@@ -9,13 +9,13 @@ title: "Recherche Gemini"
 
 # Recherche Gemini
 
-OpenClaw prend en charge les modèles Gemini avec [Google Search grounding](https://ai.google.dev/gemini-api/docs/grounding) intégré, qui renvoie des réponses synthétisées par l'IA basées sur les résultats en direct de Google Search avec des citations.
+OpenClaw prend en charge les modèles Gemini avec un [ancrage Google Search](https://ai.google.dev/gemini-api/docs/grounding) intégré, qui renvoie des answers synthétisées par l'IA basées sur les résultats en direct de Google Search avec des citations.
 
 ## Obtenir une clé API
 
 <Steps>
-  <Step title="Créer une clé">
-    Rendez-vous sur [Google AI Studio](https://aistudio.google.com/apikey) et créez une
+  <Step title="Create a key">
+    Allez sur [Google AI Studio](https://aistudio.google.com/apikey) et créez une
     clé API.
   </Step>
   <Step title="Stocker la clé">
@@ -67,18 +67,18 @@ Contrairement aux fournisseurs de recherche traditionnels qui renvoient une list
 
 ## Paramètres pris en charge
 
-La recherche Gemini prend en charge les paramètres standard `query` et `count`.
-Les filtres spécifiques aux fournisseurs tels que `country`, `language`, `freshness` et
-`domain_filter` ne sont pas pris en charge.
+Gemini search prend en charge `query`.
+
+`count` est accepté pour la compatibilité partagée `web_search`, mais l'ancrage Gemini renvoie toujours une réponse synthétisée unique avec des citations plutôt qu'une liste de N résultats.
+
+Les filtres spécifiques aux fournisseurs comme `country`, `language`, `freshness` et `domain_filter` ne sont pas pris en charge.
 
 ## Sélection du modèle
 
-Le modèle par défaut est `gemini-2.5-flash` (rapide et économique). Tout modèle Gemini
-qui prend en charge le grounding peut être utilisé via
-`plugins.entries.google.config.webSearch.model`.
+Le modèle par défaut est `gemini-2.5-flash` (rapide et rentable). Tout modèle Gemini prenant en charge l'ancrage peut être utilisé via `plugins.entries.google.config.webSearch.model`.
 
 ## Connexes
 
-- [Aperçu de la recherche web](/en/tools/web) -- tous les fournisseurs et la détection automatique
-- [Recherche Brave](/en/tools/brave-search) -- résultats structurés avec extraits
+- [Aperçu de la recherche Web](/en/tools/web) -- tous les fournisseurs et la détection automatique
+- [Brave Search](/en/tools/brave-search) -- résultats structurés avec extraits
 - [Perplexity Search](/en/tools/perplexity-search) -- résultats structurés + extraction de contenu

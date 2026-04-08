@@ -10,7 +10,7 @@ read_when:
 
 Skills 教会 Agent 如何以及何时使用工具。每个 Skill 都是一个目录，其中包含一个带有 YAML frontmatter 和 markdown 指令的 `SKILL.md` 文件。
 
-有关如何加载和确定 Skills 的优先级，请参阅 [Skills](/en/tools/skills)。
+有关如何加载和优先排序 Skills，请参阅 [Skills](/en/tools/skills)。
 
 ## 创建您的第一个 Skill
 
@@ -97,20 +97,22 @@ YAML frontmatter 支持以下字段：
 - **保持简洁** — 指示模型做*什么*，而不是如何成为 AI
 - **安全第一** — 如果你的 Skill 使用 `exec`，请确保提示词不允许来自不受信任输入的任意命令注入
 - **本地测试** — 在共享之前使用 `openclaw agent --message "..."` 进行测试
-- **使用 ClawHub** — 在 [ClawHub](https://clawhub.com) 上浏览和贡献 Skills
+- **使用 ClawHub** — 在 [ClawHub](https://clawhub.ai) 浏览和贡献 Skills
 
 ## Skills 的存放位置
 
-| 位置                     | 优先级 | 范围                |
-| ------------------------ | ------ | ------------------- |
-| `\<workspace\>/skills/`  | 最高   | 每个 Agent          |
-| `~/.openclaw/skills/`    | 中等   | 共享（所有 Agents） |
-| 捆绑（随 OpenClaw 附带） | 最低   | 全局                |
-| `skills.load.extraDirs`  | 最低   | 自定义共享文件夹    |
+| 位置                            | 优先级 | 范围             |
+| ------------------------------- | ------ | ---------------- |
+| `\<workspace\>/skills/`         | 最高   | 每个 Agent       |
+| `\<workspace\>/.agents/skills/` | 高     | 每个工作区代理   |
+| `~/.agents/skills/`             | 中     | 共享代理配置文件 |
+| `~/.openclaw/skills/`           | 中     | 共享（所有代理） |
+| 捆绑（随 OpenClaw 附带）        | 低     | 全局             |
+| `skills.load.extraDirs`         | 最低   | 自定义共享文件夹 |
 
 ## 相关
 
-- [Skills 参考](/en/tools/skills) — 加载、优先级和规则
+- [Skills 参考](/en/tools/skills) — 加载、优先级和门控规则
 - [Skills 配置](/en/tools/skills-config) — `skills.*` 配置架构
-- [ClawHub](/en/tools/clawhub) — 公共 Skill 注册表
+- [ClawHub](/en/tools/clawhub) — 公共 Skills 注册表
 - [构建插件](/en/plugins/building-plugins) — 插件可以附带 Skills

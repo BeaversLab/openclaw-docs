@@ -8,37 +8,30 @@ title: "Nostr"
 
 # Nostr
 
-**状态：** 可选插件（默认禁用）。
+**状态：** 可选的捆绑插件（默认禁用，直到配置完成）。
 
 Nostr 是一个去中心化的社交网络协议。此频道使 OpenClaw 能够通过 NIP-04 接收和回复加密的直连消息 (DM)。
 
-## 安装（按需）
+## 捆绑插件
 
-### 入门向导（推荐）
+当前的 OpenClaw 发行版将 Nostr 作为捆绑插件提供，因此正常的打包版本不需要单独安装。
 
-- 新手引导 (`openclaw onboard`) 和 `openclaw channels add` 列出了可选的渠道插件。
-- 选择 Nostr 会提示您按需安装该插件。
+### 旧版本/自定义安装
 
-安装默认设置：
-
-- **开发频道 + 可用 git 检出：** 使用本地插件路径。
-- **稳定版/Beta 版：** 从 npm 下载。
-
-您始终可以覆盖提示中的选择。
-
-### 手动安装
+- 新手引导 (`openclaw onboard`) 和 `openclaw channels add` 仍然会从共享渠道目录中显示 Nostr。
+- 如果您的构建版本排除了捆绑的 Nostr，请手动安装它。
 
 ```bash
 openclaw plugins install @openclaw/nostr
 ```
 
-使用本地检出（开发工作流）：
+使用本地检出版本（开发工作流）：
 
 ```bash
 openclaw plugins install --link <path-to-local-nostr-plugin>
 ```
 
-安装或启用插件后，重启 Gateway(网关) 网关。
+安装或启用插件后，请重启 Gateway(网关)。
 
 ### 非交互式设置
 
@@ -51,7 +44,7 @@ openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY" --relay
 
 ## 快速设置
 
-1. 生成 Nostr 密钥对（如果需要）：
+1. 生成一个 Nostr 密钥对（如果需要）：
 
 ```bash
 # Using nak
@@ -80,11 +73,11 @@ export NOSTR_PRIVATE_KEY="nsec1..."
 
 ## 配置参考
 
-| Key          | Type     | Default                                     | Description                 |
+| Key          | Type     | 默认值                                      | 描述                        |
 | ------------ | -------- | ------------------------------------------- | --------------------------- |
 | `privateKey` | string   | required                                    | `nsec` 或十六进制格式的私钥 |
-| `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | Relay URL (WebSocket)       |
-| `dmPolicy`   | string   | `pairing`                                   | 私信 访问策略               |
+| `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | 中继 URL（WebSocket）       |
+| `dmPolicy`   | string   | `pairing`                                   | 私信访问策略                |
 | `allowFrom`  | string[] | `[]`                                        | 允许的发送者公钥            |
 | `enabled`    | boolean  | `true`                                      | 启用/禁用渠道               |
 | `name`       | string   | -                                           | 显示名称                    |
@@ -92,7 +85,7 @@ export NOSTR_PRIVATE_KEY="nsec1..."
 
 ## 个人资料元数据
 
-个人资料数据作为 NIP-01 `kind:0` 事件发布。您可以从控制 UI (渠道 -> Nostr -> Profile) 管理它，或直接在配置中设置它。
+个人资料数据作为 NIP-01 `kind:0` 事件发布。您可以从控制 UI（渠道 -> Nostr -> 个人资料）进行管理，或者直接在配置中设置。
 
 示例：
 
@@ -123,18 +116,18 @@ export NOSTR_PRIVATE_KEY="nsec1..."
 
 ## 访问控制
 
-### 私信 策略
+### 私信策略
 
-- **pairing** (默认)：未知发送者会收到配对码。
+- **pairing**（默认）：未知发送者会收到配对代码。
 - **allowlist**：只有 `allowFrom` 中的公钥可以发送私信。
-- **open**：公开的入站私信 (需要 `allowFrom: ["*"]`)。
+- **open**：公开的入站私信（需要 `allowFrom: ["*"]`）。
 - **disabled**：忽略入站私信。
 
 执行说明：
 
-- 发送方策略在签名验证和 NIP-04 解密之前进行检查。
-- 配对回复的发送不处理原始私信内容。
-- 入站私消息已进行速率限制，超大的负载会在解密前被丢弃。
+- 在执行发送者策略和 NIP-04 解密之前会验证入站事件的签名，因此伪造的事件会被及早拒绝。
+- 配对回复是在不处理原始私信正文的情况下发送的。
+- 接收到的私信受速率限制，过大的负载会在解密前被丢弃。
 
 ### 允许列表示例
 
@@ -154,7 +147,7 @@ export NOSTR_PRIVATE_KEY="nsec1..."
 
 接受的格式：
 
-- **私钥：** `nsec...` 或 64 字符十六进制
+- **私钥：** `nsec...` 或 64 个字符的十六进制
 - **公钥 (`allowFrom`)：** `npub...` 或十六进制
 
 ## 中继
@@ -183,9 +176,9 @@ export NOSTR_PRIVATE_KEY="nsec1..."
 
 | NIP    | 状态   | 描述                          |
 | ------ | ------ | ----------------------------- |
-| NIP-01 | 支持   | 基本事件格式 + 个人资料元数据 |
-| NIP-04 | 支持   | 加密私信 (`kind:4`)           |
-| NIP-17 | 计划中 | 包装的私信                    |
+| NIP-01 | 已支持 | 基本事件格式 + 个人资料元数据 |
+| NIP-04 | 已支持 | 加密私信 (`kind:4`)           |
+| NIP-17 | 计划中 | 礼品包装的私信                |
 | NIP-44 | 计划中 | 版本化加密                    |
 
 ## 测试
@@ -210,9 +203,9 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ### 手动测试
 
-1. 从日志中记录 bot 公钥 (npub)。
-2. 打开 Nostr 客户端（Damus、Amethyst 等）。
-3. 向 bot 公钥发送私信。
+1. 从日志中记录机器人公钥 (npub)。
+2. 打开 Nostr 客户端 (Damus, Amethyst 等)。
+3. 向机器人公钥发送私信。
 4. 验证响应。
 
 ## 故障排除
@@ -220,38 +213,38 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 ### 未收到消息
 
 - 验证私钥是否有效。
-- 确保中继 URL 可访问，并使用 `wss://`（本地使用 `ws://`）。
+- 确保中继 URL 可访问，并使用 `wss://`（或本地使用 `ws://`）。
 - 确认 `enabled` 未设置为 `false`。
-- 检查 Gateway(网关) 日志中是否有中继连接错误。
+- 检查 Gateway(网关) 日志中的中继连接错误。
 
 ### 未发送响应
 
 - 检查中继是否接受写入。
 - 验证出站连接。
-- 注意中继速率限制。
+- 留意中继速率限制。
 
 ### 重复响应
 
-- 使用多个中继时属于预期情况。
-- 消息按事件 ID 去重；只有首次投递会触发响应。
+- 使用多个中继时的预期情况。
+- 消息根据事件 ID 去重；只有第一次投递会触发响应。
 
 ## 安全性
 
 - 切勿提交私钥。
 - 使用环境变量存储密钥。
-- 对于生产环境机器人，请考虑 `allowlist`。
-- 配对和允许列表策略在解密之前强制执行，因此未知发送者无法强制执行完整的加密工作。
+- 对于生产环境的机器人，请考虑 `allowlist`。
+- 签名在发送方策略之前进行验证，而发送方策略在解密之前执行，因此伪造的事件会被尽早拒绝，未知发送者无法强制进行完整的加密工作。
 
-## 限制（MVP）
+## 限制 (MVP)
 
-- 仅限私信（无群聊）。
-- 无媒体附件。
-- 仅限 NIP-04（计划支持 NIP-17 gift-wrap）。
+- 仅支持私信（不支持群聊）。
+- 不支持媒体附件。
+- 仅支持 NIP-04（计划支持 NIP-17 礼品包装）。
 
 ## 相关
 
-- [渠道概述](/en/channels) — 所有支持的渠道
+- [通道概述](/en/channels) — 所有支持的通道
 - [配对](/en/channels/pairing) — 私信认证和配对流程
-- [群组](/en/channels/groups) — 群聊行为和提及限制
-- [渠道路由](/en/channels/channel-routing) — 消息的会话路由
-- [安全性](/en/gateway/security) — 访问模型和加固
+- [Groups](/en/channels/groups) — 群组聊天行为和提及门控
+- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
+- [Security](/en/gateway/security) — 访问模型和加固

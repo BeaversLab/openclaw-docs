@@ -48,9 +48,9 @@ Ejecute el OpenClaw Gateway en cualquier servidor Linux o VPS en la nube. Esta p
 </CardGroup>
 
 **AWS (EC2 / Lightsail / nivel gratuito)** también funciona bien.
-Un video tutorial de la comunidad está disponible en
+Hay un recorrido en video de la comunidad disponible en
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
-(recurso de la comunidad -- podría dejar de estar disponible).
+(recurso de la comunidad -- puede dejar de estar disponible).
 
 ## Cómo funcionan las configuraciones en la nube
 
@@ -60,7 +60,7 @@ Un video tutorial de la comunidad está disponible en
 - Predeterminado seguro: mantén el Gateway en loopback y accede a él mediante túnel SSH o Tailscale Serve.
   Si te enlazas a `lan` o `tailnet`, requiere `gateway.auth.token` o `gateway.auth.password`.
 
-Páginas relacionadas: [acceso remoto a Gateway](/en/gateway/remote), [centro de plataformas](/en/platforms).
+Páginas relacionadas: [Acceso remoto a la puerta de enlace](/en/gateway/remote), [Centro de plataformas](/en/platforms).
 
 ## Agente empresarial compartido en un VPS
 
@@ -111,10 +111,10 @@ Para hosts de VM que usan `systemd`, considere:
   - `TimeoutStartSec=90`
 - Se prefieren discos con respaldo SSD para rutas de estado/caché a fin de reducir las penalizaciones de arranque en frío por E/S aleatoria.
 
-Ejemplo:
+Para la ruta estándar `openclaw onboard --install-daemon`, edite la unidad de usuario:
 
 ```bash
-sudo systemctl edit openclaw
+systemctl --user edit openclaw-gateway.service
 ```
 
 ```ini
@@ -126,5 +126,8 @@ RestartSec=2
 TimeoutStartSec=90
 ```
 
-Cómo las políticas de `Restart=` ayudan a la recuperación automatizada:
-[systemd puede automatizar la recuperación del servicio](https://www.redhat.com/en/blog/systemd-automate-recovery).
+Si instaló deliberadamente una unidad del sistema en su lugar, edite
+`openclaw-gateway.service` mediante `sudo systemctl edit openclaw-gateway.service`.
+
+Cómo las políticas `Restart=` ayudan a la recuperación automatizada:
+[systemd puede automatizar la recuperación de servicios](https://www.redhat.com/en/blog/systemd-automate-recovery).

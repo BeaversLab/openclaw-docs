@@ -21,7 +21,7 @@ macOS al agente como un nodo.
 - Expone herramientas exclusivas de macOS (Canvas, Cámara, Grabación de pantalla, `system.run`).
 - Inicia el servicio host del nodo local en modo **remoto** (launchd) y lo detiene en modo **local**.
 - Opcionalmente aloja **PeekabooBridge** para la automatización de la interfaz de usuario.
-- Instala la CLI global (`openclaw`) a través de npm/pnpm bajo solicitud (no se recomienda bun para el tiempo de ejecución de la Puerta de enlace).
+- Instala la CLI global (`openclaw`) a pedido mediante npm, pnpm o bun (la aplicación prefiere npm, luego pnpm y luego bun; Node sigue siendo el tiempo de ejecución recomendado para Gateway).
 
 ## Modo local vs. remoto
 
@@ -194,7 +194,7 @@ Opciones de descubrimiento:
 - `--timeout <ms>`: ventana de descubrimiento general (predeterminado: `2000`)
 - `--json`: salida estructurada para comparaciones
 
-Sugerencia: compare con `openclaw gateway discover --json` para ver si la canalización de descubrimiento de la aplicación de macOS (NWBrowser + respaldo DNS‑SD de tailnet) difiere del descubrimiento basado en `dns-sd` de la CLI de Node.
+Sugerencia: compare con `openclaw gateway discover --json` para ver si la canalización de descubrimiento de la aplicación de macOS (`local.` más el dominio de área amplia configurado, con respaldos de área amplia y Tailscale Serve) difiere del descubrimiento basado en `dns-sd` de la CLI de Node.
 
 ## Plomería de conexión remota (túneles SSH)
 
@@ -203,17 +203,17 @@ Cuando la aplicación de macOS se ejecuta en modo **Remoto**, abre un túnel SSH
 ### Túnel de control (puerto WebSocket del Gateway)
 
 - **Propósito:** comprobaciones de estado, estado, Web Chat, configuración y otras llamadas al plano de control.
-- **Puerto local:** el puerto del Gateway (predeterminado `18789`), siempre estable.
+- **Puerto local:** el puerto de Gateway (predeterminado `18789`), siempre estable.
 - **Puerto remoto:** el mismo puerto del Gateway en el host remoto.
 - **Comportamiento:** sin puerto local aleatorio; la aplicación reutiliza un túnel existente y saludable o lo reinicia si es necesario.
-- **Forma SSH:** `ssh -N -L <local>:127.0.0.1:<remote>` con opciones BatchMode + ExitOnForwardFailure + keepalive.
-- **Informe de IP:** el túnel SSH utiliza loopback, por lo que el gateway verá la IP del nodo como `127.0.0.1`. Use el transporte **Directo (ws/wss)** si desea que aparezca la IP real del cliente (consulte [acceso remoto macOS](/en/platforms/mac/remote)).
+- **Formato SSH:** `ssh -N -L <local>:127.0.0.1:<remote>` con las opciones BatchMode + ExitOnForwardFailure + keepalive.
+- **Informes de IP:** el túnel SSH utiliza loopback, por lo que el gateway verá la IP del nodo como `127.0.0.1`. Utilice el transporte **Direct (ws/wss)** si desea que aparezca la IP real del cliente (consulte [acceso remoto de macOS](/en/platforms/mac/remote)).
 
-Para conocer los pasos de configuración, consulte [acceso remoto macOS](/en/platforms/mac/remote). Para obtener detalles del protocolo, consulte [Protocolo de Gateway](/en/gateway/protocol).
+Para ver los pasos de configuración, consulte [acceso remoto de macOS](/en/platforms/mac/remote). Para obtener detalles sobre el protocolo, consulte [Gateway protocol](/en/gateway/protocol).
 
 ## Documentos relacionados
 
-- [Manual de procedimientos del Gateway](/en/gateway)
+- [Gateway runbook](/en/gateway)
 - [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
-- [permisos de macOS](/en/platforms/mac/permissions)
+- [macOS permissions](/en/platforms/mac/permissions)
 - [Canvas](/en/platforms/mac/canvas)

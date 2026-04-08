@@ -11,7 +11,7 @@ sidebarTitle: "CLI 自动化"
 
 使用 `--non-interactive` 自动化 `openclaw onboard`。
 
-<Note>`--json` 并不意味着非交互模式。在脚本中请使用 `--non-interactive`（以及 `--workspace`）。</Note>
+<Note>`--json` 并不意味着非交互模式。请将 `--non-interactive`（以及 `--workspace`）用于脚本。</Note>
 
 ## 基准非交互式示例
 
@@ -30,8 +30,8 @@ openclaw onboard --non-interactive \
 
 添加 `--json` 以获取机器可读的摘要。
 
-使用 `--secret-input-mode ref` 在身份验证配置文件中存储环境变量支持的引用，而不是明文值。
-在环境变量引用和配置的提供商引用（`file` 或 `exec`）之间进行交互式选择的功能，在引导流程中可用。
+使用 `--secret-input-mode ref` 将环境变量支持的引用存储在身份验证配置文件中，而不是明文值。
+在环境变量引用和配置的提供商引用（`file` 或 `exec`）之间的交互式选择在新手引导流程中可用。
 
 在非交互式 `ref` 模式下，必须在进程环境中设置提供商环境变量。
 如果没有匹配的环境变量，现在传递内联密钥标志将快速失败。
@@ -49,6 +49,16 @@ openclaw onboard --non-interactive \
 ## 特定于提供商的示例
 
 <AccordionGroup>
+  <Accordion title="Anthropic API key example">
+    ```bash
+    openclaw onboard --non-interactive \
+      --mode local \
+      --auth-choice apiKey \
+      --anthropic-api-key "$ANTHROPIC_API_KEY" \
+      --gateway-port 18789 \
+      --gateway-bind loopback
+    ```
+  </Accordion>
   <Accordion title="Gemini example">
     ```bash
     openclaw onboard --non-interactive \
@@ -130,7 +140,7 @@ openclaw onboard --non-interactive \
       --gateway-port 18789 \
       --gateway-bind loopback
     ```
-    切换到 `--auth-choice opencode-go --opencode-go-api-key "$OPENCODE_API_KEY"` 以使用 Go 目录。
+    切换到 `--auth-choice opencode-go --opencode-go-api-key "$OPENCODE_API_KEY"` 以获取 Go 目录。
   </Accordion>
   <Accordion title="Ollama 示例">
     ```bash
@@ -157,7 +167,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` 是可选的。如果省略，新手引导将检查 `CUSTOM_API_KEY`。
+    `--custom-api-key` 是可选的。如果省略，新手引导会检查 `CUSTOM_API_KEY`。
 
     引用模式变体：
 
@@ -180,15 +190,20 @@ openclaw onboard --non-interactive \
   </Accordion>
 </AccordionGroup>
 
+Anthropic setup-token 再次作为旧版/手动新手引导路径可用。
+使用它的前提是，Anthropic 告知 OpenClaw 用户 OpenClaw
+Claude 登录路径需要 **Extra Usage**。对于生产环境，首选
+Anthropic API 密钥。
+
 ## 添加另一个代理
 
-使用 `openclaw agents add <name>` 创建一个拥有独立工作区、会话和认证配置文件的独立代理。
-如果不带 `--workspace` 运行，将启动向导。
+使用 `openclaw agents add <name>` 创建具有自己的工作区、
+会话和身份验证配置文件的独立代理。不带 `--workspace` 运行将启动向导。
 
 ```bash
 openclaw agents add work \
   --workspace ~/.openclaw/workspace-work \
-  --model openai/gpt-5.2 \
+  --model openai/gpt-5.4 \
   --bind whatsapp:biz \
   --non-interactive \
   --json
@@ -208,6 +223,6 @@ openclaw agents add work \
 
 ## 相关文档
 
-- 新手引导中心：[CLI (CLI)](/en/start/wizard)
+- 新手引导中心：[新手引导 (CLI)](/en/start/wizard)
 - 完整参考：[CLI 设置参考](/en/start/wizard-cli-reference)
 - 命令参考：[`openclaw onboard`](/en/cli/onboard)

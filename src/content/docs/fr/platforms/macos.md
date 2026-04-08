@@ -21,7 +21,7 @@ gère/attache la passerelle localement (launchd ou manuel), et expose les foncti
 - Expose les outils exclusifs à macOS (Canvas, Caméra, Enregistrement d'écran, `system.run`).
 - Démarre le service d'hôte de nœud local en mode **distant** (launchd), et l'arrête en mode **local**.
 - Héberge éventuellement **PeekabooBridge** pour l'automatisation de l'interface utilisateur.
-- Installe le CLI global (`openclaw`) via npm/pnpm sur demande (bun n'est pas recommandé pour l'exécution de la passerelle).
+- Installe le CLI global (`openclaw`) sur demande via npm, pnpm ou bun (l'application préfère npm, puis pnpm, puis bun ; Node reste le runtime recommandé pour le CLI).
 
 ## Mode local vs distant
 
@@ -194,9 +194,7 @@ Discovery options:
 - `--timeout <ms>`: overall discovery window (default: `2000`)
 - `--json`: structured output for diffing
 
-Tip: compare against `openclaw gateway discover --json` to see whether the
-macOS app’s discovery pipeline (NWBrowser + tailnet DNS‑SD fallback) differs from
-the Node CLI’s `dns-sd` based discovery.
+Astuce : comparez avec `openclaw gateway discover --json` pour voir si le pipeline de découverte de l'application macOS (`local.` plus le domaine longue distance configuré, avec replis longue distance et Tailscale Serve) diffère de la découverte basée sur `dns-sd` du CLI Node.
 
 ## Remote connection plumbing (SSH tunnels)
 
@@ -206,18 +204,21 @@ components can talk to a remote Gateway as if it were on localhost.
 ### Control tunnel (Gateway WebSocket port)
 
 - **Purpose:** health checks, status, Web Chat, config, and other control-plane calls.
-- **Local port:** the Gateway port (default `18789`), always stable.
+- **Port local :** le port du Gateway (par défaut `18789`), toujours stable.
 - **Remote port:** le même port Gateway sur l'hôte distant.
 - **Comportement:** pas de port local aléatoire; l'application réutilise un tunnel sain existant ou le redémarre si nécessaire.
-- **Forme SSH:** `ssh -N -L <local>:127.0.0.1:<remote>` avec les options BatchMode +
+- **Forme SSH :** `ssh -N -L <local>:127.0.0.1:<remote>` avec les options BatchMode +
   ExitOnForwardFailure + keepalive.
-- **Rapport d'IP:** le tunnel SSH utilise le bouclage, donc la passerelle verra l'IP du nœud comme `127.0.0.1`. Utilisez le transport **Direct (ws/wss)** si vous souhaitez que l'IP réelle du client apparaisse (voir [macOS accès à distance](/en/platforms/mac/remote)).
+- **Rapport d'IP :** le tunnel SSH utilise le bouclage, donc la passerelle verra l'IP du nœud
+  comme `127.0.0.1`. Utilisez le transport **Direct (ws/wss)** si vous voulez que la véritable IP
+  du client apparaisse (voir [accès distant macOS](/en/platforms/mac/remote)).
 
-Pour les étapes de configuration, voir [macOS accès à distance](/en/platforms/mac/remote). Pour les détails du protocole, voir [Protocole Gateway](/en/gateway/protocol).
+Pour les étapes de configuration, voir [accès distant macOS](/en/platforms/mac/remote). Pour les détails du
+protocole, voir [protocole Gateway](/en/gateway/protocol).
 
 ## Documentation connexe
 
-- [Manuel de procédures Gateway](/en/gateway)
+- [Manuel du Gateway](/en/gateway)
 - [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
-- [Autorisations macOS](/en/platforms/mac/permissions)
+- [Permissions macOS](/en/platforms/mac/permissions)
 - [Canvas](/en/platforms/mac/canvas)

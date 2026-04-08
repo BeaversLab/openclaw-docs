@@ -8,7 +8,7 @@ title: "個人助理設定"
 
 # 使用 OpenClaw 建立個人助理
 
-OpenClaw 是一個自託管的閘道，可將 WhatsApp、Telegram、Discord、iMessage 等連接到 AI 代理。本指南涵蓋「個人助理」設定：一個表現得像您隨時待命 AI 助理的專用 WhatsApp 號碼。
+OpenClaw 是一個自託管的閘道，可將 Discord、Google Chat、iMessage、Matrix、Microsoft Teams、Signal、Slack、Telegram、WhatsApp、Zalo 等連線到 AI 代理程式。本指南涵蓋「個人助理」設定：一個表現得像您隨時待命 AI 助理的專用 WhatsApp 號碼。
 
 ## ⚠️ 安全第一
 
@@ -16,7 +16,7 @@ OpenClaw 是一個自託管的閘道，可將 WhatsApp、Telegram、Discord、iM
 
 - 在您的機器上執行指令（取決於您的工具政策）
 - 讀取/寫入您工作區中的檔案
-- 透過 WhatsApp/Telegram/Discord/Mattermost（外掛）回傳訊息
+- 透過 WhatsApp/Telegram/Discord/Mattermost 和其他捆綁通道將訊息發送回去
 
 開始時採保守策略：
 
@@ -26,7 +26,7 @@ OpenClaw 是一個自託管的閘道，可將 WhatsApp、Telegram、Discord、iM
 
 ## 先決條件
 
-- 已安裝並入職 OpenClaw — 如果您尚未完成此操作，請參閱[入門指南](/en/start/getting-started)
+- 已安裝並上線 OpenClaw — 如果您尚未完成此操作，請參閱[入門指南](/en/start/getting-started)
 - 助理的第二個電話號碼（SIM/eSIM/預付卡）
 
 ## 雙手機設定（推薦）
@@ -59,21 +59,22 @@ openclaw gateway --port 18789
 
 ```json5
 {
+  gateway: { mode: "local" },
   channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
 現在從您允許清單中的手機傳送訊息給助理號碼。
 
-當註冊完成時，我們會自動開啟儀表板並列印一個乾淨（非權杖化）的連結。如果它提示身份驗證，請將來自 `gateway.auth.token` 的權杖貼上到 Control UI 設定中。若稍後要重新開啟：`openclaw dashboard`。
+當上線完成時，我們會自動開啟儀表板並列印一個乾淨（非權杖化）的連結。如果提示身份驗證，請將設定的共用金鑰貼上到 Control UI 設定中。上線預設使用權杖 (`gateway.auth.token`)，但如果您將 `gateway.auth.mode` 切換為 `password`，密碼驗證也可以運作。若要稍後重新開啟：`openclaw dashboard`。
 
 ## 給代理一個工作區 (AGENTS)
 
 OpenClaw 從其工作區目錄讀取操作指令和「記憶」。
 
-預設情況下，OpenClaw 使用 `~/.openclaw/workspace` 作為代理工作區，並會在設置/首次代理運行時自動建立它（以及初始的 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`）。`BOOTSTRAP.md` 僅在工作區是全新時才建立（刪除後不應再出現）。`MEMORY.md` 是可選的（不自動建立）；如果存在，會在一般工作階段中載入。子代理工作階段僅會注入 `AGENTS.md` 和 `TOOLS.md`。
+預設情況下，OpenClaw 使用 `~/.openclaw/workspace` 作為代理程式工作區，並會在設定/首次代理程式執行時自動建立它（加上起始 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`）。`BOOTSTRAP.md` 僅在工作區是全新的時候建立（刪除後不應該再出現）。`MEMORY.md` 是可選的（不自動建立）；當存在時，它會載入到正常工作階段中。子代理程式工作階段僅注入 `AGENTS.md` 和 `TOOLS.md`。
 
-提示：將此資料夾視為 OpenClaw 的「記憶」並將其設為 git 儲存庫（最好是私有的），以便備份您的 `AGENTS.md` + 記憶檔案。如果已安裝 git，全新的工作區會自動初始化。
+提示：將此資料夾視為 OpenClaw 的「記憶體」，並使其成為 git 儲存庫（最好是私有的），以便您的 `AGENTS.md` + 記憶體檔案能夠備份。如果安裝了 git，全新的工作區會自動初始化。
 
 ```bash
 openclaw setup
@@ -82,7 +83,7 @@ openclaw setup
 完整的工作區佈局 + 備份指南：[代理程式工作區](/en/concepts/agent-workspace)
 記憶體工作流程：[記憶體](/en/concepts/memory)
 
-可選：使用 `agents.defaults.workspace` 選擇不同的工作區（支援 `~`）。
+選用：使用 `agents.defaults.workspace` 選擇不同的工作區（支援 `~`）。
 
 ```json5
 {
@@ -106,7 +107,7 @@ openclaw setup
 
 OpenClaw 預設為良好的助理設置，但您通常會想要調整：
 
-- `SOUL.md` 中的 persona/instructions
+- [`SOUL.md`](/en/concepts/soul) 中的 persona/instructions
 - thinking 預設值（如果需要）
 - heartbeats（一旦您信任它）
 
@@ -151,20 +152,20 @@ OpenClaw 預設為良好的助理設置，但您通常會想要調整：
 ## 工作階段與記憶
 
 - 工作階段檔案：`~/.openclaw/agents/<agentId>/sessions/{{SessionId}}.jsonl`
-- 工作階段元資料（token 使用量、最後路由等）：`~/.openclaw/agents/<agentId>/sessions/sessions.json`（舊版：`~/.openclaw/sessions/sessions.json`）
-- `/new` 或 `/reset` 為該聊天啟動一個新的工作階段（可透過 `resetTriggers` 設定）。如果單獨發送，代理會回覆簡短的問候以確認重置。
-- `/compact [instructions]` 會壓縮工作階段上下文並報告剩餘的上下文預算。
+- Session metadata (token usage, last route, etc): `~/.openclaw/agents/<agentId>/sessions/sessions.json` (legacy: `~/.openclaw/sessions/sessions.json`)
+- `/new` 或 `/reset` 會為該對話啟動一個新的會話（可透過 `resetTriggers` 進行配置）。如果單獨發送，代理會回覆一個簡短的問候以確認重置。
+- `/compact [instructions]` 會壓縮會話上下文並報告剩餘的上下文預算。
 
 ## Heartbeats（主動模式）
 
-根據預設，OpenClaw 每 30 分鐘執行一次心跳，提示如下：
+預設情況下，OpenClaw 每 30 分鐘使用以下提示運行一次心跳：
 `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
 設定 `agents.defaults.heartbeat.every: "0m"` 以停用。
 
-- 如果 `HEARTBEAT.md` 存在但實際上是空的（只有空白行和像 `# Heading` 這樣的 markdown 標題），OpenClaw 會跳過此次心跳執行以節省 API 呼叫。
+- 如果 `HEARTBEAT.md` 存在但實際上為空（僅包含空行和如 `# Heading` 的 markdown 標題），OpenClaw 將跳過心跳運行以節省 API 呼叫。
 - 如果檔案不存在，心跳仍會執行，由模型決定該做什麼。
-- 如果代理回覆 `HEARTBEAT_OK`（可選擇帶有短填充；請參閱 `agents.defaults.heartbeat.ackMaxChars`），OpenClaw 將抑制該心跳的發送。
-- 根據預設，允許將心跳發送到 DM 風格的 `user:<id>` 目標。設定 `agents.defaults.heartbeat.directPolicy: "block"` 以抑制直接目標發送，同時保持心跳執行啟用。
+- 如果代理回覆 `HEARTBEAT_OK`（可選帶有短填充；請參閱 `agents.defaults.heartbeat.ackMaxChars`），OpenClaw 將抑制該心跳的外發傳送。
+- 預設情況下，允許向 DM 風格的 `user:<id>` 目標傳送心跳。設定 `agents.defaults.heartbeat.directPolicy: "block"` 以在保持心跳運行處於活動狀態的同時，抑制直接目標的傳送。
 - 心跳會執行完整的代理輪次 — 較短的間隔會消耗更多的 token。
 
 ```json5
@@ -179,11 +180,11 @@ OpenClaw 預設為良好的助理設置，但您通常會想要調整：
 
 入站附件（圖片/音訊/文件）可以透過範本顯示給您的指令：
 
-- `{{MediaPath}}` (本機暫存檔案路徑)
-- `{{MediaUrl}}` (虛擬 URL)
-- `{{Transcript}}` (如果啟用了音訊轉錄)
+- `{{MediaPath}}` (本地暫存檔案路徑)
+- `{{MediaUrl}}` (偽 URL)
+- `{{Transcript}}` (如果已啟用音訊轉錄)
 
-來自代理的出站附件：在單獨的一行中包含 `MEDIA:<path-or-url>` (不要有空格)。範例：
+來自代理的外發附件：在自己的行中包含 `MEDIA:<path-or-url>` (沒有空格)。範例：
 
 ```
 Here’s the screenshot.
@@ -194,8 +195,8 @@ OpenClaw 會提取這些內容，並將其作為媒體與文字一起發送。
 
 本機路徑行為遵循與代理程式相同的檔案讀取信任模型：
 
-- 如果 `tools.fs.workspaceOnly` 是 `true`，傳出的 `MEDIA:` 本機路徑將僅限於 OpenClaw 臨時根目錄、媒體快取、代理程式工作區路徑以及沙箱產生的檔案。
-- 如果 `tools.fs.workspaceOnly` 是 `false`，傳出的 `MEDIA:` 可以使用代理程式已有權限讀取的主機本機檔案。
+- 如果 `tools.fs.workspaceOnly` 為 `true`，外發 `MEDIA:` 本地路徑將僅限於 OpenClaw 暫存根目錄、媒體快取、代理工作區路徑和沙盒生成的檔案。
+- 如果 `tools.fs.workspaceOnly` 為 `false`，外發 `MEDIA:` 可以使用代理已獲讀取權限的主機本地檔案。
 - 從主機本機發送仍然僅允許媒體和安全文件類型（圖片、音訊、影片、PDF 和 Office 文件）。純文字和類似機密的檔案不被視為可發送的媒體。
 
 這意味著當您的 fs 原則已允許讀取時，工作區外產生的圖片/檔案現在可以發送，而不會重新開放任意主機文字附件的外洩風險。
@@ -205,18 +206,18 @@ OpenClaw 會提取這些內容，並將其作為媒體與文字一起發送。
 ```bash
 openclaw status          # local status (creds, sessions, queued events)
 openclaw status --all    # full diagnosis (read-only, pasteable)
-openclaw status --deep   # adds gateway health probes (Telegram + Discord)
-openclaw health --json   # gateway health snapshot (WS)
+openclaw status --deep   # asks the gateway for a live health probe with channel probes when supported
+openclaw health --json   # gateway health snapshot (WS; default can return a fresh cached snapshot)
 ```
 
-日誌存儲於 `/tmp/openclaw/` 下（預設：`openclaw-YYYY-MM-DD.log`）。
+日誌位於 `/tmp/openclaw/` (預設：`openclaw-YYYY-MM-DD.log`)。
 
 ## 下一步
 
-- WebChat：[WebChat](/en/web/webchat)
-- 閘道運作：[Gateway runbook](/en/gateway)
-- Cron + 喚醒：[Cron jobs](/en/automation/cron-jobs)
-- macOS 選單列伴隨程式：[OpenClaw macOS app](/en/platforms/macos)
+- WebChat: [WebChat](/en/web/webchat)
+- Gateway ops: [Gateway runbook](/en/gateway)
+- Cron + wakeups: [Cron jobs](/en/automation/cron-jobs)
+- macOS 選單列伴隨應用程式：[OpenClaw macOS app](/en/platforms/macos)
 - iOS 節點應用程式：[iOS app](/en/platforms/ios)
 - Android 節點應用程式：[Android app](/en/platforms/android)
 - Windows 狀態：[Windows (WSL2)](/en/platforms/windows)

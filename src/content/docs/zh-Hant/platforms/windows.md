@@ -129,8 +129,8 @@ wsl --list --verbose
 重新開機後（在 Windows 登入前），從 WSL 檢查：
 
 ```bash
-systemctl --user is-enabled openclaw-gateway
-systemctl --user status openclaw-gateway --no-pager
+systemctl --user is-enabled openclaw-gateway.service
+systemctl --user status openclaw-gateway.service --no-pager
 ```
 
 ## 進階：透過 LAN 暴露 WSL 服務 (portproxy)

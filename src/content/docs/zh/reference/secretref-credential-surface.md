@@ -24,22 +24,33 @@ title: "SecretRef 凭据定义"
 
 - `models.providers.*.apiKey`
 - `models.providers.*.headers.*`
+- `models.providers.*.request.auth.token`
+- `models.providers.*.request.auth.value`
+- `models.providers.*.request.headers.*`
+- `models.providers.*.request.proxy.tls.ca`
+- `models.providers.*.request.proxy.tls.cert`
+- `models.providers.*.request.proxy.tls.key`
+- `models.providers.*.request.proxy.tls.passphrase`
+- `models.providers.*.request.tls.ca`
+- `models.providers.*.request.tls.cert`
+- `models.providers.*.request.tls.key`
+- `models.providers.*.request.tls.passphrase`
 - `skills.entries.*.apiKey`
 - `agents.defaults.memorySearch.remote.apiKey`
 - `agents.list[].memorySearch.remote.apiKey`
-- `talk.apiKey`
 - `talk.providers.*.apiKey`
 - `messages.tts.providers.*.apiKey`
 - `tools.web.fetch.firecrawl.apiKey`
+- `plugins.entries.firecrawl.config.webFetch.apiKey`
 - `plugins.entries.brave.config.webSearch.apiKey`
 - `plugins.entries.google.config.webSearch.apiKey`
 - `plugins.entries.xai.config.webSearch.apiKey`
 - `plugins.entries.moonshot.config.webSearch.apiKey`
 - `plugins.entries.perplexity.config.webSearch.apiKey`
 - `plugins.entries.firecrawl.config.webSearch.apiKey`
+- `plugins.entries.minimax.config.webSearch.apiKey`
 - `plugins.entries.tavily.config.webSearch.apiKey`
 - `tools.web.search.apiKey`
-- `tools.web.x_search.apiKey`
 - `gateway.auth.password`
 - `gateway.auth.token`
 - `gateway.remote.token`
@@ -90,29 +101,29 @@ title: "SecretRef 凭据定义"
 - `channels.zalo.webhookSecret`
 - `channels.zalo.accounts.*.botToken`
 - `channels.zalo.accounts.*.webhookSecret`
-- 通过同级 `serviceAccountRef` 的 `channels.googlechat.serviceAccount`（兼容性例外）
-- 通过同级 `serviceAccountRef` 的 `channels.googlechat.accounts.*.serviceAccount`（兼容性例外）
+- `channels.googlechat.serviceAccount` 通过同级 `serviceAccountRef` （兼容性例外）
+- `channels.googlechat.accounts.*.serviceAccount` 通过同级 `serviceAccountRef` （兼容性例外）
 
 ### `auth-profiles.json` 目标（`secrets configure` + `secrets apply` + `secrets audit`）
 
-- `profiles.*.keyRef` (`type: "api_key"`；当 `auth.profiles.<id>.mode = "oauth"` 时不支持)
-- `profiles.*.tokenRef` (`type: "token"`；当 `auth.profiles.<id>.mode = "oauth"` 时不支持)
+- `profiles.*.keyRef` （`type: "api_key"`；当 `auth.profiles.<id>.mode = "oauth"` 时不支持）
+- `profiles.*.tokenRef` （`type: "token"`；当 `auth.profiles.<id>.mode = "oauth"` 时不支持）
 
 [//]: # "secretref-supported-list-end"
 
-注意事项：
+备注：
 
 - Auth-profile 计划目标需要 `agentId`。
-- 计划条目目标 `profiles.*.key` / `profiles.*.token` 并写入同级引用 (`keyRef` / `tokenRef`)。
+- 计划条目针对 `profiles.*.key` / `profiles.*.token` 并写入同级引用（`keyRef` / `tokenRef`）。
 - Auth-profile 引用包含在运行时解析和审计覆盖范围内。
 - OAuth 策略守卫：`auth.profiles.<id>.mode = "oauth"` 不能与该配置文件的 SecretRef 输入结合使用。当违反此策略时，启动/重新加载和 auth-profile 解析会快速失败。
-- 对于 SecretRef 托管的模型提供商，生成的 `agents/*/agent/models.json` 条目会为 `apiKey`/header 表面持久化非机密标记（而非已解析的机密值）。
-- 标记持久化以源为准：OpenClaw 从活动源配置快照（解析前）写入标记，而不是从已解析的运行时机密值写入。
+- 对于由 SecretRef 管理的模型提供商，生成的 `agents/*/agent/models.json` 条目会为 `apiKey`/header 表面持久化非机密标记（而非解析后的机密值）。
+- 标记持久化是源权威的：OpenClaw 从活动源配置快照（解析前）写入标记，而不是从解析后的运行时机密值写入。
 - 对于网络搜索：
-  - 在显式提供商模式（设置了 `tools.web.search.provider`）下，仅所选的提供商密钥处于活动状态。
-  - 在自动模式（未设置 `tools.web.search.provider`）下，仅按优先级解析的第一个提供商密钥处于活动状态。
-  - 在自动模式下，未选定的提供商引用在被选中之前被视为非活动状态。
-  - 传统的 `tools.web.search.*` 提供商路径在兼容性窗口期间仍然解析，但规范的 SecretRef 表面是 `plugins.entries.<plugin>.config.webSearch.*`。
+  - 在显式提供商模式下（设置了 `tools.web.search.provider`），仅选定的提供商密钥处于活动状态。
+  - 在自动模式（`tools.web.search.provider` 未设置）下，只有按优先级解析的第一个提供商密钥处于活动状态。
+  - 在自动模式下，未被选中的提供商引用在被选中之前被视为不活动。
+  - 传统的 `tools.web.search.*` 提供商路径在兼容性窗口期内仍然可以解析，但规范的 SecretRef 表面是 `plugins.entries.<plugin>.config.webSearch.*`。
 
 ## 不支持的凭据
 

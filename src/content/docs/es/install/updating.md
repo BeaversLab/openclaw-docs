@@ -1,9 +1,9 @@
 ---
-summary: "Actualizar OpenClaw de forma segura (instalación global o desde fuente), además de la estrategia de reversión"
+summary: "Actualizar OpenClaw de forma segura (instalación global o desde fuente), más estrategia de reversión"
 read_when:
   - Updating OpenClaw
   - Something breaks after an update
-title: "Actualización"
+title: "Actualizando"
 ---
 
 # Actualizando
@@ -12,7 +12,7 @@ Mantén OpenClaw actualizado.
 
 ## Recomendado: `openclaw update`
 
-La forma más rápida de actualizar. Detecta tu tipo de instalación (npm o git), busca la última versión, ejecuta `openclaw doctor` y reinicia el gateway.
+La forma más rápida de actualizar. Detecta tu tipo de instalación (npm o git), busca la última versión, ejecuta `openclaw doctor` y reinicia la puerta de enlace.
 
 ```bash
 openclaw update
@@ -26,6 +26,10 @@ openclaw update --tag main
 openclaw update --dry-run   # preview without applying
 ```
 
+`--channel beta` prefiere beta, pero el tiempo de ejecución vuelve a estable/última cuando
+falta la etiqueta beta o es anterior a la última versión estable. Usa `--tag beta`
+si quieres la etiqueta de distribución beta cruda de npm para una actualización de paquete única.
+
 Consulta [Canales de desarrollo](/en/install/development-channels) para conocer la semántica de los canales.
 
 ## Alternativa: volver a ejecutar el instalador
@@ -34,9 +38,9 @@ Consulta [Canales de desarrollo](/en/install/development-channels) para conocer 
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-Añade `--no-onboard` para omitir el onboarding. Para instalaciones desde fuente, pasa `--install-method git --no-onboard`.
+Añade `--no-onboard` para omitir la incorporación. Para instalaciones desde fuente, pasa `--install-method git --no-onboard`.
 
-## Alternativa: npm o pnpm manual
+## Alternativa: npm, pnpm o bun manual
 
 ```bash
 npm i -g openclaw@latest
@@ -46,9 +50,13 @@ npm i -g openclaw@latest
 pnpm add -g openclaw@latest
 ```
 
-## Actualización automática
+```bash
+bun add -g openclaw@latest
+```
 
-La actualización automática está desactivada por defecto. Actívala en `~/.openclaw/openclaw.json`:
+## Actualizador automático
+
+El actualizador automático está desactivado por defecto. Actívalo en `~/.openclaw/openclaw.json`:
 
 ```json5
 {
@@ -64,13 +72,13 @@ La actualización automática está desactivada por defecto. Actívala en `~/.op
 }
 ```
 
-| Canal    | Comportamiento                                                                                                                 |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `stable` | Espera `stableDelayHours` y luego aplica con un jitter determinista a lo largo de `stableJitterHours` (despliegue escalonado). |
-| `beta`   | Comprueba cada `betaCheckIntervalHours` (por defecto: cada hora) y aplica inmediatamente.                                      |
-| `dev`    | Sin aplicación automática. Usa `openclaw update` manualmente.                                                                  |
+| Canal    | Comportamiento                                                                                                             |
+| -------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `stable` | Espera `stableDelayHours`, luego aplica con fluctuación determinista a través de `stableJitterHours` (despliegue gradual). |
+| `beta`   | Comprueba cada `betaCheckIntervalHours` (por defecto: cada hora) y aplica inmediatamente.                                  |
+| `dev`    | Sin aplicación automática. Usa `openclaw update` manualmente.                                                              |
 
-El gateway también registra un consejo de actualización al iniciar (desactívalo con `update.checkOnStart: false`).
+La puerta de enlace también registra un consejo de actualización al inicio (desactívalo con `update.checkOnStart: false`).
 
 ## Después de actualizar
 
@@ -82,9 +90,9 @@ El gateway también registra un consejo de actualización al iniciar (desactíva
 openclaw doctor
 ```
 
-Migra la configuración, audita las políticas de DM y comprueba el estado del gateway. Detalles: [Doctor](/en/gateway/doctor)
+Migra la configuración, audita las políticas de DM y comprueba el estado de la puerta de enlace. Detalles: [Doctor](/en/gateway/doctor)
 
-### Reiniciar el gateway
+### Reiniciar la puerta de enlace
 
 ```bash
 openclaw gateway restart
@@ -98,7 +106,7 @@ openclaw health
 
 </Steps>
 
-## Reversión
+## Revertir
 
 ### Fijar una versión (npm)
 
@@ -124,11 +132,12 @@ Para volver a la última versión: `git checkout main && git pull`.
 ## Si estás atascado
 
 - Ejecuta `openclaw doctor` de nuevo y lee la salida cuidadosamente.
-- Consulta: [Solución de problemas](/en/gateway/troubleshooting)
-- Pregunta en Discord: [https://discord.gg/clawd](https://discord.gg/clawd)
+- Para `openclaw update --channel dev` en checkouts de código fuente, el actualizador inicia automáticamente `pnpm` cuando es necesario. Si ve un error de arranque de pnpm/corepack, instale `pnpm` manualmente (o reactive `corepack`) y vuelva a ejecutar la actualización.
+- Consulte: [Solución de problemas](/en/gateway/troubleshooting)
+- Pregunte en Discord: [https://discord.gg/clawd](https://discord.gg/clawd)
 
 ## Relacionado
 
 - [Resumen de instalación](/en/install) — todos los métodos de instalación
-- [Doctor](/en/gateway/doctor) — comprobaciones de estado después de las actualizaciones
+- [Doctor](/en/gateway/doctor) — comprobaciones de salud después de las actualizaciones
 - [Migración](/en/install/migrating) — guías de migración de versiones principales

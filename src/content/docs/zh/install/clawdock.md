@@ -90,13 +90,14 @@ clawdock-approve <request-id>
 
 ## 配置和密钥
 
-ClawDock 使用与 [Docker](/en/install/docker) 中描述的相同的 Docker 配置分离：
+ClawDock 使用与 [Docker](/en/install/docker) 中描述的相同的 Docker 配置分离方式：
 
 - `<project>/.env` 用于 Docker 特定的值，如镜像名称、端口和网关令牌
-- `~/.openclaw/.env` 用于提供商密钥和机器人令牌
+- `~/.openclaw/.env` 用于支持环境变量的提供商密钥和机器人令牌
+- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 用于存储的提供商 OAuth/API-key 身份验证
 - `~/.openclaw/openclaw.json` 用于行为配置
 
-当您想要快速检查这些文件时，请使用 `clawdock-show-config`。它会在打印输出中编辑 `.env` 值。
+当您想要快速检查 `.env` 文件和 `openclaw.json` 时，请使用 `clawdock-show-config`。它会在打印输出中编辑 `.env` 值。
 
 ## 相关页面
 

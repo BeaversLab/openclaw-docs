@@ -12,7 +12,7 @@ Cloudflare AI Gateway se place devant les API des fournisseurs et vous permet d'
 
 - Fournisseur : `cloudflare-ai-gateway`
 - URL de base : `https://gateway.ai.cloudflare.com/v1/<account_id>/<gateway_id>/anthropic`
-- Modèle par défaut : `cloudflare-ai-gateway/claude-sonnet-4-6`
+- Modèle par défaut : `cloudflare-ai-gateway/claude-sonnet-4-5`
 - Clé API : `CLOUDFLARE_AI_GATEWAY_API_KEY` (votre clé API de fournisseur pour les requêtes via la Gateway)
 
 Pour les modèles Anthropic, utilisez votre clé API Anthropic.
@@ -31,7 +31,7 @@ openclaw onboard --auth-choice cloudflare-ai-gateway-api-key
 {
   agents: {
     defaults: {
-      model: { primary: "cloudflare-ai-gateway/claude-sonnet-4-6" },
+      model: { primary: "cloudflare-ai-gateway/claude-sonnet-4-5" },
     },
   },
 }

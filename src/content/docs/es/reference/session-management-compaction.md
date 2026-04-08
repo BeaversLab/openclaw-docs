@@ -210,13 +210,30 @@ Después de la compactación, los turnos futuros ven:
 
 La compactación es **persistente** (a diferencia de la poda de sesiones). Consulte [/concepts/session-pruning](/en/concepts/session-pruning).
 
+## Límites de los fragmentos de compactación y emparejamiento de herramientas
+
+Cuando OpenClaw divide una transcripción larga en fragmentos de compactación, mantiene
+las llamadas a herramientas del asistente emparejadas con sus entradas `toolResult` correspondientes.
+
+- Si la división del porcentaje de tokens cae entre una llamada a herramienta y su resultado, OpenClaw
+  desplaza el límite hacia el mensaje de llamada a herramienta del asistente en lugar de separar
+  el par.
+- Si un bloque de resultado de herramienta final empujara el fragmento por encima del objetivo,
+  OpenClaw preserva ese bloque de herramientas pendiente y mantiene la cola no resumida
+  intacta.
+- Los bloques de llamadas a herramientas abortados/errores no mantienen abierta una división pendiente.
+
 ---
 
 ## Cuándo ocurre la auto-compactación (tiempo de ejecución de Pi)
 
 En el agente Pi integrado, la auto-compactación se activa en dos casos:
 
-1. **Recuperación por desbordamiento**: el modelo devuelve un error de desbordamiento de contexto → compactar → reintentar.
+1. **Recuperación de desbordamiento**: el modelo devuelve un error de desbordamiento de contexto
+   (`request_too_large`, `context length exceeded`, `input exceeds the maximum
+number of tokens`, `input token count exceeds the maximum number of input
+tokens`, `input is too long for the model`, `ollama error: context length
+exceeded`, y variantes similares moldeadas por el proveedor) → compactar → reintentar.
 2. **Mantenimiento del umbral**: después de un turno exitoso, cuando:
 
 `contextTokens > contextWindow - reserveTokens`
@@ -224,7 +241,7 @@ En el agente Pi integrado, la auto-compactación se activa en dos casos:
 Donde:
 
 - `contextWindow` es la ventana de contexto del modelo
-- `reserveTokens` es el espacio libre reservado para los prompts + la siguiente salida del modelo
+- `reserveTokens` es el margen reservado para los mensajes + la siguiente salida del modelo
 
 Estas son semánticas del tiempo de ejecución de Pi (OpenClaw consume los eventos, pero Pi decide cuándo compactar).
 
@@ -246,12 +263,12 @@ La configuración de compactación de Pi reside en la configuración de Pi:
 
 OpenClaw también impone un límite de seguridad para las ejecuciones integradas:
 
-- Si `compaction.reserveTokens < reserveTokensFloor`, OpenClaw lo aumenta.
+- Si `compaction.reserveTokens < reserveTokensFloor`, OpenClaw lo incrementa.
 - El límite predeterminado es `20000` tokens.
 - Establezca `agents.defaults.compaction.reserveTokensFloor: 0` para desactivar el límite.
-- Si ya es más alto, OpenClaw lo deja tal como está.
+- Si ya es más alto, OpenClaw lo deja como está.
 
-Por qué: dejar suficiente espacio libre para el "mantenimiento" de varios turnos (como escrituras en memoria) antes de que la compactación sea inevitable.
+Por qué: dejar suficiente espacio para tareas de “mantenimiento” de múltiples turnos (como escrituras en memoria) antes de que la compactación sea inevitable.
 
 Implementación: `ensurePiCompactionReserveTokens()` en `src/agents/pi-settings.ts`
 (llamado desde `src/agents/pi-embedded-runner.ts`).
@@ -265,49 +282,58 @@ Puede observar la compactación y el estado de la sesión a través de:
 - `/status` (en cualquier sesión de chat)
 - `openclaw status` (CLI)
 - `openclaw sessions` / `sessions --json`
-- Modo detallado: `🧹 Auto-compaction complete` + recuento de compactaciones
+- Modo detallado: `🧹 Auto-compaction complete` + recuento de compactación
 
 ---
 
 ## Mantenimiento silencioso (`NO_REPLY`)
 
-OpenClaw admite turnos "silenciosos" para tareas en segundo plano donde el usuario no debe ver el resultado intermedio.
+OpenClaw admite turnos “silenciosos” para tareas en segundo plano donde el usuario no debe ver el resultado intermedio.
 
 Convención:
 
-- El asistente inicia su salida con `NO_REPLY` para indicar "no entregar una respuesta al usuario".
+- El asistente inicia su resultado con el token silencioso exacto `NO_REPLY` /
+  `no_reply` para indicar “no entregar una respuesta al usuario”.
 - OpenClaw elimina/suprime esto en la capa de entrega.
+- La supresión exacta del token silencioso no distingue entre mayúsculas y minúsculas, por lo que `NO_REPLY` y
+  `no_reply` cuentan cuando toda la carga es solo el token silencioso.
+- Esto es solo para turnos verdaderamente en segundo plano/sin entrega; no es un atajo para
+  solicitudes de usuario ordinarias accionables.
 
-A partir de `2026.1.10`, OpenClaw también suprime el **streaming de borrador/escritura** cuando un fragmento parcial comienza con `NO_REPLY`, para que las operaciones silenciosas no filtren una salida parcial a mitad de turno.
+A partir de `2026.1.10`, OpenClaw también suprime el **streaming de borrador/escritura** cuando un
+fragmento parcial comienza con `NO_REPLY`, para que las operaciones silenciosas no filtren resultados
+parciales a mitad del turno.
 
 ---
 
-## "Flush" de memoria pre-compresión (implementado)
+## “Limpieza de memoria” previa a la compactación (implementado)
 
-Objetivo: antes de que ocurra la auto-compresión, ejecutar un turno agente silencioso que escriba el estado duradero en el disco (por ejemplo, `memory/YYYY-MM-DD.md` en el espacio de trabajo del agente) para que la compresión no pueda borrar el contexto crítico.
+Objetivo: antes de que ocurra la auto-compactación, ejecutar un turno agente silencioso que escriba un estado
+duradero en el disco (p. ej. `memory/YYYY-MM-DD.md` en el espacio de trabajo del agente) para que la compactación no pueda
+borrar el contexto crítico.
 
-OpenClaw utiliza el enfoque de **flush previo al umbral**:
+OpenClaw utiliza el enfoque de **limpieza previa al umbral**:
 
-1. Monitorear el uso del contexto de la sesión.
-2. Cuando cruza un "umbral suave" (por debajo del umbral de compresión de Pi), ejecutar una directiva silenciosa de "escribir memoria ahora" al agente.
-3. Usar `NO_REPLY` para que el usuario no vea nada.
+1. Supervisar el uso del contexto de la sesión.
+2. Cuando cruza un “umbral suave” (por debajo del umbral de compactación de Pi), ejecute una directiva silenciosa de "escribir memoria ahora" al agente.
+3. Use el token silencioso exacto `NO_REPLY` / `no_reply` para que el usuario no vea nada.
 
 Configuración (`agents.defaults.compaction.memoryFlush`):
 
 - `enabled` (predeterminado: `true`)
 - `softThresholdTokens` (predeterminado: `4000`)
-- `prompt` (mensaje de usuario para el turno de flush)
-- `systemPrompt` (prompt del sistema adicional añadido para el turno de flush)
+- `prompt` (mensaje de usuario para el turno de vaciado)
+- `systemPrompt` (prompt del sistema adicional añadido para el turno de vaciado)
 
 Notas:
 
-- El prompt predeterminado/prompt del sistema incluye una pista `NO_REPLY` para suprimir la entrega.
-- El flush se ejecuta una vez por ciclo de compresión (rastreado en `sessions.json`).
-- El flush se ejecuta solo para sesiones Pi incrustadas (los backends de CLI lo omiten).
-- El flush se omite cuando el espacio de trabajo de la sesión es de solo lectura (`workspaceAccess: "ro"` o `"none"`).
-- Consulte [Memoria](/en/concepts/memory) para ver el diseño de archivos del espacio de trabajo y los patrones de escritura.
+- El prompt del sistema por defecto incluye una pista `NO_REPLY` para suprimir la entrega.
+- El vaciado se ejecuta una vez por ciclo de compactación (rastreado en `sessions.json`).
+- El vaciado se ejecuta solo para sesiones de Pi integradas.
+- Se omite el vaciado cuando el espacio de trabajo de la sesión es de solo lectura (`workspaceAccess: "ro"` o `"none"`).
+- Consulte [Memoria](/en/concepts/memory) para conocer el diseño de archivos del espacio de trabajo y los patrones de escritura.
 
-Pi también expone un hook `session_before_compact` en la API de extensiones, pero la lógica de flush de OpenClaw reside hoy en el lado del Gateway.
+Pi también expone un gancho `session_before_compact` en la API de extensiones, pero la lógica de vaciado de OpenClaw vive hoy en el lado del Gateway.
 
 ---
 
@@ -315,8 +341,8 @@ Pi también expone un hook `session_before_compact` en la API de extensiones, pe
 
 - ¿Clave de sesión incorrecta? Comience con [/concepts/session](/en/concepts/session) y confirme el `sessionKey` en `/status`.
 - ¿Discrepancia entre el almacén y la transcripción? Confirme el host del Gateway y la ruta del almacén desde `openclaw status`.
-- ¿Spam de compresión? Compruebe:
+- ¿Spam de compactación? Verifique:
   - ventana de contexto del modelo (demasiado pequeña)
-  - configuración de compactación (`reserveTokens` demasiado alta para la ventana del modelo puede provocar una compactación anterior)
-  - hinchazón de resultados de herramientas: activa/ajusta la poda de sesiones
-- ¿Fugas de turnos silenciosos? Confirma que la respuesta comience con `NO_REPLY` (token exacto) y que estás en una compilación que incluye la corrección de supresión de transmisión.
+  - configuración de compactación (`reserveTokens` demasiado alta para la ventana del modelo puede causar una compactación anterior)
+  - hinchazón de resultados de herramientas: habilite/ajuste la poda de sesiones
+- ¿Filtración de turnos silenciosos? Confirme que la respuesta comience con `NO_REPLY` (token exacto sin distinción de mayúsculas y minúsculas) y que esté en una compilación que incluya la corrección de supresión de streaming.

@@ -44,7 +44,7 @@ node scripts/watch-node.mjs gateway --force
 
 监视器会根据 `src/` 下的构建相关文件、扩展源文件、扩展 `package.json` 和 `openclaw.plugin.json` 元数据、`tsconfig.json`、`package.json` 以及 `tsdown.config.ts` 进行重启。扩展元数据的更改会在不强制 `tsdown` 重新构建的情况下重启网关；源文件和配置的更改仍会先重新构建 `dist`。
 
-在 `gateway:watch` 之后添加任意网关 CLI 标志，它们将在每次重启时被传递。
+在 `gateway:watch` 之后添加任何网关 CLI 标志，它们将在每次重启时被传递。针对同一个仓库/标志集重新运行相同的监视命令现在会替换较旧的监视器，而不是留下重复的监视器父进程。
 
 ## Dev profile + dev gateway (--dev)
 

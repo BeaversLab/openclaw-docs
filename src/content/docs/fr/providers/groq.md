@@ -9,7 +9,7 @@ read_when:
 # Groq
 
 [Groq](https://groq.com) fournit une inférence ultra-rapide sur des modèles open source
-(Llama, Gemma, Mistral, et plus) grâce à un matériel LPU personnalisé. OpenClaw se connecte
+(Llama, Gemma, Mistral, etc.) grâce à un matériel LPU personnalisé. OpenClaw se connecte
 à Groq via son API compatible OpenAI.
 
 - Provider : `groq`
@@ -18,7 +18,7 @@ read_when:
 
 ## Quick start
 
-1. Obtenez une clé API sur [console.groq.com/keys](https://console.groq.com/keys).
+1. Obtenez une clé API auprès de [console.groq.com/keys](https://console.groq.com/keys).
 
 2. Définissez la clé API :
 
@@ -54,13 +54,14 @@ export GROQ_API_KEY="gsk_..."
 ## Transcription audio
 
 Groq fournit également une transcription audio rapide basée sur Whisper. Lorsqu'il est configuré en tant que
-fournisseur de compréhension des médias, OpenClaw utilise le modèle `whisper-large-v3-turbo`
-de Groq pour transcrire les messages vocaux.
+fournisseur de compréhension de média, OpenClaw utilise le modèle `whisper-large-v3-turbo`
+de Groq pour transcrire les messages vocaux via l'interface `tools.media.audio`
+partagée.
 
 ```json5
 {
-  media: {
-    understanding: {
+  tools: {
+    media: {
       audio: {
         models: [{ provider: "groq" }],
       },
@@ -71,9 +72,17 @@ de Groq pour transcrire les messages vocaux.
 
 ## Note sur l'environnement
 
-Si le Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous que `GROQ_API_KEY` est
+Si la Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous que `GROQ_API_KEY` est
 accessible pour ce processus (par exemple, dans `~/.openclaw/.env` ou via
 `env.shellEnv`).
+
+## Notes audio
+
+- Chemin de config partagé : `tools.media.audio`
+- URL de base audio Groq par défaut : `https://api.groq.com/openai/v1`
+- Modèle audio Groq par défaut : `whisper-large-v3-turbo`
+- La transcription audio Groq utilise le chemin `/audio/transcriptions`
+  compatible OpenAI
 
 ## Modèles disponibles
 
@@ -83,10 +92,10 @@ pour voir les modèles actuellement disponibles, ou consultez
 
 Les choix populaires incluent :
 
-- **Llama 3.3 70B Versatile** - polyvalent, grand contexte
+- **Llama 3.3 70B Versatile** - polyvalent, contexte large
 - **Llama 3.1 8B Instant** - rapide, léger
 - **Gemma 2 9B** - compact, efficace
-- **Mixtral 8x7B** - architecture MoE, raisonnement solide
+- **Mixtral 8x7B** - architecture MoE, raisonnement puissant
 
 ## Liens
 

@@ -7,5 +7,6 @@ read_when:
 
 # BOOT.md
 
-Añade instrucciones cortas y explícitas sobre lo que OpenClaw debe hacer al iniciar (habilite `hooks.internal.enabled`).
-Si la tarea envía un mensaje, usa la herramienta de mensaje y luego responde con NO_REPLY.
+Añada instrucciones cortas y explícitas sobre lo que OpenClaw debe hacer al iniciarse (habilite `hooks.internal.enabled`).
+Si la tarea envía un mensaje, use la herramienta de mensaje y luego responda con el
+token silencioso exacto `NO_REPLY` / `no_reply`.

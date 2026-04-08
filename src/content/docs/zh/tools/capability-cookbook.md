@@ -10,7 +10,7 @@ sidebarTitle: "添加功能"
 
 # 添加功能
 
-<Info>这是针对 OpenClaw 核心开发者的**贡献者指南**。如果您正在 构建外部插件，请参阅[构建插件](/en/plugins/building-plugins) 。</Info>
+<Info>这是给 OpenClaw 核心开发者的**贡献者指南**。如果您正在 构建外部插件，请改为参阅 [构建插件](/en/plugins/building-plugins)。</Info>
 
 当 OpenClaw 需要一个新领域（例如图像生成、视频
 生成或某些未来的供应商支持的功能区域）时，请使用本指南。
@@ -52,7 +52,7 @@ sidebarTitle: "添加功能"
 - 请求/响应类型
 - 提供商注册表 + 解析
 - 后备行为
-- 配置架构以及标签/帮助信息
+- 配置模式加上在嵌套对象、通配符、数组项和组合节点上传播的 `title` / `description` 文档元数据
 - 运行时辅助程序接口
 
 供应商插件：
@@ -64,7 +64,7 @@ sidebarTitle: "添加功能"
 
 功能/渠道插件：
 
-- 调用 `api.runtime.*` 或匹配的 `plugin-sdk/*-runtime` 辅助程序
+- 调用 `api.runtime.*` 或匹配的 `plugin-sdk/*-runtime` 辅助函数
 - 从不直接调用供应商实现
 
 ## 文件清单
@@ -88,10 +88,10 @@ sidebarTitle: "添加功能"
 
 图像生成遵循标准形式：
 
-1. core 定义 `ImageGenerationProvider`
-2. core 暴露 `registerImageGenerationProvider(...)`
-3. core 暴露 `runtime.imageGeneration.generate(...)`
-4. `openai` 和 `google` 插件注册供应商支持的实现
+1. 核心定义 `ImageGenerationProvider`
+2. 核心公开 `registerImageGenerationProvider(...)`
+3. 核心公开 `runtime.imageGeneration.generate(...)`
+4. `openai`、`google`、`fal` 和 `minimax` 插件注册供应商支持的实现
 5. 未来的供应商可以注册相同的合约，而无需更改渠道/工具
 
 配置键与视觉分析路由是分开的：

@@ -107,7 +107,7 @@ Ciclo de vida de la sesión:
 - `/settings`
 - `/exit`
 
-Otros comandos de barra del Gateway (por ejemplo, `/context`) se reenvían al Gateway y se muestran como resultado del sistema. Consulte [Slash commands](/en/tools/slash-commands).
+Otros comandos de barra del Gateway (por ejemplo, `/context`) se reenvían al Gateway y se muestran como salida del sistema. Consulte [Comandos de barra](/en/tools/slash-commands).
 
 ## Comandos de shell local
 
@@ -148,9 +148,11 @@ Otros comandos de barra del Gateway (por ejemplo, `/context`) se reenvían al Ga
 - `--session <key>`: Clave de sesión (por defecto: `main`, o `global` cuando el alcance es global)
 - `--deliver`: Entregar las respuestas del asistente al proveedor (desactivado por defecto)
 - `--thinking <level>`: Anular el nivel de pensamiento para los envíos
-- `--timeout-ms <ms>`: Tiempo de espera del agente en ms (por defecto `agents.defaults.timeoutSeconds`)
+- `--message <text>`: Enviar un mensaje inicial después de conectarse
+- `--timeout-ms <ms>`: Tiempo de espera del agente en ms (el valor predeterminado es `agents.defaults.timeoutSeconds`)
+- `--history-limit <n>`: Entradas del historial que se cargarán (predeterminado `200`)
 
-Nota: cuando establece `--url`, la TUI no recurre a las credenciales de configuración o de entorno.
+Nota: cuando configura `--url`, la TUI no recurre a las credenciales de configuración o de entorno.
 Pase `--token` o `--password` explícitamente. La falta de credenciales explícitas es un error.
 
 ## Solución de problemas
@@ -158,18 +160,17 @@ Pase `--token` o `--password` explícitamente. La falta de credenciales explíci
 Sin salida después de enviar un mensaje:
 
 - Ejecute `/status` en la TUI para confirmar que el Gateway está conectado y inactivo/ocupado.
-- Revise los registros del Gateway: `openclaw logs --follow`.
+- Verifique los registros del Gateway: `openclaw logs --follow`.
 - Confirme que el agente puede ejecutarse: `openclaw status` y `openclaw models status`.
 - Si espera mensajes en un canal de chat, habilite la entrega (`/deliver on` o `--deliver`).
-- `--history-limit <n>`: Entradas de historial a cargar (por defecto 200)
 
 ## Solución de problemas de conexión
 
 - `disconnected`: asegúrese de que el Gateway se esté ejecutando y que sus `--url/--token/--password` sean correctas.
 - Sin agentes en el selector: verifique `openclaw agents list` y su configuración de enrutamiento.
-- Selector de sesión vacío: es posible que esté en el alcance global o que aún no tenga sesiones.
+- Selector de sesiones vacío: es posible que se encuentre en el ámbito global o que aún no tenga sesiones.
 
 ## Relacionado
 
-- [Control UI](/en/web/control-ui) — interfaz de control basada en web
-- [Referencia de la CLI](/en/cli) — referencia completa de comandos de la CLI
+- [Interfaz de control (Control UI)](/en/web/control-ui) — interfaz de control basada en la web
+- [Referencia de CLI](/en/cli) — referencia completa de comandos de CLI

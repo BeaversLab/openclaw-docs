@@ -17,8 +17,8 @@ Esta página asume la imagen **exeuntu** predeterminada de exe.dev. Si elegiste 
 1. [https://exe.new/openclaw](https://exe.new/openclaw)
 2. Rellena tu clave/token de autenticación según sea necesario
 3. Haz clic en "Agent" junto a tu VM y espera a que Shelley termine el aprovisionamiento
-4. Abre `https://<vm-name>.exe.xyz/` y pega tu token de gateway para autenticarte
-5. Aprueba cualquier solicitud de emparejamiento de dispositivo pendiente con `openclaw devices approve <requestId>`
+4. Abra `https://<vm-name>.exe.xyz/` y autentíquese con el secreto compartido configurado (esta guía utiliza autenticación por token por defecto, pero la autenticación por contraseña también funciona si cambia `gateway.auth.mode`)
+5. Aprobar cualquier solicitud de emparejamiento de dispositivo pendiente con `openclaw devices approve <requestId>`
 
 ## Lo que necesitas
 
@@ -27,7 +27,7 @@ Esta página asume la imagen **exeuntu** predeterminada de exe.dev. Si elegiste 
 
 ## Instalación automática con Shelley
 
-Shelley, el agente de [exe.dev](https://exe.dev), puede instalar OpenClaw al instante con nuestro
+Shelley, el agente de [exe.dev](https://exe.dev), puede instalar OpenClaw instantáneamente con nuestro
 prompt. El prompt utilizado es el siguiente:
 
 ```
@@ -50,7 +50,9 @@ Luego conecta:
 ssh <vm-name>.exe.xyz
 ```
 
-Consejo: mantén esta VM **con estado**. OpenClaw almacena el estado en `~/.openclaw/` y `~/.openclaw/workspace/`.
+Consejo: mantenga esta VM con **estado**. OpenClaw almacena `openclaw.json`, por agente
+`auth-profiles.json`, sesiones, y el estado del canal/proveedor bajo
+`~/.openclaw/`, además del espacio de trabajo bajo `~/.openclaw/workspace/`.
 
 ## 2) Instalar requisitos previos (en la VM)
 
@@ -69,7 +71,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash
 
 ## 4) Configurar nginx para hacer de proxy de OpenClaw en el puerto 8000
 
-Edita `/etc/nginx/sites-enabled/default` con
+Edite `/etc/nginx/sites-enabled/default` con
 
 ```
 server {
@@ -91,7 +93,7 @@ server {
         # Standard proxy headers
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-For $remote_addr;
         proxy_set_header X-Forwarded-Proto $scheme;
 
         # Timeout settings for long-lived connections
@@ -101,20 +103,25 @@ server {
 }
 ```
 
-## 5) Acceder a OpenClaw y otorgar privilegios
+Sobrescribir las cabeceras de reenvío en lugar de preservar las cadenas suministradas por el cliente.
+OpenClaw confía en los metadatos de IP reenviados solo de proxies configurados explícitamente,
+y las cadenas de estilo anexar `X-Forwarded-For` se tratan como un riesgo de endurecimiento.
 
-Accede a `https://<vm-name>.exe.xyz/` (consulta la salida de la Interfaz de Usuario de Control del onboarding). Si solicita autenticación, pega el
-token de `gateway.auth.token` en la VM (recupéralo con `openclaw config get gateway.auth.token`, o genera uno
-con `openclaw doctor --generate-gateway-token`). Aprueba los dispositivos con `openclaw devices list` y
-`openclaw devices approve <requestId>`. Si tienes dudas, ¡usa Shelley desde tu navegador!
+## 5) Acceda a OpenClaw y conceda privilegios
 
-## Acceso remoto
+Acceda a `https://<vm-name>.exe.xyz/` (vea la salida de la Interfaz de Usuario de Control del onboarding). Si solicita autenticación, pegue el
+secreto compartido configurado de la VM. Esta guía usa autenticación por token, así que recupere `gateway.auth.token`
+con `openclaw config get gateway.auth.token` (o genere uno con `openclaw doctor --generate-gateway-token`).
+Si cambió el gateway a autenticación por contraseña, use `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD` en su lugar.
+Apruebe los dispositivos con `openclaw devices list` y `openclaw devices approve <requestId>`. Si tiene dudas, ¡use Shelley desde su navegador!
 
-El acceso remoto es manejado por la autenticación de [exe.dev](https://exe.dev). De
-forma predeterminada, el tráfico HTTP del puerto 8000 se reenvía a `https://<vm-name>.exe.xyz`
+## Acceso Remoto
+
+El acceso remoto es manejado por la autenticación de [exe.dev](https://exe.dev). Por
+defecto, el tráfico HTTP del puerto 8000 se reenvía a `https://<vm-name>.exe.xyz`
 con autenticación por correo electrónico.
 
-## Actualización
+## Actualizando
 
 ```bash
 npm i -g openclaw@latest
@@ -123,4 +130,4 @@ openclaw gateway restart
 openclaw health
 ```
 
-Guía: [Actualización](/en/install/updating)
+Guía: [Actualizando](/en/install/updating)

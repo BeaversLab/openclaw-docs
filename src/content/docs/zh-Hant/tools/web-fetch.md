@@ -13,8 +13,8 @@ sidebarTitle: "網頁擷取"
 `web_fetch` 工具會執行單純的 HTTP GET 請求並提取可讀內容
 （HTML 轉 markdown 或純文字）。它**不會**執行 JavaScript。
 
-對於重度依賴 JS 的網站或需要登入的頁面，請改用
-[網頁瀏覽器](/en/tools/browser)。
+對於重度依賴 JS 的網站或需登入保護的頁面，請改用
+[Web Browser](/en/tools/browser)。
 
 ## 快速開始
 
@@ -50,6 +50,7 @@ await web_fetch({ url: "https://example.com/article" });
     web: {
       fetch: {
         enabled: true, // default: true
+        provider: "firecrawl", // optional; omit for auto-detect
         maxChars: 50000, // max output chars
         maxCharsCap: 50000, // hard cap for maxChars param
         maxResponseBytes: 2000000, // max download size before truncation
@@ -66,21 +67,30 @@ await web_fetch({ url: "https://example.com/article" });
 
 ## Firecrawl 後備
 
-如果 Readability 提取失敗，`web_fetch` 可以退而求其次使用
-[Firecrawl](/en/tools/firecrawl) 來繞過機器人偵測並獲得更好的提取效果：
+如果 Readability 提取失敗，`web_fetch` 可以回退到
+[Firecrawl](/en/tools/firecrawl) 以繞過機器人偵測並獲得更好的提取效果：
 
 ```json5
 {
   tools: {
     web: {
       fetch: {
-        firecrawl: {
-          enabled: true,
-          apiKey: "fc-...", // optional if FIRECRAWL_API_KEY is set
-          baseUrl: "https://api.firecrawl.dev",
-          onlyMainContent: true,
-          maxAgeMs: 86400000, // cache duration (1 day)
-          timeoutSeconds: 60,
+        provider: "firecrawl", // optional; omit for auto-detect from available credentials
+      },
+    },
+  },
+  plugins: {
+    entries: {
+      firecrawl: {
+        enabled: true,
+        config: {
+          webFetch: {
+            apiKey: "fc-...", // optional if FIRECRAWL_API_KEY is set
+            baseUrl: "https://api.firecrawl.dev",
+            onlyMainContent: true,
+            maxAgeMs: 86400000, // cache duration (1 day)
+            timeoutSeconds: 60,
+          },
         },
       },
     },
@@ -88,34 +98,45 @@ await web_fetch({ url: "https://example.com/article" });
 }
 ```
 
-`tools.web.fetch.firecrawl.apiKey` 支援 SecretRef 物件。
+`plugins.entries.firecrawl.config.webFetch.apiKey` 支援 SecretRef 物件。
+舊版 `tools.web.fetch.firecrawl.*` 設定會由 `openclaw doctor --fix` 自動遷移。
 
-<Note>如果已啟用 Firecrawl 且其 SecretRef 未解析且沒有 `FIRECRAWL_API_KEY` 環境變數後備，閘道啟動會快速失敗。</Note>
+<Note>如果啟用 Firecrawl 且其 SecretRef 未解析，且沒有 `FIRECRAWL_API_KEY` 環境變數作為備案，閘道啟動時會快速失敗。</Note>
+
+<Note>Firecrawl 的 `baseUrl` 覆寫已鎖定：必須使用 `https://` 和 官方 Firecrawl 主機 (`api.firecrawl.dev`)。</Note>
+
+目前的執行時期行為：
+
+- `tools.web.fetch.provider` 明確選擇提取回退提供者。
+- 如果省略 `provider`，OpenClaw 會從可用的憑證中自動偵測第一個就緒的 web-fetch
+  提供者。目前內建的提供者是 Firecrawl。
+- 如果停用 Readability，`web_fetch` 會直接跳到選定的
+  提供者回退。如果沒有可用的提供者，它會以封閉式失敗處理。
 
 ## 限制與安全性
 
-- `maxChars` 被限制為 `tools.web.fetch.maxCharsCap`
-- 回應主體在解析前上限為 `maxResponseBytes`；超過大小
+- `maxChars` 限制為 `tools.web.fetch.maxCharsCap`
+- 回應主體在解析前限制為 `maxResponseBytes`；超過大小
   的回應會被截斷並顯示警告
-- 私有/內部主機名稱被封鎖
-- 重新導向會被檢查並由 `maxRedirects` 限制
+- 私人/內部主機名稱會被封鎖
+- 重新導向會受到 `maxRedirects` 檢查與限制
 - `web_fetch` 為盡力而為 -- 某些網站需要 [Web Browser](/en/tools/browser)
 
 ## 工具設定檔
 
-如果您使用工具設定檔或允許列表，請新增 `web_fetch` 或 `group:web`：
+如果您使用工具設定檔或允許清單，請新增 `web_fetch` 或 `group:web`：
 
 ```json5
 {
   tools: {
     allow: ["web_fetch"],
-    // or: allow: ["group:web"]  (includes both web_fetch and web_search)
+    // or: allow: ["group:web"]  (includes web_fetch, web_search, and x_search)
   },
 }
 ```
 
 ## 相關
 
-- [Web Search](/en/tools/web) -- 使用多種提供者搜尋網路
-- [Web Browser](/en/tools/browser) -- 適用於重度 JS 網站的完整瀏覽器自動化
-- [Firecrawl](/en/tools/firecrawl) -- Firecrawl 搜尋和擷取工具
+- [Web Search](/en/tools/web) -- 使用多個提供者搜尋網路
+- [Web Browser](/en/tools/browser) -- 針對重度 JS 網站的完整瀏覽器自動化
+- [Firecrawl](/en/tools/firecrawl) -- Firecrawl 搜尋與刮取工具

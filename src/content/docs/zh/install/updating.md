@@ -1,5 +1,5 @@
 ---
-summary: "安全地更新 OpenClaw（全局安装或源码），以及回滚策略"
+summary: "安全更新 OpenClaw（全局安装或源码），以及回滚策略"
 read_when:
   - Updating OpenClaw
   - Something breaks after an update
@@ -12,7 +12,7 @@ title: "更新"
 
 ## 推荐：`openclaw update`
 
-最快更新的方法。它会检测您的安装类型（npm 或 git），获取最新版本，运行 `openclaw doctor`，并重启网关。
+最快的更新方式。它会检测您的安装类型（npm 或 git），获取最新版本，运行 `openclaw doctor`，并重启网关。
 
 ```bash
 openclaw update
@@ -26,7 +26,9 @@ openclaw update --tag main
 openclaw update --dry-run   # preview without applying
 ```
 
-有关渠道的语义，请参阅 [开发渠道](/en/install/development-channels)。
+`--channel beta` 优先使用 beta 版本，但当 beta 标签缺失或比最新的稳定版本旧时，运行时会回退到 stable/latest。如果您想对单次包更新使用原始的 npm beta dist-tag，请使用 `--tag beta`。
+
+有关渠道语义，请参阅 [开发渠道](/en/install/development-channels)。
 
 ## 备选方案：重新运行安装程序
 
@@ -36,7 +38,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash
 
 添加 `--no-onboard` 以跳过新手引导。对于源码安装，请传递 `--install-method git --no-onboard`。
 
-## 备选方案：手动 npm 或 pnpm
+## 备选方案：手动 npm, pnpm, 或 bun
 
 ```bash
 npm i -g openclaw@latest
@@ -46,9 +48,13 @@ npm i -g openclaw@latest
 pnpm add -g openclaw@latest
 ```
 
-## 自动更新
+```bash
+bun add -g openclaw@latest
+```
 
-自动更新功能默认关闭。在 `~/.openclaw/openclaw.json` 中启用：
+## 自动更新器
+
+自动更新器默认关闭。在 `~/.openclaw/openclaw.json` 中启用：
 
 ```json5
 {
@@ -64,11 +70,11 @@ pnpm add -g openclaw@latest
 }
 ```
 
-| 渠道     | 行为                                                                               |
-| -------- | ---------------------------------------------------------------------------------- |
-| `stable` | 等待 `stableDelayHours`，然后对 `stableJitterHours` 应用确定性抖动（分阶段推出）。 |
-| `beta`   | 每隔 `betaCheckIntervalHours` 检查一次（默认：每小时）并立即应用。                 |
-| `dev`    | 不自动应用。手动使用 `openclaw update`。                                           |
+| 渠道     | 行为                                                                              |
+| -------- | --------------------------------------------------------------------------------- |
+| `stable` | 等待 `stableDelayHours`，然后应用确定的抖动于 `stableJitterHours`（分阶段推出）。 |
+| `beta`   | 每隔 `betaCheckIntervalHours`（默认：每小时）检查一次并立即应用。                 |
+| `dev`    | 不自动应用。请手动使用 `openclaw update`。                                        |
 
 网关还会在启动时记录更新提示（使用 `update.checkOnStart: false` 禁用）。
 
@@ -76,13 +82,13 @@ pnpm add -g openclaw@latest
 
 <Steps>
 
-### 运行医生
+### 运行 doctor
 
 ```bash
 openclaw doctor
 ```
 
-迁移配置，审核私信策略，并检查网关健康状况。详情：[Doctor](/en/gateway/doctor)
+迁移配置，审核私信策略，并检查网关运行状况。详情：[Doctor](/en/gateway/doctor)
 
 ### 重启网关
 
@@ -108,7 +114,7 @@ openclaw doctor
 openclaw gateway restart
 ```
 
-提示：`npm view openclaw version` 显示当前发布的版本。
+提示：`npm view openclaw version` 显示当前已发布的版本。
 
 ### 固定提交 (源码)
 
@@ -121,14 +127,15 @@ openclaw gateway restart
 
 要返回最新版本：`git checkout main && git pull`。
 
-## 如果您遇到了问题
+## 如果遇到问题
 
 - 再次运行 `openclaw doctor` 并仔细阅读输出。
-- 检查：[故障排除](/en/gateway/troubleshooting)
-- 在 Discord 提问: [https://discord.gg/clawd](https://discord.gg/clawd)
+- 对于源码检出上的 `openclaw update --channel dev`，更新程序会在需要时自动引导 `pnpm`。如果你看到 pnpm/corepack 引导错误，请手动安装 `pnpm`（或重新启用 `corepack`）并重新运行更新。
+- 查看：[故障排除](/en/gateway/troubleshooting)
+- 在 Discord 中提问：[https://discord.gg/clawd](https://discord.gg/clawd)
 
 ## 相关
 
 - [安装概述](/en/install) — 所有安装方法
-- [Doctor](/en/gateway/doctor) — 更新后的健康检查
+- [医生](/en/gateway/doctor) — 更新后的健康检查
 - [迁移](/en/install/migrating) — 主要版本迁移指南

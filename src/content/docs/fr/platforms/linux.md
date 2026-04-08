@@ -19,15 +19,15 @@ Des applications compagnons natives Linux sont prévues. Les contributions sont 
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
 4. Depuis votre ordinateur portable : `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
-5. Ouvrez `http://127.0.0.1:18789/` et collez votre jeton
+5. Ouvrez `http://127.0.0.1:18789/` et authentifiez-vous avec le secret partagé configuré (token par défaut ; mot de passe si vous avez défini `gateway.auth.mode: "password"`)
 
-Guide complet du serveur Linux : [Linux Server](/en/vps). Exemple étape par étape de VPS : [exe.dev](/en/install/exe-dev)
+Guide complet du serveur Linux : [Linux Server](/en/vps). Exemple étape par étape pour VPS : [exe.dev](/en/install/exe-dev)
 
 ## Installer
 
 - [Getting Started](/en/start/getting-started)
 - [Install & updates](/en/install/updating)
-- Flux facultatifs : [Bun (expérimental)](/en/install/bun), [Nix](/en/install/nix), [Docker](/en/install/docker)
+- Flux optionnels : [Bun (expérimental)](/en/install/bun), [Nix](/en/install/nix), [Docker](/en/install/docker)
 
 ## Gateway
 
@@ -64,9 +64,7 @@ openclaw doctor
 
 ## Contrôle système (unité utilisateur systemd)
 
-OpenClaw installe un service systemd **utilisateur** par défaut. Utilisez un service
-**système** pour les serveurs partagés ou toujours actifs. L'exemple complet d'unité
-et les conseils se trouvent dans le [Gateway runbook](/en/gateway).
+OpenClaw installe un service systemd **utilisateur** par défaut. Utilisez un service **système** pour les serveurs partagés ou toujours actifs. `openclaw gateway install` et `openclaw onboard --install-daemon` génèrent déjà l'unité canonique actuelle pour vous ; n'en écrivez une manuellement que si vous avez besoin d'une configuration système/gestionnaire de service personnalisée. Les instructions complètes sur le service se trouvent dans le [Gateway runbook](/en/gateway).
 
 Configuration minimale :
 
@@ -82,6 +80,10 @@ Wants=network-online.target
 ExecStart=/usr/local/bin/openclaw gateway --port 18789
 Restart=always
 RestartSec=5
+TimeoutStopSec=30
+TimeoutStartSec=30
+SuccessExitStatus=0 143
+KillMode=control-group
 
 [Install]
 WantedBy=default.target

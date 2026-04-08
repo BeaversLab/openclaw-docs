@@ -13,13 +13,13 @@ QQ Bot se connecte à OpenClaw via l'API officiel de QQ Bot (passerelle WebSocke
 plugin prend en charge le chat privé C2C, les messages de groupe @messages, et les messages de canal de guilde avec
 des médias riches (images, voix, vidéo, fichiers).
 
-Statut : plugin de canal intégré. Les messages directs, les chats de groupe, les canaux de guilde et
+Statut : plugin intégré. Les messages directs, les discussions de groupe, les canaux de guilde et
 les médias sont pris en charge. Les réactions et les fils de discussion ne sont pas pris en charge.
 
-## Intégré avec OpenClaw
+## Plugin intégré
 
-Les installations actuelles de OpenClaw intègrent QQ Bot. Vous n'avez pas besoin d'une étape
-`openclaw plugins install` séparée pour une configuration normale.
+Les versions actuelles d'OpenClaw incluent QQ Bot, les versions empaquetées standard n'ont donc pas besoin
+d'une étape de `openclaw plugins install` séparée.
 
 ## Configuration
 

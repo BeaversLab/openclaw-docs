@@ -15,10 +15,10 @@ Esto está separado de `~/.openclaw/`, que almacena la configuración, las crede
 las sesiones.
 
 **Importante:** el espacio de trabajo es el **cwd predeterminado**, no un sandbox estricto. Las herramientas
-resuelven las rutas relativas respecto al espacio de trabajo, pero las rutas absolutas aún pueden alcanzar
-otros lugares en el host a menos que se habilite el sandbox. Si necesita aislamiento, use
+resuelven rutas relativas contra el espacio de trabajo, pero las rutas absolutas aún pueden llegar
+a otros lugares en el host a menos que se habilite el sandbox. Si necesita aislamiento, use
 [`agents.defaults.sandbox`](/en/gateway/sandboxing) (y/o configuración de sandbox por agente).
-Cuando el sandbox está habilitado y `workspaceAccess` no es `"rw"`, las herramientas operan
+Cuando se habilita el sandbox y `workspaceAccess` no es `"rw"`, las herramientas operan
 dentro de un espacio de trabajo sandbox bajo `~/.openclaw/sandboxes`, no su espacio de trabajo del host.
 
 ## Ubicación predeterminada
@@ -73,80 +73,74 @@ Estos son los archivos estándar que OpenClaw espera dentro del espacio de traba
 - `SOUL.md`
   - Personalidad, tono y límites.
   - Cargado en cada sesión.
+  - Guía: [Guía de personalidad SOUL.md](/en/concepts/soul)
 
 - `USER.md`
   - Quién es el usuario y cómo dirigirse a él.
   - Cargado en cada sesión.
 
 - `IDENTITY.md`
-  - El nombre, la vibra y el emoji del agente.
+  - El nombre, ambiente y emoji del agente.
   - Creado/actualizado durante el ritual de arranque.
 
 - `TOOLS.md`
-  - Notas sobre tus herramientas locales y convenciones.
-  - No controla la disponibilidad de herramientas; es solo orientación.
+  - Notas sobre sus herramientas y convenciones locales.
+  - No controla la disponibilidad de herramientas; es solo una guía.
 
 - `HEARTBEAT.md`
   - Lista de verificación opcional y breve para ejecuciones de latido.
-  - Manténla breve para evitar el consumo de tokens.
+  - Manténgala breve para evitar el consumo excesivo de tokens.
 
 - `BOOT.md`
-  - Lista de verificación de inicio opcional ejecutada al reiniciar la puerta de enlace cuando los enlaces internos están habilitados.
-  - Manténla breve; usa la herramienta de mensaje para envíos salientes.
+  - Lista de verificación de inicio opcional que se ejecuta al reiniciar el gateway cuando los enlaces internos están habilitados.
+  - Manténgala breve; use la herramienta de mensaje para envíos salientes.
 
 - `BOOTSTRAP.md`
-  - Ritual de primera ejecución de una sola vez.
-  - Solo creado para un espacio de trabajo completamente nuevo.
-  - Bórralo después de que se complete el ritual.
+  - Ritual de primera ejecución único.
+  - Solo se crea para un espacio de trabajo totalmente nuevo.
+  - Elimínelo después de que se complete el ritual.
 
 - `memory/YYYY-MM-DD.md`
   - Registro de memoria diaria (un archivo por día).
-  - Se recomienda leer hoy + ayer al inicio de la sesión.
+  - Se recomienda leer hoy + ayer al iniciar la sesión.
 
 - `MEMORY.md` (opcional)
   - Memoria a largo plazo curada.
-  - Solo cargar en la sesión principal privada (no en contextos compartidos/grupales).
+  - Cargar solo en la sesión principal privada (no en contextos compartidos/grupales).
 
-Consulta [Memoria](/en/concepts/memory) para conocer el flujo de trabajo y el vaciado automático de memoria.
+Consulte [Memoria](/en/concepts/memory) para ver el flujo de trabajo y el vaciado automático de memoria.
 
 - `skills/` (opcional)
   - Habilidades específicas del espacio de trabajo.
-  - Anula las habilidades gestionadas/incluidas cuando los nombres colisionan.
+  - Ubicación de habilidades de mayor precedencia para ese espacio de trabajo.
+  - Anula las habilidades del agente del proyecto, habilidades del agente personal, habilidades administradas, habilidades empaquetadas y `skills.load.extraDirs` cuando los nombres colisionan.
 
 - `canvas/` (opcional)
   - Archivos de interfaz de usuario de Canvas para visualizaciones de nodos (por ejemplo `canvas/index.html`).
 
-Si falta algún archivo de arranque, OpenClaw inyecta un marcador de "archivo faltante" en
-la sesión y continúa. Los archivos de arranque grandes se truncarán al inyectarse;
-ajusta los límites con `agents.defaults.bootstrapMaxChars` (predeterminado: 20000) y
-`agents.defaults.bootstrapTotalMaxChars` (predeterminado: 150000).
-`openclaw setup` puede recrear los valores predeterminados que faltan sin sobrescribir los
-archivos existentes.
+Si falta algún archivo de arranque, OpenClaw inyecta un marcador de "archivo faltante" en la sesión y continúa. Los archivos de arranque grandes se truncarán al inyectarse; ajuste los límites con `agents.defaults.bootstrapMaxChars` (predeterminado: 20000) y `agents.defaults.bootstrapTotalMaxChars` (predeterminado: 150000). `openclaw setup` puede recrear los valores predeterminados faltantes sin sobrescribir los archivos existentes.
 
-## Lo que NO está en el espacio de trabajo
+## Qué NO hay en el espacio de trabajo
 
 Estos se encuentran en `~/.openclaw/` y NO se deben confirmar en el repositorio del espacio de trabajo:
 
 - `~/.openclaw/openclaw.json` (configuración)
-- `~/.openclaw/credentials/` (tokens de OAuth, claves de API)
+- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (perfiles de autenticación de modelo: OAuth + claves API)
+- `~/.openclaw/credentials/` (estado del canal/proveedor más datos de importación de OAuth heredados)
 - `~/.openclaw/agents/<agentId>/sessions/` (transcripciones de sesión + metadatos)
 - `~/.openclaw/skills/` (habilidades administradas)
 
-Si necesita migrar sesiones o configuración, cópielas por separado y manténgalas
-fuera del control de versiones.
+Si necesita migrar sesiones o configuraciones, cópielas por separado y manténgalas fuera del control de versiones.
 
-## Respaldo de Git (recomendado, privado)
+## Copia de seguridad de Git (recomendado, privado)
 
-Trate el espacio de trabajo como memoria privada. Colóquelo en un repositorio
-de git **privado** para que esté respaldado y sea recuperable.
+Trate el espacio de trabajo como memoria privada. Colóquelo en un repositorio git **privado** para que se respalde y se pueda recuperar.
 
-Ejecute estos pasos en la máquina donde se ejecuta el Gateway (es allí donde
-vive el espacio de trabajo).
+Ejecute estos pasos en la máquina donde se ejecuta el Gateway (es donde reside el espacio de trabajo).
 
 ### 1) Inicializar el repositorio
 
-Si git está instalado, los espacios de trabajo nuevos se inicializan automáticamente.
-Si este espacio de trabajo aún no es un repositorio, ejecute:
+Si git está instalado, los espacios de trabajo completamente nuevos se inicializan automáticamente. Si este espacio de trabajo aún no es un repositorio, ejecute:
 
 ```bash
 cd ~/.openclaw/workspace
@@ -155,14 +149,14 @@ git add AGENTS.md SOUL.md TOOLS.md IDENTITY.md USER.md HEARTBEAT.md memory/
 git commit -m "Add agent workspace"
 ```
 
-### 2) Agregar un remoto privado (opciones para principiantes)
+### 2) Agregar un remoto privado (opciones fáciles para principiantes)
 
 Opción A: Interfaz web de GitHub
 
 1. Cree un nuevo repositorio **privado** en GitHub.
 2. No lo inicialice con un README (evita conflictos de fusión).
-3. Copie la URL remota HTTPS.
-4. Agregue el remoto y envíe los cambios:
+3. Copie la URL remota de HTTPS.
+4. Agregue el remoto y haga push:
 
 ```bash
 git branch -M main
@@ -181,8 +175,8 @@ Opción C: Interfaz web de GitLab
 
 1. Cree un nuevo repositorio **privado** en GitLab.
 2. No lo inicialice con un README (evita conflictos de fusión).
-3. Copie la URL remota HTTPS.
-4. Agregue el remoto y envíe los cambios:
+3. Copie la URL remota de HTTPS.
+4. Agregue el remoto y haga push:
 
 ```bash
 git branch -M main
@@ -199,18 +193,17 @@ git commit -m "Update memory"
 git push
 ```
 
-## No confirme secretos
+## No confirmar secretos
 
 Incluso en un repositorio privado, evite almacenar secretos en el espacio de trabajo:
 
-- Claves de API, tokens de OAuth, contraseñas o credenciales privadas.
-- Cualquier cosa bajo `~/.openclaw/`.
+- Claves API, tokens OAuth, contraseñas o credenciales privadas.
+- Cualquier cosa en `~/.openclaw/`.
 - Volcados en bruto de chats o archivos adjuntos confidenciales.
 
-Si debe almacenar referencias confidenciales, use marcadores de posición y mantenga
-el secreto real en otro lugar (gestor de contraseñas, variables de entorno o `~/.openclaw/`).
+Si debe almacenar referencias confidenciales, use marcadores de posición y mantenga el secreto real en otro lugar (administrador de contraseñas, variables de entorno o `~/.openclaw/`).
 
-Inicio `.gitignore` sugerido:
+Inicio de `.gitignore` sugerido:
 
 ```gitignore
 .DS_Store
@@ -222,21 +215,22 @@ Inicio `.gitignore` sugerido:
 
 ## Mover el espacio de trabajo a una nueva máquina
 
-1. Clone el repositorio en la ruta deseada (por defecto `~/.openclaw/workspace`).
-2. Establezca `agents.defaults.workspace` en esa ruta en `~/.openclaw/openclaw.json`.
-3. Ejecute `openclaw setup --workspace <path>` para inicializar cualquier archivo faltante.
-4. Si necesita las sesiones, copie `~/.openclaw/agents/<agentId>/sessions/` de la
+1. Clona el repositorio en la ruta deseada (por defecto `~/.openclaw/workspace`).
+2. Establece `agents.defaults.workspace` en esa ruta en `~/.openclaw/openclaw.json`.
+3. Ejecuta `openclaw setup --workspace <path>` para generar cualquier archivo faltante.
+4. Si necesitas sesiones, copia `~/.openclaw/agents/<agentId>/sessions/` de la
    máquina anterior por separado.
 
 ## Notas avanzadas
 
-- El enrutamiento multiagente puede usar diferentes espacios de trabajo por agente.
-  Vea [Enrutamiento de canales](/en/channels/channel-routing) para la configuración de enrutamiento.
-- Si `agents.defaults.sandbox` está habilitado, las sesiones que no son las principales pueden usar espacios de trabajo de sandbox por sesión bajo `agents.defaults.sandbox.workspaceRoot`.
+- El enrutamiento multiagente puede usar diferentes espacios de trabajo por agente. Consulta
+  [Channel routing](/en/channels/channel-routing) para la configuración de enrutamiento.
+- Si `agents.defaults.sandbox` está habilitado, las sesiones que no son principales pueden usar espacios de trabajo de sandbox por sesión
+  bajo `agents.defaults.sandbox.workspaceRoot`.
 
 ## Relacionado
 
-- [Standing Orders](/en/automation/standing-orders) — instrucciones persistentes en archivos del espacio de trabajo
+- [Standing Orders](/en/automation/standing-orders) — instrucciones persistentes en los archivos del espacio de trabajo
 - [Heartbeat](/en/gateway/heartbeat) — archivo del espacio de trabajo HEARTBEAT.md
-- [Session](/en/concepts/session) — rutas de almacenamiento de sesión
-- [Sandboxing](/en/gateway/sandboxing) — acceso al espacio de trabajo en entornos con sandbox
+- [Session](/en/concepts/session) — rutas de almacenamiento de sesiones
+- [Sandboxing](/en/gateway/sandboxing) — acceso al espacio de trabajo en entornos sandbox

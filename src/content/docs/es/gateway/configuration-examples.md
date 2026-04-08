@@ -9,7 +9,7 @@ title: "Ejemplos de configuración"
 
 # Ejemplos de configuración
 
-Los ejemplos a continuación se alinean con el esquema de configuración actual. Para obtener la referencia exhaustiva y notas por campo, consulte [Configuración](/en/gateway/configuration).
+Los ejemplos a continuación están alineados con el esquema de configuración actual. Para obtener la referencia exhaustiva y las notas por campo, consulte [Configuration](/en/gateway/configuration).
 
 ## Inicio rápido
 
@@ -67,19 +67,15 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
   // Auth profile metadata (secrets live in auth-profiles.json)
   auth: {
     profiles: {
-      "anthropic:me@example.com": {
-        provider: "anthropic",
-        mode: "oauth",
-        email: "me@example.com",
-      },
+      "anthropic:default": { provider: "anthropic", mode: "api_key" },
       "anthropic:work": { provider: "anthropic", mode: "api_key" },
       "openai:default": { provider: "openai", mode: "api_key" },
-      "openai-codex:default": { provider: "openai-codex", mode: "oauth" },
+      "openai-codex:personal": { provider: "openai-codex", mode: "oauth" },
     },
     order: {
-      anthropic: ["anthropic:me@example.com", "anthropic:work"],
+      anthropic: ["anthropic:default", "anthropic:work"],
       openai: ["openai:default"],
-      "openai-codex": ["openai-codex:default"],
+      "openai-codex": ["openai-codex:personal"],
     },
   },
 
@@ -240,7 +236,7 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
       userTimezone: "America/Chicago",
       model: {
         primary: "anthropic/claude-sonnet-4-6",
-        fallbacks: ["anthropic/claude-opus-4-6", "openai/gpt-5.2"],
+        fallbacks: ["anthropic/claude-opus-4-6", "openai/gpt-5.4"],
       },
       imageModel: {
         primary: "openrouter/anthropic/claude-sonnet-4-6",
@@ -248,8 +244,9 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
       models: {
         "anthropic/claude-opus-4-6": { alias: "opus" },
         "anthropic/claude-sonnet-4-6": { alias: "sonnet" },
-        "openai/gpt-5.2": { alias: "gpt" },
+        "openai/gpt-5.4": { alias: "gpt" },
       },
+      skills: ["github", "weather"], // inherited by agents that omit list[].skills
       thinkingDefault: "low",
       verboseDefault: "off",
       elevatedDefault: "on",
@@ -308,12 +305,14 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
       {
         id: "main",
         default: true,
+        // inherits defaults.skills -> github, weather
         thinkingDefault: "high", // per-agent thinking override
         reasoningDefault: "on", // per-agent reasoning visibility
         fastModeDefault: false, // per-agent fast mode
       },
       {
         id: "quick",
+        skills: [], // no skills for this agent
         fastModeDefault: true, // this agent always runs fast
         thinkingDefault: "off",
       },
@@ -446,7 +445,7 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
     },
     install: {
       preferBrew: true,
-      nodeManager: "npm",
+      nodeManager: "npm", // npm | pnpm | yarn | bun
     },
     entries: {
       "image-lab": {
@@ -461,6 +460,27 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
 ```
 
 ## Patrones comunes
+
+### Línea base de habilidades compartidas con una anulación
+
+```json5
+{
+  agents: {
+    defaults: {
+      workspace: "~/.openclaw/workspace",
+      skills: ["github", "weather"],
+    },
+    list: [
+      { id: "main", default: true },
+      { id: "docs", workspace: "~/.openclaw/workspace-docs", skills: ["docs-search"] },
+    ],
+  },
+}
+```
+
+- `agents.defaults.skills` es la línea base compartida.
+- `agents.list[].skills` reemplaza esa línea base para un agente.
+- Use `skills: []` cuando un agente no deba ver ninguna habilidad.
 
 ### Configuración multiplataforma
 
@@ -483,9 +503,9 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
 }
 ```
 
-### Modo de MD seguro (bandeja de entrada compartida / MD multiusuario)
+### Modo de MD seguro (bandeja de entrada compartida / MD de múltiples usuarios)
 
-Si más de una persona puede enviar MD a su bot (múltiples entradas en `allowFrom`, aprobaciones de emparejamiento para múltiples personas, o `dmPolicy: "open"`), habilite el **modo de MD seguro** para que los MD de diferentes remitentes no compartan un contexto de forma predeterminada:
+Si más de una persona puede enviar MD a su bot (múltiples entradas en `allowFrom`, aprobaciones de vinculación para múltiples personas, o `dmPolicy: "open"`), habilite el **modo de MD seguro** para que los MD de diferentes remitentes no compartan un contexto por defecto:
 
 ```json5
 {
@@ -509,59 +529,22 @@ Si más de una persona puede enviar MD a su bot (múltiples entradas en `allowFr
 }
 ```
 
-Para Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC, la autorización del remitente es prioritaria por ID de forma predeterminada.
-Solo habilite la coincidencia directa de nombre/correo/nick mutable con el `dangerouslyAllowNameMatching: true` de cada canal si acepta explícitamente ese riesgo.
+Para Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC, la autorización del remitente es por ID por defecto.
+Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutable con el `dangerouslyAllowNameMatching: true` de cada canal si acepta explícitamente ese riesgo.
 
-### OAuth con conmutación por error de clave API
+### Clave de API de Anthropic + respaldo de MiniMax
 
 ```json5
 {
   auth: {
     profiles: {
-      "anthropic:subscription": {
-        provider: "anthropic",
-        mode: "oauth",
-        email: "me@example.com",
-      },
       "anthropic:api": {
         provider: "anthropic",
         mode: "api_key",
       },
     },
     order: {
-      anthropic: ["anthropic:subscription", "anthropic:api"],
-    },
-  },
-  agent: {
-    workspace: "~/.openclaw/workspace",
-    model: {
-      primary: "anthropic/claude-sonnet-4-6",
-      fallbacks: ["anthropic/claude-opus-4-6"],
-    },
-  },
-}
-```
-
-### Token de configuración de Anthropic + clave API, conmutación por error a MiniMax
-
-<Warning>El uso del token de configuración de Anthropic fuera de Claude Code ha sido restringido para algunos usuarios en el pasado. Considere esto como un riesgo de elección del usuario y verifique los términos actuales de Anthropic antes de depender de la autenticación por suscripción.</Warning>
-
-```json5
-{
-  auth: {
-    profiles: {
-      "anthropic:subscription": {
-        provider: "anthropic",
-        mode: "oauth",
-        email: "user@example.com",
-      },
-      "anthropic:api": {
-        provider: "anthropic",
-        mode: "api_key",
-      },
-    },
-    order: {
-      anthropic: ["anthropic:subscription", "anthropic:api"],
+      anthropic: ["anthropic:api"],
     },
   },
   models: {

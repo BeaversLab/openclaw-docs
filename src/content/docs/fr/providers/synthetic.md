@@ -82,18 +82,20 @@ Tous les models ci-dessous utilisent le coût `0` (entrée/sortie/cache).
 | `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128000              | 8192       | false        | texte         |
 | `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524000              | 8192       | false        | texte         |
 | `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256000              | 8192       | false        | texte         |
+| `hf:moonshotai/Kimi-K2.5`                              | 256000              | 8192       | true         | texte + image |
 | `hf:openai/gpt-oss-120b`                               | 128000              | 8192       | false        | texte         |
 | `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256000              | 8192       | false        | texte         |
 | `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000              | 8192       | false        | texte         |
 | `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250000              | 8192       | false        | texte + image |
 | `hf:zai-org/GLM-4.5`                                   | 128000              | 128000     | false        | texte         |
 | `hf:zai-org/GLM-4.6`                                   | 198000              | 128000     | false        | texte         |
+| `hf:zai-org/GLM-5`                                     | 256000              | 128000     | true         | texte + image |
 | `hf:deepseek-ai/DeepSeek-V3`                           | 128000              | 8192       | false        | texte         |
 | `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000              | 8192       | true         | texte         |
 
 ## Notes
 
-- Les références de models utilisent `synthetic/<modelId>`.
-- Si vous activez une liste blanche de modèles (`agents.defaults.models`), ajoutez chaque modèle que vous
-  prévoyez d'utiliser.
+- Les références de modèle utilisent `synthetic/<modelId>`.
+- Si vous activez une liste blanche de modèles (`agents.defaults.models`), ajoutez chaque modèle que
+  vous prévoyez d'utiliser.
 - Voir [Model providers](/en/concepts/model-providers) pour les règles du provider.

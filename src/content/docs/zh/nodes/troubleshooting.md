@@ -80,17 +80,23 @@ openclaw approvals allowlist add --node <idOrNameOrIp> "/usr/bin/uname"
 
 节点配对是一个身份/信任关口，而不是按命令进行的批准界面。对于 `system.run`，按节点的策略位于该节点的 exec 批准文件 (`openclaw approvals get --node ...`) 中，而不是在网关配对记录中。
 
+对于基于批准的 `host=node` 运行，网关还会将执行绑定到
+准备好的规范 `systemRunPlan`。如果后续调用者在批准的运行被转发之前更改了 command/cwd 或
+会话元数据，网门将拒绝
+该运行，视其为批准不匹配，而不是信任被编辑的有效负载。
+
 ## 常见节点错误代码
 
-- `NODE_BACKGROUND_UNAVAILABLE` → 应用已后台运行；将其切换到前台。
-- `CAMERA_DISABLED` → 相机切换开关在节点设置中被禁用。
+- `NODE_BACKGROUND_UNAVAILABLE` → 应用处于后台；将其切换到前台。
+- `CAMERA_DISABLED` → 相机开关在节点设置中被禁用。
 - `*_PERMISSION_REQUIRED` → 缺少/被拒绝 OS 权限。
 - `LOCATION_DISABLED` → 定位模式已关闭。
 - `LOCATION_PERMISSION_REQUIRED` → 未授予请求的定位模式。
-- `LOCATION_BACKGROUND_UNAVAILABLE` → 应用已后台运行，但仅存在“使用期间”权限。
-- `SYSTEM_RUN_DENIED: approval required` → exec 请求需要明确批准。
+- `LOCATION_BACKGROUND_UNAVAILABLE` → 应用处于后台，但仅存在“使用时”权限。
+- `SYSTEM_RUN_DENIED: approval required` → exec 请求需要显式批准。
 - `SYSTEM_RUN_DENIED: allowlist miss` → 命令被允许列表模式阻止。
-  在 Windows 节点主机上，像 `cmd.exe /c ...` 这样的 shell 包装形式在允许列表模式下被视为允许列表未命中，除非通过请求流程获得批准。
+  在 Windows 节点主机上，如 `cmd.exe /c ...` 等 shell 包装形式将被视为允许列表遗漏，
+  在允许列表模式下，除非通过询问流程获得批准。
 
 ## 快速恢复循环
 

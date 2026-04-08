@@ -57,7 +57,7 @@ Le mode distant prend en charge deux transports :
 
 - Privilégiez les liaisons loopback sur l'hôte distant et connectez-vous via SSH ou Tailscale.
 - Le tunneling SSH utilise une vérification stricte de la clé de l'hôte ; faites confiance à la clé de l'hôte au préalable pour qu'elle existe dans `~/.ssh/known_hosts`.
-- Si vous liez la Gateway à une interface non loopback, exigez une authentification par jeton/mot de passe.
+- Si vous liez le Gateway à une interface non bouclée, exigez une authentification Gateway valide : jeton, mot de passe ou un proxy inverse conscient de l'identité avec `gateway.auth.mode: "trusted-proxy"`.
 - Voir [Sécurité](/en/gateway/security) et [Tailscale](/en/gateway/tailscale).
 
 ## Flux de connexion WhatsApp (distant)
@@ -67,7 +67,7 @@ Le mode distant prend en charge deux transports :
 
 ## Dépannage
 
-- **exit 127 / not found** : `openclaw` n'est pas dans le PATH pour les shells non-login. Ajoutez-le à `/etc/paths`, à votre rc de shell, ou créez un lien symbolique dans `/usr/local/bin`/`/opt/homebrew/bin`.
+- **exit 127 / not found** : `openclaw` n'est pas dans le PATH pour les shells non-login. Ajoutez-le à `/etc/paths`, votre rc de shell, ou créez un lien symbolique vers `/usr/local/bin`/`/opt/homebrew/bin`.
 - **Health probe failed** : vérifiez l'accessibilité SSH, le PATH, et que Baileys est connecté (`openclaw status --json`).
 - **Web Chat stuck** : confirmez que la passerelle fonctionne sur l'hôte distant et que le port transféré correspond au port WS de la passerelle ; l'interface nécessite une connexion WS saine.
 - **Node IP shows 127.0.0.1** : comportement attendu avec le tunnel SSH. Basculez le **Transport** sur **Direct (ws/wss)** si vous souhaitez que la passerelle voie la véritable adresse IP du client.
@@ -75,7 +75,7 @@ Le mode distant prend en charge deux transports :
 
 ## Sons de notification
 
-Choisissez des sons par notification depuis des scripts avec `openclaw` et `node.invoke`, par exemple :
+Choisissez les sons par notification depuis des scripts avec `openclaw` et `node.invoke`, par exemple :
 
 ```bash
 openclaw nodes notify --node <id> --title "Ping" --body "Remote gateway ready" --sound Glass

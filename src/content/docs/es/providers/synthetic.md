@@ -82,18 +82,20 @@ Todos los modelos de abajo usan el costo `0` (entrada/salida/caché).
 | `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128000              | 8192           | false        | texto          |
 | `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524000              | 8192           | false        | texto          |
 | `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256000              | 8192           | false        | texto          |
+| `hf:moonshotai/Kimi-K2.5`                              | 256000              | 8192           | true         | texto + imagen |
 | `hf:openai/gpt-oss-120b`                               | 128000              | 8192           | false        | texto          |
 | `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256000              | 8192           | false        | texto          |
 | `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000              | 8192           | false        | texto          |
 | `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250000              | 8192           | false        | texto + imagen |
 | `hf:zai-org/GLM-4.5`                                   | 128000              | 128000         | false        | texto          |
 | `hf:zai-org/GLM-4.6`                                   | 198000              | 128000         | false        | texto          |
+| `hf:zai-org/GLM-5`                                     | 256000              | 128000         | true         | texto + imagen |
 | `hf:deepseek-ai/DeepSeek-V3`                           | 128000              | 8192           | false        | texto          |
 | `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000              | 8192           | true         | texto          |
 
 ## Notas
 
 - Las referencias de modelos usan `synthetic/<modelId>`.
-- Si habilitas una lista de permitidos de modelos (`agents.defaults.models`), añade cada modelo que
-  planees usar.
-- Consulta [Model providers](/en/concepts/model-providers) para conocer las reglas de los proveedores.
+- Si habilita una lista blanca de modelos (`agents.defaults.models`), agregue cada modelo que
+  planea usar.
+- Consulte [Proveedores de modelos](/en/concepts/model-providers) para obtener las reglas del proveedor.

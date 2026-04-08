@@ -23,17 +23,17 @@ title: "Raspberry Pi"
 ## 設定
 
 <Steps>
-  <Step title="安裝作業系統">
-    請使用 **Raspberry Pi OS Lite (64-bit)** -- 無人頭伺服器不需要桌面環境。
+  <Step title="Flash the OS">
+    使用 **Raspberry Pi OS Lite (64-bit)** -- 無桌面環境的無頭伺服器不需要此功能。
 
     1. 下載 [Raspberry Pi Imager](https://www.raspberrypi.com/software/)。
     2. 選擇作業系統：**Raspberry Pi OS Lite (64-bit)**。
     3. 在設定對話方塊中，預先設定：
-       - 主機名稱：`gateway-host`
+       - 主機名稱： `gateway-host`
        - 啟用 SSH
        - 設定使用者名稱和密碼
-       - 設定 WiFi（如果不使用乙太網路）
-    4. 將系統刷入您的 SD 卡或 USB 隨身碟，插入並啟動 Pi。
+       - 設定 WiFi (如果不使用乙太網路)
+    4. 燒錄至您的 SD 卡或 USB 隨身碟，插入並啟動 Pi。
 
   </Step>
 
@@ -78,10 +78,10 @@ title: "Raspberry Pi"
 
   </Step>
 
-<Step title="驗證">```bash openclaw status sudo systemctl status openclaw journalctl -u openclaw -f ```</Step>
+<Step title="Verify">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
-  <Step title="存取控制介面">
-    在您的電腦上，從 Pi 獲取儀表板 URL：
+  <Step title="Access the Control UI">
+    在您的電腦上，從 Pi 取得儀表板 URL：
 
     ```bash
     ssh user@gateway-host 'openclaw dashboard --no-open'
@@ -93,14 +93,14 @@ title: "Raspberry Pi"
     ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
     ```
 
-    在您的本機瀏覽器中開啟列印出來的 URL。若要進行隨時遠端存取，請參閱 [Tailscale 整合](/en/gateway/tailscale)。
+    在您的本機瀏覽器中開啟列印出的 URL。若要進行永遠在線的遠端存取，請參閱 [Tailscale 整合](/en/gateway/tailscale)。
 
   </Step>
 </Steps>
 
 ## 效能提示
 
-**使用 USB SSD** -- SD 卡速度較慢且容易損壞。USB SSD 能大幅提升效能。請參閱 [Pi USB 開機指南](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot)。
+**使用 USB SSD** -- SD 卡速度慢且容易損壞。USB SSD 可大幅提升效能。請參閱 [Pi USB 開機指南](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot)。
 
 **啟用模組編譯快取** -- 在低功耗 Pi 主機上加速重複的 CLI 呼叫：
 
@@ -126,14 +126,14 @@ sudo systemctl disable bluetooth
 
 **效能緩慢** -- 使用 USB SSD 代替 SD 卡。使用 `vcgencmd get_throttled` 檢查 CPU 節流情況 (應傳回 `0x0`)。
 
-**服務無法啟動** -- 使用 `journalctl -u openclaw --no-pager -n 100` 檢查日誌並執行 `openclaw doctor --non-interactive`。
+**服務無法啟動** -- 使用 `journalctl --user -u openclaw-gateway.service --no-pager -n 100` 檢查日誌並執行 `openclaw doctor --non-interactive`。如果這是無頭 Pi，請同時驗證是否已啟用 lingering： `sudo loginctl enable-linger "$(whoami)"`。
 
-**ARM 二進位檔問題** -- 如果技能因「exec format error」而失敗，請檢查二進位檔是否有 ARM64 版本。使用 `uname -m` 驗證架構 (應顯示 `aarch64`)。
+**ARM 二進位檔問題** -- 如果某個技能失敗並顯示「exec format error」，請檢查該二進位檔是否有 ARM64 建置版本。使用 `uname -m` 驗證架構 (應顯示 `aarch64`)。
 
-**WiFi 斷線** -- 停用 WiFi 電源管理：`sudo iwconfig wlan0 power off`。
+**WiFi 斷線** -- 停用 WiFi 電源管理： `sudo iwconfig wlan0 power off`。
 
 ## 下一步
 
-- [頻道](/en/channels) -- 連接 Telegram、WhatsApp、Discord 等
-- [Gateway 設定](/en/gateway/configuration) -- 所有設定選項
-- [更新](/en/install/updating) -- 讓 OpenClaw 保持最新狀態
+- [Channels](/en/channels) -- 連接 Telegram、WhatsApp、Discord 等更多服務
+- [Gateway configuration](/en/gateway/configuration) -- 所有設定選項
+- [Updating](/en/install/updating) -- 讓 OpenClaw 保持最新狀態

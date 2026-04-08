@@ -48,8 +48,7 @@ les métadonnées d'extension `package.json` et `openclaw.plugin.json`, `tsconfi
 gateway sans forcer une reconstruction `tsdown` ; les modifications de source et de configuration reconstruisent toujours
 `dist` d'abord.
 
-Ajoutez tous les indicateurs CLI du gateway après `gateway:watch` et ils seront transmis à chaque
-redémarrage.
+Ajoutez tous les indicateurs CLI de passerelle après `gateway:watch` et ils seront transmis à chaque redémarrage. La réexécution de la même commande watch pour le même référentiel/ensemble d'indicateurs remplace désormais l'ancien observateur au lieu de laisser des parents d'observateur en double.
 
 ## Profil dev + gateway dev (--dev)
 

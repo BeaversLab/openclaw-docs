@@ -1,9 +1,9 @@
 ---
-summary: "Voice Call 外掛程式：透過 Twilio/Telnyx/Plivo 撥打外撥與內接電話（外掛程式安裝 + 設定 + CLI）"
+summary: "語音通話外掛：透過 Twilio/Telnyx/Plivo 撥打外撥與接聽來電（外掛安裝 + 設定 + CLI）"
 read_when:
   - You want to place an outbound voice call from OpenClaw
   - You are configuring or developing the voice-call plugin
-title: "Voice Call 外掛程式"
+title: "語音通話外掛"
 ---
 
 # Voice Call（外掛程式）
@@ -12,10 +12,10 @@ title: "Voice Call 外掛程式"
 
 目前支援的業者：
 
-- `twilio` (Programmable Voice + Media Streams)
-- `telnyx` (Call Control v2)
-- `plivo` (Voice API + XML 轉接 + GetInput 語音)
-- `mock` (開發/無網路)
+- `twilio` （可程式化語音 + 媒體串流）
+- `telnyx` （通話控制 v2）
+- `plivo` （語音 API + XML 轉接 + GetInput 語音）
+- `mock` （開發/無網路）
 
 快速概念模型：
 
@@ -52,7 +52,7 @@ cd "$PLUGIN_SRC" && pnpm install
 
 ## 設定
 
-在 `plugins.entries.voice-call.config` 下設定：
+在 `plugins.entries.voice-call.config` 下設定設定值：
 
 ```json5
 {
@@ -106,7 +106,16 @@ cd "$PLUGIN_SRC" && pnpm install
 
           streaming: {
             enabled: true,
+            provider: "openai", // optional; first registered realtime transcription provider when unset
             streamPath: "/voice/stream",
+            providers: {
+              openai: {
+                apiKey: "sk-...", // optional if OPENAI_API_KEY is set
+                model: "gpt-4o-transcribe",
+                silenceDurationMs: 800,
+                vadThreshold: 0.5,
+              },
+            },
             preStartTimeoutMs: 5000,
             maxPendingConnections: 32,
             maxPendingConnectionsPerIp: 4,
@@ -123,29 +132,82 @@ cd "$PLUGIN_SRC" && pnpm install
 
 - Twilio/Telnyx 需要一個 **公開可存取** 的 webhook URL。
 - Plivo 需要一個 **公開可存取** 的 webhook URL。
-- `mock` 是一個本機開發用業者（不進行網路呼叫）。
-- 除非 `skipSignatureVerification` 為 true，否則 Telnyx 需要 `telnyx.publicKey`（或 `TELNYX_PUBLIC_KEY`）。
+- `mock` 是本地開發供應商（無網路呼叫）。
+- 如果較舊的設定仍使用 `provider: "log"`、`twilio.from` 或舊版 `streaming.*` OpenAI 金鑰，請執行 `openclaw doctor --fix` 來重寫它們。
+- 除非 `skipSignatureVerification` 為 true，否則 Telnyx 需要 `telnyx.publicKey` （或 `TELNYX_PUBLIC_KEY`）。
 - `skipSignatureVerification` 僅供本機測試使用。
-- 如果您使用 ngrok 免費版，請將 `publicUrl` 設定為確切的 ngrok URL；簽章驗證始終會強制執行。
-- `tunnel.allowNgrokFreeTierLoopbackBypass: true` 僅在 `tunnel.provider="ngrok"` 且 `serve.bind` 為 loopback（ngrok 本機代理程式）時，才允許簽章無效的 Twilio webhook。僅供本機開發使用。
-- Ngrok 免費版網址可能會變更或加入插入式行為；如果 `publicUrl` 偏移，Twilio 簽章將會驗證失敗。正式環境建議使用穩定的網域或 Tailscale funnel。
+- 如果您使用 ngrok 免費版，請將 `publicUrl` 設定為確切的 ngrok URL；簽章驗證始終會被強制執行。
+- `tunnel.allowNgrokFreeTierLoopbackBypass: true` 僅在 `tunnel.provider="ngrok"` 且 `serve.bind` 為 loopback （ngrok 本地端代理程式）時，允許簽章無效的 Twilio webhook。僅供本地開發使用。
+- Ngrok 免費版 URL 可能會變更或加入插頁行為；如果 `publicUrl` 偏移，Twilio 簽章將會失敗。對於生產環境，建議使用穩定的網域或 Tailscale funnel。
 - 串流安全預設值：
-  - `streaming.preStartTimeoutMs` 會關閉從未傳送有效 `start` frame 的 socket。
-  - `streaming.maxPendingConnections` 限制未經驗證的啟動前 socket 總數。
-  - `streaming.maxPendingConnectionsPerIp` 限制每個來源 IP 的未經驗證的啟動前 socket 數量。
-  - `streaming.maxConnections` 限制總共開啟的媒體串流 socket 數量（處理中 + 作用中）。
+  - `streaming.preStartTimeoutMs` 會關閉從未傳送有效 `start` 框架的 socket。
+- `streaming.maxPendingConnections` 限制未驗證啟動前 socket 的總數。
+- `streaming.maxPendingConnectionsPerIp` 限制每個來源 IP 未驗證啟動前 socket 的數量。
+- `streaming.maxConnections` 限制開啟中媒體串流 socket （待處理 + 作用中）的總數。
+- 執行時期回退目前仍接受那些舊的 voice-call 金鑰，但重寫路徑為 `openclaw doctor --fix`，且相容性填充層只是暫時的。
+
+## 串流轉錄
+
+`streaming` 選擇即時通話音訊的轉錄供應商。
+
+目前執行時行為：
+
+- `streaming.provider` 是選填的。如果未設定，語音通話將使用第一個註冊的即時轉錄供應商。
+- 目前內建的供應商是 OpenAI，由內建的 `openai` 外掛程式註冊。
+- 供應商擁有的原始設定位於 `streaming.providers.<providerId>` 之下。
+- 如果 `streaming.provider` 指向未註冊的供應商，或者根本沒有註冊任何即時轉錄供應商，語音通話會記錄警告並跳過媒體串流，而不是導致整個外掛程式失敗。
+
+OpenAI 串流轉錄預設值：
+
+- API 金鑰： `streaming.providers.openai.apiKey` 或 `OPENAI_API_KEY`
+- 模型： `gpt-4o-transcribe`
+- `silenceDurationMs`: `800`
+- `vadThreshold`: `0.5`
+
+範例：
+
+```json5
+{
+  plugins: {
+    entries: {
+      "voice-call": {
+        config: {
+          streaming: {
+            enabled: true,
+            provider: "openai",
+            streamPath: "/voice/stream",
+            providers: {
+              openai: {
+                apiKey: "sk-...", // optional if OPENAI_API_KEY is set
+                model: "gpt-4o-transcribe",
+                silenceDurationMs: 800,
+                vadThreshold: 0.5,
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+}
+```
+
+舊版金鑰仍會由 `openclaw doctor --fix` 自動遷移：
+
+- `streaming.sttProvider` → `streaming.provider`
+- `streaming.openaiApiKey` → `streaming.providers.openai.apiKey`
+- `streaming.sttModel` → `streaming.providers.openai.model`
+- `streaming.silenceDurationMs` → `streaming.providers.openai.silenceDurationMs`
+- `streaming.vadThreshold` → `streaming.providers.openai.vadThreshold`
 
 ## 過期通話收割器
 
-使用 `staleCallReaperSeconds` 來結束從未收到終結 webhook 的通話
-（例如，從未完成的通知模式通話）。預設值為 `0`
-（已停用）。
+使用 `staleCallReaperSeconds` 來結束從未收到終止 webhook 的通話（例如，從未完成的通話模式）。預設值為 `0`（已停用）。
 
 建議範圍：
 
-- **正式環境：** 通知流程為 `120`–`300` 秒。
-- 將此數值保持在 **高於 `maxDurationSeconds`**，以便正常通話能夠
-  完成一個不錯的起始點是 `maxDurationSeconds + 30–60` 秒。
+- **正式環境：** 通知式流程 `120`–`300` 秒。
+- 將此值保持 **高於 `maxDurationSeconds`**，以便正常通話可以完成。一個好的起點是 `maxDurationSeconds + 30–60` 秒。
 
 範例：
 
@@ -166,27 +228,23 @@ cd "$PLUGIN_SRC" && pnpm install
 
 ## Webhook 安全性
 
-當 Proxy 或通道位於 Gateway 前端時，外掛程式會重建用於簽章驗證的
-公開 URL。這些選項控制信任哪些轉發標頭。
+當 Proxy 或通道位於 Gateway 前方時，外掛程式會重建公開 URL 以進行簽章驗證。這些選項控制信任哪些轉送標頭。
 
-`webhookSecurity.allowedHosts` 將轉發標頭中的主機加入允許清單。
+`webhookSecurity.allowedHosts` 從轉送標頭將主機加入允許清單。
 
-`webhookSecurity.trustForwardingHeaders` 在沒有允許清單的情況下信任轉發標頭。
+`webhookSecurity.trustForwardingHeaders` 在沒有允許清單的情況下信任轉發的標頭。
 
-`webhookSecurity.trustedProxyIPs` 僅在請求遠端 IP 符合清單時才信任轉發標頭。
+`webhookSecurity.trustedProxyIPs` 僅在請求遠端 IP 符合清單時信任轉發的標頭。
 
-Twilio 和 Plivo 已啟用 Webhook 重放保護。重放的有效 Webhook
-請求將會被確認，但會跳過副作用。
+Twilio 和 Plivo 已啟用 Webhook 重新傳播保護。重新傳播的有效 Webhook 請求會被確認，但會跳過副作用。
 
-Twilio 對話回合在 `<Gather>` 回呼中包含每個回合的權杖，因此
-過期/重放的語音回呼無法滿足較新的待處理文字記錄回合。
+Twilio 對話輪次在 `<Gather>` 回呼中包含每個輪次的權杖，因此過時/重新傳播的語音回呼無法滿足較新的待處理文字記錄輪次。
 
-當提供者所需的簽章標頭缺失時，未經驗證的 webhook 請求會在讀取內文之前被拒絕。
+當缺少提供者所需的簽章標頭時，未經驗證的 Webhook 請求會在讀取主體之前被拒絕。
 
-Voice-call webhook 使用共享的預先驗證內文設定檔（64 KB / 5 秒），
-以及在簽章驗證之前的每個 IP 進行中請求上限。
+語音通話 Webhook 在簽章驗證之前使用共享的預先驗證主體設定檔（64 KB / 5 秒）加上每個 IP 的進行中上限。
 
-具有穩定公開主機的範例：
+使用穩定公開主機的範例：
 
 ```json5
 {
@@ -207,8 +265,7 @@ Voice-call webhook 使用共享的預先驗證內文設定檔（64 KB / 5 秒）
 
 ## 通話的 TTS
 
-Voice Call 使用核心 `messages.tts` 設定在通話上進行
-語音串流。您可以使用 **相同的結構** 在外掛設定下覆寫它 — 它會與 `messages.tts` 深度合併。
+語音通話使用核心 `messages.tts` 設定來進行通話中的串流語音。您可以使用**相同的結構**在插件設定下覆寫它 —— 它會與 `messages.tts` 深度合併。
 
 ```json5
 {
@@ -226,15 +283,15 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
 
 備註：
 
-- 外掛程式設定內的舊版 `tts.<provider>` 金鑰 (`openai`, `elevenlabs`, `microsoft`, `edge`) 會在載入時自動遷移至 `tts.providers.<provider>`。建議在提交的設定中優先使用 `providers` 格式。
-- **語音通話會忽略 Microsoft 語音**（電話音訊需要 PCM；目前的 Microsoft 傳輸方式不公開電話 PCM 輸出）。
-- 啟用 Twilio 媒體串流時會使用核心 TTS；否則通話會退回至提供者原生的語音。
-- 如果 Twilio 媒體串流已經啟用，Voice Call 不會退回至 TwiML `<Say>`。如果在此狀態下無法使用電話 TTS，播放請求將會失敗，而不是混合兩條播放路徑。
-- 當電話 TTS 退回至次要提供者時，Voice Call 會記錄包含提供者鏈 (`from`, `to`, `attempts`) 的警告以供偵錯。
+- 插件設定內的舊版 `tts.<provider>` 金鑰（`openai`、`elevenlabs`、`microsoft`、`edge`）會在載入時自動遷移至 `tts.providers.<provider>`。在提交的設定中偏好使用 `providers` 結構。
+- **語音通話會忽略 Microsoft 語音**（電話語音需要 PCM；目前的 Microsoft 傳輸方式不公開電話 PCM 輸出）。
+- 當啟用 Twilio 媒體串流時會使用核心 TTS；否則通話會退回至提供者原生的語音。
+- 如果 Twilio 媒體串流已啟用，語音通話不會退回至 TwiML `<Say>`。如果在該狀態下無法使用電話 TTS，播放請求將會失敗，而不是混合兩條播放路徑。
+- 當電話 TTS 退回至次要提供者時，語音通話會記錄包含提供者鏈結（`from`、`to`、`attempts`）的警告以利除錯。
 
 ### 更多範例
 
-僅使用核心 TTS（無覆寫）：
+僅使用核心 TTS（不覆寫）：
 
 ```json5
 {
@@ -249,7 +306,7 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
 }
 ```
 
-僅針對通話覆寫為 ElevenLabs（其他地方保持核心預設）：
+僅針對通話覆寫為 ElevenLabs（其他地方保持核心預設值）：
 
 ```json5
 {
@@ -274,7 +331,7 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
 }
 ```
 
-僅覆寫通話的 OpenAI 模型（深度合併範例）：
+僅針對通話覆寫 OpenAI 模型（深度合併範例）：
 
 ```json5
 {
@@ -299,7 +356,7 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
 
 ## 來電
 
-來電原則預設為 `disabled`。若要啟用來電，請設定：
+入站政策預設為 `disabled`。若要啟用入站通話，請設定：
 
 ```json5
 {
@@ -309,43 +366,43 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
 }
 ```
 
-`inboundPolicy: "allowlist"` 是一個低保驗證的來電顯示篩選器。此外掛程式會將提供者提供的 `From` 值標準化，並將其與 `allowFrom` 進行比較。
-Webhook 驗證會驗證提供者傳送和負載的完整性，但它無法證明 PSTN/VoIP 來電號碼的所有權。請將 `allowFrom` 視為來電顯示篩選，而非強力的來電身份驗證。
+`inboundPolicy: "allowlist"` 是一個低保真度的來電 ID 篩選器。外掛程式會將供應商提供的 `From` 值標準化，並與 `allowFrom` 進行比對。
+Webhook 驗證會驗證供應商的傳遞與 payload 完整性，但無法證明 PSTN/VoIP 來電號碼的所有權。請將 `allowFrom` 視為來電 ID 篩選，而非強力來電身分驗證。
 
-自動回應使用代理系統。請透過以下方式調整：
+自動回應使用代理系統。可透過以下方式調整：
 
 - `responseModel`
 - `responseSystemPrompt`
 - `responseTimeoutMs`
 
-### 口語輸出合約
+### 語音輸出契約
 
-對於自動回應，Voice Call 會在系統提示詞中附加嚴格的口語輸出合約：
+針對自動回應，Voice Call 會在系統提示詞中附加嚴格的語音輸出契約：
 
 - `{"spoken":"..."}`
 
-然後 Voice Call 會防禦性地提取語音文字：
+Voice Call 接著會以防禦方式擷取語音文字：
 
-- 忽略標記為推理/錯誤內容的負載。
-- 解析直接 JSON、圍籬 JSON 或行內 `"spoken"` 金鑰。
-- 會回退為純文字並移除可能的規劃/元資訊前導段落。
+- 忽略標記為推理/錯誤內容的 payload。
+- 解析直接 JSON、圍欄 JSON 或內聯 `"spoken"` 鍵。
+- 會降級為純文字，並移除可能是規劃/元資料的前導段落。
 
-這樣可以保持語音播放專注於面向呼叫者的文字，並避免將規劃文字洩漏到音訊中。
+這能讓語音播放專注於面向來電者的文字，並避免規劃文字外洩到音訊中。
 
 ### 對話啟動行為
 
-對於 `conversation` 呼出，首則訊息的處理與即時播放狀態綁定：
+針對 `conversation` 的出站通話，首則訊息的處理與即時播放狀態相關聯：
 
-- 插隊佇列清除與自動回應僅在初始問候語正在播放時受到抑制。
-- 如果初始播放失敗，通話會返回 `listening` 狀態，且初始訊息會保留在佇列中以供重試。
-- Twilio 串流的初始播放會在串流連線建立時立即開始，無額外延遲。
+- 僅在初始問候語正在播放時，才會抑制插隊佇列清除與自動回應。
+- 如果初始播放失敗，通話會回到 `listening`，而初始訊息則保留在佇列中以備重試。
+- Twilio 串流的初始播放會在串流連線時開始，無額外延遲。
 
 ### Twilio 串流斷線寬限期
 
-當 Twilio 媒體串流斷線時，Voice Call 會等待 `2000ms` 才自動結束通話：
+當 Twilio 媒體串流斷線時，Voice Call 會等待 `2000ms` 再自動結束通話：
 
-- 如果串流在該期間內重新連線，將取消自動結束。
-- 如果寬限期過後沒有重新註冊串流，將結束通話以防止卡在活躍狀態。
+- 如果在該時間範圍內串流重新連線，則會取消自動結束。
+- 如果在寬限期後沒有重新註冊串流，則會結束通話以防止通話卡在啟用狀態。
 
 ## CLI
 
@@ -361,10 +418,10 @@ openclaw voicecall latency                     # summarize turn latency from log
 openclaw voicecall expose --mode funnel
 ```
 
-`latency` 會從預設的 voice-call 儲存路徑讀取 `calls.jsonl`。使用
-`--file <path>` 指向不同的日誌，並使用 `--last <n>` 將分析限制
-在最後 N 筆記錄（預設為 200）。輸出包含回合延遲
-和聆聽等待時間的 p50/p90/p99 數值。
+`latency` 從預設的 voice-call 儲存路徑讀取 `calls.jsonl`。使用
+`--file <path>` 指向不同的日誌，並使用 `--last <n>` 將分析
+限制在最近 N 筆記錄（預設為 200）。輸出包含輪次延遲
+和聆聽等待時間的 p50/p90/p99。
 
 ## 代理工具
 
@@ -378,9 +435,9 @@ openclaw voicecall expose --mode funnel
 - `end_call` (callId)
 - `get_status` (callId)
 
-此儲存庫在 `skills/voice-call/SKILL.md` 提供了相應的技能文件。
+此儲存庫在 `skills/voice-call/SKILL.md` 提供了相符的技能文件。
 
-## 閘道 RPC
+## Gateway RPC
 
 - `voicecall.initiate` (`to?`, `message`, `mode?`)
 - `voicecall.continue` (`callId`, `message`)

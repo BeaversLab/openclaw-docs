@@ -19,7 +19,7 @@ Mac 上的默認運行時是 Node 24。目前的 Node 22 LTS（`22.14+`）出於
 npm install -g openclaw@<version>
 ```
 
-macOS 應用程式的 **「安裝 CLI」** 按鈕會透過 npm/pnpm 執行相同的流程（不建議用於 Gateway 運行時）。
+macOS 應用程式的 **Install CLI** 按鈕會執行與應用程式內部相同的全域安裝流程：它優先使用 npm，然後是 pnpm，如果偵測到的套件管理器只有 bun，則使用 bun。Node 仍是建議的 Gateway 執行環境。
 
 ## Launchd（Gateway 作為 LaunchAgent）
 

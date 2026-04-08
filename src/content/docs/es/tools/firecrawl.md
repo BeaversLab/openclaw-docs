@@ -56,8 +56,10 @@ Notas:
 - Elegir Firecrawl en la incorporación o `openclaw configure --section web` habilita automáticamente el complemento Firecrawl incluido.
 - `web_search` con Firecrawl admite `query` y `count`.
 - Para controles específicos de Firecrawl como `sources`, `categories`, o el raspado de resultados, use `firecrawl_search`.
+- Las anulaciones de `baseUrl` deben permanecer en `https://api.firecrawl.dev`.
+- `FIRECRAWL_BASE_URL` es el respaldo de entorno compartido para las URL base de búsqueda y extracción de Firecrawl.
 
-## Configurar raspado de Firecrawl + alternativa web_fetch
+## Configurar el respaldo de extracción (scrape) de Firecrawl + web_fetch
 
 ```json5
 {
@@ -65,18 +67,14 @@ Notas:
     entries: {
       firecrawl: {
         enabled: true,
-      },
-    },
-  },
-  tools: {
-    web: {
-      fetch: {
-        firecrawl: {
-          apiKey: "FIRECRAWL_API_KEY_HERE",
-          baseUrl: "https://api.firecrawl.dev",
-          onlyMainContent: true,
-          maxAgeMs: 172800000,
-          timeoutSeconds: 60,
+        config: {
+          webFetch: {
+            apiKey: "FIRECRAWL_API_KEY_HERE",
+            baseUrl: "https://api.firecrawl.dev",
+            onlyMainContent: true,
+            maxAgeMs: 172800000,
+            timeoutSeconds: 60,
+          },
         },
       },
     },
@@ -86,17 +84,18 @@ Notas:
 
 Notas:
 
-- `firecrawl.enabled` por defecto es `true` a menos que se establezca explícitamente en `false`.
-- Los intentos de alternativa de Firecrawl se ejecutan solo cuando hay una clave de API disponible (`tools.web.fetch.firecrawl.apiKey` o `FIRECRAWL_API_KEY`).
+- Los intentos de respaldo de Firecrawl se ejecutan solo cuando hay una clave API disponible (`plugins.entries.firecrawl.config.webFetch.apiKey` o `FIRECRAWL_API_KEY`).
 - `maxAgeMs` controla la antigüedad máxima de los resultados en caché (ms). El valor predeterminado es 2 días.
+- La configuración heredada de `tools.web.fetch.firecrawl.*` se migra automáticamente mediante `openclaw doctor --fix`.
+- Las anulaciones de la URL base/extracción de Firecrawl están restringidas a `https://api.firecrawl.dev`.
 
-`firecrawl_scrape` reutiliza la misma configuración y variables de entorno de `tools.web.fetch.firecrawl.*`.
+`firecrawl_scrape` reutiliza la misma configuración y las mismas variables de entorno de `plugins.entries.firecrawl.config.webFetch.*`.
 
 ## Herramientas del complemento Firecrawl
 
 ### `firecrawl_search`
 
-Use esto cuando desee controles de búsqueda específicos de Firecrawl en lugar de `web_search` genérico.
+Use esto cuando desee controles de búsqueda específicos de Firecrawl en lugar de `web_search` genéricos.
 
 Parámetros principales:
 
@@ -124,21 +123,23 @@ Parámetros principales:
 
 ## Sigilo / evasión de bots
 
-Firecrawl expone un parámetro de **modo proxy** para la evasión de bots (`basic`, `stealth` o `auto`).
+Firecrawl expone un parámetro de **modo de proxy** para la evasión de bots (`basic`, `stealth` o `auto`).
 OpenClaw siempre usa `proxy: "auto"` más `storeInCache: true` para las solicitudes de Firecrawl.
 Si se omite el proxy, Firecrawl usa por defecto `auto`. `auto` reintentará con proxies sigilosos si falla un intento básico, lo que puede usar más créditos
-que el scraping básico únicamente.
+que la extracción solo básica.
 
 ## Cómo `web_fetch` usa Firecrawl
 
 Orden de extracción de `web_fetch`:
 
-1. Readability (local)
-2. Firecrawl (si está configurado)
-3. Limpieza básica de HTML (último recurso)
+1. Legibilidad (local)
+2. Firecrawl (si se selecciona o se detecta automáticamente como la alternativa de recuperación web activa)
+3. Limpieza básica de HTML (última alternativa)
+
+El control de selección es `tools.web.fetch.provider`. Si lo omite, OpenClaw detecta automáticamente el primer proveedor de recuperación web listo a partir de las credenciales disponibles. Hoy, el proveedor incluido es Firecrawl.
 
 ## Relacionado
 
-- [Resumen de búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
-- [Web Fetch](/en/tools/web-fetch) -- herramienta web_fetch con respaldo Firecrawl
+- [Información general de búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
+- [Recuperación web](/en/tools/web-fetch) -- herramienta web_fetch con alternativa a Firecrawl
 - [Tavily](/en/tools/tavily) -- herramientas de búsqueda y extracción

@@ -1,5 +1,5 @@
 ---
-summary: "Protocole de pont (nœuds hérités) : TCP JSONL, appairage, RPC étendu"
+summary: "Protocole de pont historique (nœuds hérités) : TCP JSONL, appariement, RPC délimité"
 read_when:
   - Building or debugging node clients (iOS/Android/macOS node mode)
   - Investigating pairing or bridge auth failures
@@ -9,9 +9,9 @@ title: "Protocole de pont"
 
 # Protocole de pont (transport de nœud hérité)
 
-<Warning>Le pont TCP a été **supprimé**. Les versions actuelles d'OpenClaw n'incluent plus l'écouteur de pont et les clés de configuration `bridge.*` ne sont plus dans le schéma. Cette page est conservée uniquement à des fins historiques. Utilisez le [Protocole Gateway](/en/gateway/protocol) pour tous les clients nœuds/opérateurs.</Warning>
+<Warning>Le pont TCP a été **supprimé**. Les versions actuelles d'OpenClaw n'incluent plus le listener de pont et les clés de configuration `bridge.*` ne sont plus dans le schéma. Cette page est conservée uniquement à des fins historiques. Utilisez le [protocole Gateway](/en/gateway/protocol) pour tous les clients nœud/opérateur.</Warning>
 
-## Pourquoi nous avons les deux
+## Pourquoi il existait
 
 - **Limite de sécurité** : le pont expose une petite liste blanche au lieu de l'intégralité de la surface de l'API du gateway.
 - **Jumelage + identité du nœud** : l'admission du nœud est gérée par le gateway et liée à un jeton par nœud.
@@ -22,7 +22,8 @@ title: "Protocole de pont"
 
 - TCP, un objet JSON par ligne (JSONL).
 - TLS optionnel (lorsque `bridge.tls.enabled` est vrai).
-- Le port d'écoute par défaut hérité était `18790` (les versions actuelles ne démarront pas de pont TCP).
+- Le port d'écoute par défaut historique était `18790` (les versions actuelles ne démarrent pas de
+  pont TCP).
 
 Lorsque le TLS est activé, les enregistrements TXT de découverte incluent `bridgeTls=1` plus
 `bridgeTlsSha256` comme un indice non secret. Notez que les enregistrements TXT Bonjour/mDNS ne sont pas authentifiés ; les clients ne doivent pas traiter l'empreinte digitale annoncée comme une épingle autoritaire sans intention explicite de l'utilisateur ou une autre vérification hors bande.
@@ -34,7 +35,8 @@ Lorsque le TLS est activé, les enregistrements TXT de découverte incluent `bri
 3. Le client envoie `pair-request`.
 4. Le Gateway attend l'approbation, puis envoie `pair-ok` et `hello-ok`.
 
-`hello-ok` renvoie `serverName` et peut inclure `canvasHostUrl`.
+Historiquement, `hello-ok` renvoyait `serverName` et pouvait inclure
+`canvasHostUrl`.
 
 ## Trames
 
@@ -65,15 +67,16 @@ Champs de charge utile (tous optionnels sauf indication contraire) :
 - `exitCode`, `timedOut`, `success`, `output` : détails de l'achèvement (terminé uniquement).
 - `reason` : motif du refus (refusé uniquement).
 
-## Utilisation de Tailnet
+## Utilisation historique du tailnet
 
-- Liez le pont à une IP tailnet : `bridge.bind: "tailnet"` dans
-  `~/.openclaw/openclaw.json`.
+- Lier le pont à une IP de tailnet : `bridge.bind: "tailnet"` dans
+  `~/.openclaw/openclaw.json` (historique uniquement ; `bridge.*` n'est plus valide).
 - Les clients se connectent via le nom MagicDNS ou l'IP tailnet.
 - Bonjour ne traverse **pas** les réseaux ; utilisez l'hôte/port manuel ou le DNS‑SD étendu
   si nécessaire.
 
 ## Versionnage
 
-Le pont est actuellement en **v1 implicite** (sans négociation min/max). La compatibilité descendante
-est attendue ; ajoutez un champ de version du protocole de pont avant tout changement cassant.
+Le pont était en **v1 implicite** (sans négociation min/max). Cette section est
+une référence historique uniquement ; les clients nœud/opérateur actuels utilisent le WebSocket
+[protocole Gateway](/en/gateway/protocol).

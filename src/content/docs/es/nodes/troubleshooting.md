@@ -80,18 +80,23 @@ Si el emparejamiento está bien pero `system.run` falla, corrija las aprobacione
 
 El emparejamiento de nodos es una puerta de identidad/confianza, no una superficie de aprobación por comando. Para `system.run`, la política por nodo reside en el archivo de aprobaciones de ejecución de ese nodo (`openclaw approvals get --node ...`), no en el registro de emparejamiento de la puerta de enlace.
 
+Para ejecuciones `host=node` respaldadas por aprobaciones, la puerta de enlace también vincula la ejecución al
+`systemRunPlan` canónico preparado. Si un interlocutor posterior muta el comando/cwd o
+los metadatos de la sesión antes de que se reenvíe la ejecución aprobada, la puerta de enlace rechaza la
+ejecución como una discrepancia de aprobación en lugar de confiar en la carga útil editada.
+
 ## Códigos de error comunes de nodos
 
-- `NODE_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano; póngala en primer plano.
-- `CAMERA_DISABLED` → el interruptor de cámara está deshabilitado en la configuración del nodo.
+- `NODE_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano; tráela a primer plano.
+- `CAMERA_DISABLED` → el interruptor de cámara está desactivado en la configuración del nodo.
 - `*_PERMISSION_REQUIRED` → permiso del SO faltante/denegado.
 - `LOCATION_DISABLED` → el modo de ubicación está desactivado.
 - `LOCATION_PERMISSION_REQUIRED` → modo de ubicación solicitado no otorgado.
-- `LOCATION_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano pero solo existe el permiso Mientras se usa.
+- `LOCATION_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano, pero solo existe el permiso Mientras se usa.
 - `SYSTEM_RUN_DENIED: approval required` → la solicitud de ejecución necesita aprobación explícita.
 - `SYSTEM_RUN_DENIED: allowlist miss` → comando bloqueado por el modo de lista de permitidos.
-  En los hosts de nodo Windows, las formas de contenedor de shell como `cmd.exe /c ...` se tratan como fallos en la lista de permitidos en
-  modo de lista de permitidos a menos que se aprueben mediante el flujo de solicitud.
+  En los hosts de nodos Windows, las formas de envoltorio de shell como `cmd.exe /c ...` se tratan como fallos de lista de permitidos en
+  el modo de lista de permitidos a menos que se aprueben mediante el flujo ask.
 
 ## Bucle de recuperación rápida
 
@@ -105,9 +110,9 @@ openclaw logs --follow
 Si sigue atascado:
 
 - Volver a aprobar el emparejamiento del dispositivo.
-- Volver a abrir la aplicación del nodo (en primer plano).
+- Volver a abrir la aplicación del nodo (primer plano).
 - Volver a otorgar permisos del SO.
-- Recrear/ajustar la política de aprobación de ejecución.
+- Volver a crear/ajustar la política de aprobación de ejecución.
 
 Relacionado:
 

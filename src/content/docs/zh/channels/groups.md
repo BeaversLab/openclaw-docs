@@ -36,40 +36,62 @@ requireMention? yes -> mentioned? no -> store for context only
 otherwise -> reply
 ```
 
-![群消息流程](/images/groups-flow.svg)
+## 上下文可见性和允许列表
+
+群组安全涉及两种不同的控制：
+
+- **触发授权**：谁可以触发代理（`groupPolicy`、`groups`、`groupAllowFrom`、特定渠道的允许列表）。
+- **上下文可见性**：将哪些补充上下文注入到模型中（回复文本、引用、线程历史、转发元数据）。
+
+默认情况下，OpenClaw 优先考虑正常的聊天行为，并基本保持接收到的上下文不变。这意味着允许列表主要决定谁可以触发操作，而不是作为每个引用或历史片段的通用编辑边界。
+
+当前行为因渠道而异：
+
+- 某些渠道已针对特定路径中的补充上下文应用基于发送者的过滤（例如 Slack 线程植入、Matrix 回复/线程查找）。
+- 其他渠道仍按接收到的原样传递引用/回复/转发上下文。
+
+加固方向（计划中）：
+
+- `contextVisibility: "all"`（默认）保持当前按接收原样处理的行为。
+- `contextVisibility: "allowlist"` 将补充上下文过滤为仅包含允许列表中的发送者。
+- `contextVisibility: "allowlist_quote"` 是 `allowlist` 加上一个显式的引用/回复例外。
+
+在此加固模型在各个渠道一致实施之前，预期不同表现层会存在差异。
+
+![群组消息流程](/images/groups-flow.svg)
 
 如果您想要...
 
-| 目标                           | 设置内容                                                   |
-| ------------------------------ | ---------------------------------------------------------- |
-| 允许所有群组但仅在 @提及时回复 | `groups: { "*": { requireMention: true } }`                |
-| 禁用所有群组回复               | `groupPolicy: "disabled"`                                  |
-| 仅限特定群组                   | `groups: { "<group-id>": { ... } }`（没有 `"*"` 键）       |
-| 只有你可以在群组中触发         | `groupPolicy: "allowlist"`，`groupAllowFrom: ["+1555..."]` |
+| 目标                                | 设置方法                                                   |
+| ----------------------------------- | ---------------------------------------------------------- |
+| 允许所有群组但仅在 @mentions 时回复 | `groups: { "*": { requireMention: true } }`                |
+| 禁用所有群组回复                    | `groupPolicy: "disabled"`                                  |
+| 仅限特定群组                        | `groups: { "<group-id>": { ... } }`（无 `"*"` 键）         |
+| 只有您可以在群组中触发              | `groupPolicy: "allowlist"`、`groupAllowFrom: ["+1555..."]` |
 
 ## 会话密钥
 
-- 群组会话使用 `agent:<agentId>:<channel>:group:<id>` 会话键（房间/频道使用 `agent:<agentId>:<channel>:channel:<id>`）。
-- Telegram 论坛主题会在群组 ID 后添加 `:topic:<threadId>`，以便每个主题都有自己的会话。
+- 群组会话使用 `agent:<agentId>:<channel>:group:<id>` 会话密钥（房间/渠道使用 `agent:<agentId>:<channel>:channel:<id>`）。
+- Telegram 论坛主题会将 `:topic:<threadId>` 添加到群组 ID，以便每个主题都有自己的会话。
 - 直接聊天使用主会话（如果配置了，则使用每个发送者的会话）。
-- 跳过群组会话的心跳检测。
+- 群组会话跳过心跳检测。
 
 <a id="pattern-personal-dms-public-groups-single-agent"></a>
 
-## 模式：个人私信 + 公开群组（单代理）
+## 模式：个人私信 + 公共群组（单个代理）
 
-是的 — 如果您的“个人”流量是**私信**而“公开”流量是**群组**，这非常适用。
+是的 —— 如果您的“个人”流量是 **私信**，而“公共”流量是 **群组**，这种模式效果很好。
 
-原因：在单代理模式下，私信通常落在**主**会话键（`agent:main:main`）中，而群组始终使用**非主**会话键（`agent:main:<channel>:group:<id>`）。如果您使用 `mode: "non-main"` 启用沙箱隔离，这些群组会话将在 Docker 中运行，而您的主私信会话则保留在主机上。
+原因：在单代理模式下，私信通常会进入 **主** 会话密钥 (`agent:main:main`)，而群组总是使用 **非主** 会话密钥 (`agent:main:<channel>:group:<id>`)。如果您使用 `mode: "non-main"` 启用沙箱隔离，这些群组会话将在 Docker 中运行，而您的主私信会话则保留在主机上。
 
 这为您提供了一个代理“大脑”（共享工作区 + 内存），但有两种执行姿态：
 
 - **私信**：完整工具（主机）
-- **群组**：沙箱 + 受限工具（Docker）
+- **群组**：沙箱 + 受限工具
 
-> 如果您需要真正独立的工作区/角色（“个人”和“公开”绝不能混合），请使用第二个代理 + 绑定。请参阅[多代理路由](/en/concepts/multi-agent)。
+> 如果您需要真正独立的工作区/人设（“个人”和“公共”绝不能混合），请使用第二个代理 + 绑定。请参阅 [Multi-Agent Routing](/en/concepts/multi-agent)。
 
-示例（私信在主机上，群组已沙箱隔离 + 仅消息工具）：
+示例（主机上的私信，群组沙箱隔离 + 仅限消息工具）：
 
 ```json5
 {
@@ -94,7 +116,7 @@ otherwise -> reply
 }
 ```
 
-希望“群组只能看到文件夹 X”而不是“无主机访问权限”？保留 `workspaceAccess: "none"` 并且仅将允许列表中的路径挂载到沙箱中：
+想要“群组只能看到文件夹 X”而不是“无主机访问”？保留 `workspaceAccess: "none"` 并仅将允许列表中的路径挂载到沙箱中：
 
 ```json5
 {
@@ -178,34 +200,34 @@ otherwise -> reply
 
 | 策略          | 行为                                  |
 | ------------- | ------------------------------------- |
-| `"open"`      | 群组绕过允许列表；提及门控仍然适用。  |
+| `"open"`      | 群组绕过允许列表；提及限制仍然适用。  |
 | `"disabled"`  | 完全阻止所有群组消息。                |
-| `"allowlist"` | 仅允许匹配所配置允许列表的群组/房间。 |
+| `"allowlist"` | 仅允许匹配配置的允许列表的群组/房间。 |
 
-注意：
+注：
 
-- `groupPolicy` 与提及门控（需要 @mentions）是分开的。
-- WhatsApp/Telegram/Signal/iMessage/Microsoft Teams/Zalo：使用 `groupAllowFrom`（回退：显式 `allowFrom`）。
-- 私信配对批准（`*-allowFrom` 存储条目）仅适用于私信访问；群组发送者授权保持对群组允许列表的显式要求。
+- `groupPolicy` 与提及限制（需要 @mentions）是分开的。
+- WhatsApp/Telegram/Signal/iMessage/Microsoft Teams/Zalo：使用 `groupAllowFrom`（后备：显式 `allowFrom`）。
+- 私信 配对批准（`*-allowFrom` 存储条目）仅适用于私信访问；群组发送者授权仍明确取决于群组允许列表。
 - Discord：允许列表使用 `channels.discord.guilds.<id>.channels`。
 - Slack：允许列表使用 `channels.slack.channels`。
-- Matrix：允许列表使用 `channels.matrix.groups`。首选房间 ID 或别名；已加入房间名称查找是尽力而为的，未解析的名称在运行时会被忽略。使用 `channels.matrix.groupAllowFrom` 限制发送者；也支持每个房间 `users` 允许列表。
-- 群组私信是单独控制的（`channels.discord.dm.*`，`channels.slack.dm.*`）。
-- Telegram 允许列表可以匹配用户 ID (`"123456789"`, `"telegram:123456789"`, `"tg:123456789"`) 或用户名 (`"@alice"` 或 `"alice"`)；前缀不区分大小写。
-- 默认值为 `groupPolicy: "allowlist"`；如果您的群组允许列表为空，则群组消息将被阻止。
-- 运行时安全性：当提供商块完全缺失（`channels.<provider>` 缺失）时，组策略将回退到故障关闭模式（通常为 `allowlist`），而不是继承 `channels.defaults.groupPolicy`。
+- Matrix：允许列表使用 `channels.matrix.groups`。首选房间 ID 或别名；已加入房间的名称查找尽力而为，运行时将忽略未解析的名称。使用 `channels.matrix.groupAllowFrom` 限制发送者；每个房间的 `users` 允许列表也受支持。
+- 群组私信 单独控制（`channels.discord.dm.*`, `channels.slack.dm.*`）。
+- Telegram 允许列表可以匹配用户 ID（`"123456789"`, `"telegram:123456789"`, `"tg:123456789"`）或用户名（`"@alice"` 或 `"alice"`）；前缀不区分大小写。
+- 默认值为 `groupPolicy: "allowlist"`；如果您的群组允许列表为空，群组消息将被阻止。
+- 运行时安全性：当提供商 块完全缺失（`channels.<provider>` 缺失）时，群组策略将回退到故障关闭模式（通常为 `allowlist`），而不是继承 `channels.defaults.groupPolicy`。
 
 快速心理模型（群组消息的评估顺序）：
 
 1. `groupPolicy` (open/disabled/allowlist)
-2. 组允许列表（`*.groups`，`*.groupAllowFrom`，特定于渠道的允许列表）
-3. 提及 gating（`requireMention`，`/activation`）
+2. 群组允许列表（`*.groups`, `*.groupAllowFrom`, 特定渠道 允许列表）
+3. 提及门控（`requireMention`, `/activation`）
 
-## 提及 gating（默认）
+## 提及门控（默认）
 
-除非针对特定群组进行了覆盖，否则群组消息需要提及。默认值位于每个子系统的 `*.groups."*"` 下。
+除非针对每个群组进行了覆盖，否则群组消息需要提及。默认值按子系统位于 `*.groups."*"` 下。
 
-回复机器人消息被视为一种隐式提及（当该渠道支持回复元数据时）。这适用于 Telegram、WhatsApp、Slack、Discord 和 Microsoft Teams。
+回复机器人消息算作隐式提及（当渠道 支持回复元数据时）。这适用于 Telegram、WhatsApp、Slack、Discord 和 Microsoft Teams。
 
 ```json5
 {
@@ -246,30 +268,30 @@ otherwise -> reply
 备注：
 
 - `mentionPatterns` 是不区分大小写的安全正则表达式模式；无效的模式和不安全的嵌套重复形式将被忽略。
-- 提供明确提及的 Surface 仍然会通过；模式仅作为后备方案。
-- 按代理覆盖：`agents.list[].groupChat.mentionPatterns` （当多个代理共享一个群组时很有用）。
-- 提及拦截仅在可进行提及检测（配置了原生提及或 `mentionPatterns`）时才强制执行。
-- Discord 默认值位于 `channels.discord.guilds."*"`（可按每个服务器/渠道覆盖）。
-- 跨渠道统一封装群组历史上下文，且仅包含待处理内容（因提及 gating 而跳过的消息）；使用 `messages.groupChat.historyLimit` 作为全局默认值，并使用 `channels.<channel>.historyLimit`（或 `channels.<channel>.accounts.*.historyLimit`）进行覆盖。设置 `0` 以禁用。
+- 提供明确提及的界面仍然可以通过；模式是一种备用方案。
+- 每代理覆盖：`agents.list[].groupChat.mentionPatterns` （当多个代理共享一个组时很有用）。
+- 仅在可以进行提及检测（配置了原生提及或 `mentionPatterns`）时，才会强制执行提及限制。
+- Discord 的默认值位于 `channels.discord.guilds."*"` 中（可按 guild/渠道 覆盖）。
+- 组历史上下文在渠道间统一包装，且为 **仅待处理** （因提及限制而跳过的消息）；使用 `messages.groupChat.historyLimit` 作为全局默认值，使用 `channels.<channel>.historyLimit` （或 `channels.<channel>.accounts.*.historyLimit` ）进行覆盖。设置 `0` 以禁用。
 
-## 群组/渠道工具限制（可选）
+## 组/渠道工具限制（可选）
 
-某些渠道配置支持限制在**特定群组/房间/渠道**内可用的工具。
+某些渠道配置支持限制在 **特定组/房间/渠道内** 可用的工具。
 
-- `tools`：允许/拒绝整个群组的工具。
-- `toolsBySender`：群组内针对发件人的覆盖设置。
-  使用显式键前缀：
-  `id:<senderId>`，`e164:<phone>`，`username:<handle>`，`name:<displayName>` 和 `"*"` 通配符。
-  旧版无前缀的键仍然被接受，并且仅作为 `id:` 进行匹配。
+- `tools`：允许/拒绝整个组的工具。
+- `toolsBySender`：组内按发件人覆盖。
+  使用显式密钥前缀：
+  `id:<senderId>`, `e164:<phone>`, `username:<handle>`, `name:<displayName>` 和 `"*"` 通配符。
+  旧的无前缀密钥仍被接受，并仅匹配为 `id:`。
 
 解析顺序（最具体的优先）：
 
-1. 群组/渠道 `toolsBySender` 匹配
-2. 群组/渠道 `tools`
-3. 默认 (`"*"`) `toolsBySender` 匹配
-4. 默认 (`"*"`) `tools`
+1. 组/渠道 `toolsBySender` 匹配
+2. 组/渠道 `tools`
+3. 默认 （`"*"`） `toolsBySender` 匹配
+4. 默认 （`"*"`） `tools`
 
-示例 (Telegram)：
+示例 （%%PH:GLOSSARY:175:698df0b%%）：
 
 ```json5
 {
@@ -289,16 +311,18 @@ otherwise -> reply
 }
 ```
 
-说明：
+注意：
 
-- 群组/渠道工具限制是在全局/代理工具策略之外应用的（拒绝仍然优先）。
+- 组/渠道工具限制是除全局/代理工具策略外额外应用的（拒绝仍然优先）。
 - 某些渠道对房间/渠道使用不同的嵌套结构（例如，Discord `guilds.*.channels.*`，Slack `channels.*`，Microsoft Teams `teams.*.channels.*`）。
 
-## 群组允许列表
+## 组允许列表
 
-当配置了 `channels.whatsapp.groups`、`channels.telegram.groups` 或 `channels.imessage.groups` 时，这些键将作为群组允许列表生效。使用 `"*"` 来允许所有群组，同时仍然设置默认提及行为。
+当配置了 `channels.whatsapp.groups`, `channels.telegram.groups` 或 `channels.imessage.groups` 时，这些密钥将作为组允许列表。使用 `"*"` 允许所有组，同时仍设置默认提及行为。
 
-常见意图 (复制/粘贴)：
+常见误区：私信配对批准与群组授权不是一回事。对于支持私信配对的渠道，配对存储仅解锁私信。群组命令仍然需要来自配置允许列表（例如 `groupAllowFrom`）或该渠道文档中记录的配置回退的明确群组发送者授权。
+
+常见意图（复制/粘贴）：
 
 1. 禁用所有群组回复
 
@@ -323,7 +347,7 @@ otherwise -> reply
 }
 ```
 
-3. 允许所有群组但要求提及（显式）
+3. 允许所有群组但需要提及（显式）
 
 ```json5
 {
@@ -349,37 +373,37 @@ otherwise -> reply
 }
 ```
 
-## 激活（仅限所有者）
+## 激活（仅所有者）
 
 群组所有者可以切换每个群组的激活状态：
 
 - `/activation mention`
 - `/activation always`
 
-所有者由 `channels.whatsapp.allowFrom` 确定（或未设置时使用机器人的自身 E.164）。将命令作为独立消息发送。其他表面目前忽略 `/activation`。
+所有者由 `channels.whatsapp.allowFrom` 确定（如果未设置，则为机器人自身的 E.164）。将命令作为独立消息发送。其他界面当前忽略 `/activation`。
 
 ## 上下文字段
 
 群组入站负载设置：
 
 - `ChatType=group`
-- `GroupSubject` (如果已知)
-- `GroupMembers` (如果已知)
-- `WasMentioned` (提及门控结果)
+- `GroupSubject`（如果已知）
+- `GroupMembers`（如果已知）
+- `WasMentioned`（提及拦截结果）
 - Telegram 论坛主题还包括 `MessageThreadId` 和 `IsForum`。
 
-频道特定说明：
+渠道特定说明：
 
-- BlueBubbles 可以在填充 `GroupMembers` 之前，从本地联系人数据库中可选地丰富未命名的 macOS 群组参与者。此功能默认关闭，仅在常规群组门控通过后运行。
+- BlueBubbles 可以在填充 `GroupMembers` 之前，选择性地从本地联系人数据库中丰富未命名的 macOS 群组参与者。默认情况下此功能是关闭的，并且仅在正常的群组拦截通过后才运行。
 
-代理系统提示在新群组会话的第一轮中包含群组介绍。它提醒模型像人类一样回复，避免使用 Markdown 表格，并避免输入字面的 `\n` 序列。
+智能体系统提示在新群组会话的第一轮包含群组介绍。它提醒模型像人类一样回应，避免 Markdown 表格，尽量减少空行并遵循正常的聊天间距，并避免输入字面的 `\n` 序列。
 
-## iMessage 细节
+## iMessage 特性
 
-- 在路由或添加到允许列表时，首选 `chat_id:<id>`。
+- 在路由或列入允许列表时，首选 `chat_id:<id>`。
 - 列出聊天：`imsg chats --limit 20`。
-- 群组回复始终发回同一个 `chat_id`。
+- 群组回复总是回到同一个 `chat_id`。
 
-## WhatsApp 细节
+## WhatsApp 特性
 
-有关 WhatsApp 专有的行为（历史记录注入、提及处理详细信息），请参阅 [群组消息](/en/channels/group-messages)。
+有关 WhatsApp 特有的行为（历史记录注入、提及处理详细信息），请参阅 [Group messages](/en/channels/group-messages)。

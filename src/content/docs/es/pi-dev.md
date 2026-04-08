@@ -12,17 +12,16 @@ Esta guía resume un flujo de trabajo sensato para trabajar en la integración d
 
 ## Comprobación de tipos y Linting
 
-- Comprobación de tipos y compilación: `pnpm build`
-- Lint: `pnpm lint`
-- Comprobación de formato: `pnpm format`
-- Comprobación completa antes de enviar: `pnpm lint && pnpm build && pnpm test`
+- Puerta de enlace local predeterminada: `pnpm check`
+- Puerta de enlace de compilación: `pnpm build` cuando el cambio puede afectar la salida de la compilación, el empaquetado o los límites de carga diferida/módulos
+- Puerta de enlace de aterrizaje completa para cambios intensivos en Pi: `pnpm check && pnpm test`
 
-## Ejecución de pruebas de Pi
+## Ejecutar pruebas de Pi
 
 Ejecute el conjunto de pruebas centrado en Pi directamente con Vitest:
 
 ```bash
-pnpm test -- \
+pnpm test \
   "src/agents/pi-*.test.ts" \
   "src/agents/pi-embedded-*.test.ts" \
   "src/agents/pi-tools*.test.ts" \
@@ -34,10 +33,10 @@ pnpm test -- \
 Para incluir el ejercicio del proveedor en vivo:
 
 ```bash
-OPENCLAW_LIVE_TEST=1 pnpm test -- src/agents/pi-embedded-runner-extraparams.live.test.ts
+OPENCLAW_LIVE_TEST=1 pnpm test src/agents/pi-embedded-runner-extraparams.live.test.ts
 ```
 
-Esto cubre las principales suites de unidades de Pi:
+Esto cubre las suites principales de unidades de Pi:
 
 - `src/agents/pi-*.test.ts`
 - `src/agents/pi-embedded-*.test.ts`
@@ -52,27 +51,28 @@ Flujo recomendado:
 
 - Ejecute la puerta de enlace en modo de desarrollo:
   - `pnpm gateway:dev`
-- Activar el agente directamente:
+- Active el agente directamente:
   - `pnpm openclaw agent --message "Hello" --thinking low`
-- Use la interfaz de usuario de terminal (TUI) para la depuración interactiva:
+- Use la TUI para la depuración interactiva:
   - `pnpm tui`
 
-Para el comportamiento de la llamada a herramientas, solicite una acción `read` o `exec` para que pueda ver la transmisión de herramientas y el manejo de cargas útiles.
+Para el comportamiento de las llamadas a herramientas, solicite una acción `read` o `exec` para que pueda ver la transmisión de herramientas y el manejo de cargas útiles.
 
-## Restablecimiento limpio
+## Restablecimiento total
 
-El estado reside en el directorio de estado de OpenClaw. El valor predeterminado es `~/.openclaw`. Si `OPENCLAW_STATE_DIR` está configurado, use ese directorio en su lugar.
+El estado se encuentra en el directorio de estado de OpenClaw. El valor predeterminado es `~/.openclaw`. Si `OPENCLAW_STATE_DIR` está configurado, use ese directorio en su lugar.
 
 Para restablecer todo:
 
 - `openclaw.json` para la configuración
-- `credentials/` para los perfiles de autenticación y tokens
+- `agents/<agentId>/agent/auth-profiles.json` para los perfiles de autenticación del modelo (claves de API + OAuth)
+- `credentials/` para el estado del proveedor/canal que aún reside fuera del almacén de perfiles de autenticación
 - `agents/<agentId>/sessions/` para el historial de sesiones del agente
-- `agents/<agentId>/sessions.json` para el índice de sesiones
+- `agents/<agentId>/sessions/sessions.json` para el índice de sesión
 - `sessions/` si existen rutas heredadas
 - `workspace/` si desea un espacio de trabajo en blanco
 
-Si solo desea restablecer las sesiones, elimine `agents/<agentId>/sessions/` y `agents/<agentId>/sessions.json` para ese agente. Conserve `credentials/` si no desea volver a autenticarse.
+Si solo desea restablecer las sesiones, elimine `agents/<agentId>/sessions/` para ese agente. Si desea mantener la autenticación, deje `agents/<agentId>/agent/auth-profiles.json` y cualquier estado de proveedor en `credentials/` en su lugar.
 
 ## Referencias
 

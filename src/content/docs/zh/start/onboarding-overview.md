@@ -9,8 +9,7 @@ sidebarTitle: "入门概述"
 
 # 入门概述
 
-OpenClaw 提供两种新手引导路径。两者都会配置身份验证、Gateway(网关)
-和可选的渠道——它们只是在您与设置交互的方式上有所不同。
+OpenClaw 提供两种新手引导路径。两者都会配置身份认证、Gateway（网关）以及可选的聊天频道——区别仅在于您与设置过程的交互方式不同。
 
 ## 我应该使用哪种路径？
 
@@ -32,7 +31,7 @@ OpenClaw 提供两种新手引导路径。两者都会配置身份验证、Gatew
 1. **模型提供商和身份验证** —— 所选提供商的 API 密钥、OAuth 或设置令牌
 2. **工作区** —— 用于代理文件、引导模板和内存的目录
 3. **Gateway(网关)** —— 端口、绑定地址、身份验证模式
-4. **渠道**（可选）—— WhatsApp、Telegram、Discord 等
+4. **频道**（可选）——内置且绑定的聊天频道，例如 BlueBubbles、Discord、飞书、Google Chat、Mattermost、Microsoft Teams、Telegram、WhatsApp 等
 5. **守护进程**（可选）—— 后台服务，使 Gateway(网关) 自动启动
 
 ## CLI 新手引导

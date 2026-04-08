@@ -17,17 +17,19 @@ Ce document définit la sémantique canonique d'éligibilité et de résolution 
 
 L'objectif est de garder le comportement au moment de la sélection et à l'exécution alignés.
 
-## Codes de raison stables
+## Codes de raison de sonde stable
 
 - `ok`
+- `excluded_by_auth_order`
 - `missing_credential`
 - `invalid_expires`
 - `expired`
 - `unresolved_ref`
+- `no_model`
 
-## Informations d'identification de jeton
+## Identifiants de jeton
 
-Les informations d'identification de jeton (`type: "token"`) prennent en charge `token` en ligne et/ou `tokenRef`.
+Les identifiants de jeton (`type: "token"`) prennent en charge `token` en ligne et/ou `tokenRef`.
 
 ### Règles d'éligibilité
 
@@ -41,20 +43,30 @@ Les informations d'identification de jeton (`type: "token"`) prennent en charge 
 ### Règles de résolution
 
 1. La sémantique du résolveur correspond à la sémantique d'éligibilité pour `expires`.
-2. Pour les profils éligibles, le matériel du jeton peut être résolu à partir de la valeur en ligne ou `tokenRef`.
+2. Pour les profils éligibles, le matériau du jeton peut être résolu à partir de la valeur en ligne ou `tokenRef`.
 3. Les références non résolues produisent `unresolved_ref` dans la sortie `models status --probe`.
+
+## Filtrage explicite de l'ordre d'authentification
+
+- Lorsque `auth.order.<provider>` ou la substitution de l'ordre du magasin d'authentification est définie pour un fournisseur, `models status --probe` sonde uniquement les identifiants de profil qui restent dans l'ordre d'authentification résolu pour ce fournisseur.
+- Un profil stocké pour ce fournisseur qui est omis de l'ordre explicite n'est pas essayé silencieusement plus tard. La sortie de la sonde le signale avec `reasonCode: excluded_by_auth_order` et le détail `Excluded by auth.order for this provider.`
+
+## Résolution de la cible de la sonde
+
+- Les cibles de sonde peuvent provenir de profils d'authentification, d'identifiants d'environnement ou de `models.json`.
+- Si un fournisseur dispose d'identifiants mais que OpenClaw ne peut pas résoudre un candidat de modèle sondeable pour celui-ci, `models status --probe` signale `status: no_model` avec `reasonCode: no_model`.
 
 ## OAuth SecretRef Policy Guard
 
-- L'entrée SecretRef est destinée uniquement aux informations d'identification statiques.
-- Si une information d'identification de profil est `type: "oauth"`, les objets SecretRef ne sont pas pris en charge pour ce matériel d'information d'identification de profil.
-- Si `auth.profiles.<id>.mode` est `"oauth"`, l'entrée `keyRef`/`tokenRef` basée sur SecretRef pour ce profil est rejetée.
-- Les violations sont des échecs critiques dans les chemins de résolution d'authentification au démarrage/rechargement.
+- SecretRef input is for static credentials only.
+- If a profile credential is `type: "oauth"`, SecretRef objects are not supported for that profile credential material.
+- If `auth.profiles.<id>.mode` is `"oauth"`, SecretRef-backed `keyRef`/`tokenRef` input for that profile is rejected.
+- Violations are hard failures in startup/reload auth resolution paths.
 
-## Messagerie compatible avec l'héritage
+## Legacy-Compatible Messaging
 
-Pour la compatibilité des scripts, les erreurs de sondage conservent cette première ligne inchangée :
+For script compatibility, probe errors keep this first line unchanged:
 
 `Auth profile credentials are missing or expired.`
 
-Des détails conviviaux et des codes de raison stables peuvent être ajoutés sur les lignes suivantes.
+Human-friendly detail and stable reason codes may be added on subsequent lines.

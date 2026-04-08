@@ -55,15 +55,18 @@ Alternativement, installez-la manuellement :
 npm install -g openclaw@<version>
 ```
 
-## Troubleshooting
+`pnpm add -g openclaw@<version>` et `bun add -g openclaw@<version>` fonctionnent également.
+Pour le runtime Gateway, Node reste la méthode recommandée.
 
-### Échec de la compilation : Inadéquation de la chaîne d'outils ou du SDK
+## Dépannage
 
-La compilation de l'application macOS attend le dernier SDK macOS et la chaîne d'outils Swift 6.2.
+### Échec de la build : Inadéquation de la chaîne d'outils ou du SDK
 
-**Dépendances système (requis) :**
+La build de l'application macOS s'attend au dernier SDK macOS et à la chaîne d'outils Swift 6.2.
 
-- **Dernière version de macOS disponible dans Mise à jour logicielle** (requise par les SDK Xcode 26.2)
+**Dépendances système (requises) :**
+
+- **Dernière version macOS disponible dans Mise à jour de logiciels** (requis par les SDK Xcode 26.2)
 - **Xcode 26.2** (chaîne d'outils Swift 6.2)
 
 **Vérifications :**
@@ -73,9 +76,9 @@ xcodebuild -version
 xcrun swift --version
 ```
 
-Si les versions ne correspondent pas, mettez à jour macOS/Xcode et relancez la compilation.
+Si les versions ne correspondent pas, mettez à jour macOS/Xcode et relancez la build.
 
-### L'application plante lors de l'octroi d'autorisation
+### L'application plante lors de l'octroi d'autorisations
 
 Si l'application plante lorsque vous essayez d'autoriser l'accès à la **Reconnaissance vocale** ou au **Microphone**, cela peut être dû à un cache TCC corrompu ou à une inadéquation de signature.
 
@@ -87,11 +90,11 @@ Si l'application plante lorsque vous essayez d'autoriser l'accès à la **Reconn
    tccutil reset All ai.openclaw.mac.debug
    ```
 
-2. Si cela échoue, modifiez temporairement le `BUNDLE_ID` dans [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) pour forcer un « nouveau départ » de la part de macOS.
+2. Si cela échoue, modifiez temporairement le `BUNDLE_ID` dans [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) pour forcer un "propre départ" de la part de macOS.
 
-### Gateway indéfiniment « Démarrage... »
+### Gateway "Démarrage..." indéfiniment
 
-Si le statut de la passerelle reste sur « Démarrage... », vérifiez si un processus zombie occupe le port :
+Si le statut de la passerelle reste sur "Démarrage...", vérifiez si un processus zombie occupe le port :
 
 ```bash
 openclaw gateway status

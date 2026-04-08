@@ -8,16 +8,21 @@ title: "Xiaomi MiMo"
 
 # Xiaomi MiMo
 
-Xiaomi MiMo 是 **MiMo** 模型的 API 平台。OpenClaw 使用支援 API 金鑰驗證的 Xiaomi OpenAI 相容端點。請在 [Xiaomi MiMo console](https://platform.xiaomimimo.com/#/console/api-keys) 中建立您的 API 金鑰，然後使用該金鑰設定內建的 `xiaomi` 供應商。
+Xiaomi MiMo 是 **MiMo** 模型的 API 平台。OpenClaw 使用與 OpenAI 相容的 Xiaomi
+端點以及 API 金鑰驗證。請在 [Xiaomi MiMo console](https://platform.xiaomimimo.com/#/console/api-keys) 中建立您的 API 金鑰，然後使用該金鑰設定
+隨附的 `xiaomi` 提供者。
 
-## 模型概覽
+## 內建目錄
 
-- **mimo-v2-flash**：預設文字模型，262144 token 上下文視窗
-- **mimo-v2-pro**：推理文字模型，1048576 token 上下文視窗
-- **mimo-v2-omni**：具有文字和圖片輸入的推理多模態模型，262144 token 上下文視窗
-- Base URL: `https://api.xiaomimimo.com/v1`
-- API: `openai-completions`
-- Authorization: `Bearer $XIAOMI_API_KEY`
+- Base URL：`https://api.xiaomimimo.com/v1`
+- API：`openai-completions`
+- 授權：`Bearer $XIAOMI_API_KEY`
+
+| 模型參照               | 輸入       | 內容      | 最大輸出 | 備註             |
+| ---------------------- | ---------- | --------- | -------- | ---------------- |
+| `xiaomi/mimo-v2-flash` | 文字       | 262,144   | 8,192    | 預設模型         |
+| `xiaomi/mimo-v2-pro`   | 文字       | 1,048,576 | 32,000   | 啟用推理         |
+| `xiaomi/mimo-v2-omni`  | 文字、影像 | 262,144   | 32,000   | 啟用推理的多模態 |
 
 ## CLI 設定
 
@@ -75,9 +80,9 @@ openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
 }
 ```
 
-## 注意事項
+## 備註
 
-- 預設模型參考：`xiaomi/mimo-v2-flash`。
+- 預設模型參照：`xiaomi/mimo-v2-flash`。
 - 其他內建模型：`xiaomi/mimo-v2-pro`、`xiaomi/mimo-v2-omni`。
-- 當設定了 `XIAOMI_API_KEY` (或存在驗證設定檔) 時，供應商會自動注入。
-- 請參閱 [/concepts/model-providers](/en/concepts/model-providers) 以了解供應商規則。
+- 當設定 `XIAOMI_API_KEY` 時（或存在驗證設定檔），提供者會自動注入。
+- 請參閱 [/concepts/model-providers](/en/concepts/model-providers) 以了解提供者規則。

@@ -13,7 +13,7 @@ sidebarTitle: "Récupération Web"
 L'outil `web_fetch` effectue une requête HTTP GET simple et extrait le contenu lisible
 (HTML en markdown ou texte). Il n'exécute **pas** JavaScript.
 
-Pour les sites utilisant beaucoup de JS ou les pages protégées par connexion, utilisez
+Pour les sites avec beaucoup de JS ou les pages protégées par une connexion, utilisez le
 [Web Browser](/en/tools/browser) à la place.
 
 ## Démarrage rapide
@@ -50,6 +50,7 @@ await web_fetch({ url: "https://example.com/article" });
     web: {
       fetch: {
         enabled: true, // default: true
+        provider: "firecrawl", // optional; omit for auto-detect
         maxChars: 50000, // max output chars
         maxCharsCap: 50000, // hard cap for maxChars param
         maxResponseBytes: 2000000, // max download size before truncation
@@ -66,21 +67,30 @@ await web_fetch({ url: "https://example.com/article" });
 
 ## Firecrawl de secours
 
-Si l'extraction par Readabilité échoue, `web_fetch` peut revenir à
-[Firecrawl](/en/tools/firecrawl) pour le contournement de bot et une meilleure extraction :
+Si l'extraction Readability échoue, `web_fetch` peut revenir à
+[Firecrawl](/en/tools/firecrawl) pour contourner les bots et améliorer l'extraction :
 
 ```json5
 {
   tools: {
     web: {
       fetch: {
-        firecrawl: {
-          enabled: true,
-          apiKey: "fc-...", // optional if FIRECRAWL_API_KEY is set
-          baseUrl: "https://api.firecrawl.dev",
-          onlyMainContent: true,
-          maxAgeMs: 86400000, // cache duration (1 day)
-          timeoutSeconds: 60,
+        provider: "firecrawl", // optional; omit for auto-detect from available credentials
+      },
+    },
+  },
+  plugins: {
+    entries: {
+      firecrawl: {
+        enabled: true,
+        config: {
+          webFetch: {
+            apiKey: "fc-...", // optional if FIRECRAWL_API_KEY is set
+            baseUrl: "https://api.firecrawl.dev",
+            onlyMainContent: true,
+            maxAgeMs: 86400000, // cache duration (1 day)
+            timeoutSeconds: 60,
+          },
         },
       },
     },
@@ -88,9 +98,20 @@ Si l'extraction par Readabilité échoue, `web_fetch` peut revenir à
 }
 ```
 
-`tools.web.fetch.firecrawl.apiKey` prend en charge les objets SecretRef.
+`plugins.entries.firecrawl.config.webFetch.apiKey` prend en charge les objets SecretRef.
+L'ancienne configuration `tools.web.fetch.firecrawl.*` est automatiquement migrée par `openclaw doctor --fix`.
 
-<Note>Si Firecrawl est activé et que son SecretRef n'est pas résolu sans `FIRECRAWL_API_KEY` de repli d'env, le démarrage de la passerelle échoue rapidement.</Note>
+<Note>Si Firecrawl est activé et que son SecretRef n'est pas résolu sans de repli d'environnement `FIRECRAWL_API_KEY`, le démarrage de la passerelle échoue rapidement.</Note>
+
+<Note>Les remplacements `baseUrl` de Firecrawl sont verrouillés : ils doivent utiliser `https://` et l'hôte officiel Firecrawl (`api.firecrawl.dev`).</Note>
+
+Comportement actuel de l'exécution :
+
+- `tools.web.fetch.provider` sélectionne explicitement le fournisseur de repli de récupération.
+- Si `provider` est omis, OpenClaw détecte automatiquement le premier fournisseur
+  de récupération web prêt parmi les identifiants disponibles. Aujourd'hui, le fournisseur inclus est Firecrawl.
+- Si Readability est désactivé, `web_fetch` passe directement au repli du
+  fournisseur sélectionné. Si aucun fournisseur n'est disponible, il échoue en mode fermé.
 
 ## Limites et sécurité
 
@@ -103,13 +124,13 @@ Si l'extraction par Readabilité échoue, `web_fetch` peut revenir à
 
 ## Profils d'outil
 
-Si vous utilisez des profils d'outil ou des listes autorisées (allowlists), ajoutez `web_fetch` ou `group:web` :
+Si vous utilisez des profils d'outil ou des listes autorisées, ajoutez `web_fetch` ou `group:web` :
 
 ```json5
 {
   tools: {
     allow: ["web_fetch"],
-    // or: allow: ["group:web"]  (includes both web_fetch and web_search)
+    // or: allow: ["group:web"]  (includes web_fetch, web_search, and x_search)
   },
 }
 ```
@@ -117,5 +138,5 @@ Si vous utilisez des profils d'outil ou des listes autorisées (allowlists), ajo
 ## Connexes
 
 - [Web Search](/en/tools/web) -- rechercher sur le web avec plusieurs fournisseurs
-- [Web Browser](/en/tools/browser) -- automatisation complète du navigateur pour les sites utilisant beaucoup de JS
-- [Firecrawl](/en/tools/firecrawl) -- outils de recherche et de scraping Firecrawl
+- [Web Browser](/en/tools/browser) -- automatisation complète du navigateur pour les sites avec beaucoup de JS
+- [Firecrawl](/en/tools/firecrawl) -- outils de recherche et d'extraction Firecrawl

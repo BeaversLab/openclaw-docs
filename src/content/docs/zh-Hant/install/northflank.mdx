@@ -12,29 +12,31 @@ title: "Northflank"
 ## 如何開始
 
 1. 點擊 [Deploy OpenClaw](https://northflank.com/stacks/deploy-openclaw) 以開啟範本。
-2. 如果您尚未擁有帳戶，請建立一個 [Northflank 帳戶](https://app.northflank.com/signup)。
+2. 如果您還沒有帳戶，請建立一個 [Northflank 帳戶](https://app.northflank.com/signup)。
 3. 點擊 **Deploy OpenClaw now**。
 4. 設定所需的環境變數： `OPENCLAW_GATEWAY_TOKEN` (請使用強隨機值)。
 5. 點擊 **Deploy stack** 以建置並執行 OpenClaw 範本。
 6. 等待部署完成，然後點擊 **View resources**。
 7. 開啟 OpenClaw 服務。
-8. 在 `/openclaw` 開啟公開的 OpenClaw URL，並使用您的 `OPENCLAW_GATEWAY_TOKEN` 進行連線。
+8. 在 `/openclaw` 開啟公開的 OpenClaw URL，並使用設定的共享金鑰進行連線。此範本預設使用 `OPENCLAW_GATEWAY_TOKEN`；如果您將其替換為密碼驗證，請改用該密碼。
 
 ## 您將獲得
 
 - 託管的 OpenClaw Gateway + Control UI
-- 透過 Northflank Volume (`/data`) 提供的持久儲存空間，讓設定/憑證/工作區在重新部署後得以保留
+- 透過 Northflank Volume (`/data`) 提供持久儲存，因此 `openclaw.json`、
+  每個代理程式的 `auth-profiles.json`、通道/提供者狀態、工作階段和
+  工作區皆可在重新部署後保留
 
 ## 連接頻道
 
-使用位於 `/openclaw` 的 Control UI，或透過 SSH 執行 `openclaw onboard` 以取得頻道設定說明：
+使用 `/openclaw` 的控制 UI，或透過 SSH 執行 `openclaw onboard` 以取得通道設定說明：
 
 - [Telegram](/en/channels/telegram) (最快 — 只需要機器人權杖)
 - [Discord](/en/channels/discord)
-- [所有頻道](/en/channels)
+- [所有通道](/en/channels)
 
 ## 後續步驟
 
-- 設定訊息頻道： [Channels](/en/channels)
-- 設定 Gateway： [Gateway configuration](/en/gateway/configuration)
-- 保持 OpenClaw 為最新狀態： [Updating](/en/install/updating)
+- 設定訊息通道：[通道](/en/channels)
+- 設定 Gateway：[Gateway 配置](/en/gateway/configuration)
+- 保持 OpenClaw 更新：[更新](/en/install/updating)

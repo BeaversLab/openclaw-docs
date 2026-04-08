@@ -19,8 +19,7 @@ Utilisez-les lorsqu'une tâche est clairement liée à un script ; sinon, préf�
 
 ## Scripts de surveillance d'authentification
 
-Les scripts de surveillance d'authentification sont documentés ici :
-[/automation/auth-monitoring](/en/automation/auth-monitoring)
+La surveillance de l'authentification est traitée dans [Authentication](/en/gateway/authentication). Les scripts sous `scripts/` sont des options supplémentaires pour les workflows systemd/Termux sur téléphone.
 
 ## Lors de l'ajout de scripts
 

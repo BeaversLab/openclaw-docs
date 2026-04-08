@@ -23,22 +23,36 @@ OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentif
 
 ## Fournisseurs pris en charge (ensemble de démarrage)
 
-- [OpenAI (API + Codex)](/en/providers/openai)
-- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
-- [OpenRouter](/en/providers/openrouter)
-- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
-- [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
-- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
-- [Mistral](/en/providers/mistral)
-- [Synthetic](/en/providers/synthetic)
-- [OpenCode (Zen + Go)](/en/providers/opencode)
-- [Z.AI](/en/providers/zai)
-- [Modèles GLM](/en/providers/glm)
-- [MiniMax](/en/providers/minimax)
-- [Venice (Venice AI)](/en/providers/venice)
+- [Alibaba Model Studio](/en/providers/alibaba)
+- [Anthropic (API + Claude CLI)](/en/providers/anthropic)
 - [Amazon Bedrock](/en/providers/bedrock)
+- [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
+- [Chutes](/en/providers/chutes)
+- [ComfyUI](/en/providers/comfy)
+- [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
+- [fal](/en/providers/fal)
+- [Fireworks](/en/providers/fireworks)
+- [GLM models](/en/providers/glm)
+- [MiniMax](/en/providers/minimax)
+- [Mistral](/en/providers/mistral)
+- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+- [OpenAI (API + Codex)](/en/providers/openai)
+- [OpenCode (Zen + Go)](/en/providers/opencode)
+- [OpenRouter](/en/providers/openrouter)
 - [Qianfan](/en/providers/qianfan)
+- [Qwen](/en/providers/qwen)
+- [Runway](/en/providers/runway)
+- [StepFun](/en/providers/stepfun)
+- [Synthetic](/en/providers/synthetic)
+- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+- [Venice (Venice AI)](/en/providers/venice)
 - [xAI](/en/providers/xai)
+- [Z.AI](/en/providers/zai)
+
+## Variantes de provider groupées supplémentaires
+
+- `anthropic-vertex` - prise en charge implicite de Anthropic sur Google Vertex lorsque les informations d'identification Vertex sont disponibles ; aucun choix d'authentification onboarding distinct
+- `copilot-proxy` - pont de proxy VS Code Copilot local ; utilisez `openclaw onboard --auth-choice copilot-proxy`
 
 Pour le catalogue complet des providers (xAI, Groq, Mistral, etc.) et la configuration avancée,
-voir [Model providers](/en/concepts/model-providers).
+voyez [Model providers](/en/concepts/model-providers).

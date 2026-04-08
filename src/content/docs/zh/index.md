@@ -15,9 +15,9 @@ title: "OpenClaw"
 > _"去壳! 去壳!"_ — A space lobster, probably
 
 <p align="center">
-  <strong>适用于跨越 WhatsApp、Telegram、Discord、iMessage 等平台的 AI 智能体的任意操作系统网关。</strong>
+  <strong>适用于跨 Discord、Google Chat、iMessage、Matrix、Microsoft Teams、Signal、Slack、Telegram、WhatsApp、Zalo 等平台的 AI 代理的任意操作系统网关。</strong>
   <br />
-  发送消息，即可从您的口袋中获得智能体的响应。插件可添加 Mattermost 等更多支持。
+  发送一条消息，即可从您的口袋中获得代理的响应。运行一个网关即可覆盖内置渠道、打包的渠道插件、Gateway(网关) 和移动节点。
 </p>
 
 <Columns>
@@ -34,14 +34,14 @@ title: "OpenClaw"
 
 ## 什么是 OpenClaw？
 
-OpenClaw 是一个**自托管网关**，它将您喜爱的聊天应用 —— WhatsApp、Telegram、Discord、iMessage 等更多应用 —— 连接到像 Pi 这样的 AI 编码智能体。您在自己的机器（或服务器）上运行单一的网关进程，它将成为您的消息应用与随时可用的 AI 助手之间的桥梁。
+OpenClaw 是一个**自托管网关**，它将您喜爱的聊天应用和渠道表面（包括内置渠道以及打包或外部的渠道插件，例如 Discord、Google Chat、iMessage、Matrix、Microsoft Teams、Signal、Slack、Telegram、WhatsApp、Zalo 等）连接到像 Pi 这样的 AI 编码代理。您在自己的机器（或服务器）上运行单个 Gateway(网关) 进程，它便成为您的消息应用与始终可用的 AI 助手之间的桥梁。
 
 **适用对象是谁？** 希望拥有一个可以从任何地方发送消息的个人 AI 助手的开发者和高级用户——且无需放弃数据控制权或依赖托管服务。
 
 **它有何不同之处？**
 
 - **自托管**：在您的硬件上运行，遵循您的规则
-- **多渠道**：一个 Gateway(网关) 同时支持 WhatsApp、Telegram、Discord 等
+- **多渠道**：一个 Gateway(网关) 同时服务于内置渠道以及打包或外部的渠道插件
 - **原生代理**：专为使用工具、会话、记忆和多代理路由的编码代理构建
 - **开源**：MIT 许可，社区驱动
 
@@ -65,10 +65,10 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
 
 <Columns>
   <Card title="Multi-渠道 gateway" icon="network">
-    通过单个 WhatsApp 进程支持 Telegram、Discord、iMessage 和 Gateway(网关)。
+    通过单个 Discord 进程支持 iMessage、Signal、Slack、Telegram、WhatsApp、WebChat、Gateway(网关) 等。
   </Card>
   <Card title="Plugin channels" icon="plug">
-    使用扩展包添加 Mattermost 和更多支持。
+    打包的插件在常规当前版本中增加了 Matrix、Nostr、Twitch、Zalo 等。
   </Card>
   <Card title="多智能体路由" icon="route">
     针对每个智能体、工作区或发送者的隔离会话。
@@ -156,7 +156,7 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
     SSH 和 tailnet 访问模式。
   </Card>
   <Card title="Channels" href="/en/channels/telegram" icon="message-square">
-    针对特定渠道的 WhatsApp、Telegram、Discord 等的设置。
+    针对飞书、Microsoft Teams、WhatsApp、Telegram、Discord 等的特定渠道设置。
   </Card>
   <Card title="Nodes" href="/en/nodes" icon="smartphone">
     支持配对、iOS、摄像头和设备操作的 Android 和 Canvas 节点。

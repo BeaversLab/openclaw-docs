@@ -45,7 +45,7 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 ### Zen
 
 - 執行時提供者：`opencode`
-- 範例模型：`opencode/claude-opus-4-6`、`opencode/gpt-5.2`、`opencode/gemini-3-pro`
+- 範例模型：`opencode/claude-opus-4-6`、`opencode/gpt-5.4`、`opencode/gemini-3-pro`
 - 當您想要經過策劃的 OpenCode 多模型代理時最佳
 
 ### Go
@@ -60,3 +60,5 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 - 在設定期間輸入一個 OpenCode 金鑰即可儲存這兩個執行時提供者的憑證。
 - 您登入 OpenCode，新增帳單詳細資訊，並複製您的 API 金鑰。
 - 計費和目錄可用性是從 OpenCode 儀表板進行管理的。
+- Gemini 支援的 OpenCode refs 保持在 proxy-Gemini 路徑上，因此 OpenClaw 在那裡保留 Gemini thought-signature 清理，而不啟用原生 Gemini 重播驗證或 bootstrap 重寫。
+- 非 Gemini 的 OpenCode refs 保留最少的 OpenAI 相容重播原則。

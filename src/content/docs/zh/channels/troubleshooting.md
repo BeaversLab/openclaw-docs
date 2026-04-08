@@ -26,7 +26,7 @@ openclaw channels status --probe
 
 - `Runtime: running`
 - `RPC probe: ok`
-- 频道探测显示已连接/就绪
+- 渠道探测显示传输层已连接，并且在支持的情况下，显示 `works` 或 `audit ok`
 
 ## WhatsApp
 
@@ -46,10 +46,10 @@ openclaw channels status --probe
 
 | 症状                           | 最快检查                                 | 修复                                                                |
 | ------------------------------ | ---------------------------------------- | ------------------------------------------------------------------- |
-| `/start` 但没有可用的回复流程  | `openclaw pairing list telegram`         | 批准配对或更改私信策略。                                            |
+| `/start` 但没有可用的回复流    | `openclaw pairing list telegram`         | 批准配对或更改私信策略。                                            |
 | 机器人在线但群组保持沉默       | 验证提及要求和机器人隐私模式             | 禁用群组可见性的隐私模式或提及机器人。                              |
-| 发送失败并伴随网络错误         | 检查日志以查找 Telegram API 调用失败     | 修复到 `api.telegram.org` 的 DNS/IPv6/代理路由。                    |
-| `setMyCommands` 在启动时被拒绝 | 检查日志中的 `BOT_COMMANDS_TOO_MUCH`     | 减少插件/技能/自定义 Telegram 指令或禁用原生菜单。                  |
+| 发送失败并伴随网络错误         | 检查日志以查找 Telegram API 调用失败     | 修复 `api.telegram.org` 的 DNS/IPv6/代理路由。                      |
+| `setMyCommands` 在启动时被拒绝 | 检查 `BOT_COMMANDS_TOO_MUCH` 的日志      | 减少插件/技能/自定义 Telegram 指令或禁用原生菜单。                  |
 | 升级后允许列表阻止了您         | `openclaw security audit` 和配置允许列表 | 运行 `openclaw doctor --fix` 或将 `@username` 替换为数字发送者 ID。 |
 
 完整故障排除：[/channels/telegram#故障排除](/en/channels/telegram#troubleshooting)
@@ -58,11 +58,11 @@ openclaw channels status --probe
 
 ### Discord 故障特征
 
-| 症状                   | 最快检查                           | 修复                                                |
-| ---------------------- | ---------------------------------- | --------------------------------------------------- |
-| 机器人在线但无公会回复 | `openclaw channels status --probe` | 允许公会/渠道并验证消息内容意图。                   |
-| 群组消息被忽略         | 检查日志中是否有提及拦截导致的丢弃 | 提及机器人或设置公会/渠道 `requireMention: false`。 |
-| 私信回复缺失           | `openclaw pairing list discord`    | 批准私信配对或调整私信策略。                        |
+| 症状                   | 最快检查                           | 修复                                                  |
+| ---------------------- | ---------------------------------- | ----------------------------------------------------- |
+| 机器人在线但无公会回复 | `openclaw channels status --probe` | 允许公会/渠道并验证消息内容意图。                     |
+| 群组消息被忽略         | 检查日志中是否有提及拦截导致的丢弃 | 提及机器人或设置服务器/频道 `requireMention: false`。 |
+| 私信回复缺失           | `openclaw pairing list discord`    | 批准私信配对或调整私信策略。                          |
 
 完整故障排除：[/channels/discord#故障排除](/en/channels/discord#troubleshooting)
 
@@ -70,11 +70,11 @@ openclaw channels status --probe
 
 ### Slack 故障特征
 
-| 症状                      | 最快检查                           | 修复                                           |
-| ------------------------- | ---------------------------------- | ---------------------------------------------- |
-| Socket 模式已连接但无响应 | `openclaw channels status --probe` | 验证 App token + bot token 以及所需的 scopes。 |
-| 私信被阻止                | `openclaw pairing list slack`      | 批准配对或放宽私信策略。                       |
-| 渠道消息被忽略            | 检查 `groupPolicy` 和渠道允许列表  | 允许该渠道或将策略切换到 `open`。              |
+| 症状                      | 最快检查                           | 修复                                                                                                                              |
+| ------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Socket 模式已连接但无响应 | `openclaw channels status --probe` | 验证应用令牌 + 机器人令牌和所需范围；在 SecretRef 支持的设置中注意 `botTokenStatus` / `appTokenStatus = configured_unavailable`。 |
+| 私信被阻止                | `openclaw pairing list slack`      | 批准配对或放宽私信策略。                                                                                                          |
+| 渠道消息被忽略            | 检查 `groupPolicy` 和渠道允许列表  | 允许该渠道或将策略切换为 `open`。                                                                                                 |
 
 完整故障排除：[/channels/slack#故障排除](/en/channels/slack#troubleshooting)
 
@@ -122,10 +122,12 @@ openclaw channels status --probe
 
 ### Matrix 故障特征
 
-| 症状                 | 最快检查                           | 修复                              |
-| -------------------- | ---------------------------------- | --------------------------------- |
-| 已登录但忽略房间消息 | `openclaw channels status --probe` | 检查 `groupPolicy` 和房间白名单。 |
-| 私信无法处理         | `openclaw pairing list matrix`     | 批准发送者或调整私信策略。        |
-| 加密房间失败         | 验证加密模块和加密设置             | 启用加密支持并重新加入/同步房间。 |
+| 症状                      | 最快检查                               | 修复                                                                  |
+| ------------------------- | -------------------------------------- | --------------------------------------------------------------------- |
+| 已登录但忽略房间消息      | `openclaw channels status --probe`     | 检查 `groupPolicy`、房间允许列表以及提及限制。                        |
+| 私信无法处理              | `openclaw pairing list matrix`         | 批准发送者或调整私信策略。                                            |
+| 加密房间失败              | `openclaw matrix verify status`        | 重新验证设备，然后检查 `openclaw matrix verify backup status`。       |
+| 备份恢复待处理/已损坏     | `openclaw matrix verify backup status` | 运行 `openclaw matrix verify backup restore` 或使用恢复密钥重新运行。 |
+| 交叉签名/引导看起来不正确 | `openclaw matrix verify bootstrap`     | 一次性修复密钥存储、交叉签名和备份状态。                              |
 
 完整设置和配置：[Matrix](/en/channels/matrix)

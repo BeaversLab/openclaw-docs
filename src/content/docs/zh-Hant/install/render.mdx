@@ -68,7 +68,7 @@ services:
 | 入門       | 永不           | 1GB+   | 個人使用、小團隊   |
 | 標準版以上 | 永不           | 1GB+   | 正式環境、多個頻道 |
 
-Blueprint 預設為 `starter`。若要使用免費層級，請在您分支儲存庫的 `render.yaml` 中變更 `plan: free`（但請注意：沒有持久性磁碟意味著每次部署時配置都會重設）。
+Blueprint 預設為 `starter`。若要使用免費層，請在您 fork 的 `render.yaml` 中變更 `plan: free`（但請注意：沒有永續磁碟代表 OpenClaw 的狀態會在每次部署時重設）。
 
 ## 部署完成後
 
@@ -76,7 +76,9 @@ Blueprint 預設為 `starter`。若要使用免費層級，請在您分支儲存
 
 網頁儀表板可在 `https://<your-service>.onrender.com/` 存取。
 
-使用部署期間自動產生的 `OPENCLAW_GATEWAY_TOKEN` 值進行連線（可在 **Dashboard → your service → Environment** 中找到）。
+使用設定的共用金鑰進行連線。此部署範本會自動產生
+`OPENCLAW_GATEWAY_TOKEN`（在 **Dashboard → 您的服務 →
+Environment** 中可以找到）；如果您將其替換為密碼驗證，請改用該密碼。
 
 ## Render Dashboard 功能
 
@@ -118,13 +120,13 @@ Render 支援水平和垂直擴展：
 
 ## 備份與移轉
 
-隨時使用 Render Dashboard 中的 shell 存取權匯出您的設定和工作區：
+隨時使用 Render Dashboard 中的 shell 存取匯出您的狀態、設定、驗證設定檔和工作區：
 
 ```bash
 openclaw backup create
 ```
 
-這會建立一個可攜式備份存檔，您可以在任何 OpenClaw 主機上還原。詳情請參閱 [備份](/en/cli/backup)。
+這會建立一個包含 OpenClaw 狀態以及任何設定好工作區的可攜式備份封存。詳情請參閱 [Backup](/en/cli/backup)。
 
 ## 疑難排解
 
@@ -141,7 +143,8 @@ openclaw backup create
 
 ### 重新部署後資料遺失
 
-這發生在免費層級（無永久性磁碟）。升級至付費方案，或在 Render shell 中定期透過 `openclaw backup create` 匯出您的設定。
+這發生在免費方案上（無永續磁碟）。升級至付費方案，或
+透過 Render shell 中的 `openclaw backup create` 定期匯出完整備份。
 
 ### 健康檢查失敗
 

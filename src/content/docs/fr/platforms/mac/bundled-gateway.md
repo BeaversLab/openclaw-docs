@@ -22,7 +22,7 @@ Node 24 est l'exécution par défaut sur le Mac. Node 22 LTS, actuellement `22.1
 npm install -g openclaw@<version>
 ```
 
-Le bouton **Installer le CLI** de l'application macOS exécute le même processus via npm/pnpm (bun n'est pas recommandé pour le runtime Gateway).
+Le bouton **Installer CLI** de l'application macOS exécute le même processus d'installation globale que l'application utilise en interne : il privilégie d'abord npm, puis pnpm, puis bun si c'est le seul gestionnaire de paquets détecté. Node reste le runtime recommandé pour le Gateway.
 
 ## Launchd (Gateway en tant que LaunchAgent)
 

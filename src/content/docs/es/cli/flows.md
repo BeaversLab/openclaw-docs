@@ -1,36 +1,18 @@
 ---
-summary: "Nota de compatibilidad para el comando `openclaw flows` documentado erróneamente"
+summary: "Redireccionamiento: los comandos de flujo se encuentran en `openclaw tasks flow`"
 read_when:
-  - You encounter openclaw flows in older release notes, issue threads, or search results
-  - You want to know what command replaced openclaw flows
-title: "flows"
+  - You encounter openclaw flows in older docs or release notes
+title: "flows (redireccionamiento)"
 ---
 
-# `openclaw flows`
+# `openclaw tasks flow`
 
-`openclaw flows` **no** es un comando actual de la CLI de OpenClaw.
-
-Algunas notas de la versión y documentación antiguas documentaron erróneamente una superficie de comando `flows`. La superficie de operador admitida es [`openclaw tasks`](/en/automation/tasks).
+Los comandos de flujo son subcomandos de `openclaw tasks`, no un comando `flows` independiente.
 
 ```bash
-openclaw tasks list
-openclaw tasks show <lookup>
-openclaw tasks cancel <lookup>
+openclaw tasks flow list [--json]
+openclaw tasks flow show <lookup>
+openclaw tasks flow cancel <lookup>
 ```
 
-## Usar en su lugar
-
-- `openclaw tasks list` — lista las tareas en segundo plano rastreadas
-- `openclaw tasks show <lookup>` — inspecciona una tarea por id. de tarea, id. de ejecución o clave de sesión
-- `openclaw tasks cancel <lookup>` — cancela una tarea en segundo plano en ejecución
-- `openclaw tasks notify <lookup> <policy>` — cambia el comportamiento de notificación de tareas
-- `openclaw tasks audit` — muestra ejecuciones de tareas obsoletas o rotas
-
-## Por qué existe esta página
-
-Esta página se mantiene para que los enlaces existentes de entradas antiguas del registro de cambios, hilos de problemas y resultados de búsqueda tengan una corrección clara en lugar de un camino sin salida.
-
-## Relacionado
-
-- [Tareas en segundo plano](/en/automation/tasks) — libro de trabajo desacoplado
-- [Referencia de la CLI](/en/cli/index) — árbol de comandos completo
+Para obtener la documentación completa, consulte [Flujo de tareas](/en/automation/taskflow) y la [referencia de la CLI de tareas](/en/cli/index#tasks).

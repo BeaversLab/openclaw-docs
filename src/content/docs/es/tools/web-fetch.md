@@ -13,8 +13,8 @@ sidebarTitle: "Obtención web"
 La herramienta `web_fetch` realiza un HTTP GET simple y extrae contenido legible
 (de HTML a markdown o texto). **No** ejecuta JavaScript.
 
-Para sitios con mucho JS o páginas protegidas por inicio de sesión, utilice
-[Navegador web](/en/tools/browser) en su lugar.
+Para sitios con mucho JS o páginas protegidas por inicio de sesión, utilice el
+[Navegador Web](/en/tools/browser) en su lugar.
 
 ## Inicio rápido
 
@@ -50,6 +50,7 @@ await web_fetch({ url: "https://example.com/article" });
     web: {
       fetch: {
         enabled: true, // default: true
+        provider: "firecrawl", // optional; omit for auto-detect
         maxChars: 50000, // max output chars
         maxCharsCap: 50000, // hard cap for maxChars param
         maxResponseBytes: 2000000, // max download size before truncation
@@ -66,21 +67,30 @@ await web_fetch({ url: "https://example.com/article" });
 
 ## Alternativa de Firecrawl
 
-Si la extracción con Readability falla, `web_fetch` puede usar como alternativa
-[Firecrawl](/en/tools/firecrawl) para evasión de bots y una mejor extracción:
+Si la extracción de Readability falla, `web_fetch` puede usar como alternativa
+[Firecrawl](/en/tools/firecrawl) para evitar la detección de bots y mejorar la extracción:
 
 ```json5
 {
   tools: {
     web: {
       fetch: {
-        firecrawl: {
-          enabled: true,
-          apiKey: "fc-...", // optional if FIRECRAWL_API_KEY is set
-          baseUrl: "https://api.firecrawl.dev",
-          onlyMainContent: true,
-          maxAgeMs: 86400000, // cache duration (1 day)
-          timeoutSeconds: 60,
+        provider: "firecrawl", // optional; omit for auto-detect from available credentials
+      },
+    },
+  },
+  plugins: {
+    entries: {
+      firecrawl: {
+        enabled: true,
+        config: {
+          webFetch: {
+            apiKey: "fc-...", // optional if FIRECRAWL_API_KEY is set
+            baseUrl: "https://api.firecrawl.dev",
+            onlyMainContent: true,
+            maxAgeMs: 86400000, // cache duration (1 day)
+            timeoutSeconds: 60,
+          },
         },
       },
     },
@@ -88,34 +98,45 @@ Si la extracción con Readability falla, `web_fetch` puede usar como alternativa
 }
 ```
 
-`tools.web.fetch.firecrawl.apiKey` admite objetos SecretRef.
+`plugins.entries.firecrawl.config.webFetch.apiKey` admite objetos SecretRef.
+La configuración heredada `tools.web.fetch.firecrawl.*` se migra automáticamente mediante `openclaw doctor --fix`.
 
-<Note>Si Firecrawl está habilitado y su SecretRef no está resuelto sin un env alternativo `FIRECRAWL_API_KEY`, el inicio de la puerta de enlace falla rápidamente.</Note>
+<Note>Si Firecrawl está habilitado y su SecretRef no está resuelto sin una alternativa de entorno `FIRECRAWL_API_KEY`, el inicio de la puerta de enlace falla rápidamente.</Note>
+
+<Note>Las anulaciones de `baseUrl` de Firecrawl están bloqueadas: deben usar `https://` y el host oficial de Firecrawl (`api.firecrawl.dev`).</Note>
+
+Comportamiento de tiempo de ejecución actual:
+
+- `tools.web.fetch.provider` selecciona explícitamente el proveedor de recuperación alternativo.
+- Si se omite `provider`, OpenClaw detecta automáticamente el primer proveedor
+  web-fetch listo entre las credenciales disponibles. Hoy el proveedor incluido es Firecrawl.
+- Si Readability está deshabilitado, `web_fetch` omite directamente a la alternativa
+  del proveedor seleccionado. Si no hay ningún proveedor disponible, falla cerrado.
 
 ## Límites y seguridad
 
 - `maxChars` está limitado a `tools.web.fetch.maxCharsCap`
-- El cuerpo de la respuesta está limitado a `maxResponseBytes` antes del análisis; las respuestas
-  excesivamente grandes se truncan con una advertencia
+- El cuerpo de la respuesta está limitado a `maxResponseBytes` antes del análisis; las
+  respuestas excesivas se truncan con una advertencia
 - Los nombres de host privados/internos están bloqueados
 - Las redirecciones se verifican y limitan mediante `maxRedirects`
-- `web_fetch` es de mejor esfuerzo posible; algunos sitios necesitan el [Web Browser](/en/tools/browser)
+- `web_fetch` es de mejor esfuerzo posible: algunos sitios necesitan el [Navegador Web](/en/tools/browser)
 
 ## Perfiles de herramientas
 
-Si utiliza perfiles de herramientas o listas de permitidos, agregue `web_fetch` o `group:web`:
+Si utiliza perfiles de herramientas o listas de permitidos, añada `web_fetch` o `group:web`:
 
 ```json5
 {
   tools: {
     allow: ["web_fetch"],
-    // or: allow: ["group:web"]  (includes both web_fetch and web_search)
+    // or: allow: ["group:web"]  (includes web_fetch, web_search, and x_search)
   },
 }
 ```
 
 ## Relacionado
 
-- [Web Search](/en/tools/web) -- busca en la web con múltiples proveedores
-- [Web Browser](/en/tools/browser) -- automatización completa del navegador para sitios con mucho JS
+- [Búsqueda Web](/en/tools/web) -- buscar en la web con varios proveedores
+- [Navegador Web](/en/tools/browser) -- automatización completa del navegador para sitios con mucho JS
 - [Firecrawl](/en/tools/firecrawl) -- herramientas de búsqueda y extracción de Firecrawl

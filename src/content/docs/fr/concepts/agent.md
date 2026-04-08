@@ -15,11 +15,11 @@ OpenClaw utilise un seul répertoire d'espace de travail de l'agent (`agents.def
 
 Recommandé : utilisez `openclaw setup` pour créer `~/.openclaw/openclaw.json` s'il est manquant et initialiser les fichiers de l'espace de travail.
 
-Guide complet de la disposition de l'espace de travail + sauvegarde : [Espace de travail de l'agent](/en/concepts/agent-workspace)
+Guide complet de la disposition de l'espace de travail + sauvegarde : [Agent workspace](/en/concepts/agent-workspace)
 
 Si `agents.defaults.sandbox` est activé, les sessions non principales peuvent remplacer ceci par
 des espaces de travail par session sous `agents.defaults.sandbox.workspaceRoot` (voir
-[configuration du Gateway](/en/gateway/configuration)).
+[Gateway configuration](/en/gateway/configuration)).
 
 ## Fichiers d'amorçage (injectés)
 
@@ -52,40 +52,43 @@ Les outils principaux (read/exec/edit/write et les outils système associés) so
 
 ## Skills
 
-OpenClaw charge les Skills depuis trois emplacements (l'espace de travail prévaut en cas de conflit de noms) :
+OpenClaw charge les compétences depuis ces emplacements (par ordre de priorité décroissante) :
 
-- Groupés (fournis avec l'installation)
-- Gérés/locaux : `~/.openclaw/skills`
 - Espace de travail : `<workspace>/skills`
+- Compétences de l'agent de projet : `<workspace>/.agents/skills`
+- Compétences de l'agent personnel : `~/.agents/skills`
+- Géré/local : `~/.openclaw/skills`
+- Groupé (fourni avec l'installation)
+- Dossiers de compétences supplémentaires : `skills.load.extraDirs`
 
-Les compétences peuvent être restreintes par la config/l'environnement (voir `skills` dans [configuration du Gateway](/en/gateway/configuration)).
+Les compétences peuvent être conditionnées par la config/env (voir `skills` dans [Gateway configuration](/en/gateway/configuration)).
 
-## Limites du runtime
+## Limites du Runtime
 
-Le runtime de l'agent intégré est basé sur le cœur de l'agent Pi (modèles, outils et
-pipeline de invites). La gestion des sessions, la découverte, le câblage des outils et la livraison
-via le canal sont des couches détenues par OpenClaw par-dessus ce cœur.
+Le runtime de l'agent intégré est construit sur le cœur de l'agent Pi (modèles, outils et
+pipeline de prompts). La gestion des sessions, la découverte, le câblage des outils et la remise des
+canaux sont des couches détenues par OpenClaw par-dessus ce cœur.
 
 ## Sessions
 
-Les transcriptions de session sont stockées au format JSONL à l'emplacement :
+Les transcriptions de session sont stockées au format JSONL à :
 
 - `~/.openclaw/agents/<agentId>/sessions/<SessionId>.jsonl`
 
 L'ID de session est stable et choisi par OpenClaw.
 Les dossiers de session hérités d'autres outils ne sont pas lus.
 
-## Pilotage lors du streaming
+## Pilotage pendant le streaming
 
-Lorsque le mode de file d'attente est `steer`, les messages entrants sont injectés dans l'exécution actuelle.
-La direction en file d'attente est délivrée **une fois que le tour de l'assistant actuel a fini
-d'exécuter ses appels de tool**, avant le prochain appel LLM. La direction ne saute plus
-les appels de tool restants du message de l'assistant actuel ; elle injecte plutôt le message mis en file d'attente
-à la prochaine limite du model.
+Lorsque le mode de file d'attente est `steer`, les messages entrants sont injectés dans l'exécution
+courante. Le pilotage en file d'attente est livré **une fois que le tour de l'assistant actuel a fini
+d'exécuter ses appels d'outils**, avant le prochain appel LLM. Le pilotage ne saute plus
+les appels d'outils restants du message de l'assistant actuel ; il injecte plutôt le message
+en file d'attente à la prochaine limite du modèle.
 
-Lorsque le mode de file d'attente est `followup` ou `collect`, les messages entrants sont retenus jusqu'à ce que
-le tour actuel se termine, puis un nouveau tour d'agent commence avec les charges utiles en file d'attente. Voir
-[File d'attente](/en/concepts/queue) pour le comportement du mode + anti-rebond/limite.
+Lorsque le mode de file d'attente est `followup` ou `collect`, les messages entrants sont conservés jusqu'à ce
+que le tour actuel se termine, puis un nouveau tour d'agent commence avec les charges utiles en file d'attente. Voir
+[Queue](/en/concepts/queue) pour le comportement du mode + rebond/limite.
 
 Block streaming sends completed assistant blocks as soon as they finish; it is
 **off by default** (`agents.defaults.blockStreamingDefault: "off"`).
@@ -99,21 +102,21 @@ Verbose tool summaries are emitted at tool start (no debounce); Control UI
 streams tool output via agent events when available.
 More details: [Streaming + chunking](/en/concepts/streaming).
 
-## Model refs
+## Références de modèle
 
-Model refs in config (for example `agents.defaults.model` and `agents.defaults.models`) are parsed by splitting on the **first** `/`.
+Les références de modèle dans la configuration (par exemple `agents.defaults.model` et `agents.defaults.models`) sont analysées en divisant sur la **première** `/`.
 
-- Use `provider/model` when configuring models.
-- If the model ID itself contains `/` (OpenRouter-style), include the provider prefix (example: `openrouter/moonshotai/kimi-k2`).
-- If you omit the provider, OpenClaw treats the input as an alias or a model for the **default provider** (only works when there is no `/` in the model ID).
+- Utilisez `provider/model` lors de la configuration des modèles.
+- Si l'ID du modèle contient lui-même `/` (style OpenRouter), incluez le préfixe du fournisseur (exemple : `openrouter/moonshotai/kimi-k2`).
+- Si vous omettez le fournisseur, OpenClaw essaie d'abord un alias, puis une correspondance unique de fournisseur configuré pour cet ID de modèle exact, et ne revient ensuite qu'au fournisseur par défaut configuré. Si ce fournisseur n'expose plus le modèle par défaut configuré, OpenClaw revient au premier fournisseur/modèle configuré au lieu d'afficher un ancien fournisseur par défaut supprimé.
 
-## Configuration (minimal)
+## Configuration (minimale)
 
-At minimum, set:
+Au minimum, définissez :
 
 - `agents.defaults.workspace`
-- `channels.whatsapp.allowFrom` (strongly recommended)
+- `channels.whatsapp.allowFrom` (fortement recommandé)
 
 ---
 
-_Next: [Group Chats](/en/channels/group-messages)_ 🦞
+_Suivant : [Group Chats](/en/channels/group-messages)_ 🦞

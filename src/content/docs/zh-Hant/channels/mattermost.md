@@ -6,38 +6,41 @@ read_when:
 title: "Mattermost"
 ---
 
-# Mattermost (外掛)
+# Mattermost
 
-狀態：透過外掛支援（機器人權杖 + WebSocket 事件）。支援頻道、群組和私人訊息。
-Mattermost 是一個可自託管的團隊訊息平台；請造訪
+狀態：內建外掛程式（bot token + WebSocket 事件）。支援頻道、群組和私人訊息。
+Mattermost 是一個可自行架設的團隊訊息平台；請參閱
 [mattermost.com](https://mattermost.com) 官方網站以取得產品詳細資訊和下載。
 
-## 需要安裝外掛
+## 內建外掛程式
 
-Mattermost 以外掛形式提供，並未包含於核心安裝套件中。
+在目前的 OpenClaw 版本中，Mattermost 作為內建外掛程式發行，因此一般的
+套件組建版本不需要另外安裝。
 
-透過 CLI 安裝 (npm registry)：
+如果您使用的是較舊的組建版本，或是排除 Mattermost 的自訂安裝，
+請手動安裝：
+
+透過 CLI 安裝（npm registry）：
 
 ```bash
 openclaw plugins install @openclaw/mattermost
 ```
 
-本地檢出 (當從 git 儲存庫執行時)：
+本地結帳（當從 git repo 執行時）：
 
 ```bash
 openclaw plugins install ./path/to/local/mattermost-plugin
 ```
 
-如果您在設定過程中選擇 Mattermost 且偵測到 git 檢出，
-OpenClaw 將會自動提供本地安裝路徑。
-
-詳細資訊：[外掛](/en/tools/plugin)
+詳細資訊：[外掛程式](/en/tools/plugin)
 
 ## 快速設定
 
-1. 安裝 Mattermost 外掛。
-2. 建立 Mattermost 機器人帳戶並複製 **bot token**。
-3. 複製 Mattermost **base URL** (例如 `https://chat.example.com`)。
+1. 確保 Mattermost 外掛程式可用。
+   - 目前的套件版 OpenClaw 發行版本已內建此外掛程式。
+   - 較舊或自訂的安裝版本可以使用上述指令手動新增。
+2. 建立一個 Mattermost bot 帳號並複製 **bot token**。
+3. 複製 Mattermost **base URL**（例如 `https://chat.example.com`）。
 4. 設定 OpenClaw 並啟動閘道。
 
 最小設定：
@@ -58,7 +61,7 @@ OpenClaw 將會自動提供本地安裝路徑。
 ## 原生斜線指令
 
 原生斜線指令為選用功能。啟用後，OpenClaw 會透過 Mattermost API 註冊 `oc_*` 斜線指令，
-並在閘道 HTTP 伺服器上接收回呼 POST 請求。
+並在閘道 HTTP 伺服器上接收回呼 POST 要求。
 
 ```json5
 {
@@ -76,42 +79,45 @@ OpenClaw 將會自動提供本地安裝路徑。
 }
 ```
 
-注意事項：
+備註：
 
-- `native: "auto"` 預設對於 Mattermost 為停用。設定 `native: true` 以啟用。
-- 如果省略 `callbackUrl`，OpenClaw 會根據閘道主機/連接埠 + `callbackPath` 推導出來。
+- 對於 Mattermost，`native: "auto"` 預設為停用。請設定 `native: true` 以啟用。
+- 如果省略 `callbackUrl`，OpenClaw 會根據閘道主機/連接埠 + `callbackPath` 推導出一個。
 - 對於多帳號設定，`commands` 可以設定在頂層或
-  `channels.mattermost.accounts.<id>.commands` 之下 (帳號值會覆寫頂層欄位)。
-- 指令回呼會使用每個指令的權杖進行驗證，並在權杖檢查失敗時採取封閉式失敗處理。
-- 連線能力需求：回呼端點必須可從 Mattermost 伺服器存取。
-  - 除非 Mattermost 與 OpenClaw 執行於相同的主機/網路命名空間，否則請勿將 `callbackUrl` 設定為 `localhost`。
-  - 除非該 URL 將 `/api/channels/mattermost/command` 反向代理至 OpenClaw，否則請勿將 `callbackUrl` 設定為您的 Mattermost base URL。
-  - 快速檢查方法是 `curl https://<gateway-host>/api/channels/mattermost/command`；GET 請求應從 OpenClaw 返回 `405 Method Not Allowed`，而不是 `404`。
+  `channels.mattermost.accounts.<id>.commands` 之下（帳號值會覆寫頂層欄位）。
+- 指令回呼會使用 OpenClaw 註冊 `oc_*` 指令時
+  Mattermost 傳回的各指令 token 進行驗證。
+- 當註冊失敗、啟動未完成，或回呼 token 與任一已註冊指令不符時，
+  斜線回呼會封閉式地失敗（fail closed）。
+- 連線能力需求：Mattermost 伺服器必須能夠連線到回呼端點。
+  - 除非 Mattermost 與 OpenClaw 運行在同一主機/網路命名空間中，否則請勿將 `callbackUrl` 設置為 `localhost`。
+  - 除非該 URL 將 `/api/channels/mattermost/command` 反向代理至 OpenClaw，否則請勿將 `callbackUrl` 設置為您的 Mattermost 基礎 URL。
+  - 一個快速檢查方法是 `curl https://<gateway-host>/api/channels/mattermost/command`；GET 請求應從 OpenClaw 返回 `405 Method Not Allowed`，而不是 `404`。
 - Mattermost 出站允許清單要求：
-  - 如果您的回調目標是私人/tailnet/內部位址，請設定 Mattermost
+  - 如果您的回調目標是私有/tailnet/內部地址，請設置 Mattermost
     `ServiceSettings.AllowedUntrustedInternalConnections` 以包含回調主機/網域。
   - 請使用主機/網域條目，而非完整的 URL。
     - 正確：`gateway.tailnet-name.ts.net`
     - 錯誤：`https://gateway.tailnet-name.ts.net`
 
-## 環境變數（預設帳戶）
+## 環境變量（預設帳號）
 
-如果您偏好使用環境變數，請在 gateway 主機上設定這些：
+如果您偏好使用環境變量，請在 Gateway 主機上設置這些變量：
 
 - `MATTERMOST_BOT_TOKEN=...`
 - `MATTERMOST_URL=https://chat.example.com`
 
-環境變數僅適用於 **預設** 帳戶（`default`）。其他帳戶必須使用設定值。
+環境變量僅適用於 **預設** 帳號 (`default`)。其他帳號必須使用配置值。
 
 ## 聊天模式
 
-Mattermost 會自動回覆私訊 (DM)。頻道行為由 `chatmode` 控制：
+Mattermost 會自動回覆 DM。頻道行為由 `chatmode` 控制：
 
-- `oncall`（預設）：僅在頻道中被 @提及 時回覆。
-- `onmessage`：回覆每一則頻道訊息。
+- `oncall` （預設）：僅在頻道中被 @提及時回覆。
+- `onmessage`：回覆每一條頻道訊息。
 - `onchar`：當訊息以觸發前綴開頭時回覆。
 
-設定範例：
+配置範例：
 
 ```json5
 {
@@ -124,22 +130,22 @@ Mattermost 會自動回覆私訊 (DM)。頻道行為由 `chatmode` 控制：
 }
 ```
 
-備註：
+注意：
 
-- `onchar` 仍會回覆明確的 @提及。
-- `channels.mattermost.requireMention` 在舊版設定中仍然有效，但建議使用 `chatmode`。
+- `onchar` 仍會回應明確的 @提及。
+- 雖然支援舊版配置中的 `channels.mattermost.requireMention`，但建議優先使用 `chatmode`。
 
-## 主題串與工作階段
+## 串回與會話
 
-使用 `channels.mattermost.replyToMode` 來控制頻道和群組的回覆是留在主頻道，還是在觸發貼文下開啟主題串。
+使用 `channels.mattermost.replyToMode` 來控制頻道和群組回覆是保留在主頻道中，還是在觸發貼文下開啟串回。
 
-- `off`（預設）：僅當入站貼文已經在主題串中時，才在該主題串中回覆。
-- `first`：對於頂層頻道/群組貼文，在該貼文下啟動主題串，並將
-  對話路由至以主題串為範圍的工作階段。
-- `all`：目前對 Mattermost 的行為與 `first` 相同。
-- 私訊 (DM) 會忽略此設定，並保持非主題串狀態。
+- `off` （預設）：僅當入站貼文已經在串回中時，才在串回中回覆。
+- `first`：對於頂層頻道/群組貼文，在該貼文下開啟串回並將
+  對話路由至串回範圍的會話。
+- `all`：目前的 Mattermost 行為與 `first` 相同。
+- 直接訊息會忽略此設置並保持非串回狀態。
 
-設定範例：
+配置範例：
 
 ```json5
 {
@@ -151,29 +157,46 @@ Mattermost 會自動回覆私訊 (DM)。頻道行為由 `chatmode` 控制：
 }
 ```
 
-備註：
+注意：
 
-- 以主題串為範圍的工作階段使用觸發貼文 ID 作為主題串根。
-- `first` 和 `all` 目前是等效的，因為一旦 Mattermost 有了主題串根，
-  後續的區塊和媒體會繼續在同一個主題串中。
+- 執行緒範圍的會話使用觸發文章的 ID 作為執行緒根。
+- `first` 和 `all` 目前是等價的，因為一旦 Mattermost 有了執行緒根，後續的區塊和媒體會在同一個執行緒中繼續。
 
-## 存取控制 (DMs)
+## 存取控制（DM）
 
-- 預設值：`channels.mattermost.dmPolicy = "pairing"`（未知發送者會獲得配對碼）。
-- 核准方式：
+- 預設值：`channels.mattermost.dmPolicy = "pairing"`（未知傳送者會收到配對碼）。
+- 透過以下方式核准：
   - `openclaw pairing list mattermost`
   - `openclaw pairing approve mattermost <CODE>`
 - 公開 DM：`channels.mattermost.dmPolicy="open"` 加上 `channels.mattermost.allowFrom=["*"]`。
 
 ## 頻道（群組）
 
-- 預設值：`channels.mattermost.groupPolicy = "allowlist"`（提及 gated）。
-- 使用 `channels.mattermost.groupAllowFrom` 將發送者加入允許清單（建議使用使用者 ID）。
-- `@username` 比對是可變的，且僅在 `channels.mattermost.dangerouslyAllowNameMatching: true` 時啟用。
-- 公開頻道：`channels.mattermost.groupPolicy="open"`（提及 gated）。
-- 執行時期備註：如果完全缺少 `channels.mattermost`，執行時期會針對群組檢查回退到 `groupPolicy="allowlist"`（即使設定了 `channels.defaults.groupPolicy`）。
+- 預設值：`channels.mattermost.groupPolicy = "allowlist"`（提及閘道）。
+- 使用 `channels.mattermost.groupAllowFrom` 將傳送者加入允許清單（建議使用使用者 ID）。
+- 個別頻道的提及覆寫位於 `channels.mattermost.groups.<channelId>.requireMention`
+  或使用 `channels.mattermost.groups["*"].requireMention` 作為預設值。
+- `@username` 匹配是可變的，且僅在 `channels.mattermost.dangerouslyAllowNameMatching: true` 時啟用。
+- 公開頻道：`channels.mattermost.groupPolicy="open"`（提及閘道）。
+- 執行時期注意：如果完全缺少 `channels.mattermost`，執行時期會針對群組檢查回退到 `groupPolicy="allowlist"`（即使設定了 `channels.defaults.groupPolicy`）。
 
-## 出站遞送的目標
+範例：
+
+```json5
+{
+  channels: {
+    mattermost: {
+      groupPolicy: "open",
+      groups: {
+        "*": { requireMention: true },
+        "team-channel-id": { requireMention: false },
+      },
+    },
+  },
+}
+```
+
+## 外寄交付的目標
 
 將這些目標格式與 `openclaw message send` 或 cron/webhooks 搭配使用：
 
@@ -181,22 +204,21 @@ Mattermost 會自動回覆私訊 (DM)。頻道行為由 `chatmode` 控制：
 - `user:<id>` 用於 DM
 - `@username` 用於 DM（透過 Mattermost API 解析）
 
-純不透明 ID（如 `64ifufp...`）在 Mattermost 中是**有歧義的**（使用者 ID 與頻道 ID）。
+純不透明 ID（如 `64ifufp...`）在 Mattermost 中是**模稜兩可**的（使用者 ID vs 頻道 ID）。
 
-OpenClaw 以**使用者優先**的方式解析它們：
+OpenClaw 會以**使用者優先**的方式解析它們：
 
 - 如果該 ID 作為使用者存在（`GET /api/v4/users/<id>` 成功），OpenClaw 會透過 `/api/v4/channels/direct` 解析直接頻道來發送 **DM**。
-- 否則該 ID 會被視為**頻道 ID**。
+- 否則，該 ID 會被視為**頻道 ID**。
 
 如果您需要確定性行為，請務必使用明確的前綴（`user:<id>` / `channel:<id>`）。
 
 ## DM 頻道重試
 
-當 OpenClaw 發送到 Mattermost DM 目標並需要先解析直接頻道時，
+當 OpenClaw 發送到 Mattermost DM 目標並且需要先解析直接頻道時，它
 預設會重試暫時性的直接頻道建立失敗。
 
-使用 `channels.mattermost.dmChannelRetry` 全局調整 Mattermost 外掛的該行為，
-或使用 `channels.mattermost.accounts.<id>.dmChannelRetry` 針對單個帳戶進行設定。
+使用 `channels.mattermost.dmChannelRetry` 針對 Mattermost 外掛全域調整該行為，或使用 `channels.mattermost.accounts.<id>.dmChannelRetry` 針對單一帳戶進行調整。
 
 ```json5
 {
@@ -215,16 +237,16 @@ OpenClaw 以**使用者優先**的方式解析它們：
 
 備註：
 
-- 這僅適用於 DM 頻道建立（`/api/v4/channels/direct`），而非每次 Mattermost API 呼叫。
-- 重試適用於暫時性錯誤，例如速率限制、5xx 回應以及網路或逾時錯誤。
-- 除 `429` 外的 4xx 客戶端錯誤被視為永久性錯誤，不會重試。
+- 這僅適用於 DM 頻道建立 (`/api/v4/channels/direct`)，而非每次 Mattermost API 呼叫。
+- 重試機制適用於暫時性錯誤，例如速率限制、5xx 回應以及網路或逾時錯誤。
+- 除 `429` 外的 4xx 用戶端錯誤會被視為永久性錯誤，不會重試。
 
-## 反應（訊息工具）
+## 反應 (訊息工具)
 
-- 使用 `message action=react` 搭配 `channel=mattermost`。
+- 將 `message action=react` 與 `channel=mattermost` 搭配使用。
 - `messageId` 是 Mattermost 的貼文 ID。
-- `emoji` 接受諸如 `thumbsup` 或 `:+1:` 的名稱（冒號可選）。
-- 設定 `remove=true`（布林值）以移除反應。
+- `emoji` 接受像是 `thumbsup` 或 `:+1:` 這類名稱 (冒號為選用)。
+- 設定 `remove=true` (布林值) 以移除反應。
 - 反應新增/移除事件會作為系統事件轉發至路由的代理程式工作階段。
 
 範例：
@@ -236,14 +258,14 @@ message action=react channel=mattermost target=channel:<channelId> messageId=<po
 
 設定：
 
-- `channels.mattermost.actions.reactions`：啟用/停用反應動作（預設為 true）。
-- 各帳號覆寫：`channels.mattermost.accounts.<id>.actions.reactions`。
+- `channels.mattermost.actions.reactions`：啟用/停用反應動作 (預設為 true)。
+- 每個帳戶的覆寫設定：`channels.mattermost.accounts.<id>.actions.reactions`。
 
-## 互動式按鈕（訊息工具）
+## 互動式按鈕 (訊息工具)
 
-傳送包含可點擊按鈕的訊息。當使用者點擊按鈕時，代理程式會收到選項並可進行回應。
+傳送包含可點擊按鈕的訊息。當使用者點擊按鈕時，代理程式會收到選取內容並可進行回應。
 
-將 `inlineButtons` 新增至頻道功能以啟用按鈕：
+透過將 `inlineButtons` 新增至頻道功能來啟用按鈕：
 
 ```json5
 {
@@ -255,7 +277,7 @@ message action=react channel=mattermost target=channel:<channelId> messageId=<po
 }
 ```
 
-使用帶有 `buttons` 參數的 `message action=send`。按鈕是一個二維陣列（按鈕列）：
+將 `message action=send` 與 `buttons` 參數搭配使用。按鈕是一個二維陣列 (按鈕列)：
 
 ```
 message action=send channel=mattermost target=channel:<channelId> buttons=[[{"text":"Yes","callback_data":"yes"},{"text":"No","callback_data":"no"}]]
@@ -263,44 +285,42 @@ message action=send channel=mattermost target=channel:<channelId> buttons=[[{"te
 
 按鈕欄位：
 
-- `text`（必填）：顯示標籤。
-- `callback_data`（必填）：點擊時回傳的值（用作動作 ID）。
-- `style`（選填）：`"default"`、`"primary"` 或 `"danger"`。
+- `text` (必要)：顯示標籤。
+- `callback_data` (必要)：點擊時傳回的值 (用作動作 ID)。
+- `style` (選用)：`"default"`、`"primary"` 或 `"danger"`。
 
 當使用者點擊按鈕時：
 
-1. 所有按鈕會被替換為確認行（例如，「✓ **Yes** 已由 @user 選取」）。
-2. 代理程式會收到選項作為傳入訊息並進行回應。
+1. 所有按鈕會被確認行 (例如 "✓ **Yes** selected by @user") 取代。
+2. 代理程式會將選取內容作為傳入訊息接收並進行回應。
 
 備註：
 
-- 按鈕回呼使用 HMAC-SHA256 驗證（自動執行，無需設定）。
-- Mattermost 會從其 API 回應中移除回呼資料（安全功能），因此所有按鈕
-  都會在點擊時被移除 — 無法部分移除。
-- 包含連字號或底線的動作 ID 會自動被清理
-  （Mattermost 路由限制）。
+- 按鈕回呼使用 HMAC-SHA256 驗證 (自動，無需設定)。
+- Mattermost 會從其 API 回應中移除回呼資料 (安全性功能)，因此所有按鈕都會在點擊時被移除 — 無法部分移除。
+- 包含連字號或底線的動作 ID 會自動被清理（Mattermost 路由限制）。
 
 設定：
 
-- `channels.mattermost.capabilities`：功能字串陣列。新增 `"inlineButtons"` 以
-  在代理程式系統提示中啟用按鈕工具描述。
-- `channels.mattermost.interactions.callbackBaseUrl`：按鈕回呼的選用外部基礎 URL
+- `channels.mattermost.capabilities`：功能字串陣列。加入 `"inlineButtons"` 以
+  在代理程式系統提示詞中啟用按鈕工具描述。
+- `channels.mattermost.interactions.callbackBaseUrl`：按鈕回呼的可選外部基礎 URL
   （例如 `https://gateway.example.com`）。當 Mattermost 無法
-  直接在其綁定主機連上閘道時請使用此設定。
+  直接存取其綁定主機上的閘道時使用。
 - 在多帳號設定中，您也可以在
   `channels.mattermost.accounts.<id>.interactions.callbackBaseUrl` 下設定相同的欄位。
-- 如果省略了 `interactions.callbackBaseUrl`，OpenClaw 會從
-  `gateway.customBindHost` + `gateway.port` 推導回調 URL，然後後備使用 `http://localhost:<port>`。
-- 連線性規則：按鈕回調 URL 必須能從 Mattermost 伺服器存取。
-  `localhost` 僅在 Mattermost 和 OpenClaw 運行於同一台主機/網路命名空間時有效。
-- 如果您的回調目標是私有/tailnet/內部網路，請將其主機/網域新增至 Mattermost
+- 如果省略 `interactions.callbackBaseUrl`，OpenClaw 會從
+  `gateway.customBindHost` + `gateway.port` 推導回呼 URL，然後回退到 `http://localhost:<port>`。
+- 連線能力規則：按鈕回呼 URL 必須能從 Mattermost 伺服器存取。
+  `localhost` 僅在 Mattermost 和 OpenClaw 運行於相同主機/網路命名空間時有效。
+- 如果您的回呼目標是私人/tailnet/內部網路，請將其主機/網域新增至 Mattermost
   `ServiceSettings.AllowedUntrustedInternalConnections`。
 
 ### 直接 API 整合（外部腳本）
 
-外部腳本和 webhook 可以直接透過 Mattermost REST API 發送按鈕，
-而不經過代理程式的 `message` 工具。請盡可能使用擴充功能中的
-`buildButtonAttachments()`；如果發送原始 JSON，請遵循以下規則：
+外部腳本和 Webhooks 可以透過 Mattermost REST API 直接張貼按鈕，
+而不必透過代理程式的 `message` 工具。盡可能使用擴充功能中的
+`buildButtonAttachments()`；如果張貼原始 JSON，請遵循以下規則：
 
 **Payload 結構：**
 
@@ -336,26 +356,25 @@ message action=send channel=mattermost target=channel:<channelId> buttons=[[{"te
 
 **關鍵規則：**
 
-1. 附件應放在 `props.attachments` 中，而非頂層 `attachments`（會被靜默忽略）。
-2. 每個動作都需要 `type: "button"` —— 沒有它，點擊操作將被靜默吞沒。
-3. 每個動作都需要一個 `id` 欄位 —— Mattermost 會忽略沒有 ID 的動作。
-4. 動作 `id` 必須**僅為字母數字** (`[a-zA-Z0-9]`)。連字元和底線會破壞
-   Mattermost 的伺服器端動作路由（返回 404）。使用前請將其剝離。
-5. `context.action_id` 必須與按鈕的 `id` 相符，以便確認訊息顯示
-   按鈕名稱（例如「批准」）而非原始 ID。
-6. `context.action_id` 是必填的 —— 如果沒有它，互動處理程式會返回 400。
+1. 附件放在 `props.attachments` 中，而非頂層 `attachments`（會被無聲忽略）。
+2. 每個動作都需要 `type: "button"` — 沒有它，點擊會被無聲吞沒。
+3. 每個動作都需要一個 `id` 欄位 — Mattermost 會忽略沒有 ID 的動作。
+4. 動作 `id` 必須 **僅為字母數字** （`[a-zA-Z0-9]`）。連字號和底線會破壞
+   Mattermost 的伺服器端動作路由（返回 404）。使用前請將其移除。
+5. `context.action_id` 必須符合按鈕的 `id`，這樣確認訊息才會顯示
+   按鈕名稱（例如「核准」），而非原始 ID。
+6. `context.action_id` 是必需的 —— 沒有它，互動處理程式會返回 400。
 
-**HMAC 權杖產生：**
+**HMAC 權杖生成：**
 
-閘道使用 HMAC-SHA256 驗證按鈕點擊。外部腳本必須產生符合
-閘道驗證邏輯的權杖：
+閘道使用 HMAC-SHA256 驗證按鈕點擊。外部腳本必須生成符合閘道驗證邏輯的權杖：
 
-1. 從機器人權杖推導金鑰：
+1. 從機器人權杖派生密鑰：
    `HMAC-SHA256(key="openclaw-mattermost-interactions", data=botToken)`
-2. 建構包含**除** `_token` 以外所有欄位的 context 物件。
-3. 使用**排序的鍵**且**不包含空格**進行序列化（閘道使用帶有排序鍵的 `JSON.stringify`，這會產生緊湊的輸出）。
-4. 簽署：`HMAC-SHA256(key=secret, data=serializedContext)`
-5. 將產生的十六進位摘要作為 `_token` 加入到上下文中。
+2. 構建包含所有欄位（**除了** `_token`）的上下文物件。
+3. 使用 **排序鍵** 和 **無空格** 進行序列化（閘道使用帶有排序鍵的 `JSON.stringify`，這會產生緊湊輸出）。
+4. 簽名：`HMAC-SHA256(key=secret, data=serializedContext)`
+5. 將產生的十六進位摘要作為 `_token` 添加到上下文中。
 
 Python 範例：
 
@@ -378,24 +397,20 @@ context = {**ctx, "_token": token}
 
 - Python 的 `json.dumps` 預設會新增空格（`{"key": "val"}`）。請使用
   `separators=(",", ":")` 來符合 JavaScript 的緊湊輸出（`{"key":"val"}`）。
-- 請務必簽署**所有**上下文欄位（排除 `_token`）。閘道會移除 `_token` 然後
-  簽署剩餘的所有內容。簽署子集會導致無聲的驗證失敗。
-- 使用 `sort_keys=True` — 閘道在簽署前會對鍵進行排序，而 Mattermost 在儲存載荷時可能會
-  重新排序上下文欄位。
-- 從 bot token 推導金鑰（確定性），而非隨機位元組。金鑰
-  在建立按鈕的程序與進行驗證的閘道之間必須保持一致。
+- 務必簽署 **所有** 上下文欄位（減去 `_token`）。閘道會移除 `_token` 然後
+  對其餘部分進行簽署。僅簽署子集會導致靜默驗證失敗。
+- 使用 `sort_keys=True` —— 閘道在簽署前會對鍵進行排序，且 Mattermost 在儲存載荷時可能會重新排序上下文欄位。
+- 從機器人權杖派生密鑰（確定性），而非隨機位元組。密鑰在建立按鈕的程序與執行驗證的閘道之間必須保持一致。
 
 ## 目錄適配器
 
-Mattermost 外掛包含一個目錄適配器，可透過 Mattermost API 解析頻道和使用者名稱。
-這啟用了 `#channel-name` 和 `@username` 目標於
-`openclaw message send` 以及 cron/webhook 傳遞中。
+Mattermost 外掛包含一個目錄適配器，可透過 Mattermost API 解析頻道和使用者名稱。這可在 `openclaw message send` 和 cron/webhook 傳遞中啟用 `#channel-name` 和 `@username` 目標。
 
-不需要任何設定 — 適配器使用帳號設定中的 bot token。
+無需配置 —— 適配器使用帳戶配置中的機器人權杖。
 
-## 多帳號
+## 多帳戶
 
-Mattermost 支援在 `channels.mattermost.accounts` 下設置多個帳號：
+Mattermost 支援在 `channels.mattermost.accounts` 下設定多個帳戶：
 
 ```json5
 {
@@ -410,23 +425,36 @@ Mattermost 支援在 `channels.mattermost.accounts` 下設置多個帳號：
 }
 ```
 
-## 疑難排解
+## 故障排除
 
-- 頻道中沒有回覆：請確認 bot 在頻道中並提及它（oncall），使用觸發前綴（onchar），或設定 `chatmode: "onmessage"`。
-- 驗證錯誤：請檢查 bot token、基礎 URL，以及帳號是否已啟用。
-- 多帳號問題：環境變數僅適用於 `default` 帳號。
-- 按鈕顯示為白框：代理程式可能發送了格式錯誤的按鈕資料。請檢查每個按鈕是否同時具有 `text` 和 `callback_data` 欄位。
-- 按鈕已渲染但點擊無反應：請驗證 Mattermost 伺服器設定中的 `AllowedUntrustedInternalConnections` 包含 `127.0.0.1 localhost`，且 `EnablePostActionIntegration` 在 ServiceSettings 中為 `true`。
-- 點擊按鈕時返回 404：按鈕的 `id` 可能包含連字號或底線。Mattermost 的動作路由器會因非字母數字 ID 而中斷。請僅使用 `[a-zA-Z0-9]`。
-- Gateway 記錄 `invalid _token`：HMAC 不符。請檢查您是否簽署了所有上下文欄位（而非子集）、使用排序鍵，並使用精簡 JSON（無空格）。請參閱上方的 HMAC 章節。
-- Gateway 記錄 `missing _token in context`：`_token` 欄位不在按鈕的上下文中。請確保在建立整合負載時包含它。
-- 確認顯示原始 ID 而非按鈕名稱：`context.action_id` 與按鈕的 `id` 不符。請將兩者設為相同的經清理值。
-- Agent 不知道按鈕：請將 `capabilities: ["inlineButtons"]` 加入 Mattermost 頻道設定中。
+- 頻道中無回覆：請確保機器人在頻道中並提及它（oncall）、使用觸發前綴（onchar），或設定 `chatmode: "onmessage"`。
+- 驗證錯誤：請檢查機器人權杖、基礎 URL 以及帳戶是否已啟用。
+- 多帳號問題：環境變數僅套用於 `default` 帳號。
+- 原生斜線指令傳回 `Unauthorized: invalid command token.`：OpenClaw
+  未接受回調 token。典型原因：
+  - 斜線指令註冊在啟動時失敗或僅部分完成
+  - 回調指向了錯誤的 gateway/帳號
+  - Mattermost 仍有舊的指令指向先前的回調目標
+  - gateway 重新啟動時未重新啟用斜線指令
+- 如果原生斜線指令停止運作，請檢查日誌中是否有
+  `mattermost: failed to register slash commands` 或
+  `mattermost: native slash commands enabled but no commands could be registered`。
+- 如果省略了 `callbackUrl` 且日誌警告回調解析為
+  `http://127.0.0.1:18789/...`，該 URL 可能僅在
+  Mattermost 與 OpenClaw 執行於相同主機/網路命名空間時才可存取。請改為設定
+  明確的外部可存取 `commands.callbackUrl`。
+- 按鈕顯示為白框：代理程式可能正在發送格式錯誤的按鈕資料。請檢查每個按鈕是否同時具有 `text` 和 `callback_data` 欄位。
+- 按鈕已顯示但點擊無反應：請驗證 Mattermost 伺服器設定中的 `AllowedUntrustedInternalConnections` 包含 `127.0.0.1 localhost`，且 ServiceSettings 中的 `EnablePostActionIntegration` 為 `true`。
+- 點擊按鈕時傳回 404：按鈕的 `id` 可能包含連字號或底線。Mattermost 的動作路由器在遇到非字母數字 ID 時會中斷。請僅使用 `[a-zA-Z0-9]`。
+- Gateway 記錄 `invalid _token`：HMAC 不符。請檢查您是否簽署了所有內容欄位（而非子集）、使用排序後的鍵，並使用精簡 JSON（無空格）。請參閱上方的 HMAC 區段。
+- Gateway 記錄 `missing _token in context`：`_token` 欄位不在按鈕的內容中。請確保在建置整合負載時包含它。
+- 確認訊息顯示原始 ID 而非按鈕名稱：`context.action_id` 與按鈕的 `id` 不符。請將兩者設為相同的清理後值。
+- 代理程式不識別按鈕：請將 `capabilities: ["inlineButtons"]` 新增至 Mattermost 頻道設定中。
 
 ## 相關
 
 - [頻道概覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — 私人訊息驗證和配對流程
-- [群組](/en/channels/groups) — 群組聊天行為和提及閘控
-- [頻道路由](/en/channels/channel-routing) — 訊息的工作階段路由
-- [安全性](/en/gateway/security) — 存取模型和強化防護
+- [配對](/en/channels/pairing) — 私訊認證與配對流程
+- [群組](/en/channels/groups) — 群組聊天行為與提及控管
+- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
+- [安全性](/en/gateway/security) — 存取模型與強化防護

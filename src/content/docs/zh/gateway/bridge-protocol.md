@@ -1,5 +1,5 @@
 ---
-summary: "Bridge protocol (legacy nodes): TCP JSONL, pairing, scoped RPC"
+summary: "历史桥接协议（传统节点）：TCP JSONL、配对、作用域内 RPC"
 read_when:
   - Building or debugging node clients (iOS/Android/macOS node mode)
   - Investigating pairing or bridge auth failures
@@ -9,9 +9,9 @@ title: "Bridge Protocol"
 
 # 网桥协议（旧版节点传输）
 
-<Warning>TCP 桥接已被**移除**。当前的 OpenClaw 构建版本不附带桥接监听器，且 `bridge.*` 配置键已不再架构中。此页面仅供历史参考。对于所有节点/运营商客户端，请使用 [Gateway(网关) 协议](/en/gateway/protocol)。</Warning>
+<Warning>TCP 桥接已被**移除**。目前的 OpenClaw 版本不再包含桥接监听器，且 `bridge.*` 配置键也不再包含在架构中。本页面仅作为历史参考保留。所有节点/操作员客户端请使用 [Gateway(网关) Protocol](/en/gateway/protocol)。</Warning>
 
-## 为什么我们两者都有
+## 为何存在
 
 - **安全边界**：桥接暴露的是一个小型的允许列表，而不是
   完整的 gateway API 表面。
@@ -25,7 +25,8 @@ title: "Bridge Protocol"
 
 - TCP，每行一个 JSON 对象 (JSONL)。
 - 可选 TLS （当 `bridge.tls.enabled` 为 true 时）。
-- 旧版默认监听端口为 `18790` （当前构建版本不会启动 TCP 桥接）。
+- 历史默认监听端口为 `18790`（当前版本不启动
+  TCP 桥接）。
 
 当启用 TLS 时，设备发现 TXT 记录包含 `bridgeTls=1` 以及
 `bridgeTlsSha256` 作为非机密提示。请注意，Bonjour/mDNS TXT 记录是
@@ -39,7 +40,8 @@ title: "Bridge Protocol"
 3. 客户端发送 `pair-request`。
 4. Gateway(网关) 等待批准，然后发送 `pair-ok` 和 `hello-ok`。
 
-`hello-ok` 返回 `serverName` 并且可能包含 `canvasHostUrl`。
+历史上，`hello-ok` 返回 `serverName` 并且可以包含
+`canvasHostUrl`。
 
 ## 帧
 
@@ -70,15 +72,16 @@ Payload 字段（除非另有说明，均为可选）：
 - `exitCode`, `timedOut`, `success`, `output`：完成详细信息（仅限已完成）。
 - `reason`：拒绝原因（仅限已拒绝）。
 
-## Tailnet 使用
+## 历史 tailnet 使用情况
 
-- 将桥接绑定到 Tailnet IP：`bridge.bind: "tailnet"` 在
-  `~/.openclaw/openclaw.json` 中。
+- 将桥接绑定到 tailnet IP：`bridge.bind: "tailnet"` 于
+  `~/.openclaw/openclaw.json` 中（仅限历史用途；`bridge.*` 不再有效）。
 - 客户端通过 MagicDNS 名称或 Tailnet IP 进行连接。
 - Bonjour **不**跨网络工作；需要时请使用手动主机/端口或广域 DNS‑SD
   。
 
 ## 版本控制
 
-桥接目前为 **隐式 v1**（无最小/最大协商）。预期向后兼容；
-在任何重大更改之前添加一个桥接协议版本字段。
+该桥接是 **隐式 v1**（无最小/最大协商）。本节仅作
+历史参考；当前的节点/操作员客户端使用 WebSocket
+[Gateway(网关) Protocol](/en/gateway/protocol)。

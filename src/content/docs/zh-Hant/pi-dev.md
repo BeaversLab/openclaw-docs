@@ -12,17 +12,16 @@ read_when:
 
 ## 型別檢查與 Lint
 
-- 型別檢查與建置：`pnpm build`
-- Lint：`pnpm lint`
-- 格式檢查：`pnpm format`
-- 推送前的完整檢查：`pnpm lint && pnpm build && pnpm test`
+- 預設本地檢查：`pnpm check`
+- 建置檢查：當變更可能影響建置輸出、打包或延遲載入/模組邊界時，請執行 `pnpm build`
+- 針對重度 Pi 變更的完整落版檢查：`pnpm check && pnpm test`
 
 ## 執行 Pi 測試
 
-直接使用 Vitest 執行 Pi 專屬的測試組：
+直接使用 Vitest 執行 Pi 專屬測試組：
 
 ```bash
-pnpm test -- \
+pnpm test \
   "src/agents/pi-*.test.ts" \
   "src/agents/pi-embedded-*.test.ts" \
   "src/agents/pi-tools*.test.ts" \
@@ -31,13 +30,13 @@ pnpm test -- \
   "src/agents/pi-hooks/**/*.test.ts"
 ```
 
-若要包含即時提供者的練習：
+若要包含即時供應者練習：
 
 ```bash
-OPENCLAW_LIVE_TEST=1 pnpm test -- src/agents/pi-embedded-runner-extraparams.live.test.ts
+OPENCLAW_LIVE_TEST=1 pnpm test src/agents/pi-embedded-runner-extraparams.live.test.ts
 ```
 
-這涵蓋了主要的 Pi 單元測試套件：
+這涵蓋了主要的 Pi 單元套件：
 
 - `src/agents/pi-*.test.ts`
 - `src/agents/pi-embedded-*.test.ts`
@@ -50,29 +49,30 @@ OPENCLAW_LIVE_TEST=1 pnpm test -- src/agents/pi-embedded-runner-extraparams.live
 
 建議流程：
 
-- 以開發模式執行閘道：
+- 在開發模式中執行閘道：
   - `pnpm gateway:dev`
 - 直接觸發代理程式：
   - `pnpm openclaw agent --message "Hello" --thinking low`
-- 使用 TUI 進行互動式除錯：
+- 使用 TUI 進行互動式偵錯：
   - `pnpm tui`
 
-針對工具呼叫行為，提示要求 `read` 或 `exec` 動作，以便您查看工具串流與負載處理。
+針對工具呼叫行為，提示 `read` 或 `exec` 操作，以便您查看工具串流和負載處理。
 
-## 完全重置
+## 乾淨重設
 
-狀態儲存在 OpenClaw 狀態目錄下。預設為 `~/.openclaw`。如果設定了 `OPENCLAW_STATE_DIR`，則改用該目錄。
+狀態位於 OpenClaw 狀態目錄下。預設為 `~/.openclaw`。如果設定了 `OPENCLAW_STATE_DIR`，則改用該目錄。
 
-若要重置所有內容：
+若要重設所有內容：
 
 - `openclaw.json` 用於設定
-- `credentials/` 用於設定檔與權杖
+- `agents/<agentId>/agent/auth-profiles.json` 用於模型驗證設定檔（API 金鑰 + OAuth）
+- `credentials/` 用於仍位於驗證設定檔存放區外部的供應者/通道狀態
 - `agents/<agentId>/sessions/` 用於代理程式工作階段記錄
-- `agents/<agentId>/sessions.json` 用於工作階段索引
+- `agents/<agentId>/sessions/sessions.json` 用於工作階段索引
 - `sessions/` 如果舊版路徑存在
 - `workspace/` 如果您想要一個空白的工作區
 
-如果您只想重置工作階段，請刪除該代理程式的 `agents/<agentId>/sessions/` 和 `agents/<agentId>/sessions.json`。如果您不想重新進行身份驗證，請保留 `credentials/`。
+如果您只想重設工作階段，請刪除該代理程式的 `agents/<agentId>/sessions/`。如果您想保留驗證，請保留 `agents/<agentId>/agent/auth-profiles.json` 和 `credentials/` 下的任何供應者狀態不變。
 
 ## 參考資料
 

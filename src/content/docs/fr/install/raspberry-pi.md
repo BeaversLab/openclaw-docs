@@ -23,17 +23,17 @@ Exécutez une passerelle OpenClaw persistante et toujours active sur un Gateway.
 ## Configuration
 
 <Steps>
-  <Step title="Flasher le système d'exploitation">
-    Utilisez **Raspberry Pi OS Lite (64-bit)** -- aucun bureau n'est nécessaire pour un serveur sans interface graphique.
+  <Step title="Flash the OS">
+    Utilisez **Raspberry Pi OS Lite (64-bit)** -- aucun bureau n'est nécessaire pour un serveur sans tête.
 
     1. Téléchargez [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
-    2. Choisissez le système d'exploitation : **Raspberry Pi OS Lite (64-bit)**.
+    2. Choisissez l'OS : **Raspberry Pi OS Lite (64-bit)**.
     3. Dans la boîte de dialogue des paramètres, préconfigurez :
        - Nom d'hôte : `gateway-host`
        - Activer SSH
        - Définir le nom d'utilisateur et le mot de passe
        - Configurer le WiFi (si vous n'utilisez pas Ethernet)
-    4. Flashez sur votre carte SD ou votre clé USB, insérez-la et démarrez le Pi.
+    4. Flashez sur votre carte SD ou clé USB, insérez-la et démarrez le Pi.
 
   </Step>
 
@@ -78,10 +78,10 @@ Exécutez une passerelle OpenClaw persistante et toujours active sur un Gateway.
 
   </Step>
 
-<Step title="Vérifier">```bash openclaw status sudo systemctl status openclaw journalctl -u openclaw -f ```</Step>
+<Step title="Verify">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
-  <Step title="Accéder à l'interface de contrôle">
-    Sur votre ordinateur, obtenez une URL du tableau de bord depuis le Pi :
+  <Step title="Access the Control UI">
+    Sur votre ordinateur, obtenez l'URL du tableau de bord à partir du Pi :
 
     ```bash
     ssh user@gateway-host 'openclaw dashboard --no-open'
@@ -93,14 +93,14 @@ Exécutez une passerelle OpenClaw persistante et toujours active sur un Gateway.
     ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
     ```
 
-    Ouvrez l'URL affichée dans votre navigateur local. Pour un accès distant permanent, consultez [l'intégration Tailscale](/en/gateway/tailscale).
+    Ouvrez l'URL imprimée dans votre navigateur local. Pour un accès à distance permanent, consultez [l'intégration Tailscale](/en/gateway/tailscale).
 
   </Step>
 </Steps>
 
 ## Conseils de performance
 
-**Utiliser un SSD USB** -- Les cartes SD sont lentes et s'usent. Un SSD USB améliore considérablement les performances. Consultez le [guide de démarrage USB du Pi](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot).
+**Utilisez un SSD USB** -- les cartes SD sont lentes et s'usent. Un SSD USB améliore considérablement les performances. Consultez le [guide de démarrage USB du Pi](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot).
 
 **Activer le cache de compilation des modules** -- Accélère les appels répétés de la CLI sur les Pi peu puissants :
 
@@ -126,11 +126,11 @@ sudo systemctl disable bluetooth
 
 **Performances lentes** -- Utilisez un SSD USB au lieu d'une carte SD. Vérifiez le throttling du CPU avec `vcgencmd get_throttled` (devrait retourner `0x0`).
 
-**Le service ne démarre pas** -- Vérifiez les journaux avec `journalctl -u openclaw --no-pager -n 100` et exécutez `openclaw doctor --non-interactive`.
+**Le service ne démarre pas** -- Vérifiez les journaux avec `journalctl --user -u openclaw-gateway.service --no-pager -n 100` et exécutez `openclaw doctor --non-interactive`. S'il s'agit d'un Pi sans tête, vérifiez également que la persistance est activée : `sudo loginctl enable-linger "$(whoami)"`.
 
-**Problèmes de binaire ARM** -- Si une compétence échoue avec "exec format error", vérifiez si le binaire possède une version ARM64. Vérifiez l'architecture avec `uname -m` (devrait afficher `aarch64`).
+**Problèmes de binaire ARM** -- Si une compétence échoue avec "exec format error", vérifiez si le binaire dispose d'une version ARM64. Vérifiez l'architecture avec `uname -m` (devrait afficher `aarch64`).
 
-**Déconnexions WiFi** -- Désactivez la gestion de l'énergie WiFi : `sudo iwconfig wlan0 power off`.
+**Déconnexions WiFi** -- Désactivez la gestion de l'alimentation WiFi : `sudo iwconfig wlan0 power off`.
 
 ## Étapes suivantes
 

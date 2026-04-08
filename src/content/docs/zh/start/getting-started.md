@@ -17,7 +17,7 @@ title: "入门指南"
 - **Node.js** — 推荐 Node 24（也支持 Node 22.14+）
 - 来自模型提供商（API、Anthropic、Google 等）的 **OpenAI 密钥** — 新手引导将会提示您
 
-<Tip>使用 `node --version` 检查你的 Node 版本。 **Windows 用户：** 原生 Windows 和 WSL2 均受支持。WSL2 更加稳定，推荐用于完整体验。参见 [Windows](/en/platforms/windows)。 需要安装 Node？参见 [Node setup](/en/install/node)。</Tip>
+<Tip>使用 `node --version` 检查您的 Node 版本。 **Windows 用户：** 原生 Windows 和 WSL2 均受支持。为了获得完整的体验，WSL2 更加稳定并推荐使用。参见 [Windows](/en/platforms/windows)。 需要安装 Node？参见 [Node setup](/en/install/node)。</Tip>
 
 ## 快速设置
 
@@ -42,7 +42,7 @@ title: "入门指南"
     </Tabs>
 
     <Note>
-    其他安装方式 (Docker，Nix，npm)：[Install](/en/install)。
+    其他安装方式 (Docker, Nix, npm): [Install](/en/install)。
     </Note>
 
   </Step>
@@ -51,7 +51,7 @@ title: "入门指南"
     openclaw onboard --install-daemon
     ```
 
-    向导将指引你选择模型提供商，设置 API 密钥，以及配置 Gateway(网关)。大约需要 2 分钟。
+    向导将引导您选择模型提供商、设置 API 密钥，并配置 Gateway(网关)。大约需要 2 分钟。
 
     完整参考请参见 [新手引导 (CLI)](/en/start/wizard)。
 
@@ -61,46 +61,76 @@ title: "入门指南"
     openclaw gateway status
     ```
 
-    您应该看到 Gateway(网关) 正在监听端口 18789。
+    您应该看到 Gateway(网关) 正在监听 18789 端口。
 
   </Step>
-  <Step title="打开仪表板">
+  <Step title="打开控制面板">
     ```bash
     openclaw dashboard
     ```
 
-    这将在浏览器中打开控制 UI。如果能加载，说明一切正常。
+    这将在您的浏览器中打开控制 UI。如果能够加载，说明一切正常。
 
   </Step>
-  <Step title="发送第一条消息">
-    在 Control UI 聊天中输入一条消息，你应该会收到 AI 的回复。
+  <Step title="发送您的第一条消息">
+    在控制 UI 聊天中输入一条消息，您应该会收到 AI 的回复。
 
-    想在手机上聊天？设置最快的渠道是
-    [Telegram](/en/channels/telegram) (只需一个 bot token)。参见 [Channels](/en/channels)
-    了解所有选项。
+    想用手机聊天吗？设置最快的渠道是 [Telegram](/en/channels/telegram)（只需一个 bot token）。有关所有选项，请参见 [Channels](/en/channels)。
 
   </Step>
 </Steps>
 
-## What to do next
+<Accordion title="高级：挂载自定义控制 UI 构建">
+  如果您维护一个本地化或自定义的仪表板构建，请将
+  `gateway.controlUi.root` 指向包含您构建的静态资源
+  和 `index.html` 的目录。
+
+```bash
+mkdir -p "$HOME/.openclaw/control-ui-custom"
+# Copy your built static files into that directory.
+```
+
+然后设置：
+
+```json
+{
+  "gateway": {
+    "controlUi": {
+      "enabled": true,
+      "root": "$HOME/.openclaw/control-ui-custom"
+    }
+  }
+}
+```
+
+重启 Gateway 并重新打开仪表板：
+
+```bash
+openclaw gateway restart
+openclaw dashboard
+```
+
+</Accordion>
+
+## 下一步做什么
 
 <Columns>
-  <Card title="连接渠道" href="/en/channels" icon="message-square">
-    WhatsApp，Telegram，Discord，iMessage 等等。
+  <Card title="连接一个渠道" href="/en/channels" icon="message-square">
+    Discord、Feishu、iMessage、Matrix、Microsoft Teams、Signal、Slack、Telegram、WhatsApp、Zalo 等等。
   </Card>
   <Card title="配对与安全" href="/en/channels/pairing" icon="shield">
-    控制谁可以向你的代理发送消息。
+    控制谁可以向您的代理发送消息。
   </Card>
-  <Card title="配置 Gateway(网关)" href="/en/gateway/configuration" icon="settings">
+  <Card title="配置 Gateway" href="/en/gateway/configuration" icon="settings">
     模型、工具、沙箱和高级设置。
   </Card>
   <Card title="浏览工具" href="/en/tools" icon="wrench">
-    浏览器、执行、网络搜索、技能和插件。
+    浏览器、执行、Web 搜索、技能和插件。
   </Card>
 </Columns>
 
 <Accordion title="高级：环境变量">
-  如果您将 OpenClaw 作为服务帐户运行或想要自定义路径：
+  如果您将 OpenClaw 作为服务账户运行或想要自定义路径：
 
 - `OPENCLAW_HOME` — 用于内部路径解析的主目录
 - `OPENCLAW_STATE_DIR` — 覆盖状态目录

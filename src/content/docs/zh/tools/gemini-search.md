@@ -9,14 +9,16 @@ title: "Gemini 搜索"
 
 # Gemini 搜索
 
-OpenClaw 支持具有内置 [Google Search 接入](https://ai.google.dev/gemini-api/docs/grounding) 功能的 Gemini 模型，该功能返回由实时 Google 搜索结果支持并带有引用的 AI 综合答案。
+OpenClaw 支持具有内置
+[Google Search grounding](https://ai.google.dev/gemini-api/docs/grounding)
+的 Gemini 模型，该功能返回由实时 Google 搜索结果支持并包含引用的 AI 综合答案。
 
 ## 获取 API 密钥
 
 <Steps>
   <Step title="Create a key">
     前往 [Google AI Studio](https://aistudio.google.com/apikey) 并创建一个
-    API 密钥。
+    API key。
   </Step>
   <Step title="Store the key">
     在 Gateway(网关) 环境中设置 `GEMINI_API_KEY`，或通过以下方式配置：
@@ -67,17 +69,21 @@ OpenClaw 支持具有内置 [Google Search 接入](https://ai.google.dev/gemini-
 
 ## 支持的参数
 
-Gemini 搜索支持标准 `query` 和 `count` 参数。
-不支持特定于提供商的过滤器，例如 `country`、`language`、`freshness` 和
+Gemini search 支持 `query`。
+
+为了与共享的 `web_search` 兼容，接受 `count`，但 Gemini grounding
+仍然返回一个带有引用的综合答案，而不是 N 个结果的列表。
+
+不支持特定于提供商的过滤器，如 `country`、`language`、`freshness` 和
 `domain_filter`。
 
 ## 模型选择
 
-默认模型为 `gemini-2.5-flash`（快速且经济高效）。任何支持接入功能的 Gemini
+默认模型为 `gemini-2.5-flash`（快速且具有成本效益）。任何支持 grounding 的 Gemini
 模型都可以通过 `plugins.entries.google.config.webSearch.model` 使用。
 
 ## 相关
 
-- [网络搜索概述](/en/tools/web) -- 所有提供商和自动检测
-- [Brave 搜索](/en/tools/brave-search) -- 带有片段的结构化结果
+- [Web Search overview](/en/tools/web) -- 所有提供商和自动检测
+- [Brave Search](/en/tools/brave-search) -- 带有片段的结构化结果
 - [Perplexity Search](/en/tools/perplexity-search) -- 结构化结果 + 内容提取

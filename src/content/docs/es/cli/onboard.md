@@ -12,7 +12,7 @@ Incorporación interactiva para la configuración de Gateway local o remota.
 ## Guías relacionadas
 
 - Centro de incorporación de la CLI: [Incorporación (CLI)](/en/start/wizard)
-- Descripción general de la incorporación: [Descripción general de la incorporación](/en/start/onboarding-overview)
+- Resumen de incorporación: [Resumen de incorporación](/en/start/onboarding-overview)
 - Referencia de incorporación de la CLI: [Referencia de configuración de la CLI](/en/start/wizard-cli-reference)
 - Automatización de la CLI: [Automatización de la CLI](/en/start/wizard-cli-automation)
 - Incorporación en macOS: [Incorporación (Aplicación macOS)](/en/start/onboarding)
@@ -82,6 +82,8 @@ Opciones de token de Gateway en modo no interactivo:
 - Con `--install-daemon`, cuando la autenticación por token requiere un token, los tokens de puerta de enlace administrados por SecretRef se validan pero no se persisten como texto sin resolver en los metadatos del entorno del servicio supervisor.
 - Con `--install-daemon`, si el modo de token requiere un token y el SecretRef del token configurado no está resuelto, la integración falla de forma cerrada con orientación para la corrección.
 - Con `--install-daemon`, si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está definido, la integración bloquea la instalación hasta que el modo se establece explícitamente.
+- La incorporación local escribe `gateway.mode="local"` en la configuración. Si un archivo de configuración posterior carece de `gateway.mode`, trátelo como un daño en la configuración o una edición manual incompleta, no como un acceso directo válido en modo local.
+- `--allow-unconfigured` es una salida de emergencia separada del tiempo de ejecución de la puerta de enlace. No significa que la incorporación pueda omitir `gateway.mode`.
 
 Ejemplo:
 
@@ -97,24 +99,24 @@ openclaw onboard --non-interactive \
 
 Estado de salud de la puerta de enlace local no interactiva:
 
-- A menos que pases `--skip-health`, la integración espera a que haya una puerta de enlace local accesible antes de salir correctamente.
-- `--install-daemon` inicia primero la ruta de instalación de la puerta de enlace administrada. Sin ello, ya debes tener una puerta de enlace local en ejecución, por ejemplo `openclaw gateway run`.
-- Si solo quieres escrituras de configuración/espacio de trabajo/bootstrap en automatización, usa `--skip-health`.
-- En Windows nativo, `--install-daemon` intenta primero las Tareas Programadas y recurre a un elemento de inicio de sesión en la carpeta de Inicio por usuario si se deniega la creación de la tarea.
+- A menos que pases `--skip-health`, la incorporación esperará a que una puerta de enlace local sea accesible antes de salir con éxito.
+- `--install-daemon` inicia primero la ruta de instalación de la puerta de enlace administrada. Sin ella, ya debes tener una puerta de enlace local ejecutándose, por ejemplo `openclaw gateway run`.
+- Si solo deseas escrituras de configuración/espacio de trabajo/inicialización en la automatización, usa `--skip-health`.
+- En Windows nativo, `--install-daemon` intenta primero las Tareas programadas y recurre a un elemento de inicio de sesión en la carpeta Inicio por usuario si se deniega la creación de la tarea.
 
-Comportamiento de la integración interactiva con el modo de referencia:
+Comportamiento de la incorporación interactiva con el modo de referencia:
 
 - Elige **Usar referencia secreta** cuando se te solicite.
-- A continuación, elige una de las siguientes opciones:
+- Luego elige cualquiera:
   - Variable de entorno
   - Proveedor de secretos configurado (`file` o `exec`)
-- La integración realiza una validación previa rápida antes de guardar la referencia.
-  - Si la validación falla, la integración muestra el error y te permite reintentarlo.
+- La incorporación realiza una validación previa rápida antes de guardar la referencia.
+  - Si la validación falla, la incorporación muestra el error y te permite reintentar.
 
-Opciones de endpoint de Z.AI no interactivas:
+Opciones de punto final de Z.AI no interactivas:
 
-Nota: `--auth-choice zai-api-key` ahora detecta automáticamente el mejor endpoint de Z.AI para tu clave (prefiere la API general con `zai/glm-5`).
-Si específicamente quieres los endpoints del Plan de Codificación GLM, elige `zai-coding-global` o `zai-coding-cn`.
+Nota: `--auth-choice zai-api-key` ahora detecta automáticamente el mejor punto final de Z.AI para tu clave (prefiere la API general con `zai/glm-5`).
+Si específicamente deseas los puntos finales del Plan de Codificación GLM, elige `zai-coding-global` o `zai-coding-cn`.
 
 ```bash
 # Promptless endpoint selection
@@ -136,17 +138,18 @@ openclaw onboard --non-interactive \
   --mistral-api-key "$MISTRAL_API_KEY"
 ```
 
-Notas sobre el flujo:
+Notas de flujo:
 
 - `quickstart`: indicaciones mínimas, genera automáticamente un token de puerta de enlace.
-- `manual`: indicaciones completas para puerto/vínculo/autenticación (alias de `advanced`).
-- En el paso de búsqueda web, elegir **Grok** puede activar un mensaje de seguimiento
-  separado para habilitar `x_search` con el mismo `XAI_API_KEY` y, opcionalmente, elegir
-  un modelo `x_search`. Otros proveedores de búsqueda web no muestran ese mensaje.
-- Comportamiento del alcance de DM en la incorporación local: [Referencia de configuración de la CLI](/en/start/wizard-cli-reference#outputs-and-internals).
-- Primera conversación más rápida: `openclaw dashboard` (Interfaz de usuario de control, sin configuración de canal).
-- Proveedor personalizado: conecte cualquier punto final compatible con OpenAI o Anthropic,
-  incluidos los proveedores alojados que no figuran en la lista. Use Desconocido para detectar automáticamente.
+- `manual`: indicaciones completas para puerto/vinculación/auth (alias de `advanced`).
+- Cuando una elección de autenticación implica un proveedor preferido, la incorporación prefiltra los selectores de modelo predeterminado y lista de permitidos a ese proveedor. Para Volcengine y BytePlus, esto también coincide con las variantes del plan de codificación (`volcengine-plan/*`, `byteplus-plan/*`).
+- Si el filtro de proveedor preferido aún no produce modelos cargados, la incorporación recurre al catálogo sin filtrar en lugar de dejar el selector vacío.
+- En el paso de búsqueda web, algunos proveedores pueden activar indicaciones de seguimiento específicas del proveedor:
+  - **Grok** puede ofrecer configuración opcional de `x_search` con el mismo `XAI_API_KEY` y una elección de modelo `x_search`.
+  - **Kimi** puede solicitar la región de la API de Moonshot (`api.moonshot.ai` vs `api.moonshot.cn`) y el modelo de búsqueda web de Kimi predeterminado.
+- Comportamiento del alcance de DM de incorporación local: [Referencia de configuración de CLI](/en/start/wizard-cli-reference#outputs-and-internals).
+- Primera chat más rápida: `openclaw dashboard` (Interfaz de usuario de control, sin configuración de canal).
+- Proveedor personalizado: conecte cualquier punto final compatible con OpenAI o Anthropic, incluidos los proveedores alojados no enumerados. Use Desconocido para detectar automáticamente.
 
 ## Comandos de seguimiento comunes
 
@@ -155,4 +158,4 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` no implica el modo no interactivo. Use `--non-interactive` para secuencias de comandos.</Note>
+<Note>`--json` no implica el modo no interactivo. Use `--non-interactive` para scripts.</Note>

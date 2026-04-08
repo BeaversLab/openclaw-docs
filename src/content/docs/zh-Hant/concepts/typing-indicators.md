@@ -59,10 +59,7 @@ title: "輸入指示器"
 
 ## 備註
 
-- `message` 模式不會對純靜默回覆顯示輸入指示器（例如用於隱藏輸出的 `NO_REPLY`
-  token）。
-- `thinking` 僅在執行串流推理時觸發（`reasoningLevel: "stream"`）。
-  如果模型未發出推理增量，輸入指示器將不會啟動。
+- `message` 模式不會在整個 payload 完全為靜默 token 時，顯示純靜默回覆的輸入中狀態（例如 `NO_REPLY` / `no_reply`，匹配時不區分大小寫）。
+- 僅當 run 串流推論 (`reasoningLevel: "stream"`) 時，`thinking` 才會觸發。如果模型未發出推論增量，輸入中狀態將不會開始。
 - 無論模式為何，Heartbeats 永遠不會顯示輸入指示器。
-- `typingIntervalSeconds` 控制的是**重新整理頻率**，而非開始時間。
-  預設值為 6 秒。
+- `typingIntervalSeconds` 控制**更新頻率**，而非開始時間。預設為 6 秒。

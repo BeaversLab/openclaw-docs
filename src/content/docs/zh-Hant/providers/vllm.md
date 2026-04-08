@@ -90,3 +90,14 @@ curl http://127.0.0.1:8000/v1/models
 ```
 
 - 如果請求因驗證錯誤而失敗，請設定符合您伺服器設定的真實 `VLLM_API_KEY`，或在 `models.providers.vllm` 下明確設定提供者。
+
+## 代理式行為
+
+vLLM 被視為代理式的 OpenAI 相容 `/v1` 後端，而非原生的
+OpenAI 端點。
+
+- 僅適用原生 OpenAI 的請求整形在此不適用
+- 沒有 `service_tier`，沒有回應 `store`，沒有提示快取提示，也沒有
+  OpenAI 推理相容的負載整形
+- 隱藏的 OpenClaw 歸屬標頭 (`originator`, `version`, `User-Agent`)
+  不會注入到自訂的 vLLM 基礎 URL 上

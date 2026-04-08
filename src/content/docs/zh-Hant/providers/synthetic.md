@@ -82,17 +82,20 @@ synthetic/hf:MiniMaxAI/MiniMax-M2.5
 | `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128000   | 8192        | false | 文字        |
 | `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524000   | 8192        | false | 文字        |
 | `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256000   | 8192        | false | 文字        |
+| `hf:moonshotai/Kimi-K2.5`                              | 256000   | 8192        | true  | 文字 + 圖片 |
 | `hf:openai/gpt-oss-120b`                               | 128000   | 8192        | false | 文字        |
 | `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256000   | 8192        | false | 文字        |
 | `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000   | 8192        | false | 文字        |
 | `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250000   | 8192        | false | 文字 + 圖片 |
 | `hf:zai-org/GLM-4.5`                                   | 128000   | 128000      | false | 文字        |
 | `hf:zai-org/GLM-4.6`                                   | 198000   | 128000      | false | 文字        |
+| `hf:zai-org/GLM-5`                                     | 256000   | 128000      | true  | 文字 + 圖片 |
 | `hf:deepseek-ai/DeepSeek-V3`                           | 128000   | 8192        | false | 文字        |
 | `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000   | 8192        | true  | 文字        |
 
 ## 備註
 
 - 模型參照使用 `synthetic/<modelId>`。
-- 如果您啟用模型允許清單 (`agents.defaults.models`)，請新增您計劃使用的每個模型。
-- 請參閱 [Model providers](/en/concepts/model-providers) 以了解提供者規則。
+- 如果您啟用模型允許清單 (`agents.defaults.models`)，請新增您計畫
+  使用的每個模型。
+- 參閱 [Model providers](/en/concepts/model-providers) 以了解提供者規則。

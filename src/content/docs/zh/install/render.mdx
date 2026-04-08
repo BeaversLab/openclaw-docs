@@ -67,8 +67,7 @@ services:
 | 入门版       | 从不           | 1GB+   | 个人使用、小型团队 |
 | 标准版及以上 | 从不           | 1GB+   | 生产环境、多个频道 |
 
-Blueprint 默认为 `starter`。要使用免费层级，请在您 fork 仓库的
-`render.yaml` 中更改 `plan: free`（但请注意：没有持久磁盘意味着每次部署时配置都会重置）。
+该蓝图默认为 `starter`。要使用免费层，请在您分支的 `render.yaml` 中更改 `plan: free`（但请注意：没有持久磁盘意味着 OpenClaw 状态会在每次部署时重置）。
 
 ## 部署后
 
@@ -76,7 +75,7 @@ Blueprint 默认为 `starter`。要使用免费层级，请在您 fork 仓库的
 
 Web 控制面板可在 `https://<your-service>.onrender.com/` 访问。
 
-使用部署期间自动生成的 `OPENCLAW_GATEWAY_TOKEN` 值进行连接（在 **Dashboard → 您的服务 → Environment** 中找到它）。
+使用配置的共享密钥进行连接。此部署模板会自动生成 `OPENCLAW_GATEWAY_TOKEN`（可在 **Dashboard → 您的服务 → Environment** 中找到）；如果您将其替换为密码认证，请改用该密码。
 
 ## Render 控制面板功能
 
@@ -118,13 +117,13 @@ Render 支持水平和垂直扩缩容：
 
 ## 备份和迁移
 
-您可以随时使用 Render 仪表板中的 Shell 访问权限导出配置和工作区：
+随时使用 Render Dashboard 中的 shell 访问导出您的状态、配置、身份验证配置文件和工作区：
 
 ```bash
 openclaw backup create
 ```
 
-这将创建一个可移植的备份归档文件，您可以在任何 OpenClaw 主机上还原。有关详细信息，请参阅 [Backup](/en/cli/backup)。
+这将创建一个包含 OpenClaw 状态以及任何已配置工作区的可移植备份存档。详情请参阅 [Backup](/en/cli/backup)。
 
 ## 故障排除
 
@@ -141,8 +140,7 @@ openclaw backup create
 
 ### 重新部署后数据丢失
 
-这种情况发生在免费层级上（无持久磁盘）。升级到付费计划，或者
-通过 Render shell 中的 `openclaw backup create` 定期导出您的配置。
+这种情况发生在免费层（无持久磁盘）上。升级到付费计划，或定期通过 Render shell 中的 `openclaw backup create` 导出完整备份。
 
 ### 健康检查失败
 

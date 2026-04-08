@@ -77,7 +77,9 @@ La incorporación solicita los permisos TCC necesarios para:
 </Step>
 <Step title="CLI">
   <Info>Este paso es opcional</Info>
-  La aplicación puede instalar la `openclaw` CLI global a través de npm/pnpm para que los flujos de trabajo de la terminal y las tareas de launchd funcionen de inmediato.
+  La aplicación puede instalar la `openclaw` CLI global a través de npm, pnpm o bun.
+  Prefiere npm primero, luego pnpm, y luego bun si ese es el único gestor de paquetes detectado.
+  Para el tiempo de ejecución de Gateway, Node sigue siendo la ruta recomendada.
 </Step>
 <Step title="Chat de incorporación (sesión dedicada)">
   Después de la configuración, la aplicación abre una sesión de chat de incorporación dedicada para que el agente pueda presentarse y guiar los siguientes pasos. Esto mantiene la orientación de la primera ejecución separada de su conversación normal. Consulte [Inicialización](/en/start/bootstrapping) para obtener información sobre lo que sucede en el host de la puerta de enlace durante la primera ejecución del agente.

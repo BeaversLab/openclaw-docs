@@ -21,8 +21,7 @@ En otras palabras:
 - `list` / `show` / `set` / `unset` es OpenClaw actuando como un registro del lado del cliente MCP
   para otros servidores MCP que sus runtimes pueden consumir más tarde
 
-Use [`openclaw acp`](/en/cli/acp) cuando OpenClaw debe alojar una sesión de harness de código
-y enrutar ese runtime a través de ACP.
+Use [`openclaw acp`](/en/cli/acp) cuando OpenClaw debe alojar una sesión de arnés de codificación y enrutar ese tiempo de ejecución a través de ACP.
 
 ## OpenClaw como un servidor MCP
 
@@ -38,8 +37,7 @@ Use `openclaw mcp serve` cuando:
 - quieres un servidor MCP que funcione en los backends de canal de OpenClaw en lugar
   de ejecutar puentes separados por canal
 
-Use [`openclaw acp`](/en/cli/acp) en su lugar cuando OpenClaw debe alojar el runtime de
-codificación y mantener la sesión del agente dentro de OpenClaw.
+Use [`openclaw acp`](/en/cli/acp) en su lugar cuando OpenClaw debe alojar el tiempo de ejecución de codificación en sí y mantener la sesión del agente dentro de OpenClaw.
 
 ## Cómo funciona
 
@@ -312,7 +310,7 @@ Esa prueba de humo:
 Esta es la forma más rápida de demostrar que el puente funciona sin conectar una cuenta
 real de Telegram, Discord o iMessage a la ejecución de la prueba.
 
-Para obtener un contexto de pruebas más amplio, consulte [Pruebas](/en/help/testing).
+Para un contexto de pruebas más amplio, consulte [Testing](/en/help/testing).
 
 ## Solución de problemas
 
@@ -368,6 +366,13 @@ Comandos:
 - `openclaw mcp set <name> <json>`
 - `openclaw mcp unset <name>`
 
+Notas:
+
+- `list` ordena los nombres de los servidores.
+- `show` sin nombre imprime el objeto completo del servidor MCP configurado.
+- `set` espera un valor de objeto JSON en la línea de comandos.
+- `unset` falla si el servidor nombrado no existe.
+
 Ejemplos:
 
 ```bash
@@ -378,7 +383,7 @@ openclaw mcp set docs '{"url":"https://mcp.example.com"}'
 openclaw mcp unset context7
 ```
 
-Forma de configuración de ejemplo:
+Ejemplo de forma de configuración:
 
 ```json
 {
@@ -402,20 +407,20 @@ Inicia un proceso secundario local y se comunica a través de stdin/stdout.
 
 | Campo                      | Descripción                               |
 | -------------------------- | ----------------------------------------- |
-| `command`                  | Ejecutable para iniciar (obligatorio)     |
+| `command`                  | Ejecutable para iniciar (requerido)       |
 | `args`                     | Matriz de argumentos de línea de comandos |
 | `env`                      | Variables de entorno adicionales          |
 | `cwd` / `workingDirectory` | Directorio de trabajo para el proceso     |
 
 ### Transporte SSE / HTTP
 
-Se conecta a un servidor MCP remoto a través de eventos enviados por el servidor HTTP (Server-Sent Events).
+Se conecta a un servidor MCP remoto a través de eventos enviados por el servidor HTTP.
 
-| Campo               | Descripción                                                                             |
-| ------------------- | --------------------------------------------------------------------------------------- |
-| `url`               | URL HTTP o HTTPS del servidor remoto (obligatorio)                                      |
-| `headers`           | Mapa opcional de clave-valor de encabezados HTTP (por ejemplo, tokens de autenticación) |
-| `connectionTimeout` | Tiempo de espera de conexión por servidor en ms (opcional)                              |
+| Campo                 | Descripción                                                                             |
+| --------------------- | --------------------------------------------------------------------------------------- |
+| `url`                 | URL HTTP o HTTPS del servidor remoto (requerido)                                        |
+| `headers`             | Mapa opcional de clave-valor de encabezados HTTP (por ejemplo, tokens de autenticación) |
+| `connectionTimeoutMs` | Tiempo de espera de conexión por servidor en ms (opcional)                              |
 
 Ejemplo:
 
@@ -434,18 +439,18 @@ Ejemplo:
 }
 ```
 
-Los valores confidenciales en `url` (información de usuario) y `headers` se redactan en los registros y la salida de estado.
+Los valores confidenciales en `url` (userinfo) y `headers` se redactan en los registros y la salida de estado.
 
 ### Transporte HTTP transmisibles
 
-`streamable-http` es una opción de transporte adicional junto con `sse` y `stdio`. Utiliza el streaming HTTP para la comunicación bidireccional con servidores MCP remotos.
+`streamable-http` es una opción de transporte adicional junto con `sse` y `stdio`. Utiliza streaming HTTP para la comunicación bidireccional con servidores MCP remotos.
 
-| Campo               | Descripción                                                                             |
-| ------------------- | --------------------------------------------------------------------------------------- |
-| `url`               | URL HTTP o HTTPS del servidor remoto (obligatorio)                                      |
-| `transport`         | Establézcalo en `"streamable-http"` para seleccionar este transporte                    |
-| `headers`           | Mapa opcional de clave-valor de encabezados HTTP (por ejemplo, tokens de autenticación) |
-| `connectionTimeout` | Tiempo de espera de conexión por servidor en ms (opcional)                              |
+| Campo                 | Descripción                                                                                             |
+| --------------------- | ------------------------------------------------------------------------------------------------------- |
+| `url`                 | URL HTTP o HTTPS del servidor remoto (requerido)                                                        |
+| `transport`           | Establezca en `"streamable-http"` para seleccionar este transporte; cuando se omite, OpenClaw usa `sse` |
+| `headers`             | Mapa opcional de pares clave-valor de encabezados HTTP (por ejemplo, tokens de autenticación)           |
+| `connectionTimeoutMs` | Tiempo de espera de conexión por servidor en ms (opcional)                                              |
 
 Ejemplo:
 
@@ -456,7 +461,7 @@ Ejemplo:
       "streaming-tools": {
         "url": "https://mcp.example.com/stream",
         "transport": "streamable-http",
-        "connectionTimeout": 10000,
+        "connectionTimeoutMs": 10000,
         "headers": {
           "Authorization": "Bearer <token>"
         }
@@ -466,17 +471,17 @@ Ejemplo:
 }
 ```
 
-Estos comandos solo gestionan la configuración guardada. No inician el puente del canal,
+Estos comandos solo administran la configuración guardada. No inician el puente del canal,
 abren una sesión en vivo del cliente MCP ni demuestran que el servidor de destino sea accesible.
 
 ## Límites actuales
 
-Esta página documenta el puente tal como se entrega hoy.
+Esta página documenta el puente tal como se envía hoy.
 
 Límites actuales:
 
-- el descubrimiento de conversaciones depende de los metadatos de ruta de la sesión existente del Gateway
-- ningún protocolo de envío genérico más allá del adaptador específico de Claude
+- el descubrimiento de conversaciones depende de los metadatos de la ruta de la sesión existente de Gateway
+- ningún protocolo de envío (push) genérico más allá del adaptador específico de Claude
 - aún no hay herramientas de edición o reacción de mensajes
 - el transporte HTTP/SSE/streamable-http se conecta a un solo servidor remoto; aún no hay flujo ascendente multiplexado
 - `permissions_list_open` solo incluye las aprobaciones observadas mientras el puente está

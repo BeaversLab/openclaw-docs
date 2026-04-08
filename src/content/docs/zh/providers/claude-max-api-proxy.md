@@ -90,6 +90,13 @@ curl http://localhost:3456/v1/chat/completions \
 }
 ```
 
+此路径使用与其他自定义 `/v1` 后端相同的代理风格 OpenAI 兼容路由：
+
+- 仅限原生 OpenAI 的请求塑造不适用
+- 无 `service_tier`，无 Responses `store`，无提示缓存提示，也无 OpenAI 推理兼容负载塑造
+- 隐藏的 OpenClaw 归属标头（`originator`、`version`、`User-Agent`）
+  不会注入到代理 URL 中
+
 ## 可用模型
 
 | 模型 ID           | 映射到          |
@@ -100,7 +107,7 @@ curl http://localhost:3456/v1/chat/completions \
 
 ## 在 macOS 上自动启动
 
-创建 LaunchAgent 以自动运行代理：
+创建一个 LaunchAgent 以自动运行代理：
 
 ```bash
 cat > ~/Library/LaunchAgents/com.claude-max-api.plist << 'EOF'
@@ -133,18 +140,18 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 ## 链接
 
-- **npm:** [https://www.npmjs.com/package/claude-max-api-proxy](https://www.npmjs.com/package/claude-max-api-proxy)
-- **GitHub:** [https://github.com/atalovesyou/claude-max-api-proxy](https://github.com/atalovesyou/claude-max-api-proxy)
-- **问题：** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
+- **npm：** [https://www.npmjs.com/package/claude-max-api-proxy](https://www.npmjs.com/package/claude-max-api-proxy)
+- **GitHub：** [https://github.com/atalovesyou/claude-max-api-proxy](https://github.com/atalovesyou/claude-max-api-proxy)
+- **Issues：** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
 
 ## 注意事项
 
-- 这是一个 **社区工具**，并非由 Anthropic 或 OpenClaw 官方支持
+- 这是一个**社区工具**，并非由 Anthropic 或 OpenClaw 官方支持
 - 需要有效的 Claude Max/Pro 订阅以及已通过身份验证的 Claude Code CLI
 - 代理在本地运行，不会将数据发送到任何第三方服务器
 - 完全支持流式响应
 
 ## 另请参阅
 
-- [Anthropic 提供商](/en/providers/anthropic) - 原生 OpenClaw 集成，支持 Claude setup-token 或 API 密钥
+- [Anthropic 提供商](/en/providers/anthropic) - 通过 Claude OpenClaw 或 CLI 密钥进行原生 API 集成
 - [OpenAI 提供商](/en/providers/openai) - 适用于 OpenAI/Codex 订阅

@@ -1,68 +1,115 @@
 ---
-summary: "所有自動化機制總覽：heartbeat、cron、任務、hooks、webhooks 等"
+summary: "自動化機制概覽：任務、cron、鉤子、常駐指令和任務流程"
 read_when:
   - Deciding how to automate work with OpenClaw
-  - Choosing between heartbeat, cron, hooks, and webhooks
+  - Choosing between heartbeat, cron, hooks, and standing orders
   - Looking for the right automation entry point
-title: "自動化總覽"
+title: "自動化與任務"
 ---
 
-# 自動化
+# 自動化與任務
 
-OpenClaw 提供了幾種自動化機制，每種都適用於不同的使用案例。本頁面協助您選擇合適的機制。
+OpenClaw 通過任務、排程作業、事件鉤子和常駐指令在後台執行工作。本頁面將幫助您選擇合適的機制並了解它們如何協同運作。
 
 ## 快速決策指南
 
 ```mermaid
 flowchart TD
-    A{Run on a schedule?} -->|Yes| B{Exact timing needed?}
-    A -->|No| C{React to events?}
-    B -->|Yes| D[Cron]
-    B -->|No| E[Heartbeat]
-    C -->|Yes| F[Hooks]
-    C -->|No| G[Standing Orders]
+    START([What do you need?]) --> Q1{Schedule work?}
+    START --> Q2{Track detached work?}
+    START --> Q3{Orchestrate multi-step flows?}
+    START --> Q4{React to lifecycle events?}
+    START --> Q5{Give the agent persistent instructions?}
+
+    Q1 -->|Yes| Q1a{Exact timing or flexible?}
+    Q1a -->|Exact| CRON["Scheduled Tasks (Cron)"]
+    Q1a -->|Flexible| HEARTBEAT[Heartbeat]
+
+    Q2 -->|Yes| TASKS[Background Tasks]
+    Q3 -->|Yes| FLOW[Task Flow]
+    Q4 -->|Yes| HOOKS[Hooks]
+    Q5 -->|Yes| SO[Standing Orders]
 ```
 
-## 機制一覽
+| 使用案例                    | 建議機制  | 原因                                            |
+| --------------------------- | --------- | ----------------------------------------------- |
+| 在早上 9 點整發送每日報告   | 排程任務  | 精確計時，隔離執行                              |
+| 在 20 分鐘後提醒我          | 排程任務  | 具有精確計時的單次執行 (`--at`)                 |
+| 執行每週深度分析            | 排程任務  | 獨立任務，可使用不同的模型                      |
+| 每 30 分鐘檢查一次收件匣    | Heartbeat | 與其他檢查批次處理，具有情境感知能力            |
+| 監控日曆中的即將來臨的事件  | Heartbeat | 非常適合週期性感知                              |
+| 檢查子代理或 ACP 執行的狀態 | 背景任務  | 任務分類帳追蹤所有分離的工作                    |
+| 稽核執行了什麼以及何時執行  | 背景任務  | `openclaw tasks list` 和 `openclaw tasks audit` |
+| 多步驟研究然後總結          | 任務流程  | 具有修訂追蹤的持久協調流程                      |
+| 在工作階段重設時執行腳本    | 鉤子      | 事件驅動，在生命週期事件上觸發                  |
+| 在每次工具呼叫時執行程式碼  | 鉤子      | 鉤子可以按事件類型過濾                          |
+| 回覆前始終檢查合規性        | 常駐指令  | 自動注入到每個工作階段中                        |
 
-| 機制                                              | 作用                                        | 運行於           | 建立任務記錄  |
-| ------------------------------------------------- | ------------------------------------------- | ---------------- | ------------- |
-| [Heartbeat](/en/gateway/heartbeat)                | 週期性主會話週期 — 批次處理多項檢查         | 主會話           | 否            |
-| [Cron](/en/automation/cron-jobs)                  | 具有精確時間安排的排程工作                  | 主會話或隔離會話 | 是 (所有類型) |
-| [Background Tasks](/en/automation/tasks)          | 追蹤分離的工作 (cron、ACP、子代理程式、CLI) | 不適用 (帳本)    | 不適用        |
-| [Hooks](/en/automation/hooks)                     | 由代理程式生命週期事件觸發的事件驅動腳本    | Hook 執行器      | 否            |
-| [Standing Orders](/en/automation/standing-orders) | 注入到系統提示中的持續性指令                | 主會話           | 否            |
-| [Webhooks](/en/automation/webhook)                | 接收連入的 HTTP 事件並路由至代理程式        | Gateway HTTP     | 否            |
+### 排程任務 vs Heartbeat
 
-### 專用自動化
+| 維度         | 排程任務                     | Heartbeat              |
+| ------------ | ---------------------------- | ---------------------- |
+| 計時         | 精確 (cron 表達式，單次執行) | 近似 (預設每 30 分鐘)  |
+| 工作階段情境 | 全新 (隔離) 或共享           | 完整的母工作階段情境   |
+| 任務記錄     | 始終建立                     | 從不建立               |
+| 傳遞方式     | 頻道、Webhook 或靜默         | 在母工作階段內聯       |
+| 最適用於     | 報告、提醒、背景作業         | 收件匣檢查、日曆、通知 |
 
-| 機制                                              | 作用                                   |
-| ------------------------------------------------- | -------------------------------------- |
-| [Gmail PubSub](/en/automation/gmail-pubsub)       | 透過 Google PubSub 實現即時 Gmail 通知 |
-| [Polling](/en/automation/poll)                    | 週期性資料來源檢查 (RSS、API 等)       |
-| [Auth Monitoring](/en/automation/auth-monitoring) | 憑證健康狀況與過期警示                 |
+當您需要精確計時或隔離執行時，請使用排程任務。當工作受益於完整的工作階段情境且近似計時可接受時，請使用 Heartbeat。
+
+## 核心概念
+
+### 排程任務
+
+Cron 是 Gateway 內建的排程器，用於精確計時。它會持久化工作，在正確的時間喚醒代理，並可以將輸出傳送到聊天頻道或 webhook 端點。支援一次性提醒、週期性表達式和傳入 webhook 觸發器。
+
+請參閱[排程工作](/en/automation/cron-jobs)。
+
+### 工作
+
+背景工作帳本會追蹤所有分離的工作：ACP 執行、子代理產生、隔離的 cron 執行和 CLI 操作。工作是記錄，而不是排程器。使用 `openclaw tasks list` 和 `openclaw tasks audit` 來檢查它們。
+
+請參閱[背景工作](/en/automation/tasks)。
+
+### 工作流程
+
+工作流程是位於背景工作之上的流程編排基層。它管理具有受管和鏡像同步模式、修訂追蹤以及 `openclaw tasks flow list|show|cancel` 用於檢查的持久多步驟流程。
+
+請參閱[工作流程](/en/automation/taskflow)。
+
+### 常駐指令
+
+常駐指令授予代理對於定義程式的永久操作權限。它們存在於工作區檔案中（通常是 `AGENTS.md`），並會被注入到每個工作階段中。與 cron 結合以進行基於時間的執行。
+
+請參閱[常駐指令](/en/automation/standing-orders)。
+
+### 掛鉤
+
+掛鉤是由代理生命週期事件（`/new`、`/reset`、`/stop`）、工作階段壓縮、Gateway 啟動、訊息流程和工具呼叫所觸發的事件驅動腳本。掛鉤會從目錄中自動發現，並可以使用 `openclaw hooks` 進行管理。
+
+請參閱[掛鉤](/en/automation/hooks)。
+
+### 心跳
+
+心跳是週期性的主工作階段輪次（預設每 30 分鐘一次）。它在一個具有完整工作階段內容的代理輪次中將多項檢查（收件匣、行事曆、通知）批次處理。心跳輪次不會建立工作記錄。使用 `HEARTBEAT.md` 作為小型檢查清單，或是當您希望在心跳內部進行僅到期週期性檢查時，使用 `tasks:` 區塊。空的心跳檔案會跳過為 `empty-heartbeat-file`；僅到期工作模式會跳過為 `no-tasks-due`。
+
+請參閱[心跳](/en/gateway/heartbeat)。
 
 ## 它們如何協同運作
 
-最有效的設定會結合多種機制：
-
-1. **Heartbeat** 在每 30 分鐘的一次批次週期中處理常規監控 (收件匣、行事曆、通知)。
-2. **Cron** 處理精確排程 (每日報告、每週審查) 和一次性提醒。
-3. **Hooks** 會使用自訂腳本回應特定事件 (工具呼叫、會話重設、壓縮)。
-4. **Standing Orders** 為代理程式提供持續性內容 (「回覆前務必檢查專案看板」)。
-5. **Background Tasks** 會自動追蹤所有分離的工作，以便您進行檢查與稽核。
-
-請參閱 [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) 以深入了解這兩種排程機制的比較。
-
-## 較舊的 ClawFlow 參考資料
-
-較舊的版本說明和文件可能會提及 `ClawFlow` 或 `openclaw flows`，但此存儲庫中目前的 CLI 介面為 `openclaw tasks`。
-
-請參閱 [Background Tasks](/en/automation/tasks) 以了解支援的工作總帳命令，並參閱 [ClawFlow](/en/automation/clawflow) 和 [CLI: flows](/en/cli/flows) 以了解相容性說明。
+- **Cron** 處理精確排程（每日報告、每週檢閱）和一次性提醒。所有的 cron 執行都會建立任務記錄。
+- **Heartbeat** 每 30 分鐘以一個批次回合處理常規監控（收件匣、行事曆、通知）。
+- **Hooks** 使用自訂腳本回應特定事件（工具呼叫、工作階段重設、壓縮）。
+- **Standing orders** 提供代理程式持續的上下文和權限邊界。
+- **Task Flow** 在個別任務之上協調多步驟流程。
+- **Tasks** 自動追蹤所有分離工作，以便您檢查和稽核。
 
 ## 相關
 
-- [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) — 詳細比較指南
-- [ClawFlow](/en/automation/clawflow) — 舊版文件和版本說明的相容性說明
-- [Troubleshooting](/en/automation/troubleshooting) — 除錯自動化問題
-- [Configuration Reference](/en/gateway/configuration-reference) — 所有配置鍵
+- [Scheduled Tasks](/en/automation/cron-jobs) — 精確排程和一次性提醒
+- [Background Tasks](/en/automation/tasks) — 所有分離工作的任務分類帳
+- [Task Flow](/en/automation/taskflow) — 耐久的多步驟流程協調
+- [Hooks](/en/automation/hooks) — 事件驅動的生命週期腳本
+- [Standing Orders](/en/automation/standing-orders) — 持續的代理程式指令
+- [Heartbeat](/en/gateway/heartbeat) — 週期性主工作階段回合
+- [Configuration Reference](/en/gateway/configuration-reference) — 所有設定金鑰

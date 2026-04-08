@@ -9,9 +9,9 @@ title: "Modelos locales"
 
 # Modelos locales
 
-Lo local es viable, pero OpenClaw espera un contexto grande + defensas sólidas contra la inyección de prompts. Las tarjetas pequeñas truncan el contexto y filtran la seguridad. Apunta alto: **≥2 Mac Studios al máximo o un equipo GPU equivalente (~$30k+)**. Una única GPU de **24 GB** solo funciona para prompts más ligeros con mayor latencia. Utiliza la **variante de modelo más grande / de tamaño completo que puedas ejecutar**; los puntos de control agresivamente cuantificados o “pequeños” aumentan el riesgo de inyección de prompts (consulta [Security](/en/gateway/security)).
+Lo local es viable, pero OpenClaw espera un contexto grande + defensas sólidas contra la inyección de avisos (prompts). Las tarjetas pequeñas truncan el contexto y filtran la seguridad. Apunta alto: **≥2 Mac Studios al máximo o un equipo GPU equivalente (~$30k+)**. Una sola GPU de **24 GB** solo funciona para avisos más ligeros con mayor latencia. Usa la **variante de modelo más grande/tamaño completo que puedas ejecutar**; los puntos de control (checkpoints) cuantificados agresivamente o “pequeños” aumentan el riesgo de inyección de avisos (consulta [Security](/en/gateway/security)).
 
-Si deseas la configuración local con menos fricción, comienza con [Ollama](/en/providers/ollama) y `openclaw onboard`. Esta página es la guía con opiniones para stacks locales de gama alta y servidores locales compatibles con OpenAI personalizados.
+Si quieres la configuración local con menos fricción, comienza con [Ollama](/en/providers/ollama) y `openclaw onboard`. Esta página es la guía con opiniones para pilas locales de gama alta y servidores locales personalizados compatibles con OpenAI.
 
 ## Recomendado: LM Studio + modelo local grande (Responses API)
 
@@ -145,9 +145,20 @@ vLLM, LiteLLM, OAI-proxy o gateways personalizados funcionan si exponen un punto
 
 Mantén `models.mode: "merge"` para que los modelos alojados sigan disponibles como respaldo.
 
+Nota de comportamiento para backends locales/proxificados `/v1`:
+
+- OpenClaw trata estos como rutas compatibles con OpenAI de estilo proxy, no como
+  endpoints nativos de OpenAI
+- el modelado de solicitudes solo nativo de OpenAI no se aplica aquí: sin
+  `service_tier`, sin Responses `store`, sin modelado
+  de carga compatible con el razonamiento de OpenAI, y sin sugerencias de
+  caché de avisos
+- los encabezados de atribución ocultos de OpenClaw (`originator`, `version`, `User-Agent`)
+  no se inyectan en estas URL de proxy personalizadas
+
 ## Solución de problemas
 
 - ¿Puede el Gateway alcanzar el proxy? `curl http://127.0.0.1:1234/v1/models`.
 - ¿Modelo de LM Studio descargado? Vuelve a cargarlo; el inicio en frío es una causa común de "bloqueo".
 - ¿Errores de contexto? Reduce `contextWindow` o aumenta el límite de tu servidor.
-- Seguridad: los modelos locales omiten los filtros del lado del proveedor; mantén los agentes estrechos y la compactación activa para limitar el radio de explosión de la inyección de avisos.
+- Seguridad: los modelos locales omiten los filtros del lado del proveedor; mantén los agentes limitados y la compactación activa para limitar el radio de explosión de la inyección de avisos.

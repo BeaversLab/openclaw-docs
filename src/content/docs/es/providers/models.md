@@ -23,22 +23,36 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija uno, autentíquese y lu
 
 ## Proveedores compatibles (conjunto inicial)
 
-- [OpenAI (API + Codex)](/en/providers/openai)
-- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
-- [OpenRouter](/en/providers/openrouter)
-- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
-- [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
-- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
-- [Mistral](/en/providers/mistral)
-- [Synthetic](/en/providers/synthetic)
-- [OpenCode (Zen + Go)](/en/providers/opencode)
-- [Z.AI](/en/providers/zai)
-- [Modelos GLM](/en/providers/glm)
-- [MiniMax](/en/providers/minimax)
-- [Venice (Venice AI)](/en/providers/venice)
+- [Alibaba Model Studio](/en/providers/alibaba)
+- [Anthropic (API + Claude CLI)](/en/providers/anthropic)
 - [Amazon Bedrock](/en/providers/bedrock)
+- [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
+- [Chutes](/en/providers/chutes)
+- [ComfyUI](/en/providers/comfy)
+- [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
+- [fal](/en/providers/fal)
+- [Fireworks](/en/providers/fireworks)
+- [GLM models](/en/providers/glm)
+- [MiniMax](/en/providers/minimax)
+- [Mistral](/en/providers/mistral)
+- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+- [OpenAI (API + Codex)](/en/providers/openai)
+- [OpenCode (Zen + Go)](/en/providers/opencode)
+- [OpenRouter](/en/providers/openrouter)
 - [Qianfan](/en/providers/qianfan)
+- [Qwen](/en/providers/qwen)
+- [Runway](/en/providers/runway)
+- [StepFun](/en/providers/stepfun)
+- [Synthetic](/en/providers/synthetic)
+- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+- [Venice (Venice AI)](/en/providers/venice)
 - [xAI](/en/providers/xai)
+- [Z.AI](/en/providers/zai)
 
-Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y la configuración avanzada,
-consulta [Proveedores de modelos](/en/concepts/model-providers).
+## Variantes de proveedores adicionales incluidos
+
+- `anthropic-vertex` - soporte implícito de Anthropic en Google Vertex cuando las credenciales de Vertex están disponibles; no requiere una elección separada de autenticación de incorporación
+- `copilot-proxy` - puente local del Proxy de VS Code Copilot; use `openclaw onboard --auth-choice copilot-proxy`
+
+Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y configuración avanzada,
+consulte [Model providers](/en/concepts/model-providers).

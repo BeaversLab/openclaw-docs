@@ -11,7 +11,7 @@ OpenClaw has three related (but different) controls:
 
 1. **Sandbox** (`agents.defaults.sandbox.*` / `agents.list[].sandbox.*`) decides **where tools run** (Docker vs host).
 2. **Tool policy** (`tools.*`, `tools.sandbox.tools.*`, `agents.list[].tools.*`) decides **which tools are available/allowed**.
-3. **Elevated** (`tools.elevated.*`, `agents.list[].tools.elevated.*`) is an **exec-only escape hatch** to run on the host when you’re sandboxed.
+3. **Elevated** (`tools.elevated.*`, `agents.list[].tools.elevated.*`) est une **échappatoire d'exécution uniquement** pour s'exécuter en dehors du bac à sable lorsque vous êtes sandboxé (`gateway` par défaut, ou `node` lorsque la cible d'exécution est configurée sur `node`).
 
 ## Quick debug
 
@@ -33,21 +33,23 @@ It prints:
 
 ## Sandbox: where tools run
 
-Sandboxing is controlled by `agents.defaults.sandbox.mode`:
+La mise en bac à sable est contrôlée par `agents.defaults.sandbox.mode` :
 
-- `"off"`: everything runs on the host.
-- `"non-main"`: only non-main sessions are sandboxed (common “surprise” for groups/channels).
-- `"all"`: everything is sandboxed.
+- `"off"` : tout s'exécute sur l'hôte.
+- `"non-main"` : seules les sessions non principales sont sandboxées (« surprise » courante pour les groupes/canaux).
+- `"all"` : tout est sandboxé.
 
-See [Sandboxing](/en/gateway/sandboxing) for the full matrix (scope, workspace mounts, images).
+Voir [Sandboxing](/en/gateway/sandboxing) pour la matrice complète (portée, montages d'espace de travail, images).
 
 ### Bind mounts (security quick check)
 
-- `docker.binds` _pierces_ the sandbox filesystem: whatever you mount is visible inside the container with the mode you set (`:ro` or `:rw`).
-- Default is read-write if you omit the mode; prefer `:ro` for source/secrets.
-- `scope: "shared"` ignore les liaisons par agent (seules les liaisons globales s'appliquent).
-- Lier `/var/run/docker.sock` confère effectivement le contrôle de l'hôte au sandbox ; ne faites cela que intentionnellement.
-- L'accès à l'espace de travail (`workspaceAccess: "ro"`/`"rw"`) est indépendant des modes de liaison.
+- `docker.binds` _traverse_ le système de fichiers du bac à sable : tout ce que vous montrez est visible à l'intérieur du conteneur avec le mode que vous définissez (`:ro` ou `:rw`).
+- La valeur par défaut est lecture-écriture si vous omettez le mode ; préférez `:ro` pour le code source/les secrets.
+- `scope: "shared"` ignore les montages par agent (seuls les montages globaux s'appliquent).
+- OpenClaw valide les sources de montage deux fois : d'abord sur le chemin source normalisé, puis à nouveau après résolution via l'ancêtre existant le plus profond. Les échappements par lien symbolique parent ne contournent pas les vérifications de chemin bloqué ou de racine autorisée.
+- Les chemins de feuilles inexistants sont toujours vérifiés en toute sécurité. Si `/workspace/alias-out/new-file` se résout via un parent lié par un lien symbolique vers un chemin bloqué ou en dehors des racines autorisées configurées, le montage est rejeté.
+- Monter `/var/run/docker.sock` confère effectivement le contrôle de l'hôte au bac à sable ; ne faites cela que intentionnellement.
+- L'accès à l'espace de travail (`workspaceAccess: "ro"`/`"rw"`) est indépendant des modes de montage.
 
 ## Stratégie d'outil : quels outils existent/sont appelables
 
@@ -56,20 +58,20 @@ Deux couches sont importantes :
 - **Profil d'outil** : `tools.profile` et `agents.list[].tools.profile` (liste d'autorisation de base)
 - **Profil d'outil du fournisseur** : `tools.byProvider[provider].profile` et `agents.list[].tools.byProvider[provider].profile`
 - **Stratégie d'outil globale/par agent** : `tools.allow`/`tools.deny` et `agents.list[].tools.allow`/`agents.list[].tools.deny`
-- **Stratégie d'outil du fournisseur** : `tools.byProvider[provider].allow/deny` et `agents.list[].tools.byProvider[provider].allow/deny`
-- **Stratégie d'outil du sandbox** (s'applique uniquement lors de l'utilisation du sandbox) : `tools.sandbox.tools.allow`/`tools.sandbox.tools.deny` et `agents.list[].tools.sandbox.tools.*`
+- **Stratégie de tool du fournisseur** : `tools.byProvider[provider].allow/deny` et `agents.list[].tools.byProvider[provider].allow/deny`
+- **Stratégie de tool du bac à sable** (s'applique uniquement lorsque sandboxed) : `tools.sandbox.tools.allow`/`tools.sandbox.tools.deny` et `agents.list[].tools.sandbox.tools.*`
 
 Règles empiriques :
 
-- `deny` gagne toujours.
-- Si `allow` n'est pas vide, tout le reste est traité comme bloqué.
-- La stratégie d'outil est l'arrêt définitif : `/exec` ne peut pas remplacer un outil `exec` refusé.
-- `/exec` ne modifie que les valeurs par défaut de session pour les expéditeurs autorisés ; il n'accorde pas l'accès aux outils.
-  Les clés d'outil du fournisseur acceptent soit `provider` (par ex. `google-antigravity`) soit `provider/model` (par ex. `openai/gpt-5.2`).
+- `deny` l'emporte toujours.
+- Si `allow` n'est pas vide, tout le reste est considéré comme bloqué.
+- La stratégie de tool constitue l'arrêt définitif : `/exec` ne peut pas remplacer un tool `exec` refusé.
+- `/exec` modifie uniquement les valeurs par défaut de session pour les expéditeurs autorisés ; il n'accorde pas l'accès aux tools.
+  Les clés de tool du fournisseur acceptent soit `provider` (par ex. `google-antigravity`) soit `provider/model` (par ex. `openai/gpt-5.4`).
 
-### Groupes d'outils (raccourcis)
+### Groupes de tools (raccourcis)
 
-Les stratégies d'outil (globales, agent, sandbox) prennent en charge les entrées `group:*` qui s'étendent à plusieurs outils :
+Les stratégies de tools (globale, agent, bac à sable) prennent en charge les entrées `group:*` qui s'étendent à plusieurs tools :
 
 ```json5
 {
@@ -85,50 +87,55 @@ Les stratégies d'outil (globales, agent, sandbox) prennent en charge les entré
 
 Groupes disponibles :
 
-- `group:runtime` : `exec`, `bash`, `process`
+- `group:runtime` : `exec`, `process`, `code_execution` (`bash` est accepté comme
+  un alias pour `exec`)
 - `group:fs` : `read`, `write`, `edit`, `apply_patch`
-- `group:sessions` : `sessions_list` , `sessions_history` , `sessions_send` , `sessions_spawn` , `session_status`
-- `group:memory` : `memory_search` , `memory_get`
-- `group:ui` : `browser` , `canvas`
-- `group:automation` : `cron` , `gateway`
+- `group:sessions` : `sessions_list`, `sessions_history`, `sessions_send`, `sessions_spawn`, `sessions_yield`, `subagents`, `session_status`
+- `group:memory` : `memory_search`, `memory_get`
+- `group:web` : `web_search`, `x_search`, `web_fetch`
+- `group:ui` : `browser`, `canvas`
+- `group:automation` : `cron`, `gateway`
 - `group:messaging` : `message`
 - `group:nodes` : `nodes`
-- `group:openclaw` : tous les outils OpenClaw intégrés (exclut les plugins de provider)
+- `group:agents` : `agents_list`
+- `group:media` : `image`, `image_generate`, `video_generate`, `tts`
+- `group:openclaw` : tous les outils intégrés OpenClaw (exclut les plugins de provider)
 
-## Elevated : exec-only "run on host"
+## Elevated : exécution uniquement "exécuter sur l'hôte"
 
 Elevated n'accorde **pas** d'outils supplémentaires ; cela n'affecte que `exec`.
 
-- Si vous êtes sandboxed, `/elevated on` (ou `exec` avec `elevated: true`) s'exécute sur l'hôte (les approbations peuvent toujours s'appliquer).
+- Si vous êtes dans un bac à sable, `/elevated on` (ou `exec` avec `elevated: true`) s'exécute en dehors du bac à sable (les approbations peuvent toujours s'appliquer).
 - Utilisez `/elevated full` pour ignorer les approbations d'exécution pour la session.
-- Si vous fonctionnez déjà en mode direct, elevated est effectivement une opération vide (toujours soumise à des restrictions).
-- Elevated n'est **pas** limité à une compétence (skill) et ne **remplace pas** l'autorisation/le refus d'outil.
-- `/exec` est distinct d'elevated. Il ajuste uniquement les valeurs par défaut d'exécution par session pour les expéditeurs autorisés.
+- Si vous exécutez déjà en mode direct, elevated est effectivement une opération vide (toujours limité par une porte).
+- Elevated n'est **pas** limité aux compétences (skill-scoped) et ne **surcharge pas** l'autorisation/refus des outils.
+- Elevated n'accorde pas de remplacements arbitraires entre hôtes depuis `host=auto` ; il suit les règles normales de cible d'exécution et ne préserve `node` que lorsque la cible configurée/de session est déjà `node`.
+- `/exec` est distinct d'elevated. Il n'ajuste que les valeurs par défaut d'exécution par session pour les expéditeurs autorisés.
 
 Portes :
 
-- Activation : `tools.elevated.enabled` (et optionnellement `agents.list[].tools.elevated.enabled`)
-- Listes d'autorisation des expéditeurs : `tools.elevated.allowFrom.<provider>` (et optionnellement `agents.list[].tools.elevated.allowFrom.<provider>`)
+- Activation : `tools.elevated.enabled` (et facultativement `agents.list[].tools.elevated.enabled`)
+- Listes d'autorisation des expéditeurs : `tools.elevated.allowFrom.<provider>` (et facultativement `agents.list[].tools.elevated.allowFrom.<provider>`)
 
-Voir [Elevated Mode](/en/tools/elevated).
+Voir [Mode élevé](/en/tools/elevated).
 
-## Corrections courantes du "sandbox jail"
+## Corrections courantes du "bac à sable"
 
-### "Tool X bloqué par la stratégie d'outil de sandbox"
+### "Outil X bloqué par la stratégie d'outil du bac à sable"
 
 Clés de réparation (en choisir une) :
 
-- Désactiver le sandbox : `agents.defaults.sandbox.mode=off` (ou `agents.list[].sandbox.mode=off` par agent)
-- Autoriser l'outil dans le sandbox :
-  - le supprimer de `tools.sandbox.tools.deny` (ou `agents.list[].tools.sandbox.tools.deny` par agent)
-  - ou l'ajouter à `tools.sandbox.tools.allow` (ou allow par agent)
+- Désactiver le bac à sable : `agents.defaults.sandbox.mode=off` (ou par agent `agents.list[].sandbox.mode=off`)
+- Autoriser l'outil dans le bac à sable :
+  - le retirer de `tools.sandbox.tools.deny` (ou par agent `agents.list[].tools.sandbox.tools.deny`)
+  - ou l'ajouter à `tools.sandbox.tools.allow` (ou autorisation par agent)
 
-### "Je pensais que c'était main, pourquoi est-ce sandboxed ?"
+### "Je pensais que c'était le principal, pourquoi est-il sandboxé ?"
 
-En mode `"non-main"`, les clés de groupe/channel ne sont _pas_ main. Utilisez la clé de session principale (affichée par `sandbox explain`) ou basculez le mode sur `"off"`.
+En mode `"non-main"`, les clés de groupe/channel ne sont _pas_ principales. Utilisez la clé de session principale (affichée par `sandbox explain`) ou passez en mode `"off"`.
 
 ## Voir aussi
 
-- [Sandboxing](/en/gateway/sandboxing) -- référence complète du sandbox (modes, portées, backends, images)
-- [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) -- substitutions par agent et priorité
+- [Sandboxing](/en/gateway/sandboxing) -- référence complète sur le sandboxing (modes, portées, backends, images)
+- [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) -- priorités et substitutions par agent
 - [Elevated Mode](/en/tools/elevated)

@@ -8,7 +8,7 @@ read_when:
 
 # Pi 集成架构
 
-本文档描述了 OpenClaw 如何与 [pi-coding-agent](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent) 及其兄弟包（`pi-ai`、`pi-agent-core`、`pi-tui`）集成，以驱动其 AI 代理功能。
+本文档描述了 OpenClaw 如何与 [pi-coding-agent](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent) 及其同级包（`pi-ai`、`pi-agent-core`、`pi-tui`）集成，以驱动其 AI 智能体功能。
 
 ## 概述
 
@@ -25,10 +25,10 @@ OpenClaw 使用 pi SDK 将 AI 编码代理嵌入到其消息网关架构中。Op
 
 ```json
 {
-  "@mariozechner/pi-agent-core": "0.61.1",
-  "@mariozechner/pi-ai": "0.61.1",
-  "@mariozechner/pi-coding-agent": "0.61.1",
-  "@mariozechner/pi-tui": "0.61.1"
+  "@mariozechner/pi-agent-core": "0.64.0",
+  "@mariozechner/pi-ai": "0.64.0",
+  "@mariozechner/pi-coding-agent": "0.64.0",
+  "@mariozechner/pi-tui": "0.64.0"
 }
 ```
 
@@ -153,7 +153,7 @@ const result = await runEmbeddedPiAgent({
   config: openclawConfig,
   prompt: "Hello, how are you?",
   provider: "anthropic",
-  model: "claude-sonnet-4-20250514",
+  model: "claude-sonnet-4-6",
   timeoutMs: 120_000,
   runId: "run-abc",
   onBlockReply: async (payload) => {
@@ -318,7 +318,10 @@ trackSessionManagerAccess(params.sessionFile);
 
 ### 压缩
 
-当上下文溢出时会触发自动压缩。`compactEmbeddedPiSessionDirect()` 处理手动压缩：
+当上下文溢出时会触发自动压缩。常见的溢出特征包括 `request_too_large`、`context length exceeded`、`input exceeds the
+maximum number of tokens`, `input token count exceeds the maximum number of
+input tokens`, `input is too long for the 模型`, and `ollama error: context
+length exceeded`. `compactEmbeddedPiSessionDirect()` 处理手动压缩：
 
 ```typescript
 const compactResult = await compactEmbeddedPiSessionDirect({
@@ -357,7 +360,7 @@ authStorage.setRuntimeApiKey(model.provider, apiKeyInfo.apiKey);
 
 ### 故障转移
 
-配置后，`FailoverError` 会触发模型回退：
+`FailoverError` 在配置时触发模型回退：
 
 ```typescript
 if (fallbackConfigured && isFailoverErrorMessage(errorText)) {
@@ -377,7 +380,7 @@ OpenClaw 加载自定义 pi 扩展以实现专门行为：
 
 ### 压缩保护
 
-`src/agents/pi-hooks/compaction-safeguard.ts` 为压缩添加了防护措施，包括自适应 token 预算以及工具失败和文件操作的摘要：
+`src/agents/pi-hooks/compaction-safeguard.ts` 为压缩添加了防护措施，包括自适应 token 预算以及工具失败和文件操作摘要：
 
 ```typescript
 if (resolveCompactionMode(params.cfg) === "safeguard") {
@@ -414,7 +417,7 @@ const blockChunker = blockChunking ? new EmbeddedBlockChunker(blockChunking) : n
 
 ### 思考/最终标签剥离
 
-处理流式输出以剥离 `<think>`/`<thinking>` 块并提取 `<final>` 内容：
+流式输出经过处理，以去除 `<think>`/`<thinking>` 块并提取 `<final>` 内容：
 
 ```typescript
 const stripBlockTags = (text: string, state: { thinking: boolean; final: boolean }) => {
@@ -425,7 +428,7 @@ const stripBlockTags = (text: string, state: { thinking: boolean; final: boolean
 
 ### 回复指令
 
-回复指令（如 `[[media:url]]`、`[[voice]]`、`[[reply:id]]`）会被解析并提取：
+诸如 `[[media:url]]`、`[[voice]]`、`[[reply:id]]` 之类的回复指令会被解析和提取：
 
 ```typescript
 const { text: cleanedText, mediaUrls, audioAsVoice, replyToId } = consumeReplyDirectives(chunk);
@@ -435,7 +438,7 @@ const { text: cleanedText, mediaUrls, audioAsVoice, replyToId } = consumeReplyDi
 
 ### 错误分类
 
-`pi-embedded-helpers.ts` 对错误进行分类以便进行适当的处理：
+`pi-embedded-helpers.ts` 对错误进行分类以便进行适当处理：
 
 ```typescript
 isContextOverflowError(errorText)     // Context too large
@@ -485,13 +488,11 @@ if (sandboxRoot) {
 
 - 拒绝魔术字符串清理
 - 连续角色的轮次验证
-- Claude Code 参数兼容性
+- 严格的上游 Pi 工具参数验证
 
 ### Google/Gemini
 
-- 轮次排序修复 (`applyGoogleTurnOrderingFix`)
-- 工具模式清理 (`sanitizeToolsForGoogle`)
-- 会话历史清理 (`sanitizeSessionHistory`)
+- 插件拥有的工具架构清理
 
 ### OpenAI
 
@@ -500,7 +501,7 @@ if (sandboxRoot) {
 
 ## TUI 集成
 
-OpenClaw 还有一个本地 TUI 模式，可以直接使用 pi-tui 组件：
+OpenClaw 还有一个本地 TUI 模式，直接使用 pi-tui 组件：
 
 ```typescript
 // src/tui/tui.ts
@@ -513,11 +514,11 @@ import { ... } from "@mariozechner/pi-tui";
 
 | 方面       | Pi CLI                  | OpenClaw 嵌入式                                                                                |
 | ---------- | ----------------------- | ---------------------------------------------------------------------------------------------- |
-| 调用方式   | `pi` 命令 / RPC         | 通过 `createAgentSession()` 使用 SDK                                                           |
+| 调用       | `pi` 命令 / RPC         | 通过 `createAgentSession()` 使用 SDK                                                           |
 | 工具       | 默认编码工具            | 自定义 OpenClaw 工具套件                                                                       |
-| 系统提示词 | AGENTS.md + 提示词      | 基于渠道/上下文的动态设置                                                                      |
+| 系统提示词 | AGENTS.md + 提示词      | 基于渠道/上下文的动态                                                                          |
 | 会话存储   | `~/.pi/agent/sessions/` | `~/.openclaw/agents/<agentId>/sessions/` (或 `$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/`) |
-| 认证       | 单一凭证                | 支持轮换的多配置文件                                                                           |
+| 身份验证   | 单一凭证                | 支持轮换的多配置文件                                                                           |
 | 扩展       | 从磁盘加载              | 编程方式 + 磁盘路径                                                                            |
 | 事件处理   | TUI 渲染                | 基于回调（onBlockReply 等）                                                                    |
 
@@ -525,15 +526,15 @@ import { ... } from "@mariozechner/pi-tui";
 
 可能需要重做的领域：
 
-1. **工具签名对齐**：目前正在适配 pi-agent-core 和 pi-coding-agent 的签名
-2. **会话管理器封装**：`guardSessionManager` 增加了安全性但也提高了复杂度
-3. **扩展加载**：可以直接使用 pi 的 `ResourceLoader`
-4. **流处理程序复杂度**：`subscribeEmbeddedPiSession` 变得庞大
-5. **提供商怪癖**：许多提供商特定的代码路径，pi 可能会潜在地处理
+1. **工具签名对齐**：目前正在适配 pi-agent-core 和 pi-coding-agent 之间的签名
+2. **会话管理器包装**：`guardSessionManager` 增加了安全性但也增加了复杂性
+3. **扩展加载**：可以直接使用 Pi 的 `ResourceLoader`
+4. **流式处理程序复杂性**：`subscribeEmbeddedPiSession` 变得很大
+5. **提供商怪癖**：许多提供商特定的代码路径，Pi 可能会潜在地处理
 
 ## 测试
 
-Pi 集成覆盖范围包括以下套件：
+Pi 集成覆盖范围涵盖以下套件：
 
 - `src/agents/pi-*.test.ts`
 - `src/agents/pi-auth-json.test.ts`
@@ -547,8 +548,8 @@ Pi 集成覆盖范围包括以下套件：
 - `src/agents/pi-settings.test.ts`
 - `src/agents/pi-hooks/**/*.test.ts`
 
-实时/选择性加入：
+实时/可选：
 
-- `src/agents/pi-embedded-runner-extraparams.live.test.ts` (启用 `OPENCLAW_LIVE_TEST=1`)
+- `src/agents/pi-embedded-runner-extraparams.live.test.ts` （启用 `OPENCLAW_LIVE_TEST=1`）
 
-有关当前的运行命令，请参阅 [Pi Development Workflow](/en/pi-dev)。
+有关当前的运行命令，请参阅 [Pi 开发流程](/en/pi-dev)。

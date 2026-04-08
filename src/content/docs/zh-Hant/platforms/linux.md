@@ -19,19 +19,19 @@ Gateway 在 Linux 上受到完整支援。**Node 是建議的執行環境**。
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
 4. 從您的筆記型電腦：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
-5. 開啟 `http://127.0.0.1:18789/` 並貼上您的權杖
+5. 開啟 `http://127.0.0.1:18789/` 並使用設定的共享金鑰進行驗證（預設為 token；若您設定了 `gateway.auth.mode: "password"` 則為密碼）
 
-完整的 Linux 伺服器指南：[Linux Server](/en/vps)。逐步 VPS 範例：[exe.dev](/en/install/exe-dev)
+完整的 Linux 伺服器指南：[Linux Server](/en/vps)。逐步的 VPS 範例：[exe.dev](/en/install/exe-dev)
 
 ## 安裝
 
-- [快速入門](/en/start/getting-started)
+- [開始使用](/en/start/getting-started)
 - [安裝與更新](/en/install/updating)
-- 選用流程：[Bun (實驗性)](/en/install/bun)、[Nix](/en/install/nix)、[Docker](/en/install/docker)
+- 可選流程：[Bun (實驗性)](/en/install/bun)、[Nix](/en/install/nix)、[Docker](/en/install/docker)
 
 ## Gateway
 
-- [Gateway 操作手冊](/en/gateway)
+- [Gateway 執行手冊](/en/gateway)
 - [設定](/en/gateway/configuration)
 
 ## Gateway 服務安裝 (CLI)
@@ -64,9 +64,7 @@ openclaw doctor
 
 ## 系統控制 (systemd user unit)
 
-OpenClaw 預設安裝 systemd **user** 服務。針對共用或恆線伺服器
-請使用 **system** 服務。完整的單元範例與指引位於
-[Gateway 操作手冊](/en/gateway)。
+OpenClaw 預設會安裝一個 systemd **user** 服務。請對共用或全天候運行的伺服器使用 **system** 服務。`openclaw gateway install` 和 `openclaw onboard --install-daemon` 已經為您呈現當前的標準單元；僅在您需要自訂 system/service-manager 設定時才需要手動撰寫。完整的服務指南位於 [Gateway runbook](/en/gateway)。
 
 最小化設定：
 
@@ -82,6 +80,10 @@ Wants=network-online.target
 ExecStart=/usr/local/bin/openclaw gateway --port 18789
 Restart=always
 RestartSec=5
+TimeoutStopSec=30
+TimeoutStartSec=30
+SuccessExitStatus=0 143
+KillMode=control-group
 
 [Install]
 WantedBy=default.target

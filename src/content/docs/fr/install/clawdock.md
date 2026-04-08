@@ -90,13 +90,14 @@ clawdock-approve <request-id>
 
 ## Configuration et secrets
 
-ClawDock fonctionne avec le même fractionnement de configuration Docker que celui décrit dans [Docker](/en/install/docker) :
+ClawDock fonctionne avec le même découpage de configuration Docker que celui décrit dans [Docker](/en/install/docker) :
 
 - `<project>/.env` pour les valeurs spécifiques à Docker telles que le nom de l'image, les ports et le jeton de passerelle
-- `~/.openclaw/.env` pour les clés de fournisseur et les jetons de bot
+- `~/.openclaw/.env` pour les clés de provider et les jetons de bot basés sur des variables d'environnement
+- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` pour l'authentification par clé OAuth/API du provider stockée
 - `~/.openclaw/openclaw.json` pour la configuration du comportement
 
-Utilisez `clawdock-show-config` lorsque vous souhaitez inspecter ces fichiers rapidement. Il masque les valeurs `.env` dans sa sortie imprimée.
+Utilisez `clawdock-show-config` lorsque vous souhaitez inspecter rapidement les fichiers `.env` et `openclaw.json`. Il masque les valeurs `.env` dans sa sortie imprimée.
 
 ## Pages connexes
 

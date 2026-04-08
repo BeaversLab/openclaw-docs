@@ -82,6 +82,8 @@ openclaw onboard --non-interactive \
 - 使用 `--install-daemon` 时，当令牌认证需要令牌时，SecretRef 托管的网关令牌会被验证，但不会作为解析后的明文保留在监督服务环境元数据中。
 - 使用 `--install-daemon` 时，如果令牌模式需要令牌且配置的令牌 SecretRef 未解析，新手引导将以失败关闭并提供修复指导。
 - 使用 `--install-daemon` 时，如果 `gateway.auth.token` 和 `gateway.auth.password` 均已配置且未设置 `gateway.auth.mode`，新手引导将阻止安装，直到显式设置模式。
+- 本地新手引导会将 `gateway.mode="local"` 写入配置。如果后续配置文件缺少 `gateway.mode`，请将其视为配置损坏或不完整的手动编辑，而不是有效的本地模式快捷方式。
+- `--allow-unconfigured` 是一个独立的网关运行时应急手段。这并不意味着新手引导可以省略 `gateway.mode`。
 
 示例：
 
@@ -97,23 +99,24 @@ openclaw onboard --non-interactive \
 
 非交互式本地网关运行状况：
 
-- 除非传递 `--skip-health`，否则新手引导将等待可访问的本地网关才会成功退出。
-- `--install-daemon` 首先启动托管网关安装路径。如果没有它，您必须已经有一个本地网关在运行，例如 `openclaw gateway run`。
+- 除非您传递 `--skip-health`，否则新手引导在成功退出之前会等待本地网关可达。
+- `--install-daemon` 首先启动托管网关安装路径。如果没有它，您必须已经有一个本地网关正在运行，例如 `openclaw gateway run`。
 - 如果您只想在自动化中进行配置/工作区/引导写入，请使用 `--skip-health`。
 - 在原生 Windows 上，`--install-daemon` 首先尝试计划任务，如果任务创建被拒绝，则回退到每用户启动文件夹登录项。
 
-使用引用模式的交互式新手引导行为：
+参考模式的交互式新手引导行为：
 
-- 收到提示时选择 **使用密钥引用**。
-- 然后选择以下之一：
+- 出现提示时选择 **使用密钥引用**。
+- 然后选择以下任一项：
   - 环境变量
-  - 配置的密钥提供商（`file` 或 `exec`）
-- 新手引导在保存引用之前会执行快速预检验证。
+  - 配置的密钥提供商 (`file` 或 `exec`)
+- 新手引导会在保存引用之前执行快速预检验证。
   - 如果验证失败，新手引导会显示错误并允许您重试。
 
 非交互式 Z.AI 端点选择：
 
-注意：`--auth-choice zai-api-key` 现在会为您的密钥自动检测最佳 Z.AI 端点（优先配合 `zai/glm-5` 使用通用 API）。如果您特别想要 GLM 编码计划端点，请选择 `zai-coding-global` 或 `zai-coding-cn`。
+注意：`--auth-choice zai-api-key` 现在会自动为您的密钥检测最佳的 Z.AI 端点（优先使用带有 `zai/glm-5` 的通用 API）。
+如果您特别想要 GLM 编码计划端点，请选择 `zai-coding-global` 或 `zai-coding-cn`。
 
 ```bash
 # Promptless endpoint selection
@@ -135,23 +138,24 @@ openclaw onboard --non-interactive \
   --mistral-api-key "$MISTRAL_API_KEY"
 ```
 
-Flow 备注：
+流程说明：
 
-- `quickstart`：最少的提示，自动生成网关令牌。
-- `manual`：针对端口/绑定/身份验证的完整提示（`advanced` 的别名）。
-- 在网络搜索步骤中，选择 **Grok** 可能会触发一个单独的后续
-  提示，以使用相同的 `XAI_API_KEY` 启用 `x_search`，并可选择
-  一个 `x_search` 模型。其他网络搜索提供商不会显示该提示。
+- `quickstart`：最少提示，自动生成网关令牌。
+- `manual`：端口/绑定/身份验证的完整提示（`advanced` 的别名）。
+- 当身份验证选择暗示了首选提供商时，新手引导会预先过滤默认模型和允许列表选择器，仅显示该提供商的选项。对于 Volcengine 和 BytePlus，这也会匹配编码计划变体（`volcengine-plan/*`、`byteplus-plan/*`）。
+- 如果首选提供商过滤后尚未产生任何已加载的模型，新手引导将回退到未过滤的目录，而不是让选择器保持为空。
+- 在网络搜索步骤中，某些提供商可以触发特定于提供商的后续提示：
+  - **Grok** 可以提供可选的 `x_search` 设置，使用相同的 `XAI_API_KEY` 和一个 `x_search` 模型选择。
+  - **Kimi** 可以询问 Moonshot API 区域（`api.moonshot.ai` vs `api.moonshot.cn`）以及默认的 Kimi 网络搜索模型。
 - 本地新手引导私信范围行为：[CLI 设置参考](/en/start/wizard-cli-reference#outputs-and-internals)。
 - 最快的首次聊天：`openclaw dashboard`（控制 UI，无需渠道设置）。
-- 自定义提供商：连接任何 OpenAI 或 Anthropic 兼容的端点，
-  包括未列出的托管提供商。使用 Unknown 进行自动检测。
+- 自定义提供商：连接任何 OpenAI 或 Anthropic 兼容的端点，包括未列出的托管提供商。使用 Unknown 自动检测。
 
-## 常见后续命令
+## 常见的后续命令
 
 ```bash
 openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` 并不意味着非交互模式。请使用 `--non-interactive` 进行脚本编写。</Note>
+<Note>`--json` 并不意味着非交互模式。请对脚本使用 `--non-interactive`。</Note>

@@ -93,10 +93,11 @@ clawdock-approve <request-id>
 ClawDock funciona con la misma división de configuración de Docker descrita en [Docker](/en/install/docker):
 
 - `<project>/.env` para valores específicos de Docker como el nombre de la imagen, los puertos y el token de la puerta de enlace
-- `~/.openclaw/.env` para claves de proveedor y tokens de bot
+- `~/.openclaw/.env` para las claves de proveedor y tokens de bot respaldados por variables de entorno
+- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` para la autenticación OAuth/API-key del proveedor almacenada
 - `~/.openclaw/openclaw.json` para la configuración de comportamiento
 
-Use `clawdock-show-config` cuando desee inspeccionar esos archivos rápidamente. Redacta los valores de `.env` en su salida impresa.
+Usa `clawdock-show-config` cuando quieras inspeccionar rápidamente los archivos `.env` y `openclaw.json`. Redacta los valores de `.env` en su salida impresa.
 
 ## Páginas relacionadas
 

@@ -12,7 +12,7 @@ title: "DigitalOcean (Plataforma)"
 
 Ejecutar un Gateway OpenClaw persistente en DigitalOcean por **$6/mes** (o $4/mes con precio reservado).
 
-Si desea una opción de $0/mes y no le importa ARM + una configuración específica del proveedor, consulte la [guía de Oracle Cloud](/en/platforms/oracle).
+Si quieres una opción de $0/mes y no te importa ARM + una configuración específica del proveedor, consulta la [guía de Oracle Cloud](/en/platforms/oracle).
 
 ## Comparación de costos (2026)
 
@@ -27,14 +27,14 @@ Si desea una opción de $0/mes y no le importa ARM + una configuración específ
 **Elegir un proveedor:**
 
 - DigitalOcean: la experiencia de usuario más simple + configuración predecible (esta guía)
-- Hetzner: buen precio/rendimiento (consulte la [guía de Hetzner](/en/install/hetzner))
-- Oracle Cloud: puede ser $0/mes, pero es más complicado y solo para ARM (consulte la [guía de Oracle](/en/platforms/oracle))
+- Hetzner: buen precio/rendimiento (consulta la [guía de Hetzner](/en/install/hetzner))
+- Oracle Cloud: puede ser gratis ($0/mes), pero es más complicado y solo tiene ARM (consulta la [guía de Oracle](/en/platforms/oracle))
 
 ---
 
 ## Requisitos previos
 
-- Cuenta de DigitalOcean ([regístrese con $200 de crédito gratuito](https://m.do.co/c/signup))
+- Cuenta de DigitalOcean ([regístrate con $200 de crédito gratis](https://m.do.co/c/signup))
 - Par de claves SSH (o disposición a usar autenticación por contraseña)
 - ~20 minutos
 
@@ -42,7 +42,7 @@ Si desea una opción de $0/mes y no le importa ARM + una configuración específ
 
 <Warning>Utilice una imagen base limpia (Ubuntu 24.04 LTS). Evite las imágenes de un clic de Marketplace de terceros a menos que haya revisado sus scripts de inicio y las configuraciones predeterminadas del firewall.</Warning>
 
-1. Inicie sesión en [DigitalOcean](https://cloud.digitalocean.com/)
+1. Inicia sesión en [DigitalOcean](https://cloud.digitalocean.com/)
 2. Haga clic en **Create → Droplets**
 3. Elija:
    - **Región:** La más cercana a usted (o a sus usuarios)
@@ -130,8 +130,8 @@ Abrir: `https://<magicdns>/`
 
 Notas:
 
-- Serve mantiene el Gateway solo en loopback y autentica el tráfico de la Interfaz de Control/WebSocket a través de encabezados de identidad de Tailscale (la autenticación sin token asume un host de gateway confiable; las API HTTP aún requieren token/contraseña).
-- Para requerir token/contraseña en su lugar, configure `gateway.auth.allowTailscale: false` o use `gateway.auth.mode: "password"`.
+- Serve mantiene el Gateway solo en bucle local (loopback) y autentica el tráfico de Control UI/WebSocket a través de encabezados de identidad de Tailscale (la autenticación sin token asume un host de gateway confiable; las API HTTP no usan esos encabezados de Tailscale y siguen el modo de autenticación HTTP normal del gateway).
+- Para requerir credenciales explícitas de secreto compartido en su lugar, establece `gateway.auth.allowTailscale: false` y usa `gateway.auth.mode: "token"` o `"password"`.
 
 **Opción C: Tailnet bind (sin Serve)**
 
@@ -140,7 +140,7 @@ openclaw config set gateway.bind tailnet
 openclaw gateway restart
 ```
 
-Abrir: `http://<tailscale-ip>:18789` (se requiere token).
+Abre: `http://<tailscale-ip>:18789` (se requiere token).
 
 ## 7) Conecte sus Canales
 
@@ -158,7 +158,7 @@ openclaw channels login whatsapp
 # Scan QR code
 ```
 
-Consulte [Canales](/en/channels) para otros proveedores.
+Consulta [Canales](/en/channels) para otros proveedores.
 
 ---
 
@@ -181,7 +181,7 @@ echo '/swapfile none swap sw 0 0' >> /etc/fstab
 Si está experimentando errores de falta de memoria (OOMs), considere:
 
 - Usar modelos basados en API (Claude, GPT) en lugar de modelos locales
-- Configurar `agents.defaults.model.primary` con un modelo más pequeño
+- Establecer `agents.defaults.model.primary` en un modelo más pequeño
 
 ### Monitorear la memoria
 
@@ -196,13 +196,13 @@ htop
 
 Todo el estado reside en:
 
-- `~/.openclaw/` — configuración, credenciales, datos de sesión
+- `~/.openclaw/` — `openclaw.json`, `auth-profiles.json` por agente, estado del canal/proveedor y datos de sesión
 - `~/.openclaw/workspace/` — espacio de trabajo (SOUL.md, memoria, etc.)
 
 Estos sobreviven a los reinicios. Hágales una copia de seguridad periódicamente:
 
 ```bash
-tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
+openclaw backup create
 ```
 
 ---
@@ -223,7 +223,7 @@ Oracle Cloud ofrece instancias ARM **Always Free** que son significativamente m�
 - El registro puede ser complicado (intente de nuevo si falla)
 - Arquitectura ARM — la mayoría de las cosas funcionan, pero algunos binarios necesitan compilaciones para ARM
 
-Para la guía completa de configuración, consulte [Oracle Cloud](/en/platforms/oracle). Para consejos de registro y solución de problemas del proceso de inscripción, consulte esta [guía de la comunidad](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
+Para la guía completa de configuración, consulta [Oracle Cloud](/en/platforms/oracle). Para consejos de registro y solución de problemas del proceso de inscripción, consulta esta [guía comunitaria](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
 
 ---
 
@@ -234,7 +234,7 @@ Para la guía completa de configuración, consulte [Oracle Cloud](/en/platforms/
 ```bash
 openclaw gateway status
 openclaw doctor --non-interactive
-journalctl -u openclaw --no-pager -n 50
+journalctl --user -u openclaw-gateway.service --no-pager -n 50
 ```
 
 ### Puerto ya en uso

@@ -10,7 +10,7 @@ title: "媒体理解"
 
 OpenClaw 可以在回复管道运行之前**总结入站媒体**（图像/音频/视频）。它会自动检测何时本地工具或提供商密钥可用，并且可以被禁用或自定义。如果关闭理解功能，模型仍将照常接收原始文件/URL。
 
-特定于供应商的媒体行为由供应商插件注册，而 OpenClaw 核心拥有共享 `tools.media` 配置、回退顺序和回复管道集成。
+特定于提供商的媒体行为由供应商插件注册，而 OpenClaw 核心拥有共享 `tools.media` 配置、回退顺序和回复管道集成。
 
 ## 目标
 
@@ -21,31 +21,31 @@ OpenClaw 可以在回复管道运行之前**总结入站媒体**（图像/音频
 
 ## 高级行为
 
-1. 收集入站附件 (`MediaPaths`、`MediaUrls`、`MediaTypes`)。
+1. 收集入站附件 (`MediaPaths`, `MediaUrls`, `MediaTypes`)。
 2. 对于每个启用的功能（图像/音频/视频），根据策略选择附件（默认：**第一个**）。
 3. 选择第一个符合条件的模型条目（大小 + 功能 + 身份验证）。
 4. 如果模型失败或媒体太大，**回退到下一个条目**。
 5. 成功时：
    - `Body` 变为 `[Image]`、`[Audio]` 或 `[Video]` 块。
-   - 音频设置 `{{Transcript}}`；命令解析在存在字幕时使用字幕文本，否则使用转录文本。
-   - 字幕在块内保留为 `User text:`。
+   - 音频设置 `{{Transcript}}`；命令解析在存在时使用字幕文本，否则使用转录文本。
+   - 字幕作为 `User text:` 保留在块内。
 
 如果理解失败或被禁用，**回复流程将继续**，使用原始正文 + 附件。
 
 ## 配置概述
 
-`tools.media` 支持 **共享模型** 以及每种功能的覆盖：
+`tools.media` 支持 **共享模型** 以及按功能的覆盖设置：
 
-- `tools.media.models`：共享模型列表（使用 `capabilities` 进行控制）。
+- `tools.media.models`：共享模型列表（使用 `capabilities` 进行限制）。
 - `tools.media.image` / `tools.media.audio` / `tools.media.video`：
-  - 默认值 (`prompt`、`maxChars`、`maxBytes`、`timeoutSeconds`、`language`)
-  - 提供商覆盖 (`baseUrl`、`headers`、`providerOptions`)
+  - 默认值 (`prompt`, `maxChars`, `maxBytes`, `timeoutSeconds`, `language`)
+  - 提供商覆盖 (`baseUrl`, `headers`, `providerOptions`)
   - 通过 `tools.media.audio.providerOptions.deepgram` 设置 Deepgram 音频选项
   - 音频转录回显控制 (`echoTranscript`，默认 `false`；`echoFormat`)
-  - 可选的**按功能 `models` 列表**（在共享模型之前首选）
-  - `attachments` 策略（`mode`、`maxAttachments`、`prefer`）
-  - `scope`（可选的按渠道/chatType/会话键控门）
-- `tools.media.concurrency`：最大并发能力运行数（默认 **2**）。
+  - 可选的 **按功能 `models` 列表**（优先于共享模型）
+  - `attachments` 策略 (`mode`, `maxAttachments`, `prefer`)
+  - `scope`（可选，按渠道/聊天类型/会话密钥限制）
+- `tools.media.concurrency`：最大并发功能运行数（默认 **2**）。
 
 ```json5
 {
@@ -78,7 +78,7 @@ OpenClaw 可以在回复管道运行之前**总结入站媒体**（图像/音频
 {
   type: "provider", // default if omitted
   provider: "openai",
-  model: "gpt-5.2",
+  model: "gpt-5.4-mini",
   prompt: "Describe the image in <= 500 chars.",
   maxChars: 500,
   maxBytes: 10485760,
@@ -111,9 +111,9 @@ CLI 模板还可以使用：
 
 推荐的默认值：
 
-- `maxChars`：图片/视频为 **500**（简短，命令友好）
-- `maxChars`：音频为 **unset**（完整转录，除非您设置了限制）
-- `maxBytes`：
+- `maxChars`: 图像/视频为 **500**（简短，便于命令行使用）
+- `maxChars`: 音频为 **unset**（完整转录，除非您设置了限制）
+- `maxBytes`:
   - image: **10MB**
   - audio: **20MB**
   - video: **50MB**
@@ -122,25 +122,29 @@ CLI 模板还可以使用：
 
 - 如果媒体超过 `maxBytes`，则跳过该模型并**尝试下一个模型**。
 - 小于 **1024 字节**的音频文件被视为空/损坏，并在提供商/CLI 转录之前被跳过。
-- 如果模型返回超过 `maxChars` 的内容，输出将被修剪。
-- `prompt` 默认为简单的“描述 {media}。”加上 `maxChars` 指导（仅限图片/视频）。
-- 如果 `<capability>.enabled: true` 但未配置模型，当其提供商支持该功能时，OpenClaw 会尝试**使用当前回复模型**。
+- 如果模型返回超过 `maxChars`，输出将被截断。
+- `prompt` 默认为简单的“描述{media}。”加上 `maxChars` 指导（仅限图像/视频）。
+- 如果当前使用的主要图像模型原生支持视觉功能，OpenClaw 将跳过 `[Image]` 摘要块，并将原始图像直接传递给模型。
+- 如果设置了 `<capability>.enabled: true` 但未配置模型，当其提供商支持该功能时，OpenClaw 将尝试**当前回复模型**。
 
 ### 自动检测媒体理解（默认）
 
-如果 `tools.media.<capability>.enabled` **未**设置为 `false` 且您未
-配置模型，OpenClaw 将按以下顺序自动检测并在**第一个
-可用选项处停止**：
+如果未将 `tools.media.<capability>.enabled` 设置为 `false` 且您未配置模型，OpenClaw 将按以下顺序自动检测并**在第一个可用的选项处停止**：
 
-1. **本地 CLI**（仅限音频；如果已安装）
-   - `sherpa-onnx-offline`（需要具有编码器/解码器/连接器/令牌的 `SHERPA_ONNX_MODEL_DIR`）
+1. **当前回复模型**，当其提供商支持该功能时。
+2. **`agents.defaults.imageModel`** 主要/备用引用（仅限图像）。
+3. **本地 CLI**（仅限音频；如果已安装）
+   - `sherpa-onnx-offline`（需要带有 encoder/decoder/joiner/tokens 的 `SHERPA_ONNX_MODEL_DIR`）
    - `whisper-cli`（`whisper-cpp`；使用 `WHISPER_CPP_MODEL` 或捆绑的微型模型）
-   - `whisper` (Python CLI; 自动下载模型)
-2. **Gemini CLI** (`gemini`) 使用 `read_many_files`
-3. **提供商密钥**
-   - 音频：OpenAI → Groq → Deepgram → Google
-   - 图片：OpenAI → Anthropic → Google → MiniMax
-   - 视频：Google
+   - `whisper`（Python CLI；自动下载模型）
+4. **Gemini CLI**（`gemini`），使用 `read_many_files`
+5. **提供商身份验证**
+   - 已配置的支持该功能的 `models.providers.*` 条目将在捆绑的备用顺序之前尝试。
+   - 即使不是捆绑的供应商插件，具有图像处理能力的图像配置提供商也会自动注册媒体理解。
+   - 捆绑的备用顺序：
+     - 音频：OpenAI → Groq → Deepgram → Google → Mistral
+     - 图像：OpenAI → Anthropic → Google → MiniMax → MiniMax Portal → Z.AI
+     - 视频：Google → Qwen → Moonshot
 
 要禁用自动检测，请设置：
 
@@ -156,7 +160,7 @@ CLI 模板还可以使用：
 }
 ```
 
-注意：二进制检测在 macOS/Linux/Windows 上是尽力而为的；确保 CLI 位于 `PATH`（我们会展开 `~`），或者使用完整命令路径设置显式的 CLI 模型。
+注意：在 macOS/Linux/Windows 上，二进制检测是尽力而为的；确保 CLI 位于 `PATH` 上（我们会展开 `~`），或者使用完整命令路径设置显式的 CLI 模型。
 
 ### 代理环境支持（提供商模型）
 
@@ -167,58 +171,83 @@ CLI 模板还可以使用：
 - `https_proxy`
 - `http_proxy`
 
-如果未设置代理环境变量，媒体理解将使用直接出站。如果代理值格式错误，OpenClaw 会记录警告并回退到直接获取。
+如果未设置代理环境变量，媒体理解将使用直接出口。如果代理值格式错误，OpenClaw 会记录警告并回退到直接获取。
 
 ## 功能（可选）
 
 如果您设置了 `capabilities`，该条目仅针对那些媒体类型运行。对于共享列表，OpenClaw 可以推断默认值：
 
-- `openai`, `anthropic`, `minimax`: **图片**
-- `moonshot`: **图片 + 视频**
-- `google` (Gemini API): **图片 + 音频 + 视频**
-- `mistral`: **音频**
-- `zai`: **图片**
-- `groq`: **音频**
-- `deepgram`: **音频**
+- `openai`, `anthropic`, `minimax`: **image**
+- `minimax-portal`: **image**
+- `moonshot`: **image + video**
+- `openrouter`: **image**
+- `google` (Gemini API): **image + audio + video**
+- `qwen`: **image + video**
+- `mistral`: **audio**
+- `zai`: **image**
+- `groq`: **audio**
+- `deepgram`: **audio**
+- 任何具有支持图像的模型的 `models.providers.<id>.models[]` 目录：
+  **image**
 
-对于 CLI 条目，**请显式设置 `capabilities`** 以避免意外的匹配。如果您省略 `capabilities`，该条目将适用于其所在的列表。
+对于 CLI 条目，**显式设置 `capabilities`** 以避免意外的匹配。如果您省略 `capabilities`，该条目将适用于其所在的列表。
 
 ## 提供商支持矩阵（OpenClaw 集成）
 
-| 功能 | 提供商集成                                         | 注                                             |
-| ---- | -------------------------------------------------- | ---------------------------------------------- |
-| 图片 | OpenAI, Anthropic, Google, MiniMax, Moonshot, Z.AI | 供应商插件针对核心媒体理解注册图片支持。       |
-| 音频 | OpenAI, Groq, Deepgram, Google, Mistral            | 提供商转录 (Whisper/Deepgram/Gemini/Voxtral)。 |
-| 视频 | Google, Moonshot                                   | 通过供应商插件提供的提供商视频理解。           |
+| 功能 | 提供商集成                                                                       | 备注                                                                                                      |
+| ---- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| 图像 | OpenAI, OpenRouter, Anthropic, Google, MiniMax, Moonshot, Qwen, Z.AI, 配置提供商 | 供应商插件注册图像支持；MiniMax 和 MiniMax OAuth 都使用 `MiniMax-VL-01`；支持图像的配置提供商会自动注册。 |
+| 音频 | OpenAI, Groq, Deepgram, Google, Mistral                                          | 提供商转录（Whisper/Deepgram/Gemini/Voxtral）。                                                           |
+| 视频 | Google, Qwen, Moonshot                                                           | 提供商视频理解通过供应商插件实现；Qwen 视频理解使用标准 DashScope 端点。                                  |
+
+MiniMax 说明：
+
+- `minimax` 和 `minimax-portal` 图像理解来自插件拥有的
+  `MiniMax-VL-01` 媒体提供商。
+- 捆绑的 MiniMax 文本目录仍然以纯文本开始；显式
+  `models.providers.minimax` 条目会实例化支持图像的 M2.7 聊天引用。
 
 ## 模型选择指南
 
-- 当质量和安全至关重要时，请优先为每种媒体功能选择可用的最强最新一代模型。
-- 对于处理不受信任输入的启用工具的代理，请避免使用较旧/较弱的媒体模型。
-- 为每种功能保留至少一个备用方案以保证可用性（高质量模型 + 更快/更便宜的模型）。
-- CLI 备用方案（`whisper-cli`、`whisper`、`gemini`）在提供商 API 不可用时非常有用。
-- `parakeet-mlx` 注意：使用 `--output-dir` 时，当输出格式为 `txt`（或未指定）时，OpenClaw 会读取 `<output-dir>/<media-basename>.txt`；非 `txt` 格式将回退到 stdout。
+- 当质量和安全性至关重要时，请优先为每种媒体功能选择可用的最强最新一代模型。
+- 对于处理不受信任输入的工具启用型代理，请避免使用较旧/较弱的媒体模型。
+- 为了确保可用性，请为每种功能保留至少一个后备（高质量模型 + 更快/更便宜的模型）。
+- 当提供商 API 不可用时，CLI 后备（`whisper-cli`, `whisper`, `gemini`）非常有用。
+- `parakeet-mlx` 说明：使用 `--output-dir` 时，当输出格式为 `txt`（或未指定）时，OpenClaw 会读取 `<output-dir>/<media-basename>.txt`；非 `txt` 格式将回退到 stdout。
 
 ## 附件策略
 
-按功能划分的 `attachments` 控制处理哪些附件：
+针对每种功能的 `attachments` 控制处理哪些附件：
 
-- `mode`：`first`（默认）或 `all`
-- `maxAttachments`：限制处理的数量（默认为 **1**）
-- `prefer`：`first`、`last`、`path`、`url`
+- `mode`: `first`（默认）或 `all`
+- `maxAttachments`: 限制处理数量（默认 **1**）
+- `prefer`: `first`, `last`, `path`, `url`
 
-当 `mode: "all"` 时，输出标记为 `[Image 1/2]`、`[Audio 2/2]` 等。
+当 `mode: "all"` 时，输出标记为 `[Image 1/2]`, `[Audio 2/2]` 等。
+
+文件附件提取行为：
+
+- 提取的文件文本在追加到媒体提示之前，会被包装为 **不受信任的外部内容**。
+- 注入的块使用显式边界标记，如
+  `<<<EXTERNAL_UNTRUSTED_CONTENT id="...">>>` /
+  `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>`，并包含一个
+  `Source: External` 元数据行。
+- 此附件提取路径有意省略了冗长的
+  `SECURITY NOTICE:` 横幅，以避免充斥媒体提示；边界标记和元数据仍然保留。
+- 如果文件没有可提取的文本，OpenClaw 会注入 `[No extractable text]`。
+- 如果 PDF 在此路径中回退到渲染的页面图像，媒体提示将保留占位符 `[PDF content rendered to images; images not forwarded to model]`
+  因为此附件提取步骤转发的是文本块，而不是渲染的 PDF 图像。
 
 ## 配置示例
 
-### 1) 共享模型列表 + 覆盖
+### 1) 共享模型列表 + 覆盖设置
 
 ```json5
 {
   tools: {
     media: {
       models: [
-        { provider: "openai", model: "gpt-5.2", capabilities: ["image"] },
+        { provider: "openai", model: "gpt-5.4-mini", capabilities: ["image"] },
         {
           provider: "google",
           model: "gemini-3-flash-preview",
@@ -242,7 +271,7 @@ CLI 模板还可以使用：
 }
 ```
 
-### 2) 仅音频 + 视频（关闭图像）
+### 2) 仅限音频 + 视频（图像关闭）
 
 ```json5
 {
@@ -276,7 +305,7 @@ CLI 模板还可以使用：
 }
 ```
 
-### 3) 可选图像理解
+### 3) 可选的图像理解
 
 ```json5
 {
@@ -287,7 +316,7 @@ CLI 模板还可以使用：
         maxBytes: 10485760,
         maxChars: 500,
         models: [
-          { provider: "openai", model: "gpt-5.2" },
+          { provider: "openai", model: "gpt-5.4-mini" },
           { provider: "anthropic", model: "claude-opus-4-6" },
           {
             type: "cli",
@@ -301,7 +330,7 @@ CLI 模板还可以使用：
 }
 ```
 
-### 4) 多模态单个条目（显式功能）
+### 4) 多模态单一条目（显式能力）
 
 ```json5
 {
@@ -344,16 +373,16 @@ CLI 模板还可以使用：
 当媒体理解运行时，`/status` 包含一个简短的摘要行：
 
 ```
-📎 Media: image ok (openai/gpt-5.2) · audio skipped (maxBytes)
+📎 Media: image ok (openai/gpt-5.4-mini) · audio skipped (maxBytes)
 ```
 
-这显示了每种功能的结果以及适用的提供商/模型。
+这显示了每种能力的具体结果以及适用的所选提供商/模型。
 
-## 说明
+## 注意事项
 
-- 理解是**尽力而为**的。错误不会阻止回复。
-- 即使禁用了理解，附件仍会传递给模型。
-- 使用 `scope` 限制运行理解的位置（例如仅限私信）。
+- 理解采用 **尽力而为** 策略。错误不会阻止回复。
+- 即使禁用了理解功能，附件仍会传递给模型。
+- 使用 `scope` 来限制理解运行的位置（例如仅限私信）。
 
 ## 相关文档
 

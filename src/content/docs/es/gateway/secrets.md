@@ -417,7 +417,7 @@ Las rutas de comandos pueden optar por la resolución SecretRef compatible a tra
 
 Existen dos comportamientos generales:
 
-- Las rutas de comandos estrictas (por ejemplo, rutas de memoria remota `openclaw memory` y `openclaw qr --remote`) leen desde la instantánea activa y fallan rápidamente cuando un SecretRef requerido no está disponible.
+- Las rutas de comandos estrictas (por ejemplo, `openclaw memory` rutas de memoria remota y `openclaw qr --remote` cuando necesita referencias de secretos compartidos remotos) leen desde la instantánea activa y fallan rápido cuando un SecretRef requerido no está disponible.
 - Las rutas de comandos de solo lectura (por ejemplo `openclaw status`, `openclaw status --all`, `openclaw channels status`, `openclaw channels resolve`, `openclaw security audit`, y los flujos de reparación de doctor/config de solo lectura) también prefieren la instantánea activa, pero degradan en lugar de abortar cuando un SecretRef específico no está disponible en esa ruta de comando.
 
 Comportamiento de solo lectura:

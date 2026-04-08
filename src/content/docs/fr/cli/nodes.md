@@ -1,5 +1,5 @@
 ---
-summary: "Référence CLI pour `openclaw nodes` (list/status/approve/invoke, camera/canvas/screen)"
+summary: "Référence CLI pour `openclaw nodes` (status, pairing, invoke, camera/canvas/screen)"
 read_when:
   - You’re managing paired nodes (cameras, screen, canvas)
   - You need to approve requests or invoke node commands
@@ -12,9 +12,9 @@ Gérer les nœuds jumelés (appareils) et appeler les capacités des nœuds.
 
 Connexes :
 
-- Vue d'ensemble des nœuds : [Nœuds](/en/nodes)
-- Caméra : [Nœuds de caméra](/en/nodes/camera)
-- Images : [Nœuds d'image](/en/nodes/images)
+- Aperçu des nœuds : [Nodes](/en/nodes)
+- Caméra : [Camera nodes](/en/nodes/camera)
+- Images : [Image nodes](/en/nodes/images)
 
 Options courantes :
 
@@ -28,6 +28,8 @@ openclaw nodes list --connected
 openclaw nodes list --last-connected 24h
 openclaw nodes pending
 openclaw nodes approve <requestId>
+openclaw nodes reject <requestId>
+openclaw nodes rename --node <id|name|ip> --name <displayName>
 openclaw nodes status
 openclaw nodes status --connected
 openclaw nodes status --last-connected 24h
@@ -37,19 +39,28 @@ openclaw nodes status --last-connected 24h
 Utilisez `--connected` pour afficher uniquement les nœuds actuellement connectés. Utilisez `--last-connected <duration>` pour
 filtrer les nœuds qui se sont connectés dans une durée donnée (ex. `24h`, `7d`).
 
-## Invoquer
+Note d'approbation :
+
+- `openclaw nodes pending` nécessite uniquement la portée d'appariement.
+- `openclaw nodes approve <requestId>` hérite des exigences de portée supplémentaires de la
+  requête en attente :
+  - requête sans commande : appariement uniquement
+  - commandes de nœud non-exécutables : appariement + écriture
+  - `system.run` / `system.run.prepare` / `system.which` : appariement + admin
+
+## Invoke
 
 ```bash
 openclaw nodes invoke --node <id|name|ip> --command <command> --params <json>
 ```
 
-Options d'appel :
+Invoke flags :
 
 - `--params <json>` : chaîne d'objet JSON (par défaut `{}`).
-- `--invoke-timeout <ms>` : délai d'attente d'appel du nœud (par défaut `15000`).
+- `--invoke-timeout <ms>` : délai d'expiration d'appel de nœud (par défaut `15000`).
 - `--idempotency-key <key>` : clé d'idempotence facultative.
 - `system.run` et `system.run.prepare` sont bloqués ici ; utilisez l'outil `exec` avec `host=node` pour l'exécution de shell.
 
 Pour l'exécution de shell sur un nœud, utilisez l'outil `exec` avec `host=node` au lieu de `openclaw nodes run`.
-La `nodes` CLI est désormais axée sur les fonctionnalités : RPC directe via `nodes invoke`, ainsi que l'appairage, la caméra,
+La `nodes` CLI est désormais axée sur les capacités : RPC directe via `nodes invoke`, ainsi que l'appariement, la caméra,
 l'écran, la localisation, le canvas et les notifications.

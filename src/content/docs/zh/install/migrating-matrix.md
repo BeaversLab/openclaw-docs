@@ -275,7 +275,7 @@ OpenClaw 无法自动恢复：
 - 含义：存储的密钥与活动的 Matrix 备份不匹配。
 - 操作：使用正确的密钥重新运行 `openclaw matrix verify device "<your-recovery-key>"`。
 
-如果您接受丢失无法恢复的旧加密历史记录，可以使用 `openclaw matrix verify backup reset --yes` 重置当前的备份基线。
+如果您接受丢失无法恢复的旧加密历史记录，可以改用 `openclaw matrix verify backup reset --yes` 重置当前的备份基线。当存储的备份密钥损坏时，该重置可能还会重新创建密钥存储，以便新备份密钥在重启后能够正确加载。
 
 `Backup trust chain is not verified on this device. Re-run 'openclaw matrix verify device <key>'.`
 

@@ -15,7 +15,7 @@ title: "遷移指南"
 當您複製 **狀態目錄**（預設為 `~/.openclaw/`）和您的 **工作區** 時，您會保留：
 
 - **設定** -- `openclaw.json` 和所有閘道設定
-- **驗證** -- API 金鑰、OAuth 權杖、憑證設定檔
+- **Auth** -- 每個代理 `auth-profiles.json` (API 金鑰 + OAuth)，以及 `credentials/` 下的任何通道/提供者狀態
 - **工作階段** -- 對話歷史和代理程式狀態
 - **通道狀態** -- WhatsApp 登入、Telegram 工作階段等。
 - **工作區檔案** -- `MEMORY.md`、`USER.md`、技能和提示
@@ -28,8 +28,8 @@ title: "遷移指南"
 ## 遷移步驟
 
 <Steps>
-  <Step title="停止閘道並備份">
-    在**舊**機器上，停止閘道以免檔案在複製過程中變更，然後進行封存：
+  <Step title="Stop the gateway and back up">
+    在**舊**機器上，停止閘道，以免檔案在複製中途發生變更，然後進行封存：
 
     ```bash
     openclaw gateway stop
@@ -41,17 +41,17 @@ title: "遷移指南"
 
   </Step>
 
-<Step title="在新機器上安裝 OpenClaw">在新機器上[安裝](/en/install) CLI（如果需要也包括 Node）。 如果入門程序建立了一個新的 `~/.openclaw/` 也不打緊——您接下來會將其覆蓋。</Step>
+<Step title="Install OpenClaw on the new machine">在新機器上[安裝](/en/install) CLI（以及 Node，如果需要）。 如果上架流程建立了新的 `~/.openclaw/` 也沒關係——您接下來會將其覆蓋。</Step>
 
-  <Step title="複製狀態目錄和工作區">
-    透過 `scp`、`rsync -a` 或外部硬碟傳輸封存檔，然後解壓縮：
+  <Step title="Copy state directory and workspace">
+    透過 `scp`、`rsync -a` 或外接硬碟傳輸封存檔，然後解壓縮：
 
     ```bash
     cd ~
     tar -xzf openclaw-state.tgz
     ```
 
-    確保包含隱藏目錄，且檔案擁有權符合將執行閘道的使用者。
+    請確保隱藏目錄已包含在內，且檔案擁有權符合將執行閘道的使用者。
 
   </Step>
 
@@ -71,20 +71,25 @@ title: "遷移指南"
 
 <AccordionGroup>
   <Accordion title="Profile or state-dir mismatch">
-    如果舊的閘道使用了 `--profile` 或 `OPENCLAW_STATE_DIR` 而新的沒有，
-    頻道將顯示為已登出且工作階段將是空的。
-    使用您遷移的**相同** profile 或 state-dir 啟動閘道，然後重新執行 `openclaw doctor`。
+    如果舊閘道使用了 `--profile` 或 `OPENCLAW_STATE_DIR` 而新閘道沒有，
+    通道將顯示為已登出且會話將為空。
+    請使用您遷移的**相同**設定檔或 state-dir 啟動閘道，然後重新執行 `openclaw doctor`。
   </Accordion>
 
-<Accordion title="僅複製 openclaw.">僅有設定檔是不夠的。憑證位於 `credentials/` 下，而代理程式 狀態位於 `agents/` 下。請務必遷移**整個**狀態目錄。</Accordion>
+  <Accordion title="僅複製 openclaw.">
+    僅複製設定檔是不夠的。模型驗證設定檔位於
+    `agents/<agentId>/agent/auth-profiles.json`，而頻道/提供者的狀態仍然
+    位於 `credentials/`。請務必遷移**整個**狀態目錄。
+  </Accordion>
 
 <Accordion title="權限與所有權">如果您以 root 身份複製或切換了使用者，閘道可能無法讀取憑證。 請確保狀態目錄和工作區是由執行閘道的使用者所擁有。</Accordion>
 
-<Accordion title="遠端模式">如果您的 UI 指向**遠端**閘道，遠端主機擁有工作階段和工作區。 請遷移閘道主機本身，而不是您的本機筆電。請參閱 [FAQ](/en/help/faq#where-things-live-on-disk)。</Accordion>
+<Accordion title="遠端模式">如果您的 UI 指向**遠端**閘道，遠端主機會擁有工作階段和工作區。 請遷移閘道主機本身，而不是您的本地筆記型電腦。請參閱 [常見問題](/en/help/faq#where-things-live-on-disk)。</Accordion>
 
-  <Accordion title="Secrets in backups">
-    狀態目錄包含 API 金鑰、OAuth 權杖和頻道憑證。
-    請以加密方式儲存備份，避免使用不安全的傳輸通道，如果您懷疑資料外洩，請輪換金鑰。
+  <Accordion title="備份中的機密資料">
+    狀態目錄包含驗證設定檔、頻道憑證，以及其他
+    提供者狀態。
+    請將備份加密儲存，避免使用不安全的傳輸通道，如果懷疑資料外洩請輪換金鑰。
   </Accordion>
 </AccordionGroup>
 

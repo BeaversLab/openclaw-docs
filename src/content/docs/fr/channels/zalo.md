@@ -7,22 +7,23 @@ title: "Zalo"
 
 # Zalo (Bot API)
 
-Statut : expérimental. Les DMs sont pris en charge. La section [Capabilities](#capabilities) ci-dessous reflète le comportement actuel des bots Marketplace.
+Statut : expérimental. Les DMs sont pris en charge. La section [Capabilities](#capabilities) ci-dessous reflète le comportement actuel du bot Marketplace.
 
-## Plugin requis
+## Plugin inclus
 
-Zalo est fourni sous forme de plugin et n'est pas inclus dans l'installation de base.
+Zalo est fourni en tant que plugin inclus dans les versions actuelles d'OpenClaw, les versions empaquetées standard n'ont donc pas besoin d'une installation distincte.
 
-- Installer via CLI : `openclaw plugins install @openclaw/zalo`
-- Ou sélectionnez **Zalo** lors de la configuration et confirmez la invite d'installation
+Si vous êtes sur une version ancienne ou une installation personnalisée qui exclut Zalo, installez-le manuellement :
+
+- Installer via le CLI : `openclaw plugins install @openclaw/zalo`
+- Ou depuis une extraction des sources : `openclaw plugins install ./path/to/local/zalo-plugin`
 - Détails : [Plugins](/en/tools/plugin)
 
 ## Configuration rapide (débutant)
 
-1. Installer le plugin Zalo :
-   - À partir d'une source extraite : `openclaw plugins install ./path/to/local/zalo-plugin`
-   - À partir de npm (si publié) : `openclaw plugins install @openclaw/zalo`
-   - Ou choisissez **Zalo** dans la configuration et confirmez la invite d'installation
+1. Assurez-vous que le plugin Zalo est disponible.
+   - Les versions empaquetées actuelles d'OpenClaw l'incluent déjà.
+   - Les installations anciennes/personnalisées peuvent l'ajouter manuellement avec les commandes ci-dessus.
 2. Définir le jeton :
    - Env : `ZALO_BOT_TOKEN=...`
    - Ou config : `channels.zalo.accounts.default.botToken: "..."`.
@@ -58,7 +59,7 @@ Les **bots Zalo Official Account (OA)** sont une surface de produit Zalo différ
 - Un channel Zalo Bot API appartenant au Gateway.
 - Routage déterministe : les réponses reviennent vers Zalo ; le modèle ne choisit jamais les channels.
 - Les DMs partagent la session principale de l'agent.
-- La section [Capabilities](#capabilities) ci-dessous montre le support actuel des bots Marketplace.
+- La section [Capabilities](#capabilities) ci-dessous montre la prise en charge actuelle des bots Marketplace.
 
 ## Configuration (chemin rapide)
 
@@ -66,7 +67,7 @@ Les **bots Zalo Official Account (OA)** sont une surface de produit Zalo différ
 
 1. Allez sur [https://bot.zaloplatforms.com](https://bot.zaloplatforms.com) et connectez-vous.
 2. Créez un nouveau bot et configurez ses paramètres.
-3. Copiez le jeton complet du bot (généralement `numeric_id:secret`). Pour les bots Marketplace, le jeton d'exécution utilisable peut apparaître dans le message de bienvenue du bot après sa création.
+3. Copiez le jeton complet du bot (typiquement `numeric_id:secret`). Pour les bots Marketplace, le jeton d'exécution utilisable peut apparaître dans le message de bienvenue du bot après sa création.
 
 ### 2) Configurer le jeton (env ou config)
 
@@ -88,11 +89,11 @@ Exemple :
 }
 ```
 
-Si vous passez ultérieurement à une surface de bot Zalo où les groupes sont disponibles, vous pouvez ajouter une configuration spécifique aux groupes telle que `groupPolicy` et `groupAllowFrom` explicitement. Pour le comportement actuel des bots Marketplace, voir [Capabilities](#capabilities).
+Si vous passez ultérieurement à une interface de bot Zalo où les groupes sont disponibles, vous pouvez ajouter une configuration spécifique aux groupes telle que `groupPolicy` et `groupAllowFrom` explicitement. Pour le comportement actuel du bot Marketplace, voir [Capabilities](#capabilities).
 
 Option Env : `ZALO_BOT_TOKEN=...` (fonctionne uniquement pour le compte par défaut).
 
-Support multi-compte : utilisez `channels.zalo.accounts` avec des jetons par compte et `name` facultatifs.
+Support multi-comptes : utilisez `channels.zalo.accounts` avec des jetons par compte et `name` facultatif.
 
 3. Redémarrez la passerelle. Zalo démarre lorsqu'un jeton est résolu (env ou config).
 4. L'accès DM est par défaut couplé. Approuvez le code lors du premier contact du bot.
@@ -106,7 +107,7 @@ Support multi-compte : utilisez `channels.zalo.accounts` avec des jetons par com
 ## Limites
 
 - Le texte sortant est découpé en tranches de 2000 caractères (limite de l'Zalo API).
-- Les téléchargements/téléversements de médias sont limités par `channels.zalo.mediaMaxMb` (5 par défaut).
+- Les téléchargements/téléversements de médias sont limités par `channels.zalo.mediaMaxMb` (par défaut 5).
 - Le streaming est bloqué par défaut car la limite de 2000 caractères rend le streaming moins utile.
 
 ## Contrôle d'accès (DMs)
@@ -117,8 +118,8 @@ Support multi-compte : utilisez `channels.zalo.accounts` avec des jetons par com
 - Approuver via :
   - `openclaw pairing list zalo`
   - `openclaw pairing approve zalo <CODE>`
-- L'appariement est l'échange de jetons par défaut. Détails : [Appariement](/en/channels/pairing)
-- `channels.zalo.allowFrom` accepte les ID utilisateur numériques (aucune recherche par nom d'utilisateur disponible).
+- L'appariement est l'échange de jetons par défaut. Détails : [Pairing](/en/channels/pairing)
+- `channels.zalo.allowFrom` accepte les ID d'utilisateur numériques (aucune recherche par nom d'utilisateur disponible).
 
 ## Contrôle d'accès (Groupes)
 
@@ -126,16 +127,16 @@ Pour les bots **Zalo Bot Creator / Marketplace**, la prise en charge des groupes
 
 Cela signifie que les clés de configuration liées aux groupes ci-dessous existent dans le schéma, mais n'étaient pas utilisables pour les bots Marketplace :
 
-- `channels.zalo.groupPolicy` contrôle le traitement des messages entrants du groupe : `open | allowlist | disabled`.
+- `channels.zalo.groupPolicy` contrôle la gestion des messages entrants de groupe : `open | allowlist | disabled`.
 - `channels.zalo.groupAllowFrom` restreint les ID d'expéditeur pouvant déclencher le bot dans les groupes.
-- Si `groupAllowFrom` n'est pas défini, Zalo revient à `allowFrom` pour les vérifications d'expéditeur.
-- Remarque d'exécution : si `channels.zalo` est entièrement manquant, l'exécution revient toujours à `groupPolicy="allowlist"` par sécurité.
+- Si `groupAllowFrom` n'est pas défini, Zalo revient à `allowFrom` pour les vérifications de l'expéditeur.
+- Remarque d'exécution : si `channels.zalo` est totalement absent, l'exécution revient toujours à `groupPolicy="allowlist"` pour la sécurité.
 
 Les valeurs de stratégie de groupe ( lorsque l'accès au groupe est disponible sur votre interface de bot ) sont :
 
 - `groupPolicy: "disabled"` — bloque tous les messages de groupe.
-- `groupPolicy: "open"` — permet à n'importe quel membre du groupe (limité par mention).
-- `groupPolicy: "allowlist"` — défaut sécurisé (fail-closed) ; seuls les expéditeurs autorisés sont acceptés.
+- `groupPolicy: "open"` — autorise n'importe quel membre du groupe (limité par mention).
+- `groupPolicy: "allowlist"` — échec par défaut fermé ; seuls les expéditeurs autorisés sont acceptés.
 
 Si vous utilisez une autre interface de produit bot Zalo et que vous avez vérifié le fonctionnement des groupes, documentez-le séparément plutôt que de supposer qu'il correspond au flux des bots Marketplace.
 
@@ -146,8 +147,8 @@ Si vous utilisez une autre interface de produit bot Zalo et que vous avez vérif
   - Le secret du webhook doit comporter entre 8 et 256 caractères.
   - L'URL du webhook doit utiliser HTTPS.
   - Zalo envoie des événements avec l'en-tête `X-Bot-Api-Secret-Token` pour vérification.
-  - Gateway HTTP gère les demandes de webhook à `channels.zalo.webhookPath` (correspond par défaut au chemin de l'URL du webhook).
-  - Les demandes doivent utiliser `Content-Type: application/json` (ou types de média `+json`).
+  - Le Gateway HTTP gère les demandes webhook à `channels.zalo.webhookPath` (correspond par défaut au chemin de l'URL webhook).
+  - Les demandes doivent utiliser `Content-Type: application/json` (ou les types de média `+json`).
   - Les événements en double (`event_name + message_id`) sont ignorés pendant une courte fenêtre de relecture.
   - Le trafic en rafale est limité par chemin/source et peut renvoyer une erreur HTTP 429.
 
@@ -155,14 +156,14 @@ Si vous utilisez une autre interface de produit bot Zalo et que vous avez vérif
 
 ## Types de messages pris en charge
 
-Pour un aperçu rapide de la prise en charge, consultez la section [Fonctionnalités](#capabilities). Les notes ci-dessous apportent des détails là où le comportement nécessite un contexte supplémentaire.
+Pour un aperçu rapide du support, voir [Capabilities](#capabilities). Les notes ci-dessous ajoutent des détails là où le comportement nécessite un contexte supplémentaire.
 
 - **Messages texte :** Prise en charge complète avec découpage par tranches de 2000 caractères.
 - **URL simples dans le texte :** Se comportent comme une saisie de texte normale.
-- **Aperçus de liens / cartes de liens riches :** Consultez le statut du bot Marketplace dans la section [Fonctionnalités](#capabilities) ; ils ne déclenchaient pas de réponse de manière fiable.
-- **Messages image :** Consultez le statut du bot Marketplace dans la section [Fonctionnalités](#capabilities) ; le traitement des images entrantes n'était pas fiable (indicateur de frappe sans réponse finale).
-- **Autocollants :** Consultez le statut du bot Marketplace dans la section [Fonctionnalités](#capabilities).
-- **Notes vocales / fichiers audio / vidéo / pièces jointes génériques :** Consultez le statut du bot Marketplace dans la section [Fonctionnalités](#capabilities).
+- **Aperçus de liens / cartes de liens riches** : Voir le statut du Marketplace-bot dans [Capabilities](#capabilities) ; ils ne déclenchaient pas de manière fiable une réponse.
+- **Messages image** : Voir le statut du Marketplace-bot dans [Capabilities](#capabilities) ; la gestion des images entrantes n'était pas fiable (indicateur de frappe sans réponse finale).
+- **Autocollants** : Voir le statut du Marketplace-bot dans [Capabilities](#capabilities).
+- **Notes vocales / fichiers audio / vidéo / pièces jointes génériques** : Voir le statut du Marketplace-bot dans [Capabilities](#capabilities).
 - **Types non pris en charge :** Enregistrés (par exemple, messages d'utilisateurs protégés).
 
 ## Fonctionnalités
@@ -197,7 +198,7 @@ Ce tableau résume le comportement actuel des **Zalo Bot Creator / Marketplace b
 
 - Vérifiez que le jeton est valide : `openclaw channels status --probe`
 - Vérifiez que l'expéditeur est approuvé (appairage ou allowFrom)
-- Consultez les journaux de la passerelle : `openclaw logs --follow`
+- Vérifiez les journaux de la passerelle : `openclaw logs --follow`
 
 **Le webhook ne reçoit pas d'événements :**
 
@@ -210,13 +211,13 @@ Ce tableau résume le comportement actuel des **Zalo Bot Creator / Marketplace b
 
 Configuration complète : [Configuration](/en/gateway/configuration)
 
-Les clés plates de premier niveau (`channels.zalo.botToken`, `channels.zalo.dmPolicy`, et similaires) sont un raccourci hérité pour compte unique. Privilégiez `channels.zalo.accounts.<id>.*` pour les nouvelles configurations. Les deux formes sont encore documentées ici car elles existent dans le schéma.
+Les clés de niveau supérieur plates (`channels.zalo.botToken`, `channels.zalo.dmPolicy` et similaires) sont une abréviation héritée pour un compte unique. Privilégiez `channels.zalo.accounts.<id>.*` pour les nouvelles configurations. Les deux formes sont encore documentées ici car elles existent dans le schéma.
 
 Options du fournisseur :
 
-- `channels.zalo.enabled` : activer/désactiver le démarrage du canal.
-- `channels.zalo.botToken` : jeton du bot depuis la plateforme Bot Zalo.
-- `channels.zalo.tokenFile` : lire le jeton depuis un chemin de fichier régulier. Les liens symboliques sont rejetés.
+- `channels.zalo.enabled` : activer/désactiver le démarrage du channel.
+- `channels.zalo.botToken` : jeton de bot provenant de la plateforme de bot Zalo.
+- `channels.zalo.tokenFile` : lire le jeton à partir d'un chemin de fichier régulier. Les liens symboliques sont rejetés.
 - `channels.zalo.dmPolicy` : `pairing | allowlist | open | disabled` (par défaut : appairage).
 - `channels.zalo.allowFrom` : liste d'autorisation DM (identifiants utilisateurs). `open` nécessite `"*"`. L'assistant demandera les identifiants numériques.
 - `channels.zalo.groupPolicy` : `open | allowlist | disabled` (par défaut : liste d'autorisation). Présent dans la configuration ; voir [Capacités](#capabilities) et [Contrôle d'accès (Groupes)](#access-control-groups) pour le comportement actuel du bot Marketplace.
@@ -233,9 +234,9 @@ Options multi-comptes :
 - `channels.zalo.accounts.<id>.tokenFile` : fichier de jeton régulier par compte. Les liens symboliques sont rejetés.
 - `channels.zalo.accounts.<id>.name` : nom d'affichage.
 - `channels.zalo.accounts.<id>.enabled` : activer/désactiver le compte.
-- `channels.zalo.accounts.<id>.dmPolicy` : politique DM par compte.
+- `channels.zalo.accounts.<id>.dmPolicy` : stratégie DM par compte.
 - `channels.zalo.accounts.<id>.allowFrom` : liste d'autorisation par compte.
-- `channels.zalo.accounts.<id>.groupPolicy` : stratégie de groupe par compte. Présent dans la configuration ; voir [Capabilities](#capabilities) et [Access control (Groups)](#access-control-groups) pour le comportement actuel du bot Marketplace.
+- `channels.zalo.accounts.<id>.groupPolicy` : stratégie de groupe par compte. Présent dans la configuration ; voir [Capacités](#capabilities) et [Contrôle d'accès (Groupes)](#access-control-groups) pour le comportement actuel du bot Marketplace.
 - `channels.zalo.accounts.<id>.groupAllowFrom` : liste d'autorisation des expéditeurs de groupe par compte.
 - `channels.zalo.accounts.<id>.webhookUrl` : URL de webhook par compte.
 - `channels.zalo.accounts.<id>.webhookSecret` : secret de webhook par compte.
@@ -245,7 +246,7 @@ Options multi-comptes :
 ## Connexes
 
 - [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appairage](/en/channels/pairing) — authentification et flux d'appairage DM
-- [Groupes](/en/channels/groups) — comportement du chat de groupe et restriction des mentions
+- [Jumelage](/en/channels/pairing) — authentification DM et processus de jumelage
+- [Groupes](/en/channels/groups) — comportement des discussions de groupe et filtrage des mentions
 - [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
 - [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

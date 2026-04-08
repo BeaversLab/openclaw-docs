@@ -127,3 +127,8 @@ L'hôte de nœud stocke son identifiant de nœud, son jeton, son nom d'affichage
 - `~/.openclaw/exec-approvals.json`
 - [Approbations d'exécution](/en/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>` (modifier depuis le Gateway)
+
+Pour l'exécution de nœud asynchrone approuvée, OpenClaw prépare un `systemRunPlan` canonique
+avant l'invite. Le transfert `system.run` approuvé ultérieurement réutilise ce plan
+stocké, ainsi les modifications des champs commande/cwd/session après la création de la demande
+d'approbation sont rejetées au lieu de modifier ce que le nœud exécute.

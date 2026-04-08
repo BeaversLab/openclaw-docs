@@ -8,7 +8,7 @@ read_when:
 
 # LiteLLM
 
-[LiteLLM](https://litellm.ai) 是一个开源 LLM 网关，提供统一的 API 接入 100 多个模型提供商。通过 LiteLLM 路由 OpenClaw，即可获得集中的成本跟踪、日志记录，以及无需更改 OpenClaw 配置即可灵活切换后端的能力。
+[LiteLLM](https://litellm.ai) 是一个开源 LLM 网关，为 100 多个模型提供商提供统一的 API。通过 LiteLLM 路由 OpenClaw，以获得集中的成本跟踪、日志记录，以及无需更改 OpenClaw 配置即可切换后端的灵活性。
 
 ## 为什么要将 LiteLLM 与 OpenClaw 结合使用？
 
@@ -145,8 +145,13 @@ curl "http://localhost:4000/spend/logs" \
 ## 备注
 
 - LiteLLM 默认运行在 `http://localhost:4000` 上
-- OpenClaw 通过兼容 OpenAI 的 `/v1/chat/completions` 端点进行连接
-- 所有 OpenClaw 功能均可通过 LiteLLM 正常工作 — 无任何限制
+- OpenClaw 通过 LiteLLM 的代理风格 OpenAI 兼容 `/v1`
+  端点进行连接
+- 原生仅限 OpenAI 的请求整形不适用于 LiteLLM：
+  没有 `service_tier`，没有 Responses `store`，没有提示缓存提示，也没有
+  OpenAI 推理兼容负载整形
+- 隐藏的 OpenClaw 归属标头 (`originator`, `version`, `User-Agent`)
+  不会在自定义 LiteLLM 基本 URL 上注入
 
 ## 另请参阅
 

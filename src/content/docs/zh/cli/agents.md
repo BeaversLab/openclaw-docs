@@ -11,14 +11,17 @@ title: "agents"
 
 相关：
 
-- 多代理路由：[Multi-Agent Routing](/en/concepts/multi-agent)
-- 代理工作区：[Agent workspace](/en/concepts/agent-workspace)
+- 多智能体路由：[多智能体路由](/en/concepts/multi-agent)
+- 智能体工作区：[智能体工作区](/en/concepts/agent-workspace)
+- Skills 可见性配置：[Skills 配置](/en/tools/skills-config)
 
 ## 示例
 
 ```bash
 openclaw agents list
+openclaw agents list --bindings
 openclaw agents add work --workspace ~/.openclaw/workspace-work
+openclaw agents add ops --workspace ~/.openclaw/workspace-ops --bind telegram:ops --non-interactive
 openclaw agents bindings
 openclaw agents bind --agent work --bind telegram:ops
 openclaw agents unbind --agent work --bind telegram:ops
@@ -29,7 +32,12 @@ openclaw agents delete work
 
 ## 路由绑定
 
-使用路由绑定将入站通道流量固定到特定代理。
+使用路由绑定将入站渠道流量固定到特定智能体。
+
+如果您还希望每个智能体具有不同的可见 Skills，请在 `openclaw.json` 中配置
+`agents.defaults.skills` 和 `agents.list[].skills`。请参阅
+[Skills 配置](/en/tools/skills-config) 和
+[配置参考](/en/gateway/configuration-reference#agentsdefaultsskills)。
 
 列出绑定：
 
@@ -45,13 +53,15 @@ openclaw agents bindings --json
 openclaw agents bind --agent work --bind telegram:ops --bind discord:guild-a
 ```
 
-如果省略 `accountId`（`--bind <channel>`），OpenClaw 会在可用时从频道默认值和插件设置钩子解析它。
+如果您省略 `accountId` (`--bind <channel>`)，OpenClaw 将在可用时从渠道默认值和插件设置挂钩中解析它。
+
+如果您省略 `--agent` 用于 `bind` 或 `unbind`，OpenClaw 将以当前默认智能体为目标。
 
 ### 绑定范围行为
 
-- 没有 `accountId` 的绑定仅匹配频道默认账户。
-- `accountId: "*"` 是频道范围的回退（所有账户），比显式账户绑定更不具体。
-- 如果同一个代理已经有一个匹配的通道绑定但没有 `accountId`，而您稍后使用显式或解析出的 `accountId` 进行绑定，OpenClaw 将就地升级该现有绑定，而不是添加重复项。
+- 没有 `accountId` 的绑定仅匹配渠道默认账户。
+- `accountId: "*"` 是渠道范围的回退（所有账户），其特异性低于显式账户绑定。
+- 如果同一个智能体已经有一个没有 `accountId` 的匹配渠道绑定，并且您随后使用显式或解析出的 `accountId` 进行绑定，OpenClaw 将就地升级现有绑定，而不是添加重复项。
 
 示例：
 
@@ -63,7 +73,7 @@ openclaw agents bind --agent work --bind telegram
 openclaw agents bind --agent work --bind telegram:ops
 ```
 
-升级后，该绑定的路由将限定为 `telegram:ops`。如果您还希望默认账户路由，请显式添加它（例如 `--bind telegram:default`）。
+升级后，该绑定的路由范围限定为 `telegram:ops`。如果您还想要默认账户路由，请显式添加它（例如 `--bind telegram:default`）。
 
 移除绑定：
 
@@ -72,9 +82,78 @@ openclaw agents unbind --agent work --bind telegram:ops
 openclaw agents unbind --agent work --all
 ```
 
+`unbind` 接受 `--all` 或一个或多个 `--bind` 值，但不能同时接受两者。
+
+## 命令界面
+
+### `agents`
+
+运行不带子命令的 `openclaw agents` 等效于 `openclaw agents list`。
+
+### `agents list`
+
+选项：
+
+- `--json`
+- `--bindings`：包含完整的路由规则，而不仅仅是每个智能体的计数/摘要
+
+### `agents add [name]`
+
+选项：
+
+- `--workspace <dir>`
+- `--model <id>`
+- `--agent-dir <dir>`
+- `--bind <channel[:accountId]>` (repeatable)
+- `--non-interactive`
+- `--json`
+
+备注：
+
+- 传递任何显式的添加标志会将命令切换到非交互路径。
+- 非交互模式需要代理名称和 `--workspace`。
+- `main` 已被保留，不能用作新代理的 ID。
+
+### `agents bindings`
+
+选项：
+
+- `--agent <id>`
+- `--json`
+
+### `agents bind`
+
+选项：
+
+- `--agent <id>` (默认为当前默认代理)
+- `--bind <channel[:accountId]>` (可重复)
+- `--json`
+
+### `agents unbind`
+
+选项：
+
+- `--agent <id>` (默认为当前默认代理)
+- `--bind <channel[:accountId]>` (可重复)
+- `--all`
+- `--json`
+
+### `agents delete <id>`
+
+选项：
+
+- `--force`
+- `--json`
+
+备注：
+
+- `main` 无法被删除。
+- 如果没有 `--force`，则需要进行交互式确认。
+- 工作区、代理状态和会话记录目录将被移至废纸篓，而非硬删除。
+
 ## 身份文件
 
-每个代理工作区可以在工作区根目录下包含一个 `IDENTITY.md`：
+每个代理工作区都可以在工作区根目录包含一个 `IDENTITY.md`：
 
 - 示例路径：`~/.openclaw/workspace/IDENTITY.md`
 - `set-identity --from-identity` 从工作区根目录（或显式的 `--identity-file`）读取
@@ -88,7 +167,25 @@ openclaw agents unbind --agent work --all
 - `name`
 - `theme`
 - `emoji`
-- `avatar`（工作区相对路径、http(s) URL 或 data URI）
+- `avatar` (相对于工作区的路径、http(s) URL 或数据 URI)
+
+选项：
+
+- `--agent <id>`
+- `--workspace <dir>`
+- `--identity-file <path>`
+- `--from-identity`
+- `--name <name>`
+- `--theme <theme>`
+- `--emoji <emoji>`
+- `--avatar <value>`
+- `--json`
+
+注意事项：
+
+- 可以使用 `--agent` 或 `--workspace` 来选择目标代理。
+- 如果您依赖 `--workspace` 且多个代理共享该工作区，命令将失败并要求您传递 `--agent`。
+- 当未提供显式身份字段时，该命令将从 `IDENTITY.md` 读取身份数据。
 
 从 `IDENTITY.md` 加载：
 

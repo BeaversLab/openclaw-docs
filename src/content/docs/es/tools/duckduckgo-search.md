@@ -76,8 +76,9 @@ parámetros de la herramienta anulan los valores de configuración por consulta.
   bajo uso intensivo o automatizado
 - **Análisis de HTML** — los resultados dependen de la estructura de la página, la cual puede cambiar sin
   previo aviso
-- **Orden de detección automática** — DuckDuckGo se verifica en último lugar (orden 100) en
-  la detección automática, por lo que cualquier proveedor con API que tenga una clave tiene prioridad
+- **Orden de detección automática** — DuckDuckGo es el primer respaldo sin clave
+  (orden 100) en la detección automática. Los proveedores con API que tengan claves configuradas se ejecutan
+  primero, luego Ollama Web Search (orden 110), luego SearXNG (orden 200)
 - **Búsqueda Segura se establece en moderada** de forma predeterminada cuando no se configura
 
 <Tip>Para uso en producción, considere [Brave Search](/en/tools/brave-search) (capa gratuita disponible) u otro proveedor con API.</Tip>

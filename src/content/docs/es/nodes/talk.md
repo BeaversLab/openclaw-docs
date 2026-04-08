@@ -13,7 +13,7 @@ El modo de charla es un bucle continuo de conversación por voz:
 1. Escuchar el habla
 2. Enviar la transcripción al modelo (sesión principal, chat.send)
 3. Esperar la respuesta
-4. Reproducirla mediante ElevenLabs (reproducción en streaming)
+4. Lo pronuncia mediante el proveedor de Talk configurado (`talk.speak`)
 
 ## Comportamiento (macOS)
 
@@ -36,18 +36,18 @@ Reglas:
 - Solo la primera línea no vacía.
 - Las claves desconocidas se ignoran.
 - `once: true` se aplica solo a la respuesta actual.
-- Sin `once`, la voz se convierte en la nueva predeterminada para el modo de charla.
+- Sin `once`, la voz se convierte en la nueva predeterminada para el modo Talk.
 - La línea JSON se elimina antes de la reproducción TTS.
 
 Claves compatibles:
 
 - `voice` / `voice_id` / `voiceId`
 - `model` / `model_id` / `modelId`
-- `speed`, `rate` (PPM), `stability`, `similarity`, `style`, `speakerBoost`
+- `speed`, `rate` (WPM), `stability`, `similarity`, `style`, `speakerBoost`
 - `seed`, `normalize`, `lang`, `output_format`, `latency_tier`
 - `once`
 
-## Configuración (`~/.openclaw/openclaw.json`)
+## Config (`~/.openclaw/openclaw.json`)
 
 ```json5
 {
@@ -65,9 +65,9 @@ Claves compatibles:
 Valores predeterminados:
 
 - `interruptOnSpeech`: true
-- `silenceTimeoutMs`: cuando no está configurado, Talk mantiene la ventana de pausa predeterminada de la plataforma antes de enviar la transcripción (`700 ms on macOS and Android, 900 ms on iOS`)
+- `silenceTimeoutMs`: cuando no está establecido, Talk mantiene la ventana de pausa predeterminada de la plataforma antes de enviar la transcripción (`700 ms on macOS and Android, 900 ms on iOS`)
 - `voiceId`: recurre a `ELEVENLABS_VOICE_ID` / `SAG_VOICE_ID` (o a la primera voz de ElevenLabs cuando la clave API está disponible)
-- `modelId`: por defecto es `eleven_v3` si no está establecido
+- `modelId`: por defecto es `eleven_v3` cuando no está establecido
 - `apiKey`: recurre a `ELEVENLABS_API_KEY` (o al perfil de shell de la puerta de enlace si está disponible)
 - `outputFormat`: por defecto es `pcm_44100` en macOS/iOS y `pcm_24000` en Android (establezca `mp3_*` para forzar el streaming MP3)
 
@@ -86,7 +86,7 @@ Valores predeterminados:
 
 - Requiere permisos de Voz + Micrófono.
 - Usa `chat.send` contra la clave de sesión `main`.
-- El TTS usa la API de streaming de ElevenLabs con `ELEVENLABS_API_KEY` y reproducción incremental en macOS/iOS/Android para menor latencia.
+- La puerta de enlace resuelve la reproducción de Talk a través de `talk.speak` usando el proveedor de Talk activo. Android recurre al TTS del sistema local solo cuando ese RPC no está disponible.
 - `stability` para `eleven_v3` se valida como `0.0`, `0.5` o `1.0`; otros modelos aceptan `0..1`.
 - `latency_tier` se valida como `0..4` cuando se establece.
-- Android admite formatos de salida `pcm_16000`, `pcm_22050`, `pcm_24000` y `pcm_44100` para streaming AudioTrack de baja latencia.
+- Android admite los formatos de salida `pcm_16000`, `pcm_22050`, `pcm_24000` y `pcm_44100` para la transmisión AudioTrack de baja latencia.

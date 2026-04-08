@@ -130,3 +130,8 @@ El host del nodo almacena su id de nodo, token, nombre para mostrar e informaci�
 - `~/.openclaw/exec-approvals.json`
 - [Aprobaciones de ejecución](/en/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>` (editar desde la Gateway)
+
+Para la ejecución de nodo asíncrona aprobada, OpenClaw prepara un `systemRunPlan`
+canónico antes de solicitar. El `system.run` de reenvío aprobado posteriormente reutiliza ese plan
+almacenado, por lo que las ediciones a los campos command/cwd/session después de que se creó la solicitud de
+aprobación se rechazan en lugar de cambiar lo que el nodo ejecuta.

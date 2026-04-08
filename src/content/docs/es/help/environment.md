@@ -19,9 +19,11 @@ OpenClaw obtiene variables de entorno de múltiples fuentes. La regla es **nunca
 4. **Bloque config `env`** en `~/.openclaw/openclaw.json` (se aplica solo si falta).
 5. **Importación opcional de login-shell** (`env.shellEnv.enabled` o `OPENCLAW_LOAD_SHELL_ENV=1`), aplicada solo para claves esperadas faltantes.
 
-Si falta el archivo de configuración por completo, se omite el paso 4; la importación del shell aún se ejecuta si está habilitada.
+En instalaciones nuevas de Ubuntu que usan el directorio de estado predeterminado, OpenClaw también trata `~/.config/openclaw/gateway.env` como un respaldo de compatibilidad después del `.env` global. Si ambos archivos existen y discrepan, OpenClaw mantiene `~/.openclaw/.env` e imprime una advertencia.
 
-## Bloque config `env`
+Si falta por completo el archivo de configuración, se omite el paso 4; la importación del shell todavía se ejecuta si está habilitada.
+
+## Bloque `env` de configuración
 
 Dos formas equivalentes de establecer variables de entorno en línea (ambas no sobrescriben):
 
@@ -36,9 +38,9 @@ Dos formas equivalentes de establecer variables de entorno en línea (ambas no s
 }
 ```
 
-## Importación de entorno de shell
+## Importación de variables de entorno del shell
 
-`env.shellEnv` ejecuta tu login shell e importa solo las claves esperadas **que faltan**:
+`env.shellEnv` ejecuta tu shell de inicio de sesión e importa solo las claves esperadas **que faltan**:
 
 ```json5
 {
@@ -51,7 +53,7 @@ Dos formas equivalentes de establecer variables de entorno en línea (ambas no s
 }
 ```
 
-Equivalentes de variables de entorno:
+Variables de entorno equivalentes:
 
 - `OPENCLAW_LOAD_SHELL_ENV=1`
 - `OPENCLAW_SHELL_ENV_TIMEOUT_MS=15000`
@@ -61,22 +63,22 @@ Equivalentes de variables de entorno:
 OpenClaw también inyecta marcadores de contexto en los procesos secundarios generados:
 
 - `OPENCLAW_SHELL=exec`: establecido para comandos ejecutados a través de la herramienta `exec`.
-- `OPENCLAW_SHELL=acp`: establecido para spawns de procesos de backend de runtime ACP (por ejemplo, `acpx`).
-- `OPENCLAW_SHELL=acp-client`: establecido para `openclaw acp client` cuando genera el proceso puente ACP.
-- `OPENCLAW_SHELL=tui-local`: establecido para comandos de shell `!` de TUI local.
+- `OPENCLAW_SHELL=acp`: establecido para las generaciones de procesos de backend del tiempo de ejecución de ACP (por ejemplo `acpx`).
+- `OPENCLAW_SHELL=acp-client`: establecido para `openclaw acp client` cuando genera el proceso del puente ACP.
+- `OPENCLAW_SHELL=tui-local`: establecido para comandos de shell `!` de la interfaz de usuario de texto (TUI) local.
 
-Estos son marcadores de tiempo de ejecución (no configuración de usuario requerida). Se pueden usar en la lógica de shell/perfil
+Estos son marcadores de tiempo de ejecución (no requieren configuración del usuario). Pueden usarse en la lógica del shell/perfil
 para aplicar reglas específicas del contexto.
 
 ## Variables de entorno de la interfaz de usuario
 
-- `OPENCLAW_THEME=light`: fuerza la paleta TUI clara cuando tu terminal tiene un fondo claro.
-- `OPENCLAW_THEME=dark`: fuerza la paleta TUI oscura.
-- `COLORFGBG`: si tu terminal lo exporta, OpenClaw usa la pista del color de fondo para elegir automáticamente la paleta TUI.
+- `OPENCLAW_THEME=light`: fuerza la paleta clara de TUI cuando tu terminal tiene un fondo claro.
+- `OPENCLAW_THEME=dark`: fuerza la paleta oscura de TUI.
+- `COLORFGBG`: si tu terminal la exporta, OpenClaw usa la pista del color de fondo para seleccionar automáticamente la paleta TUI.
 
 ## Sustitución de variables de entorno en la configuración
 
-Puedes referenciar variables de entorno directamente en valores de cadena de configuración usando la sintaxis `${VAR_NAME}`:
+Puedes referenciar variables de entorno directamente en los valores de cadena de configuración usando la sintaxis `${VAR_NAME}`:
 
 ```json5
 {
@@ -92,14 +94,14 @@ Puedes referenciar variables de entorno directamente en valores de cadena de con
 
 Consulta [Configuración: Sustitución de variables de entorno](/en/gateway/configuration-reference#env-var-substitution) para obtener detalles completos.
 
-## Referencias a secretos vs cadenas `${ENV}`
+## Referencias secretas frente a cadenas `${ENV}`
 
-OpenClaw admite dos patrones basados en entorno:
+OpenClaw admite dos patrones basados en el entorno:
 
 - Sustitución de cadenas `${VAR}` en valores de configuración.
-- Objetos SecretRef (`{ source: "env", provider: "default", id: "VAR" }`) para campos que soportan referencias a secretos.
+- Objetos SecretRef (`{ source: "env", provider: "default", id: "VAR" }`) para campos que admiten referencias a secretos.
 
-Ambos se resuelven a partir del entorno del proceso en el momento de la activación. Los detalles de SecretRef están documentados en [Gestión de secretos](/en/gateway/secrets).
+Ambos se resuelven desde las variables de entorno del proceso en el momento de la activación. Los detalles de SecretRef están documentados en [Secrets Management](/en/gateway/secrets).
 
 ## Variables de entorno relacionadas con la ruta
 
@@ -109,15 +111,15 @@ Ambos se resuelven a partir del entorno del proceso en el momento de la activaci
 | `OPENCLAW_STATE_DIR`   | Anula el directorio de estado (por defecto `~/.openclaw`).                                                                                                                                                          |
 | `OPENCLAW_CONFIG_PATH` | Anula la ruta del archivo de configuración (por defecto `~/.openclaw/openclaw.json`).                                                                                                                               |
 
-## Registro
+## Registro (Logging)
 
-| Variable             | Propósito                                                                                                                                                                                                                |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `OPENCLAW_LOG_LEVEL` | Anula el nivel de registro para archivo y consola (p. ej., `debug`, `trace`). Tiene prioridad sobre `logging.level` y `logging.consoleLevel` en la configuración. Los valores no válidos se ignoran con una advertencia. |
+| Variable             | Propósito                                                                                                                                                                                                                          |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_LOG_LEVEL` | Anula el nivel de registro tanto para archivo como para consola (ej. `debug`, `trace`). Tiene prioridad sobre `logging.level` y `logging.consoleLevel` en la configuración. Los valores no válidos se ignoran con una advertencia. |
 
 ### `OPENCLAW_HOME`
 
-Cuando se establece, `OPENCLAW_HOME` reemplaza el directorio de inicio del sistema (`$HOME` / `os.homedir()`) para toda la resolución de rutas internas. Esto permite un aislamiento completo del sistema de archivos para cuentas de servicio sin cabeza.
+Cuando se establece, `OPENCLAW_HOME` reemplaza el directorio de inicio del sistema (`$HOME` / `os.homedir()`) para toda la resolución de rutas internas. Esto habilita el aislamiento completo del sistema de archivos para cuentas de servicio sin interfaz gráfica.
 
 **Precedencia:** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
 
@@ -127,24 +129,24 @@ Cuando se establece, `OPENCLAW_HOME` reemplaza el directorio de inicio del siste
 <key>EnvironmentVariables</key>
 <dict>
   <key>OPENCLAW_HOME</key>
-  <string>/Users/kira</string>
+  <string>/Users/user</string>
 </dict>
 ```
 
-`OPENCLAW_HOME` también se puede establecer en una ruta con tilde (p. ej., `~/svc`), que se expande usando `$HOME` antes de su uso.
+`OPENCLAW_HOME` también se puede establecer en una ruta con tilde (ej. `~/svc`), que se expande usando `$HOME` antes de su uso.
 
 ## usuarios de nvm: fallos de TLS en web_fetch
 
-Si Node.js se instaló mediante **nvm** (no mediante el gestor de paquetes del sistema), el `fetch()` integrado usa
+Si Node.js se instaló a través de **nvm** (no mediante el gestor de paquetes del sistema), el `fetch()` integrado utiliza
 el almacén de CA incluido en nvm, que puede carecer de CA raíz modernas (ISRG Root X1/X2 para Let's Encrypt,
-DigiCert Global Root G2, etc.). Esto provoca que `web_fetch` falle con `"fetch failed"` en la mayoría de los sitios HTTPS.
+DigiCert Global Root G2, etc.). Esto hace que `web_fetch` falle con `"fetch failed"` en la mayoría de los sitios HTTPS.
 
 En Linux, OpenClaw detecta automáticamente nvm y aplica la solución en el entorno de inicio real:
 
 - `openclaw gateway install` escribe `NODE_EXTRA_CA_CERTS` en el entorno del servicio systemd
-- el punto de entrada de la CLI `openclaw` se vuelve a ejecutar a sí mismo con `NODE_EXTRA_CA_CERTS` establecido antes del inicio de Node
+- el punto de entrada `openclaw` de la CLI se vuelve a ejecutar a sí mismo con `NODE_EXTRA_CA_CERTS` establecido antes del inicio de Node
 
-**Solución manual (para versiones anteriores o ejecuciones directas de `node ...`):**
+**Solución manual (para versiones anteriores o inicios directos de `node ...`):**
 
 Exporte la variable antes de iniciar OpenClaw:
 
@@ -153,8 +155,8 @@ export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
 openclaw gateway run
 ```
 
-No dependa únicamente de escribir en `~/.openclaw/.env` para esta variable; Node lee
-`NODE_EXTRA_CA_CERTS` al iniciar el proceso.
+No confíe en escribir solo en `~/.openclaw/.env` para esta variable; Node lee
+`NODE_EXTRA_CA_CERTS` al inicio del proceso.
 
 ## Relacionado
 

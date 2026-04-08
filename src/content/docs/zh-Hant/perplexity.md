@@ -16,7 +16,7 @@ OpenClaw 支援將 Perplexity Search API 作為 `web_search` 提供者。
 
 ## 取得 Perplexity API 金鑰
 
-1. 在 [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api) 建立 Perplexity 帳戶
+1. 在 [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api) 建立 Perplexity 帳號
 2. 在儀表板中產生 API 金鑰
 3. 將金鑰儲存在設定中，或在 Gateway 環境中設定 `PERPLEXITY_API_KEY`。
 
@@ -90,7 +90,7 @@ OpenClaw 支援將 Perplexity Search API 作為 `web_search` 提供者。
 該欄位也接受 SecretRef 物件。
 
 **透過環境變數：** 在 Gateway 處理程序環境中設定 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
-對於 gateway 安裝，請將其放入
+對於 gateway 安裝，請將其放在
 `~/.openclaw/.env` (或您的服務環境) 中。參閱 [Env vars](/en/help/faq#env-vars-and-env-loading)。
 
 如果已設定 `provider: "perplexity"` 且 Perplexity 金鑰 SecretRef 未解析且沒有環境變數後備，啟動/重新載入會快速失敗。
@@ -112,8 +112,14 @@ OpenClaw 支援將 Perplexity Search API 作為 `web_search` 提供者。
 | `max_tokens`          | 內容總預算（預設值：25000，最大值：1000000）         |
 | `max_tokens_per_page` | 每頁 Token 限制（預設值：2048）                      |
 
-對於舊版 Sonar/OpenRouter 相容性路徑，僅支援 `query` 和 `freshness`。
-僅限 Search API 的篩選條件，例如 `country`、`language`、`date_after`、`date_before`、`domain_filter`、`max_tokens` 和 `max_tokens_per_page` 將傳回明確錯誤。
+針對舊版 Sonar/OpenRouter 相容性路徑：
+
+- 接受 `query`、`count` 和 `freshness`
+- 此處 `count` 僅用於相容性；回應仍是一個帶有引用文獻的綜合
+  答案，而不是 N 個結果的清單
+- 僅限 Search API 的過濾器，例如 `country`、`language`、`date_after`、
+  `date_before`、`domain_filter`、`max_tokens` 和 `max_tokens_per_page`
+  會傳回明確的錯誤
 
 **範例：**
 
@@ -158,17 +164,18 @@ await web_search({
 });
 ```
 
-### 網域篩選規則
+### 網域過濾規則
 
-- 每個篩選器最多 20 個網域
-- 無法在同一個請求中混合使用允許清單和拒絕清單
-- 使用 `-` 前綴表示拒絕清單項目（例如 `["-reddit.com"]`）
+- 每個過濾器最多 20 個網域
+- 無法在同一個請求中混合使用允許清單 和封鎖清單
+- 使用 `-` 前綴表示封鎖清單條目 (例如 `["-reddit.com"]`)
 
 ## 備註
 
-- Perplexity Search API 會傳回結構化的網頁搜尋結果（`title`、`url`、`snippet`）
-- OpenRouter 或明確指定 `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` 會將 Perplexity 切換回 Sonar 聊天完成模式以保持相容性
-- 結果預設會快取 15 分鐘（可透過 `cacheTtlMinutes` 設定）
+- Perplexity Search API 會傳回結構化的網頁搜尋結果 (`title`、`url`、`snippet`)
+- OpenRouter 或明確的 `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` 會將 Perplexity 切換回 Sonar 聊天完成模式以保持相容性
+- Sonar/OpenRouter 相容性會傳回一個帶有引用文獻的綜合答案，而不是結構化的結果列
+- 結果預設會快取 15 分鐘 (可透過 `cacheTtlMinutes` 設定)
 
-請參閱 [Web tools](/en/tools/web) 以取得完整的 web_search 設定。
-請參閱 [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) 以取得更多詳細資訊。
+參閱 [Web tools](/en/tools/web) 以取得完整的 web_search 設定。
+參閱 [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) 以取得更多詳細資訊。

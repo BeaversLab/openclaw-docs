@@ -14,12 +14,12 @@ El Gateway sirve una pequeña **Interfaz de usuario de control del navegador** (
 - prefijo opcional: configure `gateway.controlUi.basePath` (por ejemplo, `/openclaw`)
 
 Las capacidades residen en [Control UI](/en/web/control-ui).
-Esta página se centra en los modos de enlace, seguridad y superficies web.
+Esta página se centra en los modos de enlace, la seguridad y las superficies web.
 
 ## Webhooks
 
 Cuando `hooks.enabled=true`, el Gateway también expone un pequeño endpoint de webhook en el mismo servidor HTTP.
-Consulte [Gateway configuration](/en/gateway/configuration) → `hooks` para obtener información sobre la autenticación y las cargas útiles.
+Consulte [Gateway configuration](/en/gateway/configuration) → `hooks` para la autenticación y los payloads.
 
 ## Configuración (activada de forma predeterminada)
 
@@ -71,7 +71,8 @@ Abrir:
 }
 ```
 
-Luego inicie el gateway (se requiere token para enlaces no loopback):
+Luego inicie el gateway (este ejemplo que no es de loopback usa autenticación
+de token de secreto compartido):
 
 ```bash
 openclaw gateway
@@ -95,25 +96,30 @@ Abrir:
 
 ## Notas de seguridad
 
-- La autenticación del Gateway se requiere de forma predeterminada (token/contraseña o encabezados de identidad de Tailscale).
-- Los enlaces no loopback todavía **requieren** un token/contraseña compartido (`gateway.auth` o variable de entorno).
-- El asistente genera un token de gateway de forma predeterminada (incluso en loopback).
-- La interfaz de usuario envía `connect.params.auth.token` o `connect.params.auth.password`.
-- Para implementaciones de interfaz de usuario de control no loopback, configure `gateway.controlUi.allowedOrigins`
-  explícitamente (orígenes completos). Sin esto, el inicio del gateway se rechaza de forma predeterminada.
+- La autenticación del Gateway es necesaria de forma predeterminada (token, contraseña, proxy de confianza o encabezados de identidad de Tailscale Serve cuando están habilitados).
+- Los enlaces que no son de loopback todavía **requieren** autenticación del gateway. En la práctica, eso significa autenticación por token/contraseña o un proxy inverso con reconocimiento de identidad con `gateway.auth.mode: "trusted-proxy"`.
+- El asistente crea una autenticación de secreto compartido de forma predeterminada y generalmente genera un
+  token de gateway (incluso en loopback).
+- En el modo de secreto compartido, la interfaz de usuario envía `connect.params.auth.token` o
+  `connect.params.auth.password`.
+- En modos portadores de identidad como Tailscale Serve o `trusted-proxy`, la
+  verificación de autenticación de WebSocket se satisface desde los encabezados de solicitud en su lugar.
+- Para los despliegues de la interfaz de usuario de Control que no son de loopback, configure `gateway.controlUi.allowedOrigins`
+  explícitamente (orígenes completos). Sin ello, el inicio del gateway se rechaza de forma predeterminada.
 - `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` habilita
   el modo de reserva de origen del encabezado Host, pero es una degradación de seguridad peligrosa.
-- Con Serve, los encabezados de identidad de Tailscale pueden satisfacer la autenticación de la interfaz de usuario de control/WebSocket
+- Con Serve, los encabezados de identidad de Tailscale pueden satisfacer la autenticación de Control UI/WebSocket
   cuando `gateway.auth.allowTailscale` es `true` (no se requiere token/contraseña).
-  Los endpoints de la API HTTP aún requieren token/contraseña. Establezca
+  Los endpoints de la API HTTP no usan esos encabezados de identidad de Tailscale; en su lugar, siguen
+  el modo normal de autenticación HTTP del gateway. Configure
   `gateway.auth.allowTailscale: false` para requerir credenciales explícitas. Consulte
-  [Tailscale](/en/gateway/tailscale) y [Seguridad](/en/gateway/security). Este
-  flujo sin token asume que el host de la puerta de enlace es confiable.
+  [Tailscale](/en/gateway/tailscale) y [Security](/en/gateway/security). Este
+  flujo sin token asume que el host del gateway es confiable.
 - `gateway.tailscale.mode: "funnel"` requiere `gateway.auth.mode: "password"` (contraseña compartida).
 
-## Construcción de la interfaz de usuario
+## Construir la interfaz de usuario
 
-La Gateway sirve archivos estáticos desde `dist/control-ui`. Constrúyalos con:
+El Gateway sirve archivos estáticos desde `dist/control-ui`. Constrúyalos con:
 
 ```bash
 pnpm ui:build # auto-installs UI deps on first run

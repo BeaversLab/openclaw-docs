@@ -89,9 +89,9 @@ Controles de compatibilidad opcionales:
 `~/.openclaw/openclaw.json` bajo `plugins.entries.perplexity.config.webSearch.apiKey`.
 Ese campo también acepta objetos SecretRef.
 
-**Vía entorno:** establezca `PERPLEXITY_API_KEY` o `OPENROUTER_API_KEY`
-en el entorno del proceso de Gateway. Para una instalación de puerta de enlace, póngalo en
-`~/.openclaw/.env` (o su entorno de servicio). Consulte [Env vars](/en/help/faq#env-vars-and-env-loading).
+**A través del entorno:** establezca `PERPLEXITY_API_KEY` o `OPENROUTER_API_KEY`
+en el entorno del proceso de la puerta de enlace (Gateway). Para una instalación de puerta de enlace, póngalo en
+`~/.openclaw/.env` (o en el entorno de su servicio). Consulte [Variables de entorno](/en/help/faq#env-vars-and-env-loading).
 
 Si `provider: "perplexity"` está configurado y el SecretRef de la clave Perplexity no está resuelto sin respaldo de entorno, el inicio/recarga falla rápidamente.
 
@@ -112,8 +112,14 @@ Estos parámetros se aplican a la ruta nativa de la API de Perplexity Search.
 | `max_tokens`          | Presupuesto total de contenido (predeterminado: 25000, máximo: 1000000) |
 | `max_tokens_per_page` | Límite de tokens por página (predeterminado: 2048)                      |
 
-Para la ruta de compatibilidad heredada de Sonar/OpenRouter, solo se admiten `query` y `freshness`.
-Los filtros exclusivos de la API de Search como `country`, `language`, `date_after`, `date_before`, `domain_filter`, `max_tokens` y `max_tokens_per_page` devuelven errores explícitos.
+Para la ruta de compatibilidad heredada de Sonar/OpenRouter:
+
+- Se aceptan `query`, `count` y `freshness`
+- `count` es solo para compatibilidad allí; la respuesta sigue siendo una respuesta
+  sintetizada con citas en lugar de una lista de N resultados
+- Los filtros exclusivos de la API de búsqueda como `country`, `language`, `date_after`,
+  `date_before`, `domain_filter`, `max_tokens` y `max_tokens_per_page`
+  devuelven errores explícitos
 
 **Ejemplos:**
 
@@ -158,21 +164,22 @@ await web_search({
 });
 ```
 
-### Reglas de filtro de dominio
+### Reglas de filtrado de dominio
 
 - Máximo 20 dominios por filtro
-- No se puede mezclar la lista de permitidos y la lista de denegados en la misma solicitud
-- Use el prefijo `-` para las entradas de la lista de denegados (p. ej., `["-reddit.com"]`)
+- No se puede mezclar lista de permitidos y lista de bloqueados en la misma solicitud
+- Use el prefijo `-` para las entradas de lista de bloqueados (por ejemplo, `["-reddit.com"]`)
 
 ## Notas
 
-- La API de Perplexity Search devuelve resultados de búsqueda web estructurados (`title`, `url`, `snippet`)
-- OpenRouter o los interruptores explícitos `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` hacen que Perplexity vuelva a las finalizaciones de chat de Sonar por compatibilidad
+- La API de búsqueda de Perplexity devuelve resultados de búsqueda web estructurados (`title`, `url`, `snippet`)
+- OpenRouter o `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` explícitos cambian Perplexity de nuevo a completaciones de chat Sonar para compatibilidad
+- La compatibilidad con Sonar/OpenRouter devuelve una respuesta sintetizada con citas, no filas de resultados estructurados
 - Los resultados se almacenan en caché durante 15 minutos de forma predeterminada (configurable mediante `cacheTtlMinutes`)
 
 ## Relacionado
 
-- [Web Search overview](/en/tools/web) -- todos los proveedores y detección automática
-- [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) -- documentación oficial de Perplexity
-- [Brave Search](/en/tools/brave-search) -- resultados estructurados con filtros de país/idioma
-- [Exa Search](/en/tools/exa-search) -- búsqueda neuronal con extracción de contenido
+- [Descripción general de búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
+- [Documentación de la API de búsqueda de Perplexity](https://docs.perplexity.ai/docs/search/quickstart) -- documentación oficial de Perplexity
+- [Búsqueda Brave](/en/tools/brave-search) -- resultados estructurados con filtros de país/idioma
+- [Búsqueda Exa](/en/tools/exa-search) -- búsqueda neuronal con extracción de contenido

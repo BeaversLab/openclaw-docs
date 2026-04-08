@@ -107,7 +107,7 @@ Cycle de vie de la session :
 - `/settings`
 - `/exit`
 
-Les autres commandes slash du Gateway (par exemple, `/context`) sont transmises au Gateway et affichées sous forme de sortie système. Voir [Slash commands](/en/tools/slash-commands).
+Les autres commandes slash du Gateway (par exemple, `/context`) sont transmises au Gateway et affichées comme sortie système. Voir [Slash commands](/en/tools/slash-commands).
 
 ## Commandes de shell local
 
@@ -148,22 +148,23 @@ Les autres commandes slash du Gateway (par exemple, `/context`) sont transmises 
 - `--session <key>` : clé de session (par défaut : `main`, ou `global` lorsque la portée est globale)
 - `--deliver` : envoyer les réponses de l'assistant au provider (désactivé par défaut)
 - `--thinking <level>` : remplacer le niveau de réflexion pour les envois
-- `--timeout-ms <ms>` : délai d'attente de l'agent en ms (par défaut `agents.defaults.timeoutSeconds`)
+- `--message <text>` : Envoyer un message initial après la connexion
+- `--timeout-ms <ms>` : Délai d'attente de l'agent en ms (par défaut `agents.defaults.timeoutSeconds`)
+- `--history-limit <n>` : Entrées de l'historique à charger (par défaut `200`)
 
-Remarque : lorsque vous définissez `--url`, la TUI ne revient pas aux identifiants de configuration ou d'environnement.
-Passez `--token` ou `--password` explicitement. L'absence d'identifiants explicites constitue une erreur.
+Remarque : lorsque vous définissez `--url`, le TUI ne revient pas aux identifiants de configuration ou d'environnement.
+Passez `--token` ou `--password` explicitement. L'absence d'identifiants explicites est une erreur.
 
-## Dépannage
+## Troubleshooting
 
-Pas de sortie après l'envoi d'un message :
+Aucune sortie après l'envoi d'un message :
 
-- Exécutez `/status` dans la TUI pour confirmer que le Gateway est connecté et inactif/occupé.
+- Exécutez `/status` dans le TUI pour confirmer que le Gateway est connecté et inactif/occupé.
 - Vérifiez les journaux du Gateway : `openclaw logs --follow`.
 - Confirmez que l'agent peut s'exécuter : `openclaw status` et `openclaw models status`.
-- Si vous vous attendez à des messages dans un channel de chat, activez la livraison (`/deliver on` ou `--deliver`).
-- `--history-limit <n>` : Entrées d'historique à charger (défaut 200)
+- Si vous attendez des messages dans un chat channel, activez la livraison (`/deliver on` ou `--deliver`).
 
-## Dépannage de la connexion
+## Connection troubleshooting
 
 - `disconnected` : assurez-vous que le Gateway est en cours d'exécution et que vos `--url/--token/--password` sont corrects.
 - Aucun agent dans le sélecteur : vérifiez `openclaw agents list` et votre configuration de routage.
@@ -171,5 +172,5 @@ Pas de sortie après l'envoi d'un message :
 
 ## Connexes
 
-- [Interface de contrôle](/en/web/control-ui) — interface de contrôle basée sur le web
-- [Référence CLI](/en/cli) — référence complète des commandes CLI
+- [Control UI](/en/web/control-ui) — interface de contrôle basée sur le web
+- [CLI Reference](/en/cli) — référence complète des commandes CLI

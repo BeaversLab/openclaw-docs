@@ -13,7 +13,7 @@ Talk 模式是一個連續的語音對話循環：
 1. 聆聽語音
 2. 將文字紀錄傳送給模型（主會話，chat.send）
 3. 等待回應
-4. 透過 ElevenLabs 播放（串流播放）
+4. 透過設定的 Talk 提供者 (`talk.speak`) 進行說話
 
 ## 行為（macOS）
 
@@ -35,7 +35,7 @@ Talk 模式是一個連續的語音對話循環：
 
 - 僅限第一行非空行。
 - 未知的金鑰會被忽略。
-- `once: true` 僅適用於目前的回覆。
+- `once: true` 僅套用於目前的回覆。
 - 如果沒有 `once`，該語音將成為 Talk 模式的新預設值。
 - JSON 行會在 TTS 播放前被移除。
 
@@ -47,7 +47,7 @@ Talk 模式是一個連續的語音對話循環：
 - `seed`, `normalize`, `lang`, `output_format`, `latency_tier`
 - `once`
 
-## 設定（`~/.openclaw/openclaw.json`）
+## Config (`~/.openclaw/openclaw.json`)
 
 ```json5
 {
@@ -65,11 +65,11 @@ Talk 模式是一個連續的語音對話循環：
 預設值：
 
 - `interruptOnSpeech`: true
-- `silenceTimeoutMs`: 未設定時，Talk 會在傳送文字紀錄之前保留平台預設的暫停視窗（`700 ms on macOS and Android, 900 ms on iOS`）
-- `voiceId`: 會回退至 `ELEVENLABS_VOICE_ID` / `SAG_VOICE_ID`（或在有 API 金鑰時使用第一個 ElevenLabs 語音）
-- `modelId`：若未設定，則預設為 `eleven_v3`
-- `apiKey`：回退至 `ELEVENLABS_API_KEY`（或可用的 gateway shell profile）
-- `outputFormat`：在 macOS/iOS 上預設為 `pcm_44100`，在 Android 上預設為 `pcm_24000`（設定 `mp3_*` 以強制使用 MP3 串流）
+- `silenceTimeoutMs`: 當未設定時，Talk 在發送文字記錄前會保留平台預設的暫停視窗 (`700 ms on macOS and Android, 900 ms on iOS`)
+- `voiceId`: 會回退到 `ELEVENLABS_VOICE_ID` / `SAG_VOICE_ID` (或在有可用的 API 金鑰時使用第一個 ElevenLabs 語音)
+- `modelId`: 當未設定時預設為 `eleven_v3`
+- `apiKey`: 會回退到 `ELEVENLABS_API_KEY` (或可用的 gateway shell profile)
+- `outputFormat`: 在 macOS/iOS 上預設為 `pcm_44100`，在 Android 上預設為 `pcm_24000` (設定 `mp3_*` 以強制使用 MP3 串流)
 
 ## macOS 使用者介面
 
@@ -85,8 +85,8 @@ Talk 模式是一個連續的語音對話循環：
 ## 備註
 
 - 需要語音 + 麥克風權限。
-- 針對 session key `main` 使用 `chat.send`。
-- TTS 在 macOS/iOS/Android 上使用 ElevenLabs 串流 API 與 `ELEVENLABS_API_KEY` 進行增量播放，以降低延遲。
-- `stability` for `eleven_v3` 被驗證為 `0.0`、`0.5` 或 `1.0`；其他模型接受 `0..1`。
-- 當設定 `latency_tier` 時，會被驗證為 `0..4`。
-- Android 支援 `pcm_16000`、`pcm_22050`、`pcm_24000` 和 `pcm_44100` 輸出格式，以進行低延遲 AudioTrack 串流。
+- 對會話金鑰 `main` 使用 `chat.send`。
+- Gateway 會使用使用中的 Talk 提供者透過 `talk.speak` 來解析 Talk 播放。僅當該 RPC 不可用時，Android 才會回退到本地系統 TTS。
+- `eleven_v3` 的 `stability` 會被驗證為 `0.0`、`0.5` 或 `1.0`；其他模型接受 `0..1`。
+- 設定時，`latency_tier` 會驗證為 `0..4`。
+- Android 支援 `pcm_16000`、`pcm_22050`、`pcm_24000` 和 `pcm_44100` 輸出格式，用於低延遲 AudioTrack 串流。

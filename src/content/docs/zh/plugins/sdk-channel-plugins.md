@@ -12,7 +12,7 @@ read_when:
 
 本指南介绍了如何构建一个连接 OpenClaw 与消息平台的渠道插件。在结束时，你将拥有一个可用的渠道，具备私信安全性、配对、回复线程和出站消息功能。
 
-<Info>如果您之前从未构建过任何 OpenClaw 插件，请先阅读 [入门指南](/en/plugins/building-plugins) 以了解基本的包 结构和清单设置。</Info>
+<Info>如果您之前尚未构建任何 OpenClaw 插件，请先阅读 [入门指南](/en/plugins/building-plugins) 以了解基本的包 结构和清单设置。</Info>
 
 ## 渠道插件的工作原理
 
@@ -54,22 +54,61 @@ ID、显式 `baseConversationId` 以及任何 `parentConversationCandidates` 的
 大多数渠道插件不需要特定于审批的代码。
 
 - 核心拥有同聊 `/approve`、共享审批按钮负载和通用回退传递。
-- 仅当审批身份验证与正常聊天身份验证不同时，才使用
-  `auth.authorizeActorAction` 或 `auth.getActionAvailabilityState`。
-- 使用 `outbound.shouldSuppressLocalPayloadPrompt` 或 `outbound.beforeDeliverPayload` 处理特定于渠道的负载生命周期行为，例如隐藏重复的本地审批提示或在发送之前发送输入指示器。
-- 仅将 `approvals.delivery` 用于原生审批路由或回退抑制。
-- 仅当渠道确实需要自定义审批负载而非共享渲染器时，才使用 `approvals.render`。
-- 如果渠道可以从现有配置推断出稳定的类似所有者的私信身份，请从 `openclaw/plugin-sdk/approval-runtime` 使用 `createResolvedApproverActionAuthAdapter` 来限制同一会话中的 `/approve`，而无需添加特定于审批的核心逻辑。
+- 当渠道需要特定于审批的行为时，最好在渠道插件上使用一个 `approvalCapability` 对象。
+- `approvalCapability.authorizeActorAction` 和 `approvalCapability.getActionAvailabilityState` 是规范的审批认证接口。
+- 如果您的渠道暴露了原生执行审批，即使原生传输完全位于 `approvalCapability.native` 之下，也要实现 `approvalCapability.getActionAvailabilityState`。核心使用该可用性钩子来区分 `enabled` 和 `disabled`，决定发起渠道是否支持原生审批，并在原生客户端回退指导中包含该渠道。
+- 使用 `outbound.shouldSuppressLocalPayloadPrompt` 或 `outbound.beforeDeliverPayload` 来实现特定于渠道的有效负载生命周期行为，例如隐藏重复的本地审批提示或在发送前输入指示符。
+- 仅将 `approvalCapability.delivery` 用于原生审批路由或回退抑制。
+- 仅当渠道确实需要自定义审批有效负载而不是共享渲染器时，才使用 `approvalCapability.render`。
+- 当渠道希望禁用路径回复来解释启用原生执行审批所需的确切配置开关时，请使用 `approvalCapability.describeExecApprovalSetup`。该钩子接收 `{ channel, channelLabel, accountId }`；命名帐户渠道应呈现帐户范围的路径（例如 `channels.<channel>.accounts.<id>.execApprovals.*`），而不是顶级默认值。
+- 如果渠道可以从现有配置推断出稳定的类似所有者的私信身份，请使用 `openclaw/plugin-sdk/approval-runtime` 中的 `createResolvedApproverActionAuthAdapter` 来限制同会话 `/approve`，而无需添加特定于审批的核心逻辑。
+- 如果渠道需要原生审批传递，请保持渠道代码专注于目标规范化和传输钩子。使用 `openclaw/plugin-sdk/approval-runtime` 中的 `createChannelExecApprovalProfile`、`createChannelNativeOriginTargetResolver`、`createChannelApproverDmTargetResolver`、`createApproverRestrictedNativeApprovalCapability` 和 `createChannelNativeApprovalRuntime`，以便核心拥有请求过滤、路由、去重、过期和网关订阅。
+- 原生审批渠道必须通过这些辅助程序路由 `accountId` 和 `approvalKind`。`accountId` 将多账户审批策略限定在正确的机器人账户，而 `approvalKind` 使执行与插件审批行为对渠道可用，而无需在核心中进行硬编码分支。
+- 端到端保留传递的审批 id 类型。原生客户端不应从渠道本地状态猜测或重写执行与插件的审批路由。
+- 不同的审批类型可以有目的地暴露不同的原生表面。当前捆绑的示例：
+  - Slack 为执行和插件 id 保留了原生审批路由。
+  - Matrix 仅保留执行审批的原生私信/渠道路由，并将插件审批保留在共享的同一聊天 `/approve` 路径上。
+- `createApproverRestrictedNativeApprovalAdapter` 仍然作为兼容性包装器存在，但新代码应该首选功能构建器并在插件上暴露 `approvalCapability`。
 
-对于 Slack、Matrix、Microsoft Teams 和类似的聊天渠道，默认路径通常就足够了：核心处理审批，插件只需公开正常的出站和身份验证功能。
+对于热渠道入口，当您只需要该系列的一部分时，首选更窄的运行时子路径：
+
+- `openclaw/plugin-sdk/approval-auth-runtime`
+- `openclaw/plugin-sdk/approval-client-runtime`
+- `openclaw/plugin-sdk/approval-delivery-runtime`
+- `openclaw/plugin-sdk/approval-native-runtime`
+- `openclaw/plugin-sdk/approval-reply-runtime`
+
+同样，当您不需要更广泛的通用表面时，首选 `openclaw/plugin-sdk/setup-runtime`、`openclaw/plugin-sdk/setup-adapter-runtime`、`openclaw/plugin-sdk/reply-runtime`、`openclaw/plugin-sdk/reply-dispatch-runtime`、`openclaw/plugin-sdk/reply-reference` 和 `openclaw/plugin-sdk/reply-chunking`。
+
+具体对于设置：
+
+- `openclaw/plugin-sdk/setup-runtime` 涵盖了运行时安全的设置辅助程序：导入安全的设置修补适配器 (`createPatchedAccountSetupAdapter`、`createEnvPatchedAccountSetupAdapter`、`createSetupInputPresenceValidator`)、查找说明输出、`promptResolvedAllowFrom`、`splitSetupEntries` 以及委托的设置代理构建器
+- `openclaw/plugin-sdk/setup-adapter-runtime` 是 `createEnvPatchedAccountSetupAdapter` 的窄环境感知适配器接缝
+- `openclaw/plugin-sdk/channel-setup` 涵盖了可选安装的设置构建器以及一些设置安全的原语：`createOptionalChannelSetupSurface`、`createOptionalChannelSetupAdapter`、`createOptionalChannelSetupWizard`、`DEFAULT_ACCOUNT_ID`、`createTopLevelChannelDmPolicy`、`setSetupChannelEnabled` 和 `splitSetupEntries`
+- 仅当您还需要更繁重的共享设置/配置助手（例如 `moveSingleAccountChannelSectionToDefaultAccount(...)`）时，才使用更广泛的 `openclaw/plugin-sdk/setup` 接口。
+
+如果您的渠道只想在设置界面中宣传“先安装此插件”，请首选 `createOptionalChannelSetupSurface(...)`。生成的适配器/向导在配置写入和最终确认时默认失败（fail closed），并且在验证、最终确认和文档链接复制中重复使用相同的“需安装”消息。
+
+对于其他热路径渠道，首选窄辅助函数而不是更广泛的遗留接口：
+
+- `openclaw/plugin-sdk/account-core`、`openclaw/plugin-sdk/account-id`、`openclaw/plugin-sdk/account-resolution` 和 `openclaw/plugin-sdk/account-helpers` 用于多账户配置和默认账户回退
+- `openclaw/plugin-sdk/inbound-envelope` 和 `openclaw/plugin-sdk/inbound-reply-dispatch` 用于入站路由/信封以及记录和分发连接
+- `openclaw/plugin-sdk/messaging-targets` 用于目标解析/匹配
+- `openclaw/plugin-sdk/outbound-media` 和 `openclaw/plugin-sdk/outbound-runtime` 用于媒体加载以及出站身份/发送委托
+- `openclaw/plugin-sdk/thread-bindings-runtime` 用于线程绑定生命周期和适配器注册
+- 仅当仍然需要遗留的 agent/media 负载字段布局时，才使用 `openclaw/plugin-sdk/agent-media-payload`
+- `openclaw/plugin-sdk/telegram-command-config` 用于 Telegram 自定义命令标准化、重复/冲突验证以及回退稳定的命令配置契约
+
+仅包含身份验证的渠道通常可以在默认路径停止：核心处理审批，插件只需暴露出站/身份验证功能。原生审批渠道（如 Matrix、Slack、Telegram 和自定义聊天传输）应使用共享的原生助手，而不是自己实现审批生命周期。
 
 ## 演练
 
 <Steps>
   <a id="step-1-package-and-manifest"></a>
-  <Step title="包和清单">
-    创建标准插件文件。`package.json` 中的 `channel` 字段
-    是使其成为渠道插件的关键：
+  <Step title="Package and manifest">
+    创建标准的插件文件。`package.json` 中的 `channel` 字段
+    使其成为一个渠道插件。有关完整的包元数据表面，
+    请参阅 [Plugin Setup and Config](/en/plugins/sdk-setup#openclawchannel)。
 
     <CodeGroup>
     ```json package.json
@@ -118,17 +157,18 @@ ID、显式 `baseConversationId` 以及任何 `parentConversationCandidates` 的
 
   </Step>
 
-  <Step title="构建渠道插件对象">
-    `ChannelPlugin` 接口有许多可选的适配器接口。从最少的开始——`id` 和 `setup`——然后根据需要添加适配器。
+  <Step title="Build the 渠道 plugin object">
+    `ChannelPlugin` 接口有许多可选的适配器表面。从
+    最基础的开始 —— `id` 和 `setup` —— 并根据需要添加适配器。
 
-    创建 `src/channel.ts`：
+    创建 `src/channel.ts`。
 
     ```typescript src/channel.ts
     import {
       createChatChannelPlugin,
       createChannelPluginBase,
-    } from "openclaw/plugin-sdk/core";
-    import type { OpenClawConfig } from "openclaw/plugin-sdk/core";
+    } from "openclaw/plugin-sdk/channel-core";
+    import type { OpenClawConfig } from "openclaw/plugin-sdk/channel-core";
     import { acmeChatApi } from "./client.js"; // your platform API client
 
     type ResolvedAccount = {
@@ -214,17 +254,18 @@ ID、显式 `baseConversationId` 以及任何 `parentConversationCandidates` 的
     });
     ```
 
-    <Accordion title="createChatChannelPlugin 为您做了什么">
-      您无需手动实现低级适配器接口，只需传递声明式选项，构建器会将它们组合起来：
+    <Accordion title="What createChatChannelPlugin does for you">
+      您无需手动实现底层适配器接口，只需传递
+      声明式选项，构建器会将它们组合起来。
 
-      | 选项 | 它连接的内容 |
+      | Option | What it wires |
       | --- | --- |
-      | `security.dm` | 来自配置字段的范围限定私信安全解析器 |
-      | `pairing.text` | 基于文本的带代码交换的私信配对流程 |
-      | `threading` | 回复模式解析器（固定、账户范围或自定义）|
-      | `outbound.attachedResults` | 返回结果元数据（消息 ID）的发送函数 |
+      | `security.dm` | Scoped 私信 security resolver from config fields |
+      | `pairing.text` | Text-based 私信 pairing flow with code exchange |
+      | `threading` | Reply-to-mode resolver (fixed, account-scoped, or custom) |
+      | `outbound.attachedResults` | Send functions that return result metadata (message IDs) |
 
-      如果您需要完全控制，也可以传递原始适配器对象而不是声明式选项。
+      如果您需要完全控制，也可以传递原始适配器对象来代替声明式选项。
     </Accordion>
 
   </Step>
@@ -233,7 +274,7 @@ ID、显式 `baseConversationId` 以及任何 `parentConversationCandidates` 的
     创建 `index.ts`：
 
     ```typescript index.ts
-    import { defineChannelPluginEntry } from "openclaw/plugin-sdk/core";
+    import { defineChannelPluginEntry } from "openclaw/plugin-sdk/channel-core";
     import { acmeChatPlugin } from "./src/channel.js";
 
     export default defineChannelPluginEntry({
@@ -265,27 +306,36 @@ ID、显式 `baseConversationId` 以及任何 `parentConversationCandidates` 的
     });
     ```
 
-    将渠道拥有的 CLI 描述符放在 `registerCliMetadata(...)` 中，以便 OpenClaw 可以在不激活完整渠道运行时的情况下在根帮助中显示它们，而正常的完整加载仍然会获取相同的描述符以进行实际的命令注册。保留 `registerFull(...)` 用于仅运行时的工作。`defineChannelPluginEntry` 会自动处理注册模式的拆分。有关所有选项，请参阅[入口点](/en/plugins/sdk-entrypoints#definechannelpluginentry)。
+    将渠道拥有的 CLI 描述符放在 `registerCliMetadata(...)` 中，以便 OpenClaw
+    可以在不激活完整渠道运行时的情况下在根帮助中显示它们，而正常的完整加载仍然会获取相同的描述符以进行实际的命令
+    注册。将 `registerFull(...)` 用于仅运行时的工作。
+    如果 `registerFull(...)` 注册网关 RPC 方法，请使用
+    插件特定的前缀。核心管理命名空间（`config.*`、
+    `exec.approvals.*`、`wizard.*`、`update.*`）保持保留状态，并且始终
+    解析为 `operator.admin`。
+    `defineChannelPluginEntry` 会自动处理注册模式的拆分。请参阅
+    [入口点](/en/plugins/sdk-entrypoints#definechannelpluginentry) 了解所有
+    选项。
 
   </Step>
 
   <Step title="添加设置入口">
-    创建 `setup-entry.ts` 以便在新手引导期间进行轻量级加载：
+    创建 `setup-entry.ts` 以便在 OpenClaw 期间进行轻量级加载：
 
     ```typescript setup-entry.ts
-    import { defineSetupPluginEntry } from "openclaw/plugin-sdk/core";
+    import { defineSetupPluginEntry } from "openclaw/plugin-sdk/channel-core";
     import { acmeChatPlugin } from "./src/channel.js";
 
     export default defineSetupPluginEntry(acmeChatPlugin);
     ```
 
-    当渠道被禁用或未配置时，OpenClaw 会加载此入口而不是完整入口。这避免了在设置流程中引入繁重的运行时代码。有关详细信息，请参阅[设置和配置](/en/plugins/sdk-setup#setup-entry)。
+    当渠道被禁用或未配置时，OpenClaw 会加载此入口而不是完整入口。这避免了在设置流程中引入繁重的运行时代码。有关详细信息，请参阅 [设置和配置](/en/plugins/sdk-setup#setup-entry)。
 
   </Step>
 
-  <Step title="Handle inbound messages">
+  <Step title="处理传入消息">
     您的插件需要从平台接收消息并将其转发给
-    OpenClaw。典型模式是一个验证请求并通过您的渠道的入站处理程序进行分发的 webhook：
+    OpenClaw。典型的模式是验证请求并通过渠道的传入处理程序分发它的 webhook：
 
     ```typescript
     registerFull(api) {
@@ -309,16 +359,16 @@ ID、显式 `baseConversationId` 以及任何 `parentConversationCandidates` 的
     ```
 
     <Note>
-      入站消息处理是特定于渠道的。每个渠道插件拥有
-      其自己的入站管道。查看捆绑的渠道插件
+      传入消息处理是特定于渠道的。每个渠道插件都拥有
+      自己的传入管道。查看打包的渠道插件
       （例如 Microsoft Teams 或 Google Chat 插件包）以获取实际模式。
     </Note>
 
   </Step>
 
 <a id="step-6-test"></a>
-<Step title="Test">
-在 `src/channel.test.ts` 中编写同地测试：
+<Step title="测试">
+在 `src/channel.test.ts` 中编写同置测试：
 
     ```typescript src/channel.test.ts
     import { describe, it, expect } from "vitest";
@@ -356,7 +406,7 @@ ID、显式 `baseConversationId` 以及任何 `parentConversationCandidates` 的
     pnpm test -- <bundled-plugin-root>/acme-chat/
     ```
 
-    有关共享测试帮助程序，请参阅 [Testing](/en/plugins/sdk-testing)。
+    有关共享测试助手，请参阅 [测试](/en/plugins/sdk-testing)。
 
   </Step>
 </Steps>
@@ -381,23 +431,25 @@ ID、显式 `baseConversationId` 以及任何 `parentConversationCandidates` 的
 ## 高级主题
 
 <CardGroup cols={2}>
-  <Card title="Threading options" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
-    固定、帐户范围或自定义回复模式
+  <Card title="线程选项" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
+    固定、账户范围或自定义回复模式
   </Card>
-  <Card title="Message 工具 integration" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
+  <Card title="消息工具集成" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
     describeMessageTool 和操作发现
   </Card>
-  <Card title="Target resolution" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
-    inferTargetChatType, looksLikeId, resolveTarget
+  <Card title="目标解析" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
+    inferTargetChatType、looksLikeId、resolveTarget
   </Card>
-  <Card title="Runtime helpers" icon="settings" href="/en/plugins/sdk-runtime">
-    TTS、STT、媒体、通过 api.runtime 进行的子代理
+  <Card title="运行时辅助工具" icon="settings" href="/en/plugins/sdk-runtime">
+    通过 api.runtime 实现的 TTS、STT、媒体和子代理
   </Card>
 </CardGroup>
 
+<Note>为了维护捆绑插件及其兼容性，仍然存在一些捆绑的辅助接口。对于新的渠道插件，这并不是推荐的模式；除非您直接维护该捆绑插件系列，否则首选通用 SDK 表面中的 渠道/setup/reply/runtime 子路径。</Note>
+
 ## 后续步骤
 
-- [Provider Plugins](/en/plugins/sdk-provider-plugins) — 如果您的插件还提供模型
-- [SDK Overview](/en/plugins/sdk-overview) — 完整的子路径导入参考
-- [SDK Testing](/en/plugins/sdk-testing) — 测试工具和合约测试
-- [Plugin Manifest](/en/plugins/manifest) — 完整的清单架构
+- [提供商插件](/en/plugins/sdk-provider-plugins) — 如果您的插件也提供模型
+- [SDK 概述](/en/plugins/sdk-overview) — 完整的子路径导入参考
+- [SDK 测试](/en/plugins/sdk-testing) — 测试工具和合约测试
+- [插件清单](/en/plugins/manifest) — 完整的清单架构

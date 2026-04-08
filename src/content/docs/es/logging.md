@@ -1,21 +1,20 @@
 ---
-summary: "Resumen del registro: registros de archivo, salida de consola, seguimiento en vivo de la CLI y la interfaz de usuario de control"
+summary: "Resumen de registro: registros de archivo, salida de consola, seguimiento de CLI y la interfaz de usuario de control"
 read_when:
   - You need a beginner-friendly overview of logging
   - You want to configure log levels or formats
   - You are troubleshooting and need to find logs quickly
-title: "Resumen del registro"
+title: "Descripción general del registro"
 ---
 
 # Registro
 
-OpenClaw registra en dos lugares:
+OpenClaw tiene dos superficies principales de registro:
 
 - **Registros de archivo** (líneas JSON) escritos por el Gateway.
-- **Salida de consola** que se muestra en terminales y en la interfaz de usuario de control.
+- **Salida de consola** que se muestra en las terminales y en la interfaz de usuario de depuración del Gateway.
 
-Esta página explica dónde residen los registros, cómo leerlos y cómo configurar los
-niveles y formatos de registro.
+La pestaña **Registros** (Logs) de la interfaz de usuario de control realiza un seguimiento del registro de archivo del gateway. Esta página explica dónde residen los registros, cómo leerlos y cómo configurar los niveles y formatos de registro.
 
 ## Dónde residen los registros
 
@@ -45,22 +44,32 @@ Usa la CLI para hacer un seguimiento del archivo de registro de la puerta de enl
 openclaw logs --follow
 ```
 
+Opciones actuales útiles:
+
+- `--local-time`: renderiza las marcas de tiempo en tu zona horaria local
+- `--url <url>` / `--token <token>` / `--timeout <ms>`: indicadores estándar de RPC del Gateway
+- `--expect-final`: indicador de espera de respuesta final de RPC con respaldo de agente (aceptado aquí a través de la capa de cliente compartida)
+
 Modos de salida:
 
-- **Sesiones TTY**: líneas de registro estructuradas, bonitas y coloreadas.
+- **Sesiones TTY**: líneas de registro estructuradas, con colores y bonitas.
 - **Sesiones que no son TTY**: texto sin formato.
 - `--json`: JSON delimitado por líneas (un evento de registro por línea).
-- `--plain`: forzar texto sin formato en sesiones TTY.
-- `--no-color`: deshabilitar colores ANSI.
+- `--plain`: fuerza texto sin formato en sesiones TTY.
+- `--no-color`: desactiva los colores ANSI.
+
+Cuando pasas un `--url` explícito, la CLI no aplica automáticamente la configuración o las credenciales del entorno; incluye `--token` tú mismo si el Gateway de destino requiere autenticación.
 
 En modo JSON, la CLI emite objetos etiquetados con `type`:
 
-- `meta`: metadatos de la secuencia (archivo, cursor, tamaño)
+- `meta`: metadatos de la transmisión (archivo, cursor, tamaño)
 - `log`: entrada de registro analizada
 - `notice`: sugerencias de truncamiento / rotación
 - `raw`: línea de registro no analizada
 
-Si el Gateway es inalcanzable, la CLI imprime una breve sugerencia para ejecutar:
+Si el Gateway de bucle invertido local solicita emparejamiento, `openclaw logs` recurre automáticamente al archivo de registro local configurado. Los destinos `--url` explícitos no utilizan este respaldo.
+
+Si el Gateway no está accesible, la CLI imprime un breve consejo para ejecutar:
 
 ```bash
 openclaw doctor
@@ -68,12 +77,12 @@ openclaw doctor
 
 ### Interfaz de usuario de control (web)
 
-La pestaña **Registros** de la interfaz de usuario de control realiza un seguimiento del mismo archivo usando `logs.tail`.
-Consulta [/web/control-ui](/en/web/control-ui) para saber cómo abrirla.
+La pestaña **Registros** (Logs) de la interfaz de usuario de control realiza un seguimiento del mismo archivo usando `logs.tail`.
+Consulte [/web/control-ui](/en/web/control-ui) para saber cómo abrirla.
 
-### Registros solo de canal
+### Registros solo del canal
 
-Para filtrar la actividad del canal (WhatsApp/Telegram/etc), usa:
+Para filtrar la actividad del canal (WhatsApp/Telegram/etc), use:
 
 ```bash
 openclaw channels logs --channel whatsapp
@@ -83,22 +92,38 @@ openclaw channels logs --channel whatsapp
 
 ### Registros de archivo (JSONL)
 
-Cada línea del archivo de registro es un objeto JSON. La CLI y la interfaz de usuario de control analizan estas
-entradas para representar una salida estructurada (hora, nivel, subsistema, mensaje).
+Cada línea en el archivo de registro es un objeto JSON. La CLI y la Interfaz de Control analizan estas entradas para generar una salida estructurada (hora, nivel, subsistema, mensaje).
 
 ### Salida de consola
 
-Los registros de la consola son **conscientes de TTY** y están formateados para facilitar la lectura:
+Los registros de consola son **conscientes de TTY** y están formateados para facilitar la lectura:
 
-- Prefijos de subsistema (p. ej., `gateway/channels/whatsapp`)
-- Coloreado de niveles (información/advertencia/error)
+- Prefijos de subsistema (ej. `gateway/channels/whatsapp`)
+- Coloreado de niveles (info/warn/error)
 - Modo compacto o JSON opcional
 
-El formato de la consola está controlado por `logging.consoleStyle`.
+El formato de consola está controlado por `logging.consoleStyle`.
 
-## Configuración del registro
+### Registros de WebSocket del Gateway
 
-Toda la configuración de registro se encuentra en `logging` en `~/.openclaw/openclaw.json`.
+`openclaw gateway` también tiene registro de protocolo WebSocket para el tráfico RPC:
+
+- modo normal: solo resultados interesantes (errores, errores de análisis, llamadas lentas)
+- `--verbose`: todo el tráfico de solicitud/respuesta
+- `--ws-log auto|compact|full`: elija el estilo de representación detallado
+- `--compact`: alias para `--ws-log compact`
+
+Ejemplos:
+
+```bash
+openclaw gateway
+openclaw gateway --verbose --ws-log compact
+openclaw gateway --verbose --ws-log full
+```
+
+## Configurar el registro
+
+Toda la configuración de registro se encuentra bajo `logging` en `~/.openclaw/openclaw.json`.
 
 ```json
 {
@@ -116,50 +141,50 @@ Toda la configuración de registro se encuentra en `logging` en `~/.openclaw/ope
 ### Niveles de registro
 
 - `logging.level`: nivel de **registros de archivo** (JSONL).
-- `logging.consoleLevel`: nivel de verbosidad de la **consola**.
+- `logging.consoleLevel`: nivel de verbosidad de **consola**.
 
 Puede anular ambos mediante la variable de entorno **`OPENCLAW_LOG_LEVEL`** (por ejemplo, `OPENCLAW_LOG_LEVEL=debug`). La variable de entorno tiene prioridad sobre el archivo de configuración, por lo que puede aumentar la verbosidad para una sola ejecución sin editar `openclaw.json`. También puede pasar la opción global de CLI **`--log-level <level>`** (por ejemplo, `openclaw --log-level debug gateway run`), que anula la variable de entorno para ese comando.
 
-`--verbose` solo afecta la salida de la consola; no cambia los niveles de registro de archivo.
+`--verbose` solo afecta la salida de consola y la verbosidad del registro WS; no cambia los niveles de registro de archivo.
 
 ### Estilos de consola
 
 `logging.consoleStyle`:
 
-- `pretty`\_\_: fácil de usar, colorido, con marcas de tiempo.
-- `compact`\_\_: salida más compacta (ideal para sesiones largas).
-- `json`\_\_: JSON por línea (para procesadores de registros).
+- `pretty`: amigable para humanos, coloreado, con marcas de tiempo.
+- `compact`: salida más ajustada (mejor para sesiones largas).
+- `json`: JSON por línea (para procesadores de registros).
 
-### Ocultación
+### Redacción
 
-Los resúmenes de herramientas pueden ocultar tokens sensibles antes de que lleguen a la consola:
+Los resúmenes de herramientas pueden redactar tokens sensibles antes de que lleguen a la consola:
 
 - `logging.redactSensitive`: `off` | `tools` (predeterminado: `tools`)
 - `logging.redactPatterns`: lista de cadenas de regex para anular el conjunto predeterminado
 
-La ocultación afecta solo a la **salida de la consola** y no altera los registros de archivo.
+La redacción afecta **solo a la salida de la consola** y no altera los registros de archivos.
 
-## Diagnóstico + OpenTelemetry
+## Diagnósticos + OpenTelemetry
 
 Los diagnósticos son eventos estructurados y legibles por máquina para ejecuciones de modelos **y**
-telemetría de flujo de mensajes (webhooks, cola, estado de la sesión). **No**
-reemplazan los registros; existen para alimentar métricas, trazas y otros exportadores.
+telemetría de flujo de mensajes (webhooks, puesta en cola, estado de la sesión). **No** reemplazan
+los registros; existen para alimentar métricas, trazas y otros exportadores.
 
 Los eventos de diagnóstico se emiten en proceso, pero los exportadores solo se adjuntan cuando
-el diagnóstico + el complemento del exportador están habilitados.
+los diagnósticos + el complemento del exportador están habilitados.
 
-### OpenTelemetry vs OTLP
+### OpenTelemetry frente a OTLP
 
 - **OpenTelemetry (OTel)**: el modelo de datos + SDK para trazas, métricas y registros.
 - **OTLP**: el protocolo de cable utilizado para exportar datos OTel a un recolector/backend.
-- OpenClaw exporta actualmente a través de **OTLP/HTTP (protobuf)**.
+- OpenClaw exporta hoy a través de **OTLP/HTTP (protobuf)**.
 
 ### Señales exportadas
 
-- **Métricas**: contadores + histogramas (uso de tokens, flujo de mensajes, cola).
+- **Métricas**: contadores + histogramas (uso de tokens, flujo de mensajes, puesta en cola).
 - **Trazas**: intervalos para el uso del modelo + procesamiento de webhooks/mensajes.
-- **Registros**: exportados a través de OTLP cuando `diagnostics.otel.logs` está habilitado. El
-  volumen de registros puede ser alto; tenga en cuenta `logging.level` y los filtros del exportador.
+- **Registros**: exportados a través de OTLP cuando `diagnostics.otel.logs` está habilitado. El volumen
+  de registros puede ser alto; tenga en cuenta `logging.level` y los filtros del exportador.
 
 ### Catálogo de eventos de diagnóstico
 
@@ -169,10 +194,10 @@ Uso del modelo:
 
 Flujo de mensajes:
 
-- `webhook.received`: ingreso de webhook por canal.
+- `webhook.received`: entrada de webhook por canal.
 - `webhook.processed`: webhook manejado + duración.
 - `webhook.error`: errores del manejador de webhook.
-- `message.queued`: mensaje puesto en cola para procesamiento.
+- `message.queued`: mensaje puesto en cola para su procesamiento.
 - `message.processed`: resultado + duración + error opcional.
 
 Cola + sesión:
@@ -184,9 +209,9 @@ Cola + sesión:
 - `run.attempt`: metadatos de reintento/intento de ejecución.
 - `diagnostic.heartbeat`: contadores agregados (webhooks/cola/sesión).
 
-### Habilitar diagnóstico (sin exportador)
+### Habilitar diagnósticos (sin exportador)
 
-Use esto si desea que los eventos de diagnóstico estén disponibles para complementos o receptores personalizados:
+Use esto si desea que los eventos de diagnóstico estén disponibles para complementos o sumideros personalizados:
 
 ```json
 {
@@ -198,7 +223,7 @@ Use esto si desea que los eventos de diagnóstico estén disponibles para comple
 
 ### Marcadores de diagnóstico (registros específicos)
 
-Use marcadores para activar registros de depuración adicionales y específicos sin aumentar `logging.level`.
+Use marcadores para activar registros de depuración adicionales y específicos sin elevar `logging.level`.
 Los marcadores no distinguen entre mayúsculas y minúsculas y admiten comodines (por ejemplo, `telegram.*` o `*`).
 
 ```json
@@ -209,7 +234,7 @@ Los marcadores no distinguen entre mayúsculas y minúsculas y admiten comodines
 }
 ```
 
-Sobrescritura de entorno (único):
+Sobrescritura de entorno (única):
 
 ```
 OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
@@ -218,13 +243,13 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 Notas:
 
 - Los registros de marcadores van al archivo de registro estándar (igual que `logging.file`).
-- El resultado todavía se redacta según `logging.redactSensitive`.
+- El resultado sigue siendo redactado según `logging.redactSensitive`.
 - Guía completa: [/diagnostics/flags](/en/diagnostics/flags).
 
 ### Exportar a OpenTelemetry
 
 Los diagnósticos se pueden exportar a través del complemento `diagnostics-otel` (OTLP/HTTP). Esto
-funciona con cualquier recopilador/backend de OpenTelemetry que acepte OTLP/HTTP.
+funciona con cualquier recolector/backend de OpenTelemetry que acepte OTLP/HTTP.
 
 ```json
 {
@@ -256,41 +281,54 @@ funciona con cualquier recopilador/backend de OpenTelemetry que acepte OTLP/HTTP
 Notas:
 
 - También puede habilitar el complemento con `openclaw plugins enable diagnostics-otel`.
-- `protocol` actualmente solo admite `http/protobuf`. `grpc` se ignora.
-- Las métricas incluyen el uso de tokens, costo, tamaño del contexto, duración de la ejecución y contadores/histogramas de flujo de mensajes (webhooks, puesta en cola, estado de la sesión, profundidad de cola/espera).
-- Las trazas/métricas se pueden activar o desactivar con `traces` / `metrics` (predeterminado: activado). Las trazas incluyen intervalos de uso del modelo más intervalos de procesamiento de webhooks/mensajes cuando están activadas.
-- Establezca `headers` cuando su recopilador requiera autenticación.
-- Variables de entorno compatibles: `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_SERVICE_NAME`, `OTEL_EXPORTER_OTLP_PROTOCOL`.
+- `protocol` actualmente admite solo `http/protobuf`. Se ignora `grpc`.
+- Las métricas incluyen el uso de tokens, costos, tamaño de contexto, duración de ejecución y contadores/histogramas de flujo de mensajes
+  (webhooks, puesta en cola, estado de sesión, profundidad de cola/espera).
+- Las trazas/métricas se pueden alternar con `traces` / `metrics` (predeterminado: activado). Las trazas
+  incluyen intervalos de uso del modelo más intervalos de procesamiento de webhooks/mensajes cuando están habilitadas.
+- Establezca `headers` cuando su recolector requiera autenticación.
+- Variables de entorno compatibles: `OTEL_EXPORTER_OTLP_ENDPOINT`,
+  `OTEL_SERVICE_NAME`, `OTEL_EXPORTER_OTLP_PROTOCOL`.
 
 ### Métricas exportadas (nombres + tipos)
 
 Uso del modelo:
 
-- `openclaw.tokens` (contador, attrs: `openclaw.token`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
-- `openclaw.cost.usd` (contador, attrs: `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
-- `openclaw.run.duration_ms` (histograma, attrs: `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
-- `openclaw.context.tokens` (histograma, attrs: `openclaw.context`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
+- `openclaw.tokens` (contador, atributos: `openclaw.token`, `openclaw.channel`,
+  `openclaw.provider`, `openclaw.model`)
+- `openclaw.cost.usd` (contador, atributos: `openclaw.channel`, `openclaw.provider`,
+  `openclaw.model`)
+- `openclaw.run.duration_ms` (histograma, atributos: `openclaw.channel`,
+  `openclaw.provider`, `openclaw.model`)
+- `openclaw.context.tokens` (histogram, attrs: `openclaw.context`,
+  `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
 
 Flujo de mensajes:
 
-- `openclaw.webhook.received` (contador, attrs: `openclaw.channel`, `openclaw.webhook`)
-- `openclaw.webhook.error` (contador, attrs: `openclaw.channel`, `openclaw.webhook`)
-- `openclaw.webhook.duration_ms` (histograma, attrs: `openclaw.channel`, `openclaw.webhook`)
-- `openclaw.message.queued` (contador, attrs: `openclaw.channel`, `openclaw.source`)
-- `openclaw.message.processed` (contador, attrs: `openclaw.channel`, `openclaw.outcome`)
-- `openclaw.message.duration_ms` (histograma, attrs: `openclaw.channel`, `openclaw.outcome`)
+- `openclaw.webhook.received` (counter, attrs: `openclaw.channel`,
+  `openclaw.webhook`)
+- `openclaw.webhook.error` (counter, attrs: `openclaw.channel`,
+  `openclaw.webhook`)
+- `openclaw.webhook.duration_ms` (histogram, attrs: `openclaw.channel`,
+  `openclaw.webhook`)
+- `openclaw.message.queued` (counter, attrs: `openclaw.channel`,
+  `openclaw.source`)
+- `openclaw.message.processed` (counter, attrs: `openclaw.channel`,
+  `openclaw.outcome`)
+- `openclaw.message.duration_ms` (histogram, attrs: `openclaw.channel`,
+  `openclaw.outcome`)
 
 Colas + sesiones:
 
-- `openclaw.queue.lane.enqueue` (contador, attrs: `openclaw.lane`)
-- `openclaw.queue.lane.dequeue` (contador, attrs: `openclaw.lane`)
-- `openclaw.queue.depth` (histograma, attrs: `openclaw.lane` o
+- `openclaw.queue.lane.enqueue` (counter, attrs: `openclaw.lane`)
+- `openclaw.queue.lane.dequeue` (counter, attrs: `openclaw.lane`)
+- `openclaw.queue.depth` (histogram, attrs: `openclaw.lane` o
   `openclaw.channel=heartbeat`)
-- `openclaw.queue.wait_ms` (histograma, attrs: `openclaw.lane`)
-- `openclaw.session.state` (contador, attrs: `openclaw.state`, `openclaw.reason`)
-- `openclaw.session.stuck` (contador, attrs: `openclaw.state`)
-- `openclaw.session.stuck_age_ms` (histograma, attrs: `openclaw.state`)
-- `openclaw.run.attempt` (contador, attrs: `openclaw.attempt`)
+- `openclaw.queue.wait_ms` (histogram, attrs: `openclaw.lane`)
+- `openclaw.session.state` (counter, attrs: `openclaw.state`, `openclaw.reason`)
+- `openclaw.session.stuck` (counter, attrs: `openclaw.state`)
+- `openclaw.session.stuck_age_ms` (histogram, attrs: `openclaw.state`)
+- `openclaw.run.attempt` (counter, attrs: `openclaw.attempt`)
 
 ### Spans exportados (nombres + atributos clave)
 
@@ -313,32 +351,32 @@ Colas + sesiones:
 
 ### Muestreo y vaciado
 
-- Muestreo de trazas: `diagnostics.otel.sampleRate` (0.0–1.0, solo spans raíz).
-- Intervalo de exportación de métricas: `diagnostics.otel.flushIntervalMs` (mínimo 1000ms).
+- Muestreo de trazas: `diagnostics.otel.sampleRate` (0.0–1.0, solo intervalos raíz).
+- Intervalo de exportación de métricas: `diagnostics.otel.flushIntervalMs` (mínimo 1000 ms).
 
 ### Notas del protocolo
 
-- Los endpoints OTLP/HTTP se pueden configurar mediante `diagnostics.otel.endpoint` o
+- Los puntos finales OTLP/HTTP se pueden establecer mediante `diagnostics.otel.endpoint` o
   `OTEL_EXPORTER_OTLP_ENDPOINT`.
-- Si el extremo ya contiene `/v1/traces` o `/v1/metrics`, se usa tal cual.
-- Si el extremo ya contiene `/v1/logs`, se usa tal cual para los registros.
+- Si el punto final ya contiene `/v1/traces` o `/v1/metrics`, se usa tal cual.
+- Si el punto final ya contiene `/v1/logs`, se usa tal cual para los registros.
 - `diagnostics.otel.logs` habilita la exportación de registros OTLP para la salida del registrador principal.
 
-### Comportamiento de la exportación de registros
+### Comportamiento de exportación de registros
 
 - Los registros OTLP utilizan los mismos registros estructurados escritos en `logging.file`.
 - Respeta `logging.level` (nivel de registro de archivo). La redacción de la consola **no** se aplica
   a los registros OTLP.
-- Las instalaciones de gran volumen deberían preferir el muestreo/filtrado del recopilador OTLP.
+- Las instalaciones de alto volumen deben preferir el muestreo/filtrado del recolector OTLP.
 
 ## Consejos de solución de problemas
 
 - **¿No se puede alcanzar la puerta de enlace?** Ejecute primero `openclaw doctor`.
-- **¿Registros vacíos?** Compruebe que la puerta de enlace se esté ejecutando y escribiendo en la ruta de archivo
+- **¿Registros vacíos?** Verifique que la puerta de enlace se esté ejecutando y escribiendo en la ruta del archivo
   en `logging.file`.
-- **¿Necesita más detalles?** Establezca `logging.level` en `debug` o `trace` y vuelva a intentarlo.
+- **¿Necesita más detalles?** Establezca `logging.level` en `debug` o `trace` y vuelva a intentar.
 
 ## Relacionado
 
-- [Internals of Gateway Logging](/en/gateway/logging) — Estilos de registro WS, prefijos de subsistema y captura de consola
-- [Diagnóstico](/en/gateway/configuration-reference#diagnostics) — Exportación de OpenTelemetry y configuración de rastreo de caché
+- [Aspectos internos del registro de la puerta de enlace](/en/gateway/logging) — estilos de registro WS, prefijos de subsistema y captura de consola
+- [Diagnóstico](/en/gateway/configuration-reference#diagnostics) — exportación de OpenTelemetry y configuración de seguimiento de caché

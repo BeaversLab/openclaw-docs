@@ -12,20 +12,25 @@ Estado: experimental. Esta integración automatiza una **cuenta personal de Zalo
 
 > **Advertencia:** Esta es una integración no oficial y puede resultar en la suspensión o prohibición de la cuenta. Úsela bajo su propia responsabilidad.
 
-## Plugin requerido
+## Complemento incluido
 
-Zalo Personal se distribuye como un complemento y no se incluye con la instalación central.
+Zalo Personal se distribuye como un complemento incluido en las versiones actuales de OpenClaw, por lo que las versiones empaquetadas normales no necesitan una instalación separada.
 
-- Instalar mediante CLI: `openclaw plugins install @openclaw/zalouser`
-- O desde una checkout de fuente: `openclaw plugins install ./path/to/local/zalouser-plugin`
-- Detalles: [Plugins](/en/tools/plugin)
+Si está en una versión anterior o en una instalación personalizada que excluye Zalo Personal,
+instálelo manualmente:
 
-No se requiere ningún binario CLI externo `zca`/`openzca`.
+- Instalar a través de CLI: `openclaw plugins install @openclaw/zalouser`
+- O desde una fuente de descarga: `openclaw plugins install ./path/to/local/zalouser-plugin`
+- Detalles: [Complementos](/en/tools/plugin)
+
+No se requiere ningún binario externo `zca`/`openzca` de CLI.
 
 ## Configuración rápida (principiante)
 
-1. Instale el complemento (ver más arriba).
-2. Inicio de sesión (código QR, en la máquina Gateway):
+1. Asegúrese de que el complemento Zalo Personal esté disponible.
+   - Las versiones empaquetadas actuales de OpenClaw ya lo incluyen.
+   - Las instalaciones antiguas/personalizadas pueden añadirlo manualmente con los comandos anteriores.
+2. Inicio de sesión (QR, en la máquina Gateway):
    - `openclaw channels login --channel zalouser`
    - Escanee el código QR con la aplicación móvil Zalo.
 3. Habilite el canal:
@@ -42,18 +47,18 @@ No se requiere ningún binario CLI externo `zca`/`openzca`.
 ```
 
 4. Reinicie el Gateway (o termine la configuración).
-5. El acceso a DM se predetermina al emparejamiento; apruebe el código de emparejamiento en el primer contacto.
+5. El acceso a DM predeterminado es el emparejamiento; apruebe el código de emparejamiento en el primer contacto.
 
 ## Qué es
 
-- Se ejecuta completamente en el proceso mediante `zca-js`.
-- Utiliza detectores de eventos nativos para recibir mensajes entrantes.
+- Se ejecuta completamente en proceso a través de `zca-js`.
+- Utiliza escuchadores de eventos nativos para recibir mensajes entrantes.
 - Envía respuestas directamente a través de la API de JS (texto/medios/enlace).
 - Diseñado para casos de uso de "cuenta personal" donde la API de Zalo Bot no está disponible.
 
 ## Nomenclatura
 
-El ID del canal es `zalouser` para dejar claro que esto automatiza una **cuenta de usuario personal de Zalo** (no oficial). Mantenemos `zalo` reservado para una posible integración oficial futura de la API de Zalo.
+El ID del canal es `zalouser` para dejar explícito que esto automatiza una **cuenta de usuario personal de Zalo** (no oficial). Mantenemos `zalo` reservado para una posible integración oficial futura de la API de Zalo.
 
 ## Buscar ID (directorio)
 
@@ -67,34 +72,34 @@ openclaw directory groups list --channel zalouser --query "work"
 
 ## Límites
 
-- El texto saliente se divide en fragmentos de ~2000 caracteres (límites del cliente Zalo).
-- La transmisión se bloquea de forma predeterminada.
+- El texto de salida se divide en fragmentos de unos 2000 caracteres (límites del cliente Zalo).
+- La transmisión (streaming) está bloqueada de forma predeterminada.
 
 ## Control de acceso (DMs)
 
-`channels.zalouser.dmPolicy` admite: `pairing | allowlist | open | disabled` (predeterminado: `pairing`).
+`channels.zalouser.dmPolicy` soporta: `pairing | allowlist | open | disabled` (predeterminado: `pairing`).
 
-`channels.zalouser.allowFrom` acepta IDs o nombres de usuario. Durante la configuración, los nombres se resuelven a IDs utilizando la búsqueda de contactos en proceso del complemento.
+`channels.zalouser.allowFrom` acepta ID de usuario o nombres. Durante la configuración, los nombres se resuelven en ID utilizando la búsqueda de contactos en proceso del complemento.
 
-Aprobar vía:
+Aprobar a través de:
 
 - `openclaw pairing list zalouser`
 - `openclaw pairing approve zalouser <code>`
 
-## Acceso al grupo (opcional)
+## Acceso a grupos (opcional)
 
 - Predeterminado: `channels.zalouser.groupPolicy = "open"` (grupos permitidos). Use `channels.defaults.groupPolicy` para anular el valor predeterminado cuando no esté configurado.
 - Restringir a una lista de permitidos con:
   - `channels.zalouser.groupPolicy = "allowlist"`
-  - `channels.zalouser.groups` (las claves deben ser IDs de grupo estables; los nombres se resuelven a IDs al iniciar cuando sea posible)
+  - `channels.zalouser.groups` (las claves deben ser IDs de grupo estables; los nombres se resuelven a IDs al inicio cuando sea posible)
   - `channels.zalouser.groupAllowFrom` (controla qué remitentes en los grupos permitidos pueden activar el bot)
 - Bloquear todos los grupos: `channels.zalouser.groupPolicy = "disabled"`.
 - El asistente de configuración puede solicitar listas de permitidos de grupos.
-- Al iniciar, OpenClaw resuelve los nombres de grupo/usuario en las listas de permitidos a IDs y registra la asignación.
-- La coincidencia de lista de permitidos de grupos es solo por ID de forma predeterminada. Los nombres no resueltos se ignoran para la autenticación a menos que `channels.zalouser.dangerouslyAllowNameMatching: true` esté habilitado.
+- Al iniciarse, OpenClaw resuelve los nombres de grupo/usuario en las listas de permitidos a IDs y registra el mapeo.
+- La coincidencia de la lista de permitidos de grupos es solo de ID por defecto. Los nombres no resueltos se ignoran para la autenticación a menos que `channels.zalouser.dangerouslyAllowNameMatching: true` esté habilitado.
 - `channels.zalouser.dangerouslyAllowNameMatching: true` es un modo de compatibilidad de emergencia que vuelve a habilitar la coincidencia de nombres de grupo mutables.
-- Si `groupAllowFrom` no está configurado, el tiempo de ejecución recurre a `allowFrom` para las verificaciones de remitente de grupo.
-- Las verificaciones de remitente se aplican tanto a los mensajes de grupo normales como a los comandos de control (por ejemplo `/new`, `/reset`).
+- Si `groupAllowFrom` no está establecido, el tiempo de ejecución recurre a `allowFrom` para las verificaciones de remitentes de grupo.
+- Las verificaciones de remitentes se aplican tanto a los mensajes de grupo normales como a los comandos de control (por ejemplo `/new`, `/reset`).
 
 Ejemplo:
 
@@ -113,14 +118,14 @@ Ejemplo:
 }
 ```
 
-### Filtrado de mención de grupo
+### Filtrado de respuestas a grupos
 
 - `channels.zalouser.groups.<group>.requireMention` controla si las respuestas del grupo requieren una mención.
-- Orden de resolución: id/nombre exacto del grupo -> slug de grupo normalizado -> `*` -> predeterminado (`true`).
+- Orden de resolución: id/nombre de grupo exacto -> slug de grupo normalizado -> `*` -> por defecto (`true`).
 - Esto se aplica tanto a los grupos en la lista de permitidos como al modo de grupo abierto.
-- Los comandos de control autorizados (por ejemplo `/new`) pueden omitir el filtrado de mención.
+- Los comandos de control autorizados (por ejemplo `/new`) pueden omitir el filtrado de menciones.
 - Cuando se omite un mensaje de grupo porque se requiere una mención, OpenClaw lo almacena como historial de grupo pendiente y lo incluye en el siguiente mensaje de grupo procesado.
-- El límite de historial de grupos es `messages.groupChat.historyLimit` por defecto (alternativa `50`). Puede anularlo por cuenta con `channels.zalouser.historyLimit`.
+- El límite del historial de grupos es `messages.groupChat.historyLimit` por defecto (alternativo `50`). Puedes anularlo por cuenta con `channels.zalouser.historyLimit`.
 
 Ejemplo:
 
@@ -162,28 +167,28 @@ Las cuentas se asignan a perfiles `zalouser` en el estado de OpenClaw. Ejemplo:
 - La acción de reacción al mensaje `react` es compatible con `zalouser` en las acciones del canal.
   - Use `remove: true` para eliminar un emoji de reacción específico de un mensaje.
   - Semántica de reacciones: [Reacciones](/en/tools/reactions)
-- Para los mensajes entrantes que incluyen metadatos de eventos, OpenClaw envía confirmaciones de entregado + visto (mejor esfuerzo posible).
+- Para los mensajes entrantes que incluyen metadatos de eventos, OpenClaw envía acuses de entrega y vistos (mejor esfuerzo).
 
 ## Solución de problemas
 
-**El inicio de sesión no se mantiene:**
+**El inicio de sesión no persiste:**
 
 - `openclaw channels status --probe`
 - Volver a iniciar sesión: `openclaw channels logout --channel zalouser && openclaw channels login --channel zalouser`
 
-**La lista de permitidos/nombre de grupo no se resolvió:**
+**No se resolvió la lista de permitidos/nombre de grupo:**
 
 - Use IDs numéricos en `allowFrom`/`groupAllowFrom`/`groups`, o nombres exactos de amigos/grupos.
 
-**Actualizado desde la configuración antigua basada en CLI:**
+**Actualizado desde la configuración anterior basada en CLI:**
 
-- Elimine cualquier supuesto antiguo del proceso externo `zca`.
-- El canal ahora se ejecuta completamente en OpenClaw sin binarios de CLI externos.
+- Elimine cualquier suposición antigua sobre el proceso externo `zca`.
+- El canal ahora se ejecuta completamente en OpenClaw sin binarios CLI externos.
 
 ## Relacionado
 
 - [Resumen de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento de DM
-- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento de MD
+- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
 - [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento

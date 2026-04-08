@@ -9,9 +9,9 @@ status: active
 
 在多代理程式設定中，每個代理程式都可以覆寫全域沙箱和工具政策。本頁涵蓋各代理程式的設定、優先順序規則與範例。
 
-- **沙箱後端與模式**：請參閱 [沙箱隔離](/en/gateway/sandboxing)。
-- **除錯被阻擋的工具**：請參閱 [沙箱 vs 工具政策 vs 提升權限](/en/gateway/sandbox-vs-tool-policy-vs-elevated) 與 `openclaw sandbox explain`。
-- **提升權限執行**：請參閱 [提升權限模式](/en/tools/elevated)。
+- **Sandbox 後端與模式**：請參閱 [Sandboxing](/en/gateway/sandboxing)。
+- **偵錯遭封鎖的工具**：請參閱 [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) 與 `openclaw sandbox explain`。
+- **提權執行**：請參閱 [Elevated Mode](/en/tools/elevated)。
 
 身分驗證是以代理程式為單位：每個代理程式會從其位於
 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 的 `agentDir` 驗證儲存庫中讀取。
@@ -200,14 +200,14 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 7. **沙箱工具原則** (`tools.sandbox.tools` 或 `agents.list[].tools.sandbox.tools`)
 8. **子代理程式工具原則** (`tools.subagents.tools`，如適用)
 
-每個層級都可以進一步限制工具，但無法恢復先前層級中已拒絕的工具。
+每個層級都可以進一步限制工具，但無法恢復先前層級中被拒絕的工具。
 如果設定了 `agents.list[].tools.sandbox.tools`，它將取代該代理程式的 `tools.sandbox.tools`。
 如果設定了 `agents.list[].tools.profile`，它將覆寫該代理程式的 `tools.profile`。
-提供者工具金鑰接受 `provider` (例如 `google-antigravity`) 或 `provider/model` (例如 `openai/gpt-5.2`)。
+提供者工具金鑰接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.4`）。
 
-工具原則支援 `group:*` 簡寫，可擴展為多個工具。完整列表請參閱 [工具群組](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
+工具原則支援 `group:*` 簡寫，這些簡寫會展開為多個工具。完整列表請參閱 [Tool groups](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
 
-各代理程式的提升權限覆寫 (`agents.list[].tools.elevated`) 可以針對特定代理程式進一步限制提升權限執行。詳細資訊請參閱 [提升模式](/en/tools/elevated)。
+各代理程式的提權覆寫（`agents.list[].tools.elevated`）可以進一步限制特定代理程式的提權執行。詳細資訊請參閱 [Elevated Mode](/en/tools/elevated)。
 
 ---
 
@@ -293,20 +293,29 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 }
 ```
 
+此設定檔中的 `sessions_history` 仍然會傳回有邊界、經過清理的召回
+檢視，而不是原始的記錄傾印。助理召回會移除思考標籤、
+`<relevant-memories>` 鷹架、純文字工具呼叫 XML 載荷
+（包括 `<tool_call>...</tool_call>`、
+`<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、
+`<function_calls>...</function_calls>` 以及被截斷的工具呼叫區塊）、
+降級的工具呼叫鷹架、外洩的 ASCII/全形模型控制
+權杖，以及在編輯/截斷前的格式錯誤 MiniMax 工具呼叫 XML。
+
 ---
 
-## 常見陷阱：「non-main」
+## 常見陷阱："non-main"
 
-`agents.defaults.sandbox.mode: "non-main"` 是基於 `session.mainKey` (預設為 `"main"`)，
+`agents.defaults.sandbox.mode: "non-main"` 是基於 `session.mainKey`（預設為 `"main"`），
 而非代理程式 ID。群組/頻道工作階段總是會獲得自己的金鑰，因此
-它們會被視為 non-main 並將受到沙箱限制。如果您希望代理程式永遠
-不要使用沙箱，請設定 `agents.list[].sandbox.mode: "off"`。
+它們被視為非主要，並將會被沙箱化。如果您希望代理程式永不
+進行沙箱化，請設定 `agents.list[].sandbox.mode: "off"`。
 
 ---
 
 ## 測試
 
-設定多代理程式沙箱和工具後：
+設定多代理程式沙箱與工具後：
 
 1. **檢查代理程式解析：**
 
@@ -321,8 +330,8 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
    ```
 
 3. **測試工具限制：**
-   - 傳送需要受限工具的訊息
-   - 驗證代理程式無法使用被拒絕的工具
+   - 傳送一條需要受限工具的訊息
+   - 驗證代理無法使用被拒絕的工具
 
 4. **監控日誌：**
 
@@ -332,31 +341,31 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ---
 
-## 疑難排解
+## 故障排除
 
-### 代理程式未受沙箱保護，儘管有 `mode: "all"`
+### 儘管有 `mode: "all"`，代理仍未被放入沙盒
 
 - 檢查是否有全域 `agents.defaults.sandbox.mode` 覆蓋了它
-- 代理程式特定設定具有優先權，因此請設定 `agents.list[].sandbox.mode: "all"`
+- 代理專用設定優先順序較高，因此請設定 `agents.list[].sandbox.mode: "all"`
 
-### 儘管有拒絕列表，工具仍然可用
+### 儘管有拒絕清單，工具仍可使用
 
-- 檢查工具過濾順序：全域 → 代理程式 → 沙箱 → 子代理程式
-- 每個層級只能進一步限制，無法恢復權限
+- 檢查工具篩選順序：全域 → 代理 → 沙盒 → 子代理
+- 每個層級只能進一步限制，不能重新授權
 - 使用日誌驗證：`[tools] filtering tools for agent:${agentId}`
 
-### 容器未依代理程式隔離
+### 容器未按代理隔離
 
-- 在代理程式特定的沙箱設定中設定 `scope: "agent"`
-- 預設值為 `"session"`，這會為每個階段建立一個容器
+- 在代理專用沙盒設定中設定 `scope: "agent"`
+- 預設值是 `"session"`，它會為每個階段建立一個容器
 
 ---
 
 ## 另請參閱
 
-- [Sandboxing](/en/gateway/sandboxing) -- 完整的沙箱參考（模式、範圍、後端、映像檔）
-- [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- 除錯「為什麼這被阻擋？」
-- [Elevated Mode](/en/tools/elevated)
-- [Multi-Agent Routing](/en/concepts/multi-agent)
-- [Sandbox Configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
-- [Session Management](/en/concepts/session)
+- [沙盒機制](/en/gateway/sandboxing) -- 完整的沙盒參考（模式、範圍、後端、映像檔）
+- [沙盒 vs. 工具政策 vs. 提昇權限](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- 偵錯「為什麼這個被阻擋？」
+- [提昇權限模式](/en/tools/elevated)
+- [多代理路由](/en/concepts/multi-agent)
+- [沙盒設定](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- [階段管理](/en/concepts/session)

@@ -106,7 +106,15 @@ openclaw gateway --port 19001
 ## 快速檢查
 
 ```bash
+openclaw --profile main gateway status --deep
+openclaw --profile rescue gateway status --deep
+openclaw --profile rescue gateway probe
 openclaw --profile main status
 openclaw --profile rescue status
 openclaw --profile rescue browser status
 ```
+
+解讀：
+
+- `gateway status --deep` 有助於發現舊安裝中遺留的 launchd/systemd/schtasks 服務。
+- 僅當您刻意執行多個獨立的閘道時，才預期會出現 `gateway probe` 警告文字，例如 `multiple reachable gateways detected`。

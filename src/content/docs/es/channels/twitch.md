@@ -5,43 +5,50 @@ read_when:
 title: "Twitch"
 ---
 
-# Twitch (plugin)
+# Twitch
 
 Soporte de chat de Twitch mediante conexión IRC. OpenClaw se conecta como usuario de Twitch (cuenta de bot) para recibir y enviar mensajes en los canales.
 
-## Plugin requerido
+## Complemento incluido
 
-Twitch se distribuye como un plugin y no se incluye con la instalación principal.
+Twitch se distribuye como un complemento incluido en las versiones actuales de OpenClaw, por lo que las
+compilaciones empaquetadas normales no necesitan una instalación separada.
 
-Instalar mediante CLI (registro npm):
+Si está en una compilación antigua o una instalación personalizada que excluye Twitch, instálelo
+manualmente:
+
+Instalar a través de CLI (registro npm):
 
 ```bash
 openclaw plugins install @openclaw/twitch
 ```
 
-Repositorio local (al ejecutar desde un repositorio git):
+Registro local (cuando se ejecuta desde un repositorio git):
 
 ```bash
 openclaw plugins install ./path/to/local/twitch-plugin
 ```
 
-Detalles: [Plugins](/en/tools/plugin)
+Detalles: [Complementos](/en/tools/plugin)
 
 ## Configuración rápida (principiante)
 
-1. Cree una cuenta de Twitch dedicada para el bot (o use una cuenta existente).
-2. Generar credenciales: [Twitch Token Generator](https://twitchtokengenerator.com/)
+1. Asegúrese de que el complemento Twitch esté disponible.
+   - Las versiones empaquetadas actuales de OpenClaw ya lo incluyen.
+   - Las instalaciones antiguas/personalizadas pueden añadirlo manualmente con los comandos anteriores.
+2. Cree una cuenta de Twitch dedicada para el bot (o use una cuenta existente).
+3. Genere credenciales: [Generador de tokens de Twitch](https://twitchtokengenerator.com/)
    - Seleccione **Bot Token**
-   - Verifique que los alcances `chat:read` y `chat:write` estén seleccionados
+   - Verifique que los ámbitos `chat:read` y `chat:write` estén seleccionados
    - Copie el **Client ID** y el **Access Token**
-3. Encuentra tu ID de usuario de Twitch: [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)
-4. Configure el token:
-   - Entorno: `OPENCLAW_TWITCH_ACCESS_TOKEN=...` (solo cuenta predeterminada)
-   - O configuración: `channels.twitch.accessToken`
-   - Si se establecen ambos, la configuración tiene prioridad (el respaldo del entorno es solo para la cuenta predeterminada).
-5. Inicie la puerta de enlace.
+4. Encuentra tu ID de usuario de Twitch: [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)
+5. Configura el token:
+   - Env: `OPENCLAW_TWITCH_ACCESS_TOKEN=...` (solo cuenta predeterminada)
+   - O config: `channels.twitch.accessToken`
+   - Si ambos están configurados, la configuración tiene prioridad (la alternativa de env es solo para la cuenta predeterminada).
+6. Inicia la puerta de enlace.
 
-**⚠️ Importante:** Agregue control de acceso (`allowFrom` o `allowedRoles`) para evitar que usuarios no autorizados activen el bot. `requireMention` por defecto es `true`.
+**⚠️ Importante:** Añade control de acceso (`allowFrom` o `allowedRoles`) para evitar que usuarios no autorizados activen el bot. `requireMention` por defecto es `true`.
 
 Configuración mínima:
 
@@ -62,10 +69,10 @@ Configuración mínima:
 
 ## Qué es
 
-- Un canal de Twitch propiedad de la Puerta de enlace.
-- Enrutamiento determinista: las respuestas siempre regresan a Twitch.
+- Un canal de Twitch propiedad de la puerta de enlace.
+- Enrutamiento determinista: las respuestas siempre vuelven a Twitch.
 - Cada cuenta se asigna a una clave de sesión aislada `agent:<agentId>:twitch:<accountName>`.
-- `username` es la cuenta del bot (quien se autentica), `channel` es a qué sala de chat unirse.
+- `username` es la cuenta del bot (quién se autentica), `channel` es a qué sala de chat unirse.
 
 ## Configuración (detallada)
 
@@ -73,9 +80,9 @@ Configuración mínima:
 
 Usa [Twitch Token Generator](https://twitchtokengenerator.com/):
 
-- Seleccione **Bot Token**
-- Verifique que los alcances `chat:read` y `chat:write` estén seleccionados
-- Copie el **Client ID** y el **Access Token**
+- Selecciona **Bot Token**
+- Verifica que los alcances `chat:read` y `chat:write` estén seleccionados
+- Copia el **Client ID** y el **Access Token**
 
 No es necesario registrar manualmente la aplicación. Los tokens caducan después de varias horas.
 
@@ -103,7 +110,7 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 }
 ```
 
-Si se establecen tanto el entorno como la configuración, la configuración tiene prioridad.
+Si se establecen tanto las variables de entorno como la configuración, la configuración tiene prioridad.
 
 ### Control de acceso (recomendado)
 
@@ -117,19 +124,19 @@ Si se establecen tanto el entorno como la configuración, la configuración tien
 }
 ```
 
-Prefiera `allowFrom` para una lista blanca estricta. Use `allowedRoles` en su lugar si desea un acceso basado en roles.
+Prefiere `allowFrom` para una lista blanca estricta. Usa `allowedRoles` en su lugar si deseas un control de acceso basado en roles.
 
 **Roles disponibles:** `"moderator"`, `"owner"`, `"vip"`, `"subscriber"`, `"all"`.
 
-**¿Por qué ID de usuario?** Los nombres de usuario pueden cambiar, lo que permite la suplantación de identidad. Los ID de usuario son permanentes.
+**¿Por qué IDs de usuario?** Los nombres de usuario pueden cambiar, lo que permite la suplantación de identidad. Los IDs de usuario son permanentes.
 
 Encuentra tu ID de usuario de Twitch: [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/) (Convierte tu nombre de usuario de Twitch a ID)
 
 ## Actualización de token (opcional)
 
-Los tokens de [Twitch Token Generator](https://twitchtokengenerator.com/) no se pueden actualizar automáticamente: regenéralos cuando expiren.
+Los tokens de [Twitch Token Generator](https://twitchtokengenerator.com/) no se pueden actualizar automáticamente - regenerar cuando expiren.
 
-Para la actualización automática de tokens, crea tu propia aplicación de Twitch en [Twitch Developer Console](https://dev.twitch.tv/console) y agrégala a la configuración:
+Para la actualización automática de tokens, crea tu propia aplicación de Twitch en [Twitch Developer Console](https://dev.twitch.tv/console) y añádela a la configuración:
 
 ```json5
 {
@@ -146,7 +153,7 @@ El bot actualiza automáticamente los tokens antes de que caduquen y registra lo
 
 ## Soporte multicuenta
 
-Use `channels.twitch.accounts` con tokens por cuenta. Consulte [`gateway/configuration`](/en/gateway/configuration) para ver el patrón compartido.
+Usa `channels.twitch.accounts` con tokens por cuenta. Consulta [`gateway/configuration`](/en/gateway/configuration) para el patrón compartido.
 
 Ejemplo (una cuenta de bot en dos canales):
 
@@ -193,7 +200,7 @@ Ejemplo (una cuenta de bot en dos canales):
 }
 ```
 
-### Lista blanca por ID de usuario (más seguro)
+### Lista de permitidos por ID de usuario (más seguro)
 
 ```json5
 {
@@ -209,10 +216,10 @@ Ejemplo (una cuenta de bot en dos canales):
 }
 ```
 
-### Acceso basado en roles (alternativa)
+### Acceso basado en roles (alternativo)
 
-`allowFrom` es una lista blanca estricta. Cuando se establece, solo se permiten esos ID de usuario.
-Si desea un acceso basado en roles, deje `allowFrom` sin establecer y configure `allowedRoles` en su lugar:
+`allowFrom` es una lista de permitidos estricta. Cuando se establece, solo se permiten esos IDs de usuario.
+Si deseas un control de acceso basado en roles, deja `allowFrom` sin establecer y configura `allowedRoles` en su lugar:
 
 ```json5
 {
@@ -248,7 +255,7 @@ De forma predeterminada, `requireMention` es `true`. Para desactivar y responder
 
 ## Solución de problemas
 
-Primero, ejecute comandos de diagnóstico:
+Primero, ejecuta comandos de diagnóstico:
 
 ```bash
 openclaw doctor
@@ -257,22 +264,22 @@ openclaw channels status --probe
 
 ### El bot no responde a los mensajes
 
-**Verificar el control de acceso:** Asegúrese de que su ID de usuario esté en `allowFrom`, o elimine temporalmente
-`allowFrom` y establezca `allowedRoles: ["all"]` para probar.
+**Verifica el control de acceso:** Asegúrate de que tu ID de usuario esté en `allowFrom`, o elimina temporalmente
+`allowFrom` y establece `allowedRoles: ["all"]` para probar.
 
-**Verificar que el bot esté en el canal:** El bot debe unirse al canal especificado en `channel`.
+**Verifica que el bot esté en el canal:** El bot debe unirse al canal especificado en `channel`.
 
-### Problemas de token
+### Problemas con el token
 
 **"Error al conectar" o errores de autenticación:**
 
 - Verifique que `accessToken` sea el valor del token de acceso OAuth (generalmente comienza con el prefijo `oauth:`)
-- Verifique que el token tenga los ámbitos `chat:read` y `chat:write`
+- Compruebe que el token tenga los alcances `chat:read` y `chat:write`
 - Si utiliza la actualización del token, verifique que `clientSecret` y `refreshToken` estén configurados
 
 ### La actualización del token no funciona
 
-**Revise los registros para ver eventos de actualización:**
+**Revise los registros en busca de eventos de actualización:**
 
 ```
 Using env token source for mybot
@@ -286,11 +293,11 @@ Si ve "token refresh disabled (no refresh token)":
 
 ## Configuración
 
-**Configuración de cuenta:**
+**Configuración de la cuenta:**
 
 - `username` - Nombre de usuario del bot
 - `accessToken` - Token de acceso OAuth con `chat:read` y `chat:write`
-- `clientId` - ID de cliente de Twitch (del Generador de tokens o su aplicación)
+- `clientId` - ID de cliente de Twitch (del generador de tokens o de su aplicación)
 - `channel` - Canal al que unirse (obligatorio)
 - `enabled` - Habilitar esta cuenta (predeterminado: `true`)
 - `clientSecret` - Opcional: Para la actualización automática del token
@@ -345,7 +352,7 @@ Ejemplo completo:
 }
 ```
 
-## Acciones de herramientas
+## Acciones de herramienta
 
 El agente puede llamar a `twitch` con la acción:
 
@@ -365,23 +372,23 @@ Ejemplo:
 
 ## Seguridad y operaciones
 
-- **Trata los tokens como contraseñas** - Nunca guardes tokens en git
-- **Usa la actualización automática de tokens** para bots de larga duración
-- **Usa listas de permitidos de ID de usuario** en lugar de nombres de usuario para el control de acceso
-- **Supervisa los registros** para ver eventos de actualización de tokens y el estado de la conexión
-- **Limita el alcance de los tokens al mínimo** - Solo solicita `chat:read` y `chat:write`
-- **Si te bloqueas**: Reinicia la pasarela después de confirmar que ningún otro proceso es dueño de la sesión
+- **Trate los tokens como contraseñas** - Nunca confíe tokens a git
+- **Use la actualización automática de tokens** para bots de larga duración
+- **Use listas de permitidos de ID de usuario** en lugar de nombres de usuario para el control de acceso
+- **Monitoree los registros** para eventos de actualización de tokens y estado de conexión
+- **Dé el alcance mínimo a los tokens** - Solo solicite `chat:read` y `chat:write`
+- **Si estás atascado**: Reinicia la pasarela después de confirmar que ningún otro proceso es dueño de la sesión
 
 ## Límites
 
 - **500 caracteres** por mensaje (divididos automáticamente en los límites de las palabras)
-- Se elimina el formato Markdown antes de dividir
-- Sin limitación de velocidad (usa los límites de velocidad integrados de Twitch)
+- Se elimina el formato Markdown antes de la división
+- Sin límite de velocidad (utiliza los límites de velocidad integrados de Twitch)
 
 ## Relacionado
 
 - [Descripción general de canales](/en/channels) — todos los canales compatibles
 - [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento por MD
 - [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento

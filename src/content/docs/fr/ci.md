@@ -12,46 +12,55 @@ La CI s'exécute à chaque push vers `main` et chaque pull request. Elle utilise
 
 ## Aperçu des tâches
 
-| Tâche             | Objectif                                                                                                                       | Quand elle s'exécute                                                                |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
-| `preflight`       | Portée de la documentation, portée des modifications, analyse des clés, audit du workflow, audit des dépendances de production | Toujours ; audit basé sur node uniquement pour les modifications hors documentation |
-| `docs-scope`      | Détecter les modifications uniquement dans la documentation                                                                    | Toujours                                                                            |
-| `changed-scope`   | Détecter les zones modifiées (node/macos/android/windows)                                                                      | Modifications hors documentation                                                    |
-| `check`           | Types TypeScript, lint, formatage                                                                                              | Hors documentation, modifications node                                              |
-| `check-docs`      | Lint Markdown + vérification des liens brisés                                                                                  | Documentation modifiée                                                              |
-| `secrets`         | Détecter les secrets divulgués                                                                                                 | Toujours                                                                            |
-| `build-artifacts` | Construire dist une fois, partager avec `release-check`                                                                        | Pushs vers `main`, modifications node                                               |
-| `release-check`   | Valider le contenu du paquet npm                                                                                               | Pushs vers `main` après construction                                                |
-| `checks`          | Tests Node + vérification du protocole sur les PRs ; compatibilité Bun sur les pushs                                           | Hors documentation, modifications node                                              |
-| `compat-node22`   | Compatibilité minimale avec le runtime Node pris en charge                                                                     | Pushs vers `main`, modifications node                                               |
-| `checks-windows`  | Tests spécifiques à Windows                                                                                                    | Hors documentation, modifications pertinentes pour windows                          |
-| `macos`           | Lint/build/test Swift + tests TS                                                                                               | PRs avec des modifications macos                                                    |
-| `android`         | Build Gradle + tests                                                                                                           | Hors documentation, modifications android                                           |
+| Tâche                    | Objectif                                                                                                                               | Quand elle s'exécute                                  |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `preflight`              | Détecter les modifications de la documentation uniquement, les étendues modifiées, les extensions modifiées et générer le manifeste CI | Toujours sur les pushs et les PR non brouillons       |
+| `security-fast`          | Détection de clé privée, audit de workflow via `zizmor`, audit des dépendances de production                                           | Toujours sur les pushs et les PR non brouillons       |
+| `build-artifacts`        | Construire `dist/` et l'interface de contrôle une fois, télécharger les artefacts réutilisables pour les travaux en aval               | Modifications pertinentes pour Node                   |
+| `checks-fast-core`       | Voies de correction Linux rapides telles que les vérifications bundled/plugin-contract/protocol                                        | Modifications pertinentes pour Node                   |
+| `checks-fast-extensions` | Agréger les voies des shards d'extension une fois `checks-fast-extensions-shard` terminé                                               | Modifications pertinentes pour Node                   |
+| `extension-fast`         | Tests ciblés uniquement pour les plugins groupés modifiés                                                                              | Lorsque des modifications d'extension sont détectées  |
+| `check`                  | Portail local principal dans CI : `pnpm check` plus `pnpm build:strict-smoke`                                                          | Modifications pertinentes pour Node                   |
+| `check-additional`       | Gardes d'architecture et de limites plus le harnais de régression de surveillance de la passerelle                                     | Modifications pertinentes pour Node                   |
+| `build-smoke`            | Tests de fumée de CLI intégrée et test de fumée de la mémoire de démarrage                                                             | Modifications pertinentes pour Node                   |
+| `checks`                 | Voies Node Linux plus lourdes : tests complets, tests de channel et compatibilité Node 22 uniquement sur push                          | Modifications pertinentes pour Node                   |
+| `check-docs`             | Vérifications de formatage, de lint et de liens brisés de la documentation                                                             | Documentation modifiée                                |
+| `skills-python`          | Ruff + pytest pour les compétences basées sur Python                                                                                   | Modifications pertinentes pour les compétences Python |
+| `checks-windows`         | Voies de test spécifiques à Windows                                                                                                    | Modifications pertinentes pour Windows                |
+| `macos-node`             | Voie de test TypeScript macOS utilisant les artefacts construits partagés                                                              | Modifications pertinentes pour macOS                  |
+| `macos-swift`            | Lint, build et tests Swift pour l'application macOS                                                                                    | Modifications pertinentes pour macOS                  |
+| `android`                | Matrice de build et de test Android                                                                                                    | Modifications pertinentes pour Android                |
 
 ## Ordre d'échec rapide
 
-Les tâches sont ordonnées pour que les vérifications peu coûteuses échouent avant l'exécution des plus coûteuses :
+Les tâches sont ordonnées de sorte que les vérifications bon marché échouent avant que celles qui sont coûteuses ne s'exécutent :
 
-1. `docs-scope` + `changed-scope` + `check` + `secrets` (parallèle, barrières peu coûteuses d'abord)
-2. PRs : `checks` (test Node Linux divisé en 2 partitions), `checks-windows`, `macos`, `android`
-3. Pushs vers `main` : `build-artifacts` + `release-check` + compatibilité Bun + `compat-node22`
+1. `preflight` détermine quelles voies existent du tout. La logique `docs-scope` et `changed-scope` sont des étapes à l'intérieur de ce travail, pas des travaux autonomes.
+2. `security-fast`, `check`, `check-additional`, `check-docs` et `skills-python` échouent rapidement sans attendre les travaux plus lourds d'artefacts et de matrice de plateformes.
+3. `build-artifacts` chevauche les voies rapides Linux afin que les consommateurs en aval puissent démarrer dès que la construction partagée est prête.
+4. Les voies plus lourdes de plateforme et d'exécution se déploient ensuite : `checks-fast-core`, `checks-fast-extensions`, `extension-fast`, `checks`, `checks-windows`, `macos-node`, `macos-swift` et `android`.
 
 La logique de portée réside dans `scripts/ci-changed-scope.mjs` et est couverte par des tests unitaires dans `src/scripts/ci-changed-scope.test.ts`.
-Le même module de portée partagé pilote également le workflow séparé `install-smoke` via une porte `changed-smoke` plus étroite, donc les tests de fumée Docker/install ne s'exécutent que pour les modifications liées à l'installation, au packaging et aux conteneurs.
+Le workflow séparé `install-smoke` réutilise le même script de portée via son propre travail `preflight`. Il calcule `run_install_smoke` à partir du signal changed-smoke plus étroit, de sorte que la fumée Docker/install ne s'exécute que pour les modifications liées à l'installation, à l'empaquetage et aux conteneurs.
+
+Sur les poussées (pushes), la matrice `checks` ajoute la voie `compat-node22` push-only. Sur les demandes de tirage (pull requests), cette voie est ignorée et la matrice reste concentrée sur les voies de test/channel normales.
 
 ## Runners
 
-| Runner                           | Jobs                                                        |
-| -------------------------------- | ----------------------------------------------------------- |
-| `blacksmith-16vcpu-ubuntu-2404`  | La plupart des jobs Linux, y compris la détection de portée |
-| `blacksmith-32vcpu-windows-2025` | `checks-windows`                                            |
-| `macos-latest`                   | `macos`, `ios`                                              |
+| Runner                           | Travaux                                                                                                                 |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `blacksmith-16vcpu-ubuntu-2404`  | `preflight`, `security-fast`, `build-artifacts`, vérifications Linux, vérifications docs, compétences Python, `android` |
+| `blacksmith-32vcpu-windows-2025` | `checks-windows`                                                                                                        |
+| `macos-latest`                   | `macos-node`, `macos-swift`                                                                                             |
 
 ## Équivalents locaux
 
 ```bash
 pnpm check          # types + lint + format
+pnpm build:strict-smoke
+pnpm test:gateway:watch-regression
 pnpm test           # vitest tests
+pnpm test:channels
 pnpm check:docs     # docs format + lint + broken links
-pnpm release:check  # validate npm pack
+pnpm build          # build dist when CI artifact/build-smoke lanes matter
 ```

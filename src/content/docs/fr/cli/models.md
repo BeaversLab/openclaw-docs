@@ -13,7 +13,7 @@ Découverte, analyse et configuration de modèles (modèle par défaut, replis, 
 Connexes :
 
 - Fournisseurs + modèles : [Modèles](/en/providers/models)
-- Configuration de l'authentification du fournisseur : [Getting started](/en/start/getting-started)
+- Configuration de l'auth du fournisseur : [Getting started](/en/start/getting-started)
 
 ## Commandes courantes
 
@@ -24,20 +24,33 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` affiche les valeurs par défaut résolues/les secours ainsi qu'un aperçu de l'authentification.
-Lorsque des instantanés d'utilisation de provider sont disponibles, la section de statut OAuth/token comprend
-les en-têtes d'utilisation du provider.
-Ajoutez `--probe` pour exécuter des sondages d'authentification en direct sur chaque profil provider configuré.
-Les sondages sont de vraies requêtes (peuvent consommer des tokens et déclencher des limites de taux).
-Utilisez `--agent <id>` pour inspecter l'état model/auth d'un agent configuré. Si omis,
-la commande utilise `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR` si défini, sinon l'agent par défaut configuré.
+`openclaw models status` affiche les valeurs par défaut résolues/les replis ainsi qu'un aperçu de l'auth.
+Lorsque des instantanés d'utilisation du fournisseur sont disponibles, la section de statut OAuth/clé API inclut
+les fenêtres d'utilisation du fournisseur et des instantanés de quota.
+Fournisseurs de fenêtres d'utilisation actuels : Anthropic, GitHub Copilot, Gemini CLI, OpenAI
+Codex, MiniMax, Xiaomi et z.ai. L'auth d'utilisation provient de hooks spécifiques au fournisseur
+lorsqu'ils sont disponibles ; sinon OpenClaw revient à la correspondance des identifiants OAuth/clé API
+à partir des profils d'auth, de l'env ou de la config.
+Dans la sortie `--json`, `auth.providers` est l'aperçu du fournisseur conscient de l'env/config/store,
+tandis que `auth.oauth` est uniquement la santé du profil du magasin d'auth.
+Ajoutez `--probe` pour exécuter des sondes d'auth en direct sur chaque profil de fournisseur configuré.
+Les sondes sont de vraies requêtes (peuvent consommer des jetons et déclencher des limitations de débit).
+Utilisez `--agent <id>` pour inspecter l'état du modèle/auth d'un agent configuré. S'il est omis,
+la commande utilise `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR` si défini, sinon l'agent
+défaut configuré.
+Les lignes de sonde peuvent provenir des profils d'auth, des identifiants d'env ou de `models.json`.
 
 Remarques :
 
 - `models set <model-or-alias>` accepte `provider/model` ou un alias.
-- Les références de modèle sont analysées en divisant sur la **première** `/`. Si l'ID du modèle inclut `/` (style OpenRouter), incluez le préfixe du fournisseur (exemple : `openrouter/moonshotai/kimi-k2`).
-- Si vous omettez le fournisseur, OpenClaw traite l'entrée comme un alias ou un modèle pour le **fournisseur par défaut** (ne fonctionne que s'il n'y a pas de `/` dans l'ID du modèle).
-- `models status` peut afficher `marker(<value>)` dans la sortie d'authentification pour les espaces réservés non secrets (par exemple `OPENAI_API_KEY`, `secretref-managed`, `minimax-oauth`, `oauth:chutes`, `ollama-local`) au lieu de les masquer comme des secrets.
+- Les références de modèle sont analysées en séparant sur le **premier** `/`. Si l'ID du modèle inclut `/` (style OpenRouter), incluez le préfixe du fournisseur (exemple : `openrouter/moonshotai/kimi-k2`).
+- Si vous omettez le fournisseur, OpenClaw résout d'abord l'entrée comme un alias, puis
+  comme une correspondance unique de fournisseur configuré pour cet ID de modèle exact, et seulement ensuite
+  revient au fournisseur par défaut configuré avec un avertissement de dépréciation.
+  Si ce fournisseur n'expose plus le modèle par défaut configuré, OpenClaw
+  revient au premier fournisseur/modèle configuré au lieu d'afficher un
+  défaut de fournisseur obsolète.
+- `models status` peut afficher `marker(<value>)` dans la sortie d'auth pour les espaces réservés non secrets (par exemple `OPENAI_API_KEY`, `secretref-managed`, `minimax-oauth`, `oauth:chutes`, `ollama-local`) au lieu de les masquer comme des secrets.
 
 ### `models status`
 
@@ -45,45 +58,77 @@ Options :
 
 - `--json`
 - `--plain`
-- `--check` (exit 1=expired/missing, 2=expiring)
-- `--probe` (live probe of configured auth profiles)
-- `--probe-provider <name>` (probe one provider)
-- `--probe-profile <id>` (repeat or comma-separated profile ids)
+- `--check` (exit 1=expiré/manquant, 2=expirant)
+- `--probe` (sonde en direct des profils d'auth configurés)
+- `--probe-provider <name>` (sonder un provider)
+- `--probe-profile <id>` (répéter ou ids de profil séparés par des virgules)
 - `--probe-timeout <ms>`
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
-- `--agent <id>` (configured agent id; overrides `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`)
+- `--agent <id>` (id d'agent configuré ; remplace `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`)
 
-## Alias + solutions de repli
+Catégories de statut de sonde :
+
+- `ok`
+- `auth`
+- `rate_limit`
+- `billing`
+- `timeout`
+- `format`
+- `unknown`
+- `no_model`
+
+Cas de détails/codes de raison de sonde à attendre :
+
+- `excluded_by_auth_order` : un profil stocké existe, mais l'exclusion explicite
+  `auth.order.<provider>` l'a omis, donc la sonde signale l'exclusion au lieu de
+  l'essayer.
+- `missing_credential`, `invalid_expires`, `expired`, `unresolved_ref` :
+  le profil est présent mais n'est pas éligible/résolvable.
+- `no_model` : l'auth du provider existe, mais OpenClaw n'a pas pu résoudre un candidat de model sondeable
+  pour ce provider.
+
+## Alias + replis
 
 ```bash
 openclaw models aliases list
 openclaw models fallbacks list
 ```
 
-## Profils d'authentification
+## Profils d'auth
 
 ```bash
 openclaw models auth add
 openclaw models auth login --provider <id>
-openclaw models auth setup-token
+openclaw models auth setup-token --provider <id>
 openclaw models auth paste-token
 ```
 
-`models auth login` runs a provider plugin’s auth flow (OAuth/API key). Use
-`openclaw plugins list` to see which providers are installed.
+`models auth add` est l'assistant d'auth interactif. Il peut lancer un flux d'auth de provider
+(OAuth/clé API) ou vous guider vers le collage manuel de jeton, selon le
+provider que vous choisissez.
 
-Examples:
+`models auth login` exécute le flux d'auth d'un plugin de provider (OAuth/clé API). Utilisez
+`openclaw plugins list` pour voir quels providers sont installés.
+
+Exemples :
 
 ```bash
-openclaw models auth login --provider anthropic --method cli --set-default
 openclaw models auth login --provider openai-codex --set-default
 ```
 
-Notes:
+Notes :
 
-- `login --provider anthropic --method cli --set-default` reuses a local Claude
-  CLI login and rewrites the main Anthropic default-model path to `claude-cli/...`.
-- `setup-token` invite à entrer une valeur de setup-token (générez-la avec `claude setup-token` sur n'importe quelle machine).
-- `paste-token` accepte une chaîne de token générée ailleurs ou par automation.
-- Remarque sur la politique Anthropic : la prise en charge des setup-tokens est une compatibilité technique. Anthropic a bloqué par le passé certaines utilisations d'abonnement en dehors de Claude Code, vérifiez donc les conditions actuelles avant une utilisation large.
+- `setup-token` et `paste-token` restent des commandes de token génériques pour les providers
+  qui exposent des méthodes d'auth par token.
+- `setup-token` nécessite un TTY interactif et exécute la méthode token-auth
+  du provider (par défaut, la méthode `setup-token` de ce provider lorsqu'il en expose
+  une).
+- `paste-token` accepte une chaîne de token générée ailleurs ou par automatisation.
+- `paste-token` nécessite `--provider`, demande la valeur du token et l'écrit
+  dans l'id de profil par défaut `<provider>:manual`, sauf si vous passez
+  `--profile-id`.
+- `paste-token --expires-in <duration>` stocke une expiration absolue du token à partir d'une
+  durée relative telle que `365d` ou `12h`.
+- Note de facturation Anthropic : pour Anthropic dans OpenClaw, la distinction pratique se fait entre **clé API** ou **abonnement Claude avec Extra Usage**. Anthropic a informé les utilisateurs OpenClaw le **4 avril 2026 à 12 h 00 PT / 20 h 00 BST** que le chemin de connexion Claude **OpenClaw** compte comme une utilisation par un tiers et nécessite **Extra Usage** facturé séparément de l'abonnement. Nos reproductions locales montrent également que la chaîne de prompt identifiant OpenClaw ne se reproduit pas sur le chemin SDK Anthropic + clé API.
+- Anthropic `setup-token` / `paste-token` sont de nouveau disponibles en tant que chemin OpenClaw héritémanuel. Utilisez-les en sachant que Anthropic a indiqué aux utilisateurs OpenClaw que ce chemin nécessite **Extra Usage**.

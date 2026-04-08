@@ -107,7 +107,7 @@ Session lifecycle：
 - `/settings`
 - `/exit`
 
-其他 Gateway 斜線指令（例如 `/context`）會轉發到 Gateway 並顯示為系統輸出。請參閱 [Slash commands](/en/tools/slash-commands)。
+其他 Gateway 斜線指令（例如 `/context`）會被轉發到 Gateway 並顯示為系統輸出。請參閱 [斜線指令](/en/tools/slash-commands)。
 
 ## 本機 Shell 指令
 
@@ -148,28 +148,29 @@ Session lifecycle：
 - `--session <key>`：Session 金鑰（預設：`main`，若範圍為全域則為 `global`）
 - `--deliver`：將 Assistant 回覆傳送至提供者（預設關閉）
 - `--thinking <level>`：覆寫傳送的思考層級
+- `--message <text>`：連線後傳送初始訊息
 - `--timeout-ms <ms>`：Agent 逾時時間（毫秒，預設為 `agents.defaults.timeoutSeconds`）
+- `--history-limit <n>`：要載入的歷史紀錄項目數（預設為 `200`）
 
-注意：當您設定 `--url` 時，TUI 將不會回退至組態或環境認證。
-請明確傳遞 `--token` 或 `--password`。缺少明確認證將視為錯誤。
+注意：當您設定 `--url` 時，TUI 將不會回退至設定檔或環境變數中的認證資訊。
+請明確傳遞 `--token` 或 `--password`。缺少明確的認證資訊會導致錯誤。
 
 ## 疑難排解
 
 傳送訊息後沒有輸出：
 
-- 在 TUI 中執行 `/status` 以確認 Gateway 已連線並處於閒置/忙碌狀態。
+- 在 TUI 中執行 `/status` 以確認 Gateway 是否已連線以及處於閒置還是忙碌狀態。
 - 檢查 Gateway 日誌：`openclaw logs --follow`。
 - 確認 Agent 能夠執行：`openclaw status` 和 `openclaw models status`。
-- 如果您預期在聊天頻道中有訊息，請啟用傳送（`/deliver on` 或 `--deliver`）。
-- `--history-limit <n>`：要載入的歷史記錄筆數（預設 200）
+- 如果您預期在聊天頻道中收到訊息，請啟用傳送功能（`/deliver on` 或 `--deliver`）。
 
 ## 連線疑難排解
 
-- `disconnected`：請確保 Gateway 正在運行，並且您的 `--url/--token/--password` 是正確的。
+- `disconnected`：請確保 Gateway 正在執行，且您的 `--url/--token/--password` 是正確的。
 - 選擇器中沒有 Agent：請檢查 `openclaw agents list` 和您的路由設定。
-- 空的 Session 選擇器：您可能處於全域範圍，或尚未建立任何 Session。
+- 空的 Session 選擇器：您可能處於全域範圍，或者尚未建立任何 Session。
 
-## 相關
+## 相關內容
 
-- [Control UI](/en/web/control-ui) — 基於網路的控制介面
-- [CLI Reference](/en/cli) — 完整的 CLI 指令參考
+- [Control UI](/en/web/control-ui) — 基於網頁的控制介面
+- [CLI 參考資料](/en/cli) — 完整的 CLI 指令參考資料

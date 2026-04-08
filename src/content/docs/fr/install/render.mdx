@@ -67,7 +67,9 @@ Fonctionnalités clés du Blueprint utilisées :
 | Starter   | Jamais                    | 1GB+           | Usage personnel, petites équipes |
 | Standard+ | Jamais                    | 1GB+           | Production, canaux multiples     |
 
-Le Blueprint est par défaut `starter`. Pour utiliser le niveau gratuit, modifiez `plan: free` dans le `render.yaml` de votre fork (mais notez : l'absence de disque persistant signifie que la configuration est réinitialisée à chaque déploiement).
+Le Blueprint est défini par défaut sur `starter`. Pour utiliser la formule gratuite, modifiez `plan: free` dans
+le `render.yaml` de votre fork (mais notez : l'absence de disque persistant signifie que l'état de OpenClaw
+est réinitialisé à chaque déploiement).
 
 ## Après le déploiement
 
@@ -75,7 +77,10 @@ Le Blueprint est par défaut `starter`. Pour utiliser le niveau gratuit, modifie
 
 Le tableau de bord web est disponible à `https://<your-service>.onrender.com/`.
 
-Connectez-vous en utilisant la valeur `OPENCLAW_GATEWAY_TOKEN` qui a été générée automatiquement lors du déploiement (trouvez-la dans **Tableau de bord → votre service → Environnement**).
+Connectez-vous en utilisant le secret partagé configuré. Ce modèle de déploiement génère automatiquement
+`OPENCLAW_GATEWAY_TOKEN` (trouvez-le dans **Tableau de bord → votre service →
+Environnement**) ; si vous le remplacez par une authentification par mot de passe, utilisez ce mot de passe
+à la place.
 
 ## Fonctionnalités du tableau de bord Render
 
@@ -117,13 +122,15 @@ Pour OpenClaw, la mise à l'échelle verticale est généralement suffisante. La
 
 ## Sauvegardes et migration
 
-Exportez votre configuration et votre espace de travail à tout moment en utilisant l'accès au shell dans le Render Dashboard :
+Exportez votre état, votre configuration, vos profils d'authentification et votre espace de travail à tout moment en utilisant
+l'accès shell dans le tableau de bord Render :
 
 ```bash
 openclaw backup create
 ```
 
-Cela crée une archive de sauvegarde portable que vous pouvez restaurer sur n'importe quel hôte OpenClaw. Consultez [Sauvegarde](/en/cli/backup) pour plus de détails.
+Cela crée une archive de sauvegarde portable avec l'état de OpenClaw ainsi que tout espace de travail
+configuré. Voir [Sauvegarde](/en/cli/backup) pour plus de détails.
 
 ## Dépannage
 
@@ -140,8 +147,8 @@ Les services de l'offre gratuite s'arrêtent après 15 minutes d'inactivité. La
 
 ### Perte de données après redéploiement
 
-Cela arrive sur la version gratuite (pas de disque persistant). Passez à un plan payant, ou
-exportez régulièrement votre configuration via `openclaw backup create` dans le shell Render.
+Cela se produit sur la formule gratuite (pas de disque persistant). Passez à une formule payante, ou
+exportez régulièrement une sauvegarde complète via `openclaw backup create` dans le shell Render.
 
 ### Échecs des contrôles de santé
 

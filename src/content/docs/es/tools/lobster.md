@@ -10,7 +10,7 @@ read_when:
 
 Lobster es un shell de flujo de trabajo que permite a OpenClaw ejecutar secuencias de herramientas de varios pasos como una única operación determinista con puntos de control de aprobación explícitos.
 
-Lobster es una capa de autorización por encima del trabajo en segundo plano desacoplado. Si te encuentras con una terminología antigua de `ClawFlow`, trátala como una nomenclatura histórica sobre la misma área de tiempo de ejecución orientada a tareas; la superficie de CLI actual orientada al operador es [`openclaw tasks`](/en/automation/tasks).
+Lobster es una capa de autorización por encima del trabajo en segundo plano desacoplado. Para la orquestación del flujo por encima de las tareas individuales, consulte [Task Flow](/en/automation/taskflow) (`openclaw tasks flow`). Para el libro mayor de actividad de tareas, consulte [`openclaw tasks`](/en/automation/tasks).
 
 ## Gancho
 
@@ -36,8 +36,8 @@ Lobster es intencionalmente pequeño. El objetivo no es "un nuevo lenguaje", es 
 
 ## Cómo funciona
 
-OpenClaw lanza la CLI local de `lobster` en **modo de herramienta** y analiza un sobre JSON desde stdout.
-Si la canalización se pausa para aprobación, la herramienta devuelve un `resumeToken` para que puedas continuar más tarde.
+OpenClaw ejecuta los flujos de trabajo de Lobster **en proceso** utilizando un ejecutor integrado. No se genera ningún subproceso CLI externo; el motor de flujo de trabajo se ejecuta dentro del proceso de puerta de enlace y devuelve directamente un sobre JSON.
+Si la canalización se pausa para su aprobación, la herramienta devuelve un `resumeToken` para que pueda continuar más tarde.
 
 ## Patrón: pequeña CLI + tuberías JSON + aprobaciones
 
@@ -78,9 +78,9 @@ gog.gmail.search --query 'newer_than:1d' \
 
 ## Pasos de LLM solo JSON (llm-task)
 
-Para los flujos de trabajo que necesitan un **paso de LLM estructurado**, habilita la herramienta de complemento opcional
-`llm-task` y llámala desde Lobster. Esto mantiene el flujo de trabajo
-determinista mientras te permite clasificar/resumir/borrar con un modelo.
+Para los flujos de trabajo que necesitan un **paso LLM estructurado**, habilite la herramienta de complemento opcional
+`llm-task` y llámela desde Lobster. Esto mantiene el flujo de trabajo
+determinista mientras aún le permite clasificar/resumir/borrador con un modelo.
 
 Habilita la herramienta:
 
@@ -125,7 +125,7 @@ Consulte [LLM Task](/en/tools/llm-task) para obtener detalles y opciones de conf
 
 ## Archivos de flujo de trabajo (.lobster)
 
-Lobster puede ejecutar archivos de flujo de trabajo YAML/JSON con los campos `name`, `args`, `steps`, `env`, `condition` y `approval`. En las llamadas a herramientas de OpenClaw, establece `pipeline` en la ruta del archivo.
+Lobster puede ejecutar archivos de flujo de trabajo YAML/JSON con campos `name`, `args`, `steps`, `env`, `condition` y `approval`. En las llamadas a herramientas de OpenClaw, establezca `pipeline` en la ruta del archivo.
 
 ```yaml
 name: inbox-triage
@@ -155,11 +155,13 @@ Notas:
 
 ## Instalar Lobster
 
-Instale la CLI de Lobster en el **mismo host** que ejecuta OpenClaw Gateway (consulte el [repositorio de Lobster](https://github.com/openclaw/lobster)) y asegúrese de que `lobster` esté en `PATH`.
+Los flujos de trabajo de Lobster incluidos se ejecutan en proceso; no se requiere un binario `lobster` separado. El ejecutor integrado se envía con el complemento Lobster.
+
+Si necesita la CLI independiente de Lobster para el desarrollo o canalizaciones externas, instálela desde el [repositorio Lobster](https://github.com/openclaw/lobster) y asegúrese de que `lobster` esté en `PATH`.
 
 ## Habilitar la herramienta
 
-Lobster es una herramienta de complemento **opcional** (no habilitada por defecto).
+Lobster es una herramienta de complemento **opcional** (no habilitada de forma predeterminada).
 
 Recomendado (aditivo, seguro):
 
@@ -188,13 +190,13 @@ O por agente:
 }
 ```
 
-Evite usar `tools.allow: ["lobster"]` a menos que tenga la intención de ejecutarse en modo de lista de permitidos restrictiva.
+Evite usar `tools.allow: ["lobster"]` a menos que tenga la intención de ejecutar en modo de lista de permisos restrictiva.
 
-Nota: las listas de permitidos son optativas para complementos opcionales. Si su lista de permitidos solo nombra
-herramientas de complemento (como `lobster`), OpenClaw mantiene las herramientas principales habilitadas. Para restringir las herramientas
-principales, incluya también las herramientas principales o grupos que desee en la lista de permitidos.
+Nota: las listas permitidas son de participación opcional para los complementos opcionales. Si su lista permitida solo nombra
+herramientas de complementos (como `lobster`), OpenClaw mantiene las herramientas principales habilitadas. Para restringir las herramientas
+principales, incluya también las herramientas principales o los grupos que desee en la lista permitida.
 
-## Ejemplo: triaje de correo electrónico
+## Ejemplo: Triaje de correo electrónico
 
 Sin Lobster:
 
@@ -251,7 +253,7 @@ Un flujo de trabajo. Determinista. Seguro.
 
 ### `run`
 
-Ejecuta una canalización en modo de herramienta.
+Ejecutar una canalización en modo de herramienta.
 
 ```json
 {
@@ -263,7 +265,7 @@ Ejecuta una canalización en modo de herramienta.
 }
 ```
 
-Ejecuta un archivo de flujo de trabajo con argumentos:
+Ejecutar un archivo de flujo de trabajo con argumentos:
 
 ```json
 {
@@ -275,7 +277,7 @@ Ejecuta un archivo de flujo de trabajo con argumentos:
 
 ### `resume`
 
-Continúa un flujo de trabajo detenido después de la aprobación.
+Continuar un flujo de trabajo detenido después de la aprobación.
 
 ```json
 {
@@ -287,9 +289,9 @@ Continúa un flujo de trabajo detenido después de la aprobación.
 
 ### Entradas opcionales
 
-- `cwd`: Directorio de trabajo relativo para la canalización (debe mantenerse dentro del directorio de trabajo del proceso actual).
-- `timeoutMs`: Matar el subproceso si excede esta duración (predeterminado: 20000).
-- `maxStdoutBytes`: Matar el subproceso si la salida estándar excede este tamaño (predeterminado: 512000).
+- `cwd`: Directorio de trabajo relativo para la canalización (debe permanecer dentro del directorio de trabajo de la puerta de enlace).
+- `timeoutMs`: Abortar el flujo de trabajo si excede esta duración (predeterminado: 20000).
+- `maxStdoutBytes`: Abortar el flujo de trabajo si la salida excede este tamaño (predeterminado: 512000).
 - `argsJson`: Cadena JSON pasada a `lobster run --args-json` (solo archivos de flujo de trabajo).
 
 ## Sobre de salida
@@ -300,49 +302,49 @@ Lobster devuelve un sobre JSON con uno de tres estados:
 - `needs_approval` → en pausa; se requiere `requiresApproval.resumeToken` para reanudar
 - `cancelled` → denegado explícitamente o cancelado
 
-La herramienta expone el sobre tanto en `content` (JSON bonito) como en `details` (objeto sin procesar).
+La herramienta presenta el sobre tanto en `content` (JSON bonito) como en `details` (objeto sin formato).
 
 ## Aprobaciones
 
-Si `requiresApproval` está presente, inspeccione el mensaje y decida:
+Si está presente `requiresApproval`, inspeccione el mensaje y decida:
 
 - `approve: true` → reanudar y continuar los efectos secundarios
 - `approve: false` → cancelar y finalizar el flujo de trabajo
 
-Use `approve --preview-from-stdin --limit N` para adjuntar una vista previa JSON a las solicitudes de aprobación sin necesidad de pegamento personalizado de jq/heredoc. Los tokens de reanudación ahora son compactos: Lobster almacena el estado de reanudación del flujo de trabajo en su directorio de estado y devuelve una pequeña clave de token.
+Use `approve --preview-from-stdin --limit N` para adjuntar una vista previa JSON a las solicitudes de aprobación sin pegamento personalizado de jq/heredoc. Los tokens de reanudación ahora son compactos: Lobster almacena el estado de reanudación del flujo de trabajo en su directorio de estado y devuelve una pequeña clave de token.
 
 ## OpenProse
 
-OpenProse se combina bien con Lobster: use `/prose` para orquestar la preparación multiagente, luego ejecute una canalización Lobster para aprobaciones deterministas. Si un programa Prose necesita Lobster, permita la herramienta `lobster` para subagentes a través de `tools.subagents.tools`. Consulte [OpenProse](/en/prose).
+OpenProse funciona bien con Lobster: usa `/prose` para orquestar la preparación multiagente, luego ejecuta una canalización de Lobster para aprobaciones deterministas. Si un programa Prose necesita Lobster, permite la herramienta `lobster` para subagentes mediante `tools.subagents.tools`. Consulta [OpenProse](/en/prose).
 
 ## Seguridad
 
-- **Solo subproceso local** — sin llamadas a la red desde el complemento en sí.
-- **Sin secretos** — Lobster no gestiona OAuth; llama a herramientas de OpenClaw que sí lo hacen.
-- **Consciente del entorno limitado (sandbox)** — deshabilitado cuando el contexto de la herramienta está en un entorno limitado.
-- **Endurecido** — nombre de ejecutable fijo (`lobster`) en `PATH`; se aplican tiempos de espera y límites de salida.
+- **Solo local en proceso** — los flujos de trabajo se ejecutan dentro del proceso de la puerta de enlace; no hay llamadas de red desde el complemento en sí.
+- **Sin secretos** — Lobster no gestiona OAuth; llama a las herramientas de OpenClaw que sí lo hacen.
+- **Consciente del espacio aislado (sandbox)** — deshabilitado cuando el contexto de la herramienta está en espacio aislado.
+- **Endurecido** — tiempos de espera y límites de salida aplicados por el ejecutor integrado.
 
 ## Solución de problemas
 
-- **`lobster subprocess timed out`** → aumenta `timeoutMs` o divide una canalización larga.
-- **`lobster output exceeded maxStdoutBytes`** → aumenta `maxStdoutBytes` o reduce el tamaño de la salida.
-- **`lobster returned invalid JSON`** → asegúrate de que la canalización se ejecute en modo herramienta e imprima solo JSON.
-- **`lobster failed (code …)`** → ejecuta la misma canalización en una terminal para inspeccionar stderr.
+- **`lobster timed out`** → aumenta `timeoutMs` o divide una canalización larga.
+- **`lobster output exceeded maxStdoutBytes`** → aumenta `maxStdoutBytes` o reduce el tamaño de salida.
+- **`lobster returned invalid JSON`** → asegúrate de que la canalización se ejecute en modo de herramienta e imprima solo JSON.
+- **`lobster failed`** → verifica los registros de la puerta de enlace para obtener los detalles del error del ejecutor integrado.
 
 ## Más información
 
-- [Plugins](/en/tools/plugin)
-- [Creación de herramientas de complementos](/en/plugins/building-plugins#registering-agent-tools)
+- [Complementos](/en/tools/plugin)
+- [Creación de herramientas de complemento](/en/plugins/building-plugins#registering-agent-tools)
 
 ## Estudio de caso: flujos de trabajo de la comunidad
 
-Un ejemplo público: una CLI de “segundo cerebro” + canalizaciones de Lobster que gestionan tres bóvedas de Markdown (personal, pareja, compartida). La CLI emite JSON para estadísticas, listados de bandeja de entrada y escaneos de elementos obsoletos; Lobster encadena esos comandos en flujos de trabajo como `weekly-review`, `inbox-triage`, `memory-consolidation` y `shared-task-sync`, cada uno con puertas de aprobación. La IA maneja el juicio (categorización) cuando está disponible y recurre a reglas deterministas cuando no.
+Un ejemplo público: una CLI de “segundo cerebro” + canalizaciones de Lobster que gestionan tres bóvedas de Markdown (personal, de pareja, compartida). La CLI emite JSON para estadísticas, listas de bandeja de entrada y escaneos obsoletos; Lobster encadena esos comandos en flujos de trabajo como `weekly-review`, `inbox-triage`, `memory-consolidation` y `shared-task-sync`, cada uno con puertas de aprobación. La IA maneja el juicio (categorización) cuando está disponible y recurre a reglas deterministas cuando no.
 
 - Hilo: [https://x.com/plattenschieber/status/2014508656335770033](https://x.com/plattenschieber/status/2014508656335770033)
 - Repositorio: [https://github.com/bloomedai/brain-cli](https://github.com/bloomedai/brain-cli)
 
 ## Relacionado
 
-- [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) — programación de flujos de trabajo de Lobster
-- [Información general de automatización](/en/automation) — todos los mecanismos de automatización
-- [Información general de herramientas](/en/tools) — todas las herramientas de agente disponibles
+- [Automatización y tareas](/en/automation) — programación de flujos de trabajo de Lobster
+- [Descripción general de automatización](/en/automation) — todos los mecanismos de automatización
+- [Descripción general de herramientas](/en/tools) — todas las herramientas de agente disponibles

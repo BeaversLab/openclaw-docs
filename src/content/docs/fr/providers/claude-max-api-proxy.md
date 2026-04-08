@@ -90,17 +90,26 @@ Vous pouvez pointer OpenClaw vers le proxy en tant que point de terminaison pers
 }
 ```
 
-## Modèles disponibles
+This path uses the same proxy-style OpenAI-compatible route as other custom
+`/v1` backends:
 
-| ID du modèle      | Correspond à    |
+- native OpenAI-only request shaping does not apply
+- no `service_tier`, no Responses `store`, no prompt-cache hints, and no
+  OpenAI reasoning-compat payload shaping
+- hidden OpenClaw attribution headers (`originator`, `version`, `User-Agent`)
+  are not injected on the proxy URL
+
+## Modèles Disponibles
+
+| ID du Modèle      | Correspond à    |
 | ----------------- | --------------- |
 | `claude-opus-4`   | Claude Opus 4   |
 | `claude-sonnet-4` | Claude Sonnet 4 |
 | `claude-haiku-4`  | Claude Haiku 4  |
 
-## Démarrage automatique sur macOS
+## Démarrage Automatique sur macOS
 
-Créez un LaunchAgent pour exécuter le proxy automatiquement :
+Create a LaunchAgent to run the proxy automatically:
 
 ```bash
 cat > ~/Library/LaunchAgents/com.claude-max-api.plist << 'EOF'
@@ -139,12 +148,12 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 ## Notes
 
-- C'est un **outil communautaire**, non officiellement pris en charge par Anthropic ou OpenClaw
-- Nécessite un abonnement Claude Max/Pro actif avec Claude Code CLI authentifié
-- Le proxy s'exécute localement et n'envoie aucune donnée à des serveurs tiers
-- Les réponses en streaming sont entièrement prises en charge
+- This is a **community tool**, not officially supported by Anthropic or OpenClaw
+- Requires an active Claude Max/Pro subscription with Claude Code CLI authenticated
+- The proxy runs locally and does not send data to any third-party servers
+- Streaming responses are fully supported
 
-## Voir aussi
+## Voir Aussi
 
-- [Fournisseur Anthropic](/en/providers/anthropic) - Intégration native OpenClaw avec le jeton de configuration Claude ou les clés API
-- [Fournisseur OpenAI](/en/providers/openai) - Pour les abonnements OpenAI/Codex
+- [Anthropic provider](/en/providers/anthropic) - Native OpenClaw integration with Claude CLI or API keys
+- [OpenAI provider](/en/providers/openai) - For OpenAI/Codex subscriptions

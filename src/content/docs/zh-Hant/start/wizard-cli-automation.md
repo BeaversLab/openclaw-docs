@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw CLI 的指令碼入門與代理程式設定"
+summary: "OpenClaw CLI 的腳本化入門和代理程式設定"
 read_when:
   - You are automating onboarding in scripts or CI
   - You need non-interactive examples for specific providers
@@ -11,7 +11,7 @@ sidebarTitle: "CLI 自動化"
 
 使用 `--non-interactive` 來自動化 `openclaw onboard`。
 
-<Note>`--json` 並不意味著非互動模式。在腳本中使用 `--non-interactive`（以及 `--workspace`）。</Note>
+<Note>`--json` 並不意味著非互動模式。在腳本中請使用 `--non-interactive` (以及 `--workspace`)。</Note>
 
 ## 基準非互動範例
 
@@ -28,13 +28,13 @@ openclaw onboard --non-interactive \
   --skip-skills
 ```
 
-新增 `--json` 以取得機器可讀取的摘要。
+新增 `--json` 以取得機器可讀的摘要。
 
-使用 `--secret-input-mode ref` 將環境變數參照儲存在 auth profiles 中，而非純文字值。
-在入門流程中，可以在環境變數參照與已設定的提供者參照（`file` 或 `exec`）之間進行互動式選擇。
+使用 `--secret-input-mode ref` 將環境變數支援的參照儲存在驗證設定檔中，而非明文值。
+在入門流程中，可選擇性地在環境變數參照與已設定的供應商參照 (`file` 或 `exec`) 之間進行互動式選擇。
 
-在非互動式 `ref` 模式下，提供者環境變數必須在程序環境中設定。
-現在，如果傳入內聯金鑰旗標但沒有對應的環境變數，將會快速失敗。
+在非互動式 `ref` 模式下，必須在程序環境中設定供應商環境變數。
+若在沒有對應環境變數的情況下傳遞內聯金鑰旗標，現在會快速失敗。
 
 範例：
 
@@ -49,6 +49,16 @@ openclaw onboard --non-interactive \
 ## 特定提供者的範例
 
 <AccordionGroup>
+  <Accordion title="Anthropic API key example">
+    ```bash
+    openclaw onboard --non-interactive \
+      --mode local \
+      --auth-choice apiKey \
+      --anthropic-api-key "$ANTHROPIC_API_KEY" \
+      --gateway-port 18789 \
+      --gateway-bind loopback
+    ```
+  </Accordion>
   <Accordion title="Gemini example">
     ```bash
     openclaw onboard --non-interactive \
@@ -143,7 +153,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="自訂提供者範例">
+  <Accordion title="自訂供應商範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -180,34 +190,39 @@ openclaw onboard --non-interactive \
   </Accordion>
 </AccordionGroup>
 
+Anthropic setup-token 再次作為舊版/手動入門路徑提供。
+使用它的前提是 Anthropic 告知 OpenClaw 使用者，OpenClaw
+Claude 登入路徑需要 **額外使用量**。對於生產環境，建議使用
+Anthropic API 金鑰。
+
 ## 新增另一個代理程式
 
-使用 `openclaw agents add <name>` 建立具有獨立工作區、
-階段作業和 auth profiles 的個別代理程式。若不帶 `--workspace` 執行，則會啟動精靈。
+使用 `openclaw agents add <name>` 建立一個具有獨立工作區、
+階段作業和驗證設定檔的獨立代理程式。若沒有執行 `--workspace`，則會啟動精靈。
 
 ```bash
 openclaw agents add work \
   --workspace ~/.openclaw/workspace-work \
-  --model openai/gpt-5.2 \
+  --model openai/gpt-5.4 \
   --bind whatsapp:biz \
   --non-interactive \
   --json
 ```
 
-設定項目：
+設定內容：
 
 - `agents.list[].name`
 - `agents.list[].workspace`
 - `agents.list[].agentDir`
 
-備註：
+注意：
 
 - 預設工作區遵循 `~/.openclaw/workspace-<agentId>`。
 - 新增 `bindings` 以路由傳入訊息（精靈可以執行此操作）。
-- 非互動式旗標：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
+- 非互動式標誌：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
 
 ## 相關文件
 
-- 上架中心：[上架 (CLI)](/en/start/wizard)
+- 入建中心：[入建 (CLI)](/en/start/wizard)
 - 完整參考：[CLI 設定參考](/en/start/wizard-cli-reference)
 - 指令參考：[`openclaw onboard`](/en/cli/onboard)

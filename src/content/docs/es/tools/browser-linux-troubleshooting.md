@@ -135,4 +135,11 @@ Opciones de solución:
 Notas:
 
 - `user` es solo para el host. Para servidores Linux, contenedores o hosts remotos, prefiera los perfiles CDP.
-- Los perfiles `openclaw` locales asignan automáticamente `cdpPort`/`cdpUrl`; solo configure esos para CDP remoto.
+- Los perfiles `user` / otros perfiles `existing-session` mantienen los límites actuales de Chrome MCP:
+  acciones controladas por referencias, enlaces de carga de un solo archivo, sin anulaciones de tiempo de espera de diálogo, sin
+  `wait --load networkidle`, y sin `responsebody`, exportación de PDF, interceptación de
+  descargas o acciones por lotes.
+- Los perfiles locales `openclaw` asignan automáticamente `cdpPort`/`cdpUrl`; solo establezca esos para CDP remoto.
+- Los perfiles CDP remotos aceptan `http://`, `https://`, `ws://` y `wss://`.
+  Use HTTP(S) para el descubrimiento de `/json/version`, o WS(S) cuando su servicio de
+  navegador le proporcione una URL de socket directa de DevTools.

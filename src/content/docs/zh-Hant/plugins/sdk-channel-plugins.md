@@ -12,7 +12,7 @@ read_when:
 
 本指南將逐步引導您建構一個將 OpenClaw 連結至訊息平台的頻道外掛程式。完成後，您將擁有一個具備私訊安全性、配對、回覆串接以及傳出訊息功能的運作中頻道。
 
-<Info>如果您之前從未建構過任何 OpenClaw 外掛程式，請先閱讀 [Getting Started](/en/plugins/building-plugins) 以了解基本的套件 結構與 manifest 設定。</Info>
+<Info>如果您之前尚未建立任何 OpenClaw 外掛程式，請先閱讀 [Getting Started](/en/plugins/building-plugins) 以了解基本套件 結構和清單設定。</Info>
 
 ## 頻道外掛程式的運作方式
 
@@ -52,21 +52,97 @@ ID、明確的 `baseConversationId` 以及任何 `parentConversationCandidates` 
 大多數頻道外掛程式不需要特定於審核的程式碼。
 
 - 核心擁有同聊天 `/approve`、共用的審核按鈕 payload 以及泛型備援傳遞。
-- 僅當審核驗證與一般聊天驗證不同時，才使用
-  `auth.authorizeActorAction` 或 `auth.getActionAvailabilityState`。
-- 針對頻道特定的載荷生命週期行為，例如隱藏重複的本機核准提示或傳送前傳送正在輸入指示器，請使用 `outbound.shouldSuppressLocalPayloadPrompt` 或 `outbound.beforeDeliverPayload`。
-- 僅將 `approvals.delivery` 用於原生核准路由或後援抑制。
-- 僅當頻道確實需要自訂核准載荷而非共享渲染器時，才使用 `approvals.render`。
-- 如果頻道可以從現有設定中推斷穩定的類似擁有者 DM 身分，請使用 `openclaw/plugin-sdk/approval-runtime` 中的 `createResolvedApproverActionAuthAdapter` 來限制相同聊天 `/approve`，而無需新增特定於核准的核心邏輯。
+- 當頻道需要特定於審核的行為時，請在頻道外掛程式上優先使用一個 `approvalCapability` 物件。
+- `approvalCapability.authorizeActorAction` 和 `approvalCapability.getActionAvailabilityState` 是標準的審核授權接縫。
+- 如果您的頻道公開原生執行審核，請實作 `approvalCapability.getActionAvailabilityState`，即使原生傳輸完全位於 `approvalCapability.native` 之下。Core 使用該可用性掛鉤來區分 `enabled` 與 `disabled`，決定起始頻道是否支援原生審核，並將該頻道包含在原生客戶端回退指引中。
+- 使用 `outbound.shouldSuppressLocalPayloadPrompt` 或 `outbound.beforeDeliverPayload` 來處理特定於頻道的載荷生命週期行為，例如隱藏重複的本地審核提示或在傳遞之前發送輸入指示器。
+- 僅將 `approvalCapability.delivery` 用於原生審核路由或回退抑制。
+- 僅當頻道確實需要自訂審核載荷而非共用轉譯器時，才使用 `approvalCapability.render`。
+- 當頻道希望在停用路徑回覆中說明啟用原生執行審核所需的确切設定旋鈕時，請使用 `approvalCapability.describeExecApprovalSetup`。該掛鉤接收 `{ channel, channelLabel, accountId }`；具名帳戶頻道應轉譯帳戶範圍的路徑（例如 `channels.<channel>.accounts.<id>.execApprovals.*`），而非頂層預設值。
+- 如果頻道可以從現有設定推斷穩定的類似擁有者的 DM 身分，請使用 `createResolvedApproverActionAuthAdapter` 來自 `openclaw/plugin-sdk/approval-runtime` 以限制相同聊天中的 `/approve`，而無需新增特定於審核的核心邏輯。
+- 如果頻道需要原生審核傳遞，請將頻道程式碼專注於目標正規化和傳輸掛鉤。使用來自 `openclaw/plugin-sdk/approval-runtime` 的 `createChannelExecApprovalProfile`、`createChannelNativeOriginTargetResolver`、`createChannelApproverDmTargetResolver`、`createApproverRestrictedNativeApprovalCapability` 和 `createChannelNativeApprovalRuntime`，以便 Core 擁有請求過濾、路由、去重、過期和閘道訂閱。
+- 原生審核通道必須透過這些輔助函式路由 `accountId` 和 `approvalKind`。`accountId` 將多帳號審核策略限定在正確的機器人帳號，而 `approvalKind` 則讓執行與外掛程式審核的行為對通道可用，而不需要在核心中硬編碼分支。
+- 端對端保留傳遞的審核 ID 類型。原生客戶端不應
+  根據通道本機狀態猜測或重寫執行與外掛程式審核的路由。
+- 不同的審核類型可以刻意公開不同的原生介面。
+  目前內建的範例包括：
+  - Slack 讓原生審核路由同時適用於執行 ID 和外掛程式 ID。
+  - Matrix 僅對執行審核保留原生 DM/通道路由，並將
+    外掛程式審核保留在共用的相同聊天 `/approve` 路徑上。
+- `createApproverRestrictedNativeApprovalAdapter` 仍作為相容性包裝函式存在，但新程式碼應優先使用功能建構器並在外掛程式上公開 `approvalCapability`。
 
-對於 Slack、Matrix、Microsoft Teams 和類似的聊天頻道，預設路徑通常就足夠了：核心處理核准，而外掛只需公開正常的出站和驗證功能。
+對於熱門通道進入點，當您僅需要
+該系列的一部分時，請優先使用較狹窄的執行時子路徑：
 
-## 逐步指南
+- `openclaw/plugin-sdk/approval-auth-runtime`
+- `openclaw/plugin-sdk/approval-client-runtime`
+- `openclaw/plugin-sdk/approval-delivery-runtime`
+- `openclaw/plugin-sdk/approval-native-runtime`
+- `openclaw/plugin-sdk/approval-reply-runtime`
+
+同樣地，當您不需要廣泛的
+總括介面時，請優先使用 `openclaw/plugin-sdk/setup-runtime`、
+`openclaw/plugin-sdk/setup-adapter-runtime`、
+`openclaw/plugin-sdk/reply-runtime`、
+`openclaw/plugin-sdk/reply-dispatch-runtime`、
+`openclaw/plugin-sdk/reply-reference` 和
+`openclaw/plugin-sdk/reply-chunking`。
+
+特別是對於設定：
+
+- `openclaw/plugin-sdk/setup-runtime` 涵蓋執行時安全的設定輔助函式：
+  可安全匯入的設定修補介面卡 (`createPatchedAccountSetupAdapter`、
+  `createEnvPatchedAccountSetupAdapter`、
+  `createSetupInputPresenceValidator`)、查詢備註輸出、
+  `promptResolvedAllowFrom`、`splitSetupEntries` 和委派的
+  設定代理建構器
+- `openclaw/plugin-sdk/setup-adapter-runtime` 是 `createEnvPatchedAccountSetupAdapter` 的狹義
+  環境感知介面卡縫隙
+- `openclaw/plugin-sdk/channel-setup` 涵蓋了可選安裝的設定
+  建構器以及一些設定安全的原語：
+  `createOptionalChannelSetupSurface`、`createOptionalChannelSetupAdapter`、
+  `createOptionalChannelSetupWizard`、`DEFAULT_ACCOUNT_ID`、
+  `createTopLevelChannelDmPolicy`、`setSetupChannelEnabled` 和
+  `splitSetupEntries`
+- 僅當您同時需要更重型的共享設定/配置輔助工具（例如
+  `moveSingleAccountChannelSectionToDefaultAccount(...)`）時，才使用更廣泛的 `openclaw/plugin-sdk/setup` 接縫
+
+如果您的通道只想在設定介面中宣傳「先安裝此外掛」，請優先使用 `createOptionalChannelSetupSurface(...)`。產生的
+配接器/精靈在配置寫入和完成時會失敗關閉，並且它們在驗證、完成和文件連結
+複製中重複使用相同的「需要安裝」訊息。
+
+對於其他熱門通道路徑，請優先使用較狹窄的輔助工具，而不是更廣泛的舊版介面：
+
+- `openclaw/plugin-sdk/account-core`、
+  `openclaw/plugin-sdk/account-id`、
+  `openclaw/plugin-sdk/account-resolution` 和
+  `openclaw/plugin-sdk/account-helpers` 用於多帳戶配置和
+  預設帳戶後備
+- `openclaw/plugin-sdk/inbound-envelope` 和
+  `openclaw/plugin-sdk/inbound-reply-dispatch` 用於入站路由/信封和
+  記錄與分派連線
+- `openclaw/plugin-sdk/messaging-targets` 用於目標解析/比對
+- `openclaw/plugin-sdk/outbound-media` 和
+  `openclaw/plugin-sdk/outbound-runtime` 用於媒體載入以及出站
+  身份/發送委派
+- `openclaw/plugin-sdk/thread-bindings-runtime` 用於執行緒繫結生命週期
+  和配接器註冊
+- `openclaw/plugin-sdk/agent-media-payload` 僅當仍然需要舊版 agent/media
+  載荷欄位佈局時
+- `openclaw/plugin-sdk/telegram-command-config` 用於 Telegram 自訂指令
+  正規化、重複/衝突驗證，以及後備穩定的指令
+  配置契約
+
+僅限驗證的通道通常可以在預設路徑停止：核心處理核准，此外掛僅公開出站/驗證功能。原生核准通道（如 Matrix、Slack、Telegram 和自訂聊天傳輸）應使用共享的原生輔助工具，而不是自行構建核准生命週期。
+
+## 逐步演練
 
 <Steps>
   <a id="step-1-package-and-manifest"></a>
   <Step title="套件與清單">
-    建立標準外掛檔案。`package.json` 中的 `channel` 欄位是讓這成為頻道外掛的關鍵：
+    建立標準的外掛程式檔案。`package.json` 中的 `channel` 欄位
+    是讓此成為頻道外掛的關鍵。若要了解完整的套件元資料表面，
+    請參閱 [外掛程式設定與組態](/en/plugins/sdk-setup#openclawchannel)：
 
     <CodeGroup>
     ```json package.json
@@ -115,8 +191,9 @@ ID、明確的 `baseConversationId` 以及任何 `parentConversationCandidates` 
 
   </Step>
 
-  <Step title="建構通道外掛物件">
-    `ChannelPlugin` 介面有許多選用的配接器表面。從最少的選項開始 — `id` 和 `setup` — 並根據您的需求加入配接器。
+  <Step title="建構頻道外掛物件">
+    `ChannelPlugin` 介面有許多選用的介接卡表面。請從
+    最小需求開始 — `id` 和 `setup` — 並根據您的需求新增介接卡。
 
     建立 `src/channel.ts`：
 
@@ -124,8 +201,8 @@ ID、明確的 `baseConversationId` 以及任何 `parentConversationCandidates` 
     import {
       createChatChannelPlugin,
       createChannelPluginBase,
-    } from "openclaw/plugin-sdk/core";
-    import type { OpenClawConfig } from "openclaw/plugin-sdk/core";
+    } from "openclaw/plugin-sdk/channel-core";
+    import type { OpenClawConfig } from "openclaw/plugin-sdk/channel-core";
     import { acmeChatApi } from "./client.js"; // your platform API client
 
     type ResolvedAccount = {
@@ -212,25 +289,26 @@ ID、明確的 `baseConversationId` 以及任何 `parentConversationCandidates` 
     ```
 
     <Accordion title="createChatChannelPlugin 為您做什麼">
-      不需要手動實作低階配接器介面，您傳遞宣告式選項，建構器會將其組合起來：
+      您無需手動實作低階介接卡介面，只需傳入
+      宣告式選項，建構器就會將它們組合起來：
 
-      | 選項 | 它連接什麼 |
+      | 選項 | 它連接的功能 |
       | --- | --- |
-      | `security.dm` | 從設定欄位取得範圍 DM 安全性解析器 |
-      | `pairing.text` | 基於文字的 DM 配對流程，包含代碼交換 |
+      | `security.dm` | 從組態欄位衍生的範圍 DM 安全性解析器 |
+      | `pairing.text` | 基於文字的 DM 配對流程，透過代碼交換 |
       | `threading` | 回覆模式解析器 (固定、帳戶範圍或自訂) |
-      | `outbound.attachedResults` | 傳回結果中繼資料 (訊息 ID) 的傳送函式 |
+      | `outbound.attachedResults` | 傳回結果元資料 (訊息 ID) 的傳送函式 |
 
-      如果您需要完全控制，您也可以傳遞原始配接器物件來取代宣告式選項。
+      如果您需要完全控制，也可以傳入原始介接卡物件來取代宣告式選項。
     </Accordion>
 
   </Step>
 
-  <Step title="連結進入點">
+  <Step title="連接進入點">
     建立 `index.ts`：
 
     ```typescript index.ts
-    import { defineChannelPluginEntry } from "openclaw/plugin-sdk/core";
+    import { defineChannelPluginEntry } from "openclaw/plugin-sdk/channel-core";
     import { acmeChatPlugin } from "./src/channel.js";
 
     export default defineChannelPluginEntry({
@@ -262,27 +340,40 @@ ID、明確的 `baseConversationId` 以及任何 `parentConversationCandidates` 
     });
     ```
 
-    將通道擁有的 CLI 描述符放在 `registerCliMetadata(...)` 中，這樣 OpenClaw 就可以啟動完整的通道執行時段，在根據層級的說明中顯示它們，而正常的完整載入仍然會擷取相同的描述符以進行實際的指令註冊。將 `registerFull(...)` 保留給僅限執行時段的工作。`defineChannelPluginEntry` 會自動處理註冊模式分割。請參閱 [Entry Points](/en/plugins/sdk-entrypoints#definechannelpluginentry) 以了解所有選項。
+    將通道擁有的 CLI 描述符放在 `registerCliMetadata(...)` 中，以便 OpenClaw
+    可以在根幫助中顯示它們，而無需啟動完整的通道運行時，
+    而正常的完整載入仍會選取相同的描述符以進行實際指令
+    註冊。將 `registerFull(...)` 保留給僅運行時的工作。
+    如果 `registerFull(...)` 註冊閘道 RPC 方法，請使用
+    外掛特定的前綴。核心管理命名空間（`config.*`、
+    `exec.approvals.*`、`wizard.*`、`update.*`）保持保留狀態並且始終
+    解析為 `operator.admin`。
+    `defineChannelPluginEntry` 會自動處理註冊模式分割。請參閱
+    [進入點](/en/plugins/sdk-entrypoints#definechannelpluginentry) 了解所有
+    選項。
 
   </Step>
 
   <Step title="新增設定進入點">
-    建立 `setup-entry.ts` 以在入職期間進行輕量級載入：
+    建立 `setup-entry.ts` 以在引導過程中進行輕量級載入：
 
     ```typescript setup-entry.ts
-    import { defineSetupPluginEntry } from "openclaw/plugin-sdk/core";
+    import { defineSetupPluginEntry } from "openclaw/plugin-sdk/channel-core";
     import { acmeChatPlugin } from "./src/channel.js";
 
     export default defineSetupPluginEntry(acmeChatPlugin);
     ```
 
-    當通道停用或未設定時，OpenClaw 會載入此項目而非完整進入點。這可以避免在設定流程中載入繁重的執行時段程式碼。詳情請參閱 [Setup and Config](/en/plugins/sdk-setup#setup-entry)。
+    當通道被停用
+    或未設定時，OpenClaw 會載入此項而非完整的進入點。這避免了在設定流程中載入繁重的運行時程式碼。
+    詳情請參閱 [設定與組態](/en/plugins/sdk-setup#setup-entry)。
 
   </Step>
 
   <Step title="處理傳入訊息">
-    您的外掛程式需要從平台接收訊息並將其轉發給
-    OpenClaw。典型模式是一個驗證請求並透過您頻道的傳入處理程式分發請求的 webhook：
+    您的外掛需要從平台接收訊息並將其轉發給
+    OpenClaw。典型的模式是一個驗證請求並
+    通過通道的傳入處理程式分發請求的 webhook：
 
     ```typescript
     registerFull(api) {
@@ -306,16 +397,16 @@ ID、明確的 `baseConversationId` 以及任何 `parentConversationCandidates` 
     ```
 
     <Note>
-      傳入訊息的處理方式取決於特定頻道。每個頻道外掛程式都擁有
-      自己的傳入管道。請查看捆綁的頻道外掛程式
-      (例如 Microsoft Teams 或 Google Chat 外掛程式套件) 以了解實際模式。
+      傳入訊息處理是特定於通道的。每個通道外掛擁有
+      其自己的傳入管線。請查看捆綁的通道外掛
+      （例如 Microsoft Teams 或 Google Chat 外掛套件）以了解實際模式。
     </Note>
 
   </Step>
 
 <a id="step-6-test"></a>
 <Step title="測試">
-在 `src/channel.test.ts` 中編寫同置測試：
+在 `src/channel.test.ts` 中撰寫同位置測試：
 
     ```typescript src/channel.test.ts
     import { describe, it, expect } from "vitest";
@@ -353,7 +444,7 @@ ID、明確的 `baseConversationId` 以及任何 `parentConversationCandidates` 
     pnpm test -- <bundled-plugin-root>/acme-chat/
     ```
 
-    有關共享測試輔助程式，請參閱 [Testing](/en/plugins/sdk-testing)。
+    若要了解共享測試輔助程式，請參閱 [測試](/en/plugins/sdk-testing)。
 
   </Step>
 </Steps>
@@ -382,19 +473,21 @@ ID、明確的 `baseConversationId` 以及任何 `parentConversationCandidates` 
     固定、帳戶範圍或自訂回覆模式
   </Card>
   <Card title="訊息工具整合" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
-    describeMessageTool 與動作發現
+    describeMessageTool 與動作探索
   </Card>
   <Card title="目標解析" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
-    inferTargetChatType, looksLikeId, resolveTarget
+    inferTargetChatType、looksLikeId、resolveTarget
   </Card>
   <Card title="執行時期輔助程式" icon="settings" href="/en/plugins/sdk-runtime">
-    透過 api.runtime 使用 TTS、STT、媒體、subagent
+    透過 api.runtime 使用 TTS、STT、媒體、子代理程式
   </Card>
 </CardGroup>
 
-## 後續步驟
+<Note>部分內建的輔助縫隙仍然存在，用於內建外掛程式的維護與相容性。這些並非新通道外掛程式的建議模式；除非您直接維護該內建外掛程式系列，否則建議優先使用來自通用 SDK 表面的通用 channel/setup/reply/runtime 子路徑。</Note>
+
+## 下一步
 
 - [提供者外掛程式](/en/plugins/sdk-provider-plugins) — 如果您的外掛程式也提供模型
-- [SDK 概覽](/en/plugins/sdk-overview) — 完整的子路徑匯入參考
+- [SDK 概覽](/en/plugins/sdk-overview) — 完整子路徑匯入參考
 - [SDK 測試](/en/plugins/sdk-testing) — 測試工具與合約測試
-- [外掛程式清單](/en/plugins/manifest) — 完整的清單架構
+- [外掛程式清單](/en/plugins/manifest) — 完整清單架構

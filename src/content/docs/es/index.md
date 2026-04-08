@@ -15,9 +15,9 @@ title: "OpenClaw"
 > _"¡EXFOLIAR! ¡EXFOLIAR!"_ — Una langosta espacial, probablemente
 
 <p align="center">
-  <strong>Una puerta de enlace para cualquier sistema operativo para agentes de IA a través de WhatsApp, Telegram, Discord, iMessage y más.</strong>
+  <strong>Una puerta de enlace para cualquier sistema operativo para agentes de IA a través de Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo y más.</strong>
   <br />
-  Envía un mensaje, obtén una respuesta de un agente desde tu bolsillo. Los complementos añaden Mattermost y más.
+  Envía un mensaje, obtén una respuesta de un agente desde tu bolsillo. Ejecuta una sola puerta de enlace a través de canales integrados, complementos de canal incluidos, WebChat y nodos móviles.
 </p>
 
 <Columns>
@@ -34,14 +34,14 @@ title: "OpenClaw"
 
 ## ¿Qué es OpenClaw?
 
-OpenClaw es una **puerta de enlace autoalojada** que conecta tus aplicaciones de chat favoritas — WhatsApp, Telegram, Discord, iMessage y más — con agentes de IA de programación como Pi. Ejecutas un único proceso de Gateway en tu propia máquina (o en un servidor) y se convierte en el puente entre tus aplicaciones de mensajería y un asistente de IA siempre disponible.
+OpenClaw es una **puerta de enlace autohospedada** que conecta tus aplicaciones de chat favoritas y superficies de canal (canales integrados más complementos de canal incluidos o externos como Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo y más) con agentes de codificación de IA como Pi. Ejecutas un único proceso de puerta de enlace en tu propia máquina (o en un servidor) y este se convierte en el puente entre tus aplicaciones de mensajería y un asistente de IA siempre disponible.
 
 **¿Para quién es?** Para desarrolladores y usuarios avanzados que desean un asistente de IA personal al que puedan enviar mensajes desde cualquier lugar, sin renunciar al control de sus datos ni depender de un servicio alojado.
 
 **¿Qué lo hace diferente?**
 
 - **Autoalojado**: se ejecuta en tu hardware, tus reglas
-- **Multicanal**: una única Gateway atiende WhatsApp, Telegram, Discord y más simultáneamente
+- **Multicanal**: una sola puerta de enlace sirve a los canales integrados más los complementos de canal incluidos o externos simultáneamente
 - **Nativo para agentes**: diseñado para agentes de programación con uso de herramientas, sesiones, memoria y enrutamiento multi-agente
 - **Código abierto**: con licencia MIT, impulsado por la comunidad
 
@@ -65,10 +65,10 @@ El Gateway es la única fuente de verdad para las sesiones, el enrutamiento y la
 
 <Columns>
   <Card title="Puerta de enlace multicanal" icon="network">
-    WhatsApp, Telegram, Discord e iMessage con un único proceso de puerta de enlace.
+    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat y más con un único proceso de puerta de enlace.
   </Card>
   <Card title="Canales de complementos" icon="plug">
-    Añade Mattermost y más con paquetes de extensión.
+    Los complementos incluidos añaden Matrix, Nostr, Twitch, Zalo y más en las versiones normales actuales.
   </Card>
   <Card title="Enrutamiento multiagente" icon="route">
     Sesiones aisladas por agente, espacio de trabajo o remitente.
@@ -156,7 +156,7 @@ Ejemplo:
     Patrones de acceso SSH y tailnet.
   </Card>
   <Card title="Canales" href="/en/channels/telegram" icon="message-square">
-    Configuración específica del canal para WhatsApp, Telegram, Discord y más.
+    Configuración específica del canal para Feishu, Microsoft Teams, WhatsApp, Telegram, Discord y más.
   </Card>
   <Card title="Nodos" href="/en/nodes" icon="smartphone">
     Nodos iOS y Android con emparejamiento, Canvas, cámara y acciones del dispositivo.

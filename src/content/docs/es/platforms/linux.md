@@ -19,20 +19,20 @@ Las aplicaciones complementarias nativas de Linux están planeadas. Las contribu
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
 4. Desde tu portátil: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
-5. Abre `http://127.0.0.1:18789/` y pega tu token
+5. Abra `http://127.0.0.1:18789/` y autentíquese con el secreto compartido configurado (token por defecto; contraseña si estableció `gateway.auth.mode: "password"`)
 
 Guía completa del servidor Linux: [Linux Server](/en/vps). Ejemplo paso a paso de VPS: [exe.dev](/en/install/exe-dev)
 
 ## Instalación
 
-- [Introducción](/en/start/getting-started)
-- [Instalación y actualizaciones](/en/install/updating)
+- [Getting Started](/en/start/getting-started)
+- [Install & updates](/en/install/updating)
 - Flujos opcionales: [Bun (experimental)](/en/install/bun), [Nix](/en/install/nix), [Docker](/en/install/docker)
 
 ## Gateway
 
-- [Manual de Gateway](/en/gateway)
-- [Configuración](/en/gateway/configuration)
+- [Gateway runbook](/en/gateway)
+- [Configuration](/en/gateway/configuration)
 
 ## Instalación del servicio Gateway (CLI)
 
@@ -64,11 +64,11 @@ openclaw doctor
 
 ## Control del sistema (unidad de usuario systemd)
 
-OpenClaw instala un servicio de **usuario** de systemd por defecto. Use un servicio de **sistema** para servidores compartidos o siempre activos. El ejemplo completo de la unidad y la guía se encuentran en el [Gateway runbook](/en/gateway).
+OpenClaw instala un servicio de **usuario** de systemd por defecto. Use un servicio de **sistema** para servidores compartidos o siempre activos. `openclaw gateway install` y `openclaw onboard --install-daemon` ya representan la unidad canónica actual para usted; escriba una manualmente solo cuando necesite una configuración personalizada del sistema/gestor de servicios. La guía completa del servicio se encuentra en el [Gateway runbook](/en/gateway).
 
 Configuración mínima:
 
-Crea `~/.config/systemd/user/openclaw-gateway[-<profile>].service`:
+Cree `~/.config/systemd/user/openclaw-gateway[-<profile>].service`:
 
 ```
 [Unit]
@@ -80,6 +80,10 @@ Wants=network-online.target
 ExecStart=/usr/local/bin/openclaw gateway --port 18789
 Restart=always
 RestartSec=5
+TimeoutStopSec=30
+TimeoutStartSec=30
+SuccessExitStatus=0 143
+KillMode=control-group
 
 [Install]
 WantedBy=default.target

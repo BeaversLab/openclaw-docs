@@ -90,3 +90,12 @@ curl http://127.0.0.1:8000/v1/models
 ```
 
 - Si las solicitudes fallan con errores de autenticación, establezca una `VLLM_API_KEY` real que coincida con la configuración de su servidor, o configure el proveedor explícitamente bajo `models.providers.vllm`.
+
+## Comportamiento de tipo proxy
+
+vLLM se trata como un backend `/v1` compatible con OpenAI de tipo proxy, no como un punto de conexión nativo de OpenAI.
+
+- el moldeado de solicitudes nativo solo para OpenAI no se aplica aquí
+- sin `service_tier`, sin Responses `store`, sin sugerencias de caché de prompts y sin moldeado de payload de compatibilidad de razonamiento de OpenAI
+- los encabezados de atribución ocultos de OpenClaw (`originator`, `version`, `User-Agent`)
+  no se inyectan en las URL base personalizadas de vLLM

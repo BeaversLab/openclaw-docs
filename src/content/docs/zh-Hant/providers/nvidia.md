@@ -8,7 +8,7 @@ title: "NVIDIA"
 
 # NVIDIA
 
-NVIDIA 在 `https://integrate.api.nvidia.com/v1` 提供了用於 Nemotron 和 NeMo 模型的 OpenAI 相容 API。使用來自 [NVIDIA NGC](https://catalog.ngc.nvidia.com/) 的 API 金鑰進行驗證。
+NVIDIA 在 `https://integrate.api.nvidia.com/v1` 為 Nemotron 和 NeMo 模型提供與 OpenAI 相容的 API。使用來自 [NVIDIA NGC](https://catalog.ngc.nvidia.com/) 的 API 金鑰進行驗證。
 
 ## CLI 設定
 
@@ -45,11 +45,14 @@ openclaw models set nvidia/nvidia/llama-3.1-nemotron-70b-instruct
 
 ## 模型 ID
 
-- `nvidia/llama-3.1-nemotron-70b-instruct` (預設)
-- `meta/llama-3.3-70b-instruct`
-- `nvidia/mistral-nemo-minitron-8b-8k-instruct`
+| 模型參考                                             | 名稱                                     | 內容長度 | 最大輸出 |
+| ---------------------------------------------------- | ---------------------------------------- | -------- | -------- |
+| `nvidia/nvidia/llama-3.1-nemotron-70b-instruct`      | NVIDIA Llama 3.1 Nemotron 70B Instruct   | 131,072  | 4,096    |
+| `nvidia/meta/llama-3.3-70b-instruct`                 | Meta Llama 3.3 70B Instruct              | 131,072  | 4,096    |
+| `nvidia/nvidia/mistral-nemo-minitron-8b-8k-instruct` | NVIDIA Mistral NeMo Minitron 8B Instruct | 8,192    | 2,048    |
 
-## 備註
+## 注意事項
 
-- OpenAI 相容的 `/v1` 端點；使用來自 NVIDIA NGC 的 API 金鑰。
-- 當設定 `NVIDIA_API_KEY` 時提供者會自動啟用；使用靜態預設值 (131,072-token 語境視窗, 4,096 最大 token 數)。
+- 與 OpenAI 相容的 `/v1` 端點；使用來自 NVIDIA NGC 的 API 金鑰。
+- 當設定 `NVIDIA_API_KEY` 時，提供者會自動啟用。
+- 內建的目錄是靜態的；成本預設為原始碼中的 `0`。

@@ -14,12 +14,7 @@ les outils de fichiers et le contexte de l'espace de travail. Gardez-le privé e
 Ceci est distinct de `~/.openclaw/`, qui stocke la configuration, les identifiants et
 les sessions.
 
-**Important :** l'espace de travail est le **cwd par défaut**, et non un bac à sable strict. Les outils
-résolvent les chemins relatifs par rapport à l'espace de travail, mais les chemins absolus peuvent toujours atteindre
-d'autres endroits sur l'hôte sauf si le sandboxing est activé. Si vous avez besoin d'isolement, utilisez
-[`agents.defaults.sandbox`](/en/gateway/sandboxing) (et/ou la configuration de sandbox par agent).
-Lorsque le sandboxing est activé et que `workspaceAccess` n'est pas `"rw"`, les outils fonctionnent
-à l'intérieur d'un espace de travail bac à sable sous `~/.openclaw/sandboxes`, et non votre espace de travail hôte.
+**Important :** l'espace de travail est le **cwd par défaut**, et non un bac à sable strict. Les outils résolvent les chemins relatifs par rapport à l'espace de travail, mais les chemins absolus peuvent toujours atteindre d'autres endroits sur l'hôte sauf si le sandboxing est activé. Si vous avez besoin d'isolement, utilisez [`agents.defaults.sandbox`](/en/gateway/sandboxing) (et/ou la configuration de bac à sable par agent). Lorsque le sandboxing est activé et que `workspaceAccess` n'est pas `"rw"`, les outils opèrent à l'intérieur d'un espace de travail bac à sable sous `~/.openclaw/sandboxes`, et non votre espace de travail hôte.
 
 ## Emplacement par défaut
 
@@ -73,80 +68,74 @@ Voici les fichiers standards que OpenClaw s'attend à trouver dans l'espace de t
 - `SOUL.md`
   - Persona, ton et limites.
   - Chargé à chaque session.
+  - Guide : [Guide de personnalité SOUL.md](/en/concepts/soul)
 
 - `USER.md`
-  - Qui est l'utilisateur et comment s'adresser à lui.
+  - Qui est l'utilisateur et comment lui adresser la parole.
   - Chargé à chaque session.
 
 - `IDENTITY.md`
-  - Le nom, l'ambiance et l'emoji de l'agent.
+  - Le nom, l'ambiance et l'émoji de l'agent.
   - Créé/mis à jour lors du rituel d'amorçage.
 
 - `TOOLS.md`
-  - Notes sur vos outils locaux et conventions.
-  - Ne contrôle pas la disponibilité des outils ; il s'agit uniquement de conseils.
+  - Notes sur vos outils et conventions locales.
+  - Ne contrôle pas la disponibilité des outils ; c'est uniquement une directive.
 
 - `HEARTBEAT.md`
-  - Petite liste de contrôle optionnelle pour les exécutions de heartbeat.
+  - Petite liste de contrôle optionnelle pour les exécutions de battement de cœur.
   - Gardez-la courte pour éviter la surconsommation de jetons.
 
 - `BOOT.md`
-  - Liste de contrôle de démarrage optionnelle exécutée lors du redémarrage de la passerelle lorsque les crochets internes sont activés.
+  - Liste de contrôle de démarrage optionnelle exécutée au redémarrage de la passerelle lorsque les hooks internes sont activés.
   - Gardez-la courte ; utilisez l'outil de message pour les envois sortants.
 
 - `BOOTSTRAP.md`
   - Rituel de première exécution unique.
-  - Créé uniquement pour un espace de travail tout neuf.
+  - Créé uniquement pour un tout nouvel espace de travail.
   - Supprimez-le une fois le rituel terminé.
 
 - `memory/YYYY-MM-DD.md`
   - Journal de mémoire quotidien (un fichier par jour).
-  - Recommandé de lire aujourd'hui + hier au début de la session.
+  - Recommandé de lire aujourd'hui + hier au démarrage de la session.
 
 - `MEMORY.md` (optionnel)
   - Mémoire à long terme organisée.
   - À charger uniquement dans la session principale privée (pas les contextes partagés/groupe).
 
-Voir [Mémoire](/en/concepts/memory) pour le workflow et le vidage automatique de la mémoire.
+Voir [Mémoire](/en/concepts/memory) pour le flux de travail et le vidage automatique de la mémoire.
 
 - `skills/` (optionnel)
   - Compétences spécifiques à l'espace de travail.
-  - Remplace les compétences gérées/groupées lorsque les noms sont en conflit.
+  - Emplacement de compétence de priorité la plus élevée pour cet espace de travail.
+  - Remplace les compétences de l'agent de projet, les compétences de l'agent personnel, les compétences gérées, les compétences groupées et `skills.load.extraDirs` en cas de collision de noms.
 
-- `canvas/` (facultatif)
-  - Fichiers d'interface utilisateur Canvas pour les affichages de nœuds (par exemple `canvas/index.html`).
+- `canvas/` (optionnel)
+  - Fichiers UI Canvas pour les affichages de nœuds (par exemple `canvas/index.html`).
 
-Si un fichier d'amorçage manque, OpenClaw injecte un marqueur de "fichier manquant" dans
-la session et continue. Les fichiers d'amorçage volumineux sont tronqués lors de l'injection ;
-ajustez les limites avec `agents.defaults.bootstrapMaxChars` (par défaut : 20000) et
-`agents.defaults.bootstrapTotalMaxChars` (par défaut : 150000).
-`openclaw setup` peut recréer les valeurs par défaut manquantes sans écraser les fichiers
-existants.
+Si un fichier d'amorçage est manquant, OpenClaw injecte un marqueur de « fichier manquant » dans la session et continue. Les fichiers d'amorçage volumineux sont tronqués lors de l'injection ; ajustez les limites avec `agents.defaults.bootstrapMaxChars` (par défaut : 20000) et `agents.defaults.bootstrapTotalMaxChars` (par défaut : 150000). `openclaw setup` peut recréer les valeurs par défaut manquantes sans écraser les fichiers existants.
 
 ## Ce qui n'est PAS dans l'espace de travail
 
 Ces éléments se trouvent sous `~/.openclaw/` et ne doivent PAS être validés dans le dépôt de l'espace de travail :
 
-- `~/.openclaw/openclaw.json` (configuration)
-- `~/.openclaw/credentials/` (jetons OAuth, clés API)
+- `~/.openclaw/openclaw.json` (config)
+- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (profils d'authentification de modèle : OAuth + clés API)
+- `~/.openclaw/credentials/` (état du canal/fournisseur plus les données d'importation OAuth héritées)
 - `~/.openclaw/agents/<agentId>/sessions/` (transcriptions de session + métadonnées)
 - `~/.openclaw/skills/` (compétences gérées)
 
-Si vous devez migrer des sessions ou une configuration, copiez-les séparément et gardez-les
-en dehors du contrôle de version.
+Si vous devez migrer des sessions ou une configuration, copiez-les séparément et gardez-les hors du contrôle de version.
 
 ## Sauvegarde Git (recommandée, privée)
 
-Traitez l'espace de travail comme une mémoire privée. Placez-le dans un dépôt git **privé** afin qu'il soit
-sauvegardé et récupérable.
+Traitez l'espace de travail comme une mémoire privée. Placez-le dans un dépôt git **privé** afin qu'il soit sauvegardé et récupérable.
 
-Exécutez ces étapes sur la machine où le Gateway s'exécute (c'est là que se trouve
-l'espace de travail).
+Exécutez ces étapes sur la machine où le Gateway s'exécute (c'est là que réside l'espace de travail).
 
 ### 1) Initialiser le dépôt
 
-Si git est installé, les nouveaux espaces de travail sont initialisés automatiquement. Si cet
-espace de travail n'est pas déjà un dépôt, exécutez :
+Si git est installé, les nouveaux espaces de travail sont initialisés automatiquement. Si cet espace de travail n'est pas déjà un dépôt, exécutez :
 
 ```bash
 cd ~/.openclaw/workspace
@@ -162,7 +151,7 @@ Option A : Interface Web GitHub
 1. Créez un nouveau dépôt **privé** sur GitHub.
 2. Ne l'initialisez pas avec un README (évite les conflits de fusion).
 3. Copiez l'URL distante HTTPS.
-4. Ajoutez le distant et envoyez (push) :
+4. Ajoutez le distant et poussez :
 
 ```bash
 git branch -M main
@@ -182,7 +171,7 @@ Option C : Interface Web GitLab
 1. Créez un nouveau dépôt **privé** sur GitLab.
 2. Ne l'initialisez pas avec un README (évite les conflits de fusion).
 3. Copiez l'URL distante HTTPS.
-4. Ajoutez le distant et envoyez (push) :
+4. Ajoutez le distant et poussez :
 
 ```bash
 git branch -M main
@@ -199,15 +188,15 @@ git commit -m "Update memory"
 git push
 ```
 
-## Ne validez pas de secrets
+## Ne commitez pas de secrets
 
 Même dans un dépôt privé, évitez de stocker des secrets dans l'espace de travail :
 
-- Clés d'API, jetons OAuth, mots de passe ou informations d'identification privées.
+- Clés API, jetons OAuth, mots de passe ou informations d'identification privées.
 - Tout ce qui se trouve sous `~/.openclaw/`.
-- Sauvegardes brutes des discussions ou pièces jointes sensibles.
+- Sauvegardes brutes de discussions ou pièces jointes sensibles.
 
-Si vous devez stocker des références sensibles, utilisez des espaces réservés et gardez le secret réel ailleurs (gestionnaire de mots de passe, variables d'environnement ou `~/.openclaw/`).
+Si vous devez stocker des références sensibles, utilisez des espaces réservés et gardez le vrai secret ailleurs (gestionnaire de mots de passe, variables d'environnement ou `~/.openclaw/`).
 
 Starter `.gitignore` suggéré :
 
@@ -223,20 +212,20 @@ Starter `.gitignore` suggéré :
 
 1. Clonez le dépôt vers le chemin souhaité (par défaut `~/.openclaw/workspace`).
 2. Définissez `agents.defaults.workspace` sur ce chemin dans `~/.openclaw/openclaw.json`.
-3. Exécutez `openclaw setup --workspace <path>` pour créer les fichiers manquants.
-4. Si vous avez besoin des sessions, copiez `~/.openclaw/agents/<agentId>/sessions/` depuis
-   l'ancienne machine séparément.
+3. Exécutez `openclaw setup --workspace <path>` pour générer tous les fichiers manquants.
+4. Si vous avez besoin des sessions, copiez `~/.openclaw/agents/<agentId>/sessions/` séparément depuis
+   l'ancienne machine.
 
 ## Notes avancées
 
-- Le routage multi-agent peut utiliser différents espaces de travail par agent. Voir
+- Le routage multi-agents peut utiliser des espaces de travail différents par agent. Voir
   [Channel routing](/en/channels/channel-routing) pour la configuration du routage.
-- Si `agents.defaults.sandbox` est activé, les sessions non principales peuvent utiliser des espaces de travail sandbox par session
-  sous `agents.defaults.sandbox.workspaceRoot`.
+- Si `agents.defaults.sandbox` est activé, les sessions non principales peuvent utiliser des espaces de travail
+  sandbox par session sous `agents.defaults.sandbox.workspaceRoot`.
 
 ## Connexes
 
 - [Standing Orders](/en/automation/standing-orders) — instructions persistantes dans les fichiers de l'espace de travail
-- [Heartbeat](/en/gateway/heartbeat) — fichier de l'espace de travail HEARTBEAT.md
+- [Heartbeat](/en/gateway/heartbeat) — fichier d'espace de travail HEARTBEAT.md
 - [Session](/en/concepts/session) — chemins de stockage de session
 - [Sandboxing](/en/gateway/sandboxing) — accès à l'espace de travail dans les environnements sandboxés

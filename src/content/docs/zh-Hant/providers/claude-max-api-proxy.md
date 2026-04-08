@@ -90,6 +90,15 @@ curl http://localhost:3456/v1/chat/completions \
 }
 ```
 
+此路徑使用與其他自訂
+`/v1` 後端相同的代理式 OpenAI 相容路由：
+
+- 不適用原生僅 OpenAI 的請求調整
+- 沒有 `service_tier`，沒有 Responses `store`，沒有提示快取提示，也沒有
+  OpenAI 推理相容的酬載調整
+- 隱藏的 OpenClaw 歸因標頭（`originator`、`version`、`User-Agent`）
+  不會在代理 URL 上注入
+
 ## 可用模型
 
 | 模型 ID           | 對應至          |
@@ -100,7 +109,7 @@ curl http://localhost:3456/v1/chat/completions \
 
 ## 在 macOS 上自動啟動
 
-建立一個 LaunchAgent 以自動執行此代理：
+建立一個 LaunchAgent 以自動執行代理：
 
 ```bash
 cat > ~/Library/LaunchAgents/com.claude-max-api.plist << 'EOF'
@@ -135,16 +144,16 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 - **npm：** [https://www.npmjs.com/package/claude-max-api-proxy](https://www.npmjs.com/package/claude-max-api-proxy)
 - **GitHub：** [https://github.com/atalovesyou/claude-max-api-proxy](https://github.com/atalovesyou/claude-max-api-proxy)
-- **問題回報：** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
+- **問題：** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
 
-## 備註
+## 注意事項
 
-- 這是一款 **社群工具**，並非由 Anthropic 或 OpenClaw 官方支援
-- 需要有效的 Claude Max/Pro 訂閱，並已透過 Claude Code CLI 完成身份驗證
-- 此代理在本機執行，不會將資料傳送至任何第三方伺服器
-- 完整支援串流回應
+- 這是一個**社群工具**，並非由 Anthropic 或 OpenClaw 官方支援
+- 需要有效的 Claude Max/Pro 訂閱並已透過 Claude Code CLI 進行驗證
+- 代理在本地執行，不會將資料傳送至任何第三方伺服器
+- 完全支援串流回應
 
-## 相關參考
+## 另請參閱
 
-- [Anthropic 提供者](/en/providers/anthropic) - 使用 Claude 設定權杖或 API 金鑰的原生 OpenClaw 整合
-- [OpenAI 提供者](/en/providers/openai) - 用於 OpenAI/Codex 訂閱
+- [Anthropic 提供者](/en/providers/anthropic) - 與 Claude CLI 或 API 金鑰的原生 OpenClaw 整合
+- [OpenAI 提供者](/en/providers/openai) - 適用於 OpenAI/Codex 訂閱

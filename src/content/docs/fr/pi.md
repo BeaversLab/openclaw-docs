@@ -8,7 +8,7 @@ read_when:
 
 # Architecture d'intégration Pi
 
-Ce document décrit comment OpenClaw s'intègre avec [pi-coding-agent](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent) et ses packages frères (`pi-ai`, `pi-agent-core`, `pi-tui`) pour alimenter ses capacités d'agent IA.
+Ce document décrit comment OpenClaw s'intègre avec [pi-coding-agent](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent) et ses packages associés (`pi-ai`, `pi-agent-core`, `pi-tui`) pour alimenter ses capacités d'agent IA.
 
 ## Vue d'ensemble
 
@@ -25,10 +25,10 @@ OpenClaw utilise le SDK pi pour embarquer un agent de codage IA dans son archite
 
 ```json
 {
-  "@mariozechner/pi-agent-core": "0.61.1",
-  "@mariozechner/pi-ai": "0.61.1",
-  "@mariozechner/pi-coding-agent": "0.61.1",
-  "@mariozechner/pi-tui": "0.61.1"
+  "@mariozechner/pi-agent-core": "0.64.0",
+  "@mariozechner/pi-ai": "0.64.0",
+  "@mariozechner/pi-coding-agent": "0.64.0",
+  "@mariozechner/pi-tui": "0.64.0"
 }
 ```
 
@@ -154,7 +154,7 @@ const result = await runEmbeddedPiAgent({
   config: openclawConfig,
   prompt: "Hello, how are you?",
   provider: "anthropic",
-  model: "claude-sonnet-4-20250514",
+  model: "claude-sonnet-4-6",
   timeoutMs: 120_000,
   runId: "run-abc",
   onBlockReply: async (payload) => {
@@ -321,7 +321,11 @@ trackSessionManagerAccess(params.sessionFile);
 
 ### Compactage
 
-L'auto-compaction se déclenche en cas de dépassement de contexte. `compactEmbeddedPiSessionDirect()` gère la compaction manuelle :
+L'auto-compaction se déclenche lors d'un dépassement de contexte. Les signatures courantes de dépassement incluent `request_too_large`, `context length exceeded`, `input exceeds the
+maximum number of tokens`, `input token count exceeds the maximum number of
+input tokens`, `input is too long for the model`, and `ollama error: context
+length exceeded`. `compactEmbeddedPiSessionDirect()` gère la
+compaction manuelle :
 
 ```typescript
 const compactResult = await compactEmbeddedPiSessionDirect({
@@ -360,7 +364,7 @@ authStorage.setRuntimeApiKey(model.provider, apiKeyInfo.apiKey);
 
 ### Basculement
 
-`FailoverError` déclenche le basculement de model lorsque configuré :
+`FailoverError` déclenche le repli du modèle (model fallback) lorsqu'il est configuré :
 
 ```typescript
 if (fallbackConfigured && isFailoverErrorMessage(errorText)) {
@@ -380,7 +384,7 @@ OpenClaw charge des extensions pi personnalisées pour un comportement spéciali
 
 ### Garantie de compactage
 
-`src/agents/pi-hooks/compaction-safeguard.ts` ajoute des garde-fous à la compaction, notamment une budgétisation adaptative des jetons ainsi que des résumés des échecs d'outils et des opérations de fichiers :
+`src/agents/pi-hooks/compaction-safeguard.ts` ajoute des garde-fous à la compaction, y compris une budgétisation adaptative des jetons ainsi que des résumés des échecs d'outils et des opérations de fichiers :
 
 ```typescript
 if (resolveCompactionMode(params.cfg) === "safeguard") {
@@ -391,7 +395,7 @@ if (resolveCompactionMode(params.cfg) === "safeguard") {
 
 ### Élagage du contexte
 
-`src/agents/pi-hooks/context-pruning.ts` implémente l'élagage du contexte basé sur le TTL du cache :
+`src/agents/pi-hooks/context-pruning.ts` implémente l'élagage du contexte basé sur le cache-TTL :
 
 ```typescript
 if (cfg?.agents?.defaults?.contextPruning?.mode === "cache-ttl") {
@@ -409,7 +413,7 @@ if (cfg?.agents?.defaults?.contextPruning?.mode === "cache-ttl") {
 
 ### Découpage en blocs
 
-`EmbeddedBlockChunker` gère le flux de texte en blocs de réponse distincts :
+`EmbeddedBlockChunker` gère le flux de texte en continu vers des blocs de réponse distincts :
 
 ```typescript
 const blockChunker = blockChunking ? new EmbeddedBlockChunker(blockChunking) : null;
@@ -438,7 +442,7 @@ const { text: cleanedText, mediaUrls, audioAsVoice, replyToId } = consumeReplyDi
 
 ### Classification des erreurs
 
-`pi-embedded-helpers.ts` classe les erreurs pour un traitement approprié :
+`pi-embedded-helpers.ts` classe les erreurs pour une gestion appropriée :
 
 ```typescript
 isContextOverflowError(errorText)     // Context too large
@@ -488,18 +492,16 @@ if (sandboxRoot) {
 
 - Nettoyage de la chaîne magique de refus
 - Validation des tours pour les rôles consécutifs
-- Compatibilité des paramètres Claude Code
+- Validation stricte des paramètres de l'outil Pi en amont
 
 ### Google/Gemini
 
-- Corrections de l'ordre des tours (`applyGoogleTurnOrderingFix`)
-- Assainissement du schéma d'outils (`sanitizeToolsForGoogle`)
-- Assainissement de l'historique de session (`sanitizeSessionHistory`)
+- Nettoyage (sanitization) du schéma d'outil appartenant au plugin
 
 ### OpenAI
 
-- outil `apply_patch` pour les modèles Codex
-- Gestion de la réduction du niveau de réflexion
+- Outil `apply_patch` pour les modèles Codex
+- Gestion de la réduction du niveau de réflexion (thinking level)
 
 ## Intégration TUI
 
@@ -512,31 +514,31 @@ import { ... } from "@mariozechner/pi-tui";
 
 Cela fournit l'expérience interactive de terminal similaire au mode natif de pi.
 
-## Principales différences avec le Pi CLI
+## Principales différences avec le CLI Pi
 
 | Aspect                 | Pi CLI                      | OpenClaw intégré                                                                               |
 | ---------------------- | --------------------------- | ---------------------------------------------------------------------------------------------- |
-| Invocation             | commande `pi` / RPC         | SDK via `createAgentSession()`                                                                 |
+| Invocation             | Commande `pi` / RPC         | SDK via `createAgentSession()`                                                                 |
 | Outils                 | Outils de codage par défaut | Suite d'outils personnalisée OpenClaw                                                          |
 | Prompt système         | AGENTS.md + prompts         | Dynamique par canal/contexte                                                                   |
 | Stockage de session    | `~/.pi/agent/sessions/`     | `~/.openclaw/agents/<agentId>/sessions/` (ou `$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/`) |
 | Auth                   | Identifiant unique          | Multi-profil avec rotation                                                                     |
-| Extensions             | Chargé depuis le disque     | Chemins programmables + disque                                                                 |
+| Extensions             | Chargé depuis le disque     | Programmatique + chemins du disque                                                             |
 | Gestion des événements | TUI rendering               | Basé sur des rappels (onBlockReply, etc.)                                                      |
 
 ## Considérations futures
 
-Domaines susceptibles d'être retravaillés :
+Domaines potentiels de refonte :
 
-1. **Alignement des signatures d'outils** : Adaptation actuellement entre les signatures pi-agent-core et pi-coding-agent
-2. **Encapsulation du gestionnaire de session** : `guardSessionManager` ajoute de la sécurité mais augmente la complexité
-3. **Chargement des extensions** : Pourrait utiliser le `ResourceLoader` de pi plus directement
-4. **Complexité du gestionnaire de streaming** : `subscribeEmbeddedPiSession` est devenu volumineux
+1. **Alignement des signatures d'outils** : Adaptation actuellement entre les signatures de pi-agent-core et pi-coding-agent
+2. **Enveloppement du gestionnaire de session** : `guardSessionManager` ajoute de la sécurité mais augmente la complexité
+3. **Chargement des extensions** : Pourrait utiliser `ResourceLoader` de pi plus directement
+4. **Complexité du gestionnaire de flux** : `subscribeEmbeddedPiSession` est devenu volumineux
 5. **Spécificités des providers** : De nombreux chemins de code spécifiques aux providers que pi pourrait potentiellement gérer
 
 ## Tests
 
-La couverture de l'intération Pi s'étend sur ces suites :
+La couverture de l'intégration Pi s'étend sur ces suites :
 
 - `src/agents/pi-*.test.ts`
 - `src/agents/pi-auth-json.test.ts`

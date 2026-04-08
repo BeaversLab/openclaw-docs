@@ -25,7 +25,7 @@ Windows 的原生伴隨應用程式也在計畫中；建議透過 WSL2 使用 Ga
 
 ## VPS 與託管
 
-- VPS hub: [VPS 託管](/en/vps)
+- VPS hub: [VPS hosting](/en/vps)
 - Fly.io: [Fly.io](/en/install/fly)
 - Hetzner (Docker): [Hetzner](/en/install/hetzner)
 - GCP (Compute Engine): [GCP](/en/install/gcp)
@@ -34,9 +34,9 @@ Windows 的原生伴隨應用程式也在計畫中；建議透過 WSL2 使用 Ga
 
 ## 常用連結
 
-- 安裝指南：[快速入門](/en/start/getting-started)
-- Gateway 操作手冊：[Gateway](/en/gateway)
-- Gateway 設定：[Configuration](/en/gateway/configuration)
+- Install guide: [Getting Started](/en/start/getting-started)
+- Gateway runbook: [Gateway](/en/gateway)
+- Gateway configuration: [Configuration](/en/gateway/configuration)
 - 服務狀態：`openclaw gateway status`
 
 ## Gateway 服務安裝 (CLI)
@@ -52,3 +52,4 @@ Windows 的原生伴隨應用程式也在計畫中；建議透過 WSL2 使用 Ga
 
 - macOS: LaunchAgent (`ai.openclaw.gateway` 或 `ai.openclaw.<profile>`; 舊版 `com.openclaw.*`)
 - Linux/WSL2: systemd 使用者服務 (`openclaw-gateway[-<profile>].service`)
+- Native Windows: Scheduled Task (`OpenClaw Gateway` 或 `OpenClaw Gateway (<profile>)`)，若拒絕建立工作則退回至每個使用者的啟動資料夾登入項目

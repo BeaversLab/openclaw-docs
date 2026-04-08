@@ -27,13 +27,13 @@ L'application de la barre de menus macOS intègre l'interface utilisateur WebCha
 
 - Plan de données : méthodes WS du Gateway `chat.history`, `chat.send`, `chat.abort`,
   `chat.inject` et événements `chat`, `agent`, `presence`, `tick`, `health`.
-- Session : utilise par défaut la session principale (`main`, ou `global` lorsque la portée est
-  globale). L'interface utilisateur peut basculer entre les sessions.
-- L'intégration utilise une session dédiée pour séparer la configuration du premier lancement.
+- `chat.history` renvoie des lignes de transcript normalisées pour l'affichage : les balises de directive en ligne sont supprimées du texte visible, les charges utiles XML d'appels d'outil en texte brut (y compris `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` et les blocs d'appels d'outil tronqués) et les jetons de contrôle de modèle ASCII/pleine largeur fuités sont supprimés, les lignes d'assistant en jetons silencieux purs telles que `NO_REPLY` / `no_reply` exactes sont omises, et les lignes trop volumineuses peuvent être remplacées par des espaces réservés.
+- Session : par défaut, la session principale (`main`, ou `global` lorsque la portée est globale). L'interface utilisateur peut basculer entre les sessions.
+- L'intégration utilise une session dédiée pour garder la configuration de premier lancement séparée.
 
 ## Surface de sécurité
 
-- Le mode distant transfère uniquement le port de contrôle WebSocket du Gateway via SSH.
+- Le mode distant ne transfère que le port de contrôle WebSocket du Gateway via SSH.
 
 ## Limitations connues
 

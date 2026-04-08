@@ -57,7 +57,7 @@ title: "遠端控制"
 
 - 優先在遠端主機上使用回環綁定，並透過 SSH 或 Tailscale 連線。
 - SSH 通道使用嚴格的主機金鑰檢查；請先信任主機金鑰，使其存在於 `~/.ssh/known_hosts` 中。
-- 如果您將閘道綁定到非回環介面，請要求 Token/密碼驗證。
+- 如果您將 Gateway 繫結到非 loopback 介面，請要求有效的 Gateway 身分驗證：token、密碼，或是具備 `gateway.auth.mode: "trusted-proxy"` 的具備身份感知能力的反向代理伺服器。
 - 請參閱 [安全性](/en/gateway/security) 和 [Tailscale](/en/gateway/tailscale)。
 
 ## WhatsApp 登入流程（遠端）
@@ -67,15 +67,15 @@ title: "遠端控制"
 
 ## 疑難排解
 
-- **exit 127 / not found**：`openclaw` 不在非登入 Shell 的 PATH 中。請將其新增至 `/etc/paths`、您的 Shell rc，或建立符號連結到 `/usr/local/bin`/`/opt/homebrew/bin`。
-- **健康探測失敗**：檢查 SSH 連線性、PATH，以及 Baileys 是否已登入 (`openclaw status --json`)。
+- **exit 127 / not found**：`openclaw` 不在非登入 shell 的 PATH 中。請將其新增至 `/etc/paths`、您的 shell rc，或是建立符號連結至 `/usr/local/bin`/`/opt/homebrew/bin`。
+- **Health probe failed**：請檢查 SSH 連線能力、PATH，以及 Baileys 是否已登入 (`openclaw status --json`)。
 - **Web 聊天卡住**：確認閘道正在遠端主機上運作，且轉發的埠與閘道 WS 埠相符；UI 需要健康的 WS 連線。
 - **節點 IP 顯示為 127.0.0.1**：使用 SSH 通道時屬於正常情況。如果您希望閘道看到真實的客戶端 IP，請將**傳輸方式 (Transport)** 切換至 **直接 (ws/wss)**。
 - **語音喚醒 (Voice Wake)**：觸發詞組會在遠端模式下自動轉發；無需額外的轉發器。
 
 ## 通知音效
 
-透過腳本中的 `openclaw` 和 `node.invoke` 為每個通知選擇音效，例如：
+使用透過腳本中的 `openclaw` 和 `node.invoke` 為每個通知選擇音效，例如：
 
 ```bash
 openclaw nodes notify --node <id> --title "Ping" --body "Remote gateway ready" --sound Glass

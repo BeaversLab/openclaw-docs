@@ -74,8 +74,9 @@ OpenClaw 支持 DuckDuckGo 作为 **免密钥** 的 `web_search` 提供商。无
 - **机器人验证风险** — 在大量或自动使用时，DuckDuckGo 可能会提供 CAPTCHA 或阻止请求
 - **HTML 解析** — 结果取决于页面结构，该结构可能在未
   通知的情况下发生变化
-- **自动检测顺序** — DuckDuckGo 在
-  自动检测中排在最后（顺序 100），因此任何带有密钥的 API 支持提供商都具有优先权
+- **自动检测顺序** — DuckDuckGo 是自动检测中的第一个免密钥
+  回退选项（顺序 100）。配置了密钥的 API 支持的提供程序会
+  首先运行，然后是 Ollama Web Search（顺序 110），接着是 SearXNG（顺序 200）
 - **SafeSearch 默认为适中**（moderate），如果未进行配置
 
 <Tip>对于生产环境，请考虑使用 [Brave Search](/en/tools/brave-search)（提供免费层级）或另一个由 API 支持的提供商。</Tip>

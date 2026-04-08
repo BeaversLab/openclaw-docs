@@ -8,9 +8,10 @@ title: "Découverte Bonjour"
 
 # Découverte Bonjour / mDNS
 
-OpenClaw utilise Bonjour (mDNS / DNS‑SD) comme commodité **uniquement sur le réseau local** pour découvrir
-un Gateway actif (point de terminaison WebSocket). C'est un best‑effort et cela ne remplace **pas** SSH ou
-la connectivité basée sur Tailnet.
+OpenClaw utilise Bonjour (mDNS / DNS‑SD) pour découvrir une Gateway active (point de terminaison WebSocket).
+La navigation multidiffusion `local.` est une **commodité réservée au réseau local**. Pour la découverte inter-réseaux, la
+même balise peut également être publiée via un domaine DNS-SD étendu configuré. La découverte reste
+un best-effort et ne remplace **pas** la connectivité basée sur SSH ou Tailnet.
 
 ## Bonjour à grande portée (Unicast DNS-SD) sur Bonjour
 
@@ -27,7 +28,7 @@ la limite. Vous pouvez conserver la même UX de découverte en passant au **DNS�
    serveur DNS pour les clients (y compris iOS).
 
 OpenClaw prend en charge n'importe quel domaine de découverte ; `openclaw.internal.` n'est qu'un exemple.
-Les nœuds iOS/Android parcourent à la fois `local.` et votre domaine de grande portée configuré.
+Les nœuds iOS/Android explorent à la fois `local.` et votre domaine étendu configuré.
 
 ### Config Gateway (recommandé)
 
@@ -47,7 +48,7 @@ openclaw dns setup --apply
 Cela installe CoreDNS et le configure pour :
 
 - écouter sur le port 53 uniquement sur les interfaces Tailscale de la passerelle
-- servir votre domaine choisi (exemple : `openclaw.internal.`) à partir de `~/.openclaw/dns/<domain>.db`
+- servez votre domaine choisi (exemple : `openclaw.internal.`) depuis `~/.openclaw/dns/<domain>.db`
 
 Validez à partir d'une machine connectée au tailnet :
 
@@ -63,12 +64,13 @@ Dans la console d'administration Tailscale :
 - Ajoutez un serveur de noms pointant vers l'IP tailnet de la passerelle (UDP/TCP 53).
 - Ajoutez le DNS split afin que votre domaine de découverte utilise ce serveur de noms.
 
-Une fois que les clients acceptent le DNS tailnet, les nœuds iOS peuvent parcourir
+Une fois que les clients acceptent le DNS tailnet, les nœuds iOS et la découverte CLI peuvent parcourir
 `_openclaw-gw._tcp` dans votre domaine de découverte sans multidiffusion.
 
 ### Sécurité de l'écouteur Gateway (recommandé)
 
-Le port WS du Gateway (défaut `18789`) se lie à loopback par défaut. Pour l'accès LAN/tailnet, liez explicitement et gardez l'auth activée.
+Le port WS de la Gateway (par défaut `18789`) se lie à loopback par défaut. Pour l'accès LAN/tailnet,
+liez explicitement et gardez l'authentification activée.
 
 Pour les configurations tailnet uniquement :
 
@@ -77,7 +79,7 @@ Pour les configurations tailnet uniquement :
 
 ## Ce qui est annoncé
 
-Seul le Gateway annonce `_openclaw-gw._tcp`.
+Seule la Gateway annonce `_openclaw-gw._tcp`.
 
 ## Types de services
 
@@ -90,20 +92,21 @@ Le Gateway annonce de petits indices non secrets pour faciliter les flux de l'in
 - `role=gateway`
 - `displayName=<friendly name>`
 - `lanHost=<hostname>.local`
-- `gatewayPort=<port>` (Gateway WS + HTTP)
+- `gatewayPort=<port>` (WS + HTTP de la Gateway)
 - `gatewayTls=1` (uniquement lorsque TLS est activé)
-- `gatewayTlsSha256=<sha256>` (uniquement lorsque TLS est activé et que l'empreinte est disponible)
+- `gatewayTlsSha256=<sha256>` (uniquement lorsque TLS est activé et que l'empreinte digitale est disponible)
 - `canvasPort=<port>` (uniquement lorsque l'hôte de canevas est activé ; actuellement identique à `gatewayPort`)
-- `sshPort=<port>` (par défaut 22 si non remplacé)
 - `transport=gateway`
-- `cliPath=<path>` (facultatif ; chemin absolu vers un point d'entrée `openclaw` exécutable)
 - `tailnetDns=<magicdns>` (indice facultatif lorsque Tailnet est disponible)
+- `sshPort=<port>` (mode mDNS complet uniquement ; DNS-SD étendu peut l'omettre)
+- `cliPath=<path>` (mode mDNS complet uniquement ; DNS-SD étendu l'écrit toujours comme un indice d'installation à distance)
 
 Notes de sécurité :
 
 - Les enregistrements TXT Bonjour/mDNS sont **non authentifiés**. Les clients ne doivent pas traiter TXT comme un routage faisant autorité.
 - Les clients doivent router en utilisant le point de terminaison de service résolu (SRV + A/AAAA). Traitez `lanHost`, `tailnetDns`, `gatewayPort` et `gatewayTlsSha256` comme de simples indices.
-- L'épinglage TLS ne doit jamais permettre à un `gatewayTlsSha256` annoncé de remplacer un épinglage précédemment stocké.
+- Le ciblage automatique SSH doit également utiliser l'hôte de service résolu, pas les indices TXT uniquement.
+- Le épinglage TLS ne doit jamais permettre à un `gatewayTlsSha256` annoncé de remplacer une épingle précédemment stockée.
 - Les nœuds iOS/Android doivent traiter les connexions directes basées sur la découverte comme **TLS uniquement** et exiger une confirmation explicite de l'utilisateur avant de faire confiance à une empreinte pour la première fois.
 
 ## Débogage sur macOS
@@ -122,12 +125,11 @@ Outils intégrés utiles :
   dns-sd -L "<instance>" _openclaw-gw._tcp local.
   ```
 
-Si la navigation fonctionne mais que la résolution échoue, vous rencontrez généralement un problème de stratégie LAN ou de résolveur mDNS.
+Si le parcours fonctionne mais que la résolution échoue, vous rencontrez généralement un problème de stratégie LAN ou de résolveur mDNS.
 
 ## Débogage dans les journaux du Gateway
 
-Le Gateway écrit un fichier journal circulaire (affiché au démarrage sous la forme
-`gateway log file: ...`). Recherchez les lignes `bonjour:`, notamment :
+Le Gateway écrit un fichier journal circulant (affiché au démarrage comme `gateway log file: ...`). Recherchez les lignes `bonjour:`, notamment :
 
 - `bonjour: advertise failed ...`
 - `bonjour: ... name conflict resolved` / `hostname conflict resolved`
@@ -139,35 +141,34 @@ Le nœud iOS utilise `NWBrowser` pour découvrir `_openclaw-gw._tcp`.
 
 Pour capturer les journaux :
 
-- Réglages → Gateway → Avancé → **Journaux de débogage de découverte**
+- Réglages → Gateway → Avancé → **Journaux de débogage de la découverte**
 - Réglages → Gateway → Avancé → **Journaux de découverte** → reproduire → **Copier**
 
 Le journal inclut les transitions d'état du navigateur et les modifications de l'ensemble de résultats.
 
 ## Modes d'échec courants
 
-- **Bonjour ne traverse pas les réseaux** : utilisez Tailnet ou SSH.
-- **Multidiffusion bloquée** : certains réseaux Wi‑Fi désactivent mDNS.
-- **Veille / rotation des interfaces** : macOS peut temporairement perdre les résultats mDNS ; réessayez.
-- **La navigation fonctionne mais la résolution échoue** : gardez les noms de machine simples (évitez les émojis ou la ponctuation), puis redémarrez le Gateway. Le nom de l'instance de service dérive du nom d'hôte, les noms trop complexes peuvent donc confondre certains résolveurs.
+- **Le Bonjour ne traverse pas les réseaux** : utilisez Tailnet ou SSH.
+- **Multicast bloqué** : certains réseaux Wi‑Fi désactivent mDNS.
+- **Veille / instabilité de l'interface** : macOS peut temporairement abandonner les résultats mDNS ; réessayez.
+- **Le parcours fonctionne mais la résolution échoue** : gardez les noms de machine simples (évitez les émojis ou la ponctuation), puis redémarrez le Gateway. Le nom de l'instance de service dérive du nom d'hôte, donc des noms trop complexes peuvent perturber certains résolveurs.
 
 ## Noms d'instance échappés (`\032`)
 
-Bonjour/DNS‑SD échappe souvent les octets dans les noms d'instance de service sous forme de séquences décimales `\DDD`
-(par exemple, les espaces deviennent `\032`).
+Bonjour/DNS‑SD échappe souvent les octets dans les noms d'instance de service sous forme de séquences décimales `\DDD` (par exemple, les espaces deviennent `\032`).
 
-- C'est normal au niveau du protocole.
+- Ceci est normal au niveau du protocole.
 - Les interfaces utilisateur doivent décoder pour l'affichage (iOS utilise `BonjourEscapes.decode`).
 
 ## Désactivation / configuration
 
 - `OPENCLAW_DISABLE_BONJOUR=1` désactive la publicité (ancien : `OPENCLAW_DISABLE_BONJOUR`).
 - `gateway.bind` dans `~/.openclaw/openclaw.json` contrôle le mode de liaison du Gateway.
-- `OPENCLAW_SSH_PORT` remplace le port SSH annoncé dans le TXT (ancien : `OPENCLAW_SSH_PORT`).
-- `OPENCLAW_TAILNET_DNS` publie une indication MagicDNS dans TXT (ancien : `OPENCLAW_TAILNET_DNS`).
-- `OPENCLAW_CLI_PATH` remplace le chemin CLI annoncé (ancien : `OPENCLAW_CLI_PATH`).
+- `OPENCLAW_SSH_PORT` remplace le port SSH lorsque `sshPort` est annoncé (obsolète : `OPENCLAW_SSH_PORT`).
+- `OPENCLAW_TAILNET_DNS` publie une indication MagicDNS dans TXT (obsolète : `OPENCLAW_TAILNET_DNS`).
+- `OPENCLAW_CLI_PATH` remplace le chemin CLI annoncé (obsolète : `OPENCLAW_CLI_PATH`).
 
 ## Documentation connexe
 
 - Stratégie de découverte et sélection du transport : [Discovery](/en/gateway/discovery)
-- Appairage de nœuds + approbations : [Gateway pairing](/en/gateway/pairing)
+- Appairage de nœuds + approbations : [Appairage Gateway](/en/gateway/pairing)

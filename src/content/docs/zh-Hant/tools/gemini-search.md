@@ -9,10 +9,9 @@ title: "Gemini 搜尋"
 
 # Gemini 搜尋
 
-OpenClaw 支援具有內建
-[Google 搜尋接採](https://ai.google.dev/gemini-api/docs/grounding) 的 Gemini 模型，
-該功能會傳回即時 Google 搜尋結果作為參考依據的 AI 綜合回答
-並附上引用來源。
+OpenClaw 支援內建 Google Search 搜尋基礎
+[Google Search grounding](https://ai.google.dev/gemini-api/docs/grounding)
+的 Gemini 模型，這會根據即時 Google 搜尋結果傳回附上引用的 AI 綜合回答。
 
 ## 取得 API 金鑰
 
@@ -75,18 +74,21 @@ URL。
 
 ## 支援的參數
 
-Gemini 搜尋支援標準的 `query` 和 `count` 參數。
-不支援供應商特定的過濾器，例如 `country`、`language`、`freshness` 和
+Gemini 搜尋支援 `query`。
+
+為了相容共用的 `web_search`，接受使用 `count`，但 Gemini grounding
+仍然會傳回一個附上引用的綜合回答，而非 N 個結果的清單。
+
+不支援供應商專屬的篩選器，例如 `country`、`language`、`freshness` 和
 `domain_filter`。
 
 ## 模型選擇
 
-預設模型為 `gemini-2.5-flash`（快速且具成本效益）。任何支援
-接採的 Gemini 模型都可以透過
-`plugins.entries.google.config.webSearch.model` 使用。
+預設模型為 `gemini-2.5-flash` (快速且具成本效益)。任何支援 grounding 的
+Gemini 模型皆可透過 `plugins.entries.google.config.webSearch.model` 使用。
 
-## 相關內容
+## 相關
 
-- [Web Search 概觀](/en/tools/web) -- 所有供應商和自動偵測
-- [Brave Search](/en/tools/brave-search) -- 具有摘要的結構化結果
-- [Perplexity 搜尋](/en/tools/perplexity-search) -- 結構化結果 + 內容擷取
+- [Web Search 概覽](/en/tools/web) -- 所有供應商與自動偵測
+- [Brave Search](/en/tools/brave-search) -- 附摘要的結構化結果
+- [Perplexity Search](/en/tools/perplexity-search) -- 結構化結果 + 內容擷取

@@ -82,18 +82,20 @@ synthetic/hf:MiniMaxAI/MiniMax-M2.5
 | `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128000     | 8192       | false | text        |
 | `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524000     | 8192       | false | text        |
 | `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256000     | 8192       | false | text        |
+| `hf:moonshotai/Kimi-K2.5`                              | 256000     | 8192       | true  | 文本 + 图像 |
 | `hf:openai/gpt-oss-120b`                               | 128000     | 8192       | false | text        |
 | `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256000     | 8192       | false | text        |
-| `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000     | 8192       | false | text        |
+| `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000     | 8192       | false | 文本        |
 | `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250000     | 8192       | false | 文本 + 图像 |
 | `hf:zai-org/GLM-4.5`                                   | 128000     | 128000     | false | text        |
 | `hf:zai-org/GLM-4.6`                                   | 198000     | 128000     | false | text        |
-| `hf:deepseek-ai/DeepSeek-V3`                           | 128000     | 8192       | false | text        |
-| `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000     | 8192       | true  | text        |
+| `hf:zai-org/GLM-5`                                     | 256000     | 128000     | true  | 文本 + 图像 |
+| `hf:deepseek-ai/DeepSeek-V3`                           | 128000     | 8192       | false | 文本        |
+| `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000     | 8192       | true  | 文本        |
 
-## 注意
+## 备注
 
 - 模型引用使用 `synthetic/<modelId>`。
-- 如果您启用了模型允许列表（`agents.defaults.models`），请添加您计划
-  使用的每个模型。
+- 如果您启用了模型允许列表（`agents.defaults.models`），请添加您计划使用的
+  每个模型。
 - 有关提供商规则，请参阅[模型提供商](/en/concepts/model-providers)。

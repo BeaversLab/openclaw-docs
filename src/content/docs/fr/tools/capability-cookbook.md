@@ -10,7 +10,7 @@ sidebarTitle: "Ajout de capacités"
 
 # Ajout de capacités
 
-<Info>Il s'agit d'un **guide pour les contributeurs** destiné aux développeurs du cœur de OpenClaw. Si vous créez un plugin externe, consultez plutôt [Building Plugins](/en/plugins/building-plugins) .</Info>
+<Info>Ceci est un **guide pour les contributeurs** destiné aux développeurs du cœur d'OpenClaw. Si vous créez un plugin externe, consultez plutôt [Création de plugins](/en/plugins/building-plugins) .</Info>
 
 Utilisez ceci lorsque OpenClaw a besoin d'un nouveau domaine tel que la génération d'images,
 la génération de vidéos, ou une future zone fonctionnalité supportée par un fournisseur.
@@ -52,7 +52,7 @@ Cœur (Core) :
 - types de requête/réponse
 - registre de providers + résolution
 - comportement de repli (fallback)
-- schéma de configuration et étiquettes/aide
+- schéma de configuration plus métadonnées de documentation `title` / `description` propagées sur les nœuds d'objet imbriqué, de caractère générique, d'élément de tableau et de composition
 - interface de l'assistant d'exécution
 
 Plugin fournisseur :
@@ -64,7 +64,7 @@ Plugin fournisseur :
 
 Plugin de fonctionnalité/channel :
 
-- appelle `api.runtime.*` ou l'assistant `plugin-sdk/*-runtime` correspondant
+- appelle `api.runtime.*` ou le helper `plugin-sdk/*-runtime` correspondant
 - n'appelle jamais directement une implémentation de fournisseur
 
 ## Liste de fichiers
@@ -91,13 +91,13 @@ La génération d'images suit la structure standard :
 1. le cœur définit `ImageGenerationProvider`
 2. le cœur expose `registerImageGenerationProvider(...)`
 3. le cœur expose `runtime.imageGeneration.generate(...)`
-4. les plugins `openai` et `google` enregistrent des implémentations prises en charge par un fournisseur
+4. les plugins `openai`, `google`, `fal` et `minimax` enregistrent des implémentations prises en charge par les fournisseurs
 5. les futurs fournisseurs peuvent enregistrer le même contrat sans modifier les channels/tools
 
 La clé de configuration est distincte du routage de l'analyse d'image :
 
 - `agents.defaults.imageModel` = analyser les images
-- `agents.defaults.imageGenerationModel` = générer des images
+- `agents.defaults.imageGenerationModel` = générer les images
 
 Gardez-les séparés afin que la repli et la politique restent explicites.
 

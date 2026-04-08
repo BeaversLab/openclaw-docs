@@ -49,10 +49,9 @@ sidebarTitle: "Linux Server"
   </Card>
 </CardGroup>
 
-**AWS (EC2 / Lightsail / 免费层)** 也运行良好。
-社区视频演练位于
-[x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
-(社区资源 - 可能会失效)。
+**AWS (EC2 / Lightsail / free tier)** 也能很好地工作。
+可以在 x.com/techfrenAJ/status/2014934471095812547 (https://x.com/techfrenAJ/status/2014934471095812547)
+找到社区视频演示（community resource -- may become unavailable）。
 
 ## 云设置如何工作
 
@@ -62,7 +61,7 @@ sidebarTitle: "Linux Server"
 - 安全默认设置：将 Gateway(网关) 保持在本地回环地址上，并通过 SSH 隧道或 Tailscale Serve 访问它。
   如果绑定到 `lan` 或 `tailnet`，则要求使用 `gateway.auth.token` 或 `gateway.auth.password`。
 
-相关页面：[Gateway(网关) 远程访问](/en/gateway/remote)、[平台中心](/en/platforms)。
+相关页面：[Gateway 远程访问](/en/gateway/remote)、[平台中心](/en/platforms)。
 
 ## VPS 上的共享公司代理
 
@@ -98,7 +97,7 @@ source ~/.bashrc
 - `NODE_COMPILE_CACHE` 可缩短重复命令的启动时间。
 - `OPENCLAW_NO_RESPAWN=1` 可避免自重启动路径产生的额外启动开销。
 - 首次运行命令会预热缓存；后续运行会更快。
-- 有关 Raspberry Pi 的详细信息，请参阅 [Raspberry Pi](/en/install/raspberry-pi)。
+- 关于 Raspberry Pi 的具体细节，请参阅 [Raspberry Pi](/en/install/raspberry-pi)。
 
 ### systemd 优化清单（可选）
 
@@ -113,10 +112,10 @@ source ~/.bashrc
   - `TimeoutStartSec=90`
 - 对于状态/缓存路径，请优先选择支持 SSD 的磁盘，以减少随机 I/O 冷启动开销。
 
-示例：
+对于标准的 `openclaw onboard --install-daemon` 路径，请编辑用户单元：
 
 ```bash
-sudo systemctl edit openclaw
+systemctl --user edit openclaw-gateway.service
 ```
 
 ```ini
@@ -128,5 +127,8 @@ RestartSec=2
 TimeoutStartSec=90
 ```
 
+如果您特意安装了系统单元，请通过 `sudo systemctl edit openclaw-gateway.service` 编辑
+`openclaw-gateway.service`。
+
 `Restart=` 策略如何帮助自动恢复：
-[systemd 可以自动化服务恢复](https://www.redhat.com/en/blog/systemd-automate-recovery)。
+[systemd can automate service recovery](https://www.redhat.com/en/blog/systemd-automate-recovery)。

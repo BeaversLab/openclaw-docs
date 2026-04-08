@@ -69,9 +69,9 @@ openclaw channels add
 
 ### 1. 打开 Feishu 开放平台
 
-访问 [飞书开放平台](https://open.feishu.cn/app) 并登录。
+访问 [Feishu Open Platform](https://open.feishu.cn/app) 并登录。
 
-Lark（海外版）租户应使用 [https://open.larksuite.com/app](https://open.larksuite.com/app) 并在飞书配置中设置 `domain: "lark"`。
+Lark（全球版）租户应使用 [https://open.larksuite.com/app](https://open.larksuite.com/app) 并在 Feishu 配置中设置 `domain: "lark"`。
 
 ### 2. 创建应用
 
@@ -150,7 +150,7 @@ Lark（海外版）租户应使用 [https://open.larksuite.com/app](https://open
 
 ⚠️ 如果网关未运行，长连接设置可能会保存失败。
 
-![Configure event subscription](/images/feishu-step6-event-subscription.png)
+![配置事件订阅](/images/feishu-step6-event-subscription.png)
 
 ### 7. 发布应用
 
@@ -657,13 +657,13 @@ openclaw pairing list feishu
 - `match.peer.kind`: `"direct"` 或 `"group"`
 - `match.peer.id`: 用户 Open ID (`ou_xxx`) 或群组 ID (`oc_xxx`)
 
-有关查找提示，请参阅[获取群组/用户 ID](#get-groupuser-ids)。
+查看 [获取群组/用户 ID](#get-groupuser-ids) 了解查找技巧。
 
 ---
 
 ## 配置参考
 
-完整配置：[Gateway(网关) 配置](/en/gateway/configuration)
+完整配置：[Gateway(网关) configuration](/en/gateway/configuration)
 
 关键选项：
 
@@ -759,7 +759,9 @@ openclaw pairing list feishu
 - 文档元数据（标题、类型、URL）
 - 用于串内回复的评论线程上下文
 
-完成文档编辑后，代理程序将引导使用 `feishu_drive.reply_comment` 通知评论者，然后输出 `NO_REPLY` 以避免重复发送。
+文档编辑完成后，引导 Agent 使用 `feishu_drive.reply_comment` 通知
+评论者，然后输出准确的静默令牌 `NO_REPLY` / `no_reply` 以
+避免重复发送。
 
 ## 运行时操作接口
 
@@ -775,13 +777,13 @@ openclaw pairing list feishu
 - `member-info`
 - `channel-info`
 - `channel-list`
-- 当在配置中启用表情反应时，`react` 和 `reactions`
-- `feishu_drive` 评论操作：`list_comments`, `list_comment_replies`, `add_comment`, `reply_comment`
+- 当在配置中启用表情回应时的 `react` 和 `reactions`
+- `feishu_drive` 评论操作：`list_comments`、`list_comment_replies`、`add_comment`、`reply_comment`
 
 ## 相关
 
-- [频道概览](/en/channels) — 所有支持的频道
-- [配对](/en/channels/pairing) — 私信认证和配对流程
-- [群组](/en/channels/groups) — 群聊行为和提及控制
-- [频道路由](/en/channels/channel-routing) — 消息的会话路由
-- [安全性](/en/gateway/security) — 访问模型和加固
+- [Channels Overview](/en/channels) — 所有支持的渠道
+- [Pairing](/en/channels/pairing) — 私信认证和配对流程
+- [Groups](/en/channels/groups) — 群聊行为和提及限制
+- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
+- [Security](/en/gateway/security) — 访问模型和加固

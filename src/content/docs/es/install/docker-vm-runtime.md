@@ -116,18 +116,18 @@ Salida esperada:
 OpenClaw se ejecuta en Docker, pero Docker no es la fuente de verdad.
 Todo el estado de larga duración debe sobrevivir a reinicios, recompilaciones y rearranques.
 
-| Componente                           | Ubicación                          | Mecanismo de persistencia     | Notas                                                |
-| ------------------------------------ | ---------------------------------- | ----------------------------- | ---------------------------------------------------- |
-| Configuración del Gateway            | `/home/node/.openclaw/`            | Montaje de volumen del host   | Incluye `openclaw.json`, tokens                      |
-| Perfiles de autenticación de modelos | `/home/node/.openclaw/`            | Montaje de volumen del host   | Tokens de OAuth, claves API                          |
-| Configuraciones de habilidades       | `/home/node/.openclaw/skills/`     | Montaje de volumen del host   | Estado a nivel de habilidad                          |
-| Espacio de trabajo del agente        | `/home/node/.openclaw/workspace/`  | Montaje de volumen del host   | Código y artefactos del agente                       |
-| Sesión de WhatsApp                   | `/home/node/.openclaw/`            | Montaje de volumen del host   | Conserva el inicio de sesión QR                      |
-| Llavero de Gmail                     | `/home/node/.openclaw/`            | Volumen del host + contraseña | Requiere `GOG_KEYRING_PASSWORD`                      |
-| Binarios externos                    | `/usr/local/bin/`                  | Imagen de Docker              | Debe estar integrado en el momento de la compilación |
-| Tiempo de ejecución de Node          | Sistema de archivos del contenedor | Imagen de Docker              | Reconstruido en cada compilación de imagen           |
-| Paquetes del sistema operativo       | Sistema de archivos del contenedor | Imagen de Docker              | No instalar en tiempo de ejecución                   |
-| Contenedor de Docker                 | Efímero                            | Reiniciable                   | Seguro de destruir                                   |
+| Componente                           | Ubicación                          | Mecanismo de persistencia     | Notas                                                              |
+| ------------------------------------ | ---------------------------------- | ----------------------------- | ------------------------------------------------------------------ |
+| Configuración del Gateway            | `/home/node/.openclaw/`            | Montaje de volumen del host   | Incluye `openclaw.json`, `.env`                                    |
+| Perfiles de autenticación de modelos | `/home/node/.openclaw/agents/`     | Montaje de volumen del host   | `agents/<agentId>/agent/auth-profiles.json` (OAuth, claves de API) |
+| Configuraciones de habilidades       | `/home/node/.openclaw/skills/`     | Montaje de volumen del host   | Estado a nivel de habilidad                                        |
+| Espacio de trabajo del agente        | `/home/node/.openclaw/workspace/`  | Montaje de volumen del host   | Código y artefactos del agente                                     |
+| Sesión de WhatsApp                   | `/home/node/.openclaw/`            | Montaje de volumen del host   | Conserva el inicio de sesión QR                                    |
+| Llavero de Gmail                     | `/home/node/.openclaw/`            | Volumen del host + contraseña | Requiere `GOG_KEYRING_PASSWORD`                                    |
+| Binarios externos                    | `/usr/local/bin/`                  | Imagen de Docker              | Debe estar integrado en el momento de la compilación               |
+| Tiempo de ejecución de Node          | Sistema de archivos del contenedor | Imagen de Docker              | Reconstruido en cada compilación de imagen                         |
+| Paquetes del sistema operativo       | Sistema de archivos del contenedor | Imagen de Docker              | No instalar en tiempo de ejecución                                 |
+| Contenedor de Docker                 | Efímero                            | Reiniciable                   | Seguro de destruir                                                 |
 
 ## Actualizaciones
 

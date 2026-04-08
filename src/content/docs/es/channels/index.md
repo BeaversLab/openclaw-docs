@@ -13,31 +13,31 @@ El texto es compatible en todas partes; los medios y las reacciones varían seg�
 
 ## Canales compatibles
 
-- [BlueBubbles](/en/channels/bluebubbles) — **Recomendado para iMessage**; utiliza la API REST del servidor BlueBubbles para macOS con compatibilidad completa de funciones (editar, deshacer envío, efectos, reacciones, gestión de grupos — editar actualmente roto en macOS 26 Tahoe).
+- [BlueBubbles](/en/channels/bluebubbles) — **Recomendado para iMessage**; utiliza la API REST del servidor BlueBubbles para macOS con soporte completo de funciones (complemento incluido; editar, enviar no leído, efectos, reacciones, gestión de grupos — editar actualmente roto en macOS 26 Tahoe).
 - [Discord](/en/channels/discord) — Bot API de Discord + Gateway; compatible con servidores, canales y MDs.
-- [Feishu](/en/channels/feishu) — Bot de Feishu/Lark a través de WebSocket (complemento, instalado por separado).
+- [Feishu](/en/channels/feishu) — Bot de Feishu/Lark vía WebSocket (complemento incluido).
 - [Google Chat](/en/channels/googlechat) — Aplicación de API de Google Chat a través de webhook HTTP.
 - [iMessage (heredado)](/en/channels/imessage) — Integración heredada de macOS a través de la CLI imsg (obsoleto, use BlueBubbles para nuevas configuraciones).
 - [IRC](/en/channels/irc) — Servidores IRC clásicos; canales + MDs con controles de emparejamiento/lista blanca.
-- [LINE](/en/channels/line) — Bot de API de mensajería de LINE (complemento, instalado por separado).
-- [Matrix](/en/channels/matrix) — Protocolo Matrix (complemento, instalado por separado).
-- [Mattermost](/en/channels/mattermost) — Bot API + WebSocket; canales, grupos, MDs (complemento, instalado por separado).
-- [Microsoft Teams](/en/channels/msteams) — Bot Framework; soporte empresarial (complemento, instalado por separado).
-- [Nextcloud Talk](/en/channels/nextcloud-talk) — Chat autohospedado a través de Nextcloud Talk (complemento, instalado por separado).
-- [Nostr](/en/channels/nostr) — MDs descentralizados a través de NIP-04 (complemento, instalado por separado).
-- [QQ Bot](/en/channels/qqbot) — Bot API de QQ; chat privado, chat de grupo y medios enriquecidos.
+- [LINE](/en/channels/line) — Bot de la API de mensajería de LINE (complemento incluido).
+- [Matrix](/en/channels/matrix) — Protocolo Matrix (complemento incluido).
+- [Mattermost](/en/channels/mattermost) — Bot API + WebSocket; canales, grupos, MDs (complemento incluido).
+- [Microsoft Teams](/en/channels/msteams) — Bot Framework; soporte empresarial (complemento incluido).
+- [Nextcloud Talk](/en/channels/nextcloud-talk) — Chat autoalojado vía Nextcloud Talk (complemento incluido).
+- [Nostr](/en/channels/nostr) — MDs descentralizados vía NIP-04 (complemento incluido).
+- [QQ Bot](/en/channels/qqbot) — API de Bot de QQ; chat privado, chat grupal y contenido enriquecido (complemento incluido).
 - [Signal](/en/channels/signal) — signal-cli; centrado en la privacidad.
 - [Slack](/en/channels/slack) — Bolt SDK; aplicaciones de espacio de trabajo.
-- [Synology Chat](/en/channels/synology-chat) — Synology NAS Chat vía webhooks de salida y entrada (complemento, instalado por separado).
+- [Synology Chat](/en/channels/synology-chat) — Chat de NAS Synology vía webhooks de salida y entrada (complemento incluido).
 - [Telegram](/en/channels/telegram) — Bot API vía grammY; admite grupos.
-- [Tlon](/en/channels/tlon) — Mensajero basado en Urbit (complemento, instalado por separado).
-- [Twitch](/en/channels/twitch) — Chat de Twitch vía conexión IRC (complemento, instalado por separado).
+- [Tlon](/en/channels/tlon) — Mensajero basado en Urbit (complemento incluido).
+- [Twitch](/en/channels/twitch) — Chat de Twitch vía conexión IRC (complemento incluido).
 - [Voice Call](/en/plugins/voice-call) — Telefonía vía Plivo o Twilio (complemento, instalado por separado).
 - [WebChat](/en/web/webchat) — Interfaz de usuario WebChat del Gateway sobre WebSocket.
 - [WeChat](https://www.npmjs.com/package/@tencent-weixin/openclaw-weixin) — Complemento de bot Tencent iLink vía login con QR; solo chats privados.
 - [WhatsApp](/en/channels/whatsapp) — El más popular; usa Baileys y requiere emparejamiento con código QR.
-- [Zalo](/en/channels/zalo) — Zalo Bot API; mensajero popular de Vietnam (complemento, instalado por separado).
-- [Zalo Personal](/en/channels/zalouser) — Cuenta personal de Zalo vía login con QR (complemento, instalado por separado).
+- [Zalo](/en/channels/zalo) — API de Bot de Zalo; el mensajero popular de Vietnam (complemento incluido).
+- [Zalo Personal](/en/channels/zalouser) — Cuenta personal de Zalo vía inicio de sesión con QR (complemento incluido).
 
 ## Notas
 

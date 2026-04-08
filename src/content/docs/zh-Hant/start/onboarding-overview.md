@@ -9,8 +9,8 @@ sidebarTitle: "入門概述"
 
 # 入門概述
 
-OpenClaw 有兩種入門途徑。這兩種方式都會設定驗證、Gateway 和
-選用通道 — 它們的差異僅在於您與設定的互動方式。
+OpenClaw 有兩種入門途徑。兩者都會設定認證、Gateway 和
+選用的聊天頻道 — 它們僅在您與設定互動的方式上有所不同。
 
 ## 我應該使用哪種途徑？
 
@@ -32,7 +32,9 @@ OpenClaw 有兩種入門途徑。這兩種方式都會設定驗證、Gateway 和
 1. **模型提供者和驗證** — 您選擇的提供者的 API 金鑰、OAuth 或設定權杖
 2. **工作區** — 用於代理程式檔案、啟動範本和記憶體的目錄
 3. **Gateway** — 連接埠、綁定位址、驗證模式
-4. **通道** (選用) — WhatsApp、Telegram、Discord 等
+4. **頻道** (選用) — 內建並隨附的聊天頻道，例如
+   BlueBubbles、Discord、Feishu、Google Chat、Mattermost、Microsoft Teams、
+   Telegram、WhatsApp 等等
 5. **常駐程式** (選用) — 背景服務，讓 Gateway 自動啟動
 
 ## CLI 入門

@@ -10,8 +10,8 @@ read_when:
 
 # Assistants d'exécution de plugin
 
-Référence de l'objet `api.runtime` injecté dans chaque plugin lors de
-l'enregistrement. Utilisez ces assistants au lieu d'importer directement les éléments internes de l'hôte.
+Référence de l'objet `api.runtime` injecté dans chaque plugin lors
+de l'enregistrement. Utilisez ces assistants au lieu d'importer directement les composants internes de l'hôte.
 
 <Tip>**Vous cherchez un guide pas à pas ?** Voir [Channel Plugins](/en/plugins/sdk-channel-plugins) ou [Provider Plugins](/en/plugins/sdk-provider-plugins) pour des guides étape par étape qui présentent ces aides dans leur contexte.</Tip>
 
@@ -106,14 +106,48 @@ await api.runtime.subagent.deleteSession({
 ```
 
 <Warning>
-  Les substitutions de model (`provider`/`model`) nécessitent l'accord explicite de l'opérateur via
+  Les substitutions de modèle (`provider`/`model`) nécessitent une acceptation par l'opérateur via
   `plugins.entries.<id>.subagent.allowModelOverride: true` dans la configuration.
   Les plugins non fiables peuvent toujours exécuter des sous-agents, mais les demandes de substitution sont rejetées.
 </Warning>
 
+### `api.runtime.taskFlow`
+
+Liez un runtime de flux de tâches à une clé de session OpenClaw existante ou à un contexte d'outil
+approuvé, puis créez et gérez des flux de tâches sans avoir à passer un propriétaire à chaque appel.
+
+```typescript
+const taskFlow = api.runtime.taskFlow.fromToolContext(ctx);
+
+const created = taskFlow.createManaged({
+  controllerId: "my-plugin/review-batch",
+  goal: "Review new pull requests",
+});
+
+const child = taskFlow.runTask({
+  flowId: created.flowId,
+  runtime: "acp",
+  childSessionKey: "agent:main:subagent:reviewer",
+  task: "Review PR #123",
+  status: "running",
+  startedAt: Date.now(),
+});
+
+const waiting = taskFlow.setWaiting({
+  flowId: created.flowId,
+  expectedRevision: created.revision,
+  currentStep: "await-human-reply",
+  waitJson: { kind: "reply", channel: "telegram" },
+});
+```
+
+Utilisez `bindSession({ sessionKey, requesterOrigin })` lorsque vous possédez déjà une
+clé de session OpenClaw approuvée issue de votre propre couche de liaison. Ne liez pas à partir d'une
+saisie utilisateur brute.
+
 ### `api.runtime.tts`
 
-Synthèse vocale (texte-vers-parole).
+Synthèse vocale.
 
 ```typescript
 // Standard TTS
@@ -135,12 +169,12 @@ const voices = await api.runtime.tts.listVoices({
 });
 ```
 
-Utilise la configuration `messages.tts` principale et la sélection de provider. Renvoie le tampon audio
-PCM + la fréquence d'échantillonnage.
+Utilise la configuration `messages.tts` principale et la sélection de provider. Renvoie un tampon audio
+PCM + le taux d'échantillonnage.
 
 ### `api.runtime.mediaUnderstanding`
 
-Analyse d'image, d'audio et de vidéo.
+Analyse d'image, audio et vidéo.
 
 ```typescript
 // Describe an image
@@ -170,7 +204,7 @@ const result = await api.runtime.mediaUnderstanding.runFile({
 });
 ```
 
-Renvoie `{ text: undefined }` lorsque aucune sortie n'est produite (ex. entrée ignorée).
+Renvoie `{ text: undefined }` lorsqu'aucune sortie n'est produite (ex. : entrée ignorée).
 
 <Info>`api.runtime.stt.transcribeAudioFile(...)` reste un alias de compatibilité pour `api.runtime.mediaUnderstanding.transcribeAudioFile(...)`.</Info>
 
@@ -224,7 +258,7 @@ await api.runtime.config.writeConfigFile(cfg);
 
 ### `api.runtime.system`
 
-Utilitaires système.
+Utilitaires au niveau du système.
 
 ```typescript
 await api.runtime.system.enqueueSystemEvent(event);
@@ -257,7 +291,7 @@ const childLogger = api.runtime.logging.getChildLogger({ plugin: "my-plugin" }, 
 
 ### `api.runtime.modelAuth`
 
-Résolution d'authentification pour les models et providers.
+Résolution d'authentification du modèle et du provider.
 
 ```typescript
 const auth = await api.runtime.modelAuth.getApiKeyForModel({ model, cfg });
@@ -277,7 +311,7 @@ const stateDir = api.runtime.state.resolveStateDir();
 
 ### `api.runtime.tools`
 
-Fabriques d'outils de mémoire et CLI.
+Usines d'outils de mémoire et CLI.
 
 ```typescript
 const getTool = api.runtime.tools.createMemoryGetTool(/* ... */);
@@ -287,12 +321,12 @@ api.runtime.tools.registerMemoryCli(/* ... */);
 
 ### `api.runtime.channel`
 
-Assistances d'exécution spécifiques au canal (disponibles lorsqu'un plugin de canal est chargé).
+Assistants d'exécution spécifiques au canal (disponibles lorsqu'un plugin de canal est chargé).
 
 ## Stockage des références d'exécution
 
-Utilisez `createPluginRuntimeStore` pour stocker la référence d'exécution pour une utilisation en dehors
-de la fonction de rappel `register` :
+Utilisez `createPluginRuntimeStore` pour stocker la référence d'exécution en vue d'une utilisation
+en dehors du rappel `register` :
 
 ```typescript
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
@@ -319,22 +353,22 @@ export function tryGetRuntime() {
 }
 ```
 
-## Autres champs `api` de niveau supérieur
+## Autres champs de premier niveau `api`
 
 Au-delà de `api.runtime`, l'objet API fournit également :
 
-| Champ                    | Type                      | Description                                                                   |
-| ------------------------ | ------------------------- | ----------------------------------------------------------------------------- |
-| `api.id`                 | `string`                  | ID du plugin                                                                  |
-| `api.name`               | `string`                  | Nom d'affichage du plugin                                                     |
-| `api.config`             | `OpenClawConfig`          | Instantané de la configuration actuelle                                       |
-| `api.pluginConfig`       | `Record<string, unknown>` | Configuration spécifique au plugin provenant de `plugins.entries.<id>.config` |
-| `api.logger`             | `PluginLogger`            | Enregistreur avec portée (`debug`, `info`, `warn`, `error`)                   |
-| `api.registrationMode`   | `PluginRegistrationMode`  | `"full"`, `"setup-only"`, `"setup-runtime"`, ou `"cli-metadata"`              |
-| `api.resolvePath(input)` | `(string) => string`      | Résout un chemin relatif à la racine du plugin                                |
+| Champ                    | Type                      | Description                                                                                                        |
+| ------------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `api.id`                 | `string`                  | ID du plugin                                                                                                       |
+| `api.name`               | `string`                  | Nom d'affichage du plugin                                                                                          |
+| `api.config`             | `OpenClawConfig`          | Instantané de la configuration actuelle (instantané d'exécution actif en mémoire lorsqu'il est disponible)         |
+| `api.pluginConfig`       | `Record<string, unknown>` | Configuration spécifique au plugin depuis `plugins.entries.<id>.config`                                            |
+| `api.logger`             | `PluginLogger`            | Journalleur délimité (`debug`, `info`, `warn`, `error`)                                                            |
+| `api.registrationMode`   | `PluginRegistrationMode`  | Mode de chargement actuel ; `"setup-runtime"` est la fenêtre légère de démarrage/configuration pré-entrée complète |
+| `api.resolvePath(input)` | `(string) => string`      | Résoudre un chemin relatif à la racine du plugin                                                                   |
 
 ## Connexes
 
 - [Aperçu du SDK](/en/plugins/sdk-overview) -- référence de sous-chemin
 - [Points d'entrée du SDK](/en/plugins/sdk-entrypoints) -- options `definePluginEntry`
-- [Fonctionnement interne des plugins](/en/plugins/architecture) -- model de capacité et registre
+- [Internes du plugin](/en/plugins/architecture) -- modèle de capacité et registre

@@ -110,26 +110,26 @@ OpenCode 完成更改 → 打开 PR → OpenClaw 审查差异并在 Telegram 中
   <img src="/assets/showcase/papla-tts.jpg" alt="Telegram voice note output from TTS" />
 </Card>
 
-<Card title="CodexMonitor" icon="eye" href="https://clawhub.com/odrobnik/codexmonitor">
+<Card title="CodexMonitor" icon="eye" href="https://clawhub.ai/odrobnik/codexmonitor">
   **@odrobnik** • `devtools` `codex` `brew`
 
 通过 Homebrew 安装的辅助工具，用于列出/检查/监视本地 OpenAI Codex 会话（CLI + VS Code）。
 
-  <img src="/assets/showcase/codexmonitor.png" alt="CodexMonitor on ClawHub" />
+  <img src="/assets/showcase/codexmonitor.png" alt="ClawHub 上的 CodexMonitor" />
 </Card>
 
-<Card title="Bambu 3D 打印机控制" icon="print" href="https://clawhub.com/tobiasbischoff/bambu-cli">
+<Card title="Bambu 3D Printer Control" icon="print" href="https://clawhub.ai/tobiasbischoff/bambu-cli">
   **@tobiasbischoff** • `hardware` `3d-printing` `skill`
 
 控制和排查 BambuLab 打印机故障：状态、任务、摄像头、AMS、校准等。
 
-  <img src="/assets/showcase/bambu-cli.png" alt="ClawHub 上的 Bambu CLI 技能" />
+  <img src="/assets/showcase/bambu-cli.png" alt="CLI 上的 Bambu ClawHub 技能" />
 </Card>
 
-<Card title="维也纳交通" icon="train" href="https://clawhub.com/hjanuschka/wienerlinien">
+<Card title="Vienna Transport (Wiener Linien)" icon="train" href="https://clawhub.ai/hjanuschka/wienerlinien">
   **@hjanuschka** • `travel` `transport` `skill`
 
-维也纳公共交通的实时发车、中断、电梯状态和路线规划。
+维也纳公共交通的实时出发、中断、电梯状态和路线规划。
 
   <img src="/assets/showcase/wienerlinien.png" alt="ClawHub 上的 Wiener Linien 技能" />
 </Card>
@@ -141,7 +141,7 @@ OpenCode 完成更改 → 打开 PR → OpenClaw 审查差异并在 Telegram 中
 
 </Card>
 
-<Card title="R2 上传" icon="cloud-arrow-up" href="https://clawhub.com/skills/r2-upload">
+<Card title="R2 Upload (Send Me My Files)" icon="cloud-arrow-up" href="https://clawhub.ai/skills/r2-upload">
   **@julianengel** • `files` `r2` `presigned-urls`
 
 上传到 Cloudflare R2/S3 并生成安全的预签名下载链接。非常适合远程 OpenClaw 实例。
@@ -297,10 +297,10 @@ OpenClaw 连接到 Jira，然后即时生成了一个新技能（在它存在于
   **@alejandroOPI** • `voice` `vapi` `bridge` Vapi 语音助手 ↔ OpenClaw HTTP 桥接。与您的智能体进行准实时电话通话。
 </Card>
 
-<Card title="OpenRouter 转录" icon="microphone" href="https://clawhub.com/obviyus/openrouter-transcribe">
+<Card title="OpenRouter 转录" icon="microphone" href="https://clawhub.ai/obviyus/openrouter-transcribe">
   **@obviyus** • `transcription` `multilingual` `skill`
 
-通过 OpenRouter（Gemini 等）进行多语言音频转录。现已在 ClawHub 上提供。
+通过 OpenRouter (Gemini 等) 进行多语言音频转录。可在 ClawHub 上获取。
 
 </Card>
 
@@ -314,7 +314,7 @@ OpenClaw 连接到 Jira，然后即时生成了一个新技能（在它存在于
   **@ngutman** • `homeassistant` `docker` `raspberry-pi` 运行在 Home Assistant OS 上的 OpenClaw 网关，支持 SSH 隧道和持久化状态。
 </Card>
 
-<Card title="Home Assistant 技能" icon="toggle-on" href="https://clawhub.com/skills/homeassistant">
+<Card title="Home Assistant 技能" icon="toggle-on" href="https://clawhub.ai/skills/homeassistant">
   **ClawHub** • `homeassistant` `skill` `automation` 通过自然语言控制和自动化 Home Assistant 设备。
 </Card>
 
@@ -322,7 +322,7 @@ OpenClaw 连接到 Jira，然后即时生成了一个新技能（在它存在于
   **@openclaw** • `nix` `packaging` `deployment` 开箱即用的 Nix 化 OpenClaw 配置，用于可复现的部署。
 </Card>
 
-<Card title="CalDAV 日历" icon="calendar" href="https://clawhub.com/skills/caldav-calendar">
+<Card title="CalDAV 日历" icon="calendar" href="https://clawhub.ai/skills/caldav-calendar">
   **ClawHub** • `calendar` `caldav` `skill` 使用 khal/vdirsyncer 的日历技能。自托管日历集成。
 </Card>
 

@@ -14,7 +14,7 @@ Docker 是**選用**的。僅在您想要容器化的 Gateway 或是要驗證 Do
 
 - **是**：您想要一個隔離、可隨時丟棄的 Gateway 環境，或是想在沒有本地安裝的主機上執行 OpenClaw。
 - **否**：您是在自己的機器上執行，且只想要最快的開發迴圈。請改用一般的安裝流程。
-- **沙箱備註**：Agent 沙箱也會使用 Docker，但這**並不**需要完整的 Gateway 在 Docker 中執行。請參閱 [沙箱隔離](/en/gateway/sandboxing)。
+- **沙盒註記**：Agent 沙盒也使用 Docker，但它**不**要求完整的 Gateway 在 Docker 中執行。請參閱 [Sandboxing](/en/gateway/sandboxing)。
 
 ## 必要條件
 
@@ -22,29 +22,29 @@ Docker 是**選用**的。僅在您想要容器化的 Gateway 或是要驗證 Do
 - 建構映像檔至少需要 2 GB RAM（`pnpm install` 在 1 GB 的主機上可能會因 OOM 而被終止，退出代碼為 137）
 - 足夠存放映像檔和日誌的磁碟空間
 - 如果在 VPS/公開主機上執行，請檢閱
-  [針對網路暴露的安全加固](/en/gateway/security)，
-  特別是 Docker `DOCKER-USER` 防火牆政策。
+  [Security hardening for network exposure](/en/gateway/security),
+  特別是 Docker `DOCKER-USER` 防火牆原則。
 
 ## 容器化 Gateway
 
 <Steps>
   <Step title="建置映像檔">
-    從 repo 根目錄執行 setup script：
+    從 repo 根目錄執行設定腳本：
 
     ```bash
     ./scripts/docker/setup.sh
     ```
 
-    這會在本機建置 gateway 映像檔。若要改用預先建置的映像檔：
+    這會在本地建置 Gateway 映像檔。若要改用預先建置的映像檔：
 
     ```bash
     export OPENCLAW_IMAGE="ghcr.io/openclaw/openclaw:latest"
     ./scripts/docker/setup.sh
     ```
 
-    預先建置的映像檔會發布至
+    預先建置的映像檔發佈於
     [GitHub Container Registry](https://github.com/openclaw/openclaw/pkgs/container/openclaw)。
-    常見標籤：`main`、`latest`、`<version>` (例如 `2026.2.26`)。
+    常見標籤： `main`, `latest`, `<version>` (例如 `2026.2.26`)。
 
   </Step>
 
@@ -61,11 +61,12 @@ Docker 是**選用**的。僅在您想要容器化的 Gateway 或是要驗證 Do
 
   </Step>
 
-  <Step title="開啟控制介面">
-    在瀏覽器中開啟 `http://127.0.0.1:18789/` 並將 token 貼上至
-    Settings。
+  <Step title="開啟控制 UI">
+    在瀏覽器中開啟 `http://127.0.0.1:18789/` 並將設定的
+    shared secret 貼到 Settings 中。設定腳本預設會將 token 寫入 `.env`；
+    如果您將容器設定切換為密碼驗證，請改用該密碼。
 
-    再次需要網址嗎？
+    再次需要網址？
 
     ```bash
     docker compose run --rm openclaw-cli dashboard --no-open
@@ -74,7 +75,7 @@ Docker 是**選用**的。僅在您想要容器化的 Gateway 或是要驗證 Do
   </Step>
 
   <Step title="設定頻道（選用）">
-    使用 CLI 容器以新增訊息頻道：
+    使用 CLI 容器來新增訊息頻道：
 
     ```bash
     # WhatsApp (QR)
@@ -87,7 +88,7 @@ Docker 是**選用**的。僅在您想要容器化的 Gateway 或是要驗證 Do
     docker compose run --rm openclaw-cli channels add --channel discord --token "<token>"
     ```
 
-    文件：[WhatsApp](/en/channels/whatsapp)、[Telegram](/en/channels/telegram)、[Discord](/en/channels/discord)
+    文件： [WhatsApp](/en/channels/whatsapp), [Telegram](/en/channels/telegram), [Discord](/en/channels/discord)
 
   </Step>
 </Steps>
@@ -101,32 +102,27 @@ docker build -t openclaw:local -f Dockerfile .
 docker compose run --rm --no-deps --entrypoint node openclaw-gateway \
   dist/index.js onboard --mode local --no-install-daemon
 docker compose run --rm --no-deps --entrypoint node openclaw-gateway \
-  dist/index.js config set gateway.mode local
-docker compose run --rm --no-deps --entrypoint node openclaw-gateway \
-  dist/index.js config set gateway.bind lan
-docker compose run --rm --no-deps --entrypoint node openclaw-gateway \
-  dist/index.js config set gateway.controlUi.allowedOrigins \
-  '["http://localhost:18789","http://127.0.0.1:18789"]' --strict-json
+  dist/index.js config set --batch-json '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"},{"path":"gateway.controlUi.allowedOrigins","value":["http://localhost:18789","http://127.0.0.1:18789"]}]'
 docker compose up -d openclaw-gateway
 ```
 
-<Note>請從儲存庫根目錄執行 `docker compose`。如果您啟用了 `OPENCLAW_EXTRA_MOUNTS` 或 `OPENCLAW_HOME_VOLUME`，設定腳本會寫入 `docker-compose.extra.yml`； 請使用 `-f docker-compose.yml -f docker-compose.extra.yml` 將其包含在內。</Note>
+<Note>從 repo 根目錄執行 `docker compose`。如果您啟用了 `OPENCLAW_EXTRA_MOUNTS` 或 `OPENCLAW_HOME_VOLUME`，設定腳本會寫入 `docker-compose.extra.yml`； 請將其包含在 `-f docker-compose.yml -f docker-compose.extra.yml` 中。</Note>
 
-<Note>由於 `openclaw-cli` 共用 `openclaw-gateway` 的網路命名空間，它是一個 啟動後工具。在 `docker compose up -d openclaw-gateway` 之前，請透過 `openclaw-gateway` 使用 `--no-deps --entrypoint node` 來執行上架和設定時的配置寫入。</Note>
+<Note>因為 `openclaw-cli` 共用 `openclaw-gateway` 的網路命名空間，它是 一個啟動後工具。在 `docker compose up -d openclaw-gateway` 之前，請透過 `openclaw-gateway` 以 `--no-deps --entrypoint node` 執行上架和設定時期的設定寫入。</Note>
 
 ### 環境變數
 
 設定腳本接受這些選用的環境變數：
 
-| 變數                           | 用途                                                      |
-| ------------------------------ | --------------------------------------------------------- |
-| `OPENCLAW_IMAGE`               | 使用遠端映像檔而非在本地建置                              |
-| `OPENCLAW_DOCKER_APT_PACKAGES` | 在建置期間安裝額外的 apt 套件（以空格分隔）               |
-| `OPENCLAW_EXTENSIONS`          | 在建置時預先安裝擴充功能相依項（以空格分隔的名稱）        |
-| `OPENCLAW_EXTRA_MOUNTS`        | 額外的主機繫接掛載（以逗號分隔的 `source:target[:opts]`） |
-| `OPENCLAW_HOME_VOLUME`         | 在具名的 Docker volume 中保存 `/home/node`                |
-| `OPENCLAW_SANDBOX`             | 啟用沙盒引導（`1`、`true`、`yes`、`on`）                  |
-| `OPENCLAW_DOCKER_SOCKET`       | 覆寫 Docker socket 路徑                                   |
+| 變數                           | 用途                                                  |
+| ------------------------------ | ----------------------------------------------------- |
+| `OPENCLAW_IMAGE`               | 使用遠端映像檔而非在本地建置                          |
+| `OPENCLAW_DOCKER_APT_PACKAGES` | 在建置期間安裝額外的 apt 套件（以空格分隔）           |
+| `OPENCLAW_EXTENSIONS`          | 在建置時預先安裝擴充功能相依項（以空格分隔的名稱）    |
+| `OPENCLAW_EXTRA_MOUNTS`        | 額外主機綁定掛載（以逗號分隔 `source:target[:opts]`） |
+| `OPENCLAW_HOME_VOLUME`         | 將 `/home/node` 持久化到命名的 Docker volume 中       |
+| `OPENCLAW_SANDBOX`             | 選擇加入沙箱引導（`1`、`true`、`yes`、`on`）          |
+| `OPENCLAW_DOCKER_SOCKET`       | 覆寫 Docker socket 路徑                               |
 
 ### 健康檢查
 
@@ -137,9 +133,9 @@ curl -fsS http://127.0.0.1:18789/healthz   # liveness
 curl -fsS http://127.0.0.1:18789/readyz     # readiness
 ```
 
-Docker 映像檔包含內建的 `HEALTHCHECK`，會對 `/healthz` 進行 ping。
-如果檢查持續失敗，Docker 會將容器標記為 `unhealthy`，
-而編排系統可以重新啟動或取代它。
+Docker 映像檔包含內建的 `HEALTHCHECK`，會對 `/healthz` 進行 ping 檢查。
+如果檢查持續失敗，Docker 會將容器標記為 `unhealthy`，且
+編排系統可以重新啟動或取代它。
 
 經過驗證的深度健康快照：
 
@@ -149,50 +145,55 @@ docker compose exec openclaw-gateway node dist/index.js health --token "$OPENCLA
 
 ### 區域網路與 Loopback
 
-`scripts/docker/setup.sh` 預設為 `OPENCLAW_GATEWAY_BIND=lan`，因此主機對
-`http://127.0.0.1:18789` 的存取可透過 Docker 連接埠發佈運作。
+`scripts/docker/setup.sh` 預設為 `OPENCLAW_GATEWAY_BIND=lan`，以便主機對
+`http://127.0.0.1:18789` 的存取能透過 Docker 連接埠發佈運作。
 
 - `lan` (預設)：主機瀏覽器和主機 CLI 可以存取已發佈的 gateway 連接埠。
-- `loopback`：只有容器網路命名空間內的處理程序可以直接
-  存取 gateway。
+- `loopback`：只有容器網路命名空間內的程序可以直接存取
+  gateway。
 
-<Note>在 `gateway.bind` (`lan` / `loopback` / `custom` / `tailnet` / `auto`) 中使用綁定模式值，而不是像 `0.0.0.0` 或 `127.0.0.1` 這樣的主機別名。</Note>
+<Note>請在 `gateway.bind` 中使用綁定模式值（`lan` / `loopback` / `custom` / `tailnet` / `auto`），而不是像 `0.0.0.0` 或 `127.0.0.1` 這樣的主機別名。</Note>
 
 ### 儲存與持久性
 
-Docker Compose 將 `OPENCLAW_CONFIG_DIR` 綁定掛載至 `/home/node/.openclaw` 並將
-`OPENCLAW_WORKSPACE_DIR` 綁定掛載至 `/home/node/.openclaw/workspace`，因此這些路徑
+Docker Compose 將 `OPENCLAW_CONFIG_DIR` 綁定掛載到 `/home/node/.openclaw`，並將
+`OPENCLAW_WORKSPACE_DIR` 綁定掛載到 `/home/node/.openclaw/workspace`，因此這些路徑
 在容器被取代後仍會保留。
 
-關於 VM 部署的完整持久性詳細資訊，請參閱
-[Docker VM Runtime - 什麼內容會保留在哪裡](/en/install/docker-vm-runtime#what-persists-where)。
+該掛載的設定目錄是 OpenClaw 用來存放以下內容的位置：
 
-**磁碟增長熱點：** 請注意 `media/`、工作階段 JSONL 檔案、`cron/runs/*.jsonl`，
-以及 `/tmp/openclaw/` 下的輪替檔案日誌。
+- `openclaw.json` 用於行為設定
+- `agents/<agentId>/agent/auth-profiles.json` 用於已儲存的供應商 OAuth/API 金鑰驗證
+- `.env` 用於支援環境變數的執行時期密碼，例如 `OPENCLAW_GATEWAY_TOKEN`
 
-### Shell 輔助工具 (可選)
+關於 VM 部署的完整持久化詳情，請參閱
+[Docker VM Runtime - 什麼會持續存在於哪裡](/en/install/docker-vm-runtime#what-persists-where)。
 
-為了更方便日常管理 Docker，請安裝 `ClawDock`：
+**磁碟增長熱點：** 請注意 `media/`、session JSONL 檔案、`cron/runs/*.jsonl`，以及 `/tmp/openclaw/` 下的輪替日誌檔。
+
+### Shell 輔助工具（選用）
+
+為了更輕鬆地進行日常 Docker 管理，請安裝 `ClawDock`：
 
 ```bash
 mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/openclaw/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
 echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
-如果您是透過較舊的 `scripts/shell-helpers/clawdock-helpers.sh` 原始路徑安裝 ClawDock，請重新執行上述安裝指令，讓您的本機 helper 檔案追蹤新位置。
+如果您是透過較舊的 `scripts/shell-helpers/clawdock-helpers.sh` 原始路徑安裝 ClawDock，請重新執行上述安裝指令，讓您的本機輔助檔案能追蹤新的位置。
 
 然後使用 `clawdock-start`、`clawdock-stop`、`clawdock-dashboard` 等。執行
-`clawdock-help` 可查看所有指令。
-請參閱 [ClawDock](/en/install/clawdock) 以取得完整的 helper 指南。
+`clawdock-help` 查看所有指令。
+請參閱 [ClawDock](/en/install/clawdock) 以取得完整的輔助指南。
 
 <AccordionGroup>
-  <Accordion title="啟用 Docker gateway 的 agent sandbox">
+  <Accordion title="Enable agent sandbox for Docker gateway">
     ```bash
     export OPENCLAW_SANDBOX=1
     ./scripts/docker/setup.sh
     ```
 
-    自訂 socket 路徑 (例如 rootless Docker)：
+    自訂 socket 路徑（例如 rootless Docker）：
 
     ```bash
     export OPENCLAW_SANDBOX=1
@@ -200,14 +201,14 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
     ./scripts/docker/setup.sh
     ```
 
-    該 script 會在 sandbox 前置條件通過後才掛載 `docker.sock`。如果
-    sandbox 設定無法完成，script 會將 `agents.defaults.sandbox.mode`
+    此腳本會在沙箱先決條件通過後才掛載 `docker.sock`。如果
+    沙箱設定無法完成，腳本會將 `agents.defaults.sandbox.mode`
     重設為 `off`。
 
   </Accordion>
 
-  <Accordion title="自動化 / CI (非互動式)">
-    使用 `-T` 停用 Compose 的 pseudo-TTY 分配：
+  <Accordion title="Automation / CI (non-interactive)">
+    使用 `-T` 停用 Compose 擬態 TTY 分配：
 
     ```bash
     docker compose run -T --rm openclaw-cli gateway probe
@@ -216,11 +217,11 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 
   </Accordion>
 
-<Accordion title="共用網路安全性備註">`openclaw-cli` 使用 `network_mode: "service:openclaw-gateway"`，以便 CLI 指令能透過 `127.0.0.1` 到達 gateway。請將此視為共用的信任邊界。Compose 設定會捨棄 `NET_RAW`/`NET_ADMIN` 並在 `openclaw-cli` 上啟用 `no-new-privileges`。</Accordion>
+<Accordion title="Shared-network security note">`openclaw-cli` 使用 `network_mode: "service:openclaw-gateway"`，讓 CLI 指令可以透過 `127.0.0.1` 到達閘道。請將此視為一個共享 的信任邊界。Compose 設定會捨棄 `NET_RAW`/`NET_ADMIN` 並在 `openclaw-cli` 上啟用 `no-new-privileges`。</Accordion>
 
-  <Accordion title="權限與 EACCES">
-    此映像檔以 `node` (uid 1000) 身分執行。如果您在
-    `/home/node/.openclaw` 上看到權限錯誤，請確保您的主機綁定掛載是由 uid 1000 所擁有：
+  <Accordion title="Permissions and EACCES">
+    映像檔以 `node` (uid 1000) 身分執行。如果您在
+    `/home/node/.openclaw` 上看到權限錯誤，請確保您的主機掛載目錄是由 uid 1000 所擁有：
 
     ```bash
     sudo chown -R 1000:1000 /path/to/openclaw-config /path/to/openclaw-workspace
@@ -228,9 +229,9 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 
   </Accordion>
 
-  <Accordion title="更快的重建速度">
-    排列您的 Dockerfile 以快取相依性層。這能避免重新執行
-    `pnpm install`，除非鎖定檔發生變更：
+  <Accordion title="加快重新構建">
+    請排序您的 Dockerfile，以便快取相依性層。這能避免除非鎖定檔變更，否則重新執行
+    `pnpm install`：
 
     ```dockerfile
     FROM node:24-bookworm
@@ -253,8 +254,7 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
   </Accordion>
 
   <Accordion title="進階使用者容器選項">
-    預設映像檔以安全為優先，並以非 root 身分 `node` 執行。若要獲得
-    功能更完整的容器：
+    預設映像檔以安全為先，並以非 root 身分執行 `node`。若要功能更完整的容器：
 
     1. **保留 `/home/node`**：`export OPENCLAW_HOME_VOLUME="openclaw_home"`
     2. **建置系統相依項**：`export OPENCLAW_DOCKER_APT_PACKAGES="git curl jq"`
@@ -263,19 +263,18 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
        docker compose run --rm openclaw-cli \
          node /app/node_modules/playwright-core/cli.js install chromium
        ```
-    4. **保留瀏覽器下載項**：設定
+    4. **保留瀏覽器下載**：設定
        `PLAYWRIGHT_BROWSERS_PATH=/home/node/.cache/ms-playwright` 並使用
        `OPENCLAW_HOME_VOLUME` 或 `OPENCLAW_EXTRA_MOUNTS`。
 
   </Accordion>
 
-<Accordion title="OpenAI Codex OAuth (無頭 Docker)">如果您在精靈中選擇 OpenAI Codex OAuth，它會開啟瀏覽器 URL。在 Docker 或無頭環境設定中，複製您抵達的完整重新導向 URL，並將其 貼回精靈中以完成驗證。</Accordion>
+<Accordion title="OpenAI Codex OAuth (無介面 Docker)">如果您在精靈中選擇 OpenAI Codex OAuth，它會開啟瀏覽器 URL。在 Docker 或無介面設定中，請複製您抵達的完整重新導向 URL 並貼回精靈以完成驗證。</Accordion>
 
-  <Accordion title="基底映像檔中繼資料">
-    主要 Docker 映像檔使用 `node:24-bookworm` 並發布 OCI 基底映像檔
-    註解，包括 `org.opencontainers.image.base.name`、
-    `org.opencontainers.image.source` 和其他。請參閱
-    [OCI image annotations](https://github.com/opencontainers/image-spec/blob/main/annotations.md)。
+  <Accordion title="基礎映像檔中繼資料">
+    主要 Docker 映像檔使用 `node:24-bookworm` 並發布 OCI 基礎映像檔註解，包括 `org.opencontainers.image.base.name`、
+    `org.opencontainers.image.source` 等。請參閱
+    [OCI 映像檔註解](https://github.com/opencontainers/image-spec/blob/main/annotations.md)。
   </Accordion>
 </AccordionGroup>
 
@@ -283,23 +282,23 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 
 請參閱 [Hetzner (Docker VPS)](/en/install/hetzner) 和
 [Docker VM Runtime](/en/install/docker-vm-runtime) 以了解共用 VM 部署步驟，
-包括二進位檔建置、持久化和更新。
+包括二進位檔建置、保存與更新。
 
 ## Agent 沙箱
 
-當啟用 `agents.defaults.sandbox` 時，閘道會在獨立的 Docker 容器中執行代理程式工具操作
-（shell、檔案讀寫等），而閘道本身則留在主機上。這為不信任或
-多租戶代理程式工作階段提供了一道嚴格的隔離牆，而無需將整個閘道容器化。
+當啟用 `agents.defaults.sandbox` 時，閘道會在獨立 Docker 容器中執行 agent 工具執行
+(Shell、檔案讀寫等)，而閘道本身則停留在主機上。這讓您在不將整個閘道容器化的情況下，
+對不受信任或多租戶 agent 工作階段建立堅固的防護。
 
-沙箱範圍可以是每個代理程式（預設）、每個工作階段或共享的。每個範圍
+Sandbox 範圍可以是每個代理程式（預設）、每個工作階段或共用。每個範圍
 都有自己的工作區掛載於 `/workspace`。您也可以設定
-允許/拒絕工具原則、網路隔離、資源限制和瀏覽器
+允許/拒絕工具政策、網路隔離、資源限制和瀏覽器
 容器。
 
-有關完整的設定、映像檔、安全性說明和多代理程式設定檔，請參閱：
+如需完整的配置、映像檔、安全性說明和多代理程式設定檔，請參閱：
 
-- [Sandboxing](/en/gateway/sandboxing) -- 完整的沙箱參考
-- [OpenShell](/en/gateway/openshell) -- 沙箱容器的互動式 shell 存取
+- [Sandboxing](/en/gateway/sandboxing) -- 完整的 sandbox 參考資料
+- [OpenShell](/en/gateway/openshell) -- sandbox 容器的互動式 shell 存取
 - [Multi-Agent Sandbox and Tools](/en/tools/multi-agent-sandbox-tools) -- 每個代理程式的覆寫設定
 
 ### 快速啟用
@@ -317,7 +316,7 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 }
 ```
 
-建構預設沙箱映像檔：
+建構預設的 sandbox 映像檔：
 
 ```bash
 scripts/sandbox-setup.sh
@@ -326,22 +325,22 @@ scripts/sandbox-setup.sh
 ## 疑難排解
 
 <AccordionGroup>
-  <Accordion title="Image missing or sandbox container not starting">
+  <Accordion title="映像檔遺失或 sandbox 容器無法啟動">
     使用
     [`scripts/sandbox-setup.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/sandbox-setup.sh)
-    建構沙箱映像檔，
+    建構 sandbox 映像檔
     或將 `agents.defaults.sandbox.docker.image` 設定為您的自訂映像檔。
-    容器會根據需求在每個工作階段自動建立。
+    容器會根據需求為每個工作階段自動建立。
   </Accordion>
 
-<Accordion title="Permission errors in sandbox">將 `docker.user` 設定為符合您掛載工作區所有權的 UID:GID， 或變更工作區資料夾的所有權。</Accordion>
+<Accordion title="Sandbox 中的權限錯誤">將 `docker.user` 設定為符合您掛載工作區所有權的 UID:GID， 或變更工作區資料夾的所有權 (chown)。</Accordion>
 
-<Accordion title="Custom tools not found in sandbox">OpenClaw 使用 `sh -lc` (login shell) 執行命令，這會讀取 `/etc/profile` 並可能重設 PATH。設定 `docker.env.PATH` 以在前面加入您的 自訂工具路徑，或在您的 Dockerfile 中的 `/etc/profile.d/` 下新增腳本。</Accordion>
+<Accordion title="在 Sandbox 中找不到自訂工具">OpenClaw 使用 `sh -lc` (登入 shell) 執行命令，它會載入 `/etc/profile` 並可能重設 PATH。設定 `docker.env.PATH` 以在前面新增您的 自訂工具路徑，或在您的 Dockerfile 中於 `/etc/profile.d/` 下新增腳本。</Accordion>
 
-<Accordion title="OOM-killed during image build (exit 137)">VM 至少需要 2 GB RAM。請使用更大的機器類別並重試。</Accordion>
+<Accordion title="建構映像檔時 OOM-killed (exit 137)">VM 至少需要 2 GB RAM。使用更大的機器等級並重試。</Accordion>
 
-  <Accordion title="Unauthorized or pairing required in Control UI">
-    獲取一個新的儀表板連結並核准瀏覽器裝置：
+  <Accordion title="控制 UI 中顯示未授權或需要配對">
+    取得新的儀表板連結並核准瀏覽器裝置：
 
     ```bash
     docker compose run --rm openclaw-cli dashboard --no-open
@@ -349,16 +348,15 @@ scripts/sandbox-setup.sh
     docker compose run --rm openclaw-cli devices approve <requestId>
     ```
 
-    更多詳情：[Dashboard](/en/web/dashboard)、[Devices](/en/cli/devices)。
+    更多細節：[Dashboard](/en/web/dashboard)、[Devices](/en/cli/devices)。
 
   </Accordion>
 
   <Accordion title="Gateway target shows ws://172.x.x.x or pairing errors from Docker CLI">
-    重設閘道模式並綁定：
+    重設 gateway 模式並綁定：
 
     ```bash
-    docker compose run --rm openclaw-cli config set gateway.mode local
-    docker compose run --rm openclaw-cli config set gateway.bind lan
+    docker compose run --rm openclaw-cli config set --batch-json '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"}]'
     docker compose run --rm openclaw-cli devices list --url ws://127.0.0.1:18789
     ```
 
@@ -367,8 +365,8 @@ scripts/sandbox-setup.sh
 
 ## 相關
 
-- [Install Overview](/en/install) — 所有安裝方式
-- [Podman](/en/install/podman) — Podman 的 Docker 替代方案
+- [安裝概覽](/en/install) — 所有安裝方法
+- [Podman](/en/install/podman) — Podman Docker 替代方案
 - [ClawDock](/en/install/clawdock) — Docker Compose 社群設定
-- [Updating](/en/install/updating) — 保持 OpenClaw 為最新狀態
-- [Configuration](/en/gateway/configuration) — 安裝後的閘道設定
+- [更新](/en/install/updating) — 保持 OpenClaw 為最新狀態
+- [組態](/en/gateway/configuration) — 安裝後的 gateway 組態

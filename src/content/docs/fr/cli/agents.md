@@ -11,14 +11,17 @@ Gérez des agents isolés (espaces de travail + auth + routage).
 
 Connexes :
 
-- Routage multi-agent : [Routage multi-agent](/en/concepts/multi-agent)
-- Espace de travail de l'agent : [Espace de travail de l'agent](/en/concepts/agent-workspace)
+- Routage multi-agent : [Multi-Agent Routing](/en/concepts/multi-agent)
+- Espace de travail de l'agent : [Agent workspace](/en/concepts/agent-workspace)
+- Configuration de la visibilité des Skills : [Skills config](/en/tools/skills-config)
 
 ## Exemples
 
 ```bash
 openclaw agents list
+openclaw agents list --bindings
 openclaw agents add work --workspace ~/.openclaw/workspace-work
+openclaw agents add ops --workspace ~/.openclaw/workspace-ops --bind telegram:ops --non-interactive
 openclaw agents bindings
 openclaw agents bind --agent work --bind telegram:ops
 openclaw agents unbind --agent work --bind telegram:ops
@@ -30,6 +33,11 @@ openclaw agents delete work
 ## Liaisons de routage
 
 Utilisez les liaisons de routage pour épingler le trafic entrant du channel à un agent spécifique.
+
+Si vous souhaitez également des Skills visibles différents par agent, configurez
+`agents.defaults.skills` et `agents.list[].skills` dans `openclaw.json`. Voir
+[Skills config](/en/tools/skills-config) et
+[Configuration Reference](/en/gateway/configuration-reference#agentsdefaultsskills).
 
 Lister les liaisons :
 
@@ -45,7 +53,9 @@ Ajouter des liaisons :
 openclaw agents bind --agent work --bind telegram:ops --bind discord:guild-a
 ```
 
-Si vous omettez `accountId` (`--bind <channel>`), OpenClaw le résout à partir des valeurs par défaut du channel et des hooks de configuration des plugins lorsque disponibles.
+Si vous omettez `accountId` (`--bind <channel>`), OpenClaw le résout à partir des valeurs par défaut du channel et des crochets de configuration du plugin lorsque disponibles.
+
+Si vous omettez `--agent` pour `bind` ou `unbind`, OpenClaw cible l'agent par défaut actuel.
 
 ### Comportement de la portée de liaison
 
@@ -63,7 +73,7 @@ openclaw agents bind --agent work --bind telegram
 openclaw agents bind --agent work --bind telegram:ops
 ```
 
-Après la mise à niveau, le routage pour cette liaison est délimité à `telegram:ops`. Si vous souhaitez également un routage par compte par défaut, ajoutez-le explicitement (par exemple `--bind telegram:default`).
+Après la mise à niveau, le routage pour cette liaison est délimité à `telegram:ops`. Si vous souhaitez également un routage par défaut pour le compte, ajoutez-le explicitement (par exemple `--bind telegram:default`).
 
 Supprimer les liaisons :
 
@@ -71,6 +81,75 @@ Supprimer les liaisons :
 openclaw agents unbind --agent work --bind telegram:ops
 openclaw agents unbind --agent work --all
 ```
+
+`unbind` accepte soit `--all` soit une ou plusieurs valeurs `--bind`, mais pas les deux.
+
+## Surface de commande
+
+### `agents`
+
+L'exécution de `openclaw agents` sans sous-commande est équivalente à `openclaw agents list`.
+
+### `agents list`
+
+Options :
+
+- `--json`
+- `--bindings` : inclure les règles de routage complètes, pas seulement les comptes/résumés par agent
+
+### `agents add [name]`
+
+Options :
+
+- `--workspace <dir>`
+- `--model <id>`
+- `--agent-dir <dir>`
+- `--bind <channel[:accountId]>` (répétable)
+- `--non-interactive`
+- `--json`
+
+Notes :
+
+- Le passage de n'importe quel indicateur d'ajout explicite bascule la commande vers le mode non interactif.
+- Le mode non interactif nécessite à la fois un nom d'agent et `--workspace`.
+- `main` est réservé et ne peut pas être utilisé comme nouvel identifiant d'agent.
+
+### `agents bindings`
+
+Options :
+
+- `--agent <id>`
+- `--json`
+
+### `agents bind`
+
+Options :
+
+- `--agent <id>` (par défaut, l'agent par défaut actuel)
+- `--bind <channel[:accountId]>` (répétable)
+- `--json`
+
+### `agents unbind`
+
+Options :
+
+- `--agent <id>` (par défaut, l'agent par défaut actuel)
+- `--bind <channel[:accountId]>` (répétable)
+- `--all`
+- `--json`
+
+### `agents delete <id>`
+
+Options :
+
+- `--force`
+- `--json`
+
+Notes :
+
+- `main` ne peut pas être supprimé.
+- Sans `--force`, une confirmation interactive est requise.
+- Les répertoires de l'espace de travail, de l'état de l'agent et de la transcription de session sont déplacés vers la Corbeille, et non supprimés définitivement.
 
 ## Fichiers d'identité
 
@@ -83,20 +162,38 @@ Les chemins des avatars sont résolus par rapport à la racine de l'espace de tr
 
 ## Définir l'identité
 
-`set-identity` écrit les champs dans `agents.list[].identity` :
+`set-identity` écrit des champs dans `agents.list[].identity` :
 
 - `name`
 - `theme`
 - `emoji`
 - `avatar` (chemin relatif à l'espace de travail, URL http(s) ou URI de données)
 
-Charger depuis `IDENTITY.md` :
+Options :
+
+- `--agent <id>`
+- `--workspace <dir>`
+- `--identity-file <path>`
+- `--from-identity`
+- `--name <name>`
+- `--theme <theme>`
+- `--emoji <emoji>`
+- `--avatar <value>`
+- `--json`
+
+Remarques :
+
+- `--agent` ou `--workspace` peuvent être utilisés pour sélectionner l'agent cible.
+- Si vous vous fiez à `--workspace` et que plusieurs agents partagent cet espace de travail, la commande échoue et vous demande de passer `--agent`.
+- Lorsqu'aucun champ d'identité explicite n'est fourni, la commande lit les données d'identité à partir de `IDENTITY.md`.
+
+Charger à partir de `IDENTITY.md` :
 
 ```bash
 openclaw agents set-identity --workspace ~/.openclaw/workspace --from-identity
 ```
 
-Remplacer explicitement les champs :
+Remplacer les champs explicitement :
 
 ```bash
 openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞" --avatar avatars/openclaw.png

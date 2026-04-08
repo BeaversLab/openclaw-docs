@@ -57,15 +57,35 @@ automatiquement.
 
 ## Modèles disponibles
 
-- **doubao-seed-1-8** - Doubao Seed 1.8 (général, par défaut)
-- **doubao-seed-code-preview** - Modèle de codage Doubao
-- **ark-code-latest** - Par défaut pour le plan de codage
-- **Kimi K2.5** - Moonshot AI via Volcano Engine
-- **GLM-4.7** - GLM via Volcano Engine
-- **DeepSeek V3.2** - DeepSeek via Volcano Engine
+Fournisseur général (`volcengine`) :
 
-La plupart des modèles prennent en charge la saisie de texte + image. Les fenêtres de contexte vont de 128K à 256K
-tokens.
+| Réf modèle                                   | Nom                             | Entrée       | Contexte |
+| -------------------------------------------- | ------------------------------- | ------------ | -------- |
+| `volcengine/doubao-seed-1-8-251228`          | Doubao Seed 1.8                 | texte, image | 256 000  |
+| `volcengine/doubao-seed-code-preview-251028` | doubao-seed-code-preview-251028 | texte, image | 256 000  |
+| `volcengine/kimi-k2-5-260127`                | Kimi K2.5                       | texte, image | 256 000  |
+| `volcengine/glm-4-7-251222`                  | GLM 4.7                         | texte, image | 200 000  |
+| `volcengine/deepseek-v3-2-251201`            | DeepSeek V3.2                   | texte, image | 128 000  |
+
+Fournisseur de codage (`volcengine-plan`) :
+
+| Réf modèle                                        | Nom                      | Entrée | Contexte |
+| ------------------------------------------------- | ------------------------ | ------ | -------- |
+| `volcengine-plan/ark-code-latest`                 | Ark Coding Plan          | texte  | 256 000  |
+| `volcengine-plan/doubao-seed-code`                | Doubao Seed Code         | texte  | 256 000  |
+| `volcengine-plan/glm-4.7`                         | GLM 4.7 Coding           | texte  | 200 000  |
+| `volcengine-plan/kimi-k2-thinking`                | Kimi K2 Thinking         | texte  | 256 000  |
+| `volcengine-plan/kimi-k2.5`                       | Kimi K2.5 Coding         | texte  | 256 000  |
+| `volcengine-plan/doubao-seed-code-preview-251028` | Doubao Seed Code Preview | texte  | 256 000  |
+
+`openclaw onboard --auth-choice volcengine-api-key` définit actuellement
+`volcengine-plan/ark-code-latest` comme modèle par défaut tout en enregistrant
+le catalogue général `volcengine`.
+
+Pendant l'intégration/la configuration de la sélection de modèle, le choix d'authentification Volcengine préfère
+les lignes `volcengine/*` et `volcengine-plan/*`. Si ces modèles ne sont pas
+encore chargés, OpenClaw revient au catalogue non filtré au lieu d'afficher un
+sélecteur limité au fournisseur vide.
 
 ## Remarque sur l'environnement
 

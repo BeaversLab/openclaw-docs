@@ -19,7 +19,7 @@ Seuls les clients qui appellent explicitement `node.pair.*` utilisent ce flux.
 
 - **Demande en attente** : un nœud a demandé à rejoindre ; nécessite une approbation.
 - **Nœud appairé** : nœud approuvé avec un jeton d'authentification émis.
-- **Transport** : le point de terminaison WS de la Gateway transfère les demandes mais ne décide pas de l'appartenance. (La prise en charge du pont TCP hérité est obsolète/supprimée.)
+- **Transport** : le point de terminaison WS du Gateway transfère les demandes mais ne décide pas de l'appartenance. (La prise en charge du pont TCP hérité a été supprimée.)
 
 ## Fonctionnement de l'appariement
 
@@ -53,7 +53,7 @@ openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 Méthodes :
 
 - `node.pair.request` — créer ou réutiliser une demande en attente.
-- `node.pair.list` — lister les nœuds en attente + appairés.
+- `node.pair.list` — lister les nœuds en attente et appariés (`operator.pairing`).
 - `node.pair.approve` — approuver une demande en attente (émet un jeton).
 - `node.pair.reject` — rejeter une demande en attente.
 - `node.pair.verify` — vérifier `{ nodeId, token }`.
@@ -63,33 +63,38 @@ Remarques :
 - `node.pair.request` est idempotent par nœud : les appels répétés renvoient la même demande en attente.
 - Les demandes répétées pour le même nœud en attente actualisent également les métadonnées du nœud stocké et le dernier instantané des commandes déclarées sur la liste autorisée pour la visibilité de l'opérateur.
 - L'approbation génère **toujours** un nouveau jeton ; aucun jeton n'est jamais renvoyé par `node.pair.request`.
-- Les demandes peuvent inclure `silent: true` comme indice pour les flux d'approbation automatique.
+- Les demandes peuvent inclure `silent: true` comme indicateur pour les flux d'approbation automatique.
+- `node.pair.approve` utilise les commandes déclarées de la demande en attente pour appliquer des étendues d'approbation supplémentaires :
+  - demande sans commande : `operator.pairing`
+  - demande de commande non-exéc : `operator.pairing` + `operator.write`
+  - demande `system.run` / `system.run.prepare` / `system.which` :
+    `operator.pairing` + `operator.admin`
 
 Important :
 
-- L'appairage de nœuds est un flux de confiance/identité plus l'émission de jetons.
-- Il ne fige **pas** la surface des commandes de nœud en direct par nœud.
-- Les commandes de nœud en live proviennent de ce que le nœud déclare lors de la connexion après l'application de la stratégie globale de commandes de nœud de la passerelle (`gateway.nodes.allowCommands` / `denyCommands`).
-- La stratégie d'autorisation/demande `system.run` par nœud réside sur le nœud dans `exec.approvals.node.*`, et non dans l'enregistrement d'appairage.
+- L'appariement de nœuds est un flux de confiance/identité ainsi que l'émission de jetons.
+- Cela ne **fixe pas** la surface des commandes de nœud en direct par nœud.
+- Les commandes de nœud en live proviennent de ce que le nœud déclare lors de la connexion après l'application de la stratégie globale de commande de nœud de la passerelle (`gateway.nodes.allowCommands` / `denyCommands`).
+- La stratégie d'autorisation/demande `system.run` par nœud réside sur le nœud dans `exec.approvals.node.*`, et non dans l'enregistrement d'appariement.
 
 ## Gestion des commandes de nœud (2026.3.31+)
 
-<Warning>**Breaking change :** À partir de `2026.3.31`, les commandes de nœud sont désactivées jusqu'à ce que l'appairage du nœud soit approuvé. L'appairage des appareils seul ne suffit plus à exposer les commandes de nœud déclarées.</Warning>
+<Warning>**Breaking change** : À partir de `2026.3.31`, les commandes de nœud sont désactivées tant que l'appariement de nœud n'est pas approuvé. L'appariement d'appareil seul ne suffit plus à exposer les commandes de nœud déclarées.</Warning>
 
-Lorsqu'un nœud se connecte pour la première fois, l'appairage est demandé automatiquement. Tant que la demande d'appairage n'est pas approuvée, toutes les commandes de nœud en attente de ce nœud sont filtrées et ne seront pas exécutées. Une fois la confiance établie par l'approbation de l'appairage, les commandes déclarées du nœud deviennent disponibles sous réserve de la stratégie de commande normale.
+Lorsqu'un nœud se connecte pour la première fois, l'appariement est demandé automatiquement. Jusqu'à ce que la demande d'appariement soit approuvée, toutes les commandes de nœud en attente de ce nœud sont filtrées et ne s'exécuteront pas. Une fois la confiance établie par l'approbation de l'appariement, les commandes déclarées du nœud deviennent disponibles sous réserve de la stratégie de commande normale.
 
 Cela signifie :
 
-- Les nœuds qui reposaient auparavant uniquement sur l'appairage des appareils pour exposer des commandes doivent désormais effectuer l'appairage des nœuds.
-- Les commandes mises en file d'attente avant l'approbation de l'appairage sont abandonnées, et non différées.
+- Les nœuds qui reposaient précédemment uniquement sur l'appareil associé pour exposer des commandes doivent désormais terminer l'association des nœuds.
+- Les commandes mises en file d'attente avant l'approbation de l'association sont supprimées, et non différées.
 
 ## Limites de confiance des événements de nœud (2026.3.31+)
 
-<Warning>**Breaking change :** Les exécutions initiées par le nœud restent désormais sur une surface de confiance réduite.</Warning>
+<Warning>**Modification rupture :** Les exécutions initiées par le nœud restent désormais sur une surface de confiance réduite.</Warning>
 
-Les résumés initiés par le nœud et les événements de session associés sont limités à la surface de confiance prévue. Les flux pilotés par des notifications ou déclenchés par des nœuds qui reposaient auparavant sur un accès plus large aux outils de l'hôte ou de la session peuvent nécessiter des ajustements. Ce durcissement garantit que les événements de nœud ne peuvent pas escalader en un accès au niveau de l'hôte au-delà de ce que la limite de confiance du nœud permet.
+Les résumés initiés par le nœud et les événements de session associés sont restreints à la surface de confiance prévue. Les flux pilotés par notification ou déclenchés par le nœud qui reposaient précédemment sur un accès plus large aux outils de l'hôte ou de la session peuvent nécessiter des ajustements. Ce durcissement garantit que les événements de nœud ne peuvent pas escalader vers un accès au niveau de l'hôte au-delà de ce que la limite de confiance du nœud permet.
 
-## Approbation automatique (application macOS)
+## Auto-approbation (application macOS)
 
 L'application macOS peut éventuellement tenter une **approbation silencieuse** lorsque :
 
@@ -100,7 +105,7 @@ Si l'approbation silencieuse échoue, elle revient à l'invite normale « Approu
 
 ## Stockage (local, privé)
 
-L'état de l'appairage est stocké dans le répertoire d'état du Gateway (par défaut `~/.openclaw`) :
+L'état de l'association est stocké dans le répertoire d'état du Gateway (par défaut `~/.openclaw`) :
 
 - `~/.openclaw/nodes/paired.json`
 - `~/.openclaw/nodes/pending.json`
@@ -115,5 +120,5 @@ Notes de sécurité :
 ## Comportement du transport
 
 - Le transport est **sans état** ; il ne stocke pas l'appartenance.
-- Si la Gateway est hors ligne ou si l'appairage est désactivé, les nœuds ne peuvent pas s'appairer.
-- Si la Gateway est en mode distant, l'appairage s'effectue toujours par rapport au stockage de la Gateway distante.
+- Si le Gateway est hors ligne ou si l'association est désactivée, les nœuds ne peuvent pas s'associer.
+- Si le Gateway est en mode distant, l'association se produit toujours par rapport au magasin du Gateway distant.

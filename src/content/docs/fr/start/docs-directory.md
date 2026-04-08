@@ -37,27 +37,28 @@ title: "Docs directory"
 - [Contrôle de l'interface utilisateur (navigateur)](/en/web/control-ui)
 - [Telegram](/en/channels/telegram)
 - [Discord](/en/channels/discord)
-- [Mattermost (plugin)](/en/channels/mattermost)
+- [Mattermost](/en/channels/mattermost)
 - [BlueBubbles (iMessage)](/en/channels/bluebubbles)
+- [Bot QQ](/en/channels/qqbot)
 - [iMessage (legacy)](/en/channels/imessage)
 - [Groupes](/en/channels/groups)
-- [WhatsApp group messages](/en/channels/group-messages)
-- [Images multimédias](/en/nodes/images)
+- [Messages de groupe WhatsApp](/en/channels/group-messages)
+- [Images médias](/en/nodes/images)
 - [Audio média](/en/nodes/audio)
 
 ## Companion apps
 
-- [macOS app](/en/platforms/macos)
-- [iOS app](/en/platforms/ios)
+- [Application macOS](/en/platforms/macos)
+- [Application iOS](/en/platforms/ios)
 - [Application Android](/en/platforms/android)
 - [Windows (WSL2)](/en/platforms/windows)
-- [Linux app](/en/platforms/linux)
+- [Application Linux](/en/platforms/linux)
 
 ## Opérations et sécurité
 
 - [Sessions](/en/concepts/session)
-- [Tâches planifiées](/en/automation/cron-jobs)
-- [Webhooks](/en/automation/webhook)
-- [Gmail hooks (Pub/Sub)](/en/automation/gmail-pubsub)
+- [Tâches cron](/en/automation/cron-jobs)
+- [Webhooks](/en/automation/cron-jobs#webhooks)
+- [Hooks Gmail (Pub/Sub)](/en/automation/cron-jobs#gmail-pubsub-integration)
 - [Sécurité](/en/gateway/security)
 - [Dépannage](/en/gateway/troubleshooting)

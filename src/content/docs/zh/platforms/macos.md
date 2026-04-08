@@ -20,7 +20,7 @@ title: "macOS 应用"
 - 公开 macOS 专用工具（Canvas、Camera、Screen Recording、`system.run`）。
 - 在 **remote** 模式（launchd）下启动本地节点主机服务，并在 **local** 模式下停止它。
 - 可选择托管 **PeekabooBridge** 以进行 UI 自动化。
-- 根据请求通过 npm/pnpm 安装全局 CLI (`openclaw`)（不建议将 bun 用于 npm 运行时）。
+- 根据请求通过 npm、pnpm 或 bun 安装全局 CLI (`openclaw`)（该应用优先使用 npm，其次是 pnpm，然后是 bun；Node 仍然是推荐的 npm 运行时）。
 
 ## Local vs remote mode
 
@@ -191,9 +191,7 @@ swift run openclaw-mac discover --timeout 3000 --json
 - `--timeout <ms>`：整体设备发现窗口（默认：`2000`）
 - `--json`：用于差异比较的结构化输出
 
-提示：与 `openclaw gateway discover --json` 进行比较，以查看
-macOS 应用的设备发现管道（NWBrowser + tailnet DNS‑SD 回退）是否与
-Node CLI 基于 `dns-sd` 的设备发现不同。
+提示：与 `openclaw gateway discover --json` 进行比较，以查看 macOS 应用的发现管道（`local.` 加上配置的广域域，以及广域和 Tailscale Serve 回退）是否与 Node CLI 的基于 `dns-sd` 的发现不同。
 
 ## 远程连接管道（SSH 隧道）
 
@@ -202,21 +200,22 @@ Node CLI 基于 `dns-sd` 的设备发现不同。
 ### 控制通道（Gateway(网关) WebSocket 端口）
 
 - **用途：** 健康检查、状态、Web Chat、配置和其他控制平面调用。
-- **本地端口：**Gateway(网关) 端口（默认 `18789`），始终稳定。
+- **本地端口：** Gateway(网关) 端口（默认为 `18789`），始终稳定。
 - **远程端口：** 远程主机上相同的 Gateway(网关) 端口。
 - **行为：** 没有随机本地端口；应用会重用现有的健康隧道
   或在需要时重新启动它。
 - **SSH 形状：** `ssh -N -L <local>:127.0.0.1:<remote>` 配合 BatchMode +
   ExitOnForwardFailure + keepalive 选项。
-- **IP 报告：** SSH 隧道使用环回地址，因此 Gateway 网关看到的节点
-  IP 为 `127.0.0.1`。如果您希望显示真实的客户端
-  IP，请使用 **直接** 传输方式（请参阅 [macOS 远程访问](/en/platforms/mac/remote)）。
+- **IP 报告：** SSH 隧道使用环回地址，因此网关将节点
+  IP 视为 `127.0.0.1`。如果您希望显示真实的客户端
+  IP，请使用 **Direct (ws/wss)** 传输（请参阅 [macOS 远程访问](/en/platforms/mac/remote)）。
 
-有关设置步骤，请参阅 [macOS 远程访问](/en/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway(网关) 协议](/en/gateway/protocol)。
+有关设置步骤，请参阅 [macOS 远程访问](/en/platforms/mac/remote)。有关协议
+详细信息，请参阅 [Gateway(网关) 协议](/en/gateway/protocol)。
 
 ## 相关文档
 
-- [Gateway(网关) 运行手册](/en/gateway)
+- [Gateway(网关) 运维手册](/en/gateway)
 - [Gateway(网关) (macOS)](/en/platforms/mac/bundled-gateway)
 - [macOS 权限](/en/platforms/mac/permissions)
 - [Canvas](/en/platforms/mac/canvas)

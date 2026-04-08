@@ -275,7 +275,7 @@ Si el almacén antiguo informa claves de sala que nunca se respaldaron, OpenClaw
 - Significado: la clave almacenada no coincide con la copia de seguridad activa de Matrix.
 - Qué hacer: vuelva a ejecutar `openclaw matrix verify device "<your-recovery-key>"` con la clave correcta.
 
-Si acepta perder el historial encriptado antiguo irrecuperable, en su lugar puede restablecer la línea base de la copia de seguridad actual con `openclaw matrix verify backup reset --yes`.
+Si aceptas perder el historial cifrado antiguo irrecuperable, puedes en su lugar restablecer la línea de base de la copia de seguridad actual con `openclaw matrix verify backup reset --yes`. Cuando el secreto de la copia de seguridad almacenada está dañado, ese restablecimiento también puede recrear el almacenamiento de secretos para que la nueva clave de copia de seguridad pueda cargarse correctamente después de reiniciar.
 
 `Backup trust chain is not verified on this device. Re-run 'openclaw matrix verify device <key>'.`
 

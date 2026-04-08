@@ -22,11 +22,13 @@ OpenClaw 有两个表面看起来相似但实际上截然不同的问题：
 - **Gateway(网关) 网关 WS（控制平面）**：默认情况下 `127.0.0.1:18789` 上的 WebSocket 端点；可以通过 `gateway.bind` 绑定到局域网/tailnet。
 - **直接 WS 传输**：面向局域网/tailnet 的 Gateway(网关) 网关 WS 端点（无 SSH）。
 - **SSH 传输（备用）**：通过 SSH 转发 `127.0.0.1:18789` 进行远程控制。
-- **Legacy TCP bridge (deprecated/removed)**：较旧的节点传输方式（参见 [Bridge protocol](/en/gateway/bridge-protocol)）；不再用于发现通告。
+- **Legacy TCP bridge (removed)**: 旧版节点传输（请参阅
+  [Bridge protocol](/en/gateway/bridge-protocol)); 不再为
+  发现而广播，也不再是当前构建的一部分。
 
 协议详情：
 
-- [Gateway(网关) protocol](/en/gateway/protocol)
+- [Gateway protocol](/en/gateway/protocol)
 - [Bridge protocol (legacy)](/en/gateway/bridge-protocol)
 
 ## 为什么我们同时保留“direct”和 SSH
@@ -42,86 +44,98 @@ OpenClaw 有两个表面看起来相似但实际上截然不同的问题：
 
 ## 设备发现输入（客户端如何获知 Gateway 网关的位置）
 
-### 1) Bonjour / mDNS（仅限局域网）
+### 1) Bonjour / DNS-SD 发现
 
-Bonjour 是尽力而为的，无法跨网络工作。它仅用于“同一局域网”的便利性。
+组播 Bonjour 是尽力而为的，且不跨网络。OpenClaw 也可以通过配置的广域 DNS-SD 域浏览
+相同的 Gateway 信标，因此发现可以覆盖：
+
+- 同一局域网上的 `local.`
+- 用于跨网络发现的已配置单播 DNS-SD 域
 
 目标方向：
 
-- **Gateway 网关**通过 Bonjour 广播其 WS 端点。
-- 客户端进行浏览并显示“选择一个 Gateway 网关”列表，然后存储所选的端点。
+- **Gateway** 通过 Bonjour 广播其 WS 端点。
+- 客户端浏览并显示“选择一个 Gateway”列表，然后存储所选的端点。
 
-故障排除和信标详情：[Bonjour](/en/gateway/bonjour)。
+故障排除和信标详细信息：[Bonjour](/en/gateway/bonjour)。
 
 #### 服务信标详细信息
 
 - 服务类型：
-  - `_openclaw-gw._tcp`（Gateway 网关传输信标）
-- TXT 密钥（非秘密）：
+  - `_openclaw-gw._tcp` (Gateway 传输信标)
+- TXT 键（非机密）：
   - `role=gateway`
   - `transport=gateway`
-  - `displayName=<friendly name>`（操作员配置的显示名称）
+  - `displayName=<friendly name>` (操作员配置的显示名称)
   - `lanHost=<hostname>.local`
-  - `sshPort=22`（或任何通告的内容）
-  - `gatewayPort=18789`（Gateway(网关) WS + HTTP）
-  - `gatewayTls=1`（仅在启用 TLS 时）
-  - `gatewayTlsSha256=<sha256>`（仅在启用 TLS 且指纹可用时）
-  - `canvasPort=<port>`（canvas 主机端口；启用 canvas 主机时，目前与 `gatewayPort` 相同）
-  - `cliPath=<path>`（可选；可运行的 `openclaw` 入口点或二进制文件的绝对路径）
-  - `tailnetDns=<magicdns>`（可选提示；当 Tailscale 可用时自动检测）
+  - `gatewayPort=18789` (Gateway WS + HTTP)
+  - `gatewayTls=1` (仅在启用 TLS 时)
+  - `gatewayTlsSha256=<sha256>` (仅在启用 TLS 且可用指纹时)
+  - `canvasPort=<port>` (画布主机端口；启用画布主机时，目前与 `gatewayPort` 相同)
+  - `tailnetDns=<magicdns>` (可选提示；当 Tailscale 可用时自动检测)
+  - `sshPort=<port>` (仅限 mDNS 完整模式；广域 DNS-SD 可能会省略它，在这种情况下 SSH 默认值保持为 `22`)
+  - `cliPath=<path>` (仅限 mDNS 完整模式；广域 DNS-SD 仍会将其作为远程安装提示写入)
 
 安全说明：
 
-- Bonjour/mDNS TXT 记录是**未经过身份验证的**。客户端必须仅将 TXT 值视为 UX 提示。
-- 路由（主机/端口）应优先使用**已解析的服务端点**（SRV + A/AAAA），而不是 TXT 提供的 `lanHost`、`tailnetDns` 或 `gatewayPort`。
-- TLS 固定决不允许通告的 `gatewayTlsSha256` 覆盖先前存储的固定值。
-- iOS/Android 节点应将基于发现的直接连接视为**仅限 TLS**，并要求在首次存储固定值（带外验证）之前进行明确的“信任此指纹”确认。
+- Bonjour/mDNS TXT 记录是**未经身份验证的**。客户端必须仅将 TXT 值视为 UX 提示。
+- 路由（主机/端口）应优先考虑**已解析的服务端点**（SRV + A/AAAA），而不是 TXT 提供的 `lanHost`、`tailnetDns` 或 `gatewayPort`。
+- TLS 固定绝不允许通过广播的 `gatewayTlsSha256` 覆盖之前存储的固定值。
+- 当所选路由是安全/基于 TLS 的路由时，iOS/Android 节点应在存储首次固定值（带外验证）之前要求明确的“信任此指纹”确认。
 
 禁用/覆盖：
 
-- `OPENCLAW_DISABLE_BONJOUR=1` 禁用通告。
-- `~/.openclaw/openclaw.json` 中的 `gateway.bind` 控制 Gateway(网关) 绑定模式。
-- `OPENCLAW_SSH_PORT` 覆盖 TXT 中通告的 SSH 端口（默认为 22）。
-- `OPENCLAW_TAILNET_DNS` 发布 `tailnetDns` 提示（MagicDNS）。
-- `OPENCLAW_CLI_PATH` 覆盖通告的 CLI 路径。
+- `OPENCLAW_DISABLE_BONJOUR=1` 禁用广播。
+- `~/.openclaw/openclaw.json` 中的 `gateway.bind` 控制网关的绑定模式。
+- 当发出 `sshPort` 时，`OPENCLAW_SSH_PORT` 会覆盖广播的 SSH 端口。
+- `OPENCLAW_TAILNET_DNS` 会发布 `tailnetDns` 提示（MagicDNS）。
+- `OPENCLAW_CLI_PATH` 会覆盖广播的 CLI 路径。
 
 ### 2) Tailnet（跨网络）
 
-对于伦敦/维也纳风格的设置，Bonjour 没有帮助。推荐的“direct”目标是：
+对于伦敦/维也纳风格的设置，Bonjour 没有帮助。推荐的“直连”目标是：
 
 - Tailscale MagicDNS 名称（首选）或稳定的 tailnet IP。
 
-如果 Gateway(网关) 检测到它在 Tailscale 下运行，它会发布 `tailnetDns` 作为给客户端的可选提示（包括广域网信标）。
+如果网关检测到它在 Tailscale 下运行，它会发布 `tailnetDns` 作为给客户端的可选提示（包括广域网信标）。
 
-macOS 应用现在优先使用 MagicDNS 名称而不是原始的 Tailscale IP 来进行 Gateway(网关) 发现。当 tailnet IP 发生变化（例如节点重启或 CGNAT 重新分配后）时，这提高了可靠性，因为 MagicDNS 名称会自动解析为当前 IP。
+macOS 应用现在在网关发现时首选 MagicDNS 名称而不是原始的 Tailscale IP。这提高了 tailnet IP 更改时的可靠性（例如节点重启或 CGNAT 重新分配后），因为 MagicDNS 名称会自动解析为当前的 IP。
 
-### 3) Manual / SSH target
+对于移动节点配对，发现提示不会降低 tailnet/公共路由上的传输安全性：
 
-当没有直连路由（或直连被禁用）时，客户端始终可以通过转发回环 Gateway(网关) 端口通过 SSH 连接。
+- iOS/Android 仍然需要安全的首次 tailnet/公共连接路径（`wss://` 或 Tailscale Serve/Funnel）。
+- 发现的原始 tailnet IP 是一个路由提示，而不是使用纯文本远程 `ws://` 的许可。
+- 私有局域网直连 `ws://` 仍然受支持。
+- 如果您想要移动节点最简单的 Tailscale 路径，请使用 Tailscale Serve，以便发现和设置代码都解析到同一个安全的 MagicDNS 端点。
 
-请参阅 [Remote access](/en/gateway/remote)。
+### 3) 手动 / SSH 目标
 
-## Transport selection (client policy)
+当没有直连路由（或直连被禁用）时，客户端始终可以通过转发环回网关端口通过 SSH 连接。
 
-Recommended client behavior:
+参见 [远程访问](/en/gateway/remote)。
 
-1. If a paired direct endpoint is configured and reachable, use it.
-2. 否则，如果 Bonjour 在局域网上发现了 Gateway(网关)，提供一键“使用此 Gateway(网关)”选项并将其保存为直接端点。
-3. Else, if a tailnet DNS/IP is configured, try direct.
-4. Else, fall back to SSH.
+## 传输选择（客户端策略）
 
-## Pairing + auth (direct transport)
+推荐的客户端行为：
 
-The gateway is the source of truth for node/client admission.
+1. 如果已配置并可达配对的直接端点，则使用它。
+2. 否则，如果在 `local.` 或配置的广域域上发现网关，则提供一键“使用此网关”选项，并将其保存为直接端点。
+3. 否则，如果配置了 tailnet DNS/IP，请尝试直接连接。
+   对于 tailnet/公共路由上的移动节点，direct 意味着安全端点，而不是明文远程 `ws://`。
+4. 否则，回退到 SSH。
 
-- Pairing requests are created/approved/rejected in the gateway (see [Gateway(网关) pairing](/en/gateway/pairing)).
-- The gateway enforces:
-  - auth (token / keypair)
-  - scopes/ACLs (the gateway is not a raw proxy to every method)
-  - rate limits
+## 配对 + 认证（直接传输）
 
-## Responsibilities by component
+网关是节点/客户端准入的事实来源。
 
-- **Gateway(网关)**: advertises discovery beacons, owns pairing decisions, and hosts the WS endpoint.
-- **macOS app**: helps you pick a gateway, shows pairing prompts, and uses SSH only as a fallback.
-- **iOS/Android nodes**: browse Bonjour as a convenience and connect to the paired Gateway(网关) WS.
+- 配对请求在网关中创建/批准/拒绝（请参阅 [Gateway(网关) 配对](/en/gateway/pairing)）。
+- 网关强制执行：
+  - auth（令牌 / 密钥对）
+  - scopes/ACL（网关不是每种方法的原始代理）
+  - 速率限制
+
+## 按组件划分的职责
+
+- **Gateway(网关)**：发布发现信标，拥有配对决策权，并托管 WS 端点。
+- **macOS 应用**：帮助您选择网关，显示配对提示，并仅将 SSH 作为回退手段使用。
+- **iOS/Android 节点**：浏览 Bonjour 作为便利手段，并连接到配对的 Gateway(网关) WS。

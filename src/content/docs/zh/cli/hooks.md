@@ -10,10 +10,12 @@ title: "hooks"
 
 管理 Agent Hook（针对 `/new`、`/reset` 和网关启动等命令的事件驱动自动化）。
 
-相关：
+运行不带子命令的 `openclaw hooks` 相当于运行 `openclaw hooks list`。
 
-- 钩子：[Hooks](/en/automation/hooks)
-- 插件钩子：[Plugin hooks](/en/plugins/architecture#provider-runtime-hooks)
+相关内容：
+
+- Hooks: [Hooks](/en/automation/hooks)
+- 插件 Hooks: [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks)
 
 ## 列出所有 Hooks
 
@@ -21,12 +23,12 @@ title: "hooks"
 openclaw hooks list
 ```
 
-列出从工作区、托管、附加和捆绑目录中发现的所有钩子。
+列出工作区、受管、附加和捆绑目录中发现的所有 Hooks。
 
 **选项：**
 
-- `--eligible`: 仅显示符合资格的 Hook（满足要求）
-- `--json`: 输出为 JSON
+- `--eligible`: 仅显示符合条件的 Hooks（已满足要求）
+- `--json`: 以 JSON 格式输出
 - `-v, --verbose`: 显示详细信息，包括缺失的要求
 
 **示例输出：**
@@ -47,15 +49,15 @@ Ready:
 openclaw hooks list --verbose
 ```
 
-显示不符合条件的 hooks 的缺失要求。
+显示不符合条件的 Hooks 的缺失要求。
 
-**示例（JSON）：**
+**示例 (JSON)：**
 
 ```bash
 openclaw hooks list --json
 ```
 
-返回结构化 JSON 供程序化使用。
+返回结构化 JSON 以便以编程方式使用。
 
 ## 获取 Hook 信息
 
@@ -63,15 +65,15 @@ openclaw hooks list --json
 openclaw hooks info <name>
 ```
 
-显示特定 hook 的详细信息。
+显示关于特定 Hook 的详细信息。
 
 **参数：**
 
-- `<name>`: Hook 名称（例如，`session-memory`）
+- `<name>`: Hook 名称或 Hook 键（例如，`session-memory`）
 
 **选项：**
 
-- `--json`: 输出为 JSON
+- `--json`: 以 JSON 格式输出
 
 **示例：**
 
@@ -103,11 +105,11 @@ Requirements:
 openclaw hooks check
 ```
 
-显示 hook 资格状态的摘要（有多少已准备就绪，有多少未准备就绪）。
+显示 Hook 资格状态的摘要（有多少已准备就绪 vs 未准备就绪）。
 
 **选项：**
 
-- `--json`: 输出为 JSON
+- `--json`: 以 JSON 格式输出
 
 **示例输出：**
 
@@ -125,9 +127,9 @@ Not ready: 0
 openclaw hooks enable <name>
 ```
 
-通过将其添加到配置中（`~/.openclaw/config.json`）来启用特定的 Hook。
+通过将特定 Hook 添加到您的配置文件（默认为 `~/.openclaw/openclaw.json`）来启用它。
 
-**注意：**工作区钩子默认处于禁用状态，直到在此处或在配置中启用。由插件管理的钩子在 `openclaw hooks list` 中显示 `plugin:<id>`，并且无法在此处启用/禁用。请改为启用/禁用插件。
+**注意：** 工作区 Hooks 默认处于禁用状态，直到在此处或配置文件中启用。由插件管理的 Hooks 在 `openclaw hooks list` 中显示为 `plugin:<id>`，无法在此处启用/禁用。请改为启用/禁用插件。
 
 **参数：**
 
@@ -145,29 +147,29 @@ openclaw hooks enable session-memory
 ✓ Enabled hook: 💾 session-memory
 ```
 
-**它的作用：**
+**执行的操作：**
 
-- 检查 hook 是否存在且符合条件
+- 检查 Hook 是否存在并符合资格
 - 更新配置中的 `hooks.internal.entries.<name>.enabled = true`
 - 将配置保存到磁盘
 
-如果钩子来自 `<workspace>/hooks/`，则必须在 Gateway(网关) 加载它之前执行此选择加入步骤。
+如果 Hook 来自 `<workspace>/hooks/`，则 Gateway(网关) 加载它之前必须执行此选择加入步骤。
 
 **启用后：**
 
-- 重启网关以便重新加载钩子（在 macOS 上重启菜单栏应用程序，或在开发环境中重启网关进程）。
+- 重启网关以重新加载 Hooks（在 macOS 上重启菜单栏应用，或在开发环境中重启您的网关进程）。
 
-## 禁用钩子
+## 禁用 Hook
 
 ```bash
 openclaw hooks disable <name>
 ```
 
-通过更新配置来禁用特定的钩子。
+通过更新您的配置来禁用特定的 Hook。
 
 **参数：**
 
-- `<name>`：钩子名称（例如，`command-logger`）
+- `<name>`: Hook 名称（例如，`command-logger`）
 
 **示例：**
 
@@ -185,6 +187,11 @@ openclaw hooks disable command-logger
 
 - 重启网关以便重新加载钩子
 
+## 注意
+
+- `openclaw hooks list --json`、`info --json` 和 `check --json` 会将结构化的 JSON 直接写入 stdout。
+- 此处无法启用或禁用由插件管理的钩子；请改为启用或禁用所属插件。
+
 ## 安装钩子包
 
 ```bash
@@ -195,24 +202,24 @@ openclaw plugins install <path>           # local path
 
 通过统一的插件安装程序安装钩子包。
 
-`openclaw hooks install` 作为兼容性别名仍然有效，但它会打印弃用警告并转发给 `openclaw plugins install`。
+`openclaw hooks install` 仍可作为兼容性别名使用，但它会打印弃用警告并转发到 `openclaw plugins install`。
 
-Npm 规范仅限 **registry-only**（包名称 + 可选的 **精确版本** 或 **dist-tag**）。拒绝 Git/URL/文件规范和 semver 范围。依赖安装运行 `--ignore-scripts` 以确保安全。
+Npm 规范是**仅限注册表**的（包名称 + 可选的**确切版本**或**分发标签**）。会拒绝 Git/URL/文件规范和 semver 范围。依赖安装出于安全考虑会以 `--ignore-scripts` 运行。
 
-裸规范和 `@latest` 保持在稳定轨道上。如果 npm 将其中任何一个解析为预发布版本，OpenClaw 将停止并要求您使用预发布标记（例如 `@beta`/`@rc`）或精确的预发布版本明确选择加入。
+裸规范和 `@latest` 保持在稳定轨道上。如果 npm 将其中任何一个解析为预发布版本，OpenClaw 将停止并要求您通过预发布标签（如 `@beta`/`@rc`）或确切的预发布版本明确选择加入。
 
-**功能说明：**
+**作用：**
 
-- 将钩子包复制到 `~/.openclaw/hooks/<id>` 中
+- 将钩子包复制到 `~/.openclaw/hooks/<id>`
 - 在 `hooks.internal.entries.*` 中启用已安装的钩子
-- 在 `hooks.internal.installs` 下记录安装信息
+- 在 `hooks.internal.installs` 下记录安装
 
 **选项：**
 
 - `-l, --link`：链接本地目录而不是复制（将其添加到 `hooks.internal.load.extraDirs`）
-- `--pin`：将 npm 安装记录为 `hooks.internal.installs` 中已解析的精确 `name@version`
+- `--pin`：在 `hooks.internal.installs` 中将 npm 安装记录为确切解析的 `name@version`
 
-**支持的归档格式：** `.zip`, `.tgz`, `.tar.gz`, `.tar`
+**支持的归档：** `.zip`、`.tgz`、`.tar.gz`、`.tar`
 
 **示例：**
 
@@ -230,31 +237,31 @@ openclaw plugins install @openclaw/my-hook-pack
 openclaw plugins install -l ./my-hook-pack
 ```
 
-链接的 hook 包被视为来自操作员配置目录的托管 hook，而不是工作区 hook。
+链接的钩子包被视为来自操作员配置目录的托管钩子，而不是工作区钩子。
 
-## 更新 Hook 包
+## 更新钩子包
 
 ```bash
 openclaw plugins update <id>
 openclaw plugins update --all
 ```
 
-通过统一的插件更新器更新跟踪的基于 npm 的 hook 包。
+通过统一的插件更新程序更新已跟踪的基于 npm 的钩子包。
 
-`openclaw hooks update` 仍作为兼容性别名工作，但它会打印弃用警告并转发到 `openclaw plugins update`。
+`openclaw hooks update` 仍可作为兼容性别名使用，但它会打印弃用警告并转发到 `openclaw plugins update`。
 
 **选项：**
 
-- `--all`：更新所有已跟踪的 hook 包
-- `--dry-run`：显示将要更改的内容而不进行写入
+- `--all`：更新所有已跟踪的钩子包
+- `--dry-run`：显示将要更改的内容而不实际写入
 
-当存在存储的完整性哈希值且获取的构件哈希值发生变化时，OpenClaw 会打印警告并要求在继续前进行确认。在 CI/非交互式运行中使用全局 `--yes` 以绕过提示。
+当存在存储的完整性哈希且获取的构件哈希发生变化时，OpenClaw 会打印警告并在继续之前请求确认。使用全局 `--yes` 以在 CI/非交互式运行中绕过提示。
 
 ## 内置 Hooks
 
-### 会话内存 (会话-memory)
+### 会话-memory
 
-当您发出 `/new` 或 `/reset` 时，将会话上下文保存到内存中。
+当您发出 `/new` 或 `/reset` 时，将会话上下文保存到内存。
 
 **启用：**
 
@@ -264,7 +271,7 @@ openclaw hooks enable session-memory
 
 **输出：** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
 
-**参见：** [会话内存 (会话-memory) 文档](/en/automation/hooks#session-memory)
+**参见：** [会话-memory 文档](/en/automation/hooks#session-memory)
 
 ### bootstrap-extra-files
 
@@ -280,7 +287,7 @@ openclaw hooks enable bootstrap-extra-files
 
 ### command-logger
 
-将所有命令事件记录到集中式审计文件中。
+将所有命令事件记录到中心审计文件中。
 
 **启用：**
 
@@ -307,9 +314,9 @@ grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 
 ### boot-md
 
-当网关启动时（通道启动后）运行 `BOOT.md`。
+当网关启动时（在通道启动之后）运行 `BOOT.md`。
 
-**事件**：`gateway:startup`
+**事件**： `gateway:startup`
 
 **启用**：
 

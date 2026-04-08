@@ -8,19 +8,22 @@ title: "Xiaomi MiMo"
 
 # Xiaomi MiMo
 
-Xiaomi MiMo es la plataforma de API para los modelos **MiMo**. OpenClaw utiliza el
-depunto final compatible con OpenAI de Xiaomi con autenticación mediante clave de API.
-Crea tu clave de API en la [consola de Xiaomi MiMo](https://platform.xiaomimimo.com/#/console/api-keys), luego configura el
+Xiaomi MiMo es la plataforma API para los modelos **MiMo**. OpenClaw utiliza el
+endpoint compatible con OpenAI de Xiaomi con autenticación mediante clave de API. Cree su clave de API en la
+[consola de Xiaomi MiMo](https://platform.xiaomimimo.com/#/console/api-keys) y luego configure el
 proveedor `xiaomi` incluido con esa clave.
 
-## Resumen del modelo
+## Catálogo integrado
 
-- **mimo-v2-flash**: modelo de texto predeterminado, ventana de contexto de 262144 tokens
-- **mimo-v2-pro**: modelo de texto de razonamiento, ventana de contexto de 1048576 tokens
-- **mimo-v2-omni**: modelo multimodal de razonamiento con entrada de texto e imagen, ventana de contexto de 262144 tokens
 - URL base: `https://api.xiaomimimo.com/v1`
 - API: `openai-completions`
 - Autorización: `Bearer $XIAOMI_API_KEY`
+
+| Ref. de modelo         | Entrada       | Contexto  | Salida máx. | Notas                       |
+| ---------------------- | ------------- | --------- | ----------- | --------------------------- |
+| `xiaomi/mimo-v2-flash` | texto         | 262,144   | 8,192       | Modelo predeterminado       |
+| `xiaomi/mimo-v2-pro`   | texto         | 1,048,576 | 32,000      | Con razonamiento            |
+| `xiaomi/mimo-v2-omni`  | texto, imagen | 262,144   | 32,000      | Multimodal con razonamiento |
 
 ## Configuración de CLI
 
@@ -80,7 +83,7 @@ openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
 
 ## Notas
 
-- Referencia de modelo predeterminada: `xiaomi/mimo-v2-flash`.
+- Ref. de modelo predeterminada: `xiaomi/mimo-v2-flash`.
 - Modelos integrados adicionales: `xiaomi/mimo-v2-pro`, `xiaomi/mimo-v2-omni`.
 - El proveedor se inyecta automáticamente cuando se establece `XIAOMI_API_KEY` (o existe un perfil de autenticación).
-- Consulte [/concepts/model-providers](/en/concepts/model-providers) para obtener las reglas del proveedor.
+- Consulte [/concepts/model-providers](/en/concepts/model-providers) para conocer las reglas del proveedor.

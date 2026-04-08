@@ -31,7 +31,7 @@ kubectl port-forward svc/openclaw 18789:18789 -n openclaw
 open http://localhost:18789
 ```
 
-获取网关令牌并将其粘贴到控制界面中：
+检索为控制 UI 配置的共享密钥。此部署脚本默认创建令牌身份验证：
 
 ```bash
 kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GATEWAY_TOKEN}' | base64 -d

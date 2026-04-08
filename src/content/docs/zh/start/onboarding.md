@@ -76,7 +76,8 @@ sidebarTitle: "入门：macOS 应用"
 </Step>
 <Step title="CLI">
   <Info>此步骤是可选的</Info>
-  应用程序可以通过 npm/pnpm 安装全局 `openclaw` CLI，以便终端工作流和 launchd 任务能够开箱即用。
+  该应用程序可以通过 npm、pnpm 或 bun 安装全局 `openclaw` CLI。
+  它优先选择 npm，然后是 pnpm，如果 bun 是唯一检测到的包管理器，则选择 bun。对于 Gateway(网关) 运行时，Node 仍然是推荐的路径。
 </Step>
 <Step title="新手引导聊天（专用会话）">
   设置完成后，应用将打开一个专门的新手引导聊天会话，以便代理可以介绍自己并指导后续步骤。这将首次运行的引导与您的正常对话区分开来。有关首次运行代理期间在网关主机上发生的情况，请参阅 [引导加载](/en/start/bootstrapping)。

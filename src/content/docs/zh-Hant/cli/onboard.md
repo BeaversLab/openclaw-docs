@@ -11,11 +11,11 @@ title: "onboard"
 
 ## 相關指南
 
-- CLI 入教中心：[入教 (CLI)](/en/start/wizard)
-- 入教概述：[入教概述](/en/start/onboarding-overview)
-- CLI 入教参考：[CLI 設定參考](/en/start/wizard-cli-reference)
-- CLI 自動化：[CLI 自動化](/en/start/wizard-cli-automation)
-- macOS 入教：[入教 (macOS 應用程式)](/en/start/onboarding)
+- CLI 入門中心：[Onboarding (CLI)](/en/start/wizard)
+- 入門概述：[Onboarding Overview](/en/start/onboarding-overview)
+- CLI 入門參考：[CLI Setup Reference](/en/start/wizard-cli-reference)
+- CLI 自動化：[CLI Automation](/en/start/wizard-cli-automation)
+- macOS 入門：[Onboarding (macOS App)](/en/start/onboarding)
 
 ## 範例
 
@@ -82,6 +82,8 @@ openclaw onboard --non-interactive \
 - 使用 `--install-daemon` 時，當 Token 驗證需要 Token 時，會驗證由 SecretRef 管理的 Gateway Token，但不會將其解析為純文字儲存在 Supervisor 服務環境元數據中。
 - 使用 `--install-daemon` 時，如果 Token 模式需要 Token 但設定的 Token SecretRef 未解析，導入將會失敗並封閉，同時提供修復指引。
 - 使用 `--install-daemon` 時，如果同時設定了 `gateway.auth.token` 和 `gateway.auth.password` 且未設定 `gateway.auth.mode`，導入程序將封鎖安裝，直到明確設定模式。
+- 本地入門會將 `gateway.mode="local"` 寫入配置。如果後續配置檔案缺少 `gateway.mode`，請將其視為配置損壞或不完整的手動編輯，而不是有效的本地模式捷徑。
+- `--allow-unconfigured` 是一個獨立的閘道執行時緊急出口。這並不意味著入門可以省略 `gateway.mode`。
 
 範例：
 
@@ -95,25 +97,25 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-非互動式本機 Gateway 健康檢查：
+非互動式本地閘道健全性：
 
-- 除非您傳遞 `--skip-health`，否則導入程序會等待可連線的本機 Gateway，然後才會成功結束。
-- `--install-daemon` 會先啟動受管理的 Gateway 安裝程序。如果沒有它，您必須已經有一個本機 Gateway 正在執行，例如 `openclaw gateway run`。
+- 除非您傳遞 `--skip-health`，否則入門會等到可以連線的本地閘道後才會成功結束。
+- `--install-daemon` 首先啟動受管理的閘道安裝路徑。如果沒有它，您必須已經有一個本地閘道正在運行，例如 `openclaw gateway run`。
 - 如果您只想在自動化中寫入 config/workspace/bootstrap，請使用 `--skip-health`。
-- 在原生 Windows 上，`--install-daemon` 會先嘗試使用「排程的工作」，如果建立工作被拒絕，則會回退到針對每位使用者的「啟動」資料夾登入項目。
+- 在原生 Windows 上，`--install-daemon` 首先嘗試「排程的工作」，如果拒絕建立工作，則會退回到個別使用者的「啟動」資料夾登入項目。
 
-使用參考模式的互動式導入行為：
+使用參考模式的互動式入門行為：
 
-- 當收到提示時，選擇 **Use secret reference** (使用秘密參考)。
+- 當系統提示時，選擇 **Use secret reference**。
 - 然後選擇以下任一項：
   - 環境變數
   - 設定的秘密提供者 (`file` 或 `exec`)
-- 導入程序會在儲存參考之前執行快速的預檢驗證。
-  - 如果驗證失敗，導入程序會顯示錯誤並讓您重試。
+- 入門會在儲存參考之前執行快速預檢驗證。
+  - 如果驗證失敗，入門會顯示錯誤並讓您重試。
 
 非互動式 Z.AI 端點選擇：
 
-注意：`--auth-choice zai-api-key` 現在會自動為您的金鑰偵測最佳的 Z.AI 端點 (優先搭配 `zai/glm-5` 使用一般 API)。
+注意：`--auth-choice zai-api-key` 現在會自動為您的金鑰偵測最佳的 Z.AI 端點（偏好搭配 `zai/glm-5` 的一般 API）。
 如果您特別想要 GLM Coding Plan 端點，請選擇 `zai-coding-global` 或 `zai-coding-cn`。
 
 ```bash
@@ -138,12 +140,16 @@ openclaw onboard --non-interactive \
 
 流程備註：
 
-- `quickstart`：最精簡提示，自動產生 gateway token。
+- `quickstart`：最少的提示，自動產生閘道 token。
 - `manual`：針對 port/bind/auth 的完整提示（`advanced` 的別名）。
-- 在網頁搜尋步驟中，選擇 **Grok** 可能會觸發一個獨立的後續提示，以使用相同的 `XAI_API_KEY` 啟用 `x_search` 並選擇 `x_search` 模型（可選）。其他網頁搜尋提供者不會顯示該提示。
-- 本機入教 DM 範圍行為：[CLI 設定參考](/en/start/wizard-cli-reference#outputs-and-internals)。
-- 最快首次聊天：`openclaw dashboard` (控制 UI，無須設定頻道)。
-- 自訂提供者：連接任何 OpenAI 或 Anthropic 相容的端點，包括未列出的託管提供者。使用 Unknown 進行自動偵測。
+- 當驗證選擇隱含首選提供商時，入門程序會將 default-model 和 allowlist 選擇器預先篩選至該提供商。對於 Volcengine 和 BytePlus，這也會符合 coding-plan 變體（`volcengine-plan/*`、`byteplus-plan/*`）。
+- 如果首選提供商篩選器尚未產生任何已載入的模型，入門程序會改回退至未篩選的目錄，而不是讓選擇器保持空白。
+- 在 web-search 步驟中，部分提供商可以觸發提供商特定的後續提示：
+  - **Grok** 可以提供選用的 `x_search` 設定，使用相同的 `XAI_API_KEY` 和 `x_search` 模型選擇。
+  - **Kimi** 可以詢問 Moonshot API 區域（`api.moonshot.ai` 與 `api.moonshot.cn`）以及預設 Kimi web-search 模型。
+- 本機入門 DM 範圍行為：[CLI 設定參考](/en/start/wizard-cli-reference#outputs-and-internals)。
+- 最快速的首聊：`openclaw dashboard`（控制 UI，無須頻道設定）。
+- 自訂提供商：連接任何 OpenAI 或 Anthropic 相容端點，包括未列出的託管提供商。使用 Unknown 自動偵測。
 
 ## 常見的後續指令
 
@@ -152,4 +158,4 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` 並不意味著非互動模式。請在腳本中使用 `--non-interactive`。</Note>
+<Note>`--json` 並不意味著非互動模式。請使用 `--non-interactive` 進行腳本操作。</Note>

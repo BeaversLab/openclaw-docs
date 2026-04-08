@@ -45,10 +45,10 @@ Perfecto para:
 
 Use **Raspberry Pi OS Lite (64-bit)** — no se necesita escritorio para un servidor headless.
 
-1. Descargue [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+1. Descarga [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
 2. Elija SO: **Raspberry Pi OS Lite (64-bit)**
 3. Haga clic en el icono de engranaje (⚙️) para preconfigurar:
-   - Establezca nombre de host: `gateway-host`
+   - Establecer nombre de host: `gateway-host`
    - Activar SSH
    - Establecer nombre de usuario/contraseña
    - Configurar WiFi (si no usa Ethernet)
@@ -146,16 +146,16 @@ Siga el asistente:
 # Check status
 openclaw status
 
-# Check service
-sudo systemctl status openclaw
+# Check service (standard install = systemd user unit)
+systemctl --user status openclaw-gateway.service
 
 # View logs
-journalctl -u openclaw -f
+journalctl --user -u openclaw-gateway.service -f
 ```
 
 ## 9) Acceder al Panel de OpenClaw
 
-Reemplace `user@gateway-host` con su nombre de usuario y nombre de host o dirección IP de la Pi.
+Reemplaza `user@gateway-host` con tu nombre de usuario y nombre de host o dirección IP de la Pi.
 
 En su computadora, pídale a la Pi que imprima una URL nueva del panel de control:
 
@@ -163,9 +163,9 @@ En su computadora, pídale a la Pi que imprima una URL nueva del panel de contro
 ssh user@gateway-host 'openclaw dashboard --no-open'
 ```
 
-El comando imprime `Dashboard URL:`. Dependiendo de cómo esté
-configurado `gateway.auth.token`, la URL puede ser un enlace `http://127.0.0.1:18789/` plano
-o uno que incluya `#token=...`.
+El comando imprime `Dashboard URL:`. Dependiendo de cómo esté configurado `gateway.auth.token`,
+el URL puede ser un enlace `http://127.0.0.1:18789/` plano o uno
+que incluya `#token=...`.
 
 En otra terminal en su computadora, cree el túnel SSH:
 
@@ -175,10 +175,11 @@ ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 
 Luego abra la URL del panel de control impresa en su navegador local.
 
-Si la interfaz de usuario solicita autenticación, pegue el token de `gateway.auth.token`
-(o `OPENCLAW_GATEWAY_TOKEN`) en la configuración de Control UI.
+Si la interfaz de usuario solicita autenticación de secreto compartido, pega el token o contraseña
+configurado en la configuración de la Interfaz de Control. Para autenticación por token, usa `gateway.auth.token` (o
+`OPENCLAW_GATEWAY_TOKEN`).
 
-Para acceso remoto siempre activo, consulte [Tailscale](/en/gateway/tailscale).
+Para acceso remoto permanente, consulta [Tailscale](/en/gateway/tailscale).
 
 ---
 
@@ -193,7 +194,7 @@ Las tarjetas SD son lentas y se desgastan. Un SSD USB mejora drásticamente el r
 lsblk
 ```
 
-Consulte la [guía de arranque USB Pi](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot) para la configuración.
+Consulta la [guía de arranque USB de Pi](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot) para la configuración.
 
 ### Acelerar el inicio de la CLI (caché de compilación de módulos)
 
@@ -212,7 +213,7 @@ Notas:
 
 - `NODE_COMPILE_CACHE` acelera las ejecuciones posteriores (`status`, `health`, `--help`).
 - `/var/tmp` sobrevive mejor a los reinicios que `/tmp`.
-- `OPENCLAW_NO_RESPAWN=1` evita el costo de inicio adicional por el autoreinicio de la CLI.
+- `OPENCLAW_NO_RESPAWN=1` evita el costo adicional de inicio debido al autoreinicio del CLI.
 - La primera ejecución calienta la caché; las ejecuciones posteriores se benefician más.
 
 ### ajuste de inicio de systemd (opcional)
@@ -221,7 +222,7 @@ Si esta Pi se usa principalmente para ejecutar OpenClaw, agregue un drop-in de s
 jitter de reinicio y mantener el entorno de inicio estable:
 
 ```bash
-sudo systemctl edit openclaw
+systemctl --user edit openclaw-gateway.service
 ```
 
 ```ini
@@ -236,14 +237,21 @@ TimeoutStartSec=90
 Luego aplique:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl restart openclaw
+systemctl --user daemon-reload
+systemctl --user restart openclaw-gateway.service
 ```
 
 Si es posible, mantenga el estado/caché de OpenClaw en un almacenamiento con SSD para evitar
 cuellos de botella de E/S aleatoria en la tarjeta SD durante los inicios en frío.
 
-Cómo las políticas `Restart=` ayudan a la recuperación automatizada:
+Si esta es una Pi sin pantalla (headless), habilita 'lingering' una vez para que el servicio de usuario
+sobreviva al cierre de sesión:
+
+```bash
+sudo loginctl enable-linger "$(whoami)"
+```
+
+Cómo las políticas de `Restart=` ayudan a la recuperación automatizada:
 [systemd puede automatizar la recuperación del servicio](https://www.redhat.com/en/blog/systemd-automate-recovery).
 
 ### Reducir el Uso de Memoria
@@ -279,17 +287,17 @@ La mayoría de las funciones de OpenClaw funcionan en ARM64, pero algunos binari
 
 | Herramienta          | Estado ARM64 | Notas                               |
 | -------------------- | ------------ | ----------------------------------- |
-| Node.js              | ✅           | Funciona muy bien                   |
+| Node.js              | ✅           | Funciona excelente                  |
 | WhatsApp (Baileys)   | ✅           | JS puro, sin problemas              |
 | Telegram             | ✅           | JS puro, sin problemas              |
 | gog (Gmail CLI)      | ⚠️           | Verificar versión ARM               |
 | Chromium (navegador) | ✅           | `sudo apt install chromium-browser` |
 
-Si una habilidad falla, verifica si su binario tiene una compilación para ARM. Muchas herramientas de Go/Rust la tienen; otras no.
+Si una habilidad falla, verifica si su binario tiene una compilación ARM. Muchas herramientas de Go/Rust la tienen; otras no.
 
 ### 32 bits vs 64 bits
 
-**Utiliza siempre un sistema operativo de 64 bits.** Node.js y muchas herramientas modernas lo requieren. Verifícalo con:
+**Usa siempre un sistema operativo de 64 bits.** Node.js y muchas herramientas modernas lo requieren. Verifícalo con:
 
 ```bash
 uname -m
@@ -300,15 +308,15 @@ uname -m
 
 ## Configuración de Modelo Recomendada
 
-Dado que la Pi es solo la Gateway (los modelos se ejecutan en la nube), utiliza modelos basados en API:
+Dado que la Pi es solo la Pasarela (los modelos se ejecutan en la nube), utiliza modelos basados en API:
 
 ```json
 {
   "agents": {
     "defaults": {
       "model": {
-        "primary": "anthropic/claude-sonnet-4-20250514",
-        "fallbacks": ["openai/gpt-4o-mini"]
+        "primary": "anthropic/claude-sonnet-4-6",
+        "fallbacks": ["openai/gpt-5.4-mini"]
       }
     }
   }
@@ -319,26 +327,26 @@ Dado que la Pi es solo la Gateway (los modelos se ejecutan en la nube), utiliza 
 
 ---
 
-## Inicio Automático al Arrancar
+## Inicio automático al arrancar
 
-La incorporación lo configura, pero para verificar:
+El proceso de incorporación configura esto, pero para verificarlo:
 
 ```bash
 # Check service is enabled
-sudo systemctl is-enabled openclaw
+systemctl --user is-enabled openclaw-gateway.service
 
 # Enable if not
-sudo systemctl enable openclaw
+systemctl --user enable openclaw-gateway.service
 
 # Start on boot
-sudo systemctl start openclaw
+systemctl --user start openclaw-gateway.service
 ```
 
 ---
 
-## Solución de Problemas
+## Solución de problemas
 
-### Sin Memoria (OOM)
+### Sin memoria (OOM)
 
 ```bash
 # Check memory
@@ -348,29 +356,29 @@ free -h
 # Or reduce services running on the Pi
 ```
 
-### Rendimiento Lento
+### Rendimiento lento
 
 - Usa SSD USB en lugar de tarjeta SD
 - Deshabilita servicios no utilizados: `sudo systemctl disable cups bluetooth avahi-daemon`
-- Verifica la limitación de la CPU: `vcgencmd get_throttled` (debería devolver `0x0`)
+- Comprueba la limitación de la CPU: `vcgencmd get_throttled` (debería devolver `0x0`)
 
-### El servicio no se iniciará
+### El servicio no se inicia
 
 ```bash
 # Check logs
-journalctl -u openclaw --no-pager -n 100
+journalctl --user -u openclaw-gateway.service --no-pager -n 100
 
 # Common fix: rebuild
 cd ~/openclaw  # if using hackable install
 npm run build
-sudo systemctl restart openclaw
+systemctl --user restart openclaw-gateway.service
 ```
 
-### Problemas con Binarios ARM
+### Problemas con binarios ARM
 
 Si una habilidad falla con "exec format error":
 
-1. Verifica si el binario tiene una compilación ARM64
+1. Comprueba si el binario tiene una compilación ARM64
 2. Intenta compilar desde el código fuente
 3. O usa un contenedor Docker con soporte ARM
 
@@ -388,25 +396,25 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ---
 
-## Comparación de Costos
+## Comparación de costes
 
-| Configuración  | Costo Único | Costo Mensual | Notas                            |
+| Configuración  | Coste único | Coste mensual | Notas                            |
 | -------------- | ----------- | ------------- | -------------------------------- |
 | **Pi 4 (2GB)** | ~$45        | $0            | + energía (~$5/año)              |
 | **Pi 4 (4GB)** | ~$55        | $0            | Recomendado                      |
 | **Pi 5 (4GB)** | ~$60        | $0            | Mejor rendimiento                |
 | **Pi 5 (8GB)** | ~$80        | $0            | Excesivo pero a prueba de futuro |
 | DigitalOcean   | $0          | $6/mes        | $72/año                          |
-| Hetzner        | $0          | €3.79/mes     | ~$50/año                         |
+| Hetzner        | $0          | €3,79/mes     | ~$50/año                         |
 
-**Punto de equilibrio:** Una Pi se paga a sí misma en ~6-12 meses en comparación con un VPS en la nube.
+**Punto de equilibrio:** Una Pi se paga a sí misma en ~6-12 meses frente a un VPS en la nube.
 
 ---
 
-## Véase También
+## Ver también
 
 - [Guía de Linux](/en/platforms/linux) — configuración general de Linux
 - [Guía de DigitalOcean](/en/platforms/digitalocean) — alternativa en la nube
 - [Guía de Hetzner](/en/install/hetzner) — configuración con Docker
 - [Tailscale](/en/gateway/tailscale) — acceso remoto
-- [Nodos](/en/nodes) — vincula tu portátil/teléfono con la gateway Pi
+- [Nodos](/en/nodes) — empareja tu portátil/teléfono con la pasarela Pi

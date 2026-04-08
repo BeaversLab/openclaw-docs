@@ -3,23 +3,33 @@ summary: "OAuth dans OpenClaw : échange de jetons, stockage et modèles multi-c
 read_when:
   - You want to understand OpenClaw OAuth end-to-end
   - You hit token invalidation / logout issues
-  - You want setup-token or OAuth auth flows
+  - You want Claude CLI or OAuth auth flows
   - You want multiple accounts or profile routing
 title: "OAuth"
 ---
 
 # OAuth
 
-OpenClaw prend en charge « l'authentification par abonnement » via OAuth pour les fournisseurs qui l'offrent (notamment **OpenAI Codex (ChatGPT OAuth)**). Pour les abonnements Anthropic, vous pouvez soit utiliser le flux **setup-token**, soit réutiliser une connexion locale **Claude CLI** sur l'hôte de la passerelle. L'utilisation de l'abonnement Anthropic en dehors de Claude Code a été restreinte pour certains utilisateurs par le passé, traitez donc cela comme un risque lié au choix de l'utilisateur et vérifiez vous-même la politique actuelle d'Anthropic. OAuth OpenAI Codex est explicitement pris en charge pour une utilisation dans des outils externes comme OpenClaw. Cette page explique :
+OpenClaw prend en charge « l'authentification par abonnement » via OAuth pour les providers qui l'offrent
+(notamment **OpenAI Codex (ChatGPT OAuth)**). Pour Anthropic, la répartition pratique
+est désormais :
 
-Pour Anthropic en production, l'auth par clé API est le chemin recommandé plus sûr par rapport à l'auth par setup-token d'abonnement.
+- **Clé API Anthropic** : facturation API Anthropic normale
+- **Authentification par abonnement Anthropic au sein d'OpenClaw** : Anthropic a informé les utilisateurs d'OpenClaw
+  le **4 avril 2026 à 12:00 PM PT / 8:00 PM BST** que cela nécessite désormais
+  **Extra Usage**
+
+OAuth OpenAI Codex est explicitement pris en charge pour une utilisation dans des outils externes comme
+OpenClaw. Cette page explique :
+
+Pour Anthropic en production, l'authentification par clé API est le chemin recommandé le plus sûr.
 
 - comment fonctionne l'**échange de jetons** OAuth (PKCE)
 - où les jetons sont **stockés** (et pourquoi)
-- comment gérer **plusieurs comptes** (profils + substitutions par session)
+- comment gérer **plusieurs comptes** (profils + remplacements par session)
 
-OpenClaw prend également en charge les **plugins de provider** qui fournissent leurs propres flux OAuth ou de clé API.
-Exécutez-les via :
+OpenClaw prend également en charge les **plugins de provider** qui embarquent leurs propres flux OAuth ou de clé
+API. Exécutez-les via :
 
 ```bash
 openclaw models auth login --provider <id>
@@ -27,108 +37,94 @@ openclaw models auth login --provider <id>
 
 ## Le puits de jetons (pourquoi il existe)
 
-Les providers OAuth génèrent généralement un **nouveau jeton d'actualisation** lors des flux de connexion/actualisation. Certains providers (ou clients OAuth) peuvent invalider les anciens jetons d'actualisation lorsqu'un nouveau est émis pour le même utilisateur/application.
+Les providers OAuth génèrent souvent un **nouveau jeton d'actualisation** lors des flux de connexion/actualisation. Certains providers (ou clients OAuth) peuvent invalider les anciens jetons d'actualisation lorsqu'un nouveau est émis pour le même utilisateur/application.
 
 Symptôme pratique :
 
-- vous vous connectez via OpenClaw _et_ via Claude Code / Codex CLI → l'un d'eux est « déconnecté » de manière aléatoire plus tard
+- vous vous connectez via OpenClaw _et_ via Claude Code / Codex CLI → l'un d'eux se déconnecte « » aléatoirement plus tard
 
-Pour réduire cela, OpenClaw traite `auth-profiles.json` comme un **« puits de jetons »** :
+Pour réduire cela, OpenClaw traite `auth-profiles.json` comme un **puits de jetons** :
 
-- le runtime lit les identifiants à partir **d'un seul endroit**
+- le runtime lit les identifiants à partir d'**un seul endroit**
 - nous pouvons conserver plusieurs profils et les router de manière déterministe
+- lorsque les identifiants sont réutilisés depuis un CLI externe comme Codex CLI, OpenClaw
+  les met en miroir avec leur provenance et relit cette source externe au lieu de
+  faire tourner le jeton d'actualisation lui-même
 
 ## Stockage (où vivent les jetons)
 
 Les secrets sont stockés **par agent** :
 
-- Profils d'authentification (OAuth + clés API + références de niveau de valeur optionnelles) : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-- Fichier de compatibilité hérité : `~/.openclaw/agents/<agentId>/agent/auth.json`
-  (les entrées `api_key` statiques sont nettoyées lorsqu'elles sont découvertes)
+- Profils d'authentification (OAuth + clés API + références optionnelles au niveau des valeurs) : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+- Fichier de compatibilité héritée : `~/.openclaw/agents/<agentId>/agent/auth.json`
+  (les entrées statiques `api_key` sont nettoyées lors de leur découverte)
 
-Fichier hérité d'importation uniquement (toujours pris en charge, mais pas le stockage principal) :
+Fichier d'importation hérité uniquement (toujours pris en charge, mais pas le stockage principal) :
 
-- `~/.openclaw/credentials/oauth.json` (importé dans `auth-profiles.json` lors de la première utilisation)
+- `~/.openclaw/credentials/oauth.json` (importé dans `auth-profiles.json` à la première utilisation)
 
 Tout ce qui précède respecte également `$OPENCLAW_STATE_DIR` (remplacement du répertoire d'état). Référence complète : [/gateway/configuration](/en/gateway/configuration-reference#auth-storage)
 
-Pour les références de secrets statiques et le comportement d'activation des instantanés d'exécution, voir [Secrets Management](/en/gateway/secrets).
+Pour les références de secrets statiques et le comportement d'activation des instantanés d'exécution, consultez [Gestion des secrets](/en/gateway/secrets).
 
-## Anthropic setup-token (auth par abonnement)
+## Compatibilité des jetons hérités Anthropic
 
-<Warning>Le support setup-token Anthropic est une compatibilité technique, et non une garantie de politique. Anthropic a bloqué certaines utilisations d'abonnement en dehors de Claude Code dans le passé. Décidez par vous-même d'utiliser ou non l'authentification par abonnement, et vérifiez les conditions actuelles de Anthropic.</Warning>
+<Warning>
+La documentation publique de Anthropic sur Claude Code indique que l'utilisation directe de Claude Code reste dans les limites de l'abonnement Claude. Par ailleurs, Anthropic a indiqué aux utilisateurs de OpenClaw le
+**4 avril 2026 à 12 h 00 PT / 20 h 00 BST** que OpenClaw est considéré comme un
+harnais tiers. Les profils de jetons Anthropic existants restent techniquement
+utilisables dans OpenClaw, mais Anthropic indique que le chemin OpenClaw nécessite désormais une **Utilisation
+supplémentaire** (facturation à l'usage facturée séparément de l'abonnement) pour ce
+trafic.
 
-Exécutez `claude setup-token` sur n'importe quelle machine, puis collez-le dans OpenClaw :
+Pour la documentation actuelle du plan direct Claude Code de Anthropic, consultez [Utilisation de Claude Code
+avec votre plan Pro ou Max
+](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
+et [Utilisation de Claude Code avec votre plan d'équipe ou d'entreprise
+](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
-```bash
-openclaw models auth setup-token --provider anthropic
-```
+Si vous souhaitez d'autres options de style abonnement dans OpenClaw, consultez [OpenAI
+Codex](/en/providers/openai), [Plan de codage cloud Qwen
+](/en/providers/qwen), [Plan de codage MiniMax](/en/providers/minimax),
+et [Plan de codage Z.AI / GLM](/en/providers/glm).
 
-Si vous avez généré le jeton ailleurs, collez-le manuellement :
+</Warning>
 
-```bash
-openclaw models auth paste-token --provider anthropic
-```
+OpenClaw expose désormais à nouveau le jeton de configuration Anthropic en tant que chemin hérité/manuel.
+L'avis de facturation spécifique à Anthropic de OpenClaw s'applique toujours à ce chemin, donc
+utilisez-le en sachant que Anthropic exige une **Utilisation supplémentaire** pour
+le trafic de connexion Claude piloté par OpenClaw.
 
-Vérifier :
+## Migration de la Anthropic Claude CLI
 
-```bash
-openclaw models status
-```
-
-## Anthropic Claude CLI migration
-
-Si Claude CLI est déjà installé et connecté sur l'hôte de la passerelle, vous pouvez
-basculer la sélection du modèle Anthropic vers le backend local CLI :
-
-```bash
-openclaw models auth login --provider anthropic --method cli --set-default
-```
-
-Raccourci d'onboarding :
-
-```bash
-openclaw onboard --auth-choice anthropic-cli
-```
-
-Cela permet de conserver les profils d'authentification Anthropic existants pour une annulation, mais réécrit le chemin principal
-default-model de `anthropic/...` vers `claude-cli/...`.
+Anthropic n'a plus de chemin de migration pris en charge pour la CLI Claude locale dans
+OpenClaw. Utilisez les clés Anthropic de l'API pour le trafic Anthropic, ou conservez l'authentification
+basée sur des jetons hérités uniquement là où elle est déjà configurée et avec l'attente
+que Anthropic considère ce chemin OpenClaw comme une **Utilisation supplémentaire**.
 
 ## Échange OAuth (fonctionnement de la connexion)
 
-Les flux de connexion interactive de OpenClaw sont implémentés dans `@mariozechner/pi-ai` et connectés aux assistants/commandes.
+Les flux de connexion interactifs de OpenClaw sont implémentés dans `@mariozechner/pi-ai` et intégrés aux assistants/ commandes.
 
-### Anthropic setup-token / Claude CLI
+### Jeton de configuration Anthropic
 
 Forme du flux :
 
-Chemin setup-token :
-
-1. exécuter `claude setup-token`
-2. coller le jeton dans OpenClaw
-3. stocker en tant que profil d'authentification par jeton (pas d'actualisation)
-
-Chemin Claude CLI :
-
-1. se connecter avec `claude auth login` sur l'hôte de la passerelle
-2. exécuter `openclaw models auth login --provider anthropic --method cli --set-default`
-3. ne pas stocker de nouveau profil d'authentification ; basculer la sélection du modèle sur `claude-cli/...`
-
-Chemins de l'assistant :
-
-- `openclaw onboard` → choix d'authentification `anthropic-cli`
-- `openclaw onboard` → choix d'authentification `setup-token` (Anthropic)
+1. démarrer le jeton de configuration Anthropic ou coller le jeton depuis OpenClaw
+2. OpenClaw stocke les informations d'identification Anthropic résultantes dans un profil d'authentification
+3. la sélection du modèle reste sur `anthropic/...`
+4. les profils d'authentification Anthropic existants restent disponibles pour le contrôle de la restauration/de l'ordre
 
 ### OpenAI Codex (ChatGPT OAuth)
 
-L'OpenAI Codex OAuth est explicitement pris en charge pour une utilisation en dehors de l'interface de ligne de commande Codex, y compris dans les workflows CLI.
+OAuth OpenAI Codex est explicitement pris en charge pour une utilisation en dehors de la CLI Codex, y compris dans les workflows OpenClaw.
 
-Structure du flux (PKCE) :
+Forme du flux (PKCE) :
 
 1. générer le vérificateur/défi PKCE + `state` aléatoire
 2. ouvrir `https://auth.openai.com/oauth/authorize?...`
-3. essayer de capturer le rappel sur `http://127.0.0.1:1455/auth/callback`
-4. si le rappel ne peut pas se lier (ou si vous êtes distant/sans interface), collez l'URL de redirection/le code
+3. essayer de capturer le callback sur `http://127.0.0.1:1455/auth/callback`
+4. si le callback ne peut pas se lier (ou si vous êtes distant/headless), collez l'URL/code de redirection
 5. échanger à `https://auth.openai.com/oauth/token`
 6. extraire `accountId` du jeton d'accès et stocker `{ access, refresh, expires, accountId }`
 
@@ -141,7 +137,9 @@ Les profils stockent un horodatage `expires`.
 À l'exécution :
 
 - si `expires` est dans le futur → utiliser le jeton d'accès stocké
-- si expiré → actualiser (sous un verrou de fichier) et écraser les identifiants stockés
+- si expiré → actualiser (sous un verrou de fichier) et écraser les informations d'identification stockées
+- exception : les informations d'identification CLI externes réutilisées restent gérées externement ; OpenClaw
+  relit le stock d'auth CLI et ne dépense jamais lui-même le jeton d'actualisation copié
 
 Le flux d'actualisation est automatique ; vous n'avez généralement pas besoin de gérer les jetons manuellement.
 
@@ -151,7 +149,7 @@ Deux modèles :
 
 ### 1) Préféré : agents séparés
 
-Si vous voulez que « personnel » et « travail » n'interagissent jamais, utilisez des agents isolés (sessions + identifiants + espace de travail séparés) :
+Si vous ne voulez pas que « personnel » et « travail » interagissent, utilisez des agents isolés (sessions + informations d'identification + espace de travail séparés) :
 
 ```bash
 openclaw agents add work
@@ -164,9 +162,9 @@ Configurez ensuite l'auth par agent (assistant) et acheminez les discussions ver
 
 `auth-profiles.json` prend en charge plusieurs ID de profil pour le même fournisseur.
 
-Choisissez le profil utilisé :
+Choisir le profil utilisé :
 
-- mondialement via l'ordre de configuration (`auth.order`)
+- globalement via l'ordre de configuration (`auth.order`)
 - par session via `/model ...@<profileId>`
 
 Exemple (remplacement de session) :
@@ -180,10 +178,10 @@ Comment voir quels ID de profil existent :
 Documentation connexe :
 
 - [/concepts/model-failover](/en/concepts/model-failover) (règles de rotation + refroidissement)
-- [/tools/slash-commands](/en/tools/slash-commands) (interface de commande)
+- [/tools/slash-commands](/en/tools/slash-commands) (surface de commande)
 
 ## Connexes
 
-- [Authentification](/en/gateway/authentication) — aperçu de l'authentification du provider de model
-- [Secrets](/en/gateway/secrets) — stockage des identifiants et SecretRef
-- [Référence de configuration](/en/gateway/configuration-reference#auth-storage) — clés de configuration de l'authentification
+- [Authentification](/en/gateway/authentication) — aperçu de l'auth du fournisseur de modèle
+- [Secrets](/en/gateway/secrets) — stockage des informations d'identification et SecretRef
+- [Référence de configuration](/en/gateway/configuration-reference#auth-storage) — clés de configuration d'auth

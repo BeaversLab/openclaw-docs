@@ -107,7 +107,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - `/settings`
 - `/exit`
 
-其他 Gateway(网关) 斜杠命令（例如，`/context`）将被转发到 Gateway(网关) 并显示为系统输出。请参阅[斜杠命令](/en/tools/slash-commands)。
+其他 Gateway(网关) 斜杠命令（例如 `/context`）将被转发到 Gateway(网关) 并显示为系统输出。请参阅 [Slash commands](/en/tools/slash-commands)。
 
 ## 本地 Shell 命令
 
@@ -148,28 +148,29 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - `--session <key>`：会话密钥（默认：`main`，当范围为全局时为 `global`）
 - `--deliver`：将助手回复传递给提供商（默认关闭）
 - `--thinking <level>`：覆盖发送时的思考级别
-- `--timeout-ms <ms>`：代理超时时间，单位为毫秒（默认为 `agents.defaults.timeoutSeconds`）
+- `--message <text>`：连接后发送初始消息
+- `--timeout-ms <ms>`：Agent 超时时间（毫秒）（默认为 `agents.defaults.timeoutSeconds`）
+- `--history-limit <n>`：要加载的历史记录条目（默认 `200`）
 
-注意：当您设置 `--url` 时，TUI 不会回退到配置或环境凭证。
-请显式传递 `--token` 或 `--password`。缺少显式凭证将导致错误。
+注意：当您设置 `--url` 时，TUI 不会回退到配置文件或环境变量凭据。
+请显式传递 `--token` 或 `--password`。缺少显式凭据将报错。
 
 ## 故障排除
 
 发送消息后无输出：
 
-- 在 TUI 中运行 `/status`，以确认 Gateway(网关) 已连接且处于空闲/忙碌状态。
+- 在 TUI 中运行 `/status` 以确认 Gateway(网关) 已连接且处于空闲/忙碌状态。
 - 检查 Gateway(网关) 日志：`openclaw logs --follow`。
-- 确认代理能够运行：`openclaw status` 和 `openclaw models status`。
-- 如果您在聊天渠道中期望收到消息，请启用传递（`/deliver on` 或 `--deliver`）。
-- `--history-limit <n>`：要加载的历史记录条目（默认 200）
+- 确认 agent 可以运行：`openclaw status` 和 `openclaw models status`。
+- 如果您期望在聊天渠道中收到消息，请启用投递（`/deliver on` 或 `--deliver`）。
 
 ## 连接故障排除
 
-- `disconnected`：确保 Gateway(网关) 正在运行，且您的 `--url/--token/--password` 是正确的。
-- 选择器中没有代理：检查 `openclaw agents list` 和您的路由配置。
-- 会话选择器为空：您可能处于全局范围或者还没有任何会话。
+- `disconnected`：确保 Gateway(网关) 正在运行且您的 `--url/--token/--password` 正确。
+- 选择器中没有 agent：检查 `openclaw agents list` 和您的路由配置。
+- 会话选择器为空：您可能处于全局作用域或还没有任何会话。
 
-## 相关
+## 相关内容
 
 - [Control UI](/en/web/control-ui) — 基于 Web 的控制界面
 - [CLI Reference](/en/cli) — 完整的 CLI 命令参考

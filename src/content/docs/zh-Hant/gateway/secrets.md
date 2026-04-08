@@ -415,7 +415,7 @@ Secret 啟動執行於：
 
 有兩種主要的行為：
 
-- 嚴格指令路徑 (例如 `openclaw memory` 遠端記憶體路徑和 `openclaw qr --remote`) 從作用中快照讀取，當所需的 SecretRef 不可用時會快速失敗。
+- 嚴格指令路徑（例如 `openclaw memory` 遠端記憶體路徑以及需要遠端共享 Secret 參考時的 `openclaw qr --remote`）從活動快照讀取，且當必要的 SecretRef 無法使用時快速失敗。
 - 唯讀指令路徑（例如 `openclaw status`、`openclaw status --all`、`openclaw channels status`、`openclaw channels resolve`、`openclaw security audit` 和唯讀 doctor/config repair 流程）也偏好使用主動快照，但在該指令路徑中目標 SecretRef 不可用時，會降級執行而不是中止。
 
 唯讀行為：

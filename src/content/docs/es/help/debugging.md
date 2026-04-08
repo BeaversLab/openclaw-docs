@@ -49,8 +49,9 @@ metadatos de extensiones `package.json` y `openclaw.plugin.json`, `tsconfig.json
 gateway sin forzar una reconstrucción de `tsdown`; los cambios en el código fuente y la configuración aún
 reconstruyen `dist` primero.
 
-Añada cualquier flag de CLI de la gateway después de `gateway:watch` y se pasarán en
-cada reinicio.
+Añade cualquier bandera de CLI de la puerta de enlace después de `gateway:watch` y se pasarán en
+cada reinicio. Al volver a ejecutar el mismo comando de vigilancia para el mismo repositorio/conjunto de banderas ahora
+reemplaza al vigilante más antiguo en lugar de dejar padres de vigilantes duplicados atrás.
 
 ## Perfil de desarrollo + gateway de desarrollo (--dev)
 

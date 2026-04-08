@@ -90,17 +90,26 @@ Puedes apuntar OpenClaw al proxy como un punto final personalizado compatible co
 }
 ```
 
-## Modelos disponibles
+Esta ruta utiliza la misma ruta compatible con OpenAI de estilo proxy que otros
+backends personalizados `/v1`:
 
-| ID del modelo     | Se asigna a     |
+- no se aplica el modelado de solicitudes nativo solo de OpenAI
+- sin `service_tier`, sin Responses `store`, sin sugerencias de caché de prompts y sin
+  modelado de carga útil de compatibilidad de razonamiento de OpenAI
+- los encabezados de atribución ocultos de OpenClaw (`originator`, `version`, `User-Agent`)
+  no se inyectan en la URL del proxy
+
+## Modelos Disponibles
+
+| ID del Modelo     | Se Mapea A      |
 | ----------------- | --------------- |
 | `claude-opus-4`   | Claude Opus 4   |
 | `claude-sonnet-4` | Claude Sonnet 4 |
 | `claude-haiku-4`  | Claude Haiku 4  |
 
-## Inicio automático en macOS
+## Inicio Automático en macOS
 
-Crea un LaunchAgent para ejecutar el proxy automáticamente:
+Cree un LaunchAgent para ejecutar el proxy automáticamente:
 
 ```bash
 cat > ~/Library/LaunchAgents/com.claude-max-api.plist << 'EOF'
@@ -135,16 +144,16 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 - **npm:** [https://www.npmjs.com/package/claude-max-api-proxy](https://www.npmjs.com/package/claude-max-api-proxy)
 - **GitHub:** [https://github.com/atalovesyou/claude-max-api-proxy](https://github.com/atalovesyou/claude-max-api-proxy)
-- **Problemas:** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
+- **Issues:** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
 
 ## Notas
 
-- Esta es una **herramienta comunitaria**, no es oficialmente compatible con Anthropic ni OpenClaw
+- Esta es una **herramienta de la comunidad**, no compatible oficialmente con Anthropic u OpenClaw
 - Requiere una suscripción activa de Claude Max/Pro con la CLI de Claude Code autenticada
 - El proxy se ejecuta localmente y no envía datos a ningún servidor de terceros
 - Las respuestas en streaming son totalmente compatibles
 
-## Ver también
+## Véase También
 
-- [Proveedor Anthropic](/en/providers/anthropic) - Integración nativa de OpenClaw con token de configuración de Claude o claves API
+- [Proveedor Anthropic](/en/providers/anthropic) - Integración nativa de OpenClaw con Claude CLI o claves de API
 - [Proveedor OpenAI](/en/providers/openai) - Para suscripciones de OpenAI/Codex

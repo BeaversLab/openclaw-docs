@@ -89,9 +89,9 @@ Controles de compatibilidad opcionales:
 `~/.openclaw/openclaw.json` bajo `plugins.entries.perplexity.config.webSearch.apiKey`.
 Ese campo también acepta objetos SecretRef.
 
-**Vía entorno:** establezca `PERPLEXITY_API_KEY` o `OPENROUTER_API_KEY`
-en el entorno de proceso de Gateway. Para una instalación de puerta de enlace, póngalo en
-`~/.openclaw/.env` (o en su entorno de servicio). Consulte [Env vars](/en/help/faq#env-vars-and-env-loading).
+**A través del entorno:** establezca `PERPLEXITY_API_KEY` o `OPENROUTER_API_KEY`
+en el entorno del proceso Gateway. Para una instalación de puerta de enlace, póngalo en
+`~/.openclaw/.env` (o en el entorno de su servicio). Consulte [Env vars](/en/help/faq#env-vars-and-env-loading).
 
 Si `provider: "perplexity"` está configurado y el SecretRef de la clave de Perplexidad no está resuelto sin un respaldo de entorno, el inicio/recarga falla rápidamente.
 
@@ -112,8 +112,14 @@ Estos parámetros se aplican a la ruta nativa de la API de búsqueda de Perplexi
 | `max_tokens`          | Presupuesto total de contenido (predeterminado: 25000, máx: 1000000) |
 | `max_tokens_per_page` | Límite de tokens por página (predeterminado: 2048)                   |
 
-Para la ruta de compatibilidad heredada de Sonar/OpenRouter, solo se admiten `query` y `freshness`.
-Los filtros exclusivos de la API de búsqueda, como `country`, `language`, `date_after`, `date_before`, `domain_filter`, `max_tokens` y `max_tokens_per_page`, devuelven errores explícitos.
+Para la ruta de compatibilidad heredada de Sonar/OpenRouter:
+
+- `query`, `count` y `freshness` son aceptados
+- `count` es solo para compatibilidad allí; la respuesta sigue siendo una respuesta
+  sintetizada con citas en lugar de una lista de N resultados
+- Los filtros exclusivos de la API de búsqueda como `country`, `language`, `date_after`,
+  `date_before`, `domain_filter`, `max_tokens` y `max_tokens_per_page`
+  devuelven errores explícitos
 
 **Ejemplos:**
 
@@ -162,13 +168,14 @@ await web_search({
 
 - Máximo 20 dominios por filtro
 - No se puede mezclar la lista de permitidos y la lista de bloqueados en la misma solicitud
-- Use el prefijo `-` para las entradas de la lista de bloqueados (por ejemplo, `["-reddit.com"]`)
+- Use el prefijo `-` para las entradas de la lista de bloqueados (p. ej., `["-reddit.com"]`)
 
 ## Notas
 
 - La API de búsqueda de Perplexity devuelve resultados de búsqueda web estructurados (`title`, `url`, `snippet`)
-- OpenRouter o `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` explícitos cambia Perplexity de nuevo a completaciones de chat Sonar para mayor compatibilidad
-- Los resultados se almacenan en caché durante 15 minutos de forma predeterminada (configurable mediante `cacheTtlMinutes`)
+- OpenRouter o `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` explícito cambia Perplexity nuevamente a finalizaciones de chat Sonar para compatibilidad
+- La compatibilidad con Sonar/OpenRouter devuelve una respuesta sintetizada con citas, no filas de resultados estructurados
+- Los resultados se almacenan en caché durante 15 minutos de forma predeterminada (configurable a través de `cacheTtlMinutes`)
 
-Consulte [Herramientas web](/en/tools/web) para ver la configuración completa de web_search.
-Consulte [Documentación de la API de búsqueda de Perplexity](https://docs.perplexity.ai/docs/search/quickstart) para más detalles.
+Consulte [Web tools](/en/tools/web) para ver la configuración completa de web_search.
+Consulte [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) para obtener más detalles.

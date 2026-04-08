@@ -19,7 +19,7 @@ Mac 上的默认运行时是 Node 24。目前 `22.14+` 的 Node 22 LTS 仍然兼
 npm install -g openclaw@<version>
 ```
 
-macOS 应用的 **Install CLI** 按钮通过 npm/pnpm 运行相同的流程（不推荐在 Gateway(网关) 网关 运行时使用 bun）。
+macOS 应用程序中的 **安装 CLI** 按钮运行与应用程序内部使用的相同的全局安装流程：它首先首选 npm，然后是 pnpm，如果 bun 是唯一检测到的包管理器，则使用 bun。Node 仍然是推荐的 Gateway(网关) 运行时。
 
 ## Launchd（Gateway(网关) 网关 作为 LaunchAgent）
 

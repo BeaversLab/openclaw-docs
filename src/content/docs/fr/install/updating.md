@@ -1,5 +1,5 @@
 ---
-summary: "Mettre à jour OpenClaw en toute sécurité (installation globale ou source), plus stratégie de retour"
+summary: "Mise à jour sécurisée d'OpenClaw (installation globale ou source), plus stratégie de retour"
 read_when:
   - Updating OpenClaw
   - Something breaks after an update
@@ -26,6 +26,10 @@ openclaw update --tag main
 openclaw update --dry-run   # preview without applying
 ```
 
+`--channel beta` préfère la version bêta, mais l'exécution revient à stable/latest lorsque
+le tag bêta est manquant ou plus ancien que la dernière version stable. Utilisez `--tag beta`
+si vous souhaitez le tag de dist bêta npm brut pour une mise à jour de package ponctuelle.
+
 Voir [Canaux de développement](/en/install/development-channels) pour la sémantique des canaux.
 
 ## Alternative : réexécuter l'installateur
@@ -34,9 +38,9 @@ Voir [Canaux de développement](/en/install/development-channels) pour la séman
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-Ajoutez `--no-onboard` pour sauter l'intégration. Pour les installations depuis les sources, passez `--install-method git --no-onboard`.
+Ajoutez `--no-onboard` pour ignorer l'intégration (onboarding). Pour les installations à partir des sources, passez `--install-method git --no-onboard`.
 
-## Alternative : npm manuel ou pnpm
+## Alternative : npm manuel, pnpm ou bun
 
 ```bash
 npm i -g openclaw@latest
@@ -44,6 +48,10 @@ npm i -g openclaw@latest
 
 ```bash
 pnpm add -g openclaw@latest
+```
+
+```bash
+bun add -g openclaw@latest
 ```
 
 ## Mise à jour automatique
@@ -76,13 +84,13 @@ La passerelle enregistre également un indice de mise à jour au démarrage (dé
 
 <Steps>
 
-### Exécuter le docteur
+### Exécuter le médecin (doctor)
 
 ```bash
 openclaw doctor
 ```
 
-Migre la configuration, audite les politiques DM, et vérifie la santé de la passerelle. Détails : [Docteur](/en/gateway/doctor)
+Migration de la configuration, audit des stratégies DM et vérification de la santé de la passerelle. Détails : [Docteur](/en/gateway/doctor)
 
 ### Redémarrer la passerelle
 
@@ -98,7 +106,7 @@ openclaw health
 
 </Steps>
 
-## Retour en arrière
+## Retour en arrière (Rollback)
 
 ### Épingler une version (npm)
 
@@ -124,11 +132,12 @@ Pour revenir à la dernière version : `git checkout main && git pull`.
 ## Si vous êtes bloqué
 
 - Exécutez `openclaw doctor` à nouveau et lisez attentivement la sortie.
+- Pour `openclaw update --channel dev` sur les sources extraites, le programme de mise à jour amorce automatiquement `pnpm` si nécessaire. Si vous rencontrez une erreur d'amorçage pnpm/corepack, installez `pnpm` manuellement (ou réactivez `corepack`) et relancez la mise à jour.
 - Vérifiez : [Dépannage](/en/gateway/troubleshooting)
 - Demandez sur Discord : [https://discord.gg/clawd](https://discord.gg/clawd)
 
 ## Connexes
 
 - [Vue d'ensemble de l'installation](/en/install) — toutes les méthodes d'installation
-- [Doctor](/en/gateway/doctor) — vérifications de santé après les mises à jour
+- [Docteur](/en/gateway/doctor) — vérifications de santé après les mises à jour
 - [Migration](/en/install/migrating) — guides de migration pour les versions majeures

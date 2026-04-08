@@ -112,8 +112,14 @@ Ces paramètres s'appliquent au chemin de l'API native Perplexity Search API.
 | `max_tokens`          | Budget total de contenu (par défaut : 25000, max : 1000000)           |
 | `max_tokens_per_page` | Limite de jetons par page (par défaut : 2048)                         |
 
-Pour le chemin de compatibilité Sonar/OpenRouter hérité, seuls `query` et `freshness` sont pris en charge.
-Les filtres exclusifs à l'API de recherche API tels que `country`, `language`, `date_after`, `date_before`, `domain_filter`, `max_tokens` et `max_tokens_per_page` renvoient des erreurs explicites.
+Pour le chemin de compatibilité hérité Sonar/OpenRouter :
+
+- `query`, `count` et `freshness` sont acceptés
+- `count` n'est là que pour la compatibilité ; la réponse est toujours une réponse
+  synthétisée unique avec des citations plutôt qu'une liste de résultats N
+- Les filtres exclusifs à la API de recherche tels que `country`, `language`, `date_after`,
+  `date_before`, `domain_filter`, `max_tokens` et `max_tokens_per_page`
+  renvoient des erreurs explicites
 
 **Exemples :**
 
@@ -162,17 +168,18 @@ await web_search({
 
 - Maximum 20 domaines par filtre
 - Impossible de mélanger la liste d'autorisation et la liste de blocage dans la même requête
-- Utilisez le préfixe `-` pour les entrées de la liste de blocage (par exemple, `["-reddit.com"]`)
+- Utilisez le préfixe `-` pour les entrées de la liste de blocage (ex : `["-reddit.com"]`)
 
 ## Notes
 
-- L'API Perplexity Search API renvoie des résultats de recherche Web structurés (`title`, `url`, `snippet`)
-- OpenRouter ou les commutateurs explicites `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` ramènent Perplexity aux complétés de chat Sonar pour compatibilité
+- La Perplexity de recherche API renvoie des résultats de recherche web structurés (`title`, `url`, `snippet`)
+- OpenRouter ou les commutateurs explicites `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` ramènent Perplexity aux complétés de chat Sonar pour la compatibilité
+- La compatibilité Sonar/OpenRouter renvoie une réponse synthétisée unique avec des citations, et non des lignes de résultats structurés
 - Les résultats sont mis en cache pendant 15 minutes par défaut (configurable via `cacheTtlMinutes`)
 
 ## Connexes
 
-- [Aperçu de la recherche Web](/en/tools/web) -- tous les fournisseurs et la détection automatique
-- [Documentation de l'Perplexity de recherche API](https://docs.perplexity.ai/docs/search/quickstart) -- documentation officielle de Perplexity
+- [Aperçu de la recherche web](/en/tools/web) -- tous les fournisseurs et la détection automatique
+- [Docs de la Perplexity de recherche API](https://docs.perplexity.ai/docs/search/quickstart) -- documentation officielle de Perplexity
 - [Recherche Brave](/en/tools/brave-search) -- résultats structurés avec des filtres de pays/langue
 - [Recherche Exa](/en/tools/exa-search) -- recherche neurale avec extraction de contenu

@@ -1,5 +1,5 @@
 ---
-summary: "Mode exec avec élévation : exécuter des commandes sur l'hôte de la passerelle à partir d'un agent sandboxé"
+summary: "Mode exec élevé : exécuter des commandes en dehors du bac à sable depuis un agent en bac à sable"
 read_when:
   - Adjusting elevated mode defaults, allowlists, or slash command behavior
   - Understanding how sandboxed agents can access the host
@@ -8,9 +8,7 @@ title: "Mode avec élévation"
 
 # Mode avec élévation
 
-Lorsqu'un agent s'exécute dans un sandbox, ses commandes `exec` sont confinées à l'environnement
-sandbox. Le **mode avec élévation** permet à l'agent de s'en échapper et d'exécuter des commandes
-sur l'hôte de la passerelle à la place, avec des barrières d'approbation configurables.
+Lorsqu'un agent s'exécute dans un bac à sable, ses commandes `exec` sont confinées à l'environnement du bac à sable. Le **mode élevé** permet à l'agent de s'échapper et d'exécuter des commandes à l'extérieur du bac à sable, avec des portes d'approbation configurables.
 
 <Info>Le mode élevé ne modifie le comportement que lorsque l'agent est **sandboxed**. Pour les agents non sandboxed, exec s'exécute déjà sur l'hôte.</Info>
 
@@ -18,12 +16,12 @@ sur l'hôte de la passerelle à la place, avec des barrières d'approbation conf
 
 Contrôlez le mode avec élévation par session avec les commandes slash :
 
-| Directive        | Ce qu'elle fait                                                           |
-| ---------------- | ------------------------------------------------------------------------- |
-| `/elevated on`   | Exécuter sur l'hôte de la passerelle, conserver les approbations exec     |
-| `/elevated ask`  | Identique à `on` (alias)                                                  |
-| `/elevated full` | Exécuter sur l'hôte de la passerelle **et** ignorer les approbations exec |
-| `/elevated off`  | Retourner à l'exécution confinée au sandbox                               |
+| Directive        | Ce qu'elle fait                                                                              |
+| ---------------- | -------------------------------------------------------------------------------------------- |
+| `/elevated on`   | Exécuter en dehors du bac à sable sur le chemin d'hôte configuré, garder les approbations    |
+| `/elevated ask`  | Identique à `on` (alias)                                                                     |
+| `/elevated full` | Exécuter en dehors du bac à sable sur le chemin d'hôte configuré et ignorer les approbations |
+| `/elevated off`  | Retourner à l'exécution confinée au sandbox                                                  |
 
 Également disponible sous la forme `/elev on|off|ask|full`.
 
@@ -66,10 +64,11 @@ Envoyez `/elevated` sans argument pour voir le niveau actuel.
 
   </Step>
 
-  <Step title="Les commandes s'exécutent sur l'hôte">
-    Lorsque le mode avec élévation est actif, les appels `exec` sont routés vers l'hôte de la passerelle au lieu du
-    sandbox. En mode `full`, les approbations exec sont ignorées. En mode `on`/`ask`,
-    les règles d'approbation configurées s'appliquent toujours.
+  <Step title="Commands run outside the sandbox">
+    Avec le mode élevé actif, les appels `exec` quittent le bac à sable. L'hôte effectif est
+    `gateway` par défaut, ou `node` lorsque la cible d'exécution configurée/session est
+    `node`. En mode `full`, les approbations d'exécution sont ignorées. En mode
+    `on`/`ask`, les règles d'approbation configurées s'appliquent toujours.
   </Step>
 </Steps>
 
@@ -77,15 +76,15 @@ Envoyez `/elevated` sans argument pour voir le niveau actuel.
 
 1. **Directive en ligne** sur le message (s'applique uniquement à ce message)
 2. **Remplacement de session** (défini en envoyant un message contenant uniquement une directive)
-3. **Valeur par défaut globale** (`agents.defaults.elevatedDefault` dans la configuration)
+3. **Par défaut global** (`agents.defaults.elevatedDefault` dans la configuration)
 
 ## Disponibilité et listes d'autorisation
 
-- **Portail global** : `tools.elevated.enabled` (doit être `true`)
+- **Porte globale** : `tools.elevated.enabled` (doit être `true`)
 - **Liste d'autorisation de l'expéditeur** : `tools.elevated.allowFrom` avec des listes par canal
-- **Portail par agent** : `agents.list[].tools.elevated.enabled` (ne peut que restreindre davantage)
-- **Liste d'autorisation par agent** : `agents.list[].tools.elevated.allowFrom` (l'expéditeur doit correspondre à la fois au global + par agent)
-- **Repli Discord** : si `tools.elevated.allowFrom.discord` est omis, `channels.discord.allowFrom` est utilisé comme solution de repli
+- **Porte par agent** : `agents.list[].tools.elevated.enabled` (ne peut que restreindre davantage)
+- **Liste d'autorisation par agent** : `agents.list[].tools.elevated.allowFrom` (l'expéditeur doit correspondre à la fois à la liste globale + par agent)
+- **Discord fallback** : si `tools.elevated.allowFrom.discord` est omis, `channels.discord.allowFrom` est utilisé en repli
 - **Tous les portails doivent être réussis** ; sinon, le mode élevé est traité comme indisponible
 
 Formats des entrées de la liste d'autorisation :
@@ -100,12 +99,13 @@ Formats des entrées de la liste d'autorisation :
 
 ## Ce que le mode élevé ne contrôle pas
 
-- **Stratégie d'outil** : si `exec` est refusé par la stratégie d'outil, le mode élevé ne peut pas le remplacer
-- **Distinct de `/exec`** : la directive `/exec` ajuste les valeurs par défaut d'exécution par session pour les expéditeurs autorisés et ne nécessite pas le mode élevé
+- **Stratégie d'outil** : si `exec` est refusé par la stratégie d'outil, le mode élevé ne peut pas l'outrepasser
+- **Stratégie de sélection de l'hôte** : le mode élevé ne transforme pas `auto` en une substitution libre entre hôtes. Il utilise les règles de cible d'exécution configurées/session, en choisissant `node` uniquement lorsque la cible est déjà `node`.
+- **Séparé de `/exec`** : la directive `/exec` ajuste les valeurs par défaut d'exécution par session pour les expéditeurs autorisés et ne nécessite pas le mode élevé
 
 ## Connexes
 
-- [Outil Exec](/en/tools/exec) — exécution de commandes shell
-- [Approbations Exec](/en/tools/exec-approvals) — système d'approbation et de liste d'autorisation
-- [Bac à sable (Sandboxing)](/en/gateway/sandboxing) — configuration du bac à sable
-- [Bac à sable vs Stratégie d'outil vs Mode élevé](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- [Exec tool](/en/tools/exec) — exécution de commandes shell
+- [Exec approvals](/en/tools/exec-approvals) — système d'approbation et de liste d'autorisation
+- [Sandboxing](/en/gateway/sandboxing) — configuration du bac à sable
+- [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)

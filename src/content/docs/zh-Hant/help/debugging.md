@@ -48,7 +48,7 @@ node scripts/watch-node.mjs gateway --force
 擴充功能中繼資料變更會重新啟動 gateway，而不會強制進行 `tsdown` 重新建置；
 原始碼和配置變更仍會先重新建置 `dist`。
 
-在 `gateway:watch` 之後新增任何 gateway CLI 標誌，它們將會在每次重新啟動時被傳遞。
+在 `gateway:watch` 之後新增任何 gateway CLI 旗標，它們將在每次重新啟動時被傳遞。現在，針對同一個儲存庫/旗標組重新執行相同的監視指令會取代較舊的監視器，而不會留下重複的監視器父行程。
 
 ## Dev 設定檔 + dev gateway (--dev)
 

@@ -1,5 +1,5 @@
 ---
-summary: "Connectez-vous à GitHub Copilot depuis OpenClaw en utilisant le flux de l'appareil"
+summary: "Connectez-vous à GitHub Copilot depuis OpenClaw à l'aide du flux d'appareil"
 read_when:
   - You want to use GitHub Copilot as a model provider
   - You need the `openclaw models auth login-github-copilot` flow
@@ -25,11 +25,11 @@ car cela ne nécessite pas VS Code.
 ### 2) Plugin Copilot Proxy (`copilot-proxy`)
 
 Utilisez l'extension VS Code **Copilot Proxy** comme pont local. OpenClaw communique avec
-le point de terminaison `/v1` du proxy et utilise la liste de modèles que vous configurez là-bas. Choisissez
-cette option lorsque vous exécutez déjà Copilot Proxy dans VS Code ou si vous devez router via celui-ci.
+le point de terminaison `/v1` du proxy et utilise la liste de modèles que vous y configurez. Choisissez
+cette option si vous exécutez déjà Copilot Proxy dans VS Code ou si vous devez acheminer le trafic via celui-ci.
 Vous devez activer le plugin et garder l'extension VS Code en cours d'exécution.
 
-Utilisez GitHub Copilot comme fournisseur de modèle (`github-copilot`). La commande de connexion exécute
+Utilisez GitHub Copilot comme fournisseur de modèles (`github-copilot`). La commande de connexion exécute
 le flux d'appareil GitHub, enregistre un profil d'authentification et met à jour votre configuration pour utiliser ce
 profil.
 
@@ -45,8 +45,14 @@ ouvert jusqu'à ce qu'il se termine.
 ### Indicateurs optionnels
 
 ```bash
-openclaw models auth login-github-copilot --profile-id github-copilot:work
 openclaw models auth login-github-copilot --yes
+```
+
+Pour appliquer également le modèle par défaut recommandé par le fournisseur en une seule étape, utilisez plutôt
+la commande d'authentification générique :
+
+```bash
+openclaw models auth login --provider github-copilot --method device --set-default
 ```
 
 ## Définir un modèle par défaut
@@ -63,10 +69,12 @@ openclaw models set github-copilot/gpt-4o
 }
 ```
 
-## Remarques
+## Notes
 
 - Nécessite un TTY interactif ; exécutez-le directement dans un terminal.
-- La disponibilité des modèles Copilot dépend de votre plan ; si un modèle est rejeté, essayez
-  un autre ID (par exemple `github-copilot/gpt-4.1`).
+- La disponibilité des modèles Copilot dépend de votre offre ; si un modèle est rejeté, essayez
+  un autre identifiant (par exemple `github-copilot/gpt-4.1`).
+- Les identifiants de modèles Claude utilisent automatiquement le transport Messages de Anthropic ; les modèles GPT, série o
+  et Gemini conservent le transport Responses de OpenAI.
 - La connexion stocke un jeton GitHub dans le magasin de profils d'authentification et l'échange contre un
-  jeton de l'API Copilot lorsque OpenClaw s'exécute.
+  jeton API Copilot lorsque API s'exécute.

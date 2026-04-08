@@ -6,15 +6,18 @@ read_when:
 title: "Synology Chat"
 ---
 
-# Synology Chat (plugin)
+# Synology Chat
 
-Estado: soportado a través de un plugin como un canal de mensaje directo utilizando los webhooks de Synology Chat.
-El plugin acepta mensajes entrantes de los webhooks salientes de Synology Chat y envía respuestas
+Estado: canal de mensaje directo del complemento incluido que utiliza webhooks de Synology Chat.
+El complemento acepta mensajes entrantes de los webhooks salientes de Synology Chat y envía respuestas
 a través de un webhook entrante de Synology Chat.
 
-## Plugin requerido
+## Complemento incluido
 
-Synology Chat está basado en un plugin y no forma parte de la instalación del canal principal predeterminado.
+Synology Chat se distribuye como un complemento incluido en las versiones actuales de OpenClaw, por lo que las versiones empaquetadas normales no necesitan una instalación por separado.
+
+Si está en una versión antigua o una instalación personalizada que excluye Synology Chat,
+instálelo manualmente:
 
 Instalar desde una copia local:
 
@@ -22,23 +25,36 @@ Instalar desde una copia local:
 openclaw plugins install ./path/to/local/synology-chat-plugin
 ```
 
-Detalles: [Plugins](/en/tools/plugin)
+Detalles: [Complementos](/en/tools/plugin)
 
 ## Configuración rápida
 
-1. Instale y habilite el plugin de Synology Chat.
+1. Asegúrese de que el complemento Synology Chat esté disponible.
+   - Las versiones empaquetadas actuales de OpenClaw ya lo incluyen.
+   - Las instalaciones antiguas/personalizadas pueden agregarlo manualmente desde una copia del código fuente con el comando anterior.
    - `openclaw onboard` ahora muestra Synology Chat en la misma lista de configuración de canales que `openclaw channels add`.
    - Configuración no interactiva: `openclaw channels add --channel synology-chat --token <token> --url <incoming-webhook-url>`
 2. En las integraciones de Synology Chat:
    - Cree un webhook entrante y copie su URL.
    - Cree un webhook saliente con su token secreto.
 3. Apunte la URL del webhook saliente a su puerta de enlace OpenClaw:
-   - `https://gateway-host/webhook/synology` por defecto.
+   - `https://gateway-host/webhook/synology` de forma predeterminada.
    - O su `channels.synology-chat.webhookPath` personalizado.
 4. Finalice la configuración en OpenClaw.
    - Guiado: `openclaw onboard`
    - Directo: `openclaw channels add --channel synology-chat --token <token> --url <incoming-webhook-url>`
-5. Reinicie la puerta de enlace y envíe un MD al bot de Synology Chat.
+5. Reinicie la puerta de enlace y envíe un mensaje directo al bot de Synology Chat.
+
+Detalles de autenticación del webhook:
+
+- OpenClaw acepta el token del webhook saliente de `body.token`, luego
+  `?token=...`, luego los encabezados.
+- Formas de encabezado aceptadas:
+  - `x-synology-token`
+  - `x-webhook-token`
+  - `x-openclaw-token`
+  - `Authorization: Bearer <token>`
+- Los tokens vacíos o faltantes fallan de forma segura.
 
 Configuración mínima:
 
@@ -61,7 +77,7 @@ Configuración mínima:
 
 ## Variables de entorno
 
-Para la cuenta predeterminada, puede usar las variables de entorno:
+Para la cuenta predeterminada, puede usar variables de entorno:
 
 - `SYNOLOGY_CHAT_TOKEN`
 - `SYNOLOGY_CHAT_INCOMING_URL`
@@ -70,23 +86,23 @@ Para la cuenta predeterminada, puede usar las variables de entorno:
 - `SYNOLOGY_RATE_LIMIT`
 - `OPENCLAW_BOT_NAME`
 
-Los valores de configuración sobrescriben las variables de entorno.
+Los valores de configuración anulan las variables de entorno.
 
 ## Política de MD y control de acceso
 
 - `dmPolicy: "allowlist"` es el valor predeterminado recomendado.
-- `allowedUserIds` acepta una lista (o cadena separada por comas) de IDs de usuario de Synology.
-- En el modo `allowlist`, una lista vacía de `allowedUserIds` se trata como una configuración incorrecta y la ruta del webhook no se iniciará (use `dmPolicy: "open"` para permitir todo).
+- `allowedUserIds` acepta una lista (o una cadena separada por comas) de IDs de usuario de Synology.
+- En modo `allowlist`, una lista vacía de `allowedUserIds` se trata como una configuración errónea y la ruta del webhook no se iniciará (use `dmPolicy: "open"` para permitir todo).
 - `dmPolicy: "open"` permite cualquier remitente.
-- `dmPolicy: "disabled"` bloquea los MD.
-- El enlace del destinatario de respuesta se mantiene en un `user_id` numérico estable de forma predeterminada. `channels.synology-chat.dangerouslyAllowNameMatching: true` es un modo de compatibilidad de emergencia que reactiva la búsqueda de nombre de usuario/apodo mutable para la entrega de respuestas.
+- `dmPolicy: "disabled"` bloquea los MDs.
+- El enlace del destinatario de respuesta se mantiene en el `user_id` numérico estable de manera predeterminada. `channels.synology-chat.dangerouslyAllowNameMatching: true` es un modo de compatibilidad de emergencia que vuelve a habilitar la búsqueda mutable de nombre de usuario/apodo para la entrega de respuestas.
 - Las aprobaciones de emparejamiento funcionan con:
   - `openclaw pairing list synology-chat`
   - `openclaw pairing approve synology-chat <CODE>`
 
 ## Entrega saliente
 
-Utilice los IDs de usuario numéricos de Synology Chat como destinos.
+Use los IDs de usuario numéricos de Synology Chat como destinos.
 
 Ejemplos:
 
@@ -99,13 +115,13 @@ Los envíos de medios son compatibles mediante la entrega de archivos basada en 
 
 ## Multicuenta
 
-Se admiten varias cuentas de Synology Chat bajo `channels.synology-chat.accounts`.
-Cada cuenta puede anular el token, la URL entrante, la ruta del webhook, la política de DM y los límites.
+Se admiten múltiples cuentas de Synology Chat en `channels.synology-chat.accounts`.
+Cada cuenta puede anular el token, la URL entrante, la ruta del webhook, la política de MD y los límites.
 Las sesiones de mensajes directos están aisladas por cuenta y usuario, por lo que el mismo `user_id` numérico
 en dos cuentas de Synology diferentes no comparte el estado de la transcripción.
 Asigne a cada cuenta habilitada un `webhookPath` distinto. OpenClaw ahora rechaza las rutas exactas duplicadas
-y se niega a iniciar cuentas con nombre que solo heredan una ruta de webhook compartida en configuraciones multicuenta.
-Si necesita intencionalmente la herencia heredada para una cuenta con nombre, establezca
+y se niega a iniciar cuentas con nombre que solo hereden una ruta de webhook compartida en configuraciones multicuenta.
+Si intencionalmente necesita la herencia heredada para una cuenta con nombre, establezca
 `dangerouslyAllowInheritedWebhookPath: true` en esa cuenta o en `channels.synology-chat`,
 pero las rutas exactas duplicadas aún se rechazan con fallo cerrado. Prefiera rutas explícitas por cuenta.
 
@@ -136,15 +152,33 @@ pero las rutas exactas duplicadas aún se rechazan con fallo cerrado. Prefiera r
 
 - Mantenga `token` en secreto y rótelo si se filtra.
 - Mantenga `allowInsecureSsl: false` a menos que confíe explícitamente en un certificado NAS local autofirmado.
-- Las solicitudes entrantes de webhook se verifican por token y tienen límites de tasa por remitente.
+- Las solicitudes entrantes de webhook se verifican por token y tienen límite de velocidad por remitente.
+- Las verificaciones de tokens no válidas utilizan una comparación de secreto de tiempo constante y fallan cerradas.
 - Prefiera `dmPolicy: "allowlist"` para producción.
-- Mantenga `dangerouslyAllowNameMatching` desactivado a menos que necesite explícitamente la entrega de respuestas heredada basada en nombre de usuario.
-- Mantenga `dangerouslyAllowInheritedWebhookPath` desactivado a menos que acepte explícitamente el riesgo de enrutamiento de ruta compartida en una configuración multicuenta.
+- Mantenga `dangerouslyAllowNameMatching` desactivado a menos que explícitamente necesite la entrega de respuestas basada en el nombre de usuario heredado.
+- Mantenga `dangerouslyAllowInheritedWebhookPath` desactivado a menos que acepte explícitamente el riesgo de enrutamiento de ruta compartida en una configuración de varias cuentas.
+
+## Solución de problemas
+
+- `Missing required fields (token, user_id, text)`:
+  - el payload del webhook saliente falta uno de los campos requeridos
+  - si Synology envía el token en los encabezados, asegúrese de que la puerta de enlace/proxy preserve esos encabezados
+- `Invalid token`:
+  - el secreto del webhook saliente no coincide con `channels.synology-chat.token`
+  - la solicitud está llegando a la cuenta/ruta de webhook incorrecta
+  - un proxy inverso eliminó el encabezado del token antes de que la solicitud llegara a OpenClaw
+- `Rate limit exceeded`:
+  - demasiados intentos de token no válidos desde la misma fuente pueden bloquear temporalmente esa fuente
+  - los remitentes autenticados también tienen un límite de tasa de mensajes separado por usuario
+- `Allowlist is empty. Configure allowedUserIds or use dmPolicy=open.`:
+  - `dmPolicy="allowlist"` está activado pero no hay usuarios configurados
+- `User not authorized`:
+  - el `user_id` numérico del remitente no está en `allowedUserIds`
 
 ## Relacionado
 
 - [Descripción general de canales](/en/channels) — todos los canales compatibles
 - [Emparejamiento](/en/channels/pairing) — autenticación de MD y flujo de emparejamiento
-- [Grupos](/en/channels/groups) — comportamiento del chat grupal y control de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento
+- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento

@@ -15,9 +15,9 @@ title: "OpenClaw"
 > _「去角質！去角質！」_ — 一隻太空龍蝦，大概是吧
 
 <p align="center">
-  <strong>適用於各種作業系統的 AI Agent 閘道，支援 WhatsApp、Telegram、Discord、iMessage 等平台。</strong>
+  <strong>適用於 AI 代理的跨作業系統閘道，支援 Discord、Google Chat、iMessage、Matrix、Microsoft Teams、Signal、Slack、Telegram、WhatsApp、Zalo 等平台。</strong>
   <br />
-  發送訊息，從口袋中獲得 Agent 的回應。外掛程式新增了 Mattermost 等更多支援。
+  發送訊息，即可從您的口袋中獲得代理的回應。透過內建頻道、隨附的頻道外掛程式、WebChat 和行動節點，運行單一 Gateway。
 </p>
 
 <Columns>
@@ -34,14 +34,14 @@ title: "OpenClaw"
 
 ## 什麼是 OpenClaw？
 
-OpenClaw 是一款 **自託管閘道**，能將您最喜愛的聊天應用程式（如 WhatsApp、Telegram、Discord、iMessage 等）連接至像 Pi 這樣的 AI 程式碼代理。您只需在自己的機器（或伺服器）上執行單一閘道程序，它便能充當您的訊息應用程式與隨時待命的 AI 助理之間的橋樑。
+OpenClaw 是一個 **自託管的閘道**，可將您喜愛的聊天應用程式和頻道介面——包括內建頻道以及隨附或外部的頻道外掛程式，例如 Discord、Google Chat、iMessage、Matrix、Microsoft Teams、Signal、Slack、Telegram、WhatsApp、Zalo 等等——連接到像 Pi 這樣的 AI 編碼代理。您在自己的機器（或伺服器）上運行單一 Gateway 處理程序，它就會成為您的訊息應用程式與始終可用的 AI 助手之間的橋樑。
 
 **適合對象？** 希望擁有個人 AI 助理，並能從任何地方傳送訊息給它的開發者與進階使用者 — 而且無需放棄資料控制權或依賴代管服務。
 
 **獨特之處？**
 
 - **自託管**：在您的硬體上執行，遵循您的規則
-- **多通道**：單一閘道可同時服務 WhatsApp、Telegram、Discord 等多種平台
+- **多頻道**：單一 Gateway 同時服務內建頻道以及隨附或外部的頻道外掛程式
 - **Agent-native**: 為程式編寫代理構建，支援工具使用、工作階段、記憶體和多代理路由
 - **開放原始碼**: MIT 授權，社群驅動
 
@@ -64,11 +64,11 @@ Gateway 是工作階段、路由和通道連線的唯一真實來源。
 ## 主要功能
 
 <Columns>
-  <Card title="多通道閘道" icon="network">
-    透過單一 Gateway 處理程序使用 WhatsApp、Telegram、Discord 和 iMessage。
+  <Card title="多頻道閘道" icon="network">
+    使用單一 Gateway 處理程序即可連接 Discord、iMessage、Signal、Slack、Telegram、WhatsApp、WebChat 等更多平台。
   </Card>
-  <Card title="外掛通道" icon="plug">
-    使用擴充套件新增 Mattermost 及更多功能。
+  <Card title="外掛程式頻道" icon="plug">
+    在目前的常規版本中，隨附的外掛程式新增了 Matrix、Nostr、Twitch、Zalo 等更多支援。
   </Card>
   <Card title="多重代理路由" icon="route">
     針對每個代理、工作區或發送者的獨立工作階段。
@@ -156,7 +156,7 @@ Gateway 是工作階段、路由和通道連線的唯一真實來源。
     SSH 和 tailnet 存取模式。
   </Card>
   <Card title="頻道" href="/en/channels/telegram" icon="message-square">
-    針對 WhatsApp、Telegram、Discord 等的特定頻道設定。
+    針對 Feishu、Microsoft Teams、WhatsApp、Telegram、Discord 等平台的特定頻道設定。
   </Card>
   <Card title="Nodes" href="/en/nodes" icon="smartphone">
     具備配對、Canvas、相機及裝置操作的 iOS 與 Android 節點。

@@ -8,7 +8,7 @@ read_when:
 
 # LiteLLM
 
-[LiteLLM](https://litellm.ai) 是一個開放原始碼的 LLM 閘道，為 100 多個模型提供商提供統一的 API。透過 LiteLLM 路由 OpenClaw，以獲得集中的成本追蹤、日誌記錄，以及無需變更 OpenClAM 設定即可切換後端的靈活性。
+[LiteLLM](https://litellm.ai) 是一個開源 LLM 閘道，提供統一的 API 以連接 100 多個模型供應商。透過 LiteLLM 路由 OpenClaw，即可獲得集中的成本追蹤、日誌記錄，以及在變更後端時無需修改 OpenClaw 設定的彈性。
 
 ## 為何將 LiteLLM 與 OpenClaw 搭配使用？
 
@@ -145,10 +145,15 @@ curl "http://localhost:4000/spend/logs" \
 ## 備註
 
 - LiteLLM 預設執行於 `http://localhost:4000`
-- OpenClaw 透過相容 OpenAI 的 `/v1/chat/completions` 端點進行連線
-- 所有 OpenClaw 功能均可透過 LiteLLM 運作 — 無任何限制
+- OpenClaw 透過 LiteLLM 的 Proxy 樣式 OpenAI 相容 `/v1`
+  端點進行連接
+- 僅適用於原生 OpenAI 的請求修整 (request shaping) 不會透過 LiteLLM 生效：
+  沒有 `service_tier`、沒有 Responses `store`、沒有提示快取提示，也沒有
+  OpenAI 推理相容的 Payload 修整
+- 隱藏的 OpenClaw 歸屬標頭 (`originator`、`version`、`User-Agent`)
+  不會在自訂的 LiteLLM 基礎 URL 上被注入
 
-## 另請參閱
+## 參見
 
-- [LiteLLM 文件](https://docs.litellm.ai)
-- [模型提供商](/en/concepts/model-providers)
+- [LiteLLM Docs](https://docs.litellm.ai)
+- [Model Providers](/en/concepts/model-providers)

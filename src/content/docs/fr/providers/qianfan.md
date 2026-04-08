@@ -30,9 +30,61 @@ point de terminaison et clé d'API. Elle est compatible OpenAI, donc la plupart 
 openclaw onboard --auth-choice qianfan-api-key
 ```
 
-## Documentation connexe
+## Extrait de configuration
 
-- [Configuration d'OpenClaw](/en/gateway/configuration)
+```json5
+{
+  env: { QIANFAN_API_KEY: "bce-v3/ALTAK-..." },
+  agents: {
+    defaults: {
+      model: { primary: "qianfan/deepseek-v3.2" },
+      models: {
+        "qianfan/deepseek-v3.2": { alias: "QIANFAN" },
+      },
+    },
+  },
+  models: {
+    providers: {
+      qianfan: {
+        baseUrl: "https://qianfan.baidubce.com/v2",
+        api: "openai-completions",
+        models: [
+          {
+            id: "deepseek-v3.2",
+            name: "DEEPSEEK V3.2",
+            reasoning: true,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 98304,
+            maxTokens: 32768,
+          },
+          {
+            id: "ernie-5.0-thinking-preview",
+            name: "ERNIE-5.0-Thinking-Preview",
+            reasoning: true,
+            input: ["text", "image"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 119000,
+            maxTokens: 64000,
+          },
+        ],
+      },
+    },
+  },
+}
+```
+
+## Notes
+
+- Référence de modèle groupée par défaut : `qianfan/deepseek-v3.2`
+- URL de base par défaut : `https://qianfan.baidubce.com/v2`
+- Le catalogue groupé inclut actuellement `deepseek-v3.2` et `ernie-5.0-thinking-preview`
+- Ajoutez ou remplacez `models.providers.qianfan` uniquement lorsque vous avez besoin d'une URL de base personnalisée ou des métadonnées du modèle
+- Qianfan passe par le chemin de transport compatible OpenAI, et non par le façonnage des requêtes natif OpenAI
+
+## Documentation associée
+
+- [Configuration OpenClaw](/en/gateway/configuration)
 - [Fournisseurs de modèles](/en/concepts/model-providers)
 - [Configuration de l'agent](/en/concepts/agent)
 - [Documentation de l'API Qianfan](https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb)

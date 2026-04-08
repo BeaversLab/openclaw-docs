@@ -102,3 +102,14 @@ curl http://127.0.0.1:30000/v1/models
 - Si las solicitudes fallan con errores de autenticación, configure una `SGLANG_API_KEY` real que coincida
   con la configuración de su servidor, o configure el proveedor explícitamente bajo
   `models.providers.sglang`.
+
+## Comportamiento de estilo proxy
+
+SGLang se trata como un backend `/v1` compatible con OpenAI de estilo proxy, no como
+un punto de conexión nativo de OpenAI.
+
+- la conformación de solicitudes solo nativa de OpenAI no se aplica aquí
+- sin `service_tier`, sin Respuestas `store`, sin sugerencias de caché de prompt y sin
+  conformación de carga útil compatible con razonamiento de OpenAI
+- los encabezados de atribución ocultos de OpenClaw (`originator`, `version`, `User-Agent`)
+  no se inyectan en URL base personalizadas de SGLang

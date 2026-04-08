@@ -24,21 +24,33 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` 显示已解析的默认/回退设置以及身份验证概览。
-当提供商使用快照可用时，OAuth/令牌状态部分包含
-提供商使用标头。
+`openclaw models status` 显示已解析的默认/回退以及身份验证概览。
+当提供商用法的快照可用时，OAuth/API 密钥状态部分包含
+提供商用法的窗口和配额快照。
+当前用法窗口提供商：Anthropic、GitHub Copilot、Gemini CLI、OpenAI
+Codex、MiniMax、Xiaomi 和 z.ai。用法身份验证来自提供商特定的钩子
+（如果可用）；否则 OpenClaw 将回退到从身份验证配置文件、环境变量或配置中匹配的
+OAuth/API 密钥凭据。
+在 `--json` 输出中，`auth.providers` 是感知环境变量/配置/存储的提供商
+概览，而 `auth.oauth` 仅显示身份验证存储配置文件的运行状况。
 添加 `--probe` 以对每个配置的提供商配置文件运行实时身份验证探测。
 探测是真实的请求（可能会消耗令牌并触发速率限制）。
-使用 `--agent <id>` 检查已配置代理的模型/身份验证状态。如果省略，
-命令将使用 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（如果已设置），否则使用
+使用 `--agent <id>` 以检查已配置代理的模型/身份验证状态。如果省略，
+该命令将使用 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（如果已设置），否则使用
 配置的默认代理。
+探测行可以来自身份验证配置文件、环境变量凭据或 `models.json`。
 
 注意：
 
 - `models set <model-or-alias>` 接受 `provider/model` 或别名。
-- 模型引用通过在 **第一个** `/` 处分割进行解析。如果模型 ID 包含 `/`（OpenRouter 风格），请包含提供商前缀（例如：`openrouter/moonshotai/kimi-k2`）。
-- 如果您省略提供商，OpenClaw 会将输入视为 **默认提供商** 的别名或模型（仅当模型 ID 中没有 `/` 时才有效）。
-- `models status` 可能会在身份验证输出中针对非机密占位符显示 `marker(<value>)`（例如 `OPENAI_API_KEY`、`secretref-managed`、`minimax-oauth`、`oauth:chutes`、`ollama-local`），而不是将其作为机密进行掩码处理。
+- 模型引用通过在 **第一个** `/` 处分割来进行解析。如果模型 ID 包含 `/`（OpenRouter 风格），请包含提供商前缀（例如：`openrouter/moonshotai/kimi-k2`）。
+- 如果您省略提供商，OpenClaw 会首先将输入解析为别名，然后
+  解析为该确切模型 ID 的唯一已配置提供商匹配，只有在那之后才会
+  回退到已配置的默认提供商并显示弃用警告。
+  如果该提供商不再公开已配置的默认模型，OpenClaw
+  将回退到第一个已配置的提供商/模型，而不是显示
+  陈旧的已移除提供商的默认值。
+- `models status` 可能会在身份验证输出中为非机密占位符（例如 `OPENAI_API_KEY`、`secretref-managed`、`minimax-oauth`、`oauth:chutes`、`ollama-local`）显示 `marker(<value>)`，而不是将其作为机密进行掩码处理。
 
 ### `models status`
 
@@ -47,44 +59,70 @@ openclaw models scan
 - `--json`
 - `--plain`
 - `--check`（退出代码 1=已过期/缺失，2=即将过期）
-- `--probe`（对配置的身份验证配置文件进行实时探测）
+- `--probe`（对已配置的身份验证配置文件进行实时探测）
 - `--probe-provider <name>`（探测一个提供商）
 - `--probe-profile <id>`（重复或逗号分隔的配置文件 ID）
 - `--probe-timeout <ms>`
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
-- `--agent <id>`（配置的代理 ID；覆盖 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`）
+- `--agent <id>`（已配置的代理 ID；覆盖 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`）
 
-## 别名 + 备用
+探测状态分类：
+
+- `ok`
+- `auth`
+- `rate_limit`
+- `billing`
+- `timeout`
+- `format`
+- `unknown`
+- `no_model`
+
+预期会遇到的探测详情/原因代码情况：
+
+- `excluded_by_auth_order`：存在已存储的配置文件，但显式
+  `auth.order.<provider>` 将其省略，因此探测会报告排除状态而不是
+  尝试使用它。
+- `missing_credential`、`invalid_expires`、`expired`、`unresolved_ref`：
+  配置文件存在但不符合资格/无法解析。
+- `no_model`：提供商身份验证存在，但 OpenClaw 无法为该提供商解析可探测的
+  模型候选。
+
+## 别名 + 回退
 
 ```bash
 openclaw models aliases list
 openclaw models fallbacks list
 ```
 
-## 认证配置文件
+## 身份验证配置文件
 
 ```bash
 openclaw models auth add
 openclaw models auth login --provider <id>
-openclaw models auth setup-token
+openclaw models auth setup-token --provider <id>
 openclaw models auth paste-token
 ```
 
-`models auth login` 运行提供商插件的认证流程（OAuth/API 密钥）。使用
-`openclaw plugins list` 查看已安装的提供商。
+`models auth add` 是交互式身份验证助手。它可以启动提供商身份验证
+流程（OAuth/API 密钥）或引导您进行手动令牌粘贴，具体取决于您选择的
+提供商。
+
+`models auth login` 运行提供商插件的身份验证流程（OAuth/API 密钥）。使用
+`openclaw plugins list` 查看已安装哪些提供商。
 
 示例：
 
 ```bash
-openclaw models auth login --provider anthropic --method cli --set-default
 openclaw models auth login --provider openai-codex --set-default
 ```
 
 注意事项：
 
-- `login --provider anthropic --method cli --set-default` 重用本地 Claude
-  CLI 登录并将主 Anthropic 默认模型路径重写为 `claude-cli/...`。
-- `setup-token` 提示输入设置令牌值（在任何机器上使用 `claude setup-token` 生成）。
+- 对于暴露令牌身份验证方法的提供商，`setup-token` 和 `paste-token` 仍然是通用的令牌命令。
+- `setup-token` 需要一个交互式 TTY 并运行提供商的令牌身份验证方法（当提供商暴露该方法时，默认为该提供商的 `setup-token` 方法）。
 - `paste-token` 接受在其他地方生成或来自自动化的令牌字符串。
-- Anthropic 政策说明：设置令牌支持属于技术兼容性。Anthropic 过去曾阻止 Claude Code 外部的某些订阅使用，因此在广泛使用前请验证当前条款。
+- `paste-token` 需要 `--provider`，提示输入令牌值，并将其写入默认配置文件 ID `<provider>:manual`，除非您传递 `--profile-id`。
+- `paste-token --expires-in <duration>` 存储相对于持续时间的绝对令牌到期时间，例如 `365d` 或 `12h`。
+- Anthropic 计费说明：对于 OpenClaw 中的 Anthropic，实际分为 **API 密钥** 或 **带有额外使用量的 Claude 订阅**。Anthropic 在 **2026 年 4 月 4 日太平洋时间下午 12:00 / 英国夏令时晚上 8:00** 通知 OpenClaw 用户，**OpenClaw** Claude 登录路径算作第三方工具使用，并且需要单独于订阅计费的 **额外使用量**。我们的本地复现也表明，识别 OpenClaw 的提示字符串不会在 Anthropic SDK + API 密钥路径上复现。
+- Anthropic `setup-token` / `paste-token` 作为传统/手动 OpenClaw 路径再次可用。请带着这样的预期使用它们：Anthropic 告知 OpenClaw 用户此路径需要 **额外使用量**。

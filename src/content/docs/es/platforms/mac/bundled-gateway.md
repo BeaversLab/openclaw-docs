@@ -19,7 +19,7 @@ Node 24 es el tiempo de ejecución predeterminado en Mac. Node 22 LTS, actualmen
 npm install -g openclaw@<version>
 ```
 
-El botón **Install CLI** de la aplicación de macOS ejecuta el mismo flujo a través de npm/pnpm (no se recomienda bun para el tiempo de ejecución de Gateway).
+El botón **Instalar CLI** de la aplicación macOS ejecuta el mismo flujo de instalación global que la aplicación utiliza internamente: prefiere npm primero, luego pnpm, luego bun si ese es el único gestor de paquetes detectado. Node sigue siendo el tiempo de ejecución recomendado para Gateway.
 
 ## Launchd (Gateway como LaunchAgent)
 

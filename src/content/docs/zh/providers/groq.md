@@ -8,7 +8,7 @@ read_when:
 
 # Groq
 
-[Groq](https://groq.com) 使用自定义 LPU 硬件在开源模型（Llama、Gemma、Mistral 等）上提供超快的推理能力。OpenClaw 通过其 OpenAI 兼容的 API 连接到 Groq。
+[Groq](https://groq.com) 利用自定义 LPU 硬件在开源模型（Llama、Gemma、Mistral 等）上提供超快推理速度。OpenClaw 通过与其 OpenAI 兼容的 API 连接到 Groq。
 
 - 提供商: `groq`
 - 身份验证: `GROQ_API_KEY`
@@ -51,12 +51,12 @@ export GROQ_API_KEY="gsk_..."
 
 ## 音频转录
 
-Groq 还提供基于 Whisper 的快速音频转录。当配置为媒体理解提供商时，OpenClaw 使用 Groq 的 `whisper-large-v3-turbo` 模型来转录语音消息。
+Groq 还提供基于 Whisper 的快速音频转录。当配置为媒体理解提供商时，OpenClaw 使用 Groq 的 `whisper-large-v3-turbo` 模型通过共享的 `tools.media.audio` 界面转录语音消息。
 
 ```json5
 {
-  media: {
-    understanding: {
+  tools: {
+    media: {
       audio: {
         models: [{ provider: "groq" }],
       },
@@ -67,22 +67,32 @@ Groq 还提供基于 Whisper 的快速音频转录。当配置为媒体理解提
 
 ## 环境说明
 
-如果 Gateway(网关) 作为守护进程运行，请确保该进程可以访问 `GROQ_API_KEY`（例如，在 `~/.openclaw/.env` 中或通过 `env.shellEnv`）。
+如果 Gateway(网关) 作为守护进程（launchd/systemd）运行，请确保该进程可以访问 `GROQ_API_KEY`（例如，在 `~/.openclaw/.env` 中或通过 `env.shellEnv`）。
+
+## 音频备注
+
+- 共享配置路径：`tools.media.audio`
+- 默认 Groq 音频基础 URL：`https://api.groq.com/openai/v1`
+- 默认 Groq 音频模型：`whisper-large-v3-turbo`
+- Groq 音频转录使用 OpenAI 兼容的 `/audio/transcriptions`
+  路径
 
 ## 可用模型
 
-Groq 的模型目录经常变化。运行 `openclaw models list | grep groq` 查看当前可用的模型，或查看 [console.groq.com/docs/models](https://console.groq.com/docs/models)。
+Groq 的模型目录经常更新。运行 `openclaw models list | grep groq`
+查看当前可用的模型，或检查
+[console.groq.com/docs/models](https://console.groq.com/docs/models)。
 
-热门选择包括:
+热门选择包括：
 
-- **Llama 3.3 70B Versatile** - 通用型，大上下文
+- **Llama 3.3 70B Versatile** - 通用，大上下文
 - **Llama 3.1 8B Instant** - 快速，轻量级
 - **Gemma 2 9B** - 紧凑，高效
-- **Mixtral 8x7B** - MoE 架构，推理能力强
+- **Mixtral 8x7B** - MoE 架构，强大的推理能力
 
 ## 链接
 
 - [Groq Console](https://console.groq.com)
 - [API 文档](https://console.groq.com/docs)
 - [模型列表](https://console.groq.com/docs/models)
-- [定价](https://groq.com/pricing)
+- [价格](https://groq.com/pricing)

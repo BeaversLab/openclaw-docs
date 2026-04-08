@@ -11,7 +11,7 @@ read_when:
 Las habilidades enseñan al agente cómo y cuándo utilizar las herramientas. Cada habilidad es un directorio
 que contiene un archivo `SKILL.md` con frontmatter YAML e instrucciones en markdown.
 
-Para obtener información sobre cómo se cargan y priorizan las habilidades, consulte [Habilidades](/en/tools/skills).
+Para obtener información sobre cómo se cargan y priorizan las habilidades, consulte [Skills](/en/tools/skills).
 
 ## Crear tu primera habilidad
 
@@ -98,20 +98,22 @@ El frontmatter YAML admite estos campos:
 - **Sea conciso** — instruya al modelo sobre _qué_ hacer, no sobre cómo ser una IA
 - **Seguridad ante todo** — si su habilidad usa `exec`, asegúrese de que los mensajes no permitan la inyección de comandos arbitrarios desde entradas que no son confiables
 - **Pruebe localmente** — use `openclaw agent --message "..."` para probar antes de compartir
-- **Use ClawHub** — navegue y contribuya con habilidades en [ClawHub](https://clawhub.com)
+- **Use ClawHub** — navegue y contribuya con habilidades en [ClawHub](https://clawhub.ai)
 
 ## Ubicación de las habilidades
 
 | Ubicación                       | Precedencia | Alcance                             |
 | ------------------------------- | ----------- | ----------------------------------- |
 | `\<workspace\>/skills/`         | La más alta | Por agente                          |
-| `~/.openclaw/skills/`           | Media       | Compartida (todos los agentes)      |
-| Incluida (enviada con OpenClaw) | La más baja | Global                              |
-| `skills.load.extraDirs`         | La más baja | Carpetas compartidas personalizadas |
+| `\<workspace\>/.agents/skills/` | Alto        | Agente por espacio de trabajo       |
+| `~/.agents/skills/`             | Medio       | Perfil de agente compartido         |
+| `~/.openclaw/skills/`           | Medio       | Compartido (todos los agentes)      |
+| Incluido (enviado con OpenClaw) | Bajo        | Global                              |
+| `skills.load.extraDirs`         | El más bajo | Carpetas compartidas personalizadas |
 
 ## Relacionado
 
-- [Referencia de habilidades](/en/tools/skills) — reglas de carga, precedencia y filtrado
-- [Configuración de habilidades](/en/tools/skills-config) — esquema de configuración `skills.*`
+- [Referencia de habilidades](/en/tools/skills) — reglas de carga, precedencia y bloqueo
+- [Configuración de habilidades](/en/tools/skills-config) — esquema de configuración de `skills.*`
 - [ClawHub](/en/tools/clawhub) — registro público de habilidades
-- [Creación de complementos](/en/plugins/building-plugins) — los complementos pueden incluir habilidades
+- [Crear complementos](/en/plugins/building-plugins) — los complementos pueden incluir habilidades

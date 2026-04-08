@@ -22,23 +22,27 @@ Tailscale fournit le HTTPS, le routage et (pour Serve) les en-têtes d'identité
 
 Définissez `gateway.auth.mode` pour contrôler la poignée de main :
 
+- `none` (ingrès privé uniquement)
 - `token` (par défaut lorsque `OPENCLAW_GATEWAY_TOKEN` est défini)
-- `password` (secret partagé via `OPENCLAW_GATEWAY_PASSWORD` ou config)
+- `password` (secret partagé via `OPENCLAW_GATEWAY_PASSWORD` ou configuration)
+- `trusted-proxy` (proxy inverse conscient de l'identité ; voir [Authentification de proxy de confiance](/en/gateway/trusted-proxy-auth))
 
-Quand `tailscale.mode = "serve"` et `gateway.auth.allowTailscale` sont `true`,
+Lorsque `tailscale.mode = "serve"` et que `gateway.auth.allowTailscale` est `true`,
 l'authentification de l'interface de contrôle/WebSocket peut utiliser les en-têtes d'identité Tailscale
 (`tailscale-user-login`) sans fournir de jeton/mot de passe. OpenClaw vérifie
 l'identité en résolvant l'adresse `x-forwarded-for` via le démon local Tailscale
-(`tailscale whois`) et en la correspondant à l'en-tête avant de l'accepter.
-OpenClaw ne traite une requête comme Serve que lorsqu'elle provient du loopback avec
-les en-têtes Tailscale's `x-forwarded-for`, `x-forwarded-proto` et `x-forwarded-host`.
+(`tailscale whois`) et en la faisant correspondre à l'en-tête avant de l'accepter.
+OpenClaw ne traite une requête comme Serve que lorsqu'elle provient du bouclage local avec
+les en-têtes `x-forwarded-for`, `x-forwarded-proto` et `x-forwarded-host` de Tailscale.
 Les points de terminaison de l'API HTTP (par exemple `/v1/*`, `/tools/invoke` et `/api/channels/*`)
-requièrent toujours une authentification par jeton/mot de passe.
+n'utilisent **pas** l'authentification par en-tête d'identité Tailscale. Ils suivent toujours le mode
+d'authentification HTTP normal de la passerelle : authentification par secret partagé par défaut, ou une configuration
+intentionnelle de proxy de confiance / ingrès privé `none`.
 Ce flux sans jeton suppose que l'hôte de la passerelle est fiable. Si du code local non fiable
 peut s'exécuter sur le même hôte, désactivez `gateway.auth.allowTailscale` et exigez
 plutôt une authentification par jeton/mot de passe.
-Pour exiger des informations d'identification explicites, définissez `gateway.auth.allowTailscale: false` ou
-forcez `gateway.auth.mode: "password"`.
+Pour exiger des identifiants explicites par secret partagé, définissez `gateway.auth.allowTailscale: false`
+et utilisez `gateway.auth.mode: "token"` ou `"password"`.
 
 ## Exemples de configuration
 
@@ -68,12 +72,12 @@ Utilisez ceci lorsque vous voulez que le Gateway écoute directement sur l'IP Ta
 }
 ```
 
-Connectez-vous depuis un autre appareil Tailnet :
+Se connecter depuis un autre appareil Tailnet :
 
 - Interface de contrôle : `http://<tailscale-ip>:18789/`
 - WebSocket : `ws://<tailscale-ip>:18789`
 
-Remarque : le loopback (`http://127.0.0.1:18789`) ne fonctionnera **pas** dans ce mode.
+Remarque : le bouclage local (`http://127.0.0.1:18789`) ne fonctionnera **pas** dans ce mode.
 
 ### Internet public (Funnel + mot de passe partagé)
 
@@ -87,7 +91,7 @@ Remarque : le loopback (`http://127.0.0.1:18789`) ne fonctionnera **pas** dans c
 }
 ```
 
-Privilégiez `OPENCLAW_GATEWAY_PASSWORD` par rapport à l'engagement d'un mot de passe sur le disque.
+Préférez `OPENCLAW_GATEWAY_PASSWORD` plutôt que de valider un mot de passe sur le disque.
 
 ## Exemples CLI
 
@@ -98,30 +102,30 @@ openclaw gateway --tailscale funnel --auth password
 
 ## Notes
 
-- Tailscale Serve/Funnel nécessite que la `tailscale` CLI soit installée et connectée.
+- Le Serve/Funnel de Tailscale nécessite que l'`tailscale` CLI soit installé et connecté.
 - `tailscale.mode: "funnel"` refuse de démarrer sauf si le mode d'authentification est `password` pour éviter une exposition publique.
-- Définissez `gateway.tailscale.resetOnExit` si vous souhaitez qu'OpenClaw annule la configuration `tailscale serve`
+- Définissez `gateway.tailscale.resetOnExit` si vous souhaitez que OpenClaw annule la configuration `tailscale serve`
   ou `tailscale funnel` à l'arrêt.
 - `gateway.bind: "tailnet"` est une liaison directe au Tailnet (pas de HTTPS, pas de Serve/Funnel).
-- `gateway.bind: "auto"` préfère le bouclage local (loopback) ; utilisez `tailnet` si vous souhaitez un accès Tailnet uniquement.
-- Serve/Funnel n'exposent que l'**interface utilisateur de contrôle du Gateway + WS**. Les nœuds se connectent via
-  le même point de terminaison WS du Gateway, donc Serve peut fonctionner pour l'accès aux nœuds.
+- `gateway.bind: "auto"` préfère le bouclage local (loopback) ; utilisez `tailnet` si vous voulez un accès Tailnet uniquement.
+- Serve/Funnel expose uniquement l'**interface de contrôle Gateway + WS**. Les nœuds se connectent via
+  le même point de terminaison WS Gateway, donc Serve peut fonctionner pour l'accès aux nœuds.
 
 ## Contrôle du navigateur (Gateway distant + navigateur local)
 
 Si vous exécutez le Gateway sur une machine mais souhaitez piloter un navigateur sur une autre machine,
-exécutez un **node host** sur la machine du navigateur et gardez les deux sur le même tailnet.
-Le Gateway transmettra les actions du navigateur au nœud ; aucun serveur de contrôle distinct ou URL Serve n'est nécessaire.
+exécutez un **hôte de nœud** sur la machine du navigateur et gardez les deux sur le même tailnet.
+Le Gateway fera transiter les actions du navigateur vers le nœud ; aucun serveur de contrôle ou URL Serve séparé n'est nécessaire.
 
-Évitez Funnel pour le contrôle du navigateur ; traitez le jumelage de nœuds comme un accès opérateur.
+Évitez d'utiliser Funnel pour le contrôle du navigateur ; traitez l'appariement des nœuds comme un accès opérateur.
 
-## Prérequis + limites Tailscale
+## Prérequis et limites Tailscale
 
-- Serve nécessite HTTPS activé pour votre tailnet ; la CLI vous invite à l'activer s'il manque.
-- Serve injecte les en-têtes d'identité Tailscale ; Funnel ne le fait pas.
-- Funnel nécessite Tailscale v1.38.3+, MagicDNS, HTTPS activé, et un attribut de nœud funnel.
-- Funnel prend uniquement en charge les ports `443`, `8443` et `10000` sur TLS.
-- Funnel sur macOS nécessite la variante d'application open source de Tailscale.
+- Serve nécessite HTTPS activé pour votre tailnet ; le CLI le demande s'il manque.
+- Serve injecte les en-têtes d'identité Tailscale ; Funnel non.
+- Funnel nécessite Tailscale v1.38.3+, MagicDNS, HTTPS activé et un attribut de nœud funnel.
+- Funnel ne prend en charge que les ports `443`, `8443` et `10000` sur TLS.
+- Funnel sur macOS nécessite la variante d'application open source Tailscale.
 
 ## En savoir plus
 

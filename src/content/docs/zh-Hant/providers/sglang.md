@@ -101,3 +101,11 @@ curl http://127.0.0.1:30000/v1/models
 - 如果請求因驗證錯誤而失敗，請設定符合
   您伺服器設定的真實 `SGLANG_API_KEY`，或在
   `models.providers.sglang` 下明確設定提供者。
+
+## 代理樣式行為
+
+SGLang 被視為一個代理樣式的 OpenAI 相容 `/v1` 後端，而非原生的 OpenAI 端點。
+
+- 原生的僅限 OpenAI 請求塑形在此處不適用
+- 沒有 `service_tier`、沒有 Responses `store`、沒有提示快取提示，也沒有 OpenAI 推理相容負載塑形
+- 隱藏的 OpenClaw 歸因標頭（`originator`、`version`、`User-Agent`）不會在自訂 SGLang 基礎 URL 上注入

@@ -69,9 +69,9 @@ openclaw channels add
 
 ### 1. 開啟飛書開放平台
 
-造訪 [飛書開放平台](https://open.feishu.cn/app) 並登入。
+訪問 [飛書開放平台](https://open.feishu.cn/app) 並登入。
 
-Lark（全球版）租戶應使用 [https://open.larksuite.com/app](https://open.larksuite.com/app) 並在飛書配置中設定 `domain: "lark"`。
+Lark (全球版) 租戶應使用 [https://open.larksuite.com/app](https://open.larksuite.com/app) 並在飛書配置中設定 `domain: "lark"`。
 
 ### 2. 建立應用程式
 
@@ -79,7 +79,7 @@ Lark（全球版）租戶應使用 [https://open.larksuite.com/app](https://open
 2. 填寫應用程式名稱和描述
 3. 選擇應用程式圖示
 
-![Create enterprise app](/images/feishu-step2-create-app.png)
+![建立企業應用](/images/feishu-step2-create-app.png)
 
 ### 3. 複製憑證
 
@@ -90,7 +90,7 @@ Lark（全球版）租戶應使用 [https://open.larksuite.com/app](https://open
 
 ❗ **重要：** 請勿公開 App Secret。
 
-![Get credentials](/images/feishu-step3-credentials.png)
+![取得憑證](/images/feishu-step3-credentials.png)
 
 ### 4. 設定權限
 
@@ -124,7 +124,7 @@ Lark（全球版）租戶應使用 [https://open.larksuite.com/app](https://open
 }
 ```
 
-![Configure permissions](/images/feishu-step4-permissions.png)
+![配置權限](/images/feishu-step4-permissions.png)
 
 ### 5. 啟用機器人功能
 
@@ -133,7 +133,7 @@ Lark（全球版）租戶應使用 [https://open.larksuite.com/app](https://open
 1. 啟用機器人功能
 2. 設定機器人名稱
 
-![Enable bot capability](/images/feishu-step5-bot-capability.png)
+![啟用機器人能力](/images/feishu-step5-bot-capability.png)
 
 ### 6. 配置事件訂閱
 
@@ -150,7 +150,7 @@ Lark（全球版）租戶應使用 [https://open.larksuite.com/app](https://open
 
 ⚠️ 如果 Gateway 未在執行中，長連線設定可能無法儲存。
 
-![Configure event subscription](/images/feishu-step6-event-subscription.png)
+![配置事件訂閱](/images/feishu-step6-event-subscription.png)
 
 ### 7. 發布應用程式
 
@@ -205,7 +205,7 @@ openclaw channels add
 
 下方的螢幕截圖顯示了在哪裡可以找到 **Verification Token**。**Encrypt Key** 則列在同一個 **Encryption** 區塊中。
 
-![Verification Token location](/images/feishu-verification-token.png)
+![驗證 Token 位置](/images/feishu-verification-token.png)
 
 ### 透過環境變數設定
 
@@ -657,13 +657,13 @@ openclaw pairing list feishu
 - `match.peer.kind`: `"direct"` 或 `"group"`
 - `match.peer.id`：使用者 Open ID（`ou_xxx`）或群組 ID（`oc_xxx`）
 
-請參閱 [取得群組/使用者 ID](#get-groupuser-ids) 以了解查詢提示。
+請參閱 [取得群組/使用者 ID](#get-groupuser-ids) 以取得查詢提示。
 
 ---
 
 ## 設定參考
 
-完整設定：[Gateway configuration](/en/gateway/configuration)
+完整配置：[閘道器配置](/en/gateway/configuration)
 
 主要選項：
 
@@ -761,7 +761,7 @@ openclaw pairing list feishu
 - 文件中繼資料（標題、類型、URL）
 - 用於主題串內回覆的留言主題串內容
 
-在編輯文件後，Agent 會被引導使用 `feishu_drive.reply_comment` 通知評論者，然後輸出 `NO_REPLY` 以避免重複發送。
+在編輯文件後，會引導 Agent 使用 `feishu_drive.reply_comment` 來通知評論者，然後輸出確切的靜音 token `NO_REPLY` / `no_reply` 以避免重複發送。
 
 ## 執行時操作介面
 
@@ -777,13 +777,13 @@ openclaw pairing list feishu
 - `member-info`
 - `channel-info`
 - `channel-list`
-- 當在配置中啟用了表情反應時，`react` 和 `reactions`
-- `feishu_drive` 評論操作：`list_comments`、`list_comment_replies`、`add_comment`、`reply_comment`
+- 當在配置中啟用反應時，`react` 和 `reactions`
+- `feishu_drive` 評論動作：`list_comments`、`list_comment_replies`、`add_comment`、`reply_comment`
 
 ## 相關
 
-- [頻道概覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — 私訊認證和配對流程
-- [群組](/en/channels/groups) — 群聊行為和提及控制
+- [頻道總覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — 私訊驗證和配對流程
+- [群組](/en/channels/groups) — 群聊行為和提及限制
 - [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
 - [安全性](/en/gateway/security) — 存取模型和加固

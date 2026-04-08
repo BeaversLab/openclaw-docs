@@ -44,7 +44,7 @@ title: "閘道架構"
 
 協議詳情：
 
-- [Gateway 協議](/en/gateway/protocol)
+- [Gateway 協定](/en/gateway/protocol)
 
 ### WebChat
 
@@ -79,61 +79,74 @@ sequenceDiagram
 - 交握後：
   - 請求：`{type:"req", id, method, params}` → `{type:"res", id, ok, payload|error}`
   - 事件：`{type:"event", event, payload, seq?, stateVersion?}`
-- 如果設定了 `OPENCLAW_GATEWAY_TOKEN`（或 `--token`），`connect.params.auth.token`
-  必須相符，否則 socket 會關閉。
-- 具有副作用的方法（`send`、`agent`）需要冪等性金鑰以便安全重試；伺服器會維護短期的去重快取。
-- 節點必須在 `connect` 中包含 `role: "node"` 以及 capabilities/commands/permissions。
+- `hello-ok.features.methods` / `events` 是探索元數據，並非
+  每個可呼叫輔助路由的生成傾印。
+- 共用金鑰驗證使用 `connect.params.auth.token` 或
+  `connect.params.auth.password`，具體取決於設定的 Gateway 驗證模式。
+- 攜帶身分識別的模式，例如 Tailscale Serve
+  (`gateway.auth.allowTailscale: true`) 或非迴路
+  `gateway.auth.mode: "trusted-proxy"`，是從請求標頭滿足驗證
+  而非 `connect.params.auth.*`。
+- Private-ingress `gateway.auth.mode: "none"` 會完全停用共用金鑰驗證；
+  請勿在公開/不信任的入口處使用該模式。
+- 等冪性金鑰對於具有副作用的 方法 (`send`, `agent`) 是必需的，以便
+  安全地重試；伺服器會維護一個短期去重快取。
+- 節點必須在 `connect` 中包含 `role: "node"` 以及 caps/commands/permissions。
 
-## 配對 + 本地信任
+## 配對 + 本機信任
 
-- 所有 WS 客戶端（操作員 + 節點）都在 `connect` 上包含**裝置身分**。
-- 新的裝置 ID 需要配對批准；Gateway 會發出**裝置權杖**
-  供後續連接使用。
-- **本地**連接（loopback 或 gateway 主機自身的 tailnet 位址）可以
-  自動批准，以保持同主機的使用者體驗順暢。
-- 所有連接都必須簽署 `connect.challenge` nonce。
-- 簽章載荷 `v3` 也綁定了 `platform` + `deviceFamily`；gateway
-  在重新連接時會鎖定配對的元數據，並且對元數據變更需要修復配對。
-- **非本地**連接仍需要明確批准。
-- Gateway 驗證（`gateway.auth.*`）仍然適用於**所有**連接，無論是本地還是
+- 所有 WS 用戶端 (操作員 + 節點) 都會在 `connect` 上包含 **裝置身分識別**。
+- 新的裝置 ID 需要配對核准；Gateway 會發出 **裝置權杖**
+  供後續連線使用。
+- 直接的本機迴路連線可以自動核准，以保持同主機 UX 順暢。
+- OpenClaw 也有一個狹窄的後端/容器本機自連線路徑，用於
+  受信任的共用金鑰輔助流程。
+- Tailnet 和 LAN 連線（包括同主機 tailnet 綁定）仍然需要
+  明確的配對核准。
+- 所有連線都必須簽署 `connect.challenge` nonce。
+- 簽章負載 `v3` 也綁定了 `platform` + `deviceFamily`；Gateway
+  會在重新連線時鎖定配對的元數據，並要求修復配對以處理元數據
+  變更。
+- **非本機** 連線仍然需要明確核准。
+- Gateway 驗證 (`gateway.auth.*`) 仍然適用於 **所有** 連線，無論是本機還是
   遠端。
 
-詳情：[Gateway 協議](/en/gateway/protocol)、[配對](/en/channels/pairing)、
+詳情：[Gateway 協定](/en/gateway/protocol)、[配對](/en/channels/pairing)、
 [安全性](/en/gateway/security)。
 
-## 協議類型定義與程式碼生成
+## 協定型別與程式碼生成
 
-- TypeBox schemas 定義協議。
+- TypeBox schemas 定義了該協定。
 - JSON Schema 是從這些 schemas 生成的。
 - Swift 模型是從 JSON Schema 生成的。
 
 ## 遠端存取
 
 - 首選：Tailscale 或 VPN。
-- 替代方案：SSH 隧道
+- 替代方案：SSH tunnel
 
   ```bash
   ssh -N -L 18789:127.0.0.1:18789 user@host
   ```
 
-- 透過隧道進行連線時，適用相同的握手 + auth token。
-- 在遠端設置中，可以為 WS 啟用 TLS + 可選的憑證釘選。
+- 相同的 handshake + auth token 也適用於 tunnel。
+- TLS + 選用的 pinning 可以在遠端設定中為 WS 啟用。
 
-## 操作快照
+## 運作快照
 
-- 啟動：`openclaw gateway`（前景模式，日誌輸出至 stdout）。
-- 健康狀態：透過 WS 傳輸 `health`（也包含在 `hello-ok` 中）。
-- 監控：使用 launchd/systemd 進行自動重啟。
+- 啟動：`openclaw gateway`（前景，記錄至 stdout）。
+- 健康狀態：透過 WS 發送 `health`（也包含在 `hello-ok` 中）。
+- 監督：使用 launchd/systemd 自動重啟。
 
-## 不變性
+## 不變量
 
-- 每個主機上只有一個 Gateway 控制單一 Baileys 工作階段。
-- 握手是強制性的；任何非 JSON 或非 connect 的第一幀都會導致強制關閉連線。
-- 事件不會重播；客戶端必須在發生遺漏時進行重新整理。
+- 每個主機上只有一個 Gateway 控制單一 Baileys session。
+- Handshake 是強制的；任何非 JSON 或非 connect 的第一幀都會導致強制關閉連線。
+- 事件不會重播；客戶端必須在出現間隙時重新整理。
 
 ## 相關
 
-- [Agent Loop](/en/concepts/agent-loop) — 詳細的代理執行循環
-- [Gateway Protocol](/en/gateway/protocol) — WebSocket 協議契約
-- [Queue](/en/concepts/queue) — 指令佇列與並發
-- [Security](/en/gateway/security) — 信任模型與強化措施
+- [Agent Loop](/en/concepts/agent-loop) — 詳細的 Agent 執行週期
+- [Gateway Protocol](/en/gateway/protocol) — WebSocket 協定合約
+- [Queue](/en/concepts/queue) — 指令佇列和並行
+- [Security](/en/gateway/security) — 信任模型和強化防護

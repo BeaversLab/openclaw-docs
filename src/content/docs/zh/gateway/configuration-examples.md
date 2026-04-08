@@ -9,7 +9,7 @@ title: "配置示例"
 
 # 配置示例
 
-以下示例与当前的配置架构保持一致。如需详尽的参考和逐字段说明，请参阅 [Configuration](/en/gateway/configuration)。
+以下示例与当前配置架构一致。有关详尽的参考和按字段说明，请参阅 [Configuration](/en/gateway/configuration)。
 
 ## 快速开始
 
@@ -67,19 +67,15 @@ title: "配置示例"
   // Auth profile metadata (secrets live in auth-profiles.json)
   auth: {
     profiles: {
-      "anthropic:me@example.com": {
-        provider: "anthropic",
-        mode: "oauth",
-        email: "me@example.com",
-      },
+      "anthropic:default": { provider: "anthropic", mode: "api_key" },
       "anthropic:work": { provider: "anthropic", mode: "api_key" },
       "openai:default": { provider: "openai", mode: "api_key" },
-      "openai-codex:default": { provider: "openai-codex", mode: "oauth" },
+      "openai-codex:personal": { provider: "openai-codex", mode: "oauth" },
     },
     order: {
-      anthropic: ["anthropic:me@example.com", "anthropic:work"],
+      anthropic: ["anthropic:default", "anthropic:work"],
       openai: ["openai:default"],
-      "openai-codex": ["openai-codex:default"],
+      "openai-codex": ["openai-codex:personal"],
     },
   },
 
@@ -240,7 +236,7 @@ title: "配置示例"
       userTimezone: "America/Chicago",
       model: {
         primary: "anthropic/claude-sonnet-4-6",
-        fallbacks: ["anthropic/claude-opus-4-6", "openai/gpt-5.2"],
+        fallbacks: ["anthropic/claude-opus-4-6", "openai/gpt-5.4"],
       },
       imageModel: {
         primary: "openrouter/anthropic/claude-sonnet-4-6",
@@ -248,8 +244,9 @@ title: "配置示例"
       models: {
         "anthropic/claude-opus-4-6": { alias: "opus" },
         "anthropic/claude-sonnet-4-6": { alias: "sonnet" },
-        "openai/gpt-5.2": { alias: "gpt" },
+        "openai/gpt-5.4": { alias: "gpt" },
       },
+      skills: ["github", "weather"], // inherited by agents that omit list[].skills
       thinkingDefault: "low",
       verboseDefault: "off",
       elevatedDefault: "on",
@@ -308,12 +305,14 @@ title: "配置示例"
       {
         id: "main",
         default: true,
+        // inherits defaults.skills -> github, weather
         thinkingDefault: "high", // per-agent thinking override
         reasoningDefault: "on", // per-agent reasoning visibility
         fastModeDefault: false, // per-agent fast mode
       },
       {
         id: "quick",
+        skills: [], // no skills for this agent
         fastModeDefault: true, // this agent always runs fast
         thinkingDefault: "off",
       },
@@ -446,7 +445,7 @@ title: "配置示例"
     },
     install: {
       preferBrew: true,
-      nodeManager: "npm",
+      nodeManager: "npm", // npm | pnpm | yarn | bun
     },
     entries: {
       "image-lab": {
@@ -461,6 +460,27 @@ title: "配置示例"
 ```
 
 ## 常见模式
+
+### 具有一个覆盖项的共享技能基线
+
+```json5
+{
+  agents: {
+    defaults: {
+      workspace: "~/.openclaw/workspace",
+      skills: ["github", "weather"],
+    },
+    list: [
+      { id: "main", default: true },
+      { id: "docs", workspace: "~/.openclaw/workspace-docs", skills: ["docs-search"] },
+    ],
+  },
+}
+```
+
+- `agents.defaults.skills` 是共享基线。
+- `agents.list[].skills` 会替换某个代理的该基线。
+- 当代理不应看到任何技能时，请使用 `skills: []`。
 
 ### 多平台设置
 
@@ -485,7 +505,7 @@ title: "配置示例"
 
 ### 安全私信模式（共享收件箱 / 多用户私信）
 
-如果不止一个人可以私信您的机器人（`allowFrom` 中有多个条目，多人的配对批准，或 `dmPolicy: "open"`），请启用 **安全私信模式**，这样不同发送者的私信默认不会共享一个上下文：
+如果不止一个人可以向您的机器人发送私信（`allowFrom` 中有多个条目、多个人的配对批准，或 `dmPolicy: "open"`），请启用 **安全私信模式**，这样默认情况下来自不同发送者的私信不会共享同一个上下文：
 
 ```json5
 {
@@ -509,58 +529,22 @@ title: "配置示例"
 }
 ```
 
-对于 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，发件人授权默认优先使用 ID。仅在您明确接受该风险的情况下，才在每个 `dangerouslyAllowNameMatching: true` 中启用直接的可变名称/邮箱/昵称匹配。
+对于 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，发送者授权默认优先使用 ID。
+仅当您明确接受该风险时，才通过每个渠道的 `dangerouslyAllowNameMatching: true` 启用直接的可变名称/邮箱/昵称匹配。
 
-### OAuth 带 API 密钥故障转移
+### Anthropic API 密钥 + MiniMax 回退
 
 ```json5
 {
   auth: {
     profiles: {
-      "anthropic:subscription": {
-        provider: "anthropic",
-        mode: "oauth",
-        email: "me@example.com",
-      },
       "anthropic:api": {
         provider: "anthropic",
         mode: "api_key",
       },
     },
     order: {
-      anthropic: ["anthropic:subscription", "anthropic:api"],
-    },
-  },
-  agent: {
-    workspace: "~/.openclaw/workspace",
-    model: {
-      primary: "anthropic/claude-sonnet-4-6",
-      fallbacks: ["anthropic/claude-opus-4-6"],
-    },
-  },
-}
-```
-
-### Anthropic setup-token + API 密钥，MiniMax 备用
-
-<Warning>过去，部分用户在 Anthropic 之外使用 Anthropic setup-token 受到了限制。请将此视为用户自担风险，并在依赖订阅认证之前确认当前的 Anthropic 条款。</Warning>
-
-```json5
-{
-  auth: {
-    profiles: {
-      "anthropic:subscription": {
-        provider: "anthropic",
-        mode: "oauth",
-        email: "user@example.com",
-      },
-      "anthropic:api": {
-        provider: "anthropic",
-        mode: "api_key",
-      },
-    },
-    order: {
-      anthropic: ["anthropic:subscription", "anthropic:api"],
+      anthropic: ["anthropic:api"],
     },
   },
   models: {
@@ -642,6 +626,6 @@ title: "配置示例"
 ## 提示
 
 - 如果您设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
-- 提供商 ID 各不相同（电话号码、用户 ID、频道 ID）。请使用提供商文档确认格式。
+- 提供商 ID 各不相同（电话号码、用户 ID、渠道 ID）。请查阅提供商文档以确认格式。
 - 稍后添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
 - 有关更深入的设置说明，请参阅 [Providers](/en/providers) 和 [Troubleshooting](/en/gateway/troubleshooting)。

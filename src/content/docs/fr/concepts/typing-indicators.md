@@ -59,10 +59,11 @@ Vous pouvez remplacer le mode ou la cadence par session :
 
 ## Notes
 
-- Le mode `message` n'affichera pas la frappe pour les réponses entièrement silencieuses (par ex. le `NO_REPLY`
-  jeton utilisé pour supprimer la sortie).
+- Le mode `message` n'affichera pas la saisie pour les réponses silencieuses lorsque la
+  charge utile entière est le jeton silencieux exact (par exemple `NO_REPLY` / `no_reply`,
+  correspondance insensible à la casse).
 - `thinking` ne se déclenche que si l'exécution diffuse le raisonnement (`reasoningLevel: "stream"`).
-  Si le modèle n'émet pas de deltas de raisonnement, la frappe ne commencera pas.
+  Si le modèle n'émet pas de deltas de raisonnement, la saisie ne démarrera pas.
 - Les heartbeats n'affichent jamais la frappe, quel que soit le mode.
 - `typingIntervalSeconds` contrôle la **cadence de rafraîchissement**, et non l'heure de début.
   La valeur par défaut est de 6 secondes.

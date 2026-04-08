@@ -28,7 +28,7 @@ title: "远程访问"
 
 - **最佳用户体验：** 保持运行 `gateway.bind: "loopback"` 并使用 **Tailscale Serve** 来访问控制 UI。
 - **后备方案：** 保留环回 + 从任何需要访问的机器建立 SSH 隧道。
-- **示例：** [exe.dev](/en/install/exe-dev)（简易 VM）或 [Hetzner](/en/install/hetzner)（生产环境 VPS）。
+- **示例：** [exe.dev](/en/install/exe-dev) (简易虚拟机) 或 [Hetzner](/en/install/hetzner) (生产环境 VPS)。
 
 当您的笔记本电脑经常休眠但您希望代理程序始终开启时，这是理想的选择。
 
@@ -63,7 +63,7 @@ title: "远程访问"
 
 备注：
 
-- **节点不运行 gateway 服务。** 除非你有意运行隔离的配置文件（参见 [Multiple gateways](/en/gateway/multiple-gateways)），否则每台主机应仅运行一个 gateway。
+- **节点不运行 Gateway 服务。** 除非您有意运行隔离的配置文件（请参阅 [Multiple gateways](/en/gateway/multiple-gateways)），否则每个主机应只运行一个 Gateway。
 - macOS 应用程序的“节点模式”只是通过 Gateway(网关) 网关 WebSocket 连接的节点客户端。
 
 ## SSH 隧道（CLI + 工具）
@@ -77,11 +77,11 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 隧道启动后：
 
 - `openclaw health` 和 `openclaw status --deep` 现在可以通过 `ws://127.0.0.1:18789` 访问远程 gateway。
-- 在需要时，`openclaw gateway {status,health,send,agent,call}` 也可以通过 `--url` 定向到转发的 URL。
+- 如有需要，`openclaw gateway status`、`openclaw gateway health`、`openclaw gateway probe` 和 `openclaw gateway call` 也可以通过 `--url` 定向到转发的 URL。
 
-注意：将 `18789` 替换为你配置的 `gateway.port`（或 `--port`/`OPENCLAW_GATEWAY_PORT`）。
-注意：当你传递 `--url` 时，CLI 不会回退到配置或环境凭据。
-显式包含 `--token` 或 `--password`。缺少显式凭据将报错。
+注意：将 `18789` 替换为您配置的 `gateway.port`（或 `--port`/`OPENCLAW_GATEWAY_PORT`）。
+注意：当您传递 `--url` 时，CLI 不会回退到配置或环境凭据。
+请显式包含 `--token` 或 `--password`。缺少显式凭据将导致错误。
 
 ## CLI 远程默认值
 
@@ -99,18 +99,18 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 }
 ```
 
-当 gateway 仅限回环访问时，请将 URL 保持在 `ws://127.0.0.1:18789` 并首先打开 SSH 隧道。
+当 Gateway 仅支持环回时，请将 URL 保持在 `ws://127.0.0.1:18789` 并先打开 SSH 隧道。
 
 ## 凭据优先级
 
-Gateway(网关) 凭据解析在 call/probe/status 路径和 Discord exec-approval 监控中遵循一个共享约定。Node-host 使用相同的基础约定，但有一个本地模式例外（它会故意忽略 `gateway.remote.*`）：
+Gateway(网关) 凭据解析在调用/探测/状态路径和 Discord 批准监控中遵循一个共享协定。节点主机使用相同的基础协定，但有一个本地模式例外（它会故意忽略 `gateway.remote.*`）：
 
-- 显式凭据（`--token`、`--password` 或 工具 `gatewayToken`）在接受显式身份验证的调用路径中始终优先。
+- 显式凭据（`--token`、`--password` 或工具 `gatewayToken`）在接受显式身份验证的调用路径上始终优先。
 - URL 覆盖安全性：
-  - CLI URL 覆盖（`--url`）绝不重用隐式的配置/环境凭据。
-  - Env URL overrides (`OPENCLAW_GATEWAY_URL`) may use env credentials only (`OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`).
+  - CLI URL 覆盖（`--url`）从不重用隐式配置/环境凭据。
+  - 环境 URL 覆盖（`OPENCLAW_GATEWAY_URL`）只能使用环境凭据（`OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`）。
 - 本地模式默认值：
-  - token: `OPENCLAW_GATEWAY_TOKEN` -> `gateway.auth.token` -> `gateway.remote.token` (remote fallback applies only when local auth token input is unset)
+  - 令牌：`OPENCLAW_GATEWAY_TOKEN` -> `gateway.auth.token` -> `gateway.remote.token`（远程回退仅在未设置本地身份验证令牌输入时应用）
   - password: `OPENCLAW_GATEWAY_PASSWORD` -> `gateway.auth.password` -> `gateway.remote.password` (remote fallback applies only when local auth password input is unset)
 - 远程模式默认值：
   - token: `gateway.remote.token` -> `OPENCLAW_GATEWAY_TOKEN` -> `gateway.auth.token`
@@ -139,19 +139,20 @@ Runbook: [macOS remote access](/en/platforms/mac/remote).
 - **环回 + SSH/Tailscale Serve** 是最安全的默认设置（无公开暴露）。
 - Plaintext `ws://` is loopback-only by default. For trusted private networks,
   set `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` on the client process as break-glass.
-- **Non-loopback binds** (`lan`/`tailnet`/`custom`, or `auto` when loopback is unavailable) must use auth tokens/passwords.
+- **Non-loopback binds** (`lan`/`tailnet`/`custom`, or `auto` when loopback is unavailable) must use gateway auth: token, password, or an identity-aware reverse proxy with `gateway.auth.mode: "trusted-proxy"`.
 - `gateway.remote.token` / `.password` are client credential sources. They do **not** configure server auth by themselves.
 - Local call paths can use `gateway.remote.*` as fallback only when `gateway.auth.*` is unset.
 - If `gateway.auth.token` / `gateway.auth.password` is explicitly configured via SecretRef and unresolved, resolution fails closed (no remote fallback masking).
 - `gateway.remote.tlsFingerprint` pins the remote TLS cert when using `wss://`.
-- **Tailscale Serve** 可以在 `gateway.auth.allowTailscale: true` 时通过身份标头验证控制 UI/WebSocket 流量；HTTP API 端点仍需要令牌/密码验证。此无令牌流程假定网关主机是受信任的。如果您希望在任何地方都使用令牌/密码，请将其设置为 `false`。
+- 当 `gateway.auth.allowTailscale: true` 时，**Tailscale Serve** 可以通过身份标头对 Control UI/WebSocket 流量进行身份验证；HTTP API 端点不使用该 Tailscale 标头身份验证，而是遵循网关的正常 HTTP 身份验证模式。这种无令牌流程假设网关主机是受信任的。如果您希望在所有地方使用共享密钥身份验证，请将其设置为 `false`。
+- **Trusted-proxy** 身份验证仅适用于非本地回环的感知身份代理设置。同机本地回环反向代理不满足 `gateway.auth.mode: "trusted-proxy"`。
 - 将浏览器控制视为操作员访问：仅限 tailnet + 刻意的节点配对。
 
-深入了解：[安全性](/en/gateway/security)。
+深入探讨：[安全](/en/gateway/security)。
 
-### macOS：通过 LaunchAgent 建立持久 SSH 隧道
+### macOS：通过 LaunchAgent 持久化 SSH 隧道
 
-对于连接到远程网关的 macOS 客户端，最简单的持久化设置是使用 SSH `LocalForward` 配置条目以及 LaunchAgent，以在重启和崩溃时保持隧道存活。
+对于连接到远程网关的 macOS 客户端，最简单的持久化设置是使用 SSH `LocalForward` 配置条目以及一个 LaunchAgent，以在重启和崩溃期间保持隧道处于活动状态。
 
 #### 步骤 1：添加 SSH 配置
 
@@ -165,7 +166,7 @@ Host remote-gateway
     IdentityFile ~/.ssh/id_rsa
 ```
 
-将 `<REMOTE_IP>` 和 `<REMOTE_USER>` 替换为您自己的值。
+将 `<REMOTE_IP>` 和 `<REMOTE_USER>` 替换为您的值。
 
 #### 步骤 2：复制 SSH 密钥（一次性）
 
@@ -175,7 +176,7 @@ ssh-copy-id -i ~/.ssh/id_rsa <REMOTE_USER>@<REMOTE_IP>
 
 #### 步骤 3：配置网关令牌
 
-将令牌存储在配置中，以便其在重启后依然有效：
+将令牌存储在配置中，以便在重启后依然有效：
 
 ```bash
 openclaw config set gateway.remote.token "<your-token>"
@@ -183,7 +184,7 @@ openclaw config set gateway.remote.token "<your-token>"
 
 #### 步骤 4：创建 LaunchAgent
 
-将此保存为 `~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist`：
+将其另存为 `~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist`：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -212,9 +213,9 @@ openclaw config set gateway.remote.token "<your-token>"
 launchctl bootstrap gui/$UID ~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist
 ```
 
-隧道将在登录时自动启动，崩溃时重启，并保持转发的端口处于活动状态。
+隧道将在登录时自动启动，崩溃时重启，并保持转发端口处于活动状态。
 
-注意：如果您从旧设置中保留了 `com.openclaw.ssh-tunnel` LaunchAgent，请将其卸载并删除。
+注意：如果您有来自旧设置的残留 `com.openclaw.ssh-tunnel` LaunchAgent，请将其卸载并删除。
 
 #### 故障排除
 
@@ -241,5 +242,5 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 | ------------------------------------ | ---------------------------------------------- |
 | `LocalForward 18789 127.0.0.1:18789` | 将本地端口 18789 转发到远程端口 18789          |
 | `ssh -N`                             | 在不执行远程命令的情况下进行 SSH（仅端口转发） |
-| `KeepAlive`                          | 如果隧道崩溃，自动重启隧道                     |
+| `KeepAlive`                          | 如果隧道崩溃，会自动重启                       |
 | `RunAtLoad`                          | 当 LaunchAgent 在登录时加载时启动隧道          |

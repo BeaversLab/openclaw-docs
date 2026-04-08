@@ -47,10 +47,10 @@ sidebarTitle: "Linux 伺服器"
   </Card>
 </CardGroup>
 
-**AWS (EC2 / Lightsail / 免費層)** 也運作良好。
-社群影片教學位於
+**AWS (EC2 / Lightsail / 免費層)** 也很適用。
+有社群影片教學可在
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
-（社群資源 — 可能會失效）。
+觀看（社群資源 —— 可能會失效）。
 
 ## 雲端設定的運作方式
 
@@ -60,7 +60,7 @@ sidebarTitle: "Linux 伺服器"
 - 安全預設值：將 Gateway 保持在 loopback 介面並透過 SSH tunnel 或 Tailscale Serve 存取。
   若您繫結到 `lan` 或 `tailnet`，請要求 `gateway.auth.token` 或 `gateway.auth.password`。
 
-相關頁面：[Gateway remote access](/en/gateway/remote)、[Platforms hub](/en/platforms)。
+相關頁面：[Gateway 遠端存取](/en/gateway/remote)、[平台中心](/en/platforms)。
 
 ## VPS 上的共享公司代理程式
 
@@ -70,7 +70,7 @@ sidebarTitle: "Linux 伺服器"
 - 請勿將該執行環境登入至個人的 Apple/Google 帳戶或個人的瀏覽器/密碼管理員設定檔。
 - 如果使用者之間存在潛在衝突，請依照 gateway/host/OS 使用者進行分割。
 
-安全性模型詳情：[Security](/en/gateway/security)。
+安全模型細節：[安全性](/en/gateway/security)。
 
 ## 搭配 VPS 使用節點
 
@@ -96,7 +96,7 @@ source ~/.bashrc
 - `NODE_COMPILE_CACHE` 可改善重複執行指令的啟動時間。
 - `OPENCLAW_NO_RESPAWN=1` 可避免來自查自重啟路徑的額外啟動負擔。
 - 首次執行指令會預熱快取；後續的執行會更快。
-- 關於 Raspberry Pi 的細節，請參閱 [Raspberry Pi](/en/install/raspberry-pi)。
+- 關於 Raspberry Pi 的具體細節，請參閱 [Raspberry Pi](/en/install/raspberry-pi)。
 
 ### systemd 調整檢查清單（選用）
 
@@ -111,10 +111,10 @@ source ~/.bashrc
   - `TimeoutStartSec=90`
 - 對於狀態/快取路徑，建議優先使用支援 SSD 的磁碟，以減少隨機 I/O 冷啟動的效能損失。
 
-範例：
+對於標準的 `openclaw onboard --install-daemon` 路徑，請編輯使用者單元：
 
 ```bash
-sudo systemctl edit openclaw
+systemctl --user edit openclaw-gateway.service
 ```
 
 ```ini
@@ -126,5 +126,8 @@ RestartSec=2
 TimeoutStartSec=90
 ```
 
-`Restart=` 政策如何幫助自動恢復：
-[systemd 可以自動化服務恢復](https://www.redhat.com/en/blog/systemd-automate-recovery)。
+如果您刻意安裝了系統單元，請透過 `sudo systemctl edit openclaw-gateway.service` 編輯
+`openclaw-gateway.service`。
+
+`Restart=` 政策如何協助自動修復：
+[systemd can automate service recovery](https://www.redhat.com/en/blog/systemd-automate-recovery)。

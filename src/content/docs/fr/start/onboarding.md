@@ -79,8 +79,9 @@ L'onboarding demande les autorisations TCC nécessaires pour :
 </Step>
 <Step title="CLI">
   <Info>Cette étape est facultative</Info>
-  L'application peut installer le CLI global `openclaw` via npm/pnpm afin que les flux de travail
-  du terminal et les tâches launchd fonctionnent immédiatement.
+  L'application peut installer le `openclaw` CLI global via CLI, pnpm ou bun.
+  Elle privilégie d'abord CLI, puis pnpm, puis bun si c'est le seul gestionnaire de paquets détecté.
+  Pour le runtime du npm, Node reste la voie recommandée.
 </Step>
 <Step title="Onboarding Chat (dedicated session)">
   Après la configuration, l'application ouvre une session de chat d'onboarding dédiée afin que l'agent puisse

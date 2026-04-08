@@ -48,25 +48,26 @@ El canal de WhatsApp se ejecuta a través de **Baileys Web**. Este documento cap
 - La comprensión de medios (si se configura mediante `tools.media.*` o `tools.media.models` compartido) se ejecuta antes de la plantilla y puede insertar bloques `[Image]`, `[Audio]` y `[Video]` en `Body`.
   - El audio establece `{{Transcript}}` y utiliza la transcripción para el análisis de comandos, por lo que los comandos de barra diagonal aún funcionan.
   - Las descripciones de video e imagen preservan cualquier texto de leyenda para el análisis de comandos.
-- De forma predeterminada, solo se procesa el primer archivo adjunto de imagen/audio/video coincidente; establezca `tools.media.<cap>.attachments` para procesar varios archivos adjuntos.
+  - Si el modelo de imagen principal activo ya admite la visión de forma nativa, OpenClaw omite el bloque de resumen `[Image]` y pasa la imagen original al modelo en su lugar.
+- De forma predeterminada, solo se procesa el primer archivo adjunto de imagen/audio/video coincidente; configure `tools.media.<cap>.attachments` para procesar varios archivos adjuntos.
 
 ## Límites y errores
 
 **Límites de envío saliente (envío web de WhatsApp)**
 
 - Imágenes: hasta `channels.whatsapp.mediaMaxMb` (predeterminado: 50 MB) después de la recompresión.
-- Audio/voz/video: límite de 16 MB; documentos: límite de 100 MB.
-- Medio excesivamente grande o ilegible → error claro en los registros y la respuesta se omite.
+- Audio/voz/vídeo: límite de 16 MB; documentos: límite de 100 MB.
+- Medios demasiado grandes o ilegibles → error claro en los registros y la respuesta se omite.
 
 **Límites de comprensión de medios (transcripción/descripción)**
 
-- Predeterminado de imagen: 10 MB (`tools.media.image.maxBytes`).
-- Predeterminado de audio: 20 MB (`tools.media.audio.maxBytes`).
-- Predeterminado de video: 50 MB (`tools.media.video.maxBytes`).
-- El medio excesivamente grande omite la comprensión, pero las respuestas aún se envían con el cuerpo original.
+- Imagen predeterminada: 10 MB (`tools.media.image.maxBytes`).
+- Audio predeterminado: 20 MB (`tools.media.audio.maxBytes`).
+- Vídeo predeterminado: 50 MB (`tools.media.video.maxBytes`).
+- Los medios demasiado grandes omiten la comprensión, pero las respuestas aún se envían con el cuerpo original.
 
 ## Notas para las pruebas
 
-- Cubra los flujos de envío + respuesta para casos de imagen/audio/documento.
+- Cubra los flujos de envío + respuesta para los casos de imagen/audio/documento.
 - Valide la recompresión para imágenes (límite de tamaño) y el indicador de nota de voz para audio.
 - Asegúrese de que las respuestas multimedia se distribuyan como envíos secuenciales.

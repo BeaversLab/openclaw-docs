@@ -110,28 +110,28 @@ Envuelve el TTS de papla.media y envía los resultados como notas de voz de Tele
   <img src="/assets/showcase/papla-tts.jpg" alt="salida de nota de voz de Telegram desde TTS" />
 </Card>
 
-<Card title="CodexMonitor" icon="eye" href="https://clawhub.com/odrobnik/codexmonitor">
+<Card title="CodexMonitor" icon="eye" href="https://clawhub.ai/odrobnik/codexmonitor">
   **@odrobnik** • `devtools` `codex` `brew`
 
-Auxiliar instalado vía Homebrew para listar/inspeccionar/vigilar sesiones locales de OpenAI Codex (CLI + VS Code).
+Auxiliar instalado vía Homebrew para listar/inspeccionar/vigilizar sesiones locales de OpenAI Codex (CLI + VS Code).
 
   <img src="/assets/showcase/codexmonitor.png" alt="CodexMonitor en ClawHub" />
 </Card>
 
-<Card title="Control de impresora 3D Bambu" icon="print" href="https://clawhub.com/tobiasbischoff/bambu-cli">
+<Card title="Control de impresora 3D Bambu" icon="print" href="https://clawhub.ai/tobiasbischoff/bambu-cli">
   **@tobiasbischoff** • `hardware` `3d-printing` `skill`
 
 Controla y soluciona problemas de impresoras BambuLab: estado, trabajos, cámara, AMS, calibración y más.
 
-  <img src="/assets/showcase/bambu-cli.png" alt="Habilidad Bambu CLI en ClawHub" />
+  <img src="/assets/showcase/bambu-cli.png" alt="Skill Bambu CLI en ClawHub" />
 </Card>
 
-<Card title="Transporte de Viena (Wiener Linien)" icon="train" href="https://clawhub.com/hjanuschka/wienerlinien">
+<Card title="Transporte de Viena (Wiener Linien)" icon="train" href="https://clawhub.ai/hjanuschka/wienerlinien">
   **@hjanuschka** • `travel` `transport` `skill`
 
 Salidas en tiempo real, interrupciones, estado de ascensores y rutas para el transporte público de Viena.
 
-  <img src="/assets/showcase/wienerlinien.png" alt="Habilidad Wiener Linien en ClawHub" />
+  <img src="/assets/showcase/wienerlinien.png" alt="Skill Wiener Linien en ClawHub" />
 </Card>
 
 <Card title="Comidas escolares ParentPay" icon="utensils" href="#">
@@ -141,10 +141,10 @@ Reserva automatizada de comidas escolares en el Reino Unido a través de ParentP
 
 </Card>
 
-<Card title="Subida R2 (Send Me My Files)" icon="cloud-arrow-up" href="https://clawhub.com/skills/r2-upload">
+<Card title="Subida R2 (Send Me My Files)" icon="cloud-arrow-up" href="https://clawhub.ai/skills/r2-upload">
   **@julianengel** • `files` `r2` `presigned-urls`
 
-Sube archivos a Cloudflare R2/S3 y genera enlaces de descarga prefirmados seguros. Perfecto para instancias remotas de OpenClaw.
+Sube a Cloudflare R2/S3 y genera enlaces de descarga firmados de forma segura. Perfecto para instancias remotas de OpenClaw.
 
 </Card>
 
@@ -297,7 +297,7 @@ Vigila el canal de Slack de la empresa, responde de manera útil y reenvía noti
   **@alejandroOPI** • `voice` `vapi` `bridge` Asistente de voz Vapi ↔ puente HTTP OpenClaw. Llamadas telefónicas en tiempo casi real con tu agente.
 </Card>
 
-<Card title="Transcripción de OpenRouter" icon="microphone" href="https://clawhub.com/obviyus/openrouter-transcribe">
+<Card title="Transcripción de OpenRouter" icon="microphone" href="https://clawhub.ai/obviyus/openrouter-transcribe">
   **@obviyus** • `transcription` `multilingual` `skill`
 
 Transcripción de audio multilingüe a través de OpenRouter (Gemini, etc.). Disponible en ClawHub.
@@ -314,16 +314,16 @@ Transcripción de audio multilingüe a través de OpenRouter (Gemini, etc.). Dis
   **@ngutman** • `homeassistant` `docker` `raspberry-pi` Puerta de enlace de OpenClaw ejecutándose en Home Assistant OS con soporte de túnel SSH y estado persistente.
 </Card>
 
-<Card title="Habilidad de Home Assistant" icon="toggle-on" href="https://clawhub.com/skills/homeassistant">
-  **ClawHub** • `homeassistant` `skill` `automation` Controla y automatiza dispositivos de Home Assistant mediante lenguaje natural.
+<Card title="Habilidad de Home Assistant" icon="toggle-on" href="https://clawhub.ai/skills/homeassistant">
+  **ClawHub** • `homeassistant` `skill` `automation` Controle y automatice dispositivos de Home Assistant mediante lenguaje natural.
 </Card>
 
 <Card title="Empaquetado Nix" icon="snowflake" href="https://github.com/openclaw/nix-openclaw">
   **@openclaw** • `nix` `packaging` `deployment` Configuración de OpenClaw nificada con todo incluido para despliegues reproducibles.
 </Card>
 
-<Card title="Calendario CalDAV" icon="calendar" href="https://clawhub.com/skills/caldav-calendar">
-  **ClawHub** • `calendar` `caldav` `skill` Habilidad de calendario usando khal/vdirsyncer. Integración de calendario autoalojado.
+<Card title="Calendario CalDAV" icon="calendar" href="https://clawhub.ai/skills/caldav-calendar">
+  **ClawHub** • `calendar` `caldav` `skill` Habilidad de calendario que utiliza khal/vdirsyncer. Integración de calendario autohospedado.
 </Card>
 
 </CardGroup>

@@ -11,12 +11,11 @@ title: QQ Bot
 
 QQ Bot 透過官方 QQ Bot API (WebSocket 閘道) 連接到 OpenClaw。此外掛程式支援 C2C 私人聊天、群組 @訊息，以及頻道訊息，並包含多媒體（圖片、語音、影片、檔案）。
 
-狀態：內建的頻道外掛程式。支援直接訊息、群組聊天、頻道及多媒體。不支援反應和主題串。
+狀態：內建外掛。支援私訊、群組聊天、公會頻道和媒體。不支援表情回應和討論串。
 
-## 隨附於 OpenClaw
+## 內建外掛
 
-目前的 OpenClaw 安裝版本已內建 QQ Bot。對於一般設定，您不需要單獨的
-`openclaw plugins install` 步驟。
+目前的 OpenClaw 發行版本已包含 QQ Bot，因此一般的封裝版本不需要單獨進行 `openclaw plugins install` 步驟。
 
 ## 設定
 

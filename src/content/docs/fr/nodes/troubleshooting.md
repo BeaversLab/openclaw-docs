@@ -80,18 +80,23 @@ Si l'appariement est correct mais que `system.run` échoue, corrigez les approba
 
 L'appariement de nœud est une porte d'identité/confiance, et non une surface d'approbation par commande. Pour `system.run`, la stratégie par nœud réside dans le fichier d'approbations d'exécution de ce nœud (`openclaw approvals get --node ...`), et non dans l'enregistrement d'appariement de la passerelle.
 
+Pour les exécutions `host=node` basées sur l'approbation, la passerelle lie également l'exécution à la
+forme canonique préparée `systemRunPlan`. Si un appelant ultérieur modifie la commande/cwd ou
+les métadonnées de session avant que l'exécution approuvée ne soit transmise, la passerelle rejette
+l'exécution en tant que inadéquation d'approbation au lieu de faire confiance à la charge utile modifiée.
+
 ## Codes d'erreur de nœud courants
 
-- `NODE_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan ; passez-la au premier plan.
-- `CAMERA_DISABLED` → le bouton de basculement de la caméra est désactivé dans les paramètres du nœud.
-- `*_PERMISSION_REQUIRED` → autorisation OS manquante/refusée.
+- `NODE_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan ; passez-la au premier plan.
+- `CAMERA_DISABLED` → basculement de la caméra désactivé dans les paramètres du nœud.
+- `*_PERMISSION_REQUIRED` → permission OS manquante/refusée.
 - `LOCATION_DISABLED` → le mode de localisation est désactivé.
 - `LOCATION_PERMISSION_REQUIRED` → le mode de localisation demandé n'est pas accordé.
-- `LOCATION_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan mais seule l'autorisation « Pendant l'utilisation » existe.
-- `SYSTEM_RUN_DENIED: approval required` → la requête exec nécessite une approbation explicite.
-- `SYSTEM_RUN_DENIED: allowlist miss` → commande bloquée par le mode liste blanche.
-  Sur les hôtes de nœuds Windows, les formes d'enveloppe shell comme `cmd.exe /c ...` sont traitées comme des absences de liste blanche en
-  mode liste blanche, sauf si elles sont approuvées via le flux de demande.
+- `LOCATION_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan mais seule la permission « Lors de l'utilisation » existe.
+- `SYSTEM_RUN_DENIED: approval required` → la demande d'exécution nécessite une approbation explicite.
+- `SYSTEM_RUN_DENIED: allowlist miss` → commande bloquée par le mode de liste verte (allowlist).
+  Sur les hôtes de nœud Windows, les formes d'enveloppe de shell comme `cmd.exe /c ...` sont traitées comme des absences de liste verte en
+  mode de liste verte, sauf si elles sont approuvées via le flux de demande (ask flow).
 
 ## Boucle de récupération rapide
 
@@ -102,14 +107,14 @@ openclaw approvals get --node <idOrNameOrIp>
 openclaw logs --follow
 ```
 
-Si vous êtes toujours bloqué :
+Si toujours bloqué :
 
-- Réapprouver l'appariement de l'appareil.
+- Approuver à nouveau le jumelage de l'appareil.
 - Rouvrir l'application de nœud (premier plan).
-- Redonner les autorisations OS.
-- Recréer/ajuster la stratégie d'approbation exec.
+- Accorder à nouveau les permissions OS.
+- Recréer/ajuster la stratégie d'approbation d'exécution.
 
-Connexes :
+Connexes :
 
 - [/nodes/index](/en/nodes/index)
 - [/nodes/camera](/en/nodes/camera)

@@ -45,7 +45,7 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 ### Zen
 
 - Provider d'exécution : `opencode`
-- Exemples de modèles : `opencode/claude-opus-4-6`, `opencode/gpt-5.2`, `opencode/gemini-3-pro`
+- Exemples de modèles : `opencode/claude-opus-4-6`, `opencode/gpt-5.4`, `opencode/gemini-3-pro`
 - Idéal lorsque vous souhaitez le proxy multi-modèle OpenCode sélectionné
 
 ### Go
@@ -60,3 +60,7 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 - Saisir une clé OpenCode lors de la configuration stocke les identifiants pour les deux fournisseurs d'exécution.
 - Vous vous connectez à OpenCode, ajoutez les détails de facturation et copiez votre clé API.
 - La facturation et la disponibilité des catalogues sont gérées depuis le tableau de bord OpenCode.
+- Les références OpenCode basées sur Gemini restent sur le chemin proxy-Gemini, donc OpenClaw y maintient
+  le nettoyage de la signature de pensée Gemini sans activer la validation native de
+  relecture Gemini ni les réécritures d'amorçage.
+- Les références OpenCode non-Gemini conservent la stratégie de relecture minimale compatible OpenAI.

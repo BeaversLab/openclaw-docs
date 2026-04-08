@@ -89,9 +89,9 @@ Contrôles de compatibilité facultatifs :
 `~/.openclaw/openclaw.json` sous `plugins.entries.perplexity.config.webSearch.apiKey`.
 Ce champ accepte également les objets SecretRef.
 
-**Via environment:** set `PERPLEXITY_API_KEY` or `OPENROUTER_API_KEY`
-in the Gateway process environment. For a gateway install, put it in
-`~/.openclaw/.env` (or your service environment). See [Env vars](/en/help/faq#env-vars-and-env-loading).
+**Via l'environnement :** définissez `PERPLEXITY_API_KEY` ou `OPENROUTER_API_KEY`
+dans l'environnement du processus Gateway. Pour une installation de passerelle, placez-le dans
+`~/.openclaw/.env` (ou votre environnement de service). Voir [Env vars](/en/help/faq#env-vars-and-env-loading).
 
 Si `provider: "perplexity"` est configuré et que le SecretRef de la clé Perplexity n'est pas résolu sans repli d'environnement, le démarrage/rechargement échoue rapidement.
 
@@ -112,8 +112,14 @@ Ces paramètres s'appliquent au chemin de l'API de recherche Perplexity natif.
 | `max_tokens`          | Budget total de contenu (par défaut : 25000, max : 1000000)         |
 | `max_tokens_per_page` | Limite de jetons par page (par défaut : 2048)                       |
 
-Pour le chemin de compatibilité hérité Sonar/OpenRouter, seuls `query` et `freshness` sont pris en charge.
-Les filtres exclusifs à l'API de recherche tels que `country`, `language`, `date_after`, `date_before`, `domain_filter`, `max_tokens` et `max_tokens_per_page` renvoient des erreurs explicites.
+Pour le chemin de compatibilité hérité Sonar/OpenRouter :
+
+- `query`, `count` et `freshness` sont acceptés
+- `count` n'est là que pour la compatibilité ; la réponse est toujours une réponse synthétisée
+  avec citations plutôt qu'une liste de N résultats
+- Les filtres exclusifs à l'API de recherche tels que `country`, `language`, `date_after`,
+  `date_before`, `domain_filter`, `max_tokens` et `max_tokens_per_page`
+  renvoient des erreurs explicites
 
 **Exemples :**
 
@@ -161,13 +167,14 @@ await web_search({
 ### Règles de filtrage de domaine
 
 - Maximum 20 domaines par filtre
-- Impossible de mélanger la liste d'autorisation et la liste de refus dans la même requête
-- Utilisez le préfixe `-` pour les entrées de la liste de refus (ex : `["-reddit.com"]`)
+- Impossible de mélanger la liste d'autorisation et la liste de blocage dans la même requête
+- Utilisez le préfixe `-` pour les entrées de la liste de blocage (par exemple, `["-reddit.com"]`)
 
 ## Notes
 
-- L'API de recherche Perplexity renvoie des résultats de recherche web structurés (`title`, `url`, `snippet`)
-- OpenRouter ou un `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` explicite ramène Perplexity aux complétions de chat Sonar pour la compatibilité
+- L'API de recherche Perplexity renvoie des résultats de recherche Web structurés (`title`, `url`, `snippet`)
+- OpenRouter ou les commutateurs explicites `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` ramènent Perplexity aux complétions de chat Sonar pour la compatibilité
+- La compatibilité Sonar/OpenRouter renvoie une réponse synthétisée avec des citations, et non des lignes de résultats structurés
 - Les résultats sont mis en cache pendant 15 minutes par défaut (configurable via `cacheTtlMinutes`)
 
 Voir [Web tools](/en/tools/web) pour la configuration complète de web_search.

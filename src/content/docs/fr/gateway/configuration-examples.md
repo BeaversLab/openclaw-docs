@@ -67,19 +67,15 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
   // Auth profile metadata (secrets live in auth-profiles.json)
   auth: {
     profiles: {
-      "anthropic:me@example.com": {
-        provider: "anthropic",
-        mode: "oauth",
-        email: "me@example.com",
-      },
+      "anthropic:default": { provider: "anthropic", mode: "api_key" },
       "anthropic:work": { provider: "anthropic", mode: "api_key" },
       "openai:default": { provider: "openai", mode: "api_key" },
-      "openai-codex:default": { provider: "openai-codex", mode: "oauth" },
+      "openai-codex:personal": { provider: "openai-codex", mode: "oauth" },
     },
     order: {
-      anthropic: ["anthropic:me@example.com", "anthropic:work"],
+      anthropic: ["anthropic:default", "anthropic:work"],
       openai: ["openai:default"],
-      "openai-codex": ["openai-codex:default"],
+      "openai-codex": ["openai-codex:personal"],
     },
   },
 
@@ -240,7 +236,7 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
       userTimezone: "America/Chicago",
       model: {
         primary: "anthropic/claude-sonnet-4-6",
-        fallbacks: ["anthropic/claude-opus-4-6", "openai/gpt-5.2"],
+        fallbacks: ["anthropic/claude-opus-4-6", "openai/gpt-5.4"],
       },
       imageModel: {
         primary: "openrouter/anthropic/claude-sonnet-4-6",
@@ -248,8 +244,9 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
       models: {
         "anthropic/claude-opus-4-6": { alias: "opus" },
         "anthropic/claude-sonnet-4-6": { alias: "sonnet" },
-        "openai/gpt-5.2": { alias: "gpt" },
+        "openai/gpt-5.4": { alias: "gpt" },
       },
+      skills: ["github", "weather"], // inherited by agents that omit list[].skills
       thinkingDefault: "low",
       verboseDefault: "off",
       elevatedDefault: "on",
@@ -308,12 +305,14 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
       {
         id: "main",
         default: true,
+        // inherits defaults.skills -> github, weather
         thinkingDefault: "high", // per-agent thinking override
         reasoningDefault: "on", // per-agent reasoning visibility
         fastModeDefault: false, // per-agent fast mode
       },
       {
         id: "quick",
+        skills: [], // no skills for this agent
         fastModeDefault: true, // this agent always runs fast
         thinkingDefault: "off",
       },
@@ -446,7 +445,7 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
     },
     install: {
       preferBrew: true,
-      nodeManager: "npm",
+      nodeManager: "npm", // npm | pnpm | yarn | bun
     },
     entries: {
       "image-lab": {
@@ -461,6 +460,27 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
 ```
 
 ## Modèles courants
+
+### Ligne de base de compétence partagée avec une substitution
+
+```json5
+{
+  agents: {
+    defaults: {
+      workspace: "~/.openclaw/workspace",
+      skills: ["github", "weather"],
+    },
+    list: [
+      { id: "main", default: true },
+      { id: "docs", workspace: "~/.openclaw/workspace-docs", skills: ["docs-search"] },
+    ],
+  },
+}
+```
+
+- `agents.defaults.skills` est la ligne de base partagée.
+- `agents.list[].skills` remplace cette ligne de base pour un agent.
+- Utilisez `skills: []` lorsqu'un agent ne doit voir aucune compétence.
 
 ### Configuration multiplateforme
 
@@ -483,9 +503,9 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
 }
 ```
 
-### Mode DM sécurisé (boîte de réception partagée / DMs multi-utilisateurs)
+### Mode DM sécurisé (boîte de réception partagée / DM multi-utilisateur)
 
-Si plus d'une personne peut envoyer un DM à votre bot (plusieurs entrées dans `allowFrom`, approbations d'appariement pour plusieurs personnes, ou `dmPolicy: "open"`), activez le **mode DM sécurisé** afin que les DMs d'expéditeurs différents ne partagent pas un même contexte par défaut :
+Si plus d'une personne peut envoyer un DM à votre bot (plusieurs entrées dans `allowFrom`, approbations d'appariement pour plusieurs personnes, ou `dmPolicy: "open"`), activez le **mode DM sécurisé** afin que les DM de différents expéditeurs ne partagent pas un même contexte par défaut :
 
 ```json5
 {
@@ -509,59 +529,22 @@ Si plus d'une personne peut envoyer un DM à votre bot (plusieurs entrées dans 
 }
 ```
 
-Pour Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC, l'autorisation de l'expéditeur est basée sur l'ID par défaut.
-N'activez la correspondance directe mutable de nom/e-mail/pseudonyme avec le `dangerouslyAllowNameMatching: true` de chaque canal que si vous acceptez explicitement ce risque.
+Pour Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC, l'autorisation de l'expéditeur se base par défaut sur l'ID.
+N'activez la correspondance directe par nom/email/pseudonyme mutable avec `dangerouslyAllowNameMatching: true` de chaque canal que si vous acceptez explicitement ce risque.
 
-### OAuth avec basculement de clé API
+### Clé Anthropic API + repli MiniMax
 
 ```json5
 {
   auth: {
     profiles: {
-      "anthropic:subscription": {
-        provider: "anthropic",
-        mode: "oauth",
-        email: "me@example.com",
-      },
       "anthropic:api": {
         provider: "anthropic",
         mode: "api_key",
       },
     },
     order: {
-      anthropic: ["anthropic:subscription", "anthropic:api"],
-    },
-  },
-  agent: {
-    workspace: "~/.openclaw/workspace",
-    model: {
-      primary: "anthropic/claude-sonnet-4-6",
-      fallbacks: ["anthropic/claude-opus-4-6"],
-    },
-  },
-}
-```
-
-### Jeton de configuration Anthropic + clé API, repli MiniMax
-
-<Warning>L'utilisation du Anthropic setup-token en dehors de Claude Code a été restreinte par le passé pour certains utilisateurs. Considérez cela comme un risque lié au choix de l'utilisateur et vérifiez les conditions actuelles d'Anthropic avant de dépendre de l'authentification par abonnement.</Warning>
-
-```json5
-{
-  auth: {
-    profiles: {
-      "anthropic:subscription": {
-        provider: "anthropic",
-        mode: "oauth",
-        email: "user@example.com",
-      },
-      "anthropic:api": {
-        provider: "anthropic",
-        mode: "api_key",
-      },
-    },
-    order: {
-      anthropic: ["anthropic:subscription", "anthropic:api"],
+      anthropic: ["anthropic:api"],
     },
   },
   models: {
@@ -643,6 +626,6 @@ N'activez la correspondance directe mutable de nom/e-mail/pseudonyme avec le `da
 ## Conseils
 
 - Si vous définissez `dmPolicy: "open"`, la liste `allowFrom` correspondante doit inclure `"*"`.
-- Les IDs de fournisseur diffèrent (numéros de téléphone, IDs utilisateur, IDs de canal). Consultez la documentation du fournisseur pour confirmer le format.
+- Les ID de fournisseur diffèrent (numéros de téléphone, ID utilisateur, ID de canal). Consultez la documentation du fournisseur pour confirmer le format.
 - Sections facultatives à ajouter plus tard : `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
 - Voir [Fournisseurs](/en/providers) et [Dépannage](/en/gateway/troubleshooting) pour des notes de configuration plus approfondies.

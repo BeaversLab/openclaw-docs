@@ -4,7 +4,7 @@ read_when: "透過 SSH 將 macOS 應用程式連線到遠端閘道"
 title: "遠端閘道設定"
 ---
 
-> 此內容已合併至[遠端存取](/en/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent)。請參閱該頁面以取得最新指南。
+> 此內容已合併至 [遠端存取](/en/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent)。請參閱該頁面以取得最新指南。
 
 # 使用遠端閘道執行 OpenClaw.app
 
@@ -57,11 +57,15 @@ Host remote-gateway
 ssh-copy-id -i ~/.ssh/id_rsa <REMOTE_USER>@<REMOTE_IP>
 ```
 
-### 步驟 3：設定閘道權杖
+### 步驟 3：設定遠端閘道驗證
 
 ```bash
-launchctl setenv OPENCLAW_GATEWAY_TOKEN "<your-token>"
+openclaw config set gateway.remote.token "<your-token>"
 ```
+
+如果您的遠端閘道使用密碼驗證，請改用 `gateway.remote.password`。
+`OPENCLAW_GATEWAY_TOKEN` 作為 shell 層級的覆寫仍然有效，但持久化的
+remote-client 設定是 `gateway.remote.token` / `gateway.remote.password`。
 
 ### 步驟 4：啟動 SSH 隧道
 
@@ -76,7 +80,7 @@ ssh -N remote-gateway &
 open /path/to/OpenClaw.app
 ```
 
-應用程式現在將透過 SSH 隧道連線至遠端閘道。
+應用程式現將透過 SSH 隧道連接至遠端閘道。
 
 ---
 
@@ -115,17 +119,17 @@ open /path/to/OpenClaw.app
 launchctl bootstrap gui/$UID ~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist
 ```
 
-隧道現在將會：
+隧道現將會：
 
 - 在您登入時自動啟動
-- 如果當機則重新啟動
+- 如果崩潰則重新啟動
 - 在背景持續執行
 
-舊版備註：如果存在，請移除任何殘留的 `com.openclaw.ssh-tunnel` LaunchAgent。
+舊版備註：如果存在任何殘留的 `com.openclaw.ssh-tunnel` LaunchAgent，請將其移除。
 
 ---
 
-## 疑難排解
+## 故障排除
 
 **檢查隧道是否正在執行：**
 
@@ -152,9 +156,9 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 
 | 元件                                 | 功能                                      |
 | ------------------------------------ | ----------------------------------------- |
-| `LocalForward 18789 127.0.0.1:18789` | 將本地連接埠 18789 轉送至遠端連接埠 18789 |
-| `ssh -N`                             | SSH 不執行遠端指令（僅進行連接埠轉送）    |
-| `KeepAlive`                          | 如果隧道當機則自動重新啟動                |
-| `RunAtLoad`                          | 當代理程式載入時啟動隧道                  |
+| `LocalForward 18789 127.0.0.1:18789` | 將本地連接埠 18789 轉發至遠端連接埠 18789 |
+| `ssh -N`                             | 不執行遠端指令的 SSH（僅連接埠轉發）      |
+| `KeepAlive`                          | 如果隧道崩潰，自動重新啟動                |
+| `RunAtLoad`                          | 當代理載入時啟動隧道                      |
 
-OpenClaw.app 連線到您用戶端機器上的 `ws://127.0.0.1:18789`。SSH 隧道會將該連線轉送到執行閘道的遠端機器上的連接埠 18789。
+OpenClaw.app 連接至您用戶端機器上的 `ws://127.0.0.1:18789`。SSH 隧道會將該連接轉發至執行 Gateway 的遠端機器上的連接埠 18789。

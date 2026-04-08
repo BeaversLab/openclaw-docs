@@ -7,11 +7,12 @@ read_when:
 
 # DeepSeek
 
-[DeepSeek](https://www.deepseek.com) fournit des modèles d'IA puissants avec une OpenAI compatible API.
+[DeepSeek](https://www.deepseek.com) fournit des modèles d'IA puissants avec une API compatible OpenAI.
 
 - Fournisseur : `deepseek`
 - Auth : `DEEPSEEK_API_KEY`
 - API : compatible OpenAI
+- URL de base : `https://api.deepseek.com`
 
 ## Quick start
 
@@ -40,14 +41,13 @@ Si le Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous que 
 est disponible pour ce processus (par exemple, dans `~/.openclaw/.env` ou via
 `env.shellEnv`).
 
-## Modèles disponibles
+## Catalogue intégré
 
-| ID du modèle        | Nom                      | Type         | Contexte |
-| ------------------- | ------------------------ | ------------ | -------- |
-| `deepseek-chat`     | DeepSeek Chat (V3.2)     | Général      | 128K     |
-| `deepseek-reasoner` | DeepSeek Reasoner (V3.2) | Raisonnement | 128K     |
+| Réf du modèle                | Nom               | Entrée | Contexte | Max sortie | Notes                                                      |
+| ---------------------------- | ----------------- | ------ | -------- | ---------- | ---------------------------------------------------------- |
+| `deepseek/deepseek-chat`     | DeepSeek Chat     | text   | 131 072  | 8 192      | Modèle par défaut ; surface non réflexive de DeepSeek V3.2 |
+| `deepseek/deepseek-reasoner` | DeepSeek Reasoner | text   | 131 072  | 65 536     | Surface V3.2 avec capacités de raisonnement                |
 
-- **deepseek-chat** correspond à DeepSeek-V3.2 en mode non réfléchi.
-- **deepseek-reasoner** correspond à DeepSeek-V3.2 en mode réfléchi avec un raisonnement étape par étape.
+Les deux modèles inclus annoncent actuellement une compatibilité d'utilisation en streaming dans la source.
 
 Obtenez votre clé API sur [platform.deepseek.com](https://platform.deepseek.com/api_keys).

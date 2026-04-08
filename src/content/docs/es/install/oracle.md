@@ -13,7 +13,7 @@ Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free*
 
 ## Requisitos previos
 
-- Cuenta de Oracle Cloud ([registrarse](https://www.oracle.com/cloud/free/)) -- consulte la [guía de registro de la comunidad](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd) si tiene problemas
+- Cuenta de Oracle Cloud ([registro](https://www.oracle.com/cloud/free/)) -- consulte la [guía de registro de la comunidad](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd) si encuentra problemas
 - Cuenta de Tailscale (gratis en [tailscale.com](https://tailscale.com))
 - Un par de claves SSH
 - Aproximadamente 30 minutos
@@ -31,11 +31,11 @@ Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free*
        - **OCPUs:** 2 (o hasta 4)
        - **Memory:** 12 GB (o hasta 24 GB)
        - **Boot volume:** 50 GB (hasta 200 GB gratis)
-       - **SSH key:** Agregue su clave pública
+       - **SSH key:** Añada su clave pública
     4. Haga clic en **Create** y anote la dirección IP pública.
 
     <Tip>
-    Si la creación de la instancia falla con "Out of capacity", intente con un dominio de disponibilidad diferente o reintente más tarde. La capacidad del nivel gratuito es limitada.
+    Si la creación de la instancia falla con "Out of capacity", intente con un dominio de disponibilidad diferente o vuelva a intentarlo más tarde. La capacidad de la capa gratuita es limitada.
     </Tip>
 
   </Step>
@@ -83,8 +83,8 @@ Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free*
 
   </Step>
 
-  <Step title="Configure the gateway">
-    Use token auth with Tailscale Serve para acceso remoto seguro.
+  <Step title="Configurar el gateway">
+    Utilice la autenticación por token con Tailscale Serve para un acceso remoto seguro.
 
     ```bash
     openclaw config set gateway.bind loopback
@@ -93,27 +93,29 @@ Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free*
     openclaw config set gateway.tailscale.mode serve
     openclaw config set gateway.trustedProxies '["127.0.0.1"]'
 
-    systemctl --user restart openclaw-gateway
+    systemctl --user restart openclaw-gateway.service
     ```
+
+    `gateway.trustedProxies=["127.0.0.1"]` aquí es solo para el manejo de IP reenviada/cliente local del proxy local Tailscale Serve. **No** es `gateway.auth.mode: "trusted-proxy"`. Las rutas del visor de diferencias mantienen el comportamiento de cierre por fallo en esta configuración: las solicitudes del visor `127.0.0.1` sin encabezados de proxy reenviados pueden devolver `Diff not found`. Use `mode=file` / `mode=both` para los archivos adjuntos, o habilite intencionalmente los visores remotos y configure `plugins.entries.diffs.config.viewerBaseUrl` (o pase un proxy `baseUrl`) si necesita enlaces de visor compartibles.
 
   </Step>
 
-  <Step title="Lock down VCN security">
+  <Step title="Bloquear la seguridad de VCN">
     Bloquee todo el tráfico excepto Tailscale en el borde de la red:
 
     1. Vaya a **Networking > Virtual Cloud Networks** en la consola de OCI.
     2. Haga clic en su VCN, luego en **Security Lists > Default Security List**.
     3. **Elimine** todas las reglas de ingreso excepto `0.0.0.0/0 UDP 41641` (Tailscale).
-    4. Mantenga las reglas de egreso predeterminadas (permitir todo el tráfico saliente).
+    4. Mantenga las reglas de salida predeterminadas (permitir todo el tráfico saliente).
 
     Esto bloquea SSH en el puerto 22, HTTP, HTTPS y todo lo demás en el borde de la red. A partir de este momento, solo puede conectarse a través de Tailscale.
 
   </Step>
 
-  <Step title="Verify">
+  <Step title="Verificar">
     ```bash
     openclaw --version
-    systemctl --user status openclaw-gateway
+    systemctl --user status openclaw-gateway.service
     tailscale serve status
     curl http://localhost:18789
     ```
@@ -145,7 +147,7 @@ Luego abra `http://localhost:18789`.
 
 **Tailscale no se conectará** -- Ejecute `sudo tailscale up --ssh --hostname=openclaw --reset` para volver a autenticarse.
 
-**El Gateway no se iniciará** -- Ejecute `openclaw doctor --non-interactive` y verifique los registros con `journalctl --user -u openclaw-gateway -n 50`.
+**El Gateway no se iniciará** -- Ejecute `openclaw doctor --non-interactive` y verifique los registros con `journalctl --user -u openclaw-gateway.service -n 50`.
 
 **Problemas con binarios ARM** -- La mayoría de los paquetes npm funcionan en ARM64. Para binarios nativos, busque versiones `linux-arm64` o `aarch64`. Verifique la arquitectura con `uname -m`.
 
@@ -153,4 +155,4 @@ Luego abra `http://localhost:18789`.
 
 - [Canales](/en/channels) -- conecte Telegram, WhatsApp, Discord y más
 - [Configuración del Gateway](/en/gateway/configuration) -- todas las opciones de configuración
-- [Actualización](/en/install/updating) -- mantenga OpenClaw actualizado
+- [Actualización](/en/install/updating) -- mantener OpenClaw actualizado

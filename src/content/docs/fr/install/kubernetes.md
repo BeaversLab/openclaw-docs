@@ -31,7 +31,7 @@ kubectl port-forward svc/openclaw 18789:18789 -n openclaw
 open http://localhost:18789
 ```
 
-Récupérez le jeton de la passerelle et collez-le dans l'interface de contrôle :
+Récupérez le secret partagé configuré pour l'interface de contrôle. Ce script de déploiement crée une authentification par jeton par défaut :
 
 ```bash
 kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GATEWAY_TOKEN}' | base64 -d

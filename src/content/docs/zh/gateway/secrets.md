@@ -415,7 +415,7 @@ Google Chat 兼容性行为：
 
 有两种广泛的行为：
 
-- 严格的命令路径（例如 `openclaw memory` 远程内存路径和 `openclaw qr --remote`）从活动快照读取，并在所需的 SecretRef 不可用时快速失败。
+- 严格命令路径（例如 `openclaw memory` 远程内存路径和 `openclaw qr --remote` 当它需要远程共享密钥引用时）从活动快照中读取，并且在所需的 SecretRef 不可用时快速失败。
 - 只读命令路径（例如 `openclaw status`、`openclaw status --all`、`openclaw channels status`、`openclaw channels resolve`、`openclaw security audit` 以及只读 doctor/config repair 流程）也优先使用活动快照，但在该命令路径中目标 SecretRef 不可用时会降级而不是中止。
 
 只读行为：

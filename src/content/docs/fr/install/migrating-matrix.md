@@ -275,7 +275,10 @@ Si l'ancien magasin signale des clés de salle qui n'ont jamais été sauvegard�
 - Signification : la clé stockée ne correspond pas à la sauvegarde Matrix active.
 - Quoi faire : relancez `openclaw matrix verify device "<your-recovery-key>"` avec la bonne clé.
 
-Si vous acceptez de perdre l'ancien historique chiffré irrécupérable, vous pouvez à la place réinitialiser la ligne de base de la sauvegarde actuelle avec `openclaw matrix verify backup reset --yes`.
+Si vous acceptez de perdre l'ancien historique chiffré irrécupérable, vous pouvez à la place réinitialiser la
+ligne de base de la sauvegarde actuelle avec `openclaw matrix verify backup reset --yes`. Lorsque
+le secret de sauvegarde stocké est cassé, cette réinitialisation peut également recréer le stockage de secrets afin que la
+nouvelle clé de sauvegarde puisse se charger correctement après le redémarrage.
 
 `Backup trust chain is not verified on this device. Re-run 'openclaw matrix verify device <key>'.`
 

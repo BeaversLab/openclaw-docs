@@ -11,16 +11,16 @@ title: "功能"
 
 <Columns>
   <Card title="Channels" icon="message-square">
-    WhatsApp、Telegram、Discord 和 iMessage 统一通过一个 Gateway(网关)。
+    Discord、iMessage、Signal、Slack、Telegram、WhatsApp、WebChat 等，全部通过单个 Gateway(网关) 连接。
   </Card>
   <Card title="Plugins" icon="plug">
-    通过扩展添加 Mattermost 等。
+    捆绑插件增加了 Matrix、Nextcloud Talk、Nostr、Twitch、Zalo 等支持，在常规当前版本中无需单独安装。
   </Card>
   <Card title="Routing" icon="route">
     支持会话隔离的多代理路由。
   </Card>
   <Card title="Media" icon="image">
-    图片、音频和文档的输入与输出。
+    图片、音频、视频、文档以及图片/视频生成。
   </Card>
   <Card title="Apps and UI" icon="monitor">
     Web 控制界面和 macOS 伴侣应用。
@@ -34,40 +34,43 @@ title: "功能"
 
 **频道：**
 
-- WhatsApp、Telegram、Discord、iMessage（内置）
-- Mattermost、Matrix、Microsoft Teams、Nostr以及更多（通过插件）
-- 支持群聊，并通过提及激活
-- 通过允许列表和配对实现私信安全
+- 内置渠道包括 Discord、Google Chat、iMessage（旧版）、IRC、Signal、Slack、Telegram、WebChat 和 WhatsApp
+- 捆绑的插件渠道包括用于 BlueBubbles 的 iMessage、飞书、LINE、Matrix、Mattermost、Microsoft Teams、Nextcloud Talk、Nostr、QQ 机器人、群晖 Chat、Tlon、Twitch、Zalo 和 Zalo 个人版
+- 可选的单独安装的渠道插件包括语音通话和第三方软件包，例如微信
+- 第三方渠道插件可以进一步扩展 Gateway(网关)，例如微信
+- 群聊支持，并支持基于提及的激活
+- 私信安全性，支持允许列表和配对
 
 **智能体：**
 
 - 嵌入式智能体运行时，支持工具流式传输
-- 多智能体路由，每个工作区或发送者拥有隔离会话
-- 会话：直接聊天合并到共享的 `main` 中；群组则相互隔离
-- 针对长响应的流式传输和分块
+- 多智能体路由，每个工作区或发送方拥有隔离的会话
+- 会话：直接聊天会合并到共享的 `main` 中；群组则是隔离的
+- 支持长回复的流式传输和分块
 
 **身份验证和提供商：**
 
-- 35+ 模型提供商（Anthropic、OpenAI、Google 等）
+- 35+ 个模型提供商（Anthropic、OpenAI、Google 等）
 - 通过 OAuth 进行订阅身份验证（例如 OpenAI Codex）
-- 自定义和自托管提供商支持（vLLM、SGLang、Ollama 以及任何与 OpenAI 或 Anthropic 兼容的端点）
+- 自定义和自托管提供商支持（vLLM、SGLang、Ollama 以及任何兼容 OpenAI 或 Anthropic 的端点）
 
 **媒体：**
 
 - 图片、音频、视频和文档的输入与输出
-- 语音备忘录转录
+- 共享的图片生成和视频生成能力界面
+- 语音笔记转录
 - 支持多个提供商的文本转语音
 
 **应用和界面：**
 
-- WebChat 和浏览器控制界面
+- WebChat 和浏览器控制 UI
 - macOS 菜单栏伴侣应用
 - iOS 节点，支持配对、Canvas、相机、屏幕录制、位置和语音
 - Android 节点，支持配对、聊天、语音、Canvas、相机和设备命令
 
 **工具和自动化：**
 
-- 浏览器自动化、执行、沙箱隔离
-- 网络搜索（Brave、Perplexity、Gemini、Grok、Kimi、Firecrawl）
+- 浏览器自动化、exec、沙箱隔离
+- 网络搜索（Brave、DuckDuckGo、Exa、Firecrawl、Gemini、Grok、Kimi、MiniMax Search、Ollama Web Search、Perplexity、SearXNG、Tavily）
 - Cron 任务和心跳调度
-- Skills、插件和工作流流水线（Lobster）
+- Skills、插件和工作流管道（Lobster）

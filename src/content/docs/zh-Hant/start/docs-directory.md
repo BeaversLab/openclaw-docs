@@ -37,15 +37,16 @@ title: "文件目錄"
 - [控制 UI (瀏覽器)](/en/web/control-ui)
 - [Telegram](/en/channels/telegram)
 - [Discord](/en/channels/discord)
-- [Mattermost (外掛程式)](/en/channels/mattermost)
+- [Mattermost](/en/channels/mattermost)
 - [BlueBubbles (iMessage)](/en/channels/bluebubbles)
+- [QQ 機器人](/en/channels/qqbot)
 - [iMessage (舊版)](/en/channels/imessage)
 - [群組](/en/channels/groups)
 - [WhatsApp 群組訊息](/en/channels/group-messages)
 - [媒體圖片](/en/nodes/images)
 - [媒體音訊](/en/nodes/audio)
 
-## 隨行應用程式
+## 伴隨應用程式
 
 - [macOS 應用程式](/en/platforms/macos)
 - [iOS 應用程式](/en/platforms/ios)
@@ -53,11 +54,11 @@ title: "文件目錄"
 - [Windows (WSL2)](/en/platforms/windows)
 - [Linux 應用程式](/en/platforms/linux)
 
-## 操作與安全
+## 營運與安全性
 
-- [Sessions](/en/concepts/session)
-- [Cron jobs](/en/automation/cron-jobs)
-- [Webhooks](/en/automation/webhook)
-- [Gmail hooks (Pub/Sub)](/en/automation/gmail-pubsub)
-- [Security](/en/gateway/security)
-- [Troubleshooting](/en/gateway/troubleshooting)
+- [工作階段](/en/concepts/session)
+- [Cron 工作](/en/automation/cron-jobs)
+- [Webhooks](/en/automation/cron-jobs#webhooks)
+- [Gmail hooks (Pub/Sub)](/en/automation/cron-jobs#gmail-pubsub-integration)
+- [安全性](/en/gateway/security)
+- [疑難排解](/en/gateway/troubleshooting)

@@ -9,9 +9,9 @@ title: "本地模型"
 
 # 本地模型
 
-在本地运行是可行的，但 OpenClaw 需要大上下文以及强大的提示注入防御措施。小显卡会截断上下文并导致安全泄露。目标要高：**≥2 台满配的 Mac Studios 或同等的 GPU 装置 (~$30k+)**。单张 **24 GB** GPU 仅适用于延迟较高的轻量级提示。使用您能运行的**最大/完整型号的模型变体**；经过激进量化或“小”检查点的模型会增加提示注入的风险（参见 [安全性](/en/gateway/security)）。
+本地部署是可行的，但 OpenClaw 需要大上下文 + 对提示词注入的强力防御。小显卡会截断上下文并泄露安全性。目标要高：**≥2 台顶配的 Mac Studio 或同等级 GPU 设备 (~$30k+)**。单个 **24 GB** GPU 仅适用于较轻量的提示词，且延迟较高。使用你能运行的**最大 / 全尺寸模型变体**；激进量化或“小”检查点会增加提示词注入风险（请参阅 [Security](/en/gateway/security)）。
 
-如果您想要最省事的本地设置，请从 [Ollama](/en/providers/ollama) 和 `openclaw onboard` 开始。本页面是针对高端本地堆栈和自定义 OpenAI 兼容本地服务器的观点指南。
+如果你想要最低摩擦力的本地设置，请从 [Ollama](/en/providers/ollama) 和 `openclaw onboard` 开始。本页面是针对高端本地堆栈和自定义 OpenAI 兼容本地服务器的固执指南。
 
 ## 推荐：LM Studio + 大型本地模型（Responses API）
 
@@ -145,9 +145,19 @@ title: "本地模型"
 
 保留 `models.mode: "merge"`，以便托管模型作为后备保持可用。
 
+本地/代理 `/v1` 后端的行为说明：
+
+- OpenClaw 将这些视为代理风格的 OpenAI 兼容路由，而非原生的
+  OpenAI 端点
+- 原生的仅限 OpenAI 的请求塑形在此不适用：没有
+  `service_tier`，没有 Responses `store`，没有 OpenAI 推理兼容负载
+  塑形，也没有提示词缓存提示
+- 隐藏的 OpenClaw 归因标头 (`originator`, `version`, `User-Agent`)
+  不会注入到这些自定义代理 URL 上
+
 ## 故障排除
 
-- Gateway(网关) 可以连接到代理吗？`curl http://127.0.0.1:1234/v1/models`。
+- Gateway 能否连接到代理？`curl http://127.0.0.1:1234/v1/models`。
 - LM Studio 模型已卸载？重新加载；冷启动是常见的“挂起”原因。
-- 上下文错误？降低 `contextWindow` 或提高您的服务器限制。
-- 安全性：本地模型跳过提供商端的过滤器；保持代理范围狭窄并启用压缩，以限制提示注入的爆炸半径。
+- 上下文错误？降低 `contextWindow` 或提高你的服务器限制。
+- 安全提示：本地模型会跳过提供商端的过滤器；请保持代理范围狭窄并开启压缩，以限制提示词注入的波及范围。

@@ -116,18 +116,18 @@ Sortie attendue :
 OpenClaw s'exécute dans Docker, mais Docker n'est pas la source de vérité.
 Tout état de longue durée doit survivre aux redémarrages, reconstructions et reboots.
 
-| Composant                    | Emplacement                       | Mécanisme de persistance   | Notes                                         |
-| ---------------------------- | --------------------------------- | -------------------------- | --------------------------------------------- |
-| Config Gateway               | `/home/node/.openclaw/`           | Montage de volume hôte     | Inclut `openclaw.json`, jetons                |
-| Profils d'auth de modèle     | `/home/node/.openclaw/`           | Montage de volume hôte     | Jeton OAuth, clés API                         |
-| Configs de compétence        | `/home/node/.openclaw/skills/`    | Montage de volume hôte     | État au niveau de la compétence               |
-| Espace de travail de l'agent | `/home/node/.openclaw/workspace/` | Montage de volume hôte     | Code et artefacts d'agent                     |
-| Session WhatsApp             | `/home/node/.openclaw/`           | Montage de volume hôte     | Préserve la connexion QR                      |
-| Trousseau de clés Gmail      | `/home/node/.openclaw/`           | Volume hôte + mot de passe | Nécessite `GOG_KEYRING_PASSWORD`              |
-| Binaires externes            | `/usr/local/bin/`                 | Image Docker               | Doit être inclus au moment de la construction |
-| Runtime Node                 | Système de fichiers conteneur     | Image Docker               | Reconstruit à chaque construction d'image     |
-| Paquets OS                   | Système de fichiers conteneur     | Image Docker               | Ne pas installer à l'exécution                |
-| Conteneur Docker             | Éphémère                          | Redémarrable               | Sûr à détruire                                |
+| Composant                    | Emplacement                       | Mécanisme de persistance   | Notes                                                         |
+| ---------------------------- | --------------------------------- | -------------------------- | ------------------------------------------------------------- |
+| Config Gateway               | `/home/node/.openclaw/`           | Montage de volume hôte     | Inclut `openclaw.json`, `.env`                                |
+| Profils d'auth de modèle     | `/home/node/.openclaw/agents/`    | Montage de volume hôte     | `agents/<agentId>/agent/auth-profiles.json` (OAuth, clés API) |
+| Configs de compétence        | `/home/node/.openclaw/skills/`    | Montage de volume hôte     | État au niveau de la compétence                               |
+| Espace de travail de l'agent | `/home/node/.openclaw/workspace/` | Montage de volume hôte     | Code et artefacts d'agent                                     |
+| Session WhatsApp             | `/home/node/.openclaw/`           | Montage de volume hôte     | Préserve la connexion QR                                      |
+| Trousseau de clés Gmail      | `/home/node/.openclaw/`           | Volume hôte + mot de passe | Nécessite `GOG_KEYRING_PASSWORD`                              |
+| Binaires externes            | `/usr/local/bin/`                 | Image Docker               | Doit être inclus au moment de la construction                 |
+| Runtime Node                 | Système de fichiers conteneur     | Image Docker               | Reconstruit à chaque construction d'image                     |
+| Paquets OS                   | Système de fichiers conteneur     | Image Docker               | Ne pas installer à l'exécution                                |
+| Conteneur Docker             | Éphémère                          | Redémarrable               | Sûr à détruire                                                |
 
 ## Mises à jour
 

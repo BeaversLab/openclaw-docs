@@ -15,7 +15,7 @@ Ce guide déplace une passerelle OpenClaw vers une nouvelle machine sans avoir �
 Lorsque vous copiez le **répertoire d'état** (`~/.openclaw/` par défaut) et votre **espace de travail**, vous conservez :
 
 - **Config** -- `openclaw.json` et tous les paramètres de la passerelle
-- **Auth** -- clés API, jetons OAuth, profils d'identification
+- **Auth** -- par agent `auth-profiles.json` (clés API + OAuth), ainsi que tout état de canal/provider sous `credentials/`
 - **Sessions** -- historique des conversations et état de l'agent
 - **État du canal** -- connexion WhatsApp, session Telegram, etc.
 - **Fichiers de l'espace de travail** -- `MEMORY.md`, `USER.md`, compétences et invites
@@ -28,8 +28,8 @@ Les profils personnalisés utilisent `~/.openclaw-<profile>/` ou un chemin défi
 ## Étapes de migration
 
 <Steps>
-  <Step title="Arrêter la passerelle et sauvegarder">
-    Sur l'**ancienne** machine, arrêtez la passerelle afin que les fichiers ne changent pas en cours de copie, puis archivez :
+  <Step title="Arrêtez la passerelle et sauvegardez">
+    Sur l'ancienne machine, arrêtez la passerelle afin que les fichiers ne changent pas en cours de copie, puis archivez :
 
     ```bash
     openclaw gateway stop
@@ -37,13 +37,13 @@ Les profils personnalisés utilisent `~/.openclaw-<profile>/` ou un chemin défi
     tar -czf openclaw-state.tgz .openclaw
     ```
 
-    Si vous utilisez plusieurs profils (p. ex. `~/.openclaw-work`), archivez-les chacun séparément.
+    Si vous utilisez plusieurs profils (p. ex. `~/.openclaw-work`), archivez-les séparément.
 
   </Step>
 
-<Step title="Installer OpenClaw sur la nouvelle machine">[Installez](/en/install) la CLI (et Node si nécessaire) sur la nouvelle machine. C'est normal si l'onboarding crée un nouveau `~/.openclaw/` -- vous l'écraserez ensuite.</Step>
+<Step title="Installez OpenClaw sur la nouvelle machine">[Installez](/en/install) la CLI (et Node si nécessaire) sur la nouvelle machine. Ce n'est pas grave si l'onboarding crée un nouveau `~/.openclaw/` -- vous allez l'écraser ensuite.</Step>
 
-  <Step title="Copier le répertoire d'état et l'espace de travail">
+  <Step title="Copiez le répertoire d'état et l'espace de travail">
     Transférez l'archive via `scp`, `rsync -a` ou un disque externe, puis extrayez :
 
     ```bash
@@ -55,7 +55,7 @@ Les profils personnalisés utilisent `~/.openclaw-<profile>/` ou un chemin défi
 
   </Step>
 
-  <Step title="Exécuter le docteur et vérifier">
+  <Step title="Exécutez le docteur et vérifiez">
     Sur la nouvelle machine, exécutez [Doctor](/en/gateway/doctor) pour appliquer les migrations de configuration et réparer les services :
 
     ```bash
@@ -70,21 +70,26 @@ Les profils personnalisés utilisent `~/.openclaw-<profile>/` ou un chemin défi
 ## Pièges courants
 
 <AccordionGroup>
-  <Accordion title="Profil ou répertoire d'état incohérent">
-    Si l'ancienne passerelle utilisait `--profile` ou `OPENCLAW_STATE_DIR` et que la nouvelle ne les utilise pas,
+  <Accordion title="Inadéquation de profil ou de state-dir">
+    Si l'ancienne passerelle utilisait `--profile` ou `OPENCLAW_STATE_DIR` et que la nouvelle ne le fait pas,
     les canaux apparaîtront déconnectés et les sessions seront vides.
-    Lancez la passerelle avec le **même** profil ou répertoire d'état que celui que vous avez migré, puis réexécutez `openclaw doctor`.
+    Lancez la passerelle avec le **même** profil ou state-dir que vous avez migré, puis réexécutez `openclaw doctor`.
   </Accordion>
 
-<Accordion title="Copier uniquement openclaw.">Le fichier de configuration seul ne suffit pas. Les identifiants se trouvent sous `credentials/`, et l'état de l'agent se trouve sous `agents/`. Migrez toujours le répertoire d'état **entier**.</Accordion>
+  <Accordion title="Copier uniquement openclaw.">
+    Le fichier de configuration seul ne suffit pas. Les profils d'authentification des modèles se trouvent sous
+    `agents/<agentId>/agent/auth-profiles.json`, et l'état des canaux/fournisseurs se trouve
+    toujours sous `credentials/`. Migrez toujours le répertoire d'état **entier**.
+  </Accordion>
 
 <Accordion title="Autorisations et propriété">Si vous avez copié en tant que root ou changé d'utilisateur, la passerelle risque de ne pas pouvoir lire les identifiants. Assurez-vous que le répertoire d'état et l'espace de travail appartiennent à l'utilisateur exécutant la passerelle.</Accordion>
 
 <Accordion title="Mode distant">Si votre interface pointe vers une passerelle **distante**, l'hôte distant possède les sessions et l'espace de travail. Migrez l'hôte de la passerelle lui-même, et non votre ordinateur portable local. Voir [FAQ](/en/help/faq#where-things-live-on-disk).</Accordion>
 
   <Accordion title="Secrets dans les sauvegardes">
-    Le répertoire d'état contient des clés API, des jetons OAuth et des identifiants de canal.
-    Stockez les sauvegardes de manière chiffrée, évitez les canaux de transfert non sécurisés et faites tourner les clés si vous soupçonnez une exposition.
+    Le répertoire d'état contient les profils d'authentification, les identifiants des canaux et d'autres
+    états de fournisseur.
+    Stockez les sauvegardes chiffrées, évitez les canaux de transfert non sécurisés et faites tourner les clés si vous soupçonnez une exposition.
   </Accordion>
 </AccordionGroup>
 

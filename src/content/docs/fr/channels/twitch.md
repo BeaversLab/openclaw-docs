@@ -5,15 +5,17 @@ read_when:
 title: "Twitch"
 ---
 
-# Twitch (plugin)
+# Twitch
 
 Prise en charge du chat Twitch via une connexion IRC. OpenClaw se connecte en tant qu'utilisateur Twitch (compte bot) pour recevoir et envoyer des messages dans les channels.
 
-## Plugin requis
+## Plugin intégré
 
-Twitch est fourni en tant que plugin et n'est pas inclus avec l'installation de base.
+Twitch est fourni en tant que plugin intégré dans les versions actuelles de OpenClaw, les versions empaquetées standard n'ont donc pas besoin d'une installation séparée.
 
-Installer via CLI (registre npm) :
+Si vous êtes sur une version ancienne ou une installation personnalisée qui exclut Twitch, installez-le manuellement :
+
+Installation via CLI (registre npm) :
 
 ```bash
 openclaw plugins install @openclaw/twitch
@@ -29,19 +31,22 @@ Détails : [Plugins](/en/tools/plugin)
 
 ## Configuration rapide (débutant)
 
-1. Créez un compte Twitch dédié pour le bot (ou utilisez un compte existant).
-2. Générer les identifiants : [Twitch Token Generator](https://twitchtokengenerator.com/)
+1. Assurez-vous que le plugin Twitch est disponible.
+   - Les versions empaquetées actuelles de OpenClaw l'incluent déjà.
+   - Les installations anciennes/personnalisées peuvent l'ajouter manuellement avec les commandes ci-dessus.
+2. Créez un compte Twitch dédié pour le bot (ou utilisez un compte existant).
+3. Générez les identifiants : [Générateur de jeton Twitch](https://twitchtokengenerator.com/)
    - Sélectionnez **Bot Token**
-   - Vérifiez que les scopes `chat:read` et `chat:write` sont sélectionnés
-   - Copiez le **Client ID** et le **Access Token**
-3. Trouvez votre identifiant utilisateur Twitch : [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)
-4. Configurez le token :
+   - Vérifiez que les portées `chat:read` et `chat:write` sont sélectionnées
+   - Copiez l'**ID Client** et le **Jeton d'accès**
+4. Trouvez votre identifiant utilisateur Twitch : [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)
+5. Configurez le jeton :
    - Env : `OPENCLAW_TWITCH_ACCESS_TOKEN=...` (compte par défaut uniquement)
    - Ou config : `channels.twitch.accessToken`
-   - Si les deux sont définis, la configuration prend le pas (le repli env concerne uniquement le compte par défaut).
-5. Démarrez le Gateway.
+   - Si les deux sont définis, la configuration prévaut (le repli d'env est uniquement pour le compte par défaut).
+6. Démarrez la passerelle.
 
-**⚠️ Important :** Ajoutez un contrôle d'accès (`allowFrom` ou `allowedRoles`) pour empêcher les utilisateurs non autorisés de déclencher le bot. `requireMention` est par défaut `true`.
+**⚠️ Important :** Ajoutez un contrôle d'accès (`allowFrom` ou `allowedRoles`) pour empêcher les utilisateurs non autorisés de déclencher le bot. `requireMention` est `true` par défaut.
 
 Configuration minimale :
 
@@ -60,10 +65,10 @@ Configuration minimale :
 }
 ```
 
-## Présentation
+## Ce que c'est
 
-- Un channel Twitch appartenant au Gateway.
-- Routage déterministe : les réponses reviennent toujours sur Twitch.
+- Un channel Twitch appartenant à la Gateway.
+- Routage déterministe : les réponses reviennent toujours à Twitch.
 - Chaque compte correspond à une clé de session isolée `agent:<agentId>:twitch:<accountName>`.
 - `username` est le compte du bot (qui s'authentifie), `channel` est le salon de discussion à rejoindre.
 
@@ -71,17 +76,17 @@ Configuration minimale :
 
 ### Générer les identifiants
 
-Utilisez [Twitch Token Generator](https://twitchtokengenerator.com/) :
+Utilisez le [Générateur de jeton Twitch](https://twitchtokengenerator.com/) :
 
 - Sélectionnez **Bot Token**
-- Vérifiez que les scopes `chat:read` et `chat:write` sont sélectionnés
-- Copiez le **Client ID** et le **Access Token**
+- Vérifiez que les portées `chat:read` et `chat:write` sont sélectionnées
+- Copiez l'**ID Client** et le **Jeton d'accès**
 
-Aucune inscription manuelle d'application requise. Les jetons expirent après plusieurs heures.
+Aucune inscription d'application manuelle n'est nécessaire. Les jetons expirent après plusieurs heures.
 
 ### Configurer le bot
 
-**Variable d'environnement (compte par défaut uniquement) :**
+**Variable d'env (compte par défaut uniquement) :**
 
 ```bash
 OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
@@ -103,7 +108,7 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 }
 ```
 
-Si la variable d'environnement et la configuration sont définies, la configuration prévaut.
+Si l'env et la config sont tous deux définis, la config prévaut.
 
 ### Contrôle d'accès (recommandé)
 
@@ -117,19 +122,19 @@ Si la variable d'environnement et la configuration sont définies, la configurat
 }
 ```
 
-Privilégiez `allowFrom` pour une liste d'autorisation stricte. Utilisez plutôt `allowedRoles` si vous souhaitez un contrôle d'accès basé sur les rôles.
+Préférez `allowFrom` pour une liste d'autorisation stricte. Utilisez plutôt `allowedRoles` si vous souhaitez un accès basé sur les rôles.
 
 **Rôles disponibles :** `"moderator"`, `"owner"`, `"vip"`, `"subscriber"`, `"all"`.
 
-**Pourquoi les IDs utilisateur ?** Les noms d'utilisateur peuvent changer, ce qui permet l'usurpation d'identité. Les IDs utilisateur sont permanents.
+**Pourquoi les ID utilisateur ?** Les noms d'utilisateur peuvent changer, ce qui permet l'usurpation d'identité. Les ID utilisateur sont permanents.
 
-Trouvez votre identifiant utilisateur Twitch : [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/) (Convertissez votre nom d'utilisateur Twitch en ID)
+Trouvez votre ID utilisateur Twitch : [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/) (Convertissez votre nom d'utilisateur Twitch en ID)
 
 ## Actualisation du jeton (optionnelle)
 
-Les jetons de [Twitch Token Generator](https://twitchtokengenerator.com/) ne peuvent pas être actualisés automatiquement - régénérez-los lorsqu'ils expirent.
+Les jetons du [Générateur de jetons Twitch](https://twitchtokengenerator.com/) ne peuvent pas être actualisés automatiquement - régénérez-los lorsqu'ils expirent.
 
-Pour une actualisation automatique du jeton, créez votre propre application Twitch sur [Twitch Developer Console](https://dev.twitch.tv/console) et ajoutez-la à la configuration :
+Pour une actualisation automatique du jeton, créez votre propre application Twitch sur la [Console développeur Twitch](https://dev.twitch.tv/console) et ajoutez-la à la configuration :
 
 ```json5
 {
@@ -144,7 +149,7 @@ Pour une actualisation automatique du jeton, créez votre propre application Twi
 
 Le bot actualise automatiquement les jetons avant leur expiration et enregistre les événements d'actualisation.
 
-## Prise en charge multi-comptes
+## Prise en charge multi-compte
 
 Utilisez `channels.twitch.accounts` avec des jetons par compte. Voir [`gateway/configuration`](/en/gateway/configuration) pour le modèle partagé.
 
@@ -173,7 +178,7 @@ Exemple (un compte bot dans deux channels) :
 }
 ```
 
-**Note :** Chaque compte a besoin de son propre jeton (un jeton par channel).
+**Remarque :** Chaque compte a besoin de son propre jeton (un jeton par channel).
 
 ## Contrôle d'accès
 
@@ -193,7 +198,7 @@ Exemple (un compte bot dans deux channels) :
 }
 ```
 
-### Liste d'autorisation par ID utilisateur (la plus sécurisée)
+### Liste d'autorisation par ID utilisateur (le plus sécurisé)
 
 ```json5
 {
@@ -211,7 +216,7 @@ Exemple (un compte bot dans deux channels) :
 
 ### Accès basé sur les rôles (alternative)
 
-`allowFrom` est une liste d'autorisation stricte. Lorsqu'elle est définie, seuls ces IDs utilisateur sont autorisés.
+`allowFrom` est une liste d'autorisation stricte. Lorsqu'il est défini, seuls ces ID utilisateur sont autorisés.
 Si vous souhaitez un accès basé sur les rôles, laissez `allowFrom` non défini et configurez plutôt `allowedRoles` :
 
 ```json5
@@ -228,7 +233,7 @@ Si vous souhaitez un accès basé sur les rôles, laissez `allowFrom` non défin
 }
 ```
 
-### Désactiver la condition de @mention
+### Désactiver l'exigence de mention
 
 Par défaut, `requireMention` est `true`. Pour désactiver et répondre à tous les messages :
 
@@ -266,8 +271,8 @@ openclaw channels status --probe
 
 **« Échec de la connexion » ou erreurs d'authentification :**
 
-- Vérifiez que `accessToken` est la valeur du OAuth d'accès (commence généralement par le préfixe `oauth:`)
-- Vérifiez que le jeton possède les portées `chat:read` et `chat:write`
+- Vérifiez que `accessToken` est la valeur du jeton d'accès OAuth (commence généralement par le préfixe `oauth:`)
+- Vérifiez que le jeton possède les étendues `chat:read` et `chat:write`
 - Si vous utilisez l'actualisation du jeton, vérifiez que `clientSecret` et `refreshToken` sont définis
 
 ### L'actualisation du jeton ne fonctionne pas
@@ -289,8 +294,8 @@ Si vous voyez « token refresh disabled (no refresh token) » :
 **Configuration du compte :**
 
 - `username` - Nom d'utilisateur du bot
-- `accessToken` - OAuth d'accès avec `chat:read` et `chat:write`
-- `clientId` - Twitch Client ID (from Token Generator or your app)
+- `accessToken` - Jeton d'accès OAuth avec `chat:read` et `chat:write`
+- `clientId` - ID Client Twitch (provenant du générateur de jetons ou de votre application)
 - `channel` - Channel à rejoindre (requis)
 - `enabled` - Activer ce compte (par défaut : `true`)
 - `clientSecret` - Optionnel : Pour l'actualisation automatique du jeton
@@ -376,12 +381,12 @@ Exemple :
 
 - **500 caractères** par message (découpé automatiquement aux limites des mots)
 - Le Markdown est supprimé avant le découpage
-- Aucune limitation de débit (utilise les limitations de débit intégrées de Twitch)
+- Pas de limitation de débit (utilise les limites de débit intégrées de Twitch)
 
 ## Connexes
 
-- [Aperçu des canaux](/en/channels) — tous les canaux pris en charge
-- [Appairage](/en/channels/pairing) — flux d'authentification et d'appairage par DM
-- [Groupes](/en/channels/groups) — comportement de chat de groupe et filtrage des mentions
-- [Routage des canaux](/en/channels/channel-routing) — routage de session pour les messages
+- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
+- [Appariement](/en/channels/pairing) — flux d'authentification et d'appariement par DM
+- [Groupes](/en/channels/groups) — comportement du chat de groupe et filtrage des mentions
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
 - [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

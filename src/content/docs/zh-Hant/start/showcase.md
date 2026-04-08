@@ -110,28 +110,28 @@ OpenCode 完成變更 → 開啟 PR → OpenClaw 檢視差異並在 Telegram 中
   <img src="/assets/showcase/papla-tts.jpg" alt="TTS 輸出的 Telegram 語音訊息" />
 </Card>
 
-<Card title="CodexMonitor" icon="eye" href="https://clawhub.com/odrobnik/codexmonitor">
+<Card title="CodexMonitor" icon="eye" href="https://clawhub.ai/odrobnik/codexmonitor">
   **@odrobnik** • `devtools` `codex` `brew`
 
-透過 Homebrew 安装的輔助工具，用於列出/檢查/監控本機 OpenAI Codex 會話（CLI + VS Code）。
+透過 Homebrew 安裝的輔助工具，用於列出/檢查/監看本機 OpenAI Codex 工作階段（CLI + VS Code）。
 
   <img src="/assets/showcase/codexmonitor.png" alt="CodexMonitor on ClawHub" />
 </Card>
 
-<Card title="Bambu 3D 打印機控制" icon="print" href="https://clawhub.com/tobiasbischoff/bambu-cli">
+<Card title="Bambu 3D Printer Control" icon="print" href="https://clawhub.ai/tobiasbischoff/bambu-cli">
   **@tobiasbischoff** • `hardware` `3d-printing` `skill`
 
-控制和排除 BambuLab 打印機故障：狀態、任務、相機、AMS、校準等。
+控制並排除 BambuLab 打印機故障：狀態、任務、攝影機、AMS、校準等等。
 
   <img src="/assets/showcase/bambu-cli.png" alt="Bambu CLI skill on ClawHub" />
 </Card>
 
-<Card title="維也納交通（Wiener Linien）" icon="train" href="https://clawhub.com/hjanuschka/wienerlinien">
+<Card title="Vienna Transport (Wiener Linien)" icon="train" href="https://clawhub.ai/hjanuschka/wienerlinien">
   **@hjanuschka** • `travel` `transport` `skill`
 
-維也納公共交通的即時出發、中斷、電梯狀態及路線規劃。
+維也納公共交通的即時出發資訊、中斷服務、電梯狀態和路線規劃。
 
-  <img src="/assets/showcase/wienerlinien.png" alt="ClawHub 上的 Wiener Linien 技能" />
+  <img src="/assets/showcase/wienerlinien.png" alt="Wiener Linien skill on ClawHub" />
 </Card>
 
 <Card title="ParentPay 學校午餐" icon="utensils" href="#">
@@ -141,10 +141,10 @@ OpenCode 完成變更 → 開啟 PR → OpenClaw 檢視差異並在 Telegram 中
 
 </Card>
 
-<Card title="R2 上傳 (Send Me My Files)" icon="cloud-arrow-up" href="https://clawhub.com/skills/r2-upload">
+<Card title="R2 Upload (Send Me My Files)" icon="cloud-arrow-up" href="https://clawhub.ai/skills/r2-upload">
   **@julianengel** • `files` `r2` `presigned-urls`
 
-上傳至 Cloudflare R2/S3 並產生安全的預先簽署下載連結。非常適合遠端 OpenClaw 執行個體。
+上傳至 Cloudflare R2/S3 並產生安全的預先簽署下載連結。非常適合遠端 OpenClaw 實例。
 
 </Card>
 
@@ -297,10 +297,10 @@ OpenClaw 已連線至 Jira，隨後即時生成了一個新技能（在它出現
   **@alejandroOPI** • `voice` `vapi` `bridge` Vapi 語音助理 ↔ OpenClaw HTTP 橋接器。與您的代理進行近即時的通話。
 </Card>
 
-<Card title="OpenRouter 轉錄" icon="microphone" href="https://clawhub.com/obviyus/openrouter-transcribe">
+<Card title="OpenRouter Transcription" icon="microphone" href="https://clawhub.ai/obviyus/openrouter-transcribe">
   **@obviyus** • `transcription` `multilingual` `skill`
 
-透過 OpenRouter (Gemini 等) 進行的多語音訊轉錄。可在 ClawHub 上取得。
+透過 OpenRouter（Gemini 等）進行多語音音訊轉錄。可於 ClawHub 取得。
 
 </Card>
 
@@ -314,16 +314,16 @@ OpenClaw 已連線至 Jira，隨後即時生成了一個新技能（在它出現
   **@ngutman** • `homeassistant` `docker` `raspberry-pi` 在 Home Assistant OS 上執行的 OpenClaw 閘道，支援 SSH 隧道與持續性狀態。
 </Card>
 
-<Card title="Home Assistant 技能" icon="toggle-on" href="https://clawhub.com/skills/homeassistant">
-  **ClawHub** • `homeassistant` `skill` `automation` 使用自然語言控制和自動化 Home Assistant 裝置。
+<Card title="Home Assistant Skill" icon="toggle-on" href="https://clawhub.ai/skills/homeassistant">
+  **ClawHub** • `homeassistant` `skill` `automation` 透過自然語言控制和自動化 Home Assistant 裝置。
 </Card>
 
 <Card title="Nix 打包" icon="snowflake" href="https://github.com/openclaw/nix-openclaw">
   **@openclaw** • `nix` `packaging` `deployment` 功能齊全的 nixified OpenClaw 設定，用於可重現部署。
 </Card>
 
-<Card title="CalDAV 行事曆" icon="calendar" href="https://clawhub.com/skills/caldav-calendar">
-  **ClawHub** • `calendar` `caldav` `skill` 使用 khal/vdirsyncer 的行事曆技能。自託管行事曆整合。
+<Card title="CalDAV Calendar" icon="calendar" href="https://clawhub.ai/skills/caldav-calendar">
+  **ClawHub** • `calendar` `caldav` `skill` 使用 khal/vdirsyncer 的行事曆技能。自託管的行事曆整合。
 </Card>
 
 </CardGroup>

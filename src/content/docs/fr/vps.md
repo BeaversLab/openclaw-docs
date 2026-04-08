@@ -49,10 +49,10 @@ qui s'applique partout.
   </Card>
 </CardGroup>
 
-**AWS (EC2 / Lightsail / offre gratuite)** fonctionne également très bien.
-Un tutoriel vidéo communautaire est disponible sur
+**AWS (EC2 / Lightsail / free tier)** fonctionne également bien.
+Un didacticiel vidéo communautaire est disponible à l'adresse
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
-(ressource communautaire -- risque d'indisponibilité).
+(ressource communautaire -- risque de devenir indisponible).
 
 ## How cloud setups work
 
@@ -62,7 +62,7 @@ Un tutoriel vidéo communautaire est disponible sur
 - Par défaut sécurisé : gardez le Gateway en boucle locale (loopback) et accédez-y via un tunnel SSH ou Tailscale Serve.
   Si vous vous liez à `lan` ou `tailnet`, exigez `gateway.auth.token` ou `gateway.auth.password`.
 
-Pages connexes : [Gateway accès à distance](/en/gateway/remote), [Hub Plateformes](/en/platforms).
+Pages connexes : [Gateway remote access](/en/gateway/remote), [Platforms hub](/en/platforms).
 
 ## Agent d'entreprise partagé sur un VPS
 
@@ -80,7 +80,7 @@ Vous pouvez conserver le Gateway dans le cloud et jumeler des **nœuds** sur vos
 (Mac/iOS/Android/sans tête). Les nœuds fournissent des capacités d'écran/caméra/canvas locales et `system.run`
 tandis que le Gateway reste dans le cloud.
 
-Documentation : [Nœuds](/en/nodes), [CLI des nœuds](/en/cli/nodes).
+Documentation : [Nœuds](/en/nodes), [Nodes CLI](/en/cli/nodes).
 
 ## Réglage du démarrage pour les petits VM et hôtes ARM
 
@@ -113,10 +113,10 @@ Pour les hôtes VM utilisant `systemd`, envisagez :
   - `TimeoutStartSec=90`
 - Préférez les disques SSD pour les chemins d'état/cache afin de réduire les pénalités de démarrage à froid liées aux E/S aléatoires.
 
-Exemple :
+Pour le chemin standard `openclaw onboard --install-daemon`, modifiez l'unité utilisateur :
 
 ```bash
-sudo systemctl edit openclaw
+systemctl --user edit openclaw-gateway.service
 ```
 
 ```ini
@@ -128,5 +128,8 @@ RestartSec=2
 TimeoutStartSec=90
 ```
 
+Si vous avez délibérément installé une unité système à la place, modifiez
+`openclaw-gateway.service` via `sudo systemctl edit openclaw-gateway.service`.
+
 Comment les stratégies `Restart=` aident à la récupération automatisée :
-[systemd peut automatiser la récupération des services](https://www.redhat.com/en/blog/systemd-automate-recovery).
+[systemd can automate service recovery](https://www.redhat.com/en/blog/systemd-automate-recovery).

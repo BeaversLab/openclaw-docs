@@ -13,19 +13,19 @@ canaux, outils, fournisseurs ou autres capacités. Ils sont construits et mainte
 par la communauté, publiés sur [ClawHub](/en/tools/clawhub) ou npm, et
 installables avec une seule commande.
 
+ClawHub est la surface de découverte canonique pour les plugins communautaires. N'ouvrez pas de PR uniquement pour la documentation juste pour ajouter votre plugin ici pour qu'il soit découvrable ; publiez-le plutôt sur ClawHub.
+
 ```bash
 openclaw plugins install <package-name>
 ```
 
 OpenClaw vérifie d'abord ClawHub et revient automatiquement à npm.
 
-## Plug-ins répertoriés
+## Plugins répertoriés
 
 ### Codex App Server Bridge
 
-Pont OpenClaw indépendant pour les conversations du Codex App Server. Lier une discussion à
-un fil Codex, lui parler en texte brut, et la contrôler avec des commandes
-natives de chat pour la reprise, la planification, la révision, la sélection de modèle, la compaction, et plus encore.
+Pont indépendant OpenClaw pour les conversations du Codex App Server. Liez une discussion à un fil Codex, parlez-lui en texte brut et contrôlez-le avec des commandes natives de discussion pour la reprise, la planification, la révision, la sélection de modèle, la compactage, et plus encore.
 
 - **npm :** `openclaw-codex-app-server`
 - **repo :** [github.com/pwrdrvr/openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server)
@@ -36,8 +36,7 @@ openclaw plugins install openclaw-codex-app-server
 
 ### DingTalk
 
-Intégration de robot d'entreprise utilisant le mode Stream. Prend en charge les messages texte, images et
-fichiers via n'importe quel client DingTalk.
+Intégration de robot d'entreprise utilisant le mode Stream. Prend en charge les messages textuels, les images et les fichiers via n'importe quel client DingTalk.
 
 - **npm :** `@largezhou/ddingtalk`
 - **repo :** [github.com/largezhou/openclaw-dingtalk](https://github.com/largezhou/openclaw-dingtalk)
@@ -48,9 +47,7 @@ openclaw plugins install @largezhou/ddingtalk
 
 ### Lossless Claw (LCM)
 
-Plug-in de gestion de contexte sans perte pour OpenClaw. Résumé de conversation
-basé sur des DAG avec compactage incrémental — préserve la fidélité totale du contexte
-tout en réduisant l'utilisation des jetons.
+Plugin de gestion de contexte sans perte pour OpenClaw. Résumé de conversation basé sur des DAG avec compactage incrémental — préserve la fidélité complète du contexte tout en réduisant l'utilisation des jetons.
 
 - **npm :** `@martian-engineering/lossless-claw`
 - **repo :** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
@@ -61,8 +58,7 @@ openclaw plugins install @martian-engineering/lossless-claw
 
 ### Opik
 
-Plug-in officiel qui exporte les traces d'agent vers Opik. Surveillez le comportement de l'agent,
-le coût, les jetons, les erreurs, et plus encore.
+Plugin officiel qui exporte les traces d'agents vers Opik. Surveillez le comportement des agents, les coûts, les jetons, les erreurs, et plus encore.
 
 - **npm :** `@opik/opik-openclaw`
 - **repo :** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
@@ -73,25 +69,21 @@ openclaw plugins install @opik/opik-openclaw
 
 ### QQbot
 
-Connectez OpenClaw à QQ via le QQ Bot API. Prend en charge les chats privés, les mentions
-de groupe, les messages de canal, et les médias riches incluant la voix, les images, les vidéos,
-et les fichiers.
+Connectez OpenClaw à QQ via le QQ Bot API. Prend en charge les discussions privées, les mentions de groupe, les messages de canal et les médias riches incluant la voix, les images, les vidéos et les fichiers.
 
-- **npm :** `@sliverp/qqbot`
-- **repo :** [github.com/sliverp/qqbot](https://github.com/sliverp/qqbot)
+- **npm :** `@tencent-connect/openclaw-qqbot`
+- **repo :** [github.com/tencent-connect/openclaw-qqbot](https://github.com/tencent-connect/openclaw-qqbot)
 
 ```bash
-openclaw plugins install @sliverp/qqbot
+openclaw plugins install @tencent-connect/openclaw-qqbot
 ```
 
 ### wecom
 
-OpenClaw Enterprise WeCom Channel Plugin.
-Un plugin de bot alimenté par des connexions WebSocket persistantes du bot IA WeCom,
-prenant en charge les messages directs et les discussions de groupe, les réponses en streaming et la messagerie proactive.
+Plugin de canal WeCom pour OpenClaw par l'équipe Tencent WeCom. Alimenté par des connexions WebSocket persistantes du WeCom Bot, il prend en charge les messages directs et les discussions de groupe, les réponses en continu, la messagerie proactive, le traitement d'images/fichiers, le formatage Markdown, le contrôle d'accès intégré, et les compétences de document/réunion/messagerie.
 
 - **npm :** `@wecom/wecom-openclaw-plugin`
-- **dépôt :** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
+- **repo :** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
 
 ```bash
 openclaw plugins install @wecom/wecom-openclaw-plugin
@@ -99,43 +91,39 @@ openclaw plugins install @wecom/wecom-openclaw-plugin
 
 ## Soumettre votre plugin
 
-Nous accueillons favorablement les plugins communautaires qui sont utiles, documentés et sûrs à utiliser.
+Nous accueillons favorablement les plugins communautaires qui sont utiles, documentés et sûrs à exploiter.
 
 <Steps>
   <Step title="Publier sur ClawHub ou npm">
     Votre plugin doit être installable via `openclaw plugins install \<package-name\>`.
-    Publiez sur [ClawHub](/en/tools/clawhub) (préféré) ou npm.
-    Voir [Building Plugins](/en/plugins/building-plugins) pour le guide complet.
+    Publiez-le sur [ClawHub](/en/tools/clawhub) (préféré) ou npm.
+    Consultez [Building Plugins](/en/plugins/building-plugins) pour le guide complet.
 
   </Step>
 
   <Step title="Héberger sur GitHub">
-    Le code source doit être dans un dépôt public avec une documentation de configuration et un suivi de problèmes.
+    Le code source doit se trouver dans un dépôt public avec une documentation d'installation et un outil de suivi des problèmes.
 
   </Step>
 
-  <Step title="Ouvrir une PR">
-    Ajoutez votre plugin à cette page avec :
+  <Step title="Utiliser les PR de documentation uniquement pour les modifications des docs sources">
+    Vous n'avez pas besoin d'une PR de documentation juste pour rendre votre plugin découvrable. Publiez-le plutôt sur ClawHub.
 
-    - Nom du plugin
-    - Nom du package npm
-    - URL du dépôt GitHub
-    - Description en une ligne
-    - Commande d'installation
+    N'ouvrez une PR de documentation que lorsque les docs sources de OpenClaw nécessitent une modification réelle du contenu, telle que la correction des instructions d'installation ou l'ajout d'une documentation inter-dépôts appartenant à l'ensemble principal de la documentation.
 
   </Step>
 </Steps>
 
-## Niveau de qualité
+## Niveau de qualité requis
 
-| Exigence                                        | Pourquoi                                                              |
-| ----------------------------------------------- | --------------------------------------------------------------------- |
-| Publié sur ClawHub ou npm                       | Les utilisateurs ont besoin que `openclaw plugins install` fonctionne |
-| Dépôt GitHub public                             | Examen du code, suivi des problèmes, transparence                     |
-| Documentation de configuration et d'utilisation | Les utilisateurs doivent savoir comment le configurer                 |
-| Maintenance active                              | Mises à jour récentes ou gestion réactive des problèmes               |
+| Exigence                                      | Pourquoi                                                              |
+| --------------------------------------------- | --------------------------------------------------------------------- |
+| Publié sur ClawHub ou npm                     | Les utilisateurs ont besoin que `openclaw plugins install` fonctionne |
+| Dépôt GitHub public                           | Révision du code source, suivi des problèmes, transparence            |
+| Documentation d'installation et d'utilisation | Les utilisateurs doivent savoir comment le configurer                 |
+| Maintenance active                            | Mises à jour récentes ou gestion réactive des problèmes               |
 
-Les enveloppes de faible effort, la propriété incertaine ou les packages non maintenus peuvent être refusés.
+Les enveloppes de faible effort, la propriété peu claire ou les packages non maintenus peuvent être refusés.
 
 ## Connexes
 

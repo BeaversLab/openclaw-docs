@@ -12,7 +12,7 @@ title: "DigitalOcean (Platform)"
 
 Exécuter un OpenClaw Gateway persistant sur DigitalOcean pour **6 $/mois** (ou 4 $/mois avec tarification réservée).
 
-Si vous souhaitez une option à 0 $/mois et que vous ne craignez pas ARM + une configuration spécifique au fournisseur, consultez le [guide Oracle Cloud](/en/platforms/oracle).
+Si vous souhaitez une option à 0 $/mois et que vous ne craignez pas une configuration spécifique au fournisseur + ARM, consultez le guide [Oracle Cloud](/en/platforms/oracle).
 
 ## Comparaison des coûts (2026)
 
@@ -28,7 +28,7 @@ Si vous souhaitez une option à 0 $/mois et que vous ne craignez pas ARM + une c
 
 - DigitalOcean : interface UX la plus simple + configuration prévisible (ce guide)
 - Hetzner : excellent rapport qualité/prix (voir le [guide Hetzner](/en/install/hetzner))
-- Oracle Cloud : peut être gratuit (0 $/mois), mais est plus capricieux et uniquement ARM (voir le [guide Oracle](/en/platforms/oracle))
+- Oracle Cloud : peut être gratuit (0 $/mois), mais est plus capricieux et limité à l'ARM (voir le [guide Oracle](/en/platforms/oracle))
 
 ---
 
@@ -130,8 +130,8 @@ Ouvrir : `https://<magicdns>/`
 
 Notes :
 
-- Serve maintient le Gateway en loopback uniquement et authentifie le trafic de l'interface de contrôle/WebSocket via les en-têtes d'identité Tailscale (l'authentification sans jeton suppose un hôte de gateway fiable ; les API HTTP nécessitent toujours un jeton/mot de passe).
-- Pour exiger un jeton/mot de passe à la place, définissez `gateway.auth.allowTailscale: false` ou utilisez `gateway.auth.mode: "password"`.
+- Serve maintient le Gateway en boucle locale uniquement et authentifie le trafic de l'interface de contrôle/WebSocket via les en-têtes d'identité Tailscale (l'authentification sans jeton suppose un hôte de passerelle de confiance ; les API HTTP n'utilisent pas ces en-têtes Tailscale et suivent plutôt le mode d'authentification HTTP normal de la passerelle).
+- Pour exiger des informations d'identification de secret partagé explicites à la place, définissez `gateway.auth.allowTailscale: false` et utilisez `gateway.auth.mode: "token"` ou `"password"`.
 
 **Option C : Liaison Tailnet (pas de Serve)**
 
@@ -158,7 +158,7 @@ openclaw channels login whatsapp
 # Scan QR code
 ```
 
-Voir [Canaux](/en/channels) pour les autres fournisseurs.
+Voir [Channels](/en/channels) pour d'autres fournisseurs.
 
 ---
 
@@ -196,13 +196,13 @@ htop
 
 Tout l'état se trouve dans :
 
-- `~/.openclaw/` — configuration, identifiants, données de session
+- `~/.openclaw/` — `openclaw.json`, `auth-profiles.json` par agent, l'état du canal/fournisseur et les données de session
 - `~/.openclaw/workspace/` — espace de travail (SOUL.md, mémoire, etc.)
 
 Ces éléments survivent aux redémarrages. Sauvegardez-les périodiquement :
 
 ```bash
-tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
+openclaw backup create
 ```
 
 ---
@@ -223,7 +223,7 @@ Oracle Cloud propose des instances ARM **Always Free** (toujours gratuites) qui 
 - L'inscription peut être capricieuse (réessayez en cas d'échec)
 - Architecture ARM — la plupart des choses fonctionnent, mais certains binaires nécessitent des versions ARM
 
-Pour le guide de configuration complet, voir [Oracle Cloud](/en/platforms/oracle). Pour des conseils d'inscription et le dépannage du processus d'inscription, voir ce [guide communautaire](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
+Pour le guide d'installation complet, consultez [Oracle Cloud](/en/platforms/oracle). Pour des conseils d'inscription et le dépannage du processus d'inscription, consultez ce [guide communautaire](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
 
 ---
 
@@ -234,7 +234,7 @@ Pour le guide de configuration complet, voir [Oracle Cloud](/en/platforms/oracle
 ```bash
 openclaw gateway status
 openclaw doctor --non-interactive
-journalctl -u openclaw --no-pager -n 50
+journalctl --user -u openclaw-gateway.service --no-pager -n 50
 ```
 
 ### Port déjà utilisé
@@ -259,6 +259,6 @@ free -h
 ## Voir aussi
 
 - [Guide Hetzner](/en/install/hetzner) — moins cher, plus puissant
-- [Installation de Docker](/en/install/docker) — configuration conteneurisée
-- [Tailscale](/en/gateway/tailscale) — accès distant sécurisé
+- [Installation Docker](/en/install/docker) — installation conteneurisée
+- [Tailscale](/en/gateway/tailscale) — accès à distance sécurisé
 - [Configuration](/en/gateway/configuration) — référence complète de la configuration

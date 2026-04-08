@@ -155,19 +155,21 @@ export OPENCLAW_APNS_PRIVATE_KEY_P8="$(cat /path/to/AuthKey_KEYID.p8)"
 
 ### Bonjour (區域網路)
 
-閘道會在 `local.` 上廣播 `_openclaw-gw._tcp`。iOS 應用程式會自動列出這些項目。
+iOS 應用程式會在 `local.` 上瀏覽 `_openclaw-gw._tcp`，且在設定時，也會瀏覽相同的廣域 DNS-SD 探索網域。同一區域網路 (LAN) 中的閘道會自動從 `local.` 顯示；跨網路探索可以使用設定的廣域網域，而無需變更信標類型。
 
 ### Tailnet (跨網路)
 
-如果 mDNS 被封鎖，請使用單播 DNS-SD 區域（選擇一個網域；例如：`openclaw.internal.`）和 Tailscale 分割 DNS。請參閱 [Bonjour](/en/gateway/bonjour) 以取得 CoreDNS 範例。
+如果 mDNS 被阻擋，請使用單播 DNS-SD 區域 (選擇一個網域；例如：
+`openclaw.internal.`) 和 Tailscale 分流 DNS。
+請參閱 [Bonjour](/en/gateway/bonjour) 以取得 CoreDNS 範例。
 
 ### 手動主機/連接埠
 
-在設定中，啟用 **Manual Host** 並輸入閘道主機 + 連接埠（預設為 `18789`）。
+在設定中，啟用 **Manual Host** 並輸入閘道主機 + 連接埠 (預設為 `18789`)。
 
 ## Canvas + A2UI
 
-iOS 節點會渲染 WKWebView canvas。使用 `node.invoke` 來驅動它：
+iOS 節點會呈現 WKWebView 畫布。使用 `node.invoke` 來驅動它：
 
 ```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18789/__openclaw__/canvas/"}'
@@ -175,10 +177,10 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 
 備註：
 
-- 閘道 canvas 主機提供 `/__openclaw__/canvas/` 和 `/__openclaw__/a2ui/`。
-- 它是由閘道 HTTP 伺服器提供服務（與 `gateway.port` 相同的連接埠，預設為 `18789`）。
+- 閘道畫布主機提供 `/__openclaw__/canvas/` 和 `/__openclaw__/a2ui/`。
+- 它是由閘道 HTTP 伺服器提供 (連接埠與 `gateway.port` 相同，預設為 `18789`)。
 - 當有廣告播送 canvas 主機 URL 時，iOS 節點會在連線時自動導覽至 A2UI。
-- 使用 `canvas.navigate` 和 `{"url":""}` 返回內建的鷹架。
+- 使用 `canvas.navigate` 和 `{"url":""}` 返回內建的腳手架。
 
 ### Canvas 評估 / 快照
 
@@ -197,9 +199,9 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 
 ## 常見錯誤
 
-- `NODE_BACKGROUND_UNAVAILABLE`：將 iOS 應用程式帶到前景（畫布/相機/螢幕指令需要它）。
-- `A2UI_HOST_NOT_CONFIGURED`：Gateway 並未通告畫布主機 URL；請檢查 [Gateway configuration](/en/gateway/configuration) 中的 `canvasHost`。
-- 配對提示從未出現：執行 `openclaw devices list` 並手動批准。
+- `NODE_BACKGROUND_UNAVAILABLE`：將 iOS 應用程式帶到前景 (畫布/相機/螢幕指令需要此操作)。
+- `A2UI_HOST_NOT_CONFIGURED`：閘道未發布畫布主機 URL；請檢查 [Gateway configuration](/en/gateway/configuration) 中的 `canvasHost`。
+- 配對提示從未出現：執行 `openclaw devices list` 並手動核准。
 - 重新安裝後重新連線失敗：鑰匙圈配對權杖已被清除；請重新配對節點。
 
 ## 相關文件

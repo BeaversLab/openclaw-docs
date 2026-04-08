@@ -1,10 +1,10 @@
 ---
-summary: "OpenClaw 在 Raspberry Pi 上（預算自託管設定）"
+summary: "Raspberry Pi 上的 OpenClaw（預算自託管設定）"
 read_when:
   - Setting up OpenClaw on a Raspberry Pi
   - Running OpenClaw on ARM devices
   - Building a cheap always-on personal AI
-title: "Raspberry Pi（平台）"
+title: "Raspberry Pi (平台)"
 ---
 
 # OpenClaw 在 Raspberry Pi 上
@@ -146,11 +146,11 @@ openclaw onboard --install-daemon
 # Check status
 openclaw status
 
-# Check service
-sudo systemctl status openclaw
+# Check service (standard install = systemd user unit)
+systemctl --user status openclaw-gateway.service
 
 # View logs
-journalctl -u openclaw -f
+journalctl --user -u openclaw-gateway.service -f
 ```
 
 ## 9) 存取 OpenClaw 儀表板
@@ -163,8 +163,8 @@ journalctl -u openclaw -f
 ssh user@gateway-host 'openclaw dashboard --no-open'
 ```
 
-該指令會列印 `Dashboard URL:`。根據 `gateway.auth.token`
-的配置方式，URL 可能是一個單純的 `http://127.0.0.1:18789/` 連結，或者是一個
+該指令會印出 `Dashboard URL:`。根據 `gateway.auth.token`
+的設定方式，URL 可能是普通的 `http://127.0.0.1:18789/` 連結，或是
 包含 `#token=...` 的連結。
 
 在您電腦上的另一個終端機中，建立 SSH 隧道：
@@ -175,10 +175,11 @@ ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 
 然後在本機瀏覽器中開啟列印出來的儀表板 URL。
 
-如果 UI 要求身份驗證，請將 `gateway.auth.token`
-（或 `OPENCLAW_GATEWAY_TOKEN`）中的權杖貼上到控制 UI 設定中。
+如果 UI 要求進行共享金鑰驗證，請將設定的 token 或密碼貼上
+到 Control UI 設定中。對於 token 驗證，請使用 `gateway.auth.token` (或
+`OPENCLAW_GATEWAY_TOKEN`)。
 
-關於永遠線上的遠端存取，請參閱 [Tailscale](/en/gateway/tailscale)。
+對於永久遠端存取，請參閱 [Tailscale](/en/gateway/tailscale)。
 
 ---
 
@@ -210,9 +211,9 @@ source ~/.bashrc
 
 備註：
 
-- `NODE_COMPILE_CACHE` 可加快後續執行的速度 (`status`、`health`、`--help`)。
-- `/var/tmp` 在重新開機後的存活情況比 `/tmp` 更好。
-- `OPENCLAW_NO_RESPAWN=1` 可避免來自 CLI 自我重新啟動 的額外啟動成本。
+- `NODE_COMPILE_CACHE` 可加速後續的執行 (`status`、`health`、`--help`)。
+- `/var/tmp` 比 `/tmp` 更能承受重開機。
+- `OPENCLAW_NO_RESPAWN=1` 可避免 CLI 自動重新產生程序所帶來的額外啟動成本。
 - 首次執行會預熱快取；後續執行受惠最大。
 
 ### systemd 啟動調整 (選用)
@@ -221,7 +222,7 @@ source ~/.bashrc
 重新啟動的抖動 並保持啟動環境穩定：
 
 ```bash
-sudo systemctl edit openclaw
+systemctl --user edit openclaw-gateway.service
 ```
 
 ```ini
@@ -236,14 +237,20 @@ TimeoutStartSec=90
 然後套用：
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl restart openclaw
+systemctl --user daemon-reload
+systemctl --user restart openclaw-gateway.service
 ```
 
 如果可能的話，請將 OpenClaw 的狀態/快取保留在 SSD 儲存空間上，以避免在
 冷啟動期間發生 SD 卡隨機 I/O 瓶頸。
 
-`Restart=` 政策如何協助自動復原：
+如果這是一台無介面 Pi，請啟用 linger 一次，以便使用者服務能在登出後繼續運作：
+
+```bash
+sudo loginctl enable-linger "$(whoami)"
+```
+
+`Restart=` 原則如何協助自動復原：
 [systemd 可以自動化服務復原](https://www.redhat.com/en/blog/systemd-automate-recovery)。
 
 ### 降低記憶體使用量
@@ -271,11 +278,11 @@ htop
 
 ---
 
-## ARM 特定說明
+## ARM 特定注意事項
 
 ### 二進位相容性
 
-大多數 OpenClaw 功能都能在 ARM64 上運作，但部分外部二進位檔案可能需要 ARM 版本：
+大多數 OpenClaw 功能都可在 ARM64 上運作，但某些外部二進位檔案可能需要 ARM 版本：
 
 | 工具               | ARM64 狀態 | 備註                                |
 | ------------------ | ---------- | ----------------------------------- |
@@ -285,11 +292,11 @@ htop
 | gog (Gmail CLI)    | ⚠️         | 檢查是否有 ARM 版本                 |
 | Chromium (瀏覽器)  | ✅         | `sudo apt install chromium-browser` |
 
-如果某個技能失敗，請檢查其二進制檔案是否有 ARM 建置版本。許多 Go/Rust 工具有提供，有些則沒有。
+如果某個技能失敗，請檢查其二進位檔案是否有 ARM 版本。許多 Go/Rust 工具有提供；有些則沒有。
 
 ### 32 位元與 64 位元
 
-**務必使用 64 位元作業系統。** Node.js 和許多現代工具都需要它。可以使用以下指令檢查：
+**請務必使用 64 位元作業系統。** Node.js 和許多現代工具都需要它。使用以下指令檢查：
 
 ```bash
 uname -m
@@ -298,45 +305,45 @@ uname -m
 
 ---
 
-## 推薦型號設定
+## 推薦的模型設定
 
-由於 Pi 僅作為 Gateway（模型在雲端運行），請使用基於 API 的模型：
+由於 Pi 僅作為 Gateway (模型在雲端執行)，請使用基於 API 的模型：
 
 ```json
 {
   "agents": {
     "defaults": {
       "model": {
-        "primary": "anthropic/claude-sonnet-4-20250514",
-        "fallbacks": ["openai/gpt-4o-mini"]
+        "primary": "anthropic/claude-sonnet-4-6",
+        "fallbacks": ["openai/gpt-5.4-mini"]
       }
     }
   }
 }
 ```
 
-**不要嘗試在 Pi 上運行本地 LLM** — 即使是小型模型也太慢了。讓 Claude/GPT 來處理繁重的工作。
+**不要嘗試在 Pi 上執行本機 LLM** — 即使是小型模型也太慢了。讓 Claude/GPT 來處理繁重的工作。
 
 ---
 
 ## 開機自動啟動
 
-入學流程會設定此功能，但您可以透過以下方式驗證：
+上架流程會設定此功能，但若要驗證：
 
 ```bash
 # Check service is enabled
-sudo systemctl is-enabled openclaw
+systemctl --user is-enabled openclaw-gateway.service
 
 # Enable if not
-sudo systemctl enable openclaw
+systemctl --user enable openclaw-gateway.service
 
 # Start on boot
-sudo systemctl start openclaw
+systemctl --user start openclaw-gateway.service
 ```
 
 ---
 
-## 故障排除
+## 疑難排解
 
 ### 記憶體不足 (OOM)
 
@@ -352,31 +359,31 @@ free -h
 
 - 使用 USB SSD 取代 SD 卡
 - 停用未使用的服務：`sudo systemctl disable cups bluetooth avahi-daemon`
-- 檢查 CPU 節流：`vcgencmd get_throttled` （應該會回傳 `0x0`）
+- 檢查 CPU 節流：`vcgencmd get_throttled` (應回傳 `0x0`)
 
 ### 服務無法啟動
 
 ```bash
 # Check logs
-journalctl -u openclaw --no-pager -n 100
+journalctl --user -u openclaw-gateway.service --no-pager -n 100
 
 # Common fix: rebuild
 cd ~/openclaw  # if using hackable install
 npm run build
-sudo systemctl restart openclaw
+systemctl --user restart openclaw-gateway.service
 ```
 
-### ARM 二進制檔案問題
+### ARM 二進位檔問題
 
 如果某個技能因「exec format error」而失敗：
 
-1. 檢查該二進制檔案是否有 ARM64 建置版本
+1. 檢查該二進位檔是否有 ARM64 版本
 2. 嘗試從原始碼建置
-3. 或者使用支援 ARM 的 Docker 容器
+3. 或是使用支援 ARM 的 Docker 容器
 
-### WiFi 連線中斷
+### WiFi 斷線
 
-對於透過 WiFi 連線的無頭 Pi：
+對於透過 WiFi 執行的無顯示器 Pi：
 
 ```bash
 # Disable WiFi power management
@@ -390,7 +397,7 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ## 成本比較
 
-| 設定           | 一次性費用 | 每月費用 | 備註                   |
+| 設定           | 一次性成本 | 每月成本 | 備註                   |
 | -------------- | ---------- | -------- | ---------------------- |
 | **Pi 4 (2GB)** | ~$45       | $0       | + 電力 (~$5/年)        |
 | **Pi 4 (4GB)** | ~$55       | $0       | 推薦                   |
@@ -399,14 +406,14 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 | DigitalOcean   | $0         | $6/月    | $72/年                 |
 | Hetzner        | $0         | €3.79/月 | ~$50/年                |
 
-**回本點：** 與雲端 VPS 相比，Pi 在約 6-12 個月內即可回本。
+**回本點：** 相較於雲端 VPS，Pi 大約在 6-12 個月內即可回本。
 
 ---
 
-## 另請參閱
+## 參見
 
 - [Linux 指南](/en/platforms/linux) — 一般 Linux 設定
 - [DigitalOcean 指南](/en/platforms/digitalocean) — 雲端替代方案
 - [Hetzner 指南](/en/install/hetzner) — Docker 設定
 - [Tailscale](/en/gateway/tailscale) — 遠端存取
-- [節點](/en/nodes) — 將您的筆記型電腦/手機與 Pi 連線
+- [節點](/en/nodes) — 將您的筆記型電腦/手機與 Pi 閘道配對

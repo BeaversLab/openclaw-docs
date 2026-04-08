@@ -57,25 +57,25 @@ title: "Remote Control"
 
 - 首选在远程主机上使用回环绑定，并通过 SSH 或 Tailscale 连接。
 - SSH 隧道使用严格的主机密钥检查；请先信任主机密钥，使其存在于 `~/.ssh/known_hosts` 中。
-- 如果将 Gateway(网关) 网关绑定到非回环接口，则要求令牌/密码认证。
+- 如果将 Gateway(网关) 绑定到非环回接口，请要求有效的 Gateway(网关) 身份验证：令牌、密码或带有 `gateway.auth.mode: "trusted-proxy"` 的支持身份识别的反向代理。
 - 请参阅 [Security](/en/gateway/security) 和 [Tailscale](/en/gateway/tailscale)。
 
 ## WhatsApp 登录流程（远程）
 
-- **在远程主机上**运行 `openclaw channels login --verbose`。使用手机上的 WhatsApp 扫描二维码。
+- 在**远程主机**上运行 `openclaw channels login --verbose`。使用手机上的 WhatsApp 扫描二维码。
 - 如果认证过期，请在该主机上重新运行登录。健康检查会显示链接问题。
 
 ## 故障排除
 
-- **exit 127 / not found**：对于非登录 shell，`openclaw` 不在 PATH 中。将其添加到 `/etc/paths`、您的 shell rc 文件中，或软链接到 `/usr/local/bin`/`/opt/homebrew/bin`。
-- **运行状况探测失败**：检查 SSH 可达性、PATH，以及 Baileys 是否已登录 (`openclaw status --json`)。
+- **退出码 127 / 未找到**：非登录 shell 的 PATH 中没有 `openclaw`。将其添加到 `/etc/paths`、您的 shell rc 或符号链接到 `/usr/local/bin`/`/opt/homebrew/bin`。
+- **运行状况探测失败**：检查 SSH 连通性、PATH 以及 Baileys 是否已登录 (`openclaw status --json`)。
 - **Web Chat stuck**：确认网关正在远程主机上运行，且转发的端口与网关 WS 端口匹配；UI 需要健康的 WS 连接。
 - **Node IP shows 127.0.0.1**：使用 SSH 隧道时的预期情况。如果您希望网关看到真实的客户端 IP，请将 **Transport** 切换为 **Direct (ws/wss)**。
 - **Voice Wake**：触发短语在远程模式下会自动转发；无需单独的转发器。
 
 ## 通知声音
 
-使用脚本中的 `openclaw` 和 `node.invoke` 为每个通知选择声音，例如：
+使用脚本通过 `openclaw` 和 `node.invoke` 为每个通知选择声音，例如：
 
 ```bash
 openclaw nodes notify --node <id> --title "Ping" --body "Remote gateway ready" --sound Glass

@@ -1,5 +1,5 @@
 ---
-summary: "橋接協定（舊版節點）：TCP JSONL、配對、範圍 RPC"
+summary: "歷史橋接協定 (舊版節點): TCP JSONL、配對、範圍限定 RPC"
 read_when:
   - Building or debugging node clients (iOS/Android/macOS node mode)
   - Investigating pairing or bridge auth failures
@@ -9,9 +9,9 @@ title: "橋接協定"
 
 # 橋接協定（舊版節點傳輸）
 
-<Warning>TCP 橋接已被**移除**。目前的 OpenClaw 版本不再包含橋接監聽器，架構中也不再包含 `bridge.*` 設定鍵。此頁面僅供歷史參考。對於所有節點/操作員客戶端，請使用 [Gateway Protocol](/en/gateway/protocol)。</Warning>
+<Warning>TCP 橋接器已被移除。目前的 OpenClaw 建構版本不隨附橋接器監聽器，且 `bridge.*` 設定金鑰已不再位於架構中。此頁面僅供歷史參考。對於所有節點/操作員用戶端，請使用 [Gateway Protocol](/en/gateway/protocol)。</Warning>
 
-## 為什麼我們兩者都有
+## 為何存在
 
 - **安全邊界**：橋接公開的是小型允許清單，而非
   完整的 Gateway API 表面。
@@ -25,7 +25,8 @@ title: "橋接協定"
 
 - TCP，每行一個 JSON 物件 (JSONL)。
 - 選用 TLS (當 `bridge.tls.enabled` 為 true 時)。
-- 舊版預設監聽連接埠為 `18790` (目前版本不會啟動 TCP 橋接)。
+- 歷史預設監聽連接埠為 `18790` (目前的建構版本不會啟動
+  TCP 橋接器)。
 
 啟用 TLS 時，發現 TXT 記錄會包含 `bridgeTls=1` 加上
 `bridgeTlsSha256` 作為非秘密提示。請注意，Bonjour/mDNS TXT 記錄是
@@ -39,7 +40,8 @@ title: "橋接協定"
 3. 客戶端發送 `pair-request`。
 4. Gateway 等待批准，然後發送 `pair-ok` 和 `hello-ok`。
 
-`hello-ok` 傳回 `serverName` 並且可能包含 `canvasHostUrl`。
+歷史上，`hello-ok` 會傳回 `serverName` 並且可能包含
+`canvasHostUrl`。
 
 ## 框架
 
@@ -70,14 +72,13 @@ Payload 欄位 (除非另有說明，否則皆為選用)：
 - `exitCode`, `timedOut`, `success`, `output`: 完成詳情 (僅限 finished)。
 - `reason`: 拒絕原因 (僅限 denied)。
 
-## Tailnet 使用方式
+## 歷史 tailnet 用法
 
-- 將橋接器綁定到 tailnet IP：`bridge.bind: "tailnet"` 於
-  `~/.openclaw/openclaw.json` 中。
+- 將橋接器綁定到 tailnet IP：在 `~/.openclaw/openclaw.json` 中設定 `bridge.bind: "tailnet"` (僅限歷史用途；`bridge.*` 不再有效)。
 - 用戶端透過 MagicDNS 名稱或 tailnet IP 進行連線。
 - Bonjour **不會**跨網路傳播；視需要使用手動主機/連接埠或廣域 DNS‑SD。
 
 ## 版本控制
 
-橋接器目前為 **隱含 v1** (無 min/max 協商)。預期具備向後相容性；
-在任何重大變更之前新增橋接器協議版本欄位。
+橋接器屬於 **隱含 v1** (無最小/最大協商)。本節僅供歷史參考；目前的節點/操作員用戶端使用 WebSocket
+[Gateway Protocol](/en/gateway/protocol)。

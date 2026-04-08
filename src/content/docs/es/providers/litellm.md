@@ -8,7 +8,7 @@ read_when:
 
 # LiteLLM
 
-[LiteLLM](https://litellm.ai) es una puerta de enlace (gateway) de LLM de código abierto que proporciona una API unificada para más de 100 proveedores de modelos. Enruta OpenClaw a través de LiteLLM para obtener un seguimiento centralizado de costos, registro de logs y la flexibilidad de cambiar de backends sin modificar la configuración de OpenClaw.
+[LiteLLM](https://litellm.ai) es una puerta de enlace de LLM de código abierto que proporciona una API unificada a más de 100 proveedores de modelos. Enruta OpenClaw a través de LiteLLM para obtener un seguimiento centralizado de costos, registro y la flexibilidad de cambiar backends sin modificar tu configuración de OpenClaw.
 
 ## ¿Por qué usar LiteLLM con OpenClaw?
 
@@ -145,8 +145,13 @@ curl "http://localhost:4000/spend/logs" \
 ## Notas
 
 - LiteLLM se ejecuta en `http://localhost:4000` por defecto
-- OpenClaw se conecta a través del endpoint `/v1/chat/completions` compatible con OpenAI
-- Todas las funciones de OpenClaw funcionan a través de LiteLLM: sin limitaciones
+- OpenClaw se conecta a través del punto final compatible con OpenAI de estilo proxy de `/v1`
+  LiteLLM
+- La conformación de solicitudes nativa solo para OpenAI no se aplica a través de LiteLLM:
+  sin `service_tier`, sin Respuestas `store`, sin sugerencias de caché de prompt y sin
+  conformación de carga útil compatible con el razonamiento de OpenAI
+- Los encabezados de atribución ocultos de OpenClaw (`originator`, `version`, `User-Agent`)
+  no se inyectan en URL base personalizadas de LiteLLM
 
 ## Ver también
 

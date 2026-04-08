@@ -75,8 +75,8 @@ OpenClaw 支援 DuckDuckGo 作為 **免金鑰** 的 `web_search` 提供者。不
   可能會提供驗證碼或阻擋請求
 - **HTML 解析**——結果取決於頁面結構，可能會在無預警的情況下
   變更
-- **自動偵測順序**——DuckDuckGo 在自動偵測中是最後檢查的（順序 100），
-  因此任何帶有金鑰的 API 支援提供者都會優先
+- **自動檢測順序** — DuckDuckGo 是自動檢測中的第一個免金鑰備選方案
+  (順序 100)。已設定金鑰的 API 支援提供者會優先執行，接著是 Ollama Web Search (順序 110)，然後是 SearXNG (順序 200)
 - 未設定時，**SafeSearch 預設為中等**
 
 <Tip>若用於生產環境，請考慮使用 [Brave Search](/en/tools/brave-search) (提供免費層級) 或其他支援 API 的提供者。</Tip>

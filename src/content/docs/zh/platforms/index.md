@@ -30,13 +30,13 @@ Linux 伴侣应用，但 Gateway(网关) 网关 目前已获得完全支持。
 - Hetzner (Docker): [Hetzner](/en/install/hetzner)
 - GCP (Compute Engine): [GCP](/en/install/gcp)
 - Azure (Linux VM): [Azure](/en/install/azure)
-- exe.dev (VM + HTTPS 代理): [exe.dev](/en/install/exe-dev)
+- exe.dev (VM + HTTPS proxy): [exe.dev](/en/install/exe-dev)
 
 ## 常用链接
 
-- 安装指南：[入门指南](/en/start/getting-started)
-- Gateway(网关) 运维手册：[Gateway(网关)](/en/gateway)
-- Gateway(网关) 配置：[Configuration](/en/gateway/configuration)
+- Install guide: [入门指南](/en/start/getting-started)
+- Gateway runbook: [Gateway](/en/gateway)
+- Gateway configuration: [Configuration](/en/gateway/configuration)
 - 服务状态：`openclaw gateway status`
 
 ## Gateway(网关) 服务安装 (CLI)
@@ -52,3 +52,4 @@ Linux 伴侣应用，但 Gateway(网关) 网关 目前已获得完全支持。
 
 - macOS: LaunchAgent (`ai.openclaw.gateway` 或 `ai.openclaw.<profile>`; 旧版 `com.openclaw.*`)
 - Linux/WSL2: systemd 用户服务 (`openclaw-gateway[-<profile>].service`)
+- Native Windows: Scheduled Task (`OpenClaw Gateway` or `OpenClaw Gateway (<profile>)`), with a per-user Startup-folder login item fallback if task creation is denied

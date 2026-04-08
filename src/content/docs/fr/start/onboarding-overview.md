@@ -9,8 +9,7 @@ sidebarTitle: "Aperçu de l'onboarding"
 
 # Aperçu de l'onboarding
 
-OpenClaw a deux parcours d'onboarding. Les deux configurent l'auth, le Gateway et
-les canaux optionnels — ils diffèrent simplement par la façon dont vous interagissez avec la configuration.
+OpenClaw propose deux parcours d'onboarding. Les deux configurent l'auth, le Gateway et les canaux de chat facultatifs — ils diffèrent simplement par la manière dont vous interagissez avec la configuration.
 
 ## Quel parcours dois-je utiliser ?
 
@@ -32,7 +31,7 @@ Quel que soit le parcours que vous choisissez, l'onboarding configure :
 1. **Fournisseur de modèle et auth** — clé API, OAuth, ou jeton de configuration pour votre fournisseur choisi
 2. **Espace de travail** — répertoire pour les fichiers de l'agent, les modèles d'amorçage, et la mémoire
 3. **Gateway** — port, adresse de liaison, mode d'auth
-4. **Canaux** (optionnel) — WhatsApp, Telegram, Discord, et plus
+4. **Canaux** (facultatifs) — canaux de chat intégrés et regroupés tels que BlueBubbles, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams, Telegram, WhatsApp, et plus encore
 5. **Démon** (optionnel) — service en arrière-plan pour que le Gateway démarre automatiquement
 
 ## CLI onboarding

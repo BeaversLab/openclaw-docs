@@ -19,8 +19,7 @@ title: "腳本"
 
 ## 監控驗證腳本
 
-監控驗證腳本的文件位於此處：
-[/automation/auth-monitoring](/en/automation/auth-monitoring)
+驗證監控涵蓋在 [驗證](/en/gateway/authentication) 中。`scripts/` 下的腳本是 systemd/Termux 手機工作流程的可選附加項目。
 
 ## 新增腳本時
 

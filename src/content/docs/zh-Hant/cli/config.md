@@ -12,10 +12,28 @@ title: "config"
 值，並列印使用中的配置檔案。不帶子指令執行以
 開啟配置精靈（與 `openclaw configure` 相同）。
 
+根選項：
+
+- `--section <section>`：當您不帶子指令執行 `openclaw config` 時，可重複使用的引導式設定區段過濾器
+
+支援的引導式區段：
+
+- `workspace`
+- `model`
+- `web`
+- `gateway`
+- `daemon`
+- `channels`
+- `plugins`
+- `skills`
+- `health`
+
 ## 範例
 
 ```bash
 openclaw config file
+openclaw config --section model
+openclaw config --section gateway --section daemon
 openclaw config schema
 openclaw config get browser.executablePath
 openclaw config set browser.executablePath "/usr/bin/google-chrome"
@@ -31,13 +49,28 @@ openclaw config validate --json
 
 ### `config schema`
 
-將 `openclaw.json` 產生的 JSON 結構描述以純文字列印至 stdout。
+將 `openclaw.json` 的產生 JSON 結構描述以 JSON 格式列印至 stdout。
+
+包含內容：
+
+- 目前的根配置結構描述，加上一個用於編輯器工具的根 `$schema` 字串欄位
+- Control UI 使用的欄位 `title` 和 `description` 文件元資料
+- 當存在相符的欄位文件時，巢狀物件、萬用字元 (`*`) 和陣列項目 (`[]`) 節點會繼承相同的 `title` / `description` 元資料
+- 當存在相符的欄位文件時，`anyOf` / `oneOf` / `allOf` 分支也會繼承相同的文件元資料
+- 當可以載入執行期清單時，會盡力包含即時外掛程式 + 頻道結構描述元資料
+- 即使當前配置無效，也能提供乾淨的後備結構描述
+
+相關執行期 RPC：
+
+- `config.schema.lookup` 會傳回一個帶有淺層結構描述節點 (`title`、`description`、`type`、`enum`、`const`、常見邊界) 的正規化配置路徑，
+  比對到的 UI 提示元資料，以及直接子項摘要。請將其用於
+  Control UI 或自訂用戶端中的路徑範圍向下鑽取。
 
 ```bash
 openclaw config schema
 ```
 
-當您想使用其他工具檢查或驗證它時，將其輸出至檔案：
+當您想使用其他工具檢查或驗證它時，將其透過管道傳輸至檔案：
 
 ```bash
 openclaw config schema > openclaw.schema.json
@@ -45,7 +78,7 @@ openclaw config schema > openclaw.schema.json
 
 ### 路徑
 
-路徑使用點號或方括號表示法：
+路徑使用點號或括號表示法：
 
 ```bash
 openclaw config get agents.defaults.workspace
@@ -59,10 +92,10 @@ openclaw config get agents.list
 openclaw config set agents.list[1].tools.exec.node "node-id-or-name"
 ```
 
-## 值
+## 數值
 
-Values are parsed as JSON5 when possible; otherwise they are treated as strings.
-Use `--strict-json` to require JSON5 parsing. `--json` remains supported as a legacy alias.
+值盡可能解析為 JSON5，否則將其視為字串。
+使用 `--strict-json` 要求 JSON5 解析。`--json` 仍作為舊版別名受到支援。
 
 ```bash
 openclaw config set agents.defaults.heartbeat.every "0m"
@@ -70,12 +103,14 @@ openclaw config set gateway.port 19001 --strict-json
 openclaw config set channels.whatsapp.groups '["*"]' --strict-json
 ```
 
-## `config set` modes
+`config get <path> --json` 將原始值列印為 JSON，而不是終端機格式的文字。
 
-`openclaw config set` supports four assignment styles:
+## `config set` 模式
 
-1. Value mode: `openclaw config set <path> <value>`
-2. SecretRef builder mode:
+`openclaw config set` 支援四種分配樣式：
+
+1. 值模式：`openclaw config set <path> <value>`
+2. SecretRef 建構器模式：
 
 ```bash
 openclaw config set channels.discord.token \
@@ -84,7 +119,7 @@ openclaw config set channels.discord.token \
   --ref-id DISCORD_BOT_TOKEN
 ```
 
-3. Provider builder mode (`secrets.providers.<alias>` path only):
+3. 提供者建構器模式（僅限 `secrets.providers.<alias>` 路徑）：
 
 ```bash
 openclaw config set secrets.providers.vault \
@@ -95,7 +130,7 @@ openclaw config set secrets.providers.vault \
   --provider-timeout-ms 5000
 ```
 
-4. Batch mode (`--batch-json` or `--batch-file`):
+4. 批次模式（`--batch-json` 或 `--batch-file`）：
 
 ```bash
 openclaw config set --batch-json '[
@@ -114,14 +149,14 @@ openclaw config set --batch-json '[
 openclaw config set --batch-file ./config-set.batch.json --dry-run
 ```
 
-政策說明：
+策略說明：
 
-- 在不受支援的執行時可變介面上（例如 `hooks.token`、`commands.ownerDisplaySecret`、Discord 執行緒綁定 webhook 權杖以及 WhatsApp 憑證 JSON），會拒絕 SecretRef 指定。請參閱 [SecretRef Credential Surface](/en/reference/secretref-credential-surface)。
+- 在不受支援的執行時可變介面上，SecretRef 分配會被拒絕（例如 `hooks.token`、`commands.ownerDisplaySecret`、Discord 執行緒綁定 webhook 權杖，以及 WhatsApp 憑證 JSON）。請參閱 [SecretRef 憑證介面](/en/reference/secretref-credential-surface)。
 
-批次解析始終使用批次載荷（`--batch-json`/`--batch-file`）作為事實來源。
+批次解析一律使用批次酬載（`--batch-json`/`--batch-file`）作為真實來源。
 `--strict-json` / `--json` 不會改變批次解析行為。
 
-JSON 路徑/數值模式仍然同時支援 SecretRef 和提供者：
+JSON 路徑/值模式仍支援用於 SecretRef 和提供者：
 
 ```bash
 openclaw config set channels.discord.token \
@@ -140,32 +175,32 @@ openclaw config set secrets.providers.vaultfile \
 通用旗標：
 
 - `--provider-source <env|file|exec>`
-- `--provider-timeout-ms <ms>` (`file`, `exec`)
+- `--provider-timeout-ms <ms>`（`file`、`exec`）
 
-Env 提供者 (`--provider-source env`)：
+Env 提供者（`--provider-source env`）：
 
-- `--provider-allowlist <ENV_VAR>` (可重複)
+- `--provider-allowlist <ENV_VAR>`（可重複）
 
-檔案提供者 (`--provider-source file`)：
+檔案提供者（`--provider-source file`）：
 
-- `--provider-path <path>` (必要)
+- `--provider-path <path>`（必填）
 - `--provider-mode <singleValue|json>`
 - `--provider-max-bytes <bytes>`
 
-Exec 提供者 (`--provider-source exec`)：
+Exec 提供者（`--provider-source exec`）：
 
-- `--provider-command <path>` (必要)
-- `--provider-arg <arg>` (可重複)
+- `--provider-command <path>`（必填）
+- `--provider-arg <arg>`（可重複）
 - `--provider-no-output-timeout-ms <ms>`
 - `--provider-max-output-bytes <bytes>`
 - `--provider-json-only`
-- `--provider-env <KEY=VALUE>` (可重複)
-- `--provider-pass-env <ENV_VAR>` (可重複)
-- `--provider-trusted-dir <path>` (可重複)
+- `--provider-env <KEY=VALUE>`（可重複）
+- `--provider-pass-env <ENV_VAR>`（可重複）
+- `--provider-trusted-dir <path>`（可重複）
 - `--provider-allow-insecure-path`
 - `--provider-allow-symlink-command`
 
-強化版 exec 提供者範例：
+強化執行提供者範例：
 
 ```bash
 openclaw config set secrets.providers.vault \
@@ -179,9 +214,9 @@ openclaw config set secrets.providers.vault \
   --provider-timeout-ms 5000
 ```
 
-## 試執行
+## 試運行
 
-使用 `--dry-run` 來驗證變更而不寫入 `openclaw.json`。
+使用 `--dry-run` 來驗證變更，而不寫入 `openclaw.json`。
 
 ```bash
 openclaw config set channels.discord.token \
@@ -205,25 +240,25 @@ openclaw config set channels.discord.token \
   --allow-exec
 ```
 
-試執行行為：
+試運行行為：
 
-- 建構器模式：針對變更過的 refs/providers 執行 SecretRef 可解析性檢查。
-- JSON 模式（`--strict-json`、`--json` 或批次模式）：執行 schema 驗證以及 SecretRef 可解析性檢查。
-- 政策驗證也會針對已知不支援的 SecretRef 目標介面執行。
+- Builder 模式：對變更的 refs/providers 執行 SecretRef 可解析性檢查。
+- JSON 模式（`--strict-json`、`--json` 或批次模式）：執行結構描述驗證以及 SecretRef 可解析性檢查。
+- 對於已知不支援的 SecretRef 目標介面，也會執行原則驗證。
 - 原則檢查會評估完整的變更後配置，因此父物件寫入（例如將 `hooks` 設定為物件）無法繞過不支援介面的驗證。
-- 為了避免指令的副作用，試執行期間預設會跳過 Exec SecretRef 檢查。
+- 為了避免指令副作用，預設會在試運行期間跳過 Exec SecretRef 檢查。
 - 使用 `--allow-exec` 搭配 `--dry-run` 以選擇加入 exec SecretRef 檢查（這可能會執行提供者指令）。
-- `--allow-exec` 僅適用於試執行，若未搭配 `--dry-run` 使用則會報錯。
+- `--allow-exec` 僅適用於試運行，若未搭配 `--dry-run` 使用則會報錯。
 
 `--dry-run --json` 會列印機器可讀的報告：
 
-- `ok`：試執行是否通過
-- `operations`：已評估的指派數量
-- `checks`：是否執行了架構/可解析性檢查
-- `checks.resolvabilityComplete`：可解析性檢查是否執行至完成（當跳過 exec refs 時為 false）
-- `refsChecked`：試執行期間實際解析的 refs 數量
+- `ok`：試運行是否通過
+- `operations`：評估的賦值數量
+- `checks`：是否執行了結構描述/可解析性檢查
+- `checks.resolvabilityComplete`：可解析性檢查是否執行至完成（跳過 exec refs 時為 false）
+- `refsChecked`：試運行期間實際解析的 refs 數量
 - `skippedExecRefs`：因未設定 `--allow-exec` 而跳過的 exec refs 數量
-- `errors`：當 `ok=false` 時的結構化架構/可解析性失敗
+- `errors`：當 `ok=false` 時的結構化結構描述/可解析性失敗資訊
 
 ### JSON 輸出結構
 
@@ -293,23 +328,23 @@ openclaw config set channels.discord.token \
 }
 ```
 
-如果試執行失敗：
+如果試運行失敗：
 
 - `config schema validation failed`：您的變更後配置結構無效；請修正路徑/數值或提供者/ref 物件結構。
-- `Config policy validation failed: unsupported SecretRef usage`：將該憑證移回純文字/字串輸入，並僅在不支援的介面上保留 SecretRefs。
-- `SecretRef assignment(s) could not be resolved`：參照的提供者/ref 目前無法解析（缺少環境變數、無效的檔案指標、exec 提供者失敗，或提供者/來源不匹配）。
-- `Dry run note: skipped <n> exec SecretRef resolvability check(s)`：試執行跳過了 exec refs；如果您需要 exec 可解析性驗證，請使用 `--allow-exec` 重新執行。
-- 對於批次模式，請修正失敗的項目，並在寫入前重新執行 `--dry-run`。
+- `Config policy validation failed: unsupported SecretRef usage`：請將該憑證移回純文字/字串輸入，並僅在支援的介面上保留 SecretRefs。
+- `SecretRef assignment(s) could not be resolved`：參照的 provider/ref 目前無法解析（缺少環境變數、無效的檔案指標、exec provider 失敗，或 provider/source 不匹配）。
+- `Dry run note: skipped <n> exec SecretRef resolvability check(s)`：dry-run 跳過了 exec refs；如果您需要解析性驗證，請使用 `--allow-exec` 重新執行。
+- 對於批量模式，請修復失敗的條目並在寫入前重新執行 `--dry-run`。
 
 ## 子指令
 
-- `config file`：列印作用中的配置檔案路徑（從 `OPENCLAW_CONFIG_PATH` 或預設位置解析）。
+- `config file`：列印作用中的設定檔路徑（解析自 `OPENCLAW_CONFIG_PATH` 或預設位置）。
 
-編輯後請重新啟動閘道。
+編輯後重新啟動 gateway。
 
 ## 驗證
 
-根據作用中的架構驗證目前的配置，而不啟動閘道。
+在不啟動 gateway 的情況下，根據作用中的架構驗證目前的設定。
 
 ```bash
 openclaw config validate

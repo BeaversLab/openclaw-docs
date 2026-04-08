@@ -9,7 +9,7 @@ title: "SearXNG 搜索"
 
 # SearXNG 搜索
 
-OpenClaw 支持 [SearXNG](https://docs.searxng.org/) 作为 **自托管、
+OpenClaw 支持 [SearXNG](https://docs.searxng.org/) 作为一种 **自托管、
 无需密钥** 的 `web_search` 提供商。SearXNG 是一个开源元搜索引擎，
 可聚合来自 Google、Bing、DuckDuckGo 和其他来源的结果。
 
@@ -17,7 +17,7 @@ OpenClaw 支持 [SearXNG](https://docs.searxng.org/) 作为 **自托管、
 
 - **免费且无限** -- 无需 API 密钥或商业订阅
 - **隐私 / 物理隔离** -- 查询永远不会离开您的网络
-- **随处可用** -- 不受商业搜索 API 的区域限制
+- **适用于任何地方** —— 商业搜索 API 没有地区限制
 
 ## 安装
 
@@ -27,8 +27,8 @@ OpenClaw 支持 [SearXNG](https://docs.searxng.org/) 作为 **自托管、
     docker run -d -p 8888:8080 searxng/searxng
     ```
 
-    或者使用您有权访问的任何现有 SearXNG 部署。有关生产环境设置，请参阅
-    [SearXNG 文档](https://docs.searxng.org/)。
+    或者使用您有权访问的任何现有 SearXNG 部署。请参阅
+    [SearXNG 文档](https://docs.searxng.org/) 了解生产环境设置。
 
   </Step>
   <Step title="配置">
@@ -82,6 +82,12 @@ SearXNG 实例的插件级设置：
 
 `baseUrl` 字段也接受 SecretRef 对象。
 
+传输规则：
+
+- `https://` 适用于公共或私有 SearXNG 主机
+- `http://` 仅接受受信任的专用网络或环回主机
+- 公共 SearXNG 主机必须使用 `https://`
+
 ## 环境变量
 
 设置 `SEARXNG_BASE_URL` 作为配置的替代方案：
@@ -91,31 +97,33 @@ export SEARXNG_BASE_URL="http://localhost:8888"
 ```
 
 当设置了 `SEARXNG_BASE_URL` 且未配置显式提供商时，自动检测
-会自动选择 SearXNG（优先级最低 -- 任何带有密钥的 API 支持提供商
-都会优先）。
+会自动选择 SearXNG（优先级最低 -- 任何带有密钥的
+API 支持的提供商会优先）。
 
 ## 插件配置参考
 
 | 字段         | 描述                                                |
 | ------------ | --------------------------------------------------- |
-| `baseUrl`    | 您的 SearXNG 实例的基础 URL（必需）                 |
+| `baseUrl`    | SearXNG 实例的基本 URL（必需）                      |
 | `categories` | 逗号分隔的类别，例如 `general`、`news` 或 `science` |
 | `language`   | 结果的语言代码，例如 `en`、`de` 或 `fr`             |
 
 ## 注意
 
 - **JSON API** -- 使用 SearXNG 原生的 `format=json` 端点，而非 HTML 抓取
-- **无需 API 密钥** -- 开箱即用，适用于任何 SearXNG 实例
-- **自动检测顺序** —— SearXNG 在自动检测中最后被检查（顺序 200），
-  因此任何带有密钥的 API 支持的提供商都会优先于 SearXNG，而且 SearXNG 也排在
-  DuckDuckGo（顺序 100）之后
-- **自托管** —— 您控制实例、查询和上游搜索引擎
-- **类别** 如果未配置，默认为 `general`
+- **无需 API 密钥** -- 可直接使用任何 SearXNG 实例
+- **基本 URL 验证** -- `baseUrl` 必须是有效的 `http://` 或 `https://`
+  URL；公共主机必须使用 `https://`
+- **自动检测顺序** -- 在
+  自动检测中，SearXNG 最后被检查（顺序 200）。配置了密钥的 API 支持的提供商首先运行，然后
+  是 DuckDuckGo（顺序 100），接着是 Ollama Web Search（顺序 110）
+- **自托管** -- 您控制实例、查询和上游搜索引擎
+- **类别**在未配置时默认为 `general`
 
-<Tip>要使 SearXNG JSON API 正常工作，请确保您的 SearXNG 实例在其 `settings.yml` 下的 `search.formats` 中启用了 `json` 格式。</Tip>
+<Tip>要使 SearXNG JSON API 正常工作，请确保您的 SearXNG 实例在其 `search.formats` 下的 `settings.yml` 中启用了 `json` 格式。</Tip>
 
 ## 相关
 
-- [Web Search 概述](/en/tools/web) —— 所有提供商和自动检测
-- [DuckDuckGo 搜索](/en/tools/duckduckgo-search) —— 另一个无需密钥的备选方案
-- [Brave 搜索](/en/tools/brave-search) —— 提供免费层的结构化结果
+- [Web Search 概览](/en/tools/web) -- 所有提供商和自动检测
+- [DuckDuckGo 搜索](/en/tools/duckduckgo-search) -- 另一个无需密钥的备选方案
+- [Brave 搜索](/en/tools/brave-search) -- 带有免费层的结构化结果

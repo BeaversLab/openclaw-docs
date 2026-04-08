@@ -31,7 +31,7 @@ kubectl port-forward svc/openclaw 18789:18789 -n openclaw
 open http://localhost:18789
 ```
 
-取得 Gateway Token 並將其貼上到控制 UI：
+檢索為控制 UI 配置的共享密鑰。此部署腳本默認創建令牌認證：
 
 ```bash
 kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GATEWAY_TOKEN}' | base64 -d

@@ -16,7 +16,7 @@ OpenClaw 支援將 Perplexity Search API 作為 `web_search` 提供者。
 
 ## 取得 Perplexity API 金鑰
 
-1. 在 [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api) 建立 Perplexity 帳戶
+1. 在 [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api) 建立 Perplexity 帳號
 2. 在儀表板中建立 API 金鑰
 3. 將金鑰儲存在設定中，或在 Gateway 環境中設定 `PERPLEXITY_API_KEY`。
 
@@ -90,8 +90,8 @@ OpenClaw 支援將 Perplexity Search API 作為 `web_search` 提供者。
 該欄位也接受 SecretRef 物件。
 
 **透過環境變數：** 在 Gateway 程序環境中設定 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
-若是安裝 Gateway，請將其置於
-`~/.openclaw/.env` (或您的服務環境) 中。參閱 [環境變數](/en/help/faq#env-vars-and-env-loading)。
+對於 gateway 安裝，請將其放入
+`~/.openclaw/.env` (或您的服務環境)。請參閱 [Env vars](/en/help/faq#env-vars-and-env-loading)。
 
 如果已設定 `provider: "perplexity"` 且 Perplexity 金鑰 SecretRef 未解析且沒有環境變數備案，啟動/重新載入會快速失敗。
 
@@ -112,8 +112,14 @@ OpenClaw 支援將 Perplexity Search API 作為 `web_search` 提供者。
 | `max_tokens`          | 總內容預算（預設值：25000，最大值：1000000）           |
 | `max_tokens_per_page` | 每頁 Token 限制（預設值：2048）                        |
 
-對於舊版 Sonar/OpenRouter 相容性路徑，僅支援 `query` 和 `freshness`。
-僅限 Search API 的篩選器（例如 `country`、`language`、`date_after`、`date_before`、`domain_filter`、`max_tokens` 和 `max_tokens_per_page`）會傳回明確的錯誤。
+對於舊版 Sonar/OpenRouter 相容路徑：
+
+- 接受 `query`、`count` 和 `freshness`
+- `count` 僅用於相容性；回應仍然是一個帶有引用的合成
+  答案，而不是 N 個結果的列表
+- 僅限搜尋 API 的過濾器，例如 `country`、`language`、`date_after`、
+  `date_before`、`domain_filter`、`max_tokens` 和 `max_tokens_per_page`
+  會傳回明確的錯誤
 
 **範例：**
 
@@ -158,21 +164,22 @@ await web_search({
 });
 ```
 
-### 網域篩選規則
+### 網域過濾規則
 
-- 每個篩選器最多 20 個網域
+- 每個過濾器最多 20 個網域
 - 無法在同一個請求中混合使用允許清單和拒絕清單
-- 對拒絕清單項目使用 `-` 前綴（例如 `["-reddit.com"]`）
+- 使用 `-` 前綴表示拒絕清單項目 (例如 `["-reddit.com"]`)
 
-## 注意事項
+## 備註
 
-- Perplexity Search API 會傳回結構化的網頁搜尋結果（`title`、`url`、`snippet`）
-- OpenRouter 或明確指定 `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` 會將 Perplexity 切換回 Sonar 聊天完成模式以保持相容性
-- 結果預設快取 15 分鐘（可透過 `cacheTtlMinutes` 設定）
+- Perplexity Search API 會傳回結構化的網頁搜尋結果 (`title`、`url`、`snippet`)
+- OpenRouter 或明確的 `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` 會將 Perplexity 切換回 Sonar 聊天完成以維持相容性
+- Sonar/OpenRouter 相容性會傳回一個帶有引用的合成答案，而不是結構化結果行
+- 結果預設快取 15 分鐘 (可透過 `cacheTtlMinutes` 設定)
 
-## 相關連結
+## 相關
 
-- [Web Search 概觀](/en/tools/web) -- 所有供應商與自動偵測
-- [Perplexity Search API 文件](https://docs.perplexity.ai/docs/search/quickstart) -- 官方 Perplexity 文件
+- [Web Search overview](/en/tools/web) -- 所有供應商和自動偵測
+- [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) -- Perplexity 官方文件
 - [Brave Search](/en/tools/brave-search) -- 具有國家/語言過濾器的結構化結果
-- [Exa Search](/en/tools/exa-search) -- 具有內容提取功能的神經搜尋
+- [Exa Search](/en/tools/exa-search) -- 具有內容擷取功能的神經搜尋

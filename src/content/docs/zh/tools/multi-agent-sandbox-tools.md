@@ -11,9 +11,9 @@ Each agent in a multi-agent setup can override the global sandbox and 工具
 policy. This page covers per-agent configuration, precedence rules, and
 examples.
 
-- **沙箱后端和模式**：请参阅 [沙箱隔离](/en/gateway/sandboxing)。
-- **调试被阻止的工具**：请参阅 [沙箱 vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) 和 `openclaw sandbox explain`。
-- **提升权限执行**：请参阅 [Elevated Mode](/en/tools/elevated)。
+- **沙箱后端和模式**：参见 [沙箱隔离](/en/gateway/sandboxing)。
+- **调试被阻止的工具**：参见 [沙箱 vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) 和 `openclaw sandbox explain`。
+- **Elevated exec**：参见 [Elevated Mode](/en/tools/elevated)。
 
 Auth is per-agent: each agent reads from its own `agentDir` auth store at
 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`.
@@ -202,14 +202,14 @@ The filtering order is:
 7. **沙箱工具策略** (`tools.sandbox.tools` 或 `agents.list[].tools.sandbox.tools`)
 8. **子代理工具策略** (`tools.subagents.tools`，如适用)
 
-每一层级都可以进一步限制工具，但不能恢复在更早层级中被拒绝的工具。
+每个层级可以进一步限制工具，但不能恢复之前层级中拒绝的工具。
 如果设置了 `agents.list[].tools.sandbox.tools`，它将替换该代理的 `tools.sandbox.tools`。
 如果设置了 `agents.list[].tools.profile`，它将覆盖该代理的 `tools.profile`。
-提供商工具键接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.2`）。
+提供商工具键接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.4`）。
 
-工具策略支持 `group:*` 简写，这些简写可以扩展为多个工具。有关完整列表，请参阅[工具组](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
+工具策略支持 `group:*` 简写，这些简写会扩展为多个工具。有关完整列表，请参阅 [Tool groups](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
 
-每个代理的提升覆盖 (`agents.list[].tools.elevated`) 可以进一步限制特定代理的提升执行。有关详细信息，请参阅[提升模式](/en/tools/elevated)。
+每个代理的 elevated 覆盖项（`agents.list[].tools.elevated`）可以进一步限制特定代理的 elevated exec。有关详细信息，请参阅 [Elevated Mode](/en/tools/elevated)。
 
 ---
 
@@ -295,14 +295,16 @@ The filtering order is:
 }
 ```
 
+此配置文件中的 `sessions_history` 仍然返回有界的、经过清理的召回视图，而不是原始转储。Assistant 回调会去除思考标签、`<relevant-memories>` 脚手架、纯文本工具调用 XML 负载（包括 `<tool_call>...</tool_call>`、
+`<function_call>...</function_call>`、 `<tool_calls>...</tool_calls>`、
+`<function_calls>...</function_calls>` 和截断的工具调用块）、降级的工具调用脚手架、泄露的 ASCII/全角 模型控制令牌以及在编辑/截断之前格式错误的 MiniMax 工具调用 XML。
+
 ---
 
-## 常见陷阱：“非主会话”
+## 常见陷阱："non-main"
 
-`agents.defaults.sandbox.mode: "non-main"` 基于 `session.mainKey`（默认 `"main"`），
-而不是代理 ID。群组/渠道会话总是获取自己的密钥，因此
-它们被视为非主会话并将被沙箱隔离。如果您希望代理永不
-沙箱隔离，请设置 `agents.list[].sandbox.mode: "off"`。
+`agents.defaults.sandbox.mode: "non-main"` 基于 `session.mainKey`（默认为 `"main"`），
+而不是代理 ID。组/渠道会话总是获得自己的密钥，因此它们被视为非主会话并将被沙箱隔离。如果您希望代理永不进行沙箱隔离，请设置 `agents.list[].sandbox.mode: "off"`。
 
 ---
 
@@ -323,7 +325,7 @@ The filtering order is:
    ```
 
 3. **测试工具限制：**
-   - 发送需要受限工具的消息
+   - 发送一条需要受限工具的消息
    - 验证代理无法使用被拒绝的工具
 
 4. **监控日志：**
@@ -339,26 +341,26 @@ The filtering order is:
 ### 尽管有 `mode: "all"`，代理仍未进行沙箱隔离
 
 - 检查是否存在覆盖它的全局 `agents.defaults.sandbox.mode`
-- 代理特定配置具有优先权，因此请设置 `agents.list[].sandbox.mode: "all"`
+- 代理特定配置优先级更高，因此设置 `agents.list[].sandbox.mode: "all"`
 
 ### 尽管有拒绝列表，工具仍然可用
 
 - 检查工具过滤顺序：全局 → 代理 → 沙箱 → 子代理
-- 每个级别只能进一步限制，不能恢复权限
-- 使用日志验证：`[tools] filtering tools for agent:${agentId}`
+- 每个层级只能进一步限制，不能恢复权限
+- 通过日志验证：`[tools] filtering tools for agent:${agentId}`
 
 ### 容器未按代理隔离
 
 - 在代理特定的沙箱配置中设置 `scope: "agent"`
-- 默认为 `"session"`，它为每个会话创建一个容器
+- 默认为 `"session"`，这会为每个会话创建一个容器
 
 ---
 
 ## 另请参阅
 
 - [沙箱隔离](/en/gateway/sandboxing) -- 完整的沙箱参考（模式、范围、后端、镜像）
-- [沙箱 vs 工具策略 vs 提升权限](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- 调试“为什么这个被阻止了？”
-- [提升权限模式](/en/tools/elevated)
+- [沙箱 vs 工具策略 vs 提权模式](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- 调试“为什么被阻止？”
+- [提权模式](/en/tools/elevated)
 - [多代理路由](/en/concepts/multi-agent)
 - [沙箱配置](/en/gateway/configuration-reference#agentsdefaultssandbox)
 - [会话管理](/en/concepts/session)

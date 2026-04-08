@@ -11,7 +11,7 @@ Onboarding interactif pour la configuration locale ou distante de Gateway.
 
 ## Guides connexes
 
-- Centre d'onboarding CLI : [Onboarding (CLI)](/en/start/wizard)
+- Hub d'onboarding CLI : [Onboarding (CLI)](/en/start/wizard)
 - Aperçu de l'onboarding : [Onboarding Overview](/en/start/onboarding-overview)
 - Référence de l'onboarding CLI : [CLI Setup Reference](/en/start/wizard-cli-reference)
 - Automatisation CLI : [CLI Automation](/en/start/wizard-cli-automation)
@@ -82,6 +82,8 @@ Options de jeton Gateway en mode non interactif :
 - Avec `--install-daemon`, lorsque l'authentification par jeton nécessite un jeton, les jetons de gateway gérés par SecretRef sont validés mais ne sont pas persistés en texte clair résolu dans les métadonnées de l'environnement du service superviseur.
 - Avec `--install-daemon`, si le mode jeton nécessite un jeton et que le SecretRef du jeton configuré n'est pas résolu, l'onboarding échoue de manière fermée avec des instructions de correction.
 - Avec `--install-daemon`, si `gateway.auth.token` et `gateway.auth.password` sont configurés et que `gateway.auth.mode` n'est pas défini, l'onboarding bloque l'installation jusqu'à ce que le mode soit défini explicitement.
+- L'onboarding local écrit `gateway.mode="local"` dans la configuration. Si un fichier de configuration ultérieur manque `gateway.mode`, considérez cela comme une corruption de la configuration ou une modification manuelle incomplète, et non comme un raccourci de mode local valide.
+- `--allow-unconfigured` est une porte de secours d'exécution de passerelle séparée. Cela ne signifie pas que l'onboarding peut omettre `gateway.mode`.
 
 Exemple :
 
@@ -95,20 +97,20 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-Santé de la gateway locale non interactive :
+Santé non interactive de la passerelle locale :
 
-- Sauf si vous transmettez `--skip-health`, l'onboarding attend une gateway locale accessible avant de se terminer avec succès.
-- `--install-daemon` lance d'abord le chemin d'installation de la gateway gérée. Sans cela, vous devez déjà avoir une gateway locale en cours d'exécution, par exemple `openclaw gateway run`.
-- Si vous souhaitez uniquement des écritures config/workspace/bootstrap en automatisation, utilisez `--skip-health`.
-- Sur Windows natif, `--install-daemon` essaie d'abord les tâches planifiées et revient à un élément de connexion de dossier Démarrage par utilisateur si la création de tâche est refusée.
+- À moins que vous ne passiez `--skip-health`, l'onboarding attend une passerelle locale accessible avant de se terminer avec succès.
+- `--install-daemon` lance d'abord le chemin d'installation de la passerelle gérée. Sans cela, vous devez déjà avoir une passerelle locale en cours d'exécution, par exemple `openclaw gateway run`.
+- Si vous souhaitez uniquement des écritures de configuration/espace de travail/bootstrap en automatisation, utilisez `--skip-health`.
+- Sur Windows natif, `--install-daemon` essaie d'abord les tâches planifiées et se replie sur un élément de connexion dans le dossier Démarrage par utilisateur si la création de tâche est refusée.
 
 Comportement de l'onboarding interactif avec le mode de référence :
 
-- Choisissez **Utiliser la référence secrète** lorsque vous y êtes invité.
+- Choisissez **Use secret reference** lorsqu'on vous le demande.
 - Ensuite, choisissez soit :
   - Variable d'environnement
   - Fournisseur de secrets configuré (`file` ou `exec`)
-- L'onboarding effectue une validation préliminaire rapide avant d'enregistrer la référence.
+- L'onboarding effectue une validation préalable rapide avant d'enregistrer la référence.
   - Si la validation échoue, l'onboarding affiche l'erreur et vous permet de réessayer.
 
 Choix de point de terminaison Z.AI non interactif :
@@ -139,11 +141,23 @@ openclaw onboard --non-interactive \
 Notes de flux :
 
 - `quickstart` : invites minimales, génère automatiquement un jeton de passerelle.
-- `manual` : invites complètes pour le port/liaison/auth (alias de `advanced`).
-- Dans l'étape de recherche web, choisir **Grok** peut déclencher une invite de suivi distincte pour activer `x_search` avec le même `XAI_API_KEY` et, optionnellement, choisir un modèle `x_search`. Les autres fournisseurs de recherche web n'affichent pas cette invite.
-- Comportement de l'étendue DM de l'onboarding local : [CLI Setup Reference](/en/start/wizard-cli-reference#outputs-and-internals).
-- Premier chat le plus rapide : `openclaw dashboard` (Interface de contrôle, aucune configuration de channel).
-- Fournisseur personnalisé : connectez n'importe quel point de terminaison compatible OpenAI ou Anthropic, y compris les fournisseurs hébergés non répertoriés. Utilisez Unknown pour la détection automatique.
+- `manual` : invites complets pour le port/bind/auth (alias de `advanced`).
+- Lorsqu'un choix d'auth implique un provider préféré, l'onboarding pré-filtre
+  les sélecteurs de modèle par défaut et de liste d'autorisation vers ce provider. Pour Volcengine et
+  BytePlus, cela correspond également aux variantes de coding-plan
+  (`volcengine-plan/*`, `byteplus-plan/*`).
+- Si le filtre de provider préféré ne donne encore aucun modèle chargé, l'onboarding
+  revient au catalogue non filtré au lieu de laisser le sélecteur vide.
+- Dans l'étape de recherche web, certains providers peuvent déclencher des
+  invites de suivi spécifiques au provider :
+  - **Grok** peut proposer une configuration `x_search` facultative avec le même `XAI_API_KEY`
+    et un choix de modèle `x_search`.
+  - **Kimi** peut demander la région de l'Moonshot API (`api.moonshot.ai` vs
+    `api.moonshot.cn`) et le modèle de recherche web Kimi par défaut.
+- Comportement de la portée DM de l'onboarding local : [Référence de configuration CLI](/en/start/wizard-cli-reference#outputs-and-internals).
+- Premier chat le plus rapide : `openclaw dashboard` (UI de contrôle, aucune configuration de channel).
+- Provider personnalisé : connectez n'importe quel point de terminaison compatible OpenAI ou Anthropic,
+  y compris les providers hébergés non répertoriés. Utilisez Inconnu pour la détection automatique.
 
 ## Commandes de suivi courantes
 

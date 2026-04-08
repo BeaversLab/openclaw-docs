@@ -1,5 +1,5 @@
 ---
-summary: "Referencia de la CLI para `openclaw message` (envío + acciones de canal)"
+summary: "Referencia de CLI para `openclaw message` (envío + acciones de canal)"
 read_when:
   - Adding or modifying message CLI actions
   - Changing outbound channel behavior
@@ -27,25 +27,25 @@ Formatos de destino (`--target`):
 
 - WhatsApp: E.164 o JID de grupo
 - Telegram: id de chat o `@username`
-- Discord: `channel:<id>` o `user:<id>` (o mención de `<@id>`; los ids numéricos sin procesar se tratan como canales)
+- Discord: `channel:<id>` o `user:<id>` (o mención `<@id>`; los ids numéricos sin procesar se tratan como canales)
 - Google Chat: `spaces/<spaceId>` o `users/<userId>`
 - Slack: `channel:<id>` o `user:<id>` (se acepta el id de canal sin procesar)
-- Mattermost (plugin): `channel:<id>`, `user:<id>`, o `@username` (los ids simples se tratan como canales)
+- Mattermost (complemento): `channel:<id>`, `user:<id>`, o `@username` (los ids simples se tratan como canales)
 - Signal: `+E.164`, `group:<id>`, `signal:+E.164`, `signal:group:<id>`, o `username:<name>`/`u:<name>`
 - iMessage: identificador, `chat_id:<id>`, `chat_guid:<guid>`, o `chat_identifier:<id>`
-- Matrix: `@user:server`, `!room:server` o `#alias:server`
+- Matrix: `@user:server`, `!room:server`, o `#alias:server`
 - Microsoft Teams: id de conversación (`19:...@thread.tacv2`) o `conversation:<id>` o `user:<aad-object-id>`
 
 Búsqueda por nombre:
 
-- Para proveedores compatibles (Discord/Slack/etc), los nombres de canal como `Help` o `#help` se resuelven mediante la caché del directorio.
+- Para los proveedores compatibles (Discord/Slack/etc.), los nombres de canal como `Help` o `#help` se resuelven mediante el caché del directorio.
 - Si no se encuentra en la caché, OpenClaw intentará realizar una búsqueda en vivo en el directorio cuando el proveedor lo admita.
 
 ## Opciones comunes
 
 - `--channel <name>`
 - `--account <id>`
-- `--target <dest>` (canal o usuario de destino para enviar/encuesta/lectura/etc)
+- `--target <dest>` (canal o usuario de destino para enviar/encuesta/leer/etc.)
 - `--targets <name>` (repetir; solo transmisión)
 - `--json`
 - `--dry-run`
@@ -55,9 +55,9 @@ Búsqueda por nombre:
 
 - `openclaw message` resuelve los SecretRefs de canal admitidos antes de ejecutar la acción seleccionada.
 - La resolución se limita al objetivo de la acción activa cuando es posible:
-  - con alcance de canal cuando se establece `--channel` (o se infiere de objetivos con prefijo como `discord:...`)
-  - con alcance de cuenta cuando se establece `--account` (globales del canal + superficies de la cuenta seleccionada)
-  - cuando se omite `--account`, OpenClaw no fuerza un alcance de SecretRef de cuenta `default`
+  - con ámbito de canal cuando se establece `--channel` (o se infiere de objetivos con prefijo como `discord:...`)
+  - con ámbito de cuenta cuando se establece `--account` (globales del canal + superficies de la cuenta seleccionada)
+  - cuando se omite `--account`, OpenClaw no fuerza un ámbito SecretRef de cuenta `default`
 - Los SecretRefs no resueltos en canales no relacionados no bloquean una acción de mensaje dirigida.
 - Si el SecretRef del canal/cuenta seleccionado no está resuelto, el comando falla de forma segura para esa acción.
 
@@ -68,26 +68,30 @@ Búsqueda por nombre:
 - `send`
   - Canales: WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage/Matrix/Microsoft Teams
   - Obligatorio: `--target`, más `--message` o `--media`
-  - Opcional: `--media`, `--reply-to`, `--thread-id`, `--gif-playback`
-  - Solo para Telegram: `--buttons` (requiere `channels.telegram.capabilities.inlineButtons` para permitirlo)
-  - Solo para Telegram: `--force-document` (envía imágenes y GIFs como documentos para evitar la compresión de Telegram)
-  - Solo para Telegram: `--thread-id` (id del tema del foro)
-  - Solo para Slack: `--thread-id` (marca de tiempo del hilo; `--reply-to` usa el mismo campo)
-  - Solo para WhatsApp: `--gif-playback`
+  - Opcional: `--media`, `--interactive`, `--buttons`, `--components`, `--card`, `--reply-to`, `--thread-id`, `--gif-playback`, `--force-document`, `--silent`
+  - Payloads interactivos compartidos: `--interactive` envía un payload JSON interactivo nativo del canal cuando es compatible
+  - Solo Telegram: `--buttons` (requiere `channels.telegram.capabilities.inlineButtons` para permitirlo)
+  - Solo Telegram: `--force-document` (envía imágenes y GIFs como documentos para evitar la compresión de Telegram)
+  - Solo Telegram: `--thread-id` (id del tema del foro)
+  - Solo Slack: `--thread-id` (marca de tiempo del hilo; `--reply-to` usa el mismo campo)
+  - Solo Discord: payload JSON `--components`
+  - Canales de tarjetas adaptables: payload JSON `--card` cuando es compatible
+  - Telegram + Discord: `--silent`
+  - Solo WhatsApp: `--gif-playback`
 
 - `poll`
   - Canales: WhatsApp/Telegram/Discord/Matrix/Microsoft Teams
   - Obligatorio: `--target`, `--poll-question`, `--poll-option` (repetir)
   - Opcional: `--poll-multi`
-  - Solo para Discord: `--poll-duration-hours`, `--silent`, `--message`
-  - Solo para Telegram: `--poll-duration-seconds` (5-600), `--silent`, `--poll-anonymous` / `--poll-public`, `--thread-id`
+  - Solo Discord: `--poll-duration-hours`, `--silent`, `--message`
+  - Solo Telegram: `--poll-duration-seconds` (5-600), `--silent`, `--poll-anonymous` / `--poll-public`, `--thread-id`
 
 - `react`
   - Canales: Discord/Google Chat/Slack/Telegram/WhatsApp/Signal/Matrix
   - Obligatorio: `--message-id`, `--target`
   - Opcional: `--emoji`, `--remove`, `--participant`, `--from-me`, `--target-author`, `--target-author-uuid`
-  - Nota: `--remove` requiere `--emoji` (omite `--emoji` para limpiar las propias reacciones donde sea compatible; consulta /tools/reactions)
-  - Solo para WhatsApp: `--participant`, `--from-me`
+  - Nota: `--remove` requiere `--emoji` (omita `--emoji` para borrar sus propias reacciones donde sea compatible; consulte /tools/reactions)
+  - Solo WhatsApp: `--participant`, `--from-me`
   - Reacciones de grupo de Signal: se requiere `--target-author` o `--target-author-uuid`
 
 - `reactions`
@@ -120,7 +124,7 @@ Búsqueda por nombre:
 - `permissions`
   - Canales: Discord/Matrix
   - Obligatorio: `--target`
-  - Solo Matrix: disponible cuando el cifrado de Matrix está habilitado y se permiten las acciones de verificación
+  - Solo para Matrix: disponible cuando el cifrado de Matrix está habilitado y se permiten las acciones de verificación
 
 - `search`
   - Canales: Discord
@@ -192,7 +196,7 @@ Búsqueda por nombre:
 
 - `broadcast`
   - Canales: cualquier canal configurado; use `--channel all` para apuntar a todos los proveedores
-  - Obligatorio: `--targets` (repetir)
+  - Obligatorio: `--targets <target...>`
   - Opcional: `--message`, `--media`, `--dry-run`
 
 ## Ejemplos
@@ -212,7 +216,15 @@ openclaw message send --channel discord \
   --components '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve","style":"success"},{"label":"Decline","style":"danger"}]}]}'
 ```
 
-Consulte [Componentes de Discord](/en/channels/discord#interactive-components) para ver el esquema completo.
+Consulte [Discord components](/en/channels/discord#interactive-components) para obtener el esquema completo.
+
+Enviar un carga útil interactiva compartida:
+
+```bash
+openclaw message send --channel googlechat --target spaces/AAA... \
+  --message "Choose:" \
+  --interactive '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve"},{"label":"Decline"}]}]}'
+```
 
 Crear una encuesta de Discord:
 
@@ -270,6 +282,14 @@ Enviar botones en línea de Telegram:
 ```
 openclaw message send --channel telegram --target @mychat --message "Choose:" \
   --buttons '[ [{"text":"Yes","callback_data":"cmd:yes"}], [{"text":"No","callback_data":"cmd:no"}] ]'
+```
+
+Enviar una tarjeta adaptativa de Teams:
+
+```bash
+openclaw message send --channel msteams \
+  --target conversation:19:abc@thread.tacv2 \
+  --card '{"type":"AdaptiveCard","version":"1.5","body":[{"type":"TextBlock","text":"Status update"}]}'
 ```
 
 Enviar una imagen de Telegram como documento para evitar la compresión:

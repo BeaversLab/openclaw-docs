@@ -8,38 +8,44 @@ title: "OpenResponses API"
 
 # OpenResponses API (HTTP)
 
-OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1/responses` 端点。
+OpenClaw 的 Gateway 可以提供与 OpenResponses 兼容的 `POST /v1/responses` 端点。
 
 此端点**默认处于禁用状态**。请先在配置中启用它。
 
 - `POST /v1/responses`
-- 与 Gateway(网关) 相同的端口（WS + HTTP 多路复用）：`http://<gateway-host>:<port>/v1/responses`
+- 与 Gateway 相同的端口（WS + HTTP 多路复用）：`http://<gateway-host>:<port>/v1/responses`
 
-在底层，请求作为正常的 Gateway(网关) 代理运行执行（与 `openclaw agent` 代码路径相同），因此路由/权限/配置与您的 Gateway(网关) 匹配。
+在底层，请求作为正常的 Gateway 代理运行执行（与 `openclaw agent` 的代码路径相同），因此路由/权限/配置与您的 Gateway 匹配。
 
 ## 身份验证、安全和路由
 
-操作行为与 [OpenAI Chat Completions](/en/gateway/openai-http-api) 一致：
+操作行为与 [OpenAI Chat Completions](/en/gateway/openai-http-api) 相匹配：
 
-- 使用 `Authorization: Bearer <token>` 配合正常的 Gateway(网关) 身份验证配置
-- 将该端点视为对 gateway 实例的完整操作员访问权限
-- 对于共享密钥身份验证模式（`token` 和 `password`），忽略较窄的持有者声明的 `x-openclaw-scopes` 值，并恢复正常的完整操作员默认值
-- 对于承载身份的可信 HTTP 模式（例如可信代理身份验证或 `gateway.auth.mode="none"`），仍然遵守请求上声明的操作员范围
+- 使用匹配的 Gateway HTTP 认证路径：
+  - shared-secret 认证（`gateway.auth.mode="token"` 或 `"password"`）：`Authorization: Bearer <token-or-password>`
+  - trusted-proxy 认证（`gateway.auth.mode="trusted-proxy"`）：来自配置的非环回受信任代理源的具有身份感知的代理标头
+  - private-ingress 开放认证（`gateway.auth.mode="none"`）：无认证标头
+- 将该端点视为网关实例的完全操作员访问权限
+- 对于 shared-secret 认证模式（`token` 和 `password`），忽略较窄的 bearer 声明的 `x-openclaw-scopes` 值并恢复正常的标准操作员默认值
+- 对于受信任的承载身份的 HTTP 模式（例如受信任的代理认证或 `gateway.auth.mode="none"`），如果存在 `x-openclaw-scopes` 则遵循，否则回退到正常的操作员默认范围集
 - 使用 `model: "openclaw"`、`model: "openclaw/default"`、`model: "openclaw/<agentId>"` 或 `x-openclaw-agent-id` 选择代理
-- 当您想要覆盖所选代理的后端模型时，请使用 `x-openclaw-model`
+- 当您想要覆盖所选代理的后端模型时，使用 `x-openclaw-model`
 - 使用 `x-openclaw-session-key` 进行显式会话路由
-- 当您需要非默认的合成入站渠道上下文时，请使用 `x-openclaw-message-channel`
+- 当您需要非默认的合成入站渠道上下文时，使用 `x-openclaw-message-channel`
 
 认证矩阵：
 
 - `gateway.auth.mode="token"` 或 `"password"` + `Authorization: Bearer ...`
   - 证明拥有共享的网关操作员密钥
   - 忽略较窄的 `x-openclaw-scopes`
-  - 恢复完整的默认操作员作用域集
-  - 将此端点上的聊天对话轮次视为所有者发送者轮次
-- 承载受信任身份的 HTTP 模式（例如受信任的代理身份验证，或专用入口上的 `gateway.auth.mode="none"`）
-  - 遵照声明的 `x-openclaw-scopes` 标头
-  - 仅当 `operator.admin` 实际存在于那些声明的范围内时，才会获得所有者语义
+  - 恢复完整的默认操作员范围集：
+    `operator.admin`, `operator.approvals`, `operator.pairing`,
+    `operator.read`, `operator.talk.secrets`, `operator.write`
+  - 将此端点上的聊天轮次视为所有者-发送者轮次
+- 可信的身份承载 HTTP 模式（例如可信代理身份验证，或私有入口上的 `gateway.auth.mode="none"`）
+  - 当标头存在时遵守 `x-openclaw-scopes`
+  - 当标头不存在时，回退到正常的操作员默认范围集
+  - 仅当调用方显式缩小范围并省略 `operator.admin` 时，才会失去所有者语义
 
 使用 `gateway.http.endpoints.responses.enabled` 启用或禁用此端点。
 
@@ -50,27 +56,27 @@ OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-有关代理目标模型、`openclaw/default`、嵌入直通和后端模型覆盖如何协同工作的权威说明，请参阅 [OpenAI Chat Completions](/en/gateway/openai-http-api#agent-first-model-contract) 和 [Model list and agent routing](/en/gateway/openai-http-api#model-list-and-agent-routing)。
+有关代理目标模型、`openclaw/default`、嵌入直通和后端模型覆盖如何组合在一起的权威说明，请参阅 [OpenAI 聊天补全](/en/gateway/openai-http-api#agent-first-model-contract) 和 [模型列表和代理路由](/en/gateway/openai-http-api#model-list-and-agent-routing)。
 
 ## 会话行为
 
-默认情况下，该端点是**每个请求无状态**的（每次调用都会生成一个新的会话密钥）。
+默认情况下，该端点是**每个请求无状态的**（每次调用都会生成一个新的会话密钥）。
 
-如果请求包含 OpenResponses `user` 字符串，Gateway(网关) 会从中派生一个稳定的会话密钥，以便重复调用可以共享代理会话。
+如果请求包含 OpenResponses `user` 字符串，Gateway(网关) 会从中派生一个稳定的会话密钥，以便重复调用可以共享一个代理会话。
 
-## 请求形状（受支持）
+## 请求形状（支持的）
 
-请求遵循 OpenResponses API，采用基于项的输入。目前支持：
+请求遵循 OpenResponses API 并采用基于项的输入。当前支持：
 
 - `input`：字符串或项对象数组。
-- `instructions`：合并到系统提示中。
+- `instructions`：合并到系统提示词中。
 - `tools`：客户端工具定义（函数工具）。
 - `tool_choice`：过滤或要求客户端工具。
 - `stream`：启用 SSE 流式传输。
 - `max_output_tokens`：尽力而为的输出限制（取决于提供商）。
 - `user`：稳定的会话路由。
 
-接受但 **当前忽略**：
+已接受但**当前被忽略**：
 
 - `max_tool_calls`
 - `reasoning`
@@ -80,19 +86,19 @@ OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1
 
 支持：
 
-- `previous_response_id`：当请求保持在同一个 agent/user/requested-会话 范围内时，OpenClaw 会重用之前的响应会话。
+- `previous_response_id`：当请求保持在同一代理/用户/请求会话范围内时，OpenClaw 会重用之前的响应会话。
 
-## Items（输入）
+## Items (input)
 
 ### `message`
 
-角色：`system`，`developer`，`user`，`assistant`。
+角色：`system`、`developer`、`user`、`assistant`。
 
-- `system` 和 `developer` 被附加到系统提示词。
+- `system` 和 `developer` 会被附加到系统提示词中。
 - 最近的 `user` 或 `function_call_output` 项将成为“当前消息”。
-- 较早的用户/助手消息作为上下文历史包含在内。
+- 较早的用户/助理消息会作为历史记录包含在内以提供上下文。
 
-### `function_call_output`（基于轮次的工具）
+### `function_call_output` (turn-based tools)
 
 将工具结果发送回模型：
 
@@ -106,16 +112,16 @@ OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1
 
 ### `reasoning` 和 `item_reference`
 
-出于架构兼容性原因被接受，但在构建提示词时被忽略。
+接受此项以保持架构兼容性，但在构建提示词时会被忽略。
 
-## 工具（客户端函数工具）
+## Tools (client-side function tools)
 
-使用 `tools: [{ type: "function", function: { name, description?, parameters? } }]` 提供工具。
+通过 `tools: [{ type: "function", function: { name, description?, parameters? } }]` 提供工具。
 
 如果代理决定调用工具，响应将返回一个 `function_call` 输出项。
-然后，您需要发送一个带有 `function_call_output` 的后续请求以继续该回合。
+然后，您发送一个包含 `function_call_output` 的后续请求以继续该轮次。
 
-## 图像 (`input_image`)
+## Images (`input_image`)
 
 支持 base64 或 URL 来源：
 
@@ -129,7 +135,7 @@ OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1
 允许的 MIME 类型（当前）：`image/jpeg`、`image/png`、`image/gif`、`image/webp`、`image/heic`、`image/heif`。
 最大大小（当前）：10MB。
 
-## 文件 (`input_file`)
+## Files (`input_file`)
 
 支持 base64 或 URL 来源：
 
@@ -152,24 +158,32 @@ OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1
 
 当前行为：
 
-- 文件内容会被解码并添加到**系统提示词**中，而不是用户消息，
-  因此它是临时的（不会保存在会话历史中）。
-- PDF 会解析文本。如果找到的文本很少，首页将被栅格化
-  为图像并传递给模型。
+- 文件内容会被解码并添加到 **系统提示词** 中，而不是用户消息中，
+  因此它保持临时状态（不会保留在会话历史记录中）。
+- 解码后的文件文本在添加之前会被包装为**不受信任的外部内容**，因此文件字节被视为数据，而不是受信任的指令。
+- 注入的块使用显式边界标记，如
+  `<<<EXTERNAL_UNTRUSTED_CONTENT id="...">>>` /
+  `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>`，并且包含
+  `Source: External` 元数据行。
+- 此文件输入路径有意省略了冗长的 `SECURITY NOTICE:` 横幅以
+  保留提示词预算；边界标记和元数据仍然保留。
+- PDF 首先被解析为文本。如果发现的文本很少，首页将被
+  光栅化为图像并传递给模型，并且注入的文件块使用
+  占位符 `[PDF content rendered to images]`。
 
 PDF 解析使用兼容 Node 的 `pdfjs-dist` 旧版构建（无 worker）。现代
-PDF.js 构建期望浏览器 worker/DOM 全局变量，因此未在 Gateway(网关) 中使用。
+PDF.js 构建需要浏览器 worker/DOM 全局变量，因此未在 Gateway 中使用。
 
 URL 获取默认值：
 
 - `files.allowUrl`: `true`
 - `images.allowUrl`: `true`
-- `maxUrlParts`: `8`（每个请求中基于 URL 的 `input_file` + `input_image` 部分总计）
-- 请求受保护（DNS 解析、私有 IP 阻断、重定向限制、超时）。
-- 支持按输入类型（`files.urlAllowlist`、`images.urlAllowlist`）配置可选的主机名允许列表。
-  - 精确主机：`"cdn.example.com"`
-  - 通配符子域名：`"*.assets.example.com"`（不匹配顶级域名）
-  - 为空或省略允许列表表示没有主机名允许列表限制。
+- `maxUrlParts`: `8`（每个请求基于 URL 的 `input_file` + `input_image` 部分总计）
+- 请求受到保护（DNS 解析、私有 IP 阻断、重定向限制、超时）。
+- 支持按输入类型（`files.urlAllowlist`，`images.urlAllowlist`）配置可选的主机名允许列表。
+  - 精确主机： `"cdn.example.com"`
+  - 通配符子域名： `"*.assets.example.com"`（不匹配顶级域名）
+  - 空或省略的允许列表意味着没有主机名允许列表限制。
 - 要完全禁用基于 URL 的获取，请设置 `files.allowUrl: false` 和/或 `images.allowUrl: false`。
 
 ## 文件 + 图像限制（配置）
@@ -228,13 +242,13 @@ URL 获取默认值：
 - `images.maxBytes`: 10MB
 - `images.maxRedirects`: 3
 - `images.timeoutMs`: 10s
-- 接受 HEIC/HEIF `input_image` 源，并在提供商交付之前将其标准化为 JPEG。
+- 接受 HEIC/HEIF `input_image` 源，并在交付给提供商之前将其标准化为 JPEG。
 
 安全提示：
 
-- URL 允许列表在获取之前和重定向跳转时强制执行。
+- URL 允许列表在获取之前以及重定向跳转时强制执行。
 - 将主机名列入允许列表并不会绕过私有/内部 IP 阻止。
-- 对于暴露于互联网的网关，除了应用程序级别的保护之外，还应应用网络出口控制。
+- 对于暴露于互联网的网关，除应用程序级别的防护措施外，还应应用网络出口控制。
   请参阅[安全性](/en/gateway/security)。
 
 ## 流式传输 (SSE)
@@ -242,7 +256,7 @@ URL 获取默认值：
 设置 `stream: true` 以接收服务器发送事件 (SSE)：
 
 - `Content-Type: text/event-stream`
-- 每个事件行都是 `event: <type>` 和 `data: <json>`
+- 每个事件行包含 `event: <type>` 和 `data: <json>`
 - 流以 `data: [DONE]` 结束
 
 当前发出的事件类型：
@@ -256,15 +270,17 @@ URL 获取默认值：
 - `response.content_part.done`
 - `response.output_item.done`
 - `response.completed`
-- `response.failed` (发生错误时)
+- `response.failed` (出错时)
 
 ## 使用情况
 
-当底层提供商报告 token 计数时，将填充 `usage`。
+当底层提供商报告令牌计数时，将填充 `usage`。
+在那些计数器到达下游状态/会话表面之前，OpenClaw 会标准化常见的 OpenAI 样式别名，包括 `input_tokens` / `output_tokens`
+和 `prompt_tokens` / `completion_tokens`。
 
 ## 错误
 
-错误使用如下 JSON 对象：
+错误使用类似以下的 JSON 对象：
 
 ```json
 { "error": { "message": "...", "type": "invalid_request_error" } }
@@ -272,9 +288,9 @@ URL 获取默认值：
 
 常见情况：
 
-- `401` 身份验证缺失/无效
-- `400` 请求正文无效
-- `405` 方法错误
+- `401` 缺失/无效的身份验证
+- `400` 无效的请求正文
+- `405` 错误的方法
 
 ## 示例
 

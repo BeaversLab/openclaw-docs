@@ -33,7 +33,7 @@ OpenClaw 可以顯示一個單獨的後續步驟，以使用相同的
 ## 取得 API 金鑰
 
 <Steps>
-  <Step title="建立金鑰">
+  <Step title="Create a key">
     從 [xAI](https://console.x.ai/) 取得 API 金鑰。
   </Step>
   <Step title="儲存金鑰">
@@ -81,11 +81,14 @@ Grok 使用 xAI 的網路落地回應來綜合帶有內聯引用的答案，
 
 ## 支援的參數
 
-Grok 搜尋支援標準 `query` 和 `count` 參數。
-目前不支援供應商特定的過濾器。
+Grok 搜尋支援 `query`。
+
+為了共用 `web_search` 的相容性，接受 `count`，但 Grok 仍然會傳回一個帶有引用的綜合答案，而不是 N 個結果的清單。
+
+目前不支援供應商特定的篩選器。
 
 ## 相關
 
-- [Web Search 概觀](/en/tools/web) -- 所有供應商和自動偵測
-- [Web Search 中的 x_search](/en/tools/web#x_search) -- 透過 xAI 進行一等的 X 搜尋
-- [Gemini Search](/en/tools/gemini-search) -- 透過 Google 落地獲得 AI 綜合答案
+- [網路搜尋總覽](/en/tools/web) -- 所有供應商和自動偵測
+- [網路搜尋中的 x_search](/en/tools/web#x_search) -- 透過 xAI 進行一流的 X 搜尋
+- [Gemini 搜尋](/en/tools/gemini-search) -- 透過 Google grounding 產生的 AI 綜合答案

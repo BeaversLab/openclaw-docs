@@ -42,7 +42,7 @@ openclaw browser --browser-profile openclaw snapshot
 Si vous obtenez « Navigateur désactivé », activez-le dans la configuration (voir ci-dessous) et redémarrez la
 Gateway.
 
-Si `openclaw browser` est entièrement manquant, ou si l'agent indique que l'outil de navigation n'est pas disponible, passez à [Commande ou outil de navigateur manquant](/en/tools/browser#missing-browser-command-or-tool).
+Si `openclaw browser` est totalement absent, ou si l'agent indique que l'outil de navigation n'est pas disponible, passez à [Commande ou outil de navigateur manquant](/en/tools/browser#missing-browser-command-or-tool).
 
 ## Contrôle des plugins
 
@@ -230,37 +230,35 @@ openclaw config set browser.executablePath "/usr/bin/google-chrome"
 - **CDP distant :** définissez `browser.profiles.<name>.cdpUrl` (ou `browser.cdpUrl`) pour
   vous connecter à un navigateur distant basé sur Chromium. Dans ce cas, OpenClaw ne lancera pas de navigateur local.
 
+Le comportement d'arrêt diffère selon le mode de profil :
+
+- profils gérés localement : `openclaw browser stop` arrête le processus de navigateur lancé par OpenClaw
+- profils attach-only et CDP distants : `openclaw browser stop` ferme la session de contrôle active et libère les remplacements d'émulation Playwright/CDP (viewport, jeu de couleurs, langue, fuseau horaire, mode hors ligne et états similaires), même si aucun processus de navigateur n'a été lancé par OpenClaw
+
 Les URL CDP distantes peuvent inclure une authentification :
 
-- Jetons de requête (par ex., `https://provider.example?token=<token>`)
-- Authentification HTTP Basic (par ex., `https://user:pass@provider.example`)
+- Jetons de requête (par exemple, `https://provider.example?token=<token>`)
+- Authentification HTTP Basic (par exemple, `https://user:pass@provider.example`)
 
-OpenClaw préserve l'authentification lors de l'appel des points de terminaison `/json/*` et lors de la connexion
-au WebSocket CDP. Privilégiez les variables d'environnement ou les gestionnaires de secrets pour
-les jetons plutôt que de les commiter dans les fichiers de configuration.
+OpenClaw préserve l'authentification lors de l'appel des points de terminaison `/json/*` et lors de la connexion au WebSocket CDP. Privilégiez les variables d'environnement ou les gestionnaires de secrets pour les jetons plutôt que de les committing dans les fichiers de configuration.
 
 ## Proxy de navigateur de nœud (par défaut sans configuration)
 
-Si vous exécutez un **hôte de nœud** sur la machine qui possède votre navigateur, OpenClaw peut
-router automatiquement les appels d'outil de navigateur vers ce nœud sans aucune configuration supplémentaire du navigateur.
-C'est le chemin par défaut pour les passerelles distantes.
+Si vous exécutez un **hôte de nœud** sur la machine qui contient votre navigateur, OpenClaw peut acheminer automatiquement les appels de l'outil de navigateur vers ce nœud sans configuration supplémentaire. C'est le chemin par défaut pour les passerelles distantes.
 
 Notes :
 
-- L'hôte de nœud expose son serveur de contrôle de navigateur local via une **commande de proxy**.
+- L'hôte de nœud expose son serveur de contrôle de navigateur local via une **commande proxy**.
 - Les profils proviennent de la propre configuration `browser.profiles` du nœud (identique au mode local).
 - `nodeHost.browserProxy.allowProfiles` est facultatif. Laissez-le vide pour le comportement hérité par défaut : tous les profils configurés restent accessibles via le proxy, y compris les routes de création/suppression de profils.
-- Si vous définissez `nodeHost.browserProxy.allowProfiles`, OpenClaw le traite comme une frontière de moindre privilège : seuls les profils autorisés peuvent être ciblés, et les routes de création/suppression persistantes de profils sont bloquées sur la surface du proxy.
-- Désactivez si vous ne le souhaitez pas :
+- Si vous définissez `nodeHost.browserProxy.allowProfiles`, OpenClaw le considère comme une limite de moindre privilège : seuls les profils autorisés peuvent être ciblés, et les routes de création/suppression de profils persistants sont bloquées sur la surface du proxy.
+- Désactivez-le si vous ne le souhaitez pas :
   - Sur le nœud : `nodeHost.browserProxy.enabled=false`
   - Sur la passerelle : `gateway.nodes.browser.mode="off"`
 
 ## Browserless (CDP distant hébergé)
 
-[Browserless](https://browserless.io) est un service Chromium hébergé qui expose
-les URL de connexion CDP via HTTPS et WebSocket. OpenClaw peut utiliser l'une ou l'autre forme, mais
-pour un profil de navigateur distant, l'option la plus simple est l'URL WebSocket directe
-depuis la documentation de connexion de Browserless.
+[Browserless](https://browserless.io) est un service Chromium hébergé qui expose des URL de connexion CDP via HTTPS et WebSocket. OpenClaw peut utiliser l'une ou l'autre forme, mais pour un profil de navigateur distant, l'option la plus simple est l'URL WebSocket directe issue de la documentation de connexion de Browserless.
 
 Exemple :
 
@@ -283,29 +281,20 @@ Exemple :
 
 Notes :
 
-- Remplacez `<BROWSERLESS_API_KEY>` par votre véritable jeton Browserless.
-- Choisissez le point de terminaison de région qui correspond à votre compte Browserless (voir leur documentation).
-- Si Browserless vous fournit une URL de base HTTPS, vous pouvez soit la convertir en
-  `wss://` pour une connexion CDP directe soit conserver l'URL HTTPS et laisser OpenClaw
-  découvrir `/json/version`.
+- Remplacez `<BROWSERLESS_API_KEY>` par votre vrai jeton Browserless.
+- Choisissez le point de terminaison régional qui correspond à votre compte Browserless (voir leur documentation).
+- Si Browserless vous fournit une URL de base HTTPS, vous pouvez soit la convertir en `wss://` pour une connexion CDP directe, soit conserver l'URL HTTPS et laisser OpenClaw découvrir `/json/version`.
 
-## Fournisseurs CDP WebSocket directs
+## Fournisseurs WebSocket CDP directs
 
-Certains services de navigateur hébergés exposent un point de terminaison **WebSocket direct** plutôt que
-la découverte CDP standard basée sur HTTP (`/json/version`). OpenClaw prend en charge les deux :
+Certains services de navigateur hébergés exposent un point de terminaison **WebSocket direct** plutôt que la découverte CDP standard basée sur HTTP (`/json/version`). OpenClaw prend en charge les deux :
 
-- **Points de terminaison HTTP(S)** — OpenClaw appelle `/json/version` pour découvrir l'URL
-  du débogueur WebSocket, puis se connecte.
-- **Points de terminaison WebSocket** (`ws://` / `wss://`) — OpenClaw se connecte directement,
-  en ignorant `/json/version`. Utilisez ceci pour des services tels que
-  [Browserless](https://browserless.io),
-  [Browserbase](https://www.browserbase.com), ou tout fournisseur qui vous fournit une
-  URL WebSocket.
+- **Points de terminaison HTTP(S)** — OpenClaw appelle `/json/version` pour découvrir l'URL du débogueur WebSocket, puis se connecte.
+- **Points de terminaison WebSocket** (`ws://` / `wss://`) — OpenClaw se connecte directement, en ignorant `/json/version`. Utilisez cela pour des services comme [Browserless](https://browserless.io), [Browserbase](https://www.browserbase.com), ou tout fournisseur qui vous fournit une URL WebSocket.
 
 ### Browserbase
 
-[Browserbase](https://www.browserbase.com) est une plate-forme cloud pour exécuter des navigateurs
-headless avec résolution intégrée de CAPTCHA, mode furtif et proxys résidentiels.
+[Browserbase](https://www.browserbase.com) est une plate-forme cloud pour exécuter des navigateurs sans tête avec résolution intégrée de CAPTCHA, mode furtif et proxys résidentiels.
 
 ```json5
 {
@@ -326,28 +315,29 @@ headless avec résolution intégrée de CAPTCHA, mode furtif et proxys résident
 
 Notes :
 
-- [Inscrivez-vous](https://www.browserbase.com/sign-up) et copiez votre **clé API**
-  depuis le [tableau de bord Overview](https://www.browserbase.com/overview).
+- [Inscrivez-vous](https://www.browserbase.com/sign-up) et copiez votre **clé API** depuis le [tableau de bord Overview](https://www.browserbase.com/overview).
 - Remplacez `<BROWSERBASE_API_KEY>` par votre vraie clé API Browserbase.
-- Browserbase crée automatiquement une session de navigateur lors de la connexion WebSocket, donc aucune
-  étape de création manuelle de session n'est nécessaire.
-- La offre gratuite permet une session simultanée et une heure de navigateur par mois.
-  Voir [la tarification](https://www.browserbase.com/pricing) pour les limites des plans payants.
-- Consultez la [documentation Browserbase](https://docs.browserbase.com) pour une référence complète de l'API,
-  les guides SDK et les exemples d'intégration.
+- Browserbase crée automatiquement une session de navigateur lors de la connexion WebSocket, aucune étape de création de session manuelle n'est donc nécessaire.
+- Le niveau gratuit autorise une session simultanée et une heure de navigateur par mois. Consultez la [tarification](https://www.browserbase.com/pricing) pour les limites des plans payants.
+- Consultez la [documentation Browserbase](https://docs.browserbase.com) pour une référence complète de l'API, les guides SDK et les exemples d'intégration.
 
 ## Sécurité
 
-Idées clés :
+Points clés :
 
-- Le contrôle du navigateur est en boucle locale uniquement ; l'accès transite par l'authentification du Gateway ou le jumelage de nœuds.
-- Si le contrôle du navigateur est activé et qu'aucune authentification n'est configurée, OpenClaw génère automatiquement `gateway.auth.token` au démarrage et le persiste dans la configuration.
+- Le contrôle du navigateur est en boucle locale uniquement ; l'accès transite par l'authentification ou le jumelage de nœud du Gateway.
+- L'HTTP API du navigateur en boucle locale autonome utilise **uniquement l'authentification par secret partagé** : authentification du porteur par jeton de passerelle, `x-openclaw-password`, ou authentification HTTP Basic avec le mot de passe de la passerelle configuré.
+- Les en-têtes d'identité Tailscale Serve et `gateway.auth.mode: "trusted-proxy"` n'**authentifient pas** cette API de navigateur en boucle locale autonome.
+- Si le contrôle du navigateur est activé et qu'aucune authentification par secret partagé n'est configurée, OpenClaw
+  génère automatiquement `gateway.auth.token` au démarrage et le persiste dans la configuration.
+- OpenClaw ne génère **pas** automatiquement ce jeton lorsque `gateway.auth.mode` est
+  déjà `password`, `none`, ou `trusted-proxy`.
 - Gardez le Gateway et tous les hôtes de nœuds sur un réseau privé (Tailscale) ; évitez l'exposition publique.
-- Traitez les URL/jetons CDP distants comme des secrets ; privilégiez les variables d'environnement ou un gestionnaire de secrets.
+- Traitez les URL/jetons CDP distants comme des secrets ; préférez les env vars ou un gestionnaire de secrets.
 
 Conseils pour le CDP distant :
 
-- Privilégiez les points de terminaison chiffrés (HTTPS ou WSS) et les jetons à courte durée de vie dans la mesure du possible.
+- Préférez les points de terminaison chiffrés (HTTPS ou WSS) et les jetons à courte durée de vie dans la mesure du possible.
 - Évitez d'intégrer directement des jetons à longue durée de vie dans les fichiers de configuration.
 
 ## Profils (multi-navigateur)
@@ -356,7 +346,7 @@ OpenClaw prend en charge plusieurs profils nommés (configurations de routage). 
 
 - **openclaw-managed** : une instance de navigateur basée sur Chromium dédiée avec son propre répertoire de données utilisateur + port CDP
 - **remote** : une URL CDP explicite (navigateur basé sur Chromium s'exécutant ailleurs)
-- **existing session** : votre profil Chrome existant via Chrome DevTools MCP auto-connect
+- **existing session** : votre profil Chrome existant via Chrome DevTools MCP en connexion automatique
 
 Valeurs par défaut :
 
@@ -371,12 +361,12 @@ Tous les points de terminaison de contrôle acceptent `?profile=<name>` ; la CLI
 ## Session existante via Chrome DevTools MCP
 
 OpenClaw peut également s'attacher à un profil de navigateur basé sur Chromium en cours d'exécution via le
-serveur MCP officiel Chrome DevTools. Cela réutilise les onglets et l'état de connexion
-ouverts dans ce profil de navigateur.
+serveur officiel Chrome DevTools MCP. Cela réutilise les onglets et l'état de connexion
+déjà ouverts dans ce profil de navigateur.
 
 Références officielles pour l'arrière-plan et la configuration :
 
-- [Chrome pour les développeurs : Utiliser Chrome DevTools MCP avec votre session de navigateur](https://developer.chrome.com/blog/chrome-devtools-mcp-debug-your-browser-session)
+- [Chrome for Developers: Use Chrome DevTools MCP with your browser session](https://developer.chrome.com/blog/chrome-devtools-mcp-debug-your-browser-session)
 - [Chrome DevTools MCP README](https://github.com/ChromeDevTools/chrome-devtools-mcp)
 
 Profil intégré :
@@ -388,10 +378,9 @@ nom, une couleur ou un répertoire de données de navigateur différent.
 
 Comportement par défaut :
 
-- Le profil intégré `user` utilise l'auto-connexion Chrome MCP, qui cible le
-  profil local par défaut de Google Chrome.
+- Le profil intégré `user` utilise la connexion automatique Chrome MCP, qui cible le profil local par défaut de Google Chrome.
 
-Utilisez `userDataDir` pour Brave, Edge, Chromium, ou un profil Chrome non par défaut :
+Utilisez `userDataDir` pour Brave, Edge, Chromium ou un profil Chrome non par défaut :
 
 ```json5
 {
@@ -412,7 +401,7 @@ Ensuite, dans le navigateur correspondant :
 
 1. Ouvrez la page d'inspection de ce navigateur pour le débogage à distance.
 2. Activez le débogage à distance.
-3. Gardez le navigateur en cours d'exécution et approuvez la invite de connexion lorsque OpenClaw se connecte.
+3. Gardez le navigateur ouvert et approuvez l'invite de connexion lorsque OpenClaw se connecte.
 
 Pages d'inspection courantes :
 
@@ -420,7 +409,7 @@ Pages d'inspection courantes :
 - Brave : `brave://inspect/#remote-debugging`
 - Edge : `edge://inspect/#remote-debugging`
 
-Test de fumée d'attachement en direct :
+Test de fumée de connexion en direct :
 
 ```bash
 openclaw browser --browser-profile user start
@@ -434,53 +423,52 @@ openclaw browser --browser-profile user snapshot --format ai
 - `status` affiche `driver: existing-session`
 - `status` affiche `transport: chrome-mcp`
 - `status` affiche `running: true`
-- `tabs` répertorie vos onglets de navigateur déjà ouverts
-- `snapshot` renvoie les références de l'onglet en direct sélectionné
+- `tabs` liste vos onglets de navigateur déjà ouverts
+- `snapshot` renvoie des références à partir de l'onglet en direct sélectionné
 
-Ce qu'il faut vérifier si l'attachement ne fonctionne pas :
+Que vérifier si la connexion ne fonctionne pas :
 
-- le navigateur Chromium cible est en version `144+`
+- le navigateur cible basé sur Chromium est en version `144+`
 - le débogage à distance est activé dans la page d'inspection de ce navigateur
-- le navigateur a affiché et vous avez accepté l'invite de consentement d'attachement
-- `openclaw doctor` migre l'ancienne configuration de navigateur basée sur les extensions et vérifie que
-  Chrome est installé localement pour les profils de connexion automatique par défaut, mais il ne peut
-  activer le débogage à distance côté navigateur pour vous
+- le navigateur a affiché l'invite et vous avez accepté la demande de consentement de connexion
+- `openclaw doctor` migre l'ancienne configuration de navigateur basée sur l'extension et vérifie que Chrome est installé localement pour les profils de connexion automatique par défaut, mais il ne peut pas activer le débogage à distance côté navigateur pour vous
 
 Utilisation par l'agent :
 
 - Utilisez `profile="user"` lorsque vous avez besoin de l'état du navigateur connecté de l'utilisateur.
-- Si vous utilisez un profil de session existant personnalisé, passez ce nom de profil explicite.
-- Ne choisissez ce mode que lorsque l'utilisateur est devant l'ordinateur pour approuver l'invite
-  d'attachement.
+- Si vous utilisez un profil de session existant personnalisé, transmettez ce nom de profil explicite.
+- Ne choisissez ce mode que lorsque l'utilisateur est devant l'ordinateur pour approuver l'invite de connexion.
 - le Gateway ou l'hôte du nœud peut générer `npx chrome-devtools-mcp@latest --autoConnect`
 
-Notes :
+Remarques :
 
-- Ce chemin présente un risque plus élevé que le profil isolé `openclaw` car il peut
-  agir au sein de votre session de navigateur connectée.
-- OpenClaw ne lance pas le navigateur pour ce pilote ; il s'attache uniquement à
-  une session existante.
-- OpenClaw utilise ici le flux MCP officiel de Chrome DevTools `--autoConnect`. Si
-  `userDataDir` est défini, OpenClaw le transmet pour cibler ce répertoire
-  explicite de données utilisateur Chromium.
-- Les captures d'écran de session existante prennent en charge les captures de page et les captures d'élément
-  `--ref` à partir d'instantanés, mais pas les sélecteurs CSS `--element`.
-- La `wait --url` de session existante prend en charge les modèles exacts, de sous-chaîne et glob,
-  tout comme les autres pilotes de navigateur. `wait --load networkidle` n'est pas encore pris en charge.
-- Certaines fonctionnalités nécessitent encore le chemin du navigateur géré, telles que l'exportation PDF et
-  l'interception des téléchargements.
-- La session existante est locale à l'hôte. Si Chrome se trouve sur une machine différente ou un
-  espace de noms réseau différent, utilisez plutôt le CDP distant ou un hôte de nœud.
+- Ce chemin présente un risque plus élevé que le profil isolé `openclaw` car il peut agir au sein de votre session de navigateur connectée.
+- OpenClaw ne lance pas le navigateur pour ce pilote ; il se connecte uniquement à une session existante.
+- OpenClaw utilise ici le flux officiel `--autoConnect` de Chrome DevTools MCP. Si `userDataDir` est défini, OpenClaw le transmet pour cibler ce répertoire de données utilisateur Chromium explicite.
+- Les captures d'écran de session existante prennent en charge les captures de page et les captures d'éléments `--ref` à partir d'instantanés, mais pas les sélecteurs CSS `--element`.
+- Les captures d'écran de page de session existante fonctionnent sans Playwright via Chrome MCP. Les captures d'écran d'élément basées sur des références (`--ref`) fonctionnent également, mais `--full-page` ne peut pas être combiné avec `--ref` ou `--element`.
+- Les actions de session existante sont toujours plus limitées que le chemin du navigateur géré :
+  - `click`, `type`, `hover`, `scrollIntoView`, `drag`, et `select` nécessitent des références d'instantanés au lieu de sélecteurs CSS
+  - `click` est uniquement le bouton gauche (pas de substitution de bouton ni de modificateurs)
+  - `type` ne prend pas en charge `slowly=true` ; utilisez `fill` ou `press`
+  - `press` ne prend pas en charge `delayMs`
+  - `hover`, `scrollIntoView`, `drag`, `select`, `fill`, et `evaluate` ne prennent pas en charge les substitutions de délai d'attente par appel
+  - `select` prend actuellement en charge une seule valeur uniquement
+- Le `wait --url` de session existante prend en charge les modèles exacts, de sous-chaîne et glob, comme les autres pilotes de navigateur. `wait --load networkidle` n'est pas encore pris en charge.
+- Les hooks de téléchargement de session existante nécessitent `ref` ou `inputRef`, prennent en charge un fichier à la fois et ne prennent pas en charge le ciblage CSS `element`.
+- Les hooks de dialogue de session existante ne prennent pas en charge les substitutions de délai d'attente.
+- Certaines fonctionnalités nécessitent encore le chemin du navigateur géré, notamment les actions par lot, l'exportation PDF, l'interception des téléchargements et `responsebody`.
+- La session existante est locale à l'hôte. Si Chrome se trouve sur une machine différente ou un espace de noms réseau différent, utilisez CDP distant ou un hôte de nœud à la place.
 
 ## Garanties d'isolement
 
-- **Répertoire de données utilisateur dédié** : ne touche jamais à votre profil de navigateur personnel.
-- **Ports dédiés** : évite `9222` pour empêcher les collisions avec les flux de travail de développement.
-- **Contrôle déterministe des onglets** : cibler les onglets par `targetId`, et non « dernier onglet ».
+- **Répertoire de données utilisateur dédié** : n'affecte jamais votre profil de navigateur personnel.
+- **Ports dédiés** : évite `9222` pour éviter les conflits avec les flux de travail de développement.
+- **Contrôle déterministe des onglets** : cible les onglets par `targetId`, et non « dernier onglet ».
 
 ## Sélection du navigateur
 
-Lors d'un lancement local, OpenClaw choisit le premier disponible :
+Lors du lancement local, OpenClaw choisit le premier disponible :
 
 1. Chrome
 2. Brave
@@ -488,7 +476,7 @@ Lors d'un lancement local, OpenClaw choisit le premier disponible :
 4. Chromium
 5. Chrome Canary
 
-Vous pouvez remplacer cela avec `browser.executablePath`.
+Vous pouvez remplacer avec `browser.executablePath`.
 
 Plateformes :
 
@@ -496,9 +484,9 @@ Plateformes :
 - Linux : recherche `google-chrome`, `brave`, `microsoft-edge`, `chromium`, etc.
 - Windows : vérifie les emplacements d'installation courants.
 
-## API de contrôle (optionnelle)
+## Contrôle de l'API (facultatif)
 
-Pour les intégrations locales uniquement, le Gateway expose une petite API HTTP de bouclage (loopback) API :
+Pour les intégrations locales uniquement, le Gateway expose une petite API HTTP de bouclage :
 
 - Statut/démarrage/arrêt : `GET /`, `POST /start`, `POST /stop`
 - Onglets : `GET /tabs`, `POST /tabs/open`, `POST /tabs/focus`, `DELETE /tabs/:targetId`
@@ -515,25 +503,42 @@ Pour les intégrations locales uniquement, le Gateway expose une petite API HTTP
 
 Tous les points de terminaison acceptent `?profile=<name>`.
 
-Si l'authentification de la passerelle est configurée, les routes HTTP du navigateur nécessitent également une authentification :
+Si l'authentification de passerelle par secret partagé est configurée, les itinéraires HTTP du navigateur nécessitent également une authentification :
 
 - `Authorization: Bearer <gateway token>`
 - `x-openclaw-password: <gateway password>` ou authentification HTTP Basic avec ce mot de passe
 
+Remarques :
+
+- Cette API de navigateur en boucle locale autonome ne consomme **pas** les en-têtes d'identité trusted-proxy ou Tailscale Serve.
+- Si `gateway.auth.mode` est `none` ou `trusted-proxy`, ces itinéraires de navigateur en boucle locale n'héritent pas de ces modes porteurs d'identité ; gardez-les uniquement en boucle locale.
+
 ### Configuration requise pour Playwright
 
-Certaines fonctionnalités (navigation/action/instantané IA/instantané de rôle, captures d'écran d'éléments, PDF) nécessitent
-Playwright. Si Playwright n'est pas installé, ces points de terminaison renvoient une erreur 501
-claire. Les instantanés ARIA et les captures d'écran de base fonctionnent toujours pour le Chrome géré par OpenClaw.
+Certaines fonctionnalités (navigation/action/snapshot IA/snapshot de rôle, captures d'écran d'éléments, PDF) nécessitent Playwright. Si Playwright n'est pas installé, ces points de terminaison renvoient une erreur 501 claire.
 
-Si vous voyez `Playwright is not available in this gateway build`, installez le package complet
-Playwright (pas `playwright-core`) et redémarrez la passerelle, ou réinstallez
-OpenClaw avec la prise en charge du navigateur.
+Ce qui fonctionne toujours sans Playwright :
+
+- Snapshots ARIA
+- Captures d'écran de page pour le navigateur géré `openclaw` lorsqu'un WebSocket CDP par onglet est disponible
+- Captures d'écran de page pour les profils `existing-session` / Chrome MCP
+- Captures d'écran basées sur la référence `existing-session` (`--ref`) à partir de la sortie du snapshot
+
+Ce qui nécessite toujours Playwright :
+
+- `navigate`
+- `act`
+- Snapshots IA / snapshots de rôle
+- Captures d'écran d'éléments par sélecteur CSS (`--element`)
+- exportation PDF complète du navigateur
+
+Les captures d'écran d'éléments rejettent également `--full-page` ; l'itinéraire renvoie `fullPage is not supported for element screenshots`.
+
+Si vous voyez `Playwright is not available in this gateway build`, installez le package complet Playwright (pas `playwright-core`) et redémarrez la passerelle, ou réinstallez OpenClaw avec la prise en charge du navigateur.
 
 #### Installation de Playwright sur Docker
 
-Si votre Gateway s'exécute dans Docker, évitez `npx playwright` (conflits de remplacement npm).
-Utilisez plutôt l'interface de ligne de commande (CLI) incluse :
+Si votre Gateway s'exécute dans Docker, évitez `npx playwright` (conflits de remplacement npm). Utilisez plutôt la CLI fournie :
 
 ```bash
 docker compose run --rm openclaw-cli \
@@ -542,7 +547,7 @@ docker compose run --rm openclaw-cli \
 
 Pour conserver les téléchargements du navigateur, définissez `PLAYWRIGHT_BROWSERS_PATH` (par exemple,
 `/home/node/.cache/ms-playwright`) et assurez-vous que `/home/node` est conservé via
-`OPENCLAW_HOME_VOLUME` ou un montage de liaison. Voir [Docker](/en/install/docker).
+`OPENCLAW_HOME_VOLUME` ou un montage de liaison (bind mount). Voir [Docker](/en/install/docker).
 
 ## Fonctionnement (interne)
 
@@ -550,14 +555,14 @@ Flux de haut niveau :
 
 - Un petit **serveur de contrôle** accepte les requêtes HTTP.
 - Il se connecte aux navigateurs basés sur Chromium (Chrome/Brave/Edge/Chromium) via **CDP**.
-- Pour les actions avancées (clic/frappe/instantané/PDF), il utilise **Playwright** par-dessus
+- Pour les actions avancées (clic/frappe/capture d'écran/PDF), il utilise **Playwright** par-dessus
   CDP.
-- Lorsque Playwright est manquant, seules les opérations non Playwright sont disponibles.
+- Lorsque Playwright est manquant, seules les opérations non-Playwright sont disponibles.
 
 Cette conception maintient l'agent sur une interface stable et déterministe tout en vous permettant
 d'échanger des navigateurs et des profils locaux/distants.
 
-## Référence rapide de l'interface de ligne de commande
+## Référence rapide CLI
 
 Toutes les commandes acceptent `--browser-profile <name>` pour cibler un profil spécifique.
 Toutes les commandes acceptent également `--json` pour une sortie lisible par machine (charges utiles stables).
@@ -590,6 +595,13 @@ Inspection :
 - `openclaw browser snapshot --selector "#main" --interactive`
 - `openclaw browser snapshot --frame "iframe#main" --interactive`
 - `openclaw browser console --level error`
+
+Note sur le cycle de vie :
+
+- Pour les profils attachés uniquement et distants CDP, `openclaw browser stop` reste toujours la
+  bonne commande de nettoyage après les tests. Elle ferme la session de contrôle active et
+  efface les substitutions d'émulation temporaires au lieu de tuer le navigateur
+  sous-jacent.
 - `openclaw browser errors --clear`
 - `openclaw browser requests --filter api --clear`
 - `openclaw browser pdf`
@@ -640,51 +652,51 @@ Actions :
 
 Notes :
 
-- `upload` et `dialog` sont des appels de **préparation** ; exécutez-les avant le clic/l'appui
+- `upload` et `dialog` sont des appels d'**armement** ; exécutez-les avant le clic/pression
   qui déclenche le sélecteur/la boîte de dialogue.
-- Les chemins de téléchargement et de sortie de trace sont limités aux racines temporaires OpenClaw :
+- Les chemins de téléchargement et de sortie de trace sont limités aux racines temporaires de OpenClaw :
   - traces : `/tmp/openclaw` (repli : `${os.tmpdir()}/openclaw`)
-  - téléchargements : `/tmp/openclaw/downloads` (alternative : `${os.tmpdir()}/openclaw/downloads`)
-- Les chemins de téléchargement sont limités à une racine de téléchargements temporaires OpenClaw :
-  - téléchargements : `/tmp/openclaw/uploads` (alternative : `${os.tmpdir()}/openclaw/uploads`)
+  - téléchargements : `/tmp/openclaw/downloads` (repli : `${os.tmpdir()}/openclaw/downloads`)
+- Les chemins de téléversement sont limités à une racine de téléversements temporaire de OpenClaw :
+  - téléversements : `/tmp/openclaw/uploads` (repli : `${os.tmpdir()}/openclaw/uploads`)
 - `upload` peut également définir directement les entrées de fichiers via `--input-ref` ou `--element`.
 - `snapshot` :
   - `--format ai` (par défaut lorsque Playwright est installé) : renvoie un instantané IA avec des références numériques (`aria-ref="<n>"`).
-  - `--format aria` : renvoie l'arbre d'accessibilité (pas de références ; inspection uniquement).
+  - `--format aria` : renvoie l'arbre d'accessibilité (aucune référence ; inspection uniquement).
   - `--efficient` (ou `--mode efficient`) : préréglage d'instantané de rôle compact (interactif + compact + profondeur + maxChars inférieur).
-  - Config par défaut (tool/CLI uniquement) : définissez `browser.snapshotDefaults.mode: "efficient"` pour utiliser des instantanés efficaces lorsque l'appelant ne transmet pas de mode (voir [Gateway configuration](/en/gateway/configuration-reference#browser)).
+  - Config par défaut (tool/CLI uniquement) : définissez `browser.snapshotDefaults.mode: "efficient"` pour utiliser des instantanés efficaces lorsque l'appelant ne transmet pas de mode (voir [configuration Gateway](/en/gateway/configuration-reference#browser)).
   - Les options d'instantané de rôle (`--interactive`, `--compact`, `--depth`, `--selector`) forcent un instantané basé sur les rôles avec des références comme `ref=e12`.
-  - `--frame "<iframe selector>"` limite la portée des instantanés de rôle à une iframe (se combine avec des références de rôle comme `e12`).
-  - `--interactive` produit une liste plate et facile à choisir d'éléments interactifs (idéal pour piloter les actions).
-  - `--labels` ajoute une capture d'écran de la zone d'affichage uniquement avec des étiquettes de référence superposées (imprime `MEDIA:<path>`).
-- `click`/`type`/etc nécessitent une `ref` issue de `snapshot` (soit une référence numérique `12` soit une référence de rôle `e12`).
-  Les sélecteurs CSS ne sont volontairement pas pris en charge pour les actions.
+  - `--frame "<iframe selector>"` limite la portée des instantanés de rôle à une iframe (s'associe aux références de rôle comme `e12`).
+  - `--interactive` renvoie une liste plate et facile à choisir d'éléments interactifs (idéal pour piloter les actions).
+  - `--labels` ajoute une capture d'écran limitée à la fenêtre d'affichage avec des étiquettes de référence superposées (imprime `MEDIA:<path>`).
+- `click`/`type`/etc nécessitent une `ref` de `snapshot` (soit numérique `12` soit une référence de rôle `e12`).
+  Les sélecteurs CSS ne sont intentionnellement pas pris en charge pour les actions.
 
 ## Instantanés et références
 
 OpenClaw prend en charge deux styles d'« instantané » :
 
 - **Instantané IA (références numériques)** : `openclaw browser snapshot` (par défaut ; `--format ai`)
-  - Sortie : un instantané textuel qui inclut des références numériques.
+  - Sortie : un instantané textuel incluant des références numériques.
   - Actions : `openclaw browser click 12`, `openclaw browser type 23 "hello"`.
-  - En interne, la référence est résolue via le `aria-ref` de Playwright.
+  - En interne, la référence est résolue via `aria-ref` de Playwright.
 
-- **Snapshot de rôle (références de rôle comme `e12`)** : `openclaw browser snapshot --interactive` (ou `--compact`, `--depth`, `--selector`, `--frame`)
+- **Instantané de rôle (références de rôle comme `e12`)** : `openclaw browser snapshot --interactive` (ou `--compact`, `--depth`, `--selector`, `--frame`)
   - Sortie : une liste/arborescence basée sur les rôles avec `[ref=e12]` (et `[nth=1]` facultatif).
   - Actions : `openclaw browser click e12`, `openclaw browser highlight e12`.
   - En interne, la référence est résolue via `getByRole(...)` (plus `nth()` pour les doublons).
   - Ajoutez `--labels` pour inclure une capture d'écran de la fenêtre d'affichage avec des étiquettes `e12` superposées.
 
-Comportement de la référence :
+Comportement des références :
 
-- Les références **ne sont pas stables lors des navigations** ; en cas d'échec, relancez `snapshot` et utilisez une nouvelle référence.
-- Si le snapshot de rôle a été pris avec `--frame`, les références de rôle sont limitées à cette iframe jusqu'au prochain snapshot de rôle.
+- Les références ne sont **pas stables d'une navigation à l'autre** ; en cas d'échec, relancez `snapshot` et utilisez une nouvelle référence.
+- Si la capture d'état du rôle a été effectuée avec `--frame`, les références de rôle sont limitées à cette iframe jusqu'à la prochaine capture de rôle.
 
-## Améliorations d'attente (Wait power-ups)
+## Améliorations d'attente
 
 Vous pouvez attendre plus que le temps/le texte :
 
-- Attendre une URL (globs pris en charge par Playwright) :
+- Attendre l'URL (les globs pris en charge par Playwright) :
   - `openclaw browser wait --url "**/dash"`
 - Attendre l'état de chargement :
   - `openclaw browser wait --load networkidle`
@@ -693,7 +705,7 @@ Vous pouvez attendre plus que le temps/le texte :
 - Attendre qu'un sélecteur devienne visible :
   - `openclaw browser wait "#main"`
 
-Ces éléments peuvent être combinés :
+Cela peut être combiné :
 
 ```bash
 openclaw browser wait "#main" \
@@ -705,7 +717,7 @@ openclaw browser wait "#main" \
 
 ## Déboguer les workflows
 
-Lorsqu'une action échoue (par exemple, « non visible », « violation du mode strict », « couvert ») :
+Lorsqu'une action échoue (par exemple, « pas visible », « violation du mode strict », « couvert ») :
 
 1. `openclaw browser snapshot --interactive`
 2. Utilisez `click <ref>` / `type <ref>` (préférez les références de rôle en mode interactif)
@@ -715,12 +727,12 @@ Lorsqu'une action échoue (par exemple, « non visible », « violation du mode 
    - `openclaw browser requests --filter api --clear`
 5. Pour un débogage approfondi : enregistrez une trace :
    - `openclaw browser trace start`
-   - reproduire le problème
+   - reproduisez le problème
    - `openclaw browser trace stop` (imprime `TRACE:<path>`)
 
 ## Sortie JSON
 
-`--json` est destiné au scriptage et aux outils structurés.
+`--json` est destiné aux scripts et aux outils structurés.
 
 Exemples :
 
@@ -731,11 +743,11 @@ openclaw browser requests --filter api --json
 openclaw browser cookies --json
 ```
 
-Les instantanés de rôle au format JSON incluent `refs` ainsi qu'un petit bloc `stats` (lignes/caractères/réfs/interactif) afin que les outils puissent évaluer la taille et la densité de la charge utile.
+Les captures d'état de rôle en JSON incluent `refs` plus un petit bloc `stats` (lignes/caractères/références/interactif) afin que les outils puissent évaluer la taille et la densité de la charge utile.
 
 ## Contrôles d'état et d'environnement
 
-Ceux-ci sont utiles pour les workflows du type « faire se comporter le site comme X » :
+Ceux-ci sont utiles pour les workflows « faire se comporter le site comme X » :
 
 - Cookies : `cookies`, `cookies set`, `cookies clear`
 - Stockage : `storage local|session get|set|clear`
@@ -745,7 +757,7 @@ Ceux-ci sont utiles pour les workflows du type « faire se comporter le site com
 - Géolocalisation : `set geo <lat> <lon> --origin "https://example.com"` (ou `--clear`)
 - Médias : `set media dark|light|no-preference|none`
 - Fuseau horaire / langue : `set timezone ...`, `set locale ...`
-- Appareil / viewport :
+- Appareil / vue :
   - `set device "iPhone 14"` (préréglages d'appareils Playwright)
   - `set viewport 1280 720`
 
@@ -754,12 +766,12 @@ Ceux-ci sont utiles pour les workflows du type « faire se comporter le site com
 - Le profil de navigateur openclaw peut contenir des sessions connectées ; traitez-le comme sensible.
 - `browser act kind=evaluate` / `openclaw browser evaluate` et `wait --fn`
   exécutent du JavaScript arbitraire dans le contexte de la page. L'injection de prompt peut
-  influencer cela. Désactivez-le avec `browser.evaluateEnabled=false` si vous n'en avez pas besoin.
+  orienter cela. Désactivez-le avec `browser.evaluateEnabled=false` si vous n'en avez pas besoin.
 - Pour les notes de connexion et anti-bot (X/Twitter, etc.), consultez [Connexion au navigateur + publication sur X/Twitter](/en/tools/browser-login).
-- Gardez l'hôte du Gateway/nœud privé (boucle locale ou exclusif au tailnet).
+- Gardez l'hôte Gateway/nœud privé (boucle locale ou tailnet uniquement).
 - Les points de terminaison CDP distants sont puissants ; utilisez un tunnel et protégez-les.
 
-Exemple en mode strict (bloquer par défaut les destinations privées/interne) :
+Exemple en mode strict (bloquer les destinations privées/internes par défaut) :
 
 ```json5
 {
@@ -775,34 +787,34 @@ Exemple en mode strict (bloquer par défaut les destinations privées/interne) :
 
 ## Dépannage
 
-Pour les problèmes spécifiques à Linux (surtout snap Chromium), consultez
+Pour les problèmes spécifiques à Linux (notamment snap Chromium), consultez
 [Dépannage du navigateur](/en/tools/browser-linux-troubleshooting).
 
-Pour les configurations split-host avec WSL2 Gateway + Chrome Windows, consultez
+Pour les configurations split-host WSL2 Gateway + Windows Chrome, consultez
 [Dépannage WSL2 + Windows + CDP Chrome distant](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting).
 
 ## Outils de l'agent + fonctionnement du contrôle
 
 L'agent dispose d'**un seul outil** pour l'automatisation du navigateur :
 
-- `browser` — status/start/stop/tabs/open/focus/close/snapshot/screenshot/navigate/act
+- `browser` — statut/démarrage/arrêt/onglets/ouverture/focus/fermeture/instantané/capture*d*écran/navigation/action
 
 Comment cela correspond :
 
-- `browser snapshot` renvoie une arborescence d'interface utilisateur stable (IA ou ARIA).
-- `browser act` utilise les ID `ref` du snapshot pour cliquer/taper/glisser/sélectionner.
+- `browser snapshot` renvoie un arbre d'interface utilisateur stable (IA ou ARIA).
+- `browser act` utilise les ID d'instantané `ref` pour cliquer/tirer/glisser/sélectionner.
 - `browser screenshot` capture les pixels (page entière ou élément).
 - `browser` accepte :
   - `profile` pour choisir un profil de navigateur nommé (openclaw, chrome ou CDP distant).
   - `target` (`sandbox` | `host` | `node`) pour sélectionner l'emplacement du navigateur.
   - Dans les sessions sandboxed, `target: "host"` nécessite `agents.defaults.sandbox.browser.allowHostControl=true`.
-  - Si `target` est omis : les sessions sandboxed utilisent `sandbox` par défaut, les sessions hors sandbox utilisent `host` par défaut.
-  - Si un nœud compatible navigateur est connecté, l'outil peut y être acheminé automatiquement, sauf si vous épinglez `target="host"` ou `target="node"`.
+  - Si `target` est omis : les sessions sandboxed utilisent par défaut `sandbox`, les sessions non-sandbox utilisent par défaut `host`.
+  - Si un nœud compatible navigateur est connecté, l'outil peut y être acheminé automatiquement sauf si vous définissez `target="host"` ou `target="node"`.
 
 Cela permet de garder l'agent déterministe et d'éviter les sélecteurs fragiles.
 
 ## Connexes
 
-- [Aperçu des outils](/en/tools) — tous les outils d'agent disponibles
+- [Vue d'ensemble des outils](/en/tools) — tous les outils d'agent disponibles
 - [Sandboxing](/en/gateway/sandboxing) — contrôle du navigateur dans les environnements sandboxed
-- [Sécurité](/en/gateway/security) — risques et durcissement du contrôle du navigateur
+- [Sécurité](/en/gateway/security) — risques et renforcement du contrôle du navigateur

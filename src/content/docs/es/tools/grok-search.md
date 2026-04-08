@@ -39,7 +39,7 @@ Si lo omite, puede habilitar o cambiar `x_search` más tarde en la configuració
 
 <Steps>
   <Step title="Crear una clave">
-    Obtenga una clave de API de [xAI](https://console.x.ai/).
+    Obtén una clave de API de [xAI](https://console.x.ai/).
   </Step>
   <Step title="Almacenar la clave">
     Establezca `XAI_API_KEY` en el entorno de Gateway, o configure a través de:
@@ -86,11 +86,15 @@ en línea, similar al enfoque de fundamentación en la búsqueda de Google de Ge
 
 ## Parámetros admitidos
 
-La búsqueda de Grok admite los parámetros estándar `query` y `count`.
+La búsqueda de Grok admite `query`.
+
+Se acepta `count` para la compatibilidad compartida de `web_search`, pero Grok todavía
+devuelve una respuesta sintetizada con citas en lugar de una lista de N resultados.
+
 Los filtros específicos del proveedor no son compatibles actualmente.
 
 ## Relacionado
 
-- [Información general de búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
-- [x_search en búsqueda web](/en/tools/web#x_search) -- búsqueda de X de primera clase a través de xAI
-- [Búsqueda Gemini](/en/tools/gemini-search) -- respuestas sintetizadas por IA mediante la fundamentación de Google
+- [Información general de la búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
+- [x_search en la búsqueda web](/en/tools/web#x_search) -- búsqueda de X de primera clase a través de xAI
+- [Búsqueda de Gemini](/en/tools/gemini-search) -- respuestas sintetizadas por IA a través de Google grounding

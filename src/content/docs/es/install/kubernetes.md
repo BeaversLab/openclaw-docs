@@ -31,7 +31,7 @@ kubectl port-forward svc/openclaw 18789:18789 -n openclaw
 open http://localhost:18789
 ```
 
-Recupere el token de la puerta de enlace y péguelo en la Interfaz de Control:
+Recupera el secreto compartido configurado para la interfaz de usuario de Control. Este script de despliegue crea autenticación por token de forma predeterminada:
 
 ```bash
 kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GATEWAY_TOKEN}' | base64 -d

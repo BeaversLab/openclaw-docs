@@ -1,5 +1,5 @@
 ---
-summary: "Modo de ejecución elevado: ejecuta comandos en el host de puerta de enlace desde un agente en sandbox"
+summary: "Modo de ejecución elevado: ejecutar comandos fuera del entorno limitado desde un agente en entorno limitado"
 read_when:
   - Adjusting elevated mode defaults, allowlists, or slash command behavior
   - Understanding how sandboxed agents can access the host
@@ -8,9 +8,7 @@ title: "Modo Elevado"
 
 # Modo Elevado
 
-Cuando un agente se ejecuta dentro de un sandbox, sus comandos `exec` están confinados al
-entorno del sandbox. El **Modo elevado** permite al agente salir y ejecutar comandos
-en el host de la puerta de enlace en su lugar, con puertas de aprobación configurables.
+Cuando un agente se ejecuta dentro de un entorno limitado (sandbox), sus comandos `exec` se limitan al entorno del sandbox. El **Modo elevado** permite al agente salirse y ejecutar comandos fuera del sandbox, con puertas de aprobación configurables.
 
 <Info>El modo elevado solo cambia el comportamiento cuando el agente está **en sandbox**. Para los agentes sin sandbox, exec ya se ejecuta en el host.</Info>
 
@@ -18,12 +16,12 @@ en el host de la puerta de enlace en su lugar, con puertas de aprobación config
 
 Controle el modo elevado por sesión con comandos de barra:
 
-| Directiva        | Lo que hace                                                                  |
-| ---------------- | ---------------------------------------------------------------------------- |
-| `/elevated on`   | Ejecutar en el host de la puerta de enlace, mantener aprobaciones de exec    |
-| `/elevated ask`  | Igual que `on` (alias)                                                       |
-| `/elevated full` | Ejecutar en el host de la puerta de enlace **y** omitir aprobaciones de exec |
-| `/elevated off`  | Volver a la ejecución confinada al sandbox                                   |
+| Directiva        | Lo que hace                                                                       |
+| ---------------- | --------------------------------------------------------------------------------- |
+| `/elevated on`   | Ejecutar fuera del sandbox en la ruta del host configurada, mantener aprobaciones |
+| `/elevated ask`  | Igual que `on` (alias)                                                            |
+| `/elevated full` | Ejecutar fuera del sandbox en la ruta del host configurada y omitir aprobaciones  |
+| `/elevated off`  | Volver a la ejecución confinada al sandbox                                        |
 
 También disponible como `/elev on|off|ask|full`.
 
@@ -66,9 +64,10 @@ Envíe `/elevated` sin argumentos para ver el nivel actual.
 
   </Step>
 
-  <Step title="Los comandos se ejecutan en el host">
-    Con elevated activo, las llamadas a `exec` se dirigen al host de la puerta de enlace en lugar del
-    sandbox. En el modo `full`, se omiten las aprobaciones de exec. En el modo `on`/`ask`,
+  <Step title="Los comandos se ejecutan fuera del sandbox">
+    Con el modo elevado activo, las llamadas a `exec` salen del sandbox. El host efectivo es
+    `gateway` por defecto, o `node` cuando el destino de ejecución configurado/sesión es
+    `node`. En modo `full`, se omiten las aprobaciones de ejecución. En modo `on`/`ask`,
     las reglas de aprobación configuradas aún se aplican.
   </Step>
 </Steps>
@@ -77,15 +76,15 @@ Envíe `/elevated` sin argumentos para ver el nivel actual.
 
 1. **Directiva en línea** en el mensaje (se aplica solo a ese mensaje)
 2. **Anulación de sesión** (establecida al enviar un mensaje de solo directiva)
-3. **Valor predeterminado global** (`agents.defaults.elevatedDefault` en configuración)
+3. **Valor predeterminado global** (`agents.defaults.elevatedDefault` en la configuración)
 
 ## Disponibilidad y listas de permitidos
 
-- **Global gate**: `tools.elevated.enabled` (must be `true`)
-- **Sender allowlist**: `tools.elevated.allowFrom` con listas por canal
-- **Per-agent gate**: `agents.list[].tools.elevated.enabled` (solo puede restringir más)
-- **Per-agent allowlist**: `agents.list[].tools.elevated.allowFrom` (el remitente debe coincidir con la global + por agente)
-- **Discord fallback**: si se omite `tools.elevated.allowFrom.discord`, se usa `channels.discord.allowFrom` como alternativa
+- **Puerta global**: `tools.elevated.enabled` (debe ser `true`)
+- **Lista de permitidos del remitente**: `tools.elevated.allowFrom` con listas por canal
+- **Puerta por agente**: `agents.list[].tools.elevated.enabled` (solo puede restringir aún más)
+- **Lista de permitidos por agente**: `agents.list[].tools.elevated.allowFrom` (el remitente debe coincidir con global + por agente)
+- **Alternativa de Discord**: si se omite `tools.elevated.allowFrom.discord`, se usa `channels.discord.allowFrom` como alternativa
 - **All gates must pass**; de lo contrario, elevated se trata como no disponible
 
 Allowlist entry formats:
@@ -100,12 +99,13 @@ Allowlist entry formats:
 
 ## What elevated does not control
 
-- **Tool policy**: si `exec` es denegado por la política de herramientas, elevated no puede anularlo
-- **Separate from `/exec`**: la directiva `/exec` ajusta los valores predeterminados de exec por sesión para remitentes autorizados y no requiere el modo elevated
+- **Política de herramientas**: si `exec` es denegado por la política de herramientas, el modo elevado no puede anularlo
+- **Política de selección de host**: el modo elevado no convierte `auto` en una anulación gratuita entre hosts. Utiliza las reglas del destino de ejecución configurado/sesión, eligiendo `node` solo cuando el destino ya es `node`.
+- **Separado de `/exec`**: la directiva `/exec` ajusta los valores predeterminados de ejecución por sesión para remitentes autorizados y no requiere el modo elevado
 
-## Related
+## Relacionado
 
-- [Exec tool](/en/tools/exec) — ejecución de comandos de shell
-- [Exec approvals](/en/tools/exec-approvals) — sistema de aprobación y lista de permitidos
-- [Sandboxing](/en/gateway/sandboxing) — configuración de sandbox
-- [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- [Herramienta Exec](/en/tools/exec) — ejecución de comandos de shell
+- [Aprobaciones de Exec](/en/tools/exec-approvals) — sistema de aprobaciones y listas permitidas
+- [Sandbox (Caja de arena)](/en/gateway/sandboxing) — configuración del sandbox
+- [Sandbox vs Política de herramientas vs Modo elevado](/en/gateway/sandbox-vs-tool-policy-vs-elevated)

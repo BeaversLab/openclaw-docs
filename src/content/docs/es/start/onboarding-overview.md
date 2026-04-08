@@ -9,7 +9,8 @@ sidebarTitle: "Descripción general de la incorporación"
 
 # Descripción general de la incorporación
 
-OpenClaw tiene dos rutas de incorporación. Ambas configuran la autenticación, la Gateway y los canales opcionales; solo difieren en la forma en que interactúas con la configuración.
+OpenClaw tiene dos rutas de incorporación. Ambas configuran la autenticación, la Gateway y
+los canales de chat opcionales; solo difieren en cómo interactúas con la configuración.
 
 ## ¿Qué ruta debería usar?
 
@@ -30,7 +31,9 @@ Independientemente de la ruta que elijas, la incorporación configura:
 1. **Proveedor de modelos y autenticación** — clave de API, OAuth o token de configuración para el proveedor elegido
 2. **Espacio de trabajo (Workspace)** — directorio para los archivos de los agentes, plantillas de arranque y memoria
 3. **Gateway** — puerto, dirección de enlace (bind address), modo de autenticación
-4. **Canales** (opcional) — WhatsApp, Telegram, Discord y más
+4. **Canales** (opcionales) — canales de chat integrados y empaquetados, como
+   BlueBubbles, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams,
+   Telegram, WhatsApp y más
 5. **Demonio (Daemon)** (opcional) — servicio en segundo plano para que la Gateway se inicie automáticamente
 
 ## Incorporación mediante CLI

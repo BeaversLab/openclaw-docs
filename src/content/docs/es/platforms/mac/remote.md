@@ -57,25 +57,25 @@ El modo remoto admite dos transportes:
 
 - Prefiera los enlaces de loopback en el host remoto y conéctese a través de SSH o Tailscale.
 - El túnel SSH utiliza verificación estricta de clave de host; confíe primero en la clave del host para que exista en `~/.ssh/known_hosts`.
-- Si vincula la Pasarela a una interfaz que no sea de loopback, requiera autenticación por token/contraseña.
-- Consulte [Seguridad](/en/gateway/security) y [Tailscale](/en/gateway/tailscale).
+- Si enlazas la Gateway a una interfaz que no sea de bucle local (loopback), exige una autenticación válida de la Gateway: token, contraseña o un proxy inverso con reconocimiento de identidad con `gateway.auth.mode: "trusted-proxy"`.
+- Consulta [Seguridad](/en/gateway/security) y [Tailscale](/en/gateway/tailscale).
 
 ## Flujo de inicio de sesión de WhatsApp (remoto)
 
-- Ejecute `openclaw channels login --verbose` **en el host remoto**. Escanee el código QR con WhatsApp en su teléfono.
+- Ejecuta `openclaw channels login --verbose` **en el host remoto**. Escanea el código QR con WhatsApp en tu teléfono.
 - Vuelva a ejecutar el inicio de sesión en ese host si la autenticación caduca. El control de estado mostrará los problemas del enlace.
 
 ## Solución de problemas
 
-- **exit 127 / not found**: `openclaw` no está en PATH para shells que no son de inicio de sesión. Agréguelo a `/etc/paths`, su shell rc, o cree un enlace simbólico en `/usr/local/bin`/`/opt/homebrew/bin`.
-- **Health probe failed**: verifique la accesibilidad SSH, PATH y que Baileys haya iniciado sesión (`openclaw status --json`).
+- **exit 127 / not found**: `openclaw` no está en la PATH para shells que no son de inicio de sesión (non-login). Añádelo a `/etc/paths`, tu archivo rc del shell, o crea un enlace simbólico en `/usr/local/bin`/`/opt/homebrew/bin`.
+- **Health probe failed** (falló el sondeo de estado): verifica la accesibilidad por SSH, la PATH y que Baileys haya iniciado sesión (`openclaw status --json`).
 - **Web Chat atascado**: confirme que la pasarela se está ejecutando en el host remoto y que el puerto reenviado coincide con el puerto WS de la pasarela; la interfaz de usuario requiere una conexión WS saludable.
 - **Node IP shows 127.0.0.1**: esperado con el túnel SSH. Cambie **Transport** a **Direct (ws/wss)** si desea que la puerta de enlace vea la IP del cliente real.
 - **Voice Wake**: las frases de activación se reenvían automáticamente en modo remoto; no se necesita un reenviador separado.
 
 ## Sonidos de notificación
 
-Elija sonidos por notificación desde scripts con `openclaw` y `node.invoke`, p. ej.:
+Elige sonidos por notificación desde scripts con `openclaw` y `node.invoke`, p. ej.:
 
 ```bash
 openclaw nodes notify --node <id> --title "Ping" --body "Remote gateway ready" --sound Glass

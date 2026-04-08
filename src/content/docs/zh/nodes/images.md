@@ -48,25 +48,26 @@ WhatsApp 渠道通过 **Baileys Web** 运行。本文档记录了目前针对发
 - 媒体理解（如果通过 `tools.media.*` 或共享 `tools.media.models` 配置）在模板化之前运行，并且可以将 `[Image]`、`[Audio]` 和 `[Video]` 块插入到 `Body` 中。
   - 音频设置 `{{Transcript}}` 并使用转录文本进行命令解析，因此斜杠命令仍然有效。
   - 视频和图像描述保留任何字幕文本以进行命令解析。
+  - 如果当前活动的主图像模型原生支持视觉功能，OpenClaw 将跳过 `[Image]` 摘要块，而是将原始图像传递给模型。
 - 默认情况下，仅处理第一个匹配的图像/音频/视频附件；设置 `tools.media.<cap>.attachments` 以处理多个附件。
 
 ## 限制与错误
 
-**Outbound send caps (WhatsApp web send)**
+**出站发送上限（WhatsApp Web 发送）**
 
-- 图片：重新压缩后最多 `channels.whatsapp.mediaMaxMb`（默认：50 MB）。
+- 图像：重新压缩后最多 `channels.whatsapp.mediaMaxMb`（默认：50 MB）。
 - 音频/语音/视频：16 MB 上限；文档：100 MB 上限。
-- 过大或无法读取的媒体 → 日志中有明确的错误，并跳过回复。
+- 媒体过大或无法读取 → 日志中出现明确的错误，并且跳过回复。
 
 **媒体理解上限（转录/描述）**
 
-- 图片默认值：10 MB (`tools.media.image.maxBytes`)。
-- 音频默认值：20 MB (`tools.media.audio.maxBytes`)。
-- 视频默认值：50 MB (`tools.media.video.maxBytes`)。
-- 过大的媒体会跳过理解，但回复仍会使用原始正文发送。
+- 图像默认值：10 MB（`tools.media.image.maxBytes`）。
+- 音频默认值：20 MB（`tools.media.audio.maxBytes`）。
+- 视频默认值：50 MB（`tools.media.video.maxBytes`）。
+- 过大的媒体将跳过理解，但回复仍会随原始正文发送。
 
 ## 测试注意事项
 
-- 涵盖图像/音频/文档情况的发送 + 回复流程。
-- 验证图像的重新压缩（大小限制）和音频的语音备注标志。
-- 确保多媒体回复作为顺序发送分发。
+- 覆盖图像/音频/文档案例的发送 + 回复流程。
+- 验证图像的重新压缩（大小限制）和音频的语音笔记标志。
+- 确保多媒体回复作为顺序发送进行分发。

@@ -117,7 +117,7 @@ Modèles courants :
 - Cron : `cron:<job.id>`
 - Webhook : `hook:<uuid>` (sauf si remplacé)
 
-Les règles canoniques sont documentées dans [/concepts/session](/en/concepts/session).
+Les règles canoniques sont documentées sur [/concepts/session](/en/concepts/session).
 
 ---
 
@@ -195,7 +195,7 @@ Si vous réglez les limites :
 - La fenêtre de contexte provient du catalogue de modèles (et peut être remplacée via la configuration).
 - `contextTokens` dans le magasin est une valeur d'estimation/ de rapport à l'exécution ; ne la traitez pas comme une garantie stricte.
 
-Pour plus d'informations, consultez [/token-use](/en/reference/token-use).
+Pour plus d'informations, voir [/token-use](/en/reference/token-use).
 
 ---
 
@@ -210,29 +210,46 @@ Après la compression, les futurs tours voient :
 
 La compression est **persistante** (contrairement à l'élagage de session). Voir [/concepts/session-pruning](/en/concepts/session-pruning).
 
+## Limites des blocs de compression et appariement des outils
+
+Lorsque OpenClaw divise un long transcript en blocs de compression, il conserve
+les appels d'outil de l'assistant associés à leurs entrées `toolResult` correspondantes.
+
+- Si la division par part de jetons se situe entre un appel d'outil et son résultat, OpenClaw
+  déplace la limite vers le message d'appel d'outil de l'assistant au lieu de séparer
+  la paire.
+- Si un bloc de résultat d'outil à la traîne devait autrement pousser le bloc au-delà de la cible,
+  OpenClaw préserve ce bloc d'outil en attente et garde la queue non résumée
+  intacte.
+- Les blocs d'appels d'outil avortés/erreur ne maintiennent pas une division en attente ouverte.
+
 ---
 
-## Quand la compression automatique se produit (exécution Pi)
+## Lorsque la compression automatique se produit (runtime Pi)
 
-Dans l'agent Pi embarqué, la compression automatique se déclenche dans deux cas :
+Dans l'agent Pi intégré, la compression automatique se déclenche dans deux cas :
 
-1. **Récupération de dépassement** : le modèle renvoie une erreur de dépassement de contexte → compresser → réessayer.
+1. **Récupération de dépassement** : le modèle renvoie une erreur de dépassement de contexte
+   (`request_too_large`, `context length exceeded`, `input exceeds the maximum
+number of tokens`, `input token count exceeds the maximum number of input
+tokens`, `input is too long for the model`, `ollama error: context length
+exceeded`, et variantes similaires de forme fournisseur) → compacter → réessayer.
 2. **Maintenance de seuil** : après un tour réussi, lorsque :
 
 `contextTokens > contextWindow - reserveTokens`
 
 Où :
 
-- `contextWindow` est la fenêtre contextuelle du modèle
-- `reserveTokens` est la marge réservée pour les invites (prompts) + la prochaine sortie du modèle
+- `contextWindow` est la fenêtre de contexte du modèle
+- `reserveTokens` est la marge réservée pour les invites + la prochaine sortie du modèle
 
-Ce sont les sémantiques d'exécution de Pi (OpenClaw consomme les événements, mais Pi décide quand compresser).
+Ce sont les sémantiques du runtime Pi (OpenClaw consomme les événements, mais Pi décide quand compacter).
 
 ---
 
-## Paramètres de compression (`reserveTokens`, `keepRecentTokens`)
+## Paramètres de compactage (`reserveTokens`, `keepRecentTokens`)
 
-Les paramètres de compression de Pi résident dans les paramètres Pi :
+Les paramètres de compactage de Pi se trouvent dans les paramètres de Pi :
 
 ```json5
 {
@@ -244,14 +261,14 @@ Les paramètres de compression de Pi résident dans les paramètres Pi :
 }
 ```
 
-OpenClaw applique également un seuil de sécurité minimal pour les exécutions embarquées :
+OpenClaw applique également un plancher de sécurité pour les exécutions intégrées :
 
 - Si `compaction.reserveTokens < reserveTokensFloor`, OpenClaw l'augmente.
-- Le seuil par défaut est `20000` jetons.
-- Définissez `agents.defaults.compaction.reserveTokensFloor: 0` pour désactiver le seuil minimal.
+- Le plancher par défaut est `20000` jetons.
+- Définissez `agents.defaults.compaction.reserveTokensFloor: 0` pour désactiver le plancher.
 - S'il est déjà plus élevé, OpenClaw le laisse tel quel.
 
-Pourquoi : laisser suffisamment de marge pour le « nettoyage » (housekeeping) multi-tours (comme les écritures en mémoire) avant que la compression ne devienne inévitable.
+Pourquoi : laisser suffisamment de marge pour le « nettoyage » (housekeeping) multi-tours (comme les écritures en mémoire) avant que le compactage ne devienne inévitable.
 
 Implémentation : `ensurePiCompactionReserveTokens()` dans `src/agents/pi-settings.ts`
 (appelé depuis `src/agents/pi-embedded-runner.ts`).
@@ -260,12 +277,12 @@ Implémentation : `ensurePiCompactionReserveTokens()` dans `src/agents/pi-settin
 
 ## Surfaces visibles par l'utilisateur
 
-Vous pouvez observer la compression et l'état de la session via :
+Vous pouvez observer le compactage et l'état de la session via :
 
 - `/status` (dans n'importe quelle session de chat)
 - `openclaw status` (CLI)
 - `openclaw sessions` / `sessions --json`
-- Mode détaillé : `🧹 Auto-compaction complete` + nombre de compressions
+- Mode verbeux : `🧹 Auto-compaction complete` + nombre de compactages
 
 ---
 
@@ -275,48 +292,61 @@ OpenClaw prend en charge les tours « silencieux » pour les tâches en arrière
 
 Convention :
 
-- L'assistant commence sa sortie par `NO_REPLY` pour indiquer « ne pas livrer de réponse à l'utilisateur ».
-- OpenClaw supprime ceci dans la couche de livraison.
+- L'assistant commence sa sortie par le jeton silencieux exact `NO_REPLY` /
+  `no_reply` pour indiquer « ne pas envoyer de réponse à l'utilisateur ».
+- OpenClaw supprime/masque cela au niveau de la livraison.
+- La suppression exacte du jeton silencieux est insensible à la casse, donc `NO_REPLY` et
+  `no_reply` comptent tous les deux lorsque la charge utile entière n'est que le jeton silencieux.
+- Cela est réservé uniquement aux tours d'arrière-plan/sans livraison réels ; ce n'est pas un raccourci pour
+  les demandes utilisateur actionnables ordinaires.
 
-Depuis `2026.1.10`, OpenClaw supprime également le **streaming de brouillon/frappe** lorsqu'un partiel commence par `NO_REPLY`, afin que les opérations silencieuses ne fuient pas de sortie partielle en milieu de tour.
+Depuis `2026.1.10`, OpenClaw supprime également le **streaming brouillon/frappe** lorsqu'un
+bloc partiel commence par `NO_REPLY`, afin que les opérations silencieuses ne fuient pas de sortie
+partielle en cours de tour.
 
 ---
 
-## Pré-compaction "vidange de la mémoire" (implémenté)
+## "Vidange de la mémoire" préalable au compactage (implémenté)
 
-Objectif : avant que l'auto-compaction ne se produise, exécuter un tour agent silencieux qui écrit un état durable sur le disque (par exemple `memory/YYYY-MM-DD.md` dans l'espace de travail de l'agent) afin que la compaction ne puisse pas effacer le contexte critique.
+Objectif : avant que le compactage automatique ne se produise, exécuter un tour agent silencieux qui écrit l'état
+durable sur le disque (par exemple `memory/YYYY-MM-DD.md` dans l'espace de travail de l'agent) pour que le compactage ne puisse pas
+effacer le contexte critique.
 
-OpenClaw utilise l'approche de **vidange pré-seuil** :
+OpenClaw utilise l'approche de **vidange avant seuil** :
 
 1. Surveiller l'utilisation du contexte de session.
-2. Lorsqu'il dépasse un "seuil souple" (en dessous du seuil de compaction de Pi), exécuter une directive silencieuse "écrire la mémoire maintenant" à l'agent.
-3. Utilisez `NO_REPLY` pour que l'utilisateur ne voie rien.
+2. Lorsqu'il franchit un « seuil souple » (en dessous du seuil de compactage de Pi), exécutez une directive silencieuse
+   « write memory now » (écrire la mémoire maintenant) vers l'agent.
+3. Utilisez le jeton silencieux exact `NO_REPLY` / `no_reply` afin que l'utilisateur ne voie
+   rien.
 
 Config (`agents.defaults.compaction.memoryFlush`) :
 
 - `enabled` (par défaut : `true`)
 - `softThresholdTokens` (par défaut : `4000`)
-- `prompt` (message utilisateur pour le tour de vidange)
-- `systemPrompt` (invite système supplémentaire ajoutée pour le tour de vidange)
+- `prompt` (message utilisateur pour le tour de vidage)
+- `systemPrompt` (prompt système supplémentaire ajouté pour le tour de vidage)
 
 Notes :
 
-- L'invite système par défaut inclut un indice `NO_REPLY` pour supprimer la livraison.
-- La vidange s'exécute une fois par cycle de compaction (suivie dans `sessions.json`).
-- La vidange ne s'exécute que pour les sessions Pi intégrées (les backends CLI l'ignorent).
-- La vidange est ignorée lorsque l'espace de travail de la session est en lecture seule (`workspaceAccess: "ro"` ou `"none"`).
-- Voir [Mémoire](/en/concepts/memory) pour la disposition des fichiers de l'espace de travail et les modèles d'écriture.
+- Le prompt par défaut / le prompt système incluent un indice `NO_REPLY` pour supprimer
+  la livraison.
+- Le vidage s'exécute une fois par cycle de compactage (suivi dans `sessions.json`).
+- Le vidage ne s'exécute que pour les sessions Pi intégrées.
+- Le vidage est ignoré lorsque l'espace de travail de la session est en lecture seule (`workspaceAccess: "ro"` ou `"none"`).
+- Consultez [Mémoire](/en/concepts/memory) pour la disposition des fichiers de l'espace de travail et les modèles d'écriture.
 
-Pi expose également un hook `session_before_compact` dans l'API d'extension, mais la logique de vidange d'OpenClaw réside aujourd'hui du côté de la Gateway.
+Pi expose également un hook `session_before_compact` dans l'API d'extension, mais la logique de vidage d'OpenClaw
+réside aujourd'hui du côté du Gateway.
 
 ---
 
 ## Liste de contrôle de dépannage
 
 - Clé de session incorrecte ? Commencez par [/concepts/session](/en/concepts/session) et confirmez le `sessionKey` dans `/status`.
-- Inadéquation entre le magasin et la transcription ? Confirmez l'hôte de la Gateway et le chemin du magasin à partir de `openclaw status`.
-- Spam de compaction ? Vérifiez :
+- Inadéquation entre le magasin et la transcription ? Confirmez l'hôte du Gateway et le chemin du magasin à partir de `openclaw status`.
+- Spam de compactage ? Vérifiez :
   - fenêtre de contexte du modèle (trop petite)
-  - paramètres de compactage (`reserveTokens` trop élevés pour la fenêtre du model peuvent entraîner un compactage plus précoce)
-  - bloat des résultats de tool : activez/réglez l'élagage de session
-- Fuites de tours silencieux ? Confirmez que la réponse commence par `NO_REPLY` (jeton exact) et que vous êtes sur une version qui inclut le correctif de suppression du streaming.
+  - paramètres de compactage (`reserveTokens` trop élevé pour la fenêtre du modèle peut provoquer un compactage plus précoce)
+  - gonflement des résultats d'outils : activez/réglez l'élagage de session
+- Fuites de tours silencieux ? Confirmez que la réponse commence par `NO_REPLY` (jeton exact insensible à la casse) et que vous êtes sur une version qui inclut la correction de la suppression du streaming.

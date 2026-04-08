@@ -155,20 +155,21 @@ export OPENCLAW_APNS_PRIVATE_KEY_P8="$(cat /path/to/AuthKey_KEYID.p8)"
 
 ### Bonjour (LAN)
 
-Le Gateway annonce `_openclaw-gw._tcp` sur `local.`. L'application iOS les liste automatiquement.
+L'application iOS recherche `_openclaw-gw._tcp` sur `local.` et, si configuré, le même domaine de découverte DNS-SD de zone étendue. Les passerelles du même réseau local apparaissent automatiquement via `local.` ; la découverte inter-réseaux peut utiliser le domaine de zone étendue configuré sans modifier le type de beacon.
 
 ### Tailnet (cross-network)
 
-Si mDNS est bloqué, utilisez une zone DNS-SD unicast (choisissez un domaine ; exemple : `openclaw.internal.`) et le DNS divisé Tailscale.
+Si mDNS est bloqué, utilisez une zone DNS-SD unicast (choisissez un domaine ; exemple :
+`openclaw.internal.`) et le DNS split Tailscale.
 Voir [Bonjour](/en/gateway/bonjour) pour l'exemple CoreDNS.
 
 ### Hôte/port manuel
 
-Dans Réglages, activez **Hôte manuel** et entrez l'hôte + le port de la passerelle (par défaut `18789`).
+Dans Réglages, activez **Hôte manuel** et entrez l'hôte de la passerelle + le port (par défaut `18789`).
 
 ## Canvas + A2UI
 
-Le nœud iOS affiche une toile WKWebView. Utilisez `node.invoke` pour la contrôler :
+Le nœud iOS affiche une toile WKWebView. Utilisez `node.invoke` pour la piloter :
 
 ```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18789/__openclaw__/canvas/"}'
@@ -176,7 +177,7 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 
 Notes :
 
-- L'hôte de toile Gateway sert `/__openclaw__/canvas/` et `/__openclaw__/a2ui/`.
+- L'hôte de la toile Gateway sert `/__openclaw__/canvas/` et `/__openclaw__/a2ui/`.
 - Il est servi par le serveur HTTP Gateway (même port que `gateway.port`, par défaut `18789`).
 - Le nœud iOS navigue automatiquement vers A2UI lors de la connexion lorsqu'une URL d'hôte de toile est annoncée.
 - Revenez à l'échafaudage intégré avec `canvas.navigate` et `{"url":""}`.
@@ -199,7 +200,7 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 ## Erreurs courantes
 
 - `NODE_BACKGROUND_UNAVAILABLE` : amenez l'application iOS au premier plan (les commandes de toile/caméra/écran l'exigent).
-- `A2UI_HOST_NOT_CONFIGURED` : le Gateway n'a pas annoncé d'URL d'hôte de toile ; vérifiez `canvasHost` dans [Configuration Gateway](/en/gateway/configuration).
+- `A2UI_HOST_NOT_CONFIGURED` : la Gateway n'a pas annoncé d'URL d'hôte de toile ; vérifiez `canvasHost` dans [configuration Gateway](/en/gateway/configuration).
 - L'invite de jumelage n'apparaît jamais : exécutez `openclaw devices list` et approuvez manuellement.
 - La reconnexion échoue après la réinstallation : le jeton de jumelage du trousseau a été effacé ; re-jumelez le nœud.
 

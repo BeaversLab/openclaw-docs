@@ -86,11 +86,14 @@ citations en ligne, approche similaire au Google Search grounding de Gemini.
 
 ## Paramètres pris en charge
 
-La recherche Grok prend en charge les paramètres standard `query` et `count`.
+La recherche Grok prend en charge `query`.
+
+`count` est accepté pour la compatibilité partagée avec `web_search`, mais Grok renvoie toujours une réponse synthétisée unique avec des citations plutôt qu'une liste de N résultats.
+
 Les filtres spécifiques au fournisseur ne sont actuellement pas pris en charge.
 
 ## Connexes
 
-- [Vue d'ensemble de la recherche web](/en/tools/web) -- tous les fournisseurs et la détection automatique
-- [x_search dans la recherche web](/en/tools/web#x_search) -- recherche X de premier plan via xAI
-- [Recherche Gemini](/en/tools/gemini-search) -- réponses synthétisées par IA via Google grounding
+- [Vue d'ensemble de la recherche Web](/en/tools/web) -- tous les fournisseurs et la détection automatique
+- [x_search dans la recherche Web](/en/tools/web#x_search) -- recherche X de première classe via xAI
+- [Gemini Search](/en/tools/gemini-search) -- réponses synthétisées par l'IA via le grounding Google

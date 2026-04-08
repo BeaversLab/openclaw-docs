@@ -245,8 +245,8 @@ Cada programa debe tener:
 
 ## Relacionado
 
-- [Resumen de automatización](/en/automation) — todos los mecanismos de automatización de un vistazo
+- [Automatización y tareas](/en/automation) — todos los mecanismos de automatización a un vistazo
 - [Trabajos Cron](/en/automation/cron-jobs) — cumplimiento de horarios para las órdenes permanentes
 - [Ganchos (Hooks)](/en/automation/hooks) — scripts controlados por eventos para eventos del ciclo de vida del agente
-- [Webhooks](/en/automation/webhook) — disparadores de eventos HTTP entrantes
+- [Webhooks](/en/automation/cron-jobs#webhooks) — disparadores de eventos HTTP entrantes
 - [Espacio de trabajo del agente](/en/concepts/agent-workspace) — donde residen las órdenes permanentes, incluida la lista completa de archivos de arranque inyectados automáticamente (AGENTS.md, SOUL.md, etc.)

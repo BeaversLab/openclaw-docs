@@ -11,7 +11,7 @@ Chaque agent dans une configuration multi-agent peut remplacer la stratégie glo
 
 - **Backends et modes de Sandbox** : voir [Sandboxing](/en/gateway/sandboxing).
 - **Débogage des outils bloqués** : voir [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) et `openclaw sandbox explain`.
-- **Exécution élevée** : voir [Elevated Mode](/en/tools/elevated).
+- **Exec élevé** : voir [Elevated Mode](/en/tools/elevated).
 
 L'authentification est par agent : chaque agent lit depuis son propre magasin d'auth `agentDir` à
 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`.
@@ -203,11 +203,11 @@ L'ordre de filtrage est :
 Chaque niveau peut restreindre davantage les outils, mais ne peut pas rétablir les outils refusés des niveaux précédents.
 Si `agents.list[].tools.sandbox.tools` est défini, il remplace `tools.sandbox.tools` pour cet agent.
 Si `agents.list[].tools.profile` est défini, il remplace `tools.profile` pour cet agent.
-Les clés d'outil du fournisseur acceptent soit `provider` (p. ex. `google-antigravity`) soit `provider/model` (p. ex. `openai/gpt-5.2`).
+Les clés d'outils du fournisseur acceptent soit `provider` (par ex. `google-antigravity`) soit `provider/model` (par ex. `openai/gpt-5.4`).
 
-Les stratégies d'outil prennent en charge les raccourcis `group:*` qui s'étendent à plusieurs outils. Consultez [Groupes d'outils](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands) pour la liste complète.
+Les stratégies d'outils prennent en charge les raccourcis `group:*` qui s'étendent à plusieurs outils. Voir [Tool groups](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands) pour la liste complète.
 
-Les remplacements élevés par agent (`agents.list[].tools.elevated`) peuvent restreindre davantage l'exécution élevée pour des agents spécifiques. Consultez [Mode élevé](/en/tools/elevated) pour plus de détails.
+Les remplacements élevés par agent (`agents.list[].tools.elevated`) peuvent restreindre davantage l'exec élevé pour des agents spécifiques. Voir [Elevated Mode](/en/tools/elevated) pour plus de détails.
 
 ---
 
@@ -293,18 +293,29 @@ Les configurations héritées `agent.*` sont migrées par `openclaw doctor` ; pr
 }
 ```
 
+`sessions_history` dans ce profil renvoie toujours une vue de rappel bornée et nettoyée
+plutôt qu'un vidage brut de la transcription. Le rappel de l'assistant supprime les balises de réflexion,
+la scaffolding `<relevant-memories>`, les payloads XML d'appels d'outils en texte brut
+(y compris `<tool_call>...</tool_call>`,
+`<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`,
+`<function_calls>...</function_calls>`, et les blocs d'appels d'outils tronqués),
+la scaffolding d'appels d'outils dégradée, les jetons de contrôle de modèle ASCII/full-width divulgués
+et les payloads XML d'appels d'outils MiniMax malformés avant la rédaction/troncature.
+
 ---
 
 ## Piège courant : "non-main"
 
 `agents.defaults.sandbox.mode: "non-main"` est basé sur `session.mainKey` (défaut `"main"`),
-non sur l'ID de l'agent. Les sessions de groupe/canal obtiennent toujours leurs propres clés, elles sont donc traitées comme non-main et seront sandboxed. Si vous souhaitez qu'un agent ne soit jamais mis en sandbox, définissez `agents.list[].sandbox.mode: "off"`.
+non sur l'identifiant de l'agent. Les sessions de groupe/canal obtiennent toujours leurs propres clés, elles sont donc
+traitées comme non-main et seront sandboxées. Si vous souhaitez qu'un agent ne soit jamais
+sandbox, définissez `agents.list[].sandbox.mode: "off"`.
 
 ---
 
-## Tests
+## Test
 
-Après avoir configuré le sandbox et les outils multi-agent :
+Après avoir configuré le sandbox multi-agent et les outils :
 
 1. **Vérifier la résolution de l'agent :**
 
@@ -320,9 +331,9 @@ Après avoir configuré le sandbox et les outils multi-agent :
 
 3. **Tester les restrictions d'outils :**
    - Envoyer un message nécessitant des outils restreints
-   - Vérifier que l'agent ne peut pas utiliser les outils refusés
+   - Vérifiez que l'agent ne peut pas utiliser les outils refusés
 
-4. **Surveiller les journaux :**
+4. **Surveillez les journaux :**
 
    ```exec
    tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
@@ -332,29 +343,29 @@ Après avoir configuré le sandbox et les outils multi-agent :
 
 ## Dépannage
 
-### Agent non sandboxed malgré `mode: "all"`
+### L'agent n'est pas sandboxé malgré `mode: "all"`
 
-- Vérifiez s'il existe une `agents.defaults.sandbox.mode` globale qui la remplace
-- La configuration spécifique à l'agent prévaut, définissez donc `agents.list[].sandbox.mode: "all"`
+- Vérifiez s'il existe un `agents.defaults.sandbox.mode` global qui le remplace
+- La configuration spécifique à l'agent est prioritaire, définissez donc `agents.list[].sandbox.mode: "all"`
 
 ### Outils toujours disponibles malgré la liste de refus
 
 - Vérifiez l'ordre de filtrage des outils : global → agent → sandbox → sous-agent
-- Chaque niveau peut uniquement restreindre davantage, pas rétablir
+- Chaque niveau ne peut que restreindre davantage, pas rétablir
 - Vérifiez avec les journaux : `[tools] filtering tools for agent:${agentId}`
 
 ### Conteneur non isolé par agent
 
-- Définissez `scope: "agent"` dans la configuration sandbox spécifique à l'agent
-- La valeur par défaut est `"session"` qui crée un conteneur par session
+- Définissez `scope: "agent"` dans la configuration du sandbox spécifique à l'agent
+- La valeur par défaut est `"session"`, qui crée un conteneur par session
 
 ---
 
 ## Voir aussi
 
 - [Sandboxing](/en/gateway/sandboxing) -- référence complète du sandbox (modes, portées, backends, images)
-- [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- débogage "pourquoi cela est-il bloqué ?"
-- [Elevated Mode](/en/tools/elevated)
-- [Multi-Agent Routing](/en/concepts/multi-agent)
-- [Configuration du Sandbox](/en/gateway/configuration-reference#agentsdefaultssandbox)
-- [Session Management](/en/concepts/session)
+- [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- débogage de "pourquoi cela est-il bloqué ?"
+- [Mode élevé](/en/tools/elevated)
+- [Routage multi-agent](/en/concepts/multi-agent)
+- [Configuration du sandbox](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- [Gestion de session](/en/concepts/session)

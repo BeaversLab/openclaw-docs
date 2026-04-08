@@ -48,25 +48,26 @@ Le channel WhatsApp fonctionne via **Baileys Web**. Ce document capture les règ
 - La compréhension des médias (si configurée via `tools.media.*` ou `tools.media.models` partagé) s'exécute avant le modèle et peut insérer des blocs `[Image]`, `[Audio]` et `[Video]` dans `Body`.
   - L'audio définit `{{Transcript}}` et utilise la transcription pour l'analyse des commandes, afin que les commandes slash fonctionnent toujours.
   - Les descriptions vidéo et image préservent tout le texte de légende pour l'analyse des commandes.
+  - Si le modèle d'image principal actif prend déjà en charge la vision de manière native, OpenClaw ignore le bloc de `[Image]` summary et transmet l'image originale au modèle à la place.
 - Par défaut, seule la première pièce jointe image/audio/vidéo correspondante est traitée ; définissez `tools.media.<cap>.attachments` pour traiter plusieurs pièces jointes.
 
-## Limites et erreurs
+## Limites et Erreurs
 
 **Limites d'envoi sortant (envoi web WhatsApp)**
 
 - Images : jusqu'à `channels.whatsapp.mediaMaxMb` (par défaut : 50 Mo) après recompression.
 - Audio/voix/vidéo : limite de 16 Mo ; documents : limite de 100 Mo.
-- Médias trop volumineux ou illisibles → erreur claire dans les journaux et la réponse est ignorée.
+- Média trop volumineux ou illisible → erreur claire dans les journaux et la réponse est ignorée.
 
 **Limites de compréhension des médias (transcription/description)**
 
-- Image par défaut : 10 Mo (`tools.media.image.maxBytes`).
-- Audio par défaut : 20 Mo (`tools.media.audio.maxBytes`).
-- Vidéo par défaut : 50 Mo (`tools.media.video.maxBytes`).
-- Les médias trop volumineux sautent l'étape de compréhension, mais les réponses sont toujours envoyées avec le corps d'origine.
+- Par défaut pour les images : 10 Mo (`tools.media.image.maxBytes`).
+- Par défaut pour l'audio : 20 Mo (`tools.media.audio.maxBytes`).
+- Par défaut pour la vidéo : 50 Mo (`tools.media.video.maxBytes`).
+- Les médias trop volumineux ignorent la compréhension, mais les réponses sont toujours envoyées avec le corps d'origine.
 
 ## Notes pour les tests
 
-- Couvrir les flux d'envoi + réponse pour les cas image/audio/document.
+- Couvrir les flux d'envoi et de réponse pour les cas image/audio/document.
 - Valider la recompression pour les images (limite de taille) et l'indicateur de note vocale pour l'audio.
-- S'assurer que les réponses multimédias multiples sont distribuées sous forme d'envois séquentiels.
+- Assurer que les réponses multimédias multiples sont distribuées en tant qu'envois séquentiels.

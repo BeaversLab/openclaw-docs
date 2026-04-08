@@ -12,17 +12,16 @@ Ce guide résume un flux de travail sain pour travailler sur l'intégration pi d
 
 ## Vérification de type et Linting
 
-- Vérification de type et build : `pnpm build`
-- Lint : `pnpm lint`
-- Vérification du formatage : `pnpm format`
-- Passage complet avant le push : `pnpm lint && pnpm build && pnpm test`
+- Default local gate: `pnpm check`
+- Build gate: `pnpm build` when the change can affect build output, packaging, or lazy-loading/module boundaries
+- Full landing gate for Pi-heavy changes: `pnpm check && pnpm test`
 
-## Exécution des tests Pi
+## Running Pi Tests
 
-Exécutez la série de tests axés sur Pi directement avec Vitest :
+Run the Pi-focused test set directly with Vitest:
 
 ```bash
-pnpm test -- \
+pnpm test \
   "src/agents/pi-*.test.ts" \
   "src/agents/pi-embedded-*.test.ts" \
   "src/agents/pi-tools*.test.ts" \
@@ -31,13 +30,13 @@ pnpm test -- \
   "src/agents/pi-hooks/**/*.test.ts"
 ```
 
-Pour inclure l'exercice du provider en direct :
+To include the live provider exercise:
 
 ```bash
-OPENCLAW_LIVE_TEST=1 pnpm test -- src/agents/pi-embedded-runner-extraparams.live.test.ts
+OPENCLAW_LIVE_TEST=1 pnpm test src/agents/pi-embedded-runner-extraparams.live.test.ts
 ```
 
-Cela couvre les principales suites unitaires Pi :
+This covers the main Pi unit suites:
 
 - `src/agents/pi-*.test.ts`
 - `src/agents/pi-embedded-*.test.ts`
@@ -46,33 +45,34 @@ Cela couvre les principales suites unitaires Pi :
 - `src/agents/pi-tool-definition-adapter.test.ts`
 - `src/agents/pi-hooks/*.test.ts`
 
-## Tests manuels
+## Manual Testing
 
-Flux recommandé :
+Recommended flow:
 
-- Lancez la passerelle en mode dev :
+- Run the gateway in dev mode:
   - `pnpm gateway:dev`
-- Déclenchez l'agent directement :
+- Trigger the agent directly:
   - `pnpm openclaw agent --message "Hello" --thinking low`
-- Utilisez le TUI pour le débogage interactif :
+- Use the TUI for interactive debugging:
   - `pnpm tui`
 
-Pour le comportement des appels tool, demandez une action `read` ou `exec` afin de voir le streaming tool et la gestion des payloads.
+For tool call behavior, prompt for a `read` or `exec` action so you can see tool streaming and payload handling.
 
-## Réinitialisation complète
+## Clean Slate Reset
 
-L'état réside dans le répertoire d'état OpenClaw. La valeur par défaut est `~/.openclaw`. Si `OPENCLAW_STATE_DIR` est défini, utilisez ce répertoire à la place.
+State lives under the OpenClaw state directory. Default is `~/.openclaw`. If `OPENCLAW_STATE_DIR` is set, use that directory instead.
 
-Pour tout réinitialiser :
+To reset everything:
 
-- `openclaw.json` pour la configuration
-- `credentials/` pour les profils d'authentification et les jetons
+- `openclaw.json` for config
+- `agents/<agentId>/agent/auth-profiles.json` for model auth profiles (API keys + OAuth)
+- `credentials/` for provider/channel state that still lives outside the auth profile store
 - `agents/<agentId>/sessions/` pour l'historique des session agent
-- `agents/<agentId>/sessions.json` pour l'index des sessions
+- `agents/<agentId>/sessions/sessions.json` for the session index
 - `sessions/` si des chemins hérités existent
 - `workspace/` si vous souhaitez un espace de travail vierge
 
-Si vous ne souhaitez réinitialiser que les sessions, supprimez `agents/<agentId>/sessions/` et `agents/<agentId>/sessions.json` pour cet agent. Conservez `credentials/` si vous ne souhaitez pas vous réauthentifier.
+If you only want to reset sessions, delete `agents/<agentId>/sessions/` for that agent. If you want to keep auth, leave `agents/<agentId>/agent/auth-profiles.json` and any provider state under `credentials/` in place.
 
 ## Références
 

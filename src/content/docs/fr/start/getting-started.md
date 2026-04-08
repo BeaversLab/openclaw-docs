@@ -17,7 +17,7 @@ et une session de chat fonctionnelle.
 - **Node.js** — Node 24 recommandé (Node 22.14+ également pris en charge)
 - **Une clé API** d'un fournisseur de modèle (Anthropic, OpenAI, Google, etc.) — l'onboarding vous invitera à la saisir
 
-<Tip>Vérifiez votre version de Node avec `node --version`. **Utilisateurs Windows :** le Windows natif et WSL2 sont tous deux pris en charge. WSL2 est plus stable et recommandé pour une expérience complète. Voir [Windows](/en/platforms/windows). Besoin d'installer Node ? Voir [Configuration de Node](/en/install/node).</Tip>
+<Tip>Vérifiez votre version de Node avec `node --version`. **Utilisateurs Windows :** Windows natif et WSL2 sont pris en charge. WSL2 est plus stable et recommandé pour une expérience complète. Voir [Windows](/en/platforms/windows). Besoin d'installer Node ? Voir [Configuration de Node](/en/install/node).</Tip>
 
 ## Configuration rapide
 
@@ -46,15 +46,15 @@ et une session de chat fonctionnelle.
     </Note>
 
   </Step>
-  <Step title="Lancer l'onboarding">
+  <Step title="Lancer l'intégration">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    L'assistant vous guide dans le choix d'un fournisseur de modèle, la définition d'une clé API
+    L'assistant vous guide dans le choix d'un fournisseur de modèle, la définition d'une clé API,
     et la configuration du Gateway. Cela prend environ 2 minutes.
 
-    Voir [Onboarding (CLI)](/en/start/wizard) pour la référence complète.
+    Voir [Intégration (CLI)](/en/start/wizard) pour la référence complète.
 
   </Step>
   <Step title="Vérifier que le Gateway fonctionne">
@@ -76,37 +76,69 @@ et une session de chat fonctionnelle.
   <Step title="Envoyez votre premier message">
     Tapez un message dans le chat de l'interface de contrôle et vous devriez recevoir une réponse de l'IA.
 
-    Vous préférez chatter depuis votre téléphone ? Le channel le plus rapide à configurer est
-    [Telegram](/en/channels/telegram) (juste un jeton de bot). Consultez [Canaux](/en/channels)
+    Vous préférez chatter depuis votre téléphone ? Le canal le plus rapide à configurer est
+    [Telegram](/en/channels/telegram) (juste un jeton de bot). Voir [Canaux](/en/channels)
     pour toutes les options.
 
   </Step>
 </Steps>
 
+<Accordion title="Avancé : monter une build personnalisée de l'interface de contrôle">
+  Si vous maintenez une version localisée ou personnalisée du tableau de bord, pointez
+  `gateway.controlUi.root` vers un répertoire contenant vos ressources
+  statiques construites et `index.html`.
+
+```bash
+mkdir -p "$HOME/.openclaw/control-ui-custom"
+# Copy your built static files into that directory.
+```
+
+Puis définissez :
+
+```json
+{
+  "gateway": {
+    "controlUi": {
+      "enabled": true,
+      "root": "$HOME/.openclaw/control-ui-custom"
+    }
+  }
+}
+```
+
+Redémarrez la passerelle et rouvrez le tableau de bord :
+
+```bash
+openclaw gateway restart
+openclaw dashboard
+```
+
+</Accordion>
+
 ## Que faire ensuite
 
 <Columns>
-  <Card title="Connect a channel" href="/en/channels" icon="message-square">
-    WhatsApp, Telegram, Discord, iMessage, et plus encore.
+  <Card title="Connecter un canal" href="/en/channels" icon="message-square">
+    Discord, Feishu, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo, et plus encore.
   </Card>
-  <Card title="Appairage et sécurité" href="/en/channels/pairing" icon="shield">
+  <Card title="Jumelage et sécurité" href="/en/channels/pairing" icon="shield">
     Contrôlez qui peut envoyer des messages à votre agent.
   </Card>
-  <Card title="Configurer le Gateway" href="/en/gateway/configuration" icon="paramètres">
-    Modèles, outils, bac à sable et paramètres avancés.
+  <Card title="Configurer la passerelle" href="/en/gateway/configuration" icon="settings">
+    Modèles, outils, bac à sable, et paramètres avancés.
   </Card>
   <Card title="Parcourir les outils" href="/en/tools" icon="wrench">
-    Navigateur, exec, recherche web, compétences et plugins.
+    Navigateur, exécution, recherche web, compétences, et plugins.
   </Card>
 </Columns>
 
-<Accordion title="Advanced: environment variables">
+<Accordion title="Avancé : variables d'environnement">
   Si vous exécutez OpenClaw en tant que compte de service ou si vous souhaitez des chemins personnalisés :
 
 - `OPENCLAW_HOME` — répertoire personnel pour la résolution des chemins internes
 - `OPENCLAW_STATE_DIR` — remplacer le répertoire d'état
 - `OPENCLAW_CONFIG_PATH` — remplacer le chemin du fichier de configuration
 
-Référence complète : [Environment variables](/en/help/environment).
+Référence complète : [Variables d'environnement](/en/help/environment).
 
 </Accordion>

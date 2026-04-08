@@ -123,8 +123,10 @@ openclaw doctor --generate-gateway-token
 openclaw config set gateway.tailscale.mode serve
 openclaw config set gateway.trustedProxies '["127.0.0.1"]'
 
-systemctl --user restart openclaw-gateway
+systemctl --user restart openclaw-gateway.service
 ```
+
+`gateway.trustedProxies=["127.0.0.1"]` ici ne sert qu'à la gestion des IP transférées/clients locaux pour le proxy Tailscale Serve local. Ce n'est **pas** `gateway.auth.mode: "trusted-proxy"`. Les routes du visualiseur de différences conservent un comportement fermé par défaut dans cette configuration : les requêtes brutes du visualiseur `127.0.0.1` sans en-têtes de proxy transférés peuvent renvoyer `Diff not found`. Utilisez `mode=file` / `mode=both` pour les pièces jointes, ou activez intentionnellement les visualiseurs distants et définissez `plugins.entries.diffs.config.viewerBaseUrl` (ou transmettez un proxy `baseUrl`) si vous avez besoin de liens de visualiseur partageables.
 
 ## 7) Vérifier
 
@@ -133,7 +135,7 @@ systemctl --user restart openclaw-gateway
 openclaw --version
 
 # Check daemon status
-systemctl --user status openclaw-gateway
+systemctl --user status openclaw-gateway.service
 
 # Check Tailscale Serve
 tailscale serve status
@@ -146,19 +148,19 @@ curl http://localhost:18789
 
 Maintenant que tout fonctionne, verrouillez le VCN pour bloquer tout le trafic sauf Tailscale. Le réseau cloud virtuel (VCN) d'OCI agit comme un pare-feu à la périphérie du réseau — le trafic est bloqué avant d'atteindre votre instance.
 
-1. Allez dans **Networking → Virtual Cloud Networks** dans la console OCI
-2. Cliquez sur votre VCN → **Security Lists** → Default Security List
-3. **Supprimez** toutes les règles d'ingress sauf :
+1. Allez dans **Réseau → Réseaux cloud virtuels** dans la console OCI
+2. Cliquez sur votre VCN → **Listes de sécurité** → Liste de sécurité par défaut
+3. **Supprimez** toutes les règles d'entrée sauf :
    - `0.0.0.0/0 UDP 41641` (Tailscale)
-4. Conservez les règles d'egress par défaut (autoriser tout le trafic sortant)
+4. Conservez les règles de sortie par défaut (autoriser tout le trafic sortant)
 
-Cela bloque le SSH sur le port 22, HTTP, HTTPS et tout autre chose à la périphérie du réseau. Désormais, vous ne pouvez vous connecter que via Tailscale.
+Cela bloque le SSH sur le port 22, HTTP, HTTPS et tout autre élément à la périphérie du réseau. Désormais, vous ne pouvez vous connecter que via Tailscale.
 
 ---
 
 ## Accéder à l'interface de contrôle
 
-Depuis n'importe quel appareil sur votre réseau Tailscale :
+Depuis n'importe quel appareil de votre réseau Tailscale :
 
 ```
 https://openclaw.<tailnet-name>.ts.net/
@@ -176,20 +178,20 @@ Aucun tunnel SSH nécessaire. Tailscale fournit :
 
 ## Sécurité : VCN + Tailscale (ligne de base recommandée)
 
-Avec le VCN verrouillé (seul le port UDP 41641 ouvert) et le Gateway lié au loopback, vous bénéficiez d'une défense en profondeur robuste : le trafic public est bloqué à la périphérie du réseau et l'accès administrateur s'effectue via votre tailnet.
+Avec le VCN verrouillé (seul l'UDP 41641 est ouvert) et la Gateway liée au bouclage (loopback), vous obtenez une défense en profondeur solide : le trafic public est bloqué à la périphérie du réseau et l'accès administrateur s'effectue via votre tailnet.
 
-Cette configuration élimine souvent le _besoin_ de règles de pare-feu basées sur l'hôte supplémentaires uniquement pour arrêter les attaques par force brute SSH sur tout Internet — mais vous devez quand même garder le système à jour, exécuter `openclaw security audit`, et vérifier que vous n'écoutez pas accidentellement sur des interfaces publiques.
+Cette configuration élimine souvent le _besoin_ de règles de pare-feu supplémentaires basées sur l'hôte uniquement pour arrêter les attaques par force brute SSH sur l'ensemble d'Internet — mais vous devez toujours garder le système d'exploitation à jour, exécuter `openclaw security audit`, et vérifier que vous n'écoutez pas accidentellement sur des interfaces publiques.
 
-### Already protected
+### Déjà protégé
 
-| Étape traditionnelle                    | Nécessaire ?       | Pourquoi                                                                                 |
-| --------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------- |
-| Pare-feu UFW                            | Non                | Le VCN bloque avant que le trafic n'atteigne l'instance                                  |
-| fail2ban                                | Non                | Pas de force brute si le port 22 est bloqué au niveau du VCN                             |
-| Durcissement sshd                       | Non                | Le SSH Tailscale n'utilise pas sshd                                                      |
-| Désactiver la connexion root            | Non                | Tailscale utilise l'identité Tailscale, pas les utilisateurs système                     |
-| Authentification par clé SSH uniquement | Non                | Tailscale s'authentifie via votre tailnet                                                |
-| Durcissement IPv6                       | Habituellement non | Dépend de vos paramètres VCN/sous-réseau ; vérifiez ce qui est réellement assigné/exposé |
+| Étape traditionnelle                    | Nécessaire ?     | Pourquoi                                                                                 |
+| --------------------------------------- | ---------------- | ---------------------------------------------------------------------------------------- |
+| Pare-feu UFW                            | Non              | Le VCN bloque avant que le trafic n'atteigne l'instance                                  |
+| fail2ban                                | Non              | Pas de force brute si le port 22 est bloqué au niveau du VCN                             |
+| Durcissement sshd                       | Non              | Le SSH Tailscale n'utilise pas sshd                                                      |
+| Désactiver la connexion root            | Non              | Tailscale utilise l'identité Tailscale, et non les utilisateurs système                  |
+| Authentification par clé SSH uniquement | Non              | Tailscale s'authentifie via votre tailnet                                                |
+| Durcissement IPv6                       | Généralement non | Dépend de vos paramètres VCN/sous-réseau ; vérifiez ce qui est réellement assigné/exposé |
 
 ### Toujours recommandé
 
@@ -213,7 +215,7 @@ sudo systemctl disable --now ssh
 
 ---
 
-## Solution de secours : Tunnel SSH
+## Solution de repli : Tunnel SSH
 
 Si Tailscale Serve ne fonctionne pas, utilisez un tunnel SSH :
 
@@ -228,13 +230,13 @@ Ensuite, ouvrez `http://localhost:18789`.
 
 ## Dépannage
 
-### Échec de la création de l'instance ("Out of capacity")
+### La création de l'instance échoue ("Hors capacité")
 
 Les instances ARM de niveau gratuit sont populaires. Essayez :
 
 - Un domaine de disponibilité différent
 - Réessayez hors des heures de pointe (tôt le matin)
-- Utilisez le filtre "Always Free" lors de la sélection de la forme
+- Utilisez le filtre "Always Free" lors de la sélection de la forme (shape)
 
 ### Tailscale ne se connectera pas
 
@@ -246,12 +248,12 @@ sudo tailscale status
 sudo tailscale up --ssh --hostname=openclaw --reset
 ```
 
-### Gateway ne démarrera pas
+### Le Gateway ne démarrera pas
 
 ```bash
 openclaw gateway status
 openclaw doctor --non-interactive
-journalctl --user -u openclaw-gateway -n 50
+journalctl --user -u openclaw-gateway.service -n 50
 ```
 
 ### Impossible d'atteindre l'interface de contrôle
@@ -264,18 +266,18 @@ tailscale serve status
 curl http://localhost:18789
 
 # Restart if needed
-systemctl --user restart openclaw-gateway
+systemctl --user restart openclaw-gateway.service
 ```
 
 ### Problèmes de binaire ARM
 
-Certains outils n'ont peut-être pas de versions ARM. Vérifiez :
+Certains outils peuvent ne pas avoir de builds ARM. Vérifiez :
 
 ```bash
 uname -m  # Should show aarch64
 ```
 
-La plupart des paquets npm fonctionnent bien. Pour les binaires, recherchez les versions `linux-arm64` ou `aarch64`.
+La plupart des paquets npm fonctionnent correctement. Pour les binaires, recherchez les versions `linux-arm64` ou `aarch64`.
 
 ---
 
@@ -283,21 +285,21 @@ La plupart des paquets npm fonctionnent bien. Pour les binaires, recherchez les 
 
 Tout l'état réside dans :
 
-- `~/.openclaw/` — config, informations d'identification, données de session
+- `~/.openclaw/` — `openclaw.json`, `auth-profiles.json` par agent, état du canal/provider, et données de session
 - `~/.openclaw/workspace/` — espace de travail (SOUL.md, mémoire, artefacts)
 
 Sauvegardez périodiquement :
 
 ```bash
-tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
+openclaw backup create
 ```
 
 ---
 
 ## Voir aussi
 
-- [Accès distant Gateway](/en/gateway/remote) — autres modèles d'accès distant
-- [intégration Tailscale](/en/gateway/tailscale) — documentation complète Tailscale
-- [configuration Gateway](/en/gateway/configuration) — toutes les options de configuration
-- [guide DigitalOcean](/en/platforms/digitalocean) — si vous souhaitez une solution payante + inscription plus facile
-- [guide Hetzner](/en/install/hetzner) — alternative basée sur Docker
+- [Accès distant Gateway](/en/gateway/remote) — autres modèles d'accès à distance
+- [Intégration Tailscale](/en/gateway/tailscale) — documentation complète Tailscale
+- [Configuration Gateway](/en/gateway/configuration) — toutes les options de configuration
+- [guide DigitalOcean](/en/platforms/digitalocean) — si vous souhaitez un service payant + une inscription plus facile
+- [guide Hetzner](/en/install/hetzner) — alternative basée sur Hetzner

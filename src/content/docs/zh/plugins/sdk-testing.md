@@ -234,7 +234,7 @@ pnpm test:coverage
 如果本地运行导致内存压力：
 
 ```bash
-OPENCLAW_TEST_PROFILE=low OPENCLAW_TEST_SERIAL_GATEWAY=1 pnpm test
+OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test
 ```
 
 ## 相关内容

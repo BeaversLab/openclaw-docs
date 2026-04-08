@@ -11,14 +11,17 @@ title: "agents"
 
 相關連結：
 
-- 多代理程式路由：[Multi-Agent Routing](/en/concepts/multi-agent)
-- 代理程式工作區：[Agent workspace](/en/concepts/agent-workspace)
+- Multi-agent routing: [Multi-Agent Routing](/en/concepts/multi-agent)
+- Agent workspace: [Agent workspace](/en/concepts/agent-workspace)
+- Skill visibility config: [Skills config](/en/tools/skills-config)
 
 ## 範例
 
 ```bash
 openclaw agents list
+openclaw agents list --bindings
 openclaw agents add work --workspace ~/.openclaw/workspace-work
+openclaw agents add ops --workspace ~/.openclaw/workspace-ops --bind telegram:ops --non-interactive
 openclaw agents bindings
 openclaw agents bind --agent work --bind telegram:ops
 openclaw agents unbind --agent work --bind telegram:ops
@@ -29,7 +32,13 @@ openclaw agents delete work
 
 ## 路由綁定
 
-使用路由綁定將傳入通道流量固定到特定代理程式。
+使用路由綁定將入站通道流量固定到特定代理程式。
+
+如果您還希望每個代理程式有不同的可見技能，請在
+`agents.defaults.skills` 中設定
+`agents.list[].skills` 和 `openclaw.json`。請參閱
+[Skills config](/en/tools/skills-config) 和
+[Configuration Reference](/en/gateway/configuration-reference#agentsdefaultsskills)。
 
 列出綁定：
 
@@ -45,13 +54,15 @@ openclaw agents bindings --json
 openclaw agents bind --agent work --bind telegram:ops --bind discord:guild-a
 ```
 
-如果您省略 `accountId` (`--bind <channel>`)，OpenClaw 會在可用時從通道預設值和外掛程式設定掛鉤解析它。
+如果您省略 `accountId` (`--bind <channel>`)，OpenClaw 會在可用時從通道預設值和外掛程式設定钩子解析它。
+
+如果您為 `bind` 或 `unbind` 省略 `--agent`，OpenClaw 會將目標設為目前的預設代理程式。
 
 ### 綁定範圍行為
 
 - 沒有 `accountId` 的綁定僅符合通道預設帳戶。
-- `accountId: "*"` 是通道範圍的後備選項（所有帳戶），且比明確的帳戶綁定更不具體。
-- 如果同一個代理程式已經有一個沒有 `accountId` 的相符通道綁定，而您後來使用明確或解析出的 `accountId` 進行綁定，OpenClaw 會就地升級該現有綁定，而不是新增重複項目。
+- `accountId: "*"` 是通道範圍的後備 (所有帳戶)，且比明確的帳戶綁定更具體性更低。
+- 如果相同的代理程式已經有一個沒有 `accountId` 的符合通道綁定，而您稍後使用明確或解析的 `accountId` 進行綁定，OpenClaw 會就地升級該現有綁定，而不是新增重複項。
 
 範例：
 
@@ -63,7 +74,7 @@ openclaw agents bind --agent work --bind telegram
 openclaw agents bind --agent work --bind telegram:ops
 ```
 
-升級後，該綁定的路由範圍限定於 `telegram:ops`。如果您也想要預設帳戶路由，請明確新增（例如 `--bind telegram:default`）。
+升級後，該綁定的路由範圍限定為 `telegram:ops`。如果您也想要預設帳戶路由，請明確新增它 (例如 `--bind telegram:default`)。
 
 移除綁定：
 
@@ -72,23 +83,110 @@ openclaw agents unbind --agent work --bind telegram:ops
 openclaw agents unbind --agent work --all
 ```
 
+`unbind` 接受 `--all` 或一或多個 `--bind` 值，但不能同時接受。
+
+## 命令介面
+
+### `agents`
+
+不帶子指令執行 `openclaw agents` 等同於 `openclaw agents list`。
+
+### `agents list`
+
+選項：
+
+- `--json`
+- `--bindings`: 包含完整的路由規則，不僅是每個代理程式的計數/摘要
+
+### `agents add [name]`
+
+選項：
+
+- `--workspace <dir>`
+- `--model <id>`
+- `--agent-dir <dir>`
+- `--bind <channel[:accountId]>` (可重複)
+- `--non-interactive`
+- `--json`
+
+備註：
+
+- 傳遞任何明確的 add 標誌會將指令切換至非互動路徑。
+- 非互動模式需要同時提供代理程式名稱和 `--workspace`。
+- `main` 已被保留，無法用作新的代理程式 ID。
+
+### `agents bindings`
+
+選項：
+
+- `--agent <id>`
+- `--json`
+
+### `agents bind`
+
+選項：
+
+- `--agent <id>` (預設為目前的預設代理程式)
+- `--bind <channel[:accountId]>` (可重複)
+- `--json`
+
+### `agents unbind`
+
+選項：
+
+- `--agent <id>` (預設為目前的預設代理程式)
+- `--bind <channel[:accountId]>` (可重複)
+- `--all`
+- `--json`
+
+### `agents delete <id>`
+
+選項：
+
+- `--force`
+- `--json`
+
+備註：
+
+- `main` 無法被刪除。
+- 若沒有 `--force`，則需要互動式確認。
+- 工作區、代理程式狀態和工作階段記錄目錄會被移至垃圾桶，而非永久刪除。
+
 ## 身分識別檔案
 
 每個代理程式工作區都可以在工作區根目錄包含一個 `IDENTITY.md`：
 
 - 範例路徑：`~/.openclaw/workspace/IDENTITY.md`
-- `set-identity --from-identity` 從工作區根目錄（或明確的 `--identity-file`）讀取
+- `set-identity --from-identity` 會從工作區根目錄讀取 (或指定的 `--identity-file`)
 
-頭像路徑是相對於工作區根目錄解析的。
+頭像路徑會相對於工作區根目錄解析。
 
 ## 設定身分識別
 
-`set-identity` 將欄位寫入 `agents.list[].identity`：
+`set-identity` 會將欄位寫入 `agents.list[].identity`：
 
 - `name`
 - `theme`
 - `emoji`
 - `avatar` (相對於工作區的路徑、http(s) URL 或 data URI)
+
+選項：
+
+- `--agent <id>`
+- `--workspace <dir>`
+- `--identity-file <path>`
+- `--from-identity`
+- `--name <name>`
+- `--theme <theme>`
+- `--emoji <emoji>`
+- `--avatar <value>`
+- `--json`
+
+備註：
+
+- 可以使用 `--agent` 或 `--workspace` 來選擇目標代理程式。
+- 如果您依賴 `--workspace` 且有多個代理程式共用該工作區，指令會失敗並要求您傳遞 `--agent`。
+- 當未提供明確的身分識別欄位時，指令會從 `IDENTITY.md` 讀取身分識別資料。
 
 從 `IDENTITY.md` 載入：
 

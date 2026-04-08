@@ -17,38 +17,52 @@ La taille maximale par défaut de la charge utile est de 2 Mo.
 
 ## Authentification
 
-Utilise la configuration d'auth du Gateway. Envoyer un jeton porteur :
+Utilise la configuration d'authentification du Gateway.
 
-- `Authorization: Bearer <token>`
+Chemins d'authentification HTTP courants :
 
-Remarques :
+- authentification par secret partagé (`gateway.auth.mode="token"` ou `"password"`) :
+  `Authorization: Bearer <token-or-password>`
+- authentification HTTP de confiance porteur d'identité (`gateway.auth.mode="trusted-proxy"`) :
+  acheminez via le proxy configuré prenant en compte l'identité et laissez-le injecter les
+  en-têtes d'identité requis
+- authentification ouverte pour entrée privée (`gateway.auth.mode="none"`) :
+  aucun en-tête d'authentification requis
 
-- Lorsque `gateway.auth.mode="token"`, utilisez `gateway.auth.token` (ou `OPENCLAW_GATEWAY_TOKEN`).
-- Lorsque `gateway.auth.mode="password"`, utilisez `gateway.auth.password` (ou `OPENCLAW_GATEWAY_PASSWORD`).
+Notes :
+
+- Lors de l'utilisation de `gateway.auth.mode="token"`, utilisez `gateway.auth.token` (ou `OPENCLAW_GATEWAY_TOKEN`).
+- Lors de l'utilisation de `gateway.auth.mode="password"`, utilisez `gateway.auth.password` (ou `OPENCLAW_GATEWAY_PASSWORD`).
+- Lors de l'utilisation de `gateway.auth.mode="trusted-proxy"`, la requête HTTP doit provenir d'une
+  source proxy de confiance configurée et non en boucle locale (non-loopback) ; les proxies en boucle locale sur le même hôte ne
+  satisfont pas ce mode.
 - Si `gateway.auth.rateLimit` est configuré et que trop d'échecs d'authentification se produisent, le point de terminaison renvoie `429` avec `Retry-After`.
 
 ## Limite de sécurité (important)
 
 Traitez ce point de terminaison comme une surface d'**accès opérateur complet** pour l'instance de la passerelle.
 
-- L'authentification porteur HTTP ici n'est pas un modèle étendu par utilisateur.
-- Un jeton/mot de passe valide de la passerelle pour ce point de terminaison doit être traité comme une information d'identification de propriétaire/opérateur.
-- Pour les modes d'authentification par secret partagé (`token` et `password`), le point de terminaison restaure les valeurs par défaut complètes de l'opérateur, même si l'appelant envoie un en-tête `x-openclaw-scopes` plus restrictif.
-- L'authentification par secret partagé traite également les invocations directes d'outils sur ce point de terminaison comme des tours d'envoyeur-propriétaire.
-- Les modes HTTP porteurs d'identité de confiance (par exemple, l'authentification par proxy de confiance ou `gateway.auth.mode="none"` sur une entrée privée) honorent toujours les étendues d'opérateur déclarées dans la requête.
-- Gardez ce point de terminaison uniquement en boucle locale/tailnet/entrée privée ; ne l'exposez pas directement à l'internet public.
+- L'authentification HTTP bearer ici n'est pas un modèle d'étendue étroit par utilisateur.
+- Un jeton/mot de passe Gateway valide pour ce point de terminaison doit être traité comme un identifiant de propriétaire/opérateur.
+- Pour les modes d'authentification par secret partagé (`token` et `password`), le point de terminaison rétablit les paramètres par défaut d'opérateur complet normaux même si l'appelant envoie un en-tête `x-openclaw-scopes` plus étroit.
+- L'authentification par secret partagé traite également les appels directs d'outils sur ce point de terminaison comme des tours d'envoyeur propriétaire.
+- Les modes HTTP de confiance porteurs d'identité (par exemple authentification proxy de confiance ou `gateway.auth.mode="none"` sur une entrée privée) honorent `x-openclaw-scopes` lorsqu'il est présent et retombent sinon sur l'ensemble d'étendues par défaut de l'opérateur normal.
+- Gardez ce point de terminaison uniquement en boucle locale/tailnet/entrée privée ; ne l'exposez pas directement à l'Internet public.
 
 Matrice d'authentification :
 
 - `gateway.auth.mode="token"` ou `"password"` + `Authorization: Bearer ...`
   - prouve la possession du secret d'opérateur partagé de la passerelle
-  - ignore `x-openclaw-scopes` plus restrictif
-  - restaure l'ensemble complet des étendues d'opérateur par défaut
-  - traite les invocations directes d'outils sur ce point de terminaison comme des tours d'envoyeur-propriétaire
-- modes HTTP porteurs d'identité de confiance (par exemple, authentification par proxy de confiance, ou `gateway.auth.mode="none"` sur une entrée privée)
-  - authentifier une identité ou une limite de déploiement externe de confiance
-  - respecter l'en-tête `x-openclaw-scopes` déclaré
-  - n'obtenir la sémantique de propriétaire que lorsque `operator.admin` est réellement présent dans ces portées déclarées
+  - ignore `x-openclaw-scopes` plus étroit
+  - restaure l'ensemble complet de la portée de l'opérateur par défaut :
+    `operator.admin`, `operator.approvals`, `operator.pairing`,
+    `operator.read`, `operator.talk.secrets`, `operator.write`
+  - traite les appels directs de tools sur ce point de terminaison comme des tours owner-sender
+- modes HTTP transportant une identité de confiance (par exemple authentification par proxy de confiance, ou `gateway.auth.mode="none"` sur une entrée privée)
+  - authentifier une identité externe de confiance ou une limite de déploiement
+  - respecte `x-openclaw-scopes` lorsque l'en-tête est présent
+  - revient à l'ensemble de la portée par défaut normale de l'opérateur lorsque l'en-tête est absent
+  - ne perd la sémantique de propriétaire que lorsque l'appelant réduit explicitement les portées et omet `operator.admin`
 
 ## Corps de la requête
 
@@ -64,44 +78,44 @@ Matrice d'authentification :
 
 Champs :
 
-- `tool` (chaîne, requis) : nom de l'outil à invoquer.
-- `action` (chaîne, facultatif) : mappé vers args si le schéma de l'outil prend en charge `action` et que la charge utile args l'a omis.
-- `args` (objet, facultatif) : arguments spécifiques à l'outil.
+- `tool` (chaîne, requis) : nom du tool à invoquer.
+- `action` (chaîne, facultatif) : mappé vers args si le schéma du tool prend en charge `action` et que la charge utile args l'a omis.
+- `args` (objet, facultatif) : arguments spécifiques au tool.
 - `sessionKey` (chaîne, facultatif) : clé de session cible. Si omis ou `"main"`, le Gateway utilise la clé de session principale configurée (respecte `session.mainKey` et l'agent par défaut, ou `global` dans la portée globale).
 - `dryRun` (booléen, facultatif) : réservé pour une utilisation future ; actuellement ignoré.
 
-## Stratégie + comportement de routage
+## Politique + comportement de routage
 
-La disponibilité des outils est filtrée par la même chaîne de stratégies utilisée par les agents du Gateway :
+La disponibilité des tools est filtrée par la même chaîne de politiques utilisée par les agents du Gateway :
 
 - `tools.profile` / `tools.byProvider.profile`
 - `tools.allow` / `tools.byProvider.allow`
 - `agents.<id>.tools.allow` / `agents.<id>.tools.byProvider.allow`
-- stratégies de groupe (si la clé de session correspond à un groupe ou un canal)
-- stratégie de sous-agent (lors de l'appel avec une clé de session de sous-agent)
+- politiques de groupe (si la clé de session correspond à un groupe ou un channel)
+- politique de sous-agent (lors de l'invocation avec une clé de session de sous-agent)
 
-Si un outil n'est pas autorisé par la stratégie, le point de terminaison renvoie **404**.
+Si un tool n'est pas autorisé par la politique, le point de terminaison renvoie **404**.
 
 Notes importantes sur les limites :
 
-- Les approbations d'exécution sont des garde-fous pour l'opérateur, et non une limite d'autorisation distincte pour ce point de terminaison HTTP. Si un outil est accessible ici via l'authentification Gateway + la stratégie d'outil, `/tools/invoke` n'ajoute pas de demande d'approbation supplémentaire par appel.
+- Les approbations Exec sont des garde-fous pour l'opérateur, et non une limite d'autorisation distincte pour ce point de terminaison HTTP. Si un tool est accessible ici via l'authentification du Gateway + la politique de tool, `/tools/invoke` n'ajoute pas de invite d'approbation supplémentaire par appel.
 - Ne partagez pas les identifiants bearer du Gateway avec des appelants non fiables. Si vous avez besoin d'une séparation entre les limites de confiance, exécutez des passerelles distinctes (et idéalement des utilisateurs/hôtes OS distincts).
 
-Le Gateway HTTP applique également une liste de refus stricte par défaut (même si la stratégie de session autorise l'outil) :
+Le HTTP du Gateway applique également une liste de refus stricte par défaut (même si la stratégie de session autorise le tool) :
 
-- `exec` — exécution directe de commande (surface RCE)
-- `spawn` — création arbitraire de processus enfant (surface RCE)
-- `shell` — exécution de commande shell (surface RCE)
-- `fs_write` — mutation de fichier arbitraire sur l'hôte
-- `fs_delete` — suppression de fichier arbitraire sur l'hôte
-- `fs_move` — déplacement/renommage de fichier arbitraire sur l'hôte
-- `apply_patch` — l'application de correctif peut réécrire des fichiers arbitraires
-- `sessions_spawn` — orchestration de session ; le lancement d'agents à distance constitue une exécution de code à distance (RCE)
-- `sessions_send` — injection de message inter-session
-- `cron` — plan de contrôle d'automatisation persistant
-- `gateway` — plan de contrôle de la passerelle ; empêche la reconfiguration via HTTP
-- `nodes` — le relais de commande de nœud peut atteindre system.run sur les hôtes appairés
-- `whatsapp_login` — configuration interactive nécessitant un scan QR de terminal ; fige sur HTTP
+- `exec` — exécution directe de commandes (surface RCE)
+- `spawn` — création de processus enfants arbitraires (surface RCE)
+- `shell` — exécution de commandes shell (surface RCE)
+- `fs_write` — modification de fichiers arbitraires sur l'hôte
+- `fs_delete` — suppression de fichiers arbitraires sur l'hôte
+- `fs_move` — déplacement/renommage de fichiers arbitraires sur l'hôte
+- `apply_patch` — l'application de correctifs peut réécrire des fichiers arbitraires
+- `sessions_spawn` — orchestration de session ; le lancement d'agents à distance est une RCE
+- `sessions_send` — injection de messages inter-sessions
+- `cron` — plan de contrôle d'automatisation persistante
+- `gateway` — plan de contrôle de passerelle ; empêche la reconfiguration via HTTP
+- `nodes` — le relais de commande de nœud peut atteindre system.run sur les hôtes appariés
+- `whatsapp_login` — configuration interactive nécessitant un scan QR terminal ; se bloque sur HTTP
 
 Vous pouvez personnaliser cette liste de refus via `gateway.tools` :
 
@@ -118,7 +132,7 @@ Vous pouvez personnaliser cette liste de refus via `gateway.tools` :
 }
 ```
 
-Pour aider les stratégies de groupe à résoudre le contexte, vous pouvez définir facultativement :
+Pour aider les stratégies de groupe à résoudre le contexte, vous pouvez éventuellement définir :
 
 - `x-openclaw-message-channel: <channel>` (exemple : `slack`, `telegram`)
 - `x-openclaw-account-id: <accountId>` (lorsque plusieurs comptes existent)
@@ -126,12 +140,12 @@ Pour aider les stratégies de groupe à résoudre le contexte, vous pouvez défi
 ## Réponses
 
 - `200` → `{ ok: true, result }`
-- `400` → `{ ok: false, error: { type, message } }` (requête non valide ou erreur de saisie de l'outil)
+- `400` → `{ ok: false, error: { type, message } }` (demande invalide ou erreur d'entrée du tool)
 - `401` → non autorisé
-- `429` → auth limitée par débit (`Retry-After` défini)
-- `404` → outil non disponible (non trouvé ou non autorisé)
+- `429` → authentification limitée par taux (`Retry-After` défini)
+- `404` → tool non disponible (non trouvé ou non autorisé)
 - `405` → méthode non autorisée
-- `500` → `{ ok: false, error: { type, message } }` (erreur d'exécution d'outil inattendue ; message assaini)
+- `500` → `{ ok: false, error: { type, message } }` (erreur d'exécution de tool inattendue ; message nettoyé)
 
 ## Exemple
 

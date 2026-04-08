@@ -81,63 +81,72 @@ sequenceDiagram
 - 握手之后：
   - 请求：`{type:"req", id, method, params}` → `{type:"res", id, ok, payload|error}`
   - 事件：`{type:"event", event, payload, seq?, stateVersion?}`
-- 如果设置了 `OPENCLAW_GATEWAY_TOKEN`（或 `--token`），`connect.params.auth.token`
-  必须匹配，否则套接字将关闭。
-- 具有副作用的方法（`send`、`agent`）需要幂等性密钥以便
-  安全重试；服务器维护一个短期的去重缓存。
-- 节点必须在 `connect` 中包含 `role: "node"` 以及 caps/commands/permissions。
+- `hello-ok.features.methods` / `events` 是发现元数据，而不是每个可调用辅助路由的生成转储。
+- 共享密钥认证使用 `connect.params.auth.token` 或
+  `connect.params.auth.password`，具体取决于配置的网关认证模式。
+- 承载身份的模式（如 Tailscale Serve
+  (`gateway.auth.allowTailscale: true`) 或非本地环回
+  `gateway.auth.mode: "trusted-proxy"`）通过请求头满足认证要求，
+  而不是 `connect.params.auth.*`。
+- 私有入口 `gateway.auth.mode: "none"` 完全禁用共享密钥认证；
+  请确保该模式不面向公共/不受信任的入口。
+- 具有副作用的 methods (`send`, `agent`) 需要幂等性密钥
+  以便安全重试；服务器会维护一个短期去重缓存。
+- 节点必须在 `connect` 中包含 `role: "node"` 以及 capabilities/commands/permissions。
 
 ## 配对 + 本地信任
 
-- 所有 WS 客户端（操作员 + 节点）在 `connect` 上都包含一个**设备身份**。
-- 新的设备 ID 需要配对批准；Gateway(网关) 会颁发一个**设备令牌**
-  用于后续连接。
-- 对于**本地**连接（回环或网关主机自己的 tailnet 地址），可以
-  自动批准以保持同主机用户体验的流畅。
+- 所有 WebSocket 客户端（操作员 + 节点）都在 `connect` 上包含**设备身份**。
+- 新的设备 ID 需要配对批准；Gateway(网关) 会为后续连接
+  颁发一个 **device token**（设备令牌）。
+- 直接本地环回连接可以自动批准，以保持同主机 UX 流畅。
+- OpenClaw 还有一个狭窄的后端/容器本地自连接路径，
+  用于受信任的共享密钥辅助流程。
+- Tailnet 和 LAN 连接（包括同主机 tailnet 绑定）仍然需要
+  明确的配对批准。
 - 所有连接必须对 `connect.challenge` nonce 进行签名。
-- 签名载荷 `v3` 还绑定了 `platform` + `deviceFamily`；网关
-  在重新连接时会锁定已配对的元数据，如果元数据
-  发生更改则要求修复配对。
-- **非本地**连接仍然需要显式批准。
-- Gateway(网关) 认证（`gateway.auth.*`）仍然适用于**所有**连接，无论是
-  本地还是远程。
+- 签名有效载荷 `v3` 还绑定了 `platform` + `deviceFamily`；网关
+  在重新连接时会锁定已配对的元数据，如果元数据发生变化则需要修复配对。
+- **非本地** 连接仍然需要明确的批准。
+- Gateway(网关) 认证 (`gateway.auth.*`) 仍然适用于 **所有** 连接，无论是本地还是
+  远程。
 
-详情：[Gateway(网关) 协议](/en/gateway/protocol)、[配对](/en/channels/pairing)、
-[安全性](/en/gateway/security)。
+详情：[Gateway(网关) 协议](/en/gateway/protocol)，[配对](/en/channels/pairing)，
+[安全](/en/gateway/security)。
 
 ## 协议类型和代码生成
 
 - TypeBox schemas 定义了协议。
 - JSON Schema 是根据这些 schemas 生成的。
-- Swift 模型是根据 JSON Schema 生成的。
+- Swift 模型是从 JSON Schema 生成的。
 
 ## 远程访问
 
 - 首选：Tailscale 或 VPN。
-- 备选：SSH 隧道
+- 替代方案：SSH 隧道
 
   ```bash
   ssh -N -L 18789:127.0.0.1:18789 user@host
   ```
 
-- 通过隧道进行连接时，应用相同的握手 + 认证令牌。
-- 在远程设置中，可以为 WS 启用 TLS + 可选的固定（pinning）。
+- 相同的握手 + 认证令牌适用于通过隧道进行的连接。
+- 在远程设置中，可以为 WS 启用 TLS 和可选的固定证书。
 
-## 运营快照
+## 操作快照
 
 - 启动：`openclaw gateway`（前台，日志输出到 stdout）。
 - 健康检查：通过 WS 进行 `health`（也包含在 `hello-ok` 中）。
-- 监管：使用 launchd/systemd 实现自动重启。
+- 监管：使用 launchd/systemd 进行自动重启。
 
 ## 不变量
 
-- 每个主机上仅有一个 Gateway(网关) 控制单个 Baileys 会话。
-- 握手是强制性的；任何非 JSON 或非连接的首帧都将导致强制关闭。
-- 事件不会重放；客户端必须在出现缺口时进行刷新。
+- 每个主机上，确切的 Gateway(网关) 控制单个 Baileys 会话。
+- 握手是强制性的；任何非 JSON 或非连接的第一帧都将导致强制关闭。
+- 事件不会重放；客户端必须在出现间隙时进行刷新。
 
 ## 相关
 
-- [Agent Loop](/en/concepts/agent-loop) — 详细的 Agent 执行周期
-- [Gateway(网关) Protocol](/en/gateway/protocol) — WebSocket 协议契约
-- [Queue](/en/concepts/queue) — 命令队列与并发
-- [Security](/en/gateway/security) — 信任模型与加固
+- [Agent Loop](/en/concepts/agent-loop) — 详细的代理执行循环
+- [Gateway(网关) Protocol](/en/gateway/protocol) — WebSocket 协议合约
+- [Queue](/en/concepts/queue) — 命令队列和并发
+- [Security](/en/gateway/security) — 信任模型和加固

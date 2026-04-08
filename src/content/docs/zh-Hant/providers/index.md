@@ -10,7 +10,7 @@ title: "供應商目錄"
 
 OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證，然後將預設模型設定為 `provider/model`。
 
-正在尋找聊天頻道文件（WhatsApp/Telegram/Discord/Slack/Mattermost (外掛)/等。）？請參閱 [頻道](/en/channels)。
+正在尋找聊天頻道文件（WhatsApp/Telegram/Discord/Slack/Mattermost (外掛)/etc.）？請參閱 [頻道](/en/channels)。
 
 ## 快速開始
 
@@ -25,10 +25,16 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 
 ## 供應商文件
 
+- [Alibaba Model Studio](/en/providers/alibaba)
 - [Amazon Bedrock](/en/providers/bedrock)
-- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
+- [Anthropic (API + Claude CLI)](/en/providers/anthropic)
+- [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
+- [Chutes](/en/providers/chutes)
+- [ComfyUI](/en/providers/comfy)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
 - [DeepSeek](/en/providers/deepseek)
+- [fal](/en/providers/fal)
+- [Fireworks](/en/providers/fireworks)
 - [GitHub Copilot](/en/providers/github-copilot)
 - [GLM models](/en/providers/glm)
 - [Google (Gemini)](/en/providers/google)
@@ -40,32 +46,42 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
 - [NVIDIA](/en/providers/nvidia)
-- [Ollama (雲端 + 本地模型)](/en/providers/ollama)
+- [Ollama (cloud + local models)](/en/providers/ollama)
 - [OpenAI (API + Codex)](/en/providers/openai)
 - [OpenCode](/en/providers/opencode)
 - [OpenCode Go](/en/providers/opencode-go)
 - [OpenRouter](/en/providers/openrouter)
-- [Perplexity (網路搜尋)](/en/providers/perplexity-provider)
+- [Perplexity (web search)](/en/providers/perplexity-provider)
 - [Qianfan](/en/providers/qianfan)
-- [Qwen / Model Studio (阿里雲)](/en/providers/qwen_modelstudio)
-- [SGLang (本地模型)](/en/providers/sglang)
+- [Qwen Cloud](/en/providers/qwen)
+- [Runway](/en/providers/runway)
+- [SGLang (local models)](/en/providers/sglang)
+- [StepFun](/en/providers/stepfun)
 - [Synthetic](/en/providers/synthetic)
 - [Together AI](/en/providers/together)
-- [Venice (Venice AI, 注重隱私)](/en/providers/venice)
+- [Venice (Venice AI, privacy-focused)](/en/providers/venice)
 - [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
-- [vLLM (本機模型)](/en/providers/vllm)
-- [Volcengine (豆包)](/en/providers/volcengine)
+- [Vydra](/en/providers/vydra)
+- [vLLM (local models)](/en/providers/vllm)
+- [Volcengine (Doubao)](/en/providers/volcengine)
 - [xAI](/en/providers/xai)
-- [小米](/en/providers/xiaomi)
+- [Xiaomi](/en/providers/xiaomi)
 - [Z.AI](/en/providers/zai)
 
-## 轉錄服務商
+## 共享概覽頁面
 
-- [Deepgram (音訊轉錄)](/en/providers/deepgram)
+- [Additional bundled variants](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
+- [Image Generation](/en/tools/image-generation) - 共享 `image_generate` 工具、提供者選擇和故障轉移
+- [Music Generation](/en/tools/music-generation) - 共享 `music_generate` 工具、提供者選擇和故障轉移
+- [Video Generation](/en/tools/video-generation) - 共享 `video_generate` 工具、提供者選擇和故障轉移
+
+## 轉錄提供者
+
+- [Deepgram (audio transcription)](/en/providers/deepgram)
 
 ## 社群工具
 
-- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - 適用於 Claude 訂閱憑證的社群代理（使用前請確認 Anthropic 政策/條款）
+- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - 用於 Claude 訂閱憑證的社群代理（使用前請確認 Anthropic 政策/條款）
 
-如需完整的服務商目錄（xAI、Groq、Mistral 等）及進階配置，
+如需完整的提供者目錄（xAI、Groq、Mistral 等）和進階設定，
 請參閱 [Model providers](/en/concepts/model-providers)。

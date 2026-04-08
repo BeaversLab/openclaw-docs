@@ -8,16 +8,21 @@ title: "Xiaomi MiMo"
 
 # Xiaomi MiMo
 
-Xiaomi MiMo est la plateforme API pour les modèles **MiMo**. OpenClaw utilise le point de terminaison compatible OpenAI de Xiaomi avec une authentification par clé API. Créez votre clé API dans la [console Xiaomi MiMo](https://platform.xiaomimimo.com/#/console/api-keys), puis configurez le fournisseur intégré `xiaomi` avec cette clé.
+Xiaomi MiMo est la plateforme API pour les modèles **MiMo**. OpenClaw utilise le point de terminaison compatible Xiaomi de OpenAI avec une authentification par clé API. Créez votre clé API dans la
+[console Xiaomi MiMo](https://platform.xiaomimimo.com/#/console/api-keys), puis configurez le
+provider `xiaomi` inclus avec cette clé.
 
-## Aperçu du modèle
+## Catalogue intégré
 
-- **mimo-v2-flash** : modèle texte par défaut, fenêtre de contexte de 262144 jetons
-- **mimo-v2-pro** : modèle texte avec raisonnement, fenêtre de contexte de 1048576 jetons
-- **mimo-v2-omni** : modèle multimodal avec raisonnement prenant en entrée du texte et des images, fenêtre de contexte de 262144 jetons
 - URL de base : `https://api.xiaomimimo.com/v1`
 - API : `openai-completions`
 - Autorisation : `Bearer $XIAOMI_API_KEY`
+
+| Réf modèle             | Entrée       | Contexte  | Max sortie | Notes                                  |
+| ---------------------- | ------------ | --------- | ---------- | -------------------------------------- |
+| `xiaomi/mimo-v2-flash` | texte        | 262 144   | 8 192      | Modèle par défaut                      |
+| `xiaomi/mimo-v2-pro`   | texte        | 1 048 576 | 32 000     | Activé pour le raisonnement            |
+| `xiaomi/mimo-v2-omni`  | texte, image | 262 144   | 32 000     | Multimodal activé pour le raisonnement |
 
 ## Configuration CLI
 
@@ -77,7 +82,7 @@ openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
 
 ## Notes
 
-- Référence du modèle par défaut : `xiaomi/mimo-v2-flash`.
+- Réf du modèle par défaut : `xiaomi/mimo-v2-flash`.
 - Modèles intégrés supplémentaires : `xiaomi/mimo-v2-pro`, `xiaomi/mimo-v2-omni`.
-- Le fournisseur est injecté automatiquement lorsque `XIAOMI_API_KEY` est défini (ou qu'un profil d'authentification existe).
-- Voir [/concepts/model-providers](/en/concepts/model-providers) pour les règles du fournisseur.
+- Le provider est injecté automatiquement lorsque `XIAOMI_API_KEY` est défini (ou si un profil d'authentification existe).
+- Voir [/concepts/model-providers](/en/concepts/model-providers) pour les règles du provider.

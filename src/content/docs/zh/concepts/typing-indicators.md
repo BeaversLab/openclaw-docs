@@ -56,10 +56,7 @@ title: "输入指示器"
 
 ## 说明
 
-- `message` 模式不会为仅静默的回复显示输入状态（例如用于抑制输出的 `NO_REPLY`
-  令牌）。
-- `thinking` 仅在运行流式传输推理时触发（`reasoningLevel: "stream"`）。
-  如果模型未发出推理增量，则不会开始输入状态。
+- 当整个有效负载完全是静默令牌（例如 `NO_REPLY` / `no_reply`，不区分大小写匹配）时，`message` 模式不会为仅静默的回复显示正在输入。
+- `thinking` 仅在运行流式传输推理内容（`reasoningLevel: "stream"`）时才会触发。如果模型未发出推理增量，则不会开始显示正在输入。
 - 无论处于何种模式，心跳从不显示输入状态。
-- `typingIntervalSeconds` 控制**刷新节奏**，而非开始时间。
-  默认为 6 秒。
+- `typingIntervalSeconds` 控制**刷新频率**，而不是开始时间。默认值为 6 秒。

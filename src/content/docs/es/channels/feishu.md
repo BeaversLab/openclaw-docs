@@ -73,7 +73,7 @@ Elija **Feishu** y luego ingrese el ID de la aplicación y el secreto de la apli
 
 Visite [Feishu Open Platform](https://open.feishu.cn/app) e inicie sesión.
 
-Los inquilinos de Lark (global) deben usar [https://open.larksuite.com/app](https://open.larksuite.com/app) y establecer `domain: "lark"` en la configuración de Feishu.
+Los inquilinos de Lark (global) deben usar [https://open.larksuite.com/app](https://open.larksuite.com/app) y configurar `domain: "lark"` en la configuración de Feishu.
 
 ### 2. Crear una aplicación
 
@@ -81,7 +81,7 @@ Los inquilinos de Lark (global) deben usar [https://open.larksuite.com/app](http
 2. Complete el nombre de la aplicación + descripción
 3. Elija un icono para la aplicación
 
-![Create enterprise app](/images/feishu-step2-create-app.png)
+![Crear aplicación empresarial](/images/feishu-step2-create-app.png)
 
 ### 3. Copiar las credenciales
 
@@ -92,7 +92,7 @@ Desde **Credenciales e información básica**, copie:
 
 ❗ **Importante:** mantenga el secreto de la aplicación en privado.
 
-![Get credentials](/images/feishu-step3-credentials.png)
+![Obtener credenciales](/images/feishu-step3-credentials.png)
 
 ### 4. Configurar permisos
 
@@ -126,7 +126,7 @@ En **Permisos**, haga clic en **Importación por lotes** y pegue:
 }
 ```
 
-![Configure permissions](/images/feishu-step4-permissions.png)
+![Configurar permisos](/images/feishu-step4-permissions.png)
 
 ### 5. Habilitar la capacidad del bot
 
@@ -135,7 +135,7 @@ En **Capacidad de la aplicación** > **Bot**:
 1. Habilitar capacidad del bot
 2. Establecer el nombre del bot
 
-![Enable bot capability](/images/feishu-step5-bot-capability.png)
+![Habilitar capacidad de bot](/images/feishu-step5-bot-capability.png)
 
 ### 6. Configurar la suscripción de eventos
 
@@ -152,7 +152,7 @@ En **Suscripción de eventos**:
 
 ⚠️ Si la puerta de enlace no se está ejecutando, es posible que la configuración de conexión larga no se guarde.
 
-![Configure event subscription](/images/feishu-step6-event-subscription.png)
+![Configurar suscripción de eventos](/images/feishu-step6-event-subscription.png)
 
 ### 7. Publicar la aplicación
 
@@ -659,13 +659,13 @@ Campos de enrutamiento:
 - `match.peer.kind`: `"direct"` o `"group"`
 - `match.peer.id`: ID de usuario abierto (`ou_xxx`) o ID de grupo (`oc_xxx`)
 
-Consulte [Get group/user IDs](#get-groupuser-ids) para obtener consejos de búsqueda.
+Consulte [Obtener IDs de grupo/usuario](#get-groupuser-ids) para obtener consejos de búsqueda.
 
 ---
 
 ## Referencia de configuración
 
-Configuración completa: [Gateway configuration](/en/gateway/configuration)
+Configuración completa: [Configuración de puerta de enlace](/en/gateway/configuration)
 
 Opciones clave:
 
@@ -761,7 +761,7 @@ Cuando el agente maneja un evento de comentario de Drive, recibe:
 - metadatos del documento (título, tipo, URL)
 - el contexto del hilo de comentarios para respuestas en el hilo
 
-Tras realizar ediciones en el documento, se guía al agente para usar `feishu_drive.reply_comment` para notificar al comentarista y luego generar `NO_REPLY` para evitar envíos duplicados.
+Después de realizar ediciones en el documento, se guía al agente para que use `feishu_drive.reply_comment` para notificar al comentarista y luego genere el token silencioso exacto `NO_REPLY` / `no_reply` para evitar envíos duplicados.
 
 ## Superficie de acción en tiempo de ejecución
 
@@ -782,7 +782,7 @@ Actualmente, Feishu expone estas acciones en tiempo de ejecución:
 
 ## Relacionado
 
-- [Descripción general de canales](/en/channels) — todos los canales compatibles
+- [Descripción general de canales](/en/channels) — todos los canales admitidos
 - [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento por MD
 - [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
 - [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes

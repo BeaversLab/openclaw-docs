@@ -18,7 +18,7 @@ Un **délégué** est un agent OpenClaw qui :
 - Possède sa **propre identité** (adresse e-mail, nom d'affichage, calendrier).
 - Agit **pour le compte de** un ou plusieurs humains — ne fait jamais semblant d'être eux.
 - Opère sous **autorisations explicites** accordées par le fournisseur d'identité de l'organisation.
-- Suit les **[ordres permanents](/en/automation/standing-orders)** — des règles définies dans le `AGENTS.md` de l'agent qui spécifient ce qu'il peut faire de manière autonome par rapport à ce qui nécessite une approbation humaine (voir [Cron Jobs](/en/automation/cron-jobs) pour l'exécution planifiée).
+- Suit les **[standing orders](/en/automation/standing-orders)** — règles définies dans le `AGENTS.md` de l'agent qui spécifient ce qu'il peut faire de manière autonome par rapport à ce qui nécessite une approbation humaine (voir [Cron Jobs](/en/automation/cron-jobs) pour l'exécution planifiée).
 
 Le modèle de délégué correspond directement au fonctionnement des assistants de direction : ils possèdent leurs propres identifiants, envoient des courriels « pour le compte de » de leur principal et suivent une portée d'autorité définie.
 
@@ -70,7 +70,7 @@ Le délégué fonctionne de manière **autonome** selon un calendrier, exécutan
 - Publication automatisée sur les réseaux sociaux via des files d'attente de contenu approuvé.
 - Tri de la boîte de réception avec catégorisation automatique et marquage.
 
-Ce niveau combine les autorisations du Niveau 2 avec des [Tâches Cron](/en/automation/cron-jobs) et des [Ordres Permanents](/en/automation/standing-orders).
+Ce niveau combine les autorisations du niveau 2 avec les [Cron Jobs](/en/automation/cron-jobs) et les [Standing Orders](/en/automation/standing-orders).
 
 > **Avertissement de sécurité** : Le Niveau 3 nécessite une configuration minutieuse des blocs stricts — actions que l'agent ne doit jamais entreprendre quelle que soit l'instruction. Remplissez les conditions préalables ci-dessous avant d'accorder des autorisations de fournisseur d'identité.
 
@@ -173,7 +173,7 @@ Set-Mailbox -Identity "principal@[organization].org" `
 
 **Accès en lecture** (Graph API avec autorisations d'application) :
 
-Inscrivez une application Azure AD avec les autorisations d'application `Mail.Read` et `Calendars.Read`. **Avant d'utiliser l'application**, délimitez l'accès avec une [stratégie d'accès aux applications](https://learn.microsoft.com/graph/auth-limit-mailbox-access) pour restreindre l'application aux seules boîtes aux lettres du délégué et du principal :
+Enregistrez une application Azure AD avec les autorisations d'application `Mail.Read` et `Calendars.Read`. **Avant d'utiliser l'application**, délimitez l'accès avec une [application access policy](https://learn.microsoft.com/graph/auth-limit-mailbox-access) pour restreindre l'application uniquement aux boîtes aux lettres du délégué et du principal :
 
 ```powershell
 New-ApplicationAccessPolicy `
@@ -244,7 +244,7 @@ Copiez ou créez des profils d'authentification pour le `agentDir` du délégué
 ~/.openclaw/agents/delegate/agent/auth-profiles.json
 ```
 
-Ne partagez jamais le `agentDir` de l'agent principal avec le délégué. Consultez [Multi-Agent Routing](/en/concepts/multi-agent) pour plus de détails sur l'isolement de l'authentification.
+Ne partagez jamais le `agentDir` de l'agent principal avec le délégué. Voir [Multi-Agent Routing](/en/concepts/multi-agent) pour les détails sur l'isolement de l'authentification.
 
 ## Exemple : assistant organisationnel
 
@@ -282,15 +282,17 @@ Une configuration complète de délégué pour un assistant organisationnel gér
 
 Le `AGENTS.md` du délégué définit son autorité autonome — ce qu'il peut faire sans demander, ce qui nécessite une approbation et ce qui est interdit. Les [Cron Jobs](/en/automation/cron-jobs) pilotent son emploi du temps quotidien.
 
+Si vous accordez `sessions_history`, rappelez-vous qu'il s'agit d'une vue de rappel délimitée et filtrée pour la sécurité. OpenClaw censure le texte de type identifiant/jeton, tronque le contenu long, supprime les balises de réflexion / l'échafaudage `<relevant-memories>` / les charges utiles XML d'appel d'outil en texte brut (y compris `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>`, et les blocs d'appel d'outil tronqués) / l'échafaudage d'appel d'outil dégradé / les jetons de contrôle de modèle ASCII/full-width fuités / XML d'appel d'outil MiniMax malformé du rappel de l'assistant, et peut remplacer les lignes trop volumineuses par `[sessions_history omitted: message too large]` au lieu de renvoyer une vidange de transcription brute.
+
 ## Modèle de mise à l'échelle
 
 Le modèle de délégué fonctionne pour toute petite organisation :
 
-1. **Créez un agent délégué** par organisation.
-2. **Sécurisez d'abord** — restrictions des outils, bac à sable (sandbox), blocages stricts, journal d'audit.
-3. **Accordez des autorisations délimitées** via le fournisseur d'identité (principe du moindre privilège).
-4. **Définissez des [ordres permanents](/en/automation/standing-orders)** pour les opérations autonomes.
-5. **Planifiez des tâches cron** pour les tâches récurrentes.
-6. **Examinez et ajustez** le niveau de capacité à mesure que la confiance s'établit.
+1. **Créer un agent délégué** par organisation.
+2. **Sécuriser d'abord** — restrictions d'outils, bac à sable (sandbox), blocages stricts, traçabilité d'audit.
+3. **Accorder des autorisations délimitées** via le fournisseur d'identité (principe du moindre privilège).
+4. **Définir des [ordres permanents](/en/automation/standing-orders)** pour les opérations autonomes.
+5. **Planifier des tâches cron** pour les tâches récurrentes.
+6. **Réviser et ajuster** le niveau de capacité au fur et à mesure que la confiance s'établit.
 
-Plusieurs organisations peuvent partager un serveur Gateway en utilisant le routage multi-agents — chaque organisation obtient son propre agent isolé, son espace de travail et ses identifiants.
+Plusieurs organisations peuvent partager un serveur Gateway en utilisant le routage multi-agents — chaque org obtient son propre agent isolé, son espace de travail et ses identifiants.

@@ -134,4 +134,11 @@ curl -s http://127.0.0.1:18791/tabs
 注意事項：
 
 - `user` 僅限主機使用。對於 Linux 伺服器、容器或遠端主機，建議優先使用 CDP 設定檔。
+- `user` / 其他 `existing-session` 設定檔保持目前的 Chrome MCP 限制：
+  參考驅動的動作、單一檔案上傳掛鉤、無對話方塊逾時覆寫、無
+  `wait --load networkidle`，且無 `responsebody`、PDF 匯出、下載
+  攔截，或批次動作。
 - 本機 `openclaw` 設定檔會自動指派 `cdpPort`/`cdpUrl`；僅針對遠端 CDP 設定這些值。
+- 遠端 CDP 設定檔接受 `http://`、`https://`、`ws://` 和 `wss://`。
+  針對 `/json/version` 探索使用 HTTP(S)，或者當您的瀏覽器
+  服務提供直接的 DevTools socket URL 時使用 WS(S)。

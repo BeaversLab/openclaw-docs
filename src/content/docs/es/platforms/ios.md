@@ -158,20 +158,23 @@ export OPENCLAW_APNS_PRIVATE_KEY_P8="$(cat /path/to/AuthKey_KEYID.p8)"
 
 ### Bonjour (LAN)
 
-El Gateway anuncia `_openclaw-gw._tcp` en `local.`. La app de iOS los lista automáticamente.
+La aplicación iOS explora `_openclaw-gw._tcp` en `local.` y, cuando está configurada, el mismo
+dominio de descubrimiento DNS-SD de área amplia. Los gateways de la misma LAN aparecen automáticamente desde `local.`;
+el descubrimiento entre redes puede utilizar el dominio de área amplia configurado sin cambiar el tipo de baliza.
 
 ### Tailnet (entre redes)
 
-Si mDNS está bloqueado, usa una zona DNS-SD unicast (elige un dominio; ejemplo: `openclaw.internal.`) y DNS dividido de Tailscale.
-Ver [Bonjour](/en/gateway/bonjour) para el ejemplo de CoreDNS.
+Si mDNS está bloqueado, utiliza una zona DNS-SD unicast (elige un dominio; ejemplo:
+`openclaw.internal.`) y el DNS dividido de Tailscale.
+Consulta [Bonjour](/en/gateway/bonjour) para ver el ejemplo de CoreDNS.
 
 ### Host/puerto manual
 
-En Configuración, activa **Host Manual** e introduce el host + puerto del gateway (por defecto `18789`).
+En Configuración, activa **Host manual** e introduce el host + puerto del gateway (por defecto `18789`).
 
 ## Canvas + A2UI
 
-El nodo de iOS renderiza un lienzo WKWebView. Usa `node.invoke` para controlarlo:
+El nodo iOS renderiza un lienzo WKWebView. Utiliza `node.invoke` para controlarlo:
 
 ```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18789/__openclaw__/canvas/"}'
@@ -179,10 +182,10 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 
 Notas:
 
-- El host del canvas del Gateway sirve `/__openclaw__/canvas/` y `/__openclaw__/a2ui/`.
+- El host del lienzo del Gateway sirve `/__openclaw__/canvas/` y `/__openclaw__/a2ui/`.
 - Se sirve desde el servidor HTTP del Gateway (mismo puerto que `gateway.port`, por defecto `18789`).
 - El nodo de iOS navega automáticamente a A2UI al conectarse cuando se anuncia una URL de host de canvas.
-- Vuelve al scaffold integrado con `canvas.navigate` y `{"url":""}`.
+- Vuelve al andamiaje integrado con `canvas.navigate` y `{"url":""}`.
 
 ### Evaluación de canvas / instantánea
 
@@ -201,9 +204,9 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 
 ## Errores comunes
 
-- `NODE_BACKGROUND_UNAVAILABLE`: trae la app de iOS al primer plano (los comandos canvas/camera/pantalla lo requieren).
-- `A2UI_HOST_NOT_CONFIGURED`: el Gateway no anunció una URL de host de canvas; verifica `canvasHost` en [configuración del Gateway](/en/gateway/configuration).
-- El aviso de emparejamiento nunca aparece: ejecuta `openclaw devices list` y aprueba manualmente.
+- `NODE_BACKGROUND_UNAVAILABLE`: trae la aplicación iOS al primer plano (los comandos de lienzo/cámara/pantalla lo requieren).
+- `A2UI_HOST_NOT_CONFIGURED`: el Gateway no anunció una URL de host del lienzo; verifica `canvasHost` en [Configuración del Gateway](/en/gateway/configuration).
+- El mensaje de emparejamiento nunca aparece: ejecuta `openclaw devices list` y aprueba manualmente.
 - La reconexión falla después de reinstalar: el token de emparejamiento del Keychain se borró; vuelve a emparejar el nodo.
 
 ## Documentos relacionados

@@ -8,7 +8,7 @@ title: "backup"
 
 # `openclaw backup`
 
-Créer une archive de sauvegarde locale pour l'état OpenClaw, la configuration, les identifiants, les sessions et, facultativement, les espaces de travail.
+Crée une archive de sauvegarde locale pour l'état, la configuration, les profils d'authentification, les identifiants canal/fournisseur, les sessions d'OpenClaw et, en option, les espaces de travail.
 
 ```bash
 openclaw backup create
@@ -37,40 +37,48 @@ openclaw backup verify ./2026-03-09T00-00-00.000Z-openclaw-backup.tar.gz
 
 - Le répertoire d'état renvoyé par le résolveur d'état local d'OpenClaw, généralement `~/.openclaw`
 - Le chemin du fichier de configuration actif
-- Le répertoire OAuth / identifiants
-- Les répertoires d'espaces de travail découverts à partir de la configuration actuelle, sauf si vous passez `--no-include-workspace`
+- Le répertoire résolu `credentials/` lorsqu'il existe en dehors du répertoire d'état
+- Répertoires d'espace de travail découverts à partir de la configuration actuelle, sauf si vous passez `--no-include-workspace`
 
-Si vous utilisez `--only-config`, OpenClaw ignore l'état, les identifiants et la découverte des espaces de travail et archive uniquement le chemin du fichier de configuration actif.
+Les profils d'authentification de modèle font déjà partie du répertoire d'état sous
+`agents/<agentId>/agent/auth-profiles.json`, ils sont donc normalement couverts par
+l'entrée de sauvegarde de l'état.
 
-OpenClaw canonise les chemins avant de créer l'archive. Si la configuration, les identifiants ou un espace de travail résident déjà dans le répertoire d'état, ils ne sont pas dupliqués en tant que sources de sauvegarde de premier niveau distinctes. Les chemins manquants sont ignorés.
+Si vous utilisez `--only-config`, OpenClaw ignore l'état, le répertoire des identifiants et la découverte des espaces de travail, et archive uniquement le chemin du fichier de configuration actif.
 
-La charge utile de l'archive stocke le contenu des fichiers de ces arborescences sources, et le `manifest.json` intégré enregistre les chemins source absolus résolus ainsi que la disposition de l'archive utilisée pour chaque élément.
+OpenClaw canonise les chemins avant de construire l'archive. Si la configuration, le
+dossier des identifiants ou un espace de travail se trouve déjà dans le répertoire d'état,
+ils ne sont pas dupliqués en tant que sources de sauvegarde de niveau supérieur distinctes. Les chemins manquants sont
+ignorés.
+
+La charge utile de l'archive stocke le contenu des fichiers de ces arbres sources, et le `manifest.json` intégré enregistre les chemins sources absolus résolus ainsi que la disposition de l'archive utilisée pour chaque élément.
 
 ## Comportement en cas de configuration invalide
 
-`openclaw backup` contourne intentionnellement la pré-vérification de configuration normale afin de pouvoir encore aider lors de la récupération. Étant donné que la découverte des espaces de travail dépend d'une configuration valide, `openclaw backup create` échoue désormais rapidement lorsque le fichier de configuration existe mais est invalide et que la sauvegarde de l'espace de travail est toujours activée.
+`openclaw backup` contourne intentionnellement la pré-vérification normale de la configuration afin de pouvoir toujours aider lors de la récupération. Comme la découverte des espaces de travail dépend d'une configuration valide, `openclaw backup create` échoue désormais rapidement lorsque le fichier de configuration existe mais est invalide et que la sauvegarde de l'espace de travail est toujours activée.
 
-Si vous souhaitez tout de même une sauvegarde partielle dans cette situation, relancez :
+Si vous souhaitez toujours une sauvegarde partielle dans cette situation, relancez :
 
 ```bash
 openclaw backup create --no-include-workspace
 ```
 
-Cela garde l'état, la configuration et les informations d'identification dans la portée tout en ignorant totalement la découverte de l'espace de travail.
+Cela maintient l'état, la configuration et le répertoire des identifiants externes dans le périmètre tout en
+ignorant entièrement la découverte des espaces de travail.
 
-Si vous avez seulement besoin d'une copie du fichier de configuration lui-même, `--only-config` fonctionne également lorsque la configuration est malformée car il ne repose pas sur l'analyse de la configuration pour la découverte de l'espace de travail.
+Si vous avez seulement besoin d'une copie du fichier de configuration lui-même, `--only-config` fonctionne également lorsque la configuration est malformée car il ne repose pas sur l'analyse de la configuration pour la découverte des espaces de travail.
 
-## Taille et performance
+## Taille et performances
 
-OpenClaw n'impose pas de taille de sauvegarde maximale intégrée ni de limite de taille par fichier.
+OpenClaw n'impose pas de taille maximale de sauvegarde intégrée ni de limite de taille par fichier.
 
 Les limites pratiques proviennent de la machine locale et du système de fichiers de destination :
 
-- Espace disponible pour l'écriture temporaire de l'archive ainsi que pour l'archive finale
-- Temps nécessaire pour parcourir les grandes arborescences d'espaces de travail et les compresser dans un `.tar.gz`
+- Espace disponible pour l'écriture temporaire de l'archive plus l'archive finale
+- Temps nécessaire pour parcourir de grands arbres d'espace de travail et les compresser dans un `.tar.gz`
 - Temps pour rescanner l'archive si vous utilisez `openclaw backup create --verify` ou exécutez `openclaw backup verify`
-- Comportement du système de fichiers au chemin de destination. OpenClaw préfère une étape de publication par lien physique sans écrasement et revient à une copie exclusive lorsque les liens physiques ne sont pas pris en charge
+- Comportement du système de fichiers sur le chemin de destination. OpenClaw privilégie une étape de publication par liens durs sans écrasement et revient à une copie exclusive lorsque les liens durs ne sont pas pris en charge
 
-Les espaces de travail volumineux sont généralement le facteur principal de la taille de l'archive. Si vous souhaitez une sauvegarde plus petite ou plus rapide, utilisez `--no-include-workspace`.
+Les grands espaces de travail sont généralement le principal facteur de taille de l'archive. Si vous souhaitez une sauvegarde plus petite ou plus rapide, utilisez `--no-include-workspace`.
 
 Pour la plus petite archive, utilisez `--only-config`.

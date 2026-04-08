@@ -81,39 +81,59 @@ sequenceDiagram
 - Après la poignée de main :
   - Requêtes : `{type:"req", id, method, params}` → `{type:"res", id, ok, payload|error}`
   - Événements : `{type:"event", event, payload, seq?, stateVersion?}`
-- Si `OPENCLAW_GATEWAY_TOKEN` (ou `--token`) est défini, `connect.params.auth.token` doit correspondre, sinon la socket se ferme.
-- Les clés d'idempotence sont requises pour les méthodes avec effets de bord (`send`, `agent`) pour permettre des tentatives en toute sécurité ; le serveur conserve un cache de déduplication à court terme.
-- Les nœuds doivent inclure `role: "node"` ainsi que les capacités/commandes/autorisations dans `connect`.
+- `hello-ok.features.methods` / `events` sont des métadonnées de découverte, et non une
+  vidange générée de chaque route d'assistant appelable.
+- L'auth par secret partagé utilise `connect.params.auth.token` ou
+  `connect.params.auth.password`, selon le mode d'auth Gateway configuré.
+- Les modes porteurs d'identité tels que Tailscale Serve
+  (`gateway.auth.allowTailscale: true`) ou le `gateway.auth.mode: "trusted-proxy"` non-bouclé (non-loopback)
+  satisfont l'auth via les en-têtes de requête
+  au lieu de `connect.params.auth.*`.
+- Le `gateway.auth.mode: "none"` d'ingrès privé désactive complètement l'auth par secret partagé ;
+  gardez ce mode hors de l'ingrès public ou non fiable.
+- Les clés d'idempotence sont requises pour les méthodes à effets de bord (`send`, `agent`) pour
+  pouvoir réessayer en toute sécurité ; le serveur conserve un cache de déduplication à court terme.
+- Les nœuds doivent inclure `role: "node"` ainsi que les caps/commandes/permissions dans `connect`.
 
 ## Appairage + confiance locale
 
 - Tous les clients WS (opérateurs + nœuds) incluent une **identité d'appareil** sur `connect`.
-- Les nouveaux ID d'appareil nécessitent une approbation d'appairage ; le Gateway émet un **jeton d'appareil** pour les connexions ultérieures.
-- Les connexions **locales** (boucle locale ou adresse tailnet propre de l'hôte de la passerelle) peuvent être auto-approuvées pour fluidifier l'UX sur le même hôte.
+- Les nouveaux ID d'appareil nécessitent une approbation d'appairage ; le Gateway émet un **jeton d'appareil**
+  pour les connexions ultérieures.
+- Les connexions directes en boucle locale (local loopback) peuvent être approuvées automatiquement pour garder l'UX
+  sur le même hôte fluide.
+- OpenClaw dispose également d'un chemin étroit de connexion automatique backend/conteneur-local pour
+  les flux d'assistants de secret partagé de confiance.
+- Les connexions Tailnet et LAN, y compris les liaisons Tailnet sur le même hôte, nécessitent toujours une
+  approbation d'appairage explicite.
 - Toutes les connexions doivent signer le nonce `connect.challenge`.
-- Le payload de signature `v3` lie également `platform` + `deviceFamily` ; la passerelle épingle les métadonnées appariées à la reconnexion et exige un réappairage pour les modifications de métadonnées.
+- La charge utile de signature `v3` lie également `platform` + `deviceFamily` ; la passerelle
+  épingle les métadonnées appariées à la reconnexion et exige un appairage de réparation pour les modifications
+  de métadonnées.
 - Les connexions **non locales** nécessitent toujours une approbation explicite.
-- L'auth Gateway (`gateway.auth.*`) s'applique toujours à **toutes** les connexions, locales ou distantes.
+- L'auth Gateway (`gateway.auth.*`) s'applique toujours à **toutes** les connexions, locales ou
+  distantes.
 
-Détails : [Protocole Gateway](/en/gateway/protocol), [Appairage](/en/channels/pairing), [Sécurité](/en/gateway/security).
+Détails : [Protocole Gateway](/en/gateway/protocol), [Appairage](/en/channels/pairing),
+[Sécurité](/en/gateway/security).
 
-## Typage du protocole et génération de code
+## Typage de protocole et génération de code
 
 - Les schémas TypeBox définissent le protocole.
 - Le schéma JSON est généré à partir de ces schémas.
-- Les modèles Swift sont générés à partir du schéma JSON.
+- Les models Swift sont générés à partir du JSON Schema.
 
-## Accès distant
+## Accès à distance
 
 - Préféré : Tailscale ou VPN.
-- Alternative : Tunnel SSH
+- Alternative : tunnel SSH
 
   ```bash
   ssh -N -L 18789:127.0.0.1:18789 user@host
   ```
 
-- La même poignée de main + jeton d'auth s'appliquent via le tunnel.
-- TLS + épinglage optionnel peuvent être activés pour WS dans les configurations distantes.
+- Le même handshake + jeton d'auth s'appliquent sur le tunnel.
+- TLS + pinning optionnel peuvent être activés pour WS dans les configurations distantes.
 
 ## Instantané des opérations
 
@@ -124,12 +144,12 @@ Détails : [Protocole Gateway](/en/gateway/protocol), [Appairage](/en/channels/p
 ## Invariants
 
 - Exactement un Gateway contrôle une seule session Baileys par hôte.
-- Le handshake est obligatoire ; toute première trame non-JSON ou non-connect entraîne une fermeture brutale.
-- Les événements ne sont pas rejoués ; les clients doivent actualiser en cas de rupture.
+- Le handshake est obligatoire ; toute première trame non-JSON ou non-connect est une fermeture brutale.
+- Les événements ne sont pas rejoués ; les clients doivent rafraîchir en cas de discontinuité.
 
 ## Connexes
 
 - [Agent Loop](/en/concepts/agent-loop) — cycle d'exécution détaillé de l'agent
-- [Gateway Protocol](/en/gateway/protocol) — contrat de protocole WebSocket
-- [Queue](/en/concepts/queue) — file d'attente de commandes et concurrence
-- [Security](/en/gateway/security) — modèle de confiance et durcissement
+- [Protocole Gateway](/en/gateway/protocol) — contrat de protocole WebSocket
+- [File d'attente](/en/concepts/queue) — file de commandes et concurrence
+- [Sécurité](/en/gateway/security) — model de confiance et durcissement

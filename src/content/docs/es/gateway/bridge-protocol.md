@@ -1,5 +1,5 @@
 ---
-summary: "Protocolo de puente (nodos heredados): TCP JSONL, emparejamiento, RPC con ámbito"
+summary: "Protocolo de puente histórico (nodos heredados): TCP JSONL, emparejamiento, RPC con ámbito"
 read_when:
   - Building or debugging node clients (iOS/Android/macOS node mode)
   - Investigating pairing or bridge auth failures
@@ -9,9 +9,9 @@ title: "Protocolo de puente"
 
 # Protocolo de puente (transporte de nodo heredado)
 
-<Warning>El puente TCP ha sido **eliminado**. Las compilaciones actuales de OpenClaw no incluyen el escucha del puente y las claves de configuración `bridge.*` ya no están en el esquema. Esta página se conserva solo como referencia histórica. Utilice el [Gateway Protocol](/en/gateway/protocol) para todos los clientes de nodo/operador.</Warning>
+<Warning>El puente TCP ha sido **eliminado**. Las compilaciones actuales de OpenClaw no incluyen el escucha del puente (bridge listener) y las claves de configuración `bridge.*` ya no están en el esquema. Esta página se conserva solo como referencia histórica. Utilice el [Gateway Protocol](/en/gateway/protocol) para todos los clientes de nodo/operador.</Warning>
 
-## Por qué tenemos ambos
+## Por qué existía
 
 - **Límite de seguridad**: el puente expone una pequeña lista de permitidos en lugar de
   la superficie completa de la API de la puerta de enlace.
@@ -25,7 +25,8 @@ title: "Protocolo de puente"
 
 - TCP, un objeto JSON por línea (JSONL).
 - TLS opcional (cuando `bridge.tls.enabled` es verdadero).
-- El puerto de escucha predeterminado heredado era `18790` (las compilaciones actuales no inician un puente TCP).
+- El puerto de escucha predeterminado histórico era `18790` (las compilaciones actuales no inician un
+  puente TCP).
 
 Cuando TLS está habilitado, los registros TXT de descubrimiento incluyen `bridgeTls=1` más
 `bridgeTlsSha256` como una pista no secreta. Tenga en cuenta que los registros TXT de Bonjour/mDNS son
@@ -39,7 +40,8 @@ pin autoritativo sin la intención explícita del usuario u otra verificación f
 3. El cliente envía `pair-request`.
 4. La puerta de enlace espera la aprobación y luego envía `pair-ok` y `hello-ok`.
 
-`hello-ok` devuelve `serverName` y puede incluir `canvasHostUrl`.
+Históricamente, `hello-ok` devolvía `serverName` y podía incluir
+`canvasHostUrl`.
 
 ## Tramas
 
@@ -70,15 +72,16 @@ Campos de carga útil (todos son opcionales a menos que se indique lo contrario)
 - `exitCode`, `timedOut`, `success`, `output`: detalles de finalización (solo finalizado).
 - `reason`: motivo de denegación (solo denegado).
 
-## Uso de Tailnet
+## Uso histórico de tailnet
 
-- Enlace del puente a una IP de tailnet: `bridge.bind: "tailnet"` en
-  `~/.openclaw/openclaw.json`.
+- Enlazar el puente a una IP de tailnet: `bridge.bind: "tailnet"` en
+  `~/.openclaw/openclaw.json` (solo histórico; `bridge.*` ya no es válido).
 - Los clientes se conectan a través del nombre MagicDNS o la IP de tailnet.
 - Bonjour **no** cruza redes; use host/puerto manual o DNS‑SD de área amplia
   cuando sea necesario.
 
 ## Control de versiones
 
-Bridge actualmente está en la **v1 implícita** (sin negociación mín/máx). Se espera compatibilidad
-con versiones anteriores; agregue un campo de versión de protocolo de puente antes de cualquier cambio ruptura.
+El puente era **v1 implícito** (sin negociación mín/máx). Esta sección es
+solo de referencia histórica; los clientes de nodo/operador actuales utilizan el WebSocket
+[Gateway Protocol](/en/gateway/protocol).

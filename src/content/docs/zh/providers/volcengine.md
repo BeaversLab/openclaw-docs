@@ -54,17 +54,38 @@ openclaw onboard --non-interactive \
 
 ## 可用模型
 
-- **doubao-seed-1-8** - Doubao Seed 1.8（通用，默认）
-- **doubao-seed-code-preview** - Doubao 编码模型
-- **ark-code-latest** - 编码计划默认
-- **Kimi K2.5** - 通过 Volcano Engine 访问 Moonshot AI
-- **GLM-4.7** - 通过 Volcano Engine 访问 GLM
-- **DeepSeek V3.2** - 通过 Volcano Engine 访问 DeepSeek
+通用提供商 (`volcengine`)：
 
-大多数模型支持文本 + 图像输入。上下文窗口范围为 128K 至 256K token。
+| 模型参考                                     | 名称                            | 输入       | 上下文  |
+| -------------------------------------------- | ------------------------------- | ---------- | ------- |
+| `volcengine/doubao-seed-1-8-251228`          | Doubao Seed 1.8                 | 文本、图像 | 256,000 |
+| `volcengine/doubao-seed-code-preview-251028` | doubao-seed-code-preview-251028 | 文本、图像 | 256,000 |
+| `volcengine/kimi-k2-5-260127`                | Kimi K2.5                       | 文本、图像 | 256,000 |
+| `volcengine/glm-4-7-251222`                  | GLM 4.7                         | 文本、图像 | 200,000 |
+| `volcengine/deepseek-v3-2-251201`            | DeepSeek V3.2                   | 文本、图像 | 128,000 |
+
+编码提供商 (`volcengine-plan`)：
+
+| 模型参考                                          | 名称                     | 输入 | 上下文  |
+| ------------------------------------------------- | ------------------------ | ---- | ------- |
+| `volcengine-plan/ark-code-latest`                 | Ark Coding Plan          | 文本 | 256,000 |
+| `volcengine-plan/doubao-seed-code`                | Doubao Seed Code         | 文本 | 256,000 |
+| `volcengine-plan/glm-4.7`                         | GLM 4.7 Coding           | 文本 | 200,000 |
+| `volcengine-plan/kimi-k2-thinking`                | Kimi K2 Thinking         | 文本 | 256,000 |
+| `volcengine-plan/kimi-k2.5`                       | Kimi K2.5 Coding         | 文本 | 256,000 |
+| `volcengine-plan/doubao-seed-code-preview-251028` | Doubao Seed Code Preview | 文本 | 256,000 |
+
+`openclaw onboard --auth-choice volcengine-api-key` 目前将
+`volcengine-plan/ark-code-latest` 设置为默认模型，同时注册
+通用 `volcengine` 目录。
+
+在新手引导/配置模型选择期间，Volcengine 认证选项优先
+显示 `volcengine/*` 和 `volcengine-plan/*` 行。如果这些模型尚未
+加载，OpenClaw 将回退到未过滤的目录，而不是显示
+空的提供商范围选择器。
 
 ## 环境说明
 
-如果 Gateway(网关) 作为守护进程（launchd/systemd）运行，请确保
+如果 Gateway(网关) 作为守护进程运行，请确保
 `VOLCANO_ENGINE_API_KEY` 对该进程可用（例如，在
 `~/.openclaw/.env` 中或通过 `env.shellEnv`）。

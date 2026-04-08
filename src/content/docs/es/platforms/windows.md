@@ -130,8 +130,8 @@ wsl --list --verbose
 Después de reiniciar (antes de iniciar sesión en Windows), verifique desde WSL:
 
 ```bash
-systemctl --user is-enabled openclaw-gateway
-systemctl --user status openclaw-gateway --no-pager
+systemctl --user is-enabled openclaw-gateway.service
+systemctl --user status openclaw-gateway.service --no-pager
 ```
 
 ## Avanzado: exponer servicios WSL a través de LAN (portproxy)

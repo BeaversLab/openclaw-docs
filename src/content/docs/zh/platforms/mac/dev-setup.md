@@ -34,10 +34,10 @@ pnpm install
 
 如果您没有 Apple Developer ID 证书，脚本将自动使用 **临时签名** (`-`)。
 
-有关开发运行模式、签名标志和团队 ID 故障排除，请参阅 macOS 应用自述文件：
+有关开发运行模式、签名标志和团队 ID 故障排除，请参阅 macOS 应用程序 README：
 [https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
 
-> **注意**：临时签名的应用可能会触发安全提示。如果应用立即崩溃并显示 "Abort trap 6"，请参阅 [故障排除](#troubleshooting) 部分。
+> **注意**：临时签名的应用程序可能会触发安全提示。如果应用程序立即崩溃并显示 "Abort trap 6"，请参阅 [故障排除](#troubleshooting) 部分。
 
 ## 3. 安装 CLI
 
@@ -55,16 +55,19 @@ macOS 应用期望安装全局 `openclaw` CLI 来管理后台任务。
 npm install -g openclaw@<version>
 ```
 
+`pnpm add -g openclaw@<version>` 和 `bun add -g openclaw@<version>` 也可以使用。
+对于 Gateway(网关) 运行时，Node 仍然是推荐的方式。
+
 ## 故障排除
 
 ### 构建失败：工具链或 SDK 不匹配
 
-macOS 应用构建需要最新的 macOS SDK 和 Swift 6.2 工具链。
+macOS 应用程序构建需要最新的 macOS SDK 和 Swift 6.2 工具链。
 
 **系统依赖项（必需）：**
 
 - **软件更新中可用的最新 macOS 版本**（Xcode 26.2 SDK 所需）
-- **Xcode 26.2** (Swift 6.2 工具链)
+- **Xcode 26.2**（Swift 6.2 工具链）
 
 **检查：**
 
@@ -75,9 +78,9 @@ xcrun swift --version
 
 如果版本不匹配，请更新 macOS/Xcode 并重新运行构建。
 
-### 授予权限时应用崩溃
+### 授予权限时应用程序崩溃
 
-如果您在尝试允许 **语音识别** 或 **麦克风** 访问时应用崩溃，这可能是由于 TCC 缓存损坏或签名不匹配造成的。
+如果您在尝试允许 **语音识别** 或 **麦克风** 访问时应用程序崩溃，可能是由于 TCC 缓存损坏或签名不匹配。
 
 **修复：**
 
@@ -87,11 +90,11 @@ xcrun swift --version
    tccutil reset All ai.openclaw.mac.debug
    ```
 
-2. 如果失败，请在 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中临时更改 `BUNDLE_ID`，以强制 macOS "从零开始"。
+2. 如果失败，请在 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中临时更改 `BUNDLE_ID`，以强制 macOS 提供“全新开始”。
 
-### Gateway(网关) 网关 一直处于“启动中...”状态
+### Gateway(网关) 一直处于“正在启动...”状态
 
-如果网关状态一直停留在“启动中...”，请检查是否有僵尸进程占用了端口：
+如果网关状态停留在“正在启动...”，请检查是否有僵尸进程占用了端口：
 
 ```bash
 openclaw gateway status
@@ -101,4 +104,4 @@ openclaw gateway stop
 lsof -nP -iTCP:18789 -sTCP:LISTEN
 ```
 
-如果是手动运行的进程占用了端口，请停止该进程（Ctrl+C）。作为最后手段，请终止上面找到的 PID。
+如果是手动运行占用了端口，请停止该进程 (Ctrl+C)。作为最后的手段，请终止您在上面找到的 PID。

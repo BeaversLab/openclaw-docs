@@ -27,14 +27,14 @@ La aplicación de la barra de menús de macOS incrusta la interfaz de usuario de
 
 - Plano de datos: métodos WS de la puerta de enlace `chat.history`, `chat.send`, `chat.abort`,
   `chat.inject` y eventos `chat`, `agent`, `presence`, `tick`, `health`.
-- Sesión: de forma predeterminada, la sesión principal (`main`, o `global` cuando el alcance es
-  global). La interfaz de usuario puede cambiar entre sesiones.
-- La incorporación (onboarding) utiliza una sesión dedicada para mantener la configuración de primera ejecución separada.
+- `chat.history` devuelve filas de transcripciones normalizadas para visualización: las etiquetas de directivas en línea se eliminan del texto visible, las cargas útiles XML de llamadas a herramientas en texto sin formato (incluyendo `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` y bloques de llamadas a herramientas truncados) y los tokens de control de modelo ASCII/anchura completa filtrados se eliminan, las filas puras de tokens silenciosos del asistente, como `NO_REPLY` / `no_reply` exactos, se omiten, y las filas excesivamente grandes pueden ser reemplazadas por marcadores de posición.
+- Sesión: por defecto es la sesión principal (`main`, o `global` cuando el alcance es global). La interfaz de usuario puede cambiar entre sesiones.
+- La incorporación utiliza una sesión dedicada para mantener la configuración de primera ejecución separada.
 
 ## Superficie de seguridad
 
-- El modo remoto solo reenvía el puerto de control WebSocket de la puerta de enlace a través de SSH.
+- El modo remoto solo reenvía el puerto de control WebSocket de Gateway a través de SSH.
 
 ## Limitaciones conocidas
 
-- La interfaz de usuario está optimizada para sesiones de chat (no es un sandbox de navegador completo).
+- La interfaz de usuario está optimizada para sesiones de chat (no es un entorno limitado completo de navegador).

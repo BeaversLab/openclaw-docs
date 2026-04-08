@@ -167,7 +167,7 @@ complète enfichable, les hooks de cycle de vie et la configuration.
 `/context` privilégie le dernier rapport d'invite système **construit lors de l'exécution** lorsqu'il est disponible :
 
 - `System prompt (run)` = capturé à partir de la dernière exécution intégrée (compatible avec les outils) et persisté dans le stockage de session.
-- `System prompt (estimate)` = calculé à la volée lorsqu'aucun rapport d'exécution n'existe (ou lors de l'exécution via un backend CLI qui ne génère pas le rapport).
+- `System prompt (estimate)` = calculé à la volée lorsqu'aucun rapport d'exécution n'existe encore.
 
 Dans les deux cas, il signale les tailles et les principaux contributeurs ; il **ne** vide **pas** le prompt système complet ni les schémas d'outils.
 

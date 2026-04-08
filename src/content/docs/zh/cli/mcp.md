@@ -21,8 +21,7 @@ title: "mcp"
 - `list` / `show` / `set` / `unset` 是作为 MCP 客户端
   注册表运行的 OpenClaw，用于存储其运行时稍后可能使用的其他 MCP 服务器
 
-当 OpenClaw 应自行托管编程工具
-会话并通过 ACP 路由该运行时时，请使用 [`openclaw acp`](/en/cli/acp)。
+当 OpenClaw 应该自己托管编码工具会话并通过 ACP 路由该运行时时，请使用 [`openclaw acp`](/en/cli/acp)。
 
 ## OpenClaw 作为 MCP 服务器
 
@@ -38,8 +37,7 @@ title: "mcp"
 - 您希望拥有一个可跨 OpenClaw 渠道后端工作的 MCP 服务器，
   而不是运行单独的每渠道桥接器
 
-当 OpenClaw 应自行托管编程
-运行时并将代理会话保留在 OpenClaw 内部时，请改用 [`openclaw acp`](/en/cli/acp)。
+当 OpenClaw 应该自己托管编码运行时并将代理会话保留在 OpenClaw 内部时，请改用 [`openclaw acp`](/en/cli/acp)。
 
 ## 工作原理
 
@@ -298,7 +296,7 @@ pnpm test:docker:mcp-channels
 
 这是证明桥接有效而无需将真实的 Telegram、Discord 或 iMessage 账户连接到测试运行的最快方法。
 
-有关更广泛的测试上下文，请参阅 [测试](/en/help/testing)。
+有关更广泛的测试上下文，请参阅[测试](/en/help/testing)。
 
 ## 故障排除
 
@@ -350,6 +348,13 @@ OpenClaw 还在配置中存储了一个轻量级的 MCP 服务器注册表，供
 - `openclaw mcp set <name> <json>`
 - `openclaw mcp unset <name>`
 
+注意：
+
+- `list` 对服务器名称进行排序。
+- 不带名称的 `show` 会打印完整的已配置 MCP 服务器对象。
+- `set` 需要命令行中有一个 JSON 对象值。
+- 如果指定的服务器不存在，`unset` 将失败。
+
 示例：
 
 ```bash
@@ -360,7 +365,7 @@ openclaw mcp set docs '{"url":"https://mcp.example.com"}'
 openclaw mcp unset context7
 ```
 
-示例配置形式：
+示例配置结构：
 
 ```json
 {
@@ -391,13 +396,13 @@ openclaw mcp unset context7
 
 ### SSE / HTTP 传输
 
-通过 HTTP 服务器发送事件连接到远程 MCP 服务器。
+通过 HTTP 服务器发送事件 (SSE) 连接到远程 MCP 服务器。
 
-| 字段                | 描述                                           |
-| ------------------- | ---------------------------------------------- |
-| `url`               | 远程服务器的 HTTP 或 HTTPS URL（必需）         |
-| `headers`           | HTTP 标头的可选键值映射（例如身份验证令牌）    |
-| `connectionTimeout` | 每个服务器的连接超时时间，以毫秒为单位（可选） |
+| 字段                  | 描述                                       |
+| --------------------- | ------------------------------------------ |
+| `url`                 | 远程服务器的 HTTP 或 HTTPS URL（必需）     |
+| `headers`             | 可选的 HTTP 头键值映射（例如身份验证令牌） |
+| `connectionTimeoutMs` | 每个服务器的连接超时（以毫秒为单位，可选） |
 
 示例：
 
@@ -416,19 +421,18 @@ openclaw mcp unset context7
 }
 ```
 
-`url`（用户信息）和 `headers` 中的敏感值在日志和
-状态输出中会被编辑隐藏。
+`url`（用户信息）和 `headers` 中的敏感值会在日志和状态输出中被隐藏。
 
-### 可流式 HTTP 传输
+### 可流式传输 HTTP 传输
 
-`streamable-http` 是除了 `sse` 和 `stdio` 之外的额外传输选项。它使用 HTTP 流与远程 MCP 服务器进行双向通信。
+`streamable-http` 是 `sse` 和 `stdio` 之外的另一种传输选项。它使用 HTTP 流式传输与远程 MCP 服务器进行双向通信。
 
-| 字段                | 描述                                           |
-| ------------------- | ---------------------------------------------- |
-| `url`               | 远程服务器的 HTTP 或 HTTPS URL（必需）         |
-| `transport`         | 设置为 `"streamable-http"` 以选择此传输方式    |
-| `headers`           | HTTP 标头的可选键值映射（例如身份验证令牌）    |
-| `connectionTimeout` | 每个服务器的连接超时时间，以毫秒为单位（可选） |
+| 字段                  | 描述                                                                       |
+| --------------------- | -------------------------------------------------------------------------- |
+| `url`                 | 远程服务器的 HTTP 或 HTTPS URL（必需）                                     |
+| `transport`           | 设置为 `"streamable-http"` 以选择此传输方式；如果省略，OpenClaw 使用 `sse` |
+| `headers`             | HTTP 标头的可选键值映射（例如身份验证令牌）                                |
+| `connectionTimeoutMs` | 每个服务器的连接超时时间，以毫秒为单位（可选）                             |
 
 示例：
 
@@ -439,7 +443,7 @@ openclaw mcp unset context7
       "streaming-tools": {
         "url": "https://mcp.example.com/stream",
         "transport": "streamable-http",
-        "connectionTimeout": 10000,
+        "connectionTimeoutMs": 10000,
         "headers": {
           "Authorization": "Bearer <token>"
         }
@@ -449,17 +453,18 @@ openclaw mcp unset context7
 }
 ```
 
-这些命令仅管理已保存的配置。它们不启动渠道桥接器，
-不打开实时 MCP 客户端会话，也不证明目标服务器是可访问的。
+这些命令仅管理已保存的配置。它们不会启动渠道桥接，
+打开实时的 MCP 客户端会话，或证明目标服务器可达。
 
 ## 当前限制
 
-本页面记录了目前发布的桥接器功能。
+本页面记录了目前发布的桥接功能。
 
 当前限制：
 
 - 会话发现依赖于现有的 Gateway(网关) 会话路由元数据
 - 除了 Claude 特定的适配器外，没有通用的推送协议
-- 尚无消息编辑或反应工具
-- HTTP/SSE/streamable-http 传输连接到单个远程服务器；尚不支持多路复用上游
-- `permissions_list_open` 仅包含桥接器连接时观察到的批准
+- 尚无消息编辑或响应工具
+- HTTP/SSE/streamable-http 传输连接到单个远程服务器；目前尚不支持多路复用上游
+- `permissions_list_open` 仅包含在桥接
+  连接期间观察到的审批

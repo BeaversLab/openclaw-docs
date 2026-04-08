@@ -74,8 +74,9 @@ Onboarding 會請求以下所需的 TCC 權限：
 
 </Step>
 <Step title="CLI">
-  <Info>此步驟為選擇性</Info>
-  應用程式可以透過 npm/pnpm 安裝全域 `openclaw` CLI，讓終端機工作流程和 launchd 任務能夠直接運作。
+  <Info>此步驟為可選</Info>
+  應用程式可以透過 npm、pnpm 或 bun 安裝全域 `openclaw` CLI。
+  它優先選擇 npm，其次是 pnpm，如果 bun 是唯一偵測到的套件管理器，則會選擇 bun。對於 Gateway 執行時，Node 仍然是推薦的路徑。
 </Step>
 <Step title="Onboarding Chat (dedicated session)">
   設定完成後，應用程式會開啟專屬的 Onboarding 聊天工作階段，讓 Agent 能夠自我介紹並引導後續步驟。這能將首次執行的引導與您的正常對話區分開來。請參閱 [Bootstrapping](/en/start/bootstrapping) 以了解第一次執行 Agent 時在 Gateway 主機上會發生什麼事。

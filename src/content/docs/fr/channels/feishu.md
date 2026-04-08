@@ -71,7 +71,7 @@ Choisissez **Feishu**, puis entrez l'ID d'application (App ID) et le secret de l
 
 Visitez [Feishu Open Platform](https://open.feishu.cn/app) et connectez-vous.
 
-Les locataires Lark (mondial) doivent utiliser [https://open.larksuite.com/app](https://open.larksuite.com/app) et définir `domain: "lark"` dans la configuration Feishu.
+Les clients Lark (mondial) doivent utiliser [https://open.larksuite.com/app](https://open.larksuite.com/app) et définir `domain: "lark"` dans la configuration Feishu.
 
 ### 2. Créer une application
 
@@ -205,7 +205,7 @@ Lorsque vous utilisez le mode webhook, définissez `channels.feishu.verification
 
 La capture d'écran ci-dessous indique où trouver le **Jeton de vérification**. La **Clé de chiffrement** est répertoriée dans la même section **Chiffrement**.
 
-![Emplacement du jeton de vérification](/images/feishu-verification-token.png)
+![Verification Token location](/images/feishu-verification-token.png)
 
 ### Configurer via des variables d'environnement
 
@@ -657,13 +657,13 @@ Champs de routage :
 - `match.peer.kind` : `"direct"` ou `"group"`
 - `match.peer.id` : identifiant utilisateur Open ID (`ou_xxx`) ou identifiant de groupe (`oc_xxx`)
 
-Voir [Obtenir les identifiants de groupe/utilisateur](#get-groupuser-ids) pour des conseils de recherche.
+Voir [Get group/user IDs](#get-groupuser-ids) pour des conseils de recherche.
 
 ---
 
 ## Référence de configuration
 
-Configuration complète : [configuration du Gateway](/en/gateway/configuration)
+Configuration complète : [Gateway configuration](/en/gateway/configuration)
 
 Options clés :
 
@@ -761,7 +761,9 @@ Lorsque l'agent gère un événement de commentaire Drive, il reçoit :
 - les métadonnées du document (titre, type, URL)
 - le contexte du fil de commentaires pour les réponses dans le fil
 
-Après avoir apporté des modifications au document, l'agent est guidé pour utiliser `feishu_drive.reply_comment` pour notifier le commentateur, puis pour afficher `NO_REPLY` afin d'éviter les envois en double.
+Après avoir apporté des modifications au document, l'agent est guidé pour utiliser `feishu_drive.reply_comment` pour notifier le
+commentateur, puis produire le jeton silencieux exact `NO_REPLY` / `no_reply` pour
+éviter les envois en double.
 
 ## Surface d'action d'exécution
 
@@ -782,8 +784,8 @@ Feishu expose actuellement ces actions d'exécution :
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Jumelage](/en/channels/pairing) — authentification DM et processus de jumelage
-- [Groupes](/en/channels/groups) — comportement des discussions de groupe et filtrage des mentions
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Channels Overview](/en/channels) — tous les canaux pris en charge
+- [Pairing](/en/channels/pairing) — authentification par DM et processus d'appairage
+- [Groups](/en/channels/groups) — comportement du chat de groupe et filtrage des mentions
+- [Channel Routing](/en/channels/channel-routing) — routage de session pour les messages
+- [Security](/en/gateway/security) — modèle d'accès et durcissement

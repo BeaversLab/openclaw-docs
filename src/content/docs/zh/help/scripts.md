@@ -19,8 +19,7 @@ title: "脚本"
 
 ## 身份验证监控脚本
 
-身份监控脚本记录在此处：
-[/automation/auth-monitoring](/en/automation/auth-monitoring)
+身份验证监控在 [Authentication](/en/gateway/authentication) 中有详细说明。`scripts/` 下的脚本是用于 systemd/Termux 手机工作流程的可选附加项。
 
 ## 添加脚本时
 

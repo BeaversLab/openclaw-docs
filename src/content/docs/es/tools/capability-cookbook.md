@@ -10,7 +10,7 @@ sidebarTitle: "Añadir capacidades"
 
 # Añadir capacidades
 
-<Info>Esta es una **guía para colaboradores** para los desarrolladores principales de OpenClaw. Si está creando un complemento externo, consulte [Construcción de complementos](/en/plugins/building-plugins) en su lugar.</Info>
+<Info>Esta es una **guía para colaboradores** para los desarrolladores principales de OpenClaw. Si está construyendo un plugin externo, consulte [Construcción de Plugins](/en/plugins/building-plugins) en su lugar.</Info>
 
 Use esto cuando OpenClaw necesite un nuevo dominio como generación de imágenes, generación
 de video o alguna área de características futura respaldada por un proveedor.
@@ -52,7 +52,7 @@ Núcleo:
 - tipos de solicitud/respuesta
 - registro de proveedores + resolución
 - comportamiento de reserva
-- esquema de configuración y etiquetas/ayuda
+- esquema de configuración más metadatos de documentos `title` / `description` propagados en nodos de objeto anidado, comodín, elemento de matriz y composición
 - superficie del asistente de tiempo de ejecución
 
 Complemento de proveedor:
@@ -88,10 +88,10 @@ Para una nueva capacidad, espere tocar estas áreas:
 
 La generación de imágenes sigue la forma estándar:
 
-1. core define `ImageGenerationProvider`
-2. core expone `registerImageGenerationProvider(...)`
-3. core expone `runtime.imageGeneration.generate(...)`
-4. los complementos `openai` y `google` registran implementaciones respaldadas por proveedores
+1. el núcleo define `ImageGenerationProvider`
+2. el núcleo expone `registerImageGenerationProvider(...)`
+3. el núcleo expone `runtime.imageGeneration.generate(...)`
+4. los plugins `openai`, `google`, `fal` y `minimax` registran implementaciones respaldadas por proveedores
 5. los proveedores futuros pueden registrar el mismo contrato sin cambiar canales/herramientas
 
 La clave de configuración es independiente del enrutamiento de análisis de visión:

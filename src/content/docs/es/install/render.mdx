@@ -68,8 +68,9 @@ Características clave del Blueprint utilizadas:
 | Inicial   | Nunca                            | 1GB+          | Uso personal, equipos pequeños |
 | Estándar+ | Nunca                            | 1GB+          | Producción, múltiples canales  |
 
-El Blueprint por defecto es `starter`. Para usar el nivel gratuito, cambie `plan: free` en el
-`render.yaml` de su bifurcación (pero tenga en cuenta: sin disco persistente significa que la configuración se restablece en cada despliegue).
+El plano predeterminado es `starter`. Para usar el nivel gratuito, cambia `plan: free` en
+el `render.yaml` de tu bifurcación (pero ten en cuenta: sin disco persistente significa que el estado de OpenClaw
+se restablece en cada implementación).
 
 ## Después del despliegue
 
@@ -77,7 +78,10 @@ El Blueprint por defecto es `starter`. Para usar el nivel gratuito, cambie `plan
 
 El panel web está disponible en `https://<your-service>.onrender.com/`.
 
-Conéctese usando el valor `OPENCLAW_GATEWAY_TOKEN` que se generó automáticamente durante el despliegue (encuéntrelo en **Dashboard → su servicio → Environment**).
+Conéctate usando el secreto compartido configurado. Esta plantilla de implementación genera automáticamente
+`OPENCLAW_GATEWAY_TOKEN` (encuéntralo en **Dashboard → tu servicio →
+Entorno**); si lo reemplazas con autenticación por contraseña, usa esa contraseña
+en su lugar.
 
 ## Características del panel de Render
 
@@ -119,13 +123,15 @@ Para OpenClaw, el escalado vertical suele ser suficiente. El escalado horizontal
 
 ## Copias de seguridad y migración
 
-Exporta tu configuración y espacio de trabajo en cualquier momento utilizando el acceso a shell en el panel de Render:
+Exporta tu estado, configuración, perfiles de autenticación y espacio de trabajo en cualquier momento utilizando el
+acceso de shell en el panel de Render:
 
 ```bash
 openclaw backup create
 ```
 
-Esto crea un archivo de copia de seguridad portable que puedes restaurar en cualquier host de OpenClaw. Consulta [Backup](/en/cli/backup) para obtener más detalles.
+Esto crea un archivo de copia de seguridad portátil con el estado de OpenClaw más cualquier espacio de trabajo
+configurado. Consulta [Backup](/en/cli/backup) para obtener más detalles.
 
 ## Solución de problemas
 
@@ -142,8 +148,8 @@ Los servicios de nivel gratuito se apagan después de 15 minutos de inactividad.
 
 ### Pérdida de datos tras el redespliegue
 
-Esto sucede en el nivel gratuito (sin disco persistente). Actualiza a un plan de pago, o
-exporta regularmente tu configuración a través de `openclaw backup create` en el shell de Render.
+Esto sucede en el nivel gratuito (sin disco persistente). Actualiza a un plan de pago o
+exporta regularmente una copia de seguridad completa a través de `openclaw backup create` en el shell de Render.
 
 ### Fallos de comprobación de estado
 

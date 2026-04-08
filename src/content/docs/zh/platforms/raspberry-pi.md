@@ -1,10 +1,10 @@
 ---
-summary: "OpenClaw on Raspberry Pi (budget self-hosted setup)"
+summary: "OpenClaw 在 Raspberry Pi 上（预算有限的自托管设置）"
 read_when:
   - Setting up OpenClaw on a Raspberry Pi
   - Running OpenClaw on ARM devices
   - Building a cheap always-on personal AI
-title: "Raspberry Pi (Platform)"
+title: "Raspberry Pi (平台)"
 ---
 
 # OpenClaw 在Raspberry Pi上（Raspberry Pi）
@@ -146,11 +146,11 @@ openclaw onboard --install-daemon
 # Check status
 openclaw status
 
-# Check service
-sudo systemctl status openclaw
+# Check service (standard install = systemd user unit)
+systemctl --user status openclaw-gateway.service
 
 # View logs
-journalctl -u openclaw -f
+journalctl --user -u openclaw-gateway.service -f
 ```
 
 ## 9) 访问 OpenClaw 控制台
@@ -164,8 +164,8 @@ ssh user@gateway-host 'openclaw dashboard --no-open'
 ```
 
 该命令会打印 `Dashboard URL:`。根据 `gateway.auth.token`
-的配置方式，该 URL 可能是一个普通的 `http://127.0.0.1:18789/` 链接，
-也可能是一个包含 `#token=...` 的链接。
+的配置方式，URL 可能是一个普通的 `http://127.0.0.1:18789/` 链接，或者
+包含 `#token=...` 的链接。
 
 在计算机上的另一个终端中，创建 SSH 隧道：
 
@@ -175,8 +175,9 @@ ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 
 然后在本地浏览器中打开打印出来的 Dashboard URL。
 
-如果 UI 要求身份验证，请将 `gateway.auth.token`
-（或 `OPENCLAW_GATEWAY_TOKEN`）中的令牌粘贴到控制 UI 设置中。
+如果 UI 询问共享密钥认证，请将配置的令牌或密码粘贴
+到 Control UI 设置中。对于令牌认证，请使用 `gateway.auth.token` (或
+`OPENCLAW_GATEWAY_TOKEN`)。
 
 如需始终在线的远程访问，请参阅 [Tailscale](/en/gateway/tailscale)。
 
@@ -210,9 +211,9 @@ source ~/.bashrc
 
 注意：
 
-- `NODE_COMPILE_CACHE` 可以加快后续运行的速度（`status`、`health`、`--help`）。
-- 与 `/tmp` 相比，`/var/tmp` 在重启后更能保持有效。
-- `OPENCLAW_NO_RESPAWN=1` 避免了 CLI 自我重启带来的额外启动开销。
+- `NODE_COMPILE_CACHE` 可以加快后续运行的速度 (`status`, `health`, `--help`)。
+- `/var/tmp` 在重启后的存活率优于 `/tmp`。
+- `OPENCLAW_NO_RESPAWN=1` 避免了来自 CLI 自重生的额外启动开销。
 - 首次运行会预热缓存；后续运行获益最大。
 
 ### systemd 启动调优（可选）
@@ -220,7 +221,7 @@ source ~/.bashrc
 如果此 Pi 主要运行 OpenClaw，请添加一个 service drop-in 以减少重启抖动并保持启动环境稳定：
 
 ```bash
-sudo systemctl edit openclaw
+systemctl --user edit openclaw-gateway.service
 ```
 
 ```ini
@@ -235,14 +236,21 @@ TimeoutStartSec=90
 然后应用：
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl restart openclaw
+systemctl --user daemon-reload
+systemctl --user restart openclaw-gateway.service
 ```
 
 如果可能，请将 OpenClaw 的状态/缓存保留在 SSD 支持的存储上，以避免冷启动期间 SD 卡的随机 I/O 瓶颈。
 
-`Restart=` 策略如何有助于自动恢复：
-[systemd 可以自动化服务恢复](https://www.redhat.com/en/blog/systemd-automate-recovery)。
+如果这是一个无头 Pi，请启用一次 lingering，以便用户服务在
+注销后继续运行：
+
+```bash
+sudo loginctl enable-linger "$(whoami)"
+```
+
+`Restart=` 策略如何帮助自动恢复：
+[systemd 可以自动恢复服务](https://www.redhat.com/en/blog/systemd-automate-recovery)。
 
 ### 减少内存使用
 
@@ -273,21 +281,21 @@ htop
 
 ### 二进制兼容性
 
-大多数 OpenClaw 功能可在 ARM64 上运行，但某些外部二进制文件可能需要 ARM 构建：
+大多数 OpenClaw 功能在 ARM64 上均可运行，但某些外部二进制文件可能需要 ARM 版本：
 
 | 工具               | ARM64 状态 | 说明                                |
 | ------------------ | ---------- | ----------------------------------- |
 | Node.js            | ✅         | 运行良好                            |
 | WhatsApp (Baileys) | ✅         | 纯 JS，无问题                       |
 | Telegram           | ✅         | 纯 JS，无问题                       |
-| gog (Gmail CLI)    | ⚠️         | 检查是否有 ARM 版本                 |
-| Chromium（浏览器） | ✅         | `sudo apt install chromium-browser` |
+| gog (Gmail CLI)    | ⚠️         | 检查 ARM 版本                       |
+| Chromium (浏览器)  | ✅         | `sudo apt install chromium-browser` |
 
-如果某个技能失败，请检查其二进制文件是否有 ARM 构建版本。许多 Go/Rust 工具都有；有些则没有。
+如果技能失败，请检查其二进制文件是否有 ARM 版本。许多 Go/Rust 工具有；有些没有。
 
-### 32 位与 64 位
+### 32 位 vs 64 位
 
-**始终使用 64 位操作系统。** Node.js 和许多现代工具都需要它。使用以下命令检查：
+**始终使用 64 位操作系统。** Node.js 和许多现代工具都需要它。请使用以下命令检查：
 
 ```bash
 uname -m
@@ -298,38 +306,38 @@ uname -m
 
 ## 推荐型号设置
 
-由于 Pi 只是 Gateway(网关)（模型在云端运行），请使用 API-基于的模型：
+由于 Pi 只是 Gateway（模型在云端运行），请使用基于 API 的模型：
 
 ```json
 {
   "agents": {
     "defaults": {
       "model": {
-        "primary": "anthropic/claude-sonnet-4-20250514",
-        "fallbacks": ["openai/gpt-4o-mini"]
+        "primary": "anthropic/claude-sonnet-4-6",
+        "fallbacks": ["openai/gpt-5.4-mini"]
       }
     }
   }
 }
 ```
 
-**不要尝试在 Pi 上运行本地 LLM** —— 即使是小型模型也太慢了。让 Claude/GPT 来完成繁重的工作。
+**不要尝试在 Pi 上运行本地 LLM** —— 即使是小模型也太慢了。让 Claude/GPT 来处理繁重的任务。
 
 ---
 
 ## 开机自启动
 
-新手引导会设置此项，但为了验证：
+新手引导会对此进行设置，但要验证：
 
 ```bash
 # Check service is enabled
-sudo systemctl is-enabled openclaw
+systemctl --user is-enabled openclaw-gateway.service
 
 # Enable if not
-sudo systemctl enable openclaw
+systemctl --user enable openclaw-gateway.service
 
 # Start on boot
-sudo systemctl start openclaw
+systemctl --user start openclaw-gateway.service
 ```
 
 ---
@@ -348,29 +356,29 @@ free -h
 
 ### 性能缓慢
 
-- 使用 USB SSD 而不是 SD 卡
+- 使用 USB SSD 代替 SD 卡
 - 禁用未使用的服务：`sudo systemctl disable cups bluetooth avahi-daemon`
-- 检查 CPU 限流：`vcgencmd get_throttled`（应返回 `0x0`）
+- 检查 CPU 降频：`vcgencmd get_throttled` （应该返回 `0x0`）
 
 ### 服务无法启动
 
 ```bash
 # Check logs
-journalctl -u openclaw --no-pager -n 100
+journalctl --user -u openclaw-gateway.service --no-pager -n 100
 
 # Common fix: rebuild
 cd ~/openclaw  # if using hackable install
 npm run build
-sudo systemctl restart openclaw
+systemctl --user restart openclaw-gateway.service
 ```
 
-### ARM 二进制问题
+### ARM 二进制文件问题
 
-如果某个技能因“exec format error”而失败：
+如果技能因“exec format error”而失败：
 
-1. 检查该二进制文件是否有 ARM64 构建版本
+1. 检查二进制文件是否有 ARM64 版本
 2. 尝试从源代码构建
-3. 或使用支持 ARM 的 Docker 容器
+3. 或者使用支持 ARM 的 Docker 容器
 
 ### WiFi 掉线
 
@@ -386,25 +394,25 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ---
 
-## 成本对比
+## 成本比较
 
-| 设置           | 一次性成本 | 每月成本 | 备注               |
+| 设置           | 一次性费用 | 每月费用 | 备注               |
 | -------------- | ---------- | -------- | ------------------ |
-| **Pi 4 (2GB)** | ~$45       | $0       | + 电源（约 $5/年） |
+| **Pi 4 (2GB)** | ~$45       | $0       | + 电源 (~$5/年)    |
 | **Pi 4 (4GB)** | ~$55       | $0       | 推荐               |
-| **Pi 5 (4GB)** | ~$60       | $0       | 最佳性能           |
+| **Pi 5 (4GB)** | ~$60       | $0       | 性能最佳           |
 | **Pi 5 (8GB)** | ~$80       | $0       | 性能过剩但面向未来 |
 | DigitalOcean   | $0         | $6/月    | $72/年             |
 | Hetzner        | $0         | €3.79/月 | ~$50/年            |
 
-**回本点：** 与云 VPS 相比，Pi 在大约 6-12 个月内即可收回成本。
+**回本：** 与云 VPS 相比，Pi 在约 6-12 个月内即可收回成本。
 
 ---
 
 ## 另请参阅
 
-- [Linux 指南](/en/platforms/linux) — 常规 Linux 设置
-- [DigitalOcean 指南](/en/platforms/digitalocean) — 云端替代方案
+- [Linux 指南](/en/platforms/linux) — 通用 Linux 设置
+- [DigitalOcean 指南](/en/platforms/digitalocean) — 云替代方案
 - [Hetzner 指南](/en/install/hetzner) — Docker 设置
 - [Tailscale](/en/gateway/tailscale) — 远程访问
-- [节点](/en/nodes) — 将您的笔记本电脑/手机与 Pi 网关联动
+- [节点](/en/nodes) — 将您的笔记本电脑/手机与 Pi 网关配对

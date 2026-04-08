@@ -11,7 +11,7 @@ read_when:
 技能會教導代理程式如何以及何時使用工具。每個技能都是一個目錄，
 其中包含一個帶有 YAML 前置資料和 markdown 指令的 `SKILL.md` 檔案。
 
-如需了解技能如何載入和排定優先順序，請參閱 [Skills](/en/tools/skills)。
+如需了解技能的載入和優先級，請參閱 [技能](/en/tools/skills)。
 
 ## 建立您的第一個技能
 
@@ -98,20 +98,22 @@ YAML 前置資料支援以下欄位：
 - **保持簡潔** — 指示模型做*什麼*，而不是如何成為 AI
 - **安全第一** — 如果您的技能使用了 `exec`，請確保提示不允許來自不受信任輸入的任意命令注入
 - **本機測試** — 在分享之前使用 `openclaw agent --message "..."` 進行測試
-- **使用 ClawHub** — 在 [ClawHub](https://clawhub.com) 瀏覽和貢獻技能
+- **使用 ClawHub** — 在 [ClawHub](https://clawhub.ai) 瀏覽並貢獻技能
 
 ## 技能的存放位置
 
-| 位置                     | 優先順序 | 範圍                 |
-| ------------------------ | -------- | -------------------- |
-| `\<workspace\>/skills/`  | 最高     | 單一代理程式         |
-| `~/.openclaw/skills/`    | 中等     | 共享（所有代理程式） |
-| 內建（隨 OpenClaw 附帶） | 最低     | 全域                 |
-| `skills.load.extraDirs`  | 最低     | 自訂共享資料夾       |
+| 位置                            | 優先順序 | 範圍                 |
+| ------------------------------- | -------- | -------------------- |
+| `\<workspace\>/skills/`         | 最高     | 單一代理程式         |
+| `\<workspace\>/.agents/skills/` | 高       | 每個工作區的代理程式 |
+| `~/.agents/skills/`             | 中       | 共用的代理程式設定檔 |
+| `~/.openclaw/skills/`           | 中       | 共用（所有代理程式） |
+| 隨附（隨 OpenClaw 一起出貨）    | 低       | 全域                 |
+| `skills.load.extraDirs`         | 最低     | 自訂共用資料夾       |
 
 ## 相關
 
 - [技能參考](/en/tools/skills) — 載入、優先順序和閘道規則
 - [技能設定](/en/tools/skills-config) — `skills.*` 設定架構
-- [ClawHub](/en/tools/clawhub) — 公共技能註冊表
-- [建置外掛程式](/en/plugins/building-plugins) — 外掛程式可以附帶技能
+- [ClawHub](/en/tools/clawhub) — 公開技能註冊表
+- [建構外掛](/en/plugins/building-plugins) — 外掛可以附帶技能

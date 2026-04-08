@@ -417,7 +417,7 @@ Les chemins de commande peuvent opter pour la résolution SecretRef prise en cha
 
 Il existe deux comportements généraux :
 
-- Les chemins de commande stricts (par exemple les chemins de mémoire distante `openclaw memory` et `openclaw qr --remote`) lisent à partir de l'instantané actif et échouent rapidement lorsqu'un SecretRef requis n'est pas disponible.
+- Les chemins de commande stricts (par exemple `openclaw memory` chemins de mémoire distante et `openclaw qr --remote` lorsqu'il a besoin de références de secret partagé distant) lisent le snapshot actif et échouent rapidement lorsqu'une SecretRef requise est indisponible.
 - Les chemins de commande en lecture seule (par exemple `openclaw status`, `openclaw status --all`, `openclaw channels status`, `openclaw channels resolve`, `openclaw security audit`, et les flux de réparation de configuration/doctor en lecture seule) préfèrent également l'instantané actif, mais dégradent au lieu d'abandonner lorsqu'une SecretRef ciblée n'est pas disponible dans ce chemin de commande.
 
 Comportement en lecture seule :

@@ -39,7 +39,7 @@ L'ordinateur portable n'exécute **pas** l'agent. Il se connecte à distance :
 - Utilisez le mode **Remote over SSH** de l'application macOS (Paramètres → Général → « OpenClaw runs »).
 - L'application ouvre et gère le tunnel, donc WebChat + les contrôles de santé « fonctionnent tout seuls ».
 
-Runbook : [accès distant macOS](/en/platforms/mac/remote).
+Runbook : [Accès distant macOS](/en/platforms/mac/remote).
 
 ### 3) L'ordinateur portable exécute le Gateway, accès distant à partir d'autres machines
 
@@ -48,7 +48,7 @@ Gardez le Gateway en local mais exposez-le en toute sécurité :
 - Tunnel SSH vers l'ordinateur portable depuis d'autres machines, ou
 - Tailscale Serve l'interface de contrôle et garde le Gateway en boucle locale uniquement (loopback-only).
 
-Guide : [Tailscale](/en/gateway/tailscale) et [Vue d'ensemble Web](/en/web).
+Guide : [Tailscale](/en/gateway/tailscale) et [Aperçu Web](/en/web).
 
 ## Flux de commandes (ce qui s'exécute où)
 
@@ -63,7 +63,7 @@ Exemple de flux (Telegram → nœud) :
 
 Remarques :
 
-- **Les nœuds n'exécutent pas le service de passerelle.** Une seule passerelle doit s'exécuter par hôte, sauf si vous exécutez intentionnellement des profils isolés (voir [Passerelles multiples](/en/gateway/multiple-gateways)).
+- **Les nœuds n'exécutent pas le service Gateway.** Un seul Gateway doit s'exécuter par hôte, sauf si vous exécutez intentionnellement des profils isolés (voir [Multiple gateways](/en/gateway/multiple-gateways)).
 - L'application macOS en « mode nœud » est simplement un client nœud via le WebSocket de la Gateway.
 
 ## Tunnel SSH (CLI + outils)
@@ -77,11 +77,11 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 Une fois le tunnel établi :
 
 - `openclaw health` et `openclaw status --deep` atteignent désormais la passerelle distante via `ws://127.0.0.1:18789`.
-- `openclaw gateway {status,health,send,agent,call}` peut également cibler l'URL transférée via `--url` si nécessaire.
+- `openclaw gateway status`, `openclaw gateway health`, `openclaw gateway probe` et `openclaw gateway call` peuvent également cibler l'URL transférée via `--url` si nécessaire.
 
-Note : remplacez `18789` par votre `gateway.port` configuré (ou `--port`/`OPENCLAW_GATEWAY_PORT`).
-Note : lorsque vous passez `--url`, le CLI ne revient pas aux identifiants de configuration ou d'environnement.
-Incluez `--token` ou `--password` explicitement. L'absence d'identifiants explicites constitue une erreur.
+Remarque : remplacez `18789` par votre `gateway.port` configuré (ou `--port`/`OPENCLAW_GATEWAY_PORT`).
+Remarque : lorsque vous passez `--url`, le CLI n'utilise pas les informations d'identification de configuration ou d'environnement en secours.
+Incluez `--token` ou `--password` explicitement. L'absence d'informations d'identification explicites constitue une erreur.
 
 ## CLI valeurs par défaut distantes
 
@@ -99,24 +99,24 @@ Vous pouvez rendre une cible distante persistante pour que les commandes CLI l'u
 }
 ```
 
-Lorsque la passerelle est en boucle locale uniquement, conservez l'URL sur `ws://127.0.0.1:18789` et ouvrez d'abord le tunnel SSH.
+Lorsque le Gateway est en boucle locale uniquement, conservez l'URL à `ws://127.0.0.1:18789` et ouvrez d'abord le tunnel SSH.
 
 ## Priorité des identifiants
 
-La résolution des identifiants du Gateway suit un contrat partagé sur les chemins d'appel/probe/status et la surveillance d'approbation d'exécution Discord. Node-host utilise le même contrat de base avec une exception en mode local (il ignore intentionnellement `gateway.remote.*`) :
+La résolution des informations d'identification du Gateway suit un contrat partagé sur les chemins d'appel/de sonde/état et la surveillance d'approbation d'exécution Discord. L'hôte de nœud utilise le même contrat de base avec une exception en mode local (il ignore intentionnellement `gateway.remote.*`) :
 
-- Les identifiants explicites (`--token`, `--password`, ou outil `gatewayToken`) l'emportent toujours sur les chemins d'appel qui acceptent une authentification explicite.
+- Les informations d'identification explicites (`--token`, `--password` ou tool `gatewayToken`) priment toujours sur les chemins d'appel qui acceptent une authentification explicite.
 - Sécurité de la substitution de l'URL :
-  - Les remplacements d'URL du CLI (`--url`) ne réutilisent jamais les identifiants implicites de config/env.
-  - Les remplacements d'URL d'environnement (`OPENCLAW_GATEWAY_URL`) peuvent utiliser uniquement les identifiants d'environnement (`OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`).
+  - Les redéfinitions d'URL CLI (`--url`) ne réutilisent jamais les informations d'identification implicites de configuration/environnement.
+  - Les redéfinitions d'URL Env (`OPENCLAW_GATEWAY_URL`) peuvent utiliser uniquement les informations d'identification Env (`OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`).
 - Valeurs par défaut du mode local :
-  - jeton : `OPENCLAW_GATEWAY_TOKEN` -> `gateway.auth.token` -> `gateway.remote.token` (le repli distant s'applique uniquement lorsque l'entrée du jeton d'authentification locale n'est pas définie)
-  - mot de passe : `OPENCLAW_GATEWAY_PASSWORD` -> `gateway.auth.password` -> `gateway.remote.password` (le repli distant s'applique uniquement lorsque l'entrée du mot de passe d'authentification locale n'est pas définie)
+  - jeton : `OPENCLAW_GATEWAY_TOKEN` -> `gateway.auth.token` -> `gateway.remote.token` (le secours distant ne s'applique que lorsque l'entrée du jeton d'authentification locale n'est pas définie)
+  - mot de passe : `OPENCLAW_GATEWAY_PASSWORD` -> `gateway.auth.password` -> `gateway.remote.password` (le repli distant ne s'applique que lorsque la saisie du mot de passe d'authentification locale n'est pas définie)
 - Valeurs par défaut du mode distant :
   - jeton : `gateway.remote.token` -> `OPENCLAW_GATEWAY_TOKEN` -> `gateway.auth.token`
   - mot de passe : `OPENCLAW_GATEWAY_PASSWORD` -> `gateway.remote.password` -> `gateway.auth.password`
-- Exception du mode local pour l'hôte du nœud : `gateway.remote.token` / `gateway.remote.password` sont ignorés.
-- Les vérifications de jeton de sonde/d'état distantes sont strictes par défaut : elles utilisent `gateway.remote.token` uniquement (pas de repli de jeton local) lors du ciblage du mode distant.
+- Exception de mode local de l'hôte du nœud : `gateway.remote.token` / `gateway.remote.password` sont ignorés.
+- Les vérifications de jeton de sonde/état distant sont strictes par défaut : elles utilisent `gateway.remote.token` uniquement (aucun repli de jeton local) lors du ciblage du mode distant.
 - Les remplacements d'environnement du Gateway utilisent uniquement `OPENCLAW_GATEWAY_*`.
 
 ## Interface utilisateur de chat sur SSH
@@ -130,24 +130,25 @@ WebChat n'utilise plus de port HTTP distinct. L'interface utilisateur de chat Sw
 
 L'application de la barre de menus macOS peut gérer le même configuration de bout en bout (vérifications de l'état distant, WebChat et transfert Voice Wake).
 
-Manuel d'exécution : [accès distant macOS](/en/platforms/mac/remote).
+Runbook : [accès distant macOS](/en/platforms/mac/remote).
 
 ## Règles de sécurité (accès distant/VPN)
 
 Version courte : **gardez le Gateway en loopback uniquement** sauf si vous êtes sûr de devoir faire un bind.
 
 - **Loopback + SSH/Tailscale Serve** est le réglage par défaut le plus sûr (aucune exposition publique).
-- Le `ws://` en texte brut est limité à la boucle locale par défaut. Pour les réseaux privés de confiance,
-  définissez `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` sur le processus client en tant que secours.
-- Les **liaisons non boucle locale** (`lan`/`tailnet`/`custom`, ou `auto` lorsque la boucle locale n'est pas disponible) doivent utiliser des jetons/mots de passe d'authentification.
-- `gateway.remote.token` / `.password` sont des sources d'identifiants client. Ils ne configurent **pas** l'authentification serveur par eux-mêmes.
+- Le `ws://` en clair est en boucle locale uniquement par défaut. Pour les réseaux privés de confiance,
+  définissez `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` sur le processus client en cas de bris de glace.
+- Les liaisons **non boucle locale** (`lan`/`tailnet`/`custom`, ou `auto` lorsque la boucle locale n'est pas disponible) doivent utiliser l'authentification de la passerelle : jeton, mot de passe, ou un proxy inverse sensible à l'identité avec `gateway.auth.mode: "trusted-proxy"`.
+- `gateway.remote.token` / `.password` sont des sources d'identification client. Elles ne configurent **pas** l'authentification serveur par elles-mêmes.
 - Les chemins d'appel locaux peuvent utiliser `gateway.remote.*` comme repli uniquement lorsque `gateway.auth.*` n'est pas défini.
-- Si `gateway.auth.token` / `gateway.auth.password` est explicitement configuré via SecretRef et non résolu, la résolution échoue de manière fermée (aucun masquage de repli distant).
+- Si `gateway.auth.token` / `gateway.auth.password` est explicitement configuré via SecretRef et non résolu, la résolution échoue fermée (aucun masquage de repli distant).
 - `gateway.remote.tlsFingerprint` épingle le certificat TLS distant lors de l'utilisation de `wss://`.
-- **Tailscale Serve** peut authentifier le trafic de l'interface de contrôle/WebSocket via des en-têtes d'identité lorsque `gateway.auth.allowTailscale: true` ; les points de terminaison de l'API HTTP nécessitent toujours une authentification par jeton/mot de passe. Ce flux sans jeton suppose que l'hôte de la passerelle est de confiance. Réglez-le sur `false` si vous souhaitez des jetons/mots de passe partout.
-- Traitez le contrôle navigateur comme un accès opérateur : uniquement tailnet + appariement délibéré des nœuds.
+- **Tailscale Serve** peut authentifier le trafic de l'interface de contrôle/WebSocket via des en-têtes d'identité lorsque `gateway.auth.allowTailscale: true` ; les points de terminaison de l'HTTP API n'utilisent pas cette authentification par en-tête Tailscale et suivent plutôt le mode d'authentification HTTP normal de la passerelle. Ce flux sans jeton suppose que l'hôte de la passerelle est fiable. Réglez-le sur `false` si vous souhaitez une authentification par secret partagé partout.
+- L'authentification **Trusted-proxy** est destinée uniquement aux configurations de proxy avec reconnaissance de l'identité non locales. Les proxies inversés en boucle locale (loopback) sur le même hôte ne satisfont pas `gateway.auth.mode: "trusted-proxy"`.
+- Traitez le contrôle via le navigateur comme un accès opérateur : uniquement sur le tailnet + jumelage délibéré des nœuds.
 
-Pour approfondir : [Sécurité](/en/gateway/security).
+Approfondissement : [Sécurité](/en/gateway/security).
 
 ### macOS : tunnel SSH persistant via LaunchAgent
 
@@ -212,7 +213,7 @@ Enregistrez ceci sous `~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist` :
 launchctl bootstrap gui/$UID ~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist
 ```
 
-Le tunnel démarrera automatiquement à la connexion, redémarrera en cas de plantage et gardera le port transféré actif.
+Le tunnel démarrera automatiquement à la connexion, redémarrera après un plantage et gardera le port transféré actif.
 
 Remarque : si vous avez un LaunchAgent `com.openclaw.ssh-tunnel` restant d'une ancienne configuration, déchargez-le et supprimez-le.
 

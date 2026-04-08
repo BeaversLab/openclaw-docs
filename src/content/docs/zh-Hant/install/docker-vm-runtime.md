@@ -116,18 +116,18 @@ docker compose logs -f openclaw-gateway
 OpenClaw 在 Docker 中運行，但 Docker 並非事實來源 (source of truth)。
 所有長期存在的狀態必須在重啟、重新建構和重新開機後仍然存在。
 
-| 組件              | 位置                              | 持續性機制     | 備註                        |
-| ----------------- | --------------------------------- | -------------- | --------------------------- |
-| Gateway 設定      | `/home/node/.openclaw/`           | 主機磁碟區掛載 | 包含 `openclaw.json`、權杖  |
-| 模型驗證設定檔    | `/home/node/.openclaw/`           | 主機磁碟區掛載 | OAuth 權杖、API 金鑰        |
-| 技能設定          | `/home/node/.openclaw/skills/`    | 主機磁碟區掛載 | 技能層級狀態                |
-| 代理工作區        | `/home/node/.openclaw/workspace/` | 主機磁碟區掛載 | 程式碼和代理產生檔案        |
-| WhatsApp 工作階段 | `/home/node/.openclaw/`           | 主機磁碟區掛載 | 保留 QR 登入                |
-| Gmail 鑰匙圈      | `/home/node/.openclaw/`           | 主機卷 + 密碼  | 需要 `GOG_KEYRING_PASSWORD` |
-| 外部二進位檔案    | `/usr/local/bin/`                 | Docker 映像檔  | 必須在建置時 baked          |
-| Node 執行環境     | 容器檔案系統                      | Docker 映像檔  | 每次建置映像檔時重建        |
-| OS 套件           | 容器檔案系統                      | Docker 映像檔  | 不要在執行時安裝            |
-| Docker 容器       | 暫時性                            | 可重新啟動     | 可安全銷毀                  |
+| 組件              | 位置                              | 持續性機制     | 備註                                                           |
+| ----------------- | --------------------------------- | -------------- | -------------------------------------------------------------- |
+| Gateway 設定      | `/home/node/.openclaw/`           | 主機磁碟區掛載 | 包含 `openclaw.json`、`.env`                                   |
+| 模型驗證設定檔    | `/home/node/.openclaw/agents/`    | 主機磁碟區掛載 | `agents/<agentId>/agent/auth-profiles.json`（OAuth、API 金鑰） |
+| 技能設定          | `/home/node/.openclaw/skills/`    | 主機磁碟區掛載 | 技能層級狀態                                                   |
+| 代理工作區        | `/home/node/.openclaw/workspace/` | 主機磁碟區掛載 | 程式碼和代理產生檔案                                           |
+| WhatsApp 工作階段 | `/home/node/.openclaw/`           | 主機磁碟區掛載 | 保留 QR 登入                                                   |
+| Gmail 鑰匙圈      | `/home/node/.openclaw/`           | 主機卷 + 密碼  | 需要 `GOG_KEYRING_PASSWORD`                                    |
+| 外部二進位檔案    | `/usr/local/bin/`                 | Docker 映像檔  | 必須在建置時 baked                                             |
+| Node 執行環境     | 容器檔案系統                      | Docker 映像檔  | 每次建置映像檔時重建                                           |
+| OS 套件           | 容器檔案系統                      | Docker 映像檔  | 不要在執行時安裝                                               |
+| Docker 容器       | 暫時性                            | 可重新啟動     | 可安全銷毀                                                     |
 
 ## 更新
 

@@ -36,40 +36,62 @@ requireMention? yes -> mentioned? no -> store for context only
 otherwise -> reply
 ```
 
-![Group message flow](/images/groups-flow.svg)
+## 上下文可見性與允許清單
+
+群組安全性涉及兩個不同的控制項：
+
+- **觸發授權**：誰可以觸發代理程式（`groupPolicy`、`groups`、`groupAllowFrom`、特定通道的允許清單）。
+- **上下文可見性**：將哪些補充上下文注入到模型中（回覆文字、引言、執行緒歷史記錄、轉發的元資料）。
+
+根據預設，OpenClaw 優先考慮正常的聊天行為，並主要按接收到的狀態保留上下文。這表示允許清單主要決定誰可以觸發動作，而不是對每個引言或歷史片段設定通用的編輯界線。
+
+目前的行為因通道而異：
+
+- 某些通道已經在特定路徑中對補充上下文套用基於發送者的過濾（例如 Slack 執行緒植入、Matrix 回覆/執行緒查詢）。
+- 其他通道仍會按接收到的狀態傳遞引言/回覆/轉發上下文。
+
+強化方向（計劃中）：
+
+- `contextVisibility: "all"`（預設）保持目前按接收狀態處理的行為。
+- `contextVisibility: "allowlist"` 將補充上下文過濾為僅包含允許清單中的發送者。
+- `contextVisibility: "allowlist_quote"` 是 `allowlist` 加上一個明確的引言/回覆例外。
+
+在該強化模型於所有通道中一致實施之前，請預期各介面之間會有差異。
+
+![群組訊息流程](/images/groups-flow.svg)
 
 如果您想要...
 
-| 目標                             | 設定方式                                                   |
-| -------------------------------- | ---------------------------------------------------------- |
-| 允許所有群組，但僅在 @提及時回覆 | `groups: { "*": { requireMention: true } }`                |
-| 停用所有群組回覆                 | `groupPolicy: "disabled"`                                  |
-| 僅限特定群組                     | `groups: { "<group-id>": { ... } }`（沒有 `"*"` 鍵）       |
-| 只有您能在群組中觸發             | `groupPolicy: "allowlist"`、`groupAllowFrom: ["+1555..."]` |
+| 目標                           | 設定方式                                                   |
+| ------------------------------ | ---------------------------------------------------------- |
+| 允許所有群組但僅在 @提及时回覆 | `groups: { "*": { requireMention: true } }`                |
+| 停用所有群組回覆               | `groupPolicy: "disabled"`                                  |
+| 僅限特定群組                   | `groups: { "<group-id>": { ... } }`（無 `"*"` 金鑰）       |
+| 僅限您可以在群組中觸發         | `groupPolicy: "allowlist"`、`groupAllowFrom: ["+1555..."]` |
 
 ## 工作階段金鑰
 
-- 群組會話使用 `agent:<agentId>:<channel>:group:<id>` 會話金鑰（房間/頻道使用 `agent:<agentId>:<channel>:channel:<id>`）。
-- Telegram 論壇主題會將 `:topic:<threadId>` 新增至群組 ID，以便每個主題都有自己的會話。
-- 直接聊天使用主要工作階段 (若已設定，則為每位傳送者獨立)。
+- 群組工作階段使用 `agent:<agentId>:<channel>:group:<id>` 工作階段金鑰（房間/通道使用 `agent:<agentId>:<channel>:channel:<id>`）。
+- Telegram 論壇主題會將 `:topic:<threadId>` 新增至群組 ID，因此每個主題都有自己的工作階段。
+- 直接訊息使用主要工作階段（或如果已設定，則使用每個發送者的工作階段）。
 - 群組工作階段會跳過心跳。
 
 <a id="pattern-personal-dms-public-groups-single-agent"></a>
 
 ## 模式：個人 DM + 公開群組（單一代理程式）
 
-是的 — 如果您的「個人」流量是 **DM**，而您的「公開」流量是 **群組**，這樣效果很好。
+是的 — 如果您的「私人」流量是 **DMs**，而您的「公開」流量是 **groups**，這樣的效果很好。
 
-原因：在單一代理程式模式下，DM 通常會落在 **主要** 會話金鑰（`agent:main:main`）中，而群組則總是使用 **非主要** 會話金鑰（`agent:main:<channel>:group:<id>`）。如果您使用 `mode: "non-main"` 啟用沙盒機制，這些群組會話將在 Docker 中執行，而您的主要 DM 會話則保持在主機上。
+原因：在單代理模式下，DMs 通常會進入 **main** session key (`agent:main:main`)，而 groups 總是使用 **non-main** session keys (`agent:main:<channel>:group:<id>`)。如果您啟用 `mode: "non-main"`，這些 group sessions 將在 Docker 中運行，而您的主要 DM session 則保持在主機上。
 
-這為您提供了一個代理程式「大腦」（共享工作區 + 記憶體），但具有兩種執行態勢：
+這為您提供了一個代理「大腦」（共享工作區 + 記憶），但兩種執行模式：
 
-- **DM**：完整工具（主機）
-- **群組**：沙盒 + 受限工具（Docker）
+- **DMs**：完整工具（主機）
+- **Groups**：沙箱 + 受限工具（Docker）
 
-> 如果您需要真正獨立的工作區/角色設定（「個人」和「公開」絕不能混合），請使用第二個代理程式 + 綁定。請參閱 [Multi-Agent Routing](/en/concepts/multi-agent)。
+> 如果您需要真正獨立的工作區/角色（「私人」和「公開」絕不能混合），請使用第二個代理 + 綁定。請參閱 [Multi-Agent Routing](/en/concepts/multi-agent)。
 
-範例（DM 在主機上，群組在沙盒中 + 僅限訊息傳遞工具）：
+範例（DMs 在主機上，groups 受沙箱限制 + 僅限訊息傳遞工具）：
 
 ```json5
 {
@@ -94,7 +116,7 @@ otherwise -> reply
 }
 ```
 
-想要「群組只能看到資料夾 X」而不是「無主機存取權」？保留 `workspaceAccess: "none"` 並僅將允許清單中的路徑掛載到沙箱：
+想要「groups 只能存取資料夾 X」而不是「無主機存取權」？保留 `workspaceAccess: "none"` 並僅將允許清單中的路徑掛載到沙箱中：
 
 ```json5
 {
@@ -116,20 +138,20 @@ otherwise -> reply
 }
 ```
 
-相關連結：
+相關：
 
-- 配置鍵與預設值：[Gateway configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
-- 偵錯工具被阻擋的原因：[Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Bind mounts 詳細資訊：[Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
+- 配置金鑰和預設值：[Gateway configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- 調試工具被阻止的原因：[Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Bind mounts 詳情：[Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
 
 ## 顯示標籤
 
 - UI 標籤在可用時使用 `displayName`，格式為 `<channel>:<token>`。
-- `#room` 保留給房間/頻道；群組聊天使用 `g-<slug>`（小寫，空格轉換為 `-`，保留 `#@+._-`）。
+- `#room` 是保留給 rooms/channels 的；group chats 使用 `g-<slug>`（小寫，空格 -> `-`，保留 `#@+._-`）。
 
-## 群組政策
+## 群組原則
 
-控制每個頻道如何處理群組/房間訊息：
+控制每個頻道如何處理 group/room 訊息：
 
 ```json5
 {
@@ -176,36 +198,36 @@ otherwise -> reply
 }
 ```
 
-| 政策          | 行為                                 |
-| ------------- | ------------------------------------ |
-| `"open"`      | 群組略過允許清單；提及閘門仍然適用。 |
-| `"disabled"`  | 完全封鎖所有群組訊息。               |
-| `"allowlist"` | 僅允許符合設定允許清單的群組/房間。  |
+| 原則          | 行為                                    |
+| ------------- | --------------------------------------- |
+| `"open"`      | 群組繞過允許清單；提及閘控仍然適用。    |
+| `"disabled"`  | 完全阻止所有群組訊息。                  |
+| `"allowlist"` | 僅允許符合配置允許清單的 groups/rooms。 |
 
-備註：
+注意：
 
-- `groupPolicy` 與提及閘門（需要 @提及）分開。
+- `groupPolicy` 與 mention-gating（需要 @mentions）是分開的。
 - WhatsApp/Telegram/Signal/iMessage/Microsoft Teams/Zalo：使用 `groupAllowFrom`（後備：明確的 `allowFrom`）。
-- DM 配對核准（`*-allowFrom` 商店項目）僅適用於 DM 存取權；群組傳送者授權保持對群組允許清單的明確指定。
+- DM 配對批准 (`*-allowFrom` store entries) 僅適用於 DM 存取；群組發送者授權則明確依賴群組允許清單。
 - Discord：允許清單使用 `channels.discord.guilds.<id>.channels`。
 - Slack：允許清單使用 `channels.slack.channels`。
-- Matrix：允許清單使用 `channels.matrix.groups`。建議優先使用房間 ID 或別名；已加入房間名稱查詢為盡力而為，且執行時會忽略無法解析的名稱。使用 `channels.matrix.groupAllowFrom` 限制傳送者；也支援各房間 `users` 允許清單。
-- 群組 DM 受到單獨控制（`channels.discord.dm.*`，`channels.slack.dm.*`）。
-- Telegram 允許清單可以比對使用者 ID (`"123456789"`, `"telegram:123456789"`, `"tg:123456789"`) 或使用者名稱 (`"@alice"` 或 `"alice"`)；前綴不區分大小寫。
-- 預設為 `groupPolicy: "allowlist"`；如果您的群組允許清單是空的，則會封鎖群組訊息。
-- 執行時期安全性：當提供者區塊完全遺失 (`channels.<provider>` 不存在) 時，群組政策會回退到「失敗關閉」模式 (通常是 `allowlist`)，而不是繼承 `channels.defaults.groupPolicy`。
+- Matrix：允許清單使用 `channels.matrix.groups`。優先使用房間 ID 或別名；已加入房間的名稱查詢屬於盡力而為，未解析的名稱會在執行時被忽略。使用 `channels.matrix.groupAllowFrom` 來限制發送者；也支援每個房間 `users` 允許清單。
+- 群組 DM 分別受到控制 (`channels.discord.dm.*`, `channels.slack.dm.*`)。
+- Telegram 允許清單可以符合使用者 ID (`"123456789"`, `"telegram:123456789"`, `"tg:123456789"`) 或使用者名稱 (`"@alice"` 或 `"alice"`)；前綴區分大小寫。
+- 預設值為 `groupPolicy: "allowlist"`；如果您的群組允許清單為空，群組訊息將會被封鎖。
+- 執行時期安全性：當供應者區塊完全遺失 (`channels.<provider>` 缺席) 時，群組原則會退回到失敗關閉模式 (通常是 `allowlist`)，而不是繼承 `channels.defaults.groupPolicy`。
 
 快速心智模型 (群組訊息的評估順序)：
 
-1. `groupPolicy` (開啟/停用/允許清單)
-2. 群組允許清單 (`*.groups`, `*.groupAllowFrom`, 通道特定允許清單)
+1. `groupPolicy` (open/disabled/allowlist)
+2. 群組允許清單 (`*.groups`, `*.groupAllowFrom`, 特定頻道允許清單)
 3. 提及閘控 (`requireMention`, `/activation`)
 
 ## 提及閘控 (預設)
 
-除非針對每個群組進行覆蓋，否則群組訊息需要提及。預設值位於每個子系統下的 `*.groups."*"`。
+群組訊息需要提及，除非每個群組有另外覆寫。預設值位於每個子系統下的 `*.groups."*"`。
 
-回覆機器人訊息算作隱含提及 (當通道支援回覆元資料時)。這適用於 Telegram、WhatsApp、Slack、Discord 和 Microsoft Teams。
+回覆機器人訊息算作隱式提及 (當頻道支援回覆中繼資料時)。這適用於 Telegram、WhatsApp、Slack、Discord 和 Microsoft Teams。
 
 ```json5
 {
@@ -247,27 +269,27 @@ otherwise -> reply
 
 - `mentionPatterns` 是不區分大小寫的安全正規表示式模式；無效的模式和不安全的巢狀重複形式會被忽略。
 - 提供明確提及的介面仍然會通過；模式是後備方案。
-- 每個代理程式的覆寫：`agents.list[].groupChat.mentionPatterns` (當多個代理程式共用一個群組時很有用)。
-- 只有在能夠進行提及偵測 (已設定原生提及或 `mentionPatterns`) 時，才會強制執行提及閘控。
-- Discord 的預設值位於 `channels.discord.guilds."*"` 中 (可針對每個伺服器/通道覆寫)。
-- 群組歷史記錄內容在所有通道中被一致地包裝，並且是 **僅限擱置中** (因提及閘控而跳過的訊息)；使用 `messages.groupChat.historyLimit` 作為全域預設值，並使用 `channels.<channel>.historyLimit` (或 `channels.<channel>.accounts.*.historyLimit`) 進行覆寫。設定 `0` 以停用。
+- 每個代理的覆寫：`agents.list[].groupChat.mentionPatterns`（當多個代理共用一個群組時很有用）。
+- 僅在可進行提及偵測時（已設定原生提及或 `mentionPatterns`）才會執行提及閘控。
+- Discord 預設值位於 `channels.discord.guilds."*"` 中（可依伺服器/頻道覆寫）。
+- 群組歷史記錄語境在各頻道間以統一方式包裝，且為**僅限待處理**（因提及閘控而跳過的訊息）；請使用 `messages.groupChat.historyLimit` 作為全域預設值，並使用 `channels.<channel>.historyLimit`（或 `channels.<channel>.accounts.*.historyLimit`）進行覆寫。設定 `0` 以停用。
 
-## 群組/通道工具限制 (選用)
+## 群組/頻道工具限制（選用）
 
-部分頻道配置支援限制在**特定群組/房間/頻道內**可使用的工具。
+部分頻道設定支援限制**特定群組/房間/頻道內**可用的工具。
 
-- `tools`：針對整個群組的允許/拒絕工具。
-- `toolsBySender`：群組內針對每個發送者的覆寫。
-  使用明確的鍵前綴：
+- `tools`：允許/拒絕整個群組的工具。
+- `toolsBySender`：群組內依發送者覆寫。
+  使用明確的索引鍵前綴：
   `id:<senderId>`、`e164:<phone>`、`username:<handle>`、`name:<displayName>` 和 `"*"` 萬用字元。
-  舊版無前綴的鍵仍被接受，並僅作為 `id:` 進行匹配。
+  舊版無前綴的索引鍵仍被接受，且僅作為 `id:` 比對。
 
-解析順序（最優先者勝出）：
+解析順序（愈具體者優先）：
 
-1. 群組/頻道 `toolsBySender` 匹配
+1. 群組/頻道 `toolsBySender` 比對
 2. 群組/頻道 `tools`
-3. 預設（`"*"`）`toolsBySender` 匹配
-4. 預設（`"*"`）`tools`
+3. 預設（`"*"`） `toolsBySender` 比對
+4. 預設（`"*"`） `tools`
 
 範例（Telegram）：
 
@@ -291,14 +313,17 @@ otherwise -> reply
 
 備註：
 
-- 群組/頻道工具限制會與全域/代理工具策略一併套用（拒絕仍然優先）。
-- 部分頻道對房間/頻道使用不同的巢狀結構（例如，Discord `guilds.*.channels.*`、Slack `channels.*`、Microsoft Teams `teams.*.channels.*`）。
+- 群組/頻道工具限制是套用於全域/代理工具原則之外（拒絕仍優先）。
+- 部分頻道對房間/頻道使用不同的巢狀結構（例如 Discord `guilds.*.channels.*`、Slack `channels.*`、Microsoft Teams `teams.*.channels.*`）。
 
 ## 群組允許清單
 
-當設定 `channels.whatsapp.groups`、`channels.telegram.groups` 或 `channels.imessage.groups` 時，這些鍵將作為群組允許清單。使用 `"*"` 以允許所有群組，同時仍設定預設提及行為。
+當設定 `channels.whatsapp.groups`、`channels.telegram.groups` 或 `channels.imessage.groups` 時，這些索引鍵會充當群組允許清單。使用 `"*"` 以允許所有群組，同時仍設定預設的提及行為。
 
-常見用途（複製/貼上）：
+常見誤解：DM 配對核准不同於群組授權。
+對於支援 DM 配對的頻道，配對儲存庫僅解鎖 DM。群組指令仍需要來自設定允許清單（例如 `groupAllowFrom`）或該頻道記載的設定回退方案的明確群組發送者授權。
+
+常見意圖（複製/貼上）：
 
 1. 停用所有群組回覆
 
@@ -308,7 +333,7 @@ otherwise -> reply
 }
 ```
 
-2. 僅允許特定群組（WhatsApp）
+2. 僅允許特定群組 (WhatsApp)
 
 ```json5
 {
@@ -335,7 +360,7 @@ otherwise -> reply
 }
 ```
 
-4. 僅擁有者可在群組中觸發（WhatsApp）
+4. 僅擁有者可在群組中觸發 (WhatsApp)
 
 ```json5
 {
@@ -349,37 +374,37 @@ otherwise -> reply
 }
 ```
 
-## 啟用（僅限擁有者）
+## 啟動（僅限擁有者）
 
-群組擁有者可以切換各個群組的啟用狀態：
+群組擁有者可以切換各群組的啟動狀態：
 
 - `/activation mention`
 - `/activation always`
 
-擁有者由 `channels.whatsapp.allowFrom` 決定（若未設定則為機器人的自身 E.164）。請將指令作為獨立訊息發送。其他介面目前會忽略 `/activation`。
+擁有者由 `channels.whatsapp.allowFrom` 決定（若未設定則為機器人自身的 E.164）。將該指令作為獨立訊息發送。其他介面目前會忽略 `/activation`。
 
-## 上下文欄位
+## Context 欄位
 
-群組傳入負載會設定：
+群組輸入 payload 設定：
 
 - `ChatType=group`
-- `GroupSubject`（如果已知）
-- `GroupMembers`（如果已知）
-- `WasMentioned`（提及閘道結果）
-- Telegram 論壇主題也包括 `MessageThreadId` 和 `IsForum`。
+- `GroupSubject` (如果已知)
+- `GroupMembers` (如果已知)
+- `WasMentioned` (提及閘道結果)
+- Telegram 論壇主題也包含 `MessageThreadId` 和 `IsForum`。
 
 頻道特定說明：
 
-- BlueBubbles 可以選擇在填充 `GroupMembers` 之前，從本機聯絡人資料庫中豐富未命名的 macOS 群組參與者。此功能預設為關閉，且僅在常規群組閘道通過後執行。
+- BlueBubbles 可以選擇在填入 `GroupMembers` 之前，從本機聯絡人資料庫中豐富未命名的 macOS 群組參與者資訊。此功能預設為關閉，且僅在正常的群組閘道檢查通過後執行。
 
-代理程式系統提示詞在新群組會話的第一輪中包含群組簡介。它會提醒模型像人類一樣回應，避免使用 Markdown 表格，並避免輸入字面意義的 `\n` 序列。
+代理系統提示在新群組會話的第一輪包含群組簡介。它會提醒模型像人類一樣回應，避免使用 Markdown 表格，盡量減少空行並遵循一般聊天間距，並避免輸入字面意義上的 `\n` 序列。
 
-## iMessage 詳情
+## iMessage 詳細資訊
 
-- 在路由或設置允許清單時，優先使用 `chat_id:<id>`。
+- 在路由或建立允許清單時，偏好使用 `chat_id:<id>`。
 - 列出聊天：`imsg chats --limit 20`。
-- 群組回覆總是會傳回同一個 `chat_id`。
+- 群組回覆總是會發回至相同的 `chat_id`。
 
-## WhatsApp 詳情
+## WhatsApp 詳細資訊
 
-請參閱 [群組訊息](/en/channels/group-messages) 以了解 WhatsApp 專屬的行為（歷史記錄注入、提及處理詳情）。
+請參閱 [群組訊息](/en/channels/group-messages) 以了解 WhatsApp 專屬行為（歷史記錄注入、提及處理細節）。

@@ -16,7 +16,7 @@ OpenClaw 支持 Perplexity Search API 作为 `web_search` 提供商。
 
 ## 获取 Perplexity API 密钥
 
-1. 在 [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api) 创建一个 Perplexity 账户
+1. 在 [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api) 创建 Perplexity 账户
 2. 在控制台中生成 API 密钥
 3. 将密钥存储在配置中，或在 Gateway(网关) 环境中设置 `PERPLEXITY_API_KEY`。
 
@@ -89,9 +89,7 @@ OpenClaw 支持 Perplexity Search API 作为 `web_search` 提供商。
 `plugins.entries.perplexity.config.webSearch.apiKey` 下的 `~/.openclaw/openclaw.json` 中。
 该字段也接受 SecretRef 对象。
 
-**通过环境变量：** 在 Gateway(网关) 进程环境中设置 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
-对于网关安装，将其放入
-`~/.openclaw/.env`（或您的服务环境）中。参见 [Env vars](/en/help/faq#env-vars-and-env-loading)。
+**通过环境变量：** 在 Gateway(网关) 进程环境中设置 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。对于网关安装，请将其放入 `~/.openclaw/.env`（或您的服务环境）中。参见 [环境变量](/en/help/faq#env-vars-and-env-loading)。
 
 如果配置了 `provider: "perplexity"` 且 Perplexity 密钥 SecretRef 未解析且没有环境变量回退，启动/重新加载将快速失败。
 
@@ -112,7 +110,13 @@ OpenClaw 支持 Perplexity Search API 作为 `web_search` 提供商。
 | `max_tokens`          | 总内容预算（默认值：25000，最大值：1000000）           |
 | `max_tokens_per_page` | 每页 token 限制（默认值：2048）                        |
 
-对于旧的 Sonar/OpenRouter 兼容性路径，仅支持 `query` 和 `freshness`。Search API 专用过滤器（如 `country`、`language`、`date_after`、`date_before`、`domain_filter`、`max_tokens` 和 `max_tokens_per_page`）将返回明确的错误。
+对于旧版 Sonar/OpenRouter 兼容路径：
+
+- 接受 `query`、`count` 和 `freshness`
+- 在那里 `count` 仅用于兼容性；响应仍然是一个带有引用的综合答案，而不是 N 个结果的列表
+- 仅限搜索 API 的过滤器，例如 `country`、`language`、`date_after`、
+  `date_before`、`domain_filter`、`max_tokens` 和 `max_tokens_per_page`
+  会返回明确的错误
 
 **示例：**
 
@@ -161,17 +165,18 @@ await web_search({
 
 - 每个过滤器最多 20 个域名
 - 不能在同一请求中混合使用允许列表和拒绝列表
-- 拒绝列表条目使用 `-` 前缀（例如 `["-reddit.com"]`）
+- 使用 `-` 前缀表示拒绝列表条目（例如 `["-reddit.com"]`）
 
-## 注意
+## 注意事项
 
-- Perplexity Search API 返回结构化的网络搜索结果（`title`、`url`、`snippet`）
-- OpenRouter 或显式的 `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` 会将 Perplexity 切换回 Sonar 聊天补全以实现兼容性
+- Perplexity 搜索 API 返回结构化的网络搜索结果（`title`、`url`、`snippet`）
+- OpenRouter 或显式的 `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` 开关会将 Perplexity 切换回 Sonar 聊天补全以实现兼容性
+- Sonar/OpenRouter 兼容性返回一个带有引用的综合答案，而不是结构化结果行
 - 结果默认缓存 15 分钟（可通过 `cacheTtlMinutes` 配置）
 
-## 相关
+## 相关内容
 
-- [Web Search overview](/en/tools/web) -- 所有提供商及自动检测
-- [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) -- 官方 Perplexity 文档
-- [Brave Search](/en/tools/brave-search) -- 带有国家/语言过滤器的结构化结果
-- [Exa Search](/en/tools/exa-search) -- 带有内容提取的神经搜索
+- [网络搜索概述](/en/tools/web) -- 所有提供商和自动检测
+- [Perplexity 搜索 API 文档](https://docs.perplexity.ai/docs/search/quickstart) -- 官方 Perplexity 文档
+- [Brave 搜索](/en/tools/brave-search) -- 带有国家/语言过滤器的结构化结果
+- [Exa 搜索](/en/tools/exa-search) -- 带有内容提取的神经搜索

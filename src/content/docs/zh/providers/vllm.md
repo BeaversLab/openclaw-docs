@@ -90,3 +90,12 @@ curl http://127.0.0.1:8000/v1/models
 ```
 
 - 如果请求因身份验证错误而失败，请设置一个与您的服务器配置匹配的真实 `VLLM_API_KEY`，或在 `models.providers.vllm` 下显式配置提供商。
+
+## 代理风格行为
+
+vLLM 被视为代理风格的 OpenAI 兼容 `/v1` 后端，而非原生的 OpenAI 端点。
+
+- 原生的 OpenAI 专用请求整形在此处不适用
+- 没有 `service_tier`，没有响应 `store`，没有提示缓存提示，也没有 OpenAI 推理兼容负载整形
+- 隐藏的 OpenClaw 归因标头（`originator`，`version`，`User-Agent`）
+  不会注入到自定义 vLLM 基础 URL 中

@@ -10,7 +10,7 @@ title: "提供商目录"
 
 OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份验证，然后将默认模型设置为 `provider/model`。
 
-正在寻找聊天渠道文档（WhatsApp/Telegram/Discord/Slack/Mattermost (插件)/etc.）？请参阅 [渠道](/en/channels)。
+正在寻找聊天渠道文档（WhatsApp/Telegram/Discord/Slack/Mattermost (插件)/等）？请参阅[渠道](/en/channels)。
 
 ## 快速开始
 
@@ -25,10 +25,16 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 
 ## 提供商文档
 
+- [阿里巴巴模型工作室](/en/providers/alibaba)
 - [Amazon Bedrock](/en/providers/bedrock)
-- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
+- [Anthropic (API + Claude CLI)](/en/providers/anthropic)
+- [BytePlus (国际版)](/en/concepts/model-providers#byteplus-international)
+- [Chutes](/en/providers/chutes)
+- [ComfyUI](/en/providers/comfy)
 - [Cloudflare AI Gateway(网关)](/en/providers/cloudflare-ai-gateway)
 - [DeepSeek](/en/providers/deepseek)
+- [fal](/en/providers/fal)
+- [Fireworks](/en/providers/fireworks)
 - [GitHub Copilot](/en/providers/github-copilot)
 - [GLM 模型](/en/providers/glm)
 - [Google (Gemini)](/en/providers/google)
@@ -47,25 +53,35 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [OpenRouter](/en/providers/openrouter)
 - [Perplexity (网络搜索)](/en/providers/perplexity-provider)
 - [Qianfan](/en/providers/qianfan)
-- [Qwen / Model Studio (阿里云)](/en/providers/qwen_modelstudio)
+- [Qwen Cloud](/en/providers/qwen)
+- [Runway](/en/providers/runway)
 - [SGLang (本地模型)](/en/providers/sglang)
+- [StepFun](/en/providers/stepfun)
 - [Synthetic](/en/providers/synthetic)
 - [Together AI](/en/providers/together)
 - [Venice (Venice AI，注重隐私)](/en/providers/venice)
 - [Vercel AI Gateway(网关)](/en/providers/vercel-ai-gateway)
+- [Vydra](/en/providers/vydra)
 - [vLLM (本地模型)](/en/providers/vllm)
 - [Volcengine (Doubao)](/en/providers/volcengine)
 - [xAI](/en/providers/xai)
 - [Xiaomi](/en/providers/xiaomi)
 - [Z.AI](/en/providers/zai)
 
+## 共享概览页面
+
+- [Additional bundled variants](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
+- [Image Generation](/en/tools/image-generation) - 共享 `image_generate` 工具、提供商选择和故障转移
+- [Music Generation](/en/tools/music-generation) - 共享 `music_generate` 工具、提供商选择和故障转移
+- [Video Generation](/en/tools/video-generation) - 共享 `video_generate` 工具、提供商选择和故障转移
+
 ## 转录提供商
 
-- [Deepgram (音频转录)](/en/providers/deepgram)
+- [Deepgram (audio transcription)](/en/providers/deepgram)
 
 ## 社区工具
 
-- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Claude 订阅凭据的社区代理（使用前请验证 Anthropic 的政策/条款）
+- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Claude 订阅凭据的社区代理（使用前请验证 Anthropic 政策/条款）
 
 有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
-请参阅 [模型提供商](/en/concepts/model-providers)。
+请参阅 [Model providers](/en/concepts/model-providers)。

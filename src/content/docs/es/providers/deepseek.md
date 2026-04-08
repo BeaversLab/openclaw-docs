@@ -7,21 +7,22 @@ read_when:
 
 # DeepSeek
 
-[DeepSeek](https://www.deepseek.com) proporciona modelos de IA potentes con una API compatible con OpenAI.
+[DeepSeek](https://www.deepseek.com) proporciona potentes modelos de IA con una API compatible con OpenAI.
 
 - Proveedor: `deepseek`
 - Autenticación: `DEEPSEEK_API_KEY`
 - API: Compatible con OpenAI
+- URL base: `https://api.deepseek.com`
 
 ## Inicio rápido
 
-Establezca la clave API (recomendado: guárdela para el Gateway):
+Configure la clave API (recomendado: guárdela para el Gateway):
 
 ```bash
 openclaw onboard --auth-choice deepseek-api-key
 ```
 
-Esto le pedirá su clave API y establecerá `deepseek/deepseek-chat` como el modelo predeterminado.
+Esto solicitará su clave API y establecerá `deepseek/deepseek-chat` como el modelo predeterminado.
 
 ## Ejemplo no interactivo
 
@@ -40,14 +41,13 @@ Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `D
 esté disponible para ese proceso (por ejemplo, en `~/.openclaw/.env` o a través de
 `env.shellEnv`).
 
-## Modelos disponibles
+## Catálogo integrado
 
-| ID del modelo       | Nombre                   | Tipo         | Contexto |
-| ------------------- | ------------------------ | ------------ | -------- |
-| `deepseek-chat`     | DeepSeek Chat (V3.2)     | General      | 128K     |
-| `deepseek-reasoner` | DeepSeek Reasoner (V3.2) | Razonamiento | 128K     |
+| Ref. de modelo               | Nombre            | Entrada | Contexto | Salida máxima | Notas                                                       |
+| ---------------------------- | ----------------- | ------- | -------- | ------------- | ----------------------------------------------------------- |
+| `deepseek/deepseek-chat`     | DeepSeek Chat     | texto   | 131,072  | 8,192         | Modelo predeterminado; superficie DeepSeek V3.2 no pensante |
+| `deepseek/deepseek-reasoner` | DeepSeek Reasoner | texto   | 131,072  | 65,536        | Superficie V3.2 con capacidad de razonamiento               |
 
-- **deepseek-chat** corresponde a DeepSeek-V3.2 en modo sin pensamiento.
-- **deepseek-reasoner** corresponde a DeepSeek-V3.2 en modo de pensamiento con razonamiento cadena de pensamiento.
+Ambos modelos incluidos actualmente anuncian compatibilidad de uso de transmisión en el origen.
 
 Obtenga su clave API en [platform.deepseek.com](https://platform.deepseek.com/api_keys).

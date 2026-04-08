@@ -15,11 +15,11 @@ OpenClaw utiliza un directorio de espacio de trabajo de agente único (`agents.d
 
 Recomendado: utilice `openclaw setup` para crear `~/.openclaw/openclaw.json` si falta e inicialice los archivos del espacio de trabajo.
 
-Guía completa del diseño del espacio de trabajo + copia de seguridad: [Espacio de trabajo del agente](/en/concepts/agent-workspace)
+Diseño completo del espacio de trabajo + guía de copia de seguridad: [Agente espacio de trabajo](/en/concepts/agent-workspace)
 
-Si `agents.defaults.sandbox` está habilitado, las sesiones que no sean principales pueden anular esto con
-espacios de trabajo por sesión bajo `agents.defaults.sandbox.workspaceRoot` (consulte
-[Configuración de la pasarela](/en/gateway/configuration)).
+Si `agents.defaults.sandbox` está habilitado, las sesiones que no son principales pueden anular esto con
+espacios de trabajo por sesión bajo `agents.defaults.sandbox.workspaceRoot` (ver
+[Configuración de puerta de enlace](/en/gateway/configuration)).
 
 ## Archivos de inicio (inyectados)
 
@@ -52,67 +52,74 @@ Las herramientas principales (read/exec/edit/write y herramientas del sistema re
 
 ## Habilidades
 
-OpenClaw carga habilidades desde tres ubicaciones (el espacio de trabajo prevalece en caso de conflicto de nombres):
+OpenClaw carga habilidades desde estas ubicaciones (primera la máxima precedencia):
 
-- Incluidas (enviadas con la instalación)
-- Administradas locales: `~/.openclaw/skills`
 - Espacio de trabajo: `<workspace>/skills`
+- Habilidades de agente del proyecto: `<workspace>/.agents/skills`
+- Habilidades de agente personal: `~/.agents/skills`
+- Gestionado/local: `~/.openclaw/skills`
+- Incluido (enviado con la instalación)
+- Carpetas de habilidades adicionales: `skills.load.extraDirs`
 
-Las habilidades pueden estar restringidas por configuración/entorno (ver `skills` en [Configuración de la pasarela](/en/gateway/configuration)).
+Las habilidades pueden ser restringidas por configuración/entorno (ver `skills` en [Configuración de puerta de enlace](/en/gateway/configuration)).
 
-## Límites del tiempo de ejecución
+## Límites de tiempo de ejecución
 
 El tiempo de ejecución del agente integrado se basa en el núcleo del agente Pi (modelos, herramientas y
-flujo de instrucciones). La gestión de sesiones, el descubrimiento, el cableado de herramientas y la entrega
-de canales son capas propiedad de OpenClaw sobre ese núcleo.
+conducto de avisos). La gestión de sesiones, descubrimiento, cableado de herramientas y entrega de
+canal son capas propiedad de OpenClaw encima de ese núcleo.
 
 ## Sesiones
 
-Las transcripciones de las sesiones se almacenan como JSONL en:
+Las transcripciones de sesión se almacenan como JSONL en:
 
 - `~/.openclaw/agents/<agentId>/sessions/<SessionId>.jsonl`
 
 El ID de sesión es estable y es elegido por OpenClaw.
-No se leen las carpetas de sesión heredadas de otras herramientas.
+Las carpetas de sesión heredadas de otras herramientas no se leen.
 
-## Dirección durante la transmisión
+## Dirección mientras se transmite
 
 Cuando el modo de cola es `steer`, los mensajes entrantes se inyectan en la ejecución actual.
-La dirección en cola se entrega **después de que el turno del asistente actual termina
-de ejecutar sus llamadas a herramientas**, antes de la siguiente llamada al LLM. La dirección ya no omite
+La dirección en cola se entrega **después de que el turno del asistente actual termine
+de ejecutar sus llamadas a herramientas**, antes de la siguiente llamada LLM. La dirección ya no omite
 las llamadas a herramientas restantes del mensaje del asistente actual; en su lugar, inyecta el mensaje
 en cola en el siguiente límite del modelo.
 
-Cuando el modo de cola es `followup` o `collect`, los mensajes entrantes se retienen hasta que
-termina el turno actual, luego comienza un nuevo turno de agente con las cargas útiles en cola. Consulte
-[Cola](/en/concepts/queue) para conocer el comportamiento del modo + rebote/ límite.
+Cuando el modo de cola es `followup` o `collect`, los mensajes entrantes se mantienen hasta que
+termina el turno actual, luego comienza un nuevo turno de agente con las cargas útiles en cola. Vea
+[Cola](/en/concepts/queue) para el modo + comportamiento de rebote/limite.
 
-La transmisión en bloque envía bloques completos del asistente tan pronto como terminan; está
-desactivada por defecto (`agents.defaults.blockStreamingDefault: "off"`).
-Ajuste el límite a través de `agents.defaults.blockStreamingBreak` (`text_end` vs `message_end`; por defecto es text_end).
+La transmisión en bloques envía bloques completos del asistente tan pronto como terminan; está
+**desactivada por defecto** (`agents.defaults.blockStreamingDefault: "off"`).
+Ajuste el límite mediante `agents.defaults.blockStreamingBreak` (`text_end` vs `message_end`; por defecto es text_end).
 Controle la fragmentación de bloques suaves con `agents.defaults.blockStreamingChunk` (por defecto
-800–1200 caracteres; prefiere saltos de párrafo, luego nuevas líneas; oraciones al final).
+800–1200 caracteres; prefiere saltos de párrafo, luego saltos de línea; oraciones al final).
 Fusione los fragmentos transmitidos con `agents.defaults.blockStreamingCoalesce` para reducir
-el spam de una sola línea (fusión basada en inactividad antes del envío). Los canales que no sean Telegram requieren
-`*.blockStreaming: true` explícito para habilitar las respuestas en bloque.
+el spam de una sola línea (fusión basada inactividad antes de enviar). Los canales que no sean Telegram requieren
+un `*.blockStreaming: true` explícito para habilitar las respuestas en bloque.
 Los resúmenes detallados de herramientas se emiten al inicio de la herramienta (sin rebote); La interfaz de control
-transmite la salida de la herramienta a través de eventos del agente cuando está disponible.
+transmite la salida de la herramienta a través de eventos del agente cuando están disponibles.
 Más detalles: [Streaming + chunking](/en/concepts/streaming).
 
 ## Referencias de modelo
 
-Las referencias de modelo en la configuración (por ejemplo `agents.defaults.model` y `agents.defaults.models`) se analizan dividiendo por el **primer** `/`.
+Las referencias de modelo en la configuración (por ejemplo `agents.defaults.model` y `agents.defaults.models`) se analizan dividiendo en el **primer** `/`.
 
 - Use `provider/model` al configurar modelos.
-- Si el ID del modelo en sí contiene `/` (estilo OpenRouter), incluya el prefijo del proveedor (ejemplo: `openrouter/moonshotai/kimi-k2`).
-- Si omite el proveedor, OpenClaw trata la entrada como un alias o un modelo para el **proveedor predeterminado** (solo funciona cuando no hay `/` en el ID del modelo).
+- Si el ID del modelo mismo contiene `/` (estilo OpenRouter), incluya el prefijo del proveedor (ejemplo: `openrouter/moonshotai/kimi-k2`).
+- Si omite el proveedor, OpenClaw intenta primero un alias, luego una coincidencia única
+  de proveedor configurado para ese ID de modelo exacto, y solo entonces recurre
+  al proveedor predeterminado configurado. Si ese proveedor ya no expone el
+  modelo predeterminado configurado, OpenClaw recurre al primer proveedor/modelo
+  configurado en lugar de mostrar un predeterminado obsoleto de proveedor eliminado.
 
 ## Configuración (mínima)
 
 Como mínimo, configure:
 
 - `agents.defaults.workspace`
-- `channels.whatsapp.allowFrom` (muy recomendado)
+- `channels.whatsapp.allowFrom` (altamente recomendado)
 
 ---
 

@@ -8,7 +8,7 @@ title: "个人助理设置"
 
 # 使用 OpenClaw 构建个人助手
 
-OpenClaw 是一个自托管网关，用于将 WhatsApp、Telegram、Discord、iMessage 等连接到 AI 代理。本指南介绍“个人助手”设置：一个专用的 WhatsApp 号码，其行为类似于您的全天候 AI 助手。
+OpenClaw 是一个自托管网关，将 Discord、Google Chat、iMessage、Matrix、Microsoft Teams、Signal、Slack、Telegram、WhatsApp、Zalo 等连接到 AI 代理。本指南介绍“个人助理”设置：一个专用的 WhatsApp 号码，其行为类似于您全天候开启的 AI 助理。
 
 ## ⚠️ 安全第一
 
@@ -16,7 +16,7 @@ OpenClaw 是一个自托管网关，用于将 WhatsApp、Telegram、Discord、iM
 
 - 在您的机器上运行命令（取决于您的工具策略）
 - 在您的工作区中读取/写入文件
-- 通过 WhatsApp/Telegram/Discord/Mattermost（插件）发回消息
+- 通过 WhatsApp/Telegram/Discord/Mattermost 及其他捆绑渠道发回消息
 
 开始时保持保守：
 
@@ -26,7 +26,7 @@ OpenClaw 是一个自托管网关，用于将 WhatsApp、Telegram、Discord、iM
 
 ## 先决条件
 
-- 已安装并完成 OpenClaw 的入驻 — 如果尚未完成此操作，请参阅 [入门指南](/en/start/getting-started)
+- OpenClaw 已安装并完成新手引导 — 如果您尚未完成此操作，请参阅 [入门指南](/en/start/getting-started)
 - 用于助手的第二个电话号码（SIM/eSIM/预付费）
 
 ## 双手机设置（推荐）
@@ -59,28 +59,29 @@ openclaw gateway --port 18789
 
 ```json5
 {
+  gateway: { mode: "local" },
   channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
 现在从您的白名单手机向助手号码发送消息。
 
-入职完成后，我们会自动打开仪表板并打印一个干净的（非令牌化的）链接。如果提示进行身份验证，请将 `gateway.auth.token` 中的令牌粘贴到 Control UI 设置中。如需稍后重新打开：`openclaw dashboard`。
+当新手引导完成时，我们会自动打开仪表板并打印一个干净的（非令牌化）链接。如果提示进行身份验证，请将配置的共享密钥粘贴到 Control UI 设置中。新手引导默认使用令牌 (`gateway.auth.token`)，但如果您将 `gateway.auth.mode` 切换为 `password`，密码身份验证也可以使用。稍后重新打开：`openclaw dashboard`。
 
 ## 给智能体一个工作区 (AGENTS)
 
 OpenClaw 从其工作区目录读取操作指令和“记忆”。
 
-默认情况下，OpenClaw 使用 `~/.openclaw/workspace` 作为代理工作区，并会在设置/首次代理运行时自动创建它（以及初始的 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`）。`BOOTSTRAP.md` 仅在工作区是全新时创建（删除后不应再出现）。`MEMORY.md` 是可选的（不会自动创建）；如果存在，它会在正常会话中加载。子代理会话仅注入 `AGENTS.md` 和 `TOOLS.md`。
+默认情况下，OpenClaw 使用 `~/.openclaw/workspace` 作为代理工作区，并将在设置/首次代理运行时自动创建它（以及初始的 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`）。仅当工作区是全新时才会创建 `BOOTSTRAP.md`（删除它后不应重新出现）。`MEMORY.md` 是可选的（不会自动创建）；如果存在，则会为普通会话加载它。子代理会话仅注入 `AGENTS.md` 和 `TOOLS.md`。
 
-提示：将此文件夹视为 OpenClaw 的“记忆”并将其设为 git 仓库（最好是私有的），以便您的 `AGENTS.md` + 记忆文件得到备份。如果安装了 git，全新的工作区将自动初始化。
+提示：将此文件夹视为 OpenClaw 的“记忆”并将其设为 git 仓库（最好是私有的），以便备份您的 `AGENTS.md` + 记忆文件。如果安装了 git，全新工作区将自动初始化。
 
 ```bash
 openclaw setup
 ```
 
-完整的工作区布局 + 备份指南：[Agent workspace](/en/concepts/agent-workspace)
-记忆工作流：[Memory](/en/concepts/memory)
+完整的工作区布局 + 备份指南：[代理工作区](/en/concepts/agent-workspace)
+记忆工作流：[记忆](/en/concepts/memory)
 
 可选：使用 `agents.defaults.workspace` 选择不同的工作区（支持 `~`）。
 
@@ -106,7 +107,7 @@ openclaw setup
 
 OpenClaw 默认使用良好的助手设置，但您通常需要调整：
 
-- `SOUL.md` 中的 persona/instructions
+- persona/instructions 位于 [`SOUL.md`](/en/concepts/soul)
 - thinking 默认值（如果需要）
 - heartbeats（一旦您信任它）
 
@@ -151,20 +152,20 @@ OpenClaw 默认使用良好的助手设置，但您通常需要调整：
 ## 会话和记忆
 
 - 会话文件：`~/.openclaw/agents/<agentId>/sessions/{{SessionId}}.jsonl`
-- 会话元数据（令牌使用情况、最后路由等）：`~/.openclaw/agents/<agentId>/sessions/sessions.json`（旧版：`~/.openclaw/sessions/sessions.json`）
-- `/new` 或 `/reset` 为该聊天开启一个新会话（可通过 `resetTriggers` 配置）。如果单独发送，代理会回复一句简短的问候以确认重置。
+- 会话元数据（令牌使用量、最近路由等）：`~/.openclaw/agents/<agentId>/sessions/sessions.json`（旧版：`~/.openclaw/sessions/sessions.json`）
+- `/new` 或 `/reset` 为该聊天开始一个新的会话（可通过 `resetTriggers` 配置）。如果单独发送，代理会回复简短的问候以确认重置。
 - `/compact [instructions]` 压缩会话上下文并报告剩余的上下文预算。
 
 ## Heartbeats（主动模式）
 
-默认情况下，OpenClaw 每 30 分钟运行一次心跳，提示为：
+默认情况下，OpenClaw 每 30 分钟使用以下提示运行一次心跳：
 `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
 设置 `agents.defaults.heartbeat.every: "0m"` 以禁用。
 
-- 如果 `HEARTBEAT.md` 存在但实际上为空（仅包含空行和像 `# Heading` 这样的 markdown 标题），OpenClaw 会跳过该次心跳运行以节省 API 调用。
+- 如果 `HEARTBEAT.md` 存在但实际上是空的（仅包含空行和像 `# Heading` 这样的 markdown 标题），OpenClaw 会跳过心跳运行以节省 API 调用。
 - 如果文件丢失，心跳仍会运行，模型会决定做什么。
-- 如果代理回复 `HEARTBEAT_OK`（可选带有短填充；请参阅 `agents.defaults.heartbeat.ackMaxChars`），OpenClaw 将阻止该次心跳的出站传递。
-- 默认情况下，允许向 私信 风格的 `user:<id>` 目标传递心跳。设置 `agents.defaults.heartbeat.directPolicy: "block"` 以在保持心跳运行处于活动状态的同时，阻止直接目标的传递。
+- 如果代理回复 `HEARTBEAT_OK`（可选带有短填充；参见 `agents.defaults.heartbeat.ackMaxChars`），OpenClaw 将抑制该心跳的出站投递。
+- 默认情况下，允许向 `user:<id>` 目标进行私信样式的心跳投递。设置 `agents.defaults.heartbeat.directPolicy: "block"` 以在保持心跳运行处于活动状态的同时抑制直接目标投递。
 - 心跳运行完整的代理回合——间隔越短，消耗的 token 越多。
 
 ```json5
@@ -179,9 +180,9 @@ OpenClaw 默认使用良好的助手设置，但您通常需要调整：
 
 入站附件（图像/音频/文档）可以通过模板展示给您的命令：
 
-- `{{MediaPath}}` (本地临时文件路径)
-- `{{MediaUrl}}` (伪 URL)
-- `{{Transcript}}` (如果启用了音频转录)
+- `{{MediaPath}}`（本地临时文件路径）
+- `{{MediaUrl}}`（伪 URL）
+- `{{Transcript}}`（如果启用了音频转录）
 
 来自代理的出站附件：在单独的一行中包含 `MEDIA:<path-or-url>`（无空格）。示例：
 
@@ -194,8 +195,8 @@ OpenClaw 提取这些内容，并将它们作为媒体与文本一起发送。
 
 本地路径行为遵循与 agent 相同的文件读取信任模型：
 
-- 如果 `tools.fs.workspaceOnly` 为 `true`，出站 `MEDIA:` 本地路径仍将限制在 OpenClaw 临时根目录、媒体缓存、agent 工作区路径和沙盒生成的文件中。
-- 如果 `tools.fs.workspaceOnly` 为 `false`，出站 `MEDIA:` 可以使用 agent 已被允许读取的本地主机文件。
+- 如果 `tools.fs.workspaceOnly` 为 `true`，出站 `MEDIA:` 本地路径将限制在 OpenClaw 临时根目录、媒体缓存、代理工作区路径和沙盒生成的文件内。
+- 如果 `tools.fs.workspaceOnly` 为 `false`，出站 `MEDIA:` 可以使用代理已被允许读取的宿主机本地文件。
 - 本地主机发送仍然仅允许媒体和安全文档类型（图像、音频、视频、PDF 和 Office 文档）。纯文本和类似机密的文件不被视为可发送的媒体。
 
 这意味着，当您的文件系统策略已允许读取工作区之外生成的图像/文件时，现在可以发送这些文件，而无需重新开放任意主机文本附件的外泄风险。
@@ -205,17 +206,17 @@ OpenClaw 提取这些内容，并将它们作为媒体与文本一起发送。
 ```bash
 openclaw status          # local status (creds, sessions, queued events)
 openclaw status --all    # full diagnosis (read-only, pasteable)
-openclaw status --deep   # adds gateway health probes (Telegram + Discord)
-openclaw health --json   # gateway health snapshot (WS)
+openclaw status --deep   # asks the gateway for a live health probe with channel probes when supported
+openclaw health --json   # gateway health snapshot (WS; default can return a fresh cached snapshot)
 ```
 
-日志位于 `/tmp/openclaw/` 下（默认为：`openclaw-YYYY-MM-DD.log`）。
+日志位于 `/tmp/openclaw/` 下（默认：`openclaw-YYYY-MM-DD.log`）。
 
 ## 后续步骤
 
 - WebChat：[WebChat](/en/web/webchat)
-- Gateway(网关) 运维：[Gateway(网关) runbook](/en/gateway)
-- Cron + 唤醒：[Cron jobs](/en/automation/cron-jobs)
+- Gateway(网关) 运维：[Gateway(网关) 运维手册](/en/gateway)
+- Cron + 唤醒：[Cron 作业](/en/automation/cron-jobs)
 - macOS 菜单栏伴侣：[OpenClaw macOS app](/en/platforms/macos)
 - iOS 节点应用：[iOS app](/en/platforms/ios)
 - Android 节点应用：[Android app](/en/platforms/android)

@@ -275,7 +275,7 @@ OpenClaw 無法自動復原：
 - 含義：儲存的金鑰與目前的 Matrix 備份不符。
 - 處理方式：使用正確的金鑰重新執行 `openclaw matrix verify device "<your-recovery-key>"`。
 
-如果您接受失去無法恢復的舊加密歷史記錄，您可以使用 `openclaw matrix verify backup reset --yes` 來重設目前的備份基準線。
+如果您接受無法復原的舊加密歷史遺失，您可以改用 `openclaw matrix verify backup reset --yes` 重設目前的備份基準。當儲存的備份金鑰損壞時，該重設也可能會重建秘密儲存區，以便新的備份金鑰在重啟後能正確載入。
 
 `Backup trust chain is not verified on this device. Re-run 'openclaw matrix verify device <key>'.`
 

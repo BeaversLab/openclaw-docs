@@ -10,7 +10,7 @@ read_when:
 
 Les compétences enseignent à l'agent comment et quand utiliser les outils. Chaque compétence est un répertoire contenant un fichier `SKILL.md` avec des en-têtes YAML et des instructions markdown.
 
-Pour savoir comment les compétences sont chargées et priorisées, consultez [Compétences](/en/tools/skills).
+Pour savoir comment les compétences sont chargées et priorisées, consultez [Skills](/en/tools/skills).
 
 ## Créez votre première compétence
 
@@ -97,20 +97,22 @@ L'en-tête YAML prend en charge ces champs :
 - **Soyez concis** — indiquez au modèle _quoi_ faire, pas comment être une IA
 - **Sécurité avant tout** — si votre skill utilise `exec`, assurez-vous que les invites ne permettent pas l'injection de commandes arbitraires à partir d'une entrée non fiable
 - **Testez localement** — utilisez `openclaw agent --message "..."` pour tester avant de partager
-- **Utilisez ClawHub** — parcourez et contribuez aux skills sur [ClawHub](https://clawhub.com)
+- **Utilisez ClawHub** — parcourez et contribuez aux compétences sur [ClawHub](https://clawhub.ai)
 
 ## Emplacement des skills
 
-| Emplacement                   | Priorité       | Portée                          |
-| ----------------------------- | -------------- | ------------------------------- |
-| `\<workspace\>/skills/`       | La plus élevée | Par agent                       |
-| `~/.openclaw/skills/`         | Moyenne        | Partagé (tous les agents)       |
-| Intégré (livré avec OpenClaw) | La plus basse  | Global                          |
-| `skills.load.extraDirs`       | La plus basse  | Dossiers partagés personnalisés |
+| Emplacement                     | Priorité       | Portée                          |
+| ------------------------------- | -------------- | ------------------------------- |
+| `\<workspace\>/skills/`         | La plus élevée | Par agent                       |
+| `\<workspace\>/.agents/skills/` | Élevé          | Agent par espace de travail     |
+| `~/.agents/skills/`             | Moyen          | Profil d'agent partagé          |
+| `~/.openclaw/skills/`           | Moyen          | Partagé (tous les agents)       |
+| Groupé (livré avec OpenClaw)    | Faible         | Global                          |
+| `skills.load.extraDirs`         | Le plus faible | Dossiers partagés personnalisés |
 
 ## Connexes
 
-- [Référence des Skills](/en/tools/skills) — chargement, priorité et règles de filtrage
-- [Configuration des Skills](/en/tools/skills-config) — schéma de configuration `skills.*`
-- [ClawHub](/en/tools/clawhub) — registre public de skills
-- [Création de plugins](/en/plugins/building-plugins) — les plugins peuvent fournir des skills
+- [Référence des compétences](/en/tools/skills) — chargement, priorité et règles de blocage
+- [Configuration des compétences](/en/tools/skills-config) — schéma de configuration `skills.*`
+- [ClawHub](/en/tools/clawhub) — registre public de compétences
+- [Création de plugins](/en/plugins/building-plugins) — les plugins peuvent fournir des compétences

@@ -9,16 +9,16 @@ title: "Búsqueda de Gemini"
 
 # Búsqueda de Gemini
 
-OpenClaw es compatible con los modelos de Gemini con
-[fundamentación en Google Search](https://ai.google.dev/gemini-api/docs/grounding) integrada,
-que devuelve respuestas sintetizadas por IA respaldadas por resultados en vivo de Google Search con
-citas.
+OpenClaw admite modelos Gemini con
+[fundamentación en Google Search](https://ai.google.dev/gemini-api/docs/grounding)
+integrada, que devuelve respuestas sintetizadas por IA respaldadas por
+resultados en vivo de Google Search con citas.
 
 ## Obtener una clave de API
 
 <Steps>
   <Step title="Crear una clave">
-    Vaya a [Google AI Studio](https://aistudio.google.com/apikey) y cree una
+    Ve a [Google AI Studio](https://aistudio.google.com/apikey) y crea una
     clave de API.
   </Step>
   <Step title="Guardar la clave">
@@ -75,14 +75,19 @@ citas en línea. Los resultados incluyen tanto la respuesta sintetizada como las
 
 ## Parámetros compatibles
 
-La búsqueda de Gemini admite los parámetros estándar `query` y `count`.
-Los filtros específicos del proveedor como `country`, `language`, `freshness` y
+La búsqueda de Gemini admite `query`.
+
+Se acepta `count` para la compatibilidad compartida con `web_search`, pero la fundamentación de Gemini
+todavía devuelve una respuesta sintetizada con citas en lugar de una lista de N
+resultados.
+
+Filtros específicos del proveedor como `country`, `language`, `freshness` y
 `domain_filter` no son compatibles.
 
-## Selección del modelo
+## Selección de modelo
 
-El modelo predeterminado es `gemini-2.5-flash` (rápido y rentable). Se puede utilizar cualquier modelo de Gemini
-que admita la fundamentación mediante
+El modelo predeterminado es `gemini-2.5-flash` (rápido y rentable). Se puede utilizar cualquier modelo
+Gemini que admita fundamentación a través de
 `plugins.entries.google.config.webSearch.model`.
 
 ## Relacionado

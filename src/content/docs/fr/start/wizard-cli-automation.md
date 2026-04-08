@@ -1,10 +1,10 @@
 ---
-summary: "Scripted onboarding and agent setup for the OpenClaw CLI"
+summary: "Onboarding scripté et configuration de l'agent pour la CLI OpenClawCLI"
 read_when:
   - You are automating onboarding in scripts or CI
   - You need non-interactive examples for specific providers
-title: "CLI Automation"
-sidebarTitle: "CLI automation"
+title: "Automatisation CLI"
+sidebarTitle: "Automatisation CLI"
 ---
 
 # CLI Automation
@@ -28,13 +28,13 @@ openclaw onboard --non-interactive \
   --skip-skills
 ```
 
-Ajoutez `--json` pour un résumé lisible par machine.
+Ajoutez `--json` pour obtenir un résumé lisible par machine.
 
-Utilisez `--secret-input-mode ref` pour stocker les références basées sur des variables d'environnement dans les profils d'authentification au lieu des valeurs en texte clair.
-Une sélection interactive entre les références d'environnement et les références de fournisseur configurées (`file` ou `exec`) est disponible dans le flux d'onboarding.
+Utilisez `--secret-input-mode ref` pour stocker les références soutenues par des variables d'environnement dans les profils d'authentification au lieu des valeurs en clair.
+La sélection interactive entre les références d'environnement et les références de provider configurées (`file` ou `exec`) est disponible dans le flux d'onboarding.
 
-En mode `ref` non interactif, les env vars de provider doivent être définies dans l'environnement du processus.
-Le passage de flags de clé en ligne sans la env var correspondante échoue désormais rapidement.
+En mode non interactif `ref`, les variables d'environnement du provider doivent être définies dans l'environnement du processus.
+Le passage de drapeaux de clé en ligne sans la variable d'environnement correspondante échoue désormais rapidement.
 
 Exemple :
 
@@ -49,6 +49,16 @@ openclaw onboard --non-interactive \
 ## Exemples spécifiques au provider
 
 <AccordionGroup>
+  <Accordion title="Anthropic API key example">
+    ```bash
+    openclaw onboard --non-interactive \
+      --mode local \
+      --auth-choice apiKey \
+      --anthropic-api-key "$ANTHROPIC_API_KEY" \
+      --gateway-port 18789 \
+      --gateway-bind loopback
+    ```
+  </Accordion>
   <Accordion title="Gemini example">
     ```bash
     openclaw onboard --non-interactive \
@@ -121,7 +131,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="OpenCode example">
+  <Accordion title="Exemple de code ouvert">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -130,9 +140,9 @@ openclaw onboard --non-interactive \
       --gateway-port 18789 \
       --gateway-bind loopback
     ```
-    Remplacez par `--auth-choice opencode-go --opencode-go-api-key "$OPENCODE_API_KEY"` pour le catalogue Go.
+    Basculez vers `--auth-choice opencode-go --opencode-go-api-key "$OPENCODE_API_KEY"` pour le catalogue Go.
   </Accordion>
-  <Accordion title="Ollama example">
+  <Accordion title="Exemple Ollama">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -143,7 +153,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Custom provider example">
+  <Accordion title="Exemple de provider personnalisé">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -157,9 +167,9 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` est optionnel. Si omis, l'onboarding vérifie `CUSTOM_API_KEY`.
+    `--custom-api-key` est facultatif. S'il est omis, l'onboarding vérifie `CUSTOM_API_KEY`.
 
-    Variante en mode ref :
+    Variante en mode référence :
 
     ```bash
     export CUSTOM_API_KEY="your-key"
@@ -175,20 +185,23 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    Dans ce mode, l'onboarding stocke `apiKey` sous la forme `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
+    Dans ce mode, l'onboarding stocke `apiKey` sous forme de `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
 
   </Accordion>
 </AccordionGroup>
 
+Le setup-token Anthropic est à nouveau disponible en tant que chemin d'onboarding hérité/manuel.
+Utilisez-le en sachant que Anthropic a indiqué aux utilisateurs OpenClaw que le chemin de connexion Claude OpenClaw nécessite une **utilisation supplémentaire**. Pour la production, préférez une clé Anthropic API.
+
 ## Ajouter un autre agent
 
-Utilisez `openclaw agents add <name>` pour créer un agent distinct avec son propre espace de travail,
+Utilisez `openclaw agents add <name>` pour créer un agent séparé avec son propre espace de travail,
 sessions et profils d'authentification. L'exécution sans `--workspace` lance l'assistant.
 
 ```bash
 openclaw agents add work \
   --workspace ~/.openclaw/workspace-work \
-  --model openai/gpt-5.2 \
+  --model openai/gpt-5.4 \
   --bind whatsapp:biz \
   --non-interactive \
   --json
@@ -203,11 +216,11 @@ Ce qu'il définit :
 Notes :
 
 - Les espaces de travail par défaut suivent `~/.openclaw/workspace-<agentId>`.
-- Ajoutez `bindings` pour router les messages entrants (l'assistant peut le faire).
-- Indicateurs non interactifs : `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
+- Ajoutez `bindings` pour acheminer les messages entrants (l'assistant peut le faire).
+- Options non interactives : `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
 
 ## Documentation connexe
 
-- Hub d'onboarding : [Onboarding (CLI)](/en/start/wizard)
+- Hub d'intégration : [Onboarding (CLI)](/en/start/wizard)
 - Référence complète : [CLI Setup Reference](/en/start/wizard-cli-reference)
 - Référence de la commande : [`openclaw onboard`](/en/cli/onboard)

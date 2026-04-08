@@ -10,7 +10,9 @@ title: "hooks"
 
 管理代理 hooks（針對 `/new`、`/reset` 和 Gateway 啟動等指令的事件驅動自動化）。
 
-相關連結：
+執行 `openclaw hooks` 但不指定子命令，相當於執行 `openclaw hooks list`。
+
+相關：
 
 - Hooks：[Hooks](/en/automation/hooks)
 - Plugin hooks：[Plugin hooks](/en/plugins/architecture#provider-runtime-hooks)
@@ -21,15 +23,15 @@ title: "hooks"
 openclaw hooks list
 ```
 
-列出從工作區、受管理、額外和套件目錄中發現的所有 hooks。
+列出從工作區 (workspace)、受管 (managed)、額外 (extra) 和內建 (bundled) 目錄中發現的所有 hooks。
 
 **選項：**
 
-- `--eligible`：僅顯示符合資格的 hooks（符合需求）
-- `--json`：以 JSON 格式輸出
+- `--eligible`：僅顯示符合資格的 hooks (需求已滿足)
+- `--json`：輸出為 JSON 格式
 - `-v, --verbose`：顯示詳細資訊，包括缺失的需求
 
-**範例輸出：**
+**輸出示例：**
 
 ```
 Hooks (4/4 ready)
@@ -41,21 +43,21 @@ Ready:
   💾 session-memory ✓ - Save session context to memory when /new or /reset command is issued
 ```
 
-**範例（詳細模式）：**
+**示例 (詳細模式)：**
 
 ```bash
 openclaw hooks list --verbose
 ```
 
-顯示不符合資格之 hooks 的缺失需求。
+顯示不符合資格的 hooks 之缺失需求。
 
-**範例 (JSON)：**
+**示例 (JSON)：**
 
 ```bash
 openclaw hooks list --json
 ```
 
-回傳結構化 JSON 以供程式使用。
+傳回結構化的 JSON 以供程式設計使用。
 
 ## 取得 Hook 資訊
 
@@ -67,13 +69,13 @@ openclaw hooks info <name>
 
 **引數：**
 
-- `<name>`：Hook 名稱（例如 `session-memory`）
+- `<name>`：Hook 名稱或 hook 金鑰 (例如 `session-memory`)
 
 **選項：**
 
-- `--json`：以 JSON 格式輸出
+- `--json`：輸出為 JSON 格式
 
-**範例：**
+**示例：**
 
 ```bash
 openclaw hooks info session-memory
@@ -97,19 +99,19 @@ Requirements:
   Config: ✓ workspace.dir
 ```
 
-## 檢查 Hooks 資格
+## 檢查 Hook 資格
 
 ```bash
 openclaw hooks check
 ```
 
-顯示 hook 資格狀態的摘要（準備就緒與未就緒的數量）。
+顯示 hook 資格狀態的摘要 (有多少已準備就緒與未準備就緒)。
 
 **選項：**
 
-- `--json`：以 JSON 格式輸出
+- `--json`：輸出為 JSON 格式
 
-**範例輸出：**
+**輸出示例：**
 
 ```
 Hooks Status
@@ -125,15 +127,15 @@ Not ready: 0
 openclaw hooks enable <name>
 ```
 
-透過將特定 hook 新增至您的設定 (`~/.openclaw/config.json`) 來啟用它。
+透過將特定 hook 新增至您的設定來啟用它 (預設為 `~/.openclaw/openclaw.json`)。
 
-**注意：** 工作區 hooks 預設為停用，直到在此處或設定中啟用。由外掛程式管理的 hooks 會在 `openclaw hooks list` 中顯示 `plugin:<id>`，且無法在此處啟用/停用。請改為啟用/停用外掛程式。
+**注意：** 工作區 hooks 預設為停用，直到在此處或在設定中啟用為止。由外掛程式管理的 hooks 在 `openclaw hooks list` 中會顯示 `plugin:<id>`，且無法在此處啟用/停用。請改為啟用/停用外掛程式。
 
 **引數：**
 
-- `<name>`：Hook 名稱（例如 `session-memory`）
+- `<name>`：Hook 名稱 (例如 `session-memory`)
 
-**範例：**
+**示例：**
 
 ```bash
 openclaw hooks enable session-memory
@@ -145,18 +147,18 @@ openclaw hooks enable session-memory
 ✓ Enabled hook: 💾 session-memory
 ```
 
-**執行動作：**
+**運作方式：**
 
 - 檢查 hook 是否存在且符合資格
 - 更新您設定中的 `hooks.internal.entries.<name>.enabled = true`
 - 將設定儲存至磁碟
 
-如果 hook 來自 `<workspace>/hooks/`，則必須執行此選用步驟，
+如果 hook 來自 `<workspace>/hooks/`，則必須執行此選擇加入步驟，
 Gateway 才會載入它。
 
 **啟用後：**
 
-- 重新啟動 gateway 以便重新載入 hooks（在 macOS 上重新啟動選單列應用程式，或在開發中重新啟動您的 gateway 程序）。
+- 重新啟動 gateway 以重新載入 hooks (在 macOS 上重新啟動選單列應用程式，或在開發中重新啟動您的 gateway 處理程序)。
 
 ## 停用 Hook
 
@@ -168,9 +170,9 @@ openclaw hooks disable <name>
 
 **引數：**
 
-- `<name>`：Hook 名稱（例如 `command-logger`）
+- `<name>`：Hook 名稱 (例如 `command-logger`)
 
-**範例：**
+**示例：**
 
 ```bash
 openclaw hooks disable command-logger
@@ -184,7 +186,12 @@ openclaw hooks disable command-logger
 
 **停用後：**
 
-- 重新啟動 gateway 以便重新載入 hooks
+- 重新啟動閘道以便重新載入 hooks
+
+## 備註
+
+- `openclaw hooks list --json`、`info --json` 和 `check --json` 會將結構化 JSON 直接寫入標準輸出。
+- 外掛程式管理的 hooks 無法在此啟用或停用；請改為啟用或停用擁有該 hook 的外掛程式。
 
 ## 安裝 Hook 套件
 
@@ -194,27 +201,26 @@ openclaw plugins install <package> --pin  # pin version
 openclaw plugins install <path>           # local path
 ```
 
-透過統一的外掛安裝程式安裝 hook 套件。
+透過統一的外掛程式安裝程式安裝 hook 套件。
 
-`openclaw hooks install` 仍作為相容性別名使用，但它會列印棄用警告並轉發至 `openclaw plugins install`。
+`openclaw hooks install` 仍可作為相容性別名使用，但它會列印棄用警告並轉發至 `openclaw plugins install`。
 
-Npm 規格僅限於 **registry-only**（套件名稱 + 可選的 **確切版本** 或
-dist-tag）。Git/URL/檔案規格和 semver 範圍會被拒絕。為了安全起見，相依性安裝會以 `--ignore-scripts` 執行。
+Npm 規格**僅限 registry**（套件名稱 + 可選的**確切版本**或 **dist-tag**）。會拒絕 Git/URL/檔案規格和 semver 範圍。相依性安裝會以 `--ignore-scripts` 執行以確保安全。
 
-裸規格和 `@latest` 會保持在穩定版本軌道。如果 npm 將其中任一解析為預發行版本，OpenClaw 會停止並要求您使用預發行標籤（例如 `@beta`/`@rc`）或確切的預發行版本明確選擇加入。
+裸規格和 `@latest` 會保持在穩定軌道上。如果 npm 將其中任一解析為 pre-release，OpenClaw 會停止並要求您使用 pre-release 標籤（例如 `@beta`/`@rc`）或確切的 pre-release 版本明確選擇加入。
 
 **功能說明：**
 
 - 將 hook 套件複製到 `~/.openclaw/hooks/<id>`
 - 在 `hooks.internal.entries.*` 中啟用已安裝的 hooks
-- 將安裝記錄在 `hooks.internal.installs` 下
+- 在 `hooks.internal.installs` 下記錄安裝
 
 **選項：**
 
-- `-l, --link`：連結本地目錄而不是複製（將其新增至 `hooks.internal.load.extraDirs`）
-- `--pin`：將 npm 安裝記錄為 `hooks.internal.installs` 中確切解析的 `name@version`
+- `-l, --link`：連結本機目錄而非複製（將其新增至 `hooks.internal.load.extraDirs`）
+- `--pin`：將 npm 安裝記錄為 `hooks.internal.installs` 中的確切已解析 `name@version`
 
-**支援的壓縮檔：** `.zip`, `.tgz`, `.tar.gz`, `.tar`
+**支援的壓縮檔：** `.zip`、`.tgz`、`.tar.gz`、`.tar`
 
 **範例：**
 
@@ -232,7 +238,7 @@ openclaw plugins install @openclaw/my-hook-pack
 openclaw plugins install -l ./my-hook-pack
 ```
 
-已連結的 hook 套件被視為來自操作員設定目錄的受控 hooks，而不是工作區 hooks。
+連結的 hook 套件會被視為來自操作員設定目錄的受管理 hooks，而不是工作區 hooks。
 
 ## 更新 Hook 套件
 
@@ -241,22 +247,24 @@ openclaw plugins update <id>
 openclaw plugins update --all
 ```
 
-透過統一的外掛更新程式更新受追蹤的基於 npm 的 hook 套件。
+透過統一的外掛程式更新程式更新追蹤的 npm 型 hook 套件。
 
-`openclaw hooks update` 仍作為相容性別名使用，但它會列印棄用警告並轉發至 `openclaw plugins update`。
+`openclaw hooks update` 仍可作為相容性別名使用，但它會列印棄用警告並轉發至 `openclaw plugins update`。
 
 **選項：**
 
-- `--all`：更新所有受追蹤的 hook 套件
+- `--all`：更新所有追蹤的 hook 套件
 - `--dry-run`：顯示將會變更的內容而不進行寫入
 
-當儲存的完整性雜湊存在，且取得的工件雜湊發生變更時，OpenClaw 會列印警告並在繼續之前要求確認。請使用全域 `--yes` 在 CI/非互動式執行中略過提示。
+當儲存的完整性雜湊值存在且獲取的工件雜湊值發生變化時，
+OpenClaw 會列印警告並在繼續之前要求確認。請使用
+全域 `--yes` 在 CI/非互動式執行中略過提示。
 
 ## 內建 Hooks
 
 ### session-memory
 
-當您發出 `/new` 或 `/reset` 時，將 session 上下文儲存至記憶體。
+當您發出 `/new` 或 `/reset` 時，將會話上下文儲存至記憶體。
 
 **啟用：**
 
@@ -270,7 +278,7 @@ openclaw hooks enable session-memory
 
 ### bootstrap-extra-files
 
-在 `agent:bootstrap` 期間插入額外的啟動檔案（例如 monorepo 本地的 `AGENTS.md` / `TOOLS.md`）。
+在 `agent:bootstrap` 期間注入額外的啟動檔案（例如 monorepo 本地的 `AGENTS.md` / `TOOLS.md`）。
 
 **啟用：**
 
@@ -282,7 +290,7 @@ openclaw hooks enable bootstrap-extra-files
 
 ### command-logger
 
-將所有指令事件記錄到集中式的稽核檔案。
+將所有指令事件記錄到集中式的稽核檔案中。
 
 **啟用：**
 
@@ -309,9 +317,9 @@ grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 
 ### boot-md
 
-當閘道啟動時（在通道啟動後）執行 `BOOT.md`。
+當閘道啟動時（頻道啟動後）執行 `BOOT.md`。
 
-**事件**：`gateway:startup`
+**事件**： `gateway:startup`
 
 **啟用**：
 

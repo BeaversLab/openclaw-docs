@@ -10,17 +10,17 @@ title: "Características"
 ## Destacados
 
 <Columns>
-  <Card title="Canales" icon="message-square">
-    WhatsApp, Telegram, Discord e iMessage con una sola puerta de enlace.
+  <Card title="Channels" icon="message-square">
+    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat y más con una única Gateway.
   </Card>
-  <Card title="Complementos" icon="plug">
-    Añade Mattermost y más con extensiones.
+  <Card title="Plugins" icon="plug">
+    Los plugins incluidos añaden Matrix, Nextcloud Talk, Nostr, Twitch, Zalo y más sin instalaciones separadas en las versiones actuales normales.
   </Card>
   <Card title="Enrutamiento" icon="route">
     Enrutamiento multiagente con sesiones aisladas.
   </Card>
-  <Card title="Medios" icon="image">
-    Imágenes, audio y documentos de entrada y salida.
+  <Card title="Media" icon="image">
+    Imágenes, audio, video, documentos y generación de imágenes/video.
   </Card>
   <Card title="Aplicaciones e IU" icon="monitor">
     Interfaz de usuario de control web y aplicación complementaria para macOS.
@@ -34,27 +34,30 @@ title: "Características"
 
 **Canales:**
 
-- WhatsApp, Telegram, Discord, iMessage (integrado)
-- Mattermost, Matrix, Microsoft Teams, Nostr y más (plugins)
+- Los canales integrados incluyen Discord, Google Chat, iMessage (heredado), IRC, Signal, Slack, Telegram, WebChat y WhatsApp
+- Los canales de plugins incluidos incluyen BlueBubbles para iMessage, Feishu, LINE, Matrix, Mattermost, Microsoft Teams, Nextcloud Talk, Nostr, QQ Bot, Synology Chat, Tlon, Twitch, Zalo y Zalo Personal
+- Los plugins de canales instalados opcionalmente por separado incluyen Llamada de voz y paquetes de terceros como WeChat
+- Los plugins de canales de terceros pueden ampliar la Gateway aún más, como WeChat
 - Soporte de chat grupal con activación basada en menciones
-- Seguridad de MD con listas de permitidos y emparejamiento
+- Seguridad en MD con listas de permitidos y emparejamiento
 
 **Agente:**
 
-- Tiempo de ejecución del agente integrado con transmisión de herramientas
-- Enrutamiento multiagente con sesiones aisladas por espacio de trabajo o remitente
-- Sesiones: los chats directos se contraen en `main` compartidos; los grupos están aislados
+- Runtime de agente integrado con transmisión de herramientas
+- Enrutamiento multi-agente con sesiones aisladas por espacio de trabajo o remitente
+- Sesiones: los chats directos colapsan en una `main` compartida; los grupos están aislados
 - Transmisión y fragmentación para respuestas largas
 
 **Autenticación y proveedores:**
 
 - Más de 35 proveedores de modelos (Anthropic, OpenAI, Google y más)
 - Autenticación de suscripción vía OAuth (ej. OpenAI Codex)
-- Soporte para proveedores personalizados y autohospedados (vLLM, SGLang, Ollama y cualquier punto de conexión compatible con OpenAI o Anthropic)
+- Soporte para proveedores personalizados y autoalojados (vLLM, SGLang, Ollama y cualquier punto final compatible con OpenAI o Anthropic)
 
 **Medios:**
 
-- Imágenes, audio, vídeo y documentos de entrada y salida
+- Entrada y salida de imágenes, audio, video y documentos
+- Capacidades compartidas de generación de imágenes y video
 - Transcripción de notas de voz
 - Conversión de texto a voz con múltiples proveedores
 
@@ -68,6 +71,6 @@ title: "Características"
 **Herramientas y automatización:**
 
 - Automatización del navegador, exec, sandboxing
-- Búsqueda web (Brave, Perplexity, Gemini, Grok, Kimi, Firecrawl)
-- Trabajos de Cron y programación de latidos
-- Habilidades, plugins y tuberías de flujo de trabajo (Lobster)
+- Búsqueda web (Brave, DuckDuckGo, Exa, Firecrawl, Gemini, Grok, Kimi, MiniMax Search, Ollama Web Search, Perplexity, SearXNG, Tavily)
+- Trabajos Cron y programación de latidos (heartbeat)
+- Habilidades, complementos y canalizaciones de flujo de trabajo (Lobster)

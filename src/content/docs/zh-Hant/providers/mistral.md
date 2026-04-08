@@ -28,7 +28,21 @@ openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
 }
 ```
 
-## 設定片段 (使用 Voxtral 的音訊轉錄)
+## 內建 LLM 目錄
+
+OpenClaw 目前隨附此捆綁的 Mistral 目錄：
+
+| 模型參照                         | 輸入       | 上下文  | 最大輸出 | 備註               |
+| -------------------------------- | ---------- | ------- | -------- | ------------------ |
+| `mistral/mistral-large-latest`   | 文字、圖像 | 262,144 | 16,384   | 預設模型           |
+| `mistral/mistral-medium-2508`    | 文字、圖像 | 262,144 | 8,192    | Mistral Medium 3.1 |
+| `mistral/mistral-small-latest`   | 文字、圖像 | 128,000 | 16,384   | 較小的多模態模型   |
+| `mistral/pixtral-large-latest`   | 文字、圖像 | 128,000 | 32,768   | Pixtral            |
+| `mistral/codestral-latest`       | 文字       | 256,000 | 4,096    | 程式碼撰寫         |
+| `mistral/devstral-medium-latest` | 文字       | 262,144 | 32,768   | Devstral 2         |
+| `mistral/magistral-small`        | 文字       | 128,000 | 40,000   | 具備推理能力       |
+
+## 配置片段 (使用 Voxtral 進行音訊轉錄)
 
 ```json5
 {

@@ -59,10 +59,11 @@ Puede anular el modo o el cadencia por sesión:
 
 ## Notas
 
-- El modo `message` no mostrará escritura para respuestas solo silenciosas (ej. el token `NO_REPLY`
-  utilizado para suprimir la salida).
-- `thinking` solo se activa si la ejecución transmite razonamiento (`reasoningLevel: "stream"`).
-  Si el modelo no emite deltas de razonamiento, la escritura no comenzará.
+- El modo `message` no mostrará que está escribiendo para respuestas solo silenciosas cuando todo
+  el payload es exactamente el token silencioso (por ejemplo `NO_REPLY` / `no_reply`,
+  coincidencia sin distinción de mayúsculas y minúsculas).
+- `thinking` solo se activa si la ejecución transmite el razonamiento (`reasoningLevel: "stream"`).
+  Si el modelo no emite deltas de razonamiento, no se iniciará la escritura.
 - Los latidos (heartbeats) nunca muestran escritura, independientemente del modo.
-- `typingIntervalSeconds` controla la **cadencia de actualización**, no la hora de inicio.
+- `typingIntervalSeconds` controla el **ritmo de actualización**, no la hora de inicio.
   El valor predeterminado es 6 segundos.

@@ -23,16 +23,16 @@ Ejecute un Gateway de OpenClaw persistente y siempre activo en una Raspberry Pi.
 ## Configuración
 
 <Steps>
-  <Step title="Flashear el SO">
-    Use **Raspberry Pi OS Lite (64 bits)** -- no se necesita escritorio para un servidor headless.
+  <Step title="Flashear el sistema operativo">
+    Utilice **Raspberry Pi OS Lite (64 bits)** -- no se necesita escritorio para un servidor headless.
 
     1. Descargue [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
     2. Elija SO: **Raspberry Pi OS Lite (64 bits)**.
-    3. En el diálogo de configuración, preconfigure:
+    3. En el diálogo de configuración, preconfigurado:
        - Nombre de host: `gateway-host`
-       - Activar SSH
+       - Habilitar SSH
        - Establecer nombre de usuario y contraseña
-       - Configurar WiFi (si no usa Ethernet)
+       - Configurar WiFi (si no se usa Ethernet)
     4. Flashee en su tarjeta SD o unidad USB, insértela y arranque la Pi.
 
   </Step>
@@ -78,29 +78,29 @@ Ejecute un Gateway de OpenClaw persistente y siempre activo en una Raspberry Pi.
 
   </Step>
 
-<Step title="Verificar">```bash openclaw status sudo systemctl status openclaw journalctl -u openclaw -f ```</Step>
+<Step title="Verificar">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
-  <Step title="Acceder a la interfaz de control">
-    En su ordenador, obtenga una URL del panel de control desde el Pi:
+  <Step title="Acceder a la Interfaz de Control">
+    En su computadora, obtenga una URL del panel de control desde la Pi:
 
     ```bash
     ssh user@gateway-host 'openclaw dashboard --no-open'
     ```
 
-    A continuación, cree un túnel SSH en otra terminal:
+    Luego cree un túnel SSH en otra terminal:
 
     ```bash
     ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
     ```
 
-    Abra la URL impresa en su navegador local. Para un acceso remoto permanente, consulte [Integración con Tailscale](/en/gateway/tailscale).
+    Abra la URL impresa en su navegador local. Para acceso remoto siempre activo, consulte [Integración con Tailscale](/en/gateway/tailscale).
 
   </Step>
 </Steps>
 
 ## Consejos de rendimiento
 
-**Use un SSD USB** -- Las tarjetas SD son lentas y se desgastan. Un SSD USB mejora dramáticamente el rendimiento. Consulte la [guía de arranque USB de Pi](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot).
+**Use un SSD USB** -- las tarjetas SD son lentas y se desgastan. Un SSD USB mejora drásticamente el rendimiento. Consulte la [guía de arranque USB de Pi](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot).
 
 **Habilitar caché de compilación de módulos** -- Acelera las invocaciones repetidas de la CLI en hosts Pi de baja potencia:
 
@@ -126,14 +126,14 @@ sudo systemctl disable bluetooth
 
 **Rendimiento lento** -- Use un SSD USB en lugar de una tarjeta SD. Compruebe si hay limitación de la CPU con `vcgencmd get_throttled` (debería devolver `0x0`).
 
-**El servicio no se inicia** -- Revise los registros con `journalctl -u openclaw --no-pager -n 100` y ejecute `openclaw doctor --non-interactive`.
+**El servicio no se iniciará** -- Verifique los registros con `journalctl --user -u openclaw-gateway.service --no-pager -n 100` y ejecute `openclaw doctor --non-interactive`. Si esta es una Pi sin cabeza (headless), también verifique que lingering esté habilitado: `sudo loginctl enable-linger "$(whoami)"`.
 
 **Problemas con binarios ARM** -- Si una habilidad falla con "exec format error", verifique si el binario tiene una compilación ARM64. Verifique la arquitectura con `uname -m` (debería mostrar `aarch64`).
 
-**Cortes de WiFi** -- Deshabilite la gestión de energía del WiFi: `sudo iwconfig wlan0 power off`.
+**Caídas de WiFi** -- Desactive la administración de energía del WiFi: `sudo iwconfig wlan0 power off`.
 
 ## Siguientes pasos
 
 - [Canales](/en/channels) -- conecte Telegram, WhatsApp, Discord y más
 - [Configuración del Gateway](/en/gateway/configuration) -- todas las opciones de configuración
-- [Actualización](/en/install/updating) -- mantener OpenClaw actualizado
+- [Actualización](/en/install/updating) -- mantenga OpenClaw actualizado

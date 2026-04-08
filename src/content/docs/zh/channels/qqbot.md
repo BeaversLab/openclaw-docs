@@ -13,13 +13,11 @@ QQ 机器人通过官方 QQ 机器人 API (WebSocket Gateway) 连接到 OpenClaw
 插件支持 C2C 私聊、群 @消息 和频道消息，并支持
 富媒体（图片、语音、视频、文件）。
 
-状态：内置渠道插件。支持私信、群聊、频道和
-媒体。不支持表情回应和主题串。
+状态：内置插件。支持私信、群聊、频道和媒体。不支持表情回应和话题串。
 
-## 随 OpenClaw 内置
+## 内置插件
 
-当前的 OpenClaw 安装包内置了 QQ 机器人。对于常规设置，您不需要单独的
-`openclaw plugins install` 步骤。
+当前的 OpenClaw 发行版已内置 QQ Bot，因此正常的打包构建不需要单独的 `openclaw plugins install` 步骤。
 
 ## 设置
 

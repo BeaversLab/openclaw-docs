@@ -14,8 +14,8 @@ WebSocket Gateway** (poignée de main, demande/réponse, événements serveur). 
 pilotent la **validation à l'exécution**, l'**exportation JSON Schema** et la **génération de code Swift** pour
 l'application macOS. Une source de vérité ; tout le reste est généré.
 
-Si vous souhaitez obtenir le contexte de protocole de plus haut niveau, commencez par
-[Architecture de la passerelle](/en/concepts/architecture).
+Si vous souhaitez obtenir un contexte de protocole de plus haut niveau, commencez par
+[Gateway architecture](/en/concepts/architecture).
 
 ## Modèle mental (30 secondes)
 
@@ -42,23 +42,26 @@ Client                    Gateway
 
 Méthodes courantes + événements :
 
-| Catégorie  | Exemples                                                  | Notes                                               |
-| ---------- | --------------------------------------------------------- | --------------------------------------------------- |
-| Cœur       | `connect`, `health`, `status`                             | `connect` doit être en premier                      |
-| Messagerie | `send`, `poll`, `agent`, `agent.wait`                     | les effets secondaires nécessitent `idempotencyKey` |
-| Chat       | `chat.history`, `chat.send`, `chat.abort`, `chat.inject`  | WebChat les utilise                                 |
-| Sessions   | `sessions.list`, `sessions.patch`, `sessions.delete`      | administrateur de session                           |
-| Nœuds      | `node.list`, `node.invoke`, `node.pair.*`                 | Gateway WS + node actions                           |
-| Événements | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | push serveur                                        |
+| Catégorie      | Exemples                                                   | Notes                                               |
+| -------------- | ---------------------------------------------------------- | --------------------------------------------------- |
+| Cœur           | `connect`, `health`, `status`                              | `connect` doit être en premier                      |
+| Messagerie     | `send`, `agent`, `agent.wait`, `system-event`, `logs.tail` | les effets secondaires nécessitent `idempotencyKey` |
+| Chat           | `chat.history`, `chat.send`, `chat.abort`                  | WebChat les utilise                                 |
+| Sessions       | `sessions.list`, `sessions.patch`, `sessions.delete`       | administrateur de session                           |
+| Automatisation | `wake`, `cron.list`, `cron.run`, `cron.runs`               | contrôle de wake + cron                             |
+| Nœuds          | `node.list`, `node.invoke`, `node.pair.*`                  | Gateway WS + actions de nœud                        |
+| Événements     | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown`  | push serveur                                        |
 
-La liste faisant autorité se trouve dans `src/gateway/server.ts` (`METHODS`, `EVENTS`).
+L'inventaire de **découverte** annoncée faisant autorité se trouve dans
+`src/gateway/server-methods-list.ts` (`listGatewayMethods`, `GATEWAY_EVENTS`).
 
 ## Où se trouvent les schémas
 
 - Source : `src/gateway/protocol/schema.ts`
 - Validateurs d'exécution (AJV) : `src/gateway/protocol/index.ts`
-- Handshake serveur + répartition des méthodes : `src/gateway/server.ts`
-- Client Node : `src/gateway/client.ts`
+- Registre de fonctionnalités/découverte annoncé : `src/gateway/server-methods-list.ts`
+- Handshake serveur + répartition des méthodes : `src/gateway/server.impl.ts`
+- Client nœud : `src/gateway/client.ts`
 - Schéma JSON généré : `dist/protocol.schema.json`
 - Modèles Swift générés : `apps/macos/Sources/OpenClawProtocol/GatewayModels.swift`
 
@@ -67,7 +70,7 @@ La liste faisant autorité se trouve dans `src/gateway/server.ts` (`METHODS`, `E
 - `pnpm protocol:gen`
   - écrit le JSON Schema (draft‑07) dans `dist/protocol.schema.json`
 - `pnpm protocol:gen:swift`
-  - génère les modèles de passerelle Swift
+  - génère les modèles de gateway Swift
 - `pnpm protocol:check`
   - exécute les deux générateurs et vérifie que la sortie est validée
 
@@ -77,8 +80,13 @@ La liste faisant autorité se trouve dans `src/gateway/server.ts` (`METHODS`, `E
   qu'une requête `connect` dont les paramètres correspondent à `ConnectParams`.
 - **Côté client** : le client JS valide les trames d'événement et de réponse avant
   de les utiliser.
-- **Surface de méthodes** : le Gateway annonce les `methods` et
-  `events` pris en charge dans `hello-ok`.
+- **Découverte des fonctionnalités** : le Gateway envoie une liste `features.methods`
+  et `features.events` conservatrice dans `hello-ok` à partir de `listGatewayMethods()` et
+  `GATEWAY_EVENTS`.
+- Cette liste de découverte n'est pas une vidange générée de chaque assistant appelable dans
+  `coreGatewayHandlers` ; certains assistants RPC sont implémentés dans
+  `src/gateway/server-methods/*.ts` sans être énumérés dans la liste de fonctionnalités
+  annoncée.
 
 ## Exemples de trames
 
@@ -90,8 +98,8 @@ Connexion (premier message) :
   "id": "c1",
   "method": "connect",
   "params": {
-    "minProtocol": 2,
-    "maxProtocol": 2,
+    "minProtocol": 3,
+    "maxProtocol": 3,
     "client": {
       "id": "openclaw-macos",
       "displayName": "macos",
@@ -113,7 +121,7 @@ Réponse Hello-ok :
   "ok": true,
   "payload": {
     "type": "hello-ok",
-    "protocol": 2,
+    "protocol": 3,
     "server": { "version": "dev", "connId": "ws-1" },
     "features": { "methods": ["health"], "events": ["tick"] },
     "snapshot": {
@@ -221,7 +229,7 @@ export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEcho
 
 3. **Comportement du serveur**
 
-Ajoutez un gestionnaire dans `src/gateway/server-methods/system.ts` :
+Ajouter un gestionnaire dans `src/gateway/server-methods/system.ts` :
 
 ```ts
 export const systemHandlers: GatewayRequestHandlers = {
@@ -232,8 +240,13 @@ export const systemHandlers: GatewayRequestHandlers = {
 };
 ```
 
-Inscrivez-le dans `src/gateway/server-methods.ts` (fusionne déjà `systemHandlers`),
-puis ajoutez `"system.echo"` à `METHODS` dans `src/gateway/server.ts`.
+L'enregistrer dans `src/gateway/server-methods.ts` (fusionne déjà `systemHandlers`),
+puis ajouter `"system.echo"` à l'entrée `listGatewayMethods` dans
+`src/gateway/server-methods-list.ts`.
+
+Si la méthode peut être appelée par les opérateurs ou les clients nœuds, la classer également dans
+`src/gateway/method-scopes.ts` afin que l'application de la portée et la publicité des fonctionnalités `hello-ok`
+restent alignées.
 
 4. **Régénérer**
 
@@ -243,43 +256,46 @@ pnpm protocol:check
 
 5. **Tests + documentation**
 
-Ajoutez un test serveur dans `src/gateway/server.*.test.ts` et notez la méthode dans la documentation.
+Ajouter un test serveur dans `src/gateway/server.*.test.ts` et noter la méthode dans la documentation.
 
 ## Comportement de la génération de code Swift
 
 Le générateur Swift émet :
 
-- énumération `GatewayFrame` avec les cas `req`, `res`, `event` et `unknown`
-- Structures/énumérations de charge utile fortement typées
-- valeurs `ErrorCode` et `GATEWAY_PROTOCOL_VERSION`
+- Enum `GatewayFrame` avec les cas `req`, `res`, `event` et `unknown`
+- Structs/enums de charge utile fortement typés
+- Valeurs `ErrorCode` et `GATEWAY_PROTOCOL_VERSION`
 
-Les types de trames inconnus sont conservés sous forme de charges utiles brutes pour assurer la compatibilité ascendante.
+Les types de trames inconnus sont conservés sous forme de charges utiles brutes pour la compatibilité ascendante.
 
-## Gestion des versions + compatibilité
+## Versionnage + compatibilité
 
 - `PROTOCOL_VERSION` réside dans `src/gateway/protocol/schema.ts`.
-- Les clients envoient `minProtocol` + `maxProtocol` ; le serveur rejette les incohérences.
-- Les modèles Swift conservent les types de trames inconnus pour éviter de casser les anciens clients.
+- Les clients envoient `minProtocol` + `maxProtocol` ; le serveur rejette les incompatibilités.
+- Les modèles Swift conservent les types de trames inconnus pour éviter de casser les clients plus anciens.
 
-## Modèles et conventions de schémas
+## Modèles et conventions de schéma
 
 - La plupart des objets utilisent `additionalProperties: false` pour les charges utiles strictes.
 - `NonEmptyString` est la valeur par défaut pour les ID et les noms de méthodes/événements.
-- L'`GatewayFrame` de niveau supérieur utilise un **discriminant** sur `type`.
+- Le `GatewayFrame` de premier niveau utilise un **discriminateur** sur `type`.
 - Les méthodes ayant des effets secondaires nécessitent généralement un `idempotencyKey` dans les paramètres
   (exemple : `send`, `poll`, `agent`, `chat.send`).
-- `agent` accepte un `internalEvents` optionnel pour le contexte d'orchestration généré à l'exécution
-  (par exemple, transfert lors de l'achèvement d'une tâche de sous-agent/cron) ; traitez cela comme une surface de API interne.
+- `agent` accepte `internalEvents` en option pour le contexte d'orchestration généré à l'exécution
+  (par exemple, transfert après achèvement de tâche de sous-agent/cron) ; traitez cela comme une surface API interne.
 
 ## JSON de schéma en direct
 
 Le JSON Schema généré se trouve dans le dépôt à `dist/protocol.schema.json`. Le
-fichier brut publié est généralement disponible à l'adresse :
+fichier brut publié est généralement disponible à :
 
 - [https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json](https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json)
 
 ## Lorsque vous modifiez les schémas
 
 1. Mettez à jour les schémas TypeBox.
-2. Exécutez `pnpm protocol:check`.
-3. Validez le schéma régénéré + les modèles Swift.
+2. Enregistrez la méthode/l'événement dans `src/gateway/server-methods-list.ts`.
+3. Mettez à jour `src/gateway/method-scopes.ts` lorsque le nouveau RPC nécessite une classification de portée opérateur ou
+   nœud.
+4. Exécutez `pnpm protocol:check`.
+5. Validez le schéma régénéré + les modèles Swift.

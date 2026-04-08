@@ -134,4 +134,11 @@ curl -s http://127.0.0.1:18791/tabs
 注：
 
 - `user` 仅限主机。对于 Linux 服务器、容器或远程主机，建议使用 CDP 配置文件。
-- 本地 `openclaw` 配置文件会自动分配 `cdpPort`/`cdpUrl`；仅在远程 CDP 时设置这些参数。
+- `user` / 其他 `existing-session` 配置文件保持当前的 Chrome MCP 限制：
+  引用驱动的操作、单文件上传钩子、无对话框超时覆盖、无
+  `wait --load networkidle`，以及无 `responsebody`、PDF 导出、下载
+  拦截或批量操作。
+- 本地 `openclaw` 配置文件自动分配 `cdpPort`/`cdpUrl`；仅对远程 CDP 设置这些。
+- 远程 CDP 配置文件接受 `http://`、`https://`、`ws://` 和 `wss://`。
+  对 `/json/version` 发现使用 HTTP(S)，或者当您的浏览器
+  服务为您提供直接的 DevTools 套接字 URL 时使用 WS(S)。

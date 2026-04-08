@@ -80,19 +80,21 @@ openclaw approvals allowlist add --node <idOrNameOrIp> "/usr/bin/uname"
 
 節點配對是一個身分/信任閘門，而非針對每個指令的核准介面。對於 `system.run`，個別節點的原則位於該節點的 exec 核准檔案 (`openclaw approvals get --node ...`) 中，而非閘道配對記錄中。
 
-## 常見節點錯誤代碼
+對於依賴審核的 `host=node` 執行，閘道也會將執行綁定到準備好的標準 `systemRunPlan`。如果後續的呼叫者在已批准的執行轉發之前變更了 command/cwd 或工作階段中繼資料，閘道會將該執行作為「審核不相符」予以拒絕，而不是信任已編輯的負載。
 
-- `NODE_BACKGROUND_UNAVAILABLE` → 應用程式已在背景執行；請將其帶到前景。
-- `CAMERA_DISABLED` → 相機切換在節點設定中已停用。
-- `*_PERMISSION_REQUIRED` → OS 權限缺失/被拒絕。
+## 常見的節點錯誤代碼
+
+- `NODE_BACKGROUND_UNAVAILABLE` → 應用程式已進入背景；請將其帶至前景。
+- `CAMERA_DISABLED` → 相機切換功能在節點設定中已停用。
+- `*_PERMISSION_REQUIRED` → 遺失/拒絕 OS 權限。
 - `LOCATION_DISABLED` → 位置模式已關閉。
-- `LOCATION_PERMISSION_REQUIRED` → 未授予要求的位置模式。
-- `LOCATION_BACKGROUND_UNAVAILABLE` → 應用程式已在背景執行，但僅存在「使用 App 時」的權限。
-- `SYSTEM_RUN_DENIED: approval required` → exec 請求需要明確核准。
-- `SYSTEM_RUN_DENIED: allowlist miss` → 指令被允許清單模式封鎖。
-  在 Windows 節點主機上，諸如 `cmd.exe /c ...` 的 shell 包裝表單在允許清單模式中會被視為允許清單不符，除非透過要求流程核准。
+- `LOCATION_PERMISSION_REQUIRED` → 未授予請求的位置模式。
+- `LOCATION_BACKGROUND_UNAVAILABLE` → 應用程式已進入背景，但僅擁有「使用時」權限。
+- `SYSTEM_RUN_DENIED: approval required` → exec 請求需要明確審核。
+- `SYSTEM_RUN_DENIED: allowlist miss` → 指令被允許清單模式阻擋。
+  在 Windows 節點主機上，除非透過「詢問」流程批准，否則像 `cmd.exe /c ...` 這類的 shell 包裝形式在允許清單模式下會被視為允許清單不符。
 
-## 快速恢復循環
+## 快速修復迴圈
 
 ```bash
 openclaw nodes status
@@ -103,10 +105,10 @@ openclaw logs --follow
 
 如果仍然卡住：
 
-- 重新核准裝置配對。
-- 重新開啟節點應用程式 (前景)。
-- 重新授權 OS 權限。
-- 重新建立/調整 exec 核准原則。
+- 重新批准裝置配對。
+- 重新開啟節點應用程式（前景）。
+- 重新授予 OS 權限。
+- 重新建立/調整 exec 審核政策。
 
 相關連結：
 

@@ -12,29 +12,31 @@ title: "Northflank"
 ## 如何开始
 
 1. 点击 [部署 OpenClaw](https://northflank.com/stacks/deploy-openclaw) 打开模板。
-2. 如果您还没有 [Northflank 账户](https://app.northflank.com/signup)，请创建一个。
+2. 如果您还没有账户，请创建一个 [Northflank 账户](https://app.northflank.com/signup)。
 3. 点击 **Deploy OpenClaw now**。
 4. 设置所需的环境变量：`OPENCLAW_GATEWAY_TOKEN`（使用一个强随机值）。
 5. 点击 **Deploy stack** 以构建并运行 OpenClaw 模板。
 6. 等待部署完成，然后点击 **View resources**。
 7. 打开 OpenClaw 服务。
-8. 在 `/openclaw` 打开公共 OpenClaw URL，并使用您的 `OPENCLAW_GATEWAY_TOKEN` 进行连接。
+8. 在 `/openclaw` 打开公共 OpenClaw URL，并使用配置的共享密钥进行连接。此模板默认使用 `OPENCLAW_GATEWAY_TOKEN`；如果您将其替换为密码认证，请使用该密码。
 
 ## 您将获得
 
 - 托管的 OpenClaw Gateway(网关) + 控制界面
-- 通过 Northflank 卷 (`/data`) 提供持久存储，以便配置/凭据/工作区在重新部署后得以保留
+- 通过 Northflank 卷 (`/data`) 提供持久化存储，以便 `openclaw.json`、
+  每个代理的 `auth-profiles.json`、渠道/提供商状态、会话和
+  工作区在重新部署后得以保留
 
 ## 连接渠道
 
-使用 `/openclaw` 的控制界面，或通过 SSH 运行 `openclaw onboard` 以获取渠道设置说明：
+使用 `/openclaw` 的控制 UI，或通过 SSH 运行 `openclaw onboard` 查看渠道设置说明：
 
-- [Telegram](/en/channels/telegram)（最快——只需一个 bot 令牌）
+- [Telegram](/en/channels/telegram)（最快 — 只需机器人令牌）
 - [Discord](/en/channels/discord)
 - [所有渠道](/en/channels)
 
 ## 后续步骤
 
 - 设置消息渠道：[渠道](/en/channels)
-- 配置 Gateway(网关)：[Gateway(网关) 配置](/en/gateway/configuration)
-- 保持 OpenClaw 更新：[更新](/en/install/updating)
+- 配置 Gateway：[Gateway 配置](/en/gateway/configuration)
+- 保持 OpenClaw 为最新版本：[更新](/en/install/updating)

@@ -25,17 +25,17 @@ Les applications compagnons natives pour Windows sont également prévues ; le G
 
 ## VPS & hébergement
 
-- Hub VPS : [Hébergement VPS](/en/vps)
+- Centre VPS : [Hébergement VPS](/en/vps)
 - Fly.io : [Fly.io](/en/install/fly)
 - Hetzner (Docker) : [Hetzner](/en/install/hetzner)
 - GCP (Compute Engine) : [GCP](/en/install/gcp)
-- Azure (Linux VM) : [Azure](/en/install/azure)
+- Azure (VM Linux) : [Azure](/en/install/azure)
 - exe.dev (VM + proxy HTTPS) : [exe.dev](/en/install/exe-dev)
 
 ## Liens courants
 
 - Guide d'installation : [Getting Started](/en/start/getting-started)
-- Manuel d'exécution du Gateway : [Gateway](/en/gateway)
+- Manuel du Gateway : [Gateway](/en/gateway)
 - Configuration du Gateway : [Configuration](/en/gateway/configuration)
 - État du service : `openclaw gateway status`
 
@@ -52,3 +52,4 @@ La cible du service dépend du système d'exploitation :
 
 - macOS : LaunchAgent (`ai.openclaw.gateway` ou `ai.openclaw.<profile>` ; ancien `com.openclaw.*`)
 - Linux/WSL2 : service utilisateur systemd (`openclaw-gateway[-<profile>].service`)
+- Windows natif : Tâche planifiée (`OpenClaw Gateway` ou `OpenClaw Gateway (<profile>)`), avec une alternative de connexion via le dossier Démarrage par utilisateur si la création de la tâche est refusée

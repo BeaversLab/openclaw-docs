@@ -57,13 +57,17 @@ Copie su clave pública en la máquina remota (ingrese la contraseña una vez):
 ssh-copy-id -i ~/.ssh/id_rsa <REMOTE_USER>@<REMOTE_IP>
 ```
 
-### Paso 3: Establecer token de puerta de enlace
+### Paso 3: Configurar la autenticación de la puerta de enlace remota
 
 ```bash
-launchctl setenv OPENCLAW_GATEWAY_TOKEN "<your-token>"
+openclaw config set gateway.remote.token "<your-token>"
 ```
 
-### Paso 4: Iniciar túnel SSH
+Use `gateway.remote.password` en su lugar si su puerta de enlace remota usa autenticación por contraseña.
+`OPENCLAW_GATEWAY_TOKEN` sigue siendo válido como una anulación a nivel de shell, pero la configuración
+durable del cliente remoto es `gateway.remote.token` / `gateway.remote.password`.
+
+### Paso 4: Iniciar el túnel SSH
 
 ```bash
 ssh -N remote-gateway &

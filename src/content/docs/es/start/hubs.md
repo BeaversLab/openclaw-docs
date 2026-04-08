@@ -71,31 +71,32 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Telegram](/en/channels/telegram)
 - [Slack](/en/channels/slack)
 - [Discord](/en/channels/discord)
-- [Mattermost](/en/channels/mattermost) (plugin)
+- [Mattermost](/en/channels/mattermost)
 - [Signal](/en/channels/signal)
 - [BlueBubbles (iMessage)](/en/channels/bluebubbles)
-- [iMessage (legado)](/en/channels/imessage)
+- [Bot QQ](/en/channels/qqbot)
+- [iMessage (heredado)](/en/channels/imessage)
 - [Análisis de ubicación](/en/channels/location)
 - [WebChat](/en/web/webchat)
-- [Webhooks](/en/automation/webhook)
-- [Gmail Pub/Sub](/en/automation/gmail-pubsub)
+- [Webhooks](/en/automation/cron-jobs#webhooks)
+- [Gmail Pub/Sub](/en/automation/cron-jobs#gmail-pubsub-integration)
 
-## Pasarela + operaciones
+## Gateway + operaciones
 
-- [Manual de procedimientos de la pasarela](/en/gateway)
+- [Manual de operaciones del Gateway](/en/gateway)
 - [Modelo de red](/en/gateway/network-model)
-- [Emparejamiento de la pasarela](/en/gateway/pairing)
-- [Bloqueo de la pasarela](/en/gateway/gateway-lock)
+- [Emparejamiento del Gateway](/en/gateway/pairing)
+- [Bloqueo del Gateway](/en/gateway/gateway-lock)
 - [Proceso en segundo plano](/en/gateway/background-process)
 - [Salud](/en/gateway/health)
-- [Latido del corazón](/en/gateway/heartbeat)
+- [Latido](/en/gateway/heartbeat)
 - [Doctor](/en/gateway/doctor)
-- [Registro de logs](/en/gateway/logging)
+- [Registro](/en/gateway/logging)
 - [Sandboxing](/en/gateway/sandboxing)
-- [Panel de control](/en/web/dashboard)
+- [Panel](/en/web/dashboard)
 - [Interfaz de control](/en/web/control-ui)
 - [Acceso remoto](/en/gateway/remote)
-- [LÉEME de la pasarela remota](/en/gateway/remote-gateway-readme)
+- [Léame del Gateway remoto](/en/gateway/remote-gateway-readme)
 - [Tailscale](/en/gateway/tailscale)
 - [Seguridad](/en/gateway/security)
 - [Solución de problemas](/en/gateway/troubleshooting)
@@ -109,7 +110,7 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Herramienta PDF](/en/tools/pdf)
 - [Modo elevado](/en/tools/elevated)
 - [Trabajos Cron](/en/automation/cron-jobs)
-- [Cron vs Latido del corazón](/en/automation/cron-vs-heartbeat)
+- [Automatización y tareas](/en/automation)
 - [Pensamiento + detallado](/en/tools/thinking)
 - [Modelos](/en/concepts/models)
 - [Subagentes](/en/tools/subagents)
@@ -117,7 +118,7 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Interfaz de terminal](/en/web/tui)
 - [Control del navegador](/en/tools/browser)
 - [Navegador (solución de problemas en Linux)](/en/tools/browser-linux-troubleshooting)
-- [Encuestas](/en/automation/poll)
+- [Encuestas](/en/cli/message)
 
 ## Nodos, medios, voz
 
@@ -127,7 +128,7 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Audio](/en/nodes/audio)
 - [Comando de ubicación](/en/nodes/location-command)
 - [Activación por voz](/en/nodes/voicewake)
-- [Modo de habla](/en/nodes/talk)
+- [Modo de conversación](/en/nodes/talk)
 
 ## Plataformas
 
@@ -141,35 +142,35 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 
 ## Aplicación complementaria de macOS (avanzado)
 
-- [Configuración de desarrollo de macOS](/en/platforms/mac/dev-setup)
-- [Barra de menú de macOS](/en/platforms/mac/menu-bar)
-- [Activación por voz de macOS](/en/platforms/mac/voicewake)
-- [Superposición de voz de macOS](/en/platforms/mac/voice-overlay)
-- [WebChat de macOS](/en/platforms/mac/webchat)
-- [Canvas de macOS](/en/platforms/mac/canvas)
+- [Configuración de desarrollo en macOS](/en/platforms/mac/dev-setup)
+- [Barra de menús de macOS](/en/platforms/mac/menu-bar)
+- [Activación por voz en macOS](/en/platforms/mac/voicewake)
+- [Superposición de voz en macOS](/en/platforms/mac/voice-overlay)
+- [WebChat en macOS](/en/platforms/mac/webchat)
+- [Canvas en macOS](/en/platforms/mac/canvas)
 - [Proceso secundario de macOS](/en/platforms/mac/child-process)
 - [Salud de macOS](/en/platforms/mac/health)
 - [Icono de macOS](/en/platforms/mac/icon)
 - [Registro de macOS](/en/platforms/mac/logging)
 - [Permisos de macOS](/en/platforms/mac/permissions)
-- [Control remoto de macOS](/en/platforms/mac/remote)
+- [Remoto de macOS](/en/platforms/mac/remote)
 - [Firma de macOS](/en/platforms/mac/signing)
 - [Puerta de enlace de macOS (launchd)](/en/platforms/mac/bundled-gateway)
-- [macOS XPC](/en/platforms/mac/xpc)
+- [XPC de macOS](/en/platforms/mac/xpc)
 - [Habilidades de macOS](/en/platforms/mac/skills)
-- [macOS Peekaboo](/en/platforms/mac/peekaboo)
+- [Peekaboo en macOS](/en/platforms/mac/peekaboo)
 
 ## Extensiones + complementos
 
 - [Descripción general de complementos](/en/tools/plugin)
 - [Construcción de complementos](/en/plugins/building-plugins)
-- [Manifiesto de complementos](/en/plugins/manifest)
+- [Manifiesto de complemento](/en/plugins/manifest)
 - [Herramientas de agente](/en/plugins/building-plugins#registering-agent-tools)
 - [Paquetes de complementos](/en/plugins/bundles)
 - [Complementos comunitarios](/en/plugins/community)
-- [Cookbook de capacidades](/en/tools/capability-cookbook)
+- [Libro de recetas de capacidades](/en/tools/capability-cookbook)
 - [Complemento de llamada de voz](/en/plugins/voice-call)
-- [Complemento de usuario de Zalo](/en/plugins/zalouser)
+- [Complemento de usuario Zalo](/en/plugins/zalouser)
 
 ## Espacio de trabajo + plantillas
 
@@ -192,5 +193,5 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 ## Pruebas + lanzamiento
 
 - [Pruebas](/en/reference/test)
-- [Política de lanzamientos](/en/reference/RELEASING)
-- [Modelos de dispositivos](/en/reference/device-models)
+- [Política de lanzamiento](/en/reference/RELEASING)
+- [Modelos de dispositivo](/en/reference/device-models)

@@ -29,6 +29,20 @@ openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
 }
 ```
 
+## Catalogue LLM intégré
+
+OpenClaw fournit actuellement ce catalogue Mistral intégré :
+
+| Réf modèle                       | Entrée       | Contexte | Sortie max | Notes                   |
+| -------------------------------- | ------------ | -------- | ---------- | ----------------------- |
+| `mistral/mistral-large-latest`   | texte, image | 262 144  | 16 384     | Modèle par défaut       |
+| `mistral/mistral-medium-2508`    | texte, image | 262 144  | 8 192      | Mistral Medium 3.1      |
+| `mistral/mistral-small-latest`   | texte, image | 128 000  | 16 384     | Petit modèle multimodal |
+| `mistral/pixtral-large-latest`   | texte, image | 128 000  | 32 768     | Pixtral                 |
+| `mistral/codestral-latest`       | texte        | 256 000  | 4 096      | Codage                  |
+| `mistral/devstral-medium-latest` | texte        | 262 144  | 32 768     | Devstral 2              |
+| `mistral/magistral-small`        | texte        | 128 000  | 40 000     | Activer le raisonnement |
+
 ## Extrait de configuration (transcription audio avec Voxtral)
 
 ```json5
@@ -47,8 +61,8 @@ openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
 ## Notes
 
 - L'authentification Mistral utilise `MISTRAL_API_KEY`.
-- L'URL de base du provider par défaut est `https://api.mistral.ai/v1`.
-- Le modèle par défaut lors de l'intégration est `mistral/mistral-large-latest`.
+- L'URL de base du fournisseur par défaut est `https://api.mistral.ai/v1`.
+- Le modèle par défaut d'onboarding est `mistral/mistral-large-latest`.
 - Le modèle audio par défaut pour la compréhension des médias avec Mistral est `voxtral-mini-latest`.
-- Le chemin de transcription des médias utilise `/v1/audio/transcriptions`.
-- Le chemin des embeddings de mémoire utilise `/v1/embeddings` (modèle par défaut : `mistral-embed`).
+- Le chemin de transcription média utilise `/v1/audio/transcriptions`.
+- Le chemin des embeddings mémoire utilise `/v1/embeddings` (modèle par défaut : `mistral-embed`).

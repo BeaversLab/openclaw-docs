@@ -25,18 +25,18 @@ También se planean aplicaciones complementarias nativas para Windows; se recomi
 
 ## VPS y alojamiento
 
-- Centro de VPS: [Alojamiento VPS](/en/vps)
+- VPS hub: [VPS hosting](/en/vps)
 - Fly.io: [Fly.io](/en/install/fly)
 - Hetzner (Docker): [Hetzner](/en/install/hetzner)
 - GCP (Compute Engine): [GCP](/en/install/gcp)
-- Azure (máquina virtual Linux): [Azure](/en/install/azure)
-- exe.dev (máquina virtual + proxy HTTPS): [exe.dev](/en/install/exe-dev)
+- Azure (Linux VM): [Azure](/en/install/azure)
+- exe.dev (VM + HTTPS proxy): [exe.dev](/en/install/exe-dev)
 
 ## Enlaces comunes
 
-- Guía de instalación: [Primeros pasos](/en/start/getting-started)
-- Manual del Gateway: [Gateway](/en/gateway)
-- Configuración del Gateway: [Configuración](/en/gateway/configuration)
+- Install guide: [Getting Started](/en/start/getting-started)
+- Gateway runbook: [Gateway](/en/gateway)
+- Gateway configuration: [Configuration](/en/gateway/configuration)
 - Estado del servicio: `openclaw gateway status`
 
 ## Instalación del servicio Gateway (CLI)
@@ -52,3 +52,4 @@ El destino del servicio depende del sistema operativo:
 
 - macOS: LaunchAgent (`ai.openclaw.gateway` o `ai.openclaw.<profile>`; heredado `com.openclaw.*`)
 - Linux/WSL2: servicio de usuario systemd (`openclaw-gateway[-<profile>].service`)
+- Native Windows: Scheduled Task (`OpenClaw Gateway` o `OpenClaw Gateway (<profile>)`), con un elemento de inicio de sesión de carpeta de inicio por usuario como alternativa si se deniega la creación de la tarea

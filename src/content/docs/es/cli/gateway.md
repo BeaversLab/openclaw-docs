@@ -1,9 +1,9 @@
 ---
-summary: "CLI de Gateway de OpenClaw (`openclaw gateway`) — ejecute, consulte y descubra gateways"
+summary: "CLI de OpenClaw Gateway (`openclaw gateway`) — ejecutar, consultar y descubrir gateways"
 read_when:
   - Running the Gateway from the CLI (dev or servers)
   - Debugging Gateway auth, bind modes, and connectivity
-  - Discovering gateways via Bonjour (LAN + tailnet)
+  - Discovering gateways via Bonjour (local + wide-area DNS-SD)
 title: "gateway"
 ---
 
@@ -11,7 +11,7 @@ title: "gateway"
 
 El Gateway es el servidor WebSocket de OpenClaw (canales, nodos, sesiones, hooks).
 
-Los subcomandos en esta página se encuentran bajo `openclaw gateway …`.
+Los subcomandos de esta página se encuentran en `openclaw gateway …`.
 
 Documentación relacionada:
 
@@ -36,31 +36,31 @@ openclaw gateway run
 Notas:
 
 - De forma predeterminada, el Gateway se niega a iniciarse a menos que `gateway.mode=local` esté establecido en `~/.openclaw/openclaw.json`. Use `--allow-unconfigured` para ejecuciones ad-hoc/desarrollo.
-- El enlace más allá de loopback sin autenticación está bloqueado (barra de seguridad).
-- `SIGUSR1` activa un reinicio dentro del proceso cuando está autorizado (`commands.restart` está habilitado de forma predeterminada; establezca `commands.restart: false` para bloquear el reinicio manual, mientras que gateway tool/config apply/update permanecen permitidos).
-- Los controladores `SIGINT`/`SIGTERM` detienen el proceso del gateway, pero no restauran ningún estado personalizado de la terminal. Si envuelve la CLI con una interfaz de usuario de terminal (TUI) o entrada en modo sin procesar, restaure la terminal antes de salir.
+- Se espera que `openclaw onboard --mode local` y `openclaw setup` escriban `gateway.mode=local`. Si el archivo existe pero `gateway.mode` falta, trátelo como una configuración dañada o corrompida y repárela en lugar de asumir implícitamente el modo local.
+- Si el archivo existe y `gateway.mode` falta, el Gateway lo trata como un daño sospechoso en la configuración y se niega a "adivinar local" por usted.
+- El enlace más allá del loopback sin autenticación está bloqueado (guarda de seguridad).
+- `SIGUSR1` activa un reinicio en proceso cuando está autorizado (`commands.restart` está habilitado de forma predeterminada; establezca `commands.restart: false` para bloquear el reinicio manual, mientras que gateway tool/config apply/update siguen permitidos).
+- Los controladores `SIGINT`/`SIGTERM` detienen el proceso del gateway, pero no restauran ningún estado de terminal personalizado. Si envuelve la CLI con una TUI o entrada en modo sin formato, restaure la terminal antes de salir.
 
 ### Opciones
 
-- `--port <port>`: puerto WebSocket (el valor predeterminado proviene de config/env; generalmente `18789`).
+- `--port <port>`: Puerto WebSocket (el valor predeterminado proviene de config/env; generalmente `18789`).
 - `--bind <loopback|lan|tailnet|auto|custom>`: modo de enlace del escucha.
 - `--auth <token|password>`: anulación del modo de autenticación.
-- `--token <token>`: anulación del token (también establece `OPENCLAW_GATEWAY_TOKEN` para el proceso).
-- `--password <password>`: anulación de contraseña. Advertencia: las contraseñas en línea pueden exponerse en los listados de procesos locales.
+- `--token <token>`: anulación de token (también establece `OPENCLAW_GATEWAY_TOKEN` para el proceso).
+- `--password <password>`: anulación de contraseña. Advertencia: las contraseñas en línea pueden exponerse en listas de procesos locales.
 - `--password-file <path>`: lea la contraseña del gateway desde un archivo.
-- `--tailscale <off|serve|funnel>`: exponga el Gateway a través de Tailscale.
-- `--tailscale-reset-on-exit`: restablezca la configuración de serve/funnel de Tailscale al apagar.
-- `--allow-unconfigured`: permite el inicio del gateway sin `gateway.mode=local` en la configuración.
-- `--dev`: crea una configuración de desarrollo y un espacio de trabajo si faltan (omite BOOTSTRAP.md).
-- `--reset`: restablece la configuración de desarrollo + credenciales + sesiones + espacio de trabajo (requiere `--dev`).
-- `--force`: mata cualquier escucha existente en el puerto seleccionado antes de iniciar.
+- `--tailscale <off|serve|funnel>`: exponer el Gateway a través de Tailscale.
+- `--tailscale-reset-on-exit`: restablecer la configuración de serve/funnel de Tailscale al apagar.
+- `--allow-unconfigured`: permitir el inicio del gateway sin `gateway.mode=local` en la configuración. Esto omite la protección de inicio solo para arranque ad-hoc/desarrollo; no escribe ni repara el archivo de configuración.
+- `--dev`: crear una configuración de desarrollo + espacio de trabajo si faltan (omite BOOTSTRAP.md).
+- `--reset`: restablecer configuración de desarrollo + credenciales + sesiones + espacio de trabajo (requiere `--dev`).
+- `--force`: terminar cualquier escucha existente en el puerto seleccionado antes de iniciar.
 - `--verbose`: registros detallados.
-- `--cli-backend-logs`: muestra solo los registros del backend de la CLI en la consola (y habilita stdout/stderr).
-- `--claude-cli-logs`: alias obsoleto para `--cli-backend-logs`.
-- `--ws-log <auto|full|compact>`: estilo de registro websocket (por defecto `auto`).
+- `--ws-log <auto|full|compact>`: estilo de registro de websocket (por defecto `auto`).
 - `--compact`: alias para `--ws-log compact`.
-- `--raw-stream`: registra los eventos del flujo del modelo sin procesar en l.
-- `--raw-stream-path <path>`: ruta del l del flujo sin procesar.
+- `--raw-stream`: registrar eventos de flujo del modelo sin procesar en l.
+- `--raw-stream-path <path>`: ruta de l de flujo sin procesar.
 
 ## Consultar un Gateway en ejecución
 
@@ -69,18 +69,18 @@ Todos los comandos de consulta usan WebSocket RPC.
 Modos de salida:
 
 - Por defecto: legible por humanos (coloreado en TTY).
-- `--json`: JSON legible por máquina (sin estilo/indicador de progreso).
-- `--no-color` (o `NO_COLOR=1`): deshabilita ANSI manteniendo el diseño humano.
+- `--json`: JSON legible por máquina (sin estilo/indicador de carga).
+- `--no-color` (o `NO_COLOR=1`): desactivar ANSI manteniendo el diseño humano.
 
 Opciones compartidas (cuando se admitan):
 
-- `--url <url>`: URL de WebSocket del Gateway.
+- `--url <url>`: URL del WebSocket del Gateway.
 - `--token <token>`: token del Gateway.
 - `--password <password>`: contraseña del Gateway.
 - `--timeout <ms>`: tiempo de espera/presupuesto (varía según el comando).
-- `--expect-final`: espera una respuesta "final" (llamadas de agente).
+- `--expect-final`: esperar una respuesta "final" (llamadas de agente).
 
-Nota: cuando estableces `--url`, la CLI no recurre a las credenciales de configuración o del entorno.
+Nota: cuando estableces `--url`, la CLI no recurre a las credenciales de configuración o entorno.
 Pasa `--token` o `--password` explícitamente. Faltar credenciales explícitas es un error.
 
 ### `gateway health`
@@ -89,9 +89,23 @@ Pasa `--token` o `--password` explícitamente. Faltar credenciales explícitas e
 openclaw gateway health --url ws://127.0.0.1:18789
 ```
 
+### `gateway usage-cost`
+
+Obtener resúmenes de costo de uso desde los registros de sesión.
+
+```bash
+openclaw gateway usage-cost
+openclaw gateway usage-cost --days 7
+openclaw gateway usage-cost --json
+```
+
+Opciones:
+
+- `--days <days>`: número de días a incluir (por defecto `30`).
+
 ### `gateway status`
 
-`gateway status` muestra el servicio del Gateway (launchd/systemd/schtasks) más un sondeo RPC opcional.
+`gateway status` muestra el servicio Gateway (launchd/systemd/schtasks) más un sondeo RPC opcional.
 
 ```bash
 openclaw gateway status
@@ -101,32 +115,41 @@ openclaw gateway status --require-rpc
 
 Opciones:
 
-- `--url <url>`: anula la URL del sondeo.
-- `--token <token>`: autenticación con token para el sondeo.
-- `--password <password>`: autenticación con contraseña para el sondeo.
-- `--timeout <ms>`: tiempo de espera del sondeo (por defecto `10000`).
-- `--no-probe`: omitir el sondeo RPC (vista solo del servicio).
+- `--url <url>`: añade un objetivo de sondeo explícito. El remoto configurado + localhost se siguen sondeando.
+- `--token <token>`: autenticación mediante token para el sondeo.
+- `--password <password>`: autenticación mediante contraseña para el sondeo.
+- `--timeout <ms>`: tiempo de espera del sondeo (predeterminado `10000`).
+- `--no-probe`: omitir el sondeo RPC (vista solo de servicio).
 - `--deep`: escanear también los servicios de nivel del sistema.
-- `--require-rpc`: sale con un valor distinto de cero cuando falla el sondeo RPC. No se puede combinar con `--no-probe`.
+- `--require-rpc`: salir con código distinto de cero cuando falla el sondeo RPC. No se puede combinar con `--no-probe`.
 
 Notas:
 
-- `gateway status` resuelve los SecretRefs de autenticación configurados para la autenticación del sondeo cuando es posible.
-- Si un auth SecretRef requerido no se resuelve en esta ruta de comando, `gateway status --json` informa `rpc.authWarning` cuando falla la conectividad/autenticación del sondeo; pase `--token`/`--password` explícitamente o resuelva primero la fuente del secreto.
+- `gateway status` permanece disponible para el diagnóstico incluso cuando falta o no es válida la configuración local de la CLI.
+- `gateway status` resuelve los SecretRefs de autenticación configurados para la autenticación del sondeo cuando sea posible.
+- Si un SecretRef de autenticación requerido no se resuelve en esta ruta de comando, `gateway status --json` informa `rpc.authWarning` cuando falla la conectividad/autenticación del sondeo; pase `--token`/`--password` explícitamente o resuelva primero la fuente del secreto.
 - Si el sondeo tiene éxito, las advertencias de auth-ref no resueltas se suprimen para evitar falsos positivos.
-- Use `--require-rpc` en scripts y automatización cuando un servicio de escucha no sea suficiente y necesite que el Gateway RPC en sí esté saludable.
-- En las instalaciones de systemd en Linux, las comprobaciones de deriva de autenticación del servicio leen ambos valores `Environment=` y `EnvironmentFile=` de la unidad (incluyendo `%h`, rutas entre comillas, múltiples archivos y archivos opcionales `-`).
-- Las comprobaciones de deriva resuelven los SecretRefs `gateway.auth.token` utilizando el entorno de tiempo de ejecución combinado (primero el entorno del comando del servicio, luego el respaldo del entorno del proceso).
-- Si la autenticación por token no está efectivamente activa (`gateway.auth.mode` explícito de `password`/`none`/`trusted-proxy`, o modo no establecido donde la contraseña puede ganar y ningún candidato de token puede ganar), las comprobaciones de deriva de token omiten la resolución del token de configuración.
+- Use `--require-rpc` en scripts y automatización cuando un servicio de escucha no sea suficiente y necesite que el RPC del Gateway esté sano.
+- `--deep` añade un escaneo de mejor esfuerzo para instalaciones adicionales de launchd/systemd/schtasks. Cuando se detectan varios servicios similares a gateway, la salida humana imprime sugerencias de limpieza y advierte que la mayoría de las configuraciones deberían ejecutar una sola puerta de enlace por máquina.
+- La salida humana incluye la ruta del registro de archivos resuelta más la instantánea de las rutas/validez de la configuración CLI frente a servicio para ayudar a diagnosticar la deriva del perfil o del directorio de estado.
+- En instalaciones de Linux systemd, las comprobaciones de deriva de autenticación del servicio leen tanto los valores `Environment=` como `EnvironmentFile=` de la unidad (incluyendo `%h`, rutas entre comillas, múltiples archivos y archivos `-` opcionales).
+- Las comprobaciones de deriva resuelven los SecretRefs `gateway.auth.token` utilizando el entorno de tiempo de ejecución combinado (entorno del comando de servicio primero, luego respaldo del entorno del proceso).
+- Si la autenticación por token no está activa de manera efectiva (`gateway.auth.mode` explícito de `password`/`none`/`trusted-proxy`, o modo no establecido donde la contraseña puede ganar y ningún candidato a token puede ganar), las comprobaciones de deriva del token omiten la resolución del token de configuración.
 
 ### `gateway probe`
 
-`gateway probe` es el comando de "depurar todo". Siempre sondea:
+`gateway probe` es el comando "depurar todo". Siempre sondea:
 
-- su gateway remoto configurado (si está establecido), y
-- localhost (loopback) **incluso si el remoto está configurado**.
+- su puerta de enlace remota configurada (si está configurada), y
+- localhost (bucle de retorno) **incluso si se configura remota**.
 
-Si se pueden alcanzar múltiples gateways, imprime todos ellos. Se admiten múltiples gateways cuando utiliza perfiles/puertos aislados (por ejemplo, un bot de rescate), pero la mayoría de las instalaciones todavía ejecutan un solo gateway.
+Si pasa `--url`, ese objetivo explícito se añade antes que ambos. La salida humana etiqueta los objetivos como:
+
+- `URL (explicit)`
+- `Remote (configured)` o `Remote (configured, inactive)`
+- `Local loopback`
+
+Si se pueden alcanzar múltiples puertas de enlace, imprime todas. Se admiten múltiples puertas de enlace cuando usa perfiles/puertos aislados (p. ej., un bot de rescate), pero la mayoría de las instalaciones todavía ejecutan una sola puerta de enlace.
 
 ```bash
 openclaw gateway probe
@@ -137,22 +160,33 @@ Interpretación:
 
 - `Reachable: yes` significa que al menos un objetivo aceptó una conexión WebSocket.
 - `RPC: ok` significa que las llamadas RPC de detalle (`health`/`status`/`system-presence`/`config.get`) también tuvieron éxito.
-- `RPC: limited - missing scope: operator.read` significa que la conexión tuvo éxito pero el RPC de detalle está limitado en alcance. Esto se informa como accesibilidad **degradada**, no como un fallo total.
-- El código de salida es distinto de cero solo cuando ningún objetivo sondeado es accesible.
+- `RPC: limited - missing scope: operator.read` significa que la conexión tuvo éxito pero el RPC de detalle tiene un alcance limitado. Esto se informa como accesibilidad **degradada**, no como un fallo total.
+- El código de salida es distinto de cero solo cuando ningún objetivo sondeado es alcanzable.
 
 Notas JSON (`--json`):
 
 - Nivel superior:
-  - `ok`: al menos un objetivo es accesible.
-  - `degraded`: al menos un objetivo tuvo un RPC de detalle limitado en alcance.
+  - `ok`: al menos un objetivo es alcanzable.
+  - `degraded`: al menos un objetivo tenía un RPC de detalle con alcance limitado.
+  - `primaryTargetId`: el mejor objetivo para tratar como el ganador activo en este orden: URL explícita, túnel SSH, remota configurada y luego bucle de retorno local.
+  - `warnings[]`: registros de advertencia de mejor esfuerzo con `code`, `message` y opcional `targetIds`.
+  - `network`: sugerencias de URL de bucle de retorno local/tailnet derivadas de la configuración actual y la red del host.
+  - `discovery.timeoutMs` y `discovery.count`: el presupuesto de descubrimiento/recuento de resultados real utilizado para este pase de sondeo.
 - Por objetivo (`targets[].connect`):
   - `ok`: accesibilidad después de la conexión + clasificación degradada.
-  - `rpcOk`: éxito completo del RPC de detalle.
-  - `scopeLimited`: el RPC de detalle falló debido a la falta de alcance de operador.
+  - `rpcOk`: éxito de RPC con todos los detalles.
+  - `scopeLimited`: la RPC de detalles falló debido a la falta de ámbito de operador.
 
-#### Remoto a través de SSH (paridad con la aplicación Mac)
+Códigos de advertencia comunes:
 
-El modo "Remote over SSH" de la aplicación macOS utiliza un reenvío de puerto local para que la puerta de enlace remota (que puede estar vinculada solo al bucle local) sea accesible en `ws://127.0.0.1:<port>`.
+- `ssh_tunnel_failed`: falló la configuración del túnel SSH; el comando recurrió a sondas directas.
+- `multiple_gateways`: más de un objetivo era accesible; esto es inusual a menos que ejecute intencionalmente perfiles aislados, como un robot de rescate.
+- `auth_secretref_unresolved`: no se pudo resolver una referencia secreta (SecretRef) de autenticación configurada para un objetivo fallido.
+- `probe_scope_limited`: la conexión WebSocket tuvo éxito, pero la RPC de detalles se limitó por la falta de `operator.read`.
+
+#### Remoto a través de SSH (paridad con la app Mac)
+
+El modo "Remoto a través de SSH" de la aplicación macOS utiliza un reenvío de puerto local para que la puerta de enlace remota (que podría estar vinculada solo al loopback) sea accesible en `ws://127.0.0.1:<port>`.
 
 Equivalente en CLI:
 
@@ -164,9 +198,11 @@ Opciones:
 
 - `--ssh <target>`: `user@host` o `user@host:port` (el puerto predeterminado es `22`).
 - `--ssh-identity <path>`: archivo de identidad.
-- `--ssh-auto`: selecciona el primer host de puerta de enlace descubierto como objetivo SSH (solo LAN/WAB).
+- `--ssh-auto`: selecciona el primer host de puerta de enlace descubierto como objetivo SSH desde el punto final de descubrimiento resuelto
+  (`local.` más el dominio de área amplia configurado, si lo hay). Las sugerencias solo TXT
+  se ignoran.
 
-Configuración (opcional, utilizada como predeterminados):
+Configuración (opcional, se usa como valores predeterminados):
 
 - `gateway.remote.sshTarget`
 - `gateway.remote.sshIdentity`
@@ -180,6 +216,21 @@ openclaw gateway call status
 openclaw gateway call logs.tail --params '{"sinceMs": 60000}'
 ```
 
+Opciones:
+
+- `--params <json>`: cadena de objeto JSON para parámetros (predeterminado `{}`)
+- `--url <url>`
+- `--token <token>`
+- `--password <password>`
+- `--timeout <ms>`
+- `--expect-final`
+- `--json`
+
+Notas:
+
+- `--params` debe ser JSON válido.
+- `--expect-final` es principalmente para RPCs de estilo agente que transmiten eventos intermedios antes de una carga final.
+
 ## Administrar el servicio Gateway
 
 ```bash
@@ -190,34 +241,40 @@ openclaw gateway restart
 openclaw gateway uninstall
 ```
 
+Opciones de comando:
+
+- `gateway status`: `--url`, `--token`, `--password`, `--timeout`, `--no-probe`, `--require-rpc`, `--deep`, `--json`
+- `gateway install`: `--port`, `--runtime <node|bun>`, `--token`, `--force`, `--json`
+- `gateway uninstall|start|stop|restart`: `--json`
+
 Notas:
 
 - `gateway install` admite `--port`, `--runtime`, `--token`, `--force`, `--json`.
-- Cuando la autenticación por token requiere un token y `gateway.auth.token` está gestionado por SecretRef, `gateway install` valida que el SecretRef se pueda resolver, pero no persiste el token resuelto en los metadatos del entorno del servicio.
-- Si la autenticación por token requiere un token y el SecretRef de token configurado no se resuelve, la instalación falla de forma segura en lugar de persistir texto plano alternativo.
-- Para la autenticación con contraseña en `gateway run`, prefiera `OPENCLAW_GATEWAY_PASSWORD`, `--password-file`, o un `gateway.auth.password` respaldado por SecretRef antes que `--password` en línea.
-- En modo de autenticación inferida, `OPENCLAW_GATEWAY_PASSWORD` solo de shell no relaja los requisitos del token de instalación; use configuración duradera (`gateway.auth.password` o configuración `env`) al instalar un servicio administrado.
+- Cuando la autenticación por token requiere un token y `gateway.auth.token` está administrado por SecretRef, `gateway install` valida que el SecretRef sea resoluble, pero no persiste el token resuelto en los metadatos del entorno del servicio.
+- Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, la instalación falla de forma cerrada en lugar de persistir el texto sin formato de reserva.
+- Para la autenticación con contraseña en `gateway run`, prefiera `OPENCLAW_GATEWAY_PASSWORD`, `--password-file` o un `gateway.auth.password` respaldado por SecretRef en lugar de un `--password` en línea.
+- En el modo de autenticación inferida, el `OPENCLAW_GATEWAY_PASSWORD` solo de shell no relaja los requisitos del token de instalación; use una configuración duradera (`gateway.auth.password` o configuración `env`) al instalar un servicio administrado.
 - Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, la instalación se bloquea hasta que el modo se establezca explícitamente.
-- Los comandos de ciclo de vida aceptan `--json` para secuencias de comandos (scripting).
+- Los comandos de ciclo de vida aceptan `--json` para secuencias de comandos.
 
 ## Descubrir gateways (Bonjour)
 
-`gateway discover` escanea balizas de Gateway (`_openclaw-gw._tcp`).
+`gateway discover` busca balizas de Gateway (`_openclaw-gw._tcp`).
 
-- Multicast DNS-SD: `local.`
-- Unicast DNS-SD (Bonjour de área amplia): elija un dominio (ejemplo: `openclaw.internal.`) y configure DNS dividido + un servidor DNS; consulte [/gateway/bonjour](/en/gateway/bonjour)
+- DNS-SD de multidifusión: `local.`
+- DNS-SD de unidifusión (Bonjour de área amplia): elija un dominio (ejemplo: `openclaw.internal.`) y configure DNS dividido + un servidor DNS; consulte [/gateway/bonjour](/en/gateway/bonjour)
 
-Solo los gateways con el descubrimiento de Bonjour habilitado (predeterminado) anuncian la baliza.
+Solo los gateways con el descubrimiento de Bonjour habilitado (por defecto) anuncian la baliza.
 
 Los registros de descubrimiento de área amplia incluyen (TXT):
 
-- `role` (pista de rol de gateway)
-- `transport` (pista de transporte, ej. `gateway`)
+- `role` (sugerencia de rol de gateway)
+- `transport` (sugerencia de transporte, p. ej., `gateway`)
 - `gatewayPort` (puerto WebSocket, generalmente `18789`)
-- `sshPort` (puerto SSH; predeterminado a `22` si no está presente)
+- `sshPort` (opcional; los clientes establecen por defecto los destinos SSH en `22` cuando está ausente)
 - `tailnetDns` (nombre de host MagicDNS, cuando está disponible)
 - `gatewayTls` / `gatewayTlsSha256` (TLS habilitado + huella digital del certificado)
-- `cliPath` (pista opcional para instalaciones remotas)
+- `cliPath` (sugerencia de instalación remota escrita en la zona de área amplia)
 
 ### `gateway discover`
 
@@ -227,8 +284,8 @@ openclaw gateway discover
 
 Opciones:
 
-- `--timeout <ms>`: tiempo de espera por comando (explorar/resolver); predeterminado `2000`.
-- `--json`: salida legible por máquina (también deshabilita el estilo/indicador de carga).
+- `--timeout <ms>`: tiempo de espera por comando (explorar/resolver); por defecto `2000`.
+- `--json`: salida legible por máquina (también desactiva el estilo/indicador de carga).
 
 Ejemplos:
 
@@ -236,3 +293,12 @@ Ejemplos:
 openclaw gateway discover --timeout 4000
 openclaw gateway discover --json | jq '.beacons[].wsUrl'
 ```
+
+Notas:
+
+- La CLI escanea `local.` además del dominio de área amplia configurado cuando uno está habilitado.
+- `wsUrl` en la salida JSON se deriva del endpoint de servicio resuelto, no de sugerencias solo de TXT
+  como `lanHost` o `tailnetDns`.
+- En mDNS `local.`, `sshPort` y `cliPath` solo se transmiten cuando
+  `discovery.mdns.mode` es `full`. El DNS-SD de área amplia todavía escribe `cliPath`; `sshPort`
+  también permanece opcional allí.

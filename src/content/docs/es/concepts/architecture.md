@@ -41,7 +41,7 @@ title: "Arquitectura del Gateway"
 
 Detalles del protocolo:
 
-- [Protocolo del Gateway](/en/gateway/protocol)
+- [Protocolo de gateway](/en/gateway/protocol)
 
 ### WebChat
 
@@ -77,35 +77,47 @@ sequenceDiagram
 - Después del handshake:
   - Solicitudes: `{type:"req", id, method, params}` → `{type:"res", id, ok, payload|error}`
   - Eventos: `{type:"event", event, payload, seq?, stateVersion?}`
-- Si `OPENCLAW_GATEWAY_TOKEN` (o `--token`) está configurado, `connect.params.auth.token`
-  debe coincidir o el socket se cierra.
-- Las claves de idempotencia son necesarias para los métodos con efectos secundarios (`send`, `agent`) para
-  reintentar de forma segura; el servidor mantiene un caché de deduplicación de corta duración.
-- Los nodos deben incluir `role: "node"` además de caps/commands/permissions en `connect`.
+- `hello-ok.features.methods` / `events` son metadatos de descubrimiento, no un
+  volcado generado de cada ruta auxiliar invocable.
+- La autenticación de secreto compartido utiliza `connect.params.auth.token` o
+  `connect.params.auth.password`, dependiendo del modo de autenticación del gateway configurado.
+- Los modos con identidad, como Tailscale Serve
+  (`gateway.auth.allowTailscale: true`) o `gateway.auth.mode: "trusted-proxy"` que no sea de bucle local,
+  satisfacen la autenticación desde los encabezados de solicitud
+  en lugar de `connect.params.auth.*`.
+- El ingreso privado `gateway.auth.mode: "none"` deshabilita completamente la autenticación de secreto compartido;
+  mantenga ese modo fuera del ingreso público/no confiable.
+- Las claves de idempotencia son obligatorias para los métodos con efectos secundarios (`send`, `agent`) para
+  reintentar de manera segura; el servidor mantiene un caché de deduplicación de corta duración.
+- Los nodos deben incluir `role: "node"` más capacidades/comandos/permisos en `connect`.
 
 ## Emparejamiento + confianza local
 
 - Todos los clientes WS (operadores + nodos) incluyen una **identidad de dispositivo** en `connect`.
-- Los nuevos IDs de dispositivo requieren aprobación de emparejamiento; el Gateway emite un **token de dispositivo**
+- Los nuevos ID de dispositivo requieren aprobación de emparejamiento; el Gateway emite un **token de dispositivo**
   para las conexiones posteriores.
-- Las conexiones **locales** (loopback o la dirección tailnet propia del host del gateway) pueden ser
-  aprobadas automáticamente para mantener la UX del mismo host fluida.
+- Las conexiones directas de bucle local local pueden aprobarse automáticamente para mantener la UX del mismo host
+  fluida.
+- OpenClaw también tiene una ruta estrecha de autoconexión local de backend/contenedor para
+  flujos auxiliares de secreto compartido confiables.
+- Las conexiones de Tailnet y LAN, incluidos los enlaces de Tailnet del mismo host, aún requieren
+  aprobación de emparejamiento explícita.
 - Todas las conexiones deben firmar el nonce `connect.challenge`.
-- La carga útil de la firma `v3` también vincula `platform` + `deviceFamily`; el gateway
-  fija los metadatos emparejados al reconectar y requiere un emparejamiento de reparación para cambios en los
-  metadatos.
+- El payload de firma `v3` también vincula `platform` + `deviceFamily`; el gateway
+  fija los metadatos emparejados al reconectar y requiere un emparejamiento de reparación para cambios
+  en los metadatos.
 - Las conexiones **no locales** aún requieren aprobación explícita.
-- La autenticación del Gateway (`gateway.auth.*`) todavía se aplica a **todas** las conexiones, locales o
+- La autenticación del gateway (`gateway.auth.*`) todavía se aplica a **todas** las conexiones, locales o
   remotas.
 
-Detalles: [Gateway protocol](/en/gateway/protocol), [Pairing](/en/channels/pairing),
-[Security](/en/gateway/security).
+Detalles: [Protocolo de gateway](/en/gateway/protocol), [Emparejamiento](/en/channels/pairing),
+[Seguridad](/en/gateway/security).
 
-## Escritura de protocolos y generación de código
+## Escritura de protocolo y generación de código
 
 - Los esquemas TypeBox definen el protocolo.
 - JSON Schema se genera a partir de esos esquemas.
-- Los modelos Swift se generan a partir del JSON Schema.
+- Los modelos de Swift se generan a partir del esquema JSON.
 
 ## Acceso remoto
 
@@ -116,24 +128,24 @@ Detalles: [Gateway protocol](/en/gateway/protocol), [Pairing](/en/channels/pairi
   ssh -N -L 18789:127.0.0.1:18789 user@host
   ```
 
-- El mismo handshake + token de autenticación se aplican a través del túnel.
-- TLS + anclaje opcional se pueden habilitar para WS en configuraciones remotas.
+- El mismo handshake + token de autenticación aplican a través del túnel.
+- TLS + pinning opcional se pueden habilitar para WS en configuraciones remotas.
 
 ## Instantánea de operaciones
 
-- Inicio: `openclaw gateway` (en primer plano, registra en stdout).
-- Salud: `health` a través de WS (también incluido en `hello-ok`).
-- Supervisión: launchd/systemd para reinicio automático.
+- Inicio: `openclaw gateway` (en primer plano, registros a stdout).
+- Salud: `health` sobre WS (también incluido en `hello-ok`).
+- Supervisión: launchd/systemd para auto-reinicio.
 
 ## Invariantes
 
-- Exactamente un Gateway controla una sola sesión de Baileys por host.
-- El protocolo de enlace es obligatorio; cualquier primer marco que no sea JSON o no sea de conexión es un cierre brusco.
-- Los eventos no se reproducen; los clientes deben actualizar cuando haya lagunas.
+- Exactamente un Gateway controla una única sesión de Baileys por host.
+- El handshake es obligatorio; cualquier primer frame que no sea JSON o no sea de conexión es un cierre fuerte.
+- Los eventos no se reproducen; los clientes deben actualizar en caso de lagunas.
 
 ## Relacionado
 
-- [Agent Loop](/en/concepts/agent-loop) — ciclo de ejecución detallado del agente
-- [Gateway Protocol](/en/gateway/protocol) — contrato del protocolo WebSocket
-- [Queue](/en/concepts/queue) — cola de comandos y concurrencia
-- [Security](/en/gateway/security) — modelo de confianza y endurecimiento
+- [Bucle del Agente](/en/concepts/agent-loop) — ciclo de ejecución detallado del agente
+- [Protocolo del Gateway](/en/gateway/protocol) — contrato del protocolo WebSocket
+- [Cola](/en/concepts/queue) — cola de comandos y concurrencia
+- [Seguridad](/en/gateway/security) — modelo de confianza y endurecimiento

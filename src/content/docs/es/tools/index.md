@@ -30,8 +30,8 @@ OpenClaw tiene tres capas que trabajan juntas:
   <Step title="Las habilidades enseñan al agente cuándo y cómo">
     Una habilidad es un archivo markdown (`SKILL.md`) inyectado en el prompt del sistema.
     Las habilidades proporcionan al agente contexto, restricciones y guía paso a paso para
-    usar herramientas de manera efectiva. Las habilidades residen en tu espacio de trabajo, en carpetas compartidas
-    o se distribuyen dentro de complementos.
+    usar las herramientas de manera efectiva. Las habilidades residen en tu espacio de trabajo, en carpetas compartidas,
+    o se incluyen dentro de los complementos.
 
     [Referencia de habilidades](/en/tools/skills) | [Crear habilidades](/en/tools/creating-skills)
 
@@ -39,9 +39,10 @@ OpenClaw tiene tres capas que trabajan juntas:
 
   <Step title="Los complementos empaquetan todo junto">
     Un complemento es un paquete que puede registrar cualquier combinación de capacidades:
-    canales, proveedores de modelos, herramientas, habilidades, voz, generación de imágenes y más.
-    Algunos complementos son **centrales** (incluidos con OpenClaw), otros son **externos**
-    (publicados en npm por la comunidad).
+    canales, proveedores de modelos, herramientas, habilidades, voz, transcripción en tiempo real,
+    voz en tiempo real, comprensión de medios, generación de imágenes, generación de video,
+    obtención web, búsqueda web y más. Algunos complementos son **centrales** (enviados con
+    OpenClaw), otros son **externos** (publicados en npm por la comunidad).
 
     [Instalar y configurar complementos](/en/tools/plugin) | [Construir el tuyo propio](/en/plugins/building-plugins)
 
@@ -52,38 +53,61 @@ OpenClaw tiene tres capas que trabajan juntas:
 
 Estas herramientas se incluyen con OpenClaw y están disponibles sin instalar ningún complemento:
 
-| Herramienta                             | Lo que hace                                                                 | Página                                          |
-| --------------------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------- |
-| `exec` / `process`                      | Ejecutar comandos de shell, gestionar procesos en segundo plano             | [Exec](/en/tools/exec)                          |
-| `code_execution`                        | Ejecutar análisis remoto de Python en sandbox                               | [Ejecución de código](/en/tools/code-execution) |
-| `browser`                               | Controlar un navegador Chromium (navegar, hacer clic, captura de pantalla)  | [Navegador](/en/tools/browser)                  |
-| `web_search` / `x_search` / `web_fetch` | Buscar en la web, buscar publicaciones de X, obtener contenido de la página | [Web](/en/tools/web)                            |
-| `read` / `write` / `edit`               | Entrada/Salida de archivos en el espacio de trabajo                         |                                                 |
-| `apply_patch`                           | Parches de archivos de múltiples partes                                     | [Aplicar parche](/en/tools/apply-patch)         |
-| `message`                               | Enviar mensajes a través de todos los canales                               | [Envío de agente](/en/tools/agent-send)         |
-| `canvas`                                | Controlar node Canvas (presentar, evaluar, instantánea)                     |                                                 |
-| `nodes`                                 | Descubrir y apuntar a dispositivos emparejados                              |                                                 |
-| `cron` / `gateway`                      | Administrar trabajos programados, reiniciar puerta de enlace                |                                                 |
-| `image` / `image_generate`              | Analizar o generar imágenes                                                 |                                                 |
-| `sessions_*` / `agents_list`            | Gestión de sesiones, sub-agentes                                            | [Sub-agentes](/en/tools/subagents)              |
+| Herramienta                                | Lo que hace                                                                                        | Página                                               |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `exec` / `process`                         | Ejecutar comandos de shell, gestionar procesos en segundo plano                                    | [Exec](/en/tools/exec)                               |
+| `code_execution`                           | Ejecutar análisis remoto de Python en sandbox                                                      | [Ejecución de código](/en/tools/code-execution)      |
+| `browser`                                  | Controlar un navegador Chromium (navegar, hacer clic, captura de pantalla)                         | [Navegador](/en/tools/browser)                       |
+| `web_search` / `x_search` / `web_fetch`    | Buscar en la web, buscar publicaciones de X, obtener contenido de la página                        | [Web](/en/tools/web)                                 |
+| `read` / `write` / `edit`                  | Entrada/Salida de archivos en el espacio de trabajo                                                |                                                      |
+| `apply_patch`                              | Parches de archivos de múltiples partes                                                            | [Aplicar parche](/en/tools/apply-patch)              |
+| `message`                                  | Enviar mensajes a través de todos los canales                                                      | [Envío de agente](/en/tools/agent-send)              |
+| `canvas`                                   | Controlar node Canvas (presentar, evaluar, instantánea)                                            |                                                      |
+| `nodes`                                    | Descubrir y apuntar a dispositivos emparejados                                                     |                                                      |
+| `cron` / `gateway`                         | Gestionar trabajos programados; inspeccionar, parchear, reiniciar o actualizar la puerta de enlace |                                                      |
+| `image` / `image_generate`                 | Analizar o generar imágenes                                                                        | [Generación de imágenes](/en/tools/image-generation) |
+| `music_generate`                           | Generar pistas de música                                                                           | [Generación de música](/en/tools/music-generation)   |
+| `video_generate`                           | Generar videos                                                                                     | [Generación de video](/en/tools/video-generation)    |
+| `tts`                                      | Conversión de texto a voz de un solo paso                                                          | [TTS](/en/tools/tts)                                 |
+| `sessions_*` / `subagents` / `agents_list` | Gestión de sesiones, estado y orquestación de sub-agentes                                          | [Sub-agentes](/en/tools/subagents)                   |
+| `session_status`                           | Lectura de estilo `/status` ligera y anulación del modelo de sesión                                | [Herramientas de sesión](/en/concepts/session-tool)  |
 
-Para trabajar con imágenes, use `image` para el análisis y `image_generate` para la generación o edición. Si apunta a `openai/*`, `google/*`, `fal/*` u otro proveedor de imágenes no predeterminado, configure primero la clave de autenticación/API de ese proveedor.
+Para trabajos de imagen, use `image` para el análisis y `image_generate` para la generación o edición. Si apunta a `openai/*`, `google/*`, `fal/*` u otro proveedor de imágenes que no sea el predeterminado, configure primero la clave de autenticación/API de ese proveedor.
+
+Para trabajos de música, use `music_generate`. Si apunta a `google/*`, `minimax/*` u otro proveedor de música que no sea el predeterminado, configure primero la clave de autenticación/API de ese proveedor.
+
+Para trabajos de video, use `video_generate`. Si apunta a `qwen/*` u otro proveedor de video que no sea el predeterminado, configure primero la clave de autenticación/API de ese proveedor.
+
+Para la generación de audio impulsada por flujos de trabajo, use `music_generate` cuando un complemento como ComfyUI lo registre. Esto es independiente de `tts`, que es texto a voz.
+
+`session_status` es la herramienta ligera de estado/lectura en el grupo de sesiones. Responde preguntas de estilo `/status` sobre la sesión actual y opcionalmente puede establecer una anulación de modelo por sesión; `model=default` borra esa anulación. Al igual que `/status`, puede rellenar contadores dispersos de tokens/caché y la etiqueta del modelo de tiempo de ejecución activo desde la entrada de uso de la transcripción más reciente.
+
+`gateway` es la herramienta de tiempo de ejecución solo para propietarios para operaciones de puerta de enlace:
+
+- `config.schema.lookup` para un subárbol de configuración con ámbito de ruta antes de las ediciones
+- `config.get` para la instantánea + hash de la configuración actual
+- `config.patch` para actualizaciones parciales de configuración con reinicio
+- `config.apply` solo para el reemplazo de configuración completa
+- `update.run` para actualización explícita + reinicio
+
+Para cambios parciales, prefiera `config.schema.lookup` y luego `config.patch`. Use `config.apply` solo cuando intencionalmente reemplace toda la configuración. La herramienta también se niega a cambiar `tools.exec.ask` o `tools.exec.security`; los alias `tools.bash.*` heredados se normalizan a las mismas rutas de ejecución protegidas.
 
 ### Herramientas proporcionadas por complementos
 
 Los complementos pueden registrar herramientas adicionales. Algunos ejemplos:
 
-- [Lobster](/en/tools/lobster%) — tiempo de ejecución de flujo de trabajo tipado con aprobaciones reanudables
+- [Lobster](/en/tools/lobster) — tiempo de ejecución de flujos de trabajo tipados con aprobaciones reanudables
 - [LLM Task](/en/tools/llm-task) — paso de LLM solo JSON para salida estructurada
+- [Music Generation](/en/tools/music-generation) — herramienta `music_generate` compartida con proveedores respaldados por flujos de trabajo
 - [Diffs](/en/tools/diffs) — visor y renderizador de diferencias
-- [OpenProse](/en/prose) — orquestación de flujo de trabajo con prioridad en markdown
+- [OpenProse](/en/prose) — orquestación de flujos de trabajo con prioridad en markdown
 
 ## Configuración de herramientas
 
 ### Listas de permitidos y denegados
 
-Controle qué herramientas puede llamar el agente a través de `tools.allow` / `tools.deny` en la
-configuración. Denegar siempre gana a permitir.
+Controle qué herramientas puede llamar el agente mediante `tools.allow` / `tools.deny` en
+la configuración. Denegar siempre tiene prioridad sobre permitir.
 
 ```json5
 {
@@ -96,23 +120,23 @@ configuración. Denegar siempre gana a permitir.
 
 ### Perfiles de herramientas
 
-`tools.profile` establece una lista de permitidos base antes de que se aplique `allow`/`deny`.
+`tools.profile` establece una lista base de permitidos antes de que se aplique `allow`/`deny`.
 Anulación por agente: `agents.list[].tools.profile`.
 
-| Perfil      | Lo que incluye                                                  |
-| ----------- | --------------------------------------------------------------- |
-| `full`      | Todas las herramientas (predeterminado)                         |
-| `coding`    | E/S de archivos, tiempo de ejecución, sesiones, memoria, imagen |
-| `messaging` | Mensajería, lista/historial/envío/estado de sesiones            |
-| `minimal`   | Solo `session_status`                                           |
+| Perfil      | Lo que incluye                                                                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `full`      | Sin restricción (igual que sin configurar)                                                                                                        |
+| `coding`    | `group:fs`, `group:runtime`, `group:web`, `group:sessions`, `group:memory`, `cron`, `image`, `image_generate`, `music_generate`, `video_generate` |
+| `messaging` | `group:messaging`, `sessions_list`, `sessions_history`, `sessions_send`, `session_status`                                                         |
+| `minimal`   | Solo `session_status`                                                                                                                             |
 
 ### Grupos de herramientas
 
-Use abreviaturas `group:*` en listas de permitidos/denegados:
+Use abreviaturas de `group:*` en las listas de permitir/denegar:
 
 | Grupo              | Herramientas                                                                                              |
 | ------------------ | --------------------------------------------------------------------------------------------------------- |
-| `group:runtime`    | exec, bash, process, code_execution                                                                       |
+| `group:runtime`    | exec, process, code_execution (`bash` se acepta como alias para `exec`)                                   |
 | `group:fs`         | read, write, edit, apply_patch                                                                            |
 | `group:sessions`   | sessions_list, sessions_history, sessions_send, sessions_spawn, sessions_yield, subagents, session_status |
 | `group:memory`     | memory_search, memory_get                                                                                 |
@@ -121,12 +145,17 @@ Use abreviaturas `group:*` en listas de permitidos/denegados:
 | `group:automation` | cron, gateway                                                                                             |
 | `group:messaging`  | message                                                                                                   |
 | `group:nodes`      | nodes                                                                                                     |
-| `group:openclaw`   | Todas las herramientas integradas de OpenClaw (excluye herramientas de complementos)                      |
+| `group:agents`     | agents_list                                                                                               |
+| `group:media`      | image, image_generate, music_generate, video_generate, tts                                                |
+| `group:openclaw`   | Todas las herramientas integradas de OpenClaw (excluye las herramientas de complementos)                  |
+
+`sessions_history` devuelve una vista de recuperación limitada y filtrada por seguridad. Elimina las etiquetas de pensamiento, el andamiaje `<relevant-memories>`, las cargas útiles XML de llamadas a herramientas en texto sin formato (incluyendo `<tool_call>...</tool_call>`,
+`<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`,
+`<function_calls>...</function_calls>` y bloques de llamadas a herramientas truncados), el andamiaje de llamadas a herramientas degradado, los tokens de control de modelo ASCII/ancho completo filtrados y el XML de llamadas a herramientas de MiniMax malformado del texto del asistente, y luego aplica redacción/truncamiento y posibles marcadores de posición de fila sobredimensionada en lugar de actuar como un volcado de transcripción sin procesar.
 
 ### Restricciones específicas del proveedor
 
-Use `tools.byProvider` para restringir herramientas para proveedores específicos sin
-cambiar los valores predeterminados globales:
+Use `tools.byProvider` para restringir herramientas para proveedores específicos sin cambiar los valores predeterminados globales:
 
 ```json5
 {

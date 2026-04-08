@@ -23,21 +23,36 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，
 
 ## 支持的提供商（入门套件）
 
-- [OpenAI (API + Codex)](/en/providers/openai)
-- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
-- [OpenRouter](/en/providers/openrouter)
-- [Vercel AI Gateway(网关)](/en/providers/vercel-ai-gateway)
+- [Alibaba Model Studio](/en/providers/alibaba)
+- [Anthropic (API + Claude CLI)](/en/providers/anthropic)
+- [Amazon Bedrock](/en/providers/bedrock)
+- [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
+- [Chutes](/en/providers/chutes)
+- [ComfyUI](/en/providers/comfy)
 - [Cloudflare AI Gateway(网关)](/en/providers/cloudflare-ai-gateway)
-- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
-- [Mistral](/en/providers/mistral)
-- [Synthetic](/en/providers/synthetic)
-- [OpenCode (Zen + Go)](/en/providers/opencode)
-- [Z.AI](/en/providers/zai)
+- [fal](/en/providers/fal)
+- [Fireworks](/en/providers/fireworks)
 - [GLM models](/en/providers/glm)
 - [MiniMax](/en/providers/minimax)
-- [Venice (Venice AI)](/en/providers/venice)
-- [Amazon Bedrock](/en/providers/bedrock)
+- [Mistral](/en/providers/mistral)
+- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+- [OpenAI (API + Codex)](/en/providers/openai)
+- [OpenCode (Zen + Go)](/en/providers/opencode)
+- [OpenRouter](/en/providers/openrouter)
 - [Qianfan](/en/providers/qianfan)
+- [Qwen](/en/providers/qwen)
+- [Runway](/en/providers/runway)
+- [StepFun](/en/providers/stepfun)
+- [Synthetic](/en/providers/synthetic)
+- [Vercel AI Gateway(网关)](/en/providers/vercel-ai-gateway)
+- [Venice (Venice AI)](/en/providers/venice)
 - [xAI](/en/providers/xai)
+- [Z.AI](/en/providers/zai)
 
-有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，请参阅[模型提供商](/en/concepts/model-providers)。
+## 其他打包的提供商变体
+
+- `anthropic-vertex` - 当 Vertex 凭据可用时，隐式支持 Google Vertex 上的 Anthropic；无需单独的新手引导身份验证选择
+- `copilot-proxy` - 本地 VS Code Copilot 代理桥接器；使用 `openclaw onboard --auth-choice copilot-proxy`
+
+有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
+请参阅[模型提供商](/en/concepts/model-providers)。

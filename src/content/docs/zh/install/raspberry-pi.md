@@ -78,9 +78,9 @@ title: "Raspberry Pi"
 
   </Step>
 
-<Step title="验证">```bash openclaw status sudo systemctl status openclaw journalctl -u openclaw -f ```</Step>
+<Step title="验证">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
-  <Step title="访问控制界面">
+  <Step title="访问控制 UI">
     在您的计算机上，从 Pi 获取仪表板 URL：
 
     ```bash
@@ -93,14 +93,14 @@ title: "Raspberry Pi"
     ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
     ```
 
-    在本地浏览器中打开打印出的 URL。要实现始终开启的远程访问，请参阅 [Tailscale 集成](/en/gateway/tailscale)。
+    在本地浏览器中打开打印出的 URL。要实现始终在线的远程访问，请参阅 [Tailscale integration](/en/gateway/tailscale)。
 
   </Step>
 </Steps>
 
 ## 性能提示
 
-**使用 USB SSD** -- SD 卡速度较慢且容易磨损。USB SSD 可以显著提高性能。请参阅 [Pi USB 启动指南](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot)。
+**使用 USB SSD** —— SD 卡速度慢且容易损坏。USB SSD 可以显著提高性能。请参阅 [Pi USB boot guide](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot)。
 
 **启用模块编译缓存** -- 加速在低功耗 Pi 主机上重复调用 CLI：
 
@@ -126,14 +126,14 @@ sudo systemctl disable bluetooth
 
 **性能缓慢** -- 使用 USB SSD 代替 SD 卡。使用 `vcgencmd get_throttled` 检查 CPU 降频（应返回 `0x0`）。
 
-**服务无法启动** -- 使用 `journalctl -u openclaw --no-pager -n 100` 检查日志并运行 `openclaw doctor --non-interactive`。
+**服务无法启动** —— 使用 `journalctl --user -u openclaw-gateway.service --no-pager -n 100` 检查日志并运行 `openclaw doctor --non-interactive`。如果是无头 Pi，还要验证是否启用了 lingering：`sudo loginctl enable-linger "$(whoami)"`。
 
-**ARM 二进制文件问题** -- 如果某个技能因“exec format error”而失败，请检查该二进制文件是否具有 ARM64 构建。使用 `uname -m` 验证架构（应显示 `aarch64`）。
+**ARM 二进制文件问题** —— 如果技能因“exec format error”而失败，请检查二进制文件是否有 ARM64 构建。使用 `uname -m` 验证架构（应显示 `aarch64`）。
 
-**WiFi 掉线** -- 禁用 WiFi 电源管理：`sudo iwconfig wlan0 power off`。
+**WiFi 掉线** —— 禁用 WiFi 电源管理：`sudo iwconfig wlan0 power off`。
 
 ## 后续步骤
 
-- [通道](/en/channels) -- 连接 Telegram、WhatsApp、Discord 等
-- [Gateway(网关) 配置](/en/gateway/configuration) -- 所有配置选项
-- [更新](/en/install/updating) -- 保持 OpenClaw 为最新
+- [Channels](/en/channels) —— 连接 Telegram、WhatsApp、Discord 等
+- [Gateway(网关) configuration](/en/gateway/configuration) —— 所有配置选项
+- [Updating](/en/install/updating) —— 保持 OpenClaw 最新

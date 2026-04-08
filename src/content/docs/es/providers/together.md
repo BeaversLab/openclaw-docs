@@ -8,15 +8,16 @@ read_when:
 
 # Together AI
 
-[Together AI](https://together.ai) proporciona acceso a modelos de código abierto líderes, incluyendo Llama, DeepSeek, Kimi y más, a través de una API unificada.
+El [Together AI](https://together.ai) proporciona acceso a modelos de código abierto líderes, incluidos Llama, DeepSeek, Kimi y más, a través de una API unificada.
 
 - Proveedor: `together`
 - Autenticación: `TOGETHER_API_KEY`
 - API: Compatible con OpenAI
+- URL base: `https://api.together.xyz/v1`
 
 ## Inicio rápido
 
-1. Establezca la clave API (recomendado: guárdela para el Gateway):
+1. Configure la clave API (recomendado: guárdela para la Gateway):
 
 ```bash
 openclaw onboard --auth-choice together-api-key
@@ -47,20 +48,48 @@ Esto establecerá `together/moonshotai/Kimi-K2.5` como el modelo predeterminado.
 
 ## Nota sobre el entorno
 
-Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `TOGETHER_API_KEY`
+Si la Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `TOGETHER_API_KEY`
 esté disponible para ese proceso (por ejemplo, en `~/.openclaw/.env` o a través de
 `env.shellEnv`).
 
-## Modelos disponibles
+## Catálogo integrado
 
-Together AI proporciona acceso a muchos modelos de código abierto populares:
+OpenClaw incluye actualmente este catálogo agrupado de Together:
 
-- **GLM 4.7 Fp8** - Modelo predeterminado con ventana de contexto de 200K
-- **Llama 3.3 70B Instruct Turbo** - Seguimiento de instrucciones rápido y eficiente
-- **Llama 4 Scout** - Modelo de visión con comprensión de imágenes
-- **Llama 4 Maverick** - Visión avanzada y razonamiento
-- **DeepSeek V3.1** - Potente modelo de codificación y razonamiento
-- **DeepSeek R1** - Modelo de razonamiento avanzado
-- **Kimi K2 Instruct** - Modelo de alto rendimiento con ventana de contexto de 262K
+| Ref. de modelo                                               | Nombre                                 | Entrada       | Contexto   | Notas                                          |
+| ------------------------------------------------------------ | -------------------------------------- | ------------- | ---------- | ---------------------------------------------- |
+| `together/moonshotai/Kimi-K2.5`                              | Kimi K2.5                              | texto, imagen | 262,144    | Modelo predeterminado; razonamiento habilitado |
+| `together/zai-org/GLM-4.7`                                   | GLM 4.7 Fp8                            | texto         | 202,752    | Modelo de texto de propósito general           |
+| `together/meta-llama/Llama-3.3-70B-Instruct-Turbo`           | Llama 3.3 70B Instruct Turbo           | texto         | 131,072    | Modelo de instrucciones rápido                 |
+| `together/meta-llama/Llama-4-Scout-17B-16E-Instruct`         | Llama 4 Scout 17B 16E Instruct         | texto, imagen | 10,000,000 | Multimodal                                     |
+| `together/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | Llama 4 Maverick 17B 128E Instruct FP8 | texto, imagen | 20,000,000 | Multimodal                                     |
+| `together/deepseek-ai/DeepSeek-V3.1`                         | DeepSeek V3.1                          | texto         | 131,072    | Modelo de texto general                        |
+| `together/deepseek-ai/DeepSeek-R1`                           | DeepSeek R1                            | texto         | 131,072    | Modelo de razonamiento                         |
+| `together/moonshotai/Kimi-K2-Instruct-0905`                  | Kimi K2-Instruct 0905                  | texto         | 262,144    | Modelo de texto Kimi secundario                |
 
-Todos los modelos soportan finalizaciones de chat estándar y son compatibles con la API de OpenAI.
+La configuración de incorporación establece `together/moonshotai/Kimi-K2.5` como el modelo predeterminado.
+
+## Generación de video
+
+El complemento `together` incluido también registra la generación de video a través de la
+herramienta compartida `video_generate`.
+
+- Modelo de video predeterminado: `together/Wan-AI/Wan2.2-T2V-A14B`
+- Modos: flujos de texto a video y de referencia de imagen única
+- Admite `aspectRatio` y `resolution`
+
+Para usar Together como el proveedor de video predeterminado:
+
+```json5
+{
+  agents: {
+    defaults: {
+      videoGenerationModel: {
+        primary: "together/Wan-AI/Wan2.2-T2V-A14B",
+      },
+    },
+  },
+}
+```
+
+Consulte [Video Generation](/en/tools/video-generation) para obtener los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.

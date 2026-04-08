@@ -157,20 +157,23 @@ export OPENCLAW_APNS_PRIVATE_KEY_P8="$(cat /path/to/AuthKey_KEYID.p8)"
 
 ### Bonjour (LAN)
 
-Gateway(网关) 在 `local.` 上广播 `_openclaw-gw._tcp`。iOS 应用会自动列出这些设备。
+The iOS app browses `_openclaw-gw._tcp` on `local.` and, when configured, the same
+wide-area DNS-SD discovery domain. Same-LAN gateways appear automatically from `local.`;
+cross-network discovery can use the configured wide-area domain without changing the beacon type.
 
 ### Tailnet（跨网络）
 
-如果 mDNS 被阻止，请使用单播 DNS-SD 区域（选择一个域；例如：`openclaw.internal.`）和 Tailscale 分割 DNS。
-有关 CoreDNS 示例，请参见 [Bonjour](/en/gateway/bonjour)。
+If mDNS is blocked, use a unicast DNS-SD zone (choose a domain; example:
+`openclaw.internal.`) and Tailscale split DNS.
+See [Bonjour](/en/gateway/bonjour) for the CoreDNS example.
 
 ### 手动主机/端口
 
-在设置中，启用 **Manual Host** 并输入网关主机 + 端口（默认为 `18789`）。
+In Settings, enable **Manual Host** and enter the gateway host + port (default `18789`).
 
 ## Canvas + A2UI
 
-iOS 节点渲染 WKWebView 画布。使用 `node.invoke` 来驱动它：
+The iOS node renders a WKWebView canvas. Use `node.invoke` to drive it:
 
 ```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18789/__openclaw__/canvas/"}'
@@ -178,10 +181,10 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 
 备注：
 
-- Gateway(网关) 画布主机提供 `/__openclaw__/canvas/` 和 `/__openclaw__/a2ui/`。
-- 它由 Gateway(网关) HTTP 服务器提供（与 `gateway.port` 端口相同，默认为 `18789`）。
+- The Gateway(网关) canvas host serves `/__openclaw__/canvas/` and `/__openclaw__/a2ui/`.
+- It is served from the Gateway(网关) HTTP server (same port as `gateway.port`, default `18789`).
 - 当广播画布主机 URL 时，iOS 节点会在连接时自动导航到 A2UI。
-- 使用 `canvas.navigate` 和 `{"url":""}` 返回内置脚手架。
+- Return to the built-in scaffold with `canvas.navigate` and `{"url":""}`.
 
 ### Canvas 评估 / 快照
 
@@ -200,13 +203,13 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 
 ## 常见错误
 
-- `NODE_BACKGROUND_UNAVAILABLE`：将 iOS 应用置于前台（画布/相机/屏幕命令需要此操作）。
-- `A2UI_HOST_NOT_CONFIGURED`：Gateway(网关) 未广播画布主机 URL；请在 [Gateway(网关) 配置](/en/gateway/configuration) 中检查 `canvasHost`。
-- 配对提示从未出现：运行 `openclaw devices list` 并手动批准。
+- `NODE_BACKGROUND_UNAVAILABLE`: bring the iOS app to the foreground (canvas/camera/screen commands require it).
+- `A2UI_HOST_NOT_CONFIGURED`: the Gateway(网关) did not advertise a canvas host URL; check `canvasHost` in [Gateway(网关) configuration](/en/gateway/configuration).
+- Pairing prompt never appears: run `openclaw devices list` and approve manually.
 - 重新安装后重新连接失败：钥匙串配对令牌已被清除；请重新配对节点。
 
 ## 相关文档
 
-- [配对](/en/channels/pairing)
+- [Pairing](/en/channels/pairing)
 - [设备发现](/en/gateway/discovery)
 - [Bonjour](/en/gateway/bonjour)

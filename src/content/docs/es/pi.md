@@ -25,10 +25,10 @@ OpenClaw utiliza el pi SDK para integrar un agente de codificación de IA en su 
 
 ```json
 {
-  "@mariozechner/pi-agent-core": "0.61.1",
-  "@mariozechner/pi-ai": "0.61.1",
-  "@mariozechner/pi-coding-agent": "0.61.1",
-  "@mariozechner/pi-tui": "0.61.1"
+  "@mariozechner/pi-agent-core": "0.64.0",
+  "@mariozechner/pi-ai": "0.64.0",
+  "@mariozechner/pi-coding-agent": "0.64.0",
+  "@mariozechner/pi-tui": "0.64.0"
 }
 ```
 
@@ -154,7 +154,7 @@ const result = await runEmbeddedPiAgent({
   config: openclawConfig,
   prompt: "Hello, how are you?",
   provider: "anthropic",
-  model: "claude-sonnet-4-20250514",
+  model: "claude-sonnet-4-6",
   timeoutMs: 120_000,
   runId: "run-abc",
   onBlockReply: async (payload) => {
@@ -321,7 +321,12 @@ trackSessionManagerAccess(params.sessionFile);
 
 ### Compactación
 
-La compactación automática se activa al desbordar el contexto. `compactEmbeddedPiSessionDirect()` maneja la compactación manual:
+La auto-compresión se activa ante un desbordamiento de contexto. Las firmas comunes de desbordamiento
+incluyen `request_too_large`, `context length exceeded`, `input exceeds the
+maximum number of tokens`, `input token count exceeds the maximum number of
+input tokens`, `input is too long for the model`, and `ollama error: context
+length exceeded`. `compactEmbeddedPiSessionDirect()` maneja la
+compresión manual:
 
 ```typescript
 const compactResult = await compactEmbeddedPiSessionDirect({
@@ -360,7 +365,7 @@ authStorage.setRuntimeApiKey(model.provider, apiKeyInfo.apiKey);
 
 ### Conmutación por Error
 
-`FailoverError` activa el modelo de reserva (fallback) cuando está configurado:
+`FailoverError` activa el modelo alternativo cuando está configurado:
 
 ```typescript
 if (fallbackConfigured && isFailoverErrorMessage(errorText)) {
@@ -380,7 +385,7 @@ OpenClaw carga extensiones pi personalizadas para un comportamiento especializad
 
 ### Salvaguarda de Compactación
 
-`src/agents/pi-hooks/compaction-safeguard.ts` añade guardias a la compactación, incluida la asignación adaptativa de tokens más resúmenes de fallos de herramientas y operaciones de archivos:
+`src/agents/pi-hooks/compaction-safeguard.ts` añade salvaguardas a la compresión, incluyendo la presupuestación adaptativa de tokens además de resúmenes de fallos de herramientas y operaciones de archivos:
 
 ```typescript
 if (resolveCompactionMode(params.cfg) === "safeguard") {
@@ -391,7 +396,7 @@ if (resolveCompactionMode(params.cfg) === "safeguard") {
 
 ### Poda de Contexto
 
-`src/agents/pi-hooks/context-pruning.ts` implementa la poda de contexto basada en caché-TTL:
+`src/agents/pi-hooks/context-pruning.ts` implementa la poda de contexto basada en cache-TTL:
 
 ```typescript
 if (cfg?.agents?.defaults?.contextPruning?.mode === "cache-ttl") {
@@ -409,7 +414,7 @@ if (cfg?.agents?.defaults?.contextPruning?.mode === "cache-ttl") {
 
 ### Fragmentación de Bloques
 
-`EmbeddedBlockChunker` gestiona el flujo de texto en bloques de respuesta discretos:
+`EmbeddedBlockChunker` gestiona el texto de flujo continuo en bloques de respuesta discretos:
 
 ```typescript
 const blockChunker = blockChunking ? new EmbeddedBlockChunker(blockChunking) : null;
@@ -417,7 +422,7 @@ const blockChunker = blockChunking ? new EmbeddedBlockChunker(blockChunking) : n
 
 ### Eliminación de Etiquetas Thinking/Final
 
-El resultado de la transmisión se procesa para eliminar los bloques `<think>`/`<thinking>` y extraer el contenido `<final>`:
+La salida de flujo continuo se procesa para eliminar los bloques `<think>`/`<thinking>` y extraer el contenido `<final>`:
 
 ```typescript
 const stripBlockTags = (text: string, state: { thinking: boolean; final: boolean }) => {
@@ -488,13 +493,11 @@ if (sandboxRoot) {
 
 - Limpieza de cadenas mágicas de rechazo
 - Validación de turnos para roles consecutivos
-- Compatibilidad de parámetros de Claude Code
+- Validación estricta de parámetros de herramientas Pi de origen
 
 ### Google/Gemini
 
-- Correcciones del orden de turnos (`applyGoogleTurnOrderingFix`)
-- Saneamiento del esquema de herramientas (`sanitizeToolsForGoogle`)
-- Saneamiento del historial de sesiones (`sanitizeSessionHistory`)
+- Saneamiento del esquema de herramientas propiedad del plugin
 
 ### OpenAI
 
@@ -512,17 +515,17 @@ import { ... } from "@mariozechner/pi-tui";
 
 Esto proporciona la experiencia de terminal interactiva similar al modo nativo de pi.
 
-## Diferencias Clave con Pi CLI
+## Diferencias clave con la CLI de Pi
 
-| Aspecto                  | Pi CLI                                       | OpenClaw Integrado                                                                            |
-| ------------------------ | -------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Invocación               | Comando `pi` / RPC                           | SDK a través de `createAgentSession()`                                                        |
-| Herramientas             | Herramientas de codificación predeterminadas | Suite de herramientas personalizada de OpenClaw                                               |
-| Prompt del sistema       | AGENTS.md + prompts                          | Dinámico por canal/contexto                                                                   |
-| Almacenamiento de sesión | `~/.pi/agent/sessions/`                      | `~/.openclaw/agents/<agentId>/sessions/` (o `$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/`) |
-| Autenticación            | Credencial única                             | Multiperfil con rotación                                                                      |
-| Extensiones              | Cargado desde disco                          | Rutas programáticas + de disco                                                                |
-| Manejo de eventos        | Renderizado TUI                              | Basado en devoluciones de llamada (onBlockReply, etc.)                                        |
+| Aspecto                  | CLI de Pi                                | OpenClaw integrado                                                                            |
+| ------------------------ | ---------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Invocación               | Comando `pi` / RPC                       | SDK vía `createAgentSession()`                                                                |
+| Herramientas             | Herramientas de codificación por defecto | Suite de herramientas personalizada de OpenClaw                                               |
+| Prompt del sistema       | AGENTS.md + prompts                      | Dinámico por canal/contexto                                                                   |
+| Almacenamiento de sesión | `~/.pi/agent/sessions/`                  | `~/.openclaw/agents/<agentId>/sessions/` (o `$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/`) |
+| Autenticación            | Credencial única                         | Multi-perfil con rotación                                                                     |
+| Extensiones              | Cargadas desde disco                     | Programático + rutas de disco                                                                 |
+| Manejo de eventos        | Renderizado TUI                          | Basado en devoluciones de llamada (onBlockReply, etc.)                                        |
 
 ## Consideraciones futuras
 
@@ -530,13 +533,13 @@ Esto proporciona la experiencia de terminal interactiva similar al modo nativo d
 
 1. **Alineación de firmas de herramientas**: Actualmente adaptando entre firmas de pi-agent-core y pi-coding-agent
 2. **Envoltura del gestor de sesiones**: `guardSessionManager` añade seguridad pero aumenta la complejidad
-3. **Carga de extensiones**: Podría usar `ResourceLoader` de pi más directamente
+3. **Carga de extensiones**: Podría usar el `ResourceLoader` de pi más directamente
 4. **Complejidad del gestor de streaming**: `subscribeEmbeddedPiSession` ha crecido mucho
-5. **Particularidades del proveedor**: Muchas rutas de código específicas del proveedor que pi podría manejar potencialmente
+5. ** peculiaridades del proveedor**: Muchas rutas de código específicas del proveedor que pi podría manejar potencialmente
 
 ## Pruebas
 
-La cobertura de integración de Pi abarca estas suites:
+La cobertura de la integración de Pi abarca estas suites:
 
 - `src/agents/pi-*.test.ts`
 - `src/agents/pi-auth-json.test.ts`

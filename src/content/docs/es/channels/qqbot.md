@@ -13,13 +13,11 @@ QQ Bot se conecta a OpenClaw a través de la API oficial de QQ Bot (puerta de en
 complemento admite chat privado C2C, mensajes de mención de grupo (@messages) y mensajes de canal de gremio con
 medios enriquecidos (imágenes, voz, video, archivos).
 
-Estado: complemento de canal incluido. Se admiten mensajes directos, chats de grupo, canales de gremio y
-medios. No se admiten reacciones ni hilos.
+Estado: complemento integrado. Se admiten mensajes directos, chats de grupo, canales de gremio y medios. Las reacciones y los hilos no están admitidos.
 
-## Incluido con OpenClaw
+## Complemento integrado
 
-Las instalaciones actuales de OpenClaw incluyen QQ Bot. No necesita un paso de
-`openclaw plugins install` separado para la configuración normal.
+Las versiones actuales de OpenClaw incluyen QQ Bot, por lo que las compilaciones empaquetadas normales no necesitan un paso de `openclaw plugins install` separado.
 
 ## Configuración
 

@@ -8,7 +8,7 @@ read_when:
 
 # Groq
 
-[Groq](https://groq.com) ofrece inferencia ultra rápida en modelos de código abierto
+[Groq](https://groq.com) ofrece inferencia ultrarrápida en modelos de código abierto
 (Llama, Gemma, Mistral y más) utilizando hardware LPU personalizado. OpenClaw se conecta
 a Groq a través de su API compatible con OpenAI.
 
@@ -18,7 +18,7 @@ a Groq a través de su API compatible con OpenAI.
 
 ## Inicio rápido
 
-1. Obtenga una clave de API desde [console.groq.com/keys](https://console.groq.com/keys).
+1. Obtenga una clave de API en [console.groq.com/keys](https://console.groq.com/keys).
 
 2. Configure la clave de API:
 
@@ -53,14 +53,14 @@ export GROQ_API_KEY="gsk_..."
 
 ## Transcripción de audio
 
-Groq también ofrece una transcripción de audio rápida basada en Whisper. Cuando se configura como un
+Groq también ofrece transcripción de audio rápida basada en Whisper. Cuando se configura como un
 proveedor de comprensión de medios, OpenClaw utiliza el modelo `whisper-large-v3-turbo`
-de Groq para transcribir mensajes de voz.
+de Groq para transcribir mensajes de voz a través de la superficie compartida `tools.media.audio`.
 
 ```json5
 {
-  media: {
-    understanding: {
+  tools: {
+    media: {
       audio: {
         models: [{ provider: "groq" }],
       },
@@ -71,9 +71,17 @@ de Groq para transcribir mensajes de voz.
 
 ## Nota sobre el entorno
 
-Si la Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `GROQ_API_KEY` esté
+Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `GROQ_API_KEY` esté
 disponible para ese proceso (por ejemplo, en `~/.openclaw/.env` o a través
 de `env.shellEnv`).
+
+## Notas de audio
+
+- Ruta de configuración compartida: `tools.media.audio`
+- URL base de audio de Groq predeterminada: `https://api.groq.com/openai/v1`
+- Modelo de audio de Groq predeterminado: `whisper-large-v3-turbo`
+- La transcripción de audio de Groq utiliza la ruta `/audio/transcriptions`
+  compatible con OpenAI
 
 ## Modelos disponibles
 
@@ -83,10 +91,10 @@ para ver los modelos disponibles actualmente, o consulte
 
 Las opciones populares incluyen:
 
-- **Llama 3.3 70B Versátil** - uso general, contexto grande
+- **Llama 3.3 70B Versatile** - propósito general, contexto grande
 - **Llama 3.1 8B Instant** - rápido, ligero
 - **Gemma 2 9B** - compacto, eficiente
-- **Mixtral 8x7B** - arquitectura MoE, razonamiento fuerte
+- **Mixtral 8x7B** - arquitectura MoE, razonamiento sólido
 
 ## Enlaces
 

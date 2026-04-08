@@ -129,8 +129,8 @@ wsl --list --verbose
 重启后（在 Windows 登录前），从 WSL 检查：
 
 ```bash
-systemctl --user is-enabled openclaw-gateway
-systemctl --user status openclaw-gateway --no-pager
+systemctl --user is-enabled openclaw-gateway.service
+systemctl --user status openclaw-gateway.service --no-pager
 ```
 
 ## 高级：通过 LAN 暴露 WSL 服务

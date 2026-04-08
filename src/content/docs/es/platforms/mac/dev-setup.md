@@ -34,10 +34,10 @@ Para compilar la aplicación de macOS y empaquetarla en `dist/OpenClaw.app`, eje
 
 Si no tiene un certificado de ID de desarrollador de Apple, el script utilizará automáticamente **firma ad-hoc** (`-`).
 
-Para los modos de ejecución de desarrollo, las banderas de firma y la resolución de problemas con el ID de equipo, consulte el README de la aplicación de macOS:
+Para los modos de ejecución de desarrollo, marcas de firma y solución de problemas de ID de equipo, consulta el LÉEME de la aplicación macOS:
 [https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
 
-> **Nota**: Las aplicaciones firmadas ad-hoc pueden activar avisos de seguridad. Si la aplicación falla inmediatamente con "Abort trap 6", consulte la sección [Solución de problemas](#troubleshooting).
+> **Nota**: Las aplicaciones firmadas ad hoc pueden activar avisos de seguridad. Si la aplicación falla inmediatamente con "Abort trap 6", consulta la sección [Solución de problemas](#troubleshooting).
 
 ## 3. Instalar la CLI
 
@@ -55,15 +55,18 @@ Alternativamente, instálela manualmente:
 npm install -g openclaw@<version>
 ```
 
+`pnpm add -g openclaw@<version>` y `bun add -g openclaw@<version>` también funcionan.
+Para el tiempo de ejecución de Gateway, Node sigue siendo la ruta recomendada.
+
 ## Solución de problemas
 
-### Error de compilación: Discordancia en la cadena de herramientas o el SDK
+### Error de compilación: Discordancia en la cadena de herramientas o SDK
 
-La compilación de la aplicación de macOS espera el SDK de macOS más reciente y la cadena de herramientas de Swift 6.2.
+La compilación de la aplicación macOS espera el último SDK de macOS y la cadena de herramientas Swift 6.2.
 
 **Dependencias del sistema (requeridas):**
 
-- **Última versión de macOS disponible en Actualización de software** (requerida por los SDK de Xcode 26.2)
+- **Última versión de macOS disponible en Actualización de software** (requerido por los SDK de Xcode 26.2)
 - **Xcode 26.2** (cadena de herramientas Swift 6.2)
 
 **Comprobaciones:**
@@ -73,25 +76,25 @@ xcodebuild -version
 xcrun swift --version
 ```
 
-Si las versiones no coinciden, actualice macOS/Xcode y vuelva a ejecutar la compilación.
+Si las versiones no coinciden, actualiza macOS/Xcode y vuelve a ejecutar la compilación.
 
 ### La aplicación falla al otorgar permisos
 
-Si la aplicación falla cuando intenta permitir el acceso al **Reconocimiento de voz** o al **Micrófono**, puede deberse a una caché de TCC dañada o a una discrepancia en la firma.
+Si la aplicación falla cuando intentas permitir el acceso al **Reconocimiento de voz** o al **Micrófono**, puede deberse a una caché de TCC dañada o una discordancia en la firma.
 
 **Solución:**
 
-1. Restablezca los permisos de TCC:
+1. Restablece los permisos de TCC:
 
    ```bash
    tccutil reset All ai.openclaw.mac.debug
    ```
 
-2. Si eso falla, cambie el `BUNDLE_ID` temporalmente en [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) para forzar una "hoja en blanco" desde macOS.
+2. Si eso falla, cambia el `BUNDLE_ID` temporalmente en [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) para forzar una "hoja en blanco" por parte de macOS.
 
-### Gateway "Starting..." indefinidamente
+### Gateway "Iniciando..." indefinidamente
 
-Si el estado de la puerta de enlace se mantiene en "Starting...", compruebe si un proceso zombi está reteniendo el puerto:
+Si el estado del gateway se mantiene en "Iniciando...", comprueba si un proceso zombie está reteniendo el puerto:
 
 ```bash
 openclaw gateway status
@@ -101,4 +104,4 @@ openclaw gateway stop
 lsof -nP -iTCP:18789 -sTCP:LISTEN
 ```
 
-Si una ejecución manual está reteniendo el puerto, detenga ese proceso (Ctrl+C). Como último recurso, mate el PID que encontró anteriormente.
+Si una ejecución manual está reteniendo el puerto, detén ese proceso (Ctrl+C). Como último recurso, mata el PID que encontraste arriba.

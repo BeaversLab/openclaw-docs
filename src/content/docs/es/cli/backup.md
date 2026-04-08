@@ -8,7 +8,7 @@ title: "backup"
 
 # `openclaw backup`
 
-Crea un archivo de copia de seguridad local para el estado, la configuración, las credenciales, las sesiones y, opcionalmente, los espacios de trabajo de OpenClaw.
+Cree un archivo de copia de seguridad local para el estado, la configuración, los perfiles de autenticación, las credenciales de canal/proveedor, las sesiones y, opcionalmente, los espacios de trabajo de OpenClaw.
 
 ```bash
 openclaw backup create
@@ -37,18 +37,25 @@ openclaw backup verify ./2026-03-09T00-00-00.000Z-openclaw-backup.tar.gz
 
 - El directorio de estado devuelto por el solucionador de estado local de OpenClaw, generalmente `~/.openclaw`
 - La ruta del archivo de configuración activo
-- El directorio de OAuth / credenciales
-- Directorios de espacio de trabajo descubiertos desde la configuración actual, a menos que pase `--no-include-workspace`
+- El directorio `credentials/` resuelto cuando existe fuera del directorio de estado
+- Directorios de espacio de trabajo descubiertos a partir de la configuración actual, a menos que pase `--no-include-workspace`
 
-Si usa `--only-config`, OpenClaw omite el estado, las credenciales y el descubrimiento de espacios de trabajo y archiva solo la ruta del archivo de configuración activo.
+Los perfiles de autenticación de modelos ya son parte del directorio de estado en
+`agents/<agentId>/agent/auth-profiles.json`, por lo que normalmente están cubiertos por la
+entrada de copia de seguridad del estado.
 
-OpenClaw canoniciza las rutas antes de crear el archivo. Si la configuración, las credenciales o un espacio de trabajo ya residen dentro del directorio de estado, no se duplican como fuentes de copia de seguridad de nivel superior. Las rutas faltantes se omiten.
+Si usa `--only-config`, OpenClaw omite el estado, el directorio de credenciales y el descubrimiento de espacios de trabajo y archiva solo la ruta del archivo de configuración activo.
 
-La carga útil del archivo almacena el contenido de los archivos de esos árboles de origen, y el `manifest.json` incrustado registra las rutas de origen absolutas resueltas más el diseño de archivo utilizado para cada activo.
+OpenClaw canónica las rutas antes de construir el archivo. Si la configuración, el
+directorio de credenciales o un espacio de trabajo ya están dentro del directorio de estado,
+no se duplican como fuentes de copia de seguridad de nivel superior separadas. Las rutas faltantes se
+omiten.
+
+La carga útil del archivo almacena el contenido de los archivos de esos árboles de origen, y el `manifest.json` incrustado registra las rutas de origen absolutas resueltas más el diseño del archivo utilizado para cada activo.
 
 ## Comportamiento de configuración no válida
 
-`openclaw backup` omite intencionalmente la verificación previa normal de configuración para que aún pueda ayudar durante la recuperación. Dado que el descubrimiento de espacios de trabajo depende de una configuración válida, `openclaw backup create` ahora falla rápidamente cuando el archivo de configuración existe pero no es válido y la copia de seguridad del espacio de trabajo todavía está habilitada.
+`openclaw backup` omite intencionalmente el preflight normal de configuración para que aún pueda ayudar durante la recuperación. Dado que el descubrimiento de espacios de trabajo depende de una configuración válida, `openclaw backup create` ahora falla rápido cuando el archivo de configuración existe pero no es válido y la copia de seguridad del espacio de trabajo aún está habilitada.
 
 Si aún desea una copia de seguridad parcial en esa situación, vuelva a ejecutar:
 
@@ -56,9 +63,10 @@ Si aún desea una copia de seguridad parcial en esa situación, vuelva a ejecuta
 openclaw backup create --no-include-workspace
 ```
 
-Eso mantiene el estado, la configuración y las credenciales dentro del alcance mientras omite completamente el descubrimiento de espacios de trabajo.
+Eso mantiene el estado, la configuración y el directorio externo de credenciales dentro del alcance mientras
+omite por completo el descubrimiento de espacios de trabajo.
 
-Si solo necesita una copia del archivo de configuración en sí, `--only-config` también funciona cuando la configuración está malformada porque no depende del análisis de la configuración para el descubrimiento de espacios de trabajo.
+Si solo necesita una copia del propio archivo de configuración, `--only-config` también funciona cuando la configuración está malformada porque no depende del análisis de la configuración para el descubrimiento de espacios de trabajo.
 
 ## Tamaño y rendimiento
 
@@ -66,11 +74,11 @@ OpenClaw no impone un tamaño máximo de copia de seguridad integrado ni un lím
 
 Los límites prácticos provienen de la máquina local y el sistema de archivos de destino:
 
-- Espacio disponible para la escritura del archivo temporal más el archivo final
+- Espacio disponible para la escritura temporal del archivo más el archivo final
 - Tiempo para recorrer grandes árboles de espacios de trabajo y comprimirlos en un `.tar.gz`
 - Tiempo para volver a escanear el archivo si usa `openclaw backup create --verify` o ejecuta `openclaw backup verify`
-- Comportamiento del sistema de archivos en la ruta de destino. OpenClaw prefiere un paso de publicación de enlaces duros sin sobrescritura y recurre a una copia exclusiva cuando los enlaces duros no son compatibles
+- Comportamiento del sistema de archivos en la ruta de destino. OpenClaw prefiere un paso de publicación con enlaces duros sin sobrescritura y recurre a una copia exclusiva cuando los enlaces duros no son compatibles.
 
-Los espacios de trabajo grandes suelen ser el principal factor del tamaño del archivo. Si desea una copia de seguridad más pequeña o más rápida, use `--no-include-workspace`.
+Los espacios de trabajo grandes suelen ser el factor principal del tamaño del archivo. Si deseas una copia de seguridad más pequeña o más rápida, usa `--no-include-workspace`.
 
-Para el archivo más pequeño, use `--only-config`.
+Para obtener el archivo más pequeño, usa `--only-config`.

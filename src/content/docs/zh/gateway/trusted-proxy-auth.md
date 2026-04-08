@@ -53,8 +53,8 @@ read_when:
 ```json5
 {
   gateway: {
-    // Use loopback for same-host proxy setups; use lan/custom for remote proxy hosts
-    bind: "loopback",
+    // Trusted-proxy auth expects requests from a non-loopback trusted proxy source
+    bind: "lan",
 
     // CRITICAL: Only add your proxy's IP(s) here
     trustedProxies: ["10.0.0.1", "172.17.0.1"],
@@ -76,18 +76,22 @@ read_when:
 }
 ```
 
-如果 `gateway.bind` 是 `loopback`，请在
-`gateway.trustedProxies` 中包含一个回环代理地址（`127.0.0.1`、`::1` 或等效的回环 CIDR）。
+重要的运行时规则：
+
+- 受信任代理认证会拒绝回环源请求（`127.0.0.1`、`::1`、回环 CIDRs）。
+- 同主机回环反向代理**不**满足受信任代理认证的要求。
+- 对于同主机回环代理设置，请改用令牌/密码认证，或通过 OpenClaw 可以验证的非回环受信任代理地址进行路由。
+- 非回环控制 UI 部署仍然需要显式的 `gateway.controlUi.allowedOrigins`。
 
 ### 配置参考
 
 | 字段                                        | 必需 | 描述                                                   |
 | ------------------------------------------- | ---- | ------------------------------------------------------ |
-| `gateway.trustedProxies`                    | 是   | 要信任的代理 IP 地址数组。来自其他 IP 的请求将被拒绝。 |
+| `gateway.trustedProxies`                    | 是   | 受信任的代理 IP 地址数组。来自其他 IP 的请求将被拒绝。 |
 | `gateway.auth.mode`                         | 是   | 必须是 `"trusted-proxy"`                               |
-| `gateway.auth.trustedProxy.userHeader`      | 是   | 包含已认证用户身份的 Header 名称                       |
-| `gateway.auth.trustedProxy.requiredHeaders` | 否   | 请求受信任时必须存在的其他 Header                      |
-| `gateway.auth.trustedProxy.allowUsers`      | 否   | 用户身份白名单。留空表示允许所有已认证用户。           |
+| `gateway.auth.trustedProxy.userHeader`      | 是   | 包含已认证用户身份的标头名称                           |
+| `gateway.auth.trustedProxy.requiredHeaders` | 否   | 请求受信任必须存在的其他标头                           |
+| `gateway.auth.trustedProxy.allowUsers`      | 否   | 用户身份允许列表。为空表示允许所有已认证用户。         |
 
 ## TLS 终止和 HSTS
 
@@ -95,20 +99,20 @@ read_when:
 
 ### 推荐模式：代理 TLS 终止
 
-当您的反向代理为 `https://control.example.com` 处理 HTTPS 时，请在代理上为该域设置
-`Strict-Transport-Security`。
+当您的反向代理为 `https://control.example.com` 处理 HTTPS 时，
+在该代理上为该域设置 `Strict-Transport-Security`。
 
-- 适合面向互联网的部署。
-- 将证书 + HTTP 加固策略集中在一处。
-- OpenClaw 可以在代理后的回环 HTTP 上运行。
+- 非常适合面向互联网的部署。
+- 将证书 + HTTP 加固策略保留在一处。
+- OpenClaw 可以保留在代理后面的回环 HTTP 上。
 
-Header 值示例：
+示例标头值：
 
 ```text
 Strict-Transport-Security: max-age=31536000; includeSubDomains
 ```
 
-### Gateway(网关) TLS 终止
+### Gateway TLS 终止
 
 如果 OpenClaw 本身直接提供 HTTPS（无 TLS 终止代理），请设置：
 
@@ -125,21 +129,21 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains
 }
 ```
 
-`strictTransportSecurity` 接受字符串 Header 值，或使用 `false` 显式禁用。
+`strictTransportSecurity` 接受字符串标头值，或使用 `false` 显式禁用。
 
-### 部署指南
+### 上线指导
 
 - 验证流量时，首先使用较短的 max age（例如 `max-age=300`）。
-- 只有在确定无误后，才增加为长期有效的值（例如 `max-age=31536000`）。
-- 仅当每个子域名都准备好使用 HTTPS 时，才添加 `includeSubDomains`。
-- 仅当您有意为整个域名集满足预加载要求时，才使用预加载。
-- 仅限回环的本地开发无法从 HSTS 中受益。
+- 只有在信心很高时，才增加到长期值（例如 `max-age=31536000`）。
+- 仅当每个子域都准备好 HTTPS 时，才添加 `includeSubDomains`。
+- 仅当您有意识地满足完整域集的预加载要求时，才使用预加载。
+- 仅限回环的本地开发不会从 HSTS 中受益。
 
 ## 代理设置示例
 
 ### Pomerium
 
-Pomerium 在 `x-pomerium-claim-email`（或其他声明 Header）中传递身份，并在 `x-pomerium-jwt-assertion` 中传递 JWT。
+Pomerium 在 `x-pomerium-claim-email`（或其他声明头）中传递身份，并在 `x-pomerium-jwt-assertion` 中传递 JWT。
 
 ```json5
 {
@@ -173,13 +177,13 @@ routes:
 
 ### 使用 OAuth 的 Caddy
 
-带有 `caddy-security` 插件的 Caddy 可以认证用户并传递身份 Header。
+带有 `caddy-security` 插件的 Caddy 可以对用户进行身份验证并传递身份头。
 
 ```json5
 {
   gateway: {
     bind: "lan",
-    trustedProxies: ["127.0.0.1"], // Caddy's IP (if on same host)
+    trustedProxies: ["10.0.0.1"], // Caddy/sidecar proxy IP
     auth: {
       mode: "trusted-proxy",
       trustedProxy: {
@@ -205,7 +209,7 @@ openclaw.example.com {
 
 ### nginx + oauth2-proxy
 
-oauth2-proxy 对用户进行认证并在 `x-auth-request-email` 中传递身份信息。
+oauth2-proxy 对用户进行身份验证并在 `x-auth-request-email` 中传递身份。
 
 ```json5
 {
@@ -237,7 +241,7 @@ location / {
 }
 ```
 
-### Traefik 搭配 Forward Auth
+### Traefik 与 Forward Auth
 
 ```json5
 {
@@ -256,35 +260,61 @@ location / {
 
 ## 混合令牌配置
 
-OpenClaw 会拒绝模糊配置，即同时启用了 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）和 `trusted-proxy` 模式。混合令牌配置可能导致环回请求在错误的身份验证路径上静默通过身份验证。
+OpenClaw 会拒绝混合配置，即同时启用了 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）和 `trusted-proxy` 模式。混合令牌配置可能导致回环请求在错误的身份验证路径上静默通过验证。
 
 如果在启动时看到 `mixed_trusted_proxy_token` 错误：
 
 - 使用 trusted-proxy 模式时移除共享令牌，或
 - 如果您打算使用基于令牌的身份验证，请将 `gateway.auth.mode` 切换为 `"token"`。
 
-环回 trusted-proxy 身份验证也会以失败关闭：同主机调用者必须通过受信任的代理提供配置的身份标头，而不是被静默身份验证。
+回环 trusted-proxy 身份验证也会失败关闭：同主机调用者必须通过受信任的代理提供配置的身份头，而不是被静默身份验证。
+
+## Operator 范围头
+
+Trusted-proxy 身份验证是一种**承载身份**的 HTTP 模式，因此调用者可以选择使用 `x-openclaw-scopes` 声明 operator 范围。
+
+示例：
+
+- `x-openclaw-scopes: operator.read`
+- `x-openclaw-scopes: operator.read,operator.write`
+- `x-openclaw-scopes: operator.admin,operator.write`
+
+行为：
+
+- 当该头存在时，OpenClaw 将遵守声明的范围集。
+- 当该头存在但为空时，请求声明**没有** operator 范围。
+- 当该头不存在时，正常的承载身份 HTTP API 会回退到标准的 operator 默认范围集。
+- Gateway(网关)-auth **插件 HTTP 路由** 默认范围更窄：当 `x-openclaw-scopes` 不存在时，其运行时范围会回退到 `operator.write`。
+- 浏览器发起的 HTTP 请求即使在 trusted-proxy 身份验证成功后，仍必须通过 `gateway.controlUi.allowedOrigins`（或故意设置的 Host 头回退模式）。
+
+实用规则：
+
+- 当您希望受信任代理请求的范围比默认值更窄，或者当 gateway-auth 插件路由需要的权限比写入范围更强时，请显式发送 `x-openclaw-scopes`。
 
 ## 安全检查清单
 
-在启用 trusted-proxy 身份验证之前，请验证：
+在启用受信任代理身份验证之前，请验证：
 
-- [ ] **代理是唯一路径**：Gateway(网关) 端口已通过防火墙设置，仅允许您的代理访问
-- [ ] **trustedProxies 最小化**：仅包含您的实际代理 IP，而不是整个子网
+- [ ] **代理是唯一路径**：Gateway(网关) 端口已设置防火墙，仅允许您的代理访问
+- [ ] **trustedProxies 是最小化的**：仅包含您的实际代理 IP，而不是整个子网
+- [ ] **无环回代理源**：对于环回源请求，受信任代理身份验证将以失败关闭（fail closed）
 - [ ] **代理剥离标头**：您的代理覆盖（而不是追加）来自客户端的 `x-forwarded-*` 标头
 - [ ] **TLS 终止**：您的代理处理 TLS；用户通过 HTTPS 连接
-- [ ] **设置了 allowUsers**（推荐）：限制为已知用户，而不是允许任何经过身份验证的人
+- [ ] **allowedOrigins 是显式的**：非环回控制 UI 使用显式的 `gateway.controlUi.allowedOrigins`
+- [ ] **已设置 allowUsers**（推荐）：限制为已知用户，而不是允许任何通过身份验证的用户
 - [ ] **无混合令牌配置**：不要同时设置 `gateway.auth.token` 和 `gateway.auth.mode: "trusted-proxy"`
 
 ## 安全审计
 
-`openclaw security audit` 将把 trusted-proxy 身份验证标记为**严重**级别的发现。这是有意为之——它提醒您正在将安全性委托给您的代理设置。
+`openclaw security audit` 会将受信任代理身份验证标记为**严重（critical）**级别的发现。这是有意为之——这是在提醒您将安全性委托给了您的代理设置。
 
-审计会检查：
+审计将检查：
 
+- 基础 `gateway.trusted_proxy_auth` 警告/严重提醒
 - 缺少 `trustedProxies` 配置
 - 缺少 `userHeader` 配置
-- `allowUsers` 为空（允许任何经过身份验证的用户）
+- 空的 `allowUsers`（允许任何通过身份验证的用户）
+- 在暴露的控制 UI 表面上存在通配符或缺失的浏览器源策略
 
 ## 故障排除
 
@@ -296,47 +326,71 @@ OpenClaw 会拒绝模糊配置，即同时启用了 `gateway.auth.token`（或 `
 - 您的代理前面是否有负载均衡器？
 - 使用 `docker inspect` 或 `kubectl get pods -o wide` 查找实际 IP
 
+### "trusted_proxy_loopback_source"
+
+OpenClaw 拒绝了环回源的受信任代理请求。
+
+检查：
+
+- 代理是否正从 `127.0.0.1` / `::1` 连接？
+- 您是否尝试将受信任代理身份验证与同主机环回反向代理一起使用？
+
+修复：
+
+- 对于同一主机回环代理设置，请使用令牌/密码认证，或者
+- 通过非回环受信任代理地址进行路由，并将该 IP 保留在 `gateway.trustedProxies` 中。
+
 ### "trusted_proxy_user_missing"
 
 用户标头为空或缺失。请检查：
 
 - 您的代理是否配置为传递身份标头？
-- Header 名称是否正确？（不区分大小写，但拼写必须准确）
-- 用户是否确实在代理处通过了身份验证？
+- 标头名称是否正确？（不区分大小写，但拼写必须正确）
+- 用户是否确实在代理端通过了身份验证？
 
 ### "trusted*proxy_missing_header*\*"
 
-缺少必需的 header。请检查：
+缺少必需的标头。请检查：
 
-- 您的代理针对这些特定 header 的配置
-- 链路中某处是否剥离了这些 headers
+- 您的代理关于这些特定标头的配置
+- 标头是否在链中的某处被剥离
 
 ### "trusted_proxy_user_not_allowed"
 
-用户已通过身份验证，但不在 `allowUsers` 中。请将他们添加进去，或移除白名单。
+用户已通过身份验证，但不在 `allowUsers` 中。请将其添加或移除允许列表。
+
+### "trusted_proxy_origin_not_allowed"
+
+受信任代理身份验证成功，但浏览器 `Origin` 标头未通过控制 UI 源检查。
+
+检查：
+
+- `gateway.controlUi.allowedOrigins` 包含确切的浏览器源
+- 除非您有意想要允许所有行为，否则不要依赖通配符源
+- 如果您有意使用 Host 标头回退模式，则 `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` 是有意设置的
 
 ### WebSocket 仍然失败
 
 请确保您的代理：
 
 - 支持 WebSocket 升级（`Upgrade: websocket`，`Connection: upgrade`）
-- 在 WebSocket 升级请求上传递身份 headers（不仅仅是 HTTP）
-- 没有为 WebSocket 连接设置单独的身份验证路径
+- 在 WebSocket 升级请求上传递身份标头（不仅仅是 HTTP）
+- 没有针对 WebSocket 连接的单独身份验证路径
 
-## 从 Token Auth 迁移
+## 从令牌认证迁移
 
-如果您正从 token auth 迁移到 trusted-proxy：
+如果您正在从令牌认证迁移到受信任代理认证：
 
-1. 配置您的代理以对用户进行身份验证并传递 headers
-2. 独立测试代理设置（使用带有 headers 的 curl）
-3. 使用 trusted-proxy auth 更新 OpenClaw 配置
+1. 配置您的代理以验证用户并传递标头
+2. 独立测试代理设置（使用带标头的 curl）
+3. 使用受信任代理认证更新 OpenClaw 配置
 4. 重启 Gateway(网关)
 5. 从控制 UI 测试 WebSocket 连接
-6. 运行 `openclaw security audit` 并检查结果
+6. 运行 `openclaw security audit` 并检查发现结果
 
 ## 相关
 
-- [安全](/en/gateway/security) — 完整的安全指南
+- [安全性](/en/gateway/security) — 完整安全指南
 - [配置](/en/gateway/configuration) — 配置参考
 - [远程访问](/en/gateway/remote) — 其他远程访问模式
-- [Tailscale](/en/gateway/tailscale) — 仅限 tailnet 访问的更简单替代方案
+- [Tailscale](/en/gateway/tailscale) — 仅适用于 tailnet 访问的更简单替代方案

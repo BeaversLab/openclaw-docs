@@ -10,7 +10,7 @@ read_when:
 
 Lobster 是一个工作流程 Shell，允许 OpenClaw 将多步工具序列作为具有明确审批检查点的单一确定性操作运行。
 
-Lobster 是位于独立后台工作之上的一个创作层。如果您遇到旧的 `ClawFlow` 术语，请将其视为围绕同一面向任务运行时区域的历史命名；当前面向操作员的 CLI 界面是 [`openclaw tasks`](/en/automation/tasks)。
+Lobster 是位于独立后台工作之上的一个编写层。如需了解各个任务之上的流程编排，请参阅 [Task Flow](/en/automation/taskflow) (`openclaw tasks flow`)。有关任务活动账本，请参阅 [`openclaw tasks`](/en/automation/tasks)。
 
 ## Hook
 
@@ -36,8 +36,7 @@ Lobster 旨在保持小巧。目标不是“一种新语言”，而是一个可
 
 ## How it works
 
-OpenClaw 在 **工具模式** 下启动本地 `lobster` CLI，并从 stdout 解析 JSON 信封。
-如果管道暂停等待审批，该工具将返回一个 `resumeToken`，以便您稍后继续。
+OpenClaw 使用嵌入式运行器**在进程内**运行 Lobster 工作流。不会生成外部 CLI 子进程；工作流引擎在网关进程内部执行并直接返回 JSON 信封。如果管道暂停等待审批，工具将返回 `resumeToken` 以便您稍后继续。
 
 ## Pattern: small CLI + JSON pipes + approvals
 
@@ -78,9 +77,7 @@ gog.gmail.search --query 'newer_than:1d' \
 
 ## 纯 JSON LLM 步骤 (llm-task)
 
-对于需要**结构化 LLM 步骤**的工作流程，启用可选的
-`llm-task` 插件工具并从 Lobster 调用它。这使工作流程
-保持确定性，同时仍允许你使用模型进行分类/摘要/起草。
+对于需要**结构化 LLM 步骤**的工作流，请启用可选的 `llm-task` 插件工具并从 Lobster 调用它。这在保持工作流确定性的同时，仍然允许您使用模型进行分类/摘要/起草。
 
 启用工具：
 
@@ -125,7 +122,7 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 
 ## 工作流程文件 (.lobster)
 
-Lobster 可以运行包含 `name`、`args`、`steps`、`env`、`condition` 和 `approval` 字段的 YAML/JSON 工作流程文件。在 OpenClaw 工具调用中，将 `pipeline` 设置为文件路径。
+Lobster 可以运行包含 `name`、`args`、`steps`、`env`、`condition` 和 `approval` 字段的 YAML/JSON 工作流文件。在 OpenClaw 工具调用中，将 `pipeline` 设置为文件路径。
 
 ```yaml
 name: inbox-triage
@@ -151,17 +148,19 @@ steps:
 备注：
 
 - `stdin: $step.stdout` 和 `stdin: $step.json` 传递上一步的输出。
-- `condition` (或 `when`) 可以根据 `$step.approved` 对步骤进行门控。
+- `condition`（或 `when`）可以根据 `$step.approved` 对步骤进行设限。
 
 ## 安装 Lobster
 
-在运行 Lobster CLI 的**同一主机**上安装 OpenClaw Gateway(网关)（请参阅 [Lobster repo](https://github.com/openclaw/lobster)），并确保 `lobster` 在 `PATH` 上。
+捆绑的 Lobster 工作流在进程内运行；不需要单独的 `lobster` 二进制文件。嵌入式运行程序随 Lobster 插件一起提供。
+
+如果您需要独立的 Lobster CLI 进行开发或外部管道，请从 [Lobster repo](https://github.com/openclaw/lobster) 安装它，并确保 `lobster` 在 `PATH` 上。
 
 ## 启用工具
 
 Lobster 是一个**可选**的插件工具（默认未启用）。
 
-推荐（累加，安全）：
+推荐（增量，安全）：
 
 ```json
 {
@@ -171,7 +170,7 @@ Lobster 是一个**可选**的插件工具（默认未启用）。
 }
 ```
 
-或按代理：
+或者按代理：
 
 ```json
 {
@@ -188,15 +187,13 @@ Lobster 是一个**可选**的插件工具（默认未启用）。
 }
 ```
 
-除非你打算在限制性允许列表模式下运行，否则请避免使用 `tools.allow: ["lobster"]`。
+除非您打算在限制性允许列表模式下运行，否则请避免使用 `tools.allow: ["lobster"]`。
 
-注意：允许列表对于可选插件是可选启用的。如果你的允许列表仅命名
-了插件工具（例如 `lobster`），OpenClaw 将保持核心工具启用。若要限制核心
-工具，请在允许列表中也包含你想要的核心工具或组。
+注意：允许列表对于可选插件是自愿启用的。如果您的允许列表仅命名插件工具（如 `lobster`），OpenClaw 将保持核心工具启用。若要限制核心工具，请在允许列表中也包含您想要的核心工具或组。
 
 ## 示例：电子邮件分类
 
-没有 Lobster 时：
+在没有 Lobster 的情况下：
 
 ```
 User: "Check my email and draft replies"
@@ -209,7 +206,7 @@ User: "Check my email and draft replies"
 (repeat daily, no memory of what was triaged)
 ```
 
-使用 Lobster 时：
+使用 Lobster：
 
 ```json
 {
@@ -245,13 +242,13 @@ User: "Check my email and draft replies"
 }
 ```
 
-一个工作流程。确定性。安全。
+单一工作流。确定性。安全。
 
 ## 工具参数
 
 ### `run`
 
-以工具模式运行管道。
+以工具模式运行流水线。
 
 ```json
 {
@@ -275,7 +272,7 @@ User: "Check my email and draft replies"
 
 ### `resume`
 
-在批准后继续已停止的工作流。
+在批准后继续已暂停的工作流。
 
 ```json
 {
@@ -287,47 +284,47 @@ User: "Check my email and draft replies"
 
 ### 可选输入
 
-- `cwd`：管道的相对工作目录（必须保持在当前进程工作目录内）。
-- `timeoutMs`：如果超过此持续时间，则终止子进程（默认值：20000）。
-- `maxStdoutBytes`：如果标准输出超过此大小，则终止子进程（默认值：512000）。
+- `cwd`：流水线的相对工作目录（必须保持在网关工作目录内）。
+- `timeoutMs`：如果超过此持续时间，则中止工作流（默认：20000）。
+- `maxStdoutBytes`：如果输出超过此大小，则中止工作流（默认：512000）。
 - `argsJson`：传递给 `lobster run --args-json` 的 JSON 字符串（仅限工作流文件）。
 
-## 输出封装
+## 输出信封
 
-Lobster 返回具有以下三种状态之一的 JSON 封装：
+Lobster 返回一个包含以下三种状态之一的 JSON 信封：
 
-- `ok` → 已成功完成
+- `ok` → 成功完成
 - `needs_approval` → 已暂停；需要 `requiresApproval.resumeToken` 才能恢复
 - `cancelled` → 已明确拒绝或取消
 
-该工具在 `content`（美化 JSON）和 `details`（原始对象）中均展示了封装。
+该工具在 `content`（美化 JSON）和 `details`（原始对象）中展示信封。
 
 ## 批准
 
 如果存在 `requiresApproval`，请检查提示并决定：
 
 - `approve: true` → 恢复并继续副作用
-- `approve: false` → 取消并结束工作流
+- `approve: false` → 取消并完成工作流
 
-使用 `approve --preview-from-stdin --limit N` 将 JSON 预览附加到批准请求，而无需自定义 jq/heredoc 粘合代码。恢复令牌现在更加紧凑：Lobster 将工作流恢复状态存储在其状态目录下，并返回一个小令牌密钥。
+使用 `approve --preview-from-stdin --limit N` 将 JSON 预览附加到批准请求，而无需自定义 jq/heredoc 粘合代码。恢复令牌现在更紧凑：Lobster 将工作流恢复状态存储在其状态目录下，并返回一个小的令牌键。
 
 ## OpenProse
 
-OpenProse 与 Lobster 搭配得很好：使用 `/prose` 编排多代理准备工作，然后运行 Lobster 管道进行确定性批准。如果 Prose 程序需要 Lobster，请通过 `tools.subagents.tools` 为子代理允许 `lobster` 工具。请参阅 [OpenProse](/en/prose)。
+OpenProse 与 Lobster 搭配得很好：使用 `/prose` 编排多代理准备，然后运行 Lobster 管道进行确定性审批。如果 Prose 程序需要 Lobster，请通过 `tools.subagents.tools` 为子代理允许 `lobster` 工具。参见 [OpenProse](/en/prose)。
 
 ## 安全性
 
-- **仅限本地子进程** — 插件本身不进行网络调用。
-- **无密钥** — Lobster 不管理 OAuth；它调用负责管理的 OpenClaw 工具。
-- **感知沙箱** — 当工具上下文处于沙箱隔离状态时，此功能被禁用。
-- **加固** — `PATH` 上的可执行文件名称固定（`lobster`）；强制执行超时和输出上限。
+- **仅限本地进程内** — 工作流在网关进程内执行；插件本身不进行网络调用。
+- **无机密** — Lobster 不管理 OAuth；它调用 OpenClaw 的工具来管理。
+- **感知沙箱** — 当工具上下文处于沙箱隔离状态时禁用。
+- **强化** — 由嵌入式运行器强制执行超时和输出限制。
 
 ## 故障排除
 
-- **`lobster subprocess timed out`** → 增加 `timeoutMs`，或拆分长管道。
-- **`lobster output exceeded maxStdoutBytes`** → 提高 `maxStdoutBytes` 或减小输出大小。
-- **`lobster returned invalid JSON`** → 确保管道在工具模式下运行并仅输出 JSON。
-- **`lobster failed (code …)`** → 在终端中运行相同的管道以检查 stderr。
+- **`lobster timed out`** → 增加 `timeoutMs`，或拆分长管道。
+- **`lobster output exceeded maxStdoutBytes`** → 提高 `maxStdoutBytes` 或减少输出大小。
+- **`lobster returned invalid JSON`** → 确保管道在工具模式下运行，并且仅打印 JSON。
+- **`lobster failed`** → 检查网关日志以获取嵌入式运行器的错误详细信息。
 
 ## 了解更多
 
@@ -336,13 +333,13 @@ OpenProse 与 Lobster 搭配得很好：使用 `/prose` 编排多代理准备工
 
 ## 案例研究：社区工作流
 
-一个公开示例：一个“第二大脑”CLI + Lobster 管道，用于管理三个 Markdown 仓库（个人、合作伙伴、共享）。CLI 发出统计、收件箱列表和陈旧扫描的 JSON；Lobster 将这些命令链接到工作流中，如 `weekly-review`、`inbox-triage`、`memory-consolidation` 和 `shared-task-sync`，每个都有审批门槛。AI 在可用时处理判断（分类），在不可用时回退到确定性规则。
+一个公开的示例：“第二大脑” CLI + Lobster 管道，用于管理三个 Markdown 仓库（个人、伙伴、共享）。CLI 发出 JSON 用于统计、收件箱列表和过期扫描；Lobster 将这些命令链接到工作流中，如 `weekly-review`、`inbox-triage`、`memory-consolidation` 和 `shared-task-sync`，每个都有审批关卡。AI 在可用时处理判断（分类），在不可用时回退到确定性规则。
 
 - 主题：[https://x.com/plattenschieber/status/2014508656335770033](https://x.com/plattenschieber/status/2014508656335770033)
 - 仓库：[https://github.com/bloomedai/brain-cli](https://github.com/bloomedai/brain-cli)
 
 ## 相关
 
-- [Cron 与 Heartbeat](/en/automation/cron-vs-heartbeat) — 调度 Lobster 工作流
+- [自动化与任务](/en/automation) — 调度 Lobster 工作流
 - [自动化概述](/en/automation) — 所有自动化机制
 - [工具概述](/en/tools) — 所有可用的代理工具
