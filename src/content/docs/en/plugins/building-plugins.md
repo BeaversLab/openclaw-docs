@@ -151,6 +151,7 @@ A single plugin can register any number of capabilities via the `api` object:
 | Capability             | Registration method                              | Detailed guide                                                                  |
 | ---------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------- |
 | Text inference (LLM)   | `api.registerProvider(...)`                      | [Provider Plugins](/en/plugins/sdk-provider-plugins)                               |
+| CLI inference backend  | `api.registerCliBackend(...)`                    | [CLI Backends](/en/gateway/cli-backends)                                           |
 | Channel / messaging    | `api.registerChannel(...)`                       | [Channel Plugins](/en/plugins/sdk-channel-plugins)                                 |
 | Speech (TTS/STT)       | `api.registerSpeechProvider(...)`                | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
 | Realtime transcription | `api.registerRealtimeTranscriptionProvider(...)` | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
