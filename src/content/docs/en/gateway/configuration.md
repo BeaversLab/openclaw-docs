@@ -224,7 +224,7 @@ When validation fails:
     - Omit `agents.list[].skills` to inherit the defaults.
     - Set `agents.list[].skills: []` for no skills.
     - See [Skills](/en/tools/skills), [Skills config](/en/tools/skills-config), and
-      the [Configuration Reference](/en/gateway/configuration-reference#agentsdefaultsskills).
+      the [Configuration Reference](/en/gateway/configuration-reference#agents-defaults-skills).
 
   </Accordion>
 

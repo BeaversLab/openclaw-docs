@@ -138,5 +138,6 @@ earlier conversations. This is opt-in via
 
 ## Further reading
 
+- [Active Memory](/en/concepts/active-memory) -- sub-agent memory for interactive chat sessions
 - [Memory](/en/concepts/memory) -- file layout, backends, tools
 - [Memory configuration reference](/en/reference/memory-config) -- all config knobs
