@@ -16,7 +16,7 @@ title: "Telegram"
   <Card title="Channel 故障排除" icon="wrench" href="/en/channels/troubleshooting">
     跨渠道诊断和修复手册。
   </Card>
-  <Card title="Gateway configuration" icon="settings" href="/en/gateway/configuration">
+  <Card title="Gateway(网关) configuration" icon="settings" href="/en/gateway/configuration">
     完整的渠道配置模式和示例。
   </Card>
 </CardGroup>

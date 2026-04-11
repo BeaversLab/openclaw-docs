@@ -23,7 +23,7 @@ OpenClaw ensambla su propio prompt del sistema en cada ejecución. Incluye:
 - Etiquetas de respuesta + comportamiento de latido
 - Metadatos de tiempo de ejecución (host/SO/modelo/pensamiento)
 
-Consulte el desglose completo en [System Prompt](/en/concepts/system-prompt).
+Vea el desglose completo en [System Prompt](/en/concepts/system-prompt).
 
 ## Qué cuenta en la ventana de contexto
 
@@ -42,7 +42,7 @@ Use `agents.defaults.imageMaxDimensionPx` (predeterminado: `1200`) para ajustar 
 - Los valores más bajos generalmente reducen el uso de tokens de visión y el tamaño de la carga útil.
 - Los valores más altos preservan más detalles visuales para capturas de pantalla con mucho OCR/interfaz de usuario.
 
-Para un desglose práctico (por archivo inyectado, herramientas, habilidades y tamaño del prompt del sistema), use `/context list` o `/context detail`. Consulte [Context](/en/concepts/context).
+Para un desglose práctico (por archivo inyectado, herramientas, habilidades y tamaño del prompt del sistema), use `/context list` o `/context detail`. Vea [Context](/en/concepts/context).
 
 ## Cómo ver el uso actual de tokens
 
@@ -102,8 +102,8 @@ ha expirado y luego restablece la ventana de la caché para que las solicitudes 
 contexto recién almacenado en caché en lugar de volver a almacenar todo el historial. Esto mantiene los costos de
 escritura de caché más bajos cuando una sesión permanece inactiva más allá del TTL.
 
-Configúrelo en [Configuración de la puerta de enlace](/en/gateway/configuration) y consulte los
-detalles del comportamiento en [Poda de sesiones](/en/concepts/session-pruning).
+Configúrelo en [Gateway configuration](/en/gateway/configuration) y vea los
+detalles del comportamiento en [Session pruning](/en/concepts/session-pruning).
 
 El latido puede mantener la caché ** caliente** a través de los intervalos de inactividad. Si el TTL de la caché de su modelo
 es `1h`, establecer el intervalo de latido justo por debajo de eso (por ejemplo, `55m`) puede evitar
@@ -112,11 +112,11 @@ volver a almacenar el mensaje completo, reduciendo los costos de escritura de ca
 En configuraciones de múltiples agentes, puede mantener una configuración de modelo compartida y ajustar el comportamiento de la caché
 por agente con `agents.list[].params.cacheRetention`.
 
-Para obtener una guía completa control por control, consulte [Almacenamiento en caché de mensajes](/en/reference/prompt-caching).
+Para una guía completa control por control, vea [Prompt Caching](/en/reference/prompt-caching).
 
-Para la tarifa de la API de Anthropic, las lecturas de caché son significativamente más baratas que los
-tokens de entrada, mientras que las escrituras de caché se facturan con un multiplicador más alto. Consulte los precios de
-almacenamiento en caché de mensajes de Anthropic para obtener las tarifas más recientes y los multiplicadores TTL:
+Para los precios de la API de Anthropic, las lecturas de caché son significativamente más baratas que los tokens de entrada,
+mientras que las escrituras de caché se facturan con un multiplicador más alto. Vea los precios de
+caché de prompts de Anthropic para las tarifas y multiplicadores TTL más recientes:
 [https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
 
 ### Ejemplo: mantener 1h de caché caliente con latido
@@ -177,21 +177,19 @@ Esto se asigna al encabezado beta `context-1m-2025-08-07` de Anthropic.
 
 Esto solo se aplica cuando `context1m: true` está configurado en esa entrada de modelo.
 
-Requisito: la credencial debe ser elegible para el uso de contexto largo (facturación
-por clave de API o ruta de inicio de sesión de Claude de OpenClaw con Uso Extra
-habilitado). Si no es así, Anthropic responde
-con `HTTP 429: rate_limit_error: Extra usage is required for long context requests`.
+Requisito: la credencial debe ser elegible para el uso de contexto largo. Si no,
+Anthropic responde con un error de límite de velocidad del proveedor para esa solicitud.
 
-Si autenticas a Anthropic con tokens de OAuth/suscripción (`sk-ant-oat-*`),
-OpenClaw omite la cabecera beta `context-1m-*` porque Anthropic actualmente
+Si autentica a Anthropic con tokens de OAuth/suscripción (`sk-ant-oat-*`),
+OpenClaw omite el encabezado beta `context-1m-*` porque Anthropic actualmente
 rechaza esa combinación con HTTP 401.
 
 ## Consejos para reducir la presión de tokens
 
-- Usa `/compact` para resumir sesiones largas.
+- Use `/compact` para resumir sesiones largas.
 - Recorta las salidas grandes de las herramientas en tus flujos de trabajo.
-- Reduce `agents.defaults.imageMaxDimensionPx` para las sesiones con muchas capturas de pantalla.
+- Reduzca `agents.defaults.imageMaxDimensionPx` para sesiones con muchas capturas de pantalla.
 - Mantén las descripciones de las habilidades breves (la lista de habilidades se inyecta en el mensaje).
 - Prefiere modelos más pequeños para el trabajo detallado y exploratorio.
 
-Consulta [Skills](/en/tools/skills) para ver la fórmula exacta de la sobrecarga de la lista de habilidades.
+Vea [Skills](/en/tools/skills) para la fórmula exacta de sobrecarga de la lista de habilidades.

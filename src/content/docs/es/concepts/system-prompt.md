@@ -43,7 +43,7 @@ El prompt es intencionalmente compacto y utiliza secciones fijas:
 - **Sandbox** (cuando está habilitado): indica el tiempo de ejecución en sandbox, las rutas de sandbox y si la ejecución elevada está disponible.
 - **Fecha y hora actuales**: hora local del usuario, zona horaria y formato de hora.
 - **Etiquetas de respuesta**: sintaxis opcional de etiquetas de respuesta para proveedores compatibles.
-- **Latidos**: prompt de latido y comportamiento de ack.
+- **Latidos**: comportamiento del aviso de latido y reconocimiento, cuando los latidos están habilitados para el agente predeterminado.
 - **Tiempo de ejecución**: host, sistema operativo, nodo, modelo, raíz del repositorio (cuando se detecta), nivel de pensamiento (una línea).
 - **Razonamiento**: nivel de visibilidad actual + sugerencia de alternancia /reasoning.
 
@@ -103,33 +103,19 @@ Los archivos de arranque se recortan y añaden bajo **Contexto del proyecto** pa
 - `BOOTSTRAP.md` (solo en espacios de trabajo totalmente nuevos)
 - `MEMORY.md` cuando está presente, de lo contrario `memory.md` como alternativa en minúsculas
 
-Todos estos archivos se **inyectan en la ventana de contexto** en cada turno, lo que
-significa que consumen tokens. Mantenlos concisos, especialmente `MEMORY.md`, que puede
-crecer con el tiempo y llevar a un uso de contexto inesperadamente alto y una compactación
-más frecuente.
+Todos estos archivos se **inyectan en la ventana de contexto** en cada turno a menos que se aplique una puerta específica del archivo. `HEARTBEAT.md` se omite en ejecuciones normales cuando los latidos están deshabilitados para el agente predeterminado o `agents.defaults.heartbeat.includeSystemPromptSection` es falso. Mantenga los archivos inyectados concisos, especialmente `MEMORY.md`, que puede crecer con el tiempo y llevar a un uso del contexto inesperadamente alto y a una compactación más frecuente.
 
-> **Nota:** Los archivos diarios `memory/*.md` **no** se inyectan automáticamente. Se
-> acceden a ellos bajo demanda a través de las herramientas `memory_search` y `memory_get`, por lo que
-> no cuentan contra la ventana de contexto a menos que el modelo los lea explícitamente.
+> **Nota:** Los archivos diarios `memory/*.md` **no** se inyectan automáticamente. Se acceden a ellos bajo demanda a través de las herramientas `memory_search` y `memory_get`, por lo que no cuentan contra la ventana de contexto a menos que el modelo los lea explícitamente.
 
-Los archivos grandes se truncan con un marcador. El tamaño máximo por archivo se controla mediante
-`agents.defaults.bootstrapMaxChars` (predeterminado: 20000). El contenido total de arranque
-inyectado entre archivos se limita mediante `agents.defaults.bootstrapTotalMaxChars`
-(predeterminado: 150000). Los archivos faltantes inyectan un marcador corto de archivo faltante. Cuando se produce
-el truncamiento, OpenClaw puede inyectar un bloque de advertencia en el Contexto del proyecto; controle esto con
-`agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`;
-predeterminado: `once`).
+Los archivos grandes se truncan con un marcador. El tamaño máximo por archivo está controlado por `agents.defaults.bootstrapMaxChars` (predeterminado: 20000). El contenido total de bootstrap inyectado entre archivos está limitado por `agents.defaults.bootstrapTotalMaxChars` (predeterminado: 150000). Los archivos faltantes inyectan un marcador corto de archivo faltante. Cuando ocurre el truncamiento, OpenClaw puede inyectar un bloque de advertencia en el Contexto del Proyecto; controle esto con `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`; predeterminado: `once`).
 
-Las sesiones de subagente solo inyectan `AGENTS.md` y `TOOLS.md` (los otros archivos de arranque
-se filtran para mantener el contexto del subagente pequeño).
+Las sesiones de subagentes solo inyectan `AGENTS.md` y `TOOLS.md` (otros archivos de bootstrap se filtran para mantener el contexto del subagente pequeño).
 
-Los enlaces internos pueden interceptar este paso a través de `agent:bootstrap` para mutar o reemplazar
-los archivos de inicio inyectados (por ejemplo, intercambiando `SOUL.md` por una personalidad alternativa).
+Los enlaces internos pueden interceptar este paso a través de `agent:bootstrap` para mutar o reemplazar los archivos de bootstrap inyectados (por ejemplo, intercambiando `SOUL.md` por una personalidad alternativa).
 
-Si desea que el agente suene menos genérico, comience con
-[SOUL.md Personality Guide](/en/concepts/soul).
+Si quiere hacer que el agente suene menos genérico, comience con [Guía de personalidad SOUL.md](/en/concepts/soul).
 
-Para inspeccionar cuánto contribuye cada archivo inyectado (sin procesar frente a inyectado, truncamiento, más sobrecarga del esquema de herramientas), use `/context list` o `/context detail`. Consulte [Context](/en/concepts/context).
+Para inspeccionar cuánto contribuye cada archivo inyectado (bruto vs. inyectado, truncamiento, más sobrecarga del esquema de herramientas), use `/context list` o `/context detail`. Consulte [Contexto](/en/concepts/context).
 
 ## Manejo del tiempo
 
@@ -137,9 +123,9 @@ El mensaje del sistema incluye una sección dedicada **Fecha y hora actual** cua
 zona horaria del usuario es conocida. Para mantener la caché del mensaje estable, ahora solo incluye
 la **zona horaria** (sin reloj dinámico o formato de hora).
 
-Use `session_status` cuando el agente necesite la hora actual; la tarjeta de estado
-incluye una línea de marca de tiempo. La misma herramienta puede establecer opcionalmente una anulación de modelo
-por sesión (`model=default` la borra).
+Use `session_status` cuando el agente necesita la hora actual; la tarjeta de estado
+incluye una línea de marca de tiempo. La misma herramienta puede establecer opcionalmente una anulación de modelo por sesión
+(`model=default` la borra).
 
 Configure con:
 
@@ -151,14 +137,14 @@ Consulte [Fecha y hora](/en/date-time) para obtener detalles completos del compo
 ## Habilidades
 
 Cuando existen habilidades elegibles, OpenClaw inyecta una **lista de habilidades disponibles** compacta
-(`formatSkillsForPrompt`) que incluye la **ruta del archivo** para cada habilidad. El
-mensaje instruye al modelo a usar `read` para cargar el SKILL.md en la ubicación
+(`formatSkillsForPrompt`) que incluye la **ruta de archivo** para cada habilidad. El
+prompt indica al modelo que use `read` para cargar el archivo SKILL.md en la ubicación
 listada (espacio de trabajo, administrada o empaquetada). Si no hay habilidades elegibles, la
-sección Habilidades se omite.
+sección de Habilidades se omite.
 
-La elegibilidad incluye puertas de metadatos de habilidades, verificaciones de entorno/configuración en tiempo de ejecución,
-y la lista blanca efectiva de habilidades del agente cuando `agents.defaults.skills` o
-`agents.list[].skills` está configurado.
+La elegibilidad incluye puertas de metadatos de habilidades, comprobaciones de entorno/configuración en tiempo de ejecución,
+y la lista blanca de habilidades de agente efectiva cuando `agents.defaults.skills` o
+`agents.list[].skills` están configurados.
 
 ```
 <available_skills>
@@ -174,9 +160,9 @@ Esto mantiene el mensaje base pequeño mientras sigue permitiendo el uso especí
 
 ## Documentación
 
-Cuando está disponible, el mensaje del sistema incluye una sección **Documentación** que señala al
-directorio local de documentos de OpenClaw (ya sea `docs/` en el espacio de trabajo del repositorio o los documentos del paquete npm
-incluido) y también menciona el espejo público, el repositorio fuente, la comunidad de Discord y
-ClawHub ([https://clawhub.ai](https://clawhub.ai)) para el descubrimiento de habilidades. El mensaje instruye al modelo a consultar primero los documentos locales
-sobre el comportamiento, comandos, configuración o arquitectura de OpenClaw, y a ejecutar
+Cuando está disponible, el prompt del sistema incluye una sección **Documentación** que señala al
+directorio de documentación local de OpenClaw (ya sea `docs/` en el espacio de trabajo del repositorio o la documentación del paquete npm
+empaquetado) y también nota el espejo público, repositorio fuente, Discord de la comunidad y
+ClawHub ([https://clawhub.ai](https://clawhub.ai)) para el descubrimiento de habilidades. El prompt indica al modelo que consulte primero la documentación local
+sobre el comportamiento, comandos, configuración o arquitectura de OpenClaw, y que ejecute
 `openclaw status` por sí mismo cuando sea posible (solicitando al usuario solo cuando no tenga acceso).

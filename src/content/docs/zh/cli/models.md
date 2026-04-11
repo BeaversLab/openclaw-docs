@@ -13,7 +13,7 @@ title: "models"
 相关：
 
 - 提供商 + 模型：[模型](/en/providers/models)
-- 提供商身份验证设置：[入门指南](/en/start/getting-started)
+- 提供商认证设置：[入门指南](/en/start/getting-started)
 
 ## 常用命令
 
@@ -124,5 +124,5 @@ openclaw models auth login --provider openai-codex --set-default
 - `paste-token` 接受在其他地方生成或来自自动化的令牌字符串。
 - `paste-token` 需要 `--provider`，提示输入令牌值，并将其写入默认配置文件 ID `<provider>:manual`，除非您传递 `--profile-id`。
 - `paste-token --expires-in <duration>` 存储相对于持续时间的绝对令牌到期时间，例如 `365d` 或 `12h`。
-- Anthropic 计费说明：对于 OpenClaw 中的 Anthropic，实际分为 **API 密钥** 或 **带有额外使用量的 Claude 订阅**。Anthropic 在 **2026 年 4 月 4 日太平洋时间下午 12:00 / 英国夏令时晚上 8:00** 通知 OpenClaw 用户，**OpenClaw** Claude 登录路径算作第三方工具使用，并且需要单独于订阅计费的 **额外使用量**。我们的本地复现也表明，识别 OpenClaw 的提示字符串不会在 Anthropic SDK + API 密钥路径上复现。
-- Anthropic `setup-token` / `paste-token` 作为传统/手动 OpenClaw 路径再次可用。请带着这样的预期使用它们：Anthropic 告知 OpenClaw 用户此路径需要 **额外使用量**。
+- Anthropic 说明：Anthropic 员工告知我们，允许再次使用 OpenClaw 风格的 Claude CLI，因此除非 Anthropic 发布新政策，否则 OpenClaw 将在此集成中认可 Claude CLI 复用和 `claude -p` 的使用。
+- Anthropic `setup-token` / `paste-token` 仍作为受支持的 OpenClaw 令牌路径提供，但如果可用，OpenClaw 现在更倾向于复用 Claude CLI 和使用 `claude -p`。

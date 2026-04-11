@@ -9,9 +9,9 @@ title: "本地模型"
 
 # 本地模型
 
-本地部署是可行的，但 OpenClaw 需要大上下文 + 对提示词注入的强力防御。小显卡会截断上下文并泄露安全性。目标要高：**≥2 台顶配的 Mac Studio 或同等级 GPU 设备 (~$30k+)**。单个 **24 GB** GPU 仅适用于较轻量的提示词，且延迟较高。使用你能运行的**最大 / 全尺寸模型变体**；激进量化或“小”检查点会增加提示词注入风险（请参阅 [Security](/en/gateway/security)）。
+本地部署是可行的，但 OpenClaw 需要大型上下文 + 针对提示词注入的强大防御。小显卡会截断上下文并导致安全性泄露。目标定高一点：**≥2 台满配的 Mac Studio 或同等 GPU 设备（约 $30k+）**。单张 **24 GB** GPU 仅适用于负载较轻的提示词，且延迟较高。使用你能运行的**最大 / 完整版模型变体**；激进量化或“小型”检查点会增加提示词注入风险（参见 [Security](/en/gateway/security)）。
 
-如果你想要最低摩擦力的本地设置，请从 [Ollama](/en/providers/ollama) 和 `openclaw onboard` 开始。本页面是针对高端本地堆栈和自定义 OpenAI 兼容本地服务器的固执指南。
+如果你想要最低摩擦的本地设置，请从 [Ollama](/en/providers/ollama) 和 `openclaw onboard` 开始。本页面是针对高端本地堆栈和自定义 OpenAI 兼容本地服务器的观点性指南。
 
 ## 推荐：LM Studio + 大型本地模型（Responses API）
 
@@ -155,9 +155,30 @@ title: "本地模型"
 - 隐藏的 OpenClaw 归因标头 (`originator`, `version`, `User-Agent`)
   不会注入到这些自定义代理 URL 上
 
+针对更严格的 OpenAI 兼容后端的兼容性说明：
+
+- 某些服务器在聊天补全上仅接受字符串 `messages[].content`，而不接受
+  结构化内容部分数组。请为
+  这些端点设置
+  `models.providers.<provider>.models[].compat.requiresStringContent: true`。
+- 一些较小或更严格的本地后端在使用 OpenClaw 的完整
+  agent-runtime 提示词形状时不稳定，尤其是当包含工具架构时。如果
+  后端对微小的直接 `/v1/chat/completions` 调用有效，但在正常的
+  OpenClaw agent 轮次中失败，请首先尝试
+  `models.providers.<provider>.models[].compat.supportsTools: false`。
+- 如果后端仍然仅在较大的 OpenClaw 运行中失败，剩余的问题
+  通常是上游模型/服务器容量或后端错误，而不是 OpenClaw 的
+  传输层问题。
+
 ## 故障排除
 
-- Gateway 能否连接到代理？`curl http://127.0.0.1:1234/v1/models`。
+- Gateway(网关) 能连接到代理吗？`curl http://127.0.0.1:1234/v1/models`。
 - LM Studio 模型已卸载？重新加载；冷启动是常见的“挂起”原因。
 - 上下文错误？降低 `contextWindow` 或提高你的服务器限制。
-- 安全提示：本地模型会跳过提供商端的过滤器；请保持代理范围狭窄并开启压缩，以限制提示词注入的波及范围。
+- OpenAI 兼容服务器返回 `messages[].content ... expected a string`？
+  在该模型条目上添加
+  `compat.requiresStringContent: true`。
+- 微小的直接 `/v1/chat/completions` 调用有效，但 `openclaw infer model run`
+  在 Gemma 或其他本地模型上失败？首先使用
+  `compat.supportsTools: false` 禁用工具架构，然后重新测试。如果服务器仍然仅在较大的 OpenClaw 提示词时崩溃，请将其视为上游服务器/模型限制。
+- 安全性：本地模型跳过提供商端的过滤器；请保持代理范围狭窄并开启压缩，以限制提示词注入的爆炸半径。

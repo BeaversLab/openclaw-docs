@@ -190,8 +190,8 @@ Controle cómo se manejan los mensajes de grupo/sala por canal:
       groupPolicy: "allowlist",
       groupAllowFrom: ["@owner:example.org"],
       groups: {
-        "!roomId:example.org": { allow: true },
-        "#alias:example.org": { allow: true },
+        "!roomId:example.org": { enabled: true },
+        "#alias:example.org": { enabled: true },
       },
     },
   },
@@ -227,7 +227,7 @@ Modelo mental rápido (orden de evaluación para mensajes de grupo):
 
 Los mensajes de grupo requieren una mención a menos que se anulen por grupo. Los valores predeterminados viven por subsistema bajo `*.groups."*"`.
 
-Responder a un mensaje de bot cuenta como una mención implícita (cuando el canal admite metadatos de respuesta). Esto se aplica a Telegram, WhatsApp, Slack, Discord y Microsoft Teams.
+Responder a un mensaje de bot cuenta como una mención implícita cuando el canal admite metadatos de respuesta. Citar un mensaje de bot también puede contar como una mención implícita en canales que exponen metadatos de cita. Los casos integrados actuales incluyen Telegram, WhatsApp, Slack, Discord, Microsoft Teams y ZaloUser.
 
 ```json5
 {

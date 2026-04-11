@@ -26,14 +26,23 @@ las características de OpenClaw que pueden generar uso del proveedor o llamadas
 - `/usage tokens` muestra solo los tokens; los flujos de tipo suscripción OAuth/token y CLI ocultan el costo en dólares.
 - Nota de CLI Gemini: cuando la CLI devuelve una salida JSON, OpenClaw lee el uso desde `stats`, normaliza `stats.cached` en `cacheRead` y deriva los tokens de entrada de `stats.input_tokens - stats.cached` cuando es necesario.
 
-Nota de Anthropic: la documentación pública de Claude Code de Anthropic todavía incluye el uso directo de la terminal Claude Code en los límites del plan Claude. Por separado, Anthropic informó a los usuarios de OpenClaw que a partir del **4 de abril de 2026 a las 12:00 PM PT / 8:00 PM BST**, la ruta de inicio de sesión de Claude de **OpenClaw** cuenta como uso de arnés de terceros y requiere **Uso Adicional** facturado por separado de la suscripción. Anthropic no expone una estimación en dólares por mensaje que OpenClaw pueda mostrar en `/usage full`.
+Nota de Anthropic: El personal de Anthropic nos informó que el uso de la CLI de Claude al estilo de OpenClaw está
+permitido nuevamente, por lo que OpenClaw trata el reuso de la CLI de Claude y el uso de `claude -p` como
+autorizados para esta integración, a menos que Anthropic publique una nueva política.
+Anthropic todavía no expone una estimación de costos por mensaje que OpenClaw pueda
+mostrar en `/usage full`.
 
 **Ventanas de uso de la CLI (cuotas del proveedor)**
 
-- `openclaw status --usage` y `openclaw channels list` muestran las **ventanas de uso** del proveedor (instantáneas de cuota, no costos por mensaje).
-- La salida humana se normaliza a `X% left` entre proveedores.
+- `openclaw status --usage` y `openclaw channels list` muestran **ventanas de uso** del proveedor
+  (instantáneas de cuota, no costos por mensaje).
+- El resultado humano se normaliza a `X% left` en todos los proveedores.
 - Proveedores actuales de ventanas de uso: Anthropic, GitHub Copilot, Gemini CLI, OpenAI Codex, MiniMax, Xiaomi y z.ai.
-- Nota de MiniMax: sus campos `usage_percent` / `usagePercent` sin procesar significan cuota restante, por lo que OpenClaw los invierte antes de mostrarlos. Los campos basados en recuento aún prevalecen cuando están presentes. Si el proveedor devuelve `model_remains`, OpenClaw prefiere la entrada del modelo de chat, deriva la etiqueta de la ventana de las marcas de tiempo cuando es necesario e incluye el nombre del modelo en la etiqueta del plan.
+- Nota de MiniMax: sus campos `usage_percent` / `usagePercent` significan la cuota
+  restante, por lo que OpenClaw los invierte antes de mostrarlos. Los campos basados en recuentos tienen prioridad
+  cuando están presentes. Si el proveedor devuelve `model_remains`, OpenClaw prefiere la
+  entrada del modelo de chat, deriva la etiqueta de la ventana de las marcas de tiempo cuando es necesario e
+  incluye el nombre del modelo en la etiqueta del plan.
 - La autenticación de uso para esas ventanas de cuota proviene de enlaces específicos del proveedor cuando están disponibles; de lo contrario, OpenClaw recurre a hacer coincidir las credenciales de OAuth/API-key de los perfiles de autenticación, las variables de entorno o la configuración.
 
 Consulte [Uso y costos de tokens](/en/reference/token-use) para obtener detalles y ejemplos.
@@ -43,7 +52,7 @@ Consulte [Uso y costos de tokens](/en/reference/token-use) para obtener detalles
 OpenClaw puede obtener credenciales de:
 
 - **Perfiles de autenticación** (por agente, almacenados en `auth-profiles.json`).
-- **Variables de entorno** (por ejemplo, `OPENAI_API_KEY`, `BRAVE_API_KEY`, `FIRECRAWL_API_KEY`).
+- **Variables de entorno** (ej. `OPENAI_API_KEY`, `BRAVE_API_KEY`, `FIRECRAWL_API_KEY`).
 - **Configuración** (`models.providers.*.apiKey`, `plugins.entries.*.config.webSearch.apiKey`,
   `plugins.entries.firecrawl.config.webFetch.apiKey`, `memorySearch.*`,
   `talk.providers.*.apiKey`).
@@ -78,8 +87,8 @@ Las capacidades de generación compartidas también pueden gastar claves de prov
 - Generación de imágenes: OpenAI / Google / fal / MiniMax
 - Generación de vídeo: Qwen
 
-La generación de imágenes puede inferir un proveedor predeterminado con respaldo de autenticación cuando
-`agents.defaults.imageGenerationModel` no está establecido. La generación de vídeo actualmente
+La generación de imágenes puede inferir un proveedor predeterminado con autenticación cuando
+`agents.defaults.imageGenerationModel` no está establecido. La generación de videos actualmente
 requiere un `agents.defaults.videoGenerationModel` explícito, como
 `qwen/wan2.6-t2v`.
 
@@ -91,10 +100,10 @@ y [Modelos](/en/concepts/models).
 La búsqueda de memoria semántica utiliza **API de incrustaciones** cuando se configura para proveedores remotos:
 
 - `memorySearch.provider = "openai"` → incrustaciones de OpenAI
-- `memorySearch.provider = "gemini"` → incrustaciones de Gemini
-- `memorySearch.provider = "voyage"` → incrustaciones de Voyage
-- `memorySearch.provider = "mistral"` → incrustaciones de Mistral
-- `memorySearch.provider = "ollama"` → incrustaciones de Ollama (local/autoalojado; generalmente sin facturación de API alojada)
+- `memorySearch.provider = "gemini"` → Incrustaciones de Gemini
+- `memorySearch.provider = "voyage"` → Incrustaciones de Voyage
+- `memorySearch.provider = "mistral"` → Incrustaciones de Mistral
+- `memorySearch.provider = "ollama"` → Incrustaciones de Ollama (local/autoalojado; generalmente sin facturación de API alojada)
 - Retorno opcional a un proveedor remoto si las incrustaciones locales fallan
 
 Puede mantenerlo localmente con `memorySearch.provider = "local"` (sin uso de API).
@@ -103,22 +112,22 @@ Consulte [Memoria](/en/concepts/memory).
 
 ### 5) Herramienta de búsqueda web
 
-`web_search` puede generar cargos por uso dependiendo de su proveedor:
+`web_search` puede incurrir en cargos por uso dependiendo de su proveedor:
 
 - **API de Brave Search**: `BRAVE_API_KEY` o `plugins.entries.brave.config.webSearch.apiKey`
 - **Exa**: `EXA_API_KEY` o `plugins.entries.exa.config.webSearch.apiKey`
 - **Firecrawl**: `FIRECRAWL_API_KEY` o `plugins.entries.firecrawl.config.webSearch.apiKey`
-- **Gemini (Búsqueda de Google)**: `GEMINI_API_KEY` o `plugins.entries.google.config.webSearch.apiKey`
+- **Gemini (Google Search)**: `GEMINI_API_KEY` o `plugins.entries.google.config.webSearch.apiKey`
 - **Grok (xAI)**: `XAI_API_KEY` o `plugins.entries.xai.config.webSearch.apiKey`
-- **Kimi (Moonshot)**: `KIMI_API_KEY`, `MOONSHOT_API_KEY` o `plugins.entries.moonshot.config.webSearch.apiKey`
-- **MiniMax Search**: `MINIMAX_CODE_PLAN_KEY`, `MINIMAX_CODING_API_KEY`, `MINIMAX_API_KEY` o `plugins.entries.minimax.config.webSearch.apiKey`
-- **Búsqueda web de Ollama**: sin clave por defecto, pero requiere un host Ollama accesible más `ollama signin`; también puede reutilizar la autenticación de portador del proveedor Ollama normal cuando el host lo requiere
-- **API de Perplexity Search**: `PERPLEXITY_API_KEY`, `OPENROUTER_API_KEY` o `plugins.entries.perplexity.config.webSearch.apiKey`
+- **Kimi (Moonshot)**: `KIMI_API_KEY`, `MOONSHOT_API_KEY`, o `plugins.entries.moonshot.config.webSearch.apiKey`
+- **MiniMax Search**: `MINIMAX_CODE_PLAN_KEY`, `MINIMAX_CODING_API_KEY`, `MINIMAX_API_KEY`, o `plugins.entries.minimax.config.webSearch.apiKey`
+- **Ollama Web Search**: sin clave por defecto, pero requiere un host Ollama accesible más `ollama signin`; también puede reutilizar la autenticación de portador normal del proveedor Ollama cuando el host lo requiere
+- **API de Perplexity Search**: `PERPLEXITY_API_KEY`, `OPENROUTER_API_KEY`, o `plugins.entries.perplexity.config.webSearch.apiKey`
 - **Tavily**: `TAVILY_API_KEY` o `plugins.entries.tavily.config.webSearch.apiKey`
 - **DuckDuckGo**: alternativa sin clave (sin facturación de API, pero no oficial y basada en HTML)
-- **SearXNG**: `SEARXNG_BASE_URL` o `plugins.entries.searxng.config.webSearch.baseUrl` (sin clave/autohospedado; sin facturación de API alojada)
+- **SearXNG**: `SEARXNG_BASE_URL` o `plugins.entries.searxng.config.webSearch.baseUrl` (sin clave/autoalojado; sin facturación de API alojada)
 
-Las rutas de proveedor heredadas `tools.web.search.*` todavía se cargan a través de la capa de compatibilidad temporal, pero ya no son la superficie de configuración recomendada.
+Las rutas de proveedor heredadas `tools.web.search.*` aún se cargan a través de la capa de compatibilidad temporal, pero ya no son la superficie de configuración recomendada.
 
 **Crédito gratuito de Brave Search:** Cada plan de Brave incluye 5$/mes en
 crédito gratuito renovable. El plan de Search cuesta 5$ por cada 1000 solicitudes, por lo que el crédito cubre
@@ -145,21 +154,21 @@ Estas suelen ser llamadas de bajo volumen pero aún así llegan a las APIs de lo
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-Consulte [CLI de modelos](/en/cli/models).
+Consulte [Models CLI](/en/cli/models).
 
 ### 7) Resumen de seguridad de compactación
 
 La seguridad de compactación puede resumir el historial de la sesión usando el **modelo actual**, lo que
 invoca las APIs del proveedor cuando se ejecuta.
 
-Consulte [Gestión de sesiones + compactación](/en/reference/session-management-compaction).
+Consulte [Session management + compaction](/en/reference/session-management-compaction).
 
 ### 8) Escaneo / sondeo de modelo
 
 `openclaw models scan` puede sondear modelos de OpenRouter y usa `OPENROUTER_API_KEY` cuando
 el sondeo está habilitado.
 
-Consulte [CLI de modelos](/en/cli/models).
+Consulte [Models CLI](/en/cli/models).
 
 ### 9) Hablar (voz)
 
@@ -167,11 +176,11 @@ El modo de hablar puede invocar **ElevenLabs** cuando está configurado:
 
 - `ELEVENLABS_API_KEY` o `talk.providers.elevenlabs.apiKey`
 
-Consulte [Modo de hablar](/en/nodes/talk).
+Consulte [Talk mode](/en/nodes/talk).
 
 ### 10) Habilidades (APIs de terceros)
 
-Las habilidades pueden almacenar `apiKey` en `skills.entries.<name>.apiKey`. Si una habilidad usa esa clave para APIs
+Las habilidades pueden almacenar `apiKey` en `skills.entries.<name>.apiKey`. Si una habilidad usa esa clave para API
 externas, puede incurrir en costos según el proveedor de la habilidad.
 
-Consulte [Habilidades](/en/tools/skills).
+Consulte [Skills](/en/tools/skills).

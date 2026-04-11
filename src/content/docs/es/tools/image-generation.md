@@ -66,7 +66,9 @@ Use `action: "list"` para inspeccionar los proveedores y modelos disponibles en 
 | `count`       | número   | Número de imágenes a generar (1–4)                                                           |
 | `filename`    | cadena   | Sugerencia de nombre de archivo de salida                                                    |
 
-No todos los proveedores admiten todos los parámetros. La herramienta pasa lo que cada proveedor admite, ignora el resto e informa las anulaciones omitidas en el resultado de la herramienta.
+No todos los proveedores admiten todos los parámetros. Cuando un proveedor de respaldo admite una opción geométrica cercana en lugar de la exacta solicitada, OpenClaw reasigna al tamaño, relación de aspecto o resolución admitido más cercano antes del envío. Las anulaciones no admitidas verdaderamente aún se reportan en el resultado de la herramienta.
+
+Los resultados de las herramientas reportan la configuración aplicada. Cuando OpenClaw reasigna la geometría durante el respaldo del proveedor, los valores `size`, `aspectRatio` y `resolution` devueltos reflejan lo que realmente se envió, y `details.normalization` captura la traducción de solicitado a aplicado.
 
 ## Configuración
 
@@ -92,16 +94,19 @@ Al generar una imagen, OpenClaw prueba los proveedores en este orden:
 1. Parámetro **`model`** de la llamada a la herramienta (si el agente especifica uno)
 2. **`imageGenerationModel.primary`** de la configuración
 3. **`imageGenerationModel.fallbacks`** en orden
-4. **Detección automática** — utiliza solo los valores predeterminados del proveedor con autenticación:
+4. **Detección automática** — usa solo los valores predeterminados del proveedor con autenticación:
    - primero el proveedor predeterminado actual
-   - proveedores de generación de imágenes registrados restantes en orden de id de proveedor
+   - proveedores de generación de imágenes registrados restantes en orden de ID de proveedor
 
 Si un proveedor falla (error de autenticación, límite de velocidad, etc.), se prueba automáticamente el siguiente candidato. Si todos fallan, el error incluye detalles de cada intento.
 
 Notas:
 
-- La detección automática es consciente de la autenticación. Un proveedor predeterminado solo ingresa a la lista de candidatos
+- La detección automática es consciente de la autenticación. Un valor predeterminado del proveedor solo ingresa a la lista de candidatos
   cuando OpenClaw puede autenticar realmente ese proveedor.
+- La detección automática está habilitada de forma predeterminada. Establezca
+  `agents.defaults.mediaGenerationAutoProviderFallback: false` si desea que la generación
+  de imágenes use solo las entradas explícitas `model`, `primary` y `fallbacks`.
 - Use `action: "list"` para inspeccionar los proveedores registrados actualmente, sus
   modelos predeterminados y sugerencias de variables de entorno de autenticación.
 
@@ -115,29 +120,29 @@ OpenAI, Google, fal, MiniMax y ComfyUI admiten la edición de imágenes de refer
 
 OpenAI y Google admiten hasta 5 imágenes de referencia a través del parámetro `images`. fal, MiniMax y ComfyUI admiten 1.
 
-La generación de imágenes MiniMax está disponible a través de ambas rutas de autenticación MiniMax incluidas:
+La generación de imágenes de MiniMax está disponible a través de ambas rutas de autenticación de MiniMax incluidas:
 
-- `minimax/image-01` para configuraciones de clave de API
-- `minimax-portal/image-01` para configuraciones de OAuth
+- `minimax/image-01` para configuraciones con clave de API
+- `minimax-portal/image-01` para configuraciones OAuth
 
 ## Capacidades del proveedor
 
-| Capacidad             | OpenAI                | Google                | fal               | MiniMax                       | ComfyUI                                         | Vydra  |
-| --------------------- | --------------------- | --------------------- | ----------------- | ----------------------------- | ----------------------------------------------- | ------ |
-| Generar               | Sí (hasta 4)          | Sí (hasta 4)          | Sí (hasta 4)      | Sí (hasta 9)                  | Sí (salidas definidas por el flujo de trabajo)  | Sí (1) |
-| Editar/referencia     | Sí (hasta 5 imágenes) | Sí (hasta 5 imágenes) | Sí (1 imagen)     | Sí (1 imagen, ref. de sujeto) | Sí (1 imagen, configurado por flujo de trabajo) | No     |
-| Control de tamaño     | Sí                    | Sí                    | Sí                | No                            | No                                              | No     |
-| Relación de aspecto   | No                    | Sí                    | Sí (solo generar) | Sí                            | No                                              | No     |
-| Resolución (1K/2K/4K) | No                    | Sí                    | Sí                | No                            | No                                              | No     |
+| Capacidad             | OpenAI                | Google                | fal                  | MiniMax                       | ComfyUI                                         | Vydra  |
+| --------------------- | --------------------- | --------------------- | -------------------- | ----------------------------- | ----------------------------------------------- | ------ |
+| Generar               | Sí (hasta 4)          | Sí (hasta 4)          | Sí (hasta 4)         | Sí (hasta 9)                  | Sí (salidas definidas por el flujo de trabajo)  | Sí (1) |
+| Editar/referencia     | Sí (hasta 5 imágenes) | Sí (hasta 5 imágenes) | Sí (1 imagen)        | Sí (1 imagen, ref. de sujeto) | Sí (1 imagen, configurado por flujo de trabajo) | No     |
+| Control de tamaño     | Sí                    | Sí                    | Sí                   | No                            | No                                              | No     |
+| Relación de aspecto   | No                    | Sí                    | Sí (solo generación) | Sí                            | No                                              | No     |
+| Resolución (1K/2K/4K) | No                    | Sí                    | Sí                   | No                            | No                                              | No     |
 
 ## Relacionado
 
-- [Resumen de herramientas](/en/tools) — todas las herramientas del agente disponibles
+- [Resumen de herramientas](/en/tools) — todas las herramientas de agente disponibles
 - [fal](/en/providers/fal) — configuración del proveedor de imagen y video fal
-- [ComfyUI](/en/providers/comfy) — configuración de flujo de trabajo de ComfyUI local y Comfy Cloud
-- [Google (Gemini)](/en/providers/google) — Configuración del proveedor de imágenes Gemini
-- [MiniMax](/en/providers/minimax) — Configuración del proveedor de imágenes MiniMax
-- [OpenAI](/en/providers/openai) — Configuración del proveedor de imágenes de OpenAI
-- [Vydra](/en/providers/vydra) — Configuración de imagen, video y voz de Vydra
+- [ComfyUI](/en/providers/comfy) — configuración de flujos de trabajo de ComfyUI local y Comfy Cloud
+- [Google (Gemini)](/en/providers/google) — configuración del proveedor de imágenes Gemini
+- [MiniMax](/en/providers/minimax) — configuración del proveedor de imágenes MiniMax
+- [OpenAI](/en/providers/openai) — configuración del proveedor OpenAI Images
+- [Vydra](/en/providers/vydra) — configuración de imagen, video y voz de Vydra
 - [Referencia de configuración](/en/gateway/configuration-reference#agent-defaults) — configuración de `imageGenerationModel`
 - [Modelos](/en/concepts/models) — configuración y conmutación por error de modelos

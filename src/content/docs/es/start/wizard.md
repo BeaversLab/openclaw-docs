@@ -50,13 +50,13 @@ La incorporación comienza con **QuickStart** (valores predeterminados) frente a
 
 **Modo local (predeterminado)** le guía a través de estos pasos:
 
-1. **Modelo/Auth** — elija cualquier proveedor/flujo de autenticación admitido (clave de API, OAuth o autenticación manual específica del proveedor), incluido Proveedor personalizado
-   (compatible con OpenAI, compatible con Anthropic o detección automática desconocida). Elija un modelo predeterminado.
-   Nota de seguridad: si este agente ejecutará herramientas o procesará contenido de webhook/hooks, prefiera el modelo más potente de la última generación disponible y mantenga la política de herramientas estricta. Los niveles más débiles/antiguos son más fáciles de inyectar mediante el prompt.
-   Para ejecuciones no interactivas, `--secret-input-mode ref` almacena referencias respaldadas por variables de entorno en perfiles de autenticación en lugar de valores de clave de API en texto plano.
-   En el modo no interactivo `ref`, la variable de entorno del proveedor debe estar configurada; pasar banderas de clave en línea sin esa variable de entorno falla rápidamente.
-   En ejecuciones interactivas, elegir el modo de referencia secreta le permite apuntar a una variable de entorno o a una referencia de proveedor configurada (`file` o `exec`), con una validación previa rápida antes de guardar.
-   Para Anthropic, el onboarding/configuración interactivo ofrece **Anthropic Claude CLI** como alternativa local y **Anthropic API key** como la ruta de producción recomendada. El token de configuración de Anthropic también está disponible nuevamente como una ruta heredada/manual de OpenClaw, con la expectativa de facturación de **Uso Extra** específica de OpenClaw de Anthropic.
+1. **Modelo/Auth** — elige cualquier proveedor/flujo de autenticación admitido (clave de API, OAuth o autenticación manual específica del proveedor), incluido el Proveedor personalizado
+   (compatible con OpenAI, compatible con Anthropic o detección automática Desconocida). Elige un modelo predeterminado.
+   Nota de seguridad: si este agente va a ejecutar herramientas o procesar contenido de webhooks/hooks, prefiere el modelo más sólido de la última generación disponible y mantén la política de herramientas estricta. Los niveles más débiles/antiguos son más fáciles de inyectar mediante prompts.
+   Para ejecuciones no interactivas, `--secret-input-mode ref` almacena referencias respaldadas por variables de entorno en los perfiles de autenticación en lugar de valores de clave de API en texto plano.
+   En el modo no interactivo `ref`, se debe establecer la variable de entorno del proveedor; pasar indicadores de clave en línea sin esa variable de entorno falla rápidamente.
+   En ejecuciones interactivas, elegir el modo de referencia secreta te permite señalar a una variable de entorno o a una referencia de proveedor configurada (`file` o `exec`), con una validación previa rápida antes de guardar.
+   Para Anthropic, el onboarding/configuración interactivo ofrece **Anthropic Claude CLI** como la ruta local preferida y **Anthropic API key** como la ruta de producción recomendada. El token de configuración de Anthropic también sigue estando disponible como una ruta de autenticación por token admitida.
 2. **Espacio de trabajo (Workspace)** — Ubicación para los archivos del agente (predeterminado `~/.openclaw/workspace`). Semilla archivos de arranque (bootstrap).
 3. **Gateway** — Puerto, dirección de enlace, modo de autenticación, exposición a Tailscale.
    En el modo de token interactivo, elija el almacenamiento de token en texto plano predeterminado u opte por SecretRef.

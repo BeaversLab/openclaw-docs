@@ -1,5 +1,5 @@
 ---
-summary: "Utiliser les images, vidéos et synthèse vocale Vydra dans OpenClaw"
+summary: "Utilisez l'image, la vidéo et la synthèse vocale de Vydra dans OpenClaw"
 read_when:
   - You want Vydra media generation in OpenClaw
   - You need Vydra API key setup guidance
@@ -10,8 +10,8 @@ title: "Vydra"
 
 Le plugin Vydra inclus ajoute :
 
-- la génération d'images via `vydra/grok-imagine`
-- la génération de vidéos via `vydra/veo3` et `vydra/kling`
+- génération d'images via `vydra/grok-imagine`
+- génération de vidéo via `vydra/veo3` et `vydra/kling`
 - la synthèse vocale via la route TTS de Vydra propulsée par ElevenLabs
 
 OpenClaw utilise le même `VYDRA_API_KEY` pour ces trois capacités.
@@ -20,7 +20,7 @@ OpenClaw utilise le même `VYDRA_API_KEY` pour ces trois capacités.
 
 Utilisez `https://www.vydra.ai/api/v1`.
 
-L'hôte apex de Vydra (`https://vydra.ai/api/v1`) redirige actuellement vers `www`. Certains clients HTTP suppriment `Authorization` lors de cette redirection inter-hôtes, ce qui transforme une clé API valide en un échec d'authentification trompeur. Le plugin inclus utilise directement l'URL de base `www` pour éviter cela.
+L'hôte apex de Vydra (`https://vydra.ai/api/v1`) redirige actuellement vers `www`. Certains clients HTTP abandonnent `Authorization` lors de cette redirection inter-hôtes, ce qui transforme une clé API valide en une erreur d'authentification trompeuse. Le plugin inclus utilise l'URL de base `www` directement pour éviter cela.
 
 ## Configuration
 
@@ -58,14 +58,14 @@ Définissez-le comme le provider d'images par défaut :
 
 La prise en charge incluse actuelle se limite à la conversion texte en image. Les routes d'édition hébergées de Vydra attendent des URL d'images distantes, et OpenClaw n'ajoute pas encore de pont de téléchargement spécifique à Vydra dans le plugin inclus.
 
-Voir [Génération d'images](/en/tools/image-generation) pour le comportement partagé des tools.
+Voir [Génération d'images](/en/tools/image-generation) pour le comportement partagé de l'outil.
 
 ## Génération de vidéos
 
 Modèles vidéo enregistrés :
 
-- `vydra/veo3` pour la conversion texte en vidéo
-- `vydra/kling` pour la conversion image en vidéo
+- `vydra/veo3` pour texte-vers-vidéo
+- `vydra/kling` pour image-vers-vidéo
 
 Définissez Vydra comme le provider vidéo par défaut :
 
@@ -83,15 +83,35 @@ Définissez Vydra comme le provider vidéo par défaut :
 
 Notes :
 
-- `vydra/veo3` est inclus uniquement pour la conversion texte en vidéo.
+- `vydra/veo3` est fourni uniquement pour le texte-vers-vidéo.
 - `vydra/kling` nécessite actuellement une référence d'URL d'image distante. Les téléchargements de fichiers locaux sont rejetés dès le départ.
-- Le plugin inclus reste prudent et ne transmet pas les commandes de style non documentées telles que le rapport d'aspect, la résolution, le filigrane ou l'audio généré.
+- La route HTTP `kling` actuelle de Vydra a été incohérente quant à la nécessité de `image_url` ou `video_url` ; le fournisseur inclus mappe la même URL d'image distante dans les deux champs.
+- Le plugin inclus reste conservateur et ne transmet pas les paramètres de style non documentés tels que le format d'image, la résolution, le filigrane ou l'audio généré.
 
-Voir [Génération de vidéos](/en/tools/video-generation) pour le comportement partagé des tools.
+Couverture en direct spécifique au fournisseur :
+
+```bash
+OPENCLAW_LIVE_TEST=1 \
+OPENCLAW_LIVE_VYDRA_VIDEO=1 \
+pnpm test:live -- extensions/vydra/vydra.live.test.ts
+```
+
+Le fichier live Vydra inclus couvre désormais :
+
+- `vydra/veo3` texte-vers-vidéo
+- `vydra/kling` image-vers-vidéo en utilisant une URL d'image distante
+
+Remplacez l'fixture d'image distante si nécessaire :
+
+```bash
+export OPENCLAW_LIVE_VYDRA_KLING_IMAGE_URL="https://example.com/reference.png"
+```
+
+Voir [Génération de vidéo](/en/tools/video-generation) pour le comportement partagé de l'outil.
 
 ## Synthèse vocale
 
-Définissez Vydra comme le provider de synthèse vocale :
+Définissez Vydra comme fournisseur de synthèse vocale :
 
 ```json5
 {
@@ -111,13 +131,13 @@ Définissez Vydra comme le provider de synthèse vocale :
 
 Valeurs par défaut :
 
-- model : `elevenlabs/tts`
-- voice id : `21m00Tcm4TlvDq8ikWAM`
+- modèle : `elevenlabs/tts`
+- id de voix : `21m00Tcm4TlvDq8ikWAM`
 
-Le plugin inclus expose actuellement une voix par défaut connue pour fonctionner et renvoie des fichiers audio MP3.
+Le plugin inclus expose actuellement une voix par défaut connue comme fonctionnelle et renvoie des fichiers audio MP3.
 
 ## Connexes
 
-- [Répertoire des fournisseurs](/en/providers/index)
+- [Annuaire des fournisseurs](/en/providers/index)
 - [Génération d'images](/en/tools/image-generation)
 - [Génération de vidéos](/en/tools/video-generation)

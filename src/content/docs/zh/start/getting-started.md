@@ -121,7 +121,7 @@ openclaw dashboard
   <Card title="配对与安全" href="/en/channels/pairing" icon="shield">
     控制谁可以向您的代理发送消息。
   </Card>
-  <Card title="配置 Gateway" href="/en/gateway/configuration" icon="settings">
+  <Card title="配置 Gateway(网关)" href="/en/gateway/configuration" icon="settings">
     模型、工具、沙箱和高级设置。
   </Card>
   <Card title="浏览工具" href="/en/tools" icon="wrench">

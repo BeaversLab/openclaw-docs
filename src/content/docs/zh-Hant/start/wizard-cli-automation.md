@@ -190,10 +190,7 @@ openclaw onboard --non-interactive \
   </Accordion>
 </AccordionGroup>
 
-Anthropic setup-token 再次作為舊版/手動入門路徑提供。
-使用它的前提是 Anthropic 告知 OpenClaw 使用者，OpenClaw
-Claude 登入路徑需要 **額外使用量**。對於生產環境，建議使用
-Anthropic API 金鑰。
+Anthropic setup-token 仍可作為支援的入門令牌路徑使用，但在有可用時，OpenClaw 現在偏好重複使用 Claude CLI。對於生產環境，請優先使用 Anthropic API 金鑰。
 
 ## 新增另一個代理程式
 

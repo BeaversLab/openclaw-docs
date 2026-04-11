@@ -1,5 +1,5 @@
 ---
-summary: "Autenticación de modelos: OAuth, claves de API y token de configuración heredado de Anthropic"
+summary: "Autenticación de modelos: OAuth, claves de API, reutilización de Claude CLI y token de configuración de Anthropic"
 read_when:
   - Debugging model auth or OAuth expiry
   - Documenting authentication or credential storage
@@ -8,11 +8,11 @@ title: "Autenticación"
 
 # Autenticación (Proveedores de Modelos)
 
-<Note>Esta página cubre la autenticación del **proveedor de modelos** (claves de API, OAuth y token de configuración heredado de Anthropic). Para la autenticación de la **conexión de puerta de enlace** (token, contraseña, proxy confiable), consulte [Configuration](/en/gateway/configuration) y [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth).</Note>
+<Note>Esta página cubre la autenticación del **proveedor de modelos** (claves de API, OAuth, reutilización de Claude CLI y token de configuración de Anthropic). Para la autenticación de la **conexión de puerta de enlace** (token, contraseña, proxy de confianza), consulte [Configuration](/en/gateway/configuration) y [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth).</Note>
 
 OpenClaw es compatible con OAuth y claves API para proveedores de modelos. Para hosts de puerta de enlace siempre activos, las claves API suelen ser la opción más predecible. Los flujos de suscripción/OAuth también son compatibles cuando coinciden con el modelo de cuenta de su proveedor.
 
-Consulte [/concepts/oauth](/en/concepts/oauth) para obtener el flujo completo de OAuth y el diseño de almacenamiento.
+Consulte [/concepts/oauth](/en/concepts/oauth) para ver el flujo de OAuth completo y el diseño de almacenamiento.
 Para la autenticación basada en SecretRef (proveedores `env`/`file`/`exec`), consulte [Secrets Management](/en/gateway/secrets).
 Para las reglas de elegibilidad de credenciales/códigos de razón utilizadas por `models status --probe`, consulte
 [Auth Credential Semantics](/en/auth-credential-semantics).
@@ -20,7 +20,7 @@ Para las reglas de elegibilidad de credenciales/códigos de razón utilizadas po
 ## Configuración recomendada (clave API, cualquier proveedor)
 
 Si está ejecutando una puerta de enlace de larga duración, comience con una clave de API para su proveedor elegido.
-Específicamente para Anthropic, la autenticación con clave de API es la ruta segura. La autenticación de tipo suscripción de Anthropic dentro de OpenClaw es la ruta del token de configuración heredada y debe tratarse como una ruta de **Uso Adicional**, no una ruta de límites del plan.
+Específicamente para Anthropic, la autenticación con clave de API sigue siendo la configuración de servidor más predecible, pero OpenClaw también admite reutilizar un inicio de sesión local de Claude CLI.
 
 1. Cree una clave API en la consola de su proveedor.
 2. Póngala en el **host de la puerta de enlace** (la máquina que ejecuta `openclaw gateway`).
@@ -30,7 +30,7 @@ export <PROVIDER>_API_KEY="..."
 openclaw models status
 ```
 
-3. Si la Puerta de enlace se ejecuta bajo systemd/launchd, prefiera poner la clave en
+3. Si la Gateway se ejecuta bajo systemd/launchd, prefiera poner la clave en
    `~/.openclaw/.env` para que el demonio pueda leerla:
 
 ```bash
@@ -46,22 +46,20 @@ openclaw models status
 openclaw doctor
 ```
 
-Si prefiere no administrar las variables de entorno usted mismo, el aprovisionamiento puede almacenar
+Si prefiere no administrar las variables de entorno usted mismo, la incorporación puede almacenar
 claves de API para uso del demonio: `openclaw onboard`.
 
-Consulte [Help](/en/help) para obtener detalles sobre la herencia de entorno (`env.shellEnv`,
+Consulte [Help](/en/help) para obtener detalles sobre la herencia de variables de entorno (`env.shellEnv`,
 `~/.openclaw/.env`, systemd/launchd).
 
-## Anthropic: compatibilidad con token heredado
+## Anthropic: Claude CLI y compatibilidad de tokens
 
-La autenticación con token de configuración de Anthropic todavía está disponible en OpenClaw como una
-ruta heredada/manual. La documentación pública de Claude Code de Anthropic todavía cubre el uso
-directo de la terminal de Claude Code bajo los planes de Claude, pero Anthropic le dijo por separado a
-los usuarios de OpenClaw que la ruta de inicio de sesión de Claude de **OpenClaw** cuenta como uso de
-terceros y requiere **Uso Adicional** facturado por separado de la
-suscripción.
+La autenticación con token de configuración de Anthropic aún está disponible en OpenClaw como una ruta de token compatible. El personal de Anthropic nos ha informado posteriormente que el uso de Claude CLI al estilo de OpenClaw está
+permitido nuevamente, por lo que OpenClaw trata la reutilización de Claude CLI y el uso de `claude -p` como
+aprobados para esta integración, a menos que Anthropic publique una nueva política. Cuando
+la reutilización de Claude CLI está disponible en el host, esa es ahora la ruta preferida.
 
-Para la ruta de configuración más clara, use una clave de API de Anthropic. Si debe mantener una ruta estilo suscripción de Anthropic en OpenClaw, use la ruta del token de configuración heredado con la expectativa de que Anthropic la trate como **Uso Extra**.
+Para hosts de puerta de enlace de larga duración, una clave de API de Anthropic sigue siendo la configuración más predecible. Si desea reutilizar un inicio de sesión de Claude existente en el mismo host, utilice la ruta de la CLI de Anthropic Claude en onboarding/configure.
 
 Entrada manual de token (cualquier proveedor; escribe `auth-profiles.json` + actualiza la configuración):
 
@@ -94,16 +92,16 @@ Notas:
 - Si existe autenticación pero OpenClaw no puede resolver un candidato de modelo sondeable para ese proveedor, la sonda informa `status: no_model`.
 - Los períodos de enfriamiento por límite de velocidad pueden estar limitados al modelo. Un perfil enfriándose por un modelo aún puede ser utilizable para un modelo hermano en el mismo proveedor.
 
-Los scripts de operaciones opcionales (systemd/Termux) están documentados aquí:
-[Scripts de monitoreo de autenticación](/en/help/scripts#auth-monitoring-scripts)
+Los scripts opcionales de operaciones (systemd/Termux) están documentados aquí:
+[Auth monitoring scripts](/en/help/scripts#auth-monitoring-scripts)
 
 ## Nota de Anthropic
 
-El backend `claude-cli` de Anthropic fue eliminado.
+El backend `claude-cli` de Anthropic es compatible de nuevo.
 
-- Use claves de API de Anthropic para el tráfico de Anthropic en OpenClaw.
-- El token de configuración de Anthropic sigue siendo una ruta heredada/manual y debe usarse con la expectativa de facturación de Uso Extra que Anthropic comunicó a los usuarios de OpenClaw.
-- `openclaw doctor` ahora detecta el estado obsoleto eliminado de la CLI de Anthropic Claude. Si los bytes de credenciales almacenadas aún existen, doctor los convierte nuevamente en perfiles de token/OAuth de Anthropic. Si no, doctor elimina la configuración obsoleta de la CLI de Claude y le señala la recuperación de clave de API o token de configuración.
+- El personal de Anthropic nos informó que esta ruta de integración de OpenClaw está permitida de nuevo.
+- Por lo tanto, OpenClaw trata la reutilización de la CLI de Claude y el uso de `claude -p` como sancionados para ejecuciones respaldadas por Anthropic, a menos que Anthropic publique una nueva política.
+- Las claves de API de Anthropic siguen siendo la opción más predecible para hosts de puerta de enlace de larga duración y control de facturación explícito del lado del servidor.
 
 ## Verificación del estado de autenticación del modelo
 
@@ -140,7 +138,7 @@ Use `/model` (o `/model list`) para un selector compacto; use `/model status` pa
 
 ### Por agente (anulación de CLI)
 
-Establezca una anulación explícita del orden del perfil de autenticación para un agente (almacenado en `auth-profiles.json` de ese agente):
+Establezca una anulación explícita del orden del perfil de autenticación para un agente (almacenado en el `auth-state.json` de ese agente):
 
 ```bash
 openclaw models auth order get --provider anthropic
@@ -159,7 +157,7 @@ a un id de modelo en lugar de a todo el perfil del proveedor.
 ### "No se encontraron credenciales"
 
 Si falta el perfil de Anthropic, configure una clave de API de Anthropic en el
-**host de gateway** o configure la ruta del token de configuración heredado de Anthropic, luego vuelva a verificar:
+**host de puerta de enlace** o configure la ruta del token de configuración de Anthropic y luego verifique de nuevo:
 
 ```bash
 openclaw models status
@@ -167,17 +165,4 @@ openclaw models status
 
 ### Token expirando/expirado
 
-Ejecute `openclaw models status` para confirmar qué perfil está caducando. Si falta
-o ha caducado un perfil de token heredado de Anthropic, actualice esa configuración
-mediante setup-token o migre a una clave de API de Anthropic.
-
-Si la máquina todavía tiene estado obsoleto eliminado de la CLI de Anthropic Claude
-de versiones anteriores, ejecute:
-
-```bash
-openclaw doctor --yes
-```
-
-Doctor convierte `anthropic:claude-cli` de nuevo a token/OAuth de Anthropic cuando
-aún existen los bytes de credenciales almacenados. De lo contrario, elimina las referencias
-obsoletas de perfil/configuración/modelo de la CLI de Claude y deja la guía del siguiente paso.
+Ejecute `openclaw models status` para confirmar qué perfil está caducando. Si falta o ha caducado un perfil de token de Anthropic, actualice esa configuración a través del setup-token o migre a una clave de API de Anthropic.

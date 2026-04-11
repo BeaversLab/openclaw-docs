@@ -12,8 +12,8 @@ Model discovery, scanning, and configuration (default model, fallbacks, auth pro
 
 相關：
 
-- 供應商 + 模型：[Models](/en/providers/models)
-- 供應商驗證設定：[Getting started](/en/start/getting-started)
+- 供應商 + 模型：[模型](/en/providers/models)
+- 供應商驗證設定：[入門指南](/en/start/getting-started)
 
 ## 常用指令
 
@@ -121,5 +121,5 @@ openclaw models auth login --provider openai-codex --set-default
 - `paste-token` 接受在其他地方產生或來自自動化的 token 字串。
 - `paste-token` 需要 `--provider`，提示輸入 token 值，並將其寫入預設的 profile id `<provider>:manual`，除非您傳遞 `--profile-id`。
 - `paste-token --expires-in <duration>` 根據相對持續時間（例如 `365d` 或 `12h`）儲存絕對的 token 有效期限。
-- Anthropic 計費說明：對於 OpenClaw 中的 Anthropic，實際的區分在於 **API 金鑰** 或 **Claude 訂閱搭配額外使用量**。Anthropic 於 **2026 年 4 月 4 日下午 12:00 PT / 晚上 8:00 BST** 通知 OpenClaw 使用者，**OpenClaw** Claude 登入路徑計算為第三方套裝軟體的使用，且需要與訂閱分開計費的 **額外使用量**。我們的本機重現也顯示，識別 OpenClaw 的提示字串不會在 Anthropic SDK + API 金鑰路徑上重現。
-- Anthropic `setup-token` / `paste-token` 再次作為舊版/手動 OpenClaw 路徑提供使用。請在使用時預期，Anthropic 已告知 OpenClaw 使用者此路徑需要 **額外使用量**。
+- Anthropic 備註：Anthropic 人員告訴我們，OpenClaw 風格的 Claude CLI 使用再次被允許，因此除非 Anthropic 發布新政策，否則 OpenClaw 將 Claude CLI 重新使用和 `claude -p` 使用視為此整合的核准用法。
+- Anthropic `setup-token` / `paste-token` 仍然可作為支援的 OpenClaw 權杖路徑，但 OpenClaw 現在在可用時優先考慮 Claude CLI 重新使用和 `claude -p`。

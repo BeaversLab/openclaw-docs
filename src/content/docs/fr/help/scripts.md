@@ -19,9 +19,35 @@ Utilisez-les lorsqu'une tâche est clairement liée à un script ; sinon, préf�
 
 ## Scripts de surveillance d'authentification
 
-La surveillance de l'authentification est traitée dans [Authentication](/en/gateway/authentication). Les scripts sous `scripts/` sont des options supplémentaires pour les workflows systemd/Termux sur téléphone.
+La surveillance de l'authentification est traitée dans [Authentification](/en/gateway/authentication). Les scripts sous `scripts/` sont des suppléments optionnels pour les flux de travail systemd/Termux sur téléphone.
+
+## Assistant de lecture GitHub
+
+Utilisez `scripts/gh-read` lorsque vous voulez que `gh` utilise un jeton d'installation d'application GitHub pour les appels de lecture limités au dépôt, tout en laissant le `gh` normal sur votre connexion personnelle pour les actions d'écriture.
+
+Variables d'environnement requises :
+
+- `OPENCLAW_GH_READ_APP_ID`
+- `OPENCLAW_GH_READ_PRIVATE_KEY_FILE`
+
+Variables d'environnement optionnelles :
+
+- `OPENCLAW_GH_READ_INSTALLATION_ID` lorsque vous souhaitez ignorer la recherche d'installation basée sur le dépôt
+- `OPENCLAW_GH_READ_PERMISSIONS` comme une substitution séparée par des virgules pour le sous-ensemble de permissions de lecture à demander
+
+Ordre de résolution du dépôt :
+
+- `gh ... -R owner/repo`
+- `GH_REPO`
+- `git remote origin`
+
+Exemples :
+
+- `scripts/gh-read pr view 123`
+- `scripts/gh-read run list -R openclaw/openclaw`
+- `scripts/gh-read api repos/openclaw/openclaw/pulls/123`
 
 ## Lors de l'ajout de scripts
 
-- Gardez les scripts concentrés et documentés.
-- Ajoutez une courte entrée dans la documentation pertinente (ou créez-en une si elle manque).
+- Gardez les scripts ciblés et documentés.
+- Ajoutez une courte entrée dans la documentation appropriée (ou créez-en une si elle manque).

@@ -124,9 +124,10 @@ openclaw directory groups list --channel zalouser --query "work"
 - `channels.zalouser.groups.<group>.requireMention` 控制群組回覆是否需要提及。
 - 解析順序：精確群組 ID/名稱 -> 正規化群組 slug -> `*` -> 預設值（`true`）。
 - 這適用於白名單群組和開放群組模式。
+- 引用機器人訊息視為群組啟動的隱性提及。
 - 授權的控制指令（例如 `/new`）可以繞過提及閘門。
-- 當群組訊息因需要提及而被跳過時，OpenClaw 會將其儲存為待處理的群組記錄，並包含在下一筆處理的群組訊息中。
-- 群組記錄限制預設為 `messages.groupChat.historyLimit`（後備值 `50`）。您可以使用 `channels.zalouser.historyLimit` 為每個帳戶進行覆寫。
+- 當因需要提及而跳過群組訊息時，OpenClaw 會將其儲存為待處理的群組歷史記錄，並包含在下一則處理的群組訊息中。
+- 群組歷史記錄限制預設為 `messages.groupChat.historyLimit`（後備值 `50`）。您可以使用 `channels.zalouser.historyLimit` 為每個帳號覆寫此設定。
 
 範例：
 
@@ -144,9 +145,9 @@ openclaw directory groups list --channel zalouser --query "work"
 }
 ```
 
-## 多重帳戶
+## 多帳號
 
-帳戶對應到 OpenClaw 狀態中的 `zalouser` 設定檔。範例：
+帳號對應到 OpenClaw 狀態中的 `zalouser` 設定檔。範例：
 
 ```json5
 {
@@ -164,15 +165,15 @@ openclaw directory groups list --channel zalouser --query "work"
 
 ## 輸入中、反應和已送達確認
 
-- OpenClaw 會在發送回覆之前發送輸入中事件（盡力而為）。
-- 訊息反應動作 `react` 在頻道動作中支援 `zalouser`。
+- OpenClaw 會在發送回覆前發送輸入中事件（盡力而為）。
+- 頻道動作中支援對 `zalouser` 使用訊息反應動作 `react`。
   - 使用 `remove: true` 從訊息中移除特定的反應表情符號。
-  - 反應語意：[反應](/en/tools/reactions)
-- 對於包含事件元資料的傳入訊息，OpenClaw 會發送已送達 + 已讀確認（盡力而為）。
+  - 反應語意：[Reactions](/en/tools/reactions)
+- 對於包含事件元資料的傳入訊息，OpenClaw 會發送已送達和已讀確認（盡力而為）。
 
 ## 疑難排解
 
-**無法保持登入狀態：**
+**無法保持登入：**
 
 - `openclaw channels status --probe`
 - 重新登入： `openclaw channels logout --channel zalouser && openclaw channels login --channel zalouser`
@@ -181,15 +182,15 @@ openclaw directory groups list --channel zalouser --query "work"
 
 - 在 `allowFrom`/`groupAllowFrom`/`groups` 中使用數字 ID，或確切的好友/群組名稱。
 
-**從舊版基於 CLI 的設置升級：**
+**從舊版基於 CLI 的設定升級：**
 
 - 移除任何舊的外部 `zca` 程序假設。
-- 該通道現在完全在 OpenClaw 中運行，無需外部 CLI 二進制文件。
+- 該頻道現在完全在 OpenClaw 中運行，無需外部 CLI 執行檔。
 
 ## 相關
 
-- [頻道總覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — 私訊驗證和配對流程
-- [群組](/en/channels/groups) — 群組聊天行為和提及控制
-- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
-- [安全性](/en/gateway/security) — 存取模型和強化措施
+- [Channels Overview](/en/channels) — 所有支援的頻道
+- [Pairing](/en/channels/pairing) — 私訊驗證和配對流程
+- [Groups](/en/channels/groups) — 群組聊天行為和提及閘門
+- [Channel Routing](/en/channels/channel-routing) — 訊息的工作階段路由
+- [Security](/en/gateway/security) — 存取模型和加固

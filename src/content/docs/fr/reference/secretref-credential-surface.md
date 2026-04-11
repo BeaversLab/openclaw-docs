@@ -41,7 +41,6 @@ Intention de la portée :
 - `talk.providers.*.apiKey`
 - `messages.tts.providers.*.apiKey`
 - `tools.web.fetch.firecrawl.apiKey`
-- `plugins.entries.firecrawl.config.webFetch.apiKey`
 - `plugins.entries.brave.config.webSearch.apiKey`
 - `plugins.entries.google.config.webSearch.apiKey`
 - `plugins.entries.xai.config.webSearch.apiKey`
@@ -102,32 +101,32 @@ Intention de la portée :
 - `channels.zalo.accounts.*.botToken`
 - `channels.zalo.accounts.*.webhookSecret`
 - `channels.googlechat.serviceAccount` via sibling `serviceAccountRef` (compatibilité exception)
-- `channels.googlechat.accounts.*.serviceAccount` via sibling `serviceAccountRef` (compatibilité exception)
+- `channels.googlechat.accounts.*.serviceAccount` via sibling `serviceAccountRef` (exception de compatibilité)
 
 ### `auth-profiles.json` targets (`secrets configure` + `secrets apply` + `secrets audit`)
 
-- `profiles.*.keyRef` (`type: "api_key"` ; non pris en charge lorsque `auth.profiles.<id>.mode = "oauth"`)
-- `profiles.*.tokenRef` (`type: "token"` ; non pris en charge lorsque `auth.profiles.<id>.mode = "oauth"`)
+- `profiles.*.keyRef` (`type: "api_key"`; non pris en charge lorsque `auth.profiles.<id>.mode = "oauth"`)
+- `profiles.*.tokenRef` (`type: "token"`; non pris en charge lorsque `auth.profiles.<id>.mode = "oauth"`)
 
 [//]: # "secretref-supported-list-end"
 
-Remarques :
+Notes :
 
-- Les cibles du plan de profil d'authentification nécessitent `agentId`.
+- Les cibles de plan de profil d'authentification nécessitent `agentId`.
 - Les entrées de plan ciblent `profiles.*.key` / `profiles.*.token` et écrivent des références frères (`keyRef` / `tokenRef`).
-- Les références de profil d'authentification sont incluses dans la résolution au moment de l'exécution et la couverture d'audit.
-- Garde de stratégie OAuth : `auth.profiles.<id>.mode = "oauth"` ne peut pas être combiné avec des entrées SecretRef pour ce profil. Le démarrage/rechargement et la résolution du profil d'authentification échouent rapidement lorsque cette stratégie est violée.
-- Pour les fournisseurs de modèles gérés par SecretRef, les entrées `agents/*/agent/models.json` générées conservent des marqueurs non secrets (pas les valeurs de secrets résolues) pour les surfaces `apiKey`/en-tête.
-- La persistance des marqueurs est source-autoritaire : OpenClaw écrit les marqueurs à partir de l'instantané de la configuration source active (pré-résolution), et non à partir des valeurs de secrets résolues au moment de l'exécution.
+- Les références de profil d'authentification sont incluses dans la résolution d'exécution et la couverture d'audit.
+- Garantie de stratégie OAuth : `auth.profiles.<id>.mode = "oauth"` ne peut pas être combiné avec des entrées SecretRef pour ce profil. Le démarrage/rechargement et la résolution du profil d'authentification échouent rapidement lorsque cette stratégie est violée.
+- Pour les providers de modèle gérés par SecretRef, les entrées `agents/*/agent/models.json` générées conservent des marqueurs non secrets (pas les valeurs de secrets résolues) pour les surfaces `apiKey`/header.
+- La persistance des marqueurs est source-autoritaire : OpenClaw écrit des marqueurs à partir de l'instantané de configuration source actif (pré-résolution), et non à partir des valeurs de secrets d'exécution résolues.
 - Pour la recherche Web :
-  - En mode fournisseur explicite (`tools.web.search.provider` défini), seule la clé du fournisseur sélectionné est active.
+  - En mode provider explicite (`tools.web.search.provider` défini), seule la clé de provider sélectionnée est active.
   - En mode automatique (`tools.web.search.provider` non défini), seule la première clé de provider résolue par priorité est active.
-  - En mode automatique, les références de provider non sélectionnées sont considérées comme inactives jusqu'à leur sélection.
-  - Les chemins de provider hérités `tools.web.search.*` se résolvent toujours pendant la fenêtre de compatibilité, mais la surface SecretRef canonique est `plugins.entries.<plugin>.config.webSearch.*`.
+  - En mode automatique, les références de provider non sélectionnées sont traitées comme inactives jusqu'à leur sélection.
+  - Les chemins de provider `tools.web.search.*` hérités sont toujours résolus pendant la fenêtre de compatibilité, mais la surface SecretRef canonique est `plugins.entries.<plugin>.config.webSearch.*`.
 
 ## Identifiants non pris en charge
 
-Les identifiants hors portée incluent :
+Les identifiants hors champ d'application incluent :
 
 [//]: # "secretref-unsupported-list-start"
 
@@ -145,4 +144,4 @@ Les identifiants hors portée incluent :
 
 Justification :
 
-- Ces identifiants sont des classes émises, pivotées, porteuses de session ou durables OAuth qui ne correspondent pas à une résolution SecretRef externe en lecture seule.
+- Ces informations d'identification sont des classes créées, pivotées, portant une session ou durables via OAuth qui ne correspondent pas à une résolution externe SecretRef en lecture seule.

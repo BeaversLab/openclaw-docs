@@ -36,7 +36,7 @@ openclaw onboard --auth-choice zai-cn
 ```json5
 {
   env: { ZAI_API_KEY: "sk-..." },
-  agents: { defaults: { model: { primary: "zai/glm-5" } } },
+  agents: { defaults: { model: { primary: "zai/glm-5.1" } } },
 }
 ```
 
@@ -65,7 +65,7 @@ Actualmente, OpenClaw inicializa el proveedor `zai` incluido con:
 ## Notas
 
 - Los modelos GLM están disponibles como `zai/<model>` (ejemplo: `zai/glm-5`).
-- Referencia de modelo incluido por defecto: `zai/glm-5`
+- Referencia del modelo incluido por defecto: `zai/glm-5.1`
 - Los ids `glm-5*` desconocidos aún se resuelven hacia adelante en la ruta del proveedor incluido
   sintetizando metadatos propios del proveedor a partir de la plantilla `glm-4.7` cuando el id
   coincide con la forma actual de la familia GLM-5.

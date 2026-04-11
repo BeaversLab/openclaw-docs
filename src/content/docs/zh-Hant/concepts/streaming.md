@@ -124,20 +124,21 @@ Model output
 
 Slack 專用：
 
-- 當 `streaming=partial` 時（預設：`true`），`channels.slack.nativeStreaming` 會切換 Slack 原生串流 API 呼叫。
+- 當 `channels.slack.streaming.mode="partial"`（預設值：`true`）時，`channels.slack.streaming.nativeTransport` 會切換 Slack 原生串流 API 呼叫。
+- Slack 原生串流和 Slack 助手執行緒狀態需要回覆執行緒目標；頂層 DM 不會顯示該執行緒樣式的預覽。
 
 舊版金鑰遷移：
 
-- Telegram：`streamMode` + 布林值 `streaming` 會自動遷移至 `streaming` 列舉。
-- Discord：`streamMode` + boolean `streaming` 自動遷移至 `streaming` enum。
-- Slack：`streamMode` 自動遷移至 `streaming` enum；boolean `streaming` 自動遷移至 `nativeStreaming`。
+- Telegram：`streamMode` + 布林值 `streaming` 自動遷移至 `streaming` 列舉。
+- Discord：`streamMode` + 布林值 `streaming` 自動遷移至 `streaming` 列舉。
+- Slack：`streamMode` 自動遷移至 `streaming.mode`；布林值 `streaming` 自動遷移至 `streaming.mode` 加上 `streaming.nativeTransport`；舊版 `nativeStreaming` 自動遷移至 `streaming.nativeTransport`。
 
-### 運行時行為
+### 執行時期行為
 
 Telegram：
 
-- 在私訊和群組/主題中，使用 `sendMessage` + `editMessageText` 預覽更新。
-- 當明確啟用 Telegram 區塊串流時，會跳過預覽串流（以避免重複串流）。
+- 跨 DM 和群組/主題使用 `sendMessage` + `editMessageText` 預覽更新。
+- 當明確啟用 Telegram 區塊串流時，會跳過預覽串流（以避免雙重串流）。
 - `/reasoning stream` 可以將推理寫入預覽。
 
 Discord：
@@ -148,12 +149,12 @@ Discord：
 
 Slack：
 
-- `partial` 可以在可用時使用 Slack 原生串流（`chat.startStream`/`append`/`stop`）。
-- `block` 使用附加樣式（append-style）的草稿預覽。
+- 當可用時，`partial` 可以使用 Slack 原生串流（`chat.startStream`/`append`/`stop`）。
+- `block` 使用附加樣式草稿預覽。
 - `progress` 使用狀態預覽文字，然後是最終答案。
 
 ## 相關
 
 - [訊息](/en/concepts/messages) — 訊息生命週期與傳遞
 - [重試](/en/concepts/retry) — 傳遞失敗時的重試行為
-- [頻道](/en/channels) — 逐頻道的串流支援
+- [頻道](/en/channels) — 各頻道串流支援

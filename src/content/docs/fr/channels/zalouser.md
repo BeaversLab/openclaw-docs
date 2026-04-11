@@ -122,9 +122,10 @@ Exemple :
 - `channels.zalouser.groups.<group>.requireMention` contrôle si les réponses de groupe nécessitent une mention.
 - Ordre de résolution : id/nom de groupe exact -> slug de groupe normalisé -> `*` -> par défaut (`true`).
 - Cela s'applique aux groupes sur liste blanche et au mode de groupe ouvert.
+- Citer un message de bot compte comme une mention implicite pour l'activation du groupe.
 - Les commandes de contrôle autorisées (par exemple `/new`) peuvent contourner le filtrage par mention.
 - Lorsqu'un message de groupe est ignoré car une mention est requise, OpenClaw le stocke comme historique de groupe en attente et l'inclut dans le prochain message de groupe traité.
-- La limite d'historique de groupe est par défaut de `messages.groupChat.historyLimit` (secours `50`). Vous pouvez la remplacer par compte avec `channels.zalouser.historyLimit`.
+- La limite de l'historique du groupe est `messages.groupChat.historyLimit` par défaut (valeur de repli `50`). Vous pouvez la modifier par compte avec `channels.zalouser.historyLimit`.
 
 Exemple :
 
@@ -144,7 +145,7 @@ Exemple :
 
 ## Multi-compte
 
-Les comptes correspondent aux profils `zalouser` dans l'état OpenClaw. Exemple :
+Les comptes correspondent aux profils `zalouser` dans l'état de OpenClaw. Exemple :
 
 ```json5
 {
@@ -160,13 +161,13 @@ Les comptes correspondent aux profils `zalouser` dans l'état OpenClaw. Exemple 
 }
 ```
 
-## État de frappe, réactions et accusés de réception
+## Indication de frappe, réactions et accusés de réception
 
-- OpenClaw envoie un événement de frappe avant d'envoyer une réponse (au mieux effort).
-- L'action de réaction au message `react` est prise en charge pour `zalouser` dans les actions de channel.
+- OpenClaw envoie un événement de frappe avant d'envoyer une réponse (au mieux possible).
+- L'action de réaction de message `react` est prise en charge pour `zalouser` dans les actions de canal.
   - Utilisez `remove: true` pour supprimer un emoji de réaction spécifique d'un message.
-  - Sémantique des réactions : [Reactions](/en/tools/reactions)
-- Pour les messages entrants incluant des métadonnées d'événement, OpenClaw envoie des accusés de réception et de lecture (best-effort).
+  - Sémantique des réactions : [Réactions](/en/tools/reactions)
+- Pour les messages entrants incluant des métadonnées d'événement, OpenClaw envoie des accusés de réception délivrés + lus (au mieux possible).
 
 ## Dépannage
 
@@ -175,19 +176,19 @@ Les comptes correspondent aux profils `zalouser` dans l'état OpenClaw. Exemple 
 - `openclaw channels status --probe`
 - Reconnexion : `openclaw channels logout --channel zalouser && openclaw channels login --channel zalouser`
 
-**La liste d'autorisation/le nom de groupe n'a pas pu être résolu :**
+**Le nom de la liste d'autorisation/groupe n'a pas pu être résolu :**
 
-- Utilisez des ID numériques dans `allowFrom`/`groupAllowFrom`/`groups`, ou les noms exacts des amis/groupes.
+- Utilisez des identifiants numériques dans `allowFrom`/`groupAllowFrom`/`groups`, ou les noms exacts d'amis/groupes.
 
-**Mise à niveau depuis l'ancienne configuration basée sur le CLI :**
+**Mise à niveau à partir de l'ancienne configuration basée sur CLI :**
 
-- Supprimez toutes les anciennes hypothèses concernant le processus externe `zca`.
-- Le canal fonctionne désormais entièrement dans OpenClaw sans binaires CLI externes.
+- Supprimez toutes les anciennes hypothèses de processus externe `zca`.
+- Le canal s'exécute désormais entièrement dans OpenClaw sans binaires externes CLI.
 
 ## Connexes
 
 - [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appariement](/en/channels/pairing) — authentification et flux d'appariement DM
-- [Groupes](/en/channels/groups) — comportement des discussions de groupe et filtrage des mentions
-- [Routage des canaux](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et renforcement
+- [Appairage](/en/channels/pairing) — authentification et flux d'appairage par DM
+- [Groupes](/en/channels/groups) — comportement du chat de groupe et filtrage par mention
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

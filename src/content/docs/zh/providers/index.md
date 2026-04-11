@@ -28,6 +28,7 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [阿里巴巴模型工作室](/en/providers/alibaba)
 - [Amazon Bedrock](/en/providers/bedrock)
 - [Anthropic (API + Claude CLI)](/en/providers/anthropic)
+- [Arcee AI (Trinity 模型)](/en/providers/arcee)
 - [BytePlus (国际版)](/en/concepts/model-providers#byteplus-international)
 - [Chutes](/en/providers/chutes)
 - [ComfyUI](/en/providers/comfy)
@@ -40,8 +41,9 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [Google (Gemini)](/en/providers/google)
 - [Groq (LPU 推理)](/en/providers/groq)
 - [Hugging Face (推理)](/en/providers/huggingface)
+- [inferrs (本地模型)](/en/providers/inferrs)
 - [Kilocode](/en/providers/kilocode)
-- [LiteLLM (统一网关)](/en/providers/litellm)
+- [LiteLLM (统一 Gateway(网关))](/en/providers/litellm)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
@@ -59,7 +61,7 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [StepFun](/en/providers/stepfun)
 - [Synthetic](/en/providers/synthetic)
 - [Together AI](/en/providers/together)
-- [Venice (Venice AI，注重隐私)](/en/providers/venice)
+- [Venice (Venice AI, 注重隐私)](/en/providers/venice)
 - [Vercel AI Gateway(网关)](/en/providers/vercel-ai-gateway)
 - [Vydra](/en/providers/vydra)
 - [vLLM (本地模型)](/en/providers/vllm)
@@ -70,10 +72,10 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 
 ## 共享概览页面
 
-- [Additional bundled variants](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
-- [Image Generation](/en/tools/image-generation) - 共享 `image_generate` 工具、提供商选择和故障转移
-- [Music Generation](/en/tools/music-generation) - 共享 `music_generate` 工具、提供商选择和故障转移
-- [Video Generation](/en/tools/video-generation) - 共享 `video_generate` 工具、提供商选择和故障转移
+- [Additional bundled variants](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy, and Gemini CLI OAuth
+- [Image Generation](/en/tools/image-generation) - Shared `image_generate` 工具, 提供商 selection, and failover
+- [Music Generation](/en/tools/music-generation) - Shared `music_generate` 工具, 提供商 selection, and failover
+- [Video Generation](/en/tools/video-generation) - Shared `video_generate` 工具, 提供商 selection, and failover
 
 ## 转录提供商
 
@@ -81,7 +83,7 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 
 ## 社区工具
 
-- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Claude 订阅凭据的社区代理（使用前请验证 Anthropic 政策/条款）
+- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Community proxy for Claude subscription credentials (verify Anthropic policy/terms before use)
 
-有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
-请参阅 [Model providers](/en/concepts/model-providers)。
+For the full 提供商 catalog (xAI, Groq, Mistral, etc.) and advanced configuration,
+see [Model providers](/en/concepts/model-providers).

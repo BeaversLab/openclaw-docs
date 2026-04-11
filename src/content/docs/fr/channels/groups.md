@@ -190,8 +190,8 @@ Contrôlez la manière dont les messages de groupe/salon sont gérés par canal 
       groupPolicy: "allowlist",
       groupAllowFrom: ["@owner:example.org"],
       groups: {
-        "!roomId:example.org": { allow: true },
-        "#alias:example.org": { allow: true },
+        "!roomId:example.org": { enabled: true },
+        "#alias:example.org": { enabled: true },
       },
     },
   },
@@ -227,7 +227,7 @@ Modèle mental rapide (ordre d'évaluation pour les messages de groupe) :
 
 Les messages de groupe nécessitent une mention, sauf s'ils sont remplacés pour chaque groupe. Les valeurs par défaut se trouvent par sous-système sous `*.groups."*"`.
 
-Répondre à un message du bot compte comme une mention implicite (lorsque le channel prend en charge les métadonnées de réponse). Cela s'applique à Telegram, WhatsApp, Slack, Discord et Microsoft Teams.
+Répondre à un message de bot compte comme une mention implicite lorsque le canal prend en charge les métadonnées de réponse. Citer un message de bot peut également compter comme une mention implicite sur les canaux qui exposent les métadonnées de citation. Les cas intégrés actuels incluent Telegram, WhatsApp, Slack, Discord, Microsoft Teams et ZaloUser.
 
 ```json5
 {

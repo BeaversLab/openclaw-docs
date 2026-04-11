@@ -1,9 +1,9 @@
 ---
 title: "Google (Gemini)"
-summary: "Configuración de Google Gemini (clave de API, generación de imágenes, comprensión de medios, búsqueda web)"
+summary: "Configuración de Google Gemini (clave de API + OAuth, generación de imágenes, comprensión multimedia, búsqueda web)"
 read_when:
   - You want to use Google Gemini models with OpenClaw
-  - You need the API key auth flow
+  - You need the API key or OAuth auth flow
 ---
 
 # Google (Gemini)
@@ -13,6 +13,7 @@ El complemento de Google proporciona acceso a los modelos Gemini a través de Go
 - Proveedor: `google`
 - Autenticación: `GEMINI_API_KEY` o `GOOGLE_API_KEY`
 - API: API de Google Gemini
+- Proveedor alternativo: `google-gemini-cli` (OAuth)
 
 ## Inicio rápido
 
@@ -43,11 +44,51 @@ openclaw onboard --non-interactive \
   --gemini-api-key "$GEMINI_API_KEY"
 ```
 
+## OAuth (CLI de Gemini)
+
+Un proveedor alternativo `google-gemini-cli` utiliza OAuth PKCE en lugar de una clave
+de API. Esta es una integración no oficial; algunos usuarios reportan
+restricciones en la cuenta. Úselo bajo su propia responsabilidad.
+
+- Modelo predeterminado: `google-gemini-cli/gemini-3-flash-preview`
+- Alias: `gemini-cli`
+- Requisito previo de instalación: CLI de Gemini local disponible como `gemini`
+  - Homebrew: `brew install gemini-cli`
+  - npm: `npm install -g @google/gemini-cli`
+- Inicio de sesión:
+
+```bash
+openclaw models auth login --provider google-gemini-cli --set-default
+```
+
+Variables de entorno:
+
+- `OPENCLAW_GEMINI_OAUTH_CLIENT_ID`
+- `OPENCLAW_GEMINI_OAUTH_CLIENT_SECRET`
+
+(O las variantes `GEMINI_CLI_*`.)
+
+Si las solicitudes OAuth de la CLI de Gemini fallan después del inicio de sesión, configure
+`GOOGLE_CLOUD_PROJECT` o `GOOGLE_CLOUD_PROJECT_ID` en el host de la puerta de enlace y
+vuelva a intentarlo.
+
+Si el inicio de sesión falla antes de que comience el flujo del navegador, asegúrese de que el comando local `gemini`
+esté instalado y en `PATH`. OpenClaw admite tanto instalaciones de Homebrew
+como instalaciones globales de npm, incluidas las disposiciones comunes de Windows/npm.
+
+Notas de uso de JSON de la CLI de Gemini:
+
+- El texto de respuesta proviene del campo `response` del JSON de la CLI.
+- El uso recurre a `stats` cuando la CLI deja `usage` vacío.
+- `stats.cached` se normaliza en OpenClaw `cacheRead`.
+- Si falta `stats.input`, OpenClaw deriva los tokens de entrada de
+  `stats.input_tokens - stats.cached`.
+
 ## Capacidades
 
-| Capacidad                | Compatible       |
+| Capacidad                | Soportado        |
 | ------------------------ | ---------------- |
-| Finalizaciones de chat   | Sí               |
+| Completaciones de chat   | Sí               |
 | Generación de imágenes   | Sí               |
 | Generación de música     | Sí               |
 | Comprensión de imágenes  | Sí               |
@@ -56,17 +97,17 @@ openclaw onboard --non-interactive \
 | Búsqueda web (Grounding) | Sí               |
 | Pensamiento/razonamiento | Sí (Gemini 3.1+) |
 
-## Reutilización directa de caché de Gemini
+## Reutilización directa del caché de Gemini
 
 Para ejecuciones directas de la API de Gemini (`api: "google-generative-ai"`), OpenClaw ahora
 pasa un identificador `cachedContent` configurado a través de las solicitudes de Gemini.
 
-- Configure parámetros por modelo o globales con cualquiera de
-  `cachedContent` o el antiguo `cached_content`
-- Si ambos están presentes, `cachedContent` tiene prioridad
+- Configure parámetros por modelo o globales con cualquiera de los dos
+  `cachedContent` o el heredado `cached_content`
+- Si ambos están presentes, gana `cachedContent`
 - Valor de ejemplo: `cachedContents/prebuilt-context`
-- El uso de aciertos de caché de Gemini se normaliza en `cacheRead` de OpenClaw desde
-  `cachedContentTokenCount` ascendente
+- El uso de aciertos de caché de Gemini se normaliza en OpenClaw `cacheRead` desde
+  el upstream `cachedContentTokenCount`
 
 Ejemplo:
 
@@ -88,16 +129,17 @@ Ejemplo:
 
 ## Generación de imágenes
 
-El proveedor de generación de imágenes `google` incluido de forma predeterminada en
+El proveedor de generación de imágenes `google` incluido tiene como valor predeterminado
 `google/gemini-3.1-flash-image-preview`.
 
-- También soporta `google/gemini-3-pro-image-preview`
+- También admite `google/gemini-3-pro-image-preview`
 - Generar: hasta 4 imágenes por solicitud
 - Modo de edición: habilitado, hasta 5 imágenes de entrada
 - Controles de geometría: `size`, `aspectRatio` y `resolution`
 
-La generación de imágenes, la comprensión de medios y Gemini Grounding se mantienen en el
-id. de proveedor `google`.
+El proveedor `google-gemini-cli` solo para OAuth es una superficie de inferencia de texto
+separada. La generación de imágenes, la comprensión de medios y Gemini Grounding se mantienen en
+el id de proveedor `google`.
 
 Para usar Google como proveedor de imágenes predeterminado:
 
@@ -113,17 +155,17 @@ Para usar Google como proveedor de imágenes predeterminado:
 }
 ```
 
-Consulte [Generación de imágenes](/en/tools/image-generation) para conocer los parámetros de la herramienta compartida,
-la selección del proveedor y el comportamiento de conmutación por error.
+Consulte [Generación de imágenes](/en/tools/image-generation) para conocer los parámetros de la herramienta
+compartida, la selección del proveedor y el comportamiento de conmutación por error.
 
 ## Generación de video
 
-El complemento `google` incluido también registra la generación de video a través de la herramienta compartida
-`video_generate`.
+El complemento `google` incluido también registra la generación de video a través de la herramienta
+compartida `video_generate`.
 
 - Modelo de video predeterminado: `google/veo-3.1-fast-generate-preview`
 - Modos: texto a video, imagen a video y flujos de referencia de video único
-- Soporta `aspectRatio`, `resolution` y `audio`
+- Admite `aspectRatio`, `resolution` y `audio`
 - Límite de duración actual: **de 4 a 8 segundos**
 
 Para usar Google como proveedor de video predeterminado:
@@ -140,18 +182,18 @@ Para usar Google como proveedor de video predeterminado:
 }
 ```
 
-Consulte [Video Generation](/en/tools/video-generation) para conocer los parámetros
-compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.
+Consulte [Generación de video](/en/tools/video-generation) para conocer los parámetros de la herramienta
+compartida, la selección del proveedor y el comportamiento de conmutación por error.
 
 ## Generación de música
 
-El complemento incluido `google` también registra la generación de música a través de la
-herramienta compartida `music_generate`.
+El complemento `google` incluido también registra la generación de música a través de la herramienta
+compartida `music_generate`.
 
 - Modelo de música predeterminado: `google/lyria-3-clip-preview`
 - También admite `google/lyria-3-pro-preview`
-- Controles del prompt: `lyrics` y `instrumental`
-- Formato de salida: `mp3` de forma predeterminada, más `wav` en `google/lyria-3-pro-preview`
+- Controles de prompt: `lyrics` y `instrumental`
+- Formato de salida: `mp3` por defecto, además de `wav` en `google/lyria-3-pro-preview`
 - Entradas de referencia: hasta 10 imágenes
 - Las ejecuciones respaldadas por sesión se desvinculan a través del flujo compartido de tarea/estado, incluyendo `action: "status"`
 
@@ -169,11 +211,10 @@ Para usar Google como proveedor de música predeterminado:
 }
 ```
 
-Consulte [Music Generation](/en/tools/music-generation) para conocer los parámetros
-compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.
+Consulte [Music Generation](/en/tools/music-generation) para conocer los parámetros de la herramienta compartida, la selección del proveedor y el comportamiento de conmutación por error.
 
 ## Nota sobre el entorno
 
-Si Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `GEMINI_API_KEY`
+Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `GEMINI_API_KEY`
 esté disponible para ese proceso (por ejemplo, en `~/.openclaw/.env` o a través de
 `env.shellEnv`).

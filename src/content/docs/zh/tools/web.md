@@ -242,7 +242,7 @@ OpenClaw 还可以提供使用相同密钥的可选 `x_search` 设置。
 
   </Tab>
   <Tab title="Environment variable">
-    在 Gateway 进程环境中设置提供商环境变量：
+    在 Gateway(网关) 进程环境中设置提供商环境变量：
 
     ```bash
     export BRAVE_API_KEY="YOUR_KEY"

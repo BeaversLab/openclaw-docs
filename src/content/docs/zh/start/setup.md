@@ -14,7 +14,7 @@ title: "设置"
 
 - **个性化配置位于仓库之外：** `~/.openclaw/workspace` (工作区) + `~/.openclaw/openclaw.json` (配置)。
 - **Stable workflow:** install the macOS app; let it run the bundled Gateway(网关).
-- **最新前沿工作流：** 通过 `pnpm gateway:watch` 自己运行 Gateway，然后让 macOS 应用以本地模式连接。
+- **最新前沿工作流：** 通过 `pnpm gateway:watch` 自己运行 Gateway(网关)，然后让 macOS 应用以本地模式连接。
 
 ## Prereqs (from source)
 
@@ -70,7 +70,7 @@ openclaw health
 
 If 新手引导 is not available in your build:
 
-- 运行 `openclaw setup`，然后 `openclaw channels login`，接着手动启动 Gateway (`openclaw gateway`)。
+- 运行 `openclaw setup`，然后 `openclaw channels login`，接着手动启动 Gateway(网关) (`openclaw gateway`)。
 
 ## Bleeding edge workflow (Gateway(网关) in a terminal)
 
@@ -100,7 +100,7 @@ bun install
 bun run gateway:watch
 ```
 
-### 2) 将 macOS 应用指向您正在运行的 Gateway
+### 2) 将 macOS 应用指向您正在运行的 Gateway(网关)
 
 在 **OpenClaw.app** 中：
 
@@ -109,7 +109,7 @@ bun run gateway:watch
 
 ### 3) 验证
 
-- 应用内 Gateway 状态应显示 **“Using existing gateway …”**
+- 应用内 Gateway(网关) 状态应显示 **“Using existing gateway …”**
 - 或通过 CLI：
 
 ```bash
@@ -118,7 +118,7 @@ openclaw health
 
 ### 常见陷阱
 
-- **端口错误：** Gateway WS 默认为 `ws://127.0.0.1:18789`；请保持应用和 CLI 在同一端口上。
+- **端口错误：** Gateway(网关) WS 默认为 `ws://127.0.0.1:18789`；请保持应用和 CLI 在同一端口上。
 - **状态存储位置：**
   - 渠道/提供商状态：`~/.openclaw/credentials/`
   - 模型身份验证配置文件：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`

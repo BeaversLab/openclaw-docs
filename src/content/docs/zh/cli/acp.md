@@ -257,11 +257,11 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 
 ## 选项
 
-- `--url <url>`：Gateway WebSocket URL（配置时默认为 gateway.remote.url）。
-- `--token <token>`：Gateway 认证令牌。
-- `--token-file <path>`：从文件读取 Gateway 认证令牌。
-- `--password <password>`：Gateway 认证密码。
-- `--password-file <path>`：从文件读取 Gateway 认证密码。
+- `--url <url>`：Gateway(网关) WebSocket URL（配置时默认为 gateway.remote.url）。
+- `--token <token>`：Gateway(网关) 认证令牌。
+- `--token-file <path>`：从文件读取 Gateway(网关) 认证令牌。
+- `--password <password>`：Gateway(网关) 认证密码。
+- `--password-file <path>`：从文件读取 Gateway(网关) 认证密码。
 - `--session <key>`：默认会话密钥。
 - `--session-label <label>`：要解析的默认会话标签。
 - `--require-existing`：如果会话密钥/标签不存在则失败。
@@ -274,7 +274,7 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 
 - 在某些系统上，`--token` 和 `--password` 可能会在本地进程列表中可见。
 - 优先使用 `--token-file`/`--password-file` 或环境变量（`OPENCLAW_GATEWAY_TOKEN`、`OPENCLAW_GATEWAY_PASSWORD`）。
-- Gateway 认证解析遵循其他 Gateway 客户端使用的共享协定：
+- Gateway(网关) 认证解析遵循其他 Gateway(网关) 客户端使用的共享协定：
   - 本地模式：环境变量 (`OPENCLAW_GATEWAY_*`) -> `gateway.auth.*` -> `gateway.remote.*`，仅当 `gateway.auth.*` 未设置时才回退（已配置但未解析的本地 SecretRef 将失败关闭）
   - 远程模式：`gateway.remote.*`，根据远程优先级规则使用环境变量/配置作为回退
   - `--url` 是可安全覆盖的，不会重用隐式的配置/环境凭据；请传递显式的 `--token`/`--password`（或文件变体）

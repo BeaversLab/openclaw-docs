@@ -112,7 +112,7 @@ read_when:
 Strict-Transport-Security: max-age=31536000; includeSubDomains
 ```
 
-### Gateway TLS 终止
+### Gateway(网关) TLS 终止
 
 如果 OpenClaw 本身直接提供 HTTPS（无 TLS 终止代理），请设置：
 

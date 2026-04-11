@@ -1,6 +1,6 @@
 ---
 title: "Dreaming (expérimental)"
-summary: "Consolidation de la mémoire en arrière-plan avec des phases légères, profondes et REM, plus un journal de rêve"
+summary: "Consolidation de la mémoire en arrière-plan avec des phases légère, profonde et REM ainsi qu'un journal de rêve"
 read_when:
   - You want memory promotion to run automatically
   - You want to understand what each dreaming phase does
@@ -10,8 +10,8 @@ read_when:
 # Dreaming (expérimental)
 
 Dreaming est le système de consolidation de la mémoire en arrière-plan dans `memory-core`.
-Il aide OpenClaw à déplacer les signaux à court terme forts vers une mémoire durable tout en
-maintenant le processus explicable et révisable.
+Il aide OpenClaw à transférer des signaux à court terme forts vers une mémoire durable tout en
+gardant le processus explicite et vérifiable.
 
 Dreaming est **opt-in** (optionnel) et désactivé par défaut.
 
@@ -19,8 +19,8 @@ Dreaming est **opt-in** (optionnel) et désactivé par défaut.
 
 Dreaming conserve deux types de sortie :
 
-- **État de la machine** dans `memory/.dreams/` (stockage de rappel, signaux de phase, points de contrôle d'ingestion, verrous).
-- **Sortie lisible par l'homme** dans `DREAMS.md` (ou `dreams.md` existant) et des fichiers de rapport de phase facultatifs sous `memory/dreaming/<phase>/YYYY-MM-DD.md`.
+- **État de la machine** dans `memory/.dreams/` (magasin de rappel, signaux de phase, points de contrôle d'ingestion, verrous).
+- **Sortie lisible par l'homme** dans `DREAMS.md` (ou le `dreams.md` existant) et des fichiers de rapport de phase optionnels sous `memory/dreaming/<phase>/YYYY-MM-DD.md`.
 
 La promotion à long terme écrit toujours uniquement dans `MEMORY.md`.
 
@@ -55,7 +55,7 @@ La phase Deep décide de ce qui devient mémoire à long terme.
 - Nécessite que `minScore`, `minRecallCount` et `minUniqueQueries` soient réussis.
 - Réhydrate les extraits des fichiers quotidiens en direct avant l'écriture, de sorte que les extraits obsolètes/supprimés sont ignorés.
 - Ajoute les entrées promues à `MEMORY.md`.
-- Écrit un résumé `## Deep Sleep` dans `DREAMS.md` et écrit facultativement `memory/dreaming/deep/YYYY-MM-DD.md`.
+- Écrit un résumé `## Deep Sleep` dans `DREAMS.md` et écrit optionnellement `memory/dreaming/deep/YYYY-MM-DD.md`.
 
 ### Phase REM
 
@@ -68,8 +68,9 @@ La phase REM extrait des motifs et des signaux de réflexion.
 
 ## Journal de rêve
 
-Le rêve tient également un **Journal de rêve** narratif dans `DREAMS.md`.
-Une fois que chaque phase a suffisamment de matériel, `memory-core` lance un tour de sous-agent en arrière-plan au mieux (en utilisant le modèle d'exécution par défaut) et ajoute une courte entrée de journal.
+Dreaming tient également un **journal de rêve** narratif dans `DREAMS.md`.
+Une fois que chaque phase a suffisamment de matériel, `memory-core` lance un tour de sous-agent
+en arrière-plan au mieux (en utilisant le modèle d'exécution par défaut) et ajoute une courte entrée de journal.
 
 Ce journal est destiné à la lecture humaine dans l'interface Dreams, et non comme source de promotion.
 
@@ -86,13 +87,13 @@ Le classement profond utilise six signaux de base pondérés plus le renforcemen
 | Consolidation          | 0,10  | Force de récurrence sur plusieurs jours                       |
 | Richesse conceptuelle  | 0,06  | Densité de balises conceptuelles à partir de l'extrait/chemin |
 
-Les impacts des phases Light et REM ajoutent un petit coup de boost dégressif en fonction de la récence provenant de
+Les succès des phases légère et REM ajoutent un petit boost dégressif basé sur la récence à partir de
 `memory/.dreams/phase-signals.json`.
 
 ## Planification
 
-Lorsqu'il est activé, `memory-core` gère automatiquement une tâche cron pour un balayage de rêve complet.
-Chaque balayage exécute les phases dans l'ordre : light -> REM -> deep.
+Lorsqu'il est activé, `memory-core` gère automatiquement une tâche cron pour un balayage
+de rêve complet. Chaque balayage exécute les phases dans l'ordre : légère -> REM -> profonde.
 
 Comportement de cadence par défaut :
 
@@ -160,10 +161,25 @@ openclaw memory promote --limit 5
 openclaw memory status --deep
 ```
 
-Le `memory promote` manuel utilise les seuils de phase profonde par défaut, sauf s'ils sont remplacés
-par des drapeaux CLI.
+Le `memory promote` manuel utilise par défaut les seuils de phase profonde, sauf s'ils sont remplacés
+par des indicateurs de CLI.
 
-## Paramètres clés par défaut
+Expliquez pourquoi un candidat spécifique serait ou ne serait pas promu :
+
+```bash
+openclaw memory promote-explain "router vlan"
+openclaw memory promote-explain "router vlan" --json
+```
+
+Prévisualiser les réflexions REM, les vérités candidates et la sortie de promotion profonde sans
+rien écrire :
+
+```bash
+openclaw memory rem-harness
+openclaw memory rem-harness --json
+```
+
+## Principales valeurs par défaut
 
 Tous les paramètres se trouvent sous `plugins.entries.memory-core.config.dreaming`.
 
@@ -172,24 +188,25 @@ Tous les paramètres se trouvent sous `plugins.entries.memory-core.config.dreami
 | `enabled`   | `false`     |
 | `frequency` | `0 3 * * *` |
 
-La politique de phase, les seuils et le comportement de stockage sont des détails d'implémentation internes (pas une configuration utilisateur).
+La stratégie de phase, les seuils et le comportement de stockage sont des détails d'implémentation internes
+(pas une configuration utilisateur).
 
 Voir [Référence de configuration de la mémoire](/en/reference/memory-config#dreaming-experimental)
 pour la liste complète des clés.
 
 ## Interface Dreams
 
-Lorsqu'il est activé, l'onglet **Dreams** (Rêves) du Gateway affiche :
+Lorsqu'il est activé, l'onglet **Dreams** du Gateway affiche :
 
-- l'état actif actuel du dreaming
-- le statut par phase et la présence de managed-sweep
+- l'état d'activation actuel du rêve
+- le statut au niveau de la phase et la présence du nettoyage géré
 - les comptes à court terme, à long terme et promus aujourd'hui
-- le moment de la prochaine exécution planifiée
-- un lecteur de Dream Diary extensible pris en charge par `doctor.memory.dreamDiary`
+- le calendrier de la prochaine exécution planifiée
+- un lecteur de journal de rêve extensible soutenu par `doctor.memory.dreamDiary`
 
 ## Connexes
 
 - [Mémoire](/en/concepts/memory)
-- [Recherche de mémoire](/en/concepts/memory-search)
+- [Recherche mémoire](/en/concepts/memory-search)
 - [memory CLI](/en/cli/memory)
 - [Référence de configuration de la mémoire](/en/reference/memory-config)

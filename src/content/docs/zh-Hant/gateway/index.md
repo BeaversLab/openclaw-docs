@@ -169,7 +169,7 @@ openclaw gateway probe
 ssh -N -L 18789:127.0.0.1:18789 user@host
 ```
 
-然後將客戶端連接到本地的 `ws://127.0.0.1:18789`。
+然後在本地將用戶端連線至 `ws://127.0.0.1:18789`。
 
 <Warning>SSH tunnel 不會繞過閘道驗證。對於共用金鑰驗證，客戶端仍 必須透過 tunnel 發送 `token`/`password`。對於承載身分的模式， 請求仍然必須滿足該驗證路徑。</Warning>
 

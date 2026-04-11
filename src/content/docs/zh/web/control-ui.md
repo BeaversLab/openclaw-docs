@@ -38,7 +38,7 @@ title: "控制 UI"
 
 ## 设备配对（首次连接）
 
-当您从新浏览器或设备连接到控制 UI 时，Gateway
+当您从新浏览器或设备连接到控制 UI 时，Gateway(网关)
 需要**一次性配对批准**——即使您位于同一个 `gateway.auth.allowTailscale: true` Tailnet 上。这是一项防止
 未经授权访问的安全措施。
 
@@ -74,8 +74,8 @@ openclaw devices approve <requestId>
 ## 语言支持
 
 控制 UI 可以在首次加载时根据您的浏览器区域设置进行本地化。
-要稍后覆盖它，请打开 **Overview -> Gateway Access -> Language**。
-区域选择器位于 Gateway Access 卡片中，而不是在 Appearance 下。
+要稍后覆盖它，请打开 **Overview -> Gateway(网关) Access -> Language**。
+区域选择器位于 Gateway(网关) Access 卡片中，而不是在 Appearance 下。
 
 - 支持的语言环境：`en`、`zh-CN`、`zh-TW`、`pt-BR`、`de`、`es`、`ja-JP`、`ko`、`fr`、`tr`、`uk`、`id`、`pl`
 - 非英语翻译将在浏览器中延迟加载。

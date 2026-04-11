@@ -55,7 +55,7 @@ openclaw onboard --non-interactive \
 2. 如果您想要本機推論，請拉取本機模型：
 
 ```bash
-ollama pull glm-4.7-flash
+ollama pull gemma4
 # or
 ollama pull gpt-oss:20b
 # or
@@ -76,12 +76,12 @@ openclaw onboard
 
 - `Local`：僅限本地模型
 - `Cloud + Local`：本地模型加上雲端模型
-- 雲端模型 (例如 `kimi-k2.5:cloud`、`minimax-m2.5:cloud` 和 `glm-5:cloud`) **不** 需要本地的 `ollama pull`
+- 雲端模型（例如 `kimi-k2.5:cloud`、`minimax-m2.7:cloud` 和 `glm-5.1:cloud`）**不**需要本地的 `ollama pull`
 
 OpenClaw 目前建議：
 
-- 本地預設值：`glm-4.7-flash`
-- 雲端預設值：`kimi-k2.5:cloud`、`minimax-m2.5:cloud`、`glm-5:cloud`
+- 本地預設值：`gemma4`
+- 雲端預設值：`kimi-k2.5:cloud`、`minimax-m2.7:cloud`、`glm-5.1:cloud`
 
 5. 如果您偏好手動設定，請直接為 OpenClaw 啟用 Ollama（任何值皆可；Ollama 不需要真實金鑰）：
 
@@ -97,7 +97,7 @@ openclaw config set models.providers.ollama.apiKey "ollama-local"
 
 ```bash
 openclaw models list
-openclaw models set ollama/glm-4.7-flash
+openclaw models set ollama/gemma4
 ```
 
 7. 或在設定中設定預設值：
@@ -106,7 +106,7 @@ openclaw models set ollama/glm-4.7-flash
 {
   agents: {
     defaults: {
-      model: { primary: "ollama/glm-4.7-flash" },
+      model: { primary: "ollama/gemma4" },
     },
   },
 }
@@ -225,7 +225,7 @@ export OLLAMA_API_KEY="ollama-local"
 
 ## 雲端模型
 
-雲端模型讓您可以在本機模型旁執行雲端託管的模型（例如 `kimi-k2.5:cloud`、`minimax-m2.5:cloud`、`glm-5:cloud`）。
+雲端模型允許您在本地模型旁邊執行雲端託管的模型（例如 `kimi-k2.5:cloud`、`minimax-m2.7:cloud`、`glm-5.1:cloud`）。
 
 若要使用雲端模型，請在設定期間選擇 **Cloud + Local** 模式。精靈會檢查您是否已登入，並在需要時開啟瀏覽器登入流程。如果無法驗證身份，精靈會還原為本機模型的預設值。
 
@@ -349,7 +349,7 @@ curl http://localhost:11434/api/tags
 
 ```bash
 ollama list  # See what's installed
-ollama pull glm-4.7-flash
+ollama pull gemma4
 ollama pull gpt-oss:20b
 ollama pull llama3.3     # Or another model
 ```

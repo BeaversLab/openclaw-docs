@@ -122,7 +122,8 @@ openclaw directory groups list --channel zalouser --query "work"
 - `channels.zalouser.groups.<group>.requireMention` 控制群组回复是否需要提及。
 - 解析顺序：精确群组 ID/名称 -> 标准化群组标识 -> `*` -> 默认（`true`）。
 - 这既适用于白名单群组，也适用于开放群组模式。
-- 授权的控制命令（例如 `/new`）可以绕过提及限制。
+- 引用机器人消息算作群组激活的隐式提及。
+- 授权的控制命令（例如 `/new`）可以绕过提及门控。
 - 当因需要提及而跳过群组消息时，OpenClaw 会将其存储为待处理的群组历史记录，并包含在下一个处理的群组消息中。
 - 群组历史记录限制默认为 `messages.groupChat.historyLimit`（回退 `50`）。您可以使用 `channels.zalouser.historyLimit` 为每个帐户覆盖此设置。
 
@@ -144,7 +145,7 @@ openclaw directory groups list --channel zalouser --query "work"
 
 ## 多帐户
 
-帐户映射到 OpenClaw 状态中的 `zalouser` 个人资料。示例：
+帐户映射到 OpenClaw 状态中的 `zalouser` 配置文件。示例：
 
 ```json5
 {
@@ -160,13 +161,13 @@ openclaw directory groups list --channel zalouser --query "work"
 }
 ```
 
-## 正在输入、反应和送达回执
+## 正在输入、反应和送达确认
 
-- OpenClaw 会在发送回复之前发送正在输入事件（尽力而为）。
+- OpenClaw 在发送回复之前发送正在输入事件（尽力而为）。
 - 渠道操作中支持针对 `zalouser` 的消息反应操作 `react`。
   - 使用 `remove: true` 从消息中移除特定的反应表情符号。
   - 反应语义：[Reactions](/en/tools/reactions)
-- 对于包含事件元数据的入站消息，OpenClaw 会发送已送达和已读回执（尽力而为）。
+- 对于包含事件元数据的入站消息，OpenClaw 发送送达 + 已读确认（尽力而为）。
 
 ## 故障排除
 
@@ -177,17 +178,17 @@ openclaw directory groups list --channel zalouser --query "work"
 
 **允许列表/群组名称未解析：**
 
-- 在 `allowFrom`/`groupAllowFrom`/`groups` 中使用数字 ID，或使用准确的好友/群组名称。
+- 在 `allowFrom`/`groupAllowFrom`/`groups` 中使用数字 ID，或使用确切的好友/群组名称。
 
 **从旧的基于 CLI 的设置升级：**
 
-- 移除所有旧的关于外部 `zca` 进程的假设。
+- 移除任何关于旧的外部 `zca` 进程的假设。
 - 该渠道现在完全在 OpenClaw 中运行，无需外部 CLI 二进制文件。
 
 ## 相关
 
-- [渠道概述](/en/channels) — 所有支持的渠道
-- [配对](/en/channels/pairing) — 私信认证和配对流程
-- [群组](/en/channels/groups) — 群组聊天行为和提及门控
-- [渠道路由](/en/channels/channel-routing) — 消息的会话路由
-- [安全性](/en/gateway/security) — 访问模型和加固
+- [Channels Overview](/en/channels) — 所有支持的渠道
+- [Pairing](/en/channels/pairing) — 私信认证和配对流程
+- [Groups](/en/channels/groups) — 群聊行为和提及门控
+- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
+- [Security](/en/gateway/security) — 访问模型和加固

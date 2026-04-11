@@ -28,6 +28,7 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [Alibaba Model Studio](/en/providers/alibaba)
 - [Amazon Bedrock](/en/providers/bedrock)
 - [Anthropic (API + Claude CLI)](/en/providers/anthropic)
+- [Arcee AI (modèles Trinity)](/en/providers/arcee)
 - [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
 - [Chutes](/en/providers/chutes)
 - [ComfyUI](/en/providers/comfy)
@@ -36,24 +37,25 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [fal](/en/providers/fal)
 - [Fireworks](/en/providers/fireworks)
 - [GitHub Copilot](/en/providers/github-copilot)
-- [Modèles GLM](/en/providers/glm)
+- [modèles GLM](/en/providers/glm)
 - [Google (Gemini)](/en/providers/google)
 - [Groq (inférence LPU)](/en/providers/groq)
 - [Hugging Face (Inférence)](/en/providers/huggingface)
+- [inferrs (modèles locaux)](/en/providers/inferrs)
 - [Kilocode](/en/providers/kilocode)
 - [LiteLLM (passerelle unifiée)](/en/providers/litellm)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
 - [NVIDIA](/en/providers/nvidia)
-- [Ollama (cloud + modèles locaux)](/en/providers/ollama)
+- [Ollama (modèles cloud + locaux)](/en/providers/ollama)
 - [OpenAI (API + Codex)](/en/providers/openai)
 - [OpenCode](/en/providers/opencode)
 - [OpenCode Go](/en/providers/opencode-go)
 - [OpenRouter](/en/providers/openrouter)
 - [Perplexity (recherche web)](/en/providers/perplexity-provider)
 - [Qianfan](/en/providers/qianfan)
-- [Cloud Qwen](/en/providers/qwen)
+- [Qwen Cloud](/en/providers/qwen)
 - [Runway](/en/providers/runway)
 - [SGLang (modèles locaux)](/en/providers/sglang)
 - [StepFun](/en/providers/stepfun)
@@ -70,10 +72,10 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 
 ## Pages de vue d'ensemble partagées
 
-- [Variant groupées supplémentaires](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy et Gemini CLI OAuth
-- [Génération d'images](/en/tools/image-generation) - `image_generate` tool partagée, sélection de provider et basculement
-- [Génération de musique](/en/tools/music-generation) - `music_generate` tool partagée, sélection de provider et basculement
-- [Génération de vidéo](/en/tools/video-generation) - `video_generate` tool partagée, sélection de provider et basculement
+- [Variantes groupées supplémentaires](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy et Gemini CLI OAuth
+- [Génération d'images](/en/tools/image-generation) - `image_generate` tool partagé, sélection de provider et basculement
+- [Génération de musique](/en/tools/music-generation) - `music_generate` tool partagé, sélection de provider et basculement
+- [Génération de vidéo](/en/tools/video-generation) - `video_generate` tool partagé, sélection de provider et basculement
 
 ## Providers de transcription
 
@@ -84,4 +86,4 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Proxy communautaire pour les identifiants d'abonnement Claude (vérifiez la politique/les conditions d'Anthropic avant utilisation)
 
 Pour le catalogue complet de providers (xAI, Groq, Mistral, etc.) et la configuration avancée,
-voyez [Model providers](/en/concepts/model-providers).
+voir [Model providers](/en/concepts/model-providers).

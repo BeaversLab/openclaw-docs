@@ -1,5 +1,5 @@
 ---
-summary: "模型身份验证：OAuth、API 密钥和旧版 Anthropic 设置令牌"
+summary: "模型身份验证：OAuth、API 密钥、Claude CLI 复用以及 Anthropic setup-token"
 read_when:
   - Debugging model auth or OAuth expiry
   - Documenting authentication or credential storage
@@ -8,33 +8,34 @@ title: "身份验证"
 
 # 身份验证（模型提供商）
 
-<Note>本页面涵盖 **模型提供商** 的身份验证（API 密钥、OAuth 和旧版 Anthropic 设置令牌）。有关 **网关连接** 的身份验证（令牌、密码、受信任代理），请参阅 [配置](/en/gateway/configuration) 和 [受信任代理身份验证](/en/gateway/trusted-proxy-auth)。</Note>
+<Note>本页涵盖**模型提供商**身份验证（API 密钥、OAuth、Claude CLI 复用以及 Anthropic setup-token）。有关 **Gateway(网关) 连接**身份验证（令牌、密码、trusted-proxy），请参阅 [配置](/en/gateway/configuration) 和 [可信代理身份验证](/en/gateway/trusted-proxy-auth)。</Note>
 
 OpenClaw 支持针对模型提供商的 OAuth 和 API 密钥。对于长期运行的网关
 主机，API 密钥通常是最可预测的选项。当它们与您的提供商账户模型匹配时，
 订阅/OAuth 流程也受支持。
 
-有关完整的 OAuth 流程和存储布局，请参阅 [/concepts/oauth](/en/concepts/oauth)。
-对于基于 SecretRef 的身份验证（`env`/`file`/`exec` 提供商），请参阅 [密钥管理](/en/gateway/secrets)。
-有关 `models status --probe` 使用的凭据资格/原因代码规则，请参阅[身份验证凭据语义](/en/auth-credential-semantics)。
+请参阅 [/concepts/oauth](/en/concepts/oauth) 以了解完整的 OAuth 流程和存储
+布局。
+对于基于 SecretRef 的身份验证（`env`/`file`/`exec` 提供商），请参阅 [机密管理](/en/gateway/secrets)。
+有关 `models status --probe` 使用的凭据资格/原因代码规则，请参阅
+[身份验证凭据语义](/en/auth-credential-semantics)。
 
 ## 推荐的设置（API 密钥，任何提供商）
 
-如果您正在运行长期运行的网关，请首先为您选择的
+如果您运行的是长时间存活的 Gateway(网关)，请首先为您选择的
 提供商使用 API 密钥。
-具体对于 Anthropic，API 密钥身份验证是安全的选择。
-OpenClaw 内部的 Anthropic 订阅式身份验证是旧版设置令牌路径，
-应视为**额外使用**路径，而非计划限制路径。
+对于 Anthropic，API 密钥身份验证仍然是最可预测的服务器
+设置方式，但 OpenClaw 也支持复用本地的 Claude CLI 登录。
 
 1. 在您的提供商控制台中创建一个 API 密钥。
-2. 将其放在 **网关主机**（运行 `openclaw gateway` 的机器）上。
+2. 将其放在 **Gateway(网关) 主机**（运行 `openclaw gateway` 的机器）上。
 
 ```bash
 export <PROVIDER>_API_KEY="..."
 openclaw models status
 ```
 
-3. 如果 Gateway 在 systemd/launchd 下运行，最好将密钥放在
+3. 如果 Gateway(网关) 在 systemd/launchd 下运行，最好将密钥放入
    `~/.openclaw/.env` 中，以便守护进程可以读取它：
 
 ```bash
@@ -53,18 +54,18 @@ openclaw doctor
 如果您不想自己管理环境变量，新手引导可以存储
 API 密钥供守护进程使用：`openclaw onboard`。
 
-有关环境变量继承的详细信息，请参阅 [帮助](/en/help)（`env.shellEnv`，
-`~/.openclaw/.env`，systemd/launchd）。
+有关环境变量继承的详细信息（`env.shellEnv`，
+`~/.openclaw/.env`，systemd/launchd），请参阅 [帮助](/en/help)。
 
-## Anthropic：旧版令牌兼容性
+## Anthropic：Claude CLI 和令牌兼容性
 
-Anthropic 设置令牌身份验证在 OpenClaw 中仍作为
-旧版/手动路径可用。Anthropic 的公共 Claude Code 文档仍涵盖
-Claude 计划下的直接 Claude Code 终端使用，但 Anthropic 单独告知
-OpenClaw 用户，**OpenClaw** Claude 登录路径被视为第三方
-工具使用，并且需要独立于订阅计费的 **额外使用**。
+Anthropic setup-token 身份验证在 OpenClaw 中仍然作为受支持的令牌
+路径可用。Anthropic 工作人员随后告诉我们，OpenClaw 风格的 Claude CLI 使用
+再次被允许，因此除非 Anthropic 发布新政策，否则 OpenClaw 将 Claude CLI 复用和 `claude -p` 使用视为
+此集成的认可方式。当主机上可用 Claude CLI
+复用时，这现在是首选路径。
 
-为了获得最清晰的设置路径，请使用 Anthropic API 密钥。如果您必须在 OpenClaw 中保留订阅式的 Anthropic 路径，请使用旧版 setup-token 路径，并预期 Anthropic 会将其视为 **Extra Usage**。
+对于长期运行的网关主机，Anthropic API 密钥仍然是最可预测的设置方式。如果您想在同一主机上复用现有的 Claude 登录信息，请在 新手引导/configure 中使用 Anthropic Claude CLI 路径。
 
 手动令牌输入（任何提供商；写入 `auth-profiles.json` + 更新配置）：
 
@@ -102,11 +103,11 @@ openclaw models status --probe
 
 ## Anthropic 备注
 
-Anthropic `claude-cli` 后端已被移除。
+Anthropic `claude-cli` 后端再次受支持。
 
-- 在 OpenClaw 中为 Anthropic 流量使用 API Anthropic 密钥。
-- Anthropic setup-token 仍然是旧版/手动路径，应结合 Anthropic 向 OpenClaw 用户传达的 Extra Usage 计费预期来使用。
-- `openclaw doctor` 现在可以检测已过时的已移除 Anthropic Claude CLI 状态。如果存储的凭据字节仍然存在，doctor 会将它们转换回 Anthropic 令牌/OAuth 配置文件。如果没有，doctor 会移除过时的 Claude CLI 配置，并指引您进行 API 密钥或 setup-token 恢复。
+- Anthropic 工作人员告知我们，此 OpenClaw 集成路径再次被允许。
+- 因此，除非 Anthropic 发布新政策，否则 OpenClaw 将 Claude CLI 复用和 `claude -p` 的使用视为在 Anthropic 支持的运行中被允许。
+- 对于长期运行的网关主机和显式的服务器端计费控制，Anthropic API 密钥仍然是最可预测的选择。
 
 ## 检查模型身份验证状态
 
@@ -142,7 +143,7 @@ requests`, `ThrottlingException`, `concurrency limit reached` 或
 
 ### 每个代理（CLI 覆盖）
 
-为代理设置显式的身份验证配置文件顺序覆盖（存储在该代理的 `auth-profiles.json` 中）：
+为代理设置显式的身份验证配置文件顺序覆盖（存储在该代理的 `auth-state.json` 中）：
 
 ```bash
 openclaw models auth order get --provider anthropic
@@ -158,7 +159,7 @@ openclaw models auth order clear --provider anthropic
 
 ### "未找到凭证"
 
-如果 Anthropic 配置文件缺失，请在 **网关主机** 上配置 Anthropic API 密钥或设置旧版 Anthropic 设置令牌路径，然后重新检查：
+如果 Anthropic 配置文件丢失，请在**网关主机**上配置 Anthropic API 密钥或设置 Anthropic setup-token 路径，然后重新检查：
 
 ```bash
 openclaw models status
@@ -166,12 +167,4 @@ openclaw models status
 
 ### 令牌即将过期/已过期
 
-运行 `openclaw models status` 以确认哪个配置文件即将过期。如果旧的 Anthropic 令牌配置文件缺失或已过期，请通过 setup-token 刷新该设置，或迁移到 Anthropic API 密钥。
-
-如果机器上仍有来自旧版本的陈旧已移除的 Anthropic Claude CLI 状态，请运行：
-
-```bash
-openclaw doctor --yes
-```
-
-当存储的凭据字节仍然存在时，Doctor 会将 `anthropic:claude-cli` 转换回 Anthropic 令牌/OAuth。否则，它会移除过时的 Claude CLI 配置文件/配置/模型引用，并保留后续步骤指导。
+运行 `openclaw models status` 以确认哪个配置文件即将过期。如果 Anthropic 令牌配置文件丢失或已过期，请通过 setup-token 刷新该设置，或迁移到 Anthropic API 密钥。

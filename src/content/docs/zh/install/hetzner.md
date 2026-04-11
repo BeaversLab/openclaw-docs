@@ -36,7 +36,7 @@ Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果
 该挂载的 `~/.openclaw` 状态包括 `openclaw.json`、针对每个代理的
 `agents/<agentId>/agent/auth-profiles.json` 以及 `.env`。
 
-可以通过以下方式访问 Gateway：
+可以通过以下方式访问 Gateway(网关)：
 
 - 从笔记本电脑进行 SSH 端口转发
 - 如果您自行管理防火墙和令牌，则直接暴露端口
@@ -56,7 +56,7 @@ Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果
 5. 配置 `.env` 和 `docker-compose.yml`
 6. 将所需的二进制文件烘焙到镜像中
 7. `docker compose up -d`
-8. 验证持久化和 Gateway 访问
+8. 验证持久化和 Gateway(网关) 访问
 
 ---
 

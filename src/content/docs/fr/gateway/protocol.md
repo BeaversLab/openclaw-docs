@@ -331,54 +331,59 @@ implémenté dans `src/gateway/server-methods/*.ts`.
 
 #### Familles d'approbation
 
-- `exec.approval.request` et `exec.approval.resolve` couvrent les demandes d'approbation
-  d'exécution ponctuelle.
+- `exec.approval.request`, `exec.approval.get`, `exec.approval.list` et
+  `exec.approval.resolve` couvrent les demandes d'approbation d'exécution ponctuelles ainsi que la recherche/relecture des approbations en attente.
 - `exec.approval.waitDecision` attend une approbation d'exécution en attente et renvoie
   la décision finale (ou `null` en cas d'expiration du délai).
-- `exec.approvals.get` et `exec.approvals.set` gèrent les instantanés de stratégie
-  d'approbation d'exécution de la passerelle.
-- `exec.approvals.node.get` et `exec.approvals.node.set` gèrent la stratégie d'approbation
-  d'exécution locale au nœud via les commandes de relais du nœud.
-- `plugin.approval.request`, `plugin.approval.waitDecision` et
-  `plugin.approval.resolve` couvrent les flux d'approbation définis par les plugins.
+- `exec.approvals.get` et `exec.approvals.set` gèrent les instantanés de stratégie d'approbation d'exécution de la passerelle.
+- `exec.approvals.node.get` et `exec.approvals.node.set` gèrent la stratégie d'approbation d'exécution locale au nœud via les commandes de relais du nœud.
+- `plugin.approval.request`, `plugin.approval.list`,
+  `plugin.approval.waitDecision` et `plugin.approval.resolve` couvrent
+  les flux d'approbation définis par le plugin.
 
 #### Autres familles principales
 
 - automatisation :
-  - `wake` planifie une injection de texte de réveil immédiate ou au prochain battement
+  - `wake` planifie une injection de texte de réveil immédiate ou lors du prochain battement de cœur
   - `cron.list`, `cron.status`, `cron.add`, `cron.update`, `cron.remove`,
     `cron.run`, `cron.runs`
 - compétences/outils : `skills.*`, `tools.catalog`, `tools.effective`
 
 ### Familles d'événements courantes
 
-- `chat` : mises à jour de chat de l'interface utilisateur telles que `chat.inject` et autres événements de chat limités à la transcription.
-- `session.message` et `session.tool` : mises à jour de la transcription/du flux d'événements pour une session abonnée.
-- `sessions.changed` : l'index de session ou les métadonnées ont changé.
-- `presence` : mises à jour de l'instantané de présence système.
-- `tick` : événement périodique de keepalive / de vérification de vie.
+- `chat` : mises à jour du chat de l'interface utilisateur telles que `chat.inject` et d'autres événements de chat exclusifs à la transcription.
+- `session.message` et `session.tool` : mises à jour de la transcription/du flux d'événements pour une
+  session abonnée.
+- `sessions.changed` : index de session ou métadonnées modifiés.
+- `presence` : mises à jour de l'instantané de présence du système.
+- `tick` : événement périodique de maintien en vie (keepalive) / de vivacité.
 - `health` : mise à jour de l'instantané de santé de la passerelle.
-- `heartbeat` : mise à jour du flux d'événements de heartbeat.
-- `cron` : événement de changement de tâche/exécution cron.
+- `heartbeat` : mise à jour du flux d'événements de battement de cœur.
+- `cron` : événement de changement d'exécution/tâche cron.
 - `shutdown` : notification d'arrêt de la passerelle.
 - `node.pair.requested` / `node.pair.resolved` : cycle de vie du jumelage de nœuds.
 - `node.invoke.request` : diffusion de la demande d'appel de nœud.
-- `device.pair.requested` / `device.pair.resolved` : cycle de vie de l'appareil jumelé.
-- `voicewake.changed` : la configuration du déclencheur par mot de réveil a changé.
-- `exec.approval.requested` / `exec.approval.resolved` : cycle de vie de l'approbation d'exécution.
-- `plugin.approval.requested` / `plugin.approval.resolved` : cycle de vie de l'approbation de plugin.
+- `device.pair.requested` / `device.pair.resolved` : cycle de vie de l'appareil couplé.
+- `voicewake.changed` : configuration du déclencheur par mot-clé modifiée.
+- `exec.approval.requested` / `exec.approval.resolved` : cycle de vie
+  de l'approbation d'exécution.
+- `plugin.approval.requested` / `plugin.approval.resolved` : cycle de vie
+  de l'approbation du plugin.
 
 ### Méthodes auxiliaires de nœud
 
-- Les nœuds peuvent appeler `skills.bins` pour récupérer la liste actuelle des exécutables de compétences pour les vérifications d'auto-autorisation.
+- Les nœuds peuvent appeler `skills.bins` pour récupérer la liste actuelle des exécutables de compétences
+  pour les vérifications d'auto-autorisation.
 
 ### Méthodes auxiliaires d'opérateur
 
-- Les opérateurs peuvent appeler `tools.catalog` (`operator.read`) pour récupérer le catalogue d'outils d'exécution pour un agent. La réponse inclut les outils groupés et les métadonnées de provenance :
+- Les opérateurs peuvent appeler `tools.catalog` (`operator.read`) pour récupérer le catalogue d'outils d'exécution pour un
+  agent. La réponse inclut les outils groupés et les métadonnées de provenance :
   - `source` : `core` ou `plugin`
-  - `pluginId` : propriétaire du plugin lorsque `source="plugin"`
-  - `optional` : indique si un outil de plugin est optionnel
-- Les opérateurs peuvent appeler `tools.effective` (`operator.read`) pour récupérer l'inventaire d'outils effectif à l'exécution pour une session.
+  - `pluginId` : propriétaire du plugin quand `source="plugin"`
+  - `optional` : si un outil de plugin est facultatif
+- Les opérateurs peuvent appeler `tools.effective` (`operator.read`) pour récupérer l'inventaire d'outils effectif à l'exécution
+  pour une session.
   - `sessionKey` est requis.
   - La passerelle dérive un contexte d'exécution de confiance à partir de la session côté serveur au lieu d'accepter le contexte d'authentification ou de livraison fourni par l'appelant.
   - La réponse est limitée à la session et reflète ce que la conversation active peut utiliser maintenant,
@@ -392,31 +397,31 @@ implémenté dans `src/gateway/server-methods/*.ts`.
   les métadonnées de découverte ClawHub.
 - Les opérateurs peuvent appeler `skills.install` (`operator.admin`) en deux modes :
   - Mode ClawHub : `{ source: "clawhub", slug, version?, force? }` installe un
-    dossier de compétences dans le répertoire de l'espace de travail de l'agent par défaut `skills/`.
+    dossier de compétences dans le répertoire `skills/` de l'espace de travail de l'agent par défaut.
   - Mode installateur Gateway : `{ name, installId, dangerouslyForceUnsafeInstall?, timeoutMs? }`
     exécute une action `metadata.openclaw.install` déclarée sur l'hôte de la passerelle.
 - Les opérateurs peuvent appeler `skills.update` (`operator.admin`) en deux modes :
   - Le mode ClawHub met à jour un slug suivi ou toutes les installations ClawHub suivies dans
     l'espace de travail de l'agent par défaut.
-  - Le mode Config modifie les valeurs `skills.entries.<skillKey>` telles que `enabled`,
-    `apiKey` et `env`.
+  - Le mode Config corrige les valeurs `skills.entries.<skillKey>` telles que `enabled`,
+    `apiKey`, et `env`.
 
 ## Approbations d'exécution
 
 - Lorsqu'une demande d'exécution nécessite une approbation, la passerelle diffuse `exec.approval.requested`.
 - Les clients opérateurs résolvent en appelant `exec.approval.resolve` (nécessite la portée `operator.approvals`).
-- Pour `host=node`, `exec.approval.request` doit inclure `systemRunPlan` (métadonnées canoniques `argv`/`cwd`/`rawCommand`/session). Les demandes sans `systemRunPlan` sont rejetées.
-- Après approbation, les appels `node.invoke system.run` transférés réutilisent ce `systemRunPlan`
-  canonique comme contexte de commande/répertoire/session faisant autorité.
+- Pour `host=node`, `exec.approval.request` doit inclure `systemRunPlan` (métadonnées de session canoniques `argv`/`cwd`/`rawCommand`). Les demandes sans `systemRunPlan` sont rejetées.
+- Après approbation, les appels transmis `node.invoke system.run` réutilisent ce `systemRunPlan` canonique
+  comme contexte de commande/répertoire/session faisant autorité.
 - Si un appelant modifie `command`, `rawCommand`, `cwd`, `agentId` ou
-  `sessionKey` entre la préparation et la réexpédition finale approuvée de `system.run`, la
+  `sessionKey` entre la préparation et la transmission finale approuvée `system.run`, la
   passerelle rejette l'exécution au lieu de faire confiance à la charge utile modifiée.
 
 ## Mode de secours pour la livraison d'agent
 
-- Les requêtes `agent` peuvent inclure `deliver=true` pour demander une livraison sortante.
+- Les demandes `agent` peuvent inclure `deliver=true` pour demander une livraison sortante.
 - `bestEffortDeliver=false` conserve un comportement strict : les cibles de livraison non résolues ou internes uniquement renvoient `INVALID_REQUEST`.
-- `bestEffortDeliver=true` permet un repli vers une exécution en session uniquement lorsqu'aucune route livrable externe ne peut être résolue (par exemple pour les sessions internes/webchat ou les configurations multi-canaux ambiguës).
+- `bestEffortDeliver=true` permet de revenir à une exécution en session uniquement lorsqu aucune route de livraison externe ne peut être résolue (par exemple pour les sessions internes/webchat ou les configurations multi-canal ambiguës).
 
 ## Gestion des versions
 
@@ -432,25 +437,21 @@ implémenté dans `src/gateway/server-methods/*.ts`.
 - L'authentification de passerelle par secret partagé utilise `connect.params.auth.token` ou
   `connect.params.auth.password`, selon le mode d'authentification configuré.
 - Les modes porteurs d'identité tels que Tailscale Serve
-  (`gateway.auth.allowTailscale: true`) ou `gateway.auth.mode: "trusted-proxy"` non-boucle
-  satisfont la vérification d'authentification de connexion à partir des
+  (`gateway.auth.allowTailscale: true`) ou `gateway.auth.mode: "trusted-proxy"` non bouclage
+  satisfont la vérification d'authentification de connexion à partir de
   en-têtes de requête au lieu de `connect.params.auth.*`.
-- Le `gateway.auth.mode: "none"` à entrée privée ignore totalement l'authentification de
-  connexion par secret partagé ; n'exposez pas ce mode sur une entrée publique/non fiable.
-- Après l'appairage, le Gateway émet un **jeton d'appareil** délimité au rôle + portées de la
-  connexion. Il est renvoyé dans `hello-ok.auth.deviceToken` et doit être
-  persisté par le client pour les connexions futures.
-- Les clients doivent persister le `hello-ok.auth.deviceToken` principal après toute
-  connexion réussie.
+- Private-ingress `gateway.auth.mode: "none"` ignore entièrement l'authentification de connexion par secret partagé ; n'exposez pas ce mode sur une entrée publique ou non fiable.
+- Après l'appariement, le Gateway émet un **jeton d'appareil** délimité au rôle + aux portées de la connexion. Il est renvoyé dans `hello-ok.auth.deviceToken` et doit être persisté par le client pour les connexions futures.
+- Les clients doivent persister le `hello-ok.auth.deviceToken` principal après toute connexion réussie.
 - La reconnexion avec ce jeton d'appareil **stocké** doit également réutiliser l'ensemble de portées approuvées stockées pour ce jeton. Cela préserve l'accès en lecture/probe/état qui a déjà été accordé et évite de réduire silencieusement les reconnexions à une portée implicite plus restreinte, réservée aux administrateurs.
-- La priorité normale de l'authentification de connexion est d'abord le jeton/mot de passe partagé explicite, puis `deviceToken` explicite, puis le jeton stocké par appareil, puis le jeton d'amorçage.
-- Les entrées `hello-ok.auth.deviceTokens` supplémentaires sont des jetons de transfert d'amorçage. Ne les conservez que lorsque la connexion a utilisé une authentification d'amorçage sur un transport de confiance tel que `wss://` ou un appariement en boucle/locale.
-- Si un client fournit un `deviceToken` **explicite** ou un `scopes` explicite, cet ensemble de portées demandé par l'appelant reste autoritaire ; les portées mises en cache ne sont réutilisées que lorsque le client réutilise le jeton stocké par appareil.
-- Les jetons d'appareil peuvent être rotatifs/révoqués via `device.token.rotate` et `device.token.revoke` (nécessite la portée `operator.pairing`).
+- La priorité d'authentification de connexion normale est d'abord le jeton/mot de passe partagé explicite, puis `deviceToken` explicite, puis le jeton par appareil stocké, puis le jeton d'amorçage.
+- Les entrées `hello-ok.auth.deviceTokens` supplémentaires sont des jetons de transfert d'amorçage. Ne les persistez que lorsque la connexion a utilisé l'authentification d'amorçage sur un transport de confiance tel que `wss://` ou l'appariement en boucle locale/local.
+- Si un client fournit un `deviceToken` **explicite** ou un `scopes` explicite, cet ensemble de portées demandé par l'appelant reste autoritaire ; les portées mises en cache ne sont réutilisées que lorsque le client réutilise le jeton par appareil stocké.
+- Les jetons d'appareil peuvent être révoqués/rotatifs via `device.token.rotate` et `device.token.revoke` (nécessite la portée `operator.pairing`).
 - L'émission/la rotation des jetons reste limitée à l'ensemble de rôles approuvés enregistré dans l'entrée d'appariement de cet appareil ; la rotation d'un jeton ne peut pas étendre l'appareil à un rôle que l'approbation d'appariement n'a jamais accordé.
-- Pour les sessions de jeton d'appareil apparié, la gestion des appareils est auto-portée, sauf si l'appelant dispose également de `operator.admin` : les appelants non-administrateurs ne peuvent supprimer/révoquer/faire pivoter que leur **propre** entrée d'appareil.
-- `device.token.rotate` vérifie également l'ensemble de portées d'opérateur demandé par rapport aux portées de session actuelles de l'appelant. Les appelants non-administrateurs ne peuvent pas faire pivoter un jeton vers un ensemble de portées d'opérateur plus large que celui qu'ils possèdent déjà.
-- Les échecs d'authentification incluent `error.details.code` ainsi que des conseils de récupération :
+- Pour les sessions de jetons d'appareil appariés, la gestion des appareils est auto-délimitée, sauf si l'appelant possède également `operator.admin` : les appelants non-administrateurs ne peuvent supprimer/révoquer/rotate que leur propre entrée d'appareil.
+- `device.token.rotate` vérifie également l'ensemble de portées d'opérateur demandé par rapport aux portées de session actuelles de l'appelant. Les appelants non-administrateurs ne peuvent pas faire tourner un jeton vers un ensemble de portées d'opérateur plus large que celui qu'ils possèdent déjà.
+- Les échecs d'authentification incluent `error.details.code` plus des indices de récupération :
   - `error.details.canRetryWithDeviceToken` (booléen)
   - `error.details.recommendedNextStep` (`retry_with_device_token`, `update_auth_configuration`, `update_auth_credentials`, `wait_then_retry`, `review_auth_configuration`)
 - Comportement du client pour `AUTH_TOKEN_MISMATCH` :
@@ -459,8 +460,7 @@ implémenté dans `src/gateway/server-methods/*.ts`.
 
 ## Identité de l'appareil + appairage
 
-- Les nœuds doivent inclure une identité d'appareil stable (`device.id`) dérivée de
-  l'empreinte digitale d'une paire de clés.
+- Les nœuds doivent inclure une identité d'appareil stable (`device.id`) dérivée d'une empreinte de paire de clés.
 - Les passerelles émettent des jetons par appareil + rôle.
 - Les approbations d'appairage sont requises pour les nouveaux IDs d'appareil, sauf si l'auto-approbation
   locale est activée.
@@ -469,17 +469,17 @@ implémenté dans `src/gateway/server-methods/*.ts`.
   les flux auxiliaires de secret partagé de confiance.
 - Les connexions tailnet ou LAN sur le même hôte sont toujours traitées comme distantes pour l'appairage et
   nécessitent une approbation.
-- Tous les clients WS doivent inclure l'identité `device` lors du `connect` (opérateur + nœud).
-  L'interface de contrôle (Control UI) peut l'omettre uniquement dans ces modes :
+- Tous les clients WS doivent inclure `device` identité pendant `connect` (opérateur + nœud).
+  L'interface de contrôle peut l'omettre uniquement dans ces modes :
   - `gateway.controlUi.allowInsecureAuth=true` pour la compatibilité HTTP non sécurisée localhost uniquement.
-  - authentification réussie de l'interface de contrôle (Control UI) de l'opérateur `gateway.auth.mode: "trusted-proxy"`.
-  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` (bris de glace, dégradation sévère de la sécurité).
+  - authentification réussie `gateway.auth.mode: "trusted-proxy"` de l'interface de contrôle de l'opérateur.
+  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` (break-glass, dégradation de sécurité sévère).
 - Toutes les connexions doivent signer le nonce `connect.challenge` fourni par le serveur.
 
 ### Diagnostics de migration de l'authentification de l'appareil
 
-Pour les clients hérités qui utilisent encore le comportement de signature pré-défi (pre-challenge), `connect` renvoie désormais
-des codes de détail `DEVICE_AUTH_*` sous `error.details.code` avec un `error.details.reason` stable.
+Pour les clients existants qui utilisent toujours le comportement de signature pré-défi, `connect` renvoie désormais
+les codes de détail `DEVICE_AUTH_*` sous `error.details.code` avec un `error.details.reason` stable.
 
 Échecs courants de migration :
 
@@ -499,17 +499,17 @@ Cible de migration :
 - Envoyez le même nonce dans `connect.params.device.nonce`.
 - La charge utile de signature préférée est `v3`, qui lie `platform` et `deviceFamily`
   en plus des champs appareil/client/rôle/portées/jeton/nonce.
-- Les signatures `v2` héritées restent acceptées pour compatibilité, mais l'épinglage
-  des métadonnées de l'appareil couplé contrôle toujours la stratégie de commande lors de la reconnexion.
+- Les signatures `v2` existantes restent acceptées pour la compatibilité, mais l'épinglage des métadonnées
+  de l'appareil couplé contrôle toujours la stratégie de commande lors de la reconnexion.
 
 ## TLS + épinglage
 
 - TLS est pris en charge pour les connexions WS.
-- Les clients peuvent éventuellement épingler l'empreinte du certificat de la passerelle (voir la config `gateway.tls`
-  ainsi que `gateway.remote.tlsFingerprint` ou la CLI `--tls-fingerprint`).
+- Les clients peuvent éventuellement épingler l'empreinte du certificat de la passerelle (voir la configuration `gateway.tls`
+  plus `gateway.remote.tlsFingerprint` ou le CLI `--tls-fingerprint`).
 
 ## Portée
 
-Ce protocole expose l'**API de passerelle complète** (statut, canaux, modèles, chat,
+Ce protocole expose l'**API complète de la passerelle** (statut, canaux, modèles, chat,
 agent, sessions, nœuds, approbations, etc.). La surface exacte est définie par les
 schémas TypeBox dans `src/gateway/protocol/schema.ts`.

@@ -340,16 +340,17 @@ implementado en `src/gateway/server-methods/*.ts`.
 
 #### Familias de aprobación
 
-- `exec.approval.request` y `exec.approval.resolve` cubren solicitudes de aprobación
-  de ejecución única.
+- `exec.approval.request`, `exec.approval.get`, `exec.approval.list` y
+  `exec.approval.resolve` cubren solicitudes de aprobación de ejecución únicas más la búsqueda/reproducción de aprobaciones pendientes.
 - `exec.approval.waitDecision` espera una aprobación de ejecución pendiente y devuelve
-  la decisión final (o `null` en caso de tiempo de espera agotado).
-- `exec.approvals.get` y `exec.approvals.set` gestionan instantáneas
-  de política de aprobación de ejecución de la puerta de enlace.
-- `exec.approvals.node.get` y `exec.approvals.node.set` gestionan la política de aprobación
-  de ejecución local del nodo a través de comandos de retransmisión de nodo.
-- `plugin.approval.request`, `plugin.approval.waitDecision` y
-  `plugin.approval.resolve` cubren flujos de aprobación definidos por complementos.
+  la decisión final (o `null` si agota el tiempo de espera).
+- `exec.approvals.get` y `exec.approvals.set` gestionan instantáneas de
+  políticas de aprobación de ejecución de puerta de enlace.
+- `exec.approvals.node.get` y `exec.approvals.node.set` gestionan la política de
+  aprobación de ejecución local del nodo mediante comandos de retransmisión de nodo.
+- `plugin.approval.request`, `plugin.approval.list`,
+  `plugin.approval.waitDecision` y `plugin.approval.resolve` cubren
+  flujos de aprobación definidos por complementos.
 
 #### Otras familias importantes
 
@@ -362,38 +363,44 @@ implementado en `src/gateway/server-methods/*.ts`.
 ### Familias de eventos comunes
 
 - `chat`: actualizaciones de chat de la interfaz de usuario como `chat.inject` y otros eventos de chat solo de transcripción.
-- `session.message` y `session.tool`: actualizaciones de transcripción/flujo de eventos para una sesión suscrita.
+- `session.message` y `session.tool`: actualizaciones de transcripción/flujo de eventos para una
+  sesión suscrita.
 - `sessions.changed`: índice de sesión o metadatos cambiados.
-- `presence`: actualizaciones de instantánea de presencia del sistema.
-- `tick`: evento periódico de keepalive/estado activo.
-- `health`: actualización de instantánea de estado de la puerta de enlace.
+- `presence`: actualizaciones de instantáneas de presencia del sistema.
+- `tick`: evento periódico de mantenimiento de actividad/estado.
+- `health`: actualización de la instantánea de estado de la puerta de enlace.
 - `heartbeat`: actualización del flujo de eventos de latido.
 - `cron`: evento de cambio de ejecución/trabajo de cron.
 - `shutdown`: notificación de apagado de la puerta de enlace.
 - `node.pair.requested` / `node.pair.resolved`: ciclo de vida del emparejamiento de nodos.
-- `node.invoke.request`: difusión de solicitud de invocación de nodo.
+- `node.invoke.request`: difusión de solicitudes de invocación de nodo.
 - `device.pair.requested` / `device.pair.resolved`: ciclo de vida del dispositivo emparejado.
 - `voicewake.changed`: configuración del disparador de palabra de activación cambiada.
-- `exec.approval.requested` / `exec.approval.resolved`: ciclo de vida de aprobación de exec.
-- `plugin.approval.requested` / `plugin.approval.resolved`: ciclo de vida de aprobación de complemento.
+- `exec.approval.requested` / `exec.approval.resolved`: ciclo de vida de aprobación
+  de ejecución.
+- `plugin.approval.requested` / `plugin.approval.resolved`: ciclo de vida de aprobación
+  de complemento.
 
 ### Métodos auxiliares de nodo
 
-- Los nodos pueden llamar a `skills.bins` para obtener la lista actual de ejecutables de habilidades para comprobaciones de permiso automático.
+- Los nodos pueden llamar a `skills.bins` para obtener la lista actual de ejecutables de habilidades
+  para verificaciones de permiso automático.
 
 ### Métodos auxiliares de operador
 
-- Los operadores pueden llamar a `tools.catalog` (`operator.read`) para obtener el catálogo de herramientas en tiempo de ejecución para un agente. La respuesta incluye herramientas agrupadas y metadatos de procedencia:
+- Los operadores pueden llamar a `tools.catalog` (`operator.read`) para obtener el catálogo de herramientas en tiempo de ejecución de un
+  agente. La respuesta incluye herramientas agrupadas y metadatos de procedencia:
   - `source`: `core` o `plugin`
   - `pluginId`: propietario del complemento cuando `source="plugin"`
   - `optional`: si una herramienta de complemento es opcional
-- Los operadores pueden llamar a `tools.effective` (`operator.read`) para obtener el inventario de herramientas efectivo en tiempo de ejecución para una sesión.
+- Los operadores pueden llamar a `tools.effective` (`operator.read`) para obtener el inventario de herramientas
+  efectivo en tiempo de ejecución para una sesión.
   - Se requiere `sessionKey`.
   - La puerta de enlace deriva el contexto de tiempo de ejecución confiable de la sesión del lado del servidor en lugar de aceptar el contexto de autenticación o entrega proporcionado por la persona que llama.
   - La respuesta está limitada a la sesión y refleja lo que la conversación activa puede usar en este momento,
     incluyendo herramientas principales, de complementos y de canales.
 - Los operadores pueden llamar a `skills.status` (`operator.read`) para obtener el inventario
-  de habilidades visible para un agente.
+  visible de habilidades de un agente.
   - `agentId` es opcional; omítalo para leer el espacio de trabajo del agente predeterminado.
   - La respuesta incluye elegibilidad, requisitos faltantes, comprobaciones de configuración y
     opciones de instalación saneadas sin exponer valores de secretos sin procesar.
@@ -401,35 +408,32 @@ implementado en `src/gateway/server-methods/*.ts`.
   obtener metadatos de descubrimiento de ClawHub.
 - Los operadores pueden llamar a `skills.install` (`operator.admin`) en dos modos:
   - Modo ClawHub: `{ source: "clawhub", slug, version?, force? }` instala una
-    carpeta de habilidades en el espacio de trabajo del agente predeterminado, directorio `skills/`.
-  - Modo instalador de puerta de enlace: `{ name, installId, dangerouslyForceUnsafeInstall?, timeoutMs? }`
+    carpeta de habilidades en el directorio `skills/` del espacio de trabajo del agente predeterminado.
+  - Modo de instalador de Gateway: `{ name, installId, dangerouslyForceUnsafeInstall?, timeoutMs? }`
     ejecuta una acción `metadata.openclaw.install` declarada en el host de la puerta de enlace.
 - Los operadores pueden llamar a `skills.update` (`operator.admin`) en dos modos:
   - El modo ClawHub actualiza un slug rastreado o todas las instalaciones rastreadas de ClawHub en
     el espacio de trabajo del agente predeterminado.
-  - El modo Config parchea valores `skills.entries.<skillKey>` tales como `enabled`,
+  - El modo de configuración parchea valores `skills.entries.<skillKey>` como `enabled`,
     `apiKey` y `env`.
 
 ## Aprobaciones de ejecución
 
-- Cuando una solicitud de ejecución necesita aprobación, la puerta de enlace transmite `exec.approval.requested`.
-- Los clientes operadores resuelven llamando a `exec.approval.resolve` (requiere alcance `operator.approvals`).
-- Para `host=node`, `exec.approval.request` debe incluir `systemRunPlan` (metadatos canónicos de `argv`/`cwd`/`rawCommand`/sesión). Las solicitudes que carecen de `systemRunPlan` se rechazan.
-- Después de la aprobación, las llamadas `node.invoke system.run` reenviadas reutilizan ese `systemRunPlan` canónico
-  como el contexto de autoridad de comando/cwd/sesión.
-- Si un autor de la llamada muta `command`, `rawCommand`, `cwd`, `agentId` o
-  `sessionKey` entre la preparación y el reenvío `system.run` final aprobado,
-  la puerta de enlace rechaza la ejecución en lugar de confiar en la carga útil mutada.
+- Cuando una solicitud exec necesita aprobación, la puerta de enlace transmite `exec.approval.requested`.
+- Los clientes de operador resuelven llamando a `exec.approval.resolve` (requiere el alcance `operator.approvals`).
+- Para `host=node`, `exec.approval.request` debe incluir `systemRunPlan` (metadatos canónicos de `argv`/`cwd`/`rawCommand`/sesión). Las solicitudes que carecen de `systemRunPlan` son rechazadas.
+- Después de la aprobación, las llamadas reenviadas de `node.invoke system.run` reutilizan ese `systemRunPlan` canónico como el contexto autoritativo de comando/cwd/sesión.
+- Si un cliente muta `command`, `rawCommand`, `cwd`, `agentId` o `sessionKey` entre la preparación y el reenvío final aprobado de `system.run`, la puerta de enlace rechaza la ejecución en lugar de confiar en la carga mutada.
 
 ## Respaldo de entrega de agente
 
-- Las solicitudes `agent` pueden incluir `deliver=true` para solicitar entrega saliente.
+- Las solicitudes `agent` pueden incluir `deliver=true` para solicitar la entrega saliente.
 - `bestEffortDeliver=false` mantiene un comportamiento estricto: los objetivos de entrega no resueltos o solo internos devuelven `INVALID_REQUEST`.
-- `bestEffortDeliver=true` permite el respaldo a la ejecución solo de sesión cuando no se puede resolver una ruta entregable externa (por ejemplo, sesiones internas/de chat web o configuraciones multicanal ambiguas).
+- `bestEffortDeliver=true` permite una alternativa a la ejecución solo de sesión cuando no se puede resolver una ruta de entrega externa (por ejemplo, sesiones internas/webchat o configuraciones multicanales ambiguas).
 
 ## Versionado
 
-- `PROTOCOL_VERSION` se encuentra en `src/gateway/protocol/schema.ts`.
+- `PROTOCOL_VERSION` reside en `src/gateway/protocol/schema.ts`.
 - Los clientes envían `minProtocol` + `maxProtocol`; el servidor rechaza las discordancias.
 - Los esquemas y modelos se generan a partir de definiciones TypeBox:
   - `pnpm protocol:gen`
@@ -438,27 +442,19 @@ implementado en `src/gateway/server-methods/*.ts`.
 
 ## Autenticación
 
-- La autenticación de puerta de enlace de secreto compartido usa `connect.params.auth.token` o
-  `connect.params.auth.password`, dependiendo del modo de autenticación configurado.
-- Los modos con identidad, como Tailscale Serve
-  (`gateway.auth.allowTailscale: true`) o `gateway.auth.mode: "trusted-proxy"` que no sea de bucle local,
-  satisfacen la verificación de autenticación de conexión desde
-  los encabezados de solicitud en lugar de `connect.params.auth.*`.
-- El `gateway.auth.mode: "none"` de entrada privada omite la autenticación de conexión
-  de secreto compartido por completo; no exponga ese modo en entradas públicas/no confiables.
-- Después del emparejamiento, la puerta de enlace emite un **token de dispositivo** con ámbito al rol
-  - alcances de la conexión. Se devuelve en `hello-ok.auth.deviceToken` y debe ser
-    persistido por el cliente para futuras conexiones.
-- Los clientes deben persistir el `hello-ok.auth.deviceToken` principal después de cualquier
-  conexión exitosa.
+- La autenticación de puerta de enlace de secreto compartido utiliza `connect.params.auth.token` o `connect.params.auth.password`, dependiendo del modo de autenticación configurado.
+- Los modos con identidad, como Tailscale Serve (`gateway.auth.allowTailscale: true`) o `gateway.auth.mode: "trusted-proxy"` que no sea de bucle local, satisfacen la verificación de autenticación de conexión desde los encabezados de solicitud en lugar de `connect.params.auth.*`.
+- Private-ingress `gateway.auth.mode: "none"` omite por completo la autenticación de conexión mediante secreto compartido; no exponga ese modo en un ingreso público/no confiable.
+- Después del emparejamiento, el Gateway emite un **token de dispositivo** con ámbito al rol + alcances de la conexión. Se devuelve en `hello-ok.auth.deviceToken` y el cliente debe conservarlo para futuras conexiones.
+- Los clientes deben conservar el `hello-ok.auth.deviceToken` principal después de cualquier conexión exitosa.
 - Volver a conectarse con ese token de dispositivo **almacenado** también debería reutilizar el conjunto de alcances aprobados almacenado para ese token. Esto preserva el acceso de lectura/sondeo/estado que ya se había otorgado y evita colapsar silenciosamente las reconexiones a un ámbito implícito de solo administrador más limitado.
-- La precedencia de autenticación de conexión normal es primero el token/contraseña compartido explícito, luego `deviceToken` explícito, luego el token almacenado por dispositivo, y luego el token de inicio.
-- Las entradas adicionales `hello-ok.auth.deviceTokens` son tokens de traspaso de inicio. Guárdelas solo cuando la conexión usó autenticación de inicio en un transporte confiable como `wss://` o emparejamiento local/bucle.
-- Si un cliente proporciona un `deviceToken` **explícito** o un `scopes` explícito, ese conjunto de alcances solicitado por el llamador sigue siendo autoritativo; los alcances en caché solo se reutilizan cuando el cliente está reutilizando el token almacenado por dispositivo.
-- Los tokens de dispositivo se pueden rotar/revocar mediante `device.token.rotate` y `device.token.revoke` (requiere el alcance `operator.pairing`).
+- La precedencia de autenticación de conexión normal es primero token/contraseña compartido explícito, luego `deviceToken` explícito, luego token por dispositivo almacenado y luego token de arranque.
+- Las entradas `hello-ok.auth.deviceTokens` adicionales son tokens de traspaso de arranque. Consérvelos solo cuando la conexión usó autenticación de arranque en un transporte de confianza como `wss://` o emparejamiento local/bucle.
+- Si un cliente proporciona un `deviceToken` **explícito** o un `scopes` explícito, ese conjunto de alcances solicitado por el llamador sigue siendo el autoritativo; los alcances en caché solo se reutilizan cuando el cliente está reutilizando el token por dispositivo almacenado.
+- Los tokens de dispositivo se pueden rotar/revocar a través de `device.token.rotate` y `device.token.revoke` (requiere el ámbito `operator.pairing`).
 - La emisión/rotación de tokens permanece limitada al conjunto de roles aprobados registrado en la entrada de emparejamiento de ese dispositivo; rotar un token no puede expandir el dispositivo a un rol que la aprobación de emparejamiento nunca otorgó.
-- Para las sesiones de token de dispositivo emparejado, la gestión del dispositivo está auto-alcanzada a menos que el llamador también tenga `operator.admin`: los llamadores que no son administradores solo pueden eliminar/revocar/rotar su **propia** entrada de dispositivo.
-- `device.token.rotate` también verifica el conjunto de alcances de operador solicitado contra los alcances de la sesión actual del llamador. Los llamadores que no son administradores no pueden rotar un token a un conjunto de alcances de operador más amplio del que ya tienen.
+- Para las sesiones de token de dispositivo emparejado, la gestión de dispositivos tiene autoámbito a menos que el llamador también tenga `operator.admin`: los llamadores no administradores solo pueden eliminar/revocar/rotar su **propia** entrada de dispositivo.
+- `device.token.rotate` también verifica el conjunto de alcances de operador solicitado con los alcances de la sesión actual del llamador. Los llamadores no administradores no pueden rotar un token a un conjunto de alcances de operador más amplio del que ya poseen.
 - Los fallos de autenticación incluyen `error.details.code` más sugerencias de recuperación:
   - `error.details.canRetryWithDeviceToken` (booleano)
   - `error.details.recommendedNextStep` (`retry_with_device_token`, `update_auth_configuration`, `update_auth_credentials`, `wait_then_retry`, `review_auth_configuration`)
@@ -474,16 +470,16 @@ implementado en `src/gateway/server-methods/*.ts`.
 - La autoaprobación de emparejamiento se centra en conexiones locales de bucle invertido (loopback) directo.
 - OpenClaw también tiene una ruta de autoconexión local de backend/contenedor estrecha para flujos de ayuda de secreto compartido confiable.
 - Las conexiones de tailnet o LAN en el mismo host todavía se tratan como remotas para el emparejamiento y requieren aprobación.
-- Todos los clientes WS deben incluir la identidad `device` durante `connect` (operador + nodo).
-  La interfaz de usuario de control puede omitirla solo en estos modos:
+- Todos los clientes WS deben incluir `device` identidad durante `connect` (operador + nodo).
+  La interfaz de control puede omitirla solo en estos modos:
   - `gateway.controlUi.allowInsecureAuth=true` para compatibilidad HTTP insegura solo para localhost.
-  - autenticación exitosa de la interfaz de usuario de control del operador `gateway.auth.mode: "trusted-proxy"`.
-  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` (romper-cristal, degradación de seguridad grave).
+  - `gateway.auth.mode: "trusted-proxy"` autenticación exitosa del operador de la interfaz de control.
+  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` (break-glass, degradación severa de seguridad).
 - Todas las conexiones deben firmar el nonce `connect.challenge` proporcionado por el servidor.
 
 ### Diagnósticos de migración de autenticación de dispositivos
 
-Para los clientes heredados que todavía usan el comportamiento de firma previa al desafío, `connect` ahora devuelve
+Para clientes heredados que aún usan el comportamiento de firma previa al desafío, `connect` ahora devuelve
 códigos de detalle `DEVICE_AUTH_*` bajo `error.details.code` con un `error.details.reason` estable.
 
 Fallos comunes de migración:
@@ -502,19 +498,18 @@ Objetivo de migración:
 - Espere siempre `connect.challenge`.
 - Firme el payload v2 que incluye el nonce del servidor.
 - Envíe el mismo nonce en `connect.params.device.nonce`.
-- El payload de firma preferido es `v3`, que vincula `platform` y `deviceFamily`
-  además de los campos device/client/role/scopes/token/nonce.
-- Las firmas `v2` heredadas siguen siendo aceptadas por compatibilidad, pero la fijación
-  de metadatos del dispositivo emparejado aún controla la política de comandos al reconectar.
+- La carga útil de firma preferida es `v3`, que vincula `platform` y `deviceFamily`
+  además de los campos dispositivo/cliente/rol/ámbitos/token/nonce.
+- Las firmas `v2` heredadas siguen siendo aceptadas por compatibilidad, pero la fijación de metadatos del dispositivo emparejado aún controla la política de comandos al reconectar.
 
 ## TLS + pinning
 
 - TLS es compatible con conexiones WS.
-- Los clientes pueden fijar opcionalmente la huella digital del certificado de la puerta de enlace (consulte `gateway.tls`
-  config más `gateway.remote.tlsFingerprint` o CLI `--tls-fingerprint`).
+- Los clientes pueden fijar opcionalmente la huella digital del certificado de la puerta de enlace (consulte la configuración `gateway.tls`
+  más `gateway.remote.tlsFingerprint` o CLI `--tls-fingerprint`).
 
 ## Ámbito
 
-Este protocolo expone la **API completa de la puerta de enlace** (estado, canales, modelos, chat,
+Este protocolo expone la **API completa de la pasarela** (estado, canales, modelos, chat,
 agente, sesiones, nodos, aprobaciones, etc.). La superficie exacta se define mediante los
 esquemas TypeBox en `src/gateway/protocol/schema.ts`.

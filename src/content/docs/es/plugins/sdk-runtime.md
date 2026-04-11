@@ -1,7 +1,7 @@
 ---
-title: "Ayudantes de tiempo de ejecución del complemento"
-sidebarTitle: "Ayudantes de Runtime"
-summary: "api.runtime -- los ayudantes de tiempo de ejecución inyectados disponibles para los complementos"
+title: "Asistentes de tiempo de ejecución del complemento"
+sidebarTitle: "Asistentes de tiempo de ejecución"
+summary: "api.runtime: los asistentes de tiempo de ejecución inyectados disponibles para los complementos"
 read_when:
   - You need to call core helpers from a plugin (TTS, STT, image gen, web search, subagent)
   - You want to understand what api.runtime exposes
@@ -11,9 +11,9 @@ read_when:
 # Auxiliares de tiempo de ejecución de complementos
 
 Referencia del objeto `api.runtime` inyectado en cada complemento durante
-el registro. Use estos ayudantes en lugar de importar directamente los internos del host.
+el registro. Utilice estos asistentes en lugar de importar directamente los internos del host.
 
-<Tip>**¿Buscas un tutorial?** Consulta [Complementos de canal](/en/plugins/sdk-channel-plugins) o [Complementos de proveedor](/en/plugins/sdk-provider-plugins) para obtener guías paso a paso que muestran estos ayudantes en contexto.</Tip>
+<Tip>**¿Buscas un tutorial?** Consulta [Complementos de canal](/en/plugins/sdk-channel-plugins) o [Complementos de proveedor](/en/plugins/sdk-provider-plugins) para obtener guías paso a paso que muestran estos asistentes en contexto.</Tip>
 
 ```typescript
 register(api) {
@@ -58,7 +58,7 @@ const result = await api.runtime.agent.runEmbeddedPiAgent({
 });
 ```
 
-Los **Ayudantes del almacén de sesión** están en `api.runtime.agent.session`:
+Los **asistentes del almacén de sesión** se encuentran en `api.runtime.agent.session`:
 
 ```typescript
 const storePath = api.runtime.agent.session.resolveStorePath(cfg);
@@ -106,7 +106,7 @@ await api.runtime.subagent.deleteSession({
 ```
 
 <Warning>
-  Las anulaciones de modelo (`provider`/`model`) requieren la aceptación explícita del operador a través de
+  Las anulaciones de modelo (`provider`/`model`) requieren la aceptación del operador a través de
   `plugins.entries.<id>.subagent.allowModelOverride: true` en la configuración.
   Los complementos que no son de confianza aún pueden ejecutar subagentes, pero se rechazan las solicitudes de anulación.
 </Warning>
@@ -142,8 +142,8 @@ const waiting = taskFlow.setWaiting({
 ```
 
 Use `bindSession({ sessionKey, requesterOrigin })` cuando ya tenga una
-clave de sesión de OpenClaw de confianza de su propia capa de vinculación. No se vincule desde la entrada
-de usuario sin procesar.
+clave de sesión de OpenClaw confiable de su propia capa de enlace. No se enlace desde la entrada
+sin procesar del usuario.
 
 ### `api.runtime.tts`
 
@@ -169,8 +169,9 @@ const voices = await api.runtime.tts.listVoices({
 });
 ```
 
-Usa la configuración y la selección de proveedor `messages.tts` del núcleo. Devuelve el búfer de audio
-PCM + la frecuencia de muestreo.
+Utiliza la configuración central de `messages.tts` y la selección del proveedor. Devuelve el búfer de audio PCM
+
+- la frecuencia de muestreo.
 
 ### `api.runtime.mediaUnderstanding`
 
@@ -323,10 +324,44 @@ api.runtime.tools.registerMemoryCli(/* ... */);
 
 Asistentes de tiempo de ejecución específicos del canal (disponibles cuando se carga un complemento de canal).
 
+`api.runtime.channel.mentions` es la superficie compartida de la política de menciones entrantes para
+los complementos de canal incluidos que utilizan la inyección en tiempo de ejecución:
+
+```typescript
+const mentionMatch = api.runtime.channel.mentions.matchesMentionWithExplicit(text, {
+  mentionRegexes,
+  mentionPatterns,
+});
+
+const decision = api.runtime.channel.mentions.resolveInboundMentionDecision({
+  facts: {
+    canDetectMention: true,
+    wasMentioned: mentionMatch.matched,
+    implicitMentionKinds: api.runtime.channel.mentions.implicitMentionKindWhen("reply_to_bot", isReplyToBot),
+  },
+  policy: {
+    isGroup,
+    requireMention,
+    allowTextCommands,
+    hasControlCommand,
+    commandAuthorized,
+  },
+});
+```
+
+Asistentes de mención disponibles:
+
+- `buildMentionRegexes`
+- `matchesMentionPatterns`
+- `matchesMentionWithExplicit`
+- `implicitMentionKindWhen`
+- `resolveInboundMentionDecision`
+
+`api.runtime.channel.mentions` intencionalmente no expone los ayudantes de compatibilidad más antiguos `resolveMentionGating*`. Prefiera la ruta normalizada `{ facts, policy }`.
+
 ## Almacenar referencias de tiempo de ejecución
 
-Use `createPluginRuntimeStore` para almacenar la referencia del tiempo de ejecución para usarla fuera
-del retorno de llamada `register`:
+Use `createPluginRuntimeStore` para almacenar la referencia del tiempo de ejecución para usarla fuera de la devolución de llamada `register`:
 
 ```typescript
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
@@ -355,20 +390,20 @@ export function tryGetRuntime() {
 
 ## Otros campos de nivel superior `api`
 
-Más allá de `api.runtime`, el objeto API también proporciona:
+Más allá de `api.runtime`, el objeto de API también proporciona:
 
-| Campo                    | Tipo                      | Descripción                                                                                                          |
-| ------------------------ | ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `api.id`                 | `string`                  | ID del complemento                                                                                                   |
-| `api.name`               | `string`                  | Nombre para mostrar del complemento                                                                                  |
-| `api.config`             | `OpenClawConfig`          | Instantánea de la configuración actual (instantánea de tiempo de ejecución en memoria activa cuando está disponible) |
-| `api.pluginConfig`       | `Record<string, unknown>` | Configuración específica del complemento de `plugins.entries.<id>.config`                                            |
-| `api.logger`             | `PluginLogger`            | Registrador con ámbito (`debug`, `info`, `warn`, `error`)                                                            |
-| `api.registrationMode`   | `PluginRegistrationMode`  | Modo de carga actual; `"setup-runtime"` es la ventana de inicio/configuración previa ligera a la entrada completa    |
-| `api.resolvePath(input)` | `(string) => string`      | Resuelve una ruta relativa a la raíz del complemento                                                                 |
+| Campo                    | Tipo                      | Descripción                                                                                                       |
+| ------------------------ | ------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `api.id`                 | `string`                  | Id. del complemento                                                                                               |
+| `api.name`               | `string`                  | Nombre para mostrar del complemento                                                                               |
+| `api.config`             | `OpenClawConfig`          | Instantánea de configuración actual (instantánea de tiempo de ejecución activa en memoria cuando esté disponible) |
+| `api.pluginConfig`       | `Record<string, unknown>` | Configuración específica del complemento de `plugins.entries.<id>.config`                                         |
+| `api.logger`             | `PluginLogger`            | Registrador con ámbito (`debug`, `info`, `warn`, `error`)                                                         |
+| `api.registrationMode`   | `PluginRegistrationMode`  | Modo de carga actual; `"setup-runtime"` es la ventana de inicio/configuración previa ligera a la entrada completa |
+| `api.resolvePath(input)` | `(string) => string`      | Resuelve una ruta relativa a la raíz del complemento                                                              |
 
 ## Relacionado
 
-- [Resumen del SDK](/en/plugins/sdk-overview) -- referencia de subruta
+- [Información general del SDK](/en/plugins/sdk-overview) -- referencia de subruta
 - [Puntos de entrada del SDK](/en/plugins/sdk-entrypoints) -- opciones `definePluginEntry`
-- [Internos del complemento](/en/plugins/architecture) -- modelo de capacidades y registro
+- [Funciones internas del complemento](/en/plugins/architecture) -- modelo de capacidad y registro

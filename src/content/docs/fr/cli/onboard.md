@@ -115,8 +115,8 @@ Comportement de l'onboarding interactif avec le mode de référence :
 
 Choix de point de terminaison Z.AI non interactif :
 
-Remarque : `--auth-choice zai-api-key` détecte désormais automatiquement le meilleur point de terminaison Z.AI pour votre clé (préfère l'API générale avec `zai/glm-5`).
-Si vous souhaitez spécifiquement les points de terminaison du plan de codage GLM, choisissez `zai-coding-global` ou `zai-coding-cn`.
+Remarque : `--auth-choice zai-api-key` détecte désormais automatiquement le meilleur point de terminaison Z.AI pour votre clé (préfère l'API générale avec `zai/glm-5.1`).
+Si vous souhaitez spécifiquement les points de terminaison du GLM Coding Plan, choisissez `zai-coding-global` ou `zai-coding-cn`.
 
 ```bash
 # Promptless endpoint selection

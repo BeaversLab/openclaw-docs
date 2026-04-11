@@ -126,36 +126,37 @@ Modes :
 
 Slack uniquement :
 
-- `channels.slack.nativeStreaming` active les appels à l'API de streaming native Slack lorsque `streaming=partial` (par défaut : `true`).
+- `channels.slack.streaming.nativeTransport` active les appels de l'API de diffusion native de Slack lorsque `channels.slack.streaming.mode="partial"` (par défaut : `true`).
+- La diffusion native de Slack et le statut du thread de l'assistant Slack nécessitent une cible de thread de réponse ; les Slack de premier niveau n'affichent pas cet aperçu de style thread.
 
-Migration de clé héritée :
+Migration des clés héritées :
 
 - Telegram : `streamMode` + booléen `streaming` migrent automatiquement vers l'énumération `streaming`.
 - Discord : `streamMode` + booléen `streaming` migrent automatiquement vers l'énumération `streaming`.
-- Slack : `streamMode` migre automatiquement vers l'énumération `streaming` ; le booléen `streaming` migre automatiquement vers `nativeStreaming`.
+- Slack : `streamMode` migre automatiquement vers `streaming.mode` ; le booléen `streaming` migre automatiquement vers `streaming.mode` plus `streaming.nativeTransport` ; l'ancien `nativeStreaming` migre automatiquement vers `streaming.nativeTransport`.
 
 ### Comportement à l'exécution
 
 Telegram :
 
-- Utilise les mises à jour d'aperçu `sendMessage` + `editMessageText` sur les DMs et les groupes/sujets.
-- Le streaming d'aperçu est ignoré lorsque le streaming de blocs Telegram est explicitement activé (pour éviter le double streaming).
-- `/reasoning stream` peut écrire le raisonnement dans l'aperçu.
+- Utilise les mises à jour d'aperçu `sendMessage` + `editMessageText` dans les DMs et les group/topics.
+- La diffusion de l'aperçu est ignorée lorsque la diffusion de blocs de Telegram est explicitement activée (pour éviter la double diffusion).
+- `/reasoning stream` peut écrire du raisonnement dans l'aperçu.
 
 Discord :
 
-- Utilise l'envoi et l'édition de messages d'aperçu.
-- Le mode `block` utilise le découpage par ébauches (`draftChunk`).
-- Le streaming d'aperçu est ignoré lorsque le streaming de blocs Discord est explicitement activé.
+- Utilise l'envoi et la modification de messages d'aperçu.
+- Le mode `block` utilise le découpage de brouillon (`draftChunk`).
+- La diffusion de l'aperçu est ignorée lorsque la diffusion de blocs de Discord est explicitement activée.
 
 Slack :
 
-- `partial` peut utiliser le streaming natif Slack (`chat.startStream`/`append`/`stop`) lorsque disponible.
-- `block` utilise des aperçus d'ébauches de type ajout.
-- `progress` utilise le texte d'aperçu d'état, puis la réponse finale.
+- `partial` peut utiliser la diffusion native de Slack (`chat.startStream`/`append`/`stop`) lorsqu'elle est disponible.
+- `block` utilise des aperçus de brouillon de type ajout.
+- `progress` utilise le texte d'aperçu de statut, puis la réponse finale.
 
 ## Connexes
 
 - [Messages](/en/concepts/messages) — cycle de vie et livraison des messages
-- [Retry](/en/concepts/retry) — comportement de nouvelle tentative en cas d'échec de livraison
-- [Channels](/en/channels) — support du streaming par channel
+- [Réessai](/en/concepts/retry) — comportement de nouvelle tentative en cas d'échec de livraison
+- [Canaux](/en/channels) — support de la diffusion par canal

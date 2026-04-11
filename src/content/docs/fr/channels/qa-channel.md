@@ -75,31 +75,31 @@ déterministe et écrit un rapport Markdown sous `.artifacts/qa-e2e/`.
 Interface utilisateur du débogueur privé :
 
 ```bash
-pnpm qa:lab:build
-pnpm openclaw qa ui
+pnpm qa:lab:up
 ```
 
-Suite QA complète soutenue par le dépôt :
+Cette commande unique construit le site QA, démarre la passerelle avec support Docker et la pile QA Lab, et imprime l'URL du QA Lab. À partir de ce site, vous pouvez sélectionner des scénarios, choisir la voie de modèle, lancer des exécutions individuelles et regarder les résultats en direct.
+
+Suite QA complète basée sur le dépôt :
 
 ```bash
 pnpm openclaw qa suite
 ```
 
-Cela lance le débogueur QA privé à une URL locale, distinct du bundle
-Control UI expédié.
+Cela lance le débogueur QA privé à une URL locale, distinct du bundle d'interface utilisateur de contrôle expédié.
 
-## Portée (Scope)
+## Portée
 
-La portée actuelle est volontairement étroite :
+La portée actuelle est intentionnellement étroite :
 
-- bus + transport de plug-in
-- grammaire de routage en fils de discussion
+- transport bus + plugin
+- grammaire de routage threadé
 - actions de message possédées par le channel
 - rapports Markdown
+- site QA avec support Docker et contrôles d'exécution
 
-Les travaux ultérieurs ajouteront :
+Le travail ultérieur ajoutera :
 
-- orchestration OpenClaw conteneurisée (Dockerized)
-- exécution de matrice provider/model
-- découverte de scénarios plus riches
-- orchestration native OpenClaw ultérieurement
+- exécution de matrice fournisseur/modèle
+- découverte de scénarios plus riche
+- orchestration native OpenClaw plus tard

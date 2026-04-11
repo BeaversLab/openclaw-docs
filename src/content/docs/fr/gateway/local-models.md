@@ -9,9 +9,9 @@ title: "Modèles locaux"
 
 # Modèles locaux
 
-Le mode local est réalisable, mais OpenClaw s'attend à un contexte volumineux et à de solides défenses contre l'injection de prompt. Les petites cartes tronquent le contexte et compromettent la sécurité. Visez haut : **≥2 Mac Studios optimisés ou une configuration GPU équivalente (~30 000 $+)**. Un seul GPU de **24 Go** ne fonctionne que pour les prompts plus légers avec une latence plus élevée. Utilisez la **plus grande variante de modèle / taille complète que vous pouvez exécuter** ; les points de contrôle agressivement quantifiés ou « petits » augmentent le risque d'injection de prompt (voir [Sécurité](/en/gateway/security)).
+L'exécution en local est possible, mais OpenClaw s'attend à un contexte volumineux et à de solides défenses contre l'injection de prompts. Les petites cartes tronquent le contexte et compromettent la sécurité. Visez haut : **≥2 Mac Studios entièrement équipés ou une configuration GPU équivalente (~30 k$+)**. Un seul GPU de **24 Go** ne fonctionne que pour les prompts plus légers avec une latence plus élevée. Utilisez la **variante de modèle la plus grande / en taille réelle que vous pouvez faire tourner** ; les points de contrôle agressivement quantifiés ou « petits » augmentent le risque d'injection de prompts (voir [Sécurité](/en/gateway/security)).
 
-Si vous souhaitez la configuration locale la plus simple, commencez par [Ollama](/en/providers/ollama) et `openclaw onboard`. Cette page est le guide avisé pour les configurations locales haut de gamme et les serveurs locaux compatibles OpenAI personnalisés.
+Si vous souhaitez la configuration locale la plus simple, commencez par [Ollama](/en/providers/ollama) et `openclaw onboard`. Cette page est le guide opiniâtre pour les piles locales haut de gamme et les serveurs locaux compatibles OpenAI personnalisés.
 
 ## Recommandé : LM Studio + grand modèle local (API Responses)
 
@@ -151,9 +151,17 @@ Remarque sur le comportement pour les backends `/v1` locaux/proxys :
 - le façonnage des requêtes natif uniquement OpenAI ne s'applique pas ici : pas de `service_tier`, pas de `store` Responses, pas de façonnage de payload compatible raisonnement OpenAI, et pas d'indices de cache de prompt
 - les en-têtes d'attribution masqués de OpenClaw (`originator`, `version`, `User-Agent`) ne sont pas injectés sur ces URL de proxy personnalisées
 
+Notes de compatibilité pour les backends compatibles OpenAI plus stricts :
+
+- Certains serveurs n'acceptent que des chaînes `messages[].content` sur Chat Completions, et non des tableaux de parties de contenu structurés. Définissez `models.providers.<provider>.models[].compat.requiresStringContent: true` pour ces points de terminaison.
+- Certains backends locaux plus petits ou plus stricts sont instables avec la forme complète du prompt d'exécution de l'agent de OpenClaw, surtout lorsque les schémas d'outils sont inclus. Si le backend fonctionne pour de minuscules appels directs `/v1/chat/completions` mais échoue sur les tours d'agent normaux de OpenClaw, essayez d'abord `models.providers.<provider>.models[].compat.supportsTools: false`.
+- Si le backend échoue encore uniquement sur les exécutions plus volumineuses de OpenClaw, le problème restant est généralement la capacité en amont du modèle/serveur ou un bogue du backend, et non la couche de transport de OpenClaw.
+
 ## Dépannage
 
-- Gateway peut-il atteindre le proxy ? `curl http://127.0.0.1:1234/v1/models`.
+- Gateway peut atteindre le proxy ? `curl http://127.0.0.1:1234/v1/models`.
 - Modèle LM Studio déchargé ? Rechargez-le ; le démarrage à froid est une cause fréquente de « blocage ».
 - Erreurs de contexte ? Abaissez `contextWindow` ou augmentez la limite de votre serveur.
-- Sécurité : les modèles locaux ignorent les filtres côté fournisseur ; gardez les agents étroits et la compression activée pour limiter le rayon d'explosion de l'injection de prompt.
+- Le serveur compatible OpenAI renvoie `messages[].content ... expected a string` ? Ajoutez `compat.requiresStringContent: true` dans cette entrée de modèle.
+- Les minuscules appels directs `/v1/chat/completions` fonctionnent, mais `openclaw infer model run` échoue sur Gemma ou un autre modèle local ? Désactivez d'abord les schémas d'outils avec `compat.supportsTools: false`, puis testez à nouveau. Si le serveur plante encore uniquement sur des prompts plus volumineux de OpenClaw, considérez cela comme une limitation du serveur/modèle en amont.
+- Sécurité : les modèles locaux ignorent les filtres côté fournisseur ; gardez les agents étroits et la compression activée pour limiter le rayon d'impact des injections de prompt.

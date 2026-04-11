@@ -66,7 +66,9 @@ title: "圖片產生"
 | `count`       | 數字   | 要生成的圖片數量（1–4）                                                         |
 | `filename`    | 字串   | 輸出檔名提示                                                                    |
 
-並非所有提供商都支援所有參數。該工具會傳遞每個提供商支援的參數，忽略其餘參數，並在工具結果中回報被捨棄的覆蓋設定。
+並非所有提供者都支援所有參數。當備用提供者支援接近的幾何選項而非精確要求的選項時，OpenClaw 會在提交前重新對應到最接近支援的尺寸、寬高比或解析度。真正不支援的覆寫仍會在工具結果中回報。
+
+工具結果會回報套用的設定。當 OpenClaw 在提供者備用期間重新對應幾何時，傳回的 `size`、`aspectRatio` 和 `resolution` 值會反映實際發送的內容，而 `details.normalization` 則會捕捉從請求到套用的轉換。
 
 ## 設定
 
@@ -85,57 +87,58 @@ title: "圖片產生"
 }
 ```
 
-### 提供商選擇順序
+### 提供者選擇順序
 
-生成圖像時，OpenClaw 會按以下順序嘗試提供商：
+產生影像時，OpenClaw 會依以下順序嘗試提供者：
 
-1. 來自工具呼叫的 **`model` 參數**（如果代理指定了一個）
-2. 來自配置的 **`imageGenerationModel.primary`**
-3. 按順序排列的 **`imageGenerationModel.fallbacks`**
-4. **自動檢測** — 僅使用經過驗證支援的提供商預設值：
-   - 當前的預設提供商優先
-   - 其餘已註冊的圖像生成提供商按提供商 ID 順序
+1. 來自工具呼叫的 **`model` 參數**（如果代理程式指定了一個）
+2. 來自設定中的 **`imageGenerationModel.primary`**
+3. 依順序的 **`imageGenerationModel.fallbacks`**
+4. **自動偵測** — 僅使用具備驗證支援的提供者預設值：
+   - 先使用目前預設的提供者
+   - 其餘已註冊的影像產生提供者，依提供者 ID 順序
 
-如果提供商失敗（認證錯誤、速率限制等），系統會自動嘗試下一個候選者。如果全部失敗，錯誤訊息將包含每次嘗試的詳細資訊。
+如果提供者失敗（驗證錯誤、速率限制等），會自動嘗試下一個候選者。如果全部失敗，錯誤訊息會包含每次嘗試的詳細資料。
 
-註記：
+注意：
 
-- 自動檢測具備驗證感知能力。只有在 OpenClaw 實際上能夠通過驗證該提供商時，其預設值才會進入候選清單。
-- 使用 `action: "list"` 檢查目前已註冊的提供商、其預設模型以及驗證環境變數提示。
+- 自動偵測具有驗證感知能力。只有當 OpenClaw 實際上能夠通過該提供者的驗證時，該提供者的預設值才會進入候選清單。
+- 自動偵測預設為啟用。如果您希望影像產生僅使用明確的 `model`、`primary` 和 `fallbacks` 項目，請設定 `agents.defaults.mediaGenerationAutoProviderFallback: false`。
+- 使用 `action: "list"` 來檢查目前已註冊的提供者、其預設模型以及驗證環境變數提示。
 
-### 圖像編輯
+### 影像編輯
 
-OpenAI、Google、fal、MiniMax 和 ComfyUI 支援編輯參考圖像。請傳遞參考圖像路徑或 URL：
+OpenAI、Google、fal、MiniMax 和 ComfyUI 支援編輯參考影像。傳遞參考影像路徑或 URL：
 
 ```
 "Generate a watercolor version of this photo" + image: "/path/to/photo.jpg"
 ```
 
-OpenAI 和 Google 透過 `images` 參數支援最多 5 張參考圖像。fal、MiniMax 和 ComfyUI 支援 1 張。
+OpenAI 和 Google 透過 `images` 參數支援最多 5 張參考影像。fal、MiniMax 和 ComfyUI 支援 1 張。
 
-MiniMax 圖像生成可透過兩種捆綁的 MiniMax 驗證路徑使用：
+MiniMax 影像產生可透過兩種內建的 MiniMax 驗證路徑使用：
 
-- `minimax/image-01` 用於 API 金鑰設定
-- `minimax-portal/image-01` 用於 OAuth 設定
+- API 金鑰設定使用 `minimax/image-01`
+- OAuth 設定使用 `minimax-portal/image-01`
 
-## 提供商功能
+## 提供者功能
 
 | 功能              | OpenAI              | Google              | fal             | MiniMax                  | ComfyUI                      | Vydra      |
 | ----------------- | ------------------- | ------------------- | --------------- | ------------------------ | ---------------------------- | ---------- |
 | 生成              | 是（最多 4 張）     | 是（最多 4 張）     | 是（最多 4 張） | 是（最多 9 張）          | 是（工作流程定義的輸出）     | 是（1 張） |
-| 編輯/參考         | 是（最多 5 張圖像） | 是（最多 5 張圖像） | 是（1 張圖像）  | 是（1 張圖像，主體參考） | 是（1 張圖像，工作流程配置） | 否         |
+| 編輯/參考         | 是（最多 5 張圖片） | 是（最多 5 張圖片） | 是（1 張圖片）  | 是（1 張圖片，主體參考） | 是（1 張圖片，工作流程設定） | 否         |
 | 尺寸控制          | 是                  | 是                  | 是              | 否                       | 否                           | 否         |
-| 長寬比            | 否                  | 是                  | 是（僅限生成）  | 是                       | 否                           | 否         |
+| 寬高比            | 否                  | 是                  | 是（僅限生成）  | 是                       | 否                           | 否         |
 | 解析度 (1K/2K/4K) | 否                  | 是                  | 是              | 否                       | 否                           | 否         |
 
 ## 相關
 
-- [工具概覽](/en/tools) — 所有可用的代理工具
-- [fal](/en/providers/fal) — fal 圖像和影片提供商設定
+- [工具概覽](/en/tools) — 所有可用的代理程式工具
+- [fal](/en/providers/fal) — fal 圖片與影片提供者設定
 - [ComfyUI](/en/providers/comfy) — 本地 ComfyUI 和 Comfy Cloud 工作流程設定
-- [Google (Gemini)](/en/providers/google) — Gemini 影像提供者設定
-- [MiniMax](/en/providers/minimax) — MiniMax 影像提供者設定
+- [Google (Gemini)](/en/providers/google) — Gemini 圖片提供者設定
+- [MiniMax](/en/providers/minimax) — MiniMax 圖片提供者設定
 - [OpenAI](/en/providers/openai) — OpenAI Images 提供者設定
-- [Vydra](/en/providers/vydra) — Vydra 影像、影片和語音設定
-- [Configuration Reference](/en/gateway/configuration-reference#agent-defaults) — `imageGenerationModel` 設定
-- [Models](/en/concepts/models) — 模型設定與失效切換
+- [Vydra](/en/providers/vydra) — Vydra 圖片、影片和語音設定
+- [設定參考](/en/gateway/configuration-reference#agent-defaults) — `imageGenerationModel` 設定
+- [模型](/en/concepts/models) — 模型設定與故障轉移

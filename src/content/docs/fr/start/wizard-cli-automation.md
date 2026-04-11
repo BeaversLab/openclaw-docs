@@ -190,8 +190,8 @@ openclaw onboard --non-interactive \
   </Accordion>
 </AccordionGroup>
 
-Le setup-token Anthropic est à nouveau disponible en tant que chemin d'onboarding hérité/manuel.
-Utilisez-le en sachant que Anthropic a indiqué aux utilisateurs OpenClaw que le chemin de connexion Claude OpenClaw nécessite une **utilisation supplémentaire**. Pour la production, préférez une clé Anthropic API.
+Le setup-token Anthropic reste disponible en tant que chemin de token d'onboarding pris en charge, mais OpenClaw préfère désormais la réutilisation du Claude CLI lorsque disponible.
+Pour la production, préférez une clé API Anthropic.
 
 ## Ajouter un autre agent
 

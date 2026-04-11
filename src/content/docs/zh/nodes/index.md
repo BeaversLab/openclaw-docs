@@ -82,7 +82,7 @@ openclaw node run --host <gateway-host> --port 18789 --display-name "Build Node"
 
 ### 通过 SSH 隧道的远程 Gateway（回环绑定）
 
-如果 Gateway 绑定到回环地址（`gateway.bind=loopback`，本地模式下的默认值），
+如果 Gateway(网关) 绑定到回环地址（`gateway.bind=loopback`，本地模式下的默认值），
 远程节点主机将无法直接连接。请创建一个 SSH 隧道，并将
 节点主机指向隧道的本地端。
 
@@ -394,9 +394,9 @@ openclaw node run --host <gateway-host> --port 18789
 - 在 macOS 上，无头节点主机默认在本地执行 `system.run`。设置
   `OPENCLAW_NODE_EXEC_HOST=app` 以通过配套应用 exec 主机路由 `system.run`；添加
   `OPENCLAW_NODE_EXEC_FALLBACK=0` 以要求应用主机，并在其不可用时失效关闭。
-- 当 Gateway WS 使用 TLS 时，添加 `--tls` / `--tls-fingerprint`。
+- 当 Gateway(网关) WS 使用 TLS 时，添加 `--tls` / `--tls-fingerprint`。
 
 ## Mac 节点模式
 
-- macOS 菜单栏应用作为节点连接到 Gateway WS 服务器（因此 `openclaw nodes …` 可对此 Mac 进行操作）。
-- 在远程模式下，该应用会为 Gateway 端口打开 SSH 隧道并连接到 `localhost`。
+- macOS 菜单栏应用作为节点连接到 Gateway(网关) WS 服务器（因此 `openclaw nodes …` 可对此 Mac 进行操作）。
+- 在远程模式下，该应用会为 Gateway(网关) 端口打开 SSH 隧道并连接到 `localhost`。

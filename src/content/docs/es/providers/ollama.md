@@ -55,7 +55,7 @@ openclaw onboard --non-interactive \
 2. Descarga un modelo local si deseas inferencia local:
 
 ```bash
-ollama pull glm-4.7-flash
+ollama pull gemma4
 # or
 ollama pull gpt-oss:20b
 # or
@@ -76,12 +76,12 @@ openclaw onboard
 
 - `Local`: solo modelos locales
 - `Cloud + Local`: modelos locales más modelos en la nube
-- Los modelos en la nube como `kimi-k2.5:cloud`, `minimax-m2.5:cloud` y `glm-5:cloud` **no** requieren un `ollama pull` local
+- Los modelos en la nube como `kimi-k2.5:cloud`, `minimax-m2.7:cloud` y `glm-5.1:cloud` **no** requieren un `ollama pull` local
 
 Actualmente, OpenClaw sugiere:
 
-- predeterminado local: `glm-4.7-flash`
-- valores predeterminados en la nube: `kimi-k2.5:cloud`, `minimax-m2.5:cloud`, `glm-5:cloud`
+- predeterminado local: `gemma4`
+- predeterminados en la nube: `kimi-k2.5:cloud`, `minimax-m2.7:cloud`, `glm-5.1:cloud`
 
 5. Si prefieres la configuración manual, habilita Ollama para OpenClaw directamente (cualquier valor funciona; Ollama no requiere una clave real):
 
@@ -97,7 +97,7 @@ openclaw config set models.providers.ollama.apiKey "ollama-local"
 
 ```bash
 openclaw models list
-openclaw models set ollama/glm-4.7-flash
+openclaw models set ollama/gemma4
 ```
 
 7. O establece el valor predeterminado en la configuración:
@@ -106,7 +106,7 @@ openclaw models set ollama/glm-4.7-flash
 {
   agents: {
     defaults: {
-      model: { primary: "ollama/glm-4.7-flash" },
+      model: { primary: "ollama/gemma4" },
     },
   },
 }
@@ -225,7 +225,7 @@ Una vez configurados, todos sus modelos de Ollama están disponibles:
 
 ## Modelos en la nube
 
-Los modelos en la nube te permiten ejecutar modelos alojados en la nube (por ejemplo `kimi-k2.5:cloud`, `minimax-m2.5:cloud`, `glm-5:cloud`) junto con tus modelos locales.
+Los modelos en la nube le permiten ejecutar modelos alojados en la nube (por ejemplo, `kimi-k2.5:cloud`, `minimax-m2.7:cloud`, `glm-5.1:cloud`) junto con sus modelos locales.
 
 Para usar modelos en la nube, seleccione el modo **Nube + Local** durante la configuración. El asistente verifica si ha iniciado sesión y abre un flujo de inicio de sesión en el navegador cuando es necesario. Si no se puede verificar la autenticación, el asistente recurre a los modelos locales predeterminados.
 
@@ -348,7 +348,7 @@ Para añadir modelos:
 
 ```bash
 ollama list  # See what's installed
-ollama pull glm-4.7-flash
+ollama pull gemma4
 ollama pull gpt-oss:20b
 ollama pull llama3.3     # Or another model
 ```

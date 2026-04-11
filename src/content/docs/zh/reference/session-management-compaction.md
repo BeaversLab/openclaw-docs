@@ -208,7 +208,7 @@ OpenClaw 故意*不*“修正”转录；Gateway(网关) 使用 `SessionManager`
 - 压缩摘要
 - `firstKeptEntryId` 之后的邮件
 
-压缩是**持久性**的（不同于会话修剪）。请参阅 [/concepts/会话-pruning](/en/concepts/session-pruning)。
+压缩是**持久化**的（与会话修剪不同）。请参阅 [/concepts/会话-pruning](/en/concepts/session-pruning)。
 
 ## 压缩块边界和工具配对
 
@@ -274,7 +274,22 @@ OpenClaw 还会为嵌入式运行执行安全下限保护：
 
 ---
 
-## 用户可见界面
+## 可插拔压缩提供商
+
+插件可以通过插件 API 上的 `registerCompactionProvider()` 注册压缩提供商。当 `agents.defaults.compaction.provider` 设置为已注册的提供商 ID 时，safeguard 扩展会将摘要委托给该提供商，而不是内置的 `summarizeInStages` 流程。
+
+- `provider`：已注册压缩提供商插件的 ID。留空以使用默认的 LLM 摘要。
+- 设置 `provider` 会强制执行 `mode: "safeguard"`。
+- 提供商接收与内置路径相同的压缩指令和标识符保留策略。
+- 在提供商输出之后，safeguard 仍然保留最近轮次和拆分轮次的上下文后缀。
+- 如果提供商失败或返回空结果，OpenClaw 会自动回退到内置的 LLM 摘要。
+- 中止/超时信号会被重新抛出（而不是被吞没），以尊重调用者的取消请求。
+
+来源：`src/plugins/compaction-provider.ts`，`src/agents/pi-hooks/compaction-safeguard.ts`。
+
+---
+
+## 用户可见的界面
 
 您可以通过以下方式观察压缩和会话状态：
 
@@ -285,62 +300,62 @@ OpenClaw 还会为嵌入式运行执行安全下限保护：
 
 ---
 
-## 静默内部维护 (`NO_REPLY`)
+## 静默维护（`NO_REPLY`）
 
 OpenClaw 支持用于后台任务的“静默”轮次，用户不应看到中间输出。
 
 约定：
 
-- 助手使用精确的静默令牌 `NO_REPLY` /
-  `no_reply` 开始其输出，以指示“不向用户传递回复”。
-- OpenClaw 在交付层会剥离/抑制此内容。
-- 精确的静默令牌抑制不区分大小写，因此当整个负载仅为静默令牌时，`NO_REPLY` 和
-  `no_reply` 均有效。
-- 这仅适用于真正的后台/无交付轮次；它不是普通可执行用户请求的捷径。
+- 助手在其输出开头使用精确的静默令牌 `NO_REPLY` /
+  `no_reply` 来表示“不向用户传递回复”。
+- OpenClaw 在交付层中剥离/抑制此内容。
+- 精确的静默令牌抑制不区分大小写，因此当整个有效载荷仅为静默令牌时，
+  `NO_REPLY` 和 `no_reply` 均计为有效。
+- 这仅用于真正的后台/不交付轮次；它不是普通可执行用户请求的捷径。
 
-自 `2026.1.10` 起，当部分块以 `NO_REPLY` 开头时，OpenClaw 也会抑制 **草稿/输入流式传输**，因此静默操作不会在轮次中途泄漏部分输出。
+截至 `2026.1.10`，OpenClaw 还在部分块以 `NO_REPLY` 开头时抑制 **草稿/正在输入流式传输**，
+因此静默操作不会在轮次中途泄漏部分输出。
 
 ---
 
-## 压缩前“内存刷新”（已实现）
+## 预压缩“内存刷新”（已实现）
 
-目标：在自动压缩发生之前，运行一个静默的代理轮次，将持久状态写入磁盘（例如代理工作区中的 `memory/YYYY-MM-DD.md`），以便压缩无法擦除关键上下文。
+目标：在自动压缩发生之前，运行一个静默的代理轮次，将持久化状态写入磁盘
+（例如，代理工作区中的 `memory/YYYY-MM-DD.md`），以便压缩无法擦除关键上下文。
 
-OpenClaw 使用 **阈值前刷新** 方法：
+OpenClaw 使用 **预阈值刷新** 方法：
 
 1. 监控会话上下文使用情况。
-2. 当它超过“软阈值”（低于 Pi 的压缩阈值）时，向代理运行一个静默的
+2. 当它越过“软阈值”（低于 Pi 的压缩阈值）时，向代理发送静默的
    “立即写入内存”指令。
-3. 使用确切的静默令牌 `NO_REPLY` / `no_reply`，以便用户
-   什么都看不到。
+3. 使用精确的静默令牌 `NO_REPLY` / `no_reply`，以便用户
+   看不到任何内容。
 
-配置 (`agents.defaults.compaction.memoryFlush`)：
+配置（`agents.defaults.compaction.memoryFlush`）：
 
 - `enabled`（默认值：`true`）
 - `softThresholdTokens`（默认值：`4000`）
 - `prompt`（刷新轮次的用户消息）
 - `systemPrompt`（为刷新轮次附加的额外系统提示）
 
-备注：
+注意：
 
-- 默认提示/系统提示包含一个 `NO_REPLY` 提示以抑制
-  传递。
-- 刷新在每个压缩周期运行一次（在 `sessions.json` 中跟踪）。
-- 刷新仅针对嵌入式 Pi 会话运行。
-- 当会话工作区为只读（`workspaceAccess: "ro"` 或 `"none"`）时，跳过刷新。
-- 有关工作区文件布局和写入模式，请参阅[内存](/en/concepts/memory)。
+- 默认提示/系统提示包含 `NO_REPLY` 提示以抑制交付。
+- 每个压缩周期运行一次刷新（在 `sessions.json` 中跟踪）。
+- 刷新仅针对嵌入式 Pi 会话运行（CLI 后端会跳过它）。
+- 当会话工作区为只读时（`workspaceAccess: "ro"` 或 `"none"`），将跳过刷新。
+- 有关工作区文件布局和写入模式，请参阅 [内存](/en/concepts/memory)。
 
-Pi 还在扩展 API 中公开了一个 `session_before_compact` 钩子，但 OpenClaw 的
-刷新逻辑目前位于 Gateway(网关) 端。
+Pi 还在扩展 API 中暴露了 `session_before_compact` 挂钩，但 OpenClaw 的刷新逻辑目前位于 Gateway(网关) 端。
 
 ---
 
 ## 故障排查清单
 
-- 会话密钥错误？首先查看 [/concepts/会话](/en/concepts/session) 并确认 `/status` 中的 `sessionKey`。
-- 存储与记录不匹配？确认 Gateway(网关) 主机和 `openclaw status` 中的存储路径。
-- 压缩垃圾邮件？检查：
+- 会话密钥错误？从 [/concepts/会话](/en/concepts/session) 开始，并确认 `/status` 中的 `sessionKey`。
+- 存储与记录不匹配？请从 `openclaw status` 确认 Gateway(网关) 主机和存储路径。
+- 压缩频繁？检查：
   - 模型上下文窗口（太小）
-  - 压缩设置（相对于模型窗口，`reserveTokens` 太高可能会导致更早的压缩）
+  - 压缩设置（相对于模型窗口，`reserveTokens` 过高会导致提前压缩）
   - 工具结果膨胀：启用/调整会话修剪
-- 静默轮次泄漏？确认回复以 `NO_REPLY` 开头（不区分大小写的精确令牌），并且您使用的版本包含流抑制修复。
+- 静默轮次泄漏？确认回复以 `NO_REPLY` 开头（不区分大小写的精确令牌），并且您使用的是包含流抑制修复的构建版本。

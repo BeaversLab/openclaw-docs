@@ -66,7 +66,9 @@ title: "图像生成"
 | `count`       | 数字       | 要生成的图像数量（1–4）                                                         |
 | `filename`    | 字符串     | 输出文件名提示                                                                  |
 
-并非所有提供商都支持所有参数。该工具会传递每个提供商支持的参数，忽略其余参数，并在工具结果中报告被丢弃的覆盖设置。
+并非所有提供商都支持所有参数。当回退提供商支持邻近的几何选项而非请求的确切选项时，OpenClaw 会在提交前重新映射到最接近的受支持大小、纵横比或分辨率。真正不支持的覆盖仍会在工具结果中报告。
+
+工具结果会报告已应用的设置。当 OpenClaw 在提供商回退期间重新映射几何形状时，返回的 `size`、`aspectRatio` 和 `resolution` 值反映了实际发送的内容，而 `details.normalization` 捕获了从请求到应用的转换。
 
 ## 配置
 
@@ -87,25 +89,26 @@ title: "图像生成"
 
 ### 提供商选择顺序
 
-生成图像时，OpenClaw 会按以下顺序尝试提供商：
+生成图像时，OpenClaw 按以下顺序尝试提供商：
 
-1. 来自工具调用的 **`model` 参数**（如果代理指定了一个）
+1. 来自工具调用的 **`model` 参数**（如果智能体指定了一个）
 2. 配置中的 **`imageGenerationModel.primary`**
 3. 按顺序排列的 **`imageGenerationModel.fallbacks`**
 4. **自动检测** — 仅使用支持身份验证的提供商默认值：
-   - 首先是当前的默认提供商
-   - 其余已注册的图像生成提供商，按提供商 ID 排序
+   - 首先是当前默认提供商
+   - 按提供商 ID 顺序排列的其余已注册图像生成提供商
 
-如果提供商失败（身份验证错误、速率限制等），系统会自动尝试下一个候选者。如果全部失败，错误信息将包含每次尝试的详细信息。
+如果提供商失败（身份验证错误、速率限制等），将自动尝试下一个候选者。如果全部失败，错误信息将包含每次尝试的详细信息。
 
-注意事项：
+注意：
 
-- 自动检测具有身份验证感知能力。只有当 OpenClaw 实际上可以验证该提供商的身份时，该提供商的默认值才会进入候选列表。
-- 使用 `action: "list"` 检查当前已注册的提供商、它们的默认模型以及身份验证环境变量提示。
+- 自动检测具有身份验证感知功能。只有当 OpenClaw 能够实际对该提供商进行身份验证时，该提供商的默认值才会进入候选列表。
+- 默认情况下启用自动检测。如果您希望图像生成仅使用显式的 `model`、`primary` 和 `fallbacks` 条目，请设置 `agents.defaults.mediaGenerationAutoProviderFallback: false`。
+- 使用 `action: "list"` 检查当前注册的提供商、其默认模型以及身份验证环境变量提示。
 
 ### 图像编辑
 
-OpenAI、Google、fal、MiniMax 和 ComfyUI 支持编辑参考图像。请传入参考图像路径或 URL：
+OpenAI、Google、fal、MiniMax 和 ComfyUI 支持编辑参考图像。传递参考图像路径或 URL：
 
 ```
 "Generate a watercolor version of this photo" + image: "/path/to/photo.jpg"
@@ -113,29 +116,29 @@ OpenAI、Google、fal、MiniMax 和 ComfyUI 支持编辑参考图像。请传入
 
 OpenAI 和 Google 通过 `images` 参数支持最多 5 张参考图像。fal、MiniMax 和 ComfyUI 支持 1 张。
 
-MiniMax 图像生成可通过两种内置的 MiniMax 身份验证路径获得：
+MiniMax 图像生成可通过捆绑的 MiniMax 身份验证路径获得：
 
-- 用于 API 密钥设置的 `minimax/image-01`
-- 用于 OAuth 设置的 `minimax-portal/image-01`
+- `minimax/image-01` 用于 API 密钥设置
+- `minimax-portal/image-01` 用于 OAuth 设置
 
-## 提供商功能
+## 提供商能力
 
-| 功能              | OpenAI              | Google              | fal             | MiniMax                  | ComfyUI                    | Vydra      |
+| 能力              | OpenAI              | Google              | fal             | MiniMax                  | ComfyUI                    | Vydra      |
 | ----------------- | ------------------- | ------------------- | --------------- | ------------------------ | -------------------------- | ---------- |
-| 生成              | 是（最多 4 张）     | 是（最多 4 张）     | 是（最多 4 张） | 是（最多 9 张）          | 是（工作流定义的输出）     | 是（1 张） |
-| 编辑/参考         | 是（最多 5 张图像） | 是（最多 5 张图像） | 是（1 张图像）  | 是（1 张图像，主体参考） | 是（1 张图像，工作流配置） | 否         |
+| 生成              | 是（最多 4 张）     | 是（最多 4 张）     | 是（最多 4 张） | 是（最多 9 张）          | 是（由工作流定义的输出）   | 是（1 张） |
+| 编辑/参考         | 是（最多 5 张图片） | 是（最多 5 张图片） | 是（1 张图片）  | 是（1 张图片，主体参考） | 是（1 张图片，工作流配置） | 否         |
 | 尺寸控制          | 是                  | 是                  | 是              | 否                       | 否                         | 否         |
-| 长宽比            | 否                  | 是                  | 是（仅限生成）  | 是                       | 否                         | 否         |
+| 纵横比            | 否                  | 是                  | 是（仅生成）    | 是                       | 否                         | 否         |
 | 分辨率 (1K/2K/4K) | 否                  | 是                  | 是              | 否                       | 否                         | 否         |
 
-## 相关内容
+## 相关
 
 - [工具概述](/en/tools) — 所有可用的代理工具
-- [fal](/en/providers/fal) — fal 图像和视频提供商设置
+- [fal](/en/providers/fal) — fal 图片和视频提供商设置
 - [ComfyUI](/en/providers/comfy) — 本地 ComfyUI 和 Comfy Cloud 工作流设置
-- [Google (Gemini)](/en/providers/google) — Gemini 图像提供商设置
-- [MiniMax](/en/providers/minimax) — MiniMax 图像提供商设置
-- [OpenAI](/en/providers/openai) — OpenAI 图像提供商设置
-- [Vydra](/en/providers/vydra) — Vydra 图像、视频和语音设置
+- [Google (Gemini)](/en/providers/google) — Gemini 图片提供商设置
+- [MiniMax](/en/providers/minimax) — MiniMax 图片提供商设置
+- [OpenAI](/en/providers/openai) — OpenAI Images 提供商设置
+- [Vydra](/en/providers/vydra) — Vydra 图片、视频和语音设置
 - [配置参考](/en/gateway/configuration-reference#agent-defaults) — `imageGenerationModel` 配置
 - [模型](/en/concepts/models) — 模型配置和故障转移

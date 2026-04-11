@@ -41,16 +41,31 @@ openclaw logs --follow
 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`，
 請前往 [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/en/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
 
+## 本機 OpenAI 相容後端直接運作但在 OpenClaw 中失敗
+
+如果您的本機或自託管 `/v1` 後端能回應小型直接
+`/v1/chat/completions` 探測，但在 `openclaw infer model run` 或一般
+代理輪次時失敗：
+
+1. 如果錯誤訊息提及 `messages[].content` 期望字串，請設定
+   `models.providers.<provider>.models[].compat.requiresStringContent: true`。
+2. 如果後端僅在 OpenClaw 代理輪次時仍然失敗，請設定
+   `models.providers.<provider>.models[].compat.supportsTools: false` 並重試。
+3. 如果小型直接呼叫仍可運作，但較大的 OpenClaw 提示詞會導致
+   後端當機，請將剩餘問題視為上游模型/伺服器限制，並
+   繼續依照深層手冊操作：
+   [/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail](/en/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail)
+
 ## 外掛程式安裝因缺少 openclaw 擴充功能而失敗
 
-如果安裝失敗並出現 `package.json missing openclaw.extensions`，則外掛程式套件
-正在使用 OpenClaw 不再接受的舊格式。
+如果安裝失敗並出現 `package.json missing openclaw.extensions`，表示外掛程式套件
+使用的是 OpenClaw 不再接受的舊格式。
 
-在外掛程式套件中修復：
+請在外掛程式套件中修正：
 
-1. 將 `openclaw.extensions` 加入到 `package.json`。
-2. 將項目指向已建置的執行時期檔案 (通常是 `./dist/index.js`)。
-3. 重新發佈外掛程式並再次執行 `openclaw plugins install <package>`。
+1. 將 `openclaw.extensions` 新增至 `package.json`。
+2. 將項目指向建置後的執行時期檔案（通常是 `./dist/index.js`）。
+3. 重新發布外掛程式並再次執行 `openclaw plugins install <package>`。
 
 範例：
 
@@ -64,7 +79,7 @@ openclaw logs --follow
 }
 ```
 
-參考：[Plugin architecture](/en/plugins/architecture)
+參考資料：[Plugin architecture](/en/plugins/architecture)
 
 ## 決策樹
 
@@ -98,18 +113,18 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    正常的輸出應類似：
+    正常的輸出看起來像這樣：
 
     - `Runtime: running`
     - `RPC probe: ok`
-    - 您的頻道顯示傳輸已連線，且在支援的情況下，`works` 或 `audit ok` 於 `channels status --probe` 中
-    - 寄件者顯示為已核准（或 DM 政策為開放/白名單）
+    - 您的頻道顯示傳輸已連接，並且在支援的情況下，在 `channels status --probe` 中顯示 `works` 或 `audit ok`
+    - 發送者顯示已核准（或 DM 政策為開放/許可清單）
 
     常見的日誌特徵：
 
-    - `drop guild message (mention required` → 提及閘門（mention gating）在 Discord 中阻擋了訊息。
-    - `pairing request` → 寄件者未獲核准，正在等待 DM 配對核准。
-    - `blocked` / `allowlist` 於頻道日誌中 → 寄件者、房間或群組已被過濾。
+    - `drop guild message (mention required` → 提及門檻阻擋了 Discord 中的訊息。
+    - `pairing request` → 發送者未核准，正在等待 DM 配對核准。
+    - 頻道日誌中的 `blocked` / `allowlist` → 發送者、房間或群組已被過濾。
 
     深入頁面：
 
@@ -128,24 +143,24 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    正常的輸出如下所示：
+    良好的輸出看起來像這樣：
 
-    - `Dashboard: http://...` 顯示於 `openclaw gateway status` 中
+    - `Dashboard: http://...` 顯示在 `openclaw gateway status` 中
     - `RPC probe: ok`
-    - 日誌中沒有認證迴圈
+    - 日誌中沒有驗證迴圈
 
     常見的日誌特徵：
 
-    - `device identity required` → HTTP/非安全環境無法完成裝置認證。
-    - `origin not allowed` → 不允許瀏覽器 `Origin` 用於控制 UI
+    - `device identity required` → HTTP/非安全內容無法完成裝置驗證。
+    - `origin not allowed` → 瀏覽器 `Origin` 不允許用於控制 UI
       閘道目標。
-    - `AUTH_TOKEN_MISMATCH` 伴隨重試提示 (`canRetryWithDeviceToken=true`) → 可能會自動進行一次受信任的裝置權杖重試。
-    - 該快取權杖重試會重複使用與配對裝置權杖一起儲存的快取範圍集合。明確的 `deviceToken` / 明確的 `scopes` 呼叫端則會改為保留其請求的範圍集合。
-    - 在非同步 Tailscale Serve 控制 UI 路徑上，相同 `{scope, ip}` 的失敗嘗試會在限制器記錄失敗之前進行序列化，因此第二次並發的錯誤重試可能已顯示 `retry later`。
-    - 來自本機瀏覽器
-      來源的 `too many failed authentication attempts (retry later)` → 來自相同 `Origin` 的重複失敗會被暫時鎖定；另一個本機來源則會使用獨立的儲存桶。
-    - 重試後重複出現 `unauthorized` → 權杖/密碼錯誤、認證模式不符或過期的配對裝置權杖。
-    - `gateway connect failed:` → UI 的目標 URL/連接埠錯誤或無法連線的閘道。
+    - `AUTH_TOKEN_MISMATCH` 並帶有重試提示 (`canRetryWithDeviceToken=true`) → 一個受信任的裝置權杖重試可能會自動發生。
+    - 該快取權杖重試會重用與配對裝置權杖一起儲存的快取範圍集。明確的 `deviceToken` / 明確的 `scopes` 呼叫者則會保留其請求的範圍集。
+    - 在非同步 Tailscale Serve 控制 UI 路徑上，相同 `{scope, ip}` 的失敗嘗試會在限制器記錄失敗之前進行序列化，因此第二次並發的錯誤重試可能已經顯示 `retry later`。
+    - 來自 localhost
+      瀏覽器來源的 `too many failed authentication attempts (retry later)` → 來自該相同 `Origin` 的重複失敗會被暫時鎖定；另一個 localhost 來源則使用個別的值區。
+    - 該重試後的重複 `unauthorized` → 錯誤的權杖/密碼、驗證模式不符，或過期的配對裝置權杖。
+    - `gateway connect failed:` → UI 的目標是錯誤的 URL/連接埠或無法連線的閘道。
 
     深入頁面：
 
@@ -155,7 +170,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Gateway 無法啟動或服務已安裝但未執行">
+  <Accordion title="閘道無法啟動或服務已安裝但未執行">
     ```bash
     openclaw status
     openclaw gateway status
@@ -164,7 +179,7 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    正常的輸出看起來像這樣：
+    正常的輸出看起來如下：
 
     - `Service: ... (loaded)`
     - `Runtime: running`
@@ -172,8 +187,8 @@ flowchart TD
 
     常見的日誌特徵：
 
-    - `Gateway start blocked: set gateway.mode=local` 或 `existing config is missing gateway.mode` → gateway 模式為遠端，或是設定檔缺少 local-mode 標記，應進行修復。
-    - `refusing to bind gateway ... without auth` → 在沒有有效的 gateway auth 路徑（token/密碼，或設定的 trusted-proxy）下進行非 loopback 綁定。
+    - `Gateway start blocked: set gateway.mode=local` 或 `existing config is missing gateway.mode` → 閘道模式為遠端，或設定檔缺少本地模式標記且應修復。
+    - `refusing to bind gateway ... without auth` → 在沒有有效閘道驗證路徑（令牌/密碼，或設定時的可信任代理）的情況下進行非迴路綁定。
     - `another gateway instance is already listening` 或 `EADDRINUSE` → 連接埠已被佔用。
 
     深入頁面：
@@ -184,7 +199,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="通道已連線但訊息無法傳遞">
+  <Accordion title="通道已連線但訊息無法流動">
     ```bash
     openclaw status
     openclaw gateway status
@@ -193,17 +208,17 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    正常的輸出看起來像這樣：
+    正常的輸出看起來如下：
 
     - 通道傳輸已連線。
-    - 配對/允許清單檢查通過。
-    - 必要時已偵測到提及。
+    - 配對/白名單檢查通過。
+    - 必要時檢測到提及。
 
     常見的日誌特徵：
 
-    - `mention required` → 群組提及閘門阻擋了處理程序。
-    - `pairing` / `pending` → DM 發送者尚未獲得核准。
-    - `not_in_channel`、 `missing_scope`、 `Forbidden`、 `401/403` → 通道權限 token 問題。
+    - `mention required` → 群組提及閘門阻擋了處理。
+    - `pairing` / `pending` → DM 發送者尚未被核准。
+    - `not_in_channel`、`missing_scope`、`Forbidden`、`401/403` → 通道權限令牌問題。
 
     深入頁面：
 
@@ -222,20 +237,20 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    正常的輸出看起來像這樣：
+    正常的輸出看起來像：
 
-    - `cron.status` 顯示已啟用且有下一次喚醒。
+    - `cron.status` 顯示已啟用並且有下次喚醒時間。
     - `cron runs` 顯示最近的 `ok` 項目。
-    - 心跳已啟用且不在活動時間之外。
+    - 心跳已啟用且不在非活動時間內。
 
     常見的日誌特徵：
 
 - `cron: scheduler disabled; jobs will not run automatically` → cron 已停用。
 - `heartbeat skipped` 伴隨 `reason=quiet-hours` → 在設定的活動時間之外。
-- `heartbeat skipped` 伴隨 `reason=empty-heartbeat-file` → `HEARTBEAT.md` 存在但僅包含空白/僅標頭的腳手架。
-- `heartbeat skipped` 伴隨 `reason=no-tasks-due` → `HEARTBEAT.md` 任務模式處於啟用狀態，但尚未有任何任務間隔到期。
-- `heartbeat skipped` 伴隨 `reason=alerts-disabled` → 所有心跳可見性均已停用（`showOk`、`showAlerts` 和 `useIndicator` 均已關閉）。
-- `requests-in-flight` → 主通道忙碌；心跳喚醒已延遲。 - `unknown accountId` → 心跳傳送目標帳戶不存在。
+- `heartbeat skipped` 伴隨 `reason=empty-heartbeat-file` → `HEARTBEAT.md` 存在，但僅包含空白/僅標頭的架構。
+- `heartbeat skipped` 伴隨 `reason=no-tasks-due` → `HEARTBEAT.md` 任務模式處於活動狀態，但尚未有任何任務間隔到期。
+- `heartbeat skipped` 伴隨 `reason=alerts-disabled` → 所有心跳可見性皆已停用（`showOk`、`showAlerts` 和 `useIndicator` 皆為關閉）。
+- `requests-in-flight` → 主通道忙碌；心跳喚醒已延後。 - `unknown accountId` → 心跳傳送目標帳戶不存在。
 
       深入頁面：
 
@@ -245,7 +260,7 @@ flowchart TD
 
     </Accordion>
 
-    <Accordion title="Node is paired but tool fails camera canvas screen exec">
+    <Accordion title="節點已配對但工具（相機、畫布、螢幕、執行）失敗">
     ```bash
     openclaw status
     openclaw gateway status
@@ -254,18 +269,18 @@ flowchart TD
     openclaw logs --follow
     ```
 
-      正常的輸出看起來像這樣：
+      正常的輸出如下所示：
 
-      - Node 已列出為已連線並針對角色 `node` 進行配對。
-      - 您正在叫用的指令存在 Capability。
-      - 工具的 Permission state 已授予。
+      - 節點被列為已連線並已針對角色 `node` 完成配對。
+      - 您正在叫用的指令具備對應功能。
+      - 工具的權限狀態已獲授權。
 
-      常見的日誌特徵：
+      常見日誌特徵：
 
-      - `NODE_BACKGROUND_UNAVAILABLE` → 將 node 應用程式帶到前景。
-      - `*_PERMISSION_REQUIRED` → OS 權限被拒絕/遺失。
-      - `SYSTEM_RUN_DENIED: approval required` → exec 審核正在待處理。
-      - `SYSTEM_RUN_DENIED: allowlist miss` → 指令未在 exec 允許清單上。
+      - `NODE_BACKGROUND_UNAVAILABLE` → 將節點應用程式帶到前景。
+      - `*_PERMISSION_REQUIRED` → OS 權限被拒絕或遺失。
+      - `SYSTEM_RUN_DENIED: approval required` → 執行核准待處理。
+      - `SYSTEM_RUN_DENIED: allowlist miss` → 指令未在執行許可清單中。
 
       深入頁面：
 
@@ -283,16 +298,16 @@ flowchart TD
     openclaw gateway restart
     ```
 
-      變更內容：
+      What changed:
 
-      - 如果未設定 `tools.exec.host`，預設值為 `auto`。
-      - 當沙箱執行環境處於啟用狀態時，`host=auto` 會解析為 `sandbox`，否則為 `gateway`。
-      - `host=auto` 僅用於路由；無提示「YOLO」行為來自於 `security=full` 加上 gateway/node 上的 `ask=off`。
-      - 在 `gateway` 和 `node` 上，未設定的 `tools.exec.security` 預設為 `full`。
-      - 未設定的 `tools.exec.ask` 預設為 `off`。
-      - 結果：如果您看到審核請求，表示某些主機本地或個別工作階段的策略將執行設定從目前的預設值收緊了。
+      - If `tools.exec.host` is unset, the default is `auto`.
+      - `host=auto` resolves to `sandbox` when a sandbox runtime is active, `gateway` otherwise.
+      - `host=auto` is routing only; the no-prompt "YOLO" behavior comes from `security=full` plus `ask=off` on gateway/node.
+      - On `gateway` and `node`, unset `tools.exec.security` defaults to `full`.
+      - Unset `tools.exec.ask` defaults to `off`.
+      - Result: if you are seeing approvals, some host-local or per-session policy tightened exec away from the current defaults.
 
-      恢復目前的預設無需審核行為：
+      Restore current default no-approval behavior:
 
       ```bash
       openclaw config set tools.exec.host gateway
@@ -301,19 +316,19 @@ flowchart TD
       openclaw gateway restart
       ```
 
-      更安全的替代方案：
+      Safer alternatives:
 
-      - 如果您只想要穩定的主機路由，請僅設定 `tools.exec.host=gateway`。
-      - 如果您想要主機執行但仍希望在允許清單遺漏時進行審查，請使用 `security=allowlist` 搭配 `ask=on-miss`。
-      - 如果您希望 `host=auto` 解析回 `sandbox`，請啟用沙箱模式。
+      - Set only `tools.exec.host=gateway` if you just want stable host routing.
+      - Use `security=allowlist` with `ask=on-miss` if you want host exec but still want review on allowlist misses.
+      - Enable sandbox mode if you want `host=auto` to resolve back to `sandbox`.
 
-      常見日誌特徵：
+      Common log signatures:
 
-      - `Approval required.` → 指令正在等待 `/approve ...`。
-      - `SYSTEM_RUN_DENIED: approval required` → node-host 執行審核待處理。
-      - `exec host=sandbox requires a sandbox runtime for this session` → 隱含/明確的沙箱選擇，但沙箱模式已關閉。
+      - `Approval required.` → command is waiting on `/approve ...`.
+      - `SYSTEM_RUN_DENIED: approval required` → node-host exec approval is pending.
+      - `exec host=sandbox requires a sandbox runtime for this session` → implicit/explicit sandbox selection but sandbox mode is off.
 
-      深度頁面：
+      Deep pages:
 
       - [/tools/exec](/en/tools/exec)
       - [/tools/exec-approvals](/en/tools/exec-approvals)
@@ -330,22 +345,22 @@ flowchart TD
     openclaw doctor
     ```
 
-      正常的輸出如下所示：
+      良好的輸出結果看起來像這樣：
 
-      - 瀏覽器狀態顯示 `running: true` 以及已選擇的瀏覽器/設定檔。
-      - `openclaw` 已啟動，或者 `user` 可以看到本機 Chrome 分頁。
+      - 瀏覽器狀態顯示 `running: true` 以及所選的瀏覽器/設定檔。
+      - `openclaw` 啟動，或 `user` 能看見本機 Chrome 分頁。
 
       常見的日誌特徵：
 
       - `unknown command "browser"` 或 `unknown command 'browser'` → `plugins.allow` 已設定且不包含 `browser`。
       - `Failed to start Chrome CDP on port` → 本機瀏覽器啟動失敗。
-      - `browser.executablePath not found` → 設定的二進位路徑錯誤。
+      - `browser.executablePath not found` → 設定的二進位檔路徑錯誤。
       - `browser.cdpUrl must be http(s) or ws(s)` → 設定的 CDP URL 使用了不支援的協定。
-      - `browser.cdpUrl has invalid port` → 設定的 CDP URL 具有錯誤或超出範圍的連接埠。
-      - `No Chrome tabs found for profile="user"` → Chrome MCP 連接設定檔沒有開啟的本機 Chrome 分頁。
+      - `browser.cdpUrl has invalid port` → 設定的 CDP URL 連接埠錯誤或超出範圍。
+      - `No Chrome tabs found for profile="user"` → Chrome MCP 附加設定檔沒有開啟的本機 Chrome 分頁。
       - `Remote CDP for profile "<name>" is not reachable` → 無法從此主機連線至設定的遠端 CDP 端點。
-      - `Browser attachOnly is enabled ... not reachable` 或 `Browser attachOnly is enabled and CDP websocket ... is not reachable` → 僅連接設定檔沒有即時的 CDP 目標。
-      - 僅連接或遠端 CDP 設定檔上的過時視口 / 暗色模式 / 地區設定 / 離線覆寫 → 執行 `openclaw browser stop --browser-profile <name>` 以關閉作用中的控制工作階段並釋放模擬狀態，而無需重新啟動閘道。
+      - `Browser attachOnly is enabled ... not reachable` 或 `Browser attachOnly is enabled and CDP websocket ... is not reachable` → 僅附加設定檔沒有作用中的 CDP 目標。
+      - 僅附加或遠端 CDP 設定檔上有過時的視口 / 暗色模式 / 地區設定 / 離線覆寫 → 請執行 `openclaw browser stop --browser-profile <name>` 以關閉作用中的控制工作階段並釋放模擬狀態，而不需重新啟動閘道。
 
       深入頁面：
 
@@ -360,7 +375,7 @@ flowchart TD
 ## 相關
 
 - [FAQ](/en/help/faq) — 常見問題
-- [Gateway Troubleshooting](/en/gateway/troubleshooting) — 閘道相關問題
-- [Doctor](/en/gateway/doctor) — 自動化健康檢查與修復
-- [Channel Troubleshooting](/en/channels/troubleshooting) — 通道連線問題
+- [Gateway Troubleshooting](/en/gateway/troubleshooting) — 閘道特定問題
+- [Doctor](/en/gateway/doctor) — 自動健康檢查與修復
+- [Channel Troubleshooting](/en/channels/troubleshooting) — 頻道連線問題
 - [Automation Troubleshooting](/en/automation/cron-jobs#troubleshooting) — cron 與 heartbeat 問題

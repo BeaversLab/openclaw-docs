@@ -34,7 +34,7 @@ openclaw onboard --auth-choice zai-cn
 ```json5
 {
   env: { ZAI_API_KEY: "sk-..." },
-  agents: { defaults: { model: { primary: "zai/glm-5" } } },
+  agents: { defaults: { model: { primary: "zai/glm-5.1" } } },
 }
 ```
 
@@ -61,5 +61,5 @@ OpenClaw 目前使用这些 GLM 引用初始化捆绑的 `zai` 提供商：
 ## 注意事项
 
 - GLM 的版本和可用性可能会发生变化；请查阅 Z.AI 的文档以获取最新信息。
-- 默认的捆绑模型引用是 `zai/glm-5`。
+- 默认捆绑的模型引用是 `zai/glm-5.1`。
 - 有关提供商的详细信息，请参阅 [/providers/zai](/en/providers/zai)。

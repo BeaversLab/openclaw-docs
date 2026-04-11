@@ -28,7 +28,8 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 - [Alibaba Model Studio](/en/providers/alibaba)
 - [Amazon Bedrock](/en/providers/bedrock)
 - [Anthropic (API + Claude CLI)](/en/providers/anthropic)
-- [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
+- [Arcee AI (Trinity 模型)](/en/providers/arcee)
+- [BytePlus (國際版)](/en/concepts/model-providers#byteplus-international)
 - [Chutes](/en/providers/chutes)
 - [ComfyUI](/en/providers/comfy)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
@@ -36,52 +37,53 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 - [fal](/en/providers/fal)
 - [Fireworks](/en/providers/fireworks)
 - [GitHub Copilot](/en/providers/github-copilot)
-- [GLM models](/en/providers/glm)
+- [GLM 模型](/en/providers/glm)
 - [Google (Gemini)](/en/providers/google)
-- [Groq (LPU inference)](/en/providers/groq)
-- [Hugging Face (Inference)](/en/providers/huggingface)
+- [Groq (LPU 推理)](/en/providers/groq)
+- [Hugging Face (推理)](/en/providers/huggingface)
+- [inferrs (本地模型)](/en/providers/inferrs)
 - [Kilocode](/en/providers/kilocode)
-- [LiteLLM (unified gateway)](/en/providers/litellm)
+- [LiteLLM (統一閘道)](/en/providers/litellm)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
 - [NVIDIA](/en/providers/nvidia)
-- [Ollama (cloud + local models)](/en/providers/ollama)
+- [Ollama (雲端 + 本地模型)](/en/providers/ollama)
 - [OpenAI (API + Codex)](/en/providers/openai)
 - [OpenCode](/en/providers/opencode)
 - [OpenCode Go](/en/providers/opencode-go)
 - [OpenRouter](/en/providers/openrouter)
-- [Perplexity (web search)](/en/providers/perplexity-provider)
+- [Perplexity (網路搜尋)](/en/providers/perplexity-provider)
 - [Qianfan](/en/providers/qianfan)
 - [Qwen Cloud](/en/providers/qwen)
 - [Runway](/en/providers/runway)
-- [SGLang (local models)](/en/providers/sglang)
+- [SGLang (本地模型)](/en/providers/sglang)
 - [StepFun](/en/providers/stepfun)
 - [Synthetic](/en/providers/synthetic)
 - [Together AI](/en/providers/together)
-- [Venice (Venice AI, privacy-focused)](/en/providers/venice)
+- [Venice (Venice AI，注重隱私)](/en/providers/venice)
 - [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
 - [Vydra](/en/providers/vydra)
-- [vLLM (local models)](/en/providers/vllm)
+- [vLLM (本地模型)](/en/providers/vllm)
 - [Volcengine (Doubao)](/en/providers/volcengine)
 - [xAI](/en/providers/xai)
 - [Xiaomi](/en/providers/xiaomi)
 - [Z.AI](/en/providers/zai)
 
-## 共享概覽頁面
+## 共用的概覽頁面
 
-- [Additional bundled variants](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
-- [Image Generation](/en/tools/image-generation) - 共享 `image_generate` 工具、提供者選擇和故障轉移
-- [Music Generation](/en/tools/music-generation) - 共享 `music_generate` 工具、提供者選擇和故障轉移
-- [Video Generation](/en/tools/video-generation) - 共享 `video_generate` 工具、提供者選擇和故障轉移
+- [其他內建變體](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
+- [圖像生成](/en/tools/image-generation) - 共用的 `image_generate` 工具、提供者選擇和故障轉移
+- [音樂生成](/en/tools/music-generation) - 共用的 `music_generate` 工具、提供者選擇和故障轉移
+- [影片生成](/en/tools/video-generation) - 共用的 `video_generate` 工具、提供者選擇和故障轉移
 
 ## 轉錄提供者
 
-- [Deepgram (audio transcription)](/en/providers/deepgram)
+- [Deepgram (音訊轉錄)](/en/providers/deepgram)
 
 ## 社群工具
 
-- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - 用於 Claude 訂閱憑證的社群代理（使用前請確認 Anthropic 政策/條款）
+- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Claude 訂閱憑證的社群 Proxy (使用前請驗證 Anthropic 政策/條款)
 
-如需完整的提供者目錄（xAI、Groq、Mistral 等）和進階設定，
+若要查看完整的提供者目錄 (xAI、Groq、Mistral 等) 和進階配置，
 請參閱 [Model providers](/en/concepts/model-providers)。

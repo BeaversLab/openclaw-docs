@@ -74,31 +74,31 @@ QA 总线，引导捆绑的 `qa-channel` 运行时切片，运行确定性
 私有调试器 UI：
 
 ```bash
-pnpm qa:lab:build
-pnpm openclaw qa ui
+pnpm qa:lab:up
 ```
 
-完整的仓库支持 QA 套件：
+该命令构建 QA 站点，启动 Docker 支持的网关 + QA Lab 栈，并打印 QA Lab URL。在该站点上，您可以选择场景、选择模型车道、启动单独的运行并实时观看结果。
+
+完整的仓库支持的 QA 套件：
 
 ```bash
 pnpm openclaw qa suite
 ```
 
-这会在本地 URL 启动私有 QA 调试器，与
-已发布的 Control UI 包分离。
+这将在本地 URL 启动私有 QA 调试器，与随附的 Control UI 包分开。
 
 ## 范围
 
-当前范围有意限制得很窄：
+当前范围故意设为狭窄：
 
-- 总线 + 插件传输
+- bus + 插件传输
 - 线程化路由语法
 - 渠道拥有的消息操作
 - Markdown 报告
+- 带有运行控制的 Docker 支持的 QA 站点
 
 后续工作将添加：
 
-- Docker 化的 OpenClaw 编排
 - 提供商/模型矩阵执行
 - 更丰富的场景发现
-- 稍后的 OpenClaw 原生编排
+- 稍后提供 OpenClaw 原生编排

@@ -109,6 +109,8 @@ the runtime does not invoke it yet.
 外掛可以使用外掛 API 註冊語境引擎：
 
 ```ts
+import { buildMemorySystemPromptAddition } from "openclaw/plugin-sdk/core";
+
 export default function register(api) {
   api.registerContextEngine("my-engine", () => ({
     info: {
@@ -122,12 +124,15 @@ export default function register(api) {
       return { ingested: true };
     },
 
-    async assemble({ sessionId, messages, tokenBudget }) {
+    async assemble({ sessionId, messages, tokenBudget, availableTools, citationsMode }) {
       // Return messages that fit the budget
       return {
         messages: buildContext(messages, tokenBudget),
         estimatedTokens: countTokens(messages),
-        systemPromptAddition: "Use lcm_grep to search history...",
+        systemPromptAddition: buildMemorySystemPromptAddition({
+          availableTools: availableTools ?? new Set(),
+          citationsMode,
+        }),
       };
     },
 
@@ -231,10 +236,15 @@ export default function register(api) {
 - **壓縮** 是上下文引擎的職責之一。舊版引擎
   委託給 OpenClaw 的內建摘要功能。外掛引擎可以實作
   任何壓縮策略（DAG 摘要、向量檢索等）。
-- **記憶體外掛程式** (`plugins.slots.memory`) 與上下文引擎是分開的。
-  記憶體外掛程式提供搜尋/檢索功能；上下文引擎控制模型
-  看到的內容。它們可以協同工作 —— 上下文引擎可能會在組裝期間使用記憶體
-  外掛程式的資料。
+- **記憶體外掛程式** (`plugins.slots.memory`) 與語境引擎是分開的。
+  記憶體外掛程式提供搜尋/檢索；語境引擎控制模型看到的內容。
+  它們可以協同工作 — 語境引擎可能在組裝期間使用記憶體外掛程式資料。
+  想要使用現用記憶體提示路徑的外掛程式引擎應優先使用來自
+  `openclaw/plugin-sdk/core` 的 `buildMemorySystemPromptAddition(...)`，它會將現用記憶體提示區段
+  轉換為準備好 prepend 的 `systemPromptAddition`。如果引擎需要更低層級的
+  控制，它仍然可以透過
+  `buildActiveMemoryPromptSection(...)` 從
+  `openclaw/plugin-sdk/memory-host-core` 拉取原始行。
 - **工作階段修剪** (在記憶體中修剪舊的工具結果) 無論啟用哪個上下文引擎都會
   繼續執行。
 
@@ -243,18 +253,18 @@ export default function register(api) {
 - 使用 `openclaw doctor` 來驗證您的引擎是否正確載入。
 - 如果切換引擎，現有的工作階段會繼續使用其目前的歷程記錄。
   新的引擎將接管未來的執行。
-- 引擎錯誤會被記錄下來並顯示在診斷資訊中。如果外掛引擎
+- 引擎錯誤會被記錄並顯示在診斷中。如果外掛程式引擎
   註冊失敗或無法解析選定的引擎 ID，OpenClaw
-  不會自動回退；執行將會失敗，直到您修復外掛程式或
+  不會自動回退；執行會失敗，直到您修復外掛程式或
   將 `plugins.slots.contextEngine` 切換回 `"legacy"`。
 - 對於開發，請使用 `openclaw plugins install -l ./my-engine` 來連結
-  本機外掛程式目錄，而無需複製。
+  本機外掛程式目錄，而不需複製。
 
-另請參閱：[壓縮](/en/concepts/compaction)、[上下文](/en/concepts/context)、
+另請參閱：[壓縮](/en/concepts/compaction)、[語境](/en/concepts/context)、
 [外掛程式](/en/tools/plugin)、[外掛程式清單](/en/plugins/manifest)。
 
 ## 相關
 
-- [Context](/en/concepts/context) — 如何為 Agent 回合建構 Context
-- [Plugin Architecture](/en/plugins/architecture) — 註冊 Context 引擎外掛
-- [Compaction](/en/concepts/compaction) — 總結長對話
+- [語境](/en/concepts/context) — 如何為代理程式回合建立語境
+- [外掛程式架構](/en/plugins/architecture) — 註冊語境引擎外掛程式
+- [壓縮](/en/concepts/compaction) — 摘要長對話

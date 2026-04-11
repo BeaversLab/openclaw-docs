@@ -1,7 +1,7 @@
 ---
-title: "插件运行时辅助函数"
-sidebarTitle: "运行时辅助函数"
-summary: "api.runtime -- 注入到插件中的可用运行时辅助函数"
+title: "插件运行时助手"
+sidebarTitle: "运行时助手"
+summary: "api.runtime -- 注入到插件中的可用运行时助手"
 read_when:
   - You need to call core helpers from a plugin (TTS, STT, image gen, web search, subagent)
   - You want to understand what api.runtime exposes
@@ -10,10 +10,9 @@ read_when:
 
 # 插件运行时辅助程序
 
-注入到每个插件中的 `api.runtime` 对象的参考文档。
-请使用这些辅助函数，而不是直接导入主机内部模块。
+注入到每个插件中的 `api.runtime` 对象的参考文档。请使用这些助手，而不是直接导入主机内部组件。
 
-<Tip>**寻找演练？** 请参阅 [通道插件](/en/plugins/sdk-channel-plugins) 或 [提供商插件](/en/plugins/sdk-provider-plugins) 获取分步指南， 其中展示了这些辅助函数的上下文用法。</Tip>
+<Tip>**寻找入门指南？** 请参阅 [渠道插件](/en/plugins/sdk-channel-plugins) 或 [提供商插件](/en/plugins/sdk-provider-plugins) 的分步指南， 其中展示了这些助手在实际场景中的应用。</Tip>
 
 ```typescript
 register(api) {
@@ -58,7 +57,7 @@ const result = await api.runtime.agent.runEmbeddedPiAgent({
 });
 ```
 
-**会话存储辅助函数** 位于 `api.runtime.agent.session` 之下：
+**会话存储助手** 位于 `api.runtime.agent.session` 下：
 
 ```typescript
 const storePath = api.runtime.agent.session.resolveStorePath(cfg);
@@ -106,8 +105,8 @@ await api.runtime.subagent.deleteSession({
 ```
 
 <Warning>
-  模型覆盖 (`provider`/`model`) 需要操作员通过配置中的
-  `plugins.entries.<id>.subagent.allowModelOverride: true` 选择加入。
+  模型覆盖 (`provider`/`model`) 需要操作员通过
+  配置中的 `plugins.entries.<id>.subagent.allowModelOverride: true` 选择加入。
   不受信任的插件仍然可以运行子代理，但覆盖请求将被拒绝。
 </Warning>
 
@@ -141,9 +140,7 @@ const waiting = taskFlow.setWaiting({
 });
 ```
 
-当您从自己的绑定层已经拥有
-受信任的 OpenClaw 会话密钥时，请使用 `bindSession({ sessionKey, requesterOrigin })`。不要从原始
-用户输入进行绑定。
+当您已经拥有来自自己绑定层的可信 OpenClaw 会话密钥时，请使用 `bindSession({ sessionKey, requesterOrigin })`。不要绑定原始用户输入。
 
 ### `api.runtime.tts`
 
@@ -206,7 +203,7 @@ const result = await api.runtime.mediaUnderstanding.runFile({
 
 当未产生输出时（例如跳过输入），返回 `{ text: undefined }`。
 
-<Info>`api.runtime.stt.transcribeAudioFile(...)` 保留为 `api.runtime.mediaUnderstanding.transcribeAudioFile(...)` 的兼容别名。</Info>
+<Info>`api.runtime.stt.transcribeAudioFile(...)` 保留为 `api.runtime.mediaUnderstanding.transcribeAudioFile(...)` 的兼容性别名。</Info>
 
 ### `api.runtime.imageGeneration`
 
@@ -323,9 +320,47 @@ api.runtime.tools.registerMemoryCli(/* ... */);
 
 渠道特定的运行时助手（在加载渠道插件时可用）。
 
+`api.runtime.channel.mentions` 是使用运行时注入的
+打包渠道插件共享的入站提及策略表面：
+
+```typescript
+const mentionMatch = api.runtime.channel.mentions.matchesMentionWithExplicit(text, {
+  mentionRegexes,
+  mentionPatterns,
+});
+
+const decision = api.runtime.channel.mentions.resolveInboundMentionDecision({
+  facts: {
+    canDetectMention: true,
+    wasMentioned: mentionMatch.matched,
+    implicitMentionKinds: api.runtime.channel.mentions.implicitMentionKindWhen("reply_to_bot", isReplyToBot),
+  },
+  policy: {
+    isGroup,
+    requireMention,
+    allowTextCommands,
+    hasControlCommand,
+    commandAuthorized,
+  },
+});
+```
+
+可用的提及助手：
+
+- `buildMentionRegexes`
+- `matchesMentionPatterns`
+- `matchesMentionWithExplicit`
+- `implicitMentionKindWhen`
+- `resolveInboundMentionDecision`
+
+`api.runtime.channel.mentions` 故意不暴露旧的
+`resolveMentionGating*` 兼容性助手。请优先使用标准化的
+`{ facts, policy }` 路径。
+
 ## 存储运行时引用
 
-使用 `createPluginRuntimeStore` 来存储运行时引用，以便在 `register` 回调之外使用：
+使用 `createPluginRuntimeStore` 存储运行时引用，以便在
+`register` 回调之外使用：
 
 ```typescript
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
@@ -352,22 +387,22 @@ export function tryGetRuntime() {
 }
 ```
 
-## 其他顶级 `api` 字段
+## 其他顶层 `api` 字段
 
-除了 `api.runtime` 之外，该 API 对象还提供了：
+除了 `api.runtime` 之外，API 对象还提供：
 
-| 字段                     | 类型                      | 描述                                                              |
-| ------------------------ | ------------------------- | ----------------------------------------------------------------- |
-| `api.id`                 | `string`                  | 插件 ID                                                           |
-| `api.name`               | `string`                  | 插件显示名称                                                      |
-| `api.config`             | `OpenClawConfig`          | 当前配置快照（可用时活动的内存运行时快照）                        |
-| `api.pluginConfig`       | `Record<string, unknown>` | 来自 `plugins.entries.<id>.config` 的插件特定配置                 |
-| `api.logger`             | `PluginLogger`            | 作用域日志记录器 (`debug`, `info`, `warn`, `error`)               |
-| `api.registrationMode`   | `PluginRegistrationMode`  | 当前加载模式；`"setup-runtime"` 是轻量级的完全入口启动/设置前窗口 |
-| `api.resolvePath(input)` | `(string) => string`      | 解析相对于插件根目录的路径                                        |
+| 字段                     | 类型                      | 描述                                                                |
+| ------------------------ | ------------------------- | ------------------------------------------------------------------- |
+| `api.id`                 | `string`                  | Plugin id                                                           |
+| `api.name`               | `string`                  | Plugin display name                                                 |
+| `api.config`             | `OpenClawConfig`          | 当前配置快照（可用时为活动内存运行时快照）                          |
+| `api.pluginConfig`       | `Record<string, unknown>` | 来自 `plugins.entries.<id>.config` 的插件特定配置                   |
+| `api.logger`             | `PluginLogger`            | 作用域记录器（`debug`、`info`、`warn`、`error`）                    |
+| `api.registrationMode`   | `PluginRegistrationMode`  | 当前加载模式；`"setup-runtime"` 是完全进入启动/设置之前的轻量级窗口 |
+| `api.resolvePath(input)` | `(string) => string`      | 解析相对于插件根目录的路径                                          |
 
 ## 相关
 
-- [SDK 概述](/en/plugins/sdk-overview) -- 子路径参考
+- [SDK 概览](/en/plugins/sdk-overview) -- 子路径参考
 - [SDK 入口点](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 选项
-- [插件内部](/en/plugins/architecture) -- 能力模型和注册表
+- [插件内部机制](/en/plugins/architecture) -- 能力模型和注册表

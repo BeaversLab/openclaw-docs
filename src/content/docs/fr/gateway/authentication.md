@@ -1,5 +1,5 @@
 ---
-summary: "Authentification de modèle : OAuth, clés API et jeton de configuration hérité OAuth"
+summary: "Authentification de modèle : OAuth, clés API, réutilisation de Claude CLI et jeton de configuration Anthropic"
 read_when:
   - Debugging model auth or OAuth expiry
   - Documenting authentication or credential storage
@@ -8,33 +8,32 @@ title: "Authentification"
 
 # Authentification (fournisseurs de modèles)
 
-<Note>Cette page traite de l'authentification des **fournisseurs de modèles** (clés API, OAuth et jeton de configuration hérité Anthropic). Pour l'authentification de **connexion de passerelle** (jeton, mot de passe, trusted-proxy), voir [Configuration](/en/gateway/configuration) et [Authentification de proxy de confiance](/en/gateway/trusted-proxy-auth).</Note>
+<Note>Cette page couvre l'authentification des **fournisseurs de modèles** (clés API, OAuth, réutilisation de Claude CLI et jeton de configuration Anthropic). Pour l'authentification de **connexion passerelle** (jeton, mot de passe, proxy de confiance), voir [Configuration](/en/gateway/configuration) et [Authentification de proxy de confiance](/en/gateway/trusted-proxy-auth).</Note>
 
 OpenClaw prend en charge OAuth et les clés API pour les fournisseurs de modèles. Pour les hôtes de passerelle toujours actifs, les clés API sont généralement l'option la plus prévisible. Les flux d'abonnement/OAuth
 sont également pris en charge lorsqu'ils correspondent au modèle de compte de votre fournisseur.
 
-Voir [/concepts/oauth](/en/concepts/oauth) pour le flux complet OAuth et la disposition du stockage.
+Voir [/concepts/oauth](/en/concepts/oauth) pour le flux OAuth complet et la disposition du stockage.
 Pour l'authentification basée sur SecretRef (fournisseurs `env`/`file`/`exec`), voir [Gestion des secrets](/en/gateway/secrets).
 Pour les règles d'éligibilité des identifiants/codes de raison utilisées par `models status --probe`, voir
 [Sémantique des identifiants d'authentification](/en/auth-credential-semantics).
 
 ## Configuration recommandée (clé API, n'importe quel fournisseur)
 
-Si vous exécutez une passerelle longue durée, commencez par une clé API pour votre fournisseur
-choisi.
-Plus spécifiquement pour Anthropic, l'authentification par clé API est la voie sûre. L'authentification
-de type abonnement Anthropic à l'intérieur de OpenClaw est la voie héritée du jeton de configuration et
-doit être considérée comme une voie **Extra Usage**, et non comme une voie de limites de plan.
+Si vous exécutez une passerelle à longue durée de vie, commencez par une clé API pour votre
+fournisseur choisi.
+Pour Anthropic spécifiquement, l'authentification par clé API est toujours la configuration serveur la plus
+prévisible, mais OpenClaw prend également en charge la réutilisation d'une connexion locale Claude CLI.
 
 1. Créez une clé API dans la console de votre fournisseur.
-2. Placez-la sur l'**hôte de passerelle** (la machine exécutant `openclaw gateway`).
+2. Placez-la sur l'**hôte de la passerelle** (la machine exécutant `openclaw gateway`).
 
 ```bash
 export <PROVIDER>_API_KEY="..."
 openclaw models status
 ```
 
-3. Si la Gateway fonctionne sous systemd/launchd, préférez mettre la clé dans
+3. Si la passerelle fonctionne sous systemd/launchd, préférez placer la clé dans
    `~/.openclaw/.env` afin que le démon puisse la lire :
 
 ```bash
@@ -50,22 +49,20 @@ openclaw models status
 openclaw doctor
 ```
 
-Si vous préférez ne pas gérer les env vars vous-même, l'onboarding peut stocker
+Si vous préférez ne pas gérer les variables d'environnement vous-même, l'intégration peut stocker
 les clés API pour une utilisation par le démon : `openclaw onboard`.
 
-Voir [Aide](/en/help) pour des détails sur l'héritage de l'environnement (`env.shellEnv`,
+Voir [Aide](/en/help) pour plus de détails sur l'héritage des variables d'environnement (`env.shellEnv`,
 `~/.openclaw/.env`, systemd/launchd).
 
-## Anthropic : compatibilité avec les jetons hérités
+## Anthropic : Claude CLI et compatibilité des jetons
 
-L'authentification par jeton de configuration Anthropic est toujours disponible dans OpenClaw comme une
-voie héritée/manuelle. La documentation publique de Claude Code de Anthropic couvre toujours l'utilisation
-directe du terminal Claude Code sous les plans Claude, mais Anthropic a indiqué séparément aux
-utilisateurs de OpenClaw que la voie de connexion Claude de **OpenClaw** compte comme une utilisation
-de tierce partie et nécessite un **Extra Usage** facturé séparément de
-l'abonnement.
+L'authentification par jeton de configuration Anthropic est toujours disponible dans OpenClaw en tant que chemin de jeton pris en charge. Le personnel d'Anthropic nous a depuis informés que l'utilisation de Claude CLI de style OpenClaw est
+à nouveau autorisée, donc OpenClaw considère la réutilisation de Claude CLI et l'utilisation de `claude -p` comme
+autorisées pour cette intégration, sauf si Anthropic publie une nouvelle politique. Lorsque
+la réutilisation de Claude CLI est disponible sur l'hôte, c'est désormais le chemin privilégié.
 
-Pour la méthode de configuration la plus claire, utilisez une clé API Anthropic. Si vous devez conserver un chemin d'abonnement API dans Anthropic, utilisez le chemin legacy setup-token avec l'attente que OpenClaw le traite comme **Extra Usage**.
+Pour les hôtes de passerelle longue durée, une clé API Anthropic reste toujours l'option la plus prévisible. Si vous souhaitez réutiliser une connexion Claude existante sur le même hôte, utilisez le chemin Anthropic Claude CLI dans onboarding/configure.
 
 Saisie manuelle de jeton (n'importe quel fournisseur ; écrit `auth-profiles.json` + met à jour la configuration) :
 
@@ -98,16 +95,16 @@ Notes :
 - Si une authentification existe mais que OpenClaw ne peut pas résoudre un candidat de modèle sondable pour ce fournisseur, le sondage signale `status: no_model`.
 - Les temps de recharge de limite de taux peuvent être limités au modèle. Un profil en recharge pour un modèle peut toujours être utilisable pour un modèle frère sur le même fournisseur.
 
-Les scripts d'opération facultatifs (systemd/Termux) sont documentés ici :
+Les scripts ops facultatifs (systemd/Termux) sont documentés ici :
 [Auth monitoring scripts](/en/help/scripts#auth-monitoring-scripts)
 
 ## Note Anthropic
 
-Le backend `claude-cli` Anthropic a été supprimé.
+Le backend `claude-cli` d'Anthropic est à nouveau pris en charge.
 
-- Utilisez les clés API Anthropic API pour le trafic Anthropic dans OpenClaw.
-- Le setup-token Anthropic reste un chemin legacy/manuel et doit être utilisé avec l'attente de facturation Extra Usage que Anthropic a communiquée aux utilisateurs OpenClaw.
-- `openclaw doctor` détecte désormais l'état obsolète et supprimé du Claude Anthropic CLI. Si les octets d'identifiant stockés existent toujours, doctor les reconvertit en profils de jeton/OAuth Anthropic. Sinon, doctor supprime la configuration obsolète du Claude OAuth et vous dirige vers la récupération par clé API ou setup-token.
+- L'équipe d'Anthropic nous a informés que ce chemin d'intégration OpenClaw est à nouveau autorisé.
+- OpenClaw considère donc la réutilisation du Claude CLI et l'utilisation de `claude -p` comme approuvées pour les exécutions supportées par Anthropic, sauf si Anthropic publie une nouvelle politique.
+- Les clés API Anthropic restent le choix le plus prévisible pour les hôtes de passerelle longue durée et le contrôle explicite de la facturation côté serveur.
 
 ## Vérification de l'état de l'authentification du modèle
 
@@ -144,7 +141,7 @@ Utilisez `/model` (ou `/model list`) pour un sélecteur compact ; utilisez `/mod
 
 ### Par agent (remplacement CLI)
 
-Définissez un ordre de remplacement explicite du profil d'authentification pour un agent (stocké dans le `auth-profiles.json` de cet agent) :
+Définissez une priorité explicite de l'ordre des profils d'authentification pour un agent (stockée dans le `auth-state.json` de cet agent) :
 
 ```bash
 openclaw models auth order get --provider anthropic
@@ -162,7 +159,7 @@ Lorsque vous déboguez des problèmes de temps de recharge, rappelez-vous que le
 
 ### "Aucune information d'identification trouvée"
 
-Si le profil Anthropic est manquant, configurez une clé Anthropic API sur l'**hôte de la passerelle** ou configurez le chemin du jeton de configuration Anthropic hérité, puis vérifiez à nouveau :
+Si le profil Anthropic est manquant, configurez une clé API Anthropic sur l'**hôte de passerelle** ou configurez le chemin setup-token Anthropic, puis vérifiez à nouveau :
 
 ```bash
 openclaw models status
@@ -170,12 +167,4 @@ openclaw models status
 
 ### Jeton expirant/expiré
 
-Exécutez `openclaw models status` pour confirmer le profil qui expire. Si un profil de jeton Anthropic hérité est manquant ou expiré, actualisez cette configuration via setup-token ou migrez vers une clé Anthropic API.
-
-Si la machine possède encore un état Anthropic Claude CLI obsolète et supprimé des anciennes versions, exécutez :
-
-```bash
-openclaw doctor --yes
-```
-
-Doctor reconvertit `anthropic:claude-cli` en jeton Anthropic/OAuth lorsque les octets d'identification stockés existent toujours. Sinon, il supprime les références de profil/config/modèle obsolètes de Claude CLI et laisse les instructions pour l'étape suivante.
+Exécutez `openclaw models status` pour confirmer quel profil expire. Si un profil de jeton Anthropic est manquant ou expiré, actualisez cette configuration via setup-token ou migrez vers une clé API Anthropic.

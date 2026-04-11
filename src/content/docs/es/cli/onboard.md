@@ -115,8 +115,8 @@ Comportamiento de la incorporación interactiva con el modo de referencia:
 
 Opciones de punto final de Z.AI no interactivas:
 
-Nota: `--auth-choice zai-api-key` ahora detecta automáticamente el mejor punto final de Z.AI para tu clave (prefiere la API general con `zai/glm-5`).
-Si específicamente deseas los puntos finales del Plan de Codificación GLM, elige `zai-coding-global` o `zai-coding-cn`.
+Nota: `--auth-choice zai-api-key` ahora detecta automáticamente el mejor punto de conexión de Z.AI para tu clave (prefiere la API general con `zai/glm-5.1`).
+Si específicamente deseas los puntos de conexión del Plan de codificación GLM, elige `zai-coding-global` o `zai-coding-cn`.
 
 ```bash
 # Promptless endpoint selection

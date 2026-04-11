@@ -55,7 +55,7 @@ openclaw onboard --non-interactive \
 2. Tirez un modèle local si vous souhaitez une inférence locale :
 
 ```bash
-ollama pull glm-4.7-flash
+ollama pull gemma4
 # or
 ollama pull gpt-oss:20b
 # or
@@ -76,12 +76,12 @@ openclaw onboard
 
 - `Local` : modèles locaux uniquement
 - `Cloud + Local` : modèles locaux plus modèles cloud
-- Les modèles cloud tels que `kimi-k2.5:cloud`, `minimax-m2.5:cloud` et `glm-5:cloud` ne nécessitent **pas** de `ollama pull` local
+- Les modèles cloud tels que `kimi-k2.5:cloud`, `minimax-m2.7:cloud` et `glm-5.1:cloud` ne nécessitent **pas** de `ollama pull` local
 
 OpenClaw suggère actuellement :
 
-- défaut local : `glm-4.7-flash`
-- défauts cloud : `kimi-k2.5:cloud`, `minimax-m2.5:cloud`, `glm-5:cloud`
+- par défaut local : `gemma4`
+- par défaut cloud : `kimi-k2.5:cloud`, `minimax-m2.7:cloud`, `glm-5.1:cloud`
 
 5. Si vous préférez une configuration manuelle, activez Ollama pour OpenClaw directement (n'importe quelle valeur fonctionne ; Ollama ne nécessite pas de vraie clé) :
 
@@ -97,7 +97,7 @@ openclaw config set models.providers.ollama.apiKey "ollama-local"
 
 ```bash
 openclaw models list
-openclaw models set ollama/glm-4.7-flash
+openclaw models set ollama/gemma4
 ```
 
 7. Ou définir la valeur par défaut dans la configuration :
@@ -106,7 +106,7 @@ openclaw models set ollama/glm-4.7-flash
 {
   agents: {
     defaults: {
-      model: { primary: "ollama/glm-4.7-flash" },
+      model: { primary: "ollama/gemma4" },
     },
   },
 }
@@ -225,7 +225,7 @@ Une fois configuré, tous vos modèles Ollama sont disponibles :
 
 ## Modèles cloud
 
-Les modèles cloud vous permettent d'exécuter des modèles hébergés dans le cloud (par exemple `kimi-k2.5:cloud`, `minimax-m2.5:cloud`, `glm-5:cloud`) aux côtés de vos modèles locaux.
+Les modèles cloud vous permettent d'exécuter des modèles hébergés dans le cloud (par exemple `kimi-k2.5:cloud`, `minimax-m2.7:cloud`, `glm-5.1:cloud`) parallèlement à vos modèles locaux.
 
 Pour utiliser des modèles cloud, sélectionnez le mode **Cloud + Local** lors de la configuration. L'assistant vérifie si vous êtes connecté et ouvre un flux de connexion dans le navigateur si nécessaire. Si l'authentification ne peut pas être vérifiée, l'assistant revient aux paramètres par défaut des modèles locaux.
 
@@ -349,7 +349,7 @@ Pour ajouter des modèles :
 
 ```bash
 ollama list  # See what's installed
-ollama pull glm-4.7-flash
+ollama pull gemma4
 ollama pull gpt-oss:20b
 ollama pull llama3.3     # Or another model
 ```

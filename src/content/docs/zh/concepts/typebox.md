@@ -76,7 +76,7 @@ Client                    Gateway
 
 - **服务端**：每个入站帧都由 AJV 验证。握手仅接受参数匹配 `ConnectParams` 的 `connect` 请求。
 - **客户端**：JS 客户端在使用事件和响应帧之前会对其进行验证。
-- **功能发现**：Gateway 从 `listGatewayMethods()` 和 `GATEWAY_EVENTS` 中的 `hello-ok` 发送保守的 `features.methods` 和 `features.events` 列表。
+- **功能发现**：Gateway(网关) 从 `listGatewayMethods()` 和 `GATEWAY_EVENTS` 中的 `hello-ok` 发送保守的 `features.methods` 和 `features.events` 列表。
 - 该发现列表不是 `coreGatewayHandlers` 中每个可调用辅助程序的生成转储；一些辅助 RPC 在 `src/gateway/server-methods/*.ts` 中实现，但未在公告的功能列表中枚举。
 
 ## 示例帧

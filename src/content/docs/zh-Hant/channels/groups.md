@@ -190,8 +190,8 @@ otherwise -> reply
       groupPolicy: "allowlist",
       groupAllowFrom: ["@owner:example.org"],
       groups: {
-        "!roomId:example.org": { allow: true },
-        "#alias:example.org": { allow: true },
+        "!roomId:example.org": { enabled: true },
+        "#alias:example.org": { enabled: true },
       },
     },
   },
@@ -227,7 +227,7 @@ otherwise -> reply
 
 群組訊息需要提及，除非每個群組有另外覆寫。預設值位於每個子系統下的 `*.groups."*"`。
 
-回覆機器人訊息算作隱式提及 (當頻道支援回覆中繼資料時)。這適用於 Telegram、WhatsApp、Slack、Discord 和 Microsoft Teams。
+當頻道支援回覆元數據時，回覆機器人訊息會被視為隱式提及。在暴露引用元數據的頻道上，引用機器人訊息也可以被視為隱式提及。目前內建的案例包括 Telegram、WhatsApp、Slack、Discord、Microsoft Teams 和 ZaloUser。
 
 ```json5
 {

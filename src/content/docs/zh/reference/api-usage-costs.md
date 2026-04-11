@@ -26,14 +26,21 @@ title: "API 使用和成本"
 - `/usage tokens` 仅显示令牌数；订阅式的 OAuth/令牌和 CLI 流程会隐藏美元成本。
 - Gemini CLI 说明：当 CLI 返回 JSON 输出时，OpenClaw 会从 `stats` 读取使用情况，将 `stats.cached` 标准化为 `cacheRead`，并在需要时从 `stats.input_tokens - stats.cached` 推导输入令牌。
 
-Anthropic 说明：Anthropic 的公共 Claude Code 文档仍然将直接的 Claude Code 终端使用包含在 Claude 计划限制中。此外，Anthropic 告知 OpenClaw 用户，从 **2026 年 4 月 4 日下午 12:00 PT / 晚上 8:00 BST** 开始，**OpenClaw** 的 Claude 登录路径将被视为第三方工具使用，并需要与订阅分开计费的 **Extra Usage**。Anthropic 未公开 OpenClaw 可以在 `/usage full` 中显示的每条消息美元估算。
+Anthropic 说明：Anthropic 工作人员告知我们，OpenClaw 风格的 Claude CLI 使用
+再次被允许，因此除非 Anthropic 发布新政策，否则 OpenClaw 将 Claude CLI 重用和 `claude -p` 使用
+视为本集成的官方许可。
+Anthropic 仍未公开 OpenClaw 可以在 `/usage full` 中显示的单条消息美元估算值。
 
 **CLI 使用窗口（提供商配额）**
 
-- `openclaw status --usage` 和 `openclaw channels list` 显示提供商**使用窗口**（配额快照，而非每条消息的成本）。
-- 人工输出在所有提供商中均被标准化为 `X% left`。
+- `openclaw status --usage` 和 `openclaw channels list` 显示提供商 **使用量窗口**
+  （配额快照，而非单条消息费用）。
+- 人工输出在所有提供商中均标准化为 `X% left`。
 - 当前支持使用窗口的提供商：Anthropic、GitHub Copilot、Gemini CLI、OpenAI Codex、MiniMax、Xiaomi 和 z.ai。
-- MiniMax 说明：其原始的 `usage_percent` / `usagePercent` 字段表示剩余配额，因此 OpenClaw 会在显示前将其反转。当存在基于计数的字段时，它们仍然优先。如果提供商返回 `model_remains`，OpenClaw 优先选择聊天模型条目，在需要时从时间戳推导窗口标签，并在计划标签中包含模型名称。
+- MiniMax 说明：其原始 `usage_percent` / `usagePercent` 字段表示剩余
+  配额，因此 OpenClaw 在显示前将其反转。基于计数的字段在存在时仍优先。
+  如果提供商返回 `model_remains`，OpenClaw 优先选择
+  聊天模型条目，在需要时从时间戳推导窗口标签，并在计划标签中包含模型名称。
 - 这些配额窗口的使用授权在可用时来自特定于提供商的钩子；否则 OpenClaw 会回退到从 auth profiles、env 或 config 中匹配 OAuth/API-key 凭据。
 
 有关详细信息和示例，请参阅 [Token use & costs](/en/reference/token-use)。
@@ -42,12 +49,12 @@ Anthropic 说明：Anthropic 的公共 Claude Code 文档仍然将直接的 Clau
 
 OpenClaw 可以从以下位置获取凭据：
 
-- **Auth profiles**（每个代理一个，存储在 `auth-profiles.json` 中）。
+- **Auth 配置文件**（每个代理一个，存储在 `auth-profiles.json` 中）。
 - **环境变量**（例如 `OPENAI_API_KEY`、`BRAVE_API_KEY`、`FIRECRAWL_API_KEY`）。
 - **配置**（`models.providers.*.apiKey`、`plugins.entries.*.config.webSearch.apiKey`、
   `plugins.entries.firecrawl.config.webFetch.apiKey`、`memorySearch.*`、
   `talk.providers.*.apiKey`）。
-- **Skills**（`skills.entries.<name>.apiKey`），可能会将密钥导出到技能进程环境变量中。
+- **Skills**（`skills.entries.<name>.apiKey`）可能会将密钥导出到技能进程环境变量中。
 
 ## 可能消耗密钥的功能
 
@@ -78,13 +85,12 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 - 图像生成：OpenAI / Google / fal / MiniMax
 - 视频生成：Qwen
 
-当
-`agents.defaults.imageGenerationModel` 未设置时，图像生成可以推断支持身份验证的提供商默认值。视频生成目前
+当 `agents.defaults.imageGenerationModel` 未设置时，图像生成可以推断基于身份验证的提供商默认值。视频生成目前
 需要一个显式的 `agents.defaults.videoGenerationModel`，例如
 `qwen/wan2.6-t2v`。
 
-参见 [图像生成](/en/tools/image-generation)、[Qwen Cloud](/en/providers/qwen)
-和 [模型](/en/concepts/models)。
+请参阅 [Image generation](/en/tools/image-generation)、[Qwen Cloud](/en/providers/qwen)
+和 [Models](/en/concepts/models)。
 
 ### 4) 记忆嵌入 + 语义搜索
 
@@ -97,32 +103,32 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 - `memorySearch.provider = "ollama"` → Ollama 嵌入（本地/自托管；通常无托管 API 计费）
 - 如果本地嵌入失败，可选择回退到远程提供商
 
-您可以使用 `memorySearch.provider = "local"` 将其保持在本地（无 API 使用）。
+您可以使用 `memorySearch.provider = "local"` 将其保留在本地（无 API 使用）。
 
-参见 [记忆](/en/concepts/memory)。
+参见[内存](/en/concepts/memory)。
 
 ### 5) 网络搜索工具
 
 `web_search` 可能会根据您的提供商产生使用费用：
 
-- **Brave Search API**：`BRAVE_API_KEY` 或 `plugins.entries.brave.config.webSearch.apiKey`
+- **Brave 搜索 API**：`BRAVE_API_KEY` 或 `plugins.entries.brave.config.webSearch.apiKey`
 - **Exa**：`EXA_API_KEY` 或 `plugins.entries.exa.config.webSearch.apiKey`
 - **Firecrawl**：`FIRECRAWL_API_KEY` 或 `plugins.entries.firecrawl.config.webSearch.apiKey`
 - **Gemini (Google Search)**：`GEMINI_API_KEY` 或 `plugins.entries.google.config.webSearch.apiKey`
 - **Grok (xAI)**：`XAI_API_KEY` 或 `plugins.entries.xai.config.webSearch.apiKey`
 - **Kimi (Moonshot)**：`KIMI_API_KEY`、`MOONSHOT_API_KEY` 或 `plugins.entries.moonshot.config.webSearch.apiKey`
-- **MiniMax Search**：`MINIMAX_CODE_PLAN_KEY`、`MINIMAX_CODING_API_KEY`、`MINIMAX_API_KEY` 或 `plugins.entries.minimax.config.webSearch.apiKey`
-- **Ollama Web Search**：默认不需要密钥，但需要一个可访问的 Ollama 主机以及 `ollama signin`；当主机需要时，也可以复用常规的 Ollama 提供商 bearer auth
-- **Perplexity Search API**：`PERPLEXITY_API_KEY`、`OPENROUTER_API_KEY` 或 `plugins.entries.perplexity.config.webSearch.apiKey`
+- **MiniMax 搜索**：`MINIMAX_CODE_PLAN_KEY`、`MINIMAX_CODING_API_KEY`、`MINIMAX_API_KEY` 或 `plugins.entries.minimax.config.webSearch.apiKey`
+- **Ollama 网络搜索**：默认无密钥，但需要可访问的 Ollama 主机以及 `ollama signin`；当主机需要时，也可以重用常规 Ollama 提供商的持有者认证
+- **Perplexity 搜索 API**：`PERPLEXITY_API_KEY`、`OPENROUTER_API_KEY` 或 `plugins.entries.perplexity.config.webSearch.apiKey`
 - **Tavily**：`TAVILY_API_KEY` 或 `plugins.entries.tavily.config.webSearch.apiKey`
 - **DuckDuckGo**：无密钥回退（无 API 计费，但非官方且基于 HTML）
-- **SearXNG**: `SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl` （免密钥/自托管；无托管 API 计费）
+- **SearXNG**：`SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl`（无密钥/自托管；无托管 API 计费）
 
-传统的 `tools.web.search.*` 提供商路径仍然通过临时兼容性垫片加载，但它们不再是推荐的配置界面。
+旧的 `tools.web.search.*` 提供商路径仍然通过临时兼容性垫片加载，但它们不再是推荐的配置界面。
 
 **Brave Search 免费额度：** 每个 Brave 计划包含每月 $5 的续费免费额度。搜索计划每 1,000 次请求费用为 $5，因此该额度覆盖每月 1,000 次免费请求。在 Brave 仪表板中设置您的使用限制，以避免意外收费。
 
-请参阅 [Web 工具](/en/tools/web)。
+参见[Web 工具](/en/tools/web)。
 
 ### 5) Web 抓取工具 (Firecrawl)
 
@@ -132,7 +138,7 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 
 如果未配置 Firecrawl，该工具将回退到直接抓取 + 可读性处理（无付费 API）。
 
-请参阅 [Web 工具](/en/tools/web)。
+参见[Web 工具](/en/tools/web)。
 
 ### 6) 提供商使用快照（状态/健康）
 
@@ -141,19 +147,19 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-请参阅 [模型 CLI](/en/cli/models)。
+请参阅 [Models CLI](/en/cli/models)。
 
 ### 7) 压缩保护摘要
 
 压缩保护功能可以使用 **当前模型** 汇总会话历史，运行时会调用提供商 API。
 
-请参阅 [会话管理 + 压缩](/en/reference/session-management-compaction)。
+请参阅 [Session management + compaction](/en/reference/session-management-compaction)。
 
 ### 8) 模型扫描 / 探测
 
 `openclaw models scan` 可以探测 OpenRouter 模型，并在启用探测时使用 `OPENROUTER_API_KEY`。
 
-请参阅 [模型 CLI](/en/cli/models)。
+请参阅 [Models CLI](/en/cli/models)。
 
 ### 9) 对话（语音）
 
@@ -161,10 +167,10 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 
 - `ELEVENLABS_API_KEY` 或 `talk.providers.elevenlabs.apiKey`
 
-请参阅 [对话模式](/en/nodes/talk)。
+请参阅 [Talk mode](/en/nodes/talk)。
 
 ### 10) Skills（第三方 API）
 
-Skills 可以将 `apiKey` 存储在 `skills.entries.<name>.apiKey` 中。如果 Skill 使用该密钥访问外部 API，则可能会根据 Skill 的提供商产生费用。
+Skills 可以将 `apiKey` 存储在 `skills.entries.<name>.apiKey` 中。如果 skill 使用该密钥用于外部 API，则可能会根据 skill 的提供商产生费用。
 
 请参阅 [Skills](/en/tools/skills)。

@@ -75,9 +75,10 @@ determinista y escribe un informe Markdown bajo `.artifacts/qa-e2e/`.
 Interfaz de usuario de depurador privada:
 
 ```bash
-pnpm qa:lab:build
-pnpm openclaw qa ui
+pnpm qa:lab:up
 ```
+
+Ese único comando construye el sitio de QA, inicia la puerta de enlace y la pila de QA Lab respaldadas por Docker, e imprime la URL de QA Lab. Desde ese sitio puedes elegir escenarios, seleccionar el carril del modelo, lanzar ejecuciones individuales y ver los resultados en vivo.
 
 Suite de QA completa respaldada por el repositorio:
 
@@ -85,21 +86,20 @@ Suite de QA completa respaldada por el repositorio:
 pnpm openclaw qa suite
 ```
 
-Eso inicia el depurador de QA privado en una URL local, separado del
-paquete de interfaz de usuario de Control enviado.
+Eso inicia el depurador privado de QA en una URL local, separado del paquete de interfaz de usuario de Control enviado.
 
 ## Alcance
 
-El alcance actual es intencionalmente estrecho:
+El alcance actual es intencionalmente limitado:
 
 - bus + transporte de complementos
-- gramática de enrutamiento con hilos
+- gramática de enrutamiento con subprocesos
 - acciones de mensajes propiedad del canal
 - informes en Markdown
+- sitio de QA respaldado por Docker con controles de ejecución
 
-El trabajo de seguimiento añadirá:
+El trabajo de seguimiento agregará:
 
-- orquestación de OpenClaw en Docker
 - ejecución de matriz de proveedor/modelo
 - descubrimiento de escenarios más rico
 - orquestación nativa de OpenClaw más adelante

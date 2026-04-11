@@ -14,13 +14,13 @@ title: "Vydra"
 - 透過 `vydra/veo3` 和 `vydra/kling` 進行影片生成
 - 透過 Vydra 的 ElevenLabs 支援的 TTS 路由進行語音合成
 
-OpenClaw 對於這三項功能都使用相同的 `VYDRA_API_KEY`。
+OpenClaw 對於這三種功能都使用相同的 `VYDRA_API_KEY`。
 
 ## 重要基礎 URL
 
 使用 `https://www.vydra.ai/api/v1`。
 
-Vydra 的 apex 主機 (`https://vydra.ai/api/v1`) 目前會重新導向至 `www`。某些 HTTP 用戶端會在該跨主機重新導向時捨棄 `Authorization`，這會導致有效的 API 金鑰變成令人誤解的認證失敗。內建的外掛程式直接使用 `www` 基礎 URL 以避免這種情況。
+Vydra 的 apex host (`https://vydra.ai/api/v1`) 目前重新導向至 `www`。某些 HTTP 用戶端會在跨主機重新導向時捨棄 `Authorization`，這會將有效的 API 金鑰變成誤導性的驗證失敗。隨附的外掛程式直接使用 `www` 基礎 URL 來避免這個問題。
 
 ## 設定
 
@@ -58,7 +58,7 @@ export VYDRA_API_KEY="vydra_live_..."
 
 目前的內建支援僅限文字轉影像。Vydra 的託管編輯路由需要遠端影像 URL，而 OpenClaw 尚未在內建外掛程式中新增 Vydra 專用的上傳橋接器。
 
-請參閱 [影像生成](/en/tools/image-generation) 以了解共用工具行為。
+請參閱 [影像生成](/en/tools/image-generation) 以了解共享的工具行為。
 
 ## 影片生成
 
@@ -83,11 +83,31 @@ export VYDRA_API_KEY="vydra_live_..."
 
 備註：
 
-- `vydra/veo3` 內建僅支援文字轉影片。
-- `vydra/kling` 目前需要遠端影像 URL 參照。本機檔案上傳會在一開始就被拒絕。
-- 內建的外掛程式保持保守，不會轉送未紀錄的樣式控制項，例如長寬比、解析度、浮水印或產生的音訊。
+- `vydra/veo3` 僅作為文字轉影片功能隨附。
+- `vydra/kling` 目前需要遠端影像 URL 參照。本機檔案上傳會一開始就被拒絕。
+- Vydra 目前的 `kling` HTTP 路由在需要 `image_url` 還是 `video_url` 方面一直不一致；隨附的提供者將相同的遠端影像 URL 對應到這兩個欄位。
+- 隨附的外掛程式採取保守做法，不會轉傳未記載的樣式控制項，例如長寬比、解析度、浮水印或產生的音訊。
 
-請參閱 [影片生成](/en/tools/video-generation) 以了解共用工具行為。
+提供者專屬的即時覆蓋範圍：
+
+```bash
+OPENCLAW_LIVE_TEST=1 \
+OPENCLAW_LIVE_VYDRA_VIDEO=1 \
+pnpm test:live -- extensions/vydra/vydra.live.test.ts
+```
+
+隨附的 Vydra 即時檔案目前涵蓋：
+
+- `vydra/veo3` 文字轉影片
+- 使用遠端影像 URL 的 `vydra/kling` 影像轉影片
+
+必要時覆寫遠端影像固件：
+
+```bash
+export OPENCLAW_LIVE_VYDRA_KLING_IMAGE_URL="https://example.com/reference.png"
+```
+
+請參閱 [影片生成](/en/tools/video-generation) 以了解共享的工具行為。
 
 ## 語音合成
 
@@ -111,13 +131,13 @@ export VYDRA_API_KEY="vydra_live_..."
 
 預設值：
 
-- 模型： `elevenlabs/tts`
-- 語音 ID： `21m00Tcm4TlvDq8ikWAM`
+- 模型：`elevenlabs/tts`
+- 語音 ID：`21m00Tcm4TlvDq8ikWAM`
 
-內建的外掛程式目前公開一個已知良好的預設語音，並傳回 MP3 音訊檔案。
+隨附的外掛程式目前公開一個已知良好的預設語音，並傳回 MP3 音訊檔。
 
 ## 相關
 
 - [提供者目錄](/en/providers/index)
-- [圖像生成](/en/tools/image-generation)
+- [圖片生成](/en/tools/image-generation)
 - [影片生成](/en/tools/video-generation)

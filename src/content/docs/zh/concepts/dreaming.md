@@ -1,6 +1,6 @@
 ---
-title: "Dreaming (实验性)"
-summary: "包含浅层、深层和 REM 阶段的背景记忆巩固，外加梦境日记"
+title: "Dreaming (experimental)"
+summary: "包含浅层、深层和 REM 阶段以及梦梦日记的后台记忆巩固系统"
 read_when:
   - You want memory promotion to run automatically
   - You want to understand what each dreaming phase does
@@ -11,7 +11,7 @@ read_when:
 
 Dreaming 是 `memory-core` 中的后台记忆巩固系统。
 它帮助 OpenClaw 将强烈的短期信号转化为持久记忆，同时
-保持该过程的可解释性和可审查性。
+保持过程的可解释性和可审查性。
 
 Dreaming 是**可选加入 (opt-in)** 的，默认情况下处于禁用状态。
 
@@ -19,10 +19,10 @@ Dreaming 是**可选加入 (opt-in)** 的，默认情况下处于禁用状态。
 
 Dreaming 保留两种输出：
 
-- **机器状态**位于 `memory/.dreams/`（召回存储、阶段信号、摄取检查点、锁）。
-- **人类可读的输出**位于 `DREAMS.md`（或现有的 `dreams.md`）以及 `memory/dreaming/<phase>/YYYY-MM-DD.md` 下的可选阶段报告文件。
+- `memory/.dreams/` 中的 **机器状态**（召回存储、阶段信号、摄取检查点、锁）。
+- `DREAMS.md`（或现有的 `dreams.md`）中的 **人类可读输出** 以及 `memory/dreaming/<phase>/YYYY-MM-DD.md` 下的可选阶段报告文件。
 
-长期提升仍然仅写入 `MEMORY.md`。
+长期提升仍然只写入 `MEMORY.md`。
 
 ## 阶段模型
 
@@ -62,15 +62,15 @@ Dreaming 使用三个协作阶段：
 REM 相提取模式和反思信号。
 
 - 根据最近的短期痕迹构建主题和反思摘要。
-- 当存储包含内联输出时，写入受管 `## REM Sleep` 代码块。
+- 当存储包含内联输出时，写入受管理的 `## REM Sleep` 块。
 - 记录深度排名使用的 REM 增强信号。
 - 从不写入 `MEMORY.md`。
 
 ## 梦境日记
 
-dreaming 还会在 `DREAMS.md` 中保留一个叙事性的**梦境日记**。
-当每个阶段有足够的内容时，`memory-core` 会尽力运行后台
-子代理轮次（使用默认运行时模型）并附加一条简短的日记条目。
+Dreaming 还会在 `DREAMS.md` 中保持一份叙述性的 **Dream Diary**。
+在每个阶段有足够材料后，`memory-core` 会运行一个尽力而为的后台
+子代理轮次（使用默认运行时模型）并追加一条简短的日记条目。
 
 该日记供在 Dreams UI 中进行人工阅读，而非提升来源。
 
@@ -87,13 +87,13 @@ dreaming 还会在 `DREAMS.md` 中保留一个叙事性的**梦境日记**。
 | 巩固       | 0.10 | 多日重复出现的强度                |
 | 概念丰富度 | 0.06 | 来自片段/路径的概念标签密度       |
 
-Light 和 REM 阶段的命中会从
-`memory/.dreams/phase-signals.json` 增加一个微小的近期衰减提升。
+浅层和 REM 阶段的命中会从
+`memory/.dreams/phase-signals.json` 增加微小的近期衰减提升。
 
 ## 调度
 
-启用后，`memory-core` 会自动管理一个 cron 作业以进行完整的梦
-想扫描。每次扫描按顺序运行各个阶段：light -> REM -> deep。
+启用后，`memory-core` 会自动管理一个 cron 任务以进行完整的 dream
+扫描。每次扫描按顺序运行各阶段：light -> REM -> deep。
 
 默认的节奏行为：
 
@@ -161,7 +161,22 @@ openclaw memory promote --limit 5
 openclaw memory status --deep
 ```
 
-除非使用 CLI 标志覆盖，否则手动 `memory promote` 默认使用深阶段阈值。
+手动 `memory promote` 默认使用 deep-phase 阈值，除非被
+CLI 标志覆盖。
+
+解释为什么特定的候选者会或不会提升：
+
+```bash
+openclaw memory promote-explain "router vlan"
+openclaw memory promote-explain "router vlan" --json
+```
+
+在不写入任何内容的情况下预览 REM 反思、候选真理和深度提升输出：
+
+```bash
+openclaw memory rem-harness
+openclaw memory rem-harness --json
+```
 
 ## 关键默认值
 
@@ -172,19 +187,19 @@ openclaw memory status --deep
 | `enabled`   | `false`     |
 | `frequency` | `0 3 * * *` |
 
-阶段策略、阈值和存储行为是内部实现细节（而非面向用户的配置）。
+阶段策略、阈值和存储行为属于内部实现细节（而非面向用户的配置）。
 
 有关完整的键列表，请参阅 [Memory configuration reference](/en/reference/memory-config#dreaming-experimental)。
 
 ## Dreams UI
 
-启用后，Gateway(网关) **Dreams** 标签页显示：
+启用后，Gateway(网关) 中的 **Dreams** 标签页会显示：
 
 - 当前 dreaming 启用状态
-- 阶段级状态和托管扫描（managed-sweep）情况
-- 短期、长期和今日提升（promoted-today）计数
-- 下次计划的运行时间
-- 由 `doctor.memory.dreamDiary` 支持的可展开的 Dream Diary 阅读器
+- 阶段级状态和托管扫描状态
+- 短期、长期和今日提升计数
+- 下一次计划运行时间
+- 一个可展开的 Dream Diary 阅读器，由 `doctor.memory.dreamDiary` 支持
 
 ## 相关
 

@@ -61,7 +61,7 @@ sidebarTitle: "Linux Server"
 - 安全默认设置：将 Gateway(网关) 保持在本地回环地址上，并通过 SSH 隧道或 Tailscale Serve 访问它。
   如果绑定到 `lan` 或 `tailnet`，则要求使用 `gateway.auth.token` 或 `gateway.auth.password`。
 
-相关页面：[Gateway 远程访问](/en/gateway/remote)、[平台中心](/en/platforms)。
+相关页面：[Gateway(网关) 远程访问](/en/gateway/remote)、[平台中心](/en/platforms)。
 
 ## VPS 上的共享公司代理
 

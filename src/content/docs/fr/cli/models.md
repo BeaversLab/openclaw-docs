@@ -13,7 +13,7 @@ Découverte, analyse et configuration de modèles (modèle par défaut, replis, 
 Connexes :
 
 - Fournisseurs + modèles : [Modèles](/en/providers/models)
-- Configuration de l'auth du fournisseur : [Getting started](/en/start/getting-started)
+- Configuration de l'authentification du fournisseur : [Getting started](/en/start/getting-started)
 
 ## Commandes courantes
 
@@ -130,5 +130,5 @@ Notes :
   `--profile-id`.
 - `paste-token --expires-in <duration>` stocke une expiration absolue du token à partir d'une
   durée relative telle que `365d` ou `12h`.
-- Note de facturation Anthropic : pour Anthropic dans OpenClaw, la distinction pratique se fait entre **clé API** ou **abonnement Claude avec Extra Usage**. Anthropic a informé les utilisateurs OpenClaw le **4 avril 2026 à 12 h 00 PT / 20 h 00 BST** que le chemin de connexion Claude **OpenClaw** compte comme une utilisation par un tiers et nécessite **Extra Usage** facturé séparément de l'abonnement. Nos reproductions locales montrent également que la chaîne de prompt identifiant OpenClaw ne se reproduit pas sur le chemin SDK Anthropic + clé API.
-- Anthropic `setup-token` / `paste-token` sont de nouveau disponibles en tant que chemin OpenClaw héritémanuel. Utilisez-les en sachant que Anthropic a indiqué aux utilisateurs OpenClaw que ce chemin nécessite **Extra Usage**.
+- Remarque d'Anthropic : Le personnel d'Anthropic nous a informé que l'utilisation de la CLI Claude de style OpenClaw est à nouveau autorisée, donc OpenClaw considère la réutilisation de la CLI Claude et l'utilisation de `claude -p` comme étant approuvées pour cette intégration, sauf si Anthropic publie une nouvelle politique.
+- Les `setup-token` / `paste-token` d'Anthropic restent disponibles en tant que chemin de jeton OpenClaw pris en charge, mais OpenClaw privilégie désormais la réutilisation de la CLI Claude et `claude -p` lorsqu'ils sont disponibles.

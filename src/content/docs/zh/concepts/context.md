@@ -160,7 +160,7 @@ Top tools (schema size):
 `/context` 在可用时首选最新的**运行构建**系统提示词报告：
 
 - `System prompt (run)` = 从最后一次嵌入（具备工具能力）的运行中捕获，并持久化到会话存储中。
-- 当尚不存在运行报告时，`System prompt (estimate)` = 即时计算。
+- `System prompt (estimate)` = 当不存在运行报告时（或通过不生成该报告的 CLI 后端运行时）即时计算。
 
 无论哪种方式，它都会报告大小和主要贡献者；它**不**会转储完整的系统提示或工具架构。
 

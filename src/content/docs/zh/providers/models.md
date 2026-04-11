@@ -53,6 +53,6 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，
 
 - `anthropic-vertex` - 当 Vertex 凭据可用时，隐式支持 Google Vertex 上的 Anthropic；无需单独的新手引导身份验证选择
 - `copilot-proxy` - 本地 VS Code Copilot 代理桥接器；使用 `openclaw onboard --auth-choice copilot-proxy`
+- `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要本地安装 `gemini`（`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`）；默认模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
 
-有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
-请参阅[模型提供商](/en/concepts/model-providers)。
+有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，请参阅 [Model providers](/en/concepts/model-providers)。

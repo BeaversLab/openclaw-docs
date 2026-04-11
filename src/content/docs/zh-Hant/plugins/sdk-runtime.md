@@ -1,7 +1,7 @@
 ---
-title: "Plugin Runtime Helpers"
-sidebarTitle: "Runtime Helpers"
-summary: "api.runtime -- the injected runtime helpers available to plugins"
+title: "外掛程式執行時期協助程式"
+sidebarTitle: "執行時期協助程式"
+summary: "api.runtime -- 可供外掛程式使用的注入執行時期協助程式"
 read_when:
   - You need to call core helpers from a plugin (TTS, STT, image gen, web search, subagent)
   - You want to understand what api.runtime exposes
@@ -10,9 +10,9 @@ read_when:
 
 # Plugin Runtime Helpers
 
-在註冊期間注入到每個外掛程式中的 `api.runtime` 物件參考。請使用這些輔助程式，而不是直接匯入主機內部元件。
+在註冊期間注入至每個外掛程式的 `api.runtime` 物件參考資料。請使用這些協助程式，而非直接匯入主機內部。
 
-<Tip>**正在尋找逐步教學？** 請參閱 [頻道外掛程式](/en/plugins/sdk-channel-plugins) 或 [提供者外掛程式](/en/plugins/sdk-provider-plugins)，以查看展示這些輔助函式實際應用的 逐步指南。</Tip>
+<Tip>**尋找逐步解說？** 請參閱 [頻道外掛程式](/en/plugins/sdk-channel-plugins) 或 [提供者外掛程式](/en/plugins/sdk-provider-plugins)，查看展示這些協助程式情境的逐步指南。</Tip>
 
 ```typescript
 register(api) {
@@ -57,7 +57,7 @@ const result = await api.runtime.agent.runEmbeddedPiAgent({
 });
 ```
 
-**Session store helpers** 位於 `api.runtime.agent.session` 下：
+**工作階段儲存協助程式** 位於 `api.runtime.agent.session` 之下：
 
 ```typescript
 const storePath = api.runtime.agent.session.resolveStorePath(cfg);
@@ -105,9 +105,9 @@ await api.runtime.subagent.deleteSession({
 ```
 
 <Warning>
-  模型覆寫 (`provider`/`model`) 需要操作員透過組態中的
-  `plugins.entries.<id>.subagent.allowModelOverride: true` 選擇加入。
-  不受信任的外掛程式仍然可以執行子代理程式，但覆寫請求會被拒絕。
+  模型覆寫 (`provider`/`model`) 需要操作員透過
+  設定中的 `plugins.entries.<id>.subagent.allowModelOverride: true` 加入。
+  不受信任的外掛程式仍可執行子代理程式，但覆寫請求會被拒絕。
 </Warning>
 
 ### `api.runtime.taskFlow`
@@ -139,7 +139,7 @@ const waiting = taskFlow.setWaiting({
 });
 ```
 
-當您已經從自己的綁定層獲得受信任的 OpenClaw 工作階段金鑰時，請使用 `bindSession({ sessionKey, requesterOrigin })`。不要從原始使用者輸入進行綁定。
+當您已經從自己的綁定層獲得受信任的 OpenClaw 工作階段金鑰時，請使用 `bindSession({ sessionKey, requesterOrigin })`。請勿從原始使用者輸入進行綁定。
 
 ### `api.runtime.tts`
 
@@ -165,7 +165,8 @@ const voices = await api.runtime.tts.listVoices({
 });
 ```
 
-使用核心 `messages.tts` 組態和提供者選擇。傳回 PCM 音訊緩衝區 + 取樣率。
+使用核心 `messages.tts` 設定與提供者選擇。傳回 PCM 音訊
+緩衝區 + 取樣率。
 
 ### `api.runtime.mediaUnderstanding`
 
@@ -199,9 +200,9 @@ const result = await api.runtime.mediaUnderstanding.runFile({
 });
 ```
 
-當未產生輸出時（例如跳過輸入），傳回 `{ text: undefined }`。
+當未產生輸出時（例如略過輸入），傳回 `{ text: undefined }`。
 
-<Info>`api.runtime.stt.transcribeAudioFile(...)` 作為 `api.runtime.mediaUnderstanding.transcribeAudioFile(...)` 的相容性別名保留。</Info>
+<Info>`api.runtime.stt.transcribeAudioFile(...)` 保留為 `api.runtime.mediaUnderstanding.transcribeAudioFile(...)` 的相容性別名。</Info>
 
 ### `api.runtime.imageGeneration`
 
@@ -318,9 +319,46 @@ api.runtime.tools.registerMemoryCli(/* ... */);
 
 通道特定的執行時期輔助程式（載入通道外掛程式時可用）。
 
-## 儲存執行時期參照
+`api.runtime.channel.mentions` 是使用執行時期注入的
+隨附頻道外掛程式之共用輸入提及原則介面：
 
-使用 `createPluginRuntimeStore` 儲存執行時期參照以便在 `register` 回呼之外使用：
+```typescript
+const mentionMatch = api.runtime.channel.mentions.matchesMentionWithExplicit(text, {
+  mentionRegexes,
+  mentionPatterns,
+});
+
+const decision = api.runtime.channel.mentions.resolveInboundMentionDecision({
+  facts: {
+    canDetectMention: true,
+    wasMentioned: mentionMatch.matched,
+    implicitMentionKinds: api.runtime.channel.mentions.implicitMentionKindWhen("reply_to_bot", isReplyToBot),
+  },
+  policy: {
+    isGroup,
+    requireMention,
+    allowTextCommands,
+    hasControlCommand,
+    commandAuthorized,
+  },
+});
+```
+
+可用的提及協助程式：
+
+- `buildMentionRegexes`
+- `matchesMentionPatterns`
+- `matchesMentionWithExplicit`
+- `implicitMentionKindWhen`
+- `resolveInboundMentionDecision`
+
+`api.runtime.channel.mentions` 故意不暴露舊的
+`resolveMentionGating*` 相容性輔助函數。請優先使用標準化的
+`{ facts, policy }` 路徑。
+
+## 儲存運行時參考
+
+使用 `createPluginRuntimeStore` 來儲存運行時參考，以便在 `register` 回呼之外使用：
 
 ```typescript
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
@@ -355,14 +393,14 @@ export function tryGetRuntime() {
 | ------------------------ | ------------------------- | ------------------------------------------------------------------- |
 | `api.id`                 | `string`                  | 外掛程式 ID                                                         |
 | `api.name`               | `string`                  | 外掛程式顯示名稱                                                    |
-| `api.config`             | `OpenClawConfig`          | 目前的組態快照（可用時為現有的記憶體內執行時期快照）                |
-| `api.pluginConfig`       | `Record<string, unknown>` | 來自 `plugins.entries.<id>.config` 的外掛程式特定組態               |
-| `api.logger`             | `PluginLogger`            | 作用域記錄器（`debug`、`info`、`warn`、`error`）                    |
-| `api.registrationMode`   | `PluginRegistrationMode`  | 目前的載入模式；`"setup-runtime"` 是輕量級的完整進入啟動/設定前視窗 |
+| `api.config`             | `OpenClawConfig`          | 目前的設定快照（可用時為活躍的記憶體內運行時快照）                  |
+| `api.pluginConfig`       | `Record<string, unknown>` | 來自 `plugins.entries.<id>.config` 的外掛程式專屬設定               |
+| `api.logger`             | `PluginLogger`            | 具範圍的記錄器（`debug`、`info`、`warn`、`error`）                  |
+| `api.registrationMode`   | `PluginRegistrationMode`  | 目前的載入模式；`"setup-runtime"` 是輕量化的完整進入前啟動/設定視窗 |
 | `api.resolvePath(input)` | `(string) => string`      | 解析相對於外掛程式根目錄的路徑                                      |
 
 ## 相關
 
-- [SDK 概觀](/en/plugins/sdk-overview) -- 子路徑參照
+- [SDK 概觀](/en/plugins/sdk-overview) -- 子路徑參考
 - [SDK 進入點](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 選項
-- [外掛程式內部](/en/plugins/architecture) -- 功能模型和註冊表
+- [外掛程式內部](/en/plugins/architecture) -- 功能模型與註冊表

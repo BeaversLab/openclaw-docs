@@ -19,9 +19,35 @@ title: "脚本"
 
 ## 身份验证监控脚本
 
-身份验证监控在 [Authentication](/en/gateway/authentication) 中有详细说明。`scripts/` 下的脚本是用于 systemd/Termux 手机工作流程的可选附加项。
+身份验证监控在 [身份验证](/en/gateway/authentication) 中进行了介绍。`scripts/` 下的脚本是针对 systemd/Termux 手机工作流的可选附加工具。
+
+## GitHub read helper
+
+当你希望 `gh` 使用 GitHub App 安装令牌进行仓库范围的读取调用，同时保留个人登录的正常 `gh` 用于写入操作时，请使用 `scripts/gh-read`。
+
+必需环境变量：
+
+- `OPENCLAW_GH_READ_APP_ID`
+- `OPENCLAW_GH_READ_PRIVATE_KEY_FILE`
+
+可选环境变量：
+
+- `OPENCLAW_GH_READ_INSTALLATION_ID` 当你想跳过基于仓库的安装查找时
+- `OPENCLAW_GH_READ_PERMISSIONS` 作为请求读取权限子集的逗号分隔覆盖值
+
+仓库解析顺序：
+
+- `gh ... -R owner/repo`
+- `GH_REPO`
+- `git remote origin`
+
+示例：
+
+- `scripts/gh-read pr view 123`
+- `scripts/gh-read run list -R openclaw/openclaw`
+- `scripts/gh-read api repos/openclaw/openclaw/pulls/123`
 
 ## 添加脚本时
 
-- 保持脚本专注且有文档记录。
+- 保持脚本的专注性和文档化。
 - 在相关文档中添加简短的条目（如果缺失则创建一个）。

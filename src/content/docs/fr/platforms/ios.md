@@ -1,10 +1,10 @@
 ---
-summary: "application nœud iOS : se connecter à la Gateway, appairage, canvas et dépannage"
+summary: "Application de nœud iOS : se connecter au Gateway, appairage, canvas et troubleshooting"
 read_when:
   - Pairing or reconnecting the iOS node
   - Running the iOS app from source
   - Debugging gateway discovery or canvas commands
-title: "App iOS"
+title: "Application iOS"
 ---
 
 # App iOS (Node)
@@ -42,9 +42,9 @@ openclaw devices list
 openclaw devices approve <requestId>
 ```
 
-Si l'application tente de nouveau l'appairage avec des détails d'authentification modifiés (rôle/portées/clé publique),
+Si l'application réessaie l'appairage avec des détails d'authentification modifiés (rôle/portées/clé publique),
 la demande en attente précédente est remplacée et un nouveau `requestId` est créé.
-Exécutez `openclaw devices list` à nouveau avant l'approbation.
+Exécutez `openclaw devices list` à nouveau avant approbation.
 
 4. Vérifiez la connexion :
 
@@ -78,8 +78,8 @@ Fonctionnement du flux :
 - L'application iOS s'inscrit auprès du relais à l'aide de l'App Attest et du reçu de l'application.
 - Le relais renvoie un descripteur de relais opaque ainsi qu'une autorisation d'envoi limitée à l'inscription.
 - L'application iOS récupère l'identité du gateway apparié et l'inclut dans l'inscription au relais, de sorte que l'inscription relayée est déléguée à ce gateway spécifique.
-- L'application transfère cette inscription relayée au gateway apparié avec `push.apns.register`.
-- Le gateway utilise ce descripteur de relais stocké pour `push.test`, les réveils en arrière-plan et les incitations au réveil.
+- L'application transmet cette inscription basée sur le relai à la passerelle appariée avec `push.apns.register`.
+- La passerelle utilise ce gestionnaire de relai stocké pour `push.test`, les réveils en arrière-plan et les incitations au réveil.
 - L'URL de base du relais du gateway doit correspondre à l'URL du relais intégrée dans le build iOS officiel/TestFlight.
 - Si l'application se connecte ultérieurement à un gateway différent ou à un build avec une URL de base de relais différente, elle actualise l'inscription au relais au lieu de réutiliser l'ancienne liaison.
 
@@ -91,14 +91,14 @@ Ce dont le gateway n'a **pas** besoin pour ce chemin :
 Flux de l'opérateur attendu :
 
 1. Installez le build iOS officiel/TestFlight.
-2. Définissez `gateway.push.apns.relay.baseUrl` sur le gateway.
+2. Définissez `gateway.push.apns.relay.baseUrl` sur la passerelle.
 3. Associez l'application au gateway et laissez-la terminer la connexion.
-4. L'application publie `push.apns.register` automatiquement après avoir obtenu un jeton APNs, lorsque la session de l'opérateur est connectée et que l'inscription au relais a réussi.
-5. Ensuite, `push.test`, les réveils de reconnexion et les incitations au réveil peuvent utiliser l'inscription relayée stockée.
+4. L'application publie `push.apns.register` automatiquement après avoir obtenu un jeton APNs, lorsque la session de l'opérateur est connectée et que l'inscription au relai réussit.
+5. Ensuite, `push.test`, les réveils de reconnexion et les incitations au réveil peuvent utiliser l'inscription basée sur le relai stockée.
 
 Note de compatibilité :
 
-- `OPENCLAW_APNS_RELAY_BASE_URL` fonctionne toujours comme une substitution d'environnement temporaire pour le gateway.
+- `OPENCLAW_APNS_RELAY_BASE_URL` fonctionne toujours comme une substitution temporaire de variable d'environnement pour la passerelle.
 
 ## Flux d'authentification et de confiance
 
@@ -112,7 +112,7 @@ Saut par saut :
 1. `iOS app -> gateway`
    - L'application s'apparie d'abord avec la passerelle via le flux d'authentification normal de Gateway.
    - Cela donne à l'application une session de nœud authentifiée ainsi qu'une session d'opérateur authentifiée.
-   - La session d'opérateur est utilisée pour appeler `gateway.identity.get`.
+   - La session de l'opérateur est utilisée pour appeler `gateway.identity.get`.
 
 2. `iOS app -> relay`
    - L'application appelle les points de terminaison d'enregistrement du relais via HTTPS.
@@ -121,13 +121,15 @@ Saut par saut :
    - C'est ce qui empêche les versions de développement Xcode locales d'utiliser le relais hébergé. Une version locale peut être signée, mais elle ne satisfait pas la preuve de distribution Apple officiale attendue par le relais.
 
 3. `gateway identity delegation`
-   - Avant l'enregistrement au relais, l'application récupère l'identité de la passerelle appariée depuis `gateway.identity.get`.
+   - Avant l'inscription au relai, l'application récupère l'identité de la passerelle appariée depuis
+     `gateway.identity.get`.
    - L'application inclut cette identité de passerelle dans la charge utile d'enregistrement au relais.
    - Le relais renvoie un descripteur de relais et une autorisation d'envoi délimitée à l'enregistrement qui sont délégués à cette identité de passerelle.
 
 4. `gateway -> relay`
-   - La passerelle stocke le descripteur de relais et l'autorisation d'envoi provenant de `push.apns.register`.
-   - Sur `push.test`, les réveils de reconnexion et les incitations au réveil, la passerelle signe la demande d'envoi avec sa propre identité d'appareil.
+   - La passerelle stocke le gestionnaire de relai et l'autorisation d'envoi provenant de `push.apns.register`.
+   - Sur `push.test`, les réveils de reconnexion et les incitations au réveil, la passerelle signe la demande d'envoi avec sa
+     propre identité d'appareil.
    - Le relais vérifie à la fois l'autorisation d'envoi stockée et la signature de la passerelle par rapport à l'identité de passerelle déléguée issue de l'enregistrement.
    - Une autre passerelle ne peut pas réutiliser cet enregistrement stocké, même si elle parvient à obtenir le descripteur.
 
@@ -151,21 +153,37 @@ export OPENCLAW_APNS_KEY_ID="KEYID"
 export OPENCLAW_APNS_PRIVATE_KEY_P8="$(cat /path/to/AuthKey_KEYID.p8)"
 ```
 
-## Chemins de découverte
+Il s'agit de variables d'environnement d'exécution de l'hôte de passerelle, et non des paramètres Fastlane. `apps/ios/fastlane/.env` ne stocke que
+l'authentification App Store Connect / TestFlight telle que `ASC_KEY_ID` et `ASC_ISSUER_ID` ; il ne configure pas
+la livraison APNs directe pour les builds iOS locales.
+
+Stockage recommandé pour l'hôte de la passerelle :
+
+```bash
+mkdir -p ~/.openclaw/credentials/apns
+chmod 700 ~/.openclaw/credentials/apns
+mv /path/to/AuthKey_KEYID.p8 ~/.openclaw/credentials/apns/AuthKey_KEYID.p8
+chmod 600 ~/.openclaw/credentials/apns/AuthKey_KEYID.p8
+export OPENCLAW_APNS_PRIVATE_KEY_PATH="$HOME/.openclaw/credentials/apns/AuthKey_KEYID.p8"
+```
+
+Ne commitez pas le fichier `.p8` et ne le placez pas sous l'extraction du dépôt.
+
+## Discovery paths
 
 ### Bonjour (LAN)
 
-L'application iOS recherche `_openclaw-gw._tcp` sur `local.` et, si configuré, le même domaine de découverte DNS-SD de zone étendue. Les passerelles du même réseau local apparaissent automatiquement via `local.` ; la découverte inter-réseaux peut utiliser le domaine de zone étendue configuré sans modifier le type de beacon.
+L'application iOS parcourt `_openclaw-gw._tcp` sur `local.` et, si configuré, le même domaine de découverte DNS-SD de zone étendue. Les passerelles du même réseau local apparaissent automatiquement depuis `local.` ; la découverte inter-réseaux peut utiliser le domaine de zone étendue configuré sans modifier le type de balise.
 
-### Tailnet (cross-network)
+### Tailnet (inter-réseaux)
 
 Si mDNS est bloqué, utilisez une zone DNS-SD unicast (choisissez un domaine ; exemple :
-`openclaw.internal.`) et le DNS split Tailscale.
+`openclaw.internal.`) et le DNS divisé Tailscale.
 Voir [Bonjour](/en/gateway/bonjour) pour l'exemple CoreDNS.
 
 ### Hôte/port manuel
 
-Dans Réglages, activez **Hôte manuel** et entrez l'hôte de la passerelle + le port (par défaut `18789`).
+Dans Réglages, activez **Hôte manuel** et entrez l'hôte + le port de la passerelle (par défaut `18789`).
 
 ## Canvas + A2UI
 
@@ -177,8 +195,8 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 
 Notes :
 
-- L'hôte de la toile Gateway sert `/__openclaw__/canvas/` et `/__openclaw__/a2ui/`.
-- Il est servi par le serveur HTTP Gateway (même port que `gateway.port`, par défaut `18789`).
+- L'hôte de la passerelle Gateway sert `/__openclaw__/canvas/` et `/__openclaw__/a2ui/`.
+- Il est servi par le serveur HTTP de la Gateway (même port que `gateway.port`, par défaut `18789`).
 - Le nœud iOS navigue automatiquement vers A2UI lors de la connexion lorsqu'une URL d'hôte de toile est annoncée.
 - Revenez à l'échafaudage intégré avec `canvas.navigate` et `{"url":""}`.
 
@@ -192,20 +210,20 @@ openclaw nodes invoke --node "iOS Node" --command canvas.eval --params '{"javaSc
 openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"maxWidth":900,"format":"jpeg"}'
 ```
 
-## Réveil vocal + mode talk
+## Réveil vocal + mode discussion
 
-- Le réveil vocal et le mode talk sont disponibles dans les Réglages.
+- Le réveil vocal et le mode discussion sont disponibles dans Réglages.
 - iOS peut suspendre l'audio en arrière-plan ; traitez les fonctionnalités vocales comme « au mieux » lorsque l'application n'est pas active.
 
 ## Erreurs courantes
 
-- `NODE_BACKGROUND_UNAVAILABLE` : amenez l'application iOS au premier plan (les commandes de toile/caméra/écran l'exigent).
-- `A2UI_HOST_NOT_CONFIGURED` : la Gateway n'a pas annoncé d'URL d'hôte de toile ; vérifiez `canvasHost` dans [configuration Gateway](/en/gateway/configuration).
+- `NODE_BACKGROUND_UNAVAILABLE` : amenez l'application iOS au premier plan (les commandes de toile/caméra/écran le nécessitent).
+- `A2UI_HOST_NOT_CONFIGURED` : la Gateway n'a pas annoncé d'URL d'hôte de toile ; vérifiez `canvasHost` dans [Configuration de la Gateway](/en/gateway/configuration).
 - L'invite de jumelage n'apparaît jamais : exécutez `openclaw devices list` et approuvez manuellement.
-- La reconnexion échoue après la réinstallation : le jeton de jumelage du trousseau a été effacé ; re-jumelez le nœud.
+- La reconnexion échoue après la réinstallation : le jeton de jumelage du trousseau a été effacé ; jumelez à nouveau le nœud.
 
 ## Documentation connexe
 
 - [Jumelage](/en/channels/pairing)
-- [Découverte](/en/gateway/discovery)
+- [Discovery](/en/gateway/discovery)
 - [Bonjour](/en/gateway/bonjour)

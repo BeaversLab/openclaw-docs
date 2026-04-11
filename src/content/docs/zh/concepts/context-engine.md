@@ -114,6 +114,8 @@ OpenClaw 目前调用一个子代理生命周期挂钩：
 插件可以使用插件 API 注册上下文引擎：
 
 ```ts
+import { buildMemorySystemPromptAddition } from "openclaw/plugin-sdk/core";
+
 export default function register(api) {
   api.registerContextEngine("my-engine", () => ({
     info: {
@@ -127,12 +129,15 @@ export default function register(api) {
       return { ingested: true };
     },
 
-    async assemble({ sessionId, messages, tokenBudget }) {
+    async assemble({ sessionId, messages, tokenBudget, availableTools, citationsMode }) {
       // Return messages that fit the budget
       return {
         messages: buildContext(messages, tokenBudget),
         estimatedTokens: countTokens(messages),
-        systemPromptAddition: "Use lcm_grep to search history...",
+        systemPromptAddition: buildMemorySystemPromptAddition({
+          availableTools: availableTools ?? new Set(),
+          citationsMode,
+        }),
       };
     },
 
@@ -229,18 +234,17 @@ export default function register(api) {
 ## 与压缩和内存的关系
 
 - **压缩** 是上下文引擎的一项职责。旧版引擎 委托给 OpenClaw 的内置摘要。插件引擎可以实现任何压缩策略（DAG 摘要、向量检索等）。
-- **内存插件** (`plugins.slots.memory`) 与上下文引擎是分开的。内存插件提供搜索/检索；上下文引擎控制模型看到的内容。它们可以协同工作 —— 上下文引擎可能会在组装期间使用内存插件数据。
+- **Memory plugins** (`plugins.slots.memory`) 与上下文引擎是分开的。Memory plugins 提供搜索/检索；上下文引擎控制模型看到的内容。它们可以协同工作——上下文引擎可能会在组装期间使用 memory plugin 的数据。如果插件引擎需要活动的内存提示路径，应该首选来自 `openclaw/plugin-sdk/core` 的 `buildMemorySystemPromptAddition(...)`，它会将活动的内存提示部分转换为准备好预置的 `systemPromptAddition`。如果引擎需要更低级别的控制，它仍然可以通过 `buildActiveMemoryPromptSection(...)` 从 `openclaw/plugin-sdk/memory-host-core` 中提取原始行。
 - **会话修剪** (在内存中修剪旧的工具结果) 仍会运行，而无论当前处于活动状态的是哪个上下文引擎。
 
 ## 提示
 
 - 使用 `openclaw doctor` 来验证您的引擎是否正确加载。
 - 如果切换引擎，现有会话将继续使用其当前历史记录。新引擎将接管未来的运行。
-- 引擎错误会被记录并在诊断中显示。如果插件引擎未能注册，或者所选的引擎 ID 无法解析，OpenClaw 不会自动回退；运行将失败，直到您修复插件或将 `plugins.slots.contextEngine` 切换回 `"legacy"`。
-- 对于开发，请使用 `openclaw plugins install -l ./my-engine` 来链接本地插件目录，而无需复制。
+- 引擎错误会被记录并显示在诊断信息中。如果插件引擎注册失败或选定的引擎 ID 无法解析，OpenClaw 不会自动回退；运行将会失败，直到您修复插件或将 `plugins.slots.contextEngine` 切换回 `"legacy"`。
+- 对于开发，请使用 `openclaw plugins install -l ./my-engine` 来链接本地插件目录而无需复制。
 
-另请参阅：[Compaction](/en/concepts/compaction)、[Context](/en/concepts/context)、
-[Plugins](/en/tools/plugin)、[Plugin manifest](/en/plugins/manifest)。
+另请参阅：[Compaction](/en/concepts/compaction)、[Context](/en/concepts/context)、[Plugins](/en/tools/plugin)、[Plugin manifest](/en/plugins/manifest)。
 
 ## 相关
 

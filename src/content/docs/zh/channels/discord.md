@@ -812,7 +812,7 @@ OpenClaw 支持针对代理消息的 Discord 组件 v2 容器。使用带有 `co
   </Accordion>
 
   <Accordion title="Gateway(网关) proxy">
-    使用 `channels.discord.proxy` 通过 HTTP(S) 代理路由 Discord Gateway WebSocket 流量和启动 REST 查询（应用程序 ID + 允许列表解析）。
+    使用 `channels.discord.proxy` 通过 HTTP(S) 代理路由 Discord Gateway(网关) WebSocket 流量和启动 REST 查询（应用程序 ID + 允许列表解析）。
 
 ```json5
 {

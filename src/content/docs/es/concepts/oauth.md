@@ -15,9 +15,8 @@ OpenClaw admite "autenticación de suscripción" mediante OAuth para los proveed
 es ahora:
 
 - **Clave de API de Anthropic**: facturación normal de la API de Anthropic
-- **Autenticación de suscripción de Anthropic dentro de OpenClaw**: Anthropic notificó a los usuarios de OpenClaw
-  el **4 de abril de 2026 a las 12:00 PM PT / 8:00 PM BST** que esto ahora
-  requiere **Uso Adicional**
+- **Anthropic Claude CLI / autenticación de suscripción dentro de OpenClaw**: El personal de
+  Anthropic nos dijo que este uso está permitido de nuevo
 
 El uso de OAuth de OpenAI Codex está explícitamente admitido para su uso en herramientas externas como
 OpenClaw. Esta página explica:
@@ -65,35 +64,40 @@ Archivo heredado solo de importación (aún admitido, pero no el almacenamiento 
 
 Todo lo anterior también respeta `$OPENCLAW_STATE_DIR` (anulación del directorio de estado). Referencia completa: [/gateway/configuration](/en/gateway/configuration-reference#auth-storage)
 
-Para referencias de secretos estáticos y el comportamiento de activación de instantáneas en tiempo de ejecución, consulte [Secrets Management](/en/gateway/secrets).
+Para las referencias estáticas de secretos y el comportamiento de activación de instantáneas en tiempo de ejecución, consulte [Gestión de secretos](/en/gateway/secrets).
 
 ## Compatibilidad con tokens heredados de Anthropic
 
 <Warning>
-La documentación pública de Claude Code de Anthropic indica que el uso directo de Claude Code se mantiene dentro de los límites de la suscripción a Claude. Por separado, Anthropic informó a los usuarios de OpenClaw el **4 de abril de 2026 a las 12:00 PM PT / 8:00 PM BST** que **OpenClaw cuenta como un arnés de terceros**. Los perfiles de token de Anthropic existentes siguen siendo técnicamente utilizables en OpenClaw, pero Anthropic indica que la ruta de OpenClaw ahora requiere **Uso Adicional** (facturado por uso por separado de la suscripción) para ese tráfico.
+Los documentos públicos de Claude Code de Anthropic indican que el uso directo de Claude Code se mantiene dentro de
+los límites de suscripción de Claude, y el personal de Anthropic nos dijo que el uso de la CLI de Claude
+tipo OpenClaw está permitido de nuevo. Por lo tanto, OpenClaw trata la reutilización de la CLI de Claude y
+el uso de `claude -p` como autorizados para esta integración, a menos que Anthropic
+publique una nueva política.
 
-Para ver la documentación actual del plan directo de Claude Code de Anthropic, consulte [Using Claude Code
-with your Pro or Max
-plan](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
-y [Using Claude Code with your Team or Enterprise
-plan](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
+Para ver los documentos actuales del plan directo de Claude Code de Anthropic, consulte [Uso de Claude Code
+con su plan Pro o Max
+](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
+y [Uso de Claude Code con su plan de equipo o empresa
+](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
-Si desea otras opciones de estilo de suscripción en OpenClaw, consulte [OpenAI
-Codex](/en/providers/openai), [Qwen Cloud Coding
-Plan](/en/providers/qwen), [MiniMax Coding Plan](/en/providers/minimax)
-y [Z.AI / GLM Coding Plan](/en/providers/glm).
+Si desea otras opciones de tipo suscripción en OpenClaw, consulte [OpenAI
+Codex](/en/providers/openai), [Plan de codificación en la nube de Qwen
+](/en/providers/qwen), [Plan de codificación de MiniMax](/en/providers/minimax)
+y [Plan de codificación de Z.AI / GLM](/en/providers/glm).
 
 </Warning>
 
-OpenClaw ahora expone el token de configuración de Anthropic nuevamente como una ruta heredada/manual. El aviso de facturación específico de OpenClaw de Anthropic todavía se aplica a esa ruta, así que úsela con la expectativa de que Anthropic requiere **Uso Adicional** para el tráfico de inicio de sesión de Claude impulsado por OpenClaw.
+OpenClaw también expone el token de configuración de Anthropic como una ruta de autenticación de token compatible, pero ahora prefiere la reutilización de la CLI de Claude y `claude -p` cuando están disponibles.
 
 ## Migración de Anthropic Claude CLI
 
-Anthropic ya no tiene una ruta de migración compatible con la CLI local de Claude en OpenClaw. Use claves de API de Anthropic para el tráfico de Anthropic, o mantenga la autenticación basada en tokens heredada solo donde ya esté configurada y con la expectativa de que Anthropic trata esa ruta de OpenClaw como **Uso Adicional**.
+OpenClaw admite la reutilización de la CLI de Anthropic Claude nuevamente. Si ya tiene un inicio de sesión
+de Claude local en el host, la incorporación/configuración puede reutilizarlo directamente.
 
 ## Intercambio de OAuth (cómo funciona el inicio de sesión)
 
-Los flujos de inicio de sesión interactivo de OpenClaw se implementan en `@mariozechner/pi-ai` y están conectados a los asistentes/comandos.
+Los flujos de inicio de sesión interactivo de OpenClaw están implementados en `@mariozechner/pi-ai` y conectados a los asistentes/comandos.
 
 ### Token de configuración de Anthropic
 
@@ -110,7 +114,7 @@ OpenAI Codex OAuth es explícitamente compatible para su uso fuera de la CLI de 
 
 Forma del flujo (PKCE):
 
-1. generar verificador/desafío PKCE + aleatorio `state`
+1. generar verificador/desafío PKCE + `state` aleatorio
 2. abrir `https://auth.openai.com/oauth/authorize?...`
 3. intentar capturar la devolución de llamada en `http://127.0.0.1:1455/auth/callback`
 4. si la devolución de llamada no puede vincularse (o estás en remoto/sin cabeza), pega la URL/código de redirección
@@ -149,7 +153,7 @@ Luego configura la autenticación por agente (asistente) y enruta los chats al a
 
 ### 2) Avanzado: múltiples perfiles en un agente
 
-`auth-profiles.json` soporta múltiples IDs de perfil para el mismo proveedor.
+`auth-profiles.json` admite múltiples ID de perfil para el mismo proveedor.
 
 Elige qué perfil se usa:
 
@@ -171,6 +175,6 @@ Documentos relacionados:
 
 ## Relacionado
 
-- [Autenticación](/en/gateway/authentication) — descripción general de la autenticación del proveedor de modelos
-- [Secretos](/en/gateway/secrets) — almacenamiento de credenciales y SecretRef
-- [Referencia de configuración](/en/gateway/configuration-reference#auth-storage) — claves de configuración de autenticación
+- [Authentication](/en/gateway/authentication) — descripción general de la autenticación del proveedor del modelo
+- [Secrets](/en/gateway/secrets) — almacenamiento de credenciales y SecretRef
+- [Configuration Reference](/en/gateway/configuration-reference#auth-storage) — claves de configuración de autenticación

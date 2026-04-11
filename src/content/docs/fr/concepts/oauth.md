@@ -15,9 +15,7 @@ OpenClaw prend en charge « l'authentification par abonnement » via OAuth pour 
 est désormais :
 
 - **Clé API Anthropic** : facturation API Anthropic normale
-- **Authentification par abonnement Anthropic au sein d'OpenClaw** : Anthropic a informé les utilisateurs d'OpenClaw
-  le **4 avril 2026 à 12:00 PM PT / 8:00 PM BST** que cela nécessite désormais
-  **Extra Usage**
+- **Anthropic Claude CLI / auth par abonnement dans OpenClaw** : le personnel d'Anthropic nous a informé que cette utilisation est à nouveau autorisée
 
 OAuth OpenAI Codex est explicitement pris en charge pour une utilisation dans des outils externes comme
 OpenClaw. Cette page explique :
@@ -65,46 +63,28 @@ Fichier d'importation hérité uniquement (toujours pris en charge, mais pas le 
 
 Tout ce qui précède respecte également `$OPENCLAW_STATE_DIR` (remplacement du répertoire d'état). Référence complète : [/gateway/configuration](/en/gateway/configuration-reference#auth-storage)
 
-Pour les références de secrets statiques et le comportement d'activation des instantanés d'exécution, consultez [Gestion des secrets](/en/gateway/secrets).
+Pour les références de secrets statiques et le comportement d'activation des instantanés d'exécution, consultez la section [Gestion des secrets](/en/gateway/secrets).
 
 ## Compatibilité des jetons hérités Anthropic
 
 <Warning>
-La documentation publique de Anthropic sur Claude Code indique que l'utilisation directe de Claude Code reste dans les limites de l'abonnement Claude. Par ailleurs, Anthropic a indiqué aux utilisateurs de OpenClaw le
-**4 avril 2026 à 12 h 00 PT / 20 h 00 BST** que OpenClaw est considéré comme un
-harnais tiers. Les profils de jetons Anthropic existants restent techniquement
-utilisables dans OpenClaw, mais Anthropic indique que le chemin OpenClaw nécessite désormais une **Utilisation
-supplémentaire** (facturation à l'usage facturée séparément de l'abonnement) pour ce
-trafic.
+La documentation publique de Claude Code d'Anthropic indique que l'utilisation directe de Claude Code reste dans les limites de l'abonnement Claude, et le personnel d'Anthropic nous a informé que l'utilisation de la CLI Claude de style OpenClaw est à nouveau autorisée. OpenClaw considère donc la réutilisation de la CLI Claude et l'utilisation de `claude -p` comme sanctionnées pour cette intégration, sauf si Anthropic publie une nouvelle politique.
 
-Pour la documentation actuelle du plan direct Claude Code de Anthropic, consultez [Utilisation de Claude Code
-avec votre plan Pro ou Max
-](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
-et [Utilisation de Claude Code avec votre plan d'équipe ou d'entreprise
-](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
+Pour la documentation actuelle du plan direct-Claude-Code d'Anthropic, consultez [Utiliser Claude Code avec votre plan Pro ou Max](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan) et [Utiliser Claude Code avec votre plan Team ou Enterprise](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
-Si vous souhaitez d'autres options de style abonnement dans OpenClaw, consultez [OpenAI
-Codex](/en/providers/openai), [Plan de codage cloud Qwen
-](/en/providers/qwen), [Plan de codage MiniMax](/en/providers/minimax),
-et [Plan de codage Z.AI / GLM](/en/providers/glm).
+Si vous souhaitez d'autres options de style abonnement dans OpenClaw, consultez [OpenAI Codex](/en/providers/openai), [Plan de codage cloud Qwen](/en/providers/qwen), [Plan de codage MiniMax](/en/providers/minimax) et [Plan de codage Z.AI / GLM](/en/providers/glm).
 
 </Warning>
 
-OpenClaw expose désormais à nouveau le jeton de configuration Anthropic en tant que chemin hérité/manuel.
-L'avis de facturation spécifique à Anthropic de OpenClaw s'applique toujours à ce chemin, donc
-utilisez-le en sachant que Anthropic exige une **Utilisation supplémentaire** pour
-le trafic de connexion Claude piloté par OpenClaw.
+OpenClaw expose également le setup-token Anthropic comme chemin d'auth par jeton pris en charge, mais il préfère désormais la réutilisation de la CLI Claude et `claude -p` lorsqu'elles sont disponibles.
 
 ## Migration de la Anthropic Claude CLI
 
-Anthropic n'a plus de chemin de migration pris en charge pour la CLI Claude locale dans
-OpenClaw. Utilisez les clés Anthropic de l'API pour le trafic Anthropic, ou conservez l'authentification
-basée sur des jetons hérités uniquement là où elle est déjà configurée et avec l'attente
-que Anthropic considère ce chemin OpenClaw comme une **Utilisation supplémentaire**.
+OpenClaw prend à nouveau en charge la réutilisation de la CLI Claude Anthropic. Si vous avez déjà une connexion Claude locale sur l'hôte, l'intégration/configuration peut la réutiliser directement.
 
 ## Échange OAuth (fonctionnement de la connexion)
 
-Les flux de connexion interactifs de OpenClaw sont implémentés dans `@mariozechner/pi-ai` et intégrés aux assistants/ commandes.
+Les flux de connexion interactive d'OpenClaw sont implémentés dans `@mariozechner/pi-ai` et intégrés aux assistants/commands.
 
 ### Jeton de configuration Anthropic
 
@@ -123,7 +103,7 @@ Forme du flux (PKCE) :
 
 1. générer le vérificateur/défi PKCE + `state` aléatoire
 2. ouvrir `https://auth.openai.com/oauth/authorize?...`
-3. essayer de capturer le callback sur `http://127.0.0.1:1455/auth/callback`
+3. essayer de capturer le rappel sur `http://127.0.0.1:1455/auth/callback`
 4. si le callback ne peut pas se lier (ou si vous êtes distant/headless), collez l'URL/code de redirection
 5. échanger à `https://auth.openai.com/oauth/token`
 6. extraire `accountId` du jeton d'accès et stocker `{ access, refresh, expires, accountId }`
@@ -164,7 +144,7 @@ Configurez ensuite l'auth par agent (assistant) et acheminez les discussions ver
 
 Choisir le profil utilisé :
 
-- globalement via l'ordre de configuration (`auth.order`)
+- mondialement via l'ordre de configuration (`auth.order`)
 - par session via `/model ...@<profileId>`
 
 Exemple (remplacement de session) :
@@ -177,11 +157,11 @@ Comment voir quels ID de profil existent :
 
 Documentation connexe :
 
-- [/concepts/model-failover](/en/concepts/model-failover) (règles de rotation + refroidissement)
-- [/tools/slash-commands](/en/tools/slash-commands) (surface de commande)
+- [/concepts/model-failover](/en/concepts/model-failover) (règles de rotation + temps de recharge)
+- [/tools/slash-commands](/en/tools/slash-commands) (interface de commande)
 
 ## Connexes
 
-- [Authentification](/en/gateway/authentication) — aperçu de l'auth du fournisseur de modèle
+- [Authentication](/en/gateway/authentication) — aperçu de l'authentification du fournisseur de modèle
 - [Secrets](/en/gateway/secrets) — stockage des informations d'identification et SecretRef
-- [Référence de configuration](/en/gateway/configuration-reference#auth-storage) — clés de configuration d'auth
+- [Configuration Reference](/en/gateway/configuration-reference#auth-storage) — clés de configuration d'authentification

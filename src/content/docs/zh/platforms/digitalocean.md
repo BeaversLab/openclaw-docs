@@ -130,7 +130,7 @@ openclaw gateway restart
 
 备注：
 
-- Serve 保持 Gateway 仅限本地回环，并通过 Tailscale 身份标头对控制 UI/WebSocket 流量进行身份验证（无令牌身份验证假定受信任的网关主机；HTTP API 不使用那些 Tailscale 标头，而是遵循网关的正常 HTTP 身份验证模式）。
+- Serve 保持 Gateway(网关) 仅限本地回环，并通过 Tailscale 身份标头对控制 UI/WebSocket 流量进行身份验证（无令牌身份验证假定受信任的网关主机；HTTP API 不使用那些 Tailscale 标头，而是遵循网关的正常 HTTP 身份验证模式）。
 - 若需要显式的共享密钥凭证，请设置 `gateway.auth.allowTailscale: false` 并使用 `gateway.auth.mode: "token"` 或 `"password"`。
 
 **选项 C：Tailnet 绑定（不使用 Serve）**

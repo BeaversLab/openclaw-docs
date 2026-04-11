@@ -1,10 +1,10 @@
 ---
-summary: "Aplicación de nodo iOS: conexión con la puerta de enlace, emparejamiento, lienzo y solución de problemas"
+summary: "Aplicación de nodo iOS: conexión a la puerta de enlace, emparejamiento, lienzo y resolución de problemas"
 read_when:
   - Pairing or reconnecting the iOS node
   - Running the iOS app from source
   - Debugging gateway discovery or canvas commands
-title: "App de iOS"
+title: "App para iOS"
 ---
 
 # App de iOS (Nodo)
@@ -15,14 +15,14 @@ Disponibilidad: vista previa interna. La app de iOS aún no se distribuye públi
 
 - Se conecta a una puerta de enlace a través de WebSocket (LAN o tailnet).
 - Expone capacidades del nodo: Lienzo, Captura de pantalla, Captura de cámara, Ubicación, Modo de habla, Activación por voz.
-- Recibe comandos de `node.invoke` y reporta eventos de estado del nodo.
+- Recibe comandos de `node.invoke` e informa eventos de estado del nodo.
 
 ## Requisitos
 
 - Puerta de enlace ejecutándose en otro dispositivo (macOS, Linux o Windows a través de WSL2).
 - Ruta de red:
   - Misma LAN a través de Bonjour, **o**
-  - Tailnet a través de DNS-SD unicast (dominio de ejemplo: `openclaw.internal.`), **o**
+  - Tailnet mediante DNS-SD unicast (dominio de ejemplo: `openclaw.internal.`), **o**
   - Host/puerto manual (alternativo).
 
 ## Inicio rápido (emparejar + conectar)
@@ -42,9 +42,9 @@ openclaw devices list
 openclaw devices approve <requestId>
 ```
 
-Si la aplicación reintenta el emparejamiento con detalles de autenticación modificados (rol/ámbitos/clave pública),
-la solicitud pendiente anterior se reemplaza y se crea un nuevo `requestId`.
-Ejecute `openclaw devices list` de nuevo antes de la aprobación.
+Si la aplicación reintenta el emparejamiento con detalles de autenticación modificados (rol/alcances/clave pública),
+la solicitud pendiente anterior queda obsoleta y se crea un nuevo `requestId`.
+Ejecute `openclaw devices list` nuevamente antes de la aprobación.
 
 4. Verificar la conexión:
 
@@ -80,7 +80,7 @@ Cómo funciona el flujo:
 - El relay devuelve un identificador de relay opaco más una concesión de envío con alcance de registro.
 - La aplicación de iOS obtiene la identidad de la puerta de enlace emparejada y la incluye en el registro del relay, de modo que el registro respaldado por el relay se delega a esa puerta de enlace específica.
 - La aplicación reenvía ese registro respaldado por relay a la puerta de enlace emparejada con `push.apns.register`.
-- La puerta de enlace utiliza ese identificador de relay almacenado para `push.test`, activaciones en segundo plano e impulsos de activación.
+- La puerta de enlace utiliza ese identificador de relay almacenado para `push.test`, reactivaciones en segundo plano y empujes de reactivación.
 - La URL base del relay de la puerta de enlace debe coincidir con la URL del relay integrada en la compilación de iOS oficial/TestFlight.
 - Si la aplicación se conecta más tarde a una puerta de enlace diferente o a una compilación con una URL base de relay diferente, actualiza el registro del relay en lugar de reutilizar el enlace antiguo.
 
@@ -92,14 +92,14 @@ Lo que la puerta de enlace **no** necesita para esta ruta:
 Flujo esperado del operador:
 
 1. Instale la compilación de iOS oficial/TestFlight.
-2. Configure `gateway.push.apns.relay.baseUrl` en la puerta de enlace.
+2. Establezca `gateway.push.apns.relay.baseUrl` en la puerta de enlace.
 3. Empareje la aplicación con la puerta de enlace y déjela terminar de conectarse.
-4. La aplicación publica `push.apns.register` automáticamente después de tener un token APNs, la sesión del operador está conectada y el registro del relay es exitoso.
-5. Después de eso, `push.test`, activaciones de reconexión e impulsos de activación pueden utilizar el registro respaldado por relay almacenado.
+4. La aplicación publica `push.apns.register` automáticamente después de tener un token APNs, la sesión del operador está conectada y el registro del relay se realiza correctamente.
+5. Después de eso, `push.test`, reactivaciones de reconexión y empujes de reactivación pueden utilizar el registro respaldado por relay almacenado.
 
 Nota de compatibilidad:
 
-- `OPENCLAW_APNS_RELAY_BASE_URL` todavía funciona como una sustitución temporal de entorno para la puerta de enlace.
+- `OPENCLAW_APNS_RELAY_BASE_URL` todavía funciona como una anulación de entorno temporal para la puerta de enlace.
 
 ## Flujo de autenticación y confianza
 
@@ -114,7 +114,7 @@ Salto a salto:
 1. `iOS app -> gateway`
    - La aplicación primero se empareja con la puerta de enlace a través del flujo de autenticación normal de la puerta de enlace.
    - Esto otorga a la aplicación una sesión de nodo autenticada más una sesión de operador autenticada.
-   - La sesión de operador se usa para llamar a `gateway.identity.get`.
+   - La sesión del operador se utiliza para llamar a `gateway.identity.get`.
 
 2. `iOS app -> relay`
    - La aplicación llama a los endpoints de registro de relay a través de HTTPS.
@@ -123,13 +123,15 @@ Salto a salto:
    - Esto es lo que impide que las compilaciones locales de Xcode/desarrollo usen el relay alojado. Una compilación local puede estar firmada, pero no satisface la prueba de distribución oficial de Apple que el relay espera.
 
 3. `gateway identity delegation`
-   - Antes del registro del relay, la aplicación obtiene la identidad de la puerta de enlace emparejada de `gateway.identity.get`.
+   - Antes del registro del relay, la aplicación obtiene la identidad de la puerta de enlace emparejada de
+     `gateway.identity.get`.
    - La aplicación incluye esa identidad de puerta de enlace en la carga útil de registro del relay.
    - El relay devuelve un identificador de relay y una concesión de envío con alcance de registro que se delegan a esa identidad de puerta de enlace.
 
 4. `gateway -> relay`
-   - La puerta de enlace almacena el identificador de relay y la concesión de envío de `push.apns.register`.
-   - En `push.test`, al despertar la reconexión y en los empujones de activación, la puerta de enlace firma la solicitud de envío con su propia identidad de dispositivo.
+   - La puerta de enlace almacena el identificador del relay y el permiso de envío de `push.apns.register`.
+   - En `push.test`, reactivaciones de reconexión y empujes de reactivación, la puerta de enlace firma la solicitud de envío con su
+     propia identidad de dispositivo.
    - El relay verifica tanto la concesión de envío almacenada como la firma de la puerta de enlace frente a la identidad de puerta de enlace delegada del registro.
    - Otra puerta de enlace no puede reutilizar ese registro almacenado, incluso si de alguna manera obtiene el identificador.
 
@@ -154,27 +156,43 @@ export OPENCLAW_APNS_KEY_ID="KEYID"
 export OPENCLAW_APNS_PRIVATE_KEY_P8="$(cat /path/to/AuthKey_KEYID.p8)"
 ```
 
+Estas son variables de entorno de tiempo de ejecución del host de la puerta de enlace, no configuraciones de Fastlane. `apps/ios/fastlane/.env` solo almacena
+autenticación de App Store Connect / TestFlight como `ASC_KEY_ID` y `ASC_ISSUER_ID`; no configura
+la entrega directa de APNs para compilaciones locales de iOS.
+
+Almacenamiento recomendado para el host de la puerta de enlace:
+
+```bash
+mkdir -p ~/.openclaw/credentials/apns
+chmod 700 ~/.openclaw/credentials/apns
+mv /path/to/AuthKey_KEYID.p8 ~/.openclaw/credentials/apns/AuthKey_KEYID.p8
+chmod 600 ~/.openclaw/credentials/apns/AuthKey_KEYID.p8
+export OPENCLAW_APNS_PRIVATE_KEY_PATH="$HOME/.openclaw/credentials/apns/AuthKey_KEYID.p8"
+```
+
+No confirme el archivo `.p8` ni lo coloque bajo el repositorio de checkout.
+
 ## Rutas de descubrimiento
 
 ### Bonjour (LAN)
 
-La aplicación iOS explora `_openclaw-gw._tcp` en `local.` y, cuando está configurada, el mismo
-dominio de descubrimiento DNS-SD de área amplia. Los gateways de la misma LAN aparecen automáticamente desde `local.`;
+La aplicación de iOS explora `_openclaw-gw._tcp` en `local.` y, cuando está configurado, el mismo
+dominio de descubrimiento DNS-SD de área amplia. Las pasarelas de la misma LAN aparecen automáticamente desde `local.`;
 el descubrimiento entre redes puede utilizar el dominio de área amplia configurado sin cambiar el tipo de baliza.
 
 ### Tailnet (entre redes)
 
-Si mDNS está bloqueado, utiliza una zona DNS-SD unicast (elige un dominio; ejemplo:
-`openclaw.internal.`) y el DNS dividido de Tailscale.
-Consulta [Bonjour](/en/gateway/bonjour) para ver el ejemplo de CoreDNS.
+Si mDNS está bloqueado, use una zona DNS-SD unicast (elija un dominio; ejemplo:
+`openclaw.internal.`) y Tailscale split DNS.
+Vea [Bonjour](/en/gateway/bonjour) para el ejemplo de CoreDNS.
 
 ### Host/puerto manual
 
-En Configuración, activa **Host manual** e introduce el host + puerto del gateway (por defecto `18789`).
+En Configuración, active **Host manual** e introduzca el host de la pasarela + puerto (predeterminado `18789`).
 
 ## Canvas + A2UI
 
-El nodo iOS renderiza un lienzo WKWebView. Utiliza `node.invoke` para controlarlo:
+El nodo de iOS renderiza un lienzo WKWebView. Use `node.invoke` para controlarlo:
 
 ```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18789/__openclaw__/canvas/"}'
@@ -182,12 +200,12 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 
 Notas:
 
-- El host del lienzo del Gateway sirve `/__openclaw__/canvas/` y `/__openclaw__/a2ui/`.
-- Se sirve desde el servidor HTTP del Gateway (mismo puerto que `gateway.port`, por defecto `18789`).
-- El nodo de iOS navega automáticamente a A2UI al conectarse cuando se anuncia una URL de host de canvas.
-- Vuelve al andamiaje integrado con `canvas.navigate` y `{"url":""}`.
+- El host del lienzo de la pasarela sirve `/__openclaw__/canvas/` y `/__openclaw__/a2ui/`.
+- Se sirve desde el servidor HTTP de la pasarela (mismo puerto que `gateway.port`, predeterminado `18789`).
+- El nodo de iOS navega automáticamente a A2UI al conectarse cuando se anuncia una URL de host de lienzo.
+- Vuelva al andamio integrado con `canvas.navigate` y `{"url":""}`.
 
-### Evaluación de canvas / instantánea
+### Evaluación / instantánea de Canvas
 
 ```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.eval --params '{"javaScript":"(() => { const {ctx} = window.__openclaw; ctx.clearRect(0,0,innerWidth,innerHeight); ctx.lineWidth=6; ctx.strokeStyle=\"#ff2d55\"; ctx.beginPath(); ctx.moveTo(40,40); ctx.lineTo(innerWidth-40, innerHeight-40); ctx.stroke(); return \"ok\"; })()"}'
@@ -197,17 +215,17 @@ openclaw nodes invoke --node "iOS Node" --command canvas.eval --params '{"javaSc
 openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"maxWidth":900,"format":"jpeg"}'
 ```
 
-## Activación por voz + modo de habla
+## Activación por voz + modo de conversación
 
-- La activación por voz y el modo de habla están disponibles en Configuración.
-- iOS puede suspender el audio en segundo plano; trata las funciones de voz como mejor esfuerzo cuando la app no está activa.
+- La activación por voz y el modo de conversación están disponibles en Configuración.
+- iOS puede suspender el audio en segundo plano; trate las funciones de voz como de mejor esfuerzo cuando la aplicación no está activa.
 
 ## Errores comunes
 
-- `NODE_BACKGROUND_UNAVAILABLE`: trae la aplicación iOS al primer plano (los comandos de lienzo/cámara/pantalla lo requieren).
-- `A2UI_HOST_NOT_CONFIGURED`: el Gateway no anunció una URL de host del lienzo; verifica `canvasHost` en [Configuración del Gateway](/en/gateway/configuration).
-- El mensaje de emparejamiento nunca aparece: ejecuta `openclaw devices list` y aprueba manualmente.
-- La reconexión falla después de reinstalar: el token de emparejamiento del Keychain se borró; vuelve a emparejar el nodo.
+- `NODE_BACKGROUND_UNAVAILABLE`: traiga la aplicación de iOS al primer plano (los comandos de lienzo/cámara/pantalla lo requieren).
+- `A2UI_HOST_NOT_CONFIGURED`: la pasarela no anunció una URL de host de lienzo; verifique `canvasHost` en [Configuración de la pasarela](/en/gateway/configuration).
+- El aviso de emparejamiento nunca aparece: ejecute `openclaw devices list` y apruébelo manualmente.
+- La reconexión falla después de reinstalar: el token de emparejamiento del llavero se borró; vuelva a emparejar el nodo.
 
 ## Documentos relacionados
 

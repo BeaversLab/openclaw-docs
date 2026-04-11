@@ -275,6 +275,21 @@ Implementación: `ensurePiCompactionReserveTokens()` en `src/agents/pi-settings.
 
 ---
 
+## Proveedores de compactación conectables
+
+Los complementos pueden registrar un proveedor de compactación a través de `registerCompactionProvider()` en la API de complementos. Cuando `agents.defaults.compaction.provider` se establece en un id de proveedor registrado, la extensión de seguridad delega el resumen a ese proveedor en lugar de la canalización `summarizeInStages` integrada.
+
+- `provider`: id de un complemento proveedor de compactación registrado. Déjelo sin configurar para el resumen LLM predeterminado.
+- Establecer un `provider` fuerza `mode: "safeguard"`.
+- Los proveedores reciben las mismas instrucciones de compactación y políticas de preservación de identificadores que la ruta integrada.
+- La extensión de seguridad todavía conserva el contexto de turno reciente y el sufijo de turno dividido después de la salida del proveedor.
+- Si el proveedor falla o devuelve un resultado vacío, OpenClaw vuelve automáticamente al resumen LLM integrado.
+- Las señales de anulación/tiempo de espera se vuelven a lanzar (no se tragan) para respetar la cancelación de la persona que llama.
+
+Fuente: `src/plugins/compaction-provider.ts`, `src/agents/pi-hooks/compaction-safeguard.ts`.
+
+---
+
 ## Superficies visibles para el usuario
 
 Puede observar la compactación y el estado de la sesión a través de:
@@ -288,52 +303,55 @@ Puede observar la compactación y el estado de la sesión a través de:
 
 ## Mantenimiento silencioso (`NO_REPLY`)
 
-OpenClaw admite turnos “silenciosos” para tareas en segundo plano donde el usuario no debe ver el resultado intermedio.
+OpenClaw admite turnos "silenciosos" para tareas en segundo plano donde el usuario no debe ver la salida intermedia.
 
 Convención:
 
-- El asistente inicia su resultado con el token silencioso exacto `NO_REPLY` /
-  `no_reply` para indicar “no entregar una respuesta al usuario”.
+- El asistente inicia su salida con el token silencioso exacto `NO_REPLY` /
+  `no_reply` para indicar "no entregar una respuesta al usuario".
 - OpenClaw elimina/suprime esto en la capa de entrega.
 - La supresión exacta del token silencioso no distingue entre mayúsculas y minúsculas, por lo que `NO_REPLY` y
-  `no_reply` cuentan cuando toda la carga es solo el token silencioso.
-- Esto es solo para turnos verdaderamente en segundo plano/sin entrega; no es un atajo para
-  solicitudes de usuario ordinarias accionables.
+  `no_reply` cuentan cuando toda la carga útil es solo el token silencioso.
+- Esto es solo para turnos de fondo/sin entrega reales; no es un atajo para
+  solicitudes de usuario accionables ordinarias.
 
 A partir de `2026.1.10`, OpenClaw también suprime el **streaming de borrador/escritura** cuando un
-fragmento parcial comienza con `NO_REPLY`, para que las operaciones silenciosas no filtren resultados
-parciales a mitad del turno.
+fragmento parcial comienza con `NO_REPLY`, para que las operaciones silenciosas no filtren una salida
+parcial a mitad del turno.
 
 ---
 
-## “Limpieza de memoria” previa a la compactación (implementado)
+## "Limpieza de memoria" previa a la compactación (implementado)
 
-Objetivo: antes de que ocurra la auto-compactación, ejecutar un turno agente silencioso que escriba un estado
+Objetivo: antes de que ocurra la auto-compactación, ejecutar un turno agente silencioso que escriba el estado
 duradero en el disco (p. ej. `memory/YYYY-MM-DD.md` en el espacio de trabajo del agente) para que la compactación no pueda
 borrar el contexto crítico.
 
 OpenClaw utiliza el enfoque de **limpieza previa al umbral**:
 
-1. Supervisar el uso del contexto de la sesión.
-2. Cuando cruza un “umbral suave” (por debajo del umbral de compactación de Pi), ejecute una directiva silenciosa de "escribir memoria ahora" al agente.
-3. Use el token silencioso exacto `NO_REPLY` / `no_reply` para que el usuario no vea nada.
+1. Monitorear el uso del contexto de la sesión.
+2. Cuando cruza un "umbral suave" (por debajo del umbral de compactación de Pi), ejecutar una directiva
+   silenciosa de "escribir memoria ahora" al agente.
+3. Usar el token silencioso exacto `NO_REPLY` / `no_reply` para que el usuario no vea
+   nada.
 
 Configuración (`agents.defaults.compaction.memoryFlush`):
 
 - `enabled` (predeterminado: `true`)
 - `softThresholdTokens` (predeterminado: `4000`)
-- `prompt` (mensaje de usuario para el turno de vaciado)
-- `systemPrompt` (prompt del sistema adicional añadido para el turno de vaciado)
+- `prompt` (mensaje de usuario para el turno de limpieza)
+- `systemPrompt` (prompt del sistema adicional añadido para el turno de limpieza)
 
 Notas:
 
-- El prompt del sistema por defecto incluye una pista `NO_REPLY` para suprimir la entrega.
-- El vaciado se ejecuta una vez por ciclo de compactación (rastreado en `sessions.json`).
-- El vaciado se ejecuta solo para sesiones de Pi integradas.
-- Se omite el vaciado cuando el espacio de trabajo de la sesión es de solo lectura (`workspaceAccess: "ro"` o `"none"`).
-- Consulte [Memoria](/en/concepts/memory) para conocer el diseño de archivos del espacio de trabajo y los patrones de escritura.
+- El prompt predeterminado/prompt del sistema incluye una sugerencia `NO_REPLY` para suprimir
+  la entrega.
+- La limpieza se ejecuta una vez por ciclo de compactación (rastreado en `sessions.json`).
+- La limpieza se ejecuta solo para sesiones Pi integradas (los backends CLI la omiten).
+- La limpieza se omite cuando el espacio de trabajo de la sesión es de solo lectura (`workspaceAccess: "ro"` o `"none"`).
+- Consulte [Memoria](/en/concepts/memory) para ver el diseño de archivos del espacio de trabajo y los patrones de escritura.
 
-Pi también expone un gancho `session_before_compact` en la API de extensiones, pero la lógica de vaciado de OpenClaw vive hoy en el lado del Gateway.
+Pi también expone un gancho `session_before_compact` en la API de extensión, pero la lógica de vaciado de OpenClaw se encuentra hoy en el lado del Gateway.
 
 ---
 
@@ -341,8 +359,8 @@ Pi también expone un gancho `session_before_compact` en la API de extensiones, 
 
 - ¿Clave de sesión incorrecta? Comience con [/concepts/session](/en/concepts/session) y confirme el `sessionKey` en `/status`.
 - ¿Discrepancia entre el almacén y la transcripción? Confirme el host del Gateway y la ruta del almacén desde `openclaw status`.
-- ¿Spam de compactación? Verifique:
+- ¿Spam de compactación? Compruebe:
   - ventana de contexto del modelo (demasiado pequeña)
   - configuración de compactación (`reserveTokens` demasiado alta para la ventana del modelo puede causar una compactación anterior)
   - hinchazón de resultados de herramientas: habilite/ajuste la poda de sesiones
-- ¿Filtración de turnos silenciosos? Confirme que la respuesta comience con `NO_REPLY` (token exacto sin distinción de mayúsculas y minúsculas) y que esté en una compilación que incluya la corrección de supresión de streaming.
+- ¿Fugas de turnos silenciosos? Confirme que la respuesta comienza con `NO_REPLY` (token exacto sin distinción de mayúsculas y minúsculas) y que está en una compilación que incluye la corrección de supresión de transmisión.

@@ -58,7 +58,7 @@ HTTP API 端点（例如 `/v1/*`、`/tools/invoke` 和 `/api/channels/*`）
 
 ### 仅 Tailnet (绑定到 Tailnet IP)
 
-当您希望 Gateway 直接监听 Tailnet IP（不使用 Serve/Funnel）时，请使用此方式。
+当您希望 Gateway(网关) 直接监听 Tailnet IP（不使用 Serve/Funnel）时，请使用此方式。
 
 ```json5
 {

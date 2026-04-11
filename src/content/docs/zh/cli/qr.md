@@ -46,7 +46,7 @@ openclaw qr --url wss://gateway.example/ws
   - `gateway.auth.token` 在令牌认证可以胜出时解析（显式 `gateway.auth.mode="token"` 或没有密码源胜出的推断模式）。
   - `gateway.auth.password` 在密码认证可以胜出时解析（显式 `gateway.auth.mode="password"` 或来自 auth/env 的令牌未胜出的推断模式）。
 - 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password`（包括 SecretRefs）且未设置 `gateway.auth.mode`，则在显式设置模式之前，设置代码解析将失败。
-- Gateway 版本偏差说明：此命令路径需要支持 `secrets.resolve` 的 Gateway(网关)；较旧的 Gateway 返回 unknown-method 错误。
+- Gateway(网关) 版本偏差说明：此命令路径需要支持 `secrets.resolve` 的 Gateway(网关)；较旧的 Gateway(网关) 返回 unknown-method 错误。
 - 扫描后，使用以下命令批准设备配对：
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`

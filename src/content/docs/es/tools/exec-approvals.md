@@ -350,7 +350,7 @@ Use la tarjeta **Control UI → Nodes → Exec approvals** para editar los valor
 
 El selector de destino elige **Gateway** (aprobaciones locales) o un **Node**. Los nodos deben anunciar `system.execApprovals.get/set` (aplicación macOS o host de nodo sin interfaz gráfica). Si un nodo aún no anuncia aprobaciones de ejecución, edite su `~/.openclaw/exec-approvals.json` local directamente.
 
-CLI: `openclaw approvals` admite la edición de gateway o nodo (consulte [Approvals CLI](/en/cli/approvals)).
+CLI: `openclaw approvals` admite la edición de gateway o nodos (consulte [Approvals CLI](/en/cli/approvals)).
 
 ## Flujo de aprobación
 
@@ -537,20 +537,20 @@ Comportamiento compartido:
 - los aprobadores de Slack pueden ser explícitos (`execApprovals.approvers`) o inferidos de `commands.ownerAllowFrom`
 - los botones nativos de Slack conservan el tipo de ID de aprobación, por lo que los IDs `plugin:` pueden resolver aprobaciones de complementos
   sin una segunda capa de respaldo local de Slack
-- el enrutamiento nativo de DM/canal de Matrix es solo para exec; las aprobaciones de complementos de Matrix se mantienen en las rutas de reenvío compartidas
-  del mismo chat `/approve` y opcional `approvals.plugin`
+- El enrutamiento nativo de DM/canal de Matrix y los accesos directos de reacción manejan tanto las aprobaciones de ejecución como las de complemento;
+  la autorización del complemento aún proviene de `channels.matrix.dm.allowFrom`
 - el solicitante no necesita ser un aprobador
 - el chat de origen puede aprobar directamente con `/approve` cuando ese chat ya admite comandos y respuestas
-- los botones de aprobación nativos de Discord se enrutan por tipo de ID de aprobación: los IDs `plugin:` van
-  directamente a las aprobaciones de complementos, todo lo demás va a las aprobaciones de exec
-- los botones de aprobación nativos de Telegram siguen el mismo respaldo limitado de exec a complemento que `/approve`
-- cuando el `target` nativo habilita la entrega al chat de origen, las solicitudes de aprobación incluyen el texto del comando
+- los botones de aprobación nativos de Discord se enrutan por tipo de id de aprobación: los ids `plugin:` van
+  directamente a las aprobaciones de complemento, todo lo demás va a las aprobaciones de ejecución
+- los botones de aprobación nativos de Telegram siguen la misma alternativa de ejecución a complemento limitada que `/approve`
+- cuando `target` nativo habilita la entrega al chat de origen, las solicitudes de aprobación incluyen el texto del comando
 - las aprobaciones de exec pendientes expiran después de 30 minutos de forma predeterminada
 - si ninguna interfaz de usuario de operador o cliente de aprobación configurado puede aceptar la solicitud, la solicitud vuelve a `askFallback`
 
-Telegram usa de forma predeterminada los MD del aprobador (`target: "dm"`). Puede cambiar a `channel` o `both` cuando
-quiera que las solicitudes de aprobación también aparezcan en el chat/tema de Telegram de origen. Para los temas de foro
-de Telegram, OpenClaw conserva el tema para la solicitud de aprobación y el seguimiento posterior a la aprobación.
+Telegram por defecto usa DMs del aprobador (`target: "dm"`). Puede cambiar a `channel` o `both` cuando usted
+quiera que las solicitudes de aprobación también aparezcan en el chat/tema de Telegram de origen. Para los temas de foro de
+Telegram, OpenClaw conserva el tema para la solicitud de aprobación y el seguimiento posterior a la aprobación.
 
 Ver:
 
@@ -581,8 +581,8 @@ El ciclo de vida de Exec se presenta como mensajes del sistema:
 - `Exec denied`
 
 Estos se publican en la sesión del agente después de que el nodo reporta el evento.
-Las aprobaciones de exec alojadas en gateway emiten los mismos eventos del ciclo de vida cuando el comando finaliza (y opcionalmente cuando se ejecuta por más tiempo que el umbral).
-Los ejecutables con puerta de aprobación reutilizan el id de aprobación como el `runId` en estos mensajes para una fácil correlación.
+Las aprobaciones de ejecución alojadas en el gateway emiten los mismos eventos del ciclo de vida cuando finaliza el comando (y opcionalmente cuando se ejecuta por más tiempo que el umbral).
+Las ejecuciones con puerta de aprobación reutilizan el id de aprobación como el `runId` en estos mensajes para una fácil correlación.
 
 ## Comportamiento de aprobación denegada
 
@@ -597,19 +597,19 @@ resultados obsoletos de una ejecución exitosa anterior.
 - **full** es potente; prefiera listas de permitidos cuando sea posible.
 - **ask** le mantiene informado mientras permite aprobaciones rápidas.
 - Las listas de permitidos por agente evitan que las aprobaciones de un agente se filtren a otros.
-- Las aprobaciones solo se aplican a las solicitudes de exec de host de **remitentes autorizados**. Los remitentes no autorizados no pueden emitir `/exec`.
-- `/exec security=full` es una conveniencia a nivel de sesión para operadores autorizados y omite aprobaciones por diseño.
-  Para bloquear completamente el exec del host, configure la seguridad de aprobaciones en `deny` o deniegue la herramienta `exec` a través de la política de herramientas.
+- Las aprobaciones solo se aplican a las solicitudes de ejecución del host de **remitentes autorizados**. Los remitentes no autorizados no pueden emitir `/exec`.
+- `/exec security=full` es una comodidad a nivel de sesión para operadores autorizados y omite las aprobaciones por diseño.
+  Para bloquear totalmente la ejecución en el host, establezca la seguridad de aprobaciones en `deny` o deniegue la herramienta `exec` mediante la política de herramientas.
 
 Relacionado:
 
-- [Herramienta Exec](/en/tools/exec)
-- [Modo elevado](/en/tools/elevated)
-- [Habilidades](/en/tools/skills)
+- [Exec tool](/en/tools/exec)
+- [Elevated mode](/en/tools/elevated)
+- [Skills](/en/tools/skills)
 
 ## Relacionado
 
 - [Exec](/en/tools/exec) — herramienta de ejecución de comandos de shell
 - [Sandboxing](/en/gateway/sandboxing) — modos de sandbox y acceso al espacio de trabajo
-- [Seguridad](/en/gateway/security) — modelo de seguridad y endurecimiento
-- [Sandbox vs. Política de herramientas vs. Elevado](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — cuándo usar cada uno
+- [Security](/en/gateway/security) — modelo de seguridad y endurecimiento
+- [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — cuándo usar cada uno

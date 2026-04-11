@@ -115,6 +115,8 @@ utiliza este motor automáticamente.
 Un complemento puede registrar un motor de contexto utilizando la API del complemento:
 
 ```ts
+import { buildMemorySystemPromptAddition } from "openclaw/plugin-sdk/core";
+
 export default function register(api) {
   api.registerContextEngine("my-engine", () => ({
     info: {
@@ -128,12 +130,15 @@ export default function register(api) {
       return { ingested: true };
     },
 
-    async assemble({ sessionId, messages, tokenBudget }) {
+    async assemble({ sessionId, messages, tokenBudget, availableTools, citationsMode }) {
       // Return messages that fit the budget
       return {
         messages: buildContext(messages, tokenBudget),
         estimatedTokens: countTokens(messages),
-        systemPromptAddition: "Use lcm_grep to search history...",
+        systemPromptAddition: buildMemorySystemPromptAddition({
+          availableTools: availableTools ?? new Set(),
+          citationsMode,
+        }),
       };
     },
 
@@ -227,20 +232,34 @@ El espacio es exclusivo en tiempo de ejecución: solo se resuelve un motor de co
 ## Relación con la compactación y la memoria
 
 - La **compactación** es una responsabilidad del motor de contexto. El motor heredado delega en el resumen integrado de OpenClaw. Los motores de complemento pueden implementar cualquier estrategia de compactación (resúmenes DAG, recuperación vectorial, etc.).
-- Los **complementos de memoria** (`plugins.slots.memory`) son independientes de los motores de contexto. Los complementos de memoria proporcionan búsqueda/recuperación; los motores de contexto controlan lo que ve el modelo. Pueden trabajar juntos: un motor de contexto podría usar datos de complementos de memoria durante el ensamblaje.
+- **Los complementos de memoria** (`plugins.slots.memory`) están separados de los motores de contexto.
+  Los complementos de memoria proporcionan búsqueda/recuperación; los motores de contexto controlan lo que
+  el modelo ve. Pueden trabajar juntos: un motor de contexto podría usar datos del
+  complemento de memoria durante el ensamblaje. Los motores de complemento que desean la ruta del
+  prompt de memoria activo deben preferir `buildMemorySystemPromptAddition(...)` de
+  `openclaw/plugin-sdk/core`, que convierte las secciones del prompt de memoria activo
+  en un `systemPromptAddition` listo para anteponer. Si un motor necesita un control
+  de menor nivel, aún puede extraer líneas sin procesar de
+  `openclaw/plugin-sdk/memory-host-core` a través de
+  `buildActiveMemoryPromptSection(...)`.
 - La **poda de sesión** (recortar resultados de herramientas antiguos en memoria) todavía se ejecuta independientemente de qué motor de contexto esté activo.
 
 ## Consejos
 
 - Use `openclaw doctor` para verificar que su motor se esté cargando correctamente.
 - Si cambia de motor, las sesiones existentes continúan con su historial actual. El nuevo motor se hace cargo de las ejecuciones futuras.
-- Los errores del motor se registran y se muestran en los diagnósticos. Si un motor de complemento no logra registrarse o el ID del motor seleccionado no se puede resolver, OpenClaw no recurre automáticamente; las ejecuciones fallan hasta que arregle el complemento o cambie `plugins.slots.contextEngine` de vuelta a `"legacy"`.
-- Para el desarrollo, use `openclaw plugins install -l ./my-engine` para vincular un directorio de complementos local sin copiarlo.
+- Los errores del motor se registran y se muestran en los diagnósticos. Si un motor de complemento
+  no logra registrarse o no se puede resolver el id del motor seleccionado, OpenClaw
+  no retrocede automáticamente; las ejecuciones fallan hasta que arregle el complemento o
+  cambie `plugins.slots.contextEngine` de nuevo a `"legacy"`.
+- Para el desarrollo, use `openclaw plugins install -l ./my-engine` para vincular un
+  directorio de complementos local sin copiar.
 
-Consulte también: [Compactación](/en/concepts/compaction), [Contexto](/en/concepts/context), [Complementos](/en/tools/plugin), [Manifiesto del complemento](/en/plugins/manifest).
+Consulte también: [Compaction](/en/concepts/compaction), [Context](/en/concepts/context),
+[Plugins](/en/tools/plugin), [Plugin manifest](/en/plugins/manifest).
 
 ## Relacionado
 
 - [Context](/en/concepts/context) — cómo se construye el contexto para los turnos del agente
-- [Plugin Architecture](/en/plugins/architecture) — registro de plugins de motor de contexto
+- [Plugin Architecture](/en/plugins/architecture) — registro de complementos de motor de contexto
 - [Compaction](/en/concepts/compaction) — resumiendo conversaciones largas

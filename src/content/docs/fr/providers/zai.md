@@ -34,7 +34,7 @@ openclaw onboard --auth-choice zai-cn
 ```json5
 {
   env: { ZAI_API_KEY: "sk-..." },
-  agents: { defaults: { model: { primary: "zai/glm-5" } } },
+  agents: { defaults: { model: { primary: "zai/glm-5.1" } } },
 }
 ```
 
@@ -61,7 +61,7 @@ OpenClaw fournit actuellement le fournisseur `zai` inclus avec :
 ## Notes
 
 - Les modèles GLM sont disponibles sous la forme `zai/<model>` (exemple : `zai/glm-5`).
-- Référence de modèle incluse par défaut : `zai/glm-5`
+- Référence de modèle groupée par défaut : `zai/glm-5.1`
 - Les ids `glm-5*` inconnus sont toujours résolus en avant sur le chemin du fournisseur inclus en synthétisant les métadonnées propres au fournisseur à partir du modèle `glm-4.7` lorsque l'id correspond à la forme actuelle de la famille GLM-5.
 - `tool_stream` est activé par défaut pour le streaming d'appels d'outil Z.AI. Définissez `agents.defaults.models["zai/<model>"].params.tool_stream` sur `false` pour le désactiver.
 - Voir [/providers/glm](/en/providers/glm) pour la présentation de la famille de modèles.

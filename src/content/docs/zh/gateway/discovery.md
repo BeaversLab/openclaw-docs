@@ -28,7 +28,7 @@ OpenClaw 有两个表面看起来相似但实际上截然不同的问题：
 
 协议详情：
 
-- [Gateway protocol](/en/gateway/protocol)
+- [Gateway(网关) protocol](/en/gateway/protocol)
 - [Bridge protocol (legacy)](/en/gateway/bridge-protocol)
 
 ## 为什么我们同时保留“direct”和 SSH
@@ -68,7 +68,7 @@ OpenClaw 有两个表面看起来相似但实际上截然不同的问题：
   - `transport=gateway`
   - `displayName=<friendly name>` (操作员配置的显示名称)
   - `lanHost=<hostname>.local`
-  - `gatewayPort=18789` (Gateway WS + HTTP)
+  - `gatewayPort=18789` (Gateway(网关) WS + HTTP)
   - `gatewayTls=1` (仅在启用 TLS 时)
   - `gatewayTlsSha256=<sha256>` (仅在启用 TLS 且可用指纹时)
   - `canvasPort=<port>` (画布主机端口；启用画布主机时，目前与 `gatewayPort` 相同)

@@ -38,7 +38,10 @@ title: "Slash Commands"
     mcp: false,
     plugins: false,
     debug: false,
-    restart: false,
+    restart: true,
+    ownerAllowFrom: ["discord:123456789012345678"],
+    ownerDisplay: "raw",
+    ownerDisplaySecret: "${OWNER_ID_HASH_SECRET}",
     allowFrom: {
       "*": ["user1"],
       discord: ["user:123"],
@@ -63,130 +66,162 @@ title: "Slash Commands"
 - `commands.mcp` (預設 `false`) 啟用 `/mcp` (讀取/寫入 OpenClaw 管理的 MCP 設定，位於 `mcp.servers` 下)。
 - `commands.plugins` (預設 `false`) 啟用 `/plugins` (外掛程式探索/狀態，以及安裝 + 啟用/停用控制)。
 - `commands.debug` (預設 `false`) 啟用 `/debug` (僅限執行階段的覆寫)。
-- `commands.allowFrom`（可選）為指令授權設定各提供者的允許清單。配置後，它將是指令和指令的唯一授權來源（頻道允許清單/配對和 `commands.useAccessGroups` 將被忽略）。使用 `"*"` 作為全域預設值；特定提供者的鍵會覆蓋它。
-- `commands.useAccessGroups`（預設為 `true`）在未設定 `commands.allowFrom` 時強制執行指令的允許清單/原則。
+- `commands.restart`（預設 `true`）啟用 `/restart` 以及 gateway restart 工具操作。
+- `commands.ownerAllowFrom`（可選）為僅限所有者的指令/工具介面設定明確的所有者允許清單。這與 `commands.allowFrom` 是分開的。
+- `commands.ownerDisplay` 控制所有者 ID 在系統提示中的顯示方式：`raw` 或 `hash`。
+- `commands.ownerDisplaySecret` 可選設定當 `commands.ownerDisplay="hash"` 時使用的 HMAC 密鑰。
+- `commands.allowFrom`（可選）為指令授權設定各提供者的允許清單。設定後，它將是指令和指令的唯一授權來源（頻道允許清單/配對和 `commands.useAccessGroups` 將被忽略）。使用 `"*"` 作為全域預設值；特定提供者的金鑰會覆寫它。
+- `commands.useAccessGroups`（預設 `true`）在未設定 `commands.allowFrom` 時，對指令執行允許清單/策略。
 
 ## 指令清單
 
-文字 + 原生（啟用時）：
+目前的唯一真相來源：
 
-- `/help`
-- `/commands`
-- `/tools [compact|verbose]`（顯示當前代理目前可使用的內容；`verbose` 會新增描述）
-- `/skill <name> [input]`（依名稱執行技能）
-- `/status`（顯示當前狀態；包括目前模型提供者的使用量/配額，如有提供）
-- `/tasks` (列出當前工作階段的背景工作；顯示作用中及最近的工作細節以及代理程式本機的後援計數)
-- `/allowlist` (列出/新增/移除允許清單項目)
-- `/approve <id> <decision>` (解析執行核准提示；使用待處理的核准訊息來取得可用的決定)
-- `/context [list|detail|json]` (解釋「context」；`detail` 顯示每個檔案 + 每個工具 + 每個技能 + 系統提示的大小)
-- `/btw <question>` (詢問關於目前會話的臨時側面問題，而不會改變未來的會語內容；請參閱 [/tools/btw](/en/tools/btw))
-- `/export-session [path]` (別名：`/export`) (將當前工作階段與完整的系統提示匯出為 HTML)
-- `/whoami` (顯示您的發送者 ID；別名：`/id`)
-- `/session idle <duration|off>` (管理已聚焦執行緒綁定的閒置自動取消聚焦)
-- `/session max-age <duration|off>` (管理已聚焦執行緒綁定的強制最大時間自動取消聚焦)
-- `/subagents list|kill|log|info|send|steer|spawn` (檢查、控制或生成當前工作階段的子代理程式執行)
-- `/acp spawn|cancel|steer|close|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|sessions` (檢查並控制 ACP 執行階段工作階段)
-- `/agents` (列出此工作階段的執行緒綁定代理程式)
-- `/focus <target>` (Discord：將此執行緒或新執行緒綁定至工作階段/子代理程式目標)
-- `/unfocus` (Discord：移除當前的執行緒綁定)
-- `/kill <id|#|all>` (立即中止此工作階段的一個或所有執行中的子代理程式；無確認訊息)
-- `/steer <id|#> <message>` (立即引導執行中的子代理程式：盡可能在執行中進行，否則中止當前工作並依據引導訊息重新開始)
-- `/tell <id|#> <message>` (`/steer` 的別名)
-- `/config show|get|set|unset` (將設定保存至磁碟，僅限擁有者；需要 `commands.config: true`)
-- `/mcp show|get|set|unset` (管理 OpenClaw MCP 伺服器設定，僅限擁有者；需要 `commands.mcp: true`)
-- `/plugins list|show|get|install|enable|disable` （檢查發現的外掛、安裝新的外掛並切換啟用狀態；僅限擁有者寫入；需要 `commands.plugins: true`）
-  - `/plugin` 是 `/plugins` 的別名。
-  - `/plugin install <spec>` 接受與 `openclaw plugins install` 相同的外掛規格：本機路徑/壓縮檔、npm 套件或 `clawhub:<pkg>`。
-  - 啟用/停用寫入操作仍會回覆重啟提示。在被監視的前端 Gateway 上，OpenClaw 可能會在寫入操作後立即自動執行該重啟。
-- `/debug show|set|unset|reset` （執行時期覆寫，僅限擁有者；需要 `commands.debug: true`）
-- `/usage off|tokens|full|cost` （每次回應的使用量頁尾或本機成本摘要）
-- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio` (控制 TTS；請參閱 [/tts](/en/tools/tts))
-  - Discord：原生指令為 `/voice`（Discord 保留 `/tts`）；文字 `/tts` 仍然有效。
-- `/stop`
-- `/restart`
-- `/dock-telegram` （別名：`/dock_telegram`）（將回應切換至 Telegram）
-- `/dock-discord` （別名：`/dock_discord`）（將回應切換至 Discord）
-- `/dock-slack` （別名：`/dock_slack`）（將回應切換至 Slack）
-- `/activation mention|always` （僅限群組）
-- `/send on|off|inherit` （僅限擁有者）
-- `/reset` 或 `/new [model]` （選用的模型提示；其餘部分將被傳遞）
-- `/think <off|minimal|low|medium|high|xhigh>` （依模型/提供者動態選擇；別名：`/thinking`、`/t`）
-- `/fast status|on|off` （省略參數會顯示當前有效的快速模式狀態）
-- `/verbose on|full|off` （別名：`/v`）
-- `/reasoning on|off|stream` （別名：`/reason`；開啟時，發送一條前綴為 `Reasoning:` 的單獨訊息；`stream` = 僅限 Telegram 草稿）
-- `/elevated on|off|ask|full`（別名：`/elev`；`full` 跳過執行核准）
-- `/exec host=<auto|sandbox|gateway|node> security=<deny|allowlist|full> ask=<off|on-miss|always> node=<id>`（發送 `/exec` 以顯示當前內容）
-- `/model <name>`（別名：`/models`；或從 `agents.defaults.models.*.alias` 使用 `/<alias>`）
-- `/queue <mode>`（加上 `debounce:2s cap:25 drop:summarize` 等選項；發送 `/queue` 以查看當前設定）
-- `/bash <command>`（僅限主機；`! <command>` 的別名；需要 `commands.bash: true` + `tools.elevated` 允許清單）
-- `/dreaming [on|off|status|help]` (切換全域 dreaming 或顯示狀態；請參閱 [Dreaming](/en/concepts/dreaming))
+- 核心內建指令來自 `src/auto-reply/commands-registry.shared.ts`
+- 產生的 dock 指令來自 `src/auto-reply/commands-registry.data.ts`
+- 外掛程式指令來自外掛程式 `registerCommand()` 呼叫
+- 在您的 gateway 上實際的可用性仍取決於設定旗標、頻道介面以及已安裝/啟用的外掛程式
 
-僅限文字：
+### 核心內建指令
 
-- `/compact [instructions]` (請參閱 [/concepts/compaction](/en/concepts/compaction))
-- `! <command>` (僅限主機；一次一個；對於長時間執行的工作，請使用 `!poll` + `!stop`)
-- `!poll` (檢查輸出 / 狀態；接受選用的 `sessionId`；`/bash poll` 也可使用)
-- `!stop` (停止執行中的 bash 工作；接受選用的 `sessionId`；`/bash stop` 也可使用)
+目前可用的內建指令：
+
+- `/new [model]` 啟動一個新工作階段；`/reset` 是重設別名。
+- `/compact [instructions]` 壓縮工作階段上下文。請參閱 [/concepts/compaction](/en/concepts/compaction)。
+- `/stop` 中止當前的執行。
+- `/session idle <duration|off>` 和 `/session max-age <duration|off>` 管理執行緒綁定的到期。
+- `/think <off|minimal|low|medium|high|xhigh>` 設定思考等級。別名：`/thinking`、`/t`。
+- `/verbose on|off|full` 切換詳細輸出。別名：`/v`。
+- `/fast [status|on|off]` 顯示或設定快速模式。
+- `/reasoning [on|off|stream]` 切換推論可見性。別名：`/reason`。
+- `/elevated [on|off|ask|full]` 切換提權模式。別名：`/elev`。
+- `/exec host=<auto|sandbox|gateway|node> security=<deny|allowlist|full> ask=<off|on-miss|always> node=<id>` 顯示或設定 exec 預設值。
+- `/model [name|#|status]` 顯示或設定模型。
+- `/models [provider] [page] [limit=<n>|size=<n>|all]` 列出提供者或提供者的模型。
+- `/queue <mode>` 管理佇列行為（`steer`、`interrupt`、`followup`、`collect`、`steer-backlog`）以及 `debounce:2s cap:25 drop:summarize` 等選項。
+- `/help` 顯示簡短說明摘要。
+- `/commands` 顯示生成的指令目錄。
+- `/tools [compact|verbose]` 顯示當前代理現在可以使用的內容。
+- `/status` 顯示執行時狀態，包括提供者使用量/配額（如果可用）。
+- `/tasks` 列出目前工作階段的啟用中/最近背景任務。
+- `/context [list|detail|json]` 說明如何組合上下文。
+- `/export-session [path]` 將當前工作階段匯出為 HTML。別名：`/export`。
+- `/whoami` 顯示您的寄件者 ID。別名：`/id`。
+- `/skill <name> [input]` 依名稱執行技能。
+- `/allowlist [list|add|remove] ...` 管理允許清單項目。僅限文字。
+- `/approve <id> <decision>` 解析 exec 核准提示。
+- `/btw <question>` 提出一個側面問題，而不會改變未來的工作階段上下文。請參閱 [/tools/btw](/en/tools/btw)。
+- `/subagents list|kill|log|info|send|steer|spawn` 管理目前工作階段的子代理執行。
+- `/acp spawn|cancel|steer|close|sessions|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|help` 管理 ACP 工作階段和執行時選項。
+- `/focus <target>` 將目前的 Discord 執行緒或 Telegram 主題/對話綁定到工作階段目標。
+- `/unfocus` 移除目前的綁定。
+- `/agents` 列出目前工作階段的執行緒綁定代理。
+- `/kill <id|#|all>` 中止一個或所有正在執行的子代理。
+- `/steer <id|#> <message>` 向正在運行的子代理發送指引。別名：`/tell`。
+- `/config show|get|set|unset` 讀取或寫入 `openclaw.json`。僅限所有者。需要 `commands.config: true`。
+- `/mcp show|get|set|unset` 讀取或寫入位於 `mcp.servers` 的 OpenClaw 管理的 MCP 伺服器配置。僅限所有者。需要 `commands.mcp: true`。
+- `/plugins list|inspect|show|get|install|enable|disable` 檢查或變更插件狀態。`/plugin` 是一個別名。寫入操作僅限所有者。需要 `commands.plugins: true`。
+- `/debug show|set|unset|reset` 管理僅運行時配置覆蓋。僅限所有者。需要 `commands.debug: true`。
+- `/usage off|tokens|full|cost` 控制每次回應的使用情況頁尾或列印本機成本摘要。
+- `/tts on|off|status|provider|limit|summary|audio|help` 控制 TTS。參見 [/tools/tts](/en/tools/tts)。
+- `/restart` 在啟用時重啟 OpenClaw。預設：已啟用；設定 `commands.restart: false` 以停用它。
+- `/activation mention|always` 設定群組啟用模式。
+- `/send on|off|inherit` 設定傳送策略。僅限所有者。
+- `/bash <command>` 執行主機 shell 指令。僅文字。別名：`! <command>`。需要 `commands.bash: true` 加上 `tools.elevated` 允許清單。
+- `!poll [sessionId]` 檢查背景 bash 任務。
+- `!stop [sessionId]` 停止背景 bash 任務。
+
+### 生成的 Dock 指令
+
+Dock 指令是從支援原生指令的頻道插件生成的。目前的捆綁集合：
+
+- `/dock-discord`（別名：`/dock_discord`）
+- `/dock-mattermost`（別名：`/dock_mattermost`）
+- `/dock-slack`（別名：`/dock_slack`）
+- `/dock-telegram`（別名：`/dock_telegram`）
+
+### 捆綁插件指令
+
+捆綁插件可以新增更多斜線指令。此 repo 中目前的捆綁指令：
+
+- `/dreaming [on|off|status|help]` 切換記憶體夢境。參見 [夢境](/en/concepts/dreaming)。
+- `/pair [qr|status|pending|approve|cleanup|notify]` 管理裝置配對/設定流程。請參閱[配對](/en/channels/pairing)。
+- `/phone status|arm <camera|screen|writes|all> [duration]|disarm` 暫時啟用高風險手機節點指令。
+- `/voice status|list [limit]|set <voiceId|name>` 管理 Talk 語音設定。在 Discord 上，原生指令名稱為 `/talkvoice`。
+- `/card ...` 發送 LINE 豐富卡預設值。請參閱 [LINE](/en/channels/line)。
+- 僅限 QQBot 的指令：
+  - `/bot-ping`
+  - `/bot-version`
+  - `/bot-help`
+  - `/bot-upgrade`
+  - `/bot-logs`
+
+### 動態技能指令
+
+使用者可呼叫的技能也會以斜線指令的形式呈現：
+
+- `/skill <name> [input]` 始終作為通用入口點運作。
+- 當技能/外掛註冊時，技能也可能會以直接指令的形式出現，例如 `/prose`。
+- 原生技能指令註冊由 `commands.nativeSkills` 和 `channels.<provider>.commands.nativeSkills` 控制。
 
 備註：
 
-- 指令接受在指令和參數之間加入選用的 `:` (例如 `/think: high`、`/send: on`、`/help:`)。
-- `/new <model>` 接受模型別名、`provider/model` 或提供者名稱 (模糊比對)；如果沒有符合項，文字將被視為訊息內文。
-- 如需完整的提供者使用量詳細資訊，請使用 `openclaw status --usage`。
+- 指令接受在指令和參數之間加入選用的 `:` (例如 `/think: high`, `/send: on`, `/help:`)。
+- `/new <model>` 接受模型別名、`provider/model` 或提供者名稱 (模糊比對)；如果無比對，文字將視為訊息內容。
+- 如需完整的提供者使用量細目，請使用 `openclaw status --usage`。
 - `/allowlist add|remove` 需要 `commands.config=true` 並遵守頻道 `configWrites`。
-- 在多重帳號頻道中，以設定為目標的 `/allowlist --account <id>` 和 `/config set channels.<provider>.accounts.<id>...` 也會遵守目標帳號的 `configWrites`。
-- `/usage` 控制每次回應的使用量頁尾；`/usage cost` 會從 OpenClaw 會話記錄中列印本機成本摘要。
-- `/restart` 預設為啟用；設定 `commands.restart: false` 可將其停用。
-- Discord 專用原生指令：`/vc join|leave|status` 控制語音頻道（需要 `channels.discord.voice` 和原生指令；不提供文字形式）。
+- 在多帳號頻道中，以設定為目標的 `/allowlist --account <id>` 和 `/config set channels.<provider>.accounts.<id>...` 也會遵守目標帳號的 `configWrites`。
+- `/usage` 控制每次回應的使用量頁尾；`/usage cost` 列印來自 OpenClaw 會話記錄的本地成本摘要。
+- `/restart` 預設為啟用；設定 `commands.restart: false` 即可停用。
+- `/plugins install <spec>` 接受與 `openclaw plugins install` 相同的插件規格：本機路徑/壓縮檔、npm 套件或 `clawhub:<pkg>`。
+- `/plugins enable|disable` 會更新插件設定並可能提示重新啟動。
+- Discord 專用原生指令：`/vc join|leave|status` 控制語音頻道（需要 `channels.discord.voice` 和原生指令；無法以文字形式使用）。
 - Discord 執行緒綁定指令（`/focus`、`/unfocus`、`/agents`、`/session idle`、`/session max-age`）需要啟用有效的執行緒綁定（`session.threadBindings.enabled` 和/或 `channels.discord.threadBindings.enabled`）。
-- ACP 指令參考和運行時行為：[ACP Agents](/en/tools/acp-agents)。
-- `/verbose` 用於除錯和額外的可見性；在正常使用中請保持**關閉**。
-- `/fast on|off` 會保存會話覆寫。使用 Sessions UI 的 `inherit` 選項來清除它並回退至配置預設值。
-- `/fast` 是特定於供應商的：OpenAI/OpenAI Codex 在原生 Responses 端點上將其對映到 `service_tier=priority`，而直接的公開 Anthropic 請求（包括傳送到 `api.anthropic.com` 的 OAuth 驗證流量）則將其對映到 `service_tier=auto` 或 `standard_only`。請參閱 [OpenAI](/en/providers/openai) 和 [Anthropic](/en/providers/anthropic)。
+- ACP 指令參考和執行時行為：[ACP Agents](/en/tools/acp-agents)。
+- `/verbose` 適用於偵錯和額外可見性；正常使用時請將其保持**關閉**。
+- `/fast on|off` 會保存工作階段覆寫。使用 Sessions UI 的 `inherit` 選項來清除它並還原為設定預設值。
+- `/fast` 是特定於提供者的：OpenAI/OpenAI Codex 在原生 Responses 端點上將其對應到 `service_tier=priority`，而直接的公開 Anthropic 請求（包括傳送到 `api.anthropic.com` 的 OAuth 驗證流量）則將其對應到 `service_tier=auto` 或 `standard_only`。請參閱 [OpenAI](/en/providers/openai) 和 [Anthropic](/en/providers/anthropic)。
 - 相關時仍會顯示工具失敗摘要，但僅當 `/verbose` 為 `on` 或 `full` 時才會包含詳細的失敗文字。
-- `/reasoning`（以及 `/verbose`）在群組設定中具有風險：它們可能會洩露您不打算公開的內部推理或工具輸出。建議保持關閉，尤其是在群組聊天中。
-- `/model` 會立即保存新的會話模型。
-- 如果代理處於空閒狀態，下次運行會立即使用它。
-- 如果運行已經處於活動狀態，OpenClaw 會將即時切換標記為待處理，並且僅在乾淨的重試點重新啟動到新模型。
-- 如果工具活動或回覆輸出已經開始，待處理的切換可以保持佇列狀態，直到稍後的重試機會或下一個使用者輪次。
-- **快速路徑：** 來自允許清單發送者的僅指令訊息會立即處理（繞過佇列 + 模型）。
-- **群組提及門控：** 來自允許清單發送者的僅指令訊息會繞過提及要求。
-- **內建捷徑（僅限允許清單發送者）：** 某些指令在嵌入一般訊息時也能運作，並會在模型看到其餘文字前被移除。
-  - 範例：`hey /status` 會觸發狀態回覆，其餘文字則繼續依照一般流程處理。
-- 目前包括：`/help`、`/commands`、`/status`、`/whoami`（`/id`）。
-- 未授權的僅指令訊息會被靜默忽略，而內建的 `/...` token 會被視為純文字。
-- **技能指令：** `user-invocable` 技能會以斜線指令形式呈現。名稱會被標準化為 `a-z0-9_`（最多 32 個字元）；衝突時會加上數字後綴（例如 `_2`）。
-  - `/skill <name> [input]` 會依名稱執行技能（當原生指令限制無法允許個別技能指令時很有用）。
+- `/reasoning`（和 `/verbose`）在群組設定中存在風險：它們可能會暴露您不打算公開的內部推理或工具輸出。建議將其保持關閉，尤其是在群組聊天中。
+- `/model` 會立即儲存新的工作階段模型。
+- 如果代理處於閒置狀態，下次執行將立即使用它。
+- 如果運作已經活躍，OpenClaw 會將即時切換標記為待處理，並且只在乾淨的重試點重新啟動到新模型。
+- 如果工具活動或回覆輸出已經開始，待處理的切換可以保持佇列狀態，直到下一次重試機會或下一個使用者輪次。
+- **快速路徑：** 來自允許列表發送者的僅指令訊息會立即處理（略過佇列 + 模型）。
+- **群組提及閘門：** 來自允許列表發送者的僅指令訊息會略過提及要求。
+- **內嵌捷徑（僅限允許列表發送者）：** 某些指令在嵌入一般訊息時也能運作，並且在模型看到其餘文字之前會被移除。
+  - 範例：`hey /status` 觸發狀態回覆，其餘文字繼續正常流程。
+- 目前：`/help`、`/commands`、`/status`、`/whoami` (`/id`)。
+- 未授權的僅指令訊息會被靜默忽略，而內嵌的 `/...` 標記會被視為純文字。
+- **技能指令：** `user-invocable` 技能會以斜線指令公開。名稱會被清理為 `a-z0-9_`（最多 32 個字元）；衝突會加上數字後綴（例如 `_2`）。
+  - `/skill <name> [input]` 依名稱執行技能（當原生指令限制阻止每個技能指令時很有用）。
   - 預設情況下，技能指令會作為一般請求轉發給模型。
-  - 技能可以選擇宣告 `command-dispatch: tool`，將指令直接路由到工具（確定性，無模型）。
-  - 範例：`/prose`（OpenProse 外掛）— 請參閱 [OpenProse](/en/prose)。
-- **原生指令引數：** Discord 會針對動態選項使用自動完成（當您省略必要引數時會顯示按鈕選單）。Telegram 和 Slack 當指令支援選項且您省略引數時會顯示按鈕選單。
+  - 技能可以選擇宣告 `command-dispatch: tool` 以將指令直接路由到工具（確定性，無模型）。
+  - 範例：`/prose` (OpenProse 外掛) — 請參閱 [OpenProse](/en/prose)。
+- **原生指令引數：** Discord 對動態選項使用自動完成（當您省略必要引數時也使用按鈕選單）。Telegram 和 Slack 當指令支援選擇且您省略引數時會顯示按鈕選單。
 
 ## `/tools`
 
-`/tools` 回答的是執行時期的問題，而不是設定問題：**此代理在此對話中現在可以使用什麼**。
+`/tools` 回答的是執行時問題，而不是設定問題：**此代理在此對話中現在可以使用什麼**。
 
-- 預設的 `/tools` 為精簡格式，並針對快速瀏覽進行最佳化。
-- `/tools verbose` 會加入簡短描述。
-- 支援引數的原生指令介面會公開與 `compact|verbose` 相同的模式切換。
-- 結果是依會話範圍而定，因此變更代理、通道、執行緒、傳送者授權或模型可能會
-  變更輸出。
-- `/tools` 包含在執行時期實際可存取的工具，包括核心工具、已連線
-  的外掛工具以及通道擁有的工具。
+- 預設的 `/tools` 是精簡的並經過最佳化以利快速掃讀。
+- `/tools verbose` 增加了簡短描述。
+- 支援引數的原生命令介面會顯示與 `compact|verbose` 相同的模式切換開關。
+- 結果是以會話為範圍的，因此變更代理、頻道、執行緒、發送者授權或模型可能會改變輸出。
+- `/tools` 包含在執行時實際可存取的工具，包括核心工具、已連線的外掛工具以及頻道擁有的工具。
 
-若要編輯設定檔與覆寫值，請使用控制 UI 工具面板或設定/目錄介面，而不要將
-`/tools` 視為靜態目錄。
+若要編輯設定檔和覆蓋設定，請使用控制 UI 工具面板或設定/目錄介面，而不是將 `/tools` 視為靜態目錄。
 
-## 使用介面（顯示位置與內容）
+## 使用介面（顯示位置）
 
-- 當啟用量值追蹤時，**提供者使用量/配額**（例如：「Claude 剩餘 80%」）會顯示於目前模型提供者的 `/status` 中。OpenClaw 會將提供者視窗正規化為 `% left`；對於 MiniMax，僅剩餘百分比欄位會在顯示前反轉，而 `model_remains` 回應會偏好聊天模型條目加上帶有模型標籤的計畫標籤。
-- 當即時會話快照稀疏時，`/status` 中的 **Token/快取行** 可以回退到最新的逐字稿使用量項目。現有的非零即時值優先，而逐字稿回退也可以在儲存的總數遺失或較小時，恢復作用中的執行時期模型標籤以及較大的提示導向總數。
-- **每次回應的 Token/成本** 由 `/usage off|tokens|full` 控制（附加至一般回覆）。
-- `/model status` 是關於 **模型/授權/端點**，而非使用量。
+- 當啟用量值追蹤時，**提供者用量/配額**（例如：“Claude 剩餘 80%”）會顯示在目前模型提供者的 `/status` 中。OpenClaw 會將提供者視窗標準化為 `% left`；對於 MiniMax，僅剩餘百分比的欄位會在顯示前進行反轉，而 `model_remains` 的回應會偏好聊天模型條目加上帶有模型標籤的計劃標籤。
+- 當即時會話快照稀疏時，`/status` 中的 **Token/快取行** 可以退回到最新的逐字稿用量條目。現有的非零即時值仍然優先，且逐字稿退回也可以在儲存的總數缺失或較小時恢復作用中的執行時模型標籤以及較大的以提示為導向的總數。
+- **每次回應的 token/成本** 由 `/usage off|tokens|full` 控制（附加到一般回應）。
+- `/model status` 關於 **模型/授權/端點**，而非用量。
 
-## 模型選擇（`/model`）
+## 模型選擇 (`/model`)
 
-`/model` 是以指令的方式實作。
+`/model` 是作為指令實作的。
 
 範例：
 
@@ -201,14 +236,14 @@ title: "Slash Commands"
 
 備註：
 
-- `/model` 和 `/model list` 會顯示簡潔的編號選擇器（模型系列 + 可用提供者）。
-- 在 Discord 上，`/model` 和 `/models` 會開啟互動式選擇器，其中包含提供者和模型下拉式選單以及提交步驟。
-- `/model <#>` 從該選擇器中進行選擇（並在可能時偏好目前的提供者）。
-- `/model status` 顯示詳細檢視，包括已設定的提供者端點（`baseUrl`）和 API 模式（`api`）（如果有的話）。
+- `/model` 和 `/model list` 會顯示一個精簡的編號選擇器（模型系列 + 可用提供者）。
+- 在 Discord 上，`/model` 和 `/models` 會開啟一個互動式選擇器，其中包含提供者和模型下拉選單以及提交步驟。
+- `/model <#>` 從該選擇器中進行選擇（並在可能的情況下偏好目前的提供者）。
+- `/model status` 顯示詳細視圖，包括設定的提供者端點（`baseUrl`）和 API 模式（`api`，如有提供）。
 
 ## 除錯覆寫
 
-`/debug` 讓您設定 **僅限執行時期** 的設定覆寫（記憶體中，而非磁碟）。僅限擁有者。預設停用；請透過 `commands.debug: true` 啟用。
+`/debug` 讓您設定 **僅限執行時期** 的配置覆寫（記憶體中，非硬碟）。僅限所有者使用。預設為停用；請使用 `commands.debug: true` 啟用。
 
 範例：
 
@@ -222,12 +257,12 @@ title: "Slash Commands"
 
 備註：
 
-- 覆寫會立即套用至新的設定讀取，但**不會**寫入 `openclaw.json`。
-- 使用 `/debug reset` 清除所有覆寫並返回至磁碟上的設定。
+- 覆寫會立即套用至新的配置讀取，但 **不會** 寫入 `openclaw.json`。
+- 使用 `/debug reset` 清除所有覆寫並返回硬碟上的配置。
 
-## 設定更新
+## 配置更新
 
-`/config` 會寫入至您磁碟上的設定（`openclaw.json`）。僅限擁有者。預設停用；請透過 `commands.config: true` 啟用。
+`/config` 會寫入您的硬碟配置（`openclaw.json`）。僅限所有者使用。預設為停用；請使用 `commands.config: true` 啟用。
 
 範例：
 
@@ -241,12 +276,12 @@ title: "Slash Commands"
 
 備註：
 
-- 設定會在寫入前驗證；無效的變更會被拒絕。
-- `/config` 的更新在重新啟動後會持續保留。
+- 配置會在寫入前經過驗證；無效的變更將會被拒絕。
+- `/config` 的更新在重新啟動後會持續存在。
 
 ## MCP 更新
 
-`/mcp` 會將 OpenClaw 管理的 MCP 伺服器定義寫入 `mcp.servers` 下。僅限擁有者。預設停用；請透過 `commands.mcp: true` 啟用。
+`/mcp` 會將 OpenClaw 管理的 MCP 伺服器定義寫入 `mcp.servers` 之下。僅限所有者使用。預設為停用；請使用 `commands.mcp: true` 啟用。
 
 範例：
 
@@ -259,12 +294,12 @@ title: "Slash Commands"
 
 備註：
 
-- `/mcp` 將設定儲存在 OpenClaw 設定中，而非 Pi 擁有的專案設定中。
-- 執行時期配接器會決定哪些傳輸實際上可執行。
+- `/mcp` 將配置儲存在 OpenClaw 配置中，而非 Pi 擁有的專案設定中。
+- 執行時期適配器決定哪些傳輸實際上可執行。
 
-## 外掛程式更新
+## 外掛更新
 
-`/plugins` 讓操作員檢查已發現的外掛程式，並在設定中切換啟用狀態。唯讀流程可以使用 `/plugin` 作為別名。預設停用；請透過 `commands.plugins: true` 啟用。
+`/plugins` 讓操作員檢查已發現的外掛並切換配置中的啟用狀態。唯讀流程可以使用 `/plugin` 作為別名。預設為停用；請使用 `commands.plugins: true` 啟用。
 
 範例：
 
@@ -278,34 +313,34 @@ title: "Slash Commands"
 
 備註：
 
-- `/plugins list` 和 `/plugins show` 使用對當前工作區加上磁碟設定的真實外掛程式探索。
-- `/plugins enable|disable` 僅更新外掛程式設定；它不會安裝或解除安裝外掛程式。
-- 啟用/停用變更後，請重新啟動 gateway 以套用變更。
+- `/plugins list` 和 `/plugins show` 會針對目前的工作區加上硬碟配置使用實際的外掛探索。
+- `/plugins enable|disable` 僅更新外掛配置；它不會安裝或解除安裝外掛。
+- 啟用/停用變更後，請重新啟動閘道以套用變更。
 
 ## 介面備註
 
-- **文字指令** 在一般聊天會話中執行（DM 共用 `main`，群組有自己的會話）。
-- **原生指令** 使用獨立會話：
+- **文字指令** 在一般聊天階段中執行（DM 共用 `main`，群組則有自己的階段）。
+- **原生指令** 使用獨立的階段：
   - Discord：`agent:<agentId>:discord:slash:<userId>`
-  - Slack：`agent:<agentId>:slack:slash:<userId>`（前綴可透過 `channels.slack.slashCommand.sessionPrefix` 設定）
-  - Telegram：`telegram:slash:<userId>`（透過 `CommandTargetSessionKey` 指向聊天會話）
-- **`/stop`** 以作用中的聊天會話為目標，以便中止當前的執行。
-- **Slack：** 單一 `/openclaw` 風格的指令仍然支援 `channels.slack.slashCommand`。如果您啟用 `commands.native`，則必須為每個內建指令建立一個 Slack 指令（名稱與 `/help` 相同）。Slack 的指令參數選單會以暫時性的 Block Kit 按鈕形式提供。
-  - Slack 原生例外：請註冊 `/agentstatus`（而不是 `/status`），因為 Slack 保留了 `/status`。文字 `/status` 在 Slack 訊息中仍然有效。
+  - Slack：`agent:<agentId>:slack:slash:<userId>`（字首可透過 `channels.slack.slashCommand.sessionPrefix` 設定）
+  - Telegram：`telegram:slash:<userId>`（透過 `CommandTargetSessionKey` 指定聊天工作階段）
+- **`/stop`** 會以目前的聊天工作階段為目標，因此可以中止目前的執行。
+- **Slack：** `channels.slack.slashCommand` 仍支援單一 `/openclaw` 風格的指令。如果您啟用 `commands.native`，您必須為每個內建指令建立一個 Slack 斜線指令（名稱與 `/help` 相同）。Slack 的指令參數選單會以暫時性的 Block Kit 按鈕形式呈現。
+  - Slack 原生例外：註冊 `/agentstatus`（而非 `/status`），因為 Slack 保留了 `/status`。文字 `/status` 在 Slack 訊息中仍然有效。
 
-## BTW 附帶問題
+## BTW 側面提問
 
-`/btw` 是關於當前會話的快速**附帶問題**。
+`/btw` 是關於目前工作階段的快速**側面提問**。
 
 與一般聊天不同：
 
-- 它使用當前會話作為背景上下文，
-- 它作為單獨的**無工具**一次性呼叫執行，
-- 它不會改變未來的會話上下文，
-- 它不會寫入對話記錄歷史，
-- 它是作為即時附帶結果傳送，而非一般的助理訊息。
+- 它會使用目前的工作階段作為背景上下文，
+- 它會以個別的**無工具**一次性呼叫方式執行，
+- 它不會改變未來的工作階段上下文，
+- 它不會寫入逐字稿歷史記錄，
+- 它會以即時側面結果的形式傳遞，而非一般的助理訊息。
 
-這使得當您需要臨時釐清某些事項，且同時讓主要任務繼續進行時，`/btw` 非常有用。
+這使得 `/btw` 在您希望主要任務持續進行時想要進行暫時性釐清時非常有用。
 
 範例：
 
@@ -313,5 +348,5 @@ title: "Slash Commands"
 /btw what are we doing right now?
 ```
 
-請參閱 [BTW 附帶問題](/en/tools/btw) 以了解完整行為和客戶端 UX
-詳細資訊。
+請參閱 [BTW 側面提問](/en/tools/btw) 以了解完整行為與客戶端 UX
+細節。

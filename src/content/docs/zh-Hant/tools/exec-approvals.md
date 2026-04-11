@@ -472,7 +472,7 @@ Discord 和 Telegram 也支援同一聊天 `/approve`，但即使停用了原生
 
 設定 `enabled: false` 以明確停用原生審批客戶端。設定 `enabled: true` 以在解析出審批者時強制啟用它。公開原始聊天傳遞仍透過 `channels.<channel>.execApprovals.target` 明確控制。
 
-常見問題：[為什麼聊天審批有兩個 exec 審批設定？](/en/help/faq#why-are-there-two-exec-approval-configs-for-chat-approvals)
+常見問題解答：[為何聊天審核有兩個執行審核設定？](/en/help/faq#why-are-there-two-exec-approval-configs-for-chat-approvals)
 
 - Discord：`channels.discord.execApprovals.*`
 - Slack：`channels.slack.execApprovals.*`
@@ -491,20 +491,20 @@ Discord 和 Telegram 也支援同一聊天 `/approve`，但即使停用了原生
 - Slack 審批者可以是明確的 (`execApprovals.approvers`) 或從 `commands.ownerAllowFrom` 推斷
 - Slack 原生按鈕保留審批 ID 種類，因此 `plugin:` ID 可以解析插件審批
   而無需第二層 Slack 本機後援層
-- Matrix 原生 DM/頻道路由僅適用於 exec；Matrix 插件審批保留在共享的
-  同一聊天 `/approve` 和可選的 `approvals.plugin` 轉發路徑上
+- Matrix 原生 DM/頻道路由和反應捷徑可同時處理執行與外掛程式審核；
+  外掛程式授權仍來自 `channels.matrix.dm.allowFrom`
 - 請求者不必是審批者
-- 當該聊天已支援指令和回覆時，原始聊天可以直接使用 `/approve` 進行批准
-- 原生 Discord 審批按鈕按審批 ID 種類路由：`plugin:` ID 直接
-  前往插件審批，其他所有內容前往 exec 審批
-- 原生 Telegram 審批按鈕遵循與 `/approve` 相同的有界 exec 到插件後援機制
-- 當原生 `target` 啟用原始聊天傳遞時，審批提示包含指令文字
+- 當該聊天已支援指令和回覆時，來源聊天可直接使用 `/approve` 進行審核
+- 原生 Discord 審核按鈕根據審核 ID 種類進行路由：`plugin:` ID 會
+  直接進入外掛程式審核，其他所有內容則進入執行審核
+- 原生 Telegram 審核按鈕遵循與 `/approve` 相同的有界執行至外掛程式後援機制
+- 當原生 `target` 啟用來源聊天傳遞時，審核提示會包含指令文字
 - 待處理的 exec 審批預設在 30 分鐘後過期
-- 如果沒有操作員 UI 或設定的審批用戶端可以接受請求，提示會後援到 `askFallback`
+- 如果操作員 UI 或設定的審核客戶端均無法接受請求，提示會後援至 `askFallback`
 
-Telegram 預設為審批者 DM (`target: "dm"`)。當您
-希望審批提示也出現在原始 Telegram 聊天/主題中時，您可以切換到 `channel` 或 `both`。對於 Telegram 論壇
-主題，OpenClaw 會為審批提示和批准後的後續跟進保留該主題。
+Telegram 預設為審核者 DM (`target: "dm"`)。當您
+希望審核提示也顯示在來源 Telegram 聊天/主題中時，可以切換至 `channel` 或 `both`。對於 Telegram 論壇
+主題，OpenClaw 會為審核提示和審核後的後續追蹤保留主題。
 
 請參閱：
 
@@ -522,7 +522,7 @@ Gateway -> Node Service (WS)
 
 安全說明：
 
-- Unix socket 模式 `0600`，token 儲存於 `exec-approvals.json`。
+- Unix socket 模式 `0600`，token 儲存在 `exec-approvals.json` 中。
 - Same-UID 對等端檢查。
 - 挑戰/回應 (nonce + HMAC token + 請求雜湊) + 短 TTL。
 
@@ -534,9 +534,9 @@ Exec 生命週期會以系統訊息呈現：
 - `Exec finished`
 - `Exec denied`
 
-這些內容會在節點回報事件後發布至 Agent 的會話。
-Gateway-host exec 批准會在指令完成時（以及可選的執行時間超過閾值時）發出相同的生命週期事件。
-有批准閘門的 exec 會在這些訊息中重複使用批准 ID 作為 `runId` 以便於關聯。
+這些會在節點回報事件後發佈至代理程式的工作階段。
+閘道主機執行審核會在指令完成時發出相同的生命週期事件（以及選擇性地當執行時間超過閾值時）。
+有審核閘門的執行會在這些訊息中重複使用審核 ID 作為 `runId` 以便於關聯。
 
 ## 拒絕批准的行為
 
@@ -551,19 +551,19 @@ Agent 聲稱有新輸出，或利用先前成功執行的過期結果
 - **full** 功能強大；盡可能優先使用允許清單。
 - **ask** 讓您保持知情，同時仍允許快速批准。
 - 每個 Agent 的允許清單可防止一個 Agent 的批准洩漏到其他 Agent。
-- 批准僅適用於來自**授權傳送者**的主機 exec 請求。未授權的傳送者無法發出 `/exec`。
-- `/exec security=full` 是授權操作員的會話層級便利功能，且設計上會跳過批准。
-  若要徹底封鎖主機 exec，請將批准安全性設為 `deny` 或透過工具政策拒絕 `exec` 工具。
+- 審核僅適用於來自 **授權發送者** 的主機執行請求。未授權的發送者無法發出 `/exec`。
+- `/exec security=full` 是授權操作員的會話層級便利功能，旨在略過批准程序。
+  若要徹底阻擋主機 exec，請將批准安全性設定為 `deny` 或透過工具政策拒絕 `exec` 工具。
 
 相關：
 
-- [Exec tool](/en/tools/exec)
-- [Elevated mode](/en/tools/elevated)
-- [Skills](/en/tools/skills)
+- [Exec 工具](/en/tools/exec)
+- [提升模式](/en/tools/elevated)
+- [技能](/en/tools/skills)
 
 ## 相關
 
-- [Exec](/en/tools/exec) — shell 指令執行工具
-- [Sandboxing](/en/gateway/sandboxing) — 沙箱模式和工作區存取
-- [安全性](/en/gateway/security) — 安全模型與加固
-- [沙盒 vs 工具策略 vs 提升權限](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — 何時使用各項
+- [Exec](/en/tools/exec) — Shell 指令執行工具
+- [沙盒化](/en/gateway/sandboxing) — 沙盒模式與工作區存取
+- [安全性](/en/gateway/security) — 安全性模型與加固
+- [沙盒 vs 工具政策 vs 提升](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — 何時使用各項功能

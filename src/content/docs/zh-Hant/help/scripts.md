@@ -19,9 +19,35 @@ title: "腳本"
 
 ## 監控驗證腳本
 
-驗證監控涵蓋在 [驗證](/en/gateway/authentication) 中。`scripts/` 下的腳本是 systemd/Termux 手機工作流程的可選附加項目。
+身份驗證監控涵蓋於 [Authentication](/en/gateway/authentication)。`scripts/` 下的腳本是 systemd/Termux 手機工作流程的額外可選選項。
+
+## GitHub 讀取輔助工具
+
+當您希望 `gh` 在執行存放庫範圍的讀取呼叫時使用 GitHub App 安裝權杖，同時將一般的 `gh` 保留在您的個人登入中以進行寫入操作，請使用 `scripts/gh-read`。
+
+必要環境變數：
+
+- `OPENCLAW_GH_READ_APP_ID`
+- `OPENCLAW_GH_READ_PRIVATE_KEY_FILE`
+
+選用環境變數：
+
+- 當您想要略過基於存放庫的安裝查詢時 `OPENCLAW_GH_READ_INSTALLATION_ID`
+- `OPENCLAW_GH_READ_PERMISSIONS` 作為要求讀取權限子集的逗號分隔覆寫值
+
+存放庫解析順序：
+
+- `gh ... -R owner/repo`
+- `GH_REPO`
+- `git remote origin`
+
+範例：
+
+- `scripts/gh-read pr view 123`
+- `scripts/gh-read run list -R openclaw/openclaw`
+- `scripts/gh-read api repos/openclaw/openclaw/pulls/123`
 
 ## 新增腳本時
 
-- 保持腳本專注並附上文件。
-- 在相關文件中新增簡短條目（如果缺少，請建立一個）。
+- 保持腳本專注並提供文件。
+- 在相關文件中新增簡短條目（如果缺失則建立一個）。

@@ -59,81 +59,81 @@ pendant que la tentative était en cours.
 OpenClaw utilise des **profils d'authentification** à la fois pour les clés API et les jetons OAuth.
 
 - Les secrets résident dans `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (ancien : `~/.openclaw/agent/auth-profiles.json`).
-- La configuration `auth.profiles` / `auth.order` est **uniquement des métadonnées + routage** (pas de secrets).
-- Fichier OAuth ancien, importation uniquement : `~/.openclaw/credentials/oauth.json` (importé dans `auth-profiles.json` à la première utilisation).
+- L'état du routage d'authentification au runtime réside dans `~/.openclaw/agents/<agentId>/agent/auth-state.json`.
+- La configuration `auth.profiles` / `auth.order` est **uniquement des métadonnées + du routage** (pas de secrets).
+- Fichier hérité d'importation uniquement OAuth : `~/.openclaw/credentials/oauth.json` (importé dans `auth-profiles.json` lors de la première utilisation).
 
 Plus de détails : [/concepts/oauth](/en/concepts/oauth)
 
-Types d'informations d'identification :
+Types d'identifiants :
 
 - `type: "api_key"` → `{ provider, key }`
-- `type: "oauth"` → `{ provider, access, refresh, expires, email? }` (+ `projectId`/`enterpriseUrl` pour certains providers)
+- `type: "oauth"` → `{ provider, access, refresh, expires, email? }` (+ `projectId`/`enterpriseUrl` pour certains fournisseurs)
 
 ## ID de profil
 
-Les connexions OAuth créent des profils distincts afin que plusieurs comptes puissent coexister.
+Les connexions OAuth créent des profils distincts pour que plusieurs comptes puissent coexister.
 
-- Par défaut : `provider:default` lorsqu'aucun e-mail n'est disponible.
+- Par défaut : `provider:default` lorsqu aucun e-mail n'est disponible.
 - OAuth avec e-mail : `provider:<email>` (par exemple `google-antigravity:user@gmail.com`).
 
 Les profils résident dans `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` sous `profiles`.
 
 ## Ordre de rotation
 
-Lorsqu'un provider possède plusieurs profils, OpenClaw choisit un ordre comme suit :
+Lorsqu'un fournisseur a plusieurs profils, OpenClaw choisit un ordre comme ceci :
 
 1. **Configuration explicite** : `auth.order[provider]` (si défini).
-2. **Profils configurés** : `auth.profiles` filtrés par provider.
-3. **Profils stockés** : entrées dans `auth-profiles.json` pour le provider.
+2. **Profils configurés** : `auth.profiles` filtrés par fournisseur.
+3. **Profils stockés** : entrées dans `auth-profiles.json` pour le fournisseur.
 
-Si aucun ordre explicite n'est configuré, OpenClaw utilise un ordre round‑robin :
+Si aucun ordre explicite n'est configuré, OpenClaw utilise un ordre tournant (round‑robin) :
 
-- **Clé primaire** : type de profil (\*\*OAuth avant les clés API).
-- **Clé secondaire** : `usageStats.lastUsed` (plus ancien en premier, au sein de chaque type).
-- Les **profils en période de refroidissement/désactivés** sont déplacés à la fin, triés par expiration la plus proche.
+- **Clé primaire** : type de profil (**OAuth avant les clés API**).
+- **Clé secondaire** : `usageStats.lastUsed` (le plus ancien en premier, dans chaque type).
+- Les **profils en période de refroidissement/désactivés** sont déplacés à la fin, classés par expiration la plus proche.
 
 ### Persistance de session (cache-friendly)
 
-OpenClaw **épinglera le profil d'authentification choisi par session** pour garder les caches des providers chauds.
-Il n'effectue **pas** une rotation à chaque requête. Le profil épinglé est réutilisé jusqu'à ce que :
+OpenClaw **épingle le profil d'authentification choisi par session** pour garder les caches du fournisseur à jour.
+Il **ne** fait pas de rotation à chaque requête. Le profil épinglé est réutilisé jusqu'à ce que :
 
 - la session soit réinitialisée (`/new` / `/reset`)
-- une compaction soit terminée (le compteur de compaction s'incrémente)
+- un compactage soit terminé (le compteur de compactage incrémente)
 - le profil soit en période de refroidissement/désactivé
 
-Une sélection manuelle via `/model …@<profileId>` définit une **redéfinition utilisateur** pour cette session
+Une sélection manuelle via `/model …@<profileId>` définit une **substitution utilisateur** pour cette session
 et n'est pas automatiquement tournée tant qu'une nouvelle session n'a pas commencé.
 
 Les profils épinglés automatiquement (sélectionnés par le routeur de session) sont traités comme une **préférence** :
-Ils sont essayés en premier, mais OpenClaw peut passer à un autre profil en cas de limites de taux/délais d'expiration.
-Les profils épinglés par l'utilisateur restent verrouillés sur ce profil ; en cas d'échec et si des replis de modèle
-sont configurés, OpenClaw passe au modèle suivant au lieu de changer de profil.
+ils sont essayés en premier, mais OpenClaw peut passer à un autre profil en cas de limites de délai/d'expiration.
+Les profils épinglés par l'utilisateur restent verrouillés sur ce profil ; s'il échoue et que les modèles de secours sont configurés, OpenClaw passe au modèle suivant au lieu de changer de profil.
 
 ### Pourquoi OAuth peut sembler "perdu"
 
-Si vous avez à la fois un profil OAuth et un profil de clé API pour le même provider, le round‑robin peut basculer entre eux d'un message à l'autre s'ils ne sont pas épinglés. Pour forcer un profil unique :
+Si vous disposez à la fois d'un profil OAuth et d'un profil de clé API pour le même fournisseur, le round-robin peut basculer entre eux d'un message à l'autre, sauf s'ils sont épinglés. Pour forcer un seul profil :
 
 - Épinglez avec `auth.order[provider] = ["provider:profileId"]`, ou
-- Utilisez une substitution par session via `/model …` avec une substitution de profil (lorsque cela est pris en charge par votre interface de chat).
+- Utilisez une substitution par session via `/model …` avec une substitution de profil (lorsque pris en charge par votre interface de discussion/interface utilisateur).
 
-## Périodes de refroidissement
+## Cooldowns
 
-Lorsqu'un profil échoue en raison d'erreurs d'authentification/de limitation de débit (ou d'un délai d'attente ressemblant à une limitation de débit), OpenClaw le marque en période de refroidissement et passe au profil suivant. Ce compartiment de limitation de débit est plus large qu'un simple `429` : il inclut également les messages du fournisseur tels que `Too many concurrent requests`, `ThrottlingException`, `concurrency limit reached`, `workers_ai ... quota limit exceeded`, `throttled`, `resource exhausted`, et les limites périodiques de fenêtre d'utilisation telles que `weekly/monthly limit reached`. Les erreurs de format/requête invalide (par exemple, les échecs de validation de l'ID d'appel d'outil Cloud Code Assist) sont traitées comme justifiant un basculement et utilisent les mêmes périodes de refroidissement. Les erreurs de raison d'arrêt compatibles avec OpenAI telles que `Unhandled stop reason: error`, `stop reason: error` et `reason: error` sont classées comme des signaux de délai d'attente/basculement. Le texte générique du serveur délimité au fournisseur peut également atterrir dans ce compartiment de délai d'attente lorsque la source correspond à un modèle transitoire connu. Par exemple, Anthropic nu `An unknown error occurred` et les payloads JSON `api_error` avec du texte de serveur transitoire tel que `internal server error`, `unknown error, 520`, `upstream error` ou `backend error` sont traités comme des délais d'attente justifiant un basculement. Le texte générique en amont spécifique à OpenRouter tel que le `Provider returned error` nu est également traité comme un délai d'attente uniquement lorsque le contexte du fournisseur est OpenRouter. Le texte de repli interne générique tel que `LLM request failed with an unknown error.` reste conservateur et ne déclenche pas de basculement par lui-même.
+Lorsqu'un profil échoue en raison d'erreurs d'authentification/de limite de taux (ou d'un délai d'expiration ressemblant à une limitation de débit), OpenClaw le place en refroidissement et passe au profil suivant. Ce compartiment de limite de taux est plus large que le simple `429` : il inclut également les messages du fournisseur tels que `Too many concurrent requests`, `ThrottlingException`, `concurrency limit reached`, `workers_ai ... quota limit exceeded`, `throttled`, `resource exhausted`, et les limites périodiques de fenêtre d'utilisation telles que `weekly/monthly limit reached`. Les erreurs de format/de demande invalide (par exemple, les échecs de validation de l'ID d'appel d'outil Cloud Code Assist) sont considérées comme justifiant un basculement et utilisent les mêmes temps de refroidissement. Les erreurs de raison d'arrêt compatibles OpenAI telles que `Unhandled stop reason: error`, `stop reason: error` et `reason: error` sont classées comme signaux de délai d'expiration/basculement. Le texte générique du serveur délimité au fournisseur peut également atterrir dans ce compartiment de délai d'expiration lorsque la source correspond à un modèle transitoire connu. Par exemple, Anthropic nu `An unknown error occurred` et les charges utiles JSON `api_error` avec du texte serveur transitoire tel que `internal server error`, `unknown error, 520`, `upstream error` ou `backend error` sont traitées comme des délais d'expiration justifiant un basculement. Le texte générique en amont spécifique à OpenRouter tel que `Provider returned error` nu est également traité comme un délai d'expiration uniquement lorsque le contexte du fournisseur est OpenRouter. Le texte de repli interne générique tel que `LLM request failed with an unknown error.` reste conservateur et ne déclenche pas de basculement par lui-même.
 
-Les périodes de refroidissement pour limitation de débit peuvent également être délimitées au modèle :
+Les temps de refroidissement pour limites de taux peuvent également être limités au modèle :
 
-- OpenClaw enregistre `cooldownModel` pour les échecs de limitation de débit lorsque l'identifiant du modèle défaillant est connu.
-- Un modèle frère sur le même fournisseur peut toujours être essayé lorsque la période de refroidissement est délimitée à un modèle différent.
+- OpenClaw enregistre `cooldownModel` pour les échecs de limite de taux lorsque l'identifiant du modèle défaillant est connu.
+- Un modèle frère sur le même fournisseur peut toujours être essayé lorsque le refroidissement est limité à un modèle différent.
 - Les fenêtres de facturation/désactivation bloquent toujours l'ensemble du profil pour tous les modèles.
 
-Les périodes de refroidissement utilisent une temporisation exponentielle :
+Les temps de refroidissement utilisent un backoff exponentiel :
 
 - 1 minute
 - 5 minutes
 - 25 minutes
-- 1 heure (limite)
+- 1 heure (plafond)
 
-L'état est stocké dans `auth-profiles.json` sous `usageStats` :
+L'état est stocké dans `auth-state.json` sous `usageStats` :
 
 ```json
 {
@@ -149,19 +149,19 @@ L'état est stocké dans `auth-profiles.json` sous `usageStats` :
 
 ## Désactivations de facturation
 
-Les échecs de facturation/crédit (par exemple « crédits insuffisants » / « solde de crédit trop faible ») sont considérés comme justifiant un basculement, mais ils ne sont généralement pas transitoires. Au lieu d'un court temps de recharge, OpenClaw marque le profil comme **désactivé** (avec un temps d'attente plus long) et passe au profil/fournisseur suivant.
+Les échecs de facturation/crédit (par exemple « crédits insuffisants » / « solde de crédit trop faible ») sont considérés comme justifiant un basculement (failover), mais ils ne sont généralement pas transitoires. Au lieu d'un court refroidissement (cooldown), OpenClaw marque le profil comme **désactivé** (avec un délai d'attente plus long) et passe au profil/fournisseur suivant.
 
 Toutes les responses de type facturation ne sont pas `402`, et chaque code HTTP `402` n'atterrit
-pas ici. OpenClaw conserve le texte de facturation explicite dans la voie de facturation même lorsqu'un
-fournisseur renvoie `401` ou `403` à la place, mais les correspondants spécifiques au fournisseur restent
+pas ici. OpenClaw conserve les textes de facturation explicites dans la voie de facturation même lorsqu'un
+fournisseur renvoie `401` ou `403` à la place, mais les correspondants (matchers) spécifiques au fournisseur restent
 limités au fournisseur qui les possède (par exemple OpenRouter `403 Key limit
 exceeded`). Meanwhile temporary `402` usage-window et
 les erreurs de limite de dépense d'organisation/espace de travail sont classées comme `rate_limit` lorsque
-le message semble réessayable (par exemple `weekly usage limit exhausted`, `daily
+le message semble réessayer (par exemple `weekly usage limit exhausted`, `daily
 limit reached, resets tomorrow`, or `organization spending limit exceeded`).
-Celles-ci restent sur le chemin de temps de recharge court/basculement au lieu du chemin de désactivation de facturation long.
+Ceux-ci restent sur le chemin de basculement à court refroidissement au lieu du chemin de désactivation de facturation à long terme.
 
-L'état est stocké dans `auth-profiles.json` :
+L'état est stocké dans `auth-state.json` :
 
 ```json
 {
@@ -176,32 +176,38 @@ L'état est stocké dans `auth-profiles.json` :
 
 Valeurs par défaut :
 
-- Le temps d'attente de facturation commence à **5 heures**, double à chaque échec de facturation et plafonne à **24 heures**.
-- Les compteurs de temps d'attente sont réinitialisés si le profil n'a pas échoué pendant **24 heures** (configurable).
-- Les tentatives de réessai en cas de surcharge permettent **1 rotation de profil du même fournisseur** avant le basculement de modèle.
-- Les tentatives de réessai en cas de surcharge utilisent un temps d'attente de **0 ms** par défaut.
+- L'attente de facturation commence à **5 heures**, double à chaque échec de facturation et plafonne à **24 heures**.
+- Les compteurs d'attente sont réinitialisés si le profil n'a pas échoué pendant **24 heures** (configurable).
+- Les tentatives de réessai en cas de surcharge permettent **1 rotation de profil du même fournisseur** avant le repli de modèle.
+- Les tentatives de réessai en cas de surcharge utilisent **0 ms d'attente** par défaut.
 
-## Basculement de modèle
+## Repli de modèle
 
 Si tous les profils d'un fournisseur échouent, OpenClaw passe au modèle suivant dans
-`agents.defaults.model.fallbacks`. Cela s'applique aux échecs d'authentification, aux limites de débit et
-aux délais d'attente qui ont épuisé la rotation des profils (d'autres erreurs n'avancent pas le basculement).
+`agents.defaults.model.fallbacks`. Cela s'applique aux échecs d'authentification, aux limites de taux et
+aux délais d'attente qui ont épuisé la rotation des profils (d'autres erreurs n'avancent pas le repli).
 
-Les erreurs de surcharge et de limitation de débit sont gérées plus agressivement que les temps de recharge de facturation. Par défaut, OpenClaw permet une nouvelle tentative de profil d'authentification du même fournisseur, puis passe au modèle de repli configuré suivant sans attendre. Les signaux de fournisseur occupé tels que `ModelNotReadyException` atterrissent dans ce compartiment de surcharge. Ajustez ceci avec `auth.cooldowns.overloadedProfileRotations`, `auth.cooldowns.overloadedBackoffMs` et `auth.cooldowns.rateLimitedProfileRotations`.
+Les erreurs de surcharge et de limite de taux sont gérées plus agressivement que les
+refroidissements de facturation. Par défaut, OpenClaw permet une nouvelle tentative de profil d'authentification du même fournisseur,
+puis passe au repli de modèle configuré suivant sans attendre.
+Les signaux de fournisseur occupé tels que `ModelNotReadyException` atterrissent dans ce seau
+de surcharge. Ajustez cela avec `auth.cooldowns.overloadedProfileRotations`,
+`auth.cooldowns.overloadedBackoffMs` et
+`auth.cooldowns.rateLimitedProfileRotations`.
 
-Lorsqu'une exécution commence avec une priorité de modèle (hooks ou CLI), les replis se terminent tout de même à `agents.defaults.model.primary` après avoir tenté tous les replis configurés.
+Lorsqu'une exécution commence avec une substitution de modèle (hooks ou CLI), les replis aboutissent toujours à `agents.defaults.model.primary` après avoir essayé les replis configurés.
 
 ### Règles de la chaîne de candidats
 
-OpenClaw construit la liste des candidats à partir du `provider/model` actuellement demandé plus les replis configurés.
+OpenClaw construit la liste des candidats à partir du `provider/model` actuellement demandé ainsi que des replis configurés.
 
 Règles :
 
 - Le modèle demandé est toujours le premier.
-- Les replis configurés explicitement sont dédupliqués mais non filtrés par la liste d'autorisation des modèles. Ils sont traités comme une intention explicite de l'opérateur.
-- Si l'exécution actuelle utilise déjà un repli configuré dans la même famille de fournisseurs, OpenClaw continue d'utiliser la chaîne configurée complète.
-- Si l'exécution actuelle est sur un fournisseur différent de la configuration et que ce modèle actuel ne fait pas déjà partie de la chaîne de repli configurée, OpenClaw n'ajoute pas les replis configurés non liés d'un autre fournisseur.
-- Lorsque l'exécution a commencé par une priorité, le principal configuré est ajouté à la fin afin que la chaîne puisse revenir à la valeur par défaut normale une fois les candidats précédents épuisés.
+- Les replis configurés explicitement sont dédupliqués mais non filtrés par la liste d'autorisation de modèles. Ils sont considérés comme une intention explicite de l'opérateur.
+- Si l'exécution actuelle est déjà sur un repli configuré dans la même famille de fournisseurs, OpenClaw continue d'utiliser la chaîne configurée complète.
+- Si l'exécution actuelle est sur un fournisseur différent de celui de la configuration et que ce modèle actuel ne fait pas déjà partie de la chaîne de repli configurée, OpenClaw n'ajoute pas de replis configurés non liés provenant d'un autre fournisseur.
+- Lorsque l'exécution a commencé à partir d'une substitution, le principal configuré est ajouté à la fin afin que la chaîne puisse revenir à la valeur par défaut normale une fois les candidats précédents épuisés.
 
 ### Quelles erreurs font avancer le repli
 
@@ -212,84 +218,74 @@ Le repli de modèle continue en cas de :
 - erreurs de surcharge/fournisseur occupé
 - erreurs de repli de type timeout
 - désactivations de facturation
-- `LiveSessionModelSwitchError`, qui est normalisé dans un chemin de repli afin qu'un modèle persistant obsolète ne crée pas une boucle de nouvelle tentative externe
-- autres erreurs non reconnues lorsqu'il reste encore des candidats
+- `LiveSessionModelSwitchError`, qui est normalisé dans un chemin de repli pour qu'un modèle persistant obsolète ne crée pas une boucle de réessai externe
+- autres erreurs non reconnues lorsqu'il reste des candidats
 
 Le repli de modèle ne continue pas en cas de :
 
-- abandons explicites qui ne sont pas de type timeout/repli
-- erreurs de dépassement de contexte qui doivent rester dans la logique de compactage/réessai
-  (par exemple `request_too_large`, `INVALID_ARGUMENT: input exceeds the maximum
+- abords explicites qui ne sont pas de type timeout/repli
+- erreurs de dépassement de contexte qui doivent rester dans la logique de compactage/réessai (par exemple `request_too_large`, `INVALID_ARGUMENT: input exceeds the maximum
 number of tokens`, `input token count exceeds the maximum number of input
 tokens`, `The input is too long for the model`, or `ollama error: context
 length exceeded`)
-- une erreur inconnue finale lorsqu'il ne reste plus de candidats
+- une erreur inconnue finale lorsqu'il n'y a plus de candidats
 
-### Contournement du refroidissement vs comportement de sonde
+### Comportement d'ignorance vs sonde de temps de recharge
 
-Lorsque chaque profil d'authentification pour un fournisseur est déjà en refroidissement, OpenClaw ne
-saute pas automatiquement ce fournisseur pour toujours. Il prend une décision par candidat :
+Lorsque chaque profil d'authentification pour un fournisseur est déjà en temps de recharge, OpenClaw ne ignore pas automatiquement ce fournisseur pour toujours. Il prend une décision par candidat :
 
-- Les échecs d'authentification persistants sautent immédiatement l'ensemble du fournisseur.
-- Les désactivations de facturation sautent généralement, mais le candidat principal peut toujours être sondé
-  lors d'une limitation afin que la récupération soit possible sans redémarrage.
-- Le candidat principal peut être sondé près de l'expiration du refroidissement, avec une limitation
-  par fournisseur.
-- Les frères et sœurs de repli du même fournisseur peuvent être tentés malgré le refroidissement lorsque
-  l'échec semble transitoire (`rate_limit`, `overloaded`, ou inconnu). Ceci est
-  particulièrement pertinent lorsqu'une limite de taux est délimitée au niveau du modèle et qu'un modèle frère peut
-  toujours récupérer immédiatement.
-- Les sondes de refroidissement transitoires sont limitées à une par fournisseur par exécution de repli afin qu'un
-  seul fournisseur ne bloque pas le repli entre fournisseurs.
+- Les échecs d'authentification persistants ignorent immédiatement l'ensemble du fournisseur.
+- Les désactivations de facturation sont généralement ignorées, mais le candidat principal peut toujours être testé lors d'une limitation de débit, ce qui permet une récupération sans redémarrage.
+- Le candidat principal peut être testé près de l'expiration du délai de récupération, avec une limitation de débit par fournisseur.
+- Les alternatives de secours du même fournisseur peuvent être tentées malgré le délai de récupération lorsque la défaillance semble transitoire (`rate_limit`, `overloaded`, ou inconnue). C'est particulièrement pertinent lorsqu'une limite de débit est spécifique au modèle et qu'un modèle alternatif peut toujours récupérer immédiatement.
+- Les tests de délai de récupération transitoires sont limités à un par fournisseur par exécution de secours, afin qu'un seul fournisseur ne bloque pas le secours inter-fournisseurs.
 
 ## Remplacements de session et changement de modèle en direct
 
-Les changements de modèle de session sont un état partagé. Le runner actif, la commande `/model`,
-les mises à jour de compactage/session et la réconciliation de session en direct lisent ou écrivent
-tous des parties de la même entrée de session.
+Les modifications de modèle de session sont un état partagé. Le runner actif, la commande `/model`, les mises à jour de compactage/session et la réconciliation de session en direct lisent ou écrivent tous des parties de la même entrée de session.
 
-Cela signifie que les tentatives de repli doivent se coordonner avec le changement de modèle en direct :
+Cela signifie que les tentatives de secours doivent être coordonnées avec le changement de modèle en direct :
 
-- Seuls les changements de modèle explicitement pilotés par l'utilisateur marquent un changement en direct en attente. Cela
-  inclut `/model`, `session_status(model=...)` et `sessions.patch`.
-- Les changements de modèle pilotés par le système tels que la rotation de repli, les remplacements de heartbeat,
-  ou le compactage ne marquent jamais seuls un changement en direct en attente.
-- Avant qu'une tentative de repli ne commence, le runner de réponse persiste les champs
-  de remplacement de repli sélectionnés dans l'entrée de session.
-- La réconciliation de session en direct préfère les remplacements de session persistés aux champs de modèle
-  d'exécution obsolètes.
-- Si la tentative de repli échoue, le runner annule uniquement les champs de substitution qu'il a écrits, et uniquement s'ils correspondent toujours à ce candidat ayant échoué.
+- Seuls les changements de modèle explicitement initiés par l'utilisateur marquent un basculement en direct en attente. Cela inclut `/model`, `session_status(model=...)` et `sessions.patch`.
+- Les changements de modèle pilotés par le système, tels que la rotation de secours, les remplacements de heartbeat ou le compactage, ne marquent jamais à eux seuls un basculement en direct en attente.
+- Avant qu'une tentative de secours ne commence, le runner de réponse persiste les champs de remplacement de secours sélectionnés dans l'entrée de session.
+- La réconciliation de session en direct privilégie les remplacements de session persistants par rapport aux champs de modèle d'exécution obsolètes.
+- Si la tentative de secours échoue, le runner annule uniquement les champs de remplacement qu'il a écrits, et seulement s'ils correspondent toujours à ce candidat échoué.
 
-Cela empêche la situation de course classique :
+Cela empêche la situation de classique de compétition :
 
-1. Le primaire échoue.
-2. Le candidat de repli est choisi en mémoire.
-3. Le magasin de session indique toujours l'ancien primaire.
+1. Échec du principal.
+2. Le candidat de secours est choisi en mémoire.
+3. Le magasin de session indique toujours l'ancien principal.
 4. La réconciliation de session en direct lit l'état de session obsolète.
-5. La nouvelle tentative est ramenée à l'ancien modèle avant le début de la tentative de repli.
+5. La nouvelle tentative est ramenée à l'ancien modèle avant le début de la tentative de secours.
 
-La substitution de repli persistante ferme cette fenêtre, et l'annulation ciblée conserve les modifications manuelles ou d'exécution de session plus récentes intactes.
+Le remplacement de secours persistant ferme cette fenêtre, et l'annulation ciblée garde intactes les modifications manuelles ou d'exécution de session plus récentes.
 
-## Observabilité et résumés d'échec
+## Observabilité et résumés des échecs
 
-`runWithModelFallback(...)` enregistre les détails de chaque tentative qui alimentent les journaux et les messages de refroidissement visibles par l'utilisateur :
+`runWithModelFallback(...)` enregistre les détails de chaque tentative qui alimentent les journaux et les messages de délai de récupération destinés à l'utilisateur :
 
 - fournisseur/modèle tenté
 - raison (`rate_limit`, `overloaded`, `billing`, `auth`, `model_not_found`, et
-  raisons de repli similaires)
+  motifs de basculement similaires)
 - statut/code facultatif
-- résumé d'erreur lisible par l'homme
+- résumé de l'erreur lisible par l'homme
 
-Lorsque tous les candidats échouent, OpenClaw lance `FallbackSummaryError`. Le runner de réponse externe peut l'utiliser pour construire un message plus spécifique tel que "tous les modèles sont temporairement limités par le taux" et inclure la prochaine expiration du refroidissement lorsqu'une est connue.
+Lorsque chaque candidat échoue, OpenClaw lance `FallbackSummaryError`. Le lanceur de réponse externe peut l'utiliser pour construire un message plus spécifique tel que "tous les modèles
+sont temporairement limités par le taux" et inclure l'expiration du refroidissement la plus proche lorsqu'une
+est connue.
 
 Ce résumé de refroidissement est conscient du modèle :
 
-- les limites de taux sans rapport et limitées au modèle sont ignorées pour la chaîne fournisseur/modèle tentée
-- si le bloc restant est une limite de taux correspondante et limitée au modèle, OpenClaw signale la dernière expiration correspondante qui bloque encore ce modèle
+- les limites de taux sans rapport avec la portée du modèle sont ignorées pour la chaîne
+  provider/model tentée
+- si le bloc restant est une limite de taux correspondant à la portée du modèle, OpenClaw
+  signale la dernière expiration correspondante qui bloque encore ce modèle
 
-## Configuration connexe
+## Config associée
 
-Voir la [configuration Gateway](/en/gateway/configuration) pour :
+Voir [Configuration du Gateway](/en/gateway/configuration) pour :
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
@@ -299,4 +295,4 @@ Voir la [configuration Gateway](/en/gateway/configuration) pour :
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - routage `agents.defaults.imageModel`
 
-Voir [Modèles](/en/concepts/models) pour l'aperçu plus large de la sélection et du repli de modèles.
+Voir [Models](/en/concepts/models) pour la vue d'ensemble de la sélection et du basculement des modèles.

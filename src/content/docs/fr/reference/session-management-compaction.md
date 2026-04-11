@@ -208,7 +208,7 @@ Après la compression, les futurs tours voient :
 - Le résumé de la compression
 - Messages après `firstKeptEntryId`
 
-La compression est **persistante** (contrairement à l'élagage de session). Voir [/concepts/session-pruning](/en/concepts/session-pruning).
+La compaction est **persistante** (contrairement à l'élagage de session). Voir [/concepts/session-pruning](/en/concepts/session-pruning).
 
 ## Limites des blocs de compression et appariement des outils
 
@@ -275,9 +275,24 @@ Implémentation : `ensurePiCompactionReserveTokens()` dans `src/agents/pi-settin
 
 ---
 
+## Fournisseurs de compaction enfichables
+
+Les plugins peuvent enregistrer un fournisseur de compaction via `registerCompactionProvider()` sur l'API du plugin. Lorsque `agents.defaults.compaction.provider` est défini sur un id de fournisseur enregistré, l'extension de sécurité délègue le résumé à ce fournisseur au lieu du pipeline intégré `summarizeInStages`.
+
+- `provider` : id d'un plugin fournisseur de compaction enregistré. Laisser non défini pour le résumé LLM par défaut.
+- Définir un `provider` force `mode: "safeguard"`.
+- Les fournisseurs reçoivent les mêmes instructions de compaction et la même politique de préservation des identifiants que le chemin intégré.
+- Le garde-fou préserve toujours le contexte de suffixe des tours récents et des tours fractionnés après la sortie du fournisseur.
+- Si le fournisseur échoue ou renvoie un résultat vide, OpenClaw revient automatiquement au résumé LLM intégré.
+- Les signaux d'abort/d'expiration sont relancés (non ignorés) pour respecter l'annulation de l'appelant.
+
+Source : `src/plugins/compaction-provider.ts`, `src/agents/pi-hooks/compaction-safeguard.ts`.
+
+---
+
 ## Surfaces visibles par l'utilisateur
 
-Vous pouvez observer le compactage et l'état de la session via :
+Vous pouvez observer la compaction et l'état de la session via :
 
 - `/status` (dans n'importe quelle session de chat)
 - `openclaw status` (CLI)
@@ -286,67 +301,66 @@ Vous pouvez observer le compactage et l'état de la session via :
 
 ---
 
-## Nettoyage silencieux (`NO_REPLY`)
+## Maintenance silencieuse (`NO_REPLY`)
 
-OpenClaw prend en charge les tours « silencieux » pour les tâches en arrière-plan où l'utilisateur ne doit pas voir la sortie intermédiaire.
+OpenClaw prend en charge les tours « silencieux » pour les tâches d'arrière-plan où l'utilisateur ne doit pas voir la sortie intermédiaire.
 
 Convention :
 
 - L'assistant commence sa sortie par le jeton silencieux exact `NO_REPLY` /
   `no_reply` pour indiquer « ne pas envoyer de réponse à l'utilisateur ».
-- OpenClaw supprime/masque cela au niveau de la livraison.
-- La suppression exacte du jeton silencieux est insensible à la casse, donc `NO_REPLY` et
-  `no_reply` comptent tous les deux lorsque la charge utile entière n'est que le jeton silencieux.
-- Cela est réservé uniquement aux tours d'arrière-plan/sans livraison réels ; ce n'est pas un raccourci pour
+- OpenClaw supprime/empêche cela dans la couche de livraison.
+- La suppression exacte du jeton silencieux ne tient pas compte de la casse, donc `NO_REPLY` et
+  `no_reply` comptent tous les deux lorsque la charge utile entière est juste le jeton silencieux.
+- Ceci est uniquement pour les tours réels en arrière-plan/sans livraison ; ce n'est pas un raccourci pour
   les demandes utilisateur actionnables ordinaires.
 
-Depuis `2026.1.10`, OpenClaw supprime également le **streaming brouillon/frappe** lorsqu'un
+Depuis `2026.1.10`, OpenClaw supprime également le **streaming de brouillon/frappe** lorsqu'un
 bloc partiel commence par `NO_REPLY`, afin que les opérations silencieuses ne fuient pas de sortie
 partielle en cours de tour.
 
 ---
 
-## "Vidange de la mémoire" préalable au compactage (implémenté)
+## « Vidange de mémoire » de pré-compaction (implémentée)
 
-Objectif : avant que le compactage automatique ne se produise, exécuter un tour agent silencieux qui écrit l'état
-durable sur le disque (par exemple `memory/YYYY-MM-DD.md` dans l'espace de travail de l'agent) pour que le compactage ne puisse pas
+Objectif : avant que la auto-compaction ne se produise, exécuter un tour agent silencieux qui écrit l'état
+durable sur le disque (par exemple `memory/YYYY-MM-DD.md` dans l'espace de travail de l'agent) afin que la compaction ne puisse pas
 effacer le contexte critique.
 
-OpenClaw utilise l'approche de **vidange avant seuil** :
+OpenClaw utilise l'approche de « vidange avant seuil » :
 
 1. Surveiller l'utilisation du contexte de session.
-2. Lorsqu'il franchit un « seuil souple » (en dessous du seuil de compactage de Pi), exécutez une directive silencieuse
-   « write memory now » (écrire la mémoire maintenant) vers l'agent.
-3. Utilisez le jeton silencieux exact `NO_REPLY` / `no_reply` afin que l'utilisateur ne voie
+2. Lorsqu'il franchit un « seuil souple » (en dessous du seuil de compaction de Pi), exécuter une directive
+   silencieuse « écrire la mémoire maintenant » à l'agent.
+3. Utiliser le jeton silencieux exact `NO_REPLY` / `no_reply` afin que l'utilisateur ne voie
    rien.
 
 Config (`agents.defaults.compaction.memoryFlush`) :
 
 - `enabled` (par défaut : `true`)
 - `softThresholdTokens` (par défaut : `4000`)
-- `prompt` (message utilisateur pour le tour de vidage)
-- `systemPrompt` (prompt système supplémentaire ajouté pour le tour de vidage)
+- `prompt` (message utilisateur pour le tour de vidange)
+- `systemPrompt` (invite système supplémentaire ajoutée pour le tour de vidange)
 
 Notes :
 
-- Le prompt par défaut / le prompt système incluent un indice `NO_REPLY` pour supprimer
+- L'invite système par défaut inclut un indice `NO_REPLY` pour supprimer
   la livraison.
-- Le vidage s'exécute une fois par cycle de compactage (suivi dans `sessions.json`).
-- Le vidage ne s'exécute que pour les sessions Pi intégrées.
-- Le vidage est ignoré lorsque l'espace de travail de la session est en lecture seule (`workspaceAccess: "ro"` ou `"none"`).
-- Consultez [Mémoire](/en/concepts/memory) pour la disposition des fichiers de l'espace de travail et les modèles d'écriture.
+- La vidange s'exécute une fois par cycle de compaction (suivi dans `sessions.json`).
+- La vidange ne s'exécute que pour les sessions Pi intégrées (les backends CLI l'ignorent).
+- La vidange est ignorée lorsque l'espace de travail de la session est en lecture seule (`workspaceAccess: "ro"` ou `"none"`).
+- Voir [Mémoire](/en/concepts/memory) pour la disposition des fichiers et les modèles d'écriture de l'espace de travail.
 
-Pi expose également un hook `session_before_compact` dans l'API d'extension, mais la logique de vidage d'OpenClaw
-réside aujourd'hui du côté du Gateway.
+Pi expose également un hook `session_before_compact` dans l'API d'extension, mais la logique de vidage d'OpenClaw réside aujourd'hui du côté de la Gateway.
 
 ---
 
 ## Liste de contrôle de dépannage
 
 - Clé de session incorrecte ? Commencez par [/concepts/session](/en/concepts/session) et confirmez le `sessionKey` dans `/status`.
-- Inadéquation entre le magasin et la transcription ? Confirmez l'hôte du Gateway et le chemin du magasin à partir de `openclaw status`.
+- Incohérence entre le magasin et la transcription ? Confirmez l'hôte de la Gateway et le chemin du magasin à partir de `openclaw status`.
 - Spam de compactage ? Vérifiez :
-  - fenêtre de contexte du modèle (trop petite)
+  - fenêtre contextuelle du modèle (trop petite)
   - paramètres de compactage (`reserveTokens` trop élevé pour la fenêtre du modèle peut provoquer un compactage plus précoce)
   - gonflement des résultats d'outils : activez/réglez l'élagage de session
-- Fuites de tours silencieux ? Confirmez que la réponse commence par `NO_REPLY` (jeton exact insensible à la casse) et que vous êtes sur une version qui inclut la correction de la suppression du streaming.
+- Fuite de tours silencieux ? Confirmez que la réponse commence par `NO_REPLY` (jeton exact insensible à la casse) et que vous êtes sur une version qui inclut la correction de la suppression du flux.

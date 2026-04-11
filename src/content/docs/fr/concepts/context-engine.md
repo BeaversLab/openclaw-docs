@@ -115,6 +115,8 @@ moteur est utilisé automatiquement.
 Un plugin peut enregistrer un moteur de contexte en utilisant l'API de plugin :
 
 ```ts
+import { buildMemorySystemPromptAddition } from "openclaw/plugin-sdk/core";
+
 export default function register(api) {
   api.registerContextEngine("my-engine", () => ({
     info: {
@@ -128,12 +130,15 @@ export default function register(api) {
       return { ingested: true };
     },
 
-    async assemble({ sessionId, messages, tokenBudget }) {
+    async assemble({ sessionId, messages, tokenBudget, availableTools, citationsMode }) {
       // Return messages that fit the budget
       return {
         messages: buildContext(messages, tokenBudget),
         estimatedTokens: countTokens(messages),
-        systemPromptAddition: "Use lcm_grep to search history...",
+        systemPromptAddition: buildMemorySystemPromptAddition({
+          availableTools: availableTools ?? new Set(),
+          citationsMode,
+        }),
       };
     },
 
@@ -239,20 +244,34 @@ Le slot est exclusif lors de l'exécution — un seul moteur de contexte enregis
 ## Relation avec le compactage et la mémoire
 
 - Le **compactage** est une responsabilité du moteur de contexte. Le moteur hérité délègue à la résumé intégrée de OpenClaw. Les moteurs de plugin peuvent implémenter n'importe quelle stratégie de compactage (résumés DAG, récupération vectorielle, etc.).
-- Les **plugins de mémoire** (`plugins.slots.memory`) sont distincts des moteurs de contexte. Les plugins de mémoire fournissent la recherche/récupération ; les moteurs de contexte contrôlent ce que le modèle voit. Ils peuvent travailler ensemble — un moteur de contexte pourrait utiliser les données d'un plugin de mémoire lors de l'assemblage.
+- Les **plugins de mémoire** (`plugins.slots.memory`) sont distincts des moteurs de contexte.
+  Les plugins de mémoire fournissent la recherche/récupération ; les moteurs de contexte contrôlent ce que le
+  modèle voit. Ils peuvent fonctionner ensemble — un moteur de contexte peut utiliser les données d'un
+  plugin de mémoire lors de l'assemblage. Les moteurs de plugins qui souhaitent utiliser le chemin d'invite de mémoire actif
+  devraient privilégier `buildMemorySystemPromptAddition(...)` à partir de
+  `openclaw/plugin-sdk/core`, qui convertit les sections de l'invite de mémoire active
+  en un `systemPromptAddition` prêt à être ajouté en préambule. Si un moteur a besoin d'un contrôle
+  de plus bas niveau, il peut toujours extraire les lignes brutes de
+  `openclaw/plugin-sdk/memory-host-core` via
+  `buildActiveMemoryPromptSection(...)`.
 - Le **nettoyage de session** (coupe des anciens résultats d'outils en mémoire) s'exécute toujours, quel que soit le moteur de contexte actif.
 
 ## Conseils
 
 - Utilisez `openclaw doctor` pour vérifier que votre moteur se charge correctement.
 - Si vous changez de moteur, les sessions existantes continuent avec leur historique actuel. Le nouveau moteur prend le relais pour les futures exécutions.
-- Les erreurs du moteur sont journalisées et affichées dans les diagnostics. Si un moteur de plugin échoue à s'enregistrer ou si l'identifiant du moteur sélectionné ne peut pas être résolu, OpenClaw ne revient pas automatiquement à une version précédente ; les exécutions échouent jusqu'à ce que vous corrigiez le plugin ou que vous remettiez `plugins.slots.contextEngine` à `"legacy"`.
-- Pour le développement, utilisez `openclaw plugins install -l ./my-engine` pour lier un répertoire de plugin local sans copier.
+- Les erreurs du moteur sont enregistrées et affichées dans les diagnostics. Si un moteur de plugin
+  échoue à s'enregistrer ou si l'identifiant du moteur sélectionné ne peut pas être résolu, OpenClaw
+  ne revient pas automatiquement à l'ancienne version ; les exécutions échouent jusqu'à ce que vous corrigiez le plugin ou
+  que vous `plugins.slots.contextEngine` reveniez à `"legacy"`.
+- Pour le développement, utilisez `openclaw plugins install -l ./my-engine` pour lier un
+  répertoire de plugins local sans copier.
 
-Voir aussi : [Compactage](/en/concepts/compaction), [Contexte](/en/concepts/context), [Plugins](/en/tools/plugin), [Manifeste de plugin](/en/plugins/manifest).
+Voir aussi : [Compaction](/en/concepts/compaction), [Context](/en/concepts/context),
+[Plugins](/en/tools/plugin), [Plugin manifest](/en/plugins/manifest).
 
 ## Connexes
 
-- [Contexte](/en/concepts/context) — comment le contexte est construit pour les tours de l'agent
-- [Architecture de plugins](/en/plugins/architecture) — enregistrement des plugins de moteur de contexte
-- [Compactage](/en/concepts/compaction) — résumé des longues conversations
+- [Context](/en/concepts/context) — comment le contexte est construit pour les tours de l'agent
+- [Plugin Architecture](/en/plugins/architecture) — enregistrement des plugins de moteur de contexte
+- [Compaction](/en/concepts/compaction) — résumer les longues conversations

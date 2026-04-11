@@ -66,7 +66,9 @@ Utilisez `action: "list"` pour inspecter les fournisseurs et les modèles dispon
 | `count`       | nombre   | Nombre d'images à générer (1–4)                                                          |
 | `filename`    | chaîne   | Indication de nom de fichier de sortie                                                   |
 
-Tous les fournisseurs ne prennent pas en charge tous les paramètres. L'outil transmet ce que chaque fournisseur prend en charge, ignore le reste et signale les substitutions abandonnées dans le résultat de l'outil.
+Tous les providers ne prennent pas en charge tous les paramètres. Lorsqu'un provider de secours prend en charge une option de géométrie proche au lieu de celle exactement demandée, OpenClaw la remappe vers la taille, le format d'image ou la résolution la plus proche prise en charge avant l'envoi. Les substitutions non prises en charge sont toujours signalées dans le résultat de l'outil.
+
+Les résultats de l'outil indiquent les paramètres appliqués. Lorsque OpenClaw remappe la géométrie lors du basculement vers un provider de secours, les valeurs `size`, `aspectRatio` et `resolution` renvoyées reflètent ce qui a été réellement envoyé, et `details.normalization` capture la traduction entre la demande et l'application.
 
 ## Configuration
 
@@ -85,27 +87,28 @@ Tous les fournisseurs ne prennent pas en charge tous les paramètres. L'outil tr
 }
 ```
 
-### Ordre de sélection du fournisseur
+### Ordre de sélection des providers
 
-Lors de la génération d'une image, OpenClaw essaie les fournisseurs dans cet ordre :
+Lors de la génération d'une image, OpenClaw essaie les providers dans cet ordre :
 
-1. Paramètre **`model`** provenant de l'appel de l'outil (si l'agent en spécifie un)
+1. **Paramètre `model`** issu de l'appel d'outil (si l'agent en spécifie un)
 2. **`imageGenerationModel.primary`** depuis la configuration
 3. **`imageGenerationModel.fallbacks`** dans l'ordre
-4. **Détection automatique** — utilise uniquement les valeurs par défaut des fournisseurs avec authentification :
-   - le fournisseur par défaut actuel en premier
-   - les autres fournisseurs de génération d'images enregistrés par ordre d'ID de fournisseur
+4. **Détection automatique** — utilise uniquement les valeurs par défaut des providers avec authentification :
+   - le provider par défaut actuel en premier
+   - les providers de génération d'images restants dans l'ordre des identifiants de provider
 
-Si un fournisseur échoue (erreur d'authentification, limite de taux, etc.), le candidat suivant est essayé automatiquement. Si tous échouent, l'erreur inclut les détails de chaque tentative.
+Si un provider échoue (erreur d'authentification, limite de débit, etc.), le candidat suivant est essayé automatiquement. Si tous échouent, l'erreur inclut les détails de chaque tentative.
 
-Notes :
+Remarques :
 
-- La détection automatique est consciente de l'authentification. Une valeur par défaut du fournisseur n'est ajoutée à la liste des candidats que lorsque OpenClaw peut réellement authentifier ce fournisseur.
-- Utilisez `action: "list"` pour inspecter les fournisseurs actuellement enregistrés, leurs modèles par défaut et les indications des variables d'environnement d'authentification.
+- La détection automatique est consciente de l'authentification. Un provider par défaut n'entre dans la liste des candidats que lorsque OpenClaw peut réellement authentifier ce provider.
+- La détection automatique est activée par défaut. Définissez `agents.defaults.mediaGenerationAutoProviderFallback: false` si vous souhaitez que la génération d'images utilise uniquement les entrées explicites `model`, `primary` et `fallbacks`.
+- Utilisez `action: "list"` pour inspecter les providers actuellement enregistrés, leurs modèles par défaut et les indices de variables d'environnement d'authentification.
 
 ### Modification d'image
 
-OpenAI, Google, fal, MiniMax et ComfyUI prennent en charge la modification d'images de référence. Transmettez un chemin ou une URL d'image de référence :
+OpenAI, Google, fal, MiniMax et ComfyUI prennent en charge la modification d'images de référence. Indiquez un chemin ou une URL d'image de référence :
 
 ```
 "Generate a watercolor version of this photo" + image: "/path/to/photo.jpg"
@@ -118,24 +121,24 @@ La génération d'images MiniMax est disponible via les deux chemins d'authentif
 - `minimax/image-01` pour les configurations avec clé API
 - `minimax-portal/image-01` pour les configurations OAuth
 
-## Capacités du fournisseur
+## Fonctionnalités des providers
 
-| Capacité               | OpenAI                 | Google                 | fal                         | MiniMax                   | ComfyUI                                       | Vydra   |
-| ---------------------- | ---------------------- | ---------------------- | --------------------------- | ------------------------- | --------------------------------------------- | ------- |
-| Générer                | Oui (jusqu'à 4)        | Oui (jusqu'à 4)        | Oui (jusqu'à 4)             | Oui (jusqu'à 9)           | Oui (sorties définies par le flux de travail) | Oui (1) |
-| Modification/référence | Oui (jusqu'à 5 images) | Oui (jusqu'à 5 images) | Oui (1 image)               | Oui (1 image, réf. sujet) | Oui (1 image, configuré par flux de travail)  | Non     |
-| Contrôle de la taille  | Oui                    | Oui                    | Oui                         | Non                       | Non                                           | Non     |
-| Format d'image         | Non                    | Oui                    | Oui (génération uniquement) | Oui                       | Non                                           | Non     |
-| Résolution (1K/2K/4K)  | Non                    | Oui                    | Oui                         | Non                       | Non                                           | Non     |
+| Fonctionnalité         | OpenAI                 | Google                 | fal                         | MiniMax                   | ComfyUI                                  | Vydra   |
+| ---------------------- | ---------------------- | ---------------------- | --------------------------- | ------------------------- | ---------------------------------------- | ------- |
+| Générer                | Oui (jusqu'à 4)        | Oui (jusqu'à 4)        | Oui (jusqu'à 4)             | Oui (jusqu'à 9)           | Oui (sorties définies par le workflow)   | Oui (1) |
+| Modification/référence | Oui (jusqu'à 5 images) | Oui (jusqu'à 5 images) | Oui (1 image)               | Oui (1 image, réf. sujet) | Oui (1 image, configuré par le workflow) | Non     |
+| Contrôle de la taille  | Oui                    | Oui                    | Oui                         | Non                       | Non                                      | Non     |
+| Format d'image         | Non                    | Oui                    | Oui (génération uniquement) | Oui                       | Non                                      | Non     |
+| Résolution (1K/2K/4K)  | Non                    | Oui                    | Oui                         | Non                       | Non                                      | Non     |
 
 ## Connexes
 
 - [Présentation des outils](/en/tools) — tous les outils de l'agent disponibles
 - [fal](/en/providers/fal) — configuration du fournisseur d'images et de vidéos fal
 - [ComfyUI](/en/providers/comfy) — configuration des flux de travail ComfyUI locaux et Comfy Cloud
-- [Google (Gemini)](/en/providers/google) — Configuration du fournisseur d'images Gemini
-- [MiniMax](/en/providers/minimax) — Configuration du fournisseur d'images MiniMax
-- [OpenAI](/en/providers/openai) — Configuration du fournisseur d'images OpenAI
-- [Vydra](/en/providers/vydra) — Configuration de Vydra pour les images, la vidéo et la voix
+- [Google (Gemini)](/en/providers/google) — configuration du fournisseur d'images Gemini
+- [MiniMax](/en/providers/minimax) — configuration du fournisseur d'images MiniMax
+- [OpenAI](/en/providers/openai) — configuration du fournisseur d'images OpenAI
+- [Vydra](/en/providers/vydra) — configuration de l'image, de la vidéo et de la parole Vydra
 - [Référence de configuration](/en/gateway/configuration-reference#agent-defaults) — config `imageGenerationModel`
-- [Modèles](/en/concepts/models) — configuration des modèles et basculement
+- [Modèles](/en/concepts/models) — configuration et basculement des modèles

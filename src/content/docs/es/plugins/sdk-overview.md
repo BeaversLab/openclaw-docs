@@ -64,116 +64,122 @@ promocione explícitamente una como pública.
 | `plugin-sdk/provider-entry` | `defineSingleProviderPluginEntry`                                                                                                      |
 
 <AccordionGroup>
-  <Accordion title="Subrutas de canal">
+  <Accordion title="Subrutas del canal">
     | Subruta | Exportaciones clave |
     | --- | --- |
     | `plugin-sdk/channel-core` | `defineChannelPluginEntry`, `defineSetupPluginEntry`, `createChatChannelPlugin`, `createChannelPluginBase` |
-    | `plugin-sdk/config-schema` | Exportación del esquema Zod de `openclaw.json` raíz (`OpenClawSchema`) |
+    | `plugin-sdk/config-schema` | Exportación del esquema Zod `openclaw.json` raíz (`OpenClawSchema`) |
     | `plugin-sdk/channel-setup` | `createOptionalChannelSetupSurface`, `createOptionalChannelSetupAdapter`, `createOptionalChannelSetupWizard`, más `DEFAULT_ACCOUNT_ID`, `createTopLevelChannelDmPolicy`, `setSetupChannelEnabled`, `splitSetupEntries` |
-    | `plugin-sdk/setup` | Asistentes compartidos del asistente de configuración, avisos de lista de permitidos, constructores de estado de configuración |
+    | `plugin-sdk/setup` | Ayudantes del asistente de configuración compartida, mensajes de lista de permitidos, constructores de estado de configuración |
     | `plugin-sdk/setup-runtime` | `createPatchedAccountSetupAdapter`, `createEnvPatchedAccountSetupAdapter`, `createSetupInputPresenceValidator`, `noteChannelLookupFailure`, `noteChannelLookupSummary`, `promptResolvedAllowFrom`, `splitSetupEntries`, `createAllowlistSetupWizardProxy`, `createDelegatedSetupWizardProxy` |
     | `plugin-sdk/setup-adapter-runtime` | `createEnvPatchedAccountSetupAdapter` |
     | `plugin-sdk/setup-tools` | `formatCliCommand`, `detectBinary`, `extractArchive`, `resolveBrewExecutable`, `formatDocsLink`, `CONFIG_DIR` |
-    | `plugin-sdk/account-core` | Asistentes de configuración/acción-gate multicuenta, asistentes de reserva de cuenta predeterminada |
-    | `plugin-sdk/account-id` | `DEFAULT_ACCOUNT_ID`, asistentes de normalización de account-id |
-    | `plugin-sdk/account-resolution` | Búsqueda de cuenta + asistentes de reserva predeterminada |
-    | `plugin-sdk/account-helpers` | Asistentes de lista de cuentas restringida/acción de cuenta |
+    | `plugin-sdk/account-core` | Ayudantes de configuración/acción de puerta multicuenta, ayudantes de reserva de cuenta predeterminada |
+    | `plugin-sdk/account-id` | `DEFAULT_ACCOUNT_ID`, ayudantes de normalización de id de cuenta |
+    | `plugin-sdk/account-resolution` | Búsqueda de cuenta + ayudantes de reserva predeterminada |
+    | `plugin-sdk/account-helpers` | Ayudantes de lista de cuenta/acción de cuenta estrecha |
     | `plugin-sdk/channel-pairing` | `createChannelPairingController` |
     | `plugin-sdk/channel-reply-pipeline` | `createChannelReplyPipeline` |
     | `plugin-sdk/channel-config-helpers` | `createHybridChannelConfigAdapter` |
-    | `plugin-sdk/channel-config-schema` | Tipos de esquema de configuración de canal |
-    | `plugin-sdk/telegram-command-config` | Asistentes de normalización/validación de comandos personalizados de Telegram con reserva de contrato agrupado |
+    | `plugin-sdk/channel-config-schema` | Tipos de esquema de configuración del canal |
+    | `plugin-sdk/telegram-command-config` | Ayudantes de normalización/validación de comandos personalizados de Telegram con reserva de contrato empaquetado |
     | `plugin-sdk/channel-policy` | `resolveChannelGroupRequireMention` |
     | `plugin-sdk/channel-lifecycle` | `createAccountStatusSink` |
-    | `plugin-sdk/inbound-envelope` | Asistentes compartidos de ruta entrante + constructor de sobre |
-    | `plugin-sdk/inbound-reply-dispatch` | Asistentes compartidos de registro y envío entrantes |
-    | `plugin-sdk/messaging-targets` | Asistentes de análisis/coincidencia de objetivos |
-    | `plugin-sdk/outbound-media` | Asistentes compartidos de carga de medios salientes |
-    | `plugin-sdk/outbound-runtime` | Asistentes de delegación de identidad/envío saliente |
-    | `plugin-sdk/thread-bindings-runtime` | Ciclo de vida de vinculación de hilos y asistentes de adaptador |
+    | `plugin-sdk/inbound-envelope` | Ayudantes compartidos de ruta entrante + constructor de sobre |
+    | `plugin-sdk/inbound-reply-dispatch` | Ayudantes compartidos de registro y envío entrantes |
+    | `plugin-sdk/messaging-targets` | Ayudantes de análisis/coincidencia de objetivos |
+    | `plugin-sdk/outbound-media` | Ayudantes compartidos de carga de medios salientes |
+    | `plugin-sdk/outbound-runtime` | Ayudantes de delegación de identidad/envío saliente |
+    | `plugin-sdk/thread-bindings-runtime` | Ciclo de vida de vinculación de hilos y ayudantes de adaptador |
     | `plugin-sdk/agent-media-payload` | Constructor de carga de medios de agente heredado |
-    | `plugin-sdk/conversation-runtime` | Vinculación de conversación/hilos, emparejamiento y asistentes de vinculación configurada |
-    | `plugin-sdk/runtime-config-snapshot` | Asistente de instantáneas de configuración en tiempo de ejecución |
-    | `plugin-sdk/runtime-group-policy` | Asistentes de resolución de políticas de grupo en tiempo de ejecución |
-    | `plugin-sdk/channel-status` | Asistentes compartidos de instantánea/resumen de estado del canal |
-    | `plugin-sdk/channel-config-primitives` | Primitivas de esquema de configuración de canal restringido |
-    | `plugin-sdk/channel-config-writes` | Asistentes de autorización de escritura de configuración de canal |
-    | `plugin-sdk/channel-plugin-common` | Exportaciones de preámbulo compartidas del complemento de canal |
-    | `plugin-sdk/allowlist-config-edit` | Asistentes de edición/lectura de configuración de lista de permitidos |
-    | `plugin-sdk/group-access` | Asistentes compartidos de decisiones de acceso de grupo |
-    | `plugin-sdk/direct-dm` | Asistentes compartidos de autorización/guardia de DM directo |
-    | `plugin-sdk/interactive-runtime` | Asistentes de normalización/reducción de carga de respuesta interactiva |
-    | `plugin-sdk/channel-inbound` | Rebote, coincidencia de mención, asistentes de sobre |
+    | `plugin-sdk/conversation-runtime` | Vinculación de conversación/hilo, emparejamiento y ayudantes de vinculación configurada |
+    | `plugin-sdk/runtime-config-snapshot` | Ayudante de instantánea de configuración en tiempo de ejecución |
+    | `plugin-sdk/runtime-group-policy` | Ayudantes de resolución de políticas de grupo en tiempo de ejecución |
+    | `plugin-sdk/channel-status` | Ayudantes compartidos de instantánea/resumen de estado del canal |
+    | `plugin-sdk/channel-config-primitives` | Primitivas de esquema de configuración de canal estrecho |
+    | `plugin-sdk/channel-config-writes` | Ayudantes de autorización de escritura de configuración del canal |
+    | `plugin-sdk/channel-plugin-common` | Exportaciones preliminares compartidas de complementos de canal |
+    | `plugin-sdk/allowlist-config-edit` | Ayudantes de edición/lectura de configuración de lista de permitidos |
+    | `plugin-sdk/group-access` | Ayudantes compartidos de decisiones de acceso de grupo |
+    | `plugin-sdk/direct-dm` | Ayudantes compartidos de autenticación/guardia de DM directo |
+    | `plugin-sdk/interactive-runtime` | Ayudantes de normalización/reducción de carga útil de respuesta interactiva |
+    | `plugin-sdk/channel-inbound` | Desaceleración entrante, coincidencia de mención, ayudantes de política de mención y ayudantes de sobre |
     | `plugin-sdk/channel-send-result` | Tipos de resultados de respuesta |
     | `plugin-sdk/channel-actions` | `createMessageToolButtonsSchema`, `createMessageToolCardSchema` |
-    | `plugin-sdk/channel-targets` | Asistentes de análisis/coincidencia de objetivos |
-    | `plugin-sdk/channel-contract` | Tipos de contrato de canal |
-    | `plugin-sdk/channel-feedback` | Conexión de comentarios/reacciones |
+    | `plugin-sdk/channel-targets` | Ayudantes de análisis/coincidencia de objetivos |
+    | `plugin-sdk/channel-contract` | Tipos de contrato del canal |
+    | `plugin-sdk/channel-feedback` | Cableado de comentarios/reacciones |
+    | `plugin-sdk/channel-secret-runtime` | Ayudantes de contrato secreto estrecho como `collectSimpleChannelFieldAssignments`, `getChannelSurface`, `pushAssignment` y tipos de objetivos secretos |
   </Accordion>
 
-<Accordion title="Subrutas de proveedores">
-  | Subruta | Exportaciones clave | | --- | --- | | `plugin-sdk/provider-entry` | `defineSingleProviderPluginEntry` | | `plugin-sdk/provider-setup` | Auxiliares de configuración de proveedores locales/autoalojados curados | | `plugin-sdk/self-hosted-provider-setup` | Auxiliares de configuración de proveedores autoalojados compatibles con OpenAI enfocados | | `plugin-sdk/provider-auth-runtime` |
-  Auxiliares de resolución de claves API en tiempo de ejecución para complementos de proveedor | | `plugin-sdk/provider-auth-api-key` | Auxiliares de incorporación de claves API/escritura de perfiles | | `plugin-sdk/provider-auth-result` | Constructor de resultados de autenticación OAuth estándar | | `plugin-sdk/provider-auth-login` | Auxiliares de inicio de sesión interactivo compartidos para
-  complementos de proveedor | | `plugin-sdk/provider-env-vars` | Auxiliares de búsqueda de variables de entorno de autenticación de proveedor | | `plugin-sdk/provider-auth` | `createProviderApiKeyAuthMethod`, `ensureApiKeyFromOptionEnvOrPrompt`, `upsertAuthProfile` | | `plugin-sdk/provider-model-shared` | `ProviderReplayFamily`, `buildProviderReplayFamilyHooks`, `normalizeModelCompat`,
-  constructores de políticas de reproducción compartidas, auxiliares de puntos finales de proveedor y auxiliares de normalización de ID de modelo como `normalizeNativeXaiModelId` | | `plugin-sdk/provider-catalog-shared` | `findCatalogTemplate`, `buildSingleProviderApiKeyCatalog`, `supportsNativeStreamingUsageCompat`, `applyProviderNativeStreamingUsageCompat` | | `plugin-sdk/provider-http` |
-  Auxiliares de capacidades HTTP/punto final genéricas de proveedor | | `plugin-sdk/provider-web-fetch` | Auxiliares de registro/caché de proveedor de recuperación web | | `plugin-sdk/provider-web-search` | Auxiliares de registro/caché/configuración de proveedor de búsqueda web | | `plugin-sdk/provider-tools` | `ProviderToolCompatFamily`, `buildProviderToolCompatFamilyHooks`, limpieza y
-  diagnóstico del esquema de Gemini, y auxiliares de compatibilidad con xAI como `resolveXaiModelCompatPatch` / `applyXaiModelCompat` | | `plugin-sdk/provider-usage` | `fetchClaudeUsage` y similares | | `plugin-sdk/provider-stream` | `ProviderStreamFamily`, `buildProviderStreamFamilyHooks`, `composeProviderStreamWrappers`, tipos de envoltorio de flujo y auxiliares de envoltorio compartidos para
-  Anthropic/Bedrock/Google/Kilocode/Moonshot/OpenAI/OpenRouter/Z.A.I/MiniMax/Copilot | | `plugin-sdk/provider-onboard` | Auxiliares de parches de configuración de incorporación | | `plugin-sdk/global-singleton` | Auxiliares de singleton/mapa/caché locales de proceso |
+<Accordion title="Subrutas del proveedor">
+  | Subruta | Exportaciones clave | | --- | --- | | `plugin-sdk/provider-entry` | `defineSingleProviderPluginEntry` | | `plugin-sdk/provider-setup` | Asistentes de configuración de proveedores locales/autoalojados curados | | `plugin-sdk/self-hosted-provider-setup` | Asistentes de configuración de proveedores autoalojados compatibles con OpenAI enfocados | | `plugin-sdk/cli-backend` | Valores
+  predeterminados del backend de la CLI + constantes de watchdog | | `plugin-sdk/provider-auth-runtime` | Asistentes de resolución de claves API en tiempo de ejecución para complementos de proveedor | | `plugin-sdk/provider-auth-api-key` | Asistentes de incorporación/escritura de perfil de claves API, como `upsertApiKeyProfile` | | `plugin-sdk/provider-auth-result` | Generador de resultados de
+  autenticación OAuth estándar | | `plugin-sdk/provider-auth-login` | Asistentes de inicio de sesión interactivo compartidos para complementos de proveedor | | `plugin-sdk/provider-env-vars` | Asistentes de búsqueda de variables de entorno de autenticación del proveedor | | `plugin-sdk/provider-auth` | `createProviderApiKeyAuthMethod`, `ensureApiKeyFromOptionEnvOrPrompt`, `upsertAuthProfile`,
+  `upsertApiKeyProfile`, `writeOAuthCredentials` | | `plugin-sdk/provider-model-shared` | `ProviderReplayFamily`, `buildProviderReplayFamilyHooks`, `normalizeModelCompat`, constructores compartidos de políticas de repetición, asistentes de endpoints de proveedores y asistentes de normalización de ID de modelo, como `normalizeNativeXaiModelId` | | `plugin-sdk/provider-catalog-shared` |
+  `findCatalogTemplate`, `buildSingleProviderApiKeyCatalog`, `supportsNativeStreamingUsageCompat`, `applyProviderNativeStreamingUsageCompat` | | `plugin-sdk/provider-http` | Asistentes de capacidades HTTP/endpoint de proveedor genéricas | | `plugin-sdk/provider-web-fetch-contract` | Asistentes de contrato de configuración/selección de recuperación web estrecha, como `enablePluginInConfig` y
+  `WebFetchProviderPlugin` | | `plugin-sdk/provider-web-fetch` | Asistentes de registro/caché de proveedores de recuperación web | | `plugin-sdk/provider-web-search-contract` | Asistentes de contrato de credenciales/configuración de búsqueda web estrecha, como `enablePluginInConfig`, `resolveProviderWebSearchPluginConfig`, y establecedores/obtenedores de credenciales con ámbito | |
+  `plugin-sdk/provider-web-search` | Asistentes de registro/caché/tiempo de ejecución de proveedores de búsqueda web | | `plugin-sdk/provider-tools` | `ProviderToolCompatFamily`, `buildProviderToolCompatFamilyHooks`, limpieza y diagnóstico del esquema de Gemini, y asistentes de compatibilidad con xAI, como `resolveXaiModelCompatPatch` / `applyXaiModelCompat` | | `plugin-sdk/provider-usage` |
+  `fetchClaudeUsage` y similares | | `plugin-sdk/provider-stream` | `ProviderStreamFamily`, `buildProviderStreamFamilyHooks`, `composeProviderStreamWrappers`, tipos de contenedor de flujo (stream), y asistentes compartidos de contenedor para Anthropic/Bedrock/Google/Kilocode/Moonshot/OpenAI/OpenRouter/Z.A.I/MiniMax/Copilot | | `plugin-sdk/provider-onboard` | Asistentes de parche de configuración
+  de incorporación | | `plugin-sdk/global-singleton` | Asistentes de singleton/mapa/caché local de proceso |
 </Accordion>
 
 <Accordion title="Subrutas de autenticación y seguridad">
-  | Subpath | Exportaciones clave | | --- | --- | | `plugin-sdk/command-auth` | `resolveControlCommandGate`, asistentes de registro de comandos, asistentes de autorización del remitente | | `plugin-sdk/approval-auth-runtime` | Resolución del aprobador y asistentes de autenticación de acciones del mismo chat | | `plugin-sdk/approval-client-runtime` | Asistentes de perfil/filtro de aprobación de
-  ejecución nativa | | `plugin-sdk/approval-delivery-runtime` | Adaptadores de capacidad/entrega de aprobación nativa | | `plugin-sdk/approval-native-runtime` | Objetivo de aprobación nativa + asistentes de vinculación de cuentas | | `plugin-sdk/approval-reply-runtime` | Asistentes de carga útil de respuesta de aprobación de ejecución/complemento | | `plugin-sdk/command-auth-native` |
-  Autenticación de comandos nativos + asistentes de destino de sesión nativa | | `plugin-sdk/command-detection` | Asistentes de detección de comandos compartidos | | `plugin-sdk/command-surface` | Normalización del cuerpo del comando y asistentes de superficie del comando | | `plugin-sdk/allow-from` | `formatAllowFromLowercase` | | `plugin-sdk/security-runtime` | Confianza compartida, restricción
-  de DM, contenido externo y asistentes de recopilación de secretos | | `plugin-sdk/ssrf-policy` | Lista de permitidos de host y asistentes de política SSRF de red privada | | `plugin-sdk/ssrf-runtime` | Despachador anclado, búsqueda protegida por SSRF y asistentes de política SSRF | | `plugin-sdk/secret-input` | Asistentes de análisis de entrada de secretos | | `plugin-sdk/webhook-ingress` |
-  Asistentes de solicitud/destino de Webhook | | `plugin-sdk/webhook-request-guards` | Asistentes de tamaño de cuerpo de solicitud/tiempo de espera |
+  | Subruta | Exportaciones clave | | --- | --- | | `plugin-sdk/command-auth` | `resolveControlCommandGate`, ayudantes del registro de comandos, ayudantes de autorización de remitente | | `plugin-sdk/approval-auth-runtime` | Resolución de aprobador y ayudantes de autenticación de acciones del mismo chat | | `plugin-sdk/approval-client-runtime` | Ayudantes de perfil/filtro de aprobación de
+  ejecución nativa | | `plugin-sdk/approval-delivery-runtime` | Adaptadores de capacidad/entrega de aprobación nativa | | `plugin-sdk/approval-gateway-runtime` | Ayudante compartido de resolución de puerta de enlace de aprobación | | `plugin-sdk/approval-handler-adapter-runtime` | Ayudantes de carga de adaptadores de aprobación nativa ligera para puntos de entrada de canal en caliente | |
+  `plugin-sdk/approval-handler-runtime` | Ayudantes de tiempo de ejecución del controlador de aprobación más amplios; prefiera las costuras de adaptador/puerta de enlace más estrechas cuando sean suficientes | | `plugin-sdk/approval-native-runtime` | Ayudantes de objetivo de aprobación nativa + vinculación de cuenta | | `plugin-sdk/approval-reply-runtime` | Ayudantes de carga útil de respuesta de
+  aprobación de ejecución/complemento | | `plugin-sdk/command-auth-native` | Ayudantes de autenticación de comandos nativos + objetivos de sesión nativa | | `plugin-sdk/command-detection` | Ayudantes compartidos de detección de comandos | | `plugin-sdk/command-surface` | Ayudantes de normalización del cuerpo del comando y de superficie del comando | | `plugin-sdk/allow-from` |
+  `formatAllowFromLowercase` | | `plugin-sdk/channel-secret-runtime` | Ayudantes estrechos de colección de contratos de secretos para superficies de secretos de canal/complemento | | `plugin-sdk/secret-ref-runtime` | Ayudantes estrechos `coerceSecretRef` y de escritura de SecretRef para el análisis de contratos/configuración de secretos | | `plugin-sdk/security-runtime` | Ayudantes compartidos de
+  confianza, restricción de DM, contenido externo y colección de secretos | | `plugin-sdk/ssrf-policy` | Ayudantes de lista de permitidos de host y política SSRF de red privada | | `plugin-sdk/ssrf-runtime` | Ayudantes de despachador fijado, recuperación protegida por SSRF y política SSRF | | `plugin-sdk/secret-input` | Ayudantes de análisis de entrada de secretos | | `plugin-sdk/webhook-ingress`
+  | Ayudantes de solicitud/objetivo de webhook | | `plugin-sdk/webhook-request-guards` | Ayudantes de tamaño/tiempo de espera del cuerpo de la solicitud |
 </Accordion>
 
 <Accordion title="Subrutas de tiempo de ejecución y almacenamiento">
-  | Subruta | Exportaciones clave | | --- | --- | | `plugin-sdk/runtime` | Funciones auxiliares amplias de tiempo de ejecución/registro/copias de seguridad/instalación de complementos | | `plugin-sdk/runtime-env` | Funciones auxiliares estrechas de entorno de tiempo de ejecución, registrador, tiempo de espera, reintento y retroceso exponencial | | `plugin-sdk/runtime-store` |
-  `createPluginRuntimeStore` | | `plugin-sdk/plugin-runtime` | Funciones auxiliares compartidas de comandos de complementos/ganchos/HTTP/interactivos | | `plugin-sdk/hook-runtime` | Funciones auxiliares compartidas de canalización de webhooks/ganchos internos | | `plugin-sdk/lazy-runtime` | Funciones auxiliares de importación/vinculación de tiempo de ejecución diferidas, como
-  `createLazyRuntimeModule`, `createLazyRuntimeMethod` y `createLazyRuntimeSurface` | | `plugin-sdk/process-runtime` | Funciones auxiliares de ejecución de procesos | | `plugin-sdk/cli-runtime` | Funciones auxiliares de formato CLI, espera y versión | | `plugin-sdk/gateway-runtime` | Funciones auxiliares de cliente de puerta de enlace y parches de estado de canal | | `plugin-sdk/config-runtime` |
-  Funciones auxiliares de carga/escritura de configuración | | `plugin-sdk/telegram-command-config` | Normalización de nombre/descripción de comandos de Telegram y verificaciones de duplicados/conflictos, incluso cuando la superficie del contrato de Telegram empaquetado no está disponible | | `plugin-sdk/approval-runtime` | Funciones auxiliares de aprobación de ejecución/complemento, constructores
-  de capacidades de aprobación, funciones auxiliares de autenticación/perfil, funciones auxiliares de enrutamiento nativo/tiempo de ejecución | | `plugin-sdk/reply-runtime` | Funciones auxiliares compartidas de tiempo de ejecución de entrada/respuesta, fragmentación, despacho, latido y planificador de respuestas | | `plugin-sdk/reply-dispatch-runtime` | Funciones auxiliares estrechas de
-  despacho/finalización de respuestas | | `plugin-sdk/reply-history` | Funciones auxiliares compartidas de historial de respuestas de ventana corta, como `buildHistoryContext`, `recordPendingHistoryEntry` y `clearHistoryEntriesIfEnabled` | | `plugin-sdk/reply-reference` | `createReplyReferencePlanner` | | `plugin-sdk/reply-chunking` | Funciones auxiliares estrechas de fragmentación de
-  texto/markdown | | `plugin-sdk/session-store-runtime` | Funciones auxiliares de ruta de almacenamiento de sesión + actualizado en | | `plugin-sdk/state-paths` | Funciones auxiliares de ruta de directorio de estado/OAuth | | `plugin-sdk/routing` | Funciones auxiliares de vinculación de ruta/clave de sesión/cuenta, como `resolveAgentRoute`, `buildAgentSessionKey` y
-  `resolveDefaultAgentBoundAccountId` | | `plugin-sdk/status-helpers` | Funciones auxiliares compartidas de resumen de estado de canal/cuenta, valores predeterminados de estado de tiempo de ejecución y funciones auxiliares de metadatos de problemas | | `plugin-sdk/target-resolver-runtime` | Funciones auxiliares compartidas de resolución de objetivos | | `plugin-sdk/string-normalization-runtime` |
-  Funciones auxiliares de normalización de slug/cadena | | `plugin-sdk/request-url` | Extraer URLs de cadenas de entradas tipo fetch/request | | `plugin-sdk/run-command` | Ejecutor de comandos cronometrado con resultados normalizados de stdout/stderr | | `plugin-sdk/param-readers` | Lectores de parámetros comunes de herramienta/CLI | | `plugin-sdk/tool-send` | Extraer campos de destino de envío
-  canónicos de argumentos de herramienta | | `plugin-sdk/temp-path` | Funciones auxiliares compartidas de ruta de descarga temporal | | `plugin-sdk/logging-core` | Funciones auxiliares de registrador de subsistema y redacción | | `plugin-sdk/markdown-table-runtime` | Funciones auxiliares de modo de tabla Markdown | | `plugin-sdk/json-store` | Funciones auxiliares pequeñas de lectura/escritura de
-  estado JSON | | `plugin-sdk/file-lock` | Funciones auxiliares de bloqueo de archivos reentrantes | | `plugin-sdk/persistent-dedupe` | Funciones auxiliares de caché de deduplicación respaldada en disco | | `plugin-sdk/acp-runtime` | Funciones auxiliares de tiempo de ejecución/sesión ACP y despacho de respuestas | | `plugin-sdk/agent-config-primitives` | Primitivas estrechas de esquema de
-  configuración de tiempo de ejecución de agente | | `plugin-sdk/boolean-param` | Lector suelto de parámetros booleanos | | `plugin-sdk/dangerous-name-runtime` | Funciones auxiliares de resolución de coincidencias de nombres peligrosos | | `plugin-sdk/device-bootstrap` | Funciones auxiliares de arranque de dispositivo y token de emparejamiento | | `plugin-sdk/extension-shared` | Primitivas
-  compartidas de canal pasivo y funciones auxiliares de estado | | `plugin-sdk/models-provider-runtime` | Funciones auxiliares de respuesta de comando/proveedor `/models` | | `plugin-sdk/skill-commands-runtime` | Funciones auxiliares de listado de comandos de habilidades | | `plugin-sdk/native-command-registry` | Funciones auxiliares de registro/construcción/serialización de comandos nativos | |
-  `plugin-sdk/provider-zai-endpoint` | Funciones auxiliares de detección de puntos finales Z.AI | | `plugin-sdk/infra-runtime` | Funciones auxiliares de eventos del sistema/latidos | | `plugin-sdk/collection-runtime` | Funciones auxiliares de caché pequeña y limitada | | `plugin-sdk/diagnostic-runtime` | Funciones auxiliares de banderas y eventos de diagnóstico | | `plugin-sdk/error-runtime` |
-  Gráfico de errores, formato, funciones auxiliares compartidas de clasificación de errores, `isApprovalNotFoundError` | | `plugin-sdk/fetch-runtime` | Funciones auxiliares de búsqueda ajustada, proxy y búsqueda anclada | | `plugin-sdk/host-runtime` | Funciones auxiliares de normalización de nombre de host y host SCP | | `plugin-sdk/retry-runtime` | Funciones auxiliares de configuración de
-  reintento y ejecutor de reintento | | `plugin-sdk/agent-runtime` | Funciones auxiliares de directorio/identidad/espacio de trabajo del agente | | `plugin-sdk/directory-runtime` | Consulta/deduplicación de directorio respaldada en configuración | | `plugin-sdk/keyed-async-queue` | `KeyedAsyncQueue` |
+  | Subruta | Exportaciones clave | | --- | --- | | `plugin-sdk/runtime` | Asistentes amplios de tiempo de ejecución/registro/respaldo/instalación de complementos | | `plugin-sdk/runtime-env` | Asistentes estrechos de entorno de tiempo de ejecución, registrador, tiempo de espera, reintento y retroceso | | `plugin-sdk/channel-runtime-context` | Asistentes genéricos de registro y búsqueda de
+  contexto de tiempo de ejecución de canal | | `plugin-sdk/runtime-store` | `createPluginRuntimeStore` | | `plugin-sdk/plugin-runtime` | Asistentes compartidos de comandos/ganchos/http/interactivos de complementos | | `plugin-sdk/hook-runtime` | Asistentes compartidos de canalizaciones de webhook/ganchos internos | | `plugin-sdk/lazy-runtime` | Asistentes de importación/vinculación de tiempo de
+  ejecución diferida, como `createLazyRuntimeModule`, `createLazyRuntimeMethod` y `createLazyRuntimeSurface` | | `plugin-sdk/process-runtime` | Asistentes de ejecución de procesos | | `plugin-sdk/cli-runtime` | Asistentes de formato de CLI, espera y versión | | `plugin-sdk/gateway-runtime` | Cliente de puerta de enlace y asistentes de parches de estado del canal | | `plugin-sdk/config-runtime` |
+  Asistentes de carga/escritura de configuración | | `plugin-sdk/telegram-command-config` | Normalización de nombre de comando/descripción de Telegram y verificaciones de duplicados/conflictos, incluso cuando la superficie del contrato Telegram incluido no está disponible | | `plugin-sdk/approval-runtime` | Asistentes de aprobación de ejecución/complementos, constructores de capacidades de
+  aprobación, asistentes de autenticación/perfil, asistentes de enrutamiento/tiempo de ejecución nativos | | `plugin-sdk/reply-runtime` | Asistentes compartidos de tiempo de ejecución de entrada/respuesta, fragmentación, despacho, latido y planificador de respuesta | | `plugin-sdk/reply-dispatch-runtime` | Asistentes estrechos de despacho/finalización de respuesta | | `plugin-sdk/reply-history` |
+  Asistentes compartidos de historial de respuesta de ventana corta, como `buildHistoryContext`, `recordPendingHistoryEntry` y `clearHistoryEntriesIfEnabled` | | `plugin-sdk/reply-reference` | `createReplyReferencePlanner` | | `plugin-sdk/reply-chunking` | Asistentes estrechos de fragmentación de texto/markdown | | `plugin-sdk/session-store-runtime` | Ruta de almacenamiento de sesión + asistentes
+  de actualización en | | `plugin-sdk/state-paths` | Asistentes de ruta de directorio de estado/OAuth | | `plugin-sdk/routing` | Asistentes de vinculación de ruta/clave de sesión/cuenta, como `resolveAgentRoute`, `buildAgentSessionKey` y `resolveDefaultAgentBoundAccountId` | | `plugin-sdk/status-helpers` | Asistentes compartidos de resumen de estado de canal/cuenta, valores predeterminados de
+  estado de tiempo de ejecución y asistentes de metadatos de problemas | | `plugin-sdk/target-resolver-runtime` | Asistentes compartidos de resolución de objetivos | | `plugin-sdk/string-normalization-runtime` | Asistentes de normalización de slug/cadena | | `plugin-sdk/request-url` | Extraer URLs de cadenas de entradas tipo fetch/request | | `plugin-sdk/run-command` | Ejecutor de comandos
+  cronometrados con resultados normalizados de stdout/stderr | | `plugin-sdk/param-readers` | Lectores de parámetros comunes de herramienta/CLI | | `plugin-sdk/tool-send` | Extraer campos canónicos de objetivo de envío de argumentos de herramienta | | `plugin-sdk/temp-path` | Asistentes compartidos de ruta de descarga temporal | | `plugin-sdk/logging-core` | Registrador de subsistema y asistentes
+  de redacción | | `plugin-sdk/markdown-table-runtime` | Asistentes de modo de tabla Markdown | | `plugin-sdk/json-store` | Asistentes pequeños de lectura/escritura de estado JSON | | `plugin-sdk/file-lock` | Asistentes de bloqueo de archivo reentrante | | `plugin-sdk/persistent-dedupe` | Asistentes de caché de deduplicación respaldada en disco | | `plugin-sdk/acp-runtime` | Asistentes de tiempo
+  de ejecución/sesión ACP y despacho de respuesta | | `plugin-sdk/agent-config-primitives` | Primitivas estrechas de esquema de configuración de tiempo de ejecución de agente | | `plugin-sdk/boolean-param` | Lector suelto de parámetros booleanos | | `plugin-sdk/dangerous-name-runtime` | Asistentes de resolución de coincidencia de nombres peligrosos | | `plugin-sdk/device-bootstrap` | Asistentes de
+  token de arranque y emparejamiento de dispositivos | | `plugin-sdk/extension-shared` | Primitivas de asistentes compartidos de canal pasivo, estado y proxy ambiental | | `plugin-sdk/models-provider-runtime` | Asistentes de respuesta de comando/proveedor `/models` | | `plugin-sdk/skill-commands-runtime` | Asistentes de listado de comandos de habilidades | | `plugin-sdk/native-command-registry` |
+  Asistentes de registro/compilación/serialización de comandos nativos | | `plugin-sdk/provider-zai-endpoint` | Asistentes de detección de puntos finales de Z.AI | | `plugin-sdk/infra-runtime` | Asistentes de eventos del sistema/latido | | `plugin-sdk/collection-runtime` | Asistentes de caché delimitada pequeña | | `plugin-sdk/diagnostic-runtime` | Asistentes de indicadores y eventos de
+  diagnóstico | | `plugin-sdk/error-runtime` | Gráfico de errores, formato, asistentes compartidos de clasificación de errores, `isApprovalNotFoundError` | | `plugin-sdk/fetch-runtime` | Asistentes de búsqueda, proxy y búsqueda fijada envueltos | | `plugin-sdk/host-runtime` | Asistentes de normalización de nombre de host y host SCP | | `plugin-sdk/retry-runtime` | Configuración de reintento y
+  asistentes de ejecución de reintento | | `plugin-sdk/agent-runtime` | Asistentes de directorio/identidad/espacio de trabajo del agente | | `plugin-sdk/directory-runtime` | Consulta/deduplicación de directorio respaldada por configuración | | `plugin-sdk/keyed-async-queue` | `KeyedAsyncQueue` |
 </Accordion>
 
 <Accordion title="Subrutas de capacidades y pruebas">
-  | Subruta | Exportaciones clave | | --- | --- | | `plugin-sdk/media-runtime` | Asistentes compartidos de obtención/transformación/almacenamiento de medios más constructores de carga útil de medios | | `plugin-sdk/media-understanding` | Tipos de proveedor de comprensión de medios más exportaciones de asistentes de imagen/audio orientadas al proveedor | | `plugin-sdk/text-runtime` | Asistentes
-  compartidos de texto/markdown/registro, como eliminación de texto visible para el asistente, asistentes de representación/fragmentación/tablas de markdown, asistentes de redacción, asistentes de etiquetas de directiva y utilidades de texto seguro | | `plugin-sdk/text-chunking` | Asistente de fragmentación de texto saliente | | `plugin-sdk/speech` | Tipos de proveedor de voz más asistentes de
-  directiva, registro y validación orientados al proveedor | | `plugin-sdk/speech-core` | Tipos compartidos de proveedor de voz, registro, directiva y asistentes de normalización | | `plugin-sdk/realtime-transcription` | Tipos de proveedor de transcripción en tiempo real y asistentes de registro | | `plugin-sdk/realtime-voice` | Tipos de proveedor de voz en tiempo real y asistentes de registro | |
-  `plugin-sdk/image-generation` | Tipos de proveedor de generación de imágenes | | `plugin-sdk/image-generation-core` | Tipos compartidos de generación de imágenes, conmutación por error, autenticación y asistentes de registro | | `plugin-sdk/music-generation` | Tipos de proveedor/solicitud/resultado de generación de música | | `plugin-sdk/music-generation-core` | Tipos compartidos de generación
-  de música, asistentes de conmutación por error, búsqueda de proveedor y análisis de referencia de modelo | | `plugin-sdk/video-generation` | Tipos de proveedor/solicitud/resultado de generación de video | | `plugin-sdk/video-generation-core` | Tipos compartidos de generación de video, asistentes de conmutación por error, búsqueda de proveedor y análisis de referencia de modelo | |
-  `plugin-sdk/webhook-targets` | Registro de destino de webhook y asistentes de instalación de rutas | | `plugin-sdk/webhook-path` | Asistentes de normalización de rutas de webhook | | `plugin-sdk/web-media` | Asistentes compartidos de carga de medios remotos/locale | | `plugin-sdk/zod` | `zod` reexportado para consumidores del SDK de complementos | | `plugin-sdk/testing` |
-  `installCommonResolveTargetErrorCases`, `shouldAckReaction` |
+  | Subpath | Exportaciones clave | | --- | --- | | `plugin-sdk/media-runtime` | Asistentes compartidos de obtención/transformación/almacenamiento de medios más constructores de cargas útiles de medios | | `plugin-sdk/media-generation-runtime` | Asistentes compartidos de conmutación por error de generación de medios, selección de candidatos y mensajería de modelo faltante | |
+  `plugin-sdk/media-understanding` | Tipos de proveedor de comprensión de medios más exportaciones de asistentes de imagen/audio orientados al proveedor | | `plugin-sdk/text-runtime` | Asistentes compartidos de texto/markdown/registro, como eliminación de texto visible para el asistente, asistentes de representación/fragmentación/tablas de markdown, asistentes de redacción, asistentes de etiquetas
+  de directiva y utilidades de texto seguro | | `plugin-sdk/text-chunking` | Asistente de fragmentación de texto saliente | | `plugin-sdk/speech` | Tipos de proveedor de voz más asistentes de directiva, registro y validación orientados al proveedor | | `plugin-sdk/speech-core` | Tipos compartidos de proveedor de voz, registro, directiva y asistentes de normalización | |
+  `plugin-sdk/realtime-transcription` | Tipos de proveedor de transcripción en tiempo real y asistentes de registro | | `plugin-sdk/realtime-voice` | Tipos de proveedor de voz en tiempo real y asistentes de registro | | `plugin-sdk/image-generation` | Tipos de proveedor de generación de imágenes | | `plugin-sdk/image-generation-core` | Tipos compartidos de generación de imágenes, conmutación por
+  error, autenticación y asistentes de registro | | `plugin-sdk/music-generation` | Tipos de proveedor/solicitud/resultado de generación de música | | `plugin-sdk/music-generation-core` | Tipos compartidos de generación de música, asistentes de conmutación por error, búsqueda de proveedor y análisis de referencias de modelo | | `plugin-sdk/video-generation` | Tipos de proveedor/solicitud/resultado
+  de generación de video | | `plugin-sdk/video-generation-core` | Tipos compartidos de generación de video, asistentes de conmutación por error, búsqueda de proveedor y análisis de referencias de modelo | | `plugin-sdk/webhook-targets` | Registro de objetivos de webhook y asistentes de instalación de rutas | | `plugin-sdk/webhook-path` | Asistentes de normalización de rutas de webhook | |
+  `plugin-sdk/web-media` | Asistentes compartidos de carga de medios remotos locales | | `plugin-sdk/zod` | `zod` reexportado para consumidores del SDK de complementos | | `plugin-sdk/testing` | `installCommonResolveTargetErrorCases`, `shouldAckReaction` |
 </Accordion>
 
 <Accordion title="Subrutas de memoria">
-  | Subruta | Exportaciones clave | | --- | --- | | `plugin-sdk/memory-core` | Superficie de ayuda agrupada de memory-core para asistentes de manager/config/archivo/CLI | | `plugin-sdk/memory-core-engine-runtime` | Fachada de tiempo de ejecución de índice/búsqueda de memoria | | `plugin-sdk/memory-core-host-engine-foundation` | Exportaciones del motor de base de host de memoria | |
-  `plugin-sdk/memory-core-host-engine-embeddings` | Exportaciones del motor de incrustación de host de memoria | | `plugin-sdk/memory-core-host-engine-qmd` | Exportaciones del motor QMD de host de memoria | | `plugin-sdk/memory-core-host-engine-storage` | Exportaciones del motor de almacenamiento de host de memoria | | `plugin-sdk/memory-core-host-multimodal` | Asistentes multimodales de host de
-  memoria | | `plugin-sdk/memory-core-host-query` | Asistentes de consulta de host de memoria | | `plugin-sdk/memory-core-host-secret` | Asistentes de secretos de host de memoria | | `plugin-sdk/memory-core-host-status` | Asistentes de estado de host de memoria | | `plugin-sdk/memory-core-host-runtime-cli` | Asistentes de tiempo de ejecución de CLI de host de memoria | |
-  `plugin-sdk/memory-core-host-runtime-core` | Asistentes de tiempo de ejecución central de host de memoria | | `plugin-sdk/memory-core-host-runtime-files` | Asistentes de archivo/tiempo de ejecución de host de memoria | | `plugin-sdk/memory-lancedb` | Superficie de ayuda agrupada de memory-lancedb |
+  | Subruta | Exportaciones clave | | --- | --- | | `plugin-sdk/memory-core` | Superficie de ayuda de memory-core incluida para administrador/configuración/archivo/CLI | | `plugin-sdk/memory-core-engine-runtime` | Fachada de tiempo de ejecución de índice/búsqueda de memoria | | `plugin-sdk/memory-core-host-engine-foundation` | Exportaciones del motor de base del host de memoria | |
+  `plugin-sdk/memory-core-host-engine-embeddings` | Exportaciones del motor de incrustación del host de memoria | | `plugin-sdk/memory-core-host-engine-qmd` | Exportaciones del motor QMD del host de memoria | | `plugin-sdk/memory-core-host-engine-storage` | Exportaciones del motor de almacenamiento del host de memoria | | `plugin-sdk/memory-core-host-multimodal` | Ayudas multimodales del host de
+  memoria | | `plugin-sdk/memory-core-host-query` | Ayudas de consulta del host de memoria | | `plugin-sdk/memory-core-host-secret` | Ayudas de secretos del host de memoria | | `plugin-sdk/memory-core-host-events` | Ayudas de diario de eventos del host de memoria | | `plugin-sdk/memory-core-host-status` | Ayudas de estado del host de memoria | | `plugin-sdk/memory-core-host-runtime-cli` | Ayudas
+  de tiempo de ejecución de CLI del host de memoria | | `plugin-sdk/memory-core-host-runtime-core` | Ayudas de tiempo de ejecución central del host de memoria | | `plugin-sdk/memory-core-host-runtime-files` | Ayudas de archivo/tiempo de ejecución del host de memoria | | `plugin-sdk/memory-host-core` | Alias neutral del proveedor para las ayudas de tiempo de ejecución central del host de memoria |
+  | `plugin-sdk/memory-host-events` | Alias neutral del proveedor para las ayudas de diario de eventos del host de memoria | | `plugin-sdk/memory-host-files` | Alias neutral del proveedor para las ayudas de archivo/tiempo de ejecución del host de memoria | | `plugin-sdk/memory-host-markdown` | Ayudas de markdown administradas compartidas para plugins adyacentes a la memoria | |
+  `plugin-sdk/memory-host-search` | Fachada de tiempo de ejecución de memoria activa para el acceso al gestor de búsqueda | | `plugin-sdk/memory-host-status` | Alias neutral del proveedor para las ayudas de estado del host de memoria | | `plugin-sdk/memory-lancedb` | Superficie de ayuda de memory-lancedb incluida |
 </Accordion>
 
-  <Accordion title="Subrutas de ayudantes empaquetados reservados">
+  <Accordion title="Subrutas de auxiliares empaquetados reservados">
     | Familia | Subrutas actuales | Uso previsto |
     | --- | --- | --- |
-    | Navegador | `plugin-sdk/browser-cdp`, `plugin-sdk/browser-config-runtime`, `plugin-sdk/browser-config-support`, `plugin-sdk/browser-control-auth`, `plugin-sdk/browser-node-runtime`, `plugin-sdk/browser-profiles`, `plugin-sdk/browser-security-runtime`, `plugin-sdk/browser-setup-tools`, `plugin-sdk/browser-support` | Ayudantes de soporte para complementos del navegador empaquetados (`browser-support` sigue siendo el barril de compatibilidad) |
-    | Matrix | `plugin-sdk/matrix`, `plugin-sdk/matrix-helper`, `plugin-sdk/matrix-runtime-heavy`, `plugin-sdk/matrix-runtime-shared`, `plugin-sdk/matrix-runtime-surface`, `plugin-sdk/matrix-surface`, `plugin-sdk/matrix-thread-bindings` | Superficie de ayudante/tiempo de ejecución de Matrix empaquetada |
-    | Line | `plugin-sdk/line`, `plugin-sdk/line-core`, `plugin-sdk/line-runtime`, `plugin-sdk/line-surface` | Superficie de ayudante/tiempo de ejecución de LINE empaquetada |
-    | IRC | `plugin-sdk/irc`, `plugin-sdk/irc-surface` | Superficie de ayudante de IRC empaquetada |
-    | Ayudantes específicos del canal | `plugin-sdk/googlechat`, `plugin-sdk/zalouser`, `plugin-sdk/bluebubbles`, `plugin-sdk/bluebubbles-policy`, `plugin-sdk/mattermost`, `plugin-sdk/mattermost-policy`, `plugin-sdk/feishu-conversation`, `plugin-sdk/msteams`, `plugin-sdk/nextcloud-talk`, `plugin-sdk/nostr`, `plugin-sdk/tlon`, `plugin-sdk/twitch` | Costuras de compatibilidad/ayudante de canal empaquetadas |
-    | Ayudantes específicos de autenticación/complementos | `plugin-sdk/github-copilot-login`, `plugin-sdk/github-copilot-token`, `plugin-sdk/diagnostics-otel`, `plugin-sdk/diffs`, `plugin-sdk/llm-task`, `plugin-sdk/thread-ownership`, `plugin-sdk/voice-call` | Costuras de ayudante de complementos/características empaquetadas; `plugin-sdk/github-copilot-token` actualmente exporta `DEFAULT_COPILOT_API_BASE_URL`, `deriveCopilotApiBaseUrlFromToken` y `resolveCopilotApiToken` |
+    | Browser | `plugin-sdk/browser-cdp`, `plugin-sdk/browser-config-runtime`, `plugin-sdk/browser-config-support`, `plugin-sdk/browser-control-auth`, `plugin-sdk/browser-node-runtime`, `plugin-sdk/browser-profiles`, `plugin-sdk/browser-security-runtime`, `plugin-sdk/browser-setup-tools`, `plugin-sdk/browser-support` | Auxiliares de soporte de complementos del navegador empaquetados (`browser-support` permanece como el barril de compatibilidad) |
+    | Matrix | `plugin-sdk/matrix`, `plugin-sdk/matrix-helper`, `plugin-sdk/matrix-runtime-heavy`, `plugin-sdk/matrix-runtime-shared`, `plugin-sdk/matrix-runtime-surface`, `plugin-sdk/matrix-surface`, `plugin-sdk/matrix-thread-bindings` | Superficie de auxiliares/runtime de Matrix empaquetada |
+    | Line | `plugin-sdk/line`, `plugin-sdk/line-core`, `plugin-sdk/line-runtime`, `plugin-sdk/line-surface` | Superficie de auxiliares/runtime de LINE empaquetada |
+    | IRC | `plugin-sdk/irc`, `plugin-sdk/irc-surface` | Superficie de auxiliares de IRC empaquetada |
+    | Auxiliares específicos del canal | `plugin-sdk/googlechat`, `plugin-sdk/zalouser`, `plugin-sdk/bluebubbles`, `plugin-sdk/bluebubbles-policy`, `plugin-sdk/mattermost`, `plugin-sdk/mattermost-policy`, `plugin-sdk/feishu-conversation`, `plugin-sdk/msteams`, `plugin-sdk/nextcloud-talk`, `plugin-sdk/nostr`, `plugin-sdk/tlon`, `plugin-sdk/twitch` | Costuras de compatibilidad/auxiliares del canal empaquetadas |
+    | Auxiliares específicos de Auth/complemento | `plugin-sdk/github-copilot-login`, `plugin-sdk/github-copilot-token`, `plugin-sdk/diagnostics-otel`, `plugin-sdk/diffs`, `plugin-sdk/llm-task`, `plugin-sdk/thread-ownership`, `plugin-sdk/voice-call` | Costuras de auxiliares de características/complementos empaquetados; `plugin-sdk/github-copilot-token` actualmente exporta `DEFAULT_COPILOT_API_BASE_URL`, `deriveCopilotApiBaseUrlFromToken` y `resolveCopilotApiToken` |
   </Accordion>
 </AccordionGroup>
 
@@ -184,41 +190,44 @@ métodos:
 
 ### Registro de capacidades
 
-| Método                                           | Lo que registra                             |
-| ------------------------------------------------ | ------------------------------------------- |
-| `api.registerProvider(...)`                      | Inferencia de texto (LLM)                   |
-| `api.registerChannel(...)`                       | Canal de mensajería                         |
-| `api.registerSpeechProvider(...)`                | Síntesis de texto a voz / STT               |
-| `api.registerRealtimeTranscriptionProvider(...)` | Transcripción en tiempo real de transmisión |
-| `api.registerRealtimeVoiceProvider(...)`         | Sesiones de voz en tiempo real dúplex       |
-| `api.registerMediaUnderstandingProvider(...)`    | Análisis de imagen/audio/vídeo              |
-| `api.registerImageGenerationProvider(...)`       | Generación de imágenes                      |
-| `api.registerMusicGenerationProvider(...)`       | Generación de música                        |
-| `api.registerVideoGenerationProvider(...)`       | Generación de vídeo                         |
-| `api.registerWebFetchProvider(...)`              | Proveedor de recuperación/extracción web    |
-| `api.registerWebSearchProvider(...)`             | Búsqueda web                                |
+| Método                                           | Lo que registra                           |
+| ------------------------------------------------ | ----------------------------------------- |
+| `api.registerProvider(...)`                      | Inferencia de texto (LLM)                 |
+| `api.registerCliBackend(...)`                    | Backend de inferencia de CLI local        |
+| `api.registerChannel(...)`                       | Canal de mensajería                       |
+| `api.registerSpeechProvider(...)`                | Síntesis de texto a voz / STT             |
+| `api.registerRealtimeTranscriptionProvider(...)` | Transcripción en tiempo real en streaming |
+| `api.registerRealtimeVoiceProvider(...)`         | Sesiones de voz dúplex en tiempo real     |
+| `api.registerMediaUnderstandingProvider(...)`    | Análisis de imagen/audio/vídeo            |
+| `api.registerImageGenerationProvider(...)`       | Generación de imágenes                    |
+| `api.registerMusicGenerationProvider(...)`       | Generación de música                      |
+| `api.registerVideoGenerationProvider(...)`       | Generación de vídeo                       |
+| `api.registerWebFetchProvider(...)`              | Proveedor de recuperación/extracción web  |
+| `api.registerWebSearchProvider(...)`             | Búsqueda web                              |
 
 ### Herramientas y comandos
 
-| Método                          | Lo que registra                                            |
-| ------------------------------- | ---------------------------------------------------------- |
-| `api.registerTool(tool, opts?)` | Herramienta de agente (obligatoria u `{ optional: true }`) |
-| `api.registerCommand(def)`      | Comando personalizado (omite el LLM)                       |
+| Método                          | Lo que registra                                                   |
+| ------------------------------- | ----------------------------------------------------------------- |
+| `api.registerTool(tool, opts?)` | Herramienta de agente (requerida u opcional `{ optional: true }`) |
+| `api.registerCommand(def)`      | Comando personalizado (omite el LLM)                              |
 
 ### Infraestructura
 
-| Método                                         | Lo que registra                      |
-| ---------------------------------------------- | ------------------------------------ |
-| `api.registerHook(events, handler, opts?)`     | Gancho de eventos                    |
-| `api.registerHttpRoute(params)`                | Punto final HTTP de puerta de enlace |
-| `api.registerGatewayMethod(name, handler)`     | Método RPC de puerta de enlace       |
-| `api.registerCli(registrar, opts?)`            | Subcomando de CLI                    |
-| `api.registerService(service)`                 | Servicio en segundo plano            |
-| `api.registerInteractiveHandler(registration)` | Controlador interactivo              |
+| Método                                         | Lo que registra                                  |
+| ---------------------------------------------- | ------------------------------------------------ |
+| `api.registerHook(events, handler, opts?)`     | Gancho de evento                                 |
+| `api.registerHttpRoute(params)`                | Endpoint HTTP de Gateway                         |
+| `api.registerGatewayMethod(name, handler)`     | Método RPC de Gateway                            |
+| `api.registerCli(registrar, opts?)`            | Subcomando de CLI                                |
+| `api.registerService(service)`                 | Servicio en segundo plano                        |
+| `api.registerInteractiveHandler(registration)` | Controlador interactivo                          |
+| `api.registerMemoryPromptSupplement(builder)`  | Sección de prompt aditiva adyacente a la memoria |
+| `api.registerMemoryCorpusSupplement(adapter)`  | Corpus de búsqueda/lectura de memoria aditiva    |
 
-Los espacios de nombres de administración principal reservados (`config.*`, `exec.approvals.*`, `wizard.*`,
+Los espacios de nombres de administración central reservados (`config.*`, `exec.approvals.*`, `wizard.*`,
 `update.*`) siempre se mantienen `operator.admin`, incluso si un complemento intenta asignar un
-alcance de método de puerta de enlace más estrecho. Se prefieren prefijos específicos del complemento para
+alcance de método de gateway más estrecho. Se prefieren prefijos específicos del complemento para
 los métodos propiedad del complemento.
 
 ### Metadatos de registro de CLI
@@ -227,9 +236,11 @@ los métodos propiedad del complemento.
 
 - `commands`: raíces de comandos explícitas propiedad del registrador
 - `descriptors`: descriptores de comandos en tiempo de análisis utilizados para la ayuda de la CLI raíz,
-  enrutamiento y registro diferido de la CLI del complemento
+  enrutamiento y registro perezoso de CLI de complementos
 
-Si desea que un comando de complemento se mantenga cargado de forma diferida en la ruta raíz normal de la CLI, proporcione `descriptors` que cubran cada raíz de comando de nivel superior expuesta por ese registrador.
+Si desea que un comando de complemento se mantenga con carga diferida en la ruta normal de la CLI raíz,
+proporcione `descriptors` que cubran cada raíz de comando de nivel superior expuesta por ese
+registrador.
 
 ```typescript
 api.registerCli(
@@ -249,16 +260,31 @@ api.registerCli(
 );
 ```
 
-Use `commands` por sí solo solo cuando no necesite el registro diferido de la CLI raíz. Esa ruta de compatidad ansiosa sigue siendo compatible, pero no instala marcadores de posición respaldados por descriptores para la carga diferida en el momento de análisis.
+Use `commands` por sí solo solo cuando no necesite el registro de la CLI raíz con carga diferida.
+Esa ruta de compatibilidad ansiosa sigue siendo compatible, pero no instala
+marcadores de posición respaldados por descriptores para la carga diferida en el momento del análisis.
+
+### Registro del backend de la CLI
+
+`api.registerCliBackend(...)` permite que un complemento sea el propietario de la configuración predeterminada para un
+backend de CLI de IA local como `codex-cli`.
+
+- El `id` del backend se convierte en el prefijo del proveedor en las referencias de modelos como `codex-cli/gpt-5`.
+- El `config` del backend utiliza la misma forma que `agents.defaults.cliBackends.<id>`.
+- La configuración del usuario sigue teniendo prioridad. OpenClaw fusiona `agents.defaults.cliBackends.<id>` sobre la
+  predeterminada del complemento antes de ejecutar la CLI.
+- Use `normalizeConfig` cuando un backend necesite reescrituras de compatibilidad después de la fusión
+  (por ejemplo, normalizar formas de banderas antiguas).
 
 ### Slots exclusivos
 
-| Método                                     | Lo que registra                                  |
-| ------------------------------------------ | ------------------------------------------------ |
-| `api.registerContextEngine(id, factory)`   | Motor de contexto (uno activo a la vez)          |
-| `api.registerMemoryPromptSection(builder)` | Generador de sección de instrucciones de memoria |
-| `api.registerMemoryFlushPlan(resolver)`    | Resolución del plan de vaciado de memoria        |
-| `api.registerMemoryRuntime(runtime)`       | Adaptador de tiempo de ejecución de memoria      |
+| Método                                     | Lo que registra                             |
+| ------------------------------------------ | ------------------------------------------- |
+| `api.registerContextEngine(id, factory)`   | Motor de contexto (uno activo a la vez)     |
+| `api.registerMemoryCapability(capability)` | Capacidad de memoria unificada              |
+| `api.registerMemoryPromptSection(builder)` | Generador de sección de aviso de memoria    |
+| `api.registerMemoryFlushPlan(resolver)`    | Resolución de plan de vaciado de memoria    |
+| `api.registerMemoryRuntime(runtime)`       | Adaptador de tiempo de ejecución de memoria |
 
 ### Adaptadores de incrustación de memoria
 
@@ -266,47 +292,52 @@ Use `commands` por sí solo solo cuando no necesite el registro diferido de la C
 | ---------------------------------------------- | --------------------------------------------------------------- |
 | `api.registerMemoryEmbeddingProvider(adapter)` | Adaptador de incrustación de memoria para el complemento activo |
 
+- `registerMemoryCapability` es la API exclusiva de complemento de memoria preferida.
+- `registerMemoryCapability` también puede exponer `publicArtifacts.listArtifacts(...)`
+  para que los complementos complementarios puedan consumir artefactos de memoria exportados a través de
+  `openclaw/plugin-sdk/memory-host-core` en lugar de acceder al diseño privado de un
+  complemento de memoria específico.
 - `registerMemoryPromptSection`, `registerMemoryFlushPlan` y
-  `registerMemoryRuntime` son exclusivos de los complementos de memoria.
+  `registerMemoryRuntime` son API exclusivas de complemento de memoria compatibles con versiones anteriores.
 - `registerMemoryEmbeddingProvider` permite que el complemento de memoria activo registre uno
-  o más ID de adaptadores de incrustación (por ejemplo, `openai`, `gemini`, o un
-  ID definido por el complemento personalizado).
+  o más ids de adaptadores de incrustación (por ejemplo `openai`, `gemini`, o un id
+  definido por el complemento personalizado).
 - La configuración de usuario, como `agents.defaults.memorySearch.provider` y
-  `agents.defaults.memorySearch.fallback`, se resuelve en función de esos ID de
-  adaptadores registrados.
+  `agents.defaults.memorySearch.fallback`, se resuelve respecto a esos ids de
+  adaptador registrados.
 
 ### Eventos y ciclo de vida
 
 | Método                                       | Lo que hace                                          |
 | -------------------------------------------- | ---------------------------------------------------- |
-| `api.on(hookName, handler, opts?)`           | Gancho de ciclo de vida con tipo                     |
+| `api.on(hookName, handler, opts?)`           | Gancho de ciclo de vida tipado                       |
 | `api.onConversationBindingResolved(handler)` | Devolución de llamada de vinculación de conversación |
 
 ### Semántica de decisión del gancho
 
-- `before_tool_call`: devolver `{ block: true }` es terminal. Una vez que cualquier controlador lo establece, se omiten los controladores de menor prioridad.
+- `before_tool_call`: devolver `{ block: true }` es terminal. Una vez que cualquier controlador lo establece, los controladores de menor prioridad se omiten.
 - `before_tool_call`: devolver `{ block: false }` se trata como sin decisión (lo mismo que omitir `block`), no como una anulación.
-- `before_install`: devolver `{ block: true }` es terminal. Una vez que cualquier controlador lo establece, se omiten los controladores de menor prioridad.
+- `before_install`: devolver `{ block: true }` es terminal. Una vez que cualquier controlador lo establece, los controladores de menor prioridad se omiten.
 - `before_install`: devolver `{ block: false }` se trata como sin decisión (lo mismo que omitir `block`), no como una anulación.
-- `reply_dispatch`: devolver `{ handled: true, ... }` es terminal. Una vez que cualquier controlador reclama el despacho, se omiten los controladores de menor prioridad y la ruta de despacho del modelo predeterminado.
-- `message_sending`: devolver `{ cancel: true }` es terminal. Una vez que cualquier controlador lo establece, se omiten los controladores de menor prioridad.
+- `reply_dispatch`: devolver `{ handled: true, ... }` es terminal. Una vez que cualquier controlador reclama el despacho, los controladores de menor prioridad y la ruta de despacho del modelo predeterminado se omiten.
+- `message_sending`: devolver `{ cancel: true }` es terminal. Una vez que cualquier controlador lo establece, los controladores de menor prioridad se omiten.
 - `message_sending`: devolver `{ cancel: false }` se trata como sin decisión (lo mismo que omitir `cancel`), no como una anulación.
 
 ### Campos del objeto API
 
 | Campo                    | Tipo                      | Descripción                                                                                                       |
 | ------------------------ | ------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `api.id`                 | `string`                  | Id. del complemento                                                                                               |
+| `api.id`                 | `string`                  | Id del complemento                                                                                                |
 | `api.name`               | `string`                  | Nombre para mostrar                                                                                               |
 | `api.version`            | `string?`                 | Versión del complemento (opcional)                                                                                |
 | `api.description`        | `string?`                 | Descripción del complemento (opcional)                                                                            |
 | `api.source`             | `string`                  | Ruta de origen del complemento                                                                                    |
 | `api.rootDir`            | `string?`                 | Directorio raíz del complemento (opcional)                                                                        |
-| `api.config`             | `OpenClawConfig`          | Instantánea de configuración actual (instantánea de ejecución en memoria activa cuando esté disponible)           |
+| `api.config`             | `OpenClawConfig`          | Instantánea de configuración actual (instantánea de runtime en memoria activa cuando está disponible)             |
 | `api.pluginConfig`       | `Record<string, unknown>` | Configuración específica del complemento de `plugins.entries.<id>.config`                                         |
-| `api.runtime`            | `PluginRuntime`           | [Ayudantes de tiempo de ejecución](/en/plugins/sdk-runtime)                                                       |
-| `api.logger`             | `PluginLogger`            | Registrador con alcance (`debug`, `info`, `warn`, `error`)                                                        |
-| `api.registrationMode`   | `PluginRegistrationMode`  | Modo de carga actual; `"setup-runtime"` es la ventana de inicio/configuración previa ligera a la entrada completa |
+| `api.runtime`            | `PluginRuntime`           | [Ayudantes de ejecución](/en/plugins/sdk-runtime)                                                                 |
+| `api.logger`             | `PluginLogger`            | Registrador con ámbito (`debug`, `info`, `warn`, `error`)                                                         |
+| `api.registrationMode`   | `PluginRegistrationMode`  | Modo de carga actual; `"setup-runtime"` es la ventana ligera de inicio/configuración previa a la entrada completa |
 | `api.resolvePath(input)` | `(string) => string`      | Resolver ruta relativa a la raíz del complemento                                                                  |
 
 ## Convención de módulo interno
@@ -323,21 +354,16 @@ my-plugin/
 
 <Warning>
   Nunca importe su propio complemento a través de `openclaw/plugin-sdk/<your-plugin>`
-  desde el código de producción. Enrute las importaciones internas a través de `./api.ts` o
+  desde el código de producción. Dirija las importaciones internas a través de `./api.ts` o
   `./runtime-api.ts`. La ruta del SDK es solo el contrato externo.
 </Warning>
 
-Las superficies públicas de complementos empaquetados cargados por fachada (`api.ts`, `runtime-api.ts`,
+Las superficies públicas del complemento empaquetado cargado por fachada (`api.ts`, `runtime-api.ts`,
 `index.ts`, `setup-entry.ts` y archivos de entrada públicos similares) ahora prefieren la
-instantánea de configuración de tiempo de ejecución activa cuando OpenClaw ya se está ejecutando. Si aún no existe ninguna
-instantánea de tiempo de ejecución, recurren al archivo de configuración resuelto en el disco.
+instantánea de configuración de runtime activa cuando OpenClaw ya se está ejecutando. Si aún no existe una
+instantánea de runtime, recurren al archivo de configuración resuelto en disco.
 
-Los complementos de proveedor también pueden exponer un contrato local de complemento estrecho cuando un
-asistente es intencionalmente específico del proveedor y aún no pertenece a una subruta de SDK
-genérica. Ejemplo empaquetado actual: el proveedor Anthropic mantiene sus asistentes
-de flujo Claude en su propia costura pública `api.ts` / `contract-api.ts` en lugar de
-promover la lógica de encabezado beta de Anthropic y `service_tier` a un contrato
-`plugin-sdk/*` genérico.
+Los complementos del proveedor también pueden exponer un barril de contrato local y limitado del complemento cuando un asistente es intencionalmente específico del proveedor y aún no pertenece a una subruta de SDK genérica. Ejemplo empaquetado actual: el proveedor Anthropic mantiene sus asistentes de flujo de Claude en su propia costura pública `api.ts` / `contract-api.ts` en lugar de promover la lógica del encabezado beta de Anthropic y `service_tier` a un contrato `plugin-sdk/*` genérico.
 
 Otros ejemplos empaquetados actuales:
 
@@ -347,17 +373,17 @@ Otros ejemplos empaquetados actuales:
   asistentes de incorporación/configuración
 
 <Warning>
-  El código de producción de extensiones también debe evitar las importaciones `openclaw/plugin-sdk/<other-plugin>`.
+  El código de producción de la extensión también debe evitar las importaciones `openclaw/plugin-sdk/<other-plugin>`.
   Si un asistente es realmente compartido, promuévalo a una subruta de SDK neutral
-  como `openclaw/plugin-sdk/speech`, `.../provider-model-shared` u otra
-  superficie orientada a capacidades en lugar de acoplar dos complementos juntos.
+  como `openclaw/plugin-sdk/speech`, `.../provider-model-shared`, u otra
+  superficie orientada a capacidades en lugar de acoplar dos complementos entre sí.
 </Warning>
 
 ## Relacionado
 
 - [Puntos de entrada](/en/plugins/sdk-entrypoints) — opciones `definePluginEntry` y `defineChannelPluginEntry`
 - [Asistentes de tiempo de ejecución](/en/plugins/sdk-runtime) — referencia completa del espacio de nombres `api.runtime`
-- [Configuración](/en/plugins/sdk-setup) — empaquetado, manifiestos, esquemas de configuración
-- [Pruebas](/en/plugins/sdk-testing) — utilidades de prueba y reglas de linting
+- [Configuración y configuración](/en/plugins/sdk-setup) — empaquetado, manifiestos, esquemas de configuración
+- [Pruebas](/en/plugins/sdk-testing) — utilidades de prueba y reglas de lint
 - [Migración del SDK](/en/plugins/sdk-migration) — migración desde superficies obsoletas
-- [Aspectos internos de los complementos](/en/plugins/architecture) — arquitectura profunda y modelo de capacidades
+- [Internos del complemento](/en/plugins/architecture) — arquitectura profunda y modelo de capacidades

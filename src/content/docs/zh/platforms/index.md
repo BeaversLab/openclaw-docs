@@ -35,8 +35,8 @@ Linux 伴侣应用，但 Gateway(网关) 网关 目前已获得完全支持。
 ## 常用链接
 
 - Install guide: [入门指南](/en/start/getting-started)
-- Gateway runbook: [Gateway](/en/gateway)
-- Gateway configuration: [Configuration](/en/gateway/configuration)
+- Gateway(网关) runbook: [Gateway(网关)](/en/gateway)
+- Gateway(网关) configuration: [Configuration](/en/gateway/configuration)
 - 服务状态：`openclaw gateway status`
 
 ## Gateway(网关) 服务安装 (CLI)

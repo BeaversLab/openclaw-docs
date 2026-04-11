@@ -32,7 +32,7 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija uno, autentíquese y lu
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
 - [fal](/en/providers/fal)
 - [Fireworks](/en/providers/fireworks)
-- [GLM models](/en/providers/glm)
+- [Modelos GLM](/en/providers/glm)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
@@ -53,6 +53,7 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija uno, autentíquese y lu
 
 - `anthropic-vertex` - soporte implícito de Anthropic en Google Vertex cuando las credenciales de Vertex están disponibles; no requiere una elección separada de autenticación de incorporación
 - `copilot-proxy` - puente local del Proxy de VS Code Copilot; use `openclaw onboard --auth-choice copilot-proxy`
+- `google-gemini-cli` - flujo OAuth de la CLI de Gemini no oficial; requiere una instalación local de `gemini` (`brew install gemini-cli` o `npm install -g @google/gemini-cli`); modelo predeterminado `google-gemini-cli/gemini-3-flash-preview`; use `openclaw onboard --auth-choice google-gemini-cli` o `openclaw models auth login --provider google-gemini-cli --set-default`
 
-Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y configuración avanzada,
-consulte [Model providers](/en/concepts/model-providers).
+Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y la configuración avanzada,
+consulte [Proveedores de modelos](/en/concepts/model-providers).

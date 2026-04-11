@@ -54,5 +54,6 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行驗證，然後
 
 - `anthropic-vertex` - 當有 Vertex 憑證可用時，隱含支援 Google Vertex 上的 Anthropic；無需額外的入門驗證選擇
 - `copilot-proxy` - 本機 VS Code Copilot Proxy 橋接器；使用 `openclaw onboard --auth-choice copilot-proxy`
+- `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要在本地安裝 `gemini`（`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`）；預設模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
 
-如需完整的提供者目錄（xAI、Groq、Mistral 等）及進階設定，請參閱 [Model providers](/en/concepts/model-providers)。
+如需完整的供應商目錄（xAI、Groq、Mistral 等）及進階設定，請參閱 [Model providers](/en/concepts/model-providers)。

@@ -159,6 +159,6 @@ openclaw gateway run
 
 ## 相关
 
-- [Gateway 配置](/en/gateway/configuration)
+- [Gateway(网关) 配置](/en/gateway/configuration)
 - [常见问题：环境变量和 .env 加载](/en/help/faq#env-vars-and-env-loading)
 - [模型概述](/en/concepts/models)

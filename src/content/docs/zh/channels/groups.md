@@ -190,8 +190,8 @@ otherwise -> reply
       groupPolicy: "allowlist",
       groupAllowFrom: ["@owner:example.org"],
       groups: {
-        "!roomId:example.org": { allow: true },
-        "#alias:example.org": { allow: true },
+        "!roomId:example.org": { enabled: true },
+        "#alias:example.org": { enabled: true },
       },
     },
   },
@@ -227,7 +227,7 @@ otherwise -> reply
 
 除非针对每个群组进行了覆盖，否则群组消息需要提及。默认值按子系统位于 `*.groups."*"` 下。
 
-回复机器人消息算作隐式提及（当渠道 支持回复元数据时）。这适用于 Telegram、WhatsApp、Slack、Discord 和 Microsoft Teams。
+当渠道支持回复元数据时，回复机器人消息被视为隐式提及。在暴露引用元数据的渠道上，引用机器人消息也可以被视为隐式提及。当前内置案例包括 Telegram、WhatsApp、Slack、Discord、Microsoft Teams 和 ZaloUser。
 
 ```json5
 {

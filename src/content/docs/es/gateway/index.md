@@ -172,7 +172,7 @@ Alternativa: Túnel SSH.
 ssh -N -L 18789:127.0.0.1:18789 user@host
 ```
 
-Luego conecte los clientes a `ws://127.0.0.1:18789` localmente.
+Luego conecte los clientes localmente a `ws://127.0.0.1:18789`.
 
 <Warning>Los túneles SSH no omiten la autenticación de la puerta de enlace. Para la autenticación de secreto compartido, los clientes aún deben enviar `token`/`password` incluso a través del túnel. Para los modos con identidad, la solicitud aún debe satisfacer esa ruta de autenticación.</Warning>
 

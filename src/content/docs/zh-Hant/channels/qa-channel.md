@@ -73,30 +73,31 @@ QA 匯流排、啟動內建的 `qa-channel` 執行時切片、執行確定性
 私人偵錯工具 UI：
 
 ```bash
-pnpm qa:lab:build
-pnpm openclaw qa ui
+pnpm qa:lab:up
 ```
 
-完整的程式庫支援 QA 套件：
+這個單一命令會建置 QA 網站、啟動基於 Docker 的 gateway + QA Lab 堆疊，並列印 QA Lab URL。從該網站，您可以選擇場景、選擇模型通道、啟動個別執行，並即時觀看結果。
+
+完整的 repo-backed QA 套件：
 
 ```bash
 pnpm openclaw qa suite
 ```
 
-這會在本機 URL 啟動私人 QA 偵錯工具，與已出貨的 Control UI 套件分開。
+這會在本機 URL 啟動私有的 QA 除錯器，與隨附的 Control UI bundle 分開。
 
 ## 範圍
 
-目前的範圍有意保持狹窄：
+目前的範圍刻意保持狹窄：
 
 - bus + plugin transport
 - threaded routing grammar
 - channel-owned message actions
 - Markdown reporting
+- Docker-backed QA site with run controls
 
-後續工作將會加入：
+後續工作將新增：
 
-- Dockerized OpenClaw orchestration
 - provider/model matrix execution
 - richer scenario discovery
-- 稍後的 OpenClaw 原生協調
+- OpenClaw-native orchestration later

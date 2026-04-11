@@ -8,20 +8,20 @@ title: "OpenResponses API"
 
 # OpenResponses API (HTTP)
 
-OpenClaw 的 Gateway 可以提供与 OpenResponses 兼容的 `POST /v1/responses` 端点。
+OpenClaw 的 Gateway(网关) 可以提供与 OpenResponses 兼容的 `POST /v1/responses` 端点。
 
 此端点**默认处于禁用状态**。请先在配置中启用它。
 
 - `POST /v1/responses`
-- 与 Gateway 相同的端口（WS + HTTP 多路复用）：`http://<gateway-host>:<port>/v1/responses`
+- 与 Gateway(网关) 相同的端口（WS + HTTP 多路复用）：`http://<gateway-host>:<port>/v1/responses`
 
-在底层，请求作为正常的 Gateway 代理运行执行（与 `openclaw agent` 的代码路径相同），因此路由/权限/配置与您的 Gateway 匹配。
+在底层，请求作为正常的 Gateway(网关) 代理运行执行（与 `openclaw agent` 的代码路径相同），因此路由/权限/配置与您的 Gateway(网关) 匹配。
 
 ## 身份验证、安全和路由
 
 操作行为与 [OpenAI Chat Completions](/en/gateway/openai-http-api) 相匹配：
 
-- 使用匹配的 Gateway HTTP 认证路径：
+- 使用匹配的 Gateway(网关) HTTP 认证路径：
   - shared-secret 认证（`gateway.auth.mode="token"` 或 `"password"`）：`Authorization: Bearer <token-or-password>`
   - trusted-proxy 认证（`gateway.auth.mode="trusted-proxy"`）：来自配置的非环回受信任代理源的具有身份感知的代理标头
   - private-ingress 开放认证（`gateway.auth.mode="none"`）：无认证标头
@@ -172,7 +172,7 @@ OpenClaw 的 Gateway 可以提供与 OpenResponses 兼容的 `POST /v1/responses
   占位符 `[PDF content rendered to images]`。
 
 PDF 解析使用兼容 Node 的 `pdfjs-dist` 旧版构建（无 worker）。现代
-PDF.js 构建需要浏览器 worker/DOM 全局变量，因此未在 Gateway 中使用。
+PDF.js 构建需要浏览器 worker/DOM 全局变量，因此未在 Gateway(网关) 中使用。
 
 URL 获取默认值：
 

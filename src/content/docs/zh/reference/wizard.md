@@ -29,48 +29,48 @@ sidebarTitle: "新手引导参考"
       - 配置 + 凭证 + 会话
       - 完全重置（也会删除工作区）
   </Step>
-  <Step title="模型/身份">
-    - **Anthropic API 密钥**：如果存在 `ANTHROPIC_API_KEY` 则使用，否则提示输入密钥，然后将其保存以供守护进程使用。
-    - **Anthropic API 密钥**：在 新手引导/configure 中首选的 Anthropic 助手选择。
-    - **Anthropic setup-token（旧版/手动）**：在 新手引导/configure 中再次可用，但 Anthropic 告知 OpenClaw 用户，OpenClaw Claude 登录路径被视为第三方工具使用，并且需要 Claude 账户启用 **Extra Usage**。
-    - **OpenAI Code (Codex) 订阅 (Codex CLI)**：如果 `~/.codex/auth.json` 存在，新手引导可以重用它。重用的 Codex CLI 凭据仍由 Codex CLI 管理；过期时 OpenClaw 会首先重新读取该来源，并且当提供商可以刷新它时，会将刷新后的凭据写回 Codex 存储，而不是自己接管所有权。
-    - **OpenAI Code (Codex) 订阅 (OAuth)**：浏览器流程；粘贴 `code#state`。
-      - 当模型未设置或 `openai/*` 时，将 `agents.defaults.model` 设置为 `openai-codex/gpt-5.4`。
-    - **OpenAI API 密钥**：如果存在 `OPENAI_API_KEY` 则使用，否则提示输入密钥，然后将其存储在身份配置文件中。
-      - 当模型未设置、`openai/*` 或 `openai-codex/*` 时，将 `agents.defaults.model` 设置为 `openai/gpt-5.4`。
-    - **xAI (Grok) API 密钥**：提示输入 `XAI_API_KEY` 并将 xAI 配置为模型提供商。
-    - **OpenCode**：提示输入 `OPENCODE_API_KEY`（或 `OPENCODE_ZEN_API_KEY`，在 https://opencode.ai/auth 获取）并允许您选择 Zen 或 Go 目录。
-    - **Ollama**：提示输入 Ollama 基础 URL，提供 **Cloud + Local** 或 **Local** 模式，发现可用模型，并在需要时自动拉选定的本地模型。
+  <Step title="模型/认证">
+    - **Anthropic API key**: 如果存在 `ANTHROPIC_API_KEY` 则使用它，否则提示输入密钥，然后将其保存以供守护进程使用。
+    - **Anthropic API key**: 在 新手引导/configure 中首选的 Anthropic 助手选择。
+    - **Anthropic setup-token**: 在 新手引导/configure 中仍然可用，尽管 OpenClaw 现在在可用时更倾向于重用 Claude CLI。
+    - **OpenAI Code (Codex) subscription (Codex CLI)**: 如果 `~/.codex/auth.json` 存在，新手引导可以重用它。重用的 Codex CLI 凭证仍由 Codex CLI 管理；过期时，OpenClaw 会首先重新读取该源，并且当提供商可以刷新它时，会将刷新后的凭证写回 Codex 存储，而不是自己取得所有权。
+    - **OpenAI Code (Codex) subscription (OAuth)**: 浏览器流程；粘贴 `code#state`。
+      - 当模型未设置或为 `openai/*` 时，将 `agents.defaults.model` 设置为 `openai-codex/gpt-5.4`。
+    - **OpenAI API key**: 如果存在 `OPENAI_API_KEY` 则使用它，否则提示输入密钥，然后将其存储在认证配置文件中。
+      - 当模型未设置、为 `openai/*` 或 `openai-codex/*` 时，将 `agents.defaults.model` 设置为 `openai/gpt-5.4`。
+    - **xAI (Grok) API key**: 提示输入 `XAI_API_KEY` 并将 xAI 配置为模型提供商。
+    - **OpenCode**: 提示输入 `OPENCODE_API_KEY`（或 `OPENCODE_ZEN_API_KEY`，在 https://opencode.ai/auth 获取），并允许您选择 Zen 或 Go 目录。
+    - **Ollama**: 提示输入 Ollama 基础 URL，提供 **Cloud + Local** 或 **Local** 模式，发现可用模型，并在需要时自动拉入选定的本地模型。
     - 更多详情：[Ollama](/en/providers/ollama)
-    - **API 密钥**：为您存储密钥。
-    - **Vercel AI Gateway(网关) (多模型代理)**：提示输入 `AI_GATEWAY_API_KEY`。
+    - **API key**: 为您存储密钥。
+    - **Vercel AI Gateway(网关) (multi-模型 proxy)**: 提示输入 `AI_GATEWAY_API_KEY`。
     - 更多详情：[Vercel AI Gateway(网关)](/en/providers/vercel-ai-gateway)
-    - **Cloudflare AI Gateway(网关)**：提示输入账户 ID、Gateway(网关) ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
+    - **Cloudflare AI Gateway(网关)**: 提示输入账户 ID、网关 ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
     - 更多详情：[Cloudflare AI Gateway(网关)](/en/providers/cloudflare-ai-gateway)
-    - **MiniMax**：配置自动写入；托管默认值为 `MiniMax-M2.7`。
-      API 密钥设置使用 `minimax/...`，而 OAuth 设置使用
+    - **MiniMax**: 配置是自动写入的；托管默认值是 `MiniMax-M2.7`。
+      API-key 设置使用 `minimax/...`，OAuth 设置使用
       `minimax-portal/...`。
     - 更多详情：[MiniMax](/en/providers/minimax)
-    - **StepFun**：为中国或全球端点的 StepFun 标准版或 Step Plan 自动写入配置。
-    - 标准版目前包括 `step-3.5-flash`，Step Plan 也包括 `step-3.5-flash-2603`。
+    - **StepFun**: 为中国或全球端点上的 StepFun 标准版或 Step Plan 自动写入配置。
+    - 标准版目前包括 `step-3.5-flash`，Step Plan 还包括 `step-3.5-flash-2603`。
     - 更多详情：[StepFun](/en/providers/stepfun)
-    - **Synthetic (Anthropic 兼容)**：提示输入 `SYNTHETIC_API_KEY`。
+    - **Synthetic (Anthropic-compatible)**: 提示输入 `SYNTHETIC_API_KEY`。
     - 更多详情：[Synthetic](/en/providers/synthetic)
-    - **Moonshot (Kimi K2)**：配置自动写入。
-    - **Kimi Coding**：配置自动写入。
+    - **Moonshot (Kimi K2)**: 配置是自动写入的。
+    - **Kimi Coding**: 配置是自动写入的。
     - 更多详情：[Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
-    - **跳过**：尚未配置身份验证。
-    - 从检测到的选项中选择一个默认模型（或手动输入提供商/模型）。为了获得最佳质量和更低的提示注入风险，请选择您的提供商堆栈中可用的最强大的最新一代模型。
-    - 新手引导运行模型检查，如果配置的模型未知或缺少身份验证，则会发出警告。
-    - API 密钥存储模式默认为纯文本身份配置文件值。使用 `--secret-input-mode ref` 来存储环境支持的引用（例如 `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`）。
-    - 身份配置文件位于 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`（API 密钥 + OAuth）。`~/.openclaw/credentials/oauth.json` 仅限旧版导入。
+    - **Skip**: 尚未配置认证。
+    - 从检测到的选项中选择默认模型（或手动输入提供商/模型）。为了获得最佳质量和较低的提示注入风险，请选择您的提供商堆栈中可用的最强大的最新一代模型。
+    - 新手引导运行模型检查，如果配置的模型未知或缺少认证，则会发出警告。
+    - API 密钥存储模式默认为明文认证配置文件值。使用 `--secret-input-mode ref` 来存储环境支持的引用（例如 `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`）。
+    - 认证配置文件位于 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`（API 密钥 + OAuth）中。`~/.openclaw/credentials/oauth.json` 仅用于旧版导入。
     - 更多详情：[/concepts/oauth](/en/concepts/oauth)
     <Note>
-    无头/服务器提示：在带有浏览器的机器上完成 OAuth，然后将
+    Headless/服务器提示：在带有浏览器的计算机上完成 OAuth，然后将
     该代理的 `auth-profiles.json`（例如
     `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`，或匹配的
     `$OPENCLAW_STATE_DIR/...` 路径）复制到网关主机。`credentials/oauth.json`
-    仅是旧版导入源。
+    只是旧版导入源。
     </Note>
   </Step>
   <Step title="Workspace">
@@ -186,7 +186,7 @@ openclaw agents add work \
 
 ## Gateway(网关) 网关向导 RPC
 
-Gateway 通过 RPC (`wizard.start`、`wizard.next`、`wizard.cancel`、`wizard.status`) 暴露新手引导流程。
+Gateway(网关) 通过 RPC (`wizard.start`、`wizard.next`、`wizard.cancel`、`wizard.status`) 暴露新手引导流程。
 客户端（macOS 应用、控制 UI）可以渲染步骤而无需重新实现新手引导逻辑。
 
 ## Signal 设置 (signal-cli)

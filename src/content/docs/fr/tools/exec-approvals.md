@@ -336,7 +336,7 @@ Utilisez la carte **Control UI → Nodes → Exec approvals** pour modifier les 
 
 Le sélecteur de cible choisit **Gateway** (approbations locales) ou un **Node**. Les nœuds doivent annoncer `system.execApprovals.get/set` (application macOS ou hôte de nœud sans tête). Si un nœud n'annonce pas encore les approbations d'exécution, modifiez son `~/.openclaw/exec-approvals.json` local directement.
 
-CLI : `openclaw approvals` prend en charge la modification de la passerelle ou du nœud (voir [Approvals CLI](/en/cli/approvals)).
+CLI : `openclaw approvals` prend en charge l'édition de passerelle ou de nœud (voir [Approvals CLI](/en/cli/approvals)).
 
 ## Flux d'approbation
 
@@ -502,7 +502,7 @@ Définissez `enabled: false` pour désactiver explicitement un client d'approbat
 forcer lorsque les responsables sont résolus. La diffusion publique vers le chat d'origine reste explicite via
 `channels.<channel>.execApprovals.target`.
 
-FAQ : [Pourquoi existe-t-il deux configurations d'approbation d'exécution pour les approbations par chat ?](/en/help/faq#why-are-there-two-exec-approval-configs-for-chat-approvals)
+FAQ : [Pourquoi y a-t-il deux configurations d'approbation d'exécution pour les approbations de chat ?](/en/help/faq#why-are-there-two-exec-approval-configs-for-chat-approvals)
 
 - Discord : `channels.discord.execApprovals.*`
 - Slack : `channels.slack.execApprovals.*`
@@ -520,16 +520,20 @@ Comportement partagé :
 - les approbateurs Telegram peuvent être explicites (`execApprovals.approvers`) ou déduits de la configuration de propriétaire existante (`allowFrom`, plus `defaultTo` de message direct lorsque pris en charge)
 - les approbateurs Slack peuvent être explicites (`execApprovals.approvers`) ou déduits de `commands.ownerAllowFrom`
 - les boutons natifs Slack préservent le type d'id d'approbation, donc les ids `plugin:` peuvent résoudre les approbations de plugin sans une deuxième couche de repli locale Slack
-- le routage natif DM/canal Matrix est réservé à l'exécution ; les approbations de plugin Matrix restent sur les chemins de transfert `/approve` de même chat partagés et `approvals.plugin` facultatifs
+- Le routage natif Matrix DM/canal et les raccourcis de réaction gèrent les approbations d'exécution et de plugin ;
+  l'autorisation de plugin provient toujours de `channels.matrix.dm.allowFrom`
 - le demandeur n'a pas besoin d'être un approbateur
 - le chat d'origine peut approuver directement avec `/approve` lorsque ce chat prend déjà en charge les commandes et les réponses
-- les boutons d'approbation natifs Discord acheminent par type d'id d'approbation : les ids `plugin:` vont directement aux approbations de plugin, tout le reste va aux approbations d'exécution
-- les boutons d'approbation natifs Telegram suivent le même repli limité de l'exécution vers le plugin que `/approve`
+- les boutons d'approbation natifs Discord sont acheminés par type d'identifiant d'approbation : les identifiants `plugin:` vont
+  directement aux approbations de plugin, tout le reste va aux approbations d'exécution
+- les boutons d'approbation natifs Telegram suivent le même repli limité d'exécution vers plugin que `/approve`
 - lorsque `target` natif active la livraison vers le chat d'origine, les invites d'approbation incluent le texte de la commande
 - les approbations d'exécution en attente expirent après 30 minutes par défaut
 - si aucune interface utilisateur d'opérateur ou client d'approbation configuré ne peut accepter la demande, l'invite revient à `askFallback`
 
-Telegram est réglé par défaut sur les DMs de l'approbateur (`target: "dm"`). Vous pouvez basculer sur `channel` ou `both` lorsque vous voulez que les invites d'approbation apparaissent également dans le chat/sujet Telegram d'origine. Pour les sujets de forum Telegram, OpenClaw préserve le sujet pour l'invite d'approbation et le suivi après approbation.
+Telegram utilise par défaut les DMs de l'approbateur (`target: "dm"`). Vous pouvez passer à `channel` ou `both` lorsque vous
+voulez que les invites d'approbation apparaissent également dans le chat/sujet Telegram d'origine. Pour les sujets de forum
+Telegram, OpenClaw conserve le sujet pour l'invite d'approbation et le suivi post-approbation.
 
 Voir :
 
@@ -555,13 +559,13 @@ Notes de sécurité :
 
 Le cycle de vie de l'exécution est présenté sous forme de messages système :
 
-- `Exec running` (seulement si la commande dépasse le seuil d'avertissement d'exécution)
+- `Exec running` (uniquement si la commande dépasse le seuil de notification d'exécution)
 - `Exec finished`
 - `Exec denied`
 
-Ces messages sont publiés dans la session de l'agent après que le nœud a signalé l'événement.
-Les approbations d'exécution hébergées par la passerelle émettent les mêmes événements de cycle de vie lorsque la commande se termine (et facultativement lorsqu'elle s'exécute plus longtemps que le seuil).
-Les exécutions avec validation réutilisent l'identifiant d'approbation comme `runId` dans ces messages pour une corrélation facile.
+Ceux-ci sont publiés dans la session de l'agent après que le nœud a signalé l'événement.
+Les approbations d'exécution hébergées par Gateway émettent les mêmes événements de cycle de vie lorsque la commande se termine (et facultativement lorsqu'elle s'exécute plus longtemps que le seuil).
+Les exécutions soumises à approbation réutilisent l'identifiant d'approbation comme `runId` dans ces messages pour une corrélation facile.
 
 ## Comportement en cas de refus d'approbation
 
@@ -576,9 +580,9 @@ des résultats obsolètes provenant d'une exécution réussie antérieure.
 - **full** est puissant ; préférez les listes blanches lorsque c'est possible.
 - **ask** vous tient informé tout en permettant des approbations rapides.
 - Les listes blances par agent empêchent les approbations d'un agent de fuir vers d'autres.
-- Les approbations ne s'appliquent qu'aux requêtes d'exécution d'hôte provenant d'**expéditeurs autorisés**. Les expéditeurs non autorisés ne peuvent pas émettre de `/exec`.
-- `/exec security=full` est une commodité au niveau de la session pour les opérateurs autorisés et contourne les approbations par conception.
-  Pour bloquer strictement l'exécution sur l'hôte, définissez la sécurité des approbations sur `deny` ou refusez l'outil `exec` via la stratégie d'outil.
+- Les approbations ne s'appliquent qu'aux demandes d'exécution d'hôte provenant d'**expéditeurs autorisés**. Les expéditeurs non autorisés ne peuvent pas émettre `/exec`.
+- `/exec security=full` est une commodité au niveau de la session pour les opérateurs autorisés et saute les approbations par conception.
+  Pour bloquer fermement l'exécution sur l'hôte, définissez la sécurité des approbations sur `deny` ou refusez l'outil `exec` via la politique d'outils.
 
 Connexes :
 
@@ -589,6 +593,6 @@ Connexes :
 ## Connexes
 
 - [Exec](/en/tools/exec) — outil d'exécution de commandes shell
-- [Sandboxing](/en/gateway/sandboxing) — modes de bac à sable et accès à l'espace de travail
+- [Sandboxing](/en/gateway/sandboxing) — modes de Sandbox et accès à l'espace de travail
 - [Sécurité](/en/gateway/security) — modèle de sécurité et durcissement
-- [Sandbox vs politique d'outil vs élevé](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — quand utiliser chacun
+- [Sandbox vs Politique d'outil vs Élevé](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — quand utiliser chacun

@@ -160,7 +160,7 @@ De forma predeterminada, OpenClaw utiliza el motor de contexto `legacy` integrad
 `/context` prefiere el informe más reciente del prompt del sistema **construido en la ejecución** cuando está disponible:
 
 - `System prompt (run)` = capturado de la última ejecución integrada (con capacidad de herramientas) y persistido en el almacén de sesiones.
-- `System prompt (estimate)` = calculado al vuelo cuando aún no existe un informe de ejecución.
+- `System prompt (estimate)` = calculado al vuelo cuando no existe un informe de ejecución (o al ejecutarse a través de un backend de CLI que no genera el informe).
 
 De cualquier manera, reporta los tamaños y los principales contribuyentes; **no** vuelca el prompt del sistema completo ni los esquemas de herramientas.
 

@@ -47,13 +47,13 @@ Onboarding starts with **QuickStart** (defaults) vs **Advanced** (full control).
 
 **Local mode (default)** walks you through these steps:
 
-1. **Model/Auth** — 選擇任何支援的提供者/驗證流程（API 金鑰、OAuth 或提供者特定的手動驗證），包括自訂提供者
-   (OpenAI 相容、Anthropic 相容或 Unknown 自動偵測)。選擇預設模型。
-   安全提示：如果此代理將執行工具或處理 webhook/hooks 內容，請優先選擇可用的最強最新一代模型，並保持嚴格的工具政策。較弱/較舊的層級更容易受到 prompt-injection 攻擊。
-   對於非互動式執行，`--secret-input-mode ref` 會將環境變數支援的參照儲存在驗證設定檔中，而不是明文 API 金鑰值。
-   在非互動式 `ref` 模式下，必須設定提供者環境變數；如果沒有該環境變數，傳遞內聯金鑰旗標會快速失敗。
-   在互動式執行中，選擇密鑰參照模式可讓您指向環境變數或已設定的提供者參照（`file` 或 `exec`），並在儲存前進行快速的預檢驗證。
-   對於 Anthropic，互動式入職/設定提供 **Anthropic Claude CLI** 作為本機備援方案，並提供 **Anthropic API 金鑰** 作為建議的生產環境路徑。Anthropic setup-token 也可作為舊版/手動 OpenClaw 路徑再次使用，並帶有 Anthropic 針對 OpenClaw 特定的 **Extra Usage** 計費預期。
+1. **模型/驗證** — 選擇任何支援的提供者/驗證流程（API 金鑰、OAuth 或提供者特定的手動驗證），包括自訂提供者
+   （OpenAI 相容、Anthropic 相容或未知自動偵測）。選擇一個預設模型。
+   安全注意：如果此代理程式將執行工具或處理 webhook/hooks 內容，請盡可能選擇最強大的最新世代模型，並保持嚴格的工具政策。較弱/舊的層級更容易受到提示注入攻擊。
+   對於非互動式執行，`--secret-input-mode ref` 會將環境變數支援的參照儲存在驗證設定檔中，而非純文字 API 金鑰值。
+   在非互動式 `ref` 模式下，必須設定提供者環境變數；若在沒有該環境變數的情況下傳遞內聯金鑰旗標，則會快速失敗。
+   在互動式執行中，選擇秘密參照模式可讓您指向環境變數或已設定的提供者參照（`file` 或 `exec`），並在儲存前進行快速的預檢驗證。
+   對於 Anthropic，互動式入門/設定提供 **Anthropic Claude CLI** 作為首選的本機路徑，以及 **Anthropic API 金鑰** 作為推薦的生產環境路徑。Anthropic 設定權杖也仍可作為支援的權杖驗證路徑使用。
 2. **Workspace** — 代理檔案的位置（預設 `~/.openclaw/workspace`）。Seeds bootstrap 檔案。
 3. **Gateway** — 連接埠、綁定位址、驗證模式、Tailscale 曝光。
    在互動式權杖模式中，選擇預設明文權杖儲存或選用 SecretRef。

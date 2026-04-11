@@ -123,36 +123,37 @@ Model output
 
 Slack 专用：
 
-- `channels.slack.nativeStreaming` 在 `streaming=partial` 时切换 Slack 原生流式 API 调用（默认：`true`）。
+- `channels.slack.streaming.nativeTransport` 在 `channels.slack.streaming.mode="partial"` 时切换 Slack 原生流式传输 API 调用（默认：`true`）。
+- Slack 原生流式传输和 Slack 助手线程状态需要一个回复线程目标；顶级 Slack 不显示该线程样式预览。
 
-旧键迁移：
+旧版密钥迁移：
 
 - Telegram：`streamMode` + 布尔值 `streaming` 自动迁移到 `streaming` 枚举。
 - Discord：`streamMode` + 布尔值 `streaming` 自动迁移到 `streaming` 枚举。
-- Slack：`streamMode` 自动迁移到 `streaming` 枚举；布尔值 `streaming` 自动迁移到 `nativeStreaming`。
+- Slack：`streamMode` 自动迁移到 `streaming.mode`；布尔值 `streaming` 自动迁移到 `streaming.mode` 加上 `streaming.nativeTransport`；旧版 `nativeStreaming` 自动迁移到 `streaming.nativeTransport`。
 
 ### 运行时行为
 
 Telegram：
 
-- 在私信和群组/主题中使用 `sendMessage` + `editMessageText` 预览更新。
-- 当明确启用 Telegram 分块流式传输时，将跳过预览流式传输（以避免重复流式传输）。
-- `/reasoning stream` 可以将推理内容写入预览。
+- 在私信和群组/话题中使用 `sendMessage` + `editMessageText` 预览更新。
+- 当明确启用 Telegram 块流式传输时，将跳过预览流式传输（以避免双重流式传输）。
+- `/reasoning stream` 可以将推理写入预览。
 
 Discord：
 
 - 使用发送 + 编辑预览消息。
 - `block` 模式使用草稿分块（`draftChunk`）。
-- 当明确启用 Discord 分块流式传输时，将跳过预览流式传输。
+- 当明确启用 Discord 块流式传输时，将跳过预览流式传输。
 
 Slack：
 
 - `partial` 在可用时可以使用 Slack 原生流式传输（`chat.startStream`/`append`/`stop`）。
-- `block` 使用附加式草稿预览。
+- `block` 使用追加式草稿预览。
 - `progress` 使用状态预览文本，然后是最终答案。
 
 ## 相关
 
-- [Messages](/en/concepts/messages) — 消息生命周期与传递
-- [Retry](/en/concepts/retry) — 传递失败时的重试行为
-- [Channels](/en/channels) — 每个渠道的流式传输支持
+- [消息](/en/concepts/messages) — 消息生命周期和传递
+- [重试](/en/concepts/retry) — 传递失败时的重试行为
+- [渠道](/en/channels) — 每个渠道的流式传输支持

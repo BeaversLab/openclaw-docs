@@ -57,7 +57,7 @@ Host remote-gateway
 ssh-copy-id -i ~/.ssh/id_rsa <REMOTE_USER>@<REMOTE_IP>
 ```
 
-### 步骤 3：配置远程 Gateway 身份验证
+### 步骤 3：配置远程 Gateway(网关) 身份验证
 
 ```bash
 openclaw config set gateway.remote.token "<your-token>"
@@ -161,4 +161,4 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 | `KeepAlive`                          | 如果隧道崩溃，自动重启隧道            |
 | `RunAtLoad`                          | 当代理加载时启动隧道                  |
 
-OpenClaw.app 连接到您客户端机器上的 `ws://127.0.0.1:18789`。SSH 隧道将该连接转发到运行 Gateway 的远程机器上的端口 18789。
+OpenClaw.app 连接到您客户端机器上的 `ws://127.0.0.1:18789`。SSH 隧道将该连接转发到运行 Gateway(网关) 的远程机器上的端口 18789。

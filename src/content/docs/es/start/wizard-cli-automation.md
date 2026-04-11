@@ -190,8 +190,8 @@ openclaw onboard --non-interactive \
   </Accordion>
 </AccordionGroup>
 
-El token de configuración de Anthropic está disponible nuevamente como una ruta de incorporación heredada/manual.
-Úselo con la expectativa de que Anthropic dijo a los usuarios de OpenClaw que la ruta de inicio de sesión de Claude de OpenClaw requiere **Uso adicional**. Para producción, prefiera una clave de API de Anthropic.
+El token de configuración de Anthropic sigue disponible como una ruta de token de incorporación compatible, pero OpenClaw ahora prefiere la reutilización de la CLI de Claude cuando está disponible.
+Para producción, prefiera una clave de API de Anthropic.
 
 ## Agregar otro agente
 

@@ -34,7 +34,7 @@ openclaw onboard --auth-choice zai-cn
 ```json5
 {
   env: { ZAI_API_KEY: "sk-..." },
-  agents: { defaults: { model: { primary: "zai/glm-5" } } },
+  agents: { defaults: { model: { primary: "zai/glm-5.1" } } },
 }
 ```
 
@@ -61,7 +61,7 @@ OpenClaw 目前為內建的 `zai` 提供者植入以下內容：
 ## 備註
 
 - GLM 模型可作為 `zai/<model>` 使用（例如：`zai/glm-5`）。
-- 預設內建模型參照：`zai/glm-5`
+- 預設內建模型參考：`zai/glm-5.1`
 - 未知的 `glm-5*` ID 在符合當前 GLM-5 系列形狀時，仍會透過從 `glm-4.7` 樣板合成提供者擁有的元數據，在內建提供者路徑上進行正向解析。
 - `tool_stream` 針對 Z.AI 工具呼叫串流預設為啟用。將 `agents.defaults.models["zai/<model>"].params.tool_stream` 設為 `false` 即可停用。
 - 請參閱 [/providers/glm](/en/providers/glm) 以了解模型系列概覽。

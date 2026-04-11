@@ -66,7 +66,7 @@ openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 ## 注意事项
 
 - 机器人无法发起私信。用户必须先向机器人发送消息。
-- Webhook URL 必须能被 Gateway 访问；如果位于代理后面，请设置 `webhookPublicUrl`。
+- Webhook URL 必须能被 Gateway(网关) 访问；如果位于代理后面，请设置 `webhookPublicUrl`。
 - 机器人 API 不支持媒体上传；媒体以 URL 形式发送。
 - Webhook 负载不区分私信和房间；设置 `apiUser` + `apiPassword` 以启用房间类型查找（否则私信将被视为房间）。
 

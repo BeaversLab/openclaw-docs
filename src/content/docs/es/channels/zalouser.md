@@ -123,9 +123,10 @@ Ejemplo:
 - `channels.zalouser.groups.<group>.requireMention` controla si las respuestas del grupo requieren una mención.
 - Orden de resolución: id/nombre de grupo exacto -> slug de grupo normalizado -> `*` -> por defecto (`true`).
 - Esto se aplica tanto a los grupos en la lista de permitidos como al modo de grupo abierto.
-- Los comandos de control autorizados (por ejemplo `/new`) pueden omitir el filtrado de menciones.
-- Cuando se omite un mensaje de grupo porque se requiere una mención, OpenClaw lo almacena como historial de grupo pendiente y lo incluye en el siguiente mensaje de grupo procesado.
-- El límite del historial de grupos es `messages.groupChat.historyLimit` por defecto (alternativo `50`). Puedes anularlo por cuenta con `channels.zalouser.historyLimit`.
+- Citar un mensaje del bot cuenta como una mención implícita para la activación del grupo.
+- Los comandos de control autorizados (por ejemplo `/new`) pueden omitir el filtrado por mención.
+- Cuando un mensaje de grupo se omite porque se requiere una mención, OpenClaw lo almacena como historial de grupo pendiente y lo incluye en el siguiente mensaje de grupo procesado.
+- El límite del historial de grupo es `messages.groupChat.historyLimit` de forma predeterminada (alternativa `50`). Puedes anularlo por cuenta con `channels.zalouser.historyLimit`.
 
 Ejemplo:
 
@@ -161,34 +162,34 @@ Las cuentas se asignan a perfiles `zalouser` en el estado de OpenClaw. Ejemplo:
 }
 ```
 
-## Indicador de escritura, reacciones y confirmaciones de entrega
+## Indicador de escribiendo, reacciones y confirmaciones de entrega
 
-- OpenClaw envía un evento de escritura antes de enviar una respuesta (mejor esfuerzo posible).
+- OpenClaw envía un evento de "escribiendo" antes de enviar una respuesta (con el mejor esfuerzo).
 - La acción de reacción al mensaje `react` es compatible con `zalouser` en las acciones del canal.
-  - Use `remove: true` para eliminar un emoji de reacción específico de un mensaje.
+  - Usa `remove: true` para eliminar un emoji de reacción específico de un mensaje.
   - Semántica de reacciones: [Reacciones](/en/tools/reactions)
-- Para los mensajes entrantes que incluyen metadatos de eventos, OpenClaw envía acuses de entrega y vistos (mejor esfuerzo).
+- Para los mensajes entrantes que incluyen metadatos de eventos, OpenClaw envía confirmaciones de entregado + visto (con el mejor esfuerzo).
 
 ## Solución de problemas
 
-**El inicio de sesión no persiste:**
+**El inicio de sesión no se mantiene:**
 
 - `openclaw channels status --probe`
 - Volver a iniciar sesión: `openclaw channels logout --channel zalouser && openclaw channels login --channel zalouser`
 
-**No se resolvió la lista de permitidos/nombre de grupo:**
+**La lista de permitidos/nombre del grupo no se resolvió:**
 
-- Use IDs numéricos en `allowFrom`/`groupAllowFrom`/`groups`, o nombres exactos de amigos/grupos.
+- Usa IDs numéricos en `allowFrom`/`groupAllowFrom`/`groups`, o nombres exactos de amigos/grupos.
 
-**Actualizado desde la configuración anterior basada en CLI:**
+**Actualizado desde una configuración antigua basada en CLI:**
 
-- Elimine cualquier suposición antigua sobre el proceso externo `zca`.
-- El canal ahora se ejecuta completamente en OpenClaw sin binarios CLI externos.
+- Elimina cualquier suposición antigua sobre el proceso externo `zca`.
+- El canal ahora se ejecuta completamente en OpenClaw sin binarios externos de CLI.
 
 ## Relacionado
 
-- [Resumen de canales](/en/channels) — todos los canales compatibles
+- [Descripción general de canales](/en/channels) — todos los canales compatibles
 - [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento de MD
-- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento
+- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y filtrado por mención
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento

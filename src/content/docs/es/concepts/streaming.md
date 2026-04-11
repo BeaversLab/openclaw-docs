@@ -126,36 +126,37 @@ Modos:
 
 Solo para Slack:
 
-- `channels.slack.nativeStreaming` alterna las llamadas a la API de transmisión nativa de Slack cuando `streaming=partial` (predeterminado: `true`).
+- `channels.slack.streaming.nativeTransport` alterna las llamadas a la API de transmisión nativa de Slack cuando `channels.slack.streaming.mode="partial"` (predeterminado: `true`).
+- La transmisión nativa de Slack y el estado del hilo del asistente de Slack requieren un objetivo de hilo de respuesta; los MD de nivel superior no muestran esa vista previa de estilo de hilo.
 
 Migración de clave heredada:
 
-- Telegram: `streamMode` + booleano `streaming` migran automáticamente al enum `streaming`.
-- Discord: `streamMode` + boolean `streaming` se migra automáticamente al enum `streaming`.
-- Slack: `streamMode` se migra automáticamente al enum `streaming`; el boolean `streaming` se migra automáticamente a `nativeStreaming`.
+- Telegram: `streamMode` + booleano `streaming` migran automáticamente al enumerado `streaming`.
+- Discord: `streamMode` + booleano `streaming` migran automáticamente al enumerado `streaming`.
+- Slack: `streamMode` migra automáticamente a `streaming.mode`; el booleano `streaming` migra automáticamente a `streaming.mode` más `streaming.nativeTransport`; `nativeStreaming` heredado migra automáticamente a `streaming.nativeTransport`.
 
 ### Comportamiento en tiempo de ejecución
 
 Telegram:
 
-- Usa `sendMessage` + `editMessageText` actualizaciones de vista previa en MDs y grupos/temas.
-- La transmisión de vista previa se omite cuando la transmisión de bloques de Telegram está explícitamente habilitada (para evitar la doble transmisión).
-- `/reasoning stream` puede escribir el razonamiento en la vista previa.
+- Usa `sendMessage` + `editMessageText` actualizaciones de vista previa en MD y grupos/temas.
+- Se omite la transmisión de vista previa cuando la transmisión de bloques de Telegram está explícitamente habilitada (para evitar la doble transmisión).
+- `/reasoning stream` puede escribir razonamiento en la vista previa.
 
 Discord:
 
 - Usa mensajes de vista previa de envío y edición.
-- El modo `block` usa fragmentación de borradores (`draftChunk`).
-- La transmisión de vista previa se omite cuando la transmisión de bloques de Discord está explícitamente habilitada.
+- El modo `block` usa fragmentación de borrador (`draftChunk`).
+- Se omite la transmisión de vista previa cuando la transmisión de bloques de Discord está explícitamente habilitada.
 
 Slack:
 
 - `partial` puede usar la transmisión nativa de Slack (`chat.startStream`/`append`/`stop`) cuando esté disponible.
 - `block` usa vistas previas de borrador de estilo anexar.
-- `progress` usa texto de vista previa de estado, luego la respuesta final.
+- `progress` usa texto de vista previa de estado y luego la respuesta final.
 
 ## Relacionado
 
 - [Mensajes](/en/concepts/messages) — ciclo de vida y entrega de mensajes
-- [Reintento](/en/concepts/retry) — comportamiento de reintento en caso de fallo de entrega
+- [Reintentar](/en/concepts/retry) — comportamiento de reintento en caso de error de entrega
 - [Canales](/en/channels) — soporte de transmisión por canal

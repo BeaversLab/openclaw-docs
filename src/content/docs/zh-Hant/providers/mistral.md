@@ -32,15 +32,15 @@ openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
 
 OpenClaw 目前隨附此捆綁的 Mistral 目錄：
 
-| 模型參照                         | 輸入       | 上下文  | 最大輸出 | 備註               |
-| -------------------------------- | ---------- | ------- | -------- | ------------------ |
-| `mistral/mistral-large-latest`   | 文字、圖像 | 262,144 | 16,384   | 預設模型           |
-| `mistral/mistral-medium-2508`    | 文字、圖像 | 262,144 | 8,192    | Mistral Medium 3.1 |
-| `mistral/mistral-small-latest`   | 文字、圖像 | 128,000 | 16,384   | 較小的多模態模型   |
-| `mistral/pixtral-large-latest`   | 文字、圖像 | 128,000 | 32,768   | Pixtral            |
-| `mistral/codestral-latest`       | 文字       | 256,000 | 4,096    | 程式碼撰寫         |
-| `mistral/devstral-medium-latest` | 文字       | 262,144 | 32,768   | Devstral 2         |
-| `mistral/magistral-small`        | 文字       | 128,000 | 40,000   | 具備推理能力       |
+| 模型參照                         | 輸入       | 上下文  | 最大輸出 | 備註                                                          |
+| -------------------------------- | ---------- | ------- | -------- | ------------------------------------------------------------- |
+| `mistral/mistral-large-latest`   | 文字、圖像 | 262,144 | 16,384   | 預設模型                                                      |
+| `mistral/mistral-medium-2508`    | 文字、圖像 | 262,144 | 8,192    | Mistral Medium 3.1                                            |
+| `mistral/mistral-small-latest`   | 文字、圖像 | 128,000 | 16,384   | Mistral Small 4；可透過 API `reasoning_effort` 進行可調整推理 |
+| `mistral/pixtral-large-latest`   | 文字、圖像 | 128,000 | 32,768   | Pixtral                                                       |
+| `mistral/codestral-latest`       | 文字       | 256,000 | 4,096    | 程式碼撰寫                                                    |
+| `mistral/devstral-medium-latest` | 文字       | 262,144 | 32,768   | Devstral 2                                                    |
+| `mistral/magistral-small`        | 文字       | 128,000 | 40,000   | 具備推理能力                                                  |
 
 ## 配置片段 (使用 Voxtral 進行音訊轉錄)
 
@@ -56,6 +56,17 @@ OpenClaw 目前隨附此捆綁的 Mistral 目錄：
   },
 }
 ```
+
+## 可調整推理 (`mistral-small-latest`)
+
+`mistral/mistral-small-latest` 對應 Mistral Small 4，並透過 `reasoning_effort` 支援 Chat Completions API 上的 [可調整推理](https://docs.mistral.ai/capabilities/reasoning/adjustable) (`none` 將輸出中的額外思考降至最低；`high` 會在最終答案之前顯示完整的思考軌跡)。
+
+OpenClaw 會將工作階段的 **thinking** 層級對應至 Mistral 的 API：
+
+- **off** / **minimal** → `none`
+- **low** / **medium** / **high** / **xhigh** / **adaptive** → `high`
+
+其他內建的 Mistral 型錄模型不使用此參數；當您想要 Mistral 原生的推理優先行為時，請繼續使用 `magistral-*` 模型。
 
 ## 備註
 

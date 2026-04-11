@@ -28,7 +28,7 @@ title: "WebChat"
 - `chat.history` 也会进行显示标准化：例如 `[[reply_to_*]]` 和 `[[audio_as_voice]]` 等内联交付指令标签、纯文本工具调用 XML 载荷（包括 `<tool_call>...</tool_call>`、`<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、`<function_calls>...</function_calls>` 以及截断的工具调用块），以及泄露的 ASCII/全角模型控制标记都会从可见文本中剥离掉，并且如果助手条目的整个可见文本仅是静默标记 `NO_REPLY` / `no_reply`，则这些条目将被省略。
 - `chat.inject` 会将助手注释直接附加到记录副本并向 UI 广播（不运行 agent）。
 - 中止的运行可以在 UI 中保留部分可见的助手输出。
-- 当存在缓冲输出时，Gateway 会将中止的部分助手文本持久化到记录副本历史中，并用中止元数据标记这些条目。
+- 当存在缓冲输出时，Gateway(网关) 会将中止的部分助手文本持久化到记录副本历史中，并用中止元数据标记这些条目。
 - 历史记录始终从 gateway 获取（不监听本地文件）。
 - 如果 gateway 无法访问，WebChat 将变为只读。
 

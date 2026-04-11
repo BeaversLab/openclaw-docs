@@ -42,7 +42,7 @@ Utilisez `agents.defaults.imageMaxDimensionPx` (par défaut : `1200`) pour ajust
 - Des valeurs plus faibles réduisent généralement l'utilisation des tokens de vision et la taille de la charge utile.
 - Des valeurs plus élevées préservent plus de détails visuels pour les captures d'écran lourdes en OCR/interface utilisateur.
 
-Pour une ventilation pratique (par fichier injecté, outils, compétences et taille du prompt système), utilisez `/context list` ou `/context detail`. Voir [Context](/en/concepts/context).
+Pour une ventilation pratique (par fichier injecté, outils, Skills et taille du prompt système), utilisez `/context list` ou `/context detail`. Voir [Context](/en/concepts/context).
 
 ## Comment voir l'utilisation actuelle des tokens
 
@@ -112,11 +112,11 @@ de remettre en cache le prompt complet, réduisant ainsi les coûts d'écriture 
 Dans les configurations multi-agent, vous pouvez conserver une seule configuration de modèle partagée et régler le comportement du cache
 par agent avec `agents.list[].params.cacheRetention`.
 
-Pour un guide détaillé de chaque paramètre, voir [Prompt Caching](/en/reference/prompt-caching).
+Pour un guide détaillé de tous les paramètres, voir [Prompt Caching](/en/reference/prompt-caching).
 
-Pour la tarification de l'Anthropic API, les lectures de cache sont significativement moins chères que les tokens
-d'entrée, tandis que les écritures de cache sont facturées avec un multiplicateur plus élevé. Voir la tarification de mise en cache
-de prompt de Anthropic pour les derniers tarifs et multiplicateurs TTL :
+Pour la tarification de l'Anthropic API, les lectures de cache sont nettement moins chères que les tokens d'entrée,
+tandis que les écritures dans le cache sont facturées avec un multiplicateur plus élevé. Voir la tarification
+du cache de prompt de Anthropic pour les derniers tarifs et multiplicateurs TTL :
 [https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
 
 ### Exemple : garder le cache 1h à chaud avec heartbeat
@@ -177,8 +177,8 @@ Cela correspond à l'en-tête bêta `context-1m-2025-08-07` de Anthropic.
 
 Cela ne s'applique que lorsque `context1m: true` est défini pour cette entrée de modèle.
 
-Exigence : les identifiants doivent être éligibles pour l'utilisation de contexte long (facturation par clé API, ou chemin de connexion Claude de OpenClaw avec Extra Usage activé). Si ce n'est pas le cas, Anthropic répond
-avec `HTTP 429: rate_limit_error: Extra usage is required for long context requests`.
+Condition requise : les identifiants doivent être éligibles à l'utilisation du contexte long. Sinon,
+Anthropic répond par une erreur de limite de taux côté fournisseur pour cette demande.
 
 Si vous authentifiez Anthropic avec des jetons OAuth/d'abonnement (`sk-ant-oat-*`),
 OpenClaw ignore l'en-tête bêta `context-1m-*` car Anthropic rejette actuellement
@@ -186,10 +186,10 @@ cette combinaison avec une erreur HTTP 401.
 
 ## Conseils pour réduire la pression sur les jetons
 
-- Utilisez `/compact` pour résumer les sessions longues.
+- Utilisez `/compact` pour résumer les longues sessions.
 - Raccourcissez les grandes sorties d'outils dans vos flux de travail.
-- Abaissez `agents.defaults.imageMaxDimensionPx` pour les sessions avec de nombreuses captures d'écran.
+- Baissez `agents.defaults.imageMaxDimensionPx` pour les sessions avec beaucoup de captures d'écran.
 - Gardez les descriptions de compétences courtes (la liste des compétences est injectée dans le prompt).
 - Préférez des modèles plus petits pour un travail verbeux et exploratoire.
 
-Consultez [Compétences](/en/tools/skills) pour connaître la formule exacte de la surcharge de la liste de compétences.
+Voir [Skills](/en/tools/skills) pour la formule exacte de la surcharge de la liste de compétences.

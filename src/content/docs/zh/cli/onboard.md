@@ -115,8 +115,8 @@ openclaw onboard --non-interactive \
 
 非交互式 Z.AI 端点选择：
 
-注意：`--auth-choice zai-api-key` 现在会自动为您的密钥检测最佳的 Z.AI 端点（优先使用带有 `zai/glm-5` 的通用 API）。
-如果您特别想要 GLM 编码计划端点，请选择 `zai-coding-global` 或 `zai-coding-cn`。
+注意：`--auth-choice zai-api-key` 现在会自动检测适合您的密钥的最佳 Z.AI 端点（优先使用带有 `zai/glm-5.1` 的通用 API）。
+如果您特别想要 GLM Coding Plan 端点，请选择 `zai-coding-global` 或 `zai-coding-cn`。
 
 ```bash
 # Promptless endpoint selection
