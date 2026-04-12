@@ -43,7 +43,7 @@ En OpenClaw, un bucle es una única ejecución serializada por sesión que emite
 - Las ejecuciones se serializan por clave de sesión (carril de sesión) y opcionalmente a través de un carril global.
 - Esto evita carreras de herramientas/sesión y mantiene el historial de sesiones consistente.
 - Los canales de mensajería pueden elegir modos de cola (collect/steer/followup) que alimentan este sistema de carriles.
-  Consulte [Cola de comandos](/en/concepts/queue).
+  Véase [Command Queue](/en/concepts/queue).
 
 ## Sesión + preparación del espacio de trabajo
 
@@ -56,7 +56,7 @@ En OpenClaw, un bucle es una única ejecución serializada por sesión que emite
 
 - El prompt del sistema se construye a partir del prompt base de OpenClaw, el prompt de habilidades, el contexto de arranque y las anulaciones por ejecución.
 - Se aplican los límites específicos del modelo y los tokens de reserva de compactación.
-- Consulte [Prompt del sistema](/en/concepts/system-prompt) para ver lo que ve el modelo.
+- Véase [System prompt](/en/concepts/system-prompt) para lo que ve el modelo.
 
 ## Puntos de enlace (donde puede interceptar)
 
@@ -71,7 +71,7 @@ OpenClaw tiene dos sistemas de enlaces:
   Úselo para agregar/eliminar archivos de contexto de arranque.
 - **Command hooks**: `/new`, `/reset`, `/stop` y otros eventos de comando (consulte la documentación de Hooks).
 
-Consulte [Hooks](/en/automation/hooks) para ver la configuración y los ejemplos.
+Véase [Hooks](/en/automation/hooks) para la configuración y ejemplos.
 
 ### Enlaces de complemento (ciclo de vida del agente + puerta de enlace)
 
@@ -99,14 +99,14 @@ Reglas de decisión de gancho para guardias de salida/herramientas:
 - `message_sending`: `{ cancel: true }` es terminal y detiene los controladores de menor prioridad.
 - `message_sending`: `{ cancel: false }` es una no-op y no borra una cancelación anterior.
 
-Consulte [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) para obtener detalles sobre la API de hooks y el registro.
+Véase [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) para la API de hooks y detalles de registro.
 
 ## Streaming + respuestas parciales
 
 - Los deltas del asistente se transmiten desde pi-agent-core y se emiten como eventos `assistant`.
 - El streaming en bloque puede emitir respuestas parciales ya sea en `text_end` o en `message_end`.
 - El streaming de razonamiento puede emitirse como un flujo separado o como respuestas en bloque.
-- Consulte [Streaming](/en/concepts/streaming) para conocer el comportamiento de fragmentación y respuestas en bloque.
+- Véase [Streaming](/en/concepts/streaming) para el comportamiento de fragmentación y respuesta en bloque.
 
 ## Ejecución de herramientas + herramientas de mensajería
 
@@ -130,7 +130,7 @@ Consulte [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) para ob
 
 - La auto-compactación emite eventos de flujo `compaction` y puede activar un reintento.
 - Al reintentar, los búferes en memoria y los resúmenes de herramientas se restablecen para evitar resultados duplicados.
-- Consulte [Compaction](/en/concepts/compaction) para conocer la canalización de compactación.
+- Véase [Compaction](/en/concepts/compaction) para la canalización de compactación.
 
 ## Flujos de eventos (hoy)
 
@@ -147,18 +147,19 @@ Consulte [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) para ob
 
 - `agent.wait` predeterminado: 30s (solo la espera). El parámetro `timeoutMs` lo anula.
 - Tiempo de ejecución del agente: `agents.defaults.timeoutSeconds` predeterminado 172800s (48 horas); aplicado en `runEmbeddedPiAgent` temporizador de anulación.
+- Tiempo de espera de inactividad de LLM: `agents.defaults.llm.idleTimeoutSeconds` cancela una solicitud del modelo cuando no llegan fragmentos de respuesta antes de la ventana de inactividad. Establézcalo explícitamente para modelos locales lentos o proveedores de razonamiento/llamadas a herramientas; establézcalo en 0 para desactivarlo. Si no se establece, OpenClaw usa `agents.defaults.timeoutSeconds` cuando está configurado, de lo contrario 120s. Las ejecuciones activadas por Cron sin un tiempo de espera explícito de LLM o agente desactivan el perro guardián de inactividad y se basan en el tiempo de espera exterior de cron.
 
-## Dónde las cosas pueden terminar temprano
+## Donde las cosas pueden terminar antes
 
-- Tiempo de espera del agente (anulación)
+- Tiempo de espera del agente (abortar)
 - AbortSignal (cancelar)
-- Desconexión de la puerta de enlace o tiempo de espera de RPC
+- Desconexión de Gateway o tiempo de espera de RPC
 - Tiempo de espera de `agent.wait` (solo espera, no detiene al agente)
 
 ## Relacionado
 
-- [Herramientas](/en/tools) — herramientas de agente disponibles
-- [Ganchos](/en/automation/hooks) — scripts controlados por eventos activados por eventos del ciclo de vida del agente
-- [Compactación](/en/concepts/compaction) — cómo se resumen las conversaciones largas
-- [Aprobaciones de ejecución](/en/tools/exec-approvals) — puertas de aprobación para comandos de shell
-- [Pensamiento](/en/tools/thinking) — configuración del nivel de pensamiento/razonamiento
+- [Tools](/en/tools) — herramientas de agente disponibles
+- [Hooks](/en/automation/hooks) — scripts controlados por eventos activados por eventos del ciclo de vida del agente
+- [Compaction](/en/concepts/compaction) — cómo se resumen las conversaciones largas
+- [Exec Approvals](/en/tools/exec-approvals) — puertas de aprobación para comandos de shell
+- [Thinking](/en/tools/thinking) — configuración del nivel de pensamiento/razonamiento

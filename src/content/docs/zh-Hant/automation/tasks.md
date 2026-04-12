@@ -170,7 +170,7 @@ openclaw tasks show <lookup>
 openclaw tasks cancel <lookup>
 ```
 
-對於 ACP 和子代理任務，這會終止子會話。狀態轉換為 `cancelled` 並發送傳送通知。
+對於 ACP 和子代理任務，這會終止子會話。對於 CLI 追蹤的任務，取消操作會記錄在任務登錄表中（沒有獨立的子運行時句柄）。狀態轉換為 `cancelled` 並且在適用時發送傳遞通知。
 
 ### `tasks notify`
 

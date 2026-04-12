@@ -367,160 +367,176 @@ implemented in `src/gateway/server-methods/*.ts`.
   - `wake` 调度立即或在下一次心跳时的唤醒文本注入
   - `cron.list`、`cron.status`、`cron.add`、`cron.update`、`cron.remove`、
     `cron.run`、`cron.runs`
-- 技能/工具：`skills.*`、`tools.catalog`、`tools.effective`
+- 技能/工具：`commands.list`、`skills.*`、`tools.catalog`、`tools.effective`
 
 ### 常见事件系列
 
-- `chat`：UI 聊天更新，如 `chat.inject` 以及其他仅对话记录的聊天
-  事件。
+- `chat`：UI 聊天更新，例如 `chat.inject` 以及其他仅限聊天记录的
+  聊天事件。
 - `session.message` 和 `session.tool`：已订阅会话的
-  对话记录/事件流更新。
+  聊天记录/事件流更新。
 - `sessions.changed`：会话索引或元数据已更改。
 - `presence`：系统在线状态快照更新。
-- `tick`：定期保活/存活事件。
+- `tick`：定期保活 / 存活事件。
 - `health`：网关健康快照更新。
 - `heartbeat`：心跳事件流更新。
-- `cron`：cron 运行/任务更改事件。
+- `cron`：Cron 运行/任务更改事件。
 - `shutdown`：网关关闭通知。
 - `node.pair.requested` / `node.pair.resolved`：节点配对生命周期。
 - `node.invoke.request`：节点调用请求广播。
-- `device.pair.requested` / `device.pair.resolved`: 配对设备生命周期。
-- `voicewake.changed`: 唤醒词触发配置已更改。
-- `exec.approval.requested` / `exec.approval.resolved`: 执行批准
+- `device.pair.requested` / `device.pair.resolved`：已配对设备生命周期。
+- `voicewake.changed`：唤醒词触发配置已更改。
+- `exec.approval.requested` / `exec.approval.resolved`：执行批准
   生命周期。
-- `plugin.approval.requested` / `plugin.approval.resolved`: 插件批准
+- `plugin.approval.requested` / `plugin.approval.resolved`：插件批准
   生命周期。
 
 ### 节点辅助方法
 
-- 节点可以调用 `skills.bins` 来获取当前的技能可执行文件列表
-  以进行自动允许检查。
+- 节点可以调用 `skills.bins` 来获取当前的技能可执行文件列表，
+  用于自动允许检查。
 
 ### 操作员辅助方法
 
-- 操作员可以调用 `tools.catalog` (`operator.read`) 来获取代理的
-  运行时工具目录。响应包括分组工具和出处元数据：
-  - `source`: `core` 或 `plugin`
-  - `pluginId`: 当 `source="plugin"` 时的插件所有者
-  - `optional`: 插件工具是否可选
-- 操作员可以调用 `tools.effective` (`operator.read`) 来获取会话的
-  运行时有效工具清单。
-  - 需要 `sessionKey`。
-  - 网关从会话的服务器端派生可信的运行时上下文，而不是接受调用方提供的身份验证或传递上下文。
-  - 响应的作用域限定为会话，并反映了当前活动对话可以立即使用的内容，包括核心、插件和渠道工具。
-- 操作员可以调用 `skills.status` (`operator.read`) 来获取代理的
-  可见技能清单。
+- 操作员可以调用 `commands.list` (`operator.read`) 来获取
+  代理的运行时命令清单。
   - `agentId` 是可选的；省略它以读取默认代理工作区。
-  - 响应包括资格、缺失要求、配置检查以及经过清理的安装选项，而不暴露原始的机密值。
-- 操作员可以调用 `skills.search` 和 `skills.detail` (`operator.read`) 以获取
-  ClawHub 发现元数据。
-- 操作员可以 `skills.install` (`operator.admin`) 以两种模式调用：
-  - ClawHub 模式: `{ source: "clawhub", slug, version?, force? }` 将
-    技能文件夹安装到默认代理工作区 `skills/` 目录中。
-  - Gateway(网关) 安装程序模式: `{ name, installId, dangerouslyForceUnsafeInstall?, timeoutMs? }`
-    在网关主机上运行声明的 `metadata.openclaw.install` 操作。
-- 操作员可以 `skills.update` (`operator.admin`) 以两种模式调用：
-  - ClawHub 模式会更新默认代理工作区中的一个跟踪 slug 或所有跟踪的 ClawHub 安装。
+  - `scope` 控制主要 `name` 针对的界面：
+    - `text` 返回不带前缀 `/` 的主要文本命令令牌
+    - `native` 和默认 `both` 路径在可用时返回
+      提供商感知的原生名称
+  - `textAliases` 携带精确的斜杠别名，例如 `/model` 和 `/m`。
+  - `nativeName` 携带提供商感知的原生命令名称（如果存在）。
+  - `provider` 是可选的，仅影响原生命名和原生插件命令的可用性。
+  - `includeArgs=false` 会从响应中省略序列化的参数元数据。
+- 操作员可以调用 `tools.catalog` (`operator.read`) 来获取代理的运行时工具目录。响应包括分组工具和来源元数据：
+  - `source`：`core` 或 `plugin`
+  - `pluginId`：插件所有者（当 `source="plugin"` 时）
+  - `optional`：插件工具是否可选
+- 操作员可以调用 `tools.effective` (`operator.read`) 来获取会话的运行时有效工具清单。
+  - `sessionKey` 是必需的。
+  - 网关从服务端的会话派生可信的运行时上下文，而不是接受调用方提供的身份验证或传递上下文。
+  - 响应是会话作用域的，反映了当前对话可以立即使用的内容，包括核心、插件和渠道工具。
+- 操作员可以调用 `skills.status` (`operator.read`) 来获取代理的可见技能清单。
+  - `agentId` 是可选的；省略它以读取默认代理工作区。
+  - 响应包括资格、缺失要求、配置检查和经过清理的安装选项，而不暴露原始机密值。
+- 操作员可以调用 `skills.search` 和 `skills.detail` (`operator.read`) 来获取 ClawHub 发现元数据。
+- 操作员可以以两种模式调用 `skills.install` (`operator.admin`)：
+  - ClawHub 模式：`{ source: "clawhub", slug, version?, force? }` 将技能文件夹安装到默认代理工作区的 `skills/` 目录中。
+  - Gateway 安装程序模式：`{ name, installId, dangerouslyForceUnsafeInstall?, timeoutMs? }`
+    在网关主机上运行已声明的 `metadata.openclaw.install` 操作。
+- 操作员可以通过两种模式调用 `skills.update` (`operator.admin`)：
+  - ClawHub 模式会更新默认代理工作区中一个跟踪的 slug 或所有跟踪的 ClawHub 安装。
   - 配置模式修补 `skills.entries.<skillKey>` 值，例如 `enabled`、
     `apiKey` 和 `env`。
 
-## 执行批准
+## 执行审批
 
-- 当 exec 请求需要批准时，网关会广播 `exec.approval.requested`。
-- 操作员客户端通过调用 `exec.approval.resolve` 来解决（需要 `operator.approvals` 作用域）。
+- 当执行请求需要审批时，网关会广播 `exec.approval.requested`。
+- 操作员客户端通过调用 `exec.approval.resolve` 来解决（需要 `operator.approvals` 范围）。
 - 对于 `host=node`，`exec.approval.request` 必须包含 `systemRunPlan`（规范 `argv`/`cwd`/`rawCommand`/会话元数据）。缺少 `systemRunPlan` 的请求将被拒绝。
-- 获得批准后，转发的 `node.invoke system.run` 调用将重用该规范
+- 审批后，转发的 `node.invoke system.run` 调用将重用该规范
   `systemRunPlan` 作为权威命令/cwd/会话上下文。
-- 如果调用者在准备阶段和最终批准的 `system.run` 转发之间更改了 `command`、`rawCommand`、`cwd`、`agentId` 或
-  `sessionKey`，网
-  网关将拒绝运行，而不是信任被更改的载荷。
+- 如果调用者在准备和最终批准的 `system.run` 转发之间更改了 `command`、`rawCommand`、`cwd`、`agentId` 或
+  `sessionKey`，网关将拒绝运行，而不是信任更改后的有效负载。
 
-## Agent 传递回退
+## 代理交付回退
 
-- `agent` 请求可以包含 `deliver=true` 以请求出站传递。
-- `bestEffortDeliver=false` 保持严格行为：无法解析或仅限内部的传递目标返回 `INVALID_REQUEST`。
-- `bestEffortDeliver=true` 允许在无法解析外部可传递路由时回退到仅会话执行（例如内部/web聊天会话或多渠道配置歧义的情况）。
+- `agent` 请求可以包含 `deliver=true` 以请求出站交付。
+- `bestEffortDeliver=false` 保持严格行为：未解析或仅限内部的交付目标返回 `INVALID_REQUEST`。
+- `bestEffortDeliver=true` 允许在无法解析外部可交付路由时回退到仅会话执行（例如内部/网络聊天会话或模糊的多渠道配置）。
 
 ## 版本控制
 
 - `PROTOCOL_VERSION` 位于 `src/gateway/protocol/schema.ts` 中。
-- 客户端发送 `minProtocol` + `maxProtocol`；服务器拒绝不匹配的请求。
-- 模式（Schemas）+ 模型是从 TypeBox 定义生成的：
+- 客户端发送 `minProtocol` + `maxProtocol`；服务器将拒绝不匹配的连接。
+- 模式（Schemas）+ 模型（models）是从 TypeBox 定义生成的：
   - `pnpm protocol:gen`
   - `pnpm protocol:gen:swift`
   - `pnpm protocol:check`
 
-## 身份验证
+## 认证（Auth）
 
-- 共享密钥网关身份验证根据配置的身份验证模式使用 `connect.params.auth.token` 或
-  `connect.params.auth.password`。
-- 具有身份的模式，例如 Tailscale Serve
+- 共享密钥网关认证使用 `connect.params.auth.token` 或
+  `connect.params.auth.password`，具体取决于配置的认证模式。
+- 带有身份的模式（如 Tailscale Serve
   (`gateway.auth.allowTailscale: true`) 或非环回
-  `gateway.auth.mode: "trusted-proxy"`，从
-  请求头而不是 `connect.params.auth.*` 满足连接身份验证检查。
-- Private-ingress `gateway.auth.mode: "none"` 完全跳过共享密钥连接身份验证；切勿在公共/不受信任的入口上公开该模式。
-- 配对后，Gateway(网关) 会发出一个范围限定于连接角色和范围的 **设备令牌**。它在 `hello-ok.auth.deviceToken` 中返回，客户端应将其持久化以供将来连接使用。
-- 客户端应在任何成功连接后持久化主 `hello-ok.auth.deviceToken`。
-- 使用该**已存储**设备令牌重新连接时，还应复用为该令牌存储的
-  已批准作用域集。这保留已授予的读取/探测/状态访问权限，
-  并避免静默将重新连接的范围缩小为仅限管理员的隐式作用域。
-- 正常连接身份验证优先级首先是显式共享令牌/密码，然后是显式 `deviceToken`，接着是存储的每设备令牌，最后是引导令牌。
-- 额外的 `hello-ok.auth.deviceTokens` 条目是引导交接令牌。仅当连接在受信任的传输（如 `wss://` 或环回/本地配对）上使用引导身份验证时，才应持久化它们。
-- 如果客户端提供了 **显式** `deviceToken` 或显式 `scopes`，则该调用者请求的范围集保持权威；仅当客户端重用存储的每设备令牌时，才会重用缓存的范围。
-- 设备令牌可以通过 `device.token.rotate` 和 `device.token.revoke` 轮换/撤销（需要 `operator.pairing` 范围）。
-- 令牌的颁发/轮换始终受限于记录在该设备配对条目中的已批准角色集；轮换令牌无法将设备扩展到配对批准从未授予的角色。
-- 对于已配对设备令牌会话，除非调用者还具有 `operator.admin`，否则设备管理是自范围的：非管理员调用者只能删除/撤销/轮换其 **自己** 的设备条目。
-- `device.token.rotate` 还会根据调用者当前的会话范围检查请求的操作员范围集。非管理员调用者无法将令牌轮换到比其当前持有的范围更广的操作员范围集。
+  `gateway.auth.mode: "trusted-proxy"`）通过请求头满足连接认证检查，
+  而不是 `connect.params.auth.*`。
+- 私有入口 `gateway.auth.mode: "none"` 完全跳过共享密钥连接认证；
+  请勿在公共/不受信任的入口上暴露该模式。
+- 配对后，Gateway(网关) 会发出一个作用于连接
+  角色 + 范围的 **设备令牌 (device token)**。它在 `hello-ok.auth.deviceToken` 中返回，
+  客户端应将其持久化以供将来连接使用。
+- 客户端应在任何
+  成功连接后持久化主 `hello-ok.auth.deviceToken`。
+- 使用该 **已存储** 的设备令牌重新连接时，还应重用该令牌存储的
+  已批准范围集。这保留已授予的读取/探测/状态访问权限，
+  并避免在静默情况下将重新连接的权限收窄为
+  仅限管理员的隐式范围。
+- 正常的连接认证优先级首先是显式的共享令牌/密码，然后是
+  显式的 `deviceToken`，接着是存储的每设备令牌，最后是引导令牌。
+- 额外的 `hello-ok.auth.deviceTokens` 条目是引导交接令牌。
+  仅当连接在受信任的传输（如 `wss://` 或环回/本地配对）上使用引导认证时，
+  才应持久化这些条目。
+- 如果客户端提供了 **显式的** `deviceToken` 或显式的 `scopes`，该
+  调用方请求的范围集将保持权威性；仅当
+  客户端重用存储的每设备令牌时，才会重用缓存的范围。
+- 可以通过 `device.token.rotate` 和
+  `device.token.revoke` 轮换/吊销设备令牌（需要 `operator.pairing` 范围）。
+- 令牌的签发/轮换受限于记录在该设备配对条目中的已批准角色集；轮换令牌无法将设备扩展到配对批准从未授予的角色。
+- 对于已配对设备的令牌会话，设备管理属于自身作用域，除非调用者同时也拥有 `operator.admin`：非管理员调用者只能移除/撤销/轮换他们**自己**的设备条目。
+- `device.token.rotate` 还会根据调用者当前的会话作用域来检查请求的操作员作用域集。非管理员调用者无法将令牌轮换为比其当前拥有的更广泛的操作员作用域集。
 - 身份验证失败包括 `error.details.code` 以及恢复提示：
-  - `error.details.canRetryWithDeviceToken`（布尔值）
-  - `error.details.recommendedNextStep`（`retry_with_device_token`、`update_auth_configuration`、`update_auth_credentials`、`wait_then_retry`、`review_auth_configuration`）
-- 客户端针对 `AUTH_TOKEN_MISMATCH` 的行为：
-  - 可信客户端可能会尝试使用缓存的每设备令牌进行一次有界的重试。
-  - 如果重试失败，客户端应停止自动重连循环并向操作员提供操作指导。
+  - `error.details.canRetryWithDeviceToken` (布尔值)
+  - `error.details.recommendedNextStep` (`retry_with_device_token`, `update_auth_configuration`, `update_auth_credentials`, `wait_then_retry`, `review_auth_configuration`)
+- 针对 `AUTH_TOKEN_MISMATCH` 的客户端行为：
+  - 可信客户端可以使用缓存的每设备令牌尝试一次有限的重试。
+  - 如果重试失败，客户端应停止自动重新连接循环，并展示操作员操作指导。
 
 ## 设备身份 + 配对
 
-- 节点应包含从密钥对指纹派生的稳定设备标识（`device.id`）。
-- 网关针对每个设备 + 角色颁发令牌。
+- 节点应包含源自密钥对指纹的稳定设备身份 (`device.id`)。
+- 网关按设备 + 角色签发令牌。
 - 除非启用了本地自动批准，否则新的设备 ID 需要配对批准。
-- 配对自动批准以直接本地 loopback 连接为中心。
-- OpenClaw 还有一个用于受信任共享密钥辅助流程的狭窄后端/容器本地自连接路径。
-- 同主机 tailnet 或 LAN 连接在配对时仍被视为远程连接，需要批准。
-- 所有 WS 客户端都必须在 `connect` 期间包含 `device` 身份（operator + node）。
-  控制 UI 仅在这些模式下可以省略它：
-  - `gateway.controlUi.allowInsecureAuth=true` 用于仅限本地主机的不安全 HTTP 兼容性。
-  - 成功的 `gateway.auth.mode: "trusted-proxy"` operator 控制 UI 身份验证。
-  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` （紧急情况，严重安全降级）。
+- 配对自动批准主要针对直接本地回环连接。
+- OpenClaw 还有一个狭窄的后端/容器本地自连接路径，用于受信任的共享密钥辅助流程。
+- 同主机的 tailnet 或 LAN 连接在配对时仍被视为远程连接，并需要批准。
+- 所有 WS 客户端在 `connect` 期间必须包含 `device` 身份（操作员 + 节点）。控制 UI 仅在以下模式下可以省略它：
+  - `gateway.controlUi.allowInsecureAuth=true`，用于仅限本地主机的 HTTP 不安全兼容性。
+  - 成功的 `gateway.auth.mode: "trusted-proxy"` 操作员控制 UI 身份验证。
+  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` (break-glass，严重的安全降级)。
 - 所有连接必须对服务器提供的 `connect.challenge` nonce 进行签名。
 
-### 设备认证迁移诊断
+### 设备身份验证迁移诊断
 
-对于仍然使用挑战前签名行为的旧版客户端，`connect` 现在会在 `error.details.code` 下返回 `DEVICE_AUTH_*` 详细代码，并带有稳定的 `error.details.reason`。
+对于仍使用预挑战签名行为的旧版客户端，`connect` 现在在 `error.details.code` 下返回 `DEVICE_AUTH_*` 详细代码，并带有稳定的 `error.details.reason`。
 
-常见迁移故障：
+常见迁移失败：
 
-| 消息                        | details.code                     | details.reason           | 含义                                          |
-| --------------------------- | -------------------------------- | ------------------------ | --------------------------------------------- |
-| `device nonce required`     | `DEVICE_AUTH_NONCE_REQUIRED`     | `device-nonce-missing`   | 客户端省略了 `device.nonce`（或发送了空值）。 |
-| `device nonce mismatch`     | `DEVICE_AUTH_NONCE_MISMATCH`     | `device-nonce-mismatch`  | 客户端使用过时/错误的 nonce 进行了签名。      |
-| `device signature invalid`  | `DEVICE_AUTH_SIGNATURE_INVALID`  | `device-signature`       | 签名负载与 v2 负载不匹配。                    |
-| `device signature expired`  | `DEVICE_AUTH_SIGNATURE_EXPIRED`  | `device-signature-stale` | 签名的时间戳超出允许的偏差范围。              |
-| `device identity mismatch`  | `DEVICE_AUTH_DEVICE_ID_MISMATCH` | `device-id-mismatch`     | `device.id` 与公钥指纹不匹配。                |
-| `device public key invalid` | `DEVICE_AUTH_PUBLIC_KEY_INVALID` | `device-public-key`      | 公钥格式/规范化失败。                         |
+| 消息                        | details.code                     | details.reason           | 含义                                            |
+| --------------------------- | -------------------------------- | ------------------------ | ----------------------------------------------- |
+| `device nonce required`     | `DEVICE_AUTH_NONCE_REQUIRED`     | `device-nonce-missing`   | 客户端省略了 `device.nonce`（或发送了空白值）。 |
+| `device nonce mismatch`     | `DEVICE_AUTH_NONCE_MISMATCH`     | `device-nonce-mismatch`  | 客户端使用了过时/错误的 nonce 进行签名。        |
+| `device signature invalid`  | `DEVICE_AUTH_SIGNATURE_INVALID`  | `device-signature`       | 签名负载与 v2 负载不匹配。                      |
+| `device signature expired`  | `DEVICE_AUTH_SIGNATURE_EXPIRED`  | `device-signature-stale` | 签名时间戳超出允许的偏差范围。                  |
+| `device identity mismatch`  | `DEVICE_AUTH_DEVICE_ID_MISMATCH` | `device-id-mismatch`     | `device.id` 与公钥指纹不匹配。                  |
+| `device public key invalid` | `DEVICE_AUTH_PUBLIC_KEY_INVALID` | `device-public-key`      | 公钥格式/规范化失败。                           |
 
 迁移目标：
 
 - 始终等待 `connect.challenge`。
-- 对包含服务器随机数的 v2 载荷进行签名。
+- 对包含服务器 nonce 的 v2 负载进行签名。
 - 在 `connect.params.device.nonce` 中发送相同的 nonce。
-- 首选的签名负载是 `v3`，除了 device/client/role/scopes/token/nonce 字段外，它还绑定了 `platform` 和 `deviceFamily`。
-- 出于兼容性原因，仍然接受传统的 `v2` 签名，但在重新连接时，配对设备元数据固定仍然控制命令策略。
+- 首选签名负载是 `v3`，它除了设备/客户端/角色/范围/令牌/nonce 字段外，还绑定了 `platform` 和 `deviceFamily`。
+- 出于兼容性考虑，仍接受旧版 `v2` 签名，但配对设备元数据固定仍然控制重新连接时的命令策略。
 
-## TLS + 固定
+## TLS + 证书固定
 
 - WS 连接支持 TLS。
-- 客户端可以选择固定网关证书指纹（请参阅 `gateway.tls` 配置加上 `gateway.remote.tlsFingerprint` 或 CLI `--tls-fingerprint`）。
+- 客户端可以选择固定网关证书指纹（请参阅 `gateway.tls` 配置以及 `gateway.remote.tlsFingerprint` 或 CLI CLI `--tls-fingerprint`）。
 
-## 作用域
+## 范围
 
-此协议公开了**完整的 API**（状态、频道、模型、聊天、代理、会话、节点、审批等）。确切的范围由 `src/gateway/protocol/schema.ts` 中的 TypeBox 模式定义。
+该协议公开了 **完整的网关 API**（状态、频道、模型、聊天、
+代理、会话、节点、审批等）。确切的接口由 TypeBox 模式在 `src/gateway/protocol/schema.ts` 中定义。

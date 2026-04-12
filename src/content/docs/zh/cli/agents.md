@@ -34,10 +34,7 @@ openclaw agents delete work
 
 使用路由绑定将入站渠道流量固定到特定智能体。
 
-如果您还希望每个智能体具有不同的可见 Skills，请在 `openclaw.json` 中配置
-`agents.defaults.skills` 和 `agents.list[].skills`。请参阅
-[Skills 配置](/en/tools/skills-config) 和
-[配置参考](/en/gateway/configuration-reference#agentsdefaultsskills)。
+如果您还希望每个代理具有不同的可见 Skills，请在 `openclaw.json` 中配置 `agents.defaults.skills` 和 `agents.list[].skills`。请参阅 [Skills config](/en/tools/skills-config) 和 [Configuration Reference](/en/gateway/configuration-reference#agents-defaults-skills)。
 
 列出绑定：
 

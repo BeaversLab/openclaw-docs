@@ -67,10 +67,7 @@ OpenClaw 有三條公開發布管道：
   `dist/control-ui/index.html` 和非空的 `dist/control-ui/assets/` 承載，
   否則 npm 發布預檢會以失敗關閉，
   以免我們再次發布空的瀏覽器儀表板
-- 如果發布工作涉及 CI 規劃、擴充功能時間顯示清單或快速
-  測試矩陣，請在批准前從 `.github/workflows/ci.yml`
-  重新產生並審查規劃器擁有的 `checks-fast-extensions`
-  工作流程矩陣輸出，以免發布說明描述過時的 CI 佈局
+- 如果發布工作涉及 CI 規劃、擴充功能時間清單或擴充功能測試矩陣，請在批准前重新產生並審閱來自 `.github/workflows/ci.yml` 的規劃器擁有的 `checks-node-extensions` 工作流程矩陣輸出，以免發布說明描述過時的 CI 版面配置
 - 穩定 macOS 發布準備就緒也包括更新介面：
   - GitHub 發布最終必須包含打包好的 `.zip`、`.dmg` 和 `.dSYM.zip`
   - `main` 上的 `appcast.xml` 必須在發布後指向新的穩定 zip 檔案

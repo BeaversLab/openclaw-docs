@@ -851,7 +851,7 @@ openclaw status --deep
 注意：
 
 - 当直接配对作用域不可用时，`devices list` 和 `devices approve` 可以回退到本地 loopback 上的本地配对文件。
-- 当未传递 `requestId` 或设置了 `--latest` 时，`devices approve` 会自动选择最新的待处理请求。
+- `devices approve` 在创建令牌之前需要明确的请求 ID；省略 `requestId` 或仅传递 `--latest` 只会预览最新的待处理请求。
 - 使用存储令牌重新连接时会复用令牌的缓存批准作用域；显式的 `devices rotate --scope ...` 会更新存储的作用域集，以便在将来使用缓存令牌重新连接时使用。
 - `devices rotate` 和 `devices revoke` 返回 JSON 载荷。
 

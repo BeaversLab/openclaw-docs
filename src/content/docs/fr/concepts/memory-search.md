@@ -132,5 +132,6 @@ les conversations précédentes. C'est une option accessible via
 
 ## Pour aller plus loin
 
-- [Mémoire](/en/concepts/memory) -- disposition des fichiers, backends, outils
+- [Active Memory](/en/concepts/active-memory) -- mémoire de sous-agent pour les sessions de chat interactives
+- [Memory](/en/concepts/memory) -- disposition des fichiers, backends, outils
 - [Référence de configuration de la mémoire](/en/reference/memory-config) -- tous les paramètres de configuration

@@ -23,7 +23,7 @@ et non comme un plugin provider dédié à OpenClaw.
 Exemple :
 
 ```bash
-inferrs serve gg-hf-gg/gemma-4-E2B-it \
+inferrs serve google/gemma-4-E2B-it \
   --host 127.0.0.1 \
   --port 8080 \
   --device metal
@@ -46,9 +46,9 @@ Cet exemple utilise Gemma 4 sur un serveur `inferrs` local.
 {
   agents: {
     defaults: {
-      model: { primary: "inferrs/gg-hf-gg/gemma-4-E2B-it" },
+      model: { primary: "inferrs/google/gemma-4-E2B-it" },
       models: {
-        "inferrs/gg-hf-gg/gemma-4-E2B-it": {
+        "inferrs/google/gemma-4-E2B-it": {
           alias: "Gemma 4 (inferrs)",
         },
       },
@@ -63,7 +63,7 @@ Cet exemple utilise Gemma 4 sur un serveur `inferrs` local.
         api: "openai-completions",
         models: [
           {
-            id: "gg-hf-gg/gemma-4-E2B-it",
+            id: "google/gemma-4-E2B-it",
             name: "Gemma 4 E2B (inferrs)",
             reasoning: false,
             input: ["text"],
@@ -132,10 +132,10 @@ Une fois configuré, testez les deux couches :
 ```bash
 curl http://127.0.0.1:8080/v1/chat/completions \
   -H 'content-type: application/json' \
-  -d '{"model":"gg-hf-gg/gemma-4-E2B-it","messages":[{"role":"user","content":"What is 2 + 2?"}],"stream":false}'
+  -d '{"model":"google/gemma-4-E2B-it","messages":[{"role":"user","content":"What is 2 + 2?"}],"stream":false}'
 
 openclaw infer model run \
-  --model inferrs/gg-hf-gg/gemma-4-E2B-it \
+  --model inferrs/google/gemma-4-E2B-it \
   --prompt "What is 2 + 2? Reply with one short sentence." \
   --json
 ```

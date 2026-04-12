@@ -9,10 +9,10 @@ read_when:
 
 # fal
 
-OpenClaw 內建了一個用於託管影像和影片生成的 `fal` 提供者。
+OpenClaw 內建了用於託管影像和影片生成的 `fal` 提供者。
 
 - 提供者：`fal`
-- 驗證：`FAL_KEY`（標準方式；`FAL_API_KEY` 也可作為備選）
+- 驗證：`FAL_KEY` （正式；`FAL_API_KEY` 亦可作為後備方案）
 - API：fal 模型端點
 
 ## 快速開始
@@ -45,7 +45,7 @@ openclaw onboard --auth-choice fal-api-key
 - 生成：每個請求最多 4 張影像
 - 編輯模式：已啟用，1 張參考影像
 - 支援 `size`、`aspectRatio` 和 `resolution`
-- 目前編輯注意事項：fal 影像編輯端點**不**支援
+- 目前編輯的限制：fal 影像編輯端點**不**支援
   `aspectRatio` 覆寫
 
 要將 fal 作為預設影像提供者：
@@ -69,15 +69,36 @@ openclaw onboard --auth-choice fal-api-key
 
 - 模式：文字生成影片和單張影像參考流程
 - 執行時間：針對長時間執行的工作，採用佇列備援的 submit/status/result 流程
+- HeyGen 影片代理模型參考：
+  - `fal/fal-ai/heygen/v2/video-agent`
+- Seedance 2.0 模型參考：
+  - `fal/bytedance/seedance-2.0/fast/text-to-video`
+  - `fal/bytedance/seedance-2.0/fast/image-to-video`
+  - `fal/bytedance/seedance-2.0/text-to-video`
+  - `fal/bytedance/seedance-2.0/image-to-video`
 
-要將 fal 作為預設影片提供者：
+要使用 Seedance 2.0 作為預設影片模型：
 
 ```json5
 {
   agents: {
     defaults: {
       videoGenerationModel: {
-        primary: "fal/fal-ai/minimax/video-01-live",
+        primary: "fal/bytedance/seedance-2.0/fast/text-to-video",
+      },
+    },
+  },
+}
+```
+
+要使用 HeyGen video-agent 作為預設影片模型：
+
+```json5
+{
+  agents: {
+    defaults: {
+      videoGenerationModel: {
+        primary: "fal/fal-ai/heygen/v2/video-agent",
       },
     },
   },

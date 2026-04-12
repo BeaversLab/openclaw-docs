@@ -136,31 +136,28 @@ Les Skills fournissent vos outils. Lorsque vous en avez besoin d'un, vérifiez s
 
 Lorsque vous recevez un sondage heartbeat (le message correspond au prompt heartbeat configuré), ne répondez pas simplement `HEARTBEAT_OK` à chaque fois. Utilisez les heartbeats de manière productive !
 
-Prompt heartbeat par défaut :
-`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
+Vous êtes libre de modifier `HEARTBEAT.md` avec une courte liste de vérification ou des rappels. Gardez-le concise pour limiter la consommation de jetons.
 
-Vous êtes libre de modifier `HEARTBEAT.md` avec une courte liste de contrôle ou des rappels. Gardez-le petit pour limiter la consommation de tokens.
-
-### Heartbeat vs Cron : Quand utiliser chacun
+### Heartbeat vs Cron : quand utiliser chacun
 
 **Utilisez heartbeat lorsque :**
 
 - Plusieurs vérifications peuvent être regroupées (boîte de réception + calendrier + notifications en un seul tour)
 - Vous avez besoin du contexte conversationnel des messages récents
-- Le timing peut dériver légèrement (toutes les ~30 minutes, c'est bien, pas besoin d'être exact)
+- Le timing peut dériver légèrement (toutes les ~30 minutes, c'est bien, pas besoin d'exactitude)
 - Vous souhaitez réduire les appels API en combinant des vérifications périodiques
 
 **Utilisez cron lorsque :**
 
-- Le timing exact compte (« 9h00 pile tous les lundis »)
-- La tâche doit être isolée de l'historique de la session principale
-- Vous voulez un modèle ou un niveau de réflexion différent pour la tâche
+- Le timing exact compte ("9h00 pile tous les lundis")
+- La tâche nécessite un isolement de l'historique de la session principale
+- Vous souhaitez un modèle ou un niveau de réflexion différent pour la tâche
 - Rappels ponctuels ("rappelle-moi dans 20 minutes")
 - La sortie doit être livrée directement à un channel sans implication de la session principale
 
-**Astuce :** Regroupez les vérifications périodiques similaires dans `HEARTBEAT.md` au lieu de créer plusieurs tâches cron. Utilisez cron pour des planifications précises et des tâches autonomes.
+**Astuce :** Regroupez les vérifications périodiques similaires dans `HEARTBEAT.md` au lieu de créer plusieurs tâches cron. Utilisez cron pour des horaires précis et des tâches autonomes.
 
-**Choses à vérifier (alternez parmi celles-ci, 2 à 4 fois par jour) :**
+**Choses à vérifier (alternez entre elles, 2 à 4 fois par jour) :**
 
 - **E-mails** - Des messages non lus urgents ?
 - **Calendrier** - Événements à venir dans les prochaines 24-48h ?
@@ -184,36 +181,36 @@ Vous êtes libre de modifier `HEARTBEAT.md` avec une courte liste de contrôle o
 - Un e-mail important est arrivé
 - Un événement calendrier approche (&lt;2h)
 - Quelque chose d'intéressant que vous avez trouvé
-- Cela fait >8h que vous n'avez rien dit
+- Cela fait plus de 8h que vous n'avez rien dit
 
 **Quand rester silencieux (HEARTBEAT_OK) :**
 
-- Tard la nuit (23:00-08:00) sauf urgence
+- Tard la nuit (23h00-08h00) sauf urgence
 - L'humain est clairement occupé
 - Rien de nouveau depuis la dernière vérification
-- Vous venez de vérifier &lt; il y a 30 minutes
+- Vous venez de vérifier &lt;30 minutes
 
 **Travail proactif que vous pouvez faire sans demander :**
 
 - Lire et organiser les fichiers de mémoire
-- Vérifier les projets (git status, etc.)
+- Vérifier l'état des projets (git status, etc.)
 - Mettre à jour la documentation
-- Commiter et pousser vos propres changements
+- Commiter et pousser vos propres modifications
 - **Réviser et mettre à jour MEMORY.md** (voir ci-dessous)
 
-### 🔄 Maintenance de la mémoire (Pendant les battements de cœur)
+### 🔄 Maintenance de la mémoire (Pendant les heartbeats)
 
-Périodiquement (tous les quelques jours), utilisez un battement de cœur pour :
+Périodiquement (tous les quelques jours), utilisez un heartbeat pour :
 
-1. Lire les fichiers récents `memory/YYYY-MM-DD.md`
-2. Identifier les événements significatifs, leçons ou idées méritant d'être conservés à long terme
-3. Mettre à jour `MEMORY.md` avec les apprentissages distillés
+1. Lire les fichiers `memory/YYYY-MM-DD.md` récents
+2. Identifier les événements significatifs, leçons ou informations dignes d'être conservés à long terme
+3. Mettre à jour `MEMORY.md` avec les apprentissages synthétisés
 4. Supprimer les informations obsolètes de MEMORY.md qui ne sont plus pertinentes
 
-Pensez-y comme un humain relisant son journal et mettant à jour son modèle mental. Les fichiers quotidiens sont des notes brutes ; MEMORY.md est une sagesse curatée.
+Pensez-y comme à un humain relisant son journal et mettant à jour son modèle mental. Les fichiers quotidiens sont des notes brutes ; MEMORY.md est une sagesse organisée.
 
-L'objectif : Soyez utile sans être agaçant. Vérifiez quelques fois par jour, faites un travail d'arrière-plan utile, mais respectez les moments de calme.
+L'objectif : être utile sans être agaçant. Vérifiez quelques fois par jour, effectuez un travail d'arrière-plan utile, mais respectez les moments de calme.
 
-## Rendez-le vôtre
+## Faites-le vôtre
 
-C'est un point de départ. Ajoutez vos propres conventions, style et règles à mesure que vous déterminez ce qui fonctionne.
+C'est un point de départ. Ajoutez vos propres conventions, votre style et vos règles au fur et à mesure que vous déterminez ce qui fonctionne.

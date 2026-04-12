@@ -367,82 +367,93 @@ Gateway 將這些視為**聲明** 並執行服務器端允許列表。
   - `wake` 排定立即或下一次心跳喚醒的文字注入
   - `cron.list`、`cron.status`、`cron.add`、`cron.update`、`cron.remove`、
     `cron.run`、`cron.runs`
-- 技能/工具：`skills.*`、`tools.catalog`、`tools.effective`
+- 技能/工具：`commands.list`、`skills.*`、`tools.catalog`、`tools.effective`
 
 ### 常見事件系列
 
-- `chat`：UI 聊天更新，例如 `chat.inject` 和其他僅限文字記錄的聊天
-  事件。
-- `session.message` 和 `session.tool`：訂閱會話的文字記錄/事件串流更新。
+- `chat`：UI 聊天更新，例如 `chat.inject` 以及其他僅限文字記錄的聊天事件。
+- `session.message` 和 `session.tool`：已訂閱會話的文字記錄/事件流更新。
 - `sessions.changed`：會話索引或中繼資料已變更。
-- `presence`：系統狀態快照更新。
-- `tick`：定期保活/存活事件。
-- `health`：閘道器健康狀態快照更新。
-- `heartbeat`：心跳事件串流更新。
+- `presence`：系統在場狀態快照更新。
+- `tick`：週期性保持活躍 / 存活事件。
+- `health`：閘道健康狀態快照更新。
+- `heartbeat`：心跳事件流更新。
 - `cron`：Cron 執行/工作變更事件。
-- `shutdown`：閘道器關機通知。
+- `shutdown`：閘道關機通知。
 - `node.pair.requested` / `node.pair.resolved`：節點配對生命週期。
-- `node.invoke.request`：節點叫用請求廣播。
-- `device.pair.requested` / `device.pair.resolved`：配對設備生命週期。
+- `node.invoke.request`：節點調用請求廣播。
+- `device.pair.requested` / `device.pair.resolved`：配對裝置生命週期。
 - `voicewake.changed`：喚醒詞觸發配置已變更。
-- `exec.approval.requested` / `exec.approval.resolved`：執行核准
-  生命週期。
-- `plugin.approval.requested` / `plugin.approval.resolved`：外掛程式核准
-  生命週期。
+- `exec.approval.requested` / `exec.approval.resolved`：執行核准生命週期。
+- `plugin.approval.requested` / `plugin.approval.resolved`：外掛程式核准生命週期。
 
 ### 節點輔助方法
 
-- 節點可以呼叫 `skills.bins` 以擷取目前的技能可執行檔清單
-  以進行自動允許檢查。
+- 節點可以呼叫 `skills.bins` 來擷取目前的技能可執行檔清單，以進行自動允許檢查。
 
 ### 操作員輔助方法
 
-- 操作員可以呼叫 `tools.catalog` (`operator.read`) 以擷取代理程式的
-  執行階段工具目錄。回應包含分組的工具和來源元資料：
+- 操作員可以呼叫 `commands.list` (`operator.read`) 來擷取代理程式的執行階段指令清單。
+  - `agentId` 是選用的；省略它以讀取預設的代理程式工作區。
+  - `scope` 控制主要 `name` 的目標介面：
+    - `text` 會傳回不帶有前置 `/` 的主要文字指令符記
+    - `native` 和預設的 `both` 路徑會在可用時傳回具備提供者感知的原生名稱
+  - `textAliases` 攜帶精確的斜線別名，例如 `/model` 和 `/m`。
+  - `nativeName` 攜帶感知提供者的原生指令名稱（如果存在）。
+  - `provider` 是可選的，並且僅影響原生命名以及原生外掛
+    指令的可用性。
+  - `includeArgs=false` 省略回應中的序列化參數元資料。
+- 操作者可以呼叫 `tools.catalog` (`operator.read`) 來取得代理程式的
+  執行時期工具目錄。回應包含分組的工具和來源元資料：
   - `source`：`core` 或 `plugin`
-  - `pluginId`：當 `source="plugin"` 時的外掛程式擁有者
-  - `optional`：外掛程式工具是否為選用
-- 操作員可以呼叫 `tools.effective` (`operator.read`) 以擷取作業階段的
-  實際執行工具清單。
-  - `sessionKey` 是必要的。
-  - 閘道是從伺服器端的會話衍生可信的執行階段上下文，而不是接受呼叫者提供的驗證或傳遞上下文。
-  - 回應具有工作階段範圍，並反映目前對話可立即使用的內容，包括核心、外掛和頻道工具。
-- 操作員可以呼叫 `skills.status` (`operator.read`) 以擷取代理程式的
+  - `pluginId`：當 `source="plugin"` 時的外掛擁有者
+  - `optional`：外掛工具是否為可選
+- 操作者可以呼叫 `tools.effective` (`operator.read`) 來取得會話的
+  執行時期有效工具清單。
+  - `sessionKey` 是必需的。
+  - 閘道是從伺服器端的會話推導可信的執行時期上下文，而不是接受
+    呼叫者提供的驗證或交付上下文。
+  - 回應是會話範圍的，反映了活躍對話目前可以使用的內容，
+    包括核心、外掛和頻道工具。
+- 操作者可以呼叫 `skills.status` (`operator.read`) 來取得代理程式的
   可見技能清單。
-  - `agentId` 是選用的；省略它以讀取預設代理程式工作區。
-  - 回應包含資格、遺漏的需求、設定檢查，以及已清理的安裝選項，但不會暴露原始的秘密值。
-- 操作員可以呼叫 `skills.search` 和 `skills.detail` (`operator.read`) 以取得
+  - `agentId` 是可選的；省略它以讀取預設的代理程式工作區。
+  - 回應包含資格、缺失的需求、配置檢查和
+    經過清理的安裝選項，而不會暴露原始的秘密值。
+- 操作者可以呼叫 `skills.search` 和 `skills.detail` (`operator.read`) 來取得
   ClawHub 探索元資料。
-- 操作員可以以兩種模式呼叫 `skills.install` (`operator.admin`)：
+- 操作者可以以兩種模式呼叫 `skills.install` (`operator.admin`)：
   - ClawHub 模式：`{ source: "clawhub", slug, version?, force? }` 將
-    技能資料夾安裝至預設代理程式工作區 `skills/` 目錄中。
-  - 閘道安裝程式模式：`{ name, installId, dangerouslyForceUnsafeInstall?, timeoutMs? }`
-    在閘道主機上執行宣告的 `metadata.openclaw.install` 動作。
-- 操作員可以以兩種模式呼叫 `skills.update` (`operator.admin`)：
-  - ClawHub 模式會更新預設代理程式工作區中一個追蹤的 slug 或所有追蹤的 ClawHub 安裝項目。
-  - 配置模式會修補 `skills.entries.<skillKey>` 值，例如 `enabled`、
-    `apiKey` 和 `env`。
+    技能資料夾安裝到預設代理程式工作區的 `skills/` 目錄中。
+  - Gateway installer mode: `{ name, installId, dangerouslyForceUnsafeInstall?, timeoutMs? }`
+    runs a declared `metadata.openclaw.install` action on the gateway host.
+- Operators may call `skills.update` (`operator.admin`) in two modes:
+  - ClawHub mode updates one tracked slug or all tracked ClawHub installs in
+    the default agent workspace.
+  - Config mode patches `skills.entries.<skillKey>` values such as `enabled`,
+    `apiKey`, and `env`.
 
-## 執行核准
+## Exec approvals
 
-- 當 exec 請求需要批准時，閘道會廣播 `exec.approval.requested`。
-- 操作員客戶端通過呼叫 `exec.approval.resolve` 來解決（需要 `operator.approvals` 範圍）。
-- 對於 `host=node`，`exec.approval.request` 必須包含 `systemRunPlan`（規範 `argv`/`cwd`/`rawCommand`/session 中繼資料）。缺少 `systemRunPlan` 的請求將被拒絕。
-- 批准後，轉發的 `node.invoke system.run` 呼叫會重用該規範
-  `systemRunPlan` 作為授權的 command/cwd/session 上下文。
-- 如果呼叫者在準備和最終批准的 `system.run` 轉發之間改變了 `command`、`rawCommand`、`cwd`、`agentId` 或
-  `sessionKey`，閘道將拒絕該執行，而不是信任被修改的負載。
+- When an exec request needs approval, the gateway broadcasts `exec.approval.requested`.
+- Operator clients resolve by calling `exec.approval.resolve` (requires `operator.approvals` scope).
+- For `host=node`, `exec.approval.request` must include `systemRunPlan` (canonical `argv`/`cwd`/`rawCommand`/session metadata). Requests missing `systemRunPlan` are rejected.
+- After approval, forwarded `node.invoke system.run` calls reuse that canonical
+  `systemRunPlan` as the authoritative command/cwd/session context.
+- If a caller mutates `command`, `rawCommand`, `cwd`, `agentId`, or
+  `sessionKey` between prepare and the final approved `system.run` forward, the
+  gateway rejects the run instead of trusting the mutated payload.
 
-## Agent 遞送後備機制
+## Agent delivery fallback
 
-- `agent` 請求可以包含 `deliver=true` 以請求輸出傳遞。
-- `bestEffortDeliver=false` 保持嚴格行為：未解析或�限內部的傳遞目標返回 `INVALID_REQUEST`。
-- `bestEffortDeliver=true` 允許在無法解析外部可傳遞路由時（例如內部/webchat 會話或不明確的多通道配置）回退到僅限會話的執行。
+- `agent` requests can include `deliver=true` to request outbound delivery.
+- `bestEffortDeliver=false` keeps strict behavior: unresolved or internal-only delivery targets return `INVALID_REQUEST`.
+- `bestEffortDeliver=true` allows fallback to session-only execution when no external deliverable route can be resolved (for example internal/webchat sessions or ambiguous multi-channel configs).
 
-## 版本控制
+## Versioning
 
-- `PROTOCOL_VERSION` 位於 `src/gateway/protocol/schema.ts` 中。
-- 客戶端發送 `minProtocol` + `maxProtocol`；伺服器拒絕不匹配的項目。
+- `PROTOCOL_VERSION` lives in `src/gateway/protocol/schema.ts`.
+- 客戶端發送 `minProtocol` + `maxProtocol`；伺服器會拒絕不匹配的請求。
 - Schemas + 模型是從 TypeBox 定義生成的：
   - `pnpm protocol:gen`
   - `pnpm protocol:gen:swift`
@@ -450,76 +461,93 @@ Gateway 將這些視為**聲明** 並執行服務器端允許列表。
 
 ## 認證
 
-- 共享金鑰閘道驗證使用 `connect.params.auth.token` 或
-  `connect.params.auth.password`，具體取決於配置的驗證模式。
-- 帶有身分識別的模式，例如 Tailscale Serve
-  (`gateway.auth.allowTailscale: true`) 或非迴路
+- 共用密鑰 Gateway 認證使用 `connect.params.auth.token` 或
+  `connect.params.auth.password`，具體取決於設定的認證模式。
+- 承載身分的模式，如 Tailscale Serve
+  (`gateway.auth.allowTailscale: true`) 或非 loopback
   `gateway.auth.mode: "trusted-proxy"`，透過
-  請求標頭滿足連線驗證檢查，而不是 `connect.params.auth.*`。
-- Private-ingress `gateway.auth.mode: "none"` 完全跳過共享密碼連線驗證；請勿在公開/不受信任的入口上公開該模式。
-- 配對後，Gateway 會發出範圍限定於連線角色 + 範圍的 **裝置權杖**。它會在 `hello-ok.auth.deviceToken` 中傳回，且客戶端應將其持久化以供未來連線使用。
-- 客戶端應在任何成功連線後持久化主要 `hello-ok.auth.deviceToken`。
-- 使用該**已儲存**的裝置 Token 重新連線時，應該重複使用為該 Token 已儲存的
-  已核准 Scope 集合。這保留了先前已授予的 read/probe/status 存取權限，
-  並避免將重新連線無聲地縮減為較窄的隱含 admin-only scope。
-- 正常連線驗證優先順序為：首先是明確的共享權杖/密碼，然後是明確的 `deviceToken`，接著是儲存的每裝置權杖，最後是啟動權杖。
-- 額外的 `hello-ok.auth.deviceTokens` 項目是啟動移交權杖。僅當連線在受信任傳輸（例如 `wss://` 或迴路/本機配對）上使用啟動驗證時，才將其持久化。
-- 如果客戶端提供 **明確的** `deviceToken` 或明確的 `scopes`，該呼叫者請求的範圍集將保持權威；僅當客戶端重用儲存的每裝置權杖時，才會重用快取的範圍。
-- 可以透過 `device.token.rotate` 和 `device.token.revoke` 輪替/撤銷裝置權杖（需要 `operator.pairing` 範圍）。
-- Token 的發行/輪換僅限於記錄在該裝置配對項目中的已核准角色集；輪換 Token
-  無法將裝置擴展至配對核准從未授予的角色。
-- 對於已配對裝置權杖工作階段，除非呼叫者也具有 `operator.admin`，否則裝置管理為自我範圍：非管理員呼叫者只能移除/撤銷/輪替 **自己** 的裝置項目。
-- `device.token.rotate` 也會根據呼叫者目前的工作階段範圍檢查請求的操作員範圍集。非管理員呼叫者無法將權杖輪替為比其目前持有更廣泛的操作員範圍集。
-- 驗證失敗包括 `error.details.code` 加上復原提示：
+  請求標頭滿足連線認證檢查，而不是 `connect.params.auth.*`。
+- 私有入口 `gateway.auth.mode: "none"` 完全跳過共用密鑰連線認證；
+  請勿在公開/不受信任的入口上暴露該模式。
+- 配對後，Gateway 會發布限定範圍為連線
+  角色 + 範圍的 **裝置權杖 (device token)**。它在 `hello-ok.auth.deviceToken` 中返回，客戶端應將其
+  持久化以供未來連線使用。
+- 客戶端應在任何成功連線後保存主要 `hello-ok.auth.deviceToken`。
+- 使用該 **已儲存** 的裝置權杖重新連線也應重複使用該權杖的已儲存核准範圍集。這保留了
+  已授予的讀取/探測/狀態存取權，並避免將重新連線無聲地折疊為
+  更窄的隱含僅限管理員範圍。
+- 正常連線認證優先順序是明確的共用權杖/密碼優先，然後是
+  明確的 `deviceToken`，然後是已儲存的每裝置權杖，最後是啟動權杖。
+- 額外的 `hello-ok.auth.deviceTokens` 項目是啟動移交權杖。
+  僅當連線在信任的傳輸（例如 `wss://` 或 loopback/本機配對）上使用啟動認證時才保存它們。
+- 如果客戶端提供 **明確的** `deviceToken` 或明確的 `scopes`，該
+  呼叫者請求的範圍集將保持權威；僅當
+  客戶端重複使用已儲存的每裝置權杖時才重複使用快取的範圍。
+- 可以透過 `device.token.rotate` 和
+  `device.token.revoke` 輪換/撤銷裝置權杖（需要 `operator.pairing` 範圍）。
+- Token issuance/rotation stays bounded to the approved role set recorded in
+  that device's pairing entry; rotating a token cannot expand the device into a
+  role that pairing approval never granted.
+- For paired-device token sessions, device management is self-scoped unless the
+  caller also has `operator.admin`: non-admin callers can remove/revoke/rotate
+  only their **own** device entry.
+- `device.token.rotate` also checks the requested operator scope set against the
+  caller's current session scopes. Non-admin callers cannot rotate a token into
+  a broader operator scope set than they already hold.
+- Auth failures include `error.details.code` plus recovery hints:
   - `error.details.canRetryWithDeviceToken` (boolean)
   - `error.details.recommendedNextStep` (`retry_with_device_token`, `update_auth_configuration`, `update_auth_credentials`, `wait_then_retry`, `review_auth_configuration`)
-- 客戶端對於 `AUTH_TOKEN_MISMATCH` 的行為：
-  - 受信任的客戶端可以使用快取的每裝置 Token 嘗試一次有限的重新嘗試。
-  - 如果該重試失敗，客戶端應停止自動重新連線循環並顯示操作員操作指引。
+- Client behavior for `AUTH_TOKEN_MISMATCH`:
+  - Trusted clients may attempt one bounded retry with a cached per-device token.
+  - If that retry fails, clients should stop automatic reconnect loops and surface operator action guidance.
 
-## 裝置身分 + 配對
+## Device identity + pairing
 
-- 節點應包含從金鑰對指紋衍生的穩定裝置身分 (`device.id`)。
-- 閘道會根據每個裝置 + 角色發出令牌。
-- 除非啟用了本機自動核准，否則新的裝置 ID 需要配對核准。
-- 配對自動核准以直接的本機回送連線為中心。
-- OpenClaw 也具有一個狹窄的後端/容器本機自連線路徑，用於受信任的共享金鑰輔助流程。
-- 同主機的 tailnet 或 LAN 連線在配對方面仍被視為遠端連線，並需要核准。
-- 所有 WS 用戶端必須在 `connect` 期間包含 `device` 身份（操作員 + 節點）。
-  控制 UI 僅在以下模式下可以省略它：
-  - `gateway.controlUi.allowInsecureAuth=true` 用於僅限本地主機的不安全 HTTP 相容性。
-  - 成功的 `gateway.auth.mode: "trusted-proxy"` 操作員控制 UI 身份驗證。
-  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` （應急玻璃，嚴重的安全性降級）。
-- 所有連線必須對伺服器提供的 `connect.challenge` nonce 進行簽署。
+- Nodes should include a stable device identity (`device.id`) derived from a
+  keypair fingerprint.
+- Gateways issue tokens per device + role.
+- Pairing approvals are required for new device IDs unless local auto-approval
+  is enabled.
+- Pairing auto-approval is centered on direct local loopback connects.
+- OpenClaw also has a narrow backend/container-local self-connect path for
+  trusted shared-secret helper flows.
+- Same-host tailnet or LAN connects are still treated as remote for pairing and
+  require approval.
+- All WS clients must include `device` identity during `connect` (operator + node).
+  Control UI can omit it only in these modes:
+  - `gateway.controlUi.allowInsecureAuth=true` for localhost-only insecure HTTP compatibility.
+  - successful `gateway.auth.mode: "trusted-proxy"` operator Control UI auth.
+  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` (break-glass, severe security downgrade).
+- All connections must sign the server-provided `connect.challenge` nonce.
 
-### 裝置身分驗證遷移診斷
+### 裝置驗證移轉診斷
 
-對於仍使用挑戰前簽署行為的舊版用戶端，`connect` 現在會在 `error.details.code` 下返回具有穩定 `error.details.reason` 的 `DEVICE_AUTH_*` 詳細代碼。
+對於仍使用挑戰前簽署行為的舊版客戶端，`connect` 現在會在 `error.details.code` 下傳回 `DEVICE_AUTH_*` 詳細代碼，並附帶穩定的 `error.details.reason`。
 
-常見的遷移失敗：
+常見移轉失敗：
 
-| 訊息                        | details.code                     | details.reason           | 含義                                             |
-| --------------------------- | -------------------------------- | ------------------------ | ------------------------------------------------ |
-| `device nonce required`     | `DEVICE_AUTH_NONCE_REQUIRED`     | `device-nonce-missing`   | 用戶端省略了 `device.nonce` （或發送了空白值）。 |
-| `device nonce mismatch`     | `DEVICE_AUTH_NONCE_MISMATCH`     | `device-nonce-mismatch`  | 客戶端使用過時/錯誤的 nonce 進行簽署。           |
-| `device signature invalid`  | `DEVICE_AUTH_SIGNATURE_INVALID`  | `device-signature`       | 簽署內容與 v2 內容不符。                         |
-| `device signature expired`  | `DEVICE_AUTH_SIGNATURE_EXPIRED`  | `device-signature-stale` | 簽署的時間戳超出允許的誤差範圍。                 |
-| `device identity mismatch`  | `DEVICE_AUTH_DEVICE_ID_MISMATCH` | `device-id-mismatch`     | `device.id` 與公鑰指紋不匹配。                   |
-| `device public key invalid` | `DEVICE_AUTH_PUBLIC_KEY_INVALID` | `device-public-key`      | 公開金鑰格式/正規化失敗。                        |
+| 訊息                        | details.code                     | details.reason           | 含義                                        |
+| --------------------------- | -------------------------------- | ------------------------ | ------------------------------------------- |
+| `device nonce required`     | `DEVICE_AUTH_NONCE_REQUIRED`     | `device-nonce-missing`   | 客戶端省略了 `device.nonce`（或傳送空白）。 |
+| `device nonce mismatch`     | `DEVICE_AUTH_NONCE_MISMATCH`     | `device-nonce-mismatch`  | 客戶端使用了過時/錯誤的 nonce 進行簽署。    |
+| `device signature invalid`  | `DEVICE_AUTH_SIGNATURE_INVALID`  | `device-signature`       | 簽署內容與 v2 內容不符。                    |
+| `device signature expired`  | `DEVICE_AUTH_SIGNATURE_EXPIRED`  | `device-signature-stale` | 簽署的時間戳記超出允許的偏差範圍。          |
+| `device identity mismatch`  | `DEVICE_AUTH_DEVICE_ID_MISMATCH` | `device-id-mismatch`     | `device.id` 與公開金鑰指紋不符。            |
+| `device public key invalid` | `DEVICE_AUTH_PUBLIC_KEY_INVALID` | `device-public-key`      | 公開金鑰格式/正規化失敗。                   |
 
-遷移目標：
+移轉目標：
 
-- 請始終等待 `connect.challenge`。
-- 對包含伺服器 nonce 的 v2 負載進行簽署。
-- 在 `connect.params.device.nonce` 中發送相同的 nonce。
-- 首選的簽署負載是 `v3`，除了 device/client/role/scopes/token/nonce 欄位外，它還綁定了 `platform` 和 `deviceFamily`。
-- 舊版 `v2` 簽署為了相容性仍被接受，但在重新連線時，配對裝置的中繼資料固定仍然控制命令政策。
+- 請務必等待 `connect.challenge`。
+- 對包含伺服器 nonce 的 v2 內容進行簽署。
+- 在 `connect.params.device.nonce` 中傳送相同的 nonce。
+- 偏好的簽署內容為 `v3`，除了裝置/客戶端/角色/範圍/權杖/nonce 欄位外，它還綁定了 `platform` 和 `deviceFamily`。
+- 為了相容性，舊版 `v2` 簽署仍被接受，但配對裝置的中繼資料固定仍然控制重新連線時的指令策略。
 
-## TLS + 固定
+## TLS + 憑證固定
 
 - WS 連線支援 TLS。
-- 用戶端可以選擇性固定閘道憑證指紋（請參閱 `gateway.tls` 配置以及 `gateway.remote.tlsFingerprint` 或 CLI `--tls-fingerprint`）。
+- 客戶端可以選擇固定閘道憑證指紋（請參閱 `gateway.tls` 組態加上 `gateway.remote.tlsFingerprint` 或 CLI `--tls-fingerprint`）。
 
 ## 範圍
 
-此協議公開了 **完整的閘道 API**（狀態、頻道、模型、聊天、代理、會話、節點、審核等）。其確切的介面由 `src/gateway/protocol/schema.ts` 中的 TypeBox 結構描述定義。
+此協議公開了**完整的閘道 API**（狀態、頻道、模型、聊天、代理、會話、節點、審核等）。其具體內容由 `src/gateway/protocol/schema.ts` 中的 TypeBox 結構定義。

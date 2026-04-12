@@ -50,7 +50,7 @@ openclaw onboard --non-interactive \
 
 ### Configuración manual
 
-1. Instale Ollama: [https://ollama.com/download](https://ollama.com/download)
+1. Instala Ollama: [https://ollama.com/download](https://ollama.com/download)
 
 2. Descarga un modelo local si deseas inferencia local:
 
@@ -117,12 +117,13 @@ openclaw models set ollama/gemma4
 Cuando configura `OLLAMA_API_KEY` (o un perfil de autenticación) y **no** define `models.providers.ollama`, OpenClaw descubre modelos de la instancia local de Ollama en `http://127.0.0.1:11434`:
 
 - Consulta `/api/tags`
-- Utiliza búsquedas de `/api/show` de mejor esfuerzo para leer `contextWindow` cuando está disponible
+- Utiliza búsquedas de mejor esfuerzo de `/api/show` para leer `contextWindow` y detectar capacidades (incluida la visión) cuando estén disponibles
+- Los modelos con una capacidad `vision` reportada por `/api/show` se marcan como capaces de procesar imágenes (`input: ["text", "image"]`), por lo que OpenClaw inyecta automáticamente imágenes en el prompt para esos modelos
 - Marca `reasoning` con un heurístico de nombre de modelo (`r1`, `reasoning`, `think`)
-- Establece `maxTokens` al límite máximo de tokens predeterminado de Ollama utilizado por OpenClaw
+- Establece `maxTokens` en el límite máximo de tokens predeterminado de Ollama utilizado por OpenClaw
 - Establece todos los costos en `0`
 
-Esto evita entradas de modelo manuales manteniendo el catálogo alineado con la instancia local de Ollama.
+Esto evita entradas de modelo manuales mientras se mantiene el catálogo alineado con la instancia local de Ollama.
 
 Para ver qué modelos están disponibles:
 
@@ -156,8 +157,8 @@ export OLLAMA_API_KEY="ollama-local"
 Usa la configuración explícita cuando:
 
 - Ollama se ejecuta en otro host/puerto.
-- Quieres forzar ventanas de contexto específicas o listas de modelos.
-- Quieres definiciones de modelos completamente manuales.
+- Deseas forzar ventanas de contexto específicas o listas de modelos.
+- Deseas definiciones de modelo totalmente manuales.
 
 ```json5
 {
@@ -184,11 +185,11 @@ Usa la configuración explícita cuando:
 }
 ```
 
-Si `OLLAMA_API_KEY` está configurado, puedes omitir `apiKey` en la entrada del proveedor y OpenClaw lo completará para las comprobaciones de disponibilidad.
+Si se establece `OLLAMA_API_KEY`, puedes omitir `apiKey` en la entrada del proveedor y OpenClaw lo rellenará para las comprobaciones de disponibilidad.
 
 ### URL base personalizada (configuración explícita)
 
-Si Ollama se está ejecutando en un host o puerto diferente (la configuración explícita deshabilita el autodescubrimiento, así que define los modelos manualmente):
+Si Ollama se está ejecutando en un host o puerto diferente (la configuración explícita deshabilita el descubrimiento automático, así que define los modelos manualmente):
 
 ```json5
 {
@@ -208,7 +209,7 @@ Si Ollama se está ejecutando en un host o puerto diferente (la configuración e
 
 ### Selección de modelo
 
-Una vez configurados, todos sus modelos de Ollama están disponibles:
+Una vez configurado, todos tus modelos de Ollama están disponibles:
 
 ```json5
 {
@@ -225,23 +226,21 @@ Una vez configurados, todos sus modelos de Ollama están disponibles:
 
 ## Modelos en la nube
 
-Los modelos en la nube le permiten ejecutar modelos alojados en la nube (por ejemplo, `kimi-k2.5:cloud`, `minimax-m2.7:cloud`, `glm-5.1:cloud`) junto con sus modelos locales.
+Los modelos en la nube te permiten ejecutar modelos alojados en la nube (por ejemplo `kimi-k2.5:cloud`, `minimax-m2.7:cloud`, `glm-5.1:cloud`) junto con tus modelos locales.
 
-Para usar modelos en la nube, seleccione el modo **Nube + Local** durante la configuración. El asistente verifica si ha iniciado sesión y abre un flujo de inicio de sesión en el navegador cuando es necesario. Si no se puede verificar la autenticación, el asistente recurre a los modelos locales predeterminados.
+Para usar modelos en la nube, selecciona el modo **Cloud + Local** durante la configuración. El asistente verifica si has iniciado sesión y abre un flujo de inicio de sesión en el navegador cuando es necesario. Si no se puede verificar la autenticación, el asistente recurre a los valores predeterminados del modelo local.
 
 También puedes iniciar sesión directamente en [ollama.com/signin](https://ollama.com/signin).
 
-## Ollama Web Search
+## Búsqueda web de Ollama
 
-OpenClaw también admite **Ollama Web Search** como un proveedor `web_search` incluido.
+OpenClaw también admite **Búsqueda web de Ollama** como proveedor `web_search` incluido.
 
-- Utiliza tu host de Ollama configurado (`models.providers.ollama.baseUrl` cuando
-  está configurado, de lo contrario `http://127.0.0.1:11434`).
+- Utiliza tu host de Ollama configurado (`models.providers.ollama.baseUrl` cuando está establecido; de lo contrario, `http://127.0.0.1:11434`).
 - No requiere clave.
-- Requiere que Ollama se esté ejecutando y haber iniciado sesión con `ollama signin`.
+- Requiere que Ollama se esté ejecutando y que hayas iniciado sesión con `ollama signin`.
 
-Elige **Ollama Web Search** durante `openclaw onboard` o
-`openclaw configure --section web`, o establece:
+Elige **Búsqueda web de Ollama** durante `openclaw onboard` o `openclaw configure --section web`, o establece:
 
 ```json5
 {
@@ -255,13 +254,13 @@ Elige **Ollama Web Search** durante `openclaw onboard` o
 }
 ```
 
-Para obtener detalles completos sobre la configuración y el comportamiento, consulte [Ollama Web Search](/en/tools/ollama-search).
+Para obtener detalles completos sobre la configuración y el comportamiento, consulta [Búsqueda web de Ollama](/en/tools/ollama-search).
 
 ## Avanzado
 
 ### Modelos de razonamiento
 
-Por defecto, OpenClaw trata los modelos con nombres como `deepseek-r1`, `reasoning` o `think` como capaces de razonamiento:
+OpenClaw trata los modelos con nombres como `deepseek-r1`, `reasoning` o `think` como capaces de razonamiento de forma predeterminada:
 
 ```bash
 ollama pull deepseek-r1:32b
@@ -273,11 +272,11 @@ Ollama es gratuito y se ejecuta localmente, por lo que todos los costos del mode
 
 ### Configuración de transmisión
 
-La integración de Ollama de OpenClaw utiliza la **API nativa de Ollama** (`/api/chat`) por defecto, que admite completamente la transmisión y la llamada a herramientas simultáneamente. No se necesita ninguna configuración especial.
+La integración de Ollama de OpenClaw utiliza la **API nativa de Ollama** (`/api/chat`) de forma predeterminada, que admite completamente la transmisión y las llamadas a herramientas simultáneamente. No se necesita una configuración especial.
 
-#### Modo heredado compatible con OpenAI
+#### Modo compatible con OpenAI heredado
 
-<Warning>**La llamada a herramientas no es fiable en el modo compatible con OpenAI.** Utilice este modo solo si necesita el formato OpenAI para un proxy y no depende del comportamiento de la llamada a herramientas nativa.</Warning>
+<Warning>**Las llamadas a herramientas no son fiables en el modo compatible con OpenAI.** Usa este modo solo si necesitas el formato OpenAI para un proxy y no dependes del comportamiento nativo de llamadas a herramientas.</Warning>
 
 Si necesitas usar el endpoint compatible con OpenAI en su lugar (por ejemplo, detrás de un proxy que solo admite el formato OpenAI), establece `api: "openai-completions"` explícitamente:
 
@@ -297,9 +296,9 @@ Si necesitas usar el endpoint compatible con OpenAI en su lugar (por ejemplo, de
 }
 ```
 
-Este modo puede no admitir el streaming y la llamada de herramientas (tool calling) simultáneamente. Es posible que necesites desactivar el streaming con `params: { streaming: false }` en la configuración del modelo.
+Este modo puede no admitir la transmisión + llamadas a herramientas simultáneamente. Es posible que debas desactivar la transmisión con `params: { streaming: false }` en la configuración del modelo.
 
-Cuando se usa `api: "openai-completions"` con Ollama, OpenClaw inyecta `options.num_ctx` por defecto para que Ollama no vuelva silenciosamente a una ventana de contexto de 4096. Si tu proxy o servidor rechaza campos `options` desconocidos, desactiva este comportamiento:
+Cuando se usa `api: "openai-completions"` con Ollama, OpenClaw inyecta `options.num_ctx` de forma predeterminada para que Ollama no recurra silenciosamente a una ventana de contexto de 4096. Si tu proxy/servidor rechaza campos `options` desconocidos, desactiva este comportamiento:
 
 ```json5
 {
@@ -319,7 +318,7 @@ Cuando se usa `api: "openai-completions"` con Ollama, OpenClaw inyecta `options.
 
 ### Ventanas de contexto
 
-Para modelos detectados automáticamente, OpenClaw utiliza la ventana de contexto reportada por Ollama cuando está disponible; de lo contrario, vuelve a la ventana de contexto predeterminada de Ollama utilizada por OpenClaw. Puedes anular `contextWindow` y `maxTokens` en la configuración explícita del proveedor.
+Para los modelos descubiertos automáticamente, OpenClaw utiliza la ventana de contexto reportada por Ollama cuando está disponible, de lo contrario, recurre a la ventana de contexto predeterminada de Ollama utilizada por OpenClaw. Puedes sobrescribir `contextWindow` y `maxTokens` en la configuración explícita del proveedor.
 
 ## Solución de problemas
 
@@ -339,12 +338,12 @@ curl http://localhost:11434/api/tags
 
 ### No hay modelos disponibles
 
-Si tu modelo no aparece en la lista:
+Si tu modelo no está listado, haz lo siguiente:
 
-- Descarga (pull) el modelo localmente, o
+- Descarga el modelo localmente, o
 - Define el modelo explícitamente en `models.providers.ollama`.
 
-Para añadir modelos:
+Para agregar modelos:
 
 ```bash
 ollama list  # See what's installed

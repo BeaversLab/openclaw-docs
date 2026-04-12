@@ -233,7 +233,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Cron o latido no se activó o no se entregó">
+  <Accordion title="Cron o latido no se ejecutó o no se entregó">
     ```bash
     openclaw status
     openclaw gateway status
@@ -243,37 +243,38 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    La salida correcta se ve así:
+    El resultado correcto se ve así:
 
-    - `cron.status` muestra activado con un próximo despertar.
+    - `cron.status` muestra que está habilitado con un próximo despertar.
     - `cron runs` muestra entradas `ok` recientes.
     - El latido está habilitado y no está fuera del horario activo.
 
     Firmas de registro comunes:
 
-- `cron: scheduler disabled; jobs will not run automatically` → el cron está deshabilitado.
-- `heartbeat skipped` con `reason=quiet-hours` → fuera del horario activo configurado.
-- `heartbeat skipped` con `reason=empty-heartbeat-file` → `HEARTBEAT.md` existe pero solo contiene un andamiaje vacío/solo de encabezados.
-- `heartbeat skipped` con `reason=no-tasks-due` → el modo de tarea `HEARTBEAT.md` está activo pero aún no vence ningún intervalo de tareas.
-- `heartbeat skipped` con `reason=alerts-disabled` → toda la visibilidad del latido está deshabilitada (`showOk`, `showAlerts` y `useIndicator` están todos apagados).
-- `requests-in-flight` → carril principal ocupado; el despertar del latido se pospuso. - `unknown accountId` → la cuenta de destino de entrega del latido no existe.
+    - `cron: scheduler disabled; jobs will not run automatically` → cron está deshabilitado.
+    - `heartbeat skipped` con `reason=quiet-hours` → fuera del horario activo configurado.
+    - `heartbeat skipped` con `reason=empty-heartbeat-file` → `HEARTBEAT.md` existe pero solo contiene scaffolding en blanco o solo encabezados.
+    - `heartbeat skipped` con `reason=no-tasks-due` → el modo de tarea `HEARTBEAT.md` está activo pero aún no vence ningún intervalo de tarea.
+    - `heartbeat skipped` con `reason=alerts-disabled` → toda la visibilidad de latido está deshabilitada (`showOk`, `showAlerts` y `useIndicator` están apagados).
+    - `requests-in-flight` → carril principal ocupado; el despertar del latido se pospuso.
+    - `unknown accountId` → la cuenta de destino de entrega del latido no existe.
 
-      Páginas profundas:
+    Páginas profundas:
 
-      - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
-      - [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
-      - [/gateway/heartbeat](/en/gateway/heartbeat)
+    - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
+    - [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
+    - [/gateway/heartbeat](/en/gateway/heartbeat)
 
     </Accordion>
 
     <Accordion title="El nodo está emparejado pero la herramienta falla: cámara, lienzo, pantalla, exec">
-    ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw nodes status
-    openclaw nodes describe --node <idOrNameOrIp>
-    openclaw logs --follow
-    ```
+      ```bash
+      openclaw status
+      openclaw gateway status
+      openclaw nodes status
+      openclaw nodes describe --node <idOrNameOrIp>
+      openclaw logs --follow
+      ```
 
       El resultado correcto se ve así:
 
@@ -297,21 +298,21 @@ flowchart TD
     </Accordion>
 
     <Accordion title="Exec de repente pide aprobación">
-    ```bash
-    openclaw config get tools.exec.host
-    openclaw config get tools.exec.security
-    openclaw config get tools.exec.ask
-    openclaw gateway restart
-    ```
+      ```bash
+      openclaw config get tools.exec.host
+      openclaw config get tools.exec.security
+      openclaw config get tools.exec.ask
+      openclaw gateway restart
+      ```
 
-      Qué cambió:
+      Lo que cambió:
 
-      - Si `tools.exec.host` no está establecido, el valor predeterminado es `auto`.
+      - Si `tools.exec.host` no está configurado, el valor predeterminado es `auto`.
       - `host=auto` se resuelve a `sandbox` cuando un tiempo de ejecución de sandbox está activo, `gateway` en caso contrario.
-      - `host=auto` es solo enrutamiento; el comportamiento "YOLO" sin solicitud proviene de `security=full` más `ask=off` en gateway/nodo.
-      - En `gateway` y `node`, si `tools.exec.security` no está establecido, el valor predeterminado es `full`.
-      - Si `tools.exec.ask` no está establecido, el valor predeterminado es `off`.
-      - Resultado: si estás viendo aprobaciones, alguna política local del host o por sesión ha ajustado exec más estrictamente alejándolo de los valores predeterminados actuales.
+      - `host=auto` es solo enrutamiento; el comportamiento "YOLO" sin solicitud proviene de `security=full` más `ask=off` en el gateway/nodo.
+      - En `gateway` y `node`, si `tools.exec.security` no está configurado, el valor predeterminado es `full`.
+      - Si `tools.exec.ask` no está configurado, el valor predeterminado es `off`.
+      - Resultado: si está viendo aprobaciones, alguna política local del host o por sesión ha restringido exec alejándolo de los valores predeterminados actuales.
 
       Restaurar el comportamiento predeterminado actual sin aprobación:
 
@@ -324,32 +325,32 @@ flowchart TD
 
       Alternativas más seguras:
 
-      - Establece solo `tools.exec.host=gateway` si solo quieres enrutamiento de host estable.
-      - Usa `security=allowlist` con `ask=on-miss` si quieres exec de host pero aún deseas revisiones por fallos en la lista de permitidos.
-      - Habilita el modo sandbox si quieres que `host=auto` se resuelva de nuevo a `sandbox`.
+      - Configure solo `tools.exec.host=gateway` si solo desea un enrutamiento de host estable.
+      - Use `security=allowlist` con `ask=on-miss` si desea exec del host pero aún desea revisión cuando se falte en la lista de permitidos.
+      - Habilite el modo sandbox si desea que `host=auto` se resuelva nuevamente a `sandbox`.
 
       Firmas de registro comunes:
 
       - `Approval required.` → el comando está esperando en `/approve ...`.
-      - `SYSTEM_RUN_DENIED: approval required` → la aprobación de exec del nodo-host está pendiente.
+      - `SYSTEM_RUN_DENIED: approval required` → la aprobación de exec del node-host está pendiente.
       - `exec host=sandbox requires a sandbox runtime for this session` → selección de sandbox implícita/explícita pero el modo sandbox está desactivado.
 
-      Páginas en profundidad:
+      Páginas profundas:
 
       - [/tools/exec](/en/tools/exec)
       - [/tools/exec-approvals](/en/tools/exec-approvals)
-      - [/gateway/security#runtime-expectation-drift](/en/gateway/security#runtime-expectation-drift)
+      - [/gateway/security#what-the-audit-checks-high-level](/en/gateway/security#what-the-audit-checks-high-level)
 
     </Accordion>
 
     <Accordion title="Browser tool fails">
-    ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw browser status
-    openclaw logs --follow
-    openclaw doctor
-    ```
+      ```bash
+      openclaw status
+      openclaw gateway status
+      openclaw browser status
+      openclaw logs --follow
+      openclaw doctor
+      ```
 
       El buen resultado se ve así:
 
@@ -376,7 +377,8 @@ flowchart TD
       - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
 
     </Accordion>
-</AccordionGroup>
+
+  </AccordionGroup>
 
 ## Relacionado
 

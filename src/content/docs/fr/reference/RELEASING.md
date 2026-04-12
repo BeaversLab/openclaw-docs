@@ -68,10 +68,7 @@ OpenClaw dispose de trois canaux de publication publique :
 - la prépublication de version npm échoue fermement à moins que l'archive ne comprenne à la fois
   `dist/control-ui/index.html` et une charge utile `dist/control-ui/assets/` non vide
   pour que nous ne livrions plus un tableau de bord de navigateur vide
-- Si le travail de publication a touché la planification CI, les manifestes de timing d'extension, ou les matrices
-  de tests rapides, régénérez et examinez les `checks-fast-extensions`
-  de matrice de workflow appartenant au planificateur à partir de `.github/workflows/ci.yml`
-  avant approbation afin que les notes de version ne décrivent pas une disposition CI obsolète
+- Si le travail de publication a touché à la planification CI, aux manifestes de timing d'extension, ou aux matrices de test d'extension, régénérez et examinez les sorties de matrice de workflow `checks-node-extensions` détenues par le planificateur à partir de `.github/workflows/ci.yml` avant approbation afin que les notes de version ne décrivent pas une disposition CI obsolète.
 - La préparation de la version stable macOS comprend également les surfaces de l'outil de mise à jour :
   - la version GitHub doit se retrouver avec le `.zip` empaqueté, le `.dmg`, et le `.dSYM.zip`
   - `appcast.xml` sur `main` doit pointer vers le nouveau zip stable après publication

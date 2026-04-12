@@ -127,5 +127,6 @@ flowchart LR
 
 ## 延伸阅读
 
-- [Memory](/en/concepts/memory) -- 文件布局、后端、工具
-- [Memory configuration reference](/en/reference/memory-config) -- 所有配置选项
+- [Active Memory](/en/concepts/active-memory) —— 用于交互式聊天会话的子代理记忆
+- [Memory](/en/concepts/memory) —— 文件布局、后端、工具
+- [Memory configuration reference](/en/reference/memory-config) —— 所有配置选项

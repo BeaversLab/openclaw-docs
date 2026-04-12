@@ -177,7 +177,7 @@ Schema 工具說明：
 
   <Accordion title="限制每個代理的技能">
     使用 `agents.defaults.skills` 作為共享基線，然後使用 `agents.list[].skills` 覆蓋特定
-    代理的設定：
+    代理：
 
     ```json5
     {
@@ -194,11 +194,11 @@ Schema 工具說明：
     }
     ```
 
-    - 預設情況下省略 `agents.defaults.skills` 以允許不受限制的技能。
+    - 省略 `agents.defaults.skills` 以預設不限制技能。
     - 省略 `agents.list[].skills` 以繼承預設值。
-    - 設定 `agents.list[].skills: []` 以表示無技能。
+    - 設定 `agents.list[].skills: []` 表示無技能。
     - 請參閱 [技能](/en/tools/skills)、[技能配置](/en/tools/skills-config) 和
-      [配置參考](/en/gateway/configuration-reference#agentsdefaultsskills)。
+      [配置參考](/en/gateway/configuration-reference#agents-defaults-skills)。
 
   </Accordion>
 

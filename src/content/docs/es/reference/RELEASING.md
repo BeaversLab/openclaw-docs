@@ -60,10 +60,7 @@ OpenClaw tiene tres carriles de lanzamiento públicos:
 - la verificación previa al lanzamiento de npm falla de forma cerrada a menos que el archivo tar incluya ambos
   `dist/control-ui/index.html` y una carga útil `dist/control-ui/assets/` no vacía
   para no volver a enviar un panel de navegador vacío
-- Si el trabajo de lanzamiento tocó la planificación de CI, los manifiestos de sincronización de extensiones o las
-  matrices de prueba rápida, regenere y revise las `checks-fast-extensions` propiedad del planificador
-  salidas de matriz de flujo de trabajo de `.github/workflows/ci.yml`
-  antes de la aprobación para que las notas de la versión no describan un diseño de CI obsoleto
+- Si el trabajo de la versión afectó la planificación de CI, los manifiestos de temporización de extensiones o las matrices de pruebas de extensiones, regenere y revise las salidas de la matriz del flujo de trabajo `checks-node-extensions` propiedad del planificador desde `.github/workflows/ci.yml` antes de la aprobación para que las notas de la versión no describan un diseño de CI obsoleto
 - La preparación para el lanzamiento estable de macOS también incluye las superficies del actualizador:
   - el lanzamiento de GitHub debe terminar con el `.zip`, `.dmg` y `.dSYM.zip` empaquetados
   - `appcast.xml` en `main` debe apuntar al nuevo zip estable después de la publicación

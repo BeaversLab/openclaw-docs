@@ -117,14 +117,15 @@ openclaw models set ollama/gemma4
 当您设置 `OLLAMA_API_KEY`（或身份验证配置文件）并且**不**定义 `models.providers.ollama` 时，OpenClaw 会从 `http://127.0.0.1:11434` 的本地 Ollama 实例发现模型：
 
 - 查询 `/api/tags`
-- 使用尽力而为的 `/api/show` 查找来读取 `contextWindow`（如果可用）
-- 使用模型名称启发式方法 (`r1`、`reasoning`、`think`) 标记 `reasoning`
-- 将 `maxTokens` 设置为 OpenClaw 使用的默认 Ollama 最大令牌上限
+- 使用尽力而为的 `/api/show` 查找来读取 `contextWindow` 并在可用时检测功能（包括视觉功能）
+- 由 `/api/show` 报告具有 `vision` 功能的模型会被标记为具有图像处理能力（`input: ["text", "image"]`），因此 OpenClaw 会自动将图像注入到这些模型的提示词中
+- 使用模型名称启发式方法（`r1`、`reasoning`、`think`）标记 `reasoning`
+- 将 `maxTokens` 设置为 Ollama 使用的默认 OpenClaw 最大令牌上限
 - 将所有成本设置为 `0`
 
-这避免了手动输入模型，同时保持目录与本地 Ollama 实例同步。
+这避免了手动输入模型，同时使目录与本地 Ollama 实例保持同步。
 
-要查看可用的模型：
+要查看有哪些可用模型：
 
 ```bash
 ollama list
@@ -139,7 +140,7 @@ ollama pull mistral
 
 新模型将被自动发现并可供使用。
 
-如果你显式设置了 `models.providers.ollama`，则会跳过自动发现，并且必须手动定义模型（见下文）。
+如果您显式设置了 `models.providers.ollama`，则将跳过自动发现，您必须手动定义模型（见下文）。
 
 ## 配置
 
@@ -153,11 +154,11 @@ export OLLAMA_API_KEY="ollama-local"
 
 ### 显式设置（手动模型）
 
-在以下情况下使用显式配置：
+在以下情况使用显式配置：
 
 - Ollama 运行在其他主机/端口上。
-- 您想要强制特定的上下文窗口或模型列表。
-- 您想要完全手动的模型定义。
+- 您想要强制使用特定的上下文窗口或模型列表。
+- 您需要完全手动的模型定义。
 
 ```json5
 {
@@ -184,11 +185,11 @@ export OLLAMA_API_KEY="ollama-local"
 }
 ```
 
-如果设置了 `OLLAMA_API_KEY`，你可以在提供商条目中省略 `apiKey`，OpenClaw 将会为可用性检查填充它。
+如果设置了 `OLLAMA_API_KEY`，您可以在提供商条目中省略 `apiKey`，OpenClaw 将为其填充以进行可用性检查。
 
 ### 自定义基础 URL（显式配置）
 
-如果 Ollama 在不同的主机或端口上运行（显式配置会禁用自动发现，因此请手动定义模型）：
+如果 Ollama 运行在不同的主机或端口上（显式配置会禁用自动发现，因此请手动定义模型）：
 
 ```json5
 {
@@ -204,11 +205,11 @@ export OLLAMA_API_KEY="ollama-local"
 }
 ```
 
-<Warning>不要在 URL 中添加 `/v1`。`/v1` 路径使用 OpenAI 兼容模式，在此模式下工具调用不可靠。请使用不带路径后缀的基础 Ollama URL。</Warning>
+<Warning>不要在 URL 中添加 `/v1`。`/v1` 路径使用 OpenAI 兼容模式，其中工具调用不可靠。请使用不带路径后缀的基础 Ollama URL。</Warning>
 
 ### 模型选择
 
-配置完成后，您的所有 Ollama 模型均可用：
+配置完成后，您所有的 Ollama 模型都可用：
 
 ```json5
 {
@@ -223,26 +224,26 @@ export OLLAMA_API_KEY="ollama-local"
 }
 ```
 
-## 云端模型
+## 云模型
 
-云模型允许您与本地模型一起运行云托管模型（例如 `kimi-k2.5:cloud`、`minimax-m2.7:cloud`、`glm-5.1:cloud`）。
+云模型允许您运行云托管模型（例如 `kimi-k2.5:cloud`、`minimax-m2.7:cloud`、`glm-5.1:cloud`）以及您的本地模型。
 
-要使用云模型，请在设置过程中选择 **Cloud + Local** 模式。向导会检查您是否已登录，并在需要时打开浏览器登录流程。如果无法验证身份，向导将回退到本地模型默认设置。
+若要使用云模型，请在设置过程中选择 **Cloud + Local** 模式。向导会检查您是否已登录，并在需要时打开浏览器登录流程。如果无法验证身份，向导将回退到本地模型默认设置。
 
-你也可以直接在 [ollama.com/signin](https://ollama.com/signin) 登录。
+您也可以直接在 [ollama.com/signin](https://ollama.com/signin) 登录。
 
-## Ollama 网络搜索
+## Ollama Web 搜索
 
-OpenClaw 还支持 **Ollama 网络搜索**作为捆绑的 `web_search`
+OpenClaw 还支持 **Ollama Web 搜索**作为捆绑的 `web_search`
 提供商。
 
-- 它使用你配置的 Ollama 主机（如果设置了 `models.providers.ollama.baseUrl`
-  则使用该值，否则使用 `http://127.0.0.1:11434`）。
-- 它是免密钥的。
-- 它要求 Ollama 正在运行并使用 `ollama signin` 登录。
+- 它使用您配置的 Ollama 主机（如果
+  设置了 `models.providers.ollama.baseUrl`，否则为 `http://127.0.0.1:11434`）。
+- 它是免费的（无需密钥）。
+- 它要求 Ollama 正在运行并已使用 `ollama signin` 登录。
 
 在 `openclaw onboard` 或
-`openclaw configure --section web` 期间选择 **Ollama 网络搜索**，或者设置：
+`openclaw configure --section web` 期间选择 **Ollama Web 搜索**，或设置：
 
 ```json5
 {
@@ -256,13 +257,13 @@ OpenClaw 还支持 **Ollama 网络搜索**作为捆绑的 `web_search`
 }
 ```
 
-有关完整的设置和行为详细信息，请参阅 [Ollama 网络搜索](/en/tools/ollama-search)。
+有关完整的设置和行为详细信息，请参阅 [Ollama Web 搜索](/en/tools/ollama-search)。
 
 ## 高级
 
 ### 推理模型
 
-OpenClaw 默认将名称为 `deepseek-r1`、`reasoning` 或 `think` 等的模型视为具有推理能力：
+OpenClaw 默认将名称中包含 `deepseek-r1`、`reasoning` 或 `think` 的模型视为具有推理能力：
 
 ```bash
 ollama pull deepseek-r1:32b
@@ -270,17 +271,17 @@ ollama pull deepseek-r1:32b
 
 ### 模型成本
 
-Ollama 是免费且本地运行的，因此所有模型成本均设置为 $0。
+Ollama 是免费的并在本地运行，因此所有模型成本均设置为 0 美元。
 
-### 流式配置
+### 流式传输配置
 
-OpenClaw 的 Ollama 集成默认使用 **原生 Ollama API** (`/api/chat`)，它同时完全支持流式传输和工具调用。无需特殊配置。
+OpenClaw 的 Ollama 集成默认使用 **原生 Ollama API**（`/api/chat`），它完全支持同时进行流式传输和工具调用。无需特殊配置。
 
 #### 旧版 OpenAI 兼容模式
 
-<Warning>**在 OpenAI 兼容模式下工具调用不可靠。** 仅当你需要代理的 OpenAI 格式且不依赖原生工具调用行为时，才使用此模式。</Warning>
+<Warning>**工具调用在 OpenAI 兼容模式下不可靠。** 仅当您需要代理使用 OpenAI 格式且不依赖原生工具调用行为时，才使用此模式。</Warning>
 
-如果您需要改用 OpenAI 兼容的端点（例如，在仅支持 OpenAI 格式的代理后面），请显式设置 `api: "openai-completions"`：
+如果您需要改用 OpenAI 兼容端点（例如，在仅支持 OpenAI 格式的代理后面），请显式设置 `api: "openai-completions"`：
 
 ```json5
 {
@@ -298,9 +299,9 @@ OpenClaw 的 Ollama 集成默认使用 **原生 Ollama API** (`/api/chat`)，它
 }
 ```
 
-此模式可能不支持同时进行流式传输和工具调用。您可能需要在模型配置中使用 `params: { streaming: false }` 禁用流式传输。
+此模式可能不支持同时进行流式传输 + 工具调用。您可能需要在模型配置中使用 `params: { streaming: false }` 禁用流式传输。
 
-当 `api: "openai-completions"` 与 Ollama 一起使用时，OpenClaw 默认会注入 `options.num_ctx`，以免 Ollama 默默回退到 4096 的上下文窗口。如果您的代理/上游拒绝未知的 `options` 字段，请禁用此行为：
+当 `api: "openai-completions"` 与 Ollama 一起使用时，OpenClaw 默认会注入 `options.num_ctx`，以便 Ollama 不会静默回退到 4096 上下文窗口。如果您的代理/上游拒绝未知的 `options` 字段，请禁用此行为：
 
 ```json5
 {
@@ -320,7 +321,7 @@ OpenClaw 的 Ollama 集成默认使用 **原生 Ollama API** (`/api/chat`)，它
 
 ### 上下文窗口
 
-对于自动发现的模型，OpenClaw 使用 Ollama 报告的上下文窗口（如果可用），否则回退到 Ollama 使用的默认 OpenClaw 上下文窗口。您可以在显式提供商配置中覆盖 `contextWindow` 和 `maxTokens`。
+对于自动发现的模型，OpenClaw 在可用时使用 Ollama 报告的上下文窗口，否则回退到 OpenClaw 使用的默认 Ollama 上下文窗口。您可以在显式提供商配置中覆盖 `contextWindow` 和 `maxTokens`。
 
 ## 故障排除
 
@@ -340,7 +341,7 @@ curl http://localhost:11434/api/tags
 
 ### 没有可用的模型
 
-如果未列出您的模型，请执行以下操作之一：
+如果您的模型未被列出，请执行以下任一操作：
 
 - 在本地拉取模型，或
 - 在 `models.providers.ollama` 中显式定义模型。
@@ -368,6 +369,6 @@ ollama serve
 
 ## 另请参阅
 
-- [模型提供商](/en/concepts/model-providers) - 所有提供商概述
+- [模型提供商](/en/concepts/model-providers) - 所有提供商的概述
 - [模型选择](/en/concepts/models) - 如何选择模型
 - [配置](/en/gateway/configuration) - 完整配置参考

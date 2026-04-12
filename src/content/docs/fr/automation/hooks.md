@@ -12,8 +12,8 @@ Les hooks sont de petits scripts qui s'exécutent lorsque quelque chose se produ
 
 Il existe deux types de hooks dans OpenClaw :
 
-- **Hooks internes** (cette page) : s'exécutent dans le Gateway lorsque des événements d'agent se déclenchent, comme `/new`, `/reset`, `/stop`, ou des événements de cycle de vie.
-- **Webhooks** : points de terminaison HTTP externes qui permettent à d'autres systèmes de déclencher des travaux dans OpenClaw. Voir [Webhooks](/en/automation/cron-jobs#webhooks).
+- **Internal hooks** (cette page) : s'exécutent dans le Gateway lorsque des événements d'agent se déclenchent, comme `/new`, `/reset`, `/stop`, ou des événements de cycle de vie.
+- **Webhooks** : points de terminaison HTTP externes qui permettent à d'autres systèmes de déclencher des tâches dans OpenClaw. Voir [Webhooks](/en/automation/cron-jobs#webhooks).
 
 Les hooks peuvent également être regroupés dans des plugins. `openclaw hooks list` affiche à la fois les hooks autonomes et les hooks gérés par des plugins.
 
@@ -37,9 +37,9 @@ openclaw hooks info session-memory
 
 | Événement                | Lorsqu'il se déclenche                                           |
 | ------------------------ | ---------------------------------------------------------------- |
-| `command:new`            | Commande `/new` émise                                            |
-| `command:reset`          | Commande `/reset` émise                                          |
-| `command:stop`           | Commande `/stop` émise                                           |
+| `command:new`            | commande `/new` émise                                            |
+| `command:reset`          | commande `/reset` émise                                          |
+| `command:stop`           | commande `/stop` émise                                           |
 | `command`                | Tout événement de commande (écouteur général)                    |
 | `session:compact:before` | Avant que la compactage ne résume l'historique                   |
 | `session:compact:after`  | Après la fin du compactage                                       |
@@ -79,15 +79,15 @@ Detailed documentation goes here.
 
 **Champs de métadonnées** (`metadata.openclaw`) :
 
-| Champ      | Description                                         |
-| ---------- | --------------------------------------------------- |
-| `emoji`    | Emoji d'affichage pour la CLI                       |
-| `events`   | Tableau des événements à écouter                    |
-| `export`   | Export nommé à utiliser (par défaut `"default"`)    |
-| `os`       | Plateformes requises (ex. `["darwin", "linux"]`)    |
-| `requires` | Chemins `bins`, `anyBins`, `env` ou `config` requis |
-| `always`   | Ignorer les vérifications d'éligibilité (booléen)   |
-| `install`  | Méthodes d'installation                             |
+| Champ      | Description                                               |
+| ---------- | --------------------------------------------------------- |
+| `emoji`    | Emoji d'affichage pour la CLI                             |
+| `events`   | Tableau des événements à écouter                          |
+| `export`   | Export nommé à utiliser (par défaut `"default"`)          |
+| `os`       | Plateformes requises (par exemple, `["darwin", "linux"]`) |
+| `requires` | Chemins `bins`, `anyBins`, `env` ou `config` requis       |
+| `always`   | Ignorer les vérifications d'éligibilité (booléen)         |
+| `install`  | Méthodes d'installation                                   |
 
 ### Implémentation du gestionnaire
 
@@ -119,11 +119,11 @@ Chaque événement inclut : `type`, `action`, `sessionKey`, `timestamp`, `messag
 
 **Événements de message** (`message:transcribed`) : `context.transcript`, `context.from`, `context.channelId`, `context.mediaPath`.
 
-**Événements de message** (`message:preprocessed`) : `context.bodyForAgent` (corps final enrichi), `context.from`, `context.channelId`.
+**Événements de message** (`message:preprocessed`) : `context.bodyForAgent` (corps enrichi final), `context.from`, `context.channelId`.
 
 **Événements d'amorçage** (`agent:bootstrap`) : `context.bootstrapFiles` (tableau modifiable), `context.agentId`.
 
-**Événements de correctif de session** (`session:patch`) : `context.sessionEntry`, `context.patch` (seuls les champs modifiés), `context.cfg`. Seuls les clients privilégiés peuvent déclencher des événements de correctif.
+**Événements de correctif de session** (`session:patch`) : `context.sessionEntry`, `context.patch` (champs modifiés uniquement), `context.cfg`. Seuls les clients privilégiés peuvent déclencher des événements de correctif.
 
 **Événements de compactage** : `session:compact:before` inclut `messageCount`, `tokenCount`. `session:compact:after` ajoute `compactedCount`, `summaryLength`, `tokensBefore`, `tokensAfter`.
 
@@ -134,7 +134,7 @@ Les hooks sont découverts à partir de ces répertoires, par ordre de priorité
 1. **Hooks groupés** : livrés avec OpenClaw
 2. **Hooks de plugin** : hooks groupés dans les plugins installés
 3. **Hooks gérés** : `~/.openclaw/hooks/` (installés par l'utilisateur, partagés entre les espaces de travail). Les répertoires supplémentaires de `hooks.internal.load.extraDirs` partagent cette priorité.
-4. **Hooks d'espace de travail** : `<workspace>/hooks/` (par agent, désactivés par défaut jusqu'à ce qu'ils soient explicitement activés)
+4. **Hooks d'espace de travail** : `<workspace>/hooks/` (par agent, désactivés par défaut jusqu'à être explicitement activés)
 
 Les hooks d'espace de travail peuvent ajouter de nouveaux noms de hooks mais ne peuvent pas remplacer les hooks groupés, gérés ou fournis par des plugins portant le même nom.
 
@@ -163,11 +163,15 @@ Activer n'importe quel hook groupé :
 openclaw hooks enable <hook-name>
 ```
 
+<a id="session-memory"></a>
+
 ### détails de session-memory
 
-Extrait les 15 derniers messages utilisateur/assistant, génère un slug de nom de fichier descriptif via LLM, et enregistre dans `<workspace>/memory/YYYY-MM-DD-slug.md`. Nécessite que `workspace.dir` soit configuré.
+Extrait les 15 derniers messages utilisateur/assistant, génère un slug de fichier descriptif via LLM, et enregistre dans `<workspace>/memory/YYYY-MM-DD-slug.md`. Nécessite que `workspace.dir` soit configuré.
 
-### Configuration de bootstrap-extra-files
+<a id="bootstrap-extra-files"></a>
+
+### config bootstrap-extra-files
 
 ```json
 {
@@ -184,13 +188,25 @@ Extrait les 15 derniers messages utilisateur/assistant, génère un slug de nom 
 }
 ```
 
-Les chemins sont résolus relativement à l'espace de travail. Seuls les noms de base bootstrap reconnus sont chargés (`AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md`, `MEMORY.md`).
+Les chemins sont résolus par rapport à l'espace de travail. Seuls les noms de base bootstrap reconnus sont chargés (`AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md`, `MEMORY.md`).
+
+<a id="command-logger"></a>
+
+### détails de command-logger
+
+Enregistre chaque commande slash dans `~/.openclaw/logs/commands.log`.
+
+<a id="boot-md"></a>
+
+### détails de boot-md
+
+Exécute `BOOT.md` depuis l'espace de travail actif au démarrage de la passerelle.
 
 ## Hooks de plugin
 
-Les plugins peuvent enregistrer des hooks via le Plugin SDK pour une intégration plus poussée : interception des appels d'outils, modification des prompts, contrôle du flux des messages, et plus encore. Le Plugin SDK expose 28 hooks couvrant la résolution de modèles, le cycle de vie des agents, le flux des messages, l'exécution d'outils, la coordination de sous-agents et le cycle de vie de la passerelle.
+Les plugins peuvent enregistrer des hooks via le Plugin SDK pour une intégration plus profonde : interception des appels d'outils, modification des invites, contrôle du flux de messages, et plus encore. Le Plugin SDK expose 28 hooks couvrant la résolution de modèle, le cycle de vie de l'agent, le flux de messages, l'exécution d'outils, la coordination des sous-agents et le cycle de vie de la passerelle.
 
-Pour la référence complète des hooks de plugin, y compris `before_tool_call`, `before_agent_reply`, `before_install` et tous les autres hooks de plugin, voir [Plugin Architecture](/en/plugins/architecture#provider-runtime-hooks).
+Pour la référence complète des hooks de plugin incluant `before_tool_call`, `before_agent_reply`, `before_install`, et tous les autres hooks de plugin, voir [Plugin Architecture](/en/plugins/architecture#provider-runtime-hooks).
 
 ## Configuration
 
@@ -239,9 +255,9 @@ Répertoires de hooks supplémentaires :
 }
 ```
 
-<Note>Le format de configuration de tableau `hooks.internal.handlers` hérité est toujours pris en charge pour la rétrocompatibilité, mais les nouveaux hooks doivent utiliser le système basé sur la découverte.</Note>
+<Note>The legacy `hooks.internal.handlers` array config format is still supported for backwards compatibility, but new hooks should use the discovery-based system.</Note>
 
-## Référence CLI
+## CLI reference
 
 ```bash
 # List all hooks (add --eligible, --verbose, or --json)
@@ -258,16 +274,16 @@ openclaw hooks enable <hook-name>
 openclaw hooks disable <hook-name>
 ```
 
-## Bonnes pratiques
+## Best practices
 
-- **Gardez les gestionnaires rapides.** Les hooks s'exécutent pendant le traitement des commandes. Déchargez le travail lourd en mode fire-and-forget avec `void processInBackground(event)`.
-- **Gérez les erreurs avec élégance.** Enveloppez les opérations risquées dans des blocs try/catch ; ne levez pas d'exceptions pour que les autres gestionnaires puissent s'exécuter.
-- **Filtrez les événements tôt.** Retournez immédiatement si le type/action de l'événement n'est pas pertinent.
-- **Utilisez des clés d'événement spécifiques.** Préférez `"events": ["command:new"]` à `"events": ["command"]` pour réduire la surcharge.
+- **Keep handlers fast.** Hooks run during command processing. Fire-and-forget heavy work with `void processInBackground(event)`.
+- **Handle errors gracefully.** Wrap risky operations in try/catch; do not throw so other handlers can run.
+- **Filter events early.** Return immediately if the event type/action is not relevant.
+- **Use specific event keys.** Prefer `"events": ["command:new"]` over `"events": ["command"]` to reduce overhead.
 
-## Dépannage
+## Troubleshooting
 
-### Hook non découvert
+### Hook not discovered
 
 ```bash
 # Verify directory structure
@@ -278,23 +294,23 @@ ls -la ~/.openclaw/hooks/my-hook/
 openclaw hooks list
 ```
 
-### Hook non éligible
+### Hook not eligible
 
 ```bash
 openclaw hooks info my-hook
 ```
 
-Vérifiez les binaires manquants (PATH), les variables d'environnement, les valeurs de configuration ou la compatibilité du système d'exploitation.
+Check for missing binaries (PATH), environment variables, config values, or OS compatibility.
 
-### Hook non exécuté
+### Hook not executing
 
-1. Vérifiez que le hook est activé : `openclaw hooks list`
-2. Redémarrez votre processus de passerelle pour que les hooks se rechargent.
-3. Consultez les journaux de la passerelle : `./scripts/clawlog.sh | grep hook`
+1. Verify the hook is enabled: `openclaw hooks list`
+2. Restart your gateway process so hooks reload.
+3. Check gateway logs: `./scripts/clawlog.sh | grep hook`
 
-## Connexes
+## Related
 
-- [Référence CLI : hooks](/en/cli/hooks)
+- [CLI Reference: hooks](/en/cli/hooks)
 - [Webhooks](/en/automation/cron-jobs#webhooks)
-- [Architecture de Plugin](/en/plugins/architecture#provider-runtime-hooks) — référence complète des hooks de plugin
+- [Plugin Architecture](/en/plugins/architecture#provider-runtime-hooks) — full plugin hook reference
 - [Configuration](/en/gateway/configuration-reference#hooks)

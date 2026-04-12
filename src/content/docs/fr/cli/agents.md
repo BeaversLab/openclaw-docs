@@ -34,10 +34,7 @@ openclaw agents delete work
 
 Utilisez les liaisons de routage pour épingler le trafic entrant du channel à un agent spécifique.
 
-Si vous souhaitez également des Skills visibles différents par agent, configurez
-`agents.defaults.skills` et `agents.list[].skills` dans `openclaw.json`. Voir
-[Skills config](/en/tools/skills-config) et
-[Configuration Reference](/en/gateway/configuration-reference#agentsdefaultsskills).
+Si vous souhaitez également des Skills visibles différentes pour chaque agent, configurez `agents.defaults.skills` et `agents.list[].skills` dans `openclaw.json`. Consultez la [configuration des Skills](/en/tools/skills-config) et le [référentiel de configuration](/en/gateway/configuration-reference#agents-defaults-skills).
 
 Lister les liaisons :
 

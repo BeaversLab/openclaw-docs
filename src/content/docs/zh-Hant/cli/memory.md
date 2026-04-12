@@ -14,10 +14,10 @@ title: "memory"
 
 相關：
 
-- 記憶概念：[記憶](/en/concepts/memory)
-- 記憶 Wiki：[記憶 Wiki](/en/plugins/memory-wiki)
+- Memory 概念：[Memory](/en/concepts/memory)
+- Memory 維基：[Memory Wiki](/en/plugins/memory-wiki)
 - Wiki CLI：[wiki](/en/cli/wiki)
-- 外掛程式：[外掛程式](/en/tools/plugin)
+- 外掛程式：[Plugins](/en/tools/plugin)
 
 ## 範例
 
@@ -165,4 +165,8 @@ openclaw memory rem-harness [--agent <id>] [--include-promoted] [--json]
 - 如果有效的作用中記憶遠端 API 金鑰欄位配置為 SecretRefs，指令會從作用中閘道快照解析這些值。如果閘道無法使用，指令會快速失敗。
 - 閘道版本差異注意：此指令路徑需要支援 `secrets.resolve` 的閘道；較舊的閘道會傳回未知方法錯誤。
 - 使用 `dreaming.frequency` 調整計劃掃描的頻率。深度提升策略在內部是固定的；當您需要一次性手動覆蓋時，請在 `memory promote` 上使用 CLI 旗標。
-- 請參閱 [Dreaming](/en/concepts/dreaming) 以了解完整的階段描述和配置參考。
+- `memory rem-harness --path <file-or-dir> --grounded` 預覽來自歷史每日筆記的有根據的 `What Happened`、`Reflections` 和 `Possible Lasting Updates`，而不寫入任何內容。
+- `memory rem-backfill --path <file-or-dir>` 將可還原的有根據的日記條目寫入 `DREAMS.md` 以供 UI 審閱。
+- `memory rem-backfill --path <file-or-dir> --stage-short-term` 還會將有根據的持久候選項播種到即時短期提升存放區中，以便正常的深度階段可以對其進行排名。
+- `memory rem-backfill --rollback` 移除先前寫入的有根據的日記條目，而 `memory rem-backfill --rollback-short-term` 移除先前暫存的有根據的短期候選項。
+- 請參閱 [Dreaming](/en/concepts/dreaming) 以取得完整的階段描述和設定參考。

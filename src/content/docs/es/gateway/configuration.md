@@ -179,8 +179,8 @@ Cuando la validación falla:
   </Accordion>
 
   <Accordion title="Restringir habilidades por agente">
-    Use `agents.defaults.skills` para una línea base compartida, luego anule
-    agentes específicos con `agents.list[].skills`:
+    Use `agents.defaults.skills` para una línea base compartida y luego anule agentes específicos
+    con `agents.list[].skills`:
 
     ```json5
     {
@@ -197,11 +197,11 @@ Cuando la validación falla:
     }
     ```
 
-    - Omita `agents.defaults.skills` para habilidades sin restricciones por defecto.
+    - Omita `agents.defaults.skills` para habilidades sin restricciones de forma predeterminada.
     - Omita `agents.list[].skills` para heredar los valores predeterminados.
-    - Establezca `agents.list[].skills: []` para ninguna habilidad.
-    - Consulte [Habilidades](/en/tools/skills), [Configuración de habilidades](/en/tools/skills-config) y
-      la [Referencia de configuración](/en/gateway/configuration-reference#agentsdefaultsskills).
+    - Establezca `agents.list[].skills: []` para no tener habilidades.
+    - Consulte [Skills](/en/tools/skills), [Skills config](/en/tools/skills-config) y
+      la [Configuration Reference](/en/gateway/configuration-reference#agents-defaults-skills).
 
   </Accordion>
 

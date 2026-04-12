@@ -14,10 +14,10 @@ Proporcionado por el plugin de memoria activo (predeterminado: `memory-core`; es
 
 Relacionado:
 
-- Concepto de memoria: [Memoria](/en/concepts/memory)
-- Wiki de memoria: [Wiki de memoria](/en/plugins/memory-wiki)
+- Concepto de memoria: [Memory](/en/concepts/memory)
+- Wiki de memoria: [Memory Wiki](/en/plugins/memory-wiki)
 - CLI de Wiki: [wiki](/en/cli/wiki)
-- Complementos: [Complementos](/en/tools/plugin)
+- Complementos: [Plugins](/en/tools/plugin)
 
 ## Ejemplos
 
@@ -165,4 +165,8 @@ Notas:
 - Si los campos de clave API remota de memoria efectivamente activa están configurados como SecretRefs, el comando resuelve esos valores desde la instantánea de la puerta de enlace activa. Si la puerta de enlace no está disponible, el comando falla rápidamente.
 - Nota de discrepancia de versión de la puerta de enlace: esta ruta de comando requiere una puerta de enlace que admita `secrets.resolve`; las puertas de enlace antiguas devuelven un error de método desconocido.
 - Ajuste la cadencia de barrido programada con `dreaming.frequency`. La política de promoción profunda es, por lo demás, interna; utilice las opciones de CLI en `memory promote` cuando necesite anulaciones manuales únicas.
+- `memory rem-harness --path <file-or-dir> --grounded` previsualiza `What Happened`, `Reflections` y `Possible Lasting Updates` fundamentados de notas diarias históricas sin escribir nada.
+- `memory rem-backfill --path <file-or-dir>` escribe entradas de diario fundamentadas reversibles en `DREAMS.md` para su revisión en la interfaz de usuario.
+- `memory rem-backfill --path <file-or-dir> --stage-short-term` también siembra candidatos duraderos fundamentados en el almacén de promoción a corto plazo en vivo para que la fase profunda normal pueda clasificarlos.
+- `memory rem-backfill --rollback` elimina las entradas de diario fundamentadas escritas previamente, y `memory rem-backfill --rollback-short-term` elimina los candidatos a corto plazo fundamentados preparados previamente.
 - Consulte [Dreaming](/en/concepts/dreaming) para obtener descripciones completas de las fases y la referencia de configuración.

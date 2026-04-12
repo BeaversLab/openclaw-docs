@@ -68,9 +68,7 @@ OpenClaw 拥有三个公共发布渠道：
 - npm 发布前检查默认失败，除非压缩包同时包含
   `dist/control-ui/index.html` 和非空的 `dist/control-ui/assets/` 负载，
   这样我们就不会再次发布空的浏览器仪表板
-- 如果发布工作涉及 CI 规划、扩展计时清单或快速
-  测试矩阵，请在批准前从 `.github/workflows/ci.yml` 重新生成并审查规划器拥有的 `checks-fast-extensions`
-  工作流矩阵输出，以免发行说明描述过时的 CI 布局
+- 如果发布工作涉及了 CI 规划、扩展时机清单或扩展测试矩阵，请在批准之前从 `.github/workflows/ci.yml` 重新生成并审查规划者拥有的 `checks-node-extensions` 工作流矩阵输出，以免发布说明描述过时的 CI 布局。
 - 稳定 macOS 发布准备情况还包括更新程序表面：
   - GitHub 发布最终必须包含打包好的 `.zip`、`.dmg` 和 `.dSYM.zip`
   - `main` 上的 `appcast.xml` 必须在发布后指向新的稳定 zip 包

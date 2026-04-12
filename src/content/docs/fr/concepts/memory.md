@@ -15,8 +15,8 @@ OpenClaw se souvient des choses en écrivant des fichiers **Markdown brut** dans
 Votre agent possède trois fichiers liés à la mémoire :
 
 - **`MEMORY.md`** -- mémoire à long terme. Faits durables, préférences et décisions. Chargé au début de chaque session DM.
-- **`memory/YYYY-MM-DD.md`** -- notes quotidiennes. Contexte en cours et observations. Les notes d'aujourd'hui et d'hier sont chargées automatiquement.
-- **`DREAMS.md`** (expérimental, facultatif) -- Journal des rêves et résumés de balayage de rêves pour revue humaine.
+- **`memory/YYYY-MM-DD.md`** -- notes quotidiennes. Contexte et observations en cours. Les notes d'aujourd'hui et d'hier sont chargées automatiquement.
+- **`DREAMS.md`** (expérimental, optionnel) -- Journal de rêve et résumés de balayage de rêve pour examen humain, y compris les entrées de rétroremplissage historique ancrées.
 
 Ces fichiers résident dans l'espace de travail de l'agent (par défaut `~/.openclaw/workspace`).
 
@@ -26,31 +26,31 @@ Ces fichiers résident dans l'espace de travail de l'agent (par défaut `~/.open
 
 L'agent dispose de deux outils pour travailler avec la mémoire :
 
-- **`memory_search`** -- trouve des notes pertinentes en utilisant la recherche sémantique, même lorsque la formulation diffère de l'originale.
-- **`memory_get`** -- lit un fichier de mémoire spécifique ou une plage de lignes.
+- **`memory_search`** -- trouve des notes pertinentes grâce à une recherche sémantique, même lorsque le libellé diffère de l'original.
+- **`memory_get`** -- lit un fichier mémoire ou une plage de lignes spécifique.
 
 Les deux outils sont fournis par le plugin de mémoire actif (par défaut : `memory-core`).
 
 ## Plugin compagnon Memory Wiki
 
-Si vous souhaitez que la mémoire durable se comporte davantage comme une base de connaissances maintenue que de simples notes brutes, utilisez le plugin inclus `memory-wiki`.
+Si vous souhaitez que la mémoire durable se comporte davantage comme une base de connaissances entretenue que de simples notes brutes, utilisez le plugin fourni `memory-wiki`.
 
-`memory-wiki` compile les connaissances durables dans un coffre de wiki avec :
+`memory-wiki` compile les connaissances durables dans un coffre wiki avec :
 
 - structure de page déterministe
 - revendications et preuves structurées
 - suivi des contradictions et de la fraîcheur
 - tableaux de bord générés
 - résumés compilés pour les consommateurs agent/execution
-- outils natifs au wiki comme `wiki_search`, `wiki_get`, `wiki_apply` et `wiki_lint`
+- des outils natifs du wiki comme `wiki_search`, `wiki_get`, `wiki_apply` et `wiki_lint`
 
-Il ne remplace pas le plugin de mémoire actif. Le plugin de mémoire actif possède toujours la fonction de rappel, la promotion et le rêve. `memory-wiki` ajoute une couche de connaissances riche en provenance à côté.
+Il ne remplace pas le plugin de mémoire actif. Le plugin de mémoire actif possède toujours le rappel, la promotion et le rêve. `memory-wiki` ajoute une couche de connaissances riche en provenance à côté.
 
 Voir [Memory Wiki](/en/plugins/memory-wiki).
 
 ## Recherche mémoire
 
-Lorsqu'un fournisseur d'embeddings est configuré, `memory_search` utilise la **recherche hybride** -- combinant la similarité vectorielle (sens sémantique) avec la correspondance de mots-clés (termes exacts comme les ID et les symboles de code). Cela fonctionne immédiatement une fois que vous avez une clé API pour n'importe quel fournisseur pris en charge.
+Lorsqu'un fournisseur d'embeddings est configuré, `memory_search` utilise une **recherche hybride** -- combinant la similarité vectorielle (signification sémantique) avec la correspondance par mots-clés (termes exacts comme les ID et les symboles de code). Cela fonctionne immédiatement une fois que vous disposez d'une clé API pour n'importe quel fournisseur pris en charge.
 
 <Info>OpenClaw détecte automatiquement votre fournisseur d'embeddings à partir des clés API disponibles. Si vous avez une clé OpenAI, Gemini, Voyage ou Mistral configurée, la recherche mémoire est activée automatiquement.</Info>
 
@@ -59,14 +59,14 @@ Pour plus de détails sur le fonctionnement de la recherche, les options de rég
 ## Moteurs de mémoire
 
 <CardGroup cols={3}>
-  <Card title="Intégré (par défaut)" icon="database" href="/en/concepts/memory-builtin">
-    Basé sur SQLite. Fonctionne immédiatement avec la recherche par mots-clés, la similarité vectorielle et la recherche hybride. Aucune dépendance supplémentaire.
+  <Card title="Builtin (default)" icon="database" href="/en/concepts/memory-builtin">
+    Basé sur SQLite. Fonctionne immédiatement avec la recherche par mots-clés, la similarité vectorielle et la recherche hybride. Aucune dépendance externe.
   </Card>
   <Card title="QMD" icon="search" href="/en/concepts/memory-qmd">
-    Sidecar priorité locale avec re-classement, expansion de requêtes et la capacité d'indexer des répertoires en dehors de l'espace de travail.
+    Sidecar "local-first" avec re-classement, expansion de requêtes, et la capacité d'indexer des répertoires en dehors de l'espace de travail.
   </Card>
   <Card title="Honcho" icon="brain" href="/en/concepts/memory-honcho">
-    Mémoire inter-session native IA avec modélisation utilisateur, recherche sémantique et sensibilisation multi-agent. Installation de plugin.
+    Mémoire inter-sessions native IA avec modélisation utilisateur, recherche sémantique et conscience multi-agents. Installation de plugin.
   </Card>
 </CardGroup>
 
@@ -74,21 +74,23 @@ Pour plus de détails sur le fonctionnement de la recherche, les options de rég
 
 <CardGroup cols={1}>
   <Card title="Memory Wiki" icon="book" href="/en/plugins/memory-wiki">
-    Compile la mémoire durable dans un coffre-fort wiki riche en provenance avec des revendications, des tableaux de bord, le mode pont et des flux de travail compatibles avec Obsidian.
+    Compile une mémoire durable dans un coffre wiki riche en provenance avec des revendications, des tableaux de bord, le mode pont et des flux de travail compatibles avec Obsidian.
   </Card>
 </CardGroup>
 
 ## Vidange automatique de la mémoire
 
-Avant que la [compaction](/en/concepts/compaction) ne résume votre conversation, OpenClaw
-exécute un tour silencieux qui rappelle à l'agent de sauvegarder le contexte important dans les fichiers de mémoire.
-Ceci est activé par défaut -- vous n'avez rien à configurer.
+Avant que la [compactage](/en/concepts/compaction) ne résume votre conversation, OpenClaw
+lance un tour silencieux qui rappelle à l'agent de sauvegarder le contexte important dans les fichiers
+de mémoire. Ceci est activé par défaut -- vous n'avez rien à configurer.
 
 <Tip>La vidange de la mémoire empêche la perte de contexte lors de la compaction. Si votre agent possède des faits importants dans la conversation qui ne sont pas encore écrits dans un fichier, ils seront sauvegardés automatiquement avant que le résumé ne soit effectué.</Tip>
 
 ## Rêve (expérimental)
 
-Le rêve est une passe de consolidation en arrière-plan facultative pour la mémoire. Il collecte des signaux à court terme, évalue les candidats et ne promeut que les éléments qualifiés dans la mémoire à long terme (`MEMORY.md`).
+Le rêve est une passe de consolidation en arrière-plan optionnelle pour la mémoire. Il collecte
+les signaux à court terme, note les candidats, et ne promeut que les éléments qualifiés dans
+la mémoire à long terme (`MEMORY.md`).
 
 Il est conçu pour maintenir un signal élevé dans la mémoire à long terme :
 
@@ -96,11 +98,46 @@ Il est conçu pour maintenir un signal élevé dans la mémoire à long terme :
 - **Planifié** : lorsqu'il est activé, `memory-core` gère automatiquement une tâche cron récurrente
   pour un balayage de rêve complet.
 - **Seuillé** : les promotions doivent réussir les seuils de score, la fréquence de rappel et la diversité des requêtes.
-- **Consultable** : les résumés de phase et les entrées de journal sont écrits dans `DREAMS.md`
-  pour consultation humaine.
+- **Révisable** : les résumés de phase et les entrées de journal sont écrits dans `DREAMS.md`
+  pour révision humaine.
 
-Pour le comportement des phases, les signaux de scoring et les détails du Dream Diary, voir
-[Dreaming (expérimental)](/en/concepts/dreaming).
+Pour le comportement des phases, les signaux de notation et les détails du Journal de Rêve, voir
+[Dreaming (experimental)](/en/concepts/dreaming).
+
+## Remplissage ancré et promotion en direct
+
+Le système de rêve possède désormais deux voies de révision étroitement liées :
+
+- **Le rêve en direct** fonctionne à partir du magasin de rêve à court terme sous
+  `memory/.dreams/` et c'est ce que la phase profonde normale utilise pour décider ce qui
+  peut passer dans `MEMORY.md`.
+- **Le remplissage ancré (grounded backfill)** lit les notes historiques `memory/YYYY-MM-DD.md` en tant que
+  fichiers journal autonomes et écrit les résultats de révision structurés dans `DREAMS.md`.
+
+Le remplissage ancré est utile lorsque vous souhaitez relire d'anciennes notes et inspecter ce
+que le système considère comme durable sans modifier manuellement `MEMORY.md`.
+
+Lorsque vous utilisez :
+
+```bash
+openclaw memory rem-backfill --path ./memory --stage-short-term
+```
+
+les candidats durables ancrés ne sont pas promus directement. Ils sont mis en attente dans
+le même magasin de rêve à court terme que la phase profonde normale utilise déjà. Cela
+signifie :
+
+- `DREAMS.md` reste la surface de révision humaine.
+- le magasin à court terme reste la surface de classement orientée machine.
+- `MEMORY.md` est toujours uniquement écrit par la promotion profonde.
+
+Si vous décidez que la relève n'était pas utile, vous pouvez supprimer les artefacts mis en attente
+sans toucher aux entrées de journal ordinaires ou à l'état de rappel normal :
+
+```bash
+openclaw memory rem-backfill --rollback
+openclaw memory rem-backfill --rollback-short-term
+```
 
 ## CLI
 
@@ -113,12 +150,12 @@ openclaw memory index --force   # Rebuild the index
 ## Pour aller plus loin
 
 - [Moteur de mémoire intégré](/en/concepts/memory-builtin) -- backend SQLite par défaut
-- [Moteur de mémoire QMD](/en/concepts/memory-qmd) -- sidecar avancé en priorité locale
-- [Honcho Memory](/en/concepts/memory-honcho) -- mémoire multi-session native IA
-- [Memory Wiki](/en/plugins/memory-wiki) -- coffre de connaissances compilé et outils natifs wiki
-- [Memory Search](/en/concepts/memory-search) -- pipeline de recherche, fournisseurs et
+- [Moteur de mémoire QMD](/en/concepts/memory-qmd) -- sidecar avancé local-first
+- [Honcho Memory](/en/concepts/memory-honcho) -- mémoire inter-sessions native IA
+- [Memory Wiki](/en/plugins/memory-wiki) -- coffre-fort de connaissances compilé et outils natifs wiki
+- [Recherche de mémoire](/en/concepts/memory-search) -- pipeline de recherche, fournisseurs et
   réglage
-- [Dreaming (expérimental)](/en/concepts/dreaming) -- promotion en arrière-plan
-  du souvenir à court terme vers la mémoire à long terme
+- [Rêve (expérimental)](/en/concepts/dreaming) -- promotion en arrière-plan
+  du rappel à court terme vers la mémoire à long terme
 - [Référence de configuration de la mémoire](/en/reference/memory-config) -- tous les paramètres de configuration
 - [Compaction](/en/concepts/compaction) -- interaction de la compaction avec la mémoire

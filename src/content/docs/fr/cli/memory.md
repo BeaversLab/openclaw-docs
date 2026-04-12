@@ -14,8 +14,8 @@ Fourni par le plugin de mémoire actif (par défaut : `memory-core` ; définisse
 
 Connexes :
 
-- Concept de mémoire : [Memory](/en/concepts/memory)
-- Wiki Mémoire : [Memory Wiki](/en/plugins/memory-wiki)
+- Concept de mémoire : [Mémoire](/en/concepts/memory)
+- Wiki Mémoire : [Wiki Mémoire](/en/plugins/memory-wiki)
 - Wiki CLI : [wiki](/en/cli/wiki)
 - Plugins : [Plugins](/en/tools/plugin)
 
@@ -165,4 +165,8 @@ Notes :
 - Si les champs de clé API distante de mémoire effectivement active sont configurés en tant que SecretRefs, la commande résout ces valeurs à partir de l'instantané de la passerelle active. Si la passerelle n'est pas disponible, la commande échoue rapidement.
 - Remarque sur la disparité de version de la Gateway : ce chemin de commande nécessite une passerelle qui prend en charge `secrets.resolve` ; les passerelles plus anciennes renvoient une erreur de méthode inconnue.
 - Ajustez la cadence du nettoyage programmé avec `dreaming.frequency`. La stratégie de promotion approfondie est par ailleurs interne ; utilisez les drapeaux CLI sur `memory promote` lorsque vous avez besoin de substitutions manuelles ponctuelles.
+- `memory rem-harness --path <file-or-dir> --grounded` prévisualise les `What Happened`, `Reflections` et `Possible Lasting Updates` ancrés à partir des notes quotidiennes historiques sans rien écrire.
+- `memory rem-backfill --path <file-or-dir>` écrit des entrées de journal ancrées réversibles dans `DREAMS.md` pour examen par l'interface utilisateur.
+- `memory rem-backfill --path <file-or-dir> --stage-short-term` ensemence également des candidats durables ancrés dans le stock de promotion à court terme en direct afin que la phase profonde normale puisse les classer.
+- `memory rem-backfill --rollback` supprime les entrées de journal ancrées précédemment écrites, et `memory rem-backfill --rollback-short-term` supprime les candidats à court terme ancrés précédemment mis en attente.
 - Voir [Dreaming](/en/concepts/dreaming) pour les descriptions complètes des phases et la référence de configuration.

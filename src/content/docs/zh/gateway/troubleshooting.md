@@ -103,7 +103,7 @@ openclaw logs --follow
 相关：
 
 - [/gateway/local-models](/en/gateway/local-models)
-- [/gateway/configuration#models](/en/gateway/configuration#models)
+- [/网关/配置](/en/gateway/configuration)
 - [/gateway/configuration-reference#openai-compatible-endpoints](/en/gateway/configuration-reference#openai-compatible-endpoints)
 
 ## 无回复

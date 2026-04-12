@@ -240,9 +240,9 @@ debería usar `resolveInboundMentionDecision({ facts, policy })`.
 <Steps>
   <a id="step-1-package-and-manifest"></a>
   <Step title="Paquete y manifiesto">
-    Cree los archivos estándar del complemento. El campo `channel` en `package.json` es
-    lo que convierte a esto en un complemento de canal. Para conocer la superficie completa de metadatos del paquete,
-    consulte [Configuración y configuración de complementos](/en/plugins/sdk-setup#openclawchannel):
+    Cree los archivos de plugin estándar. El campo `channel` en `package.json` es
+    lo que convierte a esto en un plugin de canal. Para obtener la superficie completa de metadatos del paquete,
+    consulte [Configuración y configuración del plugin](/en/plugins/sdk-setup#openclaw-channel):
 
     <CodeGroup>
     ```json package.json

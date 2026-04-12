@@ -220,10 +220,10 @@ if (decision.shouldSkip) return;
 
 <Steps>
   <a id="step-1-package-and-manifest"></a>
-  <Step title="包和清单">
-    创建标准插件文件。`package.json` 中的 `channel` 字段
-    使其成为渠道插件。有关完整的包元数据表面，
-    请参阅 [插件设置和配置](/en/plugins/sdk-setup#openclawchannel)：
+  <Step title="Package and manifest">
+    创建标准的插件文件。`package.json` 中的 `channel` 字段
+    是使其成为渠道插件的关键。有关完整的包元数据接口，
+    请参阅 [Plugin Setup and Config](/en/plugins/sdk-setup#openclaw-channel)：
 
     <CodeGroup>
     ```json package.json

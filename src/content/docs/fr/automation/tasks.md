@@ -172,7 +172,7 @@ Le jeton de recherche accepte un ID de tâche, un ID d'exécution ou une clé de
 openclaw tasks cancel <lookup>
 ```
 
-Pour les tâches ACP et de sous-agent, cela tue la session enfant. Le statut passe à `cancelled` et une notification de livraison est envoyée.
+Pour les tâches ACP et de sous-agent, cela met fin à la session enfant. Pour les tâches suivies par CLI, l'annulation est enregistrée dans le registre des tâches (il n'y a pas de handle d'exécution enfant distinct). Le statut passe à `cancelled` et une notification de livraison est envoyée le cas échéant.
 
 ### `tasks notify`
 

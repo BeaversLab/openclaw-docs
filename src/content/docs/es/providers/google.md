@@ -96,18 +96,21 @@ Notas de uso de JSON de la CLI de Gemini:
 | Comprensión de video     | Sí               |
 | Búsqueda web (Grounding) | Sí               |
 | Pensamiento/razonamiento | Sí (Gemini 3.1+) |
+| Modelos Gemma 4          | Sí               |
 
-## Reutilización directa del caché de Gemini
+Los modelos Gemma 4 (por ejemplo `gemma-4-26b-a4b-it`) admiten el modo de pensamiento. OpenClaw reescribe `thinkingBudget` a un `thinkingLevel` de Google compatible para Gemma 4. Configurar el pensamiento en `off` mantiene el pensamiento desactivado en lugar de asignarlo a `MINIMAL`.
+
+## Reutilización directa de la caché de Gemini
 
 Para ejecuciones directas de la API de Gemini (`api: "google-generative-ai"`), OpenClaw ahora
 pasa un identificador `cachedContent` configurado a través de las solicitudes de Gemini.
 
 - Configure parámetros por modelo o globales con cualquiera de los dos
   `cachedContent` o el heredado `cached_content`
-- Si ambos están presentes, gana `cachedContent`
+- Si ambos están presentes, `cachedContent` tiene prioridad
 - Valor de ejemplo: `cachedContents/prebuilt-context`
-- El uso de aciertos de caché de Gemini se normaliza en OpenClaw `cacheRead` desde
-  el upstream `cachedContentTokenCount`
+- El uso de aciertos en la caché de Gemini se normaliza en el `cacheRead` de OpenClaw desde
+  el `cachedContentTokenCount` ascendente
 
 Ejemplo:
 
@@ -137,9 +140,9 @@ El proveedor de generación de imágenes `google` incluido tiene como valor pred
 - Modo de edición: habilitado, hasta 5 imágenes de entrada
 - Controles de geometría: `size`, `aspectRatio` y `resolution`
 
-El proveedor `google-gemini-cli` solo para OAuth es una superficie de inferencia de texto
+El proveedor `google-gemini-cli` solo de OAuth es una superficie de inferencia de texto
 separada. La generación de imágenes, la comprensión de medios y Gemini Grounding se mantienen en
-el id de proveedor `google`.
+el id del proveedor `google`.
 
 Para usar Google como proveedor de imágenes predeterminado:
 
@@ -160,7 +163,7 @@ compartida, la selección del proveedor y el comportamiento de conmutación por 
 
 ## Generación de video
 
-El complemento `google` incluido también registra la generación de video a través de la herramienta
+El complemento `google` incluido también registra la generación de videos a través de la herramienta
 compartida `video_generate`.
 
 - Modelo de video predeterminado: `google/veo-3.1-fast-generate-preview`
@@ -168,7 +171,7 @@ compartida `video_generate`.
 - Admite `aspectRatio`, `resolution` y `audio`
 - Límite de duración actual: **de 4 a 8 segundos**
 
-Para usar Google como proveedor de video predeterminado:
+Para usar Google como proveedor de videos predeterminado:
 
 ```json5
 {
@@ -182,22 +185,20 @@ Para usar Google como proveedor de video predeterminado:
 }
 ```
 
-Consulte [Generación de video](/en/tools/video-generation) para conocer los parámetros de la herramienta
-compartida, la selección del proveedor y el comportamiento de conmutación por error.
+Consulte [Generación de video](/en/tools/video-generation) para obtener los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.
 
 ## Generación de música
 
-El complemento `google` incluido también registra la generación de música a través de la herramienta
-compartida `music_generate`.
+El complemento `google` incluido también registra la generación de música a través de la herramienta compartida `music_generate`.
 
 - Modelo de música predeterminado: `google/lyria-3-clip-preview`
 - También admite `google/lyria-3-pro-preview`
-- Controles de prompt: `lyrics` y `instrumental`
-- Formato de salida: `mp3` por defecto, además de `wav` en `google/lyria-3-pro-preview`
+- Controles del prompt: `lyrics` y `instrumental`
+- Formato de salida: `mp3` de forma predeterminada, más `wav` en `google/lyria-3-pro-preview`
 - Entradas de referencia: hasta 10 imágenes
-- Las ejecuciones respaldadas por sesión se desvinculan a través del flujo compartido de tarea/estado, incluyendo `action: "status"`
+- Las ejecuciones con respaldo de sesión se desvinculan a través del flujo compartido de tarea/estado, incluyendo `action: "status"`
 
-Para usar Google como proveedor de música predeterminado:
+Para utilizar Google como proveedor de música predeterminado:
 
 ```json5
 {
@@ -211,10 +212,8 @@ Para usar Google como proveedor de música predeterminado:
 }
 ```
 
-Consulte [Music Generation](/en/tools/music-generation) para conocer los parámetros de la herramienta compartida, la selección del proveedor y el comportamiento de conmutación por error.
+Consulte [Generación de música](/en/tools/music-generation) para obtener los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.
 
 ## Nota sobre el entorno
 
-Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `GEMINI_API_KEY`
-esté disponible para ese proceso (por ejemplo, en `~/.openclaw/.env` o a través de
-`env.shellEnv`).
+Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `GEMINI_API_KEY` esté disponible para ese proceso (por ejemplo, en `~/.openclaw/.env` o a través de `env.shellEnv`).

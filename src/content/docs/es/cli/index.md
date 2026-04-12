@@ -852,7 +852,7 @@ Subcomandos:
 Notas:
 
 - `devices list` y `devices approve` pueden recurrir a archivos de emparejamiento locales en el bucle local cuando el ámbito de emparejamiento directo no está disponible.
-- `devices approve` selecciona automáticamente la solicitud pendiente más reciente cuando no se pasa ningún `requestId` o se establece `--latest`.
+- `devices approve` requiere un ID de solicitud explícito antes de acuñar tokens; omitir `requestId` o pasar `--latest` solo previsualiza la solicitud pendiente más reciente.
 - Las reconexiones con token almacenado reutilizan los ámbitos aprobados en caché del token; una `devices rotate --scope ...` explícita actualiza ese conjunto de ámbitos almacenado para futuras reconexiones con token en caché.
 - `devices rotate` y `devices revoke` devuelven cargas JSON.
 

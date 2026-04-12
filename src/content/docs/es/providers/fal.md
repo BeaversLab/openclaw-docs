@@ -9,7 +9,7 @@ read_when:
 
 # fal
 
-OpenClaw incluye un proveedor `fal` integrado para la generación de imágenes y videos alojados.
+OpenClaw incluye un proveedor `fal` para la generación alojada de imágenes y videos.
 
 - Proveedor: `fal`
 - Autenticación: `FAL_KEY` (canónico; `FAL_API_KEY` también funciona como alternativa)
@@ -39,13 +39,13 @@ openclaw onboard --auth-choice fal-api-key
 
 ## Generación de imágenes
 
-El proveedor de generación de imágenes `fal` integrado tiene por defecto
+El proveedor de generación de imágenes `fal` incluido utiliza por defecto
 `fal/fal-ai/flux/dev`.
 
 - Generar: hasta 4 imágenes por solicitud
 - Modo de edición: habilitado, 1 imagen de referencia
-- Soporta `size`, `aspectRatio` y `resolution`
-- Advertencia de edición actual: el endpoint de edición de imágenes de fal **no** admite
+- Admite `size`, `aspectRatio` y `resolution`
+- Advertencia actual de edición: el punto final de edición de imágenes de fal **no** admite
   anulaciones de `aspectRatio`
 
 Para usar fal como proveedor de imágenes predeterminado:
@@ -64,20 +64,41 @@ Para usar fal como proveedor de imágenes predeterminado:
 
 ## Generación de video
 
-El proveedor de generación de video `fal` integrado tiene por defecto
+El proveedor de generación de videos `fal` incluido utiliza por defecto
 `fal/fal-ai/minimax/video-01-live`.
 
 - Modos: flujos de texto a video y de referencia de imagen única
 - Tiempo de ejecución: flujo de envío/estado/resultado respaldado por cola para trabajos de larga duración
+- Referencia del modelo de video-agente HeyGen:
+  - `fal/fal-ai/heygen/v2/video-agent`
+- Referencias del modelo Seedance 2.0:
+  - `fal/bytedance/seedance-2.0/fast/text-to-video`
+  - `fal/bytedance/seedance-2.0/fast/image-to-video`
+  - `fal/bytedance/seedance-2.0/text-to-video`
+  - `fal/bytedance/seedance-2.0/image-to-video`
 
-Para usar fal como proveedor de video predeterminado:
+Para usar Seedance 2.0 como el modelo de video predeterminado:
 
 ```json5
 {
   agents: {
     defaults: {
       videoGenerationModel: {
-        primary: "fal/fal-ai/minimax/video-01-live",
+        primary: "fal/bytedance/seedance-2.0/fast/text-to-video",
+      },
+    },
+  },
+}
+```
+
+Para usar el video-agente HeyGen como el modelo de video predeterminado:
+
+```json5
+{
+  agents: {
+    defaults: {
+      videoGenerationModel: {
+        primary: "fal/fal-ai/heygen/v2/video-agent",
       },
     },
   },
@@ -87,5 +108,5 @@ Para usar fal como proveedor de video predeterminado:
 ## Relacionado
 
 - [Generación de imágenes](/en/tools/image-generation)
-- [Generación de video](/en/tools/video-generation)
+- [Generación de videos](/en/tools/video-generation)
 - [Referencia de configuración](/en/gateway/configuration-reference#agent-defaults)

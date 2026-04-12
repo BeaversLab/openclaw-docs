@@ -99,14 +99,14 @@ Règles de décision des hooks pour les gardes de sortie/tool :
 - `message_sending` : `{ cancel: true }` est terminal et arrête les gestionnaires de priorité inférieure.
 - `message_sending` : `{ cancel: false }` est une opération vide (no-op) et ne supprime pas une annulation précédente.
 
-Voir [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) pour l'API des hooks et les détails d'enregistrement.
+Voir [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) pour l'API API et les détails d'enregistrement.
 
 ## Streaming + réponses partielles
 
 - Les deltas de l'assistant sont transmis en continu depuis pi-agent-core et émis sous forme d'événements `assistant`.
 - Le Block streaming peut émettre des réponses partielles soit sur `text_end` soit sur `message_end`.
 - Le streaming de raisonnement peut être émis sous forme d'un flux séparé ou sous forme de réponses de bloc.
-- Voir [Streaming](/en/concepts/streaming) pour le découpage (chunking) et le comportement des réponses de bloc.
+- Voir [Streaming](/en/concepts/streaming) pour le comportement de fragmentation et de réponse en bloc.
 
 ## Exécution d'outils + outils de messagerie
 
@@ -147,18 +147,19 @@ Voir [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) pour l'API 
 
 - `agent.wait` par défaut : 30s (juste l'attente). Remplacé par le paramètre `timeoutMs`.
 - Durée d'exécution de l'agent : `agents.defaults.timeoutSeconds` par défaut 172800 s (48 heures) ; appliquée dans `runEmbeddedPiAgent` la minuterie d'abandon.
+- Délai d'inactivité LLM : `agents.defaults.llm.idleTimeoutSeconds` annule une demande de model si aucun bloc de réponse n'arrive avant la fenêtre d'inactivité. Définissez-le explicitement pour les models locaux lents ou les fournisseurs de raisonnement/appels d'outils ; définissez-le sur 0 pour désactiver. S'il n'est pas défini, OpenClaw utilise `agents.defaults.timeoutSeconds` lorsqu'il est configuré, sinon 120 s. Les exécutions déclenchées par Cron sans délai d'expiration explicite LLM ou d'agent désactivent le chien de garde d'inactivité et s'appuient sur le délai d'expiration externe de Cron.
 
 ## Où les choses peuvent se terminer tôt
 
-- Délai d'attente de l'agent (abandon)
+- Délai d'expiration de l'agent (abandon)
 - AbortSignal (annuler)
-- Déconnexion du Gateway ou délai d'attente RPC
-- Délai d'attente `agent.wait` (attente uniquement, n'arrête pas l'agent)
+- Déconnexion Gateway ou délai d'expiration RPC
+- Délai d'expiration `agent.wait` (attente uniquement, n'arrête pas l'agent)
 
 ## Connexes
 
-- [Outils](/en/tools) — outils de l'agent disponibles
-- [Hooks](/en/automation/hooks) — scripts pilotés par les événements déclenchés par les événements de cycle de vie de l'agent
-- [Compactage](/en/concepts/compaction) — résumé des longues conversations
-- [Approbations d'exécution](/en/tools/exec-approvals) — portes d'approbation pour les commandes shell
-- [Réflexion](/en/tools/thinking) — configuration du niveau de réflexion/raisonnement
+- [Tools](/en/tools) — outils d'agent disponibles
+- [Hooks](/en/automation/hooks) — scripts pilotés par les événements déclenchés par le cycle de vie de l'agent
+- [Compaction](/en/concepts/compaction) — comment les longues conversations sont résumées
+- [Exec Approvals](/en/tools/exec-approvals) — portes d'approbation pour les commandes shell
+- [Thinking](/en/tools/thinking) — configuration du niveau de réflexion/raisonnement

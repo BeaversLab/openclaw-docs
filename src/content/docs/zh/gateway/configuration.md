@@ -175,7 +175,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
   </Accordion>
 
-  <Accordion title="限制每个代理的 Skills">
+  <Accordion title="按代理限制 Skills">
     使用 `agents.defaults.skills` 作为共享基线，然后使用 `agents.list[].skills` 覆盖特定
     代理：
 
@@ -194,11 +194,11 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     }
     ```
 
-    - 省略 `agents.defaults.skills` 以默认允许不受限的 Skills。
+    - 省略 `agents.defaults.skills` 以默认使用不受限的 Skills。
     - 省略 `agents.list[].skills` 以继承默认值。
-    - 设置 `agents.list[].skills: []` 以禁用所有 Skills。
-    - 参见 [Skills](/en/tools/skills)、[Skills config](/en/tools/skills-config) 和
-      [Configuration Reference](/en/gateway/configuration-reference#agentsdefaultsskills)。
+    - 将 `agents.list[].skills: []` 设置为无 Skills。
+    - 请参阅 [Skills](/en/tools/skills)、[Skills 配置](/en/tools/skills-config) 和
+      [配置参考](/en/gateway/configuration-reference#agents-defaults-skills)。
 
   </Accordion>
 

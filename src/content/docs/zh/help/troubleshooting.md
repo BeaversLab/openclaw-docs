@@ -231,7 +231,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Cron 或心跳未触发或未送达">
+  <Accordion title="Cron 或心跳未触发或未传递">
     ```bash
     openclaw status
     openclaw gateway status
@@ -243,35 +243,36 @@ flowchart TD
 
     良好的输出如下所示：
 
-    - `cron.status` 显示已启用并带有下次唤醒时间。
+    - `cron.status` 显示已启用并具有下一次唤醒时间。
     - `cron runs` 显示最近的 `ok` 条目。
     - 心跳已启用且未处于活动时间之外。
 
     常见日志特征：
 
-- `cron: scheduler disabled; jobs will not run automatically` → cron 已禁用。
-- `heartbeat skipped` 且带有 `reason=quiet-hours` → 超出配置的活动时间。
-- `heartbeat skipped` 且带有 `reason=empty-heartbeat-file` → `HEARTBEAT.md` 存在，但仅包含空白/仅表头的脚手架。
-- `heartbeat skipped` 且带有 `reason=no-tasks-due` → `HEARTBEAT.md` 任务模式处于活动状态，但尚未达到任何任务间隔。
-- `heartbeat skipped` 且带有 `reason=alerts-disabled` → 所有心跳可见性均已禁用（`showOk`、`showAlerts` 和 `useIndicator` 均关闭）。
-- `requests-in-flight` → 主通道忙碌；心跳唤醒已推迟。- `unknown accountId` → 心跳送达目标账户不存在。
+    - `cron: scheduler disabled; jobs will not run automatically` → cron 已禁用。
+    - `heartbeat skipped` 同时伴有 `reason=quiet-hours` → 超出配置的活动时间。
+    - `heartbeat skipped` 同时伴有 `reason=empty-heartbeat-file` → `HEARTBEAT.md` 存在，但仅包含空白/仅标题的脚手架。
+    - `heartbeat skipped` 同时伴有 `reason=no-tasks-due` → `HEARTBEAT.md` 任务模式处于活动状态，但尚未到任何任务间隔。
+    - `heartbeat skipped` 同时伴有 `reason=alerts-disabled` → 所有心跳可见性均已禁用（`showOk`、`showAlerts` 和 `useIndicator` 均关闭）。
+    - `requests-in-flight` → 主通道忙碌；心跳唤醒已推迟。
+    - `unknown accountId` → 心跳传递目标帐户不存在。
 
-      深入页面：
+    深度页面：
 
-      - [/gateway/故障排除#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
-      - [/automation/cron-jobs#故障排除](/en/automation/cron-jobs#troubleshooting)
-      - [/gateway/heartbeat](/en/gateway/heartbeat)
+    - [/gateway/故障排除#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
+    - [/automation/cron-jobs#故障排除](/en/automation/cron-jobs#troubleshooting)
+    - [/gateway/heartbeat](/en/gateway/heartbeat)
 
     </Accordion>
 
     <Accordion title="Node is paired but 工具 fails camera canvas screen exec">
-    ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw nodes status
-    openclaw nodes describe --node <idOrNameOrIp>
-    openclaw logs --follow
-    ```
+      ```bash
+      openclaw status
+      openclaw gateway status
+      openclaw nodes status
+      openclaw nodes describe --node <idOrNameOrIp>
+      openclaw logs --follow
+      ```
 
       良好的输出如下所示：
 
@@ -294,24 +295,24 @@ flowchart TD
 
     </Accordion>
 
-    <Accordion title="Exec 突然请求审批">
-    ```bash
-    openclaw config get tools.exec.host
-    openclaw config get tools.exec.security
-    openclaw config get tools.exec.ask
-    openclaw gateway restart
-    ```
+    <Accordion title="Exec 突然请求批准">
+      ```bash
+      openclaw config get tools.exec.host
+      openclaw config get tools.exec.security
+      openclaw config get tools.exec.ask
+      openclaw gateway restart
+      ```
 
       变更内容：
 
-      - 如果未设置 `tools.exec.host`，默认值为 `auto`。
-      - 当沙盒运行时处于活动状态时，`host=auto` 解析为 `sandbox`，否则为 `gateway`。
+      - 如果 `tools.exec.host` 未设置，默认值为 `auto`。
+      - 当沙箱运行时处于活动状态时，`host=auto` 解析为 `sandbox`，否则为 `gateway`。
       - `host=auto` 仅用于路由；无提示的“YOLO”行为来自 `security=full` 加上网关/节点上的 `ask=off`。
       - 在 `gateway` 和 `node` 上，未设置的 `tools.exec.security` 默认为 `full`。
       - 未设置的 `tools.exec.ask` 默认为 `off`。
-      - 结果：如果您看到审批请求，说明某些主机本地或每个会话的策略将执行限制得比当前默认值更严格。
+      - 结果：如果您看到了批准请求，说明某些主机本地或每个会话的策略将执行限制得比当前默认值更严格。
 
-      恢复当前默认的无审批行为：
+      恢复当前默认的无批准行为：
 
       ```bash
       openclaw config set tools.exec.host gateway
@@ -322,32 +323,32 @@ flowchart TD
 
       更安全的替代方案：
 
-      - 如果您只想要稳定的主机路由，请仅设置 `tools.exec.host=gateway`。
-      - 如果您想要主机执行但仍希望在允许列表未命中时进行审查，请将 `security=allowlist` 与 `ask=on-miss` 一起使用。
-      - 如果您希望 `host=auto` 解析回 `sandbox`，请启用沙盒模式。
+      - 如果您只需要稳定的主机路由，请仅设置 `tools.exec.host=gateway`。
+      - 如果您希望主机执行但仍希望在允许列表缺失时进行审查，请使用带有 `ask=on-miss` 的 `security=allowlist`。
+      - 如果您希望 `host=auto` 解析回 `sandbox`，请启用沙箱模式。
 
       常见日志特征：
 
       - `Approval required.` → 命令正在等待 `/approve ...`。
-      - `SYSTEM_RUN_DENIED: approval required` → 节点主机执行审批待定。
-      - `exec host=sandbox requires a sandbox runtime for this session` → 隐式/显式沙盒选择，但沙盒模式已关闭。
+      - `SYSTEM_RUN_DENIED: approval required` → 节点主机执行批准待处理。
+      - `exec host=sandbox requires a sandbox runtime for this session` → 隐式/显式沙箱选择，但沙箱模式已关闭。
 
-      深度页面：
+      深入页面：
 
       - [/tools/exec](/en/tools/exec)
       - [/tools/exec-approvals](/en/tools/exec-approvals)
-      - [/gateway/security#runtime-expectation-drift](/en/gateway/security#runtime-expectation-drift)
+      - [/gateway/security#what-the-audit-checks-high-level](/en/gateway/security#what-the-audit-checks-high-level)
 
     </Accordion>
 
     <Accordion title="Browser 工具 fails">
-    ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw browser status
-    openclaw logs --follow
-    openclaw doctor
-    ```
+      ```bash
+      openclaw status
+      openclaw gateway status
+      openclaw browser status
+      openclaw logs --follow
+      openclaw doctor
+      ```
 
       良好的输出如下所示：
 
@@ -374,7 +375,8 @@ flowchart TD
       - [/tools/browser-wsl2-windows-remote-cdp-故障排除](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
 
     </Accordion>
-</AccordionGroup>
+
+  </AccordionGroup>
 
 ## 相关
 

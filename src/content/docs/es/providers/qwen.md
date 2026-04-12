@@ -84,7 +84,7 @@ Los puntos de conexión nativos de Model Studio anuncian compatibilidad de uso d
 
 ## Catálogo incorporado
 
-Actualmente, OpenClaw incluye este catálogo de Qwen:
+OpenClaw actualmente incluye este catálogo integrado de Qwen. El catálogo configurado es consciente del punto de conexión: las configuraciones del plan de codificación omiten los modelos que solo se sabe que funcionan en el punto de conexión estándar.
 
 | Ref. de modelo              | Entrada       | Contexto  | Notas                                                                |
 | --------------------------- | ------------- | --------- | -------------------------------------------------------------------- |

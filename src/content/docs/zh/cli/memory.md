@@ -14,8 +14,8 @@ title: "memory"
 
 相关：
 
-- 记忆概念：[Memory](/en/concepts/memory)
-- 记忆 Wiki：[Memory Wiki](/en/plugins/memory-wiki)
+- Memory 概念：[Memory](/en/concepts/memory)
+- Memory wiki：[Memory Wiki](/en/plugins/memory-wiki)
 - Wiki CLI：[wiki](/en/cli/wiki)
 - 插件：[Plugins](/en/tools/plugin)
 
@@ -165,4 +165,8 @@ openclaw memory rem-harness [--agent <id>] [--include-promoted] [--json]
 - 如果有效活动的内存远程 API 键字段被配置为 SecretRefs，该命令会从活动网关快照中解析这些值。如果网关不可用，该命令将快速失败。
 - Gateway(网关) 版本偏差说明：此命令路径需要支持 `secrets.resolve` 的网关；较旧的网关会返回未知方法错误。
 - 使用 `dreaming.frequency` 调整预定清理的频率。深层提升策略通常是内部的；当您需要一次性手动覆盖时，请使用 CLI 标志在 `memory promote` 上进行操作。
-- 有关完整的阶段描述和配置参考，请参阅 [Dreaming](/en/concepts/dreaming)。
+- `memory rem-harness --path <file-or-dir> --grounded` 预览来自历史每日笔记的有根据的 `What Happened`、`Reflections` 和 `Possible Lasting Updates`，且不写入任何内容。
+- `memory rem-backfill --path <file-or-dir>` 将可逆的有根据日记条目写入 `DREAMS.md` 以供 UI 审核。
+- `memory rem-backfill --path <file-or-dir> --stage-short-term` 还将有根据的持久候选内容植入到实时短期提升存储中，以便常规深度阶段可以对其进行排名。
+- `memory rem-backfill --rollback` 移除先前写入的有根据日记条目，而 `memory rem-backfill --rollback-short-term` 移除先前暂存的有根据短期候选内容。
+- 有关完整阶段描述和配置参考，请参阅 [Dreaming](/en/concepts/dreaming)。

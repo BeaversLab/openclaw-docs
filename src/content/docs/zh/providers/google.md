@@ -86,25 +86,28 @@ Gemini CLI JSON 使用说明：
 
 ## 功能
 
-| 功能      | 支持             |
-| --------- | ---------------- |
-| 聊天补全  | 是               |
-| 图像生成  | 是               |
-| 音乐生成  | 是               |
-| 图像理解  | 是               |
-| 音频转录  | 是               |
-| 视频理解  | 是               |
-| 网络搜索  | 是               |
-| 思考/推理 | 是 (Gemini 3.1+) |
+| 功能         | 支持             |
+| ------------ | ---------------- |
+| 聊天补全     | 是               |
+| 图像生成     | 是               |
+| 音乐生成     | 是               |
+| 图像理解     | 是               |
+| 音频转录     | 是               |
+| 视频理解     | 是               |
+| 网络搜索     | 是               |
+| 思考/推理    | 是 (Gemini 3.1+) |
+| Gemma 4 模型 | 是               |
 
-## 直接 Gemini 缓存复用
+Gemma 4 模型（例如 `gemma-4-26b-a4b-it`）支持思考模式。OpenClaw 会将 `thinkingBudget` 重写为 Gemma 4 支持的 Google `thinkingLevel`。将 thinking 设置为 `off` 会保持禁用思考，而不是映射到 `MINIMAL`。
 
-对于直接的 Gemini API 调用（`api: "google-generative-ai"`），OpenClaw 现在会将配置的 `cachedContent` 句柄传递给 Gemini 请求。
+## 直接 Gemini 缓存重用
 
-- 使用 `cachedContent` 或旧版的 `cached_content` 配置每个模型或全局参数
-- 如果两者都存在，`cachedContent` 优先
+对于直接 Gemini API 运行（`api: "google-generative-ai"`），OpenClaw 现在会将配置的 `cachedContent` 句柄传递给 Gemini 请求。
+
+- 使用 `cachedContent` 或旧版 `cached_content` 配置每个模型或全局参数
+- 如果两者都存在，则以 `cachedContent` 为准
 - 示例值：`cachedContents/prebuilt-context`
-- Gemini 缓存命中使用情况已从上游的 `cachedContentTokenCount` 归一化为 OpenClaw `cacheRead`
+- Gemini 缓存命中使用量已从上游 `cachedContentTokenCount` 规范化为 OpenClaw `cacheRead`
 
 示例：
 
@@ -126,14 +129,17 @@ Gemini CLI JSON 使用说明：
 
 ## 图像生成
 
-捆绑的 `google` 图像生成提供商默认为 `google/gemini-3.1-flash-image-preview`。
+捆绑的 `google` 图像生成提供商默认为
+`google/gemini-3.1-flash-image-preview`。
 
-- 同时也支持 `google/gemini-3-pro-image-preview`
-- 生成：每次请求最多生成 4 张图像
-- 编辑模式：已启用，最多支持 5 张输入图像
+- 也支持 `google/gemini-3-pro-image-preview`
+- 生成：每个请求最多 4 张图像
+- 编辑模式：已启用，最多 5 张输入图像
 - 几何控制：`size`、`aspectRatio` 和 `resolution`
 
-仅支持 OAuth 的 `google-gemini-cli` 提供商是一个独立的文本推理接口。图像生成、媒体理解和 Gemini Grounding 保留在 `google` 提供商 ID 上。
+仅限 OAuth 的 `google-gemini-cli` 提供商是一个独立的文本推理
+表面。图像生成、媒体理解和 Gemini Grounding 保留在
+`google` 提供商 ID 上。
 
 要将 Google 用作默认图像提供商：
 
@@ -149,14 +155,14 @@ Gemini CLI JSON 使用说明：
 }
 ```
 
-请参阅[图像生成](/en/tools/image-generation)了解共享工具参数、提供商选择和故障转移行为。
+有关共享工具参数、提供商选择和故障转移行为，请参阅 [图像生成](/en/tools/image-generation)。
 
 ## 视频生成
 
 捆绑的 `google` 插件还通过共享的 `video_generate` 工具注册视频生成。
 
 - 默认视频模型：`google/veo-3.1-fast-generate-preview`
-- 模式：文本到视频、图像到视频以及单视频参考流程
+- 模式：文本生成视频、图像生成视频和单视频参考流程
 - 支持 `aspectRatio`、`resolution` 和 `audio`
 - 当前持续时间限制：**4 到 8 秒**
 
@@ -174,18 +180,18 @@ Gemini CLI JSON 使用说明：
 }
 ```
 
-请参阅[视频生成](/en/tools/video-generation)了解共享工具参数、提供商选择和故障转移行为。
+有关共享工具参数、提供商选择和故障转移行为，请参阅 [视频生成](/en/tools/video-generation)。
 
 ## 音乐生成
 
-捆绑的 `google` 插件还通过共享的 `music_generate` 工具注册音乐生成。
+捆绑的 `google` 插件还通过共享的 `music_generate` 工具注册了音乐生成功能。
 
 - 默认音乐模型：`google/lyria-3-clip-preview`
-- 同时也支持 `google/lyria-3-pro-preview`
-- 提示控制：`lyrics` 和 `instrumental`
-- 输出格式：默认为 `mp3`，此外在 `google/lyria-3-pro-preview` 上还支持 `wav`
+- 还支持 `google/lyria-3-pro-preview`
+- 提示词控制：`lyrics` 和 `instrumental`
+- 输出格式：默认为 `mp3`，在 `google/lyria-3-pro-preview` 上还支持 `wav`
 - 参考输入：最多 10 张图片
-- 基于会话的运行通过共享任务/状态流程分离，包括 `action: "status"`
+- 基于会话的运行通过共享的任务/状态流进行分离，包括 `action: "status"`
 
 要将 Google 用作默认音乐提供商：
 
@@ -201,10 +207,8 @@ Gemini CLI JSON 使用说明：
 }
 ```
 
-有关共享工具参数、提供商选择和故障转移行为，请参阅[音乐生成](/en/tools/music-generation)。
+有关共享工具参数、提供商选择和故障转移行为，请参阅 [音乐生成](/en/tools/music-generation)。
 
 ## 环境说明
 
-如果 Gateway(网关) 作为守护进程（launchd/systemd）运行，请确保 `GEMINI_API_KEY`
-对该进程可用（例如，在 `~/.openclaw/.env` 中或通过
-`env.shellEnv`）。
+如果 Gateway(网关) 作为守护进程（launchd/systemd）运行，请确保 `GEMINI_API_KEY` 对该进程可用（例如，在 `~/.openclaw/.env` 中或通过 `env.shellEnv`）。

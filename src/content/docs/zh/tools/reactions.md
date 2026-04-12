@@ -52,7 +52,7 @@ Agent 可以使用 `message` 工具的 `react` 操作在消息上添加和移除
 针对每个渠道的 `reactionLevel` 配置控制代理使用反应的广泛程度。值通常为 `off`、`ack`、`minimal` 或 `extensive`。
 
 - [Telegram reactionLevel](/en/channels/telegram#reaction-notifications) — `channels.telegram.reactionLevel`
-- [WhatsApp reactionLevel](/en/channels/whatsapp#reactions) — `channels.whatsapp.reactionLevel`
+- [WhatsApp reactionLevel](/en/channels/whatsapp#reaction-level) — `channels.whatsapp.reactionLevel`
 
 在各个渠道上设置 `reactionLevel`，以调整代理在每个平台上对消息做出反应的活跃程度。
 

@@ -224,7 +224,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Cron ou heartbeat n'a pas été déclenché ou n'a pas été livré">
+  <Accordion title="Le cron ou le heartbeat ne s'est pas déclenché ou n'a pas été délivré">
     ```bash
     openclaw status
     openclaw gateway status
@@ -238,33 +238,34 @@ flowchart TD
 
     - `cron.status` indique qu'il est activé avec un prochain réveil.
     - `cron runs` montre des entrées `ok` récentes.
-    - Le heartbeat est activé et n'est pas en dehors des heures actives.
+    - Le heartbeat est activé et ne se trouve pas en dehors des heures actives.
 
     Signatures de journal courantes :
 
-- `cron: scheduler disabled; jobs will not run automatically` → le cron est désactivé.
-- `heartbeat skipped` avec `reason=quiet-hours` → en dehors des heures actives configurées.
-- `heartbeat skipped` avec `reason=empty-heartbeat-file` → `HEARTBEAT.md` existe mais ne contient qu'une structure vide ou avec uniquement des en-têtes.
-- `heartbeat skipped` avec `reason=no-tasks-due` → le mode de tâche `HEARTBEAT.md` est actif mais aucun des intervalles de tâche n'est encore échu.
-- `heartbeat skipped` avec `reason=alerts-disabled` → toute la visibilité du heartbeat est désactivée (`showOk`, `showAlerts` et `useIndicator` sont tous désactivés).
-- `requests-in-flight` → voie principale occupée ; le réveil du heartbeat a été différé. - `unknown accountId` → le compte cible de livraison du heartbeat n'existe pas.
+    - `cron: scheduler disabled; jobs will not run automatically` → le cron est désactivé.
+    - `heartbeat skipped` avec `reason=quiet-hours` → en dehors des heures actives configurées.
+    - `heartbeat skipped` avec `reason=empty-heartbeat-file` → `HEARTBEAT.md` existe mais contient uniquement une structure vide/avec uniquement des en-têtes.
+    - `heartbeat skipped` avec `reason=no-tasks-due` → le mode de tâche `HEARTBEAT.md` est actif mais aucun des intervalles de tâche n'est encore attendu.
+    - `heartbeat skipped` avec `reason=alerts-disabled` → toute la visibilité du heartbeat est désactivée (`showOk`, `showAlerts`, et `useIndicator` sont tous désactivés).
+    - `requests-in-flight` → la voie principale est occupée ; le réveil du heartbeat a été différé.
+    - `unknown accountId` → le compte cible de livraison du heartbeat n'existe pas.
 
-      Pages approfondies :
+    Pages approfondies :
 
-      - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
-      - [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
-      - [/gateway/heartbeat](/en/gateway/heartbeat)
+    - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
+    - [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
+    - [/gateway/heartbeat](/en/gateway/heartbeat)
 
     </Accordion>
 
     <Accordion title="Node is paired but tool fails camera canvas screen exec">
-    ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw nodes status
-    openclaw nodes describe --node <idOrNameOrIp>
-    openclaw logs --follow
-    ```
+      ```bash
+      openclaw status
+      openclaw gateway status
+      openclaw nodes status
+      openclaw nodes describe --node <idOrNameOrIp>
+      openclaw logs --follow
+      ```
 
       Un bon résultat ressemble à ceci :
 
@@ -288,21 +289,21 @@ flowchart TD
     </Accordion>
 
     <Accordion title="Exec demande soudainement une approbation">
-    ```bash
-    openclaw config get tools.exec.host
-    openclaw config get tools.exec.security
-    openclaw config get tools.exec.ask
-    openclaw gateway restart
-    ```
+      ```bash
+      openclaw config get tools.exec.host
+      openclaw config get tools.exec.security
+      openclaw config get tools.exec.ask
+      openclaw gateway restart
+      ```
 
       Ce qui a changé :
 
       - Si `tools.exec.host` n'est pas défini, la valeur par défaut est `auto`.
-      - `host=auto` est résolu en `sandbox` lorsqu'un runtime de bac à sable est actif, sinon `gateway`.
-      - `host=auto` concerne uniquement le routage ; le comportement sans invite « YOLO » provient de `security=full` plus `ask=off` sur la passerelle/le nœud.
-      - Sur `gateway` et `node`, la valeur non définie de `tools.exec.security` est `full` par défaut.
-      - `tools.exec.ask` non défini est `off` par défaut.
-      - Résultat : si vous voyez des demandes d'approbation, une stratégie locale à l'hôte ou par session a resserré l'exécution par rapport aux valeurs par défaut actuelles.
+      - `host=auto` résout vers `sandbox` lorsqu'un runtime de bac à sable (sandbox) est actif, `gateway` sinon.
+      - `host=auto` ne concerne que le routage ; le comportement « YOLO » sans invite provient de `security=full` plus `ask=off` sur la passerelle/le nœud.
+      - Sur `gateway` et `node`, si `tools.exec.security` n'est pas défini, la valeur par défaut est `full`.
+      - Si `tools.exec.ask` n'est pas défini, la valeur par défaut est `off`.
+      - Résultat : si vous voyez des demandes d'approbation, une stratégie locale à l'hôte ou par session a resserré l'exécution (exec) par rapport aux valeurs par défaut actuelles.
 
       Restaurer le comportement par défaut actuel sans approbation :
 
@@ -315,32 +316,32 @@ flowchart TD
 
       Alternatives plus sûres :
 
-      - Définissez uniquement `tools.exec.host=gateway` si vous souhaitez simplement un routage d'hôte stable.
-      - Utilisez `security=allowlist` avec `ask=on-miss` si vous souhaitez une exécution sur l'hôte mais que vous voulez toujours une révision en cas d'absence dans la liste d'autorisation.
-      - Activez le mode bac à sable si vous voulez que `host=auto` soit résolu à nouveau en `sandbox`.
+      - Définissez uniquement `tools.exec.host=gateway` si vous souhaitez simplement un routage hôte stable.
+      - Utilisez `security=allowlist` avec `ask=on-miss` si vous souhaitez une exécution hôte mais que vous voulez toujours une révision en cas d'absence dans la liste d'autorisation (allowlist).
+      - Activez le mode bac à sable si vous voulez que `host=auto` résolve à nouveau vers `sandbox`.
 
       Signatures de journal courantes :
 
       - `Approval required.` → la commande attend `/approve ...`.
-      - `SYSTEM_RUN_DENIED: approval required` → l'approbation d'exécution node-host est en attente.
+      - `SYSTEM_RUN_DENIED: approval required` → l'approbation d'exécution node-hôte est en attente.
       - `exec host=sandbox requires a sandbox runtime for this session` → sélection de bac à sable implicite/explicite mais le mode bac à sable est désactivé.
 
       Pages approfondies :
 
       - [/tools/exec](/en/tools/exec)
       - [/tools/exec-approvals](/en/tools/exec-approvals)
-      - [/gateway/security#runtime-expectation-drift](/en/gateway/security#runtime-expectation-drift)
+      - [/gateway/security#what-the-audit-checks-high-level](/en/gateway/security#what-the-audit-checks-high-level)
 
     </Accordion>
 
     <Accordion title="Échec de l'outil de navigation">
-    ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw browser status
-    openclaw logs --follow
-    openclaw doctor
-    ```
+      ```bash
+      openclaw status
+      openclaw gateway status
+      openclaw browser status
+      openclaw logs --follow
+      openclaw doctor
+      ```
 
       Un résultat correct ressemble à :
 
@@ -367,7 +368,8 @@ flowchart TD
       - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
 
     </Accordion>
-</AccordionGroup>
+
+  </AccordionGroup>
 
 ## Connexes
 

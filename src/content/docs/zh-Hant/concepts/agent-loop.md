@@ -46,7 +46,7 @@ wired end-to-end.
 
 - Runs are serialized per session key (session lane) and optionally through a global lane.
 - This prevents tool/session races and keeps session history consistent.
-- 訊息傳遞管道可以選擇佇列模式（collect/steer/followup）來供應此通道系統。
+- 訊息通道可以選擇佇列模式（collect/steer/followup）以輸入至此車道系統。
   請參閱 [Command Queue](/en/concepts/queue)。
 
 ## 工作階段 + 工作區準備
@@ -60,7 +60,7 @@ wired end-to-end.
 
 - 系統提示是依據 OpenClaw 的基本提示、技能提示、Bootstrap 內容以及各次執行的覆寫所建構。
 - 會強制執行特定模型的限制與壓縮保留 Token。
-- 關於模型看到的內容，請參閱 [System prompt](/en/concepts/system-prompt)。
+- 請參閱 [System prompt](/en/concepts/system-prompt) 以了解模型看到的內容。
 
 ## Hook 點（您可以進行攔截的地方）
 
@@ -75,7 +75,7 @@ OpenClaw 有兩個 Hook 系統：
   使用此功能來新增/移除 Bootstrap Context 檔案。
 - **Command hooks**：`/new`、`/reset`、`/stop` 以及其他指令事件（請參閱 Hooks 文件）。
 
-關於設定和範例，請參閱 [Hooks](/en/automation/hooks)。
+請參閱 [Hooks](/en/automation/hooks) 以了解設定和範例。
 
 ### Plugin hooks (agent + gateway lifecycle)
 
@@ -103,7 +103,7 @@ OpenClaw 有兩個 Hook 系統：
 - `message_sending`：`{ cancel: true }` 是終止狀態，並會停止較低優先權的處理程式。
 - `message_sending`：`{ cancel: false }` 是空操作，不會清除先前的取消。
 
-請參閱 [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) 以了解掛鉤 API 和註冊詳情。
+請參閱 [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) 以了解 Hook API 和註冊細節。
 
 ## 串流 + 部分回覆
 
@@ -151,18 +151,19 @@ OpenClaw 有兩個 Hook 系統：
 
 - `agent.wait` 預設值：30秒（僅等待時間）。`timeoutMs` 參數可覆寫。
 - Agent 執行時間：`agents.defaults.timeoutSeconds` 預設 172800s（48 小時）；在 `runEmbeddedPiAgent` 中止計時器中強制執行。
+- LLM 閒置逾時：若在閒置時間視窗結束前未收到回應區塊，`agents.defaults.llm.idleTimeoutSeconds` 會中止模型請求。請針對緩慢的本機模型或推理/工具呼叫提供者明確設定；將其設為 0 可停用。若未設定，OpenClaw 會在已設定時使用 `agents.defaults.timeoutSeconds`，否則預設為 120 秒。若沒有明確的 LLM 或 Agent 逾時，由 Cron 觸發的執行將停用閒置監控，並依賴 Cron 的外部逾時。
 
-## 可能提前結束的情況
+## 可能提前結束的地方
 
-- Agent 逾時（中止）
-- AbortSignal（取消）
+- Agent 逾時 (中止)
+- AbortSignal (取消)
 - Gateway 中斷連線或 RPC 逾時
-- `agent.wait` 逾時（僅等待，不會停止 agent）
+- `agent.wait` 逾時 (僅等待，不會停止 Agent)
 
 ## 相關
 
-- [工具](/en/tools) — 可用的 agent 工具
-- [掛鉤](/en/automation/hooks) — 由 agent 生命週期事件觸發的事件驅動腳本
-- [壓縮](/en/concepts/compaction) — 長對話如何被摘要
-- [執行核准](/en/tools/exec-approvals) — Shell 指令的核准閘門
-- [思考](/en/tools/thinking) — 思考/推理層級配置
+- [Tools](/en/tools) — 可用的 Agent 工具
+- [Hooks](/en/automation/hooks) — 由 Agent 生命週期事件觸發的事件驅動腳本
+- [Compaction](/en/concepts/compaction) — 長對話的摘要方式
+- [Exec Approvals](/en/tools/exec-approvals) — Shell 指令的審核閘門
+- [Thinking](/en/tools/thinking) — 思考/推理層級設定

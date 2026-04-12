@@ -1,5 +1,5 @@
 ---
-summary: "Forme d'automatisation QA privée pour qa-lab, qa-channel, scénarios amorcés et rapports de protocole"
+summary: "Forme d'automatisation QA privée pour qa-lab, qa-channel, les scénarios amorcés et les rapports de protocole"
 read_when:
   - Extending qa-lab or qa-channel
   - Adding repo-backed QA scenarios
@@ -14,11 +14,11 @@ sous la forme d'un channel, qu'un test unitaire unique ne le peut.
 
 Éléments actuels :
 
-- `extensions/qa-channel` : canal de messages synthétique avec DM, channel, thread,
-  réaction, modification et surfaces de suppression.
-- `extensions/qa-lab` : interface utilisateur de débogage et bus QA pour observer la transcription,
+- `extensions/qa-channel` : channel de messages synthétiques avec les surfaces DM, channel, fil,
+  réaction, modification et suppression.
+- `extensions/qa-lab` : interface de débogueur et bus QA pour observer la transcription,
   injecter des messages entrants et exporter un rapport Markdown.
-- `qa/` : ressources d'amorçage (seed) soutenues par le repo pour la tâche de lancement et les scénarios QA
+- `qa/` : ressources d'amorçage sauvegardées dans le dépôt pour la tâche de lancement et les scénarios QA
   de référence.
 
 Le flux actuel de l'opérateur QA est un site QA à deux volets :
@@ -49,30 +49,90 @@ pnpm qa:lab:watch
 
 `qa:lab:up:fast` maintient les services Docker sur une image préconstruite et monte en liaison
 `extensions/qa-lab/web/dist` dans le conteneur `qa-lab`. `qa:lab:watch`
-reconstruit ce bundle lors des modifications, et le navigateur se recharge automatiquement lorsque le hachage
-des ressources QA Lab change.
+reconstruit ce bundle lors des modifications, et le navigateur se recharge automatiquement lorsque le hachage de ressource
+QA Lab change.
 
-## Graines (Seeds) soutenues par le repo
+Pour une voie de test de fumée Matrix réaliste au niveau du transport, exécutez :
 
-Les ressources d'amorçage (seed assets) résident dans `qa/` :
+```bash
+pnpm openclaw qa matrix
+```
+
+Cette voie approvisionne un serveur d'accueil Tuwunel éphémère dans Docker, inscrit
+les utilisateurs pilote, SUT et observateur temporaires, crée une salle privée, puis exécute
+le plugin Matrix réel dans un enfant de passerelle QA. La voie de transport en direct maintient
+la configuration de l'enfant limitée au transport testé, donc Matrix s'exécute sans
+`qa-channel` dans la configuration de l'enfant.
+
+Pour une voie de test de fumée Telegram réaliste au niveau du transport, exécutez :
+
+```bash
+pnpm openclaw qa telegram
+```
+
+Cette voie cible un groupe privé Telegram réel au lieu d'approvisionner un
+serveur éphémère. Elle nécessite `OPENCLAW_QA_TELEGRAM_GROUP_ID`,
+`OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN` et
+`OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN`, plus deux bots distincts dans le même
+groupe privé. Le bot SUT doit avoir un nom d'utilisateur Telegram, et l'observation
+bot-à-bot fonctionne mieux lorsque les deux bots ont le Mode de Communication Bot-à-Bot
+activé dans `@BotFather`.
+
+Les voies de transport en direct partagent désormais un contrat plus petit au lieu que chacune n'invente
+sa propre forme de liste de scénarios :
+
+`qa-channel` reste la suite synthétique large de comportement produit et ne fait pas partie
+de la matrice de couverture du transport en direct.
+
+| Voie     | Canary | Blocage de mention | Bloc de liste blanche | Réponse de premier niveau | Reprise après redémarrage | Suite de fil | Isolement de fil | Observation de réaction | Commande d'aide |
+| -------- | ------ | ------------------ | --------------------- | ------------------------- | ------------------------- | ------------ | ---------------- | ----------------------- | --------------- |
+| Matrix   | x      | x                  | x                     | x                         | x                         | x            | x                | x                       |                 |
+| Telegram | x      |                    |                       |                           |                           |              |                  |                         | x               |
+
+Cela conserve `qa-channel` comme suite de comportement produit large, tandis que Matrix,
+Telegram et les futurs transports live partagent une liste de contrôle
+explicite du contrat de transport.
+
+Pour une voie de machine virtuelle Linux éphémère sans introduire Docker dans le chemin QA, exécutez :
+
+```bash
+pnpm openclaw qa suite --runner multipass --scenario channel-chat-baseline
+```
+
+Cela démarre un invité Multipass frais, installe les dépendances, construit OpenClaw
+à l'intérieur de l'invité, exécute `qa suite`, puis copie le rapport QA normal et
+le résumé dans `.artifacts/qa-e2e/...` sur l'hôte.
+Il réutilise le même comportement de sélection de scénario que `qa suite` sur l'hôte.
+Les exécutions de suite sur l'hôte et Multipass exécutent plusieurs scénarios sélectionnés en parallèle
+avec des workers de passerelle isolés par défaut, jusqu'à 64 workers ou le nombre
+de scénarios sélectionnés. Utilisez `--concurrency <count>` pour régler le nombre de workers, ou
+`--concurrency 1` pour une exécution en série.
+Les exécutions live transmettent les entrées d'authentification QA prises en charge qui sont pratiques pour
+l'invité : les clés de fournisseur basées sur l'environnement, le chemin de configuration du fournisseur live QA, et
+`CODEX_HOME` si présent. Gardez `--output-dir` sous la racine du dépôt pour que l'invité
+puisse écrire en retour via l'espace de travail monté.
+
+## Graines supportées par dépôt
+
+Les ressources de graines vivent dans `qa/` :
 
 - `qa/scenarios/index.md`
 - `qa/scenarios/*.md`
 
-Ils sont intentionnellement dans git afin que le plan QA soit visible à la fois par les humains et par
-l'agent. La liste de référence doit rester suffisamment large pour couvrir :
+Ceux-ci sont intentionnellement dans git pour que le plan QA soit visible à la fois pour les humains et l'
+agent. La liste de base doit rester assez large pour couvrir :
 
 - Chat DM et channel
-- comportement des fils de discussion (threads)
+- comportement de fil de discussion
 - cycle de vie des actions de message
 - rappels cron
 - rappel de mémoire
 - changement de model
-- transfert vers un sous-agent (subagent handoff)
-- lecture de repo et lecture de docs
+- transfert de sous-agent
+- lecture de dépôt et lecture de docs
 - une petite tâche de construction telle que Lobster Invaders
 
-## Rapports
+## Rapport
 
 `qa-lab` exporte un rapport de protocole Markdown à partir de la chronologie du bus observée.
 Le rapport doit répondre :
@@ -82,8 +142,30 @@ Le rapport doit répondre :
 - Ce qui est resté bloqué
 - Quels scénarios de suivi valent la peine d'être ajoutés
 
-## Documentation connexe
+Pour les vérifications de caractère et de style, exécutez le même scénario sur plusieurs refs de model live
+et écrivez un rapport Markdown jugé :
 
-- [Tests](/en/help/testing)
+```bash
+pnpm openclaw qa character-eval \
+  --model openai/gpt-5.4,thinking=xhigh \
+  --model openai/gpt-5.2,thinking=xhigh \
+  --model openai/gpt-5,thinking=xhigh \
+  --model anthropic/claude-opus-4-6,thinking=high \
+  --model anthropic/claude-sonnet-4-6,thinking=high \
+  --model zai/glm-5.1,thinking=high \
+  --model moonshot/kimi-k2.5,thinking=high \
+  --model google/gemini-3.1-pro-preview,thinking=high \
+  --judge-model openai/gpt-5.4,thinking=xhigh,fast \
+  --judge-model anthropic/claude-opus-4-6,thinking=high \
+  --blind-judge-models \
+  --concurrency 16 \
+  --judge-concurrency 16
+```
+
+La commande exécute des processus enfants de passerelle QA locaux, et non Docker. Les scénarios d'évaluation de personnage doivent définir le personnage via `SOUL.md`, puis exécuter des tours d'utilisateur ordinaires tels que le chat, l'aide de l'espace de travail et de petites tâches sur fichiers. Le modèle candidat ne doit pas être informé qu'il est en cours d'évaluation. La commande préserve chaque transcription complète, enregistre des statistiques d'exécution de base, puis demande aux modèles juges en mode rapide avec un raisonnement `xhigh` de classer les exécutions par naturalité, ambiance et humour. Utilisez `--blind-judge-models` lors de la comparaison de fournisseurs : le prompt du juge reçoit toujours chaque transcription et le statut de l'exécution, mais les références des candidats sont remplacées par des étiquettes neutres telles que `candidate-01` ; le rapport remappe les classements aux vraies références après l'analyse. Les exécutions de candidats utilisent par défaut la réflexion `high`, avec `xhigh` pour les modèles OpenAI qui la prennent en charge. Remplacez un candidat spécifique en ligne par `--model provider/model,thinking=<level>`. `--thinking <level>` définit toujours un repli global, et l'ancienne forme `--model-thinking <provider/model=level>` est conservée pour compatibilité. Les références de candidats OpenAI utilisent par défaut le mode rapide afin que le traitement prioritaire soit utilisé là où le fournisseur le prend en charge. Ajoutez `,fast`, `,no-fast` ou `,fast=false` en ligne lorsqu'un seul candidat ou juge a besoin d'une substitution. Passez `--fast` uniquement lorsque vous souhaitez forcer l'activation du mode rapide pour chaque modèle candidat. Les durées des candidats et des juges sont enregistrées dans le rapport pour l'analyse de référence, mais les invites des juges indiquent explicitement de ne pas classer par vitesse. Les exécutions de modèle candidat et juge utilisent par défaut une concurrence de 16. Réduisez `--concurrency` ou `--judge-concurrency` lorsque les limites du fournisseur ou la pression de la passerelle locale rendent une exécution trop bruyante. Lorsqu'aucun `--model` de candidat n'est passé, l'évaluation de personnage utilise par défaut `openai/gpt-5.4`, `openai/gpt-5.2`, `openai/gpt-5`, `anthropic/claude-opus-4-6`, `anthropic/claude-sonnet-4-6`, `zai/glm-5.1`, `moonshot/kimi-k2.5` et `google/gemini-3.1-pro-preview` lorsqu'aucun `--model` n'est passé. Lorsqu'aucun `--judge-model` n'est passé, les juges utilisent par défaut `openai/gpt-5.4,thinking=xhigh,fast` et `anthropic/claude-opus-4-6,thinking=high`.
+
+## Documentation associée
+
+- [Testing](/en/help/testing)
 - [QA Channel](/en/channels/qa-channel)
-- [Tableau de bord](/en/web/dashboard)
+- [Dashboard](/en/web/dashboard)

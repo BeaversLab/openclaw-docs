@@ -227,7 +227,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Cron 或心跳未觸發或未傳送">
+  <Accordion title="Cron or heartbeat did not fire or did not deliver">
     ```bash
     openclaw status
     openclaw gateway status
@@ -237,37 +237,38 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    正常的輸出看起來像：
+    正常的輸出如下所示：
 
-    - `cron.status` 顯示已啟用並且有下次喚醒時間。
-    - `cron runs` 顯示最近的 `ok` 項目。
-    - 心跳已啟用且不在非活動時間內。
+    - `cron.status` 顯示已啟用，並有下一次喚醒時間。
+    - `cron runs` 顯示最近的 `ok` 條目。
+    - Heartbeat 已啟用，且不處於活動時間之外。
 
-    常見的日誌特徵：
+    常見日誌特徵：
 
-- `cron: scheduler disabled; jobs will not run automatically` → cron 已停用。
-- `heartbeat skipped` 伴隨 `reason=quiet-hours` → 在設定的活動時間之外。
-- `heartbeat skipped` 伴隨 `reason=empty-heartbeat-file` → `HEARTBEAT.md` 存在，但僅包含空白/僅標頭的架構。
-- `heartbeat skipped` 伴隨 `reason=no-tasks-due` → `HEARTBEAT.md` 任務模式處於活動狀態，但尚未有任何任務間隔到期。
-- `heartbeat skipped` 伴隨 `reason=alerts-disabled` → 所有心跳可見性皆已停用（`showOk`、`showAlerts` 和 `useIndicator` 皆為關閉）。
-- `requests-in-flight` → 主通道忙碌；心跳喚醒已延後。 - `unknown accountId` → 心跳傳送目標帳戶不存在。
+    - `cron: scheduler disabled; jobs will not run automatically` → cron 已停用。
+    - `heartbeat skipped` 且包含 `reason=quiet-hours` → 在設定的活動時間之外。
+    - `heartbeat skipped` 且包含 `reason=empty-heartbeat-file` → `HEARTBEAT.md` 存在，但僅包含空白/僅標頭的腳手架。
+    - `heartbeat skipped` 且包含 `reason=no-tasks-due` → `HEARTBEAT.md` 任務模式處於活動狀態，但尚未到達任何任務間隔。
+    - `heartbeat skipped` 且包含 `reason=alerts-disabled` → 所有 heartbeat 可見性均已停用（`showOk`、`showAlerts` 和 `useIndicator` 均為關閉狀態）。
+    - `requests-in-flight` → 主通道忙碌；heartbeat 喚醒已延遲。
+    - `unknown accountId` → heartbeat 傳送目標帳戶不存在。
 
-      深入頁面：
+    深入頁面：
 
-      - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
-      - [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
-      - [/gateway/heartbeat](/en/gateway/heartbeat)
+    - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
+    - [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
+    - [/gateway/heartbeat](/en/gateway/heartbeat)
 
     </Accordion>
 
     <Accordion title="節點已配對但工具（相機、畫布、螢幕、執行）失敗">
-    ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw nodes status
-    openclaw nodes describe --node <idOrNameOrIp>
-    openclaw logs --follow
-    ```
+      ```bash
+      openclaw status
+      openclaw gateway status
+      openclaw nodes status
+      openclaw nodes describe --node <idOrNameOrIp>
+      openclaw logs --follow
+      ```
 
       正常的輸出如下所示：
 
@@ -290,24 +291,24 @@ flowchart TD
 
     </Accordion>
 
-    <Accordion title="Exec suddenly asks for approval">
-    ```bash
-    openclaw config get tools.exec.host
-    openclaw config get tools.exec.security
-    openclaw config get tools.exec.ask
-    openclaw gateway restart
-    ```
+    <Accordion title="Exec 突然要求批准">
+      ```bash
+      openclaw config get tools.exec.host
+      openclaw config get tools.exec.security
+      openclaw config get tools.exec.ask
+      openclaw gateway restart
+      ```
 
-      What changed:
+      什麼變了：
 
-      - If `tools.exec.host` is unset, the default is `auto`.
-      - `host=auto` resolves to `sandbox` when a sandbox runtime is active, `gateway` otherwise.
-      - `host=auto` is routing only; the no-prompt "YOLO" behavior comes from `security=full` plus `ask=off` on gateway/node.
-      - On `gateway` and `node`, unset `tools.exec.security` defaults to `full`.
-      - Unset `tools.exec.ask` defaults to `off`.
-      - Result: if you are seeing approvals, some host-local or per-session policy tightened exec away from the current defaults.
+      - 如果未設定 `tools.exec.host`，預設值為 `auto`。
+      - 當沙箱運行時處於活動狀態時，`host=auto` 解析為 `sandbox`，否則為 `gateway`。
+      - `host=auto` 僅用於路由；無提示的「YOLO」行為來自於 `security=full` 加上 gateway/node 上的 `ask=off`。
+      - 在 `gateway` 和 `node` 上，未設定 `tools.exec.security` 預設為 `full`。
+      - 未設定 `tools.exec.ask` 預設為 `off`。
+      - 結果：如果您看到批准請求，則是某些主機本地或每個會話的策略將 exec 收緊，偏離了當前的預設值。
 
-      Restore current default no-approval behavior:
+      恢復當前的預設無批准行為：
 
       ```bash
       openclaw config set tools.exec.host gateway
@@ -316,34 +317,34 @@ flowchart TD
       openclaw gateway restart
       ```
 
-      Safer alternatives:
+      更安全的替代方案：
 
-      - Set only `tools.exec.host=gateway` if you just want stable host routing.
-      - Use `security=allowlist` with `ask=on-miss` if you want host exec but still want review on allowlist misses.
-      - Enable sandbox mode if you want `host=auto` to resolve back to `sandbox`.
+      - 如果您只想要穩定的主機路由，請僅設定 `tools.exec.host=gateway`。
+      - 如果您想要主機 exec 但仍希望在允許清單遺漏時進行審查，請將 `security=allowlist` 與 `ask=on-miss` 一起使用。
+      - 如果您希望 `host=auto` 解析回 `sandbox`，請啟用沙箱模式。
 
-      Common log signatures:
+      常見日誌特徵：
 
-      - `Approval required.` → command is waiting on `/approve ...`.
-      - `SYSTEM_RUN_DENIED: approval required` → node-host exec approval is pending.
-      - `exec host=sandbox requires a sandbox runtime for this session` → implicit/explicit sandbox selection but sandbox mode is off.
+      - `Approval required.` → 指令正在等待 `/approve ...`。
+      - `SYSTEM_RUN_DENIED: approval required` → node-host exec 批准待定。
+      - `exec host=sandbox requires a sandbox runtime for this session` → 隱式/顯式沙箱選擇，但沙箱模式已關閉。
 
-      Deep pages:
+      深入頁面：
 
       - [/tools/exec](/en/tools/exec)
       - [/tools/exec-approvals](/en/tools/exec-approvals)
-      - [/gateway/security#runtime-expectation-drift](/en/gateway/security#runtime-expectation-drift)
+      - [/gateway/security#what-the-audit-checks-high-level](/en/gateway/security#what-the-audit-checks-high-level)
 
     </Accordion>
 
     <Accordion title="Browser tool fails">
-    ```bash
-    openclaw status
-    openclaw gateway status
-    openclaw browser status
-    openclaw logs --follow
-    openclaw doctor
-    ```
+      ```bash
+      openclaw status
+      openclaw gateway status
+      openclaw browser status
+      openclaw logs --follow
+      openclaw doctor
+      ```
 
       良好的輸出結果看起來像這樣：
 
@@ -370,7 +371,8 @@ flowchart TD
       - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
 
     </Accordion>
-</AccordionGroup>
+
+  </AccordionGroup>
 
 ## 相關
 

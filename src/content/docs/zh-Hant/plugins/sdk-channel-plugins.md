@@ -234,10 +234,10 @@ should use `resolveInboundMentionDecision({ facts, policy })`.
 
 <Steps>
   <a id="step-1-package-and-manifest"></a>
-  <Step title="Package and manifest">
-    Create the standard plugin files. The `channel` field in `package.json` is
-    what makes this a channel plugin. For the full package-metadata surface,
-    see [Plugin Setup and Config](/en/plugins/sdk-setup#openclawchannel):
+  <Step title="套件與清單">
+    建立標準的外掛程式檔案。`package.json` 中的 `channel` 欄位
+    讓這成為一個頻道外掛。如需完整的套件中介資料表面，
+    請參閱 [外掛程式設定與配置](/en/plugins/sdk-setup#openclaw-channel)：
 
     <CodeGroup>
     ```json package.json

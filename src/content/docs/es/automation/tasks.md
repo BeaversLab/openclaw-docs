@@ -172,7 +172,7 @@ El token de búsqueda acepta un ID de tarea, ID de ejecución o clave de sesión
 openclaw tasks cancel <lookup>
 ```
 
-Para tareas de ACP y subagente, esto termina la sesión secundaria. El estado cambia a `cancelled` y se envía una notificación de entrega.
+Para tareas de ACP y subagentes, esto finaliza la sesión secundaria. Para tareas rastreadas por CLI, la cancelación se registra en el registro de tareas (no hay un identificador de tiempo de ejecución secundario separado). El estado cambia a `cancelled` y se envía una notificación de entrega cuando corresponda.
 
 ### `tasks notify`
 

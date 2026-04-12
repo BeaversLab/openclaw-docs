@@ -851,7 +851,7 @@ openclaw status --deep
 備註：
 
 - `devices list` 和 `devices approve` 在無法使用直接配對範圍時，可以回退到本機迴路上的本機配對檔案。
-- 當未傳遞 `requestId` 或設定了 `--latest` 時，`devices approve` 會自動選擇最新的待處理請求。
+- `devices approve` 需要一個明確的請求 ID 才能生成令牌（token）；省略 `requestId` 或傳遞 `--latest` 僅預覽最新的待處理請求。
 - 使用已儲存令牌的重新連線會重複使用該令牌的快取已批准範圍；明確的 `devices rotate --scope ...` 會更新該儲存的範圍集，以供未來的快取令牌重新連線使用。
 - `devices rotate` 和 `devices revoke` 會傳回 JSON 承載。
 

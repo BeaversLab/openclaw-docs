@@ -176,8 +176,8 @@ En cas d'échec de la validation :
 
   </Accordion>
 
-  <Accordion title="Restrict skills per agent">
-    Utilisez `agents.defaults.skills` pour une base de référence partagée, puis remplacez les paramètres de
+  <Accordion title="Limiter les compétences par agent">
+    Utilisez `agents.defaults.skills` pour une base de référence partagée, puis remplacez les
     agents spécifiques avec `agents.list[].skills` :
 
     ```json5
@@ -198,8 +198,8 @@ En cas d'échec de la validation :
     - Omettez `agents.defaults.skills` pour des compétences illimitées par défaut.
     - Omettez `agents.list[].skills` pour hériter des valeurs par défaut.
     - Définissez `agents.list[].skills: []` pour aucune compétence.
-    - Voir [Skills](/en/tools/skills), [Skills config](/en/tools/skills-config), et
-      la [Configuration Reference](/en/gateway/configuration-reference#agentsdefaultsskills).
+    - Voir [Skills](/en/tools/skills), [Configuration des compétences](/en/tools/skills-config) et
+      la [Référence de configuration](/en/gateway/configuration-reference#agents-defaults-skills).
 
   </Accordion>
 

@@ -34,11 +34,11 @@ openclaw agents delete work
 
 使用路由綁定將入站通道流量固定到特定代理程式。
 
-如果您還希望每個代理程式有不同的可見技能，請在
-`agents.defaults.skills` 中設定
-`agents.list[].skills` 和 `openclaw.json`。請參閱
+如果您還希望每個代理程式具有不同的可見技能，請在
+`openclaw.json` 中設定
+`agents.defaults.skills` 和 `agents.list[].skills`。請參閱
 [Skills config](/en/tools/skills-config) 和
-[Configuration Reference](/en/gateway/configuration-reference#agentsdefaultsskills)。
+[Configuration Reference](/en/gateway/configuration-reference#agents-defaults-skills)。
 
 列出綁定：
 

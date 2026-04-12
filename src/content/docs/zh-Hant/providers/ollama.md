@@ -117,14 +117,15 @@ openclaw models set ollama/gemma4
 當您設定 `OLLAMA_API_KEY` (或驗證設定檔) 且 **不** 定義 `models.providers.ollama` 時，OpenClaw 會從 `http://127.0.0.1:11434` 的本地 Ollama 實例探索模型：
 
 - 查詢 `/api/tags`
-- 使用盡力而為的 `/api/show` 查詢，以便在可用時讀取 `contextWindow`
-- 使用模型名稱啟發式方法標記 `reasoning` (`r1`、`reasoning`、`think`)
+- 使用盡力而為的 `/api/show` 查詢來讀取 `contextWindow` 並在可用時檢測功能（包括視覺功能）
+- 對於由 `/api/show` 回報具有 `vision` 功能的模型，會被標記為支援圖像 (`input: ["text", "image"]`)，因此 OpenClaw 會自動將圖像注入到這些模型的提示詞中
+- 使用模型名稱啟發法 (`r1`, `reasoning`, `think`) 標記 `reasoning`
 - 將 `maxTokens` 設定為 OpenClaw 使用的預設 Ollama 最大 token 上限
 - 將所有成本設定為 `0`
 
-這避免了手動輸入模型，同時讓目錄與本機 Ollama 實例保持同步。
+這避免了手動輸入模型，同時保持目錄與本機 Ollama 實例同步。
 
-若要查看有哪些可用模型：
+若要查看有哪些可用的模型：
 
 ```bash
 ollama list
@@ -137,13 +138,13 @@ openclaw models list
 ollama pull mistral
 ```
 
-新模型將會自動被探索並可使用。
+新模型將會被自動發現並可供使用。
 
-如果您明確設定了 `models.providers.ollama`，則會跳過自動探索，且您必須手動定義模型（見下文）。
+如果您明確設定 `models.providers.ollama`，將會跳過自動發現，並且您必須手動定義模型（見下文）。
 
 ## 設定
 
-### 基本設定（隱式探索）
+### 基本設定（隱含發現）
 
 啟用 Ollama 最簡單的方法是透過環境變數：
 
@@ -184,11 +185,11 @@ export OLLAMA_API_KEY="ollama-local"
 }
 ```
 
-如果設定了 `OLLAMA_API_KEY`，您可以在供應商項目中省略 `apiKey`，OpenClaw 將會自動填寫以進行可用性檢查。
+如果設定了 `OLLAMA_API_KEY`，您可以在供應商項目中省略 `apiKey`，OpenClaw 將會為可用性檢查填入它。
 
 ### 自訂基礎 URL（明確設定）
 
-如果 Ollama 執行於不同的主機或連接埠（明確設定會停用自動探索，因此請手動定義模型）：
+如果 Ollama 執行於不同的主機或連接埠（明確設定會停用自動發現，因此請手動定義模型）：
 
 ```json5
 {
@@ -208,7 +209,7 @@ export OLLAMA_API_KEY="ollama-local"
 
 ### 模型選擇
 
-設定完成後，您所有的 Ollama 模型均可使用：
+設定完成後，您的所有 Ollama 模型皆可供使用：
 
 ```json5
 {
@@ -225,24 +226,24 @@ export OLLAMA_API_KEY="ollama-local"
 
 ## 雲端模型
 
-雲端模型允許您在本地模型旁邊執行雲端託管的模型（例如 `kimi-k2.5:cloud`、`minimax-m2.7:cloud`、`glm-5.1:cloud`）。
+雲端模型讓您可以與本機模型一起執行雲端託管的模型（例如 `kimi-k2.5:cloud`、`minimax-m2.7:cloud`、`glm-5.1:cloud`）。
 
-若要使用雲端模型，請在設定期間選擇 **Cloud + Local** 模式。精靈會檢查您是否已登入，並在需要時開啟瀏覽器登入流程。如果無法驗證身份，精靈會還原為本機模型的預設值。
+若要使用雲端模型，請在設定期間選擇 **Cloud + Local** 模式。精靈會檢查您是否已登入，並在需要時開啟瀏覽器登入流程。如果無法驗證身分，精靈將會退回至本機模型預設值。
 
 您也可以直接在 [ollama.com/signin](https://ollama.com/signin) 登入。
 
-## Ollama 網頁搜尋
+## Ollama Web Search
 
-OpenClaw 也支援將 **Ollama 網頁搜尋** 作為內建的 `web_search`
-供應商。
+OpenClaw 也支援將 **Ollama Web Search** 作為內建的 `web_search`
+提供者。
 
-- 它使用您設定的 Ollama 主機（設定 `models.providers.ollama.baseUrl` 時
-  使用該值，否則使用 `http://127.0.0.1:11434`）。
-- 它不需要金鑰。
-- 它需要 Ollama 正在運作，並已使用 `ollama signin` 登入。
+- 它使用您設定的 Ollama 主機 (若已設定則為 `models.providers.ollama.baseUrl`，
+  否則為 `http://127.0.0.1:11434`)。
+- 它是免金鑰的。
+- 它要求 Ollama 必須正在執行，並已使用 `ollama signin` 登入。
 
 在 `openclaw onboard` 或
-`openclaw configure --section web` 期間選擇 **Ollama 網頁搜尋**，或設定：
+`openclaw configure --section web` 期間選擇 **Ollama Web Search**，或設定：
 
 ```json5
 {
@@ -256,13 +257,13 @@ OpenClaw 也支援將 **Ollama 網頁搜尋** 作為內建的 `web_search`
 }
 ```
 
-如需完整的設定和行為詳細資訊，請參閱 [Ollama 網頁搜尋](/en/tools/ollama-search)。
+如需完整的設定和行為詳細資訊，請參閱 [Ollama Web Search](/en/tools/ollama-search)。
 
 ## 進階
 
 ### 推理模型
 
-OpenClaw 預設將名稱包含 `deepseek-r1`、`reasoning` 或 `think` 的模型視為具備推理能力：
+OpenClaw 預設會將名稱包含 `deepseek-r1`、`reasoning` 或 `think` 的模型視為具備推理能力：
 
 ```bash
 ollama pull deepseek-r1:32b
@@ -270,17 +271,17 @@ ollama pull deepseek-r1:32b
 
 ### 模型成本
 
-Ollama 是免費的且在本機運行，因此所有模型成本均設為 $0。
+Ollama 是免費的且在本機執行，因此所有模型成本均設為 $0。
 
 ### 串流設定
 
-OpenClaw 的 Ollama 整合預設使用 **原生 Ollama API** (`/api/chat`)，該 API 完全支援同時進行串流和工具呼叫。無需特殊設定。
+OpenClaw 的 Ollama 整合預設使用 **原生 Ollama API** (`/api/chat`)，它完全支援同時進行串流和工具呼叫。不需要特殊設定。
 
 #### 舊版 OpenAI 相容模式
 
-<Warning>**在 OpenAI 相容模式下，工具呼叫並不可靠。** 僅在您需要代理的 OpenAI 格式且不依賴原生工具呼叫行為時才使用此模式。</Warning>
+<Warning>**在 OpenAI 相容模式下，工具呼叫並不可靠。** 僅在您需要代理伺服器使用 OpenAI 格式，且不依賴原生工具呼叫行為時才使用此模式。</Warning>
 
-如果您需要改用 OpenAI 相容的端點（例如，在僅支援 OpenAI 格式的代理後方），請明確設定 `api: "openai-completions"`：
+如果您需要改用 OpenAI 相容端點 (例如，在僅支援 OpenAI 格式的代理伺服器後面)，請明確設定 `api: "openai-completions"`：
 
 ```json5
 {
@@ -298,9 +299,9 @@ OpenClaw 的 Ollama 整合預設使用 **原生 Ollama API** (`/api/chat`)，該
 }
 ```
 
-此模式可能不會同時支援串流 + 工具呼叫。您可能需要在模型設定中停用串流，方法是使用 `params: { streaming: false }`。
+此模式可能不支援同時進行串流和工具呼叫。您可能需要在模型設定中使用 `params: { streaming: false }` 停用串流。
 
-當 `api: "openai-completions"` 與 Ollama 搭配使用時，OpenClaw 預設會注入 `options.num_ctx`，以免 Ollama 無聲地回退到 4096 的上下文視窗。如果您的代理/上游伺服器拒絕未知的 `options` 欄位，請停用此行為：
+當 `api: "openai-completions"` 與 Ollama 一起使用時，OpenClaw 預設會注入 `options.num_ctx`，以免 Ollama 靜默退回至 4096 的內容視窗。如果您的代理伺服器或上游拒絕未知的 `options` 欄位，請停用此行為：
 
 ```json5
 {
@@ -318,21 +319,21 @@ OpenClaw 的 Ollama 整合預設使用 **原生 Ollama API** (`/api/chat`)，該
 }
 ```
 
-### 上下文視窗
+### 內容視窗
 
-對於自動探索的模型，OpenClaw 會使用 Ollama 回報的上下文視窗（如果可用），否則會回退到 OpenClaw 使用的預設 Ollama 上下文視窗。您可以在明確的提供者設定中覆寫 `contextWindow` 和 `maxTokens`。
+對於自動探索的模型，OpenClaw 會使用 Ollama 回報的內容視窗（如果可用），否則會回退到 OpenClaw 使用的預設 Ollama 內容視窗。您可以在明確的提供者設定中覆寫 `contextWindow` 和 `maxTokens`。
 
 ## 疑難排解
 
 ### 未偵測到 Ollama
 
-請確保 Ollama 正在執行，並且您已設定 `OLLAMA_API_KEY`（或驗證設定檔），且**未**定義明確的 `models.providers.ollama` 項目：
+請確保 Ollama 正在運作，並且您設定了 `OLLAMA_API_KEY` （或驗證設定檔），且您**沒有**定義明確的 `models.providers.ollama` 項目：
 
 ```bash
 ollama serve
 ```
 
-並且 API 可存取：
+並且 API 可以存取：
 
 ```bash
 curl http://localhost:11434/api/tags
@@ -340,9 +341,9 @@ curl http://localhost:11434/api/tags
 
 ### 沒有可用的模型
 
-如果未列出您的模型，請執行以下任一操作：
+如果未列出您的模型，請執行下列其中一項：
 
-- 在本機拉取模型，或
+- 在本地端拉取模型，或
 - 在 `models.providers.ollama` 中明確定義模型。
 
 若要新增模型：
@@ -356,7 +357,7 @@ ollama pull llama3.3     # Or another model
 
 ### 連線被拒
 
-請檢查 Ollama 是否在正確的連接埠上執行：
+請檢查 Ollama 是否在正確的連接埠上運作：
 
 ```bash
 # Check if Ollama is running
@@ -366,7 +367,7 @@ ps aux | grep ollama
 ollama serve
 ```
 
-## 參閱
+## 參見
 
 - [模型提供者](/en/concepts/model-providers) - 所有提供者概覽
 - [模型選擇](/en/concepts/models) - 如何選擇模型

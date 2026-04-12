@@ -36,8 +36,8 @@ Utilice los enlaces de enrutamiento para fijar el tráfico del canal entrante a 
 
 Si también desea diferentes habilidades visibles por agente, configure
 `agents.defaults.skills` y `agents.list[].skills` en `openclaw.json`. Consulte
-[Skills config](/en/tools/skills-config) y
-[Configuration Reference](/en/gateway/configuration-reference#agentsdefaultsskills).
+[Configuración de habilidades](/en/tools/skills-config) y
+[Referencia de configuración](/en/gateway/configuration-reference#agents-defaults-skills).
 
 Listar enlaces:
 

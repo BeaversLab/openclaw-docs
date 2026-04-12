@@ -8,7 +8,7 @@ title: "Habilidades"
 
 # Habilidades (OpenClaw)
 
-OpenClaw utiliza carpetas de habilidades **compatibles con [AgentSkills](https://agentskills.io)** para enseñar al agente cómo usar las herramientas. Cada habilidad es un directorio que contiene un `SKILL.md` con frontmatter YAML e instrucciones. OpenClaw carga **habilidades incluidas** más anulaciones locales opcionales, y las filtra en el momento de la carga según el entorno, la configuración y la presencia de binarios.
+OpenClaw utiliza carpetas de habilidades **compatibles con [AgentSkills](https://agentskills.io)** para enseñar al agente cómo usar herramientas. Cada habilidad es un directorio que contiene un `SKILL.md` con encabezados YAML e instrucciones. OpenClaw carga **habilidades empaquetadas** además de anulaciones locales opcionales, y las filtra en el momento de la carga según el entorno, la configuración y la presencia de binarios.
 
 ## Ubicaciones y precedencia
 
@@ -79,12 +79,12 @@ OpenClaw aplica el conjunto de habilidades efectivo del agente durante la creaci
 
 ## Complementos + habilidades
 
-Los complementos pueden incluir sus propias habilidades listando los directorios `skills` en `openclaw.plugin.json` (rutas relativas a la raíz del complemento). Las habilidades del complemento se cargan cuando el complemento está habilitado. Hoy en día, esos directorios se fusionan en la misma ruta de baja precedencia que `skills.load.extraDirs`, por lo que una habilidad incorporada, administrada, de agente o de espacio de trabajo con el mismo nombre las anula.
-Puede limitarlas mediante `metadata.openclaw.requires.config` en la entrada de configuración del complemento. Consulte [Plugins](/en/tools/plugin) para descubrimiento/configuración y [Tools](/en/tools) para la superficie de herramientas que esas habilidades enseñan.
+Los complementos pueden incluir sus propias habilidades listando directorios `skills` en `openclaw.plugin.json` (rutas relativas a la raíz del complemento). Las habilidades de los complementos se cargan cuando el complemento está habilitado. Hoy en día, esos directorios se fusionan en la misma ruta de baja precedencia que `skills.load.extraDirs`, por lo que una habilidad empaquetada, gestionada, de agente o del espacio de trabajo con el mismo nombre las anula.
+Puedes filtrarlas mediante `metadata.openclaw.requires.config` en la entrada de configuración del complemento. Consulta [Plugins](/en/tools/plugin) para descubrir/configurar y [Tools](/en/tools) para la superficie de herramientas que esas habilidades enseñan.
 
 ## ClawHub (instalación + sincronización)
 
-ClawHub es el registro público de habilidades para OpenClaw. Navegue en [https://clawhub.ai](https://clawhub.ai). Use los comandos nativos `openclaw skills` para descubrir/instalar/actualizar habilidades, o la CLI `clawhub` separada cuando necesite flujos de trabajo de publicación/sincronización.
+ClawHub es el registro público de habilidades para OpenClaw. Explore en [https://clawhub.ai](https://clawhub.ai). Utilice comandos nativos `openclaw skills` para descubrir/installar/actualizar habilidades, o el CLI separado `clawhub` cuando necesite flujos de trabajo de publicación/sincronización.
 Guía completa: [ClawHub](/en/tools/clawhub).
 
 Flujos comunes:
@@ -108,7 +108,7 @@ OpenClaw lo recoge como `<workspace>/skills` en la siguiente sesión.
 - `openclaw skills install <slug>` es diferente: descarga una carpeta de habilidades de ClawHub en el espacio de trabajo y no utiliza la ruta de metadatos del instalador mencionada anteriormente.
 - `skills.entries.*.env` y `skills.entries.*.apiKey` inyectan secretos en el proceso **host**
   para ese turno del agente (no el sandbox). Mantenga los secretos fuera de los avisos y los registros.
-- Para un modelo de amenaza más amplio y listas de verificación, consulte [Seguridad](/en/gateway/security).
+- Para obtener un modelo de amenazas más amplio y listas de verificación, consulte [Security](/en/gateway/security).
 
 ## Formato (compatible con AgentSkills + Pi)
 
@@ -265,25 +265,27 @@ Cuando se inicia una ejecución del agente, OpenClaw:
 
 Esto está **limitado a la ejecución del agente**, no a un entorno de shell global.
 
+Para el backend `claude-cli` empaquetado, OpenClaw también materializa la misma instantánea elegible como un complemento temporal de Claude Code y la pasa con `--plugin-dir`. Claude Code puede usar su solucionador de habilidades nativo mientras OpenClaw aún posee la precedencia, listas de permitidos por agente, filtrado y inyección de claves de entorno/API `skills.entries.*`. Otros backends de CLI usan solo el catálogo de solicitudes.
+
 ## Instantánea de sesión (rendimiento)
 
-OpenClaw toma una instantánea de las habilidades elegibles **cuando comienza una sesión** y reutiliza esa lista para los turnos posteriores en la misma sesión. Los cambios en las habilidades o la configuración surten efecto en la próxima sesión nueva.
+OpenClaw guarda una instantánea de las habilidades elegibles **cuando se inicia una sesión** y reutiliza esa lista para turnos posteriores en la misma sesión. Los cambios en las habilidades o la configuración surten efecto en la próxima sesión nueva.
 
-Las habilidades también pueden actualizarse a mitad de la sesión cuando el observador de habilidades está habilitado o cuando aparece un nuevo nodo remoto elegible (ver a continuación). Piense en esto como una **recarga en caliente (hot reload)**: la lista actualizada se recoge en el siguiente turno del agente.
+Las habilidades también pueden actualizarse a mitad de sesión cuando el observador de habilidades está habilitado o cuando aparece un nuevo nodo remoto elegible (ver abajo). Piénselo como una **recarga en caliente (hot reload)**: la lista actualizada se recoge en el siguiente turno del agente.
 
-Si la lista de permisos de habilidades del agente efectiva cambia para esa sesión, OpenClaw
-actualiza la instantánea para que las habilidades visibles se mantengan alineadas con el agente
+Si la lista blanca efectiva de habilidades del agente cambia para esa sesión, OpenClaw
+actualiza la instantánea para que las habilidades visibles sigan alineadas con el agente
 actual.
 
 ## Nodos macOS remotos (puerta de enlace Linux)
 
-Si la puerta de enlace se está ejecutando en Linux pero hay un **nodo macOS** conectado **con `system.run` permitido** (Seguridad de aprobaciones de Exec no establecida en `deny`), OpenClaw puede tratar las habilidades exclusivas de macOS como elegibles cuando los binarios requeridos están presentes en ese nodo. El agente debe ejecutar esas habilidades a través de la herramienta `exec` con `host=node`.
+Si la puerta de enlace se está ejecutando en Linux pero un **nodo macOS** está conectado **con `system.run` permitido** (Seguridad de aprobaciones de ejecución no establecida en `deny`), OpenClaw puede tratar las habilidades exclusivas de macOS como elegibles cuando los binarios requeridos están presentes en ese nodo. El agente debe ejecutar esas habilidades a través de la herramienta `exec` con `host=node`.
 
-Esto depende de que el nodo informe su soporte de comandos y de una sonda de binarios a través de `system.run`. Si el nodo macOS se desconecta más tarde, las habilidades permanecen visibles; las invocaciones pueden fallar hasta que el nodo se vuelva a conectar.
+Esto depende de que el nodo informe su soporte de comandos y de un sondeo de binarios a través de `system.run`. Si el nodo macOS se desconecta más tarde, las habilidades siguen siendo visibles; las invocaciones pueden fallar hasta que el nodo se vuelva a conectar.
 
 ## Observador de habilidades (actualización automática)
 
-De forma predeterminada, OpenClaw observa las carpetas de habilidades y actualiza la instantánea de habilidades cuando cambian los archivos `SKILL.md`. Configure esto en `skills.load`:
+Por defecto, OpenClaw observa las carpetas de habilidades y actualiza la instantánea de habilidades cuando cambian los archivos `SKILL.md`. Configure esto en `skills.load`:
 
 ```json5
 {
@@ -298,10 +300,10 @@ De forma predeterminada, OpenClaw observa las carpetas de habilidades y actualiz
 
 ## Impacto de tokens (lista de habilidades)
 
-Cuando las habilidades son elegibles, OpenClaw inyecta una lista XML compacta de las habilidades disponibles en el mensaje del sistema (a través de `formatSkillsForPrompt` en `pi-coding-agent`). El costo es determinista:
+Cuando las habilidades son elegibles, OpenClaw inyecta una lista XML compacta de las habilidades disponibles en el prompt del sistema (a través de `formatSkillsForPrompt` en `pi-coding-agent`). El costo es determinista:
 
 - **Sobrecarga base (solo cuando hay ≥1 habilidad):** 195 caracteres.
-- **Por habilidad:** 97 caracteres + la longitud de los valores `<name>`, `<description>` y `<location>` escapados en XML.
+- **Por habilidad:** 97 caracteres + la longitud de los valores escapados en XML de `<name>`, `<description>` y `<location>`.
 
 Fórmula (caracteres):
 
@@ -311,12 +313,12 @@ total = 195 + Σ (97 + len(name_escaped) + len(description_escaped) + len(locati
 
 Notas:
 
-- El escape XML expande `& < > " '` en entidades (`&amp;`, `&lt;`, etc.), aumentando la longitud.
-- Los recuentos de tokens varían según el tokenizador del modelo. Una estim aproximada estilo OpenAI es de ~4 caracteres/token, por lo que **97 caracteres ≈ 24 tokens** por habilidad más sus longitudes de campo reales.
+- El escape de XML expande `& < > " '` en entidades (`&amp;`, `&lt;`, etc.), aumentando la longitud.
+- Los recuentos de tokens varían según el tokenizador del modelo. Una estimación aproximada estilo OpenAI es de ~4 caracteres/token, por lo que **97 caracteres ≈ 24 tokens** por habilidad más las longitudes reales de sus campos.
 
-## Ciclo de vida de habilidades gestionadas
+## Ciclo de vida de habilidades administradas
 
-OpenClaw incluye un conjunto base de habilidades como **habilidades empaquetadas** como parte de la instalación (paquete npm u OpenClaw.app). `~/.openclaw/skills` existe para anulaciones locales (por ejemplo, fijar/ parchear una habilidad sin cambiar la copia empaquetada). Las habilidades del espacio de trabajo son propiedad del usuario y anulan a ambas en caso de conflicto de nombres.
+OpenClaw incluye un conjunto base de habilidades como **habilidades incluidas** (bundled skills) como parte de la instalación (paquete npm u OpenClaw.app). `~/.openclaw/skills` existe para las anulaciones locales (por ejemplo, fijar/ parchear una habilidad sin cambiar la copia incluida). Las habilidades del espacio de trabajo son propiedad del usuario y anulan a ambas en caso de conflicto de nombres.
 
 ## Referencia de configuración
 
@@ -330,7 +332,7 @@ Explore [https://clawhub.ai](https://clawhub.ai).
 
 ## Relacionado
 
-- [Creating Skills](/en/tools/creating-skills) — crear habilidades personalizadas
+- [Creating Skills](/en/tools/creating-skills) — creación de habilidades personalizadas
 - [Skills Config](/en/tools/skills-config) — referencia de configuración de habilidades
 - [Slash Commands](/en/tools/slash-commands) — todos los comandos de barra disponibles
 - [Plugins](/en/tools/plugin) — descripción general del sistema de complementos

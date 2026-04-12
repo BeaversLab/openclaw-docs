@@ -238,10 +238,10 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
 
 <Steps>
   <a id="step-1-package-and-manifest"></a>
-  <Step title="Paquet et manifeste">
+  <Step title="Package and manifest">
     Créez les fichiers de plugin standard. Le champ `channel` dans `package.json` est
-    ce qui fait de ce plugin un plugin de canal. Pour la surface complète des métadonnées de paquet,
-    voir [Configuration et configuration du plugin](/en/plugins/sdk-setup#openclawchannel) :
+    ce qui fait de ce plugin un plugin de channel. Pour la surface complète des métadonnées de package,
+    consultez [Plugin Setup and Config](/en/plugins/sdk-setup#openclaw-channel) :
 
     <CodeGroup>
     ```json package.json

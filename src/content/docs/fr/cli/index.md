@@ -852,7 +852,7 @@ Sous-commandes :
 Notes :
 
 - `devices list` et `devices approve` peuvent revenir aux fichiers de couplage locaux sur la boucle locale lorsque la portée de couplage direct n'est pas disponible.
-- `devices approve` sélectionne automatiquement la demande en attente la plus récente lorsqu'aucun `requestId` n'est passé ou que `--latest` est défini.
+- `devices approve` nécessite un ID de demande explicite avant de frapper des jetons ; l'omission de `requestId` ou le passage de `--latest` permet uniquement de prévisualiser la demande en attente la plus récente.
 - Les reconnexions par jeton stocké réutilisent les portées approuvées en cache du jeton ; les mises à jour explicites de `devices rotate --scope ...` mettent à jour cet ensemble de portées stocké pour les futures reconnexions par jeton en cache.
 - `devices rotate` et `devices revoke` renvoient des charges utiles JSON.
 

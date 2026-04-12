@@ -83,7 +83,7 @@ Les points de terminaison natifs de Model Studio annoncent une compatibilité d'
 
 ## Catalogue intégré
 
-OpenClaw fournit actuellement ce catalogue Qwen groupé :
+OpenClaw fournit actuellement ce catalogue Qwen intégré. Le catalogue configuré est conscient du point de terminaison : les configurations du Plan de codage omettent les modèles dont on sait qu'ils fonctionnent uniquement sur le point de terminaison Standard.
 
 | Réf modèle                  | Entrée       | Contexte  | Notes                                                                                |
 | --------------------------- | ------------ | --------- | ------------------------------------------------------------------------------------ |

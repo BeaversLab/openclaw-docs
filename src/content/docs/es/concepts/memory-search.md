@@ -128,5 +128,6 @@ conversaciones anteriores. Esto es opcional a través de
 
 ## Lecturas adicionales
 
-- [Memoria](/en/concepts/memory) -- diseño de archivos, backends, herramientas
-- [Referencia de configuración de memoria](/en/reference/memory-config) -- todos los controles de configuración
+- [Active Memory](/en/concepts/active-memory) -- memoria del subagente para sesiones de chat interactivas
+- [Memory](/en/concepts/memory) -- diseño de archivos, backends, herramientas
+- [Memory configuration reference](/en/reference/memory-config) -- todos los controles de configuración
