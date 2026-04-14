@@ -45,6 +45,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [inferrs (local models)](/en/providers/inferrs)
 - [Kilocode](/en/providers/kilocode)
 - [LiteLLM (unified gateway)](/en/providers/litellm)
+- [LM Studio (local models)](/en/providers/lmstudio)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
