@@ -26,7 +26,7 @@ OpenClaw 是一个自托管网关，将 Discord、Google Chat、iMessage、Matri
 
 ## 先决条件
 
-- OpenClaw 已安装并完成新手引导 — 如果您尚未完成此操作，请参阅 [入门指南](/en/start/getting-started)
+- OpenClaw 已安装并完成新手引导 — 如果您尚未完成此操作，请参阅 [入门指南](/zh/start/getting-started)
 - 用于助手的第二个电话号码（SIM/eSIM/预付费）
 
 ## 双手机设置（推荐）
@@ -80,8 +80,8 @@ OpenClaw 从其工作区目录读取操作指令和“记忆”。
 openclaw setup
 ```
 
-完整的工作区布局 + 备份指南：[代理工作区](/en/concepts/agent-workspace)
-记忆工作流：[记忆](/en/concepts/memory)
+完整的工作区布局 + 备份指南：[代理工作区](/zh/concepts/agent-workspace)
+记忆工作流：[记忆](/zh/concepts/memory)
 
 可选：使用 `agents.defaults.workspace` 选择不同的工作区（支持 `~`）。
 
@@ -107,7 +107,7 @@ openclaw setup
 
 OpenClaw 默认使用良好的助手设置，但您通常需要调整：
 
-- persona/instructions 位于 [`SOUL.md`](/en/concepts/soul)
+- persona/instructions 位于 [`SOUL.md`](/zh/concepts/soul)
 - thinking 默认值（如果需要）
 - heartbeats（一旦您信任它）
 
@@ -214,12 +214,12 @@ openclaw health --json   # gateway health snapshot (WS; default can return a fre
 
 ## 后续步骤
 
-- WebChat：[WebChat](/en/web/webchat)
-- Gateway(网关) 运维：[Gateway(网关) 运维手册](/en/gateway)
-- Cron + 唤醒：[Cron 作业](/en/automation/cron-jobs)
-- macOS 菜单栏伴侣：[OpenClaw macOS app](/en/platforms/macos)
-- iOS 节点应用：[iOS app](/en/platforms/ios)
-- Android 节点应用：[Android app](/en/platforms/android)
-- Windows 状态：[Windows (WSL2)](/en/platforms/windows)
-- Linux 状态：[Linux app](/en/platforms/linux)
-- 安全性：[Security](/en/gateway/security)
+- WebChat：[WebChat](/zh/web/webchat)
+- Gateway(网关) 运维：[Gateway(网关) 运维手册](/zh/gateway)
+- Cron + 唤醒：[Cron 作业](/zh/automation/cron-jobs)
+- macOS 菜单栏伴侣：[OpenClaw macOS app](/zh/platforms/macos)
+- iOS 节点应用：[iOS app](/zh/platforms/ios)
+- Android 节点应用：[Android app](/zh/platforms/android)
+- Windows 状态：[Windows (WSL2)](/zh/platforms/windows)
+- Linux 状态：[Linux app](/zh/platforms/linux)
+- 安全性：[Security](/zh/gateway/security)

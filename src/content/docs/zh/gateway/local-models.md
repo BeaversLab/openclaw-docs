@@ -9,9 +9,9 @@ title: "本地模型"
 
 # 本地模型
 
-本地部署是可行的，但 OpenClaw 需要大上下文 + 对提示注入的强有力防御。小显卡会截断上下文并导致安全隐患。目标要高：**≥2 台满配的 Mac Studios 或同等的 GPU 装备（约 $30k+）**。单张 **24 GB** GPU 仅适用于较轻量的提示，但延迟较高。使用**你能运行的最大的 / 完整大小的模型变体**；过度量化或“小”检查点会增加提示注入的风险（参见 [安全性](/en/gateway/security)）。
+本地部署是可行的，但 OpenClaw 需要大上下文 + 对提示注入的强有力防御。小显卡会截断上下文并导致安全隐患。目标要高：**≥2 台满配的 Mac Studios 或同等的 GPU 装备（约 $30k+）**。单张 **24 GB** GPU 仅适用于较轻量的提示，但延迟较高。使用**你能运行的最大的 / 完整大小的模型变体**；过度量化或“小”检查点会增加提示注入的风险（参见 [安全性](/zh/gateway/security)）。
 
-如果您想要最低摩擦力的本地设置，请从 [LM Studio](/en/providers/lmstudio) 或 [Ollama](/en/providers/ollama) 和 `openclaw onboard` 开始。本页面是针对高端本地堆栈和自定义 OpenAI 兼容本地服务器的固执己见指南。
+如果您想要最低摩擦力的本地设置，请从 [LM Studio](/zh/providers/lmstudio) 或 [Ollama](/zh/providers/ollama) 和 `openclaw onboard` 开始。本页面是针对高端本地堆栈和自定义 OpenAI 兼容本地服务器的固执己见指南。
 
 ## 推荐：LM Studio + 大型本地模型（Responses API）
 
@@ -168,7 +168,7 @@ title: "本地模型"
   `agents.defaults.experimental.localModelLean: true` 来丢弃重量级
   默认工具，如 `browser`、`cron` 和 `message`；这是一个实验性
   标志，而不是稳定的默认模式设置。请参阅
-  [实验性功能](/en/concepts/experimental-features)。如果仍然失败，请尝试
+  [实验性功能](/zh/concepts/experimental-features)。如果仍然失败，请尝试
   `models.providers.<provider>.models[].compat.supportsTools: false`。
 - 如果后端仍然仅在较大的 OpenClaw 运行中失败，剩余的问题
   通常是上游模型/服务器容量或后端错误，而不是 OpenClaw 的

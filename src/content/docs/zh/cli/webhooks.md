@@ -12,8 +12,8 @@ Webhook 辅助工具和集成（Gmail Pub/Sub、webhook 辅助工具）。
 
 相关：
 
-- Webhooks：[Webhooks](/en/automation/cron-jobs#webhooks)
-- Gmail Pub/Sub：[Gmail Pub/Sub](/en/automation/cron-jobs#gmail-pubsub-integration)
+- Webhooks：[Webhooks](/zh/automation/cron-jobs#webhooks)
+- Gmail Pub/Sub：[Gmail Pub/Sub](/zh/automation/cron-jobs#gmail-pubsub-integration)
 
 ## Gmail
 
@@ -88,4 +88,4 @@ openclaw webhooks gmail setup --account you@example.com --hook-url https://gatew
 openclaw webhooks gmail run --account you@example.com
 ```
 
-有关端到端设置流程和操作详细信息，请参阅 [Gmail Pub/Sub 文档](/en/automation/cron-jobs#gmail-pubsub-integration)。
+有关端到端设置流程和操作详细信息，请参阅 [Gmail Pub/Sub 文档](/zh/automation/cron-jobs#gmail-pubsub-integration)。

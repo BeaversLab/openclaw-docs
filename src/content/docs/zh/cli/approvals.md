@@ -15,8 +15,8 @@ title: "批准"
 
 相关内容：
 
-- Exec 批准：[Exec 批准](/en/tools/exec-approvals)
-- 节点：[节点](/en/nodes)
+- Exec 批准：[Exec 批准](/zh/tools/exec-approvals)
+- 节点：[节点](/zh/nodes)
 
 ## `openclaw exec-policy`
 

@@ -74,7 +74,7 @@ title: "WSL2 + Windows + remote Chrome CDP 故障排除"
 
 `http://127.0.0.1:18789/`
 
-不要默认将控制 UI 设置为 LAN IP。LAN 或 tailnet 地址上的纯 HTTP 可能会触发不安全源/设备身份验证行为，这与 CDP 本身无关。请参阅[控制 UI](/en/web/control-ui)。
+不要默认将控制 UI 设置为 LAN IP。LAN 或 tailnet 地址上的纯 HTTP 可能会触发不安全源/设备身份验证行为，这与 CDP 本身无关。请参阅[控制 UI](/zh/web/control-ui)。
 
 ## 分层验证
 
@@ -162,7 +162,7 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 
 有用的页面：
 
-- [控制 UI](/en/web/control-ui)
+- [控制 UI](/zh/web/control-ui)
 
 ### 第 5 层：验证端到端浏览器控制
 

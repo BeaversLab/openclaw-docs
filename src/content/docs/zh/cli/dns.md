@@ -12,8 +12,8 @@ title: "dns"
 
 相关：
 
-- Gateway(网关)发现：[设备发现](/en/gateway/discovery)
-- 广域网发现配置：[配置](/en/gateway/configuration)
+- Gateway(网关)发现：[设备发现](/zh/gateway/discovery)
+- 广域网发现配置：[配置](/zh/gateway/configuration)
 
 ## 安装
 

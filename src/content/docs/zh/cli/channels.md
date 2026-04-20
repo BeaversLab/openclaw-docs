@@ -12,8 +12,8 @@ title: "channels"
 
 相关文档：
 
-- 渠道指南：[渠道](/en/channels/index)
-- Gateway(网关) 配置：[Configuration](/en/gateway/configuration)
+- 渠道指南：[渠道](/zh/channels/index)
+- Gateway(网关) 配置：[Configuration](/zh/gateway/configuration)
 
 ## 常用命令
 
@@ -67,7 +67,7 @@ openclaw channels remove --channel telegram --delete
 
 如果您现在确认绑定，向导会询问哪个代理应该拥有每个配置的渠道账户，并写入账户范围的路由绑定。
 
-您也可以稍后使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 管理相同的路由规则（请参阅 [agents](/en/cli/agents)）。
+您也可以稍后使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 管理相同的路由规则（请参阅 [agents](/zh/cli/agents)）。
 
 当您向仍在使用单账户顶级设置的渠道添加非默认账户时，OpenClaw 会在写入新账户之前将账户范围的顶级值提升到渠道的账户映射中。大多数渠道将这些值放入 `channels.<channel>.accounts.default`，但捆绑渠道可以保留现有的匹配提升账户。Matrix 是目前的示例：如果一个命名账户已经存在，或者 `defaultAccount` 指向现有的命名账户，则提升将保留该账户，而不是创建新的 `accounts.default`。
 

@@ -43,7 +43,7 @@ Anthropic 仍未公开 OpenClaw 可以在 `/usage full` 中显示的单条消息
   聊天模型条目，在需要时从时间戳推导窗口标签，并在计划标签中包含模型名称。
 - 这些配额窗口的使用授权在可用时来自特定于提供商的钩子；否则 OpenClaw 会回退到从 auth profiles、env 或 config 中匹配 OAuth/API-key 凭据。
 
-有关详细信息和示例，请参阅 [Token use & costs](/en/reference/token-use)。
+有关详细信息和示例，请参阅 [Token use & costs](/zh/reference/token-use)。
 
 ## 如何发现密钥
 
@@ -66,7 +66,7 @@ OpenClaw 可以从以下位置获取凭据：
 Coding Plan**、**MiniMax Coding Plan**、**Z.AI / GLM Coding Plan**，以及
 Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 
-有关价格配置，请参阅 [Models](/en/providers/models)；有关显示，请参阅 [Token use & costs](/en/reference/token-use)。
+有关价格配置，请参阅 [Models](/zh/providers/models)；有关显示，请参阅 [Token use & costs](/zh/reference/token-use)。
 
 ### 2) 媒体理解（音频/图像/视频）
 
@@ -76,7 +76,7 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 - 图像：OpenAI / OpenRouter / Anthropic / Google / MiniMax / Moonshot / Qwen / Z.AI。
 - 视频：Google / Qwen / Moonshot。
 
-请参阅 [Media understanding](/en/nodes/media-understanding)。
+请参阅 [Media understanding](/zh/nodes/media-understanding)。
 
 ### 3) 图像和视频生成
 
@@ -89,8 +89,8 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 需要一个显式的 `agents.defaults.videoGenerationModel`，例如
 `qwen/wan2.6-t2v`。
 
-请参阅 [Image generation](/en/tools/image-generation)、[Qwen Cloud](/en/providers/qwen)
-和 [Models](/en/concepts/models)。
+请参阅 [Image generation](/zh/tools/image-generation)、[Qwen Cloud](/zh/providers/qwen)
+和 [Models](/zh/concepts/models)。
 
 ### 4) 记忆嵌入 + 语义搜索
 
@@ -106,7 +106,7 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 
 您可以使用 `memorySearch.provider = "local"` 将其保留在本地（不使用 API）。
 
-请参阅 [Memory](/en/concepts/memory)。
+请参阅 [Memory](/zh/concepts/memory)。
 
 ### 5) Web search 工具
 
@@ -129,7 +129,7 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 
 **Brave 搜索免费额度：** 每个 Brave 计划都包含每月 $5 的可续期免费额度。搜索计划每 1,000 次请求费用为 $5，因此该额度可覆盖每月 1,000 次免费请求。在 Brave 仪表板中设置您的使用限制，以避免意外收费。
 
-请参阅 [Web 工具](/en/tools/web)。
+请参阅 [Web 工具](/zh/tools/web)。
 
 ### 5) Web 获取工具 (Firecrawl)
 
@@ -139,7 +139,7 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 
 如果未配置 Firecrawl，该工具将回退到直接获取 + 可读性处理（无付费 API）。
 
-请参阅 [Web 工具](/en/tools/web)。
+请参阅 [Web 工具](/zh/tools/web)。
 
 ### 6) 提供商使用快照 (status/health)
 
@@ -149,19 +149,19 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-请参阅 [模型 CLI](/en/cli/models)。
+请参阅 [模型 CLI](/zh/cli/models)。
 
 ### 7) 压缩安全摘要
 
 压缩安全机制可以使用 **当前模型** 对会话历史进行摘要，这会在其运行时调用提供商 API。
 
-请参阅 [会话管理 + 压缩](/en/reference/session-management-compaction)。
+请参阅 [会话管理 + 压缩](/zh/reference/session-management-compaction)。
 
 ### 8) 模型扫描 / 探测
 
 `openclaw models scan` 可以探测 OpenRouter 模型，并在启用探测时使用 `OPENROUTER_API_KEY`。
 
-请参阅 [模型 CLI](/en/cli/models)。
+请参阅 [模型 CLI](/zh/cli/models)。
 
 ### 9) 通话 (语音)
 
@@ -169,11 +169,11 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 
 - `ELEVENLABS_API_KEY` 或 `talk.providers.elevenlabs.apiKey`
 
-请参阅 [通话模式](/en/nodes/talk)。
+请参阅 [通话模式](/zh/nodes/talk)。
 
 ### 10) Skills (第三方 API)
 
 Skills 可以在 `skills.entries.<name>.apiKey` 中存储 `apiKey`。如果 skill 使用该密钥访问外部
 API，则可能会根据 skill 的提供商产生费用。
 
-请参阅 [Skills](/en/tools/skills)。
+请参阅 [Skills](/zh/tools/skills)。

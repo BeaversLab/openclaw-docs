@@ -12,8 +12,8 @@ title: "logs"
 
 相关：
 
-- 日志概览：[日志](/en/logging)
-- Gateway(网关) CLI：[gateway](/en/cli/gateway)
+- 日志概览：[日志](/zh/logging)
+- Gateway(网关) CLI：[gateway](/zh/cli/gateway)
 
 ## 选项
 

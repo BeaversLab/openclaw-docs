@@ -110,7 +110,7 @@ read_when:
 }
 ```
 
-有关完整的字段详细信息，请参阅 [配置参考](/en/gateway/configuration-reference)。
+有关完整的字段详细信息，请参阅 [配置参考](/zh/gateway/configuration-reference)。
 
 ## 输出详情
 
@@ -168,5 +168,5 @@ read_when:
 
 ## 相关
 
-- [工具概述](/en/tools) — 所有可用的代理工具
-- [配置参考](/en/gateway/configuration-reference#agent-defaults) — pdfMaxBytesMb 和 pdfMaxPages 配置
+- [工具概述](/zh/tools) — 所有可用的代理工具
+- [配置参考](/zh/gateway/configuration-reference#agent-defaults) — pdfMaxBytesMb 和 pdfMaxPages 配置

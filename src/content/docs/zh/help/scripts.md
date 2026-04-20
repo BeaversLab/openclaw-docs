@@ -19,7 +19,7 @@ title: "脚本"
 
 ## 身份验证监控脚本
 
-身份验证监控在 [身份验证](/en/gateway/authentication) 中进行了介绍。`scripts/` 下的脚本是针对 systemd/Termux 手机工作流的可选附加工具。
+身份验证监控在 [身份验证](/zh/gateway/authentication) 中进行了介绍。`scripts/` 下的脚本是针对 systemd/Termux 手机工作流的可选附加工具。
 
 ## GitHub read helper
 

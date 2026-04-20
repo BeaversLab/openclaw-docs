@@ -92,5 +92,5 @@ OpenClaw 支持 **Ollama Web Search** 作为捆绑的 `web_search` 提供商。
 
 ## 相关
 
-- [Web Search 概述](/en/tools/web) -- 所有提供商和自动检测
-- [Ollama](/en/providers/ollama) -- Ollama 模型设置和云/本地模式
+- [Web Search 概述](/zh/tools/web) -- 所有提供商和自动检测
+- [Ollama](/zh/providers/ollama) -- Ollama 模型设置和云/本地模式

@@ -46,7 +46,7 @@ title: "Gateway(网关) 网关 架构"
 
 协议详细信息：
 
-- [Gateway(网关) 协议](/en/gateway/protocol)
+- [Gateway(网关) 协议](/zh/gateway/protocol)
 
 ### WebChat
 
@@ -111,8 +111,8 @@ sequenceDiagram
 - Gateway(网关) 认证 (`gateway.auth.*`) 仍然适用于 **所有** 连接，无论是本地还是
   远程。
 
-详情：[Gateway(网关) 协议](/en/gateway/protocol)，[配对](/en/channels/pairing)，
-[安全](/en/gateway/security)。
+详情：[Gateway(网关) 协议](/zh/gateway/protocol)，[配对](/zh/channels/pairing)，
+[安全](/zh/gateway/security)。
 
 ## 协议类型和代码生成
 
@@ -146,7 +146,7 @@ sequenceDiagram
 
 ## 相关
 
-- [Agent Loop](/en/concepts/agent-loop) — 详细的代理执行循环
-- [Gateway(网关) Protocol](/en/gateway/protocol) — WebSocket 协议合约
-- [Queue](/en/concepts/queue) — 命令队列和并发
-- [Security](/en/gateway/security) — 信任模型和加固
+- [Agent Loop](/zh/concepts/agent-loop) — 详细的代理执行循环
+- [Gateway(网关) Protocol](/zh/gateway/protocol) — WebSocket 协议合约
+- [Queue](/zh/concepts/queue) — 命令队列和并发
+- [Security](/zh/gateway/security) — 信任模型和加固

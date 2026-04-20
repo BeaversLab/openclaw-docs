@@ -5,4 +5,4 @@ title: "Cron vs Heartbeat"
 
 # Cron vs Heartbeat
 
-此页面已移至 [Automation & Tasks](/en/automation)。请参阅 [Automation & Tasks](/en/automation) 了解比较 cron 和 heartbeat 的决策指南。
+此页面已移至 [Automation & Tasks](/zh/automation)。请参阅 [Automation & Tasks](/zh/automation) 了解比较 cron 和 heartbeat 的决策指南。

@@ -99,6 +99,6 @@ Save the new `SOUL.md`. Welcome to having a personality.
 
 ## 相关文档
 
-- [Agent 工作区](/en/concepts/agent-workspace)
-- [系统提示](/en/concepts/system-prompt)
-- [SOUL.md 模板](/en/reference/templates/SOUL)
+- [Agent 工作区](/zh/concepts/agent-workspace)
+- [系统提示](/zh/concepts/system-prompt)
+- [SOUL.md 模板](/zh/reference/templates/SOUL)

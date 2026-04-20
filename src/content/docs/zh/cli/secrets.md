@@ -38,9 +38,9 @@ CI/网关的退出代码说明：
 
 相关内容：
 
-- Secrets 指南：[Secrets Management](/en/gateway/secrets)
-- 凭证覆盖范围：[SecretRef Credential Surface](/en/reference/secretref-credential-surface)
-- 安全指南：[Security](/en/gateway/security)
+- Secrets 指南：[Secrets Management](/zh/gateway/secrets)
+- 凭证覆盖范围：[SecretRef Credential Surface](/zh/reference/secretref-credential-surface)
+- 安全指南：[Security](/zh/gateway/security)
 
 ## 重新加载运行时快照
 
@@ -135,7 +135,7 @@ openclaw secrets configure --json
 - 您不能将 `--providers-only` 与 `--skip-provider-setup` 组合使用。
 - `configure` 针对的是 `openclaw.json` 中包含机密的字段，以及所选代理范围的 `auth-profiles.json`。
 - `configure` 支持在选择器流程中直接创建新的 `auth-profiles.json` 映射。
-- 规范支持的范围：[SecretRef Credential Surface](/en/reference/secretref-credential-surface)。
+- 规范支持的范围：[SecretRef Credential Surface](/zh/reference/secretref-credential-surface)。
 - 它在应用之前执行预检解析。
 - 如果预检/应用包含 exec 引用，请在这两个步骤中保持 `--allow-exec` 已设置。
 - 生成的计划默认为清理选项（`scrubEnv`、`scrubAuthProfilesForProviderTargets`、`scrubLegacyAuthJson` 均已启用）。
@@ -171,7 +171,7 @@ Exec 行为：
 
 计划合约详情（允许的目标路径、验证规则和失败语义）：
 
-- [Secrets Apply Plan Contract](/en/gateway/secrets-plan-contract)
+- [Secrets Apply Plan Contract](/zh/gateway/secrets-plan-contract)
 
 `apply` 可能更新的内容：
 

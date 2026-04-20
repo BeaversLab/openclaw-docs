@@ -61,13 +61,13 @@ title: "Exec Tool"
 - `tools.exec.host` (默认值: `auto`; 当沙箱运行时处于活动状态时解析为 `sandbox`，否则为 `gateway`)
 - `tools.exec.security` (默认值: 沙箱为 `deny`，未设置时网关 + 节点为 `full`)
 - `tools.exec.ask` (默认值: `off`)
-- 网关和节点的默认配置是不需要批准的主机执行。如果您想要批准/允许列表行为，请同时收紧 `tools.exec.*` 和主机 `~/.openclaw/exec-approvals.json`；请参阅 [执行批准](/en/tools/exec-approvals#no-approval-yolo-mode)。
+- 网关和节点的默认配置是不需要批准的主机执行。如果您想要批准/允许列表行为，请同时收紧 `tools.exec.*` 和主机 `~/.openclaw/exec-approvals.json`；请参阅 [执行批准](/zh/tools/exec-approvals#no-approval-yolo-mode)。
 - YOLO 来自主机策略默认值（`security=full`、`ask=off`），而不是来自 `host=auto`。如果您想强制使用网关或节点路由，请设置 `tools.exec.host` 或使用 `/exec host=...`。
 - 在 `security=full` 加上 `ask=off` 模式下，主机执行直接遵循配置的策略；没有额外的启发式命令混淆预过滤器。
 - `tools.exec.node`（默认值：未设置）
 - `tools.exec.strictInlineEval`（默认值：false）：为 true 时，内联解释器求值形式（如 `python -c`、`node -e`、`ruby -e`、`perl -e`、`php -r`、`lua -e` 和 `osascript -e`）始终需要明确批准。`allow-always` 仍可保留无害的解释器/脚本调用，但内联求值形式每次仍会提示。
 - `tools.exec.pathPrepend`：要在执行运行（仅限网关 + 沙盒）时添加到 `PATH` 前面的目录列表。
-- `tools.exec.safeBins`：无需明确允许列表条目即可运行的仅 stdin 安全二进制文件。有关行为详情，请参阅 [安全二进制文件](/en/tools/exec-approvals#safe-bins-stdin-only)。
+- `tools.exec.safeBins`：无需明确允许列表条目即可运行的仅 stdin 安全二进制文件。有关行为详情，请参阅 [安全二进制文件](/zh/tools/exec-approvals#safe-bins-stdin-only)。
 - `tools.exec.safeBinTrustedDirs`：用于 `safeBins` 路径检查的其他受信任显式目录。`PATH` 条目永远不会自动受信任。内置默认值为 `/bin` 和 `/usr/bin`。
 - `tools.exec.safeBinProfiles`：每个安全二进制文件的可选自定义 argv 策略（`minPositional`、`maxPositional`、`allowedValueFlags`、`deniedFlags`）。
 
@@ -126,7 +126,7 @@ Example:
 ## Exec 审批（companion app / node host）
 
 沙箱隔离的代理可能需要在 `exec` 于网关或节点主机上运行之前获得每次请求的批准。
-有关策略、允许列表和 UI 流程，请参阅 [Exec 审批](/en/tools/exec-approvals)。
+有关策略、允许列表和 UI 流程，请参阅 [Exec 审批](/zh/tools/exec-approvals)。
 
 当需要审批时，exec 工具会立即返回
 `status: "approval-pending"` 和一个审批 ID。一旦获得批准（或被拒绝/超时），
@@ -161,7 +161,7 @@ allowlist 中或是安全回收站时，shell 命令才会被自动允许。在 
 当您显式地将行为广泛的二进制文件（例如 `jq`）重新添加到 `safeBins` 时，`openclaw security audit` 和 `openclaw doctor` 也会发出警告。
 如果您显式地将解释器加入允许列表，请启用 `tools.exec.strictInlineEval`，以便内联代码评估表单仍然需要新的批准。
 
-有关完整的策略详情和示例，请参阅 [执行批准](/en/tools/exec-approvals#safe-bins-stdin-only) 和 [安全 bin 与允许列表](/en/tools/exec-approvals#safe-bins-versus-allowlist)。
+有关完整的策略详情和示例，请参阅 [执行批准](/zh/tools/exec-approvals#safe-bins-stdin-only) 和 [安全 bin 与允许列表](/zh/tools/exec-approvals#safe-bins-versus-allowlist)。
 
 ## 示例
 
@@ -225,7 +225,7 @@ allowlist 中或是安全回收站时，shell 命令才会被自动允许。在 
 
 ## 相关
 
-- [Exec Approvals](/en/tools/exec-approvals) — Shell 命令的审批门控
-- [沙箱隔离](/en/gateway/sandboxing) — 在沙箱隔离环境中运行命令
-- [Background Process](/en/gateway/background-process) — 长期运行的 exec 和进程工具
-- [Security](/en/gateway/security) — 工具策略和提升访问权限
+- [Exec Approvals](/zh/tools/exec-approvals) — Shell 命令的审批门控
+- [沙箱隔离](/zh/gateway/sandboxing) — 在沙箱隔离环境中运行命令
+- [Background Process](/zh/gateway/background-process) — 长期运行的 exec 和进程工具
+- [Security](/zh/gateway/security) — 工具策略和提升访问权限

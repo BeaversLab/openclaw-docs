@@ -13,9 +13,9 @@ title: "技能"
 
 相关：
 
-- Skills system: [Skills](/en/tools/skills)
-- Skills config: [Skills config](/en/tools/skills-config)
-- ClawHub installs: [ClawHub](/en/tools/clawhub)
+- Skills system: [Skills](/zh/tools/skills)
+- Skills config: [Skills config](/zh/tools/skills-config)
+- ClawHub installs: [ClawHub](/zh/tools/clawhub)
 
 ## 命令
 

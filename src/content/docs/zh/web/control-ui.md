@@ -59,7 +59,7 @@ openclaw devices approve <requestId>
 
 一旦获得批准，设备将被记住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤销它，
 否则不需要重新批准。有关令牌轮换和撤销，请参阅
-[设备 CLI](/en/cli/devices)。
+[设备 CLI](/zh/cli/devices)。
 
 **注意：**
 
@@ -246,9 +246,9 @@ OpenClaw **阻止**没有设备身份的 Control UI 连接。
   设备身份的情况下允许**操作员** Control UI 会话
 - 这**不**适用于节点角色 Control UI 会话
 - 同主机环回反向代理仍不满足受信任代理身份验证；请参阅
-  [受信任代理身份验证](/en/gateway/trusted-proxy-auth)
+  [受信任代理身份验证](/zh/gateway/trusted-proxy-auth)
 
-有关 HTTPS 设置指南，请参阅 [Tailscale](/en/gateway/tailscale)。
+有关 HTTPS 设置指南，请参阅 [Tailscale](/zh/gateway/tailscale)。
 
 ## 构建 UI
 
@@ -316,11 +316,11 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-toke
 }
 ```
 
-远程访问设置详情：[Remote access](/en/gateway/remote)。
+远程访问设置详情：[Remote access](/zh/gateway/remote)。
 
 ## 相关
 
-- [Dashboard](/en/web/dashboard) — gateway dashboard
-- [WebChat](/en/web/webchat) — browser-based chat interface
-- [TUI](/en/web/tui) — terminal user interface
-- [Health Checks](/en/gateway/health) — gateway health monitoring
+- [Dashboard](/zh/web/dashboard) — gateway dashboard
+- [WebChat](/zh/web/webchat) — browser-based chat interface
+- [TUI](/zh/web/tui) — terminal user interface
+- [Health Checks](/zh/gateway/health) — gateway health monitoring

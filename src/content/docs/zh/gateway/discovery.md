@@ -23,13 +23,13 @@ OpenClaw 有两个表面看起来相似但实际上截然不同的问题：
 - **直接 WS 传输**：面向局域网/tailnet 的 Gateway(网关) 网关 WS 端点（无 SSH）。
 - **SSH 传输（备用）**：通过 SSH 转发 `127.0.0.1:18789` 进行远程控制。
 - **Legacy TCP bridge (removed)**: 旧版节点传输（请参阅
-  [Bridge protocol](/en/gateway/bridge-protocol)); 不再为
+  [Bridge protocol](/zh/gateway/bridge-protocol)); 不再为
   发现而广播，也不再是当前构建的一部分。
 
 协议详情：
 
-- [Gateway(网关) protocol](/en/gateway/protocol)
-- [Bridge protocol (legacy)](/en/gateway/bridge-protocol)
+- [Gateway(网关) protocol](/zh/gateway/protocol)
+- [Bridge protocol (legacy)](/zh/gateway/bridge-protocol)
 
 ## 为什么我们同时保留“direct”和 SSH
 
@@ -57,7 +57,7 @@ OpenClaw 有两个表面看起来相似但实际上截然不同的问题：
 - **Gateway** 通过 Bonjour 广播其 WS 端点。
 - 客户端浏览并显示“选择一个 Gateway”列表，然后存储所选的端点。
 
-故障排除和信标详细信息：[Bonjour](/en/gateway/bonjour)。
+故障排除和信标详细信息：[Bonjour](/zh/gateway/bonjour)。
 
 #### 服务信标详细信息
 
@@ -112,7 +112,7 @@ macOS 应用现在在网关发现时首选 MagicDNS 名称而不是原始的 Tai
 
 当没有直连路由（或直连被禁用）时，客户端始终可以通过转发环回网关端口通过 SSH 连接。
 
-参见 [远程访问](/en/gateway/remote)。
+参见 [远程访问](/zh/gateway/remote)。
 
 ## 传输选择（客户端策略）
 
@@ -128,7 +128,7 @@ macOS 应用现在在网关发现时首选 MagicDNS 名称而不是原始的 Tai
 
 网关是节点/客户端准入的事实来源。
 
-- 配对请求在网关中创建/批准/拒绝（请参阅 [Gateway(网关) 配对](/en/gateway/pairing)）。
+- 配对请求在网关中创建/批准/拒绝（请参阅 [Gateway(网关) 配对](/zh/gateway/pairing)）。
 - 网关强制执行：
   - auth（令牌 / 密钥对）
   - scopes/ACL（网关不是每种方法的原始代理）

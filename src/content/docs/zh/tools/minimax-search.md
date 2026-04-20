@@ -95,5 +95,5 @@ MiniMax 搜索支持：
 
 ## 相关
 
-- [Web Search overview](/en/tools/web) -- 所有提供商和自动检测
-- [MiniMax](/en/providers/minimax) -- 模型、图像、语音和身份验证设置
+- [Web Search overview](/zh/tools/web) -- 所有提供商和自动检测
+- [MiniMax](/zh/providers/minimax) -- 模型、图像、语音和身份验证设置

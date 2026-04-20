@@ -84,7 +84,7 @@ channels:
 - 内联样式（粗体/斜体/删除线/行内代码/剧透）绝不会跨块拆分；渲染器会在每个块内重新打开样式。
 
 如需了解有关跨渠道分块行为的更多信息，请参阅
-[Streaming + chunking](/en/concepts/streaming)。
+[Streaming + chunking](/zh/concepts/streaming)。
 
 ## 链接策略
 

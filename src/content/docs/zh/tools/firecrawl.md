@@ -141,6 +141,6 @@ OpenClaw 在 Firecrawl 请求中始终使用 `proxy: "auto"` 加上 `storeInCach
 
 ## 相关
 
-- [Web Search 概述](/en/tools/web) -- 所有提供商和自动检测
-- [Web Fetch](/en/tools/web-fetch) -- 带有 Firecrawl 回退的 web_fetch 工具
-- [Tavily](/en/tools/tavily) -- 搜索 + 提取工具
+- [Web Search 概述](/zh/tools/web) -- 所有提供商和自动检测
+- [Web Fetch](/zh/tools/web-fetch) -- 带有 Firecrawl 回退的 web_fetch 工具
+- [Tavily](/zh/tools/tavily) -- 搜索 + 提取工具

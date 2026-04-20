@@ -27,7 +27,7 @@ openclaw plugins install @openclaw/twitch
 openclaw plugins install ./path/to/local/twitch-plugin
 ```
 
-详情：[插件](/en/tools/plugin)
+详情：[插件](/zh/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -151,7 +151,7 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 
 ## 多账号支持
 
-将 `channels.twitch.accounts` 与每账号令牌一起使用。有关共享模式，请参阅 [`gateway/configuration`](/en/gateway/configuration)。
+将 `channels.twitch.accounts` 与每账号令牌一起使用。有关共享模式，请参阅 [`gateway/configuration`](/zh/gateway/configuration)。
 
 示例（一个机器人账号在两个渠道中）：
 
@@ -385,8 +385,8 @@ Access token refreshed for user 123456 (expires in 14400s)
 
 ## 相关
 
-- [Channels Overview](/en/channels) — 所有支持的频道
-- [Pairing](/en/channels/pairing) — 私信认证和配对流程
-- [Groups](/en/channels/groups) — 群聊行为和提及控制
-- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
-- [Security](/en/gateway/security) — 访问模型和加固
+- [Channels Overview](/zh/channels) — 所有支持的频道
+- [Pairing](/zh/channels/pairing) — 私信认证和配对流程
+- [Groups](/zh/channels/groups) — 群聊行为和提及控制
+- [Channel Routing](/zh/channels/channel-routing) — 消息的会话路由
+- [Security](/zh/gateway/security) — 访问模型和加固

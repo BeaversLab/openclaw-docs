@@ -10,7 +10,7 @@ title: "代码执行"
 # 代码执行
 
 `code_execution` 在 xAI 的 Responses API 上运行沙箱隔离的远程 Python 分析。
-这与本地的 [`exec`](/en/tools/exec) 不同：
+这与本地的 [`exec`](/zh/tools/exec) 不同：
 
 - `exec` 在您的计算机或节点上运行 Shell 命令
 - `code_execution` 在 xAI 的远程沙箱中运行 Python
@@ -23,7 +23,7 @@ title: "代码执行"
 - 图表风格分析
 - 分析由 `x_search` 或 `web_search` 返回的数据
 
-当您需要本地文件、您的 Shell、您的仓库或配对设备时，请**不要**使用它。为此请使用 [`exec`](/en/tools/exec)。
+当您需要本地文件、您的 Shell、您的仓库或配对设备时，请**不要**使用它。为此请使用 [`exec`](/zh/tools/exec)。
 
 ## 设置
 
@@ -79,10 +79,10 @@ Use web_search to gather the latest AI benchmark numbers, then use code_executio
 - 这是 xAI 远程执行，而非本地进程执行。
 - 应将其视为临时分析，而非持久化笔记本。
 - 不要假设可以访问本地文件或您的工作区。
-- 对于最新的 X 数据，请先使用 [`x_search`](/en/tools/web#x_search)。
+- 对于最新的 X 数据，请先使用 [`x_search`](/zh/tools/web#x_search)。
 
 ## 另请参阅
 
-- [Web 工具](/en/tools/web)
-- [Exec](/en/tools/exec)
-- [xAI](/en/providers/xai)
+- [Web 工具](/zh/tools/web)
+- [Exec](/zh/tools/exec)
+- [xAI](/zh/providers/xai)

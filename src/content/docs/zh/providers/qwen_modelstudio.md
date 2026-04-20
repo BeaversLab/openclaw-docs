@@ -8,6 +8,6 @@ read_when:
 
 # Qwen / Model Studio
 
-此页面已移至 [Qwen](/en/providers/qwen)。请参阅 [Qwen](/en/providers/qwen) 以获取
+此页面已移至 [Qwen](/zh/providers/qwen)。请参阅 [Qwen](/zh/providers/qwen) 以获取
 标准提供商设置、端点详情、兼容性别名和 Wan
 视频生成说明。

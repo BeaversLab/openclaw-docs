@@ -47,7 +47,7 @@ title: "WebChat"
 
 ## 配置参考 (WebChat)
 
-完整配置：[Configuration](/en/gateway/configuration)
+完整配置：[Configuration](/zh/gateway/configuration)
 
 WebChat 选项：
 
@@ -60,6 +60,6 @@ WebChat 选项：
   shared-secret WebSocket 认证。
 - `gateway.auth.allowTailscale`：启用后，浏览器控制 UI 聊天选项卡可以使用 Tailscale
   身份标头。
-- `gateway.auth.mode: "trusted-proxy"`：位于具有身份感知能力的**非环回**代理源后面的浏览器客户端的反向代理认证（参见 [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)）。
+- `gateway.auth.mode: "trusted-proxy"`：位于具有身份感知能力的**非环回**代理源后面的浏览器客户端的反向代理认证（参见 [Trusted Proxy Auth](/zh/gateway/trusted-proxy-auth)）。
 - `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`：远程网关目标。
 - `session.*`：会话存储和主键默认值。

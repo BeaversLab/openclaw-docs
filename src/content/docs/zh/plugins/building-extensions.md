@@ -7,4 +7,4 @@ read_when:
 
 # 构建插件
 
-此页面已移至[构建插件](/en/plugins/building-plugins)。
+此页面已移至[构建插件](/zh/plugins/building-plugins)。

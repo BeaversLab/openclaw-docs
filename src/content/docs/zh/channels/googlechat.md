@@ -205,7 +205,7 @@ your-domain.com {
 - `typingIndicator` 支持 `none`、`message`（默认）和 `reaction`（反应需要用户 OAuth）。
 - 附件通过 Chat API 下载并存储在媒体管道中（大小受 `mediaMaxMb` 限制）。
 
-密钥参考详情：[密钥管理](/en/gateway/secrets)。
+密钥参考详情：[密钥管理](/zh/gateway/secrets)。
 
 ## 故障排除
 
@@ -257,14 +257,14 @@ openclaw channels status
 
 相关文档：
 
-- [Gateway(网关) 配置](/en/gateway/configuration)
-- [安全](/en/gateway/security)
-- [回应](/en/tools/reactions)
+- [Gateway(网关) 配置](/zh/gateway/configuration)
+- [安全](/zh/gateway/security)
+- [回应](/zh/tools/reactions)
 
 ## 相关
 
-- [渠道概览](/en/channels) — 所有支持的渠道
-- [配对](/en/channels/pairing) — 私信认证和配对流程
-- [群组](/en/channels/groups) — 群聊行为和提及控制
-- [渠道路由](/en/channels/channel-routing) — 消息的会话路由
-- [安全](/en/gateway/security) — 访问模型和加固
+- [渠道概览](/zh/channels) — 所有支持的渠道
+- [配对](/zh/channels/pairing) — 私信认证和配对流程
+- [群组](/zh/channels/groups) — 群聊行为和提及控制
+- [渠道路由](/zh/channels/channel-routing) — 消息的会话路由
+- [安全](/zh/gateway/security) — 访问模型和加固

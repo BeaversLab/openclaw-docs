@@ -24,7 +24,7 @@ OpenClaw 在每次运行时都会组装自己的系统提示词。它包括：
 - 回复标签 + 心跳行为
 - 运行时元数据 (主机/操作系统/模型/思考)
 
-请参阅 [System Prompt](/en/concepts/system-prompt) 了解完整细分。
+请参阅 [System Prompt](/zh/concepts/system-prompt) 了解完整细分。
 
 ## 上下文窗口中包含的内容
 
@@ -54,7 +54,7 @@ OpenClaw 在每次运行时都会组装自己的系统提示词。它包括：
 - 较低的值通常会减少视觉 Token 的使用量和负载大小。
 - 较高的值可以为 OCR/UI 密集型截图保留更多视觉细节。
 
-如需实际细分（按注入文件、工具、Skills 和系统提示大小），请使用 `/context list` 或 `/context detail`。请参阅 [Context](/en/concepts/context)。
+如需实际细分（按注入文件、工具、Skills 和系统提示大小），请使用 `/context list` 或 `/context detail`。请参阅 [Context](/zh/concepts/context)。
 
 ## 如何查看当前 Token 使用量
 
@@ -91,13 +91,13 @@ models.providers.<provider>.models[].cost
 
 提供商提示缓存仅在缓存 TTL 窗口内适用。OpenClaw 可以选择运行**缓存 TTL 修剪**：它会在缓存 TTL 过期后修剪会话，然后重置缓存窗口，以便后续请求可以重用新缓存的上下文，而不是重新缓存完整历史记录。这会在会话闲置超过 TTL 时保持较低的缓存写入成本。
 
-在 [Gateway(网关) 配置](/en/gateway/configuration) 中进行配置，并在 [会话修剪](/en/concepts/session-pruning) 中查看行为详细信息。
+在 [Gateway(网关) 配置](/zh/gateway/configuration) 中进行配置，并在 [会话修剪](/zh/concepts/session-pruning) 中查看行为详细信息。
 
 心跳可以在空闲间隔期间保持缓存 **“热”**。如果您的模型缓存 TTL 为 `1h`，将心跳间隔设置为略短于该值（例如 `55m`）可以避免重新缓存整个提示词，从而降低缓存写入成本。
 
 在多智能体设置中，您可以保留一个共享的模型配置，并使用 `agents.list[].params.cacheRetention` 针对每个智能体调整缓存行为。
 
-有关详细的逐项配置指南，请参阅 [提示词缓存](/en/reference/prompt-caching)。
+有关详细的逐项配置指南，请参阅 [提示词缓存](/zh/reference/prompt-caching)。
 
 对于 Anthropic API 定价，缓存读取显著比输入 token 便宜，而缓存写入则以更高的倍率计费。请参阅 Anthropic 的提示词缓存定价以获取最新费率和 TTL 倍率：
 [https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
@@ -169,4 +169,4 @@ agents:
 - 保持技能描述简短（技能列表会注入到提示词中）。
 - 对于冗长、探索性的工作，优先使用较小的模型。
 
-有关技能列表开销的精确公式，请参阅 [Skills](/en/tools/skills)。
+有关技能列表开销的精确公式，请参阅 [Skills](/zh/tools/skills)。

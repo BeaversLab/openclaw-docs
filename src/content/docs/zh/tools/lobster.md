@@ -10,7 +10,7 @@ read_when:
 
 Lobster 是一个工作流程 Shell，允许 OpenClaw 将多步工具序列作为具有明确审批检查点的单一确定性操作运行。
 
-Lobster 是位于独立后台工作之上的一个编写层。如需了解各个任务之上的流程编排，请参阅 [Task Flow](/en/automation/taskflow) (`openclaw tasks flow`)。有关任务活动账本，请参阅 [`openclaw tasks`](/en/automation/tasks)。
+Lobster 是位于独立后台工作之上的一个编写层。如需了解各个任务之上的流程编排，请参阅 [Task Flow](/zh/automation/taskflow) (`openclaw tasks flow`)。有关任务活动账本，请参阅 [`openclaw tasks`](/zh/automation/tasks)。
 
 ## Hook
 
@@ -118,7 +118,7 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 }'
 ```
 
-有关详细信息和配置选项，请参阅 [LLM Task](/en/tools/llm-task)。
+有关详细信息和配置选项，请参阅 [LLM Task](/zh/tools/llm-task)。
 
 ## 工作流程文件 (.lobster)
 
@@ -310,7 +310,7 @@ Lobster 返回一个包含以下三种状态之一的 JSON 信封：
 
 ## OpenProse
 
-OpenProse 与 Lobster 搭配得很好：使用 `/prose` 编排多代理准备，然后运行 Lobster 管道进行确定性审批。如果 Prose 程序需要 Lobster，请通过 `tools.subagents.tools` 为子代理允许 `lobster` 工具。参见 [OpenProse](/en/prose)。
+OpenProse 与 Lobster 搭配得很好：使用 `/prose` 编排多代理准备，然后运行 Lobster 管道进行确定性审批。如果 Prose 程序需要 Lobster，请通过 `tools.subagents.tools` 为子代理允许 `lobster` 工具。参见 [OpenProse](/zh/prose)。
 
 ## 安全性
 
@@ -328,8 +328,8 @@ OpenProse 与 Lobster 搭配得很好：使用 `/prose` 编排多代理准备，
 
 ## 了解更多
 
-- [插件](/en/tools/plugin)
-- [插件工具创作](/en/plugins/building-plugins#registering-agent-tools)
+- [插件](/zh/tools/plugin)
+- [插件工具创作](/zh/plugins/building-plugins#registering-agent-tools)
 
 ## 案例研究：社区工作流
 
@@ -340,6 +340,6 @@ OpenProse 与 Lobster 搭配得很好：使用 `/prose` 编排多代理准备，
 
 ## 相关
 
-- [自动化与任务](/en/automation) — 调度 Lobster 工作流
-- [自动化概述](/en/automation) — 所有自动化机制
-- [工具概述](/en/tools) — 所有可用的代理工具
+- [自动化与任务](/zh/automation) — 调度 Lobster 工作流
+- [自动化概述](/zh/automation) — 所有自动化机制
+- [工具概述](/zh/tools) — 所有可用的代理工具

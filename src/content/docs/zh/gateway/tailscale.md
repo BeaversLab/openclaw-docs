@@ -23,7 +23,7 @@ OpenClaw 可以为 Gateway(网关) 网关 仪表板和 WebSocket 端口自动配
 - `none` (仅私有入口)
 - `token` (设置 `OPENCLAW_GATEWAY_TOKEN` 时的默认值)
 - `password` (通过 `OPENCLAW_GATEWAY_PASSWORD` 或配置共享密钥)
-- `trusted-proxy` (具有身份感知的反向代理；请参阅 [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth))
+- `trusted-proxy` (具有身份感知的反向代理；请参阅 [Trusted Proxy Auth](/zh/gateway/trusted-proxy-auth))
 
 当 `tailscale.mode = "serve"` 且 `gateway.auth.allowTailscale` 为 `true` 时，
 控制 UI/WebSocket 认证可以使用 Tailscale 身份标头

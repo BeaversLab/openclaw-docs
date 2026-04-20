@@ -184,7 +184,7 @@ IRC 频道有两个独立的“关卡”：
 - 传统的无前缀键仍然被接受，并且仅作为 `id:` 进行匹配。
 - 第一个匹配的发送者策略获胜；`"*"` 是通配符后备。
 
-有关组访问权限与提及限制（及其交互方式）的更多信息，请参阅：[/channels/groups](/en/channels/groups)。
+有关组访问权限与提及限制（及其交互方式）的更多信息，请参阅：[/channels/groups](/zh/channels/groups)。
 
 ## NickServ
 
@@ -244,8 +244,8 @@ IRC 频道有两个独立的“关卡”：
 
 ## 相关
 
-- [Channels Overview](/en/channels) — 所有支持的频道
-- [Pairing](/en/channels/pairing) — 私信认证和配对流程
-- [Groups](/en/channels/groups) — 群聊行为和提及控制
-- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
-- [Security](/en/gateway/security) — 访问模型和加固
+- [Channels Overview](/zh/channels) — 所有支持的频道
+- [Pairing](/zh/channels/pairing) — 私信认证和配对流程
+- [Groups](/zh/channels/groups) — 群聊行为和提及控制
+- [Channel Routing](/zh/channels/channel-routing) — 消息的会话路由
+- [Security](/zh/gateway/security) — 访问模型和加固

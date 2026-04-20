@@ -14,10 +14,10 @@ title: "memory"
 
 相关：
 
-- Memory 概念：[Memory](/en/concepts/memory)
-- Memory wiki：[Memory Wiki](/en/plugins/memory-wiki)
-- Wiki CLI：[wiki](/en/cli/wiki)
-- 插件：[Plugins](/en/tools/plugin)
+- Memory 概念：[Memory](/zh/concepts/memory)
+- Memory wiki：[Memory Wiki](/zh/plugins/memory-wiki)
+- Wiki CLI：[wiki](/zh/cli/wiki)
+- 插件：[Plugins](/zh/tools/plugin)
 
 ## 示例
 
@@ -169,4 +169,4 @@ openclaw memory rem-harness [--agent <id>] [--include-promoted] [--json]
 - `memory rem-backfill --path <file-or-dir>` 将可逆的有根据日记条目写入 `DREAMS.md` 以供 UI 审核。
 - `memory rem-backfill --path <file-or-dir> --stage-short-term` 还将有根据的持久候选内容植入到实时短期提升存储中，以便常规深度阶段可以对其进行排名。
 - `memory rem-backfill --rollback` 移除先前写入的有根据日记条目，而 `memory rem-backfill --rollback-short-term` 移除先前暂存的有根据短期候选内容。
-- 有关完整阶段描述和配置参考，请参阅 [Dreaming](/en/concepts/dreaming)。
+- 有关完整阶段描述和配置参考，请参阅 [Dreaming](/zh/concepts/dreaming)。

@@ -28,7 +28,7 @@ openclaw status --usage
 - 当配置了多个代理时，输出包括每个代理的会话存储。
 - 概览在可用时包括 Gateway(网关) + 节点主机服务的安装/运行时状态。
 - 概览包括更新渠道 + git SHA（针对源代码检出）。
-- 更新信息显示在概览中；如果有可用更新，status 会打印提示以运行 `openclaw update`（请参阅 [更新](/en/install/updating)）。
+- 更新信息显示在概览中；如果有可用更新，status 会打印提示以运行 `openclaw update`（请参阅 [更新](/zh/install/updating)）。
 - 只读状态界面（`status`、`status --json`、`status --all`）会尽可能解析其目标配置路径支持的 SecretRefs。
 - 如果配置了支持的渠道 SecretRef 但在当前命令路径中不可用，status 将保持只读并报告降级输出，而不是崩溃。人工输出会显示诸如“configured token unavailable in this command path”（此命令路径中配置的令牌不可用）之类的警告，JSON 输出则包含 `secretDiagnostics`。
 - 当命令本地 SecretRef 解析成功时，status 优先使用解析的快照，并从最终输出中清除暂时的“secret unavailable”渠道标记。

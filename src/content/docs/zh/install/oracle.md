@@ -153,6 +153,6 @@ ssh -L 18789:127.0.0.1:18789 ubuntu@openclaw
 
 ## 后续步骤
 
-- [Channels](/en/channels) -- 连接 Telegram、WhatsApp、Discord 等
-- [Gateway(网关) configuration](/en/gateway/configuration) -- 所有配置选项
-- [Updating](/en/install/updating) -- 保持 OpenClaw 为最新状态
+- [Channels](/zh/channels) -- 连接 Telegram、WhatsApp、Discord 等
+- [Gateway(网关) configuration](/zh/gateway/configuration) -- 所有配置选项
+- [Updating](/zh/install/updating) -- 保持 OpenClaw 为最新状态

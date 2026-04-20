@@ -88,6 +88,6 @@ Grok 搜索支持 `query`。
 
 ## 相关
 
-- [Web Search 概述](/en/tools/web) -- 所有提供商和自动检测
-- [Web Search 中的 x_search](/en/tools/web#x_search) -- 通过 xAI 进行一流的 X 搜索
-- [Gemini Search](/en/tools/gemini-search) -- 通过 Google 归因生成的 AI 综合答案
+- [Web Search 概述](/zh/tools/web) -- 所有提供商和自动检测
+- [Web Search 中的 x_search](/zh/tools/web#x_search) -- 通过 xAI 进行一流的 X 搜索
+- [Gemini Search](/zh/tools/gemini-search) -- 通过 Google 归因生成的 AI 综合答案

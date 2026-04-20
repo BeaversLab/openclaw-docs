@@ -11,9 +11,9 @@ Each agent in a multi-agent setup can override the global sandbox and 工具
 policy. This page covers per-agent configuration, precedence rules, and
 examples.
 
-- **沙箱后端和模式**：参见 [沙箱隔离](/en/gateway/sandboxing)。
-- **调试被阻止的工具**：参见 [沙箱 vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) 和 `openclaw sandbox explain`。
-- **Elevated exec**：参见 [Elevated Mode](/en/tools/elevated)。
+- **沙箱后端和模式**：参见 [沙箱隔离](/zh/gateway/sandboxing)。
+- **调试被阻止的工具**：参见 [沙箱 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) 和 `openclaw sandbox explain`。
+- **Elevated exec**：参见 [Elevated Mode](/zh/tools/elevated)。
 
 Auth is per-agent: each agent reads from its own `agentDir` auth store at
 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`.
@@ -207,9 +207,9 @@ The filtering order is:
 如果设置了 `agents.list[].tools.profile`，它将覆盖该代理的 `tools.profile`。
 提供商工具键接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.4`）。
 
-工具策略支持 `group:*` 简写，这些简写会扩展为多个工具。有关完整列表，请参阅 [Tool groups](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
+工具策略支持 `group:*` 简写，这些简写会扩展为多个工具。有关完整列表，请参阅 [Tool groups](/zh/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
 
-每个代理的 elevated 覆盖项（`agents.list[].tools.elevated`）可以进一步限制特定代理的 elevated exec。有关详细信息，请参阅 [Elevated Mode](/en/tools/elevated)。
+每个代理的 elevated 覆盖项（`agents.list[].tools.elevated`）可以进一步限制特定代理的 elevated exec。有关详细信息，请参阅 [Elevated Mode](/zh/tools/elevated)。
 
 ---
 
@@ -358,9 +358,9 @@ The filtering order is:
 
 ## 另请参阅
 
-- [沙箱隔离](/en/gateway/sandboxing) -- 完整的沙箱参考（模式、范围、后端、镜像）
-- [沙箱 vs 工具策略 vs 提权模式](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- 调试“为什么被阻止？”
-- [提权模式](/en/tools/elevated)
-- [多代理路由](/en/concepts/multi-agent)
-- [沙箱配置](/en/gateway/configuration-reference#agentsdefaultssandbox)
-- [会话管理](/en/concepts/session)
+- [沙箱隔离](/zh/gateway/sandboxing) -- 完整的沙箱参考（模式、范围、后端、镜像）
+- [沙箱 vs 工具策略 vs 提权模式](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) -- 调试“为什么被阻止？”
+- [提权模式](/zh/tools/elevated)
+- [多代理路由](/zh/concepts/multi-agent)
+- [沙箱配置](/zh/gateway/configuration-reference#agentsdefaultssandbox)
+- [会话管理](/zh/concepts/session)

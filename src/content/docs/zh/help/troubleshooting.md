@@ -38,7 +38,7 @@ openclaw logs --follow
 
 如果您看到：
 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`,
-请转到 [/gateway/故障排除#anthropic-429-extra-usage-required-for-long-context](/en/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
+请转到 [/gateway/故障排除#anthropic-429-extra-usage-required-for-long-context](/zh/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
 
 ## 本地 OpenAI 兼容后端直接有效但在 OpenClaw 中失败
 
@@ -53,7 +53,7 @@ openclaw logs --follow
 3. 如果微小的直接调用仍然有效，但较大的 OpenClaw 提示使后端崩溃，
    请将剩余问题视为上游模型/服务器限制，并
    继续查看深度运行手册：
-   [/gateway/故障排除#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail](/en/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail)
+   [/gateway/故障排除#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail](/zh/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail)
 
 ## 插件安装因缺少 openclaw 扩展而失败
 
@@ -78,7 +78,7 @@ openclaw logs --follow
 }
 ```
 
-参考：[插件架构](/en/plugins/architecture)
+参考：[插件架构](/zh/plugins/architecture)
 
 ## 决策树
 
@@ -127,9 +127,9 @@ flowchart TD
 
     深度页面：
 
-    - [/gateway/故障排除#no-replies](/en/gateway/troubleshooting#no-replies)
-    - [/channels/故障排除](/en/channels/troubleshooting)
-    - [/channels/pairing](/en/channels/pairing)
+    - [/gateway/故障排除#no-replies](/zh/gateway/troubleshooting#no-replies)
+    - [/channels/故障排除](/zh/channels/troubleshooting)
+    - [/channels/pairing](/zh/channels/pairing)
 
   </Accordion>
 
@@ -168,9 +168,9 @@ flowchart TD
 
     Deep pages:
 
-    - [/gateway/故障排除#dashboard-control-ui-connectivity](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
-    - [/web/control-ui](/en/web/control-ui)
-    - [/gateway/authentication](/en/gateway/authentication)
+    - [/gateway/故障排除#dashboard-control-ui-connectivity](/zh/gateway/troubleshooting#dashboard-control-ui-connectivity)
+    - [/web/control-ui](/zh/web/control-ui)
+    - [/gateway/authentication](/zh/gateway/authentication)
 
   </Accordion>
 
@@ -197,9 +197,9 @@ flowchart TD
 
     Deep pages:
 
-    - [/gateway/故障排除#gateway-service-not-running](/en/gateway/troubleshooting#gateway-service-not-running)
-    - [/gateway/background-process](/en/gateway/background-process)
-    - [/gateway/configuration](/en/gateway/configuration)
+    - [/gateway/故障排除#gateway-service-not-running](/zh/gateway/troubleshooting#gateway-service-not-running)
+    - [/gateway/background-process](/zh/gateway/background-process)
+    - [/gateway/configuration](/zh/gateway/configuration)
 
   </Accordion>
 
@@ -226,8 +226,8 @@ flowchart TD
 
     Deep pages:
 
-    - [/gateway/故障排除#渠道-connected-messages-not-flowing](/en/gateway/troubleshooting#channel-connected-messages-not-flowing)
-    - [/channels/故障排除](/en/channels/troubleshooting)
+    - [/gateway/故障排除#渠道-connected-messages-not-flowing](/zh/gateway/troubleshooting#channel-connected-messages-not-flowing)
+    - [/channels/故障排除](/zh/channels/troubleshooting)
 
   </Accordion>
 
@@ -259,9 +259,9 @@ flowchart TD
 
     深度页面：
 
-    - [/gateway/故障排除#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
-    - [/automation/cron-jobs#故障排除](/en/automation/cron-jobs#troubleshooting)
-    - [/gateway/heartbeat](/en/gateway/heartbeat)
+    - [/gateway/故障排除#cron-and-heartbeat-delivery](/zh/gateway/troubleshooting#cron-and-heartbeat-delivery)
+    - [/automation/cron-jobs#故障排除](/zh/automation/cron-jobs#troubleshooting)
+    - [/gateway/heartbeat](/zh/gateway/heartbeat)
 
     </Accordion>
 
@@ -289,9 +289,9 @@ flowchart TD
 
       深度页面：
 
-      - [/gateway/故障排除#node-paired-工具-fails](/en/gateway/troubleshooting#node-paired-tool-fails)
-      - [/nodes/故障排除](/en/nodes/troubleshooting)
-      - [/tools/exec-approvals](/en/tools/exec-approvals)
+      - [/gateway/故障排除#node-paired-工具-fails](/zh/gateway/troubleshooting#node-paired-tool-fails)
+      - [/nodes/故障排除](/zh/nodes/troubleshooting)
+      - [/tools/exec-approvals](/zh/tools/exec-approvals)
 
     </Accordion>
 
@@ -335,9 +335,9 @@ flowchart TD
 
       深入页面：
 
-      - [/tools/exec](/en/tools/exec)
-      - [/tools/exec-approvals](/en/tools/exec-approvals)
-      - [/gateway/security#what-the-audit-checks-high-level](/en/gateway/security#what-the-audit-checks-high-level)
+      - [/tools/exec](/zh/tools/exec)
+      - [/tools/exec-approvals](/zh/tools/exec-approvals)
+      - [/gateway/security#what-the-audit-checks-high-level](/zh/gateway/security#what-the-audit-checks-high-level)
 
     </Accordion>
 
@@ -369,10 +369,10 @@ flowchart TD
 
       深度页面：
 
-      - [/gateway/故障排除#browser-工具-fails](/en/gateway/troubleshooting#browser-tool-fails)
-      - [/tools/browser#missing-browser-command-or-工具](/en/tools/browser#missing-browser-command-or-tool)
-      - [/tools/browser-linux-故障排除](/en/tools/browser-linux-troubleshooting)
-      - [/tools/browser-wsl2-windows-remote-cdp-故障排除](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+      - [/gateway/故障排除#browser-工具-fails](/zh/gateway/troubleshooting#browser-tool-fails)
+      - [/tools/browser#missing-browser-command-or-工具](/zh/tools/browser#missing-browser-command-or-tool)
+      - [/tools/browser-linux-故障排除](/zh/tools/browser-linux-troubleshooting)
+      - [/tools/browser-wsl2-windows-remote-cdp-故障排除](/zh/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
 
     </Accordion>
 
@@ -380,8 +380,8 @@ flowchart TD
 
 ## 相关
 
-- [常见问题](/en/help/faq) — 经常被问到的问题
-- [Gateway(网关) 故障排除](/en/gateway/troubleshooting) — Gateway(网关) 特定的问题
-- [Doctor](/en/gateway/doctor) — 自动化的健康检查和修复
-- [渠道 故障排除](/en/channels/troubleshooting) — 渠道 连接问题
-- [自动化 故障排除](/en/automation/cron-jobs#troubleshooting) — cron 和心跳 问题
+- [常见问题](/zh/help/faq) — 经常被问到的问题
+- [Gateway(网关) 故障排除](/zh/gateway/troubleshooting) — Gateway(网关) 特定的问题
+- [Doctor](/zh/gateway/doctor) — 自动化的健康检查和修复
+- [渠道 故障排除](/zh/channels/troubleshooting) — 渠道 连接问题
+- [自动化 故障排除](/zh/automation/cron-jobs#troubleshooting) — cron 和心跳 问题

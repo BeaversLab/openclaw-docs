@@ -11,9 +11,9 @@ title: "agents"
 
 相关：
 
-- 多智能体路由：[多智能体路由](/en/concepts/multi-agent)
-- 智能体工作区：[智能体工作区](/en/concepts/agent-workspace)
-- Skills 可见性配置：[Skills 配置](/en/tools/skills-config)
+- 多智能体路由：[多智能体路由](/zh/concepts/multi-agent)
+- 智能体工作区：[智能体工作区](/zh/concepts/agent-workspace)
+- Skills 可见性配置：[Skills 配置](/zh/tools/skills-config)
 
 ## 示例
 
@@ -34,7 +34,7 @@ openclaw agents delete work
 
 使用路由绑定将入站渠道流量固定到特定智能体。
 
-如果您还希望每个代理具有不同的可见 Skills，请在 `openclaw.json` 中配置 `agents.defaults.skills` 和 `agents.list[].skills`。请参阅 [Skills config](/en/tools/skills-config) 和 [Configuration Reference](/en/gateway/configuration-reference#agents-defaults-skills)。
+如果您还希望每个代理具有不同的可见 Skills，请在 `openclaw.json` 中配置 `agents.defaults.skills` 和 `agents.list[].skills`。请参阅 [Skills config](/zh/tools/skills-config) 和 [Configuration Reference](/zh/gateway/configuration-reference#agents-defaults-skills)。
 
 列出绑定：
 

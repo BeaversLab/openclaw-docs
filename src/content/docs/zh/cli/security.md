@@ -12,7 +12,7 @@ title: "security"
 
 相关：
 
-- 安全指南：[安全](/en/gateway/security)
+- 安全指南：[安全](/zh/gateway/security)
 
 ## 审计
 
@@ -40,7 +40,7 @@ openclaw security audit --json
 当渠道允许列表依赖可变的名称/电子邮件/标签而非稳定的 ID 时，它会发出警告（适用于 Discord、Slack、Google Chat、Microsoft Teams、Mattermost 和 IRC 的范围）。
 当 `gateway.auth.mode="none"` 导致 Gateway(网关) HTTP API 在没有共享密钥（`/tools/invoke` 加上任何启用的 `/v1/*` 端点）的情况下可被访问时，它会发出警告。
 前缀为 `dangerous`/`dangerously` 的设置是显式的应急操作员覆盖；仅启用其中一项本身并不代表存在安全漏洞报告。
-有关完整的不安全参数清单，请参阅 [Security](/en/gateway/security) 中的“Insecure or dangerous flags summary”部分。
+有关完整的不安全参数清单，请参阅 [Security](/zh/gateway/security) 中的“Insecure or dangerous flags summary”部分。
 
 SecretRef 行为：
 

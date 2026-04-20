@@ -12,7 +12,7 @@ title: "cron"
 
 相关：
 
-- Cron 作业：[Cron jobs](/en/automation/cron-jobs)
+- Cron 作业：[Cron jobs](/zh/automation/cron-jobs)
 
 提示：运行 `openclaw cron --help` 以查看完整的命令界面。
 

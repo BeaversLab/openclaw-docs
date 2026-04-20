@@ -121,7 +121,7 @@ openclaw devices approve <requestId>
 `system.run` 受本地执行审批限制：
 
 - `~/.openclaw/exec-approvals.json`
-- [执行批准](/en/tools/exec-approvals)
+- [执行批准](/zh/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>`（从 Gateway(网关) 编辑）
 
 对于已批准的异步节点执行，OpenClaw 会在提示之前准备一个规范的 `systemRunPlan`。随后已批准的 `system.run` 转发将重用该存储的计划，因此在创建批准请求后对 command/cwd/会话 字段的编辑将被拒绝，而不是更改节点执行的内容。

@@ -19,23 +19,23 @@ title: "网络"
   非 Loopback 绑定需要有效的网关身份验证路径：shared-secret
   token/password 认证，或正确配置的非 Loopback
   `trusted-proxy` 部署。
-- **建议每个主机使用一个 Gateway(网关)**。为了隔离，请运行多个具有隔离配置文件和端口的网关 ([Multiple Gateways](/en/gateway/multiple-gateways))。
+- **建议每个主机使用一个 Gateway(网关)**。为了隔离，请运行多个具有隔离配置文件和端口的网关 ([Multiple Gateways](/zh/gateway/multiple-gateways))。
 - **Canvas host** 与 Gateway(网关) 提供在同一端口上 (`/__openclaw__/canvas/`, `/__openclaw__/a2ui/`)，当绑定超出 Loopback 时受 Gateway(网关) 认证保护。
-- **远程访问** 通常通过 SSH 隧道或 Tailscale VPN ([Remote Access](/en/gateway/remote)) 进行。
+- **远程访问** 通常通过 SSH 隧道或 Tailscale VPN ([Remote Access](/zh/gateway/remote)) 进行。
 
 关键参考：
 
-- [Gateway(网关) architecture](/en/concepts/architecture)
-- [Gateway(网关) protocol](/en/gateway/protocol)
-- [Gateway(网关) runbook](/en/gateway)
-- [Web surfaces + bind modes](/en/web)
+- [Gateway(网关) architecture](/zh/concepts/architecture)
+- [Gateway(网关) protocol](/zh/gateway/protocol)
+- [Gateway(网关) runbook](/zh/gateway)
+- [Web surfaces + bind modes](/zh/web)
 
 ## 配对 + 身份
 
-- [配对概述 (私信 + 节点)](/en/channels/pairing)
-- [Gateway(网关) 拥有的节点配对](/en/gateway/pairing)
-- [设备 CLI (配对 + token 轮换)](/en/cli/devices)
-- [配对 CLI (私信 批准)](/en/cli/pairing)
+- [配对概述 (私信 + 节点)](/zh/channels/pairing)
+- [Gateway(网关) 拥有的节点配对](/zh/gateway/pairing)
+- [设备 CLI (配对 + token 轮换)](/zh/cli/devices)
+- [配对 CLI (私信 批准)](/zh/cli/pairing)
 
 本地信任：
 
@@ -48,21 +48,21 @@ title: "网络"
 
 ## 设备发现 + 传输协议
 
-- [设备发现 & 传输协议](/en/gateway/discovery)
-- [Bonjour / mDNS](/en/gateway/bonjour)
-- [远程访问 (SSH)](/en/gateway/remote)
-- [Tailscale](/en/gateway/tailscale)
+- [设备发现 & 传输协议](/zh/gateway/discovery)
+- [Bonjour / mDNS](/zh/gateway/bonjour)
+- [远程访问 (SSH)](/zh/gateway/remote)
+- [Tailscale](/zh/gateway/tailscale)
 
 ## 节点 + 传输协议
 
-- [节点概述](/en/nodes)
-- [桥接协议 (旧节点，历史)](/en/gateway/bridge-protocol)
-- [节点操作手册： iOS](/en/platforms/ios)
-- [节点操作手册： Android](/en/platforms/android)
+- [节点概述](/zh/nodes)
+- [桥接协议 (旧节点，历史)](/zh/gateway/bridge-protocol)
+- [节点操作手册： iOS](/zh/platforms/ios)
+- [节点操作手册： Android](/zh/platforms/android)
 
 ## 安全
 
-- [安全概述](/en/gateway/security)
-- [Gateway(网关) 配置参考](/en/gateway/configuration)
-- [故障排除](/en/gateway/troubleshooting)
-- [Doctor](/en/gateway/doctor)
+- [安全概述](/zh/gateway/security)
+- [Gateway(网关) 配置参考](/zh/gateway/configuration)
+- [故障排除](/zh/gateway/troubleshooting)
+- [Doctor](/zh/gateway/doctor)

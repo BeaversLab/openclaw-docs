@@ -117,4 +117,4 @@ openclaw gateway restart
 openclaw health
 ```
 
-指南：[更新](/en/install/updating)
+指南：[更新](/zh/install/updating)

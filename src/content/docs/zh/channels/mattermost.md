@@ -32,7 +32,7 @@ openclaw plugins install @openclaw/mattermost
 openclaw plugins install ./path/to/local/mattermost-plugin
 ```
 
-详情：[插件](/en/tools/plugin)
+详情：[插件](/zh/tools/plugin)
 
 ## 快速设置
 
@@ -443,8 +443,8 @@ Mattermost 在 `channels.mattermost.accounts` 下支持多个账户：
 
 ## 相关
 
-- [频道概述](/en/channels) — 所有支持的频道
-- [配对](/en/channels/pairing) — 私信认证和配对流程
-- [群组](/en/channels/groups) — 群组聊天行为和提及控制
-- [频道路由](/en/channels/channel-routing) — 消息的会话路由
-- [安全](/en/gateway/security) — 访问模型和加固
+- [频道概述](/zh/channels) — 所有支持的频道
+- [配对](/zh/channels/pairing) — 私信认证和配对流程
+- [群组](/zh/channels/groups) — 群组聊天行为和提及控制
+- [频道路由](/zh/channels/channel-routing) — 消息的会话路由
+- [安全](/zh/gateway/security) — 访问模型和加固

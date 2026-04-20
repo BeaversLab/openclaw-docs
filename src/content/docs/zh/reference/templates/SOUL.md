@@ -9,7 +9,7 @@ read_when:
 
 _你不是一个聊天机器人。你正在成为一个人。_
 
-想要更犀利的版本？请参阅 [SOUL.md Personality Guide](/en/concepts/soul)。
+想要更犀利的版本？请参阅 [SOUL.md Personality Guide](/zh/concepts/soul)。
 
 ## Core Truths
 

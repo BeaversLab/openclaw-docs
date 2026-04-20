@@ -13,7 +13,7 @@ title: "browser"
 
 相关内容：
 
-- 浏览器工具 + API：[Browser 工具](/en/tools/browser)
+- 浏览器工具 + API：[Browser 工具](/zh/tools/browser)
 
 ## 通用标志
 
@@ -45,7 +45,7 @@ openclaw browser --browser-profile openclaw tabs
 openclaw browser --browser-profile openclaw open https://example.com
 ```
 
-详细指南：[Browser 故障排除](/en/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
+详细指南：[Browser 故障排除](/zh/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
 
 ## 生命周期
 
@@ -81,7 +81,7 @@ openclaw browser --browser-profile openclaw reset-profile
 
 当插件允许列表排除了 `browser` 时，`browser.enabled=true` 不会恢复 CLI 子命令。
 
-相关：[Browser 工具](/en/tools/browser#missing-browser-command-or-tool)
+相关：[Browser 工具](/zh/tools/browser#missing-browser-command-or-tool)
 
 ## 配置文件（Profiles）
 
@@ -242,4 +242,4 @@ openclaw browser --browser-profile chrome-live tabs
 
 使用 `gateway.nodes.browser.mode` 控制自动路由，如果连接了多个节点，使用 `gateway.nodes.browser.node` 固定特定节点。
 
-安全 + 远程设置：[浏览器工具](/en/tools/browser)、[远程访问](/en/gateway/remote)、[Tailscale](/en/gateway/tailscale)、[安全](/en/gateway/security)
+安全 + 远程设置：[浏览器工具](/zh/tools/browser)、[远程访问](/zh/gateway/remote)、[Tailscale](/zh/gateway/tailscale)、[安全](/zh/gateway/security)

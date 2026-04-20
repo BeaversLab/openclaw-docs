@@ -67,7 +67,7 @@ openclaw sessions cleanup --json
 
 `openclaw sessions cleanup` 使用配置中的 `session.maintenance` 设置：
 
-- 范围说明：`openclaw sessions cleanup` 仅维护会话存储/脚本。它不会清理 cron 运行日志（`cron/runs/<jobId>.jsonl`），这些日志由 [Cron 配置](/en/automation/cron-jobs#configuration) 中的 `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 管理，并在 [Cron 维护](/en/automation/cron-jobs#maintenance) 中进行了解释。
+- 范围说明：`openclaw sessions cleanup` 仅维护会话存储/脚本。它不会清理 cron 运行日志（`cron/runs/<jobId>.jsonl`），这些日志由 [Cron 配置](/zh/automation/cron-jobs#configuration) 中的 `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 管理，并在 [Cron 维护](/zh/automation/cron-jobs#maintenance) 中进行了解释。
 
 - `--dry-run`：预览将修剪/限制的条目数量，而不进行写入。
   - 在文本模式下，dry-run 打印每个会话的操作表（`Action`、`Key`、`Age`、`Model`、`Flags`），以便您可以查看将保留和删除的内容。
@@ -109,4 +109,4 @@ openclaw sessions cleanup --json
 
 相关：
 
-- 会话配置：[配置参考](/en/gateway/configuration-reference#session)
+- 会话配置：[配置参考](/zh/gateway/configuration-reference#session)

@@ -84,6 +84,6 @@ Gemini search 支持 `query`。
 
 ## 相关
 
-- [Web Search overview](/en/tools/web) -- 所有提供商和自动检测
-- [Brave Search](/en/tools/brave-search) -- 带有片段的结构化结果
-- [Perplexity Search](/en/tools/perplexity-search) -- 结构化结果 + 内容提取
+- [Web Search overview](/zh/tools/web) -- 所有提供商和自动检测
+- [Brave Search](/zh/tools/brave-search) -- 带有片段的结构化结果
+- [Perplexity Search](/zh/tools/perplexity-search) -- 结构化结果 + 内容提取

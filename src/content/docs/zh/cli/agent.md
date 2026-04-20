@@ -18,7 +18,7 @@ title: "agent"
 
 相关：
 
-- Agent send 工具：[Agent send](/en/tools/agent-send)
+- Agent send 工具：[Agent send](/zh/tools/agent-send)
 
 ## 选项
 

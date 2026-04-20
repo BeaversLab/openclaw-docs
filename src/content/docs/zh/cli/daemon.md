@@ -50,8 +50,8 @@ openclaw daemon uninstall
 - 当令牌身份验证需要令牌且 `gateway.auth.token` 由 SecretRef 管理时，`install` 会验证 SecretRef 是否可解析，但不会将解析出的令牌持久化到服务环境元数据中。
 - 如果令牌身份验证需要令牌且配置的令牌 SecretRef 未解析，安装将以失败关闭。
 - 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password` 且 `gateway.auth.mode` 未设置，安装将被阻止，直到显式设置模式。
-- 如果您有意在一台主机上运行多个网关，请隔离端口、配置/状态和工作区；请参阅 [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host)。
+- 如果您有意在一台主机上运行多个网关，请隔离端口、配置/状态和工作区；请参阅 [/gateway#multiple-gateways-same-host](/zh/gateway#multiple-gateways-same-host)。
 
 ## 推荐
 
-请使用 [`openclaw gateway`](/en/cli/gateway) 查看当前文档和示例。
+请使用 [`openclaw gateway`](/zh/cli/gateway) 查看当前文档和示例。

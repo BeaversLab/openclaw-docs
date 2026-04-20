@@ -74,7 +74,7 @@ OpenClaw 的 Gateway(网关) 网关 可以提供一个小型的兼容 OpenAI 的
   - 当不存在该标头时，回退到正常的操作员默认范围集合
   - 仅当调用者显式缩小范围并省略 `operator.admin` 时，才会丢失所有者语义
 
-请参阅[安全性](/en/gateway/security)和[远程访问](/en/gateway/remote)。
+请参阅[安全性](/zh/gateway/security)和[远程访问](/zh/gateway/remote)。
 
 ## 代理优先模型合约
 
