@@ -1,0 +1,439 @@
+{
+  "tabs": {
+    "Get started": {
+      "en": "Get started",
+      "zh": "开始使用",
+      "zh-Hant": "開始使用",
+      "fr": "Commencer",
+      "es": "Empezar"
+    },
+    "Install": {
+      "en": "Install",
+      "zh": "安装",
+      "zh-Hant": "安裝",
+      "fr": "Installer",
+      "es": "Instalar"
+    },
+    "Channels": {
+      "en": "Channels",
+      "zh": "渠道",
+      "zh-Hant": "渠道",
+      "fr": "Canaux",
+      "es": "Canales"
+    },
+    "Agents": {
+      "en": "Agents",
+      "zh": "智能体",
+      "zh-Hant": "智能體",
+      "fr": "Agents",
+      "es": "Agentes"
+    },
+    "Tools": {
+      "en": "Tools",
+      "zh": "工具",
+      "zh-Hant": "工具",
+      "fr": "Outils",
+      "es": "Herramientas"
+    },
+    "Models": {
+      "en": "Models",
+      "zh": "模型",
+      "zh-Hant": "模型",
+      "fr": "Modèles",
+      "es": "Modelos"
+    },
+    "Platforms": {
+      "en": "Platforms",
+      "zh": "平台",
+      "zh-Hant": "平台",
+      "fr": "Plateformes",
+      "es": "Plataformas"
+    },
+    "Gateway & Ops": {
+      "en": "Gateway & Ops",
+      "zh": "网关与运维",
+      "zh-Hant": "網關與運維",
+      "fr": "Passerelle & Ops",
+      "es": "Pasarela y Ops"
+    },
+    "Reference": {
+      "en": "Reference",
+      "zh": "参考",
+      "zh-Hant": "參考",
+      "fr": "Référence",
+      "es": "Referencia"
+    },
+    "Help": {
+      "en": "Help",
+      "zh": "帮助",
+      "zh-Hant": "幫助",
+      "fr": "Aide",
+      "es": "Ayuda"
+    }
+  },
+  "groups": {
+    "Home": {
+      "en": "Home",
+      "zh": "首页",
+      "zh-Hant": "首頁",
+      "fr": "Accueil",
+      "es": "Inicio"
+    },
+    "Overview": {
+      "en": "Overview",
+      "zh": "概览",
+      "zh-Hant": "概覽",
+      "fr": "Aperçu",
+      "es": "Visión general"
+    },
+    "Core concepts": {
+      "en": "Core concepts",
+      "zh": "核心概念",
+      "zh-Hant": "核心概念",
+      "fr": "Concepts clés",
+      "es": "Conceptos básicos"
+    },
+    "First steps": {
+      "en": "First steps",
+      "zh": "第一步",
+      "zh-Hant": "第一步",
+      "fr": "Premiers pas",
+      "es": "Primeros pasos"
+    },
+    "Guides": {
+      "en": "Guides",
+      "zh": "指南",
+      "zh-Hant": "指南",
+      "fr": "Guides",
+      "es": "Guías"
+    },
+    "Install overview": {
+      "en": "Install overview",
+      "zh": "安装概览",
+      "zh-Hant": "安裝概覽",
+      "fr": "Aperçu de l'installation",
+      "es": "Generalidades de instalación"
+    },
+    "Other install methods": {
+      "en": "Other install methods",
+      "zh": "其他安装方法",
+      "zh-Hant": "其他安裝方法",
+      "fr": "Autres méthodes d'installation",
+      "es": "Otros métodos de instalación"
+    },
+    "Maintenance": {
+      "en": "Maintenance",
+      "zh": "维护",
+      "zh-Hant": "維護",
+      "fr": "Maintenance",
+      "es": "Mantenimiento"
+    },
+    "Hosting and deployment": {
+      "en": "Hosting and deployment",
+      "zh": "托管与部署",
+      "zh-Hant": "托管與部署",
+      "fr": "Hébergement et déploiement",
+      "es": "Alojamiento y despliegue"
+    },
+    "Advanced": {
+      "en": "Advanced",
+      "zh": "高级",
+      "zh-Hant": "高級",
+      "fr": "Avancé",
+      "es": "Avanzado"
+    },
+    "Messaging platforms": {
+      "en": "Messaging platforms",
+      "zh": "消息平台",
+      "zh-Hant": "消息平台",
+      "fr": "Plateformes de messagerie",
+      "es": "Plataformas de mensajería"
+    },
+    "Configuration": {
+      "en": "Configuration",
+      "zh": "配置",
+      "zh-Hant": "配置",
+      "fr": "Configuration",
+      "es": "Configuración"
+    },
+    "Fundamentals": {
+      "en": "Fundamentals",
+      "zh": "基础理论",
+      "zh-Hant": "基礎理論",
+      "fr": "Fondamentaux",
+      "es": "Fundamentos"
+    },
+    "Bootstrapping": {
+      "en": "Bootstrapping",
+      "zh": "引导",
+      "zh-Hant": "引導",
+      "fr": "Bootstrapping",
+      "es": "Bootstrapping"
+    },
+    "Sessions and memory": {
+      "en": "Sessions and memory",
+      "zh": "会话与内存",
+      "zh-Hant": "會話與內存",
+      "fr": "Sessions et mémoire",
+      "es": "Sesiones y memoria"
+    },
+    "Multi-agent": {
+      "en": "Multi-agent",
+      "zh": "多智能体",
+      "zh-Hant": "多智能體",
+      "fr": "Multi-agent",
+      "es": "Multi-agente"
+    },
+    "Messages and delivery": {
+      "en": "Messages and delivery",
+      "zh": "消息与传递",
+      "zh-Hant": "消息與傳递",
+      "fr": "Messages et livraison",
+      "es": "Mensajes y entrega"
+    },
+    "Built-in tools": {
+      "en": "Built-in tools",
+      "zh": "内置工具",
+      "zh-Hant": "內置工具",
+      "fr": "Outils intégrés",
+      "es": "Herramientas integradas"
+    },
+    "Browser": {
+      "en": "Browser",
+      "zh": "浏览器",
+      "zh-Hant": "瀏覽器",
+      "fr": "Navigateur",
+      "es": "Navegador"
+    },
+    "Agent coordination": {
+      "en": "Agent coordination",
+      "zh": "智能体协作",
+      "zh-Hant": "智能體協作",
+      "fr": "Coordination des agents",
+      "es": "Coordinación de agentes"
+    },
+    "Skills": {
+      "en": "Skills",
+      "zh": "技能",
+      "zh-Hant": "技能",
+      "fr": "Compétences",
+      "es": "Habilidades"
+    },
+    "Extensions": {
+      "en": "Extensions",
+      "zh": "扩展",
+      "zh-Hant": "擴展",
+      "fr": "Extensions",
+      "es": "Extensiones"
+    },
+    "Automation": {
+      "en": "Automation",
+      "zh": "自动化",
+      "zh-Hant": "自動化",
+      "fr": "Automatisation",
+      "es": "Automatización"
+    },
+    "Media and devices": {
+      "en": "Media and devices",
+      "zh": "媒体与设备",
+      "zh-Hant": "媒體與設備",
+      "fr": "Médias et appareils",
+      "es": "Medios y dispositivos"
+    },
+    "Model concepts": {
+      "en": "Model concepts",
+      "zh": "模型概念",
+      "zh-Hant": "模型概念",
+      "fr": "Concepts de modèle",
+      "es": "Conceptos de modelo"
+    },
+    "Providers": {
+      "en": "Providers",
+      "zh": "提供者",
+      "zh-Hant": "提供者",
+      "fr": "Fournisseurs",
+      "es": "Proveedores"
+    },
+    "Platforms overview": {
+      "en": "Platforms overview",
+      "zh": "平台概览",
+      "zh-Hant": "平台概覽",
+      "fr": "Aperçu des plateformes",
+      "es": "Visión general de plataformas"
+    },
+    "macOS companion app": {
+      "en": "macOS companion app",
+      "zh": "macOS 助手应用",
+      "zh-Hant": "macOS 助手應用",
+      "fr": "Application compagnon macOS",
+      "es": "Aplicación de acompañamiento macOS"
+    },
+    "Gateway": {
+      "en": "Gateway",
+      "zh": "网关",
+      "zh-Hant": "網關",
+      "fr": "Passerelle",
+      "es": "Pasarela"
+    },
+    "Configuration and operations": {
+      "en": "Configuration and operations",
+      "zh": "配置与运维",
+      "zh-Hant": "配置與運維",
+      "fr": "Configuration et opérations",
+      "es": "Configuración y operaciones"
+    },
+    "Security and sandboxing": {
+      "en": "Security and sandboxing",
+      "zh": "安全与沙箱",
+      "zh-Hant": "安全與沙箱",
+      "fr": "Sécurité et sandboxing",
+      "es": "Seguridad y sandbox"
+    },
+    "Protocols and APIs": {
+      "en": "Protocols and APIs",
+      "zh": "协议与 API",
+      "zh-Hant": "協議與 API",
+      "fr": "Protocoles et API",
+      "es": "Protocolos y API"
+    },
+    "Networking and discovery": {
+      "en": "Networking and discovery",
+      "zh": "网络与发现",
+      "zh-Hant": "Réseautage et découverte",
+      "es": "Redes y descubrimiento"
+    },
+    "Remote access": {
+      "en": "Remote access",
+      "zh": "远程访问",
+      "zh-Hant": "遠程訪問",
+      "fr": "Accès à distance",
+      "es": "Acceso remoto"
+    },
+    "Security": {
+      "en": "Security",
+      "zh": "安全",
+      "zh-Hant": "安全",
+      "fr": "Sécurité",
+      "es": "Seguridad"
+    },
+    "Web interfaces": {
+      "en": "Web interfaces",
+      "zh": "Web 界面",
+      "zh-Hant": "Web 界面",
+      "fr": "Interfaces Web",
+      "es": "Interfaces Web"
+    },
+    "CLI commands": {
+      "en": "CLI commands",
+      "zh": "CLI 命令",
+      "zh-Hant": "CLI 命令",
+      "fr": "Commandes CLI",
+      "es": "Comandos CLI"
+    },
+    "RPC and API": {
+      "en": "RPC and API",
+      "zh": "RPC 与 API",
+      "zh-Hant": "RPC 與 API",
+      "fr": "RPC et API",
+      "es": "RPC y API"
+    },
+    "Templates": {
+      "en": "Templates",
+      "zh": "模板",
+      "zh-Hant": "模板",
+      "fr": "Modèles (Templates)",
+      "es": "Plantillas"
+    },
+    "Technical reference": {
+      "en": "Technical reference",
+      "zh": "技术参考",
+      "zh-Hant": "技術參考",
+      "fr": "Référence technique",
+      "es": "Referencia técnica"
+    },
+    "Concept internals": {
+      "en": "Concept internals",
+      "zh": "概念原理",
+      "zh-Hant": "概念原理",
+      "fr": "Internes des concepts",
+      "es": "Principios conceptuales"
+    },
+    "Project": {
+      "en": "Project",
+      "zh": "项目",
+      "zh-Hant": "項目",
+      "fr": "Projet",
+      "es": "Proyecto"
+    },
+    "Release notes": {
+      "en": "Release notes",
+      "zh": "发布说明",
+      "zh-Hant": "發布說明",
+      "fr": "Notes de version",
+      "es": "Notas de versión"
+    },
+    "Experiments": {
+      "en": "Experiments",
+      "zh": "实验性功能",
+      "zh-Hant": "實驗性功能",
+      "fr": "Expérimentations",
+      "es": "Experimentos"
+    },
+    "Help": {
+      "en": "Help",
+      "zh": "帮助",
+      "zh-Hant": "幫助",
+      "fr": "Aide",
+      "es": "Ayuda"
+    },
+    "Community": {
+      "en": "Community",
+      "zh": "社区",
+      "zh-Hant": "社區",
+      "fr": "Communauté",
+      "es": "Comunidad"
+    },
+    "Environment and debugging": {
+      "en": "Environment and debugging",
+      "zh": "环境与调试",
+      "zh-Hant": "環境與調試",
+      "fr": "Environnement et débogage",
+      "es": "Entorno y depuración"
+    },
+    "Node runtime": {
+      "en": "Node runtime",
+      "zh": "Node 运行时",
+      "zh-Hant": "Node 運行時",
+      "fr": "Runtime Node",
+      "es": "Runtime de Node"
+    },
+    "Compaction internals": {
+      "en": "Compaction internals",
+      "zh": "压缩原理",
+      "zh-Hant": "壓縮原理",
+      "fr": "Internes de compaction",
+      "es": "Principios de compactación"
+    },
+    "Developer setup": {
+      "en": "Developer setup",
+      "zh": "开发设置",
+      "zh-Hant": "开发設置",
+      "fr": "Configuration développeur",
+      "es": "Configuración de desarrollador"
+    },
+    "Contributing": {
+      "en": "Contributing",
+      "zh": "贡献",
+      "zh-Hant": "貢獻",
+      "fr": "Contribution",
+      "es": "Contribuir"
+    },
+    "Docs meta": {
+      "en": "Docs meta",
+      "zh": "文档说明",
+      "zh-Hant": "文檔說明",
+      "fr": "Méta des docs",
+      "es": "Meta de docs"
+    }
+  }
+}

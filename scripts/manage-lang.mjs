@@ -5,10 +5,11 @@ import { execSync } from "child_process";
 const CONFIG_PATHS = {
   i18n: "i18n-config.json",
   docs: "docs.json",
-  redirect: "redirect.js",
+  navI18n: "i18n-nav.json",
+  redirect: "public/locale-redirect.js",
   i18nTools: ".i18n/config.yaml",
   package: "package.json",
-  footerBase: "components/footer",
+  footerBase: "src/components/footer",
 };
 
 /**
@@ -33,6 +34,14 @@ async function syncPublished() {
   const config = await loadConfig();
   const enabledLangs = Object.keys(config.languages).filter(k => config.languages[k].enabled);
   
+  // 0. Load Nav Translations
+  let navI18n = { tabs: {}, groups: {} };
+  try {
+    navI18n = JSON.parse(await fs.readFile(CONFIG_PATHS.navI18n, "utf8"));
+  } catch (e) {
+    console.log(`  ⚠️  ${CONFIG_PATHS.navI18n} not found or invalid, creating new one.`);
+  }
+
   // 1. Sync docs.json navigation
   console.log(`  - Updating ${CONFIG_PATHS.docs} navigation...`);
   const docs = JSON.parse(await fs.readFile(CONFIG_PATHS.docs, "utf8"));
@@ -40,6 +49,34 @@ async function syncPublished() {
   // We need to keep en and then mirror others that are enabled
   const enNav = docs.navigation.languages.find(l => l.language === "en");
   
+  // Extract and update dictionary from EN
+  let dictChanged = false;
+  enNav.tabs.forEach(t => {
+    if (!navI18n.tabs[t.tab]) {
+      navI18n.tabs[t.tab] = { en: t.tab };
+      dictChanged = true;
+    }
+    t.groups.forEach(g => {
+      if (!navI18n.groups[g.group]) {
+        navI18n.groups[g.group] = { en: g.group };
+        dictChanged = true;
+      }
+      if (g.pages) {
+        g.pages.forEach(p => {
+          if (typeof p === "object" && p.group && !navI18n.groups[p.group]) {
+            navI18n.groups[p.group] = { en: p.group };
+            dictChanged = true;
+          }
+        });
+      }
+    });
+  });
+
+  if (dictChanged) {
+    await fs.writeFile(CONFIG_PATHS.navI18n, JSON.stringify(navI18n, null, 2));
+    console.log(`  ✨ Updated ${CONFIG_PATHS.navI18n} with new labels from EN.`);
+  }
+
   docs.navigation.languages = enabledLangs.map(langKey => {
     const langMeta = config.languages[langKey];
     if (langKey === 'en') return enNav;
@@ -47,6 +84,36 @@ async function syncPublished() {
     // Create mirrored config from EN
     const mirrored = JSON.parse(JSON.stringify(enNav).replace(/en\//g, `${langKey}/`));
     mirrored.language = langMeta.mintlifyCode || langKey;
+
+    // Apply translations
+    mirrored.tabs.forEach(t => {
+      // Translate Tab
+      const tabKey = Object.keys(navI18n.tabs).find(k => k === t.tab);
+      if (tabKey && navI18n.tabs[tabKey][langKey]) {
+        t.tab = navI18n.tabs[tabKey][langKey];
+      }
+
+      // Translate Groups
+      t.groups.forEach(g => {
+        const groupKey = Object.keys(navI18n.groups).find(k => k === g.group);
+        if (groupKey && navI18n.groups[groupKey][langKey]) {
+          g.group = navI18n.groups[groupKey][langKey];
+        }
+
+        // Translate Nested Groups in pages
+        if (g.pages) {
+          g.pages.forEach(p => {
+            if (typeof p === "object" && p.group) {
+              const nestedGroupKey = Object.keys(navI18n.groups).find(k => k === p.group);
+              if (nestedGroupKey && navI18n.groups[nestedGroupKey][langKey]) {
+                p.group = navI18n.groups[nestedGroupKey][langKey];
+              }
+            }
+          });
+        }
+      });
+    });
+
     return mirrored;
   });
   
@@ -56,7 +123,7 @@ async function syncPublished() {
   console.log(`  - Updating ${CONFIG_PATHS.redirect} redirect logic...`);
   let redirect = await fs.readFile(CONFIG_PATHS.redirect, "utf8");
   
-  // Update Regex: var localeMatch = path.match(/^\/(en|zh|fr)(\/.*)?$/);
+  // Update Regex
   const regexLineStart = "var localeMatch = path.match(/^\\/(";
   const regexLineEnd = ")(\\/.*)?$/);";
   const lineStartIdx = redirect.indexOf(regexLineStart);
@@ -134,7 +201,7 @@ async function addLanguage(lang, label = null) {
 
   // 5. Update package.json
   const pkg = JSON.parse(await fs.readFile(CONFIG_PATHS.package, "utf8"));
-  pkg.scripts[`format:${lang}`] = `prettier --write \"${lang}/**/*.md\"`;
+  pkg.scripts[`format:${lang}`] = `prettier --write '${lang}/**/*.md'`;
   await fs.writeFile(CONFIG_PATHS.package, JSON.stringify(pkg, null, 2));
 
   console.log(`\n✅ Language directory '${lang}' ready for development!`);

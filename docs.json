@@ -703,7 +703,7 @@
                 "pages": ["zh/concepts/features"]
               },
               {
-                "group": "快速上手",
+                "group": "第一步",
                 "pages": [
                   "zh/start/getting-started",
                   "zh/start/onboarding-overview",
@@ -767,7 +767,7 @@
             ]
           },
           {
-            "tab": "频道",
+            "tab": "渠道",
             "groups": [
               {
                 "group": "概览",
@@ -817,7 +817,7 @@
             "tab": "智能体",
             "groups": [
               {
-                "group": "基础",
+                "group": "基础理论",
                 "pages": [
                   "zh/pi",
                   "zh/concepts/architecture",
@@ -848,7 +848,7 @@
                 "pages": ["zh/concepts/multi-agent", "zh/concepts/presence"]
               },
               {
-                "group": "消息与投递",
+                "group": "消息与传递",
                 "pages": [
                   "zh/concepts/messages",
                   "zh/concepts/streaming",
@@ -974,7 +974,7 @@
                 ]
               },
               {
-                "group": "提供商",
+                "group": "提供者",
                 "pages": [
                   "zh/providers/anthropic",
                   "zh/providers/bedrock",
@@ -1026,7 +1026,7 @@
                 ]
               },
               {
-                "group": "macOS 伴侣应用",
+                "group": "macOS 助手应用",
                 "pages": [
                   "zh/platforms/mac/dev-setup",
                   "zh/platforms/mac/menu-bar",
@@ -1058,7 +1058,7 @@
                 "pages": [
                   "zh/gateway/index",
                   {
-                    "group": "配置与操作",
+                    "group": "配置与运维",
                     "pages": [
                       "zh/gateway/configuration",
                       "zh/gateway/configuration-reference",
@@ -1237,7 +1237,7 @@
                 "pages": ["zh/reference/credits"]
               },
               {
-                "group": "发行说明",
+                "group": "发布说明",
                 "pages": ["zh/reference/RELEASING", "zh/reference/test"]
               },
               {
@@ -1300,7 +1300,7 @@
                 "pages": ["zh/ci"]
               },
               {
-                "group": "文档元数据",
+                "group": "文档说明",
                 "pages": ["zh/start/hubs", "zh/start/docs-directory"]
               }
             ]
@@ -1322,7 +1322,7 @@
                 "pages": ["fr/start/showcase"]
               },
               {
-                "group": "Concepts de base",
+                "group": "Concepts clés",
                 "pages": ["fr/concepts/features"]
               },
               {
@@ -1345,7 +1345,7 @@
             ]
           },
           {
-            "tab": "Installation",
+            "tab": "Installer",
             "groups": [
               {
                 "group": "Aperçu de l'installation",
@@ -1453,7 +1453,7 @@
                 ]
               },
               {
-                "group": "Amorçage",
+                "group": "Bootstrapping",
                 "pages": ["fr/start/bootstrapping"]
               },
               {
@@ -1518,7 +1518,7 @@
                 ]
               },
               {
-                "group": "Coordination d'agents",
+                "group": "Coordination des agents",
                 "pages": [
                   "fr/tools/agent-send",
                   "fr/tools/subagents",
@@ -1674,7 +1674,7 @@
             ]
           },
           {
-            "tab": "Passerelle et Ops",
+            "tab": "Passerelle & Ops",
             "groups": [
               {
                 "group": "Passerelle",
@@ -1702,7 +1702,7 @@
                     ]
                   },
                   {
-                    "group": "Sécurité et bac à sable",
+                    "group": "Sécurité et sandboxing",
                     "pages": [
                       "fr/gateway/security/index",
                       "fr/gateway/sandboxing",
@@ -1722,7 +1722,7 @@
                     ]
                   },
                   {
-                    "group": "Réseautage et découverte",
+                    "group": "Networking and discovery",
                     "pages": [
                       "fr/gateway/network-model",
                       "fr/gateway/pairing",
@@ -1820,7 +1820,7 @@
                 "pages": ["fr/reference/rpc", "fr/reference/device-models"]
               },
               {
-                "group": "Modèles",
+                "group": "Modèles (Templates)",
                 "pages": [
                   "fr/reference/AGENTS.default",
                   "fr/reference/templates/AGENTS",
@@ -1846,7 +1846,7 @@
                 ]
               },
               {
-                "group": "Internes du concept",
+                "group": "Internes des concepts",
                 "pages": [
                   "fr/concepts/typebox",
                   "fr/concepts/markdown-formatting",
@@ -1911,7 +1911,7 @@
                 "pages": ["fr/install/node"]
               },
               {
-                "group": "Internes de compactage",
+                "group": "Internes de compaction",
                 "pages": ["fr/reference/session-management-compaction"]
               },
               {
@@ -1934,14 +1934,14 @@
         "language": "es",
         "tabs": [
           {
-            "tab": "Comenzar",
+            "tab": "Empezar",
             "groups": [
               {
                 "group": "Inicio",
                 "pages": ["es/index"]
               },
               {
-                "group": "Resumen",
+                "group": "Visión general",
                 "pages": ["es/start/showcase"]
               },
               {
@@ -1968,10 +1968,10 @@
             ]
           },
           {
-            "tab": "Instalación",
+            "tab": "Instalar",
             "groups": [
               {
-                "group": "Resumen de instalación",
+                "group": "Generalidades de instalación",
                 "pages": ["es/install/index", "es/install/installer"]
               },
               {
@@ -2016,7 +2016,7 @@
             "tab": "Canales",
             "groups": [
               {
-                "group": "Resumen",
+                "group": "Visión general",
                 "pages": ["es/channels/index"]
               },
               {
@@ -2076,7 +2076,7 @@
                 ]
               },
               {
-                "group": "Arranque",
+                "group": "Bootstrapping",
                 "pages": ["es/start/bootstrapping"]
               },
               {
@@ -2108,7 +2108,7 @@
             "tab": "Herramientas",
             "groups": [
               {
-                "group": "Resumen",
+                "group": "Visión general",
                 "pages": ["es/tools/index"]
               },
               {
@@ -2205,7 +2205,7 @@
             "tab": "Modelos",
             "groups": [
               {
-                "group": "Resumen",
+                "group": "Visión general",
                 "pages": ["es/providers/index", "es/providers/models"]
               },
               {
@@ -2258,7 +2258,7 @@
             "tab": "Plataformas",
             "groups": [
               {
-                "group": "Resumen de plataformas",
+                "group": "Visión general de plataformas",
                 "pages": [
                   "es/platforms/index",
                   "es/platforms/macos",
@@ -2272,7 +2272,7 @@
                 ]
               },
               {
-                "group": "Aplicación complementaria macOS",
+                "group": "Aplicación de acompañamiento macOS",
                 "pages": [
                   "es/platforms/mac/dev-setup",
                   "es/platforms/mac/menu-bar",
@@ -2325,7 +2325,7 @@
                     ]
                   },
                   {
-                    "group": "Seguridad y sandboxing",
+                    "group": "Seguridad y sandbox",
                     "pages": [
                       "es/gateway/security/index",
                       "es/gateway/sandboxing",
@@ -2373,7 +2373,7 @@
                 ]
               },
               {
-                "group": "Interfaces web",
+                "group": "Interfaces Web",
                 "pages": [
                   "es/web/index",
                   "es/web/control-ui",
@@ -2469,7 +2469,7 @@
                 ]
               },
               {
-                "group": "Internos de conceptos",
+                "group": "Principios conceptuales",
                 "pages": [
                   "es/concepts/typebox",
                   "es/concepts/markdown-formatting",
@@ -2530,11 +2530,11 @@
                 ]
               },
               {
-                "group": "Tiempo de ejecución de Node",
+                "group": "Runtime de Node",
                 "pages": ["es/install/node"]
               },
               {
-                "group": "Internos de compactación",
+                "group": "Principios de compactación",
                 "pages": ["es/reference/session-management-compaction"]
               },
               {
@@ -2542,11 +2542,11 @@
                 "pages": ["es/start/setup", "es/pi-dev"]
               },
               {
-                "group": "Contribución",
+                "group": "Contribuir",
                 "pages": ["es/ci"]
               },
               {
-                "group": "Meta de documentos",
+                "group": "Meta de docs",
                 "pages": ["es/start/hubs", "es/start/docs-directory"]
               }
             ]
@@ -2572,7 +2572,7 @@
                 "pages": ["zh-Hant/concepts/features"]
               },
               {
-                "group": "快速上手",
+                "group": "第一步",
                 "pages": [
                   "zh-Hant/start/getting-started",
                   "zh-Hant/start/onboarding-overview",
@@ -2616,7 +2616,7 @@
                 ]
               },
               {
-                "group": "託管與部署",
+                "group": "托管與部署",
                 "pages": [
                   "zh-Hant/vps",
                   "zh-Hant/install/fly",
@@ -2636,14 +2636,14 @@
             ]
           },
           {
-            "tab": "頻道",
+            "tab": "渠道",
             "groups": [
               {
                 "group": "概覽",
                 "pages": ["zh-Hant/channels/index"]
               },
               {
-                "group": "訊息平台",
+                "group": "消息平台",
                 "pages": [
                   "zh-Hant/channels/bluebubbles",
                   "zh-Hant/channels/discord",
@@ -2686,7 +2686,7 @@
             "tab": "智能體",
             "groups": [
               {
-                "group": "基礎",
+                "group": "基礎理論",
                 "pages": [
                   "zh-Hant/pi",
                   "zh-Hant/concepts/architecture",
@@ -2703,7 +2703,7 @@
                 "pages": ["zh-Hant/start/bootstrapping"]
               },
               {
-                "group": "對話與記憶",
+                "group": "會話與內存",
                 "pages": [
                   "zh-Hant/concepts/session",
                   "zh-Hant/concepts/session-pruning",
@@ -2720,7 +2720,7 @@
                 ]
               },
               {
-                "group": "訊息與遞送",
+                "group": "消息與傳递",
                 "pages": [
                   "zh-Hant/concepts/messages",
                   "zh-Hant/concepts/streaming",
@@ -2738,7 +2738,7 @@
                 "pages": ["zh-Hant/tools/index"]
               },
               {
-                "group": "內建工具",
+                "group": "內置工具",
                 "pages": [
                   "zh-Hant/tools/apply-patch",
                   "zh-Hant/brave-search",
@@ -2787,7 +2787,7 @@
                 ]
               },
               {
-                "group": "擴充",
+                "group": "擴展",
                 "pages": [
                   "zh-Hant/plugins/community",
                   "zh-Hant/plugins/voice-call",
@@ -2846,7 +2846,7 @@
                 ]
               },
               {
-                "group": "提供商",
+                "group": "提供者",
                 "pages": [
                   "zh-Hant/providers/anthropic",
                   "zh-Hant/providers/bedrock",
@@ -2898,7 +2898,7 @@
                 ]
               },
               {
-                "group": "macOS 伴侣應用",
+                "group": "macOS 助手應用",
                 "pages": [
                   "zh-Hant/platforms/mac/dev-setup",
                   "zh-Hant/platforms/mac/menu-bar",
@@ -2923,14 +2923,14 @@
             ]
           },
           {
-            "tab": "網關與維運",
+            "tab": "網關與運維",
             "groups": [
               {
                 "group": "網關",
                 "pages": [
                   "zh-Hant/gateway/index",
                   {
-                    "group": "配置與操作",
+                    "group": "配置與運維",
                     "pages": [
                       "zh-Hant/gateway/configuration",
                       "zh-Hant/gateway/configuration-reference",
@@ -2959,7 +2959,7 @@
                     ]
                   },
                   {
-                    "group": "協定與 API",
+                    "group": "協議與 API",
                     "pages": [
                       "zh-Hant/gateway/protocol",
                       "zh-Hant/gateway/bridge-protocol",
@@ -2971,7 +2971,7 @@
                     ]
                   },
                   {
-                    "group": "網路與發現",
+                    "group": "Réseautage et découverte",
                     "pages": [
                       "zh-Hant/gateway/network-model",
                       "zh-Hant/gateway/pairing",
@@ -2982,7 +2982,7 @@
                 ]
               },
               {
-                "group": "遠端存取",
+                "group": "遠程訪問",
                 "pages": [
                   "zh-Hant/gateway/remote",
                   "zh-Hant/gateway/remote-gateway-readme",
@@ -2999,7 +2999,7 @@
                 ]
               },
               {
-                "group": "Web 介面",
+                "group": "Web 界面",
                 "pages": [
                   "zh-Hant/web/index",
                   "zh-Hant/web/control-ui",
@@ -3014,7 +3014,7 @@
             "tab": "參考",
             "groups": [
               {
-                "group": "CLI 指令",
+                "group": "CLI 命令",
                 "pages": [
                   "zh-Hant/cli/index",
                   "zh-Hant/cli/acp",
@@ -3072,7 +3072,7 @@
                 ]
               },
               {
-                "group": "範本",
+                "group": "模板",
                 "pages": [
                   "zh-Hant/reference/AGENTS.default",
                   "zh-Hant/reference/templates/AGENTS",
@@ -3108,11 +3108,11 @@
                 ]
               },
               {
-                "group": "專案",
+                "group": "項目",
                 "pages": ["zh-Hant/reference/credits"]
               },
               {
-                "group": "發行說明",
+                "group": "發布說明",
                 "pages": [
                   "zh-Hant/reference/RELEASING",
                   "zh-Hant/reference/test"
@@ -3147,11 +3147,11 @@
                 ]
               },
               {
-                "group": "社群",
+                "group": "社區",
                 "pages": ["zh-Hant/start/lore"]
               },
               {
-                "group": "環境與偵錯",
+                "group": "環境與調試",
                 "pages": [
                   "zh-Hant/help/environment",
                   "zh-Hant/help/debugging",
@@ -3162,7 +3162,7 @@
                 ]
               },
               {
-                "group": "Node 執行階段",
+                "group": "Node 運行時",
                 "pages": ["zh-Hant/install/node"]
               },
               {
@@ -3170,7 +3170,7 @@
                 "pages": ["zh-Hant/reference/session-management-compaction"]
               },
               {
-                "group": "開發設置",
+                "group": "开发設置",
                 "pages": ["zh-Hant/start/setup", "zh-Hant/pi-dev"]
               },
               {
@@ -3178,7 +3178,7 @@
                 "pages": ["zh-Hant/ci"]
               },
               {
-                "group": "文檔元數據",
+                "group": "文檔說明",
                 "pages": ["zh-Hant/start/hubs", "zh-Hant/start/docs-directory"]
               }
             ]
