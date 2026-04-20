@@ -107,12 +107,12 @@ Context**（子代理程式情境），而非 **Group Chat Context**（群組聊
 > `/reset` 回次是例外：執行時可以將最近的每日記憶
 > 作為一次性啟動上下文區塊，預先附加到該第一個回次。
 
-大檔案會被截斷並標記。每個檔案的大小上限由
-`agents.defaults.bootstrapMaxChars` 控制（預設值：20000）。跨檔案注入的啟動
-內容總計受 `agents.defaults.bootstrapTotalMaxChars` 限制
-（預設值：150000）。遺失的檔案會注入一個簡短的遺失檔案標記。發生截斷時，
-OpenClaw 可以在專案上下文中注入警告區塊；透過
-`agents.defaults.bootstrapPromptTruncationWarning` 控制（`off`、`once`、`always`；
+大檔案會被截斷並加上標記。每個檔案的大小上限由
+`agents.defaults.bootstrapMaxChars` 控制（預設值：12000）。所有檔案注入的啟動引導
+內容總計上限由 `agents.defaults.bootstrapTotalMaxChars` 限制
+（預設值：60000）。缺失的檔案會注入一個簡短的缺失檔案標記。當發生截斷
+時，OpenClaw 可以在專案上下文中插入警告區塊；請使用
+`agents.defaults.bootstrapPromptTruncationWarning` 進行控制（`off`、`once`、`always`；
 預設值：`once`）。
 
 子代理工作階段僅注入 `AGENTS.md` 和 `TOOLS.md`（其他啟動檔案

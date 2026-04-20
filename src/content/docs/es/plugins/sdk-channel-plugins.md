@@ -14,7 +14,7 @@ Esta guía explica cómo crear un complemento de canal que conecte OpenClaw con 
 plataforma de mensajería. Al final, tendrá un canal funcional con seguridad de MD,
 emparejamiento, hilos de respuesta y mensajería saliente.
 
-<Info>Si no ha construido ningún plugin de OpenClaw antes, lea [Getting Started](/es/plugins/building-plugins) primero para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
+<Info>Si no has creado ningún complemento de OpenClaw antes, lee primero [Introducción](/es/plugins/building-plugins) para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
 
 ## Cómo funcionan los complementos de canales
 
@@ -179,7 +179,9 @@ Mantenga el manejo de menciones entrantes dividido en dos capas:
 - recopilación de pruebas propiedad del complemento
 - evaluación de política compartida
 
-Use `openclaw/plugin-sdk/channel-inbound` para la capa compartida.
+Usa `openclaw/plugin-sdk/channel-mention-gating` para las decisiones de política de menciones.
+Usa `openclaw/plugin-sdk/channel-inbound` solo cuando necesites el asistente de
+entrada más amplio.
 
 Adecuado para la lógica local del complemento:
 
@@ -200,8 +202,8 @@ Adecuado para el asistente compartido:
 Flujo preferido:
 
 1. Calcule los datos de mención local.
-2. Pase esos datos a `resolveInboundMentionDecision({ facts, policy })`.
-3. Use `decision.effectiveWasMentioned`, `decision.shouldBypassMention` y `decision.shouldSkip` en su puerta de entrada.
+2. Pasa esos datos a `resolveInboundMentionDecision({ facts, policy })`.
+3. Usa `decision.effectiveWasMentioned`, `decision.shouldBypassMention` y `decision.shouldSkip` en tu puerta de entrada.
 
 ```typescript
 import { implicitMentionKindWhen, matchesMentionWithExplicit, resolveInboundMentionDecision } from "openclaw/plugin-sdk/channel-inbound";
@@ -233,7 +235,7 @@ const decision = resolveInboundMentionDecision({
 if (decision.shouldSkip) return;
 ```
 
-`api.runtime.channel.mentions` expone los mismos asistentes de mención compartidos para
+`api.runtime.channel.mentions` expone los mismos asistentes de menciones compartidas para
 los complementos de canal incluidos que ya dependen de la inyección en tiempo de ejecución:
 
 - `buildMentionRegexes`
@@ -242,18 +244,23 @@ los complementos de canal incluidos que ya dependen de la inyección en tiempo d
 - `implicitMentionKindWhen`
 - `resolveInboundMentionDecision`
 
-Los asistentes más antiguos `resolveMentionGating*` permanecen en
+Si solo necesitas `implicitMentionKindWhen` y
+`resolveInboundMentionDecision`, impórtalos desde
+`openclaw/plugin-sdk/channel-mention-gating` para evitar cargar asistentes de tiempo de ejecución
+de entrada no relacionados.
+
+Los antiguos asistentes `resolveMentionGating*` permanecen en
 `openclaw/plugin-sdk/channel-inbound` solo como exportaciones de compatibilidad. El código nuevo
-debe usar `resolveInboundMentionDecision({ facts, policy })`.
+debería usar `resolveInboundMentionDecision({ facts, policy })`.
 
 ## Tutorial
 
 <Steps>
   <a id="step-1-package-and-manifest"></a>
   <Step title="Paquete y manifiesto">
-    Cree los archivos estándar del complemento. El campo `channel` en `package.json` es
-    lo que convierte a esto en un complemento de canal. Para obtener la superficie completa de metadatos del paquete,
-    consulte [Configuración y configuración de complementos](/es/plugins/sdk-setup#openclaw-channel):
+    Crea los archivos estándar del complemento. El campo `channel` en `package.json` es
+    lo que hace que esto sea un complemento de canal. Para conocer toda la superficie de metadatos del paquete,
+    consulta [Configuración y configuración de complementos](/es/plugins/sdk-setup#openclaw-channel):
 
     <CodeGroup>
     ```json package.json
@@ -302,9 +309,9 @@ debe usar `resolveInboundMentionDecision({ facts, policy })`.
 
   </Step>
 
-  <Step title="Construir el objeto del complemento de canal">
+  <Step title="Crear el objeto del complemento de canal">
     La interfaz `ChannelPlugin` tiene muchas superficies de adaptador opcionales. Comience con
-    lo mínimo — `id` y `setup` — y añada adaptadores según los necesite.
+    lo mínimo — `id` y `setup` — y agregue adaptadores según los necesite.
 
     Cree `src/channel.ts`:
 
@@ -400,18 +407,18 @@ debe usar `resolveInboundMentionDecision({ facts, policy })`.
     ```
 
     <Accordion title="Lo que hace createChatChannelPlugin por usted">
-      En lugar de implementar manualmente interfaces de adaptador de bajo nivel, usted pasa
+      En lugar de implementar interfaces de adaptador de bajo nivel manualmente, usted pasa
       opciones declarativas y el constructor las compone:
 
       | Opción | Lo que conecta |
       | --- | --- |
-      | `security.dm` | Resolvedor de seguridad de MD con ámbito desde campos de configuración |
-      | `pairing.text` | Flujo de emparejamiento de MD basado en texto con intercambio de códigos |
-      | `threading` | Resolvedor de modo de respuesta (fijo, con ámbito de cuenta o personalizado) |
-      | `outbound.attachedResults` | Funciones de envío que devuelven metadatos de resultado (ID de mensajes) |
+      | `security.dm` | Resolvedor de seguridad de DM con alcance desde campos de configuración |
+      | `pairing.text` | Flujo de emparejamiento de DM basado en texto con intercambio de códigos |
+      | `threading` | Resolvedor de modo de respuesta (fijo, con alcance de cuenta o personalizado) |
+      | `outbound.attachedResults` | Funciones de envío que devuelven metadatos de resultado (IDs de mensaje) |
 
       También puede pasar objetos de adaptador sin procesar en lugar de las opciones declarativas
-      si necesita un control total.
+      si necesita control total.
     </Accordion>
 
   </Step>
@@ -452,15 +459,15 @@ debe usar `resolveInboundMentionDecision({ facts, policy })`.
     });
     ```
 
-    Coloque descriptores de CLI propiedad del canal en `registerCliMetadata(...)` para que OpenClaw
+    Coloque los descriptores de CLI propiedad del canal en `registerCliMetadata(...)` para que OpenClaw
     pueda mostrarlos en la ayuda raíz sin activar el tiempo de ejecución completo del canal,
-    mientras que las cargas completas normales aún recogen los mismos descriptores para el registro real de
-    comandos. Mantenga `registerFull(...)` para el trabajo exclusivo del tiempo de ejecución.
+    mientras que las cargas completas normales aún recuperan los mismos descriptores para el registro real de
+    comandos. Mantenga `registerFull(...)` para el trabajo solo de tiempo de ejecución.
     Si `registerFull(...)` registra métodos RPC de puerta de enlace, use un
-    prefijo específico del complemento. Los espacios de nombres de administración principal (`config.*`,
+    prefijo específico del complemento. Los espacios de nombres de administración principales (`config.*`,
     `exec.approvals.*`, `wizard.*`, `update.*`) permanecen reservados y siempre
     resuelven a `operator.admin`.
-    `defineChannelPluginEntry` maneja la división del modo de registro automáticamente. Vea
+    `defineChannelPluginEntry` maneja la división del modo de registro automáticamente. Consulte
     [Puntos de entrada](/es/plugins/sdk-entrypoints#definechannelpluginentry) para todas
     las opciones.
 
@@ -477,14 +484,13 @@ debe usar `resolveInboundMentionDecision({ facts, policy })`.
     ```
 
     OpenClaw carga esto en lugar de la entrada completa cuando el canal está desactivado
-    o sin configurar. Evita cargar código de tiempo de ejecución pesado durante los flujos de configuración.
-    Consulte [Configuración y ajuste](/es/plugins/sdk-setup#setup-entry) para obtener más detalles.
+    o sin configurar. Evita cargar código de ejecución pesado durante los flujos de configuración.
+    Consulte [Configuración y Config](/es/plugins/sdk-setup#setup-entry) para obtener más detalles.
 
-    Los canales de espacio de trabajo agrupados que dividen las exportaciones seguras para la configuración en módulos
-
-de acompañamiento pueden usar `defineBundledChannelSetupEntry(...)` de
-`openclaw/plugin-sdk/channel-entry-contract` cuando también necesitan un
-definidor explícito de tiempo de ejecución en la configuración.
+    Los canales del espacio de trabajo empaquetados que dividen las exportaciones seguras para la configuración en módulos auxiliares
+    pueden usar `defineBundledChannelSetupEntry(...)` de
+    `openclaw/plugin-sdk/channel-entry-contract` cuando también necesitan un
+    definidor de tiempo de ejecución explícito para la configuración.
 
   </Step>
 
@@ -516,7 +522,7 @@ definidor explícito de tiempo de ejecución en la configuración.
 
     <Note>
       El manejo de mensajes entrantes es específico del canal. Cada complemento de canal posee
-      su propia canalización de entrada. Mire los complementos de canal agrupados
+      su propia canalización de entrada. Mire los complementos de canal empaquetados
       (por ejemplo, el paquete del complemento de Microsoft Teams o Google Chat) para ver patrones reales.
     </Note>
 
@@ -562,7 +568,7 @@ Escriba pruebas ubicadas en `src/channel.test.ts`:
     pnpm test -- <bundled-plugin-root>/acme-chat/
     ```
 
-    Para asistentes de pruebas compartidas, consulte [Pruebas](/es/plugins/sdk-testing).
+    Para ver asistentes de pruebas compartidos, consulte [Pruebas](/es/plugins/sdk-testing).
 
   </Step>
 </Steps>
@@ -588,24 +594,24 @@ Escriba pruebas ubicadas en `src/channel.test.ts`:
 
 <CardGroup cols={2}>
   <Card title="Opciones de hilos" icon="git-branch" href="/es/plugins/sdk-entrypoints#registration-mode">
-    Modos de respuesta fijos, con ámbito de cuenta o personalizados
+    Modos de respuesta fijos, con alcance de cuenta o personalizados
   </Card>
-  <Card title="Integración de herramienta de mensaje" icon="puzzle" href="/es/plugins/architecture#channel-plugins-and-the-shared-message-tool">
+  <Card title="Integración de herramientas de mensajes" icon="puzzle" href="/es/plugins/architecture#channel-plugins-and-the-shared-message-tool">
     describeMessageTool y descubrimiento de acciones
   </Card>
   <Card title="Resolución de objetivos" icon="crosshair" href="/es/plugins/architecture#channel-target-resolution">
     inferTargetChatType, looksLikeId, resolveTarget
   </Card>
-  <Card title="Ayudantes de tiempo de ejecución" icon="settings" href="/es/plugins/sdk-runtime">
-    TTS, STT, media, subagent vía api.runtime
+  <Card title="Ayudas de tiempo de ejecución" icon="settings" href="/es/plugins/sdk-runtime">
+    TTS, STT, media, subagente a través de api.runtime
   </Card>
 </CardGroup>
 
-<Note>Algunas costuras de ayudantes integrados todavía existen para el mantenimiento y la compatibilidad de los complementos integrados. No son el patrón recomendado para nuevos complementos de canal; prefiera las subrutas genéricas channel/setup/reply/runtime de la superficie SDK común a menos que esté manteniendo directamente esa familia de complementos integrados.</Note>
+<Note>Algunas costuras de ayuda empaquetadas todavía existen para el mantenimiento y la compatibilidad de los plugins empaquetados. No son el patrón recomendado para los nuevos plugins de canal; prefiera las subrutas genéricas channel/setup/reply/runtime de la superficie común del SDK a menos que esté manteniendo directamente esa familia de plugins empaquetados.</Note>
 
 ## Próximos pasos
 
-- [Complementos de proveedores](/es/plugins/sdk-provider-plugins) — si su complemento también proporciona modelos
+- [Plugins de proveedores](/es/plugins/sdk-provider-plugins) — si su complemento también proporciona modelos
 - [Descripción general del SDK](/es/plugins/sdk-overview) — referencia completa de importación de subrutas
 - [Pruebas del SDK](/es/plugins/sdk-testing) — utilidades de prueba y pruebas de contrato
 - [Manifiesto del complemento](/es/plugins/manifest) — esquema completo del manifiesto

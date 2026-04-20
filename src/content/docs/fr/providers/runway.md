@@ -20,22 +20,22 @@ OpenClaw est livré avec un provider `runway` intégré pour la génération de 
 ## Getting started
 
 <Steps>
-  <Step title="Set the API key">```bash openclaw onboard --auth-choice runway-api-key ```</Step>
-  <Step title="Set Runway as the default video provider">```bash openclaw config set agents.defaults.videoGenerationModel.primary "runway/gen4.5" ```</Step>
+  <Step title="Définir la clé API">```bash openclaw onboard --auth-choice runway-api-key ```</Step>
+  <Step title="Définir Runway comme provider vidéo par défaut">```bash openclaw config set agents.defaults.videoGenerationModel.primary "runway/gen4.5" ```</Step>
   <Step title="Générer une vidéo">Demandez à l'agent de générer une vidéo. Runway sera utilisé automatiquement.</Step>
 </Steps>
 
 ## Modes pris en charge
 
-| Mode             | Model                 | Référence d'entrée         |
+| Mode             | Modèle                | Référence d'entrée         |
 | ---------------- | --------------------- | -------------------------- |
 | Texte vers vidéo | `gen4.5` (par défaut) | Aucun                      |
 | Image vers vidéo | `gen4.5`              | 1 image locale ou distante |
 | Vidéo vers vidéo | `gen4_aleph`          | 1 vidéo locale ou distante |
 
-<Note>Les références d'images et de vidéos locales sont prises en charge via les URI de données. Les exécutions en mode texte uniquement exposent actuellement les formats d'aspect `16:9` et `9:16`.</Note>
+<Note>Les références d'images et de vidéos locales sont prises en charge via des URI de données. Les exécutions en mode texte uniquement exposent actuellement les formats d'aspect `16:9` et `9:16`.</Note>
 
-<Warning>Le mode vidéo vers vidéo nécessite actuellement spécifiquement `runway/gen4_aleph`.</Warning>
+<Warning>Le mode Vidéo vers vidéo nécessite actuellement spécifiquement `runway/gen4_aleph`.</Warning>
 
 ## Configuration
 
@@ -54,25 +54,25 @@ OpenClaw est livré avec un provider `runway` intégré pour la génération de 
 ## Notes avancées
 
 <AccordionGroup>
-  <Accordion title="Alias de variables d'environnement">
+  <Accordion title="Alias des variables d'environnement">
     OpenClaw reconnaît à la fois `RUNWAYML_API_SECRET` (canonique) et `RUNWAY_API_KEY`.
-    L'une ou l'autre de ces variables permettra d'authentifier le provider Runway.
+    L'une ou l'autre de ces variables authentifiera le provider Runway.
   </Accordion>
 
-  <Accordion title="Interrogation des tâches">
-    Runway utilise une API basée sur des tâches. Après avoir soumis une demande de génération, OpenClaw
+  <Accordion title="Sondage des tâches">
+    Runway utilise une API basée sur les tâches. Après avoir soumis une demande de génération, OpenClaw
     interroge `GET /v1/tasks/{id}` jusqu'à ce que la vidéo soit prête. Aucune configuration
-    supplémentaire n'est nécessaire pour le comportement d'interrogation.
+    supplémentaire n'est nécessaire pour le comportement de sondage.
   </Accordion>
 </AccordionGroup>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Génération de vidéos" href="/fr/tools/video-generation" icon="video">
-    Paramètres d'outil partagés, sélection de provider et comportement asynchrone.
+  <Card title="Génération vidéo" href="/fr/tools/video-generation" icon="video">
+    Paramètres d'outil partagés, sélection du provider et comportement asynchrone.
   </Card>
   <Card title="Référence de configuration" href="/fr/gateway/configuration-reference#agent-defaults" icon="gear">
-    Paramètres par défaut de l'agent, y compris le model de génération vidéo.
+    Paramètres par défaut de l'agent, y compris le modèle de génération vidéo.
   </Card>
 </CardGroup>

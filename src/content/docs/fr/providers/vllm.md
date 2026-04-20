@@ -52,7 +52,7 @@ OpenClaw peut également **découvrir automatiquement** les modèles disponibles
     ```
 
   </Step>
-  <Step title="Vérifier que le modèle est disponible">
+  <Step title="Vérifiez que le modèle est disponible">
     ```bash
     openclaw models list --provider vllm
     ```

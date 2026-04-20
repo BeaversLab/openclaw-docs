@@ -29,7 +29,7 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
 ## Getting started
 
 <Tabs>
-  <Tab title="Interactive">
+  <Tab title="Interactif">
     <Steps>
       <Step title="Run onboarding">
         ```bash
@@ -49,14 +49,14 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
     </Steps>
   </Tab>
 
-  <Tab title="Non-interactive">
+  <Tab title="Non interactif">
     <Steps>
-      <Step title="Passer la clé directement">
+      <Step title="Pass the key directly">
         ```bash
         openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
         ```
       </Step>
-      <Step title="Vérifier que les modèles sont disponibles">
+      <Step title="Verify models are available">
         ```bash
         openclaw models list --provider opencode-go
         ```
@@ -79,26 +79,26 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
 <AccordionGroup>
   <Accordion title="Comportement du routage">
     OpenClaw gère le routage par modèle automatiquement lorsque la référence du modèle utilise
-    `opencode-go/...`. Aucune configuration de provider supplémentaire n'est requise.
+    `opencode-go/...`. Aucune configuration de fournisseur supplémentaire n'est requise.
   </Accordion>
 
-<Accordion title="Convention des références d'exécution">Les références d'exécution restent explicites : `opencode/...` pour Zen, `opencode-go/...` pour Go. Cela permet de garder le routage par modèle en amont correct sur les deux catalogues.</Accordion>
+<Accordion title="Convention de référence d'exécution">Les références d'exécution restent explicites : `opencode/...` pour Zen, `opencode-go/...` pour Go. Cela permet de maintenir le routage amont par modèle correct sur les deux catalogues.</Accordion>
 
   <Accordion title="Identifiants partagés">
     Le même `OPENCODE_API_KEY` est utilisé par les catalogues Zen et Go. Saisir
-    la clé lors de la configuration stocke les identifiants pour les deux providers d'exécution.
+    la clé lors de la configuration stocke les identifiants pour les deux fournisseurs d'exécution.
   </Accordion>
 </AccordionGroup>
 
-<Tip>Voir [OpenCode](/fr/providers/opencode) pour la vue d'ensemble de l'intégration partagée et la référence complète des catalogues Zen + Go.</Tip>
+<Tip>Voir [OpenCode](/fr/providers/opencode) pour la présentation de l'onboarding partagé et la référence complète du catalogue Zen + Go.</Tip>
 
 ## Connexes
 
 <CardGroup cols={2}>
   <Card title="OpenCode (parent)" href="/fr/providers/opencode" icon="server">
-    Onboarding partagé, aperçu du catalogue et notes avancées.
+    Onboarding partagé, présentation du catalogue et notes avancées.
   </Card>
-  <Card title="Sélection de model" href="/fr/concepts/model-providers" icon="layers">
-    Choix des fournisseurs, des références de model et du comportement de basculement.
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
+    Choix des fournisseurs, références de modèles et comportement de basculement.
   </Card>
 </CardGroup>

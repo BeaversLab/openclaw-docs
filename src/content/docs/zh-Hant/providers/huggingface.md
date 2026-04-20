@@ -50,7 +50,7 @@ title: "Hugging Face (Inference)"
     ```
 
   </Step>
-  <Step title="驗證模型可用性">
+  <Step title="驗證模型是否可用">
     ```bash
     openclaw models list --provider huggingface
     ```
@@ -198,7 +198,7 @@ openclaw onboard --non-interactive \
     ```
   </Accordion>
 
-  <Accordion title="Config: Multiple Qwen and DeepSeek with policy suffixes">
+  <Accordion title="設定：多個 Qwen 和 DeepSeek 並搭配原則後綴">
     ```json5
     {
       agents: {

@@ -253,7 +253,7 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
 ## 進階設定
 
 <AccordionGroup>
-  <Accordion title="Config file example">
+  <Accordion title="設定檔範例">
     ```json5
     {
       env: { VENICE_API_KEY: "vapi_..." },
@@ -291,12 +291,12 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
     選擇提供者、模型參照和故障轉移行為。
   </Card>
   <Card title="Venice AI" href="https://venice.ai" icon="globe">
-    Venice AI 首頁和帳戶註冊。
+    Venice AI 首頁與帳號註冊。
   </Card>
   <Card title="API 文件" href="https://docs.venice.ai" icon="book">
-    Venice API 參考資料和開發者文件。
+    Venice API 參考資料與開發者文件。
   </Card>
-  <Card title="價格" href="https://venice.ai/pricing" icon="credit-card">
-    目前的 Venice 點數費率和方案。
+  <Card title="定價" href="https://venice.ai/pricing" icon="credit-card">
+    目前的 Venice 點數費率與方案。
   </Card>
 </CardGroup>

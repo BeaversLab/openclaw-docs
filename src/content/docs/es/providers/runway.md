@@ -20,9 +20,9 @@ OpenClaw incluye un proveedor `runway` para la generación de videos alojados.
 ## Para comenzar
 
 <Steps>
-  <Step title="Set the API key">```bash openclaw onboard --auth-choice runway-api-key ```</Step>
-  <Step title="Set Runway as the default video provider">```bash openclaw config set agents.defaults.videoGenerationModel.primary "runway/gen4.5" ```</Step>
-  <Step title="Generar un video">Pide al agente que genere un video. Runway se utilizará automáticamente.</Step>
+  <Step title="Establecer la clave de API">```bash openclaw onboard --auth-choice runway-api-key ```</Step>
+  <Step title="Establecer Runway como proveedor de video predeterminado">```bash openclaw config set agents.defaults.videoGenerationModel.primary "runway/gen4.5" ```</Step>
+  <Step title="Generar un video">Pídele al agente que genere un video. Runway se utilizará automáticamente.</Step>
 </Steps>
 
 ## Modos compatibles
@@ -35,7 +35,7 @@ OpenClaw incluye un proveedor `runway` para la generación de videos alojados.
 
 <Note>Las referencias de imágenes y videos locales son compatibles a través de URI de datos. Las ejecuciones de solo texto actualmente exponen las relaciones de aspecto `16:9` y `9:16`.</Note>
 
-<Warning>Video a video actualmente requiere específicamente `runway/gen4_aleph`.</Warning>
+<Warning>Video a video actualmente requiere `runway/gen4_aleph` específicamente.</Warning>
 
 ## Configuración
 
@@ -56,13 +56,13 @@ OpenClaw incluye un proveedor `runway` para la generación de videos alojados.
 <AccordionGroup>
   <Accordion title="Alias de variables de entorno">
     OpenClaw reconoce tanto `RUNWAYML_API_SECRET` (canónico) como `RUNWAY_API_KEY`.
-    Cualquiera de las dos variables autenticará el proveedor de Runway.
+    Cualquier variable autenticará el proveedor de Runway.
   </Accordion>
 
   <Accordion title="Sondeo de tareas">
     Runway utiliza una API basada en tareas. Después de enviar una solicitud de generación, OpenClaw
     sondea `GET /v1/tasks/{id}` hasta que el video está listo. No se necesita
-    ninguna configuración adicional para el comportamiento del sondeo.
+    configuración adicional para el comportamiento de sondeo.
   </Accordion>
 </AccordionGroup>
 
@@ -70,7 +70,7 @@ OpenClaw incluye un proveedor `runway` para la generación de videos alojados.
 
 <CardGroup cols={2}>
   <Card title="Generación de video" href="/es/tools/video-generation" icon="video">
-    Parámetros de herramienta compartidos, selección de proveedor y comportamiento asíncrono.
+    Parámetros de herramientas compartidas, selección de proveedor y comportamiento asíncrono.
   </Card>
   <Card title="Referencia de configuración" href="/es/gateway/configuration-reference#agent-defaults" icon="gear">
     Configuración predeterminada del agente, incluido el modelo de generación de video.

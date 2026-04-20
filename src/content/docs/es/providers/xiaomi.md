@@ -36,7 +36,7 @@ endpoint compatible con OpenAI de Xiaomi con autenticación mediante clave de AP
     ```
 
   </Step>
-  <Step title="Verificar que el modelo esté disponible">
+  <Step title="Verifica que el modelo esté disponible">
     ```bash
     openclaw models list --provider xiaomi
     ```

@@ -22,7 +22,7 @@ read_when:
   <Step title="获取 API 密钥">
     在 [console.groq.com/keys](https://console.groq.com/keys) 创建 API 密钥。
   </Step>
-  <Step title="设置 API 密钥">
+  <Step title="设置 API key">
     ```bash
     export GROQ_API_KEY="gsk_..."
     ```

@@ -34,7 +34,7 @@ Mistral también se puede utilizar para incrustaciones de memoria (`memorySearch
     ```
 
   </Step>
-  <Step title="Establece un modelo predeterminado">
+  <Step title="Establecer un modelo predeterminado">
     ```json5
     {
       env: { MISTRAL_API_KEY: "sk-..." },
@@ -42,7 +42,7 @@ Mistral también se puede utilizar para incrustaciones de memoria (`memorySearch
     }
     ```
   </Step>
-  <Step title="Verifica que el modelo esté disponible">
+  <Step title="Verificar que el modelo esté disponible">
     ```bash
     openclaw models list --provider mistral
     ```

@@ -77,7 +77,7 @@ Les modèles Arcee AI sont accessibles directement via la plateforme Arcee ou vi
 ## Configuration non interactive
 
 <Tabs>
-  <Tab title="Direct (Arcee platform)">
+  <Tab title="Direct (plateforme Arcee)">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -100,13 +100,13 @@ Les modèles Arcee AI sont accessibles directement via la plateforme Arcee ou vi
 
 OpenClaw fournit actuellement ce catalogue Arcee intégré :
 
-| Réf. model                     | Nom                    | Entrée | Contexte | Coût (entrée/sortie par 1M) | Notes                                   |
-| ------------------------------ | ---------------------- | ------ | -------- | --------------------------- | --------------------------------------- |
-| `arcee/trinity-large-thinking` | Trinity Large Thinking | texte  | 256K     | $0,25 / $0,90               | Modèle par défaut ; raisonnement activé |
-| `arcee/trinity-large-preview`  | Trinity Large Preview  | texte  | 128K     | $0,25 / $1,00               | Usage général ; 400B params, 13B actifs |
-| `arcee/trinity-mini`           | Trinity Mini 26B       | texte  | 128K     | $0,045 / $0,15              | Rapide et rentable ; appel de fonction  |
+| Réf modèle                     | Nom                    | Entrée | Contexte | Coût (entrée/sortie par 1M) | Notes                                    |
+| ------------------------------ | ---------------------- | ------ | -------- | --------------------------- | ---------------------------------------- |
+| `arcee/trinity-large-thinking` | Trinity Large Thinking | texte  | 256K     | $0.25 / $0.90               | Modèle par défaut ; raisonnement activé  |
+| `arcee/trinity-large-preview`  | Trinity Large Preview  | texte  | 128K     | $0.25 / $1.00               | Usage général ; 400B params, 13B actifs  |
+| `arcee/trinity-mini`           | Trinity Mini 26B       | texte  | 128K     | $0.045 / $0.15              | Rapide et économique ; appel de fonction |
 
-<Tip>La préréglage d'intégration (onboarding) définit `arcee/trinity-large-thinking` comme modèle par défaut.</Tip>
+<Tip>La préréglage d'intégration définit `arcee/trinity-large-thinking` comme le modèle par défaut.</Tip>
 
 ## Fonctionnalités prises en charge
 
@@ -138,7 +138,7 @@ OpenClaw fournit actuellement ce catalogue Arcee intégré :
   <Card title="OpenRouter" href="/fr/providers/openrouter" icon="shuffle">
     Accédez aux modèles Arcee et à bien d'autres via une seule clé API.
   </Card>
-  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
-    Choisir les fournisseurs, les références de modèle et le comportement de basculement.
+  <Card title="Sélection de modèle" href="/fr/concepts/model-providers" icon="layers">
+    Choix des fournisseurs, des références de modèle et du comportement de basculement.
   </Card>
 </CardGroup>

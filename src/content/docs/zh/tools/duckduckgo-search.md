@@ -18,7 +18,7 @@ OpenClaw 支持 DuckDuckGo 作为 **免密钥** 的 `web_search` 提供商。无
 不需要 API 密钥 — 只需将 DuckDuckGo 设置为您的提供商：
 
 <Steps>
-  <Step title="Configure">```bash openclaw configure --section web # Select "duckduckgo" as the provider ```</Step>
+  <Step title="配置">```bash openclaw configure --section web # Select "duckduckgo" as the provider ```</Step>
 </Steps>
 
 ## 配置
@@ -35,7 +35,7 @@ OpenClaw 支持 DuckDuckGo 作为 **免密钥** 的 `web_search` 提供商。无
 }
 ```
 
-插件级别的可选区域和 SafeSearch 设置：
+用于区域和 SafeSearch 的可选插件级设置：
 
 ```json5
 {
@@ -56,33 +56,28 @@ OpenClaw 支持 DuckDuckGo 作为 **免密钥** 的 `web_search` 提供商。无
 
 ## 工具参数
 
-| 参数         | 描述                                                  |
-| ------------ | ----------------------------------------------------- |
-| `query`      | 搜索查询（必填）                                      |
-| `count`      | 要返回的结果数（1-10，默认：5）                       |
-| `region`     | DuckDuckGo 区域代码（例如 `us-en`, `uk-en`, `de-de`） |
-| `safeSearch` | SafeSearch 等级：`strict`、`moderate`（默认）或 `off` |
+| 参数         | 描述                                                    |
+| ------------ | ------------------------------------------------------- |
+| `query`      | 搜索查询（必需）                                        |
+| `count`      | 返回结果数（1-10，默认：5）                             |
+| `region`     | DuckDuckGo 区域代码（例如 `us-en`, `uk-en`, `de-de`）   |
+| `safeSearch` | SafeSearch 级别：`strict`, `moderate`（默认），或 `off` |
 
-区域和 SafeSearch 也可以在插件配置中设置（见上文） — 工具
-参数会逐次查询覆盖配置值。
+区域和 SafeSearch 也可以在插件配置中设置（见上文）——工具参数会在每次查询时覆盖配置值。
 
 ## 注意事项
 
-- **无需 API 密钥** — 开箱即用，零配置
-- **实验性** — 从 DuckDuckGo 的非 JavaScript HTML
-  搜索页面收集结果，而非官方 API 或 SDK
-- **机器人验证风险** — 在大量或自动使用时，DuckDuckGo 可能会提供 CAPTCHA 或阻止请求
-- **HTML 解析** — 结果取决于页面结构，该结构可能在未
-  通知的情况下发生变化
-- **自动检测顺序** — DuckDuckGo 是自动检测中的第一个免密钥
-  回退选项（顺序 100）。配置了密钥的 API 支持的提供程序会
-  首先运行，然后是 Ollama Web Search（顺序 110），接着是 SearXNG（顺序 200）
-- **SafeSearch 默认为适中**（moderate），如果未进行配置
+- **无 API 密钥** —— 开箱即用，零配置
+- **实验性功能** —— 从 DuckDuckGo 的非 JavaScript HTML 搜索页面收集结果，而非官方 API 或 SDK
+- **机器人验证风险** —— 在重度使用或自动化使用时，DuckDuckGo 可能会显示 CAPTCHA 验证码或阻止请求
+- **HTML 解析** —— 结果取决于页面结构，该结构可能在不另行通知的情况下发生变化
+- **自动检测顺序** —— DuckDuckGo 是自动检测中的第一个免密钥备选方案（顺序 100）。配置了密钥的 API 支持的提供商优先运行，然后是 Ollama Web Search（顺序 110），最后是 SearXNG（顺序 200）
+- **SafeSearch 默认为适度** 未配置时
 
-<Tip>对于生产环境，请考虑使用 [Brave Search](/zh/tools/brave-search)（提供免费层级）或另一个由 API 支持的提供商。</Tip>
+<Tip>对于生产环境，请考虑使用 [Brave Search](/zh/tools/brave-search)（提供免费层）或其他 API 支持的提供商。</Tip>
 
 ## 相关
 
-- [网络搜索概述](/zh/tools/web) -- 所有提供商和自动检测
-- [Brave 搜索](/zh/tools/brave-search) -- 具有免费层级的结构化结果
-- [Exa Search](/zh/tools/exa-search) —— 带有内容提取功能的神经搜索
+- [Web Search 概述](/zh/tools/web) -- 所有提供商和自动检测
+- [Brave Search](/zh/tools/brave-search) -- 带有免费层的结构化结果
+- [Exa Search](/zh/tools/exa-search) -- 带有内容提取的神经搜索

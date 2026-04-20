@@ -33,12 +33,12 @@ GLM est une **famille de modèles** (et non une entreprise) disponible via la pl
     ```
 
   </Step>
-  <Step title="Set GLM as the default model">
+  <Step title="Définir GLM comme model par défaut">
     ```bash
     openclaw config set agents.defaults.model.primary "zai/glm-5.1"
     ```
   </Step>
-  <Step title="Verify models are available">
+  <Step title="Vérifier que les models sont disponibles">
     ```bash
     openclaw models list --provider zai
     ```

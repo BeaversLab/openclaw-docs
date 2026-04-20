@@ -16,7 +16,7 @@ les modèles ouverts gratuitement. Authentifiez-vous avec une clé API depuis
 
 <Steps>
   <Step title="Obtenez votre clé API">Créez une clé API sur [build.nvidia.com](https://build.nvidia.com/settings/api-keys).</Step>
-  <Step title="Exportez la clé et lancez l'onboarding">```bash export NVIDIA_API_KEY="nvapi-..." openclaw onboard --auth-choice skip ```</Step>
+  <Step title="Exporter la clé et exécuter l'intégration">```bash export NVIDIA_API_KEY="nvapi-..." openclaw onboard --auth-choice skip ```</Step>
   <Step title="Définir un modèle NVIDIA">```bash openclaw models set nvidia/nvidia/nemotron-3-super-120b-a12b ```</Step>
 </Steps>
 

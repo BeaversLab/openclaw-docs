@@ -40,7 +40,7 @@ Volcengine 提供商允许访问托管在 Volcano Engine 上的 Doubao 模型和
     }
     ```
   </Step>
-  <Step title="验证模型可用性">
+  <Step title="验证模型可用">
     ```bash
     openclaw models list --provider volcengine
     openclaw models list --provider volcengine-plan

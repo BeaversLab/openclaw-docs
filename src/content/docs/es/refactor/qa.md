@@ -17,8 +17,7 @@ El estado final deseado es un arnés de QA genérico que cargue archivos de defi
 
 ## Estado Actual
 
-La fuente principal de verdad ahora vive en `qa/scenarios/index.md` además de un archivo por
-escenario bajo `qa/scenarios/*.md`.
+La fuente principal de verdad ahora reside en `qa/scenarios/index.md` además de un archivo por escenario bajo `qa/scenarios/<theme>/*.md`.
 
 Implementado:
 
@@ -26,7 +25,7 @@ Implementado:
   - metadatos canónicos del pack de QA
   - identidad del operador
   - misión de inicio
-- `qa/scenarios/*.md`
+- `qa/scenarios/<theme>/*.md`
   - un archivo markdown por escenario
   - metadatos del escenario
   - vinculaciones de controladores
@@ -107,8 +106,7 @@ Estas categorías importan porque impulsan los requisitos del DSL. Una lista pla
 
 ### Fuente única de verdad
 
-Use `qa/scenarios/index.md` más `qa/scenarios/*.md` como la fuente única de
-verdad escrita.
+Usa `qa/scenarios/index.md` más `qa/scenarios/<theme>/*.md` como la fuente de verdad redactada.
 
 El paquete debe mantenerse:
 
@@ -363,7 +361,7 @@ Compatibilidad generada:
 Hecho.
 
 - añadido `qa/scenarios/index.md`
-- escenarios divididos en `qa/scenarios/*.md`
+- dividir los escenarios en `qa/scenarios/<theme>/*.md`
 - añadido analizador para contenido de paquete YAML markdown nombrado
 - validado con zod
 - cambiados los consumidores al paquete analizado

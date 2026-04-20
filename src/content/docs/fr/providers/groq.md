@@ -29,7 +29,7 @@ read_when:
     export GROQ_API_KEY="gsk_..."
     ```
   </Step>
-  <Step title="Définir un modèle par défaut">
+  <Step title="Définir un model par défaut">
     ```json5
     {
       agents: {

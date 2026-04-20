@@ -99,29 +99,29 @@ Deepgram 是一個語音轉文字 API。在 OpenClaw 中，它用於透過 `tool
   </Tab>
 </Tabs>
 
-## 備註
+## Notes
 
 <AccordionGroup>
-  <Accordion title="驗證">驗證遵循標準的提供者驗證順序。`DEEPGRAM_API_KEY` 是 最簡單的方式。</Accordion>
-  <Accordion title="Proxy 和自訂端點">使用 proxy 時，可以使用 `tools.media.audio.baseUrl` 和 `tools.media.audio.headers` 覆寫端點或標頭。</Accordion>
-  <Accordion title="輸出行為">輸出遵循與其他提供者相同的音訊規則（大小上限、逾時、 轉錄內容插入）。</Accordion>
+  <Accordion title="Authentication">Authentication follows the standard provider auth order. `DEEPGRAM_API_KEY` is the simplest path.</Accordion>
+  <Accordion title="Proxy and custom endpoints">Override endpoints or headers with `tools.media.audio.baseUrl` and `tools.media.audio.headers` when using a proxy.</Accordion>
+  <Accordion title="Output behavior">Output follows the same audio rules as other providers (size caps, timeouts, transcript injection).</Accordion>
 </AccordionGroup>
 
-<Note>Deepgram 轉錄僅支援**預錄音訊**（非即時串流）。OpenClaw 會上傳完整的音訊檔案，並在將其插入對話之前等待完整轉錄內容。</Note>
+<Note>Deepgram transcription is **pre-recorded only** (not real-time streaming). OpenClaw uploads the complete audio file and waits for the full transcript before injecting it into the conversation.</Note>
 
-## 相關內容
+## Related
 
 <CardGroup cols={2}>
-  <Card title="媒體工具" href="/zh-Hant/tools/media" icon="photo-film">
-    音訊、圖片和影片處理流程概述。
+  <Card title="Media tools" href="/zh-Hant/tools/media" icon="photo-film">
+    Audio, image, and video processing pipeline overview.
   </Card>
-  <Card title="設定" href="/zh-Hant/configuration" icon="gear">
-    完整設定參考，包含媒體工具設定。
+  <Card title="Configuration" href="/zh-Hant/configuration" icon="gear">
+    Full config reference including media tool settings.
   </Card>
-  <Card title="疑難排解" href="/zh-Hant/help/troubleshooting" icon="wrench">
-    常見問題與除錯步驟。
+  <Card title="Troubleshooting" href="/zh-Hant/help/troubleshooting" icon="wrench">
+    Common issues and debugging steps.
   </Card>
-  <Card title="常見問題" href="/zh-Hant/help/faq" icon="circle-question">
-    關於 OpenClaw 設定的常見問題。
+  <Card title="FAQ" href="/zh-Hant/help/faq" icon="circle-question">
+    Frequently asked questions about OpenClaw setup.
   </Card>
 </CardGroup>

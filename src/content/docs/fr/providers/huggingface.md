@@ -50,7 +50,7 @@ Les [fournisseurs d'inférence Hugging Face](https://huggingface.co/docs/inferen
     ```
 
   </Step>
-  <Step title="Vérifier que le modèle est disponible">
+  <Step title="Vérifiez que le modèle est disponible">
     ```bash
     openclaw models list --provider huggingface
     ```

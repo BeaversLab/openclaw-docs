@@ -24,12 +24,12 @@ a Groq a través de su API compatible con OpenAI.
   <Step title="Obtener una clave de API">
     Cree una clave de API en [console.groq.com/keys](https://console.groq.com/keys).
   </Step>
-  <Step title="Configurar la clave de API">
+  <Step title="Establecer la clave de API">
     ```bash
     export GROQ_API_KEY="gsk_..."
     ```
   </Step>
-  <Step title="Configurar un modelo predeterminado">
+  <Step title="Establecer un modelo por defecto">
     ```json5
     {
       agents: {

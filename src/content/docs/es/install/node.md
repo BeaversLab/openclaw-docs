@@ -93,7 +93,7 @@ fnm use 24
 Esto casi siempre significa que el directorio bin global de npm no está en tu PATH.
 
 <Steps>
-  <Step title="Find your global npm prefix">
+  <Step title="Encuentra tu prefijo global de npm">
     ```bash
     npm prefix -g
     ```
@@ -106,28 +106,28 @@ Esto casi siempre significa que el directorio bin global de npm no está en tu P
     Busca `<npm-prefix>/bin` (macOS/Linux) o `<npm-prefix>` (Windows) en la salida.
 
   </Step>
-  <Step title="Agrégalo a tu archivo de inicio de shell">
+  <Step title="Añádelo a tu archivo de inicio de shell">
     <Tabs>
       <Tab title="macOS / Linux">
-        Agrega a `~/.zshrc` o `~/.bashrc`:
+        Añade a `~/.zshrc` o `~/.bashrc`:
 
         ```bash
         export PATH="$(npm prefix -g)/bin:$PATH"
         ```
 
-        Luego abre una nueva terminal (o ejecuta `rehash` en zsh / `hash -r` en bash).
+        A continuación, abre una nueva terminal (o ejecuta `rehash` en zsh / `hash -r` en bash).
       </Tab>
       <Tab title="Windows">
-        Agrega la salida de `npm prefix -g` a tu PATH del sistema mediante Configuración → Sistema → Variables de entorno.
+        Añade la salida de `npm prefix -g` a tu PATH del sistema mediante Configuración → Sistema → Variables de entorno.
       </Tab>
     </Tabs>
 
   </Step>
 </Steps>
 
-### Errores de permiso en `npm install -g` (Linux)
+### Errores de permisos en `npm install -g` (Linux)
 
-Si ves errores de `EACCES`, cambia el prefijo global de npm a un directorio escribible por el usuario:
+Si ves errores `EACCES`, cambia el prefijo global de npm a un directorio escribible por el usuario:
 
 ```bash
 mkdir -p "$HOME/.npm-global"
@@ -135,10 +135,10 @@ npm config set prefix "$HOME/.npm-global"
 export PATH="$HOME/.npm-global/bin:$PATH"
 ```
 
-Agrega la línea `export PATH=...` a tu `~/.bashrc` o `~/.zshrc` para hacerlo permanente.
+Añade la línea `export PATH=...` a tu `~/.bashrc` o `~/.zshrc` para hacerlo permanente.
 
 ## Relacionado
 
 - [Resumen de instalación](/es/install) — todos los métodos de instalación
 - [Actualización](/es/install/updating) — mantener OpenClaw actualizado
-- [Primeros pasos](/es/start/getting-started) — primeros pasos después de la instalación
+- [Primeros pasos](/es/start/getting-started) — primeros pasos tras la instalación

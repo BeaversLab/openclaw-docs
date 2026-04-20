@@ -113,7 +113,7 @@ Voir [Mémoire](/fr/concepts/memory) pour le flux de travail et le vidage automa
 - `canvas/` (optionnel)
   - Fichiers UI Canvas pour les affichages de nœuds (par exemple `canvas/index.html`).
 
-Si un fichier d'amorçage est manquant, OpenClaw injecte un marqueur de « fichier manquant » dans la session et continue. Les fichiers d'amorçage volumineux sont tronqués lors de l'injection ; ajustez les limites avec `agents.defaults.bootstrapMaxChars` (par défaut : 20000) et `agents.defaults.bootstrapTotalMaxChars` (par défaut : 150000). `openclaw setup` peut recréer les valeurs par défaut manquantes sans écraser les fichiers existants.
+Si un fichier d'amorçage est manquant, OpenClaw injecte un marqueur de « fichier manquant » dans la session et continue. Les fichiers d'amorçage volumineux sont tronqués lors de l'injection ; ajustez les limites avec `agents.defaults.bootstrapMaxChars` (par défaut : 12000) et `agents.defaults.bootstrapTotalMaxChars` (par défaut : 60000). `openclaw setup` peut recréer les valeurs par défaut manquantes sans écraser les fichiers existants.
 
 ## Ce qui n'est PAS dans l'espace de travail
 

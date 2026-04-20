@@ -229,13 +229,13 @@ OpenClaw ajoute une petite superposition de prompt spécifique à OpenAI pour le
   </Tab>
 </Tabs>
 
-<Tip>Les valeurs ne sont pas sensibles à la casse lors de l'exécution, donc `"Off"` et `"off"` désactivent tous deux la superposition.</Tip>
+<Tip>Les valeurs ne sont pas sensibles à la casse lors de l'exécution, donc `"Off"` et `"off"` désactivent tous les deux la superposition.</Tip>
 
 ## Voix et parole
 
 <AccordionGroup>
   <Accordion title="Synthèse vocale (TTS)">
-    Le plugin intégré `openai` enregistre la synthèse vocale pour la surface `messages.tts`.
+    Le plugin `openai` inclus enregistre la synthèse vocale pour la surface `messages.tts`.
 
     | Paramètre | Chemin de configuration | Par défaut |
     |---------|------------|---------|
@@ -262,13 +262,13 @@ OpenClaw ajoute une petite superposition de prompt spécifique à OpenAI pour le
     ```
 
     <Note>
-    Définissez `OPENAI_TTS_BASE_URL` pour remplacer l'URL de base TTS sans affecter le point de terminaison de l'API de chat.
+    Définissez `OPENAI_TTS_BASE_URL` pour remplacer l'URL de base du TTS sans affecter le point de terminaison de l'API de chat.
     </Note>
 
   </Accordion>
 
-  <Accordion title="Realtime transcription">
-    Le plugin `openai` inclus enregistre la transcription en temps réel pour le plugin Voice Call.
+  <Accordion title="Transcription en temps réel">
+    Le plugin intégré `openai` enregistre la transcription en temps réel pour le plugin Voice Call.
 
     | Paramètre | Chemin de configuration | Par défaut |
     |---------|------------|---------|
@@ -278,13 +278,13 @@ OpenClaw ajoute une petite superposition de prompt spécifique à OpenAI pour le
     | Clé API | `...openai.apiKey` | Revient à `OPENAI_API_KEY` |
 
     <Note>
-    Utilise une connexion WebSocket vers `wss://api.openai.com/v1/realtime` avec de l'audio G.711 u-law.
+    Utilise une connexion WebSocket vers `wss://api.openai.com/v1/realtime` avec audio G.711 u-law.
     </Note>
 
   </Accordion>
 
-  <Accordion title="Realtime voice">
-    Le plugin `openai` inclus enregistre la voix en temps réel pour le plugin Voice Call.
+  <Accordion title="Voix en temps réel">
+    Le plugin intégré `openai` enregistre la voix en temps réel pour le plugin Voice Call.
 
     | Paramètre | Chemin de configuration | Par défaut |
     |---------|------------|---------|
@@ -306,19 +306,19 @@ OpenClaw ajoute une petite superposition de prompt spécifique à OpenAI pour le
 
 <AccordionGroup>
   <Accordion title="Transport (WebSocket vs SSE)">
-    OpenClaw utilise WebSocket par priorité avec repli SSE (`"auto"`) pour `openai/*` et `openai-codex/*`.
+    OpenClaw privilégie WebSocket avec repli sur SSE (`"auto"`) pour les modes `openai/*` et `openai-codex/*`.
 
     En mode `"auto"`, OpenClaw :
-    - Réessaie une défaillance WebSocket précoce avant de basculer vers SSE
-    - Après une défaillance, marque WebSocket comme dégradé pendant environ 60 secondes et utilise SSE pendant le refroidissement
+    - Réessaie une défaillance précoce de WebSocket avant de basculer sur SSE
+    - Après une défaillance, marque WebSocket comme dégradé pendant ~60 secondes et utilise SSE pendant le refroidissement
     - Attache des en-têtes d'identité de session et de tour stables pour les nouvelles tentatives et reconnexions
     - Normalise les compteurs d'utilisation (`input_tokens` / `prompt_tokens`) selon les variantes de transport
 
     | Valeur | Comportement |
     |-------|----------|
-    | `"auto"` (par défaut) | WebSocket en priorité, repli SSE |
-    | `"sse"` | Forcer SSE uniquement |
-    | `"websocket"` | Forcer WebSocket uniquement |
+    | `"auto"` (par défaut) | WebSocket d'abord, repli SSE |
+    | `"sse"` | Forcer uniquement SSE |
+    | `"websocket"` | Forcer uniquement WebSocket |
 
     ```json5
     {
@@ -335,8 +335,8 @@ OpenClaw ajoute une petite superposition de prompt spécifique à OpenAI pour le
     ```
 
     Documentation OpenAI connexe :
-    - [API temps réel avec WebSocket](https://platform.openai.com/docs/guides/realtime-websocket)
-    - [Réponses API en streaming (SSE)](https://platform.openai.com/docs/guides/streaming-responses)
+    - [Realtime API avec WebSocket](https://platform.openai.com/docs/guides/realtime-websocket)
+    - [Streaming API réponses (SSE)](https://platform.openai.com/docs/guides/streaming-responses)
 
   </Accordion>
 
@@ -366,7 +366,7 @@ OpenClaw ajoute une petite superposition de prompt spécifique à OpenAI pour le
     - **Chat/UI :** `/fast status|on|off`
     - **Config :** `agents.defaults.models["<provider>/<model>"].params.fastMode`
 
-    Lorsqu'il est activé, OpenClaw mappe le mode rapide au traitement prioritaire OpenAI (`service_tier = "priority"`). Les valeurs `service_tier` existantes sont préservées, et le mode rapide ne réécrit pas `reasoning` ou `text.verbosity`.
+    Lorsqu'il est activé, OpenClaw mappe le mode rapide au traitement prioritaire OpenAI (`service_tier = "priority"`). Les valeurs `service_tier` existantes sont conservées, et le mode rapide ne réécrit pas `reasoning` ni `text.verbosity`.
 
     ```json5
     {
@@ -382,13 +382,13 @@ OpenClaw ajoute une petite superposition de prompt spécifique à OpenAI pour le
     ```
 
     <Note>
-    Les substitutions de session prévalent sur la configuration. Effacer la substitution de session dans l'interface Sessions retourne la session à la valeur par défaut configurée.
+    Les remplacements de session l'emportent sur la configuration. Effacer le remplacement de session dans l'interface Sessions ramène la session à la valeur par défaut configurée.
     </Note>
 
   </Accordion>
 
   <Accordion title="Traitement prioritaire (service_tier)">
-    L'OpenAI d'API expose le traitement prioritaire via `service_tier`. Définissez-le par modèle dans OpenClaw :
+    L'OpenAI d'API expose un traitement prioritaire via `service_tier`. Définissez-le par modèle dans OpenClaw :
 
     ```json5
     {
@@ -406,7 +406,7 @@ OpenClaw ajoute une petite superposition de prompt spécifique à OpenAI pour le
     Valeurs prises en charge : `auto`, `default`, `flex`, `priority`.
 
     <Warning>
-    `serviceTier` est uniquement transmis aux points de terminaison natifs d'OpenAI (`api.openai.com`) et aux points de terminaison natifs de Codex (`chatgpt.com/backend-api`). Si vous acheminez l'un ou l'autre fournisseur via un proxy, OpenClaw laisse `service_tier` intact.
+    `serviceTier` est transmis uniquement aux points de terminaison natifs d'OpenAI (`api.openai.com`) et aux points de terminaison natifs de Codex (`chatgpt.com/backend-api`). Si vous acheminez l'un ou l'autre fournisseur via un proxy, OpenClaw laisse `service_tier` intact.
     </Warning>
 
   </Accordion>
@@ -491,29 +491,29 @@ OpenClaw ajoute une petite superposition de prompt spécifique à OpenAI pour le
     ```
 
     Avec `strict-agentic`, OpenClaw :
-    - Ne considère plus un tour de planification seule comme une progression réussie lorsqu'une action d'outil est disponible
+    - Ne considère plus un tour de planification uniquement comme une progression réussie lorsqu'une action d'outil est disponible
     - Réessaie le tour avec une directive d'action immédiate
     - Active automatiquement `update_plan` pour un travail substantiel
-    - Affiche un état bloqué explicite si le modèle continue à planifier sans agir
+    - Affiche un état bloqué explicite si le modèle continue de planifier sans agir
 
     <Note>
-    Limité aux exécutions de la famille GPT-5 d'OpenAI et Codex uniquement. Les autres providers et les familles de modèles plus anciennes conservent le comportement par défaut.
+    Limité aux exécutions de la famille GPT-5 de OpenAI et Codex uniquement. Les autres fournisseurs et les anciennes familles de modèles conservent le comportement par défaut.
     </Note>
 
   </Accordion>
 
   <Accordion title="Routes natives vs routes compatibles OpenAI">
-    OpenClaw traite les points de terminaison directs d'OpenAI, Codex et Azure OpenAI différemment des proxys `/v1` génériques compatibles OpenAI :
+    OpenClaw traite différemment les points de terminaison directs de OpenAI, Codex et Azure OpenAI par rapport aux proxys génériques compatibles OpenAI (`/v1`) :
 
     **Routes natives** (`openai/*`, `openai-codex/*`, Azure OpenAI) :
     - Conserve `reasoning: { effort: "none" }` intact lorsque le raisonnement est explicitement désactivé
     - Définit les schémas d'outils en mode strict par défaut
-    - Attache des en-têtes d'attribution masqués uniquement sur les hôtes natifs vérifiés
-    - Conserve le façonnage des requêtes propre à OpenAI (`service_tier`, `store`, compatibilité raisonnement, indicateurs de cache de prompt)
+    - Joint des en-têtes d'attribution masqués uniquement sur les hôtes natifs vérifiés
+    - Conserve le façonnage des requêtes exclusif à OpenAI (`service_tier`, `store`, reasoning-compat, indices de cache de prompt)
 
-    **Routes de proxy/compatibilité :**
+    **Routes de proxy/compatibles :**
     - Utilisent un comportement de compatibilité plus souple
-    - N'imposent pas de schémas d'outils stricts ou d'en-têtes natifs uniquement
+    - N'imposent pas de schémas d'outils stricts ni d'en-tères natifs uniquement
 
     Azure OpenAI utilise un transport natif et un comportement de compatibilité mais ne reçoit pas les en-têtes d'attribution masqués.
 
@@ -524,15 +524,15 @@ OpenClaw ajoute une petite superposition de prompt spécifique à OpenAI pour le
 
 <CardGroup cols={2}>
   <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
-    Choisir les providers, les références de modèle et le comportement de basculement.
+    Choix des fournisseurs, des références de modèle et du comportement de basculement.
   </Card>
   <Card title="Génération d'images" href="/fr/tools/image-generation" icon="image">
-    Paramètres de l'outil d'image partagés et sélection du provider.
+    Paramètres de l'outil d'image partagés et sélection du fournisseur.
   </Card>
-  <Card title="Génération de vidéo" href="/fr/tools/video-generation" icon="video">
+  <Card title="Génération vidéo" href="/fr/tools/video-generation" icon="video">
     Paramètres de l'outil vidéo partagés et sélection du fournisseur.
   </Card>
   <Card title="OAuth et auth" href="/fr/gateway/authentication" icon="key">
-    Détails d'authentification et règles de réutilisation des identifiants.
+    Détails de l'authentification et règles de réutilisation des identifiants.
   </Card>
 </CardGroup>

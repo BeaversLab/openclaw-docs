@@ -31,7 +31,7 @@ read_when:
     Cela vous demandera votre clé API et définira `deepseek/deepseek-chat` comme model par défaut.
 
   </Step>
-  <Step title="Vérifiez que les models sont disponibles">
+  <Step title="Vérifier que les modèles sont disponibles">
     ```bash
     openclaw models list --provider deepseek
     ```

@@ -60,7 +60,7 @@ Deepgram 是一个语音转文本 API。在 OpenClaw 中，它通过 `tools.medi
 | `smart_format`    | `tools.media.audio.providerOptions.deepgram.smart_format`    | 启用智能格式化（可选）             |
 
 <Tabs>
-  <Tab title="With language hint">
+  <Tab title="带语言提示">
     ```json5
     {
       tools: {
@@ -74,7 +74,7 @@ Deepgram 是一个语音转文本 API。在 OpenClaw 中，它通过 `tools.medi
     }
     ```
   </Tab>
-  <Tab title="With Deepgram options">
+  <Tab title="带 Deepgram 选项">
     ```json5
     {
       tools: {
@@ -97,26 +97,26 @@ Deepgram 是一个语音转文本 API。在 OpenClaw 中，它通过 `tools.medi
   </Tab>
 </Tabs>
 
-## 备注
+## 注意事项
 
 <AccordionGroup>
-  <Accordion title="认证">认证遵循标准提供商认证顺序。`DEEPGRAM_API_KEY` 是最简单的方式。</Accordion>
-  <Accordion title="代理和自定义端点">使用代理时，可以使用 `tools.media.audio.baseUrl` 和 `tools.media.audio.headers` 覆盖端点或标头。</Accordion>
-  <Accordion title="Output behavior">输出遵循与其他提供商相同的音频规则（大小限制、超时、 转录注入）。</Accordion>
+  <Accordion title="身份验证">身份验证遵循标准提供商的验证顺序。`DEEPGRAM_API_KEY` 是 最简单的路径。</Accordion>
+  <Accordion title="代理和自定义端点">使用代理时，可以使用 `tools.media.audio.baseUrl` 和 `tools.media.audio.headers` 覆盖端点或请求头。</Accordion>
+  <Accordion title="输出行为">输出遵循与其他提供商相同的音频规则（大小限制、超时、 转录注入）。</Accordion>
 </AccordionGroup>
 
-<Note>Deepgram 转录**仅限预录制音频**（非实时流式传输）。OpenClaw 会上传完整的音频文件并等待完整转录，然后再将其注入 对话中。</Note>
+<Note>Deepgram 转录**仅限预录制**（非实时流式传输）。OpenClaw 会上传完整的音频文件，并在将其注入对话之前等待完整的转录。</Note>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Media tools" href="/zh/tools/media" icon="photo-film">
-    音频、图像和视频处理管道概述。
+  <Card title="媒体工具" href="/zh/tools/media" icon="photo-film">
+    音频、图像和视频处理流水线概览。
   </Card>
-  <Card title="Configuration" href="/zh/configuration" icon="gear">
-    完整的配置参考，包括媒体工具设置。
+  <Card title="配置" href="/zh/configuration" icon="gear">
+    包含媒体工具设置的完整配置参考。
   </Card>
-  <Card title="Troubleshooting" href="/zh/help/troubleshooting" icon="wrench">
+  <Card title="故障排除" href="/zh/help/troubleshooting" icon="wrench">
     常见问题和调试步骤。
   </Card>
   <Card title="常见问题" href="/zh/help/faq" icon="circle-question">

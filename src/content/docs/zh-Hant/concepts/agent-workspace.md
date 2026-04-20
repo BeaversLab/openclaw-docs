@@ -105,9 +105,11 @@ Sandbox seed 複本僅接受一般 workspace 內的檔案；解析至來源 work
 - `canvas/` (可選)
   - 用於節點顯示的 Canvas UI 檔案 (例如 `canvas/index.html`)。
 
-如果缺少任何引導文件，OpenClaw 會在會話中注入「缺少文件」標記並繼續。注入大型引導檔案時會被截斷；請使用 `agents.defaults.bootstrapMaxChars` (預設值：20000) 和
-`agents.defaults.bootstrapTotalMaxChars` (預設值：150000) 調整限制。
-`openclaw setup` 可以重新建立缺少的預設檔案，而不會覆蓋現有檔案。
+如果缺少任何啟動文件，OpenClaw 會將一個「缺少文件」標記插入到
+會話中並繼續執行。大型啟動文件在插入時會被截斷；
+請使用 `agents.defaults.bootstrapMaxChars`（預設值：12000）和
+`agents.defaults.bootstrapTotalMaxChars`（預設值：60000）調整限制。
+`openclaw setup` 可以在不覆蓋現有文件的情況下重新建立缺少的預設文件。
 
 ## 工作區中沒有什麼
 

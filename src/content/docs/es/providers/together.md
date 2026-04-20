@@ -24,7 +24,7 @@ read_when:
     Cree una clave de API en
     [api.together.ai/settings/api-keys](https://api.together.ai/settings/api-keys).
   </Step>
-  <Step title="Ejecutar el onboarding">
+  <Step title="Ejecutar incorporación">
     ```bash
     openclaw onboard --auth-choice together-api-key
     ```

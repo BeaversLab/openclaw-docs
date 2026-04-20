@@ -87,47 +87,47 @@ Gateway 是工作階段、路由和通道連線的唯一真實來源。
 ## 快速開始
 
 <Steps>
-  <Step title="Install OpenClaw">
+  <Step title="安裝 OpenClaw">
     ```bash
     npm install -g openclaw@latest
     ```
   </Step>
-  <Step title="Onboard and install the service">
+  <Step title="註冊並安裝服務">
     ```bash
     openclaw onboard --install-daemon
     ```
   </Step>
-  <Step title="Chat">
-    在瀏覽器中開啟 Control UI 並傳送訊息：
+  <Step title="聊天">
+    在瀏覽器中開啟控制 UI 並傳送訊息：
 
     ```bash
     openclaw dashboard
     ```
 
-    或連接一個通道（[Telegram](/zh-Hant/channels/telegram) 最快）並從您的手機聊天。
+    或連接頻道（[Telegram](/zh-Hant/channels/telegram) 最快）並從您的手機聊天。
 
   </Step>
 </Steps>
 
-需要完整的安裝和開發設定？請參閱 [Getting Started](/zh-Hant/start/getting-started)。
+需要完整的安裝和開發設定嗎？請參閱 [入門指南](/zh-Hant/start/getting-started)。
 
 ## 儀表板
 
-在 Gateway 啟動後開啟瀏覽器控制介面。
+在 Gateway 啟動後開啟瀏覽器控制 UI。
 
-- 本機預設值：[http://127.0.0.1:18789/](http://127.0.0.1:18789/)
+- 本地預設：[http://127.0.0.1:18789/](http://127.0.0.1:18789/)
 - 遠端存取：[Web surfaces](/zh-Hant/web) 和 [Tailscale](/zh-Hant/gateway/tailscale)
 
 <p align="center">
   <img src="/whatsapp-openclaw.jpg" alt="OpenClaw" width="420" />
 </p>
 
-## 配置（選用）
+## 設定 (選用)
 
 設定檔位於 `~/.openclaw/openclaw.json`。
 
-- 如果您**不進行任何操作**，OpenClaw 將使用捆綁的 Pi 二進制檔案在 RPC 模式下運行，並採用每個發送者各自的會話。
-- 如果您想要鎖定存取，請從 `channels.whatsapp.allowFrom` 開始並（針對群組）設定提及規則。
+- 如果您**不做任何操作**，OpenClaw 將使用捆綁的 Pi 二進位檔案，以 RPC 模式搭配每位發送者的獨立連線階段運作。
+- 如果您想鎖定它，請從 `channels.whatsapp.allowFrom` 和（針對群組）提及規則開始。
 
 範例：
 
@@ -146,42 +146,42 @@ Gateway 是工作階段、路由和通道連線的唯一真實來源。
 ## 從這裡開始
 
 <Columns>
-  <Card title="Docs hubs" href="/zh-Hant/start/hubs" icon="book-open">
+  <Card title="文件中心" href="/zh-Hant/start/hubs" icon="book-open">
     所有文件和指南，依使用案例整理。
   </Card>
   <Card title="設定" href="/zh-Hant/gateway/configuration" icon="settings">
-    核心閘道設定、權杖和提供者設定。
+    核心 Gateway 設定、權杖和提供者設定。
   </Card>
   <Card title="遠端存取" href="/zh-Hant/gateway/remote" icon="globe">
     SSH 和 tailnet 存取模式。
   </Card>
   <Card title="頻道" href="/zh-Hant/channels/telegram" icon="message-square">
-    針對 Feishu、Microsoft Teams、WhatsApp、Telegram、Discord 等平台的特定頻道設定。
+    飛書、Microsoft Teams、WhatsApp、Telegram、Discord 等特定頻道的設定。
   </Card>
-  <Card title="Nodes" href="/zh-Hant/nodes" icon="smartphone">
-    具備配對、Canvas、相機及裝置操作的 iOS 與 Android 節點。
+  <Card title="節點" href="/zh-Hant/nodes" icon="smartphone">
+    具備配對、Canvas、相機和裝置操作的 iOS 和 Android 節點。
   </Card>
-  <Card title="Help" href="/zh-Hant/help" icon="life-buoy">
-    常見修復方法與疑難排解入口。
+  <Card title="說明" href="/zh-Hant/help" icon="life-buoy">
+    常見修復方法與疑難排解的入口。
   </Card>
 </Columns>
 
-## 深入瞭解
+## 了解更多
 
 <Columns>
-  <Card title="Full feature list" href="/zh-Hant/concepts/features" icon="list">
-    完整的通道、路由與媒體功能。
+  <Card title="完整功能列表" href="/zh-Hant/concepts/features" icon="list">
+    完整的頻道、路由與媒體功能。
   </Card>
-  <Card title="Multi-agent routing" href="/zh-Hant/concepts/multi-agent" icon="route">
-    工作區隔離與個別代理階段作業。
+  <Card title="多代理路由" href="/zh-Hant/concepts/multi-agent" icon="route">
+    工作區隔離與個別代理的工作階段。
   </Card>
-  <Card title="Security" href="/zh-Hant/gateway/security" icon="shield">
+  <Card title="安全性" href="/zh-Hant/gateway/security" icon="shield">
     權杖、允許清單與安全控制。
   </Card>
-  <Card title="Troubleshooting" href="/zh-Hant/gateway/troubleshooting" icon="wrench">
+  <Card title="疑難排解" href="/zh-Hant/gateway/troubleshooting" icon="wrench">
     閘道診斷與常見錯誤。
   </Card>
-  <Card title="關於與鳴謝" href="/zh-Hant/reference/credits" icon="info">
+  <Card title="關於與致謝" href="/zh-Hant/reference/credits" icon="info">
     專案起源、貢獻者與授權。
   </Card>
 </Columns>

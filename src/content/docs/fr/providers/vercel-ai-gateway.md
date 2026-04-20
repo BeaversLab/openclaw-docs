@@ -45,7 +45,7 @@ accéder à des centaines de modèles via un seul point de terminaison.
     ```
 
   </Step>
-  <Step title="Vérifier que le modèle est disponible">
+  <Step title="Vérifiez que le modèle est disponible">
     ```bash
     openclaw models list --provider vercel-ai-gateway
     ```

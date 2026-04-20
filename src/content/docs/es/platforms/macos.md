@@ -55,15 +55,15 @@ La aplicación de macOS se presenta a sí misma como un nodo. Comandos comunes:
 
 - Canvas: `canvas.present`, `canvas.navigate`, `canvas.eval`, `canvas.snapshot`, `canvas.a2ui.*`
 - Cámara: `camera.snap`, `camera.clip`
-- Pantalla: `screen.record`
+- Pantalla: `screen.snapshot`, `screen.record`
 - Sistema: `system.run`, `system.notify`
 
-El nodo informa de un mapa `permissions` para que los agentes puedan decidir qué está permitido.
+El nodo reporta un mapa `permissions` para que los agentes puedan decidir qué está permitido.
 
 Servicio de nodo + IPC de la aplicación:
 
 - Cuando se está ejecutando el servicio host del nodo sin interfaz gráfica (modo remoto), se conecta al WebSocket de la puerta de enlace (Gateway WS) como nodo.
-- `system.run` se ejecuta en la aplicación de macOS (contexto de UI/TCC) a través de un socket Unix local; los avisos y la salida permanecen en la aplicación.
+- `system.run` se ejecuta en la aplicación de macOS (contexto de IU/TCC) a través de un socket Unix local; las solicitudes y la salida permanecen en la aplicación.
 
 Diagrama (SCI):
 
@@ -76,8 +76,8 @@ Gateway -> Node Service (WS)
 
 ## Aprobaciones de ejecución (system.run)
 
-`system.run` está controlado por las **Aprobaciones de ejecución** en la aplicación de macOS (Configuración → Aprobaciones de ejecución).
-La seguridad + preguntar + lista de permitidos se almacenan localmente en el Mac en:
+`system.run` está controlado por **Aprobaciones de ejecución** en la aplicación de macOS (Configuración → Aprobaciones de ejecución).
+Seguridad + preguntar + lista blanca se almacenan localmente en el Mac en:
 
 ```
 ~/.openclaw/exec-approvals.json
@@ -104,12 +104,12 @@ Ejemplo:
 
 Notas:
 
-- Las entradas `allowlist` son patrones glob para las rutas binarias resueltas.
-- El texto del comando de shell sin procesar que contiene sintaxis de control o expansión de shell (`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) se trata como un fallo en la lista de permitidos y requiere una aprobación explícita (o añadir el binario de shell a la lista de permitidos).
+- Las entradas `allowlist` son patrones glob para rutas binarias resueltas.
+- El texto de comando de shell sin procesar que contiene sintaxis de control o expansión de shell (`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) se trata como un fallo en la lista blanca y requiere aprobación explícita (o poner el binario de shell en la lista blanca).
 - Al elegir "Permitir siempre" en el aviso, se añade ese comando a la lista de permitidos.
 - Las anulaciones de entorno de `system.run` se filtran (elimina `PATH`, `DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`) y luego se fusionan con el entorno de la aplicación.
-- Para los contenedores de shell (`bash|sh|zsh ... -c/-lc`), las anulaciones de entorno con ámbito de solicitud se reducen a una pequeña lista de permitidos explícita (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
-- Para las decisiones de permitir siempre en modo de lista blanca, los contenedores de envío conocidos (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) persisten las rutas de los ejecutables internos en lugar de las rutas de los contenedores. Si el desenvoltorio no es seguro, no se persiste automáticamente ninguna entrada en la lista blanca.
+- Para los contenedores de shell (`bash|sh|zsh ... -c/-lc`), las anulaciones de entorno con alcance de solicitud se reducen a una pequeña lista blanca explícita (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
+- Para decisiones de permitir siempre en modo de lista blanca, los contenedores de envío conocidos (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) persisten las rutas de los ejecutables internos en lugar de las rutas de los contenedores. Si el desenvolver no es seguro, no se persiste ninguna entrada de lista blanca automáticamente.
 
 ## Enlaces profundos
 
@@ -117,7 +117,7 @@ La aplicación registra el esquema de URL `openclaw://` para acciones locales.
 
 ### `openclaw://agent`
 
-Activa una solicitud `agent` del Gateway.
+Desencadena una solicitud `agent` del Gateway.
 
 ```bash
 open 'openclaw://agent?message=Hello%20from%20deep%20link'
@@ -135,8 +135,8 @@ Parámetros de consulta:
 Seguridad:
 
 - Sin `key`, la aplicación solicita confirmación.
-- Sin `key`, la aplicación impone un límite breve de mensajes para el mensaje de confirmación e ignora `deliver` / `to` / `channel`.
-- Con una `key` válida, la ejecución es desatendida (destinada a automatizaciones personales).
+- Sin `key`, la aplicación aplica un límite breve de mensaje para el mensaje de confirmación e ignora `deliver` / `to` / `channel`.
+- Con un `key` válido, la ejecución es desatendida (destinada a automatizaciones personales).
 
 ## Flujo de incorporación (típico)
 
@@ -157,7 +157,7 @@ Prefiera una ruta de estado local no sincronizada, como:
 OPENCLAW_STATE_DIR=~/.openclaw
 ```
 
-Si `openclaw doctor` detecta estado en:
+Si `openclaw doctor` detecta estado bajo:
 
 - `~/Library/Mobile Documents/com~apple~CloudDocs/...`
 - `~/Library/CloudStorage/...`
@@ -183,18 +183,21 @@ swift run openclaw-mac discover --timeout 3000 --json
 Opciones de conexión:
 
 - `--url <ws://host:port>`: anular configuración
-- `--mode <local|remote>`: resolver desde configuración (predeterminado: configuración o local)
-- `--probe`: forzar una nueva comprobación de estado
-- `--timeout <ms>`: tiempo de espera de solicitud (predeterminado: `15000`)
-- `--json`: salida estructurada para comparaciones
+- `--mode <local|remote>`: resolver desde la configuración (predeterminado: configuración o local)
+- `--probe`: forzar un nuevo sondeo de estado
+- `--timeout <ms>`: tiempo de espera de la solicitud (predeterminado: `15000`)
+- `--json`: salida estructurada para comparación
 
 Opciones de descubrimiento:
 
 - `--include-local`: incluir gateways que se filtrarían como "locales"
 - `--timeout <ms>`: ventana de descubrimiento general (predeterminado: `2000`)
-- `--json`: salida estructurada para comparaciones
+- `--json`: salida estructurada para comparación
 
-Sugerencia: compare con `openclaw gateway discover --json` para ver si la canalización de descubrimiento de la aplicación de macOS (`local.` más el dominio de área amplia configurado, con respaldos de área amplia y Tailscale Serve) difiere del descubrimiento basado en `dns-sd` de la CLI de Node.
+Tip: compare against `openclaw gateway discover --json` to see whether the
+macOS app’s discovery pipeline (`local.` plus the configured wide-area domain, with
+wide-area and Tailscale Serve fallbacks) differs from
+the Node CLI’s `dns-sd` based discovery.
 
 ## Plomería de conexión remota (túneles SSH)
 
@@ -203,13 +206,17 @@ Cuando la aplicación de macOS se ejecuta en modo **Remoto**, abre un túnel SSH
 ### Túnel de control (puerto WebSocket del Gateway)
 
 - **Propósito:** comprobaciones de estado, estado, Web Chat, configuración y otras llamadas al plano de control.
-- **Puerto local:** el puerto de Gateway (predeterminado `18789`), siempre estable.
+- **Local port:** el puerto del Gateway (por defecto `18789`), siempre estable.
 - **Puerto remoto:** el mismo puerto del Gateway en el host remoto.
 - **Comportamiento:** sin puerto local aleatorio; la aplicación reutiliza un túnel existente y saludable o lo reinicia si es necesario.
-- **Formato SSH:** `ssh -N -L <local>:127.0.0.1:<remote>` con las opciones BatchMode + ExitOnForwardFailure + keepalive.
-- **Informes de IP:** el túnel SSH utiliza loopback, por lo que el gateway verá la IP del nodo como `127.0.0.1`. Utilice el transporte **Direct (ws/wss)** si desea que aparezca la IP real del cliente (consulte [acceso remoto de macOS](/es/platforms/mac/remote)).
+- **SSH shape:** `ssh -N -L <local>:127.0.0.1:<remote>` con las opciones BatchMode +
+  ExitOnForwardFailure + keepalive.
+- **IP reporting:** el túnel SSH usa loopback, por lo que el gateway verá la IP
+  del nodo como `127.0.0.1`. Use el transporte **Direct (ws/wss)** si desea que aparezca la IP real
+  del cliente (consulte [macOS remote access](/es/platforms/mac/remote)).
 
-Para ver los pasos de configuración, consulte [acceso remoto de macOS](/es/platforms/mac/remote). Para obtener detalles sobre el protocolo, consulte [Gateway protocol](/es/gateway/protocol).
+For setup steps, see [macOS remote access](/es/platforms/mac/remote). For protocol
+details, see [Gateway protocol](/es/gateway/protocol).
 
 ## Documentos relacionados
 

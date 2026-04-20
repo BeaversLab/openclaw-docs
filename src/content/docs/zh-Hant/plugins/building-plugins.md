@@ -139,8 +139,8 @@ read_when:
 
 單一外掛程式可以透過 `api` 物件註冊任意數量的功能：
 
-| 功能            | 註冊方法                                         | 詳細指南                                                                              |
-| --------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| 功能            | 註冊方法                                         | 詳細指南                                                                         |
+| --------------- | ------------------------------------------------ | -------------------------------------------------------------------------------- |
 | 文字推理 (LLM)  | `api.registerProvider(...)`                      | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins)                               |
 | CLI 推理後端    | `api.registerCliBackend(...)`                    | [CLI 後端](/zh-Hant/gateway/cli-backends)                                             |
 | 頻道 / 訊息傳遞 | `api.registerChannel(...)`                       | [頻道外掛程式](/zh-Hant/plugins/sdk-channel-plugins)                                  |
@@ -153,7 +153,7 @@ read_when:
 | 影片生成        | `api.registerVideoGenerationProvider(...)`       | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
 | 網頁擷取        | `api.registerWebFetchProvider(...)`              | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
 | 網頁搜尋        | `api.registerWebSearchProvider(...)`             | [提供商外掛](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)     |
-| 代理工具        | `api.registerTool(...)`                          | 下方                                                                                  |
+| 代理工具        | `api.registerTool(...)`                          | 下方                                                                             |
 | 自訂指令        | `api.registerCommand(...)`                       | [進入點](/zh-Hant/plugins/sdk-entrypoints)                                            |
 | 事件鉤子        | `api.registerHook(...)`                          | [進入點](/zh-Hant/plugins/sdk-entrypoints)                                            |
 | HTTP 路由       | `api.registerHttpRoute(...)`                     | [內部結構](/zh-Hant/plugins/architecture#gateway-http-routes)                         |

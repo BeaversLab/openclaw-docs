@@ -36,7 +36,7 @@ seul point de terminaison et une seule clé API. Elle est compatible avec OpenAI
     ```
 
   </Step>
-  <Step title="Vérifier que le modèle est disponible">
+  <Step title="Vérifiez que le modèle est disponible">
     ```bash
     openclaw models list --provider kilocode
     ```

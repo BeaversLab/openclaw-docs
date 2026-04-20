@@ -253,7 +253,7 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
 ## Configuración avanzada
 
 <AccordionGroup>
-  <Accordion title="Config file example">
+  <Accordion title="Ejemplo de archivo de configuración">
     ```json5
     {
       env: { VENICE_API_KEY: "vapi_..." },
@@ -287,16 +287,16 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelos" href="/es/concepts/model-providers" icon="layers">
-    Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
+    Elegir proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
   <Card title="Venice AI" href="https://venice.ai" icon="globe">
-    Página de inicio de Venice AI y registro de cuenta.
+    Página principal de Venice AI y registro de cuenta.
   </Card>
   <Card title="Documentación de la API" href="https://docs.venice.ai" icon="book">
     Referencia de la API de Venice y documentación para desarrolladores.
   </Card>
   <Card title="Precios" href="https://venice.ai/pricing" icon="credit-card">
-    Tarifas y planes de créditos actuales de Venice.
+    Tasas y planes de crédito actuales de Venice.
   </Card>
 </CardGroup>

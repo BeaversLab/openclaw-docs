@@ -49,7 +49,7 @@ openclaw onboard --non-interactive \
 ## Ejemplos específicos del proveedor
 
 <AccordionGroup>
-  <Accordion title="Anthropic API key example">
+  <Accordion title="Ejemplo de clave de API de Anthropic">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -59,7 +59,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Gemini example">
+  <Accordion title="Ejemplo de Gemini">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -69,7 +69,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Z.AI example">
+  <Accordion title="Ejemplo de Z.AI">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -79,7 +79,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Vercel AI Gateway example">
+  <Accordion title="Ejemplo de Vercel AI Gateway">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -89,7 +89,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Cloudflare AI Gateway example">
+  <Accordion title="Ejemplo de Cloudflare AI Gateway">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -101,7 +101,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Moonshot example">
+  <Accordion title="Ejemplo de Moonshot">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -111,7 +111,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Mistral example">
+  <Accordion title="Ejemplo de Mistral">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -121,7 +121,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Synthetic example">
+  <Accordion title="Ejemplo sintético">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -167,7 +167,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` es opcional. Si se omite, la incorporación verifica `CUSTOM_API_KEY`.
+    `--custom-api-key` es opcional. Si se omite, el onboarding verifica `CUSTOM_API_KEY`.
 
     Variante de modo de referencia:
 
@@ -185,12 +185,12 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    En este modo, la incorporación almacena `apiKey` como `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
+    En este modo, el onboarding almacena `apiKey` como `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
 
   </Accordion>
 </AccordionGroup>
 
-El token de configuración de Anthropic sigue disponible como una ruta de token de incorporación compatible, pero OpenClaw ahora prefiere la reutilización de la CLI de Claude cuando está disponible.
+El token de configuración de Anthropic sigue disponible como una ruta de token de onboarding admitida, pero OpenClaw ahora prefiere reutilizar la CLI de Claude cuando está disponible.
 Para producción, prefiera una clave de API de Anthropic.
 
 ## Agregar otro agente
@@ -216,7 +216,7 @@ Lo que configura:
 Notas:
 
 - Los espacios de trabajo predeterminados siguen `~/.openclaw/workspace-<agentId>`.
-- Añada `bindings` para enrutar mensajes entrantes (el asistente puede hacer esto).
+- Añade `bindings` para enrutar los mensajes entrantes (el asistente puede hacer esto).
 - Opciones no interactivas: `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
 
 ## Documentos relacionados

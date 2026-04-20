@@ -33,9 +33,9 @@ title: "GCP"
 - 從您的筆記型電腦進行 SSH 連線埠轉發
 - 如果您自行管理防火牆和權杖，則直接開放連線埠
 
-本指南使用 GCP Compute Engine 上的 Debian。
-Ubuntu 也可以運作；請對應相關的套件。
-關於一般的 Docker 流程，請參閱 [Docker](/zh-Hant/install/docker)。
+本指南在 GCP Compute Engine 上使用 Debian。
+Ubuntu 也可以使用；請相應地對照套件。
+若要了解通用的 Docker 流程，請參閱 [Docker](/zh-Hant/install/docker)。
 
 ---
 
@@ -69,12 +69,12 @@ Ubuntu 也可以運作；請對應相關的套件。
 ---
 
 <Steps>
-  <Step title="安裝 gcloud CLI（或使用 Console）">
-    **選項 A：gcloud CLI**（建議用於自動化）
+  <Step title="安裝 gcloud CLI (或使用 Console)">
+    **選項 A：gcloud CLI** (推薦用於自動化)
 
     從 [https://cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install) 安裝
 
-    初始化並進行驗證：
+    初始化並進行身份驗證：
 
     ```bash
     gcloud init
@@ -83,7 +83,7 @@ Ubuntu 也可以運作；請對應相關的套件。
 
     **選項 B：Cloud Console**
 
-    所有步驟都可以透過位於 [https://console.cloud.google.com](https://console.cloud.google.com) 的網頁 UI 完成
+    所有步驟均可透過位於 [https://console.cloud.google.com](https://console.cloud.google.com) 的網頁 UI 完成
 
   </Step>
 
@@ -95,7 +95,7 @@ Ubuntu 也可以運作；請對應相關的套件。
     gcloud config set project my-openclaw-project
     ```
 
-    在 [https://console.cloud.google.com/billing](https://console.cloud.google.com/billing) 啟用計費（Compute Engine 所需）。
+    在 [https://console.cloud.google.com/billing](https://console.cloud.google.com/billing) 啟用計費 (Compute Engine 必需)。
 
     啟用 Compute Engine API：
 
@@ -208,23 +208,25 @@ Ubuntu 也可以運作；請對應相關的套件。
 
   </Step>
 
-  <Step title="Configure environment variables">
-    在儲存庫根目錄中建立 `.env`。
+  <Step title="設定環境變數">
+    在儲存庫根目錄建立 `.env`。
 
     ```bash
     OPENCLAW_IMAGE=openclaw:latest
-    OPENCLAW_GATEWAY_TOKEN=change-me-now
+    OPENCLAW_GATEWAY_TOKEN=
     OPENCLAW_GATEWAY_BIND=lan
     OPENCLAW_GATEWAY_PORT=18789
 
     OPENCLAW_CONFIG_DIR=/home/$USER/.openclaw
     OPENCLAW_WORKSPACE_DIR=/home/$USER/.openclaw/workspace
 
-    GOG_KEYRING_PASSWORD=change-me-now
+    GOG_KEYRING_PASSWORD=
     XDG_CONFIG_HOME=/home/node/.openclaw
     ```
 
-    產生強密鑰：
+    除非您明確想透過 `.env` 管理 `OPENCLAW_GATEWAY_TOKEN`，否則請將其留白；
+    OpenClaw 會在首次啟動時將隨機的 gateway token 寫入設定。
+    產生一個 keyring 密碼並將其貼上到 `GOG_KEYRING_PASSWORD`：
 
     ```bash
     openssl rand -hex 32
@@ -232,13 +234,13 @@ Ubuntu 也可以運作；請對應相關的套件。
 
     **請勿提交此檔案。**
 
-    這個 `.env` 檔案是用於容器/執行時環境變數，例如 `OPENCLAW_GATEWAY_TOKEN`。
-    儲存的提供者 OAuth/API 金鑰驗證位於掛載的
+    這個 `.env` 檔案是用於容器/執行時期環境，例如 `OPENCLAW_GATEWAY_TOKEN`。
+    儲存的供應商 OAuth/API 金鑰驗證則位於掛載的
     `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 中。
 
   </Step>
 
-  <Step title="Docker Compose configuration">
+  <Step title="Docker Compose 設定">
     建立或更新 `docker-compose.yml`。
 
     ```yaml
@@ -279,41 +281,42 @@ Ubuntu 也可以運作；請對應相關的套件。
           ]
     ```
 
-    `--allow-unconfigured` 僅為了引導方便，它不能取代適當的 Gateway 設定。仍需設定驗證方式 (`gateway.auth.token` 或密碼)，並為您的部署使用安全的綁定設定。
+    `--allow-unconfigured` 僅為了啟動時的便利性，並非正確 gateway 設定的替代方案。
+    仍需設定驗證 (`gateway.auth.token` 或密碼)，並為您的部署使用安全的綁定設定。
 
   </Step>
 
-  <Step title="Shared Docker VM runtime steps">
-    使用共用的執行時指南來了解一般的 Docker 主機流程：
+  <Step title="共用的 Docker VM 執行階段步驟">
+    使用共用的執行階段指南來了解一般的 Docker 主機流程：
 
-    - [將所需的二進位檔案製作到映像中](/zh-Hant/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-    - [建置並啟動](/zh-Hant/install/docker-vm-runtime#build-and-launch)
+    - [將所需的二進位檔烘焙至映像檔中](/zh-Hant/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+    - [建置與啟動](/zh-Hant/install/docker-vm-runtime#build-and-launch)
     - [什麼資料會保存在哪裡](/zh-Hant/install/docker-vm-runtime#what-persists-where)
     - [更新](/zh-Hant/install/docker-vm-runtime#updates)
 
   </Step>
 
-  <Step title="GCP-specific launch notes">
-    在 GCP 上，如果在 `pnpm install --frozen-lockfile` 期間建置失敗並出現 `Killed` 或 `exit code 137`，表示 VM 記憶體不足。請最少使用 `e2-small`，或是為了更可靠的首 次 建置使用 `e2-medium`。
+  <Step title="GCP 專屬的啟動說明">
+    在 GCP 上，如果在 `pnpm install --frozen-lockfile` 期間因 `Killed` 或 `exit code 137` 而建置失敗，表示 VM 的記憶體不足。請至少使用 `e2-small`，或使用 `e2-medium` 以讓初次建置更可靠。
 
-    當綁定到 LAN (`OPENCLAW_GATEWAY_BIND=lan`) 時，請在繼續之前設定受信任的瀏覽器來源：
+    當綁定到區域網路 (LAN) (`OPENCLAW_GATEWAY_BIND=lan`) 時，請在繼續之前設定信任的瀏覽器來源：
 
     ```bash
     docker compose run --rm openclaw-cli config set gateway.controlUi.allowedOrigins '["http://127.0.0.1:18789"]' --strict-json
     ```
 
-    如果您變更了 Gateway 連接埠，請將 `18789` 取代為您設定的連接埠。
+    如果您變更了閘道連接埠，請將 `18789` 替換為您設定的連接埠。
 
   </Step>
 
-  <Step title="從筆記型電腦存取">
-    建立一條 SSH 通道以轉發 Gateway 連接埠：
+  <Step title="從您的筆電存取">
+    建立 SSH 通道以轉發閘道連接埠：
 
     ```bash
     gcloud compute ssh openclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:18789
     ```
 
-    在您的瀏覽器中開啟：
+    在瀏覽器中開啟：
 
     `http://127.0.0.1:18789/`
 
@@ -323,19 +326,17 @@ Ubuntu 也可以運作；請對應相關的套件。
     docker compose run --rm openclaw-cli dashboard --no-open
     ```
 
-    如果 UI 提示進行 shared-secret 驗證，請將設定的 token 或
-    密碼貼上到 Control UI 設定中。此 Docker 流程預設會寫入一個 token；
-    如果您將容器設定切換為密碼驗證，請改用該密碼。
+    如果 UI 提示進行 shared-secret 驗證，請將設定的權杖或密碼貼上至 Control UI 設定中。此 Docker 流程預設會寫入權杖；如果您將容器設定切換為密碼驗證，請改用該密碼。
 
-    如果 Control UI 顯示 `unauthorized` 或 `disconnected (1008): pairing required`，請核准瀏覽器裝置：
+    如果 Control UI 顯示 `unauthorized` 或 `disconnected (1008): pairing required`，請批准瀏覽器裝置：
 
     ```bash
     docker compose run --rm openclaw-cli devices list
     docker compose run --rm openclaw-cli devices approve <requestId>
     ```
 
-    需要再次查看共享持久化和更新參考資料？
-    請參閱 [Docker VM Runtime](/zh-Hant/install/docker-vm-runtime#what-persists-where) 和 [Docker VM Runtime updates](/zh-Hant/install/docker-vm-runtime#updates)。
+    需要關於共用持久化與更新的參考資料嗎？
+    請參閱 [Docker VM 執行階段](/zh-Hant/install/docker-vm-runtime#what-persists-where) 與 [Docker VM 執行階段更新](/zh-Hant/install/docker-vm-runtime#updates)。
 
   </Step>
 </Steps>
@@ -360,7 +361,7 @@ gcloud compute os-login describe-profile
 
 **記憶體不足 (OOM)**
 
-如果 Docker 建置失敗並顯示 `Killed` 和 `exit code 137`，表示 VM 已因 OOM 被終止。請升級至 e2-small (最低) 或 e2-medium (建議用於可靠的本地建置)：
+如果 Docker 建置因 `Killed` 和 `exit code 137` 而失敗，表示 VM 已因記憶體不足 (OOM) 被終止。請升級至 e2-small (最低) 或 e2-medium (建議用於可靠的本地建置)：
 
 ```bash
 # Stop the VM first
@@ -400,12 +401,12 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 避免對自動化作業使用 Owner 角色。請遵循最小權限原則。
 
-請參閱 [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles) 以了解 IAM 角色詳情。
+請參閱 [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles) 以了解 IAM 角色的詳細資訊。
 
 ---
 
 ## 後續步驟
 
-- 設定訊息通道：[Channels](/zh-Hant/channels)
-- 將本地裝置配對為節點：[Nodes](/zh-Hant/nodes)
-- 設定 Gateway：[Gateway configuration](/zh-Hant/gateway/configuration)
+- 設定訊息通道：[通道](/zh-Hant/channels)
+- 將本地裝置配對為節點：[節點](/zh-Hant/nodes)
+- 設定閘道：[閘道設定](/zh-Hant/gateway/configuration)

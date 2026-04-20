@@ -15,7 +15,7 @@ l'assistant et laisser l'agent s'initialiser.
 Pour une vue d'ensemble des chemins d'onboarding, voir [Onboarding Overview](/fr/start/onboarding-overview).
 
 <Steps>
-<Step title="Approve macOS warning">
+<Step title="Approuver l'avertissement macOS">
 <Frame>
 <img src="/assets/macos-onboarding/01-macos-warning.jpeg" alt="" />
 </Frame>
@@ -25,42 +25,42 @@ Pour une vue d'ensemble des chemins d'onboarding, voir [Onboarding Overview](/fr
 <img src="/assets/macos-onboarding/02-local-networks.jpeg" alt="" />
 </Frame>
 </Step>
-<Step title="Welcome and security notice">
+<Step title="Bienvenue et avis de sécurité">
 <Frame caption="Read the security notice displayed and decide accordingly">
 <img src="/assets/macos-onboarding/03-security-notice.png" alt="" />
 </Frame>
 
 Modèle de confiance de sécurité :
 
-- Par défaut, OpenClaw est un agent personnel : une seule frontière d'opérateur de confiance.
-- Les configurations partagées/multi-utilisateurs nécessitent un verrouillage (séparation des frontières de confiance, accès minimal aux outils et respect des [Consignes de sécurité](/fr/gateway/security)).
-- L'intégration locale définit désormais les nouvelles configurations par défaut sur `tools.profile: "coding"` afin que les nouvelles installations locales conservent les outils de système de fichiers/exécution sans forcer le profil `full` sans restriction.
-- Si des hooks/webhooks ou d'autres flux de contenu non fiables sont activés, utilisez un niveau de modèle moderne robuste et maintenez une politique d'outils et un bac à sable (sandboxing) stricts.
+- Par défaut, OpenClaw est un agent personnel : une limite d'opérateur de confiance.
+- Les configurations partagées/multi-utilisateurs nécessitent un verrouillage (séparation des limites de confiance, maintien de l'accès aux outils au minimum et respect des consignes [Sécurité](/fr/gateway/security)).
+- L'onboarding local définit désormais les nouvelles configurations sur `tools.profile: "coding"` par défaut, afin que les nouvelles configurations locales conservent les outils de système de fichiers/exécution sans forcer le profil non restreint `full`.
+- Si des hooks/webhooks ou d'autres flux de contenu non fiables sont activés, utilisez un niveau de modèle moderne robuste et maintenez une politique d'outil/sandboxing stricte.
 
 </Step>
-<Step title="Local vs Remote">
+<Step title="Local vs distant">
 <Frame>
 <img src="/assets/macos-onboarding/04-choose-gateway.png" alt="" />
 </Frame>
 
 Où le **Gateway** s'exécute-t-il ?
 
-- **Ce Mac (Local uniquement) :** l'onboarding peut configurer l'auth et écrire les informations d'identification
+- **Ce Mac (Local uniquement) :** l'onboarding peut configurer l'authentification et écrire les identifiants
   localement.
-- **Distant (via SSH/Tailnet) :** l'onboarding configure **pas** l'auth locale ;
-  les informations d'identification doivent exister sur l'hôte de la passerelle.
-- **Configurer plus tard :** ignorer la configuration et laisser l'application non configurée.
+- **Distant (via SSH/Tailnet) :** l'onboarding ne configure **pas** l'authentification locale ;
+  les identifiants doivent exister sur l'hôte de la passerelle.
+- **Configurer plus tard :** ignorez la configuration et laissez l'application non configurée.
 
 <Tip>
-**Conseil d'auth du Gateway :**
+**Conseil d'authentification du Gateway :**
 
-- L'assistant génère désormais un **token** même pour le bouclage local (loopback), donc les clients WS locaux doivent s'authentifier.
-- Si vous désactivez l'auth, tout processus local peut se connecter ; utilisez cela uniquement sur des machines entièrement fiables.
-- Utilisez un **token** pour l'accès multi-machines ou les liaisons non bouclage (non-loopback).
+- L'assistant génère désormais un **jeton** même pour le bouclage local, donc les clients WS locaux doivent s'authentifier.
+- Si vous désactivez l'authentification, tout processus local peut se connecter ; utilisez cela uniquement sur des machines entièrement fiables.
+- Utilisez un **jeton** pour l'accès multi-machine ou les liaisons non bouclage.
 
 </Tip>
 </Step>
-<Step title="Permissions">
+<Step title="Autorisations">
 <Frame caption="Choose what permissions do you want to give OpenClaw">
 <img src="/assets/macos-onboarding/05-permissions.png" alt="" />
 </Frame>
@@ -80,13 +80,13 @@ L'onboarding demande les autorisations TCC nécessaires pour :
 <Step title="CLI">
   <Info>Cette étape est facultative</Info>
   L'application peut installer le `openclaw` CLI global via CLI, pnpm ou bun.
-  Elle privilégie d'abord CLI, puis pnpm, puis bun si c'est le seul gestionnaire de paquets détecté.
-  Pour le runtime du npm, Node reste la voie recommandée.
+  Elle privilégie d'abord CLI, puis pnpm, puis bun si c'est le seul gestionnaire de packages
+  détecté. Pour le runtime npm, Node reste la méthode recommandée.
 </Step>
 <Step title="Onboarding Chat (dedicated session)">
   Après la configuration, l'application ouvre une session de chat d'onboarding dédiée afin que l'agent puisse
-  se présenter et guider les prochaines étapes. Cela permet de séparer les instructions du premier démarrage
-  de votre conversation normale. Consultez [Bootstrapping](/fr/start/bootstrapping) pour
-  savoir ce qui se passe sur l'hôte de la passerelle lors de la première exécution de l'agent.
+  se présenter et guider les prochaines étapes. Cela permet de garder les conseils de premier démarrage séparés
+  de votre conversation normale. Voir [Bootstrapping](/fr/start/bootstrapping) pour
+  ce qui se passe sur l'hôte de la passerelle lors de la première exécution de l'agent.
 </Step>
 </Steps>

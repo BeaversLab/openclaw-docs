@@ -601,8 +601,8 @@ title: "常見問題"
   </Accordion>
 
 <Accordion title="是否支援 AWS Bedrock？">
-  是的。OpenClaw 內建了 **Amazon Bedrock (Converse)** 供應商。當 AWS 環境變數標記存在時，OpenClaw 可以自動探索串流/文字 Bedrock 目錄，並將其合併為隱含的 `amazon-bedrock` 供應商；否則您可以明確啟用 `plugins.entries.amazon-bedrock.config.discovery.enabled` 或新增手動供應商條目。請參閱 [Amazon Bedrock](/zh-Hant/providers/bedrock) 和 [模型供應商](/zh-Hant/providers/models)。如果您偏好受管金鑰流程，在
-  Bedrock 前方使用 OpenAI 相容的代理伺服器仍然是一個可行的選項。
+  是的。OpenClaw 內建了 **Amazon Bedrock (Converse)** 供應商。當 AWS 環境變數標記存在時，OpenClaw 可以自動探索串流/文字 Bedrock 目錄，並將其合併為隱含的 `amazon-bedrock` 供應商；否則您可以明確啟用 `plugins.entries.amazon-bedrock.config.discovery.enabled` 或新增手動供應商條目。請參閱 [Amazon Bedrock](/zh-Hant/providers/bedrock) 和 [模型供應商](/zh-Hant/providers/models)。如果您偏好受管金鑰流程，在 Bedrock
+  前方使用 OpenAI 相容的代理伺服器仍然是一個可行的選項。
 </Accordion>
 
 <Accordion title="Codex 驗證是如何運作的？">OpenClaw 透過 OAuth（ChatGPT 登入）支援 **OpenAI Code (Codex)**。入門流程可以執行 OAuth 流程，並在適當時將預設模型設定為 `openai-codex/gpt-5.4`。請參閱 [模型供應商](/zh-Hant/concepts/model-providers) 和 [入門 (CLI)](/zh-Hant/start/wizard)。</Accordion>

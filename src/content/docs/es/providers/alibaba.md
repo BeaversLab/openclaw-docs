@@ -19,12 +19,12 @@ Alibaba Model Studio / DashScope.
 ## Primeros pasos
 
 <Steps>
-  <Step title="Set an API key">
+  <Step title="Establecer una clave de API">
     ```bash
     openclaw onboard --auth-choice qwen-standard-api-key
     ```
   </Step>
-  <Step title="Set a default video model">
+  <Step title="Establecer un modelo de video predeterminado">
     ```json5
     {
       agents: {
@@ -37,20 +37,20 @@ Alibaba Model Studio / DashScope.
     }
     ```
   </Step>
-  <Step title="Verify the provider is available">
+  <Step title="Verificar que el proveedor esté disponible">
     ```bash
     openclaw models list --provider alibaba
     ```
   </Step>
 </Steps>
 
-<Note>Cualquiera de las claves de autenticación aceptadas (`MODELSTUDIO_API_KEY`, `DASHSCOPE_API_KEY`, `QWEN_API_KEY`) funcionará. La opción de incorporación `qwen-standard-api-key` configura la credencial compartida de DashScope.</Note>
+<Note>Cualquiera de las claves de autenticación aceptadas (`MODELSTUDIO_API_KEY`, `DASHSCOPE_API_KEY`, `QWEN_API_KEY`) funcionará. La elección de incorporación `qwen-standard-api-key` configura la credencial compartida de DashScope.</Note>
 
 ## Modelos Wan integrados
 
-El proveedor `alibaba` incluido registra actualmente:
+El proveedor incluido `alibaba` actualmente registra:
 
-| Referencia del modelo      | Modo                        |
+| Ref. de modelo             | Modo                        |
 | -------------------------- | --------------------------- |
 | `alibaba/wan2.6-t2v`       | Texto a video               |
 | `alibaba/wan2.6-i2v`       | Imagen a video              |
@@ -67,26 +67,26 @@ El proveedor `alibaba` incluido registra actualmente:
 | Videos de entrada          | Hasta **4**                                               |
 | Duración                   | Hasta **10 segundos**                                     |
 | Controles compatibles      | `size`, `aspectRatio`, `resolution`, `audio`, `watermark` |
-| Imagen/video de referencia | Solo URLs `http(s)` remotas                               |
+| Imagen/video de referencia | Solo URL `http(s)` remotas                                |
 
-<Warning>El modo de imagen/video de referencia actualmente requiere **URLs http(s) remotas**. No se admiten rutas de archivos locales para entradas de referencia.</Warning>
+<Warning>El modo de imagen/video de referencia actualmente requiere **URL http(s) remotas**. Las rutas de archivos locales no son compatibles con las entradas de referencia.</Warning>
 
 ## Configuración avanzada
 
 <AccordionGroup>
-  <Accordion title="Relationship to Qwen">
-    El proveedor incluido `qwen` también utiliza los puntos de conexión de DashScope alojados por Alibaba para
-    la generación de video Wan. Use:
+  <Accordion title="Relación con Qwen">
+    El proveedor incluido `qwen` también utiliza puntos de conexión de DashScope alojados por Alibaba para
+    la generación de videos Wan. Utilice:
 
-    - `qwen/...` cuando desee la superficie del proveedor Qwen canónico
-    - `alibaba/...` cuando desee la superficie de video Wan propiedad directa del proveedor
+    - `qwen/...` cuando desee la superficie canónica del proveedor Qwen
+    - `alibaba/...` cuando desee la superficie directa de video Wan propiedad del proveedor
 
-    Consulte la [documentación del proveedor Qwen](/es/providers/qwen) para obtener más detalles.
+    Consulte los [documentos del proveedor Qwen](/es/providers/qwen) para obtener más detalles.
 
   </Accordion>
 
-  <Accordion title="Auth key priority">
-    OpenClaw verifica las claves de autenticación en el siguiente orden:
+  <Accordion title="Prioridad de clave de autenticación">
+    OpenClaw busca claves de autenticación en este orden:
 
     1. `MODELSTUDIO_API_KEY` (preferido)
     2. `DASHSCOPE_API_KEY`
@@ -100,13 +100,13 @@ El proveedor `alibaba` incluido registra actualmente:
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Video generation" href="/es/tools/video-generation" icon="video">
-    Parámetros compartidos de la herramienta de video y selección de proveedor.
+  <Card title="Generación de video" href="/es/tools/video-generation" icon="video">
+    Parámetros compartidos de la herramienta de video y selección del proveedor.
   </Card>
   <Card title="Qwen" href="/es/providers/qwen" icon="microchip">
     Configuración del proveedor Qwen e integración con DashScope.
   </Card>
-  <Card title="Configuration reference" href="/es/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference#agent-defaults" icon="gear">
     Valores predeterminados del agente y configuración del modelo.
   </Card>
 </CardGroup>

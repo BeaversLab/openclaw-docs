@@ -87,12 +87,12 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
 ## 快速开始
 
 <Steps>
-  <Step title="Install OpenClaw">
+  <Step title="安装 OpenClaw">
     ```bash
     npm install -g openclaw@latest
     ```
   </Step>
-  <Step title="Onboard and install the service">
+  <Step title="入职并安装服务">
     ```bash
     openclaw onboard --install-daemon
     ```
@@ -113,9 +113,9 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
 
 ## 仪表板
 
-在 Gateway(网关) 启动后，打开浏览器控制 UI。
+在 Gateway(网关) 启动后打开浏览器控制 UI。
 
-- 本地默认： [http://127.0.0.1:18789/](http://127.0.0.1:18789/)
+- 本地默认地址：[http://127.0.0.1:18789/](http://127.0.0.1:18789/)
 - 远程访问：[Web 界面](/zh/web) 和 [Tailscale](/zh/gateway/tailscale)
 
 <p align="center">
@@ -124,10 +124,10 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
 
 ## 配置（可选）
 
-配置文件位于 `~/.openclaw/openclaw.json`。
+配置位于 `~/.openclaw/openclaw.json`。
 
-- 如果您**不执行任何操作**，OpenClaw 将使用内置的 Pi 二进制文件，以 RPC 模式运行，并为每个发送者创建会话。
-- 如果您想锁定配置，请从 `channels.whatsapp.allowFrom` 开始（针对群组）并配置提及规则。
+- 如果您**什么都不做**，OpenClaw 将在 RPC 模式下使用随附的 Pi 二进制文件，并按发件人划分会话。
+- 如果您想锁定它，请从 `channels.whatsapp.allowFrom` 开始（针对群组）并提及规则。
 
 示例：
 
@@ -152,17 +152,17 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
   <Card title="配置" href="/zh/gateway/configuration" icon="settings">
     核心 Gateway(网关) 设置、令牌和提供商配置。
   </Card>
-  <Card title="Remote access" href="/zh/gateway/remote" icon="globe">
+  <Card title="远程访问" href="/zh/gateway/remote" icon="globe">
     SSH 和 tailnet 访问模式。
   </Card>
   <Card title="Channels" href="/zh/channels/telegram" icon="message-square">
-    针对飞书、Microsoft Teams、WhatsApp、Telegram、Discord 等的特定渠道设置。
+    针对飞书、Microsoft Teams、WhatsApp、Telegram、Discord 等渠道的特定设置。
   </Card>
   <Card title="Nodes" href="/zh/nodes" icon="smartphone">
-    支持配对、iOS、摄像头和设备操作的 Android 和 Canvas 节点。
+    支持iOS和Android的节点，具有配对、Canvas、相机和设备操作功能。
   </Card>
   <Card title="Help" href="/zh/help" icon="life-buoy">
-    常见修复方法和故障排除入口。
+    常见修复和故障排除入口。
   </Card>
 </Columns>
 
@@ -173,13 +173,13 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
     完整的渠道、路由和媒体功能。
   </Card>
   <Card title="Multi-agent routing" href="/zh/concepts/multi-agent" icon="route">
-    工作区隔离和每个代理的会话。
+    工作区隔离和按代理会话。
   </Card>
   <Card title="Security" href="/zh/gateway/security" icon="shield">
     令牌、允许列表和安全控制。
   </Card>
   <Card title="Troubleshooting" href="/zh/gateway/troubleshooting" icon="wrench">
-    Gateway(网关) 诊断和常见错误。
+    Gateway(网关)诊断和常见错误。
   </Card>
   <Card title="About and credits" href="/zh/reference/credits" icon="info">
     项目起源、贡献者和许可证。

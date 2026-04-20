@@ -93,20 +93,20 @@ fnm use 24
 這幾乎總是表示 npm 的全域 bin 目錄不在您的 PATH 中。
 
 <Steps>
-  <Step title="Find your global npm prefix">
+  <Step title="尋找您的全域 npm 前綴">
     ```bash
     npm prefix -g
     ```
   </Step>
-  <Step title="檢查是否在您的 PATH 中">
+  <Step title="檢查它是否在您的 PATH 中">
     ```bash
     echo "$PATH"
     ```
 
-    在輸出中尋找 `<npm-prefix>/bin` (macOS/Linux) 或 `<npm-prefix>` (Windows)。
+    在輸出內容中尋找 `<npm-prefix>/bin` (macOS/Linux) 或 `<npm-prefix>` (Windows)。
 
   </Step>
-  <Step title="將其加入您的 shell 啟動檔案">
+  <Step title="將它加入您的 shell 啟動檔案">
     <Tabs>
       <Tab title="macOS / Linux">
         加入到 `~/.zshrc` 或 `~/.bashrc`：
@@ -115,19 +115,19 @@ fnm use 24
         export PATH="$(npm prefix -g)/bin:$PATH"
         ```
 
-        然後開啟一個新的終端機 (或在 zsh 中執行 `rehash` / 在 bash 中執行 `hash -r`)。
+        然後開啟新的終端機（或在 zsh 中執行 `rehash` / 在 bash 中執行 `hash -r`）。
       </Tab>
       <Tab title="Windows">
-        透過設定 → 系統 → 環境變數，將 `npm prefix -g` 的輸出加入您的系統 PATH。
+        透過 設定 → 系統 → 環境變數 將 `npm prefix -g` 的輸出加入到您的系統 PATH 中。
       </Tab>
     </Tabs>
 
   </Step>
 </Steps>
 
-### 在 `npm install -g` 上發生權限錯誤
+### `npm install -g` (Linux) 上的權限錯誤
 
-如果您看到 `EACCES` 錯誤，請將 npm 的全域 prefix 切換到使用者可寫入的目錄：
+如果您看到 `EACCES` 錯誤，請將 npm 的全域前綴切換至使用者可寫入的目錄：
 
 ```bash
 mkdir -p "$HOME/.npm-global"
@@ -135,10 +135,10 @@ npm config set prefix "$HOME/.npm-global"
 export PATH="$HOME/.npm-global/bin:$PATH"
 ```
 
-將 `export PATH=...` 這一行加入到您的 `~/.bashrc` 或 `~/.zshrc` 以使其永久生效。
+將 `export PATH=...` 那一行加入到您的 `~/.bashrc` 或 `~/.zshrc` 以使其永久生效。
 
 ## 相關
 
-- [安裝概覽](/zh-Hant/install) — 所有安裝方法
+- [安裝概覽](/zh-Hant/install) — 所有安裝方式
 - [更新](/zh-Hant/install/updating) — 保持 OpenClaw 為最新狀態
-- [快速開始](/zh-Hant/start/getting-started) — 安裝後的第一步
+- [開始使用](/zh-Hant/start/getting-started) — 安裝後的第一步

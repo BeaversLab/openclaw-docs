@@ -19,7 +19,7 @@ cuenta ni clave de API.
 No se necesita clave de API: simplemente configure DuckDuckGo como su proveedor:
 
 <Steps>
-  <Step title="Configure">```bash openclaw configure --section web # Select "duckduckgo" as the provider ```</Step>
+  <Step title="Configurar">```bash openclaw configure --section web # Select "duckduckgo" as the provider ```</Step>
 </Steps>
 
 ## Configuración
@@ -36,7 +36,7 @@ No se necesita clave de API: simplemente configure DuckDuckGo como su proveedor:
 }
 ```
 
-Configuraciones opcionales a nivel de complemento para la región y Búsqueda Segura:
+Configuraciones opcionales a nivel de complemento para región y SafeSearch:
 
 ```json5
 {
@@ -57,34 +57,33 @@ Configuraciones opcionales a nivel de complemento para la región y Búsqueda Se
 
 ## Parámetros de la herramienta
 
-| Parámetro    | Descripción                                                             |
-| ------------ | ----------------------------------------------------------------------- |
-| `query`      | Consulta de búsqueda (requerido)                                        |
-| `count`      | Resultados a devolver (1-10, predeterminado: 5)                         |
-| `region`     | Código de región de DuckDuckGo (ej. `us-en`, `uk-en`, `de-de`)          |
-| `safeSearch` | Nivel de Búsqueda Segura: `strict`, `moderate` (predeterminado) o `off` |
+| Parámetro    | Descripción                                                        |
+| ------------ | ------------------------------------------------------------------ |
+| `query`      | Consulta de búsqueda (obligatoria)                                 |
+| `count`      | Resultados a devolver (1-10, predeterminado: 5)                    |
+| `region`     | Código de región de DuckDuckGo (ej. `us-en`, `uk-en`, `de-de`)     |
+| `safeSearch` | Nivel de SafeSearch: `strict`, `moderate` (predeterminado) o `off` |
 
-La región y la Búsqueda Segura también se pueden establecer en la configuración del complemento (ver arriba) — los
-parámetros de la herramienta anulan los valores de configuración por consulta.
+La región y SafeSearch también se pueden configurar en la configuración del complemento (ver arriba) — los parámetros de la herramienta anulan los valores de configuración por consulta.
 
 ## Notas
 
 - **Sin clave de API** — funciona de inmediato, configuración cero
 - **Experimental** — recopila resultados de las páginas de búsqueda HTML
-  sin JavaScript de DuckDuckGo, no de una API o SDK oficial
-- **Riesgo de desafío para bots** — DuckDuckGo puede mostrar CAPTCHAs o bloquear solicitudes
+  sin JavaScript de DuckDuckGo, no una API oficial ni SDK
+- **Riesgo de desafío de bots** — DuckDuckGo puede mostrar CAPTCHAs o bloquear solicitudes
   bajo uso intensivo o automatizado
-- **Análisis de HTML** — los resultados dependen de la estructura de la página, la cual puede cambiar sin
+- **Análisis HTML** — los resultados dependen de la estructura de la página, la cual puede cambiar sin
   previo aviso
 - **Orden de detección automática** — DuckDuckGo es el primer respaldo sin clave
-  (orden 100) en la detección automática. Los proveedores con API que tengan claves configuradas se ejecutan
+  (orden 100) en la detección automática. Los proveedores con API y claves configuradas se ejecutan
   primero, luego Ollama Web Search (orden 110), luego SearXNG (orden 200)
-- **Búsqueda Segura se establece en moderada** de forma predeterminada cuando no se configura
+- **SafeSearch se predetermina a moderado** cuando no está configurado
 
-<Tip>Para uso en producción, considere [Brave Search](/es/tools/brave-search) (capa gratuita disponible) u otro proveedor con API.</Tip>
+<Tip>Para uso en producción, considere [Brave Search](/es/tools/brave-search) (nivel gratuito disponible) u otro proveedor con API.</Tip>
 
 ## Relacionado
 
-- [Descripción general de Web Search](/es/tools/web) -- todos los proveedores y detección automática
+- [Resumen de Web Search](/es/tools/web) -- todos los proveedores y detección automática
 - [Brave Search](/es/tools/brave-search) -- resultados estructurados con nivel gratuito
-- [Búsqueda Exa](/es/tools/exa-search) -- búsqueda neuronal con extracción de contenido
+- [Exa Search](/es/tools/exa-search) -- búsqueda neuronal con extracción de contenido

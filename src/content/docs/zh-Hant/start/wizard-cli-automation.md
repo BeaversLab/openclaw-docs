@@ -49,7 +49,7 @@ openclaw onboard --non-interactive \
 ## 特定提供者的範例
 
 <AccordionGroup>
-  <Accordion title="Anthropic API key example">
+  <Accordion title="Anthropic API 金鑰範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -59,7 +59,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Gemini example">
+  <Accordion title="Gemini 範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -69,7 +69,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Z.AI example">
+  <Accordion title="Z.AI 範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -79,7 +79,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Vercel AI Gateway example">
+  <Accordion title="Vercel AI Gateway 範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -89,7 +89,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Cloudflare AI Gateway example">
+  <Accordion title="Cloudflare AI Gateway 範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -101,7 +101,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Moonshot example">
+  <Accordion title="Moonshot 範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -111,7 +111,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Mistral example">
+  <Accordion title="Mistral 範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -121,7 +121,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Synthetic example">
+  <Accordion title="綜合範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -153,7 +153,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="自訂供應商範例">
+  <Accordion title="自訂提供者範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -167,7 +167,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` 是選用的。如果省略，入門流程會檢查 `CUSTOM_API_KEY`。
+    `--custom-api-key` 是選用的。若省略，onboarding 會檢查 `CUSTOM_API_KEY`。
 
     參照模式變體：
 
@@ -185,17 +185,17 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    在此模式下，入門流程會將 `apiKey` 儲存為 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
+    在此模式下，onboarding 會將 `apiKey` 儲存為 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
 
   </Accordion>
 </AccordionGroup>
 
-Anthropic setup-token 仍可作為支援的入門令牌路徑使用，但在有可用時，OpenClaw 現在偏好重複使用 Claude CLI。對於生產環境，請優先使用 Anthropic API 金鑰。
+Anthropic setup-token 仍然可用作支援的 onboarding token 路徑，但 OpenClaw 現在會優先使用可用的 Claude CLI。對於生產環境，建議使用 Anthropic API 金鑰。
 
 ## 新增另一個代理程式
 
-使用 `openclaw agents add <name>` 建立一個具有獨立工作區、
-階段作業和驗證設定檔的獨立代理程式。若沒有執行 `--workspace`，則會啟動精靈。
+使用 `openclaw agents add <name>` 建立一個擁有獨立工作區、
+工作階段和 auth 設定檔的個別代理程式。未帶 `--workspace` 執行會啟動精靈。
 
 ```bash
 openclaw agents add work \
@@ -206,13 +206,13 @@ openclaw agents add work \
   --json
 ```
 
-設定內容：
+設定項目：
 
 - `agents.list[].name`
 - `agents.list[].workspace`
 - `agents.list[].agentDir`
 
-注意：
+備註：
 
 - 預設工作區遵循 `~/.openclaw/workspace-<agentId>`。
 - 新增 `bindings` 以路由傳入訊息（精靈可以執行此操作）。
@@ -220,6 +220,6 @@ openclaw agents add work \
 
 ## 相關文件
 
-- 入建中心：[入建 (CLI)](/zh-Hant/start/wizard)
+- 入學中心：[入學 (CLI)](/zh-Hant/start/wizard)
 - 完整參考：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference)
 - 指令參考：[`openclaw onboard`](/zh-Hant/cli/onboard)

@@ -46,7 +46,7 @@ Cloudflare AI Gateway se place devant les API des fournisseurs et vous permet d'
     ```
 
   </Step>
-  <Step title="Vérifier que le modèle est disponible">
+  <Step title="Vérifiez que le modèle est disponible">
     ```bash
     openclaw models list --provider cloudflare-ai-gateway
     ```

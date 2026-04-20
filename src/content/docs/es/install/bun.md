@@ -27,7 +27,7 @@ Bun es un runtime local opcional para ejecutar TypeScript directamente (`bun run
     ```
 
   </Step>
-  <Step title="Build and test">
+  <Step title="Compila y prueba">
     ```sh
     bun run build
     bun run vitest run

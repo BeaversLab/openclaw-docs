@@ -159,7 +159,7 @@ Choisissez votre interface de provider et suivez les étapes de configuration.
     ```
   </Accordion>
 
-  <Accordion title="Full config : Fournisseur Step Plan">
+  <Accordion title="Full config: Step Plan provider">
     ```json5
     {
       env: { STEPFUN_API_KEY: "your-key" },
@@ -199,28 +199,28 @@ Choisissez votre interface de provider et suivez les étapes de configuration.
   </Accordion>
 
   <Accordion title="Notes">
-    - Le fournisseur est intégré à OpenClaw, il n'y a donc pas d'étape d'installation de plugin distincte.
+    - Le fournisseur est inclus avec OpenClaw, il n'y a donc pas d'étape d'installation de plugin séparée.
     - `step-3.5-flash-2603` est actuellement exposé uniquement sur `stepfun-plan`.
-    - Un flux d'authentification unique écrit des profils correspondant à la région pour `stepfun` et `stepfun-plan`, de sorte que les deux interfaces peuvent être découvertes ensemble.
+    - Un seul flux d'authentification écrit des profils correspondant à la région pour `stepfun` et `stepfun-plan`, afin que les deux surfaces puissent être découvertes ensemble.
     - Utilisez `openclaw models list` et `openclaw models set <provider/model>` pour inspecter ou changer de modèles.
   </Accordion>
 </AccordionGroup>
 
-<Note>Pour une vue d'ensemble plus large des fournisseurs, consultez [Fournisseurs de modèles](/fr/concepts/model-providers).</Note>
+<Note>Pour une vue d'ensemble plus large des fournisseurs, consultez [Model providers](/fr/concepts/model-providers).</Note>
 
-## Connexes
+## Associé
 
 <CardGroup cols={2}>
-  <Card title="Fournisseurs de modèles" href="/fr/concepts/model-providers" icon="layers">
-    Vue d'ensemble de tous les fournisseurs, des références de modèles et du comportement de basculement.
+  <Card title="Model providers" href="/fr/concepts/model-providers" icon="layers">
+    Vue d'ensemble de tous les fournisseurs, références de modèles et comportements de basculement.
   </Card>
-  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
-    Schéma de configuration complet pour les fournisseurs, les modèles et les plugins.
+  <Card title="Configuration reference" href="/fr/gateway/configuration-reference" icon="gear">
+    Schéma de configuration complet pour les fournisseurs, modèles et plugins.
   </Card>
-  <Card title="Sélection de modèle" href="/fr/concepts/models" icon="brain">
+  <Card title="Model selection" href="/fr/concepts/models" icon="brain">
     Comment choisir et configurer les modèles.
   </Card>
-  <Card title="Plateforme StepFun" href="https://platform.stepfun.com" icon="globe">
-    Gestion des clés d'API et documentation StepFun.
+  <Card title="StepFun Platform" href="https://platform.stepfun.com" icon="globe">
+    Gestion des clés API et documentation StepFun.
   </Card>
 </CardGroup>

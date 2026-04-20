@@ -93,12 +93,12 @@ fnm use 24
 这几乎总是意味着 npm 的全局 bin 目录不在您的 PATH 中。
 
 <Steps>
-  <Step title="Find your global npm prefix">
+  <Step title="查找你的全局 npm 前缀">
     ```bash
     npm prefix -g
     ```
   </Step>
-  <Step title="检查它是否在您的 PATH 中">
+  <Step title="检查它是否在你的 PATH 中">
     ```bash
     echo "$PATH"
     ```
@@ -106,7 +106,7 @@ fnm use 24
     在输出中查找 `<npm-prefix>/bin` (macOS/Linux) 或 `<npm-prefix>` (Windows)。
 
   </Step>
-  <Step title="将其添加到您的 shell 启动文件">
+  <Step title="将其添加到你的 shell 启动文件中">
     <Tabs>
       <Tab title="macOS / Linux">
         添加到 `~/.zshrc` 或 `~/.bashrc`：
@@ -115,19 +115,19 @@ fnm use 24
         export PATH="$(npm prefix -g)/bin:$PATH"
         ```
 
-        然后打开一个新终端 (或者在 zsh 中运行 `rehash` / 在 bash 中运行 `hash -r`)。
+        然后打开一个新的终端（或在 zsh 中运行 `rehash` / 在 bash 中运行 `hash -r`）。
       </Tab>
       <Tab title="Windows">
-        通过 设置 → 系统 → 环境变量，将 `npm prefix -g` 的输出添加到您的系统 PATH 中。
+        通过 设置 → 系统 → 环境变量，将 `npm prefix -g` 的输出添加到你的系统 PATH。
       </Tab>
     </Tabs>
 
   </Step>
 </Steps>
 
-### `npm install -g` 上的权限错误
+### Permission errors on `npm install -g` (Linux)
 
-如果您看到 `EACCES` 错误，请将 npm 的全局前缀切换到用户可写的目录：
+如果你看到 `EACCES` 错误，请将 npm 的全局前缀切换到用户可写的目录：
 
 ```bash
 mkdir -p "$HOME/.npm-global"
@@ -135,10 +135,10 @@ npm config set prefix "$HOME/.npm-global"
 export PATH="$HOME/.npm-global/bin:$PATH"
 ```
 
-将 `export PATH=...` 行添加到您的 `~/.bashrc` 或 `~/.zshrc` 以使其永久生效。
+将 `export PATH=...` 行添加到你的 `~/.bashrc` 或 `~/.zshrc` 以使其永久生效。
 
 ## 相关
 
-- [安装概述](/zh/install) — 所有安装方法
-- [更新](/zh/install/updating) — 保持 OpenClaw 为最新版本
+- [Install Overview](/zh/install) — 所有安装方法
+- [Updating](/zh/install/updating) — 保持 OpenClaw 最新
 - [入门指南](/zh/start/getting-started) — 安装后的第一步

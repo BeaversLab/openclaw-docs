@@ -42,7 +42,7 @@ Se puede acceder a la Gateway a través de:
 - Exposición directa de puertos si gestiona el firewall y los tokens usted mismo
 
 Esta guía asume Ubuntu o Debian en Hetzner.  
-Si está en otro VPS de Linux, asigne los paquetes correspondientes.
+Si está en otro VPS de Linux, asigne los paquetes correspondientemente.
 Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
 
 ---
@@ -134,18 +134,21 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
 
     ```bash
     OPENCLAW_IMAGE=openclaw:latest
-    OPENCLAW_GATEWAY_TOKEN=change-me-now
+    OPENCLAW_GATEWAY_TOKEN=
     OPENCLAW_GATEWAY_BIND=lan
     OPENCLAW_GATEWAY_PORT=18789
 
     OPENCLAW_CONFIG_DIR=/root/.openclaw
     OPENCLAW_WORKSPACE_DIR=/root/.openclaw/workspace
 
-    GOG_KEYRING_PASSWORD=change-me-now
+    GOG_KEYRING_PASSWORD=
     XDG_CONFIG_HOME=/home/node/.openclaw
     ```
 
-    Genere secretos seguros:
+    Deje `OPENCLAW_GATEWAY_TOKEN` en blanco a menos que explícitamente desee
+    administrarlo a través de `.env`; OpenClaw escribe un token de puerta de enlace aleatorio en
+    la configuración al iniciarse por primera vez. Genere una contraseña de llavero y péguela en
+    `GOG_KEYRING_PASSWORD`:
 
     ```bash
     openssl rand -hex 32
@@ -153,9 +156,8 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
 
     **No confirme este archivo.**
 
-    Este archivo `.env` es para el entorno de contenedor/ejecución, como `OPENCLAW_GATEWAY_TOKEN`.
-    La autenticación OAuth/API-key del proveedor almacenada reside en el
-    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` montado.
+    Este archivo `.env` es para el entorno de contenedor/tiempo de ejecución, como `OPENCLAW_GATEWAY_TOKEN`.
+    La autenticación almacenada de OAuth/API-key del proveedor vive en el `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` montado.
 
   </Step>
 
@@ -200,21 +202,21 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
           ]
     ```
 
-    `--allow-unconfigured` es solo por conveniencia para el arranque inicial, no es un reemplazo para una configuración adecuada del gateway. Aún así, configure la autenticación (`gateway.auth.token` o contraseña) y use configuraciones de enlace seguras para su implementación.
+    `--allow-unconfigured` es solo para conveniencia de inicio, no es un reemplazo para una configuración adecuada de puerta de enlace. Aún así, configure la autenticación (`gateway.auth.token` o contraseña) y use configuraciones de enlace seguro para su implementación.
 
   </Step>
 
-  <Step title="Pasos compartidos de tiempo de ejecución de Docker VM">
+  <Step title="Pasos de tiempo de ejecución de VM Docker compartidos">
     Use la guía de tiempo de ejecución compartida para el flujo común de host Docker:
 
-    - [Incrustar los binarios necesarios en la imagen](/es/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+    - [Incorporar los binarios necesarios en la imagen](/es/install/docker-vm-runtime#bake-required-binaries-into-the-image)
     - [Construir y lanzar](/es/install/docker-vm-runtime#build-and-launch)
     - [Qué persiste dónde](/es/install/docker-vm-runtime#what-persists-where)
     - [Actualizaciones](/es/install/docker-vm-runtime#updates)
 
   </Step>
 
-  <Step title="Acceso específico de Hetzner"
+  <Step title="Acceso específico de Hetzner">
     Después de los pasos compartidos de construcción y lanzamiento, haga un túnel desde su portátil:
 
     ```bash
@@ -225,13 +227,13 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
 
     `http://127.0.0.1:18789/`
 
-    Pegue el secreto compartido configurado. Esta guía utiliza el token del gateway por
+    Pegue el secreto compartido configurado. Esta guía usa el token de puerta de enlace por
     defecto; si cambió a autenticación por contraseña, use esa contraseña en su lugar.
 
   </Step>
 </Steps>
 
-El mapa de persistencia compartido reside en [Docker VM Runtime](/es/install/docker-vm-runtime#what-persists-where).
+El mapa de persistencia compartida reside en [Docker VM Runtime](/es/install/docker-vm-runtime#what-persists-where).
 
 ## Infraestructura como Código (Terraform)
 

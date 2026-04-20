@@ -943,21 +943,21 @@ IRC 基於擴充功能，並在 `channels.irc` 下進行設定。
 
 ### `agents.defaults.bootstrapMaxChars`
 
-截斷前每個工作區啟動檔案的最大字元數。預設值：`20000`。
+工作區引導檔案截斷前的最大字元數。預設值：`12000`。
 
 ```json5
 {
-  agents: { defaults: { bootstrapMaxChars: 20000 } },
+  agents: { defaults: { bootstrapMaxChars: 12000 } },
 }
 ```
 
 ### `agents.defaults.bootstrapTotalMaxChars`
 
-所有工作區啟動檔案中注入的最大總字元數。預設值：`150000`。
+所有工作區引導檔案中注入的最大總字元數。預設值：`60000`。
 
 ```json5
 {
-  agents: { defaults: { bootstrapTotalMaxChars: 150000 } },
+  agents: { defaults: { bootstrapTotalMaxChars: 60000 } },
 }
 ```
 

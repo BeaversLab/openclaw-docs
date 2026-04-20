@@ -167,7 +167,9 @@ Conservez la gestion des mentions entrantes divisée en deux couches :
 - collecte de preuves appartenant au plugin
 - évaluation de stratégie partagée
 
-Utilisez `openclaw/plugin-sdk/channel-inbound` pour la couche partagée.
+Utilisez `openclaw/plugin-sdk/channel-mention-gating` pour les décisions de stratégie de mention.
+Utilisez `openclaw/plugin-sdk/channel-inbound` uniquement lorsque vous avez besoin du
+barrel d'assistance inbound plus large.
 
 Convient bien à la logique locale du plugin :
 
@@ -188,8 +190,8 @@ Convient bien à l'assistant partagé :
 Flux privilégié :
 
 1. Calculez les faits de mention locaux.
-2. Passez ces faits à `resolveInboundMentionDecision({ facts, policy })`.
-3. Utilisez `decision.effectiveWasMentioned`, `decision.shouldBypassMention` et `decision.shouldSkip` dans votre portail entrant.
+2. Passez ces faits dans `resolveInboundMentionDecision({ facts, policy })`.
+3. Utilisez `decision.effectiveWasMentioned`, `decision.shouldBypassMention` et `decision.shouldSkip` dans votre porte inbound.
 
 ```typescript
 import { implicitMentionKindWhen, matchesMentionWithExplicit, resolveInboundMentionDecision } from "openclaw/plugin-sdk/channel-inbound";
@@ -222,7 +224,7 @@ if (decision.shouldSkip) return;
 ```
 
 `api.runtime.channel.mentions` expose les mêmes assistants de mention partagés pour
-les canaux de plugin groupés qui dépendent déjà de l'injection d'exécution :
+les plugins de canal intégrés qui dépendent déjà de l'injection de runtime :
 
 - `buildMentionRegexes`
 - `matchesMentionPatterns`
@@ -230,9 +232,14 @@ les canaux de plugin groupés qui dépendent déjà de l'injection d'exécution 
 - `implicitMentionKindWhen`
 - `resolveInboundMentionDecision`
 
+Si vous n'avez besoin que de `implicitMentionKindWhen` et
+de `resolveInboundMentionDecision`, importez depuis
+`openclaw/plugin-sdk/channel-mention-gating` pour éviter le chargement d'assistants
+runtime inbound non liés.
+
 Les anciens assistants `resolveMentionGating*` restent sur
-`openclaw/plugin-sdk/channel-inbound` uniquement en tant qu'exportations de compatibilité. Le nouveau code
-devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
+`openclaw/plugin-sdk/channel-inbound` uniquement en tant qu'exportations de compatibilité.
+Le nouveau code doit utiliser `resolveInboundMentionDecision({ facts, policy })`.
 
 ## Procédure pas à pas
 
@@ -240,8 +247,8 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
   <a id="step-1-package-and-manifest"></a>
   <Step title="Package et manifeste">
     Créez les fichiers de plugin standard. Le champ `channel` dans `package.json` est
-    ce qui fait de ce plugin un plugin de canal. Pour la surface complète des métadonnées de package,
-    voir [Configuration et configuration des plugins](/fr/plugins/sdk-setup#openclaw-channel) :
+    ce qui fait de ce plugin un plugin de channel. Pour l'ensemble de la surface des métadonnées de package,
+    consultez [Configuration et configuration du plugin](/fr/plugins/sdk-setup#openclaw-channel) :
 
     <CodeGroup>
     ```json package.json
@@ -291,8 +298,8 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
   </Step>
 
   <Step title="Créer l'objet du plugin de channel">
-    L'interface `ChannelPlugin` possède de nombreuses surfaces d'adaptateur optionnelles. Commencez par
-    le minimum — `id` et `setup` — et ajoutez les adaptateurs dont vous avez besoin.
+    L'interface `ChannelPlugin` possède de nombreuses surfaces d'adaptateur facultatives. Commencez par
+    le minimum — `id` et `setup` — et ajoutez des adaptateurs selon vos besoins.
 
     Créez `src/channel.ts` :
 
@@ -388,14 +395,14 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
     ```
 
     <Accordion title="Ce que createChatChannelPlugin fait pour vous">
-      Au lieu d'implémenter manuellement les interfaces de bas niveau, vous passez
-      des options déclaratives et le constructeur les compose :
+      Au lieu d'implémenter manuellement des interfaces d'adaptateur de bas niveau, vous passez
+      des options déclaratives et le générateur les compose :
 
       | Option | Ce qu'il connecte |
       | --- | --- |
       | `security.dm` | Résolveur de sécurité DM délimité à partir des champs de configuration |
-      | `pairing.text` | Flux d'appairage DM basé sur du texte avec échange de code |
-      | `threading` | Résolveur de mode de réponse (fixe, délimité au compte, ou personnalisé) |
+      | `pairing.text` | Flux d'appariement DM basé sur du texte avec échange de code |
+      | `threading` | Résolveur de mode de réponse (fixe, délimité au compte ou personnalisé) |
       | `outbound.attachedResults` | Fonctions d'envoi qui renvoient des métadonnées de résultat (ID de message) |
 
       Vous pouvez également passer des objets d'adaptateur bruts au lieu des options déclaratives
@@ -440,14 +447,13 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
     });
     ```
 
-    Placez les descripteurs CLI appartenant au channel dans `registerCliMetadata(...)` pour qu'OpenClaw
-    puisse les afficher dans l'aide racine sans activer le runtime complet du channel,
-    tandis que les chargements complets normaux récupèrent toujours les mêmes descripteurs pour l'enregistrement réel des
-    commandes. Gardez `registerFull(...)` pour le travail exclusif au runtime.
+    Placez les descripteurs CLI appartenant au canal dans `registerCliMetadata(...)` pour qu'OpenClaw
+    puisse les afficher dans l'aide racine sans activer le runtime complet du canal,
+    tandis que les chargements complets normaux récupèrent toujours les mêmes descripteurs pour l'enregistrement réel des commandes.
+    Gardez `registerFull(...)` pour le travail exclusif au runtime.
     Si `registerFull(...)` enregistre des méthodes RPC de passerelle, utilisez un
     préfixe spécifique au plugin. Les espaces de noms d'administration principaux (`config.*`,
-    `exec.approvals.*`, `wizard.*`, `update.*`) restent réservés et résolvent
-    toujours vers `operator.admin`.
+    `exec.approvals.*`, `wizard.*`, `update.*`) restent réservés et résolvent toujours vers `operator.admin`.
     `defineChannelPluginEntry` gère automatiquement la division du mode d'enregistrement. Consultez
     [Entry Points](/fr/plugins/sdk-entrypoints#definechannelpluginentry) pour toutes
     les options.
@@ -455,7 +461,7 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
   </Step>
 
   <Step title="Ajouter une entrée de configuration">
-    Créez `setup-entry.ts` pour un chargement léger lors de l'onboarding :
+    Créez `setup-entry.ts` pour un chargement léger pendant l'onboarding :
 
     ```typescript setup-entry.ts
     import { defineSetupPluginEntry } from "openclaw/plugin-sdk/channel-core";
@@ -464,21 +470,21 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
     export default defineSetupPluginEntry(acmeChatPlugin);
     ```
 
-    OpenClaw charge ceci au lieu de l'entrée complète lorsque le channel est désactivé
-    ou non configuré. Cela évite d'importer du code d'exécution lourd lors des flux de configuration.
-    Voir [Setup and Config](/fr/plugins/sdk-setup#setup-entry) pour plus de détails.
+    OpenClaw charge ceci à la place de l'entrée complète lorsque le canal est désactivé
+    ou non configuré. Cela évite d'importer du code de runtime lourd pendant les flux de configuration.
+    Consultez [Setup and Config](/fr/plugins/sdk-setup#setup-entry) pour plus de détails.
 
     Les canaux d'espace de travail regroupés qui séparent les exportations sûres pour la configuration en modules
-    sidecar peuvent utiliser `defineBundledChannelSetupEntry(...)` à partir de
+    parallèles peuvent utiliser `defineBundledChannelSetupEntry(...)` issu de
     `openclaw/plugin-sdk/channel-entry-contract` lorsqu'ils ont également besoin d'un
-    définisseur d'exécution explicite au moment de la configuration.
+    defineur de runtime explicite pour la configuration.
 
   </Step>
 
   <Step title="Gérer les messages entrants">
-    Votre plugin doit recevoir des messages de la plateforme et les transmettre à
+    Votre plugin doit recevoir les messages de la plateforme et les transmettre à
     OpenClaw. Le modèle typique est un webhook qui vérifie la demande et
-    la distribue via le gestionnaire entrant de votre channel :
+    la répartit via le gestionnaire entrant de votre canal :
 
     ```typescript
     registerFull(api) {
@@ -502,8 +508,8 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
     ```
 
     <Note>
-      La gestion des messages entrants est spécifique au channel. Chaque plugin de channel possède
-      son propre pipeline entrant. Regardez les plugins de channel regroupés
+      La gestion des messages entrants est spécifique au canal. Chaque plugin de canal possède
+      son propre pipeline entrant. Regardez les plugins de canal regroupés
       (par exemple le package de plugin Microsoft Teams ou Google Chat) pour des modèles réels.
     </Note>
 
@@ -549,7 +555,7 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
     pnpm test -- <bundled-plugin-root>/acme-chat/
     ```
 
-    Pour les helpers de test partagés, voir [Testing](/fr/plugins/sdk-testing).
+    Pour les helpers de test partagés, consultez [Testing](/fr/plugins/sdk-testing).
 
   </Step>
 </Steps>
@@ -574,25 +580,25 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
 ## Sujets avancés
 
 <CardGroup cols={2}>
-  <Card title="Options de discussion" icon="git-branch" href="/fr/plugins/sdk-entrypoints#registration-mode">
-    Modes de réponse fixes, limités au compte ou personnalisés
+  <Card title="Threading options" icon="git-branch" href="/fr/plugins/sdk-entrypoints#registration-mode">
+    Modes de réponse fixes, délimités par compte ou personnalisés
   </Card>
-  <Card title="Intégration de l'outil de message" icon="puzzle" href="/fr/plugins/architecture#channel-plugins-and-the-shared-message-tool">
+  <Card title="Message tool integration" icon="puzzle" href="/fr/plugins/architecture#channel-plugins-and-the-shared-message-tool">
     describeMessageTool et découverte d'actions
   </Card>
-  <Card title="Résolution de la cible" icon="crosshair" href="/fr/plugins/architecture#channel-target-resolution">
+  <Card title="Target resolution" icon="crosshair" href="/fr/plugins/architecture#channel-target-resolution">
     inferTargetChatType, looksLikeId, resolveTarget
   </Card>
-  <Card title="Assistants d'exécution" icon="settings" href="/fr/plugins/sdk-runtime">
-    TTS, STT, media, subagent via api.runtime
+  <Card title="Runtime helpers" icon="settings" href="/fr/plugins/sdk-runtime">
+    TTS, STT, média, subagent via api.runtime
   </Card>
 </CardGroup>
 
-<Note>Certaines couches d'assistance groupées (bundled) existent toujours pour la maintenance et la compatibilité des plugins groupés. Elles ne constituent pas le modèle recommandé pour les nouveaux plugins de channel ; privilégiez les sous-chemins génériques channel/setup/reply/runtime de la surface commune du SDK, sauf si vous maintenez directement cette famille de plugins groupés.</Note>
+<Note>Certains points d'entrée de helpers groupés existent toujours pour la maintenance et la compatibilité des plugins groupés. Ils ne constituent pas le modèle recommandé pour les nouveaux plugins de channel ; privilégiez les sous-chemins génériques channel/setup/reply/runtime de la surface SDK commune, sauf si vous maintenez directement cette famille de plugins groupés.</Note>
 
 ## Étapes suivantes
 
 - [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins) — si votre plugin fournit également des modèles
-- [Aperçu du SDK](/fr/plugins/sdk-overview) — référence complète des importations de sous-chemins
+- [Présentation du SDK](/fr/plugins/sdk-overview) — référence complète des importations de sous-chemins
 - [Tests du SDK](/fr/plugins/sdk-testing) — utilitaires de test et tests de contrat
 - [Manifeste de plugin](/fr/plugins/manifest) — schéma complet du manifeste

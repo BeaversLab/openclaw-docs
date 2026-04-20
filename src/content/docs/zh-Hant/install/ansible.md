@@ -55,9 +55,9 @@ Ansible playbook 會安裝並設定：
 ## 安裝後設定
 
 <Steps>
-  <Step title="Switch to the openclaw user">```bash sudo -i -u openclaw ```</Step>
-  <Step title="執行上架嚮導">安裝後腳本會引導您設定 OpenClaw 設定。</Step>
-  <Step title="連接訊息服務提供商">登入 WhatsApp、Telegram、Discord 或 Signal： ```bash openclaw channels login ```</Step>
+  <Step title="切換至 openclaw 使用者">```bash sudo -i -u openclaw ```</Step>
+  <Step title="執行入門精靈">安裝後腳本會引導您完成 OpenClaw 設定。</Step>
+  <Step title="連結訊息服務提供商">登入 WhatsApp、Telegram、Discord 或 Signal： ```bash openclaw channels login ```</Step>
   <Step title="驗證安裝">```bash sudo systemctl status openclaw sudo journalctl -u openclaw -f ```</Step>
   <Step title="連線至 Tailscale">加入您的 VPN 網狀網路以進行安全的遠端存取。</Step>
 </Steps>
@@ -79,12 +79,12 @@ sudo -i -u openclaw
 openclaw channels login
 ```
 
-## 安全架構
+## 安全性架構
 
-此部署使用 4 層防禦模型：
+部署使用 4 層防禦模型：
 
 1. **防火牆 (UFW)** -- 僅公開 SSH (22) + Tailscale (41641/udp)
-2. **VPN (Tailscale)** -- 閘道僅能透過 VPN 網狀網路存取
+2. **VPN (Tailscale)** -- 閘道僅可透過 VPN 網狀網路存取
 3. **Docker 隔離** -- DOCKER-USER iptables 鏈防止外部連接埠暴露
 4. **Systemd 加固** -- NoNewPrivileges、PrivateTmp、非特權使用者
 
@@ -94,27 +94,27 @@ openclaw channels login
 nmap -p- YOUR_SERVER_IP
 ```
 
-僅應開放連接埠 22 (SSH)。所有其他服務（閘道、Docker）皆已鎖定。
+僅連接埠 22 (SSH) 應為開啟。所有其他服務 (gateway、Docker) 均已鎖定。
 
-安裝 Docker 是為了 Agent 沙箱（隔離的工具執行），而非用於執行閘道本身。請參閱[多 Agent 沙箱與工具](/zh-Hant/tools/multi-agent-sandbox-tools)以了解沙箱設定。
+安裝 Docker 是為了代理沙盒 (隔離的工具執行)，而非用於執行閘道本身。請參閱 [Multi-Agent Sandbox and Tools](/zh-Hant/tools/multi-agent-sandbox-tools) 以了解沙盒設定。
 
 ## 手動安裝
 
-如果您更喜歡手動控制而非自動化：
+如果您希望手動控制自動化程序：
 
 <Steps>
-  <Step title="Install prerequisites">
+  <Step title="安裝必要條件">
     ```bash
     sudo apt update && sudo apt install -y ansible git
     ```
   </Step>
-  <Step title="Clone the repository">
+  <Step title="複製儲存庫">
     ```bash
     git clone https://github.com/openclaw/openclaw-ansible.git
     cd openclaw-ansible
     ```
   </Step>
-  <Step title="Install Ansible collections">
+  <Step title="安裝 Ansible 集合">
     ```bash
     ansible-galaxy collection install -r requirements.yml
     ```
@@ -135,23 +135,23 @@ nmap -p- YOUR_SERVER_IP
 
 ## 更新
 
-Ansible 安裝程式會將 OpenClaw 設定為手動更新。請參閱[更新](/zh-Hant/install/updating)以了解標準更新流程。
+Ansible 安裝程式會設定 OpenClaw 以進行手動更新。請參閱 [更新](/zh-Hant/install/updating) 以了解標準更新流程。
 
-若要重新執行 Ansible playbook（例如，用於變更設定）：
+若要重新執行 Ansible playbook（例如，用於設定變更）：
 
 ```bash
 cd openclaw-ansible
 ./run-playbook.sh
 ```
 
-此為冪等操作，可安全地多次執行。
+這具有等冪性，且可以安全地多次執行。
 
 ## 疑難排解
 
 <AccordionGroup>
-  <Accordion title="防火牆阻擋我的連線">
-    - 請確保您能先透過 Tailscale VPN 存取
-    - SSH 存取 (連接埠 22) 始終允許
+  <Accordion title="防火牆阻擋了我的連線">
+    - 請先確保您可以透過 Tailscale VPN 存取
+    - SSH 存取（連接埠 22）始終允許
     - 依設計，閘道僅能透過 Tailscale 存取
   </Accordion>
   <Accordion title="服務無法啟動">
@@ -183,7 +183,7 @@ cd openclaw-ansible
     ```
 
   </Accordion>
-  <Accordion title="提供者登入失敗">
+  <Accordion title="供應商登入失敗">
     請確保您以 `openclaw` 使用者身分執行：
     ```bash
     sudo -i -u openclaw
@@ -192,11 +192,11 @@ cd openclaw-ansible
   </Accordion>
 </AccordionGroup>
 
-## 進階組態
+## 進階設定
 
-如需詳細的安全性架構與疑難排解資訊，請參閱 openclaw-ansible 儲存庫：
+如需詳細的安全架構與疑難排解，請參閱 openclaw-ansible 儲存庫：
 
-- [安全性架構](https://github.com/openclaw/openclaw-ansible/blob/main/docs/security.md)
+- [安全架構](https://github.com/openclaw/openclaw-ansible/blob/main/docs/security.md)
 - [技術細節](https://github.com/openclaw/openclaw-ansible/blob/main/docs/architecture.md)
 - [疑難排解指南](https://github.com/openclaw/openclaw-ansible/blob/main/docs/troubleshooting.md)
 
@@ -204,5 +204,5 @@ cd openclaw-ansible
 
 - [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) -- 完整部署指南
 - [Docker](/zh-Hant/install/docker) -- 容器化閘道設定
-- [沙盒機制](/zh-Hant/gateway/sandboxing) -- 代理程式沙盒組態
-- [多代理程式沙盒與工具](/zh-Hant/tools/multi-agent-sandbox-tools) -- 每個代理程式的隔離
+- [沙盒](/zh-Hant/gateway/sandboxing) -- 代理程式沙盒設定
+- [多重代理程式沙盒與工具](/zh-Hant/tools/multi-agent-sandbox-tools) -- 每個代理程式的隔離

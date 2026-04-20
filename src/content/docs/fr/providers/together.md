@@ -24,12 +24,12 @@ read_when:
     Créez une clé API sur
     [api.together.ai/settings/api-keys](https://api.together.ai/settings/api-keys).
   </Step>
-  <Step title="Exécuter l'onboarding">
+  <Step title="Exécuter l'intégration">
     ```bash
     openclaw onboard --auth-choice together-api-key
     ```
   </Step>
-  <Step title="Définir un model par défaut">
+  <Step title="Définir un modèle par défaut">
     ```json5
     {
       agents: {

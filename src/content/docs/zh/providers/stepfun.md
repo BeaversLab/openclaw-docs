@@ -129,7 +129,7 @@ Step Plan (`stepfun-plan`)：
 ## 高级
 
 <AccordionGroup>
-  <Accordion title="Full config: Standard provider">
+  <Accordion title="完整配置：标准提供商">
     ```json5
     {
       env: { STEPFUN_API_KEY: "your-key" },
@@ -159,7 +159,7 @@ Step Plan (`stepfun-plan`)：
     ```
   </Accordion>
 
-  <Accordion title="Full config: Step Plan 提供商">
+  <Accordion title="完整配置：Step Plan 提供商">
     ```json5
     {
       env: { STEPFUN_API_KEY: "your-key" },
@@ -198,29 +198,29 @@ Step Plan (`stepfun-plan`)：
     ```
   </Accordion>
 
-  <Accordion title="Notes">
-    - The 提供商 is bundled with OpenClaw, so there is no separate plugin install step.
-    - `step-3.5-flash-2603` is currently exposed only on `stepfun-plan`.
-    - A single auth flow writes region-matched profiles for both `stepfun` and `stepfun-plan`, so both surfaces can be discovered together.
-    - Use `openclaw models list` and `openclaw models set <provider/model>` to inspect or switch models.
+  <Accordion title="注意事项">
+    - 该提供商已捆绑在 OpenClaw 中，因此无需单独安装插件。
+    - `step-3.5-flash-2603` 目前仅在 `stepfun-plan` 上公开。
+    - 单个认证流程会为 `stepfun` 和 `stepfun-plan` 同时写入匹配区域的配置文件，因此两者可以一起被发现。
+    - 使用 `openclaw models list` 和 `openclaw models set <provider/model>` 来检查或切换模型。
   </Accordion>
 </AccordionGroup>
 
-<Note>For the broader 提供商 overview, see [Model providers](/zh/concepts/model-providers).</Note>
+<Note>有关更广泛的提供商概述，请参阅 [模型提供商](/zh/concepts/model-providers)。</Note>
 
-## Related
+## 相关
 
 <CardGroup cols={2}>
-  <Card title="Model providers" href="/zh/concepts/model-providers" icon="layers">
-    Overview of all providers, 模型 refs, and failover behavior.
+  <Card title="模型提供商" href="/zh/concepts/model-providers" icon="layers">
+    所有提供商、模型引用和故障转移行为的概述。
   </Card>
-  <Card title="Configuration reference" href="/zh/gateway/configuration-reference" icon="gear">
-    Full config schema for providers, models, and plugins.
+  <Card title="配置参考" href="/zh/gateway/configuration-reference" icon="gear">
+    提供商、模型和插件的完整配置架构。
   </Card>
-  <Card title="Model selection" href="/zh/concepts/models" icon="brain">
-    How to choose and configure models.
+  <Card title="模型选择" href="/zh/concepts/models" icon="brain">
+    如何选择和配置模型。
   </Card>
-  <Card title="StepFun Platform" href="https://platform.stepfun.com" icon="globe">
-    StepFun API key management and documentation.
+  <Card title="StepFun 平台" href="https://platform.stepfun.com" icon="globe">
+    StepFun API 密钥管理和文档。
   </Card>
 </CardGroup>

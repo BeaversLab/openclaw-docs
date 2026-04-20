@@ -34,7 +34,7 @@ Le Gateway est accessible via :
 - Exposition directe du port si vous gérez vous-même le pare-feu et les jetons
 
 Ce guide utilise Debian sur GCP Compute Engine.
-Ubuntu fonctionne également ; adaptez les packages en conséquence.
+Ubuntu fonctionne également ; adaptez les paquets en conséquence.
 Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
 
 ---
@@ -69,12 +69,12 @@ Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
 ---
 
 <Steps>
-  <Step title="Installer gcloud CLI (ou utiliser la Console)">
+  <Step title="Installer la gcloud CLI (ou utiliser la Console)">
     **Option A : gcloud CLI** (recommandé pour l'automatisation)
 
     Installer depuis [https://cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install)
 
-    Initialiser et s'authentifier :
+    Initialiser et authentifier :
 
     ```bash
     gcloud init
@@ -83,7 +83,7 @@ Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
 
     **Option B : Cloud Console**
 
-    Toutes les étapes peuvent être effectuées via l'interface Web sur [https://console.cloud.google.com](https://console.cloud.google.com)
+    Toutes les étapes peuvent être effectuées via l'interface web à l'adresse [https://console.cloud.google.com](https://console.cloud.google.com)
 
   </Step>
 
@@ -105,10 +105,10 @@ Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
 
     **Console :**
 
-    1. Aller dans IAM et Admin > Créer un projet
-    2. Le nommer et le créer
-    3. Activer la facturation pour le projet
-    4. Naviguer vers API et Services > Activer les API > rechercher "API Compute Engine" > Activer
+    1. Allez dans IAM & Admin > Créer un projet
+    2. Nommez-le et créez-le
+    3. Activez la facturation pour le projet
+    4. Accédez à API et services > Activer les API > recherchez "Compute Engine API" > Activer
 
   </Step>
 
@@ -213,26 +213,29 @@ Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
 
     ```bash
     OPENCLAW_IMAGE=openclaw:latest
-    OPENCLAW_GATEWAY_TOKEN=change-me-now
+    OPENCLAW_GATEWAY_TOKEN=
     OPENCLAW_GATEWAY_BIND=lan
     OPENCLAW_GATEWAY_PORT=18789
 
     OPENCLAW_CONFIG_DIR=/home/$USER/.openclaw
     OPENCLAW_WORKSPACE_DIR=/home/$USER/.openclaw/workspace
 
-    GOG_KEYRING_PASSWORD=change-me-now
+    GOG_KEYRING_PASSWORD=
     XDG_CONFIG_HOME=/home/node/.openclaw
     ```
 
-    Générez des secrets forts :
+    Laissez `OPENCLAW_GATEWAY_TOKEN` vide, sauf si vous souhaitez explicitement
+    le gérer via `.env` ; OpenClaw écrit un jeton de passerelle aléatoire dans
+    la configuration au premier démarrage. Générez un mot de passe de trousseau et collez-le dans
+    `GOG_KEYRING_PASSWORD` :
 
     ```bash
     openssl rand -hex 32
     ```
 
-    **Ne commitez pas ce fichier.**
+    **Ne commettez pas ce fichier.**
 
-    Ce fichier `.env` est destiné à l'environnement de conteneur/d'exécution, tel que `OPENCLAW_GATEWAY_TOKEN`.
+    Ce fichier `.env` est destiné à l'environnement d'exécution/conteneur tel que `OPENCLAW_GATEWAY_TOKEN`.
     L'authentification stockée du fournisseur OAuth/clé API réside dans le
     `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` monté.
 
@@ -279,22 +282,22 @@ Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
           ]
     ```
 
-    `--allow-unconfigured` n'est là que pour la commodité de l'amorçage, il ne remplace pas une configuration de passerelle appropriée. Définissez toujours l'authentification (`gateway.auth.token` ou mot de passe) et utilisez des paramètres de liaison sûrs pour votre déploiement.
+    `--allow-unconfigured` n'est là que pour la commodité de l'amorçage, il ne remplace pas une configuration de passerelle appropriée. Définissez toujours l'authentification (`gateway.auth.token` ou mot de passe) et utilisez des paramètres de liaison sécurisés pour votre déploiement.
 
   </Step>
 
-  <Step title="Étapes d'exécution partagées pour VM Docker%PH:JSX_ATTR:46:8a331fdd%%>
-    Utilisez le guide d'exécution partagé pour le flux courant de l'hôte Docker :
+  <Step title="Étapes d'exécution de VM partagée Docker">
+    Utilisez le guide d'exécution partagé pour le flux d'hôte Docker commun :
 
     - [Intégrer les binaires requis dans l'image](/fr/install/docker-vm-runtime#bake-required-binaries-into-the-image)
     - [Construire et lancer](/fr/install/docker-vm-runtime#build-and-launch)
-    - [Ce qui persiste et où](/fr/install/docker-vm-runtime#what-persists-where)
+    - [Ce qui persiste où](/fr/install/docker-vm-runtime#what-persists-where)
     - [Mises à jour](/fr/install/docker-vm-runtime#updates)
 
   </Step>
 
-  <Step title="Notes de lancement spécifiques à GCP%PH:JSX_ATTR:48:8a331fdd%%>
-    Sur GCP, si la construction échoue avec `Killed` ou `exit code 137` pendant `pnpm install --frozen-lockfile`, la VM est à court de mémoire. Utilisez `e2-small` minimum, ou `e2-medium` pour des premières constructions plus fiables.
+  <Step title="Notes de lancement spécifiques à GCP">
+    Sur GCP, si la construction échoue avec `Killed` ou `exit code 137` pendant `pnpm install --frozen-lockfile`, la VM n'a plus de mémoire. Utilisez `e2-small` minimum, ou `e2-medium` pour des premières constructions plus fiables.
 
     Lors de la liaison au LAN (`OPENCLAW_GATEWAY_BIND=lan`), configurez une origine de navigateur approuvée avant de continuer :
 
@@ -307,7 +310,7 @@ Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
   </Step>
 
   <Step title="Accès depuis votre ordinateur portable">
-    Créez un tunnel SSH pour transférer le port du Gateway :
+    Créez un tunnel SSH pour transférer le port de la Gateway :
 
     ```bash
     gcloud compute ssh openclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:18789
@@ -323,7 +326,10 @@ Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
     docker compose run --rm openclaw-cli dashboard --no-open
     ```
 
-    Si l'interface utilisateur demande une authentification par secret partagé, collez le jeton ou le mot de passe configuré dans les paramètres de l'interface utilisateur de contrôle. Ce flux Docker écrit un jeton par défaut ; si vous basculez la configuration du conteneur vers une authentification par mot de passe, utilisez plutôt ce mot de passe.
+    Si l'interface utilisateur demande une authentification par secret partagé, collez le jeton configuré ou
+    le mot de passe dans les paramètres de l'interface utilisateur de contrôle. Ce flux Docker écrit un jeton par
+    défaut ; si vous modifiez la configuration du conteneur pour utiliser une authentification par mot de passe, utilisez ce
+    mot de passe à la place.
 
     Si l'interface utilisateur de contrôle affiche `unauthorized` ou `disconnected (1008): pairing required`, approuvez l'appareil du navigateur :
 
@@ -332,8 +338,8 @@ Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
     docker compose run --rm openclaw-cli devices approve <requestId>
     ```
 
-    Besoin de la référence de persistance et de mise à jour partagée à nouveau ?
-    Voir [Docker VM Runtime](/fr/install/docker-vm-runtime#what-persists-where) et [Mises à jour du Docker VM Runtime](/fr/install/docker-vm-runtime#updates).
+    Besoin de la référence de persistance partagée et de mise à jour à nouveau ?
+    Voir [Runtime de VM Docker](/fr/install/docker-vm-runtime#what-persists-where) et [Mises à jour du runtime de VM Docker](/fr/install/docker-vm-runtime#updates).
 
   </Step>
 </Steps>
@@ -358,7 +364,7 @@ Assurez-vous que votre compte dispose des autorisations IAM requises (Compute OS
 
 **Manque de mémoire (OOM)**
 
-Si le build Docker échoue avec `Killed` et `exit code 137`, la VM a été arrêtée par OOM. Passez à e2-small (minimum) ou e2-medium (recommandé pour des builds locaux fiables) :
+Si la construction Docker échoue avec `Killed` et `exit code 137`, la VM a été tuée par OOM. Passez à e2-small (minimum) ou e2-medium (recommandé pour des constructions locales fiables) :
 
 ```bash
 # Stop the VM first
@@ -398,12 +404,12 @@ Pour l'automatisation ou les pipelines CI/CD, créez un compte de service dédi�
 
 Évitez d'utiliser le rôle Propriétaire pour l'automatisation. Appliquez le principe du moindre privilège.
 
-Voir [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles) pour plus de détails sur les rôles IAM.
+Voir [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles) pour les détails sur les rôles IAM.
 
 ---
 
 ## Étapes suivantes
 
-- Configurez les canaux de messagerie : [Canaux](/fr/channels)
-- Associez les appareils locaux en tant que nœuds : [Nœuds](/fr/nodes)
-- Configurez le Gateway : [Configuration du Gateway](/fr/gateway/configuration)
+- Configurer les canaux de messagerie : [Canaux](/fr/channels)
+- Coupler les appareils locaux en tant que nœuds : [Nœuds](/fr/nodes)
+- Configurer le Gateway : [Configuration du Gateway](/fr/gateway/configuration)

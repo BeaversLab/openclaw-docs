@@ -112,11 +112,11 @@ Todos estos archivos se **inyectan en la ventana de contexto** en cada turno a m
 > `/reset` simples son la excepción: el tiempo de ejecución puede anteponer la memoria diaria reciente
 > como un bloque de contexto de inicio único para ese primer turno.
 
-Los archivos grandes se truncán con un marcador. El tamaño máximo por archivo se controla mediante
-`agents.defaults.bootstrapMaxChars` (predeterminado: 20000). El contenido total de bootstrap inyectado
-entre archivos se limita mediante `agents.defaults.bootstrapTotalMaxChars`
-(predeterminado: 150000). Los archivos faltantes inyectan un marcador corto de archivo faltante. Cuando se produce el truncamiento,
-OpenClaw puede inyectar un bloque de advertencia en el Contexto del Proyecto; controle esto con
+Los archivos grandes se truncan con un marcador. El tamaño máximo por archivo está controlado por
+`agents.defaults.bootstrapMaxChars` (predeterminado: 12000). El contenido total de arranque inyectado
+a través de los archivos está limitado por `agents.defaults.bootstrapTotalMaxChars`
+(predeterminado: 60000). Los archivos faltantes inyectan un marcador corto de archivo faltante. Cuando se produce
+el truncamiento, OpenClaw puede inyectar un bloque de advertencia en el Contexto del Proyecto; controle esto con
 `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`;
 predeterminado: `once`).
 

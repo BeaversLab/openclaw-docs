@@ -17,7 +17,7 @@
 
 ## 目前狀態
 
-主要的真實來源現在位於 `qa/scenarios/index.md`，加上 `qa/scenarios/*.md` 下每個情境的一個檔案。
+現在，主要來源位於 `qa/scenarios/index.md`，加上 `qa/scenarios/<theme>/*.md` 下每個情境的一個檔案。
 
 已實作：
 
@@ -25,7 +25,7 @@
   - 標準 QA 套件元數據
   - 操作員身分
   - 啟動任務
-- `qa/scenarios/*.md`
+- `qa/scenarios/<theme>/*.md`
   - 每個情境一個 markdown 檔案
   - 情境元數據
   - 處理程序綁定
@@ -106,8 +106,7 @@
 
 ### 單一真實來源
 
-使用 `qa/scenarios/index.md` 加上 `qa/scenarios/*.md` 作為撰寫的
-真實來源。
+使用 `qa/scenarios/index.md` 加上 `qa/scenarios/<theme>/*.md` 作為撰寫的來源。
 
 該套件應保持：
 
@@ -362,7 +361,7 @@ Examples from the current suite:
 完成。
 
 - 已新增 `qa/scenarios/index.md`
-- 將場景拆分為 `qa/scenarios/*.md`
+- 將情境拆分為 `qa/scenarios/<theme>/*.md`
 - 為命名的 markdown YAML 套件內容新增解析器
 - 使用 zod 驗證
 - 將消費者切換到已解析的套件

@@ -42,7 +42,7 @@ Mistral peut également être utilisé pour les embeddings de mémoire (`memoryS
     }
     ```
   </Step>
-  <Step title="Vérifier que le modèle est disponible">
+  <Step title="Vérifier la disponibilité du modèle">
     ```bash
     openclaw models list --provider mistral
     ```

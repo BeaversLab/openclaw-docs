@@ -87,36 +87,36 @@ Le Gateway est la source unique de vérité pour les sessions, le routage et les
 ## Démarrage rapide
 
 <Steps>
-  <Step title="Install OpenClaw">
+  <Step title="Installer OpenClaw">
     ```bash
     npm install -g openclaw@latest
     ```
   </Step>
-  <Step title="Onboard and install the service">
+  <Step title="Embarquement et installation du service">
     ```bash
     openclaw onboard --install-daemon
     ```
   </Step>
   <Step title="Chat">
-    Ouvrez l'interface de contrôle dans votre navigateur et envoyez un message :
+    Ouvrez l'interface utilisateur de contrôle dans votre navigateur et envoyez un message :
 
     ```bash
     openclaw dashboard
     ```
 
-    Ou connectez une chaîne ([Telegram](/fr/channels/telegram) est le plus rapide) et chattez depuis votre téléphone.
+    Ou connectez un channel ([Telegram](/fr/channels/telegram) est le plus rapide) et discutez depuis votre téléphone.
 
   </Step>
 </Steps>
 
-Besoin de l'installation complète et de la configuration de développement ? Consultez [Getting Started](/fr/start/getting-started).
+Besoin de la procédure complète d'installation et de configuration de développement ? Voir [Getting Started](/fr/start/getting-started).
 
-## Dashboard
+## Tableau de bord
 
-Ouvrez l'interface de contrôle du navigateur une fois la Gateway démarrée.
+Ouvrez l'interface utilisateur de contrôle du navigateur une fois le Gateway démarré.
 
-- Par défaut local : [http://127.0.0.1:18789/](http://127.0.0.1:18789/)
-- Accès à distance : [Interfaces Web](/fr/web) et [Tailscale](/fr/gateway/tailscale)
+- Défaut local : [http://127.0.0.1:18789/](http://127.0.0.1:18789/)
+- Accès à distance : [Web surfaces](/fr/web) et [Tailscale](/fr/gateway/tailscale)
 
 <p align="center">
   <img src="/whatsapp-openclaw.jpg" alt="OpenClaw" width="420" />
@@ -126,7 +126,7 @@ Ouvrez l'interface de contrôle du navigateur une fois la Gateway démarrée.
 
 La configuration se trouve dans `~/.openclaw/openclaw.json`.
 
-- Si vous **ne faites rien**, OpenClaw utilise le binaire Pi fourni en mode RPC avec des sessions par expéditeur.
+- Si vous **ne faites rien**, OpenClaw utilise le binaire Pi inclus en mode RPC avec des sessions par expéditeur.
 - Si vous souhaitez le verrouiller, commencez par `channels.whatsapp.allowFrom` et (pour les groupes) les règles de mention.
 
 Exemple :
@@ -143,14 +143,14 @@ Exemple :
 }
 ```
 
-## Commencer ici
+## Commencez ici
 
 <Columns>
   <Card title="Centres de documentation" href="/fr/start/hubs" icon="book-open">
     Toute la documentation et les guides, organisés par cas d'usage.
   </Card>
   <Card title="Configuration" href="/fr/gateway/configuration" icon="settings">
-    Paramètres principaux du Gateway, jetons et configuration du fournisseur.
+    Paramètres principaux du Gateway, jetons et configuration du provider.
   </Card>
   <Card title="Accès à distance" href="/fr/gateway/remote" icon="globe">
     Modèles d'accès SSH et tailnet.
@@ -158,10 +158,10 @@ Exemple :
   <Card title="Channels" href="/fr/channels/telegram" icon="message-square">
     Configuration spécifique au canal pour Feishu, Microsoft Teams, WhatsApp, Telegram, Discord, et plus encore.
   </Card>
-  <Card title="Nœuds" href="/fr/nodes" icon="smartphone">
-    Nœuds iOS et Android avec appairage, Canvas, caméra et actions d'appareil.
+  <Card title="Nodes" href="/fr/nodes" icon="smartphone">
+    Nœuds iOS et Android avec appairage, Canvas, caméra et actions de périphérique.
   </Card>
-  <Card title="Aide" href="/fr/help" icon="life-buoy">
+  <Card title="Help" href="/fr/help" icon="life-buoy">
     Solutions courantes et point d'entrée pour le troubleshooting.
   </Card>
 </Columns>
@@ -169,19 +169,19 @@ Exemple :
 ## En savoir plus
 
 <Columns>
-  <Card title="Liste complète des fonctionnalités" href="/fr/concepts/features" icon="list">
-    Capacités complètes de chaîne, de routage et de média.
+  <Card title="Full feature list" href="/fr/concepts/features" icon="list">
+    Capacités complètes de canal, de routage et de média.
   </Card>
-  <Card title="Routage multi-agent" href="/fr/concepts/multi-agent" icon="route">
+  <Card title="Multi-agent routing" href="/fr/concepts/multi-agent" icon="route">
     Isolement de l'espace de travail et sessions par agent.
   </Card>
-  <Card title="Sécurité" href="/fr/gateway/security" icon="shield">
+  <Card title="Security" href="/fr/gateway/security" icon="shield">
     Jetons, listes d'autorisation et contrôles de sécurité.
   </Card>
   <Card title="Troubleshooting" href="/fr/gateway/troubleshooting" icon="wrench">
-    Diagnostics de Gateway et erreurs courantes.
+    Diagnostics de la Gateway et erreurs courantes.
   </Card>
-  <Card title="À propos et crédits" href="/fr/reference/credits" icon="info">
+  <Card title="About and credits" href="/fr/reference/credits" icon="info">
     Origines du projet, contributeurs et licence.
   </Card>
 </Columns>

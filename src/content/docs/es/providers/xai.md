@@ -24,7 +24,7 @@ OpenClaw incluye un complemento de proveedor `xai` para los modelos Grok.
     ```
 
   </Step>
-  <Step title="Elegir un modelo">
+  <Step title="Elige un modelo">
     ```json5
     {
       agents: { defaults: { model: { primary: "xai/grok-4" } } },

@@ -34,8 +34,8 @@ Le texte est pris en charge partout ; les médias et les réactions varient selo
 - [Twitch](/fr/channels/twitch) — Chat Twitch via connexion IRC (plugin inclus).
 - [Voice Call](/fr/plugins/voice-call) — Téléphonie via Plivo ou Twilio (plug-in, installé séparément).
 - [WebChat](/fr/web/webchat) — Interface utilisateur Gateway WebChat sur WebSocket.
-- [WeChat](https://www.npmjs.com/package/@tencent-weixin/openclaw-weixin) — Plug-in Tencent iLink Bot via connexion QR ; chats privés uniquement.
-- [WhatsApp](/fr/channels/whatsapp) — Le plus populaire ; utilise Baileys et nécessite un appariement QR.
+- [WeChat](/fr/channels/wechat) — Plugin de bot Tencent iLink via connexion QR ; discussions privées uniquement (plugin externe).
+- [WhatsApp](/fr/channels/whatsapp) — Le plus populaire ; utilise Baileys et nécessite un jumelage QR.
 - [Zalo](/fr/channels/zalo) — Zalo Bot API ; messagerie populaire au Vietnam (plugin inclus).
 - [Zalo Personal](/fr/channels/zalouser) — Compte personnel Zalo via connexion QR (plugin inclus).
 
@@ -44,7 +44,7 @@ Le texte est pris en charge partout ; les médias et les réactions varient selo
 - Les canaux peuvent fonctionner simultanément ; configurez-en plusieurs et OpenClaw routera par chat.
 - La configuration la plus rapide est généralement **Telegram** (jeton de bot simple). WhatsApp nécessite un appariement QR et
   stocke plus d'état sur le disque.
-- Le comportement des groupes varie selon le canal ; voir [Groups](/fr/channels/groups).
-- L'appariement DM et les listes d'autorisation sont appliqués pour la sécurité ; voir [Security](/fr/gateway/security).
-- Dépannage : [Channel troubleshooting](/fr/channels/troubleshooting).
+- Le comportement des groupes varie selon le channel ; voir [Groups](/fr/channels/groups).
+- Le jumelage DM et les listes d'autorisation sont appliqués pour la sécurité ; voir [Security](/fr/gateway/security).
+- Troubleshooting : [Channel troubleshooting](/fr/channels/troubleshooting).
 - Les fournisseurs de modèles sont documentés séparément ; voir [Model Providers](/fr/providers/models).

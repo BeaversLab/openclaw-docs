@@ -17,8 +17,7 @@ L'état final souhaité est un harnais de QA générique qui charge des fichiers
 
 ## État actuel
 
-La source principale de vérité réside maintenant dans `qa/scenarios/index.md` plus un fichier par
-scénario sous `qa/scenarios/*.md`.
+La source principale de vérité réside désormais dans `qa/scenarios/index.md` plus un fichier par scénario sous `qa/scenarios/<theme>/*.md`.
 
 Implémenté :
 
@@ -26,7 +25,7 @@ Implémenté :
   - métadonnées canoniques du pack QA
   - identité de l'opérateur
   - mission de lancement
-- `qa/scenarios/*.md`
+- `qa/scenarios/<theme>/*.md`
   - un fichier markdown par scénario
   - métadonnées de scénario
   - liaisons de gestionnaires
@@ -107,8 +106,7 @@ Ces catégories sont importantes car elles dictent les exigences du DSL. Une lis
 
 ### Source unique de vérité
 
-Utilisez `qa/scenarios/index.md` plus `qa/scenarios/*.md` comme la source de
-vérité rédigée.
+Utilisez `qa/scenarios/index.md` plus `qa/scenarios/<theme>/*.md` comme source de vérité rédigée.
 
 Le pack doit rester :
 
@@ -363,7 +361,7 @@ Compatibilité générée :
 Terminé.
 
 - ajouté `qa/scenarios/index.md`
-- divisé les scénarios en `qa/scenarios/*.md`
+- diviser les scénarios en `qa/scenarios/<theme>/*.md`
 - ajouté un analyseur pour le contenu du pack YAML markdown nommé
 - validé avec zod
 - basculé les consommateurs vers le pack analysé

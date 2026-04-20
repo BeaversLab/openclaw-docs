@@ -129,7 +129,7 @@ Elija su superficie de proveedor y siga los pasos de configuración.
 ## Avanzado
 
 <AccordionGroup>
-  <Accordion title="Full config: Standard provider">
+  <Accordion title="Configuración completa: Proveedor estándar">
     ```json5
     {
       env: { STEPFUN_API_KEY: "your-key" },
@@ -159,7 +159,7 @@ Elija su superficie de proveedor y siga los pasos de configuración.
     ```
   </Accordion>
 
-  <Accordion title="Configuración completa: proveedor Step Plan">
+  <Accordion title="Configuración completa: Proveedor Step Plan">
     ```json5
     {
       env: { STEPFUN_API_KEY: "your-key" },
@@ -199,14 +199,14 @@ Elija su superficie de proveedor y siga los pasos de configuración.
   </Accordion>
 
   <Accordion title="Notas">
-    - El proveedor se incluye con OpenClaw, por lo que no hay un paso separado de instalación del complemento.
-    - `step-3.5-flash-2603` actualmente se expone solo en `stepfun-plan`.
-    - Un único flujo de autenticación escribe perfiles coincidentes por región tanto para `stepfun` como para `stepfun-plan`, por lo que ambas superficies pueden descubrirse juntas.
-    - Use `openclaw models list` y `openclaw models set <provider/model>` para inspeccionar o cambiar modelos.
+    - El proveedor está incluido con OpenClaw, por lo que no hay un paso de instalación de complemento separado.
+    - `step-3.5-flash-2603` actualmente solo se expone en `stepfun-plan`.
+    - Un único flujo de autenticación escribe perfiles coincidentes con la región tanto para `stepfun` como para `stepfun-plan`, por lo que ambas superficies se pueden descubrir juntas.
+    - Utilice `openclaw models list` y `openclaw models set <provider/model>` para inspeccionar o cambiar modelos.
   </Accordion>
 </AccordionGroup>
 
-<Note>Para obtener una visión general más amplia del proveedor, consulte [Proveedores de modelos](/es/concepts/model-providers).</Note>
+<Note>Para obtener una visión general más amplia de los proveedores, consulte [Proveedores de modelos](/es/concepts/model-providers).</Note>
 
 ## Relacionado
 
@@ -217,7 +217,7 @@ Elija su superficie de proveedor y siga los pasos de configuración.
   <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
     Esquema de configuración completo para proveedores, modelos y complementos.
   </Card>
-  <Card title="Selección de modelo" href="/es/concepts/models" icon="brain">
+  <Card title="Selección de modelos" href="/es/concepts/models" icon="brain">
     Cómo elegir y configurar modelos.
   </Card>
   <Card title="Plataforma StepFun" href="https://platform.stepfun.com" icon="globe">

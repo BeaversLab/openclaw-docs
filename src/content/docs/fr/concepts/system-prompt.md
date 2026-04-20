@@ -109,12 +109,12 @@ Tous ces fichiers sont **injectés dans la fenêtre de contexte** à chaque tour
 > sous forme d'un bloc de contexte de démarrage ponctuel pour ce premier tour.
 
 Les fichiers volumineux sont tronqués avec un marqueur. La taille maximale par fichier est contrôlée par
-`agents.defaults.bootstrapMaxChars` (par défaut : 20000). Le contenu total de démarrage
-injecté sur tous les fichiers est plafonné par `agents.defaults.bootstrapTotalMaxChars`
-(par défaut : 150000). Les fichiers manquants injectent un marqueur court de fichier manquant. Lorsqu'une
-troncation se produit, OpenClaw peut injecter un bloc d'avertissement dans le Project Context ; contrôlez ceci avec
+`agents.defaults.bootstrapMaxChars` (par défaut : 12000). Le contenu total de l'amorçage injecté
+sur les fichiers est plafonné par `agents.defaults.bootstrapTotalMaxChars`
+(par défaut : 60000). Les fichiers manquants injectent un marqueur court de fichier manquant. Lorsqu'une troncation
+se produit, OpenClaw peut injecter un bloc d'avertissement dans le contexte du projet ; contrôlez ceci avec
 `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ;
-défaut : `once`).
+par défaut : `once`).
 
 Les sessions de sous-agents n'injectent que `AGENTS.md` et `TOOLS.md` (les autres fichiers de démarrage
 sont filtrés pour garder le contexte du sous-agent petit).

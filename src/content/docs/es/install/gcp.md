@@ -34,8 +34,8 @@ Se puede acceder a la Gateway a través de:
 - Exposición directa de puerto si gestionas el cortafuegos y los tokens tú mismo
 
 Esta guía utiliza Debian en GCP Compute Engine.
-Ubuntu también funciona; mapea los paquetes correspondientemente.
-Para el flujo genérico de Docker, consulta [Docker](/es/install/docker).
+Ubuntu también funciona; asigne los paquetes correspondientemente.
+Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
 
 ---
 
@@ -69,7 +69,7 @@ Para el flujo genérico de Docker, consulta [Docker](/es/install/docker).
 ---
 
 <Steps>
-  <Step title="Instalar la CLI de gcloud (o usar la Consola)">
+  <Step title="Instalar gcloud CLI (o usar Console)">
     **Opción A: gcloud CLI** (recomendado para automatización)
 
     Instalar desde [https://cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install)
@@ -83,7 +83,7 @@ Para el flujo genérico de Docker, consulta [Docker](/es/install/docker).
 
     **Opción B: Cloud Console**
 
-    Todos los pasos se pueden hacer a través de la interfaz web en [https://console.cloud.google.com](https://console.cloud.google.com)
+    Todos los pasos se pueden realizar a través de la interfaz web en [https://console.cloud.google.com](https://console.cloud.google.com)
 
   </Step>
 
@@ -95,9 +95,9 @@ Para el flujo genérico de Docker, consulta [Docker](/es/install/docker).
     gcloud config set project my-openclaw-project
     ```
 
-    Habilitar la facturación en [https://console.cloud.google.com/billing](https://console.cloud.google.com/billing) (requerido para Compute Engine).
+    Active la facturación en [https://console.cloud.google.com/billing](https://console.cloud.google.com/billing) (obligatorio para Compute Engine).
 
-    Habilitar la API de Compute Engine:
+    Active la API de Compute Engine:
 
     ```bash
     gcloud services enable compute.googleapis.com
@@ -105,10 +105,10 @@ Para el flujo genérico de Docker, consulta [Docker](/es/install/docker).
 
     **Consola:**
 
-    1. Ir a IAM y administración > Crear proyecto
-    2. Nombrarlo y crearlo
-    3. Habilitar la facturación para el proyecto
-    4. Navegar a APIs y servicios > Habilitar APIs > buscar "Compute Engine API" > Habilitar
+    1. Vaya a IAM y administración > Crear proyecto
+    2. Nómbrelo y cree
+    3. Active la facturación para el proyecto
+    4. Navegue a API y servicios > Habilitar API > busque "Compute Engine API" > Habilitar
 
   </Step>
 
@@ -213,18 +213,21 @@ Para el flujo genérico de Docker, consulta [Docker](/es/install/docker).
 
     ```bash
     OPENCLAW_IMAGE=openclaw:latest
-    OPENCLAW_GATEWAY_TOKEN=change-me-now
+    OPENCLAW_GATEWAY_TOKEN=
     OPENCLAW_GATEWAY_BIND=lan
     OPENCLAW_GATEWAY_PORT=18789
 
     OPENCLAW_CONFIG_DIR=/home/$USER/.openclaw
     OPENCLAW_WORKSPACE_DIR=/home/$USER/.openclaw/workspace
 
-    GOG_KEYRING_PASSWORD=change-me-now
+    GOG_KEYRING_PASSWORD=
     XDG_CONFIG_HOME=/home/node/.openclaw
     ```
 
-    Genere secretos seguros:
+    Deje `OPENCLAW_GATEWAY_TOKEN` en blanco a menos que explícitamente desee
+    gestionarlo a través de `.env`; OpenClaw escribe un token de puerta de enlace aleatorio en
+    la configuración al iniciarse por primera vez. Genere una contraseña de llavero y péguela en
+    `GOG_KEYRING_PASSWORD`:
 
     ```bash
     openssl rand -hex 32
@@ -232,8 +235,8 @@ Para el flujo genérico de Docker, consulta [Docker](/es/install/docker).
 
     **No confirme este archivo.**
 
-    Este archivo `.env` es para variables de entorno del contenedor/ejecución, tales como `OPENCLAW_GATEWAY_TOKEN`.
-    La autenticación de OAuth/API key del proveedor almacenada reside en el
+    Este archivo `.env` es para el entorno de tiempo de ejecución/contenedor, como `OPENCLAW_GATEWAY_TOKEN`.
+    La autenticación de OAuth/API-key del proveedor almacenada reside en el
     `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` montado.
 
   </Step>
@@ -279,64 +282,61 @@ Para el flujo genérico de Docker, consulta [Docker](/es/install/docker).
           ]
     ```
 
-    `--allow-unconfigured` es solo por conveniencia durante el arranque, no es un reemplazo para una configuración de gateway adecuada. Aún así, configure la autenticación (`gateway.auth.token` o contraseña) y use configuraciones de enlace (bind) seguras para su implementación.
+    `--allow-unconfigured` es solo por conveniencia de inicio, no es un reemplazo para una configuración adecuada de la puerta de enlace. Aún así, establezca autenticación (`gateway.auth.token` o contraseña) y use configuraciones de enlace seguras para su implementación.
 
   </Step>
 
-  <Step title="Pasos de tiempo de ejecución compartidos de VM Docker">
-    Use la guía de tiempo de ejecución compartida para el flujo común de host Docker:
+  <Step title="Pasos de tiempo de ejecución compartidos de la VM de Docker">
+    Utilice la guía de tiempo de ejecución compartida para el flujo común del host Docker:
 
-    - [Incluir los binarios requeridos en la imagen](/es/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-    - [Construir y lanzar](/es/install/docker-vm-runtime#build-and-launch)
-    - [Qué persiste dónde](/es/install/docker-vm-runtime#what-persists-where)
+    - [Incluir los binarios necesarios en la imagen](/es/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+    - [Compilar e iniciar](/es/install/docker-vm-runtime#build-and-launch)
+    - [Qué persiste y dónde](/es/install/docker-vm-runtime#what-persists-where)
     - [Actualizaciones](/es/install/docker-vm-runtime#updates)
 
   </Step>
 
-  <Step title="Notas de lanzamiento específicas de GCP">
-    En GCP, si la compilación falla con `Killed` o `exit code 137` durante `pnpm install --frozen-lockfile`, la VM se quedó sin memoria. Use `e2-small` como mínimo, o `e2-medium` para primeras compilaciones más fiables.
+  <Step title="Notas de inicio específicas de GCP">
+    En GCP, si la compilación falla con `Killed` o `exit code 137` durante `pnpm install --frozen-lockfile`, la VM se quedó sin memoria. Use `e2-small` como mínimo, o `e2-medium` para primeras compilaciones más confiables.
 
-    Al enlazar a la LAN (`OPENCLAW_GATEWAY_BIND=lan`), configure un origen de navegador confiable antes de continuar:
+    Al vincular a la LAN (`OPENCLAW_GATEWAY_BIND=lan`), configure un origen de navegador confiable antes de continuar:
 
     ```bash
     docker compose run --rm openclaw-cli config set gateway.controlUi.allowedOrigins '["http://127.0.0.1:18789"]' --strict-json
     ```
 
-    Si cambió el puerto del gateway, reemplace `18789` con su puerto configurado.
+    Si cambió el puerto de la puerta de enlace, reemplace `18789` con su puerto configurado.
 
   </Step>
 
-  <Step title="Acceso desde tu portátil">
-    Crea un túnel SSH para reenviar el puerto del Gateway:
+  <Step title="Acceso desde su portátil">
+    Cree un túnel SSH para reenviar el puerto de la puerta de enlace:
 
     ```bash
     gcloud compute ssh openclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:18789
     ```
 
-    Abre en tu navegador:
+    Abra en su navegador:
 
     `http://127.0.0.1:18789/`
 
-    Vuelve a imprimir un enlace limpio del panel:
+    Vuelva a imprimir un enlace limpio del panel de control:
 
     ```bash
     docker compose run --rm openclaw-cli dashboard --no-open
     ```
 
-    Si la interfaz de usuario solicita autenticación mediante secreto compartido, pega el token
-    o contraseña configurado en la configuración de la interfaz de usuario de Control. Este flujo de Docker escribe un token
-    de forma predeterminada; si cambias la configuración del contenedor a autenticación por contraseña, usa esa
-    contraseña en su lugar.
+    Si la interfaz de usuario solicita autenticación de secreto compartido, pegue el token o contraseña configurada en la configuración de la Interfaz de Usuario de Control. Este flujo de Docker escribe un token de forma predeterminada; si cambia la configuración del contenedor a autenticación por contraseña, use esa contraseña en su lugar.
 
-    Si la interfaz de usuario de Control muestra `unauthorized` o `disconnected (1008): pairing required`, aprueba el dispositivo del navegador:
+    Si la Interfaz de Usuario de Control muestra `unauthorized` o `disconnected (1008): pairing required`, apruebe el dispositivo del navegador:
 
     ```bash
     docker compose run --rm openclaw-cli devices list
     docker compose run --rm openclaw-cli devices approve <requestId>
     ```
 
-    ¿Necesitas de nuevo la referencia de persistencia compartida y actualización?
-    Consulta [Docker VM Runtime](/es/install/docker-vm-runtime#what-persists-where) y [Docker VM Runtime updates](/es/install/docker-vm-runtime#updates).
+    ¿Necesita nuevamente la referencia de persistencia compartida y actualización?
+    Consulte [Tiempo de ejecución de la VM de Docker](/es/install/docker-vm-runtime#what-persists-where) y [Actualizaciones del tiempo de ejecución de la VM de Docker](/es/install/docker-vm-runtime#updates).
 
   </Step>
 </Steps>
@@ -361,7 +361,7 @@ Asegúrate de que tu cuenta tenga los permisos IAM necesarios (Compute OS Login 
 
 **Sin memoria (OOM)**
 
-Si la compilación de Docker falla con `Killed` y `exit code 137`, la VM fue terminada por OOM. Actualiza a e2-small (mínimo) o e2-medium (recomendado para compilaciones locales fiables):
+Si la compilación de Docker falla con `Killed` y `exit code 137`, la VM fue terminada por falta de memoria (OOM-killed). Actualice a e2-small (mínimo) o e2-medium (recomendado para compilaciones locales confiables):
 
 ```bash
 # Stop the VM first
@@ -401,12 +401,12 @@ Para automatización o canalizaciones de CI/CD, crea una cuenta de servicio dedi
 
 Evita usar el rol de Propietario para la automatización. Utiliza el principio de mínimo privilegio.
 
-Consulta [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles) para obtener detalles sobre los roles de IAM.
+Consulte [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles) para obtener detalles sobre los roles de IAM.
 
 ---
 
 ## Siguientes pasos
 
-- Configura canales de mensajería: [Canales](/es/channels)
-- Empareja dispositivos locales como nodos: [Nodos](/es/nodes)
-- Configura el Gateway: [Configuración del Gateway](/es/gateway/configuration)
+- Configure los canales de mensajería: [Canales](/es/channels)
+- Emparejar dispositivos locales como nodos: [Nodos](/es/nodes)
+- Configurar el Gateway: [Configuración del Gateway](/es/gateway/configuration)

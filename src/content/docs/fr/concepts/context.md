@@ -38,7 +38,7 @@ Les valeurs varient selon le modèle, le fournisseur, la stratégie d'outil et c
 ```
 🧠 Context breakdown
 Workspace: <workspaceDir>
-Bootstrap max/file: 20,000 chars
+Bootstrap max/file: 12,000 chars
 Sandbox: mode=non-main sandboxed=false
 System prompt (run): 38,412 chars (~9,603 tok) (Project Context 23,901 chars (~5,976 tok))
 
@@ -112,7 +112,7 @@ Par défaut, OpenClaw injecte un ensemble fixe de fichiers de l'espace de travai
 - `HEARTBEAT.md`
 - `BOOTSTRAP.md` (première exécution uniquement)
 
-Les fichiers volumineux sont tronqués par fichier en utilisant `agents.defaults.bootstrapMaxChars` (défaut `20000` caractères). OpenClaw applique également une limite totale d'injection d'amorçage sur tous les fichiers avec `agents.defaults.bootstrapTotalMaxChars` (défaut `150000` caractères). `/context` affiche les tailles **brutes vs injectées** et indique si une troncature a eu lieu.
+Les fichiers volumineux sont tronqués par fichier à l'aide de `agents.defaults.bootstrapMaxChars` (défaut `12000` caractères). OpenClaw applique également une limite totale d'injection de démarrage sur l'ensemble des fichiers avec `agents.defaults.bootstrapTotalMaxChars` (défaut `60000` caractères). `/context` affiche les tailles **brutes par rapport à injectées** et indique si une troncation a eu lieu.
 
 Lorsqu'une troncature se produit, l'exécution peut injecter un bloc d'avertissement dans le prompt sous Projet Context. Configurez ceci avec `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ; défaut `once`).
 

@@ -45,7 +45,7 @@ acceder a cientos de modelos a través de un solo punto de conexión.
     ```
 
   </Step>
-  <Step title="Verificar que el modelo esté disponible">
+  <Step title="Verifique que el modelo esté disponible">
     ```bash
     openclaw models list --provider vercel-ai-gateway
     ```

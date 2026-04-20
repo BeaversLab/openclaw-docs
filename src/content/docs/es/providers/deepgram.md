@@ -61,7 +61,7 @@ Cuando está habilitado, OpenClaw sube el archivo de audio a Deepgram e inyecta 
 | `smart_format`    | `tools.media.audio.providerOptions.deepgram.smart_format`    | Habilitar formato inteligente (opcional)             |
 
 <Tabs>
-  <Tab title="With language hint">
+  <Tab title="Con sugerencia de idioma">
     ```json5
     {
       tools: {
@@ -75,7 +75,7 @@ Cuando está habilitado, OpenClaw sube el archivo de audio a Deepgram e inyecta 
     }
     ```
   </Tab>
-  <Tab title="With Deepgram options">
+  <Tab title="Con opciones de Deepgram">
     ```json5
     {
       tools: {
@@ -101,21 +101,21 @@ Cuando está habilitado, OpenClaw sube el archivo de audio a Deepgram e inyecta 
 ## Notas
 
 <AccordionGroup>
-  <Accordion title="Autenticación">La autenticación sigue el orden de autenticación estándar de los proveedores. `DEEPGRAM_API_KEY` es la ruta más sencilla.</Accordion>
-  <Accordion title="Proxy y puntos finales personalizados">Anule los puntos finales o encabezados con `tools.media.audio.baseUrl` y `tools.media.audio.headers` al utilizar un proxy.</Accordion>
-  <Accordion title="Comportamiento de salida">La salida sigue las mismas reglas de audio que otros proveedores (límites de tamaño, tiempos de espera, inyección de transcripciones).</Accordion>
+  <Accordion title="Autenticación">La autenticación sigue el orden de autenticación estándar de proveedores. `DEEPGRAM_API_KEY` es la ruta más sencilla.</Accordion>
+  <Accordion title="Proxy y endpoints personalizados">Anule los endpoints o encabezados con `tools.media.audio.baseUrl` y `tools.media.audio.headers` cuando use un proxy.</Accordion>
+  <Accordion title="Comportamiento de salida">El resultado sigue las mismas reglas de audio que otros proveedores (límites de tamaño, tiempos de espera, inyección de transcripciones).</Accordion>
 </AccordionGroup>
 
-<Note>La transcripción de Deepgram es **solo pregrabada** (no streaming en tiempo real). OpenClaw sube el archivo de audio completo y espera la transcripción completa antes de inyectarla en la conversación.</Note>
+<Note>La transcripción de Deepgram es **solo pregrabada** (no es transmisión en tiempo real). OpenClaw sube el archivo de audio completo y espera la transcripción completa antes de inyectarla en la conversación.</Note>
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Herramientas multimedia" href="/es/tools/media" icon="photo-film">
-    Resumen de la canalización de procesamiento de audio, imagen y video.
+  <Card title="Herramientas de medios" href="/es/tools/media" icon="photo-film">
+    Resumen del pipeline de procesamiento de audio, imagen y video.
   </Card>
   <Card title="Configuración" href="/es/configuration" icon="gear">
-    Referencia completa de configuración, incluidos los ajustes de herramientas multimedia.
+    Referencia completa de configuración, incluidos los ajustes de herramientas de medios.
   </Card>
   <Card title="Solución de problemas" href="/es/help/troubleshooting" icon="wrench">
     Problemas comunes y pasos de depuración.

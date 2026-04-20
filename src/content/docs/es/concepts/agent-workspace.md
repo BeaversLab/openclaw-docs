@@ -118,7 +118,12 @@ Consulte [Memoria](/es/concepts/memory) para ver el flujo de trabajo y el vaciad
 - `canvas/` (opcional)
   - Archivos de interfaz de usuario de Canvas para visualizaciones de nodos (por ejemplo `canvas/index.html`).
 
-Si falta algún archivo de arranque, OpenClaw inyecta un marcador de "archivo faltante" en la sesión y continúa. Los archivos de arranque grandes se truncarán al inyectarse; ajuste los límites con `agents.defaults.bootstrapMaxChars` (predeterminado: 20000) y `agents.defaults.bootstrapTotalMaxChars` (predeterminado: 150000). `openclaw setup` puede recrear los valores predeterminados faltantes sin sobrescribir los archivos existentes.
+Si falta algún archivo de arranque, OpenClaw inyecta un marcador de "archivo faltante" en
+la sesión y continúa. Los archivos de arranque grandes se truncarán al inyectarlos;
+ajuste los límites con `agents.defaults.bootstrapMaxChars` (predeterminado: 12000) y
+`agents.defaults.bootstrapTotalMaxChars` (predeterminado: 60000).
+`openclaw setup` puede recrear los valores predeterminados faltantes sin sobrescribir los archivos
+existentes.
 
 ## Qué NO hay en el espacio de trabajo
 

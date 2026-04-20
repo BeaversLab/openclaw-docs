@@ -23,7 +23,7 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
 - 保持嚴格的分離：專用的 VPS/執行環境 + 專用帳戶；該主機上不得有個人的 Apple/Google/瀏覽器/密碼管理器設定檔。
 - 如果使用者之間存在潛在衝突，請依據 gateway/host/OS 使用者進行分隔。
 
-請參閱[安全性](/zh-Hant/gateway/security)和 [VPS 託管](/zh-Hant/vps)。
+請參閱 [安全性](/zh-Hant/gateway/security) 和 [VPS 託管](/zh-Hant/vps)。
 
 ## 我們在做什麼（簡單來說）？
 
@@ -41,9 +41,9 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
 - 從您的筆記型電腦進行 SSH 連接埠轉送
 - 如果您自行管理防火牆和 Token，則可直接暴露連接埠
 
-本指南假設您在 Hetzner 上使用 Ubuntu 或 Debian。  
-如果您使用的是其他 Linux VPS，請對應相應的套件。
-關於一般的 Docker 流程，請參閱 [Docker](/zh-Hant/install/docker)。
+本指南假設您在 Hetzner 上使用 Ubuntu 或 Debian。
+如果您使用的是其他 Linux VPS，請對應套件。
+若要了解一般的 Docker 流程，請參閱 [Docker](/zh-Hant/install/docker)。
 
 ---
 
@@ -130,31 +130,32 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
   </Step>
 
   <Step title="設定環境變數">
-    在倉庫根目錄中建立 `.env`。
+    在儲存庫根目錄中建立 `.env`。
 
     ```bash
     OPENCLAW_IMAGE=openclaw:latest
-    OPENCLAW_GATEWAY_TOKEN=change-me-now
+    OPENCLAW_GATEWAY_TOKEN=
     OPENCLAW_GATEWAY_BIND=lan
     OPENCLAW_GATEWAY_PORT=18789
 
     OPENCLAW_CONFIG_DIR=/root/.openclaw
     OPENCLAW_WORKSPACE_DIR=/root/.openclaw/workspace
 
-    GOG_KEYRING_PASSWORD=change-me-now
+    GOG_KEYRING_PASSWORD=
     XDG_CONFIG_HOME=/home/node/.openclaw
     ```
 
-    生成強祕鑰：
+    除非您明確想要透過 `.env` 管理 `OPENCLAW_GATEWAY_TOKEN`，否則請將其留白；
+    OpenClaw 會在首次啟動時將隨機的 gateway token 寫入設定。產生金鑰環密碼並將其貼上到 `GOG_KEYRING_PASSWORD` 中：
 
     ```bash
     openssl rand -hex 32
     ```
 
-    **不要提交此檔案。**
+    **請勿提交此檔案。**
 
-    此 `.env` 檔案用於容器/運行時環境變數，例如 `OPENCLAW_GATEWAY_TOKEN`。
-    已儲存的供應商 OAuth/API 金鑰認證位於已掛載的
+    這個 `.env` 檔案是用於容器/執行時環境變數，例如 `OPENCLAW_GATEWAY_TOKEN`。
+    已儲存的供應商 OAuth/API-key 驗證位於已掛載的
     `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 中。
 
   </Step>
@@ -200,22 +201,22 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
           ]
     ```
 
-    `--allow-unconfigured` 僅為了便於啟動，它不能取代適當的 Gateway 設定。仍需設定認證 (`gateway.auth.token` 或密碼)，並針對您的部署使用安全的綁定設定。
+    `--allow-unconfigured` 僅用於初始部署的便利性，它不能取代適當的 gateway 設定。仍然需要設定驗證（`gateway.auth.token` 或密碼），並為您的部署使用安全的 bind 設定。
 
   </Step>
 
-  <Step title="共用的 Docker VM 運行時步驟">
-    使用共用的運行時指南來了解一般的 Docker 主機流程：
+  <Step title="共用的 Docker VM 執行時步驟">
+    使用共用的執行時指南來了解常見的 Docker 主機流程：
 
-    - [將所需的二進位檔案製作到映像中](/zh-Hant/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-    - [建置與啟動](/zh-Hant/install/docker-vm-runtime#build-and-launch)
-    - [資料持久化位置](/zh-Hant/install/docker-vm-runtime#what-persists-where)
+    - [將所需的二進位檔烘焙至映像檔中](/zh-Hant/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+    - [建構與啟動](/zh-Hant/install/docker-vm-runtime#build-and-launch)
+    - [什麼會持續儲存在哪裡](/zh-Hant/install/docker-vm-runtime#what-persists-where)
     - [更新](/zh-Hant/install/docker-vm-runtime#updates)
 
   </Step>
 
-  <Step title="Hetzner 專屬存取方式">
-    在完成共用的建置和啟動步驟後，從您的筆記型電腦建立通道：
+  <Step title="Hetzner 特定的存取方式">
+    在完成共用的建構與啟動步驟後，從您的筆記型電腦建立通道：
 
     ```bash
     ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
@@ -225,13 +226,13 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
 
     `http://127.0.0.1:18789/`
 
-    貼上已設定的共用祕鑰。本指南預設使用 Gateway 權杖；
-    如果您切換到密碼認證，請改用該密碼。
+    貼上設定的共用金鑰。本指南預設使用 gateway token；
+    如果您切換到密碼驗證，請使用該密碼。
 
   </Step>
 </Steps>
 
-共用的持久化對應表位於 [Docker VM 運行時](/zh-Hant/install/docker-vm-runtime#what-persists-where) 中。
+共享持久化映射位於 [Docker VM Runtime](/zh-Hant/install/docker-vm-runtime#what-persists-where)。
 
 ## 基礎設施即程式碼
 
@@ -246,7 +247,7 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
 **儲存庫：**
 
 - 基礎架構：[openclaw-terraform-hetzner](https://github.com/andreesg/openclaw-terraform-hetzner)
-- Docker 設定：[openclaw-docker-config](https://github.com/andreesg/openclaw-docker-config)
+- Docker 配置：[openclaw-docker-config](https://github.com/andreesg/openclaw-docker-config)
 
 此方法透過可重現的部署、版本控制的基礎架構和自動化災難恢復，補充了上述 Docker 設定。
 
@@ -254,6 +255,6 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
 
 ## 後續步驟
 
-- 設定訊息通道：[通道](/zh-Hant/channels)
-- 設定 Gateway：[Gateway 設定](/zh-Hant/gateway/configuration)
-- 保持 OpenClaw 為最新狀態：[更新](/zh-Hant/install/updating)
+- 設置訊息通道：[Channels](/zh-Hant/channels)
+- 配置網關：[Gateway configuration](/zh-Hant/gateway/configuration)
+- 保持 OpenClaw 更新：[Updating](/zh-Hant/install/updating)

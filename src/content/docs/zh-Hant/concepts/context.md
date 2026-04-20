@@ -38,7 +38,7 @@ Context _並不相同_ 於“記憶”：記憶可以儲存在磁碟上並在之
 ```
 🧠 Context breakdown
 Workspace: <workspaceDir>
-Bootstrap max/file: 20,000 chars
+Bootstrap max/file: 12,000 chars
 Sandbox: mode=non-main sandboxed=false
 System prompt (run): 38,412 chars (~9,603 tok) (Project Context 23,901 chars (~5,976 tok))
 
@@ -112,7 +112,7 @@ System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包
 - `HEARTBEAT.md`
 - `BOOTSTRAP.md`（僅首次執行時）
 
-大檔案會根據 `agents.defaults.bootstrapMaxChars` 逐個檔案進行截斷（預設 `20000` 個字元）。OpenClaw 也會透過 `agents.defaults.bootstrapTotalMaxChars` 對所有檔案的總引導注入量設限（預設 `150000` 個字元）。`/context` 會顯示 **原始大小與注入大小** 以及是否發生截斷。
+大型檔案會根據 `agents.defaults.bootstrapMaxChars`（預設 `12000` 個字元）逐個檔案截斷。OpenClaw 還會透過 `agents.defaults.bootstrapTotalMaxChars`（預設 `60000` 個字元）對所有檔案的啟動注入總量強制執行上限。`/context` 會顯示「原始與注入」的大小以及是否發生了截斷。
 
 當發生截斷時，執行環境可以在 Project Context 下注入提示詞內的警告區塊。您可以透過 `agents.defaults.bootstrapPromptTruncationWarning` 進行設定（`off`、`once`、`always`；預設 `once`）。
 

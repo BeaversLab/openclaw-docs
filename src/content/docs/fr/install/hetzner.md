@@ -41,7 +41,7 @@ Le Gateway est accessible via :
 - Exposition directe du port si vous gérez vous-même le pare-feu et les jetons
 
 Ce guide suppose Ubuntu ou Debian sur Hetzner.  
-Si vous êtes sur un autre VPS Linux, adaptez les packages en conséquence.
+Si vous êtes sur un autre VPS Linux, mappez les packages en conséquence.
 Pour le flux générique Docker, voir [Docker](/fr/install/docker).
 
 ---
@@ -133,27 +133,30 @@ Pour le flux générique Docker, voir [Docker](/fr/install/docker).
 
     ```bash
     OPENCLAW_IMAGE=openclaw:latest
-    OPENCLAW_GATEWAY_TOKEN=change-me-now
+    OPENCLAW_GATEWAY_TOKEN=
     OPENCLAW_GATEWAY_BIND=lan
     OPENCLAW_GATEWAY_PORT=18789
 
     OPENCLAW_CONFIG_DIR=/root/.openclaw
     OPENCLAW_WORKSPACE_DIR=/root/.openclaw/workspace
 
-    GOG_KEYRING_PASSWORD=change-me-now
+    GOG_KEYRING_PASSWORD=
     XDG_CONFIG_HOME=/home/node/.openclaw
     ```
 
-    Générez des secrets robustes :
+    Laissez `OPENCLAW_GATEWAY_TOKEN` vide à moins que vous ne souhaitiez explicitement
+    le gérer via `.env` ; OpenClaw écrit un jeton de passerelle aléatoire dans
+    la configuration au premier démarrage. Générez un mot de passe de trousseau et collez-le dans
+    `GOG_KEYRING_PASSWORD` :
 
     ```bash
     openssl rand -hex 32
     ```
 
-    **Ne commitez pas ce fichier.**
+    **Ne commettez pas ce fichier.**
 
-    Ce fichier `.env` est destiné à l'environnement conteneur/runtime tel que `OPENCLAW_GATEWAY_TOKEN`.
-    L'authentification stockée par le fournisseur OAuth/clé API réside dans le
+    Ce fichier `.env` est destiné à l'environnement d'exécution/conteneur tel que `OPENCLAW_GATEWAY_TOKEN`.
+    L'authentification stockée par le fournisseur OAuth/Clé-API réside dans le
     `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` monté.
 
   </Step>
@@ -204,7 +207,7 @@ Pour le flux générique Docker, voir [Docker](/fr/install/docker).
   </Step>
 
   <Step title="Étapes d'exécution VM Docker partagées">
-    Utilisez le guide d'exécution partagé pour le flux d'hôte Docker commun :
+    Utilisez le guide d'exécution partagé pour le flux hôte Docker commun :
 
     - [Intégrer les binaires requis dans l'image](/fr/install/docker-vm-runtime#bake-required-binaries-into-the-image)
     - [Construire et lancer](/fr/install/docker-vm-runtime#build-and-launch)
@@ -224,12 +227,13 @@ Pour le flux générique Docker, voir [Docker](/fr/install/docker).
 
     `http://127.0.0.1:18789/`
 
-    Collez le secret partagé configuré. Ce guide utilise le jeton de passerée par défaut ; si vous êtes passé à l'authentification par mot de passe, utilisez plutôt ce mot de passe.
+    Collez le secret partagé configuré. Ce guide utilise le jeton de passerelle par
+    défaut ; si vous avez passé à l'authentification par mot de passe, utilisez plutôt ce mot de passe.
 
   </Step>
 </Steps>
 
-La carte de persistance partagée se trouve dans [Runtime VM Docker](/fr/install/docker-vm-runtime#what-persists-where).
+La carte de persistance partagée réside dans [Docker VM Runtime](/fr/install/docker-vm-runtime#what-persists-where).
 
 ## Infrastructure as Code (Terraform)
 
@@ -253,5 +257,5 @@ Cette approche complète la configuration Docker ci-dessus avec des déploiement
 ## Étapes suivantes
 
 - Configurer les canaux de messagerie : [Canaux](/fr/channels)
-- Configurer le Gateway : [Configuration Gateway](/fr/gateway/configuration)
+- Configurer le Gateway : [Configuration du Gateway](/fr/gateway/configuration)
 - Garder OpenClaw à jour : [Mise à jour](/fr/install/updating)

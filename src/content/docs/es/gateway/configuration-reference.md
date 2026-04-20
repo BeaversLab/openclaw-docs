@@ -950,21 +950,21 @@ Controla cuándo se inyectan los archivos de arranque del espacio de trabajo en 
 
 ### `agents.defaults.bootstrapMaxChars`
 
-Máximo de caracteres por archivo de arranque del espacio de trabajo antes del truncamiento. Por defecto: `20000`.
+Máximo de caracteres por archivo de arranque del espacio de trabajo antes del truncamiento. Predeterminado: `12000`.
 
 ```json5
 {
-  agents: { defaults: { bootstrapMaxChars: 20000 } },
+  agents: { defaults: { bootstrapMaxChars: 12000 } },
 }
 ```
 
 ### `agents.defaults.bootstrapTotalMaxChars`
 
-Máximo total de caracteres inyectados en todos los archivos de arranque del espacio de trabajo. Por defecto: `150000`.
+Máximo total de caracteres inyectados en todos los archivos de arranque del espacio de trabajo. Predeterminado: `60000`.
 
 ```json5
 {
-  agents: { defaults: { bootstrapTotalMaxChars: 150000 } },
+  agents: { defaults: { bootstrapTotalMaxChars: 60000 } },
 }
 ```
 

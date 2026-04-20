@@ -21,7 +21,7 @@ Feishu/Lark es una plataforma de colaboración todo en uno donde los equipos cha
 <Steps>
   <Step title="Ejecute el asistente de configuración del canal">```bash openclaw channels login --channel feishu ``` Escanee el código QR con su aplicación móvil Feishu/Lark para crear un bot Feishu/Lark automáticamente.</Step>
 
-  <Step title="Después de que se complete la configuración, reinicie la puerta de enlace para aplicar los cambios">```bash openclaw gateway restart ```</Step>
+  <Step title="Una vez completada la configuración, reinicie la puerta de enlace para aplicar los cambios">```bash openclaw gateway restart ```</Step>
 </Steps>
 
 ---

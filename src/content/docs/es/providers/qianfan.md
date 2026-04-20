@@ -22,7 +22,7 @@ Qianfan es la plataforma MaaS de Baidu, que proporciona una **API unificada** qu
 <Steps>
   <Step title="Crear una cuenta de Baidu Cloud">Regístrate o inicia sesión en la [Consola de Qianfan](https://console.bce.baidu.com/qianfan/ais/console/apiKey) y asegúrate de tener habilitado el acceso a la API de Qianfan.</Step>
   <Step title="Generar una clave de API">Crea una nueva aplicación o selecciona una existente, luego genera una clave de API. El formato de la clave es `bce-v3/ALTAK-...`.</Step>
-  <Step title="Ejecutar la incorporación">```bash openclaw onboard --auth-choice qianfan-api-key ```</Step>
+  <Step title="Ejecutar incorporación">```bash openclaw onboard --auth-choice qianfan-api-key ```</Step>
   <Step title="Verificar que el modelo esté disponible">```bash openclaw models list --provider qianfan ```</Step>
 </Steps>
 

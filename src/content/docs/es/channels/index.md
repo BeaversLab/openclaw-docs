@@ -34,10 +34,10 @@ El texto es compatible en todas partes; los medios y las reacciones varían seg�
 - [Twitch](/es/channels/twitch) — Chat de Twitch vía conexión IRC (complemento incluido).
 - [Voice Call](/es/plugins/voice-call) — Telefonía vía Plivo o Twilio (complemento, instalado por separado).
 - [WebChat](/es/web/webchat) — Interfaz de usuario WebChat del Gateway sobre WebSocket.
-- [WeChat](https://www.npmjs.com/package/@tencent-weixin/openclaw-weixin) — Complemento de bot Tencent iLink vía login con QR; solo chats privados.
+- [WeChat](/es/channels/wechat) — Complemento Tencent iLink Bot mediante inicio de sesión con código QR; solo chats privados (complemento externo).
 - [WhatsApp](/es/channels/whatsapp) — El más popular; usa Baileys y requiere emparejamiento con código QR.
-- [Zalo](/es/channels/zalo) — API de Bot de Zalo; el mensajero popular de Vietnam (complemento incluido).
-- [Zalo Personal](/es/channels/zalouser) — Cuenta personal de Zalo vía inicio de sesión con QR (complemento incluido).
+- [Zalo](/es/channels/zalo) — Zalo Bot API; el mensajero más popular de Vietnam (complemento incluido).
+- [Zalo Personal](/es/channels/zalouser) — Cuenta personal de Zalo mediante inicio de sesión con código QR (complemento incluido).
 
 ## Notas
 
@@ -45,6 +45,6 @@ El texto es compatible en todas partes; los medios y las reacciones varían seg�
 - La configuración más rápida suele ser **Telegram** (token de bot simple). WhatsApp requiere emparejamiento con código QR y
   almacena más estado en el disco.
 - El comportamiento del grupo varía según el canal; consulte [Grupos](/es/channels/groups).
-- El emparejamiento DM y las listas de permitidos se aplican por seguridad; consulte [Seguridad](/es/gateway/security).
-- Solución de problemas: [Solución de problemas de canales](/es/channels/troubleshooting).
+- El emparejamiento de MD y las listas de permitidos se aplican por seguridad; consulte [Seguridad](/es/gateway/security).
+- Solución de problemas: [Solución de problemas del canal](/es/channels/troubleshooting).
 - Los proveedores de modelos están documentados por separado; consulte [Proveedores de modelos](/es/providers/models).

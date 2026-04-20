@@ -61,16 +61,16 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 ## Soluciones temporales
 
 - Usar Bun para los scripts de desarrollo (reversión temporal actual).
-- Usar Node + tsc watch y luego ejecutar el resultado compilado:
+- Use `tsgo` para la verificación de tipos del repositorio, luego ejecute la salida construida:
 
   ```bash
-  pnpm exec tsc --watch --preserveWatchOutput
-  node --watch openclaw.mjs status
+  pnpm tsgo
+  node openclaw.mjs status
   ```
 
-- Confirmado localmente: `pnpm exec tsc -p tsconfig.json` + `node openclaw.mjs status` funciona en Node 25.
-- Deshabilitar esbuild keepNames en el cargador TS si es posible (evita la inserción del helper `__name`); tsx actualmente no expone esto.
-- Probar Node LTS (22/24) con `tsx` para ver si el problema es específico de Node 25.
+- Nota histórica: `tsc` se usó aquí mientras se depuraba este problema de Node/tsx, pero los carriles de verificación de tipos del repositorio ahora usan `tsgo`.
+- Desactive esbuild keepNames en el cargador TS si es posible (evita la inserción del asistente `__name`); tsx actualmente no expone esto.
+- Pruebe Node LTS (22/24) con `tsx` para ver si el problema es específico de Node 25.
 
 ## Referencias
 
@@ -81,5 +81,5 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 ## Próximos pasos
 
 - Reproducir en Node 22/24 para confirmar la regresión en Node 25.
-- Prueba `tsx` nightly o fija una versión anterior si existe una regresión conocida.
-- Si se reproduce en Node LTS, envía un repro mínimo upstream con el stack trace `__name`.
+- Pruebe `tsx` nightly o fije a una versión anterior si existe una regresión conocida.
+- Si se reproduce en Node LTS, presente un repro mínimo upstream con el seguimiento de pila `__name`.

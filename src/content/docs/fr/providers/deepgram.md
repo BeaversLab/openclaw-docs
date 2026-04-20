@@ -61,7 +61,7 @@ Lorsqu'elle est activée, OpenClaw télécharge le fichier audio vers Deepgram e
 | `smart_format`    | `tools.media.audio.providerOptions.deepgram.smart_format`    | Activer le formatage intelligent (optionnel)  |
 
 <Tabs>
-  <Tab title="With language hint">
+  <Tab title="Avec indication de langue">
     ```json5
     {
       tools: {
@@ -75,7 +75,7 @@ Lorsqu'elle est activée, OpenClaw télécharge le fichier audio vers Deepgram e
     }
     ```
   </Tab>
-  <Tab title="With Deepgram options">
+  <Tab title="Avec les options Deepgram">
     ```json5
     {
       tools: {
@@ -102,25 +102,25 @@ Lorsqu'elle est activée, OpenClaw télécharge le fichier audio vers Deepgram e
 
 <AccordionGroup>
   <Accordion title="Authentification">L'authentification suit l'ordre d'authentification standard du fournisseur. `DEEPGRAM_API_KEY` est le chemin le plus simple.</Accordion>
-  <Accordion title="Proxy et points de terminaison personnalisés">Remplacez les points de terminaison ou les en-têtes par `tools.media.audio.baseUrl` et `tools.media.audio.headers` lors de l'utilisation d'un proxy.</Accordion>
-  <Accordion title="Comportement de la sortie">La sortie suit les mêmes règles audio que les autres fournisseurs (limites de taille, délais d'expiration, injection de transcription).</Accordion>
+  <Accordion title="Proxy et points de terminaison personnalisés">Remplacez les points de terminaison ou les en-têtes avec `tools.media.audio.baseUrl` et `tools.media.audio.headers` lors de l'utilisation d'un proxy.</Accordion>
+  <Accordion title="Comportement de la sortie">La sortie suit les mêmes règles audio que les autres fournisseurs (limites de taille, délais d'attente, injection de transcription).</Accordion>
 </AccordionGroup>
 
-<Note>La transcription Deepgram est **uniquement pré-enregistrée** (pas en temps réel). OpenClaw télécharge le fichier audio complet et attend la transcription complète avant de l'injecter dans la conversation.</Note>
+<Note>La transcription Deepgram est **uniquement pré-enregistrée** (pas de streaming en temps réel). OpenClaw télécharge le fichier audio complet et attend la transcription complète avant de l'injecter dans la conversation.</Note>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Outils multimédias" href="/fr/tools/media" icon="photo-film">
+  <Card title="Outils médias" href="/fr/tools/media" icon="photo-film">
     Aperçu du pipeline de traitement audio, image et vidéo.
   </Card>
   <Card title="Configuration" href="/fr/configuration" icon="gear">
-    Référence complète de la configuration, y compris les paramètres des outils multimédias.
+    Référence complète de la configuration, y compris les paramètres des outils médias.
   </Card>
   <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
     Problèmes courants et étapes de débogage.
   </Card>
   <Card title="FAQ" href="/fr/help/faq" icon="circle-question">
-    Questions fréquentes sur la configuration de OpenClaw.
+    Questions fréquemment posées sur la configuration de OpenClaw.
   </Card>
 </CardGroup>

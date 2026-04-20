@@ -61,15 +61,15 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 ## Solutions de contournement
 
 - Utilisez Bun pour les scripts de dev (retour temporaire actuel).
-- Utilisez Node + tsc watch, puis exécutez la sortie compilée :
+- Utilisez `tsgo` pour la vérification de type du dépôt, puis exécutez la sortie construite :
 
   ```bash
-  pnpm exec tsc --watch --preserveWatchOutput
-  node --watch openclaw.mjs status
+  pnpm tsgo
+  node openclaw.mjs status
   ```
 
-- Confirmé localement : `pnpm exec tsc -p tsconfig.json` + `node openclaw.mjs status` fonctionne sur Node 25.
-- Désactiver esbuild keepNames dans le chargeur TS si possible (empêche l'insertion de la fonction utilitaire `__name`) ; tsx ne l'expose pas actuellement.
+- Note historique : `tsc` a été utilisé ici lors du débogage de ce problème Node/tsx, mais les voies de vérification de type du dépôt utilisent désormais `tsgo`.
+- Désactivez esbuild keepNames dans le chargeur TS si possible (empêche l'insertion de la fonction d'aide `__name`) ; tsx ne l'expose pas actuellement.
 - Testez Node LTS (22/24) avec `tsx` pour voir si le problème est spécifique à Node 25.
 
 ## Références
@@ -81,5 +81,5 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 ## Prochaines étapes
 
 - Reproduire sur Node 22/24 pour confirmer la régression de Node 25.
-- Testez la version nightly de `tsx` ou verrouillez une version antérieure si une régression connue existe.
-- Si cela se reproduit sur Node LTS, signalez un problème minimal en amont avec la trace de la pile `__name`.
+- Testez `tsx` nightly ou fixez une version antérieure si une régression connue existe.
+- Si cela se reproduit sur Node LTS, signalez un repro minimal en amont avec la trace de pile `__name`.

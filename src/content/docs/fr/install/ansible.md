@@ -55,11 +55,11 @@ Le playbook Ansible installe et configure :
 ## Configuration post-installation
 
 <Steps>
-  <Step title="Switch to the openclaw user">```bash sudo -i -u openclaw ```</Step>
+  <Step title="Basculer vers l'utilisateur openclaw">```bash sudo -i -u openclaw ```</Step>
   <Step title="Exécuter l'assistant de configuration">Le script post-installation vous guide dans la configuration des paramètres OpenClaw.</Step>
   <Step title="Connecter les fournisseurs de messagerie">Connectez-vous à WhatsApp, Telegram, Discord ou Signal : ```bash openclaw channels login ```</Step>
   <Step title="Vérifier l'installation">```bash sudo systemctl status openclaw sudo journalctl -u openclaw -f ```</Step>
-  <Step title="Connecter à Tailscale">Rejoignez votre maillage VPN pour un accès distant sécurisé.</Step>
+  <Step title="Se connecter à Tailscale">Rejoignez votre maillage VPN pour un accès distant sécurisé.</Step>
 </Steps>
 
 ### Commandes rapides
@@ -83,10 +83,10 @@ openclaw channels login
 
 Le déploiement utilise un modèle de défense à 4 couches :
 
-1. **Pare-feu (UFW)** -- seuls SSH (22) + Tailscale (41641/udp) sont exposés publiquement
+1. **Pare-feu (UFW)** -- seul SSH (22) + Tailscale (41641/udp) sont exposés publiquement
 2. **VPN (Tailscale)** -- passerelle accessible uniquement via le maillage VPN
-3. **Isolation Docker** -- la chaîne iptables DOCKER-USER empêche l'exposition des ports externes
-4. **Durcissement Systemd** -- NoNewPrivileges, PrivateTmp, utilisateur non privilégié
+3. **Isolement Docker** -- la chaîne iptables DOCKER-USER empêche l'exposition des ports externes
+4. **Renforcement Systemd** -- NoNewPrivileges, PrivateTmp, utilisateur non privilégié
 
 Pour vérifier votre surface d'attaque externe :
 
@@ -96,35 +96,35 @@ nmap -p- YOUR_SERVER_IP
 
 Seul le port 22 (SSH) doit être ouvert. Tous les autres services (passerelle, Docker) sont verrouillés.
 
-Docker est installé pour les sandbox d'agents (exécution d'outil isolée), et non pour exécuter la passerelle elle-même. Voir [Multi-Agent Sandbox and Tools](/fr/tools/multi-agent-sandbox-tools) pour la configuration des sandbox.
+Docker est installé pour les bac à sable d'agents (exécution d'outils isolée), et non pour exécuter la passerelle elle-même. Voir [Multi-Agent Sandbox and Tools](/fr/tools/multi-agent-sandbox-tools) pour la configuration du bac à sable.
 
 ## Installation manuelle
 
-Si vous préférez un contrôle manuel plutôt que l'automatisation :
+Si vous préférez un contrôle manuel sur l'automatisation :
 
 <Steps>
-  <Step title="Install prerequisites">
+  <Step title="Installer les prérequis">
     ```bash
     sudo apt update && sudo apt install -y ansible git
     ```
   </Step>
-  <Step title="Clone the repository">
+  <Step title="Cloner le dépôt">
     ```bash
     git clone https://github.com/openclaw/openclaw-ansible.git
     cd openclaw-ansible
     ```
   </Step>
-  <Step title="Install Ansible collections">
+  <Step title="Installer les collections Ansible">
     ```bash
     ansible-galaxy collection install -r requirements.yml
     ```
   </Step>
-  <Step title="Exécutez le playbook">
+  <Step title="Exécuter le playbook">
     ```bash
     ./run-playbook.sh
     ```
 
-    Alternativement, exécutez directement puis exécutez manuellement le script de configuration par la suite :
+    Alternativement, exécutez directement puis exécutez manuellement le script de configuration ensuite :
     ```bash
     ansible-playbook playbook.yml --ask-become-pass
     # Then run: /tmp/openclaw-setup.sh
@@ -135,7 +135,7 @@ Si vous préférez un contrôle manuel plutôt que l'automatisation :
 
 ## Mise à jour
 
-Le programme d'installation Ansible configure OpenClaw pour les mises à jour manuelles. Voir [Updating](/fr/install/updating) pour le flux de mise à jour standard.
+Le programme d'installation Ansible configure OpenClaw pour les mises à jour manuelles. Voir [Mise à jour](/fr/install/updating) pour le processus de mise à jour standard.
 
 Pour réexécuter le playbook Ansible (par exemple, pour les changements de configuration) :
 
@@ -144,7 +144,7 @@ cd openclaw-ansible
 ./run-playbook.sh
 ```
 
-Ceci est idempotent et sûr à exécuter plusieurs fois.
+Ceci est idempotent et sans risque à exécuter plusieurs fois.
 
 ## Dépannage
 
@@ -152,7 +152,7 @@ Ceci est idempotent et sûr à exécuter plusieurs fois.
   <Accordion title="Le pare-feu bloque ma connexion">
     - Assurez-vous que vous pouvez accéder via le VPN Tailscale d'abord
     - L'accès SSH (port 22) est toujours autorisé
-    - La passerelle est uniquement accessible via Tailscale par conception
+    - La passerelle n'est accessible que via Tailscale par conception
   </Accordion>
   <Accordion title="Le service ne démarre pas">
     ```bash
@@ -194,7 +194,7 @@ Ceci est idempotent et sûr à exécuter plusieurs fois.
 
 ## Configuration avancée
 
-Pour une architecture de sécurité détaillée et le dépannage, consultez le dépôt openclaw-ansible :
+Pour l'architecture de sécurité détaillée et le dépannage, consultez le dépôt openclaw-ansible :
 
 - [Architecture de sécurité](https://github.com/openclaw/openclaw-ansible/blob/main/docs/security.md)
 - [Détails techniques](https://github.com/openclaw/openclaw-ansible/blob/main/docs/architecture.md)
@@ -202,7 +202,7 @@ Pour une architecture de sécurité détaillée et le dépannage, consultez le d
 
 ## Connexes
 
-- [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) -- guide complet de déploiement
-- [Docker](/fr/install/docker) -- configuration de passerelle conteneurisée
-- [Sandboxing](/fr/gateway/sandboxing) -- configuration du bac à sable de l'agent
-- [Multi-Agent Sandbox and Tools](/fr/tools/multi-agent-sandbox-tools) -- isolement par agent
+- [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) -- guide de déploiement complet
+- [Docker](/fr/install/docker) -- configuration de passerene conteneurisée
+- [Bac à sable (Sandboxing)](/fr/gateway/sandboxing) -- configuration du bac à sable de l'agent
+- [Bac à sable multi-agent et outils](/fr/tools/multi-agent-sandbox-tools) -- isolement par agent

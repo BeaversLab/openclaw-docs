@@ -77,7 +77,7 @@ Se puede acceder a los modelos de Arcee AI directamente a través de la platafor
 ## Configuración no interactiva
 
 <Tabs>
-  <Tab title="Direct (Arcee platform)">
+  <Tab title="Directo (plataforma Arcee)">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -100,17 +100,17 @@ Se puede acceder a los modelos de Arcee AI directamente a través de la platafor
 
 OpenClaw actualmente incluye este catálogo de Arcee:
 
-| Referencia del modelo          | Nombre                 | Entrada | Contexto | Costo (entrada/salida por 1M) | Notas                                          |
-| ------------------------------ | ---------------------- | ------- | -------- | ----------------------------- | ---------------------------------------------- |
-| `arcee/trinity-large-thinking` | Trinity Large Thinking | texto   | 256K     | $0.25 / $0.90                 | Modelo predeterminado; razonamiento habilitado |
-| `arcee/trinity-large-preview`  | Trinity Large Preview  | texto   | 128K     | $0.25 / $1.00                 | Uso general; 400B parámetros, 13B activos      |
-| `arcee/trinity-mini`           | Trinity Mini 26B       | texto   | 128K     | $0.045 / $0.15                | Rápido y rentable; llamada a funciones         |
+| Ref. de modelo                 | Nombre                 | Entrada | Contexto | Coste (ent/sal por 1M) | Notas                                           |
+| ------------------------------ | ---------------------- | ------- | -------- | ---------------------- | ----------------------------------------------- |
+| `arcee/trinity-large-thinking` | Trinity Large Thinking | texto   | 256K     | $0.25 / $0.90          | Modelo predeterminado; razonamiento activado    |
+| `arcee/trinity-large-preview`  | Trinity Large Preview  | texto   | 128K     | $0.25 / $1.00          | Propósito general; 400B parámetros, 13B activos |
+| `arcee/trinity-mini`           | Trinity Mini 26B       | texto   | 128K     | $0.045 / $0.15         | Rápido y rentable; llamada a funciones          |
 
-<Tip>La configuración de inicio establece `arcee/trinity-large-thinking` como el modelo predeterminado.</Tip>
+<Tip>El ajuste preestablecido de incorporación establece `arcee/trinity-large-thinking` como modelo predeterminado.</Tip>
 
 ## Funciones admitidas
 
-| Función                                        | Admitido                    |
+| Función                                        | Admitida                    |
 | ---------------------------------------------- | --------------------------- |
 | Transmisión (Streaming)                        | Sí                          |
 | Uso de herramientas / llamada a funciones      | Sí                          |
@@ -119,16 +119,16 @@ OpenClaw actualmente incluye este catálogo de Arcee:
 
 <AccordionGroup>
   <Accordion title="Nota sobre el entorno">
-    Si Gateway se ejecuta como demonio (launchd/systemd), asegúrese de que `ARCEEAI_API_KEY`
+    Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `ARCEEAI_API_KEY`
     (o `OPENROUTER_API_KEY`) esté disponible para ese proceso (por ejemplo, en
     `~/.openclaw/.env` o mediante `env.shellEnv`).
   </Accordion>
 
-  <Accordion title="Enrutamiento de OpenRouter">
-    Cuando se usan modelos de Arcee a través de OpenRouter, se aplican las mismas referencias de modelo `arcee/*`.
-    OpenClaw maneja el enrutamiento de forma transparente según su elección de autenticación. Consulte la
-    [documentación del proveedor OpenRouter](/es/providers/openrouter) para obtener detalles de configuración
-    específicos de OpenRouter.
+  <Accordion title="Enrutamiento OpenRouter">
+    Al utilizar los modelos de Arcee a través de OpenRouter, se aplican las mismas referencias de modelo `arcee/*`.
+    OpenClaw gestiona el enrutamiento de forma transparente según su elección de autenticación. Consulte la
+    [documentación del proveedor OpenRouter](/es/providers/openrouter) para obtener detalles de
+    configuración específicos de OpenRouter.
   </Accordion>
 </AccordionGroup>
 
@@ -136,9 +136,9 @@ OpenClaw actualmente incluye este catálogo de Arcee:
 
 <CardGroup cols={2}>
   <Card title="OpenRouter" href="/es/providers/openrouter" icon="shuffle">
-    Acceda a modelos de Arcee y muchos más a través de una sola clave de API.
+    Acceda a los modelos de Arcee y muchos más con una sola clave de API.
   </Card>
   <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
-    Elegir proveedores, referencias de modelo y comportamiento de conmutación por error.
+    Elegir proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
 </CardGroup>

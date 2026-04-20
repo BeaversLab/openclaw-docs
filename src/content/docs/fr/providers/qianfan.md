@@ -23,8 +23,8 @@ endpoint et une seule clé API. Elle est compatible avec OpenAI, donc la plupart
 <Steps>
   <Step title="Créer un compte Baidu Cloud">Inscrivez-vous ou connectez-vous sur la [Qianfan Console](https://console.bce.baidu.com/qianfan/ais/console/apiKey) et assurez-vous d'avoir activé l'accès à l'API Qianfan.</Step>
   <Step title="Générer une clé API">Créez une nouvelle application ou sélectionnez une application existante, puis générez une clé API. Le format de la clé est `bce-v3/ALTAK-...`.</Step>
-  <Step title="Lancer l'onboarding">```bash openclaw onboard --auth-choice qianfan-api-key ```</Step>
-  <Step title="Vérifier que le modèle est disponible">```bash openclaw models list --provider qianfan ```</Step>
+  <Step title="Exécuter l'onboarding">```bash openclaw onboard --auth-choice qianfan-api-key ```</Step>
+  <Step title="Vérifier que le model est disponible">```bash openclaw models list --provider qianfan ```</Step>
 </Steps>
 
 ## Modèles disponibles

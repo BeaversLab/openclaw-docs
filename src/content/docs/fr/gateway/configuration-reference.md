@@ -945,21 +945,21 @@ Contrôle quand les fichiers d'amorçage de l'espace de travail sont injectés d
 
 ### `agents.defaults.bootstrapMaxChars`
 
-Nombre maximum de caractères par fichier d'amorçage de l'espace de travail avant troncature. Par défaut : `20000`.
+Nombre maximal de caractères par fichier d'amorçage d'espace de travail avant troncature. Par défaut : `12000`.
 
 ```json5
 {
-  agents: { defaults: { bootstrapMaxChars: 20000 } },
+  agents: { defaults: { bootstrapMaxChars: 12000 } },
 }
 ```
 
 ### `agents.defaults.bootstrapTotalMaxChars`
 
-Nombre total maximum de caractères injectés dans tous les fichiers d'amorçage de l'espace de travail. Par défaut : `150000`.
+Nombre total maximal de caractères injectés dans tous les fichiers d'amorçage d'espace de travail. Par défaut : `60000`.
 
 ```json5
 {
-  agents: { defaults: { bootstrapTotalMaxChars: 150000 } },
+  agents: { defaults: { bootstrapTotalMaxChars: 60000 } },
 }
 ```
 

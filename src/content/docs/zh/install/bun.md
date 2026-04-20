@@ -27,7 +27,7 @@ Bun 是一个可选的本地运行时，用于直接运行 TypeScript（`bun run
     ```
 
   </Step>
-  <Step title="构建和测试">
+  <Step title="构建并测试">
     ```sh
     bun run build
     bun run vitest run

@@ -61,16 +61,16 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 ## 解決方法
 
 - 使用 Bun 執行開發腳本（目前暫時回退）。
-- 使用 Node + tsc watch，然後執行編譯輸出：
+- 使用 `tsgo` 進行 repo 型別檢查，然後執行建置輸出：
 
   ```bash
-  pnpm exec tsc --watch --preserveWatchOutput
-  node --watch openclaw.mjs status
+  pnpm tsgo
+  node openclaw.mjs status
   ```
 
-- 已在本地確認：`pnpm exec tsc -p tsconfig.json` + `node openclaw.mjs status` 可在 Node 25 上運作。
-- 如果可能的話，在 TS 載入器中停用 esbuild keepNames（這可以防止插入 `__name` 輔助函數）；tsx 目前未公開此選項。
-- 使用 `tsx` 測試 Node LTS (22/24)，以查看問題是否僅限於 Node 25。
+- 歷史記錄：除錯此 Node/tsx 問題時曾在此處使用 `tsc`，但 repo 型別檢查通道現在使用 `tsgo`。
+- 如果可能的話，在 TS 載入器中停用 esbuild keepNames（防止插入 `__name` helper）；tsx 目前未公開此選項。
+- 使用 `tsx` 測試 Node LTS (22/24)，以查看該問題是否特定於 Node 25。
 
 ## 參考資料
 
@@ -81,5 +81,5 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 ## 後續步驟
 
 - 在 Node 22/24 上重現問題，以確認是否為 Node 25 的回歸問題。
-- 測試 `tsx` 每夜版，如果存在已知的回歸問題，請固定到較早的版本。
-- 如果在 Node LTS 上重現，請向上遊提交帶有 `__name` 堆疊追蹤的最小重現案例。
+- 測試 `tsx` 每夜版本或如果存在已知的迴歸，則鎖定到較早版本。
+- 如果在 Node LTS 上重現，請使用 `__name` 堆疊追蹤向上游提交最小重現案例。

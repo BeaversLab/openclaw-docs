@@ -93,7 +93,7 @@ fnm use 24
 Cela signifie presque toujours que le répertoire bin global de npm n'est pas dans votre PATH.
 
 <Steps>
-  <Step title="Find your global npm prefix">
+  <Step title="Trouvez votre préfixe global npm">
     ```bash
     npm prefix -g
     ```
@@ -118,7 +118,7 @@ Cela signifie presque toujours que le répertoire bin global de npm n'est pas da
         Ouvrez ensuite un nouveau terminal (ou exécutez `rehash` dans zsh / `hash -r` dans bash).
       </Tab>
       <Tab title="Windows">
-        Ajoutez la sortie de `npm prefix -g` à votre variable d'environnement PATH système via Paramètres → Système → Variables d'environnement.
+        Ajoutez la sortie de `npm prefix -g` à votre PATH système via Paramètres → Système → Variables d'environnement.
       </Tab>
     </Tabs>
 
@@ -127,7 +127,7 @@ Cela signifie presque toujours que le répertoire bin global de npm n'est pas da
 
 ### Erreurs de permission sur `npm install -g` (Linux)
 
-Si vous voyez des erreurs `EACCES`, modifiez le préfixe global de npm pour pointer vers un répertoire accessible en écriture par l'utilisateur :
+Si vous voyez des erreurs `EACCES`, changez le préfixe global de npm pour un dossier accessible en écriture par l'utilisateur :
 
 ```bash
 mkdir -p "$HOME/.npm-global"
@@ -140,5 +140,5 @@ Ajoutez la ligne `export PATH=...` à votre `~/.bashrc` ou `~/.zshrc` pour rendr
 ## Connexes
 
 - [Vue d'ensemble de l'installation](/fr/install) — toutes les méthodes d'installation
-- [Mise à jour](/fr/install/updating) — tenir OpenClaw à jour
+- [Mises à jour](/fr/install/updating) — garder OpenClaw à jour
 - [Getting Started](/fr/start/getting-started) — premiers pas après l'installation

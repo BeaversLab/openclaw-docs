@@ -15,7 +15,7 @@ asistente y dejar que el agente se inicie automáticamente.
 Para obtener una descripción general de las rutas de incorporación, consulte [Información general sobre la incorporación](/es/start/onboarding-overview).
 
 <Steps>
-<Step title="Approve macOS warning">
+<Step title="Aprobar advertencia de macOS">
 <Frame>
 <img src="/assets/macos-onboarding/01-macos-warning.jpeg" alt="" />
 </Frame>
@@ -32,10 +32,10 @@ Para obtener una descripción general de las rutas de incorporación, consulte [
 
 Modelo de confianza de seguridad:
 
-- De forma predeterminada, OpenClaw es un agente personal: un límite de un operador de confianza.
-- Las configuraciones compartidas/multiusuario requieren bloqueo (dividir los límites de confianza, mantener el acceso a las herramientas al mínimo y seguir [Seguridad](/es/gateway/security)).
-- La incorporación local ahora establece de forma predeterminada las nuevas configuraciones en `tools.profile: "coding"` para que las configuraciones locales nuevas mantengan las herramientas de sistema de archivos/ejecución sin forzar el perfil `full` sin restricciones.
-- Si se habilitan hooks/webhooks u otras fuentes de contenido que no son de confianza, utilice un nivel de modelo moderno y sólido y mantenga una política estricta de herramientas y sandbox.
+- De forma predeterminada, OpenClaw es un agente personal: un límite de operador de confianza.
+- Las configuraciones compartidas/multiusuario requieren bloqueo (separar límites de confianza, mantener el acceso a las herramientas al mínimo y seguir [Seguridad](/es/gateway/security)).
+- La integración local ahora establece de forma predeterminada las nuevas configuraciones en `tools.profile: "coding"` para que las configuraciones locales nuevas mantengan las herramientas de sistema de archivos/ejecución sin forzar el perfil `full` sin restricciones.
+- Si están habilitados los hooks/webhooks u otras fuentes de contenido que no son de confianza, use una capa de modelo moderna y sólida y mantenga una política de herramientas/aislamiento estricta.
 
 </Step>
 <Step title="Local vs. Remoto">
@@ -45,16 +45,18 @@ Modelo de confianza de seguridad:
 
 ¿Dónde se ejecuta el **Gateway**?
 
-- **Este Mac (solo local):** la incorporación puede configurar la autenticación y escribir las credenciales localmente.
-- **Remoto (a través de SSH/Tailnet):** la incorporación **no** configura la autenticación local; las credenciales deben existir en el host de la puerta de enlace.
+- **Esta Mac (Solo local):** la integración puede configurar la autenticación y escribir las credenciales
+  localmente.
+- **Remoto (a través de SSH/Tailnet):** la integración **no** configura la autenticación local;
+  las credenciales deben existir en el host de la puerta de enlace.
 - **Configurar más tarde:** omita la configuración y deje la aplicación sin configurar.
 
 <Tip>
-**Consejo de autenticación de Gateway:**
+**Sugerencia de autenticación de Gateway:**
 
-- El asistente ahora genera un **token** incluso para el bucle invertido, por lo que los clientes WS locales deben autenticarse.
-- Si deshabilita la autenticación, cualquier proceso local puede conectarse; úselo solo en máquinas de total confianza.
-- Use un **token** para el acceso a varias máquinas o enlaces que no sean de bucle invertido.
+- El asistente ahora genera un **token** incluso para el bucle local, por lo que los clientes de WebSocket locales deben autenticarse.
+- Si deshabilita la autenticación, cualquier proceso local puede conectarse; úselo solo en equipos de total confianza.
+- Use un **token** para el acceso a varias máquinas o enlaces que no sean de bucle local.
 
 </Tip>
 </Step>
@@ -63,7 +65,7 @@ Modelo de confianza de seguridad:
 <img src="/assets/macos-onboarding/05-permissions.png" alt="" />
 </Frame>
 
-La incorporación solicita los permisos TCC necesarios para:
+La integración solicita los permisos TCC necesarios para:
 
 - Automatización (AppleScript)
 - Notificaciones
@@ -77,11 +79,14 @@ La incorporación solicita los permisos TCC necesarios para:
 </Step>
 <Step title="CLI">
   <Info>Este paso es opcional</Info>
-  La aplicación puede instalar la `openclaw` CLI global a través de npm, pnpm o bun.
-  Prefiere npm primero, luego pnpm, y luego bun si ese es el único gestor de paquetes detectado.
+  La aplicación puede instalar la CLI global `openclaw` a través de npm, pnpm o bun.
+  Prefiere npm primero, luego pnpm y luego bun si ese es el único gestor de paquetes detectado.
   Para el tiempo de ejecución de Gateway, Node sigue siendo la ruta recomendada.
 </Step>
 <Step title="Chat de incorporación (sesión dedicada)">
-  Después de la configuración, la aplicación abre una sesión de chat de incorporación dedicada para que el agente pueda presentarse y guiar los siguientes pasos. Esto mantiene la orientación de la primera ejecución separada de su conversación normal. Consulte [Inicialización](/es/start/bootstrapping) para obtener información sobre lo que sucede en el host de la puerta de enlace durante la primera ejecución del agente.
+  Después de la configuración, la aplicación abre una sesión de chat de incorporación dedicada para que el agente pueda
+  presentarse y guiar los siguientes pasos. Esto mantiene la orientación de la primera ejecución separada
+  de tu conversación normal. Consulta [Inicialización](/es/start/bootstrapping) para
+  ver lo que sucede en el host de la puerta de enlace durante la primera ejecución del agente.
 </Step>
 </Steps>

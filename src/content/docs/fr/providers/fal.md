@@ -20,12 +20,12 @@ OpenClaw est livré avec un fournisseur `fal` intégré pour la génération d'i
 ## Getting started
 
 <Steps>
-  <Step title="Set the API key">
+  <Step title="Définir la clé d'API">
     ```bash
     openclaw onboard --auth-choice fal-api-key
     ```
   </Step>
-  <Step title="Set a default image model">
+  <Step title="Définir un modèle d'image par défaut">
     ```json5
     {
       agents: {
@@ -42,20 +42,20 @@ OpenClaw est livré avec un fournisseur `fal` intégré pour la génération d'i
 
 ## Génération d'images
 
-Le fournisseur de génération d'images `fal` intégré est défini par défaut sur
+Le provider de génération d'images intégré `fal` a par défaut
 `fal/fal-ai/flux/dev`.
 
-| Fonctionnalité          | Valeur                       |
+| Capacité                | Valeur                       |
 | ----------------------- | ---------------------------- |
 | Max images              | 4 par requête                |
-| Mode d'édition          | Activé, 1 image de référence |
+| Mode édition            | Activé, 1 image de référence |
 | Remplacements de taille | Pris en charge               |
 | Format d'image          | Pris en charge               |
 | Résolution              | Pris en charge               |
 
-<Warning>Le point de terminaison d'édition d'images fal ne prend **pas** en charge les remplacements `aspectRatio`.</Warning>
+<Warning>Le point de terminaison d'édition d'image fal ne prend **pas** en charge les remplacements `aspectRatio`.</Warning>
 
-Pour utiliser fal comme fournisseur d'images par défaut :
+Pour utiliser fal comme provider d'images par défaut :
 
 ```json5
 {
@@ -71,21 +71,21 @@ Pour utiliser fal comme fournisseur d'images par défaut :
 
 ## Génération de vidéos
 
-Le fournisseur de génération de vidéos `fal` intégré est défini par défaut sur
+Le provider de génération de vidéos intégré `fal` a par défaut
 `fal/fal-ai/minimax/video-01-live`.
 
-| Fonctionnalité | Valeur                                                                                     |
-| -------------- | ------------------------------------------------------------------------------------------ |
-| Modes          | Texte vers vidéo, référence à image unique                                                 |
-| Runtime        | Flux de soumission/statut/résultat géré par file d'attente pour les tâches de longue durée |
+| Capacité          | Valeur                                                                                 |
+| ----------------- | -------------------------------------------------------------------------------------- |
+| Modes             | Texte vers vidéo, référence image unique                                               |
+| Durée d'exécution | Flux de soumission/statut/résultat basé sur une file d'attente pour les tâches longues |
 
 <AccordionGroup>
   <Accordion title="Modèles vidéo disponibles">
-    **HeyGen video-agent :**
+    **HeyGen video-agent:**
 
     - `fal/fal-ai/heygen/v2/video-agent`
 
-    **Seedance 2.0 :**
+    **Seedance 2.0:**
 
     - `fal/bytedance/seedance-2.0/fast/text-to-video`
     - `fal/bytedance/seedance-2.0/fast/image-to-video`
@@ -129,12 +129,12 @@ Le fournisseur de génération de vidéos `fal` intégré est défini par défau
 
 <CardGroup cols={2}>
   <Card title="Génération d'images" href="/fr/tools/image-generation" icon="image">
-    Paramètres de l'outil d'image partagés et sélection du fournisseur.
+    Paramètres de l'outil d'image partagés et sélection du provider.
   </Card>
   <Card title="Génération vidéo" href="/fr/tools/video-generation" icon="video">
-    Paramètres partagés de l'outil vidéo et sélection du provider.
+    Paramètres de l'outil vidéo partagés et sélection du provider.
   </Card>
   <Card title="Référence de configuration" href="/fr/gateway/configuration-reference#agent-defaults" icon="gear">
-    Valeurs par défaut de l'agent, y compris la sélection de model d'image et de vidéo.
+    Valeurs par défaut de l'agent, y compris la sélection de modèle d'image et de vidéo.
   </Card>
 </CardGroup>

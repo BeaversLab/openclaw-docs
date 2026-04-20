@@ -29,7 +29,7 @@ read_when:
     Cela stocke votre clé Fireworks dans la configuration d'OpenClaw et définit le modèle de démarrage Fire Pass par défaut.
 
   </Step>
-  <Step title="Vérifier que le modèle est disponible">
+  <Step title="Vérifiez que le modèle est disponible">
     ```bash
     openclaw models list --provider fireworks
     ```

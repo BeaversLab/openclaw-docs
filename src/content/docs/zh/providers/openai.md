@@ -211,7 +211,7 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
 | `"off"`             | 仅使用基础 OpenClaw 提示 |
 
 <Tabs>
-  <Tab title="Config">
+  <Tab title="配置">
     ```json5
     {
       plugins: {
@@ -229,13 +229,13 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
   </Tab>
 </Tabs>
 
-<Tip>值在运行时不区分大小写，因此 `"Off"` 和 `"off"` 都会禁用覆盖。</Tip>
+<Tip>值在运行时不区分大小写，因此 `"Off"` 和 `"off"` 都会禁用覆盖层。</Tip>
 
-## 语音和语言
+## 语音和语音合成
 
 <AccordionGroup>
   <Accordion title="语音合成 (TTS)">
-    捆绑的 `openai` 插件为 `messages.tts` 表面注册了语音合成功能。
+    内置的 `openai` 插件为 `messages.tts` 表面注册了语音合成功能。
 
     | 设置 | 配置路径 | 默认值 |
     |---------|------------|---------|
@@ -243,7 +243,7 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
     | 语音 | `messages.tts.providers.openai.voice` | `coral` |
     | 语速 | `messages.tts.providers.openai.speed` | (未设置) |
     | 指令 | `messages.tts.providers.openai.instructions` | (未设置，仅限 `gpt-4o-mini-tts`) |
-    | 格式 | `messages.tts.providers.openai.responseFormat` | 语音笔记为 `opus`，文件为 `mp3` |
+    | 格式 | `messages.tts.providers.openai.responseFormat` | 语音备注为 `opus`，文件为 `mp3` |
     | API 密钥 | `messages.tts.providers.openai.apiKey` | 回退到 `OPENAI_API_KEY` |
     | 基础 URL | `messages.tts.providers.openai.baseUrl` | `https://api.openai.com/v1` |
 
@@ -262,15 +262,15 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
     ```
 
     <Note>
-    设置 `OPENAI_TTS_BASE_URL` 以覆盖 TTS 基础 URL，而不会影响聊天 API 端点。
+    设置 `OPENAI_TTS_BASE_URL` 以覆盖 TTS 基础 URL，而不影响聊天 API 端点。
     </Note>
 
   </Accordion>
 
-  <Accordion title="实时转录">
+  <Accordion title="Realtime transcription">
     捆绑的 `openai` 插件为 Voice Call 插件注册实时转录。
 
-    | 设置 | 配置路径 | 默认值 |
+    | Setting | Config path | Default |
     |---------|------------|---------|
     | Model | `plugins.entries.voice-call.config.streaming.providers.openai.model` | `gpt-4o-transcribe` |
     | Silence duration | `...openai.silenceDurationMs` | `800` |
@@ -278,15 +278,15 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
     | API key | `...openai.apiKey` | Falls back to `OPENAI_API_KEY` |
 
     <Note>
-    使用 WebSocket 连接到 `wss://api.openai.com/v1/realtime` 并采用 G.711 u-law 音频格式。
+    Uses a WebSocket connection to `wss://api.openai.com/v1/realtime` with G.711 u-law audio.
     </Note>
 
   </Accordion>
 
-  <Accordion title="实时语音">
+  <Accordion title="Realtime voice">
     捆绑的 `openai` 插件为 Voice Call 插件注册实时语音。
 
-    | 设置 | 配置路径 | 默认值 |
+    | Setting | Config path | Default |
     |---------|------------|---------|
     | Model | `plugins.entries.voice-call.config.realtime.providers.openai.model` | `gpt-realtime` |
     | Voice | `...openai.voice` | `alloy` |
@@ -296,7 +296,7 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
     | API key | `...openai.apiKey` | Falls back to `OPENAI_API_KEY` |
 
     <Note>
-    通过 `azureEndpoint` 和 `azureDeployment` 配置键支持 Azure OpenAI。支持双向工具调用。使用 G.711 u-law 音频格式。
+    Supports Azure OpenAI via `azureEndpoint` and `azureDeployment` config keys. Supports bidirectional 工具 calling. Uses G.711 u-law audio format.
     </Note>
 
   </Accordion>
@@ -305,18 +305,18 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
 ## 高级配置
 
 <AccordionGroup>
-  <Accordion title="Transport (WebSocket vs SSE)">
-    OpenClaw 优先使用 WebSocket，回退方案为 SSE (`"auto"`)，这同时适用于 `openai/*` 和 `openai-codex/*`。
+  <Accordion title="传输方式（WebSocket 与 SSE）">
+    OpenClaw 优先使用 WebSocket，并将 SSE 作为回退方案 (`"auto"`)，这适用于 `openai/*` 和 `openai-codex/*`。
 
-    在 `"auto"` 模式下，OpenClaw:
+    在 `"auto"` 模式下，OpenClaw 会：
     - 在回退到 SSE 之前重试一次早期的 WebSocket 失败
     - 失败后，将 WebSocket 标记为降级状态约 60 秒，并在冷却期间使用 SSE
-    - 为重试和重新连接附加稳定的会话 和轮次 标识头
-    - 在不同的传输变体之间统一使用计数器 (`input_tokens` / `prompt_tokens`)
+    - 附加稳定的会话和轮次标识头信息，以便进行重试和重新连接
+    - 跨不同的传输方式标准化使用计数器 (`input_tokens` / `prompt_tokens`)
 
-    | Value | Behavior |
+    | 值 | 行为 |
     |-------|----------|
-    | `"auto"` (默认) | WebSocket 优先，SSE 回退 |
+    | `"auto"` (默认) | 优先 WebSocket，SSE 回退 |
     | `"sse"` | 强制仅使用 SSE |
     | `"websocket"` | 强制仅使用 WebSocket |
 
@@ -334,13 +334,13 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
     }
     ```
 
-    相关 OpenAI 文档:
-    - [Realtime API with WebSocket](https://platform.openai.com/docs/guides/realtime-websocket)
-    - [Streaming API responses (SSE)](https://platform.openai.com/docs/guides/streaming-responses)
+    相关 OpenAI 文档：
+    - [基于 WebSocket 的实时 API](https://platform.openai.com/docs/guides/realtime-websocket)
+    - [API 流式响应 (SSE)](https://platform.openai.com/docs/guides/streaming-responses)
 
   </Accordion>
 
-  <Accordion title="WebSocket warm-up">
+  <Accordion title="WebSocket 预热">
     OpenClaw 默认为 `openai/*` 启用 WebSocket 预热，以减少首轮延迟。
 
     ```json5
@@ -360,13 +360,13 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
 
   </Accordion>
 
-  <Accordion title="Fast mode">
-    OpenClaw 为 `openai/*` 和 `openai-codex/*` 暴露了一个共享的快速模式开关:
+  <Accordion title="快速模式">
+    OpenClaw 为 `openai/*` 和 `openai-codex/*` 提供了一个共享的快速模式切换开关：
 
-    - **Chat/UI:** `/fast status|on|off`
-    - **Config:** `agents.defaults.models["<provider>/<model>"].params.fastMode`
+    - **聊天/UI：** `/fast status|on|off`
+    - **配置：** `agents.defaults.models["<provider>/<model>"].params.fastMode`
 
-    启用后，OpenClaw 将快速模式映射到 OpenAI 优先处理 (`service_tier = "priority"`)。现有的 `service_tier` 值将被保留，且快速模式不会重写 `reasoning` 或 `text.verbosity`。
+    启用后，OpenClaw 会将快速模式映射到 OpenAI 的优先处理 (`service_tier = "priority"`)。现有的 `service_tier` 值将被保留，且快速模式不会重写 `reasoning` 或 `text.verbosity`。
 
     ```json5
     {
@@ -382,13 +382,13 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
     ```
 
     <Note>
-    会话 覆盖优先于配置。在 Sessions UI 中清除会话覆盖将使会话返回到配置的默认值。
+    会话覆盖优先于配置。在会话 UI 中清除会话覆盖后，会话将恢复为配置的默认值。
     </Note>
 
   </Accordion>
 
   <Accordion title="优先处理 (service_tier)">
-    OpenAI 的 API 通过 `service_tier` 暴露了优先处理功能。在 OpenClaw 中按模型进行设置：
+    OpenAI 的 API 通过 `service_tier` 暴露了优先处理功能。在 OpenClaw 中为每个模型进行设置：
 
     ```json5
     {
@@ -406,21 +406,21 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
     支持的值：`auto`、`default`、`flex`、`priority`。
 
     <Warning>
-    `serviceTier` 仅转发到原生 OpenAI 端点 (`api.openai.com`) 和原生 Codex 端点 (`chatgpt.com/backend-api`)。如果您通过代理路由任一提供商，OpenClaw 将保持 `service_tier` 不变。
+    `serviceTier` 仅会转发到原生 OpenAI 端点 (`api.openai.com`) 和原生 Codex 端点 (`chatgpt.com/backend-api`)。如果您通过代理路由任一提供商，OpenClaw 将不会改动 `service_tier`。
     </Warning>
 
   </Accordion>
 
-  <Accordion title="服务端压缩 (Responses API)">
-    对于直接的 OpenAI Responses 模型 (位于 `api.openai.com` 上的 `openai/*`)，OpenClaw 会自动启用服务端压缩：
+  <Accordion title="服务器端压缩 (Responses API)">
+    对于直接连接的 OpenAI Responses 模型 (`openai/*` 于 `api.openai.com` 上)，OpenClaw 会自动启用服务器端压缩：
 
-    - 强制 `store: true` (除非模型兼容性设置了 `supportsStore: false`)
+    - 强制启用 `store: true`（除非模型兼容性设置了 `supportsStore: false`）
     - 注入 `context_management: [{ type: "compaction", compact_threshold: ... }]`
-    - 默认 `compact_threshold`：`contextWindow` 的 70% (如果不可用则为 `80000`)
+    - 默认 `compact_threshold`：`contextWindow` 的 70%（如果不可用则为 `80000`）
 
     <Tabs>
       <Tab title="显式启用">
-        对于兼容的端点（例如 Azure OpenAI Responses）非常有用：
+        适用于兼容的端点，例如 Azure OpenAI Responses：
 
         ```json5
         {
@@ -472,13 +472,13 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
     </Tabs>
 
     <Note>
-    `responsesServerCompaction` 仅控制 `context_management` 的注入。直接的 OpenAI Responses 模型仍然会强制 `store: true`，除非兼容性设置了 `supportsStore: false`。
+    `responsesServerCompaction` 仅控制 `context_management` 的注入。直接的 OpenAI Responses 模型仍会强制启用 `store: true`，除非兼容性设置了 `supportsStore: false`。
     </Note>
 
   </Accordion>
 
   <Accordion title="Strict-agentic GPT mode">
-    对于在 `openai/*` 和 `openai-codex/*` 上运行的 GPT-5 系列，OpenClaw 可以使用更严格的嵌入式执行合约：
+    对于在 `openai/*` 和 `openai-codex/*` 上运行的 GPT-5 系列，OpenClaw 可以使用更严格的嵌入式执行协定：
 
     ```json5
     {
@@ -490,37 +490,37 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
     }
     ```
 
-    启用 `strict-agentic` 后，OpenClaw 会：
-    - 当有工具动作可用时，不再将仅包含计划的轮次视为成功的进度
-    - 使用“立即行动”引导重试该轮次
-    - 为重要工作自动启用 `update_plan`
-    - 如果模型持续计划而不行动，将显示明确的阻塞状态
+    使用 `strict-agentic` 时，OpenClaw：
+    - 当工具操作可用时，不再将仅计划的轮次视为成功的进度
+    - 使用立即行动的引导重试该轮次
+    - 为实质工作自动启用 `update_plan`
+    - 如果模型持续计划而不采取行动，则显示明确的阻塞状态
 
     <Note>
-    仅适用于 OpenAI 和 Codex GPT-5 系列运行。其他提供商和较旧的模型系列保持默认行为。
+    仅限于 OpenAI 和 Codex GPT-5 系列运行。其他提供商和较旧的模型系列保持默认行为。
     </Note>
 
   </Accordion>
 
   <Accordion title="Native vs OpenAI-compatible routes">
-    OpenClaw 对直接连接的 OpenAI、Codex 和 Azure OpenAI 端点的处理方式与通用 OpenAI 兼容的 `/v1` 代理不同：
+    OpenClaw 对直接 OpenAI、Codex 和 Azure OpenAI 端点的处理方式不同于通用的 OpenAI 兼容 `/v1` 代理：
 
-    **原生路由**（`openai/*`、`openai-codex/*`、Azure OpenAI）：
-    - 当明确禁用推理时，保持 `reasoning: { effort: "none" }` 完整
-    - 默认将工具架构设为严格模式
+    **Native routes** (`openai/*`, `openai-codex/*`, Azure OpenAI):
+    - 在明确禁用推理时保持 `reasoning: { effort: "none" }` 完整
+    - 默认将工具架构设置为严格模式
     - 仅在经过验证的原生主机上附加隐藏的归属标头
-    - 保留 OpenAI 独有的请求整形（`service_tier`、`store`、reasoning-compat、prompt-cache hints）
+    - 保持 OpenAI 专用的请求整形 (`service_tier`, `store`, reasoning-compat, prompt-cache hints)
 
-    **代理/兼容路由：**
+    **Proxy/compatible routes:**
     - 使用较宽松的兼容行为
-    - 不强制使用严格的工具架构或仅限原生的标头
+    - 不强制执行严格的工具架构或仅限原生的标头
 
-    Azure OpenAI 使用原生传输和兼容行为，但不会接收隐藏的归属标头。
+    Azure OpenAI 使用原生传输和兼容行为，但不接收隐藏的归属标头。
 
   </Accordion>
 </AccordionGroup>
 
-## 相关内容
+## 相关
 
 <CardGroup cols={2}>
   <Card title="Model selection" href="/zh/concepts/model-providers" icon="layers">
@@ -530,9 +530,9 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
     共享的图像工具参数和提供商选择。
   </Card>
   <Card title="视频生成" href="/zh/tools/video-generation" icon="video">
-    共享的 video 工具参数和提供商选择。
+    共享视频工具参数和提供商选择。
   </Card>
-  <Card title="OAuth 和 auth" href="/zh/gateway/authentication" icon="key">
-    身份验证详细信息和凭据重用规则。
+  <Card title="OAuth 和认证" href="/zh/gateway/authentication" icon="key">
+    认证详细信息和凭据重用规则。
   </Card>
 </CardGroup>

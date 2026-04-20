@@ -29,7 +29,7 @@ OpenCode Go 是 [OpenCode](/zh/providers/opencode) 中的 Go 目录。
 ## 入门指南
 
 <Tabs>
-  <Tab title="Interactive">
+  <Tab title="交互式">
     <Steps>
       <Step title="Run onboarding">
         ```bash
@@ -51,12 +51,12 @@ OpenCode Go 是 [OpenCode](/zh/providers/opencode) 中的 Go 目录。
 
   <Tab title="非交互式">
     <Steps>
-      <Step title="直接传递密钥">
+      <Step title="Pass the key directly">
         ```bash
         openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
         ```
       </Step>
-      <Step title="验证模型可用性">
+      <Step title="Verify models are available">
         ```bash
         openclaw models list --provider opencode-go
         ```
@@ -78,26 +78,26 @@ OpenCode Go 是 [OpenCode](/zh/providers/opencode) 中的 Go 目录。
 
 <AccordionGroup>
   <Accordion title="路由行为">
-    当模型引用使用
-    `opencode-go/...` 时，OpenClaw 会自动处理按模型路由。无需额外的提供商配置。
+    当模型引用使用 `opencode-go/...` 时，OpenClaw 会自动处理每个模型的路由。不需要额外的提供商配置。
   </Accordion>
 
-<Accordion title="运行时引用约定">运行时引用保持明确：Zen 为 `opencode/...`，Go 为 `opencode-go/...`。 这可以确保上游按模型路由在两个目录中保持正确。</Accordion>
+<Accordion title="运行时引用约定">运行时引用保持显式：Zen 使用 `opencode/...`，Go 使用 `opencode-go/...`。 这样可以确保两个目录之间的上游每个模型路由保持正确。</Accordion>
 
-  <Accordion title="共享凭证">
-    Zen 和 Go 目录使用相同的 `OPENCODE_API_KEY`。在设置期间输入密钥会为两个运行时提供商存储凭证。
+  <Accordion title="共享凭据">
+    Zen 和 Go 目录使用相同的 `OPENCODE_API_KEY`。在设置期间输入密钥
+    会为两个运行时提供商存储凭据。
   </Accordion>
 </AccordionGroup>
 
-<Tip>请参阅 [OpenCode](/zh/providers/opencode) 以了解共享新手引导概述以及完整的 Zen + Go 目录参考。</Tip>
+<Tip>有关共享的新手引导概述以及完整的 Zen + Go 目录参考，请参阅 [OpenCode](/zh/providers/opencode)。</Tip>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="OpenCode (parent)" href="/zh/providers/opencode" icon="server">
-    共享的新手引导、目录概览和高级说明。
+  <Card title="OpenCode (父级)" href="/zh/providers/opencode" icon="server">
+    共享的新手引导、目录概述和高级说明。
   </Card>
-  <Card title="Model selection" href="/zh/concepts/model-providers" icon="layers">
+  <Card title="模型选择" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
 </CardGroup>

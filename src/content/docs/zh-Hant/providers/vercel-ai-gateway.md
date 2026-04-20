@@ -45,7 +45,7 @@ read_when:
     ```
 
   </Step>
-  <Step title="驗證模型是否可用">
+  <Step title="Verify the model is available">
     ```bash
     openclaw models list --provider vercel-ai-gateway
     ```

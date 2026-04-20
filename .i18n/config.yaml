@@ -8,7 +8,6 @@ collect:
     - zh-CN/**
     - .generated/**
     - .i18n/*.tm.jsonl
-    - install/index.md
 
 formatSafety:
   jsx:

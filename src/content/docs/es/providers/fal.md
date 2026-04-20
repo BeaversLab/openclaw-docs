@@ -20,12 +20,12 @@ OpenClaw incluye un proveedor `fal` integrado para la generación alojada de im�
 ## Introducción
 
 <Steps>
-  <Step title="Set the API key">
+  <Step title="Configurar la clave de API">
     ```bash
     openclaw onboard --auth-choice fal-api-key
     ```
   </Step>
-  <Step title="Set a default image model">
+  <Step title="Configurar un modelo de imagen predeterminado">
     ```json5
     {
       agents: {
@@ -69,9 +69,9 @@ Para usar fal como proveedor de imágenes predeterminado:
 }
 ```
 
-## Generación de videos
+## Generación de video
 
-El proveedor de generación de videos `fal` incluido tiene como valor predeterminado
+El proveedor de generación de video `fal` incluido tiene como valor predeterminado
 `fal/fal-ai/minimax/video-01-live`.
 
 | Capacidad           | Valor                                                                               |
@@ -81,7 +81,7 @@ El proveedor de generación de videos `fal` incluido tiene como valor predetermi
 
 <AccordionGroup>
   <Accordion title="Modelos de video disponibles">
-    **HeyGen video-agent:**
+    **Agente de video HeyGen:**
 
     - `fal/fal-ai/heygen/v2/video-agent`
 
@@ -108,7 +108,7 @@ El proveedor de generación de videos `fal` incluido tiene como valor predetermi
     ```
   </Accordion>
 
-  <Accordion title="Ejemplo de configuración de HeyGen video-agent">
+  <Accordion title="Ejemplo de configuración del agente de video HeyGen">
     ```json5
     {
       agents: {
@@ -132,7 +132,7 @@ El proveedor de generación de videos `fal` incluido tiene como valor predetermi
     Parámetros compartidos de la herramienta de imagen y selección de proveedor.
   </Card>
   <Card title="Generación de video" href="/es/tools/video-generation" icon="video">
-    Parámetros compartidos de herramientas de video y selección de proveedor.
+    Parámetros compartidos de la herramienta de video y selección del proveedor.
   </Card>
   <Card title="Referencia de configuración" href="/es/gateway/configuration-reference#agent-defaults" icon="gear">
     Valores predeterminados del agente, incluida la selección de modelos de imagen y video.

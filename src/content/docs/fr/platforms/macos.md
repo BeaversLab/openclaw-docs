@@ -55,10 +55,10 @@ L'application macOS se présente comme un nœud. Commandes courantes :
 
 - Canvas : Canvas : `canvas.present`, `canvas.navigate`, `canvas.eval`, `canvas.snapshot`, `canvas.a2ui.*`
 - Caméra : `camera.snap`, `camera.clip`
-- Écran : `screen.record`
+- Écran : `screen.snapshot`, `screen.record`
 - Système : `system.run`, `system.notify`
 
-Le nœud signale une carte `permissions` afin que les agents puissent décider de ce qui est autorisé.
+Le nœud signale une carte `permissions` afin que les agents puissent décider ce qui est autorisé.
 
 Service de nœud + IPC de l'application :
 
@@ -77,7 +77,7 @@ Gateway -> Node Service (WS)
 ## Approbations d'exécution (system.run)
 
 `system.run` est contrôlé par les **Approbations d'exécution** dans l'application macOS (Paramètres → Approbations d'exécution).
-La sécurité, les demandes et la liste d'autorisation sont stockées localement sur le Mac dans :
+La sécurité, la demande et la liste d'autorisation sont stockées localement sur le Mac dans :
 
 ```
 ~/.openclaw/exec-approvals.json
@@ -104,12 +104,12 @@ Exemple :
 
 Remarques :
 
-- Les entrées `allowlist` sont des motifs glob pour les chemins binaires résolus.
-- Le texte de commande shell brut contenant une syntaxe de contrôle ou d'expansion de shell (`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) est traité comme une absence de la liste d'autorisation et nécessite une approbation explicite (ou l'ajout du binaire du shell à la liste d'autorisation).
+- Les entrées `allowlist` sont des modèles glob pour les chemins d'accès binaires résolus.
+- Le texte de commande shell brut qui contient une syntaxe de contrôle ou d'expansion de shell (`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) est traité comme un échec de la liste d'autorisation et nécessite une approbation explicite (ou l'ajout du binaire du shell à la liste d'autorisation).
 - Le choix de « Toujours autoriser » dans l'invite ajoute cette commande à la liste d'autorisation.
-- Les remplacements d'environnement `system.run` sont filtrés (supprime `PATH`, `DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`) puis fusionnés avec l'environnement de l'application.
-- Pour les wrappers de shell (`bash|sh|zsh ... -c/-lc`), les substitutions d'environnement limitées à la requête sont réduites à une petite liste d'autorisation explicite (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
-- Pour les décisions « autoriser toujours » en mode liste d'autorisation, les wrappers de répartition connus (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) persistent les chemins des exécutables internes plutôt que les chemins des wrappers. Si le déballage n'est pas sûr, aucune entrée de liste d'autorisation n'est persistée automatiquement.
+- Les redéfinitions de l'environnement `system.run` sont filtrées (suppression de `PATH`, `DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`) puis fusionnées avec l'environnement de l'application.
+- Pour les wrappers de shell (`bash|sh|zsh ... -c/-lc`), les redéfinitions de l'environnement étendues à la demande sont réduites à une petite liste d'autorisation explicite (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
+- Pour les décisions d'autorisation permanente en mode liste d'autorisation, les wrappers de répartition connus (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) conservent les chemins des exécutables internes au lieu des chemins des wrappers. Si le déballage n'est pas sûr, aucune entrée de liste d'autorisation n'est conservée automatiquement.
 
 ## Liens profonds
 
@@ -130,12 +130,12 @@ Paramètres de requête :
 - `thinking` (facultatif)
 - `deliver` / `to` / `channel` (facultatif)
 - `timeoutSeconds` (facultatif)
-- `key` (clé de mode sans surveillance facultatif)
+- `key` (clé de mode sans surveillance facultative)
 
 Sécurité :
 
 - Sans `key`, l'application demande une confirmation.
-- Sans `key`, l'application applique une courte limite de message pour l'invite de confirmation et ignore `deliver` / `to` / `channel`.
+- Sans `key`, l'application impose une limite courte de message pour l'invite de confirmation et ignore `deliver` / `to` / `channel`.
 - Avec un `key` valide, l'exécution est sans surveillance (destinée aux automatisations personnelles).
 
 ## Flux d'intégration (type)
@@ -157,7 +157,7 @@ Préférez un chemin d'état local non synchronisé tel que :
 OPENCLAW_STATE_DIR=~/.openclaw
 ```
 
-Si `openclaw doctor` détecte un état sous :
+Si `openclaw doctor` détecte l'état sous :
 
 - `~/Library/Mobile Documents/com~apple~CloudDocs/...`
 - `~/Library/CloudStorage/...`
@@ -167,8 +167,8 @@ il avertira et recommandera de revenir à un chemin local.
 ## Build & dev workflow (native)
 
 - `cd apps/macos && swift build`
-- `swift run OpenClaw` (or Xcode)
-- Package app: `scripts/package-mac-app.sh`
+- `swift run OpenClaw` (ou Xcode)
+- Package app : `scripts/package-mac-app.sh`
 
 ## Debug gateway connectivity (macOS CLI)
 
@@ -182,19 +182,19 @@ swift run openclaw-mac discover --timeout 3000 --json
 
 Connect options:
 
-- `--url <ws://host:port>`: override config
-- `--mode <local|remote>`: resolve from config (default: config or local)
-- `--probe`: force a fresh health probe
-- `--timeout <ms>`: request timeout (default: `15000`)
-- `--json`: structured output for diffing
+- `--url <ws://host:port>` : remplacer la configuration
+- `--mode <local|remote>` : résoudre à partir de la configuration (par défaut : config ou local)
+- `--probe` : forcer une nouvelle sonde de santé
+- `--timeout <ms>` : délai d'expiration de la requête (par défaut : `15000`)
+- `--json` : sortie structurée pour différenciation
 
 Discovery options:
 
-- `--include-local`: include gateways that would be filtered as “local”
-- `--timeout <ms>`: overall discovery window (default: `2000`)
-- `--json`: structured output for diffing
+- `--include-local` : inclure les passerelles qui seraient filtrées comme « locales »
+- `--timeout <ms>` : fenêtre de découverte globale (par défaut : `2000`)
+- `--json` : sortie structurée pour différenciation
 
-Astuce : comparez avec `openclaw gateway discover --json` pour voir si le pipeline de découverte de l'application macOS (`local.` plus le domaine longue distance configuré, avec replis longue distance et Tailscale Serve) diffère de la découverte basée sur `dns-sd` du CLI Node.
+Astuce : comparez avec `openclaw gateway discover --json` pour voir si le pipeline de découverte de l’application macOS (`local.` ainsi que le domaine étendu configuré, avec les solutions de repli étendues et Tailscale Serve) diffère de la découverte basée sur `dns-sd` du CLI.
 
 ## Remote connection plumbing (SSH tunnels)
 
@@ -204,21 +204,21 @@ components can talk to a remote Gateway as if it were on localhost.
 ### Control tunnel (Gateway WebSocket port)
 
 - **Purpose:** health checks, status, Web Chat, config, and other control-plane calls.
-- **Port local :** le port du Gateway (par défaut `18789`), toujours stable.
+- **Port local :** le port du Gateway (par défaut `18789`), toujours stable.
 - **Remote port:** le même port Gateway sur l'hôte distant.
 - **Comportement:** pas de port local aléatoire; l'application réutilise un tunnel sain existant ou le redémarre si nécessaire.
-- **Forme SSH :** `ssh -N -L <local>:127.0.0.1:<remote>` avec les options BatchMode +
+- **Configuration SSH :** `ssh -N -L <local>:127.0.0.1:<remote>` avec les options BatchMode +
   ExitOnForwardFailure + keepalive.
-- **Rapport d'IP :** le tunnel SSH utilise le bouclage, donc la passerelle verra l'IP du nœud
-  comme `127.0.0.1`. Utilisez le transport **Direct (ws/wss)** si vous voulez que la véritable IP
-  du client apparaisse (voir [accès distant macOS](/fr/platforms/mac/remote)).
+- **Rapport d’IP :** le tunnel SSH utilise le bouclage, donc le gateway verra l’IP du nœud
+  comme `127.0.0.1`. Utilisez le transport **Direct (ws/wss)** si vous souhaitez que l’IP réelle du
+  client apparaisse (voir [accès distant macOS](/fr/platforms/mac/remote)).
 
 Pour les étapes de configuration, voir [accès distant macOS](/fr/platforms/mac/remote). Pour les détails du
 protocole, voir [protocole Gateway](/fr/gateway/protocol).
 
 ## Documentation connexe
 
-- [Manuel du Gateway](/fr/gateway)
+- [Runbook du Gateway](/fr/gateway)
 - [Gateway (macOS)](/fr/platforms/mac/bundled-gateway)
-- [Permissions macOS](/fr/platforms/mac/permissions)
+- [Autorisations macOS](/fr/platforms/mac/permissions)
 - [Canvas](/fr/platforms/mac/canvas)

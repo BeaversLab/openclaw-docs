@@ -21,7 +21,7 @@ title: 飛書
 <Steps>
   <Step title="執行通道設定精靈">```bash openclaw channels login --channel feishu ``` 使用您的飛書/Lark 行動應用程式掃描 QR Code，以自動建立飛書/Lark 機器人。</Step>
 
-  <Step title="設定完成後，重新啟動閘道以套用變更">```bash openclaw gateway restart ```</Step>
+  <Step title="設定完成後，請重新啟動 gateway 以套用變更">```bash openclaw gateway restart ```</Step>
 </Steps>
 
 ---

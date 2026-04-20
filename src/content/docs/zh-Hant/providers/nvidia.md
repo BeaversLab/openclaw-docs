@@ -16,7 +16,7 @@ NVIDIA 在 `https://integrate.api.nvidia.com/v1` 提供了一個相容 OpenAI �
 
 <Steps>
   <Step title="取得您的 API 金鑰">在 [build.nvidia.com](https://build.nvidia.com/settings/api-keys) 建立 API 金鑰。</Step>
-  <Step title="匯出金鑰並執行引導程式">```bash export NVIDIA_API_KEY="nvapi-..." openclaw onboard --auth-choice skip ```</Step>
+  <Step title="匯出金鑰並執行入門">```bash export NVIDIA_API_KEY="nvapi-..." openclaw onboard --auth-choice skip ```</Step>
   <Step title="設定 NVIDIA 模型">```bash openclaw models set nvidia/nvidia/nemotron-3-super-120b-a12b ```</Step>
 </Steps>
 

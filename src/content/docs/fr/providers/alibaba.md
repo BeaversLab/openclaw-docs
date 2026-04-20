@@ -19,12 +19,12 @@ Alibaba Model Studio / DashScope.
 ## Getting started
 
 <Steps>
-  <Step title="Set an API key">
+  <Step title="Définir une clé API">
     ```bash
     openclaw onboard --auth-choice qwen-standard-api-key
     ```
   </Step>
-  <Step title="Set a default video model">
+  <Step title="Définir un modèle vidéo par défaut">
     ```json5
     {
       agents: {
@@ -37,20 +37,20 @@ Alibaba Model Studio / DashScope.
     }
     ```
   </Step>
-  <Step title="Verify the provider is available">
+  <Step title="Vérifier que le fournisseur est disponible">
     ```bash
     openclaw models list --provider alibaba
     ```
   </Step>
 </Steps>
 
-<Note>N'importe quelle clé d'authentification acceptée (`MODELSTUDIO_API_KEY`, `DASHSCOPE_API_KEY`, `QWEN_API_KEY`) fonctionnera. Le choix d'onboarding `qwen-standard-api-key` configure les informations d'identification partagées DashScope.</Note>
+<Note>N'importe laquelle des clés d'authentification acceptées (`MODELSTUDIO_API_KEY`, `DASHSCOPE_API_KEY`, `QWEN_API_KEY`) fonctionnera. Le choix d'intégration `qwen-standard-api-key` configure les identifiants partagés DashScope.</Note>
 
 ## Modèles Wan intégrés
 
-Le provider `alibaba` intégré enregistre actuellement :
+Le fournisseur intégré `alibaba` enregistre actuellement :
 
-| Réf du modèle              | Mode                          |
+| Réf modèle                 | Mode                          |
 | -------------------------- | ----------------------------- |
 | `alibaba/wan2.6-t2v`       | Texte vers vidéo              |
 | `alibaba/wan2.6-i2v`       | Image vers vidéo              |
@@ -75,18 +75,18 @@ Le provider `alibaba` intégré enregistre actuellement :
 
 <AccordionGroup>
   <Accordion title="Relation avec Qwen">
-    Le provider `qwen` intégré utilise également les points de terminaison DashScope hébergés par Alibaba pour
+    Le fournisseur intégré `qwen` utilise également les points de terminaison DashScope hébergés par Alibaba pour
     la génération vidéo Wan. Utilisez :
 
-    - `qwen/...` lorsque vous souhaitez l'interface canonique du provider Qwen
+    - `qwen/...` lorsque vous souhaitez l'interface du fournisseur Qwen canonique
     - `alibaba/...` lorsque vous souhaitez l'interface vidéo Wan directe du fournisseur
 
-    Consultez la [documentation du provider Qwen](/fr/providers/qwen) pour plus de détails.
+    Consultez la [documentation du fournisseur Qwen](/fr/providers/qwen) pour plus de détails.
 
   </Accordion>
 
-  <Accordion title="Priorité de la clé d'authentification">
-    OpenClaw vérifie les clés d'authentification dans l'ordre suivant :
+  <Accordion title="Priorité de la clé d'auth">
+    OpenClaw vérifie les clés d'auth dans cet ordre :
 
     1. `MODELSTUDIO_API_KEY` (préféré)
     2. `DASHSCOPE_API_KEY`

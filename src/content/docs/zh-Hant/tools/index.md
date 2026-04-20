@@ -52,18 +52,18 @@ OpenClaw 有三個協同運作的層級：
 
 這些工具隨 OpenClaw 附帶，無需安裝任何外掛即可使用：
 
-| 工具                                       | 功能說明                                     | 頁面                                                |
-| ------------------------------------------ | -------------------------------------------- | --------------------------------------------------- |
+| 工具                                       | 功能說明                                     | 頁面                                           |
+| ------------------------------------------ | -------------------------------------------- | ---------------------------------------------- |
 | `exec` / `process`                         | 執行 Shell 指令，管理背景程序                | [Exec](/zh-Hant/tools/exec)                         |
 | `code_execution`                           | 執行沙盒化遠端 Python 分析                   | [Code Execution](/zh-Hant/tools/code-execution)     |
 | `browser`                                  | 控制 Chromium 瀏覽器（導航、點擊、截圖）     | [Browser](/zh-Hant/tools/browser)                   |
 | `web_search` / `x_search` / `web_fetch`    | 搜尋網路、搜尋 X 帖文、擷取頁面內容          | [Web](/zh-Hant/tools/web)                           |
-| `read` / `write` / `edit`                  | 工作區內的檔案 I/O                           |                                                     |
+| `read` / `write` / `edit`                  | 工作區內的檔案 I/O                           |                                                |
 | `apply_patch`                              | 多區塊檔案修補                               | [Apply Patch](/zh-Hant/tools/apply-patch)           |
 | `message`                                  | 跨所有頻道傳送訊息                           | [Agent Send](/zh-Hant/tools/agent-send)             |
-| `canvas`                                   | 驅動節點 Canvas (呈現、評估、快照)           |                                                     |
-| `nodes`                                    | 發現並指定配對裝置                           |                                                     |
-| `cron` / `gateway`                         | 管理排程工作；檢查、修補、重新啟動或更新閘道 |                                                     |
+| `canvas`                                   | 驅動節點 Canvas (呈現、評估、快照)           |                                                |
+| `nodes`                                    | 發現並指定配對裝置                           |                                                |
+| `cron` / `gateway`                         | 管理排程工作；檢查、修補、重新啟動或更新閘道 |                                                |
 | `image` / `image_generate`                 | 分析或生成圖片                               | [Image Generation](/zh-Hant/tools/image-generation) |
 | `music_generate`                           | 生成音樂曲目                                 | [Music Generation](/zh-Hant/tools/music-generation) |
 | `video_generate`                           | 生成影片                                     | [Video Generation](/zh-Hant/tools/video-generation) |

@@ -19,9 +19,9 @@ y no como un complemento de proveedor dedicado para OpenClaw.
 ## Introducción
 
 <Steps>
-  <Step title="Start inferrs with a model">```bash inferrs serve google/gemma-4-E2B-it \ --host 127.0.0.1 \ --port 8080 \ --device metal ```</Step>
-  <Step title="Verify the server is reachable">```bash curl http://127.0.0.1:8080/health curl http://127.0.0.1:8080/v1/models ```</Step>
-  <Step title="Añada una entrada de proveedor de OpenClaw">Añada una entrada de proveedor explícita y dirija su modelo predeterminado a ella. Vea el ejemplo de configuración completo a continuación.</Step>
+  <Step title="Iniciar inferrs con un modelo">```bash inferrs serve google/gemma-4-E2B-it \ --host 127.0.0.1 \ --port 8080 \ --device metal ```</Step>
+  <Step title="Verificar que el servidor sea accesible">```bash curl http://127.0.0.1:8080/health curl http://127.0.0.1:8080/v1/models ```</Step>
+  <Step title="Agregar una entrada de proveedor de OpenClaw">Agregue una entrada de proveedor explícita y apunte su modelo predeterminado a ella. Vea el ejemplo de configuración completo a continuación.</Step>
 </Steps>
 
 ## Ejemplo de configuración completa
@@ -71,8 +71,8 @@ Este ejemplo usa Gemma 4 en un servidor `inferrs` local.
 
 <AccordionGroup>
   <Accordion title="Por qué es importante requiresStringContent">
-    Algunas rutas de Chat Completions de `inferrs` solo aceptan cadenas de texto
-    `messages[].content`, no matrices de contenido estructurado.
+    Algunas rutas de Chat Completions de `inferrs` aceptan solo
+    `messages[].content` de cadena, no matrices de partes de contenido estructuradas.
 
     <Warning>
     Si las ejecuciones de OpenClaw fallan con un error como:
@@ -90,16 +90,16 @@ Este ejemplo usa Gemma 4 en un servidor `inferrs` local.
     }
     ```
 
-    OpenClaw convertirá las partes de contenido de texto puro en cadenas simples antes de enviar
+    OpenClaw aplanará las partes de contenido de texto puro en cadenas simples antes de enviar
     la solicitud.
 
   </Accordion>
 
   <Accordion title="Advertencia sobre Gemma y el esquema de herramientas">
-    Algunas combinaciones actuales de `inferrs` + Gemma aceptan pequeñas solicitudes directas
-    `/v1/chat/completions` pero aún fallan en turnos completos del tiempo de ejecución del agente OpenClaw.
+    Algunas combinaciones actuales de `inferrs` + Gemma aceptan pequeñas `/v1/chat/completions` directas
+    pero aún fallan en turnos completos de tiempo de ejecución del agente OpenClaw.
 
-    Si eso sucede, pruebe esto primero:
+    Si eso sucede, intente esto primero:
 
     ```json5
     compat: {
@@ -108,10 +108,10 @@ Este ejemplo usa Gemma 4 en un servidor `inferrs` local.
     }
     ```
 
-    Esto deshabilita la superficie del esquema de herramientas de OpenClaw para el modelo y puede reducir la
-    presión en los backends locales más estrictos.
+    Eso deshabilita la superficie del esquema de herramientas de OpenClaw para el modelo y puede reducir la presión
+    del indicador en backends locales más estrictos.
 
-    Si las pequeñas solicitudes directas aún funcionan pero los turnos normales del agente OpenClaw siguen
+    Si las solicitudes directas pequeñas aún funcionan pero los turnos de agente normales de OpenClaw continúan
     fallando dentro de `inferrs`, el problema restante suele ser el comportamiento del modelo/servidor
     ascendente en lugar de la capa de transporte de OpenClaw.
 
@@ -138,14 +138,14 @@ Este ejemplo usa Gemma 4 en un servidor `inferrs` local.
   </Accordion>
 
   <Accordion title="Comportamiento estilo proxy">
-    `inferrs` se trata como un backend `/v1` compatible con OpenAI estilo proxy, no como
-    un endpoint nativo de OpenAI.
+    `inferrs` se trata como un backend compatible con `/v1` de estilo proxy, no como
+    un punto de conexión nativo de OpenAI.
 
-    - La configuración de solicitudes nativa solo para OpenAI no se aplica aquí
-    - No hay `service_tier`, ni Responses `store`, ni sugerencias de caché de prompts, y ninguna
-      configuración de payload de compatibilidad de razonamiento de OpenAI
+    - La configuración de solicitudes exclusiva de OpenAI nativo no se aplica aquí
+    - Sin `service_tier`, sin Respuestas `store`, sin sugerencias de caché de prompt y sin
+    configuración de carga útil compatible con el razonamiento de OpenAI
     - Los encabezados de atribución ocultos de OpenClaw (`originator`, `version`, `User-Agent`)
-      no se inyectan en URL base `inferrs` personalizadas
+      no se inyectan en URL base personalizadas de `inferrs`
 
   </Accordion>
 </AccordionGroup>
@@ -154,18 +154,18 @@ Este ejemplo usa Gemma 4 en un servidor `inferrs` local.
 
 <AccordionGroup>
   <Accordion title="curl /v1/models falla">
-    `inferrs` no se está ejecutando, no es accesible o no está vinculado al host/puerto esperado.
-    Asegúrese de que el servidor se haya iniciado y esté escuchando en la dirección que
+    `inferrs` no se está ejecutando, no es accesible o no está vinculado al
+    host/puerto esperado. Asegúrese de que el servidor se haya iniciado y esté escuchando en la dirección que
     configuró.
   </Accordion>
 
-<Accordion title="se esperaba una cadena en messages[].content">Establezca `compat.requiresStringContent: true` en la entrada del modelo. Consulte la sección `requiresStringContent` anterior para obtener detalles.</Accordion>
+<Accordion title="messages[].content esperaba una cadena">Establezca `compat.requiresStringContent: true` en la entrada del modelo. Consulte la sección `requiresStringContent` anterior para obtener más detalles.</Accordion>
 
-<Accordion title="Las llamadas directas a /v1/chat/completions funcionan pero openclaw infer model run falla">Intente establecer `compat.supportsTools: false` para deshabilitar la superficie del esquema de herramientas. Consulte la advertencia sobre el esquema de herramientas de Gemma anterior.</Accordion>
+<Accordion title="Las llamadas directas a /v1/chat/completions funcionan pero openclaw infer model run falla">Intente establecer `compat.supportsTools: false` para deshabilitar la superficie del esquema de herramientas. Consulta la advertencia sobre el esquema de herramientas de Gemma anterior.</Accordion>
 
-  <Accordion title="inferrs sigue fallando en turnos de agente más grandes">
-    Si OpenClaw ya no recibe errores de esquema pero `inferrs` aún falla en turnos de agente
-    más grandes, trátelo como una limitación del modelo o de `inferrs` ascendente. Reduzca
+  <Accordion title="inferrs sigue fallando en turnos de agentes grandes">
+    Si OpenClaw ya no recibe errores de esquema pero `inferrs` sigue fallando en turnos de
+    agentes grandes, trátelo como una limitación del modelo o de `inferrs` en sentido ascendente. Reduzca
     la presión del prompt o cambie a un backend o modelo local diferente.
   </Accordion>
 </AccordionGroup>
@@ -175,13 +175,13 @@ Este ejemplo usa Gemma 4 en un servidor `inferrs` local.
 ## Véase también
 
 <CardGroup cols={2}>
-  <Card title="Modelos locales" href="/es/gateway/local-models" icon="server">
-    Ejecutar OpenClaw en servidores de modelos locales.
+  <Card title="Modelos locales" href="/es/gateway/local-models" icon="servidor">
+    Ejecutar OpenClaw contra servidores de modelos locales.
   </Card>
-  <Card title="Solución de problemas de puerta de enlace" href="/es/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail" icon="wrench">
-    Depuración de backends locales compatibles con OpenAI que pasan las sondas pero fallan en las ejecuciones del agente.
+  <Card title="Solución de problemas de puerta de enlace" href="/es/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail" icon="llave">
+    Depuración de backends locales compatibles con OpenAI que pasan las sondas pero fallan en las ejecuciones de los agentes.
   </Card>
-  <Card title="Proveedores de modelos" href="/es/concepts/model-providers" icon="layers">
+  <Card title="Proveedores de modelos" href="/es/concepts/model-providers" icon="capas">
     Resumen de todos los proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
 </CardGroup>
