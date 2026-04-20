@@ -16,7 +16,7 @@ Votre agent possède trois fichiers liés à la mémoire :
 
 - **`MEMORY.md`** -- mémoire à long terme. Faits durables, préférences et décisions. Chargé au début de chaque session DM.
 - **`memory/YYYY-MM-DD.md`** -- notes quotidiennes. Contexte et observations en cours. Les notes d'aujourd'hui et d'hier sont chargées automatiquement.
-- **`DREAMS.md`** (expérimental, optionnel) -- Journal de rêve et résumés de balayage de rêve pour examen humain, y compris les entrées de rétroremplissage historique ancrées.
+- **`DREAMS.md`** (facultatif) -- Résumés du Journal des rêves et du balayage de rêve pour examen humain, y compris les entrées de rétro-remplissage historique ancrées.
 
 Ces fichiers résident dans l'espace de travail de l'agent (par défaut `~/.openclaw/workspace`).
 
@@ -86,7 +86,7 @@ de mémoire. Ceci est activé par défaut -- vous n'avez rien à configurer.
 
 <Tip>La vidange de la mémoire empêche la perte de contexte lors de la compaction. Si votre agent possède des faits importants dans la conversation qui ne sont pas encore écrits dans un fichier, ils seront sauvegardés automatiquement avant que le résumé ne soit effectué.</Tip>
 
-## Rêve (expérimental)
+## Rêve
 
 Le rêve est une passe de consolidation en arrière-plan optionnelle pour la mémoire. Il collecte
 les signaux à court terme, note les candidats, et ne promeut que les éléments qualifiés dans
@@ -101,8 +101,8 @@ Il est conçu pour maintenir un signal élevé dans la mémoire à long terme :
 - **Révisable** : les résumés de phase et les entrées de journal sont écrits dans `DREAMS.md`
   pour révision humaine.
 
-Pour le comportement des phases, les signaux de notation et les détails du Journal de Rêve, voir
-[Dreaming (experimental)](/en/concepts/dreaming).
+Pour le comportement des phases, les signaux de scoring et les détails du Journal des rêves, voir
+[Dreaming](/en/concepts/dreaming).
 
 ## Remplissage ancré et promotion en direct
 
@@ -155,7 +155,7 @@ openclaw memory index --force   # Rebuild the index
 - [Memory Wiki](/en/plugins/memory-wiki) -- coffre-fort de connaissances compilé et outils natifs wiki
 - [Recherche de mémoire](/en/concepts/memory-search) -- pipeline de recherche, fournisseurs et
   réglage
-- [Rêve (expérimental)](/en/concepts/dreaming) -- promotion en arrière-plan
+- [Dreaming](/en/concepts/dreaming) -- promotion en arrière-plan
   du rappel à court terme vers la mémoire à long terme
 - [Référence de configuration de la mémoire](/en/reference/memory-config) -- tous les paramètres de configuration
 - [Compaction](/en/concepts/compaction) -- interaction de la compaction avec la mémoire

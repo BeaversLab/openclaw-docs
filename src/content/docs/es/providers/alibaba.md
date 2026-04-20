@@ -16,57 +16,97 @@ Alibaba Model Studio / DashScope.
 - También aceptado: `DASHSCOPE_API_KEY`, `QWEN_API_KEY`
 - API: Generación de video asíncrona de DashScope / Model Studio
 
-## Inicio rápido
+## Primeros pasos
 
-1. Establezca una clave de API:
-
-```bash
-openclaw onboard --auth-choice qwen-standard-api-key
-```
-
-2. Establezca un modelo de video predeterminado:
-
-```json5
-{
-  agents: {
-    defaults: {
-      videoGenerationModel: {
-        primary: "alibaba/wan2.6-t2v",
+<Steps>
+  <Step title="Set an API key">
+    ```bash
+    openclaw onboard --auth-choice qwen-standard-api-key
+    ```
+  </Step>
+  <Step title="Set a default video model">
+    ```json5
+    {
+      agents: {
+        defaults: {
+          videoGenerationModel: {
+            primary: "alibaba/wan2.6-t2v",
+          },
+        },
       },
-    },
-  },
-}
-```
+    }
+    ```
+  </Step>
+  <Step title="Verify the provider is available">
+    ```bash
+    openclaw models list --provider alibaba
+    ```
+  </Step>
+</Steps>
+
+<Note>Cualquiera de las claves de autenticación aceptadas (`MODELSTUDIO_API_KEY`, `DASHSCOPE_API_KEY`, `QWEN_API_KEY`) funcionará. La opción de incorporación `qwen-standard-api-key` configura la credencial compartida de DashScope.</Note>
 
 ## Modelos Wan integrados
 
-El proveedor `alibaba` incluido actualmente registra:
+El proveedor `alibaba` incluido registra actualmente:
 
-- `alibaba/wan2.6-t2v`
-- `alibaba/wan2.6-i2v`
-- `alibaba/wan2.6-r2v`
-- `alibaba/wan2.6-r2v-flash`
-- `alibaba/wan2.7-r2v`
+| Referencia del modelo      | Modo                        |
+| -------------------------- | --------------------------- |
+| `alibaba/wan2.6-t2v`       | Texto a video               |
+| `alibaba/wan2.6-i2v`       | Imagen a video              |
+| `alibaba/wan2.6-r2v`       | Referencia a video          |
+| `alibaba/wan2.6-r2v-flash` | Referencia a video (rápido) |
+| `alibaba/wan2.7-r2v`       | Referencia a video          |
 
 ## Límites actuales
 
-- Hasta **1** video de salida por solicitud
-- Hasta **1** imagen de entrada
-- Hasta **4** videos de entrada
-- Hasta **10 segundos** de duración
-- Soporta `size`, `aspectRatio`, `resolution`, `audio` y `watermark`
-- El modo de imagen/video de referencia actualmente requiere **URLs http(s) remotas**
+| Parámetro                  | Límite                                                    |
+| -------------------------- | --------------------------------------------------------- |
+| Videos de salida           | Hasta **1** por solicitud                                 |
+| Imágenes de entrada        | Hasta **1**                                               |
+| Videos de entrada          | Hasta **4**                                               |
+| Duración                   | Hasta **10 segundos**                                     |
+| Controles compatibles      | `size`, `aspectRatio`, `resolution`, `audio`, `watermark` |
+| Imagen/video de referencia | Solo URLs `http(s)` remotas                               |
 
-## Relación con Qwen
+<Warning>El modo de imagen/video de referencia actualmente requiere **URLs http(s) remotas**. No se admiten rutas de archivos locales para entradas de referencia.</Warning>
 
-El proveedor `qwen` incluido también utiliza los endpoints de DashScope alojados por Alibaba para
-la generación de video Wan. Use:
+## Configuración avanzada
 
-- `qwen/...` cuando desea la superficie del proveedor Qwen canónico
-- `alibaba/...` cuando desea la superficie de video Wan propiedad directa del proveedor
+<AccordionGroup>
+  <Accordion title="Relationship to Qwen">
+    El proveedor incluido `qwen` también utiliza los puntos de conexión de DashScope alojados por Alibaba para
+    la generación de video Wan. Use:
+
+    - `qwen/...` cuando desee la superficie del proveedor Qwen canónico
+    - `alibaba/...` cuando desee la superficie de video Wan propiedad directa del proveedor
+
+    Consulte la [documentación del proveedor Qwen](/en/providers/qwen) para obtener más detalles.
+
+  </Accordion>
+
+  <Accordion title="Auth key priority">
+    OpenClaw verifica las claves de autenticación en el siguiente orden:
+
+    1. `MODELSTUDIO_API_KEY` (preferido)
+    2. `DASHSCOPE_API_KEY`
+    3. `QWEN_API_KEY`
+
+    Cualquiera de estos autenticará el proveedor `alibaba`.
+
+  </Accordion>
+</AccordionGroup>
 
 ## Relacionado
 
-- [Generación de Video](/en/tools/video-generation)
-- [Qwen](/en/providers/qwen)
-- [Referencia de Configuración](/en/gateway/configuration-reference#agent-defaults)
+<CardGroup cols={2}>
+  <Card title="Video generation" href="/en/tools/video-generation" icon="video">
+    Parámetros compartidos de la herramienta de video y selección de proveedor.
+  </Card>
+  <Card title="Qwen" href="/en/providers/qwen" icon="microchip">
+    Configuración del proveedor Qwen e integración con DashScope.
+  </Card>
+  <Card title="Configuration reference" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+    Valores predeterminados del agente y configuración del modelo.
+  </Card>
+</CardGroup>

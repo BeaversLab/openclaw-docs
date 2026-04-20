@@ -31,7 +31,7 @@ Installer depuis un checkout local :
 openclaw plugins install ./path/to/local/matrix-plugin
 ```
 
-Voir [Plugins](/en/tools/plugin) pour le comportement des plugins et les règles d'installation.
+Consultez la page [Plugins](/en/tools/plugin) pour le comportement des plugins et les règles d'installation.
 
 ## Configuration
 
@@ -609,10 +609,11 @@ si vous souhaitez une fenêtre de réessai plus courte ou plus longue.
 Le démarrage effectue également automatiquement une passe conservatrice d'amorçage cryptographique.
 Cette passe essaie d'abord de réutiliser le stockage de secrets actuel et l'identité de signature croisée, et évite de réinitialiser la signature croisée à moins que vous n'exécutiez un flux de réparation d'amorçage explicite.
 
-Si le démarrage détecte un état d'amorçage cassé et que `channels.matrix.password` est configuré, OpenClaw peut tenter un chemin de réparation plus strict.
+Si le démarrage détecte toujours un état d'amorçage défaillant, OpenClaw peut tenter une voie de réparation protégée même lorsque `channels.matrix.password` n'est pas configuré.
+Si le serveur d'accueil nécessite une IUA basée sur un mot de passe pour cette réparation, OpenClaw enregistre un avertissement et rend le démarrage non fatal au lieu d'interrompre le bot.
 Si l'appareil actuel est déjà signé par le propriétaire, OpenClaw préserve cette identité au lieu de la réinitialiser automatiquement.
 
-Voir [Migration Matrix](/en/install/migrating-matrix) pour le flux complet de mise à niveau, les limites, les commandes de récupération et les messages de migration courants.
+Consultez la page [Migration Matrix](/en/install/migrating-matrix) pour le processus complet de mise à niveau, les limites, les commandes de récupération et les messages de migration courants.
 
 ### Notifications de vérification
 
@@ -802,7 +803,7 @@ Trigger authorization still comes from `groupPolicy`, `groups`, `groupAllowFrom`
 }
 ```
 
-See [Groups](/en/channels/groups) for mention-gating and allowlist behavior.
+Consultez la page [Groupes](/en/channels/groups) pour le comportement de filtrage des mentions et des listes d'autorisation.
 
 Pairing example for Matrix DMs:
 
@@ -813,7 +814,7 @@ openclaw pairing approve matrix <CODE>
 
 If an unapproved Matrix user keeps messaging you before approval, OpenClaw reuses the same pending pairing code and may send a reminder reply again after a short cooldown instead of minting a new code.
 
-See [Pairing](/en/channels/pairing) for the shared DM pairing flow and storage layout.
+Consultez la page [Jumelage](/en/channels/pairing) pour le processus de jumelage DM partagé et la disposition du stockage.
 
 ## Direct room repair
 
@@ -908,14 +909,15 @@ Documentation connexe : [Approbations d'exécution](/en/tools/exec-approvals)
 }
 ```
 
-Les valeurs `channels.matrix` de niveau supérieur servent de valeurs par défaut pour les comptes nommés, sauf si un compte les remplace.
-Vous pouvez limiter les entrées de salles héritées à un compte Matrix avec `groups.<room>.account`.
+Les valeurs de premier niveau `channels.matrix` agissent comme valeurs par défaut pour les comptes nommés, sauf si un compte les remplace.
+Vous pouvez limiter les entrées de salle héritées à un compte Matrix avec `groups.<room>.account`.
 Les entrées sans `account` restent partagées entre tous les comptes Matrix, et les entrées avec `account: "default"` fonctionnent toujours lorsque le compte par défaut est configuré directement au niveau supérieur `channels.matrix.*`.
-Les valeurs par défaut d'authentification partagée partielles ne créent pas par elles-mêmes un compte par défaut implicite distinct. OpenClaw ne synthétise le compte `default` de niveau supérieur que lorsque cette valeur par défaut dispose d'une authentification fraîche (`homeserver` plus `accessToken`, ou `homeserver` plus `userId` et `password`) ; les comptes nommés peuvent toujours rester découvrables à partir de `homeserver` plus `userId` lorsque les informations d'identification mises en cache satisfont ultérieurement l'authentification.
-Si Matrix possède déjà exactement un compte nommé, ou si `defaultAccount` pointe vers une clé de compte nommé existante, la promotion de réparation/configuration de compte unique vers compte multiple préserve ce compte au lieu de créer une nouvelle entrée `accounts.default`. Seules les clés d'authentification/d'amorçage Matrix sont déplacées vers ce compte promu ; les clés de stratégie de livraison partagées restent au niveau supérieur.
-Définissez `defaultAccount` lorsque vous souhaitez que OpenClaw privilégie un compte Matrix nommé pour le routage implicite, la détection et les opérations CLI.
+Les valeurs par défaut d'authentification partagée partielles ne créent pas par elles-mêmes un compte par défaut implicite séparé. OpenClaw synthétise uniquement le compte de premier niveau `default` lorsque cette valeur par défaut dispose d'une authentification fraîche (`homeserver` plus `accessToken`, ou `homeserver` plus `userId` et `password`) ; les comptes nommés peuvent toujours rester détectables à partir de `homeserver` plus `userId` lorsque les identifiants mis en cache satisfont l'authentification ultérieurement.
+Si Matrix possède déjà exactement un compte nommé, ou si `defaultAccount` pointe vers une clé de compte nommé existante, la promotion de réparation/configuration de compte unique à comptes multiples préserve ce compte au lieu de créer une nouvelle entrée `accounts.default`. Seules les clés d'authentification/d'amorçage Matrix sont déplacées vers ce compte promu ; les clés de stratégie de livraison partagées restent au niveau supérieur.
+Définissez `defaultAccount` lorsque vous souhaitez que OpenClaw préfère un compte Matrix nommé pour le routage implicite, la sonde et les opérations CLI.
+Si plusieurs comptes Matrix sont configurés et qu'un id de compte est `default`, OpenClaw utilise ce compte implicitement même lorsque `defaultAccount` n'est pas défini.
 Si vous configurez plusieurs comptes nommés, définissez `defaultAccount` ou passez `--account <id>` pour les commandes CLI qui dépendent de la sélection implicite de compte.
-Passez `--account <id>` à `openclaw matrix verify ...` et `openclaw matrix devices ...` lorsque vous souhaitez remplacer cette sélection implicite pour une seule commande.
+Passez `--account <id>` à `openclaw matrix verify ...` et `openclaw matrix devices ...` lorsque vous souhaitez remplacer cette sélection implicite pour une commande.
 
 Voir [Référence de configuration](/en/gateway/configuration-reference#multi-account-all-channels) pour le modèle multi-compte partagé.
 
@@ -924,8 +926,7 @@ Voir [Référence de configuration](/en/gateway/configuration-reference#multi-ac
 Par défaut, OpenClaw bloque les serveurs d'accueil Matrix privés/internes pour la protection SSRF, sauf si vous
 optez explicitement pour chaque compte.
 
-Si votre serveur domestique s'exécute sur localhost, une IP LAN/Tailscale, ou un nom d'hôte interne, activez
-`network.dangerouslyAllowPrivateNetwork` pour ce compte Tailscale :
+Si votre serveur domestique s'exécute sur localhost, une IP LAN/Tailscale ou un nom d'hôte interne, activez `network.dangerouslyAllowPrivateNetwork` pour ce compte Matrix :
 
 ```json5
 {
@@ -951,8 +952,7 @@ openclaw matrix account add \
   --access-token syt_ops_xxx
 ```
 
-Cette option d'adhésion autorise uniquement les cibles privées/internal de confiance. Les serveurs domestiques publics en clair tels que
-`http://matrix.example.org:8008` restent bloqués. Privilégiez `https://` chaque fois que possible.
+Cette option ne permet que les cibles privées/internal de confiance. Les serveurs domestiques publics en texte clair tels que `http://matrix.example.org:8008` restent bloqués. Privilégiez `https://` chaque fois que possible.
 
 ## Proxying du trafic Matrix
 
@@ -970,16 +970,15 @@ Si votre déploiement Matrix nécessite un proxy HTTP(S) sortant explicite, déf
 }
 ```
 
-Les comptes nommés peuvent remplacer la valeur par défaut de premier niveau avec `channels.matrix.accounts.<id>.proxy`.
-OpenClaw utilise le même paramètre de proxy pour le trafic Matrix d'exécution et les sondes de statut de compte.
+Les comptes nommés peuvent remplacer la valeur par défaut de niveau supérieur par `channels.matrix.accounts.<id>.proxy`. OpenClaw utilise le même paramètre de proxy pour le trafic d'exécution Matrix et les sondes de statut de compte.
 
 ## Résolution de cible
 
 Matrix accepte ces formes de cibles partout où OpenClaw vous demande une cible de salle ou d'utilisateur :
 
-- Utilisateurs : `@user:server`, `user:@user:server`, ou `matrix:user:@user:server`
-- Salles : `!room:server`, `room:!room:server`, ou `matrix:room:!room:server`
-- Alias : `#alias:server`, `channel:#alias:server`, ou `matrix:channel:#alias:server`
+- Utilisateurs : `@user:server`, `user:@user:server` ou `matrix:user:@user:server`
+- Salons : `!room:server`, `room:!room:server` ou `matrix:room:!room:server`
+- Alias : `#alias:server`, `channel:#alias:server` ou `matrix:channel:#alias:server`
 
 La recherche en direct dans l'annuaire utilise le compte Matrix connecté :
 
@@ -990,66 +989,66 @@ La recherche en direct dans l'annuaire utilise le compte Matrix connecté :
 ## Référence de configuration
 
 - `enabled` : activer ou désactiver le channel.
-- `name` : étiquette optionnelle pour le compte.
+- `name` : étiquette facultative pour le compte.
 - `defaultAccount` : ID de compte préféré lorsque plusieurs comptes Matrix sont configurés.
 - `homeserver` : URL du serveur domestique, par exemple `https://matrix.example.org`.
-- `network.dangerouslyAllowPrivateNetwork` : autoriser ce compte Matrix à se connecter à des serveurs domestiques privés/interne. Activez ceci lorsque le serveur domestique est résolu en `localhost`, une IP LAN/Tailscale, ou un hôte interne tel que `matrix-synapse`.
+- `network.dangerouslyAllowPrivateNetwork` : autoriser ce compte Matrix à se connecter aux serveurs domestiques privés/internal. Activez ceci lorsque le serveur domestique résout vers `localhost`, une IP LAN/Tailscale ou un hôte interne tel que `matrix-synapse`.
 - `proxy` : URL de proxy HTTP(S) facultative pour le trafic Matrix. Les comptes nommés peuvent remplacer la valeur par défaut de niveau supérieur par leur propre `proxy`.
-- `userId` : identifiant utilisateur complet Matrix, par exemple `@bot:example.org`.
-- `accessToken` : jeton d'accès pour l'authentification par jeton. Les valeurs en texte brut et les valeurs SecretRef sont prises en charge pour `channels.matrix.accessToken` et `channels.matrix.accounts.<id>.accessToken` sur les fournisseurs env/file/exec. Voir [Secrets Management](/en/gateway/secrets).
+- `userId` : ID complet de l'utilisateur Matrix, par exemple `@bot:example.org`.
+- `accessToken` : jeton d'accès pour l'authentification par jeton. Les valeurs en texte clair et les valeurs SecretRef sont prises en charge pour `channels.matrix.accessToken` et `channels.matrix.accounts.<id>.accessToken` sur les fournisseurs env/file/exec. Voir [Secrets Management](/en/gateway/secrets).
 - `password` : mot de passe pour la connexion par mot de passe. Les valeurs en texte brut et les valeurs SecretRef sont prises en charge.
-- `deviceId` : identifiant d'appareil Matrix explicite.
+- `deviceId` : ID d'appareil Matrix explicite.
 - `deviceName` : nom d'affichage de l'appareil pour la connexion par mot de passe.
-- `avatarUrl` : URL d'avatar auto-stockée pour la synchronisation du profil et les mises à jour `profile set`.
-- `initialSyncLimit` : nombre maximum d'événements récupérés lors de la synchronisation de démarrage.
-- `encryption` : activer l'E2EE.
-- `allowlistOnly` : lorsque `true`, met à niveau la stratégie de salle `open` vers `allowlist` et force toutes les stratégies DM actives, sauf `disabled` (y compris `pairing` et `open`), vers `allowlist`. N'affecte pas les stratégies `disabled`.
-- `allowBots` : autoriser les messages d'autres comptes OpenClaw Matrix configurés (`true` ou `"mentions"`).
-- `groupPolicy` : `open`, `allowlist`, ou `disabled`.
+- `avatarUrl` : URL de l'avatar auto-stocké pour la synchronisation du profil et les mises à jour `profile set`.
+- `initialSyncLimit` : nombre maximum d'événements récupérés lors de la synchronisation au démarrage.
+- `encryption` : activer le chiffrement de bout en bout (E2EE).
+- `allowlistOnly` : lorsque `true`, met à niveau la stratégie de salle `open` vers `allowlist` et force toutes les stratégies DM actives, à l'exception de `disabled` (y compris `pairing` et `open`), vers `allowlist`. N'affecte pas les stratégies `disabled`.
+- `allowBots` : autoriser les messages provenant d'autres comptes OpenClaw Matrix configurés (`true` ou `"mentions"`).
+- `groupPolicy` : `open`, `allowlist` ou `disabled`.
 - `contextVisibility` : mode de visibilité du contexte de salle supplémentaire (`all`, `allowlist`, `allowlist_quote`).
-- `groupAllowFrom` : liste d'autorisation des identifiants utilisateur pour le trafic de salle. Les entrées doivent être des identifiants utilisateur complets Matrix ; les noms non résolus sont ignorés lors de l'exécution.
-- `historyLimit` : nombre maximal de messages de salle à inclure en tant que contexte d'historique de groupe. Revient à `messages.groupChat.historyLimit` ; si les deux ne sont pas définis, la valeur par défaut effective est `0`. Définissez `0` pour désactiver.
-- `replyToMode` : `off`, `first`, `all`, ou `batched`.
-- `markdown` : configuration de rendu Markdown optionnelle pour le texte sortant Matrix.
-- `streaming` : `off` (par défaut), `"partial"`, `"quiet"`, `true`, ou `false`. `"partial"` et `true` activent les mises à jour de brouillon avec aperçu prioritaire via des messages texte normaux Matrix. `"quiet"` utilise des avis de prévisualisation non notifiants pour les configurations de règles de push auto-hébergées. `false` est équivalent à `"off"`.
-- `blockStreaming` : `true` active des messages de progression séparés pour les blocs d'assistant terminés tandis que le streaming de prévisualisation de brouillon est actif.
+- `groupAllowFrom` : liste d'autorisation des ID d'utilisateur pour le trafic de la salle. Les entrées doivent être des ID d'utilisateur Matrix complets ; les noms non résolus sont ignorés lors de l'exécution.
+- `historyLimit` : nombre maximum de messages de salle à inclure comme contexte de l'historique du groupe. Revient à `messages.groupChat.historyLimit` ; si les deux ne sont pas définis, la valeur par défaut effective est `0`. Définissez `0` pour désactiver.
+- `replyToMode` : `off`, `first`, `all` ou `batched`.
+- `markdown` : configuration facultative du rendu Markdown pour le texte Matrix sortant.
+- `streaming` : `off` (par défaut), `"partial"`, `"quiet"`, `true`, ou `false`. `"partial"` et `true` activent les mises à jour de brouillon par aperçu préalable avec des messages texte Matrix normaux. `"quiet"` utilise des avis d'aperçu sans notification pour les configurations de règles de push auto-hébergées. `false` est équivalent à `"off"`.
+- `blockStreaming` : `true` active des messages de progression distincts pour les blocs d'assistant terminés lorsque le streaming d'aperçu de brouillon est actif.
 - `threadReplies` : `off`, `inbound`, ou `always`.
-- `threadBindings` : substitutions par channel pour le routage et le cycle de vie des sessions liées aux fils de discussion.
+- `threadBindings` : substitutions par canal pour le routage et le cycle de vie des sessions liées aux fils.
 - `startupVerification` : mode de demande de vérification automatique au démarrage (`if-unverified`, `off`).
-- `startupVerificationCooldownHours` : délai d'attente avant de réessayer les demandes de vérification automatique au démarrage.
-- `textChunkLimit` : taille des fragments de messages sortants en caractères (s'applique lorsque `chunkMode` est `length`).
+- `startupVerificationCooldownHours` : temps de refroidissement avant de réessayer les demandes de vérification automatique au démarrage.
+- `textChunkLimit` : taille des blocs de messages sortants en caractères (s'applique lorsque `chunkMode` est `length`).
 - `chunkMode` : `length` divise les messages par nombre de caractères ; `newline` divise aux limites des lignes.
-- `responsePrefix` : chaîne optionnelle ajoutée au début de toutes les réponses sortantes pour ce channel.
-- `ackReaction` : substitution de réaction d'accusé de réception facultative pour ce channel/compte.
-- `ackReactionScope` : substitution de la portée de la réaction d'accusé de réception (`group-mentions`, `group-all`, `direct`, `all`, `none`, `off`).
+- `responsePrefix` : chaîne optionnelle ajoutée devant toutes les réponses sortantes pour ce canal.
+- `ackReaction` : substitution de réaction d'accusé de réception optionnelle pour ce canal/compte.
+- `ackReactionScope` : substitution de portée de réaction d'accusé de réception optionnelle (`group-mentions`, `group-all`, `direct`, `all`, `none`, `off`).
 - `reactionNotifications` : mode de notification de réaction entrante (`own`, `off`).
-- `mediaMaxMb` : limite de taille des médias en Mo pour les envois sortants et le traitement des médias entrants.
-- `autoJoin` : politique de jointure automatique aux invitations (`always`, `allowlist`, `off`). Par défaut : `off`. S'applique à toutes les invitations Matrix, y compris les invitations de type DM.
-- `autoJoinAllowlist` : salons/alias autorisés lorsque `autoJoin` est `allowlist`. Les entrées d'alias sont résolues en ID de salon lors du traitement des invitations ; OpenClaw ne fait pas confiance à l'état de l'alias revendiqué par le salon invité.
-- `dm` : bloc de stratégie DM (`enabled`, `policy`, `allowFrom`, `sessionScope`, `threadReplies`).
-- `dm.policy` : contrôle l'accès DM une fois que OpenClaw a rejoint le salon et l'a classifié comme DM. Cela ne modifie pas si une invitation est automatiquement rejointe.
-- `dm.allowFrom` : les entrées doivent être des ID utilisateur complets Matrix, sauf si vous les avez déjà résolus via une recherche en direct dans l'annuaire.
-- `dm.sessionScope` : `per-user` (par défaut) ou `per-room`. Utilisez `per-room` lorsque vous souhaitez que chaque salon DM Matrix conserve un contexte distinct, même si l'interlocuteur est le même.
-- `dm.threadReplies` : substitution de la stratégie de filtre DM uniquement (`off`, `inbound`, `always`). Elle remplace le paramètre de niveau supérieur `threadReplies` pour le placement des réponses et l'isolation de session dans les DMs.
-- `execApprovals` : Livraison native des approbations d'exécution Matrix (`enabled`, `approvers`, `target`, `agentFilter`, `sessionFilter`).
-- `execApprovals.approvers` : Identifiants utilisateurs Matrix autorisés à approuver les demandes d'exécution. Optionnel lorsque `dm.allowFrom` identifie déjà les approbateurs.
-- `execApprovals.target` : `dm | channel | both` (par défaut : `dm`).
-- `accounts` : substitutions nommées par compte. Les valeurs de `channels.matrix` de premier niveau servent de valeurs par défaut pour ces entrées.
-- `groups` : carte de stratégie par salon. Privilégiez les identifiants ou alias de salon ; les noms de salon non résolus sont ignorés lors de l'exécution. L'identité de session/groupe utilise l'identifiant de salon stable après résolution.
-- `groups.<room>.account` : restreindre une entrée de salon héritée à un compte Matrix spécifique dans les configurations multi-comptes.
-- `groups.<room>.allowBots` : substitution au niveau du salon pour les expéditeurs de bots configurés (`true` ou `"mentions"`).
-- `groups.<room>.users` : liste d'autorisation d'expéditeurs par salon.
-- `groups.<room>.tools` : substitutions d'autorisation/refus d'outils par salon.
-- `groups.<room>.autoReply` : substitution de filtrage par mention au niveau du salon. `true` désactive les exigences de mention pour ce salon ; `false` les réactive.
-- `groups.<room>.skills` : filtre de compétences optionnel au niveau du salon.
-- `groups.<room>.systemPrompt` : extrait d'invite système optionnel au niveau du salon.
-- `rooms` : ancien alias pour `groups`.
-- `actions` : filtrage des outils par action (`messages`, `reactions`, `pins`, `profile`, `memberInfo`, `channelInfo`, `verification`).
+- `mediaMaxMb` : limite de taille des médias en Mo pour les envois sortants et le traitement des médias entrants.
+- `autoJoin` : politique de rejoindre automatiquement les invitations (`always`, `allowlist`, `off`). Par défaut : `off`. S'applique à toutes les invitations Matrix, y compris les invitations de style DM.
+- `autoJoinAllowlist` : salons/alias autorisés lorsque `autoJoin` est `allowlist`. Les entrées d'alias sont résolues en ID de salon lors du traitement de l'invitation ; OpenClaw ne fait pas confiance à l'état de l'alias revendiqué par le salon invité.
+- `dm` : bloc de stratégie de DM (`enabled`, `policy`, `allowFrom`, `sessionScope`, `threadReplies`).
+- `dm.policy` : contrôle l'accès aux DM après que OpenClaw a rejoint le salon et l'a classé comme DM. Cela ne modifie pas si une invitation est rejointe automatiquement.
+- `dm.allowFrom` : les entrées doivent être des ID d'utilisateurs Matrix complets, sauf si vous les avez déjà résolus via une recherche en direct dans l'annuaire.
+- `dm.sessionScope` : `per-user` (par défaut) ou `per-room`. Utilisez `per-room` lorsque vous souhaitez que chaque salon DM Matrix conserve un contexte distinct, même si l'interlocuteur est le même.
+- `dm.threadReplies` : remplacement de la stratégie de filtre pour DM uniquement (`off`, `inbound`, `always`). Il remplace le paramètre `threadReplies` de niveau supérieur pour le placement des réponses et l'isolement de session dans les DM.
+- `execApprovals` : livraison d'approbation d'exécution native Matrix (`enabled`, `approvers`, `target`, `agentFilter`, `sessionFilter`).
+- `execApprovals.approvers` : ID d'utilisateurs Matrix autorisés à approuver les demandes d'exécution. Optionnel lorsque `dm.allowFrom` identifie déjà les approbateurs.
+- `execApprovals.target` : `dm | channel | both` (par défaut : `dm`).
+- `accounts` : remplacements nommés par compte. Les valeurs `channels.matrix` de niveau supérieur servent de valeurs par défaut pour ces entrées.
+- `groups` : carte de stratégie par salle. Préférez les ID ou alias de salle ; les noms de salle non résolus sont ignorés lors de l'exécution. L'identité de session/groupe utilise l'ID de salle stable après résolution.
+- `groups.<room>.account` : restreindre une entrée de salle héritée à un compte Matrix spécifique dans les configurations multi-comptes.
+- `groups.<room>.allowBots` : remplacement au niveau de la salle pour les expéditeurs de bots configurés (`true` ou `"mentions"`).
+- `groups.<room>.users` : liste d'autorisation des expéditeurs par salle.
+- `groups.<room>.tools` : remplacements d'autorisation/refus d'outils par salle.
+- `groups.<room>.autoReply` : remplacement de filtrage par mention au niveau de la salle. `true` désactive les exigences de mention pour cette salle ; `false` les réactive.
+- `groups.<room>.skills` : filtre de compétences facultatif au niveau de la salle.
+- `groups.<room>.systemPrompt` : extrait d'invite système facultatif au niveau de la salle.
+- `rooms` : alias hérité pour `groups`.
+- `actions` : filtrage d'outils par action (`messages`, `reactions`, `pins`, `profile`, `memberInfo`, `channelInfo`, `verification`).
 
 ## Connexes
 
-- [Aperçu des canaux](/en/channels) — tous les canaux pris en charge
-- [Appariement](/en/channels/pairing) — flux d'authentification et d'appariement DM
-- [Groups](/en/channels/groups) — comportement du chat de groupe et filtrage des mentions
-- [Channel Routing](/en/channels/channel-routing) — routage de session pour les messages
-- [Security](/en/gateway/security) — modèle d'accès et durcissement
+- [Présentation des canaux](/en/channels) — tous les canaux pris en charge
+- [Appairage](/en/channels/pairing) — authentification par DM et flux d'appairage
+- [Groupes](/en/channels/groups) — comportement de chat de groupe et filtrage par mention
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

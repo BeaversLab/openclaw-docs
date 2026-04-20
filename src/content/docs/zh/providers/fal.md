@@ -9,44 +9,51 @@ read_when:
 
 # fal
 
-OpenClaw 附带了一个用于托管图像和视频生成的捆绑 `fal` 提供商。
+OpenClaw 附带了一个捆绑的 `fal` 提供商，用于托管图像和视频生成。
 
-- 提供商：`fal`
-- 认证：`FAL_KEY`（标准；`FAL_API_KEY` 也可作为备选方案）
-- API： fal 模型端点
+| 属性     | 值                                                  |
+| -------- | --------------------------------------------------- |
+| 提供商   | `fal`                                               |
+| 身份验证 | `FAL_KEY`（规范；`FAL_API_KEY` 也可以作为后备使用） |
+| API      | fal 模型端点                                        |
 
-## 快速开始
+## 入门指南
 
-1. 设置 API 密钥：
-
-```bash
-openclaw onboard --auth-choice fal-api-key
-```
-
-2. 设置默认图像模型：
-
-```json5
-{
-  agents: {
-    defaults: {
-      imageGenerationModel: {
-        primary: "fal/fal-ai/flux/dev",
+<Steps>
+  <Step title="Set the API key">
+    ```bash
+    openclaw onboard --auth-choice fal-api-key
+    ```
+  </Step>
+  <Step title="Set a default image model">
+    ```json5
+    {
+      agents: {
+        defaults: {
+          imageGenerationModel: {
+            primary: "fal/fal-ai/flux/dev",
+          },
+        },
       },
-    },
-  },
-}
-```
+    }
+    ```
+  </Step>
+</Steps>
 
 ## 图像生成
 
-捆绑的 `fal` 图像生成提供商默认为
+捆绑的 `fal` 图像生成提供商默认使用
 `fal/fal-ai/flux/dev`。
 
-- 生成：每个请求最多 4 张图像
-- 编辑模式：已启用，1 张参考图像
-- 支持 `size`、`aspectRatio` 和 `resolution`
-- 当前编辑注意事项：fal 图像编辑端点 **不** 支持
-  `aspectRatio` 覆盖
+| 功能       | 值                   |
+| ---------- | -------------------- |
+| 最大图像数 | 每次请求 4 张        |
+| 编辑模式   | 已启用，1 张参考图像 |
+| 尺寸覆盖   | 支持                 |
+| 纵横比     | 支持                 |
+| 分辨率     | 支持                 |
+
+<Warning>fal 图像编辑端点**不**支持 `aspectRatio` 覆盖。</Warning>
 
 要将 fal 用作默认图像提供商：
 
@@ -64,49 +71,70 @@ openclaw onboard --auth-choice fal-api-key
 
 ## 视频生成
 
-捆绑的 `fal` 视频生成提供商默认为
+捆绑的 `fal` 视频生成提供商默认使用
 `fal/fal-ai/minimax/video-01-live`。
 
-- 模式：文本生成视频和单图像参考流
-- 运行时：针对长时间运行作业的队列支持的提交/状态/结果流
-- HeyGen 视频代理 模型参考：
-  - `fal/fal-ai/heygen/v2/video-agent`
-- Seedance 2.0 模型参考：
-  - `fal/bytedance/seedance-2.0/fast/text-to-video`
-  - `fal/bytedance/seedance-2.0/fast/image-to-video`
-  - `fal/bytedance/seedance-2.0/text-to-video`
-  - `fal/bytedance/seedance-2.0/image-to-video`
+| 功能   | 值                                       |
+| ------ | ---------------------------------------- |
+| 模式   | 文本生成视频，单图参考                   |
+| 运行时 | 长时间运行任务的队列支持提交/状态/结果流 |
 
-要将 Seedance 2.0 用作默认视频 模型：
+<AccordionGroup>
+  <Accordion title="可用的视频模型">
+    **HeyGen video-agent:**
 
-```json5
-{
-  agents: {
-    defaults: {
-      videoGenerationModel: {
-        primary: "fal/bytedance/seedance-2.0/fast/text-to-video",
+    - `fal/fal-ai/heygen/v2/video-agent`
+
+    **Seedance 2.0:**
+
+    - `fal/bytedance/seedance-2.0/fast/text-to-video`
+    - `fal/bytedance/seedance-2.0/fast/image-to-video`
+    - `fal/bytedance/seedance-2.0/text-to-video`
+    - `fal/bytedance/seedance-2.0/image-to-video`
+
+  </Accordion>
+
+  <Accordion title="Seedance 2.0 配置示例">
+    ```json5
+    {
+      agents: {
+        defaults: {
+          videoGenerationModel: {
+            primary: "fal/bytedance/seedance-2.0/fast/text-to-video",
+          },
+        },
       },
-    },
-  },
-}
-```
+    }
+    ```
+  </Accordion>
 
-要将 HeyGen 视频代理 用作默认视频 模型：
-
-```json5
-{
-  agents: {
-    defaults: {
-      videoGenerationModel: {
-        primary: "fal/fal-ai/heygen/v2/video-agent",
+  <Accordion title="HeyGen video-agent 配置示例">
+    ```json5
+    {
+      agents: {
+        defaults: {
+          videoGenerationModel: {
+            primary: "fal/fal-ai/heygen/v2/video-agent",
+          },
+        },
       },
-    },
-  },
-}
-```
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+<Tip>使用 `openclaw models list --provider fal` 查看可用的 fal 模型的完整列表，包括最近添加的条目。</Tip>
 
 ## 相关
 
-- [图像生成](/en/tools/image-generation)
-- [视频生成](/en/tools/video-generation)
-- [配置参考](/en/gateway/configuration-reference#agent-defaults)
+<CardGroup cols={2}>
+  <Card title="图像生成" href="/en/tools/image-generation" icon="image">
+    共享的图像工具参数和提供商选择。
+  </Card>
+  <Card title="视频生成" href="/en/tools/video-generation" icon="video">
+    共享的视频工具参数和提供商选择。
+  </Card>
+  <Card title="配置参考" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+    代理默认值，包括图像和视频模型选择。
+  </Card>
+</CardGroup>

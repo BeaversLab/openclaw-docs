@@ -18,8 +18,8 @@ OpenClaw 通過在您代理的工作區中寫入**純 Markdown 文件**來記憶
   決策。在每次 DM 會話開始時載入。
 - **`memory/YYYY-MM-DD.md`** -- 每日筆記。運行上下文和觀察記錄。
   今天和昨天的筆記會自動載入。
-- **`DREAMS.md`** (實驗性、可選) -- 夢境日記和夢境掃描
-  摘要，供人類審閱，包括有依據的歷史回填條目。
+- **`DREAMS.md`** (選用) -- 夢日記與夢境掃描
+  摘要供人類檢閱，包括基於歷史背景的回填條目。
 
 這些檔案位於代理工作區中 (預設為 `~/.openclaw/workspace`)。
 
@@ -94,7 +94,7 @@ OpenClaw 通過在您代理的工作區中寫入**純 Markdown 文件**來記憶
 
 <Tip>記憶體沖刷可防止壓縮期間的上下文遺失。如果您的代理在對話中擁有尚未寫入檔案的重要事實，它們將在總結發生之前自動儲存。</Tip>
 
-## 夢境（實驗性）
+## 夢境 (Dreaming)
 
 夢境是一個可選的後台記憶整合過程。它會收集短期訊號、對候選項進行評分，並僅將合格項目提升至長期記憶 (`MEMORY.md`)。
 
@@ -105,7 +105,8 @@ OpenClaw 通過在您代理的工作區中寫入**純 Markdown 文件**來記憶
 - **閾值篩選**：提升項目必須通過分數、回顧頻率和查詢多樣性的閘門。
 - **可審查**：階段總結和日記條目會被寫入 `DREAMS.md` 以供人工審查。
 
-關於階段行為、評分訊號和夢境日記的詳細資訊，請參閱 [夢境 (實驗性)](/en/concepts/dreaming)。
+關於階段行為、評分信號與夢日記的詳情，請參閱
+[夢境](/en/concepts/dreaming)。
 
 ## 基於事實的回填與即時提升
 
@@ -150,6 +151,7 @@ openclaw memory index --force   # Rebuild the index
 - [Honcho Memory](/en/concepts/memory-honcho) -- AI 原生的跨會話記憶
 - [Memory Wiki](/en/plugins/memory-wiki) -- 編譯的知識保存庫和 Wiki 原生工具
 - [Memory Search](/en/concepts/memory-search) -- 搜尋管道、提供者和調整
-- [夢想（實驗性）](/en/concepts/dreaming) -- 從短期回憶到長期記憶的背景晉升
+- [夢境](/en/concepts/dreaming) -- 從短期回憶到長期記憶的
+  背景提昇
 - [記憶配置參考](/en/reference/memory-config) -- 所有配置選項
 - [壓縮](/en/concepts/compaction) -- 壓縮如何與記憶互動

@@ -1,5 +1,5 @@
 ---
-summary: "Utilisez l'API compatible Anthropic de Synthetic dans API"
+summary: "Utilisez l'API Anthropic compatible de Synthetic dans API"
 read_when:
   - You want to use Synthetic as a model provider
   - You need a Synthetic API key or base URL setup
@@ -8,23 +8,25 @@ title: "Synthetic"
 
 # Synthetic
 
-Synthetic expose des points de terminaison compatibles Anthropic. OpenClaw l'enregistre en tant que
-`synthetic` provider et utilise l'API Messages de Anthropic.
+[Synthetic](https://synthetic.new) expose des points de terminaison compatibles Anthropic.
+OpenClaw l'enregistre en tant que fournisseur `synthetic` et utilise l'Anthropic de messages API.
 
-## Configuration rapide
+| Propriété   | Valeur                                |
+| ----------- | ------------------------------------- |
+| Fournisseur | `synthetic`                           |
+| Auth        | `SYNTHETIC_API_KEY`                   |
+| API         | Messages Anthropic                    |
+| URL de base | `https://api.synthetic.new/anthropic` |
 
-1. Définissez `SYNTHETIC_API_KEY` (ou exécutez l'assistant ci-dessous).
-2. Exécuter l'onboarding :
+## Getting started
 
-```bash
-openclaw onboard --auth-choice synthetic-api-key
-```
+<Steps>
+  <Step title="Obtenir une clé API">Obtenez un `SYNTHETIC_API_KEY` à partir de votre compte Synthetic, ou laissez l'assistant de configuration vous en demander un.</Step>
+  <Step title="Exécuter l'intégration">```bash openclaw onboard --auth-choice synthetic-api-key ```</Step>
+  <Step title="Vérifier le modèle par défaut">Après l'intégration, le modèle par défaut est défini sur : ``` synthetic/hf:MiniMaxAI/MiniMax-M2.5 ```</Step>
+</Steps>
 
-Le model par défaut est défini sur :
-
-```
-synthetic/hf:MiniMaxAI/MiniMax-M2.5
-```
+<Warning>Le client OpenClaw de Anthropic ajoute `/v1` à l'URL de base automatiquement, utilisez donc `https://api.synthetic.new/anthropic` (et non `/anthropic/v1`). Si Synthetic modifie son URL de base, remplacez `models.providers.synthetic.baseUrl`.</Warning>
 
 ## Exemple de configuration
 
@@ -61,41 +63,77 @@ synthetic/hf:MiniMaxAI/MiniMax-M2.5
 }
 ```
 
-Remarque : Le client OpenClaw de Anthropic ajoute `/v1` à l'URL de base, utilisez donc
-`https://api.synthetic.new/anthropic` (pas `/anthropic/v1`). Si Synthetic modifie
-son URL de base, redéfinissez `models.providers.synthetic.baseUrl`.
+## Catalogue de modèles
 
-## Catalogue de models
+Tous les modèles Synthetic utilisent le coût `0` (entrée/sortie/cache).
 
-Tous les models ci-dessous utilisent le coût `0` (entrée/sortie/cache).
-
-| ID du model                                            | Fenêtre de contexte | Max tokens | Raisonnement | Entrée        |
+| ID du modèle                                           | Fenêtre de contexte | Max tokens | Raisonnement | Entrée        |
 | ------------------------------------------------------ | ------------------- | ---------- | ------------ | ------------- |
-| `hf:MiniMaxAI/MiniMax-M2.5`                            | 192000              | 65536      | false        | texte         |
-| `hf:moonshotai/Kimi-K2-Thinking`                       | 256000              | 8192       | true         | texte         |
-| `hf:zai-org/GLM-4.7`                                   | 198000              | 128000     | false        | texte         |
-| `hf:deepseek-ai/DeepSeek-R1-0528`                      | 128000              | 8192       | false        | texte         |
-| `hf:deepseek-ai/DeepSeek-V3-0324`                      | 128000              | 8192       | false        | texte         |
-| `hf:deepseek-ai/DeepSeek-V3.1`                         | 128000              | 8192       | false        | texte         |
-| `hf:deepseek-ai/DeepSeek-V3.1-Terminus`                | 128000              | 8192       | false        | texte         |
-| `hf:deepseek-ai/DeepSeek-V3.2`                         | 159000              | 8192       | false        | texte         |
-| `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128000              | 8192       | false        | texte         |
-| `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524000              | 8192       | false        | texte         |
-| `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256000              | 8192       | false        | texte         |
-| `hf:moonshotai/Kimi-K2.5`                              | 256000              | 8192       | true         | texte + image |
-| `hf:openai/gpt-oss-120b`                               | 128000              | 8192       | false        | texte         |
-| `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256000              | 8192       | false        | texte         |
-| `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000              | 8192       | false        | texte         |
-| `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250000              | 8192       | false        | texte + image |
-| `hf:zai-org/GLM-4.5`                                   | 128000              | 128000     | false        | texte         |
-| `hf:zai-org/GLM-4.6`                                   | 198000              | 128000     | false        | texte         |
-| `hf:zai-org/GLM-5`                                     | 256000              | 128000     | true         | texte + image |
-| `hf:deepseek-ai/DeepSeek-V3`                           | 128000              | 8192       | false        | texte         |
-| `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000              | 8192       | true         | texte         |
+| `hf:MiniMaxAI/MiniMax-M2.5`                            | 192,000             | 65,536     | non          | texte         |
+| `hf:moonshotai/Kimi-K2-Thinking`                       | 256,000             | 8,192      | oui          | texte         |
+| `hf:zai-org/GLM-4.7`                                   | 198,000             | 128,000    | non          | texte         |
+| `hf:deepseek-ai/DeepSeek-R1-0528`                      | 128,000             | 8,192      | non          | texte         |
+| `hf:deepseek-ai/DeepSeek-V3-0324`                      | 128,000             | 8,192      | non          | texte         |
+| `hf:deepseek-ai/DeepSeek-V3.1`                         | 128,000             | 8,192      | non          | texte         |
+| `hf:deepseek-ai/DeepSeek-V3.1-Terminus`                | 128,000             | 8,192      | non          | texte         |
+| `hf:deepseek-ai/DeepSeek-V3.2`                         | 159,000             | 8,192      | non          | texte         |
+| `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128,000             | 8,192      | non          | texte         |
+| `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524,000             | 8,192      | non          | texte         |
+| `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256,000             | 8,192      | non          | texte         |
+| `hf:moonshotai/Kimi-K2.5`                              | 256,000             | 8,192      | oui          | texte + image |
+| `hf:openai/gpt-oss-120b`                               | 128,000             | 8,192      | non          | texte         |
+| `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256,000             | 8,192      | non          | texte         |
+| `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256,000             | 8,192      | non          | texte         |
+| `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250,000             | 8,192      | non          | texte + image |
+| `hf:zai-org/GLM-4.5`                                   | 128,000             | 128,000    | non          | texte         |
+| `hf:zai-org/GLM-4.6`                                   | 198,000             | 128,000    | non          | texte         |
+| `hf:zai-org/GLM-5`                                     | 256,000             | 128,000    | oui          | texte + image |
+| `hf:deepseek-ai/DeepSeek-V3`                           | 128,000             | 8,192      | non          | texte         |
+| `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256,000             | 8,192      | oui          | texte         |
 
-## Notes
+<Tip>
+Les références de modèle utilisent le format `synthetic/<modelId>`. Utilisez
+`openclaw models list --provider synthetic` pour voir tous les modèles disponibles sur votre
+compte.
+</Tip>
 
-- Les références de modèle utilisent `synthetic/<modelId>`.
-- Si vous activez une liste blanche de modèles (`agents.defaults.models`), ajoutez chaque modèle que
-  vous prévoyez d'utiliser.
-- Voir [Model providers](/en/concepts/model-providers) pour les règles du provider.
+<AccordionGroup>
+  <Accordion title="Liste d'autorisation de modèles">
+    Si vous activez une liste d'autorisation de modèles (`agents.defaults.models`), ajoutez chaque
+    modèle Synthetic que vous prévoyez d'utiliser. Les modèles qui ne figurent pas dans la liste d'autorisation seront masqués
+    pour l'agent.
+  </Accordion>
+
+  <Accordion title="Remplacement de l'URL de base">
+    Si Synthetic modifie son point de terminaison API, remplacez l'URL de base dans votre configuration :
+
+    ```json5
+    {
+      models: {
+        providers: {
+          synthetic: {
+            baseUrl: "https://new-api.synthetic.new/anthropic",
+          },
+        },
+      },
+    }
+    ```
+
+    N'oubliez pas que OpenClaw ajoute `/v1` automatiquement.
+
+  </Accordion>
+</AccordionGroup>
+
+## Connexes
+
+<CardGroup cols={2}>
+  <Card title="Fournisseurs de modèles" href="/en/concepts/model-providers" icon="layers">
+    Règles de fournisseur, références de modèle et comportement de basculement.
+  </Card>
+  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+    Schéma de configuration complet incluant les paramètres du fournisseur.
+  </Card>
+  <Card title="Synthetic" href="https://synthetic.new" icon="arrow-up-right-from-square">
+    Tableau de bord Synthetic et documentation API.
+  </Card>
+</CardGroup>

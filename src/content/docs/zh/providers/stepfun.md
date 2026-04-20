@@ -1,5 +1,5 @@
 ---
-summary: "在 OpenClaw 中使用 StepFun 模型"
+summary: "使用 OpenClaw 中的 StepFun 模型"
 read_when:
   - You want StepFun models in OpenClaw
   - You need StepFun setup guidance
@@ -13,140 +13,214 @@ OpenClaw 包含一个捆绑的 StepFun 提供商插件，具有两个提供商 I
 - `stepfun` 用于标准端点
 - `stepfun-plan` 用于 Step Plan 端点
 
-内置目录目前因界面而异：
-
-- 标准版： `step-3.5-flash`
-- Step Plan： `step-3.5-flash`， `step-3.5-flash-2603`
+<Warning>Standard 和 Step Plan 是拥有不同端点和模型引用前缀（`stepfun/...` vs `stepfun-plan/...`）的**独立提供商**。请在中国端点 `.com` 使用中国密钥，在全球端点 `.ai` 使用全球密钥。</Warning>
 
 ## 区域和端点概述
 
-- 中国标准端点： `https://api.stepfun.com/v1`
-- 全球标准端点： `https://api.stepfun.ai/v1`
-- 中国 Step Plan 端点： `https://api.stepfun.com/step_plan/v1`
-- 全球 Step Plan 端点： `https://api.stepfun.ai/step_plan/v1`
-- Auth 环境变量： `STEPFUN_API_KEY`
+| 端点      | 中国 (`.com`)                          | 全球 (`.ai`)                          |
+| --------- | -------------------------------------- | ------------------------------------- |
+| Standard  | `https://api.stepfun.com/v1`           | `https://api.stepfun.ai/v1`           |
+| Step Plan | `https://api.stepfun.com/step_plan/v1` | `https://api.stepfun.ai/step_plan/v1` |
 
-请将中国密钥用于 `.com` 端点，将全球密钥用于 `.ai`
-端点。
-
-## CLI 设置
-
-交互式设置：
-
-```bash
-openclaw onboard
-```
-
-选择以下身份验证选项之一：
-
-- `stepfun-standard-api-key-cn`
-- `stepfun-standard-api-key-intl`
-- `stepfun-plan-api-key-cn`
-- `stepfun-plan-api-key-intl`
-
-非交互式示例：
-
-```bash
-openclaw onboard --auth-choice stepfun-standard-api-key-intl --stepfun-api-key "$STEPFUN_API_KEY"
-openclaw onboard --auth-choice stepfun-plan-api-key-intl --stepfun-api-key "$STEPFUN_API_KEY"
-```
-
-## 模型参考
-
-- 标准默认模型： `stepfun/step-3.5-flash`
-- Step Plan 默认模型： `stepfun-plan/step-3.5-flash`
-- Step Plan 备选模型： `stepfun-plan/step-3.5-flash-2603`
+Auth 环境变量: `STEPFUN_API_KEY`
 
 ## 内置目录
 
-标准版 (`stepfun`)：
+Standard (`stepfun`)：
 
-| 模型参考                 | 上下文  | 最大输出 | 备注         |
-| ------------------------ | ------- | -------- | ------------ |
-| `stepfun/step-3.5-flash` | 262,144 | 65,536   | 默认标准模型 |
+| 模型引用                 | 上下文  | 最大输出 | 备注               |
+| ------------------------ | ------- | -------- | ------------------ |
+| `stepfun/step-3.5-flash` | 262,144 | 65,536   | 默认 Standard 模型 |
 
 Step Plan (`stepfun-plan`)：
 
-| 模型参考                           | 上下文  | 最大输出 | 备注                  |
+| 模型引用                           | 上下文  | 最大输出 | 备注                  |
 | ---------------------------------- | ------- | -------- | --------------------- |
 | `stepfun-plan/step-3.5-flash`      | 262,144 | 65,536   | 默认 Step Plan 模型   |
 | `stepfun-plan/step-3.5-flash-2603` | 262,144 | 65,536   | 额外的 Step Plan 模型 |
 
-## 配置片段
+## 入门指南
 
-标准提供商：
+选择您的提供商界面并按照设置步骤操作。
 
-```json5
-{
-  env: { STEPFUN_API_KEY: "your-key" },
-  agents: { defaults: { model: { primary: "stepfun/step-3.5-flash" } } },
-  models: {
-    mode: "merge",
-    providers: {
-      stepfun: {
-        baseUrl: "https://api.stepfun.ai/v1",
-        api: "openai-completions",
-        apiKey: "${STEPFUN_API_KEY}",
-        models: [
-          {
-            id: "step-3.5-flash",
-            name: "Step 3.5 Flash",
-            reasoning: true,
-            input: ["text"],
-            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-            contextWindow: 262144,
-            maxTokens: 65536,
+<Tabs>
+  <Tab title="Standard">
+    **适用场景：** 通过标准 StepFun 端点进行通用使用。
+
+    <Steps>
+      <Step title="选择您的端点区域">
+        | 认证选择                      | 端点                         | 区域        |
+        | -------------------------------- | -------------------------------- | ------------- |
+        | `stepfun-standard-api-key-intl`  | `https://api.stepfun.ai/v1`     | 国际 |
+        | `stepfun-standard-api-key-cn`    | `https://api.stepfun.com/v1`    | 中国         |
+      </Step>
+      <Step title="运行新手引导">
+        ```bash
+        openclaw onboard --auth-choice stepfun-standard-api-key-intl
+        ```
+
+        或对于中国端点：
+
+        ```bash
+        openclaw onboard --auth-choice stepfun-standard-api-key-cn
+        ```
+      </Step>
+      <Step title="非交互式替代方案">
+        ```bash
+        openclaw onboard --auth-choice stepfun-standard-api-key-intl \
+          --stepfun-api-key "$STEPFUN_API_KEY"
+        ```
+      </Step>
+      <Step title="验证模型可用">
+        ```bash
+        openclaw models list --provider stepfun
+        ```
+      </Step>
+    </Steps>
+
+    ### 模型引用
+
+    - 默认模型：`stepfun/step-3.5-flash`
+
+  </Tab>
+
+  <Tab title="Step Plan">
+    **适用场景：** Step Plan 推理端点。
+
+    <Steps>
+      <Step title="选择您的端点区域">
+        | 认证选择                  | 端点                                | 区域        |
+        | ---------------------------- | --------------------------------------- | ------------- |
+        | `stepfun-plan-api-key-intl`  | `https://api.stepfun.ai/step_plan/v1`  | 国际 |
+        | `stepfun-plan-api-key-cn`    | `https://api.stepfun.com/step_plan/v1` | 中国         |
+      </Step>
+      <Step title="运行新手引导">
+        ```bash
+        openclaw onboard --auth-choice stepfun-plan-api-key-intl
+        ```
+
+        或对于中国端点：
+
+        ```bash
+        openclaw onboard --auth-choice stepfun-plan-api-key-cn
+        ```
+      </Step>
+      <Step title="非交互式替代方案">
+        ```bash
+        openclaw onboard --auth-choice stepfun-plan-api-key-intl \
+          --stepfun-api-key "$STEPFUN_API_KEY"
+        ```
+      </Step>
+      <Step title="验证模型可用">
+        ```bash
+        openclaw models list --provider stepfun-plan
+        ```
+      </Step>
+    </Steps>
+
+    ### 模型引用
+
+    - 默认模型：`stepfun-plan/step-3.5-flash`
+    - 备用模型：`stepfun-plan/step-3.5-flash-2603`
+
+  </Tab>
+</Tabs>
+
+## 高级
+
+<AccordionGroup>
+  <Accordion title="Full config: Standard provider">
+    ```json5
+    {
+      env: { STEPFUN_API_KEY: "your-key" },
+      agents: { defaults: { model: { primary: "stepfun/step-3.5-flash" } } },
+      models: {
+        mode: "merge",
+        providers: {
+          stepfun: {
+            baseUrl: "https://api.stepfun.ai/v1",
+            api: "openai-completions",
+            apiKey: "${STEPFUN_API_KEY}",
+            models: [
+              {
+                id: "step-3.5-flash",
+                name: "Step 3.5 Flash",
+                reasoning: true,
+                input: ["text"],
+                cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+                contextWindow: 262144,
+                maxTokens: 65536,
+              },
+            ],
           },
-        ],
+        },
       },
-    },
-  },
-}
-```
+    }
+    ```
+  </Accordion>
 
-Step Plan 提供商：
-
-```json5
-{
-  env: { STEPFUN_API_KEY: "your-key" },
-  agents: { defaults: { model: { primary: "stepfun-plan/step-3.5-flash" } } },
-  models: {
-    mode: "merge",
-    providers: {
-      "stepfun-plan": {
-        baseUrl: "https://api.stepfun.ai/step_plan/v1",
-        api: "openai-completions",
-        apiKey: "${STEPFUN_API_KEY}",
-        models: [
-          {
-            id: "step-3.5-flash",
-            name: "Step 3.5 Flash",
-            reasoning: true,
-            input: ["text"],
-            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-            contextWindow: 262144,
-            maxTokens: 65536,
+  <Accordion title="Full config: Step Plan 提供商">
+    ```json5
+    {
+      env: { STEPFUN_API_KEY: "your-key" },
+      agents: { defaults: { model: { primary: "stepfun-plan/step-3.5-flash" } } },
+      models: {
+        mode: "merge",
+        providers: {
+          "stepfun-plan": {
+            baseUrl: "https://api.stepfun.ai/step_plan/v1",
+            api: "openai-completions",
+            apiKey: "${STEPFUN_API_KEY}",
+            models: [
+              {
+                id: "step-3.5-flash",
+                name: "Step 3.5 Flash",
+                reasoning: true,
+                input: ["text"],
+                cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+                contextWindow: 262144,
+                maxTokens: 65536,
+              },
+              {
+                id: "step-3.5-flash-2603",
+                name: "Step 3.5 Flash 2603",
+                reasoning: true,
+                input: ["text"],
+                cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+                contextWindow: 262144,
+                maxTokens: 65536,
+              },
+            ],
           },
-          {
-            id: "step-3.5-flash-2603",
-            name: "Step 3.5 Flash 2603",
-            reasoning: true,
-            input: ["text"],
-            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-            contextWindow: 262144,
-            maxTokens: 65536,
-          },
-        ],
+        },
       },
-    },
-  },
-}
-```
+    }
+    ```
+  </Accordion>
 
-## 备注
+  <Accordion title="Notes">
+    - The 提供商 is bundled with OpenClaw, so there is no separate plugin install step.
+    - `step-3.5-flash-2603` is currently exposed only on `stepfun-plan`.
+    - A single auth flow writes region-matched profiles for both `stepfun` and `stepfun-plan`, so both surfaces can be discovered together.
+    - Use `openclaw models list` and `openclaw models set <provider/model>` to inspect or switch models.
+  </Accordion>
+</AccordionGroup>
 
-- 该提供商与 OpenClaw 捆绑在一起，因此没有单独的插件安装步骤。
-- `step-3.5-flash-2603` 目前仅在 `stepfun-plan` 上可用。
-- 单一的身份验证流程会为 `stepfun` 和 `stepfun-plan` 写入区域匹配的配置文件，因此可以同时发现这两个表面。
-- 使用 `openclaw models list` 和 `openclaw models set <provider/model>` 检查或切换模型。
-- 有关更广泛的提供商概述，请参阅 [Model providers](/en/concepts/model-providers)。
+<Note>For the broader 提供商 overview, see [Model providers](/en/concepts/model-providers).</Note>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Model providers" href="/en/concepts/model-providers" icon="layers">
+    Overview of all providers, 模型 refs, and failover behavior.
+  </Card>
+  <Card title="Configuration reference" href="/en/gateway/configuration-reference" icon="gear">
+    Full config schema for providers, models, and plugins.
+  </Card>
+  <Card title="Model selection" href="/en/concepts/models" icon="brain">
+    How to choose and configure models.
+  </Card>
+  <Card title="StepFun Platform" href="https://platform.stepfun.com" icon="globe">
+    StepFun API key management and documentation.
+  </Card>
+</CardGroup>

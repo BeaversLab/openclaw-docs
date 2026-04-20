@@ -38,7 +38,7 @@ Anthropic 說明：Anthropic 人員告訴我們，OpenClaw 風格的 Claude CLI 
   聊天模型項目，必要時從時間戳記推導視窗標籤，並在方案標籤中包含模型名稱。
 - 那些配額視窗的使用權限驗證來自供應商特定的掛鉤（如果可用）；否則 OpenClaw 會退而求其次，從驗證設定檔、環境變數或設定中匹配 OAuth/API 金鑰憑證。
 
-詳情與範例請參閱 [Token use & costs](/en/reference/token-use)。
+詳情和範例請參閱 [Token use & costs](/en/reference/token-use)。
 
 ## 如何探索金鑰
 
@@ -61,7 +61,7 @@ OpenClaw 可以從以下位置獲取憑證：
 編碼方案**、**MiniMax 編碼方案**、**Z.AI / GLM 編碼方案**，以及
 Anthropic 的 OpenClaw Claude 登入路徑且已啟用 **額外使用量**。
 
-關於定價配置請參閱 [Models](/en/providers/models)，關於顯示方式請參閱 [Token use & costs](/en/reference/token-use)。
+價格設定請參閱 [Models](/en/providers/models)，顯示相關資訊請參閱 [Token use & costs](/en/reference/token-use)。
 
 ### 2) 媒體理解（音訊/圖片/影片）
 
@@ -95,49 +95,51 @@ Anthropic 的 OpenClaw Claude 登入路徑且已啟用 **額外使用量**。
 - `memorySearch.provider = "gemini"` → Gemini 嵌入
 - `memorySearch.provider = "voyage"` → Voyage 嵌入
 - `memorySearch.provider = "mistral"` → Mistral 嵌入
-- `memorySearch.provider = "ollama"` → Ollama 嵌入（本地/自託管；通常無託管 API 費用）
-- 如果本地嵌入失敗，可選擇回退到遠端供應商
+- `memorySearch.provider = "lmstudio"` → LM Studio embeddings (本機/自託管)
+- `memorySearch.provider = "ollama"` → Ollama embeddings (本機/自託管；通常無託管 API 計費)
+- 如果本機 embeddings 失敗，可選擇回退至遠端提供者
 
-您可以使用 `memorySearch.provider = "local"` 將其保持在本地（無 API 使用量）。
+您可以使用 `memorySearch.provider = "local"` 將其保持在本地 (不使用 API)。
 
-參閱 [記憶體](/en/concepts/memory)。
+請參閱 [Memory](/en/concepts/memory)。
 
-### 5) 網路搜尋工具
+### 5) Web search tool
 
-`web_search` 可能會根據您的提供商產生使用量費用：
+`web_search` 可能會根據您的提供者產生使用費用：
 
-- **Brave Search API**：`BRAVE_API_KEY` 或 `plugins.entries.brave.config.webSearch.apiKey`
-- **Exa**：`EXA_API_KEY` 或 `plugins.entries.exa.config.webSearch.apiKey`
-- **Firecrawl**：`FIRECRAWL_API_KEY` 或 `plugins.entries.firecrawl.config.webSearch.apiKey`
-- **Gemini (Google Search)**：`GEMINI_API_KEY` 或 `plugins.entries.google.config.webSearch.apiKey`
-- **Grok (xAI)**：`XAI_API_KEY` 或 `plugins.entries.xai.config.webSearch.apiKey`
-- **Kimi (Moonshot)**：`KIMI_API_KEY`、`MOONSHOT_API_KEY` 或 `plugins.entries.moonshot.config.webSearch.apiKey`
-- **MiniMax Search**：`MINIMAX_CODE_PLAN_KEY`、`MINIMAX_CODING_API_KEY`、`MINIMAX_API_KEY` 或 `plugins.entries.minimax.config.webSearch.apiKey`
-- **Ollama Web Search**：預設無需金鑰，但需要可連線的 Ollama 主機以及 `ollama signin`；當主機有要求時，也可以重複使用一般的 Ollama 提供者持有者驗證
-- **Perplexity Search API**：`PERPLEXITY_API_KEY`、`OPENROUTER_API_KEY` 或 `plugins.entries.perplexity.config.webSearch.apiKey`
-- **Tavily**：`TAVILY_API_KEY` 或 `plugins.entries.tavily.config.webSearch.apiKey`
-- **DuckDuckGo**：無需金鑰的備選方案 (無 API 費用，但為非官方且基於 HTML)
-- **SearXNG**：`SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl`（無金鑰/自託管；無託管 API 費用）
+- **Brave Search API**: `BRAVE_API_KEY` 或 `plugins.entries.brave.config.webSearch.apiKey`
+- **Exa**: `EXA_API_KEY` 或 `plugins.entries.exa.config.webSearch.apiKey`
+- **Firecrawl**: `FIRECRAWL_API_KEY` 或 `plugins.entries.firecrawl.config.webSearch.apiKey`
+- **Gemini (Google Search)**: `GEMINI_API_KEY` 或 `plugins.entries.google.config.webSearch.apiKey`
+- **Grok (xAI)**: `XAI_API_KEY` 或 `plugins.entries.xai.config.webSearch.apiKey`
+- **Kimi (Moonshot)**: `KIMI_API_KEY`、`MOONSHOT_API_KEY` 或 `plugins.entries.moonshot.config.webSearch.apiKey`
+- **MiniMax Search**: `MINIMAX_CODE_PLAN_KEY`、`MINIMAX_CODING_API_KEY`、`MINIMAX_API_KEY` 或 `plugins.entries.minimax.config.webSearch.apiKey`
+- **Ollama Web Search**: 預設無需金鑰，但需要可連線的 Ollama 主機以及 `ollama signin`；當主機有要求時，也可以重複使用一般的 Ollama 提供者 bearer auth
+- **Perplexity Search API**: `PERPLEXITY_API_KEY`、`OPENROUTER_API_KEY` 或 `plugins.entries.perplexity.config.webSearch.apiKey`
+- **Tavily**: `TAVILY_API_KEY` 或 `plugins.entries.tavily.config.webSearch.apiKey`
+- **DuckDuckGo**: 無金鑰的備選方案 (無 API 計費，但為非官方且基於 HTML)
+- **SearXNG**: `SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl` （免鑰匙/自託管；無託管 API 計費）
 
-舊版的 `tools.web.search.*` 提供者路徑仍然會透過暫時性相容性 shim 載入，但它們不再是建議的設定介面。
+舊版 `tools.web.search.*` 提供者路徑仍透過暫時性相容性墊片載入，但這些路徑不再是建議的設定介面。
 
-**Brave Search 免費額度**：每個 Brave 方案包含每月 $5 的續期免費額度。搜尋方案每 1,000 次請求收費 $5，因此額度可覆蓋每月 1,000 次免費請求。請在 Brave 儀表板中設定使用量上限，以避免意外費用。
+**Brave Search 免費額度：** 每個 Brave 方案包含每月 5 美元的續期免費額度。Search 方案每 1,000 次請求收費 5 美元，因此該額度可覆蓋每月 1,000 次免費請求。請在 Brave 儀表板中設定使用量上限，以避免意外費用。
 
-參閱 [Web 工具](/en/tools/web)。
+請參閱 [Web 工具](/en/tools/web)。
 
-### 5) Web fetch 工具 (Firecrawl)
+### 5) Web 取用工具 (Firecrawl)
 
 當存在 API 金鑰時，`web_fetch` 可以呼叫 **Firecrawl**：
 
 - `FIRECRAWL_API_KEY` 或 `plugins.entries.firecrawl.config.webFetch.apiKey`
 
-如果未設定 Firecrawl，該工具會退回至直接擷取 + readability（無付費 API）。
+如果未設定 Firecrawl，該工具會退回至直接取用 + 可讀性處理（無付費 API）。
 
-參閱 [Web 工具](/en/tools/web)。
+請參閱 [Web 工具](/en/tools/web)。
 
 ### 6) 提供者使用量快照 (狀態/健康狀況)
 
-部分狀態指令會呼叫 **提供者使用量端點** 以顯示配額視窗或驗證健康狀況。這些通常為低量呼叫，但仍會連線至提供者 API：
+部分狀態指令會呼叫 **提供者使用量端點** 以顯示配額視窗或驗證健康狀況。
+這些通常是低量呼叫，但仍會存取提供者 API：
 
 - `openclaw status --usage`
 - `openclaw models status --json`
@@ -146,9 +148,9 @@ Anthropic 的 OpenClaw Claude 登入路徑且已啟用 **額外使用量**。
 
 ### 7) 壓縮防護摘要
 
-壓縮防護可以使用 **目前模型** 摘要工作階段歷史記錄，執行時會呼叫提供者 API。
+壓縮防護功能可以使用 **目前模型** 摘要工作階段歷史記錄，這會在執行時呼叫提供者 API。
 
-請參閱 [Session management + compaction](/en/reference/session-management-compaction)。
+請參閱 [工作階段管理 + 壓縮](/en/reference/session-management-compaction)。
 
 ### 8) 模型掃描 / 探測
 
@@ -156,16 +158,16 @@ Anthropic 的 OpenClaw Claude 登入路徑且已啟用 **額外使用量**。
 
 請參閱 [Models CLI](/en/cli/models)。
 
-### 9) 說話 (語音)
+### 9) 語音交談
 
-說話模式在設定後可以呼叫 **ElevenLabs**：
+語音模式在設定後可以叫用 **ElevenLabs**：
 
 - `ELEVENLABS_API_KEY` 或 `talk.providers.elevenlabs.apiKey`
 
-請參閱 [Talk mode](/en/nodes/talk)。
+請參閱 [語音模式](/en/nodes/talk)。
 
 ### 10) 技能 (第三方 API)
 
-Skills 可以將 `apiKey` 儲存在 `skills.entries.<name>.apiKey` 中。如果 skill 使用該金鑰來呼叫外部 API，則會根據該 skill 的提供者產生費用。
+技能可以在 `skills.entries.<name>.apiKey` 中儲存 `apiKey`。如果技能使用該金鑰存取外部 API，可能會根據該技能的提供者產生費用。
 
-請參閱 [Skills](/en/tools/skills)。
+請參閱 [技能](/en/tools/skills)。

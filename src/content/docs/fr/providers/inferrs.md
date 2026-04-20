@@ -10,33 +10,19 @@ title: "inferrs"
 # inferrs
 
 [inferrs](https://github.com/ericcurtin/inferrs) peut servir des modèles locaux derrière une
-API `/v1` compatible OpenAI. OpenClaw fonctionne avec `inferrs` via le chemin générique
+OpenAI `/v1` compatible avec API. OpenClaw fonctionne avec `inferrs` via le chemin générique
 `openai-completions`.
 
-`inferrs` est actuellement mieux traité comme un backend auto-hébergé personnalisé compatible OpenAI,
-et non comme un plugin provider dédié à OpenClaw.
+`inferrs` est actuellement mieux considéré comme un backend auto-hébergé personnalisé compatible avec OpenAI,
+plutôt que comme un plugin de fournisseur dédié pour OpenClaw.
 
-## Quick start
+## Getting started
 
-1. Démarrez `inferrs` avec un modèle.
-
-Exemple :
-
-```bash
-inferrs serve google/gemma-4-E2B-it \
-  --host 127.0.0.1 \
-  --port 8080 \
-  --device metal
-```
-
-2. Vérifiez que le serveur est accessible.
-
-```bash
-curl http://127.0.0.1:8080/health
-curl http://127.0.0.1:8080/v1/models
-```
-
-3. Ajoutez une entrée explicite de provider OpenClaw et pointez votre modèle par défaut dessus.
+<Steps>
+  <Step title="Start inferrs with a model">```bash inferrs serve google/gemma-4-E2B-it \ --host 127.0.0.1 \ --port 8080 \ --device metal ```</Step>
+  <Step title="Verify the server is reachable">```bash curl http://127.0.0.1:8080/health curl http://127.0.0.1:8080/v1/models ```</Step>
+  <Step title="Ajouter une entrée de fournisseur OpenClaw">Ajoutez une entrée de fournisseur explicite et pointez votre modèle par défaut vers celle-ci. Voir l'exemple de configuration complet ci-dessous.</Step>
+</Steps>
 
 ## Exemple de configuration complète
 
@@ -81,93 +67,121 @@ Cet exemple utilise Gemma 4 sur un serveur `inferrs` local.
 }
 ```
 
-## Pourquoi `requiresStringContent` est important
+## Avancé
 
-Certains itinéraires de Chat Completions `inferrs` n'acceptent que des
-`messages[].content` de type chaîne, et non des tableaux structurés de parties de contenu.
+<AccordionGroup>
+  <Accordion title="Pourquoi requiresStringContent est important">
+    Certains itinéraires de Chat Completions `inferrs` n'acceptent que des
+    `messages[].content` de type chaîne, et non des tableaux de parties de contenu structuré.
 
-Si les exécutions OpenClaw échouent avec une erreur telle que :
+    <Warning>
+    Si les exécutions OpenClaw échouent avec une erreur du type :
 
-```text
-messages[1].content: invalid type: sequence, expected a string
-```
+    ```text
+    messages[1].content: invalid type: sequence, expected a string
+    ```
 
-définissez :
+    définissez `compat.requiresStringContent: true` dans votre entrée de modèle.
+    </Warning>
 
-```json5
-compat: {
-  requiresStringContent: true
-}
-```
+    ```json5
+    compat: {
+      requiresStringContent: true
+    }
+    ```
 
-OpenClap aplatira les parties de contenu en texte brut en chaînes simples avant d'envoyer
-la requête.
+    OpenClaw aplanira les parties de contenu en texte brut en chaînes simples avant d'envoyer
+    la requête.
 
-## Mise en garde concernant Gemma et tool-schema
+  </Accordion>
 
-Certaines combinaisons actuelles `inferrs` + Gemma acceptent de petites demandes directes
-`/v1/chat/completions` mais échouent toujours lors des tours complets de l'agent-runtime
-OpenClaw.
+  <Accordion title="Mise en garde concernant Gemma et le schéma d'outils">
+    Certaines combinaisons actuelles `inferrs` + Gemma acceptent de petites requêtes directes
+    `/v1/chat/completions` mais échouent toujours lors des tours complets du runtime d'agent OpenClaw.
 
-Si cela se produit, essayez d'abord ceci :
+    Si cela se produit, essayez d'abord ceci :
 
-```json5
-compat: {
-  requiresStringContent: true,
-  supportsTools: false
-}
-```
+    ```json5
+    compat: {
+      requiresStringContent: true,
+      supportsTools: false
+    }
+    ```
 
-Cela désactive la surface du schéma d'outils d'OpenClaw pour le modèle et peut réduire la pression
-de prompt sur les backends locaux plus stricts.
+    Cela désactive la surface du schéma d'outils de OpenClaw pour le modèle et peut réduire la pression
+    sur les backends locaux plus stricts.
 
-Si de minuscules demandes directes fonctionnent toujours mais que les tours d'agent OpenClaw normaux continuent de
-crasher à l'intérieur de `inferrs`, le problème restant est généralement le comportement en amont du modèle/serveur
-plutôt que la couche de transport d'OpenClaw.
+    Si de minuscules requêtes directes fonctionnent toujours mais que les tours d'agent normaux OpenClaw continuent de
+    planter à l'intérieur de `inferrs`, le problème restant provient généralement du comportement du modèle/serveur en amont
+    plutôt que de la couche de transport de OpenClaw.
 
-## Test de fumée manuel
+  </Accordion>
 
-Une fois configuré, testez les deux couches :
+  <Accordion title="Test de fumée manuel">
+    Une fois configuré, testez les deux couches :
 
-```bash
-curl http://127.0.0.1:8080/v1/chat/completions \
-  -H 'content-type: application/json' \
-  -d '{"model":"google/gemma-4-E2B-it","messages":[{"role":"user","content":"What is 2 + 2?"}],"stream":false}'
+    ```bash
+    curl http://127.0.0.1:8080/v1/chat/completions \
+      -H 'content-type: application/json' \
+      -d '{"model":"google/gemma-4-E2B-it","messages":[{"role":"user","content":"What is 2 + 2?"}],"stream":false}'
+    ```
 
-openclaw infer model run \
-  --model inferrs/google/gemma-4-E2B-it \
-  --prompt "What is 2 + 2? Reply with one short sentence." \
-  --json
-```
+    ```bash
+    openclaw infer model run \
+      --model inferrs/google/gemma-4-E2B-it \
+      --prompt "What is 2 + 2? Reply with one short sentence." \
+      --json
+    ```
 
-Si la première commande fonctionne mais que la seconde échoue, utilisez les notes de dépannage
-ci-dessous.
+    Si la première commande fonctionne mais que la seconde échoue, consultez la section de résolution de problèmes ci-dessous.
+
+  </Accordion>
+
+  <Accordion title="Comportement de type proxy">
+    `inferrs` est traité comme un backend OpenAI-compatible de type proxy `/v1`, et non comme
+    un point de terminaison natif OpenAI.
+
+    - Le façonnage des requêtes exclusivement pour OpenAI natif ne s'applique pas ici
+    - Pas de `service_tier`, pas de `store` Responses, pas d'indications de cache de prompt, et pas de
+    façonnage de payload compatible avec le raisonnement OpenAI
+    - Les en-têtes d'attribution masqués de OpenClaw (`originator`, `version`, `User-Agent`)
+      ne sont pas injectés sur les URL de base `inferrs` personnalisées
+
+  </Accordion>
+</AccordionGroup>
 
 ## Troubleshooting
 
-- `curl /v1/models` échoue : `inferrs` n'est pas en cours d'exécution, n'est pas accessible, ou n'est pas
-  lié à l'hôte/port attendu.
-- `messages[].content ... expected a string` : définissez
-  `compat.requiresStringContent: true`.
-- Les appels directs `/v1/chat/completions` minimes réussissent, mais `openclaw infer model run`
-  échoue : essayez `compat.supportsTools: false`.
-- OpenClaw ne reçoit plus d'erreurs de schéma, mais `inferrs` plante encore lors des tours d'agent plus
-  importants : considérez cela comme une limitation en amont de `inferrs` ou du modèle et réduisez
-  la pression du prompt ou changez de backend/modèle local.
+<AccordionGroup>
+  <Accordion title="curl /v1/models échoue">
+    `inferrs` n'est pas en cours d'exécution, n'est pas accessible ou n'est pas lié à l'hôte/port
+    attendu. Assurez-vous que le serveur est démarré et écoute sur l'adresse que vous
+    avez configurée.
+  </Accordion>
 
-## Comportement de type proxy
+<Accordion title="messages[].content attendait une chaîne">Définissez `compat.requiresStringContent: true` dans l'entrée du model. Consultez la section `requiresStringContent` ci-dessus pour plus de détails.</Accordion>
 
-`inferrs` est traité comme un backend `/v1` compatible OpenAI de type proxy, et non comme
-un point de terminaison natif OpenAI.
+<Accordion title="Les appels directs /v1/chat/completions fonctionnent mais l'exécution du model openclaw infer échoue">Essayez de définir `compat.supportsTools: false` pour désactiver la surface du schéma d'outil. Consultez la mise en garde concernant le schéma d'outil de Gemma ci-dessus.</Accordion>
 
-- le façonnage des demandes natif uniquement pour OpenAI ne s'applique pas ici
-- pas de `service_tier`, pas de Réponses `store`, pas d'indices de cache de prompt, et pas
-  de façonnage de payload compatible raisonnement OpenAI
-- les en-têtes d'attribution masqués de OpenClaw (`originator`, `version`, `User-Agent`)
-  ne sont pas injectés sur les URL de base `inferrs` personnalisées
+  <Accordion title="inferrs plante toujours sur les tours d'agent plus volumineux">
+    Si OpenClaw n'a plus d'erreurs de schéma mais que `inferrs` plante toujours sur les
+    tours d'agent plus volumineux, considérez cela comme une limitation en amont de `inferrs` ou du model. Réduisez
+    la pression sur le prompt ou passez à un backend local ou à un model différent.
+  </Accordion>
+</AccordionGroup>
+
+<Tip>Pour une aide générale, consultez la section [Troubleshooting](/en/help/troubleshooting) et la [FAQ](/en/help/faq).</Tip>
 
 ## Voir aussi
 
-- [Modèles locaux](/en/gateway/local-models)
-- [Dépannage Gateway](/en/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail)
-- [Fournisseurs de modèles](/en/concepts/model-providers)
+<CardGroup cols={2}>
+  <Card title="Modèles locaux" href="/en/gateway/local-models" icon="server">
+    Exécution d'OpenClaw sur des serveurs de modèles locaux.
+  </Card>
+  <Card title="Dépannage Gateway" href="/en/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail" icon="wrench">
+    Débogage de backends locaux compatibles avec OpenAI qui passent les sondes mais échouent lors des exécutions d'agent.
+  </Card>
+  <Card title="Fournisseurs de modèles" href="/en/concepts/model-providers" icon="layers">
+    Vue d'ensemble de tous les fournisseurs, des références de modèles et du comportement de basculement.
+  </Card>
+</CardGroup>

@@ -35,6 +35,9 @@ qui s'applique partout.
   <Card title="Hetzner" href="/en/install/hetzner">
     Docker sur un VPS Hetzner
   </Card>
+  <Card title="Hostinger" href="/en/install/hostinger">
+    VPS avec configuration en un clic
+  </Card>
   <Card title="GCP" href="/en/install/gcp">
     Compute Engine
   </Card>
@@ -49,38 +52,38 @@ qui s'applique partout.
   </Card>
 </CardGroup>
 
-**AWS (EC2 / Lightsail / free tier)** fonctionne également bien.
-Un didacticiel vidéo communautaire est disponible à l'adresse
+**AWS (EC2 / Lightsail / offre gratuite)** fonctionne également bien.
+Un didacticiel vidéo communautaire est disponible sur
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
 (ressource communautaire -- risque de devenir indisponible).
 
-## How cloud setups work
+## Fonctionnement des configurations cloud
 
-- Le **Gateway tourne sur le VPS** et possède l'état + l'espace de travail.
-- Vous vous connectez depuis votre ordinateur portable ou téléphone via l'**interface de contrôle (Control UI)** ou **Tailscale/SSH**.
-- Considérez le VPS comme la source de vérité et **sauvegardez** régulièrement l'état + l'espace de travail.
-- Par défaut sécurisé : gardez le Gateway en boucle locale (loopback) et accédez-y via un tunnel SSH ou Tailscale Serve.
+- Le **Gateway s'exécute sur le VPS** et possède l'état + l'espace de travail.
+- Vous vous connectez depuis votre ordinateur portable ou votre téléphone via l'**Interface de contrôle** ou **Tailscale/SSH**.
+- Traitez le VPS comme source de vérité et **sauvegardez** régulièrement l'état + l'espace de travail.
+- Sécurité par défaut : gardez le Gateway en boucle locale (loopback) et accédez-y via un tunnel SSH ou Tailscale Serve.
   Si vous vous liez à `lan` ou `tailnet`, exigez `gateway.auth.token` ou `gateway.auth.password`.
 
-Pages connexes : [Gateway remote access](/en/gateway/remote), [Platforms hub](/en/platforms).
+Pages connexes : [Gateway accès distant](/en/gateway/remote), [Hub des plateformes](/en/platforms).
 
 ## Agent d'entreprise partagé sur un VPS
 
-Faire fonctionner un seul agent pour une équipe est une configuration valide lorsque chaque utilisateur est dans la même limite de confiance et que l'agent est réservé à un usage professionnel.
+L'exécution d'un seul agent pour une équipe est une configuration valide lorsque chaque utilisateur se trouve dans la même limite de confiance et que l'agent est réservé à un usage professionnel.
 
-- Gardez-le sur un environnement d'exécution dédié (VPS/VM/conteneur + utilisateur système/comptes dédiés).
+- Gardez-le sur un environnement d'exécution dédié (VPS/VM/conteneur + utilisateur/comptes OS dédiés).
 - Ne connectez pas cet environnement d'exécution à des comptes personnels Apple/Google ou à des profils personnels de navigateur/gestionnaire de mots de passe.
-- Si les utilisateurs sont adversaires les uns envers les autres, séparez par passerelle/hôte/utilisateur OS.
+- Si les utilisateurs sont antagonistes les uns envers les autres, séparez-les par passerelle/hôte/utilisateur OS.
 
 Détails du modèle de sécurité : [Sécurité](/en/gateway/security).
 
 ## Utilisation des nœuds avec un VPS
 
-Vous pouvez conserver le Gateway dans le cloud et jumeler des **nœuds** sur vos périphériques locaux
-(Mac/iOS/Android/sans tête). Les nœuds fournissent des capacités d'écran/caméra/canvas locales et `system.run`
+Vous pouvez conserver le Gateway dans le cloud et associer des **nœuds** sur vos appareils locaux
+(Mac/iOS/Android/sans tête). Les nœuds fournissent des capacités d'écran/camera/canvas locales et `system.run`
 tandis que le Gateway reste dans le cloud.
 
-Documentation : [Nœuds](/en/nodes), [Nodes CLI](/en/cli/nodes).
+Docs : [Nodes](/en/nodes), [Nodes CLI](/en/cli/nodes).
 
 ## Réglage du démarrage pour les petits VM et hôtes ARM
 
@@ -96,22 +99,22 @@ source ~/.bashrc
 ```
 
 - `NODE_COMPILE_CACHE` améliore les temps de démarrage des commandes répétées.
-- `OPENCLAW_NO_RESPAWN=1` évite la surcharge de démarrage supplémentaire d'un chemin de redémarrage automatique.
-- La première exécution de commande réchauffe le cache ; les exécutions suivantes sont plus rapides.
+- `OPENCLAW_NO_RESPAWN=1` évite la surcharge de démarrage supplémentaire due à un chemin de redémarrage automatique.
+- La première exécution de la commande réchauffe le cache ; les exécutions suivantes sont plus rapides.
 - Pour les spécificités du Raspberry Pi, voir [Raspberry Pi](/en/install/raspberry-pi).
 
 ### Liste de contrôle du réglage systemd (facultatif)
 
 Pour les hôtes VM utilisant `systemd`, envisagez :
 
-- Ajoutez des variables d'environnement de service pour un chemin de démarrage stable :
+- Ajoutez une variable d'environnement de service pour un chemin de démarrage stable :
   - `OPENCLAW_NO_RESPAWN=1`
   - `NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache`
 - Gardez le comportement de redémarrage explicite :
   - `Restart=always`
   - `RestartSec=2`
   - `TimeoutStartSec=90`
-- Préférez les disques SSD pour les chemins d'état/cache afin de réduire les pénalités de démarrage à froid liées aux E/S aléatoires.
+- Préférez les disques SSD pour les chemins d'état/de cache afin de réduire les pénalités de démarrage à froid des E/S aléatoires.
 
 Pour le chemin standard `openclaw onboard --install-daemon`, modifiez l'unité utilisateur :
 
@@ -132,4 +135,4 @@ Si vous avez délibérément installé une unité système à la place, modifiez
 `openclaw-gateway.service` via `sudo systemctl edit openclaw-gateway.service`.
 
 Comment les stratégies `Restart=` aident à la récupération automatisée :
-[systemd can automate service recovery](https://www.redhat.com/en/blog/systemd-automate-recovery).
+[systemd peut automatiser la récupération de service](https://www.redhat.com/en/blog/systemd-automate-recovery).

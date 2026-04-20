@@ -8,34 +8,41 @@ read_when:
 
 # Together AI
 
-El [Together AI](https://together.ai) proporciona acceso a modelos de código abierto líderes, incluidos Llama, DeepSeek, Kimi y más, a través de una API unificada.
+[Together AI](https://together.ai) proporciona acceso a modelos de código abierto líderes como Llama, DeepSeek, Kimi y más a través de una API unificada.
 
-- Proveedor: `together`
-- Autenticación: `TOGETHER_API_KEY`
-- API: Compatible con OpenAI
-- URL base: `https://api.together.xyz/v1`
+| Propiedad     | Valor                         |
+| ------------- | ----------------------------- |
+| Proveedor     | `together`                    |
+| Autenticación | `TOGETHER_API_KEY`            |
+| API           | Compatible con OpenAI         |
+| URL base      | `https://api.together.xyz/v1` |
 
-## Inicio rápido
+## Para comenzar
 
-1. Configure la clave API (recomendado: guárdela para la Gateway):
+<Steps>
+  <Step title="Obtener una clave de API">
+    Cree una clave de API en
+    [api.together.ai/settings/api-keys](https://api.together.ai/settings/api-keys).
+  </Step>
+  <Step title="Ejecutar el onboarding">
+    ```bash
+    openclaw onboard --auth-choice together-api-key
+    ```
+  </Step>
+  <Step title="Establecer un modelo predeterminado">
+    ```json5
+    {
+      agents: {
+        defaults: {
+          model: { primary: "together/moonshotai/Kimi-K2.5" },
+        },
+      },
+    }
+    ```
+  </Step>
+</Steps>
 
-```bash
-openclaw onboard --auth-choice together-api-key
-```
-
-2. Establezca un modelo predeterminado:
-
-```json5
-{
-  agents: {
-    defaults: {
-      model: { primary: "together/moonshotai/Kimi-K2.5" },
-    },
-  },
-}
-```
-
-## Ejemplo no interactivo
+### Ejemplo no interactivo
 
 ```bash
 openclaw onboard --non-interactive \
@@ -44,17 +51,11 @@ openclaw onboard --non-interactive \
   --together-api-key "$TOGETHER_API_KEY"
 ```
 
-Esto establecerá `together/moonshotai/Kimi-K2.5` como el modelo predeterminado.
-
-## Nota sobre el entorno
-
-Si la Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `TOGETHER_API_KEY`
-esté disponible para ese proceso (por ejemplo, en `~/.openclaw/.env` o a través de
-`env.shellEnv`).
+<Note>El ajuste preestablecido de onboarding establece `together/moonshotai/Kimi-K2.5` como el modelo predeterminado.</Note>
 
 ## Catálogo integrado
 
-OpenClaw incluye actualmente este catálogo agrupado de Together:
+OpenClaw incluye este catálogo Together:
 
 | Ref. de modelo                                               | Nombre                                 | Entrada       | Contexto   | Notas                                          |
 | ------------------------------------------------------------ | -------------------------------------- | ------------- | ---------- | ---------------------------------------------- |
@@ -67,18 +68,18 @@ OpenClaw incluye actualmente este catálogo agrupado de Together:
 | `together/deepseek-ai/DeepSeek-R1`                           | DeepSeek R1                            | texto         | 131,072    | Modelo de razonamiento                         |
 | `together/moonshotai/Kimi-K2-Instruct-0905`                  | Kimi K2-Instruct 0905                  | texto         | 262,144    | Modelo de texto Kimi secundario                |
 
-La configuración de incorporación establece `together/moonshotai/Kimi-K2.5` como el modelo predeterminado.
-
 ## Generación de video
 
-El complemento `together` incluido también registra la generación de video a través de la
+El complemento `together` incluido también registra la generación de videos a través de la
 herramienta compartida `video_generate`.
 
-- Modelo de video predeterminado: `together/Wan-AI/Wan2.2-T2V-A14B`
-- Modos: flujos de texto a video y de referencia de imagen única
-- Admite `aspectRatio` y `resolution`
+| Propiedad                      | Valor                                     |
+| ------------------------------ | ----------------------------------------- |
+| Modelo de video predeterminado | `together/Wan-AI/Wan2.2-T2V-A14B`         |
+| Modos                          | texto a video, referencia de imagen única |
+| Parámetros compatibles         | `aspectRatio`, `resolution`               |
 
-Para usar Together como el proveedor de video predeterminado:
+Para usar Together como proveedor de video predeterminado:
 
 ```json5
 {
@@ -92,4 +93,43 @@ Para usar Together como el proveedor de video predeterminado:
 }
 ```
 
-Consulte [Video Generation](/en/tools/video-generation) para obtener los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.
+<Tip>Consulte [Generación de video](/en/tools/video-generation) para ver los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.</Tip>
+
+<AccordionGroup>
+  <Accordion title="Nota de entorno">
+    Si el Gateway se ejecuta como demonio (launchd/systemd), asegúrese de que
+    `TOGETHER_API_KEY` esté disponible para ese proceso (por ejemplo, en
+    `~/.openclaw/.env` o mediante `env.shellEnv`).
+
+    <Warning>
+    Las claves establecidas solo en su shell interactivo no son visibles para los procesos
+    de gateway gestionados por el demonio. Use `~/.openclaw/.env` o config `env.shellEnv` para
+    disponibilidad persistente.
+    </Warning>
+
+  </Accordion>
+
+  <Accordion title="Solución de problemas">
+    - Verifique que su clave funcione: `openclaw models list --provider together`
+    - Si los modelos no aparecen, confirme que la clave de API está establecida en el entorno
+      correcto para su proceso de Gateway.
+    - Las referencias de modelos usan el formato `together/<model-id>`.
+  </Accordion>
+</AccordionGroup>
+
+## Relacionado
+
+<CardGroup cols={2}>
+  <Card title="Proveedores de modelos" href="/en/concepts/model-providers" icon="layers">
+    Reglas del proveedor, referencias de modelos y comportamiento de conmutación por error.
+  </Card>
+  <Card title="Generación de video" href="/en/tools/video-generation" icon="video">
+    Parámetros compartidos de la herramienta de generación de video y selección del proveedor.
+  </Card>
+  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference" icon="gear">
+    Esquema de configuración completo que incluye la configuración del proveedor.
+  </Card>
+  <Card title="Together AI" href="https://together.ai" icon="arrow-up-right-from-square">
+    Panel de Together AI, documentación de la API y precios.
+  </Card>
+</CardGroup>

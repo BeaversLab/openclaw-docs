@@ -3152,13 +3152,14 @@ Relacionado: [/concepts/oauth](/en/concepts/oauth) (flujo OAuth, almacenamiento 
 
 <AccordionGroup>
   <Accordion title="¿Cómo evito que los mensajes internos del sistema aparezcan en el chat?">
-    La mayoría de los mensajes internos o de herramientas solo aparecen cuando **verbose** o **reasoning** están habilitados
+    La mayoría de los mensajes internos o de herramientas solo aparecen cuando **verbose**, **trace** o **reasoning** están activados
     para esa sesión.
 
-    Solucionar en el chat donde lo ves:
+    Solución en el chat donde lo veas:
 
     ```
     /verbose off
+    /trace off
     /reasoning off
     ```
 

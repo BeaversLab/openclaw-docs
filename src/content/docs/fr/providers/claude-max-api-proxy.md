@@ -13,7 +13,7 @@ title: "Proxy API de Claude Max"
 
 <Warning>Cette option concerne uniquement la compatibilité technique. Anthropic a bloqué par le passé certaines utilisations d'abonnement en dehors de Claude Code. Vous devez décider par vous-même de l'utiliser et vérifier les conditions actuelles de Anthropic avant d'en dépendre.</Warning>
 
-## Pourquoi l'utiliser ?
+## Pourquoi utiliser ceci ?
 
 | Approche              | Coût                                                           | Idéal pour                                            |
 | --------------------- | -------------------------------------------------------------- | ----------------------------------------------------- |
@@ -22,7 +22,7 @@ title: "Proxy API de Claude Max"
 
 Si vous disposez d'un abonnement Claude Max et souhaitez l'utiliser avec des outils compatibles OpenAI, ce proxy peut réduire les coûts pour certains workflows. Les clés API restent la voie la plus claire en termes de politique pour une utilisation en production.
 
-## Fonctionnement
+## Comment cela fonctionne
 
 ```
 Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscription)
@@ -35,110 +35,121 @@ Le proxy :
 2. Les convertit en commandes CLI de Claude Code
 3. Renvoie les réponses au format OpenAI (streaming pris en charge)
 
-## Installation
+## Getting started
 
-```bash
-# Requires Node.js 20+ and Claude Code CLI
-npm install -g claude-max-api-proxy
+<Steps>
+  <Step title="Installer le proxy">
+    Nécessite Node.js 20+ et Claude Code CLI.
 
-# Verify Claude CLI is authenticated
-claude --version
-```
+    ```bash
+    npm install -g claude-max-api-proxy
 
-## Utilisation
+    # Verify Claude CLI is authenticated
+    claude --version
+    ```
 
-### Démarrer le serveur
+  </Step>
+  <Step title="Démarrer le serveur">
+    ```bash
+    claude-max-api
+    # Server runs at http://localhost:3456
+    ```
+  </Step>
+  <Step title="Tester le proxy">
+    ```bash
+    # Health check
+    curl http://localhost:3456/health
 
-```bash
-claude-max-api
-# Server runs at http://localhost:3456
-```
+    # List models
+    curl http://localhost:3456/v1/models
 
-### Le tester
+    # Chat completion
+    curl http://localhost:3456/v1/chat/completions \
+      -H "Content-Type: application/json" \
+      -d '{
+        "model": "claude-opus-4",
+        "messages": [{"role": "user", "content": "Hello!"}]
+      }'
+    ```
 
-```bash
-# Health check
-curl http://localhost:3456/health
+  </Step>
+  <Step title="Configurer OpenClaw">
+    Pointer OpenClaw vers le proxy en tant que point de terminaison compatible OpenAI :
 
-# List models
-curl http://localhost:3456/v1/models
+    ```json5
+    {
+      env: {
+        OPENAI_API_KEY: "not-needed",
+        OPENAI_BASE_URL: "http://localhost:3456/v1",
+      },
+      agents: {
+        defaults: {
+          model: { primary: "openai/claude-opus-4" },
+        },
+      },
+    }
+    ```
 
-# Chat completion
-curl http://localhost:3456/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "claude-opus-4",
-    "messages": [{"role": "user", "content": "Hello!"}]
-  }'
-```
+  </Step>
+</Steps>
 
-### Avec OpenClaw
+## Modèles disponibles
 
-Vous pouvez pointer OpenClaw vers le proxy en tant que point de terminaison personnalisé compatible OpenAI :
-
-```json5
-{
-  env: {
-    OPENAI_API_KEY: "not-needed",
-    OPENAI_BASE_URL: "http://localhost:3456/v1",
-  },
-  agents: {
-    defaults: {
-      model: { primary: "openai/claude-opus-4" },
-    },
-  },
-}
-```
-
-This path uses the same proxy-style OpenAI-compatible route as other custom
-`/v1` backends:
-
-- native OpenAI-only request shaping does not apply
-- no `service_tier`, no Responses `store`, no prompt-cache hints, and no
-  OpenAI reasoning-compat payload shaping
-- hidden OpenClaw attribution headers (`originator`, `version`, `User-Agent`)
-  are not injected on the proxy URL
-
-## Modèles Disponibles
-
-| ID du Modèle      | Correspond à    |
+| ID de modèle      | Correspond à    |
 | ----------------- | --------------- |
 | `claude-opus-4`   | Claude Opus 4   |
 | `claude-sonnet-4` | Claude Sonnet 4 |
 | `claude-haiku-4`  | Claude Haiku 4  |
 
-## Démarrage Automatique sur macOS
+## Avancé
 
-Create a LaunchAgent to run the proxy automatically:
+<AccordionGroup>
+  <Accordion title="Notes de compatibilité style proxy OpenAI">
+    Ce chemin utilise la même route compatible OpenAI de style proxy que les autres
+    backends personnalisés `/v1` :
 
-```bash
-cat > ~/Library/LaunchAgents/com.claude-max-api.plist << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>Label</key>
-  <string>com.claude-max-api</string>
-  <key>RunAtLoad</key>
-  <true/>
-  <key>KeepAlive</key>
-  <true/>
-  <key>ProgramArguments</key>
-  <array>
-    <string>/usr/local/bin/node</string>
-    <string>/usr/local/lib/node_modules/claude-max-api-proxy/dist/server/standalone.js</string>
-  </array>
-  <key>EnvironmentVariables</key>
-  <dict>
-    <key>PATH</key>
-    <string>/usr/local/bin:/opt/homebrew/bin:~/.local/bin:/usr/bin:/bin</string>
-  </dict>
-</dict>
-</plist>
-EOF
+    - Le façonnement de requête natif uniquement OpenAI ne s'applique pas
+    - Pas de `service_tier`, pas de `store` Responses, pas d'indices de cache de prompt, et pas de
+      façonnement de payload de compatibilité de raisonnement OpenAI
+    - Les en-têtes d'attribution cachés OpenClaw (`originator`, `version`, `User-Agent`)
+      ne sont pas injectés sur l'URL du proxy
 
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
-```
+  </Accordion>
+
+  <Accordion title="Démarrage automatique sur macOS avec LaunchAgent">
+    Créer un LaunchAgent pour exécuter le proxy automatiquement :
+
+    ```bash
+    cat > ~/Library/LaunchAgents/com.claude-max-api.plist << 'EOF'
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+      <key>Label</key>
+      <string>com.claude-max-api</string>
+      <key>RunAtLoad</key>
+      <true/>
+      <key>KeepAlive</key>
+      <true/>
+      <key>ProgramArguments</key>
+      <array>
+        <string>/usr/local/bin/node</string>
+        <string>/usr/local/lib/node_modules/claude-max-api-proxy/dist/server/standalone.js</string>
+      </array>
+      <key>EnvironmentVariables</key>
+      <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/opt/homebrew/bin:~/.local/bin:/usr/bin:/bin</string>
+      </dict>
+    </dict>
+    </plist>
+    EOF
+
+    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
+    ```
+
+  </Accordion>
+</AccordionGroup>
 
 ## Liens
 
@@ -148,12 +159,26 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 ## Notes
 
-- This is a **community tool**, not officially supported by Anthropic or OpenClaw
-- Requires an active Claude Max/Pro subscription with Claude Code CLI authenticated
-- The proxy runs locally and does not send data to any third-party servers
-- Streaming responses are fully supported
+- Il s'agit d'un **outil communautaire**, non officiellement pris en charge par Anthropic ou OpenClaw
+- Nécessite un abonnement Claude Max/Pro actif avec Claude Code CLI authentifié
+- Le proxy s'exécute localement et n'envoie aucune donnée à des serveurs tiers
+- Les réponses en streaming sont entièrement prises en charge
 
-## Voir Aussi
+<Note>Pour l'intégration native Anthropic avec Claude CLI ou les clés API, voir [Anthropic provider](/en/providers/anthropic). Pour les abonnements OpenAI/Codex, voir [OpenAI provider](/en/providers/openai).</Note>
 
-- [Anthropic provider](/en/providers/anthropic) - Native OpenClaw integration with Claude CLI or API keys
-- [OpenAI provider](/en/providers/openai) - For OpenAI/Codex subscriptions
+## Connexes
+
+<CardGroup cols={2}>
+  <Card title="Fournisseur Anthropic" href="/en/providers/anthropic" icon="bolt">
+    Intégration native OpenClaw avec Claude CLI ou les clés API.
+  </Card>
+  <Card title="Fournisseur OpenAI" href="/en/providers/openai" icon="robot">
+    Pour les abonnements OpenAI/Codex.
+  </Card>
+  <Card title="Fournisseurs de modèles" href="/en/concepts/model-providers" icon="layers">
+    Aperçu de tous les fournisseurs, références de modèles et comportements de basculement.
+  </Card>
+  <Card title="Configuration" href="/en/gateway/configuration" icon="gear">
+    Référence complète de la configuration.
+  </Card>
+</CardGroup>

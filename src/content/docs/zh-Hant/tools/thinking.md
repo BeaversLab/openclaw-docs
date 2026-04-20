@@ -1,5 +1,5 @@
 ---
-summary: "/think、/fast、/verbose 和推理可見性的指令語法"
+summary: "Directive syntax for /think, /fast, /verbose, /trace, and reasoning visibility"
 read_when:
   - Adjusting thinking, fast-mode, or verbose directive parsing or defaults
 title: "思考層級"
@@ -72,31 +72,40 @@ title: "思考層級"
 - 工具失敗摘要在一般模式下仍然可見，但除非詳細等級為 `on` 或 `full`，否則會隱藏原始錯誤詳細資訊後綴。
 - 當詳細等級為 `full` 時，工具輸出也會在完成後轉發（獨立氣泡，截斷為安全長度）。如果您在執行期間切換 `/verbose on|full|off`，後續的工具氣泡將採用新設定。
 
-## 推理可見性 (/reasoning)
+## Plugin trace directives (/trace)
 
-- 等級：`on|off|stream`。
-- 僅指令訊息會切換是否在回覆中顯示思考區塊。
-- 啟用後，推理會作為以 `Reasoning:` 為前綴的 **獨立訊息** 傳送。
-- `stream`（僅限 Telegram）：在產生回覆時將推理串流至 Telegram 草稿氣泡，然後傳送不包含推理的最終答案。
-- 別名：`/reason`。
-- 傳送 `/reasoning`（或 `/reasoning:`） 且不帶引數，以查看目前的推理等級。
-- 解析順序：內聯指令、接著工作階段覆寫、接著各代理程式預設（`agents.list[].reasoningDefault`）、接著後備（`off`）。
+- Levels: `on` | `off` (default).
+- Directive-only message toggles session plugin trace output and replies `Plugin trace enabled.` / `Plugin trace disabled.`.
+- Inline directive affects only that message; session/global defaults apply otherwise.
+- Send `/trace` (or `/trace:`) with no argument to see the current trace level.
+- `/trace` is narrower than `/verbose`: it only exposes plugin-owned trace/debug lines such as Active Memory debug summaries.
+- Trace lines can appear in `/status` and as a follow-up diagnostic message after the normal assistant reply.
 
-## 相關
+## Reasoning visibility (/reasoning)
 
-- 提昇模式文件位於 [Elevated mode](/en/tools/elevated)。
+- Levels: `on|off|stream`.
+- Directive-only message toggles whether thinking blocks are shown in replies.
+- When enabled, reasoning is sent as a **separate message** prefixed with `Reasoning:`.
+- `stream` (Telegram only): streams reasoning into the Telegram draft bubble while the reply is generating, then sends the final answer without reasoning.
+- Alias: `/reason`.
+- Send `/reasoning` (or `/reasoning:`) with no argument to see the current reasoning level.
+- Resolution order: inline directive, then session override, then per-agent default (`agents.list[].reasoningDefault`), then fallback (`off`).
 
-## 心跳
+## Related
 
-- 心跳探查內容是設定的心跳提示（預設：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`）。心跳訊息中的內聯指令照常套用（但請避免從心跳變更工作階段預設值）。
-- 心跳傳遞預設僅包含最終的 Payload。若也要傳送獨立的 `Reasoning:` 訊息（如有），請設定 `agents.defaults.heartbeat.includeReasoning: true` 或各代理的 `agents.list[].heartbeat.includeReasoning: true`。
+- Elevated mode docs live in [Elevated mode](/en/tools/elevated).
 
-## 網頁聊天 UI
+## Heartbeats
 
-- 網頁聊天思維選擇器會在頁面載入時，反映來自傳入連線 Session 儲存/設定中已儲存的層級。
-- 選擇另一個層級會透過 `sessions.patch` 立即寫入 Session 覆寫；它不會等待下一次傳送，也不是一次性 `thinkingOnce` 覆寫。
-- 第一個選項永遠是 `Default (<resolved level>)`，其解析後的預設值來自於作用中的 Session 模型：針對 Anthropic/Bedrock 上的 Claude 4.6 為 `adaptive`，其他具備推理能力的模型為 `low`，否則為 `off`。
-- 選擇器會保持供應商感知：
-  - 大多數供應商顯示 `off | minimal | low | medium | high | adaptive`
-  - Z.AI 顯示二元的 `off | on`
-- `/think:<level>` 仍然有效，並會更新同一個已儲存的 Session 層級，因此聊天指令和選擇器會保持同步。
+- Heartbeat probe body is the configured heartbeat prompt (default: `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`). Inline directives in a heartbeat message apply as usual (but avoid changing session defaults from heartbeats).
+- Heartbeat delivery defaults to the final payload only. To also send the separate `Reasoning:` message (when available), set `agents.defaults.heartbeat.includeReasoning: true` or per-agent `agents.list[].heartbeat.includeReasoning: true`.
+
+## Web chat UI
+
+- 當頁面載入時，網頁聊天思考選擇器會反映傳入工作階段儲存/設定中所儲存的工作階段等級。
+- 選擇另一個等級會透過 `sessions.patch` 立即寫入工作階段覆寫；它不會等待下一次傳送，而且不是一次性 `thinkingOnce` 覆寫。
+- 第一個選項永遠是 `Default (<resolved level>)`，其中解析出的預設值來自於目前的工作階段模型：針對 Anthropic/Bedrock 上的 Claude 4.6 是 `adaptive`，其他具備推理能力的模型是 `low`，其他情況則是 `off`。
+- 選擇器會保持對供應商的感知：
+  - 大多數供應商會顯示 `off | minimal | low | medium | high | adaptive`
+  - Z.AI 會顯示二元選項 `off | on`
+- `/think:<level>` 仍然有效，並會更新相同的儲存工作階段等級，因此聊天指令與選擇器會保持同步。

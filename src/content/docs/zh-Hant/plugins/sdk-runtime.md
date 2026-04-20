@@ -12,7 +12,7 @@ read_when:
 
 在註冊期間注入至每個外掛程式的 `api.runtime` 物件參考資料。請使用這些協助程式，而非直接匯入主機內部。
 
-<Tip>**正在尋找逐步指南？** 參閱 [通道外掛](/en/plugins/sdk-channel-plugins) 或 [供應商外掛](/en/plugins/sdk-provider-plugins) 以了解展示這些 輔助函數使用情境的逐步指南。</Tip>
+<Tip>**尋找逐步指南？** 請參閱 [通道插件](/en/plugins/sdk-channel-plugins) 或 [提供者插件](/en/plugins/sdk-provider-plugins) 以了解展示這些輔助函式使用情境的 逐步指南。</Tip>
 
 ```typescript
 register(api) {
@@ -369,7 +369,10 @@ const decision = api.runtime.channel.mentions.resolveInboundMentionDecision({
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
 import type { PluginRuntime } from "openclaw/plugin-sdk/runtime-store";
 
-const store = createPluginRuntimeStore<PluginRuntime>("my-plugin runtime not initialized");
+const store = createPluginRuntimeStore<PluginRuntime>({
+  pluginId: "my-plugin",
+  errorMessage: "my-plugin runtime not initialized",
+});
 
 // In your entry point
 export default defineChannelPluginEntry({
@@ -390,22 +393,24 @@ export function tryGetRuntime() {
 }
 ```
 
+建議優先使用 `pluginId` 作為 runtime-store 的識別身份。底層的 `key` 形式適用於罕見情況，即當一個插件刻意需要多個 runtime 插槽時。
+
 ## 其他頂層 `api` 欄位
 
 除了 `api.runtime` 之外，API 物件還提供：
 
-| 欄位                     | 類型                      | 描述                                                              |
-| ------------------------ | ------------------------- | ----------------------------------------------------------------- |
-| `api.id`                 | `string`                  | 插件 ID                                                           |
-| `api.name`               | `string`                  | 插件顯示名稱                                                      |
-| `api.config`             | `OpenClawConfig`          | 目前設定快照（可用時的活躍記憶體執行時快照）                      |
-| `api.pluginConfig`       | `Record<string, unknown>` | 來自 `plugins.entries.<id>.config` 的插件特定設定                 |
-| `api.logger`             | `PluginLogger`            | 範圍日誌記錄器（`debug`、`info`、`warn`、`error`）                |
-| `api.registrationMode`   | `PluginRegistrationMode`  | 目前載入模式；`"setup-runtime"` 是輕量級的完整進入前啟動/設定視窗 |
-| `api.resolvePath(input)` | `(string) => string`      | 解析相對於插件根目錄的路徑                                        |
+| 欄位                     | 類型                      | 描述                                                                |
+| ------------------------ | ------------------------- | ------------------------------------------------------------------- |
+| `api.id`                 | `string`                  | 插件 ID                                                             |
+| `api.name`               | `string`                  | 插件顯示名稱                                                        |
+| `api.config`             | `OpenClawConfig`          | 目前設定快照 (可用時為活躍的記憶體內執行時快照)                     |
+| `api.pluginConfig`       | `Record<string, unknown>` | 來自 `plugins.entries.<id>.config` 的插件專屬設定                   |
+| `api.logger`             | `PluginLogger`            | 作用域日誌記錄器 (`debug`, `info`, `warn`, `error`)                 |
+| `api.registrationMode`   | `PluginRegistrationMode`  | 目前的載入模式；`"setup-runtime"` 是輕量級的完整進入前啟動/設定視窗 |
+| `api.resolvePath(input)` | `(string) => string`      | 解析相對於插件根目錄的路徑                                          |
 
 ## 相關
 
 - [SDK 概觀](/en/plugins/sdk-overview) -- 子路徑參考
-- [SDK Entry Points](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 選項
-- [Plugin Internals](/en/plugins/architecture) -- 功能模型與註冊表
+- [SDK 進入點](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 選項
+- [Plugin 內部機制](/en/plugins/architecture) -- 功能模型與註冊表

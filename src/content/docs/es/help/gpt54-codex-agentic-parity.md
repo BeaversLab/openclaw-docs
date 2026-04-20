@@ -1,54 +1,54 @@
-# Paridad agentic de GPT-5.4 / Codex en OpenClaw
+# Paridad de GPT-5.4 / Codex Agentic en OpenClaw
 
-OpenClaw ya funcionaba bien con modelos de frontera que usan herramientas, pero GPT-5.4 y los modelos de tipo Codex todavía presentaban carencias en algunos aspectos prácticos:
+OpenClaw ya funcionaba bien con modelos frontera que usan herramientas, pero los modelos GPT-5.4 y de estilo Codex todavía tenían un rendimiento inferior en algunos aspectos prácticos:
 
-- podían detenerse después de la planificación en lugar de realizar el trabajo
-- podían usar incorrectamente los esquemas estrictos de herramientas OpenAI/Codex
+- podían detenerse después de la planificación en lugar de hacer el trabajo
+- podían usar esquemas de herramientas estrictos de OpenAI/Codex incorrectamente
 - podían solicitar `/elevated full` incluso cuando el acceso completo era imposible
-- podían perder el estado de tareas de larga duración durante la reproducción o compactación
-- las afirmaciones de paridad frente a Claude Opus 4.6 se basaban en anécdotas en lugar de escenarios reproducibles
+- podían perder el estado de tareas de larga duración durante la repetición o compactación
+- las afirmaciones de paridad con Claude Opus 4.6 se basaban en anécdotas en lugar de escenarios repetibles
 
-Este programa de paridad corrige esas carencias en cuatro tramos revisables.
+Este programa de paridad corrige esas lagunas en cuatro segmentos revisables.
 
 ## Qué cambió
 
-### PR A: ejecución strict-agentic
+### PR A: ejecución estricta de agentes
 
-Este tramo añade un contrato de ejecución `strict-agentic` opt-in para las ejecuciones GPT-5 Pi integradas.
+Este segmento añade un contrato de ejecución `strict-agentic` opcional para las ejecuciones integradas de Pi GPT-5.
 
-Cuando está habilitado, OpenClaw deja de aceptar turnos de solo planificación como una finalización "suficientemente buena". Si el modelo solo dice lo que tiene intención de hacer y no usa herramientas ni progresa realmente, OpenClaw reintenta con una indicación de acción inmediata y luego falla cerrado con un estado bloqueado explícito en lugar de terminar silenciosamente la tarea.
+Cuando se habilita, OpenClaw deja de aceptar turnos de solo planificación como una finalización "suficientemente buena". Si el modelo solo dice lo que pretende hacer y no utiliza realmente herramientas o avanza, OpenClaw lo reintenta con una instrucción de actuación inmediata y luego falla cerrando con un estado bloqueado explícito en lugar de finalizar silenciosamente la tarea.
 
 Esto mejora la experiencia de GPT-5.4 principalmente en:
 
-- seguimientos cortos de tipo "ok, hazlo"
+- breves seguimientos de "ok hazlo"
 - tareas de código donde el primer paso es obvio
-- flujos donde `update_plan` debería ser seguimiento de progreso en lugar de texto de relleno
+- flujos donde `update_plan` debe ser seguimiento del progreso en lugar de texto de relleno
 
-### PR B: veracidad del runtime
+### PR B: veracidad en tiempo de ejecución
 
-Este tramo hace que OpenClaw diga la verdad sobre dos cosas:
+Este segmento hace que OpenClaw diga la verdad sobre dos cosas:
 
-- por qué falló la llamada al proveedor/runtime
+- por qué falló la llamada del proveedor/tiempo de ejecución
 - si `/elevated full` está realmente disponible
 
-Eso significa que GPT-5.4 obtiene mejores señales de runtime para ámbitos faltantes, fallos de renovación de autenticación, fallos de autenticación HTML 403, problemas de proxy, fallos de DNS o timeout, y modos de acceso completo bloqueados. El modelo es menos propenso a alucinar una remediación incorrecta o seguir pidiendo un modo de permiso que el runtime no puede proporcionar.
+Eso significa que GPT-5.4 obtiene mejores señales de tiempo de ejecución para el alcance faltante, fallos de actualización de autenticación, fallos de autenticación HTML 403, problemas de proxy, fallos de DNS o tiempo de espera agotado, y modos de acceso completo bloqueados. Es menos probable que el modelo alucine la solución incorrecta o siga solicitando un modo de permiso que el tiempo de ejecución no puede proporcionar.
 
 ### PR C: corrección de ejecución
 
-Este tramo mejora dos tipos de corrección:
+Este segmento mejora dos tipos de corrección:
 
-- compatibilidad de esquemas de herramientas OpenAI/Codex propiedad del proveedor
-- visibilidad del estado de reproducción y tareas de larga duración
+- compatibilidad de esquemas de herramientas de OpenAI/Codex propiedad del proveedor
+- revelación de la actividad en la repetición y tareas largas
 
-El trabajo de compatibilidad de herramientas reduce la fricción de esquemas para el registro estricto de herramientas OpenAI/Codex, especialmente alrededor de herramientas sin parámetros y expectativas estrictas de raíz de objeto. El trabajo de reproducción/vitalidad hace que las tareas de larga duración sean más observables, de modo que los estados en pausa, bloqueados y abandonados son visibles en lugar de desaparecer en texto de fallo genérico.
+El trabajo de compatibilidad de herramientas reduce la fricción del esquema para el registro estricto de herramientas de OpenAI/Codex, especialmente en torno a herramientas sin parámetros y expectativas estrictas de raíz de objeto. El trabajo de repetición/actividad hace que las tareas de larga duración sean más observables, por lo que los estados en pausa, bloqueados y abandonados son visibles en lugar de desaparecer en un texto de falla genérico.
 
 ### PR D: arnés de paridad
 
-Este tramo añade el paquete de paridad de primera ola del laboratorio de QA para que GPT-5.4 y Opus 4.6 puedan ejercitarse a través de los mismos escenarios y compararse usando evidencia compartida.
+Este segmento añade el primer paquete de paridad del laboratorio de control de calidad (QA-lab) para que GPT-5.4 y Opus 4.6 puedan ejercitarse a través de los mismos escenarios y compararse utilizando evidencia compartida.
 
-El paquete de paridad es la capa de prueba. No cambia el comportamiento del runtime por sí mismo.
+El paquete de paridad es la capa de prueba. No cambia el comportamiento en tiempo de ejecución por sí mismo.
 
-Una vez que tenga dos artefactos `qa-suite-summary.json`, genere la comparación de puerta de liberación con:
+Una vez que tenga dos artefactos `qa-suite-summary.json`, genere la comparación de la puerta de lanzamiento (release-gate) con:
 
 ```bash
 pnpm openclaw qa parity-report \
@@ -58,40 +58,40 @@ pnpm openclaw qa parity-report \
   --output-dir .artifacts/qa-e2e/parity
 ```
 
-Ese comando genera:
+Ese comando escribe:
 
-- un informe Markdown legible por humanos
+- un informe en Markdown legible por humanos
 - un veredicto JSON legible por máquina
 - un resultado de puerta explícito `pass` / `fail`
 
 ## Por qué esto mejora GPT-5.4 en la práctica
 
-Antes de este trabajo, GPT-5.4 en OpenClaw podía parecer menos agentic que Opus en sesiones de codificación reales porque el runtime toleraba comportamientos especialmente perjudiciales para modelos de estilo GPT-5:
+Antes de este trabajo, GPT-5.4 en OpenClaw podía parecerse menos a una agente que Opus en sesiones reales de codificación porque el tiempo de ejecución toleraba comportamientos que son especialmente dañinos para los modelos estilo GPT-5:
 
 - turnos de solo comentario
-- fricción de esquemas alrededor de herramientas
-- retroalimentación vaga sobre permisos
-- rotura silenciosa de reproducción o compactación
+- fricción del esquema alrededor de las herramientas
+- comentarios de permisos vagos
+- reproducción silenciosa o interrupción de compactación
 
-El objetivo no es que GPT-5.4 imite a Opus. El objetivo es dar a GPT-5.4 un contrato de runtime que recompense el progreso real, proporcione semánticas más claras de herramientas y permisos, y convierta los modos de fallo en estados explícitos legibles por máquina y por humanos.
+El objetivo no es hacer que GPT-5.4 imite a Opus. El objetivo es dar a GPT-5.4 un contrato de tiempo de ejecución que recompense el progreso real, proporcione semánticas de herramientas y permisos más limpias, y convierta los modos de fallo en estados explícitos legibles por máquina y por humanos.
 
 Eso cambia la experiencia del usuario de:
 
-- "el modelo tenía un buen plan pero se detuvo"
+- “el modelo tenía un buen plan pero se detuvo”
 
 a:
 
-- "el modelo actuó, o OpenClaw mostró la razón exacta por la que no pudo"
+- “el modelo actuó, o OpenClaw mostró la razón exacta por la que no podía”
 
-## Antes vs después para usuarios de GPT-5.4
+## Antes y después para los usuarios de GPT-5.4
 
-| Antes de este programa                                                                                                      | Después de PR A-D                                                                                        |
-| --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| GPT-5.4 podía detenerse después de un plan razonable sin ejecutar el siguiente paso de herramienta                          | PR A convierte "solo plan" en "actúa ahora o muestra un estado bloqueado"                                |
-| Los esquemas estrictos de herramientas podían rechazar herramientas sin parámetros o de forma OpenAI/Codex de forma confusa | PR C hace que el registro e invocación de herramientas propiedad del proveedor sea más predecible        |
-| La guía de `/elevated full` podía ser vaga o incorrecta en runtimes bloqueados                                              | PR B da a GPT-5.4 y al usuario pistas veraces sobre runtime y permisos                                   |
-| Los fallos de reproducción o compactación podían parecer que la tarea desapareció silenciosamente                           | PR C muestra explícitamente estados en pausa, bloqueados, abandonados y de reproducción inválida         |
-| "GPT-5.4 se siente peor que Opus" era mayormente anecdótico                                                                 | PR D lo convierte en el mismo paquete de escenarios, las mismas métricas y una puerta pass/fail estricta |
+| Antes de este programa                                                                                                            | Después de las PR A-D                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| GPT-5.4 podía detenerse después de un plan razonable sin dar el siguiente paso de herramienta                                     | La PR A convierte “solo planificar” en “actuar ahora o mostrar un estado bloqueado”                                       |
+| Los esquemas estrictos de herramientas podían rechazar herramientas sin parámetros o con forma de OpenAI/Codex de formas confusas | La PR C hace que el registro y la invocación de herramientas propiedad del proveedor sean más predecibles                 |
+| La guía `/elevated full` podía ser vaga o incorrecta en tiempos de ejecución bloqueados                                           | La PR B proporciona a GPT-5.4 y al usuario sugerencias veraces sobre el tiempo de ejecución y los permisos                |
+| Los fallos de reproducción o compactación podían parecer que la tarea desaparecía silenciosamente                                 | La PR C muestra explícitamente los resultados en pausa, bloqueados, abandonados e inválidos para la reproducción          |
+| “GPT-5.4 se siente peor que Opus” era mayormente anecdótico                                                                       | La PR D convierte eso en el mismo paquete de escenarios, las mismas métricas y una puerta de aprobado/suspendido estricta |
 
 ## Arquitectura
 
@@ -110,7 +110,7 @@ flowchart TD
     H --> I["Scenario report and parity gate"]
 ```
 
-## Flujo de liberación
+## Flujo de lanzamiento
 
 ```mermaid
 flowchart LR
@@ -129,91 +129,91 @@ flowchart LR
 
 ## Paquete de escenarios
 
-El paquete de paridad de primera ola cubre actualmente cinco escenarios:
+El primer paquete de paridad cubre actualmente cinco escenarios:
 
 ### `approval-turn-tool-followthrough`
 
-Verifica que el modelo no se detenga en "voy a hacer eso" después de una breve aprobación. Debería ejecutar la primera acción concreta en el mismo turno.
+Comprueba que el modelo no se detenga en «Lo haré» después de una breve aprobación. Debe tomar la primera acción concreta en el mismo turno.
 
 ### `model-switch-tool-continuity`
 
-Verifica que el trabajo con herramientas se mantenga coherente a través de los límites de cambio de modelo/runtime en lugar de reiniciarse en comentarios o perder el contexto de ejecución.
+Comprueba que el trabajo con herramientas sigue siendo coherente a través de los límites de cambio de modelo/tiempo de ejecución en lugar de restablecerse en comentarios o perder el contexto de ejecución.
 
 ### `source-docs-discovery-report`
 
-Verifica que el modelo pueda leer fuentes y documentación, sintetizar hallazgos y continuar la tarea de manera agentic en lugar de producir un resumen superficial y detenerse prematuramente.
+Comprueba que el modelo pueda leer el código fuente y la documentación, sintetizar los hallazgos y continuar la tarea de manera agéntica en lugar de producir un resumen superficial y detenerse prematuramente.
 
 ### `image-understanding-attachment`
 
-Verifica que las tareas en modo mixto que involucran adjuntos sigan siendo procesables y no colapsen en narración vaga.
+Comprueba que las tareas de modo mixto que implican archivos adjuntos sigan siendo accionables y no colapsen en una narración vaga.
 
 ### `compaction-retry-mutating-tool`
 
-Verifica que una tarea con una escritura mutante real mantenga explícita la inseguridad de reproducción en lugar de parecer silenciosamente segura para reproducción si la ejecución se compacta, reintenta o pierde el estado de respuesta bajo presión.
+Comprueba que una tarea con una escritura mutante real mantenga la inseguridad de reproducción explícita en lugar de parecer silenciosamente segura para la reproducción si la ejecución se compacta, reintenta o pierde el estado de respuesta bajo presión.
 
 ## Matriz de escenarios
 
-| Escenario                          | Lo que prueba                                     | Buen comportamiento de GPT-5.4                                                                               | Señal de fallo                                                                                          |
-| ---------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| `approval-turn-tool-followthrough` | Turnos cortos de aprobación después de un plan    | Inicia la primera acción concreta de herramienta inmediatamente en lugar de reformular la intención          | seguimiento de solo plan, sin actividad de herramientas, o turno bloqueado sin un bloqueador real       |
-| `model-switch-tool-continuity`     | Cambio de runtime/modelo bajo uso de herramientas | Preserva el contexto de la tarea y continúa actuando coherentemente                                          | se reinicia en comentarios, pierde el contexto de herramientas, o se detiene después del cambio         |
-| `source-docs-discovery-report`     | Lectura de fuentes + síntesis + acción            | Encuentra fuentes, usa herramientas y produce un informe útil sin estancarse                                 | resumen superficial, trabajo de herramientas faltante, o parada de turno incompleto                     |
-| `image-understanding-attachment`   | Trabajo agentic impulsado por adjuntos            | Interpreta el adjunto, lo conecta con herramientas y continúa la tarea                                       | narración vaga, adjunto ignorado, o ninguna acción concreta siguiente                                   |
-| `compaction-retry-mutating-tool`   | Trabajo mutante bajo presión de compactación      | Realiza una escritura real y mantiene explícita la inseguridad de reproducción después del efecto secundario | la escritura mutante ocurre pero la seguridad de reproducción está implícita, faltante o contradictoria |
+| Escenario                          | Lo que prueba                                                       | Buen comportamiento de GPT-5.4                                                                               | Señal de fallo                                                                                             |
+| ---------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| `approval-turn-tool-followthrough` | Turnos de aprobación cortos después de un plan                      | Inicia la primera acción de herramienta concreta inmediatamente en lugar de reiterar la intención            | seguimiento solo del plan, sin actividad de herramientas o turno bloqueado sin un bloqueador real          |
+| `model-switch-tool-continuity`     | Cambio de modelo/tiempo de ejecución durante el uso de herramientas | Conserva el contexto de la tarea y continúa actuando de manera coherente                                     | se restablece en comentarios, pierde el contexto de las herramientas o se detiene después del cambio       |
+| `source-docs-discovery-report`     | Lectura de fuentes + síntesis + acción                              | Encuentra fuentes, utiliza herramientas y produce un informe útil sin detenerse                              | resumen superficial, falta de trabajo con herramientas o detención en un turno incompleto                  |
+| `image-understanding-attachment`   | Trabajo agéntico impulsado por archivos adjuntos                    | Interpreta el archivo adjunto, lo conecta con las herramientas y continúa la tarea                           | narración vaga, archivo adjunto ignorado o ninguna acción concreta siguiente                               |
+| `compaction-retry-mutating-tool`   | Trabajo mutante bajo presión de compactación                        | Realiza una escritura real y mantiene la inseguridad de reproducción explícita después del efecto secundario | ocurre una escritura mutante pero la seguridad de reproducción está implícita, ausente o es contradictoria |
 
-## Puerta de liberación
+## Puerta de lanzamiento
 
-GPT-5.4 solo puede considerarse a paridad o superior cuando el runtime fusionado pasa simultáneamente el paquete de paridad y las regresiones de veracidad del runtime.
+Solo se puede considerar que GPT-5.4 está a la par o es mejor cuando el tiempo de ejecución combinado supera el paquete de paridad y las regresiones de veracidad del tiempo de ejecución al mismo tiempo.
 
 Resultados requeridos:
 
 - sin estancamiento de solo plan cuando la siguiente acción de herramienta es clara
 - sin finalización falsa sin ejecución real
-- sin guía incorrecta de `/elevated full`
-- sin abandono silencioso de reproducción o compactación
-- métricas del paquete de paridad al menos tan sólidas como la línea base acordada de Opus 4.6
+- sin orientación incorrecta de `/elevated full`
+- sin repetición silenciosa o abandono de compactación
+- métricas de parity-pack que sean al menos tan sólidas como la línea base de Opus 4.6 acordada
 
-Para el arnés de primera ola, la puerta compara:
+Para el harness de primera ola, el gate compara:
 
 - tasa de finalización
 - tasa de paradas no intencionadas
-- tasa de llamadas de herramientas válidas
-- conteo de falsos éxitos
+- tasa de llamadas a herramientas válidas
+- recuento de éxitos falsos
 
 La evidencia de paridad se divide intencionalmente en dos capas:
 
-- PR D demuestra el comportamiento de GPT-5.4 vs Opus 4.6 en los mismos escenarios con el laboratorio de QA
-- Las suites deterministas de PR B demuestran la veracidad de autenticación, proxy, DNS y `/elevated full` fuera del arnés
+- PR D demuestra el comportamiento de GPT-5.4 frente a Opus 4.6 en el mismo escenario con QA-lab
+- las suites deterministas de PR B prueban la veracidad de auth, proxy, DNS y `/elevated full` fuera del harness
 
 ## Matriz de objetivo a evidencia
 
-| Elemento de la puerta de finalización                             | PR propietario | Fuente de evidencia                                                             | Señal de aprobación                                                                                                  |
-| ----------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| GPT-5.4 ya no se estanca después de la planificación              | PR A           | `approval-turn-tool-followthrough` y suites de runtime de PR A                  | los turnos de aprobación activan trabajo real o un estado bloqueado explícito                                        |
-| GPT-5.4 ya no finge progreso o finalización falsa de herramientas | PR A + PR D    | resultados de escenarios del informe de paridad y conteo de falsos éxitos       | sin resultados de aprobación sospechosos y sin finalización de solo comentario                                       |
-| GPT-5.4 ya no da guía falsa de `/elevated full`                   | PR B           | suites deterministas de veracidad del runtime                                   | las razones de bloqueo y las sugerencias de acceso completo se mantienen precisas al runtime                         |
-| Los fallos de reproducción/vitalidad permanecen explícitos        | PR C + PR D    | suites de ciclo de vida/reproducción de PR C y `compaction-retry-mutating-tool` | el trabajo mutante mantiene explícita la inseguridad de reproducción en lugar de desaparecer silenciosamente         |
-| GPT-5.4 iguala o supera a Opus 4.6 en las métricas acordadas      | PR D           | `qa-agentic-parity-report.md` y `qa-agentic-parity-summary.json`                | misma cobertura de escenarios y sin regresión en finalización, comportamiento de parada o uso válido de herramientas |
+| Elemento del gate de finalización                                           | PR propietaria | Fuente de evidencia                                                             | Señal de paso                                                                                                                 |
+| --------------------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| GPT-5.4 ya no se bloquea después de la planificación                        | PR A           | `approval-turn-tool-followthrough` más suites de runtime de PR A                | los turnos de aprobación activan el trabajo real o un estado bloqueado explícito                                              |
+| GPT-5.4 ya no falsifica el progreso o la finalización falsa de herramientas | PR A + PR D    | resultados de escenarios del informe de paridad y recuento de éxitos falsos     | sin resultados de paso sospechosos y sin finalización solo de comentarios                                                     |
+| GPT-5.4 ya no da orientación falsa de `/elevated full`                      | PR B           | suites de veracidad deterministas                                               | las razones de bloqueo y las pistas de acceso completo se mantienen precisas en tiempo de ejecución                           |
+| Los fallos de repetición/vigencia se mantienen explícitos                   | PR C + PR D    | suites de ciclo de vida/repetición de PR C más `compaction-retry-mutating-tool` | el trabajo de mutación mantiene la inseguridad de repetición explícita en lugar de desaparecer silenciosamente                |
+| GPT-5.4 iguala o supera a Opus 4.6 en las métricas acordadas                | PR D           | `qa-agentic-parity-report.md` y `qa-agentic-parity-summary.json`                | misma cobertura de escenarios y sin regresión en la finalización, el comportamiento de parada o el uso válido de herramientas |
 
 ## Cómo leer el veredicto de paridad
 
 Use el veredicto en `qa-agentic-parity-summary.json` como la decisión final legible por máquina para el paquete de paridad de primera ola.
 
-- `pass` significa que GPT-5.4 cubrió los mismos escenarios que Opus 4.6 sin regresión en las métricas agregadas acordadas.
-- `fail` significa que al menos una puerta dura se activó: finalización más débil, peores paradas no intencionadas, uso de herramientas válidas más débil, cualquier caso de falso éxito, o cobertura de escenarios inconsistente.
-- "problema de CI compartido/base" no es en sí mismo un resultado de paridad. Si el ruido de CI fuera de PR D bloquea una ejecución, el veredicto debe esperar una ejecución limpia del runtime fusionado en lugar de inferirse de los registros de la era de la rama.
-- La veracidad de autenticación, proxy, DNS y `/elevated full` todavía proviene de las suites deterministas de PR B, por lo que la afirmación de liberación final necesita ambos: un veredicto de paridad PR D aprobado y cobertura de veracidad PR B verde.
+- `pass` significa que GPT-5.4 cubrió los mismos escenarios que Opus 4.6 y no regresionó en las métricas agregadas acordadas.
+- `fail` significa que se activó al menos un gate duro: finalización más débil, paradas no intencionadas peores, uso de herramientas válido más débil, cualquier caso de éxito falso o cobertura de escenarios desigual.
+- "shared/base CI issue" no es en sí mismo un resultado de paridad. Si el ruido de CI fuera de PR D bloquea una ejecución, el veredicto debe esperar a una ejecución limpia en el runtime fusionado en lugar de inferirse a partir de registros de la era de la rama.
+- La veracidad de Auth, proxy, DNS y `/elevated full` todavía proviene de los conjuntos deterministas de PR B, por lo que la afirmación de lanzamiento final necesita ambos: un veredicto de paridad de PR D superado y una cobertura de veracidad de PR B en verde.
 
-## Quién debería habilitar `strict-agentic`
+## Quién debe habilitar `strict-agentic`
 
-Habilite `strict-agentic` cuando:
+Use `strict-agentic` cuando:
 
-- se espera que el agente actúe inmediatamente cuando el siguiente paso es obvio
-- GPT-5.4 o modelos de la familia Codex son el runtime principal
-- prefiere estados bloqueados explícitos sobre respuestas de solo resumen "útiles"
+- se espera que el agente actúe de inmediato cuando el siguiente paso sea obvio
+- los modelos GPT-5.4 o de la familia Codex son el runtime principal
+- prefiere estados bloqueados explícitos sobre respuestas de "resumen" "útiles"
 
 Mantenga el contrato predeterminado cuando:
 
-- desea el comportamiento existente más flexible
+- desea el comportamiento más flexible existente
 - no está usando modelos de la familia GPT-5
-- está probando prompts en lugar de la aplicación del runtime
+- está probando indicaciones (prompts) en lugar de la aplicación del runtime

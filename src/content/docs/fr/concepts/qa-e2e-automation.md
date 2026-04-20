@@ -119,20 +119,47 @@ Les ressources de graines vivent dans `qa/` :
 - `qa/scenarios/index.md`
 - `qa/scenarios/*.md`
 
-Ceux-ci sont intentionnellement dans git pour que le plan QA soit visible à la fois pour les humains et l'
-agent. La liste de base doit rester assez large pour couvrir :
+Ils sont intentionnellement dans git afin que le plan QA soit visible à la fois par les humains et par l'agent.
 
-- Chat DM et channel
-- comportement de fil de discussion
-- cycle de vie des actions de message
-- rappels cron
-- rappel de mémoire
-- changement de model
-- transfert de sous-agent
-- lecture de dépôt et lecture de docs
+`qa-lab` doit rester un exécuteur markdown générique. Chaque fichier de scénario markdown est la source de vérité pour une exécution de test et doit définir :
+
+- les métadonnées du scénario
+- les références de documentation et de code
+- les exigences de plugin optionnelles
+- le correctif de configuration de gateway optionnel
+- l'exécutable `qa-flow`
+
+La surface d'exécution réutilisable qui prend en charge `qa-flow` est autorisée à rester générique et transversale. Par exemple, les scénarios markdown peuvent combiner des assistants côté transport avec des assistants côté navigateur qui pilotent l'interface utilisateur de contrôle intégrée via la couture Gateway `browser.request` sans ajouter d'exécuteur particulier.
+
+La liste de base doit rester assez large pour couvrir :
+
+- les DM et les discussions de channel
+- le comportement des fils de discussion
+- le cycle de vie des actions de message
+- les rappels cron
+- le rappel de mémoire
+- la commutation de model
+- le transfert vers un sous-agent
+- la lecture de dépôt et la lecture de documentation
 - une petite tâche de construction telle que Lobster Invaders
 
-## Rapport
+## Adaptateurs de transport
+
+`qa-lab` possède une couture de transport générique pour les scénarios QA markdown.
+`qa-channel` est le premier adaptateur sur cette couture, mais la cible de conception est plus large :
+les futurs canaux réels ou synthétiques doivent se connecter au même exécuteur de suite
+au lieu d'ajouter un exécuteur QA spécifique au transport.
+
+Au niveau architectural, la répartition est la suivante :
+
+- `qa-lab` gère l'exécution générique de scénarios, la concurrence des travailleurs, l'écriture d'artefacts et les rapports.
+- l'adaptateur de transport gère la configuration de la passerelle, la disponibilité, l'observation entrante et sortante, les actions de transport et l'état de transport normalisé.
+- les fichiers de scénario markdown sous `qa/scenarios/` définissent l'exécution du test ; `qa-lab` fournit la surface d'exécution réutilisable qui les exécute.
+
+Les conseils d'adoption destinés aux mainteneurs pour les nouveaux adaptateurs de channel se trouvent dans
+[Testing](/en/help/testing#adding-a-channel-to-qa).
+
+## Rapports
 
 `qa-lab` exporte un rapport de protocole Markdown à partir de la chronologie du bus observée.
 Le rapport doit répondre :
@@ -142,8 +169,7 @@ Le rapport doit répondre :
 - Ce qui est resté bloqué
 - Quels scénarios de suivi valent la peine d'être ajoutés
 
-Pour les vérifications de caractère et de style, exécutez le même scénario sur plusieurs refs de model live
-et écrivez un rapport Markdown jugé :
+Pour les vérifications de caractère et de style, exécutez le même scénario sur plusieurs références de model actives et écrivez un rapport Markdown jugé :
 
 ```bash
 pnpm openclaw qa character-eval \
@@ -162,9 +188,9 @@ pnpm openclaw qa character-eval \
   --judge-concurrency 16
 ```
 
-La commande exécute des processus enfants de passerelle QA locaux, et non Docker. Les scénarios d'évaluation de personnage doivent définir le personnage via `SOUL.md`, puis exécuter des tours d'utilisateur ordinaires tels que le chat, l'aide de l'espace de travail et de petites tâches sur fichiers. Le modèle candidat ne doit pas être informé qu'il est en cours d'évaluation. La commande préserve chaque transcription complète, enregistre des statistiques d'exécution de base, puis demande aux modèles juges en mode rapide avec un raisonnement `xhigh` de classer les exécutions par naturalité, ambiance et humour. Utilisez `--blind-judge-models` lors de la comparaison de fournisseurs : le prompt du juge reçoit toujours chaque transcription et le statut de l'exécution, mais les références des candidats sont remplacées par des étiquettes neutres telles que `candidate-01` ; le rapport remappe les classements aux vraies références après l'analyse. Les exécutions de candidats utilisent par défaut la réflexion `high`, avec `xhigh` pour les modèles OpenAI qui la prennent en charge. Remplacez un candidat spécifique en ligne par `--model provider/model,thinking=<level>`. `--thinking <level>` définit toujours un repli global, et l'ancienne forme `--model-thinking <provider/model=level>` est conservée pour compatibilité. Les références de candidats OpenAI utilisent par défaut le mode rapide afin que le traitement prioritaire soit utilisé là où le fournisseur le prend en charge. Ajoutez `,fast`, `,no-fast` ou `,fast=false` en ligne lorsqu'un seul candidat ou juge a besoin d'une substitution. Passez `--fast` uniquement lorsque vous souhaitez forcer l'activation du mode rapide pour chaque modèle candidat. Les durées des candidats et des juges sont enregistrées dans le rapport pour l'analyse de référence, mais les invites des juges indiquent explicitement de ne pas classer par vitesse. Les exécutions de modèle candidat et juge utilisent par défaut une concurrence de 16. Réduisez `--concurrency` ou `--judge-concurrency` lorsque les limites du fournisseur ou la pression de la passerelle locale rendent une exécution trop bruyante. Lorsqu'aucun `--model` de candidat n'est passé, l'évaluation de personnage utilise par défaut `openai/gpt-5.4`, `openai/gpt-5.2`, `openai/gpt-5`, `anthropic/claude-opus-4-6`, `anthropic/claude-sonnet-4-6`, `zai/glm-5.1`, `moonshot/kimi-k2.5` et `google/gemini-3.1-pro-preview` lorsqu'aucun `--model` n'est passé. Lorsqu'aucun `--judge-model` n'est passé, les juges utilisent par défaut `openai/gpt-5.4,thinking=xhigh,fast` et `anthropic/claude-opus-4-6,thinking=high`.
+La commande exécute des processus enfants de passerelle QA locaux, et non Docker. Les scénarios d'évaluation de personnage doivent définir le personnage via `SOUL.md`, puis exécuter des tours d'utilisateur ordinaires tels que le chat, l'aide de l'espace de travail et des petites tâches de fichiers. Le modèle candidat ne doit pas être informé qu'il est en cours d'évaluation. La commande préserve chaque transcription complète, enregistre des statistiques d'exécution de base, puis demande aux modèles juges en mode rapide avec un raisonnement `xhigh` de classer les exécutions par naturalité, ambiance et humour. Utilisez `--blind-judge-models` lors de la comparaison de fournisseurs : le prompt du juge reçoit toujours chaque transcription et le statut d'exécution, mais les références candidates sont remplacées par des étiquettes neutres telles que `candidate-01` ; le rapport remappe les classements vers les vraies références après l'analyse. Les exécutions candidates utilisent par défaut la réflexion `high`, avec `xhigh` pour les modèles OpenAI qui la prennent en charge. Remplacez un candidat spécifique en ligne avec `--model provider/model,thinking=<level>`. `--thinking <level>` définit toujours un repli global, et l'ancienne forme `--model-thinking <provider/model=level>` est conservée pour la compatibilité. Les références candidates OpenAI utilisent par défaut le mode rapide afin que le traitement prioritaire soit utilisé lorsque le fournisseur le prend en charge. Ajoutez `,fast`, `,no-fast` ou `,fast=false` en ligne lorsqu'un seul candidat ou juge a besoin d'un remplacement. Passez `--fast` uniquement lorsque vous souhaitez forcer le mode rapide pour chaque modèle candidat. Les durées des candidats et des juges sont enregistrées dans le rapport pour l'analyse de référence, mais les prompts des juges précisent explicitement de ne pas classer par vitesse. Les exécutions de modèles candidats et juges utilisent par défaut une concurrence de 16. Réduisez `--concurrency` ou `--judge-concurrency` lorsque les limites du fournisseur ou la pression de la passerelle locale rendent une exécution trop bruyante. Lorsqu'aucun `--model` candidat n'est passé, l'évaluation de personnage utilise par défaut `openai/gpt-5.4`, `openai/gpt-5.2`, `openai/gpt-5`, `anthropic/claude-opus-4-6`, `anthropic/claude-sonnet-4-6`, `zai/glm-5.1`, `moonshot/kimi-k2.5` et `google/gemini-3.1-pro-preview` lorsqu'aucun `--model` n'est passé. Lorsqu'aucun `--judge-model` n'est passé, les juges utilisent par défaut `openai/gpt-5.4,thinking=xhigh,fast` et `anthropic/claude-opus-4-6,thinking=high`.
 
-## Documentation associée
+## Documentation connexe
 
 - [Testing](/en/help/testing)
 - [QA Channel](/en/channels/qa-channel)

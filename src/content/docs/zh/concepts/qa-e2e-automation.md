@@ -93,29 +93,52 @@ Seed 资产位于 `qa/`：
 - `qa/scenarios/index.md`
 - `qa/scenarios/*.md`
 
-这些有意放在 git 中，以便 QA 计划对人类和代理都可见。基准列表应保持足够宽泛以涵盖：
+这些有意放在 git 中，以便人员和代理都能看到 QA 计划。
+
+`qa-lab` 应保持为通用的 markdown 运行器。每个场景 markdown 文件是一次测试运行的单一事实来源，并应定义：
+
+- 场景元数据
+- 文档和代码引用
+- 可选的插件要求
+- 可选的 Gateway 配置补丁
+- 可执行的 `qa-flow`
+
+支持 `qa-flow` 的可重用运行时表面允许保持通用和横切性。例如，markdown 场景可以结合传输端辅助程序和浏览器端辅助程序，通过 Gateway(网关) `browser.request` 缝隙驱动嵌入式控制 UI，而无需添加特殊情况运行程序。
+
+基线列表应保持足够广泛以覆盖：
 
 - 私信和渠道聊天
-- thread 行为
+- 线程行为
 - 消息操作生命周期
 - cron 回调
-- memory 回忆
+- 记忆回想
 - 模型切换
-- subagent 交接
-- repo-reading 和 docs-reading
-- 一个小型的构建任务，例如 Lobster Invaders
+- 子代理交接
+- 仓库读取和文档读取
+- 一个小的构建任务，例如 Lobster Invaders
+
+## 传输适配器
+
+`qa-lab` 拥有用于 markdown QA 场景的通用传输缝隙。`qa-channel` 是该缝隙上的第一个适配器，但设计目标更广泛：未来的真实或合成渠道应插入同一套件运行程序，而不是添加特定于传输的 QA 运行程序。
+
+在架构层面，划分如下：
+
+- `qa-lab` 负责通用场景执行、工作线程并发、工件写入和报告。
+- 传输适配器负责 Gateway 配置、就绪状态、入站和出站观察、传输操作以及规范化的传输状态。
+- `qa/scenarios/` 下的 markdown 场景文件定义测试运行；`qa-lab` 提供执行它们的可重用运行时表面。
+
+针对新渠道适配器的维护者采用指南位于 [Testing](/en/help/testing#adding-a-channel-to-qa)。
 
 ## 报告
 
-`qa-lab` 从观察到的总线时间线导出 Markdown 协议报告。
-报告应回答：
+`qa-lab` 从观察到的总线时间轴导出 Markdown 协议报告。该报告应回答：
 
-- 什么起作用了
-- 什么失败了
+- 什么有效
+- 什么失败
 - 什么仍然受阻
 - 哪些后续场景值得添加
 
-对于角色和风格检查，请在多个实时模型引用上运行相同的场景，并编写一份评判性的 Markdown 报告：
+对于角色和风格检查，请在多个实时模型引用上运行相同场景并编写评估后的 Markdown 报告：
 
 ```bash
 pnpm openclaw qa character-eval \
@@ -134,10 +157,41 @@ pnpm openclaw qa character-eval \
   --judge-concurrency 16
 ```
 
-该命令运行本地 QA 网关子进程，而不是 Docker。角色评估场景应通过 `SOUL.md` 设置角色，然后运行普通用户轮次，例如聊天、工作区帮助和小型文件任务。不应告诉候选模型它正在接受评估。该命令保留每个完整的转录本，记录基本的运行统计数据，然后使用带有 `xhigh` 推理的快速模式下的判断模型，根据自然度、氛围和幽默感对运行进行排名。在比较提供商时使用 `--blind-judge-models`：判断提示词仍然会获取每个转录本和运行状态，但候选引用被替换为中性标签，例如 `candidate-01`；报告在解析后将排名映射回真实引用。候选运行默认使用 `high` 思考，对于支持的 OpenAI 模型则使用 `xhigh`。使用 `--model provider/model,thinking=<level>` 内联覆盖特定的候选。`--thinking <level>` 仍然设置全局回退，并且为了兼容性保留了旧的 `--model-thinking <provider/model=level>` 形式。OpenAI 候选引用默认使用快速模式，因此在提供商支持的地方会使用优先处理。当单个候选或判断需要覆盖时，请内联添加 `,fast`、`,no-fast` 或 `,fast=false`。仅当您想为每个候选模型强制开启快速模式时才传递 `--fast`。候选和判断的持续时间会记录在报告中以进行基准分析，但判断提示词明确说明不要按速度排名。候选和判断模型运行都默认并发数为 16。当提供商限制或本地网关压力导致运行过于嘈杂时，请降低 `--concurrency` 或 `--judge-concurrency`。当未传递候选 `--model` 时，角色评估默认为 `openai/gpt-5.4`、`openai/gpt-5.2`、`openai/gpt-5`、`anthropic/claude-opus-4-6`、`anthropic/claude-sonnet-4-6`、`zai/glm-5.1`、`moonshot/kimi-k2.5` 和 `google/gemini-3.1-pro-preview`，当未传递 `--model` 时。当未传递 `--judge-model` 时，判断默认为 `openai/gpt-5.4,thinking=xhigh,fast` 和 `anthropic/claude-opus-4-6,thinking=high`。
+该命令运行本地 QA 网关子进程，而不是 Docker。角色评估
+场景应通过 `SOUL.md` 设置人设，然后运行普通用户轮次
+例如聊天、工作区帮助和小型文件任务。不应告知候选模型
+它正在接受评估。该命令保留每个完整的
+对话记录，记录基本运行统计数据，然后让快速模式下的评判模型通过
+`xhigh` 推理按自然度、氛围和幽默感对运行进行排名。
+在比较提供商时使用 `--blind-judge-models`：评判提示词仍然会获取
+每份对话记录和运行状态，但候选引用将被中性
+标签（如 `candidate-01`）替换；报告在
+解析后将排名映射回真实引用。
+候选运行默认为 `high` 思考，对于支持的 OpenAI 模型
+则使用 `xhigh`。可以通过
+`--model provider/model,thinking=<level>` 内联覆盖特定的候选设置。`--thinking <level>` 仍然设置
+全局后备值，并且保留了较旧的 `--model-thinking <provider/model=level>` 形式
+以保持兼容性。
+OpenAI 候选引用默认为快速模式，因此在提供商
+支持的地方会使用优先处理。当
+单个候选或评判需要覆盖时，请内联添加 `,fast`、`,no-fast` 或 `,fast=false`。仅当您想要
+为每个候选模型强制开启快速模式时，才传递 `--fast`。候选和评判的持续时间
+会记录在报告中以进行基准分析，但评判提示词明确表示
+不要按速度排名。
+候选和评判模型运行均默认并发度为 16。当提供商限制或本地网关
+压力导致运行过于嘈杂时，请降低
+`--concurrency` 或 `--judge-concurrency`。
+当未传递候选 `--model` 时，角色评估默认为
+`openai/gpt-5.4`、`openai/gpt-5.2`、`openai/gpt-5`、`anthropic/claude-opus-4-6`、
+`anthropic/claude-sonnet-4-6`、`zai/glm-5.1`、
+`moonshot/kimi-k2.5` 以及
+`google/gemini-3.1-pro-preview`（当未传递 `--model` 时）。
+当未传递 `--judge-model` 时，评判默认为
+`openai/gpt-5.4,thinking=xhigh,fast` 和
+`anthropic/claude-opus-4-6,thinking=high`。
 
 ## 相关文档
 
 - [测试](/en/help/testing)
-- [QA 渠道](/en/channels/qa-channel)
+- [QA 频道](/en/channels/qa-channel)
 - [仪表板](/en/web/dashboard)

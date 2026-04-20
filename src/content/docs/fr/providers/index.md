@@ -44,11 +44,12 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [inferrs (modèles locaux)](/en/providers/inferrs)
 - [Kilocode](/en/providers/kilocode)
 - [LiteLLM (passerelle unifiée)](/en/providers/litellm)
+- [LM Studio (modèles locaux)](/en/providers/lmstudio)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
 - [NVIDIA](/en/providers/nvidia)
-- [Ollama (modèles cloud + locaux)](/en/providers/ollama)
+- [Ollama (cloud + modèles locaux)](/en/providers/ollama)
 - [OpenAI (API + Codex)](/en/providers/openai)
 - [OpenCode](/en/providers/opencode)
 - [OpenCode Go](/en/providers/opencode-go)
@@ -73,11 +74,11 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 ## Pages de vue d'ensemble partagées
 
 - [Variantes groupées supplémentaires](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy et Gemini CLI OAuth
-- [Génération d'images](/en/tools/image-generation) - `image_generate` tool partagé, sélection de provider et basculement
-- [Génération de musique](/en/tools/music-generation) - `music_generate` tool partagé, sélection de provider et basculement
-- [Génération de vidéo](/en/tools/video-generation) - `video_generate` tool partagé, sélection de provider et basculement
+- [Génération d'images](/en/tools/image-generation) - `image_generate` tool partagé, sélection du fournisseur et basculement
+- [Génération de musique](/en/tools/music-generation) - `music_generate` tool partagé, sélection du fournisseur et basculement
+- [Génération de vidéo](/en/tools/video-generation) - `video_generate` tool partagé, sélection du fournisseur et basculement
 
-## Providers de transcription
+## Fournisseurs de transcription
 
 - [Deepgram (transcription audio)](/en/providers/deepgram)
 
@@ -86,4 +87,4 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Proxy communautaire pour les identifiants d'abonnement Claude (vérifiez la politique/les conditions d'Anthropic avant utilisation)
 
 Pour le catalogue complet de providers (xAI, Groq, Mistral, etc.) et la configuration avancée,
-voir [Model providers](/en/concepts/model-providers).
+voir [Modèles de providers](/en/concepts/model-providers).

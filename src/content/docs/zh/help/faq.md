@@ -3091,17 +3091,18 @@ title: "常见问题"
 ## 聊天命令、中止任务以及“它无法停止”
 
 <AccordionGroup>
-  <Accordion title="如何阻止内部系统消息显示在聊天中？">
-    大多数内部或工具消息仅在该会话启用了 **verbose**（详细）或 **reasoning**（推理）时才出现。
+  <Accordion title="如何阻止内部系统消息在聊天中显示？">
+    大多数内部或工具消息仅在该会话启用 **verbose**、**trace** 或 **reasoning** 时才会出现。
 
-    在你看到该消息的聊天中修复：
+    在出现该问题的聊天中修复：
 
     ```
     /verbose off
+    /trace off
     /reasoning off
     ```
 
-    如果仍然很嘈杂，请在控制 UI 中检查会话设置并将 verbose 设置为 **inherit**（继承）。同时确认你没有在配置中使用设置了 `verboseDefault` 为 `on` 的机器人配置文件。
+    如果仍然很嘈杂，请在控制 UI 中检查会话设置，并将 verbose 设置为 **inherit**。同时确认您没有使用在配置中设置了 `verboseDefault` 为 `on` 的机器人配置文件。
 
     文档：[Thinking and verbose](/en/tools/thinking)、[Security](/en/gateway/security#reasoning-verbose-output-in-groups)。
 

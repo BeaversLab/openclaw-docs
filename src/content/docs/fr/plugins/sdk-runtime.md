@@ -13,7 +13,7 @@ read_when:
 Référence de l'objet `api.runtime` injecté dans chaque plugin lors de
 l'enregistrement. Utilisez ces helpers au lieu d'importer directement les éléments internes de l'hôte.
 
-<Tip>**Vous cherchez un guide pas à pas ?** Consultez les [Plugins de canal](/en/plugins/sdk-channel-plugins) ou les [Plugins de fournisseur](/en/plugins/sdk-provider-plugins) pour des guides étape par étape qui présentent ces assistants dans leur contexte.</Tip>
+<Tip>**Vous cherchez un guide pas à pas ?** Consultez [Plugins de canal](/en/plugins/sdk-channel-plugins) ou [Plugins de fournisseur](/en/plugins/sdk-provider-plugins) pour des guides étape par étape qui présentent ces assistants dans leur contexte.</Tip>
 
 ```typescript
 register(api) {
@@ -375,7 +375,10 @@ du rappel `register` :
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
 import type { PluginRuntime } from "openclaw/plugin-sdk/runtime-store";
 
-const store = createPluginRuntimeStore<PluginRuntime>("my-plugin runtime not initialized");
+const store = createPluginRuntimeStore<PluginRuntime>({
+  pluginId: "my-plugin",
+  errorMessage: "my-plugin runtime not initialized",
+});
 
 // In your entry point
 export default defineChannelPluginEntry({
@@ -396,22 +399,24 @@ export function tryGetRuntime() {
 }
 ```
 
-## Autres champs de niveau supérieur `api`
+Privilégiez `pluginId` pour l'identité du magasin d'exécution. La forme de bas niveau `key` est destinée aux cas exceptionnels où un plugin a intentionnellement besoin de plus d'un emplacement d'exécution.
+
+## Autres champs de premier niveau `api`
 
 Au-delà de `api.runtime`, l'objet API fournit également :
 
-| Champ                    | Type                      | Description                                                                                                            |
-| ------------------------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `api.id`                 | `string`                  | Id du plugin                                                                                                           |
-| `api.name`               | `string`                  | Nom d'affichage du plugin                                                                                              |
-| `api.config`             | `OpenClawConfig`          | Instantané de la configuration actuelle (instantané d'exécution en mémoire actif si disponible)                        |
-| `api.pluginConfig`       | `Record<string, unknown>` | Configuration spécifique au plugin à partir de `plugins.entries.<id>.config`                                           |
-| `api.logger`             | `PluginLogger`            | Enregistreur avec portée (`debug`, `info`, `warn`, `error`)                                                            |
-| `api.registrationMode`   | `PluginRegistrationMode`  | Mode de chargement actuel ; `"setup-runtime"` est la fenêtre de démarrage/configuration légère avant l'entrée complète |
-| `api.resolvePath(input)` | `(string) => string`      | Résoudre un chemin relatif à la racine du plugin                                                                       |
+| Champ                    | Type                      | Description                                                                                                        |
+| ------------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `api.id`                 | `string`                  | Id du plugin                                                                                                       |
+| `api.name`               | `string`                  | Nom d'affichage du plugin                                                                                          |
+| `api.config`             | `OpenClawConfig`          | Instantané de la configuration actuelle (instantané d'exécution en mémoire active lorsqu'il est disponible)        |
+| `api.pluginConfig`       | `Record<string, unknown>` | Configuration spécifique au plugin à partir de `plugins.entries.<id>.config`                                       |
+| `api.logger`             | `PluginLogger`            | Enregistreur délimité (`debug`, `info`, `warn`, `error`)                                                           |
+| `api.registrationMode`   | `PluginRegistrationMode`  | Mode de chargement actuel ; `"setup-runtime"` est la fenêtre légère de démarrage/configuration pré-entrée complète |
+| `api.resolvePath(input)` | `(string) => string`      | Résoudre un chemin relatif à la racine du plugin                                                                   |
 
 ## Connexes
 
-- [Présentation du SDK](/en/plugins/sdk-overview) -- référence de sous-chemin
-- [Points d'entrée du SDK](/en/plugins/sdk-entrypoints) -- `definePluginEntry` options
-- [Fonctionnement interne des plugins](/en/plugins/architecture) -- modèle de capacité et registre
+- [Aperçu du SDK](/en/plugins/sdk-overview) -- référence de sous-chemin
+- [Points d'entrée du SDK](/en/plugins/sdk-entrypoints) -- options `definePluginEntry`
+- [Internes du plugin](/en/plugins/architecture) -- modèle de capacité et registre

@@ -13,7 +13,7 @@ read_when:
 Référence pour le conditionnement des plugins (métadonnées `package.json`), les manifestes
 (`openclaw.plugin.json`), les entrées de configuration et les schémas de configuration.
 
-<Tip>**Vous cherchez un guide pas à pas ?** Les guides pratiques couvrent le conditionnement en contexte : [Plugins de canal](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) et [Plugins de fournisseur](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
+<Tip>**Vous cherchez un guide pas à pas ?** Les guides pratiques couvrent le packaging en contexte : [Plugins de canaux](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) et [Plugins de fournisseurs](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
 
 ## Métadonnées du package
 
@@ -270,9 +270,15 @@ export default defineSetupPluginEntry(myChannelPlugin);
 Cela évite de charger du code d'exécution lourd (bibliothèques de cryptographie, enregistrements CLI,
 services d'arrière-plan) lors des flux de configuration.
 
-**Quand OpenClaw utilise `setupEntry` au lieu de l'entrée complète :**
+Les canaux d'espace de travail regroupés qui conservent des exportations sûres pour la configuration dans des modules sidecar peuvent
+utiliser `defineBundledChannelSetupEntry(...)` depuis
+`openclaw/plugin-sdk/channel-entry-contract` au lieu de
+`defineSetupPluginEntry(...)`. Ce contrat regroupé prend également en charge une exportation
+`runtime` facultative afin que le câblage d'exécution au moment de la configuration puisse rester léger et explicite.
 
-- Le canal est désactivé mais a besoin de surfaces de configuration/onboarding
+**Lorsque OpenClaw utilise `setupEntry` au lieu de l'entrée complète :**
+
+- Le canal est désactivé mais nécessite des surfaces de configuration/onboarding
 - Le canal est activé mais non configuré
 - Le chargement différé est activé (`deferConfiguredChannelFullLoadUntilAfterListen`)
 
@@ -282,41 +288,42 @@ services d'arrière-plan) lors des flux de configuration.
 - Toutes les routes HTTP requises avant l'écoute de la passerelle
 - Toutes les méthodes de passerelle nécessaires lors du démarrage
 
-Ces méthodes de passerelle de démarrage doivent toujours éviter les espaces de noms admin principaux réservés
-tels que `config.*` ou `update.*`.
+Ces méthodes de passerelle de démarrage doivent toujours éviter les espaces de noms d'administration principale réservés tels que
+`config.*` ou `update.*`.
 
 **Ce que `setupEntry` ne doit PAS inclure :**
 
 - Enregistrements CLI
 - Services d'arrière-plan
-- Imports lourds au runtime (crypto, SDK)
+- Importations d'exécution lourdes (crypto, SDK)
 - Méthodes Gateway nécessaires uniquement après le démarrage
 
-### Imports étroits d'helpers de configuration
+### Importations étroites d'aides à la configuration
 
-Pour les chemins d'exécution à chaud (hot setup-only paths), privilégiez les interfaces d'helpers de configuration étroites par rapport à la catégorie plus large `plugin-sdk/setup` lorsque vous n'avez besoin que d'une partie de la surface de configuration :
+Pour les chemins d'accès chauds réservés uniquement à la configuration, privilégiez les interfaces étroites d'aides à la configuration par rapport au parapluie plus large
+`plugin-sdk/setup` lorsque vous n'avez besoin que d'une partie de la surface de configuration :
 
-| Chemin d'import                    | À utiliser pour                                                                                                          | Exportations clés                                                                                                                                                                                                                                                                            |
+| Chemin d'importation               | Utilisez-le pour                                                                                                         | Exportations clés                                                                                                                                                                                                                                                                            |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `plugin-sdk/setup-runtime`         | helpers d'exécution au moment de la configuration qui restent disponibles dans `setupEntry` / démarrage différé de canal | `createPatchedAccountSetupAdapter`, `createEnvPatchedAccountSetupAdapter`, `createSetupInputPresenceValidator`, `noteChannelLookupFailure`, `noteChannelLookupSummary`, `promptResolvedAllowFrom`, `splitSetupEntries`, `createAllowlistSetupWizardProxy`, `createDelegatedSetupWizardProxy` |
+| `plugin-sdk/setup-runtime`         | aides à l'exécution au moment de la configuration qui restent disponibles dans `setupEntry` / démarrage différé du canal | `createPatchedAccountSetupAdapter`, `createEnvPatchedAccountSetupAdapter`, `createSetupInputPresenceValidator`, `noteChannelLookupFailure`, `noteChannelLookupSummary`, `promptResolvedAllowFrom`, `splitSetupEntries`, `createAllowlistSetupWizardProxy`, `createDelegatedSetupWizardProxy` |
 | `plugin-sdk/setup-adapter-runtime` | adaptateurs de configuration de compte conscients de l'environnement                                                     | `createEnvPatchedAccountSetupAdapter`                                                                                                                                                                                                                                                        |
-| `plugin-sdk/setup-tools`           | helpers de configuration/installation CLI/archive/docs                                                                   | `formatCliCommand`, `detectBinary`, `extractArchive`, `resolveBrewExecutable`, `formatDocsLink`, `CONFIG_DIR`                                                                                                                                                                                |
+| `plugin-sdk/setup-tools`           | assistants d'installation/de configuration/CLI/archive/docs                                                              | `formatCliCommand`, `detectBinary`, `extractArchive`, `resolveBrewExecutable`, `formatDocsLink`, `CONFIG_DIR`                                                                                                                                                                                |
 
-Utilisez l'interface plus large `plugin-sdk/setup` lorsque vous souhaitez la boîte à outils de configuration partagée complète, y compris les helpers de correctifs de configuration tels que `moveSingleAccountChannelSectionToDefaultAccount(...)`.
+Utilisez la couture `plugin-sdk/setup` plus large lorsque vous souhaitez la boîte à outils d'installation partagée complète, y compris les assistants de correctifs de configuration tels que `moveSingleAccountChannelSectionToDefaultAccount(...)`.
 
-Les adaptateurs de correctifs de configuration restent sûrs sur le chemin d'exécution à chaud (hot-path) lors de l'import. Leur recherche de surface de contrat pour la promotion à compte unique groupée est paresseuse, donc l'import de `plugin-sdk/setup-runtime` ne charge pas avidement la découverte de surface de contrat groupée avant que l'adaptateur ne soit réellement utilisé.
+Les adaptateurs de correctifs d'installation restent sûrs pour le chemin critique lors de l'importation. Leur recherche de surface de contrat de promotion à compte unique groupée est paresseuse, donc l'importation de `plugin-sdk/setup-runtime` ne charge pas eagèrement la découverte de surface de contrat groupée avant que l'adaptateur ne soit réellement utilisé.
 
-### Promotion à compte unique détenue par le canal
+### Promotion à compte unique détenue par le channel
 
-Lorsqu'un canal passe d'une configuration de niveau supérieur à compte unique à `channels.<id>.accounts.*`, le comportement partagé par défaut consiste à déplacer les valeurs promues à portée de compte dans `accounts.default`.
+Lorsqu'un channel passe d'une configuration de premier niveau à compte unique à `channels.<id>.accounts.*`, le comportement partagé par défaut consiste à déplacer les valeurs promues délimitées au compte dans `accounts.default`.
 
-Les canaux groupés peuvent restreindre ou remplacer cette promotion via leur surface de contrat de configuration :
+Les channels groupés peuvent restreindre ou remplacer cette promotion via leur surface de contrat d'installation :
 
-- `singleAccountKeysToMove` : clés supplémentaires de niveau supérieur qui doivent être déplacées dans le compte promu
-- `namedAccountPromotionKeys` : lorsque des comptes nommés existent déjà, seules ces clés sont déplacées vers le compte promu ; les clés de stratégie/de livraison partagées restent à la racine du channel
-- `resolveSingleAccountPromotionTarget(...)` : choisir le compte existant qui reçoit les valeurs promues
+- `singleAccountKeysToMove` : clés supplémentaires de premier niveau qui doivent être déplacées dans le compte promu
+- `namedAccountPromotionKeys` : lorsque des comptes nommés existent déjà, seules ces clés sont déplacées dans le compte promu ; les clés de stratégie/livraison partagées restent à la racine du channel
+- `resolveSingleAccountPromotionTarget(...)` : choisir quel compte existant reçoit les valeurs promues
 
-Matrix est l'exemple groupé actuel. S'il existe exactement un compte Matrix nommé ou si `defaultAccount` pointe vers une clé non canonique existante telle que `Ops`, la promotion conserve ce compte au lieu de créer une nouvelle entrée `accounts.default`.
+Matrix est l'exemple groupé actuel. Si exactement un compte nommé Matrix existe déjà, ou si `defaultAccount` pointe vers une clé non canonique existante telle que `Ops`, la promotion préserve ce compte au lieu de créer une nouvelle entrée `accounts.default`.
 
 ## Schéma de configuration
 
@@ -336,7 +343,7 @@ La configuration du plugin est validée par rapport au schéma JSON de votre man
 }
 ```
 
-Votre plugin reçoit cette configuration en tant que `api.pluginConfig` lors de l'enregistrement.
+Votre plugin reçoit cette configuration sous forme de `api.pluginConfig` lors de l'enregistrement.
 
 Pour une configuration spécifique au channel, utilisez plutôt la section de configuration du channel :
 
@@ -353,7 +360,7 @@ Pour une configuration spécifique au channel, utilisez plutôt la section de co
 
 ### Création de schémas de configuration de channel
 
-Utilisez `buildChannelConfigSchema` de `openclaw/plugin-sdk/core` pour convertir un schéma Zod dans le wrapper `ChannelConfigSchema` que OpenClaw valide :
+Utilisez `buildChannelConfigSchema` de `openclaw/plugin-sdk/core` pour convertir un schéma Zod dans l'enveloppe `ChannelConfigSchema` que OpenClaw valide :
 
 ```typescript
 import { z } from "zod";
@@ -369,9 +376,10 @@ const accountSchema = z.object({
 const configSchema = buildChannelConfigSchema(accountSchema);
 ```
 
-## Assistant de configuration
+## Assistants d'installation
 
-Les plugins de channel peuvent fournir des assistants de configuration interactifs pour `openclaw onboard`. L'assistant est un objet `ChannelSetupWizard` sur le `ChannelPlugin` :
+Les plugins de channel peuvent fournir des assistants de configuration interactifs pour `openclaw onboard`.
+L'assistant est un objet `ChannelSetupWizard` sur le `ChannelPlugin` :
 
 ```typescript
 import type { ChannelSetupWizard } from "openclaw/plugin-sdk/channel-setup";
@@ -404,11 +412,21 @@ const setupWizard: ChannelSetupWizard = {
 };
 ```
 
-Le type `ChannelSetupWizard` prend en charge `credentials`, `textInputs`, `dmPolicy`, `allowFrom`, `groupAccess`, `prepare`, `finalize`, et plus encore. Consultez les packages de plugins groupés (par exemple le `src/channel.setup.ts` du plugin Discord) pour des exemples complets.
+Le type `ChannelSetupWizard` prend en charge `credentials`, `textInputs`,
+`dmPolicy`, `allowFrom`, `groupAccess`, `prepare`, `finalize`, et plus encore.
+Voir les packages de plugins inclus (par exemple le plugin Discord `src/channel.setup.ts`) pour
+des exemples complets.
 
-Pour les invites de liste d'autorisation DM qui nécessitent uniquement le flux standard `note -> prompt -> parse -> merge -> patch`, préférez les assistants de configuration partagés de `openclaw/plugin-sdk/setup` : `createPromptParsedAllowFromForAccount(...)`, `createTopLevelChannelParsedAllowFromPrompt(...)`, et `createNestedChannelParsedAllowFromPrompt(...)`.
+Pour les invites de liste d'autorisation DM qui nécessitent uniquement le flux standard
+`note -> prompt -> parse -> merge -> patch`, préférez les assistants de configuration partagés
+de `openclaw/plugin-sdk/setup` : `createPromptParsedAllowFromForAccount(...)`,
+`createTopLevelChannelParsedAllowFromPrompt(...)`, et
+`createNestedChannelParsedAllowFromPrompt(...)`.
 
-Pour les blocs de statut de configuration de channel qui ne varient que par les étiquettes, les scores et les lignes supplémentaires facultatives, préférez `createStandardChannelSetupStatus(...)` de `openclaw/plugin-sdk/setup` au lieu de créer manuellement le même objet `status` dans chaque plugin.
+Pour les blocs de statut de configuration de channel qui ne varient que par les étiquettes, les scores et les lignes supplémentaires facultatives,
+préférez `createStandardChannelSetupStatus(...)` issu de
+`openclaw/plugin-sdk/setup` plutôt que de recréer manuellement le même objet `status` dans
+chaque plugin.
 
 Pour les surfaces de configuration facultatives qui ne doivent apparaître que dans certains contextes, utilisez
 `createOptionalChannelSetupSurface` de `openclaw/plugin-sdk/channel-setup` :
@@ -425,26 +443,26 @@ const setupSurface = createOptionalChannelSetupSurface({
 // Returns { setupAdapter, setupWizard }
 ```
 
-`plugin-sdk/channel-setup` expose également les constructeurs de niveau inférieur
+`plugin-sdk/channel-setup` expose également les constructeurs de plus bas niveau
 `createOptionalChannelSetupAdapter(...)` et
-`createOptionalChannelSetupWizard(...)` lorsque vous n'avez besoin que de la moitié de
+`createOptionalChannelSetupWizard(...)` lorsque vous n'avez besoin que d'une seule moitié de
 cette surface d'installation facultative.
 
-L'adaptateur/l'assistant facultatif généré échoue de manière sécurisée (fail closed) lors des écritures de configuration réelles. Ils
+L'adaptateur/assistant facultatif généré échoue de manière fermée lors des écritures de configuration réelles. Ils
 réutilisent un seul message d'installation requise sur `validateInput`,
 `applyAccountConfig` et `finalize`, et ajoutent un lien vers la documentation lorsque `docsPath` est
 défini.
 
-Pour les interfaces utilisateur de configuration basées sur des binaires, préférez les assistants délégués partagés plutôt que
-de copier la même colle binaire/statut dans chaque canal :
+Pour les interfaces utilisateur de configuration basées sur des binaires, préférez les assistants délégués partagés plutôt que de
+copier la même colle binaire/statut dans chaque channel :
 
 - `createDetectedBinaryStatus(...)` pour les blocs de statut qui ne varient que par les étiquettes,
   les indices, les scores et la détection de binaire
-- `createCliPathTextInput(...)` pour les entrées de texte basées sur un chemin
+- `createCliPathTextInput(...)` pour les entrées texte basées sur un chemin
 - `createDelegatedSetupWizardStatusResolvers(...)`,
   `createDelegatedPrepare(...)`, `createDelegatedFinalize(...)` et
-  `createDelegatedResolveConfigured(...)` lorsque `setupEntry` doit transférer vers
-  un assistant complet plus lourd de manière différée
+  `createDelegatedResolveConfigured(...)` lorsque `setupEntry` doit transmettre à
+  un assistant complet plus volumineux de manière paresseuse
 - `createDelegatedTextInputShouldPrompt(...)` lorsque `setupEntry` a seulement besoin de
   déléguer une décision `textInputs[*].shouldPrompt`
 
@@ -463,14 +481,14 @@ forcer explicitement ClawHub :
 openclaw plugins install clawhub:@myorg/openclaw-my-plugin   # ClawHub only
 ```
 
-Il n'y a pas de substitution `npm:` correspondante. Utilisez la spécification de package normale npm lorsque vous
-voulez le chemin npm après le repli ClawHub :
+Il n'y a pas de remplacement `npm:` correspondant. Utilisez la spécification de package npm normale lorsque vous
+voulez le chemin npm après le repli sur ClawHub :
 
 ```bash
 openclaw plugins install @myorg/openclaw-my-plugin
 ```
 
-**Plugins dans le dépôt :** placez-les sous l'arborescence de l'espace de travail du plugin groupé et ils sont automatiquement
+**Plugins dans le dépôt :** placez-les sous l'arborescence de l'espace de travail du plugin groupé et ils seront automatiquement
 découverts lors de la construction.
 
 **Les utilisateurs peuvent installer :**
@@ -479,10 +497,10 @@ découverts lors de la construction.
 openclaw plugins install <package-name>
 ```
 
-<Info>Pour les installations issues de npm, `openclaw plugins install` exécute `npm install --ignore-scripts` (pas de scripts de cycle de vie). Gardez les arbres de dépendances des plugins en JS/TS pur et évitez les packages qui nécessitent des constructions `postinstall`.</Info>
+<Info>Pour les installations issues de npm, `openclaw plugins install` exécute `npm install --ignore-scripts` (pas de scripts de cycle de vie). Gardez les arbres de dépendances des plugins en JS/TS pur et évitez les packages qui nécessitent des builds `postinstall`.</Info>
 
 ## Connexes
 
 - [Points d'entrée du SDK](/en/plugins/sdk-entrypoints) -- `definePluginEntry` et `defineChannelPluginEntry`
-- [Plugin Manifest](/en/plugins/manifest) -- référence complète du schéma de manifeste
-- [Building Plugins](/en/plugins/building-plugins) -- guide de démarrage étape par étape
+- [Manifeste de plugin](/en/plugins/manifest) -- référence complète du schéma de manifeste
+- [Création de plugins](/en/plugins/building-plugins) -- guide de démarrage pas à pas

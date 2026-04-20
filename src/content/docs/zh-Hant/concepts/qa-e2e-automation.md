@@ -96,31 +96,58 @@ Seed 資源位於 `qa/`：
 - `qa/scenarios/index.md`
 - `qa/scenarios/*.md`
 
-這些刻意放在 git 中，以便人類和代理程式都能看到 QA 計畫。
-基準清單應保持足夠廣泛以涵蓋：
+這些有意放置在 git 中，以便 QA 計劃對人類和代理程式都可見。
 
-- DM 和頻道聊天
-- thread 行為
-- 訊息動作生命週期
+`qa-lab` 應保持為通用 markdown 執行器。每個情境 markdown 檔案是單次測試執行的事實來源，並應定義：
+
+- 情境元資料
+- 文件和程式碼參照
+- 可選的外掛程式需求
+- 可選的 gateway 設定補丁
+- 可執行的 `qa-flow`
+
+支援 `qa-flow` 的可重用執行時介面被允許保持通用性和橫切性。例如，markdown 情境可以結合傳輸端的輔助程式與瀏覽器端的輔助程式，透過 Gateway `browser.request` 縫合來驅動嵌入式控制 UI，而無需新增特殊情況的執行器。
+
+基線清單應保持足夠廣泛以涵蓋：
+
+- 私訊和頻道聊天
+- 執行緒行為
+- 訊息操作生命週期
 - cron 回呼
-- 記憶回憶
+- 記憶體回憶
 - 模型切換
-- subagent 交接
-- repo 讀取和 docs 讀取
+- 子代理移交
+- 讀取 repo 和讀取文件
 - 一個小型的建置任務，例如 Lobster Invaders
+
+## 傳輸適配器
+
+`qa-lab` 擁有適用於 markdown QA 情境的通用傳輸縫合。
+`qa-channel` 是該縫合上的第一個適配器，但設計目標更廣泛：
+未來的真實或合成頻道應插入到相同的套件執行器中，
+而不是新增傳輸特定的 QA 執行器。
+
+在架構層面，劃分如下：
+
+- `qa-lab` 負責通用情境執行、工作並發、產出寫入和報告。
+- 傳輸適配器負責 gateway 設定、就緒狀態、入站和出站觀測、傳輸操作，以及正規化的傳輸狀態。
+- `qa/scenarios/` 下的 markdown 情境檔案定義測試執行；`qa-lab` 提供執行它們的可重用執行時介面。
+
+針對新頻道適配器的維護者採用指南位於
+[Testing](/en/help/testing#adding-a-channel-to-qa)。
 
 ## 報告
 
-`qa-lab` 從觀察到的 bus timeline 匯出 Markdown 協定報告。
-報告應回答：
+`qa-lab` 從觀測到的總線時間軸匯出 Markdown 協議報告。
+該報告應回答：
 
 - 什麼運作正常
 - 什麼失敗了
-- 什麼仍然受阻
-- 哪些後續情境值得加入
+- 什麼仍被阻塞
+- 哪些後續情境值得新增
 
-若要進行角色和風格檢查，請在多個即時模型
-refs 上執行相同的情境並撰寫一份評判的 Markdown 報告：
+對於角色和風格檢查，請跨多個即時模型參照執行相同的情境
+並撰寫經過評判的 Markdown 報告：
 
 ```bash
 pnpm openclaw qa character-eval \
@@ -139,11 +166,11 @@ pnpm openclaw qa character-eval \
   --judge-concurrency 16
 ```
 
-該指令執行本機 QA gateway 子進程，而非 Docker。角色評估場景應透過 `SOUL.md` 設定角色，然後執行一般使用者輪次，例如聊天、工作區協助和小型檔案任務。不應告訴候選模型它正在接受評估。該指令會保留每份完整對話記錄，記錄基本執行統計數據，然後要求法官模型在 `xhigh` 推理的快速模式下，根據自然度、氛圍和幽默感對執行進行排名。比較供應商時請使用 `--blind-judge-models`：法官提示仍會取得每份對話記錄和執行狀態，但候選參照會替換為中性標籤，例如 `candidate-01`；報告會在解析後將排名對應回真實參照。
-候選執行預設使用 `high` 思考，對於支援此模式的 OpenAI 模型則使用 `xhigh`。若要覆寫特定候選項，請使用 `--model provider/model,thinking=<level>`。`--thinking <level>` 仍會設定全域備選方案，而較舊的 `--model-thinking <provider/model=level>` 形式則保留以供相容性使用。
-OpenAI 候選參照預設為快速模式，因此在供應商支援的地方會使用優先處理。當單一候選項或法官需要覆寫時，請加入 `,fast`、`,no-fast` 或 `,fast=false`。僅當您希望對每個候選模型強制開啟快速模式時，才傳遞 `--fast`。候選項和法官的持續時間會記錄在報告中用於基準分析，但法官提示會明確表示不要根據速度排名。
-候選項和法官模型執行的預設並發數均為 16。當供應商限制或本機 gateway 壓力導致執行過於吵雜時，請降低 `--concurrency` 或 `--judge-concurrency`。
-當未傳遞候選 `--model` 時，角色評估預設為 `openai/gpt-5.4`、`openai/gpt-5.2`、`openai/gpt-5`、`anthropic/claude-opus-4-6`、`anthropic/claude-sonnet-4-6`、`zai/glm-5.1`、`moonshot/kimi-k2.5` 和 `google/gemini-3.1-pro-preview`（當未傳遞 `--model` 時）。
+此指令執行本機 QA 閘道子進程，而非 Docker。角色評估場景應透過 `SOUL.md` 設定角色，然後執行一般使用者回合，例如聊天、工作區協助和小型檔案任務。不應讓候選模型知道它正在接受評估。該指令會保留每份完整對話紀錄、記錄基本執行統計數據，然後要求法官模型以 `xhigh` 推理的快速模式根據自然度、氛圍和幽默感來對執行進行排名。比較供應商時請使用 `--blind-judge-models`：法官提示仍會取得每份對話紀錄和執行狀態，但候選參照會被取代為中性標籤，例如 `candidate-01`；報告會在解析後將排名對應回真實參照。
+候選執行預設為 `high` 思考，支援該功能的 OpenAI 模型則為 `xhigh`。您可以使用 `--model provider/model,thinking=<level>` 针對特定候選進行內嵌覆寫。`--thinking <level>` 仍會設定全域後備，並保留較舊的 `--model-thinking <provider/model=level>` 格式以相容舊版。
+OpenAI 候選參照預設為快速模式，因此只要供應商支援，就會使用優先處理。當單一候選或法官需要覆寫時，請內嵌新增 `,fast`、`,no-fast` 或 `,fast=false`。只有在您希望對每個候選模型強制開啟快速模式時，才傳遞 `--fast`。候選和法官的持續時間會記錄在報告中以進行基準分析，但法官提示會明確指出不要根據速度排名。
+候選和法官模型執行的預設並行數皆為 16。當供應商限制或本機閘道壓力導致執行過於干擾時，請降低 `--concurrency` 或 `--judge-concurrency`。
+當未傳遞候選 `--model` 時，角色評估預設為 `openai/gpt-5.4`、`openai/gpt-5.2`、`openai/gpt-5`、`anthropic/claude-opus-4-6`、`anthropic/claude-sonnet-4-6`、`zai/glm-5.1`、`moonshot/kimi-k2.5` 和 `google/gemini-3.1-pro-preview` (當未傳遞 `--model` 時)。
 當未傳遞 `--judge-model` 時，法官預設為 `openai/gpt-5.4,thinking=xhigh,fast` 和 `anthropic/claude-opus-4-6,thinking=high`。
 
 ## 相關文件

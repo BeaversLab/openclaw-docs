@@ -9,19 +9,19 @@ title: "browser"
 
 # `openclaw browser`
 
-Gérez la surface de contrôle du navigateur d'OpenClaw et exécutez des actions de navigateur (cycle de vie, profils, onglets, snapshots, captures d'écran, navigation, saisie, émulation d'état et débogage).
+Gérer la surface de contrôle du navigateur de OpenClaw et exécuter des actions de navigateur (cycle de vie, profils, onglets, instantanés, captures d'écran, navigation, saisie, émulation d'état et débogage).
 
 Connexes :
 
 - Outil de navigateur + API : [Outil de navigateur](/en/tools/browser)
 
-## Drapeaux courants
+## Indicateurs communs
 
-- `--url <gatewayWsUrl>` : URL WebSocket de la Gateway (valeur par défaut définie par la configuration).
+- `--url <gatewayWsUrl>` : URL WebSocket de la Gateway (par défaut, selon la configuration).
 - `--token <token>` : jeton de la Gateway (si requis).
 - `--timeout <ms>` : délai d'expiration de la requête (ms).
 - `--expect-final` : attendre une réponse finale de la Gateway.
-- `--browser-profile <name>` : choisir un profil de navigateur (celui par défaut issu de la configuration).
+- `--browser-profile <name>` : choisir un profil de navigateur (celui par défaut de la configuration).
 - `--json` : sortie lisible par machine (lorsque pris en charge).
 
 ## Démarrage rapide (local)
@@ -33,6 +33,20 @@ openclaw browser --browser-profile openclaw open https://example.com
 openclaw browser --browser-profile openclaw snapshot
 ```
 
+## Dépannage rapide
+
+Si `start` échoue avec `not reachable after start`, dépannez d'abord la disponibilité du CDP. Si `start` et `tabs` réussissent mais que `open` ou `navigate` échoue, le plan de contrôle du navigateur est sain et l'échec est généralement dû à une stratégie SSRF de navigation.
+
+Séquence minimale :
+
+```bash
+openclaw browser --browser-profile openclaw start
+openclaw browser --browser-profile openclaw tabs
+openclaw browser --browser-profile openclaw open https://example.com
+```
+
+Conseils détaillés : [Dépannage du navigateur](/en/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
+
 ## Cycle de vie
 
 ```bash
@@ -42,21 +56,21 @@ openclaw browser stop
 openclaw browser --browser-profile openclaw reset-profile
 ```
 
-Notes :
+Remarques :
 
-- Pour `attachOnly` et les profils CDP distants, `openclaw browser stop` ferme la
+- Pour les profils CDP distants et `attachOnly`, `openclaw browser stop` ferme la
   session de contrôle active et efface les substitutions d'émulation temporaires, même lorsque
   OpenClaw n'a pas lancé le processus du navigateur lui-même.
-- Pour les profils gérés localement, `openclaw browser stop` arrête le processus du navigateur
-  généré.
+- Pour les profils gérés localement, `openclaw browser stop` arrête le processus
+  du navigateur généré.
 
 ## Si la commande est manquante
 
 Si `openclaw browser` est une commande inconnue, vérifiez `plugins.allow` dans
 `~/.openclaw/openclaw.json`.
 
-Lorsque `plugins.allow` est présent, le plugin de navigateur groupé doit être listé
-explicitement :
+Lorsque `plugins.allow` est présent, le plug-in de navigateur groupé doit être
+répertorié explicitement :
 
 ```json5
 {
@@ -66,17 +80,17 @@ explicitement :
 }
 ```
 
-`browser.enabled=true` ne restaure pas la sous-commande de la CLI lorsque la liste blanche de plugins
-exclut `browser`.
+`browser.enabled=true` ne restaure pas la sous-commande de la CLI lorsque la liste
+autorisée des plug-ins exclut `browser`.
 
-Connexe : [Outil de navigateur](/en/tools/browser#missing-browser-command-or-tool)
+Voir aussi : [outil Browser](/en/tools/browser#missing-browser-command-or-tool)
 
 ## Profils
 
 Les profils sont des configurations de routage de navigateur nommées. En pratique :
 
 - `openclaw` : lance ou se connecte à une instance Chrome dédiée gérée par OpenClaw (répertoire de données utilisateur isolé).
-- `user` : contrôle votre session Chrome existante connectée via Chrome DevTools MCP.
+- `user` : contrôle votre session Chrome connectée existante via Chrome DevTools MCP.
 - profils CDP personnalisés : pointent vers un point de terminaison CDP local ou distant.
 
 ```bash
@@ -105,9 +119,9 @@ openclaw browser focus <targetId>
 openclaw browser close <targetId>
 ```
 
-## Snapshot / capture d'écran / actions
+## Instantané / capture d'écran / actions
 
-Snapshot :
+Instantané :
 
 ```bash
 openclaw browser snapshot
@@ -126,9 +140,9 @@ Notes :
 - `--full-page` est réservé aux captures de page ; il ne peut pas être combiné avec `--ref`
   ou `--element`.
 - Les profils `existing-session` / `user` prennent en charge les captures d'écran de page et les captures d'écran `--ref`
-  à partir de la sortie de l'instantané, mais pas les captures d'écran CSS `--element`.
+  à partir de la sortie d'instantané, mais pas les captures d'écran CSS `--element`.
 
-Navigation/clic/saisie (automatisation de l'interface utilisateur basée sur les références) :
+Navigation/clic/frappe (automatisation de l'interface utilisateur basée sur les références) :
 
 ```bash
 openclaw browser navigate https://example.com
@@ -144,7 +158,7 @@ openclaw browser wait --text "Done"
 openclaw browser evaluate --fn '(el) => el.textContent' --ref <ref>
 ```
 
-Assistants de fichiers et de boîtes de dialogue :
+Assistants de fichier et de boîte de dialogue :
 
 ```bash
 openclaw browser upload /tmp/openclaw/uploads/file.pdf --ref <ref>
@@ -155,7 +169,7 @@ openclaw browser dialog --accept
 
 ## État et stockage
 
-Vue + émulation :
+Viewport + émulation :
 
 ```bash
 openclaw browser resize 1280 720
@@ -196,7 +210,7 @@ openclaw browser trace stop --out trace.zip
 
 ## Chrome existant via MCP
 
-Utilisez le profil intégré `user`, ou créez votre propre profil `existing-session` :
+Utilisez le profil intégré `user` ou créez votre propre profil `existing-session` :
 
 ```bash
 openclaw browser --browser-profile user tabs
@@ -209,24 +223,23 @@ Ce chemin est réservé à l'hôte. Pour Docker, les serveurs sans tête, Browse
 
 Limites actuelles des sessions existantes :
 
-- les actions basées sur les instantanés utilisent des références, pas les sélecteurs CSS
-- `click` est un clic gauche uniquement
+- les actions basées sur des instantanés utilisent des références, pas des sélecteurs CSS
+- `click` effectue uniquement des clics gauches
 - `type` ne prend pas en charge `slowly=true`
 - `press` ne prend pas en charge `delayMs`
 - `hover`, `scrollintoview`, `drag`, `select`, `fill` et `evaluate` rejettent
   les remplacements du délai d'expiration par appel
 - `select` prend en charge une seule valeur
 - `wait --load networkidle` n'est pas pris en charge
-- les téléchargements de fichiers nécessitent `--ref` / `--input-ref`, ne prennent pas en charge CSS
+- les téléchargements de fichiers nécessitent `--ref` / `--input-ref`, ne prennent pas en charge les sélecteurs CSS
   `--element` et prennent actuellement en charge un seul fichier à la fois
-- les hooks de boîte de dialogue ne prennent pas en charge `--timeout`
-- les captures d'écran prennent en charge les captures de page et `--ref`, mais pas CSS `--element`
-- `responsebody`, l'interception des téléchargements, l'exportation PDF et les actions par lots nécessitent
-  toujours un navigateur géré ou un profil CDP brut
+- les crochets de boîte de dialogue ne prennent pas en charge `--timeout`
+- les captures d'écran prennent en charge les captures de page et `--ref`, mais pas le CSS `--element`
+- `responsebody`, l'interception des téléchargements, l'exportation PDF et les actions par lot nécessitent toujours un navigateur géré ou un profil CDP brut
 
-## Contrôle distant du navigateur (proxy hôte de nœud)
+## Contrôle distant du navigateur (proxy node host)
 
-Si le Gateway s'exécute sur une machine différente de celle du navigateur, exécutez un **node host** sur la machine qui dispose de Chrome/Brave/Edge/Chromium. Le Gateway proxiera les actions du navigateur vers ce nœud (aucun serveur de contrôle de navigateur distinct requis).
+Si le Gateway s'exécute sur une machine différente de celle du navigateur, exécutez un **node host** sur la machine qui dispose de Chrome/Brave/Edge/Chromium. Le Gateway proxy les actions du navigateur vers ce nœud (aucun serveur de contrôle de navigateur séparé requis).
 
 Utilisez `gateway.nodes.browser.mode` pour contrôler le routage automatique et `gateway.nodes.browser.node` pour épingler un nœud spécifique si plusieurs sont connectés.
 

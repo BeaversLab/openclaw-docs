@@ -13,7 +13,7 @@ read_when:
 Referencia del objeto `api.runtime` inyectado en cada complemento durante
 el registro. Utilice estos asistentes en lugar de importar directamente los internos del host.
 
-<Tip>**¿Buscas un tutorial?** Consulta [Complementos de canal](/en/plugins/sdk-channel-plugins) o [Complementos de proveedor](/en/plugins/sdk-provider-plugins) para guías paso a paso que muestran estos ayudantes en contexto.</Tip>
+<Tip>**¿Buscas un tutorial?** Consulta [Complementos de canal](/en/plugins/sdk-channel-plugins) o [Complementos de proveedor](/en/plugins/sdk-provider-plugins) para obtener guías paso a paso que muestran estos asistentes en contexto.</Tip>
 
 ```typescript
 register(api) {
@@ -375,7 +375,10 @@ del callback `register`:
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
 import type { PluginRuntime } from "openclaw/plugin-sdk/runtime-store";
 
-const store = createPluginRuntimeStore<PluginRuntime>("my-plugin runtime not initialized");
+const store = createPluginRuntimeStore<PluginRuntime>({
+  pluginId: "my-plugin",
+  errorMessage: "my-plugin runtime not initialized",
+});
 
 // In your entry point
 export default defineChannelPluginEntry({
@@ -396,22 +399,26 @@ export function tryGetRuntime() {
 }
 ```
 
+Prefer `pluginId` para la identidad del almacén de tiempo de ejecución. El formato de menor nivel `key` es
+para casos poco comunes en los que un complemento necesita intencionalmente más de una ranura
+de tiempo de ejecución.
+
 ## Otros campos de nivel superior `api`
 
 Más allá de `api.runtime`, el objeto API también proporciona:
 
 | Campo                    | Tipo                      | Descripción                                                                                                       |
 | ------------------------ | ------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `api.id`                 | `string`                  | Id del complemento                                                                                                |
+| `api.id`                 | `string`                  | ID del complemento                                                                                                |
 | `api.name`               | `string`                  | Nombre para mostrar del complemento                                                                               |
-| `api.config`             | `OpenClawConfig`          | Instantánea de configuración actual (instantánea de tiempo de ejecución activa en memoria cuando está disponible) |
+| `api.config`             | `OpenClawConfig`          | Instantánea de configuración actual (instantánea de tiempo de ejecución en memoria activa cuando está disponible) |
 | `api.pluginConfig`       | `Record<string, unknown>` | Configuración específica del complemento de `plugins.entries.<id>.config`                                         |
 | `api.logger`             | `PluginLogger`            | Registrador con ámbito (`debug`, `info`, `warn`, `error`)                                                         |
-| `api.registrationMode`   | `PluginRegistrationMode`  | Modo de carga actual; `"setup-runtime"` es la ventana de inicio/configuración previa ligera a la entrada completa |
-| `api.resolvePath(input)` | `(string) => string`      | Resolver una ruta relativa a la raíz del complemento                                                              |
+| `api.registrationMode`   | `PluginRegistrationMode`  | Modo de carga actual; `"setup-runtime"` es la ventana ligera de inicio/configuración previa a la entrada completa |
+| `api.resolvePath(input)` | `(string) => string`      | Resuelve una ruta relativa a la raíz del complemento                                                              |
 
 ## Relacionado
 
 - [Resumen del SDK](/en/plugins/sdk-overview) -- referencia de subruta
-- [Puntos de entrada del SDK](/en/plugins/sdk-entrypoints) -- opciones de `definePluginEntry`
+- [Puntos de entrada del SDK](/en/plugins/sdk-entrypoints) -- opciones `definePluginEntry`
 - [Aspectos internos del complemento](/en/plugins/architecture) -- modelo de capacidad y registro

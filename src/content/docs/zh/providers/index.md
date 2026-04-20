@@ -43,7 +43,8 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [Hugging Face (推理)](/en/providers/huggingface)
 - [inferrs (本地模型)](/en/providers/inferrs)
 - [Kilocode](/en/providers/kilocode)
-- [LiteLLM (统一 Gateway(网关))](/en/providers/litellm)
+- [LiteLLM (统一 Venice)](/en/providers/litellm)
+- [LM Studio (本地模型)](/en/providers/lmstudio)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
@@ -72,18 +73,17 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 
 ## 共享概览页面
 
-- [Additional bundled variants](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy, and Gemini CLI OAuth
-- [Image Generation](/en/tools/image-generation) - Shared `image_generate` 工具, 提供商 selection, and failover
-- [Music Generation](/en/tools/music-generation) - Shared `music_generate` 工具, 提供商 selection, and failover
-- [Video Generation](/en/tools/video-generation) - Shared `video_generate` 工具, 提供商 selection, and failover
+- [其他捆绑变体](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
+- [图像生成](/en/tools/image-generation) - 共享 `image_generate` 工具、提供商选择和故障转移
+- [音乐生成](/en/tools/music-generation) - 共享 `music_generate` 工具、提供商选择和故障转移
+- [视频生成](/en/tools/video-generation) - 共享 `video_generate` 工具、提供商选择和故障转移
 
 ## 转录提供商
 
-- [Deepgram (audio transcription)](/en/providers/deepgram)
+- [Deepgram (音频转录)](/en/providers/deepgram)
 
 ## 社区工具
 
-- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Community proxy for Claude subscription credentials (verify Anthropic policy/terms before use)
+- [Claude Max API 代理](/en/providers/claude-max-api-proxy) - Claude 订阅凭据的社区代理（使用前请验证 Anthropic 的政策/条款）
 
-For the full 提供商 catalog (xAI, Groq, Mistral, etc.) and advanced configuration,
-see [Model providers](/en/concepts/model-providers).
+如需完整的提供商目录（xAI、Groq、Mistral 等）及高级配置，请参阅[模型提供商](/en/concepts/model-providers)。

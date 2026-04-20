@@ -44,6 +44,7 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 - [inferrs (本地模型)](/en/providers/inferrs)
 - [Kilocode](/en/providers/kilocode)
 - [LiteLLM (統一閘道)](/en/providers/litellm)
+- [LM Studio (本地模型)](/en/providers/lmstudio)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
@@ -70,12 +71,12 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 - [Xiaomi](/en/providers/xiaomi)
 - [Z.AI](/en/providers/zai)
 
-## 共用的概覽頁面
+## 共享概覽頁面
 
-- [其他內建變體](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
-- [圖像生成](/en/tools/image-generation) - 共用的 `image_generate` 工具、提供者選擇和故障轉移
-- [音樂生成](/en/tools/music-generation) - 共用的 `music_generate` 工具、提供者選擇和故障轉移
-- [影片生成](/en/tools/video-generation) - 共用的 `video_generate` 工具、提供者選擇和故障轉移
+- [額外的附帶變體](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
+- [圖像生成](/en/tools/image-generation) - 共享的 `image_generate` 工具、提供者選擇和故障轉移
+- [音樂生成](/en/tools/music-generation) - 共享的 `music_generate` 工具、提供者選擇和故障轉移
+- [影片生成](/en/tools/video-generation) - 共享的 `video_generate` 工具、提供者選擇和故障轉移
 
 ## 轉錄提供者
 
@@ -83,7 +84,6 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 
 ## 社群工具
 
-- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Claude 訂閱憑證的社群 Proxy (使用前請驗證 Anthropic 政策/條款)
+- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Claude 訂閱憑證的社群代理（使用前請驗證 Anthropic 政策/條款）
 
-若要查看完整的提供者目錄 (xAI、Groq、Mistral 等) 和進階配置，
-請參閱 [Model providers](/en/concepts/model-providers)。
+如需完整的提供商目录（xAI、Groq、Mistral 等）及高级配置，請參閱 [Model providers](/en/concepts/model-providers)。

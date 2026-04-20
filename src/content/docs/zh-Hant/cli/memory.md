@@ -121,7 +121,7 @@ openclaw memory rem-harness [--agent <id>] [--include-promoted] [--json]
 - `--include-promoted`：包含已提升的深度候選。
 - `--json`：列印 JSON 輸出。
 
-## 夢境（實驗性）
+## Dreaming
 
 夢境是後台記憶整合系統，包含三個協作階段：**淺層**（sort/stage 短期素材）、**深層**（promote 持久事實至 `MEMORY.md`），以及 **REM**（reflect and surface themes）。
 

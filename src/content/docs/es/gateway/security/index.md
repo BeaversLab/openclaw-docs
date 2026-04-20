@@ -12,7 +12,7 @@ title: "Seguridad"
   límites de confianza (puerta de enlace + credenciales separadas, idealmente usuarios/hosts de SO separados).
 </Warning>
 
-**En esta página:** [Modelo de confianza](#scope-first-personal-assistant-security-model) | [Auditoría rápida](#quick-check-openclaw-security-audit) | [Línea base reforzada](#hardened-baseline-in-60-seconds) | [Modelo de acceso DM](#dm-access-model-pairing-allowlist-open-disabled) | [Refuerzo de configuración](#configuration-hardening-examples) | [Respuesta a incidentes](#incident-response)
+**En esta página:** [Modelo de confianza](#scope-first-personal-assistant-security-model) | [Auditoría rápida](#quick-check-openclaw-security-audit) | [Línea base endurecida](#hardened-baseline-in-60-seconds) | [Modelo de acceso MD](#dm-access-model-pairing-allowlist-open-disabled) | [Endurecimiento de la configuración](#configuration-hardening-examples) | [Respuesta a incidentes](#incident-response)
 
 ## Alcance primero: modelo de seguridad de asistente personal
 
@@ -128,7 +128,7 @@ Antes de abrir un GHSA, verifique todo lo siguiente:
 1. El problema reproducible todavía funciona en la última versión `main` o en el último lanzamiento.
 2. El informe incluye la ruta de código exacta (`file`, función, rango de líneas) y la versión/commit probado.
 3. El impacto cruza un límite de confianza documentado (no solo inyección de prompt).
-4. La afirmación no está listada en [Fuera de alcance](https://github.com/openclaw/openclaw/blob/main/SECURITY.md#out-of-scope).
+4. La afirmación no aparece en [Fuera de alcance](https://github.com/openclaw/openclaw/blob/main/SECURITY.md#out-of-scope).
 5. Se buscaron avisos existentes para detectar duplicados (reutilizar el GHSA canónico cuando corresponda).
 6. Las suposiciones de implementación son explícitas (bucle local/local frente a expuesto, operadores de confianza frente a no confiables).
 
@@ -450,7 +450,7 @@ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
 - El gateway de OpenClaw es local/de loopback primero. Si termina TLS en un proxy inverso, establezca HSTS en el dominio HTTPS orientado al proxy allí.
 - Si el propio gateway termina HTTPS, puede establecer `gateway.http.securityHeaders.strictTransportSecurity` para emitir el encabezado HSTS desde las respuestas de OpenClaw.
-- La guía detallada de implementación se encuentra en [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth#tls-termination-and-hsts).
+- La guía detallada de implementación se encuentra en [Autenticación de proxy de confianza](/en/gateway/trusted-proxy-auth#tls-termination-and-hsts).
 - Para implementaciones de la interfaz de usuario de control que no sean de bucle local, `gateway.controlUi.allowedOrigins` es obligatorio por defecto.
 - `gateway.controlUi.allowedOrigins: ["*"]` es una política explícita de permitir todos los orígenes del navegador, no un valor predeterminado endurecido. Evítelo fuera de pruebas locales estrictamente controladas.
 - Los fallos de autenticación de origen del navegador en el bucle local aún están limitados por tasa incluso cuando
@@ -522,7 +522,10 @@ La postura de OpenClaw:
 
 ## Modelo de autorización de comandos
 
-Los comandos de barra y directivas solo se respetan para **remitentes autorizados**. La autorización se deriva de las listas de permitidas/emparejamiento de canales más `commands.useAccessGroups` (consulte [Configuration](/en/gateway/configuration) y [Slash commands](/en/tools/slash-commands)). Si una lista de permitidas de canales está vacía o incluye `"*"`, los comandos están efectivamente abiertos para ese canal.
+Los comandos de barra y directivas solo se respetan para **remitentes autorizados**. La autorización se deriva de
+listas de permitidos/emparejamiento de canales más `commands.useAccessGroups` (consulte [Configuración](/en/gateway/configuration)
+y [Comandos de barra](/en/tools/slash-commands)). Si una lista de permitidos de canales está vacía o incluye `"*"`,
+los comandos están efectivamente abiertos para ese canal.
 
 `/exec` es una conveniencia solo de sesión para operadores autorizados. **No** escribe configuración ni cambia otras sesiones.
 
@@ -608,7 +611,7 @@ Trate el fragmento anterior como **modo MD seguro**:
 - Modo MD seguro: `session.dmScope: "per-channel-peer"` (cada par de canal+remitente obtiene un contexto de MD aislado).
 - Aislamiento de pares entre canales: `session.dmScope: "per-peer"` (cada remitente obtiene una sesión en todos los canales del mismo tipo).
 
-Si ejecuta varias cuentas en el mismo canal, use `per-account-channel-peer` en su lugar. Si la misma persona se pone en contacto con usted en varios canales, use `session.identityLinks` para combinar esas sesiones de MD en una identidad canónica. Consulte [Gestión de sesiones](/en/concepts/session) y [Configuración](/en/gateway/configuration).
+Si ejecuta varias cuentas en el mismo canal, use `per-account-channel-peer` en su lugar. Si la misma persona lo contacta en varios canales, use `session.identityLinks` para colapsar esas sesiones de MD en una identidad canónica. Consulte [Gestión de sesiones](/en/concepts/session) y [Configuración](/en/gateway/configuration).
 
 ## Listas de permitidos (MD + grupos) - terminología
 
@@ -714,15 +717,15 @@ Recomendaciones:
 
 ## Razonamiento y salida detallada en grupos
 
-`/reasoning` y `/verbose` pueden exponer el razonamiento interno o la salida de herramientas que
-no estaba destinada a un canal público. En entornos grupales, trátelos como **solo
-de depuración** y manténgalos desactivados a menos que los necesite explícitamente.
+`/reasoning`, `/verbose` y `/trace` pueden exponer razonamiento interno, salida de herramientas o diagnósticos de complementos que
+no estaban destinados a un canal público. En configuraciones de grupo, trátelos como **solo
+depuración** y manténgalos desactivados a menos que los necesite explícitamente.
 
 Guía:
 
-- Mantenga `/reasoning` y `/verbose` deshabilitados en salas públicas.
+- Mantenga `/reasoning`, `/verbose` y `/trace` desactivados en salas públicas.
 - Si los habilita, hágalo solo en MDs confiables o salas controladas estrictamente.
-- Recuerde: la salida detallada puede incluir argumentos de herramientas, URL y datos que el modelo vio.
+- Recuerde: la salida detallada y de rastreo puede incluir argumentos de herramientas, URL, diagnósticos de complementos y datos que el modelo vio.
 
 ## Endurecimiento de la configuración (ejemplos)
 
@@ -740,12 +743,12 @@ Mantenga la configuración + el estado privados en el host de la puerta de enlac
 La puerta de enlace multiplexa **WebSocket + HTTP** en un solo puerto:
 
 - Predeterminado: `18789`
-- Configuración/flags/entorno: `gateway.port`, `--port`, `OPENCLAW_GATEWAY_PORT`
+- Configuración/indicadores/entorno: `gateway.port`, `--port`, `OPENCLAW_GATEWAY_PORT`
 
 Esta superficie HTTP incluye la interfaz de usuario de control y el host del lienzo:
 
 - Interfaz de usuario de control (activos SPA) (ruta base predeterminada `/`)
-- Anfitrión de Canvas (Canvas host): `/__openclaw__/canvas/` y `/__openclaw__/a2ui/` (HTML/JS arbitrario; trátelo como contenido no confiable)
+- Host de lienzo: `/__openclaw__/canvas/` y `/__openclaw__/a2ui/` (HTML/JS arbitrarios; tratar como contenido que no es de confianza)
 
 Si carga contenido de Canvas en un navegador normal, trátelo como cualquier otra página web no confiable:
 
@@ -755,24 +758,24 @@ Si carga contenido de Canvas en un navegador normal, trátelo como cualquier otr
 El modo de enlace (Bind mode) controla dónde escucha el Gateway:
 
 - `gateway.bind: "loopback"` (predeterminado): solo los clientes locales pueden conectarse.
-- Los enlaces no de retorno (`"lan"`, `"tailnet"`, `"custom"`) amplían la superficie de ataque. Úselos solo con autenticación de gateway (token/contraseña compartido o un proxy de confianza no de retorno configurado correctamente) y un firewall real.
+- Los enlaces que no son de bucle invertido (`"lan"`, `"tailnet"`, `"custom"`) amplían la superficie de ataque. Úselos solo con autenticación de puerta de enlace (token/contraseña compartida o un proxy de confianza que no sea de bucle invertido configurado correctamente) y un firewall real.
 
 Reglas generales:
 
 - Prefiera Tailscale Serve antes que los enlaces LAN (Serve mantiene el Gateway en bucle local [loopback] y Tailscale maneja el acceso).
 - Si debe enlazarse a LAN, aplique reglas de firewall al puerto para una lista de permitidos (allowlist) estricta de IPs de origen; no haga reenvío de puerto (port-forward) de forma amplia.
-- Nunca exponga el Gateway sin autenticación en `0.0.0.0`.
+- Nunca exponga la Gateway sin autenticación en `0.0.0.0`.
 
-### 0.4.1) Publicación de puertos Docker + UFW (`DOCKER-USER`)
+### 0.4.1) Publicación de puertos de Docker + UFW (`DOCKER-USER`)
 
-Si ejecuta OpenClaw con Docker en un VPS, recuerde que los puertos publicados del contenedor
+Si ejecuta OpenClaw con Docker en un VPS, recuerde que los puertos de contenedor publicados
 (`-p HOST:CONTAINER` o Compose `ports:`) se enrutan a través de las cadenas de reenvío
 de Docker, no solo a través de las reglas del host `INPUT`.
 
 Para mantener el tráfico de Docker alineado con su política de firewall, aplique reglas en
 `DOCKER-USER` (esta cadena se evalúa antes de las reglas de aceptación propias de Docker).
-En muchas distribuciones modernas, `iptables`/`ip6tables` usan el frontend `iptables-nft`
-y aún aplican estas reglas al backend nftables.
+En muchas distribuciones modernas, `iptables`/`ip6tables` usan el frontend
+`iptables-nft` y aún aplican estas reglas al backend nftables.
 
 Ejemplo mínimo de lista de permitidos (IPv4):
 
@@ -794,11 +797,11 @@ COMMIT
 ```
 
 IPv6 tiene tablas separadas. Agregue una política coincidente en `/etc/ufw/after6.rules` si
-IPv6 de Docker está habilitado.
+el IPv6 de Docker está habilitado.
 
-Evite codificar (hardcode) nombres de interfaz como `eth0` en los fragmentos de documentación. Los nombres de interfaz
-varían entre las imágenes de VPS (`ens3`, `enp*`, etc.) y las discordancias pueden pasar por alto
-accidentalmente su regla de denegación.
+Evite codificar nombres de interfaz como `eth0` en los fragmentos de documentación. Los nombres de interfaz
+varían en las imágenes de VPS (`ens3`, `enp*`, etc.) y las discrepancias pueden omitir accidentalmente
+su regla de denegación.
 
 Validación rápida después de recargar:
 
@@ -813,7 +816,7 @@ Los puertos externos esperados deben ser solo aquellos que intencionalmente expo
 
 ### 0.4.2) Descubrimiento mDNS/Bonjour (divulgación de información)
 
-El Gateway transmite su presencia mediante mDNS (`_openclaw-gw._tcp` en el puerto 5353) para el descubrimiento de dispositivos locales. En modo completo, esto incluye registros TXT que pueden exponer detalles operativos:
+El Gateway transmite su presencia a través de mDNS (`_openclaw-gw._tcp` en el puerto 5353) para el descubrimiento de dispositivos locales. En modo completo, esto incluye registros TXT que pueden exponer detalles operativos:
 
 - `cliPath`: ruta completa del sistema de archivos al binario de la CLI (revela el nombre de usuario y la ubicación de instalación)
 - `sshPort`: anuncia la disponibilidad de SSH en el host
@@ -843,7 +846,7 @@ El Gateway transmite su presencia mediante mDNS (`_openclaw-gw._tcp` en el puert
    }
    ```
 
-3. **Modo completo** (opcional): incluir `cliPath` + `sshPort` en los registros TXT:
+3. **Modo completo** (opcional): incluye `cliPath` + `sshPort` en los registros TXT:
 
    ```json5
    {
@@ -853,9 +856,9 @@ El Gateway transmite su presencia mediante mDNS (`_openclaw-gw._tcp` en el puert
    }
    ```
 
-4. **Variable de entorno** (alternativa): establezca `OPENCLAW_DISABLE_BONJOUR=1` para desactivar mDNS sin cambios en la configuración.
+4. **Variable de entorno** (alternativa): establece `OPENCLAW_DISABLE_BONJOUR=1` para desactivar mDNS sin cambios de configuración.
 
-En modo mínimo, el Gateway aún transmite lo suficiente para el descubrimiento de dispositivos (`role`, `gatewayPort`, `transport`) pero omite `cliPath` y `sshPort`. Las aplicaciones que necesitan información sobre la ruta de la CLI pueden obtenerla a través de la conexión WebSocket autenticada.
+En modo mínimo, el Gateway aún transmite lo suficiente para el descubrimiento de dispositivos (`role`, `gatewayPort`, `transport`) pero omite `cliPath` y `sshPort`. Las aplicaciones que necesiten información sobre la ruta de la CLI pueden obtenerla a través de la conexión WebSocket autenticada.
 
 ### 0.5) Asegurar el WebSocket del Gateway (autenticación local)
 
@@ -873,17 +876,17 @@ Establezca un token para que **todos** los clientes de WS deban autenticarse:
 }
 ```
 
-Doctor puede generar uno por usted: `openclaw doctor --generate-gateway-token`.
+El Doctor puede generar uno por ti: `openclaw doctor --generate-gateway-token`.
 
-Nota: `gateway.remote.token` / `.password` son fuentes de credenciales de cliente. Por sí mismos,
-**no** protegen el acceso local a WS.
-Las rutas de llamada locales pueden usar `gateway.remote.*` como alternativa solo cuando `gateway.auth.*`
-no está configurado.
-Si `gateway.auth.token` / `gateway.auth.password` se configura explícitamente a través de
-SecretRef y no se resuelve, la resolución falla de forma segura (sin enmascaramiento de reserva remota).
-Opcional: ancle TLS remoto con `gateway.remote.tlsFingerprint` al usar `wss://`.
-El texto plano `ws://` es solo de bucle local (loopback) de forma predeterminada. Para rutas de red privada
-confiables, configure `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` en el proceso del cliente como medida de emergencia (break-glass).
+Nota: `gateway.remote.token` / `.password` son fuentes de credenciales de cliente. Por sí solos
+**no** protegen el acceso WS local.
+Las rutas de llamadas locales pueden usar `gateway.remote.*` como alternativa solo cuando `gateway.auth.*`
+no está establecido.
+Si `gateway.auth.token` / `gateway.auth.password` está configurado explícitamente a través
+de SecretRef y no se resuelve, la resolución falla de forma cerrada (sin enmascaramiento de alternativa remota).
+Opcional: fija el TLS remoto con `gateway.remote.tlsFingerprint` al usar `wss://`.
+Por defecto, `ws://` en texto plano es solo para bucle local (loopback). Para rutas de red privada
+confiables, establece `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` en el proceso del cliente como medida de emergencia.
 
 Emparejamiento de dispositivo local:
 
@@ -896,9 +899,9 @@ Emparejamiento de dispositivo local:
 
 Modos de autenticación:
 
-- `gateway.auth.mode: "token"`: token de portador compartido (recomendado para la mayoría de las configuraciones).
-- `gateway.auth.mode: "password"`: autenticación con contraseña (preferir configurar a través de env: `OPENCLAW_GATEWAY_PASSWORD`).
-- `gateway.auth.mode: "trusted-proxy"`: confiar en un proxy inverso con reconocimiento de identidad para autenticar usuarios y pasar la identidad a través de encabezados (ver [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)).
+- `gateway.auth.mode: "token"`: token de portador compartido (recomendado para la mayoría de configuraciones).
+- `gateway.auth.mode: "password"`: autenticación por contraseña (preferible establecerlo a través de env: `OPENCLAW_GATEWAY_PASSWORD`).
+- `gateway.auth.mode: "trusted-proxy"`: confiar en un proxy inverso con conocimiento de identidad para autenticar usuarios y pasar la identidad mediante encabezados (ver [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)).
 
 Lista de verificación de rotación (token/contraseña):
 
@@ -913,51 +916,51 @@ Cuando `gateway.auth.allowTailscale` es `true` (predeterminado para Serve), Open
 acepta encabezados de identidad de Tailscale Serve (`tailscale-user-login`) para la autenticación
 de Control UI/WebSocket. OpenClaw verifica la identidad resolviendo la
 dirección `x-forwarded-for` a través del demonio local de Tailscale (`tailscale whois`)
-y coincidiéndola con el encabezado. Esto solo se activa para solicitudes que alcanzan el loopback
+y coincidiéndola con el encabezado. Esto solo se activa para solicitudes que golpean loopback
 e incluyen `x-forwarded-for`, `x-forwarded-proto` y `x-forwarded-host` como
-inyectados por Tailscale.
+inyectado por Tailscale.
 Para esta ruta de verificación de identidad asíncrona, los intentos fallidos para el mismo `{scope, ip}`
 se serializan antes de que el limitador registre el fallo. Por lo tanto, los reintentos incorrectos simultáneos
 de un cliente Serve pueden bloquear el segundo intento inmediatamente
-en lugar de competir como dos discordancias simples.
+en lugar de competir como dos discordias simples.
 Los puntos finales de la API HTTP (por ejemplo `/v1/*`, `/tools/invoke` y `/api/channels/*`)
-**no** usan la autenticación de encabezado de identidad de Tailscale. Todavía siguen el modo
-de autenticación HTTP configurado en la puerta de enlace.
+**no** usan la autenticación por encabezado de identidad de Tailscale. Todavía siguen el modo
+de autenticación HTTP configurado del gateway.
 
 Nota importante sobre el límite:
 
 - La autenticación HTTP bearer de la puerta de enlace es efectivamente un acceso de operador de todo o nada.
-- Trate las credenciales que pueden llamar a `/v1/chat/completions`, `/v1/responses` o `/api/channels/*` como secretos de operador de acceso completo para esa puerta de enlace.
-- En la superficie HTTP compatible con OpenAI, la autenticación bearer de secreto compartido restaura los alcances completos predeterminados del operador (`operator.admin`, `operator.approvals`, `operator.pairing`, `operator.read`, `operator.talk.secrets`, `operator.write`) y la semántica de propietario para los turnos del agente; los valores `x-openclaw-scopes` más estrechos no reducen esa ruta de secreto compartido.
-- La semántica de alcance por solicitud en HTTP solo se aplica cuando la solicitud proviene de un modo con identidad, como la autenticación de proxy de confianza o `gateway.auth.mode="none"` en un ingreso privado.
-- En esos modos con identidad, omitir `x-openclaw-scopes` vuelve al conjunto de alcances predeterminados del operador normal; envíe el encabezado explícitamente cuando desee un conjunto de alcances más estrecho.
-- `/tools/invoke` sigue la misma regla de secreto compartido: la autenticación de portador de token/contraseña también se trata como acceso de operador completo allí, mientras que los modos con identidad todavía respetan los alcances declarados.
+- Trate las credenciales que pueden llamar a `/v1/chat/completions`, `/v1/responses` o `/api/channels/*` como secretos de operador de acceso completo para ese gateway.
+- En la superficie HTTP compatible con OpenAI, la autenticación de portador de secreto compartido restaura los alcances de operador predeterminados completos (`operator.admin`, `operator.approvals`, `operator.pairing`, `operator.read`, `operator.talk.secrets`, `operator.write`) y la semántica de propietario para los turnos del agente; los valores `x-openclaw-scopes` más estrechos no reducen esa ruta de secreto compartido.
+- La semántica del ámbito por solicitud en HTTP solo se aplica cuando la solicitud proviene de un modo con identidad, como la autenticación de proxy de confianza o `gateway.auth.mode="none"` en un ingreso privado.
+- En esos modos con identidad, omitir `x-openclaw-scopes` vuelve al conjunto de ámbitos predeterminados del operador normal; envíe el encabezado explícitamente cuando desee un conjunto de ámbitos más restringido.
+- `/tools/invoke` sigue la misma regla de secreto compartido: la autenticación de portador de token/contraseña también se trata como acceso completo de operador allí, mientras que los modos con identidad respetan los ámbitos declarados.
 - No comparta estas credenciales con llamadores no confiables; prefiera puertas de enlace separadas por límite de confianza.
 
 **Suposición de confianza:** la autenticación Serve sin token asume que el host de la puerta de enlace es confiable.
 No trate esto como protección contra procesos hostiles en el mismo host. Si código local
-no confiable puede ejecutarse en el host de la puerta de enlace, desactive `gateway.auth.allowTailscale`
+no confiable puede ejecutarse en el host de la puerta de enlace, deshabilite `gateway.auth.allowTailscale`
 y requiera autenticación explícita de secreto compartido con `gateway.auth.mode: "token"` o
 `"password"`.
 
 **Regla de seguridad:** no reenvíe estos encabezados desde su propio proxy inverso. Si
-termina TLS o usa un proxy delante de la puerta de enlace, desactive
+termina TLS o utiliza un proxy frente a la puerta de enlace, deshabilite
 `gateway.auth.allowTailscale` y use autenticación de secreto compartido (`gateway.auth.mode:
 "token"` or `"password"`) o [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)
 en su lugar.
 
 Proxies de confianza:
 
-- Si termina TLS delante de la puerta de enlace, establezca `gateway.trustedProxies` a las IPs de su proxy.
-- OpenClaw confiará en `x-forwarded-for` (o `x-real-ip`) de esas IPs para determinar la IP del cliente para verificaciones de emparejamiento local y verificaciones de autenticación HTTP/local.
+- Si termina TLS frente a la puerta de enlace, configure `gateway.trustedProxies` con las IPs de su proxy.
+- OpenClaw confiará en `x-forwarded-for` (o `x-real-ip`) de esas IPs para determinar la IP del cliente para las comprobaciones de emparejamiento local y las comprobaciones de autenticación/local HTTP.
 - Asegúrese de que su proxy **sobrescriba** `x-forwarded-for` y bloquee el acceso directo al puerto de la puerta de enlace.
 
 Consulte [Tailscale](/en/gateway/tailscale) y [Web overview](/en/web).
 
 ### 0.6.1) Control del navegador a través del host del nodo (recomendado)
 
-Si su puerta de enlace es remota pero el navegador se ejecuta en otra máquina, ejecute un **node host**
-en la máquina del navegador y permita que la puerta de enlace actúe como proxy para las acciones del navegador (consulte [Browser tool](/en/tools/browser)).
+Si su puerta de enlace es remota pero el navegador se ejecuta en otra máquina, ejecute un **host de nodo**
+en la máquina del navegador y permita que la puerta de enlace represente las acciones del navegador (consulte [Browser tool](/en/tools/browser)).
 Trate el emparejamiento de nodos como acceso de administrador.
 
 Patrón recomendado:
@@ -972,16 +975,16 @@ Evitar:
 
 ### 0.7) Secretos en el disco (datos confidenciales)
 
-Asuma que cualquier cosa bajo `~/.openclaw/` (o `$OPENCLAW_STATE_DIR/`) puede contener secretos o datos privados:
+Asuma que cualquier cosa en `~/.openclaw/` (o `$OPENCLAW_STATE_DIR/`) puede contener secretos o datos privados:
 
-- `openclaw.json`: la configuración puede incluir tokens (de puerta de enlace, puerta de enlace remota), configuraciones de proveedor y listas de permitidos.
-- `credentials/**`: credenciales del canal (ejemplo: credenciales de WhatsApp), listas de permitidos de emparejamiento, importaciones heredadas de OAuth.
+- `openclaw.json`: la configuración puede incluir tokens (gateway, remote gateway), configuraciones del proveedor y listas de permitidos.
+- `credentials/**`: credenciales del canal (ejemplo: credenciales de WhatsApp), listas de permitidos de emparejamiento, importaciones de OAuth heredadas.
 - `agents/<agentId>/agent/auth-profiles.json`: claves de API, perfiles de tokens, tokens de OAuth y `keyRef`/`tokenRef` opcionales.
-- `secrets.json` (opcional): carga útil de secreto respaldada en archivo utilizada por los proveedores `file` SecretRef (`secrets.providers`).
-- `agents/<agentId>/agent/auth.json`: archivo de compatibilidad heredada. Las entradas estáticas de `api_key` se depuran cuando se descubren.
+- `secrets.json` (opcional): carga útil de secreto respaldada por archivo utilizada por los proveedores `file` SecretRef (`secrets.providers`).
+- `agents/<agentId>/agent/auth.json`: archivo de compatibilidad heredada. Las entradas estáticas de `api_key` se eliminan cuando se descubren.
 - `agents/<agentId>/sessions/**`: transcripciones de sesión (`*.jsonl`) + metadatos de enrutamiento (`sessions.json`) que pueden contener mensajes privados y resultados de herramientas.
 - paquetes de complementos agrupados: complementos instalados (más sus `node_modules/`).
-- `sandboxes/**`: espacios de trabajo del espacio aislado de herramientas; pueden acumular copias de los archivos que lees/escribes dentro del espacio aislado.
+- `sandboxes/**`: espacios de trabajo del sandbox de herramientas; puede acumular copias de archivos que lees/escribes dentro del sandbox.
 
 Consejos de endurecimiento:
 
@@ -998,9 +1001,9 @@ Los registros y las transcripciones pueden filtrar información sensible incluso
 
 Recomendaciones:
 
-- Mantenga la redacción del resumen de herramientas activada (`logging.redactSensitive: "tools"`; predeterminado).
-- Agregue patrones personalizados para su entorno a través de `logging.redactPatterns` (tokens, nombres de host, URL internas).
-- Al compartir diagnósticos, prefiera `openclaw status --all` (pegable, secretos redactados) sobre los registros sin procesar.
+- Mantenga la redacción del resumen de herramientas activada (`logging.redactSensitive: "tools"`; por defecto).
+- Agregue patrones personalizados para su entorno a través de `logging.redactPatterns` (tokens, nombres de host, URLs internas).
+- Al compartir diagnósticos, prefiera `openclaw status --all` (pegable, secretos redactados) sobre los registros brutos.
 - Pode las transcripciones de sesión antiguas y los archivos de registro si no necesita una retención prolongada.
 
 Detalles: [Registro](/en/gateway/logging)
@@ -1049,13 +1052,13 @@ Para los canales basados en números de teléfono, considere ejecutar su IA en u
 Puede crear un perfil de solo lectura combinando:
 
 - `agents.defaults.sandbox.workspaceAccess: "ro"` (o `"none"` para sin acceso al espacio de trabajo)
-- listas de permiso/denegación de herramientas que bloquean `write`, `edit`, `apply_patch`, `exec`, `process`, etc.
+- listas de permitir/denegar herramientas que bloquean `write`, `edit`, `apply_patch`, `exec`, `process`, etc.
 
 Opciones adicionales de endurecimiento:
 
-- `tools.exec.applyPatch.workspaceOnly: true` (predeterminado): garantiza que `apply_patch` no pueda escribir/eliminar fuera del directorio del espacio de trabajo incluso cuando el sandbox está desactivado. Establézcalo en `false` solo si desea intencionalmente que `apply_patch` toque archivos fuera del espacio de trabajo.
-- `tools.fs.workspaceOnly: true` (opcional): restringe las rutas `read`/`write`/`edit`/`apply_patch` y las rutas de carga automática de imágenes de indicador nativo al directorio del espacio de trabajo (útil si permite rutas absolutas hoy y desea una sola barrera de seguridad).
-- Mantenga las raíces del sistema de archivos estrechas: evite raíces amplias como su directorio de inicio para espacios de trabajo de agente/espacios de trabajo de sandbox. Las raíces amplias pueden exponer archivos locales sensibles (por ejemplo, estado/configuración bajo `~/.openclaw`) a las herramientas del sistema de archivos.
+- `tools.exec.applyPatch.workspaceOnly: true` (predeterminado): garantiza que `apply_patch` no pueda escribir/eliminar fuera del directorio del espacio de trabajo incluso cuando el sandboxing esté desactivado. Establézcalo en `false` solo si desea intencionalmente que `apply_patch` toque archivos fuera del espacio de trabajo.
+- `tools.fs.workspaceOnly: true` (opcional): restringe las rutas `read`/`write`/`edit`/`apply_patch` y las rutas de carga automática de imágenes nativas del prompt al directorio del espacio de trabajo (útil si permite rutas absolutas hoy y desea una sola barrera de seguridad).
+- Mantenga las raíces del sistema de archivos estrechas: evite raíces amplias como su directorio de inicio para espacios de trabajo de agentes/espacios de trabajo de sandbox. Las raíces amplias pueden exponer archivos locales sensibles (por ejemplo, estado/configuración bajo `~/.openclaw`) a herramientas del sistema de archivos.
 
 ### 5) Línea de base segura (copiar/pegar)
 
@@ -1080,16 +1083,16 @@ Una configuración de “predeterminado seguro” que mantiene la puerta de enla
 
 Si también desea una ejecución de herramientas “más segura por defecto”, agregue un sandbox + deniegue herramientas peligrosas para cualquier agente que no sea propietario (ejemplo a continuación en “Perfiles de acceso por agente”).
 
-Línea de base incorporada para turnos de agente impulsados por chat: los remitentes que no son propietarios no pueden usar las herramientas `cron` o `gateway`.
+Línea base integrada para turnos de agentes impulsados por chat: los remitentes que no son propietarios no pueden usar las herramientas `cron` o `gateway`.
 
 ## Sandboxeo (recomendado)
 
-Documentación dedicada: [Sandboxeo](/en/gateway/sandboxing)
+Documento dedicado: [Sandboxing](/en/gateway/sandboxing)
 
 Dos enfoques complementarios:
 
-- **Ejecutar todo el Gateway en Docker** (límite del contenedor): [Docker](/en/install/docker)
-- **Sandbox de herramientas** (`agents.defaults.sandbox`, host gateway + herramientas aisladas con Docker): [Sandboxeo](/en/gateway/sandboxing)
+- **Ejecute todo el Gateway en Docker** (límite del contenedor): [Docker](/en/install/docker)
+- **Sandbox de herramientas** (`agents.defaults.sandbox`, gateway host + herramientas aisladas en Docker): [Sandboxing](/en/gateway/sandboxing)
 
 Nota: para evitar el acceso entre agentes, mantenga `agents.defaults.sandbox.scope` en `"agent"` (predeterminado)
 o `"session"` para un aislamiento por sesión más estricto. `scope: "shared"` usa un
@@ -1097,21 +1100,21 @@ o `"session"` para un aislamiento por sesión más estricto. `scope: "shared"` u
 
 Considere también el acceso al espacio de trabajo del agente dentro del sandbox:
 
-- `agents.defaults.sandbox.workspaceAccess: "none"` (predeterminado) mantiene el espacio de trabajo del agente fuera de límites; las herramientas se ejecutan contra un espacio de trabajo de sandbox bajo `~/.openclaw/sandboxes`
-- `agents.defaults.sandbox.workspaceAccess: "ro"` monta el espacio de trabajo del agente como solo lectura en `/agent` (deshabilita `write`/`edit`/`apply_patch`)
+- `agents.defaults.sandbox.workspaceAccess: "none"` (predeterminado) mantiene el espacio de trabajo del agente fuera de los límites; las herramientas se ejecutan en un espacio de trabajo de sandbox bajo `~/.openclaw/sandboxes`
+- `agents.defaults.sandbox.workspaceAccess: "ro"` monta el espacio de trabajo del agente como de solo lectura en `/agent` (desactiva `write`/`edit`/`apply_patch`)
 - `agents.defaults.sandbox.workspaceAccess: "rw"` monta el espacio de trabajo del agente como lectura/escritura en `/workspace`
-- Los `sandbox.docker.binds` adicionales se validan contra las rutas de origen normalizadas y canónicas. Los trucos de enlaces simbólicos principales y los alias de inicio canónicos aún fallarán de forma cerrada si se resuelven en raíces bloqueadas como `/etc`, `/var/run` o directorios de credenciales bajo el inicio del SO.
+- Los `sandbox.docker.binds` adicionales se validan frente a rutas de origen normalizadas y canónicas. Los trucos de enlaces simbólicos principales y los alias de inicio canónicos seguirán fallando de forma cerrada si se resuelven en raíces bloqueadas como `/etc`, `/var/run`, o directorios de credenciales en el inicio del sistema operativo.
 
-Importante: `tools.elevated` es la escotilla de escape de línea base global que ejecuta exec fuera del sandbox. El host efectivo es `gateway` de forma predeterminada, o `node` cuando el destino exec está configurado para `node`. Mantenga `tools.elevated.allowFrom` restringido y no lo habilite para extraños. Puede restringir aún más el modo elevado por agente a través de `agents.list[].tools.elevated`. Consulte [Modo elevado](/en/tools/elevated).
+Importante: `tools.elevated` es la escotilla de escape global de línea base que ejecuta exec fuera del sandbox. El host efectivo es `gateway` de forma predeterminada, o `node` cuando el objetivo de exec está configurado como `node`. Mantenga `tools.elevated.allowFrom` restringido y no lo habilite para extraños. Puede restringir aún más el modo elevado por agente mediante `agents.list[].tools.elevated`. Consulte [Modo elevado](/en/tools/elevated).
 
 ### Guardián de delegación de sub-agentes
 
 Si permite herramientas de sesión, trate las ejecuciones delegadas de sub-agentes como otra decisión de límite:
 
-- Denegue `sessions_spawn` a menos que el agente realmente necesite delegación.
-- Mantenga `agents.defaults.subagents.allowAgents` y cualquier anulación de `agents.list[].subagents.allowAgents` por agente restringida a agentes de destino seguros conocidos.
-- Para cualquier flujo de trabajo que deba permanecer en sandbox, llame a `sessions_spawn` con `sandbox: "require"` (el valor predeterminado es `inherit`).
-- `sandbox: "require"` falla rápido cuando el tiempo de ejecución del hijo de destino no está en sandbox.
+- Deniegue `sessions_spawn` a menos que el agente realmente necesite delegación.
+- Mantenga `agents.defaults.subagents.allowAgents` y cualquier invalidación `agents.list[].subagents.allowAgents` por agente restringidos a agentes objetivo conocidos como seguros.
+- Para cualquier flujo de trabajo que deba permanecer en el sandbox, llame a `sessions_spawn` con `sandbox: "require"` (el valor predeterminado es `inherit`).
+- `sandbox: "require"` falla rápido cuando el tiempo de ejecución del hijo de destino no está en el sandbox.
 
 ## Riesgos del control del navegador
 
@@ -1136,11 +1139,11 @@ acceder a esas cuentas y datos. Trate los perfiles del navegador como **estado c
 
 La política de navegación del navegador de OpenClaw es estricta de forma predeterminada: los destinos privados/internos permanecen bloqueados a menos que usted opte explícitamente por participar.
 
-- Predeterminado: `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork` no está establecido, por lo que la navegación del navegador mantiene los destinos privados/internos/de uso especial bloqueados.
+- Valor predeterminado: `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork` no está establecido, por lo que la navegación del navegador mantiene bloqueados los destinos privados/internos/de uso especial.
 - Alias heredado: `browser.ssrfPolicy.allowPrivateNetwork` todavía se acepta por compatibilidad.
 - Modo de participación: establezca `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork: true` para permitir destinos privados/internos/de uso especial.
-- En modo estricto, use `hostnameAllowlist` (patrones como `*.example.com`) y `allowedHostnames` (excepciones exactas de host, incluyendo nombres bloqueados como `localhost`) para excepciones explícitas.
-- La navegación se verifica antes de la solicitud y se vuelve a verificar con el mejor esfuerzo posible en la URL final `http(s)` después de la navegación para reducir los pivotes basados en redirecciones.
+- En modo estricto, use `hostnameAllowlist` (patrones como `*.example.com`) y `allowedHostnames` (excepciones de host exactas, incluidos nombres bloqueados como `localhost`) para excepciones explícitas.
+- La navegación se verifica antes de la solicitud y se vuelve a verificar con el mejor esfuerzo en la URL final `http(s)` después de la navegación para reducir los pivotes basados en redirecciones.
 
 Ejemplo de política estricta:
 
@@ -1158,7 +1161,7 @@ Ejemplo de política estricta:
 
 ## Perfiles de acceso por agente (multiagente)
 
-Con el enrutamiento multiagente, cada agente puede tener su propia política de sandbox + herramientas:
+Con el enrutamiento multiagente, cada agente puede tener su propio sandbox + política de herramientas:
 use esto para dar **acceso completo**, **solo lectura** o **sin acceso** por agente.
 Consulte [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) para obtener detalles completos
 y reglas de precedencia.
@@ -1256,22 +1259,22 @@ Si su IA hace algo malo:
 
 ### Contener
 
-1. **Deténgala:** detenga la aplicación de macOS (si supervisa la Gateway) o termine su proceso `openclaw gateway`.
-2. **Cierre la exposición:** establezca `gateway.bind: "loopback"` (o deshabilite Tailscale Funnel/Serve) hasta que entienda qué sucedió.
-3. **Congele el acceso:** cambie los MDs/grupos de riesgo a `dmPolicy: "disabled"` / exija menciones y elimine las entradas de permitir todo `"*"` si las tenía.
+1. **Deténgalo:** detenga la aplicación de macOS (si supervisa el Gateway) o termine su proceso `openclaw gateway`.
+2. **Cierre la exposición:** configure `gateway.bind: "loopback"` (o deshabilite Tailscale Funnel/Serve) hasta que comprenda qué sucedió.
+3. **Congele el acceso:** cambie los DMs/grupos de riesgo a `dmPolicy: "disabled"` / exija menciones y elimine las entradas de permitir todo de `"*"` si las tenía.
 
 ### Rotar (asumir compromiso si se filtraron secretos)
 
-1. Rotar la autenticación de Gateway (`gateway.auth.token` / `OPENCLAW_GATEWAY_PASSWORD`) y reiniciar.
-2. Rotar los secretos del cliente remoto (`gateway.remote.token` / `.password`) en cualquier máquina que pueda llamar a la Gateway.
-3. Rotar las credenciales del proveedor/API (credenciales de WhatsApp, tokens de Slack/Discord, claves de modelo/API en `auth-profiles.json` y valores de carga útil de secretos cifrados cuando se usen).
+1. Rote la autenticación del Gateway (`gateway.auth.token` / `OPENCLAW_GATEWAY_PASSWORD`) y reinicie.
+2. Rote los secretos del cliente remoto (`gateway.remote.token` / `.password`) en cualquier máquina que pueda llamar al Gateway.
+3. Rote las credenciales del proveedor/API (credenciales de WhatsApp, tokens de Slack/Discord, claves de modelo/API en `auth-profiles.json` y valores de carga útil de secretos cifrados cuando se usen).
 
 ### Auditar
 
-1. Verificar registros de Gateway: `/tmp/openclaw/openclaw-YYYY-MM-DD.log` (o `logging.file`).
-2. Revisa la(s) transcripción(es) relevante(s): `~/.openclaw/agents/<agentId>/sessions/*.jsonl`.
-3. Revisa los cambios recientes de configuración (cualquier cosa que podría haber ampliado el acceso: `gateway.bind`, `gateway.auth`, políticas de dm/grupo, `tools.elevated`, cambios de complementos).
-4. Vuelve a ejecutar `openclaw security audit --deep` y confirma que los hallazgos críticos se han resuelto.
+1. Verifique los registros del Gateway: `/tmp/openclaw/openclaw-YYYY-MM-DD.log` (o `logging.file`).
+2. Revise las transcripciones relevantes: `~/.openclaw/agents/<agentId>/sessions/*.jsonl`.
+3. Revise los cambios recientes en la configuración (cualquier cosa que podría haber ampliado el acceso: `gateway.bind`, `gateway.auth`, políticas de dm/grupo, `tools.elevated`, cambios de complementos).
+4. Vuelva a ejecutar `openclaw security audit --deep` y confirme que los hallazgos críticos estén resueltos.
 
 ### Recopilar para un informe
 
@@ -1283,9 +1286,9 @@ Si su IA hace algo malo:
 ## Escaneo de secretos (detect-secrets)
 
 La CI ejecuta el gancho de pre-commit `detect-secrets` en el trabajo `secrets`.
-Los envíos a `main` siempre ejecutan un escaneo de todos los archivos. Las solicitudes de extracción (pull requests) usan una ruta rápida de archivos modificados
+Los envíos a `main` siempre ejecutan un escaneo de todos los archivos. Las solicitudes de extracción usan una ruta rápida de archivos cambiados
 cuando hay una confirmación base disponible y recurren a un escaneo de todos los archivos
-en caso contrario. Si falla, hay nuevos candidatos que aún no están en la línea base.
+de lo contrario. Si falla, hay nuevos candidatos que aún no están en la línea base.
 
 ### Si falla la CI
 
@@ -1298,8 +1301,8 @@ en caso contrario. Si falla, hay nuevos candidatos que aún no están en la lín
 2. Entender las herramientas:
    - `detect-secrets` en pre-commit ejecuta `detect-secrets-hook` con la línea base
      y exclusiones del repositorio.
-   - `detect-secrets audit` abre una revisión interactiva para marcar cada elemento de la línea base
-     como real o falso positivo.
+   - `detect-secrets audit` abre una revisión interactiva para marcar cada elemento de referencia
+     como real o como un falso positivo.
 3. Para secretos reales: rótalo/elimínalo y luego vuelve a ejecutar el escaneo para actualizar la línea base.
 4. Para falsos positivos: ejecuta la auditoría interactiva y márcalos como falsos:
 
@@ -1307,11 +1310,11 @@ en caso contrario. Si falla, hay nuevos candidatos que aún no están en la lín
    detect-secrets audit .secrets.baseline
    ```
 
-5. Si necesitas nuevas exclusiones, agrégalas a `.detect-secrets.cfg` y regenera la
-   línea base con las banderas `--exclude-files` / `--exclude-lines` coincidentes (el archivo de
+5. Si necesita nuevas exclusiones, agréguelas a `.detect-secrets.cfg` y regenere la
+   referencia con los indicadores `--exclude-files` / `--exclude-lines` coincidentes (el archivo de
    configuración es solo de referencia; detect-secrets no lo lee automáticamente).
 
-Confirma la `.secrets.baseline` actualizada una vez que refleje el estado deseado.
+Confirme la `.secrets.baseline` actualizada una vez que refleje el estado deseado.
 
 ## Informar de problemas de seguridad
 

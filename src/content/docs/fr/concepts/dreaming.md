@@ -1,5 +1,5 @@
 ---
-title: "Dreaming (expérimental)"
+title: "Rêve"
 summary: "Consolidation de la mémoire en arrière-plan avec des phases légère, profonde et REM ainsi qu'un journal de rêve"
 read_when:
   - You want memory promotion to run automatically
@@ -7,7 +7,7 @@ read_when:
   - You want to tune consolidation without polluting MEMORY.md
 ---
 
-# Dreaming (expérimental)
+# Rêve
 
 Dreaming est le système de consolidation de la mémoire en arrière-plan dans `memory-core`.
 Il aide OpenClaw à transférer des signaux à court terme forts vers une mémoire durable tout en
@@ -76,13 +76,16 @@ Dreaming tient également un **Journal de rêve** narratif dans `DREAMS.md`.
 Une fois que chaque phase a suffisamment de matériel, `memory-core` lance un tour de sous-agent en arrière-plan au mieux de ses capacités (en utilisant le modèle d'exécution par défaut) et ajoute une courte entrée de journal.
 
 Ce journal est destiné à la lecture humaine dans l'interface Dreams, et non comme source de promotion.
+Les artefacts de journal/rapport générés par le Rêve sont exclus de la promotion
+à court terme. Seuls les extraits de mémoire ancrés sont éligibles à la promotion dans
+`MEMORY.md`.
 
 Il existe également une voie de rétroremplissage historique ancrée pour le travail de révision et de récupération :
 
 - `memory rem-harness --path ... --grounded` prévisualise la sortie du journal ancrée à partir des notes historiques `YYYY-MM-DD.md`.
 - `memory rem-backfill --path ...` écrit des entrées de journal ancrées réversibles dans `DREAMS.md`.
-- `memory rem-backfill --path ... --stage-short-term` met en scène des candidats durables ancrés dans le même magasin de preuves à court terme que la phase profonde normale utilise déjà.
-- `memory rem-backfill --rollback` et `--rollback-short-term` suppriment ces artefacts de rétroremplissage mis en scène sans toucher aux entrées de journal ordinaires ni au rappel à court terme en direct.
+- `memory rem-backfill --path ... --stage-short-term` met en attente les candidats durables ancrés dans le même magasin de preuves à court terme que la phase profonde normale utilise déjà.
+- `memory rem-backfill --rollback` et `--rollback-short-term` suppriment ces artefacts de rétrochargement mis en attente sans toucher aux entrées de journal ordinaires ni au rappel à court terme en direct.
 
 L'interface utilisateur Control expose le même flux de rétroremplissage/réinitialisation du journal afin que vous puissiez inspecter les résultats dans la scène Dreams avant de décider si les candidats ancrés méritent une promotion. La scène affiche également une voie ancrée distincte afin que vous puissiez voir quelles entrées à court terme mises en scène proviennent de la réexécution historique, quels éléments promus étaient dirigés par l'ancrage, et effacer uniquement les entrées mises en scène ancrées sans toucher à l'état à court terme ordinaire en direct.
 
@@ -99,11 +102,13 @@ Le classement profond utilise six signaux de base pondérés plus le renforcemen
 | Consolidation          | 0,10  | Force de récurrence sur plusieurs jours                       |
 | Richesse conceptuelle  | 0,06  | Densité des balises de concept à partir de l'extrait/chemin   |
 
-Les correspondances des phases légère et REM ajoutent un petit boost dégressif en fonction de la récence à partir de `memory/.dreams/phase-signals.json`.
+Les correspondances des phases légères et REM ajoutent un petit boost décroissant en fonction de la récence en provenance de
+`memory/.dreams/phase-signals.json`.
 
 ## Planification
 
-Lorsqu'il est activé, `memory-core` gère automatiquement une tâche cron pour un cycle complet de rêve. Chaque cycle exécute les phases dans l'ordre : légère -> REM -> profonde.
+Lorsqu'il est activé, `memory-core` gère automatiquement une tâche cron pour un balayage de rêve complet.
+Chaque balayage exécute les phases dans l'ordre : léger -> REM -> profond.
 
 Comportement de cadence par défaut :
 
@@ -171,7 +176,7 @@ openclaw memory promote --limit 5
 openclaw memory status --deep
 ```
 
-Le `memory promote` manuel utilise les seuils de phase profonde par défaut sauf s'ils sont remplacés par des indicateurs CLI.
+Le `memory promote` manuel utilise les seuils de la phase profonde par défaut, sauf s'ils sont remplacés par des indicateurs CLI.
 
 Expliquer pourquoi un candidat spécifique serait ou ne serait pas promu :
 
@@ -198,7 +203,7 @@ Tous les paramètres se trouvent sous `plugins.entries.memory-core.config.dreami
 
 La politique de phase, les seuils et le comportement de stockage sont des détails de mise en œuvre internes (pas une configuration utilisateur).
 
-Voir [Référence de configuration de la mémoire](/en/reference/memory-config#dreaming-experimental)
+Voir [Référence de configuration de la mémoire](/en/reference/memory-config#dreaming)
 pour la liste complète des clés.
 
 ## Interface utilisateur des rêves

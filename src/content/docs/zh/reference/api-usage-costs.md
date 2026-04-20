@@ -100,77 +100,80 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 - `memorySearch.provider = "gemini"` → Gemini 嵌入
 - `memorySearch.provider = "voyage"` → Voyage 嵌入
 - `memorySearch.provider = "mistral"` → Mistral 嵌入
-- `memorySearch.provider = "ollama"` → Ollama 嵌入（本地/自托管；通常无托管 API 计费）
-- 如果本地嵌入失败，可选择回退到远程提供商
+- `memorySearch.provider = "lmstudio"` → LM Studio embeddings（本地/自托管）
+- `memorySearch.provider = "ollama"` → Ollama embeddings（本地/自托管；通常不涉及托管 API 计费）
+- 如果本地 embeddings 失败，可以选择回退到远程提供商
 
-您可以使用 `memorySearch.provider = "local"` 将其保留在本地（无 API 使用）。
+您可以使用 `memorySearch.provider = "local"` 将其保留在本地（不使用 API）。
 
-参见[内存](/en/concepts/memory)。
+请参阅 [Memory](/en/concepts/memory)。
 
-### 5) 网络搜索工具
+### 5) Web search 工具
 
 `web_search` 可能会根据您的提供商产生使用费用：
 
-- **Brave 搜索 API**：`BRAVE_API_KEY` 或 `plugins.entries.brave.config.webSearch.apiKey`
+- **Brave Search API**：`BRAVE_API_KEY` 或 `plugins.entries.brave.config.webSearch.apiKey`
 - **Exa**：`EXA_API_KEY` 或 `plugins.entries.exa.config.webSearch.apiKey`
 - **Firecrawl**：`FIRECRAWL_API_KEY` 或 `plugins.entries.firecrawl.config.webSearch.apiKey`
 - **Gemini (Google Search)**：`GEMINI_API_KEY` 或 `plugins.entries.google.config.webSearch.apiKey`
 - **Grok (xAI)**：`XAI_API_KEY` 或 `plugins.entries.xai.config.webSearch.apiKey`
 - **Kimi (Moonshot)**：`KIMI_API_KEY`、`MOONSHOT_API_KEY` 或 `plugins.entries.moonshot.config.webSearch.apiKey`
-- **MiniMax 搜索**：`MINIMAX_CODE_PLAN_KEY`、`MINIMAX_CODING_API_KEY`、`MINIMAX_API_KEY` 或 `plugins.entries.minimax.config.webSearch.apiKey`
-- **Ollama 网络搜索**：默认无密钥，但需要可访问的 Ollama 主机以及 `ollama signin`；当主机需要时，也可以重用常规 Ollama 提供商的持有者认证
-- **Perplexity 搜索 API**：`PERPLEXITY_API_KEY`、`OPENROUTER_API_KEY` 或 `plugins.entries.perplexity.config.webSearch.apiKey`
+- **MiniMax Search**：`MINIMAX_CODE_PLAN_KEY`、`MINIMAX_CODING_API_KEY`、`MINIMAX_API_KEY` 或 `plugins.entries.minimax.config.webSearch.apiKey`
+- **Ollama Web Search**：默认无密钥，但需要可访问的 Ollama 主机以及 `ollama signin`；当主机需要时，也可以复用普通的 Ollama 提供商 bearer auth
+- **Perplexity Search API**：`PERPLEXITY_API_KEY`、`OPENROUTER_API_KEY` 或 `plugins.entries.perplexity.config.webSearch.apiKey`
 - **Tavily**：`TAVILY_API_KEY` 或 `plugins.entries.tavily.config.webSearch.apiKey`
-- **DuckDuckGo**：无密钥回退（无 API 计费，但非官方且基于 HTML）
-- **SearXNG**：`SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl`（无密钥/自托管；无托管 API 计费）
+- **DuckDuckGo**：无密钥回退选项（无 API 计费，但非官方且基于 HTML）
+- **SearXNG**: `SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl`（无密钥/自托管；无托管 API 计费）
 
-旧的 `tools.web.search.*` 提供商路径仍然通过临时兼容性垫片加载，但它们不再是推荐的配置界面。
+旧版 `tools.web.search.*` 提供商路径仍然通过临时兼容性垫片加载，但它们不再是推荐的配置界面。
 
-**Brave Search 免费额度：** 每个 Brave 计划包含每月 $5 的续费免费额度。搜索计划每 1,000 次请求费用为 $5，因此该额度覆盖每月 1,000 次免费请求。在 Brave 仪表板中设置您的使用限制，以避免意外收费。
+**Brave 搜索免费额度：** 每个 Brave 计划都包含每月 $5 的可续期免费额度。搜索计划每 1,000 次请求费用为 $5，因此该额度可覆盖每月 1,000 次免费请求。在 Brave 仪表板中设置您的使用限制，以避免意外收费。
 
-参见[Web 工具](/en/tools/web)。
+请参阅 [Web 工具](/en/tools/web)。
 
-### 5) Web 抓取工具 (Firecrawl)
+### 5) Web 获取工具 (Firecrawl)
 
-当存在 Firecrawl 密钥时，`web_fetch` 可以调用 **API**：
+`web_fetch` 可以在存在 Firecrawl 密钥时调用 **API**：
 
 - `FIRECRAWL_API_KEY` 或 `plugins.entries.firecrawl.config.webFetch.apiKey`
 
-如果未配置 Firecrawl，该工具将回退到直接抓取 + 可读性处理（无付费 API）。
+如果未配置 Firecrawl，该工具将回退到直接获取 + 可读性处理（无付费 API）。
 
-参见[Web 工具](/en/tools/web)。
+请参阅 [Web 工具](/en/tools/web)。
 
-### 6) 提供商使用快照（状态/健康）
+### 6) 提供商使用快照 (status/health)
 
-某些状态命令会调用 **提供商使用端点** 以显示配额窗口或身份验证健康状况。这些通常是低频调用，但仍然会访问提供商 API：
+某些状态命令会调用 **提供商使用端点** 以显示配额窗口或身份验证运行状况。
+这些通常是低调用量操作，但仍然会访问提供商 API：
 
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-请参阅 [Models CLI](/en/cli/models)。
+请参阅 [模型 CLI](/en/cli/models)。
 
-### 7) 压缩保护摘要
+### 7) 压缩安全摘要
 
-压缩保护功能可以使用 **当前模型** 汇总会话历史，运行时会调用提供商 API。
+压缩安全机制可以使用 **当前模型** 对会话历史进行摘要，这会在其运行时调用提供商 API。
 
-请参阅 [Session management + compaction](/en/reference/session-management-compaction)。
+请参阅 [会话管理 + 压缩](/en/reference/session-management-compaction)。
 
 ### 8) 模型扫描 / 探测
 
 `openclaw models scan` 可以探测 OpenRouter 模型，并在启用探测时使用 `OPENROUTER_API_KEY`。
 
-请参阅 [Models CLI](/en/cli/models)。
+请参阅 [模型 CLI](/en/cli/models)。
 
-### 9) 对话（语音）
+### 9) 通话 (语音)
 
-对话模式可以在配置后调用 **ElevenLabs**：
+在配置后，通话模式可以调用 **ElevenLabs**：
 
 - `ELEVENLABS_API_KEY` 或 `talk.providers.elevenlabs.apiKey`
 
-请参阅 [Talk mode](/en/nodes/talk)。
+请参阅 [通话模式](/en/nodes/talk)。
 
-### 10) Skills（第三方 API）
+### 10) Skills (第三方 API)
 
-Skills 可以将 `apiKey` 存储在 `skills.entries.<name>.apiKey` 中。如果 skill 使用该密钥用于外部 API，则可能会根据 skill 的提供商产生费用。
+Skills 可以在 `skills.entries.<name>.apiKey` 中存储 `apiKey`。如果 skill 使用该密钥访问外部
+API，则可能会根据 skill 的提供商产生费用。
 
 请参阅 [Skills](/en/tools/skills)。

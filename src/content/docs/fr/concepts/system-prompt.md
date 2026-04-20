@@ -101,17 +101,31 @@ Les fichiers d'amorçage sont rognés et ajoutés sous **Project Context** afin 
 
 Tous ces fichiers sont **injectés dans la fenêtre de contexte** à chaque tour, sauf si une porte spécifique au fichier s'applique. `HEARTBEAT.md` est omis lors des exécutions normales lorsque les battements de cœur sont désactivés pour l'agent par défaut ou que `agents.defaults.heartbeat.includeSystemPromptSection` est faux. Gardez les fichiers injectés concis — en particulier `MEMORY.md`, qui peut augmenter au fil du temps et entraîner une utilisation inattendue du contexte et des compactages plus fréquents.
 
-> **Remarque :** Les fichiers quotidiens `memory/*.md` ne sont **pas** injectés automatiquement. Ils sont accessibles à la demande via les outils `memory_search` et `memory_get`, ils ne comptent donc pas contre la fenêtre de contexte à moins que le modèle ne les lise explicitement.
+> **Remarque :** Les fichiers quotidiens `memory/*.md` ne font **pas** partie du
+> Project Context de démarrage normal. Lors des tours ordinaires, ils sont consultés à la demande via les
+> outils `memory_search` et `memory_get`, ils ne comptent donc pas dans la
+> fenêtre de contexte à moins que le modèle ne les lise explicitement. Les tours `/new` et
+> `/reset` nus font exception : le runtime peut prépender la mémoire quotidienne récente
+> sous forme d'un bloc de contexte de démarrage ponctuel pour ce premier tour.
 
-Les fichiers volumineux sont tronqués avec un marqueur. La taille maximale par fichier est contrôlée par `agents.defaults.bootstrapMaxChars` (par défaut : 20000). Le contenu total injecté du bootstrap sur tous les fichiers est plafonné par `agents.defaults.bootstrapTotalMaxChars` (par défaut : 150000). Les fichiers manquants injectent un marqueur court de fichier manquant. Lorsqu'une troncation se produit, OpenClaw peut injecter un bloc d'avertissement dans le contexte du projet ; contrôlez ceci avec `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ; par défaut : `once`).
+Les fichiers volumineux sont tronqués avec un marqueur. La taille maximale par fichier est contrôlée par
+`agents.defaults.bootstrapMaxChars` (par défaut : 20000). Le contenu total de démarrage
+injecté sur tous les fichiers est plafonné par `agents.defaults.bootstrapTotalMaxChars`
+(par défaut : 150000). Les fichiers manquants injectent un marqueur court de fichier manquant. Lorsqu'une
+troncation se produit, OpenClaw peut injecter un bloc d'avertissement dans le Project Context ; contrôlez ceci avec
+`agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ;
+défaut : `once`).
 
-Les sessions de sous-agents n'injectent que `AGENTS.md` et `TOOLS.md` (les autres fichiers de bootstrap sont filtrés pour garder le contexte du sous-agent petit).
+Les sessions de sous-agents n'injectent que `AGENTS.md` et `TOOLS.md` (les autres fichiers de démarrage
+sont filtrés pour garder le contexte du sous-agent petit).
 
-Les crochets internes peuvent intercepter cette étape via `agent:bootstrap` pour modifier ou remplacer les fichiers de bootstrap injectés (par exemple, échanger `SOUL.md` pour une autre personnalité).
+Les hooks internes peuvent intercepter cette étape via `agent:bootstrap` pour modifier ou remplacer
+les fichiers de démarrage injectés (par exemple, échanger `SOUL.md` pour une personnalité alternative).
 
-Si vous souhaitez rendre l'agent moins générique, commencez par le guide de personnalité [SOUL.md Personality Guide](/en/concepts/soul).
+Si vous souhaitez rendre l'agent moins générique, commencez par
+[SOUL.md Personality Guide](/en/concepts/soul).
 
-Pour inspecter combien chaque fichier injecté contribue (brut vs injecté, troncation, plus la surcharge du schéma d'outils), utilisez `/context list` ou `/context detail`. Voir [Context](/en/concepts/context).
+Pour inspecter la contribution de chaque fichier injecté (brut vs injecté, troncation, ainsi que la surcharge du schéma d'outils), utilisez `/context list` ou `/context detail`. Voir [Context](/en/concepts/context).
 
 ## Gestion de l'heure
 
@@ -120,26 +134,26 @@ fuseau horaire de l'utilisateur est connu. Pour garder le prompt stable en cache
 que le **fuseau horaire** (pas d'horloge dynamique ni de format d'heure).
 
 Utilisez `session_status` lorsque l'agent a besoin de l'heure actuelle ; la carte de statut
-inclut une ligne d'horodatage. Le même outil peut facultativement définir une substitution de modèle par session
-(`model=default` l'efface).
+comprend une ligne d'horodatage. Le même outil peut optionnellement définir une substitution de modèle
+par session (`model=default` l'efface).
 
 Configurer avec :
 
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-Voir [Date & Time](/en/date-time) pour plus de détails sur le comportement complet.
+Voir [Date & Time](/en/date-time) pour les détails complets du comportement.
 
 ## Skills
 
-Lorsque des compétences éligibles existent, OpenClaw injecte une **liste de compétences disponibles** compacte
+Lorsque des compétences éligibles existent, OpenClaw injecte une **liste des compétences disponibles** compacte
 (`formatSkillsForPrompt`) qui inclut le **chemin de fichier** pour chaque compétence. Le
-prompt instruit le modèle d'utiliser `read` pour charger le SKILL.md à l'emplacement
+prompt instruit le model d'utiliser `read` pour charger le SKILL.md à l'emplacement
 répertorié (espace de travail, géré ou groupé). Si aucune compétence n'est éligible, la
 section Skills est omise.
 
-L'éligibilité inclut les métadonnées de verrouillage des compétences, les vérifications de l'environnement d'exécution/de configuration,
-et la liste autorisée effective des compétences de l'agent lorsque `agents.defaults.skills` ou
+L'éligibilité comprend les portes de métadonnées de compétence, les vérifications de l'environnement d'exécution/de configuration,
+et la liste d'autorisation effective des compétences de l'agent lorsque `agents.defaults.skills` ou
 `agents.list[].skills` est configuré.
 
 ```
@@ -154,11 +168,24 @@ et la liste autorisée effective des compétences de l'agent lorsque `agents.def
 
 Cela permet de garder le prompt de base petit tout en permettant une utilisation ciblée des compétences.
 
+Le budget de la liste des compétences appartient au sous-système de compétences :
+
+- Par défaut global : `skills.limits.maxSkillsPromptChars`
+- Remplacement par agent : `agents.list[].skillsLimits.maxSkillsPromptChars`
+
+Les extraits d'exécution bornés génériques utilisent une surface différente :
+
+- `agents.defaults.contextLimits.*`
+- `agents.list[].contextLimits.*`
+
+Cette séparation garde le dimensionnement des compétences distinct du dimensionnement de la lecture/injection à l'exécution tel
+que `memory_get`, les résultats en direct des outils, et les actualisations de l'AGENTS.md post-compaction.
+
 ## Documentation
 
-Lorsqu'elles sont disponibles, le prompt système inclut une section **Documentation** qui pointe vers le
-répertoire de documentation locale OpenClaw (soit `docs/` dans l'espace de travail du dépôt ou le package npm
-groupé docs) et note également le miroir public, le dépôt source, la communauté Discord, et
-ClawHub ([https://clawhub.ai](https://clawhub.ai)) pour la découverte de compétences. Le prompt instruit le modèle de consulter d'abord la documentation locale
-pour le comportement, les commandes, la configuration ou l'architecture OpenClaw, et d'exécuter
-`openclaw status` lui-même lorsque cela est possible (demandant à l'utilisateur uniquement en cas d'accès manquant).
+Lorsqu'elle est disponible, le prompt système inclut une section **Documentation** qui pointe vers le
+répertoire local de la documentation OpenClaw (soit `docs/` dans l'espace de travail du dépôt ou le npm
+bundled package docs) et note également le miroir public, le dépôt source, la communauté Discord, et
+le ClawHub ([https://clawhub.ai](https://clawhub.ai)) pour la découverte de compétences. Le prompt instruit le model de consulter d'abord la documentation locale
+pour le comportement, les commandes, la configuration ou l'architecture de OpenClaw, et d'exécuter
+`openclaw status` lui-même lorsque cela est possible (demandant à l'utilisateur uniquement lorsqu'il n'y a pas d'accès).

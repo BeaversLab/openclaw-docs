@@ -1,5 +1,5 @@
 ---
-summary: "/think、/fast、/verbose 和推理可见性的指令语法"
+summary: "/think、/fast、/verbose、/trace 和推理可见性的指令语法"
 read_when:
   - Adjusting thinking, fast-mode, or verbose directive parsing or defaults
 title: "思考级别"
@@ -72,31 +72,40 @@ title: "思考级别"
 - 工具失败摘要在正常模式下保持可见，但原始错误详细信息后缀会被隐藏，除非详细级别为 `on` 或 `full`。
 - 当详细级别为 `full` 时，工具输出也会在完成后转发（独立的气泡，截断至安全长度）。如果在运行过程中切换 `/verbose on|full|off`，随后的工具气泡将遵循新设置。
 
+## 插件跟踪指令 (/trace)
+
+- 级别：`on` | `off` (默认)。
+- 仅包含指令的消息会切换会话插件跟踪输出并回复 `Plugin trace enabled.` / `Plugin trace disabled.`。
+- 内联指令仅影响该消息；否则应用会话/全局默认值。
+- 发送不带参数的 `/trace` (或 `/trace:`) 以查看当前的跟踪级别。
+- `/trace` 比 `/verbose` 更窄：它仅显示插件拥有的跟踪/调试行，例如主动内存 (Active Memory) 调试摘要。
+- 跟踪行可以出现在 `/status` 中，也可以在正常助手回复后作为后续诊断消息出现。
+
 ## 推理可见性 (/reasoning)
 
 - 级别：`on|off|stream`。
-- 仅指令消息用于切换是否在回复中显示思维模块。
-- 启用后，推理将作为以 `Reasoning:` 为前缀的**单独消息**发送。
-- `stream`（仅限 Telegram）：在生成回复时将推理流式传输到 Telegram 草稿气泡中，然后发送不包含推理的最终答案。
+- 仅包含指令的消息切换回复中是否显示思考块。
+- 启用后，推理会作为带有 `Reasoning:` 前缀的**单独消息**发送。
+- `stream` (仅限 Telegram)：在回复生成时将推理流式传输到 Telegram 草稿气泡中，然后发送不包含推理的最终答案。
 - 别名：`/reason`。
-- 发送 `/reasoning`（或 `/reasoning:`）且不带参数，以查看当前的推理级别。
-- 解析顺序：内联指令 > 会话覆盖 > 每个代理的默认值 (`agents.list[].reasoningDefault`) > 回退值 (`off`)。
+- 发送不带参数的 `/reasoning` (或 `/reasoning:`) 以查看当前的推理级别。
+- 解析顺序：内联指令，然后是会话覆盖，然后是每代理默认值 (`agents.list[].reasoningDefault`)，最后是回退值 (`off`)。
 
 ## 相关
 
-- 提升模式文档位于 [Elevated mode](/en/tools/elevated)。
+- 提升模式 (Elevated mode) 文档位于 [提升模式](/en/tools/elevated)。
 
 ## 心跳
 
-- 心跳探测正文是配置的心跳提示（默认：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`）。心跳消息中的内联指令照常应用（但避免从心跳更改会话默认值）。
-- 心跳传递默认仅包含最终负载。要同时发送单独的 `Reasoning:` 消息（如果有），请设置 `agents.defaults.heartbeat.includeReasoning: true` 或每个代理的 `agents.list[].heartbeat.includeReasoning: true`。
+- 心跳探测正文是配置的心跳提示（默认：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`）。心跳消息中的内联指令照常应用（但请避免通过心跳更改会话默认值）。
+- 心跳传送默认仅发送最终负载。若也要发送单独的 `Reasoning:` 消息（如果可用），请设置 `agents.defaults.heartbeat.includeReasoning: true` 或每代理 `agents.list[].heartbeat.includeReasoning: true`。
 
-## Web 聊天 UI
+## Web 聊天界面
 
-- Web 聊天思考选择器会在页面加载时镜像反映来自传入会话存储/配置的已存储会话级别。
+- 页面加载时，网页聊天思考选择器会反映入站会话存储/配置中存储的会话级别。
 - 选择另一个级别会通过 `sessions.patch` 立即写入会话覆盖；它不会等待下一次发送，也不是一次性的 `thinkingOnce` 覆盖。
-- 第一个选项始终是 `Default (<resolved level>)`，其中解析的默认值来自活动会话模型：对于 Anthropic/Bedrock 上的 Claude 4.6 为 `adaptive`，对于其他具备推理能力的模型为 `low`，否则为 `off`。
-- 选择器保持提供商感知：
+- 第一个选项始终是 `Default (<resolved level>)`，其中解析后的默认值来自活动会话模型：对于 Anthropic/Bedrock 上的 Claude 4.6 为 `adaptive`，对于其他具备推理能力的模型为 `low`，其他情况则为 `off`。
+- 选择器保持对提供商的感知：
   - 大多数提供商显示 `off | minimal | low | medium | high | adaptive`
-  - Z.AI 显示二元 `off | on`
-- `/think:<level>` 仍然有效，并更新相同的已存储会话级别，因此聊天指令和选择器保持同步。
+  - Z.AI 显示二进制的 `off | on`
+- `/think:<level>` 仍然有效，并更新相同的存储会话级别，因此聊天指令和选择器保持同步。

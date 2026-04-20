@@ -962,7 +962,7 @@ OpenClaw 支持针对代理消息的 Discord 组件 v2 容器。使用带有 `co
     聊天审批不可用或手动审批是唯一路径时，OpenClaw
     才应包含手动 `/approve` 命令。
 
-    此处理程序使用的 Gateway 身份验证与其他 Gateway 客户端使用相同的共享凭证解析协议：
+    此处理程序使用的 Gateway(网关) 身份验证与其他 Gateway(网关) 客户端使用相同的共享凭证解析协议：
 
     - 环境优先的本地身份验证（`OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`，然后 `gateway.auth.*`）
     - 在本地模式下，仅在 `gateway.auth.*` 未设置时，`gateway.remote.*` 才能用作回退；已配置但未解析的本地 SecretRefs 将失败关闭
@@ -974,7 +974,7 @@ OpenClaw 支持针对代理消息的 Discord 组件 v2 容器。使用带有 `co
     - 带有 `plugin:` 前缀的 ID 通过 `plugin.approval.resolve` 解析。
     - 其他 ID 通过 `exec.approval.resolve` 解析。
     - Discord 在此处不执行额外的执行到插件回退跳转；ID
-      前缀决定它调用哪个 Gateway 方法。
+      前缀决定它调用哪个 Gateway(网关) 方法。
 
     执行审批默认在 30 分钟后过期。如果审批失败并显示
     未知的审批 ID，请验证审批人解析、功能启用，

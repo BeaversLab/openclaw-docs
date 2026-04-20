@@ -20,7 +20,7 @@ En OpenClaw, un bucle es una única ejecución serializada por sesión que emite
 
 1. El RPC `agent` valida los parámetros, resuelve la sesión (sessionKey/sessionId), persiste los metadatos de la sesión, devuelve `{ runId, acceptedAt }` inmediatamente.
 2. `agentCommand` ejecuta el agente:
-   - resuelve el modelo + valores predeterminados de pensamiento/verbosidad
+   - resuelve el modelo y los valores predeterminados de thinking/verbose/trace
    - carga la instantánea de habilidades
    - llama a `runEmbeddedPiAgent` (tiempo de ejecución pi-agent-core)
    - emite **fin/error del ciclo de vida** si el bucle incrustado no emite uno

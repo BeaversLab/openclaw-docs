@@ -20,8 +20,7 @@ Su agente tiene tres archivos relacionados con la memoria:
   decisiones. Se cargan al inicio de cada sesión de DM.
 - **`memory/YYYY-MM-DD.md`** -- notas diarias. Contexto continuo y observaciones.
   Las notas de hoy y ayer se cargan automáticamente.
-- **`DREAMS.md`** (experimental, opcional) -- Diario de Sueños y resúmenes de
-  barrido de sueños para revisión humana, incluyendo entradas de relleno histórico fundamentadas.
+- **`DREAMS.md`** (opcional) -- Resúmenes del Diario de Sueños y barridos de soñado para revisión humana, incluyendo entradas de relleno histórico fundamentado.
 
 Estos archivos residen en el espacio de trabajo del agente (por defecto `~/.openclaw/workspace`).
 
@@ -99,7 +98,7 @@ memoria. Esto está activado por defecto; no necesitas configurar nada.
 
 <Tip>El vaciado de memoria evita la pérdida de contexto durante la compactación. Si tu agente tiene hechos importantes en la conversación que aún no se han escrito en un archivo, se guardarán automáticamente antes de que se produzca el resumen.</Tip>
 
-## Soñando (experimental)
+## Soñado
 
 Soñar es un pase de consolidación en segundo plano opcional para la memoria. Recopila
 señales a corto plazo, puntúa candidatos y promueve solo los elementos calificados a la
@@ -115,8 +114,8 @@ Está diseñado para mantener la memoria a largo plazo con alta señal:
 - **Revisable**: los resúmenes de fase y las entradas de diario se escriben en `DREAMS.md`
   para su revisión humana.
 
-Para el comportamiento de fase, señales de puntuación y detalles del Diario de Sueños, consulte
-[Soñar (experimental)](/en/concepts/dreaming).
+Para el comportamiento de las fases, las señales de puntuación y los detalles del Diario de Sueños, consulte
+[Dreaming](/en/concepts/dreaming).
 
 ## Relleno fundamentado y promoción en vivo
 
@@ -169,7 +168,7 @@ openclaw memory index --force   # Rebuild the index
 - [Memory Wiki](/en/plugins/memory-wiki) -- bóveda de conocimiento compilada y herramientas nativas de wiki
 - [Memory Search](/en/concepts/memory-search) -- canalización de búsqueda, proveedores y
   ajuste
-- [Dreaming (experimental)](/en/concepts/dreaming) -- promoción en segundo plano
+- [Dreaming](/en/concepts/dreaming) -- promoción en segundo plano
   desde el recuerdo a corto plazo hasta la memoria a largo plazo
 - [Referencia de configuración de memoria](/en/reference/memory-config) -- todos los controles de configuración
 - [Compaction](/en/concepts/compaction) -- cómo la compactación interactúa con la memoria

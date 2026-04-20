@@ -105,17 +105,31 @@ Los archivos de arranque se recortan y añaden bajo **Contexto del proyecto** pa
 
 Todos estos archivos se **inyectan en la ventana de contexto** en cada turno a menos que se aplique una puerta específica del archivo. `HEARTBEAT.md` se omite en ejecuciones normales cuando los latidos están deshabilitados para el agente predeterminado o `agents.defaults.heartbeat.includeSystemPromptSection` es falso. Mantenga los archivos inyectados concisos, especialmente `MEMORY.md`, que puede crecer con el tiempo y llevar a un uso del contexto inesperadamente alto y a una compactación más frecuente.
 
-> **Nota:** Los archivos diarios `memory/*.md` **no** se inyectan automáticamente. Se acceden a ellos bajo demanda a través de las herramientas `memory_search` y `memory_get`, por lo que no cuentan contra la ventana de contexto a menos que el modelo los lea explícitamente.
+> **Nota:** `memory/*.md` archivos diarios **no** son parte del bootstrap normal
+> del Contexto del Proyecto. En turnos ordinarios se accede a ellos bajo demanda a través de las
+> herramientas `memory_search` y `memory_get`, por lo que no cuentan contra la
+> ventana de contexto a menos que el modelo los lea explícitamente. Los turnos `/new` y
+> `/reset` simples son la excepción: el tiempo de ejecución puede anteponer la memoria diaria reciente
+> como un bloque de contexto de inicio único para ese primer turno.
 
-Los archivos grandes se truncan con un marcador. El tamaño máximo por archivo está controlado por `agents.defaults.bootstrapMaxChars` (predeterminado: 20000). El contenido total de bootstrap inyectado entre archivos está limitado por `agents.defaults.bootstrapTotalMaxChars` (predeterminado: 150000). Los archivos faltantes inyectan un marcador corto de archivo faltante. Cuando ocurre el truncamiento, OpenClaw puede inyectar un bloque de advertencia en el Contexto del Proyecto; controle esto con `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`; predeterminado: `once`).
+Los archivos grandes se truncán con un marcador. El tamaño máximo por archivo se controla mediante
+`agents.defaults.bootstrapMaxChars` (predeterminado: 20000). El contenido total de bootstrap inyectado
+entre archivos se limita mediante `agents.defaults.bootstrapTotalMaxChars`
+(predeterminado: 150000). Los archivos faltantes inyectan un marcador corto de archivo faltante. Cuando se produce el truncamiento,
+OpenClaw puede inyectar un bloque de advertencia en el Contexto del Proyecto; controle esto con
+`agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`;
+predeterminado: `once`).
 
-Las sesiones de subagentes solo inyectan `AGENTS.md` y `TOOLS.md` (otros archivos de bootstrap se filtran para mantener el contexto del subagente pequeño).
+Las sesiones de subagentes solo inyectan `AGENTS.md` y `TOOLS.md` (otros archivos de bootstrap
+se filtran para mantener el contexto del subagente pequeño).
 
-Los enlaces internos pueden interceptar este paso a través de `agent:bootstrap` para mutar o reemplazar los archivos de bootstrap inyectados (por ejemplo, intercambiando `SOUL.md` por una personalidad alternativa).
+Los ganchos internos pueden interceptar este paso mediante `agent:bootstrap` para modificar o reemplazar
+los archivos de bootstrap inyectados (por ejemplo, intercambiando `SOUL.md` por una personalidad alternativa).
 
-Si quiere hacer que el agente suene menos genérico, comience con [Guía de personalidad SOUL.md](/en/concepts/soul).
+Si desea que el agente suene menos genérico, comience con
+[Guía de personalidad SOUL.md](/en/concepts/soul).
 
-Para inspeccionar cuánto contribuye cada archivo inyectado (bruto vs. inyectado, truncamiento, más sobrecarga del esquema de herramientas), use `/context list` o `/context detail`. Consulte [Contexto](/en/concepts/context).
+Para inspeccionar cuánto aporta cada archivo inyectado (sin procesar vs. inyectado, truncamiento, más sobrecarga del esquema de herramientas), use `/context list` o `/context detail`. Consulte [Contexto](/en/concepts/context).
 
 ## Manejo del tiempo
 
@@ -123,9 +137,9 @@ El mensaje del sistema incluye una sección dedicada **Fecha y hora actual** cua
 zona horaria del usuario es conocida. Para mantener la caché del mensaje estable, ahora solo incluye
 la **zona horaria** (sin reloj dinámico o formato de hora).
 
-Use `session_status` cuando el agente necesita la hora actual; la tarjeta de estado
-incluye una línea de marca de tiempo. La misma herramienta puede establecer opcionalmente una anulación de modelo por sesión
-(`model=default` la borra).
+Use `session_status` cuando el agente necesite la hora actual; la tarjeta de estado
+incluye una línea de marca de tiempo. La misma herramienta puede establecer opcionalmente una sobrescritura
+de modelo por sesión (`model=default` la borra).
 
 Configure con:
 
@@ -138,12 +152,12 @@ Consulte [Fecha y hora](/en/date-time) para obtener detalles completos del compo
 
 Cuando existen habilidades elegibles, OpenClaw inyecta una **lista de habilidades disponibles** compacta
 (`formatSkillsForPrompt`) que incluye la **ruta de archivo** para cada habilidad. El
-prompt indica al modelo que use `read` para cargar el archivo SKILL.md en la ubicación
+prompt instruye al modelo a usar `read` para cargar el SKILL.md en la ubicación
 listada (espacio de trabajo, administrada o empaquetada). Si no hay habilidades elegibles, la
 sección de Habilidades se omite.
 
 La elegibilidad incluye puertas de metadatos de habilidades, comprobaciones de entorno/configuración en tiempo de ejecución,
-y la lista blanca de habilidades de agente efectiva cuando `agents.defaults.skills` o
+y la lista de permitidos efectiva de habilidades del agente cuando `agents.defaults.skills` o
 `agents.list[].skills` están configurados.
 
 ```
@@ -158,11 +172,24 @@ y la lista blanca de habilidades de agente efectiva cuando `agents.defaults.skil
 
 Esto mantiene el mensaje base pequeño mientras sigue permitiendo el uso específico de habilidades.
 
+El presupuesto de la lista de habilidades es propiedad del subsistema de habilidades:
+
+- Predeterminado global: `skills.limits.maxSkillsPromptChars`
+- Invalidación por agente: `agents.list[].skillsLimits.maxSkillsPromptChars`
+
+Los extractos de tiempo de ejecución acotados genéricos utilizan una superficie diferente:
+
+- `agents.defaults.contextLimits.*`
+- `agents.list[].contextLimits.*`
+
+Esa división mantiene el tamaño de las habilidades separado del tamaño de lectura/inyección en tiempo de ejecución, tales
+como `memory_get`, resultados de herramientas en vivo y actualizaciones de AGENTS.md posteriores a la compactación.
+
 ## Documentación
 
-Cuando está disponible, el prompt del sistema incluye una sección **Documentación** que señala al
-directorio de documentación local de OpenClaw (ya sea `docs/` en el espacio de trabajo del repositorio o la documentación del paquete npm
-empaquetado) y también nota el espejo público, repositorio fuente, Discord de la comunidad y
-ClawHub ([https://clawhub.ai](https://clawhub.ai)) para el descubrimiento de habilidades. El prompt indica al modelo que consulte primero la documentación local
-sobre el comportamiento, comandos, configuración o arquitectura de OpenClaw, y que ejecute
-`openclaw status` por sí mismo cuando sea posible (solicitando al usuario solo cuando no tenga acceso).
+Cuando está disponible, el prompt del sistema incluye una sección **Documentación** que apunta al
+directorio de documentación local de OpenClaw (ya sea `docs/` en el espacio de trabajo del repositorio o la documentación del
+paquete npm incluido) y también señala el espejo público, repositorio fuente, comunidad de Discord y
+ClawHub ([https://clawhub.ai](https://clawhub.ai)) para el descubrimiento de habilidades. El prompt instruye al modelo a consultar primero la documentación local
+sobre el comportamiento, comandos, configuración o arquitectura de OpenClaw, y ejecutar
+`openclaw status` por sí mismo cuando sea posible (preguntando al usuario solo cuando no tenga acceso).

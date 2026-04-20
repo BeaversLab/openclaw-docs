@@ -1,5 +1,5 @@
 ---
-summary: "Syntaxe des directives pour /think, /fast, /verbose et la visibilité du raisonnement"
+summary: "Directive syntax for /think, /fast, /verbose, /trace, and reasoning visibility"
 read_when:
   - Adjusting thinking, fast-mode, or verbose directive parsing or defaults
 title: "Niveaux de réflexion"
@@ -72,15 +72,24 @@ title: "Niveaux de réflexion"
 - Les résumés d'échecs d'outils restent visibles en mode normal, mais les suffixes de détails d'erreur bruts sont masqués sauf si le mode verbose est `on` ou `full`.
 - Lorsque le mode verbose est `full`, les sorties des outils sont également transmises après achèvement (bulle séparée, tronquée à une longueur sûre). Si vous basculez `/verbose on|full|off` pendant qu'une exécution est en cours, les bulles d'outils suivantes respectent le nouveau paramètre.
 
+## Directives de trace de plugin (/trace)
+
+- Niveaux : `on` | `off` (par défaut).
+- Un message contenant uniquement la directive active/désactive la sortie de trace du plugin de session et répond `Plugin trace enabled.` / `Plugin trace disabled.`.
+- La directive en ligne n'affecte que ce message ; sinon, les valeurs par défaut de session/globales s'appliquent.
+- Envoyez `/trace` (ou `/trace:`) sans argument pour voir le niveau de trace actuel.
+- `/trace` est plus restrictif que `/verbose` : il n'expose que les lignes de trace/débogage appartenant à des plugins, telles que les résumés de débogage de la mémoire active.
+- Les lignes de trace peuvent apparaître dans `/status` et sous forme de message de diagnostic de suivi après la réponse normale de l'assistant.
+
 ## Visibilité du raisonnement (/reasoning)
 
 - Niveaux : `on|off|stream`.
-- Un message contenant uniquement la directive active ou désactive l'affichage des blocs de réflexion dans les réponses.
-- Lorsqu'elle est activée, le raisonnement est envoyé comme un **message séparé** préfixé par `Reasoning:`.
-- `stream` (Telegram uniquement) : diffuse le raisonnement dans la bulle de brouillon Telegram pendant que la réponse est générée, puis envoie la réponse finale sans le raisonnement.
+- Un message contenant uniquement la directive active/désactive l'affichage des blocs de réflexion dans les réponses.
+- Lorsqu'elle est activée, le raisonnement est envoyé comme un **message distinct** préfixé par `Reasoning:`.
+- `stream` (Telegram uniquement) : diffuse le raisonnement dans la bulle de brouillon Telegram pendant la génération de la réponse, puis envoie la réponse finale sans le raisonnement.
 - Alias : `/reason`.
 - Envoyez `/reasoning` (ou `/reasoning:`) sans argument pour voir le niveau de raisonnement actuel.
-- Ordre de résolution : directive en ligne, puis substitution de session, puis valeur par défaut par agent (`agents.list[].reasoningDefault`), puis repli (`off`).
+- Ordre de résolution : directive en ligne, puis remplacement de session, puis valeur par défaut par agent (`agents.list[].reasoningDefault`), puis repli (`off`).
 
 ## Connexes
 
@@ -89,14 +98,14 @@ title: "Niveaux de réflexion"
 ## Battements de cœur (Heartbeats)
 
 - Le corps de la sonde de battement de cœur est l'invite de battement de cœur configurée (par défaut : `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`). Les directives en ligne dans un message de battement de cœur s'appliquent comme d'habitude (mais évitez de modifier les valeurs par défaut de session depuis les battements de cœur).
-- La livraison des signaux de battement (heartbeats) par défaut se limite à la charge utile finale. Pour envoyer également le message séparé `Reasoning:` (lorsqu'il est disponible), définissez `agents.defaults.heartbeat.includeReasoning: true` ou `agents.list[].heartbeat.includeReasoning: true` par agent.
+- La livraison des battements de cœur par défaut concerne uniquement la charge utile finale. Pour envoyer également le message distinct `Reasoning:` (lorsqu'il est disponible), définissez `agents.defaults.heartbeat.includeReasoning: true` ou `agents.list[].heartbeat.includeReasoning: true` par agent.
 
 ## Interface utilisateur de chat Web
 
-- Le sélecteur de réflexion (thinking) du chat Web reflète le niveau stocké de la session à partir du magasin de session/configuration entrante lorsque la page se charge.
-- Choisir un autre niveau écrit immédiatement la substitution de session via `sessions.patch` ; il n'attend pas le prochain envoi et ce n'est pas une substitution unique `thinkingOnce`.
-- La première option est toujours `Default (<resolved level>)`, où la valeur par défaut résolue provient du modèle de session active : `adaptive` pour Claude 4.6 sur Anthropic/Bedrock, `low` pour d'autres modèles capables de raisonnement, `off` sinon.
-- Le sélecteur reste conscient du fournisseur (provider-aware) :
+- Le sélecteur de réflexion du chat Web reflète le niveau stocké de la session à partir du magasin/configuration de session entrant lors du chargement de la page.
+- Choisir un autre niveau écrit immédiatement la substitution de session via `sessions.patch` ; il n'attend pas le prochain envoi et ce n'est pas une substitution `thinkingOnce` unique.
+- La première option est toujours `Default (<resolved level>)`, où la valeur par défaut résolue provient du modèle de session actif : `adaptive` pour Claude 4.6 sur Anthropic/Bedrock, `low` pour d'autres modèles capables de raisonnement, `off` sinon.
+- Le sélecteur reste conscient du fournisseur :
   - la plupart des fournisseurs affichent `off | minimal | low | medium | high | adaptive`
-  - Z.AI affiche le binaire `off | on`
-- `/think:<level>` fonctionne toujours et met à jour le même niveau de session stocké, de sorte que les directives de chat et le sélecteur restent synchronisés.
+  - Z.AI affiche `off | on` binaire
+- `/think:<level>` fonctionne toujours et met à jour le même niveau de session stocké, les directives de chat et le sélecteur restent donc synchronisés.

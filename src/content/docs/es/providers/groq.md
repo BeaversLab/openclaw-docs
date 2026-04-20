@@ -8,37 +8,41 @@ read_when:
 
 # Groq
 
-[Groq](https://groq.com) ofrece inferencia ultrarrápida en modelos de código abierto
+[Groq](https://groq.com) ofrece una inferencia ultra rápida en modelos de código abierto
 (Llama, Gemma, Mistral y más) utilizando hardware LPU personalizado. OpenClaw se conecta
 a Groq a través de su API compatible con OpenAI.
 
-- Proveedor: `groq`
-- Autenticación: `GROQ_API_KEY`
-- API: Compatible con OpenAI
+| Propiedad     | Valor                 |
+| ------------- | --------------------- |
+| Proveedor     | `groq`                |
+| Autenticación | `GROQ_API_KEY`        |
+| API           | Compatible con OpenAI |
 
-## Inicio rápido
+## Primeros pasos
 
-1. Obtenga una clave de API en [console.groq.com/keys](https://console.groq.com/keys).
+<Steps>
+  <Step title="Obtener una clave de API">
+    Cree una clave de API en [console.groq.com/keys](https://console.groq.com/keys).
+  </Step>
+  <Step title="Configurar la clave de API">
+    ```bash
+    export GROQ_API_KEY="gsk_..."
+    ```
+  </Step>
+  <Step title="Configurar un modelo predeterminado">
+    ```json5
+    {
+      agents: {
+        defaults: {
+          model: { primary: "groq/llama-3.3-70b-versatile" },
+        },
+      },
+    }
+    ```
+  </Step>
+</Steps>
 
-2. Configure la clave de API:
-
-```bash
-export GROQ_API_KEY="gsk_..."
-```
-
-3. Configure un modelo predeterminado:
-
-```json5
-{
-  agents: {
-    defaults: {
-      model: { primary: "groq/llama-3.3-70b-versatile" },
-    },
-  },
-}
-```
-
-## Ejemplo de archivo de configuración
+### Ejemplo de archivo de configuración
 
 ```json5
 {
@@ -51,9 +55,24 @@ export GROQ_API_KEY="gsk_..."
 }
 ```
 
+## Modelos disponibles
+
+El catálogo de modelos de Groq cambia con frecuencia. Ejecute `openclaw models list | grep groq`
+para ver los modelos actualmente disponibles, o consulte
+[console.groq.com/docs/models](https://console.groq.com/docs/models).
+
+| Modelo                     | Notas                                 |
+| -------------------------- | ------------------------------------- |
+| **Llama 3.3 70B Versátil** | Uso general, contexto grande          |
+| **Llama 3.1 8B Instant**   | Rápido, ligero                        |
+| **Gemma 2 9B**             | Compacto, eficiente                   |
+| **Mixtral 8x7B**           | Arquitectura MoE, razonamiento fuerte |
+
+<Tip>Use `openclaw models list --provider groq` para la lista más actualizada de modelos disponibles en su cuenta.</Tip>
+
 ## Transcripción de audio
 
-Groq también ofrece transcripción de audio rápida basada en Whisper. Cuando se configura como un
+Groq también ofrece una transcripción de audio rápida basada en Whisper. Cuando se configura como un
 proveedor de comprensión de medios, OpenClaw utiliza el modelo `whisper-large-v3-turbo`
 de Groq para transcribir mensajes de voz a través de la superficie compartida `tools.media.audio`.
 
@@ -69,36 +88,43 @@ de Groq para transcribir mensajes de voz a través de la superficie compartida `
 }
 ```
 
-## Nota sobre el entorno
+<AccordionGroup>
+  <Accordion title="Detalles de la transcripción de audio">
+    | Propiedad | Valor |
+    |----------|-------|
+    | Ruta de configuración compartida | `tools.media.audio` |
+    | URL base predeterminada   | `https://api.groq.com/openai/v1` |
+    | Modelo predeterminado      | `whisper-large-v3-turbo` |
+    | Endpoint de API       | Compatible con OpenAI `/audio/transcriptions` |
+  </Accordion>
 
-Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `GROQ_API_KEY` esté
-disponible para ese proceso (por ejemplo, en `~/.openclaw/.env` o a través
-de `env.shellEnv`).
+  <Accordion title="Nota sobre el entorno">
+    Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `GROQ_API_KEY` esté
+    disponible para ese proceso (por ejemplo, en `~/.openclaw/.env` o a través de
+    `env.shellEnv`).
 
-## Notas de audio
+    <Warning>
+    Las claves establecidas solo en su shell interactivo no son visibles para los procesos de
+    gateway administrados por demonios. Use la configuración de `~/.openclaw/.env` o `env.shellEnv` para
+    disponibilidad persistente.
+    </Warning>
 
-- Ruta de configuración compartida: `tools.media.audio`
-- URL base de audio de Groq predeterminada: `https://api.groq.com/openai/v1`
-- Modelo de audio de Groq predeterminado: `whisper-large-v3-turbo`
-- La transcripción de audio de Groq utiliza la ruta `/audio/transcriptions`
-  compatible con OpenAI
+  </Accordion>
+</AccordionGroup>
 
-## Modelos disponibles
+## Relacionado
 
-El catálogo de modelos de Groq cambia con frecuencia. Ejecute `openclaw models list | grep groq`
-para ver los modelos disponibles actualmente, o consulte
-[console.groq.com/docs/models](https://console.groq.com/docs/models).
-
-Las opciones populares incluyen:
-
-- **Llama 3.3 70B Versatile** - propósito general, contexto grande
-- **Llama 3.1 8B Instant** - rápido, ligero
-- **Gemma 2 9B** - compacto, eficiente
-- **Mixtral 8x7B** - arquitectura MoE, razonamiento sólido
-
-## Enlaces
-
-- [Consola de Groq](https://console.groq.com)
-- [Documentación de la API](https://console.groq.com/docs)
-- [Lista de modelos](https://console.groq.com/docs/models)
-- [Precios](https://groq.com/pricing)
+<CardGroup cols={2}>
+  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+    Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
+  </Card>
+  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference" icon="gear">
+    Esquema de configuración completo, incluyendo la configuración de proveedor y de audio.
+  </Card>
+  <Card title="Consola de Groq" href="https://console.groq.com" icon="arrow-up-right-from-square">
+    Panel de Groq, documentación de la API y precios.
+  </Card>
+  <Card title="Lista de modelos de Groq" href="https://console.groq.com/docs/models" icon="list">
+    Catálogo oficial de modelos de Groq.
+  </Card>
+</CardGroup>

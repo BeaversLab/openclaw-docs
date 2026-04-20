@@ -37,7 +37,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - 页眉：连接 URL、当前代理、当前会话。
 - 聊天记录：用户消息、助手回复、系统通知、工具卡片。
 - 状态栏：连接/运行状态（connecting、running、streaming、idle、error）。
-- 页脚：连接状态 + 代理 + 会话 + 模型 + 思考/快速/详细/推理 + 令牌计数 + 投递。
+- 页脚：连接状态 + agent + 会话 + 模型 + think/fast/verbose/trace/reasoning + token 计数 + deliver。
 - 输入：带有自动补全功能的文本编辑器。
 
 ## 心智模型：代理 + 会话
@@ -94,66 +94,67 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - `/think <off|minimal|low|medium|high>`
 - `/fast <status|on|off>`
 - `/verbose <on|full|off>`
+- `/trace <on|off>`
 - `/reasoning <on|off|stream>`
 - `/usage <off|tokens|full>`
-- `/elevated <on|off|ask|full>`（别名：`/elev`）
+- `/elevated <on|off|ask|full>` (别名: `/elev`)
 - `/activation <mention|always>`
 - `/deliver <on|off>`
 
 会话生命周期：
 
-- `/new` 或 `/reset`（重置会话）
-- `/abort`（中止活动运行）
+- `/new` 或 `/reset` (重置会话)
+- `/abort` (中止当前运行)
 - `/settings`
 - `/exit`
 
-其他 Gateway(网关) 斜杠命令（例如 `/context`）将被转发到 Gateway(网关) 并显示为系统输出。请参阅 [Slash commands](/en/tools/slash-commands)。
+其他 Gateway(网关) 斜杠命令（例如 `/context`）会被转发到 Gateway(网关) 并显示为系统输出。请参阅 [Slash commands](/en/tools/slash-commands)。
 
 ## 本地 Shell 命令
 
 - 在行首添加 `!`，以便在 TUI 主机上运行本地 Shell 命令。
-- TUI 会在每次会话时提示一次以允许本地执行；如果拒绝，将在该会话中保持 `!` 禁用状态。
-- 命令在 TUI 工作目录中全新的非交互式 Shell 中运行（没有持久的 `cd`/env）。
+- TUI 每个会话提示一次以允许本地执行；拒绝将使 `!` 在该会话中保持禁用状态。
+- 命令在 TUI 工作目录中的一个新的非交互式 Shell 中运行（没有持久的 `cd`/env）。
 - 本地 Shell 命令在其环境中接收 `OPENCLAW_SHELL=tui-local`。
 - 单独的 `!` 将作为普通消息发送；前导空格不会触发本地执行。
 
 ## 工具输出
 
 - 工具调用显示为包含参数和结果的卡片。
-- Ctrl+O 可在折叠视图和展开视图之间切换。
-- 工具运行时，部分更新会流式传输到同一张卡片中。
+- Ctrl+O 在折叠/展开视图之间切换。
+- 工具运行时，部分更新会流入同一张卡片。
 
 ## 终端颜色
 
-- TUI 将助手正文文本保留在终端的默认前景色中，以便深色和浅色终端都能保持可读性。
+- TUI 将助手正文文本保持在终端的默认前景色中，以便深色和浅色终端都保持可读性。
 - 如果您的终端使用浅色背景且自动检测错误，请在启动 `openclaw tui` 之前设置 `OPENCLAW_THEME=light`。
-- 若要强制使用原始深色调色板，请设置 `OPENCLAW_THEME=dark`。
+- 若要改为强制使用原始深色调色板，请设置 `OPENCLAW_THEME=dark`。
 
 ## 历史记录 + 流式传输
 
 - 连接时，TUI 会加载最新的历史记录（默认为 200 条消息）。
-- 流式响应会就地更新，直到完成。
+- 流式响应会原地更新，直到完成。
 - TUI 还会监听代理工具事件，以提供更丰富的工具卡片。
 
 ## 连接详情
 
-- TUI 作为 `mode: "tui"` 向 Gateway(网关) 注册。
-- 重连会显示系统消息；事件间隔会在日志中显示。
+- TUI 向 Gateway(网关) 注册为 `mode: "tui"`。
+- 重新连接会显示系统消息；事件间隔会在日志中显示。
 
 ## 选项
 
-- `--url <url>`：Gateway(网关) 网关 WebSocket URL（默认为配置或 `ws://127.0.0.1:<port>`）
-- `--token <token>`: Gateway(网关)令牌（如果需要）
+- `--url <url>`：Gateway(网关) WebSocket URL（默认为配置或 `ws://127.0.0.1:<port>`）
+- `--token <token>`：Gateway(网关) 令牌（如果需要）
 - `--password <password>`：Gateway(网关) 密码（如果需要）
-- `--session <key>`：会话密钥（默认：`main`，当范围为全局时为 `global`）
-- `--deliver`：将助手回复传递给提供商（默认关闭）
-- `--thinking <level>`：覆盖发送时的思考级别
+- `--session <key>`：会话密钥（默认：`main`，或者在范围为全局时为 `global`）
+- `--deliver`：将助理回复发送给提供商（默认关闭）
+- `--thinking <level>`：覆盖发送的思考级别
 - `--message <text>`：连接后发送初始消息
-- `--timeout-ms <ms>`：Agent 超时时间（毫秒）（默认为 `agents.defaults.timeoutSeconds`）
+- `--timeout-ms <ms>`：代理超时时间（毫秒）（默认为 `agents.defaults.timeoutSeconds`）
 - `--history-limit <n>`：要加载的历史记录条目（默认 `200`）
 
-注意：当您设置 `--url` 时，TUI 不会回退到配置文件或环境变量凭据。
-请显式传递 `--token` 或 `--password`。缺少显式凭据将报错。
+注意：当您设置 `--url` 时，TUI 不会回退到配置或环境凭据。
+请显式传递 `--token` 或 `--password`。缺少显式凭据将导致错误。
 
 ## 故障排除
 
@@ -161,16 +162,16 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 - 在 TUI 中运行 `/status` 以确认 Gateway(网关) 已连接且处于空闲/忙碌状态。
 - 检查 Gateway(网关) 日志：`openclaw logs --follow`。
-- 确认 agent 可以运行：`openclaw status` 和 `openclaw models status`。
+- 确认代理可以运行：`openclaw status` 和 `openclaw models status`。
 - 如果您期望在聊天渠道中收到消息，请启用投递（`/deliver on` 或 `--deliver`）。
 
 ## 连接故障排除
 
-- `disconnected`：确保 Gateway(网关) 正在运行且您的 `--url/--token/--password` 正确。
-- 选择器中没有 agent：检查 `openclaw agents list` 和您的路由配置。
-- 会话选择器为空：您可能处于全局作用域或还没有任何会话。
+- `disconnected`：确保 Gateway(网关) 正在运行并且您的 `--url/--token/--password` 是正确的。
+- 选择器中没有代理：检查 `openclaw agents list` 和您的路由配置。
+- 会话选择器为空：您可能处于全局范围或尚未有任何会话。
 
-## 相关内容
+## 相关
 
 - [Control UI](/en/web/control-ui) — 基于 Web 的控制界面
 - [CLI Reference](/en/cli) — 完整的 CLI 命令参考

@@ -10,112 +10,225 @@ title: "xAI"
 
 OpenClaw incluye un complemento de proveedor `xai` para los modelos Grok.
 
-## Configuración
+## Introducción
 
-1. Cree una clave de API en la consola de xAI.
-2. Establezca `XAI_API_KEY`, o ejecute:
+<Steps>
+  <Step title="Crear una clave de API">
+    Cree una clave de API en la [consola de xAI](https://console.x.ai/).
+  </Step>
+  <Step title="Configurar su clave de API">
+    Configure `XAI_API_KEY`, o ejecute:
 
-```bash
-openclaw onboard --auth-choice xai-api-key
-```
+    ```bash
+    openclaw onboard --auth-choice xai-api-key
+    ```
 
-3. Elija un modelo como:
+  </Step>
+  <Step title="Elegir un modelo">
+    ```json5
+    {
+      agents: { defaults: { model: { primary: "xai/grok-4" } } },
+    }
+    ```
+  </Step>
+</Steps>
 
-```json5
-{
-  agents: { defaults: { model: { primary: "xai/grok-4" } } },
-}
-```
+<Note>
+  OpenClaw utiliza la API de Respuestas de xAI como el transporte xAI incluido. El mismo `XAI_API_KEY` también puede alimentar `web_search` con respaldo de Grok, `x_search` de primera clase, y `code_execution` remotos. Si almacena una clave de xAI en `plugins.entries.xai.config.webSearch.apiKey`, el proveedor de modelo xAI incluido también reutiliza esa clave como alternativa. El ajuste de
+  `code_execution` se encuentra en `plugins.entries.xai.config.codeExecution`.
+</Note>
 
-OpenClaw ahora utiliza la API de Respuestas de xAI como el transporte xAI incluido. El mismo
-`XAI_API_KEY` también puede potenciar `web_search` con respaldo de Grok, `x_search` de primera clase
-y `code_execution` remotos.
-Si almacena una clave de xAI en `plugins.entries.xai.config.webSearch.apiKey`,
-el proveedor del modelo xAI incluido ahora reutiliza esa clave también como alternativa.
-El ajuste de `code_execution` se encuentra en `plugins.entries.xai.config.codeExecution`.
+## Catálogo de modelos incluidos
 
-## Catálogo de modelos incluidos actual
+OpenClaw incluye estas familias de modelos xAI de fábrica:
 
-OpenClaw ahora incluye estas familias de modelos xAI de fábrica:
+| Familia        | IDs de modelo                                                            |
+| -------------- | ------------------------------------------------------------------------ |
+| Grok 3         | `grok-3`, `grok-3-fast`, `grok-3-mini`, `grok-3-mini-fast`               |
+| Grok 4         | `grok-4`, `grok-4-0709`                                                  |
+| Grok 4 Fast    | `grok-4-fast`, `grok-4-fast-non-reasoning`                               |
+| Grok 4.1 Fast  | `grok-4-1-fast`, `grok-4-1-fast-non-reasoning`                           |
+| Grok 4.20 Beta | `grok-4.20-beta-latest-reasoning`, `grok-4.20-beta-latest-non-reasoning` |
+| Grok Code      | `grok-code-fast-1`                                                       |
 
-- `grok-3`, `grok-3-fast`, `grok-3-mini`, `grok-3-mini-fast`
-- `grok-4`, `grok-4-0709`
-- `grok-4-fast`, `grok-4-fast-non-reasoning`
-- `grok-4-1-fast`, `grok-4-1-fast-non-reasoning`
-- `grok-4.20-beta-latest-reasoning`, `grok-4.20-beta-latest-non-reasoning`
-- `grok-code-fast-1`
-
-El complemento también resuelve hacia adelante los IDs de los modelos más nuevos `grok-4*` y `grok-code-fast*` cuando
+El complemento también resuelve directamente los IDs más nuevos de `grok-4*` y `grok-code-fast*` cuando
 siguen la misma forma de API.
 
-Notas de modelos rápidos:
+<Tip>`grok-4-fast`, `grok-4-1-fast` y las variantes `grok-4.20-beta-*` son las referencias de Grok con capacidad de imagen actuales en el catálogo incluido.</Tip>
 
-- `grok-4-fast`, `grok-4-1-fast`, y las variantes `grok-4.20-beta-*` son las
-  referencias de Grok con capacidad de imagen actuales en el catálogo incluido.
-- `/fast on` o `agents.defaults.models["xai/<model>"].params.fastMode: true`
-  reescribe las solicitudes nativas de xAI de la siguiente manera:
-  - `grok-3` -> `grok-3-fast`
-  - `grok-3-mini` -> `grok-3-mini-fast`
-  - `grok-4` -> `grok-4-fast`
-  - `grok-4-0709` -> `grok-4-fast`
+### Asignaciones de modo rápido
 
-Los alias de compatibilidad heredados todavía se normalizan a los IDs incluidos canónicos. Por
-ejemplo:
+`/fast on` o `agents.defaults.models["xai/<model>"].params.fastMode: true`
+reescribe las solicitudes nativas de xAI de la siguiente manera:
 
-- `grok-4-fast-reasoning` -> `grok-4-fast`
-- `grok-4-1-fast-reasoning` -> `grok-4-1-fast`
-- `grok-4.20-reasoning` -> `grok-4.20-beta-latest-reasoning`
-- `grok-4.20-non-reasoning` -> `grok-4.20-beta-latest-non-reasoning`
+| Modelo de origen | Destino en modo rápido |
+| ---------------- | ---------------------- |
+| `grok-3`         | `grok-3-fast`          |
+| `grok-3-mini`    | `grok-3-mini-fast`     |
+| `grok-4`         | `grok-4-fast`          |
+| `grok-4-0709`    | `grok-4-fast`          |
 
-## Búsqueda web
+### Alias de compatibilidad heredados
 
-El proveedor de búsqueda web `grok` incluido también utiliza `XAI_API_KEY`:
+Los alias heredados aún se normalizan a los ids agrupados canónicos:
 
-```bash
-openclaw config set tools.web.search.provider grok
-```
+| Alias heredado            | Id canónico                           |
+| ------------------------- | ------------------------------------- |
+| `grok-4-fast-reasoning`   | `grok-4-fast`                         |
+| `grok-4-1-fast-reasoning` | `grok-4-1-fast`                       |
+| `grok-4.20-reasoning`     | `grok-4.20-beta-latest-reasoning`     |
+| `grok-4.20-non-reasoning` | `grok-4.20-beta-latest-non-reasoning` |
 
-## Generación de video
+## Características
 
-El complemento `xai` incluido también registra la generación de video a través de la herramienta
-compartida `video_generate`.
+<AccordionGroup>
+  <Accordion title="Búsqueda web">
+    El proveedor de búsqueda web `grok` agrupado también utiliza `XAI_API_KEY`:
 
-- Modelo de video predeterminado: `xai/grok-imagine-video`
-- Modos: texto a video, imagen a video y flujos de edición/extensión de video remotos
-- Admite `aspectRatio` y `resolution`
-- Límite actual: no se aceptan búferes de video locales; use URLs `http(s)`
-  remotas para entradas de referencia/edición de video
+    ```bash
+    openclaw config set tools.web.search.provider grok
+    ```
 
-Para usar xAI como el proveedor de video predeterminado:
+  </Accordion>
 
-```json5
-{
-  agents: {
-    defaults: {
-      videoGenerationModel: {
-        primary: "xai/grok-imagine-video",
+  <Accordion title="Generación de video">
+    El complemento `xai` agrupado registra la generación de video a través de la herramienta
+    compartida `video_generate`.
+
+    - Modelo de video predeterminado: `xai/grok-imagine-video`
+    - Modos: texto a video, imagen a video, y flujos de edición/extensión de video remotos
+    - Soporta `aspectRatio` y `resolution`
+
+    <Warning>
+    No se aceptan búfers de video locales. Use URLs `http(s)` remotas para
+    entradas de referencia y edición de video.
+    </Warning>
+
+    Para usar xAI como el proveedor de video predeterminado:
+
+    ```json5
+    {
+      agents: {
+        defaults: {
+          videoGenerationModel: {
+            primary: "xai/grok-imagine-video",
+          },
+        },
       },
-    },
-  },
-}
-```
+    }
+    ```
 
-Consulte [Generación de video](/en/tools/video-generation) para conocer los parámetros de la herramienta compartida,
-la selección del proveedor y el comportamiento de conmutación por error.
+    <Note>
+    Consulte [Video Generation](/en/tools/video-generation) para obtener parámetros de herramientas compartidas,
+    selección de proveedor y comportamiento de conmutación por error.
+    </Note>
 
-## Límites conocidos
+  </Accordion>
 
-- Hoy la autenticación es solo mediante clave API. Aún no hay un flujo OAuth/código de dispositivo de xAI en OpenClaw.
-- `grok-4.20-multi-agent-experimental-beta-0304` no es compatible con la ruta del proveedor xAI normal porque requiere una superficie API upstream diferente que el transporte estándar xAI de OpenClaw.
+  <Accordion title="configuración de x_search">
+    El complemento xAI incluido expone `x_search` como una herramienta de OpenClaw para buscar
+    contenido de X (anteriormente Twitter) mediante Grok.
 
-## Notas
+    Ruta de configuración: `plugins.entries.xai.config.xSearch`
 
-- OpenClaw aplica automáticamente correcciones de compatibilidad de esquema de herramientas y llamadas a herramientas específicas de xAI en la ruta de ejecución compartida.
-- Las solicitudes nativas de xAI usan `tool_stream: true` de forma predeterminada. Establezca
-  `agents.defaults.models["xai/<model>"].params.tool_stream` en `false` para
-  desactivarlo.
-- El contenedor xAI incluido elimina las banderas de esquema de herramienta estrictas no compatibles y las claves de carga útil de razonamiento antes de enviar solicitudes nativas de xAI.
-- `web_search`, `x_search` y `code_execution` se exponen como herramientas de OpenClaw. OpenClaw habilita la herramienta integrada específica de xAI que necesita dentro de cada solicitud de herramienta en lugar de adjuntar todas las herramientas nativas a cada turno de chat.
-- `x_search` y `code_execution` son propiedad del complemento xAI incluido en lugar de estar codificadas en el tiempo de ejecución del modelo central.
-- `code_execution` es ejecución remota en sandbox xAI, no [`exec`](/en/tools/exec) local.
-- Para obtener una descripción general más amplia de los proveedores, consulte [Model providers](/en/providers/index).
+    | Key                | Type    | Default            | Description                          |
+    | ------------------ | ------- | ------------------ | ------------------------------------ |
+    | `enabled`          | boolean | —                  | Habilitar o deshabilitar x_search           |
+    | `model`            | string  | `grok-4-1-fast`    | Modelo utilizado para solicitudes x_search     |
+    | `inlineCitations`  | boolean | —                  | Incluir citas en línea en los resultados  |
+    | `maxTurns`         | number  | —                  | Turnos máximos de conversación           |
+    | `timeoutSeconds`   | number  | —                  | Tiempo de espera de solicitud en segundos           |
+    | `cacheTtlMinutes`  | number  | —                  | Tiempo de vida de caché en minutos        |
+
+    ```json5
+    {
+      plugins: {
+        entries: {
+          xai: {
+            config: {
+              xSearch: {
+                enabled: true,
+                model: "grok-4-1-fast",
+                inlineCitations: true,
+              },
+            },
+          },
+        },
+      },
+    }
+    ```
+
+  </Accordion>
+
+  <Accordion title="Configuración de ejecución de código">
+    El complemento xAI incluido expone `code_execution` como una herramienta de OpenClaw para
+    la ejecución remota de código en el entorno sandbox de xAI.
+
+    Ruta de configuración: `plugins.entries.xai.config.codeExecution`
+
+    | Clave               | Tipo    | Predeterminado            | Descripción                              |
+    | ----------------- | ------- | ------------------ | ---------------------------------------- |
+    | `enabled`         | boolean | `true` (si la clave está disponible) | Habilitar o deshabilitar la ejecución de código  |
+    | `model`           | string  | `grok-4-1-fast`    | Modelo utilizado para solicitudes de ejecución de código   |
+    | `maxTurns`        | number  | —                  | Turnos máximos de conversación               |
+    | `timeoutSeconds`  | number  | —                  | Tiempo de espera de la solicitud en segundos               |
+
+    <Note>
+    Esto es ejecución remota en sandbox de xAI, no [`exec`](/en/tools/exec) local.
+    </Note>
+
+    ```json5
+    {
+      plugins: {
+        entries: {
+          xai: {
+            config: {
+              codeExecution: {
+                enabled: true,
+                model: "grok-4-1-fast",
+              },
+            },
+          },
+        },
+      },
+    }
+    ```
+
+  </Accordion>
+
+<Accordion title="Límites conocidos">- La autenticación hoy es solo mediante clave de API. Todavía no hay flujo OAuth o código de dispositivo de xAI en OpenClaw. - `grok-4.20-multi-agent-experimental-beta-0304` no es compatible con la ruta de proveedor xAI normal porque requiere una superficie de API aguas arriba diferente que el transporte xAI estándar de OpenClaw.</Accordion>
+
+  <Accordion title="Notas avanzadas">
+    - OpenClaw aplica correcciones de compatibilidad específicas de xAI para el esquema de herramientas y llamadas a herramientas
+      automáticamente en la ruta de ejecución compartida.
+    - Las solicitudes nativas de xAI usan `tool_stream: true` de forma predeterminada. Establezca
+      `agents.defaults.models["xai/<model>"].params.tool_stream` en `false` para
+      desactivarlo.
+    - El contenedor xAI incluido elimina las marcas no compatibles de esquema estricto de herramientas
+      y las claves de carga útil de razonamiento antes de enviar solicitudes nativas de xAI.
+    - `web_search`, `x_search` y `code_execution` se exponen como herramientas de
+      OpenClaw. OpenClaw habilita la herramienta integrada específica de xAI que necesita dentro de cada solicitud de
+      herramienta en lugar de adjuntar todas las herramientas nativas a cada turno de chat.
+    - `x_search` y `code_execution` son propiedad del complemento xAI incluido en lugar
+      de estar codificadas en el tiempo de ejecución del modelo principal.
+    - `code_execution` es la ejecución remota del entorno sandbox de xAI, no local
+      [`exec`](/en/tools/exec).
+  </Accordion>
+</AccordionGroup>
+
+## Relacionado
+
+<CardGroup cols={2}>
+  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+    Elegir proveedores, referencias de modelo y comportamiento de conmutación por error.
+  </Card>
+  <Card title="Generación de video" href="/en/tools/video-generation" icon="video">
+    Parámetros compartidos de la herramienta de video y selección de proveedor.
+  </Card>
+  <Card title="Todos los proveedores" href="/en/providers/index" icon="grid-2">
+    La descripción general más amplia de proveedores.
+  </Card>
+  <Card title="Solución de problemas" href="/en/help/troubleshooting" icon="wrench">
+    Problemas comunes y soluciones.
+  </Card>
+</CardGroup>

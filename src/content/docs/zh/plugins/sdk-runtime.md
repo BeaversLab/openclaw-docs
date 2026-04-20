@@ -12,7 +12,7 @@ read_when:
 
 注入到每个插件中的 `api.runtime` 对象的参考文档。请使用这些助手，而不是直接导入主机内部组件。
 
-<Tip>**寻找教程？** 请参阅 [渠道插件](/en/plugins/sdk-channel-plugins) 或 [提供商插件](/en/plugins/sdk-provider-plugins)，获取展示这些助手上下文的 分步指南。</Tip>
+<Tip>**Looking for a walkthrough?** See [Channel Plugins](/en/plugins/sdk-channel-plugins) or [Provider Plugins](/en/plugins/sdk-provider-plugins) for step-by-step guides that show these helpers in context.</Tip>
 
 ```typescript
 register(api) {
@@ -367,7 +367,10 @@ const decision = api.runtime.channel.mentions.resolveInboundMentionDecision({
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
 import type { PluginRuntime } from "openclaw/plugin-sdk/runtime-store";
 
-const store = createPluginRuntimeStore<PluginRuntime>("my-plugin runtime not initialized");
+const store = createPluginRuntimeStore<PluginRuntime>({
+  pluginId: "my-plugin",
+  errorMessage: "my-plugin runtime not initialized",
+});
 
 // In your entry point
 export default defineChannelPluginEntry({
@@ -388,22 +391,26 @@ export function tryGetRuntime() {
 }
 ```
 
-## 其他顶级 `api` 字段
+Prefer `pluginId` for the runtime-store identity. The lower-level `key` form is
+for uncommon cases where one plugin intentionally needs more than one runtime
+slot.
 
-除了 `api.runtime` 之外，API 对象还提供：
+## Other top-level `api` fields
 
-| 字段                     | 类型                      | 描述                                                                |
-| ------------------------ | ------------------------- | ------------------------------------------------------------------- |
-| `api.id`                 | `string`                  | 插件 ID                                                             |
-| `api.name`               | `string`                  | 插件显示名称                                                        |
-| `api.config`             | `OpenClawConfig`          | 当前配置快照（可用时为活动的内存运行时快照）                        |
-| `api.pluginConfig`       | `Record<string, unknown>` | 来自 `plugins.entries.<id>.config` 的插件特定配置                   |
-| `api.logger`             | `PluginLogger`            | 作用域日志记录器 (`debug`, `info`, `warn`, `error`)                 |
-| `api.registrationMode`   | `PluginRegistrationMode`  | 当前加载模式；`"setup-runtime"` 是完全进入之前的轻量级启动/设置窗口 |
-| `api.resolvePath(input)` | `(string) => string`      | 解析相对于插件根目录的路径                                          |
+Beyond `api.runtime`, the API object also provides:
 
-## 相关
+| Field                    | Type                      | Description                                                                                 |
+| ------------------------ | ------------------------- | ------------------------------------------------------------------------------------------- |
+| `api.id`                 | `string`                  | Plugin id                                                                                   |
+| `api.name`               | `string`                  | Plugin display name                                                                         |
+| `api.config`             | `OpenClawConfig`          | Current config snapshot (active in-memory runtime snapshot when available)                  |
+| `api.pluginConfig`       | `Record<string, unknown>` | Plugin-specific config from `plugins.entries.<id>.config`                                   |
+| `api.logger`             | `PluginLogger`            | Scoped logger (`debug`, `info`, `warn`, `error`)                                            |
+| `api.registrationMode`   | `PluginRegistrationMode`  | Current load mode; `"setup-runtime"` is the lightweight pre-full-entry startup/setup window |
+| `api.resolvePath(input)` | `(string) => string`      | Resolve a path relative to the plugin root                                                  |
 
-- [SDK 概述](/en/plugins/sdk-overview) -- 子路径参考
-- [SDK 入口点](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 选项
-- [插件内部机制](/en/plugins/architecture) -- 能力模型和注册表
+## Related
+
+- [SDK Overview](/en/plugins/sdk-overview) -- subpath reference
+- [SDK Entry Points](/en/plugins/sdk-entrypoints) -- `definePluginEntry` options
+- [Plugin Internals](/en/plugins/architecture) -- capability 模型 and registry

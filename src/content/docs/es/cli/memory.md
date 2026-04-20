@@ -121,7 +121,7 @@ openclaw memory rem-harness [--agent <id>] [--include-promoted] [--json]
 - `--include-promoted`: incluir candidatos profundos ya promovidos.
 - `--json`: imprimir salida JSON.
 
-## Soñar (experimental)
+## Soñando
 
 Soñar es el sistema de consolidación de memoria en segundo plano con tres fases cooperativas: **ligera** (clasificar/preparar material a corto plazo), **profunda** (promover hechos duraderos a `MEMORY.md`) y **REM** (reflexionar y sacar a la luz temas).
 

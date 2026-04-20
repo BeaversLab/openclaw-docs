@@ -16,7 +16,7 @@ OpenClaw 通过在您的代理工作区中编写**纯 Markdown 文件**来记忆
 
 - **`MEMORY.md`** -- 长期记忆。持久的事实、偏好和决策。在每次私信会话开始时加载。
 - **`memory/YYYY-MM-DD.md`** -- 每日笔记。运行的上下文和观察。今天和昨天的笔记会自动加载。
-- **`DREAMS.md`**（实验性，可选）-- 供人类审核的梦境日记和梦境扫描摘要，包括有根据的历史回填条目。
+- **`DREAMS.md`**（可选）—— 供人工审阅的梦境日记和梦境扫描摘要，包括有根据的历史回填条目。
 
 这些文件位于代理工作区中（默认为 `~/.openclaw/workspace`）。
 
@@ -86,7 +86,7 @@ OpenClaw 通过在您的代理工作区中编写**纯 Markdown 文件**来记忆
 
 <Tip>内存刷新可防止压缩期间的上下文丢失。如果您的代理在对话中有 尚未写入文件的重要事实，它们将在摘要生成前被自动保存。</Tip>
 
-## 梦境（实验性）
+## 梦境机制（Dreaming）
 
 梦境是一个可选的记忆后台整合过程。它会收集
 短期信号，对候选项目评分，并仅将合格的项目提升至
@@ -103,7 +103,7 @@ OpenClaw 通过在您的代理工作区中编写**纯 Markdown 文件**来记忆
   供人工审查。
 
 有关阶段行为、评分信号和梦境日记的详细信息，请参阅
-[梦境（实验性）](/en/concepts/dreaming)。
+[Dreaming](/en/concepts/dreaming)。
 
 ## 基于事实的回填和实时提升
 
@@ -149,7 +149,7 @@ openclaw memory index --force   # Rebuild the index
 - [内存 Wiki](/en/plugins/memory-wiki) -- 编译的知识库和 Wiki 原生工具
 - [内存搜索](/en/concepts/memory-search) -- 搜索管道、提供商和
   调优
-- [做梦（实验性）](/en/concepts/dreaming) -- 从短期召回到长期记忆的
-  后台升级
+- [Dreaming](/en/concepts/dreaming) —— 从短期记忆到长期记忆的
+  后台提升
 - [内存配置参考](/en/reference/memory-config) -- 所有配置选项
 - [压缩](/en/concepts/compaction) -- 压缩如何与内存交互

@@ -1,7 +1,7 @@
 ---
-title: "Puntos de entrada del complemento"
+title: "Puntos de entrada del plugin"
 sidebarTitle: "Puntos de entrada"
-summary: "Referencia de definePluginEntry, defineChannelPluginEntry y defineSetupPluginEntry"
+summary: "Referencia para definePluginEntry, defineChannelPluginEntry y defineSetupPluginEntry"
 read_when:
   - You need the exact type signature of definePluginEntry or defineChannelPluginEntry
   - You want to understand registration mode (full vs setup vs CLI metadata)
@@ -13,7 +13,7 @@ read_when:
 Cada complemento exporta un objeto de entrada predeterminado. El SDK proporciona tres asistentes para
 crearlos.
 
-<Tip>**¿Buscas un tutorial?** Consulta [Complementos de canal](/en/plugins/sdk-channel-plugins) o [Complementos de proveedor](/en/plugins/sdk-provider-plugins) para guías paso a paso.</Tip>
+<Tip>**¿Buscas un tutorial?** Consulta [Plugins de canal](/en/plugins/sdk-channel-plugins) o [Plugins de proveedor](/en/plugins/sdk-provider-plugins) para guías paso a paso.</Tip>
 
 ## `definePluginEntry`
 
@@ -49,9 +49,9 @@ export default definePluginEntry({
 | `configSchema` | `OpenClawPluginConfigSchema \| () => OpenClawPluginConfigSchema` | No          | Esquema de objeto vacío |
 | `register`     | `(api: OpenClawPluginApi) => void`                               | Sí          | —                       |
 
-- `id` debe coincidir con tu manifiesto `openclaw.plugin.json`.
-- `kind` es para ranuras exclusivas: `"memory"` o `"context-engine"`.
-- `configSchema` puede ser una función para una evaluación diferida.
+- `id` debe coincidir con tu manifiesto de `openclaw.plugin.json`.
+- `kind` es para espacios exclusivos: `"memory"` o `"context-engine"`.
+- `configSchema` puede ser una función para evaluación diferida.
 - OpenClaw resuelve y memoriza ese esquema en el primer acceso, por lo que los constructores de esquemas costosos
   solo se ejecutan una vez.
 
@@ -61,7 +61,7 @@ export default definePluginEntry({
 
 Envuelve `definePluginEntry` con cableado específico del canal. Llama automáticamente a
 `api.registerChannel({ plugin })`, expone una costura opcional de metadatos de CLI de ayuda raíz
-y controla `registerFull` según el modo de registro.
+y condiciona `registerFull` al modo de registro.
 
 ```typescript
 import { defineChannelPluginEntry } from "openclaw/plugin-sdk/channel-core";
@@ -94,22 +94,22 @@ export default defineChannelPluginEntry({
 
 - `setRuntime` se llama durante el registro para que puedas almacenar la referencia de tiempo de ejecución
   (típicamente a través de `createPluginRuntimeStore`). Se omite durante la captura
-  de metadatos de CLI.
+  de metadatos de la CLI.
 - `registerCliMetadata` se ejecuta tanto durante `api.registrationMode === "cli-metadata"`
   como durante `api.registrationMode === "full"`.
-  Úsalo como el lugar canónico para los descriptores de CLI propiedad del canal para que la ayuda raíz
+  Úsalo como el lugar canónico para los descriptores de CLI propiedad del canal, de modo que la ayuda raíz
   permanezca sin activar mientras que el registro normal de comandos de CLI sigue siendo compatible
-  con cargas completas de complementos.
+  con las cargas completas de complementos.
 - `registerFull` solo se ejecuta cuando `api.registrationMode === "full"`. Se omite
-  durante la carga solo de configuración.
+  durante la carga de solo configuración.
 - Al igual que `definePluginEntry`, `configSchema` puede ser una fábrica diferida y OpenClaw
   memoriza el esquema resuelto en el primer acceso.
-- Para comandos CLI raíz propiedad del complemento, prefiere `api.registerCli(..., { descriptors: [...] })`
-  cuando quieras que el comando se mantenga con carga diferida (lazy-loaded) sin desaparecer del
-  árbol de análisis CLI raíz. Para complementos de canal, prefiere registrar esos descriptores
-  desde `registerCliMetadata(...)` y mantener `registerFull(...)` enfocado solo en el trabajo en tiempo de ejecución.
-- Si `registerFull(...)` también registra métodos RPC de puerta de enlace, manténlos en un
-  prefijo específico del complemento. Los espacios de nombres reservados de administración central (`config.*`,
+- Para los comandos de CLI raíz propiedad del complemento, prefiere `api.registerCli(..., { descriptors: [...] })`
+  cuando quieras que el comando permanezca cargado de forma diferida sin desaparecer del
+  árbol de análisis de la CLI raíz. Para los complementos de canal, prefiere registrar esos descriptores
+  desde `registerCliMetadata(...)` y mantener `registerFull(...)` enfocado solo en el trabajo de tiempo de ejecución.
+- Si `registerFull(...)` también registra métodos RPC de puerta de enlace, mantenlos en un
+  prefijo específico del complemento. Los espacios de nombres de administración central reservados (`config.*`,
   `exec.approvals.*`, `wizard.*`, `update.*`) siempre se fuerzan a
   `operator.admin`.
 
@@ -117,8 +117,8 @@ export default defineChannelPluginEntry({
 
 **Importar:** `openclaw/plugin-sdk/channel-core`
 
-Para el archivo `setup-entry.ts` liviano. Devuelve solo `{ plugin }` sin
-cableado de tiempo de ejecución o CLI.
+Para el archivo `setup-entry.ts` ligero. Devuelve solo `{ plugin }` sin
+conexiones de tiempo de ejecución o CLI.
 
 ```typescript
 import { defineSetupPluginEntry } from "openclaw/plugin-sdk/channel-core";
@@ -127,29 +127,55 @@ export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
 OpenClaw carga esto en lugar de la entrada completa cuando un canal está deshabilitado,
-sin configurar o cuando la carga diferida está habilitada. Consulta
-[Configuración e instalación](/en/plugins/sdk-setup#setup-entry) para saber cuándo es importante.
+no configurado, o cuando la carga diferida está habilitada. Consulta
+[Configuración y Config](/en/plugins/sdk-setup#setup-entry) para saber cuándo importa esto.
 
-En la práctica, combina `defineSetupPluginEntry(...)` con las familias de asistentes de configuración estrechos:
+En la práctica, combina `defineSetupPluginEntry(...)` con las familias de asistentes de configuración
+estrechos:
 
-- `openclaw/plugin-sdk/setup-runtime` para asistentes de configuración seguros en tiempo de ejecución, como
-  adaptadores de parches de configuración seguros de importación, salida de nota de búsqueda,
-  `promptResolvedAllowFrom`, `splitSetupEntries` y proxies de configuración delegados
+- `openclaw/plugin-sdk/setup-runtime` para asistentes de configuración seguros para el tiempo de ejecución, como
+  adaptadores de parches de configuración seguros de importación, salida de notas de búsqueda,
+  `promptResolvedAllowFrom`, `splitSetupEntries`, y proxies de configuración delegados
 - `openclaw/plugin-sdk/channel-setup` para superficies de configuración de instalación opcional
-- `openclaw/plugin-sdk/setup-tools` para asistentes de configuración/instalación CLI/archive/docs
+- `openclaw/plugin-sdk/setup-tools` para asistentes de CLI de configuración/instalación, archivos y documentación
 
 Mantén los SDK pesados, el registro CLI y los servicios de tiempo de ejecución de larga duración en la entrada completa.
 
+Los canales del espacio de trabajo agrupados que dividen las superficies de configuración y tiempo de ejecución pueden usar
+`defineBundledChannelSetupEntry(...)` de
+`openclaw/plugin-sdk/channel-entry-contract` en su lugar. Ese contrato permite que la
+entrada de configuración mantenga exportaciones de complementos/seguros de configuración, mientras que todavía expone un
+establecedor de tiempo de ejecución:
+
+```typescript
+import { defineBundledChannelSetupEntry } from "openclaw/plugin-sdk/channel-entry-contract";
+
+export default defineBundledChannelSetupEntry({
+  importMetaUrl: import.meta.url,
+  plugin: {
+    specifier: "./channel-plugin-api.js",
+    exportName: "myChannelPlugin",
+  },
+  runtime: {
+    specifier: "./runtime-api.js",
+    exportName: "setMyChannelRuntime",
+  },
+});
+```
+
+Use ese contrato agrupado solo cuando los flujos de configuración realmente necesiten un establecedor de tiempo de ejecución
+ligero antes de que se cargue la entrada completa del canal.
+
 ## Modo de registro
 
-`api.registrationMode` le indica a tu complemento cómo se cargó:
+`api.registrationMode` indica a su complemento cómo se cargó:
 
-| Modo              | Cuándo                                                    | Qué registrar                                                                                                 |
-| ----------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `"full"`          | Inicio normal de la puerta de enlace                      | Todo                                                                                                          |
-| `"setup-only"`    | Canal deshabilitado/sin configurar                        | Solo registro de canal                                                                                        |
-| `"setup-runtime"` | Flujo de configuración con tiempo de ejecución disponible | Registro de canal más solo el tiempo de ejecución ligero necesario antes de que se cargue la entrada completa |
-| `"cli-metadata"`  | Ayuda raíz / captura de metadatos CLI                     | Solo descriptores CLI                                                                                         |
+| Modo              | Cuándo                                                    | Qué registrar                                                                                                  |
+| ----------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `"full"`          | Inicio normal de la puerta de enlace                      | Todo                                                                                                           |
+| `"setup-only"`    | Canal deshabilitado/sin configurar                        | Solo registro del canal                                                                                        |
+| `"setup-runtime"` | Flujo de configuración con tiempo de ejecución disponible | Registro del canal más solo el tiempo de ejecución ligero necesario antes de que se cargue la entrada completa |
+| `"cli-metadata"`  | Ayuda raíz / captura de metadatos de CLI                  | Solo descriptores de CLI                                                                                       |
 
 `defineChannelPluginEntry` maneja esta división automáticamente. Si usa
 `definePluginEntry` directamente para un canal, verifique el modo usted mismo:
@@ -169,37 +195,31 @@ register(api) {
 }
 ```
 
-Trate `"setup-runtime"` como la ventana donde las superficies de inicio exclusivas de configuración deben
-existir sin volver a entrar en el tiempo de ejecución del canal completo empaquetado. Las opciones adecuadas son
-el registro del canal, rutas HTTP seguras para la configuración, métodos de gateway seguros para la configuración y
-ayudantes de configuración delegados. Los servicios pesados en segundo plano, registradores de CLI y
-arranques de SDK de proveedor/cliente aún pertenecen a `"full"`.
+Trate `"setup-runtime"` como la ventana donde las superficies de inicio solo de configuración deben existir sin volver a entrar en el tiempo de ejecución completo del canal agrupado. Las opciones adecuadas son el registro del canal, rutas HTTP seguras para la configuración, métodos de puerta de enlace seguros para la configuración y asistentes de configuración delegados. Los servicios pesados en segundo plano, los registradores de CLI y los arranques del SDK de proveedor/cliente aún pertenecen a `"full"`.
 
 Específicamente para los registradores de CLI:
 
-- use `descriptors` cuando el registrador posee uno o más comandos raíz y usted
-  quiere que OpenClaw cargue de manera diferida el módulo CLI real en la primera invocación
-- asegúrese de que esos descriptores cubran cada raíz de comando de nivel superior expuesta por el
-  registrador
-- use `commands` solo para rutas de compatibilidad eager
+- use `descriptors` cuando el registrador posee uno o más comandos raíz y desea que OpenClaw cargue de forma diferida el módulo CLI real en la primera invocación
+- asegúrese de que esos descriptores cubran cada raíz de comando de nivel superior expuesta por el registrador
+- use `commands` solo para rutas de compatibilidad ansiosa
 
-## Formas de complemento
+## Formas de complementos
 
-OpenClaw clasifica los complementos cargados por su comportamiento de registro:
+OpenClaw clasifica los complementos cargados según su comportamiento de registro:
 
-| Forma                 | Descripción                                              |
-| --------------------- | -------------------------------------------------------- |
-| **plain-capability**  | Un tipo de capacidad (p. ej., solo proveedor)            |
-| **hybrid-capability** | Múltiples tipos de capacidades (p. ej., proveedor + voz) |
-| **hook-only**         | Solo ganchos, sin capacidades                            |
-| **non-capability**    | Herramientas/comandos/servicios pero sin capacidades     |
+| Forma                 | Descripción                                                   |
+| --------------------- | ------------------------------------------------------------- |
+| **capacidad simple**  | Un tipo de capacidad (por ejemplo, solo proveedor)            |
+| **capacidad híbrida** | Múltiples tipos de capacidades (por ejemplo, proveedor + voz) |
+| **solo enlace**       | Solo enlaces, sin capacidades                                 |
+| **sin capacidad**     | Herramientas/comandos/servicios pero sin capacidades          |
 
-Use `openclaw plugins inspect <id>` para ver la forma de un complemento.
+Use `openclaw plugins inspect <id>` to see a plugin's shape.
 
-## Relacionado
+## Related
 
-- [Resumen del SDK](/en/plugins/sdk-overview) — referencia de API de registro y subrutas
-- [Ayudantes de tiempo de ejecución](/en/plugins/sdk-runtime) — `api.runtime` y `createPluginRuntimeStore`
-- [Configuración y configuración](/en/plugins/sdk-setup) — manifiesto, entrada de configuración, carga diferida
-- [Complementos de canal](/en/plugins/sdk-channel-plugins) — construyendo el objeto `ChannelPlugin`
-- [Complementos de proveedor](/en/plugins/sdk-provider-plugins) — registro de proveedor y ganchos
+- [SDK Overview](/en/plugins/sdk-overview) — registration API and subpath reference
+- [Runtime Helpers](/en/plugins/sdk-runtime) — `api.runtime` and `createPluginRuntimeStore`
+- [Setup and Config](/en/plugins/sdk-setup) — manifest, setup entry, deferred loading
+- [Channel Plugins](/en/plugins/sdk-channel-plugins) — building the `ChannelPlugin` object
+- [Provider Plugins](/en/plugins/sdk-provider-plugins) — provider registration and hooks

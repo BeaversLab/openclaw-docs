@@ -1,5 +1,5 @@
 ---
-summary: "CLI 參考資料，用於 `openclaw browser` (生命週期、設定檔、分頁、操作、狀態和偵錯)"
+summary: "CLI 參考資料，用於 `openclaw browser`（生命週期、設定檔、分頁、動作、狀態和偵錯）"
 read_when:
   - You use `openclaw browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
@@ -9,22 +9,22 @@ title: "browser"
 
 # `openclaw browser`
 
-管理 OpenClaw 的瀏覽器控制介面並執行瀏覽器操作（生命週期、設定檔、分頁、快照、螢幕截圖、導覽、輸入、狀態模擬和偵錯）。
+管理 OpenClaw 的瀏覽器控制介面並執行瀏覽器動作（生命週期、設定檔、分頁、快照、螢幕截圖、導航、輸入、狀態模擬和偵錯）。
 
-相關連結：
+相關：
 
 - 瀏覽器工具 + API：[瀏覽器工具](/en/tools/browser)
 
-## 常用旗標
+## 通用旗標
 
-- `--url <gatewayWsUrl>`: Gateway WebSocket URL (預設為組態)。
-- `--token <token>`: Gateway 權杖 (若有需要)。
-- `--timeout <ms>`: 要求逾時 (毫秒)。
-- `--expect-final`: 等待最終 Gateway 回應。
-- `--browser-profile <name>`: 選擇瀏覽器設定檔 (預設來自組態)。
-- `--json`: 機器可讀輸出 (在支援的情況下)。
+- `--url <gatewayWsUrl>`：Gateway WebSocket URL（預設為設定檔）。
+- `--token <token>`：Gateway 權杖（如有需要）。
+- `--timeout <ms>`：要求逾時 (ms)。
+- `--expect-final`：等待最終的 Gateway 回應。
+- `--browser-profile <name>`：選擇瀏覽器設定檔（預設來自設定檔）。
+- `--json`：機器可讀輸出（如支援）。
 
-## 快速入門 (本機)
+## 快速入門（本機）
 
 ```bash
 openclaw browser profiles
@@ -32,6 +32,20 @@ openclaw browser --browser-profile openclaw start
 openclaw browser --browser-profile openclaw open https://example.com
 openclaw browser --browser-profile openclaw snapshot
 ```
+
+## 快速疑難排解
+
+如果 `start` 失敗並顯示 `not reachable after start`，請先針對 CDP 就緒狀況進行疑難排解。如果 `start` 和 `tabs` 成功但 `open` 或 `navigate` 失敗，表示瀏覽器控制平面狀況良好，失敗通常是因為導航 SSRF 原則。
+
+最短程序：
+
+```bash
+openclaw browser --browser-profile openclaw start
+openclaw browser --browser-profile openclaw tabs
+openclaw browser --browser-profile openclaw open https://example.com
+```
+
+詳細指引：[瀏覽器疑難排解](/en/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
 
 ## 生命週期
 
@@ -45,18 +59,17 @@ openclaw browser --browser-profile openclaw reset-profile
 備註：
 
 - 對於 `attachOnly` 和遠端 CDP 設定檔，`openclaw browser stop` 會關閉
-  使用中的控制階段並清除暫時模擬覆寫，即使
-  OpenClaw 本身並未啟動瀏覽器程序。
-- 對於本機受管理的設定檔，`openclaw browser stop` 會停止所產生的瀏覽器
+  作用中的控制工作階段並清除暫時的模擬覆寫，即使 OpenClaw
+  本身並未啟動瀏覽器程序也是如此。
+- 對於本機受管理設定檔，`openclaw browser stop` 會停止產生的瀏覽器
   程序。
 
 ## 如果缺少指令
 
-如果 `openclaw browser` 是未知指令，請檢查 `plugins.allow` 中的
-`~/.openclaw/openclaw.json`。
+如果 `openclaw browser` 是未知指令，請檢查 `plugins.allow` 中
+的 `~/.openclaw/openclaw.json`。
 
-當存在 `plugins.allow` 時，必須明確列出
-隨附的瀏覽器外掛程式：
+當存在 `plugins.allow` 時，必須明確列出內建的瀏覽器外掛程式：
 
 ```json5
 {
@@ -69,13 +82,13 @@ openclaw browser --browser-profile openclaw reset-profile
 當外掛程式允許清單排除 `browser` 時，
 `browser.enabled=true` 不會還原 CLI 子指令。
 
-相關資訊：[瀏覽器工具](/en/tools/browser#missing-browser-command-or-tool)
+相關：[瀏覽器工具](/en/tools/browser#missing-browser-command-or-tool)
 
 ## 設定檔
 
-設定檔是具名的瀏覽器路由組態。實務上：
+設定檔是命名的瀏覽器路由配置。實際上：
 
-- `openclaw`：啟動或連結至專屬的 OpenClaw 受管理 Chrome 執行個體 (隔離的使用者資料目錄)。
+- `openclaw`：啟動或附加至專屬的 OpenClaw 管理的 Chrome 實例（獨立的使用者資料目錄）。
 - `user`：透過 Chrome DevTools MCP 控制您現有的已登入 Chrome 工作階段。
 - 自訂 CDP 設定檔：指向本機或遠端 CDP 端點。
 
@@ -105,7 +118,7 @@ openclaw browser focus <targetId>
 openclaw browser close <targetId>
 ```
 
-## 快照 / 螢幕截圖 / 操作
+## 快照 / 截圖 / 動作
 
 快照：
 
@@ -113,7 +126,7 @@ openclaw browser close <targetId>
 openclaw browser snapshot
 ```
 
-螢幕截圖：
+截圖：
 
 ```bash
 openclaw browser screenshot
@@ -123,12 +136,12 @@ openclaw browser screenshot --ref e12
 
 備註：
 
-- `--full-page` 僅用於頁面擷取；無法與 `--ref`
+- `--full-page` 僅用於頁面擷取；它無法與 `--ref`
   或 `--element` 結合使用。
-- `existing-session` / `user` 設定檔支援頁面截圖和來自快照輸出的 `--ref`
+- `existing-session` / `user` 設定檔支援頁面截圖以及來自快照輸出的 `--ref`
   截圖，但不支援 CSS `--element` 截圖。
 
-導覽/點擊/輸入（基於 ref 的 UI 自動化）：
+導覽/點擊/輸入 (基於 ref 的 UI 自動化)：
 
 ```bash
 openclaw browser navigate https://example.com
@@ -155,7 +168,7 @@ openclaw browser dialog --accept
 
 ## 狀態與儲存空間
 
-檢視區 + 模擬：
+視口 + 模擬：
 
 ```bash
 openclaw browser resize 1280 720
@@ -181,7 +194,7 @@ openclaw browser storage local set token abc123
 openclaw browser storage session clear
 ```
 
-## 偵錯
+## 除錯
 
 ```bash
 openclaw browser console --level error
@@ -194,7 +207,7 @@ openclaw browser trace start
 openclaw browser trace stop --out trace.zip
 ```
 
-## 透過 MCP 使用現有的 Chrome
+## 透過 MCP 存取現有的 Chrome
 
 使用內建的 `user` 設定檔，或建立您自己的 `existing-session` 設定檔：
 
@@ -209,7 +222,7 @@ openclaw browser --browser-profile chrome-live tabs
 
 目前現有工作階段的限制：
 
-- 快照驅動的操作使用 refs，而非 CSS 選擇器
+- 快照驅動的動作使用 refs，而非 CSS 選擇器
 - `click` 僅支援左鍵點擊
 - `type` 不支援 `slowly=true`
 - `press` 不支援 `delayMs`
@@ -219,15 +232,14 @@ openclaw browser --browser-profile chrome-live tabs
 - 不支援 `wait --load networkidle`
 - 檔案上傳需要 `--ref` / `--input-ref`，不支援 CSS
   `--element`，且目前一次僅支援一個檔案
-- 對話方塊攔截不支援 `--timeout`
-- 截圖支援頁面擷取和 `--ref`，但不支援 CSS `--element`
-- `responsebody`、下載攔截、PDF 匯出和批次操作仍然
-  需要受管理的瀏覽器或原始 CDP 設定檔
+- 對話方塊勾點不支援 `--timeout`
+- 螢幕截圖支援頁面擷取和 `--ref`，但不支援 CSS `--element`
+- `responsebody`、下載攔截、PDF 匯出和批次操作仍需要受管理的瀏覽器或原始 CDP 設定檔
 
-## 遠端瀏覽器控制（節點主機代理程式）
+## 遠端瀏覽器控制（節點主機代理）
 
-如果 Gateway 和瀏覽器在不同的機器上執行，請在安裝了 Chrome/Brave/Edge/Chromium 的機器上執行 **node host**。Gateway 會將瀏覽器操作代理到該節點（不需要個別的瀏覽器控制伺服器）。
+如果 Gateway 與瀏覽器在不同的機器上運行，請在裝有 Chrome/Brave/Edge/Chromium 的機器上執行 **node host**。Gateway 會將瀏覽器操作代理到該節點（不需要獨立的瀏覽器控制伺服器）。
 
-使用 `gateway.nodes.browser.mode` 控制自動路由，如果連接了多個節點，則使用 `gateway.nodes.browser.node` 固定特定節點。
+使用 `gateway.nodes.browser.mode` 來控制自動路由，如果連接了多個節點，使用 `gateway.nodes.browser.node` 來固定特定節點。
 
-安全性與遠端設定：[Browser tool](/en/tools/browser), [Remote access](/en/gateway/remote), [Tailscale](/en/gateway/tailscale), [Security](/en/gateway/security)
+安全性 + 遠端設定：[Browser tool](/en/tools/browser)、[Remote access](/en/gateway/remote)、[Tailscale](/en/gateway/tailscale)、[Security](/en/gateway/security)

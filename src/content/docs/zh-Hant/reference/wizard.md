@@ -10,8 +10,8 @@ sidebarTitle: "入門參考"
 
 # 入門參考
 
-這是 `openclaw onboard` 的完整參考文件。
-若要了解高層次的概覽，請參閱 [Onboarding (CLI)](/en/start/wizard)。
+這是 `openclaw onboard` 的完整參考資料。
+如需高層次的概覽，請參閱 [Onboarding (CLI)](/en/start/wizard)。
 
 ## 流程詳細資訊（本機模式）
 
@@ -29,84 +29,84 @@ sidebarTitle: "入門參考"
       - 設定 + 憑證 + 工作階段
       - 完整重設（也會移除工作區）
   </Step>
-  <Step title="模型/認證">
-    - **Anthropic API 金鑰**: 如果存在則使用 `ANTHROPIC_API_KEY`，否則提示輸入金鑰，然後將其儲存以供守護程序使用。
-    - **Anthropic API 金鑰**: 在 onboarding/configure 中首選的 Anthropic 助手選擇。
-    - **Anthropic setup-token**: 在 onboarding/configure 中仍然可用，不過 OpenClaw 現在在可用時更傾向於重複使用 Claude CLI。
-    - **OpenAI Code (Codex) 訂閱 (Codex CLI)**: 如果 `~/.codex/auth.json` 存在，onboarding 可以重複使用它。重複使用的 Codex CLI 憑證仍由 Codex CLI 管理；過期時 OpenClaw 會先重新讀取該來源，並且當提供者可以刷新它時，將刷新後的憑證寫回 Codex 儲存空間，而不是自己接管所有權。
-    - **OpenAI Code (Codex) 訂閱 (OAuth)**: 瀏覽器流程；貼上 `code#state`。
-      - 當模型未設定或為 `openai/*` 時，將 `agents.defaults.model` 設定為 `openai-codex/gpt-5.4`。
-    - **OpenAI API 金鑰**: 如果存在則使用 `OPENAI_API_KEY`，否則提示輸入金鑰，然後將其儲存在認證設定檔中。
+  <Step title="Model/Auth">
+    - **Anthropic API 金鑰**：如果存在則使用 `ANTHROPIC_API_KEY` 或提示輸入金鑰，然後將其保存以供 daemon 使用。
+    - **Anthropic API 金鑰**：在 onboarding/configure 中首選的 Anthropic 助手選擇。
+    - **Anthropic setup-token**：仍然可在 onboarding/configure 中使用，儘管 OpenClaw 現在在可用時更偏向重複使用 Claude CLI。
+    - **OpenAI Code (Codex) 訂閱**：如果 `~/.codex/auth.json` 存在，onboarding 可以重複使用它。重複使用的 Codex CLI 憑證仍由 Codex CLI 管理；過期後 OpenClaw 會先重新讀取該來源，並且當提供者可以刷新它時，將刷新後的憑證寫回 Codex 儲存空間，而不是自行接管。
+    - **OpenAI Code (Codex) 訂閱**：瀏覽器流程；貼上 `code#state`。
+      - 當模型未設定或 `openai/*` 時，將 `agents.defaults.model` 設定為 `openai-codex/gpt-5.4`。
+    - **OpenAI API 金鑰**：如果存在則使用 `OPENAI_API_KEY` 或提示輸入金鑰，然後將其儲存在 auth profiles 中。
       - 當模型未設定、`openai/*` 或 `openai-codex/*` 時，將 `agents.defaults.model` 設定為 `openai/gpt-5.4`。
-    - **xAI (Grok) API 金鑰**: 提示輸入 `XAI_API_KEY` 並將 xAI 設定為模型提供者。
-    - **OpenCode**: 提示輸入 `OPENCODE_API_KEY` (或 `OPENCODE_ZEN_API_KEY`，在 https://opencode.ai/auth 取得)，並讓您選擇 Zen 或 Go 目錄。
-    - **Ollama**: 提示輸入 Ollama 基礎 URL，提供 **Cloud + Local** 或 **Local** 模式，探索可用的模型，並在需要時自動拉取選取的本機模型。
-    - 更多細節: [Ollama](/en/providers/ollama)
-    - **API 金鑰**: 為您儲存金鑰。
-    - **Vercel AI Gateway (多模型代理)**: 提示輸入 `AI_GATEWAY_API_KEY`。
-    - 更多細節: [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
-    - **Cloudflare AI Gateway**: 提示輸入帳戶 ID、Gateway ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
-    - 更多細節: [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
-    - **MiniMax**: 設定會自動寫入；託管預設值為 `MiniMax-M2.7`。
+    - **xAI (Grok) API 金鑰**：提示輸入 `XAI_API_KEY` 並將 xAI 設定為模型提供者。
+    - **OpenCode**：提示輸入 `OPENCODE_API_KEY` (或 `OPENCODE_ZEN_API_KEY`，在 https://opencode.ai/auth 取得) 並讓您選擇 Zen 或 Go 目錄。
+    - **Ollama**：首先提供 **Cloud + Local**、**Cloud only** 或 **Local only** 選項。`Cloud only` 提示輸入 `OLLAMA_API_KEY` 並使用 `https://ollama.com`；主機支援的模式會提示輸入 Ollama 基礎 URL，探索可用的模型，並在需要時自動拉選取的本地模型；`Cloud + Local` 還會檢查該 Ollama 主機是否已登入以進行雲端存取。
+    - 更多詳情：[Ollama](/en/providers/ollama)
+    - **API 金鑰**：為您儲存金鑰。
+    - **Vercel AI Gateway (多模型代理)**：提示輸入 `AI_GATEWAY_API_KEY`。
+    - 更多詳情：[Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+    - **Cloudflare AI Gateway**：提示輸入 Account ID、Gateway ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
+    - 更多詳情：[Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
+    - **MiniMax**：配置會自動寫入；託管的預設值是 `MiniMax-M2.7`。
       API 金鑰設定使用 `minimax/...`，而 OAuth 設定使用
       `minimax-portal/...`。
-    - 更多細節: [MiniMax](/en/providers/minimax)
-    - **StepFun**: 為位於中國或全球端點的 StepFun 標準版或 Step Plan 自動寫入設定。
-    - 標準版目前包括 `step-3.5-flash`，而 Step Plan 也包括 `step-3.5-flash-2603`。
-    - 更多細節: [StepFun](/en/providers/stepfun)
-    - **Synthetic (Anthropic 相容)**: 提示輸入 `SYNTHETIC_API_KEY`。
-    - 更多細節: [Synthetic](/en/providers/synthetic)
-    - **Moonshot (Kimi K2)**: 設定會自動寫入。
-    - **Kimi Coding**: 設定會自動寫入。
-    - 更多細節: [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
-    - **略過**: 尚未設定認證。
-    - 從偵測到的選項中選取預設模型 (或手動輸入提供者/模型)。為了獲得最佳品質並降低提示注入 風險，請選擇您提供者堆疊中最強大的最新一代模型。
-    - Onboarding 會執行模型檢查，如果設定的模型未知或缺少認證，則會發出警告。
-    - API 金鑰儲存模式預設為純文字認證設定檔值。請使用 `--secret-input-mode ref` 來儲存環境變數支援的參考 (例如 `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)。
-    - 認證設定檔位於 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (API 金鑰 + OAuth)。`~/.openclaw/credentials/oauth.json` 僅供傳統匯入使用。
-    - 更多細節: [/concepts/oauth](/en/concepts/oauth)
+    - 更多詳情：[MiniMax](/en/providers/minimax)
+    - **StepFun**：會針對中國或全球端點上的 StepFun standard 或 Step Plan 自動寫入配置。
+    - Standard 目前包括 `step-3.5-flash`，而 Step Plan 也包括 `step-3.5-flash-2603`。
+    - 更多詳情：[StepFun](/en/providers/stepfun)
+    - **Synthetic (Anthropic-compatible)**：提示輸入 `SYNTHETIC_API_KEY`。
+    - 更多詳情：[Synthetic](/en/providers/synthetic)
+    - **Moonshot (Kimi K2)**：配置會自動寫入。
+    - **Kimi Coding**：配置會自動寫入。
+    - 更多詳情：[Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+    - **跳過**：尚未配置身份驗證。
+    - 從檢測到的選項中選擇預設模型 (或手動輸入提供者/模型)。為了獲得最佳品質和較低的提示注入風險，請選擇您提供者堆疊中可用的最強大的最新一代模型。
+    - Onboarding 會執行模型檢查，如果配置的模型未知或缺少身份驗證，則會發出警告。
+    - API 金鑰儲存模式預設為純文本 auth-profile 值。使用 `--secret-input-mode ref` 來儲存 env 支援的引用 (例如 `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)。
+    - Auth profiles 存在於 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 中 (API 金鑰 + OAuth)。`~/.openclaw/credentials/oauth.json` 僅供舊版匯入。
+    - 更多詳情：[/concepts/oauth](/en/concepts/oauth)
     <Note>
-    Headless/伺服器提示: 在具有瀏覽器的機器上完成 OAuth，然後將
+    Headless/server 提示：在具有瀏覽器的機器上完成 OAuth，然後將
     該代理程式的 `auth-profiles.json` (例如
-    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`，或相符的
-    `$OPENCLAW_STATE_DIR/...` 路徑) 複製到閘道主機。`credentials/oauth.json`
-    僅是傳統匯入來源。
+    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`，或匹配的
+    `$OPENCLAW_STATE_DIR/...` 路徑) 複製到 gateway 主機。`credentials/oauth.json`
+    只是舊版匯入來源。
     </Note>
   </Step>
   <Step title="Workspace">
-    - 預設 `~/.openclaw/workspace` (可配置)。
-    - 種置代理啟動儀式所需的工作區檔案。
-    - 完整的工作區佈局 + 備份指南：[Agent workspace](/en/concepts/agent-workspace)
+    - 預設 `~/.openclaw/workspace` （可配置）。
+    - 為代理程式啟動程序提供所需的工作區檔案。
+    - 完整的工作區佈局 + 備份指南：[代理程式工作區](/en/concepts/agent-workspace)
   </Step>
   <Step title="Gateway">
-    - 連接埠、綁定、認證模式、Tailscale 暴露。
-    - 認證建議：即使是 loopback 也保留 **Token**，以便本機 WS 用戶端必須進行驗證。
+    - 連接埠、綁定、驗證模式、Tailscale 暴露。
+    - 驗證建議：即使對於回環也請保留 **Token**，以便本機 WS 用戶端必須進行驗證。
     - 在 Token 模式下，互動式設定提供：
-      - **產生/儲存明文 Token** (預設)
-      - **使用 SecretRef** (選用)
-      - 快速開始會在 `env`、`file` 和 `exec` 提供者之間重複使用現有的 `gateway.auth.token` SecretRef，以進入入門探針/儀表板啟動。
-      - 如果該 SecretRef 已設定但無法解析，入門會提早失敗並顯示明確的修正訊息，而不是在執行時靜默降低認證安全性。
-    - 在密碼模式下，互動式設定也支援明文或 SecretRef 儲存。
+      - **產生/儲存純文字 Token** （預設）
+      - **使用 SecretRef** （選用）
+      - 快速入門會跨 `env`、`file` 和 `exec` 提供者重複使用現有的 `gateway.auth.token` SecretRefs，用於入門探測/儀表板啟動程序。
+      - 如果該 SecretRef 已設定但無法解析，入門過程會提前失敗並顯示明確的修復訊息，而不是在執行時靜默降級驗證。
+    - 在密碼模式下，互動式設定也支援純文字或 SecretRef 儲存。
     - 非互動式 Token SecretRef 路徑：`--gateway-token-ref-env <ENV_VAR>`。
-      - 需要在入門流程環境中設定一個非空的環境變數。
+      - 需要在入門程序環境中設定非空的環境變數。
       - 不能與 `--gateway-token` 結合使用。
-    - 僅在您完全信任每個本機程序時才停用認證。
-    - 非 loopback 綁定仍然需要認證。
+    - 僅在您完全信任每個本機程序時才停用驗證。
+    - 非回環綁定仍需要驗證。
   </Step>
-  <Step title="Channels">
-    - [WhatsApp](/en/channels/whatsapp): 可選的 QR 登入。
-    - [Telegram](/en/channels/telegram): bot token。
-    - [Discord](/en/channels/discord): bot token。
-    - [Google Chat](/en/channels/googlechat): service account JSON + webhook audience。
-    - [Mattermost](/en/channels/mattermost) (plugin): bot token + base URL。
-    - [Signal](/en/channels/signal): 可選的 `signal-cli` 安裝 + 帳戶設定。
-    - [BlueBubbles](/en/channels/bluebubbles): **iMessage 的推薦選擇**；伺服器 URL + 密碼 + webhook。
-    - [iMessage](/en/channels/imessage): 舊版 `imsg` CLI 路徑 + DB 存取權限。
-    - DM 安全性：預設為配對模式。第一則 DM 會傳送代碼；透過 `openclaw pairing approve <channel> <code>` 核准或使用允許清單。
+  <Step title="頻道">
+    - [WhatsApp](/en/channels/whatsapp)：選用性的 QR 登入。
+    - [Telegram](/en/channels/telegram)：bot token。
+    - [Discord](/en/channels/discord)：bot token。
+    - [Google Chat](/en/channels/googlechat)：服務帳號 JSON + webhook 受眾。
+    - [Mattermost](/en/channels/mattermost) (plugin)：bot token + 基礎 URL。
+    - [Signal](/en/channels/signal)：選用性的 `signal-cli` 安裝 + 帳號設定。
+    - [BlueBubbles](/en/channels/bluebubbles)：**iMessage 推薦使用**；伺服器 URL + 密碼 + webhook。
+    - [iMessage](/en/channels/imessage)：舊版 `imsg` CLI 路徑 + DB 存取權限。
+    - DM 安全性：預設為配對。首則 DM 會發送代碼；透過 `openclaw pairing approve <channel> <code>` 核准或使用允許清單。
   </Step>
-  <Step title="Web search">
-    - 選擇一個支援的提供商，例如 Brave、DuckDuckGo、Exa、Firecrawl、Gemini、Grok、Kimi、MiniMax Search、Ollama Web Search、Perplexity、SearXNG 或 Tavily (或跳過)。
-    - 支援 API 的提供商可以使用環境變數或現有設定來快速設定；無金鑰的提供商則改用其特定的先決條件。
+  <Step title="網路搜尋">
+    - 選擇支援的供應商，例如 Brave、DuckDuckGo、Exa、Firecrawl、Gemini、Grok、Kimi、MiniMax Search、Ollama Web Search、Perplexity、SearXNG 或 Tavily（或跳過）。
+    - 支援 API 的供應商可使用環境變數或現有設定快速設定；免金鑰供應商則改用其供應商特定的先決條件。
     - 使用 `--skip-search` 跳過。
     - 稍後設定：`openclaw configure --section web`。
   </Step>
@@ -170,8 +170,8 @@ openclaw onboard --non-interactive \
 
 <Note>`--json` does **not** imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for scripts.</Note>
 
-特定供應商的指令範例位於 [CLI Automation](/en/start/wizard-cli-automation#provider-specific-examples)。
-請使用此參考頁面了解旗標語義與步驟順序。
+供應商特定的指令範例位於 [CLI 自動化](/en/start/wizard-cli-automation#provider-specific-examples)。
+請使用此參考頁面了解旗標語義和步驟順序。
 
 ### 新增代理（非互動）
 
@@ -186,12 +186,12 @@ openclaw agents add work \
 
 ## Gateway 精靈 RPC
 
-Gateway 透過 RPC (`wizard.start`, `wizard.next`, `wizard.cancel`, `wizard.status`) 公開入門流程。
-用戶端（macOS 應用程式、Control UI）可以呈現步驟，而無需重新實作入門邏輯。
+Gateway 透過 RPC (`wizard.start`, `wizard.next`, `wizard.cancel`, `wizard.status`) 公開上架流程。
+用戶端 (macOS 應用程式, Control UI) 可以渲染步驟，而無需重新實作上架邏輯。
 
 ## Signal 設定 (signal-cli)
 
-入門流程可以從 GitHub 版本安裝 `signal-cli`：
+上架可以從 GitHub 發布版本安裝 `signal-cli`：
 
 - 下載適當的發行資產。
 - 將其儲存在 `~/.openclaw/tools/signal-cli/<version>/` 下。
@@ -208,10 +208,10 @@ Gateway 透過 RPC (`wizard.start`, `wizard.next`, `wizard.cancel`, `wizard.stat
 `~/.openclaw/openclaw.json` 中的典型欄位：
 
 - `agents.defaults.workspace`
-- `agents.defaults.model` / `models.providers` (如果選擇 Minimax)
-- `tools.profile` (若未設定，本機入門預設為 `"coding"`；會保留現有的明確值)
+- `agents.defaults.model` / `models.providers` (若選擇 Minimax)
+- `tools.profile` (若未設定，本地上架預設為 `"coding"`；現有的明確值會被保留)
 - `gateway.*` (mode, bind, auth, tailscale)
-- `session.dmScope` (行為細節：[CLI Setup Reference](/en/start/wizard-cli-reference#outputs-and-internals))
+- `session.dmScope` (行為詳情：[CLI 設定參考](/en/start/wizard-cli-reference#outputs-and-internals))
 - `channels.telegram.botToken`, `channels.discord.token`, `channels.matrix.*`, `channels.signal.*`, `channels.imessage.*`
 - 當您在提示期間選擇加入時的頻道允許清單（Slack/Discord/Matrix/Microsoft Teams）（名稱會盡可能解析為 ID）。
 - `skills.install.nodeManager`
@@ -226,15 +226,15 @@ Gateway 透過 RPC (`wizard.start`, `wizard.next`, `wizard.cancel`, `wizard.stat
 `openclaw agents add` 會寫入 `agents.list[]` 和選用的 `bindings`。
 
 WhatsApp 憑證位於 `~/.openclaw/credentials/whatsapp/<accountId>/` 下。
-Session 則儲存在 `~/.openclaw/agents/<agentId>/sessions/` 下。
+工作階段儲存在 `~/.openclaw/agents/<agentId>/sessions/` 下。
 
 部分通道是以外掛程式形式提供。當您在設定期間選擇其中一個時，入門流程
 會提示您先安裝它（npm 或本機路徑），然後才能進行設定。
 
 ## 相關文件
 
-- 上架概覽：[上架 (CLI)](/en/start/wizard)
+- 上架概述：[上架 (CLI)](/en/start/wizard)
 - macOS 應用程式上架：[上架](/en/start/onboarding)
-- 設定參考：[Gateway 設定](/en/gateway/configuration)
+- 設定參考：[Gateway configuration](/en/gateway/configuration)
 - 提供者：[WhatsApp](/en/channels/whatsapp)、[Telegram](/en/channels/telegram)、[Discord](/en/channels/discord)、[Google Chat](/en/channels/googlechat)、[Signal](/en/channels/signal)、[BlueBubbles](/en/channels/bluebubbles) (iMessage)、[iMessage](/en/channels/imessage) (舊版)
-- 技能：[技能](/en/tools/skills)、[技能設定](/en/tools/skills-config)
+- 技能：[Skills](/en/tools/skills)、[Skills config](/en/tools/skills-config)

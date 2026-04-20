@@ -8,32 +8,51 @@ title: "Xiaomi MiMo"
 
 # Xiaomi MiMo
 
-Xiaomi MiMo 是 **MiMo** 模型的 API 平台。OpenClaw 使用 Xiaomi
-OpenAI 兼容的端点进行 API 密钥认证。在
-[API MiMo 控制台](https://platform.xiaomimimo.com/#/console/api-keys) 中创建您的 Xiaomi 密钥，然后使用该密钥配置
-内置的 `xiaomi` 提供商。
+Xiaomi MiMo 是 **MiMo** 模型的 API 平台。OpenClaw 使用通过 API 密钥进行身份验证的 Xiaomi OpenAI 兼容端点。
 
-## 内置目录
+| 属性     | 值                              |
+| -------- | ------------------------------- |
+| 提供商   | `xiaomi`                        |
+| 身份验证 | `XIAOMI_API_KEY`                |
+| API      | OpenAI 兼容                     |
+| 基础 URL | `https://api.xiaomimimo.com/v1` |
 
-- Base URL: `https://api.xiaomimimo.com/v1`
-- API: `openai-completions`
-- Authorization: `Bearer $XIAOMI_API_KEY`
+## 入门指南
 
-| Model ref              | Input       | Context   | Max output | Notes                        |
-| ---------------------- | ----------- | --------- | ---------- | ---------------------------- |
-| `xiaomi/mimo-v2-flash` | text        | 262,144   | 8,192      | Default 模型                 |
-| `xiaomi/mimo-v2-pro`   | text        | 1,048,576 | 32,000     | Reasoning-enabled            |
-| `xiaomi/mimo-v2-omni`  | text, image | 262,144   | 32,000     | Reasoning-enabled multimodal |
+<Steps>
+  <Step title="获取 API 密钥">
+    在 [Xiaomi MiMo 控制台](https://platform.xiaomimimo.com/#/console/api-keys) 中创建 API 密钥。
+  </Step>
+  <Step title="运行新手引导">
+    ```bash
+    openclaw onboard --auth-choice xiaomi-api-key
+    ```
 
-## CLI setup
+    或者直接传递密钥：
 
-```bash
-openclaw onboard --auth-choice xiaomi-api-key
-# or non-interactive
-openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
-```
+    ```bash
+    openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
+    ```
 
-## Config snippet
+  </Step>
+  <Step title="验证模型是否可用">
+    ```bash
+    openclaw models list --provider xiaomi
+    ```
+  </Step>
+</Steps>
+
+## 可用模型
+
+| 模型参考               | 输入       | 上下文    | 最大输出 | 推理 | 备注     |
+| ---------------------- | ---------- | --------- | -------- | ---- | -------- |
+| `xiaomi/mimo-v2-flash` | 文本       | 262,144   | 8,192    | 否   | 默认模型 |
+| `xiaomi/mimo-v2-pro`   | 文本       | 1,048,576 | 32,000   | 是   | 大上下文 |
+| `xiaomi/mimo-v2-omni`  | 文本，图像 | 262,144   | 32,000   | 是   | 多模态   |
+
+<Tip>默认模型参考是 `xiaomi/mimo-v2-flash`。当设置 `XIAOMI_API_KEY` 或存在身份验证配置文件时，提供商会自动注入。</Tip>
+
+## 配置示例
 
 ```json5
 {
@@ -81,9 +100,43 @@ openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
 }
 ```
 
-## Notes
+<AccordionGroup>
+  <Accordion title="自动注入行为">
+    当在环境中设置 `XIAOMI_API_KEY` 或存在身份验证配置文件时，`xiaomi` 提供商会自动注入。除非您想要覆盖模型元数据或基础 URL，否则无需手动配置提供商。
+  </Accordion>
 
-- Default 模型 ref: `xiaomi/mimo-v2-flash`。
-- Additional built-in models: `xiaomi/mimo-v2-pro`, `xiaomi/mimo-v2-omni`。
-- 当设置了 `XIAOMI_API_KEY` 时（或存在身份验证配置文件），提供商会自动注入。
-- 有关提供商规则，请参阅 [/concepts/模型-providers](/en/concepts/model-providers)。
+  <Accordion title="模型详情">
+    - **mimo-v2-flash** — 轻量且快速，适用于通用文本任务。不支持推理。
+    - **mimo-v2-pro** — 支持推理，拥有 1M token 上下文窗口，适用于长文档工作负载。
+    - **mimo-v2-omni** — 支持推理的多模态模型，接受文本和图像输入。
+
+    <Note>
+    所有模型均使用 `xiaomi/` 前缀（例如 `xiaomi/mimo-v2-pro`）。
+    </Note>
+
+  </Accordion>
+
+  <Accordion title="故障排除">
+    - 如果模型未显示，请确认 `XIAOMI_API_KEY` 已设置且有效。
+    - 当 Gateway(网关) 作为守护进程运行时，确保该进程可访问密钥（例如在 `~/.openclaw/.env` 中或通过 `env.shellEnv`）。
+
+    <Warning>
+    仅在交互式 shell 中设置的密钥对由守护进程管理的 gateway 进程不可见。使用 `~/.openclaw/.env` 或 `env.shellEnv` 配置以确保持久可用。
+    </Warning>
+
+  </Accordion>
+</AccordionGroup>
+
+## 相关
+
+<CardGroup cols={2}>
+  <Card title="模型选择" href="/en/concepts/model-providers" icon="layers">
+    选择提供商、模型引用和故障转移行为。
+  </Card>
+  <Card title="配置参考" href="/en/gateway/configuration" icon="gear">
+    完整的 OpenClaw 配置参考。
+  </Card>
+  <Card title="Xiaomi MiMo 控制台" href="https://platform.xiaomimimo.com" icon="arrow-up-right-from-square">
+    Xiaomi MiMo 仪表板和 API 密钥管理。
+  </Card>
+</CardGroup>

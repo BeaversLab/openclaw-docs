@@ -8,61 +8,68 @@ title: "SGLang"
 
 # SGLang
 
-SGLang peut servir des modèles open source via une OpenAI HTTP compatible **API**.
-OpenClaw peut se connecter à SGLang en utilisant l'API `openai-completions`.
+SGLang peut servir des modèles open source via une API HTTP **compatible OpenAI**.
+API peut se connecter à SGLang en utilisant l'OpenClaw `openai-completions`.
 
 OpenClaw peut également **découvrir automatiquement** les modèles disponibles depuis SGLang lorsque vous activez
 l'option avec `SGLANG_API_KEY` (n'importe quelle valeur fonctionne si votre serveur n'applique pas l'authentification)
-et que vous ne définissez pas explicitement d'entrée `models.providers.sglang`.
+et que vous ne définissez pas d'entrée `models.providers.sglang` explicite.
 
-## Quick start
+## Getting started
 
-1. Démarrez SGLang avec un serveur compatible OpenAI.
+<Steps>
+  <Step title="Démarrer SGLang">
+    Lancez SGLang avec un serveur compatible OpenAI. Votre URL de base doit exposer
+    des points de terminaison `/v1` (par exemple `/v1/models`, `/v1/chat/completions`). SGLang
+    fonctionne généralement sur :
 
-Votre URL de base doit exposer des points de terminaison `/v1` (par exemple `/v1/models`,
-`/v1/chat/completions`). SGLang s'exécute généralement sur :
+    - `http://127.0.0.1:30000/v1`
 
-- `http://127.0.0.1:30000/v1`
+  </Step>
+  <Step title="Définir une clé d'API">
+    N'importe quelle valeur fonctionne si aucune authentification n'est configurée sur votre serveur :
 
-2. Activez l'option (n'importe quelle valeur fonctionne si aucune authentification n'est configurée) :
+    ```bash
+    export SGLANG_API_KEY="sglang-local"
+    ```
 
-```bash
-export SGLANG_API_KEY="sglang-local"
-```
+  </Step>
+  <Step title="Exécuter l'onboarding ou définir un modèle directement">
+    ```bash
+    openclaw onboard
+    ```
 
-3. Exécutez l'onboarding et choisissez `SGLang`, ou définissez directement un modèle :
+    Ou configurez le modèle manuellement :
 
-```bash
-openclaw onboard
-```
+    ```json5
+    {
+      agents: {
+        defaults: {
+          model: { primary: "sglang/your-model-id" },
+        },
+      },
+    }
+    ```
 
-```json5
-{
-  agents: {
-    defaults: {
-      model: { primary: "sglang/your-model-id" },
-    },
-  },
-}
-```
+  </Step>
+</Steps>
 
-## Model discovery (implicit provider)
+## Découverte de modèles (provider implicite)
 
 Lorsque `SGLANG_API_KEY` est défini (ou qu'un profil d'authentification existe) et que vous **ne**
 définissez **pas** `models.providers.sglang`, OpenClaw interrogera :
 
 - `GET http://127.0.0.1:30000/v1/models`
 
-et convertira les IDs renvoyés en entrées de modèles.
+et convertira les ID renvoyés en entrées de modèle.
 
-Si vous définissez `models.providers.sglang` explicitement, la découverte automatique est ignorée et
-vous devez définir les modèles manuellement.
+<Note>Si vous définissez `models.providers.sglang` explicitement, la découverte automatique est ignorée et vous devez définir les modèles manuellement.</Note>
 
-## Explicit configuration (manual models)
+## Configuration explicite (modèles manuels)
 
 Utilisez une configuration explicite lorsque :
 
-- SGLang s'exécute sur un hôte/port différent.
+- SGLang fonctionne sur un hôte/port différent.
 - Vous souhaitez épingler les valeurs `contextWindow`/`maxTokens`.
 - Votre serveur nécessite une vraie clé API (ou vous souhaitez contrôler les en-têtes).
 
@@ -91,25 +98,52 @@ Utilisez une configuration explicite lorsque :
 }
 ```
 
-## Troubleshooting
+## Configuration avancée
 
-- Vérifiez que le serveur est accessible :
+<AccordionGroup>
+  <Accordion title="Comportement de type proxy">
+    SGLang est traité comme un backend OpenAI-compatible de type proxy `/v1`, et non comme
+    un point de terminaison natif OpenAI.
 
-```bash
-curl http://127.0.0.1:30000/v1/models
-```
+    | Comportement | SGLang |
+    |----------|--------|
+    | Mise en forme des requêtes exclusivement OpenAI | Non appliquée |
+    | `service_tier`, Réponses `store`, indices de cache de prompt | Non envoyés |
+    | Mise en forme des charges utiles compatibles avec le raisonnement | Non appliquée |
+    | En-têtes d'attribution masqués (`originator`, `version`, `User-Agent`) | Non injectés sur les URL de base SGLang personnalisées |
 
-- Si les requêtes échouent avec des erreurs d'authentification, définissez une vraie valeur `SGLANG_API_KEY` correspondant
-  à la configuration de votre serveur, ou configurez le provider explicitement sous
-  `models.providers.sglang`.
+  </Accordion>
 
-## Comportement de type proxy
+  <Accordion title="Dépannage">
+    **Serveur inaccessible**
 
-SGLang est traité comme un backend OpenAI-compatible de type proxy `/v1`, et non comme
-un point de terminaison natif OpenAI.
+    Vérifiez que le serveur est en cours d'exécution et répond :
 
-- le formatage des requêtes natif uniquement OpenAI ne s'applique pas ici
-- pas de `service_tier`, pas de Réponses `store`, pas d'indications de cache de prompt, et pas
-  de formatage de payload compatible avec le raisonnement OpenAI
-- les en-têtes d'attribution masqués OpenClaw (`originator`, `version`, `User-Agent`)
-  ne sont pas injectés sur les URL de base SGLang personnalisées
+    ```bash
+    curl http://127.0.0.1:30000/v1/models
+    ```
+
+    **Erreurs d'authentification**
+
+    Si les demandes échouent avec des erreurs d'authentification, définissez une vraie valeur `SGLANG_API_KEY` qui correspond
+    à la configuration de votre serveur, ou configurez le fournisseur explicitement sous
+    `models.providers.sglang`.
+
+    <Tip>
+    Si vous exécutez SGLang sans authentification, toute valeur non vide pour
+    `SGLANG_API_KEY` suffit pour activer la découverte de modèles.
+    </Tip>
+
+  </Accordion>
+</AccordionGroup>
+
+## Connexes
+
+<CardGroup cols={2}>
+  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+    Choix des fournisseurs, références de modèles et comportement de basculement.
+  </Card>
+  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+    Schéma de configuration complet, y compris les entrées du fournisseur.
+  </Card>
+</CardGroup>

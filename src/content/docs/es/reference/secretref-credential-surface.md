@@ -42,6 +42,7 @@ Intención del alcance:
 - `messages.tts.providers.*.apiKey`
 - `tools.web.fetch.firecrawl.apiKey`
 - `plugins.entries.brave.config.webSearch.apiKey`
+- `plugins.entries.exa.config.webSearch.apiKey`
 - `plugins.entries.google.config.webSearch.apiKey`
 - `plugins.entries.xai.config.webSearch.apiKey`
 - `plugins.entries.moonshot.config.webSearch.apiKey`
@@ -101,7 +102,7 @@ Intención del alcance:
 - `channels.zalo.accounts.*.botToken`
 - `channels.zalo.accounts.*.webhookSecret`
 - `channels.googlechat.serviceAccount` a través de `serviceAccountRef` hermano (excepción de compatibilidad)
-- `channels.googlechat.accounts.*.serviceAccount` a través de `serviceAccountRef` secundario (excepción de compatibilidad)
+- `channels.googlechat.accounts.*.serviceAccount` a través de `serviceAccountRef` hermano (excepción de compatibilidad)
 
 ### Objetivos `auth-profiles.json` (`secrets configure` + `secrets apply` + `secrets audit`)
 
@@ -113,16 +114,16 @@ Intención del alcance:
 Notas:
 
 - Los objetivos del plan de perfil de autenticación requieren `agentId`.
-- Las entradas del plan tienen como objetivo `profiles.*.key` / `profiles.*.token` y escriben referencias secundarias (`keyRef` / `tokenRef`).
+- Las entradas del plan tienen como objetivo `profiles.*.key` / `profiles.*.token` y escriben referencias hermanas (`keyRef` / `tokenRef`).
 - Las referencias de perfil de autenticación se incluyen en la resolución en tiempo de ejecución y la cobertura de auditoría.
-- Protección de política de OAuth: `auth.profiles.<id>.mode = "oauth"` no se puede combinar con entradas SecretRef para ese perfil. El inicio/recarga y la resolución del perfil de autenticación fallan rápidamente cuando se viola esta política.
-- Para los proveedores de modelos administrados por SecretRef, las entradas `agents/*/agent/models.json` generadas persisten marcadores no secretos (no valores secretos resueltos) para las superficies `apiKey`/encabezado.
-- La persistencia de marcadores tiene autoridad de origen: OpenClaw escribe marcadores a partir de la instantánea de configuración de origen activa (pre-resolución), no a partir de valores secretos en tiempo de ejecución resueltos.
-- Para la búsqueda web:
-  - En modo de proveedor explícito (`tools.web.search.provider` establecido), solo la clave del proveedor seleccionado está activa.
-  - En modo automático (`tools.web.search.provider` no establecido), solo la primera clave de proveedor que se resuelva por precedencia está activa.
-  - En modo automático, las referencias de proveedor no seleccionadas se tratan como inactivas hasta que se seleccionan.
-  - Las rutas de proveedor `tools.web.search.*` heredadas aún se resuelven durante la ventana de compatibilidad, pero la superficie SecretRef canónica es `plugins.entries.<plugin>.config.webSearch.*`.
+- Guardia de política de OAuth: `auth.profiles.<id>.mode = "oauth"` no se puede combinar con entradas SecretRef para ese perfil. El inicio/recarga y la resolución del perfil de autenticación fallan rápidamente cuando se viola esta política.
+- Para proveedores de modelos administrados por SecretRef, las entradas `agents/*/agent/models.json` generadas conservan marcadores no secretos (no valores secretos resueltos) para superficies `apiKey`/encabezado.
+- La persistencia de marcadores es autorizada por la fuente: OpenClaw escribe marcadores a partir de la instantánea de configuración de fuente activa (pre-resolución), no a partir de valores secretos resueltos en tiempo de ejecución.
+- Para búsqueda web:
+  - En modo de proveedor explícito (`tools.web.search.provider` establecido), solo la clave de proveedor seleccionada está activa.
+  - En modo automático (`tools.web.search.provider` sin establecer), solo la primera clave de proveedor que se resuelva por precedencia está activa.
+  - En modo automático, las referencias de proveedores no seleccionados se tratan como inactivos hasta que se seleccionan.
+  - Las rutas de proveedor heredadas de `tools.web.search.*` aún se resuelven durante la ventana de compatibilidad, pero la superficie canónica de SecretRef es `plugins.entries.<plugin>.config.webSearch.*`.
 
 ## Credenciales no compatibles
 
@@ -144,4 +145,4 @@ Las credenciales fuera del alcance incluyen:
 
 Fundamento:
 
-- Estas credenciales son clases generadas, rotadas, con sesión o durables de OAuth que no se ajustan a la resolución externa de solo lectura de SecretRef.
+- Estas credenciales son clases creadas, rotadas, portadoras de sesión o durables de OAuth que no se ajustan a la resolución externa de solo lectura de SecretRef.

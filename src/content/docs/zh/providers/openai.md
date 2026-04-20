@@ -3,514 +3,536 @@ summary: "在 OpenClaw 中通过 API 密钥或 Codex 订阅使用 OpenAI"
 read_when:
   - You want to use OpenAI models in OpenClaw
   - You want Codex subscription auth instead of API keys
+  - You need stricter GPT-5 agent execution behavior
 title: "OpenAI"
 ---
 
 # OpenAI
 
-OpenAI 为 GPT 模型提供开发者 API。Codex 支持通过 **ChatGPT 登录** 进行订阅访问，或通过 **API 密钥** 登录进行按量付费访问。Codex 云端需要 ChatGPT 登录。
-OpenAI 明确支持在外部工具/工作流（如 OpenClaw）中使用订阅 OAuth。
+OpenAI 为 GPT 模型提供开发者 API。OpenClaw 支持两种认证方式：
 
-## 默认交互风格
+- **API 密钥** — 直接访问 OpenAI 平台，采用按量计费（`openai/*` 模型）
+- **Codex 订阅** — 使用订阅权限登录 ChatGPT/Codex（`openai-codex/*` 模型）
 
-OpenClaw 可以为 `openai/*` 和
-`openai-codex/*` 运行添加一个特定的 OpenAI 提示叠加层。默认情况下，该叠加层保持助手热情、协作、简洁、直接，并更具情感表现力，
-而不会替换基础的 OpenClaw 系统提示。友好的叠加层
-还允许在自然合适的情况下偶尔使用表情符号，同时保持整体
-输出简洁。
+OpenAI 明确支持在外部工具和工作流（如 OpenClaw）中使用订阅 OAuth。
 
-配置键：
+## 入门指南
 
-`plugins.entries.openai.config.personality`
+选择您偏好的认证方式并按照设置步骤操作。
 
-允许的值：
+<Tabs>
+  <Tab title="API 密钥 (OpenAI 平台)">
+    **最适用于：** 直接 API 访问和按量计费。
 
-- `"friendly"`：默认值；启用特定于 OpenAI 的叠加层。
-- `"on"`：`"friendly"` 的别名。
-- `"off"`：禁用覆盖层并仅使用基础 OpenClaw 提示。
+    <Steps>
+      <Step title="获取您的 API 密钥">
+        从 [OpenAI 平台仪表板](https://platform.openai.com/api-keys) 创建或复制 API 密钥。
+      </Step>
+      <Step title="运行新手引导">
+        ```bash
+        openclaw onboard --auth-choice openai-api-key
+        ```
 
-范围：
+        或直接传入密钥：
 
-- 适用于 `openai/*` 模型。
-- 适用于 `openai-codex/*` 模型。
-- 不影响其他提供商。
+        ```bash
+        openclaw onboard --openai-api-key "$OPENAI_API_KEY"
+        ```
+      </Step>
+      <Step title="验证模型是否可用">
+        ```bash
+        openclaw models list --provider openai
+        ```
+      </Step>
+    </Steps>
 
-此行为默认开启。如果您希望该设置在未来本地配置更迭中保持不变，请显式保留 `"friendly"`：
+    ### 路由摘要
 
-```json5
-{
-  plugins: {
-    entries: {
-      openai: {
-        config: {
-          personality: "friendly",
+    | 模型参考 | 路由 | 认证 |
+    |-----------|-------|------|
+    | `openai/gpt-5.4` | 直接 OpenAI 平台 API | `OPENAI_API_KEY` |
+    | `openai/gpt-5.4-pro` | 直接 OpenAI 平台 API | `OPENAI_API_KEY` |
+
+    <Note>
+    ChatGPT/Codex 登录通过 `openai-codex/*` 路由，而非 `openai/*`。
+    </Note>
+
+    ### 配置示例
+
+    ```json5
+    {
+      env: { OPENAI_API_KEY: "sk-..." },
+      agents: { defaults: { model: { primary: "openai/gpt-5.4" } } },
+    }
+    ```
+
+    <Warning>
+    OpenClaw 在直接 API 路径上**不**公开 `openai/gpt-5.3-codex-spark`。实时的 OpenAI API 请求会拒绝该模型。Spark 仅限 Codex。
+    </Warning>
+
+  </Tab>
+
+  <Tab title="Codex 订阅">
+    **最适用于：** 使用您的 ChatGPT/Codex 订阅，而不是单独的 API 密钥。Codex 云需要 ChatGPT 登录。
+
+    <Steps>
+      <Step title="运行 Codex OAuth">
+        ```bash
+        openclaw onboard --auth-choice openai-codex
+        ```
+
+        或者直接运行 OAuth：
+
+        ```bash
+        openclaw models auth login --provider openai-codex
+        ```
+      </Step>
+      <Step title="设置默认模型">
+        ```bash
+        openclaw config set agents.defaults.model.primary openai-codex/gpt-5.4
+        ```
+      </Step>
+      <Step title="验证模型可用性">
+        ```bash
+        openclaw models list --provider openai-codex
+        ```
+      </Step>
+    </Steps>
+
+    ### 路由摘要
+
+    | 模型引用 | 路由 | 认证 |
+    |-----------|-------|------|
+    | `openai-codex/gpt-5.4` | ChatGPT/Codex OAuth | Codex 登录 |
+    | `openai-codex/gpt-5.3-codex-spark` | ChatGPT/Codex OAuth | Codex 登录（取决于权限） |
+
+    <Note>
+    此路由有意与 `openai/gpt-5.4` 分开。使用带有 API 密钥的 `openai/*` 进行直接平台访问，使用 `openai-codex/*` 进行 Codex 订阅访问。
+    </Note>
+
+    ### 配置示例
+
+    ```json5
+    {
+      agents: { defaults: { model: { primary: "openai-codex/gpt-5.4" } } },
+    }
+    ```
+
+    <Tip>
+    如果新手引导重用了现有的 Codex CLI 登录信息，这些凭据仍由 Codex CLI 管理。过期后，OpenClaw 会先重新读取外部 Codex 源，然后将刷新后的凭据写回 Codex 存储。
+    </Tip>
+
+    ### 上下文窗口上限
+
+    OpenClaw 将模型元数据和运行时上下文上限视为独立的值。
+
+    对于 `openai-codex/gpt-5.4`：
+
+    - 原生 `contextWindow`：`1050000`
+    - 默认运行时 `contextTokens` 上限：`272000`
+
+    较小的默认上限在实际使用中具有更好的延迟和质量特征。使用 `contextTokens` 覆盖它：
+
+    ```json5
+    {
+      models: {
+        providers: {
+          "openai-codex": {
+            models: [{ id: "gpt-5.4", contextTokens: 160000 }],
+          },
         },
       },
-    },
-  },
-}
-```
+    }
+    ```
 
-### 禁用 OpenAI 提示覆盖层
+    <Note>
+    使用 `contextWindow` 声明原生模型元数据。使用 `contextTokens` 限制运行时上下文预算。
+    </Note>
 
-如果您想要未修改的基础 OpenClaw 提示，请将覆盖层设置为 `"off"`：
-
-```json5
-{
-  plugins: {
-    entries: {
-      openai: {
-        config: {
-          personality: "off",
-        },
-      },
-    },
-  },
-}
-```
-
-您也可以使用配置 CLI 直接进行设置：
-
-```bash
-openclaw config set plugins.entries.openai.config.personality off
-```
-
-OpenClaw 在运行时会以不区分大小写的方式规范化此设置，因此像 `"Off"` 这样的值仍然会禁用友好覆盖层。
-
-## 选项 A：OpenAI API 密钥（OpenAI 平台）
-
-**最适合：** 直接的 API 访问和按使用量计费。
-从 API 仪表板获取您的 OpenAI 密钥。
-
-路由摘要：
-
-- `openai/gpt-5.4` = 直接 OpenAI 平台 API 路由
-- 需要 `OPENAI_API_KEY`（或等效的 OpenAI 提供商配置）
-- 在 OpenClaw 中，ChatGPT/Codex 登录通过 `openai-codex/*` 路由，而不是 `openai/*`
-
-### CLI 设置
-
-```bash
-openclaw onboard --auth-choice openai-api-key
-# or non-interactive
-openclaw onboard --openai-api-key "$OPENAI_API_KEY"
-```
-
-### 配置代码片段
-
-```json5
-{
-  env: { OPENAI_API_KEY: "sk-..." },
-  agents: { defaults: { model: { primary: "openai/gpt-5.4" } } },
-}
-```
-
-OpenAI 当前的 API 模型文档列出了 `gpt-5.4` 和 `gpt-5.4-pro` 用于直接
-OpenAI API 使用。OpenClaw 将两者通过 `openai/*` 响应路径进行转发。
-OpenClaw 有意抑制了过时的 `openai/gpt-5.3-codex-spark` 行，
-因为直接的 OpenAI API 调用会在实时流量中拒绝它。
-
-OpenClaw **不会** 在直接的 OpenAI
-API 路径上暴露 `openai/gpt-5.3-codex-spark`。`pi-ai` 仍然为该模型内置了一行，但实时的 OpenAI API
-请求目前会拒绝它。Spark 在 OpenClaw 中被视为仅限 Codex 使用。
+  </Tab>
+</Tabs>
 
 ## 图像生成
 
-捆绑的 `openai` 插件也通过共享的
-`image_generate` 工具注册图像生成。
+捆绑的 `openai` 插件通过 `image_generate` 工具注册图像生成功能。
 
-- 默认图像模型：`openai/gpt-image-1`
-- 生成：每个请求最多 4 张图像
-- 编辑模式：已启用，最多 5 张参考图像
-- 支持 `size`
-- 当前 OpenAI 特定的注意事项：OpenClaw 目前不会将 `aspectRatio` 或
-  `resolution` 覆盖参数转发给 OpenAI Images OpenAI
-
-要将 OpenAI 用作默认图像提供商：
+| 功能                 | 值                          |
+| -------------------- | --------------------------- |
+| 默认模型             | `openai/gpt-image-1`        |
+| 每次请求的最大图像数 | 4                           |
+| 编辑模式             | 已启用（最多 5 张参考图像） |
+| 尺寸覆盖             | 支持                        |
+| 纵横比 / 分辨率      | 不转发至 OpenAI 图像 API    |
 
 ```json5
 {
   agents: {
     defaults: {
-      imageGenerationModel: {
-        primary: "openai/gpt-image-1",
-      },
+      imageGenerationModel: { primary: "openai/gpt-image-1" },
     },
   },
 }
 ```
 
-有关共享工具参数、提供商选择和故障转移行为，请参阅 [图像生成](/en/tools/image-generation)。
+<Note>有关共享工具参数、提供商选择和故障转移行为，请参阅 [图像生成](/en/tools/image-generation)。</Note>
 
 ## 视频生成
 
-捆绑的 `openai` 插件还通过共享的 `video_generate` 工具注册视频生成。
+捆绑的 `openai` 插件通过 `video_generate` 工具注册视频生成。
 
-- 默认视频模型：`openai/sora-2`
-- 模式：文本生成视频、图像生成视频以及单视频参考/编辑流程
-- 当前限制：1 个图像或 1 个视频参考输入
-- 当前 OpenAI 特定的注意事项：OpenClaw 目前仅转发原生 OpenAI 视频生成的 `size`
-  覆盖参数。不支持的可选覆盖参数（例如 `aspectRatio`、`resolution`、`audio` 和 `watermark`）将被忽略
-  并作为工具警告报告回来。
-
-要将 OpenAI 用作默认视频提供商：
-
-```json5
-{
-  agents: {
-    defaults: {
-      videoGenerationModel: {
-        primary: "openai/sora-2",
-      },
-    },
-  },
-}
-```
-
-有关共享工具参数、提供商选择和故障转移行为，请参阅 [视频生成](/en/tools/video-generation)。
-
-## 选项 B：OpenAI Code (Codex) 订阅
-
-**最适用于：** 使用 ChatGPT/Codex 订阅访问而不是 API 密钥。
-Codex 云需要 ChatGPT 登录，而 Codex CLI 支持 ChatGPT 或 API 密钥登录。
-
-路由摘要：
-
-- `openai-codex/gpt-5.4` = ChatGPT/Codex OAuth 路由
-- 使用 ChatGPT/Codex 登录，而不是直接的 OpenAI Platform API 密钥
-- 提供商对 `openai-codex/*` 的限制可能与 ChatGPT Web/应用体验不同
-
-### CLI 设置 (Codex OAuth)
-
-```bash
-# Run Codex OAuth in the wizard
-openclaw onboard --auth-choice openai-codex
-
-# Or run OAuth directly
-openclaw models auth login --provider openai-codex
-```
-
-### 配置代码片段 (Codex 订阅)
-
-```json5
-{
-  agents: { defaults: { model: { primary: "openai-codex/gpt-5.4" } } },
-}
-```
-
-OpenAI 当前的 Codex 文档列出 `gpt-5.4` 为当前的 Codex 模型。OpenClaw
-将其映射到 `openai-codex/gpt-5.4` 以用于 ChatGPT/Codex OpenAI 用法。
-
-此路由故意与 `openai/gpt-5.4` 分开。如果您想要
-直接的 OpenAI Platform API 路径，请使用带有 API 密钥的 `openai/*`。如果您想要
-ChatGPT/Codex 登录，请使用 `openai-codex/*`。
-
-如果新手引导重用了现有的 Codex CLI 登录，这些凭据将由 Codex CLI 管理。过期后，OpenClaw 会首先重新读取外部 Codex 源，并且当提供商可以刷新它时，会将刷新后的凭据写回 Codex 存储，而不是在单独的仅限 OpenClaw 的副本中取得所有权。
-
-如果您的 Codex 账户有权使用 Codex Spark，OpenClaw 也支持：
-
-- `openai-codex/gpt-5.3-codex-spark`
-
-OpenClaw 将 Codex Spark 视为仅限 Codex。它不暴露直接的 `openai/gpt-5.3-codex-spark` API 密钥路径。
-
-当 `pi-ai` 发现 `openai-codex/gpt-5.3-codex-spark` 时，OpenClaw 也会保留它。请将其视为依赖于权利的实验性功能：Codex Spark 不同于 GPT-5.4 `/fast`，其可用性取决于已登录的 Codex / ChatGPT 账户。
-
-### Codex 上下文窗口上限
-
-OpenClaw 将 Codex 模型元数据和运行时上下文上限视为独立的值。
-
-对于 `openai-codex/gpt-5.4`：
-
-- 原生 `contextWindow`：`1050000`
-- 默认运行时 `contextTokens` 上限：`272000`
-
-这样既保持了模型元数据的真实性，又保留了实践中具有更好延迟和质量特征的较小默认运行时窗口。
-
-如果您想要不同的有效上限，请设置 `models.providers.<provider>.models[].contextTokens`：
-
-```json5
-{
-  models: {
-    providers: {
-      "openai-codex": {
-        models: [
-          {
-            id: "gpt-5.4",
-            contextTokens: 160000,
-          },
-        ],
-      },
-    },
-  },
-}
-```
-
-仅当您声明或覆盖原生模型元数据时才使用 `contextWindow`。当您想要限制运行时上下文预算时使用 `contextTokens`。
-
-### 传输默认值
-
-OpenClaw 使用 `pi-ai` 进行模型流式传输。对于 `openai/*` 和 `openai-codex/*`，默认传输方式为 `"auto"`（WebSocket 优先，然后 SSE 回退）。
-
-在 `"auto"` 模式下，OpenClaw 还会在回退到 SSE 之前重试一次早期的、可重试的 WebSocket 失败。强制的 `"websocket"` 模式仍然会直接显示传输错误，而不是将其隐藏在回退机制之后。
-
-在 `"auto"` 模式下发生连接或早期轮次 WebSocket 失败后，OpenClaw 会将该会话的 WebSocket 路径标记为降级状态约 60 秒，并在冷却期间通过 SSE 发送后续轮次，而不是在传输方式之间反复切换。
-
-对于原生 OpenAI 系列端点（`openai/*`、`openai-codex/*` 和 Azure OpenAI Responses），OpenClaw 还会将稳定的会话和轮次标识状态附加到请求中，以便重试、重新连接和 SSE 回退与同一对话标识保持一致。在原生 OpenAI 系列路由上，这包括稳定的会话/轮次请求标识头以及匹配的传输元数据。
-
-OpenClaw 还会在传输变体的使用计数到达会话/状态界面之前对其进行归一化处理。原生 OpenAI/Codex Responses 流量可能会将使用情况报告为 `input_tokens` / `output_tokens` 或 `prompt_tokens` / `completion_tokens`；OpenAI 会将这些视为 `/status`、`/usage` 和会话日志的相同输入和输出计数器。当原生 WebSocket 流量省略 `total_tokens`（或报告 `0`）时，OpenClaw 会回退到归一化的输入 + 输出总数，以便会话/状态显示保持填充。
-
-您可以设置 `agents.defaults.models.<provider/model>.params.transport`：
-
-- `"sse"`：强制使用 SSE
-- `"websocket"`：强制使用 WebSocket
-- `"auto"`：尝试 WebSocket，然后回退到 SSE
-
-对于 `openai/*`（Responses API），当使用 WebSocket 传输时，OpenClaw 默认也会启用 WebSocket 预热（`openaiWsWarmup: true`）。
-
-相关的 OpenAI 文档：
-
-- [带有 WebSocket 的实时 API](https://platform.openai.com/docs/guides/realtime-websocket)
-- [流式 API 响应 (SSE)](https://platform.openai.com/docs/guides/streaming-responses)
+| 功能     | 值                                                                       |
+| -------- | ------------------------------------------------------------------------ |
+| 默认模型 | `openai/sora-2`                                                          |
+| 模式     | 文本生成视频、图像生成视频、单视频编辑                                   |
+| 参考输入 | 1 张图像或 1 个视频                                                      |
+| 尺寸覆盖 | 支持                                                                     |
+| 其他覆盖 | `aspectRatio`、`resolution`、`audio`、`watermark` 将被忽略并显示工具警告 |
 
 ```json5
 {
   agents: {
     defaults: {
-      model: { primary: "openai-codex/gpt-5.4" },
-      models: {
-        "openai-codex/gpt-5.4": {
-          params: {
-            transport: "auto",
-          },
-        },
-      },
+      videoGenerationModel: { primary: "openai/sora-2" },
     },
   },
 }
 ```
 
-### OpenAI WebSocket 预热
+<Note>有关共享工具参数、提供商选择和故障转移行为，请参阅 [视频生成](/en/tools/video-generation)。</Note>
 
-OpenAI 文档将预热描述为可选。OpenClaw 默认为 `openai/*` 启用它，以减少使用 WebSocket 传输时的第一轮次延迟。
+## 个性覆盖
 
-### 禁用预热
+OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 OpenAI 专用提示覆盖。该覆盖使助手保持热情、协作、简洁，并更具情感表达力，且不会替换基础系统提示。
 
-```json5
-{
-  agents: {
-    defaults: {
-      models: {
-        "openai/gpt-5.4": {
-          params: {
-            openaiWsWarmup: false,
+| 值                  | 效果                     |
+| ------------------- | ------------------------ |
+| `"friendly"` (默认) | 启用 OpenAI 专用覆盖     |
+| `"on"`              | `"friendly"` 的别名      |
+| `"off"`             | 仅使用基础 OpenClaw 提示 |
+
+<Tabs>
+  <Tab title="Config">
+    ```json5
+    {
+      plugins: {
+        entries: {
+          openai: { config: { personality: "friendly" } },
+        },
+      },
+    }
+    ```
+  </Tab>
+  <Tab title="CLI">
+    ```bash
+    openclaw config set plugins.entries.openai.config.personality off
+    ```
+  </Tab>
+</Tabs>
+
+<Tip>值在运行时不区分大小写，因此 `"Off"` 和 `"off"` 都会禁用覆盖。</Tip>
+
+## 语音和语言
+
+<AccordionGroup>
+  <Accordion title="语音合成 (TTS)">
+    捆绑的 `openai` 插件为 `messages.tts` 表面注册了语音合成功能。
+
+    | 设置 | 配置路径 | 默认值 |
+    |---------|------------|---------|
+    | 模型 | `messages.tts.providers.openai.model` | `gpt-4o-mini-tts` |
+    | 语音 | `messages.tts.providers.openai.voice` | `coral` |
+    | 语速 | `messages.tts.providers.openai.speed` | (未设置) |
+    | 指令 | `messages.tts.providers.openai.instructions` | (未设置，仅限 `gpt-4o-mini-tts`) |
+    | 格式 | `messages.tts.providers.openai.responseFormat` | 语音笔记为 `opus`，文件为 `mp3` |
+    | API 密钥 | `messages.tts.providers.openai.apiKey` | 回退到 `OPENAI_API_KEY` |
+    | 基础 URL | `messages.tts.providers.openai.baseUrl` | `https://api.openai.com/v1` |
+
+    可用模型：`gpt-4o-mini-tts`、`tts-1`、`tts-1-hd`。可用语音：`alloy`、`ash`、`ballad`、`cedar`、`coral`、`echo`、`fable`、`juniper`、`marin`、`onyx`、`nova`、`sage`、`shimmer`、`verse`。
+
+    ```json5
+    {
+      messages: {
+        tts: {
+          providers: {
+            openai: { model: "gpt-4o-mini-tts", voice: "coral" },
           },
         },
       },
-    },
-  },
-}
-```
+    }
+    ```
 
-### 显式启用预热
+    <Note>
+    设置 `OPENAI_TTS_BASE_URL` 以覆盖 TTS 基础 URL，而不会影响聊天 API 端点。
+    </Note>
 
-```json5
-{
-  agents: {
-    defaults: {
-      models: {
-        "openai/gpt-5.4": {
-          params: {
-            openaiWsWarmup: true,
+  </Accordion>
+
+  <Accordion title="实时转录">
+    捆绑的 `openai` 插件为 Voice Call 插件注册实时转录。
+
+    | 设置 | 配置路径 | 默认值 |
+    |---------|------------|---------|
+    | Model | `plugins.entries.voice-call.config.streaming.providers.openai.model` | `gpt-4o-transcribe` |
+    | Silence duration | `...openai.silenceDurationMs` | `800` |
+    | VAD threshold | `...openai.vadThreshold` | `0.5` |
+    | API key | `...openai.apiKey` | Falls back to `OPENAI_API_KEY` |
+
+    <Note>
+    使用 WebSocket 连接到 `wss://api.openai.com/v1/realtime` 并采用 G.711 u-law 音频格式。
+    </Note>
+
+  </Accordion>
+
+  <Accordion title="实时语音">
+    捆绑的 `openai` 插件为 Voice Call 插件注册实时语音。
+
+    | 设置 | 配置路径 | 默认值 |
+    |---------|------------|---------|
+    | Model | `plugins.entries.voice-call.config.realtime.providers.openai.model` | `gpt-realtime` |
+    | Voice | `...openai.voice` | `alloy` |
+    | Temperature | `...openai.temperature` | `0.8` |
+    | VAD threshold | `...openai.vadThreshold` | `0.5` |
+    | Silence duration | `...openai.silenceDurationMs` | `500` |
+    | API key | `...openai.apiKey` | Falls back to `OPENAI_API_KEY` |
+
+    <Note>
+    通过 `azureEndpoint` 和 `azureDeployment` 配置键支持 Azure OpenAI。支持双向工具调用。使用 G.711 u-law 音频格式。
+    </Note>
+
+  </Accordion>
+</AccordionGroup>
+
+## 高级配置
+
+<AccordionGroup>
+  <Accordion title="Transport (WebSocket vs SSE)">
+    OpenClaw 优先使用 WebSocket，回退方案为 SSE (`"auto"`)，这同时适用于 `openai/*` 和 `openai-codex/*`。
+
+    在 `"auto"` 模式下，OpenClaw:
+    - 在回退到 SSE 之前重试一次早期的 WebSocket 失败
+    - 失败后，将 WebSocket 标记为降级状态约 60 秒，并在冷却期间使用 SSE
+    - 为重试和重新连接附加稳定的会话 和轮次 标识头
+    - 在不同的传输变体之间统一使用计数器 (`input_tokens` / `prompt_tokens`)
+
+    | Value | Behavior |
+    |-------|----------|
+    | `"auto"` (默认) | WebSocket 优先，SSE 回退 |
+    | `"sse"` | 强制仅使用 SSE |
+    | `"websocket"` | 强制仅使用 WebSocket |
+
+    ```json5
+    {
+      agents: {
+        defaults: {
+          models: {
+            "openai-codex/gpt-5.4": {
+              params: { transport: "auto" },
+            },
           },
         },
       },
-    },
-  },
-}
-```
+    }
+    ```
 
-### OpenAI 和 Codex 优先处理
+    相关 OpenAI 文档:
+    - [Realtime API with WebSocket](https://platform.openai.com/docs/guides/realtime-websocket)
+    - [Streaming API responses (SSE)](https://platform.openai.com/docs/guides/streaming-responses)
 
-OpenAI 的 API 通过 `service_tier=priority` 公开了优先处理。在
-OpenClaw 中，设置 `agents.defaults.models["<provider>/<model>"].params.serviceTier`
-以在原生 OpenAI/Codex Responses 端点上传递该字段。
+  </Accordion>
 
-```json5
-{
-  agents: {
-    defaults: {
-      models: {
-        "openai/gpt-5.4": {
-          params: {
-            serviceTier: "priority",
-          },
-        },
-        "openai-codex/gpt-5.4": {
-          params: {
-            serviceTier: "priority",
+  <Accordion title="WebSocket warm-up">
+    OpenClaw 默认为 `openai/*` 启用 WebSocket 预热，以减少首轮延迟。
+
+    ```json5
+    // Disable warm-up
+    {
+      agents: {
+        defaults: {
+          models: {
+            "openai/gpt-5.4": {
+              params: { openaiWsWarmup: false },
+            },
           },
         },
       },
-    },
-  },
-}
-```
+    }
+    ```
 
-支持的值为 `auto`、`default`、`flex` 和 `priority`。
+  </Accordion>
 
-OpenClaw 会将 `params.serviceTier` 转发给直接的 `openai/*` Responses
-请求以及 `openai-codex/*` Codex Responses 请求，前提是这些模型指向
-原生 OpenAI/Codex 端点。
+  <Accordion title="Fast mode">
+    OpenClaw 为 `openai/*` 和 `openai-codex/*` 暴露了一个共享的快速模式开关:
 
-重要行为：
+    - **Chat/UI:** `/fast status|on|off`
+    - **Config:** `agents.defaults.models["<provider>/<model>"].params.fastMode`
 
-- 直接的 `openai/*` 必须针对 `api.openai.com`
-- `openai-codex/*` 必须针对 `chatgpt.com/backend-api`
-- 如果您将任一提供商通过另一个基础 URL 或代理进行路由，OpenClaw 将保持 `service_tier` 不变
+    启用后，OpenClaw 将快速模式映射到 OpenAI 优先处理 (`service_tier = "priority"`)。现有的 `service_tier` 值将被保留，且快速模式不会重写 `reasoning` 或 `text.verbosity`。
 
-### OpenAI 快速模式
-
-OpenClaw 为 `openai/*` 和
-`openai-codex/*` 会话提供了一个共享的快速模式开关：
-
-- 聊天/UI：`/fast status|on|off`
-- 配置：`agents.defaults.models["<provider>/<model>"].params.fastMode`
-
-启用快速模式时，OpenClaw 会将其映射到 OpenAI 优先处理：
-
-- 针对 `api.openai.com` 的直接 `openai/*` Responses 调用会发送 `service_tier = "priority"`
-- 针对 `chatgpt.com/backend-api` 的 `openai-codex/*` Responses 调用也会发送 `service_tier = "priority"`
-- 现有的有效载荷 `service_tier` 值将保留
-- 快速模式不会重写 `reasoning` 或 `text.verbosity`
-
-具体对于 GPT 5.4，最常见的设置是：
-
-- 在使用 `openai/gpt-5.4` 或 `openai-codex/gpt-5.4` 的会话中发送 `/fast on`
-- 或设置 `agents.defaults.models["openai/gpt-5.4"].params.fastMode = true`
-- 如果您还使用 Codex OAuth，请同时设置 `agents.defaults.models["openai-codex/gpt-5.4"].params.fastMode = true`
-
-示例：
-
-```json5
-{
-  agents: {
-    defaults: {
-      models: {
-        "openai/gpt-5.4": {
-          params: {
-            fastMode: true,
-          },
-        },
-        "openai-codex/gpt-5.4": {
-          params: {
-            fastMode: true,
+    ```json5
+    {
+      agents: {
+        defaults: {
+          models: {
+            "openai/gpt-5.4": { params: { fastMode: true } },
+            "openai-codex/gpt-5.4": { params: { fastMode: true } },
           },
         },
       },
-    },
-  },
-}
-```
+    }
+    ```
 
-会话覆盖优先于配置。在会话 UI 中清除会话覆盖
-会将会话恢复为配置的默认值。
+    <Note>
+    会话 覆盖优先于配置。在 Sessions UI 中清除会话覆盖将使会话返回到配置的默认值。
+    </Note>
 
-### 原生 OpenAI 与 OpenAI 兼容路由
+  </Accordion>
 
-OpenClaw 将直接的 OpenAI、Codex 和 Azure OpenAI 端点与通用的 OpenAI 兼容 `/v1` 代理区别对待：
+  <Accordion title="优先处理 (service_tier)">
+    OpenAI 的 API 通过 `service_tier` 暴露了优先处理功能。在 OpenClaw 中按模型进行设置：
 
-- 当您明确禁用推理时，原生 `openai/*`、`openai-codex/*` 和 Azure OpenAI 路由会保持 `reasoning: { effort: "none" }` 完整无损
-- 原生 OpenAI 系列路由默认将工具架构设置为严格模式
-- 隐藏的 OpenClaw 归属标头（`originator`、`version` 和
-  `User-Agent`）仅附加到经过验证的原生 OpenAI 主机
-  （`api.openai.com`）和原生 Codex 主机（`chatgpt.com/backend-api`）
-- 原生 OpenAI/Codex 路由保留 OpenAI 专用的请求整形，例如
-  `service_tier`、Responses `store`、OpenAI 推理兼容负载以及
-  提示缓存提示
-- 代理风格的 OpenAI 兼容路由保持较宽松的兼容行为，并且
-  不强制执行严格的工具架构、原生专用的请求整形或隐藏的
-  OpenAI/Codex 归属标头
-
-Azure OpenAI 在传输和兼容行为方面仍属于原生路由类别，但它
-不会接收隐藏的 OpenAI/Codex 归属标头。
-
-这样既保留了当前的原生 OpenAI Responses 行为，又不会将较旧的
-OpenAI 兼容垫片强加给第三方 `/v1` 后端。
-
-### OpenAI Responses 服务端压缩
-
-对于直接的 OpenAI Responses 模型（在 `api.openai.com` 上使用 `baseUrl` 和
-`api: "openai-responses"` 的 `openai/*`），OpenClaw 现在自动启用 OpenAI 服务端
-压缩负载提示：
-
-- 强制 `store: true`（除非模型兼容性设置了 `supportsStore: false`）
-- 注入 `context_management: [{ type: "compaction", compact_threshold: ... }]`
-
-默认情况下，`compact_threshold` 是模型 `contextWindow` 的 `70%`（或在不可用时为 `80000`
-）。
-
-### 显式启用服务端压缩
-
-当您想强制在兼容的 Responses 模型上注入 `context_management` 时使用此选项（例如 Azure OpenAI Responses）：
-
-```json5
-{
-  agents: {
-    defaults: {
-      models: {
-        "azure-openai-responses/gpt-5.4": {
-          params: {
-            responsesServerCompaction: true,
+    ```json5
+    {
+      agents: {
+        defaults: {
+          models: {
+            "openai/gpt-5.4": { params: { serviceTier: "priority" } },
+            "openai-codex/gpt-5.4": { params: { serviceTier: "priority" } },
           },
         },
       },
-    },
-  },
-}
-```
+    }
+    ```
 
-### 使用自定义阈值启用
+    支持的值：`auto`、`default`、`flex`、`priority`。
 
-```json5
-{
-  agents: {
-    defaults: {
-      models: {
-        "openai/gpt-5.4": {
-          params: {
-            responsesServerCompaction: true,
-            responsesCompactThreshold: 120000,
+    <Warning>
+    `serviceTier` 仅转发到原生 OpenAI 端点 (`api.openai.com`) 和原生 Codex 端点 (`chatgpt.com/backend-api`)。如果您通过代理路由任一提供商，OpenClaw 将保持 `service_tier` 不变。
+    </Warning>
+
+  </Accordion>
+
+  <Accordion title="服务端压缩 (Responses API)">
+    对于直接的 OpenAI Responses 模型 (位于 `api.openai.com` 上的 `openai/*`)，OpenClaw 会自动启用服务端压缩：
+
+    - 强制 `store: true` (除非模型兼容性设置了 `supportsStore: false`)
+    - 注入 `context_management: [{ type: "compaction", compact_threshold: ... }]`
+    - 默认 `compact_threshold`：`contextWindow` 的 70% (如果不可用则为 `80000`)
+
+    <Tabs>
+      <Tab title="显式启用">
+        对于兼容的端点（例如 Azure OpenAI Responses）非常有用：
+
+        ```json5
+        {
+          agents: {
+            defaults: {
+              models: {
+                "azure-openai-responses/gpt-5.4": {
+                  params: { responsesServerCompaction: true },
+                },
+              },
+            },
           },
+        }
+        ```
+      </Tab>
+      <Tab title="自定义阈值">
+        ```json5
+        {
+          agents: {
+            defaults: {
+              models: {
+                "openai/gpt-5.4": {
+                  params: {
+                    responsesServerCompaction: true,
+                    responsesCompactThreshold: 120000,
+                  },
+                },
+              },
+            },
+          },
+        }
+        ```
+      </Tab>
+      <Tab title="禁用">
+        ```json5
+        {
+          agents: {
+            defaults: {
+              models: {
+                "openai/gpt-5.4": {
+                  params: { responsesServerCompaction: false },
+                },
+              },
+            },
+          },
+        }
+        ```
+      </Tab>
+    </Tabs>
+
+    <Note>
+    `responsesServerCompaction` 仅控制 `context_management` 的注入。直接的 OpenAI Responses 模型仍然会强制 `store: true`，除非兼容性设置了 `supportsStore: false`。
+    </Note>
+
+  </Accordion>
+
+  <Accordion title="Strict-agentic GPT mode">
+    对于在 `openai/*` 和 `openai-codex/*` 上运行的 GPT-5 系列，OpenClaw 可以使用更严格的嵌入式执行合约：
+
+    ```json5
+    {
+      agents: {
+        defaults: {
+          embeddedPi: { executionContract: "strict-agentic" },
         },
       },
-    },
-  },
-}
-```
+    }
+    ```
 
-### 禁用服务器端压缩
+    启用 `strict-agentic` 后，OpenClaw 会：
+    - 当有工具动作可用时，不再将仅包含计划的轮次视为成功的进度
+    - 使用“立即行动”引导重试该轮次
+    - 为重要工作自动启用 `update_plan`
+    - 如果模型持续计划而不行动，将显示明确的阻塞状态
 
-```json5
-{
-  agents: {
-    defaults: {
-      models: {
-        "openai/gpt-5.4": {
-          params: {
-            responsesServerCompaction: false,
-          },
-        },
-      },
-    },
-  },
-}
-```
+    <Note>
+    仅适用于 OpenAI 和 Codex GPT-5 系列运行。其他提供商和较旧的模型系列保持默认行为。
+    </Note>
 
-`responsesServerCompaction` 仅控制 `context_management` 注入。
-直接 OpenAI 响应模型仍会强制使用 `store: true`，除非兼容性设置了
-`supportsStore: false`。
+  </Accordion>
 
-## 注意事项
+  <Accordion title="Native vs OpenAI-compatible routes">
+    OpenClaw 对直接连接的 OpenAI、Codex 和 Azure OpenAI 端点的处理方式与通用 OpenAI 兼容的 `/v1` 代理不同：
 
-- 模型引用始终使用 `provider/model`（参见 [/concepts/models](/en/concepts/models)）。
-- 身份验证详细信息和重用规则位于 [/concepts/oauth](/en/concepts/oauth)。
+    **原生路由**（`openai/*`、`openai-codex/*`、Azure OpenAI）：
+    - 当明确禁用推理时，保持 `reasoning: { effort: "none" }` 完整
+    - 默认将工具架构设为严格模式
+    - 仅在经过验证的原生主机上附加隐藏的归属标头
+    - 保留 OpenAI 独有的请求整形（`service_tier`、`store`、reasoning-compat、prompt-cache hints）
+
+    **代理/兼容路由：**
+    - 使用较宽松的兼容行为
+    - 不强制使用严格的工具架构或仅限原生的标头
+
+    Azure OpenAI 使用原生传输和兼容行为，但不会接收隐藏的归属标头。
+
+  </Accordion>
+</AccordionGroup>
+
+## 相关内容
+
+<CardGroup cols={2}>
+  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+    选择提供商、模型引用和故障转移行为。
+  </Card>
+  <Card title="Image generation" href="/en/tools/image-generation" icon="image">
+    共享的图像工具参数和提供商选择。
+  </Card>
+  <Card title="视频生成" href="/en/tools/video-generation" icon="video">
+    共享的 video 工具参数和提供商选择。
+  </Card>
+  <Card title="OAuth 和 auth" href="/en/gateway/authentication" icon="key">
+    身份验证详细信息和凭据重用规则。
+  </Card>
+</CardGroup>

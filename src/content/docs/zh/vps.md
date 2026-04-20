@@ -35,55 +35,59 @@ sidebarTitle: "Linux Server"
   <Card title="Hetzner" href="/en/install/hetzner">
     Docker 在 Hetzner VPS 上
   </Card>
+  <Card title="Hostinger" href="/en/install/hostinger">
+    支持一键设置的 VPS
+  </Card>
   <Card title="GCP" href="/en/install/gcp">
     Compute Engine
   </Card>
   <Card title="Azure" href="/en/install/azure">
-    Linux 虚拟机
+    Linux VM
   </Card>
   <Card title="exe.dev" href="/en/install/exe-dev">
-    带有 HTTPS 代理的虚拟机
+    带 HTTPS 代理的 VM
   </Card>
   <Card title="Raspberry Pi" href="/en/install/raspberry-pi">
     ARM 自托管
   </Card>
 </CardGroup>
 
-**AWS (EC2 / Lightsail / free tier)** 也能很好地工作。
-可以在 x.com/techfrenAJ/status/2014934471095812547 (https://x.com/techfrenAJ/status/2014934471095812547)
-找到社区视频演示（community resource -- may become unavailable）。
+**AWS (EC2 / Lightsail / 免费套餐)** 也很适用。
+社区视频教程可在
+[x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
+观看（社区资源 —— 可能会失效）。
 
 ## 云设置如何工作
 
 - **Gateway(网关) 在 VPS 上运行** 并拥有状态 + 工作区。
-- 您通过 **Control UI** 或 **Tailscale/SSH** 从笔记本电脑或手机进行连接。
-- 将 VPS 视为事实来源，并定期**备份**状态和工作区。
-- 安全默认设置：将 Gateway(网关) 保持在本地回环地址上，并通过 SSH 隧道或 Tailscale Serve 访问它。
-  如果绑定到 `lan` 或 `tailnet`，则要求使用 `gateway.auth.token` 或 `gateway.auth.password`。
+- 您可以通过 **Control UI** 或 **Tailscale/SSH** 从笔记本电脑或手机进行连接。
+- 将 VPS 视为事实来源，并定期**备份**状态 + 工作区。
+- 安全默认设置：将 Gateway(网关) 保留在本地回环，并通过 SSH 隧道或 Tailscale Serve 访问它。
+  如果绑定到 `lan` 或 `tailnet`，请要求 `gateway.auth.token` 或 `gateway.auth.password`。
 
 相关页面：[Gateway(网关) 远程访问](/en/gateway/remote)、[平台中心](/en/platforms)。
 
-## VPS 上的共享公司代理
+## 在 VPS 上共享公司代理
 
-当所有用户都在同一个信任边界内且该代理仅用于业务时，为团队运行单个代理是有效的设置。
+当每个用户都在相同的信任边界内且代理仅用于业务时，为团队运行单个代理是有效的设置。
 
-- 将其保留在专用运行时上（VPS/VM/容器 + 专用操作系统用户/帐户）。
-- 请勿将该运行时登录到个人 Apple/Google 帐户或个人浏览器/密码管理器配置文件中。
-- 如果用户之间存在利益冲突，请按 Gateway/主机/操作系统用户进行拆分。
+- 将其保存在专用的运行时环境（VPS/VM/容器 + 专用操作系统用户/帐户）中。
+- 切勿将该运行时登录到个人 Apple/Google 帐户或个人浏览器/密码管理器配置文件。
+- 如果用户之间存在对抗关系，请按 gateway/host/操作系统用户进行拆分。
 
-安全模型详情：[安全](/en/gateway/security)。
+安全模型详情：[安全性](/en/gateway/security)。
 
-## 将节点与 VPS 配合使用
+## 结合 VPS 使用节点
 
 您可以将 Gateway(网关) 保留在云端，并在本地设备上配对**节点**
 (Mac/iOS/Android/headless)。节点提供本地屏幕/摄像头/画布和 `system.run`
 功能，而 Gateway(网关) 则保留在云端。
 
-文档：[节点](/en/nodes)、[节点 CLI](/en/cli/nodes)。
+文档：[节点](/en/nodes)，[节点 CLI](/en/cli/nodes)。
 
-## 小型 VM 和 ARM 主机的启动优化
+## 针对小型虚拟机和 ARM 主机的启动优化
 
-如果 CLI 命令在低功率 VM（或 ARM 主机）上感觉缓慢，请启用 Node 的模块编译缓存：
+如果在低功耗虚拟机（或 ARM 主机）上运行 CLI 命令感觉缓慢，请启用 Node 的模块编译缓存：
 
 ```bash
 grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF'
@@ -94,23 +98,23 @@ EOF
 source ~/.bashrc
 ```
 
-- `NODE_COMPILE_CACHE` 可缩短重复命令的启动时间。
-- `OPENCLAW_NO_RESPAWN=1` 可避免自重启动路径产生的额外启动开销。
-- 首次运行命令会预热缓存；后续运行会更快。
-- 关于 Raspberry Pi 的具体细节，请参阅 [Raspberry Pi](/en/install/raspberry-pi)。
+- `NODE_COMPILE_CACHE` 改善重复命令的启动时间。
+- `OPENCLAW_NO_RESPAWN=1` 避免来自自重生路径的额外启动开销。
+- 首次命令运行会预热缓存；后续运行会更快。
+- 有关 Raspberry Pi 的具体信息，请参阅 [Raspberry Pi](/en/install/raspberry-pi)。
 
-### systemd 优化清单（可选）
+### systemd 调优检查清单（可选）
 
-对于使用 `systemd` 的 VM 主机，请考虑：
+对于使用 `systemd` 的虚拟机主机，请考虑：
 
 - 添加服务环境变量以获得稳定的启动路径：
   - `OPENCLAW_NO_RESPAWN=1`
   - `NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache`
-- 保持重启行为的明确性：
+- 保持重启行为显式化：
   - `Restart=always`
   - `RestartSec=2`
   - `TimeoutStartSec=90`
-- 对于状态/缓存路径，请优先选择支持 SSD 的磁盘，以减少随机 I/O 冷启动开销。
+- 对于状态/缓存路径，首选 SSD 支持的磁盘以减少随机 I/O 冷启动惩罚。
 
 对于标准的 `openclaw onboard --install-daemon` 路径，请编辑用户单元：
 
@@ -127,8 +131,8 @@ RestartSec=2
 TimeoutStartSec=90
 ```
 
-如果您特意安装了系统单元，请通过 `sudo systemctl edit openclaw-gateway.service` 编辑
+如果您刻意安装了系统单元，请通过 `sudo systemctl edit openclaw-gateway.service` 编辑
 `openclaw-gateway.service`。
 
 `Restart=` 策略如何帮助自动恢复：
-[systemd can automate service recovery](https://www.redhat.com/en/blog/systemd-automate-recovery)。
+[systemd 可以自动化服务恢复](https://www.redhat.com/en/blog/systemd-automate-recovery)。

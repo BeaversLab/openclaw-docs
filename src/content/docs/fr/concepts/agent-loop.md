@@ -20,7 +20,7 @@ Dans OpenClaw, une boucle est une exécution unique et sérialisée par session 
 
 1. Le RPC `agent` valide les paramètres, résout la session (sessionKey/sessionId), persiste les métadonnées de session et renvoie `{ runId, acceptedAt }` immédiatement.
 2. `agentCommand` exécute l'agent :
-   - résout le modèle + les valeurs par défaut de réflexion/verbosité
+   - résout le modèle + les valeurs par défaut de réflexion/verbeux/trace
    - charge l'instantané des compétences
    - appelle `runEmbeddedPiAgent` (runtime pi-agent-core)
    - émet une **fin/erreur de cycle de vie** si la boucle intégrée n'en émet pas une

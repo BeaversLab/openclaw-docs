@@ -1,5 +1,5 @@
 ---
-title: "Soñar (experimental)"
+title: "Soñar"
 summary: "Consolidación de memoria en segundo plano con fases ligera, profunda y REM, además de un Diario de Sueños"
 read_when:
   - You want memory promotion to run automatically
@@ -7,7 +7,7 @@ read_when:
   - You want to tune consolidation without polluting MEMORY.md
 ---
 
-# Soñar (experimental)
+# Soñar
 
 Soñar es el sistema de consolidación de memoria en segundo plano en `memory-core`.
 Ayuda a OpenClaw a mover señales fuertes a corto plazo hacia la memoria duradera mientras
@@ -80,13 +80,16 @@ Después de que cada fase tenga suficiente material, `memory-core` ejecuta un tu
 subagente de fondo de mejor esfuerzo (usando el modelo de tiempo de ejecución predeterminado) y añade una breve entrada de diario.
 
 Este diario es para lectura humana en la interfaz de usuario de Dreams, no una fuente de promoción.
+Los artefactos de diario/informe generados por Soñar están excluidos de la promoción
+a corto plazo. Solo los fragmentos de memoria fundamentados son elegibles para promocionar a
+`MEMORY.md`.
 
 También hay un carril de relleno histórico fundamentado para trabajos de revisión y recuperación:
 
-- `memory rem-harness --path ... --grounded` previsualiza la salida del diario fundamentado a partir de notas históricas `YYYY-MM-DD.md`.
+- `memory rem-harness --path ... --grounded` previsualiza la salida del diario fundamentado a partir de notas `YYYY-MM-DD.md` históricas.
 - `memory rem-backfill --path ...` escribe entradas de diario fundamentadas reversibles en `DREAMS.md`.
-- `memory rem-backfill --path ... --stage-short-term` pone en escena candidatos duraderos fundamentados en el mismo almacén de evidencia a corto plazo que la fase profunda normal ya usa.
-- `memory rem-backfill --rollback` y `--rollback-short-term` eliminan esos artefactos de relleno puestos en escena sin tocar las entradas de diario ordinarias ni la recuperación a corto plazo en vivo.
+- `memory rem-backfill --path ... --stage-short-term` prepara candidatos duraderos fundamentados en el mismo almacén de evidencia a corto plazo que la fase profunda normal ya utiliza.
+- `memory rem-backfill --rollback` y `--rollback-short-term` eliminan esos artefactos de relleno preparados sin tocar las entradas de diario ordinarias o el recuerdo a corto plazo en vivo.
 
 La interfaz de usuario de Control expone el mismo flujo de relleno/restablecimiento de diario para que puedas inspeccionar
 los resultados en la escena Dreams antes de decidir si los candidatos fundamentados
@@ -108,13 +111,13 @@ La clasificación profunda utiliza seis señales base ponderadas más el refuerz
 | Consolidación           | 0.10 | Fuerza de recurrencia de varios días                   |
 | Riqueza conceptual      | 0.06 | Densidad de etiquetas de concepto desde fragmento/ruta |
 
-Los aciertos de las fases Ligera y REM añaden un pequeño impulso de desvanecimiento por reciente desde
+Los aciertos de las fases Ligera y REM añaden un pequeño impulso decaído por reciente de
 `memory/.dreams/phase-signals.json`.
 
 ## Programación
 
 Cuando está habilitado, `memory-core` gestiona automáticamente un trabajo cron para un barrido completo de
-dreaming. Cada barrido ejecuta las fases en orden: ligera -> REM -> profunda.
+soñar. Cada barrido ejecuta las fases en orden: ligera -> REM -> profunda.
 
 Comportamiento de cadencia predeterminado:
 
@@ -182,8 +185,8 @@ openclaw memory promote --limit 5
 openclaw memory status --deep
 ```
 
-El `memory promote` manual utiliza los umbrales de la fase profunda de forma predeterminada a menos que se anulen
-con banderas de CLI.
+El `memory promote` manual utiliza umbrales de fase profunda de forma predeterminada a menos que se anulen
+con indicadores de CLI.
 
 Explique por qué un candidato específico promovería o no:
 
@@ -202,7 +205,7 @@ openclaw memory rem-harness --json
 
 ## Valores clave predeterminados
 
-Todos los ajustes se encuentran bajo `plugins.entries.memory-core.config.dreaming`.
+Todas las configuraciones residen bajo `plugins.entries.memory-core.config.dreaming`.
 
 | Clave       | Predeterminado |
 | ----------- | -------------- |
@@ -212,7 +215,7 @@ Todos los ajustes se encuentran bajo `plugins.entries.memory-core.config.dreamin
 La política de fase, los umbrales y el comportamiento de almacenamiento son detalles internos de
 implementación (no configuración visible para el usuario).
 
-Consulte [Referencia de configuración de memoria](/en/reference/memory-config#dreaming-experimental)
+Consulte [Referencia de configuración de memoria](/en/reference/memory-config#dreaming)
 para obtener la lista completa de claves.
 
 ## Interfaz de usuario de Dreams
@@ -224,7 +227,7 @@ Cuando está habilitado, la pestaña **Dreams** del Gateway muestra:
 - recuentos de corto plazo, anclados, señal y promovidos hoy
 - momento de la próxima ejecución programada
 - un carril de Escena anclado distintivo para entradas de repetición histórica preparadas
-- un lector expandible del Diario de Sueños respaldado por `doctor.memory.dreamDiary`
+- un lector de Dream Diary ampliable respaldado por `doctor.memory.dreamDiary`
 
 ## Relacionado
 

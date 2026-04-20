@@ -117,31 +117,52 @@ Los activos semilla viven en `qa/`:
 - `qa/scenarios/index.md`
 - `qa/scenarios/*.md`
 
-Estos están intencionalmente en git para que el plan de QA sea visible tanto para humanos como para el
-agente. La lista base debe mantenerse lo suficientemente amplia para cubrir:
+Estos están intencionalmente en git para que el plan de QA sea visible tanto para humanos como para el agente.
 
-- Chat de MD y canal
-- comportamiento de hilos
-- ciclo de vida de acciones de mensaje
-- retrollamadas cron
-- recuerdo de memoria
+`qa-lab` debe seguir siendo un ejecutor de markdown genérico. Cada archivo de escenario markdown es la fuente de verdad para una ejecución de prueba y debe definir:
+
+- metadatos del escenario
+- referencias de documentos y código
+- requisitos opcionales de complementos
+- parche de configuración opcional de la puerta de enlace
+- el `qa-flow` ejecutable
+
+Se permite que la superficie de tiempo de ejecución reutilizable que respalda `qa-flow` permanezca genérica y transversal. Por ejemplo, los escenarios markdown pueden combinar ayudantes del lado del transporte con ayudantes del lado del navegador que impulsan la interfaz de usuario de Control integrada a través de la costura `browser.request` de la Gateway sin agregar un ejecutor de caso especial.
+
+La lista base debe mantenerse lo suficientemente amplia para cubrir:
+
+- mensajes directos y chat del canal
+- comportamiento del hilo
+- ciclo de vida de la acción del mensaje
+- retrollamadas de cron
+- recuperación de memoria
 - cambio de modelo
-- traspaso de subagente
-- lectura de repositorio y lectura de documentos
+- transferencia a subagente
+- lectura de repositorios y lectura de documentos
 - una pequeña tarea de compilación como Lobster Invaders
+
+## Adaptadores de transporte
+
+`qa-lab` posee una costura de transporte genérica para escenarios QA de markdown. `qa-channel` es el primer adaptador en esa costura, pero el objetivo de diseño es más amplio: los canales futuros, reales o sintéticos, deben conectarse al mismo ejecutor de suite en lugar de agregar un ejecutor QA específico del transporte.
+
+A nivel de arquitectura, la división es:
+
+- `qa-lab` posee la ejecución genérica de escenarios, la concurrencia de trabajadores, la escritura de artefactos y los informes.
+- el adaptador de transporte posee la configuración de la puerta de enlace, la preparación, la observación de entrada y salida, las acciones de transporte y el estado de transporte normalizado.
+- los archivos de escenarios markdown bajo `qa/scenarios/` definen la ejecución de la prueba; `qa-lab` proporciona la superficie de tiempo de ejecución reutilizable que los ejecuta.
+
+La guía de adopción orientada a los mantenedores para nuevos adaptadores de canal se encuentra en [Testing](/en/help/testing#adding-a-channel-to-qa).
 
 ## Informes
 
-`qa-lab` exporta un reporte de protocolo Markdown desde la línea de tiempo del bus observada.
-El reporte debe responder:
+`qa-lab` exporta un informe de protocolo Markdown a partir de la línea de tiempo del bus observado. El informe debe responder:
 
 - Qué funcionó
 - Qué falló
-- Qué se mantuvo bloqueado
-- Qué escenarios de seguimiento vale la pena añadir
+- Qué permaneció bloqueado
+- Qué escenarios de seguimiento vale la pena agregar
 
-Para comprobaciones de personaje y estilo, ejecute el mismo escenario a través de múltiples referencias
-de modelos en vivo y escriba un reporte Markdown evaluado:
+Para verificar el carácter y el estilo, ejecute el mismo escenario en múltiples referencias de modelos en vivo y escriba un informe Markdown juzgado:
 
 ```bash
 pnpm openclaw qa character-eval \
@@ -160,16 +181,16 @@ pnpm openclaw qa character-eval \
   --judge-concurrency 16
 ```
 
-El comando ejecuta procesos secundarios locales de la puerta de enlace de QA, no Docker. Los escenarios de evaluación de personajes deben establecer el personaje a través de `SOUL.md`, luego ejecutar turnos de usuario ordinarios como chat, ayuda del espacio de trabajo y pequeñas tareas de archivos. No se debe decir al modelo candidato que está siendo evaluado. El comando conserva cada transcripción completa, registra estadísticas básicas de ejecución y luego pide a los modelos jueces en modo rápido con razonamiento `xhigh` que clasifiquen las ejecuciones por naturalidad, ambiente y humor.
-Use `--blind-judge-models` al comparar proveedores: el prompt del juez aún recibe cada transcripción y estado de ejecución, pero las referencias de los candidatos se reemplazan con etiquetas neutrales como `candidate-01`; el informe asigna las clasificaciones de vuelta a las referencias reales después del análisis.
-Las ejecuciones de candidatos por defecto usan pensamiento `high`, con `xhigh` para modelos de OpenAI que lo soportan. Anule un candidato específico en línea con `--model provider/model,thinking=<level>`. `--thinking <level>` todavía establece un respaldo global, y el formato más antiguo `--model-thinking <provider/model=level>` se mantiene por compatibilidad.
-Las referencias de candidatos de OpenAI por defecto usan el modo rápido, por lo que se utiliza el procesamiento prioritario donde el proveedor lo soporta. Agregue `,fast`, `,no-fast` o `,fast=false` en línea cuando un solo candidato o juez necesite una anulación. Pase `--fast` solo cuando desee forzar el modo rápido en cada modelo candidato. Las duraciones de los candidatos y jueces se registran en el informe para el análisis comparativo, pero los prompts de los jueces dicen explícitamente que no clasifiquen por velocidad.
-Las ejecuciones de modelos candidatos y jueces por defecto ambas usan concurrencia 16. Reduzca `--concurrency` o `--judge-concurrency` cuando los límites del proveedor o la presión de la puerta de enlace local hagan que una ejecución sea demasiado ruidosa.
-Cuando no se pasa ningún `--model` candidato, la evaluación de personajes por defecto usa `openai/gpt-5.4`, `openai/gpt-5.2`, `openai/gpt-5`, `anthropic/claude-opus-4-6`, `anthropic/claude-sonnet-4-6`, `zai/glm-5.1`, `moonshot/kimi-k2.5` y `google/gemini-3.1-pro-preview` cuando no se pasa ningún `--model`.
+El comando ejecuta procesos secundarios locales de puerta de enlace de QA, no Docker. Los escenarios de evaluación de personajes deben establecer el personaje a través de `SOUL.md`, luego ejecutar turnos de usuario ordinarios como chat, ayuda del espacio de trabajo y pequeñas tareas de archivos. No se debe informar al modelo candidato que está siendo evaluado. El comando conserva cada transcripción completa, registra estadísticas básicas de ejecución y luego pide a los modelos jueces en modo rápido con razonamiento `xhigh` que clasifiquen las ejecuciones por naturalidad, ambiente y humor.
+Use `--blind-judge-models` al comparar proveedores: el mensaje del juez aún recibe cada transcripción y estado de ejecución, pero las referencias del candidato se reemplazan con etiquetas neutras como `candidate-01`; el informe asigna las clasificaciones de vuelta a las referencias reales después del análisis.
+Las ejecuciones de candidatos por defecto usan pensamiento `high`, con `xhigh` para modelos de OpenAI que lo admitan. Anule un candidato específico en línea con `--model provider/model,thinking=<level>`. `--thinking <level>` todavía establece un respaldo global, y la forma antigua `--model-thinking <provider/model=level>` se mantiene por compatibilidad.
+Las referencias de candidatos de OpenAI por defecto están en modo rápido, por lo que se utiliza el procesamiento prioritario donde el proveedor lo admite. Agregue `,fast`, `,no-fast` o `,fast=false` en línea cuando un solo candidato o juez necesite una anulación. Pase `--fast` solo cuando desee forzar el modo rápido para cada modelo candidato. Las duraciones del candidato y del juez se registran en el informe para el análisis de referencia, pero los mensajes de los jueces dicen explícitamente que no clasifiquen por velocidad.
+Las ejecuciones de modelos candidatos y jueces por defecto ambas tienen una concurrencia de 16. Reduzca `--concurrency` o `--judge-concurrency` cuando los límites del proveedor o la presión de la puerta de enlace local hagan que una ejecución sea demasiado ruidosa.
+Cuando no se pasa ningún candidato `--model`, la evaluación de caracteres por defecto es `openai/gpt-5.4`, `openai/gpt-5.2`, `openai/gpt-5`, `anthropic/claude-opus-4-6`, `anthropic/claude-sonnet-4-6`, `zai/glm-5.1`, `moonshot/kimi-k2.5` y `google/gemini-3.1-pro-preview` cuando no se pasa ningún `--model`.
 Cuando no se pasa ningún `--judge-model`, los jueces por defecto son `openai/gpt-5.4,thinking=xhigh,fast` y `anthropic/claude-opus-4-6,thinking=high`.
 
 ## Documentos relacionados
 
 - [Pruebas](/en/help/testing)
-- [Canal de QA](/en/channels/qa-channel)
+- [Canal QA](/en/channels/qa-channel)
 - [Panel](/en/web/dashboard)

@@ -3159,18 +3159,22 @@ Connexe : [/concepts/oauth](/en/concepts/oauth) (flux OAuth, stockage des jetons
 
 <AccordionGroup>
   <Accordion title="Comment empêcher l'affichage des messages système internes dans le chat ?">
-    La plupart des messages internes ou d'outil n'apparaissent que lorsque le mode **verbose** ou **reasoning** est activé pour cette session.
+    La plupart des messages internes ou de %%PH:GLOSSARY:1:tool%% n'apparaissent que lorsque **verbose**, **trace** ou **reasoning** est activé
+    pour cette %%PH:GLOSSARY:0:session%%.
 
-    Corriger dans le chat où vous le voyez :
+    Correction dans le chat où vous le voyez :
 
     ```
     /verbose off
+    /trace off
     /reasoning off
     ```
 
-    Si c'est encore bruyant, vérifiez les paramètres de session dans l'interface de contrôle et définissez verbose sur **inherit**. Confirmez également que vous n'utilisez pas un profil de bot avec `verboseDefault` défini sur `on` dans la configuration.
+    Si c'est encore trop bruyant, vérifiez les paramètres de la session dans l'interface de contrôle et définissez verbose
+    à **inherit**. Confirmez également que vous n'utilisez pas un profil de bot avec `verboseDefault` défini
+    à `on` dans la configuration.
 
-    Docs : [Thinking and verbose](/en/tools/thinking), [Security](/en/gateway/security#reasoning-verbose-output-in-groups).
+    Documentation : [Thinking and verbose](/en/tools/thinking), [Security](/en/gateway/security#reasoning-verbose-output-in-groups).
 
   </Accordion>
 

@@ -9,44 +9,51 @@ read_when:
 
 # fal
 
-OpenClaw incluye un proveedor `fal` para la generación alojada de imágenes y videos.
+OpenClaw incluye un proveedor `fal` integrado para la generación alojada de imágenes y videos.
 
-- Proveedor: `fal`
-- Autenticación: `FAL_KEY` (canónico; `FAL_API_KEY` también funciona como alternativa)
-- API: endpoints de modelos de fal
+| Propiedad     | Valor                                                                 |
+| ------------- | --------------------------------------------------------------------- |
+| Proveedor     | `fal`                                                                 |
+| Autenticación | `FAL_KEY` (canónico; `FAL_API_KEY` también funciona como alternativa) |
+| API           | Endpoints de modelos de fal                                           |
 
-## Inicio rápido
+## Introducción
 
-1. Establezca la clave de API:
-
-```bash
-openclaw onboard --auth-choice fal-api-key
-```
-
-2. Establezca un modelo de imagen predeterminado:
-
-```json5
-{
-  agents: {
-    defaults: {
-      imageGenerationModel: {
-        primary: "fal/fal-ai/flux/dev",
+<Steps>
+  <Step title="Set the API key">
+    ```bash
+    openclaw onboard --auth-choice fal-api-key
+    ```
+  </Step>
+  <Step title="Set a default image model">
+    ```json5
+    {
+      agents: {
+        defaults: {
+          imageGenerationModel: {
+            primary: "fal/fal-ai/flux/dev",
+          },
+        },
       },
-    },
-  },
-}
-```
+    }
+    ```
+  </Step>
+</Steps>
 
 ## Generación de imágenes
 
-El proveedor de generación de imágenes `fal` incluido utiliza por defecto
+El proveedor de generación de imágenes `fal` incluido tiene como valor predeterminado
 `fal/fal-ai/flux/dev`.
 
-- Generar: hasta 4 imágenes por solicitud
-- Modo de edición: habilitado, 1 imagen de referencia
-- Admite `size`, `aspectRatio` y `resolution`
-- Advertencia actual de edición: el punto final de edición de imágenes de fal **no** admite
-  anulaciones de `aspectRatio`
+| Capacidad                | Valor                              |
+| ------------------------ | ---------------------------------- |
+| Máximo de imágenes       | 4 por solicitud                    |
+| Modo de edición          | Habilitado, 1 imagen de referencia |
+| Sobrescrituras de tamaño | Compatible                         |
+| Relación de aspecto      | Compatible                         |
+| Resolución               | Compatible                         |
+
+<Warning>El endpoint de edición de imágenes de fal **no** admite sobrescrituras de `aspectRatio`.</Warning>
 
 Para usar fal como proveedor de imágenes predeterminado:
 
@@ -62,51 +69,72 @@ Para usar fal como proveedor de imágenes predeterminado:
 }
 ```
 
-## Generación de video
+## Generación de videos
 
-El proveedor de generación de videos `fal` incluido utiliza por defecto
+El proveedor de generación de videos `fal` incluido tiene como valor predeterminado
 `fal/fal-ai/minimax/video-01-live`.
 
-- Modos: flujos de texto a video y de referencia de imagen única
-- Tiempo de ejecución: flujo de envío/estado/resultado respaldado por cola para trabajos de larga duración
-- Referencia del modelo de video-agente HeyGen:
-  - `fal/fal-ai/heygen/v2/video-agent`
-- Referencias del modelo Seedance 2.0:
-  - `fal/bytedance/seedance-2.0/fast/text-to-video`
-  - `fal/bytedance/seedance-2.0/fast/image-to-video`
-  - `fal/bytedance/seedance-2.0/text-to-video`
-  - `fal/bytedance/seedance-2.0/image-to-video`
+| Capacidad           | Valor                                                                               |
+| ------------------- | ----------------------------------------------------------------------------------- |
+| Modos               | Texto a video, referencia de imagen única                                           |
+| Tiempo de ejecución | Flujo de envío/estado/resultado respaldado por cola para trabajos de larga duración |
 
-Para usar Seedance 2.0 como el modelo de video predeterminado:
+<AccordionGroup>
+  <Accordion title="Modelos de video disponibles">
+    **HeyGen video-agent:**
 
-```json5
-{
-  agents: {
-    defaults: {
-      videoGenerationModel: {
-        primary: "fal/bytedance/seedance-2.0/fast/text-to-video",
+    - `fal/fal-ai/heygen/v2/video-agent`
+
+    **Seedance 2.0:**
+
+    - `fal/bytedance/seedance-2.0/fast/text-to-video`
+    - `fal/bytedance/seedance-2.0/fast/image-to-video`
+    - `fal/bytedance/seedance-2.0/text-to-video`
+    - `fal/bytedance/seedance-2.0/image-to-video`
+
+  </Accordion>
+
+  <Accordion title="Ejemplo de configuración de Seedance 2.0">
+    ```json5
+    {
+      agents: {
+        defaults: {
+          videoGenerationModel: {
+            primary: "fal/bytedance/seedance-2.0/fast/text-to-video",
+          },
+        },
       },
-    },
-  },
-}
-```
+    }
+    ```
+  </Accordion>
 
-Para usar el video-agente HeyGen como el modelo de video predeterminado:
-
-```json5
-{
-  agents: {
-    defaults: {
-      videoGenerationModel: {
-        primary: "fal/fal-ai/heygen/v2/video-agent",
+  <Accordion title="Ejemplo de configuración de HeyGen video-agent">
+    ```json5
+    {
+      agents: {
+        defaults: {
+          videoGenerationModel: {
+            primary: "fal/fal-ai/heygen/v2/video-agent",
+          },
+        },
       },
-    },
-  },
-}
-```
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+<Tip>Use `openclaw models list --provider fal` para ver la lista completa de modelos de fal disponibles, incluidas las entradas añadidas recientemente.</Tip>
 
 ## Relacionado
 
-- [Generación de imágenes](/en/tools/image-generation)
-- [Generación de videos](/en/tools/video-generation)
-- [Referencia de configuración](/en/gateway/configuration-reference#agent-defaults)
+<CardGroup cols={2}>
+  <Card title="Generación de imágenes" href="/en/tools/image-generation" icon="image">
+    Parámetros compartidos de la herramienta de imagen y selección de proveedor.
+  </Card>
+  <Card title="Generación de video" href="/en/tools/video-generation" icon="video">
+    Parámetros compartidos de herramientas de video y selección de proveedor.
+  </Card>
+  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+    Valores predeterminados del agente, incluida la selección de modelos de imagen y video.
+  </Card>
+</CardGroup>

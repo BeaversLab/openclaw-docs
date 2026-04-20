@@ -1,19 +1,19 @@
-# Rich Output Protocol
+# Protocolo de salida enriquecida
 
-La salida del asistente puede contener un pequeño conjunto de directivas de entrega/renderizado:
+La salida del asistente puede llevar un pequeño conjunto de directivas de entrega/renderizado:
 
-- `MEDIA:` para la entrega de adjuntos
-- `[[audio_as_voice]]` para indicaciones de presentación de audio
+- `MEDIA:` para la entrega de archivos adjuntos
+- `[[audio_as_voice]]` para sugerencias de presentación de audio
 - `[[reply_to_current]]` / `[[reply_to:<id>]]` para metadatos de respuesta
-- `[embed ...]` para el renderizado enriquecido en el Control UI
+- `[embed ...]` para el renderizado enriquecido de la interfaz de usuario de control
 
-Estas directivas son independientes. `MEDIA:` y las etiquetas de respuesta/voz siguen siendo metadatos de entrega; `[embed ...]` es la ruta de renderizado enriquecido exclusiva para Web.
+Estas directivas son independientes. `MEDIA:` y las etiquetas de respuesta/voz siguen siendo metadatos de entrega; `[embed ...]` es la ruta de renderizado enriquecido solo para web.
 
 ## `[embed ...]`
 
-`[embed ...]` es la única sintaxis de renderizado enriquecido orientada a agentes para el Control UI.
+`[embed ...]` es la única sintaxis de renderizado enriquecido orientada al agente para la interfaz de usuario de control.
 
-Ejemplo de cierre automático:
+Ejemplo de autocierre:
 
 ```text
 [embed ref="cv_123" title="Status" /]
@@ -22,13 +22,13 @@ Ejemplo de cierre automático:
 Reglas:
 
 - `[view ...]` ya no es válido para nuevas salidas.
-- Los shortcodes embed solo se renderizan en la superficie del mensaje del asistente.
-- Solo se renderizan los embeds respaldados por una URL. Use `ref="..."` o `url="..."`.
-- Los shortcodes embed HTML en línea de tipo bloque no se renderizan.
-- La interfaz Web elimina el shortcode del texto visible y renderiza el embed en línea.
-- `MEDIA:` no es un alias de embed y no debe usarse para el renderizado enriquecido de embeds.
+- Los códigos cortos de inserción se renderizan solo en la superficie del mensaje del asistente.
+- Solo se renderizan las inserciones respaldadas por URL. Use `ref="..."` o `url="..."`.
+- Los códigos cortos de inserción de HTML en línea en forma de bloque no se renderizan.
+- La interfaz de usuario web elimina el código corto del texto visible y renderiza la inserción en línea.
+- `MEDIA:` no es un alias de inserción y no debe usarse para el renderizado de inserciones enriquecidas.
 
-## Estructura de renderizado almacenada
+## Forma de renderizado almacenado
 
 El bloque de contenido del asistente normalizado/almacenado es un elemento `canvas` estructurado:
 
@@ -47,4 +47,4 @@ El bloque de contenido del asistente normalizado/almacenado es un elemento `canv
 }
 ```
 
-Los bloques enriquecidos almacenados/renderizados usan directamente esta estructura `canvas`. `present_view` no se reconoce.
+Los bloques enriquecidos almacenados/renderizados usan directamente esta forma `canvas`. `present_view` no se reconoce.

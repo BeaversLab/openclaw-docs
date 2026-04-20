@@ -14,8 +14,8 @@ proveedor mezcla el razonamiento con el texto normal.
 
 ## Invalidaciones de depuración en tiempo de ejecución
 
-Use `/debug` en el chat para establecer invalidaciones de configuración **solo en tiempo de ejecución** (memoria, no disco).
-`/debug` está deshabilitado por defecto; habilítelo con `commands.debug: true`.
+Use `/debug` en el chat para establecer anulaciones de configuración **solo en tiempo de ejecución** (memoria, no disco).
+`/debug` está deshabilitado de forma predeterminada; habilítelo con `commands.debug: true`.
 Esto es útil cuando necesita alternar configuraciones oscuras sin editar `openclaw.json`.
 
 Ejemplos:
@@ -27,9 +27,26 @@ Ejemplos:
 /debug reset
 ```
 
-`/debug reset` borra todas las invalidaciones y regresa a la configuración en disco.
+`/debug reset` borra todas las anulaciones y vuelve a la configuración en disco.
 
-## Modo watch de la puerta de enlace
+## Salida de traza de sesión
+
+Use `/trace` cuando desee ver líneas de traza/depuración propiedad del complemento en una sesión
+sin activar el modo completo detallado (verbose).
+
+Ejemplos:
+
+```text
+/trace
+/trace on
+/trace off
+```
+
+Use `/trace` para diagnósticos de complementos, como resúmenes de depuración de Memoria Activa.
+Siga usando `/verbose` para la salida de herramientas y estado detallado normal, y siga usando
+`/debug` para anulaciones de configuración solo en tiempo de ejecución.
+
+## Modo de vigilancia de la puerta de enlace (Gateway watch mode)
 
 Para una iteración rápida, ejecute la puerta de enlace bajo el observador de archivos:
 
@@ -44,24 +61,24 @@ node scripts/watch-node.mjs gateway --force
 ```
 
 El observador se reinicia en los archivos relevantes para la compilación bajo `src/`, archivos fuente de extensiones,
-metadatos de extensiones `package.json` y `openclaw.plugin.json`, `tsconfig.json`,
+metadatos de `package.json` y `openclaw.plugin.json` de extensiones, `tsconfig.json`,
 `package.json` y `tsdown.config.ts`. Los cambios en los metadatos de la extensión reinician la
-gateway sin forzar una reconstrucción de `tsdown`; los cambios en el código fuente y la configuración aún
+puerta de enlace sin forzar una reconstrucción de `tsdown`; los cambios de fuente y configuración aún
 reconstruyen `dist` primero.
 
-Añade cualquier bandera de CLI de la puerta de enlace después de `gateway:watch` y se pasarán en
-cada reinicio. Al volver a ejecutar el mismo comando de vigilancia para el mismo repositorio/conjunto de banderas ahora
-reemplaza al vigilante más antiguo en lugar de dejar padres de vigilantes duplicados atrás.
+Agregue cualquier indicador CLI de puerta de enlace después de `gateway:watch` y se pasarán en cada
+reinicio. Volver a ejecutar el mismo comando de vigilancia para el mismo repositorio/conjunto de indicadores ahora
+reemplaza al observador anterior en lugar de dejar padres de observadores duplicados atrás.
 
-## Perfil de desarrollo + gateway de desarrollo (--dev)
+## Perfil de desarrollo + puerta de enlace de desarrollo (--dev)
 
-Use el perfil de desarrollo para aislar el estado e iniciar una configuración segura y desechable para
-depuración. Hay **dos** flags `--dev`:
+Use el perfil de desarrollo para aislar el estado y crear una configuración segura y desechable para
+la depuración. Hay **dos** indicadores `--dev`:
 
-- **`--dev` Global (perfil):** aísla el estado bajo `~/.openclaw-dev` y
-  establece el puerto de la gateway por defecto en `19001` (los puertos derivados se desplazan con él).
-- **`gateway --dev`: le dice a la Gateway que cree automáticamente una configuración predeterminada +
-  workspace** cuando falte (y omita BOOTSTRAP.md).
+- **Global `--dev` (profile):** aísla el estado bajo `~/.openclaw-dev` y
+  establece el puerto del gateway por defecto en `19001` (los puertos derivados cambian con él).
+- **`gateway --dev`: indica al Gateway que cree automáticamente una configuración predeterminada +
+  espacio de trabajo** cuando falten (y omitir BOOTSTRAP.md).
 
 Flujo recomendado (perfil de desarrollo + arranque de desarrollo):
 
@@ -70,21 +87,21 @@ pnpm gateway:dev
 OPENCLAW_PROFILE=dev openclaw tui
 ```
 
-Si aún no tiene una instalación global, ejecute la CLI a través de `pnpm openclaw ...`.
+Si aún no tienes una instalación global, ejecuta la CLI a través de `pnpm openclaw ...`.
 
-Lo que esto hace:
+Lo que hace esto:
 
-1. **Aislamiento de perfil** (`--dev` global)
+1. **Aislamiento de perfil** (global `--dev`)
    - `OPENCLAW_PROFILE=dev`
    - `OPENCLAW_STATE_DIR=~/.openclaw-dev`
    - `OPENCLAW_CONFIG_PATH=~/.openclaw-dev/openclaw.json`
-   - `OPENCLAW_GATEWAY_PORT=19001` (el navegador/canvas se desplazan en consecuencia)
+   - `OPENCLAW_GATEWAY_PORT=19001` (el navegador/canvas cambian en consecuencia)
 
 2. **Arranque de desarrollo** (`gateway --dev`)
    - Escribe una configuración mínima si falta (`gateway.mode=local`, bind loopback).
    - Establece `agent.workspace` al espacio de trabajo de desarrollo.
    - Establece `agent.skipBootstrap=true` (sin BOOTSTRAP.md).
-   - Siembra los archivos del espacio de trabajo si faltan:
+   - Si faltan, inicializa los archivos del espacio de trabajo:
      `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`.
    - Identidad predeterminada: **C3‑PO** (droide de protocolo).
    - Omite los proveedores de canales en modo de desarrollo (`OPENCLAW_SKIP_CHANNELS=1`).
@@ -95,8 +112,8 @@ Flujo de restablecimiento (nuevo inicio):
 pnpm gateway:dev:reset
 ```
 
-Nota: `--dev` es un indicador de perfil **global** y es consumido por algunos ejecutores.
-Si necesita escribirlo explícitamente, use la forma de variable de entorno:
+Nota: `--dev` es una marca de perfil **global** y es consumida por algunos ejecutores.
+Si necesitas especificarlo, usa la forma de variable de entorno:
 
 ```bash
 OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
@@ -105,7 +122,7 @@ OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
 `--reset` borra la configuración, las credenciales, las sesiones y el espacio de trabajo de desarrollo (usando
 `trash`, no `rm`), y luego recrea la configuración de desarrollo predeterminada.
 
-Consejo: si una puerta de enlace no de desarrollo ya se está ejecutando (launchd/systemd), deténgala primero:
+Consejo: si un gateway que no es de desarrollo ya se está ejecutando (launchd/systemd), deténlo primero:
 
 ```bash
 openclaw gateway stop
@@ -114,10 +131,10 @@ openclaw gateway stop
 ## Registro de flujo sin procesar (OpenClaw)
 
 OpenClaw puede registrar el **flujo del asistente sin procesar** antes de cualquier filtrado o formato.
-Esta es la mejor manera de ver si el razonamiento está llegando como deltas de texto plano
+Esta es la mejor manera de ver si el razonamiento llega como deltas de texto plano
 (o como bloques de pensamiento separados).
 
-Actívelo a través de la CLI:
+Actívalo a través de la CLI:
 
 ```bash
 pnpm gateway:watch --raw-stream
@@ -159,11 +176,11 @@ Archivo predeterminado:
 
 `~/.pi-mono/logs/raw-openai-completions.jsonl`
 
-> Nota: esto solo lo emiten los procesos que usan el proveedor
+> Nota: esto solo lo emiten los procesos que utilizan el proveedor
 > `openai-completions` de pi-mono.
 
 ## Notas de seguridad
 
-- Los registros de flujo sin procesar pueden incluir avisos completos, resultados de herramientas y datos de usuario.
+- Los registros de flujo sin procesar pueden incluir avisos completos, resultados de herramientas y datos del usuario.
 - Mantenga los registros localmente y elimínelos después de la depuración.
-- Si comparte registros, elimine primero los secretos y la PII.
+- Si comparte registros, elimine primero los secretos y la información personal (PII).

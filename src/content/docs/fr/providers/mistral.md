@@ -1,5 +1,5 @@
 ---
-summary: "Utiliser les modèles Mistral et la transcription Voxtral avec OpenClaw"
+summary: "Utilisez les modèles Mistral et la transcription Voxtral avec OpenClaw"
 read_when:
   - You want to use Mistral models in OpenClaw
   - You need Mistral API key onboarding and model refs
@@ -8,32 +8,52 @@ title: "Mistral"
 
 # Mistral
 
-OpenClaw prend en charge Mistral à la fois pour le routage de modèles texte/image (`mistral/...`) et
-pour la transcription audio via Voxtral dans la compréhension des médias.
+OpenClaw prend en charge Mistral pour le routage de modèles texte/image (`mistral/...`) et
+la transcription audio via Voxtral dans la compréhension des médias.
 Mistral peut également être utilisé pour les embeddings de mémoire (`memorySearch.provider = "mistral"`).
 
-## Configuration CLI
+- Fournisseur : `mistral`
+- Auth : `MISTRAL_API_KEY`
+- API : Mistral Chat Completions (`https://api.mistral.ai/v1`)
 
-```bash
-openclaw onboard --auth-choice mistral-api-key
-# or non-interactive
-openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
-```
+## Getting started
 
-## Extrait de configuration (provider LLM)
+<Steps>
+  <Step title="Obtenez votre clé API">
+    Créez une clé API dans la [Mistral Console](https://console.mistral.ai/).
+  </Step>
+  <Step title="Exécutez l'onboarding">
+    ```bash
+    openclaw onboard --auth-choice mistral-api-key
+    ```
 
-```json5
-{
-  env: { MISTRAL_API_KEY: "sk-..." },
-  agents: { defaults: { model: { primary: "mistral/mistral-large-latest" } } },
-}
-```
+    Ou passez la clé directement :
+
+    ```bash
+    openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
+    ```
+
+  </Step>
+  <Step title="Définir un modèle par défaut">
+    ```json5
+    {
+      env: { MISTRAL_API_KEY: "sk-..." },
+      agents: { defaults: { model: { primary: "mistral/mistral-large-latest" } } },
+    }
+    ```
+  </Step>
+  <Step title="Vérifier que le modèle est disponible">
+    ```bash
+    openclaw models list --provider mistral
+    ```
+  </Step>
+</Steps>
 
 ## Catalogue LLM intégré
 
 OpenClaw fournit actuellement ce catalogue Mistral intégré :
 
-| Réf modèle                       | Entrée       | Contexte | Sortie max | Notes                                                                 |
+| Modèle ref                       | Entrée       | Contexte | Max sortie | Notes                                                                 |
 | -------------------------------- | ------------ | -------- | ---------- | --------------------------------------------------------------------- |
 | `mistral/mistral-large-latest`   | texte, image | 262 144  | 16 384     | Modèle par défaut                                                     |
 | `mistral/mistral-medium-2508`    | texte, image | 262 144  | 8 192      | Mistral Medium 3.1                                                    |
@@ -43,7 +63,9 @@ OpenClaw fournit actuellement ce catalogue Mistral intégré :
 | `mistral/devstral-medium-latest` | texte        | 262 144  | 32 768     | Devstral 2                                                            |
 | `mistral/magistral-small`        | texte        | 128 000  | 40 000     | Activer le raisonnement                                               |
 
-## Extrait de configuration (transcription audio avec Voxtral)
+## Transcription audio (Voxtral)
+
+Utilisez Voxtral pour la transcription audio via le pipeline de compréhension des médias.
 
 ```json5
 {
@@ -58,22 +80,53 @@ OpenClaw fournit actuellement ce catalogue Mistral intégré :
 }
 ```
 
-## Raisonnement ajustable (`mistral-small-latest`)
+<Tip>Le chemin de transcription des médias utilise `/v1/audio/transcriptions`. Le modèle audio par défaut pour Mistral est `voxtral-mini-latest`.</Tip>
 
-`mistral/mistral-small-latest` correspond à Mistral Small 4 et prend en charge le [raisonnement ajustable](https://docs.mistral.ai/capabilities/reasoning/adjustable) sur l'API Chat Completions via `reasoning_effort` (`none` minimise la réflexion supplémentaire dans la sortie ; `high` affiche les traces complètes de réflexion avant la réponse finale).
+## Configuration avancée
 
-OpenClaw mappe le niveau de **thinking** de la session sur l'API de Mistral :
+<AccordionGroup>
+  <Accordion title="Raisonnement ajustable (mistral-small-latest)">
+    `mistral/mistral-small-latest` correspond à Mistral Small 4 et prend en charge le [raisonnement ajustable](https://docs.mistral.ai/capabilities/reasoning/adjustable) sur l'API Chat Completions via `reasoning_effort` (`none` minimise la réflexion supplémentaire dans la sortie ; `high` affiche les traces de réflexion complètes avant la réponse finale).
 
-- **off** / **minimal** → `none`
-- **low** / **medium** / **high** / **xhigh** / **adaptive** → `high`
+    OpenClaw mappe le niveau de réflexion (**thinking**) de la session à l'API de Mistral :
 
-Les autres modèles du catalogue Mistral inclus n'utilisent pas ce paramètre ; continuez à utiliser les modèles `magistral-*` lorsque vous souhaitez le comportement natif de priorité au raisonnement de Mistral.
+    | Niveau de réflexion OpenClaw                          | `reasoning_effort` Mistral |
+    | ------------------------------------------------ | -------------------------- |
+    | **off** / **minimal**                            | `none`                     |
+    | **low** / **medium** / **high** / **xhigh** / **adaptive** | `high`             |
 
-## Notes
+    <Note>
+    Les autres modèles du catalogue Mistral groupés n'utilisent pas ce paramètre. Continuez d'utiliser les modèles `magistral-*` lorsque vous souhaitez le comportement natif de raisonnement prioritaire de Mistral.
+    </Note>
 
-- L'authentification Mistral utilise `MISTRAL_API_KEY`.
-- L'URL de base du fournisseur par défaut est `https://api.mistral.ai/v1`.
-- Le modèle par défaut pour l'intégration (Onboarding) est `mistral/mistral-large-latest`.
-- Le modèle audio par défaut pour la compréhension des médias pour Mistral est `voxtral-mini-latest`.
-- Le chemin de transcription des médias utilise `/v1/audio/transcriptions`.
-- Le chemin des embeddings mémoire utilise `/v1/embeddings` (modèle par défaut : `mistral-embed`).
+  </Accordion>
+
+  <Accordion title="Intégrations de mémoire">
+    Mistral peut fournir des intégrations de mémoire via `/v1/embeddings` (modèle par défaut : `mistral-embed`).
+
+    ```json5
+    {
+      memorySearch: { provider: "mistral" },
+    }
+    ```
+
+  </Accordion>
+
+  <Accordion title="Authentification et URL de base">
+    - L'authentification Mistral utilise `MISTRAL_API_KEY`.
+    - L'URL de base du fournisseur par défaut est `https://api.mistral.ai/v1`.
+    - Le modèle par défaut d'intégration est `mistral/mistral-large-latest`.
+    - Z.AI utilise l'authentification Bearer avec votre clé API.
+  </Accordion>
+</AccordionGroup>
+
+## Connexes
+
+<CardGroup cols={2}>
+  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+    Choisir les fournisseurs, les références de modèles et le comportement de basculement.
+  </Card>
+  <Card title="Compréhension des médias" href="/en/tools/media-understanding" icon="microphone">
+    Configuration de la transcription audio et sélection du fournisseur.
+  </Card>
+</CardGroup>

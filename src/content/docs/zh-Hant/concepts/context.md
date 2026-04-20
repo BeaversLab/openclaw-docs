@@ -27,7 +27,7 @@ Context _並不相同_ 於“記憶”：記憶可以儲存在磁碟上並在之
 - `/usage tokens` → 將每次回覆的使用情況頁尾附加到正常回覆中。
 - `/compact` → 將較舊的歷史記錄摘要為一個精簡項目，以釋放視窗空間。
 
-另請參閱：[Slash commands](/en/tools/slash-commands)、[Token use & costs](/en/reference/token-use)、[Compaction](/en/concepts/compaction)。
+另請參閱：[斜線指令](/en/tools/slash-commands)、[Token 使用與成本](/en/reference/token-use)、[壓縮](/en/concepts/compaction)。
 
 ## Example output
 
@@ -98,7 +98,7 @@ System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包
 - Runtime metadata（主機/作業系統/模型/思考）。
 - 在 **Project Context** 下注入的工作區引導檔案。
 
-完整細節：[系統提示詞](/en/concepts/system-prompt)。
+完整說明：[系統提示詞](/en/concepts/system-prompt)。
 
 ## 注入的工作區檔案（專案上下文 Project Context）
 
@@ -136,10 +136,10 @@ System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包
 斜線指令由閘道 處理。有幾種不同的行為：
 
 - **獨立指令**：僅包含 `/...` 的訊息會以指令形式執行。
-- **指令 (Directives)**：`/think`、`/verbose`、`/reasoning`、`/elevated`、`/model`、`/queue` 會在模型看到訊息之前被移除。
+- **指令**：`/think`、`/verbose`、`/trace`、`/reasoning`、`/elevated`、`/model`、`/queue` 會在模型看到訊息之前被移除。
   - 僅包含指令的訊息會保留工作階段設定。
   - 一般訊息中的內嵌指令會作為單則訊息的提示。
-- **內嵌快捷指令** (僅限允許清單中的發送者)：一般訊息中的特定 `/...` 標記可以立即執行 (例如：「hey /status」)，並且會在模型看到剩餘文字之前被移除。
+- **內聯捷徑** (僅限允許清單中的傳送者)：一般訊息內的某些 `/...` token 可以立即執行 (例如：「嘿 /status」)，並且會在模型看到其餘文字之前被移除。
 
 詳細資訊：[斜線指令](/en/tools/slash-commands)。
 
@@ -151,22 +151,29 @@ System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包
 - **壓縮** 會將摘要保留在紀錄中，並保持最近的訊息完整不動。
 - **修剪** 會從執行作業的 _記憶體中_ 提示詞中移除舊的工具結果，但不會重寫紀錄。
 
-文件：[工作階段](/en/concepts/session)、[壓縮](/en/concepts/compaction)、[工作階段修剪](/en/concepts/session-pruning)。
+文件：[Session](/en/concepts/session)、[Compaction](/en/concepts/compaction)、[Session pruning](/en/concepts/session-pruning)。
 
-根據預設，OpenClaw 使用內建的 `legacy` 上下文引擎進行組裝和壓縮。如果您安裝了提供 `kind: "context-engine"` 的外掛程式，並使用 `plugins.slots.contextEngine` 選取它，OpenClaw 會將上下文組裝、`/compact` 和相關的子代理程式上下文生命週期掛鉤委派給該引擎。`ownsCompaction: false` 不會自動回退到舊版引擎；作用中的引擎仍須正確實作 `compact()`。請參閱 [Context Engine](/en/concepts/context-engine) 以了解完整的可插入介面、生命週期掛鉤和設定。
+預設情況下，OpenClaw 使用內建的 `legacy` 引擎進行組裝和
+壓縮。如果您安裝了提供 `kind: "context-engine"` 的外掛程式
+並使用 `plugins.slots.contextEngine` 選取它，OpenClaw 會將上下文
+組裝、`/compact` 和相關的子代理程式上下文生命週期掛鉤委派給該
+引擎。`ownsCompaction: false` 不會自動回退到舊版
+引擎；使用中的引擎仍必須正確實作 `compact()`。請參閱
+[Context Engine](/en/concepts/context-engine) 以了解完整的
+可插拔介面、生命週期掛鉤和設定。
 
 ## `/context` 實際回報的內容
 
-`/context` 在可用時偏好使用最新的 **執行建置** 系統提示詞報告：
+`/context` 在可用時偏好使用最新的 **執行時組建** 系統提示詞報告：
 
-- `System prompt (run)` = 從上次內嵌 (具備工具能力) 的執行作業中擷取，並保存在工作階段存放區中。
-- `System prompt (estimate)` = 在沒有運行報告時（或在透過不產生報告的 CLI 後端運行時）即時計算。
+- `System prompt (run)` = 從上次內嵌 (具備工具能力) 的執行中擷取並持續儲存於 session store 中。
+- `System prompt (estimate)` = 當不存在執行報告時 (或是透過不產生報告的 CLI 後端執行時) 即時計算。
 
 無論如何，它都會報告大小和主要貢獻者；它**不會**傾印完整的系統提示詞或工具架構。
 
 ## 相關
 
-- [Context Engine](/en/concepts/context-engine) — 透過插件自訂插入內容
-- [Compaction](/en/concepts/compaction) — 摘要長對話
-- [System Prompt](/en/concepts/system-prompt) — 系統提示詞的建構方式
-- [Agent Loop](/en/concepts/agent-loop) — 完整的 Agent 執行週期
+- [Context Engine](/en/concepts/context-engine) — 透過外掛程式自訂上下文插入
+- [壓縮](/en/concepts/compaction) — 總結長對話
+- [系統提示詞](/en/concepts/system-prompt) — 系統提示詞是如何建構的
+- [Agent 迴圈](/en/concepts/agent-loop) — 完整的 Agent 執行週期

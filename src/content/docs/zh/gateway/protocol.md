@@ -423,7 +423,7 @@ implemented in `src/gateway/server-methods/*.ts`.
 - 操作员可以调用 `skills.search` 和 `skills.detail` (`operator.read`) 来获取 ClawHub 发现元数据。
 - 操作员可以以两种模式调用 `skills.install` (`operator.admin`)：
   - ClawHub 模式：`{ source: "clawhub", slug, version?, force? }` 将技能文件夹安装到默认代理工作区的 `skills/` 目录中。
-  - Gateway 安装程序模式：`{ name, installId, dangerouslyForceUnsafeInstall?, timeoutMs? }`
+  - Gateway(网关) 安装程序模式：`{ name, installId, dangerouslyForceUnsafeInstall?, timeoutMs? }`
     在网关主机上运行已声明的 `metadata.openclaw.install` 操作。
 - 操作员可以通过两种模式调用 `skills.update` (`operator.admin`)：
   - ClawHub 模式会更新默认代理工作区中一个跟踪的 slug 或所有跟踪的 ClawHub 安装。

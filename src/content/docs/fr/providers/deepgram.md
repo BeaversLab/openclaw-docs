@@ -8,86 +8,119 @@ title: "Deepgram"
 
 # Deepgram (Transcription Audio)
 
-Deepgram est une API de reconnaissance vocale. Dans API, elle est utilisée pour la **transcription de fichiers audio/notes vocales
-entrants** via `tools.media.audio`.
+Deepgram est une API de reconnaissance vocale. Dans OpenClaw, elle est utilisée pour la **transcription de notes audio/voix entrantes** via `tools.media.audio`.
 
-Lorsqu'elle est activée, OpenClaw télécharge le fichier audio vers Deepgram et injecte la transcription
-dans le pipeline de réponse (bloc `{{Transcript}}` + `[Audio]`). Ce n'est **pas un streaming**;
-il utilise le point de terminaison de transcription préenregistrée.
+Lorsqu'elle est activée, OpenClaw télécharge le fichier audio vers Deepgram et injecte la transcription dans le pipeline de réponse (bloc `{{Transcript}}` + `[Audio]`). Il ne s'agit **pas de streaming** ; cela utilise le point de terminaison de transcription préenregistrée.
 
-Site Web : [https://deepgram.com](https://deepgram.com)  
-Docs : [https://developers.deepgram.com](https://developers.deepgram.com)
+| Détail            | Valeur                                                     |
+| ----------------- | ---------------------------------------------------------- |
+| Site Web          | [deepgram.com](https://deepgram.com)                       |
+| Docs              | [developers.deepgram.com](https://developers.deepgram.com) |
+| Auth              | `DEEPGRAM_API_KEY`                                         |
+| Modèle par défaut | `nova-3`                                                   |
 
-## Quick start
+## Getting started
 
-1. Définissez votre clé API :
+<Steps>
+  <Step title="Définissez votre clé API">
+    Ajoutez votre clé API Deepgram à l'environnement :
 
-```
-DEEPGRAM_API_KEY=dg_...
-```
+    ```
+    DEEPGRAM_API_KEY=dg_...
+    ```
 
-2. Activez le fournisseur :
-
-```json5
-{
-  tools: {
-    media: {
-      audio: {
-        enabled: true,
-        models: [{ provider: "deepgram", model: "nova-3" }],
-      },
-    },
-  },
-}
-```
-
-## Options
-
-- `model` : id du modèle Deepgram (par défaut : `nova-3`)
-- `language` : indication de langue (facultatif)
-- `tools.media.audio.providerOptions.deepgram.detect_language` : activer la détection de langue (facultatif)
-- `tools.media.audio.providerOptions.deepgram.punctuate` : activer la ponctuation (facultatif)
-- `tools.media.audio.providerOptions.deepgram.smart_format` : activer le formatage intelligent (facultatif)
-
-Exemple avec langue :
-
-```json5
-{
-  tools: {
-    media: {
-      audio: {
-        enabled: true,
-        models: [{ provider: "deepgram", model: "nova-3", language: "en" }],
-      },
-    },
-  },
-}
-```
-
-Exemple avec les options Deepgram :
-
-```json5
-{
-  tools: {
-    media: {
-      audio: {
-        enabled: true,
-        providerOptions: {
-          deepgram: {
-            detect_language: true,
-            punctuate: true,
-            smart_format: true,
+  </Step>
+  <Step title="Activez le fournisseur audio">
+    ```json5
+    {
+      tools: {
+        media: {
+          audio: {
+            enabled: true,
+            models: [{ provider: "deepgram", model: "nova-3" }],
           },
         },
-        models: [{ provider: "deepgram", model: "nova-3" }],
       },
-    },
-  },
-}
-```
+    }
+    ```
+  </Step>
+  <Step title="Envoyez une note vocale">
+    Envoyez un message audio via n'importe quel canal connecté. OpenClaw le transcrit
+    via Deepgram et injecte la transcription dans le pipeline de réponse.
+  </Step>
+</Steps>
+
+## Options de configuration
+
+| Option            | Chemin                                                       | Description                                   |
+| ----------------- | ------------------------------------------------------------ | --------------------------------------------- |
+| `model`           | `tools.media.audio.models[].model`                           | ID du modèle Deepgram (par défaut : `nova-3`) |
+| `language`        | `tools.media.audio.models[].language`                        | Indication de langue (optionnel)              |
+| `detect_language` | `tools.media.audio.providerOptions.deepgram.detect_language` | Activer la détection de langue (optionnel)    |
+| `punctuate`       | `tools.media.audio.providerOptions.deepgram.punctuate`       | Activer la ponctuation (optionnel)            |
+| `smart_format`    | `tools.media.audio.providerOptions.deepgram.smart_format`    | Activer le formatage intelligent (optionnel)  |
+
+<Tabs>
+  <Tab title="With language hint">
+    ```json5
+    {
+      tools: {
+        media: {
+          audio: {
+            enabled: true,
+            models: [{ provider: "deepgram", model: "nova-3", language: "en" }],
+          },
+        },
+      },
+    }
+    ```
+  </Tab>
+  <Tab title="With Deepgram options">
+    ```json5
+    {
+      tools: {
+        media: {
+          audio: {
+            enabled: true,
+            providerOptions: {
+              deepgram: {
+                detect_language: true,
+                punctuate: true,
+                smart_format: true,
+              },
+            },
+            models: [{ provider: "deepgram", model: "nova-3" }],
+          },
+        },
+      },
+    }
+    ```
+  </Tab>
+</Tabs>
 
 ## Notes
 
-- L'authentification suit l'ordre d'authentification standard des fournisseurs ; `DEEPGRAM_API_KEY` est le chemin le plus simple.
-- Remplacez les points de terminaison ou les en-têtes avec `tools.media.audio.baseUrl` et `tools.media.audio.headers` lors de l'utilisation d'un proxy.
-- La sortie suit les mêmes règles audio que les autres fournisseurs (limites de taille, délais d'attente, injection de transcription).
+<AccordionGroup>
+  <Accordion title="Authentification">L'authentification suit l'ordre d'authentification standard du fournisseur. `DEEPGRAM_API_KEY` est le chemin le plus simple.</Accordion>
+  <Accordion title="Proxy et points de terminaison personnalisés">Remplacez les points de terminaison ou les en-têtes par `tools.media.audio.baseUrl` et `tools.media.audio.headers` lors de l'utilisation d'un proxy.</Accordion>
+  <Accordion title="Comportement de la sortie">La sortie suit les mêmes règles audio que les autres fournisseurs (limites de taille, délais d'expiration, injection de transcription).</Accordion>
+</AccordionGroup>
+
+<Note>La transcription Deepgram est **uniquement pré-enregistrée** (pas en temps réel). OpenClaw télécharge le fichier audio complet et attend la transcription complète avant de l'injecter dans la conversation.</Note>
+
+## Connexes
+
+<CardGroup cols={2}>
+  <Card title="Outils multimédias" href="/en/tools/media" icon="photo-film">
+    Aperçu du pipeline de traitement audio, image et vidéo.
+  </Card>
+  <Card title="Configuration" href="/en/configuration" icon="gear">
+    Référence complète de la configuration, y compris les paramètres des outils multimédias.
+  </Card>
+  <Card title="Dépannage" href="/en/help/troubleshooting" icon="wrench">
+    Problèmes courants et étapes de débogage.
+  </Card>
+  <Card title="FAQ" href="/en/help/faq" icon="circle-question">
+    Questions fréquentes sur la configuration de OpenClaw.
+  </Card>
+</CardGroup>

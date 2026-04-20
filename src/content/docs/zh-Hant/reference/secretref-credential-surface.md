@@ -42,6 +42,7 @@ Scope intent:
 - `messages.tts.providers.*.apiKey`
 - `tools.web.fetch.firecrawl.apiKey`
 - `plugins.entries.brave.config.webSearch.apiKey`
+- `plugins.entries.exa.config.webSearch.apiKey`
 - `plugins.entries.google.config.webSearch.apiKey`
 - `plugins.entries.xai.config.webSearch.apiKey`
 - `plugins.entries.moonshot.config.webSearch.apiKey`
@@ -100,8 +101,8 @@ Scope intent:
 - `channels.zalo.webhookSecret`
 - `channels.zalo.accounts.*.botToken`
 - `channels.zalo.accounts.*.webhookSecret`
-- `channels.googlechat.serviceAccount` 透過同層級 `serviceAccountRef` (相容性例外)
-- `channels.googlechat.accounts.*.serviceAccount` 透過同層級 `serviceAccountRef` (相容性例外)
+- `channels.googlechat.serviceAccount` 透過同級 `serviceAccountRef` (相容性例外)
+- `channels.googlechat.accounts.*.serviceAccount` 透過同級 `serviceAccountRef` (相容性例外)
 
 ### `auth-profiles.json` 目標 (`secrets configure` + `secrets apply` + `secrets audit`)
 
@@ -110,19 +111,19 @@ Scope intent:
 
 [//]: # "secretref-supported-list-end"
 
-備註：
+註記：
 
-- Auth-profile plan 目標需要 `agentId`。
-- Plan 項目目標為 `profiles.*.key` / `profiles.*.token` 並寫入同層級參照 (`keyRef` / `tokenRef`)。
+- Auth-profile 計畫目標需要 `agentId`。
+- 計畫項目目標為 `profiles.*.key` / `profiles.*.token` 並寫入同級參照 (`keyRef` / `tokenRef`)。
 - Auth-profile 參照包含在執行階段解析和稽核覆蓋範圍內。
-- OAuth 政策防護：`auth.profiles.<id>.mode = "oauth"` 不能與該設定檔的 SecretRef 輸入結合。當此政策被違反時，啟動/重新載入和 auth-profile 解析會快速失敗。
-- 對於 SecretRef 管理的模型提供者，產生的 `agents/*/agent/models.json` 項目會保留非機密標記 (非已解析的機密值) 給 `apiKey`/header 介面。
-- 標記持久性是來源權威的：OpenClaw 從作用中的來源設定快照 (解析前) 寫入標記，而非從已解析的執行階段機密值寫入。
-- 針對網路搜尋：
-  - 在明確提供者模式 (`tools.web.search.provider` 已設定) 下，只有選取的提供者金鑰是作用中的。
-  - 在自動模式 (`tools.web.search.provider` 未設定) 下，只有依優先順序解析的第一個提供者金鑰是作用中的。
-  - 在自動模式下，未選取的提供者參照會被視為非作用中，直到被選取為止。
-  - 舊版 `tools.web.search.*` 提供者路徑在相容性期間仍可解析，但標準 SecretRef 介面為 `plugins.entries.<plugin>.config.webSearch.*`。
+- OAuth 原則守衛：`auth.profiles.<id>.mode = "oauth"` 不能與該設定檔的 SecretRef 輸入結合。當此原則被違反時，啟動/重新載入和 auth-profile 解析會快速失敗。
+- 對於 SecretRef 管理的模型提供者，產生的 `agents/*/agent/models.json` 項目會為 `apiKey`/標頭表面保留非機密標記 (而非已解析的機密值)。
+- 標記持久性是來源權威的：OpenClaw 從作用中來源設定快照 (解析前) 寫入標記，而非從已解析的執行階段機密值寫入。
+- 對於網路搜尋：
+  - 在明確提供者模式 (設定 `tools.web.search.provider`) 下，只有選取的提供者金鑰是作用中的。
+  - 在自動模式（未設定 `tools.web.search.provider`）下，只有按優先順序解析的第一個提供者金鑰是啟用的。
+  - 在自動模式下，未選取的提供者參照在被選取之前會被視為非啟用狀態。
+  - 舊版的 `tools.web.search.*` 提供者路徑在相容性視窗期間仍會解析，但標準的 SecretRef 介面是 `plugins.entries.<plugin>.config.webSearch.*`。
 
 ## 不支援的憑證
 
@@ -144,4 +145,4 @@ Scope intent:
 
 基本原理：
 
-- 這些憑證屬於已建立、輪換、承載會話或 OAuth 耐用類別，不適合唯讀的外部 SecretRef 解析。
+- 這些憑證屬於建立、輪替、承載工作階段或 OAuth 耐用類別，不適合唯讀的外部 SecretRef 解析。

@@ -44,6 +44,7 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija un proveedor, autentíq
 - [inferrs (modelos locales)](/en/providers/inferrs)
 - [Kilocode](/en/providers/kilocode)
 - [LiteLLM (puerta de enlace unificada)](/en/providers/litellm)
+- [LM Studio (modelos locales)](/en/providers/lmstudio)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
@@ -70,20 +71,20 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija un proveedor, autentíq
 - [Xiaomi](/en/providers/xiaomi)
 - [Z.AI](/en/providers/zai)
 
-## Páginas de resumen compartidas
+## Páginas de descripción general compartidas
 
-- [Variantas adicionales incluidas](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy y Gemini CLI OAuth
-- [Generación de imágenes](/en/tools/image-generation) - Herramienta `image_generate` compartida, selección de proveedor y conmutación por error
-- [Generación de música](/en/tools/music-generation) - Herramienta `music_generate` compartida, selección de proveedor y conmutación por error
-- [Generación de video](/en/tools/video-generation) - Herramienta `video_generate` compartida, selección de proveedor y conmutación por error
+- [Variantes incluidas adicionales](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy y Gemini CLI OAuth
+- [Generación de imágenes](/en/tools/image-generation) - Herramienta compartida `image_generate`, selección de proveedor y conmutación por error
+- [Generación de música](/en/tools/music-generation) - Herramienta compartida `music_generate`, selección de proveedor y conmutación por error
+- [Generación de video](/en/tools/video-generation) - Herramienta compartida `video_generate`, selección de proveedor y conmutación por error
 
 ## Proveedores de transcripción
 
 - [Deepgram (transcripción de audio)](/en/providers/deepgram)
 
-## Herramientas comunitarias
+## Herramientas de la comunidad
 
-- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Proxy comunitario para credenciales de suscripción de Claude (verifique la política/términos de Anthropic antes de usar)
+- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Proxy comunitario para credenciales de suscripción a Claude (verifique la política/términos de Anthropic antes de usar)
 
 Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y la configuración avanzada,
-consulte [Proveedores de modelos](/en/concepts/model-providers).
+consulte [Model providers](/en/concepts/model-providers).

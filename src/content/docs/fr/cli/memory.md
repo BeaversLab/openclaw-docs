@@ -121,7 +121,7 @@ openclaw memory rem-harness [--agent <id>] [--include-promoted] [--json]
 - `--include-promoted` : inclure les candidats profonds déjà promus.
 - `--json` : afficher la sortie JSON.
 
-## Rêve (expérimental)
+## Rêve
 
 Le rêve est le système de consolidation de la mémoire en arrière-plan avec trois phases coopératives : **light** (trier/mettre en scène le matériel à court terme), **deep** (promouvoir des faits durables dans `MEMORY.md`) et **REM** (réfléchir et faire surface aux thèmes).
 

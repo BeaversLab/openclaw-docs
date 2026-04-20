@@ -98,7 +98,7 @@ Top tools (schema size):
 - 运行时元数据（主机/操作系统/模型/思考）。
 - **项目上下文（Project Context）** 下注入的工作区引导文件。
 
-完整分解：[系统提示词](/en/concepts/system-prompt)。
+完整细分：[系统提示](/en/concepts/system-prompt)。
 
 ## 注入的工作区文件（项目上下文）
 
@@ -136,10 +136,10 @@ Top tools (schema size):
 斜杠命令由 Gateway(网关) 网关 处理。有几种不同的行为：
 
 - **独立命令**：仅包含 `/...` 的消息将作为命令运行。
-- **指令**：在模型看到消息之前，会先剥离 `/think`、`/verbose`、`/reasoning`、`/elevated`、`/model`、`/queue`。
+- **指令**：`/think`、`/verbose`、`/trace`、`/reasoning`、`/elevated`、`/model`、`/queue` 会在模型看到消息之前被剥离。
   - 仅包含指令的消息会保留会话设置。
   - 普通消息中的内联指令作为单条消息的提示。
-- **内联快捷方式**（仅限允许的发件人）：普通消息中的某些 `/...` 令牌可以立即运行（例如：“hey /status”），并且会在模型看到剩余文本之前被剥离。
+- **内联快捷方式**（仅限白名单发送者）：普通消息中的某些 `/...` token 可以立即运行（例如：“hey /status”），并在模型看到剩余文本之前被剥离。
 
 详情：[斜杠命令](/en/tools/slash-commands)。
 
@@ -153,20 +153,20 @@ Top tools (schema size):
 
 文档：[会话](/en/concepts/session)、[压缩](/en/concepts/compaction)、[会话修剪](/en/concepts/session-pruning)。
 
-默认情况下，OpenClaw 使用内置的 `legacy` 上下文引擎进行组装和压缩。如果您安装了提供 `kind: "context-engine"` 的插件并使用 `plugins.slots.contextEngine` 选中它，OpenClaw 会将上下文组装、`/compact` 和相关的子代理上下文生命周期钩子委托给该引擎。`ownsCompaction: false` 不会自动回退到旧引擎；活动引擎仍必须正确实现 `compact()`。有关完整的可插拔接口、生命周期钩子和配置，请参阅 [Context Engine](/en/concepts/context-engine)。
+默认情况下，OpenClaw 使用内置的 `legacy` 上下文引擎进行组装和压缩。如果您安装了提供 `kind: "context-engine"` 并使用 `plugins.slots.contextEngine` 选中它的插件，OpenClaw 会将上下文组装、`/compact` 和相关的子代理上下文生命周期钩子委托给该引擎。`ownsCompaction: false` 不会自动回退到旧引擎；活动引擎仍必须正确实现 `compact()`。有关完整的可插拔接口、生命周期钩子和配置，请参阅 [上下文引擎](/en/concepts/context-engine)。
 
 ## `/context` 实际报告的内容
 
-`/context` 在可用时首选最新的**运行构建**系统提示词报告：
+`/context` 在可用时首选最新的 **运行构建 (run-built)** 系统提示报告：
 
-- `System prompt (run)` = 从最后一次嵌入（具备工具能力）的运行中捕获，并持久化到会话存储中。
-- `System prompt (estimate)` = 当不存在运行报告时（或通过不生成该报告的 CLI 后端运行时）即时计算。
+- `System prompt (run)` = 从最后一次嵌入（具有工具能力）的运行中捕获，并持久化在会话存储中。
+- `System prompt (estimate)` = 当不存在运行报告时（或通过不生成报告的 CLI 后端运行时）即时计算得出。
 
 无论哪种方式，它都会报告大小和主要贡献者；它**不**会转储完整的系统提示或工具架构。
 
 ## 相关
 
-- [Context Engine](/en/concepts/context-engine) — 通过插件注入自定义上下文
-- [Compaction](/en/concepts/compaction) — 总结长对话
-- [System Prompt](/en/concepts/system-prompt) — 系统提示词的构建方式
-- [Agent Loop](/en/concepts/agent-loop) — 完整的 Agent 执行周期
+- [上下文引擎](/en/concepts/context-engine) — 通过插件自定义上下文注入
+- [压缩]（/en/concepts/compaction）—— 总结长对话
+- [系统提示词]（/en/concepts/system-prompt）—— 系统提示词是如何构建的
+- [代理循环]（/en/concepts/agent-loop）—— 完整的代理执行周期

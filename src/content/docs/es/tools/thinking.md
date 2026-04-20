@@ -1,5 +1,5 @@
 ---
-summary: "Sintaxis de directivas para /think, /fast, /verbose y visibilidad del razonamiento"
+summary: "Sintaxis de directivas para /think, /fast, /verbose, /trace y visibilidad de razonamiento"
 read_when:
   - Adjusting thinking, fast-mode, or verbose directive parsing or defaults
 title: "Niveles de pensamiento"
@@ -72,31 +72,40 @@ title: "Niveles de pensamiento"
 - Los resúmenes de fallos de herramientas siguen siendo visibles en modo normal, pero los sufijos de detalles de errores sin procesar están ocultos a menos que el modo detallado sea `on` o `full`.
 - Cuando el modo detallado es `full`, las salidas de las herramientas también se reenvían después de completarse (burbuja separada, truncadas a una longitud segura). Si activa `/verbose on|full|off` mientras se está ejecutando una tarea, las burbujas de herramientas posteriores respetan la nueva configuración.
 
-## Visibilidad del razonamiento (/reasoning)
+## Directivas de traza de complementos (/trace)
+
+- Niveles: `on` | `off` (predeterminado).
+- El mensaje de solo directiva alterna la salida de traza del complemento de la sesión y responde `Plugin trace enabled.` / `Plugin trace disabled.`.
+- La directiva en línea afecta solo ese mensaje; de lo contrario, se aplican los valores predeterminados de la sesión/global.
+- Envíe `/trace` (o `/trace:`) sin argumentos para ver el nivel de traza actual.
+- `/trace` es más estrecho que `/verbose`: solo expone líneas de traza/depuración propias del complemento, como los resúmenes de depuración de Active Memory.
+- Las líneas de traza pueden aparecer en `/status` y como un mensaje de diagnóstico de seguimiento después de la respuesta normal del asistente.
+
+## Visibilidad de razonamiento (/reasoning)
 
 - Niveles: `on|off|stream`.
 - El mensaje de solo directiva alterna si se muestran los bloques de pensamiento en las respuestas.
-- Cuando está activado, el razonamiento se envía como un **mensaje separado** con el prefijo `Reasoning:`.
-- `stream` (solo Telegram): transmite el razonamiento a la burbuja de borrador de Telegram mientras se genera la respuesta y luego envía la respuesta final sin el razonamiento.
+- Cuando está habilitado, el razonamiento se envía como un **mensaje separado** prefijado con `Reasoning:`.
+- `stream` (solo Telegram): transmite el razonamiento a la burbuja de borrador de Telegram mientras se genera la respuesta y luego envía la respuesta final sin razonamiento.
 - Alias: `/reason`.
 - Envíe `/reasoning` (o `/reasoning:`) sin argumentos para ver el nivel de razonamiento actual.
 - Orden de resolución: directiva en línea, luego anulación de sesión, luego valor predeterminado por agente (`agents.list[].reasoningDefault`), luego alternativa (`off`).
 
 ## Relacionado
 
-- La documentación del modo elevado se encuentra en [Elevated mode](/en/tools/elevated).
+- La documentación del modo elevado se encuentra en [Modo elevado](/en/tools/elevated).
 
-## Latidos (Heartbeats)
+## Latidos
 
-- El cuerpo de la sonda de latido es el prompt de latido configurado (predeterminado: `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`). Las directivas en línea en un mensaje de latido se aplican como de costumbre (pero evite cambiar los valores predeterminados de sesión desde los latidos).
-- La entrega de latidos por defecto es solo la carga útil final. Para también enviar el mensaje separado `Reasoning:` (cuando esté disponible), establezca `agents.defaults.heartbeat.includeReasoning: true` o por agente `agents.list[].heartbeat.includeReasoning: true`.
+- El cuerpo de la sonda de latido es el mensaje de latido configurado (predeterminado: `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`). Las directivas en línea en un mensaje de latido se aplican como de costumbre (pero evite cambiar los valores predeterminados de la sesión desde los latidos).
+- La entrega de latidos predetermina solo a la carga útil final. Para también enviar el mensaje separado `Reasoning:` (cuando esté disponible), establezca `agents.defaults.heartbeat.includeReasoning: true` o `agents.list[].heartbeat.includeReasoning: true` por agente.
 
 ## Interfaz de usuario de chat web
 
-- El selector de pensamiento del chat web refleja el nivel almacenado de la sesión desde el almacén/configuración de la sesión entrante cuando se carga la página.
-- Al elegir otro nivel, se escribe la anulación de la sesión inmediatamente a través de `sessions.patch`; no espera al siguiente envío y no es una anulación de una sola vez `thinkingOnce`.
-- La primera opción siempre es `Default (<resolved level>)`, donde el predeterminado resuelto proviene del modelo de sesión activo: `adaptive` para Claude 4.6 en Anthropic/Bedrock, `low` para otros modelos con capacidad de razonamiento, `off` en caso contrario.
-- El selector mantiene el conocimiento del proveedor:
+- El selector de pensamiento del chat web refleja el nivel almacenado de la sesión desde el almacenamiento/configuración de la sesión entrante cuando se carga la página.
+- Al elegir otro nivel, se escribe la invalidación de sesión inmediatamente a través de `sessions.patch`; no espera al siguiente envío y no es una invalidación de un solo uso `thinkingOnce`.
+- La primera opción siempre es `Default (<resolved level>)`, donde el valor predeterminado resuelto proviene del modelo de sesión activo: `adaptive` para Claude 4.6 en Anthropic/Bedrock, `low` para otros modelos con capacidad de razonamiento, `off` en caso contrario.
+- El selector permanece consciente del proveedor:
   - la mayoría de los proveedores muestran `off | minimal | low | medium | high | adaptive`
-  - Z.AI muestra `off | on` binario
+  - Z.AI muestra un binario `off | on`
 - `/think:<level>` todavía funciona y actualiza el mismo nivel de sesión almacenado, por lo que las directivas de chat y el selector se mantienen sincronizados.

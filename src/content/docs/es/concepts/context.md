@@ -27,7 +27,7 @@ El contexto _no es lo mismo_ que la "memoria": la memoria se puede almacenar en 
 - `/usage tokens` → añade un pie de página de uso por respuesta a las respuestas normales.
 - `/compact` → resume el historial anterior en una entrada compacta para liberar espacio en la ventana.
 
-Consulta también: [Comandos de barra](/en/tools/slash-commands), [Uso de tokens y costes](/en/reference/token-use), [Compactación](/en/concepts/compaction).
+Ver también: [Comandos de barra](/en/tools/slash-commands), [Uso de tokens y costes](/en/reference/token-use), [Compactación](/en/concepts/compaction).
 
 ## Salida de ejemplo
 
@@ -136,10 +136,10 @@ Las herramientas afectan el contexto de dos maneras:
 Los comandos de barra son manejados por el Gateway. Hay algunos comportamientos diferentes:
 
 - **Comandos independientes**: un mensaje que solo es `/...` se ejecuta como un comando.
-- **Directivas**: `/think`, `/verbose`, `/reasoning`, `/elevated`, `/model`, `/queue` se eliminan antes de que el modelo vea el mensaje.
+- **Directivas**: `/think`, `/verbose`, `/trace`, `/reasoning`, `/elevated`, `/model`, `/queue` se eliminan antes de que el modelo vea el mensaje.
   - Los mensajes que solo contienen directivas persisten en la configuración de la sesión.
   - Las directivas en línea en un mensaje normal actúan como sugerencias por mensaje.
-- **Atajos en línea** (solo remitentes permitidos): ciertos tokens `/...` dentro de un mensaje normal pueden ejecutarse inmediatamente (ejemplo: “hey /status”) y se eliminan antes de que el modelo vea el texto restante.
+- **Atajos en línea** (solo remitentes en lista blanca): ciertos tokens `/...` dentro de un mensaje normal pueden ejecutarse inmediatamente (ejemplo: “hey /status”), y se eliminan antes de que el modelo vea el texto restante.
 
 Detalles: [Comandos de barra](/en/tools/slash-commands).
 
@@ -153,13 +153,20 @@ Lo que persiste entre mensajes depende del mecanismo:
 
 Documentación: [Sesión](/en/concepts/session), [Compactación](/en/concepts/compaction), [Poda de sesión](/en/concepts/session-pruning).
 
-De forma predeterminada, OpenClaw utiliza el motor de contexto `legacy` integrado para el ensamblaje y la compactación. Si instalas un complemento que proporciona `kind: "context-engine"` y lo seleccionas con `plugins.slots.contextEngine`, OpenClaw delega el ensamblaje de contexto, `/compact` y los enlaces del ciclo de vida del contexto de subagentes relacionados a ese motor en su lugar. `ownsCompaction: false` no vuelve automáticamente al motor heredado; el motor activo aún debe implementar `compact()` correctamente. Consulta [Context Engine](/en/concepts/context-engine) para obtener la interfaz conectable completa, los enlaces del ciclo de vida y la configuración.
+De forma predeterminada, OpenClaw utiliza el motor de contexto `legacy` integrado para el ensamblaje y
+compactación. Si instala un complemento que proporciona `kind: "context-engine"` y
+lo selecciona con `plugins.slots.contextEngine`, OpenClaw delega el ensamblaje de contexto,
+`/compact` y los ganchos del ciclo de vida del contexto del subagente relacionados a ese
+motor en su lugar. `ownsCompaction: false` no vuelve automáticamente al motor
+heredado; el motor activo todavía debe implementar `compact()` correctamente. Consulte
+[Context Engine](/en/concepts/context-engine) para obtener la interfaz
+conectable completa, los ganchos del ciclo de vida y la configuración.
 
 ## Lo que `/context` realmente reporta
 
-`/context` prefiere el informe más reciente del prompt del sistema **construido en la ejecución** cuando está disponible:
+`/context` prefiere el informe del prompt del sistema **construido por la ejecución** más reciente cuando está disponible:
 
-- `System prompt (run)` = capturado de la última ejecución integrada (con capacidad de herramientas) y persistido en el almacén de sesiones.
+- `System prompt (run)` = capturado de la última ejecución integrada (con capacidad de herramienta) y persistido en el almacén de sesiones.
 - `System prompt (estimate)` = calculado al vuelo cuando no existe un informe de ejecución (o al ejecutarse a través de un backend de CLI que no genera el informe).
 
 De cualquier manera, reporta los tamaños y los principales contribuyentes; **no** vuelca el prompt del sistema completo ni los esquemas de herramientas.
@@ -167,6 +174,6 @@ De cualquier manera, reporta los tamaños y los principales contribuyentes; **no
 ## Relacionado
 
 - [Context Engine](/en/concepts/context-engine) — inyección de contexto personalizada mediante complementos
-- [Compaction](/en/concepts/compaction) — resumiendo conversaciones largas
-- [System Prompt](/en/concepts/system-prompt) — cómo se construye el prompt del sistema
-- [Agent Loop](/en/concepts/agent-loop) — el ciclo completo de ejecución del agente
+- [Compresión](/en/concepts/compaction) — resumen de conversaciones largas
+- [Prompt del sistema](/en/concepts/system-prompt) — cómo se construye el prompt del sistema
+- [Bucle del agente](/en/concepts/agent-loop) — el ciclo completo de ejecución del agente

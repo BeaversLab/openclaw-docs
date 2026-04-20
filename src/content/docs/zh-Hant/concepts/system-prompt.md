@@ -100,48 +100,53 @@ Context**（子代理程式情境），而非 **Group Chat Context**（群組聊
 `agents.defaults.heartbeat.includeSystemPromptSection` 為 false 時，`HEARTBEAT.md` 會在正常執行中被省略。
 請保持注入的檔案簡潔 — 尤其是 `MEMORY.md`，它會隨時間增長並導致上下文使用量異常偏高以及更頻繁的壓縮。
 
-> **注意：** `memory/*.md` 每日檔案**不**會自動注入。它們
-> 透過 `memory_search` 和 `memory_get` 工具按需存取，因此除非模型明確讀取它們，
-> 否則它們不會計入上下文視窗。
+> **注意：** `memory/*.md` 每日文件**不**屬於正常啟動
+> 專案上下文的一部分。在普通回合中，它們是透過
+> `memory_search` 和 `memory_get` 工具按需存取的，因此除非模型明確讀取它們，否則它們不會佔用
+> 上下文視窗。純 `/new` 和
+> `/reset` 回次是例外：執行時可以將最近的每日記憶
+> 作為一次性啟動上下文區塊，預先附加到該第一個回次。
 
-大型檔案會被標記截斷。每個檔案的大小上限由
-`agents.defaults.bootstrapMaxChars` 控制（預設值：20000）。所有檔案的注入 bootstrap 內容
-總計上限由 `agents.defaults.bootstrapTotalMaxChars` 控制
-（預設值：150000）。遺失的檔案會注入一個簡短的遺失檔案標記。當發生截斷時，
+大檔案會被截斷並標記。每個檔案的大小上限由
+`agents.defaults.bootstrapMaxChars` 控制（預設值：20000）。跨檔案注入的啟動
+內容總計受 `agents.defaults.bootstrapTotalMaxChars` 限制
+（預設值：150000）。遺失的檔案會注入一個簡短的遺失檔案標記。發生截斷時，
 OpenClaw 可以在專案上下文中注入警告區塊；透過
-`agents.defaults.bootstrapPromptTruncationWarning` 控制此行為（`off`、`once`、`always`；
+`agents.defaults.bootstrapPromptTruncationWarning` 控制（`off`、`once`、`always`；
 預設值：`once`）。
 
-子代理階段僅注入 `AGENTS.md` 和 `TOOLS.md`（其他 bootstrap 檔案
-會被過濾掉，以保持子代理上下文精簡）。
+子代理工作階段僅注入 `AGENTS.md` 和 `TOOLS.md`（其他啟動檔案
+會被過濾掉以保持子代理上下文精簡）。
 
-內部掛鉤可以透過 `agent:bootstrap` 攔截此步驟，以變更或取代
-注入的 bootstrap 檔案（例如用替換身分取代 `SOUL.md`）。
+內部 Hook 可以透過 `agent:bootstrap` 攔截此步驟，以變更或替換
+注入的啟動檔案（例如將 `SOUL.md` 交換為替代人格）。
 
-如果您想讓代理聽起來不太普通，請從
-[SOUL.md 個性指南](/en/concepts/soul) 開始。
+如果您想讓代理聽起來不那麼通用，請從
+[SOUL.md 人格指南](/en/concepts/soul) 開始。
 
-若要檢查每個注入檔案的貢獻程度（原始與注入、截斷，加上工具架構額外開銷），請使用 `/context list` 或 `/context detail`。請參閱 [Context](/en/concepts/context)。
+要檢查每個注入檔案的貢獻程度（原始與注入、截斷，加上工具架構開銷），請使用 `/context list` 或 `/context detail`。請參閱 [Context](/en/concepts/context)。
 
 ## 時間處理
 
 當已知使用者時區時，系統提示詞會包含一個專用的 **Current Date & Time** 區塊。為了保持提示詞快取的穩定性，它現在僅包含
 **時區**（沒有動態時鐘或時間格式）。
 
-當代理需要當前時間時使用 `session_status`；狀態卡片包含一個時間戳記行。同一個工具可以選擇性地設定每個會話的模型覆蓋（`model=default` 會將其清除）。
+當代理需要當前時間時，請使用 `session_status`；狀態卡片
+包含一個時間戳行。同一個工具可選擇設定每個工作階段的模型
+覆寫（`model=default` 會清除它）。
 
 設定方式：
 
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-有關完整行為細節，請參閱[日期與時間](/en/date-time)。
+有關完整行為細節，請參閱 [日期與時間](/en/date-time)。
 
 ## 技能
 
-當存在符合資格的技能時，OpenClaw 會注入一個簡潔的 **可用技能列表**（`formatSkillsForPrompt`），其中包含每個技能的 **檔案路徑**。提示會指示模型使用 `read` 來載入列出的位置（工作區、受管理或打包）中的 SKILL.md。如果沒有符合資格的技能，則會省略技能部分。
+當存在符合條件的技能時，OpenClaw 會注入一個精簡的 **可用技能清單** (`formatSkillsForPrompt`)，其中包含每個技能的 **檔案路徑**。系統提示會指示模型使用 `read` 來載入列舉位置（工作區、受管理或內建）中的 SKILL.md。如果沒有符合條件的技能，則會省略技能章節。
 
-資格條件包括技能元資料閘道、執行時期環境/設定檢查，以及當配置了 `agents.defaults.skills` 或 `agents.list[].skills` 時的有效代理技能允許清單。
+資格條件包含技能元資料閘門、執行時期環境/設定檢查，以及當配置 `agents.defaults.skills` 或 `agents.list[].skills` 時的有效代理程式技能允許清單。
 
 ```
 <available_skills>
@@ -155,6 +160,18 @@ OpenClaw 可以在專案上下文中注入警告區塊；透過
 
 這既保持了基礎提示詞的精簡，同時又啟用了針對性的技能使用。
 
+技能清單預算由技能子系統擁有：
+
+- 全域預設值：`skills.limits.maxSkillsPromptChars`
+- 各代理程式覆寫值：`agents.list[].skillsLimits.maxSkillsPromptChars`
+
+一般有界的執行時期摘要使用不同的介面：
+
+- `agents.defaults.contextLimits.*`
+- `agents.list[].contextLimits.*`
+
+這種區分方式能將技能大小計算與執行時期讀取/注入大小計算（例如 `memory_get`、即時工具結果以及壓縮後的 AGENTS.md 重新整理）分開處理。
+
 ## 文件
 
-當可用時，系統提示會包含一個指向本機 OpenClaw 文件目錄的 **文件** 部分（儲存庫工作區中的 `docs/` 或打包的 npm 套件文件），並且也會注明公開鏡像、來源儲存庫、社群 Discord 和 ClawHub ([https://clawhub.ai](https://clawhub.ai)) 以便探索技能。提示會指示模型優先查詢本機文件以了解 OpenClaw 的行為、指令、設定或架構，並在可能時自行執行 `openclaw status`（僅在無法存取時才詢問使用者）。
+當有可用資源時，系統提示會包含一個 **文件** 章節，指向本機 OpenClaw 文件目錄（位於儲存庫工作區中的 `docs/` 或內建的 npm 套件文件），並且註記公開鏡像、來源儲存庫、社群 Discord 以及 ClawHub ([https://clawhub.ai](https://clawhub.ai)) 以供技能探索。系統提示會指示模型優先查閱本機文件以了解 OpenClaw 的行為、指令、設定或架構，並在可能的情況下自行執行 `openclaw status`（僅在無權限存取時才詢問使用者）。

@@ -12,7 +12,7 @@ title: "Sécurité"
   utilisateurs antagonistes, divisez les frontières de confiance (passerelle + identifiants séparés, idéalement utilisateurs/hôtes OS séparés).
 </Warning>
 
-**Sur cette page :** [Modèle de confiance](#scope-first-personal-assistant-security-model) | [Audit rapide](#quick-check-openclaw-security-audit) | [Ligne de base renforcée](#hardened-baseline-in-60-seconds) | [Modèle d'accès DM](#dm-access-model-pairing-allowlist-open-disabled) | [Renforcement de la configuration](#configuration-hardening-examples) | [Réponse aux incidents](#incident-response)
+**Sur cette page :** [Modèle de confiance](#scope-first-personal-assistant-security-model) | [Audit rapide](#quick-check-openclaw-security-audit) | [Ligne de base durcie](#hardened-baseline-in-60-seconds) | [Modèle d'accès DM](#dm-access-model-pairing-allowlist-open-disabled) | [Durcissement de la configuration](#configuration-hardening-examples) | [Réponse aux incidents](#incident-response)
 
 ## Priorité à la portée : modèle de sécurité de l'assistant personnel
 
@@ -128,7 +128,7 @@ Avant d'ouvrir une GHSA, vérifiez tout ce qui suit :
 1. Le problème de reproductibilité persiste toujours sur la dernière version `main` ou la dernière version publiée.
 2. Le rapport inclut le chemin exact du code (`file`, fonction, plage de lignes) et la version/le commit testés.
 3. L'impact franchit une frontière de confiance documentée (et pas seulement une injection de prompt).
-4. La réclamation n'est pas répertoriée dans [Out of Scope](https://github.com/openclaw/openclaw/blob/main/SECURITY.md#out-of-scope).
+4. La réclamation n'est pas listée dans [Hors périmètre](https://github.com/openclaw/openclaw/blob/main/SECURITY.md#out-of-scope).
 5. Les avis existants ont été vérifiés pour les doublons (réutiliser la GHSA canonique le cas échéant).
 6. Les hypothèses de déploiement sont explicites (bouclage local vs exposé, opérateurs de confiance vs non fiables).
 
@@ -183,7 +183,7 @@ Les listes d'autorisation verrouillent les déclencheurs et l'autorisation de co
 - `contextVisibility: "allowlist"` filtre le contexte supplémentaire pour les expéditeurs autorisés par les vérifications de liste d'autorisation actives.
 - `contextVisibility: "allowlist_quote"` se comporte comme `allowlist`, mais conserve tout de même une réponse citée explicite.
 
-Définissez `contextVisibility` par canal ou par salon/conversation. Consultez [Group Chats](/en/channels/groups#context-visibility-and-allowlists) pour les détails de configuration.
+Définissez `contextVisibility` par channel ou par salle/conversation. Voir [Chats de groupe](/en/channels/groups#context-visibility-and-allowlists) pour les détails de configuration.
 
 Recommandations de triage consultatif :
 
@@ -448,7 +448,7 @@ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
 - La passerelle OpenClaw est prioritairement locale/boucle locale. Si vous terminez TLS au niveau d'un proxy inverse, définissez HSTS sur le domaine HTTPS faisant face au proxy à cet endroit.
 - Si la passerine elle-même termine le HTTPS, vous pouvez définir `gateway.http.securityHeaders.strictTransportSecurity` pour émettre l'en-tête HSTS à partir des réponses OpenClaw.
-- Des conseils de déploiement détaillés sont disponibles dans [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth#tls-termination-and-hsts).
+- Les conseils détaillés de déploiement se trouvent dans [Authentification par proxy de confiance](/en/gateway/trusted-proxy-auth#tls-termination-and-hsts).
 - Pour les déploiements de l'interface de contrôle (Control UI) non en boucle locale, `gateway.controlUi.allowedOrigins` est requis par défaut.
 - `gateway.controlUi.allowedOrigins: ["*"]` est une stratégie explicite d'autorisation de toutes les origines du navigateur, et non une valeur par défaut renforcée. Évitez son utilisation en dehors de tests locaux étroitement contrôlés.
 - Les échecs d'authentification par origine du navigateur en boucle locale sont toujours limités par taux même lorsque l'exemption de boucle locale générale est activée, mais la clé de verrouillage est délimitée par valeur `Origin` normalisée au lieu d'un compartiment localhost partagé.
@@ -515,7 +515,9 @@ Position de OpenClaw :
 
 ## Modèle d'autorisation des commandes
 
-Les commandes slash et les directives sont honorées uniquement pour les **expéditeurs autorisés**. L'autorisation est dérivée des listes autorisatives/appariements de canal plus `commands.useAccessGroups` (voir [Configuration](/en/gateway/configuration) et [Slash commands](/en/tools/slash-commands)). Si une liste autorisée de canal est vide ou inclut `"*"`, les commandes sont effectivement ouvertes pour ce canal.
+Les commandes slash et les directives ne sont honorées que pour les **expéditeurs autorisés**. L'autorisation est dérivée des listes d'autorisation/appariement de channel plus `commands.useAccessGroups` (voir [Configuration](/en/gateway/configuration)
+et [Commandes slash](/en/tools/slash-commands)). Si une liste d'autorisation de channel est vide ou inclut `"*"`,
+les commandes sont effectivement ouvertes pour ce channel.
 
 `/exec` est une commodité de session uniquement pour les opérateurs autorisés. Elle n'écrit **pas** la configuration et ne modifie pas les autres sessions.
 
@@ -576,7 +578,7 @@ openclaw pairing list <channel>
 openclaw pairing approve <channel> <code>
 ```
 
-Détails + fichiers sur le disque : [Appairage](/en/channels/pairing)
+Détails + fichiers sur le disque : [Appariement](/en/channels/pairing)
 
 ## Isolement des sessions DM (mode multi-utilisateur)
 
@@ -601,7 +603,7 @@ Traitez l'extrait de code ci-dessus comme **mode DM sécurisé** :
 - Mode DM sécurisé : `session.dmScope: "per-channel-peer"` (chaque paire canal+expéditeur obtient un contexte DM isolé).
 - Isolement des homologues inter-canaux : `session.dmScope: "per-peer"` (chaque expéditeur obtient une session sur tous les canaux du même type).
 
-Si vous utilisez plusieurs comptes sur le même canal, utilisez plutôt `per-account-channel-peer`. Si la même personne vous contacte sur plusieurs canaux, utilisez `session.identityLinks` pour fusionner ces sessions DM en une identité canonique. Voir [Gestion des sessions](/en/concepts/session) et [Configuration](/en/gateway/configuration).
+Si vous exécutez plusieurs comptes sur le même channel, utilisez plutôt `per-account-channel-peer`. Si la même personne vous contacte sur plusieurs channels, utilisez `session.identityLinks` pour fusionner ces sessions DM en une identité canonique. Voir [Gestion des sessions](/en/concepts/session) et [Configuration](/en/gateway/configuration).
 
 ## Listes d'autorisation (DM + groupes) - terminologie
 
@@ -706,15 +708,16 @@ Recommandations :
 
 ## Reasoning & verbose output in groups
 
-`/reasoning` et `/verbose` peuvent exposer un raisonnement interne ou une sortie d'outil qui
-n'était pas destiné à un channel public. Dans les contextes de groupe, considérez-les comme **debug
-only** et gardez-les désactivés sauf si vous en avez explicitement besoin.
+`/reasoning`, `/verbose` et `/trace` peuvent exposer un raisonnement interne, une sortie d'outil
+ou des diagnostics de plugin qui
+n'étaient pas destinés à un channel public. Dans les paramètres de groupe, considérez-les comme **uniquement
+débug** et gardez-les désactivés sauf si vous en avez explicitement besoin.
 
 Consignes :
 
-- Keep `/reasoning` et `/verbose` désactivés dans les salles publiques.
+- Gardez `/reasoning`, `/verbose` et `/trace` désactivés dans les salles publiques.
 - If you enable them, do so only in trusted DMs or tightly controlled rooms.
-- Remember: verbose output can include tool args, URLs, and data the model saw.
+- Rappelez-vous : la sortie détaillée (verbose) et la trace peuvent inclure les arguments des outils, les URL, les diagnostics des plugins et les données vues par le modèle.
 
 ## Configuration Hardening (examples)
 
@@ -722,22 +725,22 @@ Consignes :
 
 Keep config + state private on the gateway host :
 
-- `~/.openclaw/openclaw.json`: `600` (user read/write only)
-- `~/.openclaw`: `700` (user only)
+- `~/.openclaw/openclaw.json` : `600` (lecture/écriture utilisateur uniquement)
+- `~/.openclaw` : `700` (utilisateur uniquement)
 
-`openclaw doctor` peut avertir et proposer de resserrer ces permissions.
+`openclaw doctor` peut avertir et proposer de resserrer ces autorisations.
 
 ### 0.4) Network exposure (bind + port + firewall)
 
 Le Gateway multiplexe **WebSocket + HTTP** sur un seul port :
 
-- Default: `18789`
-- Config/flags/env: `gateway.port`, `--port`, `OPENCLAW_GATEWAY_PORT`
+- Par défaut : `18789`
+- Config/drapeaux/env : `gateway.port`, `--port`, `OPENCLAW_GATEWAY_PORT`
 
 This HTTP surface includes the Control UI and the canvas host :
 
-- Control UI (SPA assets) (default base path `/`)
-- Hôte Canvas : `/__openclaw__/canvas/` et `/__openclaw__/a2ui/` (HTML/JS arbitraire ; traiter comme du contenu non fiable)
+- Interface de contrôle (assets SPA) (chemin de base par défaut `/`)
+- Hôte Canvas : `/__openclaw__/canvas/` et `/__openclaw__/a2ui/` (HTML/JS arbitraire ; traiter comme un contenu non fiable)
 
 Si vous chargez du contenu Canvas dans un navigateur normal, traitez-le comme n'importe quelle autre page web non fiable :
 
@@ -747,7 +750,7 @@ Si vous chargez du contenu Canvas dans un navigateur normal, traitez-le comme n'
 Le mode de liaison contrôle où la Gateway écoute :
 
 - `gateway.bind: "loopback"` (par défaut) : seuls les clients locaux peuvent se connecter.
-- Les liaisons non bouclées (`"lan"`, `"tailnet"`, `"custom"`) élargissent la surface d'attaque. Ne les utilisez qu'avec une authentification de passerelle (jeton/mot de passe partagé ou un proxy de confiance non bouclé correctement configuré) et un véritable pare-feu.
+- Les liaisons non-boucle (`"lan"`, `"tailnet"`, `"custom"`) étendent la surface d'attaque. Ne les utilisez qu'avec une authentification de passerelle (jeton/mot de passe partagé ou un proxy de confiance non-boucle correctement configuré) et un véritable pare-feu.
 
 Règles empiriques :
 
@@ -758,13 +761,13 @@ Règles empiriques :
 ### 0.4.1) Publication de port Docker + UFW (`DOCKER-USER`)
 
 Si vous exécutez OpenClaw avec Docker sur un VPS, rappelez-vous que les ports de conteneur publiés
-(`-p HOST:CONTAINER` ou Compose `ports:`) sont acheminés via les chaînes de
-transfert de Docker, et pas seulement les règles hôte `INPUT`.
+(`-p HOST:CONTAINER` ou Compose `ports:`) sont acheminés via les chaînes de transfert de Docker,
+et pas seulement les règles `INPUT` de l'hôte.
 
-Pour aligner le trafic Docker sur votre stratégie de pare-feu, appliquez des règles dans
+Pour maintenir le trafic Docker aligné avec votre stratégie de pare-feu, appliquez des règles dans
 `DOCKER-USER` (cette chaîne est évaluée avant les propres règles d'acceptation de Docker).
-Sur de nombreuses distributions modernes, `iptables`/`ip6tables` utilisent l'interface
-`iptables-nft` et appliquent toujours ces règles au backend nftables.
+Sur de nombreuses distributions modernes, `iptables`/`ip6tables` utilisent le frontal `iptables-nft`
+et appliquent toujours ces règles au backend nftables.
 
 Exemple minimal de liste d'autorisation (IPv4) :
 
@@ -786,11 +789,9 @@ COMMIT
 ```
 
 IPv6 possède des tables séparées. Ajoutez une stratégie correspondante dans `/etc/ufw/after6.rules` si
-Docker IPv6 est activé.
+l'IPv6 Docker est activé.
 
-Évitez de coder en dur les noms d'interface comme `eth0` dans les extraits de documentation. Les noms d'interface
-varient selon les images VPS (`ens3`, `enp*`, etc.) et les incohérences pourraient accidentellement
-ignorer votre règle de refus.
+Évitez de coder en dur les noms d'interface comme `eth0` dans les extraits de documentation. Les noms d'interface varient selon les images VPS (`ens3`, `enp*`, etc.) et les incohérences peuvent accidentellement sauter votre règle de refus.
 
 Validation rapide après rechargement :
 
@@ -835,7 +836,7 @@ Le Gateway diffuse sa présence via mDNS (`_openclaw-gw._tcp` sur le port 5353) 
    }
    ```
 
-3. **Mode complet** (opt-in) : incluez `cliPath` + `sshPort` dans les enregistrements TXT :
+3. **Mode complet** (optionnel) : inclure `cliPath` + `sshPort` dans les enregistrements TXT :
 
    ```json5
    {
@@ -845,7 +846,7 @@ Le Gateway diffuse sa présence via mDNS (`_openclaw-gw._tcp` sur le port 5353) 
    }
    ```
 
-4. **Variable d'environnement** (alternative) : définissez `OPENCLAW_DISABLE_BONJOUR=1` pour désactiver mDNS sans modifier la configuration.
+4. **Variable d'environnement** (alternative) : définir `OPENCLAW_DISABLE_BONJOUR=1` pour désactiver mDNS sans modifier la configuration.
 
 En mode minimal, le Gateway diffuse toujours suffisamment d'informations pour la découverte d'appareils (`role`, `gatewayPort`, `transport`) mais omet `cliPath` et `sshPort`. Les applications qui ont besoin des informations sur le chemin CLI peuvent les récupérer via la connexion WebSocket authentifiée à la place.
 
@@ -867,11 +868,15 @@ Définissez un jeton pour que **tous** les clients WS doivent s'authentifier :
 
 Doctor peut en générer un pour vous : `openclaw doctor --generate-gateway-token`.
 
-Remarque : `gateway.remote.token` / `.password` sont des sources d'identifiants client. Ils ne protègent **pas** par eux-mêmes l'accès WS local.
-Les chemins d'appel locaux peuvent utiliser `gateway.remote.*` comme solution de repli uniquement lorsque `gateway.auth.*` n'est pas défini.
-Si `gateway.auth.token` / `gateway.auth.password` est explicitement configuré via SecretRef et non résolu, la résolution échoue de manière fermée (pas de masquage de repli distant).
-Optionnel : épinglez le TLS distant avec `gateway.remote.tlsFingerprint` lors de l'utilisation de `wss://`.
-Le `ws://` en texte clair est réservé au bouclage local par défaut. Pour les chemons de réseau privé de confiance, définissez `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` sur le processus client en mode bris de glace.
+Remarque : `gateway.remote.token` / `.password` sont des sources d'informations d'identification client. Ils
+ne protègent **pas** l'accès WS local par eux-mêmes.
+Les chemins d'appel locaux peuvent utiliser `gateway.remote.*` comme solution de repli uniquement lorsque `gateway.auth.*`
+n'est pas défini.
+Si `gateway.auth.token` / `gateway.auth.password` est explicitement configuré via
+SecretRef et non résolu, la résolution échoue de manière fermée (aucun masquage de repli à distance).
+Optionnel : épingler le TLS distant avec `gateway.remote.tlsFingerprint` lors de l'utilisation de `wss://`.
+Le `ws://` en clair est limité à la boucle locale par défaut. Pour les chemons de réseau privé
+fiables, définissez `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` sur le processus client en tant que bris-de-vitre.
 
 Jumelage d'appareils local :
 
@@ -882,67 +887,66 @@ Jumelage d'appareils local :
 Modes d'authentification :
 
 - `gateway.auth.mode: "token"` : jeton porteur partagé (recommandé pour la plupart des configurations).
-- `gateway.auth.mode: "password"` : authentification par mot de passe (préférez le paramétrage via env : `OPENCLAW_GATEWAY_PASSWORD`).
-- `gateway.auth.mode: "trusted-proxy"` : faire confiance à un proxy inverse conscient de l'identité pour authentifier les utilisateurs et transmettre l'identité via les en-têtes (voir [Authentification Proxy de Confiance](/en/gateway/trusted-proxy-auth)).
+- `gateway.auth.mode: "password"` : authentification par mot de passe (préférer le paramétrage via env : `OPENCLAW_GATEWAY_PASSWORD`).
+- `gateway.auth.mode: "trusted-proxy"` : faire confiance à un reverse proxy prenant en charge l'identité pour authentifier les utilisateurs et transmettre l'identité via les en-têtes (voir [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)).
 
 Liste de vérification de la rotation (jeton/mot de passe) :
 
 1. Générer/définir un nouveau secret (`gateway.auth.token` ou `OPENCLAW_GATEWAY_PASSWORD`).
 2. Redémarrez le Gateway (ou redémarrez l'application macOS si elle supervise le Gateway).
-3. Mettez à jour tous les clients distants (`gateway.remote.token` / `.password` sur les machines qui appellent le Gateway).
+3. Mettre à jour tous les clients distants (`gateway.remote.token` / `.password` sur les machines qui appellent le Gateway).
 4. Vérifiez que vous ne pouvez plus vous connecter avec les anciens identifiants.
 
 ### 0.6) En-têtes d'identité Tailscale Serve
 
 Lorsque `gateway.auth.allowTailscale` est `true` (par défaut pour Serve), OpenClaw
-accepte les en-têtes d'identité Tailscale Serve (`tailscale-user-login`) pour l'authentification
-Control UI/WebSocket. Tailscale vérifie l'identité en résolvant l'adresse
-`x-forwarded-for` via le démon Tailscale local (`tailscale whois`)
-et en la faisant correspondre à l'en-tête. Cela ne se déclenche que pour les requêtes qui atteignent
-le bouclage local (loopback) et incluent `x-forwarded-for`, `x-forwarded-proto`, et `x-forwarded-host` tels
-qu'injectés par OpenClaw.
+accepte les en-têtes d'identité Serve Tailscale (`tailscale-user-login`) pour l'authentification
+Control UI/WebSocket. OpenClaw vérifie l'identité en résolvant l'adresse
+`x-forwarded-for` via le démon local Tailscale (`tailscale whois`)
+et en la faisant correspondre à l'en-tête. Cela ne se déclenche que pour les requêtes qui atteignent le loopback
+et incluent `x-forwarded-for`, `x-forwarded-proto` et `x-forwarded-host` tels
+qu'injectés par Tailscale.
 Pour ce chemin de vérification d'identité asynchrone, les tentatives échouées pour le même `{scope, ip}`
-sont sérialisées avant que le limiter n'enregistre l'échec. Les nouvelles tentatives simultanées
-incorrectes d'un client Serve peuvent donc verrouiller la deuxième tentative immédiatement
-au lieu de se concurrencer comme deux simples discordances.
-Les points de terminaison de l'Tailscale HTTP (par exemple `/v1/*`, `/tools/invoke`, et `/api/channels/*`)
-n'utilisent **pas** l'authentification par en-tête d'identité Tailscale. Ils suivent toujours le mode
-d'authentification HTTP configuré de la passerelle.
+sont sérialisées avant que le limiteur n'enregistre l'échec. Les nouvelles tentatives simultanées incorrectes
+d'un client Serve peuvent donc bloquer immédiatement la deuxième tentative
+au lieu de s'exécuter en parallèle comme deux simples discordances.
+Les points de terminaison de l'API HTTP (par exemple `/v1/*`, `/tools/invoke` et `/api/channels/*`)
+n'utilisent **pas** l'authentification par en-tête d'identité Tailscale. Ils suivent toujours le mode d'authentification HTTP configuré par la passerelle.
 
 Note importante sur la limite de confiance (boundary) :
 
 - L'authentification HTTP Bearer de la Gateway constitue effectivement un accès opérateur tout ou rien.
-- Traitez les identifiants pouvant appeler `/v1/chat/completions`, `/v1/responses`, ou `/api/channels/*` comme des secrets d'opérateur à accès complet pour cette passerelle.
-- Sur la surface HTTP compatible avec OpenAI, l'authentification Bearer par secret partagé restaure les étendues d'opérateur par défaut complètes (`operator.admin`, `operator.approvals`, `operator.pairing`, `operator.read`, `operator.talk.secrets`, `operator.write`) et la sémantique de propriétaire pour les tours de l'agent ; des valeurs `x-openclaw-scopes` plus restreintes ne réduisent pas ce chemin par secret partagé.
-- La sémantique d'étendue par requête sur HTTP ne s'applique que lorsque la requête provient d'un mode porteur d'identité tel que l'authentification par proxy de confiance ou `gateway.auth.mode="none"` sur une entrée privée.
-- Dans ces modes porteurs d'identité, l'omission de `x-openclaw-scopes` revient à l'ensemble d'étendues par défaut de l'opérateur normal ; envoyez l'en-tête explicitement lorsque vous souhaitez un ensemble d'étendues plus restreint.
-- `/tools/invoke` suit la même règle de secret partagé : l'authentification par porteur de jeton/mot de passe y est également considérée comme un accès complet à l'opérateur, tandis que les modes porteurs d'identité honorent toujours les portées déclarées.
+- Traitez les identifiants qui peuvent appeler `/v1/chat/completions`, `/v1/responses` ou `/api/channels/*` comme des secrets d'opérateur à accès complet pour cette passerelle.
+- Sur la surface HTTP compatible OpenAI, l'authentification porte par secret partagé restaure les étendues d'opérateur par défaut complètes (`operator.admin`, `operator.approvals`, `operator.pairing`, `operator.read`, `operator.talk.secrets`, `operator.write`) et la sémantique de propriétaire pour les tours d'agent ; les valeurs `x-openclaw-scopes` plus étroites ne réduisent pas ce chemin à secret partagé.
+- Les sémantiques de portée par requête sur HTTP ne s'appliquent que lorsque la requête provient d'un mode porteur d'identité tel que l'authentification par proxy de confiance ou `gateway.auth.mode="none"` sur une entrée privée.
+- Dans ces modes porteurs d'identité, l'omission de `x-openclaw-scopes` revient à l'ensemble de portées par défaut de l'opérateur normal ; envoyez l'en-tête explicitement lorsque vous voulez un ensemble de portées plus restreint.
+- `/tools/invoke` suit la même règle de secret partagé : l'authentification par porteur de jeton/mot de passe est également traitée comme un accès complet opérateur, tandis que les modes porteurs d'identité honorent toujours les portées déclarées.
 - Ne partagez pas ces identifiants avec des appelants non fiables ; préférez des passerelles distinctes pour chaque limite de confiance.
 
-**Hypothèse de confiance :** l'authentification Serve sans jeton suppose que l'hôte de la passerelle est fiable.
-Ne traitez pas cela comme une protection contre les processus hostiles sur le même hôte. Si du code local
+**Hypothèse de confiance :** l'authentification Serve sans jeton suppose que l'hôte de la passerelle est de confiance.
+Ne considérez pas ceci comme une protection contre les processus hostiles sur le même hôte. Si du code local
 non fiable peut s'exécuter sur l'hôte de la passerelle, désactivez `gateway.auth.allowTailscale`
 et exigez une authentification explicite par secret partagé avec `gateway.auth.mode: "token"` ou
 `"password"`.
 
-**Règle de sécurité :** ne transférez pas ces en-têtes depuis votre propre proxy inverse. Si
-vous terminez le TLS ou proxyez devant la passerelle, désactivez
+**Règle de sécurité :** ne transmettez pas ces en-têtes depuis votre propre proxy inverse. Si
+vous terminez le TLS ou effectuez un proxy devant la passerelle, désactivez
 `gateway.auth.allowTailscale` et utilisez l'authentification par secret partagé (`gateway.auth.mode:
-"token"` or `"password"`) ou [Authentification de proxy de confiance](/en/gateway/trusted-proxy-auth)
+"token"` or `"password"`) ou [Authentification par proxy de confiance](/en/gateway/trusted-proxy-auth)
 à la place.
 
 Proxys de confiance :
 
-- Si vous terminez le TLS devant le Gateway, définissez `gateway.trustedProxies` sur vos IP de proxy.
+- Si vous terminez le TLS devant la passerelle (Gateway), définissez `gateway.trustedProxies` sur vos IP de proxy.
 - OpenClaw fera confiance à `x-forwarded-for` (ou `x-real-ip`) de ces IP pour déterminer l'IP du client pour les vérifications locales d'appariement et les vérifications HTTP/auth locales.
-- Assurez-vous que votre proxy **remplace** `x-forwarded-for` et bloque l'accès direct au port du Gateway.
+- Assurez-vous que votre proxy **remplace** `x-forwarded-for` et bloque l'accès direct au port de la passerelle (Gateway).
 
 Voir [Tailscale](/en/gateway/tailscale) et [Vue d'ensemble Web](/en/web).
 
 ### 0.6.1) Contrôle du navigateur via l'hôte de nœud (recommandé)
 
-Si votre Gateway est distante mais que le navigateur s'exécute sur une autre machine, exécutez un **node host**
-sur la machine du navigateur et laissez la Gateway proxyer les actions du navigateur (voir [tool de navigateur](/en/tools/browser)).
+Si votre passerelle (Gateway) est distante mais que le navigateur s'exécute sur une autre machine, exécutez un **hôte de nœud**
+sur la machine du navigateur et laissez la passerelle (Gateway) agir comme proxy pour les actions du navigateur (voir [Outil navigateur](/en/tools/browser)).
 Traitez l'appariement de nœuds comme un accès administrateur.
 
 Modèle recommandé :
@@ -959,18 +963,18 @@ Modèle recommandé :
 
 Supposez que tout ce qui se trouve sous `~/.openclaw/` (ou `$OPENCLAW_STATE_DIR/`) peut contenir des secrets ou des données privées :
 
-- `openclaw.json` : la configuration peut inclure des jetons (passerelle, passerelle distante), les paramètres du fournisseur et les listes blanches.
-- `credentials/**` : identifiants du canal (exemple : identifiants WhatsApp), listes blanches d'appariement, importations OAuth héritées.
-- `agents/<agentId>/agent/auth-profiles.json` : clés API, profils de jetons, jetons OAuth, et `keyRef`/`tokenRef` en option.
-- `secrets.json` (en option) : charge utile de secret stockée dans un fichier, utilisée par les fournisseurs SecretRef `file` (`secrets.providers`).
+- `openclaw.json` : la configuration peut inclure des jetons (passerelle, passerelle distante), les paramètres du fournisseur et les listes autorisées.
+- `credentials/**` : identifiants de WhatsApp (exemple : identifiants OAuth), listes autorisées d'appariement, importations OAuth héritées.
+- `agents/<agentId>/agent/auth-profiles.json` : clés API, profils de jetons, jetons OAuth, et optionnel `keyRef`/`tokenRef`.
+- `secrets.json` (optionnel) : charge utile de secret stockée dans un fichier, utilisée par les fournisseurs `file` SecretRef (`secrets.providers`).
 - `agents/<agentId>/agent/auth.json` : fichier de compatibilité hérité. Les entrées statiques `api_key` sont nettoyées lorsqu'elles sont découvertes.
-- `agents/<agentId>/sessions/**` : transcriptions de session (`*.jsonl`) + métadonnées de routage (`sessions.json`) pouvant contenir des messages privés et la sortie des outils.
+- `agents/<agentId>/sessions/**` : transcriptions de session (`*.jsonl`) + métadonnées de routage (`sessions.json`) qui peuvent contenir des messages privés et la sortie des outils.
 - packages de plugins groupés : plugins installés (ainsi que leurs `node_modules/`).
 - `sandboxes/**` : espaces de travail du bac à sable (sandbox) des outils ; peuvent accumuler des copies des fichiers que vous lisez/écrivez à l'intérieur du bac à sable.
 
 Conseils de durcissement :
 
-- Gardez les autorisations strictes (`700` sur les répertoires, `600` sur les fichiers).
+- Maintenez les autorisations strictes (`700` sur les répertoires, `600` sur les fichiers).
 - Utilisez le chiffrement complet du disque sur l'hôte de la passerelle.
 - Privilégiez un compte utilisateur dédié sur le système d'exploitation pour le Gateway si l'hôte est partagé.
 
@@ -983,9 +987,9 @@ Les journaux et les transcriptions peuvent divulguer des informations sensibles 
 
 Recommandations :
 
-- Gardez la rédaction des résumés d'outils activée (`logging.redactSensitive: "tools"` ; par défaut).
+- Gardez la rédaction du résumé des outils activée (`logging.redactSensitive: "tools"` ; par défaut).
 - Ajoutez des modèles personnalisés pour votre environnement via `logging.redactPatterns` (jetons, noms d'hôte, URL internes).
-- Lors du partage de diagnostics, privilégiez `openclaw status --all` (collable, secrets rédigés) plutôt que les journaux bruts.
+- Lors du partage de diagnostics, préférez `openclaw status --all` (collable, secrets rédigés) aux journaux bruts.
 - Nettoyez les anciennes transcriptions de session et les fichiers journaux si vous n'avez pas besoin d'une rétention à long terme.
 
 Détails : [Journalisation](/en/gateway/logging)
@@ -1034,13 +1038,13 @@ Pour les canaux basés sur le numéro de téléphone, envisagez de faire fonctio
 Vous pouvez créer un profil en lecture seule en combinant :
 
 - `agents.defaults.sandbox.workspaceAccess: "ro"` (ou `"none"` pour aucun accès à l'espace de travail)
-- listes d'autorisation/refus de tools qui bloquent `write`, `edit`, `apply_patch`, `exec`, `process`, etc.
+- listes d'autorisation/refus d'outils qui bloquent `write`, `edit`, `apply_patch`, `exec`, `process`, etc.
 
 Options de renforcement supplémentaires :
 
-- `tools.exec.applyPatch.workspaceOnly: true` (par défaut) : garantit que `apply_patch` ne peut pas écrire/supprimer en dehors du répertoire de l'espace de travail même lorsque le sandboxing est désactivé. Définissez sur `false` uniquement si vous souhaitez intentionnellement que `apply_patch` touche des fichiers en dehors de l'espace de travail.
+- `tools.exec.applyPatch.workspaceOnly: true` (par défaut) : garantit que `apply_patch` ne peut pas écrire/supprimer en dehors du répertoire de l'espace de travail, même lorsque le sandboxing est désactivé. Définissez sur `false` uniquement si vous voulez intentionnellement que `apply_patch` accède aux fichiers en dehors de l'espace de travail.
 - `tools.fs.workspaceOnly: true` (optionnel) : restreint les chemins `read`/`write`/`edit`/`apply_patch` et les chemins de chargement automatique d'images de prompt natifs au répertoire de l'espace de travail (utile si vous autorisez aujourd'hui les chemins absolus et souhaitez une seule barrière de sécurité).
-- Gardez les racines du système de fichiers étroites : évitez les racines larges comme votre répertoire personnel pour les espaces de travail des agents/sandboxes. Les racines larges peuvent exposer des fichiers locaux sensibles (par exemple état/config sous `~/.openclaw`) aux outils de système de fichiers.
+- Gardez les racines du système de fichiers étroites : évitez les racines larges comme votre répertoire personnel pour les espaces de travail des agents/espaces de travail sandbox. Les racines larges peuvent exposer des fichiers locaux sensibles (par exemple, l'état/la configuration sous `~/.openclaw`) aux outils du système de fichiers.
 
 ### 5) Ligne de base sécurisée (copier/coller)
 
@@ -1065,7 +1069,7 @@ Une configuration « par défaut sûre » qui maintient le Gateway privé, néce
 
 Si vous souhaitez également une exécution de tool « plus sûre par défaut », ajoutez un sandbox + refusez les tools dangereux pour tout agent non propriétaire (exemple ci-dessous sous « Profils d'accès par agent »).
 
-Ligne de base intégrée pour les tours d'agent pilotés par chat : les expéditeurs non propriétaires ne peuvent pas utiliser les tools `cron` ou `gateway`.
+Référence intégrée pour les tours d'agent pilotés par le chat : les expéditeurs non propriétaires ne peuvent pas utiliser les outils `cron` ou `gateway`.
 
 ## Sandboxing (recommandé)
 
@@ -1074,29 +1078,29 @@ Document dédié : [Sandboxing](/en/gateway/sandboxing)
 Deux approches complémentaires :
 
 - **Exécuter l'intégralité du Gateway dans Docker** (limite du conteneur) : [Docker](/en/install/docker)
-- **Bac à sable d'outils** (`agents.defaults.sandbox`, passerelle hôte + outils isolés par Docker) : [Sandboxing](/en/gateway/sandboxing)
+- **Sandbox d'outils** (`agents.defaults.sandbox`, gateway hôte + outils isolés par Docker) : [Sandboxing](/en/gateway/sandboxing)
 
-Remarque : pour éviter l'accès inter-agent, maintenez `agents.defaults.sandbox.scope` à `"agent"` (par défaut)
+Remarque : pour éviter l'accès inter-agents, gardez `agents.defaults.sandbox.scope` à `"agent"` (par défaut)
 ou `"session"` pour une isolation plus stricte par session. `scope: "shared"` utilise un
 seul conteneur/espace de travail.
 
 Considérez également l'accès à l'espace de travail de l'agent à l'intérieur du bac à sable :
 
-- `agents.defaults.sandbox.workspaceAccess: "none"` (par défaut) rend l'espace de travail de l'agent inaccessible ; les outils s'exécutent sur un espace de travail bac à sable sous `~/.openclaw/sandboxes`
+- `agents.defaults.sandbox.workspaceAccess: "none"` (par défaut) garde l'espace de travail de l'agent hors limites ; les outils s'exécutent sur un espace de travail sandbox sous `~/.openclaw/sandboxes`
 - `agents.defaults.sandbox.workspaceAccess: "ro"` monte l'espace de travail de l'agent en lecture seule à `/agent` (désactive `write`/`edit`/`apply_patch`)
 - `agents.defaults.sandbox.workspaceAccess: "rw"` monte l'espace de travail de l'agent en lecture/écriture à `/workspace`
-- Les `sandbox.docker.binds` supplémentaires sont validés par rapport aux chemins source normalisés et canonisés. Les astuces de lien symbolique parent et les alias canoniques du répertoire personnel échouent toujours de manière fermée s'ils résolvent vers des racines bloquées telles que `/etc`, `/var/run`, ou les répertoires d'identifiants sous le répertoire personnel du système d'exploitation.
+- Les `sandbox.docker.binds` supplémentaires sont validés par rapport aux chemins source normalisés et canonisés. Les astuces de liens symboliques parents et les alias canoniques du répertoire personnel échouent toujours de manière sécurisée s'ils résolvent vers des racines bloquées telles que `/etc`, `/var/run`, ou les répertoires d'informations d'identification sous le répertoire personnel du système d'exploitation.
 
-Important : `tools.elevated` est l'échappatoire de base global qui exécute exec en dehors du bac à sable. L'hôte effectif est `gateway` par défaut, ou `node` lorsque la cible exec est configurée sur `node`. Maintenez `tools.elevated.allowFrom` strict et ne l'activez pas pour les inconnus. Vous pouvez restreindre davantage les droits élevés par agent via `agents.list[].tools.elevated`. Voir [Elevated Mode](/en/tools/elevated).
+Important : `tools.elevated` est l'échappatoire de référence globale qui exécute exec en dehors du bac à sable. L'hôte effectif est `gateway` par défaut, ou `node` lorsque la cible exec est configurée sur `node`. Maintenez `tools.elevated.allowFrom` strict et ne l'activez pas pour des inconnus. Vous pouvez restreindre davantage le mode élevé par agent via `agents.list[].tools.elevated`. Voir [Mode élevé](/en/tools/elevated).
 
 ### Garde-fou de délégation de sous-agent
 
 Si vous autorisez les outils de session, traitez les exécutions de sous-agents délégués comme une autre décision de limite :
 
 - Refusez `sessions_spawn` sauf si l'agent a vraiment besoin de délégation.
-- Gardez `agents.defaults.subagents.allowAgents` et toute substitution `agents.list[].subagents.allowAgents` par agent limités aux agents cibles connus comme sûrs.
-- Pour tout workflow qui doit rester sandboxed, appelez `sessions_spawn` avec `sandbox: "require"` (par défaut `inherit`).
-- `sandbox: "require"` échoue rapidement lorsque le runtime enfant cible n'est pas sandboxed.
+- Gardez `agents.defaults.subagents.allowAgents` et tous les remplacements `agents.list[].subagents.allowAgents` par agent limités aux agents cibles connus comme sûrs.
+- Pour tout workflow qui doit rester sandboxé, appelez `sessions_spawn` avec `sandbox: "require"` (la valeur par défaut est `inherit`).
+- `sandbox: "require"` échoue rapidement lorsque le runtime enfant cible n'est pas sandboxé.
 
 ## Risques liés au contrôle du navigateur
 
@@ -1104,7 +1108,7 @@ Activer le contrôle du navigateur donne au model la capacité de piloter un vra
 Si ce profil de navigateur contient déjà des sessions connectées, le model peut
 accéder à ces comptes et données. Traitez les profils de navigateur comme un **état sensible** :
 
-- Préférez un profil dédié pour l'agent (le profil `openclaw` par défaut).
+- Préférez un profil dédié pour l'agent (le profil par défaut `openclaw`).
 - Évitez de diriger l'agent vers votre profil personnel quotidien.
 - Gardez le contrôle du navigateur hôte désactivé pour les agents sandboxed, sauf si vous leur faites confiance.
 - L'API de contrôle du navigateur en boucle autonome ne respecte que l'authentification par secret partagé
@@ -1114,18 +1118,18 @@ accéder à ces comptes et données. Traitez les profils de navigateur comme un 
 - Désactivez la synchronisation du navigateur / les gestionnaires de mots de passe dans le profil de l'agent si possible (réduit le rayon d'impact).
 - Pour les passerelles distantes, supposez que « le contrôle du navigateur » équivaut à « l'accès opérateur » à tout ce que ce profil peut atteindre.
 - Gardez le Gateway et les hôtes de nœuds en accès tailnet uniquement ; évitez d'exposer les ports de contrôle du navigateur au réseau local ou à l'Internet public.
-- Désactivez le routage proxy du navigateur lorsque vous n'en avez pas besoin (`gateway.nodes.browser.mode="off"`).
+- Désactivez le routage du proxy navigateur lorsque vous n'en avez pas besoin (`gateway.nodes.browser.mode="off"`).
 - Le mode de session existant Chrome MCP n'est **pas** plus « sûr » ; il peut agir en votre nom dans tout ce que le profil Chrome hôte peut atteindre.
 
 ### Stratégie SSRF du navigateur (stricte par défaut)
 
 La stratégie de navigation du navigateur de OpenClaw est stricte par défaut : les destinations privées/internes restent bloquées à moins que vous ne vous y abonniez explicitement.
 
-- Par défaut : `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork` n'est pas défini, donc la navigation du navigateur conserve les destinations privées/internes/à usage spécial bloquées.
-- Alias hérité : `browser.ssrfPolicy.allowPrivateNetwork` est toujours accepté pour compatibilité.
+- Par défaut : `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork` n'est pas défini, donc la navigation du navigateur garde les destinations privées/internes/à usage spécial bloquées.
+- Alias hérité : `browser.ssrfPolicy.allowPrivateNetwork` est toujours accepté pour la compatibilité.
 - Mode opt-in : définissez `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork: true` pour autoriser les destinations privées/internes/à usage spécial.
-- En mode strict, utilisez `hostnameAllowlist` (modèles comme `*.example.com`) et `allowedHostnames` (exceptions d'hôte exactes, y compris les noms bloqués comme `localhost`) pour les exceptions explicites.
-- La navigation est vérifiée avant la demande et revérifiée au mieux sur l'URL finale `http(s)` après navigation pour réduire les pivots basés sur les redirections.
+- En mode strict, utilisez `hostnameAllowlist` (modèles comme `*.example.com`) et `allowedHostnames` (exceptions d'hôte exactes, y compris les noms bloqués comme `localhost`) pour des exceptions explicites.
+- La navigation est vérifiée avant la requête et revérifiée autant que possible sur l'URL finale `http(s)` après la navigation pour réduire les pivots basés sur des redirections.
 
 Exemple de politique stricte :
 
@@ -1143,7 +1147,7 @@ Exemple de politique stricte :
 
 ## Profils d'accès par agent (multi-agent)
 
-Avec le routage multi-agent, chaque agent peut avoir sa propre stratégie de sandbox + tool :
+Avec le routage multi-agent, chaque agent peut avoir sa propre stratégie de sandbox + outil :
 utilisez ceci pour donner un **accès complet**, un **accès en lecture seule**, ou **aucun accès** par agent.
 Voir [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) pour tous les détails
 et les règles de priorité.
@@ -1241,21 +1245,21 @@ Si votre IA fait quelque chose de mal :
 
 ### Confiner
 
-1. **Arrêtez-la :** arrêtez l'application macOS (si elle supervise le Gateway) ou terminez votre processus `openclaw gateway`.
+1. **Arrêtez-le :** arrêtez l'application macOS (si elle supervise le Gateway) ou terminez votre processus `openclaw gateway`.
 2. **Fermez l'exposition :** définissez `gateway.bind: "loopback"` (ou désactivez Tailscale Funnel/Serve) jusqu'à ce que vous compreniez ce qui s'est passé.
-3. **Gel de l'accès :** passez les DMs/groupes risqués en `dmPolicy: "disabled"` / exigez des mentions, et supprimez les entrées `"*"` autorisant tout si vous en aviez.
+3. **Bloquez l'accès :** passez les DMs/groupes risqués en `dmPolicy: "disabled"` / exigez des mentions, et supprimez les entrées de `"*"` autorisant tout si vous en aviez.
 
 ### Faire une rotation (supposer une compromission si des secrets ont fuité)
 
-1. Faire une rotation de l'auth Gateway (`gateway.auth.token` / `OPENCLAW_GATEWAY_PASSWORD`) et redémarrez.
-2. Faire une rotation des secrets de client distant (`gateway.remote.token` / `.password`) sur toute machine pouvant appeler le Gateway.
-3. Faire une rotation des identifiants provider/API (identifiants WhatsApp, jetons Slack/Discord, clés model/API dans `auth-profiles.json`, et les valeurs de payload de secrets chiffrés lors de leur utilisation).
+1. Faites une rotation de l'authentification du Gateway (`gateway.auth.token` / `OPENCLAW_GATEWAY_PASSWORD`) et redémarrez.
+2. Faites une rotation des secrets du client distant (`gateway.remote.token` / `.password`) sur toute machine pouvant appeler le Gateway.
+3. Faites une rotation des identifiants provider/API (identifiants WhatsApp, jetons Slack/Discord, clés model/API dans `auth-profiles.json`, et les valeurs de payload de secrets chiffrés lorsqu'ils sont utilisés).
 
 ### Audit
 
 1. Vérifiez les journaux du Gateway : `/tmp/openclaw/openclaw-YYYY-MM-DD.log` (ou `logging.file`).
-2. Consultez la ou les transcription(s) pertinente(s) : `~/.openclaw/agents/<agentId>/sessions/*.jsonl`.
-3. Examinez les récentes modifications de configuration (tout ce qui aurait pu élargir l'accès : `gateway.bind`, `gateway.auth`, stratégies de groupe/de messages directs, `tools.elevated`, modifications de plugins).
+2. Examinez la ou les transcriptions pertinentes : `~/.openclaw/agents/<agentId>/sessions/*.jsonl`.
+3. Examinez les récentes modifications de configuration (tout ce qui aurait pu élargir l'accès : `gateway.bind`, `gateway.auth`, stratégies DM/groupe, `tools.elevated`, modifications de plugins).
 4. Relancez `openclaw security audit --deep` et confirmez que les résultats critiques sont résolus.
 
 ### Collecter pour un rapport
@@ -1267,8 +1271,10 @@ Si votre IA fait quelque chose de mal :
 
 ## Analyse de secrets (detect-secrets)
 
-L'CI exécute le hook de pré-commit `detect-secrets` dans la tâche `secrets`.
-Les envois vers `main` exécutent toujours une analyse sur tous les fichiers. Les demandes de tirage (pull requests) utilisent un chemin rapide pour les fichiers modifiés lorsqu'une base de référence est disponible, et reviennent à une analyse sur tous les fichiers sinon. Si cela échoue, il y a de nouveaux candidats qui ne sont pas encore dans la ligne de base.
+L'IC exécute le hook de pre-commit `detect-secrets` dans la tâche `secrets`.
+Les poussées vers `main` exécutent toujours une analyse de tous les fichiers. Les pull requests utilisent un chemin rapide
+pour les fichiers modifiés lorsqu'un commit de base est disponible, et reviennent sinon à une analyse de tous les fichiers.
+Si cela échoue, il y a de nouveaux candidats qui ne sont pas encore dans la ligne de base.
 
 ### Si l'CI échoue
 
@@ -1279,10 +1285,9 @@ Les envois vers `main` exécutent toujours une analyse sur tous les fichiers. Le
    ```
 
 2. Comprendre les outils :
-   - `detect-secrets` dans pre-commit exécute `detect-secrets-hook` avec la ligne de base
-     et les exclusions du dépôt.
-   - `detect-secrets audit` ouvre une révision interactive pour marquer chaque élément
-     de la ligne de base comme réel ou faux positif.
+   - `detect-secrets` dans pre-commit exécute `detect-secrets-hook` avec la ligne de base du dépôt
+     et les exclusions.
+   - `detect-secrets audit` ouvre une révision interactive pour marquer chaque élément de référence comme réel ou faux positif.
 3. Pour les vrais secrets : faites-les pivoter/supprimez-les, puis relancez l'analyse pour mettre à jour la ligne de base.
 4. Pour les faux positifs : lancez l'audit interactif et marquez-les comme faux :
 
@@ -1290,9 +1295,7 @@ Les envois vers `main` exécutent toujours une analyse sur tous les fichiers. Le
    detect-secrets audit .secrets.baseline
    ```
 
-5. Si vous avez besoin de nouvelles exclusions, ajoutez-les à `.detect-secrets.cfg` et régénérez la
-   ligne de base avec les indicateurs correspondants `--exclude-files` / `--exclude-lines` (le fichier
-   de configuration est uniquement pour référence ; detect-secrets ne le lit pas automatiquement).
+5. Si vous avez besoin de nouvelles exclusions, ajoutez-les à `.detect-secrets.cfg` et régénérez la référence avec les indicateurs correspondants `--exclude-files` / `--exclude-lines` (le fichier de configuration est uniquement une référence ; detect-secrets ne le lit pas automatiquement).
 
 Validez la `.secrets.baseline` mise à jour une fois qu'elle reflète l'état souhaité.
 

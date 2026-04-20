@@ -45,7 +45,7 @@ afficher dans `/usage full`.
   inclut le nom du modèle dans l'étiquette du plan.
 - L'autorisation d'utilisation pour ces fenêtres de quota provient de hooks spécifiques au fournisseur lorsque disponibles; sinon, OpenClaw revient à faire correspondre les identifiants OAuth/clé OAuth depuis les profils d'auth, l'environnement ou la configuration.
 
-Voir [Utilisation et coûts des tokens](/en/reference/token-use) pour les détails et les exemples.
+Consultez [Utilisation et coûts des jetons](/en/reference/token-use) pour plus de détails et d'exemples.
 
 ## Découverte des clés
 
@@ -68,7 +68,7 @@ Cela inclut également les fournisseurs hébergés par abonnement qui facturent 
 Coding Plan**, **MiniMax Coding Plan**, **Z.AI / GLM Coding Plan**, et
 le chemin de connexion Claude d'Anthropic d'OpenClaw avec l'**Utilisation supplémentaire** activée.
 
-Voir [Modèles](/en/providers/models) pour la configuration des prix et [Utilisation et coûts des tokens](/en/reference/token-use) pour l'affichage.
+Consultez [Modèles](/en/providers/models) pour la configuration des tarifs et [Utilisation et coûts des jetons](/en/reference/token-use) pour l'affichage.
 
 ### 2) Compréhension des médias (audio/image/vidéo)
 
@@ -78,7 +78,7 @@ Les médias entrants peuvent être résumés/transcrits avant l'exécution de la
 - Image : OpenAI / OpenRouter / Anthropic / Google / MiniMax / Moonshot / Qwen / Z.AI.
 - Vidéo : Google / Qwen / Moonshot.
 
-Voir [Compréhension des médias](/en/nodes/media-understanding).
+Consultez [Compréhension des médias](/en/nodes/media-understanding).
 
 ### 3) Génération d'images et de vidéos
 
@@ -92,7 +92,7 @@ La génération d'images peut déduire un provider par défaut soutenu par une a
 un `agents.defaults.videoGenerationModel` explicite tel que
 `qwen/wan2.6-t2v`.
 
-Voir [Génération d'images](/en/tools/image-generation), [Qwen Cloud](/en/providers/qwen),
+Consultez [Génération d'images](/en/tools/image-generation), [Qwen Cloud](/en/providers/qwen),
 et [Modèles](/en/concepts/models).
 
 ### 4) Memory embeddings + recherche sémantique
@@ -103,35 +103,36 @@ La recherche de mémoire sémantique utilise des **API d'embedding** lorsqu'elle
 - `memorySearch.provider = "gemini"` → embeddings Gemini
 - `memorySearch.provider = "voyage"` → embeddings Voyage
 - `memorySearch.provider = "mistral"` → embeddings Mistral
-- `memorySearch.provider = "ollama"` → embeddings Ollama (local/auto-hébergé ; généralement aucune facturation d'API hébergée)
-- Retour facultatif à un provider distant si les embeddings locaux échouent
+- `memorySearch.provider = "lmstudio"` → Embeddings LM Studio (local/auto-hébergé)
+- `memorySearch.provider = "ollama"` → Embeddings Ollama (local/auto-hébergé ; généralement aucune facturation d'API hébergée)
+- Repli optionnel vers un fournisseur distant si les embeddings locaux échouent
 
-Vous pouvez le conserver en local avec `memorySearch.provider = "local"` (aucune utilisation d'API).
+Vous pouvez le garder local avec `memorySearch.provider = "local"` (aucune utilisation d'API).
 
-Voir [Mémoire](/en/concepts/memory).
+Consultez [Mémoire](/en/concepts/memory).
 
 ### 5) Outil de recherche Web
 
 `web_search` peut entraîner des frais d'utilisation selon votre fournisseur :
 
-- **Brave Search API** : `BRAVE_API_KEY` ou `plugins.entries.brave.config.webSearch.apiKey`
+- **API de recherche Brave** : `BRAVE_API_KEY` ou `plugins.entries.brave.config.webSearch.apiKey`
 - **Exa** : `EXA_API_KEY` ou `plugins.entries.exa.config.webSearch.apiKey`
 - **Firecrawl** : `FIRECRAWL_API_KEY` ou `plugins.entries.firecrawl.config.webSearch.apiKey`
-- **Gemini (Google Search)** : `GEMINI_API_KEY` ou `plugins.entries.google.config.webSearch.apiKey`
+- **Gemini (Recherche Google)** : `GEMINI_API_KEY` ou `plugins.entries.google.config.webSearch.apiKey`
 - **Grok (xAI)** : `XAI_API_KEY` ou `plugins.entries.xai.config.webSearch.apiKey`
 - **Kimi (Moonshot)** : `KIMI_API_KEY`, `MOONSHOT_API_KEY`, ou `plugins.entries.moonshot.config.webSearch.apiKey`
-- **Recherche MiniMax** : `MINIMAX_CODE_PLAN_KEY`, `MINIMAX_CODING_API_KEY`, `MINIMAX_API_KEY`, ou `plugins.entries.minimax.config.webSearch.apiKey`
-- **Recherche Web Ollama** : sans clé par défaut, mais nécessite un hôte Ollama accessible plus `ollama signin` ; peut également réutiliser l'authentification bearer du fournisseur Ollama normal lorsque l'hôte l'exige
-- **Perplexity Search API** : `PERPLEXITY_API_KEY`, `OPENROUTER_API_KEY`, ou `plugins.entries.perplexity.config.webSearch.apiKey`
+- **MiniMax Search** : `MINIMAX_CODE_PLAN_KEY`, `MINIMAX_CODING_API_KEY`, `MINIMAX_API_KEY`, ou `plugins.entries.minimax.config.webSearch.apiKey`
+- **Recherche Web Ollama** : sans clé par défaut, mais nécessite un hôte Ollama joignable plus `ollama signin` ; peut également réutiliser l'authentification du porteur du fournisseur Ollama normal lorsque l'hôte l'exige
+- **API de recherche Perplexity** : `PERPLEXITY_API_KEY`, `OPENROUTER_API_KEY`, ou `plugins.entries.perplexity.config.webSearch.apiKey`
 - **Tavily** : `TAVILY_API_KEY` ou `plugins.entries.tavily.config.webSearch.apiKey`
 - **DuckDuckGo** : repli sans clé (aucune facturation d'API, mais non officiel et basé sur HTML)
 - **SearXNG** : `SEARXNG_BASE_URL` ou `plugins.entries.searxng.config.webSearch.baseUrl` (sans clé/auto-hébergé ; aucune facturation d'API hébergée)
 
-Les chemins du fournisseur `tools.web.search.*` hérités se chargent toujours via la couche de compatibilité temporaire, mais ce n'est plus la surface de configuration recommandée.
+Les chemins de fournisseur `tools.web.search.*` hérités sont toujours chargés via la shim de compatibilité temporaire, mais ils ne sont plus la surface de configuration recommandée.
 
 **Crédit gratuit Brave Search :** Chaque plan Brave inclut 5 $/mois de crédit gratuit renouvelable. Le plan Search coûte 5 $ pour 1 000 requêtes, donc le crédit couvre 1 000 requêtes/mois sans frais. Définissez votre limite d'utilisation dans le tableau de bord Brave pour éviter des frais inattendus.
 
-Voir [Outils Web](/en/tools/web).
+Voir [Web tools](/en/tools/web).
 
 ### 5) Outil de récupération Web (Firecrawl)
 
@@ -141,43 +142,43 @@ Voir [Outils Web](/en/tools/web).
 
 Si Firecrawl n'est pas configuré, l'outil revient à une récupération directe + lisibilité (pas d'API payante).
 
-Voir [Outils Web](/en/tools/web).
+Voir [Web tools](/en/tools/web).
 
-### 6) Instantanés d'utilisation du fournisseur (statut/santé)
+### 6) Instantanés d'utilisation du fournisseur (status/health)
 
-Certaines commandes de statut appellent les **points de terminaison d'utilisation du fournisseur** pour afficher les fenêtres de quota ou l'état de l'authentification.
-Ce sont généralement des appels à faible volume mais qui atteignent toujours les API des fournisseurs :
+Certaines commandes d'état appellent des **points de terminaison d'utilisation du fournisseur** pour afficher les fenêtres de quota ou l'état de l'authentification.
+Ce sont généralement des appels à faible volume mais qui atteignent toujours les API du fournisseur :
 
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-Voir [Modèles CLI](/en/cli/models).
+Voir [Models CLI](/en/cli/models).
 
 ### 7) Résumé de la sauvegarde de compactage
 
-La sauvegarde de compactage peut résumer l'historique de la session en utilisant le **modèle actuel**, ce qui
-appelle les API des fournisseurs lors de son exécution.
+La sauvegarde de compactage peut résumer l'historique de la session en utilisant le **model actuel**, ce qui
+appelle les API du fournisseur lors de son exécution.
 
-Voir [Gestion de session + compactage](/en/reference/session-management-compaction).
+Voir [Session management + compaction](/en/reference/session-management-compaction).
 
-### 8) Analyse / sonde de modèle
+### 8) Analyse / sonde de model
 
-`openclaw models scan` peut sonder les modèles OpenRouter et utilise `OPENROUTER_API_KEY` lorsque
+`openclaw models scan` peut sonder les models OpenRouter et utilise `OPENROUTER_API_KEY` lorsque
 le sondage est activé.
 
-Voir [Modèles CLI](/en/cli/models).
+Voir [Models CLI](/en/cli/models).
 
-### 9) Discussion (parole)
+### 9) Talk (speech)
 
-Le mode discussion peut appeler **ElevenLabs** lorsqu'il est configuré :
+Le mode Talk peut invoquer **ElevenLabs** lorsqu'il est configuré :
 
 - `ELEVENLABS_API_KEY` ou `talk.providers.elevenlabs.apiKey`
 
-Voir [Mode Talk](/en/nodes/talk).
+Voir [Talk mode](/en/nodes/talk).
 
 ### 10) Skills (API tierces)
 
-Les Skills peuvent stocker `apiKey` dans `skills.entries.<name>.apiKey`. Si une skill utilise cette clé pour des API
-externes, cela peut engendrer des coûts selon le provider de la skill.
+Les Skills peuvent stocker `apiKey` dans `skills.entries.<name>.apiKey`. Si une skill utilise cette clé pour des
+API externes, elle peut entraîner des coûts selon le fournisseur de la skill.
 
 Voir [Skills](/en/tools/skills).

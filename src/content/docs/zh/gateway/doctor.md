@@ -82,7 +82,7 @@ cat ~/.openclaw/openclaw.json
 - 渠道状态警告（从正在运行的 Gateway 探测）。
 - 监管程序配置审计 (launchd/systemd/schtasks)，可选择修复。
 - Gateway(网关) 运行时最佳实践检查（Node 与 Bun、版本管理器路径）。
-- Gateway 端口冲突诊断 (默认 `18789`)。
+- Gateway(网关) 端口冲突诊断 (默认 `18789`)。
 - 针对开放私信策略的安全警告。
 - 本地令牌模式下的 Gateway(网关) 认证检查（当不存在令牌源时提供令牌生成；不会覆盖令牌 SecretRef 配置）。
 - Linux 上的 systemd linger 检查。
@@ -246,7 +246,7 @@ Doctor 可以将较旧的磁盘布局迁移到当前结构：
   - 从旧版 `~/.openclaw/credentials/*.json`（`oauth.json` 除外）
   - 到 `~/.openclaw/credentials/whatsapp/<accountId>/...`（默认账户 id：`default`）
 
-这些迁移是尽力而为且幂等的；当 doctor 将任何旧版文件夹保留为备份时，它会发出警告。Gateway/CLI 也会在启动时自动迁移旧的会话和 agent 目录，这样历史记录/身份验证/模型就会落在 per-agent 路径中，而无需手动运行 doctor。WhatsApp 身份验证有意仅通过 `openclaw doctor` 迁移。Talk 提供商/提供商-map 标准化现在通过结构相等性进行比较，因此仅键顺序的差异不再触发重复的空操作 `doctor --fix` 更改。
+这些迁移是尽力而为且幂等的；当 doctor 将任何旧版文件夹保留为备份时，它会发出警告。Gateway(网关)/CLI 也会在启动时自动迁移旧的会话和 agent 目录，这样历史记录/身份验证/模型就会落在 per-agent 路径中，而无需手动运行 doctor。WhatsApp 身份验证有意仅通过 `openclaw doctor` 迁移。Talk 提供商/提供商-map 标准化现在通过结构相等性进行比较，因此仅键顺序的差异不再触发重复的空操作 `doctor --fix` 更改。
 
 ### 3a) 旧版插件清单迁移
 

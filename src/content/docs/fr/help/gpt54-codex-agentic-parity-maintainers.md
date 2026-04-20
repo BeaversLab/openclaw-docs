@@ -1,77 +1,77 @@
-# Notes du mainteneur de parité GPT-5.4 / Codex
+# Notes de maintenance sur la parité GPT-5.4 / Codex
 
-Cette note explique comment réviser le programme de parité GPT-5.4 / Codex sous forme de quatre unités de fusion sans perdre l'architecture originale à six contrats.
+Cette note explique comment réviser le programme de parité GPT-5.4 / Codex en quatre unités de fusion sans perdre l'architecture originale des six contrats.
 
 ## Unités de fusion
 
-### PR A : exécution strict-agentic
+### PR A : exécution stricte-agentic
 
 Possède :
 
 - `executionContract`
-- suivi dans le même tour, priorité GPT-5
-- `update_plan` comme suivi de progression non terminal
-- états bloqués explicites au lieu d'arrêts silencieux de planification seule
+- suivi immédiat (same-turn) prioritaire GPT-5
+- `update_plan` en tant que suivi de progression non terminal
+- états bloqués explicites au lieu d'arrêts silencieux basés uniquement sur le plan
 
 Ne possède pas :
 
-- classification des échecs auth/runtime
-- véracité des permissions
-- refonte de la relecture/continuation
-- benchmarking de parité
+- classification des échecs d'authentification/exécution
+- exactitude des permissions
+- refonte de la reprise/continuation
+- benchmark de parité
 
-### PR B : véracité du runtime
+### PR B : exactitude de l'exécution (runtime truthfulness)
 
 Possède :
 
-- correction des scopes OAuth Codex
-- classification typée des échecs fournisseur/runtime
-- disponibilité véridique de `/elevated full` et raisons de blocage
+- exactitude de la portée OAuth Codex
+- classification typée des échecs de fournisseur/exécution
+- disponibilité et raisons de blocage exactes de `/elevated full`
 
 Ne possède pas :
 
-- normalisation des schémas d'outils
-- état de relecture/vivacité
-- contrôle de porte de benchmark
+- normalisation du schéma de l'outil
+- état de reprise/vivacité
+- validation par benchmark (gating)
 
 ### PR C : correction de l'exécution
 
 Possède :
 
 - compatibilité des outils OpenAI/Codex détenus par le fournisseur
-- gestion des schémas stricts sans paramètres
-- visibilité de l'invalidité de relecture
-- visibilité des états de tâches longues en pause, bloquées et abandonnées
+- gestion de schéma stricte sans paramètre
+- affichage des invalidités de reprise
+- visibilité de l'état des tâches longues en pause, bloquées et abandonnées
 
 Ne possède pas :
 
 - continuation auto-élue
-- comportement générique du dialecte Codex en dehors des hooks fournisseur
-- contrôle de porte de benchmark
+- comportement du dialecte Codex générique en dehors des hooks du fournisseur
+- validation par benchmark (gating)
 
 ### PR D : harnais de parité
 
 Possède :
 
-- pack de scénarios GPT-5.4 vs Opus 4.6 de première vague
-- documentation de parité
-- rapport de parité et mécaniques de porte de publication
+- pack de scénarios de première vague GPT-5.4 vs Opus 4.6
+- documentation de la parité
+- rapport de parité et mécaniques de porte de sortie (release-gate)
 
 Ne possède pas :
 
-- changements de comportement du runtime en dehors du laboratoire QA
+- changements de comportement d'exécution en dehors du QA-lab
 - simulation auth/proxy/DNS à l'intérieur du harnais
 
 ## Correspondance avec les six contrats originaux
 
-| Contrat original                              | Unité de fusion |
-| --------------------------------------------- | --------------- |
-| Correction du transport/auth du fournisseur   | PR B            |
-| Compatibilité des contrats/schémas d'outils   | PR C            |
-| Exécution dans le même tour                   | PR A            |
-| Véracité des permissions                      | PR B            |
-| Correction de relecture/continuation/vivacité | PR C            |
-| Porte de benchmark/publication                | PR D            |
+| Contrat original                                             | Unité de fusion |
+| ------------------------------------------------------------ | --------------- |
+| Exactitude du transport/de l'authentification du fournisseur | PR B            |
+| Compatibilité du contrat/du schéma de l'outil                | PR C            |
+| Exécution immédiate (same-turn)                              | PR A            |
+| Exactitude des permissions                                   | PR B            |
+| Exactitude de la reprise/continuation/vivacité               | PR C            |
+| Porte de benchmark/de sortie                                 | PR D            |
 
 ## Ordre de révision
 
@@ -80,49 +80,49 @@ Ne possède pas :
 3. PR C
 4. PR D
 
-PR D est la couche de preuve. Elle ne devrait pas être la raison pour laquelle les PR de correction du runtime sont retardés.
+La PR D est la couche de preuve. Elle ne doit pas être la raison du retard des PR de correction d'exécution.
 
 ## Ce qu'il faut rechercher
 
 ### PR A
 
-- les exécutions GPT-5 agissent ou échouent fermement au lieu de s'arrêter au commentaire
-- `update_plan` ne ressemble plus à du progrès par lui-même
-- le comportement reste centré GPT-5 et limité au Pi intégré
+- Les exécutions GPT-5 agissent ou échouent de manière fermée au lieu de s'arrêter au commentaire
+- `update_plan` n'apparaît plus comme une progression en soi
+- le comportement reste prioritaire GPT-5 et délimité à la portée Pi intégrée
 
 ### PR B
 
-- les échecs auth/proxy/runtime ne s'effondrent plus dans la gestion générique « le modèle a échoué »
+- les échecs auth/proxy/exécution cessent de s'effondrer dans la gestion générique « échec du model »
 - `/elevated full` n'est décrit comme disponible que lorsqu'il est réellement disponible
-- les raisons de blocage sont visibles à la fois pour le modèle et le runtime面向 utilisateur
+- les raisons du blocage sont visibles à la fois pour le model et pour le runtime orienté utilisateur
 
 ### PR C
 
-- l'enregistrement strict des outils OpenAI/Codex se comporte de manière prévisible
-- les outils sans paramètres ne échouent pas aux vérifications de schéma strict
-- les résultats de relecture et de compaction préservent un état de vivacité véridique
+- l'enregistrement strict des tools OpenAI/Codex se comporte de manière prévisible
+- les tools sans paramètres ne font pas échouer les vérifications strictes du schéma
+- les résultats de la relecture et de la compaction préservent l'état de vivacité véridique
 
 ### PR D
 
 - le pack de scénarios est compréhensible et reproductible
-- le pack inclut une voie de sécurité de relecture mutante, pas seulement des flux en lecture seule
+- le pack inclut une voie de sécurité de relecture avec mutation, et pas seulement des flux en lecture seule
 - les rapports sont lisibles par les humains et l'automatisation
-- les affirmations de parité sont étayées par des preuves, non anecdotiques
+- les revendications de parité sont étayées par des preuves, et non anecdotiques
 
-Artefacts attendus de PR D :
+Artefacts attendus de la PR D :
 
-- `qa-suite-report.md` / `qa-suite-summary.json` pour chaque exécution de modèle
-- `qa-agentic-parity-report.md` avec comparaison agrégée et par scénario
+- `qa-suite-report.md` / `qa-suite-summary.json` pour chaque exécution de model
+- `qa-agentic-parity-report.md` avec une comparaison agrégée et au niveau du scénario
 - `qa-agentic-parity-summary.json` avec un verdict lisible par machine
 
-## Porte de publication
+## Porte de version
 
-Ne pas affirmer la parité ou la supériorité de GPT-5.4 sur Opus 4.6 tant que :
+Ne prétendez pas à une parité ou une supériorité de GPT-5.4 par rapport à Opus 4.6 tant que :
 
-- PR A, PR B et PR C sont fusionnés
-- PR D exécute proprement le pack de parité de première vague
+- les PR A, PR B et PR C sont fusionnées
+- la PR D exécute proprement le pack de parité de la première vague
 - les suites de régression de véracité du runtime restent vertes
-- le rapport de parité ne montre aucun cas de faux succès et aucune régression du comportement d'arrêt
+- le rapport de parité ne présente aucun cas de fausse réussite et aucune régression dans le comportement d'arrêt
 
 ```mermaid
 flowchart LR
@@ -138,27 +138,27 @@ flowchart LR
     H -- "no" --> J["Keep runtime fixes / review loop open"]
 ```
 
-Le harnais de parité n'est pas la seule source de preuve. Gardez cette séparation explicite dans la révision :
+Le harnais de parité n'est pas la seule source de preuves. Gardez cette séparation explicite lors de la révision :
 
-- PR D possède la comparaison GPT-5.4 vs Opus 4.6 basée sur les scénarios
-- Les suites déterministes de PR B possèdent toujours la preuve de véracité auth/proxy/DNS et de l'accès complet
+- la PR D possède la comparaison basée sur des scénarios entre GPT-5.4 et Opus 4.6
+- les suites déterministes de la PR B possèdent toujours les preuves de véracité auth/proxy/DNS et à accès complet
 
-## Carte objectif-preuve
+## Cartographie objectif-preuve
 
-| Élément de la porte d'achèvement                    | Propriétaire principal | Artefact de révision                                                    |
-| --------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------- |
-| Pas de blocages de planification seule              | PR A                   | tests runtime strict-agentic et `approval-turn-tool-followthrough`      |
-| Pas de faux progrès ni fausse complétion d'outils   | PR A + PR D            | comptage des faux succès de parité plus détails du rapport par scénario |
-| Pas de guidance `/elevated full` erronée            | PR B                   | suites déterministes de véracité du runtime                             |
-| Les échecs de relecture/vivacité restent explicites | PR C + PR D            | suites lifecycle/replay et `compaction-retry-mutating-tool`             |
-| GPT-5.4 égale ou surpasse Opus 4.6                  | PR D                   | `qa-agentic-parity-report.md` et `qa-agentic-parity-summary.json`       |
+| Élément de porte d'achèvement                          | Propriétaire principal | Artefact de révision                                                                |
+| ------------------------------------------------------ | ---------------------- | ----------------------------------------------------------------------------------- |
+| Aucun blocage de planification uniquement              | PR A                   | tests de runtime strict-agentic et `approval-turn-tool-followthrough`               |
+| Aucune fausse progression ou fausse achèvement de tool | PR A + PR D            | nombre de fausses réussites de parité plus détails du rapport au niveau du scénario |
+| Aucune fausse guidances `/elevated full`               | PR B                   | suites déterministes de véracité du runtime                                         |
+| Les échecs de relecture/vivacité restent explicites    | PR C + PR D            | suites de cycle de vie/relecture plus `compaction-retry-mutating-tool`              |
+| GPT-5.4 égale ou surpasse Opus 4.6                     | PR D                   | `qa-agentic-parity-report.md` et `qa-agentic-parity-summary.json`                   |
 
-## Aide-mémoire du réviseur : avant vs après
+## Raccourci du réviseur : avant vs après
 
-| Problème visible par l'utilisateur avant                                            | Signal de révision après                                                                               |
-| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| GPT-5.4 s'arrêtait après la planification                                           | PR A montre un comportement d'action ou de blocage au lieu d'une complétion par commentaire uniquement |
-| L'utilisation des outils semblait fragile avec les schémas stricts OpenAI/Codex     | PR C maintient l'enregistrement des outils et l'invocation sans paramètres prévisibles                 |
-| Les indications `/elevated full` étaient parfois trompeuses                         | PR B lie la guidance à la capacité réelle du runtime et aux raisons de blocage                         |
-| Les tâches longues pouvaient disparaître dans l'ambiguïté de relecture/compactation | PR C émet un état explicite en pause, bloqué, abandonné et de relecture invalide                       |
-| Les affirmations de parité étaient anecdotiques                                     | PR D produit un rapport plus un verdict JSON avec la même couverture de scénarios sur les deux modèles |
+| Problème visible par l'utilisateur avant                                             | Signal de révision après                                                                                   |
+| ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| GPT-5.4 s'est arrêté après la planification                                          | la PR A montre un comportement d'action ou de blocage au lieu d'un achèvement par commentaire uniquement   |
+| L'utilisation des tools semblait fragile avec les schémas stricts OpenAI/Codex       | la PR C maintient l'enregistrement des tools et l'invocation sans paramètres prévisibles                   |
+| `/elevated full` hints étaient parfois trompeurs                                     | PR B lie les conseils aux capacités d'exécution réelles et aux raisons de blocage                          |
+| Les tâches longues pouvaient disparaître dans l'ambiguïté de la relecture/compactage | PR C émet des états explicites de pause, blocage, abandon et invalidité de relecture                       |
+| Les affirmations de parité étaient anecdotiques                                      | PR D produit un rapport ainsi qu'un verdict JSON avec la même couverture de scénarios sur les deux modèles |

@@ -3067,19 +3067,20 @@ title: "常見問題"
 ## 聊天指令、中止任務和「它無法停止」
 
 <AccordionGroup>
-  <Accordion title="如何阻止內部系統訊息顯示在聊天中？">
-    大多數內部或工具訊息僅在針對該工作階段啟用 **詳細** 或 **推理** 時才會出現。
+  <Accordion title="如何停止內部系統訊息顯示在聊天中？">
+    大多數內部或工具訊息只有在該工作階段啟用了 **verbose**、**trace** 或 **reasoning** 時才會出現。
 
-    在您看到問題的聊天中修正：
+    在您看到問題的聊天中進行修正：
 
     ```
     /verbose off
+    /trace off
     /reasoning off
     ```
 
-    如果仍然很吵雜，請檢查 Control UI 中的工作階段設定，並將詳細設定為 **繼承**。同時請確認您沒有使用在設定中將 `verboseDefault` 設定為 `on` 的機器人設定檔。
+    如果仍然太吵雜，請檢查 Control UI 中的工作階段設定並將 verbose 設定為 **inherit**。同時確認您沒有使用在 config 中將 `verboseDefault` 設定為 `on` 的 bot 設定檔。
 
-    文件：[思考與詳細](/en/tools/thinking)、[安全性](/en/gateway/security#reasoning-verbose-output-in-groups)。
+    文件：[Thinking and verbose](/en/tools/thinking)、[Security](/en/gateway/security#reasoning-verbose-output-in-groups)。
 
   </Accordion>
 

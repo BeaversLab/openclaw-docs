@@ -33,6 +33,9 @@ sidebarTitle: "Linux 伺服器"
   <Card title="Hetzner" href="/en/install/hetzner">
     Hetzner VPS 上的 Docker
   </Card>
+  <Card title="Hostinger" href="/en/install/hostinger">
+    具有一鍵設定的 VPS
+  </Card>
   <Card title="GCP" href="/en/install/gcp">
     Compute Engine
   </Card>
@@ -40,49 +43,49 @@ sidebarTitle: "Linux 伺服器"
     Linux VM
   </Card>
   <Card title="exe.dev" href="/en/install/exe-dev">
-    VM with HTTPS proxy
+    具 HTTPS 代理的 VM
   </Card>
   <Card title="Raspberry Pi" href="/en/install/raspberry-pi">
-    ARM self-hosted
+    ARM 自託管
   </Card>
 </CardGroup>
 
 **AWS (EC2 / Lightsail / 免費層)** 也很適用。
-有社群影片教學可在
+社群影片逐步指南請參閱
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
-觀看（社群資源 —— 可能會失效）。
+（社群資源——可能會變成無法使用）。
 
 ## 雲端設定的運作方式
 
-- **Gateway 在 VPS 上執行** 並擁有狀態 + 工作區。
-- 您可以透過 **Control UI** 或 **Tailscale/SSH** 從您的筆記型電腦或手機進行連線。
-- 將 VPS 視為事實來源，並定期**備份**狀態 + 工作區。
-- 安全預設值：將 Gateway 保持在 loopback 介面並透過 SSH tunnel 或 Tailscale Serve 存取。
-  若您繫結到 `lan` 或 `tailnet`，請要求 `gateway.auth.token` 或 `gateway.auth.password`。
+- **Gateway 在 VPS 上運行**並擁有狀態與工作區。
+- 您可以透過 **Control UI** 或 **Tailscale/SSH** 從筆記型電腦或手機進行連線。
+- 將 VPS 視為事實來源，並定期**備份**狀態與工作區。
+- 安全預設值：將 Gateway 保持在 loopback 並透過 SSH tunnel 或 Tailscale Serve 存取。
+  如果您綁定到 `lan` 或 `tailnet`，請要求 `gateway.auth.token` 或 `gateway.auth.password`。
 
 相關頁面：[Gateway 遠端存取](/en/gateway/remote)、[平台中心](/en/platforms)。
 
-## VPS 上的共享公司代理程式
+## VPS 上的共用公司代理程式
 
-當每位使用者都處於相同的信任邊界且該代理程式僅供商業用途時，為團隊執行單一代理程式是一個有效的設定。
+當每個使用者都在相同的信任邊界內，且該代理程式僅供商業用途時，為團隊執行單一代理程式是有效的設定。
 
-- 請將其保留在專用的執行環境上（VPS/VM/container + 專用的 OS 使用者/帳戶）。
-- 請勿將該執行環境登入至個人的 Apple/Google 帳戶或個人的瀏覽器/密碼管理員設定檔。
-- 如果使用者之間存在潛在衝突，請依照 gateway/host/OS 使用者進行分割。
+- 請將其保留在專用的執行環境上 (VPS/VM/container + 專用 OS user/accounts)。
+- 請勿將該執行環境登入個人的 Apple/Google 帳戶或個人的瀏覽器/密碼管理員設定檔。
+- 如果使用者之間存在敵對關係，請依 gateway/host/OS user 進行區隔。
 
-安全模型細節：[安全性](/en/gateway/security)。
+安全模型詳細資訊：[Security](/en/gateway/security)。
 
 ## 搭配 VPS 使用節點
 
-您可以將 Gateway 保留在雲端，並在您的本地裝置
-(Mac/iOS/Android/headless) 上配對 **節點** (nodes)。當 Gateway 保留在雲端時，節點會提供本機的螢幕/相機/畫布 和 `system.run`
-功能。
+您可以將 Gateway 保留在雲端，並將您的本機裝置
+(Mac/iOS/Android/headless) 與 **節點** 配對。節點提供本機螢幕/相機/畫布和 `system.run`
+功能，而 Gateway 則停留在雲端。
 
-文件：[Nodes](/en/nodes)、[Nodes CLI](/en/cli/nodes)。
+文件：[節點](/en/nodes)、[節點 CLI](/en/cli/nodes)。
 
-## 小型 VM 和 ARM 主機的啟動調整
+## 小型虛擬機和 ARM 主機的啟動調整
 
-如果在低功率 VM（或 ARM 主機）上執行 CLI 指令感到緩慢，請啟用 Node 的模組編譯快取：
+如果在低功耗虛擬機（或 ARM 主機）上感覺 CLI 指令執行緩慢，請啟用 Node 的模組編譯快取：
 
 ```bash
 grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF'
@@ -94,22 +97,22 @@ source ~/.bashrc
 ```
 
 - `NODE_COMPILE_CACHE` 可改善重複執行指令的啟動時間。
-- `OPENCLAW_NO_RESPAWN=1` 可避免來自查自重啟路徑的額外啟動負擔。
-- 首次執行指令會預熱快取；後續的執行會更快。
-- 關於 Raspberry Pi 的具體細節，請參閱 [Raspberry Pi](/en/install/raspberry-pi)。
+- `OPENCLAW_NO_RESPAWN=1` 可避免來自自我重生路徑的額外啟動負擔。
+- 首次執行指令會預熱快取；後續執行會更快。
+- 關於 Raspberry Pi 的細節，請參閱 [Raspberry Pi](/en/install/raspberry-pi)。
 
 ### systemd 調整檢查清單（選用）
 
-對於使用 `systemd` 的 VM 主機，請考慮：
+對於使用 `systemd` 的虛擬機主機，建議考慮：
 
 - 新增服務環境變數以獲得穩定的啟動路徑：
   - `OPENCLAW_NO_RESPAWN=1`
   - `NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache`
-- 保持重啟行為的明確性：
+- 保持重啟行為明確：
   - `Restart=always`
   - `RestartSec=2`
   - `TimeoutStartSec=90`
-- 對於狀態/快取路徑，建議優先使用支援 SSD 的磁碟，以減少隨機 I/O 冷啟動的效能損失。
+- 針對狀態/快取路徑，優先選用支援 SSD 的磁碟，以減少隨機 I/O 冷啟動的效能損失。
 
 對於標準的 `openclaw onboard --install-daemon` 路徑，請編輯使用者單元：
 
@@ -126,8 +129,8 @@ RestartSec=2
 TimeoutStartSec=90
 ```
 
-如果您刻意安裝了系統單元，請透過 `sudo systemctl edit openclaw-gateway.service` 編輯
+如果您是刻意安裝了系統單元，請透過 `sudo systemctl edit openclaw-gateway.service` 編輯
 `openclaw-gateway.service`。
 
-`Restart=` 政策如何協助自動修復：
+`Restart=` 策略如何協助自動修復：
 [systemd can automate service recovery](https://www.redhat.com/en/blog/systemd-automate-recovery)。

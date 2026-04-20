@@ -1,19 +1,19 @@
-# Rich Output Protocol
+# Protocole de sortie enrichie
 
-La sortie de l'assistant peut contenir un petit ensemble de directives de livraison/rendu :
+La sortie de l'assistant peut contenir un petit ensemble de directives de livraison/restitution :
 
 - `MEDIA:` pour la livraison de pièces jointes
 - `[[audio_as_voice]]` pour les indices de présentation audio
 - `[[reply_to_current]]` / `[[reply_to:<id>]]` pour les métadonnées de réponse
-- `[embed ...]` pour le rendu riche dans le Control UI
+- `[embed ...]` pour le rendu enrichi de l'interface de contrôle
 
-Ces directives sont indépendantes. `MEDIA:` et les balises de réponse/vocale restent des métadonnées de livraison ; `[embed ...]` est le chemin de rendu riche réservé au Web.
+Ces directives sont distinctes. `MEDIA:` et les balises de réponse/voix restent des métadonnées de livraison ; `[embed ...]` est le chemin de rendu enrichi réservé au web.
 
 ## `[embed ...]`
 
-`[embed ...]` est la seule syntaxe de rendu riche destinée aux agents pour le Control UI.
+`[embed ...]` est la seule syntaxe de rendu enrichi orientée agent pour l'interface de contrôle.
 
-Exemple auto-fermant :
+Exemple de fermeture automatique :
 
 ```text
 [embed ref="cv_123" title="Status" /]
@@ -22,15 +22,15 @@ Exemple auto-fermant :
 Règles :
 
 - `[view ...]` n'est plus valide pour les nouvelles sorties.
-- Les shortcodes embed ne sont rendus que dans la surface des messages de l'assistant.
-- Seuls les embeds soutenus par une URL sont rendus. Utilisez `ref="..."` ou `url="..."`.
-- Les shortcodes embed HTML en ligne de type bloc ne sont pas rendus.
-- L'interface Web supprime le shortcode du texte visible et rend l'embed en ligne.
-- `MEDIA:` n'est pas un alias d'embed et ne doit pas être utilisé pour le rendu riche des embeds.
+- Les shortcodes d'intégration (embed) sont restitués uniquement dans la surface du message de l'assistant.
+- Seules les intégrations basées sur une URL sont restituées. Utilisez `ref="..."` ou `url="..."`.
+- Les shortcodes d'intégration HTML en ligne sous forme de bloc ne sont pas restitués.
+- L'interface web supprime le shortcode du texte visible et restitue l'intégration en ligne.
+- `MEDIA:` n'est pas un alias d'intégration et ne doit pas être utilisé pour le rendu d'intégrations enrichies.
 
-## Structure de rendu stockée
+## Forme de rendu stockée
 
-Le bloc de contenu assistant normalisé/stocké est un élément `canvas` structuré :
+Le bloc de contenu de l'assistant normalisé/stocké est un élément `canvas` structuré :
 
 ```json
 {
@@ -47,4 +47,4 @@ Le bloc de contenu assistant normalisé/stocké est un élément `canvas` struct
 }
 ```
 
-Les blocs riches stockés/rendus utilisent directement cette structure `canvas`. `present_view` n'est pas reconnu.
+Les blocs enrichis stockés/restitués utilisent directement cette forme `canvas`. `present_view` n'est pas reconnu.

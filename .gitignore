@@ -11,3 +11,4 @@ en/.i18n/*.tm.jsonl
 .i18n/flow-i18n.db*
 dist/
 .astro/
+.chatlog/

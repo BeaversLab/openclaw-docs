@@ -10,77 +10,68 @@ read_when:
 # Chutes
 
 [Chutes](https://chutes.ai) expose des catalogues de modèles open source via une
-OpenAI compatible %API. %OpenClaw prend en charge à la fois le OAuth via navigateur et l'authentification directe par clé %API
-pour le provider intégré `chutes`.
+OpenAI compatible avec API. OpenClaw prend en charge à la fois le OAuth navigateur et l'authentification directe par clé API
+pour le provider `chutes` inclus.
 
-- Provider : `chutes`
-- API : compatible %OpenAI
-- URL de base : `https://llm.chutes.ai/v1`
-- Auth :
-  - OAuth via `openclaw onboard --auth-choice chutes`
-  - Clé %API via `openclaw onboard --auth-choice chutes-api-key`
-  - Variables d'environnement d'exécution : `CHUTES_API_KEY`, `CHUTES_OAUTH_TOKEN`
+| Propriété   | Valeur                             |
+| ----------- | ---------------------------------- |
+| Provider    | `chutes`                           |
+| API         | compatible OpenAI                  |
+| URL de base | `https://llm.chutes.ai/v1`         |
+| Auth        | OAuth ou clé API (voir ci-dessous) |
 
-## Quick start
+## Getting started
 
-### OAuth
+<Tabs>
+  <Tab title="OAuth">
+    <Steps>
+      <Step title="Exécuter le flux d'onboarding OAuth">```bash openclaw onboard --auth-choice chutes ``` OpenClaw lance le flux navigateur localement, ou affiche une URL + un flux de redirection par copier-coller sur les hôtes distants/sans tête. Les jetons OAuth s'actualisent automatiquement via les profils d'authentification OpenClaw.</Step>
+      <Step title="Vérifier le modèle par défaut">Après l'onboarding, le modèle par défaut est défini sur `chutes/zai-org/GLM-4.7-TEE` et le catalogue Chutes inclus est enregistré.</Step>
+    </Steps>
+  </Tab>
+  <Tab title="Clé API">
+    <Steps>
+      <Step title="Obtenir une clé API">Créez une clé sur [chutes.ai/settings/api-keys](https://chutes.ai/settings/api-keys).</Step>
+      <Step title="Exécuter le flux d'onboarding par clé API">```bash openclaw onboard --auth-choice chutes-api-key ```</Step>
+      <Step title="Vérifier le modèle par défaut">Après l'onboarding, le modèle par défaut est défini sur `chutes/zai-org/GLM-4.7-TEE` et le catalogue Chutes inclus est enregistré.</Step>
+    </Steps>
+  </Tab>
+</Tabs>
 
-```bash
-openclaw onboard --auth-choice chutes
-```
-
-OpenClaw lance le flux navigateur localement, ou affiche une URL + un flux de redirection-collage
-sur les hôtes distants/sans interface. Les jetons OAuth s'actualisent automatiquement via les profils d'authentification
-OpenClaw.
-
-Remplacements OAuth optionnels :
-
-- `CHUTES_CLIENT_ID`
-- `CHUTES_CLIENT_SECRET`
-- `CHUTES_OAUTH_REDIRECT_URI`
-- `CHUTES_OAUTH_SCOPES`
-
-### API key
-
-```bash
-openclaw onboard --auth-choice chutes-api-key
-```
-
-Obtenez votre clé sur
-[chutes.ai/settings/api-keys](https://chutes.ai/settings/api-keys).
-
-Les deux chemins d'authentification enregistrent le catalogue Chutes intégré et définissent le modèle par défaut
-sur `chutes/zai-org/GLM-4.7-TEE`.
+<Note>Les deux chemins d'auth enregistrent le catalogue Chutes inclus et définissent le modèle par défaut sur `chutes/zai-org/GLM-4.7-TEE`. Variables d'environnement d'exécution : `CHUTES_API_KEY`, `CHUTES_OAUTH_TOKEN`.</Note>
 
 ## Discovery behavior
 
-Lorsque l'authentification Chutes est disponible, %OpenClaw interroge le catalogue Chutes avec ces
-identifiants et utilise les modèles découverts. Si la découverte échoue, %OpenClaw revient
-à un catalogue statique intégré afin que l'intégration et le démarrage fonctionnent toujours.
+Lorsque l'auth Chutes est disponible, OpenClaw interroge le catalogue Chutes avec ces
+identifiants et utilise les modèles découverts. Si la découverte échoue, OpenClaw revient
+à un catalogue statique inclus afin que l'onboarding et le démarrage fonctionnent toujours.
 
 ## Default aliases
 
-OpenClaw enregistre également trois alias de commodité pour le catalogue Chutes
-intégré :
+OpenClaw enregistre trois alias de commodité pour le catalogue Chutes inclus :
 
-- `chutes-fast` -> `chutes/zai-org/GLM-4.7-FP8`
-- `chutes-pro` -> `chutes/deepseek-ai/DeepSeek-V3.2-TEE`
-- `chutes-vision` -> `chutes/chutesai/Mistral-Small-3.2-24B-Instruct-2506`
+| Alias           | Modèle cible                                          |
+| --------------- | ----------------------------------------------------- |
+| `chutes-fast`   | `chutes/zai-org/GLM-4.7-FP8`                          |
+| `chutes-pro`    | `chutes/deepseek-ai/DeepSeek-V3.2-TEE`                |
+| `chutes-vision` | `chutes/chutesai/Mistral-Small-3.2-24B-Instruct-2506` |
 
-## Built-in starter catalog
+## Catalogue de démarrage intégré
 
-Le catalogue de secours intégré inclut des références Chutes actuelles telles que :
+Le catalogue de repli intégré inclut les références actuelles de Chutes :
 
-- `chutes/zai-org/GLM-4.7-TEE`
-- `chutes/zai-org/GLM-5-TEE`
-- `chutes/deepseek-ai/DeepSeek-V3.2-TEE`
-- `chutes/deepseek-ai/DeepSeek-R1-0528-TEE`
-- `chutes/moonshotai/Kimi-K2.5-TEE`
-- `chutes/chutesai/Mistral-Small-3.2-24B-Instruct-2506`
-- `chutes/Qwen/Qwen3-Coder-Next-TEE`
-- `chutes/openai/gpt-oss-120b-TEE`
+| Réf. de model                                         |
+| ----------------------------------------------------- |
+| `chutes/zai-org/GLM-4.7-TEE`                          |
+| `chutes/zai-org/GLM-5-TEE`                            |
+| `chutes/deepseek-ai/DeepSeek-V3.2-TEE`                |
+| `chutes/deepseek-ai/DeepSeek-R1-0528-TEE`             |
+| `chutes/moonshotai/Kimi-K2.5-TEE`                     |
+| `chutes/chutesai/Mistral-Small-3.2-24B-Instruct-2506` |
+| `chutes/Qwen/Qwen3-Coder-Next-TEE`                    |
+| `chutes/openai/gpt-oss-120b-TEE`                      |
 
-## Config example
+## Exemple de configuration
 
 ```json5
 {
@@ -96,8 +87,42 @@ Le catalogue de secours intégré inclut des références Chutes actuelles telle
 }
 ```
 
-## Notes
+<AccordionGroup>
+  <Accordion title="Remplacements OAuth">
+    Vous pouvez personnaliser le flux OAuth avec des variables d'environnement facultatives :
 
-- Aide OAuth et exigences de l'application de redirection : [Documentation Chutes OAuth](https://chutes.ai/docs/sign-in-with-chutes/overview)
-- La découverte par clé API et OAuth utilise le même identifiant de provider `chutes`.
-- Les modèles Chutes sont enregistrés en tant que `chutes/<model-id>`.
+    | Variable | Objectif |
+    | -------- | ------- |
+    | `CHUTES_CLIENT_ID` | ID client OAuth personnalisé |
+    | `CHUTES_CLIENT_SECRET` | Secret client OAuth personnalisé |
+    | `CHUTES_OAUTH_REDIRECT_URI` | URI de redirection personnalisée |
+    | `CHUTES_OAUTH_SCOPES` | Portées OAuth personnalisées |
+
+    Consultez la [documentation OAuth de Chutes](https://chutes.ai/docs/sign-in-with-chutes/overview)
+    pour les exigences et l'aide concernant l'application de redirection.
+
+  </Accordion>
+
+  <Accordion title="Notes">
+    - La découverte par clé d'API et OAuth utilise le même identifiant de fournisseur `chutes`.
+    - Les models Chutes sont enregistrés en tant que `chutes/<model-id>`.
+    - Si la découverte échoue au démarrage, le catalogue statique intégré est utilisé automatiquement.
+  </Accordion>
+</AccordionGroup>
+
+## Connexes
+
+<CardGroup cols={2}>
+  <Card title="Fournisseurs de model" href="/en/concepts/model-providers" icon="layers">
+    Règles de fournisseur, références de model et comportement de basculement.
+  </Card>
+  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+    Schéma de configuration complet incluant les paramètres du fournisseur.
+  </Card>
+  <Card title="Chutes" href="https://chutes.ai" icon="arrow-up-right-from-square">
+    Tableau de bord Chutes et documentation de l'API.
+  </Card>
+  <Card title="Clés d'API Chutes" href="https://chutes.ai/settings/api-keys" icon="key">
+    Créer et gérer les clés d'API Chutes.
+  </Card>
+</CardGroup>
