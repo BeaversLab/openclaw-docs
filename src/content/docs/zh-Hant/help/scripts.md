@@ -19,7 +19,7 @@ title: "腳本"
 
 ## 監控驗證腳本
 
-身份驗證監控涵蓋於 [Authentication](/en/gateway/authentication)。`scripts/` 下的腳本是 systemd/Termux 手機工作流程的額外可選選項。
+身份驗證監控涵蓋於 [Authentication](/zh-Hant/gateway/authentication)。`scripts/` 下的腳本是 systemd/Termux 手機工作流程的額外可選選項。
 
 ## GitHub 讀取輔助工具
 

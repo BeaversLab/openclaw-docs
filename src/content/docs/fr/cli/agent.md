@@ -18,7 +18,7 @@ Transmettez au moins un sélecteur de session :
 
 Connexe :
 
-- Outil d'envoi d'agent : [Agent send](/en/tools/agent-send)
+- Outil d'envoi d'agent : [Agent send](/fr/tools/agent-send)
 
 ## Options
 

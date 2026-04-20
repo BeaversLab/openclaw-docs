@@ -10,7 +10,7 @@ read_when:
 
 Lobster est un shell de workflow qui permet à OpenClaw d'exécuter des séquences d'outils en plusieurs étapes en une seule opération déterministe avec des points d'approbation explicites.
 
-Lobster est une couche de rédaction située au-dessus du travail en arrière-plan détaché. Pour l'orchestration des flux au-dessus des tâches individuelles, consultez [Task Flow](/en/automation/taskflow) (`openclaw tasks flow`). Pour le registre des activités des tâches, consultez [`openclaw tasks`](/en/automation/tasks).
+Lobster est une couche de rédaction située au-dessus du travail en arrière-plan détaché. Pour l'orchestration des flux au-dessus des tâches individuelles, consultez [Task Flow](/fr/automation/taskflow) (`openclaw tasks flow`). Pour le registre des activités des tâches, consultez [`openclaw tasks`](/fr/automation/tasks).
 
 ## Hook
 
@@ -120,7 +120,7 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 }'
 ```
 
-Consultez [LLM Task](/en/tools/llm-task) pour plus de détails et les options de configuration.
+Consultez [LLM Task](/fr/tools/llm-task) pour plus de détails et les options de configuration.
 
 ## Fichiers de workflow (.lobster)
 
@@ -314,7 +314,7 @@ Utilisez `approve --preview-from-stdin --limit N` pour attacher un aperçu JSON 
 
 ## OpenProse
 
-OpenProse se marie bien avec Lobster : utilisez `/prose` pour orchestrer la préparation multi-agent, puis exécutez un pipeline Lobster pour des approbations déterministes. Si un programme Prose a besoin de Lobster, autorisez l'outil `lobster` pour les sous-agents via `tools.subagents.tools`. Voir [OpenProse](/en/prose).
+OpenProse se marie bien avec Lobster : utilisez `/prose` pour orchestrer la préparation multi-agent, puis exécutez un pipeline Lobster pour des approbations déterministes. Si un programme Prose a besoin de Lobster, autorisez l'outil `lobster` pour les sous-agents via `tools.subagents.tools`. Voir [OpenProse](/fr/prose).
 
 ## Sécurité
 
@@ -332,8 +332,8 @@ OpenProse se marie bien avec Lobster : utilisez `/prose` pour orchestrer la pré
 
 ## En savoir plus
 
-- [Plugins](/en/tools/plugin)
-- [Création d'outil de plugin](/en/plugins/building-plugins#registering-agent-tools)
+- [Plugins](/fr/tools/plugin)
+- [Création d'outil de plugin](/fr/plugins/building-plugins#registering-agent-tools)
 
 ## Étude de cas : workflows communautaires
 
@@ -344,6 +344,6 @@ Un exemple public : une « second cerveau » CLI + pipelines Lobster qui gèrent
 
 ## Connexes
 
-- [Automatisation et Tâches](/en/automation) — planification des workflows Lobster
-- [Vue d'ensemble de l'automatisation](/en/automation) — tous les mécanismes d'automatisation
-- [Vue d'ensemble des outils](/en/tools) — tous les outils d'agent disponibles
+- [Automatisation et Tâches](/fr/automation) — planification des workflows Lobster
+- [Vue d'ensemble de l'automatisation](/fr/automation) — tous les mécanismes d'automatisation
+- [Vue d'ensemble des outils](/fr/tools) — tous les outils d'agent disponibles

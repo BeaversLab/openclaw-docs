@@ -100,7 +100,7 @@ openclaw models auth login --provider github-copilot --method device --set-defau
 
 ## 记忆搜索嵌入
 
-GitHub Copilot 也可以充当 [记忆搜索](/en/concepts/memory-search) 的嵌入提供商。
+GitHub Copilot 也可以充当 [记忆搜索](/zh/concepts/memory-search) 的嵌入提供商。
 如果您拥有 Copilot 订阅并已登录，OpenClaw 可以将其用于嵌入，而无需单独的 API 密钥。
 
 ### 自动检测
@@ -138,10 +138,10 @@ GitHub Copilot 也可以充当 [记忆搜索](/en/concepts/memory-search) 的嵌
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="OAuth and auth" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth and auth" href="/zh/gateway/authentication" icon="key">
     认证详细信息和凭据重用规则。
   </Card>
 </CardGroup>

@@ -76,5 +76,5 @@ If you only want to reset sessions, delete `agents/<agentId>/sessions/` for that
 
 ## Références
 
-- [Tests](/en/help/testing)
-- [Getting Started](/en/start/getting-started)
+- [Tests](/fr/help/testing)
+- [Getting Started](/fr/start/getting-started)

@@ -10,7 +10,7 @@ sidebarTitle: "CLI 參考"
 # CLI 設定參考
 
 此頁面是 `openclaw onboard` 的完整參考。
-簡短指南請參閱 [Onboarding (CLI)](/en/start/wizard)。
+簡短指南請參閱 [Onboarding (CLI)](/zh-Hant/start/wizard)。
 
 ## 精靈的功能
 
@@ -46,7 +46,7 @@ sidebarTitle: "CLI 參考"
   <Step title="工作區">
     - 預設 `~/.openclaw/workspace` (可配置)。
     - 產生首次執行引導程序所需的工作區檔案。
-    - 工作區配置：[Agent workspace](/en/concepts/agent-workspace)。
+    - 工作區配置：[Agent workspace](/zh-Hant/concepts/agent-workspace)。
   </Step>
   <Step title="Gateway">
     - 提示輸入 port、bind、auth mode 以及 tailscale exposure。
@@ -62,14 +62,14 @@ sidebarTitle: "CLI 參考"
     - 非 loopback 的 bind 仍然需要 auth。
   </Step>
   <Step title="頻道">
-    - [WhatsApp](/en/channels/whatsapp)：選用的 QR 登入
-    - [Telegram](/en/channels/telegram)：bot token
-    - [Discord](/en/channels/discord)：bot token
-    - [Google Chat](/en/channels/googlechat)：服務帳號 JSON + webhook 受眾
-    - [Mattermost](/en/channels/mattermost)：bot token + 基礎 URL
-    - [Signal](/en/channels/signal)：選用 `signal-cli` 安裝 + 帳號配置
-    - [BlueBubbles](/en/channels/bluebubbles)：iMessage 的推薦選項；伺服器 URL + 密碼 + webhook
-    - [iMessage](/en/channels/imessage)：舊版 `imsg` CLI 路徑 + DB 存取
+    - [WhatsApp](/zh-Hant/channels/whatsapp)：選用的 QR 登入
+    - [Telegram](/zh-Hant/channels/telegram)：bot token
+    - [Discord](/zh-Hant/channels/discord)：bot token
+    - [Google Chat](/zh-Hant/channels/googlechat)：服務帳號 JSON + webhook 受眾
+    - [Mattermost](/zh-Hant/channels/mattermost)：bot token + 基礎 URL
+    - [Signal](/zh-Hant/channels/signal)：選用 `signal-cli` 安裝 + 帳號配置
+    - [BlueBubbles](/zh-Hant/channels/bluebubbles)：iMessage 的推薦選項；伺服器 URL + 密碼 + webhook
+    - [iMessage](/zh-Hant/channels/imessage)：舊版 `imsg` CLI 路徑 + DB 存取
     - DM 安全性：預設為配對。第一則 DM 會發送代碼；透過
       `openclaw pairing approve <channel> <code>` 核准或使用允許清單。
   </Step>
@@ -149,36 +149,36 @@ sidebarTitle: "CLI 參考"
   </Accordion>
   <Accordion title="Vercel AI Gateway">
     提示輸入 `AI_GATEWAY_API_KEY`。
-    更多詳情：[Vercel AI Gateway](/en/providers/vercel-ai-gateway)。
+    更多詳情：[Vercel AI Gateway](/zh-Hant/providers/vercel-ai-gateway)。
   </Accordion>
   <Accordion title="Cloudflare AI Gateway">
     提示輸入帳號 ID、gateway ID 與 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
-    更多詳情：[Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)。
+    更多詳情：[Cloudflare AI Gateway](/zh-Hant/providers/cloudflare-ai-gateway)。
   </Accordion>
   <Accordion title="MiniMax">
     配置會自動寫入。託管的默認值是 `MiniMax-M2.7`；API-key 設置使用
     `minimax/...`，而 OAuth 設置使用 `minimax-portal/...`。
-    更多詳情：[MiniMax](/en/providers/minimax)。
+    更多詳情：[MiniMax](/zh-Hant/providers/minimax)。
   </Accordion>
   <Accordion title="StepFun">
     針對位於中國或全球端點上的 StepFun 標準版或 Step Plan，配置會自動寫入。
     標準版目前包含 `step-3.5-flash`，而 Step Plan 還包含 `step-3.5-flash-2603`。
-    更多詳情：[StepFun](/en/providers/stepfun)。
+    更多詳情：[StepFun](/zh-Hant/providers/stepfun)。
   </Accordion>
   <Accordion title="Synthetic (Anthropic-compatible)">
     會提示輸入 `SYNTHETIC_API_KEY`。
-    更多詳情：[Synthetic](/en/providers/synthetic)。
+    更多詳情：[Synthetic](/zh-Hant/providers/synthetic)。
   </Accordion>
   <Accordion title="Ollama (Cloud and local open models)">
     會首先提示輸入 `Cloud + Local`、`Cloud only` 或 `Local only`。
     `Cloud only` 使用搭配 `https://ollama.com` 的 `OLLAMA_API_KEY`。
     主機支持的模式會提示輸入基礎 URL（默認 `http://127.0.0.1:11434`），發現可用模型，並建議默認值。
     `Cloud + Local` 還會檢查該 Ollama 主機是否已登入以使用雲端訪問。
-    更多詳情：[Ollama](/en/providers/ollama)。
+    更多詳情：[Ollama](/zh-Hant/providers/ollama)。
   </Accordion>
   <Accordion title="Moonshot and Kimi Coding">
     Moonshot (Kimi K2) 和 Kimi Coding 的配置會自動寫入。
-    更多詳情：[Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)。
+    更多詳情：[Moonshot AI (Kimi + Kimi Coding)](/zh-Hant/providers/moonshot)。
   </Accordion>
   <Accordion title="自訂提供者">
     適用於 OpenAI 相容和 Anthropic 相容的端點。
@@ -287,6 +287,6 @@ Signal 安裝行為：
 
 ## 相關文件
 
-- 入門中心：[入門 (CLI)](/en/start/wizard)
-- 自動化和腳本：[CLI 自動化](/en/start/wizard-cli-automation)
-- 指令參考：[`openclaw onboard`](/en/cli/onboard)
+- 入門中心：[入門 (CLI)](/zh-Hant/start/wizard)
+- 自動化和腳本：[CLI 自動化](/zh-Hant/start/wizard-cli-automation)
+- 指令參考：[`openclaw onboard`](/zh-Hant/cli/onboard)

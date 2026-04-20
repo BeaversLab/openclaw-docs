@@ -62,13 +62,13 @@ Notes:
 - `tools.exec.host` (預設值：`auto`；當沙箱執行環境啟用時解析為 `sandbox`，否則為 `gateway`)
 - `tools.exec.security` (預設值：若未設定，沙箱為 `deny`，閘道 + 節點為 `full`)
 - `tools.exec.ask` (預設值：`off`)
-- No-approval host exec 是 gateway + node 的預設值。如果您想要批准/允許清單行為，請同時收緊 `tools.exec.*` 和主機 `~/.openclaw/exec-approvals.json`；請參閱 [Exec approvals](/en/tools/exec-approvals#no-approval-yolo-mode)。
+- No-approval host exec 是 gateway + node 的預設值。如果您想要批准/允許清單行為，請同時收緊 `tools.exec.*` 和主機 `~/.openclaw/exec-approvals.json`；請參閱 [Exec approvals](/zh-Hant/tools/exec-approvals#no-approval-yolo-mode)。
 - YOLO 來自主機原則預設值 (`security=full`, `ask=off`)，而非來自 `host=auto`。如果您想要強制 gateway 或 node 路由，請設定 `tools.exec.host` 或使用 `/exec host=...`。
 - 在 `security=full` 加上 `ask=off` 模式下，host exec 會直接遵循設定的原則；沒有額外的啟發式命令混淆前過濾器。
 - `tools.exec.node` (預設：未設定)
 - `tools.exec.strictInlineEval` (預設：false)：當為 true 時，內嵌直譯器 eval 表單，例如 `python -c`、`node -e`、`ruby -e`、`perl -e`、`php -r`、`lua -e` 和 `osascript -e`，總是需要明確批准。`allow-always` 仍可持續執行良性直譯器/腳本調用，但內嵌 eval 表單每次仍會提示。
 - `tools.exec.pathPrepend`：要預先加入 `PATH` 以供 exec 執行的目錄清單 (僅限 gateway + sandbox)。
-- `tools.exec.safeBins`：僅 stdin 的安全二進位檔，可在沒有明確允許清單項目的情況下執行。有關行為的詳細資訊，請參閱 [Safe bins](/en/tools/exec-approvals#safe-bins-stdin-only)。
+- `tools.exec.safeBins`：僅 stdin 的安全二進位檔，可在沒有明確允許清單項目的情況下執行。有關行為的詳細資訊，請參閱 [Safe bins](/zh-Hant/tools/exec-approvals#safe-bins-stdin-only)。
 - `tools.exec.safeBinTrustedDirs`：用於 `safeBins` 路徑檢查的其他額外明確受信任目錄。`PATH` 項目絕不會自動受信任。內建預設值為 `/bin` 和 `/usr/bin`。
 - `tools.exec.safeBinProfiles`：每個安全 bin 的可選自訂 argv 原則 (`minPositional`, `maxPositional`, `allowedValueFlags`, `deniedFlags`)。
 
@@ -127,7 +127,7 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 ## Exec 核准（伴隨應用程式 / 節點主機）
 
 沙箱化代理程式可以要求在 `exec` 斷層或節點主機上執行前，對每個請求進行核准。
-請參閱 [Exec 核准](/en/tools/exec-approvals) 以了解政策、允許清單和 UI 流程。
+請參閱 [Exec 核准](/zh-Hant/tools/exec-approvals) 以了解政策、允許清單和 UI 流程。
 
 當需要核准時，exec 工具會立即傳回
 `status: "approval-pending"` 和一個核准 ID。一旦核准（或拒絕 / 逾時），
@@ -163,7 +163,7 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 當您明確將行為廣泛的二進位檔（例如 `jq`）加回 `safeBins` 時，`openclaw security audit` 和 `openclaw doctor` 也會發出警告。
 如果您明確將解釋器列入允許清單，請啟用 `tools.exec.strictInlineEval`，以便內聯程式碼評估表單仍需要新的批准。
 
-如需完整的政策詳細資訊和範例，請參閱 [Exec approvals](/en/tools/exec-approvals#safe-bins-stdin-only) 和 [Safe bins versus allowlist](/en/tools/exec-approvals#safe-bins-versus-allowlist)。
+如需完整的政策詳細資訊和範例，請參閱 [Exec approvals](/zh-Hant/tools/exec-approvals#safe-bins-stdin-only) 和 [Safe bins versus allowlist](/zh-Hant/tools/exec-approvals#safe-bins-versus-allowlist)。
 
 ## 範例
 
@@ -227,7 +227,7 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 
 ## 相關
 
-- [Exec Approvals](/en/tools/exec-approvals) — 殼層指令的核准閘門
-- [Sandboxing](/en/gateway/sandboxing) — 在沙盒環境中執行指令
-- [Background Process](/en/gateway/background-process) — 長時間執行的 exec 和 process 工具
-- [Security](/en/gateway/security) — 工具政策和提升存取權限
+- [Exec Approvals](/zh-Hant/tools/exec-approvals) — 殼層指令的核准閘門
+- [Sandboxing](/zh-Hant/gateway/sandboxing) — 在沙盒環境中執行指令
+- [Background Process](/zh-Hant/gateway/background-process) — 長時間執行的 exec 和 process 工具
+- [Security](/zh-Hant/gateway/security) — 工具政策和提升存取權限

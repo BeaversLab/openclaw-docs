@@ -119,6 +119,6 @@ Tavily 是专为 AI 应用程序设计的搜索 API，返回针对 LLM 消费优
 
 ## 相关
 
-- [Web Search 概述](/en/tools/web) -- 所有提供商及自动检测
-- [Firecrawl](/en/tools/firecrawl) -- 带有内容提取的搜索 + 抓取
-- [Exa Search](/en/tools/exa-search) -- 带有内容提取的神经搜索
+- [Web Search 概述](/zh/tools/web) -- 所有提供商及自动检测
+- [Firecrawl](/zh/tools/firecrawl) -- 带有内容提取的搜索 + 抓取
+- [Exa Search](/zh/tools/exa-search) -- 带有内容提取的神经搜索

@@ -308,13 +308,13 @@ La configuration se trouve sous `plugins.entries.moonshot.config.webSearch` :
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les fournisseurs, les références de modèles et le comportement de basculement.
   </Card>
-  <Card title="Recherche Web" href="/en/tools/web-search" icon="magnifying-glass">
+  <Card title="Recherche Web" href="/fr/tools/web-search" icon="magnifying-glass">
     Configuration des fournisseurs de recherche Web, y compris Kimi.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
     Schéma de configuration complet pour les fournisseurs, les modèles et les plugins.
   </Card>
   <Card title="Plateforme ouverte Moonshot" href="https://platform.moonshot.ai" icon="globe">

@@ -44,7 +44,7 @@ title: "閘道架構"
 
 協議詳情：
 
-- [Gateway 協定](/en/gateway/protocol)
+- [Gateway 協定](/zh-Hant/gateway/protocol)
 
 ### WebChat
 
@@ -111,8 +111,8 @@ sequenceDiagram
 - Gateway 驗證 (`gateway.auth.*`) 仍然適用於 **所有** 連線，無論是本機還是
   遠端。
 
-詳情：[Gateway 協定](/en/gateway/protocol)、[配對](/en/channels/pairing)、
-[安全性](/en/gateway/security)。
+詳情：[Gateway 協定](/zh-Hant/gateway/protocol)、[配對](/zh-Hant/channels/pairing)、
+[安全性](/zh-Hant/gateway/security)。
 
 ## 協定型別與程式碼生成
 
@@ -146,7 +146,7 @@ sequenceDiagram
 
 ## 相關
 
-- [Agent Loop](/en/concepts/agent-loop) — 詳細的 Agent 執行週期
-- [Gateway Protocol](/en/gateway/protocol) — WebSocket 協定合約
-- [Queue](/en/concepts/queue) — 指令佇列和並行
-- [Security](/en/gateway/security) — 信任模型和強化防護
+- [Agent Loop](/zh-Hant/concepts/agent-loop) — 詳細的 Agent 執行週期
+- [Gateway Protocol](/zh-Hant/gateway/protocol) — WebSocket 協定合約
+- [Queue](/zh-Hant/concepts/queue) — 指令佇列和並行
+- [Security](/zh-Hant/gateway/security) — 信任模型和強化防護

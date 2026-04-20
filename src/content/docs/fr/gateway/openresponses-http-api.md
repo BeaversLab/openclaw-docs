@@ -19,7 +19,7 @@ En coulisses, les requêtes sont exécutées en tant qu'exécution d'agent Gatew
 
 ## Authentification, sécurité et routage
 
-Le comportement opérationnel correspond à [OpenAI Chat Completions](/en/gateway/openai-http-api) :
+Le comportement opérationnel correspond à [OpenAI Chat Completions](/fr/gateway/openai-http-api) :
 
 - utilisez le chemin d'authentification HTTP Gateway correspondant :
   - authentification par secret partagé (`gateway.auth.mode="token"` ou `"password"`) : `Authorization: Bearer <token-or-password>`
@@ -56,7 +56,7 @@ La même surface de compatibilité inclut également :
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-Pour l'explication canonique de la manière dont les modèles ciblés par les agents, `openclaw/default`, le passage des embeddings et les substitutions de modèles backend s'assemblent, voir [OpenAI Chat Completions](/en/gateway/openai-http-api#agent-first-model-contract) et [Model list and agent routing](/en/gateway/openai-http-api#model-list-and-agent-routing).
+Pour l'explication canonique de la manière dont les modèles ciblés par les agents, `openclaw/default`, le passage des embeddings et les substitutions de modèles backend s'assemblent, voir [OpenAI Chat Completions](/fr/gateway/openai-http-api#agent-first-model-contract) et [Model list and agent routing](/fr/gateway/openai-http-api#model-list-and-agent-routing).
 
 ## Comportement de la session
 
@@ -251,7 +251,7 @@ Note de sécurité :
 - Les listes d'autorisation d'URL sont appliquées avant la récupération et lors des sauts de redirection.
 - L'autorisation d'un nom d'hôte ne contourne pas le blocage des IP privées/internes.
 - Pour les passerelles exposées à Internet, appliquez des contrôles de sortie réseau en plus des gardes au niveau de l'application.
-  Voir [Sécurité](/en/gateway/security).
+  Voir [Sécurité](/fr/gateway/security).
 
 ## Streaming (SSE)
 

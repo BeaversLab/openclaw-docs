@@ -12,8 +12,8 @@ sidebarTitle: "Internals"
 # Plugin Internals
 
 <Info>
-  This is the **deep architecture reference**. For practical guides, see: - [Install and use plugins](/en/tools/plugin) — user guide - [Getting Started](/en/plugins/building-plugins) — first plugin tutorial - [Channel Plugins](/en/plugins/sdk-channel-plugins) — build a messaging channel - [Provider Plugins](/en/plugins/sdk-provider-plugins) — build a model provider - [SDK
-  Overview](/en/plugins/sdk-overview) — import map and registration API
+  This is the **deep architecture reference**. For practical guides, see: - [Install and use plugins](/es/tools/plugin) — user guide - [Getting Started](/es/plugins/building-plugins) — first plugin tutorial - [Channel Plugins](/es/plugins/sdk-channel-plugins) — build a messaging channel - [Provider Plugins](/es/plugins/sdk-provider-plugins) — build a model provider - [SDK
+  Overview](/es/plugins/sdk-overview) — import map and registration API
 </Info>
 
 This page covers the internal architecture of the OpenClaw plugin system.
@@ -81,7 +81,7 @@ de registro (no solo metadatos estáticos):
   capacidad
 
 Use `openclaw plugins inspect <id>` para ver la forma de un complemento y el desglose de sus
-capacidades. Consulte [referencia de CLI](/en/cli/plugins#inspect) para obtener detalles.
+capacidades. Consulte [referencia de CLI](/es/cli/plugins#inspect) para obtener detalles.
 
 ### Enlaces heredados
 
@@ -357,7 +357,7 @@ capacidad tipado y el asistente de tiempo de ejecución, y los complementos del 
 implementaciones de `api.registerVideoGenerationProvider(...)` contra él.
 
 ¿Necesita una lista de verificación concreta para el despliegue? Consulte
-[Capability Cookbook](/en/tools/capability-cookbook).
+[Capability Cookbook](/es/tools/capability-cookbook).
 
 ## Contratos y cumplimiento
 
@@ -1492,7 +1492,7 @@ Secuencia recomendada:
    Agregar pruebas para que la propiedad y la forma de registro permanezcan explícitas con el tiempo.
 
 Así es como OpenClaw mantiene una opinión firme sin volverse rígida a la visión del mundo de un
-solo proveedor. Consulte el [Capability Cookbook](/en/tools/capability-cookbook)
+solo proveedor. Consulte el [Capability Cookbook](/es/tools/capability-cookbook)
 para obtener una lista de verificación de archivos concreta y un ejemplo práctico.
 
 ### Lista de verificación de capacidades

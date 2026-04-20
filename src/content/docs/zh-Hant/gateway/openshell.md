@@ -11,7 +11,7 @@ read_when:
 
 OpenShell 是 OpenClaw 的受控沙箱後端。OpenClaw 不會在本機執行 Docker 容器，而是將沙箱生命週期委派給 `openshell` CLI，該 CLI 會佈建具備 SSH 命令執行功能的遠端環境。
 
-OpenShell 外掛程式重複使用與通用 [SSH 後端](/en/gateway/sandboxing#ssh-backend) 相同的核心 SSH 傳輸與遠端檔案系統橋接器。它加入了 OpenShell 專屬的生命週期 (`sandbox create/get/delete`、`sandbox ssh-config`) 與選用的 `mirror` 工作區模式。
+OpenShell 外掛程式重複使用與通用 [SSH 後端](/zh-Hant/gateway/sandboxing#ssh-backend) 相同的核心 SSH 傳輸與遠端檔案系統橋接器。它加入了 OpenShell 專屬的生命週期 (`sandbox create/get/delete`、`sandbox ssh-config`) 與選用的 `mirror` 工作區模式。
 
 ## 先決條件
 
@@ -130,7 +130,7 @@ openclaw sandbox explain
 
 沙箱層級設定 (`mode`、`scope`、`workspaceAccess`) 的配置方式與任何後端相同，皆在
 `agents.defaults.sandbox` 之下。請參閱
-[Sandboxing](/en/gateway/sandboxing) 以取得完整矩陣。
+[Sandboxing](/zh-Hant/gateway/sandboxing) 以取得完整矩陣。
 
 ## 範例
 
@@ -282,7 +282,7 @@ openclaw sandbox recreate --all
 
 ## 另請參閱
 
-- [沙箱機制](/en/gateway/sandboxing) -- 模式、範圍與後端比較
-- [沙箱與工具原則與提權](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- 偵錯被封鎖的工具
-- [多代理程式沙箱與工具](/en/tools/multi-agent-sandbox-tools) -- 每個代理程式的覆寫
-- [沙箱 CLI](/en/cli/sandbox) -- `openclaw sandbox` 指令
+- [沙箱機制](/zh-Hant/gateway/sandboxing) -- 模式、範圍與後端比較
+- [沙箱與工具原則與提權](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated) -- 偵錯被封鎖的工具
+- [多代理程式沙箱與工具](/zh-Hant/tools/multi-agent-sandbox-tools) -- 每個代理程式的覆寫
+- [沙箱 CLI](/zh-Hant/cli/sandbox) -- `openclaw sandbox` 指令

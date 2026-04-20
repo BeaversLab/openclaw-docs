@@ -12,7 +12,7 @@ ClawDock es una pequeña capa auxiliar de shell para instalaciones de OpenClaw b
 
 Te proporciona comandos cortos como `clawdock-start`, `clawdock-dashboard` y `clawdock-fix-token` en lugar de invocaciones más largas de `docker compose ...`.
 
-Si aún no has configurado Docker, comienza con [Docker](/en/install/docker).
+Si aún no has configurado Docker, comienza con [Docker](/es/install/docker).
 
 ## Instalación
 
@@ -90,7 +90,7 @@ clawdock-approve <request-id>
 
 ## Configuración y secretos
 
-ClawDock funciona con la misma división de configuración de Docker descrita en [Docker](/en/install/docker):
+ClawDock funciona con la misma división de configuración de Docker descrita en [Docker](/es/install/docker):
 
 - `<project>/.env` para valores específicos de Docker como el nombre de la imagen, los puertos y el token de la puerta de enlace
 - `~/.openclaw/.env` para las claves de proveedor y tokens de bot respaldados por variables de entorno
@@ -101,6 +101,6 @@ Usa `clawdock-show-config` cuando quieras inspeccionar rápidamente los archivos
 
 ## Páginas relacionadas
 
-- [Docker](/en/install/docker)
-- [Docker VM Runtime](/en/install/docker-vm-runtime)
-- [Actualización](/en/install/updating)
+- [Docker](/es/install/docker)
+- [Docker VM Runtime](/es/install/docker-vm-runtime)
+- [Actualización](/es/install/updating)

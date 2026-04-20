@@ -8,7 +8,7 @@ title: "OpenCode Go"
 
 # OpenCode Go
 
-OpenCode Go es el catálogo de Go dentro de [OpenCode](/en/providers/opencode).
+OpenCode Go es el catálogo de Go dentro de [OpenCode](/es/providers/opencode).
 Utiliza el mismo `OPENCODE_API_KEY` que el catálogo Zen, pero mantiene el id
 del proveedor de tiempo de ejecución `opencode-go` para que el enrutamiento
 por modelo ascendente siga siendo correcto.
@@ -17,7 +17,7 @@ por modelo ascendente siga siendo correcto.
 | -------------------------------- | ---------------------------------- |
 | Proveedor de tiempo de ejecución | `opencode-go`                      |
 | Autenticación                    | `OPENCODE_API_KEY`                 |
-| Configuración principal          | [OpenCode](/en/providers/opencode) |
+| Configuración principal          | [OpenCode](/es/providers/opencode) |
 
 ## Modelos compatibles
 
@@ -91,15 +91,15 @@ por modelo ascendente siga siendo correcto.
   </Accordion>
 </AccordionGroup>
 
-<Tip>Consulte [OpenCode](/en/providers/opencode) para obtener una descripción general compartida del proceso de incorporación y la referencia completa del catálogo Zen + Go.</Tip>
+<Tip>Consulte [OpenCode](/es/providers/opencode) para obtener una descripción general compartida del proceso de incorporación y la referencia completa del catálogo Zen + Go.</Tip>
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="OpenCode (principal)" href="/en/providers/opencode" icon="servidor">
+  <Card title="OpenCode (principal)" href="/es/providers/opencode" icon="servidor">
     Incorporación compartida, resumen del catálogo y notas avanzadas.
   </Card>
-  <Card title="Selección de modelos" href="/en/concepts/model-providers" icon="capas">
+  <Card title="Selección de modelos" href="/es/concepts/model-providers" icon="capas">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
 </CardGroup>

@@ -8,15 +8,15 @@ title: "Heartbeat"
 
 # Heartbeat (Gateway)
 
-> **Heartbeat vs Cron ?** Consultez [Automatisation et tâches](/en/automation) pour savoir quand utiliser l'un ou l'autre.
+> **Heartbeat vs Cron ?** Consultez [Automatisation et tâches](/fr/automation) pour savoir quand utiliser l'un ou l'autre.
 
 Heartbeat exécute des **tours d'agent périodiques** dans la session principale afin que le modèle puisse
 signaler tout ce qui nécessite une attention sans vous spammer.
 
-Heartbeat est un tour de session principale programmé — il ne crée **pas** d'enregistrements de [tâche en arrière-plan](/en/automation/tasks).
+Heartbeat est un tour de session principale programmé — il ne crée **pas** d'enregistrements de [tâche en arrière-plan](/fr/automation/tasks).
 Les enregistrements de tâches sont destinés au travail détaché (exécutions ACP, sous-agents, tâches cron isolées).
 
-Dépannage : [Tâches planifiées](/en/automation/cron-jobs#troubleshooting)
+Dépannage : [Tâches planifiées](/fr/automation/cron-jobs#troubleshooting)
 
 ## Quick start (beginner)
 
@@ -68,9 +68,9 @@ Le prompt par défaut est volontairement large :
   les suivis (boîte de réception, calendrier, rappels, travail en file d'attente) et à signaler tout ce qui est urgent.
 - **Vérification humaine** : « Checkup sometimes on your human during day time » incite à un
   message occasionnel léger du type « anything you need ? », mais évite le spam nocturne
-  en utilisant votre fuseau horaire local configuré (voir [/concepts/timezone](/en/concepts/timezone)).
+  en utilisant votre fuseau horaire local configuré (voir [/concepts/timezone](/fr/concepts/timezone)).
 
-Heartbeat peut réagir aux [tâches en arrière-plan](/en/automation/tasks) terminées, mais une exécution heartbeat ne crée pas elle-même d'enregistrement de tâche.
+Heartbeat peut réagir aux [tâches en arrière-plan](/fr/automation/tasks) terminées, mais une exécution heartbeat ne crée pas elle-même d'enregistrement de tâche.
 
 Si vous souhaitez qu'un heartbeat fasse quelque chose de très spécifique (par exemple « vérifier les statistiques Gmail PubSub
 » ou « vérifier la santé de la passerelle »), définissez `agents.defaults.heartbeat.prompt` (ou
@@ -226,8 +226,8 @@ Utilisez `accountId` pour cibler un compte spécifique sur les canaux multi-comp
 - `isolatedSession` : si vrai, chaque heartbeat s'exécute dans une session fraîche sans historique de conversation précédent. Utilise le même modèle d'isolement que le cron `sessionTarget: "isolated"`. Réduit considérablement le coût en jetons par heartbeat. Combinez avec `lightContext: true` pour des économies maximales. Le routage de la livraison utilise toujours le contexte de la session principale.
 - `session` : clé de session facultative pour les exécutions de heartbeat.
   - `main` (par défaut) : session principale de l'agent.
-  - Clé de session explicite (copiée depuis `openclaw sessions --json` ou la [sessions CLI](/en/cli/sessions)).
-  - Formats de clé de session : voir [Sessions](/en/concepts/session) et [Groupes](/en/channels/groups).
+  - Clé de session explicite (copiée depuis `openclaw sessions --json` ou la [sessions CLI](/fr/cli/sessions)).
+  - Formats de clé de session : voir [Sessions](/fr/concepts/session) et [Groupes](/fr/channels/groups).
 - `target` :
   - `last` : livrer vers le dernier channel externe utilisé.
   - channel explicite : n'importe quel channel configuré ou id de plugin, par exemple `discord` , `matrix` , `telegram` , ou `whatsapp` .
@@ -260,7 +260,7 @@ Utilisez `accountId` pour cibler un compte spécifique sur les canaux multi-comp
 - Si `showOk`, `showAlerts` et `useIndicator` sont tous désactivés, l'exécution est ignorée dès le début en tant que `reason=alerts-disabled`.
 - Si seule la livraison des alertes est désactivée, OpenClaw peut toujours exécuter le heartbeat, mettre à jour les horodatages des tâches dues, restaurer l'horodatage d'inactivité de la session et supprimer la charge utile de l'alerte sortante.
 - Les réponses heartbeat uniquement ne gardent **pas** la session active ; le dernier `updatedAt` est restauré pour que l'expiration d'inactivité se comporte normalement.
-- Les [tâches d'arrière-plan](/en/automation/tasks) détachées peuvent mettre en file d'attente un événement système et réveiller le heartbeat lorsque la session principale doit remarquer quelque chose rapidement. Ce réveil ne fait pas exécuter une tâche d'arrière-plan par le heartbeat.
+- Les [tâches d'arrière-plan](/fr/automation/tasks) détachées peuvent mettre en file d'attente un événement système et réveiller le heartbeat lorsque la session principale doit remarquer quelque chose rapidement. Ce réveil ne fait pas exécuter une tâche d'arrière-plan par le heartbeat.
 
 ## Contrôles de visibilité
 
@@ -423,7 +423,7 @@ Les pulsations exécutent des tours complets d'agent. Des intervalles plus court
 
 ## Connexes
 
-- [Automatisation et Tâches](/en/automation) — tous les mécanismes d'automatisation en un coup d'œil
-- [Tâches d'arrière-plan](/en/automation/tasks) — suivi du travail détaché
-- [Fuseau horaire](/en/concepts/timezone) — incidence du fuseau horaire sur la planification des heartbeat
-- [Dépannage](/en/automation/cron-jobs#troubleshooting) — débogage des problèmes d'automatisation
+- [Automatisation et Tâches](/fr/automation) — tous les mécanismes d'automatisation en un coup d'œil
+- [Tâches d'arrière-plan](/fr/automation/tasks) — suivi du travail détaché
+- [Fuseau horaire](/fr/concepts/timezone) — incidence du fuseau horaire sur la planification des heartbeat
+- [Dépannage](/fr/automation/cron-jobs#troubleshooting) — débogage des problèmes d'automatisation

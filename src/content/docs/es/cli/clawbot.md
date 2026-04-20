@@ -12,7 +12,7 @@ Espacio de nombres de alias heredado mantenido para compatibilidad con versiones
 
 Alias admitido actualmente:
 
-- `openclaw clawbot qr` (mismo comportamiento que [`openclaw qr`](/en/cli/qr))
+- `openclaw clawbot qr` (mismo comportamiento que [`openclaw qr`](/es/cli/qr))
 
 ## Migración
 

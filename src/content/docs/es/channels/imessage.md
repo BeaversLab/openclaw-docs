@@ -9,7 +9,7 @@ title: "iMessage"
 # iMessage (heredado: imsg)
 
 <Warning>
-Para nuevos despliegues de iMessage, use <a href="/en/channels/bluebubbles">BlueBubbles</a>.
+Para nuevos despliegues de iMessage, use <a href="/es/channels/bluebubbles">BlueBubbles</a>.
 
 La integración `imsg` es heredada y puede eliminarse en una versión futura.
 
@@ -18,13 +18,13 @@ La integración `imsg` es heredada y puede eliminarse en una versión futura.
 Estado: integración heredada de CLI externa. Gateway inicia `imsg rpc` y se comunica a través de JSON-RPC en stdio (sin demonio/puerto separado).
 
 <CardGroup cols={3}>
-  <Card title="BlueBubbles (recomendado)" icon="message-circle" href="/en/channels/bluebubbles">
+  <Card title="BlueBubbles (recomendado)" icon="message-circle" href="/es/channels/bluebubbles">
     Ruta de iMessage preferida para nuevas configuraciones.
   </Card>
-  <Card title="Emparejamiento" icon="link" href="/en/channels/pairing">
+  <Card title="Emparejamiento" icon="link" href="/es/channels/pairing">
     Los MD de iMessage usan por defecto el modo de emparejamiento.
   </Card>
-  <Card title="Referencia de configuración" icon="settings" href="/en/gateway/configuration-reference#imessage">
+  <Card title="Referencia de configuración" icon="settings" href="/es/gateway/configuration-reference#imessage">
     Referencia completa de campos de iMessage.
   </Card>
 </CardGroup>
@@ -235,7 +235,7 @@ Ejemplo:
 }
 ```
 
-Consulte [Agentes ACP](/en/tools/acp-agents) para conocer el comportamiento de enlace ACP compartido.
+Consulte [Agentes ACP](/es/tools/acp-agents) para conocer el comportamiento de enlace ACP compartido.
 
 ## Patrones de implementación
 
@@ -409,15 +409,15 @@ imsg send <handle> "test"
 
 ## Punteros de referencia de configuración
 
-- [Referencia de configuración - iMessage](/en/gateway/configuration-reference#imessage)
-- [Configuración de la puerta de enlace](/en/gateway/configuration)
-- [Vinculación](/en/channels/pairing)
-- [BlueBubbles](/en/channels/bluebubbles)
+- [Referencia de configuración - iMessage](/es/gateway/configuration-reference#imessage)
+- [Configuración de la puerta de enlace](/es/gateway/configuration)
+- [Vinculación](/es/channels/pairing)
+- [BlueBubbles](/es/channels/bluebubbles)
 
 ## Relacionado
 
-- [Descripción general de canales](/en/channels) — todos los canales compatibles
-- [Vinculación](/en/channels/pairing) — flujo de autenticación y vinculación de MD
-- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento
+- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Vinculación](/es/channels/pairing) — flujo de autenticación y vinculación de MD
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

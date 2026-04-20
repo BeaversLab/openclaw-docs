@@ -135,10 +135,10 @@ OpenClaw 可以使用 `openai-completions` API 連接到 SGLang。
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和故障轉移行為。
   </Card>
-  <Card title="Configuration reference" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Configuration reference" href="/zh-Hant/gateway/configuration-reference" icon="gear">
     完整的設定架構，包括提供者項目。
   </Card>
 </CardGroup>

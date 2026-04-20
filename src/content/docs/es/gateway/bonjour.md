@@ -170,5 +170,5 @@ Bonjour/DNS‑SD a menudo escapa bytes en los de nombres de instancia de servici
 
 ## Documentación relacionada
 
-- Política de descubrimiento y selección de transporte: [Descubrimiento](/en/gateway/discovery)
-- Emparejamiento de nodos + aprobaciones: [Emparejamiento de puerta de enlace](/en/gateway/pairing)
+- Política de descubrimiento y selección de transporte: [Descubrimiento](/es/gateway/discovery)
+- Emparejamiento de nodos + aprobaciones: [Emparejamiento de puerta de enlace](/es/gateway/pairing)

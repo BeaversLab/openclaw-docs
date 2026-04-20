@@ -122,9 +122,9 @@ OpenClaw 可以在專案上下文中注入警告區塊；透過
 注入的啟動檔案（例如將 `SOUL.md` 交換為替代人格）。
 
 如果您想讓代理聽起來不那麼通用，請從
-[SOUL.md 人格指南](/en/concepts/soul) 開始。
+[SOUL.md 人格指南](/zh-Hant/concepts/soul) 開始。
 
-要檢查每個注入檔案的貢獻程度（原始與注入、截斷，加上工具架構開銷），請使用 `/context list` 或 `/context detail`。請參閱 [Context](/en/concepts/context)。
+要檢查每個注入檔案的貢獻程度（原始與注入、截斷，加上工具架構開銷），請使用 `/context list` 或 `/context detail`。請參閱 [Context](/zh-Hant/concepts/context)。
 
 ## 時間處理
 
@@ -140,7 +140,7 @@ OpenClaw 可以在專案上下文中注入警告區塊；透過
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-有關完整行為細節，請參閱 [日期與時間](/en/date-time)。
+有關完整行為細節，請參閱 [日期與時間](/zh-Hant/date-time)。
 
 ## 技能
 

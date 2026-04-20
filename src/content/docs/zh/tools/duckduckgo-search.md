@@ -79,10 +79,10 @@ OpenClaw 支持 DuckDuckGo 作为 **免密钥** 的 `web_search` 提供商。无
   首先运行，然后是 Ollama Web Search（顺序 110），接着是 SearXNG（顺序 200）
 - **SafeSearch 默认为适中**（moderate），如果未进行配置
 
-<Tip>对于生产环境，请考虑使用 [Brave Search](/en/tools/brave-search)（提供免费层级）或另一个由 API 支持的提供商。</Tip>
+<Tip>对于生产环境，请考虑使用 [Brave Search](/zh/tools/brave-search)（提供免费层级）或另一个由 API 支持的提供商。</Tip>
 
 ## 相关
 
-- [网络搜索概述](/en/tools/web) -- 所有提供商和自动检测
-- [Brave 搜索](/en/tools/brave-search) -- 具有免费层级的结构化结果
-- [Exa Search](/en/tools/exa-search) —— 带有内容提取功能的神经搜索
+- [网络搜索概述](/zh/tools/web) -- 所有提供商和自动检测
+- [Brave 搜索](/zh/tools/brave-search) -- 具有免费层级的结构化结果
+- [Exa Search](/zh/tools/exa-search) —— 带有内容提取功能的神经搜索

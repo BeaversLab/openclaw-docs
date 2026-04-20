@@ -80,7 +80,7 @@ OpenClaw 內建了針對 Alibaba Model Studio / DashScope 上 Wan 模型的 `ali
     - `qwen/...` 當您需要標準的 Qwen 提供者介面時
     - `alibaba/...` 當您需要直接由供應商擁有的 Wan 影片介面時
 
-    詳細資訊請參閱 [Qwen 提供者文件](/en/providers/qwen)。
+    詳細資訊請參閱 [Qwen 提供者文件](/zh-Hant/providers/qwen)。
 
   </Accordion>
 
@@ -99,13 +99,13 @@ OpenClaw 內建了針對 Alibaba Model Studio / DashScope 上 Wan 模型的 `ali
 ## 相關內容
 
 <CardGroup cols={2}>
-  <Card title="影片生成" href="/en/tools/video-generation" icon="video">
+  <Card title="影片生成" href="/zh-Hant/tools/video-generation" icon="video">
     共用的影片工具參數與提供者選擇。
   </Card>
-  <Card title="Qwen" href="/en/providers/qwen" icon="microchip">
+  <Card title="Qwen" href="/zh-Hant/providers/qwen" icon="microchip">
     Qwen 提供者設定與 DashScope 整合。
   </Card>
-  <Card title="設定參考" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration-reference#agent-defaults" icon="gear">
     Agent 預設值與模型設定。
   </Card>
 </CardGroup>

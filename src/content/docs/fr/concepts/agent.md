@@ -15,11 +15,11 @@ OpenClaw utilise un seul répertoire d'espace de travail de l'agent (`agents.def
 
 Recommandé : utilisez `openclaw setup` pour créer `~/.openclaw/openclaw.json` s'il est manquant et initialiser les fichiers de l'espace de travail.
 
-Guide complet de la disposition de l'espace de travail + sauvegarde : [Agent workspace](/en/concepts/agent-workspace)
+Guide complet de la disposition de l'espace de travail + sauvegarde : [Agent workspace](/fr/concepts/agent-workspace)
 
 Si `agents.defaults.sandbox` est activé, les sessions non principales peuvent remplacer ceci par
 des espaces de travail par session sous `agents.defaults.sandbox.workspaceRoot` (voir
-[Gateway configuration](/en/gateway/configuration)).
+[Gateway configuration](/fr/gateway/configuration)).
 
 ## Fichiers d'amorçage (injectés)
 
@@ -61,7 +61,7 @@ OpenClaw charge les compétences depuis ces emplacements (par ordre de priorité
 - Groupé (fourni avec l'installation)
 - Dossiers de compétences supplémentaires : `skills.load.extraDirs`
 
-Les compétences peuvent être conditionnées par la config/env (voir `skills` dans [Gateway configuration](/en/gateway/configuration)).
+Les compétences peuvent être conditionnées par la config/env (voir `skills` dans [Gateway configuration](/fr/gateway/configuration)).
 
 ## Limites du Runtime
 
@@ -88,7 +88,7 @@ en file d'attente à la prochaine limite du modèle.
 
 Lorsque le mode de file d'attente est `followup` ou `collect`, les messages entrants sont conservés jusqu'à ce
 que le tour actuel se termine, puis un nouveau tour d'agent commence avec les charges utiles en file d'attente. Voir
-[Queue](/en/concepts/queue) pour le comportement du mode + rebond/limite.
+[Queue](/fr/concepts/queue) pour le comportement du mode + rebond/limite.
 
 Block streaming sends completed assistant blocks as soon as they finish; it is
 **off by default** (`agents.defaults.blockStreamingDefault: "off"`).
@@ -100,7 +100,7 @@ single-line spam (idle-based merging before send). Non-Telegram channels require
 explicit `*.blockStreaming: true` to enable block replies.
 Verbose tool summaries are emitted at tool start (no debounce); Control UI
 streams tool output via agent events when available.
-More details: [Streaming + chunking](/en/concepts/streaming).
+More details: [Streaming + chunking](/fr/concepts/streaming).
 
 ## Références de modèle
 
@@ -119,4 +119,4 @@ Au minimum, définissez :
 
 ---
 
-_Suivant : [Group Chats](/en/channels/group-messages)_ 🦞
+_Suivant : [Group Chats](/fr/channels/group-messages)_ 🦞

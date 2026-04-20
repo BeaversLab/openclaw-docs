@@ -12,10 +12,10 @@ title: "plugins"
 
 相關：
 
-- 外掛程式系統：[Plugins](/en/tools/plugin)
-- 套件組合相容性：[Plugin bundles](/en/plugins/bundles)
-- 外掛程式清單 + Schema：[Plugin manifest](/en/plugins/manifest)
-- 安全性強化：[Security](/en/gateway/security)
+- 外掛程式系統：[Plugins](/zh-Hant/tools/plugin)
+- 套件組合相容性：[Plugin bundles](/zh-Hant/plugins/bundles)
+- 外掛程式清單 + Schema：[Plugin manifest](/zh-Hant/plugins/manifest)
+- 安全性強化：[Security](/zh-Hant/gateway/security)
 
 ## 指令
 
@@ -214,7 +214,7 @@ openclaw plugins inspect <id> --json
 - **hook-only** — 僅有 Hook，沒有功能或介面
 - **non-capability** — 有工具/命令/服務但沒有功能
 
-請參閱 [外掛程式類型](/en/plugins/architecture#plugin-shapes) 以進一步了解功能模型。
+請參閱 [外掛程式類型](/zh-Hant/plugins/architecture#plugin-shapes) 以進一步了解功能模型。
 
 `--json` 旗標會輸出適用於指令碼和稽核的機器可讀報告。
 

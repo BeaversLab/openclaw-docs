@@ -202,13 +202,13 @@ swift run openclaw-mac discover --timeout 3000 --json
 - **遠端連接埠：** 遠端主機上的同一個 Gateway 連接埠。
 - **行為：** 不使用隨機本機連接埠；app 會重複使用現有的健全通道，或在需要時重新啟動它。
 - **SSH 形式：** `ssh -N -L <local>:127.0.0.1:<remote>` 搭配 BatchMode + ExitOnForwardFailure + keepalive 選項。
-- **IP 回報：** SSH 通道使用 loopback，因此 Gateway 會將節點 IP 視為 `127.0.0.1`。如果您希望顯示真實的客戶端 IP，請使用 **Direct (ws/wss)** 傳輸（請參閱 [macOS remote access](/en/platforms/mac/remote)）。
+- **IP 回報：** SSH 通道使用 loopback，因此 Gateway 會將節點 IP 視為 `127.0.0.1`。如果您希望顯示真實的客戶端 IP，請使用 **Direct (ws/wss)** 傳輸（請參閱 [macOS remote access](/zh-Hant/platforms/mac/remote)）。
 
-如需設定步驟，請參閱 [macOS remote access](/en/platforms/mac/remote)。如需通訊協定詳細資訊，請參閱 [Gateway protocol](/en/gateway/protocol)。
+如需設定步驟，請參閱 [macOS remote access](/zh-Hant/platforms/mac/remote)。如需通訊協定詳細資訊，請參閱 [Gateway protocol](/zh-Hant/gateway/protocol)。
 
 ## 相關文件
 
-- [Gateway runbook](/en/gateway)
-- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
-- [macOS permissions](/en/platforms/mac/permissions)
-- [Canvas](/en/platforms/mac/canvas)
+- [Gateway runbook](/zh-Hant/gateway)
+- [Gateway (macOS)](/zh-Hant/platforms/mac/bundled-gateway)
+- [macOS permissions](/zh-Hant/platforms/mac/permissions)
+- [Canvas](/zh-Hant/platforms/mac/canvas)

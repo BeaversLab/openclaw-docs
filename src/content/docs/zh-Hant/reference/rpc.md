@@ -17,11 +17,11 @@ OpenClaw 透過 JSON-RPC 整合外部 CLI。目前使用兩種模式。
 - 健康探測：`/api/v1/check`。
 - 當 `channels.signal.autoStart=true` 時，OpenClaw 掌管生命週期。
 
-請參閱 [Signal](/en/channels/signal) 以了解設定與端點。
+請參閱 [Signal](/zh-Hant/channels/signal) 以了解設定與端點。
 
 ## 模式 B：stdio 子行程 (舊版：imsg)
 
-> **注意：** 對於新的 iMessage 設定，請改用 [BlueBubbles](/en/channels/bluebubbles)。
+> **注意：** 對於新的 iMessage 設定，請改用 [BlueBubbles](/zh-Hant/channels/bluebubbles)。
 
 - OpenClaw 將 `imsg rpc` 作為子行程生成 (舊版 iMessage 整合)。
 - JSON-RPC 在 stdin/stdout 上以行分隔 (每行一個 JSON 物件)。
@@ -34,7 +34,7 @@ OpenClaw 透過 JSON-RPC 整合外部 CLI。目前使用兩種模式。
 - `send`
 - `chats.list` (探測/診斷)
 
-請參閱 [iMessage](/en/channels/imessage) 以了解舊版設定與定址 (建議使用 `chat_id`)。
+請參閱 [iMessage](/zh-Hant/channels/imessage) 以了解舊版設定與定址 (建議使用 `chat_id`)。
 
 ## 配接器指南
 

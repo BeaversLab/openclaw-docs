@@ -13,7 +13,7 @@ Hooks 是在 Gateway(网关) 内部发生某些事情时运行的小型脚本。
 OpenClaw 中有两种 Hooks：
 
 - **内部 hooks**（本页）：在代理事件触发时于 Gateway(网关) 内部运行，例如 `/new`、`/reset`、`/stop` 或生命周期事件。
-- **Webhooks**：外部 HTTP 端点，允许其他系统在 OpenClaw 中触发工作。请参阅 [Webhooks](/en/automation/cron-jobs#webhooks)。
+- **Webhooks**：外部 HTTP 端点，允许其他系统在 OpenClaw 中触发工作。请参阅 [Webhooks](/zh/automation/cron-jobs#webhooks)。
 
 Hooks 也可以打包在插件内部。`openclaw hooks list` 显示了独立 hooks 和插件管理的 hooks。
 
@@ -206,7 +206,7 @@ openclaw hooks enable <hook-name>
 
 插件可以通过 Plugin SDK 注册 hooks 以实现更深入的集成：拦截工具调用、修改提示、控制消息流等。Plugin SDK 公开了 28 个 hooks，涵盖模型解析、代理生命周期、消息流、工具执行、子代理协调和网关生命周期。
 
-有关完整的插件 hook 参考，包括 `before_tool_call`、`before_agent_reply`、`before_install` 和所有其他插件 hooks，请参阅 [Plugin Architecture](/en/plugins/architecture#provider-runtime-hooks)。
+有关完整的插件 hook 参考，包括 `before_tool_call`、`before_agent_reply`、`before_install` 和所有其他插件 hooks，请参阅 [Plugin Architecture](/zh/plugins/architecture#provider-runtime-hooks)。
 
 ## 配置
 
@@ -310,7 +310,7 @@ openclaw hooks info my-hook
 
 ## 相关
 
-- [CLI 参考：hooks](/en/cli/hooks)
-- [Webhooks](/en/automation/cron-jobs#webhooks)
-- [插件架构](/en/plugins/architecture#provider-runtime-hooks) — 完整的插件 hook 参考
-- [配置](/en/gateway/configuration-reference#hooks)
+- [CLI 参考：hooks](/zh/cli/hooks)
+- [Webhooks](/zh/automation/cron-jobs#webhooks)
+- [插件架构](/zh/plugins/architecture#provider-runtime-hooks) — 完整的插件 hook 参考
+- [配置](/zh/gateway/configuration-reference#hooks)

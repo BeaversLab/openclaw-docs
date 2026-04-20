@@ -31,7 +31,7 @@ openclaw plugins enable open-prose
 
 開發/本機簽出：`openclaw plugins install ./path/to/local/open-prose-plugin`
 
-相關文件：[Plugins](/en/tools/plugin)、[Plugin manifest](/en/plugins/manifest)、[Skills](/en/tools/skills)。
+相關文件：[Plugins](/zh-Hant/tools/plugin)、[Plugin manifest](/zh-Hant/plugins/manifest)、[Skills](/zh-Hant/tools/skills)。
 
 ## 斜線指令
 
@@ -125,10 +125,10 @@ OpenProse 程式對應到 OpenClaw 基元：
 | 檔案讀寫            | `read` / `write` |
 | Web 獲取            | `web_fetch`      |
 
-如果您的工具允許清單阻擋了這些工具，OpenProse 程式將會失敗。請參閱 [Skills config](/en/tools/skills-config)。
+如果您的工具允許清單阻擋了這些工具，OpenProse 程式將會失敗。請參閱 [Skills config](/zh-Hant/tools/skills-config)。
 
 ## 安全性 + 審核
 
 請將 `.prose` 檔案視為程式碼。執行前請進行審查。使用 OpenClaw 工具允許清單和審核閘門來控制副作用。
 
-對於確定性、需經審核的工作流程，請與 [Lobster](/en/tools/lobster) 進行比較。
+對於確定性、需經審核的工作流程，請與 [Lobster](/zh-Hant/tools/lobster) 進行比較。

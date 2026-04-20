@@ -33,25 +33,25 @@ openclaw plugins install @openclaw/voice-call
 
 3. Redémarrez la Gateway, puis configurez sous `plugins.entries.<id>.config`.
 
-Voir [Voice Call](/en/plugins/voice-call) pour un exemple concret de plugin.
+Voir [Voice Call](/fr/plugins/voice-call) pour un exemple concret de plugin.
 
 ## Plugins disponibles (officiels)
 
 - Microsoft Teams est disponible uniquement sous forme de plugin depuis le 15/01/2026 ; installez `@openclaw/msteams` si vous utilisez Teams.
 - Mémoire (Core) — plugin de recherche de mémoire inclus (activé par défaut via `plugins.slots.memory`)
 - Mémoire (LanceDB) — plugin de mémoire à long terme inclus (rappel/capture automatique ; définissez `plugins.slots.memory = "memory-lancedb"`)
-- [Voice Call](/en/plugins/voice-call) — `@openclaw/voice-call`
-- [Zalo Personal](/en/plugins/zalouser) — `@openclaw/zalouser`
-- [Matrix](/en/channels/matrix) — `@openclaw/matrix`
-- [Nostr](/en/channels/nostr) — `@openclaw/nostr`
-- [Zalo](/en/channels/zalo) — `@openclaw/zalo`
-- [Microsoft Teams](/en/channels/msteams) — `@openclaw/msteams`
+- [Voice Call](/fr/plugins/voice-call) — `@openclaw/voice-call`
+- [Zalo Personal](/fr/plugins/zalouser) — `@openclaw/zalouser`
+- [Matrix](/fr/channels/matrix) — `@openclaw/matrix`
+- [Nostr](/fr/channels/nostr) — `@openclaw/nostr`
+- [Zalo](/fr/channels/zalo) — `@openclaw/zalo`
+- [Microsoft Teams](/fr/channels/msteams) — `@openclaw/msteams`
 - Google Antigravity OAuth (auth provider) — inclus sous la forme `google-antigravity-auth` (désactivé par défaut)
 - Gemini CLI OAuth (auth provider) — inclus sous la forme `google-gemini-cli-auth` (désactivé par défaut)
 - Qwen OAuth (auth provider) — inclus sous la forme `qwen-portal-auth` (désactivé par défaut)
 - Copilot Proxy (authentification du fournisseur) — pont proxy local Copilot VS Code ; distinct de la connexion de l'appareil `github-copilot` intégrée (regroupée, désactivée par défaut)
 
-Les plugins OpenClaw sont des **modules TypeScript** chargés au moment de l'exécution via jiti. **La validation de la configuration n'exécute pas le code du plugin** ; elle utilise à la place le manifeste du plugin et le schéma JSON. Voir [Plugin manifest](/en/plugins/manifest).
+Les plugins OpenClaw sont des **modules TypeScript** chargés au moment de l'exécution via jiti. **La validation de la configuration n'exécute pas le code du plugin** ; elle utilise à la place le manifeste du plugin et le schéma JSON. Voir [Plugin manifest](/fr/plugins/manifest).
 
 Les plugins peuvent enregistrer :
 
@@ -65,7 +65,7 @@ Les plugins peuvent enregistrer :
 - **Commandes de réponse automatique** (s'exécutent sans invoquer l'agent IA)
 
 Les plugins s'exécutent **en cours de processus** avec le Gateway, traitez-les donc comme du code de confiance.
-Guide de création d'outils : [Plugin agent tools](/en/plugins/agent-tools).
+Guide de création d'outils : [Plugin agent tools](/fr/plugins/agent-tools).
 
 ## Assistants d'exécution
 
@@ -493,7 +493,7 @@ puis configurez `channels.<id>` dans votre configuration.
 
 ### Outils d'agent
 
-Voir le guide dédié : [Plugin agent tools](/en/plugins/agent-tools).
+Voir le guide dédié : [Plugin agent tools](/fr/plugins/agent-tools).
 
 ### Enregistrer une méthode de passerelle RPC
 
@@ -628,7 +628,7 @@ Ce dépôt comprend un plugin d'appel vocal (Twilio ou repli sur journal) :
 - Config (twilio) : `provider: "twilio"` + `twilio.accountSid/authToken/from` (optionnel `statusCallbackUrl`, `twimlUrl`)
 - Config (dev) : `provider: "log"` (pas de réseau)
 
-Voir [Appel vocal](/en/plugins/voice-call) et `extensions/voice-call/README.md` pour la configuration et l'utilisation.
+Voir [Appel vocal](/fr/plugins/voice-call) et `extensions/voice-call/README.md` pour la configuration et l'utilisation.
 
 ## Notes de sécurité
 

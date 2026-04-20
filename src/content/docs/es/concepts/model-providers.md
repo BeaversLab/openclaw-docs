@@ -9,7 +9,7 @@ title: "Proveedores de modelos"
 # Proveedores de modelos
 
 Esta página cubre **proveedores de modelos/LLM** (no canales de chat como WhatsApp/Telegram).
-Para ver las reglas de selección de modelos, consulte [/concepts/models](/en/concepts/models).
+Para ver las reglas de selección de modelos, consulte [/concepts/models](/es/concepts/models).
 
 ## Reglas rápidas
 
@@ -17,7 +17,7 @@ Para ver las reglas de selección de modelos, consulte [/concepts/models](/en/co
 - Si configura `agents.defaults.models`, se convierte en la lista de permitidos.
 - Asistentes de CLI: `openclaw onboard`, `openclaw models list`, `openclaw models set <provider/model>`.
 - Las reglas de tiempo de ejecución de reserva, sondas de enfriamiento y la persistencia de anulación de sesión están
-  documentadas en [/concepts/model-failover](/en/concepts/model-failover).
+  documentadas en [/concepts/model-failover](/es/concepts/model-failover).
 - `models.providers.*.models[].contextWindow` son metadatos nativos del modelo;
   `models.providers.*.models[].contextTokens` es el límite efectivo de tiempo de ejecución.
 - Los complementos del proveedor pueden inyectar catálogos de modelos mediante `registerProvider({ catalog })`;
@@ -48,7 +48,7 @@ Para ver las reglas de selección de modelos, consulte [/concepts/models](/en/co
   `onModelSelected`.
 - Nota: el `capabilities` de tiempo de ejecución del proveedor son metadatos compartidos del ejecutor (familia
   del proveedor, peculiaridades de la transcripción/herramientas, sugerencias de transporte/caché). No es lo
-  mismo que el [modelo de capacidades públicas](/en/plugins/architecture#public-capability-model)
+  mismo que el [modelo de capacidades públicas](/es/plugins/architecture#public-capability-model)
   que describe lo que registra un complemento (inferencia de texto, voz, etc.).
 - El proveedor `codex` incluido está emparejado con el arnés del agente Codex incluido.
   Use `codex/gpt-*` cuando desee inicio de sesión propiedad de Codex, descubrimiento de modelos, reanudación
@@ -56,7 +56,7 @@ Para ver las reglas de selección de modelos, consulte [/concepts/models](/en/co
   usando el proveedor OpenAI y el transporte normal del proveedor OpenClaw.
   Los despliegues solo de Codex pueden deshabilitar la alternativa automática a PI con
   `agents.defaults.embeddedHarness.fallback: "none"`; consulte
-  [Codex Harness](/en/plugins/codex-harness).
+  [Codex Harness](/es/plugins/codex-harness).
 
 ## Comportamiento del proveedor propiedad del complemento
 
@@ -269,9 +269,9 @@ OpenClaw incluye el catálogo pi-ai. Estos proveedores no requieren configuraci�
 
 ### Otras opciones alojadas de estilo suscripción
 
-- [Qwen Cloud](/en/providers/qwen): Superficie del proveedor Qwen Cloud además de la asignación de puntos finales de Alibaba DashScope y Coding Plan
-- [MiniMax](/en/providers/minimax): Acceso mediante OAuth o clave API de MiniMax Coding Plan
-- [Modelos GLM](/en/providers/glm): Puntos finales de Coding Plan Z.AI o API general
+- [Qwen Cloud](/es/providers/qwen): Superficie del proveedor Qwen Cloud además de la asignación de puntos finales de Alibaba DashScope y Coding Plan
+- [MiniMax](/es/providers/minimax): Acceso mediante OAuth o clave API de MiniMax Coding Plan
+- [Modelos GLM](/es/providers/glm): Puntos finales de Coding Plan Z.AI o API general
 
 ### OpenCode
 
@@ -343,7 +343,7 @@ OpenClaw incluye el catálogo pi-ai. Estos proveedores no requieren configuraci�
 - El catálogo de respaldo estático incluye `kilocode/kilo/auto`; el descubrimiento en vivo `https://api.kilo.ai/api/gateway/models` puede ampliar aún más el catálogo en tiempo de ejecución.
 - El enrutamiento exacto aguas arriba detrás de `kilocode/kilo/auto` es propiedad de Kilo Gateway, no está codificado en OpenClaw.
 
-Consulte [/providers/kilocode](/en/providers/kilocode) para obtener detalles de configuración.
+Consulte [/providers/kilocode](/es/providers/kilocode) para obtener detalles de configuración.
 
 ### Otros complementos de proveedor incluidos
 
@@ -402,7 +402,7 @@ Consulte [/providers/kilocode](/en/providers/kilocode) para obtener detalles de 
   - Los modelos GLM en Cerebras usan los identificadores `zai-glm-4.7` y `zai-glm-4.6`.
   - URL base compatible con OpenAI: `https://api.cerebras.ai/v1`.
 - GitHub Copilot: `github-copilot` (`COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN`)
-- Modelo de ejemplo de Hugging Face Inference: `huggingface/deepseek-ai/DeepSeek-R1`; CLI: `openclaw onboard --auth-choice huggingface-api-key`. Consulte [Hugging Face (Inference)](/en/providers/huggingface).
+- Modelo de ejemplo de Hugging Face Inference: `huggingface/deepseek-ai/DeepSeek-R1`; CLI: `openclaw onboard --auth-choice huggingface-api-key`. Consulte [Hugging Face (Inference)](/es/providers/huggingface).
 
 ## Proveedores a través de `models.providers` (URL personalizada/base)
 
@@ -592,7 +592,7 @@ MiniMax se configura a través de `models.providers` porque utiliza puntos de co
 - Autenticación: `MINIMAX_API_KEY` para `minimax`; `MINIMAX_OAUTH_TOKEN` o
   `MINIMAX_API_KEY` para `minimax-portal`
 
-Consulte [/providers/minimax](/en/providers/minimax) para obtener detalles de configuración, opciones de modelo y fragmentos de configuración.
+Consulte [/providers/minimax](/es/providers/minimax) para obtener detalles de configuración, opciones de modelo y fragmentos de configuración.
 
 En la ruta de transmisión compatible con Anthropic de MiniMax, OpenClaw deshabilita el pensamiento de
 manera predeterminada a menos que lo configure explícitamente, y `/fast on` reescribe
@@ -625,7 +625,7 @@ Luego configure un modelo (reemplácelo con uno de los IDs devueltos por `http:/
 
 OpenClaw usa la `/api/v1/models` y `/api/v1/models/load` nativas de LM Studio
 para el descubrimiento y la carga automática, con `/v1/chat/completions` para la inferencia de forma predeterminada.
-Consulte [/providers/lmstudio](/en/providers/lmstudio) para la configuración y solución de problemas.
+Consulte [/providers/lmstudio](/es/providers/lmstudio) para la configuración y solución de problemas.
 
 ### Ollama
 
@@ -651,7 +651,7 @@ ollama pull llama3.3
 
 Ollama se detecta localmente en `http://127.0.0.1:11434` cuando acepta con
 `OLLAMA_API_KEY`, y el complemento de proveedor empaquetado añade Ollama directamente a
-`openclaw onboard` y al selector de modelos. Consulte [/providers/ollama](/en/providers/ollama)
+`openclaw onboard` y al selector de modelos. Consulte [/providers/ollama](/es/providers/ollama)
 para la incorporación, el modo en la nube/local y la configuración personalizada.
 
 ### vLLM
@@ -678,7 +678,7 @@ A continuación, configure un modelo (reemplácelo con uno de los ID devueltos p
 }
 ```
 
-Consulte [/providers/vllm](/en/providers/vllm) para obtener más detalles.
+Consulte [/providers/vllm](/es/providers/vllm) para obtener más detalles.
 
 ### SGLang
 
@@ -704,7 +704,7 @@ A continuación, configure un modelo (reemplácelo con uno de los ID devueltos p
 }
 ```
 
-Consulte [/providers/sglang](/en/providers/sglang) para obtener más detalles.
+Consulte [/providers/sglang](/es/providers/sglang) para obtener más detalles.
 
 ### Proxies locales (LM Studio, vLLM, LiteLLM, etc.)
 
@@ -764,11 +764,11 @@ openclaw models set opencode/claude-opus-4-6
 openclaw models list
 ```
 
-Véase también: [/gateway/configuration](/en/gateway/configuration) para ejemplos completos de configuración.
+Véase también: [/gateway/configuration](/es/gateway/configuration) para ejemplos completos de configuración.
 
 ## Relacionado
 
-- [Modelos](/en/concepts/models) — configuración y alias de modelos
-- [Conmutación por error de modelos](/en/concepts/model-failover) — cadenas de reserva y comportamiento de reintentos
-- [Referencia de configuración](/en/gateway/configuration-reference#agent-defaults) — claves de configuración de modelos
-- [Proveedores](/en/providers) — guías de configuración por proveedor
+- [Modelos](/es/concepts/models) — configuración y alias de modelos
+- [Conmutación por error de modelos](/es/concepts/model-failover) — cadenas de reserva y comportamiento de reintentos
+- [Referencia de configuración](/es/gateway/configuration-reference#agent-defaults) — claves de configuración de modelos
+- [Proveedores](/es/providers) — guías de configuración por proveedor

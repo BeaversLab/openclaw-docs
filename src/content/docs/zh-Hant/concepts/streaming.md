@@ -155,6 +155,6 @@ Slack：
 
 ## 相關
 
-- [訊息](/en/concepts/messages) — 訊息生命週期與傳遞
-- [重試](/en/concepts/retry) — 傳遞失敗時的重試行為
-- [頻道](/en/channels) — 各頻道串流支援
+- [訊息](/zh-Hant/concepts/messages) — 訊息生命週期與傳遞
+- [重試](/zh-Hant/concepts/retry) — 傳遞失敗時的重試行為
+- [頻道](/zh-Hant/channels) — 各頻道串流支援

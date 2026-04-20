@@ -10,7 +10,7 @@ title: "Manifiesto del complemento"
 
 Esta página es solo para el **manifiesto de complemento nativo de OpenClaw**.
 
-Para diseños de paquetes compatibles, consulte [Paquetes de complementos](/en/plugins/bundles).
+Para diseños de paquetes compatibles, consulte [Paquetes de complementos](/es/plugins/bundles).
 
 Los formatos de paquete compatibles utilizan diferentes archivos de manifiesto:
 
@@ -33,9 +33,9 @@ Cada complemento nativo de OpenClaw **debe** incluir un archivo `openclaw.plugin
 **sin ejecutar el código del complemento**. Los manifiestos que faltan o no son válidos se tratan como
 errores del complemento y bloquean la validación de la configuración.
 
-Consulte la guía completa del sistema de complementos: [Complementos](/en/tools/plugin).
+Consulte la guía completa del sistema de complementos: [Complementos](/es/tools/plugin).
 Para el modelo de capacidades nativo y la guía actual de compatibilidad externa:
-[Modelo de capacidades](/en/plugins/architecture#public-capability-model).
+[Modelo de capacidades](/es/plugins/architecture#public-capability-model).
 
 ## Qué hace este archivo
 
@@ -560,7 +560,7 @@ canal, mantenga esa lógica en el enlace `config.hasConfiguredState` del complem
 - Si existe la configuración de un complemento pero el complemento está **deshabilitado**, la configuración se mantiene y
   se muestra una **advertencia** en Doctor + registros.
 
-Consulte [Referencia de configuración](/en/gateway/configuration) para ver el esquema completo `plugins.*`.
+Consulte [Referencia de configuración](/es/gateway/configuration) para ver el esquema completo `plugins.*`.
 
 ## Notas
 
@@ -584,7 +584,7 @@ Consulte [Referencia de configuración](/en/gateway/configuration) para ver el e
   la resolución de `--auth-choice`, el mapeo de proveedor preferido y el registro simple de banderas de CLI
   antes de que se cargue el tiempo de ejecución del proveedor. Para los metadatos del asistente en tiempo de ejecución
   que requieren código de proveedor, consulte
-  [Provider runtime hooks](/en/plugins/architecture#provider-runtime-hooks).
+  [Provider runtime hooks](/es/plugins/architecture#provider-runtime-hooks).
 - Los tipos de complementos exclusivos se seleccionan a través de `plugins.slots.*`.
   - `kind: "memory"` es seleccionado por `plugins.slots.memory`.
   - `kind: "context-engine"` es seleccionado por `plugins.slots.contextEngine`
@@ -597,6 +597,6 @@ Consulte [Referencia de configuración](/en/gateway/configuration) para ver el e
 
 ## Relacionado
 
-- [Construcción de complementos](/en/plugins/building-plugins) — cómo empezar con los complementos
-- [Arquitectura de complementos](/en/plugins/architecture) — arquitectura interna
-- [Resumen del SDK](/en/plugins/sdk-overview) — Referencia del SDK de complementos
+- [Construcción de complementos](/es/plugins/building-plugins) — cómo empezar con los complementos
+- [Arquitectura de complementos](/es/plugins/architecture) — arquitectura interna
+- [Resumen del SDK](/es/plugins/sdk-overview) — Referencia del SDK de complementos

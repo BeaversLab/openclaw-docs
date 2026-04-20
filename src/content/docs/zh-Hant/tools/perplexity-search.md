@@ -91,7 +91,7 @@ OpenClaw 支援將 Perplexity Search API 作為 `web_search` 提供者。
 
 **透過環境變數：** 在 Gateway 程序環境中設定 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
 對於 gateway 安裝，請將其放入
-`~/.openclaw/.env` (或您的服務環境)。請參閱 [Env vars](/en/help/faq#env-vars-and-env-loading)。
+`~/.openclaw/.env` (或您的服務環境)。請參閱 [Env vars](/zh-Hant/help/faq#env-vars-and-env-loading)。
 
 如果已設定 `provider: "perplexity"` 且 Perplexity 金鑰 SecretRef 未解析且沒有環境變數備案，啟動/重新載入會快速失敗。
 
@@ -179,7 +179,7 @@ await web_search({
 
 ## 相關
 
-- [Web Search overview](/en/tools/web) -- 所有供應商和自動偵測
+- [Web Search overview](/zh-Hant/tools/web) -- 所有供應商和自動偵測
 - [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) -- Perplexity 官方文件
-- [Brave Search](/en/tools/brave-search) -- 具有國家/語言過濾器的結構化結果
-- [Exa Search](/en/tools/exa-search) -- 具有內容擷取功能的神經搜尋
+- [Brave Search](/zh-Hant/tools/brave-search) -- 具有國家/語言過濾器的結構化結果
+- [Exa Search](/zh-Hant/tools/exa-search) -- 具有內容擷取功能的神經搜尋

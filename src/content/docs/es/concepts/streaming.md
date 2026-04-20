@@ -157,6 +157,6 @@ Slack:
 
 ## Relacionado
 
-- [Mensajes](/en/concepts/messages) — ciclo de vida y entrega de mensajes
-- [Reintentar](/en/concepts/retry) — comportamiento de reintento en caso de error de entrega
-- [Canales](/en/channels) — soporte de transmisión por canal
+- [Mensajes](/es/concepts/messages) — ciclo de vida y entrega de mensajes
+- [Reintentar](/es/concepts/retry) — comportamiento de reintento en caso de error de entrega
+- [Canales](/es/channels) — soporte de transmisión por canal

@@ -123,9 +123,9 @@ Les hooks internes peuvent intercepter cette étape via `agent:bootstrap` pour m
 les fichiers de démarrage injectés (par exemple, échanger `SOUL.md` pour une personnalité alternative).
 
 Si vous souhaitez rendre l'agent moins générique, commencez par
-[SOUL.md Personality Guide](/en/concepts/soul).
+[SOUL.md Personality Guide](/fr/concepts/soul).
 
-Pour inspecter la contribution de chaque fichier injecté (brut vs injecté, troncation, ainsi que la surcharge du schéma d'outils), utilisez `/context list` ou `/context detail`. Voir [Context](/en/concepts/context).
+Pour inspecter la contribution de chaque fichier injecté (brut vs injecté, troncation, ainsi que la surcharge du schéma d'outils), utilisez `/context list` ou `/context detail`. Voir [Context](/fr/concepts/context).
 
 ## Gestion de l'heure
 
@@ -142,7 +142,7 @@ Configurer avec :
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-Voir [Date & Time](/en/date-time) pour les détails complets du comportement.
+Voir [Date & Time](/fr/date-time) pour les détails complets du comportement.
 
 ## Skills
 

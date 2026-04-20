@@ -458,7 +458,7 @@ La generación de medios no requiere PI. La imagen, el video, la música, el PDF
 
 ## Relacionado
 
-- [Complementos de arnés de agente](/en/plugins/sdk-agent-harness)
-- [Proveedores de modelos](/en/concepts/model-providers)
-- [Referencia de configuración](/en/gateway/configuration-reference)
-- [Pruebas](/en/help/testing#live-codex-app-server-harness-smoke)
+- [Complementos de arnés de agente](/es/plugins/sdk-agent-harness)
+- [Proveedores de modelos](/es/concepts/model-providers)
+- [Referencia de configuración](/es/gateway/configuration-reference)
+- [Pruebas](/es/help/testing#live-codex-app-server-harness-smoke)

@@ -111,8 +111,8 @@ Note spécifique à Podman :
 
 Voir :
 
-- [Tailscale](/en/gateway/tailscale)
-- [Interface de contrôle](/en/web/control-ui)
+- [Tailscale](/fr/gateway/tailscale)
+- [Interface de contrôle](/fr/web/control-ui)
 
 ## Systemd (Quadlet, optionnel)
 
@@ -199,6 +199,6 @@ Note sur Quadlet :
 
 ## Connexes
 
-- [Docker](/en/install/docker)
-- [Processus d'arrière-plan du Gateway](/en/gateway/background-process)
-- [Troubleshooting du Gateway](/en/gateway/troubleshooting)
+- [Docker](/fr/install/docker)
+- [Processus d'arrière-plan du Gateway](/fr/gateway/background-process)
+- [Troubleshooting du Gateway](/fr/gateway/troubleshooting)

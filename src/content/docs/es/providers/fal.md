@@ -128,13 +128,13 @@ El proveedor de generación de videos `fal` incluido tiene como valor predetermi
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Generación de imágenes" href="/en/tools/image-generation" icon="image">
+  <Card title="Generación de imágenes" href="/es/tools/image-generation" icon="image">
     Parámetros compartidos de la herramienta de imagen y selección de proveedor.
   </Card>
-  <Card title="Generación de video" href="/en/tools/video-generation" icon="video">
+  <Card title="Generación de video" href="/es/tools/video-generation" icon="video">
     Parámetros compartidos de herramientas de video y selección de proveedor.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference#agent-defaults" icon="gear">
     Valores predeterminados del agente, incluida la selección de modelos de imagen y video.
   </Card>
 </CardGroup>

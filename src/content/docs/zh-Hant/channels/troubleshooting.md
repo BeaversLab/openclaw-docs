@@ -38,7 +38,7 @@ openclaw channels status --probe
 | 群組訊息被忽略        | 檢查 `requireMention` 以及配置中的提及模式 | 提及機器人或放寬該群組的提及策略。 |
 | 隨機斷線/重新登入循環 | `openclaw channels status --probe` + 日誌  | 重新登入並驗證憑證目錄是否正常。   |
 
-完整疑難排解：[/channels/whatsapp#troubleshooting](/en/channels/whatsapp#troubleshooting)
+完整疑難排解：[/channels/whatsapp#troubleshooting](/zh-Hant/channels/whatsapp#troubleshooting)
 
 ## Telegram
 
@@ -52,7 +52,7 @@ openclaw channels status --probe
 | `setMyCommands` 在啟動時被拒絕 | 檢查日誌中的 `BOT_COMMANDS_TOO_MUCH`     | 減少外掛/技能/自訂 Telegram 指令或停用原生選單。                    |
 | 升級後白名單阻擋了您           | `openclaw security audit` 和配置允許列表 | 執行 `openclaw doctor --fix` 或將 `@username` 替換為數位發送者 ID。 |
 
-完整疑難排解：[/channels/telegram#troubleshooting](/en/channels/telegram#troubleshooting)
+完整疑難排解：[/channels/telegram#troubleshooting](/zh-Hant/channels/telegram#troubleshooting)
 
 ## Discord
 
@@ -64,7 +64,7 @@ openclaw channels status --probe
 | 群組訊息被忽略           | 檢查日誌中是否有提及閘門丟棄       | 提及機器人或設定公會/頻道 `requireMention: false`。 |
 | 缺少 DM 回覆             | `openclaw pairing list discord`    | 批准 DM 配對或調整 DM 政策。                        |
 
-完整疑難排解：[/channels/discord#troubleshooting](/en/channels/discord#troubleshooting)
+完整疑難排解：[/channels/discord#troubleshooting](/zh-Hant/channels/discord#troubleshooting)
 
 ## Slack
 
@@ -76,7 +76,7 @@ openclaw channels status --probe
 | DM 已封鎖                   | `openclaw pairing list slack`      | 批准配對或放寬 DM 政策。                                                                                                                    |
 | 頻道訊息被忽略              | 檢查 `groupPolicy` 和頻道允許列表  | 允許該頻道或將政策切換為 `open`。                                                                                                           |
 
-完整疑難排解：[/channels/slack#troubleshooting](/en/channels/slack#troubleshooting)
+完整疑難排解：[/channels/slack#troubleshooting](/zh-Hant/channels/slack#troubleshooting)
 
 ## iMessage 和 BlueBubbles
 
@@ -90,8 +90,8 @@ openclaw channels status --probe
 
 完整疑難排解：
 
-- [/channels/imessage#troubleshooting](/en/channels/imessage#troubleshooting)
-- [/channels/bluebubbles#troubleshooting](/en/channels/bluebubbles#troubleshooting)
+- [/channels/imessage#troubleshooting](/zh-Hant/channels/imessage#troubleshooting)
+- [/channels/bluebubbles#troubleshooting](/zh-Hant/channels/bluebubbles#troubleshooting)
 
 ## Signal
 
@@ -103,7 +103,7 @@ openclaw channels status --probe
 | DM 已封鎖                   | `openclaw pairing list signal`     | 批准發送者或調整 DM 政策。                      |
 | 群組回覆未觸發              | 檢查群組允許清單和提及模式         | 新增發送者/群組或放寬閘道。                     |
 
-完整疑難排解：[/channels/signal#troubleshooting](/en/channels/signal#troubleshooting)
+完整疑難排解：[/channels/signal#troubleshooting](/zh-Hant/channels/signal#troubleshooting)
 
 ## QQ 機器人
 
@@ -116,7 +116,7 @@ openclaw channels status --probe
 | 語音未轉錄                 | 檢查 STT 供應商設定                    | 設定 `channels.qqbot.stt` 或 `tools.media.audio`。 |
 | 主動訊息未送達             | 檢查 QQ 平台互動要求                   | 若無近期互動，QQ 可能會封鎖機器人發起的訊息。      |
 
-完整疑難排解：[/channels/qqbot#troubleshooting](/en/channels/qqbot#troubleshooting)
+完整疑難排解：[/channels/qqbot#troubleshooting](/zh-Hant/channels/qqbot#troubleshooting)
 
 ## Matrix
 
@@ -130,4 +130,4 @@ openclaw channels status --probe
 | 備份還原待處理/損壞         | `openclaw matrix verify backup status` | 執行 `openclaw matrix verify backup restore` 或使用復原金鑰重新執行。 |
 | 交叉簽署/啟動程序看起來異常 | `openclaw matrix verify bootstrap`     | 一次性修復秘密儲存、交叉簽署和備份狀態。                              |
 
-完整設定與設定：[Matrix](/en/channels/matrix)
+完整設定與設定：[Matrix](/zh-Hant/channels/matrix)

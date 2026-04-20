@@ -11,11 +11,11 @@ title: "onboard"
 
 ## 相關指南
 
-- CLI 入門中心：[Onboarding (CLI)](/en/start/wizard)
-- 入門總覽：[Onboarding Overview](/en/start/onboarding-overview)
-- CLI 入門參考：[CLI Setup Reference](/en/start/wizard-cli-reference)
-- CLI 自動化：[CLI Automation](/en/start/wizard-cli-automation)
-- macOS 入門：[Onboarding (macOS App)](/en/start/onboarding)
+- CLI 入門中心：[Onboarding (CLI)](/zh-Hant/start/wizard)
+- 入門總覽：[Onboarding Overview](/zh-Hant/start/onboarding-overview)
+- CLI 入門參考：[CLI Setup Reference](/zh-Hant/start/wizard-cli-reference)
+- CLI 自動化：[CLI Automation](/zh-Hant/start/wizard-cli-automation)
+- macOS 入門：[Onboarding (macOS App)](/zh-Hant/start/onboarding)
 
 ## 範例
 
@@ -163,7 +163,7 @@ openclaw onboard --non-interactive \
     和 `x_search` 模型選擇。
   - **Kimi** 可以詢問 Moonshot API 區域 (`api.moonshot.ai` vs
     `api.moonshot.cn`) 和預設的 Kimi 網路搜尋模型。
-- 本機入門 DM 範圍行為：[CLI 設定參考](/en/start/wizard-cli-reference#outputs-and-internals)。
+- 本機入門 DM 範圍行為：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference#outputs-and-internals)。
 - 最快的首次聊天： `openclaw dashboard` (控制 UI，無頻道設定)。
 - 自訂供應商：連接任何 OpenAI 或 Anthropic 相容的端點，
   包括未列出的託管供應商。使用 Unknown 來自動偵測。

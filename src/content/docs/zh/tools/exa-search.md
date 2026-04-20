@@ -122,6 +122,6 @@ await web_search({
 
 ## 相关
 
-- [Web Search 概述](/en/tools/web) -- 所有提供商和自动检测
-- [Brave 搜索](/en/tools/brave-search) -- 带有国家/语言过滤器的结构化结果
-- [Perplexity 搜索](/en/tools/perplexity-search) -- 带有域名过滤器的结构化结果
+- [Web Search 概述](/zh/tools/web) -- 所有提供商和自动检测
+- [Brave 搜索](/zh/tools/brave-search) -- 带有国家/语言过滤器的结构化结果
+- [Perplexity 搜索](/zh/tools/perplexity-search) -- 带有域名过滤器的结构化结果

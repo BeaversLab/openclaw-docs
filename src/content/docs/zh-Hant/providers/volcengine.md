@@ -105,16 +105,16 @@ openclaw onboard --non-interactive \
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參考和故障轉移行為。
   </Card>
-  <Card title="Configuration" href="/en/configuration" icon="gear">
+  <Card title="Configuration" href="/zh-Hant/configuration" icon="gear">
     代理、模型和供應商的完整配置參考。
   </Card>
-  <Card title="Troubleshooting" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Troubleshooting" href="/zh-Hant/help/troubleshooting" icon="wrench">
     常見問題和除錯步驟。
   </Card>
-  <Card title="FAQ" href="/en/help/faq" icon="circle-question">
+  <Card title="FAQ" href="/zh-Hant/help/faq" icon="circle-question">
     關於 OpenClaw 設定的常見問題。
   </Card>
 </CardGroup>

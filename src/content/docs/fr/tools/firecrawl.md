@@ -142,6 +142,6 @@ Aujourd'hui, le provider inclus est Firecrawl.
 
 ## Connexes
 
-- [Aperçu de la recherche Web](/en/tools/web) -- tous les providers et détection automatique
-- [Récupération Web](/en/tools/web-fetch) -- outil web_fetch avec secours Firecrawl
-- [Tavily](/en/tools/tavily) -- outils de recherche et d'extraction
+- [Aperçu de la recherche Web](/fr/tools/web) -- tous les providers et détection automatique
+- [Récupération Web](/fr/tools/web-fetch) -- outil web_fetch avec secours Firecrawl
+- [Tavily](/fr/tools/tavily) -- outils de recherche et d'extraction

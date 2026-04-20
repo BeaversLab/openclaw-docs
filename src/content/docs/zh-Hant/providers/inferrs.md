@@ -164,18 +164,18 @@ title: "inferrs"
   </Accordion>
 </AccordionGroup>
 
-<Tip>如需一般性協助，請參閱 [疑難排解](/en/help/troubleshooting) 和 [常見問題](/en/help/faq)。</Tip>
+<Tip>如需一般性協助，請參閱 [疑難排解](/zh-Hant/help/troubleshooting) 和 [常見問題](/zh-Hant/help/faq)。</Tip>
 
 ## 另請參閱
 
 <CardGroup cols={2}>
-  <Card title="Local models" href="/en/gateway/local-models" icon="server">
+  <Card title="Local models" href="/zh-Hant/gateway/local-models" icon="server">
     針對本地模型伺服器執行 OpenClaw。
   </Card>
-  <Card title="Gateway troubleshooting" href="/en/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail" icon="wrench">
+  <Card title="Gateway troubleshooting" href="/zh-Hant/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail" icon="wrench">
     偵錯通過探測但代理執行失敗的本地 OpenAI 相容後端。
   </Card>
-  <Card title="Model providers" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model providers" href="/zh-Hant/concepts/model-providers" icon="layers">
     所有提供者、模型參照和故障移轉行為的概覽。
   </Card>
 </CardGroup>

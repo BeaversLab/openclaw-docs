@@ -131,10 +131,10 @@ OpenAI 相容的端點，並採用 API 金鑰進行驗證。
 ## 相關連結
 
 <CardGroup cols={2}>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和容錯移轉行為。
   </Card>
-  <Card title="Configuration reference" href="/en/gateway/configuration" icon="gear">
+  <Card title="Configuration reference" href="/zh-Hant/gateway/configuration" icon="gear">
     完整的 OpenClaw 設定參考。
   </Card>
   <Card title="Xiaomi MiMo console" href="https://platform.xiaomimimo.com" icon="arrow-up-right-from-square">

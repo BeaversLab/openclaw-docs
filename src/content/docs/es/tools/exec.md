@@ -64,13 +64,13 @@ Notas:
 - `tools.exec.host` (predeterminado: `auto`; se resuelve a `sandbox` cuando el tiempo de ejecución de sandbox está activo, `gateway` en caso contrario)
 - `tools.exec.security` (predeterminado: `deny` para sandbox, `full` para gateway + node cuando no está establecido)
 - `tools.exec.ask` (predeterminado: `off`)
-- La ejecución del host sin aprobación es el valor predeterminado para la puerta de enlace (gateway) y el nodo. Si desea el comportamiento de aprobaciones/lista de permitidos, restrinja tanto `tools.exec.*` como el host `~/.openclaw/exec-approvals.json`; consulte [Aprobaciones de ejecución](/en/tools/exec-approvals#no-approval-yolo-mode).
+- La ejecución del host sin aprobación es el valor predeterminado para la puerta de enlace (gateway) y el nodo. Si desea el comportamiento de aprobaciones/lista de permitidos, restrinja tanto `tools.exec.*` como el host `~/.openclaw/exec-approvals.json`; consulte [Aprobaciones de ejecución](/es/tools/exec-approvals#no-approval-yolo-mode).
 - YOLO proviene de los valores predeterminados de la política del host (`security=full`, `ask=off`), no de `host=auto`. Si desea forzar el enrutamiento a través de la puerta de enlace o del nodo, establezca `tools.exec.host` o utilice `/exec host=...`.
 - En el modo `security=full` más `ask=off`, la ejecución del host sigue la política configurada directamente; no hay ningún filtro previo heurístico adicional de ofuscación de comandos.
 - `tools.exec.node` (predeterminado: sin definir)
 - `tools.exec.strictInlineEval` (predeterminado: false): cuando es true, los formularios de evaluación del intérprete en línea, como `python -c`, `node -e`, `ruby -e`, `perl -e`, `php -r`, `lua -e` y `osascript -e`, siempre requieren una aprobación explícita. `allow-always` aún puede persistir invocaciones benignas de intérprete/scripts, pero los formularios de evaluación en línea seguirán solicitando confirmación cada vez.
 - `tools.exec.pathPrepend`: lista de directorios que se deben anteponer a `PATH` para las ejecuciones exec (solo puerta de enlace + entorno limitado/sandbox).
-- `tools.exec.safeBins`: binarios seguros de solo stdin que pueden ejecutarse sin entradas explícitas en la lista de permitidos. Para obtener detalles sobre el comportamiento, consulte [Safe bins](/en/tools/exec-approvals#safe-bins-stdin-only).
+- `tools.exec.safeBins`: binarios seguros de solo stdin que pueden ejecutarse sin entradas explícitas en la lista de permitidos. Para obtener detalles sobre el comportamiento, consulte [Safe bins](/es/tools/exec-approvals#safe-bins-stdin-only).
 - `tools.exec.safeBinTrustedDirs`: directorios explícitos adicionales de confianza para las comprobaciones de ruta `safeBins`. Las entradas `PATH` nunca son de confianza automática. Los valores predeterminados integrados son `/bin` y `/usr/bin`.
 - `tools.exec.safeBinProfiles`: política personalizada opcional de argv por "safe bin" (`minPositional`, `maxPositional`, `allowedValueFlags`, `deniedFlags`).
 
@@ -129,7 +129,7 @@ de herramientas (`tools.deny: ["exec"]` o por agente). Las aprobaciones del host
 ## Aprobaciones de ejecución (aplicación complementaria / host de nodo)
 
 Los agentes en espacio aislado pueden requerir aprobación por solicitud antes de que `exec` se ejecute en la puerta de enlace o el host de nodo.
-Consulte [Aprobaciones de ejecución](/en/tools/exec-approvals) para obtener información sobre la política, la lista de permitidos y el flujo de la interfaz de usuario.
+Consulte [Aprobaciones de ejecución](/es/tools/exec-approvals) para obtener información sobre la política, la lista de permitidos y el flujo de la interfaz de usuario.
 
 Cuando se requieren aprobaciones, la herramienta de ejecución regresa inmediatamente con
 `status: "approval-pending"` y un id de aprobación. Una vez aprobada (o denegada / expirada),
@@ -165,7 +165,7 @@ No trate `safeBins` como una lista de permitidos genérica, y no agregue binario
 `openclaw security audit` y `openclaw doctor` también advierten cuando agrega explícitamente bins de comportamiento amplio como `jq` de nuevo en `safeBins`.
 Si permite explícitamente intérpretes, habilite `tools.exec.strictInlineEval` para que los formularios de evaluación de código en línea sigan requiriendo una aprobación nueva.
 
-Para obtener detalles completos de la política y ejemplos, consulte [Aprobaciones de ejecución](/en/tools/exec-approvals#safe-bins-stdin-only) y [Safe bins versus allowlist](/en/tools/exec-approvals#safe-bins-versus-allowlist).
+Para obtener detalles completos de la política y ejemplos, consulte [Aprobaciones de ejecución](/es/tools/exec-approvals#safe-bins-stdin-only) y [Safe bins versus allowlist](/es/tools/exec-approvals#safe-bins-versus-allowlist).
 
 ## Ejemplos
 
@@ -231,7 +231,7 @@ Notas:
 
 ## Relacionado
 
-- [Aprobaciones de Exec](/en/tools/exec-approvals) — puertas de aprobación para comandos de shell
-- [Sandboxing](/en/gateway/sandboxing) — ejecución de comandos en entornos aislados
-- [Proceso en segundo plano](/en/gateway/background-process) — herramienta de ejecución y proceso de larga duración
-- [Seguridad](/en/gateway/security) — política de herramientas y acceso elevado
+- [Aprobaciones de Exec](/es/tools/exec-approvals) — puertas de aprobación para comandos de shell
+- [Sandboxing](/es/gateway/sandboxing) — ejecución de comandos en entornos aislados
+- [Proceso en segundo plano](/es/gateway/background-process) — herramienta de ejecución y proceso de larga duración
+- [Seguridad](/es/gateway/security) — política de herramientas y acceso elevado

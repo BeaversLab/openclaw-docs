@@ -9,7 +9,7 @@ status: activo
 
 Objetivo: ejecutar OpenClaw como un **delegado con nombre** — un agente con su propia identidad que actúa "en nombre de" las personas de una organización. El agente nunca suplanta a un humano. Envía, lee y programa bajo su propia cuenta con permisos de delegación explícitos.
 
-Esto amplía el [Enrutamiento Multiagente](/en/concepts/multi-agent) desde el uso personal hasta despliegues organizacionales.
+Esto amplía el [Enrutamiento Multiagente](/es/concepts/multi-agent) desde el uso personal hasta despliegues organizacionales.
 
 ## ¿Qué es un delegado?
 
@@ -18,7 +18,7 @@ Un **delegado** es un agente de OpenClaw que:
 - Tiene su **propia identidad** (dirección de correo electrónico, nombre para mostrar, calendario).
 - Actúa **en nombre de** uno o más humanos: nunca finge ser ellos.
 - Opera bajo **permisos explícitos** otorgados por el proveedor de identidad de la organización.
-- Sigue **[órdenes permanentes](/en/automation/standing-orders)** — reglas definidas en el `AGENTS.md` del agente que especifican lo que puede hacer de forma autónoma frente a lo que requiere aprobación humana (ver [Cron Jobs](/en/automation/cron-jobs) para ejecución programada).
+- Sigue **[órdenes permanentes](/es/automation/standing-orders)** — reglas definidas en el `AGENTS.md` del agente que especifican lo que puede hacer de forma autónoma frente a lo que requiere aprobación humana (ver [Cron Jobs](/es/automation/cron-jobs) para ejecución programada).
 
 El modelo de delegado se asigna directamente a cómo trabajan los asistentes ejecutivos: tienen sus propias credenciales, envían correo "en nombre de" su principal y siguen un ámbito de autoridad definido.
 
@@ -70,7 +70,7 @@ El delegado opera de manera **autónoma** según una programación, ejecutando �
 - Publicación automatizada en redes sociales mediante colas de contenido aprobado.
 - Triaje de la bandeja de entrada con autocategorización y marcado.
 
-Este nivel combina los permisos del Nivel 2 con [Cron Jobs](/en/automation/cron-jobs) y [Órdenes Permanentes](/en/automation/standing-orders).
+Este nivel combina los permisos del Nivel 2 con [Cron Jobs](/es/automation/cron-jobs) y [Órdenes Permanentes](/es/automation/standing-orders).
 
 > **Advertencia de seguridad**: El Nivel 3 requiere una configuración cuidadosa de bloqueos rígidos (hard blocks): acciones que el agente nunca debe tomar independientemente de la instrucción. Complete los requisitos previos a continuación antes de otorgar cualquier permiso del proveedor de identidad.
 
@@ -119,7 +119,7 @@ Para implementaciones de alta seguridad, ponga en sandbox el agente delegado par
 }
 ```
 
-Consulte [Sandboxing](/en/gateway/sandboxing) y [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools).
+Consulte [Sandboxing](/es/gateway/sandboxing) y [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools).
 
 ### Auditoría de rastros
 
@@ -202,7 +202,7 @@ La cuenta de servicio suplanta al usuario delegado (no al principal), preservand
 
 ### 3. Vincular el delegado a los canales
 
-Enrute los mensajes entrantes al agente delegado utilizando enlaces de [Enrutamiento Multiagente](/en/concepts/multi-agent):
+Enrute los mensajes entrantes al agente delegado utilizando enlaces de [Enrutamiento Multiagente](/es/concepts/multi-agent):
 
 ```json5
 {
@@ -244,7 +244,7 @@ Copie o cree perfiles de autenticación para el `agentDir` del delegado:
 ~/.openclaw/agents/delegate/agent/auth-profiles.json
 ```
 
-Nunca comparta el `agentDir` del agente principal con el delegado. Consulte [Enrutamiento Multiagente](/en/concepts/multi-agent) para obtener detalles sobre el aislamiento de autenticación.
+Nunca comparta el `agentDir` del agente principal con el delegado. Consulte [Enrutamiento Multiagente](/es/concepts/multi-agent) para obtener detalles sobre el aislamiento de autenticación.
 
 ## Ejemplo: asistente organizacional
 
@@ -280,7 +280,7 @@ Una configuración de delegado completa para un asistente organizacional que man
 }
 ```
 
-El `AGENTS.md` del delegado define su autoridad autónoma — lo que puede hacer sin preguntar, lo que requiere aprobación y lo que está prohibido. Los [Cron Jobs](/en/automation/cron-jobs) impulsan su programación diaria.
+El `AGENTS.md` del delegado define su autoridad autónoma — lo que puede hacer sin preguntar, lo que requiere aprobación y lo que está prohibido. Los [Cron Jobs](/es/automation/cron-jobs) impulsan su programación diaria.
 
 Si concede `sessions_history`, recuerde que es una vista de recuperación limitada y filtrada por seguridad. OpenClaw redacta texto similar a credenciales/tokens, trunca contenido largo, elimina etiquetas de pensamiento / andamiaje `<relevant-memories>` / cargas XML de llamadas a herramientas en texto plano (incluyendo `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` y bloques de llamadas a herramientas truncados) / andamiaje de llamadas a herramientas degradado / tokens de control de modelo ASCII/ancho completo filtrados / XML de llamadas a herramientas MiniMax malformados de la recuperación del asistente, y puede reemplazar filas demasiado grandes con `[sessions_history omitted: message too large]` en lugar de devolver un volcado de transcripción sin procesar.
 
@@ -291,7 +291,7 @@ El modelo de delegado funciona para cualquier organización pequeña:
 1. **Cree un agente delegado** por organización.
 2. **Primero asegure** — restricciones de herramientas, sandbox, bloqueos estrictos, registro de auditoría.
 3. **Otorgue permisos con alcance** a través del proveedor de identidad (mínimo privilegio).
-4. **Defina [órdenes permanentes](/en/automation/standing-orders)** para operaciones autónomas.
+4. **Defina [órdenes permanentes](/es/automation/standing-orders)** para operaciones autónomas.
 5. **Programe trabajos cron** para tareas recurrentes.
 6. **Revise y ajuste** el nivel de capacidad a medida que se construye la confianza.
 

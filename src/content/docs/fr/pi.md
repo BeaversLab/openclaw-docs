@@ -556,4 +556,4 @@ En direct/opt-in :
 
 - `src/agents/pi-embedded-runner-extraparams.live.test.ts` (activer `OPENCLAW_LIVE_TEST=1`)
 
-Pour les commandes d'exécution actuelles, voir [Pi Development Workflow](/en/pi-dev).
+Pour les commandes d'exécution actuelles, voir [Pi Development Workflow](/fr/pi-dev).

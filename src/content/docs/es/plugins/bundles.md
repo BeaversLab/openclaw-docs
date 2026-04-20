@@ -268,6 +268,6 @@ paquetes de terceros como contenido de confianza para las funciones que exponen.
 
 ## Relacionado
 
-- [Instalar y configurar complementos](/en/tools/plugin)
-- [Crear complementos](/en/plugins/building-plugins) — crear un complemento nativo
-- [Manifiesto de complemento](/en/plugins/manifest) — esquema de manifiesto nativo
+- [Instalar y configurar complementos](/es/tools/plugin)
+- [Crear complementos](/es/plugins/building-plugins) — crear un complemento nativo
+- [Manifiesto de complemento](/es/plugins/manifest) — esquema de manifiesto nativo

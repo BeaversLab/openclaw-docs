@@ -46,7 +46,7 @@ Los registros recientes de la pasarela muestran fallos repetidos de `cron.add` c
 - **Valores predeterminados:** se aplican valores predeterminados seguros para `wakeMode` y `sessionTarget` cuando faltan.
 - **Proveedores:** Discord/Slack/Signal/iMessage ahora se muestran de manera consistente en la CLI/interfaz de usuario.
 
-Consulte [Cron jobs](/en/automation/cron-jobs) para obtener la forma normalizada y ejemplos.
+Consulte [Cron jobs](/es/automation/cron-jobs) para obtener la forma normalizada y ejemplos.
 
 ## Verificación
 

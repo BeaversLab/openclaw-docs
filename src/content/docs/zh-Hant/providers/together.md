@@ -92,7 +92,7 @@ OpenClaw 隨附此內建的 Together 目錄：
 }
 ```
 
-<Tip>請參閱 [影片生成](/en/tools/video-generation) 以了解共用工具參數、 提供者選擇和故障轉移行為。</Tip>
+<Tip>請參閱 [影片生成](/zh-Hant/tools/video-generation) 以了解共用工具參數、 提供者選擇和故障轉移行為。</Tip>
 
 <AccordionGroup>
   <Accordion title="環境說明">
@@ -118,13 +118,13 @@ OpenClaw 隨附此內建的 Together 目錄：
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型提供者" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型提供者" href="/zh-Hant/concepts/model-providers" icon="layers">
     提供者規則、模型參照和故障轉移行為。
   </Card>
-  <Card title="影片生成" href="/en/tools/video-generation" icon="video">
+  <Card title="影片生成" href="/zh-Hant/tools/video-generation" icon="video">
     共用的影片生成工具參數和提供者選擇。
   </Card>
-  <Card title="組態參考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="組態參考" href="/zh-Hant/gateway/configuration-reference" icon="gear">
     完整的組態架構，包括提供者設定。
   </Card>
   <Card title="Together AI" href="https://together.ai" icon="arrow-up-right-from-square">

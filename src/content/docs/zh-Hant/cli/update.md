@@ -11,7 +11,7 @@ title: "update"
 安全地更新 OpenClaw 並在穩定版/測試版/開發版之間切換。
 
 如果您透過 **npm/pnpm/bun** 安裝（全域安裝，無 git 中繼資料），
-更新會透過[更新](/en/install/updating)中的套件管理員流程進行。
+更新會透過[更新](/zh-Hant/install/updating)中的套件管理員流程進行。
 
 ## 使用方式
 
@@ -110,6 +110,6 @@ Gateway 核心自動更新程式（透過設定啟用時）會重複使用此相
 ## 參見
 
 - `openclaw doctor`（在 git 檢出上建議先運行 update）
-- [開發頻道](/en/install/development-channels)
-- [更新](/en/install/updating)
-- [CLI 參考](/en/cli)
+- [開發頻道](/zh-Hant/install/development-channels)
+- [更新](/zh-Hant/install/updating)
+- [CLI 參考](/zh-Hant/cli)

@@ -62,9 +62,9 @@ Archivo heredado solo de importación (aún admitido, pero no el almacenamiento 
 
 - `~/.openclaw/credentials/oauth.json` (importado a `auth-profiles.json` en el primer uso)
 
-Todo lo anterior también respeta `$OPENCLAW_STATE_DIR` (anulación del directorio de estado). Referencia completa: [/gateway/configuration](/en/gateway/configuration-reference#auth-storage)
+Todo lo anterior también respeta `$OPENCLAW_STATE_DIR` (anulación del directorio de estado). Referencia completa: [/gateway/configuration](/es/gateway/configuration-reference#auth-storage)
 
-Para las referencias estáticas de secretos y el comportamiento de activación de instantáneas en tiempo de ejecución, consulte [Gestión de secretos](/en/gateway/secrets).
+Para las referencias estáticas de secretos y el comportamiento de activación de instantáneas en tiempo de ejecución, consulte [Gestión de secretos](/es/gateway/secrets).
 
 ## Compatibilidad con tokens heredados de Anthropic
 
@@ -82,9 +82,9 @@ y [Uso de Claude Code con su plan de equipo o empresa
 ](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
 Si desea otras opciones de tipo suscripción en OpenClaw, consulte [OpenAI
-Codex](/en/providers/openai), [Plan de codificación en la nube de Qwen
-](/en/providers/qwen), [Plan de codificación de MiniMax](/en/providers/minimax)
-y [Plan de codificación de Z.AI / GLM](/en/providers/glm).
+Codex](/es/providers/openai), [Plan de codificación en la nube de Qwen
+](/es/providers/qwen), [Plan de codificación de MiniMax](/es/providers/minimax)
+y [Plan de codificación de Z.AI / GLM](/es/providers/glm).
 
 </Warning>
 
@@ -170,11 +170,11 @@ Cómo ver qué IDs de perfil existen:
 
 Documentos relacionados:
 
-- [/concepts/model-failover](/en/concepts/model-failover) (reglas de rotación + tiempo de espera)
-- [/tools/slash-commands](/en/tools/slash-commands) (superficie de comandos)
+- [/concepts/model-failover](/es/concepts/model-failover) (reglas de rotación + tiempo de espera)
+- [/tools/slash-commands](/es/tools/slash-commands) (superficie de comandos)
 
 ## Relacionado
 
-- [Authentication](/en/gateway/authentication) — descripción general de la autenticación del proveedor del modelo
-- [Secrets](/en/gateway/secrets) — almacenamiento de credenciales y SecretRef
-- [Configuration Reference](/en/gateway/configuration-reference#auth-storage) — claves de configuración de autenticación
+- [Authentication](/es/gateway/authentication) — descripción general de la autenticación del proveedor del modelo
+- [Secrets](/es/gateway/secrets) — almacenamiento de credenciales y SecretRef
+- [Configuration Reference](/es/gateway/configuration-reference#auth-storage) — claves de configuración de autenticación

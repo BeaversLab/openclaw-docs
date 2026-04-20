@@ -175,7 +175,7 @@ export LITELLM_API_KEY="sk-litellm-key"
   </Accordion>
 </AccordionGroup>
 
-<Note>Pour la configuration générale des providers et le comportement de basculement, voir [Model Providers](/en/concepts/model-providers).</Note>
+<Note>Pour la configuration générale des providers et le comportement de basculement, voir [Model Providers](/fr/concepts/model-providers).</Note>
 
 ## Connexes
 
@@ -183,13 +183,13 @@ export LITELLM_API_KEY="sk-litellm-key"
   <Card title="Documentation LiteLLM" href="https://docs.litellm.ai" icon="book">
     Documentation officielle et référence de l'API LiteLLM.
   </Card>
-  <Card title="Model providers" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model providers" href="/fr/concepts/model-providers" icon="layers">
     Vue d'ensemble de tous les providers, références de modèles et comportements de basculement.
   </Card>
-  <Card title="Configuration" href="/en/gateway/configuration" icon="gear">
+  <Card title="Configuration" href="/fr/gateway/configuration" icon="gear">
     Référence complète de la configuration.
   </Card>
-  <Card title="Sélection de modèle" href="/en/concepts/models" icon="brain">
+  <Card title="Sélection de modèle" href="/fr/concepts/models" icon="brain">
     Comment choisir et configurer les modèles.
   </Card>
 </CardGroup>

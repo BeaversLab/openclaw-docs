@@ -205,7 +205,7 @@ your-domain.com {
 - `typingIndicator` 支援 `none`、`message`（預設）以及 `reaction`（回應需要使用者 OAuth）。
 - 附件透過 Chat API 下載並儲存在媒體管線中（大小受 `mediaMaxMb` 限制）。
 
-祕鑰參考詳情：[Secrets Management](/en/gateway/secrets)。
+祕鑰參考詳情：[Secrets Management](/zh-Hant/gateway/secrets)。
 
 ## 疑難排解
 
@@ -257,14 +257,14 @@ openclaw channels status
 
 相關文件：
 
-- [閘道設定](/en/gateway/configuration)
-- [安全性](/en/gateway/security)
-- [反應](/en/tools/reactions)
+- [閘道設定](/zh-Hant/gateway/configuration)
+- [安全性](/zh-Hant/gateway/security)
+- [反應](/zh-Hant/tools/reactions)
 
 ## 相關
 
-- [頻道概覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — 私訊驗證與配對流程
-- [群組](/en/channels/groups) — 群組聊天行為與提及控制
-- [頻道路由](/en/channels/channel-routing) — 訊息的工作階段路由
-- [安全性](/en/gateway/security) — 存取模型與強化防護
+- [頻道概覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — 私訊驗證與配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及控制
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的工作階段路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型與強化防護

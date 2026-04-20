@@ -13,7 +13,7 @@ read_when:
 Referencia para el empaquetado de complementos (metadatos de `package.json`), manifiestos
 (`openclaw.plugin.json`), entradas de configuración y esquemas de configuración.
 
-<Tip>**¿Buscas un tutorial?** Las guías prácticas cubren el empaquetado en contexto: [Complementos de canal](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) y [Complementos de proveedor](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
+<Tip>**¿Buscas un tutorial?** Las guías prácticas cubren el empaquetado en contexto: [Complementos de canal](/es/plugins/sdk-channel-plugins#step-1-package-and-manifest) y [Complementos de proveedor](/es/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
 
 ## Metadatos del paquete
 
@@ -239,7 +239,7 @@ Incluso los complementos sin configuración deben incluir un esquema. Un esquema
 }
 ```
 
-Consulte [Manifiesto del complemento](/en/plugins/manifest) para obtener la referencia completa del esquema.
+Consulte [Manifiesto del complemento](/es/plugins/manifest) para obtener la referencia completa del esquema.
 
 ## Publicación en ClawHub
 
@@ -468,7 +468,7 @@ copiar el mismo pegamento de binario/estado en cada canal:
 
 ## Publicación e instalación
 
-**Plugins externos:** publícalos en [ClawHub](/en/tools/clawhub) o npm, luego instala:
+**Plugins externos:** publícalos en [ClawHub](/es/tools/clawhub) o npm, luego instala:
 
 ```bash
 openclaw plugins install @myorg/openclaw-my-plugin
@@ -501,6 +501,6 @@ openclaw plugins install <package-name>
 
 ## Relacionado
 
-- [Puntos de entrada del SDK](/en/plugins/sdk-entrypoints) -- `definePluginEntry` y `defineChannelPluginEntry`
-- [Manifiesto de Plugin](/en/plugins/manifest) -- referencia completa del esquema de manifiesto
-- [Construcción de Plugins](/en/plugins/building-plugins) -- guía paso a paso para comenzar
+- [Puntos de entrada del SDK](/es/plugins/sdk-entrypoints) -- `definePluginEntry` y `defineChannelPluginEntry`
+- [Manifiesto de Plugin](/es/plugins/manifest) -- referencia completa del esquema de manifiesto
+- [Construcción de Plugins](/es/plugins/building-plugins) -- guía paso a paso para comenzar

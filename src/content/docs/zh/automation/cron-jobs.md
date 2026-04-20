@@ -34,7 +34,7 @@ openclaw cron runs --id <job-id>
 
 - Cron 在 Gateway(网关)\*\* 进程内运行（而非在模型内部）。
 - 任务持久化存储在 `~/.openclaw/cron/jobs.json`，因此重启不会丢失调度。
-- 所有 cron 执行都会创建 [background task](/en/automation/tasks) 记录。
+- 所有 cron 执行都会创建 [background task](/zh/automation/tasks) 记录。
 - 一次性任务 (`--at`) 默认在成功后自动删除。
 - 独立的 cron 运行会在运行完成时尽力关闭为其 `cron:<jobId>` 会话跟踪的浏览器标签页/进程，因此分离的浏览器自动化不会留下孤立进程。
 - 独立的 cron 运行也会防止过时的确认回复。如果第一个结果只是临时状态更新 (`on it`、`pulling everything
@@ -396,7 +396,7 @@ openclaw doctor
 
 ## 相关
 
-- [自动化与任务](/en/automation) — 所有自动化机制概览
-- [后台任务](/en/automation/tasks) — cron 执行的任务账本
-- [心跳](/en/gateway/heartbeat) — 周期性主会话轮次
-- [时区](/en/concepts/timezone) — 时区配置
+- [自动化与任务](/zh/automation) — 所有自动化机制概览
+- [后台任务](/zh/automation/tasks) — cron 执行的任务账本
+- [心跳](/zh/gateway/heartbeat) — 周期性主会话轮次
+- [时区](/zh/concepts/timezone) — 时区配置

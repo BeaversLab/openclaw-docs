@@ -245,8 +245,8 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appariement](/en/channels/pairing) — authentification DM et flux d'appariement
-- [Groups](/en/channels/groups) — comportement de la discussion de groupe et filtrage des mentions
-- [Channel Routing](/en/channels/channel-routing) — routage de session pour les messages
-- [Security](/en/gateway/security) — modèle d'accès et durcissement
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appariement](/fr/channels/pairing) — authentification DM et flux d'appariement
+- [Groups](/fr/channels/groups) — comportement de la discussion de groupe et filtrage des mentions
+- [Channel Routing](/fr/channels/channel-routing) — routage de session pour les messages
+- [Security](/fr/gateway/security) — modèle d'accès et durcissement

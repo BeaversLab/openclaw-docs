@@ -22,7 +22,7 @@ OpenClaw 每次執行時都會組裝自己的系統提示詞。它包含：
 - 回覆標籤 + 心跳行為
 - 執行時期元資料（主機/作業系統/模型/思考）
 
-請參閱 [系統提示詞](/en/concepts/system-prompt) 以瞭解完整細目。
+請參閱 [系統提示詞](/zh-Hant/concepts/system-prompt) 以瞭解完整細目。
 
 ## 計入上下文視窗的內容
 
@@ -35,7 +35,7 @@ OpenClaw 每次執行時都會組裝自己的系統提示詞。它包含：
 - 壓縮摘要和修剪產物
 - 提供者包裝器或安全標頭（不可見，但仍會計入）
 
-若要查看實用細目（針對每個注入的檔案、工具、技能和系統提示詞大小），請使用 `/context list` 或 `/context detail`。請參閱 [上下文](/en/concepts/context)。
+若要查看實用細目（針對每個注入的檔案、工具、技能和系統提示詞大小），請使用 `/context list` 或 `/context detail`。請參閱 [上下文](/zh-Hant/concepts/context)。
 
 ## 如何查看目前 Token 使用量
 
@@ -74,7 +74,7 @@ models.providers.<provider>.models[].cost
 新快取的上下文，而不是重新快取完整的歷史記錄。這可以降低當
 會話閒置超過 TTL 時的快取寫入成本。
 
-在 [Gateway configuration](/en/gateway/configuration) 中配置它，並在 [Session pruning](/en/concepts/session-pruning) 中查看行為詳情。
+在 [Gateway configuration](/zh-Hant/gateway/configuration) 中配置它，並在 [Session pruning](/zh-Hant/concepts/session-pruning) 中查看行為詳情。
 
 心跳 可以在閒置期間保持快取 **溫熱**。如果您的模型快取 TTL
 是 `1h`，將心跳間隔設定為略低於該值（例如 `55m`）可以避免
@@ -107,4 +107,4 @@ agents:
 - 保持技能描述簡短（技能清單會注入提示中）。
 - 對於冗長、探索性的工作，首選較小的模型。
 
-請參閱 [Skills](/en/tools/skills) 以了解確切的技能清單開銷公式。
+請參閱 [Skills](/zh-Hant/tools/skills) 以了解確切的技能清單開銷公式。

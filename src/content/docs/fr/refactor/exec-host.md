@@ -310,7 +310,7 @@ Option B :
 
 ## Documentation connexe
 
-- [Outil Exec](/en/tools/exec)
-- [Approbations Exec](/en/tools/exec-approvals)
-- [Nœuds](/en/nodes)
-- [Mode élevé](/en/tools/elevated)
+- [Outil Exec](/fr/tools/exec)
+- [Approbations Exec](/fr/tools/exec-approvals)
+- [Nœuds](/fr/nodes)
+- [Mode élevé](/fr/tools/elevated)

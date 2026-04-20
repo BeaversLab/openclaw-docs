@@ -41,7 +41,7 @@ title: "Arquitectura del Gateway"
 
 Detalles del protocolo:
 
-- [Protocolo de gateway](/en/gateway/protocol)
+- [Protocolo de gateway](/es/gateway/protocol)
 
 ### WebChat
 
@@ -110,8 +110,8 @@ sequenceDiagram
 - La autenticación del gateway (`gateway.auth.*`) todavía se aplica a **todas** las conexiones, locales o
   remotas.
 
-Detalles: [Protocolo de gateway](/en/gateway/protocol), [Emparejamiento](/en/channels/pairing),
-[Seguridad](/en/gateway/security).
+Detalles: [Protocolo de gateway](/es/gateway/protocol), [Emparejamiento](/es/channels/pairing),
+[Seguridad](/es/gateway/security).
 
 ## Escritura de protocolo y generación de código
 
@@ -145,7 +145,7 @@ Detalles: [Protocolo de gateway](/en/gateway/protocol), [Emparejamiento](/en/cha
 
 ## Relacionado
 
-- [Bucle del Agente](/en/concepts/agent-loop) — ciclo de ejecución detallado del agente
-- [Protocolo del Gateway](/en/gateway/protocol) — contrato del protocolo WebSocket
-- [Cola](/en/concepts/queue) — cola de comandos y concurrencia
-- [Seguridad](/en/gateway/security) — modelo de confianza y endurecimiento
+- [Bucle del Agente](/es/concepts/agent-loop) — ciclo de ejecución detallado del agente
+- [Protocolo del Gateway](/es/gateway/protocol) — contrato del protocolo WebSocket
+- [Cola](/es/concepts/queue) — cola de comandos y concurrencia
+- [Seguridad](/es/gateway/security) — modelo de confianza y endurecimiento

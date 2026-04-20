@@ -4,8 +4,8 @@
 
 ## 文件
 
-- [威脅模型](/en/security/THREAT-MODEL-ATLAS) - 基於 MITRE ATLAS 的 OpenClaw 生態系統威脅模型
-- [貢獻威脅模型](/en/security/CONTRIBUTING-THREAT-MODEL) - 如何新增威脅、緩解措施與攻擊鏈
+- [威脅模型](/zh-Hant/security/THREAT-MODEL-ATLAS) - 基於 MITRE ATLAS 的 OpenClaw 生態系統威脅模型
+- [貢獻威脅模型](/zh-Hant/security/CONTRIBUTING-THREAT-MODEL) - 如何新增威脅、緩解措施與攻擊鏈
 
 ## 回報漏洞
 

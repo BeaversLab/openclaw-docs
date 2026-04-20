@@ -49,7 +49,7 @@ endpoint y clave de API. Es compatible con OpenAI, por lo que la mayoría de los
 
 <Note>
 Las referencias de modelos siguen el patrón `openrouter/<provider>/<model>`. Para ver la lista completa de
-proveedores y modelos disponibles, consulte [/concepts/model-providers](/en/concepts/model-providers).
+proveedores y modelos disponibles, consulte [/concepts/model-providers](/es/concepts/model-providers).
 </Note>
 
 ## Autenticación y encabezados
@@ -91,10 +91,10 @@ los encabezados de atribución de la aplicación documentados por OpenRouter:
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelo y comportamiento de conmutación por error.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
     Referencia completa de configuración para agentes, modelos y proveedores.
   </Card>
 </CardGroup>

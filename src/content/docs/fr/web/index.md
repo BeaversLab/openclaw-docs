@@ -13,13 +13,13 @@ Le Gateway sert une petite **interface de contrôle navigateur** (Vite + Lit) su
 - par défaut : `http://<host>:18789/`
 - préfixe optionnel : définir `gateway.controlUi.basePath` (par ex. `/openclaw`)
 
-Les fonctionnalités se trouvent dans [Control UI](/en/web/control-ui).
+Les fonctionnalités se trouvent dans [Control UI](/fr/web/control-ui).
 Cette page se concentre sur les modes de liaison, la sécurité et les surfaces web.
 
 ## Webhooks
 
 Lorsque `hooks.enabled=true`, le Gateway expose également un petit point de terminaison webhook sur le même serveur HTTP.
-Voir [configuration du Gateway](/en/gateway/configuration) → `hooks` pour l'authentification + les charges utiles.
+Voir [configuration du Gateway](/fr/gateway/configuration) → `hooks` pour l'authentification + les charges utiles.
 
 ## Config (activé par défaut)
 
@@ -111,7 +111,7 @@ Ouvrez :
   Les points de terminaison HTTP API n'utilisent pas ces en-têtes d'identité Tailscale ; ils suivent
   plutôt le mode d'authentification HTTP normal de la passerelle. Définissez
   `gateway.auth.allowTailscale: false` pour exiger des informations d'identification explicites. Voir
-  [Tailscale](/en/gateway/tailscale) et [Sécurité](/en/gateway/security). Ce
+  [Tailscale](/fr/gateway/tailscale) et [Sécurité](/fr/gateway/security). Ce
   flux sans jeton suppose que l'hôte de la passerelle est de confiance.
 - `gateway.tailscale.mode: "funnel"` nécessite `gateway.auth.mode: "password"` (mot de passe partagé).
 

@@ -167,5 +167,5 @@ Notas:
 
 Relacionado:
 
-- [Solución de problemas de autenticación del Dashboard](/en/web/dashboard#if-you-see-unauthorized-1008)
-- [Solución de problemas de la pasarela](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Solución de problemas de autenticación del Dashboard](/es/web/dashboard#if-you-see-unauthorized-1008)
+- [Solución de problemas de la pasarela](/es/gateway/troubleshooting#dashboard-control-ui-connectivity)

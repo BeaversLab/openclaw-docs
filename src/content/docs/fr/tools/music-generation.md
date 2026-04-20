@@ -224,7 +224,7 @@ Les champs plats hérités tels que `maxInputImages`, `supportsLyrics` et `suppo
 
 - Utilisez le chemin partagé supporté par le provider lorsque vous souhaitez la sélection de modèle, le basculement de provider et le flux de tâche/état asynchrone intégré.
 - Utilisez un chemin de plugin tel que ComfyUI lorsque vous avez besoin d'un graphe de workflow personnalisé ou d'un provider qui ne fait pas partie de la capacité musicale groupée partagée.
-- Si vous déboguez un comportement spécifique à ComfyUI, consultez [ComfyUI](/en/providers/comfy). Si vous déboguez le comportement du provider partagé, commencez par [Google (Gemini)](/en/providers/google) ou [MiniMax](/en/providers/minimax).
+- Si vous déboguez un comportement spécifique à ComfyUI, consultez [ComfyUI](/fr/providers/comfy). Si vous déboguez le comportement du provider partagé, commencez par [Google (Gemini)](/fr/providers/google) ou [MiniMax](/fr/providers/minimax).
 
 ## Tests en direct
 
@@ -258,10 +258,10 @@ Le fichier en direct Comfy couvre également les workflows d'image et de vidéo 
 
 ## Connexes
 
-- [Tâches d'arrière-plan](/en/automation/tasks) - suivi des tâches pour les exécutions détachées `music_generate`
-- [Référence de configuration](/en/gateway/configuration-reference#agent-defaults) - configuration `musicGenerationModel`
-- [ComfyUI](/en/providers/comfy)
-- [Google (Gemini)](/en/providers/google)
-- [MiniMax](/en/providers/minimax)
-- [Modèles](/en/concepts/models) - configuration des modèles et basculement
-- [Aperçu des outils](/en/tools)
+- [Tâches d'arrière-plan](/fr/automation/tasks) - suivi des tâches pour les exécutions détachées `music_generate`
+- [Référence de configuration](/fr/gateway/configuration-reference#agent-defaults) - configuration `musicGenerationModel`
+- [ComfyUI](/fr/providers/comfy)
+- [Google (Gemini)](/fr/providers/google)
+- [MiniMax](/fr/providers/minimax)
+- [Modèles](/fr/concepts/models) - configuration des modèles et basculement
+- [Aperçu des outils](/fr/tools)

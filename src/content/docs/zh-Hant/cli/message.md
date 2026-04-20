@@ -216,7 +216,7 @@ openclaw message send --channel discord \
   --components '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve","style":"success"},{"label":"Decline","style":"danger"}]}]}'
 ```
 
-請參閱 [Discord 元件](/en/channels/discord#interactive-components) 以取得完整架構。
+請參閱 [Discord 元件](/zh-Hant/channels/discord#interactive-components) 以取得完整架構。
 
 發送共享互動負載：
 

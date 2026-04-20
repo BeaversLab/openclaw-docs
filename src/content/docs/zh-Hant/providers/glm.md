@@ -86,17 +86,17 @@ OpenClaw 目前使用這些 GLM 參考來初始化內建的 `zai` 提供者：
   <Accordion title="提供者詳細資訊">
     GLM 模型由 `zai` 執行時提供者提供。如需完整的提供者
     設定、區域端點及其他功能，請參閱
-    [Z.AI provider docs](/en/providers/zai)。
+    [Z.AI provider docs](/zh-Hant/providers/zai)。
   </Accordion>
 </AccordionGroup>
 
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="Z.AI provider" href="/en/providers/zai" icon="server">
+  <Card title="Z.AI provider" href="/zh-Hant/providers/zai" icon="server">
     完整的 Z.AI provider 設定和區域端點。
   </Card>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和容錯移轉行為。
   </Card>
 </CardGroup>

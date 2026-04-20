@@ -50,7 +50,7 @@ El playbook de Ansible instala y configura:
 5. **OpenClaw** -- basado en el host, no en contenedores
 6. **Servicio Systemd** -- inicio automático con endurecimiento de seguridad
 
-<Note>La puerta de enlace se ejecuta directamente en el host (no en Docker), pero los entornos limitados del agente utilizan Docker para el aislamiento. Consulte [Sandboxing](/en/gateway/sandboxing) para obtener más detalles.</Note>
+<Note>La puerta de enlace se ejecuta directamente en el host (no en Docker), pero los entornos limitados del agente utilizan Docker para el aislamiento. Consulte [Sandboxing](/es/gateway/sandboxing) para obtener más detalles.</Note>
 
 ## Configuración posterior a la instalación
 
@@ -96,7 +96,7 @@ nmap -p- YOUR_SERVER_IP
 
 Solo el puerto 22 (SSH) debe estar abierto. Todos los demás servicios (puerta de enlace, Docker) están bloqueados.
 
-Docker se instala para entornos de prueba de agentes (ejecución de herramientas aisladas), no para ejecutar la puerta de enlace en sí. Consulte [Multi-Agent Sandbox and Tools](/en/tools/multi-agent-sandbox-tools) para la configuración del entorno de prueba.
+Docker se instala para entornos de prueba de agentes (ejecución de herramientas aisladas), no para ejecutar la puerta de enlace en sí. Consulte [Multi-Agent Sandbox and Tools](/es/tools/multi-agent-sandbox-tools) para la configuración del entorno de prueba.
 
 ## Instalación manual
 
@@ -135,7 +135,7 @@ Si prefiere el control manual sobre la automatización:
 
 ## Actualizando
 
-El instalador de Ansible configura OpenClaw para actualizaciones manuales. Consulte [Updating](/en/install/updating) para el flujo de actualización estándar.
+El instalador de Ansible configura OpenClaw para actualizaciones manuales. Consulte [Updating](/es/install/updating) para el flujo de actualización estándar.
 
 Para volver a ejecutar el playbook de Ansible (por ejemplo, para cambios de configuración):
 
@@ -203,6 +203,6 @@ Para obtener información detallada sobre la arquitectura de seguridad y soluci�
 ## Relacionado
 
 - [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) -- guía completa de implementación
-- [Docker](/en/install/docker) -- configuración de pasarela contenedorizada
-- [Sandboxing](/en/gateway/sandboxing) -- configuración del espacio aislado (sandbox) del agente
-- [Espacio aislado (Sandbox) y herramientas multiagente](/en/tools/multi-agent-sandbox-tools) -- aislamiento por agente
+- [Docker](/es/install/docker) -- configuración de pasarela contenedorizada
+- [Sandboxing](/es/gateway/sandboxing) -- configuración del espacio aislado (sandbox) del agente
+- [Espacio aislado (Sandbox) y herramientas multiagente](/es/tools/multi-agent-sandbox-tools) -- aislamiento por agente

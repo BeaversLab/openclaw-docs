@@ -39,7 +39,7 @@ openclaw logs --follow
 
 如果您看到：
 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`，
-請前往 [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/en/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
+請前往 [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/zh-Hant/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
 
 ## 本機 OpenAI 相容後端直接運作但在 OpenClaw 中失敗
 
@@ -54,7 +54,7 @@ openclaw logs --follow
 3. 如果小型直接呼叫仍可運作，但較大的 OpenClaw 提示詞會導致
    後端當機，請將剩餘問題視為上游模型/伺服器限制，並
    繼續依照深層手冊操作：
-   [/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail](/en/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail)
+   [/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail](/zh-Hant/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail)
 
 ## 外掛程式安裝因缺少 openclaw 擴充功能而失敗
 
@@ -79,7 +79,7 @@ openclaw logs --follow
 }
 ```
 
-參考資料：[Plugin architecture](/en/plugins/architecture)
+參考資料：[Plugin architecture](/zh-Hant/plugins/architecture)
 
 ## 決策樹
 
@@ -128,9 +128,9 @@ flowchart TD
 
     深入頁面：
 
-    - [/gateway/troubleshooting#no-replies](/en/gateway/troubleshooting#no-replies)
-    - [/channels/troubleshooting](/en/channels/troubleshooting)
-    - [/channels/pairing](/en/channels/pairing)
+    - [/gateway/troubleshooting#no-replies](/zh-Hant/gateway/troubleshooting#no-replies)
+    - [/channels/troubleshooting](/zh-Hant/channels/troubleshooting)
+    - [/channels/pairing](/zh-Hant/channels/pairing)
 
   </Accordion>
 
@@ -164,9 +164,9 @@ flowchart TD
 
     深入頁面：
 
-    - [/gateway/troubleshooting#dashboard-control-ui-connectivity](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
-    - [/web/control-ui](/en/web/control-ui)
-    - [/gateway/authentication](/en/gateway/authentication)
+    - [/gateway/troubleshooting#dashboard-control-ui-connectivity](/zh-Hant/gateway/troubleshooting#dashboard-control-ui-connectivity)
+    - [/web/control-ui](/zh-Hant/web/control-ui)
+    - [/gateway/authentication](/zh-Hant/gateway/authentication)
 
   </Accordion>
 
@@ -193,9 +193,9 @@ flowchart TD
 
     深入頁面：
 
-    - [/gateway/troubleshooting#gateway-service-not-running](/en/gateway/troubleshooting#gateway-service-not-running)
-    - [/gateway/background-process](/en/gateway/background-process)
-    - [/gateway/configuration](/en/gateway/configuration)
+    - [/gateway/troubleshooting#gateway-service-not-running](/zh-Hant/gateway/troubleshooting#gateway-service-not-running)
+    - [/gateway/background-process](/zh-Hant/gateway/background-process)
+    - [/gateway/configuration](/zh-Hant/gateway/configuration)
 
   </Accordion>
 
@@ -222,8 +222,8 @@ flowchart TD
 
     深入頁面：
 
-    - [/gateway/troubleshooting#channel-connected-messages-not-flowing](/en/gateway/troubleshooting#channel-connected-messages-not-flowing)
-    - [/channels/troubleshooting](/en/channels/troubleshooting)
+    - [/gateway/troubleshooting#channel-connected-messages-not-flowing](/zh-Hant/gateway/troubleshooting#channel-connected-messages-not-flowing)
+    - [/channels/troubleshooting](/zh-Hant/channels/troubleshooting)
 
   </Accordion>
 
@@ -255,9 +255,9 @@ flowchart TD
 
     深入頁面：
 
-    - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
-    - [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
-    - [/gateway/heartbeat](/en/gateway/heartbeat)
+    - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/zh-Hant/gateway/troubleshooting#cron-and-heartbeat-delivery)
+    - [/automation/cron-jobs#troubleshooting](/zh-Hant/automation/cron-jobs#troubleshooting)
+    - [/gateway/heartbeat](/zh-Hant/gateway/heartbeat)
 
     </Accordion>
 
@@ -285,9 +285,9 @@ flowchart TD
 
       深入頁面：
 
-      - [/gateway/troubleshooting#node-paired-tool-fails](/en/gateway/troubleshooting#node-paired-tool-fails)
-      - [/nodes/troubleshooting](/en/nodes/troubleshooting)
-      - [/tools/exec-approvals](/en/tools/exec-approvals)
+      - [/gateway/troubleshooting#node-paired-tool-fails](/zh-Hant/gateway/troubleshooting#node-paired-tool-fails)
+      - [/nodes/troubleshooting](/zh-Hant/nodes/troubleshooting)
+      - [/tools/exec-approvals](/zh-Hant/tools/exec-approvals)
 
     </Accordion>
 
@@ -331,9 +331,9 @@ flowchart TD
 
       深入頁面：
 
-      - [/tools/exec](/en/tools/exec)
-      - [/tools/exec-approvals](/en/tools/exec-approvals)
-      - [/gateway/security#what-the-audit-checks-high-level](/en/gateway/security#what-the-audit-checks-high-level)
+      - [/tools/exec](/zh-Hant/tools/exec)
+      - [/tools/exec-approvals](/zh-Hant/tools/exec-approvals)
+      - [/gateway/security#what-the-audit-checks-high-level](/zh-Hant/gateway/security#what-the-audit-checks-high-level)
 
     </Accordion>
 
@@ -365,10 +365,10 @@ flowchart TD
 
       深入頁面：
 
-      - [/gateway/troubleshooting#browser-tool-fails](/en/gateway/troubleshooting#browser-tool-fails)
-      - [/tools/browser#missing-browser-command-or-tool](/en/tools/browser#missing-browser-command-or-tool)
-      - [/tools/browser-linux-troubleshooting](/en/tools/browser-linux-troubleshooting)
-      - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+      - [/gateway/troubleshooting#browser-tool-fails](/zh-Hant/gateway/troubleshooting#browser-tool-fails)
+      - [/tools/browser#missing-browser-command-or-tool](/zh-Hant/tools/browser#missing-browser-command-or-tool)
+      - [/tools/browser-linux-troubleshooting](/zh-Hant/tools/browser-linux-troubleshooting)
+      - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/zh-Hant/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
 
     </Accordion>
 
@@ -376,8 +376,8 @@ flowchart TD
 
 ## 相關
 
-- [FAQ](/en/help/faq) — 常見問題
-- [Gateway Troubleshooting](/en/gateway/troubleshooting) — 閘道特定問題
-- [Doctor](/en/gateway/doctor) — 自動健康檢查與修復
-- [Channel Troubleshooting](/en/channels/troubleshooting) — 頻道連線問題
-- [Automation Troubleshooting](/en/automation/cron-jobs#troubleshooting) — cron 與 heartbeat 問題
+- [FAQ](/zh-Hant/help/faq) — 常見問題
+- [Gateway Troubleshooting](/zh-Hant/gateway/troubleshooting) — 閘道特定問題
+- [Doctor](/zh-Hant/gateway/doctor) — 自動健康檢查與修復
+- [Channel Troubleshooting](/zh-Hant/channels/troubleshooting) — 頻道連線問題
+- [Automation Troubleshooting](/zh-Hant/automation/cron-jobs#troubleshooting) — cron 與 heartbeat 問題

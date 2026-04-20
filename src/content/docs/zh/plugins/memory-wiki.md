@@ -362,7 +362,7 @@ openclaw wiki bridge import
 openclaw wiki obsidian status
 ```
 
-有关完整的命令参考，请参阅 [CLI: wiki](/en/cli/wiki)。
+有关完整的命令参考，请参阅 [CLI: wiki](/zh/cli/wiki)。
 
 ## Obsidian 支持
 
@@ -390,7 +390,7 @@ openclaw wiki obsidian status
 
 ## 相关文档
 
-- [记忆概览](/en/concepts/memory)
-- [CLI: memory](/en/cli/memory)
-- [CLI: wiki](/en/cli/wiki)
-- [插件 SDK 概览](/en/plugins/sdk-overview)
+- [记忆概览](/zh/concepts/memory)
+- [CLI: memory](/zh/cli/memory)
+- [CLI: wiki](/zh/cli/wiki)
+- [插件 SDK 概览](/zh/plugins/sdk-overview)

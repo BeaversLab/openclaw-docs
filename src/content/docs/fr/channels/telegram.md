@@ -10,13 +10,13 @@ title: "Telegram"
 Statut : prêt pour la production pour les DMs de bot + groupes via grammY. Le long polling est le mode par défaut ; le mode webhook est facultatif.
 
 <CardGroup cols={3}>
-  <Card title="Pairing" icon="link" href="/en/channels/pairing">
+  <Card title="Pairing" icon="link" href="/fr/channels/pairing">
     La stratégie DM par défaut pour Telegram est l'appairage.
   </Card>
-  <Card title="Channel troubleshooting" icon="wrench" href="/en/channels/troubleshooting">
+  <Card title="Channel troubleshooting" icon="wrench" href="/fr/channels/troubleshooting">
     Diagnostics inter-canaux et livres de jeux de réparation.
   </Card>
-  <Card title="Gateway configuration" icon="settings" href="/en/gateway/configuration">
+  <Card title="Gateway configuration" icon="settings" href="/fr/gateway/configuration">
     Modèles de configuration complète de canal et exemples.
   </Card>
 </CardGroup>
@@ -360,7 +360,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     Si un appareil réessaie avec des détails d'authentification modifiés (par exemple rôle/portées/clé publique), la demande en attente précédente est remplacée et la nouvelle demande utilise un `requestId` différent. Réexécutez `/pair pending` avant d'approuver.
 
-    Plus de détails : [Appareillage](/en/channels/pairing#pair-via-telegram-recommended-for-ios).
+    Plus de détails : [Appareillage](/fr/channels/pairing#pair-via-telegram-recommended-for-ios).
 
   </Accordion>
 
@@ -451,7 +451,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     Remarque : `edit` et `topic-create` sont actuellement activés par défaut et n'ont pas de commutateurs `channels.telegram.actions.*` distincts.
     Les envois lors de l'exécution utilisent l'instantané actif de la configuration/des secrets (démarrage/rechargement), les chemins d'action n'effectuent donc pas de nouvelle résolution ad hoc de SecretRef par envoi.
 
-    Sémantique de suppression des réactions : [/tools/reactions](/en/tools/reactions)
+    Sémantique de suppression des réactions : [/tools/reactions](/fr/tools/reactions)
 
   </Accordion>
 
@@ -846,7 +846,7 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
 
     Les boutons d'approbation en ligne dépendent également de `channels.telegram.capabilities.inlineButtons` autorisant la surface cible (`dm`, `group` ou `all`).
 
-    Documentation connexe : [Approbations des exécutions](/en/tools/exec-approvals)
+    Documentation connexe : [Approbations des exécutions](/fr/tools/exec-approvals)
 
   </Accordion>
 </AccordionGroup>
@@ -973,7 +973,7 @@ dig +short api.telegram.org AAAA
   </Accordion>
 </AccordionGroup>
 
-Plus d'aide : [Channel troubleshooting](/en/channels/troubleshooting).
+Plus d'aide : [Channel troubleshooting](/fr/channels/troubleshooting).
 
 ## Pointeurs vers la référence de configuration Telegram
 
@@ -1005,7 +1005,7 @@ Référence principale :
   - `channels.telegram.groups.<id>.topics.<threadId>.agentId` : acheminer ce sujet vers un agent spécifique (remplace le routage au niveau du groupe et de la liaison).
 - `channels.telegram.groups.<id>.topics.<threadId>.groupPolicy` : remplacement par sujet pour groupPolicy (`open | allowlist | disabled`).
 - `channels.telegram.groups.<id>.topics.<threadId>.requireMention` : remplacement de mention gating par sujet.
-- `bindings[]` de premier niveau avec `type: "acp"` et l'id de sujet canonique `chatId:topic:topicId` dans `match.peer.id` : champs de liaison de sujet ACP persistants (voir [ACP Agents](/en/tools/acp-agents#channel-specific-settings)).
+- `bindings[]` de premier niveau avec `type: "acp"` et l'id de sujet canonique `chatId:topic:topicId` dans `match.peer.id` : champs de liaison de sujet ACP persistants (voir [ACP Agents](/fr/tools/acp-agents#channel-specific-settings)).
 - `channels.telegram.direct.<id>.topics.<threadId>.agentId` : acheminer les sujets DM vers un agent spécifique (même comportement que les sujets de forum).
 - `channels.telegram.execApprovals.enabled` : activer Telegram comme client d'approbation exec basé sur le chat pour ce compte.
 - `channels.telegram.execApprovals.approvers` : IDs utilisateur Telegram autorisés à approuver ou refuser les requêtes exec. Facultatif quand `channels.telegram.allowFrom` ou un `channels.telegram.defaultTo` direct identifie déjà le propriétaire.
@@ -1041,7 +1041,7 @@ Référence principale :
 - `channels.telegram.errorPolicy` : `reply | silent` — contrôler le comportement de réponse en cas d'erreur (par défaut : `reply`). Les substitutions par compte/groupe/sujet sont prises en charge.
 - `channels.telegram.errorCooldownMs` : délai minimum en ms entre les réponses d'erreur pour le même chat (par défaut : `60000`). Évite le spam d'erreurs lors des pannes.
 
-- [Référence de configuration - Telegram](/en/gateway/configuration-reference#telegram)
+- [Référence de configuration - Telegram](/fr/gateway/configuration-reference#telegram)
 
 Champs à fort signal spécifiques à Telegram :
 
@@ -1061,9 +1061,9 @@ Champs à fort signal spécifiques à Telegram :
 
 ## Connexes
 
-- [Couplage](/en/channels/pairing)
-- [Groupes](/en/channels/groups)
-- [Sécurité](/en/gateway/security)
-- [Routage de canal](/en/channels/channel-routing)
-- [Routage multi-agent](/en/concepts/multi-agent)
-- [Dépannage](/en/channels/troubleshooting)
+- [Couplage](/fr/channels/pairing)
+- [Groupes](/fr/channels/groups)
+- [Sécurité](/fr/gateway/security)
+- [Routage de canal](/fr/channels/channel-routing)
+- [Routage multi-agent](/fr/concepts/multi-agent)
+- [Dépannage](/fr/channels/troubleshooting)

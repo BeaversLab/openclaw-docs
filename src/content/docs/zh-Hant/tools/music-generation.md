@@ -218,7 +218,7 @@ capabilities: {
 
 - 當您需要模型選擇、供應商故障轉移以及內建的異步任務/狀態流程時，請使用共享供應商支援路徑。
 - 當您需要自訂工作流程圖表或不屬於共享內建音樂功能的供應商時，請使用 ComfyUI 等外掛程式路徑。
-- 如果您正在偵錯 ComfyUI 特定的行為，請參閱 [ComfyUI](/en/providers/comfy)。如果您正在偵錯共享供應商的行為，請從 [Google (Gemini)](/en/providers/google) 或 [MiniMax](/en/providers/minimax) 開始。
+- 如果您正在偵錯 ComfyUI 特定的行為，請參閱 [ComfyUI](/zh-Hant/providers/comfy)。如果您正在偵錯共享供應商的行為，請從 [Google (Gemini)](/zh-Hant/providers/google) 或 [MiniMax](/zh-Hant/providers/minimax) 開始。
 
 ## 即時測試
 
@@ -252,10 +252,10 @@ OPENCLAW_LIVE_TEST=1 COMFY_LIVE_TEST=1 pnpm test:live -- extensions/comfy/comfy.
 
 ## 相關
 
-- [背景任務](/en/automation/tasks) - 針對分離式 `music_generate` 執行的任務追蹤
-- [設定參考](/en/gateway/configuration-reference#agent-defaults) - `musicGenerationModel` 設定
-- [ComfyUI](/en/providers/comfy)
-- [Google (Gemini)](/en/providers/google)
-- [MiniMax](/en/providers/minimax)
-- [Models](/en/concepts/models) - 模型設定與故障轉移
-- [工具概覽](/en/tools)
+- [背景任務](/zh-Hant/automation/tasks) - 針對分離式 `music_generate` 執行的任務追蹤
+- [設定參考](/zh-Hant/gateway/configuration-reference#agent-defaults) - `musicGenerationModel` 設定
+- [ComfyUI](/zh-Hant/providers/comfy)
+- [Google (Gemini)](/zh-Hant/providers/google)
+- [MiniMax](/zh-Hant/providers/minimax)
+- [Models](/zh-Hant/concepts/models) - 模型設定與故障轉移
+- [工具概覽](/zh-Hant/tools)

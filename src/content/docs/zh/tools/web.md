@@ -18,7 +18,7 @@ OpenClaw 还包含用于 X（前 Twitter）帖子的 `x_search` 和
 用于轻量级 URL 获取的 `web_fetch`。在此阶段，`web_fetch` 保持
 本地，而 `web_search` 和 `x_search` 可在底层使用 xAI Responses。
 
-<Info>`web_search` 是一个轻量级 HTTP 工具，而不是浏览器自动化。对于 重 JS 的站点或登录，请使用 [Web Browser](/en/tools/browser)。对于 获取特定 URL，请使用 [Web Fetch](/en/tools/web-fetch)。</Info>
+<Info>`web_search` 是一个轻量级 HTTP 工具，而不是浏览器自动化。对于 重 JS 的站点或登录，请使用 [Web Browser](/zh/tools/browser)。对于 获取特定 URL，请使用 [Web Fetch](/zh/tools/web-fetch)。</Info>
 
 ## 快速开始
 
@@ -54,40 +54,40 @@ OpenClaw 还包含用于 X（前 Twitter）帖子的 `x_search` 和
 ## 选择提供商
 
 <CardGroup cols={2}>
-  <Card title="Brave Search" icon="shield" href="/en/tools/brave-search">
+  <Card title="Brave Search" icon="shield" href="/zh/tools/brave-search">
     带有片段的结构化结果。支持 `llm-context` 模式、国家/语言过滤器。提供免费层级。
   </Card>
-  <Card title="DuckDuckGo" icon="bird" href="/en/tools/duckduckgo-search">
+  <Card title="DuckDuckGo" icon="bird" href="/zh/tools/duckduckgo-search">
     无需密钥的回退选项。不需要 API 密钥。非官方的基于 HTML 的集成。
   </Card>
-  <Card title="Exa" icon="brain" href="/en/tools/exa-search">
+  <Card title="Exa" icon="brain" href="/zh/tools/exa-search">
     神经 + 关键词搜索，附带内容提取（高亮、文本、摘要）。
   </Card>
-  <Card title="Firecrawl" icon="flame" href="/en/tools/firecrawl">
+  <Card title="Firecrawl" icon="flame" href="/zh/tools/firecrawl">
     结构化结果。最适合与 `firecrawl_search` 和 `firecrawl_scrape` 配合以进行深度提取。
   </Card>
-  <Card title="Gemini" icon="sparkles" href="/en/tools/gemini-search">
+  <Card title="Gemini" icon="sparkles" href="/zh/tools/gemini-search">
     通过 Google Search 接地生成包含引用的 AI 综合答案。
   </Card>
-  <Card title="Grok" icon="zap" href="/en/tools/grok-search">
+  <Card title="Grok" icon="zap" href="/zh/tools/grok-search">
     通过 xAI web 接地生成包含引用的 AI 综合答案。
   </Card>
-  <Card title="Kimi" icon="moon" href="/en/tools/kimi-search">
+  <Card title="Kimi" icon="moon" href="/zh/tools/kimi-search">
     通过 Moonshot 网络搜索生成包含引用的 AI 综合答案。
   </Card>
-  <Card title="MiniMax Search" icon="globe" href="/en/tools/minimax-search">
+  <Card title="MiniMax Search" icon="globe" href="/zh/tools/minimax-search">
     通过 MiniMax Coding Plan 搜索 API 获取结构化结果。
   </Card>
-  <Card title="Ollama Web Search" icon="globe" href="/en/tools/ollama-search">
+  <Card title="Ollama Web Search" icon="globe" href="/zh/tools/ollama-search">
     通过配置的 Ollama 主机进行免密钥搜索。需要 `ollama signin`。
   </Card>
-  <Card title="Perplexity" icon="search" href="/en/tools/perplexity-search">
+  <Card title="Perplexity" icon="search" href="/zh/tools/perplexity-search">
     具有内容提取控制和域名过滤功能的结构化结果。
   </Card>
-  <Card title="SearXNG" icon="server" href="/en/tools/searxng-search">
+  <Card title="SearXNG" icon="server" href="/zh/tools/searxng-search">
     自托管的元搜索引擎。无需 API 密钥。聚合了 Google、Bing、DuckDuckGo 等搜索结果。
   </Card>
-  <Card title="Tavily" icon="globe" href="/en/tools/tavily">
+  <Card title="Tavily" icon="globe" href="/zh/tools/tavily">
     具有搜索深度、主题过滤和 `tavily_extract` 用于 URL 提取的结构化结果。
   </Card>
 </CardGroup>
@@ -96,18 +96,18 @@ OpenClaw 还包含用于 X（前 Twitter）帖子的 `x_search` 和
 
 | 提供商                                       | 结果样式           | 筛选器                               | API 密钥                                                         |
 | -------------------------------------------- | ------------------ | ------------------------------------ | ---------------------------------------------------------------- |
-| [Brave](/en/tools/brave-search)              | 结构化摘要         | 国家、语言、时间、`llm-context` 模式 | `BRAVE_API_KEY`                                                  |
-| [DuckDuckGo](/en/tools/duckduckgo-search)    | 结构化摘要         | --                                   | 无（免密钥）                                                     |
-| [Exa](/en/tools/exa-search)                  | 结构化 + 提取      | 神经/关键词模式、日期、内容提取      | `EXA_API_KEY`                                                    |
-| [Firecrawl](/en/tools/firecrawl)             | 结构化摘要         | 通过 `firecrawl_search` 工具         | `FIRECRAWL_API_KEY`                                              |
-| [Gemini](/en/tools/gemini-search)            | AI 合成 + 引用     | --                                   | `GEMINI_API_KEY`                                                 |
-| [Grok](/en/tools/grok-search)                | AI 合成 + 引用     | --                                   | `XAI_API_KEY`                                                    |
-| [Kimi](/en/tools/kimi-search)                | AI 综合摘要 + 引用 | --                                   | `KIMI_API_KEY` / `MOONSHOT_API_KEY`                              |
-| [MiniMax Search](/en/tools/minimax-search)   | 结构化摘要         | 区域 (`global` / `cn`)               | `MINIMAX_CODE_PLAN_KEY` / `MINIMAX_CODING_API_KEY`               |
-| [Ollama Web Search](/en/tools/ollama-search) | 结构化摘要         | --                                   | 默认无；需要 `ollama signin`，可复用 Ollama 提供商的 Bearer 认证 |
-| [Perplexity](/en/tools/perplexity-search)    | 结构化摘要         | 国家、语言、时间、域名、内容限制     | `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY`                      |
-| [SearXNG](/en/tools/searxng-search)          | 结构化摘要         | 类别、语言                           | 无（自托管）                                                     |
-| [Tavily](/en/tools/tavily)                   | 结构化摘要         | 通过 `tavily_search` 工具            | `TAVILY_API_KEY`                                                 |
+| [Brave](/zh/tools/brave-search)              | 结构化摘要         | 国家、语言、时间、`llm-context` 模式 | `BRAVE_API_KEY`                                                  |
+| [DuckDuckGo](/zh/tools/duckduckgo-search)    | 结构化摘要         | --                                   | 无（免密钥）                                                     |
+| [Exa](/zh/tools/exa-search)                  | 结构化 + 提取      | 神经/关键词模式、日期、内容提取      | `EXA_API_KEY`                                                    |
+| [Firecrawl](/zh/tools/firecrawl)             | 结构化摘要         | 通过 `firecrawl_search` 工具         | `FIRECRAWL_API_KEY`                                              |
+| [Gemini](/zh/tools/gemini-search)            | AI 合成 + 引用     | --                                   | `GEMINI_API_KEY`                                                 |
+| [Grok](/zh/tools/grok-search)                | AI 合成 + 引用     | --                                   | `XAI_API_KEY`                                                    |
+| [Kimi](/zh/tools/kimi-search)                | AI 综合摘要 + 引用 | --                                   | `KIMI_API_KEY` / `MOONSHOT_API_KEY`                              |
+| [MiniMax Search](/zh/tools/minimax-search)   | 结构化摘要         | 区域 (`global` / `cn`)               | `MINIMAX_CODE_PLAN_KEY` / `MINIMAX_CODING_API_KEY`               |
+| [Ollama Web Search](/zh/tools/ollama-search) | 结构化摘要         | --                                   | 默认无；需要 `ollama signin`，可复用 Ollama 提供商的 Bearer 认证 |
+| [Perplexity](/zh/tools/perplexity-search)    | 结构化摘要         | 国家、语言、时间、域名、内容限制     | `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY`                      |
+| [SearXNG](/zh/tools/searxng-search)          | 结构化摘要         | 类别、语言                           | 无（自托管）                                                     |
+| [Tavily](/zh/tools/tavily)                   | 结构化摘要         | 通过 `tavily_search` 工具            | `TAVILY_API_KEY`                                                 |
 
 ## 自动检测
 
@@ -249,7 +249,7 @@ OpenClaw 还可以提供使用相同密钥的可选 `x_search` 设置。
     ```
 
     对于 gateway 安装，请将其放入 `~/.openclaw/.env` 中。
-    参见 [Env vars](/en/help/faq#env-vars-and-env-loading)。
+    参见 [Env vars](/zh/help/faq#env-vars-and-env-loading)。
 
   </Tab>
 </Tabs>
@@ -381,7 +381,7 @@ await web_search({
 
 ## 相关
 
-- [Web Fetch](/en/tools/web-fetch) -- 获取 URL 并提取可读内容
-- [Web Browser](/en/tools/browser) -- 针对 JS 重型站点的完整浏览器自动化
-- [Grok Search](/en/tools/grok-search) -- Grok 作为 `web_search` 提供商
-- [Ollama Web Search](/en/tools/ollama-search) -- 通过您的 Ollama 主机进行无密钥网络搜索
+- [Web Fetch](/zh/tools/web-fetch) -- 获取 URL 并提取可读内容
+- [Web Browser](/zh/tools/browser) -- 针对 JS 重型站点的完整浏览器自动化
+- [Grok Search](/zh/tools/grok-search) -- Grok 作为 `web_search` 提供商
+- [Ollama Web Search](/zh/tools/ollama-search) -- 通过您的 Ollama 主机进行无密钥网络搜索

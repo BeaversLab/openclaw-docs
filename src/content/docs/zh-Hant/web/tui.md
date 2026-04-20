@@ -108,7 +108,7 @@ Session 生命週期：
 - `/settings`
 - `/exit`
 
-其他 Gateway 斜線指令 (例如 `/context`) 會轉發至 Gateway 並顯示為系統輸出。請參閱 [斜線指令](/en/tools/slash-commands)。
+其他 Gateway 斜線指令 (例如 `/context`) 會轉發至 Gateway 並顯示為系統輸出。請參閱 [斜線指令](/zh-Hant/tools/slash-commands)。
 
 ## 本地 shell 指令
 
@@ -173,5 +173,5 @@ Session 生命週期：
 
 ## 相關
 
-- [Control UI](/en/web/control-ui) — 網頁式控制介面
-- [CLI Reference](/en/cli) — 完整的 CLI 指令參考
+- [Control UI](/zh-Hant/web/control-ui) — 網頁式控制介面
+- [CLI Reference](/zh-Hant/cli) — 完整的 CLI 指令參考

@@ -160,7 +160,7 @@ MDs:
 - Aprobar vía:
   - `openclaw pairing list bluebubbles`
   - `openclaw pairing approve bluebubbles <CODE>`
-- El emparejamiento es el intercambio de tokens predeterminado. Detalles: [Emparejamiento](/en/channels/pairing)
+- El emparejamiento es el intercambio de tokens predeterminado. Detalles: [Emparejamiento](/es/channels/pairing)
 
 Grupos:
 
@@ -269,7 +269,7 @@ Ejemplo:
 }
 ```
 
-Consulta [ACP Agents](/en/tools/acp-agents) para conocer el comportamiento de vinculación ACP compartida.
+Consulta [ACP Agents](/es/tools/acp-agents) para conocer el comportamiento de vinculación ACP compartida.
 
 ## Indicadores de escritura + confirmaciones de lectura
 
@@ -343,7 +343,7 @@ Use IDs completos para automatizaciones y almacenamiento duraderos:
 - Plantillas: `{{MessageSidFull}}`, `{{ReplyToIdFull}}`
 - Contexto: `MessageSidFull` / `ReplyToIdFull` en cargas útiles entrantes
 
-Consulte [Configuración](/en/gateway/configuration) para las variables de plantilla.
+Consulte [Configuración](/es/gateway/configuration) para las variables de plantilla.
 
 ## Bloquear streaming
 
@@ -367,7 +367,7 @@ Controle si las respuestas se envían como un solo mensaje o se transmiten en bl
 
 ## Referencia de configuración
 
-Configuración completa: [Configuración](/en/gateway/configuration)
+Configuración completa: [Configuración](/es/gateway/configuration)
 
 Opciones del proveedor:
 
@@ -411,7 +411,7 @@ Preferir `chat_guid` para un enrutamiento estable:
 
 - Las solicitudes de webhook se autentican comparando los parámetros de consulta o encabezados `guid`/`password` contra `channels.bluebubbles.password`.
 - Mantenga la contraseña de la API y el punto final del webhook en secreto (trátelos como credenciales).
-- No hay una omisión de localhost para la autenticación por webhook de BlueBubbles. Si proxies el tráfico del webhook, mantén la contraseña de BlueBubbles en la solicitud de extremo a extremo. `gateway.trustedProxies` no reemplaza a `channels.bluebubbles.password` aquí. Consulta [Gateway security](/en/gateway/security#reverse-proxy-configuration).
+- No hay una omisión de localhost para la autenticación por webhook de BlueBubbles. Si proxies el tráfico del webhook, mantén la contraseña de BlueBubbles en la solicitud de extremo a extremo. `gateway.trustedProxies` no reemplaza a `channels.bluebubbles.password` aquí. Consulta [Gateway security](/es/gateway/security#reverse-proxy-configuration).
 - Habilita HTTPS + reglas de firewall en el servidor de BlueBubbles si lo expones fuera de tu LAN.
 
 ## Solución de problemas
@@ -424,12 +424,12 @@ Preferir `chat_guid` para un enrutamiento estable:
 - OpenClaw oculta automáticamente las acciones conocidas como rotas según la versión de macOS del servidor de BlueBubbles. Si editar aún aparece en macOS 26 (Tahoe), desactívalo manualmente con `channels.bluebubbles.actions.edit=false`.
 - Para obtener información de estado/salud: `openclaw status --all` o `openclaw status --deep`.
 
-Para obtener una referencia general del flujo de trabajo del canal, consulta [Canales](/en/channels) y la guía de [Plugins](/en/tools/plugin).
+Para obtener una referencia general del flujo de trabajo del canal, consulta [Canales](/es/channels) y la guía de [Plugins](/es/tools/plugin).
 
 ## Relacionado
 
-- [Descripción general de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — autenticación DM y flujo de emparejamiento
-- [Grupos](/en/channels/groups) — comportamiento del chat grupal y restricción de menciones
-- [Enrutamiento de canal](/en/channels/channel-routing) — enrutamiento de sesión para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento
+- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación DM y flujo de emparejamiento
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y restricción de menciones
+- [Enrutamiento de canal](/es/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

@@ -94,6 +94,6 @@ Les filtres spécifiques au fournisseur ne sont actuellement pas pris en charge.
 
 ## Connexes
 
-- [Vue d'ensemble de la recherche Web](/en/tools/web) -- tous les fournisseurs et la détection automatique
-- [x_search dans la recherche Web](/en/tools/web#x_search) -- recherche X de première classe via xAI
-- [Gemini Search](/en/tools/gemini-search) -- réponses synthétisées par l'IA via le grounding Google
+- [Vue d'ensemble de la recherche Web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
+- [x_search dans la recherche Web](/fr/tools/web#x_search) -- recherche X de première classe via xAI
+- [Gemini Search](/fr/tools/gemini-search) -- réponses synthétisées par l'IA via le grounding Google

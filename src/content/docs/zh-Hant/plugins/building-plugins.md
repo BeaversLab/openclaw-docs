@@ -13,7 +13,7 @@ read_when:
 插件為 OpenClaw 擴充新功能：管道、模型供應商、語音、即時轉錄、即時語音、媒體理解、影像生成、影片生成、網路擷取、網路搜尋、代理工具，或以上項目的任意組合。
 
 您不需要將您的插件添加到 OpenClaw 程式庫中。發布到
-[ClawHub](/en/tools/clawhub) 或 npm，使用者可以使用
+[ClawHub](/zh-Hant/tools/clawhub) 或 npm，使用者可以使用
 `openclaw plugins install <package-name>` 進行安裝。OpenClaw 會先嘗試 ClawHub 並
 自動回退到 npm。
 
@@ -26,10 +26,10 @@ read_when:
 ## 哪種類型的外掛程式？
 
 <CardGroup cols={3}>
-  <Card title="頻道外掛程式" icon="messages-square" href="/en/plugins/sdk-channel-plugins">
+  <Card title="頻道外掛程式" icon="messages-square" href="/zh-Hant/plugins/sdk-channel-plugins">
     將 OpenClaw 連線到訊息平台（Discord、IRC 等）
   </Card>
-  <Card title="提供者外掛程式" icon="cpu" href="/en/plugins/sdk-provider-plugins">
+  <Card title="提供者外掛程式" icon="cpu" href="/zh-Hant/plugins/sdk-provider-plugins">
     新增模型提供者（LLM、Proxy 或自訂端點）
   </Card>
   <Card title="工具 / 掛件外掛" icon="wrench">
@@ -79,7 +79,7 @@ read_when:
     </CodeGroup>
 
     每個插件都需要一個清單，即使沒有設定也一樣。請參閱
-    [Manifest](/en/plugins/manifest) 以了解完整的架構。標準的 ClawHub
+    [Manifest](/zh-Hant/plugins/manifest) 以了解完整的架構。標準的 ClawHub
     發布程式碼片段位於 `docs/snippets/plugin-publish/`。
 
   </Step>
@@ -109,8 +109,8 @@ read_when:
     ```
 
     `definePluginEntry` 是用於非頻道的插件。對於頻道，請使用
-    `defineChannelPluginEntry` — 請參閱 [頻道外掛程式](/en/plugins/sdk-channel-plugins)。
-    如需完整的進入點選項，請參閱 [進入點](/en/plugins/sdk-entrypoints)。
+    `defineChannelPluginEntry` — 請參閱 [頻道外掛程式](/zh-Hant/plugins/sdk-channel-plugins)。
+    如需完整的進入點選項，請參閱 [進入點](/zh-Hant/plugins/sdk-entrypoints)。
 
   </Step>
 
@@ -139,27 +139,27 @@ read_when:
 
 單一外掛程式可以透過 `api` 物件註冊任意數量的功能：
 
-| 功能            | 註冊方法                                         | 詳細指南                                                                         |
-| --------------- | ------------------------------------------------ | -------------------------------------------------------------------------------- |
-| 文字推理 (LLM)  | `api.registerProvider(...)`                      | [提供者外掛程式](/en/plugins/sdk-provider-plugins)                               |
-| CLI 推理後端    | `api.registerCliBackend(...)`                    | [CLI 後端](/en/gateway/cli-backends)                                             |
-| 頻道 / 訊息傳遞 | `api.registerChannel(...)`                       | [頻道外掛程式](/en/plugins/sdk-channel-plugins)                                  |
-| 語音 (TTS/STT)  | `api.registerSpeechProvider(...)`                | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 即時轉錄        | `api.registerRealtimeTranscriptionProvider(...)` | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 即時語音        | `api.registerRealtimeVoiceProvider(...)`         | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 媒體理解        | `api.registerMediaUnderstandingProvider(...)`    | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 影像生成        | `api.registerImageGenerationProvider(...)`       | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 音樂生成        | `api.registerMusicGenerationProvider(...)`       | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 影片生成        | `api.registerVideoGenerationProvider(...)`       | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 網頁擷取        | `api.registerWebFetchProvider(...)`              | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 網頁搜尋        | `api.registerWebSearchProvider(...)`             | [提供商外掛](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)     |
-| 代理工具        | `api.registerTool(...)`                          | 下方                                                                             |
-| 自訂指令        | `api.registerCommand(...)`                       | [進入點](/en/plugins/sdk-entrypoints)                                            |
-| 事件鉤子        | `api.registerHook(...)`                          | [進入點](/en/plugins/sdk-entrypoints)                                            |
-| HTTP 路由       | `api.registerHttpRoute(...)`                     | [內部結構](/en/plugins/architecture#gateway-http-routes)                         |
-| CLI 子指令      | `api.registerCli(...)`                           | [進入點](/en/plugins/sdk-entrypoints)                                            |
+| 功能            | 註冊方法                                         | 詳細指南                                                                              |
+| --------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| 文字推理 (LLM)  | `api.registerProvider(...)`                      | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins)                               |
+| CLI 推理後端    | `api.registerCliBackend(...)`                    | [CLI 後端](/zh-Hant/gateway/cli-backends)                                             |
+| 頻道 / 訊息傳遞 | `api.registerChannel(...)`                       | [頻道外掛程式](/zh-Hant/plugins/sdk-channel-plugins)                                  |
+| 語音 (TTS/STT)  | `api.registerSpeechProvider(...)`                | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 即時轉錄        | `api.registerRealtimeTranscriptionProvider(...)` | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 即時語音        | `api.registerRealtimeVoiceProvider(...)`         | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 媒體理解        | `api.registerMediaUnderstandingProvider(...)`    | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 影像生成        | `api.registerImageGenerationProvider(...)`       | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 音樂生成        | `api.registerMusicGenerationProvider(...)`       | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 影片生成        | `api.registerVideoGenerationProvider(...)`       | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 網頁擷取        | `api.registerWebFetchProvider(...)`              | [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 網頁搜尋        | `api.registerWebSearchProvider(...)`             | [提供商外掛](/zh-Hant/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)     |
+| 代理工具        | `api.registerTool(...)`                          | 下方                                                                                  |
+| 自訂指令        | `api.registerCommand(...)`                       | [進入點](/zh-Hant/plugins/sdk-entrypoints)                                            |
+| 事件鉤子        | `api.registerHook(...)`                          | [進入點](/zh-Hant/plugins/sdk-entrypoints)                                            |
+| HTTP 路由       | `api.registerHttpRoute(...)`                     | [內部結構](/zh-Hant/plugins/architecture#gateway-http-routes)                         |
+| CLI 子指令      | `api.registerCli(...)`                           | [進入點](/zh-Hant/plugins/sdk-entrypoints)                                            |
 
-如需完整的註冊 API，請參閱 [SDK 概覽](/en/plugins/sdk-overview#registration-api)。
+如需完整的註冊 API，請參閱 [SDK 概覽](/zh-Hant/plugins/sdk-overview#registration-api)。
 
 如果您的外掛註冊了自訂的 Gateway RPC 方法，請將它們放在外掛專用的前綴下。核心管理命名空間（`config.*`、
 `exec.approvals.*`、`wizard.*`、`update.*`）保留給系統使用，且總是解析為
@@ -179,7 +179,7 @@ read_when:
 
 如果自訂核准流程需要偵測相同的後援案例，請優先使用 `openclaw/plugin-sdk/error-runtime` 中的 `isApprovalNotFoundError`，而不是手動比對核准過期字串。
 
-詳情請參閱 [SDK Overview hook decision semantics](/en/plugins/sdk-overview#hook-decision-semantics)。
+詳情請參閱 [SDK Overview hook decision semantics](/zh-Hant/plugins/sdk-overview#hook-decision-semantics)。
 
 ## 註冊代理工具
 
@@ -236,7 +236,7 @@ import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
 import { ... } from "openclaw/plugin-sdk";
 ```
 
-完整的子路徑參考請參閱 [SDK Overview](/en/plugins/sdk-overview)。
+完整的子路徑參考請參閱 [SDK Overview](/zh-Hant/plugins/sdk-overview)。
 
 在您的插件內，請使用本地 barrel 檔案（`api.ts`、`runtime-api.ts`）進行內部匯入 — 切勿透過其 SDK 路徑匯入您自己的插件。
 
@@ -272,30 +272,30 @@ import { ... } from "openclaw/plugin-sdk";
 ## 下一步
 
 <CardGroup cols={2}>
-  <Card title="頻道外掛程式" icon="messages-square" href="/en/plugins/sdk-channel-plugins">
+  <Card title="頻道外掛程式" icon="messages-square" href="/zh-Hant/plugins/sdk-channel-plugins">
     建立訊息頻道外掛程式
   </Card>
-  <Card title="Provider Plugins" icon="cpu" href="/en/plugins/sdk-provider-plugins">
+  <Card title="Provider Plugins" icon="cpu" href="/zh-Hant/plugins/sdk-provider-plugins">
     建構模型提供者外掛
   </Card>
-  <Card title="SDK Overview" icon="book-open" href="/en/plugins/sdk-overview">
+  <Card title="SDK Overview" icon="book-open" href="/zh-Hant/plugins/sdk-overview">
     匯入映射與註冊 API 參考
   </Card>
-  <Card title="Runtime Helpers" icon="settings" href="/en/plugins/sdk-runtime">
+  <Card title="Runtime Helpers" icon="settings" href="/zh-Hant/plugins/sdk-runtime">
     透過 api.runtime 使用 TTS、搜尋、子代理程式
   </Card>
-  <Card title="Testing" icon="test-tubes" href="/en/plugins/sdk-testing">
+  <Card title="Testing" icon="test-tubes" href="/zh-Hant/plugins/sdk-testing">
     測試工具與模式
   </Card>
-  <Card title="Plugin Manifest" icon="file-" href="/en/plugins/manifest">
+  <Card title="Plugin Manifest" icon="file-" href="/zh-Hant/plugins/manifest">
     完整的資訊清單架構參考
   </Card>
 </CardGroup>
 
 ## 相關
 
-- [Plugin Architecture](/en/plugins/architecture) — 內部架構深度解析
-- [SDK Overview](/en/plugins/sdk-overview) — 外掛 SDK 參考
-- [Manifest](/en/plugins/manifest) — 外掛資訊清單格式
-- [Channel Plugins](/en/plugins/sdk-channel-plugins) — 建構通道外掛
-- [Provider Plugins](/en/plugins/sdk-provider-plugins) — 建構提供者外掛
+- [Plugin Architecture](/zh-Hant/plugins/architecture) — 內部架構深度解析
+- [SDK Overview](/zh-Hant/plugins/sdk-overview) — 外掛 SDK 參考
+- [Manifest](/zh-Hant/plugins/manifest) — 外掛資訊清單格式
+- [Channel Plugins](/zh-Hant/plugins/sdk-channel-plugins) — 建構通道外掛
+- [Provider Plugins](/zh-Hant/plugins/sdk-provider-plugins) — 建構提供者外掛

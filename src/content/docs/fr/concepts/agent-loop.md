@@ -43,7 +43,7 @@ Dans OpenClaw, une boucle est une exécution unique et sérialisée par session 
 - Les exécutions sont sérialisées par clé de session (voie de session) et éventuellement via une voie globale.
 - Cela évite les conflits d'outils/session et maintient l'historique de la session cohérent.
 - Les canaux de messagerie peuvent choisir des modes de file d'attente (collect/steer/followup) qui alimentent ce système de voies.
-  Voir [Command Queue](/en/concepts/queue).
+  Voir [Command Queue](/fr/concepts/queue).
 
 ## Préparation de la session + de l'espace de travail
 
@@ -56,7 +56,7 @@ Dans OpenClaw, une boucle est une exécution unique et sérialisée par session 
 
 - Le prompt système est construit à partir du prompt de base d'OpenClaw, du prompt des Skills, du contexte d'amorçage et des redéfinitions par exécution.
 - Les limites spécifiques au modèle et les jetons de réserve de compactage sont appliqués.
-- Voir [System prompt](/en/concepts/system-prompt) pour ce que le model voit.
+- Voir [System prompt](/fr/concepts/system-prompt) pour ce que le model voit.
 
 ## Points d'accroche (où vous pouvez intercepter)
 
@@ -71,7 +71,7 @@ OpenClaw possède deux systèmes d'accroche :
   Utilisez-le pour ajouter/supprimer des fichiers de contexte d'amorçage.
 - **Accroches de commande** : `/new`, `/reset`, `/stop` et autres événements de commande (voir la documentation sur les Hooks).
 
-Voir [Hooks](/en/automation/hooks) pour la configuration et les exemples.
+Voir [Hooks](/fr/automation/hooks) pour la configuration et les exemples.
 
 ### Accroches de plugin (cycle de vie de l'agent + Gateway)
 
@@ -99,14 +99,14 @@ Règles de décision des hooks pour les gardes de sortie/tool :
 - `message_sending` : `{ cancel: true }` est terminal et arrête les gestionnaires de priorité inférieure.
 - `message_sending` : `{ cancel: false }` est une opération vide (no-op) et ne supprime pas une annulation précédente.
 
-Voir [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) pour l'API API et les détails d'enregistrement.
+Voir [Plugin hooks](/fr/plugins/architecture#provider-runtime-hooks) pour l'API API et les détails d'enregistrement.
 
 ## Streaming + réponses partielles
 
 - Les deltas de l'assistant sont transmis en continu depuis pi-agent-core et émis sous forme d'événements `assistant`.
 - Le Block streaming peut émettre des réponses partielles soit sur `text_end` soit sur `message_end`.
 - Le streaming de raisonnement peut être émis sous forme d'un flux séparé ou sous forme de réponses de bloc.
-- Voir [Streaming](/en/concepts/streaming) pour le comportement de fragmentation et de réponse en bloc.
+- Voir [Streaming](/fr/concepts/streaming) pour le comportement de fragmentation et de réponse en bloc.
 
 ## Exécution d'outils + outils de messagerie
 
@@ -130,7 +130,7 @@ Voir [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) pour l'API 
 
 - L'auto-compactage émet des événements de flux `compaction` et peut déclencher une nouvelle tentative.
 - Lors d'une nouvelle tentative, les tampons en mémoire et les résumés d'outils sont réinitialisés pour éviter les doublons.
-- Voir [Compaction](/en/concepts/compaction) pour le pipeline de compactage.
+- Voir [Compaction](/fr/concepts/compaction) pour le pipeline de compactage.
 
 ## Flux d'événements (actuellement)
 
@@ -158,8 +158,8 @@ Voir [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) pour l'API 
 
 ## Connexes
 
-- [Tools](/en/tools) — outils d'agent disponibles
-- [Hooks](/en/automation/hooks) — scripts pilotés par les événements déclenchés par le cycle de vie de l'agent
-- [Compaction](/en/concepts/compaction) — comment les longues conversations sont résumées
-- [Exec Approvals](/en/tools/exec-approvals) — portes d'approbation pour les commandes shell
-- [Thinking](/en/tools/thinking) — configuration du niveau de réflexion/raisonnement
+- [Tools](/fr/tools) — outils d'agent disponibles
+- [Hooks](/fr/automation/hooks) — scripts pilotés par les événements déclenchés par le cycle de vie de l'agent
+- [Compaction](/fr/concepts/compaction) — comment les longues conversations sont résumées
+- [Exec Approvals](/fr/tools/exec-approvals) — portes d'approbation pour les commandes shell
+- [Thinking](/fr/tools/thinking) — configuration du niveau de réflexion/raisonnement

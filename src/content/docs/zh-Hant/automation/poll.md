@@ -5,4 +5,4 @@ title: "投票"
 
 # 投票
 
-此頁面已移至 [Message tool](/en/cli/message)。請參閱 [Message tool](/en/cli/message) 以取得投票說明文件。
+此頁面已移至 [Message tool](/zh-Hant/cli/message)。請參閱 [Message tool](/zh-Hant/cli/message) 以取得投票說明文件。

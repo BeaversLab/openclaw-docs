@@ -13,7 +13,7 @@ read_when:
 Reference for test utilities, patterns, and lint enforcement for OpenClaw
 plugins.
 
-<Tip>**尋找測試範例？** 操作指南包含完整的測試範例： [通道外掛程式測試](/en/plugins/sdk-channel-plugins#step-6-test) 和 [提供者外掛程式測試](/en/plugins/sdk-provider-plugins#step-6-test)。</Tip>
+<Tip>**尋找測試範例？** 操作指南包含完整的測試範例： [通道外掛程式測試](/zh-Hant/plugins/sdk-channel-plugins#step-6-test) 和 [提供者外掛程式測試](/zh-Hant/plugins/sdk-provider-plugins#step-6-test)。</Tip>
 
 ## Test utilities
 
@@ -244,7 +244,7 @@ OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test
 
 ## 相關
 
-- [SDK 概觀](/en/plugins/sdk-overview) -- import 約定
-- [SDK 頻道外掛](/en/plugins/sdk-channel-plugins) -- 頻道外掛介面
-- [SDK 提供者外掛](/en/plugins/sdk-provider-plugins) -- 提供者外掛鉤子
-- [建構外掛](/en/plugins/building-plugins) -- 入門指南
+- [SDK 概觀](/zh-Hant/plugins/sdk-overview) -- import 約定
+- [SDK 頻道外掛](/zh-Hant/plugins/sdk-channel-plugins) -- 頻道外掛介面
+- [SDK 提供者外掛](/zh-Hant/plugins/sdk-provider-plugins) -- 提供者外掛鉤子
+- [建構外掛](/zh-Hant/plugins/building-plugins) -- 入門指南

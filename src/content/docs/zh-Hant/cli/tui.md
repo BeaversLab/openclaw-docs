@@ -12,7 +12,7 @@ title: "tui"
 
 相關：
 
-- TUI 指南：[TUI](/en/web/tui)
+- TUI 指南：[TUI](/zh-Hant/web/tui)
 
 注意：
 

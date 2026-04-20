@@ -86,5 +86,5 @@ title: "Hostinger"
 
 ## 後續步驟
 
-- [Channels](/en/channels) -- 連接 Telegram、WhatsApp、Discord 等
-- [Gateway configuration](/en/gateway/configuration) -- 所有組態選項
+- [Channels](/zh-Hant/channels) -- 連接 Telegram、WhatsApp、Discord 等
+- [Gateway configuration](/zh-Hant/gateway/configuration) -- 所有組態選項

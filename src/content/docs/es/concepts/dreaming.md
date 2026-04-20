@@ -215,7 +215,7 @@ Todas las configuraciones residen bajo `plugins.entries.memory-core.config.dream
 La política de fase, los umbrales y el comportamiento de almacenamiento son detalles internos de
 implementación (no configuración visible para el usuario).
 
-Consulte [Referencia de configuración de memoria](/en/reference/memory-config#dreaming)
+Consulte [Referencia de configuración de memoria](/es/reference/memory-config#dreaming)
 para obtener la lista completa de claves.
 
 ## Interfaz de usuario de Dreams
@@ -231,7 +231,7 @@ Cuando está habilitado, la pestaña **Dreams** del Gateway muestra:
 
 ## Relacionado
 
-- [Memoria](/en/concepts/memory)
-- [Búsqueda de memoria](/en/concepts/memory-search)
-- [CLI de memoria](/en/cli/memory)
-- [Referencia de configuración de memoria](/en/reference/memory-config)
+- [Memoria](/es/concepts/memory)
+- [Búsqueda de memoria](/es/concepts/memory-search)
+- [CLI de memoria](/es/cli/memory)
+- [Referencia de configuración de memoria](/es/reference/memory-config)

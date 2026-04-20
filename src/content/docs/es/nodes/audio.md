@@ -132,10 +132,10 @@ Nota: La detección binaria es de mejor esfuerzo en macOS/Linux/Windows; asegúr
 ## Notas y límites
 
 - La autenticación del proveedor sigue el orden estándar de autenticación de modelos (perfiles de autenticación, variables de entorno, `models.providers.*.apiKey`).
-- Detalles de configuración de Groq: [Groq](/en/providers/groq).
+- Detalles de configuración de Groq: [Groq](/es/providers/groq).
 - Deepgram usa `DEEPGRAM_API_KEY` cuando se usa `provider: "deepgram"`.
-- Detalles de configuración de Deepgram: [Deepgram (audio transcription)](/en/providers/deepgram).
-- Detalles de configuración de Mistral: [Mistral](/en/providers/mistral).
+- Detalles de configuración de Deepgram: [Deepgram (audio transcription)](/es/providers/deepgram).
+- Detalles de configuración de Mistral: [Mistral](/es/providers/mistral).
 - Los proveedores de audio pueden anular `baseUrl`, `headers` y `providerOptions` a través de `tools.media.audio`.
 - El límite de tamaño predeterminado es de 20 MB (`tools.media.audio.maxBytes`). El audio de tamaño excesivo se omite para ese modelo y se intenta la siguiente entrada.
 - Los archivos de audio minúsculos/vacíos inferiores a 1024 bytes se omiten antes de la transcripción del proveedor/CLI.

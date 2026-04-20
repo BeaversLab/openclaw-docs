@@ -32,7 +32,7 @@ openclaw plugins install @openclaw/mattermost
 openclaw plugins install ./path/to/local/mattermost-plugin
 ```
 
-詳細資訊：[外掛程式](/en/tools/plugin)
+詳細資訊：[外掛程式](/zh-Hant/tools/plugin)
 
 ## 快速設定
 
@@ -453,8 +453,8 @@ Mattermost 支援在 `channels.mattermost.accounts` 下設定多個帳戶：
 
 ## 相關
 
-- [頻道概覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — 私訊認證與配對流程
-- [群組](/en/channels/groups) — 群組聊天行為與提及控管
-- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
-- [安全性](/en/gateway/security) — 存取模型與強化防護
+- [頻道概覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — 私訊認證與配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及控管
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型與強化防護

@@ -110,7 +110,7 @@ read_when:
 }
 ```
 
-完整的欄位詳細資訊請參閱 [設定參考](/en/gateway/configuration-reference)。
+完整的欄位詳細資訊請參閱 [設定參考](/zh-Hant/gateway/configuration-reference)。
 
 ## 輸出詳細資訊
 
@@ -168,5 +168,5 @@ read_when:
 
 ## 相關
 
-- [工具概覽](/en/tools) — 所有可用的代理程式工具
-- [組態參考](/en/gateway/configuration-reference#agent-defaults) — pdfMaxBytesMb 和 pdfMaxPages 組態
+- [工具概覽](/zh-Hant/tools) — 所有可用的代理程式工具
+- [組態參考](/zh-Hant/gateway/configuration-reference#agent-defaults) — pdfMaxBytesMb 和 pdfMaxPages 組態

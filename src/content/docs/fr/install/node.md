@@ -9,7 +9,7 @@ read_when:
 
 # Node.js
 
-OpenClaw nécessite **Node 22.14 ou une version plus récente**. **Node 24 est l'environnement d'exécution par défaut et recommandé** pour les installations, l'intégration continue et les workflows de publication. Node 22 reste pris en charge via la ligne LTS active. Le [script d'installation](/en/install#alternative-install-methods) détectera et installera Node automatiquement — cette page est destinée aux cas où vous souhaitez configurer Node vous-même et vous assurer que tout est correctement connecté (versions, PATH, installations globales).
+OpenClaw nécessite **Node 22.14 ou une version plus récente**. **Node 24 est l'environnement d'exécution par défaut et recommandé** pour les installations, l'intégration continue et les workflows de publication. Node 22 reste pris en charge via la ligne LTS active. Le [script d'installation](/fr/install#alternative-install-methods) détectera et installera Node automatiquement — cette page est destinée aux cas où vous souhaitez configurer Node vous-même et vous assurer que tout est correctement connecté (versions, PATH, installations globales).
 
 ## Vérifiez votre version
 
@@ -139,6 +139,6 @@ Ajoutez la ligne `export PATH=...` à votre `~/.bashrc` ou `~/.zshrc` pour rendr
 
 ## Connexes
 
-- [Vue d'ensemble de l'installation](/en/install) — toutes les méthodes d'installation
-- [Mise à jour](/en/install/updating) — tenir OpenClaw à jour
-- [Getting Started](/en/start/getting-started) — premiers pas après l'installation
+- [Vue d'ensemble de l'installation](/fr/install) — toutes les méthodes d'installation
+- [Mise à jour](/fr/install/updating) — tenir OpenClaw à jour
+- [Getting Started](/fr/start/getting-started) — premiers pas après l'installation

@@ -75,12 +75,12 @@ OpenClaw 在提示词构建、技能
 ## 插件 + 技能
 
 插件可以通过在 `openclaw.plugin.json` 中列出 `skills` 目录（相对于插件根目录的路径）来附带自己的技能。插件技能在启用插件时加载。目前，这些目录被合并到与 `skills.load.extraDirs` 相同的低优先级路径中，因此同名的捆绑、托管、代理或工作区技能会覆盖它们。
-您可以通过插件配置条目上的 `metadata.openclaw.requires.config` 来设置门控。请参阅 [插件](/en/tools/plugin) 了解发现/配置，并参阅 [工具](/en/tools) 了解这些技能所教授的工具表面。
+您可以通过插件配置条目上的 `metadata.openclaw.requires.config` 来设置门控。请参阅 [插件](/zh/tools/plugin) 了解发现/配置，并参阅 [工具](/zh/tools) 了解这些技能所教授的工具表面。
 
 ## ClawHub (安装 + 同步)
 
 ClawHub 是 OpenClaw 的公共技能注册表。在 [https://clawhub.ai](https://clawhub.ai) 浏览。使用原生 `openclaw skills` 命令来发现/安装/更新技能，或者在需要发布/同步工作流时使用单独的 `clawhub` CLI。
-完整指南：[ClawHub](/en/tools/clawhub)。
+完整指南：[ClawHub](/zh/tools/clawhub)。
 
 常见流程：
 
@@ -98,12 +98,12 @@ OpenClaw 会在下一个 会话 中将其作为 `<workspace>/skills` 拾取。
 ## 安全说明
 
 - 将第三方技能视为 **不受信任的代码**。在启用前请阅读它们。
-- 对于不受信任的输入和风险工具，首选沙箱隔离运行。请参阅 [沙箱隔离](/en/gateway/sandboxing)。
+- 对于不受信任的输入和风险工具，首选沙箱隔离运行。请参阅 [沙箱隔离](/zh/gateway/sandboxing)。
 - 工作区和额外目录的技能发现仅接受解析后的实际路径保留在配置根目录内的技能根目录和 `SKILL.md` 文件。
 - Gateway(网关) 支持的技能依赖安装（`skills.install`、新手引导和 Skills 设置 UI）在执行安装程序元数据之前会运行内置的危险代码扫描器。除非调用者显式设置危险覆盖，否则 `critical` 发现默认会阻止；可疑发现仅会发出警告。
 - `openclaw skills install <slug>` 不同：它将 ClawHub 技能文件夹下载到工作区中，并且不使用上述的安装程序元数据路径。
 - `skills.entries.*.env` 和 `skills.entries.*.apiKey` 会将机密信息注入到该 Agent 轮次的 **宿主** 进程（而非沙箱）中。请勿在提示和日志中包含机密信息。
-- 有关更广泛的威胁模型和检查清单，请参阅 [安全](/en/gateway/security)。
+- 有关更广泛的威胁模型和检查清单，请参阅 [安全](/zh/gateway/security)。
 
 ## 格式 (AgentSkills + Pi 兼容)
 
@@ -302,7 +302,7 @@ OpenClaw 在安装（npm 包或 OpenClaw.app）过程中附带了一组作为 **
 
 ## Config reference
 
-有关完整的配置架构，请参阅 [Skills config](/en/tools/skills-config)。
+有关完整的配置架构，请参阅 [Skills config](/zh/tools/skills-config)。
 
 ## 正在寻找更多 Skills？
 
@@ -312,7 +312,7 @@ OpenClaw 在安装（npm 包或 OpenClaw.app）过程中附带了一组作为 **
 
 ## 相关
 
-- [Creating Skills](/en/tools/creating-skills) — 构建自定义 Skills
-- [Skills Config](/en/tools/skills-config) — Skills 配置参考
-- [Slash Commands](/en/tools/slash-commands) — 所有可用的斜杠命令
-- [Plugins](/en/tools/plugin) — 插件系统概述
+- [Creating Skills](/zh/tools/creating-skills) — 构建自定义 Skills
+- [Skills Config](/zh/tools/skills-config) — Skills 配置参考
+- [Slash Commands](/zh/tools/slash-commands) — 所有可用的斜杠命令
+- [Plugins](/zh/tools/plugin) — 插件系统概述

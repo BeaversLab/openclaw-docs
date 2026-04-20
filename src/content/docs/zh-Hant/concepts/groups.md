@@ -64,7 +64,7 @@ otherwise -> reply
 - **DM**：完整工具（主機）
 - **群組**：沙盒 + 受限工具（Docker）
 
-> 如果您需要真正分離的工作區/人格（「個人」和「公開」絕不能混合），請使用第二個代理 + 綁定。請參閱[多代理路由](/en/concepts/multi-agent)。
+> 如果您需要真正分離的工作區/人格（「個人」和「公開」絕不能混合），請使用第二個代理 + 綁定。請參閱[多代理路由](/zh-Hant/concepts/multi-agent)。
 
 範例（DM 在主機上，群組在沙盒內 + 僅限訊息傳遞工具）：
 
@@ -115,9 +115,9 @@ otherwise -> reply
 
 相關：
 
-- 配置金鑰與預設值：[Gateway 配置](/en/gateway/configuration#agentsdefaultssandbox)
-- 偵錯工具為何被封鎖：[沙盒 vs 工具政策 vs 提升權限](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
-- 綁定掛載細節：[沙盒機制](/en/gateway/sandboxing#custom-bind-mounts)
+- 配置金鑰與預設值：[Gateway 配置](/zh-Hant/gateway/configuration#agentsdefaultssandbox)
+- 偵錯工具為何被封鎖：[沙盒 vs 工具政策 vs 提升權限](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated)
+- 綁定掛載細節：[沙盒機制](/zh-Hant/gateway/sandboxing#custom-bind-mounts)
 
 ## 顯示標籤
 
@@ -370,4 +370,4 @@ otherwise -> reply
 
 ## WhatsApp 詳情
 
-請參閱 [群組訊息](/en/concepts/group-messages) 以了解 WhatsApp 專屬行為（歷史記錄注入、提及處理細節）。
+請參閱 [群組訊息](/zh-Hant/concepts/group-messages) 以了解 WhatsApp 專屬行為（歷史記錄注入、提及處理細節）。

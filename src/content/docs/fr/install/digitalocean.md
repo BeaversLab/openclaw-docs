@@ -118,6 +118,6 @@ Exécutez une passerelle OpenClaw persistante sur un Droplet Gateway.
 
 ## Étapes suivantes
 
-- [Canaux](/en/channels) -- connectez Telegram, WhatsApp, Discord, et plus
-- [Configuration du Gateway](/en/gateway/configuration) -- toutes les options de configuration
-- [Mises à jour](/en/install/updating) -- garder OpenClaw à jour
+- [Canaux](/fr/channels) -- connectez Telegram, WhatsApp, Discord, et plus
+- [Configuration du Gateway](/fr/gateway/configuration) -- toutes les options de configuration
+- [Mises à jour](/fr/install/updating) -- garder OpenClaw à jour

@@ -11,7 +11,7 @@ sidebarTitle: "入門參考"
 # 入門參考
 
 這是 `openclaw onboard` 的完整參考資料。
-如需高層次的概覽，請參閱 [Onboarding (CLI)](/en/start/wizard)。
+如需高層次的概覽，請參閱 [Onboarding (CLI)](/zh-Hant/start/wizard)。
 
 ## 流程詳細資訊（本機模式）
 
@@ -41,30 +41,30 @@ sidebarTitle: "入門參考"
     - **xAI (Grok) API 金鑰**：提示輸入 `XAI_API_KEY` 並將 xAI 設定為模型提供者。
     - **OpenCode**：提示輸入 `OPENCODE_API_KEY` (或 `OPENCODE_ZEN_API_KEY`，在 https://opencode.ai/auth 取得) 並讓您選擇 Zen 或 Go 目錄。
     - **Ollama**：首先提供 **Cloud + Local**、**Cloud only** 或 **Local only** 選項。`Cloud only` 提示輸入 `OLLAMA_API_KEY` 並使用 `https://ollama.com`；主機支援的模式會提示輸入 Ollama 基礎 URL，探索可用的模型，並在需要時自動拉選取的本地模型；`Cloud + Local` 還會檢查該 Ollama 主機是否已登入以進行雲端存取。
-    - 更多詳情：[Ollama](/en/providers/ollama)
+    - 更多詳情：[Ollama](/zh-Hant/providers/ollama)
     - **API 金鑰**：為您儲存金鑰。
     - **Vercel AI Gateway (多模型代理)**：提示輸入 `AI_GATEWAY_API_KEY`。
-    - 更多詳情：[Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+    - 更多詳情：[Vercel AI Gateway](/zh-Hant/providers/vercel-ai-gateway)
     - **Cloudflare AI Gateway**：提示輸入 Account ID、Gateway ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
-    - 更多詳情：[Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
+    - 更多詳情：[Cloudflare AI Gateway](/zh-Hant/providers/cloudflare-ai-gateway)
     - **MiniMax**：配置會自動寫入；託管的預設值是 `MiniMax-M2.7`。
       API 金鑰設定使用 `minimax/...`，而 OAuth 設定使用
       `minimax-portal/...`。
-    - 更多詳情：[MiniMax](/en/providers/minimax)
+    - 更多詳情：[MiniMax](/zh-Hant/providers/minimax)
     - **StepFun**：會針對中國或全球端點上的 StepFun standard 或 Step Plan 自動寫入配置。
     - Standard 目前包括 `step-3.5-flash`，而 Step Plan 也包括 `step-3.5-flash-2603`。
-    - 更多詳情：[StepFun](/en/providers/stepfun)
+    - 更多詳情：[StepFun](/zh-Hant/providers/stepfun)
     - **Synthetic (Anthropic-compatible)**：提示輸入 `SYNTHETIC_API_KEY`。
-    - 更多詳情：[Synthetic](/en/providers/synthetic)
+    - 更多詳情：[Synthetic](/zh-Hant/providers/synthetic)
     - **Moonshot (Kimi K2)**：配置會自動寫入。
     - **Kimi Coding**：配置會自動寫入。
-    - 更多詳情：[Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+    - 更多詳情：[Moonshot AI (Kimi + Kimi Coding)](/zh-Hant/providers/moonshot)
     - **跳過**：尚未配置身份驗證。
     - 從檢測到的選項中選擇預設模型 (或手動輸入提供者/模型)。為了獲得最佳品質和較低的提示注入風險，請選擇您提供者堆疊中可用的最強大的最新一代模型。
     - Onboarding 會執行模型檢查，如果配置的模型未知或缺少身份驗證，則會發出警告。
     - API 金鑰儲存模式預設為純文本 auth-profile 值。使用 `--secret-input-mode ref` 來儲存 env 支援的引用 (例如 `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)。
     - Auth profiles 存在於 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 中 (API 金鑰 + OAuth)。`~/.openclaw/credentials/oauth.json` 僅供舊版匯入。
-    - 更多詳情：[/concepts/oauth](/en/concepts/oauth)
+    - 更多詳情：[/concepts/oauth](/zh-Hant/concepts/oauth)
     <Note>
     Headless/server 提示：在具有瀏覽器的機器上完成 OAuth，然後將
     該代理程式的 `auth-profiles.json` (例如
@@ -76,7 +76,7 @@ sidebarTitle: "入門參考"
   <Step title="Workspace">
     - 預設 `~/.openclaw/workspace` （可配置）。
     - 為代理程式啟動程序提供所需的工作區檔案。
-    - 完整的工作區佈局 + 備份指南：[代理程式工作區](/en/concepts/agent-workspace)
+    - 完整的工作區佈局 + 備份指南：[代理程式工作區](/zh-Hant/concepts/agent-workspace)
   </Step>
   <Step title="Gateway">
     - 連接埠、綁定、驗證模式、Tailscale 暴露。
@@ -94,14 +94,14 @@ sidebarTitle: "入門參考"
     - 非回環綁定仍需要驗證。
   </Step>
   <Step title="頻道">
-    - [WhatsApp](/en/channels/whatsapp)：選用性的 QR 登入。
-    - [Telegram](/en/channels/telegram)：bot token。
-    - [Discord](/en/channels/discord)：bot token。
-    - [Google Chat](/en/channels/googlechat)：服務帳號 JSON + webhook 受眾。
-    - [Mattermost](/en/channels/mattermost) (plugin)：bot token + 基礎 URL。
-    - [Signal](/en/channels/signal)：選用性的 `signal-cli` 安裝 + 帳號設定。
-    - [BlueBubbles](/en/channels/bluebubbles)：**iMessage 推薦使用**；伺服器 URL + 密碼 + webhook。
-    - [iMessage](/en/channels/imessage)：舊版 `imsg` CLI 路徑 + DB 存取權限。
+    - [WhatsApp](/zh-Hant/channels/whatsapp)：選用性的 QR 登入。
+    - [Telegram](/zh-Hant/channels/telegram)：bot token。
+    - [Discord](/zh-Hant/channels/discord)：bot token。
+    - [Google Chat](/zh-Hant/channels/googlechat)：服務帳號 JSON + webhook 受眾。
+    - [Mattermost](/zh-Hant/channels/mattermost) (plugin)：bot token + 基礎 URL。
+    - [Signal](/zh-Hant/channels/signal)：選用性的 `signal-cli` 安裝 + 帳號設定。
+    - [BlueBubbles](/zh-Hant/channels/bluebubbles)：**iMessage 推薦使用**；伺服器 URL + 密碼 + webhook。
+    - [iMessage](/zh-Hant/channels/imessage)：舊版 `imsg` CLI 路徑 + DB 存取權限。
     - DM 安全性：預設為配對。首則 DM 會發送代碼；透過 `openclaw pairing approve <channel> <code>` 核准或使用允許清單。
   </Step>
   <Step title="網路搜尋">
@@ -170,7 +170,7 @@ openclaw onboard --non-interactive \
 
 <Note>`--json` does **not** imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for scripts.</Note>
 
-供應商特定的指令範例位於 [CLI 自動化](/en/start/wizard-cli-automation#provider-specific-examples)。
+供應商特定的指令範例位於 [CLI 自動化](/zh-Hant/start/wizard-cli-automation#provider-specific-examples)。
 請使用此參考頁面了解旗標語義和步驟順序。
 
 ### 新增代理（非互動）
@@ -211,7 +211,7 @@ Gateway 透過 RPC (`wizard.start`, `wizard.next`, `wizard.cancel`, `wizard.stat
 - `agents.defaults.model` / `models.providers` (若選擇 Minimax)
 - `tools.profile` (若未設定，本地上架預設為 `"coding"`；現有的明確值會被保留)
 - `gateway.*` (mode, bind, auth, tailscale)
-- `session.dmScope` (行為詳情：[CLI 設定參考](/en/start/wizard-cli-reference#outputs-and-internals))
+- `session.dmScope` (行為詳情：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference#outputs-and-internals))
 - `channels.telegram.botToken`, `channels.discord.token`, `channels.matrix.*`, `channels.signal.*`, `channels.imessage.*`
 - 當您在提示期間選擇加入時的頻道允許清單（Slack/Discord/Matrix/Microsoft Teams）（名稱會盡可能解析為 ID）。
 - `skills.install.nodeManager`
@@ -233,8 +233,8 @@ WhatsApp 憑證位於 `~/.openclaw/credentials/whatsapp/<accountId>/` 下。
 
 ## 相關文件
 
-- 上架概述：[上架 (CLI)](/en/start/wizard)
-- macOS 應用程式上架：[上架](/en/start/onboarding)
-- 設定參考：[Gateway configuration](/en/gateway/configuration)
-- 提供者：[WhatsApp](/en/channels/whatsapp)、[Telegram](/en/channels/telegram)、[Discord](/en/channels/discord)、[Google Chat](/en/channels/googlechat)、[Signal](/en/channels/signal)、[BlueBubbles](/en/channels/bluebubbles) (iMessage)、[iMessage](/en/channels/imessage) (舊版)
-- 技能：[Skills](/en/tools/skills)、[Skills config](/en/tools/skills-config)
+- 上架概述：[上架 (CLI)](/zh-Hant/start/wizard)
+- macOS 應用程式上架：[上架](/zh-Hant/start/onboarding)
+- 設定參考：[Gateway configuration](/zh-Hant/gateway/configuration)
+- 提供者：[WhatsApp](/zh-Hant/channels/whatsapp)、[Telegram](/zh-Hant/channels/telegram)、[Discord](/zh-Hant/channels/discord)、[Google Chat](/zh-Hant/channels/googlechat)、[Signal](/zh-Hant/channels/signal)、[BlueBubbles](/zh-Hant/channels/bluebubbles) (iMessage)、[iMessage](/zh-Hant/channels/imessage) (舊版)
+- 技能：[Skills](/zh-Hant/tools/skills)、[Skills config](/zh-Hant/tools/skills-config)

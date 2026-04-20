@@ -61,9 +61,9 @@ Fichier d'importation hérité uniquement (toujours pris en charge, mais pas le 
 
 - `~/.openclaw/credentials/oauth.json` (importé dans `auth-profiles.json` à la première utilisation)
 
-Tout ce qui précède respecte également `$OPENCLAW_STATE_DIR` (remplacement du répertoire d'état). Référence complète : [/gateway/configuration](/en/gateway/configuration-reference#auth-storage)
+Tout ce qui précède respecte également `$OPENCLAW_STATE_DIR` (remplacement du répertoire d'état). Référence complète : [/gateway/configuration](/fr/gateway/configuration-reference#auth-storage)
 
-Pour les références de secrets statiques et le comportement d'activation des instantanés d'exécution, consultez la section [Gestion des secrets](/en/gateway/secrets).
+Pour les références de secrets statiques et le comportement d'activation des instantanés d'exécution, consultez la section [Gestion des secrets](/fr/gateway/secrets).
 
 ## Compatibilité des jetons hérités Anthropic
 
@@ -72,7 +72,7 @@ La documentation publique de Claude Code d'Anthropic indique que l'utilisation d
 
 Pour la documentation actuelle du plan direct-Claude-Code d'Anthropic, consultez [Utiliser Claude Code avec votre plan Pro ou Max](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan) et [Utiliser Claude Code avec votre plan Team ou Enterprise](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
-Si vous souhaitez d'autres options de style abonnement dans OpenClaw, consultez [OpenAI Codex](/en/providers/openai), [Plan de codage cloud Qwen](/en/providers/qwen), [Plan de codage MiniMax](/en/providers/minimax) et [Plan de codage Z.AI / GLM](/en/providers/glm).
+Si vous souhaitez d'autres options de style abonnement dans OpenClaw, consultez [OpenAI Codex](/fr/providers/openai), [Plan de codage cloud Qwen](/fr/providers/qwen), [Plan de codage MiniMax](/fr/providers/minimax) et [Plan de codage Z.AI / GLM](/fr/providers/glm).
 
 </Warning>
 
@@ -157,11 +157,11 @@ Comment voir quels ID de profil existent :
 
 Documentation connexe :
 
-- [/concepts/model-failover](/en/concepts/model-failover) (règles de rotation + temps de recharge)
-- [/tools/slash-commands](/en/tools/slash-commands) (interface de commande)
+- [/concepts/model-failover](/fr/concepts/model-failover) (règles de rotation + temps de recharge)
+- [/tools/slash-commands](/fr/tools/slash-commands) (interface de commande)
 
 ## Connexes
 
-- [Authentication](/en/gateway/authentication) — aperçu de l'authentification du fournisseur de modèle
-- [Secrets](/en/gateway/secrets) — stockage des informations d'identification et SecretRef
-- [Configuration Reference](/en/gateway/configuration-reference#auth-storage) — clés de configuration d'authentification
+- [Authentication](/fr/gateway/authentication) — aperçu de l'authentification du fournisseur de modèle
+- [Secrets](/fr/gateway/secrets) — stockage des informations d'identification et SecretRef
+- [Configuration Reference](/fr/gateway/configuration-reference#auth-storage) — clés de configuration d'authentification

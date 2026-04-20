@@ -206,18 +206,18 @@ Elija su superficie de proveedor y siga los pasos de configuración.
   </Accordion>
 </AccordionGroup>
 
-<Note>Para obtener una visión general más amplia del proveedor, consulte [Proveedores de modelos](/en/concepts/model-providers).</Note>
+<Note>Para obtener una visión general más amplia del proveedor, consulte [Proveedores de modelos](/es/concepts/model-providers).</Note>
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Proveedores de modelos" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Proveedores de modelos" href="/es/concepts/model-providers" icon="layers">
     Resumen de todos los proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
     Esquema de configuración completo para proveedores, modelos y complementos.
   </Card>
-  <Card title="Selección de modelo" href="/en/concepts/models" icon="brain">
+  <Card title="Selección de modelo" href="/es/concepts/models" icon="brain">
     Cómo elegir y configurar modelos.
   </Card>
   <Card title="Plataforma StepFun" href="https://platform.stepfun.com" icon="globe">

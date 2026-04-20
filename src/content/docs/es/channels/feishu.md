@@ -355,7 +355,7 @@ Consulte [Obtener IDs de grupo/usuario](#get-groupuser-ids) para obtener consejo
 
 ## Referencia de configuración
 
-Configuración completa: [Configuración de la puerta de enlace](/en/gateway/configuration)
+Configuración completa: [Configuración de la puerta de enlace](/es/gateway/configuration)
 
 | Ajuste                                            | Descripción                                         | Predeterminado   |
 | ------------------------------------------------- | --------------------------------------------------- | ---------------- |
@@ -419,8 +419,8 @@ Configuración completa: [Configuración de la puerta de enlace](/en/gateway/con
 
 ## Relacionado
 
-- [Resumen de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento por mensaje directo
-- [Grupos](/en/channels/groups) — comportamiento del chat grupal y restricción de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento
+- [Resumen de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — flujo de autenticación y emparejamiento por mensaje directo
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y restricción de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

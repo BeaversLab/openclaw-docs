@@ -32,7 +32,7 @@ Repositorio local (cuando se ejecuta desde un repositorio git):
 openclaw plugins install ./path/to/local/mattermost-plugin
 ```
 
-Detalles: [Plugins](/en/tools/plugin)
+Detalles: [Plugins](/es/tools/plugin)
 
 ## Configuración rápida
 
@@ -462,8 +462,8 @@ Mattermost admite múltiples cuentas bajo `channels.mattermost.accounts`:
 
 ## Relacionado
 
-- [Información general de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — autenticación de MD y flujo de emparejamiento
-- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y control de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento
+- [Información general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Grupos](/es/channels/groups) — comportamiento del chat de grupo y control de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

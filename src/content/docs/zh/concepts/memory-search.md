@@ -103,14 +103,14 @@ flowchart LR
 
 使用 Gemini Embedding 2，您可以将图像和音频文件与 Markdown
 一起索引。搜索查询仍然是文本，但它们会匹配视觉和音频
-内容。有关设置，请参阅 [Memory configuration reference](/en/reference/memory-config)。
+内容。有关设置，请参阅 [Memory configuration reference](/zh/reference/memory-config)。
 
 ## 会话记忆搜索
 
 您可以选择性地索引会话记录，以便 `memory_search` 能够
 回忆起之前的对话。这是通过
 `memorySearch.experimental.sessionMemory` 选择启用的。有关详细信息，请参阅
-[configuration reference](/en/reference/memory-config)。
+[configuration reference](/zh/reference/memory-config)。
 
 ## 故障排除
 
@@ -125,6 +125,6 @@ flowchart LR
 
 ## 延伸阅读
 
-- [Active Memory](/en/concepts/active-memory) -- 用于交互式聊天会话的子代理记忆
-- [Memory](/en/concepts/memory) -- 文件布局、后端、工具
-- [Memory configuration reference](/en/reference/memory-config) -- 所有配置选项
+- [Active Memory](/zh/concepts/active-memory) -- 用于交互式聊天会话的子代理记忆
+- [Memory](/zh/concepts/memory) -- 文件布局、后端、工具
+- [Memory configuration reference](/zh/reference/memory-config) -- 所有配置选项

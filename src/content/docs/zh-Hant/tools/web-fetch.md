@@ -14,7 +14,7 @@ sidebarTitle: "網頁擷取"
 （HTML 轉 markdown 或純文字）。它**不會**執行 JavaScript。
 
 對於重度依賴 JS 的網站或需登入保護的頁面，請改用
-[Web Browser](/en/tools/browser)。
+[Web Browser](/zh-Hant/tools/browser)。
 
 ## 快速開始
 
@@ -68,7 +68,7 @@ await web_fetch({ url: "https://example.com/article" });
 ## Firecrawl 後備
 
 如果 Readability 提取失敗，`web_fetch` 可以回退到
-[Firecrawl](/en/tools/firecrawl) 以繞過機器人偵測並獲得更好的提取效果：
+[Firecrawl](/zh-Hant/tools/firecrawl) 以繞過機器人偵測並獲得更好的提取效果：
 
 ```json5
 {
@@ -120,7 +120,7 @@ await web_fetch({ url: "https://example.com/article" });
   的回應會被截斷並顯示警告
 - 私人/內部主機名稱會被封鎖
 - 重新導向會受到 `maxRedirects` 檢查與限制
-- `web_fetch` 為盡力而為 -- 某些網站需要 [Web Browser](/en/tools/browser)
+- `web_fetch` 為盡力而為 -- 某些網站需要 [Web Browser](/zh-Hant/tools/browser)
 
 ## 工具設定檔
 
@@ -137,6 +137,6 @@ await web_fetch({ url: "https://example.com/article" });
 
 ## 相關
 
-- [Web Search](/en/tools/web) -- 使用多個提供者搜尋網路
-- [Web Browser](/en/tools/browser) -- 針對重度 JS 網站的完整瀏覽器自動化
-- [Firecrawl](/en/tools/firecrawl) -- Firecrawl 搜尋與刮取工具
+- [Web Search](/zh-Hant/tools/web) -- 使用多個提供者搜尋網路
+- [Web Browser](/zh-Hant/tools/browser) -- 針對重度 JS 網站的完整瀏覽器自動化
+- [Firecrawl](/zh-Hant/tools/firecrawl) -- Firecrawl 搜尋與刮取工具

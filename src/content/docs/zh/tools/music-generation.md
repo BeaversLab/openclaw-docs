@@ -219,7 +219,7 @@ capabilities: {
 
 - 当您需要模型选择、提供商故障转移以及内置的异步任务/状态流程时，请使用共享提供商支持路径。
 - 当您需要自定义工作流图或不属于共享捆绑音乐功能一部分的提供商时，请使用 ComfyUI 等插件路径。
-- 如果您正在调试 ComfyUI 特定的行为，请参阅 [ComfyUI](/en/providers/comfy)。如果您正在调试共享提供商行为，请从 [Google (Gemini)](/en/providers/google) 或 [MiniMax](/en/providers/minimax) 开始。
+- 如果您正在调试 ComfyUI 特定的行为，请参阅 [ComfyUI](/zh/providers/comfy)。如果您正在调试共享提供商行为，请从 [Google (Gemini)](/zh/providers/google) 或 [MiniMax](/zh/providers/minimax) 开始。
 
 ## 实时测试
 
@@ -253,10 +253,10 @@ OPENCLAW_LIVE_TEST=1 COMFY_LIVE_TEST=1 pnpm test:live -- extensions/comfy/comfy.
 
 ## 相关
 
-- [后台任务](/en/automation/tasks) - 针对分离式 `music_generate` 运行的任务跟踪
-- [配置参考](/en/gateway/configuration-reference#agent-defaults) - `musicGenerationModel` 配置
-- [ComfyUI](/en/providers/comfy)
-- [Google (Gemini)](/en/providers/google)
-- [MiniMax](/en/providers/minimax)
-- [模型](/en/concepts/models) - 模型配置和故障转移
-- [工具概述](/en/tools)
+- [后台任务](/zh/automation/tasks) - 针对分离式 `music_generate` 运行的任务跟踪
+- [配置参考](/zh/gateway/configuration-reference#agent-defaults) - `musicGenerationModel` 配置
+- [ComfyUI](/zh/providers/comfy)
+- [Google (Gemini)](/zh/providers/google)
+- [MiniMax](/zh/providers/minimax)
+- [模型](/zh/concepts/models) - 模型配置和故障转移
+- [工具概述](/zh/tools)

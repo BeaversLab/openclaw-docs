@@ -30,5 +30,5 @@ sidebarTitle: "引導"
 
 ## 相關文件
 
-- macOS 應用程式入職：[入職](/en/start/onboarding)
-- 工作區佈局：[代理程式工作區](/en/concepts/agent-workspace)
+- macOS 應用程式入職：[入職](/zh-Hant/start/onboarding)
+- 工作區佈局：[代理程式工作區](/zh-Hant/concepts/agent-workspace)

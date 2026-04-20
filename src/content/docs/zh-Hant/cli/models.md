@@ -12,8 +12,8 @@ Model discovery, scanning, and configuration (default model, fallbacks, auth pro
 
 相關：
 
-- 供應商 + 模型：[模型](/en/providers/models)
-- 供應商驗證設定：[入門指南](/en/start/getting-started)
+- 供應商 + 模型：[模型](/zh-Hant/providers/models)
+- 供應商驗證設定：[入門指南](/zh-Hant/start/getting-started)
 
 ## 常用指令
 

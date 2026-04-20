@@ -463,4 +463,4 @@ Doctor persiste tous les changements de configuration et applique un tampon de m
 
 Doctor suggère un système de mémoire d'espace de travail s'il est manquant et imprime un conseil de sauvegarde si l'espace de travail n'est pas déjà sous git.
 
-Voir [/concepts/agent-workspace](/en/concepts/agent-workspace) pour un guide complet sur la structure de l'espace de travail et la sauvegarde git (GitHub ou GitLab privé recommandé).
+Voir [/concepts/agent-workspace](/fr/concepts/agent-workspace) pour un guide complet sur la structure de l'espace de travail et la sauvegarde git (GitHub ou GitLab privé recommandé).

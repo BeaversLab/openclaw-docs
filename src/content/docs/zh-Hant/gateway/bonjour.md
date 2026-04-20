@@ -174,5 +174,5 @@ Bonjour/DNS‑SD 經常會將服務實例名稱中的位元組轉義為十進制
 
 ## 相關文件
 
-- 探索原則與傳輸選擇：[Discovery](/en/gateway/discovery)
-- 節點配對 + 核准：[Gateway pairing](/en/gateway/pairing)
+- 探索原則與傳輸選擇：[Discovery](/zh-Hant/gateway/discovery)
+- 節點配對 + 核准：[Gateway pairing](/zh-Hant/gateway/pairing)

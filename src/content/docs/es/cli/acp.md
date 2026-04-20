@@ -17,7 +17,7 @@ a través de WebSocket. Mantiene las sesiones de ACP mapeadas a las claves de se
 Se centra en el enrutamiento de sesiones, la entrega de mensajes y las actualizaciones básicas de transmisión.
 
 Si desea que un cliente MCP externo se comunique directamente con las conversaciones del canal de OpenClaw en lugar de alojar una sesión de arnés de ACP, utilice
-[`openclaw mcp serve`](/en/cli/mcp) en su lugar.
+[`openclaw mcp serve`](/es/cli/mcp) en su lugar.
 
 ## Lo que esto no es
 
@@ -29,12 +29,12 @@ A menudo se confunde esta página con sesiones de arnés de ACP.
 - un IDE o cliente ACP se conecta a OpenClaw
 - OpenClaw reenvía ese trabajo a una sesión de Gateway
 
-Esto es diferente de los [Agentes ACP](/en/tools/acp-agents), donde OpenClaw ejecuta un arnés externo como Codex o Claude Code a través de `acpx`.
+Esto es diferente de los [Agentes ACP](/es/tools/acp-agents), donde OpenClaw ejecuta un arnés externo como Codex o Claude Code a través de `acpx`.
 
 Regla rápida:
 
 - el/editor cliente quiere hablar ACP con OpenClaw: use `openclaw acp`
-- OpenClaw debería iniciar Codex/Claude/Gemini como un arnés ACP: use `/acp spawn` y [ACP Agents](/en/tools/acp-agents)
+- OpenClaw debería iniciar Codex/Claude/Gemini como un arnés ACP: use `/acp spawn` y [ACP Agents](/es/tools/acp-agents)
 
 ## Matriz de compatibilidad
 
@@ -153,7 +153,7 @@ claro en lugar de ignorarlos silenciosamente.
 
 Si quieres que las sesiones respaldadas por ACPX vean las herramientas del plugin de OpenClaw, habilita el
 puente de plugin ACPX del lado del gateway en lugar de intentar pasar `mcpServers` por sesión.
-Consulta [ACP Agents](/en/tools/acp-agents#plugin-tools-mcp-bridge).
+Consulta [ACP Agents](/es/tools/acp-agents#plugin-tools-mcp-bridge).
 
 ## Uso desde `acpx` (Codex, Claude, otros clientes ACP)
 
@@ -256,7 +256,7 @@ Si tu cliente ACP admite metadatos, puedes anularlos por sesión:
 }
 ```
 
-Más información sobre las claves de sesión en [/concepts/session](/en/concepts/session).
+Más información sobre las claves de sesión en [/concepts/session](/es/concepts/session).
 
 ## Opciones
 

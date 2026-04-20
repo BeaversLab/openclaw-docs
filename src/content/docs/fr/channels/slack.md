@@ -10,13 +10,13 @@ title: "Slack"
 Statut : prêt pour la production pour les MDs + canaux via les intégrations d'application Slack. Le mode par défaut est Socket Mode ; les URL de requête HTTP sont également prises en charge.
 
 <CardGroup cols={3}>
-  <Card title="Pairing" icon="link" href="/en/channels/pairing">
+  <Card title="Pairing" icon="link" href="/fr/channels/pairing">
     Les DMs Slack sont en mode appairage par défaut.
   </Card>
-  <Card title="Slash commands" icon="terminal" href="/en/tools/slash-commands">
+  <Card title="Slash commands" icon="terminal" href="/fr/tools/slash-commands">
     Comportement des commandes natives et catalogue des commandes.
   </Card>
-  <Card title="Channel troubleshooting" icon="wrench" href="/en/channels/troubleshooting">
+  <Card title="Channel troubleshooting" icon="wrench" href="/fr/channels/troubleshooting">
     Playbooks de diagnostic et de réparation multicanal.
   </Card>
 </CardGroup>
@@ -222,7 +222,7 @@ Activez différentes fonctionnalités qui étendent les paramètres par défaut 
     - Utilisez `/agentstatus` au lieu de `/status` car la commande `/status` est réservée.
     - Pas plus de 25 commandes slash ne peuvent être disponibles à la fois.
 
-    Remplacez votre section `features.slash_commands` existante par un sous-ensemble de [available commands](/en/tools/slash-commands#command-list) :
+    Remplacez votre section `features.slash_commands` existante par un sous-ensemble de [available commands](/fr/tools/slash-commands#command-list) :
 
     <Tabs>
       <Tab title="Mode Socket (par défaut)">
@@ -867,7 +867,7 @@ Le transfert partagé `approvals.exec` est distinct. Utilisez-le uniquement lors
 séparé ; les boutons natifs Slack peuvent toujours résoudre les approbations de plugin lorsque ces demandes atterrissent déjà
 dans Slack.
 
-Le `/approve` dans le même chat fonctionne également dans les canaux et les DM Slack qui prennent déjà en charge les commandes. Consultez [Exec approvals](/en/tools/exec-approvals) pour le modèle complet de transfert d'approbation.
+Le `/approve` dans le même chat fonctionne également dans les canaux et les DM Slack qui prennent déjà en charge les commandes. Consultez [Exec approvals](/fr/tools/exec-approvals) pour le modèle complet de transfert d'approbation.
 
 ## Événements et comportement opérationnel
 
@@ -885,7 +885,7 @@ Le `/approve` dans le même chat fonctionne également dans les canaux et les DM
 
 Référence principale :
 
-- [Configuration reference - Slack](/en/gateway/configuration-reference#slack)
+- [Configuration reference - Slack](/fr/gateway/configuration-reference#slack)
 
   Champs Slack à signal fort :
   - mode/auth : `mode`, `botToken`, `appToken`, `signingSecret`, `webhookPath`, `accounts.*`
@@ -967,10 +967,10 @@ openclaw pairing list slack
 
 ## Connexes
 
-- [Jumelage](/en/channels/pairing)
-- [Groupes](/en/channels/groups)
-- [Sécurité](/en/gateway/security)
-- [Routage de channel](/en/channels/channel-routing)
-- [Dépannage](/en/channels/troubleshooting)
-- [Configuration](/en/gateway/configuration)
-- [Commandes Slash](/en/tools/slash-commands)
+- [Jumelage](/fr/channels/pairing)
+- [Groupes](/fr/channels/groups)
+- [Sécurité](/fr/gateway/security)
+- [Routage de channel](/fr/channels/channel-routing)
+- [Dépannage](/fr/channels/troubleshooting)
+- [Configuration](/fr/gateway/configuration)
+- [Commandes Slash](/fr/tools/slash-commands)

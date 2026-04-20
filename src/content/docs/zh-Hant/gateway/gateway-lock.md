@@ -33,5 +33,5 @@ title: "Gateway Lock"
 
 ## 相關內容
 
-- [Multiple Gateways](/en/gateway/multiple-gateways) — 使用唯一連接埠執行多個實例
-- [Troubleshooting](/en/gateway/troubleshooting) — 診斷 `EADDRINUSE` 和連接埠衝突
+- [Multiple Gateways](/zh-Hant/gateway/multiple-gateways) — 使用唯一連接埠執行多個實例
+- [Troubleshooting](/zh-Hant/gateway/troubleshooting) — 診斷 `EADDRINUSE` 和連接埠衝突

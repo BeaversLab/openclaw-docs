@@ -23,7 +23,7 @@ OpenClaw assemble son propre prompt système à chaque exécution. Il inclut :
 - Étiquettes de réponse + comportement de heartbeat
 - Métadonnées d'exécution (hôte/OS/modèle/réflexion)
 
-Voir le détail complet dans [Prompt système](/en/concepts/system-prompt).
+Voir le détail complet dans [Prompt système](/fr/concepts/system-prompt).
 
 ## Ce qui compte dans la fenêtre de contexte
 
@@ -36,7 +36,7 @@ Tout ce que le modèle reçoit compte vers la limite de contexte :
 - Résumés de compactage et artefacts d'élagage
 - Enveloppes de fournisseur ou en-têtes de sécurité (non visibles, mais toujours comptés)
 
-Pour une répartition pratique (par fichier injecté, outils, skills et taille du prompt système), utilisez `/context list` ou `/context detail`. Voir [Contexte](/en/concepts/context).
+Pour une répartition pratique (par fichier injecté, outils, skills et taille du prompt système), utilisez `/context list` ou `/context detail`. Voir [Contexte](/fr/concepts/context).
 
 ## Comment voir l'utilisation actuelle des tokens
 
@@ -75,8 +75,8 @@ a expiré, puis réinitialise la fenêtre de cache afin que les requêtes ultér
 contexte nouvellement mis en cache au lieu de remettre en cache l'historique complet. Cela permet de maintenir les coûts d'écriture du cache
 plus bas lorsqu'une session reste inactive au-delà du TTL.
 
-Configurez-le dans [Configuration de la Gateway](/en/gateway/configuration) et consultez les
-détails du comportement dans [Élagage de session](/en/concepts/session-pruning).
+Configurez-le dans [Configuration de la Gateway](/fr/gateway/configuration) et consultez les
+détails du comportement dans [Élagage de session](/fr/concepts/session-pruning).
 
 Le battement de cœur (heartbeat) peut garder le cache **chaud** pendant les périodes d'inactivité. Si le cache TTL de votre modèle
 est `1h`, définir l'intervalle de battement de cœur juste en dessous (par exemple `55m`) peut éviter
@@ -109,4 +109,4 @@ agents:
 - Gardez les descriptions des compétences courtes (la liste des compétences est injectée dans le prompt).
 - Préférez des modèles plus petits pour un travail verbeux et exploratoire.
 
-Voir [Skills](/en/tools/skills) pour la formule exacte de la surcharge de la liste des compétences.
+Voir [Skills](/fr/tools/skills) pour la formule exacte de la surcharge de la liste des compétences.

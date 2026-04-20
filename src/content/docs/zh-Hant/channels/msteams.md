@@ -29,7 +29,7 @@ openclaw plugins install @openclaw/msteams
 openclaw plugins install ./path/to/local/msteams-plugin
 ```
 
-詳細資訊：[外掛程式](/en/tools/plugin)
+詳細資訊：[外掛程式](/zh-Hant/tools/plugin)
 
 ## 快速設定（初學者）
 
@@ -648,7 +648,7 @@ Teams markdown 比 Slack 或 Discord 更有限制：
 
 ## 路由與工作階段
 
-- 工作階段金鑰遵循標準代理程式格式（請參閱 [/concepts/session](/en/concepts/session))：
+- 工作階段金鑰遵循標準代理程式格式（請參閱 [/concepts/session](/zh-Hant/concepts/session))：
   - 直接訊息共用主要工作階段 (`agent:<agentId>:<mainKey>`)。
   - 頻道/群組訊息使用對話 ID：
     - `agent:<agentId>:msteams:channel:<conversationId>`
@@ -950,8 +950,8 @@ Bot 在私人頻道中的支援有限：
 
 ## 相關
 
-- [Channels Overview](/en/channels) — 所有支援的頻道
-- [Pairing](/en/channels/pairing) — DM 驗證與配對流程
-- [Groups](/en/channels/groups) — 群組聊天行為與提及閘道
-- [Channel Routing](/en/channels/channel-routing) — 訊息的工作階段路由
-- [Security](/en/gateway/security) — 存取模型與強化防護
+- [Channels Overview](/zh-Hant/channels) — 所有支援的頻道
+- [Pairing](/zh-Hant/channels/pairing) — DM 驗證與配對流程
+- [Groups](/zh-Hant/channels/groups) — 群組聊天行為與提及閘道
+- [Channel Routing](/zh-Hant/channels/channel-routing) — 訊息的工作階段路由
+- [Security](/zh-Hant/gateway/security) — 存取模型與強化防護

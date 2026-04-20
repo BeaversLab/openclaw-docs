@@ -15,9 +15,9 @@ Les hooks fournissent un système événementiel extensible pour automatiser les
 Les hooks sont de petits scripts qui s'exécutent lorsqu'un événement se produit. Il en existe deux types :
 
 - **Hooks** (cette page) : s'exécutent à l'intérieur du Gateway lorsque des événements d'agent se déclenchent, comme `/new`, `/reset`, `/stop`, ou des événements de cycle de vie.
-- **Webhooks** : webhooks HTTP externes qui permettent à d'autres systèmes de déclencher des travaux dans OpenClaw. Voir [Webhook Hooks](/en/automation/webhook) ou utilisez `openclaw webhooks` pour les commandes d'aide Gmail.
+- **Webhooks** : webhooks HTTP externes qui permettent à d'autres systèmes de déclencher des travaux dans OpenClaw. Voir [Webhook Hooks](/fr/automation/webhook) ou utilisez `openclaw webhooks` pour les commandes d'aide Gmail.
 
-Les hooks peuvent également être regroupés dans des plugins ; voir [Plugins](/en/plugin#plugin-hooks).
+Les hooks peuvent également être regroupés dans des plugins ; voir [Plugins](/fr/plugin#plugin-hooks).
 
 Cas d'usage courants :
 
@@ -243,7 +243,7 @@ Déclenchés au démarrage de la passerelle :
 
 Ces hooks ne sont pas des écouteurs de flux d'événements ; ils permettent aux plugins d'ajuster de manière synchrone les résultats des outils avant que OpenClaw ne les persiste.
 
-- **`tool_result_persist`**: transformer les résultats des outils avant qu'ils ne soient écrits dans la transcription de session. Doit être synchrone ; renvoyer la charge utile du résultat de l'outil mise à jour ou `undefined` pour la laisser telle quelle. Voir [Agent Loop](/en/concepts/agent-loop).
+- **`tool_result_persist`**: transformer les résultats des outils avant qu'ils ne soient écrits dans la transcription de session. Doit être synchrone ; renvoyer la charge utile du résultat de l'outil mise à jour ou `undefined` pour la laisser telle quelle. Voir [Agent Loop](/fr/concepts/agent-loop).
 
 ### Événements futurs
 
@@ -532,7 +532,7 @@ openclaw hooks enable command-logger
 
 **Événements** : `agent:bootstrap`
 
-**Documentation** : [SOUL Evil Hook](/en/hooks/soul-evil)
+**Documentation** : [SOUL Evil Hook](/fr/hooks/soul-evil)
 
 **Sortie** : Aucun fichier écrit ; les échanges se produisent uniquement en mémoire.
 
@@ -906,7 +906,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 
 ## See Also
 
-- [CLI Reference: hooks](/en/cli/hooks)
+- [CLI Reference: hooks](/fr/cli/hooks)
 - [Bundled Hooks README](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
-- [Webhook Hooks](/en/automation/webhook)
-- [Configuration](/en/gateway/configuration#hooks)
+- [Webhook Hooks](/fr/automation/webhook)
+- [Configuration](/fr/gateway/configuration#hooks)

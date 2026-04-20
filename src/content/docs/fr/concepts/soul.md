@@ -105,6 +105,6 @@ Tranchant est bon. Agaçant ne l'est pas.
 
 ## Documentation connexe
 
-- [Espace de travail de l'agent](/en/concepts/agent-workspace)
-- [Prompt système](/en/concepts/system-prompt)
-- [Modèle SOUL.md](/en/reference/templates/SOUL)
+- [Espace de travail de l'agent](/fr/concepts/agent-workspace)
+- [Prompt système](/fr/concepts/system-prompt)
+- [Modèle SOUL.md](/fr/reference/templates/SOUL)

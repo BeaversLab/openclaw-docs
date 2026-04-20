@@ -356,7 +356,7 @@ Comportamiento en tiempo de ejecución:
 
 Las credenciales canónicas admitidas y no admitidas se enumeran en:
 
-- [Superficie de credenciales SecretRef](/en/reference/secretref-credential-surface)
+- [Superficie de credenciales SecretRef](/es/reference/secretref-credential-surface)
 
 Las credenciales creadas en tiempo de ejecución o rotantes y el material de actualización de OAuth se excluyen intencionalmente de la resolución de solo lectura de SecretRef.
 
@@ -507,7 +507,7 @@ Nota de exec:
 
 Para obtener detalles estrictos del contrato de destino/ruta y reglas exactas de rechazo, consulte:
 
-- [Contrato del plan de aplicación de secretos](/en/gateway/secrets-plan-contract)
+- [Contrato del plan de aplicación de secretos](/es/gateway/secrets-plan-contract)
 
 ## Política de seguridad unidireccional
 
@@ -533,9 +533,9 @@ Algunas uniones de SecretInput son más fáciles de configurar en modo de editor
 
 ## Documentación relacionada
 
-- Comandos de CLI: [secrets](/en/cli/secrets)
-- Detalles del contrato del plan: [Secrets Apply Plan Contract](/en/gateway/secrets-plan-contract)
-- Superficie de credenciales: [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
-- Configuración de autenticación: [Authentication](/en/gateway/authentication)
-- Postura de seguridad: [Security](/en/gateway/security)
-- Precedencia del entorno: [Environment Variables](/en/help/environment)
+- Comandos de CLI: [secrets](/es/cli/secrets)
+- Detalles del contrato del plan: [Secrets Apply Plan Contract](/es/gateway/secrets-plan-contract)
+- Superficie de credenciales: [SecretRef Credential Surface](/es/reference/secretref-credential-surface)
+- Configuración de autenticación: [Authentication](/es/gateway/authentication)
+- Postura de seguridad: [Security](/es/gateway/security)
+- Precedencia del entorno: [Environment Variables](/es/help/environment)

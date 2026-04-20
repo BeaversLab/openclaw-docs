@@ -31,7 +31,7 @@ Installer depuis un checkout local :
 openclaw plugins install ./path/to/local/matrix-plugin
 ```
 
-Consultez la page [Plugins](/en/tools/plugin) pour le comportement des plugins et les règles d'installation.
+Consultez la page [Plugins](/fr/tools/plugin) pour le comportement des plugins et les règles d'installation.
 
 ## Configuration
 
@@ -613,7 +613,7 @@ Si le démarrage détecte toujours un état d'amorçage défaillant, OpenClaw pe
 Si le serveur d'accueil nécessite une IUA basée sur un mot de passe pour cette réparation, OpenClaw enregistre un avertissement et rend le démarrage non fatal au lieu d'interrompre le bot.
 Si l'appareil actuel est déjà signé par le propriétaire, OpenClaw préserve cette identité au lieu de la réinitialiser automatiquement.
 
-Consultez la page [Migration Matrix](/en/install/migrating-matrix) pour le processus complet de mise à niveau, les limites, les commandes de récupération et les messages de migration courants.
+Consultez la page [Migration Matrix](/fr/install/migrating-matrix) pour le processus complet de mise à niveau, les limites, les commandes de récupération et les messages de migration courants.
 
 ### Notifications de vérification
 
@@ -803,7 +803,7 @@ Trigger authorization still comes from `groupPolicy`, `groups`, `groupAllowFrom`
 }
 ```
 
-Consultez la page [Groupes](/en/channels/groups) pour le comportement de filtrage des mentions et des listes d'autorisation.
+Consultez la page [Groupes](/fr/channels/groups) pour le comportement de filtrage des mentions et des listes d'autorisation.
 
 Pairing example for Matrix DMs:
 
@@ -814,7 +814,7 @@ openclaw pairing approve matrix <CODE>
 
 If an unapproved Matrix user keeps messaging you before approval, OpenClaw reuses the same pending pairing code and may send a reminder reply again after a short cooldown instead of minting a new code.
 
-Consultez la page [Jumelage](/en/channels/pairing) pour le processus de jumelage DM partagé et la disposition du stockage.
+Consultez la page [Jumelage](/fr/channels/pairing) pour le processus de jumelage DM partagé et la disposition du stockage.
 
 ## Direct room repair
 
@@ -877,7 +877,7 @@ Remplacement par compte :
 
 - `channels.matrix.accounts.<account>.execApprovals`
 
-Documentation connexe : [Approbations d'exécution](/en/tools/exec-approvals)
+Documentation connexe : [Approbations d'exécution](/fr/tools/exec-approvals)
 
 ## Multi-compte
 
@@ -919,7 +919,7 @@ Si plusieurs comptes Matrix sont configurés et qu'un id de compte est `default`
 Si vous configurez plusieurs comptes nommés, définissez `defaultAccount` ou passez `--account <id>` pour les commandes CLI qui dépendent de la sélection implicite de compte.
 Passez `--account <id>` à `openclaw matrix verify ...` et `openclaw matrix devices ...` lorsque vous souhaitez remplacer cette sélection implicite pour une commande.
 
-Voir [Référence de configuration](/en/gateway/configuration-reference#multi-account-all-channels) pour le modèle multi-compte partagé.
+Voir [Référence de configuration](/fr/gateway/configuration-reference#multi-account-all-channels) pour le modèle multi-compte partagé.
 
 ## Serveurs d'accueil privés/LAN
 
@@ -995,7 +995,7 @@ La recherche en direct dans l'annuaire utilise le compte Matrix connecté :
 - `network.dangerouslyAllowPrivateNetwork` : autoriser ce compte Matrix à se connecter aux serveurs domestiques privés/internal. Activez ceci lorsque le serveur domestique résout vers `localhost`, une IP LAN/Tailscale ou un hôte interne tel que `matrix-synapse`.
 - `proxy` : URL de proxy HTTP(S) facultative pour le trafic Matrix. Les comptes nommés peuvent remplacer la valeur par défaut de niveau supérieur par leur propre `proxy`.
 - `userId` : ID complet de l'utilisateur Matrix, par exemple `@bot:example.org`.
-- `accessToken` : jeton d'accès pour l'authentification par jeton. Les valeurs en texte clair et les valeurs SecretRef sont prises en charge pour `channels.matrix.accessToken` et `channels.matrix.accounts.<id>.accessToken` sur les fournisseurs env/file/exec. Voir [Secrets Management](/en/gateway/secrets).
+- `accessToken` : jeton d'accès pour l'authentification par jeton. Les valeurs en texte clair et les valeurs SecretRef sont prises en charge pour `channels.matrix.accessToken` et `channels.matrix.accounts.<id>.accessToken` sur les fournisseurs env/file/exec. Voir [Secrets Management](/fr/gateway/secrets).
 - `password` : mot de passe pour la connexion par mot de passe. Les valeurs en texte brut et les valeurs SecretRef sont prises en charge.
 - `deviceId` : ID d'appareil Matrix explicite.
 - `deviceName` : nom d'affichage de l'appareil pour la connexion par mot de passe.
@@ -1047,8 +1047,8 @@ La recherche en direct dans l'annuaire utilise le compte Matrix connecté :
 
 ## Connexes
 
-- [Présentation des canaux](/en/channels) — tous les canaux pris en charge
-- [Appairage](/en/channels/pairing) — authentification par DM et flux d'appairage
-- [Groupes](/en/channels/groups) — comportement de chat de groupe et filtrage par mention
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Présentation des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appairage](/fr/channels/pairing) — authentification par DM et flux d'appairage
+- [Groupes](/fr/channels/groups) — comportement de chat de groupe et filtrage par mention
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

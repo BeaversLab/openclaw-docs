@@ -41,7 +41,7 @@ title: "迁移指南"
 
   </Step>
 
-<Step title="在新机器上安装 OpenClaw">在新机器上[安装](/en/install) CLI（如果需要也包括 Node）。 即使新手引导创建了新的 `~/.openclaw/` 也没关系——您接下来会覆盖它。</Step>
+<Step title="在新机器上安装 OpenClaw">在新机器上[安装](/zh/install) CLI（如果需要也包括 Node）。 即使新手引导创建了新的 `~/.openclaw/` 也没关系——您接下来会覆盖它。</Step>
 
   <Step title="复制状态目录和工作区">
     通过 `scp`、`rsync -a` 或外部驱动器传输归档文件，然后解压：
@@ -56,7 +56,7 @@ title: "迁移指南"
   </Step>
 
   <Step title="运行检查并验证">
-    在新机器上，运行 [Doctor](/en/gateway/doctor) 以应用配置迁移并修复服务：
+    在新机器上，运行 [Doctor](/zh/gateway/doctor) 以应用配置迁移并修复服务：
 
     ```bash
     openclaw doctor
@@ -84,7 +84,7 @@ title: "迁移指南"
 
 <Accordion title="权限和所有权">如果您以 root 用户身份复制或切换了用户，网关可能无法读取凭证。 请确保状态目录和工作区归运行网关的用户所有。</Accordion>
 
-<Accordion title="远程模式">如果您的 UI 指向**远程**网关，则远程主机拥有会话和工作区。 请迁移网关主机本身，而不是您的本地笔记本电脑。请参阅 [常见问题](/en/help/faq#where-things-live-on-disk)。</Accordion>
+<Accordion title="远程模式">如果您的 UI 指向**远程**网关，则远程主机拥有会话和工作区。 请迁移网关主机本身，而不是您的本地笔记本电脑。请参阅 [常见问题](/zh/help/faq#where-things-live-on-disk)。</Accordion>
 
   <Accordion title="备份中的机密信息">
     状态目录包含身份验证配置文件、渠道凭据和其他

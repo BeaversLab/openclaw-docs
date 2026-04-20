@@ -14,7 +14,7 @@ L'outil `web_fetch` effectue une requête HTTP GET simple et extrait le contenu 
 (HTML en markdown ou texte). Il n'exécute **pas** JavaScript.
 
 Pour les sites avec beaucoup de JS ou les pages protégées par une connexion, utilisez le
-[Web Browser](/en/tools/browser) à la place.
+[Web Browser](/fr/tools/browser) à la place.
 
 ## Démarrage rapide
 
@@ -68,7 +68,7 @@ await web_fetch({ url: "https://example.com/article" });
 ## Firecrawl de secours
 
 Si l'extraction Readability échoue, `web_fetch` peut revenir à
-[Firecrawl](/en/tools/firecrawl) pour contourner les bots et améliorer l'extraction :
+[Firecrawl](/fr/tools/firecrawl) pour contourner les bots et améliorer l'extraction :
 
 ```json5
 {
@@ -120,7 +120,7 @@ Comportement actuel de l'exécution :
   trop volumineuses sont tronquées avec un avertissement
 - Les noms d'hôte privés/internes sont bloqués
 - Les redirections sont vérifiées et limitées par `maxRedirects`
-- `web_fetch` est au mieux -- certains sites ont besoin du [Web Browser](/en/tools/browser)
+- `web_fetch` est au mieux -- certains sites ont besoin du [Web Browser](/fr/tools/browser)
 
 ## Profils d'outil
 
@@ -137,6 +137,6 @@ Si vous utilisez des profils d'outil ou des listes autorisées, ajoutez `web_fet
 
 ## Connexes
 
-- [Web Search](/en/tools/web) -- rechercher sur le web avec plusieurs fournisseurs
-- [Web Browser](/en/tools/browser) -- automatisation complète du navigateur pour les sites avec beaucoup de JS
-- [Firecrawl](/en/tools/firecrawl) -- outils de recherche et d'extraction Firecrawl
+- [Web Search](/fr/tools/web) -- rechercher sur le web avec plusieurs fournisseurs
+- [Web Browser](/fr/tools/browser) -- automatisation complète du navigateur pour les sites avec beaucoup de JS
+- [Firecrawl](/fr/tools/firecrawl) -- outils de recherche et d'extraction Firecrawl

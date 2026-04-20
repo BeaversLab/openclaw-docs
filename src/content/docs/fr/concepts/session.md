@@ -99,11 +99,11 @@ Aperçu avec `openclaw sessions cleanup --dry-run`.
 
 ## Pour aller plus loin
 
-- [Session Pruning](/en/concepts/session-pruning) -- élagage des résultats des outils
-- [Compaction](/en/concepts/compaction) -- résumé des longues conversations
-- [Session Tools](/en/concepts/session-tool) -- outils de l'agent pour le travail inter-sessions
-- [Session Management Deep Dive](/en/reference/session-management-compaction) --
+- [Session Pruning](/fr/concepts/session-pruning) -- élagage des résultats des outils
+- [Compaction](/fr/concepts/compaction) -- résumé des longues conversations
+- [Session Tools](/fr/concepts/session-tool) -- outils de l'agent pour le travail inter-sessions
+- [Session Management Deep Dive](/fr/reference/session-management-compaction) --
   schéma du magasin, transcriptions, politique d'envoi, métadonnées d'origine et configuration avancée
-- [Multi-Agent](/en/concepts/multi-agent) — routage et isolement des sessions entre les agents
-- [Background Tasks](/en/automation/tasks) — comment le travail détaché crée des enregistrements de tâches avec des références de session
-- [Channel Routing](/en/channels/channel-routing) — routage des messages entrants vers les sessions
+- [Multi-Agent](/fr/concepts/multi-agent) — routage et isolement des sessions entre les agents
+- [Background Tasks](/fr/automation/tasks) — comment le travail détaché crée des enregistrements de tâches avec des références de session
+- [Channel Routing](/fr/channels/channel-routing) — routage des messages entrants vers les sessions

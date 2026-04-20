@@ -79,10 +79,10 @@ OpenClaw 支援 DuckDuckGo 作為 **免金鑰** 的 `web_search` 提供者。不
   (順序 100)。已設定金鑰的 API 支援提供者會優先執行，接著是 Ollama Web Search (順序 110)，然後是 SearXNG (順序 200)
 - 未設定時，**SafeSearch 預設為中等**
 
-<Tip>若用於生產環境，請考慮使用 [Brave Search](/en/tools/brave-search) (提供免費層級) 或其他支援 API 的提供者。</Tip>
+<Tip>若用於生產環境，請考慮使用 [Brave Search](/zh-Hant/tools/brave-search) (提供免費層級) 或其他支援 API 的提供者。</Tip>
 
 ## 相關
 
-- [網路搜尋概覽](/en/tools/web) -- 所有提供者與自動偵測
-- [Brave Search](/en/tools/brave-search) -- 提供免費層的結構化結果
-- [Exa Search](/en/tools/exa-search) —— 具有內容提取功能的神經網絡搜索
+- [網路搜尋概覽](/zh-Hant/tools/web) -- 所有提供者與自動偵測
+- [Brave Search](/zh-Hant/tools/brave-search) -- 提供免費層的結構化結果
+- [Exa Search](/zh-Hant/tools/exa-search) —— 具有內容提取功能的神經網絡搜索

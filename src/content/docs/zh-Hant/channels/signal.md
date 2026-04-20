@@ -99,7 +99,7 @@ title: "Signal"
 }
 ```
 
-多帳號支援：使用 `channels.signal.accounts` 配合每個帳號的設定與可選的 `name`。請參閱 [`gateway/configuration`](/en/gateway/configuration-reference#multi-account-all-channels) 了解共享模式。
+多帳號支援：使用 `channels.signal.accounts` 配合每個帳號的設定與可選的 `name`。請參閱 [`gateway/configuration`](/zh-Hant/gateway/configuration-reference#multi-account-all-channels) 了解共享模式。
 
 ## 設定路徑 B：註冊專用機器人號碼（簡訊，Linux）
 
@@ -188,7 +188,7 @@ openclaw channels status --probe
 - 透過以下方式批准：
   - `openclaw pairing list signal`
   - `openclaw pairing approve signal <CODE>`
-- 配對是 Signal 私訊的預設代幣交換方式。詳情：[配對](/en/channels/pairing)
+- 配對是 Signal 私訊的預設代幣交換方式。詳情：[配對](/zh-Hant/channels/pairing)
 - 僅 UUID 的發送者（來自 `sourceUuid`）會以 `uuid:<id>` 格式儲存在 `channels.signal.allowFrom` 中。
 
 群組：
@@ -284,7 +284,7 @@ pgrep -af signal-cli
 grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 ```
 
-如需分診流程：[/channels/troubleshooting](/en/channels/troubleshooting)。
+如需分診流程：[/channels/troubleshooting](/zh-Hant/channels/troubleshooting)。
 
 ## 安全備註
 
@@ -295,7 +295,7 @@ grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 
 ## 設定參考 (Signal)
 
-完整設定：[Configuration](/en/gateway/configuration)
+完整設定：[Configuration](/zh-Hant/gateway/configuration)
 
 提供者選項：
 
@@ -330,8 +330,8 @@ grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 
 ## 相關
 
-- [頻道總覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — 私訊驗證與配對流程
-- [群組](/en/channels/groups) — 群組聊天行為與提及控制
-- [頻道路由](/en/channels/channel-routing) — 訊息的工作階段路由
-- [安全性](/en/gateway/security) — 存取模型與強化防護
+- [頻道總覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — 私訊驗證與配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及控制
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的工作階段路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型與強化防護

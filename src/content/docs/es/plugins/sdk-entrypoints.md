@@ -13,7 +13,7 @@ read_when:
 Cada complemento exporta un objeto de entrada predeterminado. El SDK proporciona tres asistentes para
 crearlos.
 
-<Tip>**¿Buscas un tutorial?** Consulta [Plugins de canal](/en/plugins/sdk-channel-plugins) o [Plugins de proveedor](/en/plugins/sdk-provider-plugins) para guías paso a paso.</Tip>
+<Tip>**¿Buscas un tutorial?** Consulta [Plugins de canal](/es/plugins/sdk-channel-plugins) o [Plugins de proveedor](/es/plugins/sdk-provider-plugins) para guías paso a paso.</Tip>
 
 ## `definePluginEntry`
 
@@ -128,7 +128,7 @@ export default defineSetupPluginEntry(myChannelPlugin);
 
 OpenClaw carga esto en lugar de la entrada completa cuando un canal está deshabilitado,
 no configurado, o cuando la carga diferida está habilitada. Consulta
-[Configuración y Config](/en/plugins/sdk-setup#setup-entry) para saber cuándo importa esto.
+[Configuración y Config](/es/plugins/sdk-setup#setup-entry) para saber cuándo importa esto.
 
 En la práctica, combina `defineSetupPluginEntry(...)` con las familias de asistentes de configuración
 estrechos:
@@ -218,8 +218,8 @@ Use `openclaw plugins inspect <id>` to see a plugin's shape.
 
 ## Related
 
-- [SDK Overview](/en/plugins/sdk-overview) — registration API and subpath reference
-- [Runtime Helpers](/en/plugins/sdk-runtime) — `api.runtime` and `createPluginRuntimeStore`
-- [Setup and Config](/en/plugins/sdk-setup) — manifest, setup entry, deferred loading
-- [Channel Plugins](/en/plugins/sdk-channel-plugins) — building the `ChannelPlugin` object
-- [Provider Plugins](/en/plugins/sdk-provider-plugins) — provider registration and hooks
+- [SDK Overview](/es/plugins/sdk-overview) — registration API and subpath reference
+- [Runtime Helpers](/es/plugins/sdk-runtime) — `api.runtime` and `createPluginRuntimeStore`
+- [Setup and Config](/es/plugins/sdk-setup) — manifest, setup entry, deferred loading
+- [Channel Plugins](/es/plugins/sdk-channel-plugins) — building the `ChannelPlugin` object
+- [Provider Plugins](/es/plugins/sdk-provider-plugins) — provider registration and hooks

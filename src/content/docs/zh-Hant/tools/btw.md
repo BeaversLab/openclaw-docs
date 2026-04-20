@@ -122,6 +122,6 @@ Gateway 正確地將 BTW 作為 `chat.side_result` 發送，並且 BTW 未包含
 
 ## 相關
 
-- [Slash commands](/en/tools/slash-commands)
-- [Thinking Levels](/en/tools/thinking)
-- [Session](/en/concepts/session)
+- [Slash commands](/zh-Hant/tools/slash-commands)
+- [Thinking Levels](/zh-Hant/tools/thinking)
+- [Session](/zh-Hant/concepts/session)

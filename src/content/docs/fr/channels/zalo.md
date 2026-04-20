@@ -17,7 +17,7 @@ Si vous êtes sur une version ancienne ou une installation personnalisée qui ex
 
 - Installer via le CLI : `openclaw plugins install @openclaw/zalo`
 - Ou depuis une extraction des sources : `openclaw plugins install ./path/to/local/zalo-plugin`
-- Détails : [Plugins](/en/tools/plugin)
+- Détails : [Plugins](/fr/tools/plugin)
 
 ## Configuration rapide (débutant)
 
@@ -118,7 +118,7 @@ Support multi-comptes : utilisez `channels.zalo.accounts` avec des jetons par co
 - Approuver via :
   - `openclaw pairing list zalo`
   - `openclaw pairing approve zalo <CODE>`
-- L'appariement est l'échange de jetons par défaut. Détails : [Pairing](/en/channels/pairing)
+- L'appariement est l'échange de jetons par défaut. Détails : [Pairing](/fr/channels/pairing)
 - `channels.zalo.allowFrom` accepte les ID d'utilisateur numériques (aucune recherche par nom d'utilisateur disponible).
 
 ## Contrôle d'accès (Groupes)
@@ -209,7 +209,7 @@ Ce tableau résume le comportement actuel des **Zalo Bot Creator / Marketplace b
 
 ## Référence de configuration (Zalo)
 
-Configuration complète : [Configuration](/en/gateway/configuration)
+Configuration complète : [Configuration](/fr/gateway/configuration)
 
 Les clés de niveau supérieur plates (`channels.zalo.botToken`, `channels.zalo.dmPolicy` et similaires) sont une abréviation héritée pour un compte unique. Privilégiez `channels.zalo.accounts.<id>.*` pour les nouvelles configurations. Les deux formes sont encore documentées ici car elles existent dans le schéma.
 
@@ -245,8 +245,8 @@ Options multi-comptes :
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Jumelage](/en/channels/pairing) — authentification DM et processus de jumelage
-- [Groupes](/en/channels/groups) — comportement des discussions de groupe et filtrage des mentions
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Jumelage](/fr/channels/pairing) — authentification DM et processus de jumelage
+- [Groupes](/fr/channels/groups) — comportement des discussions de groupe et filtrage des mentions
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

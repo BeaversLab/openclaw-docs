@@ -89,7 +89,7 @@ OpenClaw 支持 Perplexity Search API 作为 `web_search` 提供商。
 `plugins.entries.perplexity.config.webSearch.apiKey` 下的 `~/.openclaw/openclaw.json` 中。
 该字段也接受 SecretRef 对象。
 
-**通过环境变量：** 在 Gateway(网关) 进程环境中设置 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。对于网关安装，请将其放入 `~/.openclaw/.env`（或您的服务环境）中。参见 [环境变量](/en/help/faq#env-vars-and-env-loading)。
+**通过环境变量：** 在 Gateway(网关) 进程环境中设置 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。对于网关安装，请将其放入 `~/.openclaw/.env`（或您的服务环境）中。参见 [环境变量](/zh/help/faq#env-vars-and-env-loading)。
 
 如果配置了 `provider: "perplexity"` 且 Perplexity 密钥 SecretRef 未解析且没有环境变量回退，启动/重新加载将快速失败。
 
@@ -176,7 +176,7 @@ await web_search({
 
 ## 相关内容
 
-- [网络搜索概述](/en/tools/web) -- 所有提供商和自动检测
+- [网络搜索概述](/zh/tools/web) -- 所有提供商和自动检测
 - [Perplexity 搜索 API 文档](https://docs.perplexity.ai/docs/search/quickstart) -- 官方 Perplexity 文档
-- [Brave 搜索](/en/tools/brave-search) -- 带有国家/语言过滤器的结构化结果
-- [Exa 搜索](/en/tools/exa-search) -- 带有内容提取的神经搜索
+- [Brave 搜索](/zh/tools/brave-search) -- 带有国家/语言过滤器的结构化结果
+- [Exa 搜索](/zh/tools/exa-search) -- 带有内容提取的神经搜索

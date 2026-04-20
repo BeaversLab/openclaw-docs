@@ -35,5 +35,5 @@ Telegram 允許清單現在會不區分大小寫地接受 `telegram:` 和 `tg:` 
 
 ## 相關文件
 
-- [群組聊天](/en/concepts/groups)
-- [Telegram 提供者](/en/channels/telegram)
+- [群組聊天](/zh-Hant/concepts/groups)
+- [Telegram 提供者](/zh-Hant/channels/telegram)

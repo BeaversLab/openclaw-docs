@@ -243,7 +243,7 @@ MiniMax 插件为 `image_generate` 工具注册了 `image-01` 模型。它支持
 
 内置的捆绑 MiniMax 文本目录本身在存在该显式提供商配置之前，保持仅文本元数据状态。图像理解通过插件拥有的 `MiniMax-VL-01` 媒体提供商单独公开。
 
-<Note>请参阅[图像生成](/en/tools/image-generation)以了解共享工具参数、提供商选择和故障转移行为。</Note>
+<Note>请参阅[图像生成](/zh/tools/image-generation)以了解共享工具参数、提供商选择和故障转移行为。</Note>
 
 ### 音乐生成
 
@@ -269,7 +269,7 @@ MiniMax 插件为 `image_generate` 工具注册了 `image-01` 模型。它支持
 }
 ```
 
-<Note>请参阅[音乐生成](/en/tools/music-generation)以了解共享工具参数、提供商选择和故障转移行为。</Note>
+<Note>请参阅[音乐生成](/zh/tools/music-generation)以了解共享工具参数、提供商选择和故障转移行为。</Note>
 
 ### 视频生成
 
@@ -293,7 +293,7 @@ MiniMax 插件为 `image_generate` 工具注册了 `image-01` 模型。它支持
 }
 ```
 
-<Note>请参阅[视频生成](/en/tools/video-generation)以了解共享工具参数、提供商选择和故障转移行为。</Note>
+<Note>请参阅[视频生成](/zh/tools/video-generation)以了解共享工具参数、提供商选择和故障转移行为。</Note>
 
 ### 图像理解
 
@@ -321,7 +321,7 @@ MiniMax 插件还通过 MiniMax 编码计划
 
 配置位于 `plugins.entries.minimax.config.webSearch.*` 下。
 
-<Note>有关完整的网络搜索配置和用法，请参阅 [MiniMax 搜索](/en/tools/minimax-search)。</Note>
+<Note>有关完整的网络搜索配置和用法，请参阅 [MiniMax 搜索](/zh/tools/minimax-search)。</Note>
 
 ## 高级配置
 
@@ -391,7 +391,7 @@ MiniMax 插件还通过 MiniMax 编码计划
 
 <Tip>MiniMax 编码计划（九折优惠）的推荐链接：[MiniMax 编码计划](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)</Tip>
 
-<Note>有关提供商规则，请参阅[模型提供商](/en/concepts/model-providers)。</Note>
+<Note>有关提供商规则，请参阅[模型提供商](/zh/concepts/model-providers)。</Note>
 
 ## 故障排除
 
@@ -418,27 +418,27 @@ MiniMax 插件还通过 MiniMax 编码计划
   </Accordion>
 </AccordionGroup>
 
-<Note>更多帮助：[故障排除](/en/help/troubleshooting) 和 [常见问题](/en/help/faq)。</Note>
+<Note>更多帮助：[故障排除](/zh/help/troubleshooting) 和 [常见问题](/zh/help/faq)。</Note>
 
 ## 相关内容
 
 <CardGroup cols={2}>
-  <Card title="模型选择" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型选择" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="图像生成" href="/en/tools/image-generation" icon="image">
+  <Card title="图像生成" href="/zh/tools/image-generation" icon="image">
     共享的图像工具参数和提供商选择。
   </Card>
-  <Card title="音乐生成" href="/en/tools/music-generation" icon="music">
+  <Card title="音乐生成" href="/zh/tools/music-generation" icon="music">
     共享的音乐工具参数和提供商选择。
   </Card>
-  <Card title="视频生成" href="/en/tools/video-generation" icon="video">
+  <Card title="视频生成" href="/zh/tools/video-generation" icon="video">
     共享的视频工具参数和提供商选择。
   </Card>
-  <Card title="MiniMax 搜索" href="/en/tools/minimax-search" icon="magnifying-glass">
+  <Card title="MiniMax 搜索" href="/zh/tools/minimax-search" icon="magnifying-glass">
     通过 MiniMax Coding Plan 进行网络搜索配置。
   </Card>
-  <Card title="故障排除" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="故障排除" href="/zh/help/troubleshooting" icon="wrench">
     一般故障排除和常见问题。
   </Card>
 </CardGroup>

@@ -130,10 +130,10 @@ Xiaomi MiMo est la plateforme API pour les modèles **MiMo**. OpenClaw utilise l
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les fournisseurs, les références de modèle et le comportement de basculement.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration" icon="gear">
     Référence complète de la configuration OpenClaw.
   </Card>
   <Card title="Console Xiaomi MiMo" href="https://platform.xiaomimimo.com" icon="arrow-up-right-from-square">

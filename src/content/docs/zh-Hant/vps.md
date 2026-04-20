@@ -15,37 +15,37 @@ sidebarTitle: "Linux 伺服器"
 ## 選擇供應商
 
 <CardGroup cols={2}>
-  <Card title="Railway" href="/en/install/railway">
+  <Card title="Railway" href="/zh-Hant/install/railway">
     單鍵、瀏覽器設定
   </Card>
-  <Card title="Northflank" href="/en/install/northflank">
+  <Card title="Northflank" href="/zh-Hant/install/northflank">
     單鍵、瀏覽器設定
   </Card>
-  <Card title="DigitalOcean" href="/en/install/digitalocean">
+  <Card title="DigitalOcean" href="/zh-Hant/install/digitalocean">
     簡單付費 VPS
   </Card>
-  <Card title="Oracle Cloud" href="/en/install/oracle">
+  <Card title="Oracle Cloud" href="/zh-Hant/install/oracle">
     永遠免費 ARM 層級
   </Card>
-  <Card title="Fly.io" href="/en/install/fly">
+  <Card title="Fly.io" href="/zh-Hant/install/fly">
     Fly Machines
   </Card>
-  <Card title="Hetzner" href="/en/install/hetzner">
+  <Card title="Hetzner" href="/zh-Hant/install/hetzner">
     Hetzner VPS 上的 Docker
   </Card>
-  <Card title="Hostinger" href="/en/install/hostinger">
+  <Card title="Hostinger" href="/zh-Hant/install/hostinger">
     具有一鍵設定的 VPS
   </Card>
-  <Card title="GCP" href="/en/install/gcp">
+  <Card title="GCP" href="/zh-Hant/install/gcp">
     Compute Engine
   </Card>
-  <Card title="Azure" href="/en/install/azure">
+  <Card title="Azure" href="/zh-Hant/install/azure">
     Linux VM
   </Card>
-  <Card title="exe.dev" href="/en/install/exe-dev">
+  <Card title="exe.dev" href="/zh-Hant/install/exe-dev">
     具 HTTPS 代理的 VM
   </Card>
-  <Card title="Raspberry Pi" href="/en/install/raspberry-pi">
+  <Card title="Raspberry Pi" href="/zh-Hant/install/raspberry-pi">
     ARM 自託管
   </Card>
 </CardGroup>
@@ -63,7 +63,7 @@ sidebarTitle: "Linux 伺服器"
 - 安全預設值：將 Gateway 保持在 loopback 並透過 SSH tunnel 或 Tailscale Serve 存取。
   如果您綁定到 `lan` 或 `tailnet`，請要求 `gateway.auth.token` 或 `gateway.auth.password`。
 
-相關頁面：[Gateway 遠端存取](/en/gateway/remote)、[平台中心](/en/platforms)。
+相關頁面：[Gateway 遠端存取](/zh-Hant/gateway/remote)、[平台中心](/zh-Hant/platforms)。
 
 ## VPS 上的共用公司代理程式
 
@@ -73,7 +73,7 @@ sidebarTitle: "Linux 伺服器"
 - 請勿將該執行環境登入個人的 Apple/Google 帳戶或個人的瀏覽器/密碼管理員設定檔。
 - 如果使用者之間存在敵對關係，請依 gateway/host/OS user 進行區隔。
 
-安全模型詳細資訊：[Security](/en/gateway/security)。
+安全模型詳細資訊：[Security](/zh-Hant/gateway/security)。
 
 ## 搭配 VPS 使用節點
 
@@ -81,7 +81,7 @@ sidebarTitle: "Linux 伺服器"
 (Mac/iOS/Android/headless) 與 **節點** 配對。節點提供本機螢幕/相機/畫布和 `system.run`
 功能，而 Gateway 則停留在雲端。
 
-文件：[節點](/en/nodes)、[節點 CLI](/en/cli/nodes)。
+文件：[節點](/zh-Hant/nodes)、[節點 CLI](/zh-Hant/cli/nodes)。
 
 ## 小型虛擬機和 ARM 主機的啟動調整
 
@@ -99,7 +99,7 @@ source ~/.bashrc
 - `NODE_COMPILE_CACHE` 可改善重複執行指令的啟動時間。
 - `OPENCLAW_NO_RESPAWN=1` 可避免來自自我重生路徑的額外啟動負擔。
 - 首次執行指令會預熱快取；後續執行會更快。
-- 關於 Raspberry Pi 的細節，請參閱 [Raspberry Pi](/en/install/raspberry-pi)。
+- 關於 Raspberry Pi 的細節，請參閱 [Raspberry Pi](/zh-Hant/install/raspberry-pi)。
 
 ### systemd 調整檢查清單（選用）
 

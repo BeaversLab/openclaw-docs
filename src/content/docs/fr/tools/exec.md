@@ -64,13 +64,13 @@ Notes :
 - `tools.exec.host` (par défaut : `auto` ; résout en `sandbox` lorsque le runtime de bac à sable est actif, `gateway` sinon)
 - `tools.exec.security` (par défaut : `deny` pour le bac à sable, `full` pour la passerelle + le nœud si non défini)
 - `tools.exec.ask` (par défaut : `off`)
-- L'exécution hôte sans approbation est la valeur par défaut pour la passerelle et le nœud. Si vous souhaitez un comportement d'approbations/de liste d'autorisation, renforcez à la fois `tools.exec.*` et l'hôte `~/.openclaw/exec-approvals.json` ; voir [Exec approvals](/en/tools/exec-approvals#no-approval-yolo-mode).
+- L'exécution hôte sans approbation est la valeur par défaut pour la passerelle et le nœud. Si vous souhaitez un comportement d'approbations/de liste d'autorisation, renforcez à la fois `tools.exec.*` et l'hôte `~/.openclaw/exec-approvals.json` ; voir [Exec approvals](/fr/tools/exec-approvals#no-approval-yolo-mode).
 - Le mode YOLO provient des valeurs par défaut de la stratégie hôte (`security=full`, `ask=off`), et non de `host=auto`. Si vous souhaitez forcer le routage via la passerelle ou le nœud, définissez `tools.exec.host` ou utilisez `/exec host=...`.
 - En mode `security=full` plus `ask=off`, l'exécution hôte suit directement la stratégie configurée ; il n'y a pas de préfiltre heuristique d'obfuscation de commande supplémentaire.
 - `tools.exec.node` (par défaut : non défini)
 - `tools.exec.strictInlineEval` (par défaut : false) : si vrai, les formes d'évaluation de l'interpréteur en ligne telles que `python -c`, `node -e`, `ruby -e`, `perl -e`, `php -r`, `lua -e` et `osascript -e` nécessitent toujours une approbation explicite. `allow-always` peut toujours conserver les appels bénins d'interpréteur/de script, mais les formes d'évaluation en ligne demandent toujours une confirmation à chaque fois.
 - `tools.exec.pathPrepend` : liste des répertoires à préfixer à `PATH` pour les exécutions exec (passerelle + bac à sable uniquement).
-- `tools.exec.safeBins` : binaires sécurisés stdin uniquement qui peuvent s'exécuter sans entrées explicites de liste d'autorisation. Pour plus de détails sur le comportement, voir [Safe bins](/en/tools/exec-approvals#safe-bins-stdin-only).
+- `tools.exec.safeBins` : binaires sécurisés stdin uniquement qui peuvent s'exécuter sans entrées explicites de liste d'autorisation. Pour plus de détails sur le comportement, voir [Safe bins](/fr/tools/exec-approvals#safe-bins-stdin-only).
 - `tools.exec.safeBinTrustedDirs` : répertoires explicites supplémentaires approuvés pour les vérifications de chemin `safeBins`. Les entrées `PATH` ne sont jamais automatiquement approuvées. Les valeurs par défaut intégrées sont `/bin` et `/usr/bin`.
 - `tools.exec.safeBinProfiles` : stratégie argv personnalisée facultative par bac à sable sécurisé (`minPositional`, `maxPositional`, `allowedValueFlags`, `deniedFlags`).
 
@@ -129,7 +129,7 @@ Il met à jour **uniquement l'état de la session** et n'écrit pas la configura
 ## Approbations Exec (application compagnon / hôte de nœud)
 
 Les agents Sandboxed peuvent exiger une approbation par requête avant que `exec` ne s'exécute sur la passerelle ou l'hôte de nœud.
-Voir [Approbations Exec](/en/tools/exec-approvals) pour la stratégie, la liste d'autorisation et le flux de l'interface utilisateur.
+Voir [Approbations Exec](/fr/tools/exec-approvals) pour la stratégie, la liste d'autorisation et le flux de l'interface utilisateur.
 
 Lorsque des approbations sont requises, l'outil d'exécution renvoie immédiatement `status: "approval-pending"` et un identifiant d'approbation. Une fois approuvé (ou refusé / expiré),
 le Gateway émet des événements système (`Exec finished` / `Exec denied`). Si la commande est toujours
@@ -164,7 +164,7 @@ Ne traitez pas `safeBins` comme une liste d'autorisation générique, et n'ajout
 `openclaw security audit` et `openclaw doctor` avertissent également lorsque vous ajoutez explicitement des bins à comportement large tels que `jq` dans `safeBins`.
 Si vous autorisez explicitement les interpréteurs, activez `tools.exec.strictInlineEval` pour que les formulaires d'évaluation de code en ligne nécessitent toujours une nouvelle approbation.
 
-Pour les détails complets de la politique et des exemples, consultez [Approbations Exec](/en/tools/exec-approvals#safe-bins-stdin-only) et [Bins sûrs par rapport à la liste d'autorisation](/en/tools/exec-approvals#safe-bins-versus-allowlist).
+Pour les détails complets de la politique et des exemples, consultez [Approbations Exec](/fr/tools/exec-approvals#safe-bins-stdin-only) et [Bins sûrs par rapport à la liste d'autorisation](/fr/tools/exec-approvals#safe-bins-versus-allowlist).
 
 ## Exemples
 
@@ -230,7 +230,7 @@ Remarques :
 
 ## Connexes
 
-- [Exec Approvals](/en/tools/exec-approvals) — portes d'approbation pour les commandes shell
-- [Sandboxing](/en/gateway/sandboxing) — exécution de commandes dans des environnements isolés (sandboxed)
-- [Background Process](/en/gateway/background-process) — tool d'exécution et de processus longue durée
-- [Security](/en/gateway/security) — stratégie de tool et accès élevé
+- [Exec Approvals](/fr/tools/exec-approvals) — portes d'approbation pour les commandes shell
+- [Sandboxing](/fr/gateway/sandboxing) — exécution de commandes dans des environnements isolés (sandboxed)
+- [Background Process](/fr/gateway/background-process) — tool d'exécution et de processus longue durée
+- [Security](/fr/gateway/security) — stratégie de tool et accès élevé

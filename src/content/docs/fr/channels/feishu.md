@@ -355,7 +355,7 @@ Voir [Obtenir les IDs de groupe/utilisateur](#get-groupuser-ids) pour des consei
 
 ## Référence de configuration
 
-Configuration complète : [Configuration du Gateway](/en/gateway/configuration)
+Configuration complète : [Configuration du Gateway](/fr/gateway/configuration)
 
 | Paramètre                                         | Description                                       | Par défaut       |
 | ------------------------------------------------- | ------------------------------------------------- | ---------------- |
@@ -419,8 +419,8 @@ Configuration complète : [Configuration du Gateway](/en/gateway/configuration)
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appairage](/en/channels/pairing) — flux d'authentification et d'appariement DM
-- [Groupes](/en/channels/groups) — comportement des discussions de groupe et filtrage par mention
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appairage](/fr/channels/pairing) — flux d'authentification et d'appariement DM
+- [Groupes](/fr/channels/groups) — comportement des discussions de groupe et filtrage par mention
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

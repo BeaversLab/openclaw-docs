@@ -393,7 +393,7 @@ Si está pasando de la autenticación por token a la de proxy de confianza:
 
 ## Relacionado
 
-- [Seguridad](/en/gateway/security) — guía de seguridad completa
-- [Configuración](/en/gateway/configuration) — referencia de configuración
-- [Acceso remoto](/en/gateway/remote) — otros patrones de acceso remoto
-- [Tailscale](/en/gateway/tailscale) — alternativa más simple para acceso solo a tailnet
+- [Seguridad](/es/gateway/security) — guía de seguridad completa
+- [Configuración](/es/gateway/configuration) — referencia de configuración
+- [Acceso remoto](/es/gateway/remote) — otros patrones de acceso remoto
+- [Tailscale](/es/gateway/tailscale) — alternativa más simple para acceso solo a tailnet

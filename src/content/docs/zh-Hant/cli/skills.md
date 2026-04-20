@@ -13,9 +13,9 @@ title: "skills"
 
 相關：
 
-- 技能系統：[技能](/en/tools/skills)
-- 技能設定：[技能設定](/en/tools/skills-config)
-- ClawHub 安裝：[ClawHub](/en/tools/clawhub)
+- 技能系統：[技能](/zh-Hant/tools/skills)
+- 技能設定：[技能設定](/zh-Hant/tools/skills-config)
+- ClawHub 安裝：[ClawHub](/zh-Hant/tools/clawhub)
 
 ## 指令
 

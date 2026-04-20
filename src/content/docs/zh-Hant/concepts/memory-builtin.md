@@ -65,7 +65,7 @@ OpenClaw 會將 `MEMORY.md` 和 `memory/*.md` 索引為區塊 (約 400 個權位
   變更時，會自動重建整個索引。
 - **隨需重新索引：** `openclaw memory index --force`
 
-<Info>您也可以使用 `memorySearch.extraPaths` 對工作區外的 Markdown 檔案進行索引。請參閱 [配置參考](/en/reference/memory-config#additional-memory-paths)。</Info>
+<Info>您也可以使用 `memorySearch.extraPaths` 對工作區外的 Markdown 檔案進行索引。請參閱 [配置參考](/zh-Hant/reference/memory-config#additional-memory-paths)。</Info>
 
 ## 使用時機
 
@@ -76,9 +76,9 @@ OpenClaw 會將 `MEMORY.md` 和 `memory/*.md` 索引為區塊 (約 400 個權位
 - 支援所有嵌入提供者。
 - 混合搜尋結合了這兩種檢索方法的優點。
 
-如果您需要重新排序、查詢擴充，或想要對工作區外的目錄進行索引，請考慮切換到 [QMD](/en/concepts/memory-qmd)。
+如果您需要重新排序、查詢擴充，或想要對工作區外的目錄進行索引，請考慮切換到 [QMD](/zh-Hant/concepts/memory-qmd)。
 
-如果您想要具有自動使用者建模的跨會話記憶，請考慮使用 [Honcho](/en/concepts/memory-honcho)。
+如果您想要具有自動使用者建模的跨會話記憶，請考慮使用 [Honcho](/zh-Hant/concepts/memory-honcho)。
 
 ## 疑難排解
 
@@ -91,4 +91,4 @@ OpenClaw 會將 `MEMORY.md` 和 `memory/*.md` 索引為區塊 (約 400 個權位
 ## 配置
 
 有關嵌入提供者設定、混合搜尋調整（權重、MMR、時間衰減）、批次索引、多模態記憶、sqlite-vec、額外路徑以及所有其他配置選項，請參閱
-[記憶配置參考](/en/reference/memory-config)。
+[記憶配置參考](/zh-Hant/reference/memory-config)。

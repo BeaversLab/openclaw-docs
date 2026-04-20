@@ -390,7 +390,7 @@ OpenClaw 拒绝了环回源的受信任代理请求。
 
 ## 相关
 
-- [安全性](/en/gateway/security) — 完整安全指南
-- [配置](/en/gateway/configuration) — 配置参考
-- [远程访问](/en/gateway/remote) — 其他远程访问模式
-- [Tailscale](/en/gateway/tailscale) — 仅适用于 tailnet 访问的更简单替代方案
+- [安全性](/zh/gateway/security) — 完整安全指南
+- [配置](/zh/gateway/configuration) — 配置参考
+- [远程访问](/zh/gateway/remote) — 其他远程访问模式
+- [Tailscale](/zh/gateway/tailscale) — 仅适用于 tailnet 访问的更简单替代方案

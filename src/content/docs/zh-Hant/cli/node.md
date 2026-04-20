@@ -123,7 +123,7 @@ openclaw devices approve <requestId>
 `system.run` 受本地執行核准限制：
 
 - `~/.openclaw/exec-approvals.json`
-- [執行核准](/en/tools/exec-approvals)
+- [執行核准](/zh-Hant/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>` (從 Gateway 編輯)
 
 對於已核准的異步節點執行，OpenClaw 會在提示前準備一個標準的 `systemRunPlan`。後續核准的 `system.run` 轉發會重複使用該儲存的計畫，因此在建立核准請求後對 command/cwd/session 欄位的編輯將被拒絕，而不是改變節點執行的內容。

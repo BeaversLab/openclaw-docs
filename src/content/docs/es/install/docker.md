@@ -14,7 +14,7 @@ Docker es **opcional**. Úselo solo si desea una puerta de enlace contenerizada 
 
 - **Sí**: desea un entorno de puerta de enlace aislado y desechable o ejecutar OpenClaw en un host sin instalaciones locales.
 - **No**: estás ejecutándolo en tu propia máquina y solo quieres el bucle de desarrollo más rápido. Utiliza el flujo de instalación normal.
-- **Nota sobre el aislamiento**: el aislamiento del agente también utiliza Docker, pero **no** requiere que la pasarela completa se ejecute en Docker. Consulte [Aislamiento](/en/gateway/sandboxing).
+- **Nota sobre el aislamiento**: el aislamiento del agente también utiliza Docker, pero **no** requiere que la pasarela completa se ejecute en Docker. Consulte [Aislamiento](/es/gateway/sandboxing).
 
 ## Requisitos previos
 
@@ -22,7 +22,7 @@ Docker es **opcional**. Úselo solo si desea una puerta de enlace contenerizada 
 - Al menos 2 GB de RAM para la compilación de la imagen (`pnpm install` puede terminar por OOM en hosts con 1 GB con el código de salida 137)
 - Suficiente espacio en disco para las imágenes y los registros
 - Si se ejecuta en un VPS/huésped público, revise
-  [Endurecimiento de seguridad para la exposición a la red](/en/gateway/security),
+  [Endurecimiento de seguridad para la exposición a la red](/es/gateway/security),
   especialmente la política de firewall `DOCKER-USER` de Docker.
 
 ## Pasarela en contenedor
@@ -89,7 +89,7 @@ Docker es **opcional**. Úselo solo si desea una puerta de enlace contenerizada 
     docker compose run --rm openclaw-cli channels add --channel discord --token "<token>"
     ```
 
-    Documentación: [WhatsApp](/en/channels/whatsapp), [Telegram](/en/channels/telegram), [Discord](/en/channels/discord)
+    Documentación: [WhatsApp](/es/channels/whatsapp), [Telegram](/es/channels/telegram), [Discord](/es/channels/discord)
 
   </Step>
 </Steps>
@@ -168,7 +168,7 @@ Ese directorio de configuración montado es donde OpenClaw mantiene:
 - `.env` para secretos de tiempo de ejecución respaldados por variables de entorno, como `OPENCLAW_GATEWAY_TOKEN`
 
 Para obtener detalles completos sobre la persistencia en implementaciones de VM, consulte
-[Docker VM Runtime - What persists where](/en/install/docker-vm-runtime#what-persists-where).
+[Docker VM Runtime - What persists where](/es/install/docker-vm-runtime#what-persists-where).
 
 **Puntos calientes de crecimiento del disco:** vigila `media/`, archivos JSONL de sesión, `cron/runs/*.jsonl`
 y registros de archivos rotativos en `/tmp/openclaw/`.
@@ -186,7 +186,7 @@ Si instalaste ClawDock desde la antigua ruta raw `scripts/shell-helpers/clawdock
 
 Luego usa `clawdock-start`, `clawdock-stop`, `clawdock-dashboard`, etc. Ejecuta
 `clawdock-help` para ver todos los comandos.
-Consulta [ClawDock](/en/install/clawdock) para obtener la guía completa del auxiliar.
+Consulta [ClawDock](/es/install/clawdock) para obtener la guía completa del auxiliar.
 
 <AccordionGroup>
   <Accordion title="Habilitar el sandbox del agente para la puerta de enlace Docker">
@@ -284,8 +284,8 @@ Consulta [ClawDock](/en/install/clawdock) para obtener la guía completa del aux
 
 ### ¿Ejecutando en un VPS?
 
-Consulte [Hetzner (Docker VPS)](/en/install/hetzner) y
-[Docker VM Runtime](/en/install/docker-vm-runtime) para ver los pasos de implementación en VM compartida,
+Consulte [Hetzner (Docker VPS)](/es/install/hetzner) y
+[Docker VM Runtime](/es/install/docker-vm-runtime) para ver los pasos de implementación en VM compartida,
 incluida la creación de binarios, la persistencia y las actualizaciones.
 
 ## Agente Sandbox
@@ -302,9 +302,9 @@ contenedores del navegador.
 
 Para obtener la configuración completa, las imágenes, las notas de seguridad y los perfiles multiagente, consulte:
 
-- [Sandboxing](/en/gateway/sandboxing) -- referencia completa del sandbox
-- [OpenShell](/en/gateway/openshell) -- acceso al shell interactivo de los contenedores del sandbox
-- [Multi-Agent Sandbox and Tools](/en/tools/multi-agent-sandbox-tools) -- anulaciones por agente
+- [Sandboxing](/es/gateway/sandboxing) -- referencia completa del sandbox
+- [OpenShell](/es/gateway/openshell) -- acceso al shell interactivo de los contenedores del sandbox
+- [Multi-Agent Sandbox and Tools](/es/tools/multi-agent-sandbox-tools) -- anulaciones por agente
 
 ### Activación rápida
 
@@ -352,7 +352,7 @@ scripts/sandbox-setup.sh
     docker compose run --rm openclaw-cli devices approve <requestId>
     ```
 
-    Más detalles: [Dashboard](/en/web/dashboard), [Devices](/en/cli/devices).
+    Más detalles: [Dashboard](/es/web/dashboard), [Devices](/es/cli/devices).
 
   </Accordion>
 
@@ -369,8 +369,8 @@ scripts/sandbox-setup.sh
 
 ## Relacionado
 
-- [Resumen de instalación](/en/install) — todos los métodos de instalación
-- [Podman](/en/install/podman) — alternativa a Podman para Docker
-- [ClawDock](/en/install/clawdock) — configuración comunitaria de Docker Compose
-- [Actualización](/en/install/updating) — mantener OpenClaw actualizado
-- [Configuración](/en/gateway/configuration) — configuración de la puerta de enlace después de la instalación
+- [Resumen de instalación](/es/install) — todos los métodos de instalación
+- [Podman](/es/install/podman) — alternativa a Podman para Docker
+- [ClawDock](/es/install/clawdock) — configuración comunitaria de Docker Compose
+- [Actualización](/es/install/updating) — mantener OpenClaw actualizado
+- [Configuración](/es/gateway/configuration) — configuración de la puerta de enlace después de la instalación

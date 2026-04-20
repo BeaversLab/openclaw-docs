@@ -86,17 +86,17 @@ OpenClaw fournit actuellement le provider `zai` inclus avec ces références GLM
   <Accordion title="Détails du provider">
     Les modèles GLM sont fournis par le provider d'exécution `zai`. Pour la configuration complète du provider,
     les points de terminaison régionaux et les capacités supplémentaires, consultez
-    [Z.AI provider docs](/en/providers/zai).
+    [Z.AI provider docs](/fr/providers/zai).
   </Accordion>
 </AccordionGroup>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Provider Z.AI" href="/en/providers/zai" icon="server">
+  <Card title="Provider Z.AI" href="/fr/providers/zai" icon="server">
     Configuration complète du provider Z.AI et points de terminaison régionaux.
   </Card>
-  <Card title="Sélection de modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection de modèle" href="/fr/concepts/model-providers" icon="layers">
     Choix des providers, références de modèle et comportement de basculement.
   </Card>
 </CardGroup>

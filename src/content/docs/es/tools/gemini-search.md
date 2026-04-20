@@ -92,6 +92,6 @@ Gemini que admita fundamentación a través de
 
 ## Relacionado
 
-- [Descripción general de Web Search](/en/tools/web) -- todos los proveedores y detección automática
-- [Brave Search](/en/tools/brave-search) -- resultados estructurados con fragmentos
-- [Perplexity Search](/en/tools/perplexity-search) -- resultados estructurados + extracción de contenido
+- [Descripción general de Web Search](/es/tools/web) -- todos los proveedores y detección automática
+- [Brave Search](/es/tools/brave-search) -- resultados estructurados con fragmentos
+- [Perplexity Search](/es/tools/perplexity-search) -- resultados estructurados + extracción de contenido

@@ -9,7 +9,7 @@ title: "Solución de problemas"
 # Solución de problemas de la puerta de enlace
 
 Esta página es el manual de procedimientos profundo.
-Comience en [/help/troubleshooting](/en/help/troubleshooting) si desea primero el flujo de triaje rápido.
+Comience en [/help/troubleshooting](/es/help/troubleshooting) si desea primero el flujo de triaje rápido.
 
 ## Escalera de comandos
 
@@ -55,9 +55,9 @@ Opciones de solución:
 
 Relacionado:
 
-- [/providers/anthropic](/en/providers/anthropic)
-- [/reference/token-use](/en/reference/token-use)
-- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/en/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
+- [/providers/anthropic](/es/providers/anthropic)
+- [/reference/token-use](/es/reference/token-use)
+- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/es/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
 
 ## El backend local compatible con OpenAI pasa las sondas directas pero fallan las ejecuciones de agentes
 
@@ -108,9 +108,9 @@ Opciones de corrección:
 
 Relacionado:
 
-- [/gateway/local-models](/en/gateway/local-models)
-- [/gateway/configuration](/en/gateway/configuration)
-- [/gateway/configuration-reference#openai-compatible-endpoints](/en/gateway/configuration-reference#openai-compatible-endpoints)
+- [/gateway/local-models](/es/gateway/local-models)
+- [/gateway/configuration](/es/gateway/configuration)
+- [/gateway/configuration-reference#openai-compatible-endpoints](/es/gateway/configuration-reference#openai-compatible-endpoints)
 
 ## Sin respuestas
 
@@ -138,9 +138,9 @@ Firmas comunes:
 
 Relacionado:
 
-- [/channels/troubleshooting](/en/channels/troubleshooting)
-- [/channels/pairing](/en/channels/pairing)
-- [/channels/groups](/en/channels/groups)
+- [/channels/troubleshooting](/es/channels/troubleshooting)
+- [/channels/pairing](/es/channels/pairing)
+- [/channels/groups](/es/channels/groups)
 
 ## Conectividad de la interfaz de usuario de control del panel
 
@@ -194,8 +194,8 @@ Use `error.details.code` de la respuesta `connect` fallida para elegir la siguie
 | Código de detalle            | Significado                                                                           | Acción recomendada                                                                                                                                                                                                                                                                                                                                                                           |
 | ---------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `AUTH_TOKEN_MISSING`         | El cliente no envió un token compartido requerido.                                    | Pegue/establezca el token en el cliente y reintente. Para rutas del panel: `openclaw config get gateway.auth.token` y luego pegue en la configuración de la Interfaz de Control.                                                                                                                                                                                                             |
-| `AUTH_TOKEN_MISMATCH`        | El token compartido no coincide con el token de autenticación de la puerta de enlace. | Si `canRetryWithDeviceToken=true`, permita un reintento de confianza. Los reintentos con token en caché reutilizan los alcances aprobados almacenados; las llamadas explícitas `deviceToken` / `scopes` mantienen los alcances solicitados. Si continúa fallando, ejecute la [lista de verificación de recuperación de desviación de token](/en/cli/devices#token-drift-recovery-checklist). |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | El token por dispositivo en caché está obsoleto o revocado.                           | Rote/vuelva a aprobar el token del dispositivo usando la [CLI de dispositivos](/en/cli/devices), luego reconecte.                                                                                                                                                                                                                                                                            |
+| `AUTH_TOKEN_MISMATCH`        | El token compartido no coincide con el token de autenticación de la puerta de enlace. | Si `canRetryWithDeviceToken=true`, permita un reintento de confianza. Los reintentos con token en caché reutilizan los alcances aprobados almacenados; las llamadas explícitas `deviceToken` / `scopes` mantienen los alcances solicitados. Si continúa fallando, ejecute la [lista de verificación de recuperación de desviación de token](/es/cli/devices#token-drift-recovery-checklist). |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | El token por dispositivo en caché está obsoleto o revocado.                           | Rote/vuelva a aprobar el token del dispositivo usando la [CLI de dispositivos](/es/cli/devices), luego reconecte.                                                                                                                                                                                                                                                                            |
 | `PAIRING_REQUIRED`           | La identidad del dispositivo es conocida pero no está aprobada para este rol.         | Aprobar solicitud pendiente: `openclaw devices list` y luego `openclaw devices approve <requestId>`.                                                                                                                                                                                                                                                                                         |
 
 Verificación de migración de autenticación de dispositivo v2:
@@ -221,11 +221,11 @@ Si `openclaw devices rotate` / `revoke` / `remove` se deniega inesperadamente:
 
 Relacionado:
 
-- [/web/control-ui](/en/web/control-ui)
-- [/gateway/configuration](/en/gateway/configuration) (modos de autenticación de puerta de enlace)
-- [/gateway/trusted-proxy-auth](/en/gateway/trusted-proxy-auth)
-- [/gateway/remote](/en/gateway/remote)
-- [/cli/devices](/en/cli/devices)
+- [/web/control-ui](/es/web/control-ui)
+- [/gateway/configuration](/es/gateway/configuration) (modos de autenticación de puerta de enlace)
+- [/gateway/trusted-proxy-auth](/es/gateway/trusted-proxy-auth)
+- [/gateway/remote](/es/gateway/remote)
+- [/cli/devices](/es/cli/devices)
 
 ## Servicio de puerta de enlace no ejecutándose
 
@@ -252,13 +252,13 @@ Firmas comunes:
 - `Gateway start blocked: set gateway.mode=local` o `existing config is missing gateway.mode` → el modo de puerta de enlace local no está habilitado, o el archivo de configuración fue sobrescrito y perdió `gateway.mode`. Solución: configure `gateway.mode="local"` en su configuración, o vuelva a ejecutar `openclaw onboard --mode local` / `openclaw setup` para restablecer la configuración de modo local esperada. Si está ejecutando OpenClaw mediante Podman, la ruta de configuración predeterminada es `~/.openclaw/openclaw.json`.
 - `refusing to bind gateway ... without auth` → enlace sin bucle local sin una ruta de autenticación de puerta de enlace válida (token/contraseña, o proxy de confianza donde esté configurado).
 - `another gateway instance is already listening` / `EADDRINUSE` → conflicto de puerto.
-- `Other gateway-like services detected (best effort)` → existen unidades launchd/systemd/schtasks obsoletas o en paralelo. La mayoría de las configuraciones deben mantener una sola puerta de enlace por máquina; si realmente necesita más de una, aisle los puertos + config/estado/espacio de trabajo. Consulte [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host).
+- `Other gateway-like services detected (best effort)` → existen unidades launchd/systemd/schtasks obsoletas o en paralelo. La mayoría de las configuraciones deben mantener una sola puerta de enlace por máquina; si realmente necesita más de una, aisle los puertos + config/estado/espacio de trabajo. Consulte [/gateway#multiple-gateways-same-host](/es/gateway#multiple-gateways-same-host).
 
 Relacionado:
 
-- [/gateway/background-process](/en/gateway/background-process)
-- [/gateway/configuration](/en/gateway/configuration)
-- [/gateway/doctor](/en/gateway/doctor)
+- [/gateway/background-process](/es/gateway/background-process)
+- [/gateway/configuration](/es/gateway/configuration)
+- [/gateway/doctor](/es/gateway/doctor)
 
 ## Advertencias de sondas de puerta de enlace
 
@@ -284,9 +284,9 @@ Firmas comunes:
 
 Relacionado:
 
-- [/cli/gateway](/en/cli/gateway)
-- [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host)
-- [/gateway/remote](/en/gateway/remote)
+- [/cli/gateway](/es/cli/gateway)
+- [/gateway#multiple-gateways-same-host](/es/gateway#multiple-gateways-same-host)
+- [/gateway/remote](/es/gateway/remote)
 
 ## Mensajes del canal conectado no fluyen
 
@@ -314,10 +314,10 @@ Firmas comunes:
 
 Relacionado:
 
-- [/channels/troubleshooting](/en/channels/troubleshooting)
-- [/channels/whatsapp](/en/channels/whatsapp)
-- [/channels/telegram](/en/channels/telegram)
-- [/channels/discord](/en/channels/discord)
+- [/channels/troubleshooting](/es/channels/troubleshooting)
+- [/channels/whatsapp](/es/channels/whatsapp)
+- [/channels/telegram](/es/channels/telegram)
+- [/channels/discord](/es/channels/discord)
 
 ## Entrega de Cron y latido
 
@@ -349,9 +349,9 @@ Firmas comunes:
 
 Relacionado:
 
-- [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
-- [/automation/cron-jobs](/en/automation/cron-jobs)
-- [/gateway/heartbeat](/en/gateway/heartbeat)
+- [/automation/cron-jobs#troubleshooting](/es/automation/cron-jobs#troubleshooting)
+- [/automation/cron-jobs](/es/automation/cron-jobs)
+- [/gateway/heartbeat](/es/gateway/heartbeat)
 
 ## Fallo de herramienta emparejada con nodo
 
@@ -380,9 +380,9 @@ Firmas comunes:
 
 Relacionado:
 
-- [/nodes/troubleshooting](/en/nodes/troubleshooting)
-- [/nodes/index](/en/nodes/index)
-- [/tools/exec-approvals](/en/tools/exec-approvals)
+- [/nodes/troubleshooting](/es/nodes/troubleshooting)
+- [/nodes/index](/es/nodes/index)
+- [/tools/exec-approvals](/es/tools/exec-approvals)
 
 ## Fallo de herramienta del navegador
 
@@ -425,8 +425,8 @@ Firmas comunes:
 
 Relacionado:
 
-- [/tools/browser-linux-troubleshooting](/en/tools/browser-linux-troubleshooting)
-- [/tools/browser](/en/tools/browser)
+- [/tools/browser-linux-troubleshooting](/es/tools/browser-linux-troubleshooting)
+- [/tools/browser](/es/tools/browser)
 
 ## Si actualizaste y algo se rompió de repente
 
@@ -499,6 +499,6 @@ openclaw gateway restart
 
 Relacionado:
 
-- [/gateway/pairing](/en/gateway/pairing)
-- [/gateway/authentication](/en/gateway/authentication)
-- [/gateway/background-process](/en/gateway/background-process)
+- [/gateway/pairing](/es/gateway/pairing)
+- [/gateway/authentication](/es/gateway/authentication)
+- [/gateway/background-process](/es/gateway/background-process)

@@ -52,7 +52,7 @@ OpenClaw 隨附三個安裝程式腳本，由 `openclaw.ai` 提供。
   </Tab>
 </Tabs>
 
-<Note>如果安裝成功但在新的終端機中找不到 `openclaw`，請參閱 [Node.js 疑難排解](/en/install/node#troubleshooting)。</Note>
+<Note>如果安裝成功但在新的終端機中找不到 `openclaw`，請參閱 [Node.js 疑難排解](/zh-Hant/install/node#troubleshooting)。</Note>
 
 ---
 
@@ -313,6 +313,6 @@ OpenClaw 隨附三個安裝程式腳本，由 `openclaw.ai` 提供。
   </Accordion>
 
   <Accordion title="安裝後找不到 openclaw">
-    通常是 PATH 問題。請參閱 [Node.js 疑難排解](/en/install/node#troubleshooting)。
+    通常是 PATH 問題。請參閱 [Node.js 疑難排解](/zh-Hant/install/node#troubleshooting)。
   </Accordion>
 </AccordionGroup>

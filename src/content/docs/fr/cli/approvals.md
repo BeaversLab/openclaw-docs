@@ -15,8 +15,8 @@ Alias : `openclaw exec-approvals`
 
 Connexes :
 
-- Approbations exec : [Approbations exec](/en/tools/exec-approvals)
-- Nœuds : [Nœuds](/en/nodes)
+- Approbations exec : [Approbations exec](/fr/tools/exec-approvals)
+- Nœuds : [Nœuds](/fr/nodes)
 
 ## `openclaw exec-policy`
 

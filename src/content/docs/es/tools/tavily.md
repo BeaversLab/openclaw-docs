@@ -124,6 +124,6 @@ Consejos:
 
 ## Relacionado
 
-- [Descripción general de la búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
-- [Firecrawl](/en/tools/firecrawl) -- búsqueda + extracción con extracción de contenido
-- [Exa Search](/en/tools/exa-search) -- búsqueda neuronal con extracción de contenido
+- [Descripción general de la búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [Firecrawl](/es/tools/firecrawl) -- búsqueda + extracción con extracción de contenido
+- [Exa Search](/es/tools/exa-search) -- búsqueda neuronal con extracción de contenido

@@ -12,8 +12,8 @@ Ver los registros de archivo de Gateway a través de RPC (funciona en modo remot
 
 Relacionado:
 
-- Resumen de registros: [Registros](/en/logging)
-- CLI de Gateway: [gateway](/en/cli/gateway)
+- Resumen de registros: [Registros](/es/logging)
+- CLI de Gateway: [gateway](/es/cli/gateway)
 
 ## Opciones
 

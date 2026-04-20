@@ -27,11 +27,11 @@ Les profils d'authentification sont **propres à chaque agent**. Chaque agent li
 
 Les identifiants de l'agent principal ne sont **pas** partagés automatiquement. Ne réutilisez jamais `agentDir` entre les agents (cela provoque des collisions d'authentification/session). Si vous souhaitez partager des identifiants, copiez `auth-profiles.json` dans le `agentDir` de l'autre agent.
 
-Les compétences sont chargées à partir de l'espace de travail de chaque agent ainsi que des racines partagées telles que `~/.openclaw/skills`, puis filtrées par la liste d'autorisation des compétences de l'agent effectif lorsqu'elle est configurée. Utilisez `agents.defaults.skills` pour une base partagée et `agents.list[].skills` pour un remplacement par agent. Voir [Skills: per-agent vs shared](/en/tools/skills#per-agent-vs-shared-skills) et [Skills: agent skill allowlists](/en/tools/skills#agent-skill-allowlists).
+Les compétences sont chargées à partir de l'espace de travail de chaque agent ainsi que des racines partagées telles que `~/.openclaw/skills`, puis filtrées par la liste d'autorisation des compétences de l'agent effectif lorsqu'elle est configurée. Utilisez `agents.defaults.skills` pour une base partagée et `agents.list[].skills` pour un remplacement par agent. Voir [Skills: per-agent vs shared](/fr/tools/skills#per-agent-vs-shared-skills) et [Skills: agent skill allowlists](/fr/tools/skills#agent-skill-allowlists).
 
 Le Gateway peut héberger **un agent** (par défaut) ou **plusieurs agents** côte à côte.
 
-**Remarque sur l'espace de travail :** l'espace de travail de chaque agent est le **cwd par défaut**, et non un bac à sable strict. Les chemins relatifs sont résolus à l'intérieur de l'espace de travail, mais les chemins absolus peuvent atteindre d'autres emplacements de l'hôte à moins que le sandboxing ne soit activé. Voir [Sandboxing](/en/gateway/sandboxing).
+**Remarque sur l'espace de travail :** l'espace de travail de chaque agent est le **cwd par défaut**, et non un bac à sable strict. Les chemins relatifs sont résolus à l'intérieur de l'espace de travail, mais les chemins absolus peuvent atteindre d'autres emplacements de l'hôte à moins que le sandboxing ne soit activé. Voir [Sandboxing](/fr/gateway/sandboxing).
 
 ## Chemins (carte rapide)
 
@@ -94,7 +94,7 @@ Créez un compte par agent sur vos canaux préférés :
 openclaw channels login --channel whatsapp --account work
 ```
 
-Voir les guides de canal : [Discord](/en/channels/discord), [Telegram](/en/channels/telegram), [WhatsApp](/en/channels/whatsapp).
+Voir les guides de canal : [Discord](/fr/channels/discord), [Telegram](/fr/channels/telegram), [WhatsApp](/fr/channels/whatsapp).
 
   </Step>
 
@@ -205,7 +205,7 @@ Exemple :
 Notes :
 
 - Le contrôle d'accès DM est **global par compte WhatsApp** (appariement/liste blanche), et non par agent.
-- Pour les groupes partagés, liez le groupe à un seul agent ou utilisez [Groupes de diffusion](/en/channels/broadcast-groups).
+- Pour les groupes partagés, liez le groupe à un seul agent ou utilisez [Groupes de diffusion](/fr/channels/broadcast-groups).
 
 ## Règles de routage (comment les messages choisissent un agent)
 
@@ -579,12 +579,12 @@ Remarque : `tools.elevated` est **global** et basé sur l'expéditeur ; il n'est
 Si vous avez besoin de limites par agent, utilisez `agents.list[].tools` pour refuser `exec`.
 Pour le ciblage de groupe, utilisez `agents.list[].groupChat.mentionPatterns` afin que les @mentions correspondent proprement à l'agent prévu.
 
-Voir [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) pour des exemples détaillés.
+Voir [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools) pour des exemples détaillés.
 
 ## Connexes
 
-- [Channel Routing](/en/channels/channel-routing) — acheminement des messages vers les agents
-- [Sub-Agents](/en/tools/subagents) — lancement d'exécutions d'agent en arrière-plan
-- [ACP Agents](/en/tools/acp-agents) — exécution de harnais de codage externes
-- [Presence](/en/concepts/presence) — présence et disponibilité des agents
-- [Session](/en/concepts/session) — isolement et acheminement des sessions
+- [Channel Routing](/fr/channels/channel-routing) — acheminement des messages vers les agents
+- [Sub-Agents](/fr/tools/subagents) — lancement d'exécutions d'agent en arrière-plan
+- [ACP Agents](/fr/tools/acp-agents) — exécution de harnais de codage externes
+- [Presence](/fr/concepts/presence) — présence et disponibilité des agents
+- [Session](/fr/concepts/session) — isolement et acheminement des sessions

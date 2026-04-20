@@ -390,7 +390,7 @@ OpenClaw 拒絕了來自回送來源的受信任代理請求。
 
 ## 相關
 
-- [安全性](/en/gateway/security) — 完整的安全性指南
-- [設定](/en/gateway/configuration) — 設定參考
-- [遠端存取](/en/gateway/remote) — 其他遠端存取模式
-- [Tailscale](/en/gateway/tailscale) — 僅限 tailnet 存取的更簡單替代方案
+- [安全性](/zh-Hant/gateway/security) — 完整的安全性指南
+- [設定](/zh-Hant/gateway/configuration) — 設定參考
+- [遠端存取](/zh-Hant/gateway/remote) — 其他遠端存取模式
+- [Tailscale](/zh-Hant/gateway/tailscale) — 僅限 tailnet 存取的更簡單替代方案

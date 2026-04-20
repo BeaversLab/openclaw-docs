@@ -180,21 +180,21 @@ Utilisez une configuration explicite lorsque :
   </Accordion>
 </AccordionGroup>
 
-<Warning>Plus d'aide : [Dépannage](/en/help/troubleshooting) et [FAQ](/en/help/faq).</Warning>
+<Warning>Plus d'aide : [Dépannage](/fr/help/troubleshooting) et [FAQ](/fr/help/faq).</Warning>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection de modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection de modèle" href="/fr/concepts/model-providers" icon="layers">
     Choix des providers, des références de modèle et du comportement de basculement.
   </Card>
-  <Card title="OpenAI" href="/en/providers/openai" icon="bolt">
+  <Card title="OpenAI" href="/fr/providers/openai" icon="bolt">
     Provider natif OpenAI et comportement des routes compatibles OpenAI.
   </Card>
-  <Card title="OAuth et auth" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth et auth" href="/fr/gateway/authentication" icon="key">
     Détails d'authentification et règles de réutilisation des informations d'identification.
   </Card>
-  <Card title="Dépannage" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
     Problèmes courants et comment les résoudre.
   </Card>
 </CardGroup>

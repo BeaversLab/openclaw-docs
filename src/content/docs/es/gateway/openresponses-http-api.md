@@ -19,7 +19,7 @@ Bajo el capó, las solicitudes se ejecutan como una ejecución de agente normal 
 
 ## Autenticación, seguridad y enrutamiento
 
-El comportamiento operativo coincide con [OpenAI Chat Completions](/en/gateway/openai-http-api):
+El comportamiento operativo coincide con [OpenAI Chat Completions](/es/gateway/openai-http-api):
 
 - use la ruta de autenticación HTTP de la puerta de enlace coincidente:
   - autenticación de secreto compartido (`gateway.auth.mode="token"` o `"password"`): `Authorization: Bearer <token-or-password>`
@@ -56,7 +56,7 @@ La misma superficie de compatibilidad también incluye:
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-Para la explicación canónica de cómo los modelos dirigidos a agentes, `openclaw/default`, el paso directo de incrustaciones y las anulaciones del modelo de backend se ajustan, consulte [OpenAI Chat Completions](/en/gateway/openai-http-api#agent-first-model-contract) y [Model list and agent routing](/en/gateway/openai-http-api#model-list-and-agent-routing).
+Para la explicación canónica de cómo los modelos dirigidos a agentes, `openclaw/default`, el paso directo de incrustaciones y las anulaciones del modelo de backend se ajustan, consulte [OpenAI Chat Completions](/es/gateway/openai-http-api#agent-first-model-contract) y [Model list and agent routing](/es/gateway/openai-http-api#model-list-and-agent-routing).
 
 ## Comportamiento de la sesión
 
@@ -243,7 +243,7 @@ Nota de seguridad:
 - Las listas de permitidos de URL se aplican antes de la recuperación y en los saltos de redirección.
 - Permitir un nombre de host no evita el bloqueo de IP privadas/internas.
 - Para gateways expuestos a Internet, aplique controles de salida de red además de las protecciones a nivel de aplicación.
-  Consulte [Seguridad](/en/gateway/security).
+  Consulte [Seguridad](/es/gateway/security).
 
 ## Transmisión (SSE)
 

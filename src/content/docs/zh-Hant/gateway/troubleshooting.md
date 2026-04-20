@@ -9,7 +9,7 @@ title: "故障排除"
 # 閘道疑難排解
 
 此頁面是深度手冊。
-如果您想先進行快速分流流程，請從 [/help/troubleshooting](/en/help/troubleshooting) 開始。
+如果您想先進行快速分流流程，請從 [/help/troubleshooting](/zh-Hant/help/troubleshooting) 開始。
 
 ## 指令階梯
 
@@ -54,9 +54,9 @@ openclaw config get agents.defaults.models
 
 相關：
 
-- [/providers/anthropic](/en/providers/anthropic)
-- [/reference/token-use](/en/reference/token-use)
-- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/en/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
+- [/providers/anthropic](/zh-Hant/providers/anthropic)
+- [/reference/token-use](/zh-Hant/reference/token-use)
+- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/zh-Hant/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
 
 ## 本機相容 OpenAI 的後端通過直接探測，但代理執行失敗
 
@@ -101,9 +101,9 @@ openclaw logs --follow
 
 相關：
 
-- [/gateway/local-models](/en/gateway/local-models)
-- [/gateway/configuration](/en/gateway/configuration)
-- [/gateway/configuration-reference#openai-compatible-endpoints](/en/gateway/configuration-reference#openai-compatible-endpoints)
+- [/gateway/local-models](/zh-Hant/gateway/local-models)
+- [/gateway/configuration](/zh-Hant/gateway/configuration)
+- [/gateway/configuration-reference#openai-compatible-endpoints](/zh-Hant/gateway/configuration-reference#openai-compatible-endpoints)
 
 ## 無回覆
 
@@ -131,9 +131,9 @@ openclaw logs --follow
 
 相關：
 
-- [/channels/troubleshooting](/en/channels/troubleshooting)
-- [/channels/pairing](/en/channels/pairing)
-- [/channels/groups](/en/channels/groups)
+- [/channels/troubleshooting](/zh-Hant/channels/troubleshooting)
+- [/channels/pairing](/zh-Hant/channels/pairing)
+- [/channels/groups](/zh-Hant/channels/groups)
 
 ## 儀表板控制 UI 連線性
 
@@ -181,12 +181,12 @@ openclaw gateway status --json
 
 使用失敗的 `connect` 回應中的 `error.details.code` 來選擇下一步動作：
 
-| 詳情代碼                     | 含義                                     | 建議動作                                                                                                                                                                                                                                                                   |
-| ---------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_TOKEN_MISSING`         | 用戶端未發送所需的共用權杖。             | 在客戶端中貼上/設定權杖並重試。對於儀表板路徑：`openclaw config get gateway.auth.token` 然後貼上到 Control UI 設定中。                                                                                                                                                     |
-| `AUTH_TOKEN_MISMATCH`        | 共享的權杖與閘道驗證權杖不符。           | 如果是 `canRetryWithDeviceToken=true`，允許一次受信任的重試。使用快取權杖的重試會重複使用已儲存的核准範圍；明確的 `deviceToken` / `scopes` 呼叫者會保留請求的範圍。如果仍然失敗，請執行 [token drift recovery checklist](/en/cli/devices#token-drift-recovery-checklist)。 |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | 每個裝置的快取權杖已過期或已撤銷。       | 使用 [devices CLI](/en/cli/devices) 旋轉/重新核准裝置權杖，然後重新連線。                                                                                                                                                                                                  |
-| `PAIRING_REQUIRED`           | 裝置身分識別已知，但未獲得此角色的核准。 | 核准待處理的請求：`openclaw devices list` 然後 `openclaw devices approve <requestId>`。                                                                                                                                                                                    |
+| 詳情代碼                     | 含義                                     | 建議動作                                                                                                                                                                                                                                                                        |
+| ---------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_TOKEN_MISSING`         | 用戶端未發送所需的共用權杖。             | 在客戶端中貼上/設定權杖並重試。對於儀表板路徑：`openclaw config get gateway.auth.token` 然後貼上到 Control UI 設定中。                                                                                                                                                          |
+| `AUTH_TOKEN_MISMATCH`        | 共享的權杖與閘道驗證權杖不符。           | 如果是 `canRetryWithDeviceToken=true`，允許一次受信任的重試。使用快取權杖的重試會重複使用已儲存的核准範圍；明確的 `deviceToken` / `scopes` 呼叫者會保留請求的範圍。如果仍然失敗，請執行 [token drift recovery checklist](/zh-Hant/cli/devices#token-drift-recovery-checklist)。 |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | 每個裝置的快取權杖已過期或已撤銷。       | 使用 [devices CLI](/zh-Hant/cli/devices) 旋轉/重新核准裝置權杖，然後重新連線。                                                                                                                                                                                                  |
+| `PAIRING_REQUIRED`           | 裝置身分識別已知，但未獲得此角色的核准。 | 核准待處理的請求：`openclaw devices list` 然後 `openclaw devices approve <requestId>`。                                                                                                                                                                                         |
 
 裝置驗證 v2 遷移檢查：
 
@@ -209,11 +209,11 @@ openclaw gateway status
 
 相關：
 
-- [/web/control-ui](/en/web/control-ui)
-- [/gateway/configuration](/en/gateway/configuration) (閘道驗證模式)
-- [/gateway/trusted-proxy-auth](/en/gateway/trusted-proxy-auth)
-- [/gateway/remote](/en/gateway/remote)
-- [/cli/devices](/en/cli/devices)
+- [/web/control-ui](/zh-Hant/web/control-ui)
+- [/gateway/configuration](/zh-Hant/gateway/configuration) (閘道驗證模式)
+- [/gateway/trusted-proxy-auth](/zh-Hant/gateway/trusted-proxy-auth)
+- [/gateway/remote](/zh-Hant/gateway/remote)
+- [/cli/devices](/zh-Hant/cli/devices)
 
 ## 閘道服務未執行
 
@@ -240,13 +240,13 @@ openclaw gateway status --deep   # also scan system-level services
 - `Gateway start blocked: set gateway.mode=local` 或 `existing config is missing gateway.mode` → 未啟用本機閘道模式，或設定檔被覆蓋並遺失了 `gateway.mode`。解決方法：在設定中設定 `gateway.mode="local"`，或重新執行 `openclaw onboard --mode local` / `openclaw setup` 以重新套用預期的本機模式設定。如果您透過 Podman 執行 OpenClaw，預設設定路徑為 `~/.openclaw/openclaw.json`。
 - `refusing to bind gateway ... without auth` → 在沒有有效閘道驗證路徑（權杖/密碼，或設定的受信任代理）的情況下進行非回送綁定。
 - `another gateway instance is already listening` / `EADDRINUSE` → 連接埠衝突。
-- `Other gateway-like services detected (best effort)` → 存在過時或並行的 launchd/systemd/schtasks 單元。大多數設定應該每台機器保留一個閘道；如果您確實需要多個，請隔離連接埠 + 設定/狀態/工作區。請參閱 [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host)。
+- `Other gateway-like services detected (best effort)` → 存在過時或並行的 launchd/systemd/schtasks 單元。大多數設定應該每台機器保留一個閘道；如果您確實需要多個，請隔離連接埠 + 設定/狀態/工作區。請參閱 [/gateway#multiple-gateways-same-host](/zh-Hant/gateway#multiple-gateways-same-host)。
 
 相關連結：
 
-- [/gateway/background-process](/en/gateway/background-process)
-- [/gateway/configuration](/en/gateway/configuration)
-- [/gateway/doctor](/en/gateway/doctor)
+- [/gateway/background-process](/zh-Hant/gateway/background-process)
+- [/gateway/configuration](/zh-Hant/gateway/configuration)
+- [/gateway/doctor](/zh-Hant/gateway/doctor)
 
 ## 閘道探測警告
 
@@ -272,9 +272,9 @@ openclaw gateway probe --ssh user@gateway-host
 
 相關連結：
 
-- [/cli/gateway](/en/cli/gateway)
-- [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host)
-- [/gateway/remote](/en/gateway/remote)
+- [/cli/gateway](/zh-Hant/cli/gateway)
+- [/gateway#multiple-gateways-same-host](/zh-Hant/gateway#multiple-gateways-same-host)
+- [/gateway/remote](/zh-Hant/gateway/remote)
 
 ## 頻道已連線但訊息無法流動
 
@@ -302,10 +302,10 @@ openclaw config get channels
 
 相關連結：
 
-- [/channels/troubleshooting](/en/channels/troubleshooting)
-- [/channels/whatsapp](/en/channels/whatsapp)
-- [/channels/telegram](/en/channels/telegram)
-- [/channels/discord](/en/channels/discord)
+- [/channels/troubleshooting](/zh-Hant/channels/troubleshooting)
+- [/channels/whatsapp](/zh-Hant/channels/whatsapp)
+- [/channels/telegram](/zh-Hant/channels/telegram)
+- [/channels/discord](/zh-Hant/channels/discord)
 
 ## Cron 與心跳傳遞
 
@@ -337,9 +337,9 @@ openclaw logs --follow
 
 Related:
 
-- [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
-- [/automation/cron-jobs](/en/automation/cron-jobs)
-- [/gateway/heartbeat](/en/gateway/heartbeat)
+- [/automation/cron-jobs#troubleshooting](/zh-Hant/automation/cron-jobs#troubleshooting)
+- [/automation/cron-jobs](/zh-Hant/automation/cron-jobs)
+- [/gateway/heartbeat](/zh-Hant/gateway/heartbeat)
 
 ## Node paired tool fails
 
@@ -368,9 +368,9 @@ Common signatures:
 
 Related:
 
-- [/nodes/troubleshooting](/en/nodes/troubleshooting)
-- [/nodes/index](/en/nodes/index)
-- [/tools/exec-approvals](/en/tools/exec-approvals)
+- [/nodes/troubleshooting](/zh-Hant/nodes/troubleshooting)
+- [/nodes/index](/zh-Hant/nodes/index)
+- [/tools/exec-approvals](/zh-Hant/tools/exec-approvals)
 
 ## Browser tool fails
 
@@ -413,8 +413,8 @@ Common signatures:
 
 相關連結：
 
-- [/tools/browser-linux-troubleshooting](/en/tools/browser-linux-troubleshooting)
-- [/tools/browser](/en/tools/browser)
+- [/tools/browser-linux-troubleshooting](/zh-Hant/tools/browser-linux-troubleshooting)
+- [/tools/browser](/zh-Hant/tools/browser)
 
 ## 如果您升級後突然出現問題
 
@@ -487,6 +487,6 @@ openclaw gateway restart
 
 相關連結：
 
-- [/gateway/pairing](/en/gateway/pairing)
-- [/gateway/authentication](/en/gateway/authentication)
-- [/gateway/background-process](/en/gateway/background-process)
+- [/gateway/pairing](/zh-Hant/gateway/pairing)
+- [/gateway/authentication](/zh-Hant/gateway/authentication)
+- [/gateway/background-process](/zh-Hant/gateway/background-process)

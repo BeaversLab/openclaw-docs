@@ -39,7 +39,7 @@ openclaw sandbox explain --json
 - `"non-main"`：僅非主要會話會被置於沙箱中 (群組/頻道的常見「驚喜」)。
 - `"all"`：所有內容都會被置於沙箱中。
 
-請參閱 [Sandboxing](/en/gateway/sandboxing) 以了解完整矩陣 (範圍、工作區掛載、映像檔)。
+請參閱 [Sandboxing](/zh-Hant/gateway/sandboxing) 以了解完整矩陣 (範圍、工作區掛載、映像檔)。
 
 ### Bind 掛載（安全快速檢查）
 
@@ -117,7 +117,7 @@ openclaw sandbox explain --json
 - 啟用：`tools.elevated.enabled`（以及選擇性的 `agents.list[].tools.elevated.enabled`）
 - 發送者允許清單：`tools.elevated.allowFrom.<provider>`（以及選擇性的 `agents.list[].tools.elevated.allowFrom.<provider>`）
 
-請參閱[提升權限模式](/en/tools/elevated)。
+請參閱[提升權限模式](/zh-Hant/tools/elevated)。
 
 ## 常見的「沙箱監獄」修復方法
 
@@ -136,6 +136,6 @@ openclaw sandbox explain --json
 
 ## 另請參閱
 
-- [Sandboxing](/en/gateway/sandboxing) -- 完整的沙盒參考（模式、範圍、後端、映像檔）
-- [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) -- 每個代理程式的覆寫與優先順序
-- [Elevated Mode](/en/tools/elevated)
+- [Sandboxing](/zh-Hant/gateway/sandboxing) -- 完整的沙盒參考（模式、範圍、後端、映像檔）
+- [Multi-Agent Sandbox & Tools](/zh-Hant/tools/multi-agent-sandbox-tools) -- 每個代理程式的覆寫與優先順序
+- [Elevated Mode](/zh-Hant/tools/elevated)

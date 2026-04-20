@@ -21,18 +21,18 @@ Des applications compagnons natives Linux sont prévues. Les contributions sont 
 4. Depuis votre ordinateur portable : `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. Ouvrez `http://127.0.0.1:18789/` et authentifiez-vous avec le secret partagé configuré (token par défaut ; mot de passe si vous avez défini `gateway.auth.mode: "password"`)
 
-Guide complet du serveur Linux : [Linux Server](/en/vps). Exemple étape par étape pour VPS : [exe.dev](/en/install/exe-dev)
+Guide complet du serveur Linux : [Linux Server](/fr/vps). Exemple étape par étape pour VPS : [exe.dev](/fr/install/exe-dev)
 
 ## Installer
 
-- [Getting Started](/en/start/getting-started)
-- [Install & updates](/en/install/updating)
-- Flux optionnels : [Bun (expérimental)](/en/install/bun), [Nix](/en/install/nix), [Docker](/en/install/docker)
+- [Getting Started](/fr/start/getting-started)
+- [Install & updates](/fr/install/updating)
+- Flux optionnels : [Bun (expérimental)](/fr/install/bun), [Nix](/fr/install/nix), [Docker](/fr/install/docker)
 
 ## Gateway
 
-- [Gateway runbook](/en/gateway)
-- [Configuration](/en/gateway/configuration)
+- [Gateway runbook](/fr/gateway)
+- [Configuration](/fr/gateway/configuration)
 
 ## Installation du service Gateway (CLI)
 
@@ -64,7 +64,7 @@ openclaw doctor
 
 ## Contrôle système (unité utilisateur systemd)
 
-OpenClaw installe un service systemd **utilisateur** par défaut. Utilisez un service **système** pour les serveurs partagés ou toujours actifs. `openclaw gateway install` et `openclaw onboard --install-daemon` génèrent déjà l'unité canonique actuelle pour vous ; n'en écrivez une manuellement que si vous avez besoin d'une configuration système/gestionnaire de service personnalisée. Les instructions complètes sur le service se trouvent dans le [Gateway runbook](/en/gateway).
+OpenClaw installe un service systemd **utilisateur** par défaut. Utilisez un service **système** pour les serveurs partagés ou toujours actifs. `openclaw gateway install` et `openclaw onboard --install-daemon` génèrent déjà l'unité canonique actuelle pour vous ; n'en écrivez une manuellement que si vous avez besoin d'une configuration système/gestionnaire de service personnalisée. Les instructions complètes sur le service se trouvent dans le [Gateway runbook](/fr/gateway).
 
 Configuration minimale :
 

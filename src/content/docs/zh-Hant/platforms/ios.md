@@ -179,7 +179,7 @@ iOS 應用程式會瀏覽 `_openclaw-gw._tcp` 在 `local.` 上，以及（在設
 
 如果 mDNS 被阻擋，請使用單播 DNS-SD 區域（選擇一個網域；例如：
 `openclaw.internal.`）和 Tailscale 分割 DNS。
-請參閱 [Bonjour](/en/gateway/bonjour) 以取得 CoreDNS 範例。
+請參閱 [Bonjour](/zh-Hant/gateway/bonjour) 以取得 CoreDNS 範例。
 
 ### 手動主機/連接埠
 
@@ -218,12 +218,12 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 ## 常見錯誤
 
 - `NODE_BACKGROUND_UNAVAILABLE`：將 iOS 應用程式帶到前景（canvas/camera/螢幕指令需要它）。
-- `A2UI_HOST_NOT_CONFIGURED`：Gateway 沒有通告 canvas 主機 URL；請檢查 [Gateway configuration](/en/gateway/configuration) 中的 `canvasHost`。
+- `A2UI_HOST_NOT_CONFIGURED`：Gateway 沒有通告 canvas 主機 URL；請檢查 [Gateway configuration](/zh-Hant/gateway/configuration) 中的 `canvasHost`。
 - 配對提示從未出現：執行 `openclaw devices list` 並手動批准。
 - 重新安裝後重新連線失敗：鑰匙圈配對 token 已被清除；請重新配對節點。
 
 ## 相關文件
 
-- [配對](/en/channels/pairing)
-- [探索](/en/gateway/discovery)
-- [Bonjour](/en/gateway/bonjour)
+- [配對](/zh-Hant/channels/pairing)
+- [探索](/zh-Hant/gateway/discovery)
+- [Bonjour](/zh-Hant/gateway/bonjour)

@@ -8,7 +8,7 @@ title: "Journalisation du Gateway"
 
 # Journalisation
 
-Pour une vue d'ensemble destinée à l'utilisateur (CLI + Interface de contrôle + configuration), voir [/logging](/en/logging).
+Pour une vue d'ensemble destinée à l'utilisateur (CLI + Interface de contrôle + configuration), voir [/logging](/fr/logging).
 
 OpenClaw possède deux « surfaces » de journalisation :
 

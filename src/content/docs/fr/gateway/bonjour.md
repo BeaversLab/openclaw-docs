@@ -170,5 +170,5 @@ Bonjour/DNS‑SD échappe souvent les octets dans les noms d'instance de service
 
 ## Documentation connexe
 
-- Stratégie de découverte et sélection du transport : [Discovery](/en/gateway/discovery)
-- Appairage de nœuds + approbations : [Appairage Gateway](/en/gateway/pairing)
+- Stratégie de découverte et sélection du transport : [Discovery](/fr/gateway/discovery)
+- Appairage de nœuds + approbations : [Appairage Gateway](/fr/gateway/pairing)

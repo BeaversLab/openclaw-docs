@@ -161,5 +161,5 @@ openclaw devices approve <requestId>
 
 相关内容：
 
-- [仪表板身份验证故障排除](/en/web/dashboard#if-you-see-unauthorized-1008)
-- [Gateway(网关) 故障排除](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [仪表板身份验证故障排除](/zh/web/dashboard#if-you-see-unauthorized-1008)
+- [Gateway(网关) 故障排除](/zh/gateway/troubleshooting#dashboard-control-ui-connectivity)

@@ -255,11 +255,11 @@ El espacio es exclusivo en tiempo de ejecución: solo se resuelve un motor de co
 - Para el desarrollo, use `openclaw plugins install -l ./my-engine` para vincular un
   directorio de complementos local sin copiar.
 
-Consulte también: [Compaction](/en/concepts/compaction), [Context](/en/concepts/context),
-[Plugins](/en/tools/plugin), [Plugin manifest](/en/plugins/manifest).
+Consulte también: [Compaction](/es/concepts/compaction), [Context](/es/concepts/context),
+[Plugins](/es/tools/plugin), [Plugin manifest](/es/plugins/manifest).
 
 ## Relacionado
 
-- [Context](/en/concepts/context) — cómo se construye el contexto para los turnos del agente
-- [Plugin Architecture](/en/plugins/architecture) — registro de complementos de motor de contexto
-- [Compaction](/en/concepts/compaction) — resumiendo conversaciones largas
+- [Context](/es/concepts/context) — cómo se construye el contexto para los turnos del agente
+- [Plugin Architecture](/es/plugins/architecture) — registro de complementos de motor de contexto
+- [Compaction](/es/concepts/compaction) — resumiendo conversaciones largas

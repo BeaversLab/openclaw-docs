@@ -33,25 +33,25 @@ openclaw plugins install @openclaw/voice-call
 
 3. Reinicie el Gateway, luego configure bajo `plugins.entries.<id>.config`.
 
-Consulte [Llamada de voz](/en/plugins/voice-call) para ver un ejemplo concreto de plugin.
+Consulte [Llamada de voz](/es/plugins/voice-call) para ver un ejemplo concreto de plugin.
 
 ## Plugins disponibles (oficiales)
 
 - Microsoft Teams es solo plugin a partir del 15.01.2026; instale `@openclaw/msteams` si usa Teams.
 - Memoria (Core) — plugin de búsqueda de memoria incluido (habilitado por defecto a través de `plugins.slots.memory`)
 - Memoria (LanceDB) — plugin de memoria a largo plazo incluido (recuperación/captura automática; configure `plugins.slots.memory = "memory-lancedb"`)
-- [Llamada de voz](/en/plugins/voice-call) — `@openclaw/voice-call`
-- [Zalo Personal](/en/plugins/zalouser) — `@openclaw/zalouser`
-- [Matrix](/en/channels/matrix) — `@openclaw/matrix`
-- [Nostr](/en/channels/nostr) — `@openclaw/nostr`
-- [Zalo](/en/channels/zalo) — `@openclaw/zalo`
-- [Microsoft Teams](/en/channels/msteams) — `@openclaw/msteams`
+- [Llamada de voz](/es/plugins/voice-call) — `@openclaw/voice-call`
+- [Zalo Personal](/es/plugins/zalouser) — `@openclaw/zalouser`
+- [Matrix](/es/channels/matrix) — `@openclaw/matrix`
+- [Nostr](/es/channels/nostr) — `@openclaw/nostr`
+- [Zalo](/es/channels/zalo) — `@openclaw/zalo`
+- [Microsoft Teams](/es/channels/msteams) — `@openclaw/msteams`
 - Google Antigravity OAuth (autenticación del proveedor) — incluido como `google-antigravity-auth` (desactivado por defecto)
 - Gemini CLI OAuth (autenticación del proveedor) — incluido como `google-gemini-cli-auth` (desactivado por defecto)
 - Qwen OAuth (autenticación del proveedor) — incluido como `qwen-portal-auth` (desactivado por defecto)
 - Copilot Proxy (autenticación del proveedor) — puente local VS Code Copilot Proxy; distinto del inicio de sesión de dispositivo integrado `github-copilot` (incluido, desactivado por defecto)
 
-Los complementos de OpenClaw son **módulos de TypeScript** cargados en tiempo de ejecución a través de jiti. **La validación de la configuración no ejecuta el código del complemento**; en su lugar, utiliza el manifiesto del complemento y el esquema JSON. Consulte [Manifiesto del complemento](/en/plugins/manifest).
+Los complementos de OpenClaw son **módulos de TypeScript** cargados en tiempo de ejecución a través de jiti. **La validación de la configuración no ejecuta el código del complemento**; en su lugar, utiliza el manifiesto del complemento y el esquema JSON. Consulte [Manifiesto del complemento](/es/plugins/manifest).
 
 Los complementos pueden registrar:
 
@@ -64,7 +64,7 @@ Los complementos pueden registrar:
 - **Habilidades** (mediante la listado de directorios `skills` en el manifiesto del complemento)
 - **Comandos de respuesta automática** (se ejecutan sin invocar al agente de IA)
 
-Los complementos se ejecutan **en el mismo proceso** que el Gateway, por lo que debe tratarlos como código de confianza. Guía de creación de herramientas: [Herramientas de agente de complemento](/en/plugins/agent-tools).
+Los complementos se ejecutan **en el mismo proceso** que el Gateway, por lo que debe tratarlos como código de confianza. Guía de creación de herramientas: [Herramientas de agente de complemento](/es/plugins/agent-tools).
 
 ## Asistentes de tiempo de ejecución
 
@@ -506,7 +506,7 @@ luego configure `channels.<id>` en su configuración.
 
 ### Herramientas de agente
 
-Consulte la guía dedicada: [Herramientas de agente de complemento](/en/plugins/agent-tools).
+Consulte la guía dedicada: [Herramientas de agente de complemento](/es/plugins/agent-tools).
 
 ### Registrar un método RPC de puerta de enlace
 
@@ -643,7 +643,7 @@ Este repositorio incluye un complemento de llamada de voz (Twilio o registro de 
 - Config (twilio): `provider: "twilio"` + `twilio.accountSid/authToken/from` (opcional `statusCallbackUrl`, `twimlUrl`)
 - Config (desarrollo): `provider: "log"` (sin red)
 
-Consulte [Voice Call](/en/plugins/voice-call) y `extensions/voice-call/README.md` para la configuración y el uso.
+Consulte [Voice Call](/es/plugins/voice-call) y `extensions/voice-call/README.md` para la configuración y el uso.
 
 ## Notas de seguridad
 

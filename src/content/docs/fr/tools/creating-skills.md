@@ -10,7 +10,7 @@ read_when:
 
 Les compétences enseignent à l'agent comment et quand utiliser les outils. Chaque compétence est un répertoire contenant un fichier `SKILL.md` avec des en-têtes YAML et des instructions markdown.
 
-Pour savoir comment les compétences sont chargées et priorisées, consultez [Skills](/en/tools/skills).
+Pour savoir comment les compétences sont chargées et priorisées, consultez [Skills](/fr/tools/skills).
 
 ## Créez votre première compétence
 
@@ -112,7 +112,7 @@ L'en-tête YAML prend en charge ces champs :
 
 ## Connexes
 
-- [Référence des compétences](/en/tools/skills) — chargement, priorité et règles de blocage
-- [Configuration des compétences](/en/tools/skills-config) — schéma de configuration `skills.*`
-- [ClawHub](/en/tools/clawhub) — registre public de compétences
-- [Création de plugins](/en/plugins/building-plugins) — les plugins peuvent fournir des compétences
+- [Référence des compétences](/fr/tools/skills) — chargement, priorité et règles de blocage
+- [Configuration des compétences](/fr/tools/skills-config) — schéma de configuration `skills.*`
+- [ClawHub](/fr/tools/clawhub) — registre public de compétences
+- [Création de plugins](/fr/plugins/building-plugins) — les plugins peuvent fournir des compétences

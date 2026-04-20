@@ -16,9 +16,9 @@ Ouverture rapide (Gateway local) :
 
 Références clés :
 
-- [Control UI](/en/web/control-ui) pour l'utilisation et les fonctionnalités de l'interface.
-- [Tailscale](/en/gateway/tailscale) pour l'automatisation Serve/Funnel.
-- [Web surfaces](/en/web) pour les modes de liaison et les notes de sécurité.
+- [Control UI](/fr/web/control-ui) pour l'utilisation et les fonctionnalités de l'interface.
+- [Tailscale](/fr/gateway/tailscale) pour l'automatisation Serve/Funnel.
+- [Web surfaces](/fr/web) pour les modes de liaison et les notes de sécurité.
 
 L'authentification est appliquée lors de la poignée de main WebSocket via le chemin d'authentification de la passerelle configuré :
 
@@ -27,7 +27,7 @@ L'authentification est appliquée lors de la poignée de main WebSocket via le c
 - En-têtes d'identité Tailscale Serve lorsque `gateway.auth.allowTailscale: true`
 - En-têtes d'identité de proxy de confiance lorsque `gateway.auth.mode: "trusted-proxy"`
 
-Voir `gateway.auth` dans [configuration du Gateway](/en/gateway/configuration).
+Voir `gateway.auth` dans [configuration du Gateway](/fr/gateway/configuration).
 
 Note de sécurité : l'interface de contrôle est une **surface d'administration** (chat, configuration, approbations d'exécution).
 Ne l'exposez pas publiquement. L'interface conserve les jetons de l'URL du tableau de bord dans sessionStorage
@@ -67,7 +67,7 @@ Privilégiez localhost, Tailscale Serve, ou un tunnel SSH.
   `gateway.auth.mode: "trusted-proxy"`, ou un tunnel SSH. Les API HTTP utilisent toujours
   l'authentification par secret partagé, sauf si vous exécutez intentionnellement
   `gateway.auth.mode: "none"` private-ingress ou une authentification HTTP trusted-proxy.
-  Voir [Web surfaces](/en/web).
+  Voir [Web surfaces](/fr/web).
 
 <a id="if-you-see-unauthorized-1008"></a>
 
@@ -79,7 +79,7 @@ Privilégiez localhost, Tailscale Serve, ou un tunnel SSH.
 - Sur le chemin asynchrone Control UI Tailscale Serve, les tentatives échouées pour le même
   `{scope, ip}` sont sérialisées avant que le limiteur d'authentification échouée ne les enregistre, de sorte que
   la deuxième mauvaise tentative simultanée peut déjà afficher `retry later`.
-- Pour les étapes de réparation de la dérive de jetons, suivez la [Checklist de récupération de dérive de jetons](/en/cli/devices#token-drift-recovery-checklist).
+- Pour les étapes de réparation de la dérive de jetons, suivez la [Checklist de récupération de dérive de jetons](/fr/cli/devices#token-drift-recovery-checklist).
 - Récupérez ou fournissez le secret partagé depuis l'hôte de la passerelle :
   - Jeton : `openclaw config get gateway.auth.token`
   - Mot de passe : résolvez le `gateway.auth.password` configuré ou

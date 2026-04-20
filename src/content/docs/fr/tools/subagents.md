@@ -9,7 +9,7 @@ title: "Sous-agents"
 
 # Sous-agents
 
-Les sous-agents sont des exécutions d'agent en arrière-plan lancées à partir d'une exécution d'agent existante. Ils s'exécutent dans leur propre session (`agent:<agentId>:subagent:<uuid>`) et, une fois terminés, **annoncent** leur résultat au channel de discussion demandeur. Chaque exécution de sous-agent est suivie comme une [tâche d'arrière-plan](/en/automation/tasks).
+Les sous-agents sont des exécutions d'agent en arrière-plan lancées à partir d'une exécution d'agent existante. Ils s'exécutent dans leur propre session (`agent:<agentId>:subagent:<uuid>`) et, une fois terminés, **annoncent** leur résultat au channel de discussion demandeur. Chaque exécution de sous-agent est suivie comme une [tâche d'arrière-plan](/fr/automation/tasks).
 
 ## Commande slash
 
@@ -62,7 +62,7 @@ chemin du transcript sur le disque lorsque vous avez besoin du transcript intég
 - `--model` et `--thinking` remplacent les valeurs par défaut pour cette exécution spécifique.
 - Utilisez `info`/`log` pour inspecter les détails et la sortie après achèvement.
 - `/subagents spawn` est le mode à tir unique (`mode: "run"`). Pour les sessions persistantes liées aux fils, utilisez `sessions_spawn` avec `thread: true` et `mode: "session"`.
-- Pour les sessions de harnais ACP (Codex, Claude Code, Gemini CLI), utilisez `sessions_spawn` avec `runtime: "acp"` et consultez [ACP Agents](/en/tools/acp-agents).
+- Pour les sessions de harnais ACP (Codex, Claude Code, Gemini CLI), utilisez `sessions_spawn` avec `runtime: "acp"` et consultez [ACP Agents](/fr/tools/acp-agents).
 
 Objectifs principaux :
 
@@ -130,7 +130,7 @@ Commutateurs de configuration :
 - Défaut global : `session.threadBindings.enabled`, `session.threadBindings.idleHours`, `session.threadBindings.maxAgeHours`
 - La substitution de canal et les clés de liaison automatique de génération sont spécifiques à l'adaptateur. Voir **Canaux prenant en charge les fils** ci-dessus.
 
-Consultez la [Référence de configuration](/en/gateway/configuration-reference) et les [Commandes slash](/en/tools/slash-commands) pour les détails actuels de l'adaptateur.
+Consultez la [Référence de configuration](/fr/gateway/configuration-reference) et les [Commandes slash](/fr/tools/slash-commands) pour les détails actuels de l'adaptateur.
 
 Liste blanche :
 

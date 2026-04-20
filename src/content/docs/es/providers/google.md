@@ -164,7 +164,7 @@ Para usar Google como proveedor de imágenes predeterminado:
 }
 ```
 
-<Note>Consulte [Image Generation](/en/tools/image-generation) para conocer los parámetros de herramientas compartidas, la selección de proveedores y el comportamiento de conmutación por error.</Note>
+<Note>Consulte [Image Generation](/es/tools/image-generation) para conocer los parámetros de herramientas compartidas, la selección de proveedores y el comportamiento de conmutación por error.</Note>
 
 ## Generación de video
 
@@ -190,7 +190,7 @@ Para usar Google como proveedor de video predeterminado:
 }
 ```
 
-<Note>Consulte [Video Generation](/en/tools/video-generation) para conocer los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.</Note>
+<Note>Consulte [Video Generation](/es/tools/video-generation) para conocer los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.</Note>
 
 ## Generación de música
 
@@ -218,7 +218,7 @@ Para usar Google como proveedor de música predeterminado:
 }
 ```
 
-<Note>Consulte [Generación de música](/en/tools/music-generation) para conocer los parámetros de herramientas compartidos, la selección de proveedor y el comportamiento de conmutación por error.</Note>
+<Note>Consulte [Generación de música](/es/tools/music-generation) para conocer los parámetros de herramientas compartidos, la selección de proveedor y el comportamiento de conmutación por error.</Note>
 
 ## Configuración avanzada
 
@@ -273,16 +273,16 @@ Para usar Google como proveedor de música predeterminado:
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Generación de imágenes" href="/en/tools/image-generation" icon="image">
+  <Card title="Generación de imágenes" href="/es/tools/image-generation" icon="image">
     Parámetros compartidos de la herramienta de imagen y selección del proveedor.
   </Card>
-  <Card title="Generación de videos" href="/en/tools/video-generation" icon="video">
+  <Card title="Generación de videos" href="/es/tools/video-generation" icon="video">
     Parámetros compartidos de la herramienta de video y selección del proveedor.
   </Card>
-  <Card title="Generación de música" href="/en/tools/music-generation" icon="music">
+  <Card title="Generación de música" href="/es/tools/music-generation" icon="music">
     Parámetros compartidos de la herramienta de música y selección del proveedor.
   </Card>
 </CardGroup>

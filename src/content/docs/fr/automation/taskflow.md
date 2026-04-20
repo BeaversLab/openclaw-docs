@@ -9,11 +9,11 @@ title: "Task Flow"
 
 # Task Flow
 
-Task Flow est le substrat d'orchestration de flux qui se situe au-dessus des [tâches d'arrière-plan](/en/automation/tasks). Il gère des flux multi-étapes durables avec leur propre état, leur suivi de révision et leur sémantique de synchronisation, tandis que les tâches individuelles restent l'unité de travail détaché.
+Task Flow est le substrat d'orchestration de flux qui se situe au-dessus des [tâches d'arrière-plan](/fr/automation/tasks). Il gère des flux multi-étapes durables avec leur propre état, leur suivi de révision et leur sémantique de synchronisation, tandis que les tâches individuelles restent l'unité de travail détaché.
 
 ## Quand utiliser Task Flow
 
-Utilisez Task Flow lorsque le travail s'étend sur plusieurs étapes séquentielles ou avec embranchements et que vous avez besoin d'un suivi de progression durable à travers les redémarrages de la passerelle. Pour des opérations d'arrière-plan uniques, une simple [tâche](/en/automation/tasks) suffit.
+Utilisez Task Flow lorsque le travail s'étend sur plusieurs étapes séquentielles ou avec embranchements et que vous avez besoin d'un suivi de progression durable à travers les redémarrages de la passerelle. Pour des opérations d'arrière-plan uniques, une simple [tâche](/fr/automation/tasks) suffit.
 
 | Scénario                                | Utilisation           |
 | --------------------------------------- | --------------------- |
@@ -76,7 +76,7 @@ Les flux coordonnent les tâches, ils ne les remplacent pas. Un seul flux peut p
 
 ## Connexes
 
-- [Tâches d'arrière-plan](/en/automation/tasks) — le registre de travail détaché que coordonnent les flux
-- [CLI : tâches](/en/cli/index#tasks) — référence de commande CLI pour `openclaw tasks flow`
-- [Aperçu de l'automatisation](/en/automation) — tous les mécanismes d'automatisation en un coup d'œil
-- [Tâches Cron](/en/automation/cron-jobs) — tâches planifiées qui peuvent alimenter les flux
+- [Tâches d'arrière-plan](/fr/automation/tasks) — le registre de travail détaché que coordonnent les flux
+- [CLI : tâches](/fr/cli/index#tasks) — référence de commande CLI pour `openclaw tasks flow`
+- [Aperçu de l'automatisation](/fr/automation) — tous les mécanismes d'automatisation en un coup d'œil
+- [Tâches Cron](/fr/automation/cron-jobs) — tâches planifiées qui peuvent alimenter les flux

@@ -75,7 +75,7 @@ Utilisez :
 
 `http://127.0.0.1:18789/`
 
-N'utilisez pas par défaut une IP LAN pour l'interface de contrôle. Le HTTP simple sur une adresse LAN ou de réseau de périphérique peut déclencher un comportement d'origine non sécurisée/d'authentification d'appareil sans rapport avec le CDP lui-même. Voir [Control UI](/en/web/control-ui).
+N'utilisez pas par défaut une IP LAN pour l'interface de contrôle. Le HTTP simple sur une adresse LAN ou de réseau de périphérique peut déclencher un comportement d'origine non sécurisée/d'authentification d'appareil sans rapport avec le CDP lui-même. Voir [Control UI](/fr/web/control-ui).
 
 ## Valider par couches
 
@@ -163,7 +163,7 @@ Ensuite, vérifiez :
 
 Page utile :
 
-- [Control UI](/en/web/control-ui)
+- [Control UI](/fr/web/control-ui)
 
 ### Couche 5 : Vérifier le contrôle de bout en bout du navigateur
 

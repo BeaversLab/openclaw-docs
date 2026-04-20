@@ -19,7 +19,7 @@ OpenClaw 的 Gateway 可以提供與 OpenResponses 相容的 `POST /v1/responses
 
 ## 驗證、安全性和路由
 
-操作行為符合 [OpenAI Chat Completions](/en/gateway/openai-http-api)：
+操作行為符合 [OpenAI Chat Completions](/zh-Hant/gateway/openai-http-api)：
 
 - 使用相符的 Gateway HTTP 驗證路徑：
   - shared-secret 驗證 (`gateway.auth.mode="token"` 或 `"password"`)：`Authorization: Bearer <token-or-password>`
@@ -56,7 +56,7 @@ OpenClaw 的 Gateway 可以提供與 OpenResponses 相容的 `POST /v1/responses
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-關於代理目標模型、`openclaw/default`、嵌入透傳和後端模型覆寫如何協同運作的標準解釋，請參閱 [OpenAI Chat Completions](/en/gateway/openai-http-api#agent-first-model-contract) 和 [Model list and agent routing](/en/gateway/openai-http-api#model-list-and-agent-routing)。
+關於代理目標模型、`openclaw/default`、嵌入透傳和後端模型覆寫如何協同運作的標準解釋，請參閱 [OpenAI Chat Completions](/zh-Hant/gateway/openai-http-api#agent-first-model-contract) 和 [Model list and agent routing](/zh-Hant/gateway/openai-http-api#model-list-and-agent-routing)。
 
 ## Session 行為
 
@@ -250,7 +250,7 @@ URL 擷取預設值：
 - URL 允許清單會在擷取之前和重新導向跳轉時強制執行。
 - 將主機名稱加入允許清單並不會繞過私人/內部 IP 封鎖。
 - 對於暴露於網際網路的閘道，除了應用程式層級的防護之外，還應套用網路出口控制。
-  請參閱 [安全性](/en/gateway/security)。
+  請參閱 [安全性](/zh-Hant/gateway/security)。
 
 ## 串流 (SSE)
 

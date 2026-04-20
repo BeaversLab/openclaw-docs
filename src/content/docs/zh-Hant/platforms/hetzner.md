@@ -32,7 +32,7 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
 
 本指南假設 Hetzner 上使用的是 Ubuntu 或 Debian。
 如果您使用其他 Linux VPS，請對應相應的套件。
-關於通用的 Docker 流程，請參閱 [Docker](/en/install/docker)。
+關於通用的 Docker 流程，請參閱 [Docker](/zh-Hant/install/docker)。
 
 ---
 

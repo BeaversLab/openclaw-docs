@@ -32,7 +32,7 @@ La passerelle est accessible via :
 
 Ce guide utilise Debian sur GCP Compute Engine.
 Ubuntu fonctionne également ; adaptez les packages en conséquence.
-Pour le flux générique Docker, voir [Docker](/en/install/docker).
+Pour le flux générique Docker, voir [Docker](/fr/install/docker).
 
 ---
 
@@ -489,6 +489,6 @@ Consultez https://cloud.google.com/iam/docs/understanding-roles pour plus de dé
 
 ## Étapes suivantes
 
-- Configurez les canaux de messagerie : [Canaux](/en/channels)
-- Associez les appareils locaux en tant que nœuds : [Nœuds](/en/nodes)
-- Configurez le Gateway : [Configuration Gateway](/en/gateway/configuration)
+- Configurez les canaux de messagerie : [Canaux](/fr/channels)
+- Associez les appareils locaux en tant que nœuds : [Nœuds](/fr/nodes)
+- Configurez le Gateway : [Configuration Gateway](/fr/gateway/configuration)

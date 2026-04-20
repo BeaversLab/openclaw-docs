@@ -9,7 +9,7 @@ title: "Bridge Protocol"
 
 # 网桥协议（旧版节点传输）
 
-<Warning>TCP 桥接已被**移除**。目前的 OpenClaw 版本不再包含桥接监听器，且 `bridge.*` 配置键也不再包含在架构中。本页面仅作为历史参考保留。所有节点/操作员客户端请使用 [Gateway(网关) Protocol](/en/gateway/protocol)。</Warning>
+<Warning>TCP 桥接已被**移除**。目前的 OpenClaw 版本不再包含桥接监听器，且 `bridge.*` 配置键也不再包含在架构中。本页面仅作为历史参考保留。所有节点/操作员客户端请使用 [Gateway(网关) Protocol](/zh/gateway/protocol)。</Warning>
 
 ## 为何存在
 
@@ -84,4 +84,4 @@ Payload 字段（除非另有说明，均为可选）：
 
 该桥接是 **隐式 v1**（无最小/最大协商）。本节仅作
 历史参考；当前的节点/操作员客户端使用 WebSocket
-[Gateway(网关) Protocol](/en/gateway/protocol)。
+[Gateway(网关) Protocol](/zh/gateway/protocol)。

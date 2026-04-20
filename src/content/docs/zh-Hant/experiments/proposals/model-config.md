@@ -9,9 +9,9 @@ title: "模型配置探索"
 
 本文件記錄了未來模型配置的**構想**。這並非發佈規格。若要了解目前的行為，請參閱：
 
-- [模型](/en/concepts/models)
-- [模型容錯移轉](/en/concepts/model-failover)
-- [OAuth + 設定檔](/en/concepts/oauth)
+- [模型](/zh-Hant/concepts/models)
+- [模型容錯移轉](/zh-Hant/concepts/model-failover)
+- [OAuth + 設定檔](/zh-Hant/concepts/oauth)
 
 ## 動機
 

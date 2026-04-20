@@ -112,10 +112,10 @@ OpenClaw 會在啟動時動態從 Kilo Gateway 探索可用模型。使用
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型引用和故障轉移行為。
   </Card>
-  <Card title="設定參考" href="/en/gateway/configuration" icon="gear">
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration" icon="gear">
     完整的 OpenClaw 設定參考。
   </Card>
   <Card title="Kilo Gateway" href="https://app.kilo.ai" icon="arrow-up-right-from-square">

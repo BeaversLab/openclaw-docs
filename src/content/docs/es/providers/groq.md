@@ -115,10 +115,10 @@ de Groq para transcribir mensajes de voz a través de la superficie compartida `
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
     Esquema de configuración completo, incluyendo la configuración de proveedor y de audio.
   </Card>
   <Card title="Consola de Groq" href="https://console.groq.com" icon="arrow-up-right-from-square">

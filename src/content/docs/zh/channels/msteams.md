@@ -29,7 +29,7 @@ openclaw plugins install @openclaw/msteams
 openclaw plugins install ./path/to/local/msteams-plugin
 ```
 
-详情：[插件](/en/tools/plugin)
+详情：[插件](/zh/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -648,7 +648,7 @@ Teams markdown 比 Slack 或 Discord 限制更多：
 
 ## 路由与会话
 
-- 会话密钥遵循标准代理格式（请参阅 [/concepts/会话](/en/concepts/session)）：
+- 会话密钥遵循标准代理格式（请参阅 [/concepts/会话](/zh/concepts/session)）：
   - 直接消息共享主会话（`agent:<agentId>:<mainKey>`）。
   - 渠道/群组消息使用会话 ID：
     - `agent:<agentId>:msteams:channel:<conversationId>`
@@ -950,8 +950,8 @@ Bot 在私密渠道中的支持有限：
 
 ## 相关
 
-- [Channels Overview](/en/channels) — 所有支持的渠道
-- [Pairing](/en/channels/pairing) — 私信认证和配对流程
-- [Groups](/en/channels/groups) — 群组聊天行为和提及控制
-- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
-- [Security](/en/gateway/security) — 访问模型和加固
+- [Channels Overview](/zh/channels) — 所有支持的渠道
+- [Pairing](/zh/channels/pairing) — 私信认证和配对流程
+- [Groups](/zh/channels/groups) — 群组聊天行为和提及控制
+- [Channel Routing](/zh/channels/channel-routing) — 消息的会话路由
+- [Security](/zh/gateway/security) — 访问模型和加固

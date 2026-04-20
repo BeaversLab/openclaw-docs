@@ -12,8 +12,8 @@ title: "頻道"
 
 相關文件：
 
-- 頻道指南：[頻道](/en/channels/index)
-- Gateway 組態：[組態](/en/gateway/configuration)
+- 頻道指南：[頻道](/zh-Hant/channels/index)
+- Gateway 組態：[組態](/zh-Hant/gateway/configuration)
 
 ## 常用指令
 
@@ -67,7 +67,7 @@ openclaw channels remove --channel telegram --delete
 
 如果您確認現在綁定，精靈會詢問哪個代理應該擁有每個已設定的頻道帳戶，並寫入帳戶範圍的路由綁定。
 
-您稍後也可以使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 管理相同的路由規則（請參閱 [agents](/en/cli/agents)）。
+您稍後也可以使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 管理相同的路由規則（請參閱 [agents](/zh-Hant/cli/agents)）。
 
 當您新增非預設帳戶到仍在使用單一帳戶頂層設定的頻道時，OpenClaw 會在寫入新帳戶之前，將帳戶範圍的頂層值提升至頻道的帳戶對映中。大多數頻道會將這些值放入 `channels.<channel>.accounts.default`，但捆綁頻道可以保留現有的相符提升帳戶。Matrix 是目前的範例：如果一個命名帳戶已經存在，或者 `defaultAccount` 指向現有的命名帳戶，提升操作會保留該帳戶，而不是建立新的 `accounts.default`。
 

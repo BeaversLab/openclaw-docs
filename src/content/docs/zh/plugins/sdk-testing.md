@@ -12,7 +12,7 @@ read_when:
 
 OpenClaw 插件的测试工具、模式和 Lint 执行参考。
 
-<Tip>**正在寻找测试示例？** 操作指南包含详细的测试示例： [渠道插件测试](/en/plugins/sdk-channel-plugins#step-6-test) 和 [提供商插件测试](/en/plugins/sdk-provider-plugins#step-6-test)。</Tip>
+<Tip>**正在寻找测试示例？** 操作指南包含详细的测试示例： [渠道插件测试](/zh/plugins/sdk-channel-plugins#step-6-test) 和 [提供商插件测试](/zh/plugins/sdk-provider-plugins#step-6-test)。</Tip>
 
 ## 测试工具
 
@@ -242,7 +242,7 @@ OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test
 
 ## 相关内容
 
-- [SDK 概述](/en/plugins/sdk-overview) -- 导入约定
-- [SDK 渠道插件](/en/plugins/sdk-channel-plugins) -- 渠道插件接口
-- [SDK 提供商插件](/en/plugins/sdk-provider-plugins) -- 提供商插件钩子
-- [构建插件](/en/plugins/building-plugins) -- 入门指南
+- [SDK 概述](/zh/plugins/sdk-overview) -- 导入约定
+- [SDK 渠道插件](/zh/plugins/sdk-channel-plugins) -- 渠道插件接口
+- [SDK 提供商插件](/zh/plugins/sdk-provider-plugins) -- 提供商插件钩子
+- [构建插件](/zh/plugins/building-plugins) -- 入门指南

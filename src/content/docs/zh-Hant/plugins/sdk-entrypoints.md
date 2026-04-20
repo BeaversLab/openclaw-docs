@@ -12,7 +12,7 @@ read_when:
 
 每個外掛程式都會匯出一個預設的進入物件。SDK 提供了三個輔助函式來建立它們。
 
-<Tip>**Looking for a walkthrough?** See [Channel Plugins](/en/plugins/sdk-channel-plugins) or [Provider Plugins](/en/plugins/sdk-provider-plugins) for step-by-step guides.</Tip>
+<Tip>**Looking for a walkthrough?** See [Channel Plugins](/zh-Hant/plugins/sdk-channel-plugins) or [Provider Plugins](/zh-Hant/plugins/sdk-provider-plugins) for step-by-step guides.</Tip>
 
 ## `definePluginEntry`
 
@@ -125,7 +125,7 @@ export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
 當管道被停用、未設定，或啟用延遲載入時，OpenClaw 會載入此項而非完整進入點。
-請參閱[設定與組態](/en/plugins/sdk-setup#setup-entry)以了解其適用時機。
+請參閱[設定與組態](/zh-Hant/plugins/sdk-setup#setup-entry)以了解其適用時機。
 
 實務上，請將 `defineSetupPluginEntry(...)` 與狹義的設定輔助工具
 系列搭配使用：
@@ -219,8 +219,8 @@ OpenClaw 根據載入插件的註冊行為對其進行分類：
 
 ## 相關
 
-- [SDK 概覽](/en/plugins/sdk-overview) — 註冊 API 和子路徑參考
-- [執行時期輔助函式](/en/plugins/sdk-runtime) — `api.runtime` 和 `createPluginRuntimeStore`
-- [設定與配置](/en/plugins/sdk-setup) — manifest、setup entry、延遲載入
-- [頻道外掛程式](/en/plugins/sdk-channel-plugins) — 建構 `ChannelPlugin` 物件
-- [提供者外掛程式](/en/plugins/sdk-provider-plugins) — 提供者註冊與 hooks
+- [SDK 概覽](/zh-Hant/plugins/sdk-overview) — 註冊 API 和子路徑參考
+- [執行時期輔助函式](/zh-Hant/plugins/sdk-runtime) — `api.runtime` 和 `createPluginRuntimeStore`
+- [設定與配置](/zh-Hant/plugins/sdk-setup) — manifest、setup entry、延遲載入
+- [頻道外掛程式](/zh-Hant/plugins/sdk-channel-plugins) — 建構 `ChannelPlugin` 物件
+- [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins) — 提供者註冊與 hooks

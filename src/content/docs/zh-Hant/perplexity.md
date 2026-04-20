@@ -91,7 +91,7 @@ OpenClaw 支援將 Perplexity Search API 作為 `web_search` 提供者。
 
 **透過環境變數：** 在 Gateway 處理程序環境中設定 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
 對於 gateway 安裝，請將其放在
-`~/.openclaw/.env` (或您的服務環境) 中。參閱 [Env vars](/en/help/faq#env-vars-and-env-loading)。
+`~/.openclaw/.env` (或您的服務環境) 中。參閱 [Env vars](/zh-Hant/help/faq#env-vars-and-env-loading)。
 
 如果已設定 `provider: "perplexity"` 且 Perplexity 金鑰 SecretRef 未解析且沒有環境變數後備，啟動/重新載入會快速失敗。
 
@@ -177,5 +177,5 @@ await web_search({
 - Sonar/OpenRouter 相容性會傳回一個帶有引用文獻的綜合答案，而不是結構化的結果列
 - 結果預設會快取 15 分鐘 (可透過 `cacheTtlMinutes` 設定)
 
-參閱 [Web tools](/en/tools/web) 以取得完整的 web_search 設定。
+參閱 [Web tools](/zh-Hant/tools/web) 以取得完整的 web_search 設定。
 參閱 [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) 以取得更多詳細資訊。

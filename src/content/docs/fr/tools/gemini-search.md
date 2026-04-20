@@ -79,6 +79,6 @@ Le modèle par défaut est `gemini-2.5-flash` (rapide et rentable). Tout modèle
 
 ## Connexes
 
-- [Aperçu de la recherche Web](/en/tools/web) -- tous les fournisseurs et la détection automatique
-- [Brave Search](/en/tools/brave-search) -- résultats structurés avec extraits
-- [Perplexity Search](/en/tools/perplexity-search) -- résultats structurés + extraction de contenu
+- [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
+- [Brave Search](/fr/tools/brave-search) -- résultats structurés avec extraits
+- [Perplexity Search](/fr/tools/perplexity-search) -- résultats structurés + extraction de contenu

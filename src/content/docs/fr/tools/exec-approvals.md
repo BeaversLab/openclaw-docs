@@ -363,7 +363,7 @@ Utilisez la carte **Control UI → Nodes → Exec approvals** pour modifier les 
 
 Le sélecteur de cible choisit **Gateway** (approbations locales) ou un **Node**. Les nœuds doivent annoncer `system.execApprovals.get/set` (application macOS ou hôte de nœud sans tête). Si un nœud n'annonce pas encore les approbations d'exécution, modifiez directement son `~/.openclaw/exec-approvals.json` local.
 
-CLI : `openclaw approvals` prend en charge la modification de la passerelle ou du nœud (voir [Approvals CLI](/en/cli/approvals)).
+CLI : `openclaw approvals` prend en charge la modification de la passerelle ou du nœud (voir [Approvals CLI](/fr/cli/approvals)).
 
 ## Flux d'approbation
 
@@ -525,7 +525,7 @@ Définissez `enabled: false` pour désactiver explicitement un client d'approbat
 forcer lorsque les approuvants sont résolus. La livraison publique dans le chat d'origine reste explicite via
 `channels.<channel>.execApprovals.target`.
 
-FAQ : [Pourquoi y a-t-il deux configurations d'approbation d'exécution pour les approbations de chat ?](/en/help/faq#why-are-there-two-exec-approval-configs-for-chat-approvals)
+FAQ : [Pourquoi y a-t-il deux configurations d'approbation d'exécution pour les approbations de chat ?](/fr/help/faq#why-are-there-two-exec-approval-configs-for-chat-approvals)
 
 - Discord : `channels.discord.execApprovals.*`
 - Slack : `channels.slack.execApprovals.*`
@@ -562,8 +562,8 @@ Telegram, OpenClaw préserve le sujet pour l'invite d'approbation et le suivi po
 
 Voir :
 
-- [Discord](/en/channels/discord)
-- [Telegram](/en/channels/telegram)
+- [Discord](/fr/channels/discord)
+- [Telegram](/fr/channels/telegram)
 
 ### Flux macOS IPC
 
@@ -611,13 +611,13 @@ des résultats obsolètes d'une exécution antérieure réussie.
 
 Connexes :
 
-- [Outil Exec](/en/tools/exec)
-- [Mode élevé](/en/tools/elevated)
-- [Skills](/en/tools/skills)
+- [Outil Exec](/fr/tools/exec)
+- [Mode élevé](/fr/tools/elevated)
+- [Skills](/fr/tools/skills)
 
 ## Connexes
 
-- [Exec](/en/tools/exec) — outil d'exécution de commandes shell
-- [Sandboxing](/en/gateway/sandboxing) — modes de bac à sable et accès à l'espace de travail
-- [Sécurité](/en/gateway/security) — modèle de sécurité et durcissement
-- [Sandbox vs politique d'outils vs élevé](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — quand utiliser chacun
+- [Exec](/fr/tools/exec) — outil d'exécution de commandes shell
+- [Sandboxing](/fr/gateway/sandboxing) — modes de bac à sable et accès à l'espace de travail
+- [Sécurité](/fr/gateway/security) — modèle de sécurité et durcissement
+- [Sandbox vs politique d'outils vs élevé](/fr/gateway/sandbox-vs-tool-policy-vs-elevated) — quand utiliser chacun

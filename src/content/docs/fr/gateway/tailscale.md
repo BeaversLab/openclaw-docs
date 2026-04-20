@@ -25,7 +25,7 @@ Définissez `gateway.auth.mode` pour contrôler la poignée de main :
 - `none` (ingrès privé uniquement)
 - `token` (par défaut lorsque `OPENCLAW_GATEWAY_TOKEN` est défini)
 - `password` (secret partagé via `OPENCLAW_GATEWAY_PASSWORD` ou configuration)
-- `trusted-proxy` (proxy inverse conscient de l'identité ; voir [Authentification de proxy de confiance](/en/gateway/trusted-proxy-auth))
+- `trusted-proxy` (proxy inverse conscient de l'identité ; voir [Authentification de proxy de confiance](/fr/gateway/trusted-proxy-auth))
 
 Lorsque `tailscale.mode = "serve"` et que `gateway.auth.allowTailscale` est `true`,
 l'authentification de l'interface de contrôle/WebSocket peut utiliser les en-têtes d'identité Tailscale

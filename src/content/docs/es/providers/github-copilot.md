@@ -104,7 +104,7 @@ openclaw models auth login --provider github-copilot --method device --set-defau
 ## Incrustaciones de búsqueda de memoria
 
 GitHub Copilot también puede servir como proveedor de incrustaciones para
-[búsqueda de memoria](/en/concepts/memory-search). Si tiene una suscripción a Copilot y
+[búsqueda de memoria](/es/concepts/memory-search). Si tiene una suscripción a Copilot y
 ha iniciado sesión, OpenClaw puede usarlo para incrustaciones sin una clave de API separada.
 
 ### Detección automática
@@ -143,10 +143,10 @@ La disponibilidad del modelo depende de su plan de GitHub. Si no hay modelos de 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="OAuth y autenticación" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth y autenticación" href="/es/gateway/authentication" icon="key">
     Detalles de autenticación y reglas de reutilización de credenciales.
   </Card>
 </CardGroup>

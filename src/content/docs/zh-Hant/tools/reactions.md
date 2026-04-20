@@ -51,12 +51,12 @@ Agent 可以使用 `message` 工具的 `react` 動作，在訊息上新增及移
 
 各頻道的 `reactionLevel` 設定控制代理使用反應的廣泛程度。數值通常為 `off`、`ack`、`minimal` 或 `extensive`。
 
-- [Telegram reactionLevel](/en/channels/telegram#reaction-notifications) — `channels.telegram.reactionLevel`
-- [WhatsApp reactionLevel](/en/channels/whatsapp#reaction-level) — `channels.whatsapp.reactionLevel`
+- [Telegram reactionLevel](/zh-Hant/channels/telegram#reaction-notifications) — `channels.telegram.reactionLevel`
+- [WhatsApp reactionLevel](/zh-Hant/channels/whatsapp#reaction-level) — `channels.whatsapp.reactionLevel`
 
 在各個頻道上設定 `reactionLevel`，以調整代理在每個平台上對訊息做出反應的積極程度。
 
 ## 相關
 
-- [Agent Send](/en/tools/agent-send) — 包含 `react` 的 `message` 工具
-- [Channels](/en/channels) — 特定頻道設定
+- [Agent Send](/zh-Hant/tools/agent-send) — 包含 `react` 的 `message` 工具
+- [Channels](/zh-Hant/channels) — 特定頻道設定

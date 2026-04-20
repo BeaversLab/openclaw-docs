@@ -22,7 +22,7 @@ title: "Matrix 遷移"
 
 ## 遷移自動執行的作業
 
-當閘道啟動，以及當您執行 [`openclaw doctor --fix`](/en/gateway/doctor) 時，OpenClaw 會嘗試自動修復舊的 Matrix 狀態。
+當閘道啟動，以及當您執行 [`openclaw doctor --fix`](/zh-Hant/gateway/doctor) 時，OpenClaw 會嘗試自動修復舊的 Matrix 狀態。
 在任何可執行的 Matrix 遷移步驟變更磁碟狀態之前，OpenClaw 會建立或重用專用的復原快照。
 
 當您使用 `openclaw update` 時，確切的觸發程序取決於 OpenClaw 的安裝方式：
@@ -340,7 +340,7 @@ openclaw matrix verify status
 
 ## 相關頁面
 
-- [Matrix](/en/channels/matrix)
-- [Doctor](/en/gateway/doctor)
-- [Migrating](/en/install/migrating)
-- [Plugins](/en/tools/plugin)
+- [Matrix](/zh-Hant/channels/matrix)
+- [Doctor](/zh-Hant/gateway/doctor)
+- [Migrating](/zh-Hant/install/migrating)
+- [Plugins](/zh-Hant/tools/plugin)

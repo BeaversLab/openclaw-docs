@@ -50,8 +50,8 @@ Remarques :
 - Lorsque l'authentification par jeton nécessite un jeton et que `gateway.auth.token` est géré par SecretRef, `install` valide que le SecretRef peut être résolu mais ne persiste pas le jeton résolu dans les métadonnées de l'environnement de service.
 - Si l'authentification par jeton nécessite un jeton et que le SecretRef du jeton configuré n'est pas résolu, l'installation échoue de manière fermée.
 - Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés et que `gateway.auth.mode` n'est pas défini, l'installation est bloquée jusqu'à ce que le mode soit défini explicitement.
-- Si vous exécutez intentionnellement plusieurs passerelles sur un même hôte, isolez les ports, la configuration/l'état et les espaces de travail ; voir [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host).
+- Si vous exécutez intentionnellement plusieurs passerelles sur un même hôte, isolez les ports, la configuration/l'état et les espaces de travail ; voir [/gateway#multiple-gateways-same-host](/fr/gateway#multiple-gateways-same-host).
 
 ## Préférences
 
-Utilisez [`openclaw gateway`](/en/cli/gateway) pour la documentation et les exemples actuels.
+Utilisez [`openclaw gateway`](/fr/cli/gateway) pour la documentation et les exemples actuels.

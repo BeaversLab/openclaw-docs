@@ -187,7 +187,7 @@ LINE 支援 ACP（Agent Communication Protocol）對話綁定：
 - `/acp spawn <agent> --bind here` 將目前的 LINE 對話綁定到 ACP 會話，而不建立子執行緒。
 - 已設定的 ACP 綁定和作用中的對話綁定 ACP 會話在 LINE 上的運作方式與其他對話頻道相同。
 
-詳情請參閱 [ACP agents](/en/tools/acp-agents)。
+詳情請參閱 [ACP agents](/zh-Hant/tools/acp-agents)。
 
 ## 外發媒體
 
@@ -210,8 +210,8 @@ LINE 外掛支援透過代理訊息工具傳送圖片、影片和音訊檔案。
 
 ## 相關
 
-- [Channels Overview](/en/channels) — 所有支援的頻道
-- [Pairing](/en/channels/pairing) — 私訊驗證與配對流程
-- [Groups](/en/channels/groups) — 群組聊天行為與提及閘道
-- [Channel Routing](/en/channels/channel-routing) — 訊息的會話路由
-- [Security](/en/gateway/security) — 存取模型與強化防護
+- [Channels Overview](/zh-Hant/channels) — 所有支援的頻道
+- [Pairing](/zh-Hant/channels/pairing) — 私訊驗證與配對流程
+- [Groups](/zh-Hant/channels/groups) — 群組聊天行為與提及閘道
+- [Channel Routing](/zh-Hant/channels/channel-routing) — 訊息的會話路由
+- [Security](/zh-Hant/gateway/security) — 存取模型與強化防護

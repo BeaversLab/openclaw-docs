@@ -9,7 +9,7 @@ title: "Fournisseurs de modèles"
 # Fournisseurs de modèles
 
 Cette page couvre les **fournisseurs de LLM/modèles** (et non les canaux de chat comme WhatsApp/Telegram).
-Pour les règles de sélection de modèle, voir [/concepts/models](/en/concepts/models).
+Pour les règles de sélection de modèle, voir [/concepts/models](/fr/concepts/models).
 
 ## Règles rapides
 
@@ -17,7 +17,7 @@ Pour les règles de sélection de modèle, voir [/concepts/models](/en/concepts/
 - Si vous définissez `agents.defaults.models`, cela devient la liste d'autorisation.
 - Assistants CLI : `openclaw onboard`, `openclaw models list`, `openclaw models set <provider/model>`.
 - Les règles d'exécution de repli, les sondages de refroidissement et la persistance de la priorité de session sont
-  documentés dans [/concepts/model-failover](/en/concepts/model-failover).
+  documentés dans [/concepts/model-failover](/fr/concepts/model-failover).
 - `models.providers.*.models[].contextWindow` sont les métadonnées natives du modèle ;
   `models.providers.*.models[].contextTokens` est la limite effective d'exécution.
 - Les plugins de fournisseur peuvent injecter des catalogues de modèles via `registerProvider({ catalog })` ;
@@ -48,7 +48,7 @@ Pour les règles de sélection de modèle, voir [/concepts/models](/en/concepts/
   `onModelSelected`.
 - Remarque : le `capabilities` du fournisseur à l'exécution est des métadonnées partagées du lanceur (famille
   de fournisseurs, particularités de transcription/outillage, indices de transport/cache). Ce n'est pas
-  la même chose que le [modèle de capacité publique](/en/plugins/architecture#public-capability-model)
+  la même chose que le [modèle de capacité publique](/fr/plugins/architecture#public-capability-model)
   qui décrit ce qu'un plugin enregistre (inférence de texte, parole, etc.).
 - Le fournisseur `codex` fourni est associé au harnais d'agent Codex fourni.
   Utilisez `codex/gpt-*` lorsque vous souhaitez une connexion, une découverte de modèle, une reprise
@@ -56,7 +56,7 @@ Pour les règles de sélection de modèle, voir [/concepts/models](/en/concepts/
   d'utiliser le fournisseur OpenAI et le transport de fournisseur normal OpenClaw.
   Les déploiements Codex uniquement peuvent désactiver le repli automatique PI avec
   `agents.defaults.embeddedHarness.fallback: "none"` ; voir
-  [Codex Harness](/en/plugins/codex-harness).
+  [Codex Harness](/fr/plugins/codex-harness).
 
 ## Comportement du fournisseur détenu par le plugin
 
@@ -270,9 +270,9 @@ OpenClaw est fourni avec le catalogue pi‑ai. Ces fournisseurs ne nécessitent 
 
 ### Autres options hébergées par abonnement
 
-- [Qwen Cloud](/en/providers/qwen) : Surface du provider Qwen Cloud plus mappage des points de terminaison Alibaba DashScope et Coding Plan
-- [MiniMax](/en/providers/minimax) : Accès OAuth ou clé API pour MiniMax Coding Plan
-- [GLM Models](/en/providers/glm) : Plan de codage Z.AI ou points de terminaison API généraux
+- [Qwen Cloud](/fr/providers/qwen) : Surface du provider Qwen Cloud plus mappage des points de terminaison Alibaba DashScope et Coding Plan
+- [MiniMax](/fr/providers/minimax) : Accès OAuth ou clé API pour MiniMax Coding Plan
+- [GLM Models](/fr/providers/glm) : Plan de codage Z.AI ou points de terminaison API généraux
 
 ### OpenCode
 
@@ -346,7 +346,7 @@ OpenClaw est fourni avec le catalogue pi‑ai. Ces fournisseurs ne nécessitent 
 - Le routage amont exact derrière `kilocode/kilo/auto` est géré par Kilo Gateway,
   et n'est pas codé en dur dans OpenClaw.
 
-Consultez [/providers/kilocode](/en/providers/kilocode) pour les détails de la configuration.
+Consultez [/providers/kilocode](/fr/providers/kilocode) pour les détails de la configuration.
 
 ### Autres plugins provider groupés
 
@@ -409,7 +409,7 @@ Consultez [/providers/kilocode](/en/providers/kilocode) pour les détails de la 
   - Les modèles GLM sur Cerebras utilisent les ids `zai-glm-4.7` et `zai-glm-4.6`.
   - URL de base compatible OpenAI : `https://api.cerebras.ai/v1`.
 - GitHub Copilot : `github-copilot` (`COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN`)
-- Modèle exemple Hugging Face Inference : `huggingface/deepseek-ai/DeepSeek-R1` ; CLI : `openclaw onboard --auth-choice huggingface-api-key`. Voir [Hugging Face (Inference)](/en/providers/huggingface).
+- Modèle exemple Hugging Face Inference : `huggingface/deepseek-ai/DeepSeek-R1` ; CLI : `openclaw onboard --auth-choice huggingface-api-key`. Voir [Hugging Face (Inference)](/fr/providers/huggingface).
 
 ## Fournisseurs via `models.providers` (URL de base/personnalisée)
 
@@ -598,7 +598,7 @@ MiniMax est configuré via `models.providers` car il utilise des points de termi
 - Auth : `MINIMAX_API_KEY` pour `minimax` ; `MINIMAX_OAUTH_TOKEN` ou
   `MINIMAX_API_KEY` pour `minimax-portal`
 
-Consultez [/providers/minimax](/en/providers/minimax) pour les détails de configuration, les options de modèle et les extraits de configuration.
+Consultez [/providers/minimax](/fr/providers/minimax) pour les détails de configuration, les options de modèle et les extraits de configuration.
 
 Sur le chemin de streaming compatible avec MiniMax de Anthropic, OpenClaw désactive la réflexion par
 défaut, sauf si vous la définissez explicitement, et `/fast on` réécrit
@@ -631,7 +631,7 @@ Définissez ensuite un modèle (remplacez par l'un des ID renvoyés par `http://
 
 OpenClaw utilise le `/api/v1/models` et le `/api/v1/models/load` natifs de LM Studio
 pour la découverte et le chargement automatique, avec `/v1/chat/completions` pour l'inférence par défaut.
-Voir [/providers/lmstudio](/en/providers/lmstudio) pour la configuration et le dépannage.
+Voir [/providers/lmstudio](/fr/providers/lmstudio) pour la configuration et le dépannage.
 
 ### Ollama
 
@@ -657,7 +657,7 @@ ollama pull llama3.3
 
 Ollama est détecté localement à `http://127.0.0.1:11434` lorsque vous activez l'option avec
 `OLLAMA_API_KEY`, et le plugin provider groupé ajoute directement Ollama à
-`openclaw onboard` et au sélecteur de model. Voir [/providers/ollama](/en/providers/ollama)
+`openclaw onboard` et au sélecteur de model. Voir [/providers/ollama](/fr/providers/ollama)
 pour l'onboarding, le mode cloud/local et la configuration personnalisée.
 
 ### vLLM
@@ -685,7 +685,7 @@ Définissez ensuite un model (remplacez par l'un des ID renvoyés par `/v1/model
 }
 ```
 
-Voir [/providers/vllm](/en/providers/vllm) pour plus de détails.
+Voir [/providers/vllm](/fr/providers/vllm) pour plus de détails.
 
 ### SGLang
 
@@ -713,7 +713,7 @@ Définissez ensuite un model (remplacez par l'un des ID renvoyés par `/v1/model
 }
 ```
 
-Voir [/providers/sglang](/en/providers/sglang) pour plus de détails.
+Voir [/providers/sglang](/fr/providers/sglang) pour plus de détails.
 
 ### Proxys locaux (LM Studio, vLLM, LiteLLM, etc.)
 
@@ -773,11 +773,11 @@ openclaw models set opencode/claude-opus-4-6
 openclaw models list
 ```
 
-Voir aussi : [/gateway/configuration](/en/gateway/configuration) pour des exemples de configuration complets.
+Voir aussi : [/gateway/configuration](/fr/gateway/configuration) pour des exemples de configuration complets.
 
 ## Connexes
 
-- [Models](/en/concepts/models) — configuration et alias de modèle
-- [Model Failover](/en/concepts/model-failover) — chaînes de repli et comportement de nouvelle tentative
-- [Configuration Reference](/en/gateway/configuration-reference#agent-defaults) — clés de configuration du modèle
-- [Providers](/en/providers) — guides de configuration par fournisseur
+- [Models](/fr/concepts/models) — configuration et alias de modèle
+- [Model Failover](/fr/concepts/model-failover) — chaînes de repli et comportement de nouvelle tentative
+- [Configuration Reference](/fr/gateway/configuration-reference#agent-defaults) — clés de configuration du modèle
+- [Providers](/fr/providers) — guides de configuration par fournisseur

@@ -205,7 +205,7 @@ Notes :
 - `typingIndicator` prend en charge `none`, `message` (par défaut) et `reaction` (la réaction nécessite le OAuth de l'utilisateur).
 - Les pièces jointes sont téléchargées via l'API de Chat et stockées dans le pipeline de médias (taille limitée par `mediaMaxMb`).
 
-Détails de référence sur les secrets : [Gestion des secrets](/en/gateway/secrets).
+Détails de référence sur les secrets : [Gestion des secrets](/fr/gateway/secrets).
 
 ## Dépannage
 
@@ -257,14 +257,14 @@ openclaw channels status
 
 Documentation connexe :
 
-- [Configuration Gateway](/en/gateway/configuration)
-- [Sécurité](/en/gateway/security)
-- [Réactions](/en/tools/reactions)
+- [Configuration Gateway](/fr/gateway/configuration)
+- [Sécurité](/fr/gateway/security)
+- [Réactions](/fr/tools/reactions)
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appairage](/en/channels/pairing) — authentification et flux d'appairage DM
-- [Groupes](/en/channels/groups) — comportement de la conversation de groupe et filtrage des mentions
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et renforcement
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appairage](/fr/channels/pairing) — authentification et flux d'appairage DM
+- [Groupes](/fr/channels/groups) — comportement de la conversation de groupe et filtrage des mentions
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et renforcement

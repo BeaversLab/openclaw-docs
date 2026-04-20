@@ -9,7 +9,7 @@ title: "設定範例"
 
 # 設定範例
 
-以下範例與目前的設定架構一致。若要查看完整的參考資料與各欄位說明，請參閱 [Configuration](/en/gateway/configuration)。
+以下範例與目前的設定架構一致。若要查看完整的參考資料與各欄位說明，請參閱 [Configuration](/zh-Hant/gateway/configuration)。
 
 ## 快速開始
 
@@ -628,4 +628,4 @@ title: "設定範例"
 - 如果您設定 `dmPolicy: "open"`，相符的 `allowFrom` 清單必須包含 `"*"`。
 - 提供者 ID 不同 (電話號碼、使用者 ID、頻道 ID)。請使用提供者文件來確認格式。
 - 稍後新增的可選區段：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 如需更深入的設定說明，請參閱 [Providers](/en/providers) 和 [Troubleshooting](/en/gateway/troubleshooting)。
+- 如需更深入的設定說明，請參閱 [Providers](/zh-Hant/providers) 和 [Troubleshooting](/zh-Hant/gateway/troubleshooting)。

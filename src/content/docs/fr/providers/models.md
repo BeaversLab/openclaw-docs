@@ -23,31 +23,31 @@ OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentif
 
 ## Fournisseurs pris en charge (ensemble de démarrage)
 
-- [Alibaba Model Studio](/en/providers/alibaba)
-- [Anthropic (API + Claude CLI)](/en/providers/anthropic)
-- [Amazon Bedrock](/en/providers/bedrock)
-- [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
-- [Chutes](/en/providers/chutes)
-- [ComfyUI](/en/providers/comfy)
-- [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
-- [fal](/en/providers/fal)
-- [Fireworks](/en/providers/fireworks)
-- [GLM models](/en/providers/glm)
-- [MiniMax](/en/providers/minimax)
-- [Mistral](/en/providers/mistral)
-- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
-- [OpenAI (API + Codex)](/en/providers/openai)
-- [OpenCode (Zen + Go)](/en/providers/opencode)
-- [OpenRouter](/en/providers/openrouter)
-- [Qianfan](/en/providers/qianfan)
-- [Qwen](/en/providers/qwen)
-- [Runway](/en/providers/runway)
-- [StepFun](/en/providers/stepfun)
-- [Synthetic](/en/providers/synthetic)
-- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
-- [Venice (Venice AI)](/en/providers/venice)
-- [xAI](/en/providers/xai)
-- [Z.AI](/en/providers/zai)
+- [Alibaba Model Studio](/fr/providers/alibaba)
+- [Anthropic (API + Claude CLI)](/fr/providers/anthropic)
+- [Amazon Bedrock](/fr/providers/bedrock)
+- [BytePlus (International)](/fr/concepts/model-providers#byteplus-international)
+- [Chutes](/fr/providers/chutes)
+- [ComfyUI](/fr/providers/comfy)
+- [Cloudflare AI Gateway](/fr/providers/cloudflare-ai-gateway)
+- [fal](/fr/providers/fal)
+- [Fireworks](/fr/providers/fireworks)
+- [GLM models](/fr/providers/glm)
+- [MiniMax](/fr/providers/minimax)
+- [Mistral](/fr/providers/mistral)
+- [Moonshot AI (Kimi + Kimi Coding)](/fr/providers/moonshot)
+- [OpenAI (API + Codex)](/fr/providers/openai)
+- [OpenCode (Zen + Go)](/fr/providers/opencode)
+- [OpenRouter](/fr/providers/openrouter)
+- [Qianfan](/fr/providers/qianfan)
+- [Qwen](/fr/providers/qwen)
+- [Runway](/fr/providers/runway)
+- [StepFun](/fr/providers/stepfun)
+- [Synthetic](/fr/providers/synthetic)
+- [Vercel AI Gateway](/fr/providers/vercel-ai-gateway)
+- [Venice (Venice AI)](/fr/providers/venice)
+- [xAI](/fr/providers/xai)
+- [Z.AI](/fr/providers/zai)
 
 ## Variantes de provider groupées supplémentaires
 
@@ -56,4 +56,4 @@ OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentif
 - `google-gemini-cli` - flux CLI OAuth OAuth non officiel ; nécessite une installation locale de `gemini` (`brew install gemini-cli` ou `npm install -g @google/gemini-cli`) ; model `google-gemini-cli/gemini-3-flash-preview` par défaut ; utilisez `openclaw onboard --auth-choice google-gemini-cli` ou `openclaw models auth login --provider google-gemini-cli --set-default`
 
 Pour le catalogue complet des fournisseurs (xAI, Groq, Mistral, etc.) et la configuration avancée,
-voyez [Model providers](/en/concepts/model-providers).
+voyez [Model providers](/fr/concepts/model-providers).

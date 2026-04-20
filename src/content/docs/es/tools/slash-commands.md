@@ -88,7 +88,7 @@ Fuente de verdad actual:
 Comandos integrados disponibles hoy:
 
 - `/new [model]` inicia una nueva sesión; `/reset` es el alias de restablecimiento.
-- `/compact [instructions]` compacta el contexto de la sesión. Consulte [/concepts/compaction](/en/concepts/compaction).
+- `/compact [instructions]` compacta el contexto de la sesión. Consulte [/concepts/compaction](/es/concepts/compaction).
 - `/stop` aborta la ejecución actual.
 - `/session idle <duration|off>` y `/session max-age <duration|off>` gestionan la expiración del enlace de hilos.
 - `/think <off|minimal|low|medium|high|xhigh>` establece el nivel de pensamiento. Alias: `/thinking`, `/t`.
@@ -112,7 +112,7 @@ Comandos integrados disponibles hoy:
 - `/skill <name> [input]` ejecuta una habilidad por nombre.
 - `/allowlist [list|add|remove] ...` gestiona las entradas de la lista de permitidos. Solo texto.
 - `/approve <id> <decision>` resuelve las solicitudes de aprobación de ejecución.
-- `/btw <question>` hace una pregunta lateral sin cambiar el contexto de la sesión futura. Véase [/tools/btw](/en/tools/btw).
+- `/btw <question>` hace una pregunta lateral sin cambiar el contexto de la sesión futura. Véase [/tools/btw](/es/tools/btw).
 - `/subagents list|kill|log|info|send|steer|spawn` gestiona las ejecuciones de sub-agentes para la sesión actual.
 - `/acp spawn|cancel|steer|close|sessions|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|help` gestiona las sesiones y opciones de tiempo de ejecución de ACP.
 - `/focus <target>` vincula el hilo actual de Discord o tema/conversación de Telegram a un destino de sesión.
@@ -125,7 +125,7 @@ Comandos integrados disponibles hoy:
 - `/plugins list|inspect|show|get|install|enable|disable` inspecciona o muta el estado del complemento. `/plugin` es un alias. Solo para el propietario para escrituras. Requiere `commands.plugins: true`.
 - `/debug show|set|unset|reset` gestiona las anulaciones de configuración solo en tiempo de ejecución. Solo para el propietario. Requiere `commands.debug: true`.
 - `/usage off|tokens|full|cost` controla el pie de página de uso por respuesta o imprime un resumen de costos local.
-- `/tts on|off|status|provider|limit|summary|audio|help` controla TTS. Consulte [/tools/tts](/en/tools/tts).
+- `/tts on|off|status|provider|limit|summary|audio|help` controla TTS. Consulte [/tools/tts](/es/tools/tts).
 - `/restart` reinicia OpenClaw cuando está habilitado. Predeterminado: habilitado; establezca `commands.restart: false` para desactivarlo.
 - `/activation mention|always` establece el modo de activación del grupo.
 - `/send on|off|inherit` establece la política de envío. Solo para el propietario.
@@ -146,12 +146,12 @@ Los comandos de dock se generan a partir de complementos de canal con soporte de
 
 Los complementos incluidos pueden agregar más comandos de barra. Comandos incluidos actuales en este repositorio:
 
-- `/dreaming [on|off|status|help]` activa o desactiva el soñar de la memoria. Consulte [Dreaming](/en/concepts/dreaming).
-- `/pair [qr|status|pending|approve|cleanup|notify]` gestiona el flujo de emparejamiento/configuración del dispositivo. Consulte [Pairing](/en/channels/pairing).
+- `/dreaming [on|off|status|help]` activa o desactiva el soñar de la memoria. Consulte [Dreaming](/es/concepts/dreaming).
+- `/pair [qr|status|pending|approve|cleanup|notify]` gestiona el flujo de emparejamiento/configuración del dispositivo. Consulte [Pairing](/es/channels/pairing).
 - `/phone status|arm <camera|screen|writes|all> [duration]|disarm` activa temporalmente los comandos de nodo de teléfono de alto riesgo.
 - `/voice status|list [limit]|set <voiceId|name>` gestiona la configuración de voz de Talk. En Discord, el nombre del comando nativo es `/talkvoice`.
-- `/card ...` envía preajustes de tarjetas enriquecidas de LINE. Consulte [LINE](/en/channels/line).
-- `/codex status|models|threads|resume|compact|review|account|mcp|skills` inspecciona y controla el arnés del servidor de aplicaciones Codex incluido. Consulte [Codex Harness](/en/plugins/codex-harness).
+- `/card ...` envía preajustes de tarjetas enriquecidas de LINE. Consulte [LINE](/es/channels/line).
+- `/codex status|models|threads|resume|compact|review|account|mcp|skills` inspecciona y controla el arnés del servidor de aplicaciones Codex incluido. Consulte [Codex Harness](/es/plugins/codex-harness).
 - Comandos solo para QQBot:
   - `/bot-ping`
   - `/bot-version`
@@ -180,11 +180,11 @@ Notas:
 - `/plugins enable|disable` actualiza la configuración del complemento y puede solicitar un reinicio.
 - Comando nativo solo para Discord: `/vc join|leave|status` controla los canales de voz (requiere `channels.discord.voice` y comandos nativos; no disponible como texto).
 - Los comandos de vinculación de hilos de Discord (`/focus`, `/unfocus`, `/agents`, `/session idle`, `/session max-age`) requieren que los enlaces de hilos efectivos estén habilitados (`session.threadBindings.enabled` y/o `channels.discord.threadBindings.enabled`).
-- Referencia de comandos y comportamiento en tiempo de ejecución de ACP: [ACP Agents](/en/tools/acp-agents).
+- Referencia de comandos y comportamiento en tiempo de ejecución de ACP: [ACP Agents](/es/tools/acp-agents).
 - `/verbose` está pensado para la depuración y visibilidad adicional; manténgalo **desactivado** en uso normal.
 - `/trace` es más limitado que `/verbose`: solo revela las líneas de seguimiento/depuración propiedad del complemento y mantiene desactivado el chatter normal y detallado de las herramientas.
 - `/fast on|off` persiste una anulación de sesión. Use la opción de la interfaz de usuario de Sesiones `inherit` para borrarla y volver a los valores predeterminados de configuración.
-- `/fast` es específico del proveedor: OpenAI/OpenAI Codex lo asignan a `service_tier=priority` en los puntos finales de Respuestas nativas, mientras que las solicitudes públicas directas de Anthropic, incluido el tráfico autenticado con OAuth enviado a `api.anthropic.com`, lo asignan a `service_tier=auto` o `standard_only`. Consulte [OpenAI](/en/providers/openai) y [Anthropic](/en/providers/anthropic).
+- `/fast` es específico del proveedor: OpenAI/OpenAI Codex lo asignan a `service_tier=priority` en los puntos finales de Respuestas nativas, mientras que las solicitudes públicas directas de Anthropic, incluido el tráfico autenticado con OAuth enviado a `api.anthropic.com`, lo asignan a `service_tier=auto` o `standard_only`. Consulte [OpenAI](/es/providers/openai) y [Anthropic](/es/providers/anthropic).
 - Los resúmenes de fallos de herramientas aún se muestran cuando corresponde, pero el texto detallado del fallo solo se incluye cuando `/verbose` es `on` o `full`.
 - `/reasoning`, `/verbose` y `/trace` son arriesgados en configuraciones de grupo: pueden revelar razonamiento interno, resultados de herramientas o diagnósticos de complementos que no tenía intención de exponer. Es preferible dejarlos desactivados, especialmente en chats grupales.
 - `/model` persiste el nuevo modelo de sesión inmediatamente.
@@ -201,7 +201,7 @@ Notas:
   - `/skill <name> [input]` ejecuta una habilidad por nombre (útil cuando los límites de comandos nativos impiden comandos por habilidad).
   - De forma predeterminada, los comandos de habilidades se reenvían al modelo como una solicitud normal.
   - Las habilidades pueden declarar opcionalmente `command-dispatch: tool` para enrutar el comando directamente a una herramienta (determinista, sin modelo).
-  - Ejemplo: `/prose` (complemento OpenProse) — consulta [OpenProse](/en/prose).
+  - Ejemplo: `/prose` (complemento OpenProse) — consulta [OpenProse](/es/prose).
 - **Argumentos de comandos nativos:** Discord usa autocompletado para opciones dinámicas (y menús de botones cuando omites argumentos obligatorios). Telegram y Slack muestran un menú de botones cuando un comando admite elecciones y omites el argumento.
 
 ## `/tools`
@@ -374,4 +374,4 @@ Ejemplo:
 /btw what are we doing right now?
 ```
 
-Consulte [Preguntas laterales BTW](/en/tools/btw) para conocer el comportamiento completo y los detalles de la experiencia del usuario.
+Consulte [Preguntas laterales BTW](/es/tools/btw) para conocer el comportamiento completo y los detalles de la experiencia del usuario.

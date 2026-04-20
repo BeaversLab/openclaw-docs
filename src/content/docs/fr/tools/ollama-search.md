@@ -96,5 +96,5 @@ Si votre hôte Ollama attend une authentification par porteur (bearer), OpenClaw
 
 ## Connexes
 
-- [Aperçu de la recherche Web](/en/tools/web) -- tous les fournisseurs et la détection automatique
-- [Ollama](/en/providers/ollama) -- configuration du modèle Ollama et modes cloud/local
+- [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
+- [Ollama](/fr/providers/ollama) -- configuration du modèle Ollama et modes cloud/local

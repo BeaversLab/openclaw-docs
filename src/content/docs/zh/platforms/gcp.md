@@ -32,7 +32,7 @@ title: "GCP"
 
 本指南在 GCP Compute Engine 上使用 Debian。
 Ubuntu 也可以使用；请相应地映射软件包。
-有关通用 Docker 流程，请参阅 [Docker](/en/install/docker)。
+有关通用 Docker 流程，请参阅 [Docker](/zh/install/docker)。
 
 ---
 
@@ -489,6 +489,6 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 ## 后续步骤
 
-- 设置消息通道：[通道](/en/channels)
-- 将本地设备配对为节点：[节点](/en/nodes)
-- 配置 Gateway(网关)：[Gateway(网关) 配置](/en/gateway/configuration)
+- 设置消息通道：[通道](/zh/channels)
+- 将本地设备配对为节点：[节点](/zh/nodes)
+- 配置 Gateway(网关)：[Gateway(网关) 配置](/zh/gateway/configuration)

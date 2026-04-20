@@ -45,7 +45,7 @@ afficher dans `/usage full`.
   inclut le nom du modèle dans l'étiquette du plan.
 - L'autorisation d'utilisation pour ces fenêtres de quota provient de hooks spécifiques au fournisseur lorsque disponibles; sinon, OpenClaw revient à faire correspondre les identifiants OAuth/clé OAuth depuis les profils d'auth, l'environnement ou la configuration.
 
-Consultez [Utilisation et coûts des jetons](/en/reference/token-use) pour plus de détails et d'exemples.
+Consultez [Utilisation et coûts des jetons](/fr/reference/token-use) pour plus de détails et d'exemples.
 
 ## Découverte des clés
 
@@ -68,7 +68,7 @@ Cela inclut également les fournisseurs hébergés par abonnement qui facturent 
 Coding Plan**, **MiniMax Coding Plan**, **Z.AI / GLM Coding Plan**, et
 le chemin de connexion Claude d'Anthropic d'OpenClaw avec l'**Utilisation supplémentaire** activée.
 
-Consultez [Modèles](/en/providers/models) pour la configuration des tarifs et [Utilisation et coûts des jetons](/en/reference/token-use) pour l'affichage.
+Consultez [Modèles](/fr/providers/models) pour la configuration des tarifs et [Utilisation et coûts des jetons](/fr/reference/token-use) pour l'affichage.
 
 ### 2) Compréhension des médias (audio/image/vidéo)
 
@@ -78,7 +78,7 @@ Les médias entrants peuvent être résumés/transcrits avant l'exécution de la
 - Image : OpenAI / OpenRouter / Anthropic / Google / MiniMax / Moonshot / Qwen / Z.AI.
 - Vidéo : Google / Qwen / Moonshot.
 
-Consultez [Compréhension des médias](/en/nodes/media-understanding).
+Consultez [Compréhension des médias](/fr/nodes/media-understanding).
 
 ### 3) Génération d'images et de vidéos
 
@@ -92,8 +92,8 @@ La génération d'images peut déduire un provider par défaut soutenu par une a
 un `agents.defaults.videoGenerationModel` explicite tel que
 `qwen/wan2.6-t2v`.
 
-Consultez [Génération d'images](/en/tools/image-generation), [Qwen Cloud](/en/providers/qwen),
-et [Modèles](/en/concepts/models).
+Consultez [Génération d'images](/fr/tools/image-generation), [Qwen Cloud](/fr/providers/qwen),
+et [Modèles](/fr/concepts/models).
 
 ### 4) Memory embeddings + recherche sémantique
 
@@ -109,7 +109,7 @@ La recherche de mémoire sémantique utilise des **API d'embedding** lorsqu'elle
 
 Vous pouvez le garder local avec `memorySearch.provider = "local"` (aucune utilisation d'API).
 
-Consultez [Mémoire](/en/concepts/memory).
+Consultez [Mémoire](/fr/concepts/memory).
 
 ### 5) Outil de recherche Web
 
@@ -132,7 +132,7 @@ Les chemins de fournisseur `tools.web.search.*` hérités sont toujours chargés
 
 **Crédit gratuit Brave Search :** Chaque plan Brave inclut 5 $/mois de crédit gratuit renouvelable. Le plan Search coûte 5 $ pour 1 000 requêtes, donc le crédit couvre 1 000 requêtes/mois sans frais. Définissez votre limite d'utilisation dans le tableau de bord Brave pour éviter des frais inattendus.
 
-Voir [Web tools](/en/tools/web).
+Voir [Web tools](/fr/tools/web).
 
 ### 5) Outil de récupération Web (Firecrawl)
 
@@ -142,7 +142,7 @@ Voir [Web tools](/en/tools/web).
 
 Si Firecrawl n'est pas configuré, l'outil revient à une récupération directe + lisibilité (pas d'API payante).
 
-Voir [Web tools](/en/tools/web).
+Voir [Web tools](/fr/tools/web).
 
 ### 6) Instantanés d'utilisation du fournisseur (status/health)
 
@@ -152,21 +152,21 @@ Ce sont généralement des appels à faible volume mais qui atteignent toujours 
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-Voir [Models CLI](/en/cli/models).
+Voir [Models CLI](/fr/cli/models).
 
 ### 7) Résumé de la sauvegarde de compactage
 
 La sauvegarde de compactage peut résumer l'historique de la session en utilisant le **model actuel**, ce qui
 appelle les API du fournisseur lors de son exécution.
 
-Voir [Session management + compaction](/en/reference/session-management-compaction).
+Voir [Session management + compaction](/fr/reference/session-management-compaction).
 
 ### 8) Analyse / sonde de model
 
 `openclaw models scan` peut sonder les models OpenRouter et utilise `OPENROUTER_API_KEY` lorsque
 le sondage est activé.
 
-Voir [Models CLI](/en/cli/models).
+Voir [Models CLI](/fr/cli/models).
 
 ### 9) Talk (speech)
 
@@ -174,11 +174,11 @@ Le mode Talk peut invoquer **ElevenLabs** lorsqu'il est configuré :
 
 - `ELEVENLABS_API_KEY` ou `talk.providers.elevenlabs.apiKey`
 
-Voir [Talk mode](/en/nodes/talk).
+Voir [Talk mode](/fr/nodes/talk).
 
 ### 10) Skills (API tierces)
 
 Les Skills peuvent stocker `apiKey` dans `skills.entries.<name>.apiKey`. Si une skill utilise cette clé pour des
 API externes, elle peut entraîner des coûts selon le fournisseur de la skill.
 
-Voir [Skills](/en/tools/skills).
+Voir [Skills](/fr/tools/skills).

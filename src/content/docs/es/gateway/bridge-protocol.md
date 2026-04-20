@@ -9,7 +9,7 @@ title: "Protocolo de puente"
 
 # Protocolo de puente (transporte de nodo heredado)
 
-<Warning>El puente TCP ha sido **eliminado**. Las compilaciones actuales de OpenClaw no incluyen el escucha del puente (bridge listener) y las claves de configuración `bridge.*` ya no están en el esquema. Esta página se conserva solo como referencia histórica. Utilice el [Gateway Protocol](/en/gateway/protocol) para todos los clientes de nodo/operador.</Warning>
+<Warning>El puente TCP ha sido **eliminado**. Las compilaciones actuales de OpenClaw no incluyen el escucha del puente (bridge listener) y las claves de configuración `bridge.*` ya no están en el esquema. Esta página se conserva solo como referencia histórica. Utilice el [Gateway Protocol](/es/gateway/protocol) para todos los clientes de nodo/operador.</Warning>
 
 ## Por qué existía
 
@@ -84,4 +84,4 @@ Campos de carga útil (todos son opcionales a menos que se indique lo contrario)
 
 El puente era **v1 implícito** (sin negociación mín/máx). Esta sección es
 solo de referencia histórica; los clientes de nodo/operador actuales utilizan el WebSocket
-[Gateway Protocol](/en/gateway/protocol).
+[Gateway Protocol](/es/gateway/protocol).

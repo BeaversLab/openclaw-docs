@@ -11,7 +11,7 @@ read_when:
 Le plugin Perplexity fournit des capacités de recherche web via l'Perplexity
 Search API ou Perplexity Sonar via OpenRouter.
 
-<Note>Cette page traite de la configuration du **fournisseur** Perplexity. Pour l'**outil** Perplexity (comment l'agent l'utilise), voir [Perplexity tool](/en/tools/perplexity-search).</Note>
+<Note>Cette page traite de la configuration du **fournisseur** Perplexity. Pour l'**outil** Perplexity (comment l'agent l'utilise), voir [Perplexity tool](/fr/tools/perplexity-search).</Note>
 
 | Propriété               | Valeur                                                                 |
 | ----------------------- | ---------------------------------------------------------------------- |
@@ -102,10 +102,10 @@ Lors de l'utilisation de l'API Perplexity native, les recherches prennent en cha
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Outil de recherche Perplexity" href="/en/tools/perplexity-search" icon="magnifying-glass">
+  <Card title="Outil de recherche Perplexity" href="/fr/tools/perplexity-search" icon="magnifying-glass">
     Comment l'agent invoque les recherches Perplexity et interprète les résultats.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
     Référence complète de la configuration, y compris les entrées du plugin.
   </Card>
 </CardGroup>

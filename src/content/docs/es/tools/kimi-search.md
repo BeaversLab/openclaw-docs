@@ -92,7 +92,7 @@ Los filtros específicos del proveedor actualmente no son compatibles.
 
 ## Relacionado
 
-- [Resumen de búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
-- [Moonshot AI](/en/providers/moonshot) -- Modelo Moonshot + documentación del proveedor Kimi Coding
-- [Búsqueda Gemini](/en/tools/gemini-search) -- respuestas sintetizadas por IA mediante grounding de Google
-- [Búsqueda Grok](/en/tools/grok-search) -- respuestas sintetizadas por IA mediante grounding de xAI
+- [Resumen de búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [Moonshot AI](/es/providers/moonshot) -- Modelo Moonshot + documentación del proveedor Kimi Coding
+- [Búsqueda Gemini](/es/tools/gemini-search) -- respuestas sintetizadas por IA mediante grounding de Google
+- [Búsqueda Grok](/es/tools/grok-search) -- respuestas sintetizadas por IA mediante grounding de xAI

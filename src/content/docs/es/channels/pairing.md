@@ -15,13 +15,13 @@ Se utiliza en dos lugares:
 1. **Emparejamiento MD** (quién tiene permiso para hablar con el bot)
 2. **Emparejamiento de nodos** (qué dispositivos/nodos tienen permiso para unirse a la red de pasarela)
 
-Contexto de seguridad: [Seguridad](/en/gateway/security)
+Contexto de seguridad: [Seguridad](/es/gateway/security)
 
 ## 1) Emparejamiento MD (acceso de chat entrante)
 
 Cuando un canal está configurado con la política de MD `pairing`, los remitentes desconocidos reciben un código corto y su mensaje **no se procesa** hasta que usted lo apruebe.
 
-Las políticas de DM predeterminadas están documentadas en: [Seguridad](/en/gateway/security)
+Las políticas de DM predeterminadas están documentadas en: [Seguridad](/es/gateway/security)
 
 Códigos de emparejamiento:
 
@@ -112,13 +112,13 @@ Almacenado bajo `~/.openclaw/devices/`:
 
 ## Documentos relacionados
 
-- Modelo de seguridad + inyección de prompt: [Seguridad](/en/gateway/security)
-- Actualización segura (ejecutar doctor): [Actualización](/en/install/updating)
+- Modelo de seguridad + inyección de prompt: [Seguridad](/es/gateway/security)
+- Actualización segura (ejecutar doctor): [Actualización](/es/install/updating)
 - Configuraciones de canales:
-  - Telegram: [Telegram](/en/channels/telegram)
-  - WhatsApp: [WhatsApp](/en/channels/whatsapp)
-  - Signal: [Signal](/en/channels/signal)
-  - BlueBubbles (iMessage): [BlueBubbles](/en/channels/bluebubbles)
-  - iMessage (heredado): [iMessage](/en/channels/imessage)
-  - Discord: [Discord](/en/channels/discord)
-  - Slack: [Slack](/en/channels/slack)
+  - Telegram: [Telegram](/es/channels/telegram)
+  - WhatsApp: [WhatsApp](/es/channels/whatsapp)
+  - Signal: [Signal](/es/channels/signal)
+  - BlueBubbles (iMessage): [BlueBubbles](/es/channels/bluebubbles)
+  - iMessage (heredado): [iMessage](/es/channels/imessage)
+  - Discord: [Discord](/es/channels/discord)
+  - Slack: [Slack](/es/channels/slack)

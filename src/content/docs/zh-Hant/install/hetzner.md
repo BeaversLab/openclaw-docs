@@ -23,7 +23,7 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
 - 保持嚴格的分離：專用的 VPS/執行環境 + 專用帳戶；該主機上不得有個人的 Apple/Google/瀏覽器/密碼管理器設定檔。
 - 如果使用者之間存在潛在衝突，請依據 gateway/host/OS 使用者進行分隔。
 
-請參閱[安全性](/en/gateway/security)和 [VPS 託管](/en/vps)。
+請參閱[安全性](/zh-Hant/gateway/security)和 [VPS 託管](/zh-Hant/vps)。
 
 ## 我們在做什麼（簡單來說）？
 
@@ -43,7 +43,7 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
 
 本指南假設您在 Hetzner 上使用 Ubuntu 或 Debian。  
 如果您使用的是其他 Linux VPS，請對應相應的套件。
-關於一般的 Docker 流程，請參閱 [Docker](/en/install/docker)。
+關於一般的 Docker 流程，請參閱 [Docker](/zh-Hant/install/docker)。
 
 ---
 
@@ -207,10 +207,10 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
   <Step title="共用的 Docker VM 運行時步驟">
     使用共用的運行時指南來了解一般的 Docker 主機流程：
 
-    - [將所需的二進位檔案製作到映像中](/en/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-    - [建置與啟動](/en/install/docker-vm-runtime#build-and-launch)
-    - [資料持久化位置](/en/install/docker-vm-runtime#what-persists-where)
-    - [更新](/en/install/docker-vm-runtime#updates)
+    - [將所需的二進位檔案製作到映像中](/zh-Hant/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+    - [建置與啟動](/zh-Hant/install/docker-vm-runtime#build-and-launch)
+    - [資料持久化位置](/zh-Hant/install/docker-vm-runtime#what-persists-where)
+    - [更新](/zh-Hant/install/docker-vm-runtime#updates)
 
   </Step>
 
@@ -231,7 +231,7 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
   </Step>
 </Steps>
 
-共用的持久化對應表位於 [Docker VM 運行時](/en/install/docker-vm-runtime#what-persists-where) 中。
+共用的持久化對應表位於 [Docker VM 運行時](/zh-Hant/install/docker-vm-runtime#what-persists-where) 中。
 
 ## 基礎設施即程式碼
 
@@ -254,6 +254,6 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
 
 ## 後續步驟
 
-- 設定訊息通道：[通道](/en/channels)
-- 設定 Gateway：[Gateway 設定](/en/gateway/configuration)
-- 保持 OpenClaw 為最新狀態：[更新](/en/install/updating)
+- 設定訊息通道：[通道](/zh-Hant/channels)
+- 設定 Gateway：[Gateway 設定](/zh-Hant/gateway/configuration)
+- 保持 OpenClaw 為最新狀態：[更新](/zh-Hant/install/updating)

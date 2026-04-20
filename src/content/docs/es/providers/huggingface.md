@@ -220,16 +220,16 @@ Las referencias de los modelos utilizan el formato `huggingface/<org>/<model>` (
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Proveedores de modelos" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Proveedores de modelos" href="/es/concepts/model-providers" icon="layers">
     Resumen de todos los proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Selección de modelo" href="/en/concepts/models" icon="brain">
+  <Card title="Selección de modelo" href="/es/concepts/models" icon="brain">
     Cómo elegir y configurar modelos.
   </Card>
   <Card title="Documentación de proveedores de inferencia" href="https://huggingface.co/docs/inference-providers" icon="book">
     Documentación oficial de Hugging Face Inference Providers.
   </Card>
-  <Card title="Configuración" href="/en/gateway/configuration" icon="gear">
+  <Card title="Configuración" href="/es/gateway/configuration" icon="gear">
     Referencia completa de configuración.
   </Card>
 </CardGroup>

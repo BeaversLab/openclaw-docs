@@ -17,23 +17,23 @@ La mayoría de las operaciones fluyen a través del Gateway (`openclaw gateway`)
 
 - **Primero loopback**: el Gateway WS por defecto es `ws://127.0.0.1:18789`.
   Los enlaces no loopback requieren una ruta de autenticación de gateway válida: token de secreto compartido/autenticación de contraseña, o un despliegue `trusted-proxy` no loopback configurado correctamente.
-- Se recomienda **un Gateway por host**. Para el aislamiento, ejecute múltiples gateways con perfiles y puertos aislados ([Multiple Gateways](/en/gateway/multiple-gateways)).
+- Se recomienda **un Gateway por host**. Para el aislamiento, ejecute múltiples gateways con perfiles y puertos aislados ([Multiple Gateways](/es/gateway/multiple-gateways)).
 - El **host de Canvas** se sirve en el mismo puerto que el Gateway (`/__openclaw__/canvas/`, `/__openclaw__/a2ui/`), protegido por la autenticación del Gateway cuando se enlaza más allá del loopback.
-- El **acceso remoto** suele ser mediante túnel SSH o VPN Tailscale ([Remote Access](/en/gateway/remote)).
+- El **acceso remoto** suele ser mediante túnel SSH o VPN Tailscale ([Remote Access](/es/gateway/remote)).
 
 Referencias clave:
 
-- [Gateway architecture](/en/concepts/architecture)
-- [Gateway protocol](/en/gateway/protocol)
-- [Gateway runbook](/en/gateway)
-- [Web surfaces + bind modes](/en/web)
+- [Gateway architecture](/es/concepts/architecture)
+- [Gateway protocol](/es/gateway/protocol)
+- [Gateway runbook](/es/gateway)
+- [Web surfaces + bind modes](/es/web)
 
 ## Emparejamiento + identidad
 
-- [Pairing overview (DM + nodes)](/en/channels/pairing)
-- [Gateway-owned node pairing](/en/gateway/pairing)
-- [Devices CLI (pairing + token rotation)](/en/cli/devices)
-- [Pairing CLI (DM approvals)](/en/cli/pairing)
+- [Pairing overview (DM + nodes)](/es/channels/pairing)
+- [Gateway-owned node pairing](/es/gateway/pairing)
+- [Devices CLI (pairing + token rotation)](/es/cli/devices)
+- [Pairing CLI (DM approvals)](/es/cli/pairing)
 
 Confianza local:
 
@@ -46,21 +46,21 @@ Confianza local:
 
 ## Descubrimiento + transportes
 
-- [Discovery & transports](/en/gateway/discovery)
-- [Bonjour / mDNS](/en/gateway/bonjour)
-- [Remote access (SSH)](/en/gateway/remote)
-- [Tailscale](/en/gateway/tailscale)
+- [Discovery & transports](/es/gateway/discovery)
+- [Bonjour / mDNS](/es/gateway/bonjour)
+- [Remote access (SSH)](/es/gateway/remote)
+- [Tailscale](/es/gateway/tailscale)
 
 ## Nodos + transportes
 
-- [Nodes overview](/en/nodes)
-- [Bridge protocol (legacy nodes, historical)](/en/gateway/bridge-protocol)
-- [Node runbook: iOS](/en/platforms/ios)
-- [Node runbook: Android](/en/platforms/android)
+- [Nodes overview](/es/nodes)
+- [Bridge protocol (legacy nodes, historical)](/es/gateway/bridge-protocol)
+- [Node runbook: iOS](/es/platforms/ios)
+- [Node runbook: Android](/es/platforms/android)
 
 ## Seguridad
 
-- [Security overview](/en/gateway/security)
-- [Gateway config reference](/en/gateway/configuration)
-- [Troubleshooting](/en/gateway/troubleshooting)
-- [Doctor](/en/gateway/doctor)
+- [Security overview](/es/gateway/security)
+- [Gateway config reference](/es/gateway/configuration)
+- [Troubleshooting](/es/gateway/troubleshooting)
+- [Doctor](/es/gateway/doctor)

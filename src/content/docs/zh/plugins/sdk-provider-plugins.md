@@ -12,9 +12,9 @@ read_when:
 
 本指南介绍了如何构建一个提供商插件，用于向 LLM 添加模型提供商 (OpenClaw)。完成本指南后，你将拥有一个包含模型目录、API 密钥身份验证和动态模型解析的提供商。
 
-<Info>如果您之前尚未构建任何 OpenClaw 插件，请首先阅读 [入门指南](/en/plugins/building-plugins) 以了解基本的包 结构和清单设置。</Info>
+<Info>如果您之前尚未构建任何 OpenClaw 插件，请首先阅读 [入门指南](/zh/plugins/building-plugins) 以了解基本的包 结构和清单设置。</Info>
 
-<Tip>提供商插件会将模型添加到 OpenClaw 的常规推理循环中。如果该模型 必须通过拥有线程、压缩或工具事件的原生代理守护进程运行，请将提供商与 [代理工具带](/en/plugins/sdk-agent-harness) 配对，而不是将守护进程协议详细信息放在核心中。</Tip>
+<Tip>提供商插件会将模型添加到 OpenClaw 的常规推理循环中。如果该模型 必须通过拥有线程、压缩或工具事件的原生代理守护进程运行，请将提供商与 [代理工具带](/zh/plugins/sdk-agent-harness) 配对，而不是将守护进程协议详细信息放在核心中。</Tip>
 
 ## 演练
 
@@ -521,7 +521,7 @@ read_when:
         `before_prompt_build`。
 
       有关详细描述和实际示例，请参阅
-      [内部结构：提供商运行时钩子](/en/plugins/architecture#provider-runtime-hooks)。
+      [内部结构：提供商运行时钩子](/zh/plugins/architecture#provider-runtime-hooks)。
     </Accordion>
 
   </Step>
@@ -637,7 +637,7 @@ read_when:
     ```
 
     OpenClaw 将其归类为 **混合功能（hybrid-capability）** 插件。这是公司插件的推荐模式（每个供应商一个插件）。请参阅
-    [内部原理：功能所有权](/en/plugins/architecture#capability-ownership-model)。
+    [内部原理：功能所有权](/zh/plugins/architecture#capability-ownership-model)。
 
     对于视频生成，首选上面显示的模式感知功能形状：
     `generate`、`imageToVideo` 和 `videoToVideo`。平面聚合字段（例如
@@ -724,7 +724,7 @@ clawhub package publish your-org/your-plugin
 
 ## 后续步骤
 
-- [渠道插件](/en/plugins/sdk-channel-plugins) — 如果您的插件还提供一个渠道
-- [SDK 运行时](/en/plugins/sdk-runtime) — `api.runtime` 辅助工具（TTS、搜索、子代理）
-- [SDK 概览](/en/plugins/sdk-overview) — 完整的子路径导入参考
-- [插件内部机制](/en/plugins/architecture#provider-runtime-hooks) — 钩子详细信息和内置示例
+- [渠道插件](/zh/plugins/sdk-channel-plugins) — 如果您的插件还提供一个渠道
+- [SDK 运行时](/zh/plugins/sdk-runtime) — `api.runtime` 辅助工具（TTS、搜索、子代理）
+- [SDK 概览](/zh/plugins/sdk-overview) — 完整的子路径导入参考
+- [插件内部机制](/zh/plugins/architecture#provider-runtime-hooks) — 钩子详细信息和内置示例

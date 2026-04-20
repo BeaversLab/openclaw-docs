@@ -25,7 +25,7 @@ Establezca `gateway.auth.mode` para controlar el protocolo de enlace:
 - `none` (solo entrada privada)
 - `token` (predeterminado cuando se establece `OPENCLAW_GATEWAY_TOKEN`)
 - `password` (secreto compartido mediante `OPENCLAW_GATEWAY_PASSWORD` o configuración)
-- `trusted-proxy` (proxy inverso con conocimiento de identidad; consulte [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth))
+- `trusted-proxy` (proxy inverso con conocimiento de identidad; consulte [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth))
 
 Cuando `tailscale.mode = "serve"` y `gateway.auth.allowTailscale` está `true`,
 el Control UI/WebSocket auth puede usar los encabezados de identidad de Tailscale

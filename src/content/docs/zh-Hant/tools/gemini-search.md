@@ -89,6 +89,6 @@ Gemini 模型皆可透過 `plugins.entries.google.config.webSearch.model` 使用
 
 ## 相關
 
-- [Web Search 概覽](/en/tools/web) -- 所有供應商與自動偵測
-- [Brave Search](/en/tools/brave-search) -- 附摘要的結構化結果
-- [Perplexity Search](/en/tools/perplexity-search) -- 結構化結果 + 內容擷取
+- [Web Search 概覽](/zh-Hant/tools/web) -- 所有供應商與自動偵測
+- [Brave Search](/zh-Hant/tools/brave-search) -- 附摘要的結構化結果
+- [Perplexity Search](/zh-Hant/tools/perplexity-search) -- 結構化結果 + 內容擷取

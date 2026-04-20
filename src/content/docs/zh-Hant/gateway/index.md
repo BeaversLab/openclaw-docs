@@ -10,16 +10,16 @@ title: "Gateway 手冊"
 使用此頁面進行 Gateway 服務的第一天啟動和第二天操作。
 
 <CardGroup cols={2}>
-  <Card title="深度疑難排解" icon="siren" href="/en/gateway/troubleshooting">
+  <Card title="深度疑難排解" icon="siren" href="/zh-Hant/gateway/troubleshooting">
     透過精確的命令階層與日誌特徵進行症狀優先診斷。
   </Card>
-  <Card title="組態" icon="sliders" href="/en/gateway/configuration">
+  <Card title="組態" icon="sliders" href="/zh-Hant/gateway/configuration">
     以任務為導向的設定指南 + 完整組態參考。
   </Card>
-  <Card title="機密管理" icon="key-round" href="/en/gateway/secrets">
+  <Card title="機密管理" icon="key-round" href="/zh-Hant/gateway/secrets">
     SecretRef 合約、執行時段快照行為，以及遷移/重新載入作業。
   </Card>
-  <Card title="Secrets 計畫合約" icon="shield-check" href="/en/gateway/secrets-plan-contract">
+  <Card title="Secrets 計畫合約" icon="shield-check" href="/zh-Hant/gateway/secrets-plan-contract">
     精確的 `secrets apply` 目標/路徑規則，以及僅限參考的 auth-profile 行為。
   </Card>
 </CardGroup>
@@ -158,7 +158,7 @@ openclaw gateway probe
   回應時警告 `multiple reachable gateways`。
 - 如果這是有意為之，請針對每個閘道隔離連接埠、設定/狀態以及工作區根目錄。
 
-詳細設定：[/gateway/multiple-gateways](/en/gateway/multiple-gateways)。
+詳細設定：[/gateway/multiple-gateways](/zh-Hant/gateway/multiple-gateways)。
 
 ## 遠端存取
 
@@ -173,7 +173,7 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 
 <Warning>SSH tunnel 不會繞過閘道驗證。對於共用金鑰驗證，客戶端仍 必須透過 tunnel 發送 `token`/`password`。對於承載身分的模式， 請求仍然必須滿足該驗證路徑。</Warning>
 
-參閱：[Remote Gateway](/en/gateway/remote)、[Authentication](/en/gateway/authentication)、[Tailscale](/en/gateway/tailscale)。
+參閱：[Remote Gateway](/zh-Hant/gateway/remote)、[Authentication](/zh-Hant/gateway/authentication)、[Tailscale](/zh-Hant/gateway/tailscale)。
 
 ## 監督與服務生命週期
 
@@ -281,7 +281,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a opencla
 OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
 ```
 
-請參閱：[Multiple gateways](/en/gateway/multiple-gateways)。
+請參閱：[Multiple gateways](/zh-Hant/gateway/multiple-gateways)。
 
 ### 開發設定檔快速途徑
 
@@ -309,7 +309,7 @@ openclaw --dev status
 1. 立即接受的回應 (`status:"accepted"`)
 2. 最終完成回應 (`status:"ok"|"error"`)，中間伴隨串流 `agent` 事件。
 
-請參閱完整的通訊協定文件：[Gateway 通訊協定](/en/gateway/protocol)。
+請參閱完整的通訊協定文件：[Gateway 通訊協定](/zh-Hant/gateway/protocol)。
 
 ## 運作檢查
 
@@ -339,7 +339,7 @@ openclaw health
 | `Gateway start blocked: set gateway.mode=local`                | 設定設為遠端模式，或損毀的設定中缺少本地模式標記 |
 | 連線時發生 `unauthorized`                                      | 客戶端與 Gateway 之間的驗證不符                  |
 
-若要取得完整的診斷步驟，請使用 [Gateway 疑難排解](/en/gateway/troubleshooting)。
+若要取得完整的診斷步驟，請使用 [Gateway 疑難排解](/zh-Hant/gateway/troubleshooting)。
 
 ## 安全性保證
 
@@ -351,9 +351,9 @@ openclaw health
 
 相關連結：
 
-- [疑難排解](/en/gateway/troubleshooting)
-- [背景處理序](/en/gateway/background-process)
-- [設定](/en/gateway/configuration)
-- [健康狀態](/en/gateway/health)
-- [診斷工具](/en/gateway/doctor)
-- [驗證](/en/gateway/authentication)
+- [疑難排解](/zh-Hant/gateway/troubleshooting)
+- [背景處理序](/zh-Hant/gateway/background-process)
+- [設定](/zh-Hant/gateway/configuration)
+- [健康狀態](/zh-Hant/gateway/health)
+- [診斷工具](/zh-Hant/gateway/doctor)
+- [驗證](/zh-Hant/gateway/authentication)

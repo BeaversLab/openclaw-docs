@@ -11,9 +11,9 @@ Administrar agentes aislados (espacios de trabajo + autenticación + enrutamient
 
 Relacionado:
 
-- Enrutamiento multiagente: [Multi-Agent Routing](/en/concepts/multi-agent)
-- Espacio de trabajo del agente: [Agent workspace](/en/concepts/agent-workspace)
-- Configuración de visibilidad de habilidades: [Skills config](/en/tools/skills-config)
+- Enrutamiento multiagente: [Multi-Agent Routing](/es/concepts/multi-agent)
+- Espacio de trabajo del agente: [Agent workspace](/es/concepts/agent-workspace)
+- Configuración de visibilidad de habilidades: [Skills config](/es/tools/skills-config)
 
 ## Ejemplos
 
@@ -36,8 +36,8 @@ Utilice los enlaces de enrutamiento para fijar el tráfico del canal entrante a 
 
 Si también desea diferentes habilidades visibles por agente, configure
 `agents.defaults.skills` y `agents.list[].skills` en `openclaw.json`. Consulte
-[Configuración de habilidades](/en/tools/skills-config) y
-[Referencia de configuración](/en/gateway/configuration-reference#agents-defaults-skills).
+[Configuración de habilidades](/es/tools/skills-config) y
+[Referencia de configuración](/es/gateway/configuration-reference#agents-defaults-skills).
 
 Listar enlaces:
 

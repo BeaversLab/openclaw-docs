@@ -176,7 +176,7 @@ Pour utiliser Qwen comme fournisseur vidéo par défaut :
 }
 ```
 
-<Note>Voir [Génération vidéo](/en/tools/video-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération vidéo](/fr/tools/video-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ## Avancé
 
@@ -281,16 +281,16 @@ Pour utiliser Qwen comme fournisseur vidéo par défaut :
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection de modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection de modèle" href="/fr/concepts/model-providers" icon="layers">
     Choix des fournisseurs, des références de modèle et du comportement de basculement.
   </Card>
-  <Card title="Génération vidéo" href="/en/tools/video-generation" icon="video">
+  <Card title="Génération vidéo" href="/fr/tools/video-generation" icon="video">
     Paramètres de l'outil vidéo partagés et sélection du fournisseur.
   </Card>
-  <Card title="Alibaba (ModelStudio)" href="/en/providers/alibaba" icon="cloud">
+  <Card title="Alibaba (ModelStudio)" href="/fr/providers/alibaba" icon="cloud">
     Fournisseur hérité ModelStudio et notes de migration.
   </Card>
-  <Card title="Dépannage" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
     Dépannage général et FAQ.
   </Card>
 </CardGroup>

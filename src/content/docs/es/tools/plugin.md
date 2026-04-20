@@ -72,10 +72,10 @@ OpenClaw reconoce dos formatos de complementos:
 | **Nativo**           | `openclaw.plugin.json` + módulo de tiempo de ejecución; se ejecuta en proceso     | Complementos oficiales, paquetes npm de la comunidad   |
 | **Paquete (Bundle)** | Diseño compatible con Codex/Claude/Cursor; asignado a características de OpenClaw | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/` |
 
-Ambos aparecen en `openclaw plugins list`. Consulte [Plugin Bundles](/en/plugins/bundles) para obtener detalles sobre los paquetes.
+Ambos aparecen en `openclaw plugins list`. Consulte [Plugin Bundles](/es/plugins/bundles) para obtener detalles sobre los paquetes.
 
-Si está escribiendo un complemento nativo, comience con [Building Plugins](/en/plugins/building-plugins)
-y [Plugin SDK Overview](/en/plugins/sdk-overview).
+Si está escribiendo un complemento nativo, comience con [Building Plugins](/es/plugins/building-plugins)
+y [Plugin SDK Overview](/es/plugins/sdk-overview).
 
 ## Complementos oficiales
 
@@ -83,12 +83,12 @@ y [Plugin SDK Overview](/en/plugins/sdk-overview).
 
 | Complemento     | Paquete                | Documentos                              |
 | --------------- | ---------------------- | --------------------------------------- |
-| Matriz          | `@openclaw/matrix`     | [Matrix](/en/channels/matrix)           |
-| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/en/channels/msteams) |
-| Nostr           | `@openclaw/nostr`      | [Nostr](/en/channels/nostr)             |
-| Llamada de voz  | `@openclaw/voice-call` | [Voice Call](/en/plugins/voice-call)    |
-| Zalo            | `@openclaw/zalo`       | [Zalo](/en/channels/zalo)               |
-| Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/en/plugins/zalouser)   |
+| Matriz          | `@openclaw/matrix`     | [Matrix](/es/channels/matrix)           |
+| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/es/channels/msteams) |
+| Nostr           | `@openclaw/nostr`      | [Nostr](/es/channels/nostr)             |
+| Llamada de voz  | `@openclaw/voice-call` | [Voice Call](/es/plugins/voice-call)    |
+| Zalo            | `@openclaw/zalo`       | [Zalo](/es/channels/zalo)               |
+| Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/es/plugins/zalouser)   |
 
 ### Principal (incluido con OpenClaw)
 
@@ -111,7 +111,7 @@ y [Plugin SDK Overview](/en/plugins/sdk-overview).
   </Accordion>
 </AccordionGroup>
 
-¿Buscas complementos de terceros? Consulta [Complementos de la comunidad](/en/plugins/community).
+¿Buscas complementos de terceros? Consulta [Complementos de la comunidad](/es/plugins/community).
 
 ## Configuración
 
@@ -266,7 +266,7 @@ Las fuentes del mercado pueden ser un nombre de mercado conocido de Claude desde
 una URL de repositorio de GitHub o una URL de git. Para los mercados remotos, las entradas de complementos deben permanecer dentro del
 repositorio de mercado clonado y usar solo fuentes de ruta relativa.
 
-Consulte la [Referencia de CLI de `openclaw plugins`](/en/cli/plugins) para obtener detalles completos.
+Consulte la [Referencia de CLI de `openclaw plugins`](/es/cli/plugins) para obtener detalles completos.
 
 ## Resumen de la API de complementos
 
@@ -328,13 +328,13 @@ Comportamiento de protección de gancho para ganchos del ciclo de vida tipados:
 - `message_sending`: `{ cancel: true }` es terminal; se omiten los controladores de menor prioridad.
 - `message_sending`: `{ cancel: false }` es una no-op y no borra una cancelación anterior.
 
-Para obtener el comportamiento completo de los ganchos tipados, consulte [SDK Overview](/en/plugins/sdk-overview#hook-decision-semantics).
+Para obtener el comportamiento completo de los ganchos tipados, consulte [SDK Overview](/es/plugins/sdk-overview#hook-decision-semantics).
 
 ## Relacionado
 
-- [Building Plugins](/en/plugins/building-plugins) — crear tu propio complemento
-- [Plugin Bundles](/en/plugins/bundles) — compatibilidad de paquetes Codex/Claude/Cursor
-- [Plugin Manifest](/en/plugins/manifest) — esquema de manifiesto
-- [Registering Tools](/en/plugins/building-plugins#registering-agent-tools) — agregar herramientas de agente en un complemento
-- [Internos del complemento](/en/plugins/architecture) — modelo de capacidades y canalización de carga
-- [Complementos de la comunidad](/en/plugins/community) — listados de terceros
+- [Building Plugins](/es/plugins/building-plugins) — crear tu propio complemento
+- [Plugin Bundles](/es/plugins/bundles) — compatibilidad de paquetes Codex/Claude/Cursor
+- [Plugin Manifest](/es/plugins/manifest) — esquema de manifiesto
+- [Registering Tools](/es/plugins/building-plugins#registering-agent-tools) — agregar herramientas de agente en un complemento
+- [Internos del complemento](/es/plugins/architecture) — modelo de capacidades y canalización de carga
+- [Complementos de la comunidad](/es/plugins/community) — listados de terceros

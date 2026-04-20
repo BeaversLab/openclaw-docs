@@ -93,7 +93,7 @@ Exécutez une passerelle OpenClaw persistante et toujours active sur un Gateway.
     ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
     ```
 
-    Ouvrez l'URL imprimée dans votre navigateur local. Pour un accès à distance permanent, consultez [l'intégration Tailscale](/en/gateway/tailscale).
+    Ouvrez l'URL imprimée dans votre navigateur local. Pour un accès à distance permanent, consultez [l'intégration Tailscale](/fr/gateway/tailscale).
 
   </Step>
 </Steps>
@@ -134,6 +134,6 @@ sudo systemctl disable bluetooth
 
 ## Étapes suivantes
 
-- [Canaux](/en/channels) -- connectez Telegram, WhatsApp, Discord, et plus
-- [Configuration du Gateway](/en/gateway/configuration) -- toutes les options de configuration
-- [Mise à jour](/en/install/updating) -- garder OpenClaw à jour
+- [Canaux](/fr/channels) -- connectez Telegram, WhatsApp, Discord, et plus
+- [Configuration du Gateway](/fr/gateway/configuration) -- toutes les options de configuration
+- [Mise à jour](/fr/install/updating) -- garder OpenClaw à jour

@@ -67,5 +67,5 @@ OpenClaw lee la configuración JSON5 de `OPENCLAW_CONFIG_PATH` y almacena datos 
 ## Relacionado
 
 - [nix-openclaw](https://github.com/openclaw/nix-openclaw) -- guía de configuración completa
-- [Asistente](/en/start/wizard) -- configuración de CLI sin Nix
-- [Docker](/en/install/docker) -- configuración en contenedor
+- [Asistente](/es/start/wizard) -- configuración de CLI sin Nix
+- [Docker](/es/install/docker) -- configuración en contenedor

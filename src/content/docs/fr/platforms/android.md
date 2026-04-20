@@ -15,13 +15,13 @@ title: "Application Android"
 
 - Rôle : application de nœud compagnon (Android n'héberge pas le Gateway).
 - Gateway requis : oui (exécutez-le sur macOS, Linux ou Windows via WSL2).
-- Installation : [Getting Started](/en/start/getting-started) + [Pairing](/en/channels/pairing).
-- Gateway : [Runbook](/en/gateway) + [Configuration](/en/gateway/configuration).
-  - Protocoles : [Protocole Gateway](/en/gateway/protocol) (nœuds + plan de contrôle).
+- Installation : [Getting Started](/fr/start/getting-started) + [Pairing](/fr/channels/pairing).
+- Gateway : [Runbook](/fr/gateway) + [Configuration](/fr/gateway/configuration).
+  - Protocoles : [Protocole Gateway](/fr/gateway/protocol) (nœuds + plan de contrôle).
 
 ## Contrôle système
 
-Le contrôle système (launchd/systemd) réside sur l'hôte du Gateway. Voir [Gateway](/en/gateway).
+Le contrôle système (launchd/systemd) réside sur l'hôte du Gateway. Voir [Gateway](/fr/gateway).
 
 ## Manuel de connexion
 
@@ -71,7 +71,7 @@ Depuis la machine passerelle :
 dns-sd -B _openclaw-gw._tcp local.
 ```
 
-Plus de notes de débogage : [Bonjour](/en/gateway/bonjour).
+Plus de notes de débogage : [Bonjour](/fr/gateway/bonjour).
 
 Si vous avez également configuré un domaine de découverte étendue (wide-area), comparez avec :
 
@@ -90,7 +90,7 @@ La seule découverte n'est pas suffisante pour l'appairage tailnet/public Androi
 1. Configurez une zone DNS-SD (exemple `openclaw.internal.`) sur l'hôte de la passerelle et publiez des enregistrements `_openclaw-gw._tcp`.
 2. Configurez le DNS fractionné (split DNS) Tailscale pour votre domaine choisi pointant vers ce serveur DNS.
 
-Détails et exemple de configuration CoreDNS : [Bonjour](/en/gateway/bonjour).
+Détails et exemple de configuration CoreDNS : [Bonjour](/fr/gateway/bonjour).
 
 ### 3) Se connecter depuis Android
 
@@ -116,7 +116,7 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-Détails de l'appairage : [Appairage](/en/channels/pairing).
+Détails de l'appairage : [Appairage](/fr/channels/pairing).
 
 ### 5) Vérifier que le nœud est connecté
 
@@ -177,7 +177,7 @@ Commandes de caméra (premier plan uniquement ; soumises à autorisation) :
 - `camera.snap` (jpg)
 - `camera.clip` (mp4)
 
-Voir [Camera node](/en/nodes/camera) pour les paramètres et les assistants CLI.
+Voir [Camera node](/fr/nodes/camera) pour les paramètres et les assistants CLI.
 
 ### 8) Voix + surface de commande étendue Android
 

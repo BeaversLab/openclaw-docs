@@ -28,7 +28,7 @@ openclaw update --dry-run   # preview without applying
 
 `--channel beta` 优先使用 beta 版本，但当 beta 标签缺失或比最新的稳定版本旧时，运行时会回退到 stable/latest。如果您想对单次包更新使用原始的 npm beta dist-tag，请使用 `--tag beta`。
 
-有关渠道语义，请参阅 [开发渠道](/en/install/development-channels)。
+有关渠道语义，请参阅 [开发渠道](/zh/install/development-channels)。
 
 ## 备选方案：重新运行安装程序
 
@@ -88,7 +88,7 @@ bun add -g openclaw@latest
 openclaw doctor
 ```
 
-迁移配置，审核私信策略，并检查网关运行状况。详情：[Doctor](/en/gateway/doctor)
+迁移配置，审核私信策略，并检查网关运行状况。详情：[Doctor](/zh/gateway/doctor)
 
 ### 重启网关
 
@@ -131,11 +131,11 @@ openclaw gateway restart
 
 - 再次运行 `openclaw doctor` 并仔细阅读输出。
 - 对于源码检出上的 `openclaw update --channel dev`，更新程序会在需要时自动引导 `pnpm`。如果你看到 pnpm/corepack 引导错误，请手动安装 `pnpm`（或重新启用 `corepack`）并重新运行更新。
-- 查看：[故障排除](/en/gateway/troubleshooting)
+- 查看：[故障排除](/zh/gateway/troubleshooting)
 - 在 Discord 中提问：[https://discord.gg/clawd](https://discord.gg/clawd)
 
 ## 相关
 
-- [安装概述](/en/install) — 所有安装方法
-- [医生](/en/gateway/doctor) — 更新后的健康检查
-- [迁移](/en/install/migrating) — 主要版本迁移指南
+- [安装概述](/zh/install) — 所有安装方法
+- [医生](/zh/gateway/doctor) — 更新后的健康检查
+- [迁移](/zh/install/migrating) — 主要版本迁移指南

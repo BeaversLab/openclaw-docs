@@ -65,7 +65,7 @@ OpenClaw indexes `MEMORY.md` and `memory/*.md` into chunks (~400 tokens with
   changes, the entire index is rebuilt automatically.
 - **Reindex on demand:** `openclaw memory index --force`
 
-<Info>您也可以使用 `memorySearch.extraPaths` 对工作区之外的 Markdown 文件进行索引。请参阅 [配置参考](/en/reference/memory-config#additional-memory-paths)。</Info>
+<Info>您也可以使用 `memorySearch.extraPaths` 对工作区之外的 Markdown 文件进行索引。请参阅 [配置参考](/zh/reference/memory-config#additional-memory-paths)。</Info>
 
 ## 何时使用
 
@@ -76,9 +76,9 @@ OpenClaw indexes `MEMORY.md` and `memory/*.md` into chunks (~400 tokens with
 - 支持所有嵌入提供商。
 - 混合搜索结合了两种检索方法的优点。
 
-如果您需要重排序、查询扩展，或者希望对工作区之外的目录进行索引，请考虑切换到 [QMD](/en/concepts/memory-qmd)。
+如果您需要重排序、查询扩展，或者希望对工作区之外的目录进行索引，请考虑切换到 [QMD](/zh/concepts/memory-qmd)。
 
-如果您需要具有自动用户建模的跨会话记忆，请考虑使用 [Honcho](/en/concepts/memory-honcho)。
+如果您需要具有自动用户建模的跨会话记忆，请考虑使用 [Honcho](/zh/concepts/memory-honcho)。
 
 ## 故障排除
 
@@ -91,4 +91,4 @@ OpenClaw indexes `MEMORY.md` and `memory/*.md` into chunks (~400 tokens with
 ## 配置
 
 有关嵌入提供商设置、混合搜索调整（权重、MMR、时间衰减）、批量索引、多模态内存、sqlite-vec、额外路径以及所有其他配置选项，请参阅
-[内存配置参考](/en/reference/memory-config)。
+[内存配置参考](/zh/reference/memory-config)。

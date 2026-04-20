@@ -4,7 +4,7 @@ read_when: "透過 SSH 將 macOS 應用程式連線到遠端閘道"
 title: "遠端閘道設定"
 ---
 
-> 此內容已合併至 [遠端存取](/en/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent)。請參閱該頁面以取得最新指南。
+> 此內容已合併至 [遠端存取](/zh-Hant/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent)。請參閱該頁面以取得最新指南。
 
 # 使用遠端閘道執行 OpenClaw.app
 

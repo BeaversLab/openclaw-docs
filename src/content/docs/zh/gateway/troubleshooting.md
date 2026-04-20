@@ -9,7 +9,7 @@ title: "故障排除"
 # Gateway(网关) 网关 故障排查
 
 本页面是深度操作手册。
-如果您首先需要快速分诊流程，请从 [/help/故障排除](/en/help/troubleshooting) 开始。
+如果您首先需要快速分诊流程，请从 [/help/故障排除](/zh/help/troubleshooting) 开始。
 
 ## 命令阶梯
 
@@ -54,9 +54,9 @@ openclaw config get agents.defaults.models
 
 相关：
 
-- [/providers/anthropic](/en/providers/anthropic)
-- [/reference/token-use](/en/reference/token-use)
-- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/en/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
+- [/providers/anthropic](/zh/providers/anthropic)
+- [/reference/token-use](/zh/reference/token-use)
+- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/zh/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
 
 ## 本地 OpenAI 兼容后端通过直接探测但代理运行失败
 
@@ -102,9 +102,9 @@ openclaw logs --follow
 
 相关：
 
-- [/gateway/local-models](/en/gateway/local-models)
-- [/网关/配置](/en/gateway/configuration)
-- [/gateway/configuration-reference#openai-compatible-endpoints](/en/gateway/configuration-reference#openai-compatible-endpoints)
+- [/gateway/local-models](/zh/gateway/local-models)
+- [/网关/配置](/zh/gateway/configuration)
+- [/gateway/configuration-reference#openai-compatible-endpoints](/zh/gateway/configuration-reference#openai-compatible-endpoints)
 
 ## 无回复
 
@@ -132,9 +132,9 @@ openclaw logs --follow
 
 相关：
 
-- [/channels/故障排除](/en/channels/troubleshooting)
-- [/channels/pairing](/en/channels/pairing)
-- [/channels/groups](/en/channels/groups)
+- [/channels/故障排除](/zh/channels/troubleshooting)
+- [/channels/pairing](/zh/channels/pairing)
+- [/channels/groups](/zh/channels/groups)
 
 ## 仪表板控制 UI 连接
 
@@ -178,8 +178,8 @@ openclaw gateway status --json
 | Detail code                  | Meaning                             | Recommended action                                                                                                                                                                                                                                       |
 | ---------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。        | 在客户端中粘贴/设置令牌并重试。对于仪表板路径：`openclaw config get gateway.auth.token`，然后将其粘贴到控制 UI 设置中。                                                                                                                                  |
-| `AUTH_TOKEN_MISMATCH`        | 共享令牌与 Gateway 认证令牌不匹配。 | 如果是 `canRetryWithDeviceToken=true`，允许一次受信任的重试。缓存令牌的重试将重用存储的已批准范围；显式的 `deviceToken` / `scopes` 调用方将保留请求的范围。如果仍然失败，请运行 [令牌漂移恢复检查清单](/en/cli/devices#token-drift-recovery-checklist)。 |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | 每个设备的缓存令牌已过期或被吊销。  | 使用 [devices CLI](/en/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                                                                                                                |
+| `AUTH_TOKEN_MISMATCH`        | 共享令牌与 Gateway 认证令牌不匹配。 | 如果是 `canRetryWithDeviceToken=true`，允许一次受信任的重试。缓存令牌的重试将重用存储的已批准范围；显式的 `deviceToken` / `scopes` 调用方将保留请求的范围。如果仍然失败，请运行 [令牌漂移恢复检查清单](/zh/cli/devices#token-drift-recovery-checklist)。 |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | 每个设备的缓存令牌已过期或被吊销。  | 使用 [devices CLI](/zh/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                                                                                                                |
 | `PAIRING_REQUIRED`           | 设备身份已知但未获批准用于此角色。  | 批准待处理的请求：`openclaw devices list`，然后 `openclaw devices approve <requestId>`。                                                                                                                                                                 |
 
 设备认证 v2 迁移检查：
@@ -205,11 +205,11 @@ openclaw gateway status
 
 相关：
 
-- [/web/control-ui](/en/web/control-ui)
-- [/gateway/configuration](/en/gateway/configuration) （Gateway 认证模式）
-- [/gateway/trusted-proxy-auth](/en/gateway/trusted-proxy-auth)
-- [/gateway/remote](/en/gateway/remote)
-- [/cli/devices](/en/cli/devices)
+- [/web/control-ui](/zh/web/control-ui)
+- [/gateway/configuration](/zh/gateway/configuration) （Gateway 认证模式）
+- [/gateway/trusted-proxy-auth](/zh/gateway/trusted-proxy-auth)
+- [/gateway/remote](/zh/gateway/remote)
+- [/cli/devices](/zh/cli/devices)
 
 ## Gateway(网关) 服务未运行
 
@@ -236,13 +236,13 @@ openclaw gateway status --deep   # also scan system-level services
 - `Gateway start blocked: set gateway.mode=local` 或 `existing config is missing gateway.mode` → 未启用本地 Gateway(网关) 模式，或者配置文件被破坏并丢失了 `gateway.mode`。修复方法：在配置中设置 `gateway.mode="local"`，或者重新运行 `openclaw onboard --mode local` / `openclaw setup` 以重新生成预期的本地模式配置。如果您通过 Podman 运行 OpenClaw，默认配置路径是 `~/.openclaw/openclaw.json`。
 - `refusing to bind gateway ... without auth` → 非回环绑定且没有有效的 Gateway(网关) 认证路径（令牌/密码，或配置的受信任代理）。
 - `another gateway instance is already listening` / `EADDRINUSE` → 端口冲突。
-- `Other gateway-like services detected (best effort)` → 存在过时或并行的 launchd/systemd/schtasks 单元。大多数设置应保证每台机器一个 Gateway(网关)；如果确实需要多个，请隔离端口 + 配置/状态/工作区。请参阅 [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host)。
+- `Other gateway-like services detected (best effort)` → 存在过时或并行的 launchd/systemd/schtasks 单元。大多数设置应保证每台机器一个 Gateway(网关)；如果确实需要多个，请隔离端口 + 配置/状态/工作区。请参阅 [/gateway#multiple-gateways-same-host](/zh/gateway#multiple-gateways-same-host)。
 
 相关：
 
-- [/gateway/background-process](/en/gateway/background-process)
-- [/gateway/configuration](/en/gateway/configuration)
-- [/gateway/doctor](/en/gateway/doctor)
+- [/gateway/background-process](/zh/gateway/background-process)
+- [/gateway/configuration](/zh/gateway/configuration)
+- [/gateway/doctor](/zh/gateway/doctor)
 
 ## Gateway(网关) 探测警告
 
@@ -268,9 +268,9 @@ openclaw gateway probe --ssh user@gateway-host
 
 相关：
 
-- [/cli/gateway](/en/cli/gateway)
-- [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host)
-- [/gateway/remote](/en/gateway/remote)
+- [/cli/gateway](/zh/cli/gateway)
+- [/gateway#multiple-gateways-same-host](/zh/gateway#multiple-gateways-same-host)
+- [/gateway/remote](/zh/gateway/remote)
 
 ## 渠道已连接但消息未流动
 
@@ -298,10 +298,10 @@ openclaw config get channels
 
 相关：
 
-- [/channels/故障排除](/en/channels/troubleshooting)
-- [/channels/whatsapp](/en/channels/whatsapp)
-- [/channels/telegram](/en/channels/telegram)
-- [/channels/discord](/en/channels/discord)
+- [/channels/故障排除](/zh/channels/troubleshooting)
+- [/channels/whatsapp](/zh/channels/whatsapp)
+- [/channels/telegram](/zh/channels/telegram)
+- [/channels/discord](/zh/channels/discord)
 
 ## Cron 和心跳传递
 
@@ -333,9 +333,9 @@ openclaw logs --follow
 
 相关：
 
-- [/automation/cron-jobs#故障排除](/en/automation/cron-jobs#troubleshooting)
-- [/automation/cron-jobs](/en/automation/cron-jobs)
-- [/gateway/heartbeat](/en/gateway/heartbeat)
+- [/automation/cron-jobs#故障排除](/zh/automation/cron-jobs#troubleshooting)
+- [/automation/cron-jobs](/zh/automation/cron-jobs)
+- [/gateway/heartbeat](/zh/gateway/heartbeat)
 
 ## 节点配对工具失败
 
@@ -364,9 +364,9 @@ openclaw status
 
 相关：
 
-- [/nodes/故障排除](/en/nodes/troubleshooting)
-- [/nodes/index](/en/nodes/index)
-- [/tools/exec-approvals](/en/tools/exec-approvals)
+- [/nodes/故障排除](/zh/nodes/troubleshooting)
+- [/nodes/index](/zh/nodes/index)
+- [/tools/exec-approvals](/zh/tools/exec-approvals)
 
 ## 浏览器工具失败
 
@@ -409,8 +409,8 @@ openclaw doctor
 
 相关：
 
-- [/tools/browser-linux-故障排除](/en/tools/browser-linux-troubleshooting)
-- [/tools/browser](/en/tools/browser)
+- [/tools/browser-linux-故障排除](/zh/tools/browser-linux-troubleshooting)
+- [/tools/browser](/zh/tools/browser)
 
 ## 如果您进行了升级并且某些内容突然损坏
 
@@ -483,6 +483,6 @@ openclaw gateway restart
 
 相关：
 
-- [/gateway/pairing](/en/gateway/pairing)
-- [/gateway/authentication](/en/gateway/authentication)
-- [/gateway/background-process](/en/gateway/background-process)
+- [/gateway/pairing](/zh/gateway/pairing)
+- [/gateway/authentication](/zh/gateway/authentication)
+- [/gateway/background-process](/zh/gateway/background-process)

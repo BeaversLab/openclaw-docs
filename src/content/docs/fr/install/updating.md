@@ -30,7 +30,7 @@ openclaw update --dry-run   # preview without applying
 le tag bêta est manquant ou plus ancien que la dernière version stable. Utilisez `--tag beta`
 si vous souhaitez le tag de dist bêta npm brut pour une mise à jour de package ponctuelle.
 
-Voir [Canaux de développement](/en/install/development-channels) pour la sémantique des canaux.
+Voir [Canaux de développement](/fr/install/development-channels) pour la sémantique des canaux.
 
 ## Alternative : réexécuter l'installateur
 
@@ -90,7 +90,7 @@ La passerelle enregistre également un indice de mise à jour au démarrage (dé
 openclaw doctor
 ```
 
-Migration de la configuration, audit des stratégies DM et vérification de la santé de la passerelle. Détails : [Docteur](/en/gateway/doctor)
+Migration de la configuration, audit des stratégies DM et vérification de la santé de la passerelle. Détails : [Docteur](/fr/gateway/doctor)
 
 ### Redémarrer la passerelle
 
@@ -133,11 +133,11 @@ Pour revenir à la dernière version : `git checkout main && git pull`.
 
 - Exécutez `openclaw doctor` à nouveau et lisez attentivement la sortie.
 - Pour `openclaw update --channel dev` sur les sources extraites, le programme de mise à jour amorce automatiquement `pnpm` si nécessaire. Si vous rencontrez une erreur d'amorçage pnpm/corepack, installez `pnpm` manuellement (ou réactivez `corepack`) et relancez la mise à jour.
-- Vérifiez : [Dépannage](/en/gateway/troubleshooting)
+- Vérifiez : [Dépannage](/fr/gateway/troubleshooting)
 - Demandez sur Discord : [https://discord.gg/clawd](https://discord.gg/clawd)
 
 ## Connexes
 
-- [Vue d'ensemble de l'installation](/en/install) — toutes les méthodes d'installation
-- [Docteur](/en/gateway/doctor) — vérifications de santé après les mises à jour
-- [Migration](/en/install/migrating) — guides de migration pour les versions majeures
+- [Vue d'ensemble de l'installation](/fr/install) — toutes les méthodes d'installation
+- [Docteur](/fr/gateway/doctor) — vérifications de santé après les mises à jour
+- [Migration](/fr/install/migrating) — guides de migration pour les versions majeures

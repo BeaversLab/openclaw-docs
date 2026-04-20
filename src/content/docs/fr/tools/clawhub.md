@@ -114,7 +114,7 @@ L'installation anonyme de plugins ClawHub échoue également pour les packages p
 
 La CLI `clawhub` distincte installe également des compétences dans `./skills` sous votre répertoire de travail actuel. Si un espace de travail OpenClaw est configuré, `clawhub` revient à cet espace de travail à moins que vous ne remplaciez `--workdir` (ou `CLAWHUB_WORKDIR`). OpenClaw charge les compétences de l'espace de travail à partir de `<workspace>/skills` et les récupérera lors de la **prochaine** session. Si vous utilisez déjà `~/.openclaw/skills` ou des compétences groupées, les compétences de l'espace de travail ont la priorité.
 
-Pour plus de détails sur le chargement, le partage et le contrôle des compétences, consultez [Skills](/en/tools/skills).
+Pour plus de détails sur le chargement, le partage et le contrôle des compétences, consultez [Skills](/fr/tools/skills).
 
 ## Présentation du système de compétences
 

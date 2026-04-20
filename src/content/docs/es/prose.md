@@ -31,7 +31,7 @@ Reinicie la puerta de enlace después de habilitar el complemento.
 
 Despliegue en desarrollo/local: `openclaw plugins install ./path/to/local/open-prose-plugin`
 
-Documentos relacionados: [Complementos](/en/tools/plugin), [Manifiesto del complemento](/en/plugins/manifest), [Habilidades](/en/tools/skills).
+Documentos relacionados: [Complementos](/es/tools/plugin), [Manifiesto del complemento](/es/plugins/manifest), [Habilidades](/es/tools/skills).
 
 ## Comando de barra
 
@@ -125,10 +125,10 @@ Los programas OpenProse se asignan a primitivas de OpenClaw:
 | Lectura/escritura de archivos      | `read` / `write`        |
 | Recuperación web                   | `web_fetch`             |
 
-Si su lista blanca de herramientas bloquea estas herramientas, los programas OpenProse fallarán. Consulte [Configuración de habilidades](/en/tools/skills-config).
+Si su lista blanca de herramientas bloquea estas herramientas, los programas OpenProse fallarán. Consulte [Configuración de habilidades](/es/tools/skills-config).
 
 ## Seguridad + aprobaciones
 
 Trate los archivos `.prose` como código. Revíselos antes de ejecutarlos. Use las listas blancas de herramientas y las puertas de aprobación de OpenClaw para controlar los efectos secundarios.
 
-Para flujos de trabajo deterministas y con puertas de aprobación, compare con [Lobster](/en/tools/lobster).
+Para flujos de trabajo deterministas y con puertas de aprobación, compare con [Lobster](/es/tools/lobster).

@@ -354,7 +354,7 @@ SecretRefs 僅在實際有效的表面上進行驗證。
 
 標準的支援與不支援憑證列於：
 
-- [SecretRef 憑證表面](/en/reference/secretref-credential-surface)
+- [SecretRef 憑證表面](/zh-Hant/reference/secretref-credential-surface)
 
 執行時期產生或輪換的憑證以及 OAuth 重新整理資料，被刻意排除在唯讀 SecretRef 解析之外。
 
@@ -505,7 +505,7 @@ Exec 注意事項：
 
 如需嚴格的目標/路徑合約詳細資訊和確切的拒絕規則，請參閱：
 
-- [Secrets 套用計畫合約](/en/gateway/secrets-plan-contract)
+- [Secrets 套用計畫合約](/zh-Hant/gateway/secrets-plan-contract)
 
 ## 單向安全原則
 
@@ -531,9 +531,9 @@ OpenClaw 故意不寫入包含歷史純文字 secret 值的回溯備份。
 
 ## 相關文件
 
-- CLI 指令：[secrets](/en/cli/secrets)
-- 計畫合約詳細資訊：[Secrets Apply Plan Contract](/en/gateway/secrets-plan-contract)
-- 憑證介面：[SecretRef Credential Surface](/en/reference/secretref-credential-surface)
-- 驗證設定：[Authentication](/en/gateway/authentication)
-- 安全狀態：[Security](/en/gateway/security)
-- 環境優先順序：[Environment Variables](/en/help/environment)
+- CLI 指令：[secrets](/zh-Hant/cli/secrets)
+- 計畫合約詳細資訊：[Secrets Apply Plan Contract](/zh-Hant/gateway/secrets-plan-contract)
+- 憑證介面：[SecretRef Credential Surface](/zh-Hant/reference/secretref-credential-surface)
+- 驗證設定：[Authentication](/zh-Hant/gateway/authentication)
+- 安全狀態：[Security](/zh-Hant/gateway/security)
+- 環境優先順序：[Environment Variables](/zh-Hant/help/environment)

@@ -28,7 +28,7 @@ Exécutez le Gateway sur un hôte persistant et accédez-y via **Tailscale** ou 
 
 - **Meilleure UX :** gardez `gateway.bind: "loopback"` et utilisez **Tailscale Serve** pour l'interface de contrôle.
 - **Repli :** conservez loopback + tunnel SSH à partir de n'importe quelle machine nécessitant un accès.
-- **Exemples :** [exe.dev](/en/install/exe-dev) (VM facile) ou [Hetzner](/en/install/hetzner) (VPS de production).
+- **Exemples :** [exe.dev](/fr/install/exe-dev) (VM facile) ou [Hetzner](/fr/install/hetzner) (VPS de production).
 
 C'est idéal lorsque votre ordinateur portable se met souvent en veille mais que vous souhaitez que l'agent soit toujours actif.
 
@@ -39,7 +39,7 @@ L'ordinateur portable n'exécute **pas** l'agent. Il se connecte à distance :
 - Utilisez le mode **Remote over SSH** de l'application macOS (Paramètres → Général → « OpenClaw runs »).
 - L'application ouvre et gère le tunnel, donc WebChat + les contrôles de santé « fonctionnent tout seuls ».
 
-Runbook : [Accès distant macOS](/en/platforms/mac/remote).
+Runbook : [Accès distant macOS](/fr/platforms/mac/remote).
 
 ### 3) L'ordinateur portable exécute le Gateway, accès distant à partir d'autres machines
 
@@ -48,7 +48,7 @@ Gardez le Gateway en local mais exposez-le en toute sécurité :
 - Tunnel SSH vers l'ordinateur portable depuis d'autres machines, ou
 - Tailscale Serve l'interface de contrôle et garde le Gateway en boucle locale uniquement (loopback-only).
 
-Guide : [Tailscale](/en/gateway/tailscale) et [Aperçu Web](/en/web).
+Guide : [Tailscale](/fr/gateway/tailscale) et [Aperçu Web](/fr/web).
 
 ## Flux de commandes (ce qui s'exécute où)
 
@@ -63,7 +63,7 @@ Exemple de flux (Telegram → nœud) :
 
 Remarques :
 
-- **Les nœuds n'exécutent pas le service Gateway.** Un seul Gateway doit s'exécuter par hôte, sauf si vous exécutez intentionnellement des profils isolés (voir [Multiple gateways](/en/gateway/multiple-gateways)).
+- **Les nœuds n'exécutent pas le service Gateway.** Un seul Gateway doit s'exécuter par hôte, sauf si vous exécutez intentionnellement des profils isolés (voir [Multiple gateways](/fr/gateway/multiple-gateways)).
 - L'application macOS en « mode nœud » est simplement un client nœud via le WebSocket de la Gateway.
 
 ## Tunnel SSH (CLI + outils)
@@ -130,7 +130,7 @@ WebChat n'utilise plus de port HTTP distinct. L'interface utilisateur de chat Sw
 
 L'application de la barre de menus macOS peut gérer le même configuration de bout en bout (vérifications de l'état distant, WebChat et transfert Voice Wake).
 
-Runbook : [accès distant macOS](/en/platforms/mac/remote).
+Runbook : [accès distant macOS](/fr/platforms/mac/remote).
 
 ## Règles de sécurité (accès distant/VPN)
 
@@ -148,7 +148,7 @@ Version courte : **gardez le Gateway en loopback uniquement** sauf si vous êtes
 - L'authentification **Trusted-proxy** est destinée uniquement aux configurations de proxy avec reconnaissance de l'identité non locales. Les proxies inversés en boucle locale (loopback) sur le même hôte ne satisfont pas `gateway.auth.mode: "trusted-proxy"`.
 - Traitez le contrôle via le navigateur comme un accès opérateur : uniquement sur le tailnet + jumelage délibéré des nœuds.
 
-Approfondissement : [Sécurité](/en/gateway/security).
+Approfondissement : [Sécurité](/fr/gateway/security).
 
 ### macOS : tunnel SSH persistant via LaunchAgent
 

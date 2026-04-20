@@ -243,7 +243,7 @@ MiniMax 外掛程式為 `image_generate` 工具註冊了 `image-01` 模型。它
 
 內建的 MiniMax 文字目錄本身在該特定的提供者配置存在之前，僅保持為純文字的元數據。圖像理解功能則透過外掛程式擁有的 `MiniMax-VL-01` 媒體提供者單獨公開。
 
-<Note>請參閱[圖像生成](/en/tools/image-generation)以了解共享的工具參數、提供者選擇和故障轉移行為。</Note>
+<Note>請參閱[圖像生成](/zh-Hant/tools/image-generation)以了解共享的工具參數、提供者選擇和故障轉移行為。</Note>
 
 ### 音樂生成
 
@@ -269,7 +269,7 @@ MiniMax 外掛程式為 `image_generate` 工具註冊了 `image-01` 模型。它
 }
 ```
 
-<Note>請參閱[音樂生成](/en/tools/music-generation)以了解共享的工具參數、提供者選擇和故障轉移行為。</Note>
+<Note>請參閱[音樂生成](/zh-Hant/tools/music-generation)以了解共享的工具參數、提供者選擇和故障轉移行為。</Note>
 
 ### 影片生成
 
@@ -293,7 +293,7 @@ MiniMax 外掛程式為 `image_generate` 工具註冊了 `image-01` 模型。它
 }
 ```
 
-<Note>請參閱[影片生成](/en/tools/video-generation)以了解共享的工具參數、提供者選擇和故障轉移行為。</Note>
+<Note>請參閱[影片生成](/zh-Hant/tools/video-generation)以了解共享的工具參數、提供者選擇和故障轉移行為。</Note>
 
 ### 圖像理解
 
@@ -320,7 +320,7 @@ MiniMax 插件還透過 MiniMax Coding Plan 搜尋 API 註冊 `web_search`。
 
 設定位於 `plugins.entries.minimax.config.webSearch.*` 之下。
 
-<Note>請參閱 [MiniMax Search](/en/tools/minimax-search) 以取得完整的網頁搜尋設定與用法。</Note>
+<Note>請參閱 [MiniMax Search](/zh-Hant/tools/minimax-search) 以取得完整的網頁搜尋設定與用法。</Note>
 
 ## 進階設定
 
@@ -390,7 +390,7 @@ MiniMax 插件還透過 MiniMax Coding Plan 搜尋 API 註冊 `web_search`。
 
 <Tip>MiniMax Coding Plan 的推薦連結（10% 折扣）：[MiniMax Coding Plan](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)</Tip>
 
-<Note>請參閱 [Model providers](/en/concepts/model-providers) 以了解提供者規則。</Note>
+<Note>請參閱 [Model providers](/zh-Hant/concepts/model-providers) 以了解提供者規則。</Note>
 
 ## 疑難排解
 
@@ -417,27 +417,27 @@ MiniMax 插件還透過 MiniMax Coding Plan 搜尋 API 註冊 `web_search`。
   </Accordion>
 </AccordionGroup>
 
-<Note>更多說明：[疑難排解](/en/help/troubleshooting) 和 [常見問題](/en/help/faq)。</Note>
+<Note>更多說明：[疑難排解](/zh-Hant/help/troubleshooting) 和 [常見問題](/zh-Hant/help/faq)。</Note>
 
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和故障轉移行為。
   </Card>
-  <Card title="圖像生成" href="/en/tools/image-generation" icon="image">
+  <Card title="圖像生成" href="/zh-Hant/tools/image-generation" icon="image">
     共用的圖像工具參數和提供者選擇。
   </Card>
-  <Card title="音樂生成" href="/en/tools/music-generation" icon="music">
+  <Card title="音樂生成" href="/zh-Hant/tools/music-generation" icon="music">
     共用的音樂工具參數和提供者選擇。
   </Card>
-  <Card title="影片生成" href="/en/tools/video-generation" icon="video">
+  <Card title="影片生成" href="/zh-Hant/tools/video-generation" icon="video">
     共用的影片工具參數和提供者選擇。
   </Card>
-  <Card title="MiniMax 搜尋" href="/en/tools/minimax-search" icon="magnifying-glass">
+  <Card title="MiniMax 搜尋" href="/zh-Hant/tools/minimax-search" icon="magnifying-glass">
     透過 MiniMax Coding Plan 進行的網路搜尋設定。
   </Card>
-  <Card title="疑難排解" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="疑難排解" href="/zh-Hant/help/troubleshooting" icon="wrench">
     一般疑難排解與常見問題。
   </Card>
 </CardGroup>

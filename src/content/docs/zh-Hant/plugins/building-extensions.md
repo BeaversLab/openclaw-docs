@@ -7,4 +7,4 @@ read_when:
 
 # Building Plugins
 
-此頁面已移至 [Building Plugins](/en/plugins/building-plugins)。
+此頁面已移至 [Building Plugins](/zh-Hant/plugins/building-plugins)。

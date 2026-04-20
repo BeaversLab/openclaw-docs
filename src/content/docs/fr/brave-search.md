@@ -100,4 +100,4 @@ await web_search({
 - `ui_lang` doit inclure une sous-région comme `en-US`.
 - Les résultats sont mis en cache pendant 15 minutes par défaut (configurable via `cacheTtlMinutes`).
 
-Voir [Web tools](/en/tools/web) pour la configuration complète de web_search.
+Voir [Web tools](/fr/tools/web) pour la configuration complète de web_search.

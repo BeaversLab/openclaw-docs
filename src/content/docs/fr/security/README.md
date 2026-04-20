@@ -4,8 +4,8 @@
 
 ## Documents
 
-- [Modèle de menace](/en/security/THREAT-MODEL-ATLAS) - Modèle de menace basé sur MITRE ATLAS pour l'écosystème OpenClaw
-- [Contribuer au modèle de menace](/en/security/CONTRIBUTING-THREAT-MODEL) - Comment ajouter des menaces, des atténuations et des chaînes d'attaque
+- [Modèle de menace](/fr/security/THREAT-MODEL-ATLAS) - Modèle de menace basé sur MITRE ATLAS pour l'écosystème OpenClaw
+- [Contribuer au modèle de menace](/fr/security/CONTRIBUTING-THREAT-MODEL) - Comment ajouter des menaces, des atténuations et des chaînes d'attaque
 
 ## Signalement de vulnérabilités
 

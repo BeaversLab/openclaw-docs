@@ -50,7 +50,7 @@ openclaw devices approve <requestId>
 
 如果瀏覽器以變更後的驗證詳細資料（角色/範圍/公開金鑰）重試配對，先前的待處理請求將被取代，並建立一個新的 `requestId`。請在核准前重新執行 `openclaw devices list`。
 
-一旦核准，該裝置會被記住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤銷它，否則不需要重新核准。請參閱[裝置 CLI](/en/cli/devices)以了解權杖輪換和撤銷。
+一旦核准，該裝置會被記住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤銷它，否則不需要重新核准。請參閱[裝置 CLI](/zh-Hant/cli/devices)以了解權杖輪換和撤銷。
 
 **備註：**
 
@@ -237,9 +237,9 @@ OpenClaw 會**阻擋**沒有裝置身分的控制 UI 連線。
   裝置身分的 **操作員** 控制 UI 工作階段
 - 這並**不**適用於節點角色 (node-role) 的控制 UI 工作階段
 - 相同主機的迴路反向 Proxy 仍然無法滿足受信任 Proxy 驗證；請參閱
-  [受信任 Proxy 驗證](/en/gateway/trusted-proxy-auth)
+  [受信任 Proxy 驗證](/zh-Hant/gateway/trusted-proxy-auth)
 
-請參閱 [Tailscale](/en/gateway/tailscale) 以取得 HTTPS 設定指南。
+請參閱 [Tailscale](/zh-Hant/gateway/tailscale) 以取得 HTTPS 設定指南。
 
 ## 建置 UI
 
@@ -310,11 +310,11 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-toke
 }
 ```
 
-遠端存取設定詳細資訊：[Remote access](/en/gateway/remote)。
+遠端存取設定詳細資訊：[Remote access](/zh-Hant/gateway/remote)。
 
 ## 相關
 
-- [Dashboard](/en/web/dashboard) — gateway 儀表板
-- [WebChat](/en/web/webchat) — 基於瀏覽器的聊天介面
-- [TUI](/en/web/tui) — 終端機使用者介面
-- [Health Checks](/en/gateway/health) — gateway 健康監控
+- [Dashboard](/zh-Hant/web/dashboard) — gateway 儀表板
+- [WebChat](/zh-Hant/web/webchat) — 基於瀏覽器的聊天介面
+- [TUI](/zh-Hant/web/tui) — 終端機使用者介面
+- [Health Checks](/zh-Hant/gateway/health) — gateway 健康監控

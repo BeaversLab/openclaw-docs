@@ -25,12 +25,12 @@ title: "安裝"
   <Tab title="Windows (PowerShell)">```powershell & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard ```</Tab>
 </Tabs>
 
-如需所有旗標和 CI/自動化選項，請參閱 [安裝程式內部機制](/en/install/installer)。
+如需所有旗標和 CI/自動化選項，請參閱 [安裝程式內部機制](/zh-Hant/install/installer)。
 
 ## 系統需求
 
 - **Node 24**（推薦）或 Node 22.14+ — 安裝程式腳本會自動處理此項
-- **macOS、Linux 或 Windows** — 同時支援原生 Windows 和 WSL2；WSL2 更穩定。請參閱 [Windows](/en/platforms/windows)。
+- **macOS、Linux 或 Windows** — 同時支援原生 Windows 和 WSL2；WSL2 更穩定。請參閱 [Windows](/zh-Hant/platforms/windows)。
 - `pnpm` 僅在您從原始碼建置時需要
 
 ## 其他安裝方法
@@ -81,7 +81,7 @@ pnpm link --global
 openclaw onboard --install-daemon
 ```
 
-或者略過連結並在 repo 內部使用 `pnpm openclaw ...`。完整的開發工作流程請參閱 [設定](/en/start/setup)。
+或者略過連結並在 repo 內部使用 `pnpm openclaw ...`。完整的開發工作流程請參閱 [設定](/zh-Hant/start/setup)。
 
 ### 從 GitHub main 安裝
 
@@ -92,19 +92,19 @@ npm install -g github:openclaw/openclaw#main
 ### 容器與套件管理員
 
 <CardGroup cols={2}>
-  <Card title="Docker" href="/en/install/docker" icon="container">
+  <Card title="Docker" href="/zh-Hant/install/docker" icon="container">
     容器化或無介面部署。
   </Card>
-  <Card title="Podman" href="/en/install/podman" icon="container">
+  <Card title="Podman" href="/zh-Hant/install/podman" icon="container">
     Docker 的無 root 容器替代方案。
   </Card>
-  <Card title="Nix" href="/en/install/nix" icon="snowflake">
+  <Card title="Nix" href="/zh-Hant/install/nix" icon="snowflake">
     透過 Nix flake 進行宣告式安裝。
   </Card>
-  <Card title="Ansible" href="/en/install/ansible" icon="server">
+  <Card title="Ansible" href="/zh-Hant/install/ansible" icon="server">
     自動化佈建機群。
   </Card>
-  <Card title="Bun" href="/en/install/bun" icon="zap">
+  <Card title="Bun" href="/zh-Hant/install/bun" icon="zap">
     透過 Bun 執行時僅使用 CLI。
   </Card>
 </CardGroup>
@@ -122,34 +122,34 @@ openclaw gateway status # verify the Gateway is running
 將 OpenClaw 部署到雲端伺服器或 VPS：
 
 <CardGroup cols={3}>
-  <Card title="VPS" href="/en/vps">
+  <Card title="VPS" href="/zh-Hant/vps">
     任何 Linux VPS
   </Card>
-  <Card title="Docker VM" href="/en/install/docker-vm-runtime">
+  <Card title="Docker VM" href="/zh-Hant/install/docker-vm-runtime">
     共用的 Docker 步驟
   </Card>
-  <Card title="Kubernetes" href="/en/install/kubernetes">
+  <Card title="Kubernetes" href="/zh-Hant/install/kubernetes">
     K8s
   </Card>
-  <Card title="Fly.io" href="/en/install/fly">
+  <Card title="Fly.io" href="/zh-Hant/install/fly">
     Fly.io
   </Card>
-  <Card title="Hetzner" href="/en/install/hetzner">
+  <Card title="Hetzner" href="/zh-Hant/install/hetzner">
     Hetzner
   </Card>
-  <Card title="GCP" href="/en/install/gcp">
+  <Card title="GCP" href="/zh-Hant/install/gcp">
     Google Cloud
   </Card>
-  <Card title="Azure" href="/en/install/azure">
+  <Card title="Azure" href="/zh-Hant/install/azure">
     Azure
   </Card>
-  <Card title="Railway" href="/en/install/railway">
+  <Card title="Railway" href="/zh-Hant/install/railway">
     Railway
   </Card>
-  <Card title="Render" href="/en/install/render">
+  <Card title="Render" href="/zh-Hant/install/render">
     Render
   </Card>
-  <Card title="Northflank" href="/en/install/northflank">
+  <Card title="Northflank" href="/zh-Hant/install/northflank">
     Northflank
   </Card>
 </CardGroup>
@@ -157,13 +157,13 @@ openclaw gateway status # verify the Gateway is running
 ## 更新、遷移或解除安裝
 
 <CardGroup cols={3}>
-  <Card title="Updating" href="/en/install/updating" icon="refresh-cw">
+  <Card title="Updating" href="/zh-Hant/install/updating" icon="refresh-cw">
     保持 OpenClaw 為最新狀態。
   </Card>
-  <Card title="Migrating" href="/en/install/migrating" icon="arrow-right">
+  <Card title="Migrating" href="/zh-Hant/install/migrating" icon="arrow-right">
     移動到新機器。
   </Card>
-  <Card title="Uninstall" href="/en/install/uninstall" icon="trash-2">
+  <Card title="Uninstall" href="/zh-Hant/install/uninstall" icon="trash-2">
     完全移除 OpenClaw。
   </Card>
 </CardGroup>
@@ -184,4 +184,4 @@ echo "$PATH"      # Is the global bin dir in PATH?
 export PATH="$(npm prefix -g)/bin:$PATH"
 ```
 
-然後開啟一個新的終端機。詳情請參閱 [Node 設定](/en/install/node)。
+然後開啟一個新的終端機。詳情請參閱 [Node 設定](/zh-Hant/install/node)。

@@ -138,7 +138,7 @@ export QMD_GENERATE_MODEL="/absolute/path/to/generator.gguf"
 - 回顾过去的会话对话。
 - 完全本地搜索，无需 API 密钥。
 
-对于较简单的设置，[内置引擎](/en/concepts/memory-builtin) 在
+对于较简单的设置，[内置引擎](/zh/concepts/memory-builtin) 在
 没有额外依赖的情况下也能很好地工作。
 
 ## 故障排除
@@ -166,4 +166,4 @@ OpenClaw 的内置符号链接规则。将临时的 monorepo 检出保留在
 
 有关完整的配置界面（`memory.qmd.*`）、搜索模式、更新间隔、
 范围规则以及所有其他选项，请参阅
-[内存配置参考](/en/reference/memory-config)。
+[内存配置参考](/zh/reference/memory-config)。

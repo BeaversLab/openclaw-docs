@@ -73,10 +73,10 @@ les modèles ouverts gratuitement. Authentifiez-vous avec une clé API depuis
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection de modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection de modèle" href="/fr/concepts/model-providers" icon="layers">
     Choix des fournisseurs, références de modèles et comportement de basculement.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
     Référence complète de la configuration pour les agents, les modèles et les fournisseurs.
   </Card>
 </CardGroup>

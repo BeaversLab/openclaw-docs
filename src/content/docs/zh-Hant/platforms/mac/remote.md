@@ -58,7 +58,7 @@ title: "遠端控制"
 - 優先在遠端主機上使用回環綁定，並透過 SSH 或 Tailscale 連線。
 - SSH 通道使用嚴格的主機金鑰檢查；請先信任主機金鑰，使其存在於 `~/.ssh/known_hosts` 中。
 - 如果您將 Gateway 繫結到非 loopback 介面，請要求有效的 Gateway 身分驗證：token、密碼，或是具備 `gateway.auth.mode: "trusted-proxy"` 的具備身份感知能力的反向代理伺服器。
-- 請參閱 [安全性](/en/gateway/security) 和 [Tailscale](/en/gateway/tailscale)。
+- 請參閱 [安全性](/zh-Hant/gateway/security) 和 [Tailscale](/zh-Hant/gateway/tailscale)。
 
 ## WhatsApp 登入流程（遠端）
 

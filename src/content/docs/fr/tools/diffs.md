@@ -429,6 +429,6 @@ Moteur de rendu de différences :
 
 ## Documentation connexe
 
-- [Aperçu des outils](/en/tools)
-- [Plugins](/en/tools/plugin)
-- [Navigateur](/en/tools/browser)
+- [Aperçu des outils](/fr/tools)
+- [Plugins](/fr/tools/plugin)
+- [Navigateur](/fr/tools/browser)

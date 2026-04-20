@@ -76,7 +76,7 @@ agents:
       ttl: "1h"
 ```
 
-Voir [Session Pruning](/en/concepts/session-pruning) pour le comportement complet.
+Voir [Session Pruning](/fr/concepts/session-pruning) pour le comportement complet.
 
 ### Maintien de la chaleur par pulsation (Heartbeat keep-warm)
 
@@ -311,7 +311,7 @@ Valeurs par défaut :
 
 Documentation connexe :
 
-- [Anthropic](/en/providers/anthropic)
-- [Utilisation des jetons et coûts](/en/reference/token-use)
-- [Nettoyage de session](/en/concepts/session-pruning)
-- [Référence de configuration Gateway](/en/gateway/configuration-reference)
+- [Anthropic](/fr/providers/anthropic)
+- [Utilisation des jetons et coûts](/fr/reference/token-use)
+- [Nettoyage de session](/fr/concepts/session-pruning)
+- [Référence de configuration Gateway](/fr/gateway/configuration-reference)

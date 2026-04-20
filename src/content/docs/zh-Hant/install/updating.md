@@ -28,7 +28,7 @@ openclaw update --dry-run   # preview without applying
 
 `--channel beta` 偏好 beta，但當 beta 標籤遺失或比最新穩定版舊時，執行時會退回至穩定版/最新版。如果您想要一次性套用原始的 npm beta dist-tag，請使用 `--tag beta`。
 
-關於版本通道的語意，請參閱[開發通道](/en/install/development-channels)。
+關於版本通道的語意，請參閱[開發通道](/zh-Hant/install/development-channels)。
 
 ## 替代方案：重新執行安裝程式
 
@@ -88,7 +88,7 @@ Gateway 也會在啟動時記錄更新提示（使用 `update.checkOnStart: fals
 openclaw doctor
 ```
 
-遷移設定、稽核 DM 原則，並檢查 Gateway 健康狀態。詳情：[Doctor](/en/gateway/doctor)
+遷移設定、稽核 DM 原則，並檢查 Gateway 健康狀態。詳情：[Doctor](/zh-Hant/gateway/doctor)
 
 ### 重新啟動 Gateway
 
@@ -131,11 +131,11 @@ openclaw gateway restart
 
 - 再次執行 `openclaw doctor` 並仔細閱讀輸出內容。
 - 對於原始碼檢出上的 `openclaw update --channel dev`，更新程式會在需要時自動引導 `pnpm`。如果您看到 pnpm/corepack 引導錯誤，請手動安裝 `pnpm`（或重新啟用 `corepack`）並重新執行更新。
-- 檢查：[疑難排解](/en/gateway/troubleshooting)
+- 檢查：[疑難排解](/zh-Hant/gateway/troubleshooting)
 - 在 Discord 中詢問：[https://discord.gg/clawd](https://discord.gg/clawd)
 
 ## 相關
 
-- [安裝概覽](/en/install) — 所有安裝方法
-- [醫生工具](/en/gateway/doctor) — 更新後的健康檢查
-- [遷移](/en/install/migrating) — 主要版本遷移指南
+- [安裝概覽](/zh-Hant/install) — 所有安裝方法
+- [醫生工具](/zh-Hant/gateway/doctor) — 更新後的健康檢查
+- [遷移](/zh-Hant/install/migrating) — 主要版本遷移指南

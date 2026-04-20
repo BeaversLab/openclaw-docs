@@ -8,7 +8,7 @@ title: "OpenCode Go"
 
 # OpenCode Go
 
-OpenCode Go est le catalogue Go au sein de [OpenCode](/en/providers/opencode).
+OpenCode Go est le catalogue Go au sein de [OpenCode](/fr/providers/opencode).
 Il utilise le même `OPENCODE_API_KEY` que le catalogue Zen, mais conserve l'identifiant du
 provider d'exécution `opencode-go` afin que le routage en amont par modèle reste correct.
 
@@ -16,7 +16,7 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
 | --------------------- | ---------------------------------- |
 | Provider d'exécution  | `opencode-go`                      |
 | Auth                  | `OPENCODE_API_KEY`                 |
-| Configuration parente | [OpenCode](/en/providers/opencode) |
+| Configuration parente | [OpenCode](/fr/providers/opencode) |
 
 ## Modèles pris en charge
 
@@ -90,15 +90,15 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
   </Accordion>
 </AccordionGroup>
 
-<Tip>Voir [OpenCode](/en/providers/opencode) pour la vue d'ensemble de l'intégration partagée et la référence complète des catalogues Zen + Go.</Tip>
+<Tip>Voir [OpenCode](/fr/providers/opencode) pour la vue d'ensemble de l'intégration partagée et la référence complète des catalogues Zen + Go.</Tip>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="OpenCode (parent)" href="/en/providers/opencode" icon="server">
+  <Card title="OpenCode (parent)" href="/fr/providers/opencode" icon="server">
     Onboarding partagé, aperçu du catalogue et notes avancées.
   </Card>
-  <Card title="Sélection de model" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection de model" href="/fr/concepts/model-providers" icon="layers">
     Choix des fournisseurs, des références de model et du comportement de basculement.
   </Card>
 </CardGroup>

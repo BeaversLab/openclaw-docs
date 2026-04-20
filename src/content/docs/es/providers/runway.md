@@ -69,10 +69,10 @@ OpenClaw incluye un proveedor `runway` para la generación de videos alojados.
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Generación de video" href="/en/tools/video-generation" icon="video">
+  <Card title="Generación de video" href="/es/tools/video-generation" icon="video">
     Parámetros de herramienta compartidos, selección de proveedor y comportamiento asíncrono.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference#agent-defaults" icon="gear">
     Configuración predeterminada del agente, incluido el modelo de generación de video.
   </Card>
 </CardGroup>

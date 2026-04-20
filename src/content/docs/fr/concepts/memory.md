@@ -46,7 +46,7 @@ Si vous souhaitez que la mémoire durable se comporte davantage comme une base d
 
 Il ne remplace pas le plugin de mémoire actif. Le plugin de mémoire actif possède toujours le rappel, la promotion et le rêve. `memory-wiki` ajoute une couche de connaissances riche en provenance à côté.
 
-Voir [Memory Wiki](/en/plugins/memory-wiki).
+Voir [Memory Wiki](/fr/plugins/memory-wiki).
 
 ## Recherche mémoire
 
@@ -54,18 +54,18 @@ Lorsqu'un fournisseur d'embeddings est configuré, `memory_search` utilise une *
 
 <Info>OpenClaw détecte automatiquement votre fournisseur d'embeddings à partir des clés API disponibles. Si vous avez une clé OpenAI, Gemini, Voyage ou Mistral configurée, la recherche mémoire est activée automatiquement.</Info>
 
-Pour plus de détails sur le fonctionnement de la recherche, les options de réglage et la configuration du fournisseur, voir [Memory Search](/en/concepts/memory-search).
+Pour plus de détails sur le fonctionnement de la recherche, les options de réglage et la configuration du fournisseur, voir [Memory Search](/fr/concepts/memory-search).
 
 ## Moteurs de mémoire
 
 <CardGroup cols={3}>
-  <Card title="Builtin (default)" icon="database" href="/en/concepts/memory-builtin">
+  <Card title="Builtin (default)" icon="database" href="/fr/concepts/memory-builtin">
     Basé sur SQLite. Fonctionne immédiatement avec la recherche par mots-clés, la similarité vectorielle et la recherche hybride. Aucune dépendance externe.
   </Card>
-  <Card title="QMD" icon="search" href="/en/concepts/memory-qmd">
+  <Card title="QMD" icon="search" href="/fr/concepts/memory-qmd">
     Sidecar "local-first" avec re-classement, expansion de requêtes, et la capacité d'indexer des répertoires en dehors de l'espace de travail.
   </Card>
-  <Card title="Honcho" icon="brain" href="/en/concepts/memory-honcho">
+  <Card title="Honcho" icon="brain" href="/fr/concepts/memory-honcho">
     Mémoire inter-sessions native IA avec modélisation utilisateur, recherche sémantique et conscience multi-agents. Installation de plugin.
   </Card>
 </CardGroup>
@@ -73,14 +73,14 @@ Pour plus de détails sur le fonctionnement de la recherche, les options de rég
 ## Couche de wiki de connaissances
 
 <CardGroup cols={1}>
-  <Card title="Memory Wiki" icon="book" href="/en/plugins/memory-wiki">
+  <Card title="Memory Wiki" icon="book" href="/fr/plugins/memory-wiki">
     Compile une mémoire durable dans un coffre wiki riche en provenance avec des revendications, des tableaux de bord, le mode pont et des flux de travail compatibles avec Obsidian.
   </Card>
 </CardGroup>
 
 ## Vidange automatique de la mémoire
 
-Avant que la [compactage](/en/concepts/compaction) ne résume votre conversation, OpenClaw
+Avant que la [compactage](/fr/concepts/compaction) ne résume votre conversation, OpenClaw
 lance un tour silencieux qui rappelle à l'agent de sauvegarder le contexte important dans les fichiers
 de mémoire. Ceci est activé par défaut -- vous n'avez rien à configurer.
 
@@ -102,7 +102,7 @@ Il est conçu pour maintenir un signal élevé dans la mémoire à long terme :
   pour révision humaine.
 
 Pour le comportement des phases, les signaux de scoring et les détails du Journal des rêves, voir
-[Dreaming](/en/concepts/dreaming).
+[Dreaming](/fr/concepts/dreaming).
 
 ## Remplissage ancré et promotion en direct
 
@@ -149,13 +149,13 @@ openclaw memory index --force   # Rebuild the index
 
 ## Pour aller plus loin
 
-- [Moteur de mémoire intégré](/en/concepts/memory-builtin) -- backend SQLite par défaut
-- [Moteur de mémoire QMD](/en/concepts/memory-qmd) -- sidecar avancé local-first
-- [Honcho Memory](/en/concepts/memory-honcho) -- mémoire inter-sessions native IA
-- [Memory Wiki](/en/plugins/memory-wiki) -- coffre-fort de connaissances compilé et outils natifs wiki
-- [Recherche de mémoire](/en/concepts/memory-search) -- pipeline de recherche, fournisseurs et
+- [Moteur de mémoire intégré](/fr/concepts/memory-builtin) -- backend SQLite par défaut
+- [Moteur de mémoire QMD](/fr/concepts/memory-qmd) -- sidecar avancé local-first
+- [Honcho Memory](/fr/concepts/memory-honcho) -- mémoire inter-sessions native IA
+- [Memory Wiki](/fr/plugins/memory-wiki) -- coffre-fort de connaissances compilé et outils natifs wiki
+- [Recherche de mémoire](/fr/concepts/memory-search) -- pipeline de recherche, fournisseurs et
   réglage
-- [Dreaming](/en/concepts/dreaming) -- promotion en arrière-plan
+- [Dreaming](/fr/concepts/dreaming) -- promotion en arrière-plan
   du rappel à court terme vers la mémoire à long terme
-- [Référence de configuration de la mémoire](/en/reference/memory-config) -- tous les paramètres de configuration
-- [Compaction](/en/concepts/compaction) -- interaction de la compaction avec la mémoire
+- [Référence de configuration de la mémoire](/fr/reference/memory-config) -- tous les paramètres de configuration
+- [Compaction](/fr/concepts/compaction) -- interaction de la compaction avec la mémoire

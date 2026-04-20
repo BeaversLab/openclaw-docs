@@ -88,7 +88,7 @@ Configuración:
 }
 ```
 
-Consulte: [Broadcast Groups](/en/channels/broadcast-groups).
+Consulte: [Broadcast Groups](/es/channels/broadcast-groups).
 
 ## Resumen de configuración
 

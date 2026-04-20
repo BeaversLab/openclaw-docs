@@ -120,5 +120,5 @@ openclaw honcho search <query> [-k N] [-d D] # Semantic search over memory
 - [Plugin source code](https://github.com/plastic-labs/openclaw-honcho)
 - [Honcho documentation](https://docs.honcho.dev)
 - [Honcho OpenClaw integration guide](https://docs.honcho.dev/v3/guides/integrations/openclaw)
-- [Memory](/en/concepts/memory) -- OpenClaw memory overview
-- [Context Engines](/en/concepts/context-engine) -- how plugin context engines work
+- [Memory](/fr/concepts/memory) -- OpenClaw memory overview
+- [Context Engines](/fr/concepts/context-engine) -- how plugin context engines work

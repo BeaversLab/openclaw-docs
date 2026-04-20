@@ -258,6 +258,6 @@ OpenClaw 會先檢查原生外掛程式格式：
 
 ## 相關
 
-- [安裝並配置插件](/en/tools/plugin)
-- [建置插件](/en/plugins/building-plugins) — 建立原生插件
-- [插件清單](/en/plugins/manifest) — 原生清單架構
+- [安裝並配置插件](/zh-Hant/tools/plugin)
+- [建置插件](/zh-Hant/plugins/building-plugins) — 建立原生插件
+- [插件清單](/zh-Hant/plugins/manifest) — 原生清單架構

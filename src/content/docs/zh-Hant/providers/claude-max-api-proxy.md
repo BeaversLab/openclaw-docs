@@ -161,21 +161,21 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
 - 代理程式在本機執行，不會將資料傳送至任何第三方伺服器
 - 完全支援串流回應
 
-<Note>如需透過 Claude CLI 或 API 金鑰進行原生 Anthropic 整合，請參閱 [Anthropic 提供者](/en/providers/anthropic)。如需 OpenAI/Codex 訂閱，請參閱 [OpenAI 提供者](/en/providers/openai)。</Note>
+<Note>如需透過 Claude CLI 或 API 金鑰進行原生 Anthropic 整合，請參閱 [Anthropic 提供者](/zh-Hant/providers/anthropic)。如需 OpenAI/Codex 訂閱，請參閱 [OpenAI 提供者](/zh-Hant/providers/openai)。</Note>
 
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="Anthropic provider" href="/en/providers/anthropic" icon="bolt">
+  <Card title="Anthropic provider" href="/zh-Hant/providers/anthropic" icon="bolt">
     透過 Claude CLI 或 API 金鑰進行原生 OpenClaw 整合。
   </Card>
-  <Card title="OpenAI provider" href="/en/providers/openai" icon="robot">
+  <Card title="OpenAI provider" href="/zh-Hant/providers/openai" icon="robot">
     適用於 OpenAI/Codex 訂閱。
   </Card>
-  <Card title="Model providers" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model providers" href="/zh-Hant/concepts/model-providers" icon="layers">
     所有提供者、模型參照和容錯移轉行為的概覽。
   </Card>
-  <Card title="Configuration" href="/en/gateway/configuration" icon="gear">
+  <Card title="Configuration" href="/zh-Hant/gateway/configuration" icon="gear">
     完整設定參考。
   </Card>
 </CardGroup>

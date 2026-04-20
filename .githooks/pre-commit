@@ -8,6 +8,14 @@ if [ -n "$STAGED_FILES" ]; then
   echo "Formatting staged files..."
   # Run prettier through pnpm to use the project's version and config
   pnpm prettier --write $STAGED_FILES
-  # Restage the formatted files
+
+  # Fix links and imports in MDX/MD files
+  STAGED_DOCS=$(echo "$STAGED_FILES" | grep -E '\.(md|mdx)$' || true)
+  if [ -n "$STAGED_DOCS" ]; then
+    echo "Fixing links and imports in staged docs..."
+    node scripts/fix-locale-links.js $STAGED_DOCS
+  fi
+
+  # Restage the formatted and fixed files
   git add $STAGED_FILES
 fi

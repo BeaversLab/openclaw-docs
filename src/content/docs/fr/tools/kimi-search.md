@@ -91,7 +91,7 @@ Les filtres spécifiques au fournisseur ne sont actuellement pas pris en charge.
 
 ## Connexes
 
-- [Aperçu de la recherche Web](/en/tools/web) -- tous les fournisseurs et la détection automatique
-- [Moonshot AI](/en/providers/moonshot) -- documentation du fournisseur de modèle Moonshot + Kimi Coding
-- [Gemini Search](/en/tools/gemini-search) -- réponses synthétisées par IA via le grounding Google
-- [Grok Search](/en/tools/grok-search) -- réponses synthétisées par IA via le grounding xAI
+- [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
+- [Moonshot AI](/fr/providers/moonshot) -- documentation du fournisseur de modèle Moonshot + Kimi Coding
+- [Gemini Search](/fr/tools/gemini-search) -- réponses synthétisées par IA via le grounding Google
+- [Grok Search](/fr/tools/grok-search) -- réponses synthétisées par IA via le grounding xAI

@@ -93,5 +93,5 @@ Los filtros específicos del proveedor no son compatibles actualmente.
 
 ## Relacionado
 
-- [Resumen de búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
-- [MiniMax](/en/providers/minimax) -- configuración de modelo, imagen, voz y autenticación
+- [Resumen de búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [MiniMax](/es/providers/minimax) -- configuración de modelo, imagen, voz y autenticación

@@ -14,7 +14,7 @@ Ce guide explique la création d'un plugin de canal qui connecte OpenClaw à une
 plateforme de messagerie. À la fin, vous disposerez d'un canal fonctionnel avec la sécurité DM,
 l'appairage, le threading des réponses et la messagerie sortante.
 
-<Info>Si vous n'avez jamais créé de plugin OpenClaw auparavant, lisez d'abord [Getting Started](/en/plugins/building-plugins) pour connaître la structure de package de base et la configuration du manifeste.</Info>
+<Info>Si vous n'avez jamais créé de plugin OpenClaw auparavant, lisez d'abord [Getting Started](/fr/plugins/building-plugins) pour connaître la structure de package de base et la configuration du manifeste.</Info>
 
 ## Fonctionnement des plugins de canal
 
@@ -241,7 +241,7 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
   <Step title="Package et manifeste">
     Créez les fichiers de plugin standard. Le champ `channel` dans `package.json` est
     ce qui fait de ce plugin un plugin de canal. Pour la surface complète des métadonnées de package,
-    voir [Configuration et configuration des plugins](/en/plugins/sdk-setup#openclaw-channel) :
+    voir [Configuration et configuration des plugins](/fr/plugins/sdk-setup#openclaw-channel) :
 
     <CodeGroup>
     ```json package.json
@@ -449,7 +449,7 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
     `exec.approvals.*`, `wizard.*`, `update.*`) restent réservés et résolvent
     toujours vers `operator.admin`.
     `defineChannelPluginEntry` gère automatiquement la division du mode d'enregistrement. Consultez
-    [Entry Points](/en/plugins/sdk-entrypoints#definechannelpluginentry) pour toutes
+    [Entry Points](/fr/plugins/sdk-entrypoints#definechannelpluginentry) pour toutes
     les options.
 
   </Step>
@@ -466,7 +466,7 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
 
     OpenClaw charge ceci au lieu de l'entrée complète lorsque le channel est désactivé
     ou non configuré. Cela évite d'importer du code d'exécution lourd lors des flux de configuration.
-    Voir [Setup and Config](/en/plugins/sdk-setup#setup-entry) pour plus de détails.
+    Voir [Setup and Config](/fr/plugins/sdk-setup#setup-entry) pour plus de détails.
 
     Les canaux d'espace de travail regroupés qui séparent les exportations sûres pour la configuration en modules
     sidecar peuvent utiliser `defineBundledChannelSetupEntry(...)` à partir de
@@ -549,7 +549,7 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
     pnpm test -- <bundled-plugin-root>/acme-chat/
     ```
 
-    Pour les helpers de test partagés, voir [Testing](/en/plugins/sdk-testing).
+    Pour les helpers de test partagés, voir [Testing](/fr/plugins/sdk-testing).
 
   </Step>
 </Steps>
@@ -574,16 +574,16 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
 ## Sujets avancés
 
 <CardGroup cols={2}>
-  <Card title="Options de discussion" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
+  <Card title="Options de discussion" icon="git-branch" href="/fr/plugins/sdk-entrypoints#registration-mode">
     Modes de réponse fixes, limités au compte ou personnalisés
   </Card>
-  <Card title="Intégration de l'outil de message" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
+  <Card title="Intégration de l'outil de message" icon="puzzle" href="/fr/plugins/architecture#channel-plugins-and-the-shared-message-tool">
     describeMessageTool et découverte d'actions
   </Card>
-  <Card title="Résolution de la cible" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
+  <Card title="Résolution de la cible" icon="crosshair" href="/fr/plugins/architecture#channel-target-resolution">
     inferTargetChatType, looksLikeId, resolveTarget
   </Card>
-  <Card title="Assistants d'exécution" icon="settings" href="/en/plugins/sdk-runtime">
+  <Card title="Assistants d'exécution" icon="settings" href="/fr/plugins/sdk-runtime">
     TTS, STT, media, subagent via api.runtime
   </Card>
 </CardGroup>
@@ -592,7 +592,7 @@ devrait utiliser `resolveInboundMentionDecision({ facts, policy })`.
 
 ## Étapes suivantes
 
-- [Plugins de fournisseur](/en/plugins/sdk-provider-plugins) — si votre plugin fournit également des modèles
-- [Aperçu du SDK](/en/plugins/sdk-overview) — référence complète des importations de sous-chemins
-- [Tests du SDK](/en/plugins/sdk-testing) — utilitaires de test et tests de contrat
-- [Manifeste de plugin](/en/plugins/manifest) — schéma complet du manifeste
+- [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins) — si votre plugin fournit également des modèles
+- [Aperçu du SDK](/fr/plugins/sdk-overview) — référence complète des importations de sous-chemins
+- [Tests du SDK](/fr/plugins/sdk-testing) — utilitaires de test et tests de contrat
+- [Manifeste de plugin](/fr/plugins/manifest) — schéma complet du manifeste

@@ -105,7 +105,7 @@ Par défaut, les sous-agents feuilles ne reçoivent pas d'outils de session. Lor
 
 Après achèvement, une étape d'annonce publie le résultat dans le canal du demandeur. La livraison de l'achèvement préserve le routage lié au fil/sujet si disponible, et si l'origine de l'achèvement n'identifie qu'un canal, OpenClaw peut toujours réutiliser la route stockée de la session du demandeur (`lastChannel` / `lastTo`) pour une livraison directe.
 
-Pour le comportement spécifique à l'ACP, voir [ACP Agents](/en/tools/acp-agents).
+Pour le comportement spécifique à l'ACP, voir [ACP Agents](/fr/tools/acp-agents).
 
 ## Visibilité
 
@@ -122,7 +122,7 @@ La valeur par défaut est `tree`. Les sessions sandboxées sont limitées à `tr
 
 ## Pour aller plus loin
 
-- [Gestion de session](/en/concepts/session) -- routage, cycle de vie, maintenance
-- [Agents ACP](/en/tools/acp-agents) -- lancement de harnais externe
-- [Multi-agent](/en/concepts/multi-agent) -- architecture multi-agents
-- [Gateway Configuration](/en/gateway/configuration) -- paramètres de configuration des outils de session
+- [Gestion de session](/fr/concepts/session) -- routage, cycle de vie, maintenance
+- [Agents ACP](/fr/tools/acp-agents) -- lancement de harnais externe
+- [Multi-agent](/fr/concepts/multi-agent) -- architecture multi-agents
+- [Gateway Configuration](/fr/gateway/configuration) -- paramètres de configuration des outils de session

@@ -13,7 +13,7 @@ read_when:
 Plugin packaging (`package.json` metadata)、manifest
 (`openclaw.plugin.json`)、setup entries 與 config schemas 的參考資料。
 
-<Tip>**尋找逐步教學？** 操作指南涵蓋了相關的打包內容： [通道外掛](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) 和 [提供者外掛](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest)。</Tip>
+<Tip>**尋找逐步教學？** 操作指南涵蓋了相關的打包內容： [通道外掛](/zh-Hant/plugins/sdk-channel-plugins#step-1-package-and-manifest) 和 [提供者外掛](/zh-Hant/plugins/sdk-provider-plugins#step-1-package-and-manifest)。</Tip>
 
 ## Package metadata
 
@@ -239,7 +239,7 @@ OpenClaw 使用它在不執行外掛程式碼的情況下驗證設定。
 }
 ```
 
-請參閱 [外掛清單](/en/plugins/manifest) 以取得完整的架構參考。
+請參閱 [外掛清單](/zh-Hant/plugins/manifest) 以取得完整的架構參考。
 
 ## ClawHub 發布
 
@@ -461,7 +461,7 @@ const setupSurface = createOptionalChannelSetupSurface({
 
 ## 發布與安裝
 
-**外掛外掛：**發布至 [ClawHub](/en/tools/clawhub) 或 npm，然後安裝：
+**外掛外掛：**發布至 [ClawHub](/zh-Hant/tools/clawhub) 或 npm，然後安裝：
 
 ```bash
 openclaw plugins install @myorg/openclaw-my-plugin
@@ -494,6 +494,6 @@ openclaw plugins install <package-name>
 
 ## 相關
 
-- [SDK Entry Points](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 和 `defineChannelPluginEntry`
-- [Plugin Manifest](/en/plugins/manifest) -- 完整的 Manifest 結構描述參考
-- [Building Plugins](/en/plugins/building-plugins) -- 逐步入門指南
+- [SDK Entry Points](/zh-Hant/plugins/sdk-entrypoints) -- `definePluginEntry` 和 `defineChannelPluginEntry`
+- [Plugin Manifest](/zh-Hant/plugins/manifest) -- 完整的 Manifest 結構描述參考
+- [Building Plugins](/zh-Hant/plugins/building-plugins) -- 逐步入門指南

@@ -65,10 +65,10 @@ OpenClaw reconnaît deux formats de plugins :
 | **Natif**  | `openclaw.plugin.json` + module d'exécution ; s'exécute dans le processus        | Plugins officiels, paquets communautaires npm          |
 | **Groupé** | Mise en page compatible Codex/Claude/Cursor ; mappé aux fonctionnalités OpenClaw | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/` |
 
-Les deux apparaissent sous `openclaw plugins list`. Voir [Plugin Bundles](/en/plugins/bundles) pour les détails des groupements.
+Les deux apparaissent sous `openclaw plugins list`. Voir [Plugin Bundles](/fr/plugins/bundles) pour les détails des groupements.
 
-Si vous écrivez un plugin natif, commencez par [Building Plugins](/en/plugins/building-plugins)
-et le [Plugin SDK Overview](/en/plugins/sdk-overview).
+Si vous écrivez un plugin natif, commencez par [Building Plugins](/fr/plugins/building-plugins)
+et le [Plugin SDK Overview](/fr/plugins/sdk-overview).
 
 ## Plugins officiels
 
@@ -76,12 +76,12 @@ et le [Plugin SDK Overview](/en/plugins/sdk-overview).
 
 | Plugin          | Paquet                 | Docs                                    |
 | --------------- | ---------------------- | --------------------------------------- |
-| Matrix          | `@openclaw/matrix`     | [Matrix](/en/channels/matrix)           |
-| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/en/channels/msteams) |
-| Nostr           | `@openclaw/nostr`      | [Nostr](/en/channels/nostr)             |
-| Appel vocal     | `@openclaw/voice-call` | [Voice Call](/en/plugins/voice-call)    |
-| Zalo            | `@openclaw/zalo`       | [Zalo](/en/channels/zalo)               |
-| Zalo Personnel  | `@openclaw/zalouser`   | [Zalo Personal](/en/plugins/zalouser)   |
+| Matrix          | `@openclaw/matrix`     | [Matrix](/fr/channels/matrix)           |
+| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/fr/channels/msteams) |
+| Nostr           | `@openclaw/nostr`      | [Nostr](/fr/channels/nostr)             |
+| Appel vocal     | `@openclaw/voice-call` | [Voice Call](/fr/plugins/voice-call)    |
+| Zalo            | `@openclaw/zalo`       | [Zalo](/fr/channels/zalo)               |
+| Zalo Personnel  | `@openclaw/zalouser`   | [Zalo Personal](/fr/plugins/zalouser)   |
 
 ### Core (livré avec OpenClaw)
 
@@ -104,7 +104,7 @@ et le [Plugin SDK Overview](/en/plugins/sdk-overview).
   </Accordion>
 </AccordionGroup>
 
-Vous cherchez des plugins tiers ? Voir [Plugins communautaires](/en/plugins/community).
+Vous cherchez des plugins tiers ? Voir [Plugins communautaires](/fr/plugins/community).
 
 ## Configuration
 
@@ -299,13 +299,13 @@ Hook guard behavior for typed lifecycle hooks:
 - `message_sending`: `{ cancel: true }` is terminal; lower-priority handlers are skipped.
 - `message_sending`: `{ cancel: false }` is a no-op and does not clear an earlier cancel.
 
-For full typed hook behavior, see [SDK Overview](/en/plugins/sdk-overview#hook-decision-semantics).
+For full typed hook behavior, see [SDK Overview](/fr/plugins/sdk-overview#hook-decision-semantics).
 
 ## Related
 
-- [Building Plugins](/en/plugins/building-plugins) — create your own plugin
-- [Plugin Bundles](/en/plugins/bundles) — Codex/Claude/Cursor bundle compatibility
-- [Plugin Manifest](/en/plugins/manifest) — manifest schema
-- [Registering Tools](/en/plugins/building-plugins#registering-agent-tools) — add agent tools in a plugin
-- [Plugin Internals](/en/plugins/architecture) — modèle de capacité et pipeline de chargement
-- [Community Plugins](/en/plugins/community) — listes tierces
+- [Building Plugins](/fr/plugins/building-plugins) — create your own plugin
+- [Plugin Bundles](/fr/plugins/bundles) — Codex/Claude/Cursor bundle compatibility
+- [Plugin Manifest](/fr/plugins/manifest) — manifest schema
+- [Registering Tools](/fr/plugins/building-plugins#registering-agent-tools) — add agent tools in a plugin
+- [Plugin Internals](/fr/plugins/architecture) — modèle de capacité et pipeline de chargement
+- [Community Plugins](/fr/plugins/community) — listes tierces

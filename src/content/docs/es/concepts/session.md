@@ -97,11 +97,11 @@ Vista previa con `openclaw sessions cleanup --dry-run`.
 
 ## Lecturas adicionales
 
-- [Poda de sesiones](/en/concepts/session-pruning) -- recortar resultados de herramientas
-- [Compactación](/en/concepts/compaction) -- resumir conversaciones largas
-- [Herramientas de sesión](/en/concepts/session-tool) -- herramientas de agente para trabajo entre sesiones
-- [Análisis profundo de la gestión de sesiones](/en/reference/session-management-compaction) --
+- [Poda de sesiones](/es/concepts/session-pruning) -- recortar resultados de herramientas
+- [Compactación](/es/concepts/compaction) -- resumir conversaciones largas
+- [Herramientas de sesión](/es/concepts/session-tool) -- herramientas de agente para trabajo entre sesiones
+- [Análisis profundo de la gestión de sesiones](/es/reference/session-management-compaction) --
   esquema de almacenamiento, transcripciones, política de envío, metadatos de origen y configuración avanzada
-- [Multiagente](/en/concepts/multi-agent) — enrutamiento y aislamiento de sesiones entre agentes
-- [Tareas en segundo plano](/en/automation/tasks) — cómo el trabajo desvinculado crea registros de tareas con referencias de sesión
-- [Enrutamiento de canales](/en/channels/channel-routing) — cómo se enrutan los mensajes entrantes a las sesiones
+- [Multiagente](/es/concepts/multi-agent) — enrutamiento y aislamiento de sesiones entre agentes
+- [Tareas en segundo plano](/es/automation/tasks) — cómo el trabajo desvinculado crea registros de tareas con referencias de sesión
+- [Enrutamiento de canales](/es/channels/channel-routing) — cómo se enrutan los mensajes entrantes a las sesiones

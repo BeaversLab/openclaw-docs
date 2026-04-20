@@ -8,15 +8,15 @@ title: "Authentification"
 
 # Authentification (fournisseurs de modèles)
 
-<Note>Cette page couvre l'authentification des **fournisseurs de modèles** (clés API, OAuth, réutilisation de Claude CLI et jeton de configuration Anthropic). Pour l'authentification de **connexion passerelle** (jeton, mot de passe, proxy de confiance), voir [Configuration](/en/gateway/configuration) et [Authentification de proxy de confiance](/en/gateway/trusted-proxy-auth).</Note>
+<Note>Cette page couvre l'authentification des **fournisseurs de modèles** (clés API, OAuth, réutilisation de Claude CLI et jeton de configuration Anthropic). Pour l'authentification de **connexion passerelle** (jeton, mot de passe, proxy de confiance), voir [Configuration](/fr/gateway/configuration) et [Authentification de proxy de confiance](/fr/gateway/trusted-proxy-auth).</Note>
 
 OpenClaw prend en charge OAuth et les clés API pour les fournisseurs de modèles. Pour les hôtes de passerelle toujours actifs, les clés API sont généralement l'option la plus prévisible. Les flux d'abonnement/OAuth
 sont également pris en charge lorsqu'ils correspondent au modèle de compte de votre fournisseur.
 
-Voir [/concepts/oauth](/en/concepts/oauth) pour le flux OAuth complet et la disposition du stockage.
-Pour l'authentification basée sur SecretRef (fournisseurs `env`/`file`/`exec`), voir [Gestion des secrets](/en/gateway/secrets).
+Voir [/concepts/oauth](/fr/concepts/oauth) pour le flux OAuth complet et la disposition du stockage.
+Pour l'authentification basée sur SecretRef (fournisseurs `env`/`file`/`exec`), voir [Gestion des secrets](/fr/gateway/secrets).
 Pour les règles d'éligibilité des identifiants/codes de raison utilisées par `models status --probe`, voir
-[Sémantique des identifiants d'authentification](/en/auth-credential-semantics).
+[Sémantique des identifiants d'authentification](/fr/auth-credential-semantics).
 
 ## Configuration recommandée (clé API, n'importe quel fournisseur)
 
@@ -52,7 +52,7 @@ openclaw doctor
 Si vous préférez ne pas gérer les variables d'environnement vous-même, l'intégration peut stocker
 les clés API pour une utilisation par le démon : `openclaw onboard`.
 
-Voir [Aide](/en/help) pour plus de détails sur l'héritage des variables d'environnement (`env.shellEnv`,
+Voir [Aide](/fr/help) pour plus de détails sur l'héritage des variables d'environnement (`env.shellEnv`,
 `~/.openclaw/.env`, systemd/launchd).
 
 ## Anthropic : Claude CLI et compatibilité des jetons
@@ -96,7 +96,7 @@ Notes :
 - Les temps de recharge de limite de taux peuvent être limités au modèle. Un profil en recharge pour un modèle peut toujours être utilisable pour un modèle frère sur le même fournisseur.
 
 Les scripts ops facultatifs (systemd/Termux) sont documentés ici :
-[Auth monitoring scripts](/en/help/scripts#auth-monitoring-scripts)
+[Auth monitoring scripts](/fr/help/scripts#auth-monitoring-scripts)
 
 ## Note Anthropic
 

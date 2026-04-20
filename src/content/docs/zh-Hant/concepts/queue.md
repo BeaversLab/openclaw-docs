@@ -77,7 +77,7 @@ Steer-backlog 意味著您可以在導向運行之後獲得後續回應，因此
 
 - 適用於所有使用網關回覆管道的傳入頻道上的自動回覆代理程式運行（WhatsApp web、Telegram、Slack、Discord、Signal、iMessage、webchat 等）。
 - 預設通道 (`main`) 對於傳入 + 主要心跳是程序範圍的；設定 `agents.defaults.maxConcurrent` 以允許多個 session 並行運行。
-- 可能會有額外的通道（例如 `cron`、`subagent`），以便背景工作可以並行執行，而不會阻擋傳入的回覆。這些分離的執行會被追蹤為 [background tasks](/en/automation/tasks)。
+- 可能會有額外的通道（例如 `cron`、`subagent`），以便背景工作可以並行執行，而不會阻擋傳入的回覆。這些分離的執行會被追蹤為 [background tasks](/zh-Hant/automation/tasks)。
 - 每個 session 的通道保證一次只有一個代理程式運行接觸給定的 session。
 - 無外部依賴或背景工作執行緒；純 TypeScript + promises。
 

@@ -25,7 +25,7 @@ OpenClaw 會在每次執行時組裝自己的系統提示詞。它包含：
 - 回覆標籤 + 心跳行為
 - 執行時期元資料（主機/OS/模型/思維）
 
-請參閱 [系統提示詞](/en/concepts/system-prompt) 以了解完整細節。
+請參閱 [系統提示詞](/zh-Hant/concepts/system-prompt) 以了解完整細節。
 
 ## 計入上下文視窗的項目
 
@@ -52,7 +52,7 @@ OpenClaw 會在每次執行時組裝自己的系統提示詞。它包含：
 - 較低的值通常會減少視覺權位的使用和負載大小。
 - 較高的值會保留更多視覺細節，適用於 OCR/UI 密集型的螢幕截圖。
 
-若要取得實務上的詳細分析（每個注入的檔案、工具、技能和系統提示大小），請使用 `/context list` 或 `/context detail`。請參閱 [Context](/en/concepts/context)。
+若要取得實務上的詳細分析（每個注入的檔案、工具、技能和系統提示大小），請使用 `/context list` 或 `/context detail`。請參閱 [Context](/zh-Hant/concepts/context)。
 
 ## 如何查看目前的權位使用量
 
@@ -89,13 +89,13 @@ models.providers.<provider>.models[].cost
 
 供應商提示快取僅適用於 cache TTL 視窗內。OpenClaw 可以選擇性地執行 **cache-ttl 修剪**：它在 cache TTL 過期後修剪會話，然後重設快取視窗，以便後續請求可以重用新快取的上下文，而不是重新快取完整歷史記錄。當會話閒置超過 TTL 時，這能保持較低的快取寫入成本。
 
-在 [Gateway configuration](/en/gateway/configuration) 中進行配置，並在 [Session pruning](/en/concepts/session-pruning) 中查看行為詳情。
+在 [Gateway configuration](/zh-Hant/gateway/configuration) 中進行配置，並在 [Session pruning](/zh-Hant/concepts/session-pruning) 中查看行為詳情。
 
 Heartbeat 可以在空閒間隔期間保持快取 **warm**。如果您的模型快取 TTL 是 `1h`，將 heartbeat 間隔設定為略低於該值（例如 `55m`）可以避免重新快取完整的 prompt，從而減少快取寫入成本。
 
 在多代理設置中，您可以保留一個共享的模型配置，並使用 `agents.list[].params.cacheRetention` 針對每個代理調整快取行為。
 
-有關完整的逐項指南，請參閱 [Prompt Caching](/en/reference/prompt-caching)。
+有關完整的逐項指南，請參閱 [Prompt Caching](/zh-Hant/reference/prompt-caching)。
 
 對於 Anthropic API 定價，快取讀取成本顯著低於輸入 token，而快取寫入則以更高的倍率計費。請參閱 Anthropic 的 prompt caching 定價以獲取最新費率和 TTL 倍率：
 [https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
@@ -167,4 +167,4 @@ agents:
 - 保持技能描述簡短（技能清單會被注入到提示詞中）。
 - 對於冗長的探索性工作，優先使用較小的模型。
 
-請參閱 [技能](/en/tools/skills) 以了解確切的技能清單開銷公式。
+請參閱 [技能](/zh-Hant/tools/skills) 以了解確切的技能清單開銷公式。

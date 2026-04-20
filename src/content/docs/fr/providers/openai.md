@@ -174,7 +174,7 @@ Le plugin `openai` inclus enregistre la génération d'images via l'outil `image
 }
 ```
 
-<Note>Voir [Génération d'images](/en/tools/image-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération d'images](/fr/tools/image-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ## Génération vidéo
 
@@ -198,7 +198,7 @@ Le plugin `openai` inclus enregistre la génération vidéo via l'outil `video_g
 }
 ```
 
-<Note>Voir [Génération vidéo](/en/tools/video-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération vidéo](/fr/tools/video-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ## Superposition de personnalité
 
@@ -523,16 +523,16 @@ OpenClaw ajoute une petite superposition de prompt spécifique à OpenAI pour le
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les providers, les références de modèle et le comportement de basculement.
   </Card>
-  <Card title="Génération d'images" href="/en/tools/image-generation" icon="image">
+  <Card title="Génération d'images" href="/fr/tools/image-generation" icon="image">
     Paramètres de l'outil d'image partagés et sélection du provider.
   </Card>
-  <Card title="Génération de vidéo" href="/en/tools/video-generation" icon="video">
+  <Card title="Génération de vidéo" href="/fr/tools/video-generation" icon="video">
     Paramètres de l'outil vidéo partagés et sélection du fournisseur.
   </Card>
-  <Card title="OAuth et auth" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth et auth" href="/fr/gateway/authentication" icon="key">
     Détails d'authentification et règles de réutilisation des identifiants.
   </Card>
 </CardGroup>

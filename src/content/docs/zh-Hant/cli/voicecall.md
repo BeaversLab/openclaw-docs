@@ -12,7 +12,7 @@ title: "voicecall"
 
 主要文件：
 
-- Voice-call 外掛：[Voice Call](/en/plugins/voice-call)
+- Voice-call 外掛：[Voice Call](/zh-Hant/plugins/voice-call)
 
 ## 常用指令
 

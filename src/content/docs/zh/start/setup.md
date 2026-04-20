@@ -8,7 +8,7 @@ title: "设置"
 
 # 设置
 
-<Note>如果您是第一次设置，请从 [入门指南](/en/start/getting-started) 开始。 有关新手引导的详细信息，请参阅 [新手引导 (CLI)](/en/start/wizard)。</Note>
+<Note>如果您是第一次设置，请从 [入门指南](/zh/start/getting-started) 开始。 有关新手引导的详细信息，请参阅 [新手引导 (CLI)](/zh/start/wizard)。</Note>
 
 ## TL;DR
 
@@ -19,8 +19,8 @@ title: "设置"
 ## Prereqs (from source)
 
 - 推荐使用 Node 24（Node 22 LTS，目前为 `22.14+`，仍受支持）
-- 首选 `pnpm`（或者如果您有意使用 [Bun 工作流](/en/install/bun)，则使用 Bun）
-- Docker（可选；仅用于容器化设置/e2e — 请参阅 [Docker](/en/install/docker)）
+- 首选 `pnpm`（或者如果您有意使用 [Bun 工作流](/zh/install/bun)，则使用 Bun）
+- Docker（可选；仅用于容器化设置/e2e — 请参阅 [Docker](/zh/install/docker)）
 
 ## Tailoring strategy (so updates do not hurt)
 
@@ -139,7 +139,7 @@ openclaw health
 - **模型身份验证配置文件**：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 - **基于文件的机密负载（可选）**：`~/.openclaw/secrets.json`
 - **传统 OAuth 导入**：`~/.openclaw/credentials/oauth.json`
-  更多详情：[Security](/en/gateway/security#credential-storage-map)。
+  更多详情：[Security](/zh/gateway/security#credential-storage-map)。
 
 ## 更新（不破坏你的设置）
 
@@ -157,12 +157,12 @@ sudo loginctl enable-linger $USER
 ```
 
 对于全天候运行或多用户服务器，请考虑使用 **系统**（system）服务而不是
-用户服务（无需 lingering）。有关 systemd 的说明，请参阅 [Gateway(网关) runbook](/en/gateway)。
+用户服务（无需 lingering）。有关 systemd 的说明，请参阅 [Gateway(网关) runbook](/zh/gateway)。
 
 ## 相关文档
 
-- [Gateway(网关) runbook](/en/gateway)（标志、监督、端口）
-- [Gateway(网关) configuration](/en/gateway/configuration)（配置架构 + 示例）
-- [Discord](/en/channels/discord) 和 [Telegram](/en/channels/telegram)（回复标签 + replyToMode 设置）
-- [OpenClaw assistant setup](/en/start/openclaw)
-- [macOS app](/en/platforms/macos)（网关生命周期）
+- [Gateway(网关) runbook](/zh/gateway)（标志、监督、端口）
+- [Gateway(网关) configuration](/zh/gateway/configuration)（配置架构 + 示例）
+- [Discord](/zh/channels/discord) 和 [Telegram](/zh/channels/telegram)（回复标签 + replyToMode 设置）
+- [OpenClaw assistant setup](/zh/start/openclaw)
+- [macOS app](/zh/platforms/macos)（网关生命周期）

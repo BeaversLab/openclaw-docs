@@ -9,7 +9,7 @@ title: "Ejemplos de configuración"
 
 # Ejemplos de configuración
 
-Los ejemplos a continuación están alineados con el esquema de configuración actual. Para obtener la referencia exhaustiva y las notas por campo, consulte [Configuration](/en/gateway/configuration).
+Los ejemplos a continuación están alineados con el esquema de configuración actual. Para obtener la referencia exhaustiva y las notas por campo, consulte [Configuration](/es/gateway/configuration).
 
 ## Inicio rápido
 
@@ -628,4 +628,4 @@ Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutabl
 - Si establece `dmPolicy: "open"`, la lista `allowFrom` coincidente debe incluir `"*"`.
 - Los ID del proveedor difieren (números de teléfono, ID de usuario, ID de canal). Use la documentación del proveedor para confirmar el formato.
 - Secciones opcionales para agregar más tarde: `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
-- Consulte [Proveedores](/en/providers) y [Solución de problemas](/en/gateway/troubleshooting) para obtener notas de configuración más detalladas.
+- Consulte [Proveedores](/es/providers) y [Solución de problemas](/es/gateway/troubleshooting) para obtener notas de configuración más detalladas.

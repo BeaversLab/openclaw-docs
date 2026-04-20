@@ -15,9 +15,9 @@ Les sous-commandes de cette page se trouvent sous `openclaw gateway …`.
 
 Documentation connexe :
 
-- [/gateway/bonjour](/en/gateway/bonjour)
-- [/gateway/discovery](/en/gateway/discovery)
-- [/gateway/configuration](/en/gateway/configuration)
+- [/gateway/bonjour](/fr/gateway/bonjour)
+- [/gateway/discovery](/fr/gateway/discovery)
+- [/gateway/configuration](/fr/gateway/configuration)
 
 ## Exécuter le Gateway
 
@@ -261,7 +261,7 @@ Notes :
 `gateway discover` recherche les balises Gateway (`_openclaw-gw._tcp`).
 
 - Multicast DNS-SD : `local.`
-- DNS-SD monodiffusion (Bonjour grande distance) : choisissez un domaine (exemple : `openclaw.internal.`) et configurez un DNS scindé + un serveur DNS ; voir [/gateway/bonjour](/en/gateway/bonjour)
+- DNS-SD monodiffusion (Bonjour grande distance) : choisissez un domaine (exemple : `openclaw.internal.`) et configurez un DNS scindé + un serveur DNS ; voir [/gateway/bonjour](/fr/gateway/bonjour)
 
 Seules les passerelles avec la découverte Bonjour activée (par défaut) diffusent la balise.
 

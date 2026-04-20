@@ -180,21 +180,21 @@ GET http://127.0.0.1:8000/v1/models
   </Accordion>
 </AccordionGroup>
 
-<Warning>更多帮助：[故障排除](/en/help/troubleshooting) 和 [常见问题](/en/help/faq)。</Warning>
+<Warning>更多帮助：[故障排除](/zh/help/troubleshooting) 和 [常见问题](/zh/help/faq)。</Warning>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="模型选择" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型选择" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="OpenAI" href="/en/providers/openai" icon="bolt">
+  <Card title="OpenAI" href="/zh/providers/openai" icon="bolt">
     原生 OpenAI 提供商和 OpenAI 兼容的路由行为。
   </Card>
-  <Card title="OAuth 和身份验证" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth 和身份验证" href="/zh/gateway/authentication" icon="key">
     身份验证详情和凭据重用规则。
   </Card>
-  <Card title="故障排除" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="故障排除" href="/zh/help/troubleshooting" icon="wrench">
     常见问题及其解决方法。
   </Card>
 </CardGroup>

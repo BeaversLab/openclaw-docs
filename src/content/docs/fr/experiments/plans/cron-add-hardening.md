@@ -46,7 +46,7 @@ Les journaux de la passerelle récents montrent des échecs répétés `cron.add
 - **Valeurs par défaut :** des valeurs par défaut sûres sont appliquées pour `wakeMode` et `sessionTarget` lorsqu'elles sont manquantes.
 - **Fournisseurs :** Discord/Slack/Signal/iMessage sont désormais affichés de manière cohérente sur la CLI/l'interface utilisateur.
 
-Voir [Tâches cron](/en/automation/cron-jobs) pour la forme normalisée et les exemples.
+Voir [Tâches cron](/fr/automation/cron-jobs) pour la forme normalisée et les exemples.
 
 ## Vérification
 

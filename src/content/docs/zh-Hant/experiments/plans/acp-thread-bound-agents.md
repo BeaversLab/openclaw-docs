@@ -14,7 +14,7 @@ title: "ACP 線程綁定代理"
 
 相關文件：
 
-- [統一執行時串流重構計劃](/en/experiments/plans/acp-unified-streaming-refactor)
+- [統一執行時串流重構計劃](/zh-Hant/experiments/plans/acp-unified-streaming-refactor)
 
 目標用戶體驗：
 

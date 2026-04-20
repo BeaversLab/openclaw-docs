@@ -63,37 +63,37 @@ flowchart TD
 
 Cron 是 Gateway 內建的排程器，用於精確計時。它會持久化工作，在正確的時間喚醒代理，並可以將輸出傳送到聊天頻道或 webhook 端點。支援一次性提醒、週期性表達式和傳入 webhook 觸發器。
 
-請參閱[排程工作](/en/automation/cron-jobs)。
+請參閱[排程工作](/zh-Hant/automation/cron-jobs)。
 
 ### 工作
 
 背景工作帳本會追蹤所有分離的工作：ACP 執行、子代理產生、隔離的 cron 執行和 CLI 操作。工作是記錄，而不是排程器。使用 `openclaw tasks list` 和 `openclaw tasks audit` 來檢查它們。
 
-請參閱[背景工作](/en/automation/tasks)。
+請參閱[背景工作](/zh-Hant/automation/tasks)。
 
 ### 工作流程
 
 工作流程是位於背景工作之上的流程編排基層。它管理具有受管和鏡像同步模式、修訂追蹤以及 `openclaw tasks flow list|show|cancel` 用於檢查的持久多步驟流程。
 
-請參閱[工作流程](/en/automation/taskflow)。
+請參閱[工作流程](/zh-Hant/automation/taskflow)。
 
 ### 常駐指令
 
 常駐指令授予代理對於定義程式的永久操作權限。它們存在於工作區檔案中（通常是 `AGENTS.md`），並會被注入到每個工作階段中。與 cron 結合以進行基於時間的執行。
 
-請參閱[常駐指令](/en/automation/standing-orders)。
+請參閱[常駐指令](/zh-Hant/automation/standing-orders)。
 
 ### 掛鉤
 
 掛鉤是由代理生命週期事件（`/new`、`/reset`、`/stop`）、工作階段壓縮、Gateway 啟動、訊息流程和工具呼叫所觸發的事件驅動腳本。掛鉤會從目錄中自動發現，並可以使用 `openclaw hooks` 進行管理。
 
-請參閱[掛鉤](/en/automation/hooks)。
+請參閱[掛鉤](/zh-Hant/automation/hooks)。
 
 ### 心跳
 
 心跳是週期性的主工作階段輪次（預設每 30 分鐘一次）。它在一個具有完整工作階段內容的代理輪次中將多項檢查（收件匣、行事曆、通知）批次處理。心跳輪次不會建立工作記錄。使用 `HEARTBEAT.md` 作為小型檢查清單，或是當您希望在心跳內部進行僅到期週期性檢查時，使用 `tasks:` 區塊。空的心跳檔案會跳過為 `empty-heartbeat-file`；僅到期工作模式會跳過為 `no-tasks-due`。
 
-請參閱[心跳](/en/gateway/heartbeat)。
+請參閱[心跳](/zh-Hant/gateway/heartbeat)。
 
 ## 它們如何協同運作
 
@@ -106,10 +106,10 @@ Cron 是 Gateway 內建的排程器，用於精確計時。它會持久化工作
 
 ## 相關
 
-- [Scheduled Tasks](/en/automation/cron-jobs) — 精確排程和一次性提醒
-- [Background Tasks](/en/automation/tasks) — 所有分離工作的任務分類帳
-- [Task Flow](/en/automation/taskflow) — 耐久的多步驟流程協調
-- [Hooks](/en/automation/hooks) — 事件驅動的生命週期腳本
-- [Standing Orders](/en/automation/standing-orders) — 持續的代理程式指令
-- [Heartbeat](/en/gateway/heartbeat) — 週期性主工作階段回合
-- [Configuration Reference](/en/gateway/configuration-reference) — 所有設定金鑰
+- [Scheduled Tasks](/zh-Hant/automation/cron-jobs) — 精確排程和一次性提醒
+- [Background Tasks](/zh-Hant/automation/tasks) — 所有分離工作的任務分類帳
+- [Task Flow](/zh-Hant/automation/taskflow) — 耐久的多步驟流程協調
+- [Hooks](/zh-Hant/automation/hooks) — 事件驅動的生命週期腳本
+- [Standing Orders](/zh-Hant/automation/standing-orders) — 持續的代理程式指令
+- [Heartbeat](/zh-Hant/gateway/heartbeat) — 週期性主工作階段回合
+- [Configuration Reference](/zh-Hant/gateway/configuration-reference) — 所有設定金鑰

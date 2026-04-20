@@ -151,5 +151,5 @@ Notes :
 
 Connexes :
 
-- [Dépannage de l'authentification du tableau de bord](/en/web/dashboard#if-you-see-unauthorized-1008)
-- [Dépannage du Gateway](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Dépannage de l'authentification du tableau de bord](/fr/web/dashboard#if-you-see-unauthorized-1008)
+- [Dépannage du Gateway](/fr/gateway/troubleshooting#dashboard-control-ui-connectivity)

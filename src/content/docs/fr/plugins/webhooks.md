@@ -182,6 +182,6 @@ Le plugin nettoie intentionnellement les métadonnées de propriétaire/session 
 
 ## Documentation associée
 
-- [Plugin runtime SDK](/en/plugins/sdk-runtime)
-- [Aperçu des hooks et webhooks](/en/automation/hooks)
-- [CLI webhooks](/en/cli/webhooks)
+- [Plugin runtime SDK](/fr/plugins/sdk-runtime)
+- [Aperçu des hooks et webhooks](/fr/automation/hooks)
+- [CLI webhooks](/fr/cli/webhooks)

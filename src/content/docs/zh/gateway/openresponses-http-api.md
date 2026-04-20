@@ -19,7 +19,7 @@ OpenClaw 的 Gateway(网关) 可以提供与 OpenResponses 兼容的 `POST /v1/r
 
 ## 身份验证、安全和路由
 
-操作行为与 [OpenAI Chat Completions](/en/gateway/openai-http-api) 相匹配：
+操作行为与 [OpenAI Chat Completions](/zh/gateway/openai-http-api) 相匹配：
 
 - 使用匹配的 Gateway(网关) HTTP 认证路径：
   - shared-secret 认证（`gateway.auth.mode="token"` 或 `"password"`）：`Authorization: Bearer <token-or-password>`
@@ -56,7 +56,7 @@ OpenClaw 的 Gateway(网关) 可以提供与 OpenResponses 兼容的 `POST /v1/r
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-有关代理目标模型、`openclaw/default`、嵌入直通和后端模型覆盖如何组合在一起的权威说明，请参阅 [OpenAI 聊天补全](/en/gateway/openai-http-api#agent-first-model-contract) 和 [模型列表和代理路由](/en/gateway/openai-http-api#model-list-and-agent-routing)。
+有关代理目标模型、`openclaw/default`、嵌入直通和后端模型覆盖如何组合在一起的权威说明，请参阅 [OpenAI 聊天补全](/zh/gateway/openai-http-api#agent-first-model-contract) 和 [模型列表和代理路由](/zh/gateway/openai-http-api#model-list-and-agent-routing)。
 
 ## 会话行为
 
@@ -249,7 +249,7 @@ URL 获取默认值：
 - URL 允许列表在获取之前以及重定向跳转时强制执行。
 - 将主机名列入允许列表并不会绕过私有/内部 IP 阻止。
 - 对于暴露于互联网的网关，除应用程序级别的防护措施外，还应应用网络出口控制。
-  请参阅[安全性](/en/gateway/security)。
+  请参阅[安全性](/zh/gateway/security)。
 
 ## 流式传输 (SSE)
 

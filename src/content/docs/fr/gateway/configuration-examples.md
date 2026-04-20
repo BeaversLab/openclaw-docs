@@ -9,7 +9,7 @@ title: "Exemples de configuration"
 
 # Exemples de configuration
 
-Les exemples ci-dessous sont alignés sur le schéma de configuration actuel. Pour la référence exhaustive et les notes par champ, voir [Configuration](/en/gateway/configuration).
+Les exemples ci-dessous sont alignés sur le schéma de configuration actuel. Pour la référence exhaustive et les notes par champ, voir [Configuration](/fr/gateway/configuration).
 
 ## Quick start
 
@@ -628,4 +628,4 @@ N'activez la correspondance directe par nom/email/pseudonyme mutable avec `dange
 - Si vous définissez `dmPolicy: "open"`, la liste `allowFrom` correspondante doit inclure `"*"`.
 - Les ID de fournisseur diffèrent (numéros de téléphone, ID utilisateur, ID de canal). Consultez la documentation du fournisseur pour confirmer le format.
 - Sections facultatives à ajouter plus tard : `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
-- Voir [Fournisseurs](/en/providers) et [Dépannage](/en/gateway/troubleshooting) pour des notes de configuration plus approfondies.
+- Voir [Fournisseurs](/fr/providers) et [Dépannage](/fr/gateway/troubleshooting) pour des notes de configuration plus approfondies.

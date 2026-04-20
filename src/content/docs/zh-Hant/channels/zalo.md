@@ -17,7 +17,7 @@ title: "Zalo"
 
 - 透過 CLI 安裝：`openclaw plugins install @openclaw/zalo`
 - 或是從原始碼檢出：`openclaw plugins install ./path/to/local/zalo-plugin`
-- 詳細資訊：[外掛](/en/tools/plugin)
+- 詳細資訊：[外掛](/zh-Hant/tools/plugin)
 
 ## 快速設定 (初學者)
 
@@ -118,7 +118,7 @@ Zalo 是一款專注於越南市場的訊息應用程式；其 Bot API 讓閘道
 - 透過以下方式批准：
   - `openclaw pairing list zalo`
   - `openclaw pairing approve zalo <CODE>`
-- 配對是預設的 token 交換方式。詳細資訊：[配對](/en/channels/pairing)
+- 配對是預設的 token 交換方式。詳細資訊：[配對](/zh-Hant/channels/pairing)
 - `channels.zalo.allowFrom` 接受數字使用者 ID (無法查詢使用者名稱)。
 
 ## 存取控制（群組）
@@ -209,7 +209,7 @@ Zalo 是一款專注於越南市場的訊息應用程式；其 Bot API 讓閘道
 
 ## 設定參考 (Zalo)
 
-完整配置：[Configuration](/en/gateway/configuration)
+完整配置：[Configuration](/zh-Hant/gateway/configuration)
 
 扁平頂層金鑰（`channels.zalo.botToken`、`channels.zalo.dmPolicy` 及類似金鑰）是舊版單一帳號簡寫。新設定建議使用 `channels.zalo.accounts.<id>.*`。因為這兩種形式都存在於架構中，所以這裡都記錄了下來。
 
@@ -245,8 +245,8 @@ Zalo 是一款專注於越南市場的訊息應用程式；其 Bot API 讓閘道
 
 ## 相關
 
-- [頻道總覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — 私訊驗證與配對流程
-- [群組](/en/channels/groups) — 群組聊天行為與提及控管
-- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
-- [安全性](/en/gateway/security) — 存取模型與強化防護
+- [頻道總覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — 私訊驗證與配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及控管
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型與強化防護

@@ -85,7 +85,7 @@ ID 由維護者在審查期間分配。您無需自行選擇。
 - [ATLAS 網站](https://atlas.mitre.org/)
 - [ATLAS 技術](https://atlas.mitre.org/techniques/)
 - [ATLAS 案例研究](https://atlas.mitre.org/studies/)
-- [OpenClaw 威脅模型](/en/security/THREAT-MODEL-ATLAS)
+- [OpenClaw 威脅模型](/zh-Hant/security/THREAT-MODEL-ATLAS)
 
 ## 聯絡
 

@@ -221,6 +221,6 @@ openclaw agents add work \
 
 ## 相关文档
 
-- 新手引导中心：[新手引导 (CLI)](/en/start/wizard)
-- 完整参考：[CLI 设置参考](/en/start/wizard-cli-reference)
-- 命令参考：[`openclaw onboard`](/en/cli/onboard)
+- 新手引导中心：[新手引导 (CLI)](/zh/start/wizard)
+- 完整参考：[CLI 设置参考](/zh/start/wizard-cli-reference)
+- 命令参考：[`openclaw onboard`](/zh/cli/onboard)

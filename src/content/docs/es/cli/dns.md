@@ -12,8 +12,8 @@ Asistentes de DNS para el descubrimiento de área amplia (Tailscale + CoreDNS). 
 
 Relacionado:
 
-- Gateway discovery: [Discovery](/en/gateway/discovery)
-- Wide-area discovery config: [Configuration](/en/gateway/configuration)
+- Gateway discovery: [Discovery](/es/gateway/discovery)
+- Wide-area discovery config: [Configuration](/es/gateway/configuration)
 
 ## Configuración
 

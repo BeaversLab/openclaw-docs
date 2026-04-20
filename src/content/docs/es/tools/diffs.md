@@ -429,6 +429,6 @@ Motor de renderizado de diffs:
 
 ## Documentos relacionados
 
-- [Descripción general de herramientas](/en/tools)
-- [Complementos](/en/tools/plugin)
-- [Navegador](/en/tools/browser)
+- [Descripción general de herramientas](/es/tools)
+- [Complementos](/es/tools/plugin)
+- [Navegador](/es/tools/browser)

@@ -64,7 +64,7 @@ openclaw sessions cleanup --json
 
 `openclaw sessions cleanup` 使用來自設定的 `session.maintenance` 設定：
 
-- 範圍說明：`openclaw sessions cleanup` 僅維護會話存放區/文字紀錄。它不會修剪 cron 執行記錄（`cron/runs/<jobId>.jsonl`），這些記錄是由 [Cron 配置](/en/automation/cron-jobs#configuration) 中的 `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 管理，並在 [Cron 維護](/en/automation/cron-jobs#maintenance) 中說明。
+- 範圍說明：`openclaw sessions cleanup` 僅維護會話存放區/文字紀錄。它不會修剪 cron 執行記錄（`cron/runs/<jobId>.jsonl`），這些記錄是由 [Cron 配置](/zh-Hant/automation/cron-jobs#configuration) 中的 `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 管理，並在 [Cron 維護](/zh-Hant/automation/cron-jobs#maintenance) 中說明。
 
 - `--dry-run`：預覽將修剪/封頂多少項目，而不進行寫入。
   - 在文字模式下，dry-run 會列印每個會話的動作表格（`Action`、`Key`、`Age`、`Model`、`Flags`），以便您查看將保留與移除的內容。
@@ -106,4 +106,4 @@ openclaw sessions cleanup --json
 
 相關：
 
-- Session 配置: [Configuration reference](/en/gateway/configuration-reference#session)
+- Session 配置: [Configuration reference](/zh-Hant/gateway/configuration-reference#session)

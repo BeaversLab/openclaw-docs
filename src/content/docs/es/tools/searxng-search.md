@@ -124,6 +124,6 @@ y clave configurada).
 
 ## Relacionado
 
-- [Resumen de búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
-- [Búsqueda DuckDuckGo](/en/tools/duckduckgo-search) -- otra alternativa sin clave
-- [Búsqueda Brave](/en/tools/brave-search) -- resultados estructurados con nivel gratuito
+- [Resumen de búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [Búsqueda DuckDuckGo](/es/tools/duckduckgo-search) -- otra alternativa sin clave
+- [Búsqueda Brave](/es/tools/brave-search) -- resultados estructurados con nivel gratuito

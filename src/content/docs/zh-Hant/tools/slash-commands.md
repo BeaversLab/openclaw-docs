@@ -88,7 +88,7 @@ title: "Slash 指令"
 目前可用的內建指令：
 
 - `/new [model]` 啟動一個新工作階段；`/reset` 是重設別名。
-- `/compact [instructions]` 壓縮工作階段上下文。參見 [/concepts/compaction](/en/concepts/compaction)。
+- `/compact [instructions]` 壓縮工作階段上下文。參見 [/concepts/compaction](/zh-Hant/concepts/compaction)。
 - `/stop` 中止目前執行。
 - `/session idle <duration|off>` 和 `/session max-age <duration|off>` 管理執行緒綁定過期。
 - `/think <off|minimal|low|medium|high|xhigh>` 設定思考等級。別名：`/thinking`、`/t`。
@@ -112,7 +112,7 @@ title: "Slash 指令"
 - `/skill <name> [input]` 依名稱執行技能。
 - `/allowlist [list|add|remove] ...` 管理允許清單項目。僅限文字模式。
 - `/approve <id> <decision>` 解決執行核准提示。
-- `/btw <question>` 提出一個額外問題而不會改變未來的階段情境。請參閱 [/tools/btw](/en/tools/btw)。
+- `/btw <question>` 提出一個額外問題而不會改變未來的階段情境。請參閱 [/tools/btw](/zh-Hant/tools/btw)。
 - `/subagents list|kill|log|info|send|steer|spawn` 管理目前階段的子代理程式執行。
 - `/acp spawn|cancel|steer|close|sessions|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|help` 管理 ACP 階段和執行時選項。
 - `/focus <target>` 將目前的 Discord 執行緒或 Telegram 主題/對話繫結至階段目標。
@@ -125,7 +125,7 @@ title: "Slash 指令"
 - `/plugins list|inspect|show|get|install|enable|disable` 檢查或變更外掛程式狀態。`/plugin` 為別名。寫入操作僅限擁有者。需要 `commands.plugins: true`。
 - `/debug show|set|unset|reset` 管理僅限運行時的配置覆寫。僅限擁有者。需要 `commands.debug: true`。
 - `/usage off|tokens|full|cost` 控制每次回應的使用頁尾或列印本機成本摘要。
-- `/tts on|off|status|provider|limit|summary|audio|help` 控制 TTS。請參閱 [/tools/tts](/en/tools/tts)。
+- `/tts on|off|status|provider|limit|summary|audio|help` 控制 TTS。請參閱 [/tools/tts](/zh-Hant/tools/tts)。
 - 啟用時，`/restart` 會重新啟動 OpenClaw。預設值：啟用；設定 `commands.restart: false` 以停用它。
 - `/activation mention|always` 設定群組啟用模式。
 - `/send on|off|inherit` 設定傳送原則。僅限擁有者。
@@ -146,12 +146,12 @@ Dock 指令是由支援原生指令的通道外掛程式所產生。目前的內
 
 內建外掛程式可以新增更多斜線指令。此存放庫中目前的內建指令：
 
-- `/dreaming [on|off|status|help]` 切換記憶體夢境。請參閱 [夢境](/en/concepts/dreaming)。
-- `/pair [qr|status|pending|approve|cleanup|notify]` 管理裝置配對/設定流程。請參閱 [配對](/en/channels/pairing)。
+- `/dreaming [on|off|status|help]` 切換記憶體夢境。請參閱 [夢境](/zh-Hant/concepts/dreaming)。
+- `/pair [qr|status|pending|approve|cleanup|notify]` 管理裝置配對/設定流程。請參閱 [配對](/zh-Hant/channels/pairing)。
 - `/phone status|arm <camera|screen|writes|all> [duration]|disarm` 暫時啟用高風險手機節點指令。
 - `/voice status|list [limit]|set <voiceId|name>` 管理 Talk 語音設定。在 Discord 上，原生指令名稱為 `/talkvoice`。
-- `/card ...` 傳送 LINE 豐富卡片預設集。請參閱 [LINE](/en/channels/line)。
-- `/codex status|models|threads|resume|compact|review|account|mcp|skills` 檢查並控制內建的 Codex 應用程式伺服器套件。請參閱 [Codex Harness](/en/plugins/codex-harness)。
+- `/card ...` 傳送 LINE 豐富卡片預設集。請參閱 [LINE](/zh-Hant/channels/line)。
+- `/codex status|models|threads|resume|compact|review|account|mcp|skills` 檢查並控制內建的 Codex 應用程式伺服器套件。請參閱 [Codex Harness](/zh-Hant/plugins/codex-harness)。
 - 僅限 QQBot 的指令：
   - `/bot-ping`
   - `/bot-version`
@@ -180,11 +180,11 @@ Dock 指令是由支援原生指令的通道外掛程式所產生。目前的內
 - `/plugins enable|disable` 會更新外掛配置，並可能提示您重新啟動。
 - 僅限 Discord 的原生指令：`/vc join|leave|status` 控制語音頻道（需要 `channels.discord.voice` 和原生指令；無法以文字形式使用）。
 - Discord 執行緒綁定命令（`/focus`、`/unfocus`、`/agents`、`/session idle`、`/session max-age`）需要啟用有效的執行緒綁定（`session.threadBindings.enabled` 和/或 `channels.discord.threadBindings.enabled`）。
-- ACP 命令參考與執行時行為：[ACP Agents](/en/tools/acp-agents)。
+- ACP 命令參考與執行時行為：[ACP Agents](/zh-Hant/tools/acp-agents)。
 - `/verbose` 用於偵錯和額外的可見性；正常使用時請保持**關閉**。
 - `/trace` 比 `/verbose` 更狹窄：它僅顯示外掛程式擁有的追蹤/偵錯行，並保持正常的詳細工具對話關閉。
 - `/fast on|off` 會保存工作階段覆蓋設定。使用 Sessions UI 的 `inherit` 選項來清除它並回復為設定預設值。
-- `/fast` 取決於提供者：OpenAI/OpenAI Codex 在原生 Responses 端點上將其對應到 `service_tier=priority`，而直接公開的 Anthropic 請求（包括發送到 `api.anthropic.com` 的 OAuth 驗證流量）則將其對應到 `service_tier=auto` 或 `standard_only`。請參閱 [OpenAI](/en/providers/openai) 和 [Anthropic](/en/providers/anthropic)。
+- `/fast` 取決於提供者：OpenAI/OpenAI Codex 在原生 Responses 端點上將其對應到 `service_tier=priority`，而直接公開的 Anthropic 請求（包括發送到 `api.anthropic.com` 的 OAuth 驗證流量）則將其對應到 `service_tier=auto` 或 `standard_only`。請參閱 [OpenAI](/zh-Hant/providers/openai) 和 [Anthropic](/zh-Hant/providers/anthropic)。
 - 相關時仍會顯示工具失敗摘要，但僅當 `/verbose` 為 `on` 或 `full` 時才會包含詳細的失敗文字。
 - `/reasoning`、`/verbose` 和 `/trace` 在群組設定中具有風險：它們可能會洩露您不打算公開的內部推理、工具輸出或外掛程式診斷資訊。建議將其保持關閉，尤其是在群組聊天中。
 - `/model` 會立即保存新的工作階段模型。
@@ -201,7 +201,7 @@ Dock 指令是由支援原生指令的通道外掛程式所產生。目前的內
   - `/skill <name> [input]` 會依名稱執行技能（當原生指令限制導致無法為每個技能建立指令時很有用）。
   - 根據預設，技能指令會作為一般請求轉發給模型。
   - 技能可以選擇宣告 `command-dispatch: tool`，將指令直接路由到工具（確定性，不經過模型）。
-  - 範例：`/prose`（OpenProse 外掛）— 請參閱 [OpenProse](/en/prose)。
+  - 範例：`/prose`（OpenProse 外掛）— 請參閱 [OpenProse](/zh-Hant/prose)。
 - **原生指令引數：** Discord 使用自動完成功能來處理動態選項（當您省略必要引數時則顯示按鈕選單）。當指令支援選項且您省略該引數時，Telegram 和 Slack 會顯示按鈕選單。
 
 ## `/tools`
@@ -377,4 +377,4 @@ Dock 指令是由支援原生指令的通道外掛程式所產生。目前的內
 ```
 
 有關完整的行為與客戶端 UX
-細節，請參閱 [BTW Side Questions](/en/tools/btw)。
+細節，請參閱 [BTW Side Questions](/zh-Hant/tools/btw)。

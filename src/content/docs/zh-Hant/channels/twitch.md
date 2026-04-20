@@ -27,7 +27,7 @@ openclaw plugins install @openclaw/twitch
 openclaw plugins install ./path/to/local/twitch-plugin
 ```
 
-詳細資訊：[外掛](/en/tools/plugin)
+詳細資訊：[外掛](/zh-Hant/tools/plugin)
 
 ## 快速設定 (初學者)
 
@@ -151,7 +151,7 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 
 ## 多重帳號支援
 
-使用 `channels.twitch.accounts` 搭配各個帳號的 Token。請參閱 [`gateway/configuration`](/en/gateway/configuration) 以了解共用模式。
+使用 `channels.twitch.accounts` 搭配各個帳號的 Token。請參閱 [`gateway/configuration`](/zh-Hant/gateway/configuration) 以了解共用模式。
 
 範例（一個機器人帳號在兩個頻道中）：
 
@@ -385,8 +385,8 @@ Access token refreshed for user 123456 (expires in 14400s)
 
 ## 相關
 
-- [頻道總覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — DM 驗證和配對流程
-- [群組](/en/channels/groups) — 群組聊天行為和提及閘控
-- [頻道路由](/en/channels/channel-routing) — 訊息的工作階段路由
-- [安全性](/en/gateway/security) — 存取模型和強化防護
+- [頻道總覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — DM 驗證和配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為和提及閘控
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的工作階段路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型和強化防護

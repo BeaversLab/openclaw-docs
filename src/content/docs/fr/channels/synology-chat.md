@@ -26,7 +26,7 @@ Installation à partir d'une copie locale :
 openclaw plugins install ./path/to/local/synology-chat-plugin
 ```
 
-Détails : [Plugins](/en/tools/plugin)
+Détails : [Plugins](/fr/tools/plugin)
 
 ## Installation rapide
 
@@ -178,8 +178,8 @@ mais les chemins exacts en double sont toujours rejetés en mode échec (fail-cl
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appariement](/en/channels/pairing) — authentification DM et processus d'appariement
-- [Groupes](/en/channels/groups) — comportement du chat de groupe et filtrage des mentions
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appariement](/fr/channels/pairing) — authentification DM et processus d'appariement
+- [Groupes](/fr/channels/groups) — comportement du chat de groupe et filtrage des mentions
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

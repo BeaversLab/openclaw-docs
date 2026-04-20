@@ -15,13 +15,13 @@ Il est utilisé à deux endroits :
 1. **Couplage DM** (qui est autorisé à parler au bot)
 2. **Couplage de nœuds** (quels appareils/nœuds sont autorisés à rejoindre le réseau Gateway)
 
-Contexte de sécurité : [Sécurité](/en/gateway/security)
+Contexte de sécurité : [Sécurité](/fr/gateway/security)
 
 ## 1) Couplage DM (accès aux messages entrants)
 
 Lorsqu’un canal est configuré avec la stratégie de DM `pairing`, les expéditeurs inconnus reçoivent un code court et leur message est **non traité** jusqu’à votre approbation.
 
-Les stratégies DM par défaut sont documentées dans : [Sécurité](/en/gateway/security)
+Les stratégies DM par défaut sont documentées dans : [Sécurité](/fr/gateway/security)
 
 Codes de couplage :
 
@@ -74,13 +74,13 @@ Stocké sous `~/.openclaw/devices/` :
 
 ## Documentation connexe
 
-- Modèle de sécurité + injection de prompt : [Sécurité](/en/gateway/security)
-- Mise à jour en toute sécurité (exécuter doctor) : [Mise à jour](/en/install/updating)
+- Modèle de sécurité + injection de prompt : [Sécurité](/fr/gateway/security)
+- Mise à jour en toute sécurité (exécuter doctor) : [Mise à jour](/fr/install/updating)
 - Configurations des canaux :
-  - Telegram : [Telegram](/en/channels/telegram)
-  - WhatsApp : [WhatsApp](/en/channels/whatsapp)
-  - Signal : [Signal](/en/channels/signal)
-  - BlueBubbles (iMessage) : [BlueBubbles](/en/channels/bluebubbles)
-  - iMessage (legacy) : [iMessage](/en/channels/imessage)
-  - Discord : [Discord](/en/channels/discord)
-  - Slack : [Slack](/en/channels/slack)
+  - Telegram : [Telegram](/fr/channels/telegram)
+  - WhatsApp : [WhatsApp](/fr/channels/whatsapp)
+  - Signal : [Signal](/fr/channels/signal)
+  - BlueBubbles (iMessage) : [BlueBubbles](/fr/channels/bluebubbles)
+  - iMessage (legacy) : [iMessage](/fr/channels/imessage)
+  - Discord : [Discord](/fr/channels/discord)
+  - Slack : [Slack](/fr/channels/slack)

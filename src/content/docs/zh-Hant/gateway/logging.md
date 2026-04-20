@@ -8,7 +8,7 @@ title: "Gateway 日誌"
 
 # 日誌
 
-如需使用者導向的總覽（CLI + Control UI + 設定），請參閱 [/logging](/en/logging)。
+如需使用者導向的總覽（CLI + Control UI + 設定），請參閱 [/logging](/zh-Hant/logging)。
 
 OpenClaw 有兩個日誌「表面」：
 

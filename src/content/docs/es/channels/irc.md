@@ -185,7 +185,7 @@ Notas:
 - Las claves heredadas sin prefijo todavía se aceptan y coinciden solo como `id:`.
 - La primera política de remitente que coincida gana; `"*"` es la alternativa de comodín.
 
-Para más información sobre el acceso de grupos frente al filtrado por mención (y cómo interactúan), consulta: [/channels/groups](/en/channels/groups).
+Para más información sobre el acceso de grupos frente al filtrado por mención (y cómo interactúan), consulta: [/channels/groups](/es/channels/groups).
 
 ## NickServ
 
@@ -245,8 +245,8 @@ La cuenta predeterminada soporta:
 
 ## Relacionado
 
-- [Descripción general de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — autenticación de MD y flujo de emparejamiento
-- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento
+- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Grupos](/es/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

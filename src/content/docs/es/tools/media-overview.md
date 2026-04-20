@@ -54,8 +54,8 @@ La generación de video y música se ejecuta como tareas en segundo plano porque
 
 ## Enlaces rápidos
 
-- [Generación de imágenes](/en/tools/image-generation) -- generar y editar imágenes
-- [Generación de video](/en/tools/video-generation) -- texto a video, imagen a video y video a video
-- [Generación de música](/en/tools/music-generation) -- crear pistas de música y audio
-- [Texto a voz](/en/tools/tts) -- convertir respuestas a audio hablado
-- [Comprensión de medios](/en/nodes/media-understanding) -- comprender imágenes, audio y video entrantes
+- [Generación de imágenes](/es/tools/image-generation) -- generar y editar imágenes
+- [Generación de video](/es/tools/video-generation) -- texto a video, imagen a video y video a video
+- [Generación de música](/es/tools/music-generation) -- crear pistas de música y audio
+- [Texto a voz](/es/tools/tts) -- convertir respuestas a audio hablado
+- [Comprensión de medios](/es/nodes/media-understanding) -- comprender imágenes, audio y video entrantes

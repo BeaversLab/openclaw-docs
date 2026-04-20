@@ -248,7 +248,7 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
   </Accordion>
 </AccordionGroup>
 
-<Note>更多帮助：[故障排除](/en/help/troubleshooting) 和 [常见问题](/en/help/faq)。</Note>
+<Note>更多帮助：[故障排除](/zh/help/troubleshooting) 和 [常见问题](/zh/help/faq)。</Note>
 
 ## 高级配置
 
@@ -287,7 +287,7 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="模型选择" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型选择" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
   <Card title="Venice AI" href="https://venice.ai" icon="globe">

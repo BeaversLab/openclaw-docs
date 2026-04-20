@@ -156,10 +156,10 @@ Los modelos GLM están disponibles como `zai/<model>` (ejemplo: `zai/glm-5`). La
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Familia de modelos GLM" href="/en/providers/glm" icon="microchip">
+  <Card title="Familia de modelos GLM" href="/es/providers/glm" icon="microchip">
     Resumen de la familia de modelos para GLM.
   </Card>
-  <Card title="Selección de modelos" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelos" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
 </CardGroup>

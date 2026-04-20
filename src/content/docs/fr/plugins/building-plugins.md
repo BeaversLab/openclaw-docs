@@ -16,7 +16,7 @@ d'images, génération de vidéos, récupération web, recherche web, outils d'a
 combinaison.
 
 Vous n'avez pas besoin d'ajouter votre plugin au dépôt OpenClaw. Publiez sur
-[ClawHub](/en/tools/clawhub) ou npm et les utilisateurs l'installent avec
+[ClawHub](/fr/tools/clawhub) ou npm et les utilisateurs l'installent avec
 `openclaw plugins install <package-name>`. OpenClaw essaie d'abord ClawHub et
 revient automatiquement à npm.
 
@@ -29,10 +29,10 @@ revient automatiquement à npm.
 ## Quel type de plugin ?
 
 <CardGroup cols={3}>
-  <Card title="Plugin de canal" icon="messages-square" href="/en/plugins/sdk-channel-plugins">
+  <Card title="Plugin de canal" icon="messages-square" href="/fr/plugins/sdk-channel-plugins">
     Connecter OpenClaw à une plateforme de messagerie (Discord, IRC, etc.)
   </Card>
-  <Card title="Provider plugin" icon="cpu" href="/en/plugins/sdk-provider-plugins">
+  <Card title="Provider plugin" icon="cpu" href="/fr/plugins/sdk-provider-plugins">
     Ajouter un provider de modèle (LLM, proxy ou point de terminaison personnalisé)
   </Card>
   <Card title="Plugin d'outil / de hook" icon="wrench">
@@ -87,7 +87,7 @@ de channel et de provider ont des guides dédiés liés ci-dessus.
     </CodeGroup>
 
     Chaque plugin a besoin d'un manifeste, même sans configuration. Voir
-    [Manifest](/en/plugins/manifest) pour le schéma complet. Les extraits de publication ClawHub
+    [Manifest](/fr/plugins/manifest) pour le schéma complet. Les extraits de publication ClawHub
     canoniques se trouvent dans `docs/snippets/plugin-publish/`.
 
   </Step>
@@ -117,8 +117,8 @@ de channel et de provider ont des guides dédiés liés ci-dessus.
     ```
 
     `definePluginEntry` est pour les plugins non channel. Pour les channels, utilisez
-    `defineChannelPluginEntry` — voir [Channel Plugins](/en/plugins/sdk-channel-plugins).
-    Pour toutes les options de point d'entrée, voir [Entry Points](/en/plugins/sdk-entrypoints).
+    `defineChannelPluginEntry` — voir [Channel Plugins](/fr/plugins/sdk-channel-plugins).
+    Pour toutes les options de point d'entrée, voir [Entry Points](/fr/plugins/sdk-entrypoints).
 
   </Step>
 
@@ -150,25 +150,25 @@ Un seul plugin peut enregistrer un nombre quelconque de capacités via l'objet `
 
 | Capacité                                    | Méthode d'enregistrement                         | Guide détaillé                                                                           |
 | ------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| Inférence de texte (LLM)                    | `api.registerProvider(...)`                      | [Provider Plugins](/en/plugins/sdk-provider-plugins)                                     |
-| Backend d'inférence CLI                     | `api.registerCliBackend(...)`                    | [Backends CLI](/en/gateway/cli-backends)                                                 |
-| Channel / messagerie                        | `api.registerChannel(...)`                       | [Channel Plugins](/en/plugins/sdk-channel-plugins)                                       |
-| Synthèse et reconnaissance vocale (TTS/STT) | `api.registerSpeechProvider(...)`                | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
-| Transcription en temps réel                 | `api.registerRealtimeTranscriptionProvider(...)` | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
-| Voix en temps réel                          | `api.registerRealtimeVoiceProvider(...)`         | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
-| Compréhension des médias                    | `api.registerMediaUnderstandingProvider(...)`    | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
-| Génération d'images                         | `api.registerImageGenerationProvider(...)`       | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
-| Génération de musique                       | `api.registerMusicGenerationProvider(...)`       | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
-| Génération de vidéo                         | `api.registerVideoGenerationProvider(...)`       | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
-| Récupération web                            | `api.registerWebFetchProvider(...)`              | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
-| Recherche web                               | `api.registerWebSearchProvider(...)`             | [Plugins de fournisseur](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| Inférence de texte (LLM)                    | `api.registerProvider(...)`                      | [Provider Plugins](/fr/plugins/sdk-provider-plugins)                                     |
+| Backend d'inférence CLI                     | `api.registerCliBackend(...)`                    | [Backends CLI](/fr/gateway/cli-backends)                                                 |
+| Channel / messagerie                        | `api.registerChannel(...)`                       | [Channel Plugins](/fr/plugins/sdk-channel-plugins)                                       |
+| Synthèse et reconnaissance vocale (TTS/STT) | `api.registerSpeechProvider(...)`                | [Provider Plugins](/fr/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
+| Transcription en temps réel                 | `api.registerRealtimeTranscriptionProvider(...)` | [Provider Plugins](/fr/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
+| Voix en temps réel                          | `api.registerRealtimeVoiceProvider(...)`         | [Provider Plugins](/fr/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
+| Compréhension des médias                    | `api.registerMediaUnderstandingProvider(...)`    | [Provider Plugins](/fr/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
+| Génération d'images                         | `api.registerImageGenerationProvider(...)`       | [Provider Plugins](/fr/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
+| Génération de musique                       | `api.registerMusicGenerationProvider(...)`       | [Provider Plugins](/fr/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
+| Génération de vidéo                         | `api.registerVideoGenerationProvider(...)`       | [Provider Plugins](/fr/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
+| Récupération web                            | `api.registerWebFetchProvider(...)`              | [Provider Plugins](/fr/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)       |
+| Recherche web                               | `api.registerWebSearchProvider(...)`             | [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
 | Outils d'agent                              | `api.registerTool(...)`                          | Ci-dessous                                                                               |
-| Commandes personnalisées                    | `api.registerCommand(...)`                       | [Points d'entrée](/en/plugins/sdk-entrypoints)                                           |
-| Crochets d'événement                        | `api.registerHook(...)`                          | [Points d'entrée](/en/plugins/sdk-entrypoints)                                           |
-| Routes HTTP                                 | `api.registerHttpRoute(...)`                     | [Fonctionnalités internes](/en/plugins/architecture#gateway-http-routes)                 |
-| Sous-commandes CLI                          | `api.registerCli(...)`                           | [Points d'entrée](/en/plugins/sdk-entrypoints)                                           |
+| Commandes personnalisées                    | `api.registerCommand(...)`                       | [Points d'entrée](/fr/plugins/sdk-entrypoints)                                           |
+| Crochets d'événement                        | `api.registerHook(...)`                          | [Points d'entrée](/fr/plugins/sdk-entrypoints)                                           |
+| Routes HTTP                                 | `api.registerHttpRoute(...)`                     | [Fonctionnalités internes](/fr/plugins/architecture#gateway-http-routes)                 |
+| Sous-commandes CLI                          | `api.registerCli(...)`                           | [Points d'entrée](/fr/plugins/sdk-entrypoints)                                           |
 
-Pour l'API d'enregistrement complet, consultez [Présentation du SDK](/en/plugins/sdk-overview#registration-api).
+Pour l'API d'enregistrement complet, consultez [Présentation du SDK](/fr/plugins/sdk-overview#registration-api).
 
 Si votre plugin enregistre des méthodes RPC de passerelle personnalisées, gardez-les sur un préfixe spécifique au plugin. Les espaces de noms d'administration principaux (`config.*`, `exec.approvals.*`, `wizard.*`, `update.*`) restent réservés et résolvent toujours vers `operator.admin`, même si un plugin demande une portée plus restreinte.
 
@@ -186,7 +186,7 @@ La commande `/approve` gère à la fois les approbations exec et plugin avec une
 
 Si une plomberie d'approbation personnalisée doit détecter ce même cas de secours limité, préférez `isApprovalNotFoundError` de `openclaw/plugin-sdk/error-runtime` plutôt que de faire correspondre manuellement les chaînes d'expiration d'approbation.
 
-Voir [sémantique de décision de hook de présentation du SDK](/en/plugins/sdk-overview#hook-decision-semantics) pour plus de détails.
+Voir [sémantique de décision de hook de présentation du SDK](/fr/plugins/sdk-overview#hook-decision-semantics) pour plus de détails.
 
 ## Enregistrement des outils d'agent
 
@@ -243,7 +243,7 @@ import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
 import { ... } from "openclaw/plugin-sdk";
 ```
 
-Pour la référence complète des sous-chemins, voir [Présentation du SDK](/en/plugins/sdk-overview).
+Pour la référence complète des sous-chemins, voir [Présentation du SDK](/fr/plugins/sdk-overview).
 
 Dans votre plugin, utilisez des fichiers barrel locaux (`api.ts`, `runtime-api.ts`) pour les importations internes — n'importez jamais votre propre plugin via son chemin SDK.
 
@@ -279,30 +279,30 @@ Certaines coutures d'assistant `openclaw/plugin-sdk/<bundled-id>` générées ex
 ## Étapes suivantes
 
 <CardGroup cols={2}>
-  <Card title="Plugins de canal" icon="messages-square" href="/en/plugins/sdk-channel-plugins">
+  <Card title="Plugins de canal" icon="messages-square" href="/fr/plugins/sdk-channel-plugins">
     Créer un plugin de canal de messagerie
   </Card>
-  <Card title="Plugins de fournisseur" icon="cpu" href="/en/plugins/sdk-provider-plugins">
+  <Card title="Plugins de fournisseur" icon="cpu" href="/fr/plugins/sdk-provider-plugins">
     Créer un plugin de fournisseur de modèle
   </Card>
-  <Card title="Aperçu du SDK" icon="book-open" href="/en/plugins/sdk-overview">
+  <Card title="Aperçu du SDK" icon="book-open" href="/fr/plugins/sdk-overview">
     Carte des imports et référence de l'API d'enregistrement
   </Card>
-  <Card title="Assistants d'exécution" icon="settings" href="/en/plugins/sdk-runtime">
+  <Card title="Assistants d'exécution" icon="settings" href="/fr/plugins/sdk-runtime">
     TTS, recherche, sous-agent via api.runtime
   </Card>
-  <Card title="Tests" icon="test-tubes" href="/en/plugins/sdk-testing">
+  <Card title="Tests" icon="test-tubes" href="/fr/plugins/sdk-testing">
     Utilitaires et modèles de test
   </Card>
-  <Card title="Manifeste du plugin" icon="file-" href="/en/plugins/manifest">
+  <Card title="Manifeste du plugin" icon="file-" href="/fr/plugins/manifest">
     Référence complète du schéma de manifeste
   </Card>
 </CardGroup>
 
 ## Connexes
 
-- [Architecture des plugins](/en/plugins/architecture) — plongée en profondeur dans l'architecture interne
-- [Aperçu du SDK](/en/plugins/sdk-overview) — référence du SDK de plugin
-- [Manifeste](/en/plugins/manifest) — format du manifeste de plugin
-- [Plugins de canal](/en/plugins/sdk-channel-plugins) — créer des plugins de canal
-- [Plugins de fournisseur](/en/plugins/sdk-provider-plugins) — créer des plugins de fournisseur
+- [Architecture des plugins](/fr/plugins/architecture) — plongée en profondeur dans l'architecture interne
+- [Aperçu du SDK](/fr/plugins/sdk-overview) — référence du SDK de plugin
+- [Manifeste](/fr/plugins/manifest) — format du manifeste de plugin
+- [Plugins de canal](/fr/plugins/sdk-channel-plugins) — créer des plugins de canal
+- [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins) — créer des plugins de fournisseur

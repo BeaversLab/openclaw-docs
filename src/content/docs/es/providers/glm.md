@@ -87,17 +87,17 @@ OpenClaw actualmente inicializa el proveedor `zai` incluido con estas referencia
   <Accordion title="Detalles del proveedor">
     Los modelos GLM son servidos por el proveedor de tiempo de ejecución `zai`. Para ver la configuración completa del proveedor,
     endpoints regionales y capacidades adicionales, consulta
-    [documentación del proveedor Z.AI](/en/providers/zai).
+    [documentación del proveedor Z.AI](/es/providers/zai).
   </Accordion>
 </AccordionGroup>
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Proveedor Z.AI" href="/en/providers/zai" icon="server">
+  <Card title="Proveedor Z.AI" href="/es/providers/zai" icon="server">
     Configuración completa del proveedor Z.AI y endpoints regionales.
   </Card>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elegir proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
 </CardGroup>

@@ -13,9 +13,9 @@ Inspecter les compétences locales et installer/mettre à jour les compétences 
 
 Connexes :
 
-- Système de Skills : [Skills](/en/tools/skills)
-- Configuration des Skills : [Skills config](/en/tools/skills-config)
-- Installations ClawHub : [ClawHub](/en/tools/clawhub)
+- Système de Skills : [Skills](/fr/tools/skills)
+- Configuration des Skills : [Skills config](/fr/tools/skills-config)
+- Installations ClawHub : [ClawHub](/fr/tools/clawhub)
 
 ## Commandes
 

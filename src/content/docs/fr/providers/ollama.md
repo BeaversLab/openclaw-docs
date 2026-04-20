@@ -287,7 +287,7 @@ Choisissez **Recherche Web Ollama** lors du `openclaw onboard` ou du `openclaw c
 }
 ```
 
-<Note>Pour les détails complets de la configuration et du comportement, consultez [Recherche Web Ollama](/en/tools/ollama-search).</Note>
+<Note>Pour les détails complets de la configuration et du comportement, consultez [Recherche Web Ollama](/fr/tools/ollama-search).</Note>
 
 ## Configuration avancée
 
@@ -377,7 +377,7 @@ Choisissez **Recherche Web Ollama** lors du `openclaw onboard` ou du `openclaw c
 
   <Accordion title="Mémoires intégrées">
     Le plugin Ollama inclus enregistre un fournisseur d'intégrations de mémoire pour
-    [memory search](/en/concepts/memory). Il utilise l'URL de base Ollama configurée
+    [memory search](/fr/concepts/memory). Il utilise l'URL de base Ollama configurée
     et la clé API.
 
     | Propriété      | Valeur               |
@@ -453,21 +453,21 @@ Choisissez **Recherche Web Ollama** lors du `openclaw onboard` ou du `openclaw c
   </Accordion>
 </AccordionGroup>
 
-<Note>Plus d'aide : [Dépannage](/en/help/troubleshooting) et [FAQ](/en/help/faq).</Note>
+<Note>Plus d'aide : [Dépannage](/fr/help/troubleshooting) et [FAQ](/fr/help/faq).</Note>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Fournisseurs de modèles" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Fournisseurs de modèles" href="/fr/concepts/model-providers" icon="layers">
     Vue d'ensemble de tous les fournisseurs, références de modèles et comportements de basculement.
   </Card>
-  <Card title="Sélection du modèle" href="/en/concepts/models" icon="brain">
+  <Card title="Sélection du modèle" href="/fr/concepts/models" icon="brain">
     Comment choisir et configurer les modèles.
   </Card>
-  <Card title="Recherche Web Ollama" href="/en/tools/ollama-search" icon="magnifying-glass">
+  <Card title="Recherche Web Ollama" href="/fr/tools/ollama-search" icon="magnifying-glass">
     Détails complets de la configuration et du comportement pour la recherche Web propulsée par Ollama.
   </Card>
-  <Card title="Configuration" href="/en/gateway/configuration" icon="gear">
+  <Card title="Configuration" href="/fr/gateway/configuration" icon="gear">
     Référence complète de la configuration.
   </Card>
 </CardGroup>

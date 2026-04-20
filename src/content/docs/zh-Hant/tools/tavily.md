@@ -121,6 +121,6 @@ JavaScript 渲染的頁面，並支援針對查詢的目標
 
 ## 相關
 
-- [Web Search 概觀](/en/tools/web) -- 所有供應商與自動偵測
-- [Firecrawl](/en/tools/firecrawl) -- 搜尋 + 爬取與內容提取
-- [Exa Search](/en/tools/exa-search) -- 具有內容提取功能的神經搜索
+- [Web Search 概觀](/zh-Hant/tools/web) -- 所有供應商與自動偵測
+- [Firecrawl](/zh-Hant/tools/firecrawl) -- 搜尋 + 爬取與內容提取
+- [Exa Search](/zh-Hant/tools/exa-search) -- 具有內容提取功能的神經搜索

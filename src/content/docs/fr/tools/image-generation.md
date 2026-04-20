@@ -133,12 +133,12 @@ La génération d'images MiniMax est disponible via les deux chemins d'authentif
 
 ## Connexes
 
-- [Présentation des outils](/en/tools) — tous les outils de l'agent disponibles
-- [fal](/en/providers/fal) — configuration du fournisseur d'images et de vidéos fal
-- [ComfyUI](/en/providers/comfy) — configuration des flux de travail ComfyUI locaux et Comfy Cloud
-- [Google (Gemini)](/en/providers/google) — configuration du fournisseur d'images Gemini
-- [MiniMax](/en/providers/minimax) — configuration du fournisseur d'images MiniMax
-- [OpenAI](/en/providers/openai) — configuration du fournisseur d'images OpenAI
-- [Vydra](/en/providers/vydra) — configuration de l'image, de la vidéo et de la parole Vydra
-- [Référence de configuration](/en/gateway/configuration-reference#agent-defaults) — config `imageGenerationModel`
-- [Modèles](/en/concepts/models) — configuration et basculement des modèles
+- [Présentation des outils](/fr/tools) — tous les outils de l'agent disponibles
+- [fal](/fr/providers/fal) — configuration du fournisseur d'images et de vidéos fal
+- [ComfyUI](/fr/providers/comfy) — configuration des flux de travail ComfyUI locaux et Comfy Cloud
+- [Google (Gemini)](/fr/providers/google) — configuration du fournisseur d'images Gemini
+- [MiniMax](/fr/providers/minimax) — configuration du fournisseur d'images MiniMax
+- [OpenAI](/fr/providers/openai) — configuration du fournisseur d'images OpenAI
+- [Vydra](/fr/providers/vydra) — configuration de l'image, de la vidéo et de la parole Vydra
+- [Référence de configuration](/fr/gateway/configuration-reference#agent-defaults) — config `imageGenerationModel`
+- [Modèles](/fr/concepts/models) — configuration et basculement des modèles

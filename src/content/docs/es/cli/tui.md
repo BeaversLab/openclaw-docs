@@ -12,7 +12,7 @@ Abre la interfaz de usuario de terminal conectada a la Gateway.
 
 Relacionado:
 
-- Guía de TUI: [TUI](/en/web/tui)
+- Guía de TUI: [TUI](/es/web/tui)
 
 Notas:
 

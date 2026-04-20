@@ -69,6 +69,38 @@ function fixUrl(url, locale) {
 }
 
 /**
+ * Fix MDX relative component imports based on file depth.
+ * Targets: import { ... } from "../../components/mdx-auto"
+ */
+function fixMdxImports(line, filePath) {
+  if (!filePath.endsWith('.mdx')) return line;
+  if (!line.includes('components/mdx-auto')) return line;
+
+  // We are in src/content/docs/<locale>/...
+  // Root is src/content/docs
+  const docsRoot = path.join(process.cwd(), 'src/content/docs');
+  const relativeToRoot = path.relative(docsRoot, filePath);
+  const depth = relativeToRoot.split(path.sep).length - 1; // Number of folders below docs/
+
+  // Components are in src/components/
+  // To get from docs/<locale>/... to src/components, we need:
+  // 1. Up to locale (1 level)
+  // 2. Up to docs/ (1 level)
+  // 3. Up to content/ (1 level)
+  // 4. Up to src/ (1 level)
+  // 5. Down to components/
+  // Total dots: depth + 3 (for en/index.md it is ../../../components)
+  // Wait, let is calculate correctly:
+  // src/content/docs/en/index.mdx (depth 1) -> ../../../components (content/docs/en -> src/)
+  // src/content/docs/en/demo/test.mdx (depth 2) -> ../../../../components
+  
+  const upLevels = depth + 3;
+  const newPath = `${'../'.repeat(upLevels)}components/mdx-auto`;
+  
+  return line.replace(/from\s+["'].*components\/mdx-auto["']/, `from "${newPath}"`);
+}
+
+/**
  * Process a single line, replacing links outside inline code spans.
  * Correctly handles nested or unclosed backticks without infinite loops.
  */
@@ -172,7 +204,9 @@ function processFile(filePath, locale, dryRun) {
       continue;
     }
 
-    const processed = processLine(line, locale);
+    let processed = processLine(line, locale);
+    processed = fixMdxImports(processed, filePath);
+    
     if (processed !== line) {
       changed = true;
       changes.push({ line: i + 1, before: line.trim(), after: processed.trim() });

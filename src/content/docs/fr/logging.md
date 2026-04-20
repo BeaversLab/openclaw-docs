@@ -78,7 +78,7 @@ openclaw doctor
 ### Interface utilisateur de contrôle (web)
 
 L'onglet **Logs** de l'interface utilisateur de contrôle suit le même fichier en utilisant `logs.tail`.
-Voir [/web/control-ui](/en/web/control-ui) pour savoir comment l'ouvrir.
+Voir [/web/control-ui](/fr/web/control-ui) pour savoir comment l'ouvrir.
 
 ### Journaux canal uniquement
 
@@ -246,7 +246,7 @@ Notes :
 
 - Les journaux d'indicateurs sont envoyés vers le fichier journal standard (identique à `logging.file`).
 - La sortie est toujours masquée conformément à `logging.redactSensitive`.
-- Guide complet : [/diagnostics/flags](/en/diagnostics/flags).
+- Guide complet : [/diagnostics/flags](/fr/diagnostics/flags).
 
 ### Exporter vers OpenTelemetry
 
@@ -380,5 +380,5 @@ Files d'attente + sessions :
 
 ## Connexes
 
-- [Gateway Logging Internals](/en/gateway/logging) — styles de journaux WS, préfixes de sous-système et capture de console
-- [Diagnostics](/en/gateway/configuration-reference#diagnostics) — Exportation OpenTelemetry et configuration de trace du cache
+- [Gateway Logging Internals](/fr/gateway/logging) — styles de journaux WS, préfixes de sous-système et capture de console
+- [Diagnostics](/fr/gateway/configuration-reference#diagnostics) — Exportation OpenTelemetry et configuration de trace du cache

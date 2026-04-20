@@ -9,7 +9,7 @@ read_when:
 
 # Node.js
 
-OpenClaw 需要 **Node 22.14 或更新版本**。**Node 24 是安裝、CI 和發佈工作流程的預設且推薦的運行時**。Node 22 透過現有的 LTS 線持續獲得支援。[安裝程式腳本](/en/install#alternative-install-methods) 會自動偵測並安裝 Node —— 本頁面適用於您想要自行設定 Node 並確保一切連線正確（版本、PATH、全域安裝）的情況。
+OpenClaw 需要 **Node 22.14 或更新版本**。**Node 24 是安裝、CI 和發佈工作流程的預設且推薦的運行時**。Node 22 透過現有的 LTS 線持續獲得支援。[安裝程式腳本](/zh-Hant/install#alternative-install-methods) 會自動偵測並安裝 Node —— 本頁面適用於您想要自行設定 Node 並確保一切連線正確（版本、PATH、全域安裝）的情況。
 
 ## 檢查您的版本
 
@@ -139,6 +139,6 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 
 ## 相關
 
-- [安裝概覽](/en/install) — 所有安裝方法
-- [更新](/en/install/updating) — 保持 OpenClaw 為最新狀態
-- [快速開始](/en/start/getting-started) — 安裝後的第一步
+- [安裝概覽](/zh-Hant/install) — 所有安裝方法
+- [更新](/zh-Hant/install/updating) — 保持 OpenClaw 為最新狀態
+- [快速開始](/zh-Hant/start/getting-started) — 安裝後的第一步

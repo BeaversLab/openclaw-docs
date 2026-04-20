@@ -77,7 +77,7 @@ openclaw doctor
 
 ### Control UI (web)
 
-Control UI 的 **Logs** 分頁使用 `logs.tail` 追蹤同一個檔案。請參閱 [/web/control-ui](/en/web/control-ui) 了解如何開啟它。
+Control UI 的 **Logs** 分頁使用 `logs.tail` 追蹤同一個檔案。請參閱 [/web/control-ui](/zh-Hant/web/control-ui) 了解如何開啟它。
 
 ### 僅限 Channel 的記錄
 
@@ -240,7 +240,7 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 - 標誌日誌會輸出到標準日誌檔案（與 `logging.file` 相同）。
 - 輸出仍會根據 `logging.redactSensitive` 進行編輯。
-- 完整指南：[/diagnostics/flags](/en/diagnostics/flags)。
+- 完整指南：[/diagnostics/flags](/zh-Hant/diagnostics/flags)。
 
 ### 匯出至 OpenTelemetry
 
@@ -374,5 +374,5 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 ## 相關內容
 
-- [Gateway 日誌內部機制](/en/gateway/logging) — WS 日誌樣式、子系統前綴與主控台擷取
-- [診斷](/en/gateway/configuration-reference#diagnostics) — OpenTelemetry 匯出與快取追蹤組態
+- [Gateway 日誌內部機制](/zh-Hant/gateway/logging) — WS 日誌樣式、子系統前綴與主控台擷取
+- [診斷](/zh-Hant/gateway/configuration-reference#diagnostics) — OpenTelemetry 匯出與快取追蹤組態

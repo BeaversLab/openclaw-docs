@@ -89,7 +89,7 @@ otherwise -> reply
 - **DMs**：完整工具（主機）
 - **Groups**：沙箱 + 受限工具（Docker）
 
-> 如果您需要真正獨立的工作區/角色（「私人」和「公開」絕不能混合），請使用第二個代理 + 綁定。請參閱 [Multi-Agent Routing](/en/concepts/multi-agent)。
+> 如果您需要真正獨立的工作區/角色（「私人」和「公開」絕不能混合），請使用第二個代理 + 綁定。請參閱 [Multi-Agent Routing](/zh-Hant/concepts/multi-agent)。
 
 範例（DMs 在主機上，groups 受沙箱限制 + 僅限訊息傳遞工具）：
 
@@ -140,9 +140,9 @@ otherwise -> reply
 
 相關：
 
-- 配置金鑰和預設值：[Gateway configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
-- 調試工具被阻止的原因：[Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Bind mounts 詳情：[Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
+- 配置金鑰和預設值：[Gateway configuration](/zh-Hant/gateway/configuration-reference#agentsdefaultssandbox)
+- 調試工具被阻止的原因：[Sandbox vs Tool Policy vs Elevated](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Bind mounts 詳情：[Sandboxing](/zh-Hant/gateway/sandboxing#custom-bind-mounts)
 
 ## 顯示標籤
 
@@ -407,4 +407,4 @@ otherwise -> reply
 
 ## WhatsApp 詳細資訊
 
-請參閱 [群組訊息](/en/channels/group-messages) 以了解 WhatsApp 專屬行為（歷史記錄注入、提及處理細節）。
+請參閱 [群組訊息](/zh-Hant/channels/group-messages) 以了解 WhatsApp 專屬行為（歷史記錄注入、提及處理細節）。

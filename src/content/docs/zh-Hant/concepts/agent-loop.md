@@ -47,7 +47,7 @@ wired end-to-end.
 - Runs are serialized per session key (session lane) and optionally through a global lane.
 - This prevents tool/session races and keeps session history consistent.
 - 訊息通道可以選擇佇列模式（collect/steer/followup）以輸入至此車道系統。
-  請參閱 [Command Queue](/en/concepts/queue)。
+  請參閱 [Command Queue](/zh-Hant/concepts/queue)。
 
 ## 工作階段 + 工作區準備
 
@@ -60,7 +60,7 @@ wired end-to-end.
 
 - 系統提示是依據 OpenClaw 的基本提示、技能提示、Bootstrap 內容以及各次執行的覆寫所建構。
 - 會強制執行特定模型的限制與壓縮保留 Token。
-- 請參閱 [System prompt](/en/concepts/system-prompt) 以了解模型看到的內容。
+- 請參閱 [System prompt](/zh-Hant/concepts/system-prompt) 以了解模型看到的內容。
 
 ## Hook 點（您可以進行攔截的地方）
 
@@ -75,7 +75,7 @@ OpenClaw 有兩個 Hook 系統：
   使用此功能來新增/移除 Bootstrap Context 檔案。
 - **Command hooks**：`/new`、`/reset`、`/stop` 以及其他指令事件（請參閱 Hooks 文件）。
 
-請參閱 [Hooks](/en/automation/hooks) 以了解設定和範例。
+請參閱 [Hooks](/zh-Hant/automation/hooks) 以了解設定和範例。
 
 ### Plugin hooks (agent + gateway lifecycle)
 
@@ -103,14 +103,14 @@ OpenClaw 有兩個 Hook 系統：
 - `message_sending`：`{ cancel: true }` 是終止狀態，並會停止較低優先權的處理程式。
 - `message_sending`：`{ cancel: false }` 是空操作，不會清除先前的取消。
 
-請參閱 [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) 以了解 Hook API 和註冊細節。
+請參閱 [Plugin hooks](/zh-Hant/plugins/architecture#provider-runtime-hooks) 以了解 Hook API 和註冊細節。
 
 ## 串流 + 部分回覆
 
 - Assistant 增量從 pi-agent-core 串流傳出，並作為 `assistant` 事件發出。
 - 區塊串流可以在 `text_end` 或 `message_end` 上發出部分回覆。
 - 推理串流可以作為單獨的串流或作為區塊回覆發出。
-- 請參閱 [Streaming](/en/concepts/streaming) 以了解分塊和區塊回覆行為。
+- 請參閱 [Streaming](/zh-Hant/concepts/streaming) 以了解分塊和區塊回覆行為。
 
 ## 工具執行 + 傳訊工具
 
@@ -134,7 +134,7 @@ OpenClaw 有兩個 Hook 系統：
 
 - 自動壓縮會發出 `compaction` 串流事件，並可以觸發重試。
 - 重試時，記憶體緩衝區和工具摘要會重置，以避免重複輸出。
-- 請參閱 [Compaction](/en/concepts/compaction) 以了解壓縮管線。
+- 請參閱 [Compaction](/zh-Hant/concepts/compaction) 以了解壓縮管線。
 
 ## 事件串流（目前）
 
@@ -162,8 +162,8 @@ OpenClaw 有兩個 Hook 系統：
 
 ## 相關
 
-- [Tools](/en/tools) — 可用的 Agent 工具
-- [Hooks](/en/automation/hooks) — 由 Agent 生命週期事件觸發的事件驅動腳本
-- [Compaction](/en/concepts/compaction) — 長對話的摘要方式
-- [Exec Approvals](/en/tools/exec-approvals) — Shell 指令的審核閘門
-- [Thinking](/en/tools/thinking) — 思考/推理層級設定
+- [Tools](/zh-Hant/tools) — 可用的 Agent 工具
+- [Hooks](/zh-Hant/automation/hooks) — 由 Agent 生命週期事件觸發的事件驅動腳本
+- [Compaction](/zh-Hant/concepts/compaction) — 長對話的摘要方式
+- [Exec Approvals](/zh-Hant/tools/exec-approvals) — Shell 指令的審核閘門
+- [Thinking](/zh-Hant/tools/thinking) — 思考/推理層級設定

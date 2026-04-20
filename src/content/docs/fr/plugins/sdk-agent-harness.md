@@ -24,7 +24,7 @@ Exemples :
 - un CLI local ou un démon qui doit diffuser des événements natifs de plan/raisonnement/outil
 - un moteur de modèle qui a besoin de son propre identifiant de reprise en plus de la transcription de session OpenClaw
 
-N'enregistrez **pas** un harnais simplement pour ajouter une nouvelle LLM API. Pour les API de modèle HTTP ou WebSocket normales, créez un [plugin de fournisseur](/en/plugins/sdk-provider-plugins).
+N'enregistrez **pas** un harnais simplement pour ajouter une nouvelle LLM API. Pour les API de modèle HTTP ou WebSocket normales, créez un [plugin de fournisseur](/fr/plugins/sdk-provider-plugins).
 
 ## Ce que le cœur possède toujours
 
@@ -101,7 +101,7 @@ Le plug-in Codex inclus suit ce modèle :
 
 Le plug-in Codex est additif. Les références simples `openai/gpt-*` restent des références de fournisseur OpenAI et continuent d'utiliser le chemin normal du fournisseur OpenClaw. Sélectionnez `codex/gpt-*` lorsque vous souhaitez une authentification gérée par Codex, une découverte de modèle Codex, des fils natifs et une exécution par le serveur d'application Codex. `/model` peut basculer parmi les modèles Codex renvoyés par le serveur d'application Codex sans exiger d'identifiants de fournisseur OpenAI.
 
-Pour la configuration de l'opérateur, les exemples de préfixes de modèle et les configurations spécifiques à Codex, consultez [Codex Harness](/en/plugins/codex-harness).
+Pour la configuration de l'opérateur, les exemples de préfixes de modèle et les configurations spécifiques à Codex, consultez [Codex Harness](/fr/plugins/codex-harness).
 
 OpenClaw nécessite le serveur d'application Codex `0.118.0` ou plus récent. Le plug-in Codex vérifie la poignée de main d'initialisation du serveur d'application et bloque les serveurs plus anciens ou sans version afin que OpenClaw ne s'exécute que contre la surface de protocole avec laquelle il a été testé.
 
@@ -231,8 +231,8 @@ sur le même chemin de livraison que les exécutions soutenues par PI.
 
 ## Connexes
 
-- [Aperçu du SDK](/en/plugins/sdk-overview)
-- [Assistants de Runtime](/en/plugins/sdk-runtime)
-- [Plugins de fournisseur](/en/plugins/sdk-provider-plugins)
-- [Codex Harness](/en/plugins/codex-harness)
-- [Fournisseurs de modèles](/en/concepts/model-providers)
+- [Aperçu du SDK](/fr/plugins/sdk-overview)
+- [Assistants de Runtime](/fr/plugins/sdk-runtime)
+- [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins)
+- [Codex Harness](/fr/plugins/codex-harness)
+- [Fournisseurs de modèles](/fr/concepts/model-providers)

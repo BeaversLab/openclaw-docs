@@ -11,7 +11,7 @@ read_when:
 技能會教導代理程式如何以及何時使用工具。每個技能都是一個目錄，
 其中包含一個帶有 YAML 前置資料和 markdown 指令的 `SKILL.md` 檔案。
 
-如需了解技能的載入和優先級，請參閱 [技能](/en/tools/skills)。
+如需了解技能的載入和優先級，請參閱 [技能](/zh-Hant/tools/skills)。
 
 ## 建立您的第一個技能
 
@@ -113,7 +113,7 @@ YAML 前置資料支援以下欄位：
 
 ## 相關
 
-- [技能參考](/en/tools/skills) — 載入、優先順序和閘道規則
-- [技能設定](/en/tools/skills-config) — `skills.*` 設定架構
-- [ClawHub](/en/tools/clawhub) — 公開技能註冊表
-- [建構外掛](/en/plugins/building-plugins) — 外掛可以附帶技能
+- [技能參考](/zh-Hant/tools/skills) — 載入、優先順序和閘道規則
+- [技能設定](/zh-Hant/tools/skills-config) — `skills.*` 設定架構
+- [ClawHub](/zh-Hant/tools/clawhub) — 公開技能註冊表
+- [建構外掛](/zh-Hant/plugins/building-plugins) — 外掛可以附帶技能

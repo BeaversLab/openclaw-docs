@@ -46,7 +46,7 @@ OpenClaw 通过在您的代理工作区中编写**纯 Markdown 文件**来记忆
 
 它不会替换活动的内存插件。活动的内存插件仍然拥有回忆、提升和梦境功能。`memory-wiki` 在其旁边添加了一个富含来源的知识层。
 
-请参阅 [Memory Wiki](/en/plugins/memory-wiki)。
+请参阅 [Memory Wiki](/zh/plugins/memory-wiki)。
 
 ## 内存搜索
 
@@ -54,18 +54,18 @@ OpenClaw 通过在您的代理工作区中编写**纯 Markdown 文件**来记忆
 
 <Info>OpenClaw 会从可用的 API 密钥中自动检测您的嵌入提供商。如果您 配置了 OpenAI、Gemini、Voyage 或 Mistral 密钥，内存搜索将 自动启用。</Info>
 
-有关搜索工作原理、调整选项和提供商设置的详细信息，请参阅 [Memory Search](/en/concepts/memory-search)。
+有关搜索工作原理、调整选项和提供商设置的详细信息，请参阅 [Memory Search](/zh/concepts/memory-search)。
 
 ## 内存后端
 
 <CardGroup cols={3}>
-  <Card title="Builtin (default)" icon="database" href="/en/concepts/memory-builtin">
+  <Card title="Builtin (default)" icon="database" href="/zh/concepts/memory-builtin">
     基于 SQLite。开箱即用，支持关键词搜索、向量相似度搜索和 混合搜索。无额外依赖。
   </Card>
-  <Card title="QMD" icon="search" href="/en/concepts/memory-qmd">
+  <Card title="QMD" icon="search" href="/zh/concepts/memory-qmd">
     本地优先的侧边栏，具有重排序、查询扩展以及索引工作区 外目录的能力。
   </Card>
-  <Card title="Honcho" icon="brain" href="/en/concepts/memory-honcho">
+  <Card title="Honcho" icon="brain" href="/zh/concepts/memory-honcho">
     AI 原生的跨会话记忆，包含用户建模、语义搜索和 多智能体感知。需安装插件。
   </Card>
 </CardGroup>
@@ -73,14 +73,14 @@ OpenClaw 通过在您的代理工作区中编写**纯 Markdown 文件**来记忆
 ## 知识库层
 
 <CardGroup cols={1}>
-  <Card title="Memory Wiki" icon="book" href="/en/plugins/memory-wiki">
+  <Card title="Memory Wiki" icon="book" href="/zh/plugins/memory-wiki">
     将持久化记忆编译为具有丰富溯源信息的 wiki 知识库，包含声明、 仪表板、桥接模式和 Obsidian 友好的工作流。
   </Card>
 </CardGroup>
 
 ## 自动内存刷新
 
-在 [压缩](/en/concepts/compaction) 总结您的对话之前，OpenClaw
+在 [压缩](/zh/concepts/compaction) 总结您的对话之前，OpenClaw
 会运行一个静默轮次，提醒智能体将重要的上下文保存到记忆
 文件中。此功能默认开启 -- 您无需进行任何配置。
 
@@ -103,7 +103,7 @@ OpenClaw 通过在您的代理工作区中编写**纯 Markdown 文件**来记忆
   供人工审查。
 
 有关阶段行为、评分信号和梦境日记的详细信息，请参阅
-[Dreaming](/en/concepts/dreaming)。
+[Dreaming](/zh/concepts/dreaming)。
 
 ## 基于事实的回填和实时提升
 
@@ -143,13 +143,13 @@ openclaw memory index --force   # Rebuild the index
 
 ## 延伸阅读
 
-- [内置内存引擎](/en/concepts/memory-builtin) -- 默认的 SQLite 后端
-- [QMD 内存引擎](/en/concepts/memory-qmd) -- 高级的本地优先侧车
-- [Honcho 内存](/en/concepts/memory-honcho) -- AI 原生的跨会话记忆
-- [内存 Wiki](/en/plugins/memory-wiki) -- 编译的知识库和 Wiki 原生工具
-- [内存搜索](/en/concepts/memory-search) -- 搜索管道、提供商和
+- [内置内存引擎](/zh/concepts/memory-builtin) -- 默认的 SQLite 后端
+- [QMD 内存引擎](/zh/concepts/memory-qmd) -- 高级的本地优先侧车
+- [Honcho 内存](/zh/concepts/memory-honcho) -- AI 原生的跨会话记忆
+- [内存 Wiki](/zh/plugins/memory-wiki) -- 编译的知识库和 Wiki 原生工具
+- [内存搜索](/zh/concepts/memory-search) -- 搜索管道、提供商和
   调优
-- [Dreaming](/en/concepts/dreaming) —— 从短期记忆到长期记忆的
+- [Dreaming](/zh/concepts/dreaming) —— 从短期记忆到长期记忆的
   后台提升
-- [内存配置参考](/en/reference/memory-config) -- 所有配置选项
-- [压缩](/en/concepts/compaction) -- 压缩如何与内存交互
+- [内存配置参考](/zh/reference/memory-config) -- 所有配置选项
+- [压缩](/zh/concepts/compaction) -- 压缩如何与内存交互

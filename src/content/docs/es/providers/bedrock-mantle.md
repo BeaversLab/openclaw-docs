@@ -92,7 +92,7 @@ punto final `/v1/models` de la región.
 | Caché de descubrimiento        | Resultados almacenados en caché durante 1 hora |
 | Actualización del token de IAM | Cada hora                                      |
 
-<Note>El token de portador es el mismo `AWS_BEARER_TOKEN_BEDROCK` que utiliza el proveedor estándar de [Amazon Bedrock](/en/providers/bedrock).</Note>
+<Note>El token de portador es el mismo `AWS_BEARER_TOKEN_BEDROCK` que utiliza el proveedor estándar de [Amazon Bedrock](/es/providers/bedrock).</Note>
 
 ### Regiones compatibles
 
@@ -143,7 +143,7 @@ Si prefiere una configuración explícita en lugar del descubrimiento automátic
 
   <Accordion title="Relación con el proveedor de Amazon Bedrock">
     Bedrock Mantle es un proveedor independiente del proveedor estándar
-    [Amazon Bedrock](/en/providers/bedrock). Mantle utiliza una
+    [Amazon Bedrock](/es/providers/bedrock). Mantle utiliza una
     superficie `/v1` compatible con OpenAI, mientras que el proveedor Bedrock estándar utiliza
     la API nativa de Bedrock.
 
@@ -156,16 +156,16 @@ Si prefiere una configuración explícita en lugar del descubrimiento automátic
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Amazon Bedrock" href="/en/providers/bedrock" icon="cloud">
+  <Card title="Amazon Bedrock" href="/es/providers/bedrock" icon="cloud">
     Proveedor nativo de Bedrock para Anthropic Claude, Titan y otros modelos.
   </Card>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="OAuth y autenticación" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth y autenticación" href="/es/gateway/authentication" icon="key">
     Detalles de autenticación y reglas de reutilización de credenciales.
   </Card>
-  <Card title="Solución de problemas" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Solución de problemas" href="/es/help/troubleshooting" icon="wrench">
     Problemas comunes y cómo resolverlos.
   </Card>
 </CardGroup>

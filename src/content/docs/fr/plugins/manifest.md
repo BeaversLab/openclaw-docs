@@ -10,7 +10,7 @@ title: "Manifest de plugin"
 
 Cette page concerne uniquement le **manifeste de plugin natif OpenClaw**.
 
-Pour les dispositions de bundle compatibles, voir [Plugins bundles](/en/plugins/bundles).
+Pour les dispositions de bundle compatibles, voir [Plugins bundles](/fr/plugins/bundles).
 
 Les formats de bundle compatibles utilisent des fichiers de manifeste différents :
 
@@ -32,9 +32,9 @@ Chaque plugin natif OpenClaw **doit** inclure un fichier `openclaw.plugin.json` 
 **sans exécuter le code du plugin**. Les manifestes manquants ou non valides sont traités comme
 des erreurs de plugin et bloquent la validation de la configuration.
 
-Voir le guide complet du système de plugins : [Plugins](/en/tools/plugin).
+Voir le guide complet du système de plugins : [Plugins](/fr/tools/plugin).
 Pour le modèle de capacités natif et les conseils actuels de compatibilité externe :
-[Modèle de capacités](/en/plugins/architecture#public-capability-model).
+[Modèle de capacités](/fr/plugins/architecture#public-capability-model).
 
 ## À quoi sert ce fichier
 
@@ -558,7 +558,7 @@ Utilisez-le lorsqu'un channel peut répondre à l'état configuré à partir de 
 - Si un plugin est installé mais possède un manifeste ou un schéma cassé ou manquant, la validation échoue et Doctor signale l'erreur du plugin.
 - Si une configuration de plugin existe mais que le plugin est **désactivé**, la configuration est conservée et un **avertissement** est affiché dans Doctor + les journaux.
 
-Consultez [Référence de configuration](/en/gateway/configuration) pour le schéma complet `plugins.*`.
+Consultez [Référence de configuration](/fr/gateway/configuration) pour le schéma complet `plugins.*`.
 
 ## Notes
 
@@ -569,7 +569,7 @@ Consultez [Référence de configuration](/en/gateway/configuration) pour le sch�
 - `providerAuthEnvVars` est le chemin de métadonnées économique pour les sondes d'authentification, la validation des marqueurs d'environnement et les surfaces similaires d'authentification de provider qui ne devraient pas démarrer l'exécution du plugin juste pour inspecter les noms d'environnement.
 - `providerAuthAliases` permet aux variantes de provider de réutiliser les variables d'environnement d'authentification, les profils d'authentification, l'authentification basée sur la configuration et le choix d'intégration de clé API d'un autre provider sans coder en dur cette relation dans le core.
 - `channelEnvVars` est le chemin de métadonnées économique pour le repli shell-env, les invites de configuration et les surfaces de channel similaires qui ne devraient pas démarrer le runtime du plugin juste pour inspecter les noms d'environnement.
-- `providerAuthChoices` est le chemin de métadonnées économique pour les sélecteurs de choix d'authentification, la résolution `--auth-choice`, le mappage de provider préféré et l'enregistrement des drapeaux CLI d'intégration simple avant le chargement du runtime du provider. Pour les métadonnées de l'assistant d'exécution nécessitant du code de provider, voir [Provider runtime hooks](/en/plugins/architecture#provider-runtime-hooks).
+- `providerAuthChoices` est le chemin de métadonnées économique pour les sélecteurs de choix d'authentification, la résolution `--auth-choice`, le mappage de provider préféré et l'enregistrement des drapeaux CLI d'intégration simple avant le chargement du runtime du provider. Pour les métadonnées de l'assistant d'exécution nécessitant du code de provider, voir [Provider runtime hooks](/fr/plugins/architecture#provider-runtime-hooks).
 - Les types de plugins exclusifs sont sélectionnés via `plugins.slots.*`.
   - `kind: "memory"` est sélectionné par `plugins.slots.memory`.
   - `kind: "context-engine"` est sélectionné par `plugins.slots.contextEngine`
@@ -580,6 +580,6 @@ Consultez [Référence de configuration](/en/gateway/configuration) pour le sch�
 
 ## Connexes
 
-- [Building Plugins](/en/plugins/building-plugins) — démarrer avec les plugins
-- [Plugin Architecture](/en/plugins/architecture) — architecture interne
-- [SDK Overview](/en/plugins/sdk-overview) — référence du Plugin SDK
+- [Building Plugins](/fr/plugins/building-plugins) — démarrer avec les plugins
+- [Plugin Architecture](/fr/plugins/architecture) — architecture interne
+- [SDK Overview](/fr/plugins/sdk-overview) — référence du Plugin SDK

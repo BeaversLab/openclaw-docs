@@ -103,13 +103,13 @@ Qianfan es la plataforma MaaS de Baidu, que proporciona una **API unificada** qu
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelo y comportamiento de conmutación por error.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration" icon="gear">
     Referencia completa de configuración de OpenClaw.
   </Card>
-  <Card title="Configuración del agente" href="/en/concepts/agent" icon="robot">
+  <Card title="Configuración del agente" href="/es/concepts/agent" icon="robot">
     Configuración de valores predeterminados del agente y asignaciones de modelos.
   </Card>
   <Card title="Documentación de la API de Qianfan" href="https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb" icon="arrow-up-right-from-square">

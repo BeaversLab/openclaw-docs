@@ -61,16 +61,16 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 ## 解决方案
 
 - 使用 Bun 运行开发脚本（当前临时回退方案）。
-- 使用 Node + tsc watch，然后运行编译输出：
+- 使用 `tsgo` 进行代码库类型检查，然后运行构建输出：
 
   ```bash
-  pnpm exec tsc --watch --preserveWatchOutput
-  node --watch openclaw.mjs status
+  pnpm tsgo
+  node openclaw.mjs status
   ```
 
-- 本地已确认：`pnpm exec tsc -p tsconfig.json` + `node openclaw.mjs status` 在 Node 25 上有效。
-- 如果可能，在 TS 加载器中禁用 esbuild keepNames（防止 `__name` 辅助函数插入）；tsx 目前未公开此选项。
-- 使用 `tsx` 测试 Node LTS (22/24) 以查看该问题是否特定于 Node 25。
+- 历史说明：在调试此 Node/tsx 问题时曾使用 `tsc`，但代码库类型检查通道现在使用 `tsgo`。
+- 如果可能，在 TS 加载器中禁用 esbuild keepNames（防止插入 `__name` 辅助函数）；tsx 目前不暴露此选项。
+- 使用 `tsx` 测试 Node LTS (22/24)，以查看该问题是否特定于 Node 25。
 
 ## 参考
 
@@ -81,5 +81,5 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 ## 后续步骤
 
 - 在 Node 22/24 上复现以确认 Node 25 的回归。
-- 如果存在已知的回归，请测试 `tsx` 每夜版或固定到早期版本。
+- 测试 `tsx` 每夜版，如果存在已知的回归问题，则锁定到较早版本。
 - 如果在 Node LTS 上复现，请使用 `__name` 堆栈跟踪向上游提交最小复现。

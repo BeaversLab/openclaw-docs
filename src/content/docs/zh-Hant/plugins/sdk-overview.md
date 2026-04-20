@@ -12,7 +12,7 @@ read_when:
 
 Plugin SDK 是外掛與核心之間的型別合約。此頁面是關於**要匯入什麼**以及**您可以註冊什麼**的參考。
 
-<Tip>**正在尋找操作指南？** - 第一個外掛程式？從[入門指南](/en/plugins/building-plugins)開始 - 頻道外掛程式？請參閱[頻道外掛程式](/en/plugins/sdk-channel-plugins) - 提供者外掛程式？請參閱[提供者外掛程式](/en/plugins/sdk-provider-plugins)</Tip>
+<Tip>**正在尋找操作指南？** - 第一個外掛程式？從[入門指南](/zh-Hant/plugins/building-plugins)開始 - 頻道外掛程式？請參閱[頻道外掛程式](/zh-Hant/plugins/sdk-channel-plugins) - 提供者外掛程式？請參閱[提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins)</Tip>
 
 ## 匯入慣例
 
@@ -292,7 +292,7 @@ api.registerCli(
 | `api.rootDir`            | `string?`                 | Plugin 根目錄（可選）                                               |
 | `api.config`             | `OpenClawConfig`          | 當前配置快照（可用時為活躍的記憶體運行時快照）                      |
 | `api.pluginConfig`       | `Record<string, unknown>` | 來自 `plugins.entries.<id>.config` 的 Plugin 特定配置               |
-| `api.runtime`            | `PluginRuntime`           | [運行時輔助函數](/en/plugins/sdk-runtime)                           |
+| `api.runtime`            | `PluginRuntime`           | [運行時輔助函數](/zh-Hant/plugins/sdk-runtime)                      |
 | `api.logger`             | `PluginLogger`            | 作用域日誌記錄器（`debug`、`info`、`warn`、`error`）                |
 | `api.registrationMode`   | `PluginRegistrationMode`  | 當前加載模式；`"setup-runtime"` 是完整條目啟動/設定之前的輕量級視窗 |
 | `api.resolvePath(input)` | `(string) => string`      | 解析相對於 Plugin 根目錄的路徑                                      |
@@ -332,9 +332,9 @@ Facade 加載的捆綁 Plugin 公開介面（`api.ts`、`runtime-api.ts`、
 
 ## 相關
 
-- [Entry Points](/en/plugins/sdk-entrypoints) — `definePluginEntry` 和 `defineChannelPluginEntry` 選項
-- [Runtime Helpers](/en/plugins/sdk-runtime) — 完整的 `api.runtime` 命名空間參考
-- [Setup and Config](/en/plugins/sdk-setup) — 打包、清單、配置架構
-- [Testing](/en/plugins/sdk-testing) — 測試工具程式與 lint 規則
-- [SDK Migration](/en/plugins/sdk-migration) — 從已棄用的介面遷移
-- [Plugin Internals](/en/plugins/architecture) — 深度架構與功能模型
+- [Entry Points](/zh-Hant/plugins/sdk-entrypoints) — `definePluginEntry` 和 `defineChannelPluginEntry` 選項
+- [Runtime Helpers](/zh-Hant/plugins/sdk-runtime) — 完整的 `api.runtime` 命名空間參考
+- [Setup and Config](/zh-Hant/plugins/sdk-setup) — 打包、清單、配置架構
+- [Testing](/zh-Hant/plugins/sdk-testing) — 測試工具程式與 lint 規則
+- [SDK Migration](/zh-Hant/plugins/sdk-migration) — 從已棄用的介面遷移
+- [Plugin Internals](/zh-Hant/plugins/architecture) — 深度架構與功能模型

@@ -93,7 +93,7 @@ title: "Niveles de pensamiento"
 
 ## Relacionado
 
-- La documentación del modo elevado se encuentra en [Modo elevado](/en/tools/elevated).
+- La documentación del modo elevado se encuentra en [Modo elevado](/es/tools/elevated).
 
 ## Latidos
 

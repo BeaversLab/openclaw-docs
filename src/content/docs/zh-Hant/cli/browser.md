@@ -13,7 +13,7 @@ title: "browser"
 
 相關：
 
-- 瀏覽器工具 + API：[瀏覽器工具](/en/tools/browser)
+- 瀏覽器工具 + API：[瀏覽器工具](/zh-Hant/tools/browser)
 
 ## 通用旗標
 
@@ -45,7 +45,7 @@ openclaw browser --browser-profile openclaw tabs
 openclaw browser --browser-profile openclaw open https://example.com
 ```
 
-詳細指引：[瀏覽器疑難排解](/en/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
+詳細指引：[瀏覽器疑難排解](/zh-Hant/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
 
 ## 生命週期
 
@@ -82,7 +82,7 @@ openclaw browser --browser-profile openclaw reset-profile
 當外掛程式允許清單排除 `browser` 時，
 `browser.enabled=true` 不會還原 CLI 子指令。
 
-相關：[瀏覽器工具](/en/tools/browser#missing-browser-command-or-tool)
+相關：[瀏覽器工具](/zh-Hant/tools/browser#missing-browser-command-or-tool)
 
 ## 設定檔
 
@@ -242,4 +242,4 @@ openclaw browser --browser-profile chrome-live tabs
 
 使用 `gateway.nodes.browser.mode` 來控制自動路由，如果連接了多個節點，使用 `gateway.nodes.browser.node` 來固定特定節點。
 
-安全性 + 遠端設定：[Browser tool](/en/tools/browser)、[Remote access](/en/gateway/remote)、[Tailscale](/en/gateway/tailscale)、[Security](/en/gateway/security)
+安全性 + 遠端設定：[Browser tool](/zh-Hant/tools/browser)、[Remote access](/zh-Hant/gateway/remote)、[Tailscale](/zh-Hant/gateway/tailscale)、[Security](/zh-Hant/gateway/security)

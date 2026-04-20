@@ -30,25 +30,25 @@ openclaw plugins install @openclaw/voice-call
 
 3. 重新啟動 Gateway，然後在 `plugins.entries.<id>.config` 下進行設定。
 
-請參閱 [語音通話](/en/plugins/voice-call) 以了解具體的外掛程式範例。
+請參閱 [語音通話](/zh-Hant/plugins/voice-call) 以了解具體的外掛程式範例。
 
 ## 可用的外掛程式（官方）
 
 - Microsoft Teams 自 2026.1.15 起僅支援外掛程式；如果您使用 Teams，請安裝 `@openclaw/msteams`。
 - Memory (Core) — 隨附的記憶體搜尋外掛程式（透過 `plugins.slots.memory` 預設啟用）
 - Memory (LanceDB) — 隨附的長期記憶體外掛程式（自動回憶/擷取；設定 `plugins.slots.memory = "memory-lancedb"`）
-- [語音通話](/en/plugins/voice-call) — `@openclaw/voice-call`
-- [Zalo 個人版](/en/plugins/zalouser) — `@openclaw/zalouser`
-- [Matrix](/en/channels/matrix) — `@openclaw/matrix`
-- [Nostr](/en/channels/nostr) — `@openclaw/nostr`
-- [Zalo](/en/channels/zalo) — `@openclaw/zalo`
-- [Microsoft Teams](/en/channels/msteams) — `@openclaw/msteams`
+- [語音通話](/zh-Hant/plugins/voice-call) — `@openclaw/voice-call`
+- [Zalo 個人版](/zh-Hant/plugins/zalouser) — `@openclaw/zalouser`
+- [Matrix](/zh-Hant/channels/matrix) — `@openclaw/matrix`
+- [Nostr](/zh-Hant/channels/nostr) — `@openclaw/nostr`
+- [Zalo](/zh-Hant/channels/zalo) — `@openclaw/zalo`
+- [Microsoft Teams](/zh-Hant/channels/msteams) — `@openclaw/msteams`
 - Google Antigravity OAuth (提供者驗證) — 隨附為 `google-antigravity-auth` (預設停用)
 - Gemini CLI OAuth (提供者驗證) — 隨附為 `google-gemini-cli-auth` (預設停用)
 - Qwen OAuth (提供者驗證) — 隨附為 `qwen-portal-auth` (預設停用)
 - Copilot Proxy (提供者驗證) — 本地 VS Code Copilot Proxy 橋接器；與內建的 `github-copilot` 裝置登入不同（隨附，預設停用）
 
-OpenClaw 外掛程式是透過 jiti 在執行時期載入的 **TypeScript 模組**。**組態驗證不會執行外掛程式碼**；它會改用外掛程式清單和 JSON Schema。請參閱 [外掛程式清單](/en/plugins/manifest)。
+OpenClaw 外掛程式是透過 jiti 在執行時期載入的 **TypeScript 模組**。**組態驗證不會執行外掛程式碼**；它會改用外掛程式清單和 JSON Schema。請參閱 [外掛程式清單](/zh-Hant/plugins/manifest)。
 
 外掛程式可以註冊：
 
@@ -62,7 +62,7 @@ OpenClaw 外掛程式是透過 jiti 在執行時期載入的 **TypeScript 模組
 - **自動回覆指令**（執行時無需呼叫 AI agent）
 
 外掛程式與 Gateway **同程序** 執行，因此請將其視為受信任的程式碼。
-工具撰寫指南：[外掛程式 Agent 工具](/en/plugins/agent-tools)。
+工具撰寫指南：[外掛程式 Agent 工具](/zh-Hant/plugins/agent-tools)。
 
 ## 執行時期輔助程式
 
@@ -493,7 +493,7 @@ export default function (api) {
 
 ### Agent 工具
 
-請參閱專屬指南：[Plugin agent tools](/en/plugins/agent-tools)。
+請參閱專屬指南：[Plugin agent tools](/zh-Hant/plugins/agent-tools)。
 
 ### 註冊網關 RPC 方法
 
@@ -630,7 +630,7 @@ export default function (api) {
 - Config (twilio)： `provider: "twilio"` + `twilio.accountSid/authToken/from` （選填 `statusCallbackUrl`， `twimlUrl`）
 - Config (dev)： `provider: "log"` （無網路）
 
-請參閱 [Voice Call](/en/plugins/voice-call) 和 `extensions/voice-call/README.md` 以了解設定與使用方式。
+請參閱 [Voice Call](/zh-Hant/plugins/voice-call) 和 `extensions/voice-call/README.md` 以了解設定與使用方式。
 
 ## 安全備註
 

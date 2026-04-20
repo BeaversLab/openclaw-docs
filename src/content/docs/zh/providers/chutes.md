@@ -109,10 +109,10 @@ OpenClaw 为捆绑的 Chutes 目录注册了三个便捷别名：
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Model providers" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model providers" href="/zh/concepts/model-providers" icon="layers">
     提供商规则、模型引用和故障转移行为。
   </Card>
-  <Card title="Configuration reference" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Configuration reference" href="/zh/gateway/configuration-reference" icon="gear">
     包含提供商设置的完整配置架构。
   </Card>
   <Card title="Chutes" href="https://chutes.ai" icon="arrow-up-right-from-square">

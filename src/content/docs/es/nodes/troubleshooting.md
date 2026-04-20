@@ -116,8 +116,8 @@ Si sigue atascado:
 
 Relacionado:
 
-- [/nodes/index](/en/nodes/index)
-- [/nodes/camera](/en/nodes/camera)
-- [/nodes/location-command](/en/nodes/location-command)
-- [/tools/exec-approvals](/en/tools/exec-approvals)
-- [/gateway/pairing](/en/gateway/pairing)
+- [/nodes/index](/es/nodes/index)
+- [/nodes/camera](/es/nodes/camera)
+- [/nodes/location-command](/es/nodes/location-command)
+- [/tools/exec-approvals](/es/tools/exec-approvals)
+- [/gateway/pairing](/es/gateway/pairing)

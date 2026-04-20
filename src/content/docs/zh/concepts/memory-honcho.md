@@ -117,5 +117,5 @@ openclaw honcho search <query> [-k N] [-d D] # Semantic search over memory
 - [插件源代码](https://github.com/plastic-labs/openclaw-honcho)
 - [Honcho 文档](https://docs.honcho.dev)
 - [Honcho OpenClaw 集成指南](https://docs.honcho.dev/v3/guides/integrations/openclaw)
-- [记忆](/en/concepts/memory) -- OpenClaw 记忆概述
-- [上下文引擎](/en/concepts/context-engine) -- 插件上下文引擎的工作原理
+- [记忆](/zh/concepts/memory) -- OpenClaw 记忆概述
+- [上下文引擎](/zh/concepts/context-engine) -- 插件上下文引擎的工作原理

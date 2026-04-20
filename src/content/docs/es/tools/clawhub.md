@@ -122,7 +122,7 @@ y las recogerá en la **siguiente** sesión. Si ya usa
 `~/.openclaw/skills` o habilidades incluidas, las habilidades del espacio de trabajo tienen prioridad.
 
 Para obtener más detalles sobre cómo se cargan, comparten y restringen las habilidades, consulte
-[Habilidades](/en/tools/skills).
+[Habilidades](/es/tools/skills).
 
 ## Resumen del sistema de habilidades
 

@@ -12,8 +12,8 @@ title: "doctor"
 
 相關主題：
 
-- 疑難排解：[疑難排解](/en/gateway/troubleshooting)
-- 安全性稽核：[安全性](/en/gateway/security)
+- 疑難排解：[疑難排解](/zh-Hant/gateway/troubleshooting)
+- 安全性稽核：[安全性](/zh-Hant/gateway/security)
 
 ## 範例
 

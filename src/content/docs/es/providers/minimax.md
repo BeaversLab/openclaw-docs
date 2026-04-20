@@ -245,7 +245,7 @@ El catálogo de texto de MiniMax incluido integrado permanece como metadatos sol
 que exista esa configuración explícita del proveedor. La comprensión de imágenes se expone por separado
 a través del proveedor de medios `MiniMax-VL-01` propiedad del complemento.
 
-<Note>Consulte [Generación de imágenes](/en/tools/image-generation) para ver los parámetros de herramientas compartidas, la selección de proveedores y el comportamiento de conmutación por error.</Note>
+<Note>Consulte [Generación de imágenes](/es/tools/image-generation) para ver los parámetros de herramientas compartidas, la selección de proveedores y el comportamiento de conmutación por error.</Note>
 
 ### Generación de música
 
@@ -272,7 +272,7 @@ Para usar MiniMax como proveedor de música predeterminado:
 }
 ```
 
-<Note>Consulte [Generación de música](/en/tools/music-generation) para ver los parámetros de herramientas compartidas, la selección de proveedores y el comportamiento de conmutación por error.</Note>
+<Note>Consulte [Generación de música](/es/tools/music-generation) para ver los parámetros de herramientas compartidas, la selección de proveedores y el comportamiento de conmutación por error.</Note>
 
 ### Generación de video
 
@@ -297,7 +297,7 @@ Para usar MiniMax como proveedor de video predeterminado:
 }
 ```
 
-<Note>Consulte [Generación de video](/en/tools/video-generation) para ver los parámetros de herramientas compartidas, la selección de proveedores y el comportamiento de conmutación por error.</Note>
+<Note>Consulte [Generación de video](/es/tools/video-generation) para ver los parámetros de herramientas compartidas, la selección de proveedores y el comportamiento de conmutación por error.</Note>
 
 ### Comprensión de imágenes
 
@@ -326,7 +326,7 @@ El complemento MiniMax también registra `web_search` a través de la API de bú
 
 La configuración reside bajo `plugins.entries.minimax.config.webSearch.*`.
 
-<Note>Consulte [Búsqueda de MiniMax](/en/tools/minimax-search) para obtener la configuración y el uso completos de la búsqueda web.</Note>
+<Note>Consulte [Búsqueda de MiniMax](/es/tools/minimax-search) para obtener la configuración y el uso completos de la búsqueda web.</Note>
 
 ## Configuración avanzada
 
@@ -396,7 +396,7 @@ La configuración reside bajo `plugins.entries.minimax.config.webSearch.*`.
 
 <Tip>Enlace de referencia para el Plan de Coding de MiniMax (10% de descuento): [MiniMax Coding Plan](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)</Tip>
 
-<Note>Consulte [Model providers](/en/concepts/model-providers) para conocer las reglas del proveedor.</Note>
+<Note>Consulte [Model providers](/es/concepts/model-providers) para conocer las reglas del proveedor.</Note>
 
 ## Solución de problemas
 
@@ -423,27 +423,27 @@ La configuración reside bajo `plugins.entries.minimax.config.webSearch.*`.
   </Accordion>
 </AccordionGroup>
 
-<Note>Más ayuda: [Troubleshooting](/en/help/troubleshooting) y [FAQ](/en/help/faq).</Note>
+<Note>Más ayuda: [Troubleshooting](/es/help/troubleshooting) y [FAQ](/es/help/faq).</Note>
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Generación de imágenes" href="/en/tools/image-generation" icon="image">
+  <Card title="Generación de imágenes" href="/es/tools/image-generation" icon="image">
     Parámetros de la herramienta de imágenes compartidos y selección del proveedor.
   </Card>
-  <Card title="Generación de música" href="/en/tools/music-generation" icon="music">
+  <Card title="Generación de música" href="/es/tools/music-generation" icon="music">
     Parámetros de la herramienta de música compartidos y selección del proveedor.
   </Card>
-  <Card title="Generación de vídeo" href="/en/tools/video-generation" icon="video">
+  <Card title="Generación de vídeo" href="/es/tools/video-generation" icon="video">
     Parámetros de la herramienta de vídeo compartidos y selección del proveedor.
   </Card>
-  <Card title="Búsqueda MiniMax" href="/en/tools/minimax-search" icon="magnifying-glass">
+  <Card title="Búsqueda MiniMax" href="/es/tools/minimax-search" icon="magnifying-glass">
     Configuración de búsqueda web mediante MiniMax Coding Plan.
   </Card>
-  <Card title="Solución de problemas" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Solución de problemas" href="/es/help/troubleshooting" icon="wrench">
     Solución de problemas generales y preguntas frecuentes.
   </Card>
 </CardGroup>

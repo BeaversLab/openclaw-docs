@@ -190,6 +190,6 @@ El complemento elimina intencionalmente los metadatos de propietario/sesión de 
 
 ## Documentación relacionada
 
-- [SDK de tiempo de ejecución del complemento](/en/plugins/sdk-runtime)
-- [Descripción general de hooks y webhooks](/en/automation/hooks)
-- [Webhooks de CLI](/en/cli/webhooks)
+- [SDK de tiempo de ejecución del complemento](/es/plugins/sdk-runtime)
+- [Descripción general de hooks y webhooks](/es/automation/hooks)
+- [Webhooks de CLI](/es/cli/webhooks)

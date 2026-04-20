@@ -17,37 +17,37 @@ sidebarTitle: "Linux Server"
 ## 选择提供商
 
 <CardGroup cols={2}>
-  <Card title="Railway" href="/en/install/railway">
+  <Card title="Railway" href="/zh/install/railway">
     一键式浏览器设置
   </Card>
-  <Card title="Northflank" href="/en/install/northflank">
+  <Card title="Northflank" href="/zh/install/northflank">
     一键式浏览器设置
   </Card>
-  <Card title="DigitalOcean" href="/en/install/digitalocean">
+  <Card title="DigitalOcean" href="/zh/install/digitalocean">
     简单的付费 VPS
   </Card>
-  <Card title="Oracle Cloud" href="/en/install/oracle">
+  <Card title="Oracle Cloud" href="/zh/install/oracle">
     始终免费 ARM 层
   </Card>
-  <Card title="Fly.io" href="/en/install/fly">
+  <Card title="Fly.io" href="/zh/install/fly">
     Fly Machines
   </Card>
-  <Card title="Hetzner" href="/en/install/hetzner">
+  <Card title="Hetzner" href="/zh/install/hetzner">
     Docker 在 Hetzner VPS 上
   </Card>
-  <Card title="Hostinger" href="/en/install/hostinger">
+  <Card title="Hostinger" href="/zh/install/hostinger">
     支持一键设置的 VPS
   </Card>
-  <Card title="GCP" href="/en/install/gcp">
+  <Card title="GCP" href="/zh/install/gcp">
     Compute Engine
   </Card>
-  <Card title="Azure" href="/en/install/azure">
+  <Card title="Azure" href="/zh/install/azure">
     Linux VM
   </Card>
-  <Card title="exe.dev" href="/en/install/exe-dev">
+  <Card title="exe.dev" href="/zh/install/exe-dev">
     带 HTTPS 代理的 VM
   </Card>
-  <Card title="Raspberry Pi" href="/en/install/raspberry-pi">
+  <Card title="Raspberry Pi" href="/zh/install/raspberry-pi">
     ARM 自托管
   </Card>
 </CardGroup>
@@ -65,7 +65,7 @@ sidebarTitle: "Linux Server"
 - 安全默认设置：将 Gateway(网关) 保留在本地回环，并通过 SSH 隧道或 Tailscale Serve 访问它。
   如果绑定到 `lan` 或 `tailnet`，请要求 `gateway.auth.token` 或 `gateway.auth.password`。
 
-相关页面：[Gateway(网关) 远程访问](/en/gateway/remote)、[平台中心](/en/platforms)。
+相关页面：[Gateway(网关) 远程访问](/zh/gateway/remote)、[平台中心](/zh/platforms)。
 
 ## 在 VPS 上共享公司代理
 
@@ -75,7 +75,7 @@ sidebarTitle: "Linux Server"
 - 切勿将该运行时登录到个人 Apple/Google 帐户或个人浏览器/密码管理器配置文件。
 - 如果用户之间存在对抗关系，请按 gateway/host/操作系统用户进行拆分。
 
-安全模型详情：[安全性](/en/gateway/security)。
+安全模型详情：[安全性](/zh/gateway/security)。
 
 ## 结合 VPS 使用节点
 
@@ -83,7 +83,7 @@ sidebarTitle: "Linux Server"
 (Mac/iOS/Android/headless)。节点提供本地屏幕/摄像头/画布和 `system.run`
 功能，而 Gateway(网关) 则保留在云端。
 
-文档：[节点](/en/nodes)，[节点 CLI](/en/cli/nodes)。
+文档：[节点](/zh/nodes)，[节点 CLI](/zh/cli/nodes)。
 
 ## 针对小型虚拟机和 ARM 主机的启动优化
 
@@ -101,7 +101,7 @@ source ~/.bashrc
 - `NODE_COMPILE_CACHE` 改善重复命令的启动时间。
 - `OPENCLAW_NO_RESPAWN=1` 避免来自自重生路径的额外启动开销。
 - 首次命令运行会预热缓存；后续运行会更快。
-- 有关 Raspberry Pi 的具体信息，请参阅 [Raspberry Pi](/en/install/raspberry-pi)。
+- 有关 Raspberry Pi 的具体信息，请参阅 [Raspberry Pi](/zh/install/raspberry-pi)。
 
 ### systemd 调优检查清单（可选）
 

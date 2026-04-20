@@ -29,7 +29,7 @@ number of tokens`, `input token count exceeds the maximum number of input
 tokens`, `input is too long for the model`, and `ollama error: context length
 exceeded`。
 
-<Info>在壓縮之前，OpenClaw 會自動提醒代理將重要筆記儲存到 [memory](/en/concepts/memory) 檔案中。這可以防止上下文遺失。</Info>
+<Info>在壓縮之前，OpenClaw 會自動提醒代理將重要筆記儲存到 [memory](/zh-Hant/concepts/memory) 檔案中。這可以防止上下文遺失。</Info>
 
 使用您的 `openclaw.json` 中的 `agents.defaults.compaction` 設定來設定壓縮行為（模式、目標 token 等）。
 壓縮摘要預設會保留不透明識別碼 (`identifierPolicy: "strict"`)。您可以使用 `identifierPolicy: "off"` 覆蓋此設定，或使用 `identifierPolicy: "custom"` 和 `identifierInstructions` 提供自訂文字。
@@ -93,7 +93,7 @@ exceeded`。
 - 在詳細模式下的 `🧹 Auto-compaction complete`
 - 顯示 `🧹 Compactions: <count>` 的 `/status`
 
-在壓縮之前，OpenClaw 可以執行 **靜默記憶體清除 (silent memory flush)** 輪次，將持久的筆記儲存到磁碟。請參閱 [記憶體 (Memory)](/en/concepts/memory) 以了解詳細資訊和配置。
+在壓縮之前，OpenClaw 可以執行 **靜默記憶體清除 (silent memory flush)** 輪次，將持久的筆記儲存到磁碟。請參閱 [記憶體 (Memory)](/zh-Hant/concepts/memory) 以了解詳細資訊和配置。
 
 ## 手動壓縮
 
@@ -145,25 +145,25 @@ exceeded`。
 | **是否保留？** | 是（在工作階段記錄中） | 否（僅在記憶體中，每次請求） |
 | **範圍**       | 整個對話               | 僅限工具結果                 |
 
-[工作階段修剪 (Session pruning)](/en/concepts/session-pruning) 是一個更輕量的輔助功能，用於在不進行摘要的情況下修剪工具輸出。
+[工作階段修剪 (Session pruning)](/zh-Hant/concepts/session-pruning) 是一個更輕量的輔助功能，用於在不進行摘要的情況下修剪工具輸出。
 
 ## 疑難排解
 
 **壓縮太過頻繁？** 模型的上下文視窗可能太小，或者工具輸出可能太大。請嘗試啟用
-[session pruning](/en/concepts/session-pruning)。
+[session pruning](/zh-Hant/concepts/session-pruning)。
 
 **壓縮後上下文感覺陳舊？** 使用 `/compact Focus on <topic>` 來
-指引摘要，或啟用 [memory flush](/en/concepts/memory) 以讓
+指引摘要，或啟用 [memory flush](/zh-Hant/concepts/memory) 以讓
 筆記保留。
 
 **需要從頭開始？** `/new` 啟動一個新的會話而不進行壓縮。
 
 若需進階設定（保留 token、識別符保留、自訂上下文引擎、OpenAI 伺服器端壓縮），請參閱
-[Session Management Deep Dive](/en/reference/session-management-compaction)。
+[Session Management Deep Dive](/zh-Hant/reference/session-management-compaction)。
 
 ## 相關內容
 
-- [Session](/en/concepts/session) — 會話管理與生命週期
-- [Session Pruning](/en/concepts/session-pruning) — 修剪工具結果
-- [Context](/en/concepts/context) — 如何為 agent 回合建立上下文
-- [Hooks](/en/automation/hooks) — 壓縮生命週期鉤子（before_compaction, after_compaction）
+- [Session](/zh-Hant/concepts/session) — 會話管理與生命週期
+- [Session Pruning](/zh-Hant/concepts/session-pruning) — 修剪工具結果
+- [Context](/zh-Hant/concepts/context) — 如何為 agent 回合建立上下文
+- [Hooks](/zh-Hant/automation/hooks) — 壓縮生命週期鉤子（before_compaction, after_compaction）

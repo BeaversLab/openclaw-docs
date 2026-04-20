@@ -8,7 +8,7 @@ title: "Registro de puerta de enlace"
 
 # Registro
 
-Para una descripción general orientada al usuario (CLI + Interfaz de usuario de control + configuración), consulte [/logging](/en/logging).
+Para una descripción general orientada al usuario (CLI + Interfaz de usuario de control + configuración), consulte [/logging](/es/logging).
 
 OpenClaw tiene dos "superficies" de registro:
 

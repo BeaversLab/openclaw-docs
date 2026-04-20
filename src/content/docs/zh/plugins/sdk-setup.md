@@ -13,7 +13,7 @@ read_when:
 插件打包（`package.json` 元数据）、清单
 （`openclaw.plugin.json`）、设置入口和配置架构的参考。
 
-<Tip>**寻找实战演练？** 操作指南涵盖了相关上下文中的打包内容： [渠道插件](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) 和 [提供者插件](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest)。</Tip>
+<Tip>**寻找实战演练？** 操作指南涵盖了相关上下文中的打包内容： [渠道插件](/zh/plugins/sdk-channel-plugins#step-1-package-and-manifest) 和 [提供者插件](/zh/plugins/sdk-provider-plugins#step-1-package-and-manifest)。</Tip>
 
 ## 包元数据
 
@@ -238,7 +238,7 @@ OpenClaw 使用它来验证配置，而无需执行插件代码。
 }
 ```
 
-有关完整的架构参考，请参阅 [插件清单](/en/plugins/manifest)。
+有关完整的架构参考，请参阅 [插件清单](/zh/plugins/manifest)。
 
 ## ClawHub 发布
 
@@ -466,7 +466,7 @@ const setupSurface = createOptionalChannelSetupSurface({
 
 ## 发布和安装
 
-**外部插件：** 发布到 [ClawHub](/en/tools/clawhub) 或 npm，然后安装：
+**外部插件：** 发布到 [ClawHub](/zh/tools/clawhub) 或 npm，然后安装：
 
 ```bash
 openclaw plugins install @myorg/openclaw-my-plugin
@@ -496,6 +496,6 @@ openclaw plugins install <package-name>
 
 ## 相关
 
-- [SDK 入口点](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 和 `defineChannelPluginEntry`
-- [插件清单](/en/plugins/manifest) -- 完整的清单模式参考
-- [构建插件](/en/plugins/building-plugins) -- 分步入门指南
+- [SDK 入口点](/zh/plugins/sdk-entrypoints) -- `definePluginEntry` 和 `defineChannelPluginEntry`
+- [插件清单](/zh/plugins/manifest) -- 完整的清单模式参考
+- [构建插件](/zh/plugins/building-plugins) -- 分步入门指南

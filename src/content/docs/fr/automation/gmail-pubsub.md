@@ -5,4 +5,4 @@ title: "Gmail PubSub"
 
 # Gmail PubSub
 
-Cette page a été déplacée vers [Tâches planifiées](/en/automation/cron-jobs#gmail-pubsub-integration). Consultez [Tâches planifiées](/en/automation/cron-jobs#gmail-pubsub-integration) pour la documentation de Gmail PubSub.
+Cette page a été déplacée vers [Tâches planifiées](/fr/automation/cron-jobs#gmail-pubsub-integration). Consultez [Tâches planifiées](/fr/automation/cron-jobs#gmail-pubsub-integration) pour la documentation de Gmail PubSub.

@@ -11,7 +11,7 @@ Approuver ou inspecter les demandes d'appariement DM (pour les channels qui pren
 
 Connexe :
 
-- Flux de couplage : [Couplage](/en/channels/pairing)
+- Flux de couplage : [Couplage](/fr/channels/pairing)
 
 ## Commandes
 

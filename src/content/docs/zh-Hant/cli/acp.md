@@ -15,7 +15,7 @@ title: "acp"
 `openclaw acp` 是一個由 Gateway 支援的 ACP 橋接器，而非完整的 ACP 原生編輯器執行環境。它專注於會話路由、提示傳遞和基本串流更新。
 
 如果您希望外部 MCP 用戶端直接與 OpenClaw 頻道對話交談，而不是託管 ACP harness 會話，請改用
-[`openclaw mcp serve`](/en/cli/mcp)。
+[`openclaw mcp serve`](/zh-Hant/cli/mcp)。
 
 ## 這不是什麼
 
@@ -27,12 +27,12 @@ title: "acp"
 - IDE 或 ACP 用戶端連接到 OpenClaw
 - OpenClaw 將該工作轉發到 Gateway 會話
 
-這與 [ACP Agents](/en/tools/acp-agents) 不同，後者 OpenClaw 透過 `acpx` 執行外部 harness（如 Codex 或 Claude Code）。
+這與 [ACP Agents](/zh-Hant/tools/acp-agents) 不同，後者 OpenClaw 透過 `acpx` 執行外部 harness（如 Codex 或 Claude Code）。
 
 快速規則：
 
 - 編輯器/用戶端想要以 ACP 與 OpenClaw 通訊：使用 `openclaw acp`
-- OpenClaw 應啟動 Codex/Claude/Gemini 作為 ACP harness：使用 `/acp spawn` 和 [ACP Agents](/en/tools/acp-agents)
+- OpenClaw 應啟動 Codex/Claude/Gemini 作為 ACP harness：使用 `/acp spawn` 和 [ACP Agents](/zh-Hant/tools/acp-agents)
 
 ## 相容性矩陣
 
@@ -158,7 +158,7 @@ the key or label.
 
 橋接模式下不支援每個工作階段的 `mcpServers`。如果 ACP 用戶端在 `newSession` 或 `loadSession` 期間發送這些設定，橋接器會傳回一個明確的錯誤，而不是靜靜地忽略它們。
 
-如果您希望 ACPX 支援的工作階段能看到 OpenClaw 外掛程式工具，請啟用閘道端的 ACPX 外掛程式橋接器，而不是嘗試傳遞每個工作階段的 `mcpServers`。請參閱 [ACP Agents](/en/tools/acp-agents#plugin-tools-mcp-bridge)。
+如果您希望 ACPX 支援的工作階段能看到 OpenClaw 外掛程式工具，請啟用閘道端的 ACPX 外掛程式橋接器，而不是嘗試傳遞每個工作階段的 `mcpServers`。請參閱 [ACP Agents](/zh-Hant/tools/acp-agents#plugin-tools-mcp-bridge)。
 
 ## 從 `acpx` (Codex、Claude、其他 ACP 用戶端) 使用
 
@@ -257,7 +257,7 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 }
 ```
 
-在 [/concepts/session](/en/concepts/session) 深入了解工作階段金鑰。
+在 [/concepts/session](/zh-Hant/concepts/session) 深入了解工作階段金鑰。
 
 ## 選項
 

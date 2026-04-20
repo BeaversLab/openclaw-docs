@@ -92,7 +92,7 @@ OpenClaw 附带了此捆绑的 Together 目录：
 }
 ```
 
-<Tip>请参阅[视频生成](/en/tools/video-generation)以了解共享的 工具 参数、提供商选择和故障转移行为。</Tip>
+<Tip>请参阅[视频生成](/zh/tools/video-generation)以了解共享的 工具 参数、提供商选择和故障转移行为。</Tip>
 
 <AccordionGroup>
   <Accordion title="环境说明">
@@ -117,13 +117,13 @@ OpenClaw 附带了此捆绑的 Together 目录：
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="模型提供商" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型提供商" href="/zh/concepts/model-providers" icon="layers">
     提供商规则、模型引用和故障转移行为。
   </Card>
-  <Card title="视频生成" href="/en/tools/video-generation" icon="video">
+  <Card title="视频生成" href="/zh/tools/video-generation" icon="video">
     共享的视频生成 工具 参数和提供商选择。
   </Card>
-  <Card title="配置参考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="配置参考" href="/zh/gateway/configuration-reference" icon="gear">
     包括提供商设置在内的完整配置架构。
   </Card>
   <Card title="Together AI" href="https://together.ai" icon="arrow-up-right-from-square">

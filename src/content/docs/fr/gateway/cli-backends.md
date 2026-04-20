@@ -23,7 +23,7 @@ voulez des réponses texte « fonctionne toujours » sans dépendre d'API extern
 
 Si vous souhaitez un runtime de harnais complet avec des contrôles de session ACP, des tâches d'arrière-plan,
 une liaison fil/discussion et des sessions de codage externe persistantes, utilisez
-[ACP Agents](/en/tools/acp-agents) à la place. Les backends CLI ne sont pas des ACP.
+[ACP Agents](/fr/tools/acp-agents) à la place. Les backends CLI ne sont pas des ACP.
 
 ## Démarrage rapide pour débutants
 

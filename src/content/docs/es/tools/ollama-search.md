@@ -96,5 +96,5 @@ también para las solicitudes de búsqueda web.
 
 ## Relacionado
 
-- [Resumen de búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
-- [Ollama](/en/providers/ollama) -- configuración de modelos de Ollama y modos en la nube/local
+- [Resumen de búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [Ollama](/es/providers/ollama) -- configuración de modelos de Ollama y modos en la nube/local

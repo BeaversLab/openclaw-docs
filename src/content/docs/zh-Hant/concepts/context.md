@@ -27,7 +27,7 @@ Context _並不相同_ 於“記憶”：記憶可以儲存在磁碟上並在之
 - `/usage tokens` → 將每次回覆的使用情況頁尾附加到正常回覆中。
 - `/compact` → 將較舊的歷史記錄摘要為一個精簡項目，以釋放視窗空間。
 
-另請參閱：[斜線指令](/en/tools/slash-commands)、[Token 使用與成本](/en/reference/token-use)、[壓縮](/en/concepts/compaction)。
+另請參閱：[斜線指令](/zh-Hant/tools/slash-commands)、[Token 使用與成本](/zh-Hant/reference/token-use)、[壓縮](/zh-Hant/concepts/compaction)。
 
 ## Example output
 
@@ -98,7 +98,7 @@ System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包
 - Runtime metadata（主機/作業系統/模型/思考）。
 - 在 **Project Context** 下注入的工作區引導檔案。
 
-完整說明：[系統提示詞](/en/concepts/system-prompt)。
+完整說明：[系統提示詞](/zh-Hant/concepts/system-prompt)。
 
 ## 注入的工作區檔案（專案上下文 Project Context）
 
@@ -141,7 +141,7 @@ System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包
   - 一般訊息中的內嵌指令會作為單則訊息的提示。
 - **內聯捷徑** (僅限允許清單中的傳送者)：一般訊息內的某些 `/...` token 可以立即執行 (例如：「嘿 /status」)，並且會在模型看到其餘文字之前被移除。
 
-詳細資訊：[斜線指令](/en/tools/slash-commands)。
+詳細資訊：[斜線指令](/zh-Hant/tools/slash-commands)。
 
 ## 工作階段、壓縮與修剪 (保留的內容)
 
@@ -151,7 +151,7 @@ System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包
 - **壓縮** 會將摘要保留在紀錄中，並保持最近的訊息完整不動。
 - **修剪** 會從執行作業的 _記憶體中_ 提示詞中移除舊的工具結果，但不會重寫紀錄。
 
-文件：[Session](/en/concepts/session)、[Compaction](/en/concepts/compaction)、[Session pruning](/en/concepts/session-pruning)。
+文件：[Session](/zh-Hant/concepts/session)、[Compaction](/zh-Hant/concepts/compaction)、[Session pruning](/zh-Hant/concepts/session-pruning)。
 
 預設情況下，OpenClaw 使用內建的 `legacy` 引擎進行組裝和
 壓縮。如果您安裝了提供 `kind: "context-engine"` 的外掛程式
@@ -159,7 +159,7 @@ System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包
 組裝、`/compact` 和相關的子代理程式上下文生命週期掛鉤委派給該
 引擎。`ownsCompaction: false` 不會自動回退到舊版
 引擎；使用中的引擎仍必須正確實作 `compact()`。請參閱
-[Context Engine](/en/concepts/context-engine) 以了解完整的
+[Context Engine](/zh-Hant/concepts/context-engine) 以了解完整的
 可插拔介面、生命週期掛鉤和設定。
 
 ## `/context` 實際回報的內容
@@ -173,7 +173,7 @@ System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包
 
 ## 相關
 
-- [Context Engine](/en/concepts/context-engine) — 透過外掛程式自訂上下文插入
-- [壓縮](/en/concepts/compaction) — 總結長對話
-- [系統提示詞](/en/concepts/system-prompt) — 系統提示詞是如何建構的
-- [Agent 迴圈](/en/concepts/agent-loop) — 完整的 Agent 執行週期
+- [Context Engine](/zh-Hant/concepts/context-engine) — 透過外掛程式自訂上下文插入
+- [壓縮](/zh-Hant/concepts/compaction) — 總結長對話
+- [系統提示詞](/zh-Hant/concepts/system-prompt) — 系統提示詞是如何建構的
+- [Agent 迴圈](/zh-Hant/concepts/agent-loop) — 完整的 Agent 執行週期

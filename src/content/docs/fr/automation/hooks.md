@@ -13,7 +13,7 @@ Les hooks sont de petits scripts qui s'exécutent lorsque quelque chose se produ
 Il existe deux types de hooks dans OpenClaw :
 
 - **Internal hooks** (cette page) : s'exécutent dans le Gateway lorsque des événements d'agent se déclenchent, comme `/new`, `/reset`, `/stop`, ou des événements de cycle de vie.
-- **Webhooks** : points de terminaison HTTP externes qui permettent à d'autres systèmes de déclencher des tâches dans OpenClaw. Voir [Webhooks](/en/automation/cron-jobs#webhooks).
+- **Webhooks** : points de terminaison HTTP externes qui permettent à d'autres systèmes de déclencher des tâches dans OpenClaw. Voir [Webhooks](/fr/automation/cron-jobs#webhooks).
 
 Les hooks peuvent également être regroupés dans des plugins. `openclaw hooks list` affiche à la fois les hooks autonomes et les hooks gérés par des plugins.
 
@@ -206,7 +206,7 @@ Exécute `BOOT.md` depuis l'espace de travail actif au démarrage de la passerel
 
 Les plugins peuvent enregistrer des hooks via le Plugin SDK pour une intégration plus profonde : interception des appels d'outils, modification des invites, contrôle du flux de messages, et plus encore. Le Plugin SDK expose 28 hooks couvrant la résolution de modèle, le cycle de vie de l'agent, le flux de messages, l'exécution d'outils, la coordination des sous-agents et le cycle de vie de la passerelle.
 
-Pour la référence complète des hooks de plugin incluant `before_tool_call`, `before_agent_reply`, `before_install`, et tous les autres hooks de plugin, voir [Plugin Architecture](/en/plugins/architecture#provider-runtime-hooks).
+Pour la référence complète des hooks de plugin incluant `before_tool_call`, `before_agent_reply`, `before_install`, et tous les autres hooks de plugin, voir [Plugin Architecture](/fr/plugins/architecture#provider-runtime-hooks).
 
 ## Configuration
 
@@ -310,7 +310,7 @@ Check for missing binaries (PATH), environment variables, config values, or OS c
 
 ## Related
 
-- [CLI Reference: hooks](/en/cli/hooks)
-- [Webhooks](/en/automation/cron-jobs#webhooks)
-- [Plugin Architecture](/en/plugins/architecture#provider-runtime-hooks) — full plugin hook reference
-- [Configuration](/en/gateway/configuration-reference#hooks)
+- [CLI Reference: hooks](/fr/cli/hooks)
+- [Webhooks](/fr/automation/cron-jobs#webhooks)
+- [Plugin Architecture](/fr/plugins/architecture#provider-runtime-hooks) — full plugin hook reference
+- [Configuration](/fr/gateway/configuration-reference#hooks)

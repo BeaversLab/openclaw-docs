@@ -211,14 +211,14 @@ components can talk to a remote Gateway as if it were on localhost.
   ExitOnForwardFailure + keepalive.
 - **Rapport d'IP :** le tunnel SSH utilise le bouclage, donc la passerelle verra l'IP du nœud
   comme `127.0.0.1`. Utilisez le transport **Direct (ws/wss)** si vous voulez que la véritable IP
-  du client apparaisse (voir [accès distant macOS](/en/platforms/mac/remote)).
+  du client apparaisse (voir [accès distant macOS](/fr/platforms/mac/remote)).
 
-Pour les étapes de configuration, voir [accès distant macOS](/en/platforms/mac/remote). Pour les détails du
-protocole, voir [protocole Gateway](/en/gateway/protocol).
+Pour les étapes de configuration, voir [accès distant macOS](/fr/platforms/mac/remote). Pour les détails du
+protocole, voir [protocole Gateway](/fr/gateway/protocol).
 
 ## Documentation connexe
 
-- [Manuel du Gateway](/en/gateway)
-- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
-- [Permissions macOS](/en/platforms/mac/permissions)
-- [Canvas](/en/platforms/mac/canvas)
+- [Manuel du Gateway](/fr/gateway)
+- [Gateway (macOS)](/fr/platforms/mac/bundled-gateway)
+- [Permissions macOS](/fr/platforms/mac/permissions)
+- [Canvas](/fr/platforms/mac/canvas)

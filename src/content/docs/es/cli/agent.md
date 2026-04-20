@@ -18,7 +18,7 @@ Pase al menos un selector de sesión:
 
 Relacionado:
 
-- Herramienta de envío del agente: [Agent send](/en/tools/agent-send)
+- Herramienta de envío del agente: [Agent send](/es/tools/agent-send)
 
 ## Opciones
 

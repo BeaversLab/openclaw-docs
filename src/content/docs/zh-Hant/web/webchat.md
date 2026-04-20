@@ -47,7 +47,7 @@ title: "WebChat"
 
 ## Configuration reference (WebChat)
 
-完整設定：[Configuration](/en/gateway/configuration)
+完整設定：[Configuration](/zh-Hant/gateway/configuration)
 
 WebChat 選項：
 
@@ -60,6 +60,6 @@ WebChat 選項：
   共用金鑰 WebSocket 認證。
 - `gateway.auth.allowTailscale`：啟用時，瀏覽器 Control UI 聊天分頁可以使用 Tailscale
   Serve 標頭檔。
-- `gateway.auth.mode: "trusted-proxy"`：針對位於具備身分感知能力**非本地回傳** proxy 來源後方的瀏覽器用戶端進行反向 proxy 認證（請參閱 [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)）。
+- `gateway.auth.mode: "trusted-proxy"`：針對位於具備身分感知能力**非本地回傳** proxy 來源後方的瀏覽器用戶端進行反向 proxy 認證（請參閱 [Trusted Proxy Auth](/zh-Hant/gateway/trusted-proxy-auth)）。
 - `gateway.remote.url`、`gateway.remote.token`、`gateway.remote.password`：遠端閘道目標。
 - `session.*`：會話儲存和主要金鑰預設值。

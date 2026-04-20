@@ -12,8 +12,8 @@ sidebarTitle: "Internals"
 # Plugin Internals
 
 <Info>
-  This is the **deep architecture reference**. For practical guides, see: - [Install and use plugins](/en/tools/plugin) — user guide - [Getting Started](/en/plugins/building-plugins) — first plugin tutorial - [Channel Plugins](/en/plugins/sdk-channel-plugins) — build a messaging channel - [Provider Plugins](/en/plugins/sdk-provider-plugins) — build a model provider - [SDK
-  Overview](/en/plugins/sdk-overview) — import map and registration API
+  This is the **deep architecture reference**. For practical guides, see: - [Install and use plugins](/fr/tools/plugin) — user guide - [Getting Started](/fr/plugins/building-plugins) — first plugin tutorial - [Channel Plugins](/fr/plugins/sdk-channel-plugins) — build a messaging channel - [Provider Plugins](/fr/plugins/sdk-provider-plugins) — build a model provider - [SDK
+  Overview](/fr/plugins/sdk-overview) — import map and registration API
 </Info>
 
 This page covers the internal architecture of the OpenClaw plugin system.
@@ -81,7 +81,7 @@ d'enregistrement réel (et pas seulement des métadonnées statiques) :
   capacité
 
 Utilisez `openclaw plugins inspect <id>` pour voir la forme d'un plugin et la répartition de ses
-capacités. Voir la [référence CLI](/en/cli/plugins#inspect) pour plus de détails.
+capacités. Voir la [référence CLI](/fr/cli/plugins#inspect) pour plus de détails.
 
 ### Hooks legacy
 
@@ -333,7 +333,7 @@ de capacité typé et le helper d'exécution, et les plugins de fournisseur enre
 les implémentations `api.registerVideoGenerationProvider(...)` correspondantes.
 
 Besoin d'une liste de vérification concrète pour le déploiement ? Voir
-[Capability Cookbook](/en/tools/capability-cookbook).
+[Capability Cookbook](/fr/tools/capability-cookbook).
 
 ## Contrats et application
 
@@ -1399,7 +1399,7 @@ Séquence recommandée :
    Ajoutez des tests pour que la propriété et la forme de l'enregistrement restent explicites dans le temps.
 
 C'est ainsi que OpenClaw reste opinionné sans être codé en dur selon la vision du monde d'un
-provider. Consultez le [Capability Cookbook](/en/tools/capability-cookbook)
+provider. Consultez le [Capability Cookbook](/fr/tools/capability-cookbook)
 pour une liste de fichiers concrète et un exemple travaillé.
 
 ### Liste de contrôle des capacités

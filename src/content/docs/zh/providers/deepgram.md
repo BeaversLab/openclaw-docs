@@ -110,16 +110,16 @@ Deepgram 是一个语音转文本 API。在 OpenClaw 中，它通过 `tools.medi
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Media tools" href="/en/tools/media" icon="photo-film">
+  <Card title="Media tools" href="/zh/tools/media" icon="photo-film">
     音频、图像和视频处理管道概述。
   </Card>
-  <Card title="Configuration" href="/en/configuration" icon="gear">
+  <Card title="Configuration" href="/zh/configuration" icon="gear">
     完整的配置参考，包括媒体工具设置。
   </Card>
-  <Card title="Troubleshooting" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Troubleshooting" href="/zh/help/troubleshooting" icon="wrench">
     常见问题和调试步骤。
   </Card>
-  <Card title="常见问题" href="/en/help/faq" icon="circle-question">
+  <Card title="常见问题" href="/zh/help/faq" icon="circle-question">
     关于 OpenClaw 设置的常见问题。
   </Card>
 </CardGroup>

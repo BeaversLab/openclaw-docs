@@ -11,7 +11,7 @@ Esta aplicación generalmente se construye desde [`scripts/package-mac-app.sh`](
 
 - establece un identificador de paquete de depuración estable: `ai.openclaw.mac.debug`
 - escribe el Info.plist con ese identificador de paquete (anular mediante `BUNDLE_ID=...`)
-- llama a [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) para firmar el binario principal y el paquete de la aplicación para que macOS trate cada reconstrucción como el mismo paquete firmado y mantenga los permisos TCC (notificaciones, accesibilidad, grabación de pantalla, micrófono, voz). Para permisos estables, utilice una identidad de firma real; ad-hoc es opcional y frágil (consulte [permisos de macOS](/en/platforms/mac/permissions)).
+- llama a [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) para firmar el binario principal y el paquete de la aplicación para que macOS trate cada reconstrucción como el mismo paquete firmado y mantenga los permisos TCC (notificaciones, accesibilidad, grabación de pantalla, micrófono, voz). Para permisos estables, utilice una identidad de firma real; ad-hoc es opcional y frágil (consulte [permisos de macOS](/es/platforms/mac/permissions)).
 - usa `CODESIGN_TIMESTAMP=auto` de forma predeterminada; habilita marcas de tiempo de confianza para las firmas de ID de desarrollador. Establezca `CODESIGN_TIMESTAMP=off` para omitir la marca de tiempo (compilaciones de depuración sin conexión).
 - inyecta metadatos de compilación en Info.plist: `OpenClawBuildTimestamp` (UTC) y `OpenClawGitCommit` (hash corto) para que el panel Acerca de pueda mostrar compilación, git y canal de depuración/lanzamiento.
 - **El empaquetado usa Node 24 por defecto**: el script ejecuta las compilaciones de TS y la compilación de la interfaz de usuario de Control. Node 22 LTS, actualmente `22.14+`, sigue siendo compatible para compatibilidad.
@@ -31,7 +31,7 @@ DISABLE_LIBRARY_VALIDATION=1 scripts/package-mac-app.sh   # dev-only Sparkle Tea
 
 ### Nota sobre la firma ad-hoc
 
-Al firmar con `SIGN_IDENTITY="-"` (ad-hoc), el script deshabilita automáticamente el **Hardened Runtime** (`--options runtime`). Esto es necesario para evitar bloqueos cuando la aplicación intenta cargar frameworks integrados (como Sparkle) que no comparten el mismo Team ID. Las firmas ad-hoc también rompen la persistencia de los permisos TCC; consulte [macOS permissions](/en/platforms/mac/permissions) para ver los pasos de recuperación.
+Al firmar con `SIGN_IDENTITY="-"` (ad-hoc), el script deshabilita automáticamente el **Hardened Runtime** (`--options runtime`). Esto es necesario para evitar bloqueos cuando la aplicación intenta cargar frameworks integrados (como Sparkle) que no comparten el mismo Team ID. Las firmas ad-hoc también rompen la persistencia de los permisos TCC; consulte [macOS permissions](/es/platforms/mac/permissions) para ver los pasos de recuperación.
 
 ## Metadatos de compilación para About
 

@@ -9,7 +9,7 @@ title: "Sub-Agentes"
 
 # Sub-agentes
 
-Los sub-agentes son ejecuciones de agentes en segundo plano generadas desde una ejecución de agente existente. Se ejecutan en su propia sesión (`agent:<agentId>:subagent:<uuid>`) y, cuando terminan, **anuncian** su resultado en el canal de chat solicitante. Cada ejecución de sub-agente se rastrea como una [tarea en segundo plano](/en/automation/tasks).
+Los sub-agentes son ejecuciones de agentes en segundo plano generadas desde una ejecución de agente existente. Se ejecutan en su propia sesión (`agent:<agentId>:subagent:<uuid>`) y, cuando terminan, **anuncian** su resultado en el canal de chat solicitante. Cada ejecución de sub-agente se rastrea como una [tarea en segundo plano](/es/automation/tasks).
 
 ## Comando de barra
 
@@ -62,7 +62,7 @@ la ruta de la transcripción en el disco cuando necesite la transcripción compl
 - `--model` y `--thinking` anulan los valores predeterminados para esa ejecución específica.
 - Use `info`/`log` para inspeccionar los detalles y la salida después de la finalización.
 - `/subagents spawn` es el modo de un solo disparo (`mode: "run"`). Para sesiones persistentes ligadas a hilos, use `sessions_spawn` con `thread: true` y `mode: "session"`.
-- Para sesiones de arnés ACP (Codex, Claude Code, Gemini CLI), use `sessions_spawn` con `runtime: "acp"` y consulte [ACP Agents](/en/tools/acp-agents).
+- Para sesiones de arnés ACP (Codex, Claude Code, Gemini CLI), use `sessions_spawn` con `runtime: "acp"` y consulte [ACP Agents](/es/tools/acp-agents).
 
 Objetivos principales:
 
@@ -130,7 +130,7 @@ Interruptores de configuración:
 - Valor predeterminado global: `session.threadBindings.enabled`, `session.threadBindings.idleHours`, `session.threadBindings.maxAgeHours`
 - La sobrescritura del canal y las claves de auto-vinculación al generar son específicas del adaptador. Consulte **Canales compatibles con hilos** más arriba.
 
-Consulte [Referencia de configuración](/en/gateway/configuration-reference) y [Comandos de barra](/en/tools/slash-commands) para obtener detalles actuales del adaptador.
+Consulte [Referencia de configuración](/es/gateway/configuration-reference) y [Comandos de barra](/es/tools/slash-commands) para obtener detalles actuales del adaptador.
 
 Lista de permitidos:
 

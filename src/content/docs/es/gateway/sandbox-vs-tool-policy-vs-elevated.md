@@ -39,7 +39,7 @@ El aislamiento (sandboxing) se controla mediante `agents.defaults.sandbox.mode`:
 - `"non-main"`: solo las sesiones que no son principales están aisladas (común "sorpresa" para grupos/canales).
 - `"all"`: todo está aislado.
 
-Consulte [Sandboxing](/en/gateway/sandboxing) para ver la matriz completa (alcance, montajes del espacio de trabajo, imágenes).
+Consulte [Sandboxing](/es/gateway/sandboxing) para ver la matriz completa (alcance, montajes del espacio de trabajo, imágenes).
 
 ### Montajes de enlace (verificación rápida de seguridad)
 
@@ -117,7 +117,7 @@ Puertas:
 - Habilitación: `tools.elevated.enabled` (y opcionalmente `agents.list[].tools.elevated.enabled`)
 - Listas de permitidos de remitentes: `tools.elevated.allowFrom.<provider>` (y opcionalmente `agents.list[].tools.elevated.allowFrom.<provider>`)
 
-Consulte [Modo elevado](/en/tools/elevated).
+Consulte [Modo elevado](/es/tools/elevated).
 
 ## Soluciones comunes de "sandbox jail"
 
@@ -136,6 +136,6 @@ En modo `"non-main"`, las claves de grupo/canal _no_ son principales. Utilice la
 
 ## Véase también
 
-- [Sandboxing](/en/gateway/sandboxing) -- referencia completa de sandbox (modos, ámbitos, backends, imágenes)
-- [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) -- anulaciones y precedencia por agente
-- [Elevated Mode](/en/tools/elevated)
+- [Sandboxing](/es/gateway/sandboxing) -- referencia completa de sandbox (modos, ámbitos, backends, imágenes)
+- [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) -- anulaciones y precedencia por agente
+- [Elevated Mode](/es/tools/elevated)

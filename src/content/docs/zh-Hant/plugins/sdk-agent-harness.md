@@ -24,7 +24,7 @@ read_when:
 - 必須串流原生計畫/推理/工具事件的本地 CLI 或守護程序
 - 除 OpenClaw 會話記錄外，還需要自己復原 ID 的模型運行時
 
-請**勿**僅為了新增新的 LLM API 而註冊 harness。對於正常的 HTTP 或 WebSocket 模型 API，請建構[提供者外掛程式](/en/plugins/sdk-provider-plugins)。
+請**勿**僅為了新增新的 LLM API 而註冊 harness。對於正常的 HTTP 或 WebSocket 模型 API，請建構[提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins)。
 
 ## 核心仍然擁有的部分
 
@@ -104,7 +104,7 @@ OpenClaw 在解析提供者/模型之後選擇一個 harness：
 
 Codex 外掛是附加性的。單純的 `openai/gpt-*` 參考仍是 OpenAI 提供者參考，並繼續使用一般的 OpenClaw 提供者路徑。當您想要 Codex 管理的授權、Codex 模型探索、原生執行緒和 Codex 應用伺服器執行時，請選擇 `codex/gpt-*`。`/model` 可在 Codex 應用伺服器傳回的 Codex 模型之間切換，而不需要 OpenAI 提供者憑證。
 
-關於操作員設定、模型前綴範例以及僅限 Codex 的設定，請參閱 [Codex Harness](/en/plugins/codex-harness)。
+關於操作員設定、模型前綴範例以及僅限 Codex 的設定，請參閱 [Codex Harness](/zh-Hant/plugins/codex-harness)。
 
 OpenClaw 需要 Codex 應用伺服器 `0.118.0` 或更新版本。Codex 外掛會檢查應用伺服器初始化交握，並阻擋較舊或無版本的伺服器，以便 OpenClaw 僅針對已測試的通訊協定介面執行。
 
@@ -220,8 +220,8 @@ Core 建構 OpenClaw 工具清單並將其傳入準備好的嘗試中。當 harn
 
 ## 相關
 
-- [SDK 概觀](/en/plugins/sdk-overview)
-- [執行時輔助程式](/en/plugins/sdk-runtime)
-- [提供者外掛程式](/en/plugins/sdk-provider-plugins)
-- [Codex Harness](/en/plugins/codex-harness)
-- [模型提供者](/en/concepts/model-providers)
+- [SDK 概觀](/zh-Hant/plugins/sdk-overview)
+- [執行時輔助程式](/zh-Hant/plugins/sdk-runtime)
+- [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins)
+- [Codex Harness](/zh-Hant/plugins/codex-harness)
+- [模型提供者](/zh-Hant/concepts/model-providers)

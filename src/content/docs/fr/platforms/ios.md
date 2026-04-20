@@ -179,7 +179,7 @@ L'application iOS parcourt `_openclaw-gw._tcp` sur `local.` et, si configuré, l
 
 Si mDNS est bloqué, utilisez une zone DNS-SD unicast (choisissez un domaine ; exemple :
 `openclaw.internal.`) et le DNS divisé Tailscale.
-Voir [Bonjour](/en/gateway/bonjour) pour l'exemple CoreDNS.
+Voir [Bonjour](/fr/gateway/bonjour) pour l'exemple CoreDNS.
 
 ### Hôte/port manuel
 
@@ -218,12 +218,12 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 ## Erreurs courantes
 
 - `NODE_BACKGROUND_UNAVAILABLE` : amenez l'application iOS au premier plan (les commandes de toile/caméra/écran le nécessitent).
-- `A2UI_HOST_NOT_CONFIGURED` : la Gateway n'a pas annoncé d'URL d'hôte de toile ; vérifiez `canvasHost` dans [Configuration de la Gateway](/en/gateway/configuration).
+- `A2UI_HOST_NOT_CONFIGURED` : la Gateway n'a pas annoncé d'URL d'hôte de toile ; vérifiez `canvasHost` dans [Configuration de la Gateway](/fr/gateway/configuration).
 - L'invite de jumelage n'apparaît jamais : exécutez `openclaw devices list` et approuvez manuellement.
 - La reconnexion échoue après la réinstallation : le jeton de jumelage du trousseau a été effacé ; jumelez à nouveau le nœud.
 
 ## Documentation connexe
 
-- [Jumelage](/en/channels/pairing)
-- [Discovery](/en/gateway/discovery)
-- [Bonjour](/en/gateway/bonjour)
+- [Jumelage](/fr/channels/pairing)
+- [Discovery](/fr/gateway/discovery)
+- [Bonjour](/fr/gateway/bonjour)

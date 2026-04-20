@@ -42,7 +42,7 @@ Agent -> Gateway -> Node Service (WS)
 - UI 自動化使用一個名為 `bridge.sock` 的單獨 UNIX socket 和 PeekabooBridge JSON 協定。
 - 主機偏好順序（客戶端）：Peekaboo.app → Claude.app → OpenClaw.app → 本地執行。
 - 安全性：橋接主機需要允許的 TeamID；僅限 DEBUG 的同 UID 逃生艙由 `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` 保護（Peekaboo 慣例）。
-- 參閱：[PeekabooBridge usage](/en/platforms/mac/peekaboo) 了解詳情。
+- 參閱：[PeekabooBridge usage](/zh-Hant/platforms/mac/peekaboo) 了解詳情。
 
 ## 操作流程
 

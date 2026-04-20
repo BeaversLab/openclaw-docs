@@ -12,9 +12,9 @@ title: "nodes"
 
 相關：
 
-- Nodes 概覽： [Nodes](/en/nodes)
-- Camera： [Camera nodes](/en/nodes/camera)
-- Images： [Image nodes](/en/nodes/images)
+- Nodes 概覽： [Nodes](/zh-Hant/nodes)
+- Camera： [Camera nodes](/zh-Hant/nodes/camera)
+- Images： [Image nodes](/zh-Hant/nodes/images)
 
 常用選項：
 

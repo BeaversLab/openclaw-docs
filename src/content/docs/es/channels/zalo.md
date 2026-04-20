@@ -17,7 +17,7 @@ Si está en una versión anterior o en una instalación personalizada que excluy
 
 - Instalar a través de CLI: `openclaw plugins install @openclaw/zalo`
 - O desde una verificación de código fuente: `openclaw plugins install ./path/to/local/zalo-plugin`
-- Detalles: [Complementos](/en/tools/plugin)
+- Detalles: [Complementos](/es/tools/plugin)
 
 ## Configuración rápida (principiante)
 
@@ -118,7 +118,7 @@ Soporte multicuenta: use `channels.zalo.accounts` con tokens por cuenta y `name`
 - Aprobar a través de:
   - `openclaw pairing list zalo`
   - `openclaw pairing approve zalo <CODE>`
-- El emparejamiento es el intercambio de tokens predeterminado. Detalles: [Emparejamiento](/en/channels/pairing)
+- El emparejamiento es el intercambio de tokens predeterminado. Detalles: [Emparejamiento](/es/channels/pairing)
 - `channels.zalo.allowFrom` acepta IDs de usuario numéricos (no hay búsqueda de nombre de usuario disponible).
 
 ## Control de acceso (Grupos)
@@ -209,7 +209,7 @@ Esta tabla resume el comportamiento actual del **Creador de bots de Zalo / bot d
 
 ## Referencia de configuración (Zalo)
 
-Configuración completa: [Configuration](/en/gateway/configuration)
+Configuración completa: [Configuration](/es/gateway/configuration)
 
 Las claves planas de nivel superior (`channels.zalo.botToken`, `channels.zalo.dmPolicy` y similares) son un método abreviado heredado de una sola cuenta. Se prefiere `channels.zalo.accounts.<id>.*` para las nuevas configuraciones. Ambas formas todavía están documentadas aquí porque existen en el esquema.
 
@@ -245,8 +245,8 @@ Opciones multicuenta:
 
 ## Relacionado
 
-- [Descripción general de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento de DM
-- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesión para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento
+- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — flujo de autenticación y emparejamiento de DM
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

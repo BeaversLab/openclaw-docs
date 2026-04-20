@@ -207,13 +207,13 @@ Cuando la aplicación de macOS se ejecuta en modo **Remoto**, abre un túnel SSH
 - **Puerto remoto:** el mismo puerto del Gateway en el host remoto.
 - **Comportamiento:** sin puerto local aleatorio; la aplicación reutiliza un túnel existente y saludable o lo reinicia si es necesario.
 - **Formato SSH:** `ssh -N -L <local>:127.0.0.1:<remote>` con las opciones BatchMode + ExitOnForwardFailure + keepalive.
-- **Informes de IP:** el túnel SSH utiliza loopback, por lo que el gateway verá la IP del nodo como `127.0.0.1`. Utilice el transporte **Direct (ws/wss)** si desea que aparezca la IP real del cliente (consulte [acceso remoto de macOS](/en/platforms/mac/remote)).
+- **Informes de IP:** el túnel SSH utiliza loopback, por lo que el gateway verá la IP del nodo como `127.0.0.1`. Utilice el transporte **Direct (ws/wss)** si desea que aparezca la IP real del cliente (consulte [acceso remoto de macOS](/es/platforms/mac/remote)).
 
-Para ver los pasos de configuración, consulte [acceso remoto de macOS](/en/platforms/mac/remote). Para obtener detalles sobre el protocolo, consulte [Gateway protocol](/en/gateway/protocol).
+Para ver los pasos de configuración, consulte [acceso remoto de macOS](/es/platforms/mac/remote). Para obtener detalles sobre el protocolo, consulte [Gateway protocol](/es/gateway/protocol).
 
 ## Documentos relacionados
 
-- [Gateway runbook](/en/gateway)
-- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
-- [macOS permissions](/en/platforms/mac/permissions)
-- [Canvas](/en/platforms/mac/canvas)
+- [Gateway runbook](/es/gateway)
+- [Gateway (macOS)](/es/platforms/mac/bundled-gateway)
+- [macOS permissions](/es/platforms/mac/permissions)
+- [Canvas](/es/platforms/mac/canvas)

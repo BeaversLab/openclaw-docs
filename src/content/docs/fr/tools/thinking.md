@@ -93,7 +93,7 @@ title: "Niveaux de réflexion"
 
 ## Connexes
 
-- La documentation du mode élevé se trouve dans [Mode élevé](/en/tools/elevated).
+- La documentation du mode élevé se trouve dans [Mode élevé](/fr/tools/elevated).
 
 ## Battements de cœur (Heartbeats)
 

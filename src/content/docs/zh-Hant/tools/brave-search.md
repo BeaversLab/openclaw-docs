@@ -102,6 +102,6 @@ await web_search({
 
 ## 相關
 
-- [網頁搜尋概覽](/en/tools/web) -- 所有提供者和自動偵測
-- [Perplexity 搜尋](/en/tools/perplexity-search) -- 具備網域篩選功能的結構化結果
-- [Exa 搜尋](/en/tools/exa-search) -- 具備內容擷取功能的神經搜尋
+- [網頁搜尋概覽](/zh-Hant/tools/web) -- 所有提供者和自動偵測
+- [Perplexity 搜尋](/zh-Hant/tools/perplexity-search) -- 具備網域篩選功能的結構化結果
+- [Exa 搜尋](/zh-Hant/tools/exa-search) -- 具備內容擷取功能的神經搜尋

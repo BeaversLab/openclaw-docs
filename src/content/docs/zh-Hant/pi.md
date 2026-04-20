@@ -553,4 +553,4 @@ Pi 整合涵蓋範圍包含以下套件：
 
 - `src/agents/pi-embedded-runner-extraparams.live.test.ts` (啟用 `OPENCLAW_LIVE_TEST=1`)
 
-如需目前的執行指令，請參閱 [Pi 開發工作流程](/en/pi-dev)。
+如需目前的執行指令，請參閱 [Pi 開發工作流程](/zh-Hant/pi-dev)。

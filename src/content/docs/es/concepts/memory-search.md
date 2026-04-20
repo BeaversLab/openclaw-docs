@@ -107,7 +107,7 @@ asegura que los resultados principales cubran diferentes temas en lugar de repet
 ## Memoria multimodal
 
 Con Gemini Embedding 2, puedes indexar imágenes y archivos de audio junto con
-Markdown. Las consultas de búsqueda siguen siendo texto, pero coinciden con el contenido visual y de audio. Consulta la [referencia de configuración de memoria](/en/reference/memory-config) para
+Markdown. Las consultas de búsqueda siguen siendo texto, pero coinciden con el contenido visual y de audio. Consulta la [referencia de configuración de memoria](/es/reference/memory-config) para
 la configuración.
 
 ## Búsqueda en la memoria de la sesión
@@ -115,7 +115,7 @@ la configuración.
 Opcionalmente, puedes indexar las transcripciones de las sesiones para que `memory_search` pueda recordar
 conversaciones anteriores. Esto es opcional a través de
 `memorySearch.experimental.sessionMemory`. Consulta la
-[referencia de configuración](/en/reference/memory-config) para obtener más detalles.
+[referencia de configuración](/es/reference/memory-config) para obtener más detalles.
 
 ## Solución de problemas
 
@@ -130,6 +130,6 @@ conversaciones anteriores. Esto es opcional a través de
 
 ## Lecturas adicionales
 
-- [Memoria activa](/en/concepts/active-memory) -- memoria de subagente para sesiones de chat interactivas
-- [Memoria](/en/concepts/memory) -- diseño de archivos, backends, herramientas
-- [Referencia de configuración de memoria](/en/reference/memory-config) -- todos los controles de configuración
+- [Memoria activa](/es/concepts/active-memory) -- memoria de subagente para sesiones de chat interactivas
+- [Memoria](/es/concepts/memory) -- diseño de archivos, backends, herramientas
+- [Referencia de configuración de memoria](/es/reference/memory-config) -- todos los controles de configuración

@@ -8,7 +8,7 @@ title: "社区插件"
 
 # 社区插件
 
-社区插件是第三方软件包，通过新的渠道、工具、提供商或其他功能来扩展 OpenClaw。它们由社区构建和维护，发布在 [ClawHub](/en/tools/clawhub) 或 npm 上，并可通过单条命令安装。
+社区插件是第三方软件包，通过新的渠道、工具、提供商或其他功能来扩展 OpenClaw。它们由社区构建和维护，发布在 [ClawHub](/zh/tools/clawhub) 或 npm 上，并可通过单条命令安装。
 
 ClawHub 是社区插件的官方发现平台。不要为了仅在此处添加您的插件以增加可见性而仅提交文档相关的 PR；请将其发布到 ClawHub。
 
@@ -93,8 +93,8 @@ openclaw plugins install @wecom/wecom-openclaw-plugin
 <Steps>
   <Step title="发布到 ClawHub 或 npm">
     您的插件必须可以通过 `openclaw plugins install \<package-name\>` 安装。
-    发布到 [ClawHub](/en/tools/clawhub)（首选）或 npm。
-    完整指南请参阅 [构建插件](/en/plugins/building-plugins)。
+    发布到 [ClawHub](/zh/tools/clawhub)（首选）或 npm。
+    完整指南请参阅 [构建插件](/zh/plugins/building-plugins)。
 
   </Step>
 
@@ -124,6 +124,6 @@ openclaw plugins install @wecom/wecom-openclaw-plugin
 
 ## 相关
 
-- [安装和配置插件](/en/tools/plugin) — 如何安装任何插件
-- [构建插件](/en/plugins/building-plugins) — 创建您自己的插件
-- [插件清单](/en/plugins/manifest) — 清单架构
+- [安装和配置插件](/zh/tools/plugin) — 如何安装任何插件
+- [构建插件](/zh/plugins/building-plugins) — 创建您自己的插件
+- [插件清单](/zh/plugins/manifest) — 清单架构

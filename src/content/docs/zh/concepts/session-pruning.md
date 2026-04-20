@@ -14,7 +14,7 @@ read_when:
 
 ## 为何重要
 
-长会话会累积工具输出，从而膨胀上下文窗口。这会增加成本，并可能迫使 [compaction](/en/concepts/compaction) 过早发生。
+长会话会累积工具输出，从而膨胀上下文窗口。这会增加成本，并可能迫使 [compaction](/zh/concepts/compaction) 过早发生。
 
 修剪对于 **Anthropic 提示词缓存**尤其有价值。在缓存 TTL 过期后，下一个请求会重新缓存完整的提示词。修剪减少了缓存写入的大小，从而直接降低了成本。
 
@@ -73,6 +73,6 @@ OpenClaw 会为 Anthropic 配置文件自动启用修剪：
 
 ## 延伸阅读
 
-- [Compaction](/en/concepts/compaction) —— 基于摘要的上下文缩减
-- [Gateway(网关) Configuration](/en/gateway/configuration) —— 所有修剪配置选项
+- [Compaction](/zh/concepts/compaction) —— 基于摘要的上下文缩减
+- [Gateway(网关) Configuration](/zh/gateway/configuration) —— 所有修剪配置选项
   (`contextPruning.*`)

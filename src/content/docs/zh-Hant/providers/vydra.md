@@ -68,7 +68,7 @@ Vydra 的 apex 主機 (`https://vydra.ai/api/v1`) 目前會重新導向至 `www`
     目前隨附的支援僅限文生圖。Vydra 的託管編輯路由需要遠端影像 URL，而 OpenClaw 尚未在隨附的外掛程式中新增 Vydra 專用的上傳橋接器。
 
     <Note>
-    參閱 [影像生成](/en/tools/image-generation) 以了解共享工具參數、提供者選擇和容錯移轉行為。
+    參閱 [影像生成](/zh-Hant/tools/image-generation) 以了解共享工具參數、提供者選擇和容錯移轉行為。
     </Note>
 
   </Accordion>
@@ -101,7 +101,7 @@ Vydra 的 apex 主機 (`https://vydra.ai/api/v1`) 目前會重新導向至 `www`
     - 內建的外掛保持保守態度，不會轉發未記錄的樣式控制參數，例如長寬比、解析度、浮水印或生成的音訊。
 
     <Note>
-    參閱 [視訊生成](/en/tools/video-generation) 以了解共用工具參數、提供者選擇和失效轉移行為。
+    參閱 [視訊生成](/zh-Hant/tools/video-generation) 以了解共用工具參數、提供者選擇和失效轉移行為。
     </Note>
 
   </Accordion>
@@ -160,16 +160,16 @@ Vydra 的 apex 主機 (`https://vydra.ai/api/v1`) 目前會重新導向至 `www`
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="提供者目錄" href="/en/providers/index" icon="list">
+  <Card title="提供者目錄" href="/zh-Hant/providers/index" icon="list">
     瀏覽所有可用的提供者。
   </Card>
-  <Card title="圖片生成" href="/en/tools/image-generation" icon="image">
+  <Card title="圖片生成" href="/zh-Hant/tools/image-generation" icon="image">
     共用的圖片工具參數與提供者選擇。
   </Card>
-  <Card title="影片生成" href="/en/tools/video-generation" icon="video">
+  <Card title="影片生成" href="/zh-Hant/tools/video-generation" icon="video">
     共用的影片工具參數與提供者選擇。
   </Card>
-  <Card title="設定參考" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration-reference#agent-defaults" icon="gear">
     Agent 預設值與模型設定。
   </Card>
 </CardGroup>

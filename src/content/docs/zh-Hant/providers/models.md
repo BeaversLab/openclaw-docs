@@ -24,31 +24,31 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行驗證，然後
 
 ## 支援的供應商（入門組）
 
-- [Alibaba Model Studio](/en/providers/alibaba)
-- [Anthropic (API + Claude CLI)](/en/providers/anthropic)
-- [Amazon Bedrock](/en/providers/bedrock)
-- [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
-- [Chutes](/en/providers/chutes)
-- [ComfyUI](/en/providers/comfy)
-- [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
-- [fal](/en/providers/fal)
-- [Fireworks](/en/providers/fireworks)
-- [GLM models](/en/providers/glm)
-- [MiniMax](/en/providers/minimax)
-- [Mistral](/en/providers/mistral)
-- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
-- [OpenAI (API + Codex)](/en/providers/openai)
-- [OpenCode (Zen + Go)](/en/providers/opencode)
-- [OpenRouter](/en/providers/openrouter)
-- [Qianfan](/en/providers/qianfan)
-- [Qwen](/en/providers/qwen)
-- [Runway](/en/providers/runway)
-- [StepFun](/en/providers/stepfun)
-- [Synthetic](/en/providers/synthetic)
-- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
-- [Venice (Venice AI)](/en/providers/venice)
-- [xAI](/en/providers/xai)
-- [Z.AI](/en/providers/zai)
+- [Alibaba Model Studio](/zh-Hant/providers/alibaba)
+- [Anthropic (API + Claude CLI)](/zh-Hant/providers/anthropic)
+- [Amazon Bedrock](/zh-Hant/providers/bedrock)
+- [BytePlus (International)](/zh-Hant/concepts/model-providers#byteplus-international)
+- [Chutes](/zh-Hant/providers/chutes)
+- [ComfyUI](/zh-Hant/providers/comfy)
+- [Cloudflare AI Gateway](/zh-Hant/providers/cloudflare-ai-gateway)
+- [fal](/zh-Hant/providers/fal)
+- [Fireworks](/zh-Hant/providers/fireworks)
+- [GLM models](/zh-Hant/providers/glm)
+- [MiniMax](/zh-Hant/providers/minimax)
+- [Mistral](/zh-Hant/providers/mistral)
+- [Moonshot AI (Kimi + Kimi Coding)](/zh-Hant/providers/moonshot)
+- [OpenAI (API + Codex)](/zh-Hant/providers/openai)
+- [OpenCode (Zen + Go)](/zh-Hant/providers/opencode)
+- [OpenRouter](/zh-Hant/providers/openrouter)
+- [Qianfan](/zh-Hant/providers/qianfan)
+- [Qwen](/zh-Hant/providers/qwen)
+- [Runway](/zh-Hant/providers/runway)
+- [StepFun](/zh-Hant/providers/stepfun)
+- [Synthetic](/zh-Hant/providers/synthetic)
+- [Vercel AI Gateway](/zh-Hant/providers/vercel-ai-gateway)
+- [Venice (Venice AI)](/zh-Hant/providers/venice)
+- [xAI](/zh-Hant/providers/xai)
+- [Z.AI](/zh-Hant/providers/zai)
 
 ## 其他內建提供者變體
 
@@ -56,4 +56,4 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行驗證，然後
 - `copilot-proxy` - 本機 VS Code Copilot Proxy 橋接器；使用 `openclaw onboard --auth-choice copilot-proxy`
 - `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要在本地安裝 `gemini`（`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`）；預設模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
 
-如需完整的供應商目錄（xAI、Groq、Mistral 等）及進階設定，請參閱 [Model providers](/en/concepts/model-providers)。
+如需完整的供應商目錄（xAI、Groq、Mistral 等）及進階設定，請參閱 [Model providers](/zh-Hant/concepts/model-providers)。

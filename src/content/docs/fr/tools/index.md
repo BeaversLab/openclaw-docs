@@ -33,7 +33,7 @@ OpenClaw possède trois couches qui fonctionnent ensemble :
     utiliser les outils efficacement. Les Skills résident dans votre espace de travail, dans des dossiers partagés,
     ou sont livrées dans des plugins.
 
-    [Référence des Skills](/en/tools/skills) | [Créer des Skills](/en/tools/creating-skills)
+    [Référence des Skills](/fr/tools/skills) | [Créer des Skills](/fr/tools/creating-skills)
 
   </Step>
 
@@ -44,7 +44,7 @@ OpenClaw possède trois couches qui fonctionnent ensemble :
     récupération web, recherche web, et plus encore. Certains plugins sont **core** (livrés avec
     OpenClaw), d'autres sont **externes** (publiés sur npm par la communauté).
 
-    [Installer et configurer les plugins](/en/tools/plugin) | [Créer le vôtre](/en/plugins/building-plugins)
+    [Installer et configurer les plugins](/fr/tools/plugin) | [Créer le vôtre](/fr/plugins/building-plugins)
 
   </Step>
 </Steps>
@@ -55,22 +55,22 @@ Ces outils sont livrés avec OpenClaw et sont disponibles sans installer de plug
 
 | Outil                                      | Ce qu'il fait                                                                                | Page                                                |
 | ------------------------------------------ | -------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| `exec` / `process`                         | Exécuter des commandes shell, gérer les processus en arrière-plan                            | [Exec](/en/tools/exec)                              |
-| `code_execution`                           | Exécuter une analyse Python distante sandboxed                                               | [Exécution de code](/en/tools/code-execution)       |
-| `browser`                                  | Contrôler un navigateur Chromium (navigation, clic, capture d'écran)                         | [Navigateur](/en/tools/browser)                     |
-| `web_search` / `x_search` / `web_fetch`    | Rechercher sur le web, rechercher des publications X, récupérer le contenu de la page        | [Web](/en/tools/web)                                |
+| `exec` / `process`                         | Exécuter des commandes shell, gérer les processus en arrière-plan                            | [Exec](/fr/tools/exec)                              |
+| `code_execution`                           | Exécuter une analyse Python distante sandboxed                                               | [Exécution de code](/fr/tools/code-execution)       |
+| `browser`                                  | Contrôler un navigateur Chromium (navigation, clic, capture d'écran)                         | [Navigateur](/fr/tools/browser)                     |
+| `web_search` / `x_search` / `web_fetch`    | Rechercher sur le web, rechercher des publications X, récupérer le contenu de la page        | [Web](/fr/tools/web)                                |
 | `read` / `write` / `edit`                  | Entrées/Sorties de fichiers dans l'espace de travail                                         |                                                     |
-| `apply_patch`                              | Correctifs de fichiers multi-parties                                                         | [Appliquer un patch](/en/tools/apply-patch)         |
-| `message`                                  | Envoyer des messages sur tous les canaux                                                     | [Envoi d'agent](/en/tools/agent-send)               |
+| `apply_patch`                              | Correctifs de fichiers multi-parties                                                         | [Appliquer un patch](/fr/tools/apply-patch)         |
+| `message`                                  | Envoyer des messages sur tous les canaux                                                     | [Envoi d'agent](/fr/tools/agent-send)               |
 | `canvas`                                   | Nœud de pilotage Canvas (présent, éval, instantané)                                          |                                                     |
 | `nodes`                                    | Découvrir et cibler les appareils appariés                                                   |                                                     |
 | `cron` / `gateway`                         | Gérer les tâches planifiées ; inspecter, corriger, redémarrer ou mettre à jour la passerelle |                                                     |
-| `image` / `image_generate`                 | Analyser ou générer des images                                                               | [Génération d'images](/en/tools/image-generation)   |
-| `music_generate`                           | Générer des pistes musicales                                                                 | [Génération de musique](/en/tools/music-generation) |
-| `video_generate`                           | Générer des vidéos                                                                           | [Génération de vidéo](/en/tools/video-generation)   |
-| `tts`                                      | Conversion synthèse vocale ponctuelle                                                        | [TTS](/en/tools/tts)                                |
-| `sessions_*` / `subagents` / `agents_list` | Gestion de session, statut et orchestration des sous-agents                                  | [Sous-agents](/en/tools/subagents)                  |
-| `session_status`                           | Relecture légère de style `/status` et remplacement du modèle de session                     | [Outils de session](/en/concepts/session-tool)      |
+| `image` / `image_generate`                 | Analyser ou générer des images                                                               | [Génération d'images](/fr/tools/image-generation)   |
+| `music_generate`                           | Générer des pistes musicales                                                                 | [Génération de musique](/fr/tools/music-generation) |
+| `video_generate`                           | Générer des vidéos                                                                           | [Génération de vidéo](/fr/tools/video-generation)   |
+| `tts`                                      | Conversion synthèse vocale ponctuelle                                                        | [TTS](/fr/tools/tts)                                |
+| `sessions_*` / `subagents` / `agents_list` | Gestion de session, statut et orchestration des sous-agents                                  | [Sous-agents](/fr/tools/subagents)                  |
+| `session_status`                           | Relecture légère de style `/status` et remplacement du modèle de session                     | [Outils de session](/fr/concepts/session-tool)      |
 
 Pour le travail sur les images, utilisez `image` pour l'analyse et `image_generate` pour la génération ou l'édition. Si vous ciblez `openai/*`, `google/*`, `fal/*` ou un autre fournisseur d'images non défini par défaut, configurez d'abord la clé d'authentification/API de ce fournisseur.
 
@@ -96,11 +96,11 @@ Pour les modifications partielles, préférez `config.schema.lookup` puis `confi
 
 Les plugins peuvent enregistrer des outils supplémentaires. Voici quelques exemples :
 
-- [Lobster](/en/tools/lobster) — moteur d'exécution de workflow typé avec approbations reprises
-- [Tâche LLM](/en/tools/llm-task) — étape LLM JSON uniquement pour la sortie structurée
-- [Génération de musique](/en/tools/music-generation) — outil `music_generate` partagé avec fournisseurs basés sur des workflows
-- [Diffs](/en/tools/diffs) — visualiseur et rendu de différences
-- [OpenProse](/en/prose) — orchestration de workflow markdown-first
+- [Lobster](/fr/tools/lobster) — moteur d'exécution de workflow typé avec approbations reprises
+- [Tâche LLM](/fr/tools/llm-task) — étape LLM JSON uniquement pour la sortie structurée
+- [Génération de musique](/fr/tools/music-generation) — outil `music_generate` partagé avec fournisseurs basés sur des workflows
+- [Diffs](/fr/tools/diffs) — visualiseur et rendu de différences
+- [OpenProse](/fr/prose) — orchestration de workflow markdown-first
 
 ## Configuration des outils
 

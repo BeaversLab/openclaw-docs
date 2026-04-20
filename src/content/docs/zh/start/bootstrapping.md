@@ -30,5 +30,5 @@ sidebarTitle: "Bootstrapping"
 
 ## 相关文档
 
-- macOS app 新手引导：[新手引导](/en/start/onboarding)
-- 工作区布局：[Agent 工作区](/en/concepts/agent-workspace)
+- macOS app 新手引导：[新手引导](/zh/start/onboarding)
+- 工作区布局：[Agent 工作区](/zh/concepts/agent-workspace)

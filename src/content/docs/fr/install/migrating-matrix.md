@@ -22,7 +22,7 @@ Vous n'avez pas besoin de renommer les clés de configuration ou de réinstaller
 
 ## Ce que fait automatiquement la migration
 
-Lorsque la passerelle démarre et lorsque vous exécutez [`openclaw doctor --fix`](/en/gateway/doctor), OpenClaw tente de réparer automatiquement l'ancien état Matrix.
+Lorsque la passerelle démarre et lorsque vous exécutez [`openclaw doctor --fix`](/fr/gateway/doctor), OpenClaw tente de réparer automatiquement l'ancien état Matrix.
 Avant qu'une étape de migration Matrix ne modifie l'état sur disque, OpenClaw crée ou réutilise un instantané de récupération ciblé.
 
 Lorsque vous utilisez `openclaw update`, le déclencheur exact dépend de la manière dont OpenClaw est installé :
@@ -343,7 +343,7 @@ Si l'appareil est toujours non vérifié après cela, terminez la vérification 
 
 ## Pages connexes
 
-- [Matrix](/en/channels/matrix)
-- [Doctor](/en/gateway/doctor)
-- [Migrating](/en/install/migrating)
-- [Plugins](/en/tools/plugin)
+- [Matrix](/fr/channels/matrix)
+- [Doctor](/fr/gateway/doctor)
+- [Migrating](/fr/install/migrating)
+- [Plugins](/fr/tools/plugin)

@@ -47,7 +47,7 @@ OpenRouter fournit une **API unifiée (API)** qui achemine les requêtes vers de
 ## Model references
 
 <Note>
-Les références de model suivent le modèle `openrouter/<provider>/<model>`. Pour la liste complète des providers et des models disponibles, consultez [/concepts/model-providers](/en/concepts/model-providers).
+Les références de model suivent le modèle `openrouter/<provider>/<model>`. Pour la liste complète des providers et des models disponibles, consultez [/concepts/model-providers](/fr/concepts/model-providers).
 </Note>
 
 ## Authentication and headers
@@ -86,10 +86,10 @@ Sur les vraies requêtes OpenRouter (`https://openrouter.ai/api/v1`), OpenClaw a
 ## Apparenté
 
 <CardGroup cols={2}>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/fr/concepts/model-providers" icon="layers">
     Choix des fournisseurs, des références de modèle et du comportement de basculement.
   </Card>
-  <Card title="Configuration reference" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Configuration reference" href="/fr/gateway/configuration-reference" icon="gear">
     Référence de configuration complète pour les agents, les modèles et les fournisseurs.
   </Card>
 </CardGroup>

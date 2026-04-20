@@ -15,8 +15,8 @@ title: "核准"
 
 相關：
 
-- 執行核准：[執行核准](/en/tools/exec-approvals)
-- 節點：[節點](/en/nodes)
+- 執行核准：[執行核准](/zh-Hant/tools/exec-approvals)
+- 節點：[節點](/zh-Hant/nodes)
 
 ## `openclaw exec-policy`
 

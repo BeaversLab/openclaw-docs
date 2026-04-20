@@ -114,7 +114,7 @@ Detalles del respaldo:
 }
 ```
 
-Consulte [Referencia de configuración](/en/gateway/configuration-reference) para obtener detalles completos de los campos.
+Consulte [Referencia de configuración](/es/gateway/configuration-reference) para obtener detalles completos de los campos.
 
 ## Detalles de la salida
 
@@ -172,5 +172,5 @@ Modelo de respaldo con filtro de páginas:
 
 ## Relacionado
 
-- [Resumen de herramientas](/en/tools) — todas las herramientas de agente disponibles
-- [Referencia de configuración](/en/gateway/configuration-reference#agent-defaults) — configuración pdfMaxBytesMb y pdfMaxPages
+- [Resumen de herramientas](/es/tools) — todas las herramientas de agente disponibles
+- [Referencia de configuración](/es/gateway/configuration-reference#agent-defaults) — configuración pdfMaxBytesMb y pdfMaxPages

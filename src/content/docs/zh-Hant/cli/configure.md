@@ -23,8 +23,8 @@ title: "configure"
 
 相關：
 
-- Gateway 配置參考：[Configuration](/en/gateway/configuration)
-- Config CLI：[Config](/en/cli/config)
+- Gateway 配置參考：[Configuration](/zh-Hant/gateway/configuration)
+- Config CLI：[Config](/zh-Hant/cli/config)
 
 ## 選項
 

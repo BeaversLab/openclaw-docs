@@ -118,6 +118,6 @@ Ejecute un Gateway de OpenClaw persistente en un Droplet de DigitalOcean.
 
 ## Pasos siguientes
 
-- [Canales](/en/channels) -- conecte Telegram, WhatsApp, Discord y más
-- [Configuración del Gateway](/en/gateway/configuration) -- todas las opciones de configuración
-- [Actualización](/en/install/updating) -- mantenga OpenClaw actualizado
+- [Canales](/es/channels) -- conecte Telegram, WhatsApp, Discord y más
+- [Configuración del Gateway](/es/gateway/configuration) -- todas las opciones de configuración
+- [Actualización](/es/install/updating) -- mantenga OpenClaw actualizado

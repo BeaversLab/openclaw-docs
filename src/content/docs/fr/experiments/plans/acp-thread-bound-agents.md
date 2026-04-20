@@ -14,7 +14,7 @@ Ce plan définit comment OpenClaw doit prendre en charge les agents de codage AC
 
 Document connexe :
 
-- [Plan de refactorisation du flux d'exécution unifié](/en/experiments/plans/acp-unified-streaming-refactor)
+- [Plan de refactorisation du flux d'exécution unifié](/fr/experiments/plans/acp-unified-streaming-refactor)
 
 Expérience utilisateur cible :
 

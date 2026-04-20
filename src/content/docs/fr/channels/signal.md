@@ -99,7 +99,7 @@ Exemple :
 }
 ```
 
-Prise en charge multi-compte : utilisez `channels.signal.accounts` avec une configuration par compte et `name` en option. Voir [`gateway/configuration`](/en/gateway/configuration-reference#multi-account-all-channels) pour le modèle partagé.
+Prise en charge multi-compte : utilisez `channels.signal.accounts` avec une configuration par compte et `name` en option. Voir [`gateway/configuration`](/fr/gateway/configuration-reference#multi-account-all-channels) pour le modèle partagé.
 
 ## Chemin de configuration B : enregistrer un numéro de bot dédié (SMS, Linux)
 
@@ -188,7 +188,7 @@ DMs :
 - Approuver via :
   - `openclaw pairing list signal`
   - `openclaw pairing approve signal <CODE>`
-- L'appariement est l'échange de jetons par défaut pour les DMs Signal. Détails : [Appariement](/en/channels/pairing)
+- L'appariement est l'échange de jetons par défaut pour les DMs Signal. Détails : [Appariement](/fr/channels/pairing)
 - Les expéditeurs UUID uniquement (issus de `sourceUuid`) sont stockés sous forme de `uuid:<id>` dans `channels.signal.allowFrom`.
 
 Groupes :
@@ -284,7 +284,7 @@ pgrep -af signal-cli
 grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 ```
 
-Pour le flux de triage : [/channels/troubleshooting](/en/channels/troubleshooting).
+Pour le flux de triage : [/channels/troubleshooting](/fr/channels/troubleshooting).
 
 ## Notes de sécurité
 
@@ -295,7 +295,7 @@ Pour le flux de triage : [/channels/troubleshooting](/en/channels/troubleshootin
 
 ## Référence de configuration (Signal)
 
-Configuration complète : [Configuration](/en/gateway/configuration)
+Configuration complète : [Configuration](/fr/gateway/configuration)
 
 Options du fournisseur :
 
@@ -330,8 +330,8 @@ Options globales connexes :
 
 ## Connexes
 
-- [Aperçu des canaux](/en/channels) — tous les canaux pris en charge
-- [Appairage](/en/channels/pairing) — authentification DM et flux d'appairage
-- [Groupes](/en/channels/groups) — comportement de la discussion de groupe et filtrage des mentions
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Aperçu des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appairage](/fr/channels/pairing) — authentification DM et flux d'appairage
+- [Groupes](/fr/channels/groups) — comportement de la discussion de groupe et filtrage des mentions
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

@@ -35,7 +35,7 @@ Le Gateway est accessible via :
 
 Ce guide utilise Debian sur GCP Compute Engine.
 Ubuntu fonctionne également ; adaptez les packages en conséquence.
-Pour le flux générique Docker, consultez [Docker](/en/install/docker).
+Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
 
 ---
 
@@ -286,10 +286,10 @@ Pour le flux générique Docker, consultez [Docker](/en/install/docker).
   <Step title="Étapes d'exécution partagées pour VM Docker%PH:JSX_ATTR:46:8a331fdd%%>
     Utilisez le guide d'exécution partagé pour le flux courant de l'hôte Docker :
 
-    - [Intégrer les binaires requis dans l'image](/en/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-    - [Construire et lancer](/en/install/docker-vm-runtime#build-and-launch)
-    - [Ce qui persiste et où](/en/install/docker-vm-runtime#what-persists-where)
-    - [Mises à jour](/en/install/docker-vm-runtime#updates)
+    - [Intégrer les binaires requis dans l'image](/fr/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+    - [Construire et lancer](/fr/install/docker-vm-runtime#build-and-launch)
+    - [Ce qui persiste et où](/fr/install/docker-vm-runtime#what-persists-where)
+    - [Mises à jour](/fr/install/docker-vm-runtime#updates)
 
   </Step>
 
@@ -333,7 +333,7 @@ Pour le flux générique Docker, consultez [Docker](/en/install/docker).
     ```
 
     Besoin de la référence de persistance et de mise à jour partagée à nouveau ?
-    Voir [Docker VM Runtime](/en/install/docker-vm-runtime#what-persists-where) et [Mises à jour du Docker VM Runtime](/en/install/docker-vm-runtime#updates).
+    Voir [Docker VM Runtime](/fr/install/docker-vm-runtime#what-persists-where) et [Mises à jour du Docker VM Runtime](/fr/install/docker-vm-runtime#updates).
 
   </Step>
 </Steps>
@@ -404,6 +404,6 @@ Voir [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.googl
 
 ## Étapes suivantes
 
-- Configurez les canaux de messagerie : [Canaux](/en/channels)
-- Associez les appareils locaux en tant que nœuds : [Nœuds](/en/nodes)
-- Configurez le Gateway : [Configuration du Gateway](/en/gateway/configuration)
+- Configurez les canaux de messagerie : [Canaux](/fr/channels)
+- Associez les appareils locaux en tant que nœuds : [Nœuds](/fr/nodes)
+- Configurez le Gateway : [Configuration du Gateway](/fr/gateway/configuration)

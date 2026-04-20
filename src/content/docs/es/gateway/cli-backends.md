@@ -23,7 +23,7 @@ quiera respuestas de texto que "siempre funcionen" sin depender de APIs externas
 
 Si desea un tiempo de ejecución de arnés completo con controles de sesión ACP, tareas en segundo plano,
 vinculación de subprocesos/conversaciones y sesiones de codificación externas persistentes, use
-[ACP Agents](/en/tools/acp-agents) en su lugar. Los backends de CLI no son ACP.
+[ACP Agents](/es/tools/acp-agents) en su lugar. Los backends de CLI no son ACP.
 
 ## Inicio rápido fácil para principiantes
 

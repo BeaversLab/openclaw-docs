@@ -34,5 +34,5 @@ remota.
 
 ## Documentos relacionados
 
-- Incorporación de la aplicación macOS: [Incorporación](/en/start/onboarding)
-- Diseño del espacio de trabajo: [Espacio de trabajo del agente](/en/concepts/agent-workspace)
+- Incorporación de la aplicación macOS: [Incorporación](/es/start/onboarding)
+- Diseño del espacio de trabajo: [Espacio de trabajo del agente](/es/concepts/agent-workspace)

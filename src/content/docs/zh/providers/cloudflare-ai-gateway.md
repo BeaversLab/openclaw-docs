@@ -105,10 +105,10 @@ openclaw onboard --non-interactive \
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="Troubleshooting" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Troubleshooting" href="/zh/help/troubleshooting" icon="wrench">
     通用故障排除和常见问题。
   </Card>
 </CardGroup>

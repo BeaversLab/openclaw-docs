@@ -4,7 +4,7 @@ read_when: "Connexion de l'application macOS à une passerelle distante via SSH"
 title: "Configuration de la passerelle distante"
 ---
 
-> Ce contenu a été fusionné dans [Remote Access](/en/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent). Voir cette page pour le guide actuel.
+> Ce contenu a été fusionné dans [Remote Access](/fr/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent). Voir cette page pour le guide actuel.
 
 # Exécution de OpenClaw.app avec une Gateway distante
 

@@ -44,14 +44,14 @@ openclaw onboard
 
 添加 `--install-daemon` 以在一并安装后台服务。
 
-完整参考：[新手引导 (CLI)](/en/start/wizard)
-CLI 命令文档：[`openclaw onboard`](/en/cli/onboard)
+完整参考：[新手引导 (CLI)](/zh/start/wizard)
+CLI 命令文档：[`openclaw onboard`](/zh/cli/onboard)
 
 ## macOS 应用新手引导
 
 打开 OpenClaw 应用。首次运行向导会通过可视化界面引导您完成相同的步骤。
 
-完整参考：[新手引导 (macOS 应用)](/en/start/onboarding)
+完整参考：[新手引导 (macOS 应用)](/zh/start/onboarding)
 
 ## 自定义或未列出的提供商
 

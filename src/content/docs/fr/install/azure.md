@@ -261,7 +261,7 @@ Ce guide configure un VM Azure Linux avec l'CLI Azure, applique le durcissement 
     rm -f /tmp/install.sh
     ```
 
-    Le programme d'installation installe Node LTS et les dépendances si elles ne sont pas déjà présentes, installe OpenClaw et lance l'assistant d'intégration. Voir [Install](/en/install) pour plus de détails.
+    Le programme d'installation installe Node LTS et les dépendances si elles ne sont pas déjà présentes, installe OpenClaw et lance l'assistant d'intégration. Voir [Install](/fr/install) pour plus de détails.
 
   </Step>
 
@@ -272,7 +272,7 @@ Ce guide configure un VM Azure Linux avec l'CLI Azure, applique le durcissement 
     openclaw gateway status
     ```
 
-    La plupart des équipes Azure d'entreprise possèdent déjà des licences GitHub Copilot. Si c'est votre cas, nous vous recommandons de choisir le fournisseur GitHub Copilot dans l'assistant d'onboarding OpenClaw. Voir [Fournisseur GitHub Copilot](/en/providers/github-copilot).
+    La plupart des équipes Azure d'entreprise possèdent déjà des licences GitHub Copilot. Si c'est votre cas, nous vous recommandons de choisir le fournisseur GitHub Copilot dans l'assistant d'onboarding OpenClaw. Voir [Fournisseur GitHub Copilot](/fr/providers/github-copilot).
 
   </Step>
 </Steps>
@@ -305,7 +305,7 @@ Cela supprime le groupe de ressources et tout ce qu'il contient (VM, VNet, NSG, 
 
 ## Étapes suivantes
 
-- Configurez les canaux de messagerie : [Canaux](/en/channels)
-- Associez les appareils locaux en tant que nœuds : [Nœuds](/en/nodes)
-- Configurez le Gateway : [Configuration du Gateway](/en/gateway/configuration)
+- Configurez les canaux de messagerie : [Canaux](/fr/channels)
+- Associez les appareils locaux en tant que nœuds : [Nœuds](/fr/nodes)
+- Configurez le Gateway : [Configuration du Gateway](/fr/gateway/configuration)
 - Pour plus de détails sur le déploiement Azure OpenClaw avec le fournisseur de modèle GitHub Copilot : [OpenClaw sur Azure avec GitHub Copilot](https://github.com/johnsonshi/openclaw-azure-github-copilot)

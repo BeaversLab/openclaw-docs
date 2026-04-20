@@ -124,6 +124,6 @@ export SEARXNG_BASE_URL="http://localhost:8888"
 
 ## 相關
 
-- [網頁搜尋概覽](/en/tools/web) -- 所有提供者與自動偵測
-- [DuckDuckGo 搜尋](/en/tools/duckduckgo-search) -- 另一個免金鑰的備選方案
-- [Brave 搜尋](/en/tools/brave-search) -- 具有免費層級的結構化結果
+- [網頁搜尋概覽](/zh-Hant/tools/web) -- 所有提供者與自動偵測
+- [DuckDuckGo 搜尋](/zh-Hant/tools/duckduckgo-search) -- 另一個免金鑰的備選方案
+- [Brave 搜尋](/zh-Hant/tools/brave-search) -- 具有免費層級的結構化結果

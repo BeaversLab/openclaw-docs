@@ -13,7 +13,7 @@ read_when:
 Reference for test utilities, patterns, and lint enforcement for OpenClaw
 plugins.
 
-<Tip>**Vous cherchez des exemples de tests ?** Les guides pratiques incluent des exemples de tests détaillés : [Tests de plugins de canal](/en/plugins/sdk-channel-plugins#step-6-test) et [Tests de plugins de fournisseur](/en/plugins/sdk-provider-plugins#step-6-test).</Tip>
+<Tip>**Vous cherchez des exemples de tests ?** Les guides pratiques incluent des exemples de tests détaillés : [Tests de plugins de canal](/fr/plugins/sdk-channel-plugins#step-6-test) et [Tests de plugins de fournisseur](/fr/plugins/sdk-provider-plugins#step-6-test).</Tip>
 
 ## Test utilities
 
@@ -244,7 +244,7 @@ OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test
 
 ## Connexes
 
-- [Présentation du SDK](/en/plugins/sdk-overview) -- conventions d'importation
-- [SDK Channel Plugins](/en/plugins/sdk-channel-plugins) -- interface de plugin channel
-- [SDK Provider Plugins](/en/plugins/sdk-provider-plugins) -- provider plugin hooks
-- [Création de plugins](/en/plugins/building-plugins) -- guide de démarrage
+- [Présentation du SDK](/fr/plugins/sdk-overview) -- conventions d'importation
+- [SDK Channel Plugins](/fr/plugins/sdk-channel-plugins) -- interface de plugin channel
+- [SDK Provider Plugins](/fr/plugins/sdk-provider-plugins) -- provider plugin hooks
+- [Création de plugins](/fr/plugins/building-plugins) -- guide de démarrage

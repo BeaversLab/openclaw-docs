@@ -103,7 +103,7 @@ openclaw models auth login --provider github-copilot --method device --set-defau
 ## Intégrations pour la recherche mémoire
 
 GitHub Copilot peut également servir de fournisseur d'intégrations pour
-la [recherche mémoire](/en/concepts/memory-search). Si vous avez un abonnement Copilot et
+la [recherche mémoire](/fr/concepts/memory-search). Si vous avez un abonnement Copilot et
 que vous êtes connecté, OpenClaw peut l'utiliser pour les intégrations sans clé API séparée.
 
 ### Détection automatique
@@ -142,10 +142,10 @@ La disponibilité des modèles dépend de votre plan GitHub. Si aucun modèle d'
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les fournisseurs, les références de modèle et le comportement de basculement.
   </Card>
-  <Card title="OAuth et auth" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth et auth" href="/fr/gateway/authentication" icon="key">
     Détails d'authentification et règles de réutilisation des identifiants.
   </Card>
 </CardGroup>

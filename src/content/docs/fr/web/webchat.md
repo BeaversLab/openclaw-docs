@@ -47,7 +47,7 @@ Statut : l'interface de conversation SwiftUI macOS/iOS communique directement av
 
 ## Référence de configuration (WebChat)
 
-Configuration complète : [Configuration](/en/gateway/configuration)
+Configuration complète : [Configuration](/fr/gateway/configuration)
 
 Options WebChat :
 
@@ -60,6 +60,6 @@ Options globales connexes :
   authentification WebSocket par secret partagé.
 - `gateway.auth.allowTailscale` : l'onglet de chat de l'interface de contrôle du navigateur peut utiliser les en-têtes d'identité Tailscale
   Serve lorsqu'il est activé.
-- `gateway.auth.mode: "trusted-proxy"` : authentification par proxy inverse pour les clients navigateurs situés derrière une source proxy **non bouclage** (non-loopback) consciente de l'identité (voir [Authentification de proxy de confiance](/en/gateway/trusted-proxy-auth)).
+- `gateway.auth.mode: "trusted-proxy"` : authentification par proxy inverse pour les clients navigateurs situés derrière une source proxy **non bouclage** (non-loopback) consciente de l'identité (voir [Authentification de proxy de confiance](/fr/gateway/trusted-proxy-auth)).
 - `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password` : cible de passerelle distante.
 - `session.*` : stockage de session et valeurs par défaut de la clé principale.

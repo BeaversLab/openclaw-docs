@@ -33,5 +33,5 @@ title: "Bloqueo de puerta de enlace"
 
 ## Relacionado
 
-- [Múltiples puertas de enlace](/en/gateway/multiple-gateways) — ejecución de varias instancias con puertos únicos
-- [Solución de problemas](/en/gateway/troubleshooting) — diagnóstico de `EADDRINUSE` y conflictos de puertos
+- [Múltiples puertas de enlace](/es/gateway/multiple-gateways) — ejecución de varias instancias con puertos únicos
+- [Solución de problemas](/es/gateway/troubleshooting) — diagnóstico de `EADDRINUSE` y conflictos de puertos

@@ -7,4 +7,4 @@ read_when:
 
 # Building Plugins
 
-Cette page a été déplacée vers [Building Plugins](/en/plugins/building-plugins).
+Cette page a été déplacée vers [Building Plugins](/fr/plugins/building-plugins).

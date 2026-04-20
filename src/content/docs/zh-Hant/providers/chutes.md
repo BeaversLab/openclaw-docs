@@ -109,10 +109,10 @@ OpenClaw 會為內建的 Chutes 目錄註冊三個便利別名：
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型提供者" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型提供者" href="/zh-Hant/concepts/model-providers" icon="layers">
     提供者規則、模型參考和故障轉移行為。
   </Card>
-  <Card title="設定參考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration-reference" icon="gear">
     完整的設定架構，包括提供者設定。
   </Card>
   <Card title="Chutes" href="https://chutes.ai" icon="arrow-up-right-from-square">

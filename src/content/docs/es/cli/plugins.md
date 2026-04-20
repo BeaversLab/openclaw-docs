@@ -12,10 +12,10 @@ Administra los complementos/extensions del Gateway, los paquetes de hooks y los 
 
 Relacionado:
 
-- Sistema de complementos: [Complementos](/en/tools/plugin)
-- Compatibilidad de paquetes: [Paquetes de complementos](/en/plugins/bundles)
-- Manifiesto de complemento + esquema: [Manifiesto de complemento](/en/plugins/manifest)
-- Refuerzo de seguridad: [Seguridad](/en/gateway/security)
+- Sistema de complementos: [Complementos](/es/tools/plugin)
+- Compatibilidad de paquetes: [Paquetes de complementos](/es/plugins/bundles)
+- Manifiesto de complemento + esquema: [Manifiesto de complemento](/es/plugins/manifest)
+- Refuerzo de seguridad: [Seguridad](/es/gateway/security)
 
 ## Comandos
 
@@ -246,7 +246,7 @@ Cada complemento se clasifica según lo que realmente registra en tiempo de ejec
 - **hook-only** (solo hook): solo hooks, sin capacidades ni superficies
 - **non-capability** (sin capacidad): herramientas/comandos/servicios pero sin capacidades
 
-Consulte [Plugin shapes](/en/plugins/architecture#plugin-shapes) para obtener más información sobre el modelo de capacidades.
+Consulte [Plugin shapes](/es/plugins/architecture#plugin-shapes) para obtener más información sobre el modelo de capacidades.
 
 La opción `--json` genera un informe legible por máquina, adecuado para secuencias de comandos
 y auditorías.

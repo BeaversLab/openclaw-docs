@@ -10,7 +10,7 @@ sidebarTitle: "新增功能"
 
 # 新增功能
 
-<Info>這是給 OpenClaw 核心開發者的 **貢獻者指南**。如果您正在 建構外部外掛，請改參閱 [建構外掛](/en/plugins/building-plugins)。</Info>
+<Info>這是給 OpenClaw 核心開發者的 **貢獻者指南**。如果您正在 建構外部外掛，請改參閱 [建構外掛](/zh-Hant/plugins/building-plugins)。</Info>
 
 當 OpenClaw 需要一個新的領域（例如影像生成、視訊生成或某些未來廠商支援的功能區域）時，請使用本指南。
 

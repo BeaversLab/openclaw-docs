@@ -15,7 +15,7 @@ La conexión/desconexión se realiza mediante un **único botón en la barra de 
 
 Si prefieres el flujo de conexión oficial de DevTools MCP de Chrome en lugar de la retransmisión de la extensión de OpenClaw,
 utiliza un perfil de `existing-session` navegador. Consulta
-[Browser](/en/tools/browser#chrome-existing-session-via-mcp). Para la documentación de configuración
+[Browser](/es/tools/browser#chrome-existing-session-via-mcp). Para la documentación de configuración
 propia de Chrome, consulta [Chrome for Developers: Use Chrome DevTools MCP with your
 browser session](https://developer.chrome.com/blog/chrome-devtools-mcp-debug-your-browser-session)
 y el [Chrome DevTools MCP README](https://github.com/ChromeDevTools/chrome-devtools-mcp).
@@ -198,6 +198,6 @@ Recomendaciones:
 
 Relacionado:
 
-- Resumen de la herramienta del navegador: [Browser](/en/tools/browser)
-- Auditoría de seguridad: [Security](/en/gateway/security)
-- Configuración de Tailscale: [Tailscale](/en/gateway/tailscale)
+- Resumen de la herramienta del navegador: [Browser](/es/tools/browser)
+- Auditoría de seguridad: [Security](/es/gateway/security)
+- Configuración de Tailscale: [Tailscale](/es/gateway/tailscale)

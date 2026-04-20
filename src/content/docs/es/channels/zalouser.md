@@ -21,7 +21,7 @@ instálelo manualmente:
 
 - Instalar a través de CLI: `openclaw plugins install @openclaw/zalouser`
 - O desde una fuente de descarga: `openclaw plugins install ./path/to/local/zalouser-plugin`
-- Detalles: [Complementos](/en/tools/plugin)
+- Detalles: [Complementos](/es/tools/plugin)
 
 No se requiere ningún binario externo `zca`/`openzca` de CLI.
 
@@ -167,7 +167,7 @@ Las cuentas se asignan a perfiles `zalouser` en el estado de OpenClaw. Ejemplo:
 - OpenClaw envía un evento de "escribiendo" antes de enviar una respuesta (con el mejor esfuerzo).
 - La acción de reacción al mensaje `react` es compatible con `zalouser` en las acciones del canal.
   - Usa `remove: true` para eliminar un emoji de reacción específico de un mensaje.
-  - Semántica de reacciones: [Reacciones](/en/tools/reactions)
+  - Semántica de reacciones: [Reacciones](/es/tools/reactions)
 - Para los mensajes entrantes que incluyen metadatos de eventos, OpenClaw envía confirmaciones de entregado + visto (con el mejor esfuerzo).
 
 ## Solución de problemas
@@ -188,8 +188,8 @@ Las cuentas se asignan a perfiles `zalouser` en el estado de OpenClaw. Ejemplo:
 
 ## Relacionado
 
-- [Descripción general de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento de MD
-- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y filtrado por mención
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesión para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento
+- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — flujo de autenticación y emparejamiento de MD
+- [Grupos](/es/channels/groups) — comportamiento del chat de grupo y filtrado por mención
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y fortalecimiento

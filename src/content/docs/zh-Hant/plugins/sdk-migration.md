@@ -262,9 +262,9 @@ OPENCLAW_SUPPRESS_EXTENSION_API_WARNING=1 openclaw gateway run
 
 ## 相關
 
-- [入門指南](/en/plugins/building-plugins) — 建構您的第一個外掛
-- [SDK 概覽](/en/plugins/sdk-overview) — 完整的子路徑匯入參考
-- [頻道外掛程式](/en/plugins/sdk-channel-plugins) — 建置頻道外掛程式
-- [提供者外掛程式](/en/plugins/sdk-provider-plugins) — 建置提供者外掛程式
-- [外掛程式內部機制](/en/plugins/architecture) — 架構深度解析
-- [外掛程式清單](/en/plugins/manifest) — 清單架構參考
+- [入門指南](/zh-Hant/plugins/building-plugins) — 建構您的第一個外掛
+- [SDK 概覽](/zh-Hant/plugins/sdk-overview) — 完整的子路徑匯入參考
+- [頻道外掛程式](/zh-Hant/plugins/sdk-channel-plugins) — 建置頻道外掛程式
+- [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins) — 建置提供者外掛程式
+- [外掛程式內部機制](/zh-Hant/plugins/architecture) — 架構深度解析
+- [外掛程式清單](/zh-Hant/plugins/manifest) — 清單架構參考

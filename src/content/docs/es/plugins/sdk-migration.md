@@ -296,9 +296,9 @@ Esta es una solución temporal, no una solución permanente.
 
 ## Relacionado
 
-- [Comenzando](/en/plugins/building-plugins) — construye tu primer complemento
-- [Resumen del SDK](/en/plugins/sdk-overview) — referencia completa de importación de subrutas
-- [Complementos de canal](/en/plugins/sdk-channel-plugins) — construcción de complementos de canal
-- [Complementos de proveedor](/en/plugins/sdk-provider-plugins) — construcción de complementos de proveedor
-- [Aspectos internos de los complementos](/en/plugins/architecture) — inmersión profunda en la arquitectura
-- [Manifiesto del complemento](/en/plugins/manifest) — referencia del esquema del manifiesto
+- [Comenzando](/es/plugins/building-plugins) — construye tu primer complemento
+- [Resumen del SDK](/es/plugins/sdk-overview) — referencia completa de importación de subrutas
+- [Complementos de canal](/es/plugins/sdk-channel-plugins) — construcción de complementos de canal
+- [Complementos de proveedor](/es/plugins/sdk-provider-plugins) — construcción de complementos de proveedor
+- [Aspectos internos de los complementos](/es/plugins/architecture) — inmersión profunda en la arquitectura
+- [Manifiesto del complemento](/es/plugins/manifest) — referencia del esquema del manifiesto

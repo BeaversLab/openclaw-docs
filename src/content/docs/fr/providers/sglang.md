@@ -140,10 +140,10 @@ Utilisez une configuration explicite lorsque :
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choix des fournisseurs, références de modèles et comportement de basculement.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
     Schéma de configuration complet, y compris les entrées du fournisseur.
   </Card>
 </CardGroup>

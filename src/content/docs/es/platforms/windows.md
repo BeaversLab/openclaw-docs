@@ -15,8 +15,8 @@ Las aplicaciones complementarias nativas de Windows están planificadas.
 
 ## WSL2 (recomendado)
 
-- [Introducción](/en/start/getting-started) (usar dentro de WSL)
-- [Instalación y actualizaciones](/en/install/updating)
+- [Introducción](/es/start/getting-started) (usar dentro de WSL)
+- [Instalación y actualizaciones](/es/install/updating)
 - Guía oficial de WSL2 (Microsoft): [https://learn.microsoft.com/windows/wsl/install](https://learn.microsoft.com/windows/wsl/install)
 
 ## Estado de Windows nativo
@@ -59,8 +59,8 @@ Si la creación de la Tarea Programada está bloqueada, el modo de servicio alte
 
 ## Gateway
 
-- [Manual del Gateway](/en/gateway)
-- [Configuración](/en/gateway/configuration)
+- [Manual del Gateway](/es/gateway)
+- [Configuración](/es/gateway/configuration)
 
 ## Instalación del servicio Gateway (CLI)
 
@@ -230,7 +230,7 @@ pnpm build
 openclaw onboard
 ```
 
-Guía completa: [Introducción](/en/start/getting-started)
+Guía completa: [Introducción](/es/start/getting-started)
 
 ## Aplicación complementaria de Windows
 

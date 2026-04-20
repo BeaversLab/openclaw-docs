@@ -300,7 +300,7 @@ openclaw models list
 
   <Accordion title="Intégrations pour la recherche de mémoire">
     Bedrock peut également servir de fournisseur d'intégrations pour
-    [memory search](/en/concepts/memory-search). Cela est configuré séparément du
+    [memory search](/fr/concepts/memory-search). Cela est configuré séparément du
     fournisseur d'inférence -- définissez `agents.defaults.memorySearch.provider` sur `"bedrock"` :
 
     ```json5
@@ -323,7 +323,7 @@ openclaw models list
 
     Les modèles d'intégration pris en charge incluent Amazon Titan Embed (v1, v2), Amazon Nova
     Embed, Cohere Embed (v3, v4) et TwelveLabs Marengo. Voir
-    [Référence de configuration de la mémoire -- Bedrock](/en/reference/memory-config#bedrock-embedding-config)
+    [Référence de configuration de la mémoire -- Bedrock](/fr/reference/memory-config#bedrock-embedding-config)
     pour la liste complète des modèles et des options de dimension.
 
   </Accordion>
@@ -348,16 +348,16 @@ openclaw models list
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choix des fournisseurs, références de modèle et comportement de basculement.
   </Card>
-  <Card title="Recherche de mémoire" href="/en/concepts/memory-search" icon="magnifying-glass">
+  <Card title="Recherche de mémoire" href="/fr/concepts/memory-search" icon="magnifying-glass">
     Embeddings Bedrock pour la configuration de la recherche de mémoire.
   </Card>
-  <Card title="Référence de configuration de la mémoire" href="/en/reference/memory-config#bedrock-embedding-config" icon="database">
+  <Card title="Référence de configuration de la mémoire" href="/fr/reference/memory-config#bedrock-embedding-config" icon="database">
     Liste complète des modèles d'embedding Bedrock et options de dimension.
   </Card>
-  <Card title="Dépannage" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
     Dépannage général et FAQ.
   </Card>
 </CardGroup>

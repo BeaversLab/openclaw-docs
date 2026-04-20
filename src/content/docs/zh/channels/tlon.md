@@ -29,7 +29,7 @@ openclaw plugins install @openclaw/tlon
 openclaw plugins install ./path/to/local/tlon-plugin
 ```
 
-详情：[插件](/en/tools/plugin)
+详情：[插件](/zh/tools/plugin)
 
 ## 设置
 
@@ -248,7 +248,7 @@ openclaw doctor
 
 ## 配置参考
 
-完整配置：[配置](/en/gateway/configuration)
+完整配置：[配置](/zh/gateway/configuration)
 
 提供程序选项：
 
@@ -276,8 +276,8 @@ openclaw doctor
 
 ## 相关内容
 
-- [渠道概览](/en/channels) — 所有支持的渠道
-- [配对](/en/channels/pairing) — 私信认证和配对流程
-- [群组](/en/channels/groups) — 群聊行为和提及限制
-- [渠道路由](/en/channels/channel-routing) — 消息的会话路由
-- [安全性](/en/gateway/security) — 访问模型和加固
+- [渠道概览](/zh/channels) — 所有支持的渠道
+- [配对](/zh/channels/pairing) — 私信认证和配对流程
+- [群组](/zh/channels/groups) — 群聊行为和提及限制
+- [渠道路由](/zh/channels/channel-routing) — 消息的会话路由
+- [安全性](/zh/gateway/security) — 访问模型和加固

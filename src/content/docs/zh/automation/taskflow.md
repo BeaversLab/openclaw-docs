@@ -9,11 +9,11 @@ title: "Task Flow"
 
 # Task Flow
 
-Task Flow 是位于[后台任务](/en/automation/tasks)之上的流程编排基底。它管理具有自身状态、版本跟踪和同步语义的持久化多步骤流程，而单个任务仍然是独立工作的单元。
+Task Flow 是位于[后台任务](/zh/automation/tasks)之上的流程编排基底。它管理具有自身状态、版本跟踪和同步语义的持久化多步骤流程，而单个任务仍然是独立工作的单元。
 
 ## 何时使用 Task Flow
 
-当工作跨越多个连续或分支步骤，并且您需要在网关重启后进行持久的进度跟踪时，请使用 Task Flow。对于单个后台操作，一个普通的[任务](/en/automation/tasks) 就足够了。
+当工作跨越多个连续或分支步骤，并且您需要在网关重启后进行持久的进度跟踪时，请使用 Task Flow。对于单个后台操作，一个普通的[任务](/zh/automation/tasks) 就足够了。
 
 | 场景                         | 使用                 |
 | ---------------------------- | -------------------- |
@@ -76,7 +76,7 @@ openclaw tasks flow cancel <lookup>
 
 ## 相关内容
 
-- [后台任务](/en/automation/tasks) — 流所协调的独立工作分类账
-- [CLI: tasks](/en/cli/index#tasks) — `openclaw tasks flow` 的 CLI 命令参考
-- [自动化概览](/en/automation) — 所有自动化机制概览
-- [Cron 作业](/en/automation/cron-jobs) — 可能输入到流的计划作业
+- [后台任务](/zh/automation/tasks) — 流所协调的独立工作分类账
+- [CLI: tasks](/zh/cli/index#tasks) — `openclaw tasks flow` 的 CLI 命令参考
+- [自动化概览](/zh/automation) — 所有自动化机制概览
+- [Cron 作业](/zh/automation/cron-jobs) — 可能输入到流的计划作业

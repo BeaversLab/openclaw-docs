@@ -33,7 +33,7 @@ OpenClaw tiene tres capas que trabajan juntas:
     usar las herramientas de manera efectiva. Las habilidades residen en tu espacio de trabajo, en carpetas compartidas,
     o se incluyen dentro de los complementos.
 
-    [Referencia de habilidades](/en/tools/skills) | [Crear habilidades](/en/tools/creating-skills)
+    [Referencia de habilidades](/es/tools/skills) | [Crear habilidades](/es/tools/creating-skills)
 
   </Step>
 
@@ -44,7 +44,7 @@ OpenClaw tiene tres capas que trabajan juntas:
     obtención web, búsqueda web y más. Algunos complementos son **centrales** (enviados con
     OpenClaw), otros son **externos** (publicados en npm por la comunidad).
 
-    [Instalar y configurar complementos](/en/tools/plugin) | [Construir el tuyo propio](/en/plugins/building-plugins)
+    [Instalar y configurar complementos](/es/tools/plugin) | [Construir el tuyo propio](/es/plugins/building-plugins)
 
   </Step>
 </Steps>
@@ -55,22 +55,22 @@ Estas herramientas se incluyen con OpenClaw y están disponibles sin instalar ni
 
 | Herramienta                                | Lo que hace                                                                                        | Página                                               |
 | ------------------------------------------ | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| `exec` / `process`                         | Ejecutar comandos de shell, gestionar procesos en segundo plano                                    | [Exec](/en/tools/exec)                               |
-| `code_execution`                           | Ejecutar análisis remoto de Python en sandbox                                                      | [Ejecución de código](/en/tools/code-execution)      |
-| `browser`                                  | Controlar un navegador Chromium (navegar, hacer clic, captura de pantalla)                         | [Navegador](/en/tools/browser)                       |
-| `web_search` / `x_search` / `web_fetch`    | Buscar en la web, buscar publicaciones de X, obtener contenido de la página                        | [Web](/en/tools/web)                                 |
+| `exec` / `process`                         | Ejecutar comandos de shell, gestionar procesos en segundo plano                                    | [Exec](/es/tools/exec)                               |
+| `code_execution`                           | Ejecutar análisis remoto de Python en sandbox                                                      | [Ejecución de código](/es/tools/code-execution)      |
+| `browser`                                  | Controlar un navegador Chromium (navegar, hacer clic, captura de pantalla)                         | [Navegador](/es/tools/browser)                       |
+| `web_search` / `x_search` / `web_fetch`    | Buscar en la web, buscar publicaciones de X, obtener contenido de la página                        | [Web](/es/tools/web)                                 |
 | `read` / `write` / `edit`                  | Entrada/Salida de archivos en el espacio de trabajo                                                |                                                      |
-| `apply_patch`                              | Parches de archivos de múltiples partes                                                            | [Aplicar parche](/en/tools/apply-patch)              |
-| `message`                                  | Enviar mensajes a través de todos los canales                                                      | [Envío de agente](/en/tools/agent-send)              |
+| `apply_patch`                              | Parches de archivos de múltiples partes                                                            | [Aplicar parche](/es/tools/apply-patch)              |
+| `message`                                  | Enviar mensajes a través de todos los canales                                                      | [Envío de agente](/es/tools/agent-send)              |
 | `canvas`                                   | Controlar node Canvas (presentar, evaluar, instantánea)                                            |                                                      |
 | `nodes`                                    | Descubrir y apuntar a dispositivos emparejados                                                     |                                                      |
 | `cron` / `gateway`                         | Gestionar trabajos programados; inspeccionar, parchear, reiniciar o actualizar la puerta de enlace |                                                      |
-| `image` / `image_generate`                 | Analizar o generar imágenes                                                                        | [Generación de imágenes](/en/tools/image-generation) |
-| `music_generate`                           | Generar pistas de música                                                                           | [Generación de música](/en/tools/music-generation)   |
-| `video_generate`                           | Generar videos                                                                                     | [Generación de video](/en/tools/video-generation)    |
-| `tts`                                      | Conversión de texto a voz de un solo paso                                                          | [TTS](/en/tools/tts)                                 |
-| `sessions_*` / `subagents` / `agents_list` | Gestión de sesiones, estado y orquestación de sub-agentes                                          | [Sub-agentes](/en/tools/subagents)                   |
-| `session_status`                           | Lectura de estilo `/status` ligera y anulación del modelo de sesión                                | [Herramientas de sesión](/en/concepts/session-tool)  |
+| `image` / `image_generate`                 | Analizar o generar imágenes                                                                        | [Generación de imágenes](/es/tools/image-generation) |
+| `music_generate`                           | Generar pistas de música                                                                           | [Generación de música](/es/tools/music-generation)   |
+| `video_generate`                           | Generar videos                                                                                     | [Generación de video](/es/tools/video-generation)    |
+| `tts`                                      | Conversión de texto a voz de un solo paso                                                          | [TTS](/es/tools/tts)                                 |
+| `sessions_*` / `subagents` / `agents_list` | Gestión de sesiones, estado y orquestación de sub-agentes                                          | [Sub-agentes](/es/tools/subagents)                   |
+| `session_status`                           | Lectura de estilo `/status` ligera y anulación del modelo de sesión                                | [Herramientas de sesión](/es/concepts/session-tool)  |
 
 Para trabajos de imagen, use `image` para el análisis y `image_generate` para la generación o edición. Si apunta a `openai/*`, `google/*`, `fal/*` u otro proveedor de imágenes que no sea el predeterminado, configure primero la clave de autenticación/API de ese proveedor.
 
@@ -96,11 +96,11 @@ Para cambios parciales, prefiera `config.schema.lookup` y luego `config.patch`. 
 
 Los complementos pueden registrar herramientas adicionales. Algunos ejemplos:
 
-- [Lobster](/en/tools/lobster) — tiempo de ejecución de flujos de trabajo tipados con aprobaciones reanudables
-- [LLM Task](/en/tools/llm-task) — paso de LLM solo JSON para salida estructurada
-- [Music Generation](/en/tools/music-generation) — herramienta `music_generate` compartida con proveedores respaldados por flujos de trabajo
-- [Diffs](/en/tools/diffs) — visor y renderizador de diferencias
-- [OpenProse](/en/prose) — orquestación de flujos de trabajo con prioridad en markdown
+- [Lobster](/es/tools/lobster) — tiempo de ejecución de flujos de trabajo tipados con aprobaciones reanudables
+- [LLM Task](/es/tools/llm-task) — paso de LLM solo JSON para salida estructurada
+- [Music Generation](/es/tools/music-generation) — herramienta `music_generate` compartida con proveedores respaldados por flujos de trabajo
+- [Diffs](/es/tools/diffs) — visor y renderizador de diferencias
+- [OpenProse](/es/prose) — orquestación de flujos de trabajo con prioridad en markdown
 
 ## Configuración de herramientas
 

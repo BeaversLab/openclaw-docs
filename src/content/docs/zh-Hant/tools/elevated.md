@@ -102,7 +102,7 @@ title: "Elevated 模式"
 
 ## 相關
 
-- [Exec 工具](/en/tools/exec) — shell 指令執行
-- [Exec 審核](/en/tools/exec-approvals) — 審核與允許清單系統
-- [沙盒化](/en/gateway/sandboxing) — 沙盒組態
-- [沙盒 vs 工具政策 vs 提升模式](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- [Exec 工具](/zh-Hant/tools/exec) — shell 指令執行
+- [Exec 審核](/zh-Hant/tools/exec-approvals) — 審核與允許清單系統
+- [沙盒化](/zh-Hant/gateway/sandboxing) — 沙盒組態
+- [沙盒 vs 工具政策 vs 提升模式](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated)

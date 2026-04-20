@@ -86,5 +86,5 @@ title: "Hostinger"
 
 ## 后续步骤
 
-- [渠道](/en/channels) -- 连接 Telegram、WhatsApp、Discord 等
-- [Gateway(网关) 配置](/en/gateway/configuration) -- 所有配置选项
+- [渠道](/zh/channels) -- 连接 Telegram、WhatsApp、Discord 等
+- [Gateway(网关) 配置](/zh/gateway/configuration) -- 所有配置选项

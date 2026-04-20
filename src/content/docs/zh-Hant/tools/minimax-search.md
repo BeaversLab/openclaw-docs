@@ -90,5 +90,5 @@ MiniMax 搜尋支援：
 
 ## 相關
 
-- [網路搜尋概覽](/en/tools/web) -- 所有供應商與自動偵測
-- [MiniMax](/en/providers/minimax) -- 模型、圖片、語音與認證設定
+- [網路搜尋概覽](/zh-Hant/tools/web) -- 所有供應商與自動偵測
+- [MiniMax](/zh-Hant/providers/minimax) -- 模型、圖片、語音與認證設定

@@ -345,7 +345,7 @@ OPENCLAW_LIVE_CLI_BACKEND=1 \
 - 透過真實 gateway + agent 迴圈進行模擬工具呼叫（`src/gateway/gateway.tool-calling.mock-openai.test.ts`）。
 - 驗證連線接線與配置效果的端對端精靈流程（`src/gateway/gateway.wizard.e2e.test.ts`）。
 
-技能方面仍缺少的內容（請參閱 [技能](/en/tools/skills)）：
+技能方面仍缺少的內容（請參閱 [技能](/zh-Hant/tools/skills)）：
 
 - **決策：** 當提示中列出技能時，agent 是否會選擇正確的技能（或避免不相關的技能）？
 - **合規性：** agent 是否在使用前讀取 `SKILL.md` 並遵循必要的步驟/參數？

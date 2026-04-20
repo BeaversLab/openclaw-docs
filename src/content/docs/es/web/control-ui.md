@@ -60,7 +60,7 @@ Vuelva a ejecutar `openclaw devices list` antes de la aprobación.
 
 Una vez aprobado, el dispositivo se recuerda y no requerirá reaprobación a menos que
 lo revoque con `openclaw devices revoke --device <id> --role <role>`. Consulte
-[Devices CLI](/en/cli/devices) para la rotación y revocación de tokens.
+[Devices CLI](/es/cli/devices) para la rotación y revocación de tokens.
 
 **Notas:**
 
@@ -249,9 +249,9 @@ Nota de proxy confiable:
   identidad del dispositivo
 - esto **no** se extiende a las sesiones de la interfaz de control con rol de nodo
 - los proxies inversos de bucle invertido del mismo host aún no satisfacen la autenticación de proxy confiable; consulte
-  [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)
+  [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth)
 
-Consulte [Tailscale](/en/gateway/tailscale) para obtener orientación sobre la configuración de HTTPS.
+Consulte [Tailscale](/es/gateway/tailscale) para obtener orientación sobre la configuración de HTTPS.
 
 ## Construcción de la interfaz
 
@@ -323,11 +323,11 @@ Ejemplo:
 }
 ```
 
-Detalles de configuración de acceso remoto: [Acceso remoto](/en/gateway/remote).
+Detalles de configuración de acceso remoto: [Acceso remoto](/es/gateway/remote).
 
 ## Relacionado
 
-- [Panel de control](/en/web/dashboard) — panel de control del gateway
-- [WebChat](/en/web/webchat) — interfaz de chat basada en navegador
-- [TUI](/en/web/tui) — interfaz de usuario de terminal
-- [Verificaciones de estado](/en/gateway/health) — monitoreo de estado del gateway
+- [Panel de control](/es/web/dashboard) — panel de control del gateway
+- [WebChat](/es/web/webchat) — interfaz de chat basada en navegador
+- [TUI](/es/web/tui) — interfaz de usuario de terminal
+- [Verificaciones de estado](/es/gateway/health) — monitoreo de estado del gateway

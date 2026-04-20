@@ -81,10 +81,10 @@ read_when:
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection de model" href="/en/concepts/model-providers" icon="couches">
+  <Card title="Sélection de model" href="/fr/concepts/model-providers" icon="couches">
     Choix des fournisseurs, des références de models et du comportement de basculement.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
     Référence de configuration complète pour les agents, les modèles et les fournisseurs.
   </Card>
 </CardGroup>

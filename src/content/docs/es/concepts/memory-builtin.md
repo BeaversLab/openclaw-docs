@@ -65,7 +65,7 @@ solapamiento de 80 tokens) y los almacena en una base de datos SQLite por agente
   se reconstruye automáticamente todo el índice.
 - **Reindexar bajo demanda:** `openclaw memory index --force`
 
-<Info>También puedes indexar archivos Markdown fuera del espacio de trabajo con `memorySearch.extraPaths`. Consulta la [referencia de configuración](/en/reference/memory-config#additional-memory-paths).</Info>
+<Info>También puedes indexar archivos Markdown fuera del espacio de trabajo con `memorySearch.extraPaths`. Consulta la [referencia de configuración](/es/reference/memory-config#additional-memory-paths).</Info>
 
 ## Cuándo usar
 
@@ -76,9 +76,9 @@ El motor integrado es la elección correcta para la mayoría de los usuarios:
 - Admite a todos los proveedores de incrustaciones (embeddings).
 - La búsqueda híbrida combina lo mejor de ambos enfoques de recuperación.
 
-Considere cambiar a [QMD](/en/concepts/memory-qmd) si necesita reranking, expansión de consultas o desea indexar directorios fuera del espacio de trabajo.
+Considere cambiar a [QMD](/es/concepts/memory-qmd) si necesita reranking, expansión de consultas o desea indexar directorios fuera del espacio de trabajo.
 
-Considere [Honcho](/en/concepts/memory-honcho) si desea memoria entre sesiones con
+Considere [Honcho](/es/concepts/memory-honcho) si desea memoria entre sesiones con
 modelado de usuario automático.
 
 ## Solución de problemas
@@ -95,4 +95,4 @@ puede perder cambios en casos excepcionales.
 Para la configuración del proveedor de incrustaciones, la ajuste de la búsqueda híbrida (ponderaciones, MMR, decaimiento
 temporal), indexación por lotes, memoria multimodal, sqlite-vec, rutas adicionales y todos
 los demás ajustes de configuración, consulte la
-[referencia de configuración de memoria](/en/reference/memory-config).
+[referencia de configuración de memoria](/es/reference/memory-config).

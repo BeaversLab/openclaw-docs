@@ -432,6 +432,6 @@ interface OpenClawConfig {
 
 ## 參見
 
-- [多代理程式設定](/en/tools/multi-agent-sandbox-tools)
-- [路由設定](/en/channels/channel-routing)
-- [會話管理](/en/concepts/session)
+- [多代理程式設定](/zh-Hant/tools/multi-agent-sandbox-tools)
+- [路由設定](/zh-Hant/channels/channel-routing)
+- [會話管理](/zh-Hant/concepts/session)

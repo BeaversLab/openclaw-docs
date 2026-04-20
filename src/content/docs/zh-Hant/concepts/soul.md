@@ -102,6 +102,6 @@ Save the new `SOUL.md`. Welcome to having a personality.
 
 ## 相關文件
 
-- [代理工作區](/en/concepts/agent-workspace)
-- [系統提示](/en/concepts/system-prompt)
-- [SOUL.md 模板](/en/reference/templates/SOUL)
+- [代理工作區](/zh-Hant/concepts/agent-workspace)
+- [系統提示](/zh-Hant/concepts/system-prompt)
+- [SOUL.md 模板](/zh-Hant/reference/templates/SOUL)

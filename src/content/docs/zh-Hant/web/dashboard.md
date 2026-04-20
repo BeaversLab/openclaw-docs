@@ -16,9 +16,9 @@ Gateway 儀表板是預設在 `/` 提供的瀏覽器控制 UI
 
 主要參考：
 
-- [Control UI](/en/web/control-ui) 以了解用法和 UI 功能。
-- [Tailscale](/en/gateway/tailscale) 用於 Serve/Funnel 自動化。
-- [Web surfaces](/en/web) 用於綁定模式和安全說明。
+- [Control UI](/zh-Hant/web/control-ui) 以了解用法和 UI 功能。
+- [Tailscale](/zh-Hant/gateway/tailscale) 用於 Serve/Funnel 自動化。
+- [Web surfaces](/zh-Hant/web) 用於綁定模式和安全說明。
 
 驗證會透過設定的 gateway auth path 在 WebSocket 握手時強制執行：
 
@@ -27,7 +27,7 @@ Gateway 儀表板是預設在 `/` 提供的瀏覽器控制 UI
 - 當 `gateway.auth.allowTailscale: true` 時的 Tailscale Serve 身份標頭
 - 當 `gateway.auth.mode: "trusted-proxy"` 時的 trusted-proxy 身份標頭
 
-請參閱 [Gateway configuration](/en/gateway/configuration) 中的 `gateway.auth`。
+請參閱 [Gateway configuration](/zh-Hant/gateway/configuration) 中的 `gateway.auth`。
 
 安全提示：Control UI 是一個 **admin surface**（聊天、配置、執行核准）。請勿公開對外。UI 將儀表板 URL token 保留在目前瀏覽器分頁階段和選定的 gateway URL 的 sessionStorage 中，並在載入後將其從 URL 中移除。建議優先使用 localhost、Tailscale Serve 或 SSH tunnel。
 
@@ -55,7 +55,7 @@ Gateway 儀表板是預設在 `/` 提供的瀏覽器控制 UI
   或 SSH 隧道。除非您刻意執行私人入口
   `gateway.auth.mode: "none"` 或受信任代理 HTTP 驗證，否則 HTTP API 仍會使用
   共享密碼驗證。請參閱
-  [Web 介面](/en/web)。
+  [Web 介面](/zh-Hant/web)。
 
 <a id="if-you-see-unauthorized-1008"></a>
 
@@ -67,7 +67,7 @@ Gateway 儀表板是預設在 `/` 提供的瀏覽器控制 UI
 - 在非同步 Tailscale Serve 控制 UI 路徑上，對於相同
   `{scope, ip}` 的失敗嘗試會在失敗驗證限制器記錄它們之前序列化，因此
   第二個並發的不良重試可能已經顯示 `retry later`。
-- 有關權杖漂移修復步驟，請遵循[權杖漂移恢復檢查清單](/en/cli/devices#token-drift-recovery-checklist)。
+- 有關權杖漂移修復步驟，請遵循[權杖漂移恢復檢查清單](/zh-Hant/cli/devices#token-drift-recovery-checklist)。
 - 從閘道主機擷取或提供共享密碼：
   - 權杖：`openclaw config get gateway.auth.token`
   - 密碼：解析已設定的 `gateway.auth.password` 或

@@ -10,7 +10,7 @@ read_when:
 
 Perplexity 插件通过 Perplexity Search API 或经由 OpenRouter 的 Perplexity Sonar 提供网络搜索功能。
 
-<Note>本页面介绍 Perplexity **提供商** 的配置。关于 Perplexity **工具**（智能体如何使用它），请参阅 [Perplexity 工具](/en/tools/perplexity-search)。</Note>
+<Note>本页面介绍 Perplexity **提供商** 的配置。关于 Perplexity **工具**（智能体如何使用它），请参阅 [Perplexity 工具](/zh/tools/perplexity-search)。</Note>
 
 | 属性     | 值                                                                     |
 | -------- | ---------------------------------------------------------------------- |
@@ -100,10 +100,10 @@ Perplexity 插件通过 Perplexity Search API 或经由 OpenRouter 的 Perplexit
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Perplexity 搜索工具" href="/en/tools/perplexity-search" icon="magnifying-glass">
+  <Card title="Perplexity 搜索工具" href="/zh/tools/perplexity-search" icon="magnifying-glass">
     代理如何调用 Perplexity 搜索并解释结果。
   </Card>
-  <Card title="配置参考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="配置参考" href="/zh/gateway/configuration-reference" icon="gear">
     完整的配置参考，包括插件条目。
   </Card>
 </CardGroup>

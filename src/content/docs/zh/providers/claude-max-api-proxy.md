@@ -162,21 +162,21 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
 - 代理在本地运行，不会将数据发送到任何第三方服务器
 - 完全支持流式响应
 
-<Note>如需使用 Claude Anthropic 或 CLI 密钥进行原生 API 集成，请参阅 [Anthropic 提供商](/en/providers/anthropic)。对于 OpenAI/Codex 订阅，请参阅 [OpenAI 提供商](/en/providers/openai)。</Note>
+<Note>如需使用 Claude Anthropic 或 CLI 密钥进行原生 API 集成，请参阅 [Anthropic 提供商](/zh/providers/anthropic)。对于 OpenAI/Codex 订阅，请参阅 [OpenAI 提供商](/zh/providers/openai)。</Note>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Anthropic 提供商" href="/en/providers/anthropic" icon="bolt">
+  <Card title="Anthropic 提供商" href="/zh/providers/anthropic" icon="bolt">
     使用 Claude OpenClaw 或 CLI 密钥进行原生 API 集成。
   </Card>
-  <Card title="OpenAI 提供商" href="/en/providers/openai" icon="robot">
+  <Card title="OpenAI 提供商" href="/zh/providers/openai" icon="robot">
     用于 OpenAI/Codex 订阅。
   </Card>
-  <Card title="Model providers" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model providers" href="/zh/concepts/model-providers" icon="layers">
     所有提供商、模型引用和故障转移行为概述。
   </Card>
-  <Card title="Configuration" href="/en/gateway/configuration" icon="gear">
+  <Card title="Configuration" href="/zh/gateway/configuration" icon="gear">
     完整配置参考。
   </Card>
 </CardGroup>

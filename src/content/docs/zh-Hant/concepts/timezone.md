@@ -87,10 +87,10 @@ OpenClaw 標準化時間戳，讓模型看到的是**單一參考時間**。
 
 您可以使用 `agents.defaults.timeFormat`（`auto` | `12` | `24`）來控制提示格式。
 
-請參閱 [日期與時間](/en/date-time) 以了解完整行為和範例。
+請參閱 [日期與時間](/zh-Hant/date-time) 以了解完整行為和範例。
 
 ## 相關
 
-- [Heartbeat](/en/gateway/heartbeat) — 活躍時間使用時區進行排程
-- [Cron Jobs](/en/automation/cron-jobs) — cron 表示式使用時區進行排程
-- [Date & Time](/en/date-time) — 完整的日期/時間行為與範例
+- [Heartbeat](/zh-Hant/gateway/heartbeat) — 活躍時間使用時區進行排程
+- [Cron Jobs](/zh-Hant/automation/cron-jobs) — cron 表示式使用時區進行排程
+- [Date & Time](/zh-Hant/date-time) — 完整的日期/時間行為與範例

@@ -29,7 +29,7 @@ Copia local (cuando se ejecuta desde un repositorio git):
 openclaw plugins install ./path/to/local/msteams-plugin
 ```
 
-Detalles: [Plugins](/en/tools/plugin)
+Detalles: [Plugins](/es/tools/plugin)
 
 ## Configuración rápida (principiante)
 
@@ -648,7 +648,7 @@ Configuraciones clave (ver `/gateway/configuration` para patrones de canales com
 
 ## Enrutamiento y Sesiones
 
-- Las claves de sesión siguen el formato estándar de agente (consulte [/concepts/session](/en/concepts/session)):
+- Las claves de sesión siguen el formato estándar de agente (consulte [/concepts/session](/es/concepts/session)):
   - Los mensajes directos comparten la sesión principal (`agent:<agentId>:<mainKey>`).
   - Los mensajes de canal/grupo usan el ID de conversación:
     - `agent:<agentId>:msteams:channel:<conversationId>`
@@ -950,8 +950,8 @@ Los bots tienen compatibilidad limitada en canales privados:
 
 ## Relacionado
 
-- [Channels Overview](/en/channels) — todos los canales compatibles
-- [Pairing](/en/channels/pairing) — autenticación de MD y flujo de emparejamiento
-- [Groups](/en/channels/groups) — comportamiento del chat de grupo y limitación de menciones
-- [Channel Routing](/en/channels/channel-routing) — enrutamiento de sesión para mensajes
-- [Security](/en/gateway/security) — modelo de acceso y fortalecimiento
+- [Channels Overview](/es/channels) — todos los canales compatibles
+- [Pairing](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Groups](/es/channels/groups) — comportamiento del chat de grupo y limitación de menciones
+- [Channel Routing](/es/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Security](/es/gateway/security) — modelo de acceso y fortalecimiento

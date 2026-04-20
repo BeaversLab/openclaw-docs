@@ -89,6 +89,6 @@ Grok 搜尋支援 `query`。
 
 ## 相關
 
-- [網路搜尋總覽](/en/tools/web) -- 所有供應商和自動偵測
-- [網路搜尋中的 x_search](/en/tools/web#x_search) -- 透過 xAI 進行一流的 X 搜尋
-- [Gemini 搜尋](/en/tools/gemini-search) -- 透過 Google grounding 產生的 AI 綜合答案
+- [網路搜尋總覽](/zh-Hant/tools/web) -- 所有供應商和自動偵測
+- [網路搜尋中的 x_search](/zh-Hant/tools/web#x_search) -- 透過 xAI 進行一流的 X 搜尋
+- [Gemini 搜尋](/zh-Hant/tools/gemini-search) -- 透過 Google grounding 產生的 AI 綜合答案

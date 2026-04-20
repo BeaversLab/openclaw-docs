@@ -170,18 +170,18 @@ Cet exemple utilise Gemma 4 sur un serveur `inferrs` local.
   </Accordion>
 </AccordionGroup>
 
-<Tip>Pour une aide générale, consultez la section [Troubleshooting](/en/help/troubleshooting) et la [FAQ](/en/help/faq).</Tip>
+<Tip>Pour une aide générale, consultez la section [Troubleshooting](/fr/help/troubleshooting) et la [FAQ](/fr/help/faq).</Tip>
 
 ## Voir aussi
 
 <CardGroup cols={2}>
-  <Card title="Modèles locaux" href="/en/gateway/local-models" icon="server">
+  <Card title="Modèles locaux" href="/fr/gateway/local-models" icon="server">
     Exécution d'OpenClaw sur des serveurs de modèles locaux.
   </Card>
-  <Card title="Dépannage Gateway" href="/en/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail" icon="wrench">
+  <Card title="Dépannage Gateway" href="/fr/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail" icon="wrench">
     Débogage de backends locaux compatibles avec OpenAI qui passent les sondes mais échouent lors des exécutions d'agent.
   </Card>
-  <Card title="Fournisseurs de modèles" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Fournisseurs de modèles" href="/fr/concepts/model-providers" icon="layers">
     Vue d'ensemble de tous les fournisseurs, des références de modèles et du comportement de basculement.
   </Card>
 </CardGroup>

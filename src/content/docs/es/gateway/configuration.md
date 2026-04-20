@@ -17,9 +17,9 @@ Si falta el archivo, OpenClaw utiliza valores predeterminados seguros. Razones c
 - Establecer modelos, herramientas, sandboxing o automatización (cron, hooks)
 - Ajustar sesiones, medios, redes o interfaz de usuario
 
-Consulte la [referencia completa](/en/gateway/configuration-reference) para todos los campos disponibles.
+Consulte la [referencia completa](/es/gateway/configuration-reference) para todos los campos disponibles.
 
-<Tip>**¿Nuevo en la configuración?** Comience con `openclaw onboard` para una configuración interactiva, o consulte la guía de [Ejemplos de configuración](/en/gateway/configuration-examples) para configuraciones completas para copiar y pegar.</Tip>
+<Tip>**¿Nuevo en la configuración?** Comience con `openclaw onboard` para una configuración interactiva, o consulte la guía de [Ejemplos de configuración](/es/gateway/configuration-examples) para configuraciones completas para copiar y pegar.</Tip>
 
 ## Configuración mínima
 
@@ -79,16 +79,16 @@ Cuando la validación falla:
   <Accordion title="Configurar un canal (WhatsApp, Telegram, Discord, etc.)">
     Cada canal tiene su propia sección de configuración bajo `channels.<provider>`. Consulte la página dedicada del canal para ver los pasos de configuración:
 
-    - [WhatsApp](/en/channels/whatsapp) — `channels.whatsapp`
-    - [Telegram](/en/channels/telegram) — `channels.telegram`
-    - [Discord](/en/channels/discord) — `channels.discord`
-    - [Feishu](/en/channels/feishu) — `channels.feishu`
-    - [Google Chat](/en/channels/googlechat) — `channels.googlechat`
-    - [Microsoft Teams](/en/channels/msteams) — `channels.msteams`
-    - [Slack](/en/channels/slack) — `channels.slack`
-    - [Signal](/en/channels/signal) — `channels.signal`
-    - [iMessage](/en/channels/imessage) — `channels.imessage`
-    - [Mattermost](/en/channels/mattermost) — `channels.mattermost`
+    - [WhatsApp](/es/channels/whatsapp) — `channels.whatsapp`
+    - [Telegram](/es/channels/telegram) — `channels.telegram`
+    - [Discord](/es/channels/discord) — `channels.discord`
+    - [Feishu](/es/channels/feishu) — `channels.feishu`
+    - [Google Chat](/es/channels/googlechat) — `channels.googlechat`
+    - [Microsoft Teams](/es/channels/msteams) — `channels.msteams`
+    - [Slack](/es/channels/slack) — `channels.slack`
+    - [Signal](/es/channels/signal) — `channels.signal`
+    - [iMessage](/es/channels/imessage) — `channels.imessage`
+    - [Mattermost](/es/channels/mattermost) — `channels.mattermost`
 
     Todos los canales comparten el mismo patrón de política de MD:
 
@@ -130,8 +130,8 @@ Cuando la validación falla:
     - `agents.defaults.models` define el catálogo de modelos y actúa como la lista de permitidos para `/model`.
     - Las referencias de modelos utilizan el formato `provider/model` (ej. `anthropic/claude-opus-4-6`).
     - `agents.defaults.imageMaxDimensionPx` controla la reducción de escala de imágenes de transcripciones/herramientas (por defecto `1200`); los valores más bajos generalmente reducen el uso de tokens de visión en ejecuciones con muchas capturas de pantalla.
-    - Consulte [CLI de Modelos](/en/concepts/models) para cambiar modelos en el chat y [Conmutación por error de modelos](/en/concepts/model-failover) para la rotación de autenticación y el comportamiento de reserva.
-    - Para proveedores personalizados/autoalojados, consulte [Proveedores personalizados](/en/gateway/configuration-reference#custom-providers-and-base-urls) en la referencia.
+    - Consulte [CLI de Modelos](/es/concepts/models) para cambiar modelos en el chat y [Conmutación por error de modelos](/es/concepts/model-failover) para la rotación de autenticación y el comportamiento de reserva.
+    - Para proveedores personalizados/autoalojados, consulte [Proveedores personalizados](/es/gateway/configuration-reference#custom-providers-and-base-urls) en la referencia.
 
   </Accordion>
 
@@ -145,7 +145,7 @@ Cuando la validación falla:
 
     Para grupos, use `groupPolicy` + `groupAllowFrom` o listas de permitidas específicas del canal.
 
-    Consulte la [referencia completa](/en/gateway/configuration-reference#dm-and-group-access) para detalles por canal.
+    Consulte la [referencia completa](/es/gateway/configuration-reference#dm-and-group-access) para detalles por canal.
 
   </Accordion>
 
@@ -174,7 +174,7 @@ Cuando la validación falla:
 
     - **Menciones de metadatos**: menciones @ nativas (menciones al tocar en WhatsApp, @bot en Telegram, etc.)
     - **Patrones de texto**: patrones de regex seguros en `mentionPatterns`
-    - Consulte [referencia completa](/en/gateway/configuration-reference#group-chat-mention-gating) para anulaciones por canal y modo de chat propio.
+    - Consulte [referencia completa](/es/gateway/configuration-reference#group-chat-mention-gating) para anulaciones por canal y modo de chat propio.
 
   </Accordion>
 
@@ -200,8 +200,8 @@ Cuando la validación falla:
     - Omita `agents.defaults.skills` para habilidades sin restricciones de forma predeterminada.
     - Omita `agents.list[].skills` para heredar los valores predeterminados.
     - Establezca `agents.list[].skills: []` para no tener habilidades.
-    - Consulte [Skills](/en/tools/skills), [Skills config](/en/tools/skills-config) y
-      la [Configuration Reference](/en/gateway/configuration-reference#agents-defaults-skills).
+    - Consulte [Skills](/es/tools/skills), [Skills config](/es/tools/skills-config) y
+      la [Configuration Reference](/es/gateway/configuration-reference#agents-defaults-skills).
 
   </Accordion>
 
@@ -231,7 +231,7 @@ Cuando la validación falla:
     - Establezca `gateway.channelHealthCheckMinutes: 0` para desactivar globalmente los reinicios del monitor de salud.
     - `channelStaleEventThresholdMinutes` debe ser mayor o igual al intervalo de verificación.
     - Use `channels.<provider>.healthMonitor.enabled` o `channels.<provider>.accounts.<id>.healthMonitor.enabled` para desactivar los reinicios automáticos de un canal o cuenta sin desactivar el monitor global.
-    - Consulte [Verificaciones de salud](/en/gateway/health) para la depuración operativa y la [referencia completa](/en/gateway/configuration-reference#gateway) para todos los campos.
+    - Consulte [Verificaciones de salud](/es/gateway/health) para la depuración operativa y la [referencia completa](/es/gateway/configuration-reference#gateway) para todos los campos.
 
   </Accordion>
 
@@ -258,8 +258,8 @@ Cuando la validación falla:
 
     - `dmScope`: `main` (compartida) | `per-peer` | `per-channel-peer` | `per-account-channel-peer`
     - `threadBindings`: valores predeterminados globales para el enrutamiento de sesiones vinculado a hilos (Discord admite `/focus`, `/unfocus`, `/agents`, `/session idle` y `/session max-age`).
-    - Consulte [Gestión de sesiones](/en/concepts/session) para el alcance, los enlaces de identidad y la política de envío.
-    - Consulte la [referencia completa](/en/gateway/configuration-reference#session) para todos los campos.
+    - Consulte [Gestión de sesiones](/es/concepts/session) para el alcance, los enlaces de identidad y la política de envío.
+    - Consulte la [referencia completa](/es/gateway/configuration-reference#session) para todos los campos.
 
   </Accordion>
 
@@ -281,7 +281,7 @@ Cuando la validación falla:
 
     Primero construya la imagen: `scripts/sandbox-setup.sh`
 
-    Consulte [Sandboxing](/en/gateway/sandboxing) para obtener la guía completa y [full reference](/en/gateway/configuration-reference#agentsdefaultssandbox) para ver todas las opciones.
+    Consulte [Sandboxing](/es/gateway/sandboxing) para obtener la guía completa y [full reference](/es/gateway/configuration-reference#agentsdefaultssandbox) para ver todas las opciones.
 
   </Accordion>
 
@@ -338,7 +338,7 @@ Cuando la validación falla:
     - `OPENCLAW_APNS_RELAY_BASE_URL` y `OPENCLAW_APNS_RELAY_TIMEOUT_MS` todavía funcionan como anulaciones temporales de env.
     - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` sigue siendo una salida de emergencia para el desarrollo solo de loopback; no persista las URLs de relay HTTP en la configuración.
 
-    Consulte [iOS App](/en/platforms/ios#relay-backed-push-for-official-builds) para el flujo de extremo a extremo y [Authentication and trust flow](/en/platforms/ios#authentication-and-trust-flow) para el modelo de seguridad del relay.
+    Consulte [iOS App](/es/platforms/ios#relay-backed-push-for-official-builds) para el flujo de extremo a extremo y [Authentication and trust flow](/es/platforms/ios#authentication-and-trust-flow) para el modelo de seguridad del relay.
 
   </Accordion>
 
@@ -359,7 +359,7 @@ Cuando la validación falla:
     - `every`: cadena de duración (`30m`, `2h`). Establezca `0m` para desactivar.
     - `target`: `last` | `none` | `<channel-id>` (por ejemplo `discord`, `matrix`, `telegram`, o `whatsapp`)
     - `directPolicy`: `allow` (predeterminado) o `block` para objetivos de latido estilo MD
-    - Consulte [Heartbeat](/en/gateway/heartbeat) para la guía completa.
+    - Consulte [Heartbeat](/es/gateway/heartbeat) para la guía completa.
 
   </Accordion>
 
@@ -380,7 +380,7 @@ Cuando la validación falla:
 
     - `sessionRetention`: poda las sesiones de ejecución aisladas completadas de `sessions.json` (predeterminado `24h`; establezca `false` para desactivar).
     - `runLog`: poda `cron/runs/<jobId>.jsonl` por tamaño y líneas retenidas.
-    - Consulte [Cron jobs](/en/automation/cron-jobs) para ver la descripción general de las características y ejemplos de CLI.
+    - Consulte [Cron jobs](/es/automation/cron-jobs) para ver la descripción general de las características y ejemplos de CLI.
 
   </Accordion>
 
@@ -417,7 +417,7 @@ Cuando la validación falla:
     - Si habilita `hooks.allowRequestSessionKey`, también configure `hooks.allowedSessionKeyPrefixes` para limitar las claves de sesión seleccionadas por el llamador.
     - Para los agentes impulsados por hooks, prefiera niveles de modelo modernos y sólidos y una política de herramientas estricta (por ejemplo, solo mensajería más aislamiento cuando sea posible).
 
-    Consulte la [referencia completa](/en/gateway/configuration-reference#hooks) para todas las opciones de mapeo e integración con Gmail.
+    Consulte la [referencia completa](/es/gateway/configuration-reference#hooks) para todas las opciones de mapeo e integración con Gmail.
 
   </Accordion>
 
@@ -439,7 +439,7 @@ Cuando la validación falla:
     }
     ```
 
-    Consulte [Multi-Agent](/en/concepts/multi-agent) y la [referencia completa](/en/gateway/configuration-reference#multi-agent-routing) para conocer las reglas de vinculación y los perfiles de acceso por agente.
+    Consulte [Multi-Agent](/es/concepts/multi-agent) y la [referencia completa](/es/gateway/configuration-reference#multi-agent-routing) para conocer las reglas de vinculación y los perfiles de acceso por agente.
 
   </Accordion>
 
@@ -660,17 +660,17 @@ Reglas:
 }
 ```
 
-Los detalles de SecretRef (incluyendo `secrets.providers` para `env`/`file`/`exec`) están en [Secrets Management](/en/gateway/secrets).
-Las rutas de credenciales compatibles se enumeran en [SecretRef Credential Surface](/en/reference/secretref-credential-surface).
+Los detalles de SecretRef (incluyendo `secrets.providers` para `env`/`file`/`exec`) están en [Secrets Management](/es/gateway/secrets).
+Las rutas de credenciales compatibles se enumeran en [SecretRef Credential Surface](/es/reference/secretref-credential-surface).
 
 </Accordion>
 
-Consulte [Environment](/en/help/environment) para obtener la precedencia y los orígenes completos.
+Consulte [Environment](/es/help/environment) para obtener la precedencia y los orígenes completos.
 
 ## Referencia completa
 
-Para obtener la referencia completa campo por campo, consulte **[Configuration Reference](/en/gateway/configuration-reference)**.
+Para obtener la referencia completa campo por campo, consulte **[Configuration Reference](/es/gateway/configuration-reference)**.
 
 ---
 
-_Relacionado: [Configuration Examples](/en/gateway/configuration-examples) · [Configuration Reference](/en/gateway/configuration-reference) · [Doctor](/en/gateway/doctor)_
+_Relacionado: [Configuration Examples](/es/gateway/configuration-examples) · [Configuration Reference](/es/gateway/configuration-reference) · [Doctor](/es/gateway/doctor)_

@@ -27,7 +27,7 @@ El contexto _no es lo mismo_ que la "memoria": la memoria se puede almacenar en 
 - `/usage tokens` → añade un pie de página de uso por respuesta a las respuestas normales.
 - `/compact` → resume el historial anterior en una entrada compacta para liberar espacio en la ventana.
 
-Ver también: [Comandos de barra](/en/tools/slash-commands), [Uso de tokens y costes](/en/reference/token-use), [Compactación](/en/concepts/compaction).
+Ver también: [Comandos de barra](/es/tools/slash-commands), [Uso de tokens y costes](/es/reference/token-use), [Compactación](/es/concepts/compaction).
 
 ## Salida de ejemplo
 
@@ -98,7 +98,7 @@ El prompt del sistema es **propiedad de OpenClaw** y se reconstruye en cada ejec
 - Metadatos de tiempo de ejecución (host/SO/modelo/pensamiento).
 - Archivos de arranque del espacio de trabajo inyectados bajo **Project Context**.
 
-Desglose completo: [Prompt del sistema](/en/concepts/system-prompt).
+Desglose completo: [Prompt del sistema](/es/concepts/system-prompt).
 
 ## Archivos del espacio de trabajo inyectados (Project Context)
 
@@ -141,7 +141,7 @@ Los comandos de barra son manejados por el Gateway. Hay algunos comportamientos 
   - Las directivas en línea en un mensaje normal actúan como sugerencias por mensaje.
 - **Atajos en línea** (solo remitentes en lista blanca): ciertos tokens `/...` dentro de un mensaje normal pueden ejecutarse inmediatamente (ejemplo: “hey /status”), y se eliminan antes de que el modelo vea el texto restante.
 
-Detalles: [Comandos de barra](/en/tools/slash-commands).
+Detalles: [Comandos de barra](/es/tools/slash-commands).
 
 ## Sesiones, compactación y poda (lo que persiste)
 
@@ -151,7 +151,7 @@ Lo que persiste entre mensajes depende del mecanismo:
 - **La compactación** guarda un resumen en la transcripción y mantiene los mensajes recientes intactos.
 - **La poda** elimina los resultados de herramientas antiguos del prompt _en memoria_ de una ejecución, pero no reescribe la transcripción.
 
-Documentación: [Sesión](/en/concepts/session), [Compactación](/en/concepts/compaction), [Poda de sesión](/en/concepts/session-pruning).
+Documentación: [Sesión](/es/concepts/session), [Compactación](/es/concepts/compaction), [Poda de sesión](/es/concepts/session-pruning).
 
 De forma predeterminada, OpenClaw utiliza el motor de contexto `legacy` integrado para el ensamblaje y
 compactación. Si instala un complemento que proporciona `kind: "context-engine"` y
@@ -159,7 +159,7 @@ lo selecciona con `plugins.slots.contextEngine`, OpenClaw delega el ensamblaje d
 `/compact` y los ganchos del ciclo de vida del contexto del subagente relacionados a ese
 motor en su lugar. `ownsCompaction: false` no vuelve automáticamente al motor
 heredado; el motor activo todavía debe implementar `compact()` correctamente. Consulte
-[Context Engine](/en/concepts/context-engine) para obtener la interfaz
+[Context Engine](/es/concepts/context-engine) para obtener la interfaz
 conectable completa, los ganchos del ciclo de vida y la configuración.
 
 ## Lo que `/context` realmente reporta
@@ -173,7 +173,7 @@ De cualquier manera, reporta los tamaños y los principales contribuyentes; **no
 
 ## Relacionado
 
-- [Context Engine](/en/concepts/context-engine) — inyección de contexto personalizada mediante complementos
-- [Compresión](/en/concepts/compaction) — resumen de conversaciones largas
-- [Prompt del sistema](/en/concepts/system-prompt) — cómo se construye el prompt del sistema
-- [Bucle del agente](/en/concepts/agent-loop) — el ciclo completo de ejecución del agente
+- [Context Engine](/es/concepts/context-engine) — inyección de contexto personalizada mediante complementos
+- [Compresión](/es/concepts/compaction) — resumen de conversaciones largas
+- [Prompt del sistema](/es/concepts/system-prompt) — cómo se construye el prompt del sistema
+- [Bucle del agente](/es/concepts/agent-loop) — el ciclo completo de ejecución del agente

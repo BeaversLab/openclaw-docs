@@ -86,17 +86,17 @@ OpenClaw 目前使用以下 GLM 引用为捆绑的 `zai` 提供商做种子：
   <Accordion title="Provider details">
     GLM 模型由 `zai` 运行时提供商提供服务。有关完整的提供商
     配置、区域端点和其他功能，请参阅
-    [Z.AI 提供商 docs](/en/providers/zai)。
+    [Z.AI 提供商 docs](/zh/providers/zai)。
   </Accordion>
 </AccordionGroup>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Z.AI 提供商" href="/en/providers/zai" icon="server">
+  <Card title="Z.AI 提供商" href="/zh/providers/zai" icon="server">
     完整的 Z.AI 提供商配置和区域端点。
   </Card>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
 </CardGroup>

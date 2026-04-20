@@ -12,8 +12,8 @@ title: "setup"
 
 相關連結：
 
-- 開始使用：[開始使用](/en/start/getting-started)
-- CLI 入門：[入門 (CLI)](/en/start/wizard)
+- 開始使用：[開始使用](/zh-Hant/start/getting-started)
+- CLI 入門：[入門 (CLI)](/zh-Hant/start/wizard)
 
 ## 範例
 

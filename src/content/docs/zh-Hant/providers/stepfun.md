@@ -206,18 +206,18 @@ Step Plan (`stepfun-plan`)：
   </Accordion>
 </AccordionGroup>
 
-<Note>如需更廣泛的提供商概覽，請參閱 [模型提供商](/en/concepts/model-providers)。</Note>
+<Note>如需更廣泛的提供商概覽，請參閱 [模型提供商](/zh-Hant/concepts/model-providers)。</Note>
 
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型提供商" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型提供商" href="/zh-Hant/concepts/model-providers" icon="layers">
     所有提供商、模型參照和故障轉移行為的概覽。
   </Card>
-  <Card title="設定參考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration-reference" icon="gear">
     提供商、模型和外掛程式的完整設定架構。
   </Card>
-  <Card title="模型選擇" href="/en/concepts/models" icon="brain">
+  <Card title="模型選擇" href="/zh-Hant/concepts/models" icon="brain">
     如何選擇和設定模型。
   </Card>
   <Card title="StepFun 平台" href="https://platform.stepfun.com" icon="globe">

@@ -10,7 +10,7 @@ sidebarTitle: "Referencia de CLI"
 # Referencia de configuración de la CLI
 
 Esta página es la referencia completa de `openclaw onboard`.
-Para la guía breve, consulte [Incorporación (CLI)](/en/start/wizard).
+Para la guía breve, consulte [Incorporación (CLI)](/es/start/wizard).
 
 ## Lo que hace el asistente
 
@@ -46,7 +46,7 @@ No instala ni modifica nada en el host remoto.
   <Step title="Espacio de trabajo">
     - Por defecto `~/.openclaw/workspace` (configurable).
     - Siembra los archivos del espacio de trabajo necesarios para el ritual de arranque inicial.
-    - Diseño del espacio de trabajo: [Espacio de trabajo del agente](/en/concepts/agent-workspace).
+    - Diseño del espacio de trabajo: [Espacio de trabajo del agente](/es/concepts/agent-workspace).
   </Step>
   <Step title="Gateway">
     - Solicita el puerto, enlace, modo de autenticación y exposición a tailscale.
@@ -62,14 +62,14 @@ No instala ni modifica nada en el host remoto.
     - Los enlaces que no son de bucle local aún requieren autenticación.
   </Step>
   <Step title="Canales">
-    - [WhatsApp](/en/channels/whatsapp): inicio de sesión con QR opcional
-    - [Telegram](/en/channels/telegram): token del bot
-    - [Discord](/en/channels/discord): token del bot
-    - [Google Chat](/en/channels/googlechat): cuenta de servicio JSON + audiencia del webhook
-    - [Mattermost](/en/channels/mattermost): token del bot + URL base
-    - [Signal](/en/channels/signal): instalación opcional de `signal-cli` + configuración de cuenta
-    - [BlueBubbles](/en/channels/bluebubbles): recomendado para iMessage; URL del servidor + contraseña + webhook
-    - [iMessage](/en/channels/imessage): ruta de CLI heredada de `imsg` + acceso a la base de datos
+    - [WhatsApp](/es/channels/whatsapp): inicio de sesión con QR opcional
+    - [Telegram](/es/channels/telegram): token del bot
+    - [Discord](/es/channels/discord): token del bot
+    - [Google Chat](/es/channels/googlechat): cuenta de servicio JSON + audiencia del webhook
+    - [Mattermost](/es/channels/mattermost): token del bot + URL base
+    - [Signal](/es/channels/signal): instalación opcional de `signal-cli` + configuración de cuenta
+    - [BlueBubbles](/es/channels/bluebubbles): recomendado para iMessage; URL del servidor + contraseña + webhook
+    - [iMessage](/es/channels/imessage): ruta de CLI heredada de `imsg` + acceso a la base de datos
     - Seguridad de MD: el valor predeterminado es el emparejamiento. El primer MD envía un código; apruébelo a través de
       `openclaw pairing approve <channel> <code>` o use listas de permitidos.
   </Step>
@@ -150,36 +150,36 @@ Lo que configura:
   </Accordion>
   <Accordion title="Vercel AI Gateway">
     Solicita `AI_GATEWAY_API_KEY`.
-    Más detalles: [Vercel AI Gateway](/en/providers/vercel-ai-gateway).
+    Más detalles: [Vercel AI Gateway](/es/providers/vercel-ai-gateway).
   </Accordion>
   <Accordion title="Cloudflare AI Gateway">
     Solicita el ID de cuenta, el ID de puerta de enlace y `CLOUDFLARE_AI_GATEWAY_API_KEY`.
-    Más detalles: [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway).
+    Más detalles: [Cloudflare AI Gateway](/es/providers/cloudflare-ai-gateway).
   </Accordion>
   <Accordion title="MiniMax">
     La configuración se escribe automáticamente. El valor predeterminado alojado es `MiniMax-M2.7`; la configuración con clave de API usa
     `minimax/...` y la configuración de OAuth usa `minimax-portal/...`.
-    Más detalles: [MiniMax](/en/providers/minimax).
+    Más detalles: [MiniMax](/es/providers/minimax).
   </Accordion>
   <Accordion title="StepFun">
     La configuración se escribe automáticamente para StepFun estándar o Step Plan en endpoints de China o globales.
     El estándar actualmente incluye `step-3.5-flash` y Step Plan también incluye `step-3.5-flash-2603`.
-    Más detalles: [StepFun](/en/providers/stepfun).
+    Más detalles: [StepFun](/es/providers/stepfun).
   </Accordion>
   <Accordion title="Synthetic (Anthropic-compatible)">
     Solicita `SYNTHETIC_API_KEY`.
-    Más detalles: [Synthetic](/en/providers/synthetic).
+    Más detalles: [Synthetic](/es/providers/synthetic).
   </Accordion>
   <Accordion title="Ollama (Cloud and local open models)">
     Solicita `Cloud + Local`, `Cloud only` o `Local only` primero.
     `Cloud only` usa `OLLAMA_API_KEY` con `https://ollama.com`.
     Los modos respaldados por el host solicitan la URL base (predeterminado `http://127.0.0.1:11434`), descubren los modelos disponibles y sugieren valores predeterminados.
     `Cloud + Local` también comprueba si ese host de Ollama ha iniciado sesión para el acceso en la nube.
-    Más detalles: [Ollama](/en/providers/ollama).
+    Más detalles: [Ollama](/es/providers/ollama).
   </Accordion>
   <Accordion title="Moonshot and Kimi Coding">
     Las configuraciones de Moonshot (Kimi K2) y Kimi Coding se escriben automáticamente.
-    Más detalles: [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot).
+    Más detalles: [Moonshot AI (Kimi + Kimi Coding)](/es/providers/moonshot).
   </Accordion>
   <Accordion title="Custom provider">
     Funciona con endpoints compatibles con OpenAI y Anthropic.
@@ -295,6 +295,6 @@ Comportamiento de configuración de Signal:
 
 ## Documentos relacionados
 
-- Centro de incorporación: [Incorporación (CLI)](/en/start/wizard)
-- Automatización y scripts: [Automatización de CLI](/en/start/wizard-cli-automation)
-- Referencia de comandos: [`openclaw onboard`](/en/cli/onboard)
+- Centro de incorporación: [Incorporación (CLI)](/es/start/wizard)
+- Automatización y scripts: [Automatización de CLI](/es/start/wizard-cli-automation)
+- Referencia de comandos: [`openclaw onboard`](/es/cli/onboard)

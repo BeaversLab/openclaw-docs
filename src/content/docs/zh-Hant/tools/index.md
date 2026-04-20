@@ -32,7 +32,7 @@ OpenClaw 有三個協同運作的層級：
     技能為代理程式提供了有效使用工具的背景、限制和逐步指導。
     技能存在於您的工作區、共享資料夾中，或隨插件打包發布。
 
-    [技能參考](/en/tools/skills) | [建立技能](/en/tools/creating-skills)
+    [技能參考](/zh-Hant/tools/skills) | [建立技能](/zh-Hant/tools/creating-skills)
 
   </Step>
 
@@ -43,7 +43,7 @@ OpenClaw 有三個協同運作的層級：
     網路擷取、網路搜尋等等。有些插件是 **核心** 的（隨 OpenClaw 附帶），
     其他則是 **外部** 的（由社群在 npm 上發布）。
 
-    [安裝並配置插件](/en/tools/plugin) | [建立您自己的插件](/en/plugins/building-plugins)
+    [安裝並配置插件](/zh-Hant/tools/plugin) | [建立您自己的插件](/zh-Hant/plugins/building-plugins)
 
   </Step>
 </Steps>
@@ -52,24 +52,24 @@ OpenClaw 有三個協同運作的層級：
 
 這些工具隨 OpenClaw 附帶，無需安裝任何外掛即可使用：
 
-| 工具                                       | 功能說明                                     | 頁面                                           |
-| ------------------------------------------ | -------------------------------------------- | ---------------------------------------------- |
-| `exec` / `process`                         | 執行 Shell 指令，管理背景程序                | [Exec](/en/tools/exec)                         |
-| `code_execution`                           | 執行沙盒化遠端 Python 分析                   | [Code Execution](/en/tools/code-execution)     |
-| `browser`                                  | 控制 Chromium 瀏覽器（導航、點擊、截圖）     | [Browser](/en/tools/browser)                   |
-| `web_search` / `x_search` / `web_fetch`    | 搜尋網路、搜尋 X 帖文、擷取頁面內容          | [Web](/en/tools/web)                           |
-| `read` / `write` / `edit`                  | 工作區內的檔案 I/O                           |                                                |
-| `apply_patch`                              | 多區塊檔案修補                               | [Apply Patch](/en/tools/apply-patch)           |
-| `message`                                  | 跨所有頻道傳送訊息                           | [Agent Send](/en/tools/agent-send)             |
-| `canvas`                                   | 驅動節點 Canvas (呈現、評估、快照)           |                                                |
-| `nodes`                                    | 發現並指定配對裝置                           |                                                |
-| `cron` / `gateway`                         | 管理排程工作；檢查、修補、重新啟動或更新閘道 |                                                |
-| `image` / `image_generate`                 | 分析或生成圖片                               | [Image Generation](/en/tools/image-generation) |
-| `music_generate`                           | 生成音樂曲目                                 | [Music Generation](/en/tools/music-generation) |
-| `video_generate`                           | 生成影片                                     | [Video Generation](/en/tools/video-generation) |
-| `tts`                                      | 一次性文字轉語音轉換                         | [TTS](/en/tools/tts)                           |
-| `sessions_*` / `subagents` / `agents_list` | 會話管理、狀態和子代理程式協調               | [Sub-agents](/en/tools/subagents)              |
-| `session_status`                           | 輕量級 `/status` 風格的回放與會話模型覆蓋    | [Session Tools](/en/concepts/session-tool)     |
+| 工具                                       | 功能說明                                     | 頁面                                                |
+| ------------------------------------------ | -------------------------------------------- | --------------------------------------------------- |
+| `exec` / `process`                         | 執行 Shell 指令，管理背景程序                | [Exec](/zh-Hant/tools/exec)                         |
+| `code_execution`                           | 執行沙盒化遠端 Python 分析                   | [Code Execution](/zh-Hant/tools/code-execution)     |
+| `browser`                                  | 控制 Chromium 瀏覽器（導航、點擊、截圖）     | [Browser](/zh-Hant/tools/browser)                   |
+| `web_search` / `x_search` / `web_fetch`    | 搜尋網路、搜尋 X 帖文、擷取頁面內容          | [Web](/zh-Hant/tools/web)                           |
+| `read` / `write` / `edit`                  | 工作區內的檔案 I/O                           |                                                     |
+| `apply_patch`                              | 多區塊檔案修補                               | [Apply Patch](/zh-Hant/tools/apply-patch)           |
+| `message`                                  | 跨所有頻道傳送訊息                           | [Agent Send](/zh-Hant/tools/agent-send)             |
+| `canvas`                                   | 驅動節點 Canvas (呈現、評估、快照)           |                                                     |
+| `nodes`                                    | 發現並指定配對裝置                           |                                                     |
+| `cron` / `gateway`                         | 管理排程工作；檢查、修補、重新啟動或更新閘道 |                                                     |
+| `image` / `image_generate`                 | 分析或生成圖片                               | [Image Generation](/zh-Hant/tools/image-generation) |
+| `music_generate`                           | 生成音樂曲目                                 | [Music Generation](/zh-Hant/tools/music-generation) |
+| `video_generate`                           | 生成影片                                     | [Video Generation](/zh-Hant/tools/video-generation) |
+| `tts`                                      | 一次性文字轉語音轉換                         | [TTS](/zh-Hant/tools/tts)                           |
+| `sessions_*` / `subagents` / `agents_list` | 會話管理、狀態和子代理程式協調               | [Sub-agents](/zh-Hant/tools/subagents)              |
+| `session_status`                           | 輕量級 `/status` 風格的回放與會話模型覆蓋    | [Session Tools](/zh-Hant/concepts/session-tool)     |
 
 對於影像工作，請使用 `image` 進行分析，並使用 `image_generate` 進行生成或編輯。如果您以 `openai/*`、`google/*`、`fal/*` 或其他非預設的影像提供者為目標，請先設定該提供者的 auth/API 金鑰。
 
@@ -95,11 +95,11 @@ OpenClaw 有三個協同運作的層級：
 
 外掛程式可以註冊額外的工具。例如：
 
-- [Lobster](/en/tools/lobster) — 具有可恢復審批功能的型別化工作流程執行環境
-- [LLM Task](/en/tools/llm-task) — 用於結構化輸出的純 JSON LLM 步驟
-- [Music Generation](/en/tools/music-generation) — 具有工作流程支援提供者的共享 `music_generate` 工具
-- [Diffs](/en/tools/diffs) — 差異查看器和渲染器
-- [OpenProse](/en/prose) — 以 markdown 為主的工作流程編排
+- [Lobster](/zh-Hant/tools/lobster) — 具有可恢復審批功能的型別化工作流程執行環境
+- [LLM Task](/zh-Hant/tools/llm-task) — 用於結構化輸出的純 JSON LLM 步驟
+- [Music Generation](/zh-Hant/tools/music-generation) — 具有工作流程支援提供者的共享 `music_generate` 工具
+- [Diffs](/zh-Hant/tools/diffs) — 差異查看器和渲染器
+- [OpenProse](/zh-Hant/prose) — 以 markdown 為主的工作流程編排
 
 ## 工具配置
 

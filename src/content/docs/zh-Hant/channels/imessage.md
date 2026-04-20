@@ -9,7 +9,7 @@ title: "iMessage"
 # iMessage (舊版：imsg)
 
 <Warning>
-對於新的 iMessage 部署，請使用 <a href="/en/channels/bluebubbles">BlueBubbles</a>。
+對於新的 iMessage 部署，請使用 <a href="/zh-Hant/channels/bluebubbles">BlueBubbles</a>。
 
 `imsg` 整合功能已過時，可能會在未來版本中移除。
 
@@ -18,13 +18,13 @@ title: "iMessage"
 狀態：舊版的外部 CLI 整合。閘道會產生 `imsg rpc` 並透過 stdio 上的 JSON-RPC 進行通訊（無需獨立的 daemon/port）。
 
 <CardGroup cols={3}>
-  <Card title="BlueBubbles (recommended)" icon="message-circle" href="/en/channels/bluebubbles">
+  <Card title="BlueBubbles (recommended)" icon="message-circle" href="/zh-Hant/channels/bluebubbles">
     新設定的首選 iMessage 方案。
   </Card>
-  <Card title="配對" icon="link" href="/en/channels/pairing">
+  <Card title="配對" icon="link" href="/zh-Hant/channels/pairing">
     iMessage 私訊預設為配對模式。
   </Card>
-  <Card title="組態參考" icon="settings" href="/en/gateway/configuration-reference#imessage">
+  <Card title="組態參考" icon="settings" href="/zh-Hant/gateway/configuration-reference#imessage">
     完整的 iMessage 欄位參考。
   </Card>
 </CardGroup>
@@ -235,7 +235,7 @@ imsg send <handle> "test"
 }
 ```
 
-請參閱 [ACP Agents](/en/tools/acp-agents) 以了解共享 ACP 綁定行為。
+請參閱 [ACP Agents](/zh-Hant/tools/acp-agents) 以了解共享 ACP 綁定行為。
 
 ## 部署模式
 
@@ -409,15 +409,15 @@ imsg send <handle> "test"
 
 ## 設定參考指引
 
-- [設定參考 - iMessage](/en/gateway/configuration-reference#imessage)
-- [Gateway 設定](/en/gateway/configuration)
-- [配對](/en/channels/pairing)
-- [BlueBubbles](/en/channels/bluebubbles)
+- [設定參考 - iMessage](/zh-Hant/gateway/configuration-reference#imessage)
+- [Gateway 設定](/zh-Hant/gateway/configuration)
+- [配對](/zh-Hant/channels/pairing)
+- [BlueBubbles](/zh-Hant/channels/bluebubbles)
 
 ## 相關
 
-- [頻道總覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — 直接訊息認證和配對流程
-- [群組](/en/channels/groups) — 群組聊天行為和提及控制
-- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
-- [安全性](/en/gateway/security) — 存取模型和強化防護
+- [頻道總覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — 直接訊息認證和配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為和提及控制
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型和強化防護

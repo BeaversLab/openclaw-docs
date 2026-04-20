@@ -136,7 +136,7 @@ export QMD_GENERATE_MODEL="/absolute/path/to/generator.gguf"
 - 回憶過去的對話紀錄。
 - 完全本機搜尋，無需 API 金鑰。
 
-對於較簡單的設定，[內建引擎](/en/concepts/memory-builtin)運作良好
+對於較簡單的設定，[內建引擎](/zh-Hant/concepts/memory-builtin)運作良好
 且無需額外相依性。
 
 ## 疑難排解
@@ -164,4 +164,4 @@ OpenClaw 的內建符號連結規則。在 QMD 揭露
 
 如需完整的設定介面（`memory.qmd.*`）、搜尋模式、更新間隔、
 範圍規則以及所有其他選項，請參閱
-[記憶體設定參考](/en/reference/memory-config)。
+[記憶體設定參考](/zh-Hant/reference/memory-config)。

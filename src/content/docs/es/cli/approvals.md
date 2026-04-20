@@ -15,8 +15,8 @@ Alias: `openclaw exec-approvals`
 
 Relacionado:
 
-- Aprobaciones de ejecución: [Exec approvals](/en/tools/exec-approvals)
-- Nodos: [Nodes](/en/nodes)
+- Aprobaciones de ejecución: [Exec approvals](/es/tools/exec-approvals)
+- Nodos: [Nodes](/es/nodes)
 
 ## `openclaw exec-policy`
 

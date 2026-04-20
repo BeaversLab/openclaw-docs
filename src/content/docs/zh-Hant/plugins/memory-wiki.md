@@ -363,7 +363,7 @@ openclaw wiki bridge import
 openclaw wiki obsidian status
 ```
 
-請參閱 [CLI: wiki](/en/cli/wiki) 以取得完整的命令參考。
+請參閱 [CLI: wiki](/zh-Hant/cli/wiki) 以取得完整的命令參考。
 
 ## Obsidian 支援
 
@@ -392,7 +392,7 @@ Markdown，並可選擇性地使用官方 `obsidian` CLI。
 
 ## 相關文件
 
-- [記憶體概觀](/en/concepts/memory)
-- [CLI: memory](/en/cli/memory)
-- [CLI: wiki](/en/cli/wiki)
-- [外掛 SDK 概觀](/en/plugins/sdk-overview)
+- [記憶體概觀](/zh-Hant/concepts/memory)
+- [CLI: memory](/zh-Hant/cli/memory)
+- [CLI: wiki](/zh-Hant/cli/wiki)
+- [外掛 SDK 概觀](/zh-Hant/plugins/sdk-overview)

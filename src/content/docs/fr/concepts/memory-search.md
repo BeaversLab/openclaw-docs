@@ -112,7 +112,7 @@ assure que les principaux résultats couvrent différents sujets au lieu de se r
 Avec Gemini Embedding 2, vous pouvez indexer des images et des fichiers audio
 alongside du Markdown. Les requêtes de recherche restent textuelles, mais elles
 portent sur le contenu visuel et audio. Consultez la [référence de
-configuration de la mémoire](/en/reference/memory-config) pour le
+configuration de la mémoire](/fr/reference/memory-config) pour le
 paramétrage.
 
 ## Recherche de mémoire de session
@@ -120,7 +120,7 @@ paramétrage.
 Vous pouvez éventuellement indexer les transcriptions de session afin que
 `memory_search` puisse se rappeler les conversations
 précédentes. C'est optionnel via `memorySearch.experimental.sessionMemory`. Consultez la
-[référence de configuration](/en/reference/memory-config) pour les détails.
+[référence de configuration](/fr/reference/memory-config) pour les détails.
 
 ## Dépannage
 
@@ -135,9 +135,9 @@ n'est peut-être pas configuré. Vérifiez `openclaw memory status --deep`.
 
 ## Pour aller plus loin
 
-- [Mémoire active](/en/concepts/active-memory) -- mémoire de sous-agent
+- [Mémoire active](/fr/concepts/active-memory) -- mémoire de sous-agent
   pour les sessions de chat interactives
-- [Mémoire](/en/concepts/memory) -- disposition des fichiers,
+- [Mémoire](/fr/concepts/memory) -- disposition des fichiers,
   backends, outils
-- [Référence de configuration de la mémoire](/en/reference/memory-config)
+- [Référence de configuration de la mémoire](/fr/reference/memory-config)
   -- tous les paramètres de configuration

@@ -182,6 +182,6 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 
 ## 相關文件
 
-- [Plugin runtime SDK](/en/plugins/sdk-runtime)
-- [Hooks and webhooks overview](/en/automation/hooks)
-- [CLI webhooks](/en/cli/webhooks)
+- [Plugin runtime SDK](/zh-Hant/plugins/sdk-runtime)
+- [Hooks and webhooks overview](/zh-Hant/automation/hooks)
+- [CLI webhooks](/zh-Hant/cli/webhooks)

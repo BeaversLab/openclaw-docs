@@ -128,13 +128,13 @@ Le fournisseur de génération de vidéos `fal` intégré est défini par défau
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Génération d'images" href="/en/tools/image-generation" icon="image">
+  <Card title="Génération d'images" href="/fr/tools/image-generation" icon="image">
     Paramètres de l'outil d'image partagés et sélection du fournisseur.
   </Card>
-  <Card title="Génération vidéo" href="/en/tools/video-generation" icon="video">
+  <Card title="Génération vidéo" href="/fr/tools/video-generation" icon="video">
     Paramètres partagés de l'outil vidéo et sélection du provider.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference#agent-defaults" icon="gear">
     Valeurs par défaut de l'agent, y compris la sélection de model d'image et de vidéo.
   </Card>
 </CardGroup>

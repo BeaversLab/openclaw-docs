@@ -12,8 +12,8 @@ title: "dns"
 
 相關主題：
 
-- 閘道探索：[探索](/en/gateway/discovery)
-- 廣域探索設定：[設定](/en/gateway/configuration)
+- 閘道探索：[探索](/zh-Hant/gateway/discovery)
+- 廣域探索設定：[設定](/zh-Hant/gateway/configuration)
 
 ## 設定
 

@@ -51,12 +51,12 @@ El agente puede añadir y eliminar reacciones de emoji en los mensajes utilizand
 
 La configuración de `reactionLevel` por canal controla la amplitud con la que el agente utiliza las reacciones. Los valores son típicamente `off`, `ack`, `minimal` o `extensive`.
 
-- [Nivel de reacción de Telegram](/en/channels/telegram#reaction-notifications) — `channels.telegram.reactionLevel`
-- [Nivel de reacción de WhatsApp](/en/channels/whatsapp#reaction-level) — `channels.whatsapp.reactionLevel`
+- [Nivel de reacción de Telegram](/es/channels/telegram#reaction-notifications) — `channels.telegram.reactionLevel`
+- [Nivel de reacción de WhatsApp](/es/channels/whatsapp#reaction-level) — `channels.whatsapp.reactionLevel`
 
 Establezca `reactionLevel` en canales individuales para ajustar la frecuencia con la que el agente reacciona a los mensajes en cada plataforma.
 
 ## Relacionado
 
-- [Envío del agente (Agent Send)](/en/tools/agent-send) — la herramienta `message` que incluye `react`
-- [Canales](/en/channels) — configuración específica del canal
+- [Envío del agente (Agent Send)](/es/tools/agent-send) — la herramienta `message` que incluye `react`
+- [Canales](/es/channels) — configuración específica del canal

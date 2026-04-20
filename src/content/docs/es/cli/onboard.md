@@ -11,11 +11,11 @@ Incorporación interactiva para la configuración de Gateway local o remota.
 
 ## Guías relacionadas
 
-- Centro de incorporación de la CLI: [Incorporación (CLI)](/en/start/wizard)
-- Descripción general de la incorporación: [Descripción general de la incorporación](/en/start/onboarding-overview)
-- Referencia de incorporación de la CLI: [Referencia de configuración de la CLI](/en/start/wizard-cli-reference)
-- Automatización de la CLI: [Automatización de la CLI](/en/start/wizard-cli-automation)
-- Incorporación en macOS: [Incorporación (Aplicación macOS)](/en/start/onboarding)
+- Centro de incorporación de la CLI: [Incorporación (CLI)](/es/start/wizard)
+- Descripción general de la incorporación: [Descripción general de la incorporación](/es/start/onboarding-overview)
+- Referencia de incorporación de la CLI: [Referencia de configuración de la CLI](/es/start/wizard-cli-reference)
+- Automatización de la CLI: [Automatización de la CLI](/es/start/wizard-cli-automation)
+- Incorporación en macOS: [Incorporación (Aplicación macOS)](/es/start/onboarding)
 
 ## Ejemplos
 
@@ -165,7 +165,7 @@ Notas de flujo:
     y una elección de modelo `x_search`.
   - **Kimi** puede solicitar la región de la API de Moonshot (`api.moonshot.ai` vs
     `api.moonshot.cn`) y el modelo de búsqueda web predeterminado de Kimi.
-- Comportamiento del alcance DM en la incorporación local: [Referencia de configuración de CLI](/en/start/wizard-cli-reference#outputs-and-internals).
+- Comportamiento del alcance DM en la incorporación local: [Referencia de configuración de CLI](/es/start/wizard-cli-reference#outputs-and-internals).
 - Primer chat más rápido: `openclaw dashboard` (UI de control, sin configuración de canal).
 - Proveedor personalizado: conecte cualquier endpoint compatible con OpenAI o Anthropic,
   incluidos los proveedores alojados no listados. Use Desconocido para detectar automáticamente.

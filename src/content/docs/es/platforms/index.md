@@ -17,26 +17,26 @@ También se planean aplicaciones complementarias nativas para Windows; se recomi
 
 ## Elige tu sistema operativo
 
-- macOS: [macOS](/en/platforms/macos)
-- iOS: [iOS](/en/platforms/ios)
-- Android: [Android](/en/platforms/android)
-- Windows: [Windows](/en/platforms/windows)
-- Linux: [Linux](/en/platforms/linux)
+- macOS: [macOS](/es/platforms/macos)
+- iOS: [iOS](/es/platforms/ios)
+- Android: [Android](/es/platforms/android)
+- Windows: [Windows](/es/platforms/windows)
+- Linux: [Linux](/es/platforms/linux)
 
 ## VPS y alojamiento
 
-- VPS hub: [VPS hosting](/en/vps)
-- Fly.io: [Fly.io](/en/install/fly)
-- Hetzner (Docker): [Hetzner](/en/install/hetzner)
-- GCP (Compute Engine): [GCP](/en/install/gcp)
-- Azure (Linux VM): [Azure](/en/install/azure)
-- exe.dev (VM + HTTPS proxy): [exe.dev](/en/install/exe-dev)
+- VPS hub: [VPS hosting](/es/vps)
+- Fly.io: [Fly.io](/es/install/fly)
+- Hetzner (Docker): [Hetzner](/es/install/hetzner)
+- GCP (Compute Engine): [GCP](/es/install/gcp)
+- Azure (Linux VM): [Azure](/es/install/azure)
+- exe.dev (VM + HTTPS proxy): [exe.dev](/es/install/exe-dev)
 
 ## Enlaces comunes
 
-- Install guide: [Getting Started](/en/start/getting-started)
-- Gateway runbook: [Gateway](/en/gateway)
-- Gateway configuration: [Configuration](/en/gateway/configuration)
+- Install guide: [Getting Started](/es/start/getting-started)
+- Gateway runbook: [Gateway](/es/gateway)
+- Gateway configuration: [Configuration](/es/gateway/configuration)
 - Estado del servicio: `openclaw gateway status`
 
 ## Instalación del servicio Gateway (CLI)

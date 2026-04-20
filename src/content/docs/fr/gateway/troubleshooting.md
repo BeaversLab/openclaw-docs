@@ -9,7 +9,7 @@ title: "Dépannage"
 # Dépannage de la passerelle
 
 Cette page est le guide d'exécution détaillé.
-Commencez par [/help/troubleshooting](/en/help/troubleshooting) si vous souhaitez d'abord suivre le processus de triage rapide.
+Commencez par [/help/troubleshooting](/fr/help/troubleshooting) si vous souhaitez d'abord suivre le processus de triage rapide.
 
 ## Échelle de commande
 
@@ -55,9 +55,9 @@ Options de correction :
 
 Connexes :
 
-- [/providers/anthropic](/en/providers/anthropic)
-- [/reference/token-use](/en/reference/token-use)
-- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/en/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
+- [/providers/anthropic](/fr/providers/anthropic)
+- [/reference/token-use](/fr/reference/token-use)
+- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/fr/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
 
 ## Le backend local compatible OpenAI réussit les sondes directes mais les exécutions de l'agent échouent
 
@@ -103,9 +103,9 @@ Options de correction :
 
 Connexe :
 
-- [/gateway/local-models](/en/gateway/local-models)
-- [/gateway/configuration](/en/gateway/configuration)
-- [/gateway/configuration-reference#openai-compatible-endpoints](/en/gateway/configuration-reference#openai-compatible-endpoints)
+- [/gateway/local-models](/fr/gateway/local-models)
+- [/gateway/configuration](/fr/gateway/configuration)
+- [/gateway/configuration-reference#openai-compatible-endpoints](/fr/gateway/configuration-reference#openai-compatible-endpoints)
 
 ## Aucune réponse
 
@@ -133,9 +133,9 @@ Signatures courantes :
 
 Connexe :
 
-- [/channels/troubleshooting](/en/channels/troubleshooting)
-- [/channels/pairing](/en/channels/pairing)
-- [/channels/groups](/en/channels/groups)
+- [/channels/troubleshooting](/fr/channels/troubleshooting)
+- [/channels/pairing](/fr/channels/pairing)
+- [/channels/groups](/fr/channels/groups)
 
 ## Connectivité de l'interface de contrôle du tableau de bord
 
@@ -177,8 +177,8 @@ Utilisez `error.details.code` de la réponse `connect` échouée pour choisir l'
 | Code de détail               | Signification                                                                    | Action recommandée                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `AUTH_TOKEN_MISSING`         | Le client n'a pas envoyé un jeton partagé requis.                                | Collez/définissez le jeton dans le client et réessayez. Pour les chemins du tableau de bord : `openclaw config get gateway.auth.token` puis collez dans les paramètres de l'interface de contrôle.                                                                                                                                                                                                                |
-| `AUTH_TOKEN_MISMATCH`        | Le jeton partagé ne correspond pas au jeton d'authentification de la passerelle. | Si `canRetryWithDeviceToken=true`, autorisez une nouvelle tentative de confiance. Les nouvelles tentatives avec jeton en cache réutilisent les étendues approuvées stockées ; les appelants explicites `deviceToken` / `scopes` conservent les étendues demandées. En cas d'échec persistant, exécutez la [liste de contrôle de récupération de dérive de jeton](/en/cli/devices#token-drift-recovery-checklist). |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | Le jeton par appareil en cache est périmé ou révoqué.                            | Faites pivoter/réapprouvez le jeton de l'appareil en utilisant le [CLI des appareils](/en/cli/devices), puis reconnectez-vous.                                                                                                                                                                                                                                                                                    |
+| `AUTH_TOKEN_MISMATCH`        | Le jeton partagé ne correspond pas au jeton d'authentification de la passerelle. | Si `canRetryWithDeviceToken=true`, autorisez une nouvelle tentative de confiance. Les nouvelles tentatives avec jeton en cache réutilisent les étendues approuvées stockées ; les appelants explicites `deviceToken` / `scopes` conservent les étendues demandées. En cas d'échec persistant, exécutez la [liste de contrôle de récupération de dérive de jeton](/fr/cli/devices#token-drift-recovery-checklist). |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | Le jeton par appareil en cache est périmé ou révoqué.                            | Faites pivoter/réapprouvez le jeton de l'appareil en utilisant le [CLI des appareils](/fr/cli/devices), puis reconnectez-vous.                                                                                                                                                                                                                                                                                    |
 | `PAIRING_REQUIRED`           | L'identité de l'appareil est connue mais n'est pas approuvée pour ce rôle.       | Approuver la demande en attente : `openclaw devices list` puis `openclaw devices approve <requestId>`.                                                                                                                                                                                                                                                                                                            |
 
 Vérification de la migration de l'authentification des appareils v2 :
@@ -204,11 +204,11 @@ Si `openclaw devices rotate` / `revoke` / `remove` est refusé de manière inatt
 
 Connexes :
 
-- [/web/control-ui](/en/web/control-ui)
-- [/gateway/configuration](/en/gateway/configuration) (modes d'authentification de la passerelle)
-- [/gateway/trusted-proxy-auth](/en/gateway/trusted-proxy-auth)
-- [/gateway/remote](/en/gateway/remote)
-- [/cli/devices](/en/cli/devices)
+- [/web/control-ui](/fr/web/control-ui)
+- [/gateway/configuration](/fr/gateway/configuration) (modes d'authentification de la passerelle)
+- [/gateway/trusted-proxy-auth](/fr/gateway/trusted-proxy-auth)
+- [/gateway/remote](/fr/gateway/remote)
+- [/cli/devices](/fr/cli/devices)
 
 ## Le service Gateway ne fonctionne pas
 
@@ -235,13 +235,13 @@ Signatures courantes :
 - `Gateway start blocked: set gateway.mode=local` ou `existing config is missing gateway.mode` → le mode passerelle locale n'est pas activé, ou le fichier de configuration a été écrasé et `gateway.mode` a été perdu. Correctif : définissez `gateway.mode="local"` dans votre configuration, ou réexécutez `openclaw onboard --mode local` / `openclaw setup` pour réappliquer la configuration locale attendue. Si vous exécutez OpenClaw via Podman, le chemin de configuration par défaut est `~/.openclaw/openclaw.json`.
 - `refusing to bind gateway ... without auth` → liaison non bouclée sans chemin d'authentification passerelle valide (jeton/mot de passe, ou proxy de confiance si configuré).
 - `another gateway instance is already listening` / `EADDRINUSE` → conflit de port.
-- `Other gateway-like services detected (best effort)` → des unités launchd/systemd/schtasks obsolètes ou parallèles existent. La plupart des configurations doivent conserver une seule passerelle par machine ; si vous en avez besoin de plus d'une, isolez les ports + config/état/espace de travail. Voir [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host).
+- `Other gateway-like services detected (best effort)` → des unités launchd/systemd/schtasks obsolètes ou parallèles existent. La plupart des configurations doivent conserver une seule passerelle par machine ; si vous en avez besoin de plus d'une, isolez les ports + config/état/espace de travail. Voir [/gateway#multiple-gateways-same-host](/fr/gateway#multiple-gateways-same-host).
 
 Connexes :
 
-- [/gateway/background-process](/en/gateway/background-process)
-- [/gateway/configuration](/en/gateway/configuration)
-- [/gateway/doctor](/en/gateway/doctor)
+- [/gateway/background-process](/fr/gateway/background-process)
+- [/gateway/configuration](/fr/gateway/configuration)
+- [/gateway/doctor](/fr/gateway/doctor)
 
 ## Avertissements de sonde Gateway
 
@@ -267,9 +267,9 @@ Signatures courantes :
 
 Connexes :
 
-- [/cli/gateway](/en/cli/gateway)
-- [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host)
-- [/gateway/remote](/en/gateway/remote)
+- [/cli/gateway](/fr/cli/gateway)
+- [/gateway#multiple-gateways-same-host](/fr/gateway#multiple-gateways-same-host)
+- [/gateway/remote](/fr/gateway/remote)
 
 ## Messages du channel connectés ne circulant pas
 
@@ -297,10 +297,10 @@ Signatures courantes :
 
 Connexes :
 
-- [/channels/troubleshooting](/en/channels/troubleshooting)
-- [/channels/whatsapp](/en/channels/whatsapp)
-- [/channels/telegram](/en/channels/telegram)
-- [/channels/discord](/en/channels/discord)
+- [/channels/troubleshooting](/fr/channels/troubleshooting)
+- [/channels/whatsapp](/fr/channels/whatsapp)
+- [/channels/telegram](/fr/channels/telegram)
+- [/channels/discord](/fr/channels/discord)
 
 ## Livraison Cron et heartbeat
 
@@ -332,9 +332,9 @@ Signatures courantes :
 
 Connexe :
 
-- [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
-- [/automation/cron-jobs](/en/automation/cron-jobs)
-- [/gateway/heartbeat](/en/gateway/heartbeat)
+- [/automation/cron-jobs#troubleshooting](/fr/automation/cron-jobs#troubleshooting)
+- [/automation/cron-jobs](/fr/automation/cron-jobs)
+- [/gateway/heartbeat](/fr/gateway/heartbeat)
 
 ## Échec de l'outil appairé au nœud
 
@@ -363,9 +363,9 @@ Signatures courantes :
 
 Connexe :
 
-- [/nodes/troubleshooting](/en/nodes/troubleshooting)
-- [/nodes/index](/en/nodes/index)
-- [/tools/exec-approvals](/en/tools/exec-approvals)
+- [/nodes/troubleshooting](/fr/nodes/troubleshooting)
+- [/nodes/index](/fr/nodes/index)
+- [/tools/exec-approvals](/fr/tools/exec-approvals)
 
 ## Échec de l'outil navigateur
 
@@ -408,8 +408,8 @@ Signatures courantes :
 
 Connexes :
 
-- [/tools/browser-linux-troubleshooting](/en/tools/browser-linux-troubleshooting)
-- [/tools/browser](/en/tools/browser)
+- [/tools/browser-linux-troubleshooting](/fr/tools/browser-linux-troubleshooting)
+- [/tools/browser](/fr/tools/browser)
 
 ## Si vous avez effectué une mise à jour et que quelque chose s'est soudainement brisé
 
@@ -482,6 +482,6 @@ openclaw gateway restart
 
 Connexes :
 
-- [/gateway/pairing](/en/gateway/pairing)
-- [/gateway/authentication](/en/gateway/authentication)
-- [/gateway/background-process](/en/gateway/background-process)
+- [/gateway/pairing](/fr/gateway/pairing)
+- [/gateway/authentication](/fr/gateway/authentication)
+- [/gateway/background-process](/fr/gateway/background-process)

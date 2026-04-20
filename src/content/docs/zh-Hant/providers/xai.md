@@ -116,7 +116,7 @@ OpenClaw 內建了以下 xAI 模型系列：
     ```
 
     <Note>
-    請參閱 [影片生成](/en/tools/video-generation) 以了解共用工具參數、
+    請參閱 [影片生成](/zh-Hant/tools/video-generation) 以了解共用工具參數、
     提供者選擇和故障轉移行為。
     </Note>
 
@@ -171,7 +171,7 @@ OpenClaw 內建了以下 xAI 模型系列：
     | `timeoutSeconds`  | number  | —                  | 請求逾時時間（秒）               |
 
     <Note>
-    這是遠端 xAI 沙盒執行，而非本機 [`exec`](/en/tools/exec)。
+    這是遠端 xAI 沙盒執行，而非本機 [`exec`](/zh-Hant/tools/exec)。
     </Note>
 
     ```json5
@@ -201,23 +201,23 @@ OpenClaw 內建了以下 xAI 模型系列：
     - 隨附的 xAI 包裝函式會在傳送原生 xAI 請求之前，移除不支援的嚴格工具架構標記和推論負載金鑰。
     - `web_search`、`x_search` 和 `code_execution` 會以 OpenClaw 工具的形式呈現。OpenClaw 會在每個工具請求內啟用其所需的特定 xAI 內建功能，而不是將所有原生工具附加到每個聊天輪次。
     - `x_search` 和 `code_execution` 是由隨附的 xAI 外掛程式擁有，而非硬式編碼至核心模型執行階段中。
-    - `code_execution` 是遠端 xAI 沙箱執行，而非本機 [`exec`](/en/tools/exec)。
+    - `code_execution` 是遠端 xAI 沙箱執行，而非本機 [`exec`](/zh-Hant/tools/exec)。
   </Accordion>
 </AccordionGroup>
 
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和故障轉移行為。
   </Card>
-  <Card title="影片生成" href="/en/tools/video-generation" icon="video">
+  <Card title="影片生成" href="/zh-Hant/tools/video-generation" icon="video">
     共用的影片工具參數和提供者選擇。
   </Card>
-  <Card title="所有提供者" href="/en/providers/index" icon="grid-2">
+  <Card title="所有提供者" href="/zh-Hant/providers/index" icon="grid-2">
     更廣泛的提供者概覽。
   </Card>
-  <Card title="疑難排解" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="疑難排解" href="/zh-Hant/help/troubleshooting" icon="wrench">
     常見問題與修復方法。
   </Card>
 </CardGroup>

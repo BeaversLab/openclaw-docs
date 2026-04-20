@@ -10,16 +10,16 @@ title: "Gateway Runbook"
 Utilisez cette page pour le démarrage initial (jour-1) et les opérations courantes (jour-2) du service Gateway.
 
 <CardGroup cols={2}>
-  <Card title="Deep troubleshooting" icon="siren" href="/en/gateway/troubleshooting">
+  <Card title="Deep troubleshooting" icon="siren" href="/fr/gateway/troubleshooting">
     Diagnostics basés sur les symptômes avec des échelles de commandes exactes et des signatures de journal.
   </Card>
-  <Card title="Configuration" icon="sliders" href="/en/gateway/configuration">
+  <Card title="Configuration" icon="sliders" href="/fr/gateway/configuration">
     Guide de configuration orienté tâche + référence complète de la configuration.
   </Card>
-  <Card title="Secrets management" icon="key-round" href="/en/gateway/secrets">
+  <Card title="Secrets management" icon="key-round" href="/fr/gateway/secrets">
     Contrat SecretRef, comportement de l'instantané d'exécution et opérations de migration/rechargement.
   </Card>
-  <Card title="Secrets plan contract" icon="shield-check" href="/en/gateway/secrets-plan-contract">
+  <Card title="Secrets plan contract" icon="shield-check" href="/fr/gateway/secrets-plan-contract">
     Règles exactes de chemin/cible `secrets apply` et comportement du profil d'authentification en référence seule.
   </Card>
 </CardGroup>
@@ -159,7 +159,7 @@ openclaw gateway probe
   répond.
 - Si c'est intentionnel, isolez les ports, la configuration/l'état et les racines de l'espace de travail pour chaque passerelle.
 
-Configuration détaillée : [/gateway/multiple-gateways](/en/gateway/multiple-gateways).
+Configuration détaillée : [/gateway/multiple-gateways](/fr/gateway/multiple-gateways).
 
 ## Accès à distance
 
@@ -174,7 +174,7 @@ Connectez ensuite les clients localement à `ws://127.0.0.1:18789`.
 
 <Warning>Les tunnels SSH ne contournent pas l'authentification de la passerelle. Pour l'authentification par secret partagé, les clients doivent encore envoyer `token`/`password` même via le tunnel. Pour les modes porteurs d'identité, la requête doit toujours satisfaire ce chemin d'authentification.</Warning>
 
-Voir : [Remote Gateway](/en/gateway/remote), [Authentication](/en/gateway/authentication), [Tailscale](/en/gateway/tailscale).
+Voir : [Remote Gateway](/fr/gateway/remote), [Authentication](/fr/gateway/authentication), [Tailscale](/fr/gateway/tailscale).
 
 ## Supervision et cycle de vie du service
 
@@ -282,7 +282,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a opencla
 OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
 ```
 
-Voir : [Plusieurs passerelles](/en/gateway/multiple-gateways).
+Voir : [Plusieurs passerelles](/fr/gateway/multiple-gateways).
 
 ### Chemin rapide du profil de développement
 
@@ -310,7 +310,7 @@ Les exécutions de l'agent se déroulent en deux étapes :
 1. Accusé de réception accepté immédiat (`status:"accepted"`)
 2. Réponse d'achèvement finale (`status:"ok"|"error"`), avec des événements `agent` diffusés entre les deux.
 
-Voir la documentation complète du protocole : [Protocole Gateway](/en/gateway/protocol).
+Voir la documentation complète du protocole : [Protocole Gateway](/fr/gateway/protocol).
 
 ## Vérifications opérationnelles
 
@@ -340,7 +340,7 @@ Les événements ne sont pas rejoués. En cas de lacunes dans la séquence, rafr
 | `Gateway start blocked: set gateway.mode=local`                | Config définie en mode distant, ou l'horodatage du mode local est manquant dans une configuration endommagée |
 | `unauthorized` lors de la connexion                            | Inadéquation de l'authentification entre le client et la passerelle                                          |
 
-Pour les échelles de diagnostic complètes, utilisez [Dépannage de la passerelle](/en/gateway/troubleshooting).
+Pour les échelles de diagnostic complètes, utilisez [Dépannage de la passerelle](/fr/gateway/troubleshooting).
 
 ## Garanties de sécurité
 
@@ -352,9 +352,9 @@ Pour les échelles de diagnostic complètes, utilisez [Dépannage de la passerel
 
 Connexes :
 
-- [Dépannage](/en/gateway/troubleshooting)
-- [Processus d'arrière-plan](/en/gateway/background-process)
-- [Configuration](/en/gateway/configuration)
-- [Santé](/en/gateway/health)
-- [Docteur](/en/gateway/doctor)
-- [Authentification](/en/gateway/authentication)
+- [Dépannage](/fr/gateway/troubleshooting)
+- [Processus d'arrière-plan](/fr/gateway/background-process)
+- [Configuration](/fr/gateway/configuration)
+- [Santé](/fr/gateway/health)
+- [Docteur](/fr/gateway/doctor)
+- [Authentification](/fr/gateway/authentication)

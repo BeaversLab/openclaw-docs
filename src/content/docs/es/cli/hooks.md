@@ -14,8 +14,8 @@ Ejecutar `openclaw hooks` sin un subcomando es equivalente a `openclaw hooks lis
 
 Relacionado:
 
-- Hooks: [Hooks](/en/automation/hooks)
-- Plugin hooks: [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks)
+- Hooks: [Hooks](/es/automation/hooks)
+- Plugin hooks: [Plugin hooks](/es/plugins/architecture#provider-runtime-hooks)
 
 ## Listar todos los hooks
 
@@ -281,7 +281,7 @@ openclaw hooks enable session-memory
 
 **Salida:** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
 
-**Consulte:** [documentación de session-memory](/en/automation/hooks#session-memory)
+**Consulte:** [documentación de session-memory](/es/automation/hooks#session-memory)
 
 ### bootstrap-extra-files
 
@@ -293,7 +293,7 @@ Inyecta archivos de arranque adicionales (por ejemplo, monorepo-local `AGENTS.md
 openclaw hooks enable bootstrap-extra-files
 ```
 
-**Consulte:** [documentación de bootstrap-extra-files](/en/automation/hooks#bootstrap-extra-files)
+**Consulte:** [documentación de bootstrap-extra-files](/es/automation/hooks#bootstrap-extra-files)
 
 ### command-logger
 
@@ -320,7 +320,7 @@ cat ~/.openclaw/logs/commands.log | jq .
 grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 ```
 
-**Consulte:** [documentación de command-logger](/en/automation/hooks#command-logger)
+**Consulte:** [documentación de command-logger](/es/automation/hooks#command-logger)
 
 ### boot-md
 
@@ -334,4 +334,4 @@ Ejecuta `BOOT.md` cuando se inicia la puerta de enlace (después de que se inici
 openclaw hooks enable boot-md
 ```
 
-**Consulte:** [documentación de boot-md](/en/automation/hooks#boot-md)
+**Consulte:** [documentación de boot-md](/es/automation/hooks#boot-md)

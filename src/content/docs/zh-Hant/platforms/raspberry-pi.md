@@ -179,7 +179,7 @@ ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 到 Control UI 設定中。對於 token 驗證，請使用 `gateway.auth.token` (或
 `OPENCLAW_GATEWAY_TOKEN`)。
 
-對於永久遠端存取，請參閱 [Tailscale](/en/gateway/tailscale)。
+對於永久遠端存取，請參閱 [Tailscale](/zh-Hant/gateway/tailscale)。
 
 ---
 
@@ -412,8 +412,8 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ## 參見
 
-- [Linux 指南](/en/platforms/linux) — 一般 Linux 設定
-- [DigitalOcean 指南](/en/platforms/digitalocean) — 雲端替代方案
-- [Hetzner 指南](/en/install/hetzner) — Docker 設定
-- [Tailscale](/en/gateway/tailscale) — 遠端存取
-- [節點](/en/nodes) — 將您的筆記型電腦/手機與 Pi 閘道配對
+- [Linux 指南](/zh-Hant/platforms/linux) — 一般 Linux 設定
+- [DigitalOcean 指南](/zh-Hant/platforms/digitalocean) — 雲端替代方案
+- [Hetzner 指南](/zh-Hant/install/hetzner) — Docker 設定
+- [Tailscale](/zh-Hant/gateway/tailscale) — 遠端存取
+- [節點](/zh-Hant/nodes) — 將您的筆記型電腦/手機與 Pi 閘道配對

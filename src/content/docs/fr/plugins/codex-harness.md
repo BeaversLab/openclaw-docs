@@ -465,7 +465,7 @@ La génération de média ne nécessite pas PI. Image, vidéo, musique, PDF, TTS
 
 ## Connexes
 
-- [Plugins de harnais d'agent](/en/plugins/sdk-agent-harness)
-- [Fournisseurs de modèle](/en/concepts/model-providers)
-- [Référence de configuration](/en/gateway/configuration-reference)
-- [Tests](/en/help/testing#live-codex-app-server-harness-smoke)
+- [Plugins de harnais d'agent](/fr/plugins/sdk-agent-harness)
+- [Fournisseurs de modèle](/fr/concepts/model-providers)
+- [Référence de configuration](/fr/gateway/configuration-reference)
+- [Tests](/fr/help/testing#live-codex-app-server-harness-smoke)

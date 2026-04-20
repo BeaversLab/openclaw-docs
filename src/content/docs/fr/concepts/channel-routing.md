@@ -68,7 +68,7 @@ Configuration :
 }
 ```
 
-Voir : [Groupes de diffusion](/en/broadcast-groups).
+Voir : [Groupes de diffusion](/fr/broadcast-groups).
 
 ## Aperçu de la configuration
 

@@ -18,7 +18,7 @@ y valores predeterminados del espacio de trabajo en un flujo guiado.
 openclaw onboard
 ```
 
-<Info>Primera chat más rápido: abre la Control UI (no se necesita configuración de canal). Ejecuta `openclaw dashboard` y chatea en el navegador. Documentos: [Dashboard](/en/web/dashboard).</Info>
+<Info>Primera chat más rápido: abre la Control UI (no se necesita configuración de canal). Ejecuta `openclaw dashboard` y chatea en el navegador. Documentos: [Dashboard](/es/web/dashboard).</Info>
 
 Para reconfigurar más adelante:
 
@@ -31,7 +31,7 @@ openclaw agents add <name>
 
 <Tip>
   La onboarding de CLI incluye un paso de búsqueda web donde puedes elegir un proveedor tal como Brave, DuckDuckGo, Exa, Firecrawl, Gemini, Grok, Kimi, MiniMax Search, Ollama Web Search, Perplexity, SearXNG o Tavily. Algunos proveedores requieren una clave API, mientras que otros no requieren clave. También puedes configurar esto más tarde con `openclaw configure --section web`. Documentos: [Web
-  tools](/en/tools/web).
+  tools](/es/tools/web).
 </Tip>
 
 ## Inicio rápido frente a Avanzado
@@ -41,7 +41,7 @@ La incorporación comienza con **QuickStart** (valores predeterminados) frente a
 <Tabs>
   <Tab title="QuickStart (valores predeterminados)">
     - Gateway local (bucle invertido) - Espacio de trabajo predeterminado (o espacio de trabajo existente) - Puerto del Gateway **18789** - Autenticación del Gateway **Token** (auto‑generado, incluso en bucle invertido) - Política de herramientas predeterminada para nuevas configuraciones locales: `tools.profile: "coding"` (se conserva el perfil explícito existente) - Aislamiento de DM
-    predeterminado: la onboarding local escribe `session.dmScope: "per-channel-peer"` cuando no está configurado. Detalles: [CLI Setup Reference](/en/start/wizard-cli-reference#outputs-and-internals) - Exposición de Tailscale **Desactivada** - Los DM de Telegram + WhatsApp se configuran por defecto en **lista de permitidos** (se te pedirá tu número de teléfono)
+    predeterminado: la onboarding local escribe `session.dmScope: "per-channel-peer"` cuando no está configurado. Detalles: [CLI Setup Reference](/es/start/wizard-cli-reference#outputs-and-internals) - Exposición de Tailscale **Desactivada** - Los DM de Telegram + WhatsApp se configuran por defecto en **lista de permitidos** (se te pedirá tu número de teléfono)
   </Tab>
   <Tab title="Avanzado (control total)">- Expone cada paso (modo, espacio de trabajo, puerta de enlace, canales, demonio, habilidades).</Tab>
 </Tabs>
@@ -94,14 +94,14 @@ Notas:
 ## Referencia completa
 
 Para ver desgloses detallados paso a paso y salidas de configuración, consulta
-[Referencia de configuración de CLI](/en/start/wizard-cli-reference).
-Para ver ejemplos no interactivos, consulta [Automatización de CLI](/en/start/wizard-cli-automation).
+[Referencia de configuración de CLI](/es/start/wizard-cli-reference).
+Para ver ejemplos no interactivos, consulta [Automatización de CLI](/es/start/wizard-cli-automation).
 Para la referencia técnica más profunda, incluidos los detalles de RPC, consulta
-[Referencia de Onboarding](/en/reference/wizard).
+[Referencia de Onboarding](/es/reference/wizard).
 
 ## Documentos relacionados
 
-- Referencia de comandos de CLI: [`openclaw onboard`](/en/cli/onboard)
-- Resumen del onboarding: [Resumen de Onboarding](/en/start/onboarding-overview)
-- Incorporación de la aplicación de macOS: [Incorporación](/en/start/onboarding)
-- Ritual de primera ejecución del agente: [Inicialización del agente](/en/start/bootstrapping)
+- Referencia de comandos de CLI: [`openclaw onboard`](/es/cli/onboard)
+- Resumen del onboarding: [Resumen de Onboarding](/es/start/onboarding-overview)
+- Incorporación de la aplicación de macOS: [Incorporación](/es/start/onboarding)
+- Ritual de primera ejecución del agente: [Inicialización del agente](/es/start/bootstrapping)

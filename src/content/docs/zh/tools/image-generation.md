@@ -133,12 +133,12 @@ MiniMax 图像生成可通过捆绑的 MiniMax 身份验证路径获得：
 
 ## 相关
 
-- [工具概述](/en/tools) — 所有可用的代理工具
-- [fal](/en/providers/fal) — fal 图片和视频提供商设置
-- [ComfyUI](/en/providers/comfy) — 本地 ComfyUI 和 Comfy Cloud 工作流设置
-- [Google (Gemini)](/en/providers/google) — Gemini 图片提供商设置
-- [MiniMax](/en/providers/minimax) — MiniMax 图片提供商设置
-- [OpenAI](/en/providers/openai) — OpenAI Images 提供商设置
-- [Vydra](/en/providers/vydra) — Vydra 图片、视频和语音设置
-- [配置参考](/en/gateway/configuration-reference#agent-defaults) — `imageGenerationModel` 配置
-- [模型](/en/concepts/models) — 模型配置和故障转移
+- [工具概述](/zh/tools) — 所有可用的代理工具
+- [fal](/zh/providers/fal) — fal 图片和视频提供商设置
+- [ComfyUI](/zh/providers/comfy) — 本地 ComfyUI 和 Comfy Cloud 工作流设置
+- [Google (Gemini)](/zh/providers/google) — Gemini 图片提供商设置
+- [MiniMax](/zh/providers/minimax) — MiniMax 图片提供商设置
+- [OpenAI](/zh/providers/openai) — OpenAI Images 提供商设置
+- [Vydra](/zh/providers/vydra) — Vydra 图片、视频和语音设置
+- [配置参考](/zh/gateway/configuration-reference#agent-defaults) — `imageGenerationModel` 配置
+- [模型](/zh/concepts/models) — 模型配置和故障转移

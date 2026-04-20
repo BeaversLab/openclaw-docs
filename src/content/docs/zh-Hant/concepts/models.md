@@ -9,9 +9,9 @@ title: "Models CLI"
 
 # Models CLI
 
-請參閱 [/concepts/model-failover](/en/concepts/model-failover) 以了解 auth profile
+請參閱 [/concepts/model-failover](/zh-Hant/concepts/model-failover) 以了解 auth profile
 輪替、冷卻，以及其與備選機制的互動方式。
-快速供應商概覽 + 範例：[/concepts/model-providers](/en/concepts/model-providers)。
+快速供應商概覽 + 範例：[/concepts/model-providers](/zh-Hant/concepts/model-providers)。
 
 ## 模型選擇運作方式
 
@@ -31,7 +31,7 @@ OpenClaw 依照以下順序選擇模型：
 - `agents.defaults.imageGenerationModel` 由共享的圖像生成功能使用。如果省略，`image_generate` 仍然可以推斷出基於 auth 的供應商預設值。它會先嘗試當前的預設供應商，然後依照 provider-id 順序嘗試剩餘的已註冊圖像生成供應商。如果您設定了特定的供應商/模型，請同時設定該供應商的 auth/API 金鑰。
 - `agents.defaults.musicGenerationModel` 由共享的音樂生成功能使用。如果省略，`music_generate` 仍然可以推斷出基於 auth 的供應商預設值。它會先嘗試當前的預設供應商，然後依照 provider-id 順序嘗試剩餘的已註冊音樂生成供應商。如果您設定了特定的供應商/模型，請同時設定該供應商的 auth/API 金鑰。
 - `agents.defaults.videoGenerationModel` 由共享的影片生成功能使用。如果省略，`video_generate` 仍然可以推斷出基於 auth 的供應商預設值。它會先嘗試當前的預設供應商，然後依照 provider-id 順序嘗試剩餘的已註冊影片生成供應商。如果您設定了特定的供應商/模型，請同時設定該供應商的 auth/API 金鑰。
-- 每個代理程式的預設值可以透過 `agents.list[].model` 加上綁定來覆寫 `agents.defaults.model` (請參閱 [/concepts/multi-agent](/en/concepts/multi-agent))。
+- 每個代理程式的預設值可以透過 `agents.list[].model` 加上綁定來覆寫 `agents.defaults.model` (請參閱 [/concepts/multi-agent](/zh-Hant/concepts/multi-agent))。
 
 ## 快速模型策略
 
@@ -64,7 +64,7 @@ Model refs are normalized to lowercase. Provider aliases like `z.ai/*` normalize
 to `zai/*`.
 
 Provider configuration examples (including OpenCode) live in
-[/providers/opencode](/en/providers/opencode).
+[/providers/opencode](/zh-Hant/providers/opencode).
 
 ## "Model is not allowed" (and why replies stop)
 
@@ -129,7 +129,7 @@ Notes:
      則改為回退至第一個設定的提供者/模型，以避免
      顯示過時的已移除提供者預設值。
 
-完整的指令行為/設定：[斜線指令](/en/tools/slash-commands)。
+完整的指令行為/設定：[斜線指令](/zh-Hant/tools/slash-commands)。
 
 ## CLI 指令
 
@@ -211,7 +211,7 @@ openclaw models status
 輸入
 
 - OpenRouter `/models` 清單（過濾器 `:free`）
-- 需要來自身份設定檔或 `OPENROUTER_API_KEY` 的 OpenRouter API 金鑰（請參閱 [/environment](/en/help/environment)）
+- 需要來自身份設定檔或 `OPENROUTER_API_KEY` 的 OpenRouter API 金鑰（請參閱 [/environment](/zh-Hant/help/environment)）
 - 可選過濾器：`--max-age-days`、`--min-params`、`--provider`、`--max-candidates`
 - 探測控制項：`--timeout`、`--concurrency`
 
@@ -236,9 +236,9 @@ openclaw models status
 
 ## 相關
 
-- [模型提供商](/en/concepts/model-providers) — 提供商路由和身份驗證
-- [模型故障轉移](/en/concepts/model-failover) — 故障轉移鏈
-- [圖像生成](/en/tools/image-generation) — 圖像模型配置
-- [音樂生成](/en/tools/music-generation) — 音樂模型配置
-- [視頻生成](/en/tools/video-generation) — 視頻模型配置
-- [配置參考](/en/gateway/configuration-reference#agent-defaults) — 模型配置鍵
+- [模型提供商](/zh-Hant/concepts/model-providers) — 提供商路由和身份驗證
+- [模型故障轉移](/zh-Hant/concepts/model-failover) — 故障轉移鏈
+- [圖像生成](/zh-Hant/tools/image-generation) — 圖像模型配置
+- [音樂生成](/zh-Hant/tools/music-generation) — 音樂模型配置
+- [視頻生成](/zh-Hant/tools/video-generation) — 視頻模型配置
+- [配置參考](/zh-Hant/gateway/configuration-reference#agent-defaults) — 模型配置鍵

@@ -184,7 +184,7 @@ el descubrimiento entre redes puede utilizar el dominio de área amplia configur
 
 Si mDNS está bloqueado, use una zona DNS-SD unicast (elija un dominio; ejemplo:
 `openclaw.internal.`) y Tailscale split DNS.
-Vea [Bonjour](/en/gateway/bonjour) para el ejemplo de CoreDNS.
+Vea [Bonjour](/es/gateway/bonjour) para el ejemplo de CoreDNS.
 
 ### Host/puerto manual
 
@@ -223,12 +223,12 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 ## Errores comunes
 
 - `NODE_BACKGROUND_UNAVAILABLE`: traiga la aplicación de iOS al primer plano (los comandos de lienzo/cámara/pantalla lo requieren).
-- `A2UI_HOST_NOT_CONFIGURED`: la pasarela no anunció una URL de host de lienzo; verifique `canvasHost` en [Configuración de la pasarela](/en/gateway/configuration).
+- `A2UI_HOST_NOT_CONFIGURED`: la pasarela no anunció una URL de host de lienzo; verifique `canvasHost` en [Configuración de la pasarela](/es/gateway/configuration).
 - El aviso de emparejamiento nunca aparece: ejecute `openclaw devices list` y apruébelo manualmente.
 - La reconexión falla después de reinstalar: el token de emparejamiento del llavero se borró; vuelva a emparejar el nodo.
 
 ## Documentos relacionados
 
-- [Emparejamiento](/en/channels/pairing)
-- [Descubrimiento](/en/gateway/discovery)
-- [Bonjour](/en/gateway/bonjour)
+- [Emparejamiento](/es/channels/pairing)
+- [Descubrimiento](/es/gateway/discovery)
+- [Bonjour](/es/gateway/bonjour)

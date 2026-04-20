@@ -175,7 +175,7 @@ export LITELLM_API_KEY="sk-litellm-key"
   </Accordion>
 </AccordionGroup>
 
-<Note>Para obtener información general sobre la configuración del proveedor y el comportamiento de conmutación por error, consulte [Proveedores de modelos](/en/concepts/model-providers).</Note>
+<Note>Para obtener información general sobre la configuración del proveedor y el comportamiento de conmutación por error, consulte [Proveedores de modelos](/es/concepts/model-providers).</Note>
 
 ## Relacionado
 
@@ -183,13 +183,13 @@ export LITELLM_API_KEY="sk-litellm-key"
   <Card title="Documentación de LiteLLM" href="https://docs.litellm.ai" icon="book">
     Documentación oficial y referencia de la API de LiteLLM.
   </Card>
-  <Card title="Proveedores de modelos" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Proveedores de modelos" href="/es/concepts/model-providers" icon="layers">
     Resumen de todos los proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Configuración" href="/en/gateway/configuration" icon="gear">
+  <Card title="Configuración" href="/es/gateway/configuration" icon="gear">
     Referencia completa de configuración.
   </Card>
-  <Card title="Selección de modelo" href="/en/concepts/models" icon="brain">
+  <Card title="Selección de modelo" href="/es/concepts/models" icon="brain">
     Cómo elegir y configurar modelos.
   </Card>
 </CardGroup>

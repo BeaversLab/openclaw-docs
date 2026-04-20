@@ -28,7 +28,7 @@ Notes :
 - La sortie inclut les magasins de session par agent lorsque plusieurs agents sont configurés.
 - La vue d'ensemble inclut le statut d'installation/exécution du service Gateway + hôte de nœud, si disponible.
 - La vue d'ensemble inclut le canal de mise à jour + le SHA git (pour les extraits de code source).
-- Les informations de mise à jour apparaissent dans la vue d'ensemble ; si une mise à jour est disponible, status affiche un conseil pour exécuter `openclaw update` (voir [Mise à jour](/en/install/updating)).
+- Les informations de mise à jour apparaissent dans la vue d'ensemble ; si une mise à jour est disponible, status affiche un conseil pour exécuter `openclaw update` (voir [Mise à jour](/fr/install/updating)).
 - Les surfaces de status en lecture seule (`status`, `status --json`, `status --all`) résolvent les SecretRefs pris en charge pour leurs chemins de configuration ciblés lorsque cela est possible.
 - Si un SecretRef de canal pris en charge est configuré mais indisponible dans le chemin de commande actuel, status reste en lecture seule et signale une sortie dégradée au lieu de planter. La sortie humaine affiche des avertissements tels que « configured token unavailable in this command path », et la sortie JSON inclut `secretDiagnostics`.
 - Lorsque la résolution locale de la commande SecretRef réussit, status privilégie l'instantané résolu et efface les marqueurs de canal transitoires « secret indisponible » de la sortie finale.

@@ -12,8 +12,8 @@ Découverte, analyse et configuration de modèles (modèle par défaut, replis, 
 
 Connexes :
 
-- Fournisseurs + modèles : [Modèles](/en/providers/models)
-- Configuration de l'authentification du fournisseur : [Getting started](/en/start/getting-started)
+- Fournisseurs + modèles : [Modèles](/fr/providers/models)
+- Configuration de l'authentification du fournisseur : [Getting started](/fr/start/getting-started)
 
 ## Commandes courantes
 

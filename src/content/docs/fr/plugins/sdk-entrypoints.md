@@ -13,7 +13,7 @@ read_when:
 Chaque plugin exporte un objet d'entrée par défaut. Le SDK fournit trois assistants pour
 les créer.
 
-<Tip>**Vous cherchez un guide pas à pas ?** Voir [Channel Plugins](/en/plugins/sdk-channel-plugins) ou [Provider Plugins](/en/plugins/sdk-provider-plugins) pour des guides détaillés.</Tip>
+<Tip>**Vous cherchez un guide pas à pas ?** Voir [Channel Plugins](/fr/plugins/sdk-channel-plugins) ou [Provider Plugins](/fr/plugins/sdk-provider-plugins) pour des guides détaillés.</Tip>
 
 ## `definePluginEntry`
 
@@ -127,7 +127,7 @@ export default defineSetupPluginEntry(myChannelPlugin);
 
 OpenClaw charge ceci à la place de l'entrée complète lorsqu'un channel est désactivé,
 non configuré, ou lorsque le chargement différé est activé. Voir
-[Configuration et configuration](/en/plugins/sdk-setup#setup-entry) pour savoir quand cela est important.
+[Configuration et configuration](/fr/plugins/sdk-setup#setup-entry) pour savoir quand cela est important.
 
 En pratique, associez `defineSetupPluginEntry(...)` aux familles d'assistants de configuration
 étroits :
@@ -224,8 +224,8 @@ Utilisez `openclaw plugins inspect <id>` pour voir la forme d'un plugin.
 
 ## Connexes
 
-- [Aperçu du SDK](/en/plugins/sdk-overview) — API d'enregistrement et référence des sous-chemins
-- [Assistants d'exécution](/en/plugins/sdk-runtime) — `api.runtime` et `createPluginRuntimeStore`
-- [Configuration et installation](/en/plugins/sdk-setup) — manifeste, point d'entrée d'installation, chargement différé
-- [Plugins de canal](/en/plugins/sdk-channel-plugins) — construction de l'objet `ChannelPlugin`
-- [Plugins de fournisseur](/en/plugins/sdk-provider-plugins) — enregistrement de fournisseur et crochets
+- [Aperçu du SDK](/fr/plugins/sdk-overview) — API d'enregistrement et référence des sous-chemins
+- [Assistants d'exécution](/fr/plugins/sdk-runtime) — `api.runtime` et `createPluginRuntimeStore`
+- [Configuration et installation](/fr/plugins/sdk-setup) — manifeste, point d'entrée d'installation, chargement différé
+- [Plugins de canal](/fr/plugins/sdk-channel-plugins) — construction de l'objet `ChannelPlugin`
+- [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins) — enregistrement de fournisseur et crochets

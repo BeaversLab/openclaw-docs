@@ -82,10 +82,10 @@ O haga un seguimiento mientras reproduce:
 tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
 ```
 
-Para puertas de enlace remotas, también puede usar `openclaw logs --follow` (consulte [/cli/logs](/en/cli/logs)).
+Para puertas de enlace remotas, también puede usar `openclaw logs --follow` (consulte [/cli/logs](/es/cli/logs)).
 
 ## Notas
 
 - Si `logging.level` se establece más alto que `warn`, estos registros pueden suprimirse. El valor predeterminado `info` está bien.
 - Es seguro dejar las marcas habilitadas; solo afectan el volumen de registros para el subsistema específico.
-- Use [/logging](/en/logging) para cambiar destinos de registros, niveles y redacción.
+- Use [/logging](/es/logging) para cambiar destinos de registros, niveles y redacción.

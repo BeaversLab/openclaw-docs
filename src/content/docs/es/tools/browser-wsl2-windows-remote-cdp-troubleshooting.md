@@ -74,7 +74,7 @@ Usa:
 
 `http://127.0.0.1:18789/`
 
-No uses por defecto una IP LAN para la Interfaz de Control. HTTP plano en una dirección LAN o tailnet puede activar un comportamiento de origen inseguro/autenticación de dispositivo que no está relacionado con el CDP en sí. Consulta [Control UI](/en/web/control-ui).
+No uses por defecto una IP LAN para la Interfaz de Control. HTTP plano en una dirección LAN o tailnet puede activar un comportamiento de origen inseguro/autenticación de dispositivo que no está relacionado con el CDP en sí. Consulta [Control UI](/es/web/control-ui).
 
 ## Validar en capas
 
@@ -162,7 +162,7 @@ Luego verifique:
 
 Página útil:
 
-- [Interfaz de Control](/en/web/control-ui)
+- [Interfaz de Control](/es/web/control-ui)
 
 ### Capa 5: Verificar el control del navegador de extremo a extremo
 

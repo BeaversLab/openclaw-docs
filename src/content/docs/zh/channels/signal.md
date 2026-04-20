@@ -99,7 +99,7 @@ title: "Signal"
 }
 ```
 
-多账号支持：使用 `channels.signal.accounts` 配置每个账号的设置，并可选 `name`。有关共享模式，请参阅 [`gateway/configuration`](/en/gateway/configuration-reference#multi-account-all-channels)。
+多账号支持：使用 `channels.signal.accounts` 配置每个账号的设置，并可选 `name`。有关共享模式，请参阅 [`gateway/configuration`](/zh/gateway/configuration-reference#multi-account-all-channels)。
 
 ## 设置路径 B：注册专用机器人号码（短信，Linux）
 
@@ -188,7 +188,7 @@ openclaw channels status --probe
 - 通过以下方式批准：
   - `openclaw pairing list signal`
   - `openclaw pairing approve signal <CODE>`
-- 配对是 Signal 私信的默认令牌交换方式。详情：[配对](/en/channels/pairing)
+- 配对是 Signal 私信的默认令牌交换方式。详情：[配对](/zh/channels/pairing)
 - 仅 UUID 的发送者（来自 `sourceUuid`）在 `channels.signal.allowFrom` 中存储为 `uuid:<id>`。
 
 群组：
@@ -284,7 +284,7 @@ pgrep -af signal-cli
 grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 ```
 
-用于分流流程：[/channels/故障排除](/en/channels/troubleshooting)。
+用于分流流程：[/channels/故障排除](/zh/channels/troubleshooting)。
 
 ## 安全说明
 
@@ -295,7 +295,7 @@ grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 
 ## 配置参考 (Signal)
 
-完整配置：[Configuration](/en/gateway/configuration)
+完整配置：[Configuration](/zh/gateway/configuration)
 
 提供商选项：
 
@@ -330,8 +330,8 @@ grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 
 ## 相关
 
-- [频道概览](/en/channels) — 所有支持的频道
-- [配对](/en/channels/pairing) — 私信认证和配对流程
-- [群组](/en/channels/groups) — 群聊行为和提及限制
-- [频道路由](/en/channels/channel-routing) — 消息的会话路由
-- [安全性](/en/gateway/security) — 访问模型和加固
+- [频道概览](/zh/channels) — 所有支持的频道
+- [配对](/zh/channels/pairing) — 私信认证和配对流程
+- [群组](/zh/channels/groups) — 群聊行为和提及限制
+- [频道路由](/zh/channels/channel-routing) — 消息的会话路由
+- [安全性](/zh/gateway/security) — 访问模型和加固

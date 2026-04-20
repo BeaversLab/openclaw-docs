@@ -7,4 +7,4 @@ title: "Inscrire des outils"
 
 # Inscrire des outils dans les plugins
 
-Cette page a été déplacée. Voir [Création de plugins : Inscrire des outils d'agent](/en/plugins/building-plugins#registering-agent-tools).
+Cette page a été déplacée. Voir [Création de plugins : Inscrire des outils d'agent](/fr/plugins/building-plugins#registering-agent-tools).

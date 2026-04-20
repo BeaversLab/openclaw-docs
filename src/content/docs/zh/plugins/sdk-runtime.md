@@ -12,7 +12,7 @@ read_when:
 
 注入到每个插件中的 `api.runtime` 对象的参考文档。请使用这些助手，而不是直接导入主机内部组件。
 
-<Tip>**Looking for a walkthrough?** See [Channel Plugins](/en/plugins/sdk-channel-plugins) or [Provider Plugins](/en/plugins/sdk-provider-plugins) for step-by-step guides that show these helpers in context.</Tip>
+<Tip>**Looking for a walkthrough?** See [Channel Plugins](/zh/plugins/sdk-channel-plugins) or [Provider Plugins](/zh/plugins/sdk-provider-plugins) for step-by-step guides that show these helpers in context.</Tip>
 
 ```typescript
 register(api) {
@@ -411,6 +411,6 @@ Beyond `api.runtime`, the API object also provides:
 
 ## Related
 
-- [SDK Overview](/en/plugins/sdk-overview) -- subpath reference
-- [SDK Entry Points](/en/plugins/sdk-entrypoints) -- `definePluginEntry` options
-- [Plugin Internals](/en/plugins/architecture) -- capability 模型 and registry
+- [SDK Overview](/zh/plugins/sdk-overview) -- subpath reference
+- [SDK Entry Points](/zh/plugins/sdk-entrypoints) -- `definePluginEntry` options
+- [Plugin Internals](/zh/plugins/architecture) -- capability 模型 and registry

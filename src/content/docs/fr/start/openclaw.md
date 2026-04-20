@@ -26,7 +26,7 @@ Commencez prudemment :
 
 ## Prérequis
 
-- OpenClaw installé et intégré — voir [Getting Started](/en/start/getting-started) si vous ne l'avez pas encore fait
+- OpenClaw installé et intégré — voir [Getting Started](/fr/start/getting-started) si vous ne l'avez pas encore fait
 - Un deuxième numéro de téléphone (SIM/eSIM/prépayé) pour l'assistant
 
 ## La configuration à deux téléphones (recommandée)
@@ -80,8 +80,8 @@ Conseil : traitez ce dossier comme la "mémoire" d'OpenClaw et faites-en un dép
 openclaw setup
 ```
 
-Guide complet de l'espace de travail + sauvegarde : [Agent workspace](/en/concepts/agent-workspace)
-Flux de travail de la mémoire : [Memory](/en/concepts/memory)
+Guide complet de l'espace de travail + sauvegarde : [Agent workspace](/fr/concepts/agent-workspace)
+Flux de travail de la mémoire : [Memory](/fr/concepts/memory)
 
 Optionnel : choisir un espace de travail différent avec `agents.defaults.workspace` (prend en charge `~`).
 
@@ -107,7 +107,7 @@ Si vous fournissez déjà vos propres fichiers d'espace de travail depuis un dé
 
 OpenClaw est configuré par défaut pour une bonne configuration d'assistant, mais vous voudrez généralement ajuster :
 
-- persona/instructions dans [`SOUL.md`](/en/concepts/soul)
+- persona/instructions dans [`SOUL.md`](/fr/concepts/soul)
 - valeurs par défaut de réflexion (si souhaité)
 - battements de cœur (une fois que vous lui faites confiance)
 
@@ -214,12 +214,12 @@ Les journaux se trouvent sous `/tmp/openclaw/` (par défaut : `openclaw-YYYY-MM-
 
 ## Étapes suivantes
 
-- WebChat : [WebChat](/en/web/webchat)
-- Ops Gateway : [Gateway runbook](/en/gateway)
-- Cron + wakeups : [Cron jobs](/en/automation/cron-jobs)
-- Compagnon de barre de menus macOS : [application OpenClaw macOS](/en/platforms/macos)
-- Application de nœud iOS : [application iOS](/en/platforms/ios)
-- Application de nœud Android : [application Android](/en/platforms/android)
-- Statut Windows : [Windows (WSL2)](/en/platforms/windows)
-- Statut Linux : [application Linux](/en/platforms/linux)
-- Sécurité : [Sécurité](/en/gateway/security)
+- WebChat : [WebChat](/fr/web/webchat)
+- Ops Gateway : [Gateway runbook](/fr/gateway)
+- Cron + wakeups : [Cron jobs](/fr/automation/cron-jobs)
+- Compagnon de barre de menus macOS : [application OpenClaw macOS](/fr/platforms/macos)
+- Application de nœud iOS : [application iOS](/fr/platforms/ios)
+- Application de nœud Android : [application Android](/fr/platforms/android)
+- Statut Windows : [Windows (WSL2)](/fr/platforms/windows)
+- Statut Linux : [application Linux](/fr/platforms/linux)
+- Sécurité : [Sécurité](/fr/gateway/security)

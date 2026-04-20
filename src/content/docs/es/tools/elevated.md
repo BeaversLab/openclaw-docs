@@ -105,7 +105,7 @@ Allowlist entry formats:
 
 ## Relacionado
 
-- [Herramienta Exec](/en/tools/exec) — ejecución de comandos de shell
-- [Aprobaciones de Exec](/en/tools/exec-approvals) — sistema de aprobaciones y listas permitidas
-- [Sandbox (Caja de arena)](/en/gateway/sandboxing) — configuración del sandbox
-- [Sandbox vs Política de herramientas vs Modo elevado](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- [Herramienta Exec](/es/tools/exec) — ejecución de comandos de shell
+- [Aprobaciones de Exec](/es/tools/exec-approvals) — sistema de aprobaciones y listas permitidas
+- [Sandbox (Caja de arena)](/es/gateway/sandboxing) — configuración del sandbox
+- [Sandbox vs Política de herramientas vs Modo elevado](/es/gateway/sandbox-vs-tool-policy-vs-elevated)

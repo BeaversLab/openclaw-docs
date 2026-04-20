@@ -107,13 +107,13 @@ flowchart LR
 
 ## 多模態記憶
 
-使用 Gemini Embedding 2，您可以與 Markdown 一起索引圖像和音訊檔案。搜尋查詢仍為文字，但它們會與視覺和音訊內容進行比對。請參閱 [Memory configuration reference](/en/reference/memory-config) 以了解設定方式。
+使用 Gemini Embedding 2，您可以與 Markdown 一起索引圖像和音訊檔案。搜尋查詢仍為文字，但它們會與視覺和音訊內容進行比對。請參閱 [Memory configuration reference](/zh-Hant/reference/memory-config) 以了解設定方式。
 
 ## Session memory search
 
 您可以選擇性地索引 session 轉錄內容，以便 `memory_search` 能夠回憶先前的對話。這是透過
 `memorySearch.experimental.sessionMemory` 選擇加入的功能。詳情請參閱
-[configuration reference](/en/reference/memory-config)。
+[configuration reference](/zh-Hant/reference/memory-config)。
 
 ## 疑難排解
 
@@ -128,6 +128,6 @@ flowchart LR
 
 ## 延伸閱讀
 
-- [Active Memory](/en/concepts/active-memory) -- 用於互動式聊天會話的子代理程式記憶體
-- [Memory](/en/concepts/memory) -- 檔案佈局、後端、工具
-- [Memory configuration reference](/en/reference/memory-config) -- 所有設定選項
+- [Active Memory](/zh-Hant/concepts/active-memory) -- 用於互動式聊天會話的子代理程式記憶體
+- [Memory](/zh-Hant/concepts/memory) -- 檔案佈局、後端、工具
+- [Memory configuration reference](/zh-Hant/reference/memory-config) -- 所有設定選項

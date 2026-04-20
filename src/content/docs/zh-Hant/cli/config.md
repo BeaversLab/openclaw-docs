@@ -151,7 +151,7 @@ openclaw config set --batch-file ./config-set.batch.json --dry-run
 
 策略說明：
 
-- 在不受支援的執行時可變介面上，SecretRef 分配會被拒絕（例如 `hooks.token`、`commands.ownerDisplaySecret`、Discord 執行緒綁定 webhook 權杖，以及 WhatsApp 憑證 JSON）。請參閱 [SecretRef 憑證介面](/en/reference/secretref-credential-surface)。
+- 在不受支援的執行時可變介面上，SecretRef 分配會被拒絕（例如 `hooks.token`、`commands.ownerDisplaySecret`、Discord 執行緒綁定 webhook 權杖，以及 WhatsApp 憑證 JSON）。請參閱 [SecretRef 憑證介面](/zh-Hant/reference/secretref-credential-surface)。
 
 批次解析一律使用批次酬載（`--batch-json`/`--batch-file`）作為真實來源。
 `--strict-json` / `--json` 不會改變批次解析行為。

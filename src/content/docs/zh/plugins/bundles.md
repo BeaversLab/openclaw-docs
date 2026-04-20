@@ -260,6 +260,6 @@ Bundle 比原生插件具有更严格的信任边界：
 
 ## 相关
 
-- [安装和配置插件](/en/tools/plugin)
-- [构建插件](/en/plugins/building-plugins) — 创建原生插件
-- [插件清单](/en/plugins/manifest) — 原生清单架构
+- [安装和配置插件](/zh/tools/plugin)
+- [构建插件](/zh/plugins/building-plugins) — 创建原生插件
+- [插件清单](/zh/plugins/manifest) — 原生清单架构

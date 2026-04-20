@@ -74,7 +74,7 @@ Matriz de autenticación:
   - recurra al conjunto normal de ámbitos predeterminados del operador cuando el encabezado esté ausente
   - solo pierde la semántica de propietario cuando la persona que llama restringe explícitamente los ámbitos y omite `operator.admin`
 
-Consulte [Seguridad](/en/gateway/security) y [Acceso remoto](/en/gateway/remote).
+Consulte [Seguridad](/es/gateway/security) y [Acceso remoto](/es/gateway/remote).
 
 ## Contrato de modelo prioritario para agentes
 

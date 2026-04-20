@@ -89,7 +89,7 @@ otherwise -> reply
 - **私信**：完整工具（主机）
 - **群组**：沙箱 + 受限工具
 
-> 如果您需要真正独立的工作区/人设（“个人”和“公共”绝不能混合），请使用第二个代理 + 绑定。请参阅 [Multi-Agent Routing](/en/concepts/multi-agent)。
+> 如果您需要真正独立的工作区/人设（“个人”和“公共”绝不能混合），请使用第二个代理 + 绑定。请参阅 [Multi-Agent Routing](/zh/concepts/multi-agent)。
 
 示例（主机上的私信，群组沙箱隔离 + 仅限消息工具）：
 
@@ -140,9 +140,9 @@ otherwise -> reply
 
 相关：
 
-- 配置键和默认值：[Gateway(网关) configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
-- 调试工具被阻止的原因：[沙箱 vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
-- 绑定挂载详细信息：[沙箱隔离](/en/gateway/sandboxing#custom-bind-mounts)
+- 配置键和默认值：[Gateway(网关) configuration](/zh/gateway/configuration-reference#agentsdefaultssandbox)
+- 调试工具被阻止的原因：[沙箱 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
+- 绑定挂载详细信息：[沙箱隔离](/zh/gateway/sandboxing#custom-bind-mounts)
 
 ## 显示标签
 
@@ -406,4 +406,4 @@ otherwise -> reply
 
 ## WhatsApp 特性
 
-有关 WhatsApp 特有的行为（历史记录注入、提及处理详细信息），请参阅 [Group messages](/en/channels/group-messages)。
+有关 WhatsApp 特有的行为（历史记录注入、提及处理详细信息），请参阅 [Group messages](/zh/channels/group-messages)。

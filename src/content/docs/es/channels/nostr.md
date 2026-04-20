@@ -244,8 +244,8 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ## Relacionado
 
-- [Descripción general de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — autenticación de MD y flujo de emparejamiento
-- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento
+- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Grupos](/es/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

@@ -89,7 +89,7 @@ Esto le da un “cerebro” de agente (espacio de trabajo compartido + memoria),
 - **MDs**: herramientas completas (host)
 - **Grupos**: sandbox + herramientas restringidas (Docker)
 
-> Si necesita espacios de trabajo/personas verdaderamente separados (“personal” y “público” nunca deben mezclarse), use un segundo agente + enlaces. Consulte [Enrutamiento multiagente](/en/concepts/multi-agent).
+> Si necesita espacios de trabajo/personas verdaderamente separados (“personal” y “público” nunca deben mezclarse), use un segundo agente + enlaces. Consulte [Enrutamiento multiagente](/es/concepts/multi-agent).
 
 Ejemplo (MDs en el host, grupos en sandbox + herramientas solo de mensajería):
 
@@ -140,9 +140,9 @@ Ejemplo (MDs en el host, grupos en sandbox + herramientas solo de mensajería):
 
 Relacionado:
 
-- Claves de configuración y valores predeterminados: [Configuración de la puerta de enlace](/en/gateway/configuration-reference#agentsdefaultssandbox)
-- Depuración de por qué se bloquea una herramienta: [Sandbox vs. Política de herramientas vs. Elevado](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Detalles de montajes de enlace (bind mounts): [Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
+- Claves de configuración y valores predeterminados: [Configuración de la puerta de enlace](/es/gateway/configuration-reference#agentsdefaultssandbox)
+- Depuración de por qué se bloquea una herramienta: [Sandbox vs. Política de herramientas vs. Elevado](/es/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Detalles de montajes de enlace (bind mounts): [Sandboxing](/es/gateway/sandboxing#custom-bind-mounts)
 
 ## Etiquetas de visualización
 
@@ -407,4 +407,4 @@ El mensaje del sistema del agente incluye una introducción de grupo en el prime
 
 ## Especificidades de WhatsApp
 
-Consulte [Mensajes de grupo](/en/channels/group-messages) para obtener un comportamiento exclusivo de WhatsApp (inyección de historial, detalles del manejo de menciones).
+Consulte [Mensajes de grupo](/es/channels/group-messages) para obtener un comportamiento exclusivo de WhatsApp (inyección de historial, detalles del manejo de menciones).

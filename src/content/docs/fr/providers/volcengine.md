@@ -107,16 +107,16 @@ openclaw onboard --non-interactive \
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les providers, les références de modèles et le comportement de basculement.
   </Card>
-  <Card title="Configuration" href="/en/configuration" icon="gear">
+  <Card title="Configuration" href="/fr/configuration" icon="gear">
     Référence complète de la configuration pour les agents, les modèles et les fournisseurs.
   </Card>
-  <Card title="Troubleshooting" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Troubleshooting" href="/fr/help/troubleshooting" icon="wrench">
     Problèmes courants et étapes de débogage.
   </Card>
-  <Card title="FAQ" href="/en/help/faq" icon="circle-question">
+  <Card title="FAQ" href="/fr/help/faq" icon="circle-question">
     Questions fréquemment posées sur la configuration de OpenClaw.
   </Card>
 </CardGroup>

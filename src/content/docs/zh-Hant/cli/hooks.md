@@ -14,8 +14,8 @@ title: "hooks"
 
 相關：
 
-- Hooks：[Hooks](/en/automation/hooks)
-- Plugin hooks：[Plugin hooks](/en/plugins/architecture#provider-runtime-hooks)
+- Hooks：[Hooks](/zh-Hant/automation/hooks)
+- Plugin hooks：[Plugin hooks](/zh-Hant/plugins/architecture#provider-runtime-hooks)
 
 ## 列出所有 Hooks
 
@@ -274,7 +274,7 @@ openclaw hooks enable session-memory
 
 **輸出：** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
 
-**參閱：** [session-memory 文件](/en/automation/hooks#session-memory)
+**參閱：** [session-memory 文件](/zh-Hant/automation/hooks#session-memory)
 
 ### bootstrap-extra-files
 
@@ -286,7 +286,7 @@ openclaw hooks enable session-memory
 openclaw hooks enable bootstrap-extra-files
 ```
 
-**參閱：** [bootstrap-extra-files 文件](/en/automation/hooks#bootstrap-extra-files)
+**參閱：** [bootstrap-extra-files 文件](/zh-Hant/automation/hooks#bootstrap-extra-files)
 
 ### command-logger
 
@@ -313,7 +313,7 @@ cat ~/.openclaw/logs/commands.log | jq .
 grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 ```
 
-**參閱：** [command-logger 文件](/en/automation/hooks#command-logger)
+**參閱：** [command-logger 文件](/zh-Hant/automation/hooks#command-logger)
 
 ### boot-md
 
@@ -327,4 +327,4 @@ grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 openclaw hooks enable boot-md
 ```
 
-**參閱：** [boot-md 文件](/en/automation/hooks#boot-md)
+**參閱：** [boot-md 文件](/zh-Hant/automation/hooks#boot-md)

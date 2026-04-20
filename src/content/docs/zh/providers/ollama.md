@@ -287,7 +287,7 @@ OpenClaw 支持将 **Ollama 网络搜索**作为内置的 `web_search` 提供商
 }
 ```
 
-<Note>有关完整的设置和行为详细信息，请参阅 [Ollama 网络搜索](/en/tools/ollama-search)。</Note>
+<Note>有关完整的设置和行为详细信息，请参阅 [Ollama 网络搜索](/zh/tools/ollama-search)。</Note>
 
 ## 高级配置
 
@@ -377,7 +377,7 @@ OpenClaw 支持将 **Ollama 网络搜索**作为内置的 `web_search` 提供商
 
   <Accordion title="Memory embeddings">
     附带的 Ollama 插件为
-    [memory search](/en/concepts/memory) 注册了一个内存嵌入提供商。它使用配置的 Ollama 基础 URL
+    [memory search](/zh/concepts/memory) 注册了一个内存嵌入提供商。它使用配置的 Ollama 基础 URL
     和 API 密钥。
 
     | 属性      | 值               |
@@ -453,21 +453,21 @@ OpenClaw 支持将 **Ollama 网络搜索**作为内置的 `web_search` 提供商
   </Accordion>
 </AccordionGroup>
 
-<Note>更多帮助：[故障排除](/en/help/troubleshooting) 和 [常见问题](/en/help/faq)。</Note>
+<Note>更多帮助：[故障排除](/zh/help/troubleshooting) 和 [常见问题](/zh/help/faq)。</Note>
 
 ## 相关内容
 
 <CardGroup cols={2}>
-  <Card title="模型提供商" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型提供商" href="/zh/concepts/model-providers" icon="layers">
     所有提供商、模型引用和故障转移行为的概述。
   </Card>
-  <Card title="模型选择" href="/en/concepts/models" icon="brain">
+  <Card title="模型选择" href="/zh/concepts/models" icon="brain">
     如何选择和配置模型。
   </Card>
-  <Card title="Ollama 网络搜索" href="/en/tools/ollama-search" icon="magnifying-glass">
+  <Card title="Ollama 网络搜索" href="/zh/tools/ollama-search" icon="magnifying-glass">
     基于 Ollama 的网络搜索的完整设置和行为详细信息。
   </Card>
-  <Card title="配置" href="/en/gateway/configuration" icon="gear">
+  <Card title="配置" href="/zh/gateway/configuration" icon="gear">
     完整的配置参考。
   </Card>
 </CardGroup>

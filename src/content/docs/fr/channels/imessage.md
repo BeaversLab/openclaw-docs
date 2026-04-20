@@ -9,7 +9,7 @@ title: "iMessage"
 # iMessage (hérité : imsg)
 
 <Warning>
-Pour les nouveaux déploiements iMessage, utilisez <a href="/en/channels/bluebubbles">BlueBubbles</a>.
+Pour les nouveaux déploiements iMessage, utilisez <a href="/fr/channels/bluebubbles">BlueBubbles</a>.
 
 L'intégration `imsg` est obsolète et pourrait être supprimée dans une future version.
 
@@ -18,13 +18,13 @@ L'intégration `imsg` est obsolète et pourrait être supprimée dans une future
 Statut : intégration externe CLI héritée. Gateway génère `imsg rpc` et communique via JSON-RPC sur stdio (pas de démon/porte séparé).
 
 <CardGroup cols={3}>
-  <Card title="BlueBubbles (recommended)" icon="message-circle" href="/en/channels/bluebubbles">
+  <Card title="BlueBubbles (recommended)" icon="message-circle" href="/fr/channels/bluebubbles">
     Chemin iMessage privilégié pour les nouvelles configurations.
   </Card>
-  <Card title="Appairage" icon="link" href="/en/channels/pairing">
+  <Card title="Appairage" icon="link" href="/fr/channels/pairing">
     Les iMessage iMessage sont en mode appairage par défaut.
   </Card>
-  <Card title="Référence de configuration" icon="settings" href="/en/gateway/configuration-reference#imessage">
+  <Card title="Référence de configuration" icon="settings" href="/fr/gateway/configuration-reference#imessage">
     Référence complète des champs iMessage.
   </Card>
 </CardGroup>
@@ -235,7 +235,7 @@ Exemple :
 }
 ```
 
-Voir [ACP Agents](/en/tools/acp-agents) pour le comportement de liaison ACP partagé.
+Voir [ACP Agents](/fr/tools/acp-agents) pour le comportement de liaison ACP partagé.
 
 ## Modèles de déploiement
 
@@ -409,15 +409,15 @@ imsg send <handle> "test"
 
 ## Pointeurs vers la référence de configuration
 
-- [Référence de configuration - iMessage](/en/gateway/configuration-reference#imessage)
-- [Configuration de la passerelle](/en/gateway/configuration)
-- [Jumelage](/en/channels/pairing)
-- [BlueBubbles](/en/channels/bluebubbles)
+- [Référence de configuration - iMessage](/fr/gateway/configuration-reference#imessage)
+- [Configuration de la passerelle](/fr/gateway/configuration)
+- [Jumelage](/fr/channels/pairing)
+- [BlueBubbles](/fr/channels/bluebubbles)
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appairage](/en/channels/pairing) — flux d'authentification et d'appairage DM
-- [Groupes](/en/channels/groups) — comportement des discussions de groupe et filtrage des mentions
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appairage](/fr/channels/pairing) — flux d'authentification et d'appairage DM
+- [Groupes](/fr/channels/groups) — comportement des discussions de groupe et filtrage des mentions
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

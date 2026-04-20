@@ -397,5 +397,5 @@ Cela affiche les résultats par capacité et le provider/model choisi le cas éc
 
 ## Documentation connexe
 
-- [Configuration](/en/gateway/configuration)
-- [Support des images et des médias](/en/nodes/images)
+- [Configuration](/fr/gateway/configuration)
+- [Support des images et des médias](/fr/nodes/images)

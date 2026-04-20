@@ -17,7 +17,7 @@
 
 ## 当前状态
 
-主要真实源现在位于 `qa/scenarios/index.md`，加上 `qa/scenarios/*.md` 下每个场景的一个文件。
+现在主要的事实来源位于 `qa/scenarios/index.md`，外加 `qa/scenarios/<theme>/*.md` 下每个场景的一个文件。
 
 已实现：
 
@@ -25,7 +25,7 @@
   - 标准 QA 包元数据
   - 操作员身份
   - 启动任务
-- `qa/scenarios/*.md`
+- `qa/scenarios/<theme>/*.md`
   - 每个场景一个 markdown 文件
   - 场景元数据
   - 处理程序绑定
@@ -106,7 +106,7 @@
 
 ### 单一事实来源
 
-使用 `qa/scenarios/index.md` 加上 `qa/scenarios/*.md` 作为创作的事实来源。
+使用 `qa/scenarios/index.md` 加上 `qa/scenarios/<theme>/*.md` 作为编写的事实来源。
 
 该包应保持：
 
@@ -361,7 +361,7 @@ Examples from the current suite:
 完成。
 
 - 添加了 `qa/scenarios/index.md`
-- 将场景拆分为 `qa/scenarios/*.md`
+- 将场景拆分为 `qa/scenarios/<theme>/*.md`
 - 添加了针对已命名 Markdown YAML 包内容的解析器
 - 使用 zod 进行验证
 - 将使用者切换到已解析的包

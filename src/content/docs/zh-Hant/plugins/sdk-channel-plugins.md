@@ -12,7 +12,7 @@ read_when:
 
 本指南將逐步引導您建構一個將 OpenClaw 連結至訊息平台的頻道外掛程式。完成後，您將擁有一個具備私訊安全性、配對、回覆串接以及傳出訊息功能的運作中頻道。
 
-<Info>如果您之前尚未建構任何 OpenClaw 外掛程式，請先閱讀 [入門指南](/en/plugins/building-plugins) 以了解基本的套件 結構和 manifest 設定。</Info>
+<Info>如果您之前尚未建構任何 OpenClaw 外掛程式，請先閱讀 [入門指南](/zh-Hant/plugins/building-plugins) 以了解基本的套件 結構和 manifest 設定。</Info>
 
 ## 頻道外掛程式的運作方式
 
@@ -240,7 +240,7 @@ if (decision.shouldSkip) return;
   <Step title="套件和清單">
     建立標準外掛檔案。`package.json` 中的 `channel` 欄位
     使其成為通道外掛。如需完整的套件中繼資料介面，
-    請參閱 [外掛設定與設定](/en/plugins/sdk-setup#openclaw-channel)：
+    請參閱 [外掛設定與設定](/zh-Hant/plugins/sdk-setup#openclaw-channel)：
 
     <CodeGroup>
     ```json package.json
@@ -447,7 +447,7 @@ if (decision.shouldSkip) return;
     `exec.approvals.*`, `wizard.*`, `update.*`) 保留給系統使用，且始終
     解析為 `operator.admin`。
     `defineChannelPluginEntry` 會自動處理註冊模式分割。請參閱
-    [進入點](/en/plugins/sdk-entrypoints#definechannelpluginentry) 以了解所有
+    [進入點](/zh-Hant/plugins/sdk-entrypoints#definechannelpluginentry) 以了解所有
     選項。
 
   </Step>
@@ -462,7 +462,7 @@ if (decision.shouldSkip) return;
     export default defineSetupPluginEntry(acmeChatPlugin);
     ```
 
-    當管道已停用或未設定時，OpenClaw 會載入此項而非完整的進入點。這可以避免在設定流程中載入沉重的執行時程式碼。詳情請參閱 [Setup and Config](/en/plugins/sdk-setup#setup-entry)。
+    當管道已停用或未設定時，OpenClaw 會載入此項而非完整的進入點。這可以避免在設定流程中載入沉重的執行時程式碼。詳情請參閱 [Setup and Config](/zh-Hant/plugins/sdk-setup#setup-entry)。
 
     將設定安全的匯出分割到附屬模組的打包工作區管道，若同時需要明確的設定時期執行時設定器，可以使用來自 `openclaw/plugin-sdk/channel-entry-contract` 的 `defineBundledChannelSetupEntry(...)`。
 
@@ -538,7 +538,7 @@ if (decision.shouldSkip) return;
     pnpm test -- <bundled-plugin-root>/acme-chat/
     ```
 
-    若為共用測試輔助工具，請參閱 [Testing](/en/plugins/sdk-testing)。
+    若為共用測試輔助工具，請參閱 [Testing](/zh-Hant/plugins/sdk-testing)。
 
   </Step>
 </Steps>
@@ -563,16 +563,16 @@ if (decision.shouldSkip) return;
 ## 進階主題
 
 <CardGroup cols={2}>
-  <Card title="Threading options" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
+  <Card title="Threading options" icon="git-branch" href="/zh-Hant/plugins/sdk-entrypoints#registration-mode">
     固定、帳號範圍或自訂回覆模式
   </Card>
-  <Card title="Message tool integration" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
+  <Card title="Message tool integration" icon="puzzle" href="/zh-Hant/plugins/architecture#channel-plugins-and-the-shared-message-tool">
     describeMessageTool 與動作探索
   </Card>
-  <Card title="目標解析" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
+  <Card title="目標解析" icon="crosshair" href="/zh-Hant/plugins/architecture#channel-target-resolution">
     inferTargetChatType, looksLikeId, resolveTarget
   </Card>
-  <Card title="執行時期輔助程式" icon="settings" href="/en/plugins/sdk-runtime">
+  <Card title="執行時期輔助程式" icon="settings" href="/zh-Hant/plugins/sdk-runtime">
     TTS, STT, media, subagent via api.runtime
   </Card>
 </CardGroup>
@@ -581,7 +581,7 @@ if (decision.shouldSkip) return;
 
 ## 後續步驟
 
-- [提供者外掛程式](/en/plugins/sdk-provider-plugins) — 如果您的外掛程式也提供模型
-- [SDK 概覽](/en/plugins/sdk-overview) — 完整的子路徑匯入參考
-- [SDK 測試](/en/plugins/sdk-testing) — 測試公用程式和合約測試
-- [外掛程式清單](/en/plugins/manifest) — 完整的清單架構
+- [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins) — 如果您的外掛程式也提供模型
+- [SDK 概覽](/zh-Hant/plugins/sdk-overview) — 完整的子路徑匯入參考
+- [SDK 測試](/zh-Hant/plugins/sdk-testing) — 測試公用程式和合約測試
+- [外掛程式清單](/zh-Hant/plugins/manifest) — 完整的清單架構

@@ -18,7 +18,7 @@ OpenClaw 也包含用於 X（前稱 Twitter）貼文的 `x_search` 和
 用於輕量級 URL 擷取的 `web_fetch`。在此階段，`web_fetch` 保持
 本機運作，而 `web_search` 和 `x_search` 則可以在底層使用 xAI Responses。
 
-<Info>`web_search` 是一個輕量級 HTTP 工具，而非瀏覽器自動化。若為 大量依賴 JS 的網站或需要登入，請使用 [Web Browser](/en/tools/browser)。若要 擷取特定 URL，請使用 [Web Fetch](/en/tools/web-fetch)。</Info>
+<Info>`web_search` 是一個輕量級 HTTP 工具，而非瀏覽器自動化。若為 大量依賴 JS 的網站或需要登入，請使用 [Web Browser](/zh-Hant/tools/browser)。若要 擷取特定 URL，請使用 [Web Fetch](/zh-Hant/tools/web-fetch)。</Info>
 
 ## 快速入門
 
@@ -55,60 +55,60 @@ OpenClaw 也包含用於 X（前稱 Twitter）貼文的 `x_search` 和
 ## 選擇供應商
 
 <CardGroup cols={2}>
-  <Card title="Brave Search" icon="shield" href="/en/tools/brave-search">
+  <Card title="Brave Search" icon="shield" href="/zh-Hant/tools/brave-search">
     提供摘要的結構化結果。支援 `llm-context` 模式、國家/語言篩選。提供免費層級。
   </Card>
-  <Card title="DuckDuckGo" icon="bird" href="/en/tools/duckduckgo-search">
+  <Card title="DuckDuckGo" icon="bird" href="/zh-Hant/tools/duckduckgo-search">
     無需金鑰的備選方案。不需要 API 金鑰。非官方的 HTML 整合方式。
   </Card>
-  <Card title="Exa" icon="brain" href="/en/tools/exa-search">
+  <Card title="Exa" icon="brain" href="/zh-Hant/tools/exa-search">
     神經網路 + 關鍵字搜尋，並具備內容擷取功能（亮點、文字、摘要）。
   </Card>
-  <Card title="Firecrawl" icon="flame" href="/en/tools/firecrawl">
+  <Card title="Firecrawl" icon="flame" href="/zh-Hant/tools/firecrawl">
     結構化結果。最適合搭配 `firecrawl_search` 和 `firecrawl_scrape` 進行深度擷取。
   </Card>
-  <Card title="Gemini" icon="sparkles" href="/en/tools/gemini-search">
+  <Card title="Gemini" icon="sparkles" href="/zh-Hant/tools/gemini-search">
     透過 Google 搜尋提供引用的 AI 整合答案。
   </Card>
-  <Card title="Grok" icon="zap" href="/en/tools/grok-search">
+  <Card title="Grok" icon="zap" href="/zh-Hant/tools/grok-search">
     透過 xAI 網路提供引用的 AI 整合答案。
   </Card>
-  <Card title="Kimi" icon="moon" href="/en/tools/kimi-search">
+  <Card title="Kimi" icon="moon" href="/zh-Hant/tools/kimi-search">
     透過 Moonshot 網路搜尋提供引用的 AI 整合答案。
   </Card>
-  <Card title="MiniMax Search" icon="globe" href="/en/tools/minimax-search">
+  <Card title="MiniMax Search" icon="globe" href="/zh-Hant/tools/minimax-search">
     透過 MiniMax Coding Plan 搜尋 API 取得結構化結果。
   </Card>
-  <Card title="Ollama Web Search" icon="globe" href="/en/tools/ollama-search">
+  <Card title="Ollama Web Search" icon="globe" href="/zh-Hant/tools/ollama-search">
     透過您設定的 Ollama 主機進行免金鑰搜尋。需要 `ollama signin`。
   </Card>
-  <Card title="Perplexity" icon="search" href="/en/tools/perplexity-search">
+  <Card title="Perplexity" icon="search" href="/zh-Hant/tools/perplexity-search">
     具有內容擷取控制和網域過濾功能的結構化結果。
   </Card>
-  <Card title="SearXNG" icon="server" href="/en/tools/searxng-search">
+  <Card title="SearXNG" icon="server" href="/zh-Hant/tools/searxng-search">
     自託管的元搜尋。不需要 API 金鑰。彙總 Google、Bing、DuckDuckGo 等搜尋結果。
   </Card>
-  <Card title="Tavily" icon="globe" href="/en/tools/tavily">
+  <Card title="Tavily" icon="globe" href="/zh-Hant/tools/tavily">
     具有搜尋深度、主題過濾和用於 URL 擷取的 `tavily_extract` 的結構化結果。
   </Card>
 </CardGroup>
 
 ### 供應商比較
 
-| 供應商                                       | 結果樣式       | 過濾器                               | API 金鑰                                                               |
-| -------------------------------------------- | -------------- | ------------------------------------ | ---------------------------------------------------------------------- |
-| [Brave](/en/tools/brave-search)              | 結構化摘要     | 國家、語言、時間、`llm-context` 模式 | `BRAVE_API_KEY`                                                        |
-| [DuckDuckGo](/en/tools/duckduckgo-search)    | 結構化摘要     | --                                   | 無（免金鑰）                                                           |
-| [Exa](/en/tools/exa-search)                  | 結構化 + 擷取  | 神經/關鍵字模式、日期、內容擷取      | `EXA_API_KEY`                                                          |
-| [Firecrawl](/en/tools/firecrawl)             | 結構化摘要     | 透過 `firecrawl_search` 工具         | `FIRECRAWL_API_KEY`                                                    |
-| [Gemini](/en/tools/gemini-search)            | AI 綜合 + 引用 | --                                   | `GEMINI_API_KEY`                                                       |
-| [Grok](/en/tools/grok-search)                | AI 綜合 + 引用 | --                                   | `XAI_API_KEY`                                                          |
-| [Kimi](/en/tools/kimi-search)                | AI 綜合 + 引用 | --                                   | `KIMI_API_KEY` / `MOONSHOT_API_KEY`                                    |
-| [MiniMax Search](/en/tools/minimax-search)   | 結構化片段     | 地區 (`global` / `cn`)               | `MINIMAX_CODE_PLAN_KEY` / `MINIMAX_CODING_API_KEY`                     |
-| [Ollama Web Search](/en/tools/ollama-search) | 結構化片段     | --                                   | 預設為無；需要 `ollama signin`，可重複使用 Ollama 提供者的 bearer auth |
-| [Perplexity](/en/tools/perplexity-search)    | 結構化片段     | 國家、語言、時間、網域、內容限制     | `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY`                            |
-| [SearXNG](/en/tools/searxng-search)          | 結構化片段     | 類別、語言                           | 無（自託管）                                                           |
-| [Tavily](/en/tools/tavily)                   | 結構化片段     | 透過 `tavily_search` 工具            | `TAVILY_API_KEY`                                                       |
+| 供應商                                            | 結果樣式       | 過濾器                               | API 金鑰                                                               |
+| ------------------------------------------------- | -------------- | ------------------------------------ | ---------------------------------------------------------------------- |
+| [Brave](/zh-Hant/tools/brave-search)              | 結構化摘要     | 國家、語言、時間、`llm-context` 模式 | `BRAVE_API_KEY`                                                        |
+| [DuckDuckGo](/zh-Hant/tools/duckduckgo-search)    | 結構化摘要     | --                                   | 無（免金鑰）                                                           |
+| [Exa](/zh-Hant/tools/exa-search)                  | 結構化 + 擷取  | 神經/關鍵字模式、日期、內容擷取      | `EXA_API_KEY`                                                          |
+| [Firecrawl](/zh-Hant/tools/firecrawl)             | 結構化摘要     | 透過 `firecrawl_search` 工具         | `FIRECRAWL_API_KEY`                                                    |
+| [Gemini](/zh-Hant/tools/gemini-search)            | AI 綜合 + 引用 | --                                   | `GEMINI_API_KEY`                                                       |
+| [Grok](/zh-Hant/tools/grok-search)                | AI 綜合 + 引用 | --                                   | `XAI_API_KEY`                                                          |
+| [Kimi](/zh-Hant/tools/kimi-search)                | AI 綜合 + 引用 | --                                   | `KIMI_API_KEY` / `MOONSHOT_API_KEY`                                    |
+| [MiniMax Search](/zh-Hant/tools/minimax-search)   | 結構化片段     | 地區 (`global` / `cn`)               | `MINIMAX_CODE_PLAN_KEY` / `MINIMAX_CODING_API_KEY`                     |
+| [Ollama Web Search](/zh-Hant/tools/ollama-search) | 結構化片段     | --                                   | 預設為無；需要 `ollama signin`，可重複使用 Ollama 提供者的 bearer auth |
+| [Perplexity](/zh-Hant/tools/perplexity-search)    | 結構化片段     | 國家、語言、時間、網域、內容限制     | `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY`                            |
+| [SearXNG](/zh-Hant/tools/searxng-search)          | 結構化片段     | 類別、語言                           | 無（自託管）                                                           |
+| [Tavily](/zh-Hant/tools/tavily)                   | 結構化片段     | 透過 `tavily_search` 工具            | `TAVILY_API_KEY`                                                       |
 
 ## 自動偵測
 
@@ -250,7 +250,7 @@ OpenClaw 也可以提供使用相同金鑰的選用 `x_search` 設定。
     ```
 
     對於安裝版 gateway，請將其放入 `~/.openclaw/.env`。
-    請參閱 [Env vars](/en/help/faq#env-vars-and-env-loading)。
+    請參閱 [Env vars](/zh-Hant/help/faq#env-vars-and-env-loading)。
 
   </Tab>
 </Tabs>
@@ -382,7 +382,7 @@ await web_search({
 
 ## 相關
 
-- [Web Fetch](/en/tools/web-fetch) -- 取得 URL 並擷取可讀內容
-- [Web Browser](/en/tools/browser) -- 針對 JS 繁重網站的完整瀏覽器自動化
-- [Grok Search](/en/tools/grok-search) -- Grok 作為 `web_search` 提供者
-- [Ollama Web Search](/en/tools/ollama-search) -- 透過您的 Ollama 主機進行免金鑰的網頁搜尋
+- [Web Fetch](/zh-Hant/tools/web-fetch) -- 取得 URL 並擷取可讀內容
+- [Web Browser](/zh-Hant/tools/browser) -- 針對 JS 繁重網站的完整瀏覽器自動化
+- [Grok Search](/zh-Hant/tools/grok-search) -- Grok 作為 `web_search` 提供者
+- [Ollama Web Search](/zh-Hant/tools/ollama-search) -- 透過您的 Ollama 主機進行免金鑰的網頁搜尋

@@ -280,7 +280,7 @@ openclaw models list
   </Accordion>
 
   <Accordion title="用于记忆搜索的嵌入">
-    Bedrock 也可以作为[记忆搜索](/en/concepts/memory-search)的嵌入提供商。
+    Bedrock 也可以作为[记忆搜索](/zh/concepts/memory-search)的嵌入提供商。
     这是与推理提供商分开配置的——将 `agents.defaults.memorySearch.provider` 设置为 `"bedrock"`：
 
     ```json5
@@ -300,7 +300,7 @@ openclaw models list
 
     支持的嵌入模型包括 Amazon Titan Embed (v1, v2)、Amazon Nova
     Embed、Cohere Embed (v3, v4) 和 TwelveLabs Marengo。请参阅
-    [Memory configuration reference -- Bedrock](/en/reference/memory-config#bedrock-embedding-config)
+    [Memory configuration reference -- Bedrock](/zh/reference/memory-config#bedrock-embedding-config)
     以获取完整的模型列表和维度选项。
 
   </Accordion>
@@ -323,16 +323,16 @@ openclaw models list
 ## 相关内容
 
 <CardGroup cols={2}>
-  <Card title="模型选择" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型选择" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="Memory search" href="/en/concepts/memory-search" icon="magnifying-glass">
+  <Card title="Memory search" href="/zh/concepts/memory-search" icon="magnifying-glass">
     用于内存搜索配置的 Bedrock 嵌入。
   </Card>
-  <Card title="Memory config reference" href="/en/reference/memory-config#bedrock-embedding-config" icon="database">
+  <Card title="Memory config reference" href="/zh/reference/memory-config#bedrock-embedding-config" icon="database">
     完整的 Bedrock 嵌入模型列表和维度选项。
   </Card>
-  <Card title="Troubleshooting" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Troubleshooting" href="/zh/help/troubleshooting" icon="wrench">
     常规故障排除和常见问题。
   </Card>
 </CardGroup>

@@ -18,7 +18,7 @@ OpenClaw inclut également `x_search` pour les posts X (anciennement Twitter) et
 `web_fetch` pour la récupération légère d'URL. À ce stade, `web_fetch` reste
 local tandis que `web_search` et `x_search` peuvent utiliser xAI Responses en arrière-plan.
 
-<Info>`web_search` est un outil HTTP léger, et non une automatisation de navigateur. Pour les sites utilisant beaucoup de JS ou les connexions, utilisez le [Web Browser](/en/tools/browser). Pour récupérer une URL spécifique, utilisez [Web Fetch](/en/tools/web-fetch).</Info>
+<Info>`web_search` est un outil HTTP léger, et non une automatisation de navigateur. Pour les sites utilisant beaucoup de JS ou les connexions, utilisez le [Web Browser](/fr/tools/browser). Pour récupérer une URL spécifique, utilisez [Web Fetch](/fr/tools/web-fetch).</Info>
 
 ## Quick start
 
@@ -55,40 +55,40 @@ local tandis que `web_search` et `x_search` peuvent utiliser xAI Responses en ar
 ## Choisir un provider
 
 <CardGroup cols={2}>
-  <Card title="Recherche Brave" icon="shield" href="/en/tools/brave-search">
+  <Card title="Recherche Brave" icon="shield" href="/fr/tools/brave-search">
     Résultats structurés avec extraits. Prend en charge le mode `llm-context`, les filtres de pays/langue. Offre gratuite disponible.
   </Card>
-  <Card title="DuckDuckGo" icon="bird" href="/en/tools/duckduckgo-search">
+  <Card title="DuckDuckGo" icon="bird" href="/fr/tools/duckduckgo-search">
     Solution de repli sans clé. Aucune clé API nécessaire. Intégration non officielle basée sur HTML.
   </Card>
-  <Card title="Exa" icon="brain" href="/en/tools/exa-search">
+  <Card title="Exa" icon="brain" href="/fr/tools/exa-search">
     Recherche neurale + par mots-clés avec extraction de contenu (extraits, texte, résumés).
   </Card>
-  <Card title="Firecrawl" icon="flame" href="/en/tools/firecrawl">
+  <Card title="Firecrawl" icon="flame" href="/fr/tools/firecrawl">
     Résultats structurés. Fonctionne mieux avec `firecrawl_search` et `firecrawl_scrape` pour une extraction approfondie.
   </Card>
-  <Card title="Gemini" icon="sparkles" href="/en/tools/gemini-search">
+  <Card title="Gemini" icon="sparkles" href="/fr/tools/gemini-search">
     Réponses synthétisées par l'IA avec citations via le Google Search grounding.
   </Card>
-  <Card title="Grok" icon="zap" href="/en/tools/grok-search">
+  <Card title="Grok" icon="zap" href="/fr/tools/grok-search">
     Réponses synthétisées par l'IA avec citations via le xAI web grounding.
   </Card>
-  <Card title="Kimi" icon="moon" href="/en/tools/kimi-search">
+  <Card title="Kimi" icon="moon" href="/fr/tools/kimi-search">
     Réponses synthétisées par l'IA avec citations via la recherche web Moonshot.
   </Card>
-  <Card title="Recherche MiniMax" icon="globe" href="/en/tools/minimax-search">
+  <Card title="Recherche MiniMax" icon="globe" href="/fr/tools/minimax-search">
     Résultats structurés via l'API de recherche du plan de codage MiniMax.
   </Card>
-  <Card title="Recherche Web Ollama" icon="globe" href="/en/tools/ollama-search">
+  <Card title="Recherche Web Ollama" icon="globe" href="/fr/tools/ollama-search">
     Recherche sans clé via votre hôte Ollama configuré. Nécessite `ollama signin`.
   </Card>
-  <Card title="Perplexity" icon="search" href="/en/tools/perplexity-search">
+  <Card title="Perplexity" icon="search" href="/fr/tools/perplexity-search">
     Résultats structurés avec des contrôles d'extraction de contenu et un filtrage de domaine.
   </Card>
-  <Card title="SearXNG" icon="server" href="/en/tools/searxng-search">
+  <Card title="SearXNG" icon="server" href="/fr/tools/searxng-search">
     Méta-moteur de recherche auto-hébergé. Aucune clé API nécessaire. Agrège Google, Bing, DuckDuckGo, et plus.
   </Card>
-  <Card title="Tavily" icon="globe" href="/en/tools/tavily">
+  <Card title="Tavily" icon="globe" href="/fr/tools/tavily">
     Résultats structurés avec profondeur de recherche, filtrage par sujet, et `tavily_extract` pour l'extraction d'URL.
   </Card>
 </CardGroup>
@@ -97,18 +97,18 @@ local tandis que `web_search` et `x_search` peuvent utiliser xAI Responses en ar
 
 | Fournisseur                                  | Style de résultat               | Filtres                                              | Clé API                                                                                                  |
 | -------------------------------------------- | ------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [Brave](/en/tools/brave-search)              | Extraits structurés             | Pays, langue, heure, mode `llm-context`              | `BRAVE_API_KEY`                                                                                          |
-| [DuckDuckGo](/en/tools/duckduckgo-search)    | Extraits structurés             | --                                                   | Aucune (sans clé)                                                                                        |
-| [Exa](/en/tools/exa-search)                  | Structuré + extrait             | Mode neural/par mot-clé, date, extraction de contenu | `EXA_API_KEY`                                                                                            |
-| [Firecrawl](/en/tools/firecrawl)             | Extraits structurés             | Via l'outil `firecrawl_search`                       | `FIRECRAWL_API_KEY`                                                                                      |
-| [Gemini](/en/tools/gemini-search)            | Synthétisé par l'IA + citations | --                                                   | `GEMINI_API_KEY`                                                                                         |
-| [Grok](/en/tools/grok-search)                | Synthétisé par l'IA + citations | --                                                   | `XAI_API_KEY`                                                                                            |
-| [Kimi](/en/tools/kimi-search)                | Synthétisé par IA + citations   | --                                                   | `KIMI_API_KEY` / `MOONSHOT_API_KEY`                                                                      |
-| [MiniMax Search](/en/tools/minimax-search)   | Extraits structurés             | Région (`global` / `cn`)                             | `MINIMAX_CODE_PLAN_KEY` / `MINIMAX_CODING_API_KEY`                                                       |
-| [Ollama Web Search](/en/tools/ollama-search) | Extraits structurés             | --                                                   | Aucune par défaut ; `ollama signin` requis, peut réutiliser l'authentification bearer du provider Ollama |
-| [Perplexity](/en/tools/perplexity-search)    | Extraits structurés             | Pays, langue, heure, domaines, limites de contenu    | `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY`                                                              |
-| [SearXNG](/en/tools/searxng-search)          | Extraits structurés             | Catégories, langue                                   | Aucune (auto-hébergé)                                                                                    |
-| [Tavily](/en/tools/tavily)                   | Extraits structurés             | Via l'outil `tavily_search`                          | `TAVILY_API_KEY`                                                                                         |
+| [Brave](/fr/tools/brave-search)              | Extraits structurés             | Pays, langue, heure, mode `llm-context`              | `BRAVE_API_KEY`                                                                                          |
+| [DuckDuckGo](/fr/tools/duckduckgo-search)    | Extraits structurés             | --                                                   | Aucune (sans clé)                                                                                        |
+| [Exa](/fr/tools/exa-search)                  | Structuré + extrait             | Mode neural/par mot-clé, date, extraction de contenu | `EXA_API_KEY`                                                                                            |
+| [Firecrawl](/fr/tools/firecrawl)             | Extraits structurés             | Via l'outil `firecrawl_search`                       | `FIRECRAWL_API_KEY`                                                                                      |
+| [Gemini](/fr/tools/gemini-search)            | Synthétisé par l'IA + citations | --                                                   | `GEMINI_API_KEY`                                                                                         |
+| [Grok](/fr/tools/grok-search)                | Synthétisé par l'IA + citations | --                                                   | `XAI_API_KEY`                                                                                            |
+| [Kimi](/fr/tools/kimi-search)                | Synthétisé par IA + citations   | --                                                   | `KIMI_API_KEY` / `MOONSHOT_API_KEY`                                                                      |
+| [MiniMax Search](/fr/tools/minimax-search)   | Extraits structurés             | Région (`global` / `cn`)                             | `MINIMAX_CODE_PLAN_KEY` / `MINIMAX_CODING_API_KEY`                                                       |
+| [Ollama Web Search](/fr/tools/ollama-search) | Extraits structurés             | --                                                   | Aucune par défaut ; `ollama signin` requis, peut réutiliser l'authentification bearer du provider Ollama |
+| [Perplexity](/fr/tools/perplexity-search)    | Extraits structurés             | Pays, langue, heure, domaines, limites de contenu    | `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY`                                                              |
+| [SearXNG](/fr/tools/searxng-search)          | Extraits structurés             | Catégories, langue                                   | Aucune (auto-hébergé)                                                                                    |
+| [Tavily](/fr/tools/tavily)                   | Extraits structurés             | Via l'outil `tavily_search`                          | `TAVILY_API_KEY`                                                                                         |
 
 ## Détection automatique
 
@@ -249,7 +249,7 @@ Il s'agit d'une étape de suivi distincte dans le chemin Grok, et non d'un choix
     ```
 
     Pour une installation de passerelle, mettez-la dans `~/.openclaw/.env`.
-    Voir [Env vars](/en/help/faq#env-vars-and-env-loading).
+    Voir [Env vars](/fr/help/faq#env-vars-and-env-loading).
 
   </Tab>
 </Tabs>
@@ -385,7 +385,7 @@ Si vous utilisez des profils d'outils ou des listes autorisées, ajoutez `web_se
 
 ## Connexes
 
-- [Web Fetch](/en/tools/web-fetch) -- récupérer une URL et extraire le contenu lisible
-- [Web Browser](/en/tools/browser) -- automatisation complète du navigateur pour les sites riches en JS
-- [Grok Search](/en/tools/grok-search) -- Grok en tant que provider `web_search`
-- [Ollama Web Search](/en/tools/ollama-search) -- recherche web sans clé via votre hôte Ollama
+- [Web Fetch](/fr/tools/web-fetch) -- récupérer une URL et extraire le contenu lisible
+- [Web Browser](/fr/tools/browser) -- automatisation complète du navigateur pour les sites riches en JS
+- [Grok Search](/fr/tools/grok-search) -- Grok en tant que provider `web_search`
+- [Ollama Web Search](/fr/tools/ollama-search) -- recherche web sans clé via votre hôte Ollama

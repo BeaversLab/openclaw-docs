@@ -43,7 +43,7 @@ En OpenClaw, un bucle es una única ejecución serializada por sesión que emite
 - Las ejecuciones se serializan por clave de sesión (carril de sesión) y opcionalmente a través de un carril global.
 - Esto evita carreras de herramientas/sesión y mantiene el historial de sesiones consistente.
 - Los canales de mensajería pueden elegir modos de cola (collect/steer/followup) que alimentan este sistema de carriles.
-  Véase [Command Queue](/en/concepts/queue).
+  Véase [Command Queue](/es/concepts/queue).
 
 ## Sesión + preparación del espacio de trabajo
 
@@ -56,7 +56,7 @@ En OpenClaw, un bucle es una única ejecución serializada por sesión que emite
 
 - El prompt del sistema se construye a partir del prompt base de OpenClaw, el prompt de habilidades, el contexto de arranque y las anulaciones por ejecución.
 - Se aplican los límites específicos del modelo y los tokens de reserva de compactación.
-- Véase [System prompt](/en/concepts/system-prompt) para lo que ve el modelo.
+- Véase [System prompt](/es/concepts/system-prompt) para lo que ve el modelo.
 
 ## Puntos de enlace (donde puede interceptar)
 
@@ -71,7 +71,7 @@ OpenClaw tiene dos sistemas de enlaces:
   Úselo para agregar/eliminar archivos de contexto de arranque.
 - **Command hooks**: `/new`, `/reset`, `/stop` y otros eventos de comando (consulte la documentación de Hooks).
 
-Véase [Hooks](/en/automation/hooks) para la configuración y ejemplos.
+Véase [Hooks](/es/automation/hooks) para la configuración y ejemplos.
 
 ### Enlaces de complemento (ciclo de vida del agente + puerta de enlace)
 
@@ -99,14 +99,14 @@ Reglas de decisión de gancho para guardias de salida/herramientas:
 - `message_sending`: `{ cancel: true }` es terminal y detiene los controladores de menor prioridad.
 - `message_sending`: `{ cancel: false }` es una no-op y no borra una cancelación anterior.
 
-Véase [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) para la API de hooks y detalles de registro.
+Véase [Plugin hooks](/es/plugins/architecture#provider-runtime-hooks) para la API de hooks y detalles de registro.
 
 ## Streaming + respuestas parciales
 
 - Los deltas del asistente se transmiten desde pi-agent-core y se emiten como eventos `assistant`.
 - El streaming en bloque puede emitir respuestas parciales ya sea en `text_end` o en `message_end`.
 - El streaming de razonamiento puede emitirse como un flujo separado o como respuestas en bloque.
-- Véase [Streaming](/en/concepts/streaming) para el comportamiento de fragmentación y respuesta en bloque.
+- Véase [Streaming](/es/concepts/streaming) para el comportamiento de fragmentación y respuesta en bloque.
 
 ## Ejecución de herramientas + herramientas de mensajería
 
@@ -130,7 +130,7 @@ Véase [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) para la A
 
 - La auto-compactación emite eventos de flujo `compaction` y puede activar un reintento.
 - Al reintentar, los búferes en memoria y los resúmenes de herramientas se restablecen para evitar resultados duplicados.
-- Véase [Compaction](/en/concepts/compaction) para la canalización de compactación.
+- Véase [Compaction](/es/concepts/compaction) para la canalización de compactación.
 
 ## Flujos de eventos (hoy)
 
@@ -158,8 +158,8 @@ Véase [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) para la A
 
 ## Relacionado
 
-- [Tools](/en/tools) — herramientas de agente disponibles
-- [Hooks](/en/automation/hooks) — scripts controlados por eventos activados por eventos del ciclo de vida del agente
-- [Compaction](/en/concepts/compaction) — cómo se resumen las conversaciones largas
-- [Exec Approvals](/en/tools/exec-approvals) — puertas de aprobación para comandos de shell
-- [Thinking](/en/tools/thinking) — configuración del nivel de pensamiento/razonamiento
+- [Tools](/es/tools) — herramientas de agente disponibles
+- [Hooks](/es/automation/hooks) — scripts controlados por eventos activados por eventos del ciclo de vida del agente
+- [Compaction](/es/concepts/compaction) — cómo se resumen las conversaciones largas
+- [Exec Approvals](/es/tools/exec-approvals) — puertas de aprobación para comandos de shell
+- [Thinking](/es/tools/thinking) — configuración del nivel de pensamiento/razonamiento

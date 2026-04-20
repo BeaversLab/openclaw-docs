@@ -40,15 +40,15 @@ Las habilidades se cargan desde cada espacio de trabajo del agente más raíces 
 `~/.openclaw/skills`, y luego se filtran por la lista de permitidos de habilidades del agente efectivo cuando
 está configurado. Usa `agents.defaults.skills` para una base lineal compartida y
 `agents.list[].skills` para el reemplazo por agente. Consulta
-[Skills: per-agent vs shared](/en/tools/skills#per-agent-vs-shared-skills) y
-[Skills: agent skill allowlists](/en/tools/skills#agent-skill-allowlists).
+[Skills: per-agent vs shared](/es/tools/skills#per-agent-vs-shared-skills) y
+[Skills: agent skill allowlists](/es/tools/skills#agent-skill-allowlists).
 
 El Gateway puede alojar **un agente** (predeterminado) o **muchos agentes** simultáneamente.
 
 **Nota sobre el espacio de trabajo:** el espacio de trabajo de cada agente es el **cwd predeterminado**, no un
 sandbox estricto. Las rutas relativas se resuelven dentro del espacio de trabajo, pero las rutas absolutas pueden
 alcanzar otras ubicaciones del host a menos que se habilite el sandboxing. Consulte
-[Sandboxing](/en/gateway/sandboxing).
+[Sandboxing](/es/gateway/sandboxing).
 
 ## Rutas (mapa rápido)
 
@@ -111,7 +111,7 @@ Cree una cuenta por agente en sus canales preferidos:
 openclaw channels login --channel whatsapp --account work
 ```
 
-Consulte las guías de canales: [Discord](/en/channels/discord), [Telegram](/en/channels/telegram), [WhatsApp](/en/channels/whatsapp).
+Consulte las guías de canales: [Discord](/es/channels/discord), [Telegram](/es/channels/telegram), [WhatsApp](/es/channels/whatsapp).
 
   </Step>
 
@@ -222,7 +222,7 @@ Ejemplo:
 Notas:
 
 - El control de acceso MD es **global por cuenta de WhatsApp** (emparejamiento/lista blanca), no por agente.
-- Para grupos compartidos, vincule el grupo a un agente o use [Grupos de transmisión](/en/channels/broadcast-groups).
+- Para grupos compartidos, vincule el grupo a un agente o use [Grupos de transmisión](/es/channels/broadcast-groups).
 
 ## Reglas de enrutamiento (cómo los mensajes eligen un agente)
 
@@ -596,12 +596,12 @@ Nota: `tools.elevated` es **global** y basado en el remitente; no es configurabl
 Si necesitas límites por agente, usa `agents.list[].tools` para denegar `exec`.
 Para la orientación por grupo, usa `agents.list[].groupChat.mentionPatterns` para que las @menciones se asignen limpiamente al agente deseado.
 
-Consulta [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) para ver ejemplos detallados.
+Consulta [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para ver ejemplos detallados.
 
 ## Relacionado
 
-- [Channel Routing](/en/channels/channel-routing) — cómo se enrutan los mensajes a los agentes
-- [Sub-Agents](/en/tools/subagents) — generación de ejecuciones de agentes en segundo plano
-- [ACP Agents](/en/tools/acp-agents) — ejecución de arneses de codificación externos
-- [Presence](/en/concepts/presence) — presencia y disponibilidad del agente
-- [Session](/en/concepts/session) — aislamiento y enrutamiento de sesiones
+- [Channel Routing](/es/channels/channel-routing) — cómo se enrutan los mensajes a los agentes
+- [Sub-Agents](/es/tools/subagents) — generación de ejecuciones de agentes en segundo plano
+- [ACP Agents](/es/tools/acp-agents) — ejecución de arneses de codificación externos
+- [Presence](/es/concepts/presence) — presencia y disponibilidad del agente
+- [Session](/es/concepts/session) — aislamiento y enrutamiento de sesiones

@@ -99,7 +99,7 @@ Ejemplo:
 }
 ```
 
-Soporte multi-cuenta: use `channels.signal.accounts` con configuración por cuenta y opcional `name`. Consulte [`gateway/configuration`](/en/gateway/configuration-reference#multi-account-all-channels) para el patrón compartido.
+Soporte multi-cuenta: use `channels.signal.accounts` con configuración por cuenta y opcional `name`. Consulte [`gateway/configuration`](/es/gateway/configuration-reference#multi-account-all-channels) para el patrón compartido.
 
 ## Ruta de configuración B: registrar número de bot dedicado (SMS, Linux)
 
@@ -188,7 +188,7 @@ MDs:
 - Aprobar a través de:
   - `openclaw pairing list signal`
   - `openclaw pairing approve signal <CODE>`
-- La vinculación es el intercambio de tokens predeterminado para los MDs de Signal. Detalles: [Vinculación](/en/channels/pairing)
+- La vinculación es el intercambio de tokens predeterminado para los MDs de Signal. Detalles: [Vinculación](/es/channels/pairing)
 - Los remitentes solo con UUID (de `sourceUuid`) se almacenan como `uuid:<id>` en `channels.signal.allowFrom`.
 
 Grupos:
@@ -284,7 +284,7 @@ pgrep -af signal-cli
 grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 ```
 
-Para el flujo de triaje: [/channels/troubleshooting](/en/channels/troubleshooting).
+Para el flujo de triaje: [/channels/troubleshooting](/es/channels/troubleshooting).
 
 ## Notas de seguridad
 
@@ -295,7 +295,7 @@ Para el flujo de triaje: [/channels/troubleshooting](/en/channels/troubleshootin
 
 ## Referencia de configuración (Signal)
 
-Configuración completa: [Configuration](/en/gateway/configuration)
+Configuración completa: [Configuration](/es/gateway/configuration)
 
 Opciones del proveedor:
 
@@ -330,8 +330,8 @@ Opciones globales relacionadas:
 
 ## Relacionado
 
-- [Descripción general de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento en MD
-- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento
+- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — flujo de autenticación y emparejamiento en MD
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y fortalecimiento

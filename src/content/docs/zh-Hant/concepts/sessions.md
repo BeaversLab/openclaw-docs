@@ -7,4 +7,4 @@ title: "Sessions"
 
 # Sessions
 
-標準的會話管理文件位於 [Session management](/en/concepts/session)。
+標準的會話管理文件位於 [Session management](/zh-Hant/concepts/session)。

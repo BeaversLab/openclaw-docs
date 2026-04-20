@@ -765,6 +765,6 @@ Après avoir changé de fournisseur, redémarrez la passerelle et effectuez un n
 
 ## Pages connexes
 
-- [Recherche mémoire](/en/concepts/memory-search)
-- [Référence de configuration mémoire](/en/reference/memory-config)
-- [Configuration du SDK de plugin](/en/plugins/sdk-setup)
+- [Recherche mémoire](/fr/concepts/memory-search)
+- [Référence de configuration mémoire](/fr/reference/memory-config)
+- [Configuration du SDK de plugin](/fr/plugins/sdk-setup)

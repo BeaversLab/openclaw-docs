@@ -25,7 +25,7 @@ OpenClaw assemble son propre prompt système à chaque exécution. Il inclut :
 - Balises de réponse + comportement de pulsation
 - Métadonnées d'exécution (hôte/SE/modèle/réflexion)
 
-Voir la répartition complète dans [Prompt système](/en/concepts/system-prompt).
+Voir la répartition complète dans [Prompt système](/fr/concepts/system-prompt).
 
 ## Ce qui compte dans la fenêtre de contexte
 
@@ -52,7 +52,7 @@ Pour les images, OpenClaw réduit la résolution des charges utiles d'images de 
 - Des valeurs plus faibles réduisent généralement l'utilisation de tokens de vision et la taille de la charge utile.
 - Des valeurs plus élevées préservent plus de détails visuels pour les captures d'écran lourdes en OCR/interface.
 
-Pour une répartition pratique (par fichier injecté, outils, compétences et taille du prompt système), utilisez `/context list` ou `/context detail`. Voir [Context](/en/concepts/context).
+Pour une répartition pratique (par fichier injecté, outils, compétences et taille du prompt système), utilisez `/context list` ou `/context detail`. Voir [Context](/fr/concepts/context).
 
 ## Comment voir l'utilisation actuelle des tokens
 
@@ -108,8 +108,8 @@ expiré, puis réinitialise la fenêtre du cache afin que les requêtes ultérie
 contexte nouvellement mis en cache au lieu de remettre en cache l'historique complet. Cela permet de maintenir les coûts d'écriture du cache
 plus bas lorsqu'une session reste inactive au-delà du TTL.
 
-Configurez-le dans la [configuration du Gateway](/en/gateway/configuration) et consultez les
-détails du comportement dans [Session pruning](/en/concepts/session-pruning).
+Configurez-le dans la [configuration du Gateway](/fr/gateway/configuration) et consultez les
+détails du comportement dans [Session pruning](/fr/concepts/session-pruning).
 
 Le heartbeat peut maintenir le cache **à chaud** pendant les périodes d'inactivité. Si le TTL du cache de votre modèle
 est `1h`, définir l'intervalle de heartbeat juste en dessous (par exemple, `55m`) peut éviter
@@ -118,7 +118,7 @@ de remettre en cache le prompt complet, réduisant ainsi les coûts d'écriture 
 Dans les configurations multi-agent, vous pouvez conserver une configuration de modèle partagée et ajuster le comportement du cache
 par agent avec `agents.list[].params.cacheRetention`.
 
-Pour un guide détaillé de tous les paramètres, consultez [Prompt Caching](/en/reference/prompt-caching).
+Pour un guide détaillé de tous les paramètres, consultez [Prompt Caching](/fr/reference/prompt-caching).
 
 Pour la tarification de l'Anthropic API, les lectures de cache sont nettement moins chères que les jetons
 d'entrée, tandis que les écritures de cache sont facturées avec un multiplicateur plus élevé. Consultez la tarification
@@ -198,4 +198,4 @@ cette combinaison avec une erreur HTTP 401.
 - Gardez les descriptions des compétences courtes (la liste des compétences est injectée dans le prompt).
 - Préférez des modèles plus petits pour un travail verbeux et exploratoire.
 
-Voir [Skills](/en/tools/skills) pour la formule exacte de la surcharge de la liste des compétences.
+Voir [Skills](/fr/tools/skills) pour la formule exacte de la surcharge de la liste des compétences.

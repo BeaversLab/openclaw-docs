@@ -13,11 +13,11 @@ read_when:
 Esta página enumera cada control de configuración para la búsqueda de memoria de OpenClaw. Para
 vistas conceptuales, consulte:
 
-- [Resumen de memoria](/en/concepts/memory) -- cómo funciona la memoria
-- [Motor integrado](/en/concepts/memory-builtin) -- backend SQLite predeterminado
-- [Motor QMD](/en/concepts/memory-qmd) -- sidecar con prioridad local
-- [Búsqueda de memoria](/en/concepts/memory-search) -- canalización y ajuste de búsqueda
-- [Memoria activa](/en/concepts/active-memory) -- habilitar el subagente de memoria para sesiones interactivas
+- [Resumen de memoria](/es/concepts/memory) -- cómo funciona la memoria
+- [Motor integrado](/es/concepts/memory-builtin) -- backend SQLite predeterminado
+- [Motor QMD](/es/concepts/memory-qmd) -- sidecar con prioridad local
+- [Búsqueda de memoria](/es/concepts/memory-search) -- canalización y ajuste de búsqueda
+- [Memoria activa](/es/concepts/active-memory) -- habilitar el subagente de memoria para sesiones interactivas
 
 Todas las configuraciones de búsqueda de memoria se encuentran en `agents.defaults.memorySearch` en
 `openclaw.json`, a menos que se indique lo contrario.
@@ -30,7 +30,7 @@ La memoria activa utiliza un modelo de dos puertas:
 1. el complemento debe estar habilitado y apuntar al id del agente actual
 2. la solicitud debe ser una sesión de chat persistente interactiva elegible
 
-Consulte [Memoria activa](/en/concepts/active-memory) para conocer el modelo de activación,
+Consulte [Memoria activa](/es/concepts/active-memory) para conocer el modelo de activación,
 la configuración propiedad del complemento, la persistencia de las transcripciones y el patrón de implementación segura.
 
 ---
@@ -417,7 +417,7 @@ ejecución de la puerta de enlace.
 ### Ámbito
 
 Controla qué sesiones pueden recibir resultados de búsqueda de QMD. Mismo esquema que
-[`session.sendPolicy`](/en/gateway/configuration-reference#session):
+[`session.sendPolicy`](/es/gateway/configuration-reference#session):
 
 ```json5
 {
@@ -479,7 +479,7 @@ no bajo `agents.defaults.memorySearch`.
 Soñar se ejecuta como un barrido programado y utiliza fases internas de ligero/profundo/REM como
 detalle de implementación.
 
-Para el comportamiento conceptual y los comandos de barra, consulte [Dreaming](/en/concepts/dreaming).
+Para el comportamiento conceptual y los comandos de barra, consulte [Dreaming](/es/concepts/dreaming).
 
 ### Configuración de usuario
 

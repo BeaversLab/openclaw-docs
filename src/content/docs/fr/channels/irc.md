@@ -185,7 +185,7 @@ Notes :
 - Les clés héritées sans préfixe sont toujours acceptées et correspondues comme `id:` uniquement.
 - La première stratégie d'expéditeur correspondante l'emporte ; `"*"` est le repli générique.
 
-Pour plus d'informations sur l'accès par groupe par rapport au filtrage par mention (et leur interaction), voir : [/channels/groups](/en/channels/groups).
+Pour plus d'informations sur l'accès par groupe par rapport au filtrage par mention (et leur interaction), voir : [/channels/groups](/fr/channels/groups).
 
 ## NickServ
 
@@ -245,8 +245,8 @@ Le compte par défaut prend en charge :
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appairage](/en/channels/pairing) — authentification DM et flux d'appairage
-- [Groupes](/en/channels/groups) — comportement de discussion de groupe et filtrage par mention
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appairage](/fr/channels/pairing) — authentification DM et flux d'appairage
+- [Groupes](/fr/channels/groups) — comportement de discussion de groupe et filtrage par mention
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

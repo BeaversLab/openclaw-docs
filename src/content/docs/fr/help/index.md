@@ -10,19 +10,19 @@ title: "Aide"
 
 Si vous souhaitez un processus rapide pour « get unstuck », commencez ici :
 
-- **Troubleshooting :** [Commencez ici](/en/help/troubleshooting)
-- **Installer la saine (Node/npm/PATH) :** [Installer](/en/install/node#troubleshooting)
-- **Problèmes de Gateway :** [Gateway troubleshooting](/en/gateway/troubleshooting)
-- **Journaux :** [Logging](/en/logging) et [Gateway logging](/en/gateway/logging)
-- **Réparations :** [Doctor](/en/gateway/doctor)
+- **Troubleshooting :** [Commencez ici](/fr/help/troubleshooting)
+- **Installer la saine (Node/npm/PATH) :** [Installer](/fr/install/node#troubleshooting)
+- **Problèmes de Gateway :** [Gateway troubleshooting](/fr/gateway/troubleshooting)
+- **Journaux :** [Logging](/fr/logging) et [Gateway logging](/fr/gateway/logging)
+- **Réparations :** [Doctor](/fr/gateway/doctor)
 
 Si vous cherchez des réponses à des questions conceptuelles (pas « quelque chose ne marche pas ») :
 
-- [FAQ (concepts)](/en/help/faq)
+- [FAQ (concepts)](/fr/help/faq)
 
 ## Environnement et débogage
 
-- **Variables d'environnement :** [Où OpenClaw charge les env vars et la priorité](/en/help/environment)
-- **Débogage :** [Mode surveillance, flux bruts et profil de développement](/en/help/debugging)
-- **Tests :** [Suites de tests, tests en direct et exécuteurs Docker](/en/help/testing)
-- **Scripts :** [Scripts d'aide du référentiel](/en/help/scripts)
+- **Variables d'environnement :** [Où OpenClaw charge les env vars et la priorité](/fr/help/environment)
+- **Débogage :** [Mode surveillance, flux bruts et profil de développement](/fr/help/debugging)
+- **Tests :** [Suites de tests, tests en direct et exécuteurs Docker](/fr/help/testing)
+- **Scripts :** [Scripts d'aide du référentiel](/fr/help/scripts)

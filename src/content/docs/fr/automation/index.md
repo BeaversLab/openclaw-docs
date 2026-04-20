@@ -63,37 +63,37 @@ Utilisez les Tâches planifiées (Cron) lorsque vous avez besoin d'un timing pr�
 
 Cron est le planificateur intégré du Gateway pour une synchronisation précise. Il persiste les travaux, réveille l'agent au bon moment et peut envoyer la sortie vers un canal de chat ou un point de terminaison webhook. Prend en charge les rappels ponctuels, les expressions récurrentes et les déclencheurs de webhook entrants.
 
-Voir [Tâches planifiées](/en/automation/cron-jobs).
+Voir [Tâches planifiées](/fr/automation/cron-jobs).
 
 ### Tâches
 
 Le registre des tâches en arrière-plan suit tout le travail détaché : exécutions ACP, générations de sous-agents, exécutions cron isolées et opérations CLI. Les tâches sont des enregistrements, pas des planificateurs. Utilisez `openclaw tasks list` et `openclaw tasks audit` pour les inspecter.
 
-Voir [Tâches en arrière-plan](/en/automation/tasks).
+Voir [Tâches en arrière-plan](/fr/automation/tasks).
 
 ### Flux de tâches
 
 Le flux de tâches est le substrat d'orchestration des flux au-dessus des tâches en arrière-plan. Il gère des flux durables en plusieurs étapes avec des modes de synchronisation gérés et miroirs, le suivi des révisions et `openclaw tasks flow list|show|cancel` pour l'inspection.
 
-Voir [Flux de tâches](/en/automation/taskflow).
+Voir [Flux de tâches](/fr/automation/taskflow).
 
 ### Ordres permanents
 
 Les ordres permanents donnent à l'agent une autorité opérationnelle permanente pour les programmes définis. Ils résident dans les fichiers de l'espace de travail (généralement `AGENTS.md`) et sont injectés dans chaque session. Combinez avec cron pour une application temporelle.
 
-Voir [Ordres permanents](/en/automation/standing-orders).
+Voir [Ordres permanents](/fr/automation/standing-orders).
 
 ### Crochets (Hooks)
 
 Les crochets sont des scripts pilotés par les événements déclenchés par les événements du cycle de vie de l'agent (`/new`, `/reset`, `/stop`), la compactage de session, le démarrage de la passerelle, le flux de messages et les appels d'outils. Les crochets sont découverts automatiquement à partir des répertoires et peuvent être gérés avec `openclaw hooks`.
 
-Voir [Crochets](/en/automation/hooks).
+Voir [Crochets](/fr/automation/hooks).
 
 ### Battement de cœur (Heartbeat)
 
 Le battement de cœur est un tour de session principal périodique (par défaut toutes les 30 minutes). Il regroupe plusieurs vérifications (boîte de réception, calendrier, notifications) en un tour d'agent avec le contexte complet de la session. Les tours de battement de cœur ne créent pas d'enregistrements de tâche. Utilisez `HEARTBEAT.md` pour une petite liste de vérification, ou un bloc `tasks:` lorsque vous souhaitez des vérifications périodiques dues uniquement à l'intérieur du battement de cœur lui-même. Les fichiers de battement de cœur vides sont ignorés en tant que `empty-heartbeat-file`; le mode de tâche dû uniquement est ignoré en tant que `no-tasks-due`.
 
-Voir [Battement de cœur](/en/gateway/heartbeat).
+Voir [Battement de cœur](/fr/gateway/heartbeat).
 
 ## Comment ils fonctionnent ensemble
 
@@ -106,10 +106,10 @@ Voir [Battement de cœur](/en/gateway/heartbeat).
 
 ## Connexes
 
-- [Scheduled Tasks](/en/automation/cron-jobs) — planification précise et rappels ponctuels
-- [Background Tasks](/en/automation/tasks) — registre des tâches pour tout le travail détaché
-- [Task Flow](/en/automation/taskflow) — orchestration de flux multi-étapes durables
-- [Hooks](/en/automation/hooks) — scripts de cycle de vie pilotés par les événements
-- [Standing Orders](/en/automation/standing-orders) — instructions persistantes pour l'agent
-- [Heartbeat](/en/gateway/heartbeat) — tours de session principale périodiques
-- [Configuration Reference](/en/gateway/configuration-reference) — toutes les clés de configuration
+- [Scheduled Tasks](/fr/automation/cron-jobs) — planification précise et rappels ponctuels
+- [Background Tasks](/fr/automation/tasks) — registre des tâches pour tout le travail détaché
+- [Task Flow](/fr/automation/taskflow) — orchestration de flux multi-étapes durables
+- [Hooks](/fr/automation/hooks) — scripts de cycle de vie pilotés par les événements
+- [Standing Orders](/fr/automation/standing-orders) — instructions persistantes pour l'agent
+- [Heartbeat](/fr/gateway/heartbeat) — tours de session principale périodiques
+- [Configuration Reference](/fr/gateway/configuration-reference) — toutes les clés de configuration

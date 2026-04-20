@@ -18,7 +18,7 @@ title: "agent"
 
 相關：
 
-- Agent send 工具：[Agent send](/en/tools/agent-send)
+- Agent send 工具：[Agent send](/zh-Hant/tools/agent-send)
 
 ## 選項
 

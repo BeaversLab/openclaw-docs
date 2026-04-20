@@ -128,10 +128,10 @@ cuenta.
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Proveedores de modelos" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Proveedores de modelos" href="/es/concepts/model-providers" icon="layers">
     Reglas del proveedor, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
     Esquema de configuración completo que incluye la configuración del proveedor.
   </Card>
   <Card title="Synthetic" href="https://synthetic.new" icon="arrow-up-right-from-square">

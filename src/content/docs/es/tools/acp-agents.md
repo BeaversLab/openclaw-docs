@@ -13,10 +13,10 @@ title: "ACP Agents"
 
 Las sesiones de [Agent Client Protocol (ACP)](https://agentclientprotocol.com/) permiten que OpenClaw ejecute arneses de codificación externos (por ejemplo, Pi, Claude Code, Codex, Cursor, Copilot, OpenClaw ACP, OpenCode, Gemini CLI y otros arneses ACPX compatibles) a través de un complemento de backend ACP.
 
-Si le pides a OpenClaw en lenguaje sencillo que "ejecute esto en Codex" o "inicie Claude Code en un hilo", OpenClaw debería enrutar esa solicitud al tiempo de ejecución de ACP (no al tiempo de ejecución del subagente nativo). Cada inicio de sesión de ACP se rastrea como una [tarea en segundo plano](/en/automation/tasks).
+Si le pides a OpenClaw en lenguaje sencillo que "ejecute esto en Codex" o "inicie Claude Code en un hilo", OpenClaw debería enrutar esa solicitud al tiempo de ejecución de ACP (no al tiempo de ejecución del subagente nativo). Cada inicio de sesión de ACP se rastrea como una [tarea en segundo plano](/es/automation/tasks).
 
 Si quieres que Codex o Claude Code se conecten como cliente MCP externo directamente
-a las conversaciones de canales existentes de OpenClaw, usa [`openclaw mcp serve`](/en/cli/mcp)
+a las conversaciones de canales existentes de OpenClaw, usa [`openclaw mcp serve`](/es/cli/mcp)
 en lugar de ACP.
 
 ## ¿Qué página quiero?
@@ -26,8 +26,8 @@ Hay tres superficies cercanas que son fáciles de confundir:
 | Quieres...                                                                          | Usa esto                                 | Notas                                                                                                                                      |
 | ----------------------------------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | Ejecutar Codex, Claude Code, Gemini CLI u otro arnés externo _a través_ de OpenClaw | Esta página: Agentes ACP                 | Sesiones vinculadas al chat, `/acp spawn`, `sessions_spawn({ runtime: "acp" })`, tareas en segundo plano, controles de tiempo de ejecución |
-| Exponer una sesión de OpenClaw Gateway _como_ servidor ACP para un editor o cliente | [`openclaw acp`](/en/cli/acp)            | Modo puente. El IDE/cliente habla ACP con OpenClaw a través de stdio/WebSocket                                                             |
-| Reutilizar una CLI de IA local como modelo alternativo de solo texto                | [CLI Backends](/en/gateway/cli-backends) | No es ACP. Sin herramientas de OpenClaw, sin controles ACP, sin tiempo de ejecución de arnés                                               |
+| Exponer una sesión de OpenClaw Gateway _como_ servidor ACP para un editor o cliente | [`openclaw acp`](/es/cli/acp)            | Modo puente. El IDE/cliente habla ACP con OpenClaw a través de stdio/WebSocket                                                             |
+| Reutilizar una CLI de IA local como modelo alternativo de solo texto                | [CLI Backends](/es/gateway/cli-backends) | No es ACP. Sin herramientas de OpenClaw, sin controles ACP, sin tiempo de ejecución de arnés                                               |
 
 ## ¿Esto funciona fuera de la caja?
 
@@ -98,7 +98,7 @@ Use ACP cuando desee un tiempo de ejecución de arnés externo. Use sub-agentes 
 | Comandos principales                   | `/acp ...`                                    | `/subagents ...`                                      |
 | Herramienta de generación (Spawn tool) | `sessions_spawn` con `runtime:"acp"`          | `sessions_spawn` (tiempo de ejecución predeterminado) |
 
-Consulte también [Sub-agentes](/en/tools/subagents).
+Consulte también [Sub-agentes](/es/tools/subagents).
 
 ## Cómo ACP ejecuta Claude Code
 
@@ -112,7 +112,7 @@ Para Claude Code a través de ACP, la pila es:
 Distinción importante:
 
 - ACP Claude es una sesión de arnés con controles ACP, reanudación de sesión, seguimiento de tareas en segundo plano y enlace opcional de conversación/hilo.
-- Los backends de CLI son tiempos de ejecución alternativos locales de solo texto separados. Consulte [Backends de CLI](/en/gateway/cli-backends).
+- Los backends de CLI son tiempos de ejecución alternativos locales de solo texto separados. Consulte [Backends de CLI](/es/gateway/cli-backends).
 
 Para los operadores, la regla práctica es:
 
@@ -459,7 +459,7 @@ Indicadores clave:
 - `--cwd <absolute-path>`
 - `--label <name>`
 
-Vea [Slash Commands](/en/tools/slash-commands).
+Vea [Slash Commands](/es/tools/slash-commands).
 
 ## Resolución del objetivo de sesión
 
@@ -649,7 +649,7 @@ Si la creación de ACP ligado a hilos no funciona, verifica primero el indicador
 
 Los enlaces de conversación actual no requieren la creación de hilos secundarios. Requieren un contexto de conversación activo y un adaptador de canal que exponga enlaces de conversación ACP.
 
-Consulta [Referencia de configuración](/en/gateway/configuration-reference).
+Consulta [Referencia de configuración](/es/gateway/configuration-reference).
 
 ## Configuración del complemento para el backend acpx
 
@@ -719,7 +719,7 @@ Notas:
 - Cuando `command` apunta a un binario/ruta personalizado, la autoinstalación local del complemento se deshabilita.
 - El inicio de OpenClaw sigue sin bloqueo mientras se ejecuta la verificación de estado del backend.
 
-Consulta [Complementos](/en/tools/plugin).
+Consulta [Complementos](/es/tools/plugin).
 
 ### Instalación automática de dependencias
 

@@ -220,16 +220,16 @@ openclaw onboard --non-interactive \
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="Model providers" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model providers" href="/zh-Hant/concepts/model-providers" icon="layers">
     所有供應商、模型參考和故障轉移行為的概覽。
   </Card>
-  <Card title="Model selection" href="/en/concepts/models" icon="brain">
+  <Card title="Model selection" href="/zh-Hant/concepts/models" icon="brain">
     如何選擇和配置模型。
   </Card>
   <Card title="Inference Providers docs" href="https://huggingface.co/docs/inference-providers" icon="book">
     Hugging Face 推理供應商官方文件。
   </Card>
-  <Card title="Configuration" href="/en/gateway/configuration" icon="gear">
+  <Card title="Configuration" href="/zh-Hant/gateway/configuration" icon="gear">
     完整配置參考。
   </Card>
 </CardGroup>

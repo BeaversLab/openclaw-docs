@@ -20,7 +20,7 @@ Si vous utilisez une version ancienne ou une installation personnalisée qui exc
 
 - Installer via CLI : `openclaw plugins install @openclaw/zalouser`
 - Ou depuis une récupération des sources : `openclaw plugins install ./path/to/local/zalouser-plugin`
-- Détails : [Plugins](/en/tools/plugin)
+- Détails : [Plugins](/fr/tools/plugin)
 
 Aucun binaire CLI externe `zca`/`openzca` n'est requis.
 
@@ -166,7 +166,7 @@ Les comptes correspondent aux profils `zalouser` dans l'état de OpenClaw. Exemp
 - OpenClaw envoie un événement de frappe avant d'envoyer une réponse (au mieux possible).
 - L'action de réaction de message `react` est prise en charge pour `zalouser` dans les actions de canal.
   - Utilisez `remove: true` pour supprimer un emoji de réaction spécifique d'un message.
-  - Sémantique des réactions : [Réactions](/en/tools/reactions)
+  - Sémantique des réactions : [Réactions](/fr/tools/reactions)
 - Pour les messages entrants incluant des métadonnées d'événement, OpenClaw envoie des accusés de réception délivrés + lus (au mieux possible).
 
 ## Dépannage
@@ -187,8 +187,8 @@ Les comptes correspondent aux profils `zalouser` dans l'état de OpenClaw. Exemp
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appairage](/en/channels/pairing) — authentification et flux d'appairage par DM
-- [Groupes](/en/channels/groups) — comportement du chat de groupe et filtrage par mention
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appairage](/fr/channels/pairing) — authentification et flux d'appairage par DM
+- [Groupes](/fr/channels/groups) — comportement du chat de groupe et filtrage par mention
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

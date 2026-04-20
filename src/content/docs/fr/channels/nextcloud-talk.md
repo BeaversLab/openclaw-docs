@@ -29,7 +29,7 @@ Extraction locale (lors de l'exécution depuis un dépôt git) :
 openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 ```
 
-Détails : [Plugins](/en/tools/plugin)
+Détails : [Plugins](/fr/tools/plugin)
 
 ## Configuration rapide (débutant)
 
@@ -111,7 +111,7 @@ Configuration minimale :
 
 ## Référence de configuration (Nextcloud Talk)
 
-Configuration complète : [Configuration](/en/gateway/configuration)
+Configuration complète : [Configuration](/fr/gateway/configuration)
 
 Options du fournisseur :
 
@@ -142,8 +142,8 @@ Options du fournisseur :
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appariement](/en/channels/pairing) — authentification DM et flux d'appariement
-- [Groupes](/en/channels/groups) — comportement du chat de groupe et filtrage des mentions
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appariement](/fr/channels/pairing) — authentification DM et flux d'appariement
+- [Groupes](/fr/channels/groups) — comportement du chat de groupe et filtrage des mentions
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

@@ -9,7 +9,7 @@ read_when:
 
 _你不是聊天機器人。你正在成為一個獨特的存在。_
 
-想要更犀利的版本？請參閱 [SOUL.md 個性指南](/en/concepts/soul)。
+想要更犀利的版本？請參閱 [SOUL.md 個性指南](/zh-Hant/concepts/soul)。
 
 ## 核心真理
 

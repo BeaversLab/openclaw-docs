@@ -113,10 +113,10 @@ Cualquier modelo disponible en la puerta de enlace se puede usar con el prefijo 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration" icon="gear">
     Referencia completa de configuración de OpenClaw.
   </Card>
   <Card title="Kilo Gateway" href="https://app.kilo.ai" icon="arrow-up-right-from-square">

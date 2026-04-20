@@ -10,16 +10,16 @@ title: "Gateway(网关) 操作手册"
 使用此页面进行 Gateway(网关) 网关 服务的第 1 天启动和第 2 天运维。
 
 <CardGroup cols={2}>
-  <Card title="Deep 故障排除" icon="siren" href="/en/gateway/troubleshooting">
+  <Card title="Deep 故障排除" icon="siren" href="/zh/gateway/troubleshooting">
     针对症状的诊断，提供确切的命令阶梯和日志特征。
   </Card>
-  <Card title="Configuration" icon="sliders" href="/en/gateway/configuration">
+  <Card title="Configuration" icon="sliders" href="/zh/gateway/configuration">
     面向任务的设置指南 + 完整配置参考。
   </Card>
-  <Card title="Secrets management" icon="key-round" href="/en/gateway/secrets">
+  <Card title="Secrets management" icon="key-round" href="/zh/gateway/secrets">
     SecretRef 协定、运行时快照行为以及迁移/重载操作。
   </Card>
-  <Card title="Secrets plan contract" icon="shield-check" href="/en/gateway/secrets-plan-contract">
+  <Card title="Secrets plan contract" icon="shield-check" href="/zh/gateway/secrets-plan-contract">
     精确的 `secrets apply` 目标/路径规则以及仅引用身份配置文件行为。
   </Card>
 </CardGroup>
@@ -157,7 +157,7 @@ openclaw gateway probe
 - 当多个目标响应时，`gateway probe` 可以针对 `multiple reachable gateways` 发出警告。
 - 如果是有意为之，请为每个 Gateway 隔离端口、配置/状态和工作区根目录。
 
-详细设置：[/gateway/multiple-gateways](/en/gateway/multiple-gateways)。
+详细设置：[/gateway/multiple-gateways](/zh/gateway/multiple-gateways)。
 
 ## 远程访问
 
@@ -172,7 +172,7 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 
 <Warning>SSH 隧道不会绕过 Gateway 认证。对于共享密钥认证，客户端即使通过隧道，也必须发送 `token`/`password`。对于基于身份的模式，请求仍必须满足该认证路径。</Warning>
 
-请参阅：[Remote Gateway(网关)](/en/gateway/remote)、[Authentication](/en/gateway/authentication)、[Tailscale](/en/gateway/tailscale)。
+请参阅：[Remote Gateway(网关)](/zh/gateway/remote)、[Authentication](/zh/gateway/authentication)、[Tailscale](/zh/gateway/tailscale)。
 
 ## 监管与服务生命周期
 
@@ -278,7 +278,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a opencla
 OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
 ```
 
-参见：[多个网关](/en/gateway/multiple-gateways)。
+参见：[多个网关](/zh/gateway/multiple-gateways)。
 
 ### 开发配置文件快速路径
 
@@ -306,7 +306,7 @@ openclaw --dev status
 1. 立即接受的确认（`status:"accepted"`）
 2. 最终完成响应（`status:"ok"|"error"`），其间包含流式 `agent` 事件。
 
-查看完整的协议文档：[Gateway(网关) 协议](/en/gateway/protocol)。
+查看完整的协议文档：[Gateway(网关) 协议](/zh/gateway/protocol)。
 
 ## 操作检查
 
@@ -336,7 +336,7 @@ openclaw health
 | `Gateway start blocked: set gateway.mode=local`                | 配置设置为远程模式，或者损坏的配置中缺少本地模式标记 |
 | 连接期间出现 `unauthorized`                                    | 客户端和网关之间的认证不匹配                         |
 
-如需完整的诊断流程，请使用 [Gateway(网关) 故障排除](/en/gateway/troubleshooting)。
+如需完整的诊断流程，请使用 [Gateway(网关) 故障排除](/zh/gateway/troubleshooting)。
 
 ## 安全保证
 
@@ -348,9 +348,9 @@ openclaw health
 
 相关：
 
-- [故障排除](/en/gateway/troubleshooting)
-- [后台进程](/en/gateway/background-process)
-- [配置](/en/gateway/configuration)
-- [健康检查](/en/gateway/health)
-- [诊断工具](/en/gateway/doctor)
-- [认证](/en/gateway/authentication)
+- [故障排除](/zh/gateway/troubleshooting)
+- [后台进程](/zh/gateway/background-process)
+- [配置](/zh/gateway/configuration)
+- [健康检查](/zh/gateway/health)
+- [诊断工具](/zh/gateway/doctor)
+- [认证](/zh/gateway/authentication)

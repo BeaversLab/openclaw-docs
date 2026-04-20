@@ -10,7 +10,7 @@ title: "Ejecución de Código"
 # Ejecución de Código
 
 `code_execution` ejecuta análisis remoto de Python en un entorno aislado en la API de Responses de xAI.
-Esto es diferente de [`exec`](/en/tools/exec) local:
+Esto es diferente de [`exec`](/es/tools/exec) local:
 
 - `exec` ejecuta comandos de shell en tu máquina o nodo
 - `code_execution` ejecuta Python en el sandbox remoto de xAI
@@ -24,7 +24,7 @@ Usa `code_execution` para:
 - analizar datos devueltos por `x_search` o `web_search`
 
 **No** lo uses cuando necesites archivos locales, tu shell, tu repositorio o dispositivos
-emparejados. Usa [`exec`](/en/tools/exec) para eso.
+emparejados. Usa [`exec`](/es/tools/exec) para eso.
 
 ## Configuración
 
@@ -81,10 +81,10 @@ la solicitud de análisis completa y cualquier dato en línea en un solo mensaje
 - Esta es una ejecución remota de xAI, no una ejecución de proceso local.
 - Debe tratarse como un análisis efímero, no como un cuaderno persistente.
 - No asumas acceso a archivos locales o a tu espacio de trabajo.
-- Para datos frescos de X, usa primero [`x_search`](/en/tools/web#x_search).
+- Para datos frescos de X, usa primero [`x_search`](/es/tools/web#x_search).
 
 ## Véase También
 
-- [Herramientas web](/en/tools/web)
-- [Exec](/en/tools/exec)
-- [xAI](/en/providers/xai)
+- [Herramientas web](/es/tools/web)
+- [Exec](/es/tools/exec)
+- [xAI](/es/providers/xai)

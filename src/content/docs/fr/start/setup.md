@@ -8,7 +8,7 @@ title: "Configuration"
 
 # Configuration
 
-<Note>Si vous configurez pour la première fois, commencez par [Getting Started](/en/start/getting-started). Pour les détails sur l'intégration, voir [Onboarding (CLI)](/en/start/wizard).</Note>
+<Note>Si vous configurez pour la première fois, commencez par [Getting Started](/fr/start/getting-started). Pour les détails sur l'intégration, voir [Onboarding (CLI)](/fr/start/wizard).</Note>
 
 ## TL;DR
 
@@ -19,8 +19,8 @@ title: "Configuration"
 ## Prérequis (à partir du code source)
 
 - Node 24 recommandé (Node 22 LTS, actuellement `22.14+`, toujours pris en charge)
-- `pnpm` préféré (ou Bun si vous utilisez intentionnellement le [flux de travail Bun](/en/install/bun))
-- Docker (optionnel ; uniquement pour la configuration/e2e conteneurisés — voir [Docker](/en/install/docker))
+- `pnpm` préféré (ou Bun si vous utilisez intentionnellement le [flux de travail Bun](/fr/install/bun))
+- Docker (optionnel ; uniquement pour la configuration/e2e conteneurisés — voir [Docker](/fr/install/docker))
 
 ## Stratégie d'adaptation (pour que les mises à jour ne fassent pas mal)
 
@@ -140,7 +140,7 @@ Utilisez ceci lors du débogage de l'authentification ou pour décider quoi sauv
 - **Profils d'authentification de modèle** : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 - **Charge utile de secrets sauvegardés dans un fichier (optionnel)** : `~/.openclaw/secrets.json`
 - **Import OAuth hérité** : `~/.openclaw/credentials/oauth.json`
-  Plus de détails : [Sécurité](/en/gateway/security#credential-storage-map).
+  Plus de détails : [Sécurité](/fr/gateway/security#credential-storage-map).
 
 ## Mise à jour (sans casser votre configuration)
 
@@ -158,12 +158,12 @@ sudo loginctl enable-linger $USER
 ```
 
 Pour les serveurs toujours actifs ou multi-utilisateurs, envisagez un service **système** au lieu d'un
-service utilisateur (pas de persistance nécessaire). Voir le [manuel de procédures Gateway](/en/gateway) pour les notes systemd.
+service utilisateur (pas de persistance nécessaire). Voir le [manuel de procédures Gateway](/fr/gateway) pour les notes systemd.
 
 ## Documentation connexe
 
-- [Manuel de procédures Gateway](/en/gateway) (drapeaux, supervision, ports)
-- [Configuration Gateway](/en/gateway/configuration) (schéma de config + exemples)
-- [Discord](/en/channels/discord) et [Telegram](/en/channels/telegram) (balises de réponse + paramètres replyToMode)
-- [Configuration de l'assistant OpenClaw](/en/start/openclaw)
-- [Application macOS](/en/platforms/macos) (cycle de vie de la passerelle)
+- [Manuel de procédures Gateway](/fr/gateway) (drapeaux, supervision, ports)
+- [Configuration Gateway](/fr/gateway/configuration) (schéma de config + exemples)
+- [Discord](/fr/channels/discord) et [Telegram](/fr/channels/telegram) (balises de réponse + paramètres replyToMode)
+- [Configuration de l'assistant OpenClaw](/fr/start/openclaw)
+- [Application macOS](/fr/platforms/macos) (cycle de vie de la passerelle)

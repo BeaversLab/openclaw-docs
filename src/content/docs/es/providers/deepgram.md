@@ -111,16 +111,16 @@ Cuando está habilitado, OpenClaw sube el archivo de audio a Deepgram e inyecta 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Herramientas multimedia" href="/en/tools/media" icon="photo-film">
+  <Card title="Herramientas multimedia" href="/es/tools/media" icon="photo-film">
     Resumen de la canalización de procesamiento de audio, imagen y video.
   </Card>
-  <Card title="Configuración" href="/en/configuration" icon="gear">
+  <Card title="Configuración" href="/es/configuration" icon="gear">
     Referencia completa de configuración, incluidos los ajustes de herramientas multimedia.
   </Card>
-  <Card title="Solución de problemas" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Solución de problemas" href="/es/help/troubleshooting" icon="wrench">
     Problemas comunes y pasos de depuración.
   </Card>
-  <Card title="Preguntas frecuentes" href="/en/help/faq" icon="circle-question">
+  <Card title="Preguntas frecuentes" href="/es/help/faq" icon="circle-question">
     Preguntas frecuentes sobre la configuración de OpenClaw.
   </Card>
 </CardGroup>

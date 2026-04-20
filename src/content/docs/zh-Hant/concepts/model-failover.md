@@ -60,7 +60,7 @@ OpenClaw 對 API 金鑰和 OAuth 權杖都使用 **auth profiles**。
 - 設定 `auth.profiles` / `auth.order` 僅為 **中繼資料 + 路由用途**（不含機密）。
 - 舊版僅供匯入的 OAuth 檔案：`~/.openclaw/credentials/oauth.json`（首次使用時會匯入至 `auth-profiles.json`）。
 
-更多細節：[/concepts/oauth](/en/concepts/oauth)
+更多細節：[/concepts/oauth](/zh-Hant/concepts/oauth)
 
 憑證類型：
 
@@ -310,7 +310,7 @@ length exceeded`）
 
 ## 相關配置
 
-請參閱 [Gateway configuration](/en/gateway/configuration) 以了解：
+請參閱 [Gateway configuration](/zh-Hant/gateway/configuration) 以了解：
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
@@ -320,4 +320,4 @@ length exceeded`）
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - `agents.defaults.imageModel` 路由
 
-請參閱 [Models](/en/concepts/models) 以了解更廣泛的模型選擇和故障轉移概覽。
+請參閱 [Models](/zh-Hant/concepts/models) 以了解更廣泛的模型選擇和故障轉移概覽。

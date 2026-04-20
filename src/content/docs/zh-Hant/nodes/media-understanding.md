@@ -391,5 +391,5 @@ MiniMax 說明：
 
 ## 相關文件
 
-- [配置](/en/gateway/configuration)
-- [影像與媒體支援](/en/nodes/images)
+- [配置](/zh-Hant/gateway/configuration)
+- [影像與媒體支援](/zh-Hant/nodes/images)

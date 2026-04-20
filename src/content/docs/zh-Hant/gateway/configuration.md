@@ -17,9 +17,9 @@ OpenClaw 會從 `~/.openclaw/openclaw.json` 讀取選用的 <Tooltip tip="JSON5 
 - 設定模型、工具、沙盒或自動化 (cron, hooks)
 - 調整 Sessions、媒體、網路或 UI
 
-參閱 [完整參考資料](/en/gateway/configuration-reference) 以了解所有可用欄位。
+參閱 [完整參考資料](/zh-Hant/gateway/configuration-reference) 以了解所有可用欄位。
 
-<Tip>**剛開始接觸設定？** 請從 `openclaw onboard` 開始進行互動式設定，或查看 [設定範例](/en/gateway/configuration-examples) 指南以取得完整的複製貼上設定。</Tip>
+<Tip>**剛開始接觸設定？** 請從 `openclaw onboard` 開始進行互動式設定，或查看 [設定範例](/zh-Hant/gateway/configuration-examples) 指南以取得完整的複製貼上設定。</Tip>
 
 ## 最精簡設定
 
@@ -76,16 +76,16 @@ Schema 工具說明：
   <Accordion title="Set up a channel (WhatsApp, Telegram, Discord, etc.)">
     每個通道在 `channels.<provider>` 下都有自己的設定區段。請參閱專屬的通道頁面以了解設定步驟：
 
-    - [WhatsApp](/en/channels/whatsapp) — `channels.whatsapp`
-    - [Telegram](/en/channels/telegram) — `channels.telegram`
-    - [Discord](/en/channels/discord) — `channels.discord`
-    - [Feishu](/en/channels/feishu) — `channels.feishu`
-    - [Google Chat](/en/channels/googlechat) — `channels.googlechat`
-    - [Microsoft Teams](/en/channels/msteams) — `channels.msteams`
-    - [Slack](/en/channels/slack) — `channels.slack`
-    - [Signal](/en/channels/signal) — `channels.signal`
-    - [iMessage](/en/channels/imessage) — `channels.imessage`
-    - [Mattermost](/en/channels/mattermost) — `channels.mattermost`
+    - [WhatsApp](/zh-Hant/channels/whatsapp) — `channels.whatsapp`
+    - [Telegram](/zh-Hant/channels/telegram) — `channels.telegram`
+    - [Discord](/zh-Hant/channels/discord) — `channels.discord`
+    - [Feishu](/zh-Hant/channels/feishu) — `channels.feishu`
+    - [Google Chat](/zh-Hant/channels/googlechat) — `channels.googlechat`
+    - [Microsoft Teams](/zh-Hant/channels/msteams) — `channels.msteams`
+    - [Slack](/zh-Hant/channels/slack) — `channels.slack`
+    - [Signal](/zh-Hant/channels/signal) — `channels.signal`
+    - [iMessage](/zh-Hant/channels/imessage) — `channels.imessage`
+    - [Mattermost](/zh-Hant/channels/mattermost) — `channels.mattermost`
 
     所有通道都共享相同的 DM policy pattern：
 
@@ -127,8 +127,8 @@ Schema 工具說明：
     - `agents.defaults.models` 定義模型目錄並作為 `/model` 的允許清單。
     - 模型參照使用 `provider/model` 格式（例如 `anthropic/claude-opus-4-6`）。
     - `agents.defaults.imageMaxDimensionPx` 控制逐字稿/工具圖片的縮小比例（預設 `1200`）；較低的值通常會在包含大量截圖的執行中減少視覺 token 的使用量。
-    - 請參閱 [Models CLI](/en/concepts/models) 以在聊天中切換模型，以及 [Model Failover](/en/concepts/model-failover) 以了解認證輪替和備用行為。
-    - 對於自訂/自託管的提供者，請參閱參考資料中的 [Custom providers](/en/gateway/configuration-reference#custom-providers-and-base-urls)。
+    - 請參閱 [Models CLI](/zh-Hant/concepts/models) 以在聊天中切換模型，以及 [Model Failover](/zh-Hant/concepts/model-failover) 以了解認證輪替和備用行為。
+    - 對於自訂/自託管的提供者，請參閱參考資料中的 [Custom providers](/zh-Hant/gateway/configuration-reference#custom-providers-and-base-urls)。
 
   </Accordion>
 
@@ -142,7 +142,7 @@ Schema 工具說明：
 
     對於群組，請使用 `groupPolicy` + `groupAllowFrom` 或特定管道的允許清單。
 
-    請參閱 [full reference](/en/gateway/configuration-reference#dm-and-group-access) 以了解各管道的詳細資訊。
+    請參閱 [full reference](/zh-Hant/gateway/configuration-reference#dm-and-group-access) 以了解各管道的詳細資訊。
 
   </Accordion>
 
@@ -171,7 +171,7 @@ Schema 工具說明：
 
     - **Metadata mentions**：原生的 @-提及（WhatsApp 點擊提及、Telegram @bot 等）
     - **Text patterns**：`mentionPatterns` 中的安全 regex 模式
-    - 請參閱 [full reference](/en/gateway/configuration-reference#group-chat-mention-gating) 以了解各管道的覆寫和自我聊天模式。
+    - 請參閱 [full reference](/zh-Hant/gateway/configuration-reference#group-chat-mention-gating) 以了解各管道的覆寫和自我聊天模式。
 
   </Accordion>
 
@@ -197,8 +197,8 @@ Schema 工具說明：
     - 省略 `agents.defaults.skills` 以預設不限制技能。
     - 省略 `agents.list[].skills` 以繼承預設值。
     - 設定 `agents.list[].skills: []` 表示無技能。
-    - 請參閱 [技能](/en/tools/skills)、[技能配置](/en/tools/skills-config) 和
-      [配置參考](/en/gateway/configuration-reference#agents-defaults-skills)。
+    - 請參閱 [技能](/zh-Hant/tools/skills)、[技能配置](/zh-Hant/tools/skills-config) 和
+      [配置參考](/zh-Hant/gateway/configuration-reference#agents-defaults-skills)。
 
   </Accordion>
 
@@ -228,7 +228,7 @@ Schema 工具說明：
     - 設定 `gateway.channelHealthCheckMinutes: 0` 以全域停用健康監控重新啟動。
     - `channelStaleEventThresholdMinutes` 應大於或等於檢查間隔。
     - 使用 `channels.<provider>.healthMonitor.enabled` 或 `channels.<provider>.accounts.<id>.healthMonitor.enabled` 來停用單一通道或帳戶的自動重新啟動，而不需停用全域監控。
-    - 請參閱 [健康檢查](/en/gateway/health) 以進行營運除錯，並參閱 [完整參考](/en/gateway/configuration-reference#gateway) 以了解所有欄位。
+    - 請參閱 [健康檢查](/zh-Hant/gateway/health) 以進行營運除錯，並參閱 [完整參考](/zh-Hant/gateway/configuration-reference#gateway) 以了解所有欄位。
 
   </Accordion>
 
@@ -255,8 +255,8 @@ Schema 工具說明：
 
     - `dmScope`: `main` (共享) | `per-peer` | `per-channel-peer` | `per-account-channel-peer`
     - `threadBindings`: 執行緒繫結會話路由的全域預設值 (Discord 支援 `/focus`、`/unfocus`、`/agents`、`/session idle` 和 `/session max-age`)。
-    - 請參閱 [會話管理](/en/concepts/session) 以了解範圍、身分連結和傳送原則。
-    - 請參閱 [完整參考](/en/gateway/configuration-reference#session) 以了解所有欄位。
+    - 請參閱 [會話管理](/zh-Hant/concepts/session) 以了解範圍、身分連結和傳送原則。
+    - 請參閱 [完整參考](/zh-Hant/gateway/configuration-reference#session) 以了解所有欄位。
 
   </Accordion>
 
@@ -278,7 +278,7 @@ Schema 工具說明：
 
     先建構映像檔：`scripts/sandbox-setup.sh`
 
-    請參閱 [沙盒機制](/en/gateway/sandboxing) 以取得完整指南，以及 [完整參考資料](/en/gateway/configuration-reference#agentsdefaultssandbox) 以瞭解所有選項。
+    請參閱 [沙盒機制](/zh-Hant/gateway/sandboxing) 以取得完整指南，以及 [完整參考資料](/zh-Hant/gateway/configuration-reference#agentsdefaultssandbox) 以瞭解所有選項。
 
   </Accordion>
 
@@ -335,7 +335,7 @@ Schema 工具說明：
     - `OPENCLAW_APNS_RELAY_BASE_URL` 和 `OPENCLAW_APNS_RELAY_TIMEOUT_MS` 仍可作為臨時的環境變數覆寫使用。
     - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` 仍然是僅限回環的開發逃生艙；請勿在 config 中保留 HTTP 中繼 URL。
 
-    請參閱 [iOS App](/en/platforms/ios#relay-backed-push-for-official-builds) 了解端到端流程，並參閱 [Authentication and trust flow](/en/platforms/ios#authentication-and-trust-flow) 了解中繼安全模型。
+    請參閱 [iOS App](/zh-Hant/platforms/ios#relay-backed-push-for-official-builds) 了解端到端流程，並參閱 [Authentication and trust flow](/zh-Hant/platforms/ios#authentication-and-trust-flow) 了解中繼安全模型。
 
   </Accordion>
 
@@ -356,7 +356,7 @@ Schema 工具說明：
     - `every`: 持續時間字串 (`30m`, `2h`)。設定 `0m` 以停用。
     - `target`: `last` | `none` | `<channel-id>` (例如 `discord`, `matrix`, `telegram`, 或 `whatsapp`)
     - `directPolicy`: `allow` (預設) 或 `block` 用於 DM 風格的心跳目標
-    - 參閱 [Heartbeat](/en/gateway/heartbeat) 以取得完整指南。
+    - 參閱 [Heartbeat](/zh-Hant/gateway/heartbeat) 以取得完整指南。
 
   </Accordion>
 
@@ -377,7 +377,7 @@ Schema 工具說明：
 
     - `sessionRetention`: 從 `sessions.json` 中清除已完成的獨立執行階段 (預設 `24h`; 設定 `false` 以停用)。
     - `runLog`: 根據大小和保留行數清除 `cron/runs/<jobId>.jsonl`。
-    - 參閱 [Cron jobs](/en/automation/cron-jobs) 以取得功能概述和 CLI 範例。
+    - 參閱 [Cron jobs](/zh-Hant/automation/cron-jobs) 以取得功能概述和 CLI 範例。
 
   </Accordion>
 
@@ -414,7 +414,7 @@ Schema 工具說明：
     - 如果您啟用 `hooks.allowRequestSessionKey`，請同時設定 `hooks.allowedSessionKeyPrefixes` 以限制呼叫端選擇的工作階段金鑰。
     - 對於由 hook 驅動的代理程式，建議使用強大的現代模型層級和嚴格的工具原則 (例如僅限傳訊加上盡可能使用沙箱機制)。
 
-    請參閱 [完整參考資料](/en/gateway/configuration-reference#hooks) 以了解所有對應選項和 Gmail 整合。
+    請參閱 [完整參考資料](/zh-Hant/gateway/configuration-reference#hooks) 以了解所有對應選項和 Gmail 整合。
 
   </Accordion>
 
@@ -436,7 +436,7 @@ Schema 工具說明：
     }
     ```
 
-    請參閱 [多代理程式](/en/concepts/multi-agent) 和 [完整參考資料](/en/gateway/configuration-reference#multi-agent-routing) 以了解綁定規則和各代理程式的存取設定檔。
+    請參閱 [多代理程式](/zh-Hant/concepts/multi-agent) 和 [完整參考資料](/zh-Hant/gateway/configuration-reference#multi-agent-routing) 以了解綁定規則和各代理程式的存取設定檔。
 
   </Accordion>
 
@@ -657,17 +657,17 @@ OpenClaw 從父進程讀取環境變數，此外還包括：
 }
 ```
 
-SecretRef 詳情（包括 `secrets.providers` 用於 `env`/`file`/`exec`）位於 [Secrets Management](/en/gateway/secrets)。
-支援的憑證路徑列於 [SecretRef Credential Surface](/en/reference/secretref-credential-surface)。
+SecretRef 詳情（包括 `secrets.providers` 用於 `env`/`file`/`exec`）位於 [Secrets Management](/zh-Hant/gateway/secrets)。
+支援的憑證路徑列於 [SecretRef Credential Surface](/zh-Hant/reference/secretref-credential-surface)。
 
 </Accordion>
 
-請參閱 [Environment](/en/help/environment) 以了解完整的優先順序與來源。
+請參閱 [Environment](/zh-Hant/help/environment) 以了解完整的優先順序與來源。
 
 ## 完整參考
 
-如需完整的逐欄位參考，請參閱 **[Configuration Reference](/en/gateway/configuration-reference)**。
+如需完整的逐欄位參考，請參閱 **[Configuration Reference](/zh-Hant/gateway/configuration-reference)**。
 
 ---
 
-_相關連結：[Configuration Examples](/en/gateway/configuration-examples) · [Configuration Reference](/en/gateway/configuration-reference) · [Doctor](/en/gateway/doctor)_
+_相關連結：[Configuration Examples](/zh-Hant/gateway/configuration-examples) · [Configuration Reference](/zh-Hant/gateway/configuration-reference) · [Doctor](/zh-Hant/gateway/doctor)_

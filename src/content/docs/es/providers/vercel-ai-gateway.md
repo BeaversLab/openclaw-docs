@@ -103,10 +103,10 @@ tiempo de ejecución:
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelo y comportamiento de conmutación por error.
   </Card>
-  <Card title="Solución de problemas" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Solución de problemas" href="/es/help/troubleshooting" icon="wrench">
     Solución de problemas generales y preguntas frecuentes.
   </Card>
 </CardGroup>

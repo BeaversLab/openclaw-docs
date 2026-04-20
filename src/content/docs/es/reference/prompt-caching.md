@@ -76,7 +76,7 @@ agents:
       ttl: "1h"
 ```
 
-Consulte [Poda de sesiones](/en/concepts/session-pruning) para ver el comportamiento completo.
+Consulte [Poda de sesiones](/es/concepts/session-pruning) para ver el comportamiento completo.
 
 ### Mantener caliente con latido (Heartbeat keep-warm)
 
@@ -332,7 +332,7 @@ Valores predeterminados:
 
 Documentos relacionados:
 
-- [Anthropic](/en/providers/anthropic)
-- [Uso de tokens y costes](/en/reference/token-use)
-- [Poda de sesiones](/en/concepts/session-pruning)
-- [Referencia de configuración de Gateway](/en/gateway/configuration-reference)
+- [Anthropic](/es/providers/anthropic)
+- [Uso de tokens y costes](/es/reference/token-use)
+- [Poda de sesiones](/es/concepts/session-pruning)
+- [Referencia de configuración de Gateway](/es/gateway/configuration-reference)

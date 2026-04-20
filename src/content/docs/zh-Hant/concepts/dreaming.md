@@ -204,7 +204,7 @@ openclaw memory rem-harness --json
 
 階段策略、閾值和儲存行為是內部實作細節（非使用者面向的設定）。
 
-參閱 [記憶配置參考](/en/reference/memory-config#dreaming)
+參閱 [記憶配置參考](/zh-Hant/reference/memory-config#dreaming)
 以取得完整的金鑰列表。
 
 ## Dreams UI
@@ -220,7 +220,7 @@ openclaw memory rem-harness --json
 
 ## 相關
 
-- [記憶](/en/concepts/memory)
-- [記憶搜尋](/en/concepts/memory-search)
-- [memory CLI](/en/cli/memory)
-- [記憶配置參考](/en/reference/memory-config)
+- [記憶](/zh-Hant/concepts/memory)
+- [記憶搜尋](/zh-Hant/concepts/memory-search)
+- [memory CLI](/zh-Hant/cli/memory)
+- [記憶配置參考](/zh-Hant/reference/memory-config)

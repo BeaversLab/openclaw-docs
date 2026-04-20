@@ -71,7 +71,7 @@ OpenClaw 的 Gateway 可以提供一個小型的相容 OpenAI 的聊天完成端
   - 當標頭不存在時，回退到正常的 operator 預設 scope set
   - 僅當呼叫者明確縮小 scope 並省略 `operator.admin` 時，才會失去 owner 語意
 
-請參閱 [安全性](/en/gateway/security) 和 [遠端存取](/en/gateway/remote)。
+請參閱 [安全性](/zh-Hant/gateway/security) 和 [遠端存取](/zh-Hant/gateway/remote)。
 
 ## Agent-first 模型合約
 

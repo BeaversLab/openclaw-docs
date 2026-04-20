@@ -10,13 +10,13 @@ title: "Slack"
 Estado: listo para producción para MDs + canales mediante integraciones de aplicaciones de Slack. El modo predeterminado es el modo Socket; las URLs de solicitudes HTTP también son compatibles.
 
 <CardGroup cols={3}>
-  <Card title="Emparejamiento" icon="link" href="/en/channels/pairing">
+  <Card title="Emparejamiento" icon="link" href="/es/channels/pairing">
     Los MD de Slack tienen por defecto el modo de emparejamiento.
   </Card>
-  <Card title="Comandos de barra" icon="terminal" href="/en/tools/slash-commands">
+  <Card title="Comandos de barra" icon="terminal" href="/es/tools/slash-commands">
     Comportamiento nativo de comandos y catálogo de comandos.
   </Card>
-  <Card title="Solución de problemas del canal" icon="wrench" href="/en/channels/troubleshooting">
+  <Card title="Solución de problemas del canal" icon="wrench" href="/es/channels/troubleshooting">
     Manuales de diagnóstico y reparación entre canales.
   </Card>
 </CardGroup>
@@ -222,7 +222,7 @@ Exponer diferentes funciones que extienden los valores predeterminados anteriore
     - Use `/agentstatus` en lugar de `/status` porque el comando `/status` está reservado.
     - No se pueden hacer disponibles más de 25 comandos de barra a la vez.
 
-    Reemplace su sección `features.slash_commands` existente con un subconjunto de [comandos disponibles](/en/tools/slash-commands#command-list):
+    Reemplace su sección `features.slash_commands` existente con un subconjunto de [comandos disponibles](/es/tools/slash-commands#command-list):
 
     <Tabs>
       <Tab title="Modo Socket (predeterminado)">
@@ -869,7 +869,7 @@ enrutarse a otros chats o objetivos explícitos fuera de banda. El reenvío comp
 separado; los botones nativos de Slack aún pueden resolver las aprobaciones de complementos cuando esas solicidades ya llegan
 a Slack.
 
-El `/approve` del mismo chat también funciona en canales y MD de Slack que ya soportan comandos. Consulte [Aprobaciones de ejecución](/en/tools/exec-approvals) para el modelo completo de reenvío de aprobaciones.
+El `/approve` del mismo chat también funciona en canales y MD de Slack que ya soportan comandos. Consulte [Aprobaciones de ejecución](/es/tools/exec-approvals) para el modelo completo de reenvío de aprobaciones.
 
 ## Eventos y comportamiento operativo
 
@@ -887,7 +887,7 @@ El `/approve` del mismo chat también funciona en canales y MD de Slack que ya s
 
 Referencia principal:
 
-- [Referencia de configuración - Slack](/en/gateway/configuration-reference#slack)
+- [Referencia de configuración - Slack](/es/gateway/configuration-reference#slack)
 
   Campos de Slack de alta señal:
   - modo/auth: `mode`, `botToken`, `appToken`, `signingSecret`, `webhookPath`, `accounts.*`
@@ -967,10 +967,10 @@ openclaw pairing list slack
 
 ## Relacionado
 
-- [Emparejamiento](/en/channels/pairing)
-- [Grupos](/en/channels/groups)
-- [Seguridad](/en/gateway/security)
-- [Enrutamiento de canales](/en/channels/channel-routing)
-- [Solución de problemas](/en/channels/troubleshooting)
-- [Configuración](/en/gateway/configuration)
-- [Comandos de barra](/en/tools/slash-commands)
+- [Emparejamiento](/es/channels/pairing)
+- [Grupos](/es/channels/groups)
+- [Seguridad](/es/gateway/security)
+- [Enrutamiento de canales](/es/channels/channel-routing)
+- [Solución de problemas](/es/channels/troubleshooting)
+- [Configuración](/es/gateway/configuration)
+- [Comandos de barra](/es/tools/slash-commands)

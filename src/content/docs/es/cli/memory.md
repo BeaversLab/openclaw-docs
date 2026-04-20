@@ -14,10 +14,10 @@ Proporcionado por el plugin de memoria activo (predeterminado: `memory-core`; es
 
 Relacionado:
 
-- Concepto de memoria: [Memory](/en/concepts/memory)
-- Wiki de memoria: [Memory Wiki](/en/plugins/memory-wiki)
-- CLI de Wiki: [wiki](/en/cli/wiki)
-- Complementos: [Plugins](/en/tools/plugin)
+- Concepto de memoria: [Memory](/es/concepts/memory)
+- Wiki de memoria: [Memory Wiki](/es/plugins/memory-wiki)
+- CLI de Wiki: [wiki](/es/cli/wiki)
+- Complementos: [Plugins](/es/tools/plugin)
 
 ## Ejemplos
 
@@ -169,4 +169,4 @@ Notas:
 - `memory rem-backfill --path <file-or-dir>` escribe entradas de diario fundamentadas reversibles en `DREAMS.md` para su revisión en la interfaz de usuario.
 - `memory rem-backfill --path <file-or-dir> --stage-short-term` también siembra candidatos duraderos fundamentados en el almacén de promoción a corto plazo en vivo para que la fase profunda normal pueda clasificarlos.
 - `memory rem-backfill --rollback` elimina las entradas de diario fundamentadas escritas previamente, y `memory rem-backfill --rollback-short-term` elimina los candidatos a corto plazo fundamentados preparados previamente.
-- Consulte [Dreaming](/en/concepts/dreaming) para obtener descripciones completas de las fases y la referencia de configuración.
+- Consulte [Dreaming](/es/concepts/dreaming) para obtener descripciones completas de las fases y la referencia de configuración.

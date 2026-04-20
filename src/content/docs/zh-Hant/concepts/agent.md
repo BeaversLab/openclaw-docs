@@ -15,9 +15,9 @@ OpenClaw 使用單一 Agent 工作區目錄 (`agents.defaults.workspace`) 作為
 
 建議：使用 `openclaw setup` 來建立 `~/.openclaw/openclaw.json`（如果缺失）並初始化工作區文件。
 
-完整的工作區佈局 + 備份指南：[Agent 工作區](/en/concepts/agent-workspace)
+完整的工作區佈局 + 備份指南：[Agent 工作區](/zh-Hant/concepts/agent-workspace)
 
-如果啟用了 `agents.defaults.sandbox`，非主要會話可以在 `agents.defaults.sandbox.workspaceRoot` 下使用各會話專屬的工作區來覆寫此設定（請參閱 [Gateway 設定](/en/gateway/configuration)）。
+如果啟用了 `agents.defaults.sandbox`，非主要會話可以在 `agents.defaults.sandbox.workspaceRoot` 下使用各會話專屬的工作區來覆寫此設定（請參閱 [Gateway 設定](/zh-Hant/gateway/configuration)）。
 
 ## Bootstrap files (注入)
 
@@ -59,7 +59,7 @@ OpenClaw 會從這些位置載入技能（優先順序由高至低）：
 - 內建（隨安裝版本附帶）
 - 額外的技能資料夾：`skills.load.extraDirs`
 
-技能可以透過設定/環境變數來控管（請參閱 [Gateway 設定](/en/gateway/configuration) 中的 `skills`）。
+技能可以透過設定/環境變數來控管（請參閱 [Gateway 設定](/zh-Hant/gateway/configuration) 中的 `skills`）。
 
 ## 執行時邊界
 
@@ -79,7 +79,7 @@ OpenClaw 會從這些位置載入技能（優先順序由高至低）：
 當佇列模式為 `steer` 時，傳入訊息會被注入到目前的執行中。
 排入佇列的導引訊息會在 **目前助理回合完成執行其工具呼叫後**、下次 LLM 呼叫前傳遞。導引功能不再會跳過目前助理訊息中剩餘的工具呼叫；相反地，它會在下一個模型邊界注入排入佇列的訊息。
 
-當佇列模式為 `followup` 或 `collect` 時，傳入訊息會保留直到目前回合結束，然後新的代理回合會以排入佇列的負載開始。請參閱 [佇列](/en/concepts/queue) 以了解模式 + 防抖/容量限制行為。
+當佇列模式為 `followup` 或 `collect` 時，傳入訊息會保留直到目前回合結束，然後新的代理回合會以排入佇列的負載開始。請參閱 [佇列](/zh-Hant/concepts/queue) 以了解模式 + 防抖/容量限制行為。
 
 區塊串流會在完成後立即發送已完成的助理區塊；預設為**關閉** (`agents.defaults.blockStreamingDefault: "off"`)。
 透過 `agents.defaults.blockStreamingBreak` 調整邊界 (`text_end` vs `message_end`；預設為 text_end)。
@@ -90,7 +90,7 @@ OpenClaw 會從這些位置載入技能（優先順序由高至低）：
 明確指定 `*.blockStreaming: true` 才能啟用區塊回覆。
 詳細的工具摘要會在工具開始時發出 (無防抖)；控制 UI
 會在可用時透過代理事件串流工具輸出。
-更多細節：[Streaming + chunking](/en/concepts/streaming)。
+更多細節：[Streaming + chunking](/zh-Hant/concepts/streaming)。
 
 ## Model refs
 
@@ -113,4 +113,4 @@ OpenClaw 會從這些位置載入技能（優先順序由高至低）：
 
 ---
 
-_下一頁：[Group Chats](/en/channels/group-messages)_ 🦞
+_下一頁：[Group Chats](/zh-Hant/channels/group-messages)_ 🦞

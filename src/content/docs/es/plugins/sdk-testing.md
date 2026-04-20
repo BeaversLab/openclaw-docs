@@ -12,7 +12,7 @@ read_when:
 
 Referencia de utilidades de prueba, patrones y aplicación de reglas de lint para complementos de OpenClaw.
 
-<Tip>**¿Buscas ejemplos de pruebas?** Las guías prácticas incluyen ejemplos de pruebas completos: [Pruebas de complementos de canal](/en/plugins/sdk-channel-plugins#step-6-test) y [Pruebas de complementos de proveedor](/en/plugins/sdk-provider-plugins#step-6-test).</Tip>
+<Tip>**¿Buscas ejemplos de pruebas?** Las guías prácticas incluyen ejemplos de pruebas completos: [Pruebas de complementos de canal](/es/plugins/sdk-channel-plugins#step-6-test) y [Pruebas de complementos de proveedor](/es/plugins/sdk-provider-plugins#step-6-test).</Tip>
 
 ## Utilidades de prueba
 
@@ -243,7 +243,7 @@ OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test
 
 ## Relacionado
 
-- [Descripción general del SDK](/en/plugins/sdk-overview) -- convenciones de importación
-- [Complementos de canal del SDK](/en/plugins/sdk-channel-plugins) -- interfaz del complemento de canal
-- [Complementos de proveedor del SDK](/en/plugins/sdk-provider-plugins) -- hooks del complemento de proveedor
-- [Creación de complementos](/en/plugins/building-plugins) -- guía de introducción
+- [Descripción general del SDK](/es/plugins/sdk-overview) -- convenciones de importación
+- [Complementos de canal del SDK](/es/plugins/sdk-channel-plugins) -- interfaz del complemento de canal
+- [Complementos de proveedor del SDK](/es/plugins/sdk-provider-plugins) -- hooks del complemento de proveedor
+- [Creación de complementos](/es/plugins/building-plugins) -- guía de introducción

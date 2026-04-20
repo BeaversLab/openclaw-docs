@@ -14,9 +14,9 @@ Proporcionado por el complemento `memory-wiki` incluido.
 
 Relacionado:
 
-- [Complemento Memory Wiki](/en/plugins/memory-wiki)
-- [Resumen de memoria](/en/concepts/memory)
-- [CLI: memory](/en/cli/memory)
+- [Complemento Memory Wiki](/es/plugins/memory-wiki)
+- [Resumen de memoria](/es/concepts/memory)
+- [CLI: memory](/es/cli/memory)
 
 ## Para qué sirve
 
@@ -211,4 +211,4 @@ El comportamiento de `openclaw wiki` está determinado por:
 - `plugins.entries.memory-wiki.config.render.*`
 - `plugins.entries.memory-wiki.config.context.includeCompiledDigestPrompt`
 
-Consulte [Memory Wiki plugin](/en/plugins/memory-wiki) para ver el modelo de configuración completo.
+Consulte [Memory Wiki plugin](/es/plugins/memory-wiki) para ver el modelo de configuración completo.

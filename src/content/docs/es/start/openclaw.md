@@ -26,7 +26,7 @@ Empiece de forma conservadora:
 
 ## Requisitos previos
 
-- OpenClaw instalado e integrado — consulta [Comenzando](/en/start/getting-started) si aún no has hecho esto
+- OpenClaw instalado e integrado — consulta [Comenzando](/es/start/getting-started) si aún no has hecho esto
 - Un segundo número de teléfono (SIM/eSIM/prepago) para el asistente
 
 ## La configuración de dos teléfonos (recomendada)
@@ -80,8 +80,8 @@ Consejo: trata esta carpeta como la "memoria" de OpenClaw y conviértela en un r
 openclaw setup
 ```
 
-Diseño completo del espacio de trabajo + guía de respaldo: [Espacio de trabajo del agente](/en/concepts/agent-workspace)
-Flujo de trabajo de memoria: [Memoria](/en/concepts/memory)
+Diseño completo del espacio de trabajo + guía de respaldo: [Espacio de trabajo del agente](/es/concepts/agent-workspace)
+Flujo de trabajo de memoria: [Memoria](/es/concepts/memory)
 
 Opcional: elige un espacio de trabajo diferente con `agents.defaults.workspace` (soporta `~`).
 
@@ -107,7 +107,7 @@ Si ya envías tus propios archivos de espacio de trabajo desde un repositorio, p
 
 OpenClaw tiene una configuración de asistente predeterminada buena, pero generalmente querrás ajustar:
 
-- persona/instrucciones en [`SOUL.md`](/en/concepts/soul)
+- persona/instrucciones en [`SOUL.md`](/es/concepts/soul)
 - valores predeterminados de pensamiento (si se desea)
 - latidos (heartbeats) (una vez que confíes en él)
 
@@ -214,12 +214,12 @@ Los registros se encuentran bajo `/tmp/openclaw/` (predeterminado: `openclaw-YYY
 
 ## Próximos pasos
 
-- WebChat: [WebChat](/en/web/webchat)
-- Operaciones de la pasarela: [Manual de operaciones de la pasarela](/en/gateway)
-- Cron + alertas: [Trabajos Cron](/en/automation/cron-jobs)
-- Compañero de la barra de menús de macOS: [aplicación OpenClaw para macOS](/en/platforms/macos)
-- Aplicación de nodo para iOS: [aplicación para iOS](/en/platforms/ios)
-- Aplicación de nodo para Android: [aplicación para Android](/en/platforms/android)
-- Estado de Windows: [Windows (WSL2)](/en/platforms/windows)
-- Estado de Linux: [aplicación para Linux](/en/platforms/linux)
-- Seguridad: [Seguridad](/en/gateway/security)
+- WebChat: [WebChat](/es/web/webchat)
+- Operaciones de la pasarela: [Manual de operaciones de la pasarela](/es/gateway)
+- Cron + alertas: [Trabajos Cron](/es/automation/cron-jobs)
+- Compañero de la barra de menús de macOS: [aplicación OpenClaw para macOS](/es/platforms/macos)
+- Aplicación de nodo para iOS: [aplicación para iOS](/es/platforms/ios)
+- Aplicación de nodo para Android: [aplicación para Android](/es/platforms/android)
+- Estado de Windows: [Windows (WSL2)](/es/platforms/windows)
+- Estado de Linux: [aplicación para Linux](/es/platforms/linux)
+- Seguridad: [Seguridad](/es/gateway/security)

@@ -117,7 +117,7 @@ OpenClaw 默认包含以下 xAI 模型系列：
 
     <Note>
     有关共享工具参数、
-    提供商选择和故障转移行为，请参阅[视频生成](/en/tools/video-generation)。
+    提供商选择和故障转移行为，请参阅[视频生成](/zh/tools/video-generation)。
     </Note>
 
   </Accordion>
@@ -171,7 +171,7 @@ OpenClaw 默认包含以下 xAI 模型系列：
     | `timeoutSeconds`  | number  | —                  | 请求超时（秒）               |
 
     <Note>
-    这是远程 xAI 沙盒执行，不是本地 [`exec`](/en/tools/exec)。
+    这是远程 xAI 沙盒执行，不是本地 [`exec`](/zh/tools/exec)。
     </Note>
 
     ```json5
@@ -201,23 +201,23 @@ OpenClaw 默认包含以下 xAI 模型系列：
     - 打包的 xAI 封装器在发送原生 xAI 请求之前，会剥离不支持的严格工具架构标志和推理负载键。
     - `web_search`、`x_search` 和 `code_execution` 被暴露为 OpenClaw 工具。OpenClaw 会在每个工具请求中启用其所需的特定 xAI 内置功能，而不是将所有原生工具附加到每次对话轮次中。
     - `x_search` 和 `code_execution` 由打包的 xAI 插件拥有，而不是硬编码到核心模型运行时中。
-    - `code_execution` 是远程 xAI 沙盒执行，而非本地 [`exec`](/en/tools/exec)。
+    - `code_execution` 是远程 xAI 沙盒执行，而非本地 [`exec`](/zh/tools/exec)。
   </Accordion>
 </AccordionGroup>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="模型选择" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型选择" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="视频生成" href="/en/tools/video-generation" icon="video">
+  <Card title="视频生成" href="/zh/tools/video-generation" icon="video">
     共享视频工具参数和提供商选择。
   </Card>
-  <Card title="所有提供商" href="/en/providers/index" icon="grid-2">
+  <Card title="所有提供商" href="/zh/providers/index" icon="grid-2">
     更广泛的提供商概览。
   </Card>
-  <Card title="故障排除" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="故障排除" href="/zh/help/troubleshooting" icon="wrench">
     常见问题与修复。
   </Card>
 </CardGroup>

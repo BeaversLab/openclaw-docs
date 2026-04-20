@@ -386,5 +386,5 @@ MiniMax 说明：
 
 ## 相关文档
 
-- [配置](/en/gateway/configuration)
-- [图像与媒体支持](/en/nodes/images)
+- [配置](/zh/gateway/configuration)
+- [图像与媒体支持](/zh/nodes/images)

@@ -93,7 +93,7 @@ title: "思考層級"
 
 ## Related
 
-- Elevated mode docs live in [Elevated mode](/en/tools/elevated).
+- Elevated mode docs live in [Elevated mode](/zh-Hant/tools/elevated).
 
 ## Heartbeats
 

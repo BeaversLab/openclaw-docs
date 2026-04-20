@@ -4,8 +4,8 @@
 
 ## Documentos
 
-- [Modelo de amenazas](/en/security/THREAT-MODEL-ATLAS) - Modelo de amenazas basado en MITRE ATLAS para el ecosistema OpenClaw
-- [Contribuir al modelo de amenazas](/en/security/CONTRIBUTING-THREAT-MODEL) - Cómo agregar amenazas, mitigaciones y cadenas de ataque
+- [Modelo de amenazas](/es/security/THREAT-MODEL-ATLAS) - Modelo de amenazas basado en MITRE ATLAS para el ecosistema OpenClaw
+- [Contribuir al modelo de amenazas](/es/security/CONTRIBUTING-THREAT-MODEL) - Cómo agregar amenazas, mitigaciones y cadenas de ataque
 
 ## Reportar vulnerabilidades
 

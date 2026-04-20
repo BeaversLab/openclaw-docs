@@ -11,11 +11,11 @@ Onboarding interactif pour la configuration locale ou distante du Gateway.
 
 ## Guides associés
 
-- Centre d'onboarding CLI : [Onboarding (CLI)](/en/start/wizard)
-- Aperçu de l'onboarding : [Onboarding Overview](/en/start/onboarding-overview)
-- Référence d'onboarding CLI : [CLI Setup Reference](/en/start/wizard-cli-reference)
-- Automatisation CLI : [CLI Automation](/en/start/wizard-cli-automation)
-- Onboarding macOS : [Onboarding (macOS App)](/en/start/onboarding)
+- Centre d'onboarding CLI : [Onboarding (CLI)](/fr/start/wizard)
+- Aperçu de l'onboarding : [Onboarding Overview](/fr/start/onboarding-overview)
+- Référence d'onboarding CLI : [CLI Setup Reference](/fr/start/wizard-cli-reference)
+- Automatisation CLI : [CLI Automation](/fr/start/wizard-cli-automation)
+- Onboarding macOS : [Onboarding (macOS App)](/fr/start/onboarding)
 
 ## Exemples
 
@@ -165,7 +165,7 @@ Notes de flux :
     et un choix de modèle `x_search`.
   - **Kimi** peut demander la région de l'Moonshot API (`api.moonshot.ai` vs
     `api.moonshot.cn`) et le modèle de recherche web Kimi par défaut.
-- Comportement de la portée DM de l'onboarding local : [Référence de configuration CLI](/en/start/wizard-cli-reference#outputs-and-internals).
+- Comportement de la portée DM de l'onboarding local : [Référence de configuration CLI](/fr/start/wizard-cli-reference#outputs-and-internals).
 - Premier chat le plus rapide : `openclaw dashboard` (UI de contrôle, aucune configuration de channel).
 - Fournisseur personnalisé : connectez n'importe quel point de terminaison compatible OpenAI ou Anthropic,
   y compris les fournisseurs hébergés non répertoriés. Utilisez Inconnu pour détecter automatiquement.

@@ -221,6 +221,6 @@ Notas:
 
 ## Documentos relacionados
 
-- Centro de incorporación: [Incorporación (CLI)](/en/start/wizard)
-- Referencia completa: [Referencia de configuración de CLI](/en/start/wizard-cli-reference)
-- Referencia de comandos: [`openclaw onboard`](/en/cli/onboard)
+- Centro de incorporación: [Incorporación (CLI)](/es/start/wizard)
+- Referencia completa: [Referencia de configuración de CLI](/es/start/wizard-cli-reference)
+- Referencia de comandos: [`openclaw onboard`](/es/cli/onboard)

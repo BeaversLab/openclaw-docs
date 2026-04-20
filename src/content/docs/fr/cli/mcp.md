@@ -21,7 +21,7 @@ En d'autres termes :
 - `list` / `show` / `set` / `unset` est OpenClaw agissant comme un registre côté client MCP
   pour d'autres serveurs MCP que ses environnements d'exécution peuvent consommer plus tard
 
-Utilisez [`openclaw acp`](/en/cli/acp) lorsqu'OpenClaw doit héberger une session de harnais de codage et acheminer ce runtime via ACP.
+Utilisez [`openclaw acp`](/fr/cli/acp) lorsqu'OpenClaw doit héberger une session de harnais de codage et acheminer ce runtime via ACP.
 
 ## OpenClaw en tant que serveur MCP
 
@@ -35,7 +35,7 @@ Utilisez `openclaw mcp serve` lorsque :
 - vous avez déjà une passerelle OpenClaw locale ou distante avec des sessions routées
 - vous voulez un seul serveur MCP qui fonctionne sur les backends de canal de OpenClaw au lieu d'exécuter des ponts séparés par canal
 
-Utilisez plutôt [`openclaw acp`](/en/cli/acp) lorsqu'OpenClaw doit héberger le runtime de codage lui-même et garder la session de l'agent à l'intérieur d'OpenClaw.
+Utilisez plutôt [`openclaw acp`](/fr/cli/acp) lorsqu'OpenClaw doit héberger le runtime de codage lui-même et garder la session de l'agent à l'intérieur d'OpenClaw.
 
 ## Comment cela fonctionne
 
@@ -290,7 +290,7 @@ Ce smoke test :
 
 C'est le moyen le plus rapide de prouver que le pont fonctionne sans connecter de compte Telegram, Discord ou iMessage réel au test.
 
-Pour un contexte de test plus large, voir [Tests](/en/help/testing).
+Pour un contexte de test plus large, voir [Tests](/fr/help/testing).
 
 ## Dépannage
 

@@ -23,7 +23,7 @@ Recordatorio del modelo de seguridad:
 - Mantén una separación estricta: VPS/tiempo de ejecución dedicado + cuentas dedicadas; sin perfiles personales de Apple/Google/navegador/gestor de contraseñas en ese host.
 - Si los usuarios son adversarios entre sí, sepáralos por gateway/host/usuario del SO.
 
-Consulte [Seguridad](/en/gateway/security) y [Alojamiento VPS](/en/vps).
+Consulte [Seguridad](/es/gateway/security) y [Alojamiento VPS](/es/vps).
 
 ## ¿Qué estamos haciendo (términos simples)?
 
@@ -43,7 +43,7 @@ Se puede acceder a la Gateway a través de:
 
 Esta guía asume Ubuntu o Debian en Hetzner.  
 Si está en otro VPS de Linux, asigne los paquetes correspondientes.
-Para el flujo genérico de Docker, consulte [Docker](/en/install/docker).
+Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
 
 ---
 
@@ -207,10 +207,10 @@ Para el flujo genérico de Docker, consulte [Docker](/en/install/docker).
   <Step title="Pasos compartidos de tiempo de ejecución de Docker VM">
     Use la guía de tiempo de ejecución compartida para el flujo común de host Docker:
 
-    - [Incrustar los binarios necesarios en la imagen](/en/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-    - [Construir y lanzar](/en/install/docker-vm-runtime#build-and-launch)
-    - [Qué persiste dónde](/en/install/docker-vm-runtime#what-persists-where)
-    - [Actualizaciones](/en/install/docker-vm-runtime#updates)
+    - [Incrustar los binarios necesarios en la imagen](/es/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+    - [Construir y lanzar](/es/install/docker-vm-runtime#build-and-launch)
+    - [Qué persiste dónde](/es/install/docker-vm-runtime#what-persists-where)
+    - [Actualizaciones](/es/install/docker-vm-runtime#updates)
 
   </Step>
 
@@ -231,7 +231,7 @@ Para el flujo genérico de Docker, consulte [Docker](/en/install/docker).
   </Step>
 </Steps>
 
-El mapa de persistencia compartido reside en [Docker VM Runtime](/en/install/docker-vm-runtime#what-persists-where).
+El mapa de persistencia compartido reside en [Docker VM Runtime](/es/install/docker-vm-runtime#what-persists-where).
 
 ## Infraestructura como Código (Terraform)
 
@@ -254,6 +254,6 @@ Este enfoque complementa la configuración de Docker anterior con implementacion
 
 ## Siguientes pasos
 
-- Configurar canales de mensajería: [Canales](/en/channels)
-- Configurar el Gateway: [Configuración del Gateway](/en/gateway/configuration)
-- Mantener OpenClaw actualizado: [Actualización](/en/install/updating)
+- Configurar canales de mensajería: [Canales](/es/channels)
+- Configurar el Gateway: [Configuración del Gateway](/es/gateway/configuration)
+- Mantener OpenClaw actualizado: [Actualización](/es/install/updating)

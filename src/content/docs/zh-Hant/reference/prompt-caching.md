@@ -76,7 +76,7 @@ agents:
       ttl: "1h"
 ```
 
-完整行為請參閱 [會話修剪](/en/concepts/session-pruning)。
+完整行為請參閱 [會話修剪](/zh-Hant/concepts/session-pruning)。
 
 ### 心跳保持溫暖
 
@@ -329,7 +329,7 @@ diagnostics:
 
 相關文件：
 
-- [Anthropic](/en/providers/anthropic)
-- [Token 使用與成本](/en/reference/token-use)
-- [會話修剪](/en/concepts/session-pruning)
-- [閘道設定參考](/en/gateway/configuration-reference)
+- [Anthropic](/zh-Hant/providers/anthropic)
+- [Token 使用與成本](/zh-Hant/reference/token-use)
+- [會話修剪](/zh-Hant/concepts/session-pruning)
+- [閘道設定參考](/zh-Hant/gateway/configuration-reference)

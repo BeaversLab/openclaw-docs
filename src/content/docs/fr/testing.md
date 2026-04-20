@@ -345,7 +345,7 @@ Nous avons déjà quelques tests compatibles CI qui se comportent comme des « �
 - Appel d'outil simulé via la véritable boucle Gateway + agent (`src/gateway/gateway.tool-calling.mock-openai.test.ts`).
 - Flux de bout en bout de l'assistant qui valident le câblage de session et les effets de la configuration (`src/gateway/gateway.wizard.e2e.test.ts`).
 
-Ce qui manque encore pour les Skills (voir [Skills](/en/tools/skills)) :
+Ce qui manque encore pour les Skills (voir [Skills](/fr/tools/skills)) :
 
 - **Prise de décision :** lorsque les Skills sont répertoriés dans le prompt, l'agent choisit-il le bon Skill (ou évite-t-il ceux non pertinents) ?
 - **Conformité :** l'agent lit-il `SKILL.md` avant utilisation et suit-il les étapes/arguments requis ?

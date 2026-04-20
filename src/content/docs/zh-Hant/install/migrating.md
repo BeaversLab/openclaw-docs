@@ -41,7 +41,7 @@ title: "遷移指南"
 
   </Step>
 
-<Step title="Install OpenClaw on the new machine">在新機器上[安裝](/en/install) CLI（以及 Node，如果需要）。 如果上架流程建立了新的 `~/.openclaw/` 也沒關係——您接下來會將其覆蓋。</Step>
+<Step title="Install OpenClaw on the new machine">在新機器上[安裝](/zh-Hant/install) CLI（以及 Node，如果需要）。 如果上架流程建立了新的 `~/.openclaw/` 也沒關係——您接下來會將其覆蓋。</Step>
 
   <Step title="Copy state directory and workspace">
     透過 `scp`、`rsync -a` 或外接硬碟傳輸封存檔，然後解壓縮：
@@ -56,7 +56,7 @@ title: "遷移指南"
   </Step>
 
   <Step title="Run doctor and verify">
-    在新機器上，執行 [Doctor](/en/gateway/doctor) 以套用設定遷移並修復服務：
+    在新機器上，執行 [Doctor](/zh-Hant/gateway/doctor) 以套用設定遷移並修復服務：
 
     ```bash
     openclaw doctor
@@ -84,7 +84,7 @@ title: "遷移指南"
 
 <Accordion title="權限與所有權">如果您以 root 身份複製或切換了使用者，閘道可能無法讀取憑證。 請確保狀態目錄和工作區是由執行閘道的使用者所擁有。</Accordion>
 
-<Accordion title="遠端模式">如果您的 UI 指向**遠端**閘道，遠端主機會擁有工作階段和工作區。 請遷移閘道主機本身，而不是您的本地筆記型電腦。請參閱 [常見問題](/en/help/faq#where-things-live-on-disk)。</Accordion>
+<Accordion title="遠端模式">如果您的 UI 指向**遠端**閘道，遠端主機會擁有工作階段和工作區。 請遷移閘道主機本身，而不是您的本地筆記型電腦。請參閱 [常見問題](/zh-Hant/help/faq#where-things-live-on-disk)。</Accordion>
 
   <Accordion title="備份中的機密資料">
     狀態目錄包含驗證設定檔、頻道憑證，以及其他

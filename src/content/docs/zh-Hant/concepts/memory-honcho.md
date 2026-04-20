@@ -118,5 +118,5 @@ openclaw honcho search <query> [-k N] [-d D] # Semantic search over memory
 - [外掛原始碼](https://github.com/plastic-labs/openclaw-honcho)
 - [Honcho 文件](https://docs.honcho.dev)
 - [Honcho OpenClaw 整合指南](https://docs.honcho.dev/v3/guides/integrations/openclaw)
-- [記憶](/en/concepts/memory) -- OpenClaw 記憶概覽
-- [語境引擎](/en/concepts/context-engine) -- 外掛語境引擎的運作方式
+- [記憶](/zh-Hant/concepts/memory) -- OpenClaw 記憶概覽
+- [語境引擎](/zh-Hant/concepts/context-engine) -- 外掛語境引擎的運作方式

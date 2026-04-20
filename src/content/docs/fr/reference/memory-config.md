@@ -13,11 +13,11 @@ read_when:
 Cette page répertorie chaque paramètre de configuration pour la recherche de mémoire OpenClaw. Pour
 les aperçus conceptuels, voir :
 
-- [Memory Overview](/en/concepts/memory) -- fonctionnement de la mémoire
-- [Builtin Engine](/en/concepts/memory-builtin) -- backend SQLite par défaut
-- [QMD Engine](/en/concepts/memory-qmd) -- sidecar local-first
-- [Memory Search](/en/concepts/memory-search) -- pipeline de recherche et réglage
-- [Active Memory](/en/concepts/active-memory) -- activation du sous-agent de mémoire pour les sessions interactives
+- [Memory Overview](/fr/concepts/memory) -- fonctionnement de la mémoire
+- [Builtin Engine](/fr/concepts/memory-builtin) -- backend SQLite par défaut
+- [QMD Engine](/fr/concepts/memory-qmd) -- sidecar local-first
+- [Memory Search](/fr/concepts/memory-search) -- pipeline de recherche et réglage
+- [Active Memory](/fr/concepts/active-memory) -- activation du sous-agent de mémoire pour les sessions interactives
 
 Tous les paramètres de recherche mémoire se trouvent sous `agents.defaults.memorySearch` dans
 `openclaw.json` sauf indication contraire.
@@ -30,7 +30,7 @@ La mémoire active utilise un modèle à deux niveaux :
 1. le plugin doit être activé et cibler l'ID de l'agent actuel
 2. la requête doit être une session de chat persistante interactive éligible
 
-Voir [Active Memory](/en/concepts/active-memory) pour le modèle d'activation,
+Voir [Active Memory](/fr/concepts/active-memory) pour le modèle d'activation,
 la configuration propriétaire du plugin, la persistance des transcriptions et le modèle de déploiement sécurisé.
 
 ---
@@ -416,7 +416,7 @@ du gateway.
 ### Portée
 
 Contrôle quelles sessions peuvent recevoir les résultats de recherche QMD. Même schéma que
-[`session.sendPolicy`](/en/gateway/configuration-reference#session) :
+[`session.sendPolicy`](/fr/gateway/configuration-reference#session) :
 
 ```json5
 {
@@ -478,7 +478,7 @@ et non sous `agents.defaults.memorySearch`.
 Dreaming s'exécute en un balayage programmé et utilise des phases internes léger/profond/REM comme
 détail d'implémentation.
 
-Pour le comportement conceptuel et les commandes slash, voir [Dreaming](/en/concepts/dreaming).
+Pour le comportement conceptuel et les commandes slash, voir [Dreaming](/fr/concepts/dreaming).
 
 ### Paramètres utilisateur
 

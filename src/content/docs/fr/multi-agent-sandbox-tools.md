@@ -32,8 +32,8 @@ L'auth est par agent : chaque agent lit depuis son propre magasin d'auth `agentD
 Les identifiants ne sont **pas** partagés entre les agents. Ne réutilisez jamais `agentDir` entre les agents.
 Si vous souhaitez partager des identifiants, copiez `auth-profiles.json` dans le `agentDir` de l'autre agent.
 
-Pour savoir comment le sandboxing se comporte à l'exécution, consultez [Sandboxing](/en/gateway/sandboxing).
-Pour le débogage de "pourquoi est-ce bloqué ?", consultez [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) et `openclaw sandbox explain`.
+Pour savoir comment le sandboxing se comporte à l'exécution, consultez [Sandboxing](/fr/gateway/sandboxing).
+Pour le débogage de "pourquoi est-ce bloqué ?", consultez [Sandbox vs Tool Policy vs Elevated](/fr/gateway/sandbox-vs-tool-policy-vs-elevated) et `openclaw sandbox explain`.
 
 ---
 
@@ -388,6 +388,6 @@ Après avoir configuré le sandbox multi-agent et les outils :
 
 ## Voir aussi
 
-- [Routage multi-agent](/en/concepts/multi-agent)
-- [Configuration du Sandbox](/en/gateway/configuration#agentsdefaults-sandbox)
-- [Gestion de session](/en/concepts/session)
+- [Routage multi-agent](/fr/concepts/multi-agent)
+- [Configuration du Sandbox](/fr/gateway/configuration#agentsdefaults-sandbox)
+- [Gestion de session](/fr/concepts/session)

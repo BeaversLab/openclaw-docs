@@ -86,5 +86,5 @@ Envíe "Hi" a su asistente en el canal que conectó. OpenClaw responderá y le g
 
 ## Siguientes pasos
 
-- [Canales](/en/channels) -- conecte Telegram, WhatsApp, Discord y más
-- [Configuración de la puerta de enlace](/en/gateway/configuration) -- todas las opciones de configuración
+- [Canales](/es/channels) -- conecte Telegram, WhatsApp, Discord y más
+- [Configuración de la puerta de enlace](/es/gateway/configuration) -- todas las opciones de configuración

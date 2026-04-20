@@ -311,13 +311,13 @@ La configuración reside bajo `plugins.entries.moonshot.config.webSearch`:
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Búsqueda web" href="/en/tools/web-search" icon="magnifying-glass">
+  <Card title="Búsqueda web" href="/es/tools/web-search" icon="magnifying-glass">
     Configuración de proveedores de búsqueda web, incluido Kimi.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
     Esquema de configuración completo para proveedores, modelos y complementos.
   </Card>
   <Card title="Plataforma abierta Moonshot" href="https://platform.moonshot.ai" icon="globe">

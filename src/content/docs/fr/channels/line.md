@@ -185,7 +185,7 @@ LINE prend en charge les liaisons de conversation ACP (Agent Communication Proto
 - `/acp spawn <agent> --bind here` lie la conversation LINE actuelle à une session ACP sans créer de fil de discussion enfant.
 - Les liaisons ACP configurées et les sessions ACP actives liées à des conversation fonctionnent sur LINE comme sur les autres canaux de conversation.
 
-Voir [Agents ACP](/en/tools/acp-agents) pour plus de détails.
+Voir [Agents ACP](/fr/tools/acp-agents) pour plus de détails.
 
 ## Médias sortants
 
@@ -205,8 +205,8 @@ Les envois de médias génériques reviennent à l'itinéraire existant « image
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appairage](/en/channels/pairing) — flux d'authentification et d'appairage DM
-- [Groupes](/en/channels/groups) — comportement des discussions de groupe et filtrage des mentions
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appairage](/fr/channels/pairing) — flux d'authentification et d'appairage DM
+- [Groupes](/fr/channels/groups) — comportement des discussions de groupe et filtrage des mentions
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

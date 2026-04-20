@@ -229,7 +229,7 @@ Los campos planos heredados como `maxInputImages`, `supportsLyrics` y `supportsF
 
 - Use la ruta compartida respaldada por el proveedor cuando quiera selección de modelo, conmutación por error de proveedor y el flujo integrado de tareas/estado asíncrono.
 - Use una ruta de complemento como ComfyUI cuando necesite un gráfico de flujo de trabajo personalizado o un proveedor que no sea parte de la capacidad de música empaquetada compartida.
-- Si está depurando un comportamiento específico de ComfyUI, consulte [ComfyUI](/en/providers/comfy). Si está depurando el comportamiento compartido del proveedor, comience con [Google (Gemini)](/en/providers/google) o [MiniMax](/en/providers/minimax).
+- Si está depurando un comportamiento específico de ComfyUI, consulte [ComfyUI](/es/providers/comfy). Si está depurando el comportamiento compartido del proveedor, comience con [Google (Gemini)](/es/providers/google) o [MiniMax](/es/providers/minimax).
 
 ## Pruebas en vivo
 
@@ -266,10 +266,10 @@ secciones están configuradas.
 
 ## Relacionado
 
-- [Tareas en segundo plano](/en/automation/tasks) - seguimiento de tareas para ejecuciones desacopladas de `music_generate`
-- [Referencia de configuración](/en/gateway/configuration-reference#agent-defaults) - configuración `musicGenerationModel`
-- [ComfyUI](/en/providers/comfy)
-- [Google (Gemini)](/en/providers/google)
-- [MiniMax](/en/providers/minimax)
-- [Modelos](/en/concepts/models) - configuración de modelos y conmutación por error
-- [Resumen de herramientas](/en/tools)
+- [Tareas en segundo plano](/es/automation/tasks) - seguimiento de tareas para ejecuciones desacopladas de `music_generate`
+- [Referencia de configuración](/es/gateway/configuration-reference#agent-defaults) - configuración `musicGenerationModel`
+- [ComfyUI](/es/providers/comfy)
+- [Google (Gemini)](/es/providers/google)
+- [MiniMax](/es/providers/minimax)
+- [Modelos](/es/concepts/models) - configuración de modelos y conmutación por error
+- [Resumen de herramientas](/es/tools)

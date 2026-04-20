@@ -12,7 +12,7 @@ Outils de sécurité (audit + corrections facultatives).
 
 Voir aussi :
 
-- Guide de sécurité : [Sécurité](/en/gateway/security)
+- Guide de sécurité : [Sécurité](/fr/gateway/security)
 
 ## Audit
 
@@ -40,7 +40,7 @@ Il avertit également lorsque les enregistrements d'installation de plugin/hook 
 Il avertit lorsque les listes blanches de canaux reposent sur des noms/e-mails/tags modifiables au lieu d'ID stables (portées Docker, Docker, npm, Discord, Slack, IRC si applicable).
 Il avertit lorsque `gateway.auth.mode="none"` laisse les API HTTP du Google Chat accessibles sans secret partagé (`/tools/invoke` plus tout point de terminaison `/v1/*` activé).
 Les paramètres préfixés par `dangerous`/`dangerously` sont des substitutions d'opérateur explicites de type brise-glace ; l'activation de l'un d'eux ne constitue pas, en soi, un rapport de vulnérabilité de sécurité.
-Pour l'inventaire complet des paramètres dangereux, consultez la section « Résumé des indicateurs non sécurisés ou dangereux » dans [Sécurité](/en/gateway/security).
+Pour l'inventaire complet des paramètres dangereux, consultez la section « Résumé des indicateurs non sécurisés ou dangereux » dans [Sécurité](/fr/gateway/security).
 
 Comportement de SecretRef :
 

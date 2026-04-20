@@ -81,10 +81,10 @@ parámetros de la herramienta anulan los valores de configuración por consulta.
   primero, luego Ollama Web Search (orden 110), luego SearXNG (orden 200)
 - **Búsqueda Segura se establece en moderada** de forma predeterminada cuando no se configura
 
-<Tip>Para uso en producción, considere [Brave Search](/en/tools/brave-search) (capa gratuita disponible) u otro proveedor con API.</Tip>
+<Tip>Para uso en producción, considere [Brave Search](/es/tools/brave-search) (capa gratuita disponible) u otro proveedor con API.</Tip>
 
 ## Relacionado
 
-- [Descripción general de Web Search](/en/tools/web) -- todos los proveedores y detección automática
-- [Brave Search](/en/tools/brave-search) -- resultados estructurados con nivel gratuito
-- [Búsqueda Exa](/en/tools/exa-search) -- búsqueda neuronal con extracción de contenido
+- [Descripción general de Web Search](/es/tools/web) -- todos los proveedores y detección automática
+- [Brave Search](/es/tools/brave-search) -- resultados estructurados con nivel gratuito
+- [Búsqueda Exa](/es/tools/exa-search) -- búsqueda neuronal con extracción de contenido

@@ -46,7 +46,7 @@ title: "Gateway Architecture"
 
 Détails du protocole :
 
-- [Protocole Gateway](/en/gateway/protocol)
+- [Protocole Gateway](/fr/gateway/protocol)
 
 ### WebChat
 
@@ -114,8 +114,8 @@ sequenceDiagram
 - L'auth Gateway (`gateway.auth.*`) s'applique toujours à **toutes** les connexions, locales ou
   distantes.
 
-Détails : [Protocole Gateway](/en/gateway/protocol), [Appairage](/en/channels/pairing),
-[Sécurité](/en/gateway/security).
+Détails : [Protocole Gateway](/fr/gateway/protocol), [Appairage](/fr/channels/pairing),
+[Sécurité](/fr/gateway/security).
 
 ## Typage de protocole et génération de code
 
@@ -149,7 +149,7 @@ Détails : [Protocole Gateway](/en/gateway/protocol), [Appairage](/en/channels/p
 
 ## Connexes
 
-- [Agent Loop](/en/concepts/agent-loop) — cycle d'exécution détaillé de l'agent
-- [Protocole Gateway](/en/gateway/protocol) — contrat de protocole WebSocket
-- [File d'attente](/en/concepts/queue) — file de commandes et concurrence
-- [Sécurité](/en/gateway/security) — model de confiance et durcissement
+- [Agent Loop](/fr/concepts/agent-loop) — cycle d'exécution détaillé de l'agent
+- [Protocole Gateway](/fr/gateway/protocol) — contrat de protocole WebSocket
+- [File d'attente](/fr/concepts/queue) — file de commandes et concurrence
+- [Sécurité](/fr/gateway/security) — model de confiance et durcissement

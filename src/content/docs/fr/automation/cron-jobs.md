@@ -34,7 +34,7 @@ openclaw cron runs --id <job-id>
 
 - Cron s'exécute **au sein du processus de la Gateway** (et non au sein du model).
 - Les tâches sont persistantes sur `~/.openclaw/cron/jobs.json`, les redémarrages ne perdent donc pas les planifications.
-- Toutes les exécutions cron créent des enregistrements de [tâche d'arrière-plan](/en/automation/tasks).
+- Toutes les exécutions cron créent des enregistrements de [tâche d'arrière-plan](/fr/automation/tasks).
 - Les tâches ponctuelles (`--at`) sont automatiquement supprimées après succès par défaut.
 - Les exécutions cron isolées tentent au mieux de fermer les onglets/processus de navigateur suivis pour leur `cron:<jobId>` session à la fin de l'exécution, afin que l'automatisation de navigateur détachée ne laisse pas de processus orphelins.
 - Les exécutions cron isolées se protègent également contre les réponses d'accusé de réception obsolètes. Si le premier résultat est seulement une mise à jour de l'état provisoire (`on it`, `pulling everything together`, et indices similaires) et qu'aucune exécution de sous-agent descendant n'est encore responsable de la réponse finale, OpenClaw redemande une fois le résultat réel avant la livraison.
@@ -394,7 +394,7 @@ openclaw doctor
 
 ## Connexes
 
-- [Automatisation et Tâches](/en/automation) — tous les mécanismes d'automatisation en un coup d'œil
-- [Tâches d'arrière-plan](/en/automation/tasks) — registre des tâches pour les exécutions cron
-- [Battement de cœur](/en/gateway/heartbeat) — tours de session principale périodiques
-- [Fuseau horaire](/en/concepts/timezone) — configuration du fuseau horaire
+- [Automatisation et Tâches](/fr/automation) — tous les mécanismes d'automatisation en un coup d'œil
+- [Tâches d'arrière-plan](/fr/automation/tasks) — registre des tâches pour les exécutions cron
+- [Battement de cœur](/fr/gateway/heartbeat) — tours de session principale périodiques
+- [Fuseau horaire](/fr/concepts/timezone) — configuration du fuseau horaire

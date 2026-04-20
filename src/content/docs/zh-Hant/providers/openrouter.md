@@ -47,7 +47,7 @@ OpenRouter 提供了一個 **統一 API**，將請求路由到單一端點和 AP
 ## 模型參考
 
 <Note>
-模型參考遵循模式 `openrouter/<provider>/<model>`。如需可用提供者和模型的完整清單，請參閱 [/concepts/model-providers](/en/concepts/model-providers)。
+模型參考遵循模式 `openrouter/<provider>/<model>`。如需可用提供者和模型的完整清單，請參閱 [/concepts/model-providers](/zh-Hant/concepts/model-providers)。
 </Note>
 
 ## 驗證與標頭
@@ -89,10 +89,10 @@ OpenRouter 記載的 app-attribution 標頭：
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和故障轉移行為。
   </Card>
-  <Card title="設定參考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration-reference" icon="gear">
     代理、模型和提供者的完整設定參考。
   </Card>
 </CardGroup>

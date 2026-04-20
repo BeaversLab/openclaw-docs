@@ -15,13 +15,13 @@ title: "Android 應用程式"
 
 - 角色：伴隨節點應用程式 (Android 不代管 Gateway)。
 - 需要 Gateway：是 (在 macOS、Linux 或透過 WSL2 在 Windows 上執行)。
-- 安裝：[快速入門](/en/start/getting-started) + [配對](/en/channels/pairing)。
-- 閘道：[操作手冊](/en/gateway) + [設定](/en/gateway/configuration)。
-  - 通訊協定：[閘道協定](/en/gateway/protocol) (節點 + 控制平面)。
+- 安裝：[快速入門](/zh-Hant/start/getting-started) + [配對](/zh-Hant/channels/pairing)。
+- 閘道：[操作手冊](/zh-Hant/gateway) + [設定](/zh-Hant/gateway/configuration)。
+  - 通訊協定：[閘道協定](/zh-Hant/gateway/protocol) (節點 + 控制平面)。
 
 ## 系統控制
 
-系統控制 (launchd/systemd) 位於閘道主機上。請參閱 [閘道](/en/gateway)。
+系統控制 (launchd/systemd) 位於閘道主機上。請參閱 [閘道](/zh-Hant/gateway)。
 
 ## 連線操作手冊
 
@@ -71,7 +71,7 @@ openclaw gateway --tailscale serve
 dns-sd -B _openclaw-gw._tcp local.
 ```
 
-更多除錯說明：[Bonjour](/en/gateway/bonjour)。
+更多除錯說明：[Bonjour](/zh-Hant/gateway/bonjour)。
 
 如果您同時設定了廣域網探索網域，請與以下內容進行比對：
 
@@ -90,7 +90,7 @@ Android NSD/mDNS 探索無法跨越網路。如果您的 Android 節點和 gatew
 1. 在 gateway 主機上設定一個 DNS-SD 區域（例如 `openclaw.internal.`）並發布 `_openclaw-gw._tcp` 記錄。
 2. 為指向該 DNS 伺服器的選定網域設定 Tailscale split DNS。
 
-詳細資訊與 CoreDNS 設定範例：[Bonjour](/en/gateway/bonjour)。
+詳細資訊與 CoreDNS 設定範例：[Bonjour](/zh-Hant/gateway/bonjour)。
 
 ### 3) 從 Android 連接
 
@@ -116,7 +116,7 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-配對詳情：[Pairing](/en/channels/pairing)。
+配對詳情：[Pairing](/zh-Hant/channels/pairing)。
 
 ### 5) 驗證節點已連接
 
@@ -170,7 +170,7 @@ Canvas 指令（僅前景）：
 - `camera.snap` (jpg)
 - `camera.clip` (mp4)
 
-參閱 [Camera node](/en/nodes/camera) 以了解參數和 CLI 輔助工具。
+參閱 [Camera node](/zh-Hant/nodes/camera) 以了解參數和 CLI 輔助工具。
 
 ### 8) 語音 + 擴充的 Android 指令介面
 

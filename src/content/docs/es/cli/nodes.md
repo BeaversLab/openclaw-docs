@@ -12,9 +12,9 @@ Administra nodos emparejados (dispositivos) e invoca capacidades de los nodos.
 
 Relacionado:
 
-- Resumen de nodos: [Nodos](/en/nodes)
-- Cámara: [Nodos de cámara](/en/nodes/camera)
-- Imágenes: [Nodos de imagen](/en/nodes/images)
+- Resumen de nodos: [Nodos](/es/nodes)
+- Cámara: [Nodos de cámara](/es/nodes/camera)
+- Imágenes: [Nodos de imagen](/es/nodes/images)
 
 Opciones comunes:
 

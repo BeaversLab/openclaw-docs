@@ -95,11 +95,11 @@ Documentation publique actuelle d'Anthropic :
     </Steps>
 
     <Note>
-    Les détails de configuration et d'exécution du backend de la Claude CLI se trouvent dans [Backends CLI](/en/gateway/cli-backends).
+    Les détails de configuration et d'exécution du backend de la Claude CLI se trouvent dans [Backends CLI](/fr/gateway/cli-backends).
     </Note>
 
     <Tip>
-    Si vous souhaitez la voie de facturation la plus claire, utilisez plutôt une clé Anthropic API. OpenClaw prend également en charge les options de type abonnement depuis [OpenAI Codex](/en/providers/openai), [Qwen Cloud](/en/providers/qwen), [MiniMax](/en/providers/minimax), et [Z.AI / GLM](/en/providers/glm).
+    Si vous souhaitez la voie de facturation la plus claire, utilisez plutôt une clé Anthropic API. OpenClaw prend également en charge les options de type abonnement depuis [OpenAI Codex](/fr/providers/openai), [Qwen Cloud](/fr/providers/qwen), [MiniMax](/fr/providers/minimax), et [Z.AI / GLM](/fr/providers/glm).
     </Tip>
 
   </Tab>
@@ -280,21 +280,21 @@ OpenClaw prend en charge la fonctionnalité de mise en cache du prompt de Anthro
   </Accordion>
 </AccordionGroup>
 
-<Note>Plus d'aide : [Dépannage](/en/help/troubleshooting) et [FAQ](/en/help/faq).</Note>
+<Note>Plus d'aide : [Dépannage](/fr/help/troubleshooting) et [FAQ](/fr/help/faq).</Note>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choix des fournisseurs, des références de modèle et du comportement de basculement.
   </Card>
-  <Card title="Backends CLI" href="/en/gateway/cli-backends" icon="terminal">
+  <Card title="Backends CLI" href="/fr/gateway/cli-backends" icon="terminal">
     Configuration du backend CLI Claude et détails d'exécution.
   </Card>
-  <Card title="Mise en cache des prompts" href="/en/reference/prompt-caching" icon="database">
+  <Card title="Mise en cache des prompts" href="/fr/reference/prompt-caching" icon="database">
     Fonctionnement de la mise en cache des prompts entre les fournisseurs.
   </Card>
-  <Card title="OAuth et auth" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth et auth" href="/fr/gateway/authentication" icon="key">
     Détails d'authentification et règles de réutilisation des identifiants.
   </Card>
 </CardGroup>

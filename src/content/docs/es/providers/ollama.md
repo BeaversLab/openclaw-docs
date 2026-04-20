@@ -287,7 +287,7 @@ Elige **Búsqueda web de Ollama** durante `openclaw onboard` o `openclaw configu
 }
 ```
 
-<Note>Para obtener detalles completos sobre la configuración y el comportamiento, consulta [Búsqueda web de Ollama](/en/tools/ollama-search).</Note>
+<Note>Para obtener detalles completos sobre la configuración y el comportamiento, consulta [Búsqueda web de Ollama](/es/tools/ollama-search).</Note>
 
 ## Configuración avanzada
 
@@ -377,7 +377,7 @@ Elige **Búsqueda web de Ollama** durante `openclaw onboard` o `openclaw configu
 
   <Accordion title="Incrustaciones de memoria">
     El complemento Ollama incluido registra un proveedor de incrustaciones de memoria para
-    [búsqueda de memoria](/en/concepts/memory). Utiliza la URL base de Ollama configurada
+    [búsqueda de memoria](/es/concepts/memory). Utiliza la URL base de Ollama configurada
     y la clave de API.
 
     | Propiedad      | Valor               |
@@ -453,21 +453,21 @@ Elige **Búsqueda web de Ollama** durante `openclaw onboard` o `openclaw configu
   </Accordion>
 </AccordionGroup>
 
-<Note>Más ayuda: [Solución de problemas](/en/help/troubleshooting) y [Preguntas frecuentes](/en/help/faq).</Note>
+<Note>Más ayuda: [Solución de problemas](/es/help/troubleshooting) y [Preguntas frecuentes](/es/help/faq).</Note>
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Proveedores de modelos" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Proveedores de modelos" href="/es/concepts/model-providers" icon="layers">
     Resumen de todos los proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Selección de modelo" href="/en/concepts/models" icon="brain">
+  <Card title="Selección de modelo" href="/es/concepts/models" icon="brain">
     Cómo elegir y configurar modelos.
   </Card>
-  <Card title="Búsqueda web de Ollama" href="/en/tools/ollama-search" icon="magnifying-glass">
+  <Card title="Búsqueda web de Ollama" href="/es/tools/ollama-search" icon="magnifying-glass">
     Detalles completos de configuración y comportamiento para la búsqueda web potenciada por Ollama.
   </Card>
-  <Card title="Configuración" href="/en/gateway/configuration" icon="gear">
+  <Card title="Configuración" href="/es/gateway/configuration" icon="gear">
     Referencia completa de configuración.
   </Card>
 </CardGroup>

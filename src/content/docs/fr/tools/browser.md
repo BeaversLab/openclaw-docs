@@ -42,7 +42,7 @@ openclaw browser --browser-profile openclaw snapshot
 Si vous obtenez « Navigateur désactivé », activez-le dans la configuration (voir ci-dessous) et redémarrez la
 Gateway.
 
-Si `openclaw browser` manque entièrement, ou si l'agent indique que l'outil de navigateur n'est pas disponible, passez à [Commande ou outil de navigateur manquant](/en/tools/browser#missing-browser-command-or-tool).
+Si `openclaw browser` manque entièrement, ou si l'agent indique que l'outil de navigateur n'est pas disponible, passez à [Commande ou outil de navigateur manquant](/fr/tools/browser#missing-browser-command-or-tool).
 
 ## Contrôle des plugins
 
@@ -583,7 +583,7 @@ docker compose run --rm openclaw-cli \
 
 Pour conserver les téléchargements du navigateur, définissez `PLAYWRIGHT_BROWSERS_PATH` (par exemple,
 `/home/node/.cache/ms-playwright`) et assurez-vous que `/home/node` est conservé via
-`OPENCLAW_HOME_VOLUME` ou un montage de liaison (bind mount). Voir [Docker](/en/install/docker).
+`OPENCLAW_HOME_VOLUME` ou un montage de liaison (bind mount). Voir [Docker](/fr/install/docker).
 
 ## Fonctionnement (interne)
 
@@ -700,7 +700,7 @@ Notes :
   - `--format ai` (par défaut lorsque Playwright est installé) : renvoie un instantané IA avec des références numériques (`aria-ref="<n>"`).
   - `--format aria` : renvoie l'arborescence d'accessibilité (aucune référence ; inspection uniquement).
   - `--efficient` (ou `--mode efficient`) : préréglage d'instantané de rôle compact (interactif + compact + profondeur + maxChars inférieur).
-  - Config par défaut (CLI uniquement) : définissez `browser.snapshotDefaults.mode: "efficient"`Gateway configuration](/en/gateway/configuration-reference#browser)).
+  - Config par défaut (CLI uniquement) : définissez `browser.snapshotDefaults.mode: "efficient"`Gateway configuration](/fr/gateway/configuration-reference#browser)).
   - Les options de snapshot de rôle (`--interactive`, `--compact`, `--depth`, `--selector`) forcent un instantané basé sur les rôles avec des références comme `ref=e12`.
   - `--frame "<iframe selector>"` limite les snapshots de rôle à une iframe (se couple avec des références de rôle comme `e12`).
   - `--interactive` affiche une liste plate et facile à choisir d'éléments interactifs (idéal pour piloter les actions).
@@ -804,7 +804,7 @@ Ces éléments sont utiles pour les flux de travail « faire se comporter le sit
   exécutent du JavaScript arbitraire dans le contexte de la page. L'injection de
   prompt peut influencer cela. Désactivez-le avec `browser.evaluateEnabled=false` si vous n'en
   avez pas besoin.
-- Pour les notes de connexion et anti-bot (X/Twitter, etc.), consultez [Connexion au navigateur + publication sur X/Twitter](/en/tools/browser-login).
+- Pour les notes de connexion et anti-bot (X/Twitter, etc.), consultez [Connexion au navigateur + publication sur X/Twitter](/fr/tools/browser-login).
 - Gardez l'hôte Gateway/nœud privé (bouclage ou tailnet uniquement).
 - Les points de terminaison CDP distants sont puissants ; tunnelisez-les et protégez-les.
 
@@ -825,10 +825,10 @@ Exemple en mode strict (bloquer les destinations privées/internes par défaut) 
 ## Troubleshooting
 
 Pour les problèmes spécifiques à Linux (en particulier snap Chromium), consultez
-[Dépannage du navigateur](/en/tools/browser-linux-troubleshooting).
+[Dépannage du navigateur](/fr/tools/browser-linux-troubleshooting).
 
 Pour les configurations split-host WSL2 Gateway + Chrome Windows, consultez
-[Dépannage CDP Chrome distant + WSL2 + Windows](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting).
+[Dépannage CDP Chrome distant + WSL2 + Windows](/fr/tools/browser-wsl2-windows-remote-cdp-troubleshooting).
 
 ### Échec du démarrage CDP vs blocage SSRF de navigation
 
@@ -909,6 +909,6 @@ Cela permet de garder l'agent déterministe et d'éviter les sélecteurs fragile
 
 ## Connexes
 
-- [Présentation des outils](/en/tools) — tous les outils d'agent disponibles
-- [Sandboxing](/en/gateway/sandboxing) — contrôle du navigateur dans les environnements sandboxed
-- [Sécurité](/en/gateway/security) — risques et durcissement du contrôle du navigateur
+- [Présentation des outils](/fr/tools) — tous les outils d'agent disponibles
+- [Sandboxing](/fr/gateway/sandboxing) — contrôle du navigateur dans les environnements sandboxed
+- [Sécurité](/fr/gateway/security) — risques et durcissement du contrôle du navigateur

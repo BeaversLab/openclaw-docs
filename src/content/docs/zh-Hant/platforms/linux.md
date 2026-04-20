@@ -21,18 +21,18 @@ Gateway 在 Linux 上受到完整支援。**Node 是建議的執行環境**。
 4. 從您的筆記型電腦：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. 開啟 `http://127.0.0.1:18789/` 並使用設定的共享金鑰進行驗證（預設為 token；若您設定了 `gateway.auth.mode: "password"` 則為密碼）
 
-完整的 Linux 伺服器指南：[Linux Server](/en/vps)。逐步的 VPS 範例：[exe.dev](/en/install/exe-dev)
+完整的 Linux 伺服器指南：[Linux Server](/zh-Hant/vps)。逐步的 VPS 範例：[exe.dev](/zh-Hant/install/exe-dev)
 
 ## 安裝
 
-- [開始使用](/en/start/getting-started)
-- [安裝與更新](/en/install/updating)
-- 可選流程：[Bun (實驗性)](/en/install/bun)、[Nix](/en/install/nix)、[Docker](/en/install/docker)
+- [開始使用](/zh-Hant/start/getting-started)
+- [安裝與更新](/zh-Hant/install/updating)
+- 可選流程：[Bun (實驗性)](/zh-Hant/install/bun)、[Nix](/zh-Hant/install/nix)、[Docker](/zh-Hant/install/docker)
 
 ## Gateway
 
-- [Gateway 執行手冊](/en/gateway)
-- [設定](/en/gateway/configuration)
+- [Gateway 執行手冊](/zh-Hant/gateway)
+- [設定](/zh-Hant/gateway/configuration)
 
 ## Gateway 服務安裝 (CLI)
 
@@ -64,7 +64,7 @@ openclaw doctor
 
 ## 系統控制 (systemd user unit)
 
-OpenClaw 預設會安裝一個 systemd **user** 服務。請對共用或全天候運行的伺服器使用 **system** 服務。`openclaw gateway install` 和 `openclaw onboard --install-daemon` 已經為您呈現當前的標準單元；僅在您需要自訂 system/service-manager 設定時才需要手動撰寫。完整的服務指南位於 [Gateway runbook](/en/gateway)。
+OpenClaw 預設會安裝一個 systemd **user** 服務。請對共用或全天候運行的伺服器使用 **system** 服務。`openclaw gateway install` 和 `openclaw onboard --install-daemon` 已經為您呈現當前的標準單元；僅在您需要自訂 system/service-manager 設定時才需要手動撰寫。完整的服務指南位於 [Gateway runbook](/zh-Hant/gateway)。
 
 最小化設定：
 

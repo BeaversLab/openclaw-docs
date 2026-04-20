@@ -133,12 +133,12 @@ MiniMax 影像產生可透過兩種內建的 MiniMax 驗證路徑使用：
 
 ## 相關
 
-- [工具概覽](/en/tools) — 所有可用的代理程式工具
-- [fal](/en/providers/fal) — fal 圖片與影片提供者設定
-- [ComfyUI](/en/providers/comfy) — 本地 ComfyUI 和 Comfy Cloud 工作流程設定
-- [Google (Gemini)](/en/providers/google) — Gemini 圖片提供者設定
-- [MiniMax](/en/providers/minimax) — MiniMax 圖片提供者設定
-- [OpenAI](/en/providers/openai) — OpenAI Images 提供者設定
-- [Vydra](/en/providers/vydra) — Vydra 圖片、影片和語音設定
-- [設定參考](/en/gateway/configuration-reference#agent-defaults) — `imageGenerationModel` 設定
-- [模型](/en/concepts/models) — 模型設定與故障轉移
+- [工具概覽](/zh-Hant/tools) — 所有可用的代理程式工具
+- [fal](/zh-Hant/providers/fal) — fal 圖片與影片提供者設定
+- [ComfyUI](/zh-Hant/providers/comfy) — 本地 ComfyUI 和 Comfy Cloud 工作流程設定
+- [Google (Gemini)](/zh-Hant/providers/google) — Gemini 圖片提供者設定
+- [MiniMax](/zh-Hant/providers/minimax) — MiniMax 圖片提供者設定
+- [OpenAI](/zh-Hant/providers/openai) — OpenAI Images 提供者設定
+- [Vydra](/zh-Hant/providers/vydra) — Vydra 圖片、影片和語音設定
+- [設定參考](/zh-Hant/gateway/configuration-reference#agent-defaults) — `imageGenerationModel` 設定
+- [模型](/zh-Hant/concepts/models) — 模型設定與故障轉移

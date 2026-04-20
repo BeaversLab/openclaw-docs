@@ -14,7 +14,7 @@ Este plan define cómo OpenClaw debe soportar agentes de codificación ACP en ca
 
 Documento relacionado:
 
-- [Plan de refactorización de transmisión de tiempo de ejecución unificada](/en/experiments/plans/acp-unified-streaming-refactor)
+- [Plan de refactorización de transmisión de tiempo de ejecución unificada](/es/experiments/plans/acp-unified-streaming-refactor)
 
 Experiencia de usuario objetivo:
 

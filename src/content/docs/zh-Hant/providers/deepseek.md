@@ -81,10 +81,10 @@ read_when:
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和故障轉移行為。
   </Card>
-  <Card title="Configuration reference" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Configuration reference" href="/zh-Hant/gateway/configuration-reference" icon="gear">
     代理人、模型和供應商的完整配置參考資料。
   </Card>
 </CardGroup>

@@ -124,6 +124,6 @@ clé l'emporte en premier).
 
 ## Connexes
 
-- [Aperçu de la recherche Web](/en/tools/web) -- tous les fournisseurs et la détection automatique
-- [Recherche DuckDuckGo](/en/tools/duckduckgo-search) -- une autre solution de secours sans clé
-- [Recherche Brave](/en/tools/brave-search) -- résultats structurés avec offre gratuite
+- [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
+- [Recherche DuckDuckGo](/fr/tools/duckduckgo-search) -- une autre solution de secours sans clé
+- [Recherche Brave](/fr/tools/brave-search) -- résultats structurés avec offre gratuite

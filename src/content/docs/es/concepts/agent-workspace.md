@@ -17,7 +17,7 @@ las sesiones.
 **Importante:** el espacio de trabajo es el **cwd predeterminado**, no un sandbox estricto. Las herramientas
 resuelven rutas relativas contra el espacio de trabajo, pero las rutas absolutas aún pueden llegar
 a otros lugares en el host a menos que se habilite el sandbox. Si necesita aislamiento, use
-[`agents.defaults.sandbox`](/en/gateway/sandboxing) (y/o configuración de sandbox por agente).
+[`agents.defaults.sandbox`](/es/gateway/sandboxing) (y/o configuración de sandbox por agente).
 Cuando se habilita el sandbox y `workspaceAccess` no es `"rw"`, las herramientas operan
 dentro de un espacio de trabajo sandbox bajo `~/.openclaw/sandboxes`, no su espacio de trabajo del host.
 
@@ -73,7 +73,7 @@ Estos son los archivos estándar que OpenClaw espera dentro del espacio de traba
 - `SOUL.md`
   - Personalidad, tono y límites.
   - Cargado en cada sesión.
-  - Guía: [Guía de personalidad SOUL.md](/en/concepts/soul)
+  - Guía: [Guía de personalidad SOUL.md](/es/concepts/soul)
 
 - `USER.md`
   - Quién es el usuario y cómo dirigirse a él.
@@ -108,7 +108,7 @@ Estos son los archivos estándar que OpenClaw espera dentro del espacio de traba
   - Memoria a largo plazo curada.
   - Cargar solo en la sesión principal privada (no en contextos compartidos/grupales).
 
-Consulte [Memoria](/en/concepts/memory) para ver el flujo de trabajo y el vaciado automático de memoria.
+Consulte [Memoria](/es/concepts/memory) para ver el flujo de trabajo y el vaciado automático de memoria.
 
 - `skills/` (opcional)
   - Habilidades específicas del espacio de trabajo.
@@ -224,13 +224,13 @@ Inicio de `.gitignore` sugerido:
 ## Notas avanzadas
 
 - El enrutamiento multiagente puede usar diferentes espacios de trabajo por agente. Consulta
-  [Channel routing](/en/channels/channel-routing) para la configuración de enrutamiento.
+  [Channel routing](/es/channels/channel-routing) para la configuración de enrutamiento.
 - Si `agents.defaults.sandbox` está habilitado, las sesiones que no son principales pueden usar espacios de trabajo de sandbox por sesión
   bajo `agents.defaults.sandbox.workspaceRoot`.
 
 ## Relacionado
 
-- [Standing Orders](/en/automation/standing-orders) — instrucciones persistentes en los archivos del espacio de trabajo
-- [Heartbeat](/en/gateway/heartbeat) — archivo del espacio de trabajo HEARTBEAT.md
-- [Session](/en/concepts/session) — rutas de almacenamiento de sesiones
-- [Sandboxing](/en/gateway/sandboxing) — acceso al espacio de trabajo en entornos sandbox
+- [Standing Orders](/es/automation/standing-orders) — instrucciones persistentes en los archivos del espacio de trabajo
+- [Heartbeat](/es/gateway/heartbeat) — archivo del espacio de trabajo HEARTBEAT.md
+- [Session](/es/concepts/session) — rutas de almacenamiento de sesiones
+- [Sandboxing](/es/gateway/sandboxing) — acceso al espacio de trabajo en entornos sandbox

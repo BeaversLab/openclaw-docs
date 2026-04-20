@@ -264,9 +264,9 @@ Il s'agit d'une échappatoire temporaire, pas d'une solution permanente.
 
 ## Connexes
 
-- [Getting Started](/en/plugins/building-plugins) — créez votre premier plugin
-- [Aperçu du SDK](/en/plugins/sdk-overview) — référence complète des importations de sous-chemins
-- [Plugins de canal](/en/plugins/sdk-channel-plugins) — création de plugins de canal
-- [Plugins de fournisseur](/en/plugins/sdk-provider-plugins) — création de plugins de fournisseur
-- [Fonctionnement interne des plugins](/en/plugins/architecture) — exploration approfondie de l'architecture
-- [Manifeste du plugin](/en/plugins/manifest) — référence du schéma du manifeste
+- [Getting Started](/fr/plugins/building-plugins) — créez votre premier plugin
+- [Aperçu du SDK](/fr/plugins/sdk-overview) — référence complète des importations de sous-chemins
+- [Plugins de canal](/fr/plugins/sdk-channel-plugins) — création de plugins de canal
+- [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins) — création de plugins de fournisseur
+- [Fonctionnement interne des plugins](/fr/plugins/architecture) — exploration approfondie de l'architecture
+- [Manifeste du plugin](/fr/plugins/manifest) — référence du schéma du manifeste

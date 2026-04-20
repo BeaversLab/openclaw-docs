@@ -81,10 +81,10 @@ paramètres de l'outil remplacent les valeurs de configuration par requête.
   en premier, puis Ollama Web Search (ordre 110), puis SearXNG (ordre 200)
 - **SafeSearch est modéré par défaut** lorsqu'il n'est pas configuré
 
-<Tip>Pour une utilisation en production, envisagez [Brave Search](/en/tools/brave-search) (version gratuite disponible) ou un autre provider supporté par une API.</Tip>
+<Tip>Pour une utilisation en production, envisagez [Brave Search](/fr/tools/brave-search) (version gratuite disponible) ou un autre provider supporté par une API.</Tip>
 
 ## Connexes
 
-- [Aperçu de la recherche Web](/en/tools/web) -- tous les fournisseurs et la détection automatique
-- [Recherche Brave](/en/tools/brave-search) -- résultats structurés avec gratuit disponible
-- [Exa Search](/en/tools/exa-search) -- recherche neurale avec extraction de contenu
+- [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
+- [Recherche Brave](/fr/tools/brave-search) -- résultats structurés avec gratuit disponible
+- [Exa Search](/fr/tools/exa-search) -- recherche neurale avec extraction de contenu

@@ -19,7 +19,7 @@ Utilisez-les lorsqu'une tâche est clairement liée à un script ; sinon, préf�
 
 ## Scripts de surveillance d'authentification
 
-La surveillance de l'authentification est traitée dans [Authentification](/en/gateway/authentication). Les scripts sous `scripts/` sont des suppléments optionnels pour les flux de travail systemd/Termux sur téléphone.
+La surveillance de l'authentification est traitée dans [Authentification](/fr/gateway/authentication). Les scripts sous `scripts/` sont des suppléments optionnels pour les flux de travail systemd/Termux sur téléphone.
 
 ## Assistant de lecture GitHub
 

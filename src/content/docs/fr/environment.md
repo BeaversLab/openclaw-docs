@@ -72,10 +72,10 @@ Vous pouvez référencer des env vars directement dans les valeurs de chaîne de
 }
 ```
 
-Voir [Configuration : Substitution de variable d'environnement](/en/gateway/configuration#env-var-substitution-in-config) pour plus de détails.
+Voir [Configuration : Substitution de variable d'environnement](/fr/gateway/configuration#env-var-substitution-in-config) pour plus de détails.
 
 ## Connexes
 
-- [Configuration du Gateway](/en/gateway/configuration)
-- [FAQ : env vars et chargement .env](/en/help/faq#env-vars-and-env-loading)
-- [Aperçu des modèles](/en/concepts/models)
+- [Configuration du Gateway](/fr/gateway/configuration)
+- [FAQ : env vars et chargement .env](/fr/help/faq#env-vars-and-env-loading)
+- [Aperçu des modèles](/fr/concepts/models)

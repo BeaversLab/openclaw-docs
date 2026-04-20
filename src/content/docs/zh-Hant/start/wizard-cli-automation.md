@@ -220,6 +220,6 @@ openclaw agents add work \
 
 ## 相關文件
 
-- 入建中心：[入建 (CLI)](/en/start/wizard)
-- 完整參考：[CLI 設定參考](/en/start/wizard-cli-reference)
-- 指令參考：[`openclaw onboard`](/en/cli/onboard)
+- 入建中心：[入建 (CLI)](/zh-Hant/start/wizard)
+- 完整參考：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference)
+- 指令參考：[`openclaw onboard`](/zh-Hant/cli/onboard)

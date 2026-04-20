@@ -21,12 +21,12 @@ title: "会话管理深入剖析"
 
 如果您想先了解更高级的概述，请从以下内容开始：
 
-- [/concepts/会话](/en/concepts/session)
-- [/concepts/compaction](/en/concepts/compaction)
-- [/concepts/memory](/en/concepts/memory)
-- [/concepts/memory-search](/en/concepts/memory-search)
-- [/concepts/会话-pruning](/en/concepts/session-pruning)
-- [/reference/transcript-hygiene](/en/reference/transcript-hygiene)
+- [/concepts/会话](/zh/concepts/session)
+- [/concepts/compaction](/zh/concepts/compaction)
+- [/concepts/memory](/zh/concepts/memory)
+- [/concepts/memory-search](/zh/concepts/memory-search)
+- [/concepts/会话-pruning](/zh/concepts/session-pruning)
+- [/reference/transcript-hygiene](/zh/reference/transcript-hygiene)
 
 ---
 
@@ -117,7 +117,7 @@ openclaw sessions cleanup --enforce
 - Cron：`cron:<job.id>`
 - Webhook：`hook:<uuid>`（除非被覆盖）
 
-规范规则记录在 [/concepts/会话](/en/concepts/session)。
+规范规则记录在 [/concepts/会话](/zh/concepts/session)。
 
 ---
 
@@ -195,7 +195,7 @@ OpenClaw 故意*不*“修正”转录；Gateway(网关) 使用 `SessionManager`
 - 上下文窗口来自模型目录（并且可以通过配置覆盖）。
 - 存储中的 `contextTokens` 是运行时估算/报告值；不要将其视为严格保证。
 
-更多信息，请参阅 [/token-use](/en/reference/token-use)。
+更多信息，请参阅 [/token-use](/zh/reference/token-use)。
 
 ---
 
@@ -208,7 +208,7 @@ OpenClaw 故意*不*“修正”转录；Gateway(网关) 使用 `SessionManager`
 - 压缩摘要
 - `firstKeptEntryId` 之后的邮件
 
-压缩是**持久化**的（与会话修剪不同）。请参阅 [/concepts/会话-pruning](/en/concepts/session-pruning)。
+压缩是**持久化**的（与会话修剪不同）。请参阅 [/concepts/会话-pruning](/zh/concepts/session-pruning)。
 
 ## 压缩块边界和工具配对
 
@@ -344,7 +344,7 @@ OpenClaw 使用 **预阈值刷新** 方法：
 - 每个压缩周期运行一次刷新（在 `sessions.json` 中跟踪）。
 - 刷新仅针对嵌入式 Pi 会话运行（CLI 后端会跳过它）。
 - 当会话工作区为只读时（`workspaceAccess: "ro"` 或 `"none"`），将跳过刷新。
-- 有关工作区文件布局和写入模式，请参阅 [内存](/en/concepts/memory)。
+- 有关工作区文件布局和写入模式，请参阅 [内存](/zh/concepts/memory)。
 
 Pi 还在扩展 API 中暴露了 `session_before_compact` 挂钩，但 OpenClaw 的刷新逻辑目前位于 Gateway(网关) 端。
 
@@ -352,7 +352,7 @@ Pi 还在扩展 API 中暴露了 `session_before_compact` 挂钩，但 OpenClaw 
 
 ## 故障排查清单
 
-- 会话密钥错误？从 [/concepts/会话](/en/concepts/session) 开始，并确认 `/status` 中的 `sessionKey`。
+- 会话密钥错误？从 [/concepts/会话](/zh/concepts/session) 开始，并确认 `/status` 中的 `sessionKey`。
 - 存储与记录不匹配？请从 `openclaw status` 确认 Gateway(网关) 主机和存储路径。
 - 压缩频繁？检查：
   - 模型上下文窗口（太小）

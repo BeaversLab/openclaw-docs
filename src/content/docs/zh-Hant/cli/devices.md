@@ -147,5 +147,5 @@ openclaw devices approve <requestId>
 
 相關連結：
 
-- [儀表板驗證疑難排解](/en/web/dashboard#if-you-see-unauthorized-1008)
-- [閘道疑難排解](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [儀表板驗證疑難排解](/zh-Hant/web/dashboard#if-you-see-unauthorized-1008)
+- [閘道疑難排解](/zh-Hant/gateway/troubleshooting#dashboard-control-ui-connectivity)

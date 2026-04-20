@@ -72,10 +72,10 @@ Puedes hacer referencia a variables de entorno directamente en los valores de ca
 }
 ```
 
-Consulta [Configuración: Sustitución de variables de entorno](/en/gateway/configuration#env-var-substitution-in-config) para obtener detalles completos.
+Consulta [Configuración: Sustitución de variables de entorno](/es/gateway/configuration#env-var-substitution-in-config) para obtener detalles completos.
 
 ## Relacionado
 
-- [Configuración del Gateway](/en/gateway/configuration)
-- [Preguntas frecuentes: variables de entorno y carga de .env](/en/help/faq#env-vars-and-env-loading)
-- [Resumen de modelos](/en/concepts/models)
+- [Configuración del Gateway](/es/gateway/configuration)
+- [Preguntas frecuentes: variables de entorno y carga de .env](/es/help/faq#env-vars-and-env-loading)
+- [Resumen de modelos](/es/concepts/models)

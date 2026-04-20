@@ -179,7 +179,7 @@ Si l'interface utilisateur demande une authentification par secret partagé, col
 dans les paramètres de l'interface de contrôle. Pour l'authentification par jeton, utilisez `gateway.auth.token` (ou
 `OPENCLAW_GATEWAY_TOKEN`).
 
-Pour un accès distant permanent, consultez [Tailscale](/en/gateway/tailscale).
+Pour un accès distant permanent, consultez [Tailscale](/fr/gateway/tailscale).
 
 ---
 
@@ -413,8 +413,8 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ## Voir aussi
 
-- [guide Linux](/en/platforms/linux) — configuration Linux générale
-- [guide DigitalOcean](/en/platforms/digitalocean) — alternative cloud
-- [guide Hetzner](/en/install/hetzner) — configuration Docker
-- [Tailscale](/en/gateway/tailscale) — accès à distance
-- [Nœuds](/en/nodes) — associer votre ordinateur portable/téléphone à la passerelle Pi
+- [guide Linux](/fr/platforms/linux) — configuration Linux générale
+- [guide DigitalOcean](/fr/platforms/digitalocean) — alternative cloud
+- [guide Hetzner](/fr/install/hetzner) — configuration Docker
+- [Tailscale](/fr/gateway/tailscale) — accès à distance
+- [Nœuds](/fr/nodes) — associer votre ordinateur portable/téléphone à la passerelle Pi

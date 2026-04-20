@@ -154,6 +154,6 @@ Slack：
 
 ## 相关
 
-- [消息](/en/concepts/messages) — 消息生命周期和传递
-- [重试](/en/concepts/retry) — 传递失败时的重试行为
-- [渠道](/en/channels) — 每个渠道的流式传输支持
+- [消息](/zh/concepts/messages) — 消息生命周期和传递
+- [重试](/zh/concepts/retry) — 传递失败时的重试行为
+- [渠道](/zh/channels) — 每个渠道的流式传输支持

@@ -140,6 +140,6 @@ El control de selección es `tools.web.fetch.provider`. Si lo omite, OpenClaw de
 
 ## Relacionado
 
-- [Información general de búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
-- [Recuperación web](/en/tools/web-fetch) -- herramienta web_fetch con alternativa a Firecrawl
-- [Tavily](/en/tools/tavily) -- herramientas de búsqueda y extracción
+- [Información general de búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [Recuperación web](/es/tools/web-fetch) -- herramienta web_fetch con alternativa a Firecrawl
+- [Tavily](/es/tools/tavily) -- herramientas de búsqueda y extracción

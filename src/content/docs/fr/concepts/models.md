@@ -9,9 +9,9 @@ title: "Models CLI"
 
 # Models CLI
 
-Voir [/concepts/model-failover](/en/concepts/model-failover) pour la rotation des profils d'authentification,
+Voir [/concepts/model-failover](/fr/concepts/model-failover) pour la rotation des profils d'authentification,
 les temps de recharge et leur interaction avec les basculements.
-Aperçu rapide du provider + exemples : [/concepts/model-providers](/en/concepts/model-providers).
+Aperçu rapide du provider + exemples : [/concepts/model-providers](/fr/concepts/model-providers).
 
 ## Fonctionnement de la sélection de modèle
 
@@ -32,7 +32,7 @@ Connexes :
 - `agents.defaults.imageGenerationModel` est utilisé par la capacité partagée de génération d'images. Si omis, `image_generate` peut toujours déduire un provider par défaut basé sur l'authentification. Il essaie d'abord le provider par défaut actuel, puis les providers de génération d'images enregistrés restants par ordre d'ID de provider. Si vous définissez un provider/model spécifique, configurez également la clé d'authentification/API de ce provider.
 - `agents.defaults.musicGenerationModel` est utilisé par la capacité partagée de génération de musique. Si omis, `music_generate` peut toujours déduire un provider par défaut basé sur l'authentification. Il essaie d'abord le provider par défaut actuel, puis les providers de génération de musique enregistrés restants par ordre d'ID de provider. Si vous définissez un provider/model spécifique, configurez également la clé d'authentification/API de ce provider.
 - `agents.defaults.videoGenerationModel` est utilisé par la capacité partagée de génération de vidéo. Si omis, `video_generate` peut toujours déduire un provider par défaut basé sur l'authentification. Il essaie d'abord le provider par défaut actuel, puis les providers de génération de vidéo enregistrés restants par ordre d'ID de provider. Si vous définissez un provider/model spécifique, configurez également la clé d'authentification/API de ce provider.
-- Les valeurs par défaut par agent peuvent remplacer `agents.defaults.model` via `agents.list[].model` plus des liaisons (voir [/concepts/multi-agent](/en/concepts/multi-agent)).
+- Les valeurs par défaut par agent peuvent remplacer `agents.defaults.model` via `agents.list[].model` plus des liaisons (voir [/concepts/multi-agent](/fr/concepts/multi-agent)).
 
 ## Politique rapide de model
 
@@ -65,7 +65,7 @@ Les références de model sont normalisées en minuscules. Les alias de fourniss
 en `zai/*`.
 
 Les exemples de configuration de fournisseur (y compris OpenCode) se trouvent dans
-[/providers/opencode](/en/providers/opencode).
+[/providers/opencode](/fr/providers/opencode).
 
 ## "Model is not allowed" (et pourquoi les réponses s'arrêtent)
 
@@ -130,7 +130,7 @@ Notes :
      revient plutôt au premier fournisseur/modèle configuré pour éviter
      d'afficher un défaut obsolète d'un fournisseur supprimé.
 
-Comportement/configuration complète des commandes : [Commandes slash](/en/tools/slash-commands).
+Comportement/configuration complète des commandes : [Commandes slash](/fr/tools/slash-commands).
 
 ## Commandes CLI
 
@@ -223,7 +223,7 @@ Les résultats de l'analyse sont classés par :
 Entrée
 
 - Liste OpenRouter `/models` (filtre `:free`)
-- Nécessite une clé API OpenRouter provenant des profils d'authentification ou `OPENROUTER_API_KEY` (voir [/environment](/en/help/environment))
+- Nécessite une clé API OpenRouter provenant des profils d'authentification ou `OPENROUTER_API_KEY` (voir [/environment](/fr/help/environment))
 - Filtres optionnels : `--max-age-days`, `--min-params`, `--provider`, `--max-candidates`
 - Contrôles de sonde : `--timeout`, `--concurrency`
 
@@ -249,9 +249,9 @@ Cela s'applique chaque fois qu'OpenClaw régénère `models.json`, y compris les
 
 ## Connexes
 
-- [Modèles de fournisseurs](/en/concepts/model-providers) — routage et authentification des fournisseurs
-- [Basculement de modèle](/en/concepts/model-failover) — chaînes de secours
-- [Génération d'images](/en/tools/image-generation) — configuration des modèles d'image
-- [Génération de musique](/en/tools/music-generation) — configuration des modèles de musique
-- [Génération de vidéo](/en/tools/video-generation) — configuration des modèles vidéo
-- [Référence de configuration](/en/gateway/configuration-reference#agent-defaults) — clés de configuration du modèle
+- [Modèles de fournisseurs](/fr/concepts/model-providers) — routage et authentification des fournisseurs
+- [Basculement de modèle](/fr/concepts/model-failover) — chaînes de secours
+- [Génération d'images](/fr/tools/image-generation) — configuration des modèles d'image
+- [Génération de musique](/fr/tools/music-generation) — configuration des modèles de musique
+- [Génération de vidéo](/fr/tools/video-generation) — configuration des modèles vidéo
+- [Référence de configuration](/fr/gateway/configuration-reference#agent-defaults) — clés de configuration du modèle

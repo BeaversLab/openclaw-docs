@@ -12,8 +12,8 @@ Administra las cuentas de los canales de chat y su estado de tiempo de ejecució
 
 Documentos relacionados:
 
-- Guías de canales: [Canales](/en/channels/index)
-- Configuración de Gateway: [Configuración](/en/gateway/configuration)
+- Guías de canales: [Canales](/es/channels/index)
+- Configuración de Gateway: [Configuración](/es/gateway/configuration)
 
 ## Comandos comunes
 
@@ -64,7 +64,7 @@ Cuando ejecutas `openclaw channels add` sin marcas, el asistente interactivo pue
 
 Si confirmas el enlace ahora, el asistente pregunta qué agente debe ser propietario de cada cuenta de canal configurada y escribe enlaces de enrutamiento con ámbito de cuenta.
 
-También puedes gestionar las mismas reglas de enrutamiento más adelante con `openclaw agents bindings`, `openclaw agents bind` y `openclaw agents unbind` (consulta [agents](/en/cli/agents)).
+También puedes gestionar las mismas reglas de enrutamiento más adelante con `openclaw agents bindings`, `openclaw agents bind` y `openclaw agents unbind` (consulta [agents](/es/cli/agents)).
 
 Cuando añades una cuenta no predeterminada a un canal que aún está usando configuraciones de nivel superior de una sola cuenta, OpenClaw promueve los valores de nivel superior con ámbito de cuenta al mapa de cuentas del canal antes de escribir la nueva cuenta. La mayoría de los canales colocan esos valores en `channels.<channel>.accounts.default`, pero los canales agrupados pueden preservar una cuenta promovida coincidente existente en su lugar. Matrix es el ejemplo actual: si ya existe una cuenta con nombre, o `defaultAccount` apunta a una cuenta con nombre existente, la promoción preserva esa cuenta en lugar de crear una nueva `accounts.default`.
 

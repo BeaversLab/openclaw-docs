@@ -12,7 +12,7 @@ read_when:
 
 Le SDK de plug-in est le contrat typé entre les plug-ins et le cœur. Cette page est la référence pour **ce qu'il faut importer** et **ce que vous pouvez enregistrer**.
 
-<Tip>**Vous cherchez un guide pratique ?** - Premier plugin ? Commencez par [Getting Started](/en/plugins/building-plugins) - Plugin de canal ? Voir [Channel Plugins](/en/plugins/sdk-channel-plugins) - Plugin de fournisseur ? Voir [Provider Plugins](/en/plugins/sdk-provider-plugins)</Tip>
+<Tip>**Vous cherchez un guide pratique ?** - Premier plugin ? Commencez par [Getting Started](/fr/plugins/building-plugins) - Plugin de canal ? Voir [Channel Plugins](/fr/plugins/sdk-channel-plugins) - Plugin de fournisseur ? Voir [Provider Plugins](/fr/plugins/sdk-provider-plugins)</Tip>
 
 ## Convention d'importation
 
@@ -307,7 +307,7 @@ Utilisez `commands` seul uniquement lorsque vous n'avez pas besoin d'un enregist
 | `api.rootDir`            | `string?`                 | Répertoire racine du plugin (facultatif)                                                                                     |
 | `api.config`             | `OpenClawConfig`          | Instantané de la configuration actuelle (instantané d'exécution en mémoire actif lorsque disponible)                         |
 | `api.pluginConfig`       | `Record<string, unknown>` | Configuration spécifique au plugin à partir de `plugins.entries.<id>.config`                                                 |
-| `api.runtime`            | `PluginRuntime`           | [Assistants d'exécution](/en/plugins/sdk-runtime)                                                                            |
+| `api.runtime`            | `PluginRuntime`           | [Assistants d'exécution](/fr/plugins/sdk-runtime)                                                                            |
 | `api.logger`             | `PluginLogger`            | Journaliste délimité (`debug`, `info`, `warn`, `error`)                                                                      |
 | `api.registrationMode`   | `PluginRegistrationMode`  | Mode de chargement actuel ; `"setup-runtime"` est la fenêtre légère de démarrage/configuration préalable à l'entrée complète |
 | `api.resolvePath(input)` | `(string) => string`      | Résoudre le chemin relatif à la racine du plugin                                                                             |
@@ -348,9 +348,9 @@ Autres exemples groupés actuels :
 
 ## Connexes
 
-- [Points d'entrée](/en/plugins/sdk-entrypoints) — options `definePluginEntry` et `defineChannelPluginEntry`
-- [Assistants d'exécution](/en/plugins/sdk-runtime) — référence complète de l'espace de noms `api.runtime`
-- [Configuration et installation](/en/plugins/sdk-setup) — empaquetage, manifestes, schémas de configuration
-- [Tests](/en/plugins/sdk-testing) — utilitaires de test et règles de lint
-- [Migration du SDK](/en/plugins/sdk-migration) — migration depuis des surfaces obsolètes
-- [Internes du plugin](/en/plugins/architecture) — architecture approfondie et modèle de capacité
+- [Points d'entrée](/fr/plugins/sdk-entrypoints) — options `definePluginEntry` et `defineChannelPluginEntry`
+- [Assistants d'exécution](/fr/plugins/sdk-runtime) — référence complète de l'espace de noms `api.runtime`
+- [Configuration et installation](/fr/plugins/sdk-setup) — empaquetage, manifestes, schémas de configuration
+- [Tests](/fr/plugins/sdk-testing) — utilitaires de test et règles de lint
+- [Migration du SDK](/fr/plugins/sdk-migration) — migration depuis des surfaces obsolètes
+- [Internes du plugin](/fr/plugins/architecture) — architecture approfondie et modèle de capacité

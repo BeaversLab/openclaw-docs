@@ -14,7 +14,7 @@ les outils de fichiers et le contexte de l'espace de travail. Gardez-le privé e
 Ceci est distinct de `~/.openclaw/`, qui stocke la configuration, les identifiants et
 les sessions.
 
-**Important :** l'espace de travail est le **cwd par défaut**, et non un bac à sable strict. Les outils résolvent les chemins relatifs par rapport à l'espace de travail, mais les chemins absolus peuvent toujours atteindre d'autres endroits sur l'hôte sauf si le sandboxing est activé. Si vous avez besoin d'isolement, utilisez [`agents.defaults.sandbox`](/en/gateway/sandboxing) (et/ou la configuration de bac à sable par agent). Lorsque le sandboxing est activé et que `workspaceAccess` n'est pas `"rw"`, les outils opèrent à l'intérieur d'un espace de travail bac à sable sous `~/.openclaw/sandboxes`, et non votre espace de travail hôte.
+**Important :** l'espace de travail est le **cwd par défaut**, et non un bac à sable strict. Les outils résolvent les chemins relatifs par rapport à l'espace de travail, mais les chemins absolus peuvent toujours atteindre d'autres endroits sur l'hôte sauf si le sandboxing est activé. Si vous avez besoin d'isolement, utilisez [`agents.defaults.sandbox`](/fr/gateway/sandboxing) (et/ou la configuration de bac à sable par agent). Lorsque le sandboxing est activé et que `workspaceAccess` n'est pas `"rw"`, les outils opèrent à l'intérieur d'un espace de travail bac à sable sous `~/.openclaw/sandboxes`, et non votre espace de travail hôte.
 
 ## Emplacement par défaut
 
@@ -68,7 +68,7 @@ Voici les fichiers standards que OpenClaw s'attend à trouver dans l'espace de t
 - `SOUL.md`
   - Persona, ton et limites.
   - Chargé à chaque session.
-  - Guide : [Guide de personnalité SOUL.md](/en/concepts/soul)
+  - Guide : [Guide de personnalité SOUL.md](/fr/concepts/soul)
 
 - `USER.md`
   - Qui est l'utilisateur et comment lui adresser la parole.
@@ -103,7 +103,7 @@ Voici les fichiers standards que OpenClaw s'attend à trouver dans l'espace de t
   - Mémoire à long terme organisée.
   - À charger uniquement dans la session principale privée (pas les contextes partagés/groupe).
 
-Voir [Mémoire](/en/concepts/memory) pour le flux de travail et le vidage automatique de la mémoire.
+Voir [Mémoire](/fr/concepts/memory) pour le flux de travail et le vidage automatique de la mémoire.
 
 - `skills/` (optionnel)
   - Compétences spécifiques à l'espace de travail.
@@ -219,13 +219,13 @@ Starter `.gitignore` suggéré :
 ## Notes avancées
 
 - Le routage multi-agents peut utiliser des espaces de travail différents par agent. Voir
-  [Channel routing](/en/channels/channel-routing) pour la configuration du routage.
+  [Channel routing](/fr/channels/channel-routing) pour la configuration du routage.
 - Si `agents.defaults.sandbox` est activé, les sessions non principales peuvent utiliser des espaces de travail
   sandbox par session sous `agents.defaults.sandbox.workspaceRoot`.
 
 ## Connexes
 
-- [Standing Orders](/en/automation/standing-orders) — instructions persistantes dans les fichiers de l'espace de travail
-- [Heartbeat](/en/gateway/heartbeat) — fichier d'espace de travail HEARTBEAT.md
-- [Session](/en/concepts/session) — chemins de stockage de session
-- [Sandboxing](/en/gateway/sandboxing) — accès à l'espace de travail dans les environnements sandboxés
+- [Standing Orders](/fr/automation/standing-orders) — instructions persistantes dans les fichiers de l'espace de travail
+- [Heartbeat](/fr/gateway/heartbeat) — fichier d'espace de travail HEARTBEAT.md
+- [Session](/fr/concepts/session) — chemins de stockage de session
+- [Sandboxing](/fr/gateway/sandboxing) — accès à l'espace de travail dans les environnements sandboxés

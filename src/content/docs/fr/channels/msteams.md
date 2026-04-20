@@ -31,7 +31,7 @@ Extraction locale (lors de l'exécution depuis un dépôt git) :
 openclaw plugins install ./path/to/local/msteams-plugin
 ```
 
-Détails : [Plugins](/en/tools/plugin)
+Détails : [Plugins](/fr/tools/plugin)
 
 ## Configuration rapide (débutant)
 
@@ -650,7 +650,7 @@ Paramètres clés (voir `/gateway/configuration` pour les modèles de canaux par
 
 ## Routage et sessions
 
-- Les clés de session suivent le format standard de l'agent (voir [/concepts/session](/en/concepts/session)) :
+- Les clés de session suivent le format standard de l'agent (voir [/concepts/session](/fr/concepts/session)) :
   - Les messages directs partagent la session principale (`agent:<agentId>:<mainKey>`).
   - Les messages de canal/groupe utilisent l'ID de conversation :
     - `agent:<agentId>:msteams:channel:<conversationId>`
@@ -952,8 +952,8 @@ Les bots ont une prise en charge limitée dans les canaux privés :
 
 ## Connexes
 
-- [Aperçu des canaux](/en/channels) — tous les canaux pris en charge
-- [Jumelage (Pairing)](/en/channels/pairing) — authentification DM et flux de jumelage
-- [Groupes](/en/channels/groups) — comportement de conversation de groupe et filtrage des mentions
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Aperçu des canaux](/fr/channels) — tous les canaux pris en charge
+- [Jumelage (Pairing)](/fr/channels/pairing) — authentification DM et flux de jumelage
+- [Groupes](/fr/channels/groups) — comportement de conversation de groupe et filtrage des mentions
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

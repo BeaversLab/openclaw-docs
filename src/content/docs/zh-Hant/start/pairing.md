@@ -15,13 +15,13 @@ title: "配對"
 1. **DM 配對**（誰被允許與機器人對話）
 2. **節點配對**（哪些設備/節點被允許加入閘道網路）
 
-安全性背景：[安全性](/en/gateway/security)
+安全性背景：[安全性](/zh-Hant/gateway/security)
 
 ## 1) DM 配對（入站聊天存取權）
 
 當頻道設定為 DM 原則 `pairing` 時，未知傳送者會收到一個簡短代碼，且其訊息在您批准之前**不會被處理**。
 
-預設 DM 原則記載於：[安全性](/en/gateway/security)
+預設 DM 原則記載於：[安全性](/zh-Hant/gateway/security)
 
 配對代碼：
 
@@ -73,13 +73,13 @@ openclaw devices reject <requestId>
 
 ## 相關文件
 
-- Security model + prompt injection: [Security](/en/gateway/security)
-- Updating safely (run doctor): [Updating](/en/install/updating)
+- Security model + prompt injection: [Security](/zh-Hant/gateway/security)
+- Updating safely (run doctor): [Updating](/zh-Hant/install/updating)
 - Channel configs:
-  - Telegram: [Telegram](/en/channels/telegram)
-  - WhatsApp: [WhatsApp](/en/channels/whatsapp)
-  - Signal: [Signal](/en/channels/signal)
-  - BlueBubbles (iMessage): [BlueBubbles](/en/channels/bluebubbles)
-  - iMessage (legacy): [iMessage](/en/channels/imessage)
-  - Discord: [Discord](/en/channels/discord)
-  - Slack: [Slack](/en/channels/slack)
+  - Telegram: [Telegram](/zh-Hant/channels/telegram)
+  - WhatsApp: [WhatsApp](/zh-Hant/channels/whatsapp)
+  - Signal: [Signal](/zh-Hant/channels/signal)
+  - BlueBubbles (iMessage): [BlueBubbles](/zh-Hant/channels/bluebubbles)
+  - iMessage (legacy): [iMessage](/zh-Hant/channels/imessage)
+  - Discord: [Discord](/zh-Hant/channels/discord)
+  - Slack: [Slack](/zh-Hant/channels/slack)

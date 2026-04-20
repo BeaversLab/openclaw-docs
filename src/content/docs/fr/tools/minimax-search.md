@@ -93,5 +93,5 @@ Les filtres spécifiques aux providers ne sont actuellement pas pris en charge.
 
 ## Connexes
 
-- [Vue d'ensemble de la recherche Web](/en/tools/web) -- tous les fournisseurs et détection automatique
-- [MiniMax](/en/providers/minimax) -- modèle, image, voix et configuration de l'authentification
+- [Vue d'ensemble de la recherche Web](/fr/tools/web) -- tous les fournisseurs et détection automatique
+- [MiniMax](/fr/providers/minimax) -- modèle, image, voix et configuration de l'authentification

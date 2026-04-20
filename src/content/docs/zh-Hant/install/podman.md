@@ -111,8 +111,8 @@ Podman 特定說明：
 
 參閱：
 
-- [Tailscale](/en/gateway/tailscale)
-- [Control UI](/en/web/control-ui)
+- [Tailscale](/zh-Hant/gateway/tailscale)
+- [Control UI](/zh-Hant/web/control-ui)
 
 ## Systemd (Quadlet，可選)
 
@@ -200,6 +200,6 @@ Quadlet 說明：
 
 ## 相關
 
-- [Docker](/en/install/docker)
-- [閘道器背景程序](/en/gateway/background-process)
-- [閘道器疑難排解](/en/gateway/troubleshooting)
+- [Docker](/zh-Hant/install/docker)
+- [閘道器背景程序](/zh-Hant/gateway/background-process)
+- [閘道器疑難排解](/zh-Hant/gateway/troubleshooting)

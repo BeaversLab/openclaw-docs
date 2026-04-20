@@ -105,7 +105,7 @@ Formats des entrées de la liste d'autorisation :
 
 ## Connexes
 
-- [Exec tool](/en/tools/exec) — exécution de commandes shell
-- [Exec approvals](/en/tools/exec-approvals) — système d'approbation et de liste d'autorisation
-- [Sandboxing](/en/gateway/sandboxing) — configuration du bac à sable
-- [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- [Exec tool](/fr/tools/exec) — exécution de commandes shell
+- [Exec approvals](/fr/tools/exec-approvals) — système d'approbation et de liste d'autorisation
+- [Sandboxing](/fr/gateway/sandboxing) — configuration du bac à sable
+- [Sandbox vs Tool Policy vs Elevated](/fr/gateway/sandbox-vs-tool-policy-vs-elevated)

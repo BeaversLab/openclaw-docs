@@ -132,10 +132,10 @@ OpenClaw 會依此順序自動偵測，並在第一個可用的選項停止：
 ## Notes & limits
 
 - Provider auth 遵循標準模型 auth 順序（auth profiles、env vars、`models.providers.*.apiKey`）。
-- Groq 設定細節：[Groq](/en/providers/groq)。
+- Groq 設定細節：[Groq](/zh-Hant/providers/groq)。
 - 當使用 `provider: "deepgram"` 時，Deepgram 會使用 `DEEPGRAM_API_KEY`。
-- Deepgram 設定細節：[Deepgram (audio transcription)](/en/providers/deepgram)。
-- Mistral 設定細節：[Mistral](/en/providers/mistral)。
+- Deepgram 設定細節：[Deepgram (audio transcription)](/zh-Hant/providers/deepgram)。
+- Mistral 設定細節：[Mistral](/zh-Hant/providers/mistral)。
 - 音訊供應商可以透過 `tools.media.audio` 覆寫 `baseUrl`、`headers` 和 `providerOptions`。
 - 預設大小上限為 20MB（`tools.media.audio.maxBytes`）。超過大小的音訊會跳過該模型並嘗試下一個項目。
 - 小於 1024 位元組的微小/空音訊檔案會在供應商/CLI 轉錄前跳過。

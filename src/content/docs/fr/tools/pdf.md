@@ -114,7 +114,7 @@ Détails du repli :
 }
 ```
 
-Voir [Référence de configuration](/en/gateway/configuration-reference) pour plus de détails sur les champs.
+Voir [Référence de configuration](/fr/gateway/configuration-reference) pour plus de détails sur les champs.
 
 ## Détails de la sortie
 
@@ -172,5 +172,5 @@ Modèle de secours avec filtrage par page :
 
 ## Connexes
 
-- [Vue d'ensemble des outils](/en/tools) — tous les outils d'agent disponibles
-- [Référence de configuration](/en/gateway/configuration-reference#agent-defaults) — configuration pdfMaxBytesMb et pdfMaxPages
+- [Vue d'ensemble des outils](/fr/tools) — tous les outils d'agent disponibles
+- [Référence de configuration](/fr/gateway/configuration-reference#agent-defaults) — configuration pdfMaxBytesMb et pdfMaxPages

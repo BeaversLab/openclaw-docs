@@ -19,7 +19,7 @@ El directorio `scripts/` contiene scripts auxiliares para flujos de trabajo loca
 
 ## Scripts de supervisión de autenticación
 
-La supervisión de autenticación se trata en [Authentication](/en/gateway/authentication). Los scripts en `scripts/` son extras opcionales para flujos de trabajo de systemd/Termux en teléfonos.
+La supervisión de autenticación se trata en [Authentication](/es/gateway/authentication). Los scripts en `scripts/` son extras opcionales para flujos de trabajo de systemd/Termux en teléfonos.
 
 ## Asistente de lectura de GitHub
 

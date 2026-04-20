@@ -10,13 +10,13 @@ title: "Discord"
 Statut : prêt pour les DMs et les channels de serveur via la passerelle Discord officielle.
 
 <CardGroup cols={3}>
-  <Card title="Pairing" icon="link" href="/en/channels/pairing">
+  <Card title="Pairing" icon="link" href="/fr/channels/pairing">
     Les DMs Discord sont par défaut en mode d'appairage.
   </Card>
-  <Card title="Slash commands" icon="terminal" href="/en/tools/slash-commands">
+  <Card title="Slash commands" icon="terminal" href="/fr/tools/slash-commands">
     Comportement des commandes natives et catalogue de commandes.
   </Card>
-  <Card title="Channel troubleshooting" icon="wrench" href="/en/channels/troubleshooting">
+  <Card title="Channel troubleshooting" icon="wrench" href="/fr/channels/troubleshooting">
     Diagnostic et flux de réparation multicanaux.
   </Card>
 </CardGroup>
@@ -139,7 +139,7 @@ openclaw gateway
 DISCORD_BOT_TOKEN=...
 ```
 
-        Les valeurs en texte brut `token` sont prises en charge. Les valeurs SecretRef sont également prises en charge pour `channels.discord.token` sur les fournisseurs env/file/exec. Voir [Gestion des secrets](/en/gateway/secrets).
+        Les valeurs en texte brut `token` sont prises en charge. Les valeurs SecretRef sont également prises en charge pour `channels.discord.token` sur les fournisseurs env/file/exec. Voir [Gestion des secrets](/fr/gateway/secrets).
 
       </Tab>
     </Tabs>
@@ -551,7 +551,7 @@ Utilisez `bindings[].match.roles` pour router les membres de la guilde Discord v
 - L'authentification des commandes natives utilise les mêmes allowlists/politiques Discord que la gestion normale des messages.
 - Les commandes peuvent encore être visibles dans l'interface de Discord pour les utilisateurs non autorisés ; l'exécution applique toujours l'authentification OpenClaw et renvoie "not authorized".
 
-Voir [Commandes slash](/en/tools/slash-commands) pour le catalogue et le comportement des commandes.
+Voir [Commandes slash](/fr/tools/slash-commands) pour le catalogue et le comportement des commandes.
 
 Paramètres par défaut des commandes slash :
 
@@ -694,7 +694,7 @@ Paramètres par défaut des commandes slash :
     - `spawnAcpSessions` doit être vrai pour créer automatiquement des fils et les lier pour ACP (`/acp spawn ... --thread ...` ou `sessions_spawn({ runtime: "acp", thread: true })`).
     - Si les liaisons de fils sont désactivées pour un compte, `/focus` et les opérations connexes de liaison de fils ne sont pas disponibles.
 
-    Voir [Sous-agents](/en/tools/subagents), [Agents ACP](/en/tools/acp-agents) et [Référence de configuration](/en/gateway/configuration-reference).
+    Voir [Sous-agents](/fr/tools/subagents), [Agents ACP](/fr/tools/acp-agents) et [Référence de configuration](/fr/gateway/configuration-reference).
 
   </Accordion>
 
@@ -763,7 +763,7 @@ Paramètres par défaut des commandes slash :
     - Les liaisons temporaires de fils fonctionnent toujours et peuvent remplacer la résolution de la cible tant qu'elles sont actives.
     - `spawnAcpSessions` n'est requis que lorsqu'OpenClaw doit créer/lier un fil enfant via `--thread auto|here`. Il n'est pas requis pour `/acp spawn ... --bind here` dans le channel actuel.
 
-    Voir [ACP Agents](/en/tools/acp-agents) pour plus de détails sur le comportement des liaisons.
+    Voir [ACP Agents](/fr/tools/acp-agents) pour plus de détails sur le comportement des liaisons.
 
   </Accordion>
 
@@ -984,7 +984,7 @@ Paramètres par défaut des commandes slash :
     des ID d'approbation inconnus, vérifiez la résolution de l'approbateur, l'activation de la fonctionnalité et
     correspondance du type d'ID d'approbation délivré avec la demande en attente.
 
-    Documentation connexe : [Approbations d'exécution](/en/tools/exec-approvals)
+    Documentation connexe : [Approbations d'exécution](/fr/tools/exec-approvals)
 
   </Accordion>
 </AccordionGroup>
@@ -1223,7 +1223,7 @@ openclaw logs --follow
 
 Primary reference:
 
-- [Configuration reference - Discord](/en/gateway/configuration-reference#discord)
+- [Configuration reference - Discord](/fr/gateway/configuration-reference#discord)
 
 High-signal Discord fields:
 
@@ -1250,10 +1250,10 @@ High-signal Discord fields:
 
 ## Connexes
 
-- [Jumelage](/en/channels/pairing)
-- [Groupes](/en/channels/groups)
-- [Routage de canal](/en/channels/channel-routing)
-- [Sécurité](/en/gateway/security)
-- [Routage multi-agent](/en/concepts/multi-agent)
-- [Dépannage](/en/channels/troubleshooting)
-- [Commandes slash](/en/tools/slash-commands)
+- [Jumelage](/fr/channels/pairing)
+- [Groupes](/fr/channels/groups)
+- [Routage de canal](/fr/channels/channel-routing)
+- [Sécurité](/fr/gateway/security)
+- [Routage multi-agent](/fr/concepts/multi-agent)
+- [Dépannage](/fr/channels/troubleshooting)
+- [Commandes slash](/fr/tools/slash-commands)

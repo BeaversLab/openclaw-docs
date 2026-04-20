@@ -67,7 +67,7 @@ OpenClaw 會將回覆**路由回訊息來源的通道**。
 }
 ```
 
-請參閱：[廣播群組](/en/broadcast-groups)。
+請參閱：[廣播群組](/zh-Hant/broadcast-groups)。
 
 ## 設定概覽
 

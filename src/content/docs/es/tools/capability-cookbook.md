@@ -10,7 +10,7 @@ sidebarTitle: "Añadir capacidades"
 
 # Añadir capacidades
 
-<Info>Esta es una **guía para colaboradores** para los desarrolladores principales de OpenClaw. Si está construyendo un plugin externo, consulte [Construcción de Plugins](/en/plugins/building-plugins) en su lugar.</Info>
+<Info>Esta es una **guía para colaboradores** para los desarrolladores principales de OpenClaw. Si está construyendo un plugin externo, consulte [Construcción de Plugins](/es/plugins/building-plugins) en su lugar.</Info>
 
 Use esto cuando OpenClaw necesite un nuevo dominio como generación de imágenes, generación
 de video o alguna área de características futura respaldada por un proveedor.

@@ -91,7 +91,7 @@ OpenClaw 也會將上下文標記注入到產生的子進程中：
 }
 ```
 
-有關完整詳情，請參閱 [Configuration: Env var substitution](/en/gateway/configuration-reference#env-var-substitution)。
+有關完整詳情，請參閱 [Configuration: Env var substitution](/zh-Hant/gateway/configuration-reference#env-var-substitution)。
 
 ## Secret 參考與 `${ENV}` 字串
 
@@ -100,7 +100,7 @@ OpenClaw 支援兩種由環境變數驅動的模式：
 - 設定值中的 `${VAR}` 字串替換。
 - 用於支援 Secret 參考之欄位的 SecretRef 物件 (`{ source: "env", provider: "default", id: "VAR" }`)。
 
-兩者都在啟動時從進程環境變數解析。SecretRef 的詳細文件記錄在[機密管理](/en/gateway/secrets)中。
+兩者都在啟動時從進程環境變數解析。SecretRef 的詳細文件記錄在[機密管理](/zh-Hant/gateway/secrets)中。
 
 ## 路徑相關環境變數
 
@@ -159,6 +159,6 @@ openclaw gateway run
 
 ## 相關
 
-- [Gateway configuration](/en/gateway/configuration)
-- [FAQ: env vars and .env loading](/en/help/faq#env-vars-and-env-loading)
-- [Models overview](/en/concepts/models)
+- [Gateway configuration](/zh-Hant/gateway/configuration)
+- [FAQ: env vars and .env loading](/zh-Hant/help/faq#env-vars-and-env-loading)
+- [Models overview](/zh-Hant/concepts/models)

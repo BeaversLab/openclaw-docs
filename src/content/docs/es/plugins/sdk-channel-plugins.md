@@ -14,7 +14,7 @@ Esta guía explica cómo crear un complemento de canal que conecte OpenClaw con 
 plataforma de mensajería. Al final, tendrá un canal funcional con seguridad de MD,
 emparejamiento, hilos de respuesta y mensajería saliente.
 
-<Info>Si no ha construido ningún plugin de OpenClaw antes, lea [Getting Started](/en/plugins/building-plugins) primero para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
+<Info>Si no ha construido ningún plugin de OpenClaw antes, lea [Getting Started](/es/plugins/building-plugins) primero para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
 
 ## Cómo funcionan los complementos de canales
 
@@ -253,7 +253,7 @@ debe usar `resolveInboundMentionDecision({ facts, policy })`.
   <Step title="Paquete y manifiesto">
     Cree los archivos estándar del complemento. El campo `channel` en `package.json` es
     lo que convierte a esto en un complemento de canal. Para obtener la superficie completa de metadatos del paquete,
-    consulte [Configuración y configuración de complementos](/en/plugins/sdk-setup#openclaw-channel):
+    consulte [Configuración y configuración de complementos](/es/plugins/sdk-setup#openclaw-channel):
 
     <CodeGroup>
     ```json package.json
@@ -461,7 +461,7 @@ debe usar `resolveInboundMentionDecision({ facts, policy })`.
     `exec.approvals.*`, `wizard.*`, `update.*`) permanecen reservados y siempre
     resuelven a `operator.admin`.
     `defineChannelPluginEntry` maneja la división del modo de registro automáticamente. Vea
-    [Puntos de entrada](/en/plugins/sdk-entrypoints#definechannelpluginentry) para todas
+    [Puntos de entrada](/es/plugins/sdk-entrypoints#definechannelpluginentry) para todas
     las opciones.
 
   </Step>
@@ -478,7 +478,7 @@ debe usar `resolveInboundMentionDecision({ facts, policy })`.
 
     OpenClaw carga esto en lugar de la entrada completa cuando el canal está desactivado
     o sin configurar. Evita cargar código de tiempo de ejecución pesado durante los flujos de configuración.
-    Consulte [Configuración y ajuste](/en/plugins/sdk-setup#setup-entry) para obtener más detalles.
+    Consulte [Configuración y ajuste](/es/plugins/sdk-setup#setup-entry) para obtener más detalles.
 
     Los canales de espacio de trabajo agrupados que dividen las exportaciones seguras para la configuración en módulos
 
@@ -562,7 +562,7 @@ Escriba pruebas ubicadas en `src/channel.test.ts`:
     pnpm test -- <bundled-plugin-root>/acme-chat/
     ```
 
-    Para asistentes de pruebas compartidas, consulte [Pruebas](/en/plugins/sdk-testing).
+    Para asistentes de pruebas compartidas, consulte [Pruebas](/es/plugins/sdk-testing).
 
   </Step>
 </Steps>
@@ -587,16 +587,16 @@ Escriba pruebas ubicadas en `src/channel.test.ts`:
 ## Temas avanzados
 
 <CardGroup cols={2}>
-  <Card title="Opciones de hilos" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
+  <Card title="Opciones de hilos" icon="git-branch" href="/es/plugins/sdk-entrypoints#registration-mode">
     Modos de respuesta fijos, con ámbito de cuenta o personalizados
   </Card>
-  <Card title="Integración de herramienta de mensaje" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
+  <Card title="Integración de herramienta de mensaje" icon="puzzle" href="/es/plugins/architecture#channel-plugins-and-the-shared-message-tool">
     describeMessageTool y descubrimiento de acciones
   </Card>
-  <Card title="Resolución de objetivos" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
+  <Card title="Resolución de objetivos" icon="crosshair" href="/es/plugins/architecture#channel-target-resolution">
     inferTargetChatType, looksLikeId, resolveTarget
   </Card>
-  <Card title="Ayudantes de tiempo de ejecución" icon="settings" href="/en/plugins/sdk-runtime">
+  <Card title="Ayudantes de tiempo de ejecución" icon="settings" href="/es/plugins/sdk-runtime">
     TTS, STT, media, subagent vía api.runtime
   </Card>
 </CardGroup>
@@ -605,7 +605,7 @@ Escriba pruebas ubicadas en `src/channel.test.ts`:
 
 ## Próximos pasos
 
-- [Complementos de proveedores](/en/plugins/sdk-provider-plugins) — si su complemento también proporciona modelos
-- [Descripción general del SDK](/en/plugins/sdk-overview) — referencia completa de importación de subrutas
-- [Pruebas del SDK](/en/plugins/sdk-testing) — utilidades de prueba y pruebas de contrato
-- [Manifiesto del complemento](/en/plugins/manifest) — esquema completo del manifiesto
+- [Complementos de proveedores](/es/plugins/sdk-provider-plugins) — si su complemento también proporciona modelos
+- [Descripción general del SDK](/es/plugins/sdk-overview) — referencia completa de importación de subrutas
+- [Pruebas del SDK](/es/plugins/sdk-testing) — utilidades de prueba y pruebas de contrato
+- [Manifiesto del complemento](/es/plugins/manifest) — esquema completo del manifiesto

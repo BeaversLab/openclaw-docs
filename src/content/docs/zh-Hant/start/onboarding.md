@@ -10,7 +10,7 @@ sidebarTitle: "Onboarding：macOS 應用程式"
 # Onboarding (macOS 應用程式)
 
 本文件說明 **目前** 的首次執行設定流程。目標是提供順暢的「第 0 天」體驗：選擇 Gateway 的執行位置、連線身分驗證、執行精靈，並讓代理程式自行啟動。
-關於 Onboarding 路徑的一般概覽，請參閱 [Onboarding Overview](/en/start/onboarding-overview)。
+關於 Onboarding 路徑的一般概覽，請參閱 [Onboarding Overview](/zh-Hant/start/onboarding-overview)。
 
 <Steps>
 <Step title="Approve macOS warning">
@@ -31,7 +31,7 @@ sidebarTitle: "Onboarding：macOS 應用程式"
 安全性信任模型：
 
 - 預設情況下，OpenClaw 是一個個人代理程式：單一受信任操作員邊界。
-- 共用/多使用者設定需要鎖定（分割信任邊界、保持工具存取權限最小化，並遵循 [Security](/en/gateway/security)）。
+- 共用/多使用者設定需要鎖定（分割信任邊界、保持工具存取權限最小化，並遵循 [Security](/zh-Hant/gateway/security)）。
 - 本機 Onboarding 現在預設將新設定為 `tools.profile: "coding"`，以便全新的本機設定保留檔案系統/執行時間工具，而不會強制使用不受限的 `full` 設定檔。
 - 如果啟用了 hooks/webhooks 或其他不受信任的內容來源，請使用強大的現代模型層級，並保持嚴格的工具原則/沙箱機制。
 
@@ -79,6 +79,6 @@ Onboarding 會請求以下所需的 TCC 權限：
   它優先選擇 npm，其次是 pnpm，如果 bun 是唯一偵測到的套件管理器，則會選擇 bun。對於 Gateway 執行時，Node 仍然是推薦的路徑。
 </Step>
 <Step title="Onboarding Chat (dedicated session)">
-  設定完成後，應用程式會開啟專屬的 Onboarding 聊天工作階段，讓 Agent 能夠自我介紹並引導後續步驟。這能將首次執行的引導與您的正常對話區分開來。請參閱 [Bootstrapping](/en/start/bootstrapping) 以了解第一次執行 Agent 時在 Gateway 主機上會發生什麼事。
+  設定完成後，應用程式會開啟專屬的 Onboarding 聊天工作階段，讓 Agent 能夠自我介紹並引導後續步驟。這能將首次執行的引導與您的正常對話區分開來。請參閱 [Bootstrapping](/zh-Hant/start/bootstrapping) 以了解第一次執行 Agent 時在 Gateway 主機上會發生什麼事。
 </Step>
 </Steps>

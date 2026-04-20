@@ -8,15 +8,15 @@ title: "OpenCode Go"
 
 # OpenCode Go
 
-OpenCode Go 是 [OpenCode](/en/providers/opencode) 內的 Go 目錄。
+OpenCode Go 是 [OpenCode](/zh-Hant/providers/opencode) 內的 Go 目錄。
 它使用與 Zen 目錄相同的 `OPENCODE_API_KEY`，但保持運行時
 提供者 ID 為 `opencode-go`，以便上游的每個模型路由保持正確。
 
-| 屬性         | 值                                 |
-| ------------ | ---------------------------------- |
-| 運行時提供者 | `opencode-go`                      |
-| 驗證         | `OPENCODE_API_KEY`                 |
-| 父級設定     | [OpenCode](/en/providers/opencode) |
+| 屬性         | 值                                      |
+| ------------ | --------------------------------------- |
+| 運行時提供者 | `opencode-go`                           |
+| 驗證         | `OPENCODE_API_KEY`                      |
+| 父級設定     | [OpenCode](/zh-Hant/providers/opencode) |
 
 ## 支援的模型
 
@@ -89,15 +89,15 @@ OpenCode Go 是 [OpenCode](/en/providers/opencode) 內的 Go 目錄。
   </Accordion>
 </AccordionGroup>
 
-<Tip>請參閱 [OpenCode](/en/providers/opencode) 以了解共用的入門概述以及完整的 Zen + Go 目錄參考。</Tip>
+<Tip>請參閱 [OpenCode](/zh-Hant/providers/opencode) 以了解共用的入門概述以及完整的 Zen + Go 目錄參考。</Tip>
 
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="OpenCode (parent)" href="/en/providers/opencode" icon="server">
+  <Card title="OpenCode (parent)" href="/zh-Hant/providers/opencode" icon="server">
     共用的入門指南、型錄概觀與進階說明。
   </Card>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照與容錯移轉行為。
   </Card>
 </CardGroup>

@@ -159,7 +159,7 @@ openclaw channels add bluebubbles --http-url http://192.168.1.100:1234 --passwor
 - 通过以下方式批准：
   - `openclaw pairing list bluebubbles`
   - `openclaw pairing approve bluebubbles <CODE>`
-- 配对是默认的令牌交换方式。详情：[配对](/en/channels/pairing)
+- 配对是默认的令牌交换方式。详情：[配对](/zh/channels/pairing)
 
 群组：
 
@@ -268,7 +268,7 @@ BlueBubbles 聊天可以转换为持久的 ACP 工作区，而无需更改传输
 }
 ```
 
-有关共享 ACP 绑定行为，请参阅 [ACP Agents](/en/tools/acp-agents)。
+有关共享 ACP 绑定行为，请参阅 [ACP Agents](/zh/tools/acp-agents)。
 
 ## 正在输入 + 已读回执
 
@@ -342,7 +342,7 @@ OpenClaw 可能会显示*短*消息 ID（例如 `1`，`2`）以节省令牌。
 - 模板：`{{MessageSidFull}}`，`{{ReplyToIdFull}}`
 - 上下文：入站载荷中的 `MessageSidFull` / `ReplyToIdFull`
 
-有关模板变量，请参阅[配置](/en/gateway/configuration)。
+有关模板变量，请参阅[配置](/zh/gateway/configuration)。
 
 ## 分块流式传输
 
@@ -366,7 +366,7 @@ OpenClaw 可能会显示*短*消息 ID（例如 `1`，`2`）以节省令牌。
 
 ## 配置参考
 
-完整配置：[配置](/en/gateway/configuration)
+完整配置：[配置](/zh/gateway/configuration)
 
 提供商选项：
 
@@ -410,7 +410,7 @@ OpenClaw 可能会显示*短*消息 ID（例如 `1`，`2`）以节省令牌。
 
 - Webhook 请求通过将 `guid`/`password` 查询参数或标头与 `channels.bluebubbles.password` 进行比较来进行身份验证。
 - 请妥善保管 API 密码和 webhook 端点（将它们视为凭据）。
-- BlueBubbles webhook 身份验证没有 localhost 绕过机制。如果您代理 webhook 流量，请确保在请求中端到端保留 BlueBubbles 密码。此处 `gateway.trustedProxies` 不会替换 `channels.bluebubbles.password`。参见 [Gateway(网关) 安全](/en/gateway/security#reverse-proxy-configuration)。
+- BlueBubbles webhook 身份验证没有 localhost 绕过机制。如果您代理 webhook 流量，请确保在请求中端到端保留 BlueBubbles 密码。此处 `gateway.trustedProxies` 不会替换 `channels.bluebubbles.password`。参见 [Gateway(网关) 安全](/zh/gateway/security#reverse-proxy-configuration)。
 - 如果将 BlueBubbles 服务器暴露在局域网之外，请在服务器上启用 HTTPS 和防火墙规则。
 
 ## 故障排除
@@ -423,12 +423,12 @@ OpenClaw 可能会显示*短*消息 ID（例如 `1`，`2`）以节省令牌。
 - OpenClaw 会根据 BlueBubbles 服务器的 macOS 版本自动隐藏已知损坏的操作。如果在 macOS 26 (Tahoe) 上仍然显示编辑功能，请使用 `channels.bluebubbles.actions.edit=false` 手动禁用它。
 - 如需状态/健康信息：`openclaw status --all` 或 `openclaw status --deep`。
 
-有关一般渠道工作流程的参考，请参阅 [渠道](/en/channels) 和 [插件](/en/tools/plugin) 指南。
+有关一般渠道工作流程的参考，请参阅 [渠道](/zh/channels) 和 [插件](/zh/tools/plugin) 指南。
 
 ## 相关
 
-- [渠道概述](/en/channels) — 所有支持的渠道
-- [配对](/en/channels/pairing) — 私信认证和配对流程
-- [群组](/en/channels/groups) — 群组聊天的行为和提及控制
-- [渠道路由](/en/channels/channel-routing) — 消息的会话路由
-- [安全](/en/gateway/security) — 访问模型和加固
+- [渠道概述](/zh/channels) — 所有支持的渠道
+- [配对](/zh/channels/pairing) — 私信认证和配对流程
+- [群组](/zh/channels/groups) — 群组聊天的行为和提及控制
+- [渠道路由](/zh/channels/channel-routing) — 消息的会话路由
+- [安全](/zh/gateway/security) — 访问模型和加固

@@ -11,9 +11,9 @@ title: "agents"
 
 相關連結：
 
-- Multi-agent routing: [Multi-Agent Routing](/en/concepts/multi-agent)
-- Agent workspace: [Agent workspace](/en/concepts/agent-workspace)
-- Skill visibility config: [Skills config](/en/tools/skills-config)
+- Multi-agent routing: [Multi-Agent Routing](/zh-Hant/concepts/multi-agent)
+- Agent workspace: [Agent workspace](/zh-Hant/concepts/agent-workspace)
+- Skill visibility config: [Skills config](/zh-Hant/tools/skills-config)
 
 ## 範例
 
@@ -37,8 +37,8 @@ openclaw agents delete work
 如果您還希望每個代理程式具有不同的可見技能，請在
 `openclaw.json` 中設定
 `agents.defaults.skills` 和 `agents.list[].skills`。請參閱
-[Skills config](/en/tools/skills-config) 和
-[Configuration Reference](/en/gateway/configuration-reference#agents-defaults-skills)。
+[Skills config](/zh-Hant/tools/skills-config) 和
+[Configuration Reference](/zh-Hant/gateway/configuration-reference#agents-defaults-skills)。
 
 列出綁定：
 

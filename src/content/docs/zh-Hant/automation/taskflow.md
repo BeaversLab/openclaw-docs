@@ -9,11 +9,11 @@ title: "Task Flow"
 
 # Task Flow
 
-Task Flow 是位於[背景任務](/en/automation/tasks)之上的工作流程編排基礎架構。它管理具有自身狀態、修訂追蹤和同步語意的持久多步驟流程，而個別任務則保持為獨立的工作單位。
+Task Flow 是位於[背景任務](/zh-Hant/automation/tasks)之上的工作流程編排基礎架構。它管理具有自身狀態、修訂追蹤和同步語意的持久多步驟流程，而個別任務則保持為獨立的工作單位。
 
 ## 何時使用 Task Flow
 
-當工作跨越多個順序或分支步驟，並且您需要在閘道重新啟動之間追蹤持久的進度時，請使用 Task Flow。對於單一的背景操作，一般的[任務](/en/automation/tasks)即已足夠。
+當工作跨越多個順序或分支步驟，並且您需要在閘道重新啟動之間追蹤持久的進度時，請使用 Task Flow。對於單一的背景操作，一般的[任務](/zh-Hant/automation/tasks)即已足夠。
 
 | 情境                         | 使用             |
 | ---------------------------- | ---------------- |
@@ -76,7 +76,7 @@ openclaw tasks flow cancel <lookup>
 
 ## 相關
 
-- [背景任務](/en/automation/tasks) — 流程所協調的獨立工作帳本
-- [CLI: tasks](/en/cli/index#tasks) — `openclaw tasks flow` 的 CLI 指令參考
-- [自動化總覽](/en/automation) — 所有自動化機制一覽
-- [Cron Jobs](/en/automation/cron-jobs) — 可能輸入至流程的排程工作
+- [背景任務](/zh-Hant/automation/tasks) — 流程所協調的獨立工作帳本
+- [CLI: tasks](/zh-Hant/cli/index#tasks) — `openclaw tasks flow` 的 CLI 指令參考
+- [自動化總覽](/zh-Hant/automation) — 所有自動化機制一覽
+- [Cron Jobs](/zh-Hant/automation/cron-jobs) — 可能輸入至流程的排程工作

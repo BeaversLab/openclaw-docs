@@ -53,10 +53,10 @@ macOS 应用程序将自己展示为一个节点。常用命令：
 
 - Canvas: `canvas.present`, `canvas.navigate`, `canvas.eval`, `canvas.snapshot`, `canvas.a2ui.*`
 - Camera：`camera.snap`，`camera.clip`
-- Screen：`screen.record`
-- System：`system.run`，`system.notify`
+- 屏幕：`screen.snapshot`、`screen.record`
+- 系统：`system.run`、`system.notify`
 
-节点报告 `permissions` 映射，以便代理可以决定允许的内容。
+该节点报告一个 `permissions` 映射，以便代理可以决定允许的操作。
 
 Node service + app IPC:
 
@@ -74,8 +74,8 @@ Gateway -> Node Service (WS)
 
 ## 执行批准 (system.run)
 
-`system.run` 由 macOS 应用中的 **Exec approvals**（设置 → 执行批准）控制。
-安全性 + 询问 + 允许列表本地存储在 Mac 上的以下位置：
+`system.run` 由 macOS 应用中的“执行批准”控制（设置 → Exec approvals）。
+安全、询问和允许列表存储在 Mac 上的以下本地位置：
 
 ```
 ~/.openclaw/exec-approvals.json
@@ -103,15 +103,15 @@ Gateway -> Node Service (WS)
 备注：
 
 - `allowlist` 条目是已解析二进制路径的 glob 模式。
-- 包含 shell 控制或扩展语法（`&&`、`||`、`;`、`|`、`` ` ``, `$`, `<`, `>`, `(`, `)`）的原始 shell 命令文本被视为允许列表未命中，需要明确批准（或将 shell 二进制文件加入允许列表）。
+- 包含 shell 控制或扩展语法（`&&`、`||`、`;`、`|`、`` ` ``, `$`, `<`, `>`, `(`, `)`)的原始 shell 命令文本被视为允许列表未命中，需要显式批准（或将 shell 二进制文件加入允许列表）。
 - 在提示中选择“始终允许”会将该命令添加到允许列表中。
 - `system.run` 环境覆盖项会被过滤（丢弃 `PATH`、`DYLD_*`、`LD_*`、`NODE_OPTIONS`、`PYTHON*`、`PERL*`、`RUBYOPT`、`SHELLOPTS`、`PS4`），然后与应用的环境合并。
-- 对于 shell 包装器（`bash|sh|zsh ... -c/-lc`），请求范围的环境覆盖项会缩减为一小部分明确的允许列表（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。
-- 在允许列表模式下，对于“始终允许”的决定，已知的调度包装器（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）将保留内部可执行文件路径而不是包装器路径。如果解包不安全，则不会自动保留允许列表条目。
+- 对于 shell 封装器（`bash|sh|zsh ... -c/-lc`），请求范围的环境覆盖项会减少为一小部分明确的允许列表（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。
+- 对于允许列表模式中的“始终允许”决策，已知的调度包装器（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）会保留内部可执行文件路径，而不是包装器路径。如果解包不安全，则不会自动保留允许列表条目。
 
 ## 深层链接
 
-该应用注册了 `openclaw://` URL scheme 用于本地操作。
+该应用注册 `openclaw://` URL scheme 用于本地操作。
 
 ### `openclaw://agent`
 
@@ -128,13 +128,13 @@ open 'openclaw://agent?message=Hello%20from%20deep%20link'
 - `thinking`（可选）
 - `deliver` / `to` / `channel`（可选）
 - `timeoutSeconds`（可选）
-- `key`（可选无人值守模式密钥）
+- `key`（可选的无人值守模式密钥）
 
 安全性：
 
-- 如果没有 `key`，应用会提示确认。
-- 如果没有 `key`，应用会对确认提示执行短消息限制，并忽略 `deliver` / `to` / `channel`。
-- 使用有效的 `key`，运行将是无人值守的（旨在用于个人自动化）。
+- 如果没有 `key`，应用将提示确认。
+- 如果没有 `key`，应用将对确认提示强制执行简短的消息限制，并忽略 `deliver` / `to` / `channel`。
+- 如果具有有效的 `key`，则运行是无人值守的（旨在用于个人自动化）。
 
 ## 新手引导流程（典型）
 
@@ -180,18 +180,18 @@ swift run openclaw-mac discover --timeout 3000 --json
 连接选项：
 
 - `--url <ws://host:port>`：覆盖配置
-- `--mode <local|remote>`：从配置解析（默认：config 或 local）
+- `--mode <local|remote>`：从配置解析（默认：配置或本地）
 - `--probe`：强制进行新的健康探测
 - `--timeout <ms>`：请求超时（默认：`15000`）
-- `--json`：用于差异比较的结构化输出
+- `--json`：用于差异的结构化输出
 
 设备发现选项：
 
-- `--include-local`：包含将被过滤为“本地”的 gateway
-- `--timeout <ms>`：整体设备发现窗口（默认：`2000`）
-- `--json`：用于差异比较的结构化输出
+- `--include-local`：包含会被过滤为“本地”的网关
+- `--timeout <ms>`：总体发现窗口（默认：`2000`）
+- `--json`：用于差异的结构化输出
 
-提示：与 `openclaw gateway discover --json` 进行比较，以查看 macOS 应用的发现管道（`local.` 加上配置的广域域，以及广域和 Tailscale Serve 回退）是否与 Node CLI 的基于 `dns-sd` 的发现不同。
+提示：与 `openclaw gateway discover --json` 进行比较，查看 macOS 应用程序的发现管道（`local.` 加上配置的广域网域名，以及广域网和 Tailscale Serve 回退机制）是否与 Node CLI 的基于 `dns-sd` 的发现有所不同。
 
 ## 远程连接管道（SSH 隧道）
 
@@ -204,18 +204,14 @@ swift run openclaw-mac discover --timeout 3000 --json
 - **远程端口：** 远程主机上相同的 Gateway(网关) 端口。
 - **行为：** 没有随机本地端口；应用会重用现有的健康隧道
   或在需要时重新启动它。
-- **SSH 形状：** `ssh -N -L <local>:127.0.0.1:<remote>` 配合 BatchMode +
-  ExitOnForwardFailure + keepalive 选项。
-- **IP 报告：** SSH 隧道使用环回地址，因此网关将节点
-  IP 视为 `127.0.0.1`。如果您希望显示真实的客户端
-  IP，请使用 **Direct (ws/wss)** 传输（请参阅 [macOS 远程访问](/en/platforms/mac/remote)）。
+- **SSH 形状：** `ssh -N -L <local>:127.0.0.1:<remote>`，带有 BatchMode、ExitOnForwardFailure 和 keepalive 选项。
+- **IP 报告：** SSH 隧道使用环回地址，因此网关会将节点 IP 视为 `127.0.0.1`。如果您希望显示真实的客户端 IP，请使用 **Direct (ws/wss)** 传输（请参阅 [macOS 远程访问](/zh/platforms/mac/remote)）。
 
-有关设置步骤，请参阅 [macOS 远程访问](/en/platforms/mac/remote)。有关协议
-详细信息，请参阅 [Gateway(网关) 协议](/en/gateway/protocol)。
+有关设置步骤，请参阅 [macOS 远程访问](/zh/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway(网关) 协议](/zh/gateway/protocol)。
 
 ## 相关文档
 
-- [Gateway(网关) 运维手册](/en/gateway)
-- [Gateway(网关) (macOS)](/en/platforms/mac/bundled-gateway)
-- [macOS 权限](/en/platforms/mac/permissions)
-- [Canvas](/en/platforms/mac/canvas)
+- [Gateway(网关) 运维手册](/zh/gateway)
+- [Gateway(网关) (macOS)](/zh/platforms/mac/bundled-gateway)
+- [macOS 权限](/zh/platforms/mac/permissions)
+- [Canvas](/zh/platforms/mac/canvas)

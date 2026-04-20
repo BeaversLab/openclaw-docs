@@ -21,13 +21,13 @@ title: "OpenClaw"
 </p>
 
 <Columns>
-  <Card title="開始使用" href="/en/start/getting-started" icon="rocket">
+  <Card title="開始使用" href="/zh-Hant/start/getting-started" icon="rocket">
     安裝 OpenClaw 並在幾分鐘內啟動 Gateway。
   </Card>
-  <Card title="Run Onboarding" href="/en/start/wizard" icon="sparkles">
+  <Card title="Run Onboarding" href="/zh-Hant/start/wizard" icon="sparkles">
     使用 `openclaw onboard` 進行引導式設定以及配對流程。
   </Card>
-  <Card title="Open the Control UI" href="/en/web/control-ui" icon="layout-dashboard">
+  <Card title="Open the Control UI" href="/zh-Hant/web/control-ui" icon="layout-dashboard">
     啟動瀏覽器儀表板以進行聊天、設定和會話管理。
   </Card>
 </Columns>
@@ -104,19 +104,19 @@ Gateway 是工作階段、路由和通道連線的唯一真實來源。
     openclaw dashboard
     ```
 
-    或連接一個通道（[Telegram](/en/channels/telegram) 最快）並從您的手機聊天。
+    或連接一個通道（[Telegram](/zh-Hant/channels/telegram) 最快）並從您的手機聊天。
 
   </Step>
 </Steps>
 
-需要完整的安裝和開發設定？請參閱 [Getting Started](/en/start/getting-started)。
+需要完整的安裝和開發設定？請參閱 [Getting Started](/zh-Hant/start/getting-started)。
 
 ## 儀表板
 
 在 Gateway 啟動後開啟瀏覽器控制介面。
 
 - 本機預設值：[http://127.0.0.1:18789/](http://127.0.0.1:18789/)
-- 遠端存取：[Web surfaces](/en/web) 和 [Tailscale](/en/gateway/tailscale)
+- 遠端存取：[Web surfaces](/zh-Hant/web) 和 [Tailscale](/zh-Hant/gateway/tailscale)
 
 <p align="center">
   <img src="/whatsapp-openclaw.jpg" alt="OpenClaw" width="420" />
@@ -146,22 +146,22 @@ Gateway 是工作階段、路由和通道連線的唯一真實來源。
 ## 從這裡開始
 
 <Columns>
-  <Card title="Docs hubs" href="/en/start/hubs" icon="book-open">
+  <Card title="Docs hubs" href="/zh-Hant/start/hubs" icon="book-open">
     所有文件和指南，依使用案例整理。
   </Card>
-  <Card title="設定" href="/en/gateway/configuration" icon="settings">
+  <Card title="設定" href="/zh-Hant/gateway/configuration" icon="settings">
     核心閘道設定、權杖和提供者設定。
   </Card>
-  <Card title="遠端存取" href="/en/gateway/remote" icon="globe">
+  <Card title="遠端存取" href="/zh-Hant/gateway/remote" icon="globe">
     SSH 和 tailnet 存取模式。
   </Card>
-  <Card title="頻道" href="/en/channels/telegram" icon="message-square">
+  <Card title="頻道" href="/zh-Hant/channels/telegram" icon="message-square">
     針對 Feishu、Microsoft Teams、WhatsApp、Telegram、Discord 等平台的特定頻道設定。
   </Card>
-  <Card title="Nodes" href="/en/nodes" icon="smartphone">
+  <Card title="Nodes" href="/zh-Hant/nodes" icon="smartphone">
     具備配對、Canvas、相機及裝置操作的 iOS 與 Android 節點。
   </Card>
-  <Card title="Help" href="/en/help" icon="life-buoy">
+  <Card title="Help" href="/zh-Hant/help" icon="life-buoy">
     常見修復方法與疑難排解入口。
   </Card>
 </Columns>
@@ -169,19 +169,19 @@ Gateway 是工作階段、路由和通道連線的唯一真實來源。
 ## 深入瞭解
 
 <Columns>
-  <Card title="Full feature list" href="/en/concepts/features" icon="list">
+  <Card title="Full feature list" href="/zh-Hant/concepts/features" icon="list">
     完整的通道、路由與媒體功能。
   </Card>
-  <Card title="Multi-agent routing" href="/en/concepts/multi-agent" icon="route">
+  <Card title="Multi-agent routing" href="/zh-Hant/concepts/multi-agent" icon="route">
     工作區隔離與個別代理階段作業。
   </Card>
-  <Card title="Security" href="/en/gateway/security" icon="shield">
+  <Card title="Security" href="/zh-Hant/gateway/security" icon="shield">
     權杖、允許清單與安全控制。
   </Card>
-  <Card title="Troubleshooting" href="/en/gateway/troubleshooting" icon="wrench">
+  <Card title="Troubleshooting" href="/zh-Hant/gateway/troubleshooting" icon="wrench">
     閘道診斷與常見錯誤。
   </Card>
-  <Card title="關於與鳴謝" href="/en/reference/credits" icon="info">
+  <Card title="關於與鳴謝" href="/zh-Hant/reference/credits" icon="info">
     專案起源、貢獻者與授權。
   </Card>
 </Columns>

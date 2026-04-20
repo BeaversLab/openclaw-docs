@@ -178,7 +178,7 @@ export type PluginRuntime = {
 - 新的連接器範本僅依賴 SDK + runtime。
 - 外部外掛程式可以在無需存取核心原始碼的情況下進行開發和更新。
 
-相關文件：[Plugins](/en/tools/plugin)、[Channels](/en/channels/index)、[Configuration](/en/gateway/configuration)。
+相關文件：[Plugins](/zh-Hant/tools/plugin)、[Channels](/zh-Hant/channels/index)、[Configuration](/zh-Hant/gateway/configuration)。
 
 ## 已實作通道擁有的接縫
 

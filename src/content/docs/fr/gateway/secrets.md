@@ -356,7 +356,7 @@ Comportement à l'exécution :
 
 Les informations d'identification prises en charge et non prises en charge de manière canonique sont répertoriées dans :
 
-- [Surface des informations d'identification SecretRef](/en/reference/secretref-credential-surface)
+- [Surface des informations d'identification SecretRef](/fr/reference/secretref-credential-surface)
 
 Les informations d'identification créées à l'exécution ou rotatives et le matériel d'actualisation OAuth sont intentionnellement exclus de la résolution SecretRef en lecture seule.
 
@@ -507,7 +507,7 @@ Note d'exécution :
 
 Pour plus de détails sur le contrat cible/chemin strict et les règles de rejet exactes, voir :
 
-- [Secrets Apply Plan Contract](/en/gateway/secrets-plan-contract)
+- [Secrets Apply Plan Contract](/fr/gateway/secrets-plan-contract)
 
 ## Politique de sécurité à sens unique
 
@@ -533,9 +533,9 @@ Certaines unions SecretInput sont plus faciles à configurer en mode éditeur br
 
 ## Documentation connexe
 
-- Commandes CLI : [secrets](/en/cli/secrets)
-- Détails du contrat de plan : [Secrets Apply Plan Contract](/en/gateway/secrets-plan-contract)
-- Surface des identifiants : [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
-- Configuration de l'authentification : [Authentication](/en/gateway/authentication)
-- Posture de sécurité : [Security](/en/gateway/security)
-- Priorité de l'environnement : [Environment Variables](/en/help/environment)
+- Commandes CLI : [secrets](/fr/cli/secrets)
+- Détails du contrat de plan : [Secrets Apply Plan Contract](/fr/gateway/secrets-plan-contract)
+- Surface des identifiants : [SecretRef Credential Surface](/fr/reference/secretref-credential-surface)
+- Configuration de l'authentification : [Authentication](/fr/gateway/authentication)
+- Posture de sécurité : [Security](/fr/gateway/security)
+- Priorité de l'environnement : [Environment Variables](/fr/help/environment)

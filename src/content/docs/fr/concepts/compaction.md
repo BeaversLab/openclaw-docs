@@ -29,7 +29,7 @@ number of tokens`, `input token count exceeds the maximum number of input
 tokens`, `input is too long for the model`, and `ollama error: context length
 exceeded`.
 
-<Info>Avant le compactage, OpenClaw rappelle automatiquement à l'agent d'enregistrer des notes importantes dans les fichiers [memory](/en/concepts/memory). Cela empêche la perte de contexte.</Info>
+<Info>Avant le compactage, OpenClaw rappelle automatiquement à l'agent d'enregistrer des notes importantes dans les fichiers [memory](/fr/concepts/memory). Cela empêche la perte de contexte.</Info>
 
 Utilisez le paramètre `agents.defaults.compaction` dans votre `openclaw.json` pour configurer le comportement de compactage (mode, nombre cible de jetons, etc.).
 Le résumé de compactage préserve les identifiants opaques par défaut (`identifierPolicy: "strict"`). Vous pouvez remplacer cela par `identifierPolicy: "off"` ou fournir du texte personnalisé avec `identifierPolicy: "custom"` et `identifierInstructions`.
@@ -93,7 +93,7 @@ Vous verrez :
 - `🧹 Auto-compaction complete` en mode verbeux
 - `/status` montrant `🧹 Compactions: <count>`
 
-Avant le compactage, OpenClaw peut exécuter un tour de **silent memory flush** (vidage silencieux de la mémoire) pour stocker des notes durables sur le disque. Voir [Memory](/en/concepts/memory) pour les détails et la configuration.
+Avant le compactage, OpenClaw peut exécuter un tour de **silent memory flush** (vidage silencieux de la mémoire) pour stocker des notes durables sur le disque. Voir [Memory](/fr/concepts/memory) pour les détails et la configuration.
 
 ## Compactage manuel
 
@@ -145,27 +145,27 @@ Lorsque activé, l'utilisateur voit un court message (par exemple, "Compactage d
 | **Sauvegardé ?**  | Oui (dans la transcription de session) | Non (en mémoire uniquement, par requête) |
 | **Portée**        | Conversation entière                   | Résultats de tool uniquement             |
 
-[Session pruning](/en/concepts/session-pruning) est un complément plus léger qui supprime la sortie des tools sans résumer.
+[Session pruning](/fr/concepts/session-pruning) est un complément plus léger qui supprime la sortie des tools sans résumer.
 
 ## Dépannage
 
 **Compacté trop souvent ?** La fenêtre de contexte du model peut être petite, ou les
 sorties du tool peuvent être volumineuses. Essayez d'activer
-[session pruning](/en/concepts/session-pruning).
+[session pruning](/fr/concepts/session-pruning).
 
 **Le contexte semble périmé après la compactage ?** Utilisez `/compact Focus on <topic>` pour
-guider le résumé, ou activez le [memory flush](/en/concepts/memory) pour que les notes
+guider le résumé, ou activez le [memory flush](/fr/concepts/memory) pour que les notes
 soient conservées.
 
 **Besoin d'un nouveau départ ?** `/new` démarre une nouvelle session sans compacter.
 
 Pour une configuration avancée (réserver des jetons, préservation des identifiants, moteurs de
 contexte personnalisés, compactage côté serveur OpenAI), consultez
-le [Session Management Deep Dive](/en/reference/session-management-compaction).
+le [Session Management Deep Dive](/fr/reference/session-management-compaction).
 
 ## Connexes
 
-- [Session](/en/concepts/session) — gestion et cycle de vie de la session
-- [Session Pruning](/en/concepts/session-pruning) — découpage des résultats des outils
-- [Context](/en/concepts/context) — comment le contexte est construit pour les tours de l'agent
-- [Hooks](/en/automation/hooks) — hooks du cycle de vie de la compactage (before_compaction, after_compaction)
+- [Session](/fr/concepts/session) — gestion et cycle de vie de la session
+- [Session Pruning](/fr/concepts/session-pruning) — découpage des résultats des outils
+- [Context](/fr/concepts/context) — comment le contexte est construit pour les tours de l'agent
+- [Hooks](/fr/automation/hooks) — hooks du cycle de vie de la compactage (before_compaction, after_compaction)

@@ -429,6 +429,6 @@ URL 建構行為：
 
 ## 相關文件
 
-- [工具概覽](/en/tools)
-- [外掛程式](/en/tools/plugin)
-- [瀏覽器](/en/tools/browser)
+- [工具概覽](/zh-Hant/tools)
+- [外掛程式](/zh-Hant/tools/plugin)
+- [瀏覽器](/zh-Hant/tools/browser)

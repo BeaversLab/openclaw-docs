@@ -131,10 +131,10 @@ endpoint compatible con OpenAI de Xiaomi con autenticación mediante clave de AP
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration" icon="gear">
     Referencia completa de configuración de OpenClaw.
   </Card>
   <Card title="Consola de Xiaomi MiMo" href="https://platform.xiaomimimo.com" icon="arrow-up-right-from-square">

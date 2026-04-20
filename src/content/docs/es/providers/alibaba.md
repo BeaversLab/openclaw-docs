@@ -81,7 +81,7 @@ El proveedor `alibaba` incluido registra actualmente:
     - `qwen/...` cuando desee la superficie del proveedor Qwen canónico
     - `alibaba/...` cuando desee la superficie de video Wan propiedad directa del proveedor
 
-    Consulte la [documentación del proveedor Qwen](/en/providers/qwen) para obtener más detalles.
+    Consulte la [documentación del proveedor Qwen](/es/providers/qwen) para obtener más detalles.
 
   </Accordion>
 
@@ -100,13 +100,13 @@ El proveedor `alibaba` incluido registra actualmente:
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Video generation" href="/en/tools/video-generation" icon="video">
+  <Card title="Video generation" href="/es/tools/video-generation" icon="video">
     Parámetros compartidos de la herramienta de video y selección de proveedor.
   </Card>
-  <Card title="Qwen" href="/en/providers/qwen" icon="microchip">
+  <Card title="Qwen" href="/es/providers/qwen" icon="microchip">
     Configuración del proveedor Qwen e integración con DashScope.
   </Card>
-  <Card title="Configuration reference" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="Configuration reference" href="/es/gateway/configuration-reference#agent-defaults" icon="gear">
     Valores predeterminados del agente y configuración del modelo.
   </Card>
 </CardGroup>

@@ -29,7 +29,7 @@ number of tokens`, `input token count exceeds the maximum number of input
 tokens`, `input is too long for the 模型`, and `ollama error: context length
 exceeded`。
 
-<Info>在压缩之前，OpenClaw 会自动提醒代理将重要笔记保存到 [memory](/en/concepts/memory) 文件中。这可以防止上下文丢失。</Info>
+<Info>在压缩之前，OpenClaw 会自动提醒代理将重要笔记保存到 [memory](/zh/concepts/memory) 文件中。这可以防止上下文丢失。</Info>
 
 使用 `openclaw.json` 中的 `agents.defaults.compaction` 设置来配置压缩行为（模式、目标令牌等）。压缩摘要默认保留不透明标识符（`identifierPolicy: "strict"`）。您可以使用 `identifierPolicy: "off"` 覆盖此设置，或使用 `identifierPolicy: "custom"` 和 `identifierInstructions` 提供自定义文本。
 
@@ -92,7 +92,7 @@ exceeded`。
 - 详细模式下的 `🧹 Auto-compaction complete`
 - 显示 `🧹 Compactions: <count>` 的 `/status`
 
-在压缩之前，OpenClaw 可以运行一个 **静默内存刷新** 轮次，将持久化笔记存储到磁盘。有关详细信息和配置，请参阅 [内存](/en/concepts/memory)。
+在压缩之前，OpenClaw 可以运行一个 **静默内存刷新** 轮次，将持久化笔记存储到磁盘。有关详细信息和配置，请参阅 [内存](/zh/concepts/memory)。
 
 ## 手动压缩
 
@@ -144,21 +144,21 @@ exceeded`。
 | **是否保存？** | 是（在会话记录中） | 否（仅在内存中，每次请求） |
 | **范围**       | 整个对话           | 仅工具结果                 |
 
-[会话修剪](/en/concepts/session-pruning) 是一个更轻量级的补充功能，它在不需要摘要的情况下修剪工具输出。
+[会话修剪](/zh/concepts/session-pruning) 是一个更轻量级的补充功能，它在不需要摘要的情况下修剪工具输出。
 
 ## 故障排除
 
-**压缩太频繁？** 模型的上下文窗口可能较小，或者工具输出可能很大。尝试启用[会话修剪](/en/concepts/session-pruning)。
+**压缩太频繁？** 模型的上下文窗口可能较小，或者工具输出可能很大。尝试启用[会话修剪](/zh/concepts/session-pruning)。
 
-**压缩后上下文感觉陈旧？** 使用 `/compact Focus on <topic>` 来引导摘要，或启用 [memory flush](/en/concepts/memory) 以便保留笔记。
+**压缩后上下文感觉陈旧？** 使用 `/compact Focus on <topic>` 来引导摘要，或启用 [memory flush](/zh/concepts/memory) 以便保留笔记。
 
 **需要重新开始？** `/new` 启动一个新的会话而无需压缩。
 
-有关高级配置（保留令牌、标识符保留、自定义上下文引擎、OpenAI 服务器端压缩），请参阅[会话管理深度剖析](/en/reference/session-management-compaction)。
+有关高级配置（保留令牌、标识符保留、自定义上下文引擎、OpenAI 服务器端压缩），请参阅[会话管理深度剖析](/zh/reference/session-management-compaction)。
 
 ## 相关
 
-- [会话](/en/concepts/session) — 会话管理和生命周期
-- [会话修剪](/en/concepts/session-pruning) — 修剪工具结果
-- [上下文](/en/concepts/context) — 如何为代理轮次构建上下文
-- [钩子](/en/automation/hooks) — 压缩生命周期钩子（before_compaction、after_compaction）
+- [会话](/zh/concepts/session) — 会话管理和生命周期
+- [会话修剪](/zh/concepts/session-pruning) — 修剪工具结果
+- [上下文](/zh/concepts/context) — 如何为代理轮次构建上下文
+- [钩子](/zh/automation/hooks) — 压缩生命周期钩子（before_compaction、after_compaction）

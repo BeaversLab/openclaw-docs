@@ -67,7 +67,7 @@ fournisseur de synthèse vocale configuré selon l'ordre de sélection automatiq
 ## Configuration
 
 La configuration TTS se trouve sous `messages.tts` dans `openclaw.json`.
-Le schéma complet se trouve dans [Configuration de la Gateway](/en/gateway/configuration).
+Le schéma complet se trouve dans [Configuration de la Gateway](/fr/gateway/configuration).
 
 ### Configuration minimale (activation + fournisseur)
 
@@ -401,7 +401,7 @@ Reply -> TTS enabled?
 ## Utilisation des commandes slash
 
 Il existe une seule commande : `/tts`.
-Voir [Commandes slash](/en/tools/slash-commands) pour les détails d'activation.
+Voir [Commandes slash](/fr/tools/slash-commands) pour les détails d'activation.
 
 Note Discord : `/tts` est une commande intégrée de Discord, donc OpenClaw enregistre `/voice` comme commande native. Le texte `/tts ...` fonctionne toujours.
 

@@ -21,7 +21,7 @@ title: "mcp"
 - `list` / `show` / `set` / `unset` 是作为 MCP 客户端
   注册表运行的 OpenClaw，用于存储其运行时稍后可能使用的其他 MCP 服务器
 
-当 OpenClaw 应该自己托管编码工具会话并通过 ACP 路由该运行时时，请使用 [`openclaw acp`](/en/cli/acp)。
+当 OpenClaw 应该自己托管编码工具会话并通过 ACP 路由该运行时时，请使用 [`openclaw acp`](/zh/cli/acp)。
 
 ## OpenClaw 作为 MCP 服务器
 
@@ -37,7 +37,7 @@ title: "mcp"
 - 您希望拥有一个可跨 OpenClaw 渠道后端工作的 MCP 服务器，
   而不是运行单独的每渠道桥接器
 
-当 OpenClaw 应该自己托管编码运行时并将代理会话保留在 OpenClaw 内部时，请改用 [`openclaw acp`](/en/cli/acp)。
+当 OpenClaw 应该自己托管编码运行时并将代理会话保留在 OpenClaw 内部时，请改用 [`openclaw acp`](/zh/cli/acp)。
 
 ## 工作原理
 
@@ -296,7 +296,7 @@ pnpm test:docker:mcp-channels
 
 这是证明桥接有效而无需将真实的 Telegram、Discord 或 iMessage 账户连接到测试运行的最快方法。
 
-有关更广泛的测试上下文，请参阅[测试](/en/help/testing)。
+有关更广泛的测试上下文，请参阅[测试](/zh/help/testing)。
 
 ## 故障排除
 

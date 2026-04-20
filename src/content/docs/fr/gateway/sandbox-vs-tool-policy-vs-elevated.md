@@ -39,7 +39,7 @@ La mise en bac à sable est contrôlée par `agents.defaults.sandbox.mode` :
 - `"non-main"` : seules les sessions non principales sont sandboxées (« surprise » courante pour les groupes/canaux).
 - `"all"` : tout est sandboxé.
 
-Voir [Sandboxing](/en/gateway/sandboxing) pour la matrice complète (portée, montages d'espace de travail, images).
+Voir [Sandboxing](/fr/gateway/sandboxing) pour la matrice complète (portée, montages d'espace de travail, images).
 
 ### Bind mounts (security quick check)
 
@@ -117,7 +117,7 @@ Portes :
 - Activation : `tools.elevated.enabled` (et facultativement `agents.list[].tools.elevated.enabled`)
 - Listes d'autorisation des expéditeurs : `tools.elevated.allowFrom.<provider>` (et facultativement `agents.list[].tools.elevated.allowFrom.<provider>`)
 
-Voir [Mode élevé](/en/tools/elevated).
+Voir [Mode élevé](/fr/tools/elevated).
 
 ## Corrections courantes du "bac à sable"
 
@@ -136,6 +136,6 @@ En mode `"non-main"`, les clés de groupe/channel ne sont _pas_ principales. Uti
 
 ## Voir aussi
 
-- [Sandboxing](/en/gateway/sandboxing) -- référence complète sur le sandboxing (modes, portées, backends, images)
-- [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) -- priorités et substitutions par agent
-- [Elevated Mode](/en/tools/elevated)
+- [Sandboxing](/fr/gateway/sandboxing) -- référence complète sur le sandboxing (modes, portées, backends, images)
+- [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools) -- priorités et substitutions par agent
+- [Elevated Mode](/fr/tools/elevated)

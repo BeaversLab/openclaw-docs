@@ -12,8 +12,8 @@ Descubrimiento, escaneo y configuración de modelos (modelo predeterminado, resp
 
 Relacionado:
 
-- Proveedores + modelos: [Modelos](/en/providers/models)
-- Configuración de autenticación del proveedor: [Primeros pasos](/en/start/getting-started)
+- Proveedores + modelos: [Modelos](/es/providers/models)
+- Configuración de autenticación del proveedor: [Primeros pasos](/es/start/getting-started)
 
 ## Comandos comunes
 

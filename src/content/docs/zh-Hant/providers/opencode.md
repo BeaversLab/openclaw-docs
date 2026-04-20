@@ -127,10 +127,10 @@ OpenCode 在 OpenClaw 中公開了兩個託管目錄：
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型 refs 和容錯移轉行為。
   </Card>
-  <Card title="設定參考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration-reference" icon="gear">
     代理程式、模型和提供者的完整設定參考。
   </Card>
 </CardGroup>

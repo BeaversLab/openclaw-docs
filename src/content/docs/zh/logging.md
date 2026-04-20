@@ -83,7 +83,7 @@ openclaw doctor
 ### Control UI (Web)
 
 Control UI 的 **Logs** 选项卡使用 `logs.tail` 对同一文件进行尾随追踪。
-请参阅 [/web/control-ui](/en/web/control-ui) 了解如何打开它。
+请参阅 [/web/control-ui](/zh/web/control-ui) 了解如何打开它。
 
 ### 仅限频道的日志
 
@@ -249,7 +249,7 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 - 标志日志会进入标准日志文件（与 `logging.file` 相同）。
 - 输出仍会根据 `logging.redactSensitive` 进行编辑（即隐藏敏感信息）。
-- 完整指南：[/diagnostics/flags](/en/diagnostics/flags)。
+- 完整指南：[/diagnostics/flags](/zh/diagnostics/flags)。
 
 ### 导出到 OpenTelemetry
 
@@ -383,5 +383,5 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 ## 相关内容
 
-- [Gateway(网关) Logging Internals](/en/gateway/logging) — WS log styles, subsystem prefixes, and console capture
-- [诊断](/en/gateway/configuration-reference#diagnostics) — OpenTelemetry 导出和缓存跟踪配置
+- [Gateway(网关) Logging Internals](/zh/gateway/logging) — WS log styles, subsystem prefixes, and console capture
+- [诊断](/zh/gateway/configuration-reference#diagnostics) — OpenTelemetry 导出和缓存跟踪配置

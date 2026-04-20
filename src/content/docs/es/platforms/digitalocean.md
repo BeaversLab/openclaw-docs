@@ -12,7 +12,7 @@ title: "DigitalOcean (Plataforma)"
 
 Ejecutar un Gateway OpenClaw persistente en DigitalOcean por **$6/mes** (o $4/mes con precio reservado).
 
-Si quieres una opción de $0/mes y no te importa ARM + una configuración específica del proveedor, consulta la [guía de Oracle Cloud](/en/platforms/oracle).
+Si quieres una opción de $0/mes y no te importa ARM + una configuración específica del proveedor, consulta la [guía de Oracle Cloud](/es/platforms/oracle).
 
 ## Comparación de costos (2026)
 
@@ -27,8 +27,8 @@ Si quieres una opción de $0/mes y no te importa ARM + una configuración espec�
 **Elegir un proveedor:**
 
 - DigitalOcean: la experiencia de usuario más simple + configuración predecible (esta guía)
-- Hetzner: buen precio/rendimiento (consulta la [guía de Hetzner](/en/install/hetzner))
-- Oracle Cloud: puede ser gratis ($0/mes), pero es más complicado y solo tiene ARM (consulta la [guía de Oracle](/en/platforms/oracle))
+- Hetzner: buen precio/rendimiento (consulta la [guía de Hetzner](/es/install/hetzner))
+- Oracle Cloud: puede ser gratis ($0/mes), pero es más complicado y solo tiene ARM (consulta la [guía de Oracle](/es/platforms/oracle))
 
 ---
 
@@ -158,7 +158,7 @@ openclaw channels login whatsapp
 # Scan QR code
 ```
 
-Consulta [Canales](/en/channels) para otros proveedores.
+Consulta [Canales](/es/channels) para otros proveedores.
 
 ---
 
@@ -223,7 +223,7 @@ Oracle Cloud ofrece instancias ARM **Always Free** que son significativamente m�
 - El registro puede ser complicado (intente de nuevo si falla)
 - Arquitectura ARM — la mayoría de las cosas funcionan, pero algunos binarios necesitan compilaciones para ARM
 
-Para la guía completa de configuración, consulta [Oracle Cloud](/en/platforms/oracle). Para consejos de registro y solución de problemas del proceso de inscripción, consulta esta [guía comunitaria](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
+Para la guía completa de configuración, consulta [Oracle Cloud](/es/platforms/oracle). Para consejos de registro y solución de problemas del proceso de inscripción, consulta esta [guía comunitaria](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
 
 ---
 
@@ -258,7 +258,7 @@ free -h
 
 ## Véase También
 
-- [Guía de Hetzner](/en/install/hetzner) — más barato, más potente
-- [Instalación con Docker](/en/install/docker) — configuración en contenedores
-- [Tailscale](/en/gateway/tailscale) — acceso remoto seguro
-- [Configuración](/en/gateway/configuration) — referencia completa de configuración
+- [Guía de Hetzner](/es/install/hetzner) — más barato, más potente
+- [Instalación con Docker](/es/install/docker) — configuración en contenedores
+- [Tailscale](/es/gateway/tailscale) — acceso remoto seguro
+- [Configuración](/es/gateway/configuration) — referencia completa de configuración

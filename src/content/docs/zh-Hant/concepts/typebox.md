@@ -13,7 +13,7 @@ TypeBox 是一個以 TypeScript 為優先的結構描述庫。我們使用它來
 WebSocket 協議**（交握、請求/回應、伺服器事件）。這些結構描述驅動 macOS 應用程式的**執行時期驗證**、**JSON Schema 匯出**以及 **Swift 程式碼生成**。單一真實來源；其他一切都由此產生。
 
 如果您需要更高層級的協議背景，請從
-[Gateway 架構](/en/concepts/architecture)開始。
+[Gateway 架構](/zh-Hant/concepts/architecture)開始。
 
 ## 心智模型（30 秒）
 

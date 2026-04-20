@@ -114,10 +114,10 @@ de Groq pour transcrire les messages vocaux via l'interface partagée `tools.med
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les providers, les références de modèle et le comportement de basculement.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
     Schéma de configuration complet incluant les paramètres du provider et de l'audio.
   </Card>
   <Card title="Console Groq" href="https://console.groq.com" icon="arrow-up-right-from-square">

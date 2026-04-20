@@ -31,7 +31,7 @@ title: "常备指令"
 
 ## 工作原理
 
-常备指令在您的[代理工作区](/en/concepts/agent-workspace)文件中定义。推荐的方法是将其直接包含在 `AGENTS.md` 中（每次会话都会自动注入），以便代理始终掌握上下文。对于较大的配置，您也可以将其放置在专用文件（如 `standing-orders.md`）中，并从 `AGENTS.md` 中引用。
+常备指令在您的[代理工作区](/zh/concepts/agent-workspace)文件中定义。推荐的方法是将其直接包含在 `AGENTS.md` 中（每次会话都会自动注入），以便代理始终掌握上下文。对于较大的配置，您也可以将其放置在专用文件（如 `standing-orders.md`）中，并从 `AGENTS.md` 中引用。
 
 每个程序指定：
 
@@ -40,7 +40,7 @@ title: "常备指令"
 3. **审批关口** —— 操作前需要人工签署的内容
 4. **升级规则** —— 何时停止并寻求帮助
 
-代理通过工作区引导文件在每个会话中加载这些指令（有关自动注入文件的完整列表，请参阅 [代理工作区](/en/concepts/agent-workspace)），并结合 [cron 作业](/en/automation/cron-jobs) 执行基于时间的强制执行。
+代理通过工作区引导文件在每个会话中加载这些指令（有关自动注入文件的完整列表，请参阅 [代理工作区](/zh/concepts/agent-workspace)），并结合 [cron 作业](/zh/automation/cron-jobs) 执行基于时间的强制执行。
 
 <Tip>将常备指令放入 `AGENTS.md` 以确保它们在每个会话中都被加载。工作区启动程序会自动注入 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 和 `MEMORY.md` —— 但不会注入子目录中的任意文件。</Tip>
 
@@ -71,7 +71,7 @@ title: "常备指令"
 
 ## 常驻指令 + Cron 作业
 
-常驻指令定义了代理被授权做**什么**。[Cron 作业](/en/automation/cron-jobs) 定义了**何时**执行。它们协同工作：
+常驻指令定义了代理被授权做**什么**。[Cron 作业](/zh/automation/cron-jobs) 定义了**何时**执行。它们协同工作：
 
 ```
 Standing Order: "You own the daily inbox triage"
@@ -245,8 +245,8 @@ openclaw cron add \
 
 ## 相关
 
-- [自动化与任务](/en/automation) — 汇总所有自动化机制
-- [Cron 作业](/en/automation/cron-jobs) — 常规指令的调度执行
-- [钩子](/en/automation/hooks) — 用于代理生命周期事件的事件驱动脚本
-- [Webhooks](/en/automation/cron-jobs#webhooks) — 入站 HTTP 事件触发器
-- [代理工作区](/en/concepts/agent-workspace) — 常规指令的存放位置，包括自动注入的引导文件（AGENTS.md、SOUL.md 等）的完整列表
+- [自动化与任务](/zh/automation) — 汇总所有自动化机制
+- [Cron 作业](/zh/automation/cron-jobs) — 常规指令的调度执行
+- [钩子](/zh/automation/hooks) — 用于代理生命周期事件的事件驱动脚本
+- [Webhooks](/zh/automation/cron-jobs#webhooks) — 入站 HTTP 事件触发器
+- [代理工作区](/zh/concepts/agent-workspace) — 常规指令的存放位置，包括自动注入的引导文件（AGENTS.md、SOUL.md 等）的完整列表

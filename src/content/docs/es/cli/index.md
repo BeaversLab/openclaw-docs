@@ -12,57 +12,57 @@ Esta página describe el comportamiento actual de la CLI. Si los comandos cambia
 
 ## Páginas de comandos
 
-- [`setup`](/en/cli/setup)
-- [`onboard`](/en/cli/onboard)
-- [`configure`](/en/cli/configure)
-- [`config`](/en/cli/config)
-- [`completion`](/en/cli/completion)
-- [`doctor`](/en/cli/doctor)
-- [`dashboard`](/en/cli/dashboard)
-- [`backup`](/en/cli/backup)
-- [`reset`](/en/cli/reset)
-- [`uninstall`](/en/cli/uninstall)
-- [`update`](/en/cli/update)
-- [`message`](/en/cli/message)
-- [`agent`](/en/cli/agent)
-- [`agents`](/en/cli/agents)
-- [`acp`](/en/cli/acp)
-- [`mcp`](/en/cli/mcp)
-- [`status`](/en/cli/status)
-- [`health`](/en/cli/health)
-- [`sessions`](/en/cli/sessions)
-- [`gateway`](/en/cli/gateway)
-- [`logs`](/en/cli/logs)
-- [`system`](/en/cli/system)
-- [`models`](/en/cli/models)
-- [`infer`](/en/cli/infer)
-- [`memory`](/en/cli/memory)
-- [`wiki`](/en/cli/wiki)
-- [`directory`](/en/cli/directory)
-- [`nodes`](/en/cli/nodes)
-- [`devices`](/en/cli/devices)
-- [`node`](/en/cli/node)
-- [`approvals`](/en/cli/approvals)
-- [`sandbox`](/en/cli/sandbox)
-- [`tui`](/en/cli/tui)
-- [`browser`](/en/cli/browser)
-- [`cron`](/en/cli/cron)
-- [`tasks`](/en/cli/index#tasks)
-- [`flows`](/en/cli/flows)
-- [`dns`](/en/cli/dns)
-- [`docs`](/en/cli/docs)
-- [`hooks`](/en/cli/hooks)
-- [`webhooks`](/en/cli/webhooks)
-- [`pairing`](/en/cli/pairing)
-- [`qr`](/en/cli/qr)
-- [`plugins`](/en/cli/plugins) (comandos de complemento)
-- [`channels`](/en/cli/channels)
-- [`security`](/en/cli/security)
-- [`secrets`](/en/cli/secrets)
-- [`skills`](/en/cli/skills)
-- [`daemon`](/en/cli/daemon) (alias heredado para comandos de servicio de puerta de enlace)
-- [`clawbot`](/en/cli/clawbot) (espacio de nombres de alias heredado)
-- [`voicecall`](/en/cli/voicecall) (complemento; si está instalado)
+- [`setup`](/es/cli/setup)
+- [`onboard`](/es/cli/onboard)
+- [`configure`](/es/cli/configure)
+- [`config`](/es/cli/config)
+- [`completion`](/es/cli/completion)
+- [`doctor`](/es/cli/doctor)
+- [`dashboard`](/es/cli/dashboard)
+- [`backup`](/es/cli/backup)
+- [`reset`](/es/cli/reset)
+- [`uninstall`](/es/cli/uninstall)
+- [`update`](/es/cli/update)
+- [`message`](/es/cli/message)
+- [`agent`](/es/cli/agent)
+- [`agents`](/es/cli/agents)
+- [`acp`](/es/cli/acp)
+- [`mcp`](/es/cli/mcp)
+- [`status`](/es/cli/status)
+- [`health`](/es/cli/health)
+- [`sessions`](/es/cli/sessions)
+- [`gateway`](/es/cli/gateway)
+- [`logs`](/es/cli/logs)
+- [`system`](/es/cli/system)
+- [`models`](/es/cli/models)
+- [`infer`](/es/cli/infer)
+- [`memory`](/es/cli/memory)
+- [`wiki`](/es/cli/wiki)
+- [`directory`](/es/cli/directory)
+- [`nodes`](/es/cli/nodes)
+- [`devices`](/es/cli/devices)
+- [`node`](/es/cli/node)
+- [`approvals`](/es/cli/approvals)
+- [`sandbox`](/es/cli/sandbox)
+- [`tui`](/es/cli/tui)
+- [`browser`](/es/cli/browser)
+- [`cron`](/es/cli/cron)
+- [`tasks`](/es/cli/index#tasks)
+- [`flows`](/es/cli/flows)
+- [`dns`](/es/cli/dns)
+- [`docs`](/es/cli/docs)
+- [`hooks`](/es/cli/hooks)
+- [`webhooks`](/es/cli/webhooks)
+- [`pairing`](/es/cli/pairing)
+- [`qr`](/es/cli/qr)
+- [`plugins`](/es/cli/plugins) (comandos de complemento)
+- [`channels`](/es/cli/channels)
+- [`security`](/es/cli/security)
+- [`secrets`](/es/cli/secrets)
+- [`skills`](/es/cli/skills)
+- [`daemon`](/es/cli/daemon) (alias heredado para comandos de servicio de puerta de enlace)
+- [`clawbot`](/es/cli/clawbot) (espacio de nombres de alias heredado)
+- [`voicecall`](/es/cli/voicecall) (complemento; si está instalado)
 
 ## Marcas globales
 
@@ -440,7 +440,7 @@ Gestionar extensiones y su configuración:
 - `openclaw plugins enable <id>` / `disable <id>` — alternar `plugins.entries.<id>.enabled`.
 - `openclaw plugins doctor` — informar errores de carga de complementos.
 
-La mayoría de los cambios de complemento requieren un reinicio de la puerta de enlace. Consulte [/plugin](/en/tools/plugin).
+La mayoría de los cambios de complemento requieren un reinicio de la puerta de enlace. Consulte [/plugin](/es/tools/plugin).
 
 ## Memoria
 
@@ -453,7 +453,7 @@ Búsqueda vectorial sobre `MEMORY.md` + `memory/*.md`:
 
 ## Sandbox
 
-Administre los tiempos de ejecución del espacio aislado para la ejecución aislada del agente. Consulte [/cli/sandbox](/en/cli/sandbox).
+Administre los tiempos de ejecución del espacio aislado para la ejecución aislada del agente. Consulte [/cli/sandbox](/es/cli/sandbox).
 
 Subcomandos:
 
@@ -468,7 +468,7 @@ Notas:
 
 ## Comandos de barra del chat
 
-Los mensajes de chat admiten comandos `/...` (texto y nativos). Consulte [/tools/slash-commands](/en/tools/slash-commands).
+Los mensajes de chat admiten comandos `/...` (texto y nativos). Consulte [/tools/slash-commands](/es/tools/slash-commands).
 
 Aspectos destacados:
 
@@ -764,7 +764,7 @@ Notas:
 - `channels capabilities --account` solo se aplica cuando se establece `--channel`.
 - `channels status --probe` puede mostrar el estado del transporte más los resultados de sondeo/auditoría, como `works`, `probe failed`, `audit ok` o `audit failed`, dependiendo del soporte del canal.
 
-Más detalles: [/concepts/oauth](/en/concepts/oauth)
+Más detalles: [/concepts/oauth](/es/concepts/oauth)
 
 Ejemplos:
 
@@ -778,7 +778,7 @@ openclaw status --deep
 
 ### `directory`
 
-Busque IDs propios, de pares y de grupo para canales que exponen una superficie de directorio. Consulte [`openclaw directory`](/en/cli/directory).
+Busque IDs propios, de pares y de grupo para canales que exponen una superficie de directorio. Consulte [`openclaw directory`](/es/cli/directory).
 
 Opciones comunes:
 
@@ -859,7 +859,7 @@ Notas:
 
 ### `qr`
 
-Genera un código QR de emparejamiento móvil y un código de configuración desde la configuración actual de Gateway. Consulte [`openclaw qr`](/en/cli/qr).
+Genera un código QR de emparejamiento móvil y un código de configuración desde la configuración actual de Gateway. Consulte [`openclaw qr`](/es/cli/qr).
 
 Opciones:
 
@@ -884,7 +884,7 @@ Notas:
 
 ### `clawbot`
 
-Espacio de nombres de alias heredado. Actualmente admite `openclaw clawbot qr`, que se asigna a [`openclaw qr`](/en/cli/qr).
+Espacio de nombres de alias heredado. Actualmente admite `openclaw clawbot qr`, que se asigna a [`openclaw qr`](/es/cli/qr).
 
 ### `hooks`
 
@@ -920,7 +920,7 @@ Auxiliares de Webhook. La superficie integrada actual es la configuración y eje
 
 ### `webhooks gmail`
 
-Configuración y ejecución del enlace de Gmail Pub/Sub. Consulte [Gmail Pub/Sub](/en/automation/cron-jobs#gmail-pubsub-integration).
+Configuración y ejecución del enlace de Gmail Pub/Sub. Consulte [Gmail Pub/Sub](/es/automation/cron-jobs#gmail-pubsub-integration).
 
 Subcomandos:
 
@@ -940,7 +940,7 @@ Asistentes de DNS de descubrimiento de área amplia (CoreDNS + Tailscale). Super
 
 ### `dns setup`
 
-Asistente de DNS de descubrimiento de área amplia (CoreDNS + Tailscale). Consulte [/gateway/discovery](/en/gateway/discovery).
+Asistente de DNS de descubrimiento de área amplia (CoreDNS + Tailscale). Consulte [/gateway/discovery](/es/gateway/discovery).
 
 Opciones:
 
@@ -958,7 +958,7 @@ Notas:
 
 Mensajería de salida unificada + acciones de canal.
 
-Consulte: [/cli/message](/en/cli/message)
+Consulte: [/cli/message](/es/cli/message)
 
 Subcomandos:
 
@@ -1138,7 +1138,7 @@ Opciones:
 - `--server-verbose`
 - `--verbose`
 
-Consulte [`acp`](/en/cli/acp) para obtener el comportamiento completo, notas de seguridad y ejemplos.
+Consulte [`acp`](/es/cli/acp) para obtener el comportamiento completo, notas de seguridad y ejemplos.
 
 ### `mcp`
 
@@ -1258,7 +1258,7 @@ Notas:
 - Proveedores con ventanas de uso actuales: Anthropic, GitHub Copilot, Gemini CLI, OpenAI Codex, MiniMax, Xiaomi y z.ai.
 - Nota de MiniMax: `usage_percent` / `usagePercent` sin procesar significa cuota restante, por lo que OpenClaw la invierte antes de mostrarla; los campos basados en recuentos aún tienen prioridad cuando están presentes. Las respuestas `model_remains` prefieren la entrada del modelo de chat, derivan la etiqueta de la ventana de las marcas de tiempo cuando es necesario e incluyen el nombre del modelo en la etiqueta del plan.
 - La autenticación de uso proviene de enlaces específicos del proveedor cuando están disponibles; de lo contrario, OpenClaw recurre a hacer coincidir las credenciales de clave de API/OAuth de los perfiles de autenticación, variables de entorno o configuración. Si no se resuelve ninguna, el uso se oculta.
-- Detalles: consulte [Seguimiento de uso](/en/concepts/usage-tracking).
+- Detalles: consulte [Seguimiento de uso](/es/concepts/usage-tracking).
 
 ### `health`
 
@@ -1336,7 +1336,7 @@ Notas:
 
 ### `tasks`
 
-Administrar y enumerar las ejecuciones de [tareas en segundo plano](/en/automation/tasks) entre agentes.
+Administrar y enumerar las ejecuciones de [tareas en segundo plano](/es/automation/tasks) entre agentes.
 
 - `tasks list` — mostrar ejecuciones de tareas activas y recientes
 - `tasks show <id>` — mostrar detalles de una ejecución de tarea específica
@@ -1411,7 +1411,7 @@ Notas:
 
 ### `daemon`
 
-Alias heredado para los comandos de gestión de servicios de la puerta de enlace. Consulte [/cli/daemon](/en/cli/daemon).
+Alias heredado para los comandos de gestión de servicios de la puerta de enlace. Consulte [/cli/daemon](/es/cli/daemon).
 
 Subcomandos:
 
@@ -1500,7 +1500,7 @@ Consejo: la herramienta de tiempo de ejecución `gateway` solo para propietarios
 
 ## Modelos
 
-Consulte [/concepts/models](/en/concepts/models) para conocer el comportamiento de reserva y la estrategia de escaneo.
+Consulte [/concepts/models](/es/concepts/models) para conocer el comportamiento de reserva y la estrategia de escaneo.
 
 Nota de Anthropic: El personal de Anthropic nos dijo que el uso de la CLI de Claude estilo OpenClaw está
 permitido nuevamente, por lo que OpenClaw trata el uso de la CLI de Claude y el uso de `claude -p` como
@@ -1665,7 +1665,7 @@ Opciones:
 
 ## Cron
 
-Gestionar trabajos programados (Gateway RPC). Consulte [/automation/cron-jobs](/en/automation/cron-jobs).
+Gestionar trabajos programados (Gateway RPC). Consulte [/automation/cron-jobs](/es/automation/cron-jobs).
 
 Subcomandos:
 
@@ -1693,7 +1693,7 @@ reintento adicional oculto.
 ### `node`
 
 `node` ejecuta un **host de nodo sin cabeza** o lo gestiona como un servicio en segundo plano. Vea
-[`openclaw node`](/en/cli/node).
+[`openclaw node`](/es/cli/node).
 
 Subcomandos:
 
@@ -1711,7 +1711,7 @@ Notas de autenticación:
 
 ## Nodos
 
-`nodes` se comunica con la puerta de enlace y apunta a los nodos emparejados. Consulte [/nodes](/en/nodes).
+`nodes` se comunica con la puerta de enlace y apunta a los nodos emparejados. Consulte [/nodes](/es/nodes).
 
 Opciones comunes:
 
@@ -1752,7 +1752,7 @@ Ubicación:
 
 ## Navegador
 
-CLI de control del navegador (Chrome/Brave/Edge/Chromium dedicado). Consulte [`openclaw browser`](/en/cli/browser) y la [herramienta Navegador](/en/tools/browser).
+CLI de control del navegador (Chrome/Brave/Edge/Chromium dedicado). Consulte [`openclaw browser`](/es/cli/browser) y la [herramienta Navegador](/es/tools/browser).
 
 Opciones comunes:
 
@@ -1800,7 +1800,7 @@ Acciones:
 
 ### `voicecall`
 
-Utilidades de llamada de voz proporcionadas por el complemento. Solo aparece cuando el complemento de llamada de voz está instalado y habilitado. Consulte [`openclaw voicecall`](/en/cli/voicecall).
+Utilidades de llamada de voz proporcionadas por el complemento. Solo aparece cuando el complemento de llamada de voz está instalado y habilitado. Consulte [`openclaw voicecall`](/es/cli/voicecall).
 
 Comandos comunes:
 

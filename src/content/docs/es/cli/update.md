@@ -11,7 +11,7 @@ title: "actualizar"
 Actualice OpenClaw de forma segura y cambie entre los canales estable/beta/desarrollo.
 
 Si instalaste vía **npm/pnpm/bun** (instalación global, sin metadatos de git),
-las actualizaciones ocurren a través del flujo del administrador de paquetes en [Actualizando](/en/install/updating).
+las actualizaciones ocurren a través del flujo del administrador de paquetes en [Actualizando](/es/install/updating).
 
 ## Uso
 
@@ -110,6 +110,6 @@ Si el arranque de pnpm aún falla, el actualizador ahora se detiene antes con un
 ## Ver también
 
 - `openclaw doctor` (ofrece ejecutar la actualización primero en los checkouts de git)
-- [Canales de desarrollo](/en/install/development-channels)
-- [Actualización](/en/install/updating)
-- [Referencia de CLI](/en/cli)
+- [Canales de desarrollo](/es/install/development-channels)
+- [Actualización](/es/install/updating)
+- [Referencia de CLI](/es/cli)

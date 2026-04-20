@@ -52,7 +52,7 @@ OpenClaw 通過在您代理的工作區中寫入**純 Markdown 文件**來記憶
 它不會取代當前的記憶插件。當前的記憶插件仍然負責回憶、晉升和做夢。
 `memory-wiki` 在其旁邊增加了一個具豐富來源記錄的知識層。
 
-請參閱 [記憶 Wiki](/en/plugins/memory-wiki)。
+請參閱 [記憶 Wiki](/zh-Hant/plugins/memory-wiki)。
 
 ## 記憶搜尋
 
@@ -64,18 +64,18 @@ OpenClaw 通過在您代理的工作區中寫入**純 Markdown 文件**來記憶
 <Info>OpenClaw 會從可用的 API 金鑰自動偵測您的嵌入提供者。如果您 設定了 OpenAI、Gemini、Voyage 或 Mistral 金鑰，記憶搜尋 將會自動啟用。</Info>
 
 有關搜尋運作方式、調整選項和提供者設定的詳細資訊，請參閱
-[記憶搜尋](/en/concepts/memory-search)。
+[記憶搜尋](/zh-Hant/concepts/memory-search)。
 
 ## 記憶體後端
 
 <CardGroup cols={3}>
-  <Card title="內建（預設）" icon="database" href="/en/concepts/memory-builtin">
+  <Card title="內建（預設）" icon="database" href="/zh-Hant/concepts/memory-builtin">
     基於 SQLite。開箱即用，支援關鍵字搜尋、向量相似度和混合搜尋。無需額外依賴。
   </Card>
-  <Card title="QMD" icon="search" href="/en/concepts/memory-qmd">
+  <Card title="QMD" icon="search" href="/zh-Hant/concepts/memory-qmd">
     本機優先的側車程式，具備重排序、查詢擴充以及索引工作區外目錄的能力。
   </Card>
-  <Card title="Honcho" icon="brain" href="/en/concepts/memory-honcho">
+  <Card title="Honcho" icon="brain" href="/zh-Hant/concepts/memory-honcho">
     AI 原生的跨會話記憶，具備使用者建模、語意搜尋和多代理感知功能。需安裝外掛程式。
   </Card>
 </CardGroup>
@@ -83,14 +83,14 @@ OpenClaw 通過在您代理的工作區中寫入**純 Markdown 文件**來記憶
 ## 知識 Wiki 層
 
 <CardGroup cols={1}>
-  <Card title="記憶 Wiki" icon="book" href="/en/plugins/memory-wiki">
+  <Card title="記憶 Wiki" icon="book" href="/zh-Hant/plugins/memory-wiki">
     將持久化記憶編譯為具有來源豐富的 Wiki 儲存庫，包含主張、儀表板、橋接模式和相容 Obsidian 的工作流程。
   </Card>
 </CardGroup>
 
 ## 自動記憶體沖刷
 
-在 [壓縮](/en/concepts/compaction) 總結您的對話之前，OpenClaw 會執行一個靜默回合，提醒代理程式將重要上下文儲存到記憶檔案中。此功能預設開啟 —— 您無需進行任何設定。
+在 [壓縮](/zh-Hant/concepts/compaction) 總結您的對話之前，OpenClaw 會執行一個靜默回合，提醒代理程式將重要上下文儲存到記憶檔案中。此功能預設開啟 —— 您無需進行任何設定。
 
 <Tip>記憶體沖刷可防止壓縮期間的上下文遺失。如果您的代理在對話中擁有尚未寫入檔案的重要事實，它們將在總結發生之前自動儲存。</Tip>
 
@@ -106,7 +106,7 @@ OpenClaw 通過在您代理的工作區中寫入**純 Markdown 文件**來記憶
 - **可審查**：階段總結和日記條目會被寫入 `DREAMS.md` 以供人工審查。
 
 關於階段行為、評分信號與夢日記的詳情，請參閱
-[夢境](/en/concepts/dreaming)。
+[夢境](/zh-Hant/concepts/dreaming)。
 
 ## 基於事實的回填與即時提升
 
@@ -146,12 +146,12 @@ openclaw memory index --force   # Rebuild the index
 
 ## 延伸閱讀
 
-- [內建記憶引擎](/en/concepts/memory-builtin) -- 預設的 SQLite 後端
-- [QMD 記憶引擎](/en/concepts/memory-qmd) -- 進階的本機優先側車
-- [Honcho Memory](/en/concepts/memory-honcho) -- AI 原生的跨會話記憶
-- [Memory Wiki](/en/plugins/memory-wiki) -- 編譯的知識保存庫和 Wiki 原生工具
-- [Memory Search](/en/concepts/memory-search) -- 搜尋管道、提供者和調整
-- [夢境](/en/concepts/dreaming) -- 從短期回憶到長期記憶的
+- [內建記憶引擎](/zh-Hant/concepts/memory-builtin) -- 預設的 SQLite 後端
+- [QMD 記憶引擎](/zh-Hant/concepts/memory-qmd) -- 進階的本機優先側車
+- [Honcho Memory](/zh-Hant/concepts/memory-honcho) -- AI 原生的跨會話記憶
+- [Memory Wiki](/zh-Hant/plugins/memory-wiki) -- 編譯的知識保存庫和 Wiki 原生工具
+- [Memory Search](/zh-Hant/concepts/memory-search) -- 搜尋管道、提供者和調整
+- [夢境](/zh-Hant/concepts/dreaming) -- 從短期回憶到長期記憶的
   背景提昇
-- [記憶配置參考](/en/reference/memory-config) -- 所有配置選項
-- [壓縮](/en/concepts/compaction) -- 壓縮如何與記憶互動
+- [記憶配置參考](/zh-Hant/reference/memory-config) -- 所有配置選項
+- [壓縮](/zh-Hant/concepts/compaction) -- 壓縮如何與記憶互動

@@ -23,13 +23,13 @@ L'objectif de conception est de conserver toute la découverte/publicité résea
 - **Transport WS direct** : un point de terminaison Gateway WS orienté réseau local/tailnet (pas de SSH).
 - **Transport SSH (secours)** : contrôle à distance en transférant `127.0.0.1:18789` via SSH.
 - **Pont TCP hérité (supprimé)** : ancien protocole de transport de nœud (voir
-  [Protocole de pont](/en/gateway/bridge-protocol)) ; n'est plus annoncé pour
+  [Protocole de pont](/fr/gateway/bridge-protocol)) ; n'est plus annoncé pour
   la découverte et ne fait plus partie des versions actuelles.
 
 Protocol details:
 
-- [Protocole Gateway](/en/gateway/protocol)
-- [Protocole de pont (hérité)](/en/gateway/bridge-protocol)
+- [Protocole Gateway](/fr/gateway/protocol)
+- [Protocole de pont (hérité)](/fr/gateway/bridge-protocol)
 
 ## Pourquoi nous conservons à la fois le mode "direct" et SSH
 
@@ -57,7 +57,7 @@ Direction de la cible :
 - La **passerelle** annonce son point de terminaison WS via Bonjour.
 - Les clients naviguent et affichent une liste « choisir une passerelle », puis stockent le point de terminaison choisi.
 
-Dépannage et détails sur les balises : [Bonjour](/en/gateway/bonjour).
+Dépannage et détails sur les balises : [Bonjour](/fr/gateway/bonjour).
 
 #### Détails de la balise de service
 
@@ -112,7 +112,7 @@ Pour le jumelage de nœuds mobiles, les indices de découverte ne relâchent pas
 
 Lorsqu'il n'y a pas d'itinéraire direct (ou que le mode direct est désactivé), les clients peuvent toujours se connecter via SSH en transférant le port de passerelle de bouclage.
 
-Voir [Accès à distance](/en/gateway/remote).
+Voir [Accès à distance](/fr/gateway/remote).
 
 ## Sélection du transport (politique client)
 
@@ -128,7 +128,7 @@ Comportement client recommandé :
 
 La passerelle est la source de vérité pour l'admission des nœuds/clients.
 
-- Les demandes d'appairage sont créées/approuvées/rejetées dans la passerelle (voir [Appairage Gateway](/en/gateway/pairing)).
+- Les demandes d'appairage sont créées/approuvées/rejetées dans la passerelle (voir [Appairage Gateway](/fr/gateway/pairing)).
 - La passerelle applique :
   - auth (jeton / paire de clés)
   - portées/ACL (la passerelle n'est pas un proxy brut vers chaque méthode)

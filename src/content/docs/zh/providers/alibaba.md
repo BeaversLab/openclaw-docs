@@ -80,7 +80,7 @@ OpenClaw 附带了一个内置的 `alibaba` 视频生成提供商，用于 Aliba
     - `qwen/...` 当您需要规范的 Qwen 提供商界面时
     - `alibaba/...` 当您需要直接供应商拥有的 Wan 视频界面时
 
-    有关更多详细信息，请参阅 [Qwen 提供商文档](/en/providers/qwen)。
+    有关更多详细信息，请参阅 [Qwen 提供商文档](/zh/providers/qwen)。
 
   </Accordion>
 
@@ -99,13 +99,13 @@ OpenClaw 附带了一个内置的 `alibaba` 视频生成提供商，用于 Aliba
 ## 相关内容
 
 <CardGroup cols={2}>
-  <Card title="视频生成" href="/en/tools/video-generation" icon="video">
+  <Card title="视频生成" href="/zh/tools/video-generation" icon="video">
     共享的视频工具参数和提供商选择。
   </Card>
-  <Card title="Qwen" href="/en/providers/qwen" icon="microchip">
+  <Card title="Qwen" href="/zh/providers/qwen" icon="microchip">
     Qwen 提供商设置和 DashScope 集成。
   </Card>
-  <Card title="配置参考" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="配置参考" href="/zh/gateway/configuration-reference#agent-defaults" icon="gear">
     Agent 默认值和模型配置。
   </Card>
 </CardGroup>

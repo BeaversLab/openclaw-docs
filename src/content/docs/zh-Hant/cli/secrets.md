@@ -38,9 +38,9 @@ CI/閘道的結束代碼說明：
 
 相關：
 
-- Secrets 指南：[Secrets Management](/en/gateway/secrets)
-- Credential surface：[SecretRef Credential Surface](/en/reference/secretref-credential-surface)
-- 安全性指南：[Security](/en/gateway/security)
+- Secrets 指南：[Secrets Management](/zh-Hant/gateway/secrets)
+- Credential surface：[SecretRef Credential Surface](/zh-Hant/reference/secretref-credential-surface)
+- 安全性指南：[Security](/zh-Hant/gateway/security)
 
 ## 重新載入執行時段快照
 
@@ -135,7 +135,7 @@ openclaw secrets configure --json
 - 您不能將 `--providers-only` 與 `--skip-provider-setup` 結合使用。
 - `configure` 的目標是 `openclaw.json` 中包含秘密的欄位，加上所選 agent 範圍的 `auth-profiles.json`。
 - `configure` 支援直接在選擇器流程中建立新的 `auth-profiles.json` 映射。
-- 標準的支援介面：[SecretRef Credential Surface](/en/reference/secretref-credential-surface)。
+- 標準的支援介面：[SecretRef Credential Surface](/zh-Hant/reference/secretref-credential-surface)。
 - 它會在 apply 之前執行 preflight 解析。
 - 如果 preflight/apply 包含 exec refs，請將 `--allow-exec` 在兩個步驟中都保持設定。
 - 產生的計畫預設使用清理選項（`scrubEnv`、`scrubAuthProfilesForProviderTargets`、`scrubLegacyAuthJson` 均已啟用）。
@@ -171,7 +171,7 @@ Exec 行為：
 
 計畫合約細節（允許的目標路徑、驗證規則和失敗語意）：
 
-- [Secrets 套用計畫合約](/en/gateway/secrets-plan-contract)
+- [Secrets 套用計畫合約](/zh-Hant/gateway/secrets-plan-contract)
 
 `apply` 可能會更新的內容：
 

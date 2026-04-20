@@ -21,13 +21,13 @@ title: "OpenClaw"
 </p>
 
 <Columns>
-  <Card title="Comenzar" href="/en/start/getting-started" icon="rocket">
+  <Card title="Comenzar" href="/es/start/getting-started" icon="rocket">
     Instala OpenClaw y pon en marcha la puerta de enlace en minutos.
   </Card>
-  <Card title="Ejecutar incorporación" href="/en/start/wizard" icon="sparkles">
+  <Card title="Ejecutar incorporación" href="/es/start/wizard" icon="sparkles">
     Configuración guiada con `openclaw onboard` y flujos de vinculación.
   </Card>
-  <Card title="Abrir la interfaz de control" href="/en/web/control-ui" icon="layout-dashboard">
+  <Card title="Abrir la interfaz de control" href="/es/web/control-ui" icon="layout-dashboard">
     Inicia el panel del navegador para chat, configuración y sesiones.
   </Card>
 </Columns>
@@ -104,19 +104,19 @@ El Gateway es la única fuente de verdad para las sesiones, el enrutamiento y la
     openclaw dashboard
     ```
 
-    O conecta un canal ([Telegram](/en/channels/telegram) es el más rápido) y chatea desde tu teléfono.
+    O conecta un canal ([Telegram](/es/channels/telegram) es el más rápido) y chatea desde tu teléfono.
 
   </Step>
 </Steps>
 
-¿Necesitas la instalación completa y la configuración de desarrollo? Consulta [Introducción](/en/start/getting-started).
+¿Necesitas la instalación completa y la configuración de desarrollo? Consulta [Introducción](/es/start/getting-started).
 
 ## Panel de control
 
 Abre la interfaz de usuario de control del navegador después de que se inicie el Gateway.
 
 - Predeterminado local: [http://127.0.0.1:18789/](http://127.0.0.1:18789/)
-- Acceso remoto: [Superficies web](/en/web) y [Tailscale](/en/gateway/tailscale)
+- Acceso remoto: [Superficies web](/es/web) y [Tailscale](/es/gateway/tailscale)
 
 <p align="center">
   <img src="/whatsapp-openclaw.jpg" alt="OpenClaw" width="420" />
@@ -146,22 +146,22 @@ Ejemplo:
 ## Comenzar aquí
 
 <Columns>
-  <Card title="Centros de documentación" href="/en/start/hubs" icon="book-open">
+  <Card title="Centros de documentación" href="/es/start/hubs" icon="book-open">
     Toda la documentación y guías, organizadas por caso de uso.
   </Card>
-  <Card title="Configuración" href="/en/gateway/configuration" icon="settings">
+  <Card title="Configuración" href="/es/gateway/configuration" icon="settings">
     Configuración principal de Gateway, tokens y configuración del proveedor.
   </Card>
-  <Card title="Acceso remoto" href="/en/gateway/remote" icon="globe">
+  <Card title="Acceso remoto" href="/es/gateway/remote" icon="globe">
     Patrones de acceso SSH y tailnet.
   </Card>
-  <Card title="Canales" href="/en/channels/telegram" icon="message-square">
+  <Card title="Canales" href="/es/channels/telegram" icon="message-square">
     Configuración específica del canal para Feishu, Microsoft Teams, WhatsApp, Telegram, Discord y más.
   </Card>
-  <Card title="Nodos" href="/en/nodes" icon="smartphone">
+  <Card title="Nodos" href="/es/nodes" icon="smartphone">
     Nodos iOS y Android con emparejamiento, Canvas, cámara y acciones del dispositivo.
   </Card>
-  <Card title="Ayuda" href="/en/help" icon="life-buoy">
+  <Card title="Ayuda" href="/es/help" icon="life-buoy">
     Punto de entrada para soluciones comunes y solución de problemas.
   </Card>
 </Columns>
@@ -169,19 +169,19 @@ Ejemplo:
 ## Más información
 
 <Columns>
-  <Card title="Lista completa de funciones" href="/en/concepts/features" icon="list">
+  <Card title="Lista completa de funciones" href="/es/concepts/features" icon="list">
     Capacidades completas de canales, enrutamiento y medios.
   </Card>
-  <Card title="Enrutamiento multiagente" href="/en/concepts/multi-agent" icon="route">
+  <Card title="Enrutamiento multiagente" href="/es/concepts/multi-agent" icon="route">
     Aislamiento del espacio de trabajo y sesiones por agente.
   </Card>
-  <Card title="Seguridad" href="/en/gateway/security" icon="shield">
+  <Card title="Seguridad" href="/es/gateway/security" icon="shield">
     Tokens, listas de permitidos y controles de seguridad.
   </Card>
-  <Card title="Solución de problemas" href="/en/gateway/troubleshooting" icon="wrench">
+  <Card title="Solución de problemas" href="/es/gateway/troubleshooting" icon="wrench">
     Diagnósticos de puerta de enlace y errores comunes.
   </Card>
-  <Card title="Acerca de y créditos" href="/en/reference/credits" icon="info">
+  <Card title="Acerca de y créditos" href="/es/reference/credits" icon="info">
     Orígenes del proyecto, colaboradores y licencia.
   </Card>
 </Columns>

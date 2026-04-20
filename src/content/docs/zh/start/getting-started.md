@@ -17,7 +17,7 @@ title: "入门指南"
 - **Node.js** — 推荐 Node 24（也支持 Node 22.14+）
 - 来自模型提供商（API、Anthropic、Google 等）的 **OpenAI 密钥** — 新手引导将会提示您
 
-<Tip>使用 `node --version` 检查您的 Node 版本。 **Windows 用户：** 原生 Windows 和 WSL2 均受支持。为了获得完整的体验，WSL2 更加稳定并推荐使用。参见 [Windows](/en/platforms/windows)。 需要安装 Node？参见 [Node setup](/en/install/node)。</Tip>
+<Tip>使用 `node --version` 检查您的 Node 版本。 **Windows 用户：** 原生 Windows 和 WSL2 均受支持。为了获得完整的体验，WSL2 更加稳定并推荐使用。参见 [Windows](/zh/platforms/windows)。 需要安装 Node？参见 [Node setup](/zh/install/node)。</Tip>
 
 ## 快速设置
 
@@ -42,7 +42,7 @@ title: "入门指南"
     </Tabs>
 
     <Note>
-    其他安装方式 (Docker, Nix, npm): [Install](/en/install)。
+    其他安装方式 (Docker, Nix, npm): [Install](/zh/install)。
     </Note>
 
   </Step>
@@ -53,7 +53,7 @@ title: "入门指南"
 
     向导将引导您选择模型提供商、设置 API 密钥，并配置 Gateway(网关)。大约需要 2 分钟。
 
-    完整参考请参见 [新手引导 (CLI)](/en/start/wizard)。
+    完整参考请参见 [新手引导 (CLI)](/zh/start/wizard)。
 
   </Step>
   <Step title="验证 Gateway(网关) 是否正在运行">
@@ -75,7 +75,7 @@ title: "入门指南"
   <Step title="发送您的第一条消息">
     在控制 UI 聊天中输入一条消息，您应该会收到 AI 的回复。
 
-    想用手机聊天吗？设置最快的渠道是 [Telegram](/en/channels/telegram)（只需一个 bot token）。有关所有选项，请参见 [Channels](/en/channels)。
+    想用手机聊天吗？设置最快的渠道是 [Telegram](/zh/channels/telegram)（只需一个 bot token）。有关所有选项，请参见 [Channels](/zh/channels)。
 
   </Step>
 </Steps>
@@ -115,16 +115,16 @@ openclaw dashboard
 ## 下一步做什么
 
 <Columns>
-  <Card title="连接一个渠道" href="/en/channels" icon="message-square">
+  <Card title="连接一个渠道" href="/zh/channels" icon="message-square">
     Discord、Feishu、iMessage、Matrix、Microsoft Teams、Signal、Slack、Telegram、WhatsApp、Zalo 等等。
   </Card>
-  <Card title="配对与安全" href="/en/channels/pairing" icon="shield">
+  <Card title="配对与安全" href="/zh/channels/pairing" icon="shield">
     控制谁可以向您的代理发送消息。
   </Card>
-  <Card title="配置 Gateway(网关)" href="/en/gateway/configuration" icon="settings">
+  <Card title="配置 Gateway(网关)" href="/zh/gateway/configuration" icon="settings">
     模型、工具、沙箱和高级设置。
   </Card>
-  <Card title="浏览工具" href="/en/tools" icon="wrench">
+  <Card title="浏览工具" href="/zh/tools" icon="wrench">
     浏览器、执行、Web 搜索、技能和插件。
   </Card>
 </Columns>
@@ -136,6 +136,6 @@ openclaw dashboard
 - `OPENCLAW_STATE_DIR` — 覆盖状态目录
 - `OPENCLAW_CONFIG_PATH` — 覆盖配置文件路径
 
-完整参考：[环境变量](/en/help/environment)。
+完整参考：[环境变量](/zh/help/environment)。
 
 </Accordion>

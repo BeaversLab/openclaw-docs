@@ -114,10 +114,10 @@ Tout modèle disponible sur la passerelle peut être utilisé avec le préfixe `
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les fournisseurs, les références de modèles et le comportement de basculement.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration" icon="gear">
     Référence complète de la configuration OpenClaw.
   </Card>
   <Card title="Kilo Gateway" href="https://app.kilo.ai" icon="arrow-up-right-from-square">

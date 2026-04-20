@@ -15,4 +15,4 @@ openclaw tasks flow show <lookup>
 openclaw tasks flow cancel <lookup>
 ```
 
-Pour la documentation complète, voir [Task Flow](/en/automation/taskflow) et la [référence de la CLI des tâches](/en/cli/index#tasks).
+Pour la documentation complète, voir [Task Flow](/fr/automation/taskflow) et la [référence de la CLI des tâches](/fr/cli/index#tasks).

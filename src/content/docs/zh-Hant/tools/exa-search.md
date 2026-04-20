@@ -121,6 +121,6 @@ await web_search({
 
 ## 相關
 
-- [Web Search 概述](/en/tools/web) -- 所有提供者與自動偵測
-- [Brave Search](/en/tools/brave-search) -- 具有國家/語言篩選的結構化結果
-- [Perplexity Search](/en/tools/perplexity-search) -- 具有網域篩選的結構化結果
+- [Web Search 概述](/zh-Hant/tools/web) -- 所有提供者與自動偵測
+- [Brave Search](/zh-Hant/tools/brave-search) -- 具有國家/語言篩選的結構化結果
+- [Perplexity Search](/zh-Hant/tools/perplexity-search) -- 具有網域篩選的結構化結果

@@ -52,7 +52,7 @@ OpenClaw 提供了三个安装程序脚本，从 `openclaw.ai` 提供。
   </Tab>
 </Tabs>
 
-<Note>如果安装成功但在新终端中找不到 `openclaw`，请参阅 [Node.js 故障排除](/en/install/node#troubleshooting)。</Note>
+<Note>如果安装成功但在新终端中找不到 `openclaw`，请参阅 [Node.js 故障排除](/zh/install/node#troubleshooting)。</Note>
 
 ---
 
@@ -313,6 +313,6 @@ OpenClaw 提供了三个安装程序脚本，从 `openclaw.ai` 提供。
   </Accordion>
 
   <Accordion title="openclaw not found after install">
-    通常是 PATH 问题。请参阅 [Node.js 故障排除](/en/install/node#troubleshooting)。
+    通常是 PATH 问题。请参阅 [Node.js 故障排除](/zh/install/node#troubleshooting)。
   </Accordion>
 </AccordionGroup>

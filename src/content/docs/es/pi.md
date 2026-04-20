@@ -557,4 +557,4 @@ En vivo/opcional:
 
 - `src/agents/pi-embedded-runner-extraparams.live.test.ts` (habilitar `OPENCLAW_LIVE_TEST=1`)
 
-Para ver los comandos de ejecución actuales, consulte [Flujo de trabajo de desarrollo de Pi](/en/pi-dev).
+Para ver los comandos de ejecución actuales, consulte [Flujo de trabajo de desarrollo de Pi](/es/pi-dev).

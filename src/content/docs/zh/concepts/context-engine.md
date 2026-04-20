@@ -244,10 +244,10 @@ export default function register(api) {
 - 引擎错误会被记录并显示在诊断信息中。如果插件引擎注册失败或选定的引擎 ID 无法解析，OpenClaw 不会自动回退；运行将会失败，直到您修复插件或将 `plugins.slots.contextEngine` 切换回 `"legacy"`。
 - 对于开发，请使用 `openclaw plugins install -l ./my-engine` 来链接本地插件目录而无需复制。
 
-另请参阅：[Compaction](/en/concepts/compaction)、[Context](/en/concepts/context)、[Plugins](/en/tools/plugin)、[Plugin manifest](/en/plugins/manifest)。
+另请参阅：[Compaction](/zh/concepts/compaction)、[Context](/zh/concepts/context)、[Plugins](/zh/tools/plugin)、[Plugin manifest](/zh/plugins/manifest)。
 
 ## 相关
 
-- [Context](/en/concepts/context) — 如何为代理轮次构建上下文
-- [Plugin Architecture](/en/plugins/architecture) — 注册上下文引擎插件
-- [Compaction](/en/concepts/compaction) — 总结长对话
+- [Context](/zh/concepts/context) — 如何为代理轮次构建上下文
+- [Plugin Architecture](/zh/plugins/architecture) — 注册上下文引擎插件
+- [Compaction](/zh/concepts/compaction) — 总结长对话

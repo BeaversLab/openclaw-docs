@@ -10,7 +10,7 @@ read_when:
 
 [Arcee AI](https://arcee.ai) proporciona acceso a la familia de modelos de mezcla de expertos Trinity a través de una API compatible con OpenAI. Todos los modelos Trinity tienen licencia Apache 2.0.
 
-Se puede acceder a los modelos de Arcee AI directamente a través de la plataforma de Arcee o mediante [OpenRouter](/en/providers/openrouter).
+Se puede acceder a los modelos de Arcee AI directamente a través de la plataforma de Arcee o mediante [OpenRouter](/es/providers/openrouter).
 
 | Propiedad     | Valor                                                                                 |
 | ------------- | ------------------------------------------------------------------------------------- |
@@ -127,7 +127,7 @@ OpenClaw actualmente incluye este catálogo de Arcee:
   <Accordion title="Enrutamiento de OpenRouter">
     Cuando se usan modelos de Arcee a través de OpenRouter, se aplican las mismas referencias de modelo `arcee/*`.
     OpenClaw maneja el enrutamiento de forma transparente según su elección de autenticación. Consulte la
-    [documentación del proveedor OpenRouter](/en/providers/openrouter) para obtener detalles de configuración
+    [documentación del proveedor OpenRouter](/es/providers/openrouter) para obtener detalles de configuración
     específicos de OpenRouter.
   </Accordion>
 </AccordionGroup>
@@ -135,10 +135,10 @@ OpenClaw actualmente incluye este catálogo de Arcee:
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="OpenRouter" href="/en/providers/openrouter" icon="shuffle">
+  <Card title="OpenRouter" href="/es/providers/openrouter" icon="shuffle">
     Acceda a modelos de Arcee y muchos más a través de una sola clave de API.
   </Card>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elegir proveedores, referencias de modelo y comportamiento de conmutación por error.
   </Card>
 </CardGroup>

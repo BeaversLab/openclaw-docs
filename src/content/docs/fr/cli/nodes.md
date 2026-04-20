@@ -12,9 +12,9 @@ Gérer les nœuds jumelés (appareils) et appeler les capacités des nœuds.
 
 Connexes :
 
-- Aperçu des nœuds : [Nodes](/en/nodes)
-- Caméra : [Camera nodes](/en/nodes/camera)
-- Images : [Image nodes](/en/nodes/images)
+- Aperçu des nœuds : [Nodes](/fr/nodes)
+- Caméra : [Camera nodes](/fr/nodes/camera)
+- Images : [Image nodes](/fr/nodes/images)
 
 Options courantes :
 

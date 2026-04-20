@@ -185,7 +185,7 @@ LINE admite enlaces de conversación ACP (Agent Communication Protocol):
 - `/acp spawn <agent> --bind here` vincula el chat actual de LINE a una sesión ACP sin crear un hilo secundario.
 - Los enlaces ACP configurados y las sesiones ACP activas vinculadas a conversaciones funcionan en LINE como en otros canales de conversación.
 
-Consulte [Agentes ACP](/en/tools/acp-agents) para obtener más detalles.
+Consulte [Agentes ACP](/es/tools/acp-agents) para obtener más detalles.
 
 ## Medios salientes
 
@@ -205,8 +205,8 @@ Los envíos de medios genéricos recurren a la ruta existente de solo imágenes 
 
 ## Relacionado
 
-- [Descripción general de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — autenticación de MD y flujo de emparejamiento
-- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento
+- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y fortalecimiento

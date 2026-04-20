@@ -10,16 +10,16 @@ title: "Manual de operaciones de Gateway"
 Utilice esta página para el inicio inicial (día-1) y las operaciones posteriores (día-2) del servicio Gateway.
 
 <CardGroup cols={2}>
-  <Card title="Solución profunda de problemas" icon="siren" href="/en/gateway/troubleshooting">
+  <Card title="Solución profunda de problemas" icon="siren" href="/es/gateway/troubleshooting">
     Diagnóstico basado en síntomas con escalas de comandos exactas y firmas de registro.
   </Card>
-  <Card title="Configuración" icon="sliders" href="/en/gateway/configuration">
+  <Card title="Configuración" icon="sliders" href="/es/gateway/configuration">
     Guía de configuración orientada a tareas + referencia de configuración completa.
   </Card>
-  <Card title="Gestión de secretos" icon="key-round" href="/en/gateway/secrets">
+  <Card title="Gestión de secretos" icon="key-round" href="/es/gateway/secrets">
     Contrato SecretRef, comportamiento de la instantánea en tiempo de ejecución y operaciones de migración/recarga.
   </Card>
-  <Card title="Contrato del plan de secretos" icon="shield-check" href="/en/gateway/secrets-plan-contract">
+  <Card title="Contrato del plan de secretos" icon="shield-check" href="/es/gateway/secrets-plan-contract">
     Reglas exactas de `secrets apply` objetivo/ruta y comportamiento de auth-profile de solo referencia.
   </Card>
 </CardGroup>
@@ -161,7 +161,7 @@ Qué esperar:
   responde.
 - Si es intencional, aisle los puertos, la configuración/estado y las raíces del espacio de trabajo para cada puerta de enlace.
 
-Configuración detallada: [/gateway/multiple-gateways](/en/gateway/multiple-gateways).
+Configuración detallada: [/gateway/multiple-gateways](/es/gateway/multiple-gateways).
 
 ## Acceso remoto
 
@@ -176,7 +176,7 @@ Luego conecte los clientes localmente a `ws://127.0.0.1:18789`.
 
 <Warning>Los túneles SSH no omiten la autenticación de la puerta de enlace. Para la autenticación de secreto compartido, los clientes aún deben enviar `token`/`password` incluso a través del túnel. Para los modos con identidad, la solicitud aún debe satisfacer esa ruta de autenticación.</Warning>
 
-Vea: [Remote Gateway](/en/gateway/remote), [Authentication](/en/gateway/authentication), [Tailscale](/en/gateway/tailscale).
+Vea: [Remote Gateway](/es/gateway/remote), [Authentication](/es/gateway/authentication), [Tailscale](/es/gateway/tailscale).
 
 ## Supervisión y ciclo de vida del servicio
 
@@ -284,7 +284,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a opencla
 OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
 ```
 
-Consulte: [Múltiples gateways](/en/gateway/multiple-gateways).
+Consulte: [Múltiples gateways](/es/gateway/multiple-gateways).
 
 ### Ruta rápida del perfil de desarrollo
 
@@ -312,7 +312,7 @@ Las ejecuciones del agente constan de dos etapas:
 1. Ack de aceptación inmediata (`status:"accepted"`)
 2. Respuesta de finalización final (`status:"ok"|"error"`), con eventos `agent` transmitidos en el medio.
 
-Consulte la documentación completa del protocolo: [Gateway Protocol](/en/gateway/protocol).
+Consulte la documentación completa del protocolo: [Gateway Protocol](/es/gateway/protocol).
 
 ## Verificaciones operativas
 
@@ -342,7 +342,7 @@ Los eventos no se reproducen. Ante huecos en la secuencia, actualice el estado (
 | `Gateway start blocked: set gateway.mode=local`                | Configuración establecida en modo remoto o falta la marca de modo local en una configuración dañada |
 | `unauthorized` durante la conexión                             | Discrepancia de autenticación entre el cliente y la puerta de enlace                                |
 
-Para obtener escaleras de diagnóstico completas, use [Gateway Troubleshooting](/en/gateway/troubleshooting).
+Para obtener escaleras de diagnóstico completas, use [Gateway Troubleshooting](/es/gateway/troubleshooting).
 
 ## Garantías de seguridad
 
@@ -354,9 +354,9 @@ Para obtener escaleras de diagnóstico completas, use [Gateway Troubleshooting](
 
 Relacionado:
 
-- [Troubleshooting](/en/gateway/troubleshooting)
-- [Background Process](/en/gateway/background-process)
-- [Configuration](/en/gateway/configuration)
-- [Health](/en/gateway/health)
-- [Doctor](/en/gateway/doctor)
-- [Authentication](/en/gateway/authentication)
+- [Troubleshooting](/es/gateway/troubleshooting)
+- [Background Process](/es/gateway/background-process)
+- [Configuration](/es/gateway/configuration)
+- [Health](/es/gateway/health)
+- [Doctor](/es/gateway/doctor)
+- [Authentication](/es/gateway/authentication)

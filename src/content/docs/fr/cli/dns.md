@@ -12,8 +12,8 @@ Helpers DNS pour la découverte grande distance (Tailscale + CoreDNS). Actuellem
 
 Connexes :
 
-- Discovery de passerelle : [Discovery](/en/gateway/discovery)
-- Configuration de la découverte à grande échelle : [Configuration](/en/gateway/configuration)
+- Discovery de passerelle : [Discovery](/fr/gateway/discovery)
+- Configuration de la découverte à grande échelle : [Configuration](/fr/gateway/configuration)
 
 ## Installation
 

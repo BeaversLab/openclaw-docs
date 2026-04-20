@@ -10,7 +10,7 @@ read_when:
 
 Lobster 是一個工作流程外殼，讓 OpenClaw 能將多步驟工具序列作為單一、確定性的操作來執行，並具有明確的審批檢查點。
 
-Lobster 是位於分離背景工作之上的其中一個編寫層。對於個別任務之上的流程協調，請參閱 [Task Flow](/en/automation/taskflow) (`openclaw tasks flow`)。關於任務活動帳本，請參閱 [`openclaw tasks`](/en/automation/tasks)。
+Lobster 是位於分離背景工作之上的其中一個編寫層。對於個別任務之上的流程協調，請參閱 [Task Flow](/zh-Hant/automation/taskflow) (`openclaw tasks flow`)。關於任務活動帳本，請參閱 [`openclaw tasks`](/zh-Hant/automation/tasks)。
 
 ## Hook
 
@@ -120,7 +120,7 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 }'
 ```
 
-詳情和設定選項，請參閱 [LLM Task](/en/tools/llm-task)。
+詳情和設定選項，請參閱 [LLM Task](/zh-Hant/tools/llm-task)。
 
 ## 工作流程檔案
 
@@ -312,7 +312,7 @@ Lobster 傳回具有以下三種狀態之一的 JSON 信封：
 
 ## OpenProse
 
-OpenProse 與 Lobster 搭配得很好：使用 `/prose` 來協調多代理準備工作，然後執行 Lobster 管線進行確定性審批。如果 Prose 程式需要 Lobster，請透過 `tools.subagents.tools` 允許子代理使用 `lobster` 工具。參見 [OpenProse](/en/prose)。
+OpenProse 與 Lobster 搭配得很好：使用 `/prose` 來協調多代理準備工作，然後執行 Lobster 管線進行確定性審批。如果 Prose 程式需要 Lobster，請透過 `tools.subagents.tools` 允許子代理使用 `lobster` 工具。參見 [OpenProse](/zh-Hant/prose)。
 
 ## 安全性
 
@@ -330,8 +330,8 @@ OpenProse 與 Lobster 搭配得很好：使用 `/prose` 來協調多代理準備
 
 ## 深入了解
 
-- [外掛程式](/en/tools/plugin)
-- [外掛程式工具撰寫](/en/plugins/building-plugins#registering-agent-tools)
+- [外掛程式](/zh-Hant/tools/plugin)
+- [外掛程式工具撰寫](/zh-Hant/plugins/building-plugins#registering-agent-tools)
 
 ## 案例研究：社群工作流程
 
@@ -342,6 +342,6 @@ OpenProse 與 Lobster 搭配得很好：使用 `/prose` 來協調多代理準備
 
 ## 相關
 
-- [自動化與任務](/en/automation) — 排程 Lobster 工作流程
-- [自動化總覽](/en/automation) — 所有自動化機制
-- [工具總覽](/en/tools) — 所有可用的代理工具
+- [自動化與任務](/zh-Hant/automation) — 排程 Lobster 工作流程
+- [自動化總覽](/zh-Hant/automation) — 所有自動化機制
+- [工具總覽](/zh-Hant/tools) — 所有可用的代理工具

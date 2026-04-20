@@ -160,18 +160,18 @@ title: "inferrs"
   </Accordion>
 </AccordionGroup>
 
-<Tip>如需常规帮助，请参阅[故障排除](/en/help/troubleshooting)和[常见问题](/en/help/faq)。</Tip>
+<Tip>如需常规帮助，请参阅[故障排除](/zh/help/troubleshooting)和[常见问题](/zh/help/faq)。</Tip>
 
 ## 另请参阅
 
 <CardGroup cols={2}>
-  <Card title="本地模型" href="/en/gateway/local-models" icon="server">
+  <Card title="本地模型" href="/zh/gateway/local-models" icon="server">
     针对本地模型服务器运行 OpenClaw。
   </Card>
-  <Card title="Gateway(网关)故障排除" href="/en/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail" icon="wrench">
+  <Card title="Gateway(网关)故障排除" href="/zh/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail" icon="wrench">
     调试通过探测但代理运行失败的本地 OpenAI-兼容后端。
   </Card>
-  <Card title="模型提供商" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型提供商" href="/zh/concepts/model-providers" icon="layers">
     所有提供商、模型引用和故障转移行为的概述。
   </Card>
 </CardGroup>

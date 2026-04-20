@@ -103,6 +103,6 @@ Ser directo es bueno. Ser molesto no lo es.
 
 ## Documentos relacionados
 
-- [Espacio de trabajo del agente](/en/concepts/agent-workspace)
-- [Prompt del sistema](/en/concepts/system-prompt)
-- [Plantilla de SOUL.md](/en/reference/templates/SOUL)
+- [Espacio de trabajo del agente](/es/concepts/agent-workspace)
+- [Prompt del sistema](/es/concepts/system-prompt)
+- [Plantilla de SOUL.md](/es/reference/templates/SOUL)

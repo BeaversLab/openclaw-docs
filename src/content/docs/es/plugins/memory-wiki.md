@@ -364,7 +364,7 @@ openclaw wiki bridge import
 openclaw wiki obsidian status
 ```
 
-Consulte [CLI: wiki](/en/cli/wiki) para la referencia completa de comandos.
+Consulte [CLI: wiki](/es/cli/wiki) para la referencia completa de comandos.
 
 ## Soporte de Obsidian
 
@@ -393,7 +393,7 @@ Esto es opcional. El wiki sigue funcionando en modo nativo sin Obsidian.
 
 ## Documentos relacionados
 
-- [Descripción general de la memoria](/en/concepts/memory)
-- [CLI: memory](/en/cli/memory)
-- [CLI: wiki](/en/cli/wiki)
-- [Descripción general del SDK de complementos](/en/plugins/sdk-overview)
+- [Descripción general de la memoria](/es/concepts/memory)
+- [CLI: memory](/es/cli/memory)
+- [CLI: wiki](/es/cli/wiki)
+- [Descripción general del SDK de complementos](/es/plugins/sdk-overview)

@@ -148,7 +148,7 @@ Choisissez QMD lorsque vous avez besoin de :
 - De rappeler les conversations des sessions passées.
 - Une recherche entièrement locale sans clés API.
 
-Pour des configurations plus simples, le [moteur intégré](/en/concepts/memory-builtin) fonctionne bien
+Pour des configurations plus simples, le [moteur intégré](/fr/concepts/memory-builtin) fonctionne bien
 sans dépendances supplémentaires.
 
 ## Dépannage
@@ -176,4 +176,4 @@ un parcours sans cycle ou des contrôles d'exclusion explicites.
 
 Pour la surface de configuration complète (`memory.qmd.*`), les modes de recherche, les intervalles de mise à jour,
 les règles de portée et tous les autres paramètres, consultez la
-[référence de configuration de la mémoire](/en/reference/memory-config).
+[référence de configuration de la mémoire](/fr/reference/memory-config).

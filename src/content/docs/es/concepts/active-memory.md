@@ -788,6 +788,6 @@ Después de cambiar el proveedor, reinicie la puerta de enlace y ejecute una pru
 
 ## Páginas relacionadas
 
-- [Búsqueda de memoria](/en/concepts/memory-search)
-- [Referencia de configuración de memoria](/en/reference/memory-config)
-- [Configuración del SDK de complementos](/en/plugins/sdk-setup)
+- [Búsqueda de memoria](/es/concepts/memory-search)
+- [Referencia de configuración de memoria](/es/reference/memory-config)
+- [Configuración del SDK de complementos](/es/plugins/sdk-setup)

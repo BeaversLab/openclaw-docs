@@ -7,7 +7,7 @@ title: "測試"
 
 # 測試
 
-- 完整的測試套件（套件、即時、Docker）：[Testing](/en/help/testing)
+- 完整的測試套件（套件、即時、Docker）：[Testing](/zh-Hant/help/testing)
 
 - `pnpm test:force`：終止任何佔用預設控制埠的殘留 gateway 程序，然後使用隔離的 gateway 埠執行完整的 Vitest 套件，以免伺服器測試與執行中的實例衝突。當先前的 gateway 執行留下佔用 18789 埠時使用此選項。
 - `pnpm test:coverage`：使用 V8 覆蓋率 (透過 `vitest.unit.config.ts`) 執行單元套件。全域閾值為 70% 的行/分支/函式/陳述式。覆蓋率排除重度整合的進入點 (CLI 接線、gateway/telegram 橋接器、webchat 靜態伺服器)，以將目標集中在可進行單元測試的邏輯上。

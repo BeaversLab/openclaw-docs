@@ -109,10 +109,10 @@ Groq 也提供快速的基於 Whisper 的音訊轉錄。當配置為媒體理解
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇供應商、模型參照和故障轉移行為。
   </Card>
-  <Card title="設定參考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration-reference" icon="gear">
     完整的設定架構，包括供應商和音訊設定。
   </Card>
   <Card title="Groq Console" href="https://console.groq.com" icon="arrow-up-right-from-square">

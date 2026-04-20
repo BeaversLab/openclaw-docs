@@ -180,7 +180,7 @@ DashScope 端點（而非 Coding Plan 端點）上公開了多模態功能：
 }
 ```
 
-<Note>請參閱 [影片生成](/en/tools/video-generation) 以了解共用工具參數、提供者選擇和故障轉移行為。</Note>
+<Note>請參閱 [影片生成](/zh-Hant/tools/video-generation) 以了解共用工具參數、提供者選擇和故障轉移行為。</Note>
 
 ## 進階
 
@@ -282,16 +282,16 @@ DashScope 端點（而非 Coding Plan 端點）上公開了多模態功能：
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和故障轉移行為。
   </Card>
-  <Card title="視訊生成" href="/en/tools/video-generation" icon="video">
+  <Card title="視訊生成" href="/zh-Hant/tools/video-generation" icon="video">
     共用的視訊工具參數和提供者選擇。
   </Card>
-  <Card title="Alibaba (ModelStudio)" href="/en/providers/alibaba" icon="cloud">
+  <Card title="Alibaba (ModelStudio)" href="/zh-Hant/providers/alibaba" icon="cloud">
     舊版 ModelStudio 提供者和遷移說明。
   </Card>
-  <Card title="疑難排解" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="疑難排解" href="/zh-Hant/help/troubleshooting" icon="wrench">
     一般疑難排解和常見問題。
   </Card>
 </CardGroup>

@@ -84,7 +84,7 @@ chargées lorsque le plugin est activé. Aujourd'hui, ces répertoires sont fusi
 chemin de faible priorité que `skills.load.extraDirs`, donc une compétence groupée,
 gérée, d'agent ou d'espace de travail du même nom les remplace.
 Vous pouvez les conditionner via `metadata.openclaw.requires.config` sur l'entrée de configuration
-du plugin. Voir [Plugins](/en/tools/plugin) pour la découverte/configuration et [Outils](/en/tools) pour
+du plugin. Voir [Plugins](/fr/tools/plugin) pour la découverte/configuration et [Outils](/fr/tools) pour
 la surface outil que ces compétences enseignent.
 
 ## ClawHub (install + sync)
@@ -93,7 +93,7 @@ ClawHub est le registre public de compétences pour OpenClaw. Parcourez-le à
 [https://clawhub.ai](https://clawhub.ai). Utilisez les commandes natives `openclaw skills`
 pour découvrir/installer/mettre à jour les compétences, ou le `clawhub` CLI séparé lorsque
 vous avez besoin des flux de travail de publication/synchronisation.
-Guide complet : [ClawHub](/en/tools/clawhub).
+Guide complet : [ClawHub](/fr/tools/clawhub).
 
 Flux courants :
 
@@ -112,13 +112,13 @@ OpenClaw le détecte en tant que `<workspace>/skills` lors de la prochaine sessi
 ## Notes de sécurité
 
 - Traitez les compétences tierces comme du **code non fiable**. Lisez-les avant de les activer.
-- Préférez les exécutions en bac à sable (sandboxed) pour les entrées non fiables et les outils risqués. Voir [Bac à sable (Sandboxing)](/en/gateway/sandboxing).
+- Préférez les exécutions en bac à sable (sandboxed) pour les entrées non fiables et les outils risqués. Voir [Bac à sable (Sandboxing)](/fr/gateway/sandboxing).
 - La découverte de compétences dans l'espace de travail et le répertoire supplémentaire n'accepte que les racines de compétences et les fichiers `SKILL.md` dont le chemin réel résolu reste à l'intérieur de la racine configurée.
 - Les installations de dépendances de compétences basées sur le Gateway (`skills.install`, l'intégration et l'interface utilisateur des paramètres des Skills) exécutent l'analyseur de code dangereux intégré avant d'exécuter les métadonnées de l'installateur. Les résultats `critical` bloquent par défaut, sauf si l'appelant définit explicitement le substitut dangereux ; les résultats suspects génèrent tout de même un avertissement.
 - `openclaw skills install <slug>` est différent : il télécharge un dossier de compétence ClawHub dans l'espace de travail et n'utilise pas le chemin des métadonnées de l'installateur mentionné ci-dessus.
 - `skills.entries.*.env` et `skills.entries.*.apiKey` injectent des secrets dans le processus **hôte**
   pour ce tour d'agent (pas le bac à sable). Gardez les secrets hors des invites et des journaux.
-- Pour un modèle de menace plus large et des listes de contrôle, voir [Sécurité](/en/gateway/security).
+- Pour un modèle de menace plus large et des listes de contrôle, voir [Sécurité](/fr/gateway/security).
 
 ## Format (compatible AgentSkills + Pi)
 
@@ -338,7 +338,7 @@ OpenClaw fournit un ensemble de base de compétences en tant que **compétences 
 
 ## Référence de configuration
 
-Voir [Skills config](/en/tools/skills-config) pour le schéma de configuration complet.
+Voir [Skills config](/fr/tools/skills-config) pour le schéma de configuration complet.
 
 ## Vous cherchez plus de compétences ?
 
@@ -348,7 +348,7 @@ Parcourir [https://clawhub.ai](https://clawhub.ai).
 
 ## Connexes
 
-- [Creating Skills](/en/tools/creating-skills) — créer des compétences personnalisées
-- [Skills Config](/en/tools/skills-config) — référence de configuration des compétences
-- [Slash Commands](/en/tools/slash-commands) — toutes les commandes slash disponibles
-- [Plugins](/en/tools/plugin) — aperçu du système de plugins
+- [Creating Skills](/fr/tools/creating-skills) — créer des compétences personnalisées
+- [Skills Config](/fr/tools/skills-config) — référence de configuration des compétences
+- [Slash Commands](/fr/tools/slash-commands) — toutes les commandes slash disponibles
+- [Plugins](/fr/tools/plugin) — aperçu du système de plugins

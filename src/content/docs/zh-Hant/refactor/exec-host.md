@@ -310,7 +310,7 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 
 ## 相關文件
 
-- [Exec tool](/en/tools/exec)
-- [Exec approvals](/en/tools/exec-approvals)
-- [Nodes](/en/nodes)
-- [Elevated mode](/en/tools/elevated)
+- [Exec tool](/zh-Hant/tools/exec)
+- [Exec approvals](/zh-Hant/tools/exec-approvals)
+- [Nodes](/zh-Hant/nodes)
+- [Elevated mode](/zh-Hant/tools/elevated)

@@ -17,11 +17,11 @@ OpenClaw intègre des CLI externes via JSON-RPC. Deux modèles sont utilisés au
 - Sonde de santé : `/api/v1/check`.
 - OpenClaw gère le cycle de vie lorsque `channels.signal.autoStart=true`.
 
-Voir [Signal](/en/channels/signal) pour la configuration et les points de terminaison.
+Voir [Signal](/fr/channels/signal) pour la configuration et les points de terminaison.
 
 ## Modèle B : Processus enfant stdio (hérité : imsg)
 
-> **Remarque :** Pour les nouvelles configurations iMessage, utilisez [BlueBubbles](/en/channels/bluebubbles) à la place.
+> **Remarque :** Pour les nouvelles configurations iMessage, utilisez [BlueBubbles](/fr/channels/bluebubbles) à la place.
 
 - OpenClaw génère `imsg rpc` en tant que processus enfant (intégration iMessage héritée).
 - JSON-RPC est délimité par ligne sur stdin/stdout (un objet JSON par ligne).
@@ -34,7 +34,7 @@ Méthodes principales utilisées :
 - `send`
 - `chats.list` (sonde/diagnostics)
 
-Voir [iMessage](/en/channels/imessage) pour la configuration héritée et l'adressage (`chat_id` préféré).
+Voir [iMessage](/fr/channels/imessage) pour la configuration héritée et l'adressage (`chat_id` préféré).
 
 ## Directives pour les adaptateurs
 

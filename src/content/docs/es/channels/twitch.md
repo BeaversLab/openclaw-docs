@@ -29,7 +29,7 @@ Registro local (cuando se ejecuta desde un repositorio git):
 openclaw plugins install ./path/to/local/twitch-plugin
 ```
 
-Detalles: [Complementos](/en/tools/plugin)
+Detalles: [Complementos](/es/tools/plugin)
 
 ## Configuración rápida (principiante)
 
@@ -153,7 +153,7 @@ El bot actualiza automáticamente los tokens antes de que caduquen y registra lo
 
 ## Soporte multicuenta
 
-Usa `channels.twitch.accounts` con tokens por cuenta. Consulta [`gateway/configuration`](/en/gateway/configuration) para el patrón compartido.
+Usa `channels.twitch.accounts` con tokens por cuenta. Consulta [`gateway/configuration`](/es/gateway/configuration) para el patrón compartido.
 
 Ejemplo (una cuenta de bot en dos canales):
 
@@ -387,8 +387,8 @@ Ejemplo:
 
 ## Relacionado
 
-- [Descripción general de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento por MD
-- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesión para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento
+- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — flujo de autenticación y emparejamiento por MD
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y fortalecimiento

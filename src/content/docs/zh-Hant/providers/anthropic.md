@@ -94,11 +94,11 @@ Anthropic 目前的公開文件：
     </Steps>
 
     <Note>
-    有關 Claude CLI 後端的設定和執行時詳細資訊，請參閱 [CLI Backends](/en/gateway/cli-backends)。
+    有關 Claude CLI 後端的設定和執行時詳細資訊，請參閱 [CLI Backends](/zh-Hant/gateway/cli-backends)。
     </Note>
 
     <Tip>
-    如果您希望計費路徑最清晰，請改用 Anthropic API 金鑰。OpenClaw 也支援來自 [OpenAI Codex](/en/providers/openai)、[Qwen Cloud](/en/providers/qwen)、[MiniMax](/en/providers/minimax) 和 [Z.AI / GLM](/en/providers/glm) 的訂閱式選項。
+    如果您希望計費路徑最清晰，請改用 Anthropic API 金鑰。OpenClaw 也支援來自 [OpenAI Codex](/zh-Hant/providers/openai)、[Qwen Cloud](/zh-Hant/providers/qwen)、[MiniMax](/zh-Hant/providers/minimax) 和 [Z.AI / GLM](/zh-Hant/providers/glm) 的訂閱式選項。
     </Tip>
 
   </Tab>
@@ -276,21 +276,21 @@ OpenClaw 支援 Anthropic 的提示快取功能，適用於 API 金鑰驗證。
   </Accordion>
 </AccordionGroup>
 
-<Note>更多協助：[疑難排解](/en/help/troubleshooting) 和 [常見問題](/en/help/faq)。</Note>
+<Note>更多協助：[疑難排解](/zh-Hant/help/troubleshooting) 和 [常見問題](/zh-Hant/help/faq)。</Note>
 
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和容錯移轉行為。
   </Card>
-  <Card title="CLI backends" href="/en/gateway/cli-backends" icon="terminal">
+  <Card title="CLI backends" href="/zh-Hant/gateway/cli-backends" icon="terminal">
     Claude CLI 後端設定和執行時期詳細資訊。
   </Card>
-  <Card title="Prompt caching" href="/en/reference/prompt-caching" icon="database">
+  <Card title="Prompt caching" href="/zh-Hant/reference/prompt-caching" icon="database">
     提示快取如何跨提供者運作。
   </Card>
-  <Card title="OAuth and auth" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth and auth" href="/zh-Hant/gateway/authentication" icon="key">
     驗證詳細資訊和認證重用規則。
   </Card>
 </CardGroup>

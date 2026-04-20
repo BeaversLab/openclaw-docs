@@ -13,7 +13,7 @@ Administra la superficie de control del navegador de OpenClaw y ejecuta acciones
 
 Relacionado:
 
-- Herramienta de navegador + API: [Herramienta de navegador](/en/tools/browser)
+- Herramienta de navegador + API: [Herramienta de navegador](/es/tools/browser)
 
 ## Indicadores comunes
 
@@ -45,7 +45,7 @@ openclaw browser --browser-profile openclaw tabs
 openclaw browser --browser-profile openclaw open https://example.com
 ```
 
-Guía detallada: [Solución de problemas del navegador](/en/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
+Guía detallada: [Solución de problemas del navegador](/es/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
 
 ## Ciclo de vida
 
@@ -83,7 +83,7 @@ explícitamente:
 `browser.enabled=true` no restaura el subcomando de CLI cuando la lista de permitidos del complemento
 excluye `browser`.
 
-Relacionado: [Herramienta de navegador](/en/tools/browser#missing-browser-command-or-tool)
+Relacionado: [Herramienta de navegador](/es/tools/browser#missing-browser-command-or-tool)
 
 ## Perfiles
 
@@ -242,4 +242,4 @@ Si Gateway se ejecuta en una máquina diferente a la del navegador, ejecute un *
 
 Use `gateway.nodes.browser.mode` para controlar el enrutamiento automático y `gateway.nodes.browser.node` para anclar un nodo específico si hay varios conectados.
 
-Seguridad + configuración remota: [Browser tool](/en/tools/browser), [Remote access](/en/gateway/remote), [Tailscale](/en/gateway/tailscale), [Security](/en/gateway/security)
+Seguridad + configuración remota: [Browser tool](/es/tools/browser), [Remote access](/es/gateway/remote), [Tailscale](/es/gateway/tailscale), [Security](/es/gateway/security)

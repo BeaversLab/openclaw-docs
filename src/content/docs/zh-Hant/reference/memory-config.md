@@ -12,11 +12,11 @@ read_when:
 
 本頁面列出了 OpenClaw 記憶體搜尋的所有配置選項。若需概念性概覽，請參閱：
 
-- [記憶體概觀](/en/concepts/memory) -- 記憶體運作方式
-- [內建引擎](/en/concepts/memory-builtin) -- 預設 SQLite 後端
-- [QMD 引擎](/en/concepts/memory-qmd) -- 本地優先的 sidecar
-- [記憶體搜尋](/en/concepts/memory-search) -- 搜尋管線與調整
-- [主動記憶體](/en/concepts/active-memory) -- 為互動式工作階段啟用記憶體子代理程式
+- [記憶體概觀](/zh-Hant/concepts/memory) -- 記憶體運作方式
+- [內建引擎](/zh-Hant/concepts/memory-builtin) -- 預設 SQLite 後端
+- [QMD 引擎](/zh-Hant/concepts/memory-qmd) -- 本地優先的 sidecar
+- [記憶體搜尋](/zh-Hant/concepts/memory-search) -- 搜尋管線與調整
+- [主動記憶體](/zh-Hant/concepts/active-memory) -- 為互動式工作階段啟用記憶體子代理程式
 
 除非另有說明，否則所有記憶體搜尋設定都位於 `agents.defaults.memorySearch` 中的 `openclaw.json` 下。
 
@@ -27,7 +27,7 @@ read_when:
 1. 外掛程式必須啟用並以目前的代理程式 ID 為目標
 2. 請求必須是合格的互動式持久聊天會話
 
-請參閱 [主動記憶體](/en/concepts/active-memory) 以了解啟用模型、
+請參閱 [主動記憶體](/zh-Hant/concepts/active-memory) 以了解啟用模型、
 外掛程式擁有的設定、逐字稿持久化以及安全推出模式。
 
 ---
@@ -412,7 +412,7 @@ QMD 模型覆寫位於 QMD 端，而非 OpenClaw 設定。如果您需要
 ### 範圍
 
 控制哪些會話可以接收 QMD 搜尋結果。架構與
-[`session.sendPolicy`](/en/gateway/configuration-reference#session) 相同：
+[`session.sendPolicy`](/zh-Hant/gateway/configuration-reference#session) 相同：
 
 ```json5
 {
@@ -472,7 +472,7 @@ QMD 模型覆寫位於 QMD 端，而非 OpenClaw 設定。如果您需要
 
 夢境作為一次排程掃描運行，並使用內部輕度/深度/REM 階段作為實作細節。
 
-有關概念行為和斜線指令，請參閱 [夢境](/en/concepts/dreaming)。
+有關概念行為和斜線指令，請參閱 [夢境](/zh-Hant/concepts/dreaming)。
 
 ### 使用者設定
 

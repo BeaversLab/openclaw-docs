@@ -28,7 +28,7 @@ openclaw status --usage
 - 當配置多個代理程式時，輸出包含每個代理程式的工作階段儲存。
 - 概述包含 Gateway + 節點主機服務安裝/執行狀態（如果可用）。
 - 概述包含更新頻道 + git SHA（適用於原始碼簽出）。
-- 更新資訊會顯示在概述中；如果有可用的更新，狀態會列印提示以執行 `openclaw update`（請參閱[更新](/en/install/updating)）。
+- 更新資訊會顯示在概述中；如果有可用的更新，狀態會列印提示以執行 `openclaw update`（請參閱[更新](/zh-Hant/install/updating)）。
 - 唯讀狀態表面（`status`、`status --json`、`status --all`）會在可能時為其目標配置路徑解析支援的 SecretRef。
 - 如果配置了支援的頻道 SecretRef 但在目前指令路徑中無法使用，狀態將保持唯讀並報告降級輸出，而不是崩潰。人類輸出會顯示諸如「在此指令路徑中無法使用配置的 token」之類的警告，而 JSON 輸出則包含 `secretDiagnostics`。
 - 當指令本機 SecretRef 解析成功時，status 偏好已解析的快照，並從最終輸出中清除暫時性的「secret unavailable」通道標記。

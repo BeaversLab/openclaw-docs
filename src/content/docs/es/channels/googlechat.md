@@ -205,7 +205,7 @@ Notas:
 - `typingIndicator` admite `none`, `message` (predeterminado) y `reaction` (reaction requiere OAuth de usuario).
 - Los adjuntos se descargan a través de la API de Chat y se almacenan en la canalización de medios (el tamaño está limitado por `mediaMaxMb`).
 
-Detalles de referencia de secretos: [Gestión de secretos](/en/gateway/secrets).
+Detalles de referencia de secretos: [Gestión de secretos](/es/gateway/secrets).
 
 ## Solución de problemas
 
@@ -257,14 +257,14 @@ openclaw channels status
 
 Documentos relacionados:
 
-- [Configuración de la puerta de enlace](/en/gateway/configuration)
-- [Seguridad](/en/gateway/security)
-- [Reacciones](/en/tools/reactions)
+- [Configuración de la puerta de enlace](/es/gateway/configuration)
+- [Seguridad](/es/gateway/security)
+- [Reacciones](/es/tools/reactions)
 
 ## Relacionado
 
-- [Resumen de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — autenticación de MD y flujo de emparejamiento
-- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y control de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento
+- [Resumen de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Grupos](/es/channels/groups) — comportamiento del chat de grupo y control de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y fortalecimiento

@@ -12,7 +12,7 @@ sidebarTitle: "Onboarding : application macOS"
 Ce document décrit le flux de configuration du **premier** démarrage. L'objectif est une
 expérience fluide « jour 0 » : choisir où le Gateway s'exécute, connecter l'authentification, exécuter
 l'assistant et laisser l'agent s'initialiser.
-Pour une vue d'ensemble des chemins d'onboarding, voir [Onboarding Overview](/en/start/onboarding-overview).
+Pour une vue d'ensemble des chemins d'onboarding, voir [Onboarding Overview](/fr/start/onboarding-overview).
 
 <Steps>
 <Step title="Approve macOS warning">
@@ -33,7 +33,7 @@ Pour une vue d'ensemble des chemins d'onboarding, voir [Onboarding Overview](/en
 Modèle de confiance de sécurité :
 
 - Par défaut, OpenClaw est un agent personnel : une seule frontière d'opérateur de confiance.
-- Les configurations partagées/multi-utilisateurs nécessitent un verrouillage (séparation des frontières de confiance, accès minimal aux outils et respect des [Consignes de sécurité](/en/gateway/security)).
+- Les configurations partagées/multi-utilisateurs nécessitent un verrouillage (séparation des frontières de confiance, accès minimal aux outils et respect des [Consignes de sécurité](/fr/gateway/security)).
 - L'intégration locale définit désormais les nouvelles configurations par défaut sur `tools.profile: "coding"` afin que les nouvelles installations locales conservent les outils de système de fichiers/exécution sans forcer le profil `full` sans restriction.
 - Si des hooks/webhooks ou d'autres flux de contenu non fiables sont activés, utilisez un niveau de modèle moderne robuste et maintenez une politique d'outils et un bac à sable (sandboxing) stricts.
 
@@ -86,7 +86,7 @@ L'onboarding demande les autorisations TCC nécessaires pour :
 <Step title="Onboarding Chat (dedicated session)">
   Après la configuration, l'application ouvre une session de chat d'onboarding dédiée afin que l'agent puisse
   se présenter et guider les prochaines étapes. Cela permet de séparer les instructions du premier démarrage
-  de votre conversation normale. Consultez [Bootstrapping](/en/start/bootstrapping) pour
+  de votre conversation normale. Consultez [Bootstrapping](/fr/start/bootstrapping) pour
   savoir ce qui se passe sur l'hôte de la passerelle lors de la première exécution de l'agent.
 </Step>
 </Steps>

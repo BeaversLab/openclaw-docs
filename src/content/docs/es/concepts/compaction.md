@@ -29,7 +29,7 @@ number of tokens`, `input token count exceeds the maximum number of input
 tokens`, `input is too long for the model`, and `ollama error: context length
 exceeded`.
 
-<Info>Antes de compactar, OpenClaw recuerda automáticamente al agente que guarde notas importantes en archivos de [memoria](/en/concepts/memory). Esto evita la pérdida de contexto.</Info>
+<Info>Antes de compactar, OpenClaw recuerda automáticamente al agente que guarde notas importantes en archivos de [memoria](/es/concepts/memory). Esto evita la pérdida de contexto.</Info>
 
 Utilice la configuración `agents.defaults.compaction` en su `openclaw.json` para configurar el comportamiento de compactación (modo, tokens objetivo, etc.).
 El resumen de compactación preserva los identificadores opacos por defecto (`identifierPolicy: "strict"`). Puede anular esto con `identifierPolicy: "off"` o proporcionar texto personalizado con `identifierPolicy: "custom"` y `identifierInstructions`.
@@ -94,7 +94,7 @@ Verás:
 - `/status` que muestra `🧹 Compactions: <count>`
 
 Antes de la compactación, OpenClaw puede ejecutar un turno de **purga de memoria silenciosa** para almacenar
-notas duraderas en el disco. Consulte [Memory](/en/concepts/memory) para obtener detalles y configuración.
+notas duraderas en el disco. Consulte [Memory](/es/concepts/memory) para obtener detalles y configuración.
 
 ## Compactación manual
 
@@ -150,28 +150,28 @@ contexto...") al comienzo de cada ejecución de compactación.
 | **¿Guardado?**  | Sí (en la transcripción de la sesión) | No (solo en memoria, por solicitud)         |
 | **Alcance**     | Toda la conversación                  | Solo resultados de herramientas             |
 
-[Poda de sesión](/en/concepts/session-pruning) es un complemento más ligero que
+[Poda de sesión](/es/concepts/session-pruning) es un complemento más ligero que
 recorta la salida de las herramientas sin resumir.
 
 ## Solución de problemas
 
 **¿Compactando con demasiada frecuencia?** La ventana de contexto del modelo puede ser pequeña, o las
 salidas de las herramientas pueden ser grandes. Intente habilitar
-[poda de sesión](/en/concepts/session-pruning).
+[poda de sesión](/es/concepts/session-pruning).
 
 **¿El contexto se siente obsoleto después de la compactación?** Use `/compact Focus on <topic>` para
-guiar el resumen, o habilite el [vacío de memoria](/en/concepts/memory) para que las notas
+guiar el resumen, o habilite el [vacío de memoria](/es/concepts/memory) para que las notas
 sobrevivan.
 
 **¿Necesita una limpieza total?** `/new` inicia una sesión nueva sin compactar.
 
 Para configuración avanzada (reservar tokens, preservación de identificadores, motores de
 contexto personalizados, compactación del lado del servidor de OpenAI), consulte la
-[Inmersión profunda en la gestión de sesiones](/en/reference/session-management-compaction).
+[Inmersión profunda en la gestión de sesiones](/es/reference/session-management-compaction).
 
 ## Relacionado
 
-- [Sesión](/en/concepts/session) — gestión y ciclo de vida de la sesión
-- [Poda de sesión](/en/concepts/session-pruning) — recorte de resultados de herramientas
-- [Contexto](/en/concepts/context) — cómo se construye el contexto para los turnos del agente
-- [Hooks](/en/automation/hooks) — ganchos del ciclo de vida de compactación (before_compaction, after_compaction)
+- [Sesión](/es/concepts/session) — gestión y ciclo de vida de la sesión
+- [Poda de sesión](/es/concepts/session-pruning) — recorte de resultados de herramientas
+- [Contexto](/es/concepts/context) — cómo se construye el contexto para los turnos del agente
+- [Hooks](/es/automation/hooks) — ganchos del ciclo de vida de compactación (before_compaction, after_compaction)

@@ -157,6 +157,6 @@ Slack :
 
 ## Connexes
 
-- [Messages](/en/concepts/messages) — cycle de vie et livraison des messages
-- [Réessai](/en/concepts/retry) — comportement de nouvelle tentative en cas d'échec de livraison
-- [Canaux](/en/channels) — support de la diffusion par canal
+- [Messages](/fr/concepts/messages) — cycle de vie et livraison des messages
+- [Réessai](/fr/concepts/retry) — comportement de nouvelle tentative en cas d'échec de livraison
+- [Canaux](/fr/channels) — support de la diffusion par canal

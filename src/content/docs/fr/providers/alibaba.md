@@ -81,7 +81,7 @@ Le provider `alibaba` intégré enregistre actuellement :
     - `qwen/...` lorsque vous souhaitez l'interface canonique du provider Qwen
     - `alibaba/...` lorsque vous souhaitez l'interface vidéo Wan directe du fournisseur
 
-    Consultez la [documentation du provider Qwen](/en/providers/qwen) pour plus de détails.
+    Consultez la [documentation du provider Qwen](/fr/providers/qwen) pour plus de détails.
 
   </Accordion>
 
@@ -100,13 +100,13 @@ Le provider `alibaba` intégré enregistre actuellement :
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Génération vidéo" href="/en/tools/video-generation" icon="video">
+  <Card title="Génération vidéo" href="/fr/tools/video-generation" icon="video">
     Paramètres de l'outil vidéo partagés et sélection du provider.
   </Card>
-  <Card title="Qwen" href="/en/providers/qwen" icon="microchip">
+  <Card title="Qwen" href="/fr/providers/qwen" icon="microchip">
     Configuration du provider Qwen et intégration DashScope.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference#agent-defaults" icon="gear">
     Valeurs par défaut de l'agent et configuration du model.
   </Card>
 </CardGroup>

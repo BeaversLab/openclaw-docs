@@ -95,6 +95,6 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 
 ## 相关
 
-- [Agent CLI reference](/en/cli/agent)
-- [Sub-agents](/en/tools/subagents) — 后台子代理生成
-- [Sessions](/en/concepts/session) — 会话密钥的工作原理
+- [Agent CLI reference](/zh/cli/agent)
+- [Sub-agents](/zh/tools/subagents) — 后台子代理生成
+- [Sessions](/zh/concepts/session) — 会话密钥的工作原理

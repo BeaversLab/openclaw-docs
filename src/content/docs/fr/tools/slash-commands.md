@@ -88,7 +88,7 @@ Source de vérité actuelle :
 Commandes intégrées disponibles aujourd'hui :
 
 - `/new [model]` démarre une nouvelle session ; `/reset` est l'alias de réinitialisation.
-- `/compact [instructions]` compresse le contexte de session. Voir [/concepts/compaction](/en/concepts/compaction).
+- `/compact [instructions]` compresse le contexte de session. Voir [/concepts/compaction](/fr/concepts/compaction).
 - `/stop` interrompt l'exécution en cours.
 - `/session idle <duration|off>` et `/session max-age <duration|off>` gèrent l'expiration de la liaison de fil de discussion.
 - `/think <off|minimal|low|medium|high|xhigh>` définit le niveau de réflexion. Alias : `/thinking`, `/t`.
@@ -112,7 +112,7 @@ Commandes intégrées disponibles aujourd'hui :
 - `/skill <name> [input]` exécute une compétence par son nom.
 - `/allowlist [list|add|remove] ...` gère les entrées de la liste d'autorisation. Texte uniquement.
 - `/approve <id> <decision>` résout les invites d'approbation d'exécution.
-- `/btw <question>` pose une question annexe sans changer le contexte futur de la session. Voir [/tools/btw](/en/tools/btw).
+- `/btw <question>` pose une question annexe sans changer le contexte futur de la session. Voir [/tools/btw](/fr/tools/btw).
 - `/subagents list|kill|log|info|send|steer|spawn` gère les exécutions de sous-agents pour la session actuelle.
 - `/acp spawn|cancel|steer|close|sessions|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|help` gère les sessions ACP et les options d'exécution.
 - `/focus <target>` lie le fil Discord ou le sujet/conversation Telegram actuel à une cible de session.
@@ -125,7 +125,7 @@ Commandes intégrées disponibles aujourd'hui :
 - `/plugins list|inspect|show|get|install|enable|disable` inspecte ou modifie l'état du plugin. `/plugin` est un alias. Réservé au propriétaire pour l'écriture. Nécessite `commands.plugins: true`.
 - `/debug show|set|unset|reset` gère les remplacements de configuration uniquement pour l'exécution. Propriétaire uniquement. Nécessite `commands.debug: true`.
 - `/usage off|tokens|full|cost` contrôle le pied de page d'utilisation par réponse ou imprime un résumé des coûts locaux.
-- `/tts on|off|status|provider|limit|summary|audio|help` contrôle le TTS. Voir [/tools/tts](/en/tools/tts).
+- `/tts on|off|status|provider|limit|summary|audio|help` contrôle le TTS. Voir [/tools/tts](/fr/tools/tts).
 - `/restart` redémarre OpenClaw lorsqu'il est activé. Par défaut : activé ; définissez `commands.restart: false` pour le désactiver.
 - `/activation mention|always` définit le mode d'activation de groupe.
 - `/send on|off|inherit` définit la stratégie d'envoi. Propriétaire uniquement.
@@ -146,12 +146,12 @@ Les commandes dock sont générées à partir des plugins de channel avec suppor
 
 Les plugins groupés peuvent ajouter plus de commandes slash. Commandes groupées actuelles dans ce dépôt :
 
-- `/dreaming [on|off|status|help]` bascule le rêve de la mémoire. Voir [Dreaming](/en/concepts/dreaming).
-- `/pair [qr|status|pending|approve|cleanup|notify]` gère le flux de couplage/configuration de l'appareil. Voir [Pairing](/en/channels/pairing).
+- `/dreaming [on|off|status|help]` bascule le rêve de la mémoire. Voir [Dreaming](/fr/concepts/dreaming).
+- `/pair [qr|status|pending|approve|cleanup|notify]` gère le flux de couplage/configuration de l'appareil. Voir [Pairing](/fr/channels/pairing).
 - `/phone status|arm <camera|screen|writes|all> [duration]|disarm` arme temporairement les commandes de nœud de téléphone à haut risque.
 - `/voice status|list [limit]|set <voiceId|name>` gère la configuration vocale Talk. Sur Discord, le nom de la commande native est `/talkvoice`.
-- `/card ...` envoie des préréglages de cartes riches LINE. Voir [LINE](/en/channels/line).
-- `/codex status|models|threads|resume|compact|review|account|mcp|skills` inspecte et contrôle le harnais de serveur d'application Codex groupé. Voir [Codex Harness](/en/plugins/codex-harness).
+- `/card ...` envoie des préréglages de cartes riches LINE. Voir [LINE](/fr/channels/line).
+- `/codex status|models|threads|resume|compact|review|account|mcp|skills` inspecte et contrôle le harnais de serveur d'application Codex groupé. Voir [Codex Harness](/fr/plugins/codex-harness).
 - Commandes uniquement pour QQBot :
   - `/bot-ping`
   - `/bot-version`
@@ -180,11 +180,11 @@ Notes :
 - `/plugins enable|disable` met à jour la configuration du plugin et peut demander un redémarrage.
 - Commande native uniquement Discord : `/vc join|leave|status` contrôle les canaux vocaux (nécessite `channels.discord.voice` et les commandes natives ; non disponible sous forme de texte).
 - Les commandes de liaison de fil Discord (`/focus`, `/unfocus`, `/agents`, `/session idle`, `/session max-age`) nécessitent que les liaisons de fil effectives soient activées (`session.threadBindings.enabled` et/ou `channels.discord.threadBindings.enabled`).
-- Référence des commandes ACP et comportement à l'exécution : [ACP Agents](/en/tools/acp-agents).
+- Référence des commandes ACP et comportement à l'exécution : [ACP Agents](/fr/tools/acp-agents).
 - `/verbose` est destiné au débogage et à une visibilité supplémentaire ; gardez-le désactivé (**off**) dans une utilisation normale.
 - `/trace` est plus restrictif que `/verbose` : il n'affiche que les lignes de trace/débogage appartenant aux plugins et désactive le bavardage verbeux normal des outils.
 - `/fast on|off` enregistre une substitution de session. Utilisez l'option `inherit` de l'interface Sessions pour l'effacer et revenir aux valeurs par défaut de la configuration.
-- `/fast` est spécifique au fournisseur : OpenAI/OpenAI Codex l'associent à `service_tier=priority` sur les points de terminaison Responses natifs, tandis que les requêtes publiques directes Anthropic, y compris le trafic authentifié OAuth envoyé à `api.anthropic.com`, l'associent à `service_tier=auto` ou `standard_only`. Voir [OpenAI](/en/providers/openai) et [Anthropic](/en/providers/anthropic).
+- `/fast` est spécifique au fournisseur : OpenAI/OpenAI Codex l'associent à `service_tier=priority` sur les points de terminaison Responses natifs, tandis que les requêtes publiques directes Anthropic, y compris le trafic authentifié OAuth envoyé à `api.anthropic.com`, l'associent à `service_tier=auto` ou `standard_only`. Voir [OpenAI](/fr/providers/openai) et [Anthropic](/fr/providers/anthropic).
 - Les résumés d'échecs d'outils sont toujours affichés lorsque pertinent, mais le texte d'échec détaillé n'est inclus que lorsque `/verbose` est `on` ou `full`.
 - `/reasoning`, `/verbose` et `/trace` sont risqués dans les contextes de groupe : ils peuvent révéler un raisonnement interne, une sortie d'outil ou des diagnostics de plugin que vous ne souhaitiez pas exposer. Préférez les laisser désactivés, surtout dans les discussions de groupe.
 - `/model` enregistre immédiatement le nouveau modèle de session.
@@ -201,7 +201,7 @@ Notes :
   - `/skill <name> [input]` exécute une compétence par son nom (utile lorsque les limites de commandes natives empêchent les commandes par compétence).
   - Par défaut, les commandes de Skills sont transmises au model en tant que demande normale.
   - Les Skills peuvent éventuellement déclarer `command-dispatch: tool` pour router la commande directement vers un tool (déterministe, sans model).
-  - Exemple : `/prose` (plugin OpenProse) — voir [OpenProse](/en/prose).
+  - Exemple : `/prose` (plugin OpenProse) — voir [OpenProse](/fr/prose).
 - **Arguments de commande natifs :** Discord utilise la saisie automatique pour les options dynamiques (et les menus de boutons lorsque vous omettez les arguments requis). Telegram et Slack affichent un menu de boutons lorsqu'une commande prend en charge des choix et que vous omettez l'argument.
 
 ## `/tools`
@@ -374,4 +374,4 @@ Exemple :
 /btw what are we doing right now?
 ```
 
-Voir [BTW Side Questions](/en/tools/btw) pour le comportement complet et les détails de l'expérience utilisateur client.
+Voir [BTW Side Questions](/fr/tools/btw) pour le comportement complet et les détails de l'expérience utilisateur client.

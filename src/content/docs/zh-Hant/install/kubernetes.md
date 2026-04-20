@@ -104,7 +104,7 @@ Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
 
 ### Gateway 配置
 
-編輯 `scripts/k8s/manifests/configmap.yaml` 中的 `openclaw.json`。請參閱 [Gateway configuration](/en/gateway/configuration) 以獲得完整參考。
+編輯 `scripts/k8s/manifests/configmap.yaml` 中的 `openclaw.json`。請參閱 [Gateway configuration](/zh-Hant/gateway/configuration) 以獲得完整參考。
 
 ### 新增供應商
 

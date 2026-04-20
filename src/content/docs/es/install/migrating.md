@@ -41,7 +41,7 @@ Los perfiles personalizados utilizan `~/.openclaw-<profile>/` o una ruta estable
 
   </Step>
 
-<Step title="Instalar OpenClaw en la nueva máquina">[Instale](/en/install) la CLI (y Node si es necesario) en la nueva máquina. No pasa nada si el onboarding crea un `~/.openclaw/` nuevo: lo sobrescribirá a continuación.</Step>
+<Step title="Instalar OpenClaw en la nueva máquina">[Instale](/es/install) la CLI (y Node si es necesario) en la nueva máquina. No pasa nada si el onboarding crea un `~/.openclaw/` nuevo: lo sobrescribirá a continuación.</Step>
 
   <Step title="Copiar el directorio de estado y el espacio de trabajo">
     Transfiera el archivo a través de `scp`, `rsync -a` o una unidad externa, luego extráigalo:
@@ -56,7 +56,7 @@ Los perfiles personalizados utilizan `~/.openclaw-<profile>/` o una ruta estable
   </Step>
 
   <Step title="Ejecutar doctor y verificar">
-    En la nueva máquina, ejecute [Doctor](/en/gateway/doctor) para aplicar migraciones de configuración y reparar servicios:
+    En la nueva máquina, ejecute [Doctor](/es/gateway/doctor) para aplicar migraciones de configuración y reparar servicios:
 
     ```bash
     openclaw doctor
@@ -84,7 +84,7 @@ Los perfiles personalizados utilizan `~/.openclaw-<profile>/` o una ruta estable
 
 <Accordion title="Permisos y propiedad">Si copiaste como root o cambiaste de usuario, la puerta de enlace podría fallar al leer las credenciales. Asegúrate de que el directorio de estado y el espacio de trabajo sean propiedad del usuario que ejecuta la puerta de enlace.</Accordion>
 
-<Accordion title="Modo remoto">Si su interfaz de usuario apunta a una puerta de enlace **remota**, el host remoto es el propietario de las sesiones y el espacio de trabajo. Migre el host de la puerta de enlace en sí, no su portátil local. Vea [FAQ](/en/help/faq#where-things-live-on-disk).</Accordion>
+<Accordion title="Modo remoto">Si su interfaz de usuario apunta a una puerta de enlace **remota**, el host remoto es el propietario de las sesiones y el espacio de trabajo. Migre el host de la puerta de enlace en sí, no su portátil local. Vea [FAQ](/es/help/faq#where-things-live-on-disk).</Accordion>
 
   <Accordion title="Secretos en las copias de seguridad">
     El directorio de estado contiene perfiles de autenticación, credenciales de canal y otro

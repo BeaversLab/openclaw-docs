@@ -12,8 +12,8 @@ Tail Gateway file logs over RPC (works in remote mode).
 
 Related:
 
-- Vue d'ensemble de la journalisation : [Logging](/en/logging)
-- Gateway CLI : [gateway](/en/cli/gateway)
+- Vue d'ensemble de la journalisation : [Logging](/fr/logging)
+- Gateway CLI : [gateway](/fr/cli/gateway)
 
 ## Options
 

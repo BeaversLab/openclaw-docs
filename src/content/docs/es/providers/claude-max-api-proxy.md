@@ -164,21 +164,21 @@ El proxy:
 - El proxy se ejecuta localmente y no envía datos a servidores de terceros
 - Las respuestas en streaming son totalmente compatibles
 
-<Note>Para la integración nativa de Anthropic con Claude CLI o claves API, consulte [Proveedor de Anthropic](/en/providers/anthropic). Para suscripciones de OpenAI/Codex, consulte [Proveedor de OpenAI](/en/providers/openai).</Note>
+<Note>Para la integración nativa de Anthropic con Claude CLI o claves API, consulte [Proveedor de Anthropic](/es/providers/anthropic). Para suscripciones de OpenAI/Codex, consulte [Proveedor de OpenAI](/es/providers/openai).</Note>
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Proveedor de Anthropic" href="/en/providers/anthropic" icon="bolt">
+  <Card title="Proveedor de Anthropic" href="/es/providers/anthropic" icon="bolt">
     Integración nativa de OpenClaw con Claude CLI o claves API.
   </Card>
-  <Card title="Proveedor de OpenAI" href="/en/providers/openai" icon="robot">
+  <Card title="Proveedor de OpenAI" href="/es/providers/openai" icon="robot">
     Para suscripciones de OpenAI/Codex.
   </Card>
-  <Card title="Proveedores de modelos" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Proveedores de modelos" href="/es/concepts/model-providers" icon="layers">
     Resumen de todos los proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Configuración" href="/en/gateway/configuration" icon="gear">
+  <Card title="Configuración" href="/es/gateway/configuration" icon="gear">
     Referencia completa de configuración.
   </Card>
 </CardGroup>

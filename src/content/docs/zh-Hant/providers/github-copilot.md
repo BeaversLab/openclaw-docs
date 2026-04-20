@@ -98,7 +98,7 @@ openclaw models auth login --provider github-copilot --method device --set-defau
 
 ## 記憶體搜尋嵌入
 
-GitHub Copilot 也可以作為 [記憶體搜尋](/en/concepts/memory-search) 的嵌入提供者。如果您有 Copilot 訂閱並且已登入，OpenClaw 可以使用它來進行嵌入，而不需要額外的 API 金鑰。
+GitHub Copilot 也可以作為 [記憶體搜尋](/zh-Hant/concepts/memory-search) 的嵌入提供者。如果您有 Copilot 訂閱並且已登入，OpenClaw 可以使用它來進行嵌入，而不需要額外的 API 金鑰。
 
 ### 自動偵測
 
@@ -133,10 +133,10 @@ GitHub Copilot 也可以作為 [記憶體搜尋](/en/concepts/memory-search) 的
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇供應商、模型參照和故障轉移行為。
   </Card>
-  <Card title="OAuth 和驗證" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth 和驗證" href="/zh-Hant/gateway/authentication" icon="key">
     驗證詳細資訊和憑證重複使用規則。
   </Card>
 </CardGroup>

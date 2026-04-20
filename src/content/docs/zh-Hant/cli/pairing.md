@@ -11,7 +11,7 @@ title: "配對"
 
 相關主題：
 
-- 配對流程：[配對](/en/channels/pairing)
+- 配對流程：[配對](/zh-Hant/channels/pairing)
 
 ## 指令
 

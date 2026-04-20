@@ -14,9 +14,9 @@ title: "wiki"
 
 相關連結：
 
-- [Memory Wiki 外掛程式](/en/plugins/memory-wiki)
-- [Memory 概覽](/en/concepts/memory)
-- [CLI：memory](/en/cli/memory)
+- [Memory Wiki 外掛程式](/zh-Hant/plugins/memory-wiki)
+- [Memory 概覽](/zh-Hant/concepts/memory)
+- [CLI：memory](/zh-Hant/cli/memory)
 
 ## 用途
 
@@ -202,4 +202,4 @@ openclaw wiki get syntheses/alpha-summary.md --from 1 --lines 80
 - `plugins.entries.memory-wiki.config.render.*`
 - `plugins.entries.memory-wiki.config.context.includeCompiledDigestPrompt`
 
-請參閱 [Memory Wiki plugin](/en/plugins/memory-wiki) 以了解完整的配置模型。
+請參閱 [Memory Wiki plugin](/zh-Hant/plugins/memory-wiki) 以了解完整的配置模型。

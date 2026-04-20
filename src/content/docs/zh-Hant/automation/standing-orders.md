@@ -31,7 +31,7 @@ title: "常駐指令"
 
 ## 運作方式
 
-常駐指令定義在您的[代理程式工作區](/en/concepts/agent-workspace)檔案中。建議的做法是直接將其包含在 `AGENTS.md` 中（每個階段會自動注入），以便代理程式始終掌握這些內容。對於較大的配置，您也可以將其放置在專用檔案（如 `standing-orders.md`）中，並從 `AGENTS.md` 引用它。
+常駐指令定義在您的[代理程式工作區](/zh-Hant/concepts/agent-workspace)檔案中。建議的做法是直接將其包含在 `AGENTS.md` 中（每個階段會自動注入），以便代理程式始終掌握這些內容。對於較大的配置，您也可以將其放置在專用檔案（如 `standing-orders.md`）中，並從 `AGENTS.md` 引用它。
 
 每個程式指定：
 
@@ -40,7 +40,7 @@ title: "常駐指令"
 3. **審批閘門** — 採取行動前需要哪些人類簽核
 4. **升級規則** — 何時停止並尋求協助
 
-代理程式會透過工作區引導檔案在每個階段載入這些指令（有關自動注入檔案的完整列表，請參閱 [Agent Workspace](/en/concepts/agent-workspace)），並結合 [cron jobs](/en/automation/cron-jobs) 進行基於時間的強制執行。
+代理程式會透過工作區引導檔案在每個階段載入這些指令（有關自動注入檔案的完整列表，請參閱 [Agent Workspace](/zh-Hant/concepts/agent-workspace)），並結合 [cron jobs](/zh-Hant/automation/cron-jobs) 進行基於時間的強制執行。
 
 <Tip>將常備指令置於 `AGENTS.md` 以確保每個工作階段都會載入它們。工作區啟動程序會自動注入 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 和 `MEMORY.md` —— 但不會包含子目錄中的任意檔案。</Tip>
 
@@ -71,7 +71,7 @@ title: "常駐指令"
 
 ## 常駐指令 + Cron 作業
 
-常駐指令定義了代理被授權執行 **什麼**。[Cron 作業](/en/automation/cron-jobs) 則定義了發生的 **時間**。它們協同運作：
+常駐指令定義了代理被授權執行 **什麼**。[Cron 作業](/zh-Hant/automation/cron-jobs) 則定義了發生的 **時間**。它們協同運作：
 
 ```
 Standing Order: "You own the daily inbox triage"
@@ -245,8 +245,8 @@ openclaw cron add \
 
 ## 相關
 
-- [Automation & Tasks](/en/automation) — 所有自動化機制一覽
-- [Cron Jobs](/en/automation/cron-jobs) — 常規任務的排程強制執行
-- [Hooks](/en/automation/hooks) — 代理生命週期事件的事件驅動腳本
-- [Webhooks](/en/automation/cron-jobs#webhooks) — 傳入 HTTP 事件觸發程序
-- [Agent Workspace](/en/concepts/agent-workspace) — 常規任務的存放位置，包括自動注入的引導檔案完整列表（AGENTS.md、SOUL.md 等）
+- [Automation & Tasks](/zh-Hant/automation) — 所有自動化機制一覽
+- [Cron Jobs](/zh-Hant/automation/cron-jobs) — 常規任務的排程強制執行
+- [Hooks](/zh-Hant/automation/hooks) — 代理生命週期事件的事件驅動腳本
+- [Webhooks](/zh-Hant/automation/cron-jobs#webhooks) — 傳入 HTTP 事件觸發程序
+- [Agent Workspace](/zh-Hant/concepts/agent-workspace) — 常規任務的存放位置，包括自動注入的引導檔案完整列表（AGENTS.md、SOUL.md 等）

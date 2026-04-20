@@ -18,7 +18,7 @@ and workspace defaults in one guided flow.
 openclaw onboard
 ```
 
-<Info>最快首次聊天：開啟控制 UI（無需設定頻道）。執行 `openclaw dashboard` 並在瀏覽器中聊天。文件：[Dashboard](/en/web/dashboard)。</Info>
+<Info>最快首次聊天：開啟控制 UI（無需設定頻道）。執行 `openclaw dashboard` 並在瀏覽器中聊天。文件：[Dashboard](/zh-Hant/web/dashboard)。</Info>
 
 To reconfigure later:
 
@@ -29,7 +29,7 @@ openclaw agents add <name>
 
 <Note>`--json` 並不意味著非互動模式。對於腳本，請使用 `--non-interactive`。</Note>
 
-<Tip>CLI 入門包含一個網路搜尋步驟，您可以選擇提供者， 例如 Brave、DuckDuckGo、Exa、Firecrawl、Gemini、Grok、Kimi、MiniMax Search、 Ollama Web Search、Perplexity、SearXNG 或 Tavily。部分提供者需要 API 金鑰，而其他則不需要。您也可以稍後使用 `openclaw configure --section web` 進行設定。文件：[Web tools](/en/tools/web)。</Tip>
+<Tip>CLI 入門包含一個網路搜尋步驟，您可以選擇提供者， 例如 Brave、DuckDuckGo、Exa、Firecrawl、Gemini、Grok、Kimi、MiniMax Search、 Ollama Web Search、Perplexity、SearXNG 或 Tavily。部分提供者需要 API 金鑰，而其他則不需要。您也可以稍後使用 `openclaw configure --section web` 進行設定。文件：[Web tools](/zh-Hant/tools/web)。</Tip>
 
 ## QuickStart vs Advanced
 
@@ -37,7 +37,7 @@ Onboarding starts with **QuickStart** (defaults) vs **Advanced** (full control).
 
 <Tabs>
   <Tab title="QuickStart (defaults)">
-    - 本機閘道 (loopback) - 工作區預設值 (或現有工作區) - 閘道連接埠 **18789** - 閘道驗證 **Token** (自動生成，即使在 loopback 上) - 新本機設定的工具原則預設值：`tools.profile: "coding"` (現有明確設定檔會被保留) - DM 隔離預設值：本機入門在未設定時會寫入 `session.dmScope: "per-channel-peer"`。詳細資訊：[CLI Setup Reference](/en/start/wizard-cli-reference#outputs-and-internals) - Tailscale 暴露
+    - 本機閘道 (loopback) - 工作區預設值 (或現有工作區) - 閘道連接埠 **18789** - 閘道驗證 **Token** (自動生成，即使在 loopback 上) - 新本機設定的工具原則預設值：`tools.profile: "coding"` (現有明確設定檔會被保留) - DM 隔離預設值：本機入門在未設定時會寫入 `session.dmScope: "per-channel-peer"`。詳細資訊：[CLI Setup Reference](/zh-Hant/start/wizard-cli-reference#outputs-and-internals) - Tailscale 暴露
     **關閉** - Telegram + WhatsApp DM 預設為 **allowlist** (系統會提示您輸入電話號碼)
   </Tab>
   <Tab title="Advanced (full control)">- 顯示每個步驟 (模式、workspace、gateway、channels、daemon、skills)。</Tab>
@@ -90,14 +90,14 @@ Notes:
 ## Full reference
 
 如需詳細的逐步分解和設定輸出，請參閱
-[CLI Setup Reference](/en/start/wizard-cli-reference)。
-如需非互動式範例，請參閱 [CLI Automation](/en/start/wizard-cli-automation)。
+[CLI Setup Reference](/zh-Hant/start/wizard-cli-reference)。
+如需非互動式範例，請參閱 [CLI Automation](/zh-Hant/start/wizard-cli-automation)。
 如需更深入的技術參考，包括 RPC 詳細資訊，請參閱
-[Onboarding Reference](/en/reference/wizard)。
+[Onboarding Reference](/zh-Hant/reference/wizard)。
 
 ## Related docs
 
-- CLI 指令參考：[`openclaw onboard`](/en/cli/onboard)
-- 入門指引概覽：[Onboarding Overview](/en/start/onboarding-overview)
-- macOS 應用程式入門：[入門](/en/start/onboarding)
-- Agent 首次執行程序：[Agent 啟動程序](/en/start/bootstrapping)
+- CLI 指令參考：[`openclaw onboard`](/zh-Hant/cli/onboard)
+- 入門指引概覽：[Onboarding Overview](/zh-Hant/start/onboarding-overview)
+- macOS 應用程式入門：[入門](/zh-Hant/start/onboarding)
+- Agent 首次執行程序：[Agent 啟動程序](/zh-Hant/start/bootstrapping)

@@ -121,6 +121,6 @@ System: [2026-01-12 12:19:17 PST] Model switched.
 
 ## 相關文件
 
-- [系統提示](/en/concepts/system-prompt)
-- [時區](/en/concepts/timezone)
-- [訊息](/en/concepts/messages)
+- [系統提示](/zh-Hant/concepts/system-prompt)
+- [時區](/zh-Hant/concepts/timezone)
+- [訊息](/zh-Hant/concepts/messages)

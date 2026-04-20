@@ -64,7 +64,7 @@ otherwise -> reply
 - **私信**：完整工具（主机）
 - **群组**：沙箱 + 受限工具 (Docker)
 
-> 如果您需要真正分离的工作区/人设（“个人”和“公共”绝不能混合），请使用第二个代理 + 绑定。请参阅 [多代理路由](/en/concepts/multi-agent)。
+> 如果您需要真正分离的工作区/人设（“个人”和“公共”绝不能混合），请使用第二个代理 + 绑定。请参阅 [多代理路由](/zh/concepts/multi-agent)。
 
 示例（私信在主机上，群组沙箱隔离 + 仅消息传递工具）：
 
@@ -115,9 +115,9 @@ otherwise -> reply
 
 相关内容：
 
-- 配置键和默认值：[Gateway(网关) 网关 配置](/en/gateway/configuration#agentsdefaultssandbox)
-- 调试工具 被阻止的原因：[沙箱隔离 vs 工具 策略 vs 提升权限](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
-- 绑定挂载详细信息：[沙箱隔离](/en/gateway/sandboxing#custom-bind-mounts)
+- 配置键和默认值：[Gateway(网关) 网关 配置](/zh/gateway/configuration#agentsdefaultssandbox)
+- 调试工具 被阻止的原因：[沙箱隔离 vs 工具 策略 vs 提升权限](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
+- 绑定挂载详细信息：[沙箱隔离](/zh/gateway/sandboxing#custom-bind-mounts)
 
 ## 显示标签
 
@@ -370,4 +370,4 @@ The agent system prompt includes a group intro on the first turn of a new group 
 
 ## WhatsApp 特性
 
-有关 WhatsApp 独有的行为（历史记录注入、提及处理详细信息），请参阅 [群组消息](/en/concepts/group-messages)。
+有关 WhatsApp 独有的行为（历史记录注入、提及处理详细信息），请参阅 [群组消息](/zh/concepts/group-messages)。

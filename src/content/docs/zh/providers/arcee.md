@@ -10,7 +10,7 @@ read_when:
 
 [Arcee AI](https://arcee.ai) 通过兼容 OpenAI 的 API 提供对 Trinity 混合专家模型系列的访问。所有 Trinity 模型均采用 Apache 2.0 许可。
 
-可以直接通过 Arcee 平台或通过 [OpenRouter](/en/providers/openrouter) 访问 Arcee AI 模型。
+可以直接通过 Arcee 平台或通过 [OpenRouter](/zh/providers/openrouter) 访问 Arcee AI 模型。
 
 | 属性     | 值                                                                                   |
 | -------- | ------------------------------------------------------------------------------------ |
@@ -127,17 +127,17 @@ OpenClaw 目前附带此捆绑的 Arcee 目录：
   <Accordion title="OpenRouter 路由">
     通过 OpenRouter 使用 Arcee 模型时，应用相同的 `arcee/*` 模型引用。
     OpenClaw 根据您的身份验证选择透明地处理路由。有关 OpenRouter 特定
-    的配置详细信息，请参阅 [OpenRouter 提供商文档](/en/providers/openrouter)。
+    的配置详细信息，请参阅 [OpenRouter 提供商文档](/zh/providers/openrouter)。
   </Accordion>
 </AccordionGroup>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="OpenRouter" href="/en/providers/openrouter" icon="shuffle">
+  <Card title="OpenRouter" href="/zh/providers/openrouter" icon="shuffle">
     通过单个 API 密钥访问 Arcee 模型和许多其他模型。
   </Card>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
 </CardGroup>

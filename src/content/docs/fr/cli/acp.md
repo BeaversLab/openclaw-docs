@@ -18,7 +18,7 @@ Il se concentre sur le routage des sessions, la livraison des invites et les mis
 streaming de base.
 
 Si vous souhaitez qu'un client MCP externe communique directement avec les conversations de canal OpenClaw au lieu d'héberger une session de harnais ACP, utilisez
-[`openclaw mcp serve`](/en/cli/mcp) à la place.
+[`openclaw mcp serve`](/fr/cli/mcp) à la place.
 
 ## Ce que ce n'est pas
 
@@ -30,13 +30,13 @@ Cette page est souvent confondue avec les sessions de harnais ACP.
 - un IDE ou un client ACP se connecte à OpenClaw
 - OpenClaw transfère ce travail vers une session Gateway
 
-Cela est différent des [Agents ACP](/en/tools/acp-agents), où OpenClaw exécute un
+Cela est différent des [Agents ACP](/fr/tools/acp-agents), où OpenClaw exécute un
 harnais externe tel que Codex ou Claude Code via `acpx`.
 
 Règle rapide :
 
 - l'éditeur/le client souhaite parler ACP à OpenClaw : utilisez `openclaw acp`
-- OpenClaw doit lancer Codex/Claude/Gemini en tant que harnais ACP : utilisez `/acp spawn` et les [Agents ACP](/en/tools/acp-agents)
+- OpenClaw doit lancer Codex/Claude/Gemini en tant que harnais ACP : utilisez `/acp spawn` et les [Agents ACP](/fr/tools/acp-agents)
 
 ## Matrix de compatibilité
 
@@ -160,7 +160,7 @@ claire au lieu de les ignorer silencieusement.
 
 Si vous souhaitez que les sessions basées sur ACPX voient les outils du plugin OpenClaw, activez
 le pont de plugin ACPX côté passerelle au lieu d'essayer de passer des `mcpServers`
-par session. Voir [ACP Agents](/en/tools/acp-agents#plugin-tools-mcp-bridge).
+par session. Voir [ACP Agents](/fr/tools/acp-agents#plugin-tools-mcp-bridge).
 
 ## Utilisation à partir de `acpx` (Codex, Claude, autres clients ACP)
 
@@ -263,7 +263,7 @@ Si votre client ACP prend en charge les métadonnées, vous pouvez les remplacer
 }
 ```
 
-En savoir plus sur les clés de session sur [/concepts/session](/en/concepts/session).
+En savoir plus sur les clés de session sur [/concepts/session](/fr/concepts/session).
 
 ## Options
 

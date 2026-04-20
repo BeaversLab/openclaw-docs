@@ -151,10 +151,10 @@ GLM 模型可用作 `zai/<model>`（例如：`zai/glm-5`）。預設的打包模
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="GLM model family" href="/en/providers/glm" icon="microchip">
+  <Card title="GLM model family" href="/zh-Hant/providers/glm" icon="microchip">
     GLM 模型系列概覽。
   </Card>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和故障轉移行為。
   </Card>
 </CardGroup>

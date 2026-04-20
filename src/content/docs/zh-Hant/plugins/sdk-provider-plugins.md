@@ -14,9 +14,9 @@ read_when:
 (LLM) 新增至 OpenClaw。最後，您將擁有一個包含模型目錄、
 API 金鑰驗證以及動態模型解析的提供者。
 
-<Info>如果您以前未曾建置過任何 OpenClaw 外掛程式，請先閱讀 [入門指南](/en/plugins/building-plugins) 以了解基本套件 結構和清單設定。</Info>
+<Info>如果您以前未曾建置過任何 OpenClaw 外掛程式，請先閱讀 [入門指南](/zh-Hant/plugins/building-plugins) 以了解基本套件 結構和清單設定。</Info>
 
-<Tip>提供者外掛程式會將模型新增至 OpenClaw 的常態推論迴圈中。如果模型 必須透過擁有執行緒、壓縮或工具事件的原生代理程式常駐程式來執行，請將提供者與 [agent harness](/en/plugins/sdk-agent-harness) 配對，而不是將常駐程式通訊協定詳細資料放在核心中。</Tip>
+<Tip>提供者外掛程式會將模型新增至 OpenClaw 的常態推論迴圈中。如果模型 必須透過擁有執行緒、壓縮或工具事件的原生代理程式常駐程式來執行，請將提供者與 [agent harness](/zh-Hant/plugins/sdk-agent-harness) 配對，而不是將常駐程式通訊協定詳細資料放在核心中。</Tip>
 
 ## 逐步解說
 
@@ -513,7 +513,7 @@ API 金鑰驗證以及動態模型解析的提供者。
         `before_prompt_build`。
 
       如需詳細描述和真實範例，請參閱
-      [內部：供應商執行時鉤子](/en/plugins/architecture#provider-runtime-hooks)。
+      [內部：供應商執行時鉤子](/zh-Hant/plugins/architecture#provider-runtime-hooks)。
     </Accordion>
 
   </Step>
@@ -628,7 +628,7 @@ API 金鑰驗證以及動態模型解析的提供者。
     }
     ```
 
-    OpenClaw 將此歸類為 **hybrid-capability**（混合功能）外掛程式。這是公司外掛程式的建議模式（每個供應商一個外掛程式）。請參閱 [Internals: Capability Ownership](/en/plugins/architecture#capability-ownership-model)。
+    OpenClaw 將此歸類為 **hybrid-capability**（混合功能）外掛程式。這是公司外掛程式的建議模式（每個供應商一個外掛程式）。請參閱 [Internals: Capability Ownership](/zh-Hant/plugins/architecture#capability-ownership-model)。
 
     對於影片生成，建議優先使用上面顯示的模式感知功能形狀：`generate`、`imageToVideo` 和 `videoToVideo`。扁平聚合欄位（如 `maxInputImages`、`maxInputVideos` 和 `maxDurationSeconds`）不足以乾淨地通告轉換模式支援或已停用的模式。
 
@@ -708,7 +708,7 @@ clawhub package publish your-org/your-plugin
 
 ## 下一步
 
-- [通道插件](/en/plugins/sdk-channel-plugins) — 如果您的插件還提供了一個通道
-- [SDK 執行時](/en/plugins/sdk-runtime) — `api.runtime` 輔助工具（TTS、搜尋、子代理）
-- [SDK 概覽](/en/plugins/sdk-overview) — 完整的子路徑匯入參考
-- [插件內部機制](/en/plugins/architecture#provider-runtime-hooks) — 掛鉤詳細資訊和內建範例
+- [通道插件](/zh-Hant/plugins/sdk-channel-plugins) — 如果您的插件還提供了一個通道
+- [SDK 執行時](/zh-Hant/plugins/sdk-runtime) — `api.runtime` 輔助工具（TTS、搜尋、子代理）
+- [SDK 概覽](/zh-Hant/plugins/sdk-overview) — 完整的子路徑匯入參考
+- [插件內部機制](/zh-Hant/plugins/architecture#provider-runtime-hooks) — 掛鉤詳細資訊和內建範例

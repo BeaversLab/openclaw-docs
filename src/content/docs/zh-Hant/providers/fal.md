@@ -128,13 +128,13 @@ OpenClaw 內建一個用於託管圖片和影片生成的 `fal` 提供者。
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="圖片生成" href="/en/tools/image-generation" icon="image">
+  <Card title="圖片生成" href="/zh-Hant/tools/image-generation" icon="image">
     共用的圖片工具參數與提供者選擇。
   </Card>
-  <Card title="視訊生成" href="/en/tools/video-generation" icon="video">
+  <Card title="視訊生成" href="/zh-Hant/tools/video-generation" icon="video">
     共用的視訊工具參數與提供者選擇。
   </Card>
-  <Card title="設定參考" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration-reference#agent-defaults" icon="gear">
     Agent 預設值，包括影像與視訊模型選擇。
   </Card>
 </CardGroup>

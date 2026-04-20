@@ -118,6 +118,6 @@ title: "DigitalOcean"
 
 ## 后续步骤
 
-- [频道](/en/channels) -- 连接 Telegram、WhatsApp、Discord 等
-- [Gateway(网关) 配置](/en/gateway/configuration) -- 所有配置选项
-- [更新](/en/install/updating) -- 保持 OpenClaw 为最新版本
+- [频道](/zh/channels) -- 连接 Telegram、WhatsApp、Discord 等
+- [Gateway(网关) 配置](/zh/gateway/configuration) -- 所有配置选项
+- [更新](/zh/install/updating) -- 保持 OpenClaw 为最新版本

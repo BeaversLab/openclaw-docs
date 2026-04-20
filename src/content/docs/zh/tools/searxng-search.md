@@ -124,6 +124,6 @@ API 支持的提供商会优先）。
 
 ## 相关
 
-- [Web Search 概览](/en/tools/web) -- 所有提供商和自动检测
-- [DuckDuckGo 搜索](/en/tools/duckduckgo-search) -- 另一个无需密钥的备选方案
-- [Brave 搜索](/en/tools/brave-search) -- 带有免费层的结构化结果
+- [Web Search 概览](/zh/tools/web) -- 所有提供商和自动检测
+- [DuckDuckGo 搜索](/zh/tools/duckduckgo-search) -- 另一个无需密钥的备选方案
+- [Brave 搜索](/zh/tools/brave-search) -- 带有免费层的结构化结果

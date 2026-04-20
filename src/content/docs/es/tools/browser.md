@@ -43,7 +43,7 @@ Si obtiene "Navegador desactivado", actívelo en la configuración (ver abajo) y
 Gateway.
 
 Si `openclaw browser` falta por completo, o el agente dice que la herramienta del navegador
-no está disponible, vaya a [Falta el comando o herramienta del navegador](/en/tools/browser#missing-browser-command-or-tool).
+no está disponible, vaya a [Falta el comando o herramienta del navegador](/es/tools/browser#missing-browser-command-or-tool).
 
 ## Control de complementos
 
@@ -628,7 +628,7 @@ docker compose run --rm openclaw-cli \
 
 Para persistir las descargas del navegador, establezca `PLAYWRIGHT_BROWSERS_PATH` (por ejemplo,
 `/home/node/.cache/ms-playwright`) y asegúrese de que `/home/node` se persista a través de
-`OPENCLAW_HOME_VOLUME` o un bind mount. Consulte [Docker](/en/install/docker).
+`OPENCLAW_HOME_VOLUME` o un bind mount. Consulte [Docker](/es/install/docker).
 
 ## Cómo funciona (interno)
 
@@ -745,7 +745,7 @@ Notas:
   - `--format ai` (predeterminado cuando Playwright está instalado): devuelve una instantánea de IA con referencias numéricas (`aria-ref="<n>"`).
   - `--format aria`: devuelve el árbol de accesibilidad (sin referencias; solo inspección).
   - `--efficient` (o `--mode efficient`): configuración predefinida de instantánea de roles compacta (interactivo + compacto + profundidad + maxChars más bajo).
-  - Configuración por defecto (solo herramienta/CLI): configure `browser.snapshotDefaults.mode: "efficient"` para usar instantáneas eficientes cuando el llamador no pase un modo (consulte [Configuración de Gateway](/en/gateway/configuration-reference#browser)).
+  - Configuración por defecto (solo herramienta/CLI): configure `browser.snapshotDefaults.mode: "efficient"` para usar instantáneas eficientes cuando el llamador no pase un modo (consulte [Configuración de Gateway](/es/gateway/configuration-reference#browser)).
   - Las opciones de instantánea de rol (`--interactive`, `--compact`, `--depth`, `--selector`) fuerzan una instantánea basada en roles con referencias como `ref=e12`.
   - `--frame "<iframe selector>"` limita las instantáneas de rol a un iframe (se combina con referencias de rol como `e12`).
   - `--interactive` genera una lista plana y fácil de seleccionar de elementos interactivos (lo mejor para ejecutar acciones).
@@ -848,7 +848,7 @@ Estos son útiles para flujos de trabajo de "hacer que el sitio se comporte como
 - `browser act kind=evaluate` / `openclaw browser evaluate` y `wait --fn`
   ejecutan JavaScript arbitrario en el contexto de la página. La inyección de indicaciones puede dirigir esto.
   Desactívalo con `browser.evaluateEnabled=false` si no lo necesitas.
-- Para notas sobre inicios de sesión y anti-bot (X/Twitter, etc.), consulta [Browser login + X/Twitter posting](/en/tools/browser-login).
+- Para notas sobre inicios de sesión y anti-bot (X/Twitter, etc.), consulta [Browser login + X/Twitter posting](/es/tools/browser-login).
 - Mantenga el host del Gateway/nodo privado (solo loopback o tailnet).
 - Los puntos finales CDP remotos son potentes; protéjalos mediante túneles.
 
@@ -869,10 +869,10 @@ Ejemplo de modo estricto (bloquear destinos privados/internos de forma predeterm
 ## Solución de problemas
 
 Para problemas específicos de Linux (especialmente snap Chromium), consulte
-[Solución de problemas del navegador](/en/tools/browser-linux-troubleshooting).
+[Solución de problemas del navegador](/es/tools/browser-linux-troubleshooting).
 
 Para configuraciones de WSL2 Gateway + Windows Chrome split-host, consulte
-[Solución de problemas de WSL2 + Windows + CDP remoto de Chrome](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting).
+[Solución de problemas de WSL2 + Windows + CDP remoto de Chrome](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting).
 
 ### Fallo de inicio de CDP vs bloqueo de navegación SSRF
 
@@ -953,6 +953,6 @@ Esto mantiene al agente determinista y evita selectores frágiles.
 
 ## Relacionado
 
-- [Resumen de herramientas](/en/tools) — todas las herramientas de agente disponibles
-- [Sandboxing](/en/gateway/sandboxing) — control del navegador en entornos sandboxed
-- [Seguridad](/en/gateway/security) — riesgos y endurecimiento del control del navegador
+- [Resumen de herramientas](/es/tools) — todas las herramientas de agente disponibles
+- [Sandboxing](/es/gateway/sandboxing) — control del navegador en entornos sandboxed
+- [Seguridad](/es/gateway/security) — riesgos y endurecimiento del control del navegador

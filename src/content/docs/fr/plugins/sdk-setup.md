@@ -13,7 +13,7 @@ read_when:
 Référence pour le conditionnement des plugins (métadonnées `package.json`), les manifestes
 (`openclaw.plugin.json`), les entrées de configuration et les schémas de configuration.
 
-<Tip>**Vous cherchez un guide pas à pas ?** Les guides pratiques couvrent le packaging en contexte : [Plugins de canaux](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) et [Plugins de fournisseurs](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
+<Tip>**Vous cherchez un guide pas à pas ?** Les guides pratiques couvrent le packaging en contexte : [Plugins de canaux](/fr/plugins/sdk-channel-plugins#step-1-package-and-manifest) et [Plugins de fournisseurs](/fr/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
 
 ## Métadonnées du package
 
@@ -239,7 +239,7 @@ Même les plugins sans configuration doivent fournir un schéma. Un schéma vide
 }
 ```
 
-Voir [Plugin Manifest](/en/plugins/manifest) pour la référence complète du schéma.
+Voir [Plugin Manifest](/fr/plugins/manifest) pour la référence complète du schéma.
 
 ## Publication sur ClawHub
 
@@ -468,7 +468,7 @@ copier la même colle binaire/statut dans chaque channel :
 
 ## Publication et installation
 
-**Plugins externes :** publiez sur [ClawHub](/en/tools/clawhub) ou npm, puis installez :
+**Plugins externes :** publiez sur [ClawHub](/fr/tools/clawhub) ou npm, puis installez :
 
 ```bash
 openclaw plugins install @myorg/openclaw-my-plugin
@@ -501,6 +501,6 @@ openclaw plugins install <package-name>
 
 ## Connexes
 
-- [Points d'entrée du SDK](/en/plugins/sdk-entrypoints) -- `definePluginEntry` et `defineChannelPluginEntry`
-- [Manifeste de plugin](/en/plugins/manifest) -- référence complète du schéma de manifeste
-- [Création de plugins](/en/plugins/building-plugins) -- guide de démarrage pas à pas
+- [Points d'entrée du SDK](/fr/plugins/sdk-entrypoints) -- `definePluginEntry` et `defineChannelPluginEntry`
+- [Manifeste de plugin](/fr/plugins/manifest) -- référence complète du schéma de manifeste
+- [Création de plugins](/fr/plugins/building-plugins) -- guide de démarrage pas à pas

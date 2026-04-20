@@ -10,9 +10,9 @@ title: "Exploration de la configuration du modèle"
 Ce document capture des **idées** pour la configuration future des modèles. Ce n'est pas une
 spécification finale. Pour le comportement actuel, consultez :
 
-- [Modèles](/en/concepts/models)
-- [Basculement de modèle](/en/concepts/model-failover)
-- [OAuth + profils](/en/concepts/oauth)
+- [Modèles](/fr/concepts/models)
+- [Basculement de modèle](/fr/concepts/model-failover)
+- [OAuth + profils](/fr/concepts/oauth)
 
 ## Motivation
 

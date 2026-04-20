@@ -11,7 +11,7 @@ sidebarTitle: "Referencia de integración"
 # Referencia de integración
 
 Esta es la referencia completa de `openclaw onboard`.
-Para ver una descripción general de alto nivel, consulte [Onboarding (CLI)](/en/start/wizard).
+Para ver una descripción general de alto nivel, consulte [Onboarding (CLI)](/es/start/wizard).
 
 ## Detalles del flujo (modo local)
 
@@ -41,30 +41,30 @@ Para ver una descripción general de alto nivel, consulte [Onboarding (CLI)](/en
     - **Clave de API de xAI (Grok)**: solicita `XAI_API_KEY` y configura xAI como proveedor de modelo.
     - **OpenCode**: solicita `OPENCODE_API_KEY` (o `OPENCODE_ZEN_API_KEY`, consígalo en https://opencode.ai/auth) y le permite elegir el catálogo Zen o Go.
     - **Ollama**: ofrece primero **Nube + Local**, **Solo nube** o **Solo local**. `Cloud only` solicita `OLLAMA_API_KEY` y usa `https://ollama.com`; los modos respaldados por el host solicitan la URL base de Ollama, descubren los modelos disponibles y extraen automáticamente el modelo local seleccionado cuando sea necesario; `Cloud + Local` también verifica si ese host de Ollama ha iniciado sesión para el acceso a la nube.
-    - Más detalles: [Ollama](/en/providers/ollama)
+    - Más detalles: [Ollama](/es/providers/ollama)
     - **Clave de API**: almacena la clave por usted.
     - **Vercel AI Gateway (proxy multimodelo)**: solicita `AI_GATEWAY_API_KEY`.
-    - Más detalles: [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+    - Más detalles: [Vercel AI Gateway](/es/providers/vercel-ai-gateway)
     - **Cloudflare AI Gateway**: solicita el ID de cuenta, el ID de puerta de enlace y `CLOUDFLARE_AI_GATEWAY_API_KEY`.
-    - Más detalles: [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
+    - Más detalles: [Cloudflare AI Gateway](/es/providers/cloudflare-ai-gateway)
     - **MiniMax**: la configuración se escribe automáticamente; el alojado predeterminado es `MiniMax-M2.7`.
       La configuración con clave de API usa `minimax/...`, y la configuración OAuth usa
       `minimax-portal/...`.
-    - Más detalles: [MiniMax](/en/providers/minimax)
+    - Más detalles: [MiniMax](/es/providers/minimax)
     - **StepFun**: la configuración se escribe automáticamente para StepFun estándar o Step Plan en endpoints de China o globales.
     - El estándar actualmente incluye `step-3.5-flash`, y Step Plan también incluye `step-3.5-flash-2603`.
-    - Más detalles: [StepFun](/en/providers/stepfun)
+    - Más detalles: [StepFun](/es/providers/stepfun)
     - **Synthetic (compatible con Anthropic)**: solicita `SYNTHETIC_API_KEY`.
-    - Más detalles: [Synthetic](/en/providers/synthetic)
+    - Más detalles: [Synthetic](/es/providers/synthetic)
     - **Moonshot (Kimi K2)**: la configuración se escribe automáticamente.
     - **Kimi Coding**: la configuración se escribe automáticamente.
-    - Más detalles: [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+    - Más detalles: [Moonshot AI (Kimi + Kimi Coding)](/es/providers/moonshot)
     - **Omitir**: aún no hay autenticación configurada.
     - Elija un modelo predeterminado de las opciones detectadas (o ingrese proveedor/modelo manualmente). Para obtener la mejor calidad y un menor riesgo de inyección de avisos, elija el modelo de última generación más fuerte disponible en su pila de proveedores.
     - Onboarding ejecuta una verificación de modelo y advierte si el modelo configurado es desconocido o falta la autenticación.
     - El modo de almacenamiento de clave de API predeterminado son valores de perfil de autenticación en texto sin formato. Use `--secret-input-mode ref` para almacenar referencias respaldadas por env en su lugar (por ejemplo `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`).
     - Los perfiles de autenticación residen en `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (claves de API + OAuth). `~/.openclaw/credentials/oauth.json` es solo de importación heredada.
-    - Más detalles: [/concepts/oauth](/en/concepts/oauth)
+    - Más detalles: [/concepts/oauth](/es/concepts/oauth)
     <Note>
     Consejo para headless/servidor: complete OAuth en una máquina con un navegador, luego copie
     el `auth-profiles.json` de ese agente (por ejemplo
@@ -76,7 +76,7 @@ Para ver una descripción general de alto nivel, consulte [Onboarding (CLI)](/en
   <Step title="Workspace">
     - Por defecto `~/.openclaw/workspace` (configurable).
     - Inicializa los archivos del espacio de trabajo necesarios para el ritual de arranque del agente.
-    - Diseño completo del espacio de trabajo + guía de respaldo: [Agente workspace](/en/concepts/agent-workspace)
+    - Diseño completo del espacio de trabajo + guía de respaldo: [Agente workspace](/es/concepts/agent-workspace)
   </Step>
   <Step title="Gateway">
     - Puerto, enlace, modo de autenticación, exposición de tailscale.
@@ -94,14 +94,14 @@ Para ver una descripción general de alto nivel, consulte [Onboarding (CLI)](/en
     - Los enlaces no locales (non‑loopback) aún requieren autenticación.
   </Step>
   <Step title="Canales">
-    - [WhatsApp](/en/channels/whatsapp): inicio de sesión con QR opcional.
-    - [Telegram](/en/channels/telegram): token de bot.
-    - [Discord](/en/channels/discord): token de bot.
-    - [Google Chat](/en/channels/googlechat): JSON de cuenta de servicio + audiencia de webhook.
-    - [Mattermost](/en/channels/mattermost) (plugin): token de bot + URL base.
-    - [Signal](/en/channels/signal): instalación opcional de `signal-cli` + configuración de cuenta.
-    - [BlueBubbles](/en/channels/bluebubbles): **recomendado para iMessage**; URL del servidor + contraseña + webhook.
-    - [iMessage](/en/channels/imessage): ruta heredada de la CLI `imsg` + acceso a la base de datos.
+    - [WhatsApp](/es/channels/whatsapp): inicio de sesión con QR opcional.
+    - [Telegram](/es/channels/telegram): token de bot.
+    - [Discord](/es/channels/discord): token de bot.
+    - [Google Chat](/es/channels/googlechat): JSON de cuenta de servicio + audiencia de webhook.
+    - [Mattermost](/es/channels/mattermost) (plugin): token de bot + URL base.
+    - [Signal](/es/channels/signal): instalación opcional de `signal-cli` + configuración de cuenta.
+    - [BlueBubbles](/es/channels/bluebubbles): **recomendado para iMessage**; URL del servidor + contraseña + webhook.
+    - [iMessage](/es/channels/imessage): ruta heredada de la CLI `imsg` + acceso a la base de datos.
     - Seguridad de MD: el valor predeterminado es emparejamiento. El primer DM envía un código; apruébelo a través de `openclaw pairing approve <channel> <code>` o use listas de permitidos.
   </Step>
   <Step title="Búsqueda web">
@@ -170,7 +170,7 @@ openclaw onboard --non-interactive \
 
 <Note>`--json` **no** implica el modo no interactivo. Use `--non-interactive` (y `--workspace`) para scripts.</Note>
 
-Los ejemplos de comandos específicos del proveedor se encuentran en [CLI Automation](/en/start/wizard-cli-automation#provider-specific-examples).
+Los ejemplos de comandos específicos del proveedor se encuentran en [CLI Automation](/es/start/wizard-cli-automation#provider-specific-examples).
 Use esta página de referencia para la semántica de las marcas y el orden de los pasos.
 
 ### Añadir agente (no interactivo)
@@ -211,7 +211,7 @@ Campos típicos en `~/.openclaw/openclaw.json`:
 - `agents.defaults.model` / `models.providers` (si se elige Minimax)
 - `tools.profile` (la incorporación local por defecto es `"coding"` cuando no está configurado; se conservan los valores explícitos existentes)
 - `gateway.*` (modo, bind, auth, tailscale)
-- `session.dmScope` (detalles del comportamiento: [CLI Setup Reference](/en/start/wizard-cli-reference#outputs-and-internals))
+- `session.dmScope` (detalles del comportamiento: [CLI Setup Reference](/es/start/wizard-cli-reference#outputs-and-internals))
 - `channels.telegram.botToken`, `channels.discord.token`, `channels.matrix.*`, `channels.signal.*`, `channels.imessage.*`
 - Listas de permitidos de canales (Slack/Discord/Matrix/Microsoft Teams) cuando opta por participar durante las indicaciones (los nombres se resuelven en ID cuando es posible).
 - `skills.install.nodeManager`
@@ -233,8 +233,8 @@ le solicitará que lo instale (npm o una ruta local) antes de que pueda configur
 
 ## Documentos relacionados
 
-- Resumen de incorporación: [Onboarding (CLI)](/en/start/wizard)
-- Incorporación de la aplicación macOS: [Onboarding](/en/start/onboarding)
-- Referencia de configuración: [Configuración de la puerta de enlace](/en/gateway/configuration)
-- Proveedores: [WhatsApp](/en/channels/whatsapp), [Telegram](/en/channels/telegram), [Discord](/en/channels/discord), [Google Chat](/en/channels/googlechat), [Signal](/en/channels/signal), [BlueBubbles](/en/channels/bluebubbles) (iMessage), [iMessage](/en/channels/imessage) (heredado)
-- Habilidades: [Habilidades](/en/tools/skills), [Configuración de habilidades](/en/tools/skills-config)
+- Resumen de incorporación: [Onboarding (CLI)](/es/start/wizard)
+- Incorporación de la aplicación macOS: [Onboarding](/es/start/onboarding)
+- Referencia de configuración: [Configuración de la puerta de enlace](/es/gateway/configuration)
+- Proveedores: [WhatsApp](/es/channels/whatsapp), [Telegram](/es/channels/telegram), [Discord](/es/channels/discord), [Google Chat](/es/channels/googlechat), [Signal](/es/channels/signal), [BlueBubbles](/es/channels/bluebubbles) (iMessage), [iMessage](/es/channels/imessage) (heredado)
+- Habilidades: [Habilidades](/es/tools/skills), [Configuración de habilidades](/es/tools/skills-config)

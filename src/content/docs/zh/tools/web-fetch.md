@@ -14,7 +14,7 @@ sidebarTitle: "Web Fetch"
 （HTML 转 markdown 或文本）。它**不**执行 JavaScript。
 
 对于重度依赖 JS 的站点或受登录保护的页面，请改用
-[Web Browser](/en/tools/browser)。
+[Web Browser](/zh/tools/browser)。
 
 ## 快速开始
 
@@ -68,7 +68,7 @@ await web_fetch({ url: "https://example.com/article" });
 ## Firecrawl fallback
 
 如果 Readability 提取失败，`web_fetch` 可以回退到
-[Firecrawl](/en/tools/firecrawl) 以绕过机器人检测并实现更好的提取效果：
+[Firecrawl](/zh/tools/firecrawl) 以绕过机器人检测并实现更好的提取效果：
 
 ```json5
 {
@@ -120,7 +120,7 @@ await web_fetch({ url: "https://example.com/article" });
   响应将被截断并发出警告
 - 私有/内部主机名会被阻止
 - 重定向会受到 `maxRedirects` 的检查和限制
-- `web_fetch` 是尽力而为的——某些站点需要使用 [Web Browser](/en/tools/browser)
+- `web_fetch` 是尽力而为的——某些站点需要使用 [Web Browser](/zh/tools/browser)
 
 ## 工具配置文件
 
@@ -137,6 +137,6 @@ await web_fetch({ url: "https://example.com/article" });
 
 ## 相关
 
-- [Web Search](/en/tools/web) -- 使用多个提供商搜索网络
-- [Web Browser](/en/tools/browser) -- 针对重度 JS 站点的完整浏览器自动化
-- [Firecrawl](/en/tools/firecrawl) -- Firecrawl 搜索和抓取工具
+- [Web Search](/zh/tools/web) -- 使用多个提供商搜索网络
+- [Web Browser](/zh/tools/browser) -- 针对重度 JS 站点的完整浏览器自动化
+- [Firecrawl](/zh/tools/firecrawl) -- Firecrawl 搜索和抓取工具

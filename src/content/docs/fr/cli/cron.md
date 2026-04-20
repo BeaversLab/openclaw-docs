@@ -12,7 +12,7 @@ Gérer les tâches cron pour le planificateur du Gateway.
 
 Connexes :
 
-- Tâches Cron : [Tâches Cron](/en/automation/cron-jobs)
+- Tâches Cron : [Tâches Cron](/fr/automation/cron-jobs)
 
 Astuce : exécutez `openclaw cron --help` pour l'interface complète des commandes.
 

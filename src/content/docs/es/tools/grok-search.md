@@ -95,6 +95,6 @@ Los filtros específicos del proveedor no son compatibles actualmente.
 
 ## Relacionado
 
-- [Información general de la búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
-- [x_search en la búsqueda web](/en/tools/web#x_search) -- búsqueda de X de primera clase a través de xAI
-- [Búsqueda de Gemini](/en/tools/gemini-search) -- respuestas sintetizadas por IA a través de Google grounding
+- [Información general de la búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [x_search en la búsqueda web](/es/tools/web#x_search) -- búsqueda de X de primera clase a través de xAI
+- [Búsqueda de Gemini](/es/tools/gemini-search) -- respuestas sintetizadas por IA a través de Google grounding

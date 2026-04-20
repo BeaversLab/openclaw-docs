@@ -206,18 +206,18 @@ Choisissez votre interface de provider et suivez les étapes de configuration.
   </Accordion>
 </AccordionGroup>
 
-<Note>Pour une vue d'ensemble plus large des fournisseurs, consultez [Fournisseurs de modèles](/en/concepts/model-providers).</Note>
+<Note>Pour une vue d'ensemble plus large des fournisseurs, consultez [Fournisseurs de modèles](/fr/concepts/model-providers).</Note>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Fournisseurs de modèles" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Fournisseurs de modèles" href="/fr/concepts/model-providers" icon="layers">
     Vue d'ensemble de tous les fournisseurs, des références de modèles et du comportement de basculement.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
     Schéma de configuration complet pour les fournisseurs, les modèles et les plugins.
   </Card>
-  <Card title="Sélection de modèle" href="/en/concepts/models" icon="brain">
+  <Card title="Sélection de modèle" href="/fr/concepts/models" icon="brain">
     Comment choisir et configurer les modèles.
   </Card>
   <Card title="Plateforme StepFun" href="https://platform.stepfun.com" icon="globe">

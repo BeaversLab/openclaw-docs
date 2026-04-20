@@ -63,37 +63,37 @@ Utilice Tareas programadas (Cron) cuando necesite una sincronización precisa o 
 
 Cron es el planificador integrado de Gateway para una temporización precisa. Persiste los trabajos, despierta al agente en el momento adecuado y puede entregar la salida a un canal de chat o un punto final de webhook. Admite recordatorios de un solo uso, expresiones recurrentes y activadores de webhooks entrantes.
 
-Consulte [Tareas programadas](/en/automation/cron-jobs).
+Consulte [Tareas programadas](/es/automation/cron-jobs).
 
 ### Tareas
 
 El libro mayor de tareas en segundo plano rastrea todo el trabajo desacoplado: ejecuciones de ACP, generaciones de subagentes, ejecuciones de cron aisladas y operaciones de CLI. Las tareas son registros, no planificadores. Use `openclaw tasks list` y `openclaw tasks audit` para inspeccionarlas.
 
-Consulte [Tareas en segundo plano](/en/automation/tasks).
+Consulte [Tareas en segundo plano](/es/automation/tasks).
 
 ### Flujo de tareas
 
 El flujo de tareas es el sustrato de orquestación de flujos por encima de las tareas en segundo plano. Gestiona flujos multipaso duraderos con modos de sincronización administrados y reflejados, seguimiento de revisiones e `openclaw tasks flow list|show|cancel` para su inspección.
 
-Consulte [Flujo de tareas](/en/automation/taskflow).
+Consulte [Flujo de tareas](/es/automation/taskflow).
 
 ### Órdenes permanentes
 
 Las órdenes permanentes otorgan al agente autoridad operativa permanente para programas definidos. Residen en archivos del espacio de trabajo (típicamente `AGENTS.md`) y se inyectan en cada sesión. Combine con cron para hacer cumplir el tiempo.
 
-Consulte [Órdenes permanentes](/en/automation/standing-orders).
+Consulte [Órdenes permanentes](/es/automation/standing-orders).
 
 ### Ganchos
 
 Los ganchos son scripts controlados por eventos activados por eventos del ciclo de vida del agente (`/new`, `/reset`, `/stop`), compactación de sesión, inicio de gateway, flujo de mensajes y llamadas a herramientas. Los ganchos se descubren automáticamente desde los directorios y se pueden gestionar con `openclaw hooks`.
 
-Consulte [Ganchos](/en/automation/hooks).
+Consulte [Ganchos](/es/automation/hooks).
 
 ### Latido
 
 Latido es un turno de sesión principal periódico (por defecto cada 30 minutos). Agrupa múltiples comprobaciones (bandeja de entrada, calendario, notificaciones) en un solo turno de agente con el contexto completo de la sesión. Los turnos de latido no crean registros de tareas. Use `HEARTBEAT.md` para una pequeña lista de verificación, o un bloque `tasks:` cuando desee comprobaciones periódicas solo vencidas dentro del propio latido. Los archivos de latido vacíos se omiten como `empty-heartbeat-file`; el modo de tarea solo vencida se omite como `no-tasks-due`.
 
-Consulte [Latido](/en/gateway/heartbeat).
+Consulte [Latido](/es/gateway/heartbeat).
 
 ## Cómo funcionan juntos
 
@@ -106,10 +106,10 @@ Consulte [Latido](/en/gateway/heartbeat).
 
 ## Relacionado
 
-- [Tareas programadas](/en/automation/cron-jobs) — programación precisa y recordatorios de un solo uso
-- [Tareas en segundo plano](/en/automation/tasks) — libro mayor de tareas para todo el trabajo separado
-- [Flujo de tareas](/en/automation/taskflow) — orquestación de flujo duradero de varios pasos
-- [Hooks](/en/automation/hooks) — scripts de ciclo de vida impulsados por eventos
-- [Standing Orders](/en/automation/standing-orders) — instrucciones persistentes del agente
-- [Heartbeat](/en/gateway/heartbeat) — turnos periódicos de sesión principal
-- [Referencia de configuración](/en/gateway/configuration-reference) — todas las claves de configuración
+- [Tareas programadas](/es/automation/cron-jobs) — programación precisa y recordatorios de un solo uso
+- [Tareas en segundo plano](/es/automation/tasks) — libro mayor de tareas para todo el trabajo separado
+- [Flujo de tareas](/es/automation/taskflow) — orquestación de flujo duradero de varios pasos
+- [Hooks](/es/automation/hooks) — scripts de ciclo de vida impulsados por eventos
+- [Standing Orders](/es/automation/standing-orders) — instrucciones persistentes del agente
+- [Heartbeat](/es/gateway/heartbeat) — turnos periódicos de sesión principal
+- [Referencia de configuración](/es/gateway/configuration-reference) — todas las claves de configuración

@@ -80,12 +80,12 @@ OpenClaw aplica el conjunto de habilidades efectivo del agente durante la creaci
 ## Complementos + habilidades
 
 Los complementos pueden incluir sus propias habilidades listando directorios `skills` en `openclaw.plugin.json` (rutas relativas a la raíz del complemento). Las habilidades de los complementos se cargan cuando el complemento está habilitado. Hoy en día, esos directorios se fusionan en la misma ruta de baja precedencia que `skills.load.extraDirs`, por lo que una habilidad empaquetada, gestionada, de agente o del espacio de trabajo con el mismo nombre las anula.
-Puedes filtrarlas mediante `metadata.openclaw.requires.config` en la entrada de configuración del complemento. Consulta [Plugins](/en/tools/plugin) para descubrir/configurar y [Tools](/en/tools) para la superficie de herramientas que esas habilidades enseñan.
+Puedes filtrarlas mediante `metadata.openclaw.requires.config` en la entrada de configuración del complemento. Consulta [Plugins](/es/tools/plugin) para descubrir/configurar y [Tools](/es/tools) para la superficie de herramientas que esas habilidades enseñan.
 
 ## ClawHub (instalación + sincronización)
 
 ClawHub es el registro público de habilidades para OpenClaw. Explore en [https://clawhub.ai](https://clawhub.ai). Utilice comandos nativos `openclaw skills` para descubrir/installar/actualizar habilidades, o el CLI separado `clawhub` cuando necesite flujos de trabajo de publicación/sincronización.
-Guía completa: [ClawHub](/en/tools/clawhub).
+Guía completa: [ClawHub](/es/tools/clawhub).
 
 Flujos comunes:
 
@@ -102,13 +102,13 @@ OpenClaw lo recoge como `<workspace>/skills` en la siguiente sesión.
 ## Notas de seguridad
 
 - Trate las habilidades de terceros como **código no confiable**. Léyalas antes de habilitarlas.
-- Prefiera ejecuciones en sandbox para entradas que no son de confianza y herramientas riesgosas. Consulte [Sandboxing](/en/gateway/sandboxing).
+- Prefiera ejecuciones en sandbox para entradas que no son de confianza y herramientas riesgosas. Consulte [Sandboxing](/es/gateway/sandboxing).
 - El descubrimiento de habilidades en el espacio de trabajo y directorios adicionales solo acepta raíces de habilidades y archivos `SKILL.md` cuya ruta real resuelta se mantenga dentro de la raíz configurada.
 - Las instalaciones de dependencias de habilidades respaldadas por Gateway (`skills.install`, incorporación y la interfaz de usuario de configuración de Skills) ejecutan el escáner de código peligroso integrado antes de ejecutar los metadatos del instalador. Los hallazgos de `critical` se bloquean de manera predeterminada a menos que la persona que llama establezca explícitamente la anulación de peligro; los hallazgos sospechosos todavía solo avisan.
 - `openclaw skills install <slug>` es diferente: descarga una carpeta de habilidades de ClawHub en el espacio de trabajo y no utiliza la ruta de metadatos del instalador mencionada anteriormente.
 - `skills.entries.*.env` y `skills.entries.*.apiKey` inyectan secretos en el proceso **host**
   para ese turno del agente (no el sandbox). Mantenga los secretos fuera de los avisos y los registros.
-- Para obtener un modelo de amenazas más amplio y listas de verificación, consulte [Security](/en/gateway/security).
+- Para obtener un modelo de amenazas más amplio y listas de verificación, consulte [Security](/es/gateway/security).
 
 ## Formato (compatible con AgentSkills + Pi)
 
@@ -322,7 +322,7 @@ OpenClaw incluye un conjunto base de habilidades como **habilidades incluidas** 
 
 ## Referencia de configuración
 
-Consulte [Skills config](/en/tools/skills-config) para ver el esquema de configuración completo.
+Consulte [Skills config](/es/tools/skills-config) para ver el esquema de configuración completo.
 
 ## ¿Busca más habilidades?
 
@@ -332,7 +332,7 @@ Explore [https://clawhub.ai](https://clawhub.ai).
 
 ## Relacionado
 
-- [Creating Skills](/en/tools/creating-skills) — creación de habilidades personalizadas
-- [Skills Config](/en/tools/skills-config) — referencia de configuración de habilidades
-- [Slash Commands](/en/tools/slash-commands) — todos los comandos de barra disponibles
-- [Plugins](/en/tools/plugin) — descripción general del sistema de complementos
+- [Creating Skills](/es/tools/creating-skills) — creación de habilidades personalizadas
+- [Skills Config](/es/tools/skills-config) — referencia de configuración de habilidades
+- [Slash Commands](/es/tools/slash-commands) — todos los comandos de barra disponibles
+- [Plugins](/es/tools/plugin) — descripción general del sistema de complementos

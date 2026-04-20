@@ -12,8 +12,8 @@ Helpers de webhook et intégrations (Gmail Pub/Sub, helpers de webhook).
 
 Connexes :
 
-- Webhooks : [Webhooks](/en/automation/cron-jobs#webhooks)
-- Gmail Pub/Sub : [Gmail Pub/Sub](/en/automation/cron-jobs#gmail-pubsub-integration)
+- Webhooks : [Webhooks](/fr/automation/cron-jobs#webhooks)
+- Gmail Pub/Sub : [Gmail Pub/Sub](/fr/automation/cron-jobs#gmail-pubsub-integration)
 
 ## Gmail
 
@@ -88,4 +88,4 @@ Exemple :
 openclaw webhooks gmail run --account you@example.com
 ```
 
-Consultez la [documentation Gmail Pub/Sub](/en/automation/cron-jobs#gmail-pubsub-integration) pour le flux de configuration de bout en bout et les détails opérationnels.
+Consultez la [documentation Gmail Pub/Sub](/fr/automation/cron-jobs#gmail-pubsub-integration) pour le flux de configuration de bout en bout et les détails opérationnels.

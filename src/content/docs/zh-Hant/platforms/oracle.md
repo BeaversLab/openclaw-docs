@@ -298,8 +298,8 @@ openclaw backup create
 
 ## 參見
 
-- [Gateway 遠程訪問](/en/gateway/remote) — 其他遠程訪問模式
-- [Tailscale 集成](/en/gateway/tailscale) — 完整的 Tailscale 文檔
-- [Gateway 配置](/en/gateway/configuration) — 所有配置選項
-- [DigitalOcean 指南](/en/platforms/digitalocean) — 如果您想要付費且註冊更容易
-- [Hetzner 指南](/en/install/hetzner) — 基於 Docker 的替代方案
+- [Gateway 遠程訪問](/zh-Hant/gateway/remote) — 其他遠程訪問模式
+- [Tailscale 集成](/zh-Hant/gateway/tailscale) — 完整的 Tailscale 文檔
+- [Gateway 配置](/zh-Hant/gateway/configuration) — 所有配置選項
+- [DigitalOcean 指南](/zh-Hant/platforms/digitalocean) — 如果您想要付費且註冊更容易
+- [Hetzner 指南](/zh-Hant/install/hetzner) — 基於 Docker 的替代方案

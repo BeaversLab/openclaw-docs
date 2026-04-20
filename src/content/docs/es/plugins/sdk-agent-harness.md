@@ -33,7 +33,7 @@ Ejemplos:
   de la transcripción de la sesión de OpenClaw
 
 **No** registres un arnés solo para añadir una nueva API de LLM. Para las API de modelo
-HTTP o WebSocket normales, crea un [proveedor de complementos](/en/plugins/sdk-provider-plugins).
+HTTP o WebSocket normales, crea un [proveedor de complementos](/es/plugins/sdk-provider-plugins).
 
 ## Lo que el núcleo aún posee
 
@@ -128,7 +128,7 @@ ejecución del servidor de aplicaciones Codex. `/model` puede cambiar entre los 
 por el servidor de aplicaciones Codex sin requerir credenciales del proveedor OpenAI.
 
 Para ver la configuración del operador, ejemplos de prefijos de modelo y configuraciones
-de solo Codex, consulte [Arnés de Codex](/en/plugins/codex-harness).
+de solo Codex, consulte [Arnés de Codex](/es/plugins/codex-harness).
 
 OpenClaw requiere el servidor de aplicaciones Codex `0.118.0` o más reciente. El complemento Codex verifica
 el protocolo de enlace de inicialización del servidor de aplicaciones y bloquea los servidores antiguos o sin versión para que
@@ -279,8 +279,8 @@ en la misma ruta de entrega que las ejecuciones respaldadas por PI.
 
 ## Relacionado
 
-- [Descripción general del SDK](/en/plugins/sdk-overview)
-- [Ayudantes de tiempo de ejecución](/en/plugins/sdk-runtime)
-- [Complementos de proveedores](/en/plugins/sdk-provider-plugins)
-- [Arnés de Codex](/en/plugins/codex-harness)
-- [Proveedores de modelos](/en/concepts/model-providers)
+- [Descripción general del SDK](/es/plugins/sdk-overview)
+- [Ayudantes de tiempo de ejecución](/es/plugins/sdk-runtime)
+- [Complementos de proveedores](/es/plugins/sdk-provider-plugins)
+- [Arnés de Codex](/es/plugins/codex-harness)
+- [Proveedores de modelos](/es/concepts/model-providers)

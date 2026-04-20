@@ -128,7 +128,7 @@ El host del nodo almacena su id de nodo, token, nombre para mostrar e informaci�
 `system.run` está limitado por aprobaciones de ejecución locales:
 
 - `~/.openclaw/exec-approvals.json`
-- [Aprobaciones de ejecución](/en/tools/exec-approvals)
+- [Aprobaciones de ejecución](/es/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>` (editar desde la Gateway)
 
 Para la ejecución de nodo asíncrona aprobada, OpenClaw prepara un `systemRunPlan`

@@ -10,13 +10,13 @@ title: "Discord"
 Estado: listo para mensajes directos y canales de servidor a través de la puerta de enlace oficial de Discord.
 
 <CardGroup cols={3}>
-  <Card title="Emparejamiento" icon="link" href="/en/channels/pairing">
+  <Card title="Emparejamiento" icon="link" href="/es/channels/pairing">
     Los MD de Discord están en modo de emparejamiento por defecto.
   </Card>
-  <Card title="Comandos de barra" icon="terminal" href="/en/tools/slash-commands">
+  <Card title="Comandos de barra" icon="terminal" href="/es/tools/slash-commands">
     Comportamiento de comandos nativos y catálogo de comandos.
   </Card>
-  <Card title="Solución de problemas del canal" icon="wrench" href="/en/channels/troubleshooting">
+  <Card title="Solución de problemas del canal" icon="wrench" href="/es/channels/troubleshooting">
     Flujo de diagnóstico y reparación entre canales.
   </Card>
 </CardGroup>
@@ -139,7 +139,7 @@ openclaw gateway
 DISCORD_BOT_TOKEN=...
 ```
 
-        Se admiten valores de texto plano para `token`. También se admiten valores SecretRef para `channels.discord.token` en los proveedores env/file/exec. Consulta [Gestión de secretos](/en/gateway/secrets).
+        Se admiten valores de texto plano para `token`. También se admiten valores SecretRef para `channels.discord.token` en los proveedores env/file/exec. Consulta [Gestión de secretos](/es/gateway/secrets).
 
       </Tab>
     </Tabs>
@@ -551,7 +551,7 @@ Use `bindings[].match.roles` para enrutar a los miembros del gremio de Discord a
 - La autenticación de comandos nativos utiliza las mismas listas de permitidos/políticas de Discord que el manejo normal de mensajes.
 - Es posible que los comandos sigan siendo visibles en la interfaz de usuario de Discord para usuarios que no están autorizados; la ejecución aún hace cumplir la autenticación de OpenClaw y devuelve "no autorizado".
 
-Consulte [Comandos de barra](/en/tools/slash-commands) para ver el catálogo y el comportamiento de los comandos.
+Consulte [Comandos de barra](/es/tools/slash-commands) para ver el catálogo y el comportamiento de los comandos.
 
 Configuración predeterminada de comandos de barra:
 
@@ -697,7 +697,7 @@ Configuración predeterminada de comandos de barra:
     - `spawnAcpSessions` debe ser verdadero para crear/vincular hilos automáticamente para ACP (`/acp spawn ... --thread ...` o `sessions_spawn({ runtime: "acp", thread: true })`).
     - Si las vinculaciones de hilos están deshabilitadas para una cuenta, `/focus` y las operaciones relacionadas de vinculación de hilos no están disponibles.
 
-    Consulte [Sub-agentes](/en/tools/subagents), [Agentes ACP](/en/tools/acp-agents) y [Referencia de configuración](/en/gateway/configuration-reference).
+    Consulte [Sub-agentes](/es/tools/subagents), [Agentes ACP](/es/tools/acp-agents) y [Referencia de configuración](/es/gateway/configuration-reference).
 
   </Accordion>
 
@@ -766,7 +766,7 @@ Configuración predeterminada de comandos de barra:
     - Los enlaces temporales de hilos todavía funcionan y pueden anular la resolución del destino mientras están activos.
     - `spawnAcpSessions` solo se requiere cuando OpenClaw necesita crear/vincular un hilo secundario a través de `--thread auto|here`. No se requiere para `/acp spawn ... --bind here` en el canal actual.
 
-    Consulte [ACP Agents](/en/tools/acp-agents) para obtener detalles sobre el comportamiento de los enlaces.
+    Consulte [ACP Agents](/es/tools/acp-agents) para obtener detalles sobre el comportamiento de los enlaces.
 
   </Accordion>
 
@@ -987,7 +987,7 @@ Configuración predeterminada de comandos de barra:
     ID de aprobación desconocidos, verifique la resolución del aprobador, la habilitación de la función y
     que el tipo de id de aprobación entregado coincida con la solicitud pendiente.
 
-    Documentos relacionados: [Aprobaciones de ejecución](/en/tools/exec-approvals)
+    Documentos relacionados: [Aprobaciones de ejecución](/es/tools/exec-approvals)
 
   </Accordion>
 </AccordionGroup>
@@ -1226,7 +1226,7 @@ openclaw logs --follow
 
 Referencia principal:
 
-- [Referencia de configuración - Discord](/en/gateway/configuration-reference#discord)
+- [Referencia de configuración - Discord](/es/gateway/configuration-reference#discord)
 
 Campos de Discord de alta señal:
 
@@ -1253,10 +1253,10 @@ Campos de Discord de alta señal:
 
 ## Relacionado
 
-- [Emparejamiento](/en/channels/pairing)
-- [Grupos](/en/channels/groups)
-- [Enrutamiento de canales](/en/channels/channel-routing)
-- [Seguridad](/en/gateway/security)
-- [Enrutamiento multiagente](/en/concepts/multi-agent)
-- [Solución de problemas](/en/channels/troubleshooting)
-- [Comandos de barra](/en/tools/slash-commands)
+- [Emparejamiento](/es/channels/pairing)
+- [Grupos](/es/channels/groups)
+- [Enrutamiento de canales](/es/channels/channel-routing)
+- [Seguridad](/es/gateway/security)
+- [Enrutamiento multiagente](/es/concepts/multi-agent)
+- [Solución de problemas](/es/channels/troubleshooting)
+- [Comandos de barra](/es/tools/slash-commands)

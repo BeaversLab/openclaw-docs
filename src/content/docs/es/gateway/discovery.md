@@ -23,13 +23,13 @@ El objetivo de diseño es mantener todo el descubrimiento/publicidad de red en e
 - **Transporte WS directo**: un punto final de Gateway WS orientado a LAN/tailnet (sin SSH).
 - **Transporte SSH (alternativo)**: control remoto mediante el reenvío de `127.0.0.1:18789` a través de SSH.
 - **Puente TCP heredado (eliminado)**: transporte de nodo antiguo (ver
-  [Protocolo de puente](/en/gateway/bridge-protocol)); ya no se anuncia para
+  [Protocolo de puente](/es/gateway/bridge-protocol)); ya no se anuncia para
   el descubrimiento y ya no es parte de las compilaciones actuales.
 
 Detalles del protocolo:
 
-- [Protocolo de puerta de enlace](/en/gateway/protocol)
-- [Protocolo de puente (heredado)](/en/gateway/bridge-protocol)
+- [Protocolo de puerta de enlace](/es/gateway/protocol)
+- [Protocolo de puente (heredado)](/es/gateway/bridge-protocol)
 
 ## Por qué mantenemos tanto "direct" como SSH
 
@@ -57,7 +57,7 @@ Dirección de destino:
 - La **puerta de enlace** anuncia su punto final WS mediante Bonjour.
 - Los clientes examinan y muestran una lista de "elegir una puerta de enlace", luego almacenan el punto final elegido.
 
-Solución de problemas y detalles del beacon: [Bonjour](/en/gateway/bonjour).
+Solución de problemas y detalles del beacon: [Bonjour](/es/gateway/bonjour).
 
 #### Detalles del beacon de servicio
 
@@ -112,7 +112,7 @@ Para el emparejamiento de nodos móviles, las sugerencias de descubrimiento no r
 
 Cuando no hay una ruta directa (o la directa está desactivada), los clientes siempre pueden conectarse mediante SSH reenviando el puerto de loopback del gateway.
 
-Consulte [Acceso remoto](/en/gateway/remote).
+Consulte [Acceso remoto](/es/gateway/remote).
 
 ## Selección de transporte (política del cliente)
 
@@ -128,7 +128,7 @@ Comportamiento recomendado del cliente:
 
 La puerta de enlace es la fuente de verdad para la admisión de nodos/clientes.
 
-- Las solicitudes de emparejamiento se crean/aprueban/rechazan en la puerta de enlace (consulte [Emparejamiento de puerta de enlace](/en/gateway/pairing)).
+- Las solicitudes de emparejamiento se crean/aprueban/rechazan en la puerta de enlace (consulte [Emparejamiento de puerta de enlace](/es/gateway/pairing)).
 - La puerta de enlace hace cumplir:
   - autenticación (token / par de claves)
   - alcances/ACL (la puerta de enlace no es un proxy sin procesar para cada método)

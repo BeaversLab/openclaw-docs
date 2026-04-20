@@ -54,7 +54,7 @@ No reemplaza al complemento de memoria activo. El complemento de memoria activo 
 posee el recuerdo, la promoción y el sueño. `memory-wiki` añade una capa de
 conocimiento rico en procedencia junto a él.
 
-Ver [Memory Wiki](/en/plugins/memory-wiki).
+Ver [Memory Wiki](/es/plugins/memory-wiki).
 
 ## Búsqueda de memoria
 
@@ -66,18 +66,18 @@ una clave API para cualquier proveedor compatible.
 <Info>OpenClaw detecta automáticamente tu proveedor de incrustaciones a partir de las claves API disponibles. Si tienes una clave de OpenAI, Gemini, Voyage o Mistral configurada, la búsqueda de memoria se habilita automáticamente.</Info>
 
 Para detalles sobre cómo funciona la búsqueda, opciones de ajuste y configuración del proveedor, ver
-[Memory Search](/en/concepts/memory-search).
+[Memory Search](/es/concepts/memory-search).
 
 ## Backends de memoria
 
 <CardGroup cols={3}>
-  <Card title="Integrado (predeterminado)" icon="base de datos" href="/en/concepts/memory-builtin">
+  <Card title="Integrado (predeterminado)" icon="base de datos" href="/es/concepts/memory-builtin">
     Basado en SQLite. Funciona de inmediato con búsqueda por palabras clave, similitud vectorial y búsqueda híbrida. Sin dependencias adicionales.
   </Card>
-  <Card title="QMD" icon="búsqueda" href="/en/concepts/memory-qmd">
+  <Card title="QMD" icon="búsqueda" href="/es/concepts/memory-qmd">
     Sidecar local-primero con reranking, expansión de consultas y la capacidad de indexar directorios fuera del espacio de trabajo.
   </Card>
-  <Card title="Honcho" icon="cerebro" href="/en/concepts/memory-honcho">
+  <Card title="Honcho" icon="cerebro" href="/es/concepts/memory-honcho">
     Memoria multi-sesión nativa de IA con modelado de usuario, búsqueda semántica y conciencia multi-agente. Instalación de complemento.
   </Card>
 </CardGroup>
@@ -85,14 +85,14 @@ Para detalles sobre cómo funciona la búsqueda, opciones de ajuste y configurac
 ## Capa de wiki de conocimientos
 
 <CardGroup cols={1}>
-  <Card title="Wiki de Memoria" icon="libro" href="/en/plugins/memory-wiki">
+  <Card title="Wiki de Memoria" icon="libro" href="/es/plugins/memory-wiki">
     Compila la memoria duradera en una bóveda de wiki rica en procedencia con reclamos, dashboards, modo puente y flujos de trabajo compatibles con Obsidian.
   </Card>
 </CardGroup>
 
 ## Vaciado automático de memoria
 
-Antes de que la [compactación](/en/concepts/compaction) resuma su conversación, OpenClaw
+Antes de que la [compactación](/es/concepts/compaction) resuma su conversación, OpenClaw
 ejecuta un turno silencioso que recuerda al agente guardar el contexto importante en archivos de
 memoria. Esto está activado por defecto; no necesitas configurar nada.
 
@@ -115,7 +115,7 @@ Está diseñado para mantener la memoria a largo plazo con alta señal:
   para su revisión humana.
 
 Para el comportamiento de las fases, las señales de puntuación y los detalles del Diario de Sueños, consulte
-[Dreaming](/en/concepts/dreaming).
+[Dreaming](/es/concepts/dreaming).
 
 ## Relleno fundamentado y promoción en vivo
 
@@ -162,13 +162,13 @@ openclaw memory index --force   # Rebuild the index
 
 ## Lectura adicional
 
-- [Builtin Memory Engine](/en/concepts/memory-builtin) -- backend SQLite predeterminado
-- [QMD Memory Engine](/en/concepts/memory-qmd) -- sidecar local-first avanzado
-- [Honcho Memory](/en/concepts/memory-honcho) -- memoria nativa de IA entre sesiones
-- [Memory Wiki](/en/plugins/memory-wiki) -- bóveda de conocimiento compilada y herramientas nativas de wiki
-- [Memory Search](/en/concepts/memory-search) -- canalización de búsqueda, proveedores y
+- [Builtin Memory Engine](/es/concepts/memory-builtin) -- backend SQLite predeterminado
+- [QMD Memory Engine](/es/concepts/memory-qmd) -- sidecar local-first avanzado
+- [Honcho Memory](/es/concepts/memory-honcho) -- memoria nativa de IA entre sesiones
+- [Memory Wiki](/es/plugins/memory-wiki) -- bóveda de conocimiento compilada y herramientas nativas de wiki
+- [Memory Search](/es/concepts/memory-search) -- canalización de búsqueda, proveedores y
   ajuste
-- [Dreaming](/en/concepts/dreaming) -- promoción en segundo plano
+- [Dreaming](/es/concepts/dreaming) -- promoción en segundo plano
   desde el recuerdo a corto plazo hasta la memoria a largo plazo
-- [Referencia de configuración de memoria](/en/reference/memory-config) -- todos los controles de configuración
-- [Compaction](/en/concepts/compaction) -- cómo la compactación interactúa con la memoria
+- [Referencia de configuración de memoria](/es/reference/memory-config) -- todos los controles de configuración
+- [Compaction](/es/concepts/compaction) -- cómo la compactación interactúa con la memoria

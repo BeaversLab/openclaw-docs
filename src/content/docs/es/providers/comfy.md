@@ -336,19 +336,19 @@ Las secciones `image` y `video` también admiten:
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Generación de imágenes" href="/en/tools/image-generation" icon="image">
+  <Card title="Generación de imágenes" href="/es/tools/image-generation" icon="image">
     Configuración y uso de la herramienta de generación de imágenes.
   </Card>
-  <Card title="Generación de video" href="/en/tools/video-generation" icon="video">
+  <Card title="Generación de video" href="/es/tools/video-generation" icon="video">
     Configuración y uso de la herramienta de generación de video.
   </Card>
-  <Card title="Generación de música" href="/en/tools/music-generation" icon="music">
+  <Card title="Generación de música" href="/es/tools/music-generation" icon="music">
     Configuración de la herramienta de generación de música y audio.
   </Card>
-  <Card title="Directorio de proveedores" href="/en/providers/index" icon="layers">
+  <Card title="Directorio de proveedores" href="/es/providers/index" icon="layers">
     Resumen de todos los proveedores y referencias de modelos.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference#agent-defaults" icon="gear">
     Referencia completa de la configuración, incluidos los valores predeterminados del agente.
   </Card>
 </CardGroup>

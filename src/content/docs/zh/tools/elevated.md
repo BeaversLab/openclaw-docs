@@ -102,7 +102,7 @@ Allowlist entry formats:
 
 ## 相关
 
-- [Exec 工具](/en/tools/exec) — Shell 命令执行
-- [Exec 批准](/en/tools/exec-approvals) — 批准和允许列表系统
-- [沙箱隔离](/en/gateway/sandboxing) — 沙箱配置
-- [沙箱与工具策略与 Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- [Exec 工具](/zh/tools/exec) — Shell 命令执行
+- [Exec 批准](/zh/tools/exec-approvals) — 批准和允许列表系统
+- [沙箱隔离](/zh/gateway/sandboxing) — 沙箱配置
+- [沙箱与工具策略与 Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)

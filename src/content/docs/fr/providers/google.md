@@ -164,7 +164,7 @@ Pour utiliser Google comme fournisseur d'images par défaut :
 }
 ```
 
-<Note>Voir [Génération d'images](/en/tools/image-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération d'images](/fr/tools/image-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ## Génération vidéo
 
@@ -190,7 +190,7 @@ Pour utiliser Google comme fournisseur vidéo par défaut :
 }
 ```
 
-<Note>Voir [Génération vidéo](/en/tools/video-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération vidéo](/fr/tools/video-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ## Génération de musique
 
@@ -218,7 +218,7 @@ Pour utiliser Google comme fournisseur de musique par défaut :
 }
 ```
 
-<Note>Voir [Génération de musique](/en/tools/music-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération de musique](/fr/tools/music-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ## Configuration avancée
 
@@ -274,16 +274,16 @@ Pour utiliser Google comme fournisseur de musique par défaut :
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les fournisseurs, les références de modèle et le comportement de basculement.
   </Card>
-  <Card title="Génération d'images" href="/en/tools/image-generation" icon="image">
+  <Card title="Génération d'images" href="/fr/tools/image-generation" icon="image">
     Paramètres de l'outil d'image partagés et sélection du fournisseur.
   </Card>
-  <Card title="Génération vidéo" href="/en/tools/video-generation" icon="video">
+  <Card title="Génération vidéo" href="/fr/tools/video-generation" icon="video">
     Paramètres de l'outil vidéo partagés et sélection du fournisseur.
   </Card>
-  <Card title="Génération musicale" href="/en/tools/music-generation" icon="music">
+  <Card title="Génération musicale" href="/fr/tools/music-generation" icon="music">
     Paramètres de l'outil musical partagés et sélection du fournisseur.
   </Card>
 </CardGroup>

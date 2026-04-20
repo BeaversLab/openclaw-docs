@@ -179,7 +179,7 @@ ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 到 Control UI 设置中。对于令牌认证，请使用 `gateway.auth.token` (或
 `OPENCLAW_GATEWAY_TOKEN`)。
 
-如需始终在线的远程访问，请参阅 [Tailscale](/en/gateway/tailscale)。
+如需始终在线的远程访问，请参阅 [Tailscale](/zh/gateway/tailscale)。
 
 ---
 
@@ -411,8 +411,8 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ## 另请参阅
 
-- [Linux 指南](/en/platforms/linux) — 通用 Linux 设置
-- [DigitalOcean 指南](/en/platforms/digitalocean) — 云替代方案
-- [Hetzner 指南](/en/install/hetzner) — Docker 设置
-- [Tailscale](/en/gateway/tailscale) — 远程访问
-- [节点](/en/nodes) — 将您的笔记本电脑/手机与 Pi 网关配对
+- [Linux 指南](/zh/platforms/linux) — 通用 Linux 设置
+- [DigitalOcean 指南](/zh/platforms/digitalocean) — 云替代方案
+- [Hetzner 指南](/zh/install/hetzner) — Docker 设置
+- [Tailscale](/zh/gateway/tailscale) — 远程访问
+- [节点](/zh/nodes) — 将您的笔记本电脑/手机与 Pi 网关配对

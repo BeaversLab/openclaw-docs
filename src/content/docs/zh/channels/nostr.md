@@ -243,8 +243,8 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ## 相关
 
-- [通道概述](/en/channels) — 所有支持的通道
-- [配对](/en/channels/pairing) — 私信认证和配对流程
-- [Groups](/en/channels/groups) — 群组聊天行为和提及门控
-- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
-- [Security](/en/gateway/security) — 访问模型和加固
+- [通道概述](/zh/channels) — 所有支持的通道
+- [配对](/zh/channels/pairing) — 私信认证和配对流程
+- [Groups](/zh/channels/groups) — 群组聊天行为和提及门控
+- [Channel Routing](/zh/channels/channel-routing) — 消息的会话路由
+- [Security](/zh/gateway/security) — 访问模型和加固

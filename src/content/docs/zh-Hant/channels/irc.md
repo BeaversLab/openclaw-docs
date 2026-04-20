@@ -185,7 +185,7 @@ IRC 頻道有兩個分開的「閘門」：
 - 舊的無前綴鍵仍然被接受並僅作為 `id:` 匹配。
 - 第一個匹配的發送者策略獲勝；`"*"` 是通配符回退。
 
-有關群組訪問與提及閘門的更多資訊（以及它們如何互動），請參閱：[/channels/groups](/en/channels/groups)。
+有關群組訪問與提及閘門的更多資訊（以及它們如何互動），請參閱：[/channels/groups](/zh-Hant/channels/groups)。
 
 ## NickServ
 
@@ -245,8 +245,8 @@ IRC 頻道有兩個分開的「閘門」：
 
 ## 相關
 
-- [頻道概覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — DM 驗證與配對流程
-- [群組](/en/channels/groups) — 群組聊天行為與提及閘控
-- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
-- [安全性](/en/gateway/security) — 存取模型與加固
+- [頻道概覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — DM 驗證與配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及閘控
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型與加固

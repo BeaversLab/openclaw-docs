@@ -10,9 +10,9 @@ title: "Exploración de la configuración del modelo"
 Este documento captura **ideas** para la configuración futura del modelo. No es una
 especificación de lanzamiento. Para el comportamiento actual, consulte:
 
-- [Modelos](/en/concepts/models)
-- [Conmutación por error del modelo](/en/concepts/model-failover)
-- [OAuth + perfiles](/en/concepts/oauth)
+- [Modelos](/es/concepts/models)
+- [Conmutación por error del modelo](/es/concepts/model-failover)
+- [OAuth + perfiles](/es/concepts/oauth)
 
 ## Motivación
 

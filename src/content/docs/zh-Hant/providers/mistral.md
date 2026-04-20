@@ -123,10 +123,10 @@ OpenClaw 目前包含此捆綁的 Mistral 目錄：
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和故障轉移行為。
   </Card>
-  <Card title="媒體理解" href="/en/tools/media-understanding" icon="microphone">
+  <Card title="媒體理解" href="/zh-Hant/tools/media-understanding" icon="microphone">
     音訊轉錄設定與提供者選擇。
   </Card>
 </CardGroup>

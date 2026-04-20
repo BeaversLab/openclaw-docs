@@ -9,7 +9,7 @@ title: "模型供應商"
 # 模型提供者
 
 本頁涵蓋 **LLM/模型供應商**（而非 WhatsApp/Telegram 等聊天頻道）。
-關於模型選擇規則，請參閱 [/concepts/models](/en/concepts/models)。
+關於模型選擇規則，請參閱 [/concepts/models](/zh-Hant/concepts/models)。
 
 ## 快速規則
 
@@ -17,7 +17,7 @@ title: "模型供應商"
 - 如果您設定 `agents.defaults.models`，它將成為允許清單。
 - CLI 輔助工具：`openclaw onboard`、`openclaw models list`、`openclaw models set <provider/model>`。
 - 後援執行時規則、冷卻探測和會話覆寫持續性記錄於
-  [/concepts/model-failover](/en/concepts/model-failover)。
+  [/concepts/model-failover](/zh-Hant/concepts/model-failover)。
 - `models.providers.*.models[].contextWindow` 是原生模型元資料；
   `models.providers.*.models[].contextTokens` 是有效的執行時上限。
 - 供應商外掛可以透過 `registerProvider({ catalog })` 注入模型目錄；
@@ -46,8 +46,8 @@ title: "模型供應商"
   `resolveDefaultThinkingLevel`、`applyConfigDefaults`、`isModernModelRef`、
   `prepareRuntimeAuth`、`resolveUsageAuth`、`fetchUsageSnapshot` 和
   `onModelSelected` 來擁有提供者執行時期行為。
-- 注意：提供者執行時期 `capabilities` 是共享的執行器中繼資料（提供者系列、轉錄/工具怪癖、傳輸/快取提示）。它與 [公開能力模型](/en/plugins/architecture#public-capability-model) 並不相同，後者描述的是外掛程式註冊的內容（文字推論、語音等）。
-- 隨附的 `codex` 提供者與隨附的 Codex 代理程式駕驭程式搭配。當您需要 Codex 擁有的登入、模型探索、原生執行緒恢復和應用程式伺服器執行時，請使用 `codex/gpt-*`。單純的 `openai/gpt-*` 引用會繼續使用 OpenAI 提供者和正常的 OpenClaw 提供者傳輸。僅 Codex 的部署可以使用 `agents.defaults.embeddedHarness.fallback: "none"` 來停用自動 PI 備援；請參閱 [Codex 駕驭程式](/en/plugins/codex-harness)。
+- 注意：提供者執行時期 `capabilities` 是共享的執行器中繼資料（提供者系列、轉錄/工具怪癖、傳輸/快取提示）。它與 [公開能力模型](/zh-Hant/plugins/architecture#public-capability-model) 並不相同，後者描述的是外掛程式註冊的內容（文字推論、語音等）。
+- 隨附的 `codex` 提供者與隨附的 Codex 代理程式駕驭程式搭配。當您需要 Codex 擁有的登入、模型探索、原生執行緒恢復和應用程式伺服器執行時，請使用 `codex/gpt-*`。單純的 `openai/gpt-*` 引用會繼續使用 OpenAI 提供者和正常的 OpenClaw 提供者傳輸。僅 Codex 的部署可以使用 `agents.defaults.embeddedHarness.fallback: "none"` 來停用自動 PI 備援；請參閱 [Codex 駕驭程式](/zh-Hant/plugins/codex-harness)。
 
 ## 外掛擁有的提供者行為
 
@@ -258,9 +258,9 @@ OpenClaw 隨附 pi‑ai 目錄。這些提供者**不需要** `models.providers`
 
 ### 其他訂閱式託管選項
 
-- [Qwen Cloud](/en/providers/qwen)：Qwen Cloud 供應商介面加上 Alibaba DashScope 和 Coding Plan 端點對應
-- [MiniMax](/en/providers/minimax)：MiniMax Coding Plan OAuth 或 API 金鑰存取
-- [GLM Models](/en/providers/glm)：Z.AI Coding Plan 或一般 API 端點
+- [Qwen Cloud](/zh-Hant/providers/qwen)：Qwen Cloud 供應商介面加上 Alibaba DashScope 和 Coding Plan 端點對應
+- [MiniMax](/zh-Hant/providers/minimax)：MiniMax Coding Plan OAuth 或 API 金鑰存取
+- [GLM Models](/zh-Hant/providers/glm)：Z.AI Coding Plan 或一般 API 端點
 
 ### OpenCode
 
@@ -332,7 +332,7 @@ OpenClaw 隨附 pi‑ai 目錄。這些提供者**不需要** `models.providers`
 - 靜態備選目錄包含 `kilocode/kilo/auto`；即時 `https://api.kilo.ai/api/gateway/models` 探索可以進一步擴充執行時期目錄。
 - `kilocode/kilo/auto` 背後的精確上游路由由 Kilo Gateway 擁有，而非硬編碼在 OpenClaw 中。
 
-請參閱 [/providers/kilocode](/en/providers/kilocode) 以取得設定詳細資訊。
+請參閱 [/providers/kilocode](/zh-Hant/providers/kilocode) 以取得設定詳細資訊。
 
 ### 其他內建提供者外掛
 
@@ -389,7 +389,7 @@ OpenClaw 隨附 pi‑ai 目錄。這些提供者**不需要** `models.providers`
   - Cerebras 上的 GLM 模型使用 ID `zai-glm-4.7` 和 `zai-glm-4.6`。
   - 相容 OpenAI 的基礎 URL：`https://api.cerebras.ai/v1`。
 - GitHub Copilot：`github-copilot` (`COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN`)
-- Hugging Face Inference 範例模型：`huggingface/deepseek-ai/DeepSeek-R1`；CLI：`openclaw onboard --auth-choice huggingface-api-key`。請參閱 [Hugging Face (Inference)](/en/providers/huggingface)。
+- Hugging Face Inference 範例模型：`huggingface/deepseek-ai/DeepSeek-R1`；CLI：`openclaw onboard --auth-choice huggingface-api-key`。請參閱 [Hugging Face (Inference)](/zh-Hant/providers/huggingface)。
 
 ## 透過 `models.providers` 的供應商 (custom/base URL)
 
@@ -577,7 +577,7 @@ MiniMax 是透過 `models.providers` 設定的，因為它使用自訂端點：
 - 驗證：`MINIMAX_API_KEY` 用於 `minimax`；`MINIMAX_OAUTH_TOKEN` 或
   `MINIMAX_API_KEY` 用於 `minimax-portal`
 
-請參閱 [/providers/minimax](/en/providers/minimax) 以了解設定細節、模型選項和設定片段。
+請參閱 [/providers/minimax](/zh-Hant/providers/minimax) 以了解設定細節、模型選項和設定片段。
 
 在 MiniMax 的 Anthropic 相容串流路徑上，除非您明確設定，否則 OpenClaw 預設會停用思考，並且 `/fast on` 會將
 `MiniMax-M2.7` 重寫為 `MiniMax-M2.7-highspeed`。
@@ -609,7 +609,7 @@ LM Studio 作為使用原生 API 的套件提供者外掛隨附：
 
 OpenClaw 使用 LM Studio 原生的 `/api/v1/models` 和 `/api/v1/models/load`
 進行探索 + 自動載入，並預設使用 `/v1/chat/completions` 進行推理。
-請參閱 [/providers/lmstudio](/en/providers/lmstudio) 以進行設定和疑難排解。
+請參閱 [/providers/lmstudio](/zh-Hant/providers/lmstudio) 以進行設定和疑難排解。
 
 ### Ollama
 
@@ -634,7 +634,7 @@ ollama pull llama3.3
 ```
 
 當您使用 `OLLAMA_API_KEY` 選擇加入時，系統會在本機 `http://127.0.0.1:11434` 偵測到 Ollama，且內建的提供者插件會直接將 Ollama 新增至
-`openclaw onboard` 和模型選擇器。請參閱 [/providers/ollama](/en/providers/ollama)
+`openclaw onboard` 和模型選擇器。請參閱 [/providers/ollama](/zh-Hant/providers/ollama)
 以了解上手指南、雲端/本機模式及自訂設定。
 
 ### vLLM
@@ -662,7 +662,7 @@ export VLLM_API_KEY="vllm-local"
 }
 ```
 
-詳情請參閱 [/providers/vllm](/en/providers/vllm)。
+詳情請參閱 [/providers/vllm](/zh-Hant/providers/vllm)。
 
 ### SGLang
 
@@ -690,7 +690,7 @@ export SGLANG_API_KEY="sglang-local"
 }
 ```
 
-詳情請參閱 [/providers/sglang](/en/providers/sglang)。
+詳情請參閱 [/providers/sglang](/zh-Hant/providers/sglang)。
 
 ### 本機代理伺服器 (LM Studio, vLLM, LiteLLM 等)
 
@@ -750,11 +750,11 @@ openclaw models set opencode/claude-opus-4-6
 openclaw models list
 ```
 
-另請參閱：[/gateway/configuration](/en/gateway/configuration) 以取得完整的配置範例。
+另請參閱：[/gateway/configuration](/zh-Hant/gateway/configuration) 以取得完整的配置範例。
 
 ## 相關
 
-- [Models](/en/concepts/models) — 模型配置與別名
-- [Model Failover](/en/concepts/model-failover) — 故障轉移鏈與重試行為
-- [Configuration Reference](/en/gateway/configuration-reference#agent-defaults) — 模型配置鍵
-- [Providers](/en/providers) — 各提供者設定指南
+- [Models](/zh-Hant/concepts/models) — 模型配置與別名
+- [Model Failover](/zh-Hant/concepts/model-failover) — 故障轉移鏈與重試行為
+- [Configuration Reference](/zh-Hant/gateway/configuration-reference#agent-defaults) — 模型配置鍵
+- [Providers](/zh-Hant/providers) — 各提供者設定指南

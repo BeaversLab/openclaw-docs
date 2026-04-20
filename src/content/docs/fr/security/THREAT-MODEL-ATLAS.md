@@ -29,7 +29,7 @@ Ce modèle de menace est basé sur [MITRE ATLAS](https://atlas.mitre.org/), le c
 
 ### Contribuer à ce modèle de menace
 
-Il s'agit d'un document vivant maintenu par la communauté OpenClaw. Consultez [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL) pour les directives de contribution :
+Il s'agit d'un document vivant maintenu par la communauté OpenClaw. Consultez [CONTRIBUTING-THREAT-MODEL.md](/fr/security/CONTRIBUTING-THREAT-MODEL) pour les directives de contribution :
 
 - Signaler de nouvelles menaces
 - Mettre à jour les menaces existantes

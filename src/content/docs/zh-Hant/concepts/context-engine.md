@@ -260,11 +260,11 @@ export default function register(api) {
 - 對於開發，請使用 `openclaw plugins install -l ./my-engine` 來連結
   本機外掛程式目錄，而不需複製。
 
-另請參閱：[壓縮](/en/concepts/compaction)、[語境](/en/concepts/context)、
-[外掛程式](/en/tools/plugin)、[外掛程式清單](/en/plugins/manifest)。
+另請參閱：[壓縮](/zh-Hant/concepts/compaction)、[語境](/zh-Hant/concepts/context)、
+[外掛程式](/zh-Hant/tools/plugin)、[外掛程式清單](/zh-Hant/plugins/manifest)。
 
 ## 相關
 
-- [語境](/en/concepts/context) — 如何為代理程式回合建立語境
-- [外掛程式架構](/en/plugins/architecture) — 註冊語境引擎外掛程式
-- [壓縮](/en/concepts/compaction) — 摘要長對話
+- [語境](/zh-Hant/concepts/context) — 如何為代理程式回合建立語境
+- [外掛程式架構](/zh-Hant/plugins/architecture) — 註冊語境引擎外掛程式
+- [壓縮](/zh-Hant/concepts/compaction) — 摘要長對話

@@ -380,7 +380,7 @@ Utilisez ce tableau de décision :
 - Remplacements de cible facultatifs :
   - `OPENCLAW_ANDROID_NODE_ID` ou `OPENCLAW_ANDROID_NODE_NAME`.
   - `OPENCLAW_ANDROID_GATEWAY_URL` / `OPENCLAW_ANDROID_GATEWAY_TOKEN` / `OPENCLAW_ANDROID_GATEWAY_PASSWORD`.
-- Détails complets de la configuration Android : [Android App](/en/platforms/android)
+- Détails complets de la configuration Android : [Android App](/fr/platforms/android)
 
 ## Live : model smoke (clés de profil)
 
@@ -891,7 +891,7 @@ Nous avons déjà quelques tests sûrs pour CI qui se comportent comme des « é
 - Appel d'outil simulé via la véritable passerelle et la boucle de l'agent (`src/gateway/gateway.test.ts`).
 - Flux de bout en bout de l'assistant qui valident le câblage de session et les effets de configuration (`src/gateway/gateway.test.ts`).
 
-Ce qui manque encore pour les Skills (voir [Skills](/en/tools/skills)) :
+Ce qui manque encore pour les Skills (voir [Skills](/fr/tools/skills)) :
 
 - **Prise de décision :** lorsque les Skills sont répertoriés dans l'invite, l'agent choisit-il la bonne Skill (ou évite-t-il celles qui ne sont pas pertinentes) ?
 - **Conformité :** l'agent lit-il `SKILL.md` avant utilisation et suit-il les étapes/arguments requis ?

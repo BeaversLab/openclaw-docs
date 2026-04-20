@@ -12,8 +12,8 @@ Comprobaciones de estado + soluciones rápidas para la puerta de enlace y los ca
 
 Relacionado:
 
-- Solución de problemas: [Solución de problemas](/en/gateway/troubleshooting)
-- Auditoría de seguridad: [Seguridad](/en/gateway/security)
+- Solución de problemas: [Solución de problemas](/es/gateway/troubleshooting)
+- Auditoría de seguridad: [Seguridad](/es/gateway/security)
 
 ## Ejemplos
 

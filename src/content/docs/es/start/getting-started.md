@@ -17,7 +17,7 @@ configurada y una sesión de chat operativa.
 - **Node.js** — Se recomienda Node 24 (también se admite Node 22.14+)
 - **Una clave de API** de un proveedor de modelos (Anthropic, OpenAI, Google, etc.) — la integración te lo solicitará
 
-<Tip>Verifique su versión de Node con `node --version`. **Usuarios de Windows:** se admiten tanto Windows nativo como WSL2. WSL2 es más estable y se recomienda para la experiencia completa. Consulte [Windows](/en/platforms/windows). ¿Necesita instalar Node? Consulte [Configuración de Node](/en/install/node).</Tip>
+<Tip>Verifique su versión de Node con `node --version`. **Usuarios de Windows:** se admiten tanto Windows nativo como WSL2. WSL2 es más estable y se recomienda para la experiencia completa. Consulte [Windows](/es/platforms/windows). ¿Necesita instalar Node? Consulte [Configuración de Node](/es/install/node).</Tip>
 
 ## Configuración rápida
 
@@ -42,7 +42,7 @@ configurada y una sesión de chat operativa.
     </Tabs>
 
     <Note>
-    Otros métodos de instalación (Docker, Nix, npm): [Instalación](/en/install).
+    Otros métodos de instalación (Docker, Nix, npm): [Instalación](/es/install).
     </Note>
 
   </Step>
@@ -54,7 +54,7 @@ configurada y una sesión de chat operativa.
     El asistente le guía a la hora de elegir un proveedor de modelos, configurar una clave de API
     y configurar el Gateway. Toma unos 2 minutos.
 
-    Consulte [Incorporación (CLI)](/en/start/wizard) para obtener la referencia completa.
+    Consulte [Incorporación (CLI)](/es/start/wizard) para obtener la referencia completa.
 
   </Step>
   <Step title="Verificar que el Gateway se esté ejecutando">
@@ -77,7 +77,7 @@ configurada y una sesión de chat operativa.
     Escriba un mensaje en el chat de la Interfaz de Control y debería recibir una respuesta de la IA.
 
     ¿Prefiere chatear desde su teléfono? El canal más rápido de configurar es
-    [Telegram](/en/channels/telegram) (solo se necesita un token de bot). Consulte [Canales](/en/channels)
+    [Telegram](/es/channels/telegram) (solo se necesita un token de bot). Consulte [Canales](/es/channels)
     para ver todas las opciones.
 
   </Step>
@@ -118,16 +118,16 @@ openclaw dashboard
 ## Qué hacer a continuación
 
 <Columns>
-  <Card title="Conectar un canal" href="/en/channels" icon="message-square">
+  <Card title="Conectar un canal" href="/es/channels" icon="message-square">
     Discord, Feishu, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo y más.
   </Card>
-  <Card title="Emparejamiento y seguridad" href="/en/channels/pairing" icon="shield">
+  <Card title="Emparejamiento y seguridad" href="/es/channels/pairing" icon="shield">
     Controle quién puede enviar mensajes a su agente.
   </Card>
-  <Card title="Configurar la puerta de enlace" href="/en/gateway/configuration" icon="settings">
+  <Card title="Configurar la puerta de enlace" href="/es/gateway/configuration" icon="settings">
     Modelos, herramientas, sandbox y configuración avanzada.
   </Card>
-  <Card title="Explorar herramientas" href="/en/tools" icon="wrench">
+  <Card title="Explorar herramientas" href="/es/tools" icon="wrench">
     Navegador, exec, búsqueda web, habilidades y complementos.
   </Card>
 </Columns>
@@ -139,6 +139,6 @@ openclaw dashboard
 - `OPENCLAW_STATE_DIR` — anular el directorio de estado
 - `OPENCLAW_CONFIG_PATH` — anular la ruta del archivo de configuración
 
-Referencia completa: [Variables de entorno](/en/help/environment).
+Referencia completa: [Variables de entorno](/es/help/environment).
 
 </Accordion>

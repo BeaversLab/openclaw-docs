@@ -14,7 +14,7 @@ L'élagage de session supprime les **anciens résultats d'outils** du contexte a
 
 ## Pourquoi c'est important
 
-Les longues sessions accumulent des sorties d'outils qui gonflent la fenêtre de contexte. Cela augmente les coûts et peut forcer la [compaction](/en/concepts/compaction) plus tôt que nécessaire.
+Les longues sessions accumulent des sorties d'outils qui gonflent la fenêtre de contexte. Cela augmente les coûts et peut forcer la [compaction](/fr/concepts/compaction) plus tôt que nécessaire.
 
 L'élagage est particulièrement précieux pour le **cache de prompt Anthropic**. Une fois le TTL du cache expiré, la requête suivante remet en cache le prompt complet. L'élagage réduit la taille de l'écriture dans le cache, ce qui réduit directement les coûts.
 
@@ -73,5 +73,5 @@ Ils se complètent -- l'élagage maintient les sorties d'outils légères entre 
 
 ## Pour aller plus loin
 
-- [Compaction](/en/concepts/compaction) -- réduction du contexte basée sur le résumé
-- [Configuration de la Gateway](/en/gateway/configuration) -- tous les paramètres de configuration d'élagage (`contextPruning.*`)
+- [Compaction](/fr/concepts/compaction) -- réduction du contexte basée sur le résumé
+- [Configuration de la Gateway](/fr/gateway/configuration) -- tous les paramètres de configuration d'élagage (`contextPruning.*`)

@@ -34,7 +34,7 @@ openclaw cron runs --id <job-id>
 
 - Cron se ejecuta **dentro del proceso** del Gateway (no dentro del modelo).
 - Los trabajos persisten en `~/.openclaw/cron/jobs.json` por lo que los reinicios no hacen perder las programaciones.
-- Todas las ejecuciones de cron crean registros de [tarea en segundo plano](/en/automation/tasks).
+- Todas las ejecuciones de cron crean registros de [tarea en segundo plano](/es/automation/tasks).
 - Los trabajos de un solo uso (`--at`) se autoeliminan tras el éxito de forma predeterminada.
 - Las ejecuciones de cron aisladas cierran con mejor esfuerzo las pestañas/procesos del navegador rastreados para su sesión `cron:<jobId>` cuando se completa la ejecución, por lo que la automatización de navegador desasociada no deja procesos huérfanos.
 - Las ejecuciones de cron aisladas también protegen contra respuestas de reconocimiento obsoletas. Si el primer resultado es solo una actualización de estado interina (`on it`, `pulling everything together`, y sugerencias similares) y ninguna ejecución de subagente descendente sigue siendo responsable de la respuesta final, OpenClaw vuelve a solicitar una vez el resultado real antes de la entrega.
@@ -407,7 +407,7 @@ openclaw doctor
 
 ## Relacionado
 
-- [Automatización y tareas](/en/automation) — todos los mecanismos de automatización de un vistazo
-- [Tareas en segundo plano](/en/automation/tasks) — libro mayor de tareas para ejecuciones de cron
-- [Heartbeat](/en/gateway/heartbeat) — turnos periódicos de la sesión principal
-- [Zona horaria](/en/concepts/timezone) — configuración de zona horaria
+- [Automatización y tareas](/es/automation) — todos los mecanismos de automatización de un vistazo
+- [Tareas en segundo plano](/es/automation/tasks) — libro mayor de tareas para ejecuciones de cron
+- [Heartbeat](/es/gateway/heartbeat) — turnos periódicos de la sesión principal
+- [Zona horaria](/es/concepts/timezone) — configuración de zona horaria

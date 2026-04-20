@@ -10,7 +10,7 @@ read_when:
 
 Skills 教会 Agent 如何以及何时使用工具。每个 Skill 都是一个目录，其中包含一个带有 YAML frontmatter 和 markdown 指令的 `SKILL.md` 文件。
 
-有关如何加载和优先排序 Skills，请参阅 [Skills](/en/tools/skills)。
+有关如何加载和优先排序 Skills，请参阅 [Skills](/zh/tools/skills)。
 
 ## 创建您的第一个 Skill
 
@@ -112,7 +112,7 @@ YAML frontmatter 支持以下字段：
 
 ## 相关
 
-- [Skills 参考](/en/tools/skills) — 加载、优先级和门控规则
-- [Skills 配置](/en/tools/skills-config) — `skills.*` 配置架构
-- [ClawHub](/en/tools/clawhub) — 公共 Skills 注册表
-- [构建插件](/en/plugins/building-plugins) — 插件可以附带 Skills
+- [Skills 参考](/zh/tools/skills) — 加载、优先级和门控规则
+- [Skills 配置](/zh/tools/skills-config) — `skills.*` 配置架构
+- [ClawHub](/zh/tools/clawhub) — 公共 Skills 注册表
+- [构建插件](/zh/plugins/building-plugins) — 插件可以附带 Skills

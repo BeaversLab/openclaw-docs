@@ -28,7 +28,7 @@ title: "遠端存取"
 
 - **最佳體驗：** 保持 `gateway.bind: "loopback"` 並使用 **Tailscale Serve** 作為控制 UI。
 - **備用方案：** 保持 loopback + 從任何需要存取的機器進行 SSH 通道傳輸。
-- **範例：** [exe.dev](/en/install/exe-dev) (簡易 VM) 或 [Hetzner](/en/install/hetzner) (生產環境 VPS)。
+- **範例：** [exe.dev](/zh-Hant/install/exe-dev) (簡易 VM) 或 [Hetzner](/zh-Hant/install/hetzner) (生產環境 VPS)。
 
 當您的筆記型電腦經常進入睡眠狀態，但您希望 agent 常時開啟時，這是理想的選擇。
 
@@ -39,7 +39,7 @@ title: "遠端存取"
 - 使用 macOS 應用程式的 **透過 SSH 遠端** 模式 (設定 → 一般 → 「OpenClaw runs」)。
 - 應用程式會開啟並管理通道，因此 WebChat + 健康檢查「即可運作」。
 
-操作手冊：[macOS 遠端存取](/en/platforms/mac/remote)。
+操作手冊：[macOS 遠端存取](/zh-Hant/platforms/mac/remote)。
 
 ### 3) 筆記型電腦執行 Gateway，從其他機器進行遠端存取
 
@@ -48,7 +48,7 @@ title: "遠端存取"
 - 從其他機器建立到筆記型電腦的 SSH 通道，或
 - 使用 Tailscale Serve 針對控制 UI，並將 Gateway 保持為僅限 loopback。
 
-指南：[Tailscale](/en/gateway/tailscale) 和 [Web 概覽](/en/web)。
+指南：[Tailscale](/zh-Hant/gateway/tailscale) 和 [Web 概覽](/zh-Hant/web)。
 
 ## 指令流程 (什麼在哪裡執行)
 
@@ -63,7 +63,7 @@ title: "遠端存取"
 
 備註：
 
-- **節點不會執行 gateway 服務。** 除非您刻意執行獨立的設定檔 (請參閱 [Multiple gateways](/en/gateway/multiple-gateways))，否則每個主機應該只執行一個 gateway。
+- **節點不會執行 gateway 服務。** 除非您刻意執行獨立的設定檔 (請參閱 [Multiple gateways](/zh-Hant/gateway/multiple-gateways))，否則每個主機應該只執行一個 gateway。
 - macOS 應用程式的「節點模式」只是一個透過 Gateway WebSocket 的節點客戶端。
 
 ## SSH 隧道 (CLI + 工具)
@@ -130,7 +130,7 @@ WebChat 不再使用單獨的 HTTP 連接埠。SwiftUI 聊天 UI 直接連接到
 
 macOS 選單列應用程式可以端到端驅動相同的設定 (遠端狀態檢查、WebChat 和 Voice Wake 轉發)。
 
-手冊：[macOS 遠端存取](/en/platforms/mac/remote)。
+手冊：[macOS 遠端存取](/zh-Hant/platforms/mac/remote)。
 
 ## 安全規則 (遠端/VPN)
 
@@ -148,7 +148,7 @@ macOS 選單列應用程式可以端到端驅動相同的設定 (遠端狀態檢
 - **Trusted-proxy** 驗證僅適用於非本機迴路的身分感知 Proxy 設定。同主機的本機迴路反向 Proxy 不滿足 `gateway.auth.mode: "trusted-proxy"`。
 - 將瀏覽器控制視為操作員存取：僅限 tailnet + 故意的節點配對。
 
-深入探討：[安全性](/en/gateway/security)。
+深入探討：[安全性](/zh-Hant/gateway/security)。
 
 ### macOS：透過 LaunchAgent 建立持續性 SSH 通道
 

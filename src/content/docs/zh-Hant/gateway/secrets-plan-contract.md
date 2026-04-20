@@ -44,7 +44,7 @@ title: "Secrets 應用計劃合約"
 
 計劃目標在以下支援的憑證路徑中被接受：
 
-- [SecretRef 憑證範圍](/en/reference/secretref-credential-surface)
+- [SecretRef 憑證範圍](/zh-Hant/reference/secretref-credential-surface)
 
 ## 目標類型行為
 
@@ -110,7 +110,7 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
 
 ## 相關文件
 
-- [Secrets Management](/en/gateway/secrets)
-- [CLI `secrets`](/en/cli/secrets)
-- [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
-- [Configuration Reference](/en/gateway/configuration-reference)
+- [Secrets Management](/zh-Hant/gateway/secrets)
+- [CLI `secrets`](/zh-Hant/cli/secrets)
+- [SecretRef Credential Surface](/zh-Hant/reference/secretref-credential-surface)
+- [Configuration Reference](/zh-Hant/gateway/configuration-reference)

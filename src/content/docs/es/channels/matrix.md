@@ -29,7 +29,7 @@ Instalar desde una copia local:
 openclaw plugins install ./path/to/local/matrix-plugin
 ```
 
-Consulte [Plugins](/en/tools/plugin) para conocer el comportamiento y las reglas de instalación de los complementos.
+Consulte [Plugins](/es/tools/plugin) para conocer el comportamiento y las reglas de instalación de los complementos.
 
 ## Configuración
 
@@ -611,7 +611,7 @@ Si el inicio aún encuentra un estado de arranque (bootstrap) dañado, OpenClaw 
 Si el servidor doméstico requiere UIA basada en contraseña para esa reparación, OpenClaw registra una advertencia y mantiene el inicio como no fatal en lugar de abortar el bot.
 Si el dispositivo actual ya está firmado por el propietario, OpenClaw preserva esa identidad en lugar de restablecerla automáticamente.
 
-Consulte [Migración de Matrix](/en/install/migrating-matrix) para conocer el flujo completo de actualización, los límites, los comandos de recuperación y los mensajes comunes de migración.
+Consulte [Migración de Matrix](/es/install/migrating-matrix) para conocer el flujo completo de actualización, los límites, los comandos de recuperación y los mensajes comunes de migración.
 
 ### Notificaciones de verificación
 
@@ -801,7 +801,7 @@ La autorización del desencadenador aún proviene de `groupPolicy`, `groups`, `g
 }
 ```
 
-Consulte [Grupos](/en/channels/groups) para conocer el comportamiento de limitación de menciones y listas de permitidos.
+Consulte [Grupos](/es/channels/groups) para conocer el comportamiento de limitación de menciones y listas de permitidos.
 
 Ejemplo de emparejamiento para MD de Matrix:
 
@@ -812,7 +812,7 @@ openclaw pairing approve matrix <CODE>
 
 Si un usuario de Matrix no aprobado sigue enviándole mensajes antes de la aprobación, OpenClaw reutiliza el mismo código de emparejamiento pendiente y puede enviar una respuesta de recordatorio nuevamente después de un breve tiempo de enfriamiento en lugar de crear un nuevo código.
 
-Consulte [Emparejamiento](/en/channels/pairing) para conocer el flujo de emparejamiento de MD compartido y el diseño de almacenamiento.
+Consulte [Emparejamiento](/es/channels/pairing) para conocer el flujo de emparejamiento de MD compartido y el diseño de almacenamiento.
 
 ## Reparación directa de sala
 
@@ -875,7 +875,7 @@ Anulación por cuenta:
 
 - `channels.matrix.accounts.<account>.execApprovals`
 
-Documentos relacionados: [Aprobaciones de ejecución](/en/tools/exec-approvals)
+Documentos relacionados: [Aprobaciones de ejecución](/es/tools/exec-approvals)
 
 ## Multicuenta
 
@@ -917,7 +917,7 @@ Si se configuran múltiples cuentas de Matrix y un ID de cuenta es `default`, Op
 Si configura varias cuentas con nombre, establezca `defaultAccount` o pase `--account <id>` para los comandos de CLI que dependen de la selección implícita de cuenta.
 Pase `--account <id>` a `openclaw matrix verify ...` y `openclaw matrix devices ...` cuando desee anular esa selección implícita para un comando.
 
-Consulte [Referencia de configuración](/en/gateway/configuration-reference#multi-account-all-channels) para ver el patrón multicuenta compartido.
+Consulte [Referencia de configuración](/es/gateway/configuration-reference#multi-account-all-channels) para ver el patrón multicuenta compartido.
 
 ## Servidores domésticos privados/LAN
 
@@ -996,7 +996,7 @@ La búsqueda en el directorio en vivo utiliza la cuenta de Matrix conectada:
 - `network.dangerouslyAllowPrivateNetwork`: permitir que esta cuenta de Matrix se conecte a servidores domésticos privados/internos. Habilite esto cuando el servidor doméstico se resuelva a `localhost`, una IP de LAN/Tailscale o un host interno como `matrix-synapse`.
 - `proxy`: URL de proxy HTTP(S) opcional para el tráfico de Matrix. Las cuentas con nombre pueden anular el valor predeterminado de nivel superior con su propio `proxy`.
 - `userId`: ID completo de usuario de Matrix, por ejemplo `@bot:example.org`.
-- `accessToken`: token de acceso para la autenticación basada en token. Se admiten valores de texto plano y valores de SecretRef para `channels.matrix.accessToken` y `channels.matrix.accounts.<id>.accessToken` en los proveedores env/file/exec. Consulte [Secrets Management](/en/gateway/secrets).
+- `accessToken`: token de acceso para la autenticación basada en token. Se admiten valores de texto plano y valores de SecretRef para `channels.matrix.accessToken` y `channels.matrix.accounts.<id>.accessToken` en los proveedores env/file/exec. Consulte [Secrets Management](/es/gateway/secrets).
 - `password`: contraseña para el inicio de sesión basado en contraseña. Se admiten valores en texto plano y valores SecretRef.
 - `deviceId`: ID de dispositivo Matrix explícito.
 - `deviceName`: nombre para mostrar del dispositivo para el inicio de sesión con contraseña.
@@ -1048,8 +1048,8 @@ La búsqueda en el directorio en vivo utiliza la cuenta de Matrix conectada:
 
 ## Relacionado
 
-- [Visión general de canales](/en/channels) — todos los canales compatibles
-- [Emparejamiento](/en/channels/pairing) — autenticación por MD y flujo de emparejamiento
-- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
-- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento
+- [Visión general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación por MD y flujo de emparejamiento
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

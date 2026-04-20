@@ -151,7 +151,7 @@ openclaw config set --batch-file ./config-set.batch.json --dry-run
 
 Nota sobre la política:
 
-- Las asignaciones SecretRef se rechazan en superficies mutables en tiempo de ejecución no compatibles (por ejemplo, `hooks.token`, `commands.ownerDisplaySecret`, tokens de webhook de vinculación de hilos de Discord y credenciales JSON de WhatsApp). Consulte [Superficie de credenciales SecretRef](/en/reference/secretref-credential-surface).
+- Las asignaciones SecretRef se rechazan en superficies mutables en tiempo de ejecución no compatibles (por ejemplo, `hooks.token`, `commands.ownerDisplaySecret`, tokens de webhook de vinculación de hilos de Discord y credenciales JSON de WhatsApp). Consulte [Superficie de credenciales SecretRef](/es/reference/secretref-credential-surface).
 
 El análisis por lotes siempre utiliza la carga útil por lotes (`--batch-json`/`--batch-file`) como fuente de verdad.
 `--strict-json` / `--json` no cambian el comportamiento del análisis por lotes.

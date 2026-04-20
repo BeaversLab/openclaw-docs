@@ -17,9 +17,9 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 - 设置模型、工具、沙箱隔离 或自动化 (cron, hooks)
 - 调整会话、媒体、网络或 UI
 
-有关所有可用字段，请参阅[完整参考](/en/gateway/configuration-reference)。
+有关所有可用字段，请参阅[完整参考](/zh/gateway/configuration-reference)。
 
-<Tip>**不熟悉配置？** 从 `openclaw onboard` 开始进行交互式设置，或查看[配置示例](/en/gateway/configuration-examples)指南以获取完整的复制粘贴配置。</Tip>
+<Tip>**不熟悉配置？** 从 `openclaw onboard` 开始进行交互式设置，或查看[配置示例](/zh/gateway/configuration-examples)指南以获取完整的复制粘贴配置。</Tip>
 
 ## 最小配置
 
@@ -76,16 +76,16 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
   <Accordion title="设置渠道 (WhatsApp, Telegram, Discord 等)">
     每个渠道在 `channels.<provider>` 下都有自己的配置部分。请参阅专门的渠道页面了解设置步骤：
 
-    - [WhatsApp](/en/channels/whatsapp) — `channels.whatsapp`
-    - [Telegram](/en/channels/telegram) — `channels.telegram`
-    - [Discord](/en/channels/discord) — `channels.discord`
-    - [Feishu](/en/channels/feishu) — `channels.feishu`
-    - [Google Chat](/en/channels/googlechat) — `channels.googlechat`
-    - [Microsoft Teams](/en/channels/msteams) — `channels.msteams`
-    - [Slack](/en/channels/slack) — `channels.slack`
-    - [Signal](/en/channels/signal) — `channels.signal`
-    - [iMessage](/en/channels/imessage) — `channels.imessage`
-    - [Mattermost](/en/channels/mattermost) — `channels.mattermost`
+    - [WhatsApp](/zh/channels/whatsapp) — `channels.whatsapp`
+    - [Telegram](/zh/channels/telegram) — `channels.telegram`
+    - [Discord](/zh/channels/discord) — `channels.discord`
+    - [Feishu](/zh/channels/feishu) — `channels.feishu`
+    - [Google Chat](/zh/channels/googlechat) — `channels.googlechat`
+    - [Microsoft Teams](/zh/channels/msteams) — `channels.msteams`
+    - [Slack](/zh/channels/slack) — `channels.slack`
+    - [Signal](/zh/channels/signal) — `channels.signal`
+    - [iMessage](/zh/channels/imessage) — `channels.imessage`
+    - [Mattermost](/zh/channels/mattermost) — `channels.mattermost`
 
     所有渠道共享相同的私信策略模式：
 
@@ -127,8 +127,8 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     - `agents.defaults.models` 定义模型目录并作为 `/model` 的允许列表。
     - 模型引用使用 `provider/model` 格式（例如 `anthropic/claude-opus-4-6`）。
     - `agents.defaults.imageMaxDimensionPx` 控制转录/工具图片的缩小（默认 `1200`）；较低的值通常可以减少大量截图运行时的视觉 Token 使用量。
-    - 请参阅 [模型 CLI](/en/concepts/models) 以在聊天中切换模型，并参阅 [模型故障转移](/en/concepts/model-failover) 以了解认证轮换和故障转移行为。
-    - 对于自定义/自托管提供商，请参阅参考文档中的 [自定义提供商](/en/gateway/configuration-reference#custom-providers-and-base-urls)。
+    - 请参阅 [模型 CLI](/zh/concepts/models) 以在聊天中切换模型，并参阅 [模型故障转移](/zh/concepts/model-failover) 以了解认证轮换和故障转移行为。
+    - 对于自定义/自托管提供商，请参阅参考文档中的 [自定义提供商](/zh/gateway/configuration-reference#custom-providers-and-base-urls)。
 
   </Accordion>
 
@@ -142,7 +142,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     对于群组，请使用 `groupPolicy` + `groupAllowFrom` 或特定于渠道的允许列表。
 
-    有关每个渠道的详细信息，请参阅 [完整参考](/en/gateway/configuration-reference#dm-and-group-access)。
+    有关每个渠道的详细信息，请参阅 [完整参考](/zh/gateway/configuration-reference#dm-and-group-access)。
 
   </Accordion>
 
@@ -171,7 +171,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     - **元数据提及**：原生 @提及（WhatsApp 点击提及、Telegram @bot 等）
     - **文本模式**：`mentionPatterns` 中的安全正则模式
-    - 有关每个渠道的覆盖和自聊模式，请参阅 [完整参考](/en/gateway/configuration-reference#group-chat-mention-gating)。
+    - 有关每个渠道的覆盖和自聊模式，请参阅 [完整参考](/zh/gateway/configuration-reference#group-chat-mention-gating)。
 
   </Accordion>
 
@@ -197,8 +197,8 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     - 省略 `agents.defaults.skills` 以默认使用不受限的 Skills。
     - 省略 `agents.list[].skills` 以继承默认值。
     - 将 `agents.list[].skills: []` 设置为无 Skills。
-    - 请参阅 [Skills](/en/tools/skills)、[Skills 配置](/en/tools/skills-config) 和
-      [配置参考](/en/gateway/configuration-reference#agents-defaults-skills)。
+    - 请参阅 [Skills](/zh/tools/skills)、[Skills 配置](/zh/tools/skills-config) 和
+      [配置参考](/zh/gateway/configuration-reference#agents-defaults-skills)。
 
   </Accordion>
 
@@ -228,7 +228,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     - 设置 `gateway.channelHealthCheckMinutes: 0` 以全局禁用健康监控重启。
     - `channelStaleEventThresholdMinutes` 应大于或等于检查间隔。
     - 使用 `channels.<provider>.healthMonitor.enabled` 或 `channels.<provider>.accounts.<id>.healthMonitor.enabled` 为单个渠道或账户禁用自动重启，而无需禁用全局监控。
-    - 参见 [Health Checks](/en/gateway/health) 了解操作调试和 [full reference](/en/gateway/configuration-reference#gateway) 了解所有字段。
+    - 参见 [Health Checks](/zh/gateway/health) 了解操作调试和 [full reference](/zh/gateway/configuration-reference#gateway) 了解所有字段。
 
   </Accordion>
 
@@ -255,8 +255,8 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     - `dmScope`: `main` (共享) | `per-peer` | `per-channel-peer` | `per-account-channel-peer`
     - `threadBindings`: 线程绑定会话路由的全局默认值（Discord 支持 `/focus`、`/unfocus`、`/agents`、`/session idle` 和 `/session max-age`）。
-    - 参见 [Session Management](/en/concepts/session) 了解作用域、身份链接和发送策略。
-    - 参见 [full reference](/en/gateway/configuration-reference#session) 了解所有字段。
+    - 参见 [Session Management](/zh/concepts/session) 了解作用域、身份链接和发送策略。
+    - 参见 [full reference](/zh/gateway/configuration-reference#session) 了解所有字段。
 
   </Accordion>
 
@@ -278,7 +278,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     首先构建镜像：`scripts/sandbox-setup.sh`
 
-    查看 [沙箱隔离](/en/gateway/sandboxing) 获取完整指南，并查看 [full reference](/en/gateway/configuration-reference#agentsdefaultssandbox) 了解所有选项。
+    查看 [沙箱隔离](/zh/gateway/sandboxing) 获取完整指南，并查看 [full reference](/zh/gateway/configuration-reference#agentsdefaultssandbox) 了解所有选项。
 
   </Accordion>
 
@@ -335,7 +335,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     - `OPENCLAW_APNS_RELAY_BASE_URL` 和 `OPENCLAW_APNS_RELAY_TIMEOUT_MS` 仍可作为临时环境覆盖使用。
     - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` 仍然是一个仅限回环开发的应急方案；不要在配置中持久化 HTTP 中继 URL。
 
-    请参阅 [iOS 应用](/en/platforms/ios#relay-backed-push-for-official-builds) 了解端到端流程，并参阅 [身份验证和信任流程](/en/platforms/ios#authentication-and-trust-flow) 了解中继安全模型。
+    请参阅 [iOS 应用](/zh/platforms/ios#relay-backed-push-for-official-builds) 了解端到端流程，并参阅 [身份验证和信任流程](/zh/platforms/ios#authentication-and-trust-flow) 了解中继安全模型。
 
   </Accordion>
 
@@ -356,7 +356,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     - `every`: duration string (`30m`, `2h`)。设置为 `0m` 以禁用。
     - `target`: `last` | `none` | `<channel-id>` (例如 `discord`, `matrix`, `telegram`, 或 `whatsapp`)
     - `directPolicy`: `allow` (默认) 或 `block` 用于私信风格的心跳目标
-    - 参见 [Heartbeat](/en/gateway/heartbeat) 了解完整指南。
+    - 参见 [Heartbeat](/zh/gateway/heartbeat) 了解完整指南。
 
   </Accordion>
 
@@ -377,7 +377,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     - `sessionRetention`: 从 `sessions.json` 中清除已完成的隔离运行会话 (默认 `24h`; 设置 `false` 以禁用)。
     - `runLog`: 根据大小和保留行数清除 `cron/runs/<jobId>.jsonl`。
-    - 参见 [Cron jobs](/en/automation/cron-jobs) 了解功能概述和 CLI 示例。
+    - 参见 [Cron jobs](/zh/automation/cron-jobs) 了解功能概述和 CLI 示例。
 
   </Accordion>
 
@@ -414,7 +414,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     - 如果启用 `hooks.allowRequestSessionKey`，还要设置 `hooks.allowedSessionKeyPrefixes` 以限制调用方选择的会话密钥。
     - 对于 hook 驱动的代理，首选强大的现代模型层级和严格的工具策略（例如仅限消息传递并在可能的情况下进行沙箱隔离）。
 
-    请参阅[完整参考](/en/gateway/configuration-reference#hooks)了解所有映射选项和 Gmail 集成。
+    请参阅[完整参考](/zh/gateway/configuration-reference#hooks)了解所有映射选项和 Gmail 集成。
 
   </Accordion>
 
@@ -436,7 +436,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     }
     ```
 
-    请参阅[多代理](/en/concepts/multi-agent)和[完整参考](/en/gateway/configuration-reference#multi-agent-routing)了解绑定规则和每代理访问配置文件。
+    请参阅[多代理](/zh/concepts/multi-agent)和[完整参考](/zh/gateway/configuration-reference#multi-agent-routing)了解绑定规则和每代理访问配置文件。
 
   </Accordion>
 
@@ -657,17 +657,17 @@ OpenClaw 从父进程以及以下位置读取环境变量：
 }
 ```
 
-SecretRef 的详细信息（包括 `secrets.providers` 用于 `env`/`file`/`exec`）请参见[密钥管理](/en/gateway/secrets)。
-支持的凭据路径列在 [SecretRef 凭据范围](/en/reference/secretref-credential-surface) 中。
+SecretRef 的详细信息（包括 `secrets.providers` 用于 `env`/`file`/`exec`）请参见[密钥管理](/zh/gateway/secrets)。
+支持的凭据路径列在 [SecretRef 凭据范围](/zh/reference/secretref-credential-surface) 中。
 
 </Accordion>
 
-有关完整的优先级和来源，请参见[环境](/en/help/environment)。
+有关完整的优先级和来源，请参见[环境](/zh/help/environment)。
 
 ## 完整参考
 
-有关完整的逐字段参考，请参阅 **[配置参考](/en/gateway/configuration-reference)**。
+有关完整的逐字段参考，请参阅 **[配置参考](/zh/gateway/configuration-reference)**。
 
 ---
 
-_相关：[配置示例](/en/gateway/configuration-examples) · [配置参考](/en/gateway/configuration-reference) · [诊断工具](/en/gateway/doctor)_
+_相关：[配置示例](/zh/gateway/configuration-examples) · [配置参考](/zh/gateway/configuration-reference) · [诊断工具](/zh/gateway/doctor)_

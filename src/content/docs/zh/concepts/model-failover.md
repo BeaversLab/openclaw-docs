@@ -60,7 +60,7 @@ OpenClaw 使用 **auth profiles** 来同时处理 API 密钥和 OAuth 令牌。
 - 配置 `auth.profiles` / `auth.order` 仅包含 **元数据 + 路由**（无密钥）。
 - 传统的仅导入 OAuth 文件：`~/.openclaw/credentials/oauth.json`（首次使用时导入到 `auth-profiles.json` 中）。
 
-更多详情：[/concepts/oauth](/en/concepts/oauth)
+更多详情：[/concepts/oauth](/zh/concepts/oauth)
 
 凭证类型：
 
@@ -284,7 +284,7 @@ length exceeded`）
 
 ## 相关配置
 
-有关以下内容，请参阅 [Gateway(网关) 配置](/en/gateway/configuration)：
+有关以下内容，请参阅 [Gateway(网关) 配置](/zh/gateway/configuration)：
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
@@ -294,4 +294,4 @@ length exceeded`）
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - `agents.defaults.imageModel` 路由
 
-有关更广泛的模型选择和故障转移概述，请参阅 [模型](/en/concepts/models)。
+有关更广泛的模型选择和故障转移概述，请参阅 [模型](/zh/concepts/models)。

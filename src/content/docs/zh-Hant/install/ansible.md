@@ -50,7 +50,7 @@ Ansible playbook 會安裝並設定：
 5. **OpenClaw** -- 基於主機，非容器化
 6. **Systemd 服務** -- 自動啟動並強化安全性
 
-<Note>閘道直接在主機上運行（而非在 Docker 中），但代理沙箱使用 Docker 進行隔離。詳情請參閱 [Sandboxing](/en/gateway/sandboxing)。</Note>
+<Note>閘道直接在主機上運行（而非在 Docker 中），但代理沙箱使用 Docker 進行隔離。詳情請參閱 [Sandboxing](/zh-Hant/gateway/sandboxing)。</Note>
 
 ## 安裝後設定
 
@@ -96,7 +96,7 @@ nmap -p- YOUR_SERVER_IP
 
 僅應開放連接埠 22 (SSH)。所有其他服務（閘道、Docker）皆已鎖定。
 
-安裝 Docker 是為了 Agent 沙箱（隔離的工具執行），而非用於執行閘道本身。請參閱[多 Agent 沙箱與工具](/en/tools/multi-agent-sandbox-tools)以了解沙箱設定。
+安裝 Docker 是為了 Agent 沙箱（隔離的工具執行），而非用於執行閘道本身。請參閱[多 Agent 沙箱與工具](/zh-Hant/tools/multi-agent-sandbox-tools)以了解沙箱設定。
 
 ## 手動安裝
 
@@ -135,7 +135,7 @@ nmap -p- YOUR_SERVER_IP
 
 ## 更新
 
-Ansible 安裝程式會將 OpenClaw 設定為手動更新。請參閱[更新](/en/install/updating)以了解標準更新流程。
+Ansible 安裝程式會將 OpenClaw 設定為手動更新。請參閱[更新](/zh-Hant/install/updating)以了解標準更新流程。
 
 若要重新執行 Ansible playbook（例如，用於變更設定）：
 
@@ -203,6 +203,6 @@ cd openclaw-ansible
 ## 相關
 
 - [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) -- 完整部署指南
-- [Docker](/en/install/docker) -- 容器化閘道設定
-- [沙盒機制](/en/gateway/sandboxing) -- 代理程式沙盒組態
-- [多代理程式沙盒與工具](/en/tools/multi-agent-sandbox-tools) -- 每個代理程式的隔離
+- [Docker](/zh-Hant/install/docker) -- 容器化閘道設定
+- [沙盒機制](/zh-Hant/gateway/sandboxing) -- 代理程式沙盒組態
+- [多代理程式沙盒與工具](/zh-Hant/tools/multi-agent-sandbox-tools) -- 每個代理程式的隔離

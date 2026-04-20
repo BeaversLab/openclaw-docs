@@ -39,15 +39,15 @@ status: active
 技能是從每個代理的工作區以及諸如 `~/.openclaw/skills` 之類的共享根載入的，然後在
 配置時根據有效的代理技能允許清單進行過濾。使用 `agents.defaults.skills` 作為共享基準，並
 使用 `agents.list[].skills` 進行每個代理的替換。請參閱
-[Skills: per-agent vs shared](/en/tools/skills#per-agent-vs-shared-skills) 和
-[Skills: agent skill allowlists](/en/tools/skills#agent-skill-allowlists)。
+[Skills: per-agent vs shared](/zh-Hant/tools/skills#per-agent-vs-shared-skills) 和
+[Skills: agent skill allowlists](/zh-Hant/tools/skills#agent-skill-allowlists)。
 
 Gateway 可以並排託管**一個代理**（預設）或**多個代理**。
 
 **工作區備註：** 每個代理的工作區是**預設的 cwd**，而不是嚴格的
 沙箱。相對路徑在工作區內解析，但除非啟用沙箱，否則絕對路徑可以
 到達其他主機位置。請參閱
-[Sandboxing](/en/gateway/sandboxing)。
+[Sandboxing](/zh-Hant/gateway/sandboxing)。
 
 ## 路徑（快速地圖）
 
@@ -110,7 +110,7 @@ openclaw agents add social
 openclaw channels login --channel whatsapp --account work
 ```
 
-請參閱通道指南：[Discord](/en/channels/discord)、[Telegram](/en/channels/telegram)、[WhatsApp](/en/channels/whatsapp)。
+請參閱通道指南：[Discord](/zh-Hant/channels/discord)、[Telegram](/zh-Hant/channels/telegram)、[WhatsApp](/zh-Hant/channels/whatsapp)。
 
   </Step>
 
@@ -218,7 +218,7 @@ openclaw channels status --probe
 備註：
 
 - DM 存取控制是**每個 WhatsApp 帳戶的全域設定**（配對/允許清單），而不是每個代理的設定。
-- 對於共享群組，請將群組綁定到一個代理，或使用 [廣播群組](/en/channels/broadcast-groups)。
+- 對於共享群組，請將群組綁定到一個代理，或使用 [廣播群組](/zh-Hant/channels/broadcast-groups)。
 
 ## 路由規則（訊息如何選擇代理）
 
@@ -592,12 +592,12 @@ openclaw channels login --channel whatsapp --account biz
 如果您需要針對每個代理程式的界限，請使用 `agents.list[].tools` 來拒絕 `exec`。
 針對群組目標定位，請使用 `agents.list[].groupChat.mentionPatterns`，以便 @提及能乾淨地對應到預期的代理程式。
 
-請參閱 [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) 以取得詳細範例。
+請參閱 [Multi-Agent Sandbox & Tools](/zh-Hant/tools/multi-agent-sandbox-tools) 以取得詳細範例。
 
 ## 相關
 
-- [Channel Routing](/en/channels/channel-routing) — 訊息如何路由到代理程式
-- [Sub-Agents](/en/tools/subagents) — 產生背景代理程式執行
-- [ACP Agents](/en/tools/acp-agents) — 執行外部編碼機制
-- [Presence](/en/concepts/presence) — 代理程式狀態與可用性
-- [Session](/en/concepts/session) — 會話隔離與路由
+- [Channel Routing](/zh-Hant/channels/channel-routing) — 訊息如何路由到代理程式
+- [Sub-Agents](/zh-Hant/tools/subagents) — 產生背景代理程式執行
+- [ACP Agents](/zh-Hant/tools/acp-agents) — 執行外部編碼機制
+- [Presence](/zh-Hant/concepts/presence) — 代理程式狀態與可用性
+- [Session](/zh-Hant/concepts/session) — 會話隔離與路由

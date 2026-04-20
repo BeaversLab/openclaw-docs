@@ -14,9 +14,9 @@ Ce guide explique la création d'un plugin de fournisseur qui ajoute un fourniss
 (LLM) à OpenClaw. À la fin, vous disposerez d'un fournisseur avec un catalogue de modèles,
 une authentification par clé API et une résolution dynamique de modèle.
 
-<Info>Si vous n'avez jamais créé de plugin OpenClaw auparavant, lisez d'abord [Getting Started](/en/plugins/building-plugins) pour connaître la structure de base du package et la configuration du manifeste.</Info>
+<Info>Si vous n'avez jamais créé de plugin OpenClaw auparavant, lisez d'abord [Getting Started](/fr/plugins/building-plugins) pour connaître la structure de base du package et la configuration du manifeste.</Info>
 
-<Tip>Les plugins de fournisseur ajoutent des modèles à la boucle d'inférence normale de OpenClaw. Si le modèle doit passer par un démon d'agent natif qui gère les threads, la compactage ou les événements d'outil, associez le fournisseur à un [agent harness](/en/plugins/sdk-agent-harness) au lieu de mettre les détails du protocole du démon dans le cœur.</Tip>
+<Tip>Les plugins de fournisseur ajoutent des modèles à la boucle d'inférence normale de OpenClaw. Si le modèle doit passer par un démon d'agent natif qui gère les threads, la compactage ou les événements d'outil, associez le fournisseur à un [agent harness](/fr/plugins/sdk-agent-harness) au lieu de mettre les détails du protocole du démon dans le cœur.</Tip>
 
 ## Procédure pas à pas
 
@@ -541,7 +541,7 @@ une authentification par clé API et une résolution dynamique de modèle.
       et doit préserver la division stable/dynamique du cache.
 
       Pour des descriptions détaillées et des exemples réels, voir
-      [Internals : Provider Runtime Hooks](/en/plugins/architecture#provider-runtime-hooks).
+      [Internals : Provider Runtime Hooks](/fr/plugins/architecture#provider-runtime-hooks).
     </Accordion>
 
   </Step>
@@ -660,7 +660,7 @@ une authentification par clé API et une résolution dynamique de modèle.
 
     OpenClaw classe cela comme un plugin à **capacités hybrides**. C'est le
     modèle recommandé pour les plugins d'entreprise (un plugin par fournisseur). Voir
-    [Internals: Capability Ownership](/en/plugins/architecture#capability-ownership-model).
+    [Internals: Capability Ownership](/fr/plugins/architecture#capability-ownership-model).
 
     Pour la génération de vidéos, privilégiez la forme de capacité sensible au mode montrée ci-dessus :
     `generate`, `imageToVideo`, et `videoToVideo`. Les champs agrégés plats tels
@@ -747,7 +747,7 @@ N'utilisez pas ici l'alias de publication obsolète pour les compétences unique
 
 ## Étapes suivantes
 
-- [Plugins de channel](/en/plugins/sdk-channel-plugins) — si votre plugin fournit également un channel
-- [Runtime du SDK](/en/plugins/sdk-runtime) — assistants `api.runtime` (TTS, recherche, sous-agent)
-- [Présentation du SDK](/en/plugins/sdk-overview) — référence complète des imports de sous-chemins
-- [Fonctionnement interne des plugins](/en/plugins/architecture#provider-runtime-hooks) — détails des hooks et exemples inclus
+- [Plugins de channel](/fr/plugins/sdk-channel-plugins) — si votre plugin fournit également un channel
+- [Runtime du SDK](/fr/plugins/sdk-runtime) — assistants `api.runtime` (TTS, recherche, sous-agent)
+- [Présentation du SDK](/fr/plugins/sdk-overview) — référence complète des imports de sous-chemins
+- [Fonctionnement interne des plugins](/fr/plugins/architecture#provider-runtime-hooks) — détails des hooks et exemples inclus

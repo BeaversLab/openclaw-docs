@@ -11,9 +11,9 @@ Gérez des agents isolés (espaces de travail + auth + routage).
 
 Connexes :
 
-- Routage multi-agent : [Multi-Agent Routing](/en/concepts/multi-agent)
-- Espace de travail de l'agent : [Agent workspace](/en/concepts/agent-workspace)
-- Configuration de la visibilité des Skills : [Skills config](/en/tools/skills-config)
+- Routage multi-agent : [Multi-Agent Routing](/fr/concepts/multi-agent)
+- Espace de travail de l'agent : [Agent workspace](/fr/concepts/agent-workspace)
+- Configuration de la visibilité des Skills : [Skills config](/fr/tools/skills-config)
 
 ## Exemples
 
@@ -34,7 +34,7 @@ openclaw agents delete work
 
 Utilisez les liaisons de routage pour épingler le trafic entrant du channel à un agent spécifique.
 
-Si vous souhaitez également des Skills visibles différentes pour chaque agent, configurez `agents.defaults.skills` et `agents.list[].skills` dans `openclaw.json`. Consultez la [configuration des Skills](/en/tools/skills-config) et le [référentiel de configuration](/en/gateway/configuration-reference#agents-defaults-skills).
+Si vous souhaitez également des Skills visibles différentes pour chaque agent, configurez `agents.defaults.skills` et `agents.list[].skills` dans `openclaw.json`. Consultez la [configuration des Skills](/fr/tools/skills-config) et le [référentiel de configuration](/fr/gateway/configuration-reference#agents-defaults-skills).
 
 Lister les liaisons :
 

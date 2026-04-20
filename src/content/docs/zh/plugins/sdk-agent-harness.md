@@ -24,7 +24,7 @@ read_when:
 - 必须流式传输原生计划/推理/工具事件的本地 CLI 或守护进程
 - 除 OpenClaw 会话记录外，还需要自己的恢复 ID 的模型运行时
 
-**不要**仅仅为了添加新的 LLM API 而注册 harness。对于普通的 HTTP 或 WebSocket 模型 API，请构建 [提供商插件](/en/plugins/sdk-provider-plugins)。
+**不要**仅仅为了添加新的 LLM API 而注册 harness。对于普通的 HTTP 或 WebSocket 模型 API，请构建 [提供商插件](/zh/plugins/sdk-provider-plugins)。
 
 ## 核心仍然拥有的部分
 
@@ -102,7 +102,7 @@ OpenClaw 在提供商/模型解析后选择代理：
 
 Codex 插件是累加的。纯 `openai/gpt-*` 引用仍然是 OpenAI 提供商引用，并继续使用正常的 OpenClaw 提供商路径。当您需要 Codex 管理的身份验证、Codex 模型发现、原生线程和 Codex 应用服务器执行时，请选择 `codex/gpt-*`。`/model` 可以在 Codex 应用服务器返回的 Codex 模型之间切换，而无需 OpenAI 提供商凭据。
 
-有关操作员设置、模型前缀示例以及 Codex 专用配置，请参阅 [Codex Harness](/en/plugins/codex-harness)。
+有关操作员设置、模型前缀示例以及 Codex 专用配置，请参阅 [Codex Harness](/zh/plugins/codex-harness)。
 
 OpenClaw 需要 Codex 应用服务器 `0.118.0` 或更新版本。Codex 插件会检查应用服务器初始化握手，并阻止较旧或未版本化的服务器，以便 OpenClaw 仅针对已测试的协议表面运行。
 
@@ -222,8 +222,8 @@ OpenClaw 记录仍然是以下内容的兼容层：
 
 ## 相关
 
-- [SDK 概述](/en/plugins/sdk-overview)
-- [运行时助手](/en/plugins/sdk-runtime)
-- [提供程序插件](/en/plugins/sdk-provider-plugins)
-- [Codex 装置](/en/plugins/codex-harness)
-- [模型提供程序](/en/concepts/model-providers)
+- [SDK 概述](/zh/plugins/sdk-overview)
+- [运行时助手](/zh/plugins/sdk-runtime)
+- [提供程序插件](/zh/plugins/sdk-provider-plugins)
+- [Codex 装置](/zh/plugins/codex-harness)
+- [模型提供程序](/zh/concepts/model-providers)

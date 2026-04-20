@@ -9,7 +9,7 @@ title: "Tareas en segundo plano"
 
 # Tareas en segundo plano
 
-> **¿Buscas programación?** Consulta [Automatización y tareas](/en/automation) para elegir el mecanismo adecuado. Esta página cubre el **seguimiento** del trabajo en segundo plano, no su programación.
+> **¿Buscas programación?** Consulta [Automatización y tareas](/es/automation) para elegir el mecanismo adecuado. Esta página cubre el **seguimiento** del trabajo en segundo plano, no su programación.
 
 Las tareas en segundo plano rastrean el trabajo que se ejecuta **fuera de su sesión de conversación principal**:
 Ejecuciones de ACP, creaciones de subagentes, ejecuciones de trabajos de cron aislados y operaciones iniciadas por CLI.
@@ -81,7 +81,7 @@ Mientras una tarea de `video_generate` con respaldo de sesión todavía está ac
 
 **Lo que no crea tareas:**
 
-- Turnos de latido (heartbeat) — sesión principal; consulta [Heartbeat](/en/gateway/heartbeat)
+- Turnos de latido (heartbeat) — sesión principal; consulta [Heartbeat](/es/gateway/heartbeat)
 - Turnos normales de chat interactivo
 - Respuestas directas de `/command`
 
@@ -287,21 +287,21 @@ Un limpiador se ejecuta cada **60 segundos** y maneja tres cosas:
 
 ### Tareas y Task Flow
 
-[Task Flow](/en/automation/taskflow) es la capa de orquestación de flujos por encima de las tareas en segundo plano. Un solo flujo puede coordinar múltiples tareas a lo largo de su vida útil utilizando modos de sincronización administrados o reflejados. Use `openclaw tasks` para inspeccionar registros de tareas individuales y `openclaw tasks flow` para inspeccionar el flujo de orquestación.
+[Task Flow](/es/automation/taskflow) es la capa de orquestación de flujos por encima de las tareas en segundo plano. Un solo flujo puede coordinar múltiples tareas a lo largo de su vida útil utilizando modos de sincronización administrados o reflejados. Use `openclaw tasks` para inspeccionar registros de tareas individuales y `openclaw tasks flow` para inspeccionar el flujo de orquestación.
 
-Consulte [Task Flow](/en/automation/taskflow) para obtener más detalles.
+Consulte [Task Flow](/es/automation/taskflow) para obtener más detalles.
 
 ### Tareas y cron
 
 Una **definición** de trabajo cron reside en `~/.openclaw/cron/jobs.json`. **Cada** ejecución de cron crea un registro de tarea, tanto en sesión principal como aislada. Las tareas cron de sesión principal tienen por defecto la política de notificación `silent` para que rastreen sin generar notificaciones.
 
-Consulte [Cron Jobs](/en/automation/cron-jobs).
+Consulte [Cron Jobs](/es/automation/cron-jobs).
 
 ### Tareas y heartbeat
 
 Las ejecuciones de Heartbeat son turnos de sesión principal: no crean registros de tareas. Cuando se completa una tarea, puede activar una activación de heartbeat para que vea el resultado rápidamente.
 
-Consulte [Heartbeat](/en/gateway/heartbeat).
+Consulte [Heartbeat](/es/gateway/heartbeat).
 
 ### Tareas y sesiones
 
@@ -313,8 +313,8 @@ El `runId` de una tarea se vincula a la ejecución del agente que realiza el tra
 
 ## Relacionado
 
-- [Automation & Tasks](/en/automation) — todos los mecanismos de automatización de un vistazo
-- [Task Flow](/en/automation/taskflow) — orquestación de flujo por encima de las tareas
-- [Scheduled Tasks](/en/automation/cron-jobs) — programación de trabajo en segundo plano
-- [Heartbeat](/en/gateway/heartbeat) — turnos periódicos de sesión principal
-- [CLI: Tasks](/en/cli/index#tasks) — referencia de comandos de la CLI
+- [Automation & Tasks](/es/automation) — todos los mecanismos de automatización de un vistazo
+- [Task Flow](/es/automation/taskflow) — orquestación de flujo por encima de las tareas
+- [Scheduled Tasks](/es/automation/cron-jobs) — programación de trabajo en segundo plano
+- [Heartbeat](/es/gateway/heartbeat) — turnos periódicos de sesión principal
+- [CLI: Tasks](/es/cli/index#tasks) — referencia de comandos de la CLI

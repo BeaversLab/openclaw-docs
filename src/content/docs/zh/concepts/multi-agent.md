@@ -40,15 +40,15 @@ Skills 从每个代理的工作区以及共享根目录（如
 `~/.openclaw/skills`）加载，然后在配置时按有效的代理 Skills 允许列表进行过滤。
 使用 `agents.defaults.skills` 作为共享基线，
 使用 `agents.list[].skills` 进行按代理替换。请参阅
-[Skills: per-agent vs shared](/en/tools/skills#per-agent-vs-shared-skills) 和
-[Skills: agent skill allowlists](/en/tools/skills#agent-skill-allowlists)。
+[Skills: per-agent vs shared](/zh/tools/skills#per-agent-vs-shared-skills) 和
+[Skills: agent skill allowlists](/zh/tools/skills#agent-skill-allowlists)。
 
 Gateway(网关) 可以托管**一个代理**（默认）或**多个代理**并存。
 
 **工作区说明：** 每个代理的工作区是**默认 cwd**，而不是硬性
 沙箱。相对路径在工作区内部解析，但绝对路径可以
 到达其他主机位置，除非启用了沙箱隔离。请参阅
-[沙箱隔离](/en/gateway/sandboxing)。
+[沙箱隔离](/zh/gateway/sandboxing)。
 
 ## 路径（快速映射）
 
@@ -111,7 +111,7 @@ openclaw agents add social
 openclaw channels login --channel whatsapp --account work
 ```
 
-请参阅渠道指南：[Discord](/en/channels/discord)、[Telegram](/en/channels/telegram)、[WhatsApp](/en/channels/whatsapp)。
+请参阅渠道指南：[Discord](/zh/channels/discord)、[Telegram](/zh/channels/telegram)、[WhatsApp](/zh/channels/whatsapp)。
 
   </Step>
 
@@ -219,7 +219,7 @@ openclaw channels status --probe
 注意事项：
 
 - 私信访问控制是**每个 WhatsApp 账户的全局设置**（配对/允许列表），而不是每个代理的。
-- 对于共享群组，将群组绑定到一个代理或使用[广播群组](/en/channels/broadcast-groups)。
+- 对于共享群组，将群组绑定到一个代理或使用[广播群组](/zh/channels/broadcast-groups)。
 
 ## 路由规则（消息如何选择代理）
 
@@ -593,12 +593,12 @@ openclaw channels login --channel whatsapp --account biz
 如果您需要每个代理的边界，请使用 `agents.list[].tools` 来拒绝 `exec`。
 对于群组定向，请使用 `agents.list[].groupChat.mentionPatterns`，以便 @mentions 能清晰地映射到目标代理。
 
-有关详细示例，请参阅 [Multi-Agent 沙箱 & Tools](/en/tools/multi-agent-sandbox-tools)。
+有关详细示例，请参阅 [Multi-Agent 沙箱 & Tools](/zh/tools/multi-agent-sandbox-tools)。
 
 ## 相关
 
-- [Channel Routing](/en/channels/channel-routing) — 消息如何路由到代理
-- [Sub-Agents](/en/tools/subagents) — 生成后台代理运行
-- [ACP Agents](/en/tools/acp-agents) — 运行外部编码工具
-- [Presence](/en/concepts/presence) — 代理状态和可用性
-- [Session](/en/concepts/session) — 会话隔离和路由
+- [Channel Routing](/zh/channels/channel-routing) — 消息如何路由到代理
+- [Sub-Agents](/zh/tools/subagents) — 生成后台代理运行
+- [ACP Agents](/zh/tools/acp-agents) — 运行外部编码工具
+- [Presence](/zh/concepts/presence) — 代理状态和可用性
+- [Session](/zh/concepts/session) — 会话隔离和路由

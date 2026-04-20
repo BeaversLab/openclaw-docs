@@ -100,4 +100,4 @@ await web_search({
 - `ui_lang` 必須包含地區子標籤，例如 `en-US`。
 - 結果預設會快取 15 分鐘（可透過 `cacheTtlMinutes` 設定）。
 
-請參閱 [Web 工具](/en/tools/web) 以取得完整的 web_search 設定。
+請參閱 [Web 工具](/zh-Hant/tools/web) 以取得完整的 web_search 設定。

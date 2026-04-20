@@ -27,7 +27,7 @@ Le contexte n'est _pas la même chose_ que la « mémoire » : la mémoire peut 
 - `/usage tokens` → ajouter un pied de page d'utilisation par réponse aux réponses normales.
 - `/compact` → résumer l'historique ancien dans une entrée compacte pour libérer de l'espace dans la fenêtre.
 
-Voir aussi : [Commandes slash](/en/tools/slash-commands), [Utilisation des jetons et coûts](/en/reference/token-use), [Compactage](/en/concepts/compaction).
+Voir aussi : [Commandes slash](/fr/tools/slash-commands), [Utilisation des jetons et coûts](/fr/reference/token-use), [Compactage](/fr/concepts/compaction).
 
 ## Exemple de sortie
 
@@ -98,7 +98,7 @@ Le système de prompt est **propriétaire d'OpenClaw** et reconstruit à chaque 
 - Métadonnées d'exécution (hôte/OS/modèle/réflexion).
 - Fichiers d'amorçage de l'espace de travail injectés sous **Projet Context**.
 
-Répartition complète : [Invite système](/en/concepts/system-prompt).
+Répartition complète : [Invite système](/fr/concepts/system-prompt).
 
 ## Fichiers de l'espace de travail injectés (Projet Context)
 
@@ -141,7 +141,7 @@ Les commandes slash sont gérées par la Gateway. Il existe quelques comportemen
   - Les directives en ligne dans un message normal agissent comme des indices par message.
 - **Raccourcis en ligne** (expéditeurs autorisés uniquement) : certains jetons `/...` à l'intérieur d'un message normal peuvent s'exécuter immédiatement (exemple : « hey /status »), et sont supprimés avant que le modèle ne voie le texte restant.
 
-Détails : [Commandes slash](/en/tools/slash-commands).
+Détails : [Commandes slash](/fr/tools/slash-commands).
 
 ## Sessions, compactage et élagage (ce qui persiste)
 
@@ -151,7 +151,7 @@ Ce qui persiste d'un message à l'autre dépend du mécanisme :
 - **Le compactage** fait persister un résumé dans la transcription et conserve les messages récents intacts.
 - **L'élagage** supprime les anciens résultats d'outils du prompt _en mémoire_ pour une exécution, mais ne réécrit pas la transcription.
 
-Docs : [Session](/en/concepts/session), [Compactage](/en/concepts/compaction), [Élagage de session](/en/concepts/session-pruning).
+Docs : [Session](/fr/concepts/session), [Compactage](/fr/concepts/compaction), [Élagage de session](/fr/concepts/session-pruning).
 
 Par défaut, OpenClaw utilise le moteur de contexte intégré `legacy` pour l'assemblage et
 le compactage. Si vous installez un plugin qui fournit `kind: "context-engine"` et
@@ -159,7 +159,7 @@ que vous le sélectionnez avec `plugins.slots.contextEngine`, OpenClaw délègue
 contexte, `/compact`, et les hooks de cycle de vie du contexte des sous-agents associés à ce
 moteur à la place. `ownsCompaction: false` ne revient pas automatiquement à l'ancien
 moteur ; le moteur actif doit toujours implémenter `compact()` correctement. Voir
-[Context Engine](/en/concepts/context-engine) pour l'interface
+[Context Engine](/fr/concepts/context-engine) pour l'interface
 complétement enfichable, les hooks de cycle de vie et la configuration.
 
 ## Ce que `/context` rapporte réellement
@@ -173,7 +173,7 @@ Dans les deux cas, il signale les tailles et les principaux contributeurs ; il *
 
 ## Connexes
 
-- [Context Engine](/en/concepts/context-engine) — injection de contexte personnalisée via des plugins
-- [Compactage](/en/concepts/compaction) — résumer les longues conversations
-- [Invite système](/en/concepts/system-prompt) — comment l'invite système est construite
-- [Boucle de l'agent](/en/concepts/agent-loop) — le cycle complet d'exécution de l'agent
+- [Context Engine](/fr/concepts/context-engine) — injection de contexte personnalisée via des plugins
+- [Compactage](/fr/concepts/compaction) — résumer les longues conversations
+- [Invite système](/fr/concepts/system-prompt) — comment l'invite système est construite
+- [Boucle de l'agent](/fr/concepts/agent-loop) — le cycle complet d'exécution de l'agent

@@ -106,10 +106,10 @@ Context** 而非 **Group Chat Context**。
 > 作为一次性启动上下文块附加到该第一轮次之前。
 
 大文件会被截断并带有标记。每个文件的最大大小由
-`agents.defaults.bootstrapMaxChars` 控制（默认值：20000）。跨文件注入的启动引导
-内容的总上限为 `agents.defaults.bootstrapTotalMaxChars`
-（默认值：150000）。缺失的文件会注入一个简短的缺失文件标记。发生截断时，
-OpenClaw 可以在项目上下文中注入警告块；通过
+`agents.defaults.bootstrapMaxChars` 控制（默认值：12000）。所有文件中注入的引导
+内容总计上限由 `agents.defaults.bootstrapTotalMaxChars` 限制
+（默认值：60000）。缺失的文件会注入一个简短的缺失文件标记。当发生
+截断时，OpenClaw 可以在项目上下文中注入警告块；可通过
 `agents.defaults.bootstrapPromptTruncationWarning` 控制此行为（`off`、`once`、`always`；
 默认值：`once`）。
 
@@ -120,9 +120,9 @@ OpenClaw 可以在项目上下文中注入警告块；通过
 注入的启动引导文件（例如，用 `SOUL.md` 替换为替代人格）。
 
 如果您想让代理听起来不那么普通，请从
-[SOUL.md Personality Guide](/en/concepts/soul) 开始。
+[SOUL.md Personality Guide](/zh/concepts/soul) 开始。
 
-要检查每个注入文件的贡献（原始内容与注入内容的对比、截断情况以及工具架构开销），请使用 `/context list` 或 `/context detail`。参见 [Context](/en/concepts/context)。
+要检查每个注入文件的贡献（原始内容与注入内容的对比、截断情况以及工具架构开销），请使用 `/context list` 或 `/context detail`。参见 [Context](/zh/concepts/context)。
 
 ## 时间处理
 
@@ -138,7 +138,7 @@ OpenClaw 可以在项目上下文中注入警告块；通过
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-有关完整行为详情，请参阅 [Date & Time](/en/date-time)。
+有关完整行为详情，请参阅 [Date & Time](/zh/date-time)。
 
 ## Skills
 

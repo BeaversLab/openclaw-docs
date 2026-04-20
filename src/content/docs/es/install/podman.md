@@ -111,8 +111,8 @@ Nota específica para Podman:
 
 Ver:
 
-- [Tailscale](/en/gateway/tailscale)
-- [Interfaz de usuario de control](/en/web/control-ui)
+- [Tailscale](/es/gateway/tailscale)
+- [Interfaz de usuario de control](/es/web/control-ui)
 
 ## Systemd (Quadlet, opcional)
 
@@ -199,6 +199,6 @@ Nota sobre Quadlet:
 
 ## Relacionado
 
-- [Docker](/en/install/docker)
-- [Proceso en segundo plano de la puerta de enlace](/en/gateway/background-process)
-- [Solución de problemas de la puerta de enlace](/en/gateway/troubleshooting)
+- [Docker](/es/install/docker)
+- [Proceso en segundo plano de la puerta de enlace](/es/gateway/background-process)
+- [Solución de problemas de la puerta de enlace](/es/gateway/troubleshooting)

@@ -11,7 +11,7 @@ read_when:
 
 OpenShell es un backend de espacio aislado (sandbox) administrado para OpenClaw. En lugar de ejecutar contenedores Docker localmente, OpenClaw delega el ciclo de vida del sandbox a la CLI de `openshell`, la cual aprovisiona entornos remotos con ejecución de comandos basada en SSH.
 
-El complemento OpenShell reutiliza el mismo transporte SSH central y puente de sistema de archivos remoto que el [backend SSH genérico](/en/gateway/sandboxing#ssh-backend). Agrega un ciclo de vida específico de OpenShell (`sandbox create/get/delete`, `sandbox ssh-config`) y un modo de espacio de trabajo `mirror` opcional.
+El complemento OpenShell reutiliza el mismo transporte SSH central y puente de sistema de archivos remoto que el [backend SSH genérico](/es/gateway/sandboxing#ssh-backend). Agrega un ciclo de vida específico de OpenShell (`sandbox create/get/delete`, `sandbox ssh-config`) y un modo de espacio de trabajo `mirror` opcional.
 
 ## Requisitos previos
 
@@ -137,7 +137,7 @@ Toda la configuración de OpenShell vive bajo `plugins.entries.openshell.config`
 
 La configuración a nivel de sandbox (`mode`, `scope`, `workspaceAccess`) se configura bajo
 `agents.defaults.sandbox` como con cualquier backend. Véase
-[Sandboxing](/en/gateway/sandboxing) para la matriz completa.
+[Sandboxing](/es/gateway/sandboxing) para la matriz completa.
 
 ## Ejemplos
 
@@ -287,7 +287,7 @@ openclaw sandbox recreate --all
 
 ## Véase también
 
-- [Sandboxing](/en/gateway/sandboxing) -- modos, ámbitos y comparación de backends
-- [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- depuración de herramientas bloqueadas
-- [Multi-Agent Sandbox and Tools](/en/tools/multi-agent-sandbox-tools) -- anulaciones por agente
-- [Sandbox CLI](/en/cli/sandbox) -- comandos `openclaw sandbox`
+- [Sandboxing](/es/gateway/sandboxing) -- modos, ámbitos y comparación de backends
+- [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) -- depuración de herramientas bloqueadas
+- [Multi-Agent Sandbox and Tools](/es/tools/multi-agent-sandbox-tools) -- anulaciones por agente
+- [Sandbox CLI](/es/cli/sandbox) -- comandos `openclaw sandbox`

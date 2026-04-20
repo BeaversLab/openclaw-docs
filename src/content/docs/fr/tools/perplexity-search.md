@@ -91,7 +91,7 @@ Ce champ accepte également les objets SecretRef.
 
 **Via l'environnement :** définissez `PERPLEXITY_API_KEY` ou `OPENROUTER_API_KEY`
 dans l'environnement de processus du Gateway. Pour une installation de passerelle, placez-le dans
-`~/.openclaw/.env` (ou votre environnement de service). Voir [Variables d'environnement](/en/help/faq#env-vars-and-env-loading).
+`~/.openclaw/.env` (ou votre environnement de service). Voir [Variables d'environnement](/fr/help/faq#env-vars-and-env-loading).
 
 Si `provider: "perplexity"` est configuré et que le SecretRef de la clé Perplexity n'est pas résolu sans solution de repli d'environnement, le démarrage/rechargement échoue rapidement.
 
@@ -179,7 +179,7 @@ await web_search({
 
 ## Connexes
 
-- [Aperçu de la recherche web](/en/tools/web) -- tous les fournisseurs et la détection automatique
+- [Aperçu de la recherche web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
 - [Docs de la Perplexity de recherche API](https://docs.perplexity.ai/docs/search/quickstart) -- documentation officielle de Perplexity
-- [Recherche Brave](/en/tools/brave-search) -- résultats structurés avec des filtres de pays/langue
-- [Recherche Exa](/en/tools/exa-search) -- recherche neurale avec extraction de contenu
+- [Recherche Brave](/fr/tools/brave-search) -- résultats structurés avec des filtres de pays/langue
+- [Recherche Exa](/fr/tools/exa-search) -- recherche neurale avec extraction de contenu

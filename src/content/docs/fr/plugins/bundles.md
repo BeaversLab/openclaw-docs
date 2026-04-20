@@ -263,6 +263,6 @@ mise en page de hook-pack OpenClaw ou fournissez un plugin natif.
 
 ## Connexes
 
-- [Installer et configurer des plugins](/en/tools/plugin)
-- [Créer des plugins](/en/plugins/building-plugins) — créer un plugin natif
-- [Manifeste de plugin](/en/plugins/manifest) — schéma de manifeste natif
+- [Installer et configurer des plugins](/fr/tools/plugin)
+- [Créer des plugins](/fr/plugins/building-plugins) — créer un plugin natif
+- [Manifeste de plugin](/fr/plugins/manifest) — schéma de manifeste natif

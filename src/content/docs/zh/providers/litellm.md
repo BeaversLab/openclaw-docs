@@ -175,7 +175,7 @@ export LITELLM_API_KEY="sk-litellm-key"
   </Accordion>
 </AccordionGroup>
 
-<Note>有关常规提供商配置和故障转移行为，请参阅 [模型提供商](/en/concepts/model-providers)。</Note>
+<Note>有关常规提供商配置和故障转移行为，请参阅 [模型提供商](/zh/concepts/model-providers)。</Note>
 
 ## 相关
 
@@ -183,13 +183,13 @@ export LITELLM_API_KEY="sk-litellm-key"
   <Card title="LiteLLM 文档" href="https://docs.litellm.ai" icon="book">
     官方 LiteLLM 文档和 API 参考。
   </Card>
-  <Card title="模型提供商" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型提供商" href="/zh/concepts/model-providers" icon="layers">
     所有提供商、模型引用和故障转移行为的概述。
   </Card>
-  <Card title="配置" href="/en/gateway/configuration" icon="gear">
+  <Card title="配置" href="/zh/gateway/configuration" icon="gear">
     完整的配置参考。
   </Card>
-  <Card title="模型选择" href="/en/concepts/models" icon="brain">
+  <Card title="模型选择" href="/zh/concepts/models" icon="brain">
     如何选择和配置模型。
   </Card>
 </CardGroup>

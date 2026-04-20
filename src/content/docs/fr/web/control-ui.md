@@ -60,7 +60,7 @@ créé. Réexécutez `openclaw devices list` avant l'approbation.
 
 Une fois approuvé, l'appareil est mémorisé et ne nécessitera pas de réapprobation, à moins
 que vous ne le révoquiez avec `openclaw devices revoke --device <id> --role <role>`. Consultez
-[Appareils CLI](/en/cli/devices) pour la rotation et la révocation des jetons.
+[Appareils CLI](/fr/cli/devices) pour la rotation et la révocation des jetons.
 
 **Remarques :**
 
@@ -251,9 +251,9 @@ Note sur le proxy de confiance :
   identité d'appareil
 - cela ne s'étend **pas** aux sessions de l'interface de contrôle avec un rôle de nœud
 - les proxys inversés de bouclage sur le même hôte ne satisfont toujours pas l'authentification par proxy de confiance ; voir
-  [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)
+  [Trusted Proxy Auth](/fr/gateway/trusted-proxy-auth)
 
-Voir [Tailscale](/en/gateway/tailscale) pour les instructions de configuration HTTPS.
+Voir [Tailscale](/fr/gateway/tailscale) pour les instructions de configuration HTTPS.
 
 ## Construction de l'interface
 
@@ -325,11 +325,11 @@ Exemple :
 }
 ```
 
-Détails de la configuration de l'accès à distance : [Accès à distance](/en/gateway/remote).
+Détails de la configuration de l'accès à distance : [Accès à distance](/fr/gateway/remote).
 
 ## Connexes
 
-- [Tableau de bord](/en/web/dashboard) — tableau de bord de la passerelle
-- [WebChat](/en/web/webchat) — interface de chat basée sur le navigateur
-- [TUI](/en/web/tui) — interface utilisateur en terminal
-- [Contrôles de santé](/en/gateway/health) — surveillance de santé de la passerelle
+- [Tableau de bord](/fr/web/dashboard) — tableau de bord de la passerelle
+- [WebChat](/fr/web/webchat) — interface de chat basée sur le navigateur
+- [TUI](/fr/web/tui) — interface utilisateur en terminal
+- [Contrôles de santé](/fr/gateway/health) — surveillance de santé de la passerelle

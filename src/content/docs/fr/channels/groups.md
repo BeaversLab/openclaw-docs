@@ -89,7 +89,7 @@ Cela vous offre un « cerveau » d'agent unique (espace de travail partagé + m�
 - **DMs** : outils complets (hôte)
 - **Groups** : sandbox + outils restreints (Docker)
 
-> Si vous avez besoin d'espaces de travail ou de personnalités véritablement distincts (« personnel » et « public » ne doivent jamais se mélanger), utilisez un second agent + liaisons. Voir [Multi-Agent Routing](/en/concepts/multi-agent).
+> Si vous avez besoin d'espaces de travail ou de personnalités véritablement distincts (« personnel » et « public » ne doivent jamais se mélanger), utilisez un second agent + liaisons. Voir [Multi-Agent Routing](/fr/concepts/multi-agent).
 
 Exemple (DMs sur l'hôte, groupes sandboxés + outils de messagerie uniquement) :
 
@@ -140,9 +140,9 @@ Vous voulez que « les groupes ne puissent voir que le dossier X » au lieu de �
 
 Connexe :
 
-- Clés de configuration et valeurs par défaut : [configuration du Gateway](/en/gateway/configuration-reference#agentsdefaultssandbox)
-- Débogage des raisons pour lesquelles un outil est bloqué : [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Détails sur les montages de liaison (bind mounts) : [Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
+- Clés de configuration et valeurs par défaut : [configuration du Gateway](/fr/gateway/configuration-reference#agentsdefaultssandbox)
+- Débogage des raisons pour lesquelles un outil est bloqué : [Sandbox vs Tool Policy vs Elevated](/fr/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Détails sur les montages de liaison (bind mounts) : [Sandboxing](/fr/gateway/sandboxing#custom-bind-mounts)
 
 ## Libellés d'affichage
 
@@ -406,4 +406,4 @@ Le prompt système de l'agent inclut une introduction de groupe lors du premier 
 
 ## Spécificités WhatsApp
 
-Voir [Group messages](/en/channels/group-messages) pour les comportements exclusifs à WhatsApp (injection d'historique, détails de gestion des mentions).
+Voir [Group messages](/fr/channels/group-messages) pour les comportements exclusifs à WhatsApp (injection d'historique, détails de gestion des mentions).

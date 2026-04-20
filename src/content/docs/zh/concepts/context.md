@@ -27,7 +27,7 @@ title: "上下文"
 - `/usage tokens` → 将每次回复的使用情况页脚附加到普通回复中。
 - `/compact` → 将较早的历史记录汇总为一个紧凑条目以释放窗口空间。
 
-另请参阅：[斜杠命令](/en/tools/slash-commands)、[Token 使用与成本](/en/reference/token-use)、[压缩](/en/concepts/compaction)。
+另请参阅：[斜杠命令](/zh/tools/slash-commands)、[Token 使用与成本](/zh/reference/token-use)、[压缩](/zh/concepts/compaction)。
 
 ## 示例输出
 
@@ -38,7 +38,7 @@ title: "上下文"
 ```
 🧠 Context breakdown
 Workspace: <workspaceDir>
-Bootstrap max/file: 20,000 chars
+Bootstrap max/file: 12,000 chars
 Sandbox: mode=non-main sandboxed=false
 System prompt (run): 38,412 chars (~9,603 tok) (Project Context 23,901 chars (~5,976 tok))
 
@@ -98,7 +98,7 @@ Top tools (schema size):
 - 运行时元数据（主机/操作系统/模型/思考）。
 - **项目上下文（Project Context）** 下注入的工作区引导文件。
 
-完整细分：[系统提示](/en/concepts/system-prompt)。
+完整细分：[系统提示](/zh/concepts/system-prompt)。
 
 ## 注入的工作区文件（项目上下文）
 
@@ -112,7 +112,7 @@ Top tools (schema size):
 - `HEARTBEAT.md`
 - `BOOTSTRAP.md`（仅首次运行）
 
-大文件使用 `agents.defaults.bootstrapMaxChars`（默认 `20000` 个字符）按文件截断。OpenClaw 还通过 `agents.defaults.bootstrapTotalMaxChars`（默认 `150000` 个字符）对跨文件的总引导注入量实施上限。`/context` 显示 **原始大小与注入大小** 的对比以及是否发生了截断。
+大文件会使用 `agents.defaults.bootstrapMaxChars` 按文件截断（默认 `12000` 个字符）。OpenClaw 还通过 `agents.defaults.bootstrapTotalMaxChars` 在所有文件中强制执行总引导注入上限（默认 `60000` 个字符）。`/context` 显示 **原始与注入后** 的大小以及是否发生了截断。
 
 当发生截断时，运行时可以在 Project Context 下注入一个提示内警告块。使用 `agents.defaults.bootstrapPromptTruncationWarning`（`off`、`once`、`always`；默认为 `once`）进行配置。
 
@@ -141,7 +141,7 @@ Top tools (schema size):
   - 普通消息中的内联指令作为单条消息的提示。
 - **内联快捷方式**（仅限白名单发送者）：普通消息中的某些 `/...` token 可以立即运行（例如：“hey /status”），并在模型看到剩余文本之前被剥离。
 
-详情：[斜杠命令](/en/tools/slash-commands)。
+详情：[斜杠命令](/zh/tools/slash-commands)。
 
 ## 会话、压缩和修剪（保留的内容）
 
@@ -151,9 +151,9 @@ Top tools (schema size):
 - **压缩**会将摘要保留到记录中，并使最近的消息保持完整。
 - **修剪**会从一次运行的 _内存中_ 提示词中移除旧的工具结果，但不会重写记录。
 
-文档：[会话](/en/concepts/session)、[压缩](/en/concepts/compaction)、[会话修剪](/en/concepts/session-pruning)。
+文档：[会话](/zh/concepts/session)、[压缩](/zh/concepts/compaction)、[会话修剪](/zh/concepts/session-pruning)。
 
-默认情况下，OpenClaw 使用内置的 `legacy` 上下文引擎进行组装和压缩。如果您安装了提供 `kind: "context-engine"` 并使用 `plugins.slots.contextEngine` 选中它的插件，OpenClaw 会将上下文组装、`/compact` 和相关的子代理上下文生命周期钩子委托给该引擎。`ownsCompaction: false` 不会自动回退到旧引擎；活动引擎仍必须正确实现 `compact()`。有关完整的可插拔接口、生命周期钩子和配置，请参阅 [上下文引擎](/en/concepts/context-engine)。
+默认情况下，OpenClaw 使用内置的 `legacy` 上下文引擎进行组装和压缩。如果您安装了提供 `kind: "context-engine"` 并使用 `plugins.slots.contextEngine` 选中它的插件，OpenClaw 会将上下文组装、`/compact` 和相关的子代理上下文生命周期钩子委托给该引擎。`ownsCompaction: false` 不会自动回退到旧引擎；活动引擎仍必须正确实现 `compact()`。有关完整的可插拔接口、生命周期钩子和配置，请参阅 [上下文引擎](/zh/concepts/context-engine)。
 
 ## `/context` 实际报告的内容
 
@@ -166,7 +166,7 @@ Top tools (schema size):
 
 ## 相关
 
-- [上下文引擎](/en/concepts/context-engine) — 通过插件自定义上下文注入
+- [上下文引擎](/zh/concepts/context-engine) — 通过插件自定义上下文注入
 - [压缩]（/en/concepts/compaction）—— 总结长对话
 - [系统提示词]（/en/concepts/system-prompt）—— 系统提示词是如何构建的
 - [代理循环]（/en/concepts/agent-loop）—— 完整的代理执行周期

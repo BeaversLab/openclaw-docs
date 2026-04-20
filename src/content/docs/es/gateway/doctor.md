@@ -508,4 +508,4 @@ Doctor persiste cualquier cambio de configuración y marca los metadatos del asi
 
 Doctor sugiere un sistema de memoria del espacio de trabajo cuando falta e imprime un consejo de respaldo si el espacio de trabajo aún no está bajo git.
 
-Consulte [/concepts/agent-workspace](/en/concepts/agent-workspace) para obtener una guía completa sobre la estructura del espacio de trabajo y el respaldo en git (se recomienda GitHub o GitLab privados).
+Consulte [/concepts/agent-workspace](/es/concepts/agent-workspace) para obtener una guía completa sobre la estructura del espacio de trabajo y el respaldo en git (se recomienda GitHub o GitLab privados).

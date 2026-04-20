@@ -40,7 +40,7 @@ Buena salida en una línea:
 
 Si ve:
 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`,
-vaya a [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/en/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context).
+vaya a [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/es/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context).
 
 ## El backend compatible con OpenAI local funciona directamente pero falla en OpenClaw
 
@@ -55,7 +55,7 @@ de agente normales:
 3. Si las llamadas directas diminutas todavía funcionan pero las solicitudes más grandes de OpenClaw bloquean el
    backend, trate el problema restante como una limitación del modelo/servidor ascendente y
    continúe en el manual detallado:
-   [/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail](/en/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail)
+   [/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail](/es/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail)
 
 ## La instalación del complemento falla por extensiones openclaw faltantes
 
@@ -80,7 +80,7 @@ Ejemplo:
 }
 ```
 
-Referencia: [Arquitectura del complemento](/en/plugins/architecture)
+Referencia: [Arquitectura del complemento](/es/plugins/architecture)
 
 ## Árbol de decisiones
 
@@ -129,9 +129,9 @@ flowchart TD
 
     Páginas profundas:
 
-    - [/gateway/troubleshooting#no-replies](/en/gateway/troubleshooting#no-replies)
-    - [/channels/troubleshooting](/en/channels/troubleshooting)
-    - [/channels/pairing](/en/channels/pairing)
+    - [/gateway/troubleshooting#no-replies](/es/gateway/troubleshooting#no-replies)
+    - [/channels/troubleshooting](/es/channels/troubleshooting)
+    - [/channels/pairing](/es/channels/pairing)
 
   </Accordion>
 
@@ -170,9 +170,9 @@ flowchart TD
 
     Páginas en profundidad:
 
-    - [/gateway/troubleshooting#dashboard-control-ui-connectivity](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
-    - [/web/control-ui](/en/web/control-ui)
-    - [/gateway/authentication](/en/gateway/authentication)
+    - [/gateway/troubleshooting#dashboard-control-ui-connectivity](/es/gateway/troubleshooting#dashboard-control-ui-connectivity)
+    - [/web/control-ui](/es/web/control-ui)
+    - [/gateway/authentication](/es/gateway/authentication)
 
   </Accordion>
 
@@ -199,9 +199,9 @@ flowchart TD
 
     Páginas profundas:
 
-    - [/gateway/troubleshooting#gateway-service-not-running](/en/gateway/troubleshooting#gateway-service-not-running)
-    - [/gateway/background-process](/en/gateway/background-process)
-    - [/gateway/configuration](/en/gateway/configuration)
+    - [/gateway/troubleshooting#gateway-service-not-running](/es/gateway/troubleshooting#gateway-service-not-running)
+    - [/gateway/background-process](/es/gateway/background-process)
+    - [/gateway/configuration](/es/gateway/configuration)
 
   </Accordion>
 
@@ -228,8 +228,8 @@ flowchart TD
 
     Páginas profundas:
 
-    - [/gateway/troubleshooting#channel-connected-messages-not-flowing](/en/gateway/troubleshooting#channel-connected-messages-not-flowing)
-    - [/channels/troubleshooting](/en/channels/troubleshooting)
+    - [/gateway/troubleshooting#channel-connected-messages-not-flowing](/es/gateway/troubleshooting#channel-connected-messages-not-flowing)
+    - [/channels/troubleshooting](/es/channels/troubleshooting)
 
   </Accordion>
 
@@ -261,9 +261,9 @@ flowchart TD
 
     Páginas profundas:
 
-    - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
-    - [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
-    - [/gateway/heartbeat](/en/gateway/heartbeat)
+    - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/es/gateway/troubleshooting#cron-and-heartbeat-delivery)
+    - [/automation/cron-jobs#troubleshooting](/es/automation/cron-jobs#troubleshooting)
+    - [/gateway/heartbeat](/es/gateway/heartbeat)
 
     </Accordion>
 
@@ -291,9 +291,9 @@ flowchart TD
 
       Páginas en profundidad:
 
-      - [/gateway/troubleshooting#node-paired-tool-fails](/en/gateway/troubleshooting#node-paired-tool-fails)
-      - [/nodes/troubleshooting](/en/nodes/troubleshooting)
-      - [/tools/exec-approvals](/en/tools/exec-approvals)
+      - [/gateway/troubleshooting#node-paired-tool-fails](/es/gateway/troubleshooting#node-paired-tool-fails)
+      - [/nodes/troubleshooting](/es/nodes/troubleshooting)
+      - [/tools/exec-approvals](/es/tools/exec-approvals)
 
     </Accordion>
 
@@ -337,9 +337,9 @@ flowchart TD
 
       Páginas profundas:
 
-      - [/tools/exec](/en/tools/exec)
-      - [/tools/exec-approvals](/en/tools/exec-approvals)
-      - [/gateway/security#what-the-audit-checks-high-level](/en/gateway/security#what-the-audit-checks-high-level)
+      - [/tools/exec](/es/tools/exec)
+      - [/tools/exec-approvals](/es/tools/exec-approvals)
+      - [/gateway/security#what-the-audit-checks-high-level](/es/gateway/security#what-the-audit-checks-high-level)
 
     </Accordion>
 
@@ -371,10 +371,10 @@ flowchart TD
 
       Páginas profundas:
 
-      - [/gateway/troubleshooting#browser-tool-fails](/en/gateway/troubleshooting#browser-tool-fails)
-      - [/tools/browser#missing-browser-command-or-tool](/en/tools/browser#missing-browser-command-or-tool)
-      - [/tools/browser-linux-troubleshooting](/en/tools/browser-linux-troubleshooting)
-      - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+      - [/gateway/troubleshooting#browser-tool-fails](/es/gateway/troubleshooting#browser-tool-fails)
+      - [/tools/browser#missing-browser-command-or-tool](/es/tools/browser#missing-browser-command-or-tool)
+      - [/tools/browser-linux-troubleshooting](/es/tools/browser-linux-troubleshooting)
+      - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
 
     </Accordion>
 
@@ -382,8 +382,8 @@ flowchart TD
 
 ## Relacionado
 
-- [FAQ](/en/help/faq) — preguntas frecuentes
-- [Solución de problemas de la puerta de enlace](/en/gateway/troubleshooting) — problemas específicos de la puerta de enlace
-- [Doctor](/en/gateway/doctor) — comprobaciones automáticas de estado y reparaciones
-- [Solución de problemas de canal](/en/channels/troubleshooting) — problemas de conectividad del canal
-- [Solución de problemas de automatización](/en/automation/cron-jobs#troubleshooting) — problemas de cron y latido
+- [FAQ](/es/help/faq) — preguntas frecuentes
+- [Solución de problemas de la puerta de enlace](/es/gateway/troubleshooting) — problemas específicos de la puerta de enlace
+- [Doctor](/es/gateway/doctor) — comprobaciones automáticas de estado y reparaciones
+- [Solución de problemas de canal](/es/channels/troubleshooting) — problemas de conectividad del canal
+- [Solución de problemas de automatización](/es/automation/cron-jobs#troubleshooting) — problemas de cron y latido

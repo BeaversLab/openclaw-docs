@@ -9,9 +9,9 @@ title: "Modèles locaux"
 
 # Modèles locaux
 
-Une solution locale est possible, mais OpenClaw s'attend à un contexte volumineux + de solides défenses contre l'injection de prompts. Les petites cartes tronquent le contexte et compromettent la sécurité. Visez haut : **≥2 Mac Studios à leur maximum ou une configuration GPU équivalente (~30k$+)**. Un seul GPU de **24 Go** ne fonctionne que pour les prompts plus légers avec une latence plus élevée. Utilisez la **plus grande variante de modèle à taille complète que vous pouvez faire tourner** ; les points de contrôle agressivement quantifiés ou « petits » augmentent le risque d'injection de prompts (voir [Sécurité](/en/gateway/security)).
+Une solution locale est possible, mais OpenClaw s'attend à un contexte volumineux + de solides défenses contre l'injection de prompts. Les petites cartes tronquent le contexte et compromettent la sécurité. Visez haut : **≥2 Mac Studios à leur maximum ou une configuration GPU équivalente (~30k$+)**. Un seul GPU de **24 Go** ne fonctionne que pour les prompts plus légers avec une latence plus élevée. Utilisez la **plus grande variante de modèle à taille complète que vous pouvez faire tourner** ; les points de contrôle agressivement quantifiés ou « petits » augmentent le risque d'injection de prompts (voir [Sécurité](/fr/gateway/security)).
 
-Si vous souhaitez la configuration locale la plus simple, commencez par [LM Studio](/en/providers/lmstudio) ou [Ollama](/en/providers/ollama) et `openclaw onboard`. Cette page est le guide avec des opinions pour les configurations locales haut de gamme et les serveurs locaux compatibles OpenAI.
+Si vous souhaitez la configuration locale la plus simple, commencez par [LM Studio](/fr/providers/lmstudio) ou [Ollama](/fr/providers/ollama) et `openclaw onboard`. Cette page est le guide avec des opinions pour les configurations locales haut de gamme et les serveurs locaux compatibles OpenAI.
 
 ## Recommandé : LM Studio + grand modèle local (API Responses)
 
@@ -154,7 +154,7 @@ Remarque sur le comportement pour les backends `/v1` locaux/proxys :
 Notes de compatibilité pour les backends compatibles OpenAI plus stricts :
 
 - Certains serveurs n'acceptent que des chaînes `messages[].content` sur Chat Completions, et non des tableaux de parties de contenu structurés. Définissez `models.providers.<provider>.models[].compat.requiresStringContent: true` pour ces points de terminaison.
-- Certains backends locaux plus petits ou plus stricts sont instables avec la forme de prompt d'agent runtime complète de OpenClaw, surtout lorsque les schémas d'outils sont inclus. Si le backend fonctionne pour de minuscules appels directs `/v1/chat/completions` mais échoue sur les tours d'agent normaux de OpenClaw, essayez d'abord `agents.defaults.experimental.localModelLean: true` pour abandonner les outils par défaut lourds comme `browser`, `cron`, et `message` ; c'est un indicateur expérimental, pas un paramètre de mode stable par défaut. Voir [Fonctionnalités expérimentales](/en/concepts/experimental-features). Si cela échoue toujours, essayez `models.providers.<provider>.models[].compat.supportsTools: false`.
+- Certains backends locaux plus petits ou plus stricts sont instables avec la forme de prompt d'agent runtime complète de OpenClaw, surtout lorsque les schémas d'outils sont inclus. Si le backend fonctionne pour de minuscules appels directs `/v1/chat/completions` mais échoue sur les tours d'agent normaux de OpenClaw, essayez d'abord `agents.defaults.experimental.localModelLean: true` pour abandonner les outils par défaut lourds comme `browser`, `cron`, et `message` ; c'est un indicateur expérimental, pas un paramètre de mode stable par défaut. Voir [Fonctionnalités expérimentales](/fr/concepts/experimental-features). Si cela échoue toujours, essayez `models.providers.<provider>.models[].compat.supportsTools: false`.
 - Si le backend échoue encore uniquement sur les exécutions plus volumineuses de OpenClaw, le problème restant est généralement la capacité en amont du modèle/serveur ou un bogue du backend, et non la couche de transport de OpenClaw.
 
 ## Dépannage

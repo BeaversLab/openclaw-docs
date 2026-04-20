@@ -10,13 +10,13 @@ title: "Telegram"
 狀態：透過 grammY 支援機器人私訊 (DM) 與群組的正式生產版本。長輪詢 (Long polling) 為預設模式；Webhook 模式為選用。
 
 <CardGroup cols={3}>
-  <Card title="配對" icon="link" href="/en/channels/pairing">
+  <Card title="配對" icon="link" href="/zh-Hant/channels/pairing">
     Telegram 的預設 DM 原則為配對模式。
   </Card>
-  <Card title="頻道疑難排解" icon="wrench" href="/en/channels/troubleshooting">
+  <Card title="頻道疑難排解" icon="wrench" href="/zh-Hant/channels/troubleshooting">
     跨頻道診斷與修復手冊。
   </Card>
-  <Card title="閘道配置" icon="settings" href="/en/gateway/configuration">
+  <Card title="閘道配置" icon="settings" href="/zh-Hant/gateway/configuration">
     完整的頻道配置範例與模式。
   </Card>
 </CardGroup>
@@ -360,7 +360,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     如果裝置使用變更的驗證詳細資料（例如角色/範圍/公開金鑰）重試，先前的待處理請求會被取代，新請求會使用不同的 `requestId`。請在核准前重新執行 `/pair pending`。
 
-    更多詳情：[配對](/en/channels/pairing#pair-via-telegram-recommended-for-ios)。
+    更多詳情：[配對](/zh-Hant/channels/pairing#pair-via-telegram-recommended-for-ios)。
 
   </Accordion>
 
@@ -451,7 +451,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     注意：`edit` 和 `topic-create` 目前預設為啟用，且沒有個別的 `channels.telegram.actions.*` 切換開關。
     執行時間發送使用作用中的設定/密碼快照 (啟動/重新載入)，因此動作路徑不會在每次發送時執行臨時的 SecretRef 重新解析。
 
-    反應移除語意：[/tools/reactions](/en/tools/reactions)
+    反應移除語意：[/tools/reactions](/zh-Hant/tools/reactions)
 
   </Accordion>
 
@@ -847,7 +847,7 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
 
     內嵌審批按鈕也取決於 `channels.telegram.capabilities.inlineButtons` 允許目標介面 (`dm`、`group` 或 `all`)。
 
-    相關文件：[執行審批](/en/tools/exec-approvals)
+    相關文件：[執行審批](/zh-Hant/tools/exec-approvals)
 
   </Accordion>
 </AccordionGroup>
@@ -965,7 +965,7 @@ dig +short api.telegram.org AAAA
   </Accordion>
 </AccordionGroup>
 
-更多說明：[頻道疑難排解](/en/channels/troubleshooting)。
+更多說明：[頻道疑難排解](/zh-Hant/channels/troubleshooting)。
 
 ## Telegram 配置參考指引
 
@@ -997,7 +997,7 @@ dig +short api.telegram.org AAAA
   - `channels.telegram.groups.<id>.topics.<threadId>.agentId`：將此主題路由至特定代理程式（覆寫群組層級和綁定路由）。
 - `channels.telegram.groups.<id>.topics.<threadId>.groupPolicy`：groupPolicy 的每主題覆寫（`open | allowlist | disabled`）。
 - `channels.telegram.groups.<id>.topics.<threadId>.requireMention`：每主題提及控制覆寫。
-- 頂層 `bindings[]`，帶有 `type: "acp"` 和 `match.peer.id` 中的正準主題 ID `chatId:topic:topicId`：持久化 ACP 主題綁定欄位（請參閱 [ACP Agents](/en/tools/acp-agents#channel-specific-settings)）。
+- 頂層 `bindings[]`，帶有 `type: "acp"` 和 `match.peer.id` 中的正準主題 ID `chatId:topic:topicId`：持久化 ACP 主題綁定欄位（請參閱 [ACP Agents](/zh-Hant/tools/acp-agents#channel-specific-settings)）。
 - `channels.telegram.direct.<id>.topics.<threadId>.agentId`：將 DM 主題路由至特定代理程式（行為與論壇主題相同）。
 - `channels.telegram.execApprovals.enabled`：啟用 Telegram 作為此帳戶的基於聊天的 exec 批准用戶端。
 - `channels.telegram.execApprovals.approvers`：允許批准或拒絕 exec 請求的 Telegram 使用者 ID。當 `channels.telegram.allowFrom` 或直接的 `channels.telegram.defaultTo` 已識別擁有者時為選填。
@@ -1033,7 +1033,7 @@ dig +short api.telegram.org AAAA
 - `channels.telegram.errorPolicy`：`reply | silent` — 控制錯誤回覆行為（預設 `reply`）。支援每個帳號/群組/主題的覆寫設定。
 - `channels.telegram.errorCooldownMs`：對同一聊天傳送錯誤回覆之間的最小毫秒間隔（預設 `60000`）。防止中斷期間的錯誤訊息濫發。
 
-- [配置參考 - Telegram](/en/gateway/configuration-reference#telegram)
+- [配置參考 - Telegram](/zh-Hant/gateway/configuration-reference#telegram)
 
 Telegram 專用的高信號欄位：
 
@@ -1053,9 +1053,9 @@ Telegram 專用的高信號欄位：
 
 ## 相關
 
-- [配對](/en/channels/pairing)
-- [群組](/en/channels/groups)
-- [安全性](/en/gateway/security)
-- [頻道路由](/en/channels/channel-routing)
-- [多代理路由](/en/concepts/multi-agent)
-- [疑難排解](/en/channels/troubleshooting)
+- [配對](/zh-Hant/channels/pairing)
+- [群組](/zh-Hant/channels/groups)
+- [安全性](/zh-Hant/gateway/security)
+- [頻道路由](/zh-Hant/channels/channel-routing)
+- [多代理路由](/zh-Hant/concepts/multi-agent)
+- [疑難排解](/zh-Hant/channels/troubleshooting)

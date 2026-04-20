@@ -141,6 +141,6 @@ OpenClaw 在對 Firecrawl 發出請求時，一律使用 `proxy: "auto"` 加上 
 
 ## 相關
 
-- [網頁搜尋概覽](/en/tools/web) -- 所有提供者與自動偵測
-- [網頁抓取](/en/tools/web-fetch) -- 具備 Firecrawl 後援的 web_fetch 工具
-- [Tavily](/en/tools/tavily) -- 搜尋 + 提取工具
+- [網頁搜尋概覽](/zh-Hant/tools/web) -- 所有提供者與自動偵測
+- [網頁抓取](/zh-Hant/tools/web-fetch) -- 具備 Firecrawl 後援的 web_fetch 工具
+- [Tavily](/zh-Hant/tools/tavily) -- 搜尋 + 提取工具

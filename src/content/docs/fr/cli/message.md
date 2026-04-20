@@ -216,7 +216,7 @@ openclaw message send --channel discord \
   --components '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve","style":"success"},{"label":"Decline","style":"danger"}]}]}'
 ```
 
-Voir [Composants Discord](/en/channels/discord#interactive-components) pour le schéma complet.
+Voir [Composants Discord](/fr/channels/discord#interactive-components) pour le schéma complet.
 
 Envoyer une charge utile interactive partagée :
 

@@ -14,7 +14,7 @@ La poda de sesiones recorta **antiguos resultados de herramientas** del contexto
 
 ## Por qué es importante
 
-Las sesiones largas acumulan salidas de herramientas que inflan la ventana de contexto. Esto aumenta el costo y puede forzar la [compactación](/en/concepts/compaction) antes de lo necesario.
+Las sesiones largas acumulan salidas de herramientas que inflan la ventana de contexto. Esto aumenta el costo y puede forzar la [compactación](/es/concepts/compaction) antes de lo necesario.
 
 La poda es especialmente valiosa para el **almacenamiento en caché de prompt de Anthropic**. Una vez que el TTL
 del caché expira, la siguiente solicitud vuelve a almacenar en caché el prompt completo. La poda reduce el
@@ -75,6 +75,6 @@ Se complementan entre sí -- la poda mantiene la salida de herramientas ligera e
 
 ## Lecturas adicionales
 
-- [Compactación](/en/concepts/compaction) -- reducción de contexto basada en resúmenes
-- [Configuración de Gateway](/en/gateway/configuration) -- todos los controles de configuración de poda
+- [Compactación](/es/concepts/compaction) -- reducción de contexto basada en resúmenes
+- [Configuración de Gateway](/es/gateway/configuration) -- todos los controles de configuración de poda
   (`contextPruning.*`)

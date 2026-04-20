@@ -8,17 +8,17 @@ title: "身份验证"
 
 # 身份验证（模型提供商）
 
-<Note>本页涵盖**模型提供商**身份验证（API 密钥、OAuth、Claude CLI 复用以及 Anthropic setup-token）。有关 **Gateway(网关) 连接**身份验证（令牌、密码、trusted-proxy），请参阅 [配置](/en/gateway/configuration) 和 [可信代理身份验证](/en/gateway/trusted-proxy-auth)。</Note>
+<Note>本页涵盖**模型提供商**身份验证（API 密钥、OAuth、Claude CLI 复用以及 Anthropic setup-token）。有关 **Gateway(网关) 连接**身份验证（令牌、密码、trusted-proxy），请参阅 [配置](/zh/gateway/configuration) 和 [可信代理身份验证](/zh/gateway/trusted-proxy-auth)。</Note>
 
 OpenClaw 支持针对模型提供商的 OAuth 和 API 密钥。对于长期运行的网关
 主机，API 密钥通常是最可预测的选项。当它们与您的提供商账户模型匹配时，
 订阅/OAuth 流程也受支持。
 
-请参阅 [/concepts/oauth](/en/concepts/oauth) 以了解完整的 OAuth 流程和存储
+请参阅 [/concepts/oauth](/zh/concepts/oauth) 以了解完整的 OAuth 流程和存储
 布局。
-对于基于 SecretRef 的身份验证（`env`/`file`/`exec` 提供商），请参阅 [机密管理](/en/gateway/secrets)。
+对于基于 SecretRef 的身份验证（`env`/`file`/`exec` 提供商），请参阅 [机密管理](/zh/gateway/secrets)。
 有关 `models status --probe` 使用的凭据资格/原因代码规则，请参阅
-[身份验证凭据语义](/en/auth-credential-semantics)。
+[身份验证凭据语义](/zh/auth-credential-semantics)。
 
 ## 推荐的设置（API 密钥，任何提供商）
 
@@ -55,7 +55,7 @@ openclaw doctor
 API 密钥供守护进程使用：`openclaw onboard`。
 
 有关环境变量继承的详细信息（`env.shellEnv`，
-`~/.openclaw/.env`，systemd/launchd），请参阅 [帮助](/en/help)。
+`~/.openclaw/.env`，systemd/launchd），请参阅 [帮助](/zh/help)。
 
 ## Anthropic：Claude CLI 和令牌兼容性
 
@@ -99,7 +99,7 @@ openclaw models status --probe
 - 速率限制冷却可以是模型范围的。针对一个模型冷却的配置文件对于同一提供商上的同级模型仍然可用。
 
 可选的运维脚本（systemd/Termux）记录在此处：
-[Auth monitoring scripts](/en/help/scripts#auth-monitoring-scripts)
+[Auth monitoring scripts](/zh/help/scripts#auth-monitoring-scripts)
 
 ## Anthropic 备注
 

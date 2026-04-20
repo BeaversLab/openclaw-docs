@@ -9,9 +9,9 @@ status: active
 
 在多代理程式設定中，每個代理程式都可以覆寫全域沙箱和工具政策。本頁涵蓋各代理程式的設定、優先順序規則與範例。
 
-- **Sandbox 後端與模式**：請參閱 [Sandboxing](/en/gateway/sandboxing)。
-- **偵錯遭封鎖的工具**：請參閱 [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) 與 `openclaw sandbox explain`。
-- **提權執行**：請參閱 [Elevated Mode](/en/tools/elevated)。
+- **Sandbox 後端與模式**：請參閱 [Sandboxing](/zh-Hant/gateway/sandboxing)。
+- **偵錯遭封鎖的工具**：請參閱 [Sandbox vs Tool Policy vs Elevated](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated) 與 `openclaw sandbox explain`。
+- **提權執行**：請參閱 [Elevated Mode](/zh-Hant/tools/elevated)。
 
 身分驗證是以代理程式為單位：每個代理程式會從其位於
 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 的 `agentDir` 驗證儲存庫中讀取。
@@ -205,9 +205,9 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 如果設定了 `agents.list[].tools.profile`，它將覆寫該代理程式的 `tools.profile`。
 提供者工具金鑰接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.4`）。
 
-工具原則支援 `group:*` 簡寫，這些簡寫會展開為多個工具。完整列表請參閱 [Tool groups](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
+工具原則支援 `group:*` 簡寫，這些簡寫會展開為多個工具。完整列表請參閱 [Tool groups](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
 
-各代理程式的提權覆寫（`agents.list[].tools.elevated`）可以進一步限制特定代理程式的提權執行。詳細資訊請參閱 [Elevated Mode](/en/tools/elevated)。
+各代理程式的提權覆寫（`agents.list[].tools.elevated`）可以進一步限制特定代理程式的提權執行。詳細資訊請參閱 [Elevated Mode](/zh-Hant/tools/elevated)。
 
 ---
 
@@ -363,9 +363,9 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ## 另請參閱
 
-- [沙盒機制](/en/gateway/sandboxing) -- 完整的沙盒參考（模式、範圍、後端、映像檔）
-- [沙盒 vs. 工具政策 vs. 提昇權限](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- 偵錯「為什麼這個被阻擋？」
-- [提昇權限模式](/en/tools/elevated)
-- [多代理路由](/en/concepts/multi-agent)
-- [沙盒設定](/en/gateway/configuration-reference#agentsdefaultssandbox)
-- [階段管理](/en/concepts/session)
+- [沙盒機制](/zh-Hant/gateway/sandboxing) -- 完整的沙盒參考（模式、範圍、後端、映像檔）
+- [沙盒 vs. 工具政策 vs. 提昇權限](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated) -- 偵錯「為什麼這個被阻擋？」
+- [提昇權限模式](/zh-Hant/tools/elevated)
+- [多代理路由](/zh-Hant/concepts/multi-agent)
+- [沙盒設定](/zh-Hant/gateway/configuration-reference#agentsdefaultssandbox)
+- [階段管理](/zh-Hant/concepts/session)

@@ -22,8 +22,8 @@ Pour la recherche web, `openclaw configure --section web` vous permet de choisir
 
 Connexes :
 
-- Référence de configuration du Gateway : [Configuration](/en/gateway/configuration)
-- CLI de configuration : [Config](/en/cli/config)
+- Référence de configuration du Gateway : [Configuration](/fr/gateway/configuration)
+- CLI de configuration : [Config](/fr/cli/config)
 
 ## Options
 

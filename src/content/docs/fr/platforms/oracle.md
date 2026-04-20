@@ -298,8 +298,8 @@ openclaw backup create
 
 ## Voir aussi
 
-- [Accès distant Gateway](/en/gateway/remote) — autres modèles d'accès à distance
-- [Intégration Tailscale](/en/gateway/tailscale) — documentation complète Tailscale
-- [Configuration Gateway](/en/gateway/configuration) — toutes les options de configuration
-- [guide DigitalOcean](/en/platforms/digitalocean) — si vous souhaitez un service payant + une inscription plus facile
-- [guide Hetzner](/en/install/hetzner) — alternative basée sur Hetzner
+- [Accès distant Gateway](/fr/gateway/remote) — autres modèles d'accès à distance
+- [Intégration Tailscale](/fr/gateway/tailscale) — documentation complète Tailscale
+- [Configuration Gateway](/fr/gateway/configuration) — toutes les options de configuration
+- [guide DigitalOcean](/fr/platforms/digitalocean) — si vous souhaitez un service payant + une inscription plus facile
+- [guide Hetzner](/fr/install/hetzner) — alternative basée sur Hetzner

@@ -9,7 +9,7 @@ title: "iMessage"
 # iMessage（旧版：imsg）
 
 <Warning>
-对于新的 iMessage 部署，请使用 <a href="/en/channels/bluebubbles">BlueBubbles</a>。
+对于新的 iMessage 部署，请使用 <a href="/zh/channels/bluebubbles">BlueBubbles</a>。
 
 `imsg` 集成是旧版功能，可能会在未来的版本中移除。
 
@@ -18,13 +18,13 @@ title: "iMessage"
 状态：旧版外部 CLI 集成。Gateway(网关) 会生成 `imsg rpc` 并通过 stdio 上的 JSON-RPC 进行通信（无单独的守护进程/端口）。
 
 <CardGroup cols={3}>
-  <Card title="BlueBubbles (recommended)" icon="message-circle" href="/en/channels/bluebubbles">
+  <Card title="BlueBubbles (recommended)" icon="message-circle" href="/zh/channels/bluebubbles">
     新设置的首选 iMessage 路径。
   </Card>
-  <Card title="Pairing" icon="link" href="/en/channels/pairing">
+  <Card title="Pairing" icon="link" href="/zh/channels/pairing">
     iMessage 私信默认为配对模式。
   </Card>
-  <Card title="Configuration reference" icon="settings" href="/en/gateway/configuration-reference#imessage">
+  <Card title="Configuration reference" icon="settings" href="/zh/gateway/configuration-reference#imessage">
     完整的 iMessage 字段参考。
   </Card>
 </CardGroup>
@@ -235,7 +235,7 @@ imsg send <handle> "test"
 }
 ```
 
-有关共享 ACP 绑定行为，请参阅 [ACP Agents](/en/tools/acp-agents)。
+有关共享 ACP 绑定行为，请参阅 [ACP Agents](/zh/tools/acp-agents)。
 
 ## 部署模式
 
@@ -409,15 +409,15 @@ imsg send <handle> "test"
 
 ## 配置参考指针
 
-- [配置参考 - iMessage](/en/gateway/configuration-reference#imessage)
-- [Gateway(网关) 配置](/en/gateway/configuration)
-- [配对](/en/channels/pairing)
-- [BlueBubbles](/en/channels/bluebubbles)
+- [配置参考 - iMessage](/zh/gateway/configuration-reference#imessage)
+- [Gateway(网关) 配置](/zh/gateway/configuration)
+- [配对](/zh/channels/pairing)
+- [BlueBubbles](/zh/channels/bluebubbles)
 
 ## 相关
 
-- [频道概览](/en/channels) — 所有支持的频道
-- [配对](/en/channels/pairing) — 私信认证和配对流程
-- [群组](/en/channels/groups) — 群聊行为和提及控制
-- [频道路由](/en/channels/channel-routing) — 消息的会话路由
-- [安全](/en/gateway/security) — 访问模型和加固
+- [频道概览](/zh/channels) — 所有支持的频道
+- [配对](/zh/channels/pairing) — 私信认证和配对流程
+- [群组](/zh/channels/groups) — 群聊行为和提及控制
+- [频道路由](/zh/channels/channel-routing) — 消息的会话路由
+- [安全](/zh/gateway/security) — 访问模型和加固

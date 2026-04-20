@@ -12,7 +12,7 @@ title: "voicecall"
 
 Documentation principale :
 
-- Plugin voice-call : [Appel vocal](/en/plugins/voice-call)
+- Plugin voice-call : [Appel vocal](/fr/plugins/voice-call)
 
 ## Commandes courantes
 

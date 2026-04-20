@@ -67,10 +67,10 @@ OpenClaw 附带了一个用于托管视频生成的捆绑 `runway` 提供商。
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="视频生成" href="/en/tools/video-generation" icon="video">
+  <Card title="视频生成" href="/zh/tools/video-generation" icon="video">
     共享工具参数、提供商选择和异步行为。
   </Card>
-  <Card title="配置参考" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="配置参考" href="/zh/gateway/configuration-reference#agent-defaults" icon="gear">
     智能体默认设置，包括视频生成模型。
   </Card>
 </CardGroup>

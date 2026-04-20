@@ -175,7 +175,7 @@ export LITELLM_API_KEY="sk-litellm-key"
   </Accordion>
 </AccordionGroup>
 
-<Note>如需一般供應商設定和失效轉移行為，請參閱 [Model Providers](/en/concepts/model-providers)。</Note>
+<Note>如需一般供應商設定和失效轉移行為，請參閱 [Model Providers](/zh-Hant/concepts/model-providers)。</Note>
 
 ## 相關
 
@@ -183,13 +183,13 @@ export LITELLM_API_KEY="sk-litellm-key"
   <Card title="LiteLLM Docs" href="https://docs.litellm.ai" icon="book">
     官方 LiteLLM 文件和 API 參考資料。
   </Card>
-  <Card title="Model providers" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model providers" href="/zh-Hant/concepts/model-providers" icon="layers">
     所有供應商、模型參照和失效轉移行為的概觀。
   </Card>
-  <Card title="Configuration" href="/en/gateway/configuration" icon="gear">
+  <Card title="Configuration" href="/zh-Hant/gateway/configuration" icon="gear">
     完整設定參考資料。
   </Card>
-  <Card title="Model selection" href="/en/concepts/models" icon="brain">
+  <Card title="Model selection" href="/zh-Hant/concepts/models" icon="brain">
     如何選擇和設定模型。
   </Card>
 </CardGroup>

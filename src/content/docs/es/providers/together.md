@@ -93,7 +93,7 @@ Para usar Together como proveedor de video predeterminado:
 }
 ```
 
-<Tip>Consulte [Generación de video](/en/tools/video-generation) para ver los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.</Tip>
+<Tip>Consulte [Generación de video](/es/tools/video-generation) para ver los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.</Tip>
 
 <AccordionGroup>
   <Accordion title="Nota de entorno">
@@ -120,13 +120,13 @@ Para usar Together como proveedor de video predeterminado:
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Proveedores de modelos" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Proveedores de modelos" href="/es/concepts/model-providers" icon="layers">
     Reglas del proveedor, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Generación de video" href="/en/tools/video-generation" icon="video">
+  <Card title="Generación de video" href="/es/tools/video-generation" icon="video">
     Parámetros compartidos de la herramienta de generación de video y selección del proveedor.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
     Esquema de configuración completo que incluye la configuración del proveedor.
   </Card>
   <Card title="Together AI" href="https://together.ai" icon="arrow-up-right-from-square">

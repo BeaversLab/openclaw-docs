@@ -73,10 +73,10 @@ NVIDIA 在 `https://integrate.api.nvidia.com/v1` 提供了一個相容 OpenAI �
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="模型選擇" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參照和故障轉移行為。
   </Card>
-  <Card title="組態參考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="組態參考" href="/zh-Hant/gateway/configuration-reference" icon="gear">
     代理、模型和提供者的完整組態參考。
   </Card>
 </CardGroup>

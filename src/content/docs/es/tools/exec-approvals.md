@@ -381,7 +381,7 @@ deben anunciar `system.execApprovals.get/set` (aplicación macOS o host de nodo 
 Si un nodo aún no anuncia aprobaciones de ejecución, edita su
 `~/.openclaw/exec-approvals.json` local directamente.
 
-CLI: `openclaw approvals` admite la edición de gateway o nodo (consulta [Approvals CLI](/en/cli/approvals)).
+CLI: `openclaw approvals` admite la edición de gateway o nodo (consulta [Approvals CLI](/es/cli/approvals)).
 
 ## Flujo de aprobación
 
@@ -551,7 +551,7 @@ Establezca `enabled: false` para deshabilitar explícitamente un cliente de apro
 cuando se resuelvan los aprobadores. La entrega pública al chat de origen permanece explícita a través de
 `channels.<channel>.execApprovals.target`.
 
-Preguntas frecuentes: [¿Por qué hay dos configuraciones de aprobación de ejecución para las aprobaciones de chat?](/en/help/faq#why-are-there-two-exec-approval-configs-for-chat-approvals)
+Preguntas frecuentes: [¿Por qué hay dos configuraciones de aprobación de ejecución para las aprobaciones de chat?](/es/help/faq#why-are-there-two-exec-approval-configs-for-chat-approvals)
 
 - Discord: `channels.discord.execApprovals.*`
 - Slack: `channels.slack.execApprovals.*`
@@ -588,8 +588,8 @@ de Telegram, OpenClaw preserva el tema para el mensaje de aprobación y el segui
 
 Ver:
 
-- [Discord](/en/channels/discord)
-- [Telegram](/en/channels/telegram)
+- [Discord](/es/channels/discord)
+- [Telegram](/es/channels/telegram)
 
 ### Flujo de IPC de macOS
 
@@ -637,13 +637,13 @@ resultados obsoletos de una ejecución exitosa anterior.
 
 Relacionado:
 
-- [Herramienta Exec](/en/tools/exec)
-- [Modo elevado](/en/tools/elevated)
-- [Habilidades (Skills)](/en/tools/skills)
+- [Herramienta Exec](/es/tools/exec)
+- [Modo elevado](/es/tools/elevated)
+- [Habilidades (Skills)](/es/tools/skills)
 
 ## Relacionado
 
-- [Exec](/en/tools/exec) — herramienta de ejecución de comandos de shell
-- [Sandboxing](/en/gateway/sandboxing) — modos de sandbox y acceso al espacio de trabajo
-- [Seguridad](/en/gateway/security) — modelo de seguridad y endurecimiento
-- [Sandbox frente a Política de herramientas frente a Elevado](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — cuándo usar cada uno
+- [Exec](/es/tools/exec) — herramienta de ejecución de comandos de shell
+- [Sandboxing](/es/gateway/sandboxing) — modos de sandbox y acceso al espacio de trabajo
+- [Seguridad](/es/gateway/security) — modelo de seguridad y endurecimiento
+- [Sandbox frente a Política de herramientas frente a Elevado](/es/gateway/sandbox-vs-tool-policy-vs-elevated) — cuándo usar cada uno

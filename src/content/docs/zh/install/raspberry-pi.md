@@ -93,7 +93,7 @@ title: "Raspberry Pi"
     ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
     ```
 
-    在本地浏览器中打开打印出的 URL。要实现始终在线的远程访问，请参阅 [Tailscale integration](/en/gateway/tailscale)。
+    在本地浏览器中打开打印出的 URL。要实现始终在线的远程访问，请参阅 [Tailscale integration](/zh/gateway/tailscale)。
 
   </Step>
 </Steps>
@@ -134,6 +134,6 @@ sudo systemctl disable bluetooth
 
 ## 后续步骤
 
-- [Channels](/en/channels) —— 连接 Telegram、WhatsApp、Discord 等
-- [Gateway(网关) configuration](/en/gateway/configuration) —— 所有配置选项
-- [Updating](/en/install/updating) —— 保持 OpenClaw 最新
+- [Channels](/zh/channels) —— 连接 Telegram、WhatsApp、Discord 等
+- [Gateway(网关) configuration](/zh/gateway/configuration) —— 所有配置选项
+- [Updating](/zh/install/updating) —— 保持 OpenClaw 最新

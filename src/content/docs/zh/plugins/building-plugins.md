@@ -13,7 +13,7 @@ read_when:
 插件使用新功能扩展 OpenClaw：渠道、模型提供商、语音、实时转录、实时语音、媒体理解、图像生成、视频生成、网页抓取、网页搜索、代理工具，或它们的任意组合。
 
 您无需将插件添加到 OpenClaw 代码库中。发布到
-[ClawHub](/en/tools/clawhub) 或 npm，用户即可使用
+[ClawHub](/zh/tools/clawhub) 或 npm，用户即可使用
 `openclaw plugins install <package-name>` 安装。OpenClaw 会优先尝试 ClawHub，
 然后自动回退到 npm。
 
@@ -26,10 +26,10 @@ read_when:
 ## 哪种类型的插件？
 
 <CardGroup cols={3}>
-  <Card title="Channel plugin" icon="messages-square" href="/en/plugins/sdk-channel-plugins">
+  <Card title="Channel plugin" icon="messages-square" href="/zh/plugins/sdk-channel-plugins">
     将 OpenClaw 连接到消息平台（Discord、IRC 等）
   </Card>
-  <Card title="Provider plugin" icon="cpu" href="/en/plugins/sdk-provider-plugins">
+  <Card title="Provider plugin" icon="cpu" href="/zh/plugins/sdk-provider-plugins">
     添加模型提供商（LLM、代理或自定义端点）
   </Card>
   <Card title="Tool / hook plugin" icon="wrench">
@@ -79,7 +79,7 @@ read_when:
     </CodeGroup>
 
     每个插件都需要一个清单，即使没有配置。请参阅
-    [Manifest](/en/plugins/manifest) 了解完整的架构。标准的 ClawHub
+    [Manifest](/zh/plugins/manifest) 了解完整的架构。标准的 ClawHub
     发布代码片段位于 `docs/snippets/plugin-publish/` 中。
 
   </Step>
@@ -109,8 +109,8 @@ read_when:
     ```
 
     `definePluginEntry` 适用于非渠道插件。对于渠道，请使用
-    `defineChannelPluginEntry` —— 参见 [Channel Plugins](/en/plugins/sdk-channel-plugins)。
-    有关完整的入口点选项，请参阅 [Entry Points](/en/plugins/sdk-entrypoints)。
+    `defineChannelPluginEntry` —— 参见 [Channel Plugins](/zh/plugins/sdk-channel-plugins)。
+    有关完整的入口点选项，请参阅 [Entry Points](/zh/plugins/sdk-entrypoints)。
 
   </Step>
 
@@ -141,25 +141,25 @@ read_when:
 
 | 功能            | 注册方法                                         | 详细指南                                                                           |
 | --------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------- |
-| 文本推理 (LLM)  | `api.registerProvider(...)`                      | [Provider Plugins](/en/plugins/sdk-provider-plugins)                               |
-| CLI 推理后端    | `api.registerCliBackend(...)`                    | [CLI Backends](/en/gateway/cli-backends)                                           |
-| 渠道 / 消息传递 | `api.registerChannel(...)`                       | [Channel Plugins](/en/plugins/sdk-channel-plugins)                                 |
-| 语音 (TTS/STT)  | `api.registerSpeechProvider(...)`                | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 实时转录        | `api.registerRealtimeTranscriptionProvider(...)` | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 实时语音        | `api.registerRealtimeVoiceProvider(...)`         | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 媒体理解        | `api.registerMediaUnderstandingProvider(...)`    | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 图像生成        | `api.registerImageGenerationProvider(...)`       | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 音乐生成        | `api.registerMusicGenerationProvider(...)`       | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 视频生成        | `api.registerVideoGenerationProvider(...)`       | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 网页获取        | `api.registerWebFetchProvider(...)`              | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 网络搜索        | `api.registerWebSearchProvider(...)`             | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 文本推理 (LLM)  | `api.registerProvider(...)`                      | [Provider Plugins](/zh/plugins/sdk-provider-plugins)                               |
+| CLI 推理后端    | `api.registerCliBackend(...)`                    | [CLI Backends](/zh/gateway/cli-backends)                                           |
+| 渠道 / 消息传递 | `api.registerChannel(...)`                       | [Channel Plugins](/zh/plugins/sdk-channel-plugins)                                 |
+| 语音 (TTS/STT)  | `api.registerSpeechProvider(...)`                | [Provider Plugins](/zh/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 实时转录        | `api.registerRealtimeTranscriptionProvider(...)` | [Provider Plugins](/zh/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 实时语音        | `api.registerRealtimeVoiceProvider(...)`         | [Provider Plugins](/zh/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 媒体理解        | `api.registerMediaUnderstandingProvider(...)`    | [Provider Plugins](/zh/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 图像生成        | `api.registerImageGenerationProvider(...)`       | [Provider Plugins](/zh/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 音乐生成        | `api.registerMusicGenerationProvider(...)`       | [Provider Plugins](/zh/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 视频生成        | `api.registerVideoGenerationProvider(...)`       | [Provider Plugins](/zh/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 网页获取        | `api.registerWebFetchProvider(...)`              | [Provider Plugins](/zh/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 网络搜索        | `api.registerWebSearchProvider(...)`             | [Provider Plugins](/zh/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
 | Agent 工具      | `api.registerTool(...)`                          | 如下                                                                               |
-| 自定义命令      | `api.registerCommand(...)`                       | [Entry Points](/en/plugins/sdk-entrypoints)                                        |
-| 事件钩子        | `api.registerHook(...)`                          | [Entry Points](/en/plugins/sdk-entrypoints)                                        |
-| HTTP 路由       | `api.registerHttpRoute(...)`                     | [Internals](/en/plugins/architecture#gateway-http-routes)                          |
-| CLI 子命令      | `api.registerCli(...)`                           | [Entry Points](/en/plugins/sdk-entrypoints)                                        |
+| 自定义命令      | `api.registerCommand(...)`                       | [Entry Points](/zh/plugins/sdk-entrypoints)                                        |
+| 事件钩子        | `api.registerHook(...)`                          | [Entry Points](/zh/plugins/sdk-entrypoints)                                        |
+| HTTP 路由       | `api.registerHttpRoute(...)`                     | [Internals](/zh/plugins/architecture#gateway-http-routes)                          |
+| CLI 子命令      | `api.registerCli(...)`                           | [Entry Points](/zh/plugins/sdk-entrypoints)                                        |
 
-有关完整的注册 API，请参阅 [SDK Overview](/en/plugins/sdk-overview#registration-api)。
+有关完整的注册 API，请参阅 [SDK Overview](/zh/plugins/sdk-overview#registration-api)。
 
 如果您的插件注册了自定义网关 RPC 方法，请将它们保持在特定于插件的前缀上。核心管理员命名空间（`config.*`、
 `exec.approvals.*`、`wizard.*`、`update.*`）保留不变，并且总是解析为
@@ -179,7 +179,7 @@ read_when:
 
 如果自定义批准管道需要检测同样的有界回退情况，请优先使用 `openclaw/plugin-sdk/error-runtime` 中的 `isApprovalNotFoundError`，而不是手动匹配批准过期字符串。
 
-有关详细信息，请参阅 [SDK Overview hook decision semantics](/en/plugins/sdk-overview#hook-decision-semantics)。
+有关详细信息，请参阅 [SDK Overview hook decision semantics](/zh/plugins/sdk-overview#hook-decision-semantics)。
 
 ## 注册代理工具
 
@@ -236,7 +236,7 @@ import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
 import { ... } from "openclaw/plugin-sdk";
 ```
 
-有关完整的子路径参考，请参阅 [SDK Overview](/en/plugins/sdk-overview)。
+有关完整的子路径参考，请参阅 [SDK Overview](/zh/plugins/sdk-overview)。
 
 在你的插件内部，对于内部导入，请使用本地 barrel 文件（`api.ts`，`runtime-api.ts`）——永远不要通过其 SDK 路径导入你自己的插件。
 
@@ -272,30 +272,30 @@ import { ... } from "openclaw/plugin-sdk";
 ## 后续步骤
 
 <CardGroup cols={2}>
-  <Card title="渠道插件" icon="messages-square" href="/en/plugins/sdk-channel-plugins">
+  <Card title="渠道插件" icon="messages-square" href="/zh/plugins/sdk-channel-plugins">
     构建消息渠道插件
   </Card>
-  <Card title="Provider Plugins" icon="cpu" href="/en/plugins/sdk-provider-plugins">
+  <Card title="Provider Plugins" icon="cpu" href="/zh/plugins/sdk-provider-plugins">
     构建模型提供商插件
   </Card>
-  <Card title="SDK Overview" icon="book-open" href="/en/plugins/sdk-overview">
+  <Card title="SDK Overview" icon="book-open" href="/zh/plugins/sdk-overview">
     导入映射和注册 API 参考
   </Card>
-  <Card title="Runtime Helpers" icon="settings" href="/en/plugins/sdk-runtime">
+  <Card title="Runtime Helpers" icon="settings" href="/zh/plugins/sdk-runtime">
     通过 api.runtime 进行 TTS、搜索、子代理操作
   </Card>
-  <Card title="Testing" icon="test-tubes" href="/en/plugins/sdk-testing">
+  <Card title="Testing" icon="test-tubes" href="/zh/plugins/sdk-testing">
     测试工具和模式
   </Card>
-  <Card title="Plugin Manifest" icon="file-" href="/en/plugins/manifest">
+  <Card title="Plugin Manifest" icon="file-" href="/zh/plugins/manifest">
     完整清单架构参考
   </Card>
 </CardGroup>
 
 ## 相关
 
-- [插件架构](/en/plugins/architecture) — 内部架构深入探讨
-- [SDK 概述](/en/plugins/sdk-overview) — 插件 SDK 参考
-- [清单](/en/plugins/manifest) — 插件清单格式
-- [渠道插件](/en/plugins/sdk-channel-plugins) — 构建渠道插件
-- [提供商插件](/en/plugins/sdk-provider-plugins) — 构建提供商插件
+- [插件架构](/zh/plugins/architecture) — 内部架构深入探讨
+- [SDK 概述](/zh/plugins/sdk-overview) — 插件 SDK 参考
+- [清单](/zh/plugins/manifest) — 插件清单格式
+- [渠道插件](/zh/plugins/sdk-channel-plugins) — 构建渠道插件
+- [提供商插件](/zh/plugins/sdk-provider-plugins) — 构建提供商插件

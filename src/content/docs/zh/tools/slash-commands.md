@@ -88,7 +88,7 @@ title: "斜杠命令"
 目前可用的内置命令：
 
 - `/new [model]` 开始一个新会话；`/reset` 是重置别名。
-- `/compact [instructions]` 压缩会话上下文。参见 [/concepts/compaction](/en/concepts/compaction)。
+- `/compact [instructions]` 压缩会话上下文。参见 [/concepts/compaction](/zh/concepts/compaction)。
 - `/stop` 中止当前运行。
 - `/session idle <duration|off>` 和 `/session max-age <duration|off>` 管理线程绑定过期。
 - `/think <off|minimal|low|medium|high|xhigh>` 设置思考级别。别名：`/thinking`、`/t`。
@@ -112,7 +112,7 @@ title: "斜杠命令"
 - `/skill <name> [input]` 按名称运行技能。
 - `/allowlist [list|add|remove] ...` 管理允许列表条目。纯文本。
 - `/approve <id> <decision>` 解决执行批准提示。
-- `/btw <question>` 提出一个附带问题，而不更改未来的会话上下文。参见 [/tools/btw](/en/tools/btw)。
+- `/btw <question>` 提出一个附带问题，而不更改未来的会话上下文。参见 [/tools/btw](/zh/tools/btw)。
 - `/subagents list|kill|log|info|send|steer|spawn` 管理当前会话的子代理运行。
 - `/acp spawn|cancel|steer|close|sessions|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|help` 管理 ACP 会话和运行时选项。
 - `/focus <target>` 将当前的 Discord 线程或 Telegram 主题/对话绑定到会话目标。
@@ -125,7 +125,7 @@ title: "斜杠命令"
 - `/plugins list|inspect|show|get|install|enable|disable` 检查或修改插件状态。`/plugin` 是别名。写入仅限所有者。需要 `commands.plugins: true`。
 - `/debug show|set|unset|reset` 管理仅运行时的配置覆盖。仅限所有者。需要 `commands.debug: true`。
 - `/usage off|tokens|full|cost` 控制每次响应的使用页脚或打印本地成本摘要。
-- `/tts on|off|status|provider|limit|summary|audio|help` 控制 TTS。请参阅 [/tools/tts](/en/tools/tts)。
+- `/tts on|off|status|provider|limit|summary|audio|help` 控制 TTS。请参阅 [/tools/tts](/zh/tools/tts)。
 - 启用后，`/restart` 会重启 OpenClaw。默认：启用；设置 `commands.restart: false` 以禁用它。
 - `/activation mention|always` 设置组激活模式。
 - `/send on|off|inherit` 设置发送策略。仅限所有者。
@@ -146,12 +146,12 @@ Dock 命令由支持原生命令的渠道插件生成。当前捆绑的集合：
 
 捆绑的插件可以添加更多斜杠命令。此仓库中当前捆绑的命令：
 
-- `/dreaming [on|off|status|help]` 切换记忆做梦功能。请参阅 [Dreaming](/en/concepts/dreaming)。
-- `/pair [qr|status|pending|approve|cleanup|notify]` 管理设备配对/设置流程。请参阅 [Pairing](/en/channels/pairing)。
+- `/dreaming [on|off|status|help]` 切换记忆做梦功能。请参阅 [Dreaming](/zh/concepts/dreaming)。
+- `/pair [qr|status|pending|approve|cleanup|notify]` 管理设备配对/设置流程。请参阅 [Pairing](/zh/channels/pairing)。
 - `/phone status|arm <camera|screen|writes|all> [duration]|disarm` 临时启用高风险电话节点命令。
 - `/voice status|list [limit]|set <voiceId|name>` 管理 Talk 语音配置。在 Discord 上，原生命令名称是 `/talkvoice`。
-- `/card ...` 发送 LINE 富卡片预设。请参阅 [LINE](/en/channels/line)。
-- `/codex status|models|threads|resume|compact|review|account|mcp|skills` 检查并控制捆绑的 Codex 应用服务器线束。请参阅 [Codex Harness](/en/plugins/codex-harness)。
+- `/card ...` 发送 LINE 富卡片预设。请参阅 [LINE](/zh/channels/line)。
+- `/codex status|models|threads|resume|compact|review|account|mcp|skills` 检查并控制捆绑的 Codex 应用服务器线束。请参阅 [Codex Harness](/zh/plugins/codex-harness)。
 - 仅限 QQBot 的命令：
   - `/bot-ping`
   - `/bot-version`
@@ -180,11 +180,11 @@ Dock 命令由支持原生命令的渠道插件生成。当前捆绑的集合：
 - `/plugins enable|disable` 会更新插件配置并可能会提示重新启动。
 - Discord 专属原生命令：`/vc join|leave|status` 控制语音频道（需要 `channels.discord.voice` 和原生命令；不以文本形式提供）。
 - Discord 线程绑定命令（`/focus`、`/unfocus`、`/agents`、`/session idle`、`/session max-age`）需要启用有效的线程绑定（`session.threadBindings.enabled` 和/或 `channels.discord.threadBindings.enabled`）。
-- ACP 命令参考和运行时行为：[ACP Agents](/en/tools/acp-agents)。
+- ACP 命令参考和运行时行为：[ACP Agents](/zh/tools/acp-agents)。
 - `/verbose` 旨在用于调试和增加可见性；正常使用时请将其保持**关闭**状态。
 - `/trace` 比 `/verbose` 范围更窄：它仅显示插件拥有的跟踪/调试行，并保持正常的详细工具输出关闭。
 - `/fast on|off` 会持久化会话覆盖设置。使用会话 UI 的 `inherit` 选项来清除它并回退到配置默认值。
-- `/fast` 是特定于提供商的：OpenAI/OpenAI Codex 在原生响应端点上将其映射到 `service_tier=priority`，而直接公开的 Anthropic 请求（包括发送到 `api.anthropic.com` 的 OAuth 认证流量）将其映射到 `service_tier=auto` 或 `standard_only`。请参阅 [OpenAI](/en/providers/openai) 和 [Anthropic](/en/providers/anthropic)。
+- `/fast` 是特定于提供商的：OpenAI/OpenAI Codex 在原生响应端点上将其映射到 `service_tier=priority`，而直接公开的 Anthropic 请求（包括发送到 `api.anthropic.com` 的 OAuth 认证流量）将其映射到 `service_tier=auto` 或 `standard_only`。请参阅 [OpenAI](/zh/providers/openai) 和 [Anthropic](/zh/providers/anthropic)。
 - 工具失败摘要仍会在相关时显示，但仅当 `/verbose` 为 `on` 或 `full` 时才会包含详细的失败文本。
 - `/reasoning`、`/verbose` 和 `/trace` 在群组设置中存在风险：它们可能会显示您无意暴露的内部推理、工具输出或插件诊断信息。建议将它们保持关闭状态，尤其是在群聊中。
 - `/model` 会立即持久化新的会话模型。
@@ -201,7 +201,7 @@ Dock 命令由支持原生命令的渠道插件生成。当前捆绑的集合：
   - `/skill <name> [input]` 按名称运行技能（当原生命令限制阻止为每个技能创建命令时很有用）。
   - 默认情况下，技能命令会作为普通请求转发给模型。
   - 技能可以选择声明 `command-dispatch: tool`，以将命令直接路由到工具（确定性，不经过模型）。
-  - 示例：`/prose`（OpenProse 插件）——请参阅 [OpenProse](/en/prose)。
+  - 示例：`/prose`（OpenProse 插件）——请参阅 [OpenProse](/zh/prose)。
 - **原生命令参数：** Discord 对动态选项使用自动完成（当您省略必需参数时显示按钮菜单）。当命令支持选项且您省略参数时，Telegram 和 Slack 会显示按钮菜单。
 
 ## `/tools`
@@ -377,4 +377,4 @@ Dock 命令由支持原生命令的渠道插件生成。当前捆绑的集合：
 ```
 
 有关完整的行为和客户端用户体验
-详细信息，请参阅 [BTW 附加问题](/en/tools/btw)。
+详细信息，请参阅 [BTW 附加问题](/zh/tools/btw)。

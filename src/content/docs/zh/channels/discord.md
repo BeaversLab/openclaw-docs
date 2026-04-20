@@ -10,13 +10,13 @@ title: "Discord"
 状态：已准备好通过官方 Discord Gateway 网关支持私信和频道。
 
 <CardGroup cols={3}>
-  <Card title="Pairing" icon="link" href="/en/channels/pairing">
+  <Card title="Pairing" icon="link" href="/zh/channels/pairing">
     Discord 私信默认为配对模式。
   </Card>
-  <Card title="Slash commands" icon="terminal" href="/en/tools/slash-commands">
+  <Card title="Slash commands" icon="terminal" href="/zh/tools/slash-commands">
     原生命令行为和命令目录。
   </Card>
-  <Card title="Channel 故障排除" icon="wrench" href="/en/channels/troubleshooting">
+  <Card title="Channel 故障排除" icon="wrench" href="/zh/channels/troubleshooting">
     跨渠道诊断和修复流程。
   </Card>
 </CardGroup>
@@ -139,7 +139,7 @@ openclaw gateway
 DISCORD_BOT_TOKEN=...
 ```
 
-        支持纯文本 `token` 值。在 env/file/exec 提供程序中也支持 SecretRef 值，用于 `channels.discord.token`。请参阅 [Secrets Management](/en/gateway/secrets)。
+        支持纯文本 `token` 值。在 env/file/exec 提供程序中也支持 SecretRef 值，用于 `channels.discord.token`。请参阅 [Secrets Management](/zh/gateway/secrets)。
 
       </Tab>
     </Tabs>
@@ -548,7 +548,7 @@ OpenClaw 支持针对代理消息的 Discord 组件 v2 容器。使用带有 `co
 - 原生命令身份验证使用与普通消息处理相同的 Discord 允许列表/策略。
 - 对于未获授权的用户，命令在 Discord UI 中可能仍然可见；执行时仍会强制执行 OpenClaw 身份验证并返回“未授权”。
 
-有关命令目录和行为，请参阅 [Slash commands](/en/tools/slash-commands)。
+有关命令目录和行为，请参阅 [Slash commands](/zh/tools/slash-commands)。
 
 默认斜杠命令设置：
 
@@ -690,7 +690,7 @@ OpenClaw 支持针对代理消息的 Discord 组件 v2 容器。使用带有 `co
     - `spawnAcpSessions` 必须为 true 才能为 ACP（`/acp spawn ... --thread ...` 或 `sessions_spawn({ runtime: "acp", thread: true })`）自动创建/绑定线程。
     - 如果某个帐户禁用了线程绑定，`/focus` 和相关线程绑定操作将不可用。
 
-    参见 [Sub-agents](/en/tools/subagents)、[ACP Agents](/en/tools/acp-agents) 和 [Configuration Reference](/en/gateway/configuration-reference)。
+    参见 [Sub-agents](/zh/tools/subagents)、[ACP Agents](/zh/tools/acp-agents) 和 [Configuration Reference](/zh/gateway/configuration-reference)。
 
   </Accordion>
 
@@ -759,7 +759,7 @@ OpenClaw 支持针对代理消息的 Discord 组件 v2 容器。使用带有 `co
     - 临时线程绑定仍然有效，并在活动期间可以覆盖目标解析。
     - 仅当 OpenClaw 需要通过 `--thread auto|here` 创建/绑定子线程时，才需要 `spawnAcpSessions`。对于当前渠道中的 `/acp spawn ... --bind here` 则不需要。
 
-    有关绑定行为的详细信息，请参阅 [ACP Agents](/en/tools/acp-agents)。
+    有关绑定行为的详细信息，请参阅 [ACP Agents](/zh/tools/acp-agents)。
 
   </Accordion>
 
@@ -980,7 +980,7 @@ OpenClaw 支持针对代理消息的 Discord 组件 v2 容器。使用带有 `co
     未知的审批 ID，请验证审批人解析、功能启用，
     以及传递的审批 ID 类型是否与待处理请求匹配。
 
-    相关文档：[执行审批](/en/tools/exec-approvals)
+    相关文档：[执行审批](/zh/tools/exec-approvals)
 
   </Accordion>
 </AccordionGroup>
@@ -1218,7 +1218,7 @@ openclaw logs --follow
 
 主要参考：
 
-- [配置参考 - Discord](/en/gateway/configuration-reference#discord)
+- [配置参考 - Discord](/zh/gateway/configuration-reference#discord)
 
 高优先级 Discord 字段：
 
@@ -1245,10 +1245,10 @@ openclaw logs --follow
 
 ## 相关
 
-- [配对](/en/channels/pairing)
-- [组](/en/channels/groups)
-- [通道路由](/en/channels/channel-routing)
-- [安全性](/en/gateway/security)
-- [多代理路由](/en/concepts/multi-agent)
-- [故障排除](/en/channels/troubleshooting)
-- [斜杠命令](/en/tools/slash-commands)
+- [配对](/zh/channels/pairing)
+- [组](/zh/channels/groups)
+- [通道路由](/zh/channels/channel-routing)
+- [安全性](/zh/gateway/security)
+- [多代理路由](/zh/concepts/multi-agent)
+- [故障排除](/zh/channels/troubleshooting)
+- [斜杠命令](/zh/tools/slash-commands)

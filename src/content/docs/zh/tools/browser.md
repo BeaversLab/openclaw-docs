@@ -40,7 +40,7 @@ openclaw browser --browser-profile openclaw snapshot
 
 如果看到“Browser disabled”，请在配置中启用它（见下文）并重启 Gateway(网关)。
 
-如果 `openclaw browser` 完全丢失，或者代理表示浏览器工具不可用，请跳转到 [缺失浏览器命令或工具](/en/tools/browser#missing-browser-command-or-tool)。
+如果 `openclaw browser` 完全丢失，或者代理表示浏览器工具不可用，请跳转到 [缺失浏览器命令或工具](/zh/tools/browser#missing-browser-command-or-tool)。
 
 ## 插件控制
 
@@ -588,7 +588,7 @@ docker compose run --rm openclaw-cli \
 
 要持久化浏览器下载，请设置 `PLAYWRIGHT_BROWSERS_PATH`（例如，
 `/home/node/.cache/ms-playwright`）并确保 `/home/node` 通过
-`OPENCLAW_HOME_VOLUME` 或绑定挂载被持久化。参见 [Docker](/en/install/docker)。
+`OPENCLAW_HOME_VOLUME` 或绑定挂载被持久化。参见 [Docker](/zh/install/docker)。
 
 ## 工作原理（内部）
 
@@ -704,7 +704,7 @@ docker compose run --rm openclaw-cli \
   - `--format ai` (安装 Playwright 时的默认设置)：返回带有数字引用 (`aria-ref="<n>"`) 的 AI 快照。
   - `--format aria`：返回辅助功能树 (无引用；仅供检查)。
   - `--efficient` (或 `--mode efficient`)：紧凑的角色快照预设 (interactive + compact + depth + lower maxChars)。
-  - 配置默认值（仅限工具/CLI）：设置 `browser.snapshotDefaults.mode: "efficient"` 以便在调用方未传递模式时使用高效快照（参见 [Gateway(网关) configuration](/en/gateway/configuration-reference#browser)）。
+  - 配置默认值（仅限工具/CLI）：设置 `browser.snapshotDefaults.mode: "efficient"` 以便在调用方未传递模式时使用高效快照（参见 [Gateway(网关) configuration](/zh/gateway/configuration-reference#browser)）。
   - 角色快照选项（`--interactive`、`--compact`、`--depth`、`--selector`）强制使用基于角色的快照，并带有类似 `ref=e12` 的引用。
   - `--frame "<iframe selector>"` 将角色快照的作用域限定在一个 iframe（与类似 `e12` 的角色引用配对）。
   - `--interactive` 输出一个扁平的、易于选择的交互元素列表（最适合驱动操作）。
@@ -807,7 +807,7 @@ JSON 中的角色快照包含 `refs` 以及一个小的 `stats` 块（行/字符
 - `browser act kind=evaluate` / `openclaw browser evaluate` 和 `wait --fn`
   在页面上下文中执行任意 JavaScript。提示注入可能会引导
   这些操作。如果不需要，可以使用 `browser.evaluateEnabled=false` 禁用。
-- 有关登录和反机器人说明（X/Twitter 等），请参阅 [Browser login + X/Twitter posting](/en/tools/browser-login)。
+- 有关登录和反机器人说明（X/Twitter 等），请参阅 [Browser login + X/Twitter posting](/zh/tools/browser-login)。
 - 保持 Gateway(网关)/节点主机的私密性（仅限环回或 tailnet）。
 - 远程 CDP 端点功能强大；请对其进行隧道传输和保护。
 
@@ -828,10 +828,10 @@ JSON 中的角色快照包含 `refs` 以及一个小的 `stats` 块（行/字符
 ## 故障排除
 
 有关 Linux 特定问题（尤其是 snap Chromium），请参阅
-[浏览器故障排除](/en/tools/browser-linux-troubleshooting)。
+[浏览器故障排除](/zh/tools/browser-linux-troubleshooting)。
 
 有关 WSL2 Gateway(网关) + Windows Chrome 分离主机设置，请参阅
-[WSL2 + Windows + 远程 Chrome CDP 故障排除](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)。
+[WSL2 + Windows + 远程 Chrome CDP 故障排除](/zh/tools/browser-wsl2-windows-remote-cdp-troubleshooting)。
 
 ### CDP 启动失败与导航 SSRF 阻止
 
@@ -912,6 +912,6 @@ openclaw browser --browser-profile openclaw open https://example.com
 
 ## 相关
 
-- [工具概述](/en/tools) — 所有可用的代理工具
-- [沙箱隔离](/en/gateway/sandboxing) — 沙箱隔离环境中的浏览器控制
-- [安全性](/en/gateway/security) — 浏览器控制的风险与加固
+- [工具概述](/zh/tools) — 所有可用的代理工具
+- [沙箱隔离](/zh/gateway/sandboxing) — 沙箱隔离环境中的浏览器控制
+- [安全性](/zh/gateway/security) — 浏览器控制的风险与加固

@@ -9,8 +9,8 @@ title: "CLI de modelos"
 
 # CLI de modelos
 
-Consulte [/concepts/model-failover](/en/concepts/model-failover) para obtener información sobre la rotación de perfiles de autenticación, los tiempos de espera y cómo interactúa con los respaldos.
-Resumen rápido del proveedor + ejemplos: [/concepts/model-providers](/en/concepts/model-providers).
+Consulte [/concepts/model-failover](/es/concepts/model-failover) para obtener información sobre la rotación de perfiles de autenticación, los tiempos de espera y cómo interactúa con los respaldos.
+Resumen rápido del proveedor + ejemplos: [/concepts/model-providers](/es/concepts/model-providers).
 
 ## Cómo funciona la selección de modelos
 
@@ -30,7 +30,7 @@ Relacionado:
 - `agents.defaults.imageGenerationModel` es utilizado por la capacidad compartida de generación de imágenes. Si se omite, `image_generate` aún puede inferir un proveedor predeterminado respaldado por autenticación. Primero intenta el proveedor predeterminado actual y luego los proveedores de generación de imágenes registrados restantes en orden de ID de proveedor. Si establece un proveedor/modelo específico, también configure la clave de autenticación/API de ese proveedor.
 - `agents.defaults.musicGenerationModel` es utilizado por la capacidad compartida de generación de música. Si se omite, `music_generate` aún puede inferir un proveedor predeterminado respaldado por autenticación. Primero intenta el proveedor predeterminado actual y luego los proveedores de generación de música registrados restantes en orden de ID de proveedor. Si establece un proveedor/modelo específico, también configure la clave de autenticación/API de ese proveedor.
 - `agents.defaults.videoGenerationModel` es utilizado por la capacidad compartida de generación de videos. Si se omite, `video_generate` aún puede inferir un proveedor predeterminado respaldado por autenticación. Primero intenta el proveedor predeterminado actual y luego los proveedores de generación de video registrados restantes en orden de ID de proveedor. Si establece un proveedor/modelo específico, también configure la clave de autenticación/API de ese proveedor.
-- Los valores predeterminados por agente pueden anular `agents.defaults.model` mediante `agents.list[].model` más enlaces (consulte [/concepts/multi-agent](/en/concepts/multi-agent)).
+- Los valores predeterminados por agente pueden anular `agents.defaults.model` mediante `agents.list[].model` más enlaces (consulte [/concepts/multi-agent](/es/concepts/multi-agent)).
 
 ## Política rápida de modelos
 
@@ -62,7 +62,7 @@ Las referencias de modelos se normalizan a minúsculas. Los alias de proveedores
 a `zai/*`.
 
 Los ejemplos de configuración de proveedores (incluyendo OpenCode) se encuentran en
-[/providers/opencode](/en/providers/opencode).
+[/providers/opencode](/es/providers/opencode).
 
 ## "Modelo no permitido" (y por qué se detienen las respuestas)
 
@@ -127,7 +127,7 @@ Notas:
      en su lugar recurre al primer proveedor/modelo configurado para evitar
      mostrar un predeterminado de proveedor eliminado obsoleto.
 
-Comportamiento/configuración completa del comando: [Slash commands](/en/tools/slash-commands).
+Comportamiento/configuración completa del comando: [Slash commands](/es/tools/slash-commands).
 
 ## Comandos CLI
 
@@ -212,7 +212,7 @@ Los resultados del escaneo se clasifican por:
 Entrada
 
 - Lista `/models` de OpenRouter (filtro `:free`)
-- Requiere clave API de OpenRouter de perfiles de autenticación o `OPENROUTER_API_KEY` (ver [/environment](/en/help/environment))
+- Requiere clave API de OpenRouter de perfiles de autenticación o `OPENROUTER_API_KEY` (ver [/environment](/es/help/environment))
 - Filtros opcionales: `--max-age-days`, `--min-params`, `--provider`, `--max-candidates`
 - Controles de sondeo: `--timeout`, `--concurrency`
 
@@ -239,9 +239,9 @@ Esto se aplica siempre que OpenClaw regenera `models.json`, incluidas las rutas 
 
 ## Relacionado
 
-- [Proveedores de modelos](/en/concepts/model-providers) — enrutamiento y autenticación de proveedores
-- [Conmutación por error de modelos](/en/concepts/model-failover) — cadenas de reserva
-- [Generación de imágenes](/en/tools/image-generation) — configuración del modelo de imágenes
-- [Generación de música](/en/tools/music-generation) — configuración del modelo de música
-- [Generación de vídeo](/en/tools/video-generation) — configuración del modelo de vídeo
-- [Referencia de configuración](/en/gateway/configuration-reference#agent-defaults) — claves de configuración del modelo
+- [Proveedores de modelos](/es/concepts/model-providers) — enrutamiento y autenticación de proveedores
+- [Conmutación por error de modelos](/es/concepts/model-failover) — cadenas de reserva
+- [Generación de imágenes](/es/tools/image-generation) — configuración del modelo de imágenes
+- [Generación de música](/es/tools/music-generation) — configuración del modelo de música
+- [Generación de vídeo](/es/tools/video-generation) — configuración del modelo de vídeo
+- [Referencia de configuración](/es/gateway/configuration-reference#agent-defaults) — claves de configuración del modelo

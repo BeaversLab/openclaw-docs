@@ -17,23 +17,23 @@ La plupart des opérations passent par la Gateway (`openclaw gateway`), un proce
 
 - **Bouclage en priorité** : le WS de la Gateway est par défaut sur `ws://127.0.0.1:18789`.
   Les liaisons non-bouclage nécessitent un chemin d'authentification de passerelle valide : authentification par jeton/mot de passe partagé (shared-secret), ou un déploiement `trusted-proxy` non-bouclage correctement configuré.
-- **Une Gateway par hôte** est recommandée. Pour l'isolement, exécutez plusieurs passerelles avec des profils et des ports isolés ([Multiple Gateways](/en/gateway/multiple-gateways)).
+- **Une Gateway par hôte** est recommandée. Pour l'isolement, exécutez plusieurs passerelles avec des profils et des ports isolés ([Multiple Gateways](/fr/gateway/multiple-gateways)).
 - **L'hôte Canvas** est servi sur le même port que la Gateway (`/__openclaw__/canvas/`, `/__openclaw__/a2ui/`), protégé par l'authentification Gateway lorsqu'il est lié au-delà du bouclage.
-- **L'accès à distance** se fait généralement via un tunnel SSH ou un VPN Tailscale ([Remote Access](/en/gateway/remote)).
+- **L'accès à distance** se fait généralement via un tunnel SSH ou un VPN Tailscale ([Remote Access](/fr/gateway/remote)).
 
 Références clés :
 
-- [Architecture de la Gateway](/en/concepts/architecture)
-- [Protocole de la Gateway](/en/gateway/protocol)
-- [Guide de la Gateway](/en/gateway)
-- [Surfaces Web + modes de liaison](/en/web)
+- [Architecture de la Gateway](/fr/concepts/architecture)
+- [Protocole de la Gateway](/fr/gateway/protocol)
+- [Guide de la Gateway](/fr/gateway)
+- [Surfaces Web + modes de liaison](/fr/web)
 
 ## Appairage + identité
 
-- [Aperçu du couplage (DM + nœuds)](/en/channels/pairing)
-- [Couplage de nœud appartenant à la Gateway](/en/gateway/pairing)
-- [CLI des appareils (couplage + rotation des jetons)](/en/cli/devices)
-- [CLI de couplage (approbations DM)](/en/cli/pairing)
+- [Aperçu du couplage (DM + nœuds)](/fr/channels/pairing)
+- [Couplage de nœud appartenant à la Gateway](/fr/gateway/pairing)
+- [CLI des appareils (couplage + rotation des jetons)](/fr/cli/devices)
+- [CLI de couplage (approbations DM)](/fr/cli/pairing)
 
 Confiance locale :
 
@@ -43,21 +43,21 @@ Confiance locale :
 
 ## Discovery + transports
 
-- [Discovery & transports](/en/gateway/discovery)
-- [Bonjour / mDNS](/en/gateway/bonjour)
-- [Accès à distance (SSH)](/en/gateway/remote)
-- [Tailscale](/en/gateway/tailscale)
+- [Discovery & transports](/fr/gateway/discovery)
+- [Bonjour / mDNS](/fr/gateway/bonjour)
+- [Accès à distance (SSH)](/fr/gateway/remote)
+- [Tailscale](/fr/gateway/tailscale)
 
 ## Nodes + transports
 
-- [Aperçu des nœuds](/en/nodes)
-- [Protocole de pont (legacy nodes, historique)](/en/gateway/bridge-protocol)
-- [Guide du nœud : iOS](/en/platforms/ios)
-- [Guide du nœud : Android](/en/platforms/android)
+- [Aperçu des nœuds](/fr/nodes)
+- [Protocole de pont (legacy nodes, historique)](/fr/gateway/bridge-protocol)
+- [Guide du nœud : iOS](/fr/platforms/ios)
+- [Guide du nœud : Android](/fr/platforms/android)
 
 ## Sécurité
 
-- [Aperçu de la sécurité](/en/gateway/security)
-- [Référence de configuration de la Gateway](/en/gateway/configuration)
-- [Dépannage](/en/gateway/troubleshooting)
-- [Doctor](/en/gateway/doctor)
+- [Aperçu de la sécurité](/fr/gateway/security)
+- [Référence de configuration de la Gateway](/fr/gateway/configuration)
+- [Dépannage](/fr/gateway/troubleshooting)
+- [Doctor](/fr/gateway/doctor)

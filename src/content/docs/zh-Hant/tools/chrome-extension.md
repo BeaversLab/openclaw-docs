@@ -15,7 +15,7 @@ OpenClaw Chrome 擴充功能讓代理程式控制您**現有的 Chrome 分頁** 
 
 如果您想要 Chrome 官方的 DevTools MCP 附加流程，而不是 OpenClaw
 擴充功能中繼，請改用 `existing-session` 瀏覽器設定檔。請參閱
-[瀏覽器](/en/tools/browser#chrome-existing-session-via-mcp)。若要查看 Chrome 自己的
+[瀏覽器](/zh-Hant/tools/browser#chrome-existing-session-via-mcp)。若要查看 Chrome 自己的
 設定文件，請參閱 [Chrome for Developers: Use Chrome DevTools MCP with your
 browser session](https://developer.chrome.com/blog/chrome-devtools-mcp-debug-your-browser-session)
 以及 [Chrome DevTools MCP README](https://github.com/ChromeDevTools/chrome-devtools-mcp)。
@@ -198,6 +198,6 @@ CLI 刻意 **不**會印出 `node_modules` 路徑。請務必先執行 `openclaw
 
 相關：
 
-- 瀏覽器工具概覽：[Browser](/en/tools/browser)
-- 安全性稽核：[Security](/en/gateway/security)
-- Tailscale 設定：[Tailscale](/en/gateway/tailscale)
+- 瀏覽器工具概覽：[Browser](/zh-Hant/tools/browser)
+- 安全性稽核：[Security](/zh-Hant/gateway/security)
+- Tailscale 設定：[Tailscale](/zh-Hant/gateway/tailscale)

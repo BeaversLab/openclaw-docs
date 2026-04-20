@@ -157,7 +157,7 @@ Au niveau architectural, la répartition est la suivante :
 - les fichiers de scénario markdown sous `qa/scenarios/` définissent l'exécution du test ; `qa-lab` fournit la surface d'exécution réutilisable qui les exécute.
 
 Les conseils d'adoption destinés aux mainteneurs pour les nouveaux adaptateurs de channel se trouvent dans
-[Testing](/en/help/testing#adding-a-channel-to-qa).
+[Testing](/fr/help/testing#adding-a-channel-to-qa).
 
 ## Rapports
 
@@ -192,6 +192,6 @@ La commande exécute des processus enfants de passerelle QA locaux, et non Docke
 
 ## Documentation connexe
 
-- [Testing](/en/help/testing)
-- [QA Channel](/en/channels/qa-channel)
-- [Dashboard](/en/web/dashboard)
+- [Testing](/fr/help/testing)
+- [QA Channel](/fr/channels/qa-channel)
+- [Dashboard](/fr/web/dashboard)

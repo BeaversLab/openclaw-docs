@@ -17,7 +17,7 @@ title: "acp"
 运行时。它专注于会话路由、提示传递和基本的流式
 更新。
 
-如果您希望外部 MCP 客户端直接与 OpenClaw 渠道对话而不是托管 ACP 驱动会话，请改用 [`openclaw mcp serve`](/en/cli/mcp)。
+如果您希望外部 MCP 客户端直接与 OpenClaw 渠道对话而不是托管 ACP 驱动会话，请改用 [`openclaw mcp serve`](/zh/cli/mcp)。
 
 ## 这并不是什么
 
@@ -29,12 +29,12 @@ title: "acp"
 - IDE 或 ACP 客户端连接到 OpenClaw
 - OpenClaw 将该工作转发到 Gateway(网关) 会话
 
-这与 [ACP Agents](/en/tools/acp-agents) 不同，后者中 OpenClaw 通过 `acpx` 运行外部驱动程序（如 Codex 或 Claude Code）。
+这与 [ACP Agents](/zh/tools/acp-agents) 不同，后者中 OpenClaw 通过 `acpx` 运行外部驱动程序（如 Codex 或 Claude Code）。
 
 快速规则：
 
 - 编辑器/客户端希望以 ACP 协议与 OpenClaw 通信：使用 `openclaw acp`
-- OpenClaw 应将 Codex/Claude/Gemini 作为 ACP 驱动程序启动：使用 `/acp spawn` 和 [ACP Agents](/en/tools/acp-agents)
+- OpenClaw 应将 Codex/Claude/Gemini 作为 ACP 驱动程序启动：使用 `/acp spawn` 和 [ACP Agents](/zh/tools/acp-agents)
 
 ## 兼容性 Matrix
 
@@ -154,7 +154,7 @@ openclaw acp --session agent:qa:bug-123
 
 网桥模式不支持每个会话的 `mcpServers`。如果 ACP 客户端在 `newSession` 或 `loadSession` 期间发送它们，网桥将返回明确的错误，而不是默默忽略它们。
 
-如果您希望 ACPX 支持的会话能够看到 OpenClaw 插件工具，请启用网关端的 ACPX 插件网桥，而不是尝试传递每个会话的 `mcpServers`。参见 [ACP Agents](/en/tools/acp-agents#plugin-tools-mcp-bridge)。
+如果您希望 ACPX 支持的会话能够看到 OpenClaw 插件工具，请启用网关端的 ACPX 插件网桥，而不是尝试传递每个会话的 `mcpServers`。参见 [ACP Agents](/zh/tools/acp-agents#plugin-tools-mcp-bridge)。
 
 ## 从 `acpx` 使用（Codex、Claude、其他 ACP 客户端）
 
@@ -253,7 +253,7 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 }
 ```
 
-在 [/concepts/会话](/en/concepts/session) 了解有关会话密钥的更多信息。
+在 [/concepts/会话](/zh/concepts/session) 了解有关会话密钥的更多信息。
 
 ## 选项
 

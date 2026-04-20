@@ -8,7 +8,7 @@ title: "社群外掛"
 
 # 社群外掛
 
-社群外掛是第三方套件，透過新通道、工具、提供者或其他功能來擴展 OpenClaw。它們由社群建置與維護，發佈於 [ClawHub](/en/tools/clawhub) 或 npm，並可透過單一指令安裝。
+社群外掛是第三方套件，透過新通道、工具、提供者或其他功能來擴展 OpenClaw。它們由社群建置與維護，發佈於 [ClawHub](/zh-Hant/tools/clawhub) 或 npm，並可透過單一指令安裝。
 
 ClawHub 是社區插件的官方發現平台。請不要僅為了在此列出您的插件以提高可見性而開啟僅包含文檔的 PR；請改為在 ClawHub 上發布。
 
@@ -93,8 +93,8 @@ openclaw plugins install @wecom/wecom-openclaw-plugin
 <Steps>
   <Step title="發布至 ClawHub 或 npm">
     您的外掛必須能透過 `openclaw plugins install \<package-name\>` 安裝。
-    發布至 [ClawHub](/en/tools/clawhub) (優先) 或 npm。
-    請參閱 [Building Plugins](/en/plugins/building-plugins) 以取得完整指南。
+    發布至 [ClawHub](/zh-Hant/tools/clawhub) (優先) 或 npm。
+    請參閱 [Building Plugins](/zh-Hant/plugins/building-plugins) 以取得完整指南。
 
   </Step>
 
@@ -124,6 +124,6 @@ openclaw plugins install @wecom/wecom-openclaw-plugin
 
 ## 相關
 
-- [Install and Configure Plugins](/en/tools/plugin) — 如何安裝任何外掛
-- [Building Plugins](/en/plugins/building-plugins) — 建立您自己的外掛
-- [Plugin Manifest](/en/plugins/manifest) — 設定檔結構描述
+- [Install and Configure Plugins](/zh-Hant/tools/plugin) — 如何安裝任何外掛
+- [Building Plugins](/zh-Hant/plugins/building-plugins) — 建立您自己的外掛
+- [Plugin Manifest](/zh-Hant/plugins/manifest) — 設定檔結構描述

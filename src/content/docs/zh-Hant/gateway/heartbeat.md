@@ -8,15 +8,15 @@ title: "Heartbeat"
 
 # Heartbeat (Gateway)
 
-> **心跳 vs Cron？** 請參閱 [自動化與任務](/en/automation) 以獲取關於何時使用何者的指南。
+> **心跳 vs Cron？** 請參閱 [自動化與任務](/zh-Hant/automation) 以獲取關於何時使用何者的指南。
 
 Heartbeat 在主會話中執行 **週期性代理輪次**，以便模型能夠
 呈現需要注意的事項，而不會對您造成干擾。
 
-心跳是排定的主工作階段輪次——它並**不**會建立 [背景任務](/en/automation/tasks) 記錄。
+心跳是排定的主工作階段輪次——它並**不**會建立 [背景任務](/zh-Hant/automation/tasks) 記錄。
 任務記錄是用於分離的工作（ACP 執行、子代理、獨立的 cron 工作）。
 
-疑難排解：[排定任務](/en/automation/cron-jobs#troubleshooting)
+疑難排解：[排定任務](/zh-Hant/automation/cron-jobs#troubleshooting)
 
 ## 快速入門（初學者）
 
@@ -68,9 +68,9 @@ Heartbeat 在主會話中執行 **週期性代理輪次**，以便模型能夠
   後續追蹤項目（收件匣、行事曆、提醒、佇列工作）並提出任何緊急事項。
 - **人員簽到**：「Checkup sometimes on your human during day time」（有時在白天檢查您的人類）會敦促
   偶爾輕量的「您需要什麼嗎？」訊息，但透過使用您設定的本地時區來避免夜間干擾
-  （請參閱 [/concepts/timezone](/en/concepts/timezone)）。
+  （請參閱 [/concepts/timezone](/zh-Hant/concepts/timezone)）。
 
-心跳可以對已完成的 [背景任務](/en/automation/tasks) 做出反應，但心跳執行本身並不會建立任務記錄。
+心跳可以對已完成的 [背景任務](/zh-Hant/automation/tasks) 做出反應，但心跳執行本身並不會建立任務記錄。
 
 如果您希望心跳執行非常特定的工作（例如「檢查 Gmail PubSub
 統計資料」或「驗證閘道健全狀態」），請將 `agents.defaults.heartbeat.prompt` （或
@@ -223,8 +223,8 @@ Heartbeat 在主會話中執行 **週期性代理輪次**，以便模型能夠
 - `isolatedSession`：若為 true，每次心跳會在沒有先前對話歷史的新會話中執行。使用與 cron `sessionTarget: "isolated"` 相同的隔離模式。大幅降低每次心跳的 token 成本。與 `lightContext: true` 結合以實現最大程度的節省。傳送路由仍使用主會話上下文。
 - `session`：心跳執行的可選會話金鑰。
   - `main` (預設)：代理的主會話。
-  - 明確的會話金鑰 (從 `openclaw sessions --json` 複製或來自 [sessions CLI](/en/cli/sessions))。
-  - 會話金鑰格式：請參閱 [Sessions](/en/concepts/session) 和 [Groups](/en/channels/groups)。
+  - 明確的會話金鑰 (從 `openclaw sessions --json` 複製或來自 [sessions CLI](/zh-Hant/cli/sessions))。
+  - 會話金鑰格式：請參閱 [Sessions](/zh-Hant/concepts/session) 和 [Groups](/zh-Hant/channels/groups)。
 - `target`：
   - `last`：傳送到最後使用的外部頻道。
   - 明確頻道：任何已設定的頻道或外掛 ID，例如 `discord`、`matrix`、`telegram` 或 `whatsapp`。
@@ -260,7 +260,7 @@ Heartbeat 在主會話中執行 **週期性代理輪次**，以便模型能夠
 - 如果僅停用警示傳送，OpenClaw 仍可執行心跳、更新到期任務的時間戳記、還原工作階段閒置時間戳記，並抑制外寄警示內容。
 - 僅限心跳的回覆**不會**保持工作階段活躍；會還原最後一個 `updatedAt`
   以使閒置到期正常運作。
-- 分離的[背景任務](/en/automation/tasks)可以將系統事件加入佇列，並在主工作階段應快速注意某事時喚醒心跳。該喚醒動作不會讓心跳執行背景任務。
+- 分離的[背景任務](/zh-Hant/automation/tasks)可以將系統事件加入佇列，並在主工作階段應快速注意某事時喚醒心跳。該喚醒動作不會讓心跳執行背景任務。
 
 ## 可見性控制
 
@@ -423,7 +423,7 @@ openclaw system event --text "Check for urgent follow-ups" --mode now
 
 ## 相關
 
-- [Automation & Tasks](/en/automation) — 所有自動化機制一覽
-- [Background Tasks](/en/automation/tasks) — 如何追蹤分離的工作
-- [時區](/en/concepts/timezone) — 時區如何影響心跳排程
-- [疑難排解](/en/automation/cron-jobs#troubleshooting) — 自動化問題的偵錯
+- [Automation & Tasks](/zh-Hant/automation) — 所有自動化機制一覽
+- [Background Tasks](/zh-Hant/automation/tasks) — 如何追蹤分離的工作
+- [時區](/zh-Hant/concepts/timezone) — 時區如何影響心跳排程
+- [疑難排解](/zh-Hant/automation/cron-jobs#troubleshooting) — 自動化問題的偵錯

@@ -9,7 +9,7 @@ title: "Protocole de pont"
 
 # Protocole de pont (transport de nœud hérité)
 
-<Warning>Le pont TCP a été **supprimé**. Les versions actuelles d'OpenClaw n'incluent plus le listener de pont et les clés de configuration `bridge.*` ne sont plus dans le schéma. Cette page est conservée uniquement à des fins historiques. Utilisez le [protocole Gateway](/en/gateway/protocol) pour tous les clients nœud/opérateur.</Warning>
+<Warning>Le pont TCP a été **supprimé**. Les versions actuelles d'OpenClaw n'incluent plus le listener de pont et les clés de configuration `bridge.*` ne sont plus dans le schéma. Cette page est conservée uniquement à des fins historiques. Utilisez le [protocole Gateway](/fr/gateway/protocol) pour tous les clients nœud/opérateur.</Warning>
 
 ## Pourquoi il existait
 
@@ -79,4 +79,4 @@ Champs de charge utile (tous optionnels sauf indication contraire) :
 
 Le pont était en **v1 implicite** (sans négociation min/max). Cette section est
 une référence historique uniquement ; les clients nœud/opérateur actuels utilisent le WebSocket
-[protocole Gateway](/en/gateway/protocol).
+[protocole Gateway](/fr/gateway/protocol).

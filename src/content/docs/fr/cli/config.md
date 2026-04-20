@@ -151,7 +151,7 @@ openclaw config set --batch-file ./config-set.batch.json --dry-run
 
 Remarque concernant la stratégie :
 
-- Les assignations SecretRef sont rejetées sur les surfaces mutables au runtime non prises en charge (par exemple `hooks.token`, `commands.ownerDisplaySecret`, les jetons de webhook de liaison de thread Discord et les identifiants JSON WhatsApp). Voir [SecretRef Credential Surface](/en/reference/secretref-credential-surface).
+- Les assignations SecretRef sont rejetées sur les surfaces mutables au runtime non prises en charge (par exemple `hooks.token`, `commands.ownerDisplaySecret`, les jetons de webhook de liaison de thread Discord et les identifiants JSON WhatsApp). Voir [SecretRef Credential Surface](/fr/reference/secretref-credential-surface).
 
 L'analyse batch utilise toujours la charge utile batch (`--batch-json`/`--batch-file`) comme source de vérité.
 `--strict-json` / `--json` ne modifient pas le comportement de l'analyse batch.

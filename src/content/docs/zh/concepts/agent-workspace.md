@@ -12,7 +12,7 @@ title: "Agent Workspace"
 
 这与 `~/.openclaw/` 不同，后者存储配置、凭据和会话。
 
-**重要提示：**工作区是**默认 cwd**（当前工作目录），而不是严格的沙箱。工具根据工作区解析相对路径，但除非启用了沙箱隔离，否则绝对路径仍可访问主机上的其他位置。如果需要隔离，请使用 [`agents.defaults.sandbox`](/en/gateway/sandboxing)（和/或每个代理的沙箱配置）。
+**重要提示：**工作区是**默认 cwd**（当前工作目录），而不是严格的沙箱。工具根据工作区解析相对路径，但除非启用了沙箱隔离，否则绝对路径仍可访问主机上的其他位置。如果需要隔离，请使用 [`agents.defaults.sandbox`](/zh/gateway/sandboxing)（和/或每个代理的沙箱配置）。
 当启用了沙箱隔离且 `workspaceAccess` 不是 `"rw"` 时，工具将在 `~/.openclaw/sandboxes` 下的沙箱工作区内操作，而不是在您的主机工作区内。
 
 ## 默认位置
@@ -60,7 +60,7 @@ title: "Agent Workspace"
 - `SOUL.md`
   - 角色、语气和边界。
   - 每次会话加载。
-  - 指南：[SOUL.md 性格指南](/en/concepts/soul)
+  - 指南：[SOUL.md 性格指南](/zh/concepts/soul)
 
 - `USER.md`
   - 用户是谁以及如何称呼他们。
@@ -95,7 +95,7 @@ title: "Agent Workspace"
   - 策划的长期记忆。
   - 仅在主私人会话中加载（不在共享/组上下文中）。
 
-有关工作流程和自动记忆刷新，请参阅 [记忆](/en/concepts/memory)。
+有关工作流程和自动记忆刷新，请参阅 [记忆](/zh/concepts/memory)。
 
 - `skills/` (可选)
   - 特定于工作区的技能。
@@ -105,7 +105,7 @@ title: "Agent Workspace"
 - `canvas/` (可选)
   - 用于节点显示的 Canvas UI 文件（例如 `canvas/index.html`）。
 
-如果缺少任何引导文件，OpenClaw 会在会话中注入一个“缺失文件”标记并继续。注入时，大型引导文件会被截断；使用 `agents.defaults.bootstrapMaxChars`（默认：20000）和 `agents.defaults.bootstrapTotalMaxChars`（默认：150000）调整限制。`openclaw setup` 可以重新创建缺失的默认文件，而不会覆盖现有文件。
+如果缺少任何引导文件，OpenClaw 会向会话中注入一个“缺少文件”标记并继续运行。注入时大型引导文件会被截断；可通过 `agents.defaults.bootstrapMaxChars`（默认：12000）和 `agents.defaults.bootstrapTotalMaxChars`（默认：60000）调整限制。`openclaw setup` 可以在不覆盖现有文件的情况下重新创建缺少的默认文件。
 
 ## 工作区中有什么
 
@@ -210,13 +210,13 @@ git push
 ## 高级说明
 
 - 多代理路由可以为每个代理使用不同的工作区。有关路由配置，请参阅
-  [Channel routing](/en/channels/channel-routing)。
+  [Channel routing](/zh/channels/channel-routing)。
 - 如果启用了 `agents.defaults.sandbox`，非主会话可以使用 `agents.defaults.sandbox.workspaceRoot` 下的
   每次会话沙箱工作区。
 
 ## 相关
 
-- [Standing Orders](/en/automation/standing-orders) — 工作区文件中的持久指令
-- [Heartbeat](/en/gateway/heartbeat) — HEARTBEAT.md 工作区文件
-- [Session](/en/concepts/session) — 会话存储路径
-- [沙箱隔离](/en/gateway/sandboxing) — 沙箱隔离环境中的工作区访问
+- [Standing Orders](/zh/automation/standing-orders) — 工作区文件中的持久指令
+- [Heartbeat](/zh/gateway/heartbeat) — HEARTBEAT.md 工作区文件
+- [Session](/zh/concepts/session) — 会话存储路径
+- [沙箱隔离](/zh/gateway/sandboxing) — 沙箱隔离环境中的工作区访问

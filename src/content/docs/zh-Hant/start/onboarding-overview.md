@@ -47,14 +47,14 @@ openclaw onboard
 
 新增 `--install-daemon` 以一步安裝背景服務。
 
-完整參考：[入門 (CLI)](/en/start/wizard)
-CLI 指令文件：[`openclaw onboard`](/en/cli/onboard)
+完整參考：[入門 (CLI)](/zh-Hant/start/wizard)
+CLI 指令文件：[`openclaw onboard`](/zh-Hant/cli/onboard)
 
 ## macOS 應用程式入門
 
 開啟 OpenClaw 應用程式。首次執行精靈會透過視覺化介面引導您完成相同的步驟。
 
-完整參考：[入門 (macOS 應用程式)](/en/start/onboarding)
+完整參考：[入門 (macOS 應用程式)](/zh-Hant/start/onboarding)
 
 ## 自訂或未列出的提供者
 

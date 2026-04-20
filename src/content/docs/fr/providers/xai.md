@@ -119,7 +119,7 @@ Les alias hérités sont toujours normalisés vers les ids groupés canoniques :
     ```
 
     <Note>
-    Voir [Video Generation](/en/tools/video-generation) pour les paramètres d'outil partagés,
+    Voir [Video Generation](/fr/tools/video-generation) pour les paramètres d'outil partagés,
     la sélection de provider, et le comportement de basculement.
     </Note>
 
@@ -174,7 +174,7 @@ Les alias hérités sont toujours normalisés vers les ids groupés canoniques :
     | `timeoutSeconds`  | number  | —                  | Délai d'expiration de la requête en secondes               |
 
     <Note>
-    Il s'agit d'une exécution à distance dans le bac à sable xAI, et non d'une exécution locale [`exec`](/en/tools/exec).
+    Il s'agit d'une exécution à distance dans le bac à sable xAI, et non d'une exécution locale [`exec`](/fr/tools/exec).
     </Note>
 
     ```json5
@@ -212,23 +212,23 @@ Les alias hérités sont toujours normalisés vers les ids groupés canoniques :
     - `x_search` et `code_execution` sont détenus par le plugin xAI intégré plutôt
       que codés en dur dans le moteur d'exécution du modèle central.
     - `code_execution` est une exécution de bac à sable xAI distante, et non locale
-      [`exec`](/en/tools/exec).
+      [`exec`](/fr/tools/exec).
   </Accordion>
 </AccordionGroup>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les fournisseurs, les références de modèle et le comportement de basculement.
   </Card>
-  <Card title="Génération vidéo" href="/en/tools/video-generation" icon="video">
+  <Card title="Génération vidéo" href="/fr/tools/video-generation" icon="video">
     Paramètres de l'outil vidéo partagés et sélection du fournisseur.
   </Card>
-  <Card title="Tous les fournisseurs" href="/en/providers/index" icon="grid-2">
+  <Card title="Tous les fournisseurs" href="/fr/providers/index" icon="grid-2">
     La vue d'ensemble des fournisseurs plus large.
   </Card>
-  <Card title="Dépannage" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
     Problèmes courants et solutions.
   </Card>
 </CardGroup>

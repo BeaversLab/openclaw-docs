@@ -29,7 +29,7 @@ openclaw plugins install @openclaw/nextcloud-talk
 openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 ```
 
-详情：[插件](/en/tools/plugin)
+详情：[插件](/zh/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -111,7 +111,7 @@ openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 
 ## 配置参考（Nextcloud Talk）
 
-完整配置：[Configuration](/en/gateway/configuration)
+完整配置：[Configuration](/zh/gateway/configuration)
 
 提供程序选项：
 
@@ -142,8 +142,8 @@ openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 
 ## 相关
 
-- [渠道概述](/en/channels) — 所有支持的渠道
-- [配对](/en/channels/pairing) — 私信认证和配对流程
-- [群组](/en/channels/groups) — 群聊行为和提及控制
-- [渠道路由](/en/channels/channel-routing) — 消息的会话路由
-- [安全](/en/gateway/security) — 访问模型和加固
+- [渠道概述](/zh/channels) — 所有支持的渠道
+- [配对](/zh/channels/pairing) — 私信认证和配对流程
+- [群组](/zh/channels/groups) — 群聊行为和提及控制
+- [渠道路由](/zh/channels/channel-routing) — 消息的会话路由
+- [安全](/zh/gateway/security) — 访问模型和加固

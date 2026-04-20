@@ -206,18 +206,18 @@ Step Plan (`stepfun-plan`)：
   </Accordion>
 </AccordionGroup>
 
-<Note>For the broader 提供商 overview, see [Model providers](/en/concepts/model-providers).</Note>
+<Note>For the broader 提供商 overview, see [Model providers](/zh/concepts/model-providers).</Note>
 
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="Model providers" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model providers" href="/zh/concepts/model-providers" icon="layers">
     Overview of all providers, 模型 refs, and failover behavior.
   </Card>
-  <Card title="Configuration reference" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Configuration reference" href="/zh/gateway/configuration-reference" icon="gear">
     Full config schema for providers, models, and plugins.
   </Card>
-  <Card title="Model selection" href="/en/concepts/models" icon="brain">
+  <Card title="Model selection" href="/zh/concepts/models" icon="brain">
     How to choose and configure models.
   </Card>
   <Card title="StepFun Platform" href="https://platform.stepfun.com" icon="globe">

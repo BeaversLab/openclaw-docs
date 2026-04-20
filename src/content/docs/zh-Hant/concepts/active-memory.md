@@ -754,6 +754,6 @@ Ollama：
 
 ## 相關頁面
 
-- [記憶體搜尋](/en/concepts/memory-search)
-- [記憶體設定參考](/en/reference/memory-config)
-- [外掛 SDK 設定](/en/plugins/sdk-setup)
+- [記憶體搜尋](/zh-Hant/concepts/memory-search)
+- [記憶體設定參考](/zh-Hant/reference/memory-config)
+- [外掛 SDK 設定](/zh-Hant/plugins/sdk-setup)

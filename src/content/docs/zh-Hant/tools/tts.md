@@ -67,7 +67,7 @@ Microsoft 語音**不**需要 API 金鑰。
 ## 設定
 
 TTS 設定位於 `openclaw.json` 中的 `messages.tts` 下。
-完整架構請參閱 [Gateway configuration](/en/gateway/configuration)。
+完整架構請參閱 [Gateway configuration](/zh-Hant/gateway/configuration)。
 
 ### 最小設定（啟用 + 提供商）
 
@@ -400,7 +400,7 @@ Reply -> TTS enabled?
 ## 斜線指令用法
 
 只有一個指令：`/tts`。
-請參閱 [Slash commands](/en/tools/slash-commands) 以了解啟用詳情。
+請參閱 [Slash commands](/zh-Hant/tools/slash-commands) 以了解啟用詳情。
 
 Discord 註記：`/tts` 是 Discord 的內建指令，因此 OpenClaw 在那裡註冊
 `/voice` 作為原生指令。文字 `/tts ...` 仍然有效。

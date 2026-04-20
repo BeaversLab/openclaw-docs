@@ -60,7 +60,7 @@ de voz configurado en el orden de selección automática del registro.
 ## Configuración
 
 La configuración de TTS se encuentra bajo `messages.tts` en `openclaw.json`.
-El esquema completo está en [Configuración de Gateway](/en/gateway/configuration).
+El esquema completo está en [Configuración de Gateway](/es/gateway/configuration).
 
 ### Configuración mínima (activar + proveedor)
 
@@ -397,7 +397,7 @@ Reply -> TTS enabled?
 ## Uso de comandos de barra
 
 Hay un solo comando: `/tts`.
-Consulte [Comandos de barra](/en/tools/slash-commands) para obtener detalles sobre cómo habilitarlo.
+Consulte [Comandos de barra](/es/tools/slash-commands) para obtener detalles sobre cómo habilitarlo.
 
 Nota de Discord: `/tts` es un comando integrado de Discord, por lo que OpenClaw registra
 `/voice` como el comando nativo allí. El texto `/tts ...` todavía funciona.

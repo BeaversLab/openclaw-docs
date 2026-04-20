@@ -119,7 +119,7 @@ Los alias heredados aún se normalizan a los ids agrupados canónicos:
     ```
 
     <Note>
-    Consulte [Video Generation](/en/tools/video-generation) para obtener parámetros de herramientas compartidas,
+    Consulte [Video Generation](/es/tools/video-generation) para obtener parámetros de herramientas compartidas,
     selección de proveedor y comportamiento de conmutación por error.
     </Note>
 
@@ -174,7 +174,7 @@ Los alias heredados aún se normalizan a los ids agrupados canónicos:
     | `timeoutSeconds`  | number  | —                  | Tiempo de espera de la solicitud en segundos               |
 
     <Note>
-    Esto es ejecución remota en sandbox de xAI, no [`exec`](/en/tools/exec) local.
+    Esto es ejecución remota en sandbox de xAI, no [`exec`](/es/tools/exec) local.
     </Note>
 
     ```json5
@@ -212,23 +212,23 @@ Los alias heredados aún se normalizan a los ids agrupados canónicos:
     - `x_search` y `code_execution` son propiedad del complemento xAI incluido en lugar
       de estar codificadas en el tiempo de ejecución del modelo principal.
     - `code_execution` es la ejecución remota del entorno sandbox de xAI, no local
-      [`exec`](/en/tools/exec).
+      [`exec`](/es/tools/exec).
   </Accordion>
 </AccordionGroup>
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elegir proveedores, referencias de modelo y comportamiento de conmutación por error.
   </Card>
-  <Card title="Generación de video" href="/en/tools/video-generation" icon="video">
+  <Card title="Generación de video" href="/es/tools/video-generation" icon="video">
     Parámetros compartidos de la herramienta de video y selección de proveedor.
   </Card>
-  <Card title="Todos los proveedores" href="/en/providers/index" icon="grid-2">
+  <Card title="Todos los proveedores" href="/es/providers/index" icon="grid-2">
     La descripción general más amplia de proveedores.
   </Card>
-  <Card title="Solución de problemas" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Solución de problemas" href="/es/help/troubleshooting" icon="wrench">
     Problemas comunes y soluciones.
   </Card>
 </CardGroup>

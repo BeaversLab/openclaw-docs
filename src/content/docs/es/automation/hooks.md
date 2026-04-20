@@ -13,7 +13,7 @@ Los Hooks son pequeños scripts que se ejecutan cuando sucede algo dentro de la 
 Hay dos tipos de hooks en OpenClaw:
 
 - **Hooks internos** (esta página): se ejecutan dentro de la Gateway cuando se activan eventos del agente, como `/new`, `/reset`, `/stop`, o eventos del ciclo de vida.
-- **Webhooks**: puntos finales HTTP externos que permiten a otros sistemas activar trabajos en OpenClaw. Consulte [Webhooks](/en/automation/cron-jobs#webhooks).
+- **Webhooks**: puntos finales HTTP externos que permiten a otros sistemas activar trabajos en OpenClaw. Consulte [Webhooks](/es/automation/cron-jobs#webhooks).
 
 Los hooks también se pueden empaquetar dentro de complementos (plugins). `openclaw hooks list` muestra tanto los hooks independientes como los gestionados por complementos.
 
@@ -206,7 +206,7 @@ Ejecuta `BOOT.md` del espacio de trabajo activo cuando se inicia el gateway.
 
 Los complementos pueden registrar hooks a través del Plugin SDK para una integración más profunda: interceptar llamadas a herramientas, modificar indicaciones, controlar el flujo de mensajes y más. El Plugin SDK expone 28 hooks que cubren la resolución de modelos, el ciclo de vida del agente, el flujo de mensajes, la ejecución de herramientas, la coordinación de subagentes y el ciclo de vida del gateway.
 
-Para obtener la referencia completa de hooks de complementos, incluidos `before_tool_call`, `before_agent_reply`, `before_install` y todos los demás hooks de complementos, consulte [Plugin Architecture](/en/plugins/architecture#provider-runtime-hooks).
+Para obtener la referencia completa de hooks de complementos, incluidos `before_tool_call`, `before_agent_reply`, `before_install` y todos los demás hooks de complementos, consulte [Plugin Architecture](/es/plugins/architecture#provider-runtime-hooks).
 
 ## Configuración
 
@@ -310,7 +310,7 @@ Compruebe si faltan binarios (PATH), variables de entorno, valores de configurac
 
 ## Relacionado
 
-- [Referencia de la CLI: hooks](/en/cli/hooks)
-- [Webhooks](/en/automation/cron-jobs#webhooks)
-- [Arquitectura de complementos](/en/plugins/architecture#provider-runtime-hooks) — referencia completa de hooks de complementos
-- [Configuración](/en/gateway/configuration-reference#hooks)
+- [Referencia de la CLI: hooks](/es/cli/hooks)
+- [Webhooks](/es/automation/cron-jobs#webhooks)
+- [Arquitectura de complementos](/es/plugins/architecture#provider-runtime-hooks) — referencia completa de hooks de complementos
+- [Configuración](/es/gateway/configuration-reference#hooks)

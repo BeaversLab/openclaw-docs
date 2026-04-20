@@ -100,4 +100,4 @@ await web_search({
 - `ui_lang` debe incluir una subetiqueta de región como `en-US`.
 - Los resultados se almacenan en caché durante 15 minutos de forma predeterminada (configurable a través de `cacheTtlMinutes`).
 
-Consulte [Herramientas web](/en/tools/web) para obtener la configuración completa de web_search.
+Consulte [Herramientas web](/es/tools/web) para obtener la configuración completa de web_search.

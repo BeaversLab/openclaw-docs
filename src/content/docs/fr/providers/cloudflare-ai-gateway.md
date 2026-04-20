@@ -105,10 +105,10 @@ openclaw onboard --non-interactive \
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les fournisseurs, les références de modèle et le comportement de basculement.
   </Card>
-  <Card title="Résolution de problèmes" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Résolution de problèmes" href="/fr/help/troubleshooting" icon="wrench">
     Résolution de problèmes généraux et FAQ.
   </Card>
 </CardGroup>

@@ -9,7 +9,7 @@ title: "子代理"
 
 # 子代理
 
-子代理是从现有代理运行中生成的后台代理运行。它们在自己的会话（`agent:<agentId>:subagent:<uuid>`）中运行，并在完成后将结果**通知**回请求者聊天渠道。每个子代理运行都被跟踪为一个[后台任务](/en/automation/tasks)。
+子代理是从现有代理运行中生成的后台代理运行。它们在自己的会话（`agent:<agentId>:subagent:<uuid>`）中运行，并在完成后将结果**通知**回请求者聊天渠道。每个子代理运行都被跟踪为一个[后台任务](/zh/automation/tasks)。
 
 ## 斜杠命令
 
@@ -61,7 +61,7 @@ title: "子代理"
 - `--model` 和 `--thinking` 会覆盖该特定运行的默认设置。
 - 使用 `info`/`log` 在完成后检查详细信息和输出。
 - `/subagents spawn` 是一次性模式 (`mode: "run"`)。对于持久化的线程绑定会话，请将 `sessions_spawn` 与 `thread: true` 和 `mode: "session"` 结合使用。
-- 对于 ACP harness 会话 (Codex, Claude Code, Gemini CLI)，请将 `sessions_spawn` 与 `runtime: "acp"` 结合使用，并参阅 [ACP Agents](/en/tools/acp-agents)。
+- 对于 ACP harness 会话 (Codex, Claude Code, Gemini CLI)，请将 `sessions_spawn` 与 `runtime: "acp"` 结合使用，并参阅 [ACP Agents](/zh/tools/acp-agents)。
 
 主要目标：
 
@@ -127,7 +127,7 @@ title: "子代理"
 - 全局默认值：`session.threadBindings.enabled`、`session.threadBindings.idleHours`、`session.threadBindings.maxAgeHours`
 - 渠道覆盖和生成自动绑定键是特定于适配器的。请参阅上方的**支持线程的渠道**。
 
-有关当前适配器的详细信息，请参阅[配置参考](/en/gateway/configuration-reference)和[斜杠命令](/en/tools/slash-commands)。
+有关当前适配器的详细信息，请参阅[配置参考](/zh/gateway/configuration-reference)和[斜杠命令](/zh/tools/slash-commands)。
 
 允许列表：
 

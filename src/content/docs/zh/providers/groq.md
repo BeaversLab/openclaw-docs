@@ -105,10 +105,10 @@ Groq 还提供基于 Whisper 的快速音频转录。当配置为媒体理解提
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="模型选择" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型选择" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="配置参考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="配置参考" href="/zh/gateway/configuration-reference" icon="gear">
     包括提供商和音频设置的完整配置架构。
   </Card>
   <Card title="Groq 控制台" href="https://console.groq.com" icon="arrow-up-right-from-square">

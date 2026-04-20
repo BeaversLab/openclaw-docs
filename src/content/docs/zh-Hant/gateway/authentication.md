@@ -8,16 +8,16 @@ title: "驗證"
 
 # 驗證（模型供應商）
 
-<Note>本頁涵蓋 **模型提供者** 驗證（API 金鑰、OAuth、Claude CLI 重複使用和 Anthropic setup-token）。有關 **閘道連線** 驗證（token、密碼、trusted-proxy），請參閱 [Configuration](/en/gateway/configuration) 和 [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)。</Note>
+<Note>本頁涵蓋 **模型提供者** 驗證（API 金鑰、OAuth、Claude CLI 重複使用和 Anthropic setup-token）。有關 **閘道連線** 驗證（token、密碼、trusted-proxy），請參閱 [Configuration](/zh-Hant/gateway/configuration) 和 [Trusted Proxy Auth](/zh-Hant/gateway/trusted-proxy-auth)。</Note>
 
 OpenClaw 支援模型供應商的 OAuth 和 API 金鑰。對於始終運行的閘道
 主機，API 金鑰通常是最可預測的選項。當訂閱/OAuth
 流程符合您的供應商帳戶模型時，也支援這些流程。
 
-請參閱 [/concepts/oauth](/en/concepts/oauth) 以了解完整的 OAuth 流程和儲存佈局。
-對於基於 SecretRef 的驗證 (`env`/`file`/`exec` 提供者)，請參閱 [Secrets Management](/en/gateway/secrets)。
+請參閱 [/concepts/oauth](/zh-Hant/concepts/oauth) 以了解完整的 OAuth 流程和儲存佈局。
+對於基於 SecretRef 的驗證 (`env`/`file`/`exec` 提供者)，請參閱 [Secrets Management](/zh-Hant/gateway/secrets)。
 有關 `models status --probe` 使用的憑證資格/原因代碼規則，請參閱
-[Auth Credential Semantics](/en/auth-credential-semantics)。
+[Auth Credential Semantics](/zh-Hant/auth-credential-semantics)。
 
 ## 建議設置（API 金鑰，任何供應商）
 
@@ -54,7 +54,7 @@ openclaw doctor
 API 金鑰以供守護程序使用：`openclaw onboard`。
 
 有關環境變數繼承的詳細資訊 (`env.shellEnv`,
-`~/.openclaw/.env`, systemd/launchd)，請參閱 [Help](/en/help)。
+`~/.openclaw/.env`, systemd/launchd)，請參閱 [Help](/zh-Hant/help)。
 
 ## Anthropic：Claude CLI 和 token 相容性
 
@@ -102,7 +102,7 @@ openclaw models status --probe
 - 速率限制冷卻時間可以是模型範圍的。一個針對某個模型冷卻中的設定檔，對於同一提供商上的兄弟模型仍然可用。
 
 此處記錄了選用的運維腳本 (systemd/Termux)：
-[Auth monitoring scripts](/en/help/scripts#auth-monitoring-scripts)
+[Auth monitoring scripts](/zh-Hant/help/scripts#auth-monitoring-scripts)
 
 ## Anthropic 說明
 

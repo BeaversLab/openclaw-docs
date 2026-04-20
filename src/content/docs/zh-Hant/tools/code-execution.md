@@ -10,7 +10,7 @@ title: "程式碼執行"
 # 程式碼執行
 
 `code_execution` 在 xAI 的 Responses API 上執行沙箱化遠端 Python 分析。
-這與本機 [`exec`](/en/tools/exec) 不同：
+這與本機 [`exec`](/zh-Hant/tools/exec) 不同：
 
 - `exec` 在您的機器或節點上執行 Shell 指令
 - `code_execution` 在 xAI 的遠端沙箱中執行 Python
@@ -23,7 +23,7 @@ title: "程式碼執行"
 - 圖表式分析
 - 分析由 `x_search` 或 `web_search` 傳回的資料
 
-當您需要本機檔案、您的 shell、您的 repo 或配對裝置時，請**不要**使用它。請使用 [`exec`](/en/tools/exec)。
+當您需要本機檔案、您的 shell、您的 repo 或配對裝置時，請**不要**使用它。請使用 [`exec`](/zh-Hant/tools/exec)。
 
 ## 設定
 
@@ -79,10 +79,10 @@ Use web_search to gather the latest AI benchmark numbers, then use code_executio
 - 這是遠端 xAI 執行，而不是本機程序執行。
 - 它應被視為暫時性分析，而不是持續性 notebook。
 - 不要假設可以存取本機檔案或您的工作區。
-- 若要取得最新的 X 資料，請先使用 [`x_search`](/en/tools/web#x_search)。
+- 若要取得最新的 X 資料，請先使用 [`x_search`](/zh-Hant/tools/web#x_search)。
 
 ## 另請參閱
 
-- [Web 工具](/en/tools/web)
-- [Exec](/en/tools/exec)
-- [xAI](/en/providers/xai)
+- [Web 工具](/zh-Hant/tools/web)
+- [Exec](/zh-Hant/tools/exec)
+- [xAI](/zh-Hant/providers/xai)

@@ -13,7 +13,7 @@ read_when:
 El SDK de complementos es el contrato con tipo entre los complementos y el núcleo. Esta página es la
 referencia de **qué importar** y **qué puede registrar**.
 
-<Tip>**¿Buscas una guía de inicio?** - ¿Primer plugin? Empieza con [Getting Started](/en/plugins/building-plugins) - ¿Plugin de canal? Consulta [Channel Plugins](/en/plugins/sdk-channel-plugins) - ¿Plugin de proveedor? Consulta [Provider Plugins](/en/plugins/sdk-provider-plugins)</Tip>
+<Tip>**¿Buscas una guía de inicio?** - ¿Primer plugin? Empieza con [Getting Started](/es/plugins/building-plugins) - ¿Plugin de canal? Consulta [Channel Plugins](/es/plugins/sdk-channel-plugins) - ¿Plugin de proveedor? Consulta [Provider Plugins](/es/plugins/sdk-provider-plugins)</Tip>
 
 ## Convención de importación
 
@@ -337,7 +337,7 @@ backend de CLI de IA local como `codex-cli`.
 | `api.rootDir`            | `string?`                 | Directorio raíz del complemento (opcional)                                                                           |
 | `api.config`             | `OpenClawConfig`          | Instantánea de la configuración actual (instantánea de tiempo de ejecución en memoria activa cuando está disponible) |
 | `api.pluginConfig`       | `Record<string, unknown>` | Configuración específica del complemento de `plugins.entries.<id>.config`                                            |
-| `api.runtime`            | `PluginRuntime`           | [Ayudantes de tiempo de ejecución](/en/plugins/sdk-runtime)                                                          |
+| `api.runtime`            | `PluginRuntime`           | [Ayudantes de tiempo de ejecución](/es/plugins/sdk-runtime)                                                          |
 | `api.logger`             | `PluginLogger`            | Registrador con ámbito (`debug`, `info`, `warn`, `error`)                                                            |
 | `api.registrationMode`   | `PluginRegistrationMode`  | Modo de carga actual; `"setup-runtime"` es la ventana de inicio/configuración previa ligera a la entrada completa    |
 | `api.resolvePath(input)` | `(string) => string`      | Resolver ruta relativa a la raíz del complemento                                                                     |
@@ -383,9 +383,9 @@ Otros ejemplos empaquetados actuales:
 
 ## Relacionado
 
-- [Puntos de entrada](/en/plugins/sdk-entrypoints) — opciones `definePluginEntry` y `defineChannelPluginEntry`
-- [Auxiliares de tiempo de ejecución](/en/plugins/sdk-runtime) — referencia completa del espacio de nombres `api.runtime`
-- [Configuración y ajustes](/en/plugins/sdk-setup) — empaquetado, manifiestos, esquemas de configuración
-- [Pruebas](/en/plugins/sdk-testing) — utilidades de prueba y reglas de linting
-- [Migración del SDK](/en/plugins/sdk-migration) — migración desde superficies obsoletas
-- [Interno del complemento](/en/plugins/architecture) — arquitectura profunda y modelo de capacidades
+- [Puntos de entrada](/es/plugins/sdk-entrypoints) — opciones `definePluginEntry` y `defineChannelPluginEntry`
+- [Auxiliares de tiempo de ejecución](/es/plugins/sdk-runtime) — referencia completa del espacio de nombres `api.runtime`
+- [Configuración y ajustes](/es/plugins/sdk-setup) — empaquetado, manifiestos, esquemas de configuración
+- [Pruebas](/es/plugins/sdk-testing) — utilidades de prueba y reglas de linting
+- [Migración del SDK](/es/plugins/sdk-migration) — migración desde superficies obsoletas
+- [Interno del complemento](/es/plugins/architecture) — arquitectura profunda y modelo de capacidades

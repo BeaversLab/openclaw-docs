@@ -41,7 +41,7 @@ Les profils personnalisés utilisent `~/.openclaw-<profile>/` ou un chemin défi
 
   </Step>
 
-<Step title="Installez OpenClaw sur la nouvelle machine">[Installez](/en/install) la CLI (et Node si nécessaire) sur la nouvelle machine. Ce n'est pas grave si l'onboarding crée un nouveau `~/.openclaw/` -- vous allez l'écraser ensuite.</Step>
+<Step title="Installez OpenClaw sur la nouvelle machine">[Installez](/fr/install) la CLI (et Node si nécessaire) sur la nouvelle machine. Ce n'est pas grave si l'onboarding crée un nouveau `~/.openclaw/` -- vous allez l'écraser ensuite.</Step>
 
   <Step title="Copiez le répertoire d'état et l'espace de travail">
     Transférez l'archive via `scp`, `rsync -a` ou un disque externe, puis extrayez :
@@ -56,7 +56,7 @@ Les profils personnalisés utilisent `~/.openclaw-<profile>/` ou un chemin défi
   </Step>
 
   <Step title="Exécutez le docteur et vérifiez">
-    Sur la nouvelle machine, exécutez [Doctor](/en/gateway/doctor) pour appliquer les migrations de configuration et réparer les services :
+    Sur la nouvelle machine, exécutez [Doctor](/fr/gateway/doctor) pour appliquer les migrations de configuration et réparer les services :
 
     ```bash
     openclaw doctor
@@ -84,7 +84,7 @@ Les profils personnalisés utilisent `~/.openclaw-<profile>/` ou un chemin défi
 
 <Accordion title="Autorisations et propriété">Si vous avez copié en tant que root ou changé d'utilisateur, la passerelle risque de ne pas pouvoir lire les identifiants. Assurez-vous que le répertoire d'état et l'espace de travail appartiennent à l'utilisateur exécutant la passerelle.</Accordion>
 
-<Accordion title="Mode distant">Si votre interface pointe vers une passerelle **distante**, l'hôte distant possède les sessions et l'espace de travail. Migrez l'hôte de la passerelle lui-même, et non votre ordinateur portable local. Voir [FAQ](/en/help/faq#where-things-live-on-disk).</Accordion>
+<Accordion title="Mode distant">Si votre interface pointe vers une passerelle **distante**, l'hôte distant possède les sessions et l'espace de travail. Migrez l'hôte de la passerelle lui-même, et non votre ordinateur portable local. Voir [FAQ](/fr/help/faq#where-things-live-on-disk).</Accordion>
 
   <Accordion title="Secrets dans les sauvegardes">
     Le répertoire d'état contient les profils d'authentification, les identifiants des canaux et d'autres

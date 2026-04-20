@@ -552,4 +552,4 @@ Pi 集成覆盖范围涵盖以下套件：
 
 - `src/agents/pi-embedded-runner-extraparams.live.test.ts` （启用 `OPENCLAW_LIVE_TEST=1`）
 
-有关当前的运行命令，请参阅 [Pi 开发流程](/en/pi-dev)。
+有关当前的运行命令，请参阅 [Pi 开发流程](/zh/pi-dev)。

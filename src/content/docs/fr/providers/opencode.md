@@ -127,10 +127,10 @@ Les deux catalogues utilisent la même clé d'API OpenCode. OpenClaw conserve le
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les fournisseurs, les références de modèle et le comportement de basculement.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
     Référence complète de la configuration pour les agents, les modèles et les fournisseurs.
   </Card>
 </CardGroup>

@@ -221,6 +221,6 @@ Notes :
 
 ## Documentation connexe
 
-- Hub d'intégration : [Onboarding (CLI)](/en/start/wizard)
-- Référence complète : [CLI Setup Reference](/en/start/wizard-cli-reference)
-- Référence de la commande : [`openclaw onboard`](/en/cli/onboard)
+- Hub d'intégration : [Onboarding (CLI)](/fr/start/wizard)
+- Référence complète : [CLI Setup Reference](/fr/start/wizard-cli-reference)
+- Référence de la commande : [`openclaw onboard`](/fr/cli/onboard)

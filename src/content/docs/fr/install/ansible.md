@@ -50,7 +50,7 @@ Le playbook Ansible installe et configure :
 5. **OpenClaw** -- basé sur l'hôte, non conteneurisé
 6. **Service Systemd** -- démarrage automatique avec durcissement de la sécurité
 
-<Note>La passerelle s'exécute directement sur l'hôte (pas dans Docker), mais les sandboxs d'agent utilisent Docker pour l'isolation. Voir [Sandboxing](/en/gateway/sandboxing) pour les détails.</Note>
+<Note>La passerelle s'exécute directement sur l'hôte (pas dans Docker), mais les sandboxs d'agent utilisent Docker pour l'isolation. Voir [Sandboxing](/fr/gateway/sandboxing) pour les détails.</Note>
 
 ## Configuration post-installation
 
@@ -96,7 +96,7 @@ nmap -p- YOUR_SERVER_IP
 
 Seul le port 22 (SSH) doit être ouvert. Tous les autres services (passerelle, Docker) sont verrouillés.
 
-Docker est installé pour les sandbox d'agents (exécution d'outil isolée), et non pour exécuter la passerelle elle-même. Voir [Multi-Agent Sandbox and Tools](/en/tools/multi-agent-sandbox-tools) pour la configuration des sandbox.
+Docker est installé pour les sandbox d'agents (exécution d'outil isolée), et non pour exécuter la passerelle elle-même. Voir [Multi-Agent Sandbox and Tools](/fr/tools/multi-agent-sandbox-tools) pour la configuration des sandbox.
 
 ## Installation manuelle
 
@@ -135,7 +135,7 @@ Si vous préférez un contrôle manuel plutôt que l'automatisation :
 
 ## Mise à jour
 
-Le programme d'installation Ansible configure OpenClaw pour les mises à jour manuelles. Voir [Updating](/en/install/updating) pour le flux de mise à jour standard.
+Le programme d'installation Ansible configure OpenClaw pour les mises à jour manuelles. Voir [Updating](/fr/install/updating) pour le flux de mise à jour standard.
 
 Pour réexécuter le playbook Ansible (par exemple, pour les changements de configuration) :
 
@@ -203,6 +203,6 @@ Pour une architecture de sécurité détaillée et le dépannage, consultez le d
 ## Connexes
 
 - [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) -- guide complet de déploiement
-- [Docker](/en/install/docker) -- configuration de passerelle conteneurisée
-- [Sandboxing](/en/gateway/sandboxing) -- configuration du bac à sable de l'agent
-- [Multi-Agent Sandbox and Tools](/en/tools/multi-agent-sandbox-tools) -- isolement par agent
+- [Docker](/fr/install/docker) -- configuration de passerelle conteneurisée
+- [Sandboxing](/fr/gateway/sandboxing) -- configuration du bac à sable de l'agent
+- [Multi-Agent Sandbox and Tools](/fr/tools/multi-agent-sandbox-tools) -- isolement par agent

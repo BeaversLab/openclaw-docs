@@ -50,8 +50,8 @@ Notas:
 - Cuando la autenticación por token requiere un token y `gateway.auth.token` está gestionado por SecretRef, `install` valida que el SecretRef se pueda resolver pero no persiste el token resuelto en los metadatos del entorno del servicio.
 - Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, la instalación falla de forma cerrada.
 - Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, la instalación se bloquea hasta que el modo se establezca explícitamente.
-- Si ejecuta intencionadamente múltiples gateways en un solo host, aisle los puertos, la configuración/estado y los espacios de trabajo; consulte [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host).
+- Si ejecuta intencionadamente múltiples gateways en un solo host, aisle los puertos, la configuración/estado y los espacios de trabajo; consulte [/gateway#multiple-gateways-same-host](/es/gateway#multiple-gateways-same-host).
 
 ## Preferir
 
-Utilice [`openclaw gateway`](/en/cli/gateway) para la documentación y los ejemplos actuales.
+Utilice [`openclaw gateway`](/es/cli/gateway) para la documentación y los ejemplos actuales.

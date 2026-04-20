@@ -97,10 +97,10 @@ OpenClaw accepte également les identifiants de modèle Fireworks dynamiques. Ut
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection de modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection de modèle" href="/fr/concepts/model-providers" icon="layers">
     Choix des fournisseurs, références de modèles et comportement de basculement.
   </Card>
-  <Card title="Dépannage" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
     Dépannage général et FAQ.
   </Card>
 </CardGroup>

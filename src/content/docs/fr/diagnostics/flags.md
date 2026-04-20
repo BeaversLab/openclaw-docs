@@ -82,10 +82,10 @@ Ou suivre en temps réel lors de la reproduction :
 tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
 ```
 
-Pour les passerelles distantes, vous pouvez également utiliser `openclaw logs --follow` (voir [/cli/logs](/en/cli/logs)).
+Pour les passerelles distantes, vous pouvez également utiliser `openclaw logs --follow` (voir [/cli/logs](/fr/cli/logs)).
 
 ## Notes
 
 - Si `logging.level` est défini plus haut que `warn`, ces journaux peuvent être supprimés. La valeur par défaut `info` convient.
 - Il est possible de laisser les indicateurs activés ; ils n'affectent que le volume des journaux pour le sous-système spécifique.
-- Utilisez [/logging](/en/logging) pour modifier les destinations des journaux, les niveaux et la suppression des informations sensibles.
+- Utilisez [/logging](/fr/logging) pour modifier les destinations des journaux, les niveaux et la suppression des informations sensibles.

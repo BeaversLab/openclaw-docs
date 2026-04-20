@@ -32,7 +32,7 @@ Extraction locale (lors de l'exécution depuis un dépôt git) :
 openclaw plugins install ./path/to/local/tlon-plugin
 ```
 
-Détails : [Plugins](/en/tools/plugin)
+Détails : [Plugins](/fr/tools/plugin)
 
 ## Configuration
 
@@ -253,7 +253,7 @@ Pannes courantes :
 
 ## Référence de configuration
 
-Configuration complète : [Configuration](/en/gateway/configuration)
+Configuration complète : [Configuration](/fr/gateway/configuration)
 
 Options du fournisseur :
 
@@ -281,8 +281,8 @@ Options du fournisseur :
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
-- [Appairage](/en/channels/pairing) — authentification DM et flux d'appairage
-- [Groupes](/en/channels/groups) — comportement du chat de groupe et filtrage par mention
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — model d'accès et durcissement
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appairage](/fr/channels/pairing) — authentification DM et flux d'appairage
+- [Groupes](/fr/channels/groups) — comportement du chat de groupe et filtrage par mention
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — model d'accès et durcissement

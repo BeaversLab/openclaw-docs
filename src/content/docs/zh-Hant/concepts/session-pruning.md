@@ -14,7 +14,7 @@ Session pruning 會在每次 LLM 呼叫前，從上下文中修剪掉**舊的工
 
 ## 為何重要
 
-長時間的對話會累積工具輸出，從而膨脹上下文視窗。這會增加成本，並可能比必要更早地強制執行 [壓縮](/en/concepts/compaction)。
+長時間的對話會累積工具輸出，從而膨脹上下文視窗。這會增加成本，並可能比必要更早地強制執行 [壓縮](/zh-Hant/concepts/compaction)。
 
 Pruning 對於 **Anthropic prompt caching** 尤其有價值。在快取 TTL 過期後，下一個請求會重新快取完整的 prompt。Pruning 減少了快取寫入的大小，從而直接降低了成本。
 
@@ -73,6 +73,6 @@ OpenClaw 會為 Anthropic 設定檔自動啟用修剪：
 
 ## 延伸閱讀
 
-- [壓縮](/en/concepts/compaction) -- 基於摘要的上下文縮減
-- [Gateway 設定](/en/gateway/configuration) -- 所有修剪設定選項
+- [壓縮](/zh-Hant/concepts/compaction) -- 基於摘要的上下文縮減
+- [Gateway 設定](/zh-Hant/gateway/configuration) -- 所有修剪設定選項
   (`contextPruning.*`)

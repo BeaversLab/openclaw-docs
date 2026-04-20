@@ -12,7 +12,7 @@ Ouvrez l'interface utilisateur terminal connectée au Gateway.
 
 Connexes :
 
-- Guide TUI : [TUI](/en/web/tui)
+- Guide TUI : [TUI](/fr/web/tui)
 
 Notes :
 

@@ -376,7 +376,7 @@ Use esta tabla de decisiones:
 - Anulaciones de objetivo opcionales:
   - `OPENCLAW_ANDROID_NODE_ID` o `OPENCLAW_ANDROID_NODE_NAME`.
   - `OPENCLAW_ANDROID_GATEWAY_URL` / `OPENCLAW_ANDROID_GATEWAY_TOKEN` / `OPENCLAW_ANDROID_GATEWAY_PASSWORD`.
-- Detalles completos de la configuración de Android: [Android App](/en/platforms/android)
+- Detalles completos de la configuración de Android: [Android App](/es/platforms/android)
 
 ## En vivo: prueba de humo del modelo (claves de perfil)
 
@@ -897,7 +897,7 @@ Ya tenemos algunas pruebas seguras para CI que se comportan como "evaluaciones d
 - Llamada a herramientas simuladas a través del gateway real + bucle de agente (`src/gateway/gateway.test.ts`).
 - Flujos de extremo a extremo del asistente que validan el cableado de la sesión y los efectos de la configuración (`src/gateway/gateway.test.ts`).
 
-Lo que aún falta para las habilidades (ver [Habilidades](/en/tools/skills)):
+Lo que aún falta para las habilidades (ver [Habilidades](/es/tools/skills)):
 
 - **Toma de decisiones:** cuando las habilidades se enumeran en el mensaje, ¿el agente elige la habilidad correcta (o evita las irrelevantes)?
 - **Cumplimiento:** ¿el agente lee `SKILL.md` antes de usarlo y sigue los pasos/argumentos requeridos?

@@ -8,7 +8,7 @@ title: "設定"
 
 # 設定
 
-<Note>如果您是第一次設定，請從 [入門指南](/en/start/getting-started) 開始。 關於上線細節，請參閱 [Onboarding (CLI)](/en/start/wizard)。</Note>
+<Note>如果您是第一次設定，請從 [入門指南](/zh-Hant/start/getting-started) 開始。 關於上線細節，請參閱 [Onboarding (CLI)](/zh-Hant/start/wizard)。</Note>
 
 ## TL;DR
 
@@ -19,8 +19,8 @@ title: "設定"
 ## 先決條件 (從原始碼)
 
 - 建議使用 Node 24 (Node 22 LTS，目前為 `22.14+`，仍受支援)
-- 偏好使用 `pnpm` (若您刻意使用 [Bun workflow](/en/install/bun) 則使用 Bun)
-- Docker (選用；僅適用於容器化設定/e2e — 請參閱 [Docker](/en/install/docker))
+- 偏好使用 `pnpm` (若您刻意使用 [Bun workflow](/zh-Hant/install/bun) 則使用 Bun)
+- Docker (選用；僅適用於容器化設定/e2e — 請參閱 [Docker](/zh-Hant/install/docker))
 
 ## 客製化策略 (以免更新受影響)
 
@@ -140,7 +140,7 @@ openclaw health
 - **模型認證設定檔**：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 - **檔案支援的秘密載荷（選用）**：`~/.openclaw/secrets.json`
 - **舊版 OAuth 匯入**：`~/.openclaw/credentials/oauth.json`
-  更多詳情：[安全性](/en/gateway/security#credential-storage-map)。
+  更多詳情：[安全性](/zh-Hant/gateway/security#credential-storage-map)。
 
 ## 更新（不破壞您的設定）
 
@@ -157,12 +157,12 @@ sudo loginctl enable-linger $USER
 ```
 
 對於永遠在線或多使用者伺服器，請考慮使用 **系統** 服務而非
-使用者服務（不需要 linger）。請參閱 [Gateway runbook](/en/gateway) 中的 systemd 說明。
+使用者服務（不需要 linger）。請參閱 [Gateway runbook](/zh-Hant/gateway) 中的 systemd 說明。
 
 ## 相關文件
 
-- [Gateway runbook](/en/gateway)（旗標、監督、連接埠）
-- [Gateway configuration](/en/gateway/configuration)（設定架構 + 範例）
-- [Discord](/en/channels/discord) 和 [Telegram](/en/channels/telegram)（回覆標籤 + replyToMode 設定）
-- [OpenClaw assistant setup](/en/start/openclaw)
-- [macOS app](/en/platforms/macos)（gateway 生命週期）
+- [Gateway runbook](/zh-Hant/gateway)（旗標、監督、連接埠）
+- [Gateway configuration](/zh-Hant/gateway/configuration)（設定架構 + 範例）
+- [Discord](/zh-Hant/channels/discord) 和 [Telegram](/zh-Hant/channels/telegram)（回覆標籤 + replyToMode 設定）
+- [OpenClaw assistant setup](/zh-Hant/start/openclaw)
+- [macOS app](/zh-Hant/platforms/macos)（gateway 生命週期）

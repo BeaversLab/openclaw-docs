@@ -130,10 +130,10 @@ Xiaomi MiMo 是 **MiMo** 模型的 API 平台。OpenClaw 使用通过 API 密钥
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="模型选择" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型选择" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="配置参考" href="/en/gateway/configuration" icon="gear">
+  <Card title="配置参考" href="/zh/gateway/configuration" icon="gear">
     完整的 OpenClaw 配置参考。
   </Card>
   <Card title="Xiaomi MiMo 控制台" href="https://platform.xiaomimimo.com" icon="arrow-up-right-from-square">

@@ -295,7 +295,7 @@ openclaw models list
 
   <Accordion title="Incrustaciones para la búsqueda de memoria">
     Bedrock también puede actuar como proveedor de incrustaciones para
-    [memory search](/en/concepts/memory-search). Esto se configura por separado del
+    [memory search](/es/concepts/memory-search). Esto se configura por separado del
     proveedor de inferencia: configure `agents.defaults.memorySearch.provider` en `"bedrock"`:
 
     ```json5
@@ -318,7 +318,7 @@ openclaw models list
 
     Los modelos de incrustación compatibles incluyen Amazon Titan Embed (v1, v2), Amazon Nova
     Embed, Cohere Embed (v3, v4) y TwelveLabs Marengo. Consulte
-    [Referencia de configuración de memoria -- Bedrock](/en/reference/memory-config#bedrock-embedding-config)
+    [Referencia de configuración de memoria -- Bedrock](/es/reference/memory-config#bedrock-embedding-config)
     para obtener la lista completa de modelos y opciones de dimensiones.
 
   </Accordion>
@@ -343,16 +343,16 @@ openclaw models list
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Búsqueda de memoria" href="/en/concepts/memory-search" icon="magnifying-glass">
+  <Card title="Búsqueda de memoria" href="/es/concepts/memory-search" icon="magnifying-glass">
     Embeddings de Bedrock para la configuración de búsqueda de memoria.
   </Card>
-  <Card title="Referencia de configuración de memoria" href="/en/reference/memory-config#bedrock-embedding-config" icon="database">
+  <Card title="Referencia de configuración de memoria" href="/es/reference/memory-config#bedrock-embedding-config" icon="database">
     Lista completa de modelos de embeddings de Bedrock y opciones de dimensiones.
   </Card>
-  <Card title="Solución de problemas" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Solución de problemas" href="/es/help/troubleshooting" icon="wrench">
     Solución de problemas general y preguntas frecuentes.
   </Card>
 </CardGroup>

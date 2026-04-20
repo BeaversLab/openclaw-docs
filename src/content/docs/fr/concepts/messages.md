@@ -28,7 +28,7 @@ Les principaux paramètres se trouvent dans la configuration :
 - `agents.defaults.*` pour le block streaming et les paramètres par défaut de découpage.
 - Les redéfinitions de channel (`channels.whatsapp.*`, `channels.telegram.*`, etc.) pour les limites et les commutateurs de streaming.
 
-Voir [Configuration](/en/gateway/configuration) pour le schéma complet.
+Voir [Configuration](/fr/gateway/configuration) pour le schéma complet.
 
 ## Dédoublonnage entrant
 
@@ -77,7 +77,7 @@ synchronisé vers chaque client. Recommandation : utilisez un appareil principal
 conversations afin d'éviter un contexte divergent. L'interface de contrôle et le TUI affichent toujours la
 transcription de session soutenue par la passerelle, ils constituent donc la source de vérité.
 
-Détails : [Gestion des sessions](/en/concepts/session).
+Détails : [Gestion des sessions](/fr/concepts/session).
 
 ## Corps des messages entrants et contexte de l'historique
 
@@ -106,7 +106,7 @@ Si une exécution est déjà active, les messages entrants peuvent être mis en 
 - Configurer via `messages.queue` (et `messages.queue.byChannel`).
 - Modes : `interrupt`, `steer`, `followup`, `collect`, plus les variantes de backlog.
 
-Détails : [Mise en file d'attente](/en/concepts/queue).
+Détails : [Mise en file d'attente](/fr/concepts/queue).
 
 ## Streaming, chunking et mise en lot (batching)
 
@@ -122,7 +122,7 @@ Paramètres clés :
 - `agents.defaults.humanDelay` (pause humaine entre les réponses par bloc)
 - Remplacements de channel : `*.blockStreaming` et `*.blockStreamingCoalesce` (les channels non-Telegram nécessitent un `*.blockStreaming: true` explicite)
 
-Détails : [Streaming + découpage](/en/concepts/streaming).
+Détails : [Streaming + découpage](/fr/concepts/streaming).
 
 ## Visibilité du raisonnement et jetons
 
@@ -132,7 +132,7 @@ OpenClaw peut exposer ou masquer le raisonnement du model :
 - Le contenu du raisonnement compte toujours dans l'utilisation des jetons lorsqu'il est produit par le model.
 - Telegram prend en charge le flux de raisonnement dans la bulle de brouillon.
 
-Détails : [Directives de réflexion + raisonnement](/en/tools/thinking) et [Utilisation des jetons](/en/reference/token-use).
+Détails : [Directives de réflexion + raisonnement](/fr/tools/thinking) et [Utilisation des jetons](/fr/reference/token-use).
 
 ## Préfixes, fils de discussion et réponses
 
@@ -141,11 +141,11 @@ Le formatage des messages sortants est centralisé dans `messages` :
 - `messages.responsePrefix`, `channels.<channel>.responsePrefix` et `channels.<channel>.accounts.<id>.responsePrefix` (cascade de préfixes sortants), ainsi que `channels.whatsapp.messagePrefix` (préfixe entrant WhatsApp)
 - Fils de discussion de réponse via `replyToMode` et les valeurs par défaut par channel
 
-Détails : [Configuration](/en/gateway/configuration-reference#messages) et documentation sur les channels.
+Détails : [Configuration](/fr/gateway/configuration-reference#messages) et documentation sur les channels.
 
 ## Connexes
 
-- [Streaming](/en/concepts/streaming) — livraison de messages en temps réel
-- [Retry](/en/concepts/retry) — comportement de nouvelle tentative de livraison de messages
-- [Queue](/en/concepts/queue) — file de traitement des messages
-- [Channels](/en/channels) — intégrations de plateformes de messagerie
+- [Streaming](/fr/concepts/streaming) — livraison de messages en temps réel
+- [Retry](/fr/concepts/retry) — comportement de nouvelle tentative de livraison de messages
+- [Queue](/fr/concepts/queue) — file de traitement des messages
+- [Channels](/fr/channels) — intégrations de plateformes de messagerie

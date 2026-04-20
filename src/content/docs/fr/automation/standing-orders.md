@@ -31,7 +31,7 @@ C'est la différence entre dire à votre assistant "envoyer le rapport hebdomada
 
 ## Comment ils fonctionnent
 
-Les standing orders sont définis dans vos fichiers [agent workspace](/en/concepts/agent-workspace). L'approche recommandée est de les inclure directement dans `AGENTS.md` (qui est auto-injecté à chaque session) afin que l'agent les ait toujours en contexte. Pour les configurations plus volumineuses, vous pouvez également les placer dans un fichier dédié comme `standing-orders.md` et y faire référence depuis `AGENTS.md`.
+Les standing orders sont définis dans vos fichiers [agent workspace](/fr/concepts/agent-workspace). L'approche recommandée est de les inclure directement dans `AGENTS.md` (qui est auto-injecté à chaque session) afin que l'agent les ait toujours en contexte. Pour les configurations plus volumineuses, vous pouvez également les placer dans un fichier dédié comme `standing-orders.md` et y faire référence depuis `AGENTS.md`.
 
 Chaque programme spécifie :
 
@@ -40,7 +40,7 @@ Chaque programme spécifie :
 3. **Portes d'approbation** — ce qui nécessite une signature humaine avant d'agir
 4. **Règles d'escalade** — quand s'arrêter et demander de l'aide
 
-L'agent charge ces instructions à chaque session via les fichiers d'amorçage de l'espace de travail (voir [Agent Workspace](/en/concepts/agent-workspace) pour la liste complète des fichiers auto-injectés) et les exécute, combiné à des [cron jobs](/en/automation/cron-jobs) pour l'application basée sur le temps.
+L'agent charge ces instructions à chaque session via les fichiers d'amorçage de l'espace de travail (voir [Agent Workspace](/fr/concepts/agent-workspace) pour la liste complète des fichiers auto-injectés) et les exécute, combiné à des [cron jobs](/fr/automation/cron-jobs) pour l'application basée sur le temps.
 
 <Tip>Placez les ordres permanents dans `AGENTS.md` pour garantir qu'ils sont chargés à chaque session. L'amorçage de l'espace de travail injecte automatiquement `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` et `MEMORY.md` — mais pas les fichiers arbitraires des sous-répertoires.</Tip>
 
@@ -71,7 +71,7 @@ L'agent charge ces instructions à chaque session via les fichiers d'amorçage d
 
 ## Ordres permanents + Tâches Cron
 
-Les ordres permanents définissent **ce** que l'agent est autorisé à faire. Les [tâches cron](/en/automation/cron-jobs) définissent **quand** cela se produit. Ils fonctionnent ensemble :
+Les ordres permanents définissent **ce** que l'agent est autorisé à faire. Les [tâches cron](/fr/automation/cron-jobs) définissent **quand** cela se produit. Ils fonctionnent ensemble :
 
 ```
 Standing Order: "You own the daily inbox triage"
@@ -245,8 +245,8 @@ Chaque programme doit avoir :
 
 ## Connexes
 
-- [Automatisation et tâches](/en/automation) — un aperçu de tous les mécanismes d'automatisation
-- [Tâches planifiées (Cron Jobs)](/en/automation/cron-jobs) — application des planifications pour les ordres permanents
-- [Hooks](/en/automation/hooks) — scripts pilotés par les événements pour le cycle de vie de l'agent
-- [Webhooks](/en/automation/cron-jobs#webhooks) — déclencheurs d'événements HTTP entrants
-- [Espace de travail de l'agent](/en/concepts/agent-workspace) — endroit où résident les ordres permanents, y compris la liste complète des fichiers d'amorçage auto-injectés (AGENTS.md, SOUL.md, etc.)
+- [Automatisation et tâches](/fr/automation) — un aperçu de tous les mécanismes d'automatisation
+- [Tâches planifiées (Cron Jobs)](/fr/automation/cron-jobs) — application des planifications pour les ordres permanents
+- [Hooks](/fr/automation/hooks) — scripts pilotés par les événements pour le cycle de vie de l'agent
+- [Webhooks](/fr/automation/cron-jobs#webhooks) — déclencheurs d'événements HTTP entrants
+- [Espace de travail de l'agent](/fr/concepts/agent-workspace) — endroit où résident les ordres permanents, y compris la liste complète des fichiers d'amorçage auto-injectés (AGENTS.md, SOUL.md, etc.)

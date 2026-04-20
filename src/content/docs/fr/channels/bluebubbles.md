@@ -159,7 +159,7 @@ DMs :
 - Approuver via :
   - `openclaw pairing list bluebubbles`
   - `openclaw pairing approve bluebubbles <CODE>`
-- L'appairage est l'échange de jetons par défaut. Détails : [Appairage](/en/channels/pairing)
+- L'appairage est l'échange de jetons par défaut. Détails : [Appairage](/fr/channels/pairing)
 
 Groupes :
 
@@ -268,7 +268,7 @@ Exemple :
 }
 ```
 
-Voir [ACP Agents](/en/tools/acp-agents) pour le comportement de liaison ACP partagé.
+Voir [ACP Agents](/fr/tools/acp-agents) pour le comportement de liaison ACP partagé.
 
 ## Indicateurs de frappe + accusés de lecture
 
@@ -342,7 +342,7 @@ Utilisez les IDs complets pour les automatisations durables et le stockage :
 - Modèles : `{{MessageSidFull}}`, `{{ReplyToIdFull}}`
 - Contexte : `MessageSidFull` / `ReplyToIdFull` dans les charges utiles entrantes
 
-Voir [Configuration](/en/gateway/configuration) pour les variables de modèle.
+Voir [Configuration](/fr/gateway/configuration) pour les variables de modèle.
 
 ## Block streaming
 
@@ -366,7 +366,7 @@ Contrôlez si les réponses sont envoyées en un seul message ou diffusées par 
 
 ## Référence de configuration
 
-Configuration complète : [Configuration](/en/gateway/configuration)
+Configuration complète : [Configuration](/fr/gateway/configuration)
 
 Options du fournisseur :
 
@@ -410,7 +410,7 @@ Préférez `chat_guid` pour un routage stable :
 
 - Les requêtes webhook sont authentifiées en comparant les paramètres de requête ou les en-têtes `guid`/`password` avec `channels.bluebubbles.password`.
 - Gardez le mot de passe de l'API et le point de terminaison du webhook secrets (traitez-les comme des identifiants).
-- Il n'y a pas de contournement localhost pour l'authentification par webhook BlueBubbles. Si vous proxyez le trafic webhook, conservez le mot de passe BlueBubbles de bout en bout sur la requête. `gateway.trustedProxies` ne remplace pas `channels.bluebubbles.password` ici. Voir [Sécurité Gateway](/en/gateway/security#reverse-proxy-configuration).
+- Il n'y a pas de contournement localhost pour l'authentification par webhook BlueBubbles. Si vous proxyez le trafic webhook, conservez le mot de passe BlueBubbles de bout en bout sur la requête. `gateway.trustedProxies` ne remplace pas `channels.bluebubbles.password` ici. Voir [Sécurité Gateway](/fr/gateway/security#reverse-proxy-configuration).
 - Activez HTTPS + les règles de pare-feu sur le serveur BlueBubbles si vous l'exposez à l'extérieur de votre LAN.
 
 ## Dépannage
@@ -423,12 +423,12 @@ Préférez `chat_guid` pour un routage stable :
 - OpenClaw masque automatiquement les actions connues comme cassées en fonction de la version macOS du serveur BlueBubbles. Si la modification apparaît toujours sur macOS 26 (Tahoe), désactivez-la manuellement avec `channels.bluebubbles.actions.edit=false`.
 - Pour les informations d'état/santé : `openclaw status --all` ou `openclaw status --deep`.
 
-Pour une référence générale du workflow des canaux, voir [Canaux](/en/channels) et le guide [Plugins](/en/tools/plugin).
+Pour une référence générale du workflow des canaux, voir [Canaux](/fr/channels) et le guide [Plugins](/fr/tools/plugin).
 
 ## Connexes
 
-- [Aperçu des canaux](/en/channels) — tous les canaux pris en charge
-- [Appariement](/en/channels/pairing) — authentification DM et flux d'appariement
-- [Groupes](/en/channels/groups) — comportement du chat de groupe et filtrage des mentions
-- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement
+- [Aperçu des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appariement](/fr/channels/pairing) — authentification DM et flux d'appariement
+- [Groupes](/fr/channels/groups) — comportement du chat de groupe et filtrage des mentions
+- [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

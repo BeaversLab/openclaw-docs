@@ -54,8 +54,8 @@ La génération de vidéo et de musique s'exécute en tant que tâches d'arrièr
 
 ## Liens rapides
 
-- [Génération d'images](/en/tools/image-generation) -- générer et éditer des images
-- [Génération de vidéo](/en/tools/video-generation) -- texte vers vidéo, image vers vidéo et vidéo vers vidéo
-- [Génération de musique](/en/tools/music-generation) -- création de musique et de pistes audio
-- [Synthèse vocale](/en/tools/tts) -- conversion des réponses en audio parlé
-- [Compréhension des médias](/en/nodes/media-understanding) -- compréhension des images, de l'audio et de la vidéo entrants
+- [Génération d'images](/fr/tools/image-generation) -- générer et éditer des images
+- [Génération de vidéo](/fr/tools/video-generation) -- texte vers vidéo, image vers vidéo et vidéo vers vidéo
+- [Génération de musique](/fr/tools/music-generation) -- création de musique et de pistes audio
+- [Synthèse vocale](/fr/tools/tts) -- conversion des réponses en audio parlé
+- [Compréhension des médias](/fr/nodes/media-understanding) -- compréhension des images, de l'audio et de la vidéo entrants

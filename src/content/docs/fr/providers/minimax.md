@@ -239,7 +239,7 @@ Lorsque l'intégration ou la configuration avec clé API écrit des entrées `mo
 
 Le catalogue de texte MiniMax intégré reste des métadonnées texte uniquement jusqu'à ce que cette configuration de fournisseur explicite existe. La compréhension d'image est exposée séparément via le fournisseur multimédia `MiniMax-VL-01` appartenant au plugin.
 
-<Note>Voir [Génération d'images](/en/tools/image-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération d'images](/fr/tools/image-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ### Génération de musique
 
@@ -265,7 +265,7 @@ Pour utiliser MiniMax comme fournisseur de musique par défaut :
 }
 ```
 
-<Note>Voir [Génération de musique](/en/tools/music-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération de musique](/fr/tools/music-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ### Génération de vidéo
 
@@ -289,7 +289,7 @@ Pour utiliser MiniMax comme fournisseur vidéo par défaut :
 }
 ```
 
-<Note>Voir [Génération de vidéo](/en/tools/video-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération de vidéo](/fr/tools/video-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ### Compréhension d'image
 
@@ -316,7 +316,7 @@ Le plugin MiniMax enregistre également `web_search` via l'API de recherche du P
 
 La configuration se trouve sous `plugins.entries.minimax.config.webSearch.*`.
 
-<Note>Voir [Recherche MiniMax](/en/tools/minimax-search) pour la configuration complète et l'utilisation de la recherche Web.</Note>
+<Note>Voir [Recherche MiniMax](/fr/tools/minimax-search) pour la configuration complète et l'utilisation de la recherche Web.</Note>
 
 ## Configuration avancée
 
@@ -386,7 +386,7 @@ La configuration se trouve sous `plugins.entries.minimax.config.webSearch.*`.
 
 <Tip>Lien de parrainage pour le plan de codage MiniMax (10 % de réduction) : [Plan de codage MiniMax](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)</Tip>
 
-<Note>Voir [Fournisseurs de modèles](/en/concepts/model-providers) pour les règles des fournisseurs.</Note>
+<Note>Voir [Fournisseurs de modèles](/fr/concepts/model-providers) pour les règles des fournisseurs.</Note>
 
 ## Dépannage
 
@@ -413,27 +413,27 @@ La configuration se trouve sous `plugins.entries.minimax.config.webSearch.*`.
   </Accordion>
 </AccordionGroup>
 
-<Note>Plus d'aide : [Dépannage](/en/help/troubleshooting) et [FAQ](/en/help/faq).</Note>
+<Note>Plus d'aide : [Dépannage](/fr/help/troubleshooting) et [FAQ](/fr/help/faq).</Note>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choix des providers, des références de modèle et du comportement de basculement.
   </Card>
-  <Card title="Génération d'images" href="/en/tools/image-generation" icon="image">
+  <Card title="Génération d'images" href="/fr/tools/image-generation" icon="image">
     Paramètres partagés de l'outil d'image et sélection du provider.
   </Card>
-  <Card title="Génération de musique" href="/en/tools/music-generation" icon="music">
+  <Card title="Génération de musique" href="/fr/tools/music-generation" icon="music">
     Paramètres partagés de l'outil de musique et sélection du provider.
   </Card>
-  <Card title="Génération vidéo" href="/en/tools/video-generation" icon="video">
+  <Card title="Génération vidéo" href="/fr/tools/video-generation" icon="video">
     Paramètres partagés de l'outil vidéo et sélection du provider.
   </Card>
-  <Card title="Recherche MiniMax" href="/en/tools/minimax-search" icon="magnifying-glass">
+  <Card title="Recherche MiniMax" href="/fr/tools/minimax-search" icon="magnifying-glass">
     Configuration de la recherche web via le Plan de codage MiniMax.
   </Card>
-  <Card title="Dépannage" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
     Dépannage général et FAQ.
   </Card>
 </CardGroup>

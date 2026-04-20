@@ -90,7 +90,7 @@ OpenClaw tente de générer un jeton de porteur Mantle à partir de la chaîne d
 | Cache de découverte        | Résultats mis en cache pendant 1 heure |
 | Actualisation du jeton IAM | Toutes les heures                      |
 
-<Note>Le jeton de porteur est le même `AWS_BEARER_TOKEN_BEDROCK` que celui utilisé par le fournisseur standard [Amazon Bedrock](/en/providers/bedrock).</Note>
+<Note>Le jeton de porteur est le même `AWS_BEARER_TOKEN_BEDROCK` que celui utilisé par le fournisseur standard [Amazon Bedrock](/fr/providers/bedrock).</Note>
 
 ### Régions prises en charge
 
@@ -141,7 +141,7 @@ Si vous préférez une configuration explicite plutôt que la découverte automa
 
   <Accordion title="Relation avec le fournisseur Amazon Bedrock">
     Bedrock Mantle est un fournisseur distinct du fournisseur standard
-    [Amazon Bedrock](/en/providers/bedrock). Mantle utilise une surface
+    [Amazon Bedrock](/fr/providers/bedrock). Mantle utilise une surface
     `/v1` compatible avec OpenAI, tandis que le fournisseur Bedrock standard utilise
     l'API API native.
 
@@ -154,16 +154,16 @@ Si vous préférez une configuration explicite plutôt que la découverte automa
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Amazon Bedrock" href="/en/providers/bedrock" icon="cloud">
+  <Card title="Amazon Bedrock" href="/fr/providers/bedrock" icon="cloud">
     Fournisseur Bedrock natif pour les modèles Anthropic Claude, Titan et autres.
   </Card>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choix des fournisseurs, références de modèle et comportement de basculement.
   </Card>
-  <Card title="OAuth et auth" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth et auth" href="/fr/gateway/authentication" icon="key">
     Détails d'authentification et règles de réutilisation des informations d'identification.
   </Card>
-  <Card title="Dépannage" href="/en/help/troubleshooting" icon="wrench">
+  <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
     Problèmes courants et comment les résoudre.
   </Card>
 </CardGroup>

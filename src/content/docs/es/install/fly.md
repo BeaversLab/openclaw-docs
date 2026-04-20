@@ -499,6 +499,6 @@ Consulta los [precios de Fly.io](https://fly.io/docs/about/pricing/) para más d
 
 ## Próximos pasos
 
-- Configura canales de mensajería: [Canales](/en/channels)
-- Configura la puerta de enlace: [Configuración de la puerta de enlace](/en/gateway/configuration)
-- Mantén OpenClaw actualizado: [Actualización](/en/install/updating)
+- Configura canales de mensajería: [Canales](/es/channels)
+- Configura la puerta de enlace: [Configuración de la puerta de enlace](/es/gateway/configuration)
+- Mantén OpenClaw actualizado: [Actualización](/es/install/updating)

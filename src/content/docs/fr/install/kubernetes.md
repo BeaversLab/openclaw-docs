@@ -104,7 +104,7 @@ Modifiez le `AGENTS.md` dans `scripts/k8s/manifests/configmap.yaml` et redéploy
 
 ### Configuration de la passerelle
 
-Modifiez `openclaw.json` dans `scripts/k8s/manifests/configmap.yaml`. Consultez [configuration de Gateway](/en/gateway/configuration) pour la référence complète.
+Modifiez `openclaw.json` dans `scripts/k8s/manifests/configmap.yaml`. Consultez [configuration de Gateway](/fr/gateway/configuration) pour la référence complète.
 
 ### Ajouter des providers
 

@@ -58,7 +58,7 @@ Le mode distant prend en charge deux transports :
 - Privilégiez les liaisons loopback sur l'hôte distant et connectez-vous via SSH ou Tailscale.
 - Le tunneling SSH utilise une vérification stricte de la clé de l'hôte ; faites confiance à la clé de l'hôte au préalable pour qu'elle existe dans `~/.ssh/known_hosts`.
 - Si vous liez le Gateway à une interface non bouclée, exigez une authentification Gateway valide : jeton, mot de passe ou un proxy inverse conscient de l'identité avec `gateway.auth.mode: "trusted-proxy"`.
-- Voir [Sécurité](/en/gateway/security) et [Tailscale](/en/gateway/tailscale).
+- Voir [Sécurité](/fr/gateway/security) et [Tailscale](/fr/gateway/tailscale).
 
 ## Flux de connexion WhatsApp (distant)
 

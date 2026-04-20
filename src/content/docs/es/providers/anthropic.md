@@ -95,11 +95,11 @@ La documentación pública actual de Anthropic:
     </Steps>
 
     <Note>
-    Los detalles de configuración y ejecución del backend de Claude CLI se encuentran en [Backends de CLI](/en/gateway/cli-backends).
+    Los detalles de configuración y ejecución del backend de Claude CLI se encuentran en [Backends de CLI](/es/gateway/cli-backends).
     </Note>
 
     <Tip>
-    Si desea la ruta de facturación más clara, utilice en su lugar una clave API de Anthropic. OpenClaw también admite opciones de estilo suscripción de [OpenAI Codex](/en/providers/openai), [Qwen Cloud](/en/providers/qwen), [MiniMax](/en/providers/minimax) y [Z.AI / GLM](/en/providers/glm).
+    Si desea la ruta de facturación más clara, utilice en su lugar una clave API de Anthropic. OpenClaw también admite opciones de estilo suscripción de [OpenAI Codex](/es/providers/openai), [Qwen Cloud](/es/providers/qwen), [MiniMax](/es/providers/minimax) y [Z.AI / GLM](/es/providers/glm).
     </Tip>
 
   </Tab>
@@ -280,21 +280,21 @@ OpenClaw admite la función de caché de prompt de Anthropic para la autenticaci
   </Accordion>
 </AccordionGroup>
 
-<Note>Más ayuda: [Solución de problemas](/en/help/troubleshooting) y [Preguntas frecuentes](/en/help/faq).</Note>
+<Note>Más ayuda: [Solución de problemas](/es/help/troubleshooting) y [Preguntas frecuentes](/es/help/faq).</Note>
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/es/concepts/model-providers" icon="layers">
     Elegir proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="CLI backends" href="/en/gateway/cli-backends" icon="terminal">
+  <Card title="CLI backends" href="/es/gateway/cli-backends" icon="terminal">
     Configuración y detalles de tiempo de ejecución del backend de Claude CLI.
   </Card>
-  <Card title="Prompt caching" href="/en/reference/prompt-caching" icon="database">
+  <Card title="Prompt caching" href="/es/reference/prompt-caching" icon="database">
     Cómo funciona el almacenamiento en caché de prompts entre proveedores.
   </Card>
-  <Card title="OAuth and auth" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth and auth" href="/es/gateway/authentication" icon="key">
     Detalles de autenticación y reglas de reutilización de credenciales.
   </Card>
 </CardGroup>

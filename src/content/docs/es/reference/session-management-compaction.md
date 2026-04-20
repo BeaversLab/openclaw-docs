@@ -21,12 +21,12 @@ Este documento explica cómo OpenClaw gestiona las sesiones de extremo a extremo
 
 Si primero desea una descripción general de alto nivel, comience con:
 
-- [/concepts/session](/en/concepts/session)
-- [/concepts/compaction](/en/concepts/compaction)
-- [/concepts/memory](/en/concepts/memory)
-- [/concepts/memory-search](/en/concepts/memory-search)
-- [/concepts/session-pruning](/en/concepts/session-pruning)
-- [/reference/transcript-hygiene](/en/reference/transcript-hygiene)
+- [/concepts/session](/es/concepts/session)
+- [/concepts/compaction](/es/concepts/compaction)
+- [/concepts/memory](/es/concepts/memory)
+- [/concepts/memory-search](/es/concepts/memory-search)
+- [/concepts/session-pruning](/es/concepts/session-pruning)
+- [/reference/transcript-hygiene](/es/reference/transcript-hygiene)
 
 ---
 
@@ -117,7 +117,7 @@ Patrones comunes:
 - Cron: `cron:<job.id>`
 - Webhook: `hook:<uuid>` (a menos que se anule)
 
-Las reglas canónicas están documentadas en [/concepts/session](/en/concepts/session).
+Las reglas canónicas están documentadas en [/concepts/session](/es/concepts/session).
 
 ---
 
@@ -195,7 +195,7 @@ Si estás ajustando los límites:
 - La ventana de contexto proviene del catálogo de modelos (y puede anularse mediante configuración).
 - `contextTokens` en el almacenamiento es un valor estimado/de informe en tiempo de ejecución; no lo trates como una garantía estricta.
 
-Para más información, consulte [/token-use](/en/reference/token-use).
+Para más información, consulte [/token-use](/es/reference/token-use).
 
 ---
 
@@ -208,7 +208,7 @@ Después de la compactación, los turnos futuros ven:
 - El resumen de compactación
 - Mensajes después de `firstKeptEntryId`
 
-La compactación es **persistente** (a diferencia de la poda de sesiones). Consulte [/concepts/session-pruning](/en/concepts/session-pruning).
+La compactación es **persistente** (a diferencia de la poda de sesiones). Consulte [/concepts/session-pruning](/es/concepts/session-pruning).
 
 ## Límites de los fragmentos de compactación y emparejamiento de herramientas
 
@@ -349,7 +349,7 @@ Notas:
 - La limpieza se ejecuta una vez por ciclo de compactación (rastreado en `sessions.json`).
 - La limpieza se ejecuta solo para sesiones Pi integradas (los backends CLI la omiten).
 - La limpieza se omite cuando el espacio de trabajo de la sesión es de solo lectura (`workspaceAccess: "ro"` o `"none"`).
-- Consulte [Memoria](/en/concepts/memory) para ver el diseño de archivos del espacio de trabajo y los patrones de escritura.
+- Consulte [Memoria](/es/concepts/memory) para ver el diseño de archivos del espacio de trabajo y los patrones de escritura.
 
 Pi también expone un gancho `session_before_compact` en la API de extensión, pero la lógica de vaciado de OpenClaw se encuentra hoy en el lado del Gateway.
 
@@ -357,7 +357,7 @@ Pi también expone un gancho `session_before_compact` en la API de extensión, p
 
 ## Lista de verificación de solución de problemas
 
-- ¿Clave de sesión incorrecta? Comience con [/concepts/session](/en/concepts/session) y confirme el `sessionKey` en `/status`.
+- ¿Clave de sesión incorrecta? Comience con [/concepts/session](/es/concepts/session) y confirme el `sessionKey` en `/status`.
 - ¿Discrepancia entre el almacén y la transcripción? Confirme el host del Gateway y la ruta del almacén desde `openclaw status`.
 - ¿Spam de compactación? Compruebe:
   - ventana de contexto del modelo (demasiado pequeña)

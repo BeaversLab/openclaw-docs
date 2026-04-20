@@ -8,15 +8,15 @@ title: "Heartbeat"
 
 # Heartbeat (Gateway)
 
-> **¿Latido o Cron?** Consulte [Automatización y tareas](/en/automation) para obtener orientación sobre cuándo usar cada uno.
+> **¿Latido o Cron?** Consulte [Automatización y tareas](/es/automation) para obtener orientación sobre cuándo usar cada uno.
 
 Heartbeat ejecuta **turnos de agente periódicos** en la sesión principal para que el modelo pueda
 resaltar cualquier cosa que requiera atención sin enviarle spam.
 
-Latido es un turno de sesión principal programado: **no** crea registros de [tarea en segundo plano](/en/automation/tasks).
+Latido es un turno de sesión principal programado: **no** crea registros de [tarea en segundo plano](/es/automation/tasks).
 Los registros de tareas son para trabajos separados (ejecuciones de ACP, subagentes, trabajos de cron aislados).
 
-Solución de problemas: [Tareas programadas](/en/automation/cron-jobs#troubleshooting)
+Solución de problemas: [Tareas programadas](/es/automation/cron-jobs#troubleshooting)
 
 ## Inicio rápido (principiante)
 
@@ -69,9 +69,9 @@ El mensaje predeterminado es intencionalmente amplio:
   seguimientos (bandeja de entrada, calendario, recordatorios, trabajo en cola) y resaltar cualquier cosa urgente.
 - **Contacto humano**: "A veces chequee a su humano durante el día" impulsa un
   mensaje ligero ocasional de "¿necesita algo?", pero evita el spam nocturno
-  al usar su zona horaria local configurada (consulte [/concepts/timezone](/en/concepts/timezone)).
+  al usar su zona horaria local configurada (consulte [/concepts/timezone](/es/concepts/timezone)).
 
-El latido puede reaccionar a [tareas en segundo plano](/en/automation/tasks) completadas, pero una ejecución de latido en sí misma no crea un registro de tarea.
+El latido puede reaccionar a [tareas en segundo plano](/es/automation/tasks) completadas, pero una ejecución de latido en sí misma no crea un registro de tarea.
 
 Si desea que un latido haga algo muy específico (p. ej., "verificar estadísticas de Gmail PubSub"
 o "verificar el estado de la puerta de enlace"), establezca `agents.defaults.heartbeat.prompt` (o
@@ -227,8 +227,8 @@ Use `accountId` para apuntar a una cuenta específica en canales multi-cuenta co
 - `isolatedSession`: cuando es verdadero, cada heartbeat se ejecuta en una sesión nueva sin historial de conversación previo. Usa el mismo patrón de aislamiento que el cron `sessionTarget: "isolated"`. Reduce drásticamente el costo de tokens por heartbeat. Combine con `lightContext: true` para obtener el máximo ahorro. El enrutamiento de entrega aún usa el contexto de la sesión principal.
 - `session`: clave de sesión opcional para ejecuciones de heartbeat.
   - `main` (predeterminado): sesión principal del agente.
-  - Clave de sesión explícita (copiada de `openclaw sessions --json` o la [sessions CLI](/en/cli/sessions)).
-  - Formatos de clave de sesión: consulte [Sessions](/en/concepts/session) y [Groups](/en/channels/groups).
+  - Clave de sesión explícita (copiada de `openclaw sessions --json` o la [sessions CLI](/es/cli/sessions)).
+  - Formatos de clave de sesión: consulte [Sessions](/es/concepts/session) y [Groups](/es/channels/groups).
 - `target`:
   - `last`: entrega al último canal externo utilizado.
   - canal explícito: cualquier canal configurado o id de complemento, por ejemplo `discord`, `matrix`, `telegram` o `whatsapp`.
@@ -446,7 +446,7 @@ Los latidos ejecutan turnos completos del agente. Los intervalos más cortos con
 
 ## Relacionado
 
-- [Automatización y Tareas](/en/automation) — todos los mecanismos de automatización de un vistazo
-- [Tareas en segundo plano](/en/automation/tasks) — cómo se rastrea el trabajo desacoplado
-- [Zona horaria](/en/concepts/timezone) — cómo afecta la zona horaria a la programación del latido
-- [Solución de problemas](/en/automation/cron-jobs#troubleshooting) — depuración de problemas de automatización
+- [Automatización y Tareas](/es/automation) — todos los mecanismos de automatización de un vistazo
+- [Tareas en segundo plano](/es/automation/tasks) — cómo se rastrea el trabajo desacoplado
+- [Zona horaria](/es/concepts/timezone) — cómo afecta la zona horaria a la programación del latido
+- [Solución de problemas](/es/automation/cron-jobs#troubleshooting) — depuración de problemas de automatización

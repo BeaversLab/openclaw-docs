@@ -203,7 +203,7 @@ Tous les paramètres se trouvent sous `plugins.entries.memory-core.config.dreami
 
 La politique de phase, les seuils et le comportement de stockage sont des détails de mise en œuvre internes (pas une configuration utilisateur).
 
-Voir [Référence de configuration de la mémoire](/en/reference/memory-config#dreaming)
+Voir [Référence de configuration de la mémoire](/fr/reference/memory-config#dreaming)
 pour la liste complète des clés.
 
 ## Interface utilisateur des rêves
@@ -219,7 +219,7 @@ Lorsqu'il est activé, l'onglet **Dreams** du Gateway affiche :
 
 ## Connexes
 
-- [Mémoire](/en/concepts/memory)
-- [Recherche de mémoire](/en/concepts/memory-search)
-- [memory CLI](/en/cli/memory)
-- [Référence de configuration de la mémoire](/en/reference/memory-config)
+- [Mémoire](/fr/concepts/memory)
+- [Recherche de mémoire](/fr/concepts/memory-search)
+- [memory CLI](/fr/cli/memory)
+- [Référence de configuration de la mémoire](/fr/reference/memory-config)

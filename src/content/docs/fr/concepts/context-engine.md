@@ -267,11 +267,11 @@ Le slot est exclusif lors de l'exécution — un seul moteur de contexte enregis
 - Pour le développement, utilisez `openclaw plugins install -l ./my-engine` pour lier un
   répertoire de plugins local sans copier.
 
-Voir aussi : [Compaction](/en/concepts/compaction), [Context](/en/concepts/context),
-[Plugins](/en/tools/plugin), [Plugin manifest](/en/plugins/manifest).
+Voir aussi : [Compaction](/fr/concepts/compaction), [Context](/fr/concepts/context),
+[Plugins](/fr/tools/plugin), [Plugin manifest](/fr/plugins/manifest).
 
 ## Connexes
 
-- [Context](/en/concepts/context) — comment le contexte est construit pour les tours de l'agent
-- [Plugin Architecture](/en/plugins/architecture) — enregistrement des plugins de moteur de contexte
-- [Compaction](/en/concepts/compaction) — résumer les longues conversations
+- [Context](/fr/concepts/context) — comment le contexte est construit pour les tours de l'agent
+- [Plugin Architecture](/fr/plugins/architecture) — enregistrement des plugins de moteur de contexte
+- [Compaction](/fr/concepts/compaction) — résumer les longues conversations

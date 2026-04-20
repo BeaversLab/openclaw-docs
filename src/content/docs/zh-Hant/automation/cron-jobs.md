@@ -34,7 +34,7 @@ openclaw cron runs --id <job-id>
 
 - Cron 在 **Gateway 進程內運行**（而非在模型內）。
 - 工作會保存在 `~/.openclaw/cron/jobs.json`，因此重新啟動不會遺失排程。
-- 所有 cron 執行都會建立 [背景任務](/en/automation/tasks) 記錄。
+- 所有 cron 執行都會建立 [背景任務](/zh-Hant/automation/tasks) 記錄。
 - 單次工作 (`--at`) 預設在成功後會自動刪除。
 - 隔離的 cron 執行會在執行完成時，盡力關閉其 `cron:<jobId>` 階段追蹤的瀏覽器分頁/程序，因此分離的瀏覽器自動化不會留下孤兒程序。
 - 隔離的 cron 執行也會防止過時的確認回覆。如果
@@ -416,7 +416,7 @@ openclaw doctor
 
 ## 相關
 
-- [自動化與任務](/en/automation) — 所有自動化機制一覽
-- [背景任務](/en/automation/tasks) — cron 執行的任務分類帳
-- [Heartbeat](/en/gateway/heartbeat) — 週期性主會話輪次
-- [時區](/en/concepts/timezone) — 時區設定
+- [自動化與任務](/zh-Hant/automation) — 所有自動化機制一覽
+- [背景任務](/zh-Hant/automation/tasks) — cron 執行的任務分類帳
+- [Heartbeat](/zh-Hant/gateway/heartbeat) — 週期性主會話輪次
+- [時區](/zh-Hant/concepts/timezone) — 時區設定

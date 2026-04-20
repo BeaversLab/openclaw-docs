@@ -12,8 +12,8 @@ title: "logs"
 
 相關主題：
 
-- 日誌概覽：[日誌](/en/logging)
-- Gateway CLI：[gateway](/en/cli/gateway)
+- 日誌概覽：[日誌](/zh-Hant/logging)
+- Gateway CLI：[gateway](/zh-Hant/cli/gateway)
 
 ## 選項
 

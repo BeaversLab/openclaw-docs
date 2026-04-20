@@ -12,7 +12,7 @@ title: "DigitalOcean (Platform)"
 
 Exécuter un OpenClaw Gateway persistant sur DigitalOcean pour **6 $/mois** (ou 4 $/mois avec tarification réservée).
 
-Si vous souhaitez une option à 0 $/mois et que vous ne craignez pas une configuration spécifique au fournisseur + ARM, consultez le guide [Oracle Cloud](/en/platforms/oracle).
+Si vous souhaitez une option à 0 $/mois et que vous ne craignez pas une configuration spécifique au fournisseur + ARM, consultez le guide [Oracle Cloud](/fr/platforms/oracle).
 
 ## Comparaison des coûts (2026)
 
@@ -27,8 +27,8 @@ Si vous souhaitez une option à 0 $/mois et que vous ne craignez pas une configu
 **Choisir un fournisseur :**
 
 - DigitalOcean : interface UX la plus simple + configuration prévisible (ce guide)
-- Hetzner : excellent rapport qualité/prix (voir le [guide Hetzner](/en/install/hetzner))
-- Oracle Cloud : peut être gratuit (0 $/mois), mais est plus capricieux et limité à l'ARM (voir le [guide Oracle](/en/platforms/oracle))
+- Hetzner : excellent rapport qualité/prix (voir le [guide Hetzner](/fr/install/hetzner))
+- Oracle Cloud : peut être gratuit (0 $/mois), mais est plus capricieux et limité à l'ARM (voir le [guide Oracle](/fr/platforms/oracle))
 
 ---
 
@@ -158,7 +158,7 @@ openclaw channels login whatsapp
 # Scan QR code
 ```
 
-Voir [Channels](/en/channels) pour d'autres fournisseurs.
+Voir [Channels](/fr/channels) pour d'autres fournisseurs.
 
 ---
 
@@ -223,7 +223,7 @@ Oracle Cloud propose des instances ARM **Always Free** (toujours gratuites) qui 
 - L'inscription peut être capricieuse (réessayez en cas d'échec)
 - Architecture ARM — la plupart des choses fonctionnent, mais certains binaires nécessitent des versions ARM
 
-Pour le guide d'installation complet, consultez [Oracle Cloud](/en/platforms/oracle). Pour des conseils d'inscription et le dépannage du processus d'inscription, consultez ce [guide communautaire](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
+Pour le guide d'installation complet, consultez [Oracle Cloud](/fr/platforms/oracle). Pour des conseils d'inscription et le dépannage du processus d'inscription, consultez ce [guide communautaire](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
 
 ---
 
@@ -258,7 +258,7 @@ free -h
 
 ## Voir aussi
 
-- [Guide Hetzner](/en/install/hetzner) — moins cher, plus puissant
-- [Installation Docker](/en/install/docker) — installation conteneurisée
-- [Tailscale](/en/gateway/tailscale) — accès à distance sécurisé
-- [Configuration](/en/gateway/configuration) — référence complète de la configuration
+- [Guide Hetzner](/fr/install/hetzner) — moins cher, plus puissant
+- [Installation Docker](/fr/install/docker) — installation conteneurisée
+- [Tailscale](/fr/gateway/tailscale) — accès à distance sécurisé
+- [Configuration](/fr/gateway/configuration) — référence complète de la configuration

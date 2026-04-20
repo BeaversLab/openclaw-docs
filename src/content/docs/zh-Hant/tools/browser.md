@@ -42,7 +42,7 @@ openclaw browser --browser-profile openclaw snapshot
 如果您收到「Browser disabled」（瀏覽器已停用），請在設定中啟用它（見下文）並重新啟動
 Gateway。
 
-如果 `openclaw browser` 完全遺失，或者代理程式表示瀏覽器工具無法使用，請跳至 [遺失瀏覽器指令或工具](/en/tools/browser#missing-browser-command-or-tool)。
+如果 `openclaw browser` 完全遺失，或者代理程式表示瀏覽器工具無法使用，請跳至 [遺失瀏覽器指令或工具](/zh-Hant/tools/browser#missing-browser-command-or-tool)。
 
 ## 外掛程式控制
 
@@ -607,7 +607,7 @@ docker compose run --rm openclaw-cli \
 
 若要保存瀏覽器下載內容，請設定 `PLAYWRIGHT_BROWSERS_PATH`（例如，
 `/home/node/.cache/ms-playwright`）並確保 `/home/node` 透過
-`OPENCLAW_HOME_VOLUME` 或掛載綁定來保存。請參閱 [Docker](/en/install/docker)。
+`OPENCLAW_HOME_VOLUME` 或掛載綁定來保存。請參閱 [Docker](/zh-Hant/install/docker)。
 
 ## 運作方式 (內部)
 
@@ -722,7 +722,7 @@ docker compose run --rm openclaw-cli \
   - `--format ai` (安裝 Playwright 時的預設值)：傳回帶有數字參照的 AI 快照 (`aria-ref="<n>"`)。
   - `--format aria`：傳回無障礙樹 (無參照；僅供檢查)。
   - `--efficient` (或 `--mode efficient`)：精簡角色快照預設 (interactive + compact + depth + lower maxChars)。
-  - 配置預設值（僅適用於工具/CLI）：設定 `browser.snapshotDefaults.mode: "efficient"` 以在呼叫者未傳遞模式時使用有效率的快照（參閱 [Gateway configuration](/en/gateway/configuration-reference#browser)）。
+  - 配置預設值（僅適用於工具/CLI）：設定 `browser.snapshotDefaults.mode: "efficient"` 以在呼叫者未傳遞模式時使用有效率的快照（參閱 [Gateway configuration](/zh-Hant/gateway/configuration-reference#browser)）。
   - 角色快照選項（`--interactive`、`--compact`、`--depth`、`--selector`）會強制使用具有如 `ref=e12` 等參照的基於角色的快照。
   - `--frame "<iframe selector>"` 將角色快照的範圍限定在 iframe（與如 `e12` 等角色參照搭配使用）。
   - `--interactive` 輸出一個扁平、易於選取的互動元素清單（最適合用於驅動操作）。
@@ -825,7 +825,7 @@ JSON 中的角色快照包含 `refs` 以及一個小型的 `stats` 區塊（行/
 - `browser act kind=evaluate` / `openclaw browser evaluate` 和 `wait --fn`
   在頁面上下文中執行任意 JavaScript。提示注入可以操縱這一點。
   如果您不需要它，請使用 `browser.evaluateEnabled=false` 將其停用。
-- 有關登入和反機器人提示（X/Twitter 等），請參閱 [Browser login + X/Twitter posting](/en/tools/browser-login)。
+- 有關登入和反機器人提示（X/Twitter 等），請參閱 [Browser login + X/Twitter posting](/zh-Hant/tools/browser-login)。
 - 請將 Gateway/節點主機保持私密（僅限 loopback 或 tailnet）。
 - 遠端 CDP 端點功能強大；請對其進行通道傳輸並加以保護。
 
@@ -846,10 +846,10 @@ JSON 中的角色快照包含 `refs` 以及一個小型的 `stats` 區塊（行/
 ## 疑難排解
 
 針對 Linux 特有問題（特別是 snap 版 Chromium），請參閱
-[瀏覽器疑難排解](/en/tools/browser-linux-troubleshooting)。
+[瀏覽器疑難排解](/zh-Hant/tools/browser-linux-troubleshooting)。
 
 針對 WSL2 Gateway + Windows Chrome 分離主機設定，請參閱
-[WSL2 + Windows + 遠端 Chrome CDP 疑難排解](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)。
+[WSL2 + Windows + 遠端 Chrome CDP 疑難排解](/zh-Hant/tools/browser-wsl2-windows-remote-cdp-troubleshooting)。
 
 ### CDP 啟動失敗與導覽 SSRF 封鎖
 
@@ -930,6 +930,6 @@ Agent 獲得**一個工具**用於瀏覽器自動化：
 
 ## 相關內容
 
-- [工具概覽](/en/tools) — 所有可用的 Agent 工具
-- [沙盒化](/en/gateway/sandboxing) — 沙盒環境中的瀏覽器控制
-- [安全性](/en/gateway/security) — 瀏覽器控制的風險與加固
+- [工具概覽](/zh-Hant/tools) — 所有可用的 Agent 工具
+- [沙盒化](/zh-Hant/gateway/sandboxing) — 沙盒環境中的瀏覽器控制
+- [安全性](/zh-Hant/gateway/security) — 瀏覽器控制的風險與加固

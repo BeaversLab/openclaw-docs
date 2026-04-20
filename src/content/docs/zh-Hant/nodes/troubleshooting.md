@@ -112,8 +112,8 @@ openclaw logs --follow
 
 相關連結：
 
-- [/nodes/index](/en/nodes/index)
-- [/nodes/camera](/en/nodes/camera)
-- [/nodes/location-command](/en/nodes/location-command)
-- [/tools/exec-approvals](/en/tools/exec-approvals)
-- [/gateway/pairing](/en/gateway/pairing)
+- [/nodes/index](/zh-Hant/nodes/index)
+- [/nodes/camera](/zh-Hant/nodes/camera)
+- [/nodes/location-command](/zh-Hant/nodes/location-command)
+- [/tools/exec-approvals](/zh-Hant/tools/exec-approvals)
+- [/gateway/pairing](/zh-Hant/gateway/pairing)

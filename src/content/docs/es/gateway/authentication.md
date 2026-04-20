@@ -8,14 +8,14 @@ title: "Autenticación"
 
 # Autenticación (Proveedores de Modelos)
 
-<Note>Esta página cubre la autenticación del **proveedor de modelos** (claves de API, OAuth, reutilización de Claude CLI y token de configuración de Anthropic). Para la autenticación de la **conexión de puerta de enlace** (token, contraseña, proxy de confianza), consulte [Configuration](/en/gateway/configuration) y [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth).</Note>
+<Note>Esta página cubre la autenticación del **proveedor de modelos** (claves de API, OAuth, reutilización de Claude CLI y token de configuración de Anthropic). Para la autenticación de la **conexión de puerta de enlace** (token, contraseña, proxy de confianza), consulte [Configuration](/es/gateway/configuration) y [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth).</Note>
 
 OpenClaw es compatible con OAuth y claves API para proveedores de modelos. Para hosts de puerta de enlace siempre activos, las claves API suelen ser la opción más predecible. Los flujos de suscripción/OAuth también son compatibles cuando coinciden con el modelo de cuenta de su proveedor.
 
-Consulte [/concepts/oauth](/en/concepts/oauth) para ver el flujo de OAuth completo y el diseño de almacenamiento.
-Para la autenticación basada en SecretRef (proveedores `env`/`file`/`exec`), consulte [Secrets Management](/en/gateway/secrets).
+Consulte [/concepts/oauth](/es/concepts/oauth) para ver el flujo de OAuth completo y el diseño de almacenamiento.
+Para la autenticación basada en SecretRef (proveedores `env`/`file`/`exec`), consulte [Secrets Management](/es/gateway/secrets).
 Para las reglas de elegibilidad de credenciales/códigos de razón utilizadas por `models status --probe`, consulte
-[Auth Credential Semantics](/en/auth-credential-semantics).
+[Auth Credential Semantics](/es/auth-credential-semantics).
 
 ## Configuración recomendada (clave API, cualquier proveedor)
 
@@ -49,7 +49,7 @@ openclaw doctor
 Si prefiere no administrar las variables de entorno usted mismo, la incorporación puede almacenar
 claves de API para uso del demonio: `openclaw onboard`.
 
-Consulte [Help](/en/help) para obtener detalles sobre la herencia de variables de entorno (`env.shellEnv`,
+Consulte [Help](/es/help) para obtener detalles sobre la herencia de variables de entorno (`env.shellEnv`,
 `~/.openclaw/.env`, systemd/launchd).
 
 ## Anthropic: Claude CLI y compatibilidad de tokens
@@ -93,7 +93,7 @@ Notas:
 - Los períodos de enfriamiento por límite de velocidad pueden estar limitados al modelo. Un perfil enfriándose por un modelo aún puede ser utilizable para un modelo hermano en el mismo proveedor.
 
 Los scripts opcionales de operaciones (systemd/Termux) están documentados aquí:
-[Auth monitoring scripts](/en/help/scripts#auth-monitoring-scripts)
+[Auth monitoring scripts](/es/help/scripts#auth-monitoring-scripts)
 
 ## Nota de Anthropic
 

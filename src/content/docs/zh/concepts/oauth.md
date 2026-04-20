@@ -61,9 +61,9 @@ OAuth 提供商通常在登录/刷新流程中颁发一个 **新的刷新令牌*
 
 - `~/.openclaw/credentials/oauth.json` (首次使用时导入到 `auth-profiles.json`)
 
-All of the above also respect `$OPENCLAW_STATE_DIR` (state dir override). Full reference: [/gateway/configuration](/en/gateway/configuration-reference#auth-storage)
+All of the above also respect `$OPENCLAW_STATE_DIR` (state dir override). Full reference: [/gateway/configuration](/zh/gateway/configuration-reference#auth-storage)
 
-For static secret refs and runtime snapshot activation behavior, see [Secrets Management](/en/gateway/secrets).
+For static secret refs and runtime snapshot activation behavior, see [Secrets Management](/zh/gateway/secrets).
 
 ## Anthropic 遗留令牌兼容性
 
@@ -81,9 +81,9 @@ and [Using Claude Code with your Team or Enterprise
 plan](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
 If you want other subscription-style options in OpenClaw, see [OpenAI
-Codex](/en/providers/openai), [Qwen Cloud Coding
-Plan](/en/providers/qwen), [MiniMax Coding Plan](/en/providers/minimax),
-and [Z.AI / GLM Coding Plan](/en/providers/glm).
+Codex](/zh/providers/openai), [Qwen Cloud Coding
+Plan](/zh/providers/qwen), [MiniMax Coding Plan](/zh/providers/minimax),
+and [Z.AI / GLM Coding Plan](/zh/providers/glm).
 
 </Warning>
 
@@ -168,11 +168,11 @@ openclaw agents add personal
 
 相关文档：
 
-- [/concepts/模型-failover](/en/concepts/model-failover) （轮换 + 冷却规则）
-- [/tools/slash-commands](/en/tools/slash-commands) （命令界面）
+- [/concepts/模型-failover](/zh/concepts/model-failover) （轮换 + 冷却规则）
+- [/tools/slash-commands](/zh/tools/slash-commands) （命令界面）
 
 ## 相关
 
-- [Authentication](/en/gateway/authentication) — 模型提供商身份验证概览
-- [Secrets](/en/gateway/secrets) — 凭据存储和 SecretRef
-- [Configuration Reference](/en/gateway/configuration-reference#auth-storage) — 身份验证配置键
+- [Authentication](/zh/gateway/authentication) — 模型提供商身份验证概览
+- [Secrets](/zh/gateway/secrets) — 凭据存储和 SecretRef
+- [Configuration Reference](/zh/gateway/configuration-reference#auth-storage) — 身份验证配置键

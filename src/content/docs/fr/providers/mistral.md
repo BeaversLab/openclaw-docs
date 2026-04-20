@@ -123,10 +123,10 @@ Utilisez Voxtral pour la transcription audio via le pipeline de compréhension d
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les fournisseurs, les références de modèles et le comportement de basculement.
   </Card>
-  <Card title="Compréhension des médias" href="/en/tools/media-understanding" icon="microphone">
+  <Card title="Compréhension des médias" href="/fr/tools/media-understanding" icon="microphone">
     Configuration de la transcription audio et sélection du fournisseur.
   </Card>
 </CardGroup>

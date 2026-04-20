@@ -159,7 +159,7 @@ openclaw channels add bluebubbles --http-url http://192.168.1.100:1234 --passwor
 - 透過以下方式核准：
   - `openclaw pairing list bluebubbles`
   - `openclaw pairing approve bluebubbles <CODE>`
-- 配對是預設的權杖交換。詳情：[配對](/en/channels/pairing)
+- 配對是預設的權杖交換。詳情：[配對](/zh-Hant/channels/pairing)
 
 群組：
 
@@ -268,7 +268,7 @@ BlueBubbles 聊天可以轉換為持久的 ACP 工作區，而無需更改傳輸
 }
 ```
 
-關於共用的 ACP 綁定行為，請參閱 [ACP Agents](/en/tools/acp-agents)。
+關於共用的 ACP 綁定行為，請參閱 [ACP Agents](/zh-Hant/tools/acp-agents)。
 
 ## 輸入中 + 已讀回執
 
@@ -342,7 +342,7 @@ OpenClaw 可能會提供「短」訊息 ID（例如 `1`、`2`）以節省 tokens
 - 範本：`{{MessageSidFull}}`、`{{ReplyToIdFull}}`
 - 上下文：傳入負載中的 `MessageSidFull` / `ReplyToIdFull`
 
-請參閱 [Configuration](/en/gateway/configuration) 以了解模板變數。
+請參閱 [Configuration](/zh-Hant/gateway/configuration) 以了解模板變數。
 
 ## 區塊串流
 
@@ -366,7 +366,7 @@ OpenClaw 可能會提供「短」訊息 ID（例如 `1`、`2`）以節省 tokens
 
 ## 組態參考
 
-完整組態：[Configuration](/en/gateway/configuration)
+完整組態：[Configuration](/zh-Hant/gateway/configuration)
 
 提供者選項：
 
@@ -410,7 +410,7 @@ OpenClaw 可能會提供「短」訊息 ID（例如 `1`、`2`）以節省 tokens
 
 - Webhook 請求通過將 `guid`/`password` 查詢參數或標頭與 `channels.bluebubbles.password` 進行比較來進行驗證。
 - 請妥善保管 API 密碼和 webhook 端點（將其視為憑證）。
-- BlueBubbles webhook 驗證沒有 localhost 繞過機制。如果您代理 webhook 流量，請在請求中端對端保留 BlueBubbles 密碼。`gateway.trustedProxies` 不會在此取代 `channels.bluebubbles.password`。參閱 [閘道安全](/en/gateway/security#reverse-proxy-configuration)。
+- BlueBubbles webhook 驗證沒有 localhost 繞過機制。如果您代理 webhook 流量，請在請求中端對端保留 BlueBubbles 密碼。`gateway.trustedProxies` 不會在此取代 `channels.bluebubbles.password`。參閱 [閘道安全](/zh-Hant/gateway/security#reverse-proxy-configuration)。
 - 如果將 BlueBubbles 伺服器暴露在區域網路（LAN）之外，請在伺服器上啟用 HTTPS 和防火牆規則。
 
 ## 疑難排解
@@ -423,12 +423,12 @@ OpenClaw 可能會提供「短」訊息 ID（例如 `1`、`2`）以節省 tokens
 - OpenClaw 會根據 BlueBubbles 伺服器的 macOS 版本自動隱藏已知損壞的操作。如果在 macOS 26 (Tahoe) 上仍然顯示編輯選項，請使用 `channels.bluebubbles.actions.edit=false` 手動停用它。
 - 若要查看狀態/健康資訊：`openclaw status --all` 或 `openclaw status --deep`。
 
-如需一般頻道工作流程參考，請參閱 [頻道](/en/channels) 和 [外掛程式](/en/tools/plugin) 指南。
+如需一般頻道工作流程參考，請參閱 [頻道](/zh-Hant/channels) 和 [外掛程式](/zh-Hant/tools/plugin) 指南。
 
 ## 相關
 
-- [頻道概覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — 私訊驗證和配對流程
-- [群組](/en/channels/groups) — 群組聊天行為和提及控管
-- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
-- [安全性](/en/gateway/security) — 存取模型和防護
+- [頻道概覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — 私訊驗證和配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為和提及控管
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型和防護

@@ -38,7 +38,7 @@ Línea base saludable:
 | Mensajes de grupo ignorados                         | Verifique `requireMention` + patrones de mención en la configuración | Mencione al bot o relaje la política de menciones para ese grupo.                     |
 | Bucles aleatorios de desconexión/reinicio de sesión | `openclaw channels status --probe` + registros                       | Vuelva a iniciar sesión y verifique que el directorio de credenciales esté saludable. |
 
-Solución de problemas completa: [/channels/whatsapp#troubleshooting](/en/channels/whatsapp#troubleshooting)
+Solución de problemas completa: [/channels/whatsapp#troubleshooting](/es/channels/whatsapp#troubleshooting)
 
 ## Telegram
 
@@ -52,7 +52,7 @@ Solución de problemas completa: [/channels/whatsapp#troubleshooting](/en/channe
 | `setMyCommands` rechazado al inicio                | Inspeccione los registros para `BOT_COMMANDS_TOO_MUCH`                         | Reduzca los comandos personalizados de complemento/habilidad/de Telegram o desactive los menús nativos. |
 | Actualizado y la lista de permitidos le bloquea    | `openclaw security audit` y listas de permitidos de configuración              | Ejecute `openclaw doctor --fix` o reemplace `@username` con ID de remitente numéricos.                  |
 
-Solución de problemas completa: [/channels/telegram#troubleshooting](/en/channels/telegram#troubleshooting)
+Solución de problemas completa: [/channels/telegram#troubleshooting](/es/channels/telegram#troubleshooting)
 
 ## Discord
 
@@ -64,7 +64,7 @@ Solución de problemas completa: [/channels/telegram#troubleshooting](/en/channe
 | Mensajes de grupo ignorados                 | Verifique los registros para descartes por filtrado de menciones | Menciona al bot o establece el servidor/canal `requireMention: false`.   |
 | Faltan respuestas de MD                     | `openclaw pairing list discord`                                  | Aprueba el emparejamiento por MD o ajusta la política de MD.             |
 
-Solución de problemas completa: [/channels/discord#troubleshooting](/en/channels/discord#troubleshooting)
+Solución de problemas completa: [/channels/discord#troubleshooting](/es/channels/discord#troubleshooting)
 
 ## Slack
 
@@ -76,7 +76,7 @@ Solución de problemas completa: [/channels/discord#troubleshooting](/en/channel
 | MD bloqueados                             | `openclaw pairing list slack`                       | Aprueba el emparejamiento o relaja la política de MD.                                                                                                                                               |
 | Mensaje del canal ignorado                | Verifica `groupPolicy` y la lista blanca de canales | Permite el canal o cambia la política a `open`.                                                                                                                                                     |
 
-Solución de problemas completa: [/channels/slack#troubleshooting](/en/channels/slack#troubleshooting)
+Solución de problemas completa: [/channels/slack#troubleshooting](/es/channels/slack#troubleshooting)
 
 ## iMessage y BlueBubbles
 
@@ -90,8 +90,8 @@ Solución de problemas completa: [/channels/slack#troubleshooting](/en/channels/
 
 Solución de problemas completa:
 
-- [/channels/imessage#troubleshooting](/en/channels/imessage#troubleshooting)
-- [/channels/bluebubbles#troubleshooting](/en/channels/bluebubbles#troubleshooting)
+- [/channels/imessage#troubleshooting](/es/channels/imessage#troubleshooting)
+- [/channels/bluebubbles#troubleshooting](/es/channels/bluebubbles#troubleshooting)
 
 ## Signal
 
@@ -103,7 +103,7 @@ Solución de problemas completa:
 | MD bloqueado                                  | `openclaw pairing list signal`                                      | Aprueba el remitente o ajusta la política de MD.                              |
 | Las respuestas de grupo no se activan         | Verifica la lista de permitidos del grupo y los patrones de mención | Agrega el remitente/grupo o relaja el filtrado.                               |
 
-Solución de problemas completa: [/channels/signal#troubleshooting](/en/channels/signal#troubleshooting)
+Solución de problemas completa: [/channels/signal#troubleshooting](/es/channels/signal#troubleshooting)
 
 ## Bot de QQ
 
@@ -116,7 +116,7 @@ Solución de problemas completa: [/channels/signal#troubleshooting](/en/channels
 | Voz no transcrita                   | Verificar la configuración del proveedor STT                | Configure `channels.qqbot.stt` o `tools.media.audio`.                                     |
 | Los mensajes proactivos no llegan   | Verifique los requisitos de interacción de la plataforma QQ | Es posible que QQ bloquee los mensajes iniciados por el bot sin una interacción reciente. |
 
-Solución de problemas completa: [/channels/qqbot#troubleshooting](/en/channels/qqbot#troubleshooting)
+Solución de problemas completa: [/channels/qqbot#troubleshooting](/es/channels/qqbot#troubleshooting)
 
 ## Matrix
 
@@ -130,4 +130,4 @@ Solución de problemas completa: [/channels/qqbot#troubleshooting](/en/channels/
 | La restauración de la copia de seguridad está pendiente/rota | `openclaw matrix verify backup status` | Ejecute `openclaw matrix verify backup restore` o vuelva a ejecutarlo con una clave de recuperación.            |
 | El cross-signing/bootstrap parece incorrecto                 | `openclaw matrix verify bootstrap`     | Repare el almacenamiento de secretos, el cross-signing y el estado de la copia de seguridad en una sola pasada. |
 
-Configuración y ajustes completos: [Matrix](/en/channels/matrix)
+Configuración y ajustes completos: [Matrix](/es/channels/matrix)

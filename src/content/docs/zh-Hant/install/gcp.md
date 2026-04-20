@@ -35,7 +35,7 @@ title: "GCP"
 
 本指南使用 GCP Compute Engine 上的 Debian。
 Ubuntu 也可以運作；請對應相關的套件。
-關於一般的 Docker 流程，請參閱 [Docker](/en/install/docker)。
+關於一般的 Docker 流程，請參閱 [Docker](/zh-Hant/install/docker)。
 
 ---
 
@@ -286,10 +286,10 @@ Ubuntu 也可以運作；請對應相關的套件。
   <Step title="Shared Docker VM runtime steps">
     使用共用的執行時指南來了解一般的 Docker 主機流程：
 
-    - [將所需的二進位檔案製作到映像中](/en/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-    - [建置並啟動](/en/install/docker-vm-runtime#build-and-launch)
-    - [什麼資料會保存在哪裡](/en/install/docker-vm-runtime#what-persists-where)
-    - [更新](/en/install/docker-vm-runtime#updates)
+    - [將所需的二進位檔案製作到映像中](/zh-Hant/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+    - [建置並啟動](/zh-Hant/install/docker-vm-runtime#build-and-launch)
+    - [什麼資料會保存在哪裡](/zh-Hant/install/docker-vm-runtime#what-persists-where)
+    - [更新](/zh-Hant/install/docker-vm-runtime#updates)
 
   </Step>
 
@@ -335,7 +335,7 @@ Ubuntu 也可以運作；請對應相關的套件。
     ```
 
     需要再次查看共享持久化和更新參考資料？
-    請參閱 [Docker VM Runtime](/en/install/docker-vm-runtime#what-persists-where) 和 [Docker VM Runtime updates](/en/install/docker-vm-runtime#updates)。
+    請參閱 [Docker VM Runtime](/zh-Hant/install/docker-vm-runtime#what-persists-where) 和 [Docker VM Runtime updates](/zh-Hant/install/docker-vm-runtime#updates)。
 
   </Step>
 </Steps>
@@ -406,6 +406,6 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 ## 後續步驟
 
-- 設定訊息通道：[Channels](/en/channels)
-- 將本地裝置配對為節點：[Nodes](/en/nodes)
-- 設定 Gateway：[Gateway configuration](/en/gateway/configuration)
+- 設定訊息通道：[Channels](/zh-Hant/channels)
+- 將本地裝置配對為節點：[Nodes](/zh-Hant/nodes)
+- 設定 Gateway：[Gateway configuration](/zh-Hant/gateway/configuration)

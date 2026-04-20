@@ -4,7 +4,7 @@ read_when: "通过 SSH 将 macOS 应用程序连接到远程网关"
 title: "远程 Gateway(网关) 网关 设置"
 ---
 
-> 此内容已合并至[远程访问](/en/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent)。请参阅该页面以获取最新指南。
+> 此内容已合并至[远程访问](/zh/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent)。请参阅该页面以获取最新指南。
 
 # 运行使用远程Gateway(网关)的 OpenClaw.app
 

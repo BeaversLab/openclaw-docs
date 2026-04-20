@@ -118,6 +118,6 @@ title: "DigitalOcean"
 
 ## 後續步驟
 
-- [頻道](/en/channels) -- 連接 Telegram、WhatsApp、Discord 等
-- [Gateway 設定](/en/gateway/configuration) -- 所有設定選項
-- [更新](/en/install/updating) -- 保持 OpenClaw 為最新版本
+- [頻道](/zh-Hant/channels) -- 連接 Telegram、WhatsApp、Discord 等
+- [Gateway 設定](/zh-Hant/gateway/configuration) -- 所有設定選項
+- [更新](/zh-Hant/install/updating) -- 保持 OpenClaw 為最新版本

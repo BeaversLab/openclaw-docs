@@ -11,7 +11,7 @@ title: "update"
 Mettre à jour OpenClaw en toute sécurité et basculer entre les canaux stable/beta/dev.
 
 Si vous avez installé via **npm/pnpm/bun** (installation globale, pas de métadonnées git),
-les mises à jour se font via le flux du gestionnaire de paquets dans [Mise à jour](/en/install/updating).
+les mises à jour se font via le flux du gestionnaire de paquets dans [Mise à jour](/fr/install/updating).
 
 ## Utilisation
 
@@ -110,6 +110,6 @@ Si le bootstrap pnpm échoue toujours, le updater s'arrête maintenant prématur
 ## Voir aussi
 
 - `openclaw doctor` (propose de lancer la mise à jour en premier sur les checkouts git)
-- [Canaux de développement](/en/install/development-channels)
-- [Mise à jour](/en/install/updating)
-- [Référence de la CLI](/en/cli)
+- [Canaux de développement](/fr/install/development-channels)
+- [Mise à jour](/fr/install/updating)
+- [Référence de la CLI](/fr/cli)

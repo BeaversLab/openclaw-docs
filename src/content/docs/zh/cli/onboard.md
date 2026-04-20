@@ -11,11 +11,11 @@ title: "onboard"
 
 ## 相关指南
 
-- CLI 新手引导中心：[新手引导 (CLI)](/en/start/wizard)
-- 新手引导概览：[新手引导概览](/en/start/onboarding-overview)
-- CLI 新手引导参考：[CLI 设置参考](/en/start/wizard-cli-reference)
-- CLI 自动化：[CLI 自动化](/en/start/wizard-cli-automation)
-- macOS 新手引导：[新手引导 (macOS 应用)](/en/start/onboarding)
+- CLI 新手引导中心：[新手引导 (CLI)](/zh/start/wizard)
+- 新手引导概览：[新手引导概览](/zh/start/onboarding-overview)
+- CLI 新手引导参考：[CLI 设置参考](/zh/start/wizard-cli-reference)
+- CLI 自动化：[CLI 自动化](/zh/start/wizard-cli-automation)
+- macOS 新手引导：[新手引导 (macOS 应用)](/zh/start/onboarding)
 
 ## 示例
 
@@ -164,7 +164,7 @@ openclaw onboard --non-interactive \
     和 `x_search` 模型选择。
   - **Kimi** 可以询问 Moonshot API 区域（`api.moonshot.ai` 对比
     `api.moonshot.cn`）和默认 Kimi 网络搜索模型。
-- 本地新手引导私信范围行为：[CLI 设置参考](/en/start/wizard-cli-reference#outputs-and-internals)。
+- 本地新手引导私信范围行为：[CLI 设置参考](/zh/start/wizard-cli-reference#outputs-and-internals)。
 - 最快的首次聊天：`openclaw dashboard`（控制 UI，无需渠道设置）。
 - 自定义提供商：连接任何 OpenAI 或 Anthropic 兼容端点，
   包括未列出的托管提供商。使用 Unknown 进行自动检测。

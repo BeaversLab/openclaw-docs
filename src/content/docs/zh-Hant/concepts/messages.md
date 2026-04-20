@@ -27,7 +27,7 @@ Inbound message
 - `agents.defaults.*` 用於區塊串流與分塊的預設值。
 - 頻道覆寫（`channels.whatsapp.*`、`channels.telegram.*` 等）用於上限與串流切換。
 
-完整架構請參閱 [Configuration](/en/gateway/configuration)。
+完整架構請參閱 [Configuration](/zh-Hant/gateway/configuration)。
 
 ## 傳入去重
 
@@ -69,7 +69,7 @@ Inbound message
 
 多個裝置/頻道可對應至同一個工作階段，但歷史記錄不會完全同步回每個用戶端。建議：長時間對話請使用一個主要裝置，以避免語境分歧。Control UI 與 TUI 一律顯示由閘道備份的工作階段文字記錄，因此其為真實來源。
 
-詳情：[Session management](/en/concepts/session)。
+詳情：[Session management](/zh-Hant/concepts/session)。
 
 ## 傳入內容與歷史記錄語境
 
@@ -98,7 +98,7 @@ OpenClaw 會將 **提示主體** 與 **指令主體** 分離：
 - 透過 `messages.queue`（以及 `messages.queue.byChannel`）進行配置。
 - 模式：`interrupt`、`steer`、`followup`、`collect`，以及積壓變體。
 
-詳細資訊：[佇列處理](/en/concepts/queue)。
+詳細資訊：[佇列處理](/zh-Hant/concepts/queue)。
 
 ## 串流、分塊與批次處理
 
@@ -113,7 +113,7 @@ OpenClaw 會將 **提示主體** 與 **指令主體** 分離：
 - `agents.defaults.humanDelay` (區塊回覆之間的類人暫停)
 - 通道覆寫：`*.blockStreaming` 和 `*.blockStreamingCoalesce` (非 Telegram 通道需要明確的 `*.blockStreaming: true`)
 
-詳情：[串流 + 分塊](/en/concepts/streaming)。
+詳情：[串流 + 分塊](/zh-Hant/concepts/streaming)。
 
 ## 推理可見性和 Token
 
@@ -123,7 +123,7 @@ OpenClaw 可以顯示或隱藏模型推理：
 - 推理內容由模型生成時仍會計入 Token 使用量。
 - Telegram 支援將推理串流至草稿氣泡中。
 
-詳情：[思考 + 推理指令](/en/tools/thinking) 和 [Token 使用](/en/reference/token-use)。
+詳情：[思考 + 推理指令](/zh-Hant/tools/thinking) 和 [Token 使用](/zh-Hant/reference/token-use)。
 
 ## 前綴、串回和回覆
 
@@ -132,11 +132,11 @@ OpenClaw 可以顯示或隱藏模型推理：
 - `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix` (出站前綴串聯)，加上 `channels.whatsapp.messagePrefix` (WhatsApp 入站前綴)
 - 透過 `replyToMode` 和各通道預設值進行回覆串回
 
-詳情：[組態](/en/gateway/configuration-reference#messages) 和通道文件。
+詳情：[組態](/zh-Hant/gateway/configuration-reference#messages) 和通道文件。
 
 ## 相關
 
-- [串流](/en/concepts/streaming) — 即時訊息傳遞
-- [重試](/en/concepts/retry) — 訊息傳遞重試行為
-- [佇列](/en/concepts/queue) — 訊息處理佇列
-- [頻道](/en/channels) — 訊息平台整合
+- [串流](/zh-Hant/concepts/streaming) — 即時訊息傳遞
+- [重試](/zh-Hant/concepts/retry) — 訊息傳遞重試行為
+- [佇列](/zh-Hant/concepts/queue) — 訊息處理佇列
+- [頻道](/zh-Hant/channels) — 訊息平台整合

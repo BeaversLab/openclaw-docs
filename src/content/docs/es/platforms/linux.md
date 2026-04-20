@@ -21,18 +21,18 @@ Las aplicaciones complementarias nativas de Linux están planeadas. Las contribu
 4. Desde tu portátil: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. Abra `http://127.0.0.1:18789/` y autentíquese con el secreto compartido configurado (token por defecto; contraseña si estableció `gateway.auth.mode: "password"`)
 
-Guía completa del servidor Linux: [Linux Server](/en/vps). Ejemplo paso a paso de VPS: [exe.dev](/en/install/exe-dev)
+Guía completa del servidor Linux: [Linux Server](/es/vps). Ejemplo paso a paso de VPS: [exe.dev](/es/install/exe-dev)
 
 ## Instalación
 
-- [Getting Started](/en/start/getting-started)
-- [Install & updates](/en/install/updating)
-- Flujos opcionales: [Bun (experimental)](/en/install/bun), [Nix](/en/install/nix), [Docker](/en/install/docker)
+- [Getting Started](/es/start/getting-started)
+- [Install & updates](/es/install/updating)
+- Flujos opcionales: [Bun (experimental)](/es/install/bun), [Nix](/es/install/nix), [Docker](/es/install/docker)
 
 ## Gateway
 
-- [Gateway runbook](/en/gateway)
-- [Configuration](/en/gateway/configuration)
+- [Gateway runbook](/es/gateway)
+- [Configuration](/es/gateway/configuration)
 
 ## Instalación del servicio Gateway (CLI)
 
@@ -64,7 +64,7 @@ openclaw doctor
 
 ## Control del sistema (unidad de usuario systemd)
 
-OpenClaw instala un servicio de **usuario** de systemd por defecto. Use un servicio de **sistema** para servidores compartidos o siempre activos. `openclaw gateway install` y `openclaw onboard --install-daemon` ya representan la unidad canónica actual para usted; escriba una manualmente solo cuando necesite una configuración personalizada del sistema/gestor de servicios. La guía completa del servicio se encuentra en el [Gateway runbook](/en/gateway).
+OpenClaw instala un servicio de **usuario** de systemd por defecto. Use un servicio de **sistema** para servidores compartidos o siempre activos. `openclaw gateway install` y `openclaw onboard --install-daemon` ya representan la unidad canónica actual para usted; escriba una manualmente solo cuando necesite una configuración personalizada del sistema/gestor de servicios. La guía completa del servicio se encuentra en el [Gateway runbook](/es/gateway).
 
 Configuración mínima:
 

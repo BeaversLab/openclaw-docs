@@ -12,7 +12,7 @@ read_when:
 
 在註冊期間注入至每個外掛程式的 `api.runtime` 物件參考資料。請使用這些協助程式，而非直接匯入主機內部。
 
-<Tip>**尋找逐步指南？** 請參閱 [通道插件](/en/plugins/sdk-channel-plugins) 或 [提供者插件](/en/plugins/sdk-provider-plugins) 以了解展示這些輔助函式使用情境的 逐步指南。</Tip>
+<Tip>**尋找逐步指南？** 請參閱 [通道插件](/zh-Hant/plugins/sdk-channel-plugins) 或 [提供者插件](/zh-Hant/plugins/sdk-provider-plugins) 以了解展示這些輔助函式使用情境的 逐步指南。</Tip>
 
 ```typescript
 register(api) {
@@ -411,6 +411,6 @@ export function tryGetRuntime() {
 
 ## 相關
 
-- [SDK 概觀](/en/plugins/sdk-overview) -- 子路徑參考
-- [SDK 進入點](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 選項
-- [Plugin 內部機制](/en/plugins/architecture) -- 功能模型與註冊表
+- [SDK 概觀](/zh-Hant/plugins/sdk-overview) -- 子路徑參考
+- [SDK 進入點](/zh-Hant/plugins/sdk-entrypoints) -- `definePluginEntry` 選項
+- [Plugin 內部機制](/zh-Hant/plugins/architecture) -- 功能模型與註冊表

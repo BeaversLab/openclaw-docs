@@ -127,9 +127,9 @@ Los ganchos internos pueden interceptar este paso mediante `agent:bootstrap` par
 los archivos de bootstrap inyectados (por ejemplo, intercambiando `SOUL.md` por una personalidad alternativa).
 
 Si desea que el agente suene menos genérico, comience con
-[Guía de personalidad SOUL.md](/en/concepts/soul).
+[Guía de personalidad SOUL.md](/es/concepts/soul).
 
-Para inspeccionar cuánto aporta cada archivo inyectado (sin procesar vs. inyectado, truncamiento, más sobrecarga del esquema de herramientas), use `/context list` o `/context detail`. Consulte [Contexto](/en/concepts/context).
+Para inspeccionar cuánto aporta cada archivo inyectado (sin procesar vs. inyectado, truncamiento, más sobrecarga del esquema de herramientas), use `/context list` o `/context detail`. Consulte [Contexto](/es/concepts/context).
 
 ## Manejo del tiempo
 
@@ -146,7 +146,7 @@ Configure con:
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-Consulte [Fecha y hora](/en/date-time) para obtener detalles completos del comportamiento.
+Consulte [Fecha y hora](/es/date-time) para obtener detalles completos del comportamiento.
 
 ## Habilidades
 

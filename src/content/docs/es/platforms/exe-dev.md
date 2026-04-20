@@ -122,4 +122,4 @@ openclaw gateway restart
 openclaw health
 ```
 
-Guía: [Actualización](/en/install/updating)
+Guía: [Actualización](/es/install/updating)

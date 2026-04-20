@@ -392,5 +392,5 @@ Esto muestra los resultados por capacidad y el proveedor/modelo elegido cuando s
 
 ## Documentos relacionados
 
-- [Configuración](/en/gateway/configuration)
-- [Soporte de imágenes y medios](/en/nodes/images)
+- [Configuración](/es/gateway/configuration)
+- [Soporte de imágenes y medios](/es/nodes/images)

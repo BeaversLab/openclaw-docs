@@ -20,7 +20,7 @@ El directorio `scripts/` contiene scripts de ayuda para flujos de trabajo locale
 ## Scripts de supervisión de autenticación
 
 Los scripts de supervisión de autenticación están documentados aquí:
-[/automation/auth-monitoring](/en/automation/auth-monitoring)
+[/automation/auth-monitoring](/es/automation/auth-monitoring)
 
 ## Al agregar scripts
 

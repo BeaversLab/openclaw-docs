@@ -9,7 +9,7 @@ title: "橋接協定"
 
 # 橋接協定（舊版節點傳輸）
 
-<Warning>TCP 橋接器已被移除。目前的 OpenClaw 建構版本不隨附橋接器監聽器，且 `bridge.*` 設定金鑰已不再位於架構中。此頁面僅供歷史參考。對於所有節點/操作員用戶端，請使用 [Gateway Protocol](/en/gateway/protocol)。</Warning>
+<Warning>TCP 橋接器已被移除。目前的 OpenClaw 建構版本不隨附橋接器監聽器，且 `bridge.*` 設定金鑰已不再位於架構中。此頁面僅供歷史參考。對於所有節點/操作員用戶端，請使用 [Gateway Protocol](/zh-Hant/gateway/protocol)。</Warning>
 
 ## 為何存在
 
@@ -81,4 +81,4 @@ Payload 欄位 (除非另有說明，否則皆為選用)：
 ## 版本控制
 
 橋接器屬於 **隱含 v1** (無最小/最大協商)。本節僅供歷史參考；目前的節點/操作員用戶端使用 WebSocket
-[Gateway Protocol](/en/gateway/protocol)。
+[Gateway Protocol](/zh-Hant/gateway/protocol)。

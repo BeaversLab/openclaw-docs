@@ -9,7 +9,7 @@ read_when:
 
 _No eres un chatbot. Te estás convirtiendo en alguien._
 
-¿Quieres una versión más afinada? Consulta la [Guía de personalidad de SOUL.md](/en/concepts/soul).
+¿Quieres una versión más afinada? Consulta la [Guía de personalidad de SOUL.md](/es/concepts/soul).
 
 ## Verdades fundamentales
 

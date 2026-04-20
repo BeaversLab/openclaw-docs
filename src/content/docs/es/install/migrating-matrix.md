@@ -22,7 +22,7 @@ No necesita cambiar el nombre de las claves de configuración ni reinstalar el c
 
 ## Lo que hace la migración automáticamente
 
-Cuando se inicia la puerta de enlace y cuando ejecuta [`openclaw doctor --fix`](/en/gateway/doctor), OpenClaw intenta reparar el estado antiguo de Matrix automáticamente.
+Cuando se inicia la puerta de enlace y cuando ejecuta [`openclaw doctor --fix`](/es/gateway/doctor), OpenClaw intenta reparar el estado antiguo de Matrix automáticamente.
 Antes de que cualquier paso de migración de Matrix accionable mute el estado en disco, OpenClaw crea o reutiliza una instantánea de recuperación enfocada.
 
 Cuando usa `openclaw update`, el disparador exacto depende de cómo esté instalado OpenClaw:
@@ -340,7 +340,7 @@ Si el dispositivo sigue sin verificarse después de eso, completa la verificaci�
 
 ## Páginas relacionadas
 
-- [Matrix](/en/channels/matrix)
-- [Doctor](/en/gateway/doctor)
-- [Migrating](/en/install/migrating)
-- [Plugins](/en/tools/plugin)
+- [Matrix](/es/channels/matrix)
+- [Doctor](/es/gateway/doctor)
+- [Migrating](/es/install/migrating)
+- [Plugins](/es/tools/plugin)

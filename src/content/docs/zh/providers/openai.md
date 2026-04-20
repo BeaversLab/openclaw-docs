@@ -174,7 +174,7 @@ OpenAI 明确支持在外部工具和工作流（如 OpenClaw）中使用订阅 
 }
 ```
 
-<Note>有关共享工具参数、提供商选择和故障转移行为，请参阅 [图像生成](/en/tools/image-generation)。</Note>
+<Note>有关共享工具参数、提供商选择和故障转移行为，请参阅 [图像生成](/zh/tools/image-generation)。</Note>
 
 ## 视频生成
 
@@ -198,7 +198,7 @@ OpenAI 明确支持在外部工具和工作流（如 OpenClaw）中使用订阅 
 }
 ```
 
-<Note>有关共享工具参数、提供商选择和故障转移行为，请参阅 [视频生成](/en/tools/video-generation)。</Note>
+<Note>有关共享工具参数、提供商选择和故障转移行为，请参阅 [视频生成](/zh/tools/video-generation)。</Note>
 
 ## 个性覆盖
 
@@ -523,16 +523,16 @@ OpenClaw 为 `openai/*` 和 `openai-codex/*` 运行添加了一个小型的 Open
 ## 相关内容
 
 <CardGroup cols={2}>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="Image generation" href="/en/tools/image-generation" icon="image">
+  <Card title="Image generation" href="/zh/tools/image-generation" icon="image">
     共享的图像工具参数和提供商选择。
   </Card>
-  <Card title="视频生成" href="/en/tools/video-generation" icon="video">
+  <Card title="视频生成" href="/zh/tools/video-generation" icon="video">
     共享的 video 工具参数和提供商选择。
   </Card>
-  <Card title="OAuth 和 auth" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth 和 auth" href="/zh/gateway/authentication" icon="key">
     身份验证详细信息和凭据重用规则。
   </Card>
 </CardGroup>

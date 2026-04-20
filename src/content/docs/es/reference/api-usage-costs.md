@@ -45,7 +45,7 @@ mostrar en `/usage full`.
   incluye el nombre del modelo en la etiqueta del plan.
 - La autenticación de uso para esas ventanas de cuota proviene de enlaces específicos del proveedor cuando están disponibles; de lo contrario, OpenClaw recurre a hacer coincidir las credenciales de OAuth/API-key de los perfiles de autenticación, las variables de entorno o la configuración.
 
-Consulte [Token use & costs](/en/reference/token-use) para obtener detalles y ejemplos.
+Consulte [Token use & costs](/es/reference/token-use) para obtener detalles y ejemplos.
 
 ## Cómo se descubren las claves
 
@@ -68,7 +68,7 @@ Esto también incluye proveedores alojados de tipo suscripción que aún cobran 
 Coding Plan**, **MiniMax Coding Plan**, **Z.AI / GLM Coding Plan**,
 y la ruta de inicio de sesión de Claude de OpenClaw de Anthropic con **Extra Usage** habilitado.
 
-Consulte [Models](/en/providers/models) para la configuración de precios y [Token use & costs](/en/reference/token-use) para la visualización.
+Consulte [Models](/es/providers/models) para la configuración de precios y [Token use & costs](/es/reference/token-use) para la visualización.
 
 ### 2) Comprensión de medios (audio/imagen/vídeo)
 
@@ -78,7 +78,7 @@ Los medios entrantes pueden resumirse/transcribirse antes de que se ejecute la r
 - Imagen: OpenAI / OpenRouter / Anthropic / Google / MiniMax / Moonshot / Qwen / Z.AI.
 - Vídeo: Google / Qwen / Moonshot.
 
-Consulte [Media understanding](/en/nodes/media-understanding).
+Consulte [Media understanding](/es/nodes/media-understanding).
 
 ### 3) Generación de imágenes y vídeos
 
@@ -92,8 +92,8 @@ La generación de imágenes puede inferir un proveedor predeterminado con autent
 requiere un `agents.defaults.videoGenerationModel` explícito, como
 `qwen/wan2.6-t2v`.
 
-Consulte [Image generation](/en/tools/image-generation), [Qwen Cloud](/en/providers/qwen)
-y [Models](/en/concepts/models).
+Consulte [Image generation](/es/tools/image-generation), [Qwen Cloud](/es/providers/qwen)
+y [Models](/es/concepts/models).
 
 ### 4) Incrustaciones de memoria + búsqueda semántica
 
@@ -109,7 +109,7 @@ La búsqueda de memoria semántica utiliza **API de incrustaciones** cuando se c
 
 Puede mantenerlo localmente con `memorySearch.provider = "local"` (sin uso de API).
 
-Consulte [Memory](/en/concepts/memory).
+Consulte [Memory](/es/concepts/memory).
 
 ### 5) Herramienta de búsqueda web
 
@@ -132,7 +132,7 @@ Las rutas del proveedor heredadas `tools.web.search.*` aún se cargan a través 
 
 **Crédito gratuito de Brave Search:** Cada plan de Brave incluye $5/mes en crédito gratuito renovable. El plan de búsqueda cuesta $5 por 1000 solicitudes, por lo que el crédito cubre 1000 solicitudes/mes sin costo. Establezca su límite de uso en el panel de Brave para evitar cargos inesperados.
 
-Consulte [Web tools](/en/tools/web).
+Consulte [Web tools](/es/tools/web).
 
 ### 5) Herramienta de recuperación web (Firecrawl)
 
@@ -142,7 +142,7 @@ Consulte [Web tools](/en/tools/web).
 
 Si Firecrawl no está configurado, la herramienta recurre a recuperación directa + legibilidad (sin API de pago).
 
-Consulte [Web tools](/en/tools/web).
+Consulte [Web tools](/es/tools/web).
 
 ### 6) Instantáneas de uso del proveedor (estado/salud)
 
@@ -151,21 +151,21 @@ Algunos comandos de estado llaman a **endpoints de uso del proveedor** para most
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-Consulte [Models CLI](/en/cli/models).
+Consulte [Models CLI](/es/cli/models).
 
 ### 7) Resumen de protección de compactación
 
 El mecanismo de protección de compactación puede resumir el historial de la sesión utilizando el **modelo actual**, lo cual
 invoca las APIs del proveedor cuando se ejecuta.
 
-Consulte [Gestión de sesiones + compactación](/en/reference/session-management-compaction).
+Consulte [Gestión de sesiones + compactación](/es/reference/session-management-compaction).
 
 ### 8) Escaneo / sondeo de modelo
 
 `openclaw models scan` puede sondear modelos de OpenRouter y usa `OPENROUTER_API_KEY` cuando
 el sondeo está habilitado.
 
-Consulte [CLI de modelos](/en/cli/models).
+Consulte [CLI de modelos](/es/cli/models).
 
 ### 9) Talk (voz)
 
@@ -173,11 +173,11 @@ El modo Talk puede invocar **ElevenLabs** cuando está configurado:
 
 - `ELEVENLABS_API_KEY` o `talk.providers.elevenlabs.apiKey`
 
-Consulte [Modo Talk](/en/nodes/talk).
+Consulte [Modo Talk](/es/nodes/talk).
 
 ### 10) Habilidades (APIs de terceros)
 
 Las habilidades pueden almacenar `apiKey` en `skills.entries.<name>.apiKey`. Si una habilidad usa esa clave para APIs
 externas, puede incurrir en costos según el proveedor de la habilidad.
 
-Consulte [Habilidades](/en/tools/skills).
+Consulte [Habilidades](/es/tools/skills).

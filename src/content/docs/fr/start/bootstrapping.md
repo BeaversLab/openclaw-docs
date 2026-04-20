@@ -29,5 +29,5 @@ L'initialisation s'exécute toujours sur l'**hôte de passerelle**. Si l'applica
 
 ## Documentation connexe
 
-- Onboarding de l'application macOS : [Onboarding](/en/start/onboarding)
-- Disposition de l'espace de travail : [Espace de travail de l'agent](/en/concepts/agent-workspace)
+- Onboarding de l'application macOS : [Onboarding](/fr/start/onboarding)
+- Disposition de l'espace de travail : [Espace de travail de l'agent](/fr/concepts/agent-workspace)

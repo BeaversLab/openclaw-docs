@@ -29,7 +29,7 @@ openclaw plugins install @openclaw/nextcloud-talk
 openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 ```
 
-詳細資訊：[外掛程式](/en/tools/plugin)
+詳細資訊：[外掛程式](/zh-Hant/tools/plugin)
 
 ## 快速設定 (初學者)
 
@@ -111,7 +111,7 @@ openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 
 ## 設定參考（Nextcloud Talk）
 
-完整設定：[Configuration](/en/gateway/configuration)
+完整設定：[Configuration](/zh-Hant/gateway/configuration)
 
 提供者選項：
 
@@ -142,8 +142,8 @@ openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 
 ## 相關
 
-- [頻道概覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — DM 認證與配對流程
-- [群組](/en/channels/groups) — 群組聊天行為與提及閘控
-- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
-- [安全性](/en/gateway/security) — 存取模型與強化
+- [頻道概覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — DM 認證與配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及閘控
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型與強化

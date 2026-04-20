@@ -9,11 +9,11 @@ title: "Task Flow"
 
 # Task Flow
 
-Task Flow es el sustrato de orquestación de flujos que se sitúa por encima de las [tareas en segundo plano](/en/automation/tasks). Gestiona flujos multipaso duraderos con su propio estado, seguimiento de revisiones y semántica de sincronización, mientras que las tareas individuales siguen siendo la unidad de trabajo desacoplado.
+Task Flow es el sustrato de orquestación de flujos que se sitúa por encima de las [tareas en segundo plano](/es/automation/tasks). Gestiona flujos multipaso duraderos con su propio estado, seguimiento de revisiones y semántica de sincronización, mientras que las tareas individuales siguen siendo la unidad de trabajo desacoplado.
 
 ## Cuándo usar Task Flow
 
-Use Task Flow cuando el trabajo abarque varios pasos secuenciales o de ramificación y necesite un seguimiento duradero del progreso a través de reinicios de la puerta de enlace. Para operaciones individuales en segundo plano, una simple [tarea](/en/automation/tasks) es suficiente.
+Use Task Flow cuando el trabajo abarque varios pasos secuenciales o de ramificación y necesite un seguimiento duradero del progreso a través de reinicios de la puerta de enlace. Para operaciones individuales en segundo plano, una simple [tarea](/es/automation/tasks) es suficiente.
 
 | Escenario                                  | Uso                      |
 | ------------------------------------------ | ------------------------ |
@@ -76,7 +76,7 @@ Los flujos coordinan las tareas, no las reemplazan. Un solo flujo puede impulsar
 
 ## Relacionado
 
-- [Tareas en segundo plano](/en/automation/tasks) — el libro mayor de trabajo desacoplado que coordinan los flujos
-- [CLI: tareas](/en/cli/index#tasks) — referencia de comandos CLI para `openclaw tasks flow`
-- [Descripción general de automatización](/en/automation) — todos los mecanismos de automatización de un vistazo
-- [Trabajos de Cron](/en/automation/cron-jobs) — trabajos programados que pueden alimentarse en los flujos
+- [Tareas en segundo plano](/es/automation/tasks) — el libro mayor de trabajo desacoplado que coordinan los flujos
+- [CLI: tareas](/es/cli/index#tasks) — referencia de comandos CLI para `openclaw tasks flow`
+- [Descripción general de automatización](/es/automation) — todos los mecanismos de automatización de un vistazo
+- [Trabajos de Cron](/es/automation/cron-jobs) — trabajos programados que pueden alimentarse en los flujos

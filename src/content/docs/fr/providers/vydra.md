@@ -68,7 +68,7 @@ L'hôte apex de Vydra (`https://vydra.ai/api/v1`) redirige actuellement vers `ww
     La prise en charge groupée actuelle est limitée au texte vers image. Les routes d'édition hébergées de Vydra attendent des URL d'images distantes, et OpenClaw n'ajoute pas encore de pont de téléchargement spécifique à Vydra dans le plugin inclus.
 
     <Note>
-    Voir [Génération d'images](/en/tools/image-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.
+    Voir [Génération d'images](/fr/tools/image-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.
     </Note>
 
   </Accordion>
@@ -101,7 +101,7 @@ L'hôte apex de Vydra (`https://vydra.ai/api/v1`) redirige actuellement vers `ww
     - Le plugin fourni reste conservateur et ne transmet pas les boutons de style non documentés tels que le rapport d'aspect, la résolution, le filigrane ou l'audio généré.
 
     <Note>
-    Voir [Génération vidéo](/en/tools/video-generation) pour les paramètres d'outil partagés, la sélection de provider et le comportement de basculement.
+    Voir [Génération vidéo](/fr/tools/video-generation) pour les paramètres d'outil partagés, la sélection de provider et le comportement de basculement.
     </Note>
 
   </Accordion>
@@ -160,16 +160,16 @@ L'hôte apex de Vydra (`https://vydra.ai/api/v1`) redirige actuellement vers `ww
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Répertoire de providers" href="/en/providers/index" icon="list">
+  <Card title="Répertoire de providers" href="/fr/providers/index" icon="list">
     Parcourez tous les providers disponibles.
   </Card>
-  <Card title="Génération d'images" href="/en/tools/image-generation" icon="image">
+  <Card title="Génération d'images" href="/fr/tools/image-generation" icon="image">
     Paramètres de l'outil d'image partagés et sélection du fournisseur.
   </Card>
-  <Card title="Génération de vidéos" href="/en/tools/video-generation" icon="video">
+  <Card title="Génération de vidéos" href="/fr/tools/video-generation" icon="video">
     Paramètres de l'outil vidéo partagés et sélection du fournisseur.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference#agent-defaults" icon="gear">
     Valeurs par défaut de l'agent et configuration du modèle.
   </Card>
 </CardGroup>

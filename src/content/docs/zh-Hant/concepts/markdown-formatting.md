@@ -87,7 +87,7 @@ channels:
   跨分塊分割；呈現器會在每個分塊內重新開啟樣式。
 
 如果您需要更多關於跨通道分塊行為的資訊，請參閱
-[串流 + 分塊](/en/concepts/streaming)。
+[串流 + 分塊](/zh-Hant/concepts/streaming)。
 
 ## 連結政策
 

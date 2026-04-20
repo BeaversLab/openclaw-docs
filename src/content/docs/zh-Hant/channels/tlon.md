@@ -29,7 +29,7 @@ openclaw plugins install @openclaw/tlon
 openclaw plugins install ./path/to/local/tlon-plugin
 ```
 
-詳細資訊：[外掛](/en/tools/plugin)
+詳細資訊：[外掛](/zh-Hant/tools/plugin)
 
 ## 設定
 
@@ -249,7 +249,7 @@ openclaw doctor
 
 ## 設定參考
 
-完整設定：[Configuration](/en/gateway/configuration)
+完整設定：[Configuration](/zh-Hant/gateway/configuration)
 
 提供者選項：
 
@@ -277,8 +277,8 @@ openclaw doctor
 
 ## 相關
 
-- [頻道概覽](/en/channels) — 所有支援的頻道
-- [配對](/en/channels/pairing) — 訊息認證與配對流程
-- [群組](/en/channels/groups) — 群組聊天行為與提及閘道
-- [頻道路由](/en/channels/channel-routing) — 訊息的工作階段路由
-- [安全性](/en/gateway/security) — 存取模型與強化措施
+- [頻道概覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — 訊息認證與配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及閘道
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的工作階段路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型與強化措施

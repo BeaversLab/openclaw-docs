@@ -123,10 +123,10 @@ Usa Voxtral para la transcripción de audio a través de la canalización de com
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Comprensión de medios" href="/en/tools/media-understanding" icon="microphone">
+  <Card title="Comprensión de medios" href="/es/tools/media-understanding" icon="microphone">
     Configuración de transcripción de audio y selección de proveedor.
   </Card>
 </CardGroup>

@@ -106,7 +106,7 @@ el origen de finalización solo identifica un canal, OpenClaw aún puede reutili
 ruta almacenada de la sesión del solicitante (`lastChannel` / `lastTo`) para la entrega
 directa.
 
-Para un comportamiento específico de ACP, consulte [ACP Agents](/en/tools/acp-agents).
+Para un comportamiento específico de ACP, consulte [ACP Agents](/es/tools/acp-agents).
 
 ## Visibilidad
 
@@ -124,7 +124,7 @@ la configuración.
 
 ## Lecturas adicionales
 
-- [Session Management](/en/concepts/session) -- enrutamiento, ciclo de vida, mantenimiento
-- [ACP Agents](/en/tools/acp-agents) -- generación de arnés externo
-- [Multi-agent](/en/concepts/multi-agent) -- arquitectura multiagente
-- [Configuración de la pasarela](/en/gateway/configuration) -- controles de configuración de herramientas de sesión
+- [Session Management](/es/concepts/session) -- enrutamiento, ciclo de vida, mantenimiento
+- [ACP Agents](/es/tools/acp-agents) -- generación de arnés externo
+- [Multi-agent](/es/concepts/multi-agent) -- arquitectura multiagente
+- [Configuración de la pasarela](/es/gateway/configuration) -- controles de configuración de herramientas de sesión

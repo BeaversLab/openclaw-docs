@@ -10,13 +10,13 @@ title: "Telegram"
 状态：通过 grammY 实现的机器人私信和群组功能已可用于生产环境。长轮询是默认模式；Webhook 模式是可选的。
 
 <CardGroup cols={3}>
-  <Card title="Pairing" icon="link" href="/en/channels/pairing">
+  <Card title="Pairing" icon="link" href="/zh/channels/pairing">
     Telegram 的默认私信策略是配对。
   </Card>
-  <Card title="Channel 故障排除" icon="wrench" href="/en/channels/troubleshooting">
+  <Card title="Channel 故障排除" icon="wrench" href="/zh/channels/troubleshooting">
     跨渠道诊断和修复手册。
   </Card>
-  <Card title="Gateway(网关) configuration" icon="settings" href="/en/gateway/configuration">
+  <Card title="Gateway(网关) configuration" icon="settings" href="/zh/gateway/configuration">
     完整的渠道配置模式和示例。
   </Card>
 </CardGroup>
@@ -360,7 +360,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     如果设备使用更改的身份验证详细信息（例如角色/范围/公钥）重试，则先前的待处理请求将被取代，新请求使用不同的 `requestId`。在批准之前重新运行 `/pair pending`。
 
-    更多详情：[配对](/en/channels/pairing#pair-via-telegram-recommended-for-ios)。
+    更多详情：[配对](/zh/channels/pairing#pair-via-telegram-recommended-for-ios)。
 
   </Accordion>
 
@@ -451,7 +451,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     注意：`edit` 和 `topic-create` 目前默认启用，并且没有单独的 `channels.telegram.actions.*` 开关。
     运行时发送使用活动的配置/机密快照（启动/重新加载），因此操作路径不会在每次发送时执行临时的 SecretRef 重新解析。
 
-    表情符号删除语义：[/tools/reactions](/en/tools/reactions)
+    表情符号删除语义：[/tools/reactions](/zh/tools/reactions)
 
   </Accordion>
 
@@ -842,7 +842,7 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
 
     内联审批按钮还取决于 `channels.telegram.capabilities.inlineButtons` 是否允许目标界面（`dm`、`group` 或 `all`）。
 
-    相关文档：[执行审批](/en/tools/exec-approvals)
+    相关文档：[执行审批](/zh/tools/exec-approvals)
 
   </Accordion>
 </AccordionGroup>
@@ -969,7 +969,7 @@ dig +short api.telegram.org AAAA
   </Accordion>
 </AccordionGroup>
 
-更多帮助：[Telegram grammY](/en/channels/troubleshooting)。
+更多帮助：[Telegram grammY](/zh/channels/troubleshooting)。
 
 ## Telegram 配置参考指针
 
@@ -1001,7 +1001,7 @@ dig +short api.telegram.org AAAA
   - `channels.telegram.groups.<id>.topics.<threadId>.agentId`：将此主题路由到特定代理（覆盖群组级别和绑定路由）。
 - `channels.telegram.groups.<id>.topics.<threadId>.groupPolicy`：针对 groupPolicy 的每个主题覆盖（`open | allowlist | disabled`）。
 - `channels.telegram.groups.<id>.topics.<threadId>.requireMention`：针对每个主题的提及拦截覆盖。
-- `match.peer.id` 中的顶级 `bindings[]`，包含 `type: "acp"` 和规范主题 ID `chatId:topic:topicId`：持久化 ACP 主题绑定字段（参见 [ACP Agents](/en/tools/acp-agents#channel-specific-settings)）。
+- `match.peer.id` 中的顶级 `bindings[]`，包含 `type: "acp"` 和规范主题 ID `chatId:topic:topicId`：持久化 ACP 主题绑定字段（参见 [ACP Agents](/zh/tools/acp-agents#channel-specific-settings)）。
 - `channels.telegram.direct.<id>.topics.<threadId>.agentId`：将私信主题路由到特定代理（行为与论坛主题相同）。
 - `channels.telegram.execApprovals.enabled`：为此帐户启用 Telegram 作为基于聊天的 exec 批准客户端。
 - `channels.telegram.execApprovals.approvers`：获准批准或拒绝 exec 请求的 Telegram 用户 ID。当 `channels.telegram.allowFrom` 或直接的 `channels.telegram.defaultTo` 已识别所有者时为可选。
@@ -1037,7 +1037,7 @@ dig +short api.telegram.org AAAA
 - `channels.telegram.errorPolicy`：`reply | silent` —— 控制错误回复行为（默认：`reply`）。支持按账户/群组/主题覆盖。
 - `channels.telegram.errorCooldownMs`：向同一聊天发送错误回复之间的最小毫秒数（默认：`60000`）。防止中断期间的错误垃圾信息。
 
-- [配置参考 - Telegram](/en/gateway/configuration-reference#telegram)
+- [配置参考 - Telegram](/zh/gateway/configuration-reference#telegram)
 
 Telegram 特有的高信号字段：
 
@@ -1057,9 +1057,9 @@ Telegram 特有的高信号字段：
 
 ## 相关内容
 
-- [配对](/en/channels/pairing)
-- [群组](/en/channels/groups)
-- [安全性](/en/gateway/security)
-- [渠道路由](/en/channels/channel-routing)
-- [多智能体路由](/en/concepts/multi-agent)
-- [故障排除](/en/channels/troubleshooting)
+- [配对](/zh/channels/pairing)
+- [群组](/zh/channels/groups)
+- [安全性](/zh/gateway/security)
+- [渠道路由](/zh/channels/channel-routing)
+- [多智能体路由](/zh/concepts/multi-agent)
+- [故障排除](/zh/channels/troubleshooting)

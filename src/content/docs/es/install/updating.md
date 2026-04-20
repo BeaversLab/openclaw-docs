@@ -30,7 +30,7 @@ openclaw update --dry-run   # preview without applying
 falta la etiqueta beta o es anterior a la última versión estable. Usa `--tag beta`
 si quieres la etiqueta de distribución beta cruda de npm para una actualización de paquete única.
 
-Consulta [Canales de desarrollo](/en/install/development-channels) para conocer la semántica de los canales.
+Consulta [Canales de desarrollo](/es/install/development-channels) para conocer la semántica de los canales.
 
 ## Alternativa: volver a ejecutar el instalador
 
@@ -90,7 +90,7 @@ La puerta de enlace también registra un consejo de actualización al inicio (de
 openclaw doctor
 ```
 
-Migra la configuración, audita las políticas de DM y comprueba el estado de la puerta de enlace. Detalles: [Doctor](/en/gateway/doctor)
+Migra la configuración, audita las políticas de DM y comprueba el estado de la puerta de enlace. Detalles: [Doctor](/es/gateway/doctor)
 
 ### Reiniciar la puerta de enlace
 
@@ -133,11 +133,11 @@ Para volver a la última versión: `git checkout main && git pull`.
 
 - Ejecuta `openclaw doctor` de nuevo y lee la salida cuidadosamente.
 - Para `openclaw update --channel dev` en checkouts de código fuente, el actualizador inicia automáticamente `pnpm` cuando es necesario. Si ve un error de arranque de pnpm/corepack, instale `pnpm` manualmente (o reactive `corepack`) y vuelva a ejecutar la actualización.
-- Consulte: [Solución de problemas](/en/gateway/troubleshooting)
+- Consulte: [Solución de problemas](/es/gateway/troubleshooting)
 - Pregunte en Discord: [https://discord.gg/clawd](https://discord.gg/clawd)
 
 ## Relacionado
 
-- [Resumen de instalación](/en/install) — todos los métodos de instalación
-- [Doctor](/en/gateway/doctor) — comprobaciones de salud después de las actualizaciones
-- [Migración](/en/install/migrating) — guías de migración de versiones principales
+- [Resumen de instalación](/es/install) — todos los métodos de instalación
+- [Doctor](/es/gateway/doctor) — comprobaciones de salud después de las actualizaciones
+- [Migración](/es/install/migrating) — guías de migración de versiones principales

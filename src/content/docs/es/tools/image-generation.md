@@ -137,12 +137,12 @@ La generación de imágenes de MiniMax está disponible a través de ambas rutas
 
 ## Relacionado
 
-- [Resumen de herramientas](/en/tools) — todas las herramientas de agente disponibles
-- [fal](/en/providers/fal) — configuración del proveedor de imagen y video fal
-- [ComfyUI](/en/providers/comfy) — configuración de flujos de trabajo de ComfyUI local y Comfy Cloud
-- [Google (Gemini)](/en/providers/google) — configuración del proveedor de imágenes Gemini
-- [MiniMax](/en/providers/minimax) — configuración del proveedor de imágenes MiniMax
-- [OpenAI](/en/providers/openai) — configuración del proveedor OpenAI Images
-- [Vydra](/en/providers/vydra) — configuración de imagen, video y voz de Vydra
-- [Referencia de configuración](/en/gateway/configuration-reference#agent-defaults) — configuración de `imageGenerationModel`
-- [Modelos](/en/concepts/models) — configuración y conmutación por error de modelos
+- [Resumen de herramientas](/es/tools) — todas las herramientas de agente disponibles
+- [fal](/es/providers/fal) — configuración del proveedor de imagen y video fal
+- [ComfyUI](/es/providers/comfy) — configuración de flujos de trabajo de ComfyUI local y Comfy Cloud
+- [Google (Gemini)](/es/providers/google) — configuración del proveedor de imágenes Gemini
+- [MiniMax](/es/providers/minimax) — configuración del proveedor de imágenes MiniMax
+- [OpenAI](/es/providers/openai) — configuración del proveedor OpenAI Images
+- [Vydra](/es/providers/vydra) — configuración de imagen, video y voz de Vydra
+- [Referencia de configuración](/es/gateway/configuration-reference#agent-defaults) — configuración de `imageGenerationModel`
+- [Modelos](/es/concepts/models) — configuración y conmutación por error de modelos

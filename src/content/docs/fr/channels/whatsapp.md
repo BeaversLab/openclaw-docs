@@ -25,13 +25,13 @@ openclaw plugins install @openclaw/whatsapp
 ```
 
 <CardGroup cols={3}>
-  <Card title="Appariement" icon="link" href="/en/channels/pairing">
+  <Card title="Appariement" icon="link" href="/fr/channels/pairing">
     La stratégie DM par défaut est l'appariement pour les expéditeurs inconnus.
   </Card>
-  <Card title="Résolution de problèmes du channel" icon="wrench" href="/en/channels/troubleshooting">
+  <Card title="Résolution de problèmes du channel" icon="wrench" href="/fr/channels/troubleshooting">
     Guides de diagnostic et de réparation multi-channel.
   </Card>
-  <Card title="Configuration du Gateway" icon="settings" href="/en/gateway/configuration">
+  <Card title="Configuration du Gateway" icon="settings" href="/fr/gateway/configuration">
     Modèles et exemples complets de configuration de channel.
   </Card>
 </CardGroup>
@@ -464,7 +464,7 @@ Notes de comportement :
 
 Référence principale :
 
-- [Référence de configuration - WhatsApp](/en/gateway/configuration-reference#whatsapp)
+- [Référence de configuration - WhatsApp](/fr/gateway/configuration-reference#whatsapp)
 
 Champs WhatsApp à signal fort :
 
@@ -476,9 +476,9 @@ Champs WhatsApp à signal fort :
 
 ## Connexes
 
-- [Appairage](/en/channels/pairing)
-- [Groupes](/en/channels/groups)
-- [Sécurité](/en/gateway/security)
-- [Routage de canal](/en/channels/channel-routing)
-- [Routage multi-agent](/en/concepts/multi-agent)
-- [Dépannage](/en/channels/troubleshooting)
+- [Appairage](/fr/channels/pairing)
+- [Groupes](/fr/channels/groups)
+- [Sécurité](/fr/gateway/security)
+- [Routage de canal](/fr/channels/channel-routing)
+- [Routage multi-agent](/fr/concepts/multi-agent)
+- [Dépannage](/fr/channels/troubleshooting)

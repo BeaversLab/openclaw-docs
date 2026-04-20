@@ -74,7 +74,7 @@ Matrice d'authentification :
   - revenir à l'ensemble normal des portées par défaut de l'opérateur lorsque l'en-tête est absent
   - ne perdre la sémantique de propriétaire que lorsque l'appelant réduit explicitement les portées et omet `operator.admin`
 
-Voir [Sécurité](/en/gateway/security) et [Accès à distance](/en/gateway/remote).
+Voir [Sécurité](/fr/gateway/security) et [Accès à distance](/fr/gateway/remote).
 
 ## Contrat de modèle centré sur l'agent
 

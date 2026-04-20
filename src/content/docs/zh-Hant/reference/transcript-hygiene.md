@@ -23,7 +23,7 @@ title: "文字輸入清理"
 
 如果您需要文字輸入儲存的詳細資訊，請參閱：
 
-- [/reference/session-management-compaction](/en/reference/session-management-compaction)
+- [/reference/session-management-compaction](/zh-Hant/reference/session-management-compaction)
 
 ---
 

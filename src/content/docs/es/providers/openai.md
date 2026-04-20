@@ -174,7 +174,7 @@ El complemento `openai` incluido registra la generación de imágenes a través 
 }
 ```
 
-<Note>Vea [Image Generation](/en/tools/image-generation) para los parámetros de herramienta compartidos, selección de proveedor y comportamiento de conmutación por error.</Note>
+<Note>Vea [Image Generation](/es/tools/image-generation) para los parámetros de herramienta compartidos, selección de proveedor y comportamiento de conmutación por error.</Note>
 
 ## Generación de video
 
@@ -198,7 +198,7 @@ El complemento incluido `openai` registra la generación de video a través de l
 }
 ```
 
-<Note>Vea [Video Generation](/en/tools/video-generation) para los parámetros de herramienta compartidos, selección de proveedor y comportamiento de conmutación por error.</Note>
+<Note>Vea [Video Generation](/es/tools/video-generation) para los parámetros de herramienta compartidos, selección de proveedor y comportamiento de conmutación por error.</Note>
 
 ## Superposición de personalidad
 
@@ -523,16 +523,16 @@ OpenClaw añade una pequeña superposición de prompt específica de OpenAI para
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Generación de imágenes" href="/en/tools/image-generation" icon="image">
+  <Card title="Generación de imágenes" href="/es/tools/image-generation" icon="image">
     Parámetros compartidos de la herramienta de imágenes y selección del proveedor.
   </Card>
-  <Card title="Video generation" href="/en/tools/video-generation" icon="video">
+  <Card title="Video generation" href="/es/tools/video-generation" icon="video">
     Parámetros compartidos de la herramienta de video y selección del proveedor.
   </Card>
-  <Card title="OAuth and auth" href="/en/gateway/authentication" icon="key">
+  <Card title="OAuth and auth" href="/es/gateway/authentication" icon="key">
     Detalles de autenticación y reglas de reutilización de credenciales.
   </Card>
 </CardGroup>

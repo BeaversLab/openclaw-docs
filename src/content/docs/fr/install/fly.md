@@ -496,6 +496,6 @@ Voir [Tarifs Fly.io](https://fly.io/docs/about/pricing/) pour plus de détails.
 
 ## Étapes suivantes
 
-- Configurez les canaux de messagerie : [Canaux](/en/channels)
-- Configurez la Gateway : [Configuration de la Gateway](/en/gateway/configuration)
-- Gardez OpenClaw à jour : [Mise à jour](/en/install/updating)
+- Configurez les canaux de messagerie : [Canaux](/fr/channels)
+- Configurez la Gateway : [Configuration de la Gateway](/fr/gateway/configuration)
+- Gardez OpenClaw à jour : [Mise à jour](/fr/install/updating)

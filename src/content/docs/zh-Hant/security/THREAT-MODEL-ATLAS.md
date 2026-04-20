@@ -29,7 +29,7 @@ read_when:
 
 ### 貢獻此威脅模型
 
-這是由 OpenClaw 社群維護的持續更新文件。請參閱 [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL) 以了解貢獻指南：
+這是由 OpenClaw 社群維護的持續更新文件。請參閱 [CONTRIBUTING-THREAT-MODEL.md](/zh-Hant/security/CONTRIBUTING-THREAT-MODEL) 以了解貢獻指南：
 
 - 回報新威脅
 - 更新現有威脅

@@ -12,7 +12,7 @@ sidebarTitle: "Incorporación: aplicación macOS"
 Este documento describe el flujo de configuración de primera ejecución **actual**. El objetivo es una
 experiencia fluida de "día 0": elegir dónde se ejecuta el Gateway, conectar la autenticación, ejecutar el
 asistente y dejar que el agente se inicie automáticamente.
-Para obtener una descripción general de las rutas de incorporación, consulte [Información general sobre la incorporación](/en/start/onboarding-overview).
+Para obtener una descripción general de las rutas de incorporación, consulte [Información general sobre la incorporación](/es/start/onboarding-overview).
 
 <Steps>
 <Step title="Approve macOS warning">
@@ -33,7 +33,7 @@ Para obtener una descripción general de las rutas de incorporación, consulte [
 Modelo de confianza de seguridad:
 
 - De forma predeterminada, OpenClaw es un agente personal: un límite de un operador de confianza.
-- Las configuraciones compartidas/multiusuario requieren bloqueo (dividir los límites de confianza, mantener el acceso a las herramientas al mínimo y seguir [Seguridad](/en/gateway/security)).
+- Las configuraciones compartidas/multiusuario requieren bloqueo (dividir los límites de confianza, mantener el acceso a las herramientas al mínimo y seguir [Seguridad](/es/gateway/security)).
 - La incorporación local ahora establece de forma predeterminada las nuevas configuraciones en `tools.profile: "coding"` para que las configuraciones locales nuevas mantengan las herramientas de sistema de archivos/ejecución sin forzar el perfil `full` sin restricciones.
 - Si se habilitan hooks/webhooks u otras fuentes de contenido que no son de confianza, utilice un nivel de modelo moderno y sólido y mantenga una política estricta de herramientas y sandbox.
 
@@ -82,6 +82,6 @@ La incorporación solicita los permisos TCC necesarios para:
   Para el tiempo de ejecución de Gateway, Node sigue siendo la ruta recomendada.
 </Step>
 <Step title="Chat de incorporación (sesión dedicada)">
-  Después de la configuración, la aplicación abre una sesión de chat de incorporación dedicada para que el agente pueda presentarse y guiar los siguientes pasos. Esto mantiene la orientación de la primera ejecución separada de su conversación normal. Consulte [Inicialización](/en/start/bootstrapping) para obtener información sobre lo que sucede en el host de la puerta de enlace durante la primera ejecución del agente.
+  Después de la configuración, la aplicación abre una sesión de chat de incorporación dedicada para que el agente pueda presentarse y guiar los siguientes pasos. Esto mantiene la orientación de la primera ejecución separada de su conversación normal. Consulte [Inicialización](/es/start/bootstrapping) para obtener información sobre lo que sucede en el host de la puerta de enlace durante la primera ejecución del agente.
 </Step>
 </Steps>

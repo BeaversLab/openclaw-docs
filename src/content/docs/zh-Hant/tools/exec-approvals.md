@@ -353,7 +353,7 @@ Shell chaining and redirections are not auto-allowed in allowlist mode.
 
 目標選擇器會選擇 **Gateway** (本機批准) 或 **Node**。節點必須宣佈支援 `system.execApprovals.get/set` (macOS app 或無頭節點主機)。如果節點尚未宣佈支援執行批准，請直接編輯其本機 `~/.openclaw/exec-approvals.json`。
 
-CLI：`openclaw approvals` 支援閘道或節點編輯 (請參閱 [Approvals CLI](/en/cli/approvals))。
+CLI：`openclaw approvals` 支援閘道或節點編輯 (請參閱 [Approvals CLI](/zh-Hant/cli/approvals))。
 
 ## 批准流程
 
@@ -493,7 +493,7 @@ Discord 和 Telegram 也支援同聊天室 `/approve`，但即使停用原生審
 
 設定 `enabled: false` 以明確停用原生審核客戶端。設定 `enabled: true` 以在解析出審核者時強制啟用。公開的原始聊天室傳遞則透過 `channels.<channel>.execApprovals.target` 保持明確。
 
-常見問題：[為什麼針對聊天室審核有兩個 exec 審核設定？](/en/help/faq#why-are-there-two-exec-approval-configs-for-chat-approvals)
+常見問題：[為什麼針對聊天室審核有兩個 exec 審核設定？](/zh-Hant/help/faq#why-are-there-two-exec-approval-configs-for-chat-approvals)
 
 - Discord：`channels.discord.execApprovals.*`
 - Slack：`channels.slack.execApprovals.*`
@@ -529,8 +529,8 @@ Telegram 預設為審批者 DM (`target: "dm"`)。當您
 
 請參閱：
 
-- [Discord](/en/channels/discord)
-- [Telegram](/en/channels/telegram)
+- [Discord](/zh-Hant/channels/discord)
+- [Telegram](/zh-Hant/channels/telegram)
 
 ### macOS IPC 流程
 
@@ -574,13 +574,13 @@ Gateway 託管的 exec 核准會在指令完成時（以及可選的執行時間
 
 相關：
 
-- [Exec 工具](/en/tools/exec)
-- [提權模式](/en/tools/elevated)
-- [技能](/en/tools/skills)
+- [Exec 工具](/zh-Hant/tools/exec)
+- [提權模式](/zh-Hant/tools/elevated)
+- [技能](/zh-Hant/tools/skills)
 
 ## 相關
 
-- [Exec](/en/tools/exec) — shell 指令執行工具
-- [沙箱機制](/en/gateway/sandboxing) — 沙箱模式與工作區存取
-- [安全性](/en/gateway/security) — 安全模型與加固
-- [沙盒與工具策略與提升權限](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — 何時使用各項
+- [Exec](/zh-Hant/tools/exec) — shell 指令執行工具
+- [沙箱機制](/zh-Hant/gateway/sandboxing) — 沙箱模式與工作區存取
+- [安全性](/zh-Hant/gateway/security) — 安全模型與加固
+- [沙盒與工具策略與提升權限](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated) — 何時使用各項

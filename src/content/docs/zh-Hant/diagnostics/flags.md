@@ -82,10 +82,10 @@ rg "telegram http error" /tmp/openclaw/openclaw-*.log
 tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
 ```
 
-對於遠端閘道，您也可以使用 `openclaw logs --follow`（請參閱 [/cli/logs](/en/cli/logs)）。
+對於遠端閘道，您也可以使用 `openclaw logs --follow`（請參閱 [/cli/logs](/zh-Hant/cli/logs)）。
 
 ## 備註
 
 - 如果 `logging.level` 設定得比 `warn` 高，這些日誌可能會被隱藏。預設的 `info` 即可。
 - 保留啟用旗標是安全的；它們只會影響特定子系統的日誌數量。
-- 使用 [/logging](/en/logging) 來變更日誌目的地、等級和資料遮蔽。
+- 使用 [/logging](/zh-Hant/logging) 來變更日誌目的地、等級和資料遮蔽。

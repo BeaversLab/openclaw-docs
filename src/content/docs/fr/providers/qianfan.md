@@ -104,13 +104,13 @@ endpoint et une seule clé API. Elle est compatible avec OpenAI, donc la plupart
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection du modèle" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les fournisseurs, les références de modèle et le comportement de basculement.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration" icon="gear">
     Référence complète de la configuration OpenClaw.
   </Card>
-  <Card title="Configuration de l'agent" href="/en/concepts/agent" icon="robot">
+  <Card title="Configuration de l'agent" href="/fr/concepts/agent" icon="robot">
     Configuration des valeurs par défaut de l'agent et des affectations de modèle.
   </Card>
   <Card title="Documentation de l'API Qianfan" href="https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb" icon="arrow-up-right-from-square">

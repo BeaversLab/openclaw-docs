@@ -11,7 +11,7 @@ read_when:
 Perplexity 外掛程式透過 Perplexity
 Search API 或透過 OpenRouter 的 Perplexity Sonar 提供網路搜尋功能。
 
-<Note>此頁面涵蓋 Perplexity **提供者** 設定。若要了解 Perplexity **工具**（代理程式如何使用它），請參閱 [Perplexity 工具](/en/tools/perplexity-search)。</Note>
+<Note>此頁面涵蓋 Perplexity **提供者** 設定。若要了解 Perplexity **工具**（代理程式如何使用它），請參閱 [Perplexity 工具](/zh-Hant/tools/perplexity-search)。</Note>
 
 | 屬性     | 值                                                                    |
 | -------- | --------------------------------------------------------------------- |
@@ -99,10 +99,10 @@ Search API 或透過 OpenRouter 的 Perplexity Sonar 提供網路搜尋功能。
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="Perplexity 搜尋工具" href="/en/tools/perplexity-search" icon="magnifying-glass">
+  <Card title="Perplexity 搜尋工具" href="/zh-Hant/tools/perplexity-search" icon="magnifying-glass">
     代理人如何呼叫 Perplexity 搜尋並解讀結果。
   </Card>
-  <Card title="設定參考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration-reference" icon="gear">
     完整的設定參考，包括外掛項目。
   </Card>
 </CardGroup>

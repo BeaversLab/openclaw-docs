@@ -33,5 +33,5 @@ title: "Gateway(网关) 网关 锁"
 
 ## 相关内容
 
-- [多个网关](/en/gateway/multiple-gateways) — 使用唯一端口运行多个实例
-- [故障排除](/en/gateway/troubleshooting) — 诊断 `EADDRINUSE` 和端口冲突
+- [多个网关](/zh/gateway/multiple-gateways) — 使用唯一端口运行多个实例
+- [故障排除](/zh/gateway/troubleshooting) — 诊断 `EADDRINUSE` 和端口冲突

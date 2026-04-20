@@ -125,5 +125,5 @@ openclaw honcho search <query> [-k N] [-d D] # Semantic search over memory
 - [Código fuente del complemento](https://github.com/plastic-labs/openclaw-honcho)
 - [Documentación de Honcho](https://docs.honcho.dev)
 - [Guía de integración de Honcho con OpenClaw](https://docs.honcho.dev/v3/guides/integrations/openclaw)
-- [Memoria](/en/concepts/memory) -- descripción general de la memoria de OpenClaw
-- [Motores de contexto](/en/concepts/context-engine) -- cómo funcionan los motores de contexto de los complementos
+- [Memoria](/es/concepts/memory) -- descripción general de la memoria de OpenClaw
+- [Motores de contexto](/es/concepts/context-engine) -- cómo funcionan los motores de contexto de los complementos

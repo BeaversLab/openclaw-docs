@@ -33,5 +33,5 @@ title: "Verrou de la Gateway"
 
 ## Connexes
 
-- [Plusieurs passerelles](/en/gateway/multiple-gateways) — exécution de plusieurs instances avec des ports uniques
-- [Dépannage](/en/gateway/troubleshooting) — diagnostic de `EADDRINUSE` et des conflits de ports
+- [Plusieurs passerelles](/fr/gateway/multiple-gateways) — exécution de plusieurs instances avec des ports uniques
+- [Dépannage](/fr/gateway/troubleshooting) — diagnostic de `EADDRINUSE` et des conflits de ports

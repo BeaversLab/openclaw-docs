@@ -7,4 +7,4 @@ read_when:
 
 # Construcción de complementos
 
-Esta página se ha trasladado a [Construcción de complementos](/en/plugins/building-plugins).
+Esta página se ha trasladado a [Construcción de complementos](/es/plugins/building-plugins).

@@ -81,10 +81,10 @@ read_when:
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="模型选择" href="/en/concepts/model-providers" icon="layers">
+  <Card title="模型选择" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="配置参考" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="配置参考" href="/zh/gateway/configuration-reference" icon="gear">
     有关代理、模型和提供商的完整配置参考。
   </Card>
 </CardGroup>

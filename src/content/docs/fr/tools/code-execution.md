@@ -10,7 +10,7 @@ title: "Code Execution"
 # Code Execution
 
 `code_execution` exécute une analyse Python distante sandboxed sur l'API Responses de xAI.
-Ceci est différent de [`exec`](/en/tools/exec) local :
+Ceci est différent de [`exec`](/fr/tools/exec) local :
 
 - `exec` exécute des commandes shell sur votre machine ou nœud
 - `code_execution` exécute Python dans le bac à sable distant de xAI
@@ -23,7 +23,7 @@ Utilisez `code_execution` pour :
 - l'analyse de style graphique
 - analyser les données renvoyées par `x_search` ou `web_search`
 
-N'utilisez **pas** cette fonctionnalité lorsque vous avez besoin de fichiers locaux, de votre shell, de votre dépôt ou d'appareils jumelés. Utilisez [`exec`](/en/tools/exec) pour cela.
+N'utilisez **pas** cette fonctionnalité lorsque vous avez besoin de fichiers locaux, de votre shell, de votre dépôt ou d'appareils jumelés. Utilisez [`exec`](/fr/tools/exec) pour cela.
 
 ## Configuration
 
@@ -80,10 +80,10 @@ la demande d'analyse complète et toutes les données intégrées en une seule i
 - Il s'agit d'une exécution xAI à distance, et non d'une exécution de processus locale.
 - Cela doit être considéré comme une analyse éphémère, et non comme un notebook persistant.
 - Ne supposez pas l'accès aux fichiers locaux ou à votre espace de travail.
-- Pour des données X fraîches, utilisez d'abord [`x_search`](/en/tools/web#x_search).
+- Pour des données X fraîches, utilisez d'abord [`x_search`](/fr/tools/web#x_search).
 
 ## Voir aussi
 
-- [Outils Web](/en/tools/web)
-- [Exec](/en/tools/exec)
-- [xAI](/en/providers/xai)
+- [Outils Web](/fr/tools/web)
+- [Exec](/fr/tools/exec)
+- [xAI](/fr/providers/xai)

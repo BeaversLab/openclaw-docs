@@ -64,7 +64,7 @@ chevauchement de 80 jetons) et les stocke dans une base de données SQLite par a
   change, l'index entier est reconstruit automatiquement.
 - **Réindexation à la demande :** `openclaw memory index --force`
 
-<Info>Vous pouvez également indexer des fichiers Markdown hors de l'espace de travail avec `memorySearch.extraPaths`. Consultez la [référence de configuration](/en/reference/memory-config#additional-memory-paths).</Info>
+<Info>Vous pouvez également indexer des fichiers Markdown hors de l'espace de travail avec `memorySearch.extraPaths`. Consultez la [référence de configuration](/fr/reference/memory-config#additional-memory-paths).</Info>
 
 ## Quand l'utiliser
 
@@ -75,10 +75,10 @@ Le moteur intégré est le bon choix pour la plupart des utilisateurs :
 - Prend en charge tous les providers d'embeddings.
 - La recherche hybride combine le meilleur des deux approches de récupération.
 
-Envisagez de passer à [QMD](/en/concepts/memory-qmd) si vous avez besoin de reranking, d'expansion de requête
+Envisagez de passer à [QMD](/fr/concepts/memory-qmd) si vous avez besoin de reranking, d'expansion de requête
 ou si vous souhaitez indexer des répertoires en dehors de l'espace de travail.
 
-Envisagez [Honcho](/en/concepts/memory-honcho) si vous souhaitez une mémoire inter-session avec
+Envisagez [Honcho](/fr/concepts/memory-honcho) si vous souhaitez une mémoire inter-session avec
 modélisation automatique de l'utilisateur.
 
 ## Dépannage
@@ -97,4 +97,4 @@ en cours de processus. Vérifiez les journaux pour l'erreur de chargement spéci
 Pour la configuration du provider d'embeddings, le réglage de la recherche hybride (poids, MMR, décroissance
 temporelle), l'indexation par lots, la mémoire multimodale, sqlite-vec, les chemins supplémentaires et toutes
 les autres options de configuration, consultez la
-[référence de configuration de la mémoire](/en/reference/memory-config).
+[référence de configuration de la mémoire](/fr/reference/memory-config).

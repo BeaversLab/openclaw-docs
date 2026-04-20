@@ -11,7 +11,7 @@ read_when:
 El complemento Perplexity proporciona capacidades de búsqueda web a través de la API de
 búsqueda Perplexity o Perplexity Sonar a través de OpenRouter.
 
-<Note>Esta página cubre la configuración del **proveedor** Perplexity. Para la **herramienta** Perplexity (cómo la usa el agente), consulte [Herramienta Perplexity](/en/tools/perplexity-search).</Note>
+<Note>Esta página cubre la configuración del **proveedor** Perplexity. Para la **herramienta** Perplexity (cómo la usa el agente), consulte [Herramienta Perplexity](/es/tools/perplexity-search).</Note>
 
 | Propiedad             | Valor                                                                  |
 | --------------------- | ---------------------------------------------------------------------- |
@@ -103,10 +103,10 @@ Al usar la API nativa de Perplexity, las búsquedas admiten los siguientes filtr
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Herramienta de búsqueda Perplexity" href="/en/tools/perplexity-search" icon="magnifying-glass">
+  <Card title="Herramienta de búsqueda Perplexity" href="/es/tools/perplexity-search" icon="magnifying-glass">
     Cómo el agente invoca las búsquedas de Perplexity e interpreta los resultados.
   </Card>
-  <Card title="Referencia de configuración" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
     Referencia de configuración completa, incluidas las entradas del complemento.
   </Card>
 </CardGroup>

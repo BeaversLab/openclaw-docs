@@ -8,6 +8,6 @@ read_when:
 
 # Qwen / Model Studio
 
-Cette page a été déplacée vers [Qwen](/en/providers/qwen). Voir [Qwen](/en/providers/qwen) pour
+Cette page a été déplacée vers [Qwen](/fr/providers/qwen). Voir [Qwen](/fr/providers/qwen) pour
 la configuration canonique du provider, les détails du endpoint, les alias de compatibilité et les notes
 de génération vidéo Wan.

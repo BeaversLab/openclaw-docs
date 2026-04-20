@@ -151,7 +151,7 @@ A nivel de arquitectura, la división es:
 - el adaptador de transporte posee la configuración de la puerta de enlace, la preparación, la observación de entrada y salida, las acciones de transporte y el estado de transporte normalizado.
 - los archivos de escenarios markdown bajo `qa/scenarios/` definen la ejecución de la prueba; `qa-lab` proporciona la superficie de tiempo de ejecución reutilizable que los ejecuta.
 
-La guía de adopción orientada a los mantenedores para nuevos adaptadores de canal se encuentra en [Testing](/en/help/testing#adding-a-channel-to-qa).
+La guía de adopción orientada a los mantenedores para nuevos adaptadores de canal se encuentra en [Testing](/es/help/testing#adding-a-channel-to-qa).
 
 ## Informes
 
@@ -191,6 +191,6 @@ Cuando no se pasa ningún `--judge-model`, los jueces por defecto son `openai/gp
 
 ## Documentos relacionados
 
-- [Pruebas](/en/help/testing)
-- [Canal QA](/en/channels/qa-channel)
-- [Panel](/en/web/dashboard)
+- [Pruebas](/es/help/testing)
+- [Canal QA](/es/channels/qa-channel)
+- [Panel](/es/web/dashboard)

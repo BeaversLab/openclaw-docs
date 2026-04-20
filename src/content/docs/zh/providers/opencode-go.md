@@ -8,7 +8,7 @@ title: "OpenCode Go"
 
 # OpenCode Go
 
-OpenCode Go 是 [OpenCode](/en/providers/opencode) 中的 Go 目录。
+OpenCode Go 是 [OpenCode](/zh/providers/opencode) 中的 Go 目录。
 它使用与 Zen 目录相同的 `OPENCODE_API_KEY`，但保留运行时
 提供商 ID `opencode-go`，以便上游按模型路由保持正确。
 
@@ -16,7 +16,7 @@ OpenCode Go 是 [OpenCode](/en/providers/opencode) 中的 Go 目录。
 | ------------ | ---------------------------------- |
 | 运行时提供商 | `opencode-go`                      |
 | 身份验证     | `OPENCODE_API_KEY`                 |
-| 父级设置     | [OpenCode](/en/providers/opencode) |
+| 父级设置     | [OpenCode](/zh/providers/opencode) |
 
 ## 支持的模型
 
@@ -89,15 +89,15 @@ OpenCode Go 是 [OpenCode](/en/providers/opencode) 中的 Go 目录。
   </Accordion>
 </AccordionGroup>
 
-<Tip>请参阅 [OpenCode](/en/providers/opencode) 以了解共享新手引导概述以及完整的 Zen + Go 目录参考。</Tip>
+<Tip>请参阅 [OpenCode](/zh/providers/opencode) 以了解共享新手引导概述以及完整的 Zen + Go 目录参考。</Tip>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="OpenCode (parent)" href="/en/providers/opencode" icon="server">
+  <Card title="OpenCode (parent)" href="/zh/providers/opencode" icon="server">
     共享的新手引导、目录概览和高级说明。
   </Card>
-  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
 </CardGroup>

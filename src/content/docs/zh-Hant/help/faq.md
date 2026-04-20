@@ -8,7 +8,7 @@ title: "常見問題"
 
 # 常見問題
 
-針對真實環境設置（本地開發、VPS、多代理、OAuth/API 金鑰、模型故障轉移）的快速解答以及更深層的故障排除。有關運行時診斷，請參閱 [故障排除](/en/gateway/troubleshooting)。有關完整的配置參考，請參閱 [配置](/en/gateway/configuration)。
+針對真實環境設置（本地開發、VPS、多代理、OAuth/API 金鑰、模型故障轉移）的快速解答以及更深層的故障排除。有關運行時診斷，請參閱 [故障排除](/zh-Hant/gateway/troubleshooting)。有關完整的配置參考，請參閱 [配置](/zh-Hant/gateway/configuration)。
 
 ## 當發生問題時的前 60 秒
 
@@ -43,7 +43,7 @@ title: "常見問題"
    ```
 
    運行即時網關健康探測，包括支援時的通道探測
-   （需要可到達的網關）。請參閱 [健康狀態](/en/gateway/health)。
+   （需要可到達的網關）。請參閱 [健康狀態](/zh-Hant/gateway/health)。
 
 5. **追蹤最新日誌**
 
@@ -57,7 +57,7 @@ title: "常見問題"
    tail -f "$(ls -t /tmp/openclaw/openclaw-*.log | head -1)"
    ```
 
-   文件日誌與服務日誌是分開的；請參閱 [日誌記錄](/en/logging) 和 [故障排除](/en/gateway/troubleshooting)。
+   文件日誌與服務日誌是分開的；請參閱 [日誌記錄](/zh-Hant/logging) 和 [故障排除](/zh-Hant/gateway/troubleshooting)。
 
 6. **執行修復工具（修復）**
 
@@ -65,7 +65,7 @@ title: "常見問題"
    openclaw doctor
    ```
 
-   修復/遷移配置/狀態並運行健康檢查。請參閱 [醫生](/en/gateway/doctor)。
+   修復/遷移配置/狀態並運行健康檢查。請參閱 [醫生](/zh-Hant/gateway/doctor)。
 
 7. **閘道快照**
 
@@ -74,7 +74,7 @@ title: "常見問題"
    openclaw health --verbose   # shows the target URL + config path on errors
    ```
 
-   向運行中的網關請求完整快照（僅限 WS）。請參閱 [健康狀態](/en/gateway/health)。
+   向運行中的網關請求完整快照（僅限 WS）。請參閱 [健康狀態](/zh-Hant/gateway/health)。
 
 ## 快速入門與首次執行設置
 
@@ -117,7 +117,7 @@ title: "常見問題"
     `openclaw gateway status`、`openclaw health --verbose`。
 
     快速除錯循環：[First 60 seconds if something is broken](#first-60-seconds-if-something-is-broken)。
-    安裝文件：[Install](/en/install)、[Installer flags](/en/install/installer)、[Updating](/en/install/updating)。
+    安裝文件：[Install](/zh-Hant/install)、[Installer flags](/zh-Hant/install/installer)、[Updating](/zh-Hant/install/updating)。
 
   </Accordion>
 
@@ -131,7 +131,7 @@ title: "常見問題"
 
     在任務模式下，到期時間戳僅在實際 Heartbeat 執行完成後才會向前推進。跳過的執行不會將任務標記為已完成。
 
-    文件：[Heartbeat](/en/gateway/heartbeat)、[Automation & Tasks](/en/automation)。
+    文件：[Heartbeat](/zh-Hant/gateway/heartbeat)、[Automation & Tasks](/zh-Hant/automation)。
 
   </Accordion>
 
@@ -179,7 +179,7 @@ title: "常見問題"
     - **身分感知反向代理**：將閘道保留在非 loopback 的信任代理後方，設定 `gateway.auth.mode: "trusted-proxy"`，然後開啟代理 URL。
     - **SSH 隧道**：`ssh -N -L 18789:127.0.0.1:18789 user@host` 然後開啟 `http://127.0.0.1:18789/`。共用金鑰驗證仍適用於隧道；如果有提示，請貼上設定的權杖或密碼。
 
-    請參閱 [Dashboard](/en/web/dashboard) 和 [Web surfaces](/en/web) 以了解綁定模式和驗證詳情。
+    請參閱 [Dashboard](/zh-Hant/web/dashboard) 和 [Web surfaces](/zh-Hant/web) 以了解綁定模式和驗證詳情。
 
   </Accordion>
 
@@ -201,7 +201,7 @@ title: "常見問題"
     - 外掛程式審批是分開的：它們預設使用同聊天 `/approve`，可選的 `approvals.plugin` 轉發，且只有部分原生通道在最上層保留外掛程式審批的原生處理。
 
     簡而言之：轉發用於路由，原生客戶端配置用於更豐富的特定通道使用者體驗。
-    請參閱 [執行審批](/en/tools/exec-approvals)。
+    請參閱 [執行審批](/zh-Hant/tools/exec-approvals)。
 
   </Accordion>
 
@@ -217,7 +217,7 @@ title: "常見問題"
     硬性的最低要求。
 
     提示：一台小型 Pi/VPS 可以託管 Gateway，您可以在您的筆記型電腦/手機上配對 **節點**
-    以進行本機螢幕/相機/畫布或指令執行。請參閱 [節點](/en/nodes)。
+    以進行本機螢幕/相機/畫布或指令執行。請參閱 [節點](/zh-Hant/nodes)。
 
   </Accordion>
 
@@ -229,7 +229,7 @@ title: "常見問題"
     - 一開始不啟用頻道/技能，然後逐一新增。
     - 如果遇到奇怪的二進位問題，通常是 **ARM 相容性** 問題。
 
-    文件：[Linux](/en/platforms/linux)、[安裝](/en/install)。
+    文件：[Linux](/zh-Hant/platforms/linux)、[安裝](/zh-Hant/install)。
 
   </Accordion>
 
@@ -259,7 +259,7 @@ title: "常見問題"
     ```
 
     如果 Gateway 是遠端的，請確保通道/Tailscale 連線正常，且 UI
-    指向正確的 Gateway。請參閱 [遠端存取](/en/gateway/remote)。
+    指向正確的 Gateway。請參閱 [遠端存取](/zh-Hant/gateway/remote)。
 
   </Accordion>
 
@@ -275,9 +275,9 @@ title: "常見問題"
 
     **重要：** 如果您僅將工作區提交/推送至 GitHub，您正在備份 **記憶體 + 引導檔案**，但 **不包含** 會話歷史或身份驗證資訊。這些資料位於 `~/.openclaw/` 之下（例如 `~/.openclaw/agents/<agentId>/sessions/`）。
 
-    相關連結：[遷移](/en/install/migrating)、[檔案在磁碟上的位置](#where-things-live-on-disk)、
-    [Agent 工作區](/en/concepts/agent-workspace)、[Doctor](/en/gateway/doctor)、
-    [遠端模式](/en/gateway/remote)。
+    相關連結：[遷移](/zh-Hant/install/migrating)、[檔案在磁碟上的位置](#where-things-live-on-disk)、
+    [Agent 工作區](/zh-Hant/concepts/agent-workspace)、[Doctor](/zh-Hant/gateway/doctor)、
+    [遠端模式](/zh-Hant/gateway/remote)。
 
   </Accordion>
 
@@ -330,7 +330,7 @@ title: "常見問題"
     Windows 安裝程式 (PowerShell)：
     [https://openclaw.ai/install.ps1](https://openclaw.ai/install.ps1)
 
-    更多詳細資訊：[Development channels](/en/install/development-channels) 和 [Installer flags](/en/install/installer)。
+    更多詳細資訊：[Development channels](/zh-Hant/install/development-channels) 和 [Installer flags](/zh-Hant/install/installer)。
 
   </Accordion>
 
@@ -362,8 +362,8 @@ title: "常見問題"
     pnpm build
     ```
 
-    文件：[Update](/en/cli/update)、[Development channels](/en/install/development-channels)、
-    [Install](/en/install)。
+    文件：[Update](/zh-Hant/cli/update)、[Development channels](/zh-Hant/install/development-channels)、
+    [Install](/zh-Hant/install)。
 
   </Accordion>
 
@@ -406,7 +406,7 @@ title: "常見問題"
     Set-PSDebug -Trace 0
     ```
 
-    更多選項：[安裝程式旗標](/en/install/installer)。
+    更多選項：[安裝程式旗標](/zh-Hant/install/installer)。
 
   </Accordion>
 
@@ -431,7 +431,7 @@ title: "常見問題"
     - 更新 PATH 後，關閉並重新開啟 PowerShell。
 
     如果您想要最順暢的 Windows 設定，請使用 **WSL2** 而不是原生 Windows。
-    文件：[Windows](/en/platforms/windows)。
+    文件：[Windows](/zh-Hant/platforms/windows)。
 
   </Accordion>
 
@@ -471,41 +471,41 @@ title: "常見問題"
     curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method git
     ```
 
-    更多詳細資訊：[安裝](/en/install) 和 [安裝程式旗標](/en/install/installer)。
+    更多詳細資訊：[安裝](/zh-Hant/install) 和 [安裝程式旗標](/zh-Hant/install/installer)。
 
   </Accordion>
 
   <Accordion title="如何在 Linux 上安裝 OpenClaw？">
     簡短回答：依照 Linux 指南操作，然後執行上架。
 
-    - Linux 快速路徑 + 服務安裝：[Linux](/en/platforms/linux)。
-    - 完整逐步解說：[入門](/en/start/getting-started)。
-    - 安裝程式 + 更新：[安裝與更新](/en/install/updating)。
+    - Linux 快速路徑 + 服務安裝：[Linux](/zh-Hant/platforms/linux)。
+    - 完整逐步解說：[入門](/zh-Hant/start/getting-started)。
+    - 安裝程式 + 更新：[安裝與更新](/zh-Hant/install/updating)。
 
   </Accordion>
 
   <Accordion title="如何在 VPS 上安裝 OpenClaw？">
     任何 Linux VPS 都可以。在伺服器上安裝，然後使用 SSH/Tailscale 連線到 Gateway。
 
-    指南：[exe.dev](/en/install/exe-dev)、[Hetzner](/en/install/hetzner)、[Fly.io](/en/install/fly)。
-    遠端存取：[Gateway 遠端](/en/gateway/remote)。
+    指南：[exe.dev](/zh-Hant/install/exe-dev)、[Hetzner](/zh-Hant/install/hetzner)、[Fly.io](/zh-Hant/install/fly)。
+    遠端存取：[Gateway 遠端](/zh-Hant/gateway/remote)。
 
   </Accordion>
 
   <Accordion title="雲端/VPS 安裝指南在哪裡？">
     我們維護了一個包含常見供應商的**託管中心**。選擇其中一個並按照指南操作：
 
-    - [VPS 託管](/en/vps) (所有供應商集中一處)
-    - [Fly.io](/en/install/fly)
-    - [Hetzner](/en/install/hetzner)
-    - [exe.dev](/en/install/exe-dev)
+    - [VPS 託管](/zh-Hant/vps) (所有供應商集中一處)
+    - [Fly.io](/zh-Hant/install/fly)
+    - [Hetzner](/zh-Hant/install/hetzner)
+    - [exe.dev](/zh-Hant/install/exe-dev)
 
     在雲端運作的方式：**Gateway 在伺服器上運行**，您可以透過 Control UI (或 Tailscale/SSH) 從筆記型電腦/手機存取它。您的狀態 + 工作區位於伺服器上，因此請將主機視為事實來源並進行備份。
 
     您可以將**節點** (Mac/iOS/Android/headless) 配對到該雲端 Gateway，以存取本機螢幕/相機/畫布或在筆記型電腦上執行指令，同時將 Gateway 保留在雲端。
 
-    中心：[平台](/en/platforms)。遠端存取：[Gateway remote](/en/gateway/remote)。
-    節點：[節點](/en/nodes), [節點 CLI](/en/cli/nodes)。
+    中心：[平台](/zh-Hant/platforms)。遠端存取：[Gateway remote](/zh-Hant/gateway/remote)。
+    節點：[節點](/zh-Hant/nodes), [節點 CLI](/zh-Hant/cli/nodes)。
 
   </Accordion>
 
@@ -529,7 +529,7 @@ title: "常見問題"
     openclaw gateway restart
     ```
 
-    文件：[更新](/en/cli/update), [正在更新](/en/install/updating)。
+    文件：[更新](/zh-Hant/cli/update), [正在更新](/zh-Hant/install/updating)。
 
   </Accordion>
 
@@ -560,10 +560,10 @@ title: "常見問題"
 
     OpenClaw 也支援其他託管的訂閱式選項，包括 **Qwen Cloud Coding Plan**、**MiniMax Coding Plan** 和 **Z.AI / GLM Coding Plan**。
 
-    文件：[Anthropic](/en/providers/anthropic)、[OpenAI](/en/providers/openai)、
-    [Qwen Cloud](/en/providers/qwen)、
-    [MiniMax](/en/providers/minimax)、[GLM Models](/en/providers/glm)、
-    [Local models](/en/gateway/local-models)、[Models](/en/concepts/models)。
+    文件：[Anthropic](/zh-Hant/providers/anthropic)、[OpenAI](/zh-Hant/providers/openai)、
+    [Qwen Cloud](/zh-Hant/providers/qwen)、
+    [MiniMax](/zh-Hant/providers/minimax)、[GLM Models](/zh-Hant/providers/glm)、
+    [Local models](/zh-Hant/gateway/local-models)、[Models](/zh-Hant/concepts/models)。
 
   </Accordion>
 
@@ -580,9 +580,9 @@ title: "常見問題"
     Anthropic 工作人員告知我們這種用法再次被允許，因此除非 Anthropic 發布新政策，否則 OpenClaw 將此整合中的 Claude CLI 重複使用和 `claude -p` 使用視為經認可。
 
     Anthropic setup-token 仍可作為支援的 OpenClaw token 路徑使用，但在可用的情況下，OpenClaw 現在更傾向於使用 Claude CLI 重複使用和 `claude -p`。
-    對於生產環境或多使用者工作負載，Anthropic API 金鑰驗證仍然是更安全、更可預測的選擇。如果您想要 OpenClaw 中其他訂閱式託管選項，請參閱 [OpenAI](/en/providers/openai)、[Qwen / Model
-    Cloud](/en/providers/qwen)、[MiniMax](/en/providers/minimax) 和 [GLM
-    Models](/en/providers/glm)。
+    對於生產環境或多使用者工作負載，Anthropic API 金鑰驗證仍然是更安全、更可預測的選擇。如果您想要 OpenClaw 中其他訂閱式託管選項，請參閱 [OpenAI](/zh-Hant/providers/openai)、[Qwen / Model
+    Cloud](/zh-Hant/providers/qwen)、[MiniMax](/zh-Hant/providers/minimax) 和 [GLM
+    Models](/zh-Hant/providers/glm)。
 
   </Accordion>
 
@@ -595,17 +595,17 @@ title: "常見問題"
     Anthropic 的 1M 上下文測試版 (`context1m: true`)。這僅在您的憑證符合長上下文計費條件時才有效（API 金鑰計費，或已啟用額外使用量的 OpenClaw Claude 登入路徑）。
 
     提示：設定一個 **備用模型 (fallback model)**，以便當供應商受到速率限制時，OpenClaw 能繼續回覆。
-    請參閱 [模型](/en/cli/models)、[OAuth](/en/concepts/oauth) 和
-    [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/en/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
+    請參閱 [模型](/zh-Hant/cli/models)、[OAuth](/zh-Hant/concepts/oauth) 和
+    [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/zh-Hant/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
 
   </Accordion>
 
 <Accordion title="是否支援 AWS Bedrock？">
-  是的。OpenClaw 內建了 **Amazon Bedrock (Converse)** 供應商。當 AWS 環境變數標記存在時，OpenClaw 可以自動探索串流/文字 Bedrock 目錄，並將其合併為隱含的 `amazon-bedrock` 供應商；否則您可以明確啟用 `plugins.entries.amazon-bedrock.config.discovery.enabled` 或新增手動供應商條目。請參閱 [Amazon Bedrock](/en/providers/bedrock) 和 [模型供應商](/en/providers/models)。如果您偏好受管金鑰流程，在 Bedrock
-  前方使用 OpenAI 相容的代理伺服器仍然是一個可行的選項。
+  是的。OpenClaw 內建了 **Amazon Bedrock (Converse)** 供應商。當 AWS 環境變數標記存在時，OpenClaw 可以自動探索串流/文字 Bedrock 目錄，並將其合併為隱含的 `amazon-bedrock` 供應商；否則您可以明確啟用 `plugins.entries.amazon-bedrock.config.discovery.enabled` 或新增手動供應商條目。請參閱 [Amazon Bedrock](/zh-Hant/providers/bedrock) 和 [模型供應商](/zh-Hant/providers/models)。如果您偏好受管金鑰流程，在
+  Bedrock 前方使用 OpenAI 相容的代理伺服器仍然是一個可行的選項。
 </Accordion>
 
-<Accordion title="Codex 驗證是如何運作的？">OpenClaw 透過 OAuth（ChatGPT 登入）支援 **OpenAI Code (Codex)**。入門流程可以執行 OAuth 流程，並在適當時將預設模型設定為 `openai-codex/gpt-5.4`。請參閱 [模型供應商](/en/concepts/model-providers) 和 [入門 (CLI)](/en/start/wizard)。</Accordion>
+<Accordion title="Codex 驗證是如何運作的？">OpenClaw 透過 OAuth（ChatGPT 登入）支援 **OpenAI Code (Codex)**。入門流程可以執行 OAuth 流程，並在適當時將預設模型設定為 `openai-codex/gpt-5.4`。請參閱 [模型供應商](/zh-Hant/concepts/model-providers) 和 [入門 (CLI)](/zh-Hant/start/wizard)。</Accordion>
 
   <Accordion title="為什麼 ChatGPT GPT-5.4 不會在 OpenClaw 中解鎖 openai/gpt-5.4？">
     OpenClaw 將這兩種路線分開處理：
@@ -636,7 +636,7 @@ title: "常見問題"
     OpenAI 明確允許在像 OpenClaw 這類的外部工具/工作流程中使用訂閱 OAuth。
     入門流程可以為您執行 OAuth 流程。
 
-    請參閱 [OAuth](/en/concepts/oauth)、[Model providers](/en/concepts/model-providers) 和 [Onboarding (CLI)](/en/start/wizard)。
+    請參閱 [OAuth](/zh-Hant/concepts/oauth)、[Model providers](/zh-Hant/concepts/model-providers) 和 [Onboarding (CLI)](/zh-Hant/start/wizard)。
 
   </Accordion>
 
@@ -653,33 +653,33 @@ title: "常見問題"
     4. 登入後的預設模型：`google-gemini-cli/gemini-3-flash-preview`
     5. 如果請求失敗，請在閘道主機上設定 `GOOGLE_CLOUD_PROJECT` 或 `GOOGLE_CLOUD_PROJECT_ID`
 
-    這會將 OAuth 權杖儲存在閘道主機上的驗證設定檔中。詳細資訊：[模型供應商](/en/concepts/model-providers)。
+    這會將 OAuth 權杖儲存在閘道主機上的驗證設定檔中。詳細資訊：[模型供應商](/zh-Hant/concepts/model-providers)。
 
   </Accordion>
 
-<Accordion title="本機模型適合用於閒聊嗎？">通常不適合。OpenClaw 需要較大的上下文 + 強大的安全性；小顯卡會導致截斷和洩漏。如果必須使用，請在本地執行您能使用的 **最大** 模型版本 (LM Studio)，並參閱 [/gateway/local-models](/en/gateway/local-models)。較小/量化模型會增加提示注入的風險 - 請參閱 [安全性](/en/gateway/security)。</Accordion>
+<Accordion title="本機模型適合用於閒聊嗎？">通常不適合。OpenClaw 需要較大的上下文 + 強大的安全性；小顯卡會導致截斷和洩漏。如果必須使用，請在本地執行您能使用的 **最大** 模型版本 (LM Studio)，並參閱 [/gateway/local-models](/zh-Hant/gateway/local-models)。較小/量化模型會增加提示注入的風險 - 請參閱 [安全性](/zh-Hant/gateway/security)。</Accordion>
 
 <Accordion title="如何將託管模型流量保留在特定區域？">選擇區域鎖定的端點。OpenRouter 提供了 MiniMax、Kimi 和 GLM 的美國託管選項；選擇美國託管版本可將數據保留在該區域內。您仍然可以通過使用 `models.mode: "merge"` 將 Anthropic/OpenAI 與這些模型一起列出，以便在遵守您選擇的區域供應商的同時保持備援可用。</Accordion>
 
   <Accordion title="我必須購買 Mac Mini 才能安裝這個嗎？">
     不需要。OpenClaw 可在 macOS 或 Linux（透過 WSL2 的 Windows）上執行。Mac mini 是可選的——有些人會買一台作為常時開啟的主機，但小型 VPS、家用伺服器或 Raspberry Pi 級別的盒子也可以運作。
 
-    您只需要一臺 Mac **來使用僅限 macOS 的工具**。對於 iMessage，請使用 [BlueBubbles](/en/channels/bluebubbles)（推薦）——BlueBubbles 伺服器可在任何 Mac 上執行，而 Gateway 可以在 Linux 或其他地方執行。如果您需要其他僅限 macOS 的工具，請在 Mac 上執行 Gateway 或配對 macOS 節點。
+    您只需要一臺 Mac **來使用僅限 macOS 的工具**。對於 iMessage，請使用 [BlueBubbles](/zh-Hant/channels/bluebubbles)（推薦）——BlueBubbles 伺服器可在任何 Mac 上執行，而 Gateway 可以在 Linux 或其他地方執行。如果您需要其他僅限 macOS 的工具，請在 Mac 上執行 Gateway 或配對 macOS 節點。
 
-    文件：[BlueBubbles](/en/channels/bluebubbles)、[節點](/en/nodes)、[Mac 遠端模式](/en/platforms/mac/remote)。
+    文件：[BlueBubbles](/zh-Hant/channels/bluebubbles)、[節點](/zh-Hant/nodes)、[Mac 遠端模式](/zh-Hant/platforms/mac/remote)。
 
   </Accordion>
 
   <Accordion title="我需要 Mac mini 才能支援 iMessage 嗎？">
-    您需要 **登入 Messages 的某個 macOS 裝置**。它**不**一定要是 Mac mini——任何 Mac 都可以。對於 iMessage，**請使用 [BlueBubbles](/en/channels/bluebubbles)**（推薦）——BlueBubbles 伺服器在 macOS 上執行，而 Gateway 可以在 Linux 或其他地方執行。
+    您需要 **登入 Messages 的某個 macOS 裝置**。它**不**一定要是 Mac mini——任何 Mac 都可以。對於 iMessage，**請使用 [BlueBubbles](/zh-Hant/channels/bluebubbles)**（推薦）——BlueBubbles 伺服器在 macOS 上執行，而 Gateway 可以在 Linux 或其他地方執行。
 
     常見設定：
 
     - 在 Linux/VPS 上執行 Gateway，並在任何登入 Messages 的 Mac 上執行 BlueBubbles 伺服器。
     - 如果您想要最簡單的單機設定，請將所有內容都在 Mac 上執行。
 
-    文件：[BlueBubbles](/en/channels/bluebubbles)、[節點](/en/nodes)、
-    [Mac 遠端模式](/en/platforms/mac/remote)。
+    文件：[BlueBubbles](/zh-Hant/channels/bluebubbles)、[節點](/zh-Hant/nodes)、
+    [Mac 遠端模式](/zh-Hant/platforms/mac/remote)。
 
   </Accordion>
 
@@ -692,7 +692,7 @@ title: "常見問題"
     - MacBook Pro 執行 macOS 應用程式或節點主機並配對到 Gateway。
     - 使用 `openclaw nodes status` / `openclaw nodes list` 來查看它。
 
-    文件：[節點](/en/nodes)、[節點 CLI](/en/cli/nodes)。
+    文件：[節點](/zh-Hant/nodes)、[節點 CLI](/zh-Hant/cli/nodes)。
 
   </Accordion>
 
@@ -722,16 +722,16 @@ title: "常見問題"
 
     - 私訊 `@userinfobot` 或 `@getidsbot`。
 
-    參見 [/channels/telegram](/en/channels/telegram#access-control-and-activation)。
+    參見 [/channels/telegram](/zh-Hant/channels/telegram#access-control-and-activation)。
 
   </Accordion>
 
 <Accordion title="多個人可以使用同一個 WhatsApp 號碼搭配不同的 OpenClaw 實例嗎？">
-  可以，透過 **多代理程式路由**。將每個發送者的 WhatsApp **私訊**（peer `kind: "direct"`，發送者 E.164 如 `+15551234567`）綁定到不同的 `agentId`，這樣每個人都有自己的工作區和會話儲存。回覆仍來自 **同一個 WhatsApp 帳號**，且私訊存取控制（`channels.whatsapp.dmPolicy` / `channels.whatsapp.allowFrom`）對每個 WhatsApp 帳號是全域的。參見 [Multi-Agent Routing](/en/concepts/multi-agent) 和
-  [WhatsApp](/en/channels/whatsapp)。
+  可以，透過 **多代理程式路由**。將每個發送者的 WhatsApp **私訊**（peer `kind: "direct"`，發送者 E.164 如 `+15551234567`）綁定到不同的 `agentId`，這樣每個人都有自己的工作區和會話儲存。回覆仍來自 **同一個 WhatsApp 帳號**，且私訊存取控制（`channels.whatsapp.dmPolicy` / `channels.whatsapp.allowFrom`）對每個 WhatsApp 帳號是全域的。參見 [Multi-Agent Routing](/zh-Hant/concepts/multi-agent) 和
+  [WhatsApp](/zh-Hant/channels/whatsapp)。
 </Accordion>
 
-<Accordion title="我可以同時運行一個「快速聊天」代理和一個「用於編碼的 Opus」代理嗎？">可以。使用多代理路由：為每個代理指定其預設模型，然後將入站路由（提供者帳戶或特定對等節點）綁定到每個代理。範例配置位於 [多代理路由](/en/concepts/multi-agent)。另請參閱 [模型](/en/concepts/models) 和 [配置](/en/gateway/configuration)。</Accordion>
+<Accordion title="我可以同時運行一個「快速聊天」代理和一個「用於編碼的 Opus」代理嗎？">可以。使用多代理路由：為每個代理指定其預設模型，然後將入站路由（提供者帳戶或特定對等節點）綁定到每個代理。範例配置位於 [多代理路由](/zh-Hant/concepts/multi-agent)。另請參閱 [模型](/zh-Hant/concepts/models) 和 [配置](/zh-Hant/gateway/configuration)。</Accordion>
 
   <Accordion title="Homebrew 能在 Linux 上運作嗎？">
     可以。Homebrew 支援 Linux (Linuxbrew)。快速設定：
@@ -754,7 +754,7 @@ title: "常見問題"
     - **npm 安裝：** 全域 CLI 安裝，無 repo，最適合「直接執行」。
       更新來自 npm dist-tags。
 
-    文件：[快速入門](/en/start/getting-started)、[更新](/en/install/updating)。
+    文件：[快速入門](/zh-Hant/start/getting-started)、[更新](/zh-Hant/install/updating)。
 
   </Accordion>
 
@@ -802,7 +802,7 @@ title: "常見問題"
     - **優點：** 永遠在線，網路穩定，無筆記型電腦休眠問題，更容易保持運作。
     - **缺點：** 通常以無頭模式執行（使用螢幕擷圖），僅能遠端存取檔案，您必須使用 SSH 進行更新。
 
-    **OpenClaw 特別說明：** WhatsApp/Telegram/Slack/Mattermost/Discord 在 VPS 上都能正常運作。唯一真正的取捨是**無頭瀏覽器**與可見視窗的對比。請參閱 [瀏覽器](/en/tools/browser)。
+    **OpenClaw 特別說明：** WhatsApp/Telegram/Slack/Mattermost/Discord 在 VPS 上都能正常運作。唯一真正的取捨是**無頭瀏覽器**與可見視窗的對比。請參閱 [瀏覽器](/zh-Hant/tools/browser)。
 
     **建議預設值：** 如果您之前有閘道中斷連線的問題，請使用 VPS。當您正在積極使用 Mac 並想要本機檔案存取或使用可見瀏覽器進行 UI 自動化時，本機執行非常棒。
 
@@ -814,8 +814,8 @@ title: "常見問題"
     - **專用主機 (VPS/Mac mini/Pi)：** 永遠在線，較少的睡眠/重新啟動中斷，更乾淨的權限，更容易保持運作。
     - **共用的筆記型電腦/桌面電腦：** 對於測試和主動使用完全沒問題，但預期在電腦睡眠或更新時會暫停。
 
-    如果您想要兩全其美，請將 Gateway 保留在專用主機上，並將您的筆記型電腦作為本地螢幕/相機/exec 工具的**節點**進行配對。參見 [Nodes](/en/nodes)。
-    有關安全性指導，請參閱 [Security](/en/gateway/security)。
+    如果您想要兩全其美，請將 Gateway 保留在專用主機上，並將您的筆記型電腦作為本地螢幕/相機/exec 工具的**節點**進行配對。參見 [Nodes](/zh-Hant/nodes)。
+    有關安全性指導，請參閱 [Security](/zh-Hant/gateway/security)。
 
   </Accordion>
 
@@ -827,7 +827,7 @@ title: "常見問題"
 
     作業系統：使用 **Ubuntu LTS** (或任何現代的 Debian/Ubuntu)。Linux 安裝路徑在那裡經過最充分的測試。
 
-    文件：[Linux](/en/platforms/linux)、[VPS hosting](/en/vps)。
+    文件：[Linux](/zh-Hant/platforms/linux)、[VPS hosting](/zh-Hant/vps)。
 
   </Accordion>
 
@@ -842,8 +842,8 @@ title: "常見問題"
     - **作業系統：** Ubuntu LTS 或其他現代 Debian/Ubuntu。
 
     如果您使用 Windows，**WSL2 是最簡單的 VM 風格設定**，並且具有最佳的工具
-    相容性。參見 [Windows](/en/platforms/windows)、[VPS hosting](/en/vps)。
-    如果您在 VM 中執行 macOS，請參見 [macOS VM](/en/install/macos-vm)。
+    相容性。參見 [Windows](/zh-Hant/platforms/windows)、[VPS hosting](/zh-Hant/vps)。
+    如果您在 VM 中執行 macOS，請參見 [macOS VM](/zh-Hant/install/macos-vm)。
 
   </Accordion>
 </AccordionGroup>
@@ -867,8 +867,8 @@ title: "常見問題"
     - **多代理程式路由：** 按頻道、帳戶或任務分離代理程式，每個代理程式都有自己的工作區和預設值。
     - **開源且可駭：** 檢查、擴展和自託管，沒有廠商鎖定。
 
-    文件：[Gateway](/en/gateway)、[Channels](/en/channels)、[Multi-agent](/en/concepts/multi-agent)、
-    [Memory](/en/concepts/memory)。
+    文件：[Gateway](/zh-Hant/gateway)、[Channels](/zh-Hant/channels)、[Multi-agent](/zh-Hant/concepts/multi-agent)、
+    [Memory](/zh-Hant/concepts/memory)。
 
   </Accordion>
 
@@ -903,7 +903,7 @@ title: "常見問題"
     平台政策，並在寄出前審閱所有內容。最安全的模式是讓
     OpenClaw 起草，由您來審核。
 
-    文件：[Security](/en/gateway/security)。
+    文件：[Security](/zh-Hant/gateway/security)。
 
   </Accordion>
 
@@ -943,7 +943,7 @@ title: "常見問題"
     - **子代理**：將任務路由到具有不同預設模型的獨立代理。
     - **隨需切換**：使用 `/model` 隨時切換目前的工作階段模型。
 
-    請參閱 [Cron jobs](/en/automation/cron-jobs)、[多代理路由 (Multi-Agent Routing)](/en/concepts/multi-agent) 和 [斜線指令 (Slash commands)](/en/tools/slash-commands)。
+    請參閱 [Cron jobs](/zh-Hant/automation/cron-jobs)、[多代理路由 (Multi-Agent Routing)](/zh-Hant/concepts/multi-agent) 和 [斜線指令 (Slash commands)](/zh-Hant/tools/slash-commands)。
 
   </Accordion>
 
@@ -956,7 +956,7 @@ title: "常見問題"
 
     Token 提示：長時間任務和子代理都會消耗 Token。如果您擔心成本，請透過 `agents.defaults.subagents.model` 為子代理設定更便宜的模型。
 
-    文件：[子代理](/en/tools/subagents)、[背景任務](/en/automation/tasks)。
+    文件：[子代理](/zh-Hant/tools/subagents)、[背景任務](/zh-Hant/automation/tasks)。
 
   </Accordion>
 
@@ -977,7 +977,7 @@ title: "常見問題"
     - Discord 覆寫：`channels.discord.threadBindings.enabled`、`channels.discord.threadBindings.idleHours`、`channels.discord.threadBindings.maxAgeHours`。
     - 生成時自動綁定：設定 `channels.discord.threadBindings.spawnSubagentSessions: true`。
 
-    文件：[子代理](/en/tools/subagents)、[Discord](/en/channels/discord)、[設定參考](/en/gateway/configuration-reference)、[斜線指令](/en/tools/slash-commands)。
+    文件：[子代理](/zh-Hant/tools/subagents)、[Discord](/zh-Hant/channels/discord)、[設定參考](/zh-Hant/gateway/configuration-reference)、[斜線指令](/zh-Hant/tools/slash-commands)。
 
   </Accordion>
 
@@ -997,7 +997,7 @@ title: "常見問題"
     openclaw tasks show <runId-or-sessionKey>
     ```
 
-    文件：[子代理](/en/tools/subagents)、[背景任務](/en/automation/tasks)、[會話工具](/en/concepts/session-tool)。
+    文件：[子代理](/zh-Hant/tools/subagents)、[背景任務](/zh-Hant/automation/tasks)、[會話工具](/zh-Hant/concepts/session-tool)。
 
   </Accordion>
 
@@ -1018,7 +1018,7 @@ title: "常見問題"
     openclaw cron runs --id <jobId> --limit 50
     ```
 
-    文件：[Cron 工作](/en/automation/cron-jobs)、[自動化與任務](/en/automation)。
+    文件：[Cron 工作](/zh-Hant/automation/cron-jobs)、[自動化與任務](/zh-Hant/automation)。
 
   </Accordion>
 
@@ -1042,7 +1042,7 @@ title: "常見問題"
     openclaw tasks show <runId-or-sessionKey>
     ```
 
-    文件：[Cron jobs](/en/automation/cron-jobs)、[Background Tasks](/en/automation/tasks)。
+    文件：[Cron jobs](/zh-Hant/automation/cron-jobs)、[Background Tasks](/zh-Hant/automation/tasks)。
 
   </Accordion>
 
@@ -1071,7 +1071,7 @@ title: "常見問題"
     openclaw tasks show <runId-or-sessionKey>
     ```
 
-    文件：[Cron jobs](/en/automation/cron-jobs)、[cron CLI](/en/cli/cron)。
+    文件：[Cron jobs](/zh-Hant/automation/cron-jobs)、[cron CLI](/zh-Hant/cli/cron)。
 
   </Accordion>
 
@@ -1105,8 +1105,8 @@ title: "常見問題"
     - **Heartbeat** 用於「主工作階段」定期檢查。
     - **Isolated jobs** 用於發佈摘要或傳遞至聊天室的自主代理程式。
 
-    文件：[Cron jobs](/en/automation/cron-jobs)、[Automation & Tasks](/en/automation)、
-    [Heartbeat](/en/gateway/heartbeat)。
+    文件：[Cron jobs](/zh-Hant/automation/cron-jobs)、[Automation & Tasks](/zh-Hant/automation)、
+    [Heartbeat](/zh-Hant/gateway/heartbeat)。
 
   </Accordion>
 
@@ -1169,7 +1169,7 @@ title: "常見問題"
     openclaw skills update --all
     ```
 
-    原生安裝會置於現用工作區的 `skills/` 目錄中。若要跨代理共用技能，請將其置於 `~/.openclaw/skills/<name>/SKILL.md`。如果只有部分代理應該看到共用安裝，請設定 `agents.defaults.skills` 或 `agents.list[].skills`。某些技能預期會透過 Homebrew 安裝二進位檔；在 Linux 上這意味著 Linuxbrew（請參閱上方的 Homebrew Linux 常見問題條目）。請參閱 [技能](/en/tools/skills)、[技能設定](/en/tools/skills-config) 和 [ClawHub](/en/tools/clawhub)。
+    原生安裝會置於現用工作區的 `skills/` 目錄中。若要跨代理共用技能，請將其置於 `~/.openclaw/skills/<name>/SKILL.md`。如果只有部分代理應該看到共用安裝，請設定 `agents.defaults.skills` 或 `agents.list[].skills`。某些技能預期會透過 Homebrew 安裝二進位檔；在 Linux 上這意味著 Linuxbrew（請參閱上方的 Homebrew Linux 常見問題條目）。請參閱 [技能](/zh-Hant/tools/skills)、[技能設定](/zh-Hant/tools/skills-config) 和 [ClawHub](/zh-Hant/tools/clawhub)。
 
   </Accordion>
 
@@ -1203,7 +1203,7 @@ title: "常見問題"
 
 <AccordionGroup>
   <Accordion title="有沒有專門的沙盒文件？">
-    有的。請參閱 [Sandboxing](/en/gateway/sandboxing)。針對 Docker 特定設定（Docker 中的完整閘道或沙盒映像檔），請參閱 [Docker](/en/install/docker)。
+    有的。請參閱 [Sandboxing](/zh-Hant/gateway/sandboxing)。針對 Docker 特定設定（Docker 中的完整閘道或沙盒映像檔），請參閱 [Docker](/zh-Hant/install/docker)。
   </Accordion>
 
   <Accordion title="Docker 感覺受限 - 如何啟用完整功能？">
@@ -1216,7 +1216,7 @@ title: "常見問題"
       `node /app/node_modules/playwright-core/cli.js install chromium`
     - 設定 `PLAYWRIGHT_BROWSERS_PATH` 並確保該路徑已持久化。
 
-    文件：[Docker](/en/install/docker), [Browser](/en/tools/browser)。
+    文件：[Docker](/zh-Hant/install/docker), [Browser](/zh-Hant/tools/browser)。
 
   </Accordion>
 
@@ -1225,9 +1225,9 @@ title: "常見問題"
 
     使用 `agents.defaults.sandbox.mode: "non-main"`，讓群組/頻道階段作業（非主要金鑰）在 Docker 中執行，而主要 DM 階段作業則保持在主機上。然後透過 `tools.sandbox.tools` 限制沙盒階段作業中可用的工具。
 
-    設定逐步指南 + 範例設定：[Groups: personal DMs + public groups](/en/channels/groups#pattern-personal-dms-public-groups-single-agent)
+    設定逐步指南 + 範例設定：[Groups: personal DMs + public groups](/zh-Hant/channels/groups#pattern-personal-dms-public-groups-single-agent)
 
-    主要設定參考：[Gateway configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
+    主要設定參考：[Gateway configuration](/zh-Hant/gateway/configuration-reference#agentsdefaultssandbox)
 
   </Accordion>
 
@@ -1236,7 +1236,7 @@ title: "常見問題"
 
     OpenClaw 會透過最深層的現有祖先解析路徑，對照正規化路徑和規範路徑來驗證綁定來源。這意味著即使最後一個路徑區段尚不存在，符號連結父目錄逃逸仍會失敗並保持關閉，且在解析符號連結後仍會套用允許的根目錄檢查。
 
-    請參閱 [沙箱機制](/en/gateway/sandboxing#custom-bind-mounts) 和 [沙箱 vs 工具原則 vs 提權](/en/gateway/sandbox-vs-tool-policy-vs-elevated#bind-mounts-security-quick-check) 以取得範例和安全注意事項。
+    請參閱 [沙箱機制](/zh-Hant/gateway/sandboxing#custom-bind-mounts) 和 [沙箱 vs 工具原則 vs 提權](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated#bind-mounts-security-quick-check) 以取得範例和安全注意事項。
 
   </Accordion>
 
@@ -1246,7 +1246,7 @@ title: "常見問題"
     - `memory/YYYY-MM-DD.md` 中的每日筆記
     - `MEMORY.md` 中的精選長期筆記 (僅限主要/私人工作階段)
 
-    OpenClaw 也會執行 **靜默預壓縮記憶體清除 (silent pre-compaction memory flush)**，以提醒模型在自動壓縮之前寫入持久化的筆記。這僅在工作區可寫入時執行 (唯讀沙箱會跳過此步驟)。請參閱 [記憶體](/en/concepts/memory)。
+    OpenClaw 也會執行 **靜默預壓縮記憶體清除 (silent pre-compaction memory flush)**，以提醒模型在自動壓縮之前寫入持久化的筆記。這僅在工作區可寫入時執行 (唯讀沙箱會跳過此步驟)。請參閱 [記憶體](/zh-Hant/concepts/memory)。
 
   </Accordion>
 
@@ -1256,7 +1256,7 @@ title: "常見問題"
 
     這仍然是我們正在改進的領域。提醒模型儲存記憶會有幫助；它會知道該怎麼做。如果它持續忘記，請驗證 Gateway 是否在每次執行時都使用相同的工作區。
 
-    文件：[記憶體](/en/concepts/memory)、[代理工作區](/en/concepts/agent-workspace)。
+    文件：[記憶體](/zh-Hant/concepts/memory)、[代理工作區](/zh-Hant/concepts/agent-workspace)。
 
   </Accordion>
 
@@ -1266,7 +1266,7 @@ title: "常見問題"
     上下文視窗，因此長對話可能會被壓縮或截斷。這正是
     記憶體搜索存在的意義——它僅將相關部分拉回上下文中。
 
-    文件：[記憶體](/en/concepts/memory)、[上下文](/en/concepts/context)。
+    文件：[記憶體](/zh-Hant/concepts/memory)、[上下文](/zh-Hant/concepts/context)。
 
   </Accordion>
 
@@ -1288,7 +1288,7 @@ title: "常見問題"
     設定 `memorySearch.fallback = "none"`)。如果您想要 Gemini 嵌入，請設定
     `memorySearch.provider = "gemini"` 並提供 `GEMINI_API_KEY` (或
     `memorySearch.remote.apiKey`)。我們支援 **OpenAI、Gemini、Voyage、Mistral、Ollama 或本地** 嵌入
-    模型 —— 詳細設定資訊請參閱 [記憶體](/en/concepts/memory)。
+    模型 —— 詳細設定資訊請參閱 [記憶體](/zh-Hant/concepts/memory)。
 
   </Accordion>
 </AccordionGroup>
@@ -1307,7 +1307,7 @@ title: "常見問題"
     - **您可以控制足跡：** 使用本機模型可以將提示保留在您的機器上，但頻道
       流量仍會通過該頻道的伺服器。
 
-    相關：[Agent 工作區](/en/concepts/agent-workspace)、[記憶體](/en/concepts/memory)。
+    相關：[Agent 工作區](/zh-Hant/concepts/agent-workspace)、[記憶體](/zh-Hant/concepts/memory)。
 
   </Accordion>
 
@@ -1356,7 +1356,7 @@ title: "常見問題"
     提示：如果您希望保留某種行為或偏好設定，請要求機器人 **將其寫入**
     AGENTS.md 或 MEMORY.md，而不是依賴聊天記錄。
 
-    參閱 [Agent workspace](/en/concepts/agent-workspace) 和 [Memory](/en/concepts/memory)。
+    參閱 [Agent workspace](/zh-Hant/concepts/agent-workspace) 和 [Memory](/zh-Hant/concepts/memory)。
 
   </Accordion>
 
@@ -1369,17 +1369,17 @@ title: "常見問題"
     如果您需要完整還原，請分別備份工作區和狀態目錄
     （請參閱上面的遷移問題）。
 
-    文件：[Agent workspace](/en/concepts/agent-workspace)。
+    文件：[Agent workspace](/zh-Hant/concepts/agent-workspace)。
 
   </Accordion>
 
-<Accordion title="如何完全解除安裝 OpenClaw？">請參閱專屬指南：[Uninstall](/en/install/uninstall)。</Accordion>
+<Accordion title="如何完全解除安裝 OpenClaw？">請參閱專屬指南：[Uninstall](/zh-Hant/install/uninstall)。</Accordion>
 
   <Accordion title="代理程式可以在工作區之外運作嗎？">
     可以。工作區是**預設的 cwd（目前工作目錄）**和記憶錨點，而不是嚴格的沙箱。
     相對路徑在工作區內解析，但絕對路徑可以存取其他
     主機位置，除非啟用了沙箱功能。如果您需要隔離，請使用
-    [`agents.defaults.sandbox`](/en/gateway/sandboxing) 或針對每個代理程式的沙箱設定。如果您
+    [`agents.defaults.sandbox`](/zh-Hant/gateway/sandboxing) 或針對每個代理程式的沙箱設定。如果您
     希望某個存儲庫成為預設的工作目錄，請將該代理程式的
     `workspace` 指向該存儲庫的根目錄。OpenClaw 存儲庫只是原始碼；請將
     工作區分開，除非您有意讓代理程式在其中運作。
@@ -1399,7 +1399,7 @@ title: "常見問題"
   </Accordion>
 
   <Accordion title="遠端模式：Session 儲存在哪裡？">
-    Session 狀態由**閘道主機**擁有。如果您處於遠端模式，您關心的 session 儲存是在遠端機器上，而不是您的本地筆電。請參閱 [Session 管理](/en/concepts/session)。
+    Session 狀態由**閘道主機**擁有。如果您處於遠端模式，您關心的 session 儲存是在遠端機器上，而不是您的本地筆電。請參閱 [Session 管理](/zh-Hant/concepts/session)。
   </Accordion>
 </AccordionGroup>
 
@@ -1544,7 +1544,7 @@ title: "常見問題"
     - 如果省略 `tools.web.fetch.provider`，OpenClaw 會根據可用的認證資訊自動偵測第一個就緒的獲取備援提供者。目前內建的提供者是 Firecrawl。
     - Daemon 會從 `~/.openclaw/.env`（或服務環境）讀取環境變數。
 
-    文件：[網路工具](/en/tools/web)。
+    文件：[網路工具](/zh-Hant/tools/web)。
 
   </Accordion>
 
@@ -1567,7 +1567,7 @@ title: "常見問題"
     - 使用 `config.patch` 進行部分 RPC 編輯；僅將 `config.apply` 用於完整設定取代。
     - 如果您在代理程式執行期間使用�限擁有者的 `gateway` 工具，它仍會拒絕對 `tools.exec.ask` / `tools.exec.security` 的寫入（包括正規化為相同受保護執行路徑的舊版 `tools.bash.*` 別名）。
 
-    文件：[Config](/en/cli/config)、[Configure](/en/cli/configure)、[Doctor](/en/gateway/doctor)。
+    文件：[Config](/zh-Hant/cli/config)、[Configure](/zh-Hant/cli/configure)、[Doctor](/zh-Hant/gateway/doctor)。
 
   </Accordion>
 
@@ -1580,7 +1580,7 @@ title: "常見問題"
     - **Sub-agents：** 當您需要並行處理時，從主代理程式產生背景工作。
     - **TUI：** 連接到 Gateway 並切換代理程式/工作階段。
 
-    文件：[Nodes](/en/nodes)、[Remote access](/en/gateway/remote)、[Multi-Agent Routing](/en/concepts/multi-agent)、[Sub-agents](/en/tools/subagents)、[TUI](/en/web/tui)。
+    文件：[Nodes](/zh-Hant/nodes)、[Remote access](/zh-Hant/gateway/remote)、[Multi-Agent Routing](/zh-Hant/concepts/multi-agent)、[Sub-agents](/zh-Hant/tools/subagents)、[TUI](/zh-Hant/web/tui)。
 
   </Accordion>
 
@@ -1598,7 +1598,7 @@ title: "常見問題"
     }
     ```
 
-    預設為 `false`（有頭模式）。無頭模式更容易在某些網站上觸發反機器人檢查。請參閱 [Browser](/en/tools/browser)。
+    預設為 `false`（有頭模式）。無頭模式更容易在某些網站上觸發反機器人檢查。請參閱 [Browser](/zh-Hant/tools/browser)。
 
     無頭模式使用**相同的 Chromium 引擎**，並適用於大多數自動化操作（表單、點擊、爬蟲、登入）。主要差異如下：
 
@@ -1610,7 +1610,7 @@ title: "常見問題"
 
   <Accordion title="如何使用 Brave 進行瀏覽器控制？">
     將 `browser.executablePath` 設定為您的 Brave 執行檔（或任何基於 Chromium 的瀏覽器），然後重新啟動 Gateway。
-    請參閱 [Browser](/en/tools/browser#use-brave-or-another-chromium-based-browser) 中的完整配置範例。
+    請參閱 [Browser](/zh-Hant/tools/browser#use-brave-or-another-chromium-based-browser) 中的完整配置範例。
   </Accordion>
 </AccordionGroup>
 
@@ -1644,9 +1644,9 @@ title: "常見問題"
 
     不需要單獨的 TCP 橋接；節點透過 Gateway WebSocket 進行連接。
 
-    安全提醒：配對 macOS 節點允許在該機器上進行 `system.run`。僅配對您信任的設備，並參閱 [安全性](/en/gateway/security)。
+    安全提醒：配對 macOS 節點允許在該機器上進行 `system.run`。僅配對您信任的設備，並參閱 [安全性](/zh-Hant/gateway/security)。
 
-    文件：[節點](/en/nodes)、[Gateway 協定](/en/gateway/protocol)、[macOS 遠端模式](/en/platforms/mac/remote)、[安全性](/en/gateway/security)。
+    文件：[節點](/zh-Hant/nodes)、[Gateway 協定](/zh-Hant/gateway/protocol)、[macOS 遠端模式](/zh-Hant/platforms/mac/remote)、[安全性](/zh-Hant/gateway/security)。
 
   </Accordion>
 
@@ -1663,7 +1663,7 @@ title: "常見問題"
     - 如果您透過 SSH 通道連線，請確認本機通道已啟動並指向正確的連接埠。
     - 確認您的允許清單（DM 或群組）包含您的帳戶。
 
-    文件：[Tailscale](/en/gateway/tailscale)、[遠端存取](/en/gateway/remote)、[頻道](/en/channels)。
+    文件：[Tailscale](/zh-Hant/gateway/tailscale)、[遠端存取](/zh-Hant/gateway/remote)、[頻道](/zh-Hant/channels)。
 
   </Accordion>
 
@@ -1672,7 +1672,7 @@ title: "常見問題"
 
     **最簡單：**使用兩個機器人都能存取的正常聊天頻道（Telegram/Slack/WhatsApp）。讓機器人 A 發送訊息給機器人 B，然後讓機器人 B 像平常一樣回覆。
 
-    **CLI 橋接器（通用）：**執行一個腳本，使用 `openclaw agent --message ... --deliver` 呼叫另一個 Gateway，目標設為另一個機器人監聽的聊天室。如果其中一個機器人在遠端 VPS 上，請透過 SSH/Tailscale 將您的 CLI 指向該遠端 Gateway（請參閱 [遠端存取](/en/gateway/remote)）。
+    **CLI 橋接器（通用）：**執行一個腳本，使用 `openclaw agent --message ... --deliver` 呼叫另一個 Gateway，目標設為另一個機器人監聽的聊天室。如果其中一個機器人在遠端 VPS 上，請透過 SSH/Tailscale 將您的 CLI 指向該遠端 Gateway（請參閱 [遠端存取](/zh-Hant/gateway/remote)）。
 
     範例模式（從可以連線到目標 Gateway 的機器執行）：
 
@@ -1682,7 +1682,7 @@ title: "常見問題"
 
     提示：加入防護機制，以免兩個機器人無限迴圈（僅限提及、頻道允許清單，或「不要回覆機器人訊息」規則）。
 
-    文件：[遠端存取](/en/gateway/remote)、[Agent CLI](/en/cli/agent)、[Agent send](/en/tools/agent-send)。
+    文件：[遠端存取](/zh-Hant/gateway/remote)、[Agent CLI](/zh-Hant/cli/agent)、[Agent send](/zh-Hant/tools/agent-send)。
 
   </Accordion>
 
@@ -1709,14 +1709,14 @@ title: "常見問題"
     SSH 適合臨時的 Shell 存取，但對於持續的代理工作流程和
     設備自動化來說，節點更簡單。
 
-    文件：[Nodes](/en/nodes)、[Nodes CLI](/en/cli/nodes)、[Browser](/en/tools/browser)。
+    文件：[Nodes](/zh-Hant/nodes)、[Nodes CLI](/zh-Hant/cli/nodes)、[Browser](/zh-Hant/tools/browser)。
 
   </Accordion>
 
   <Accordion title="節點是否會執行閘道服務？">
-    不會。除非您故意執行隔離的設定檔（請參閱[多重閘道](/en/gateway/multiple-gateways)），否則每個主機應該只執行**一個閘道**。節點是連接到
+    不會。除非您故意執行隔離的設定檔（請參閱[多重閘道](/zh-Hant/gateway/multiple-gateways)），否則每個主機應該只執行**一個閘道**。節點是連接到
     閘道的周邊裝置（iOS/Android 節點，或功能表列應用程式中的 macOS「節點模式」）。對於無介面節點
-    主機和 CLI 控制，請參閱[節點主機 CLI](/en/cli/node)。
+    主機和 CLI 控制，請參閱[節點主機 CLI](/zh-Hant/cli/node)。
 
     變更 `gateway`、`discovery` 和 `canvasHost` 需要完全重新啟動。
 
@@ -1769,7 +1769,7 @@ title: "常見問題"
     openclaw gateway --tailscale serve
     ```
 
-    這會將閘道綁定到 loopback 並透過 Tailscale公開 HTTPS。請參閱 [Tailscale](/en/gateway/tailscale)。
+    這會將閘道綁定到 loopback 並透過 Tailscale公開 HTTPS。請參閱 [Tailscale](/zh-Hant/gateway/tailscale)。
 
   </Accordion>
 
@@ -1788,7 +1788,7 @@ title: "常見問題"
        openclaw devices approve <requestId>
        ```
 
-    文件：[Gateway protocol](/en/gateway/protocol)、[Discovery](/en/gateway/discovery)、[macOS remote mode](/en/platforms/mac/remote)。
+    文件：[Gateway protocol](/zh-Hant/gateway/protocol)、[Discovery](/zh-Hant/gateway/discovery)、[macOS remote mode](/zh-Hant/platforms/mac/remote)。
 
   </Accordion>
 
@@ -1798,7 +1798,7 @@ title: "常見問題"
 
     只有在您需要 **嚴格隔離** 或兩個完全分離的機器人時，才安裝第二個閘道。
 
-    文件：[Nodes](/en/nodes)、[Nodes CLI](/en/cli/nodes)、[Multiple gateways](/en/gateway/multiple-gateways)。
+    文件：[Nodes](/zh-Hant/nodes)、[Nodes CLI](/zh-Hant/cli/nodes)、[Multiple gateways](/zh-Hant/gateway/multiple-gateways)。
 
   </Accordion>
 </AccordionGroup>
@@ -1825,7 +1825,7 @@ title: "常見問題"
     }
     ```
 
-    查閱 [/environment](/en/help/environment) 以了解完整的優先順序和來源。
+    查閱 [/environment](/zh-Hant/help/environment) 以了解完整的優先順序和來源。
 
   </Accordion>
 
@@ -1875,7 +1875,7 @@ title: "常見問題"
     ```
 
     Copilot token 是從 `COPILOT_GITHUB_TOKEN` 讀取的（也有 `GH_TOKEN` / `GITHUB_TOKEN`）。
-    請參閱 [/concepts/model-providers](/en/concepts/model-providers) 和 [/environment](/en/help/environment)。
+    請參閱 [/concepts/model-providers](/zh-Hant/concepts/model-providers) 和 [/environment](/zh-Hant/help/environment)。
 
   </Accordion>
 </AccordionGroup>
@@ -1884,7 +1884,7 @@ title: "常見問題"
 
 <AccordionGroup>
   <Accordion title="我該如何開始一個新的對話？">
-    發送 `/new` 或 `/reset` 作為獨立訊息。請參閱 [工作階段管理](/en/concepts/session)。
+    發送 `/new` 或 `/reset` 作為獨立訊息。請參閱 [工作階段管理](/zh-Hant/concepts/session)。
   </Accordion>
 
   <Accordion title="如果我不傳送 /new，工作階段會自動重設嗎？">
@@ -1911,7 +1911,7 @@ title: "常見問題"
     比使用一個帶有不同會話的 bot 效率更低。我們設想的典型模式是您與一個 bot 對話，
     並使用不同的會話進行並行工作。該 bot 也可以在需要時生成 sub-agents。
 
-    文件：[Multi-agent routing](/en/concepts/multi-agent)、[Sub-agents](/en/tools/subagents)、[Agents CLI](/en/cli/agents)。
+    文件：[Multi-agent routing](/zh-Hant/concepts/multi-agent)、[Sub-agents](/zh-Hant/tools/subagents)、[Agents CLI](/zh-Hant/cli/agents)。
 
   </Accordion>
 
@@ -1950,7 +1950,7 @@ title: "常見問題"
 
     註記：
 
-    - 如果 Onboarding 發現現有設定，也會提供 **Reset** 選項。請參閱 [Onboarding (CLI)](/en/start/wizard)。
+    - 如果 Onboarding 發現現有設定，也會提供 **Reset** 選項。請參閱 [Onboarding (CLI)](/zh-Hant/start/wizard)。
     - 如果您使用了 profiles (`--profile` / `OPENCLAW_PROFILE`)，請重置每個狀態目錄（預設為 `~/.openclaw-<profile>`）。
     - 開發重置：`openclaw gateway --dev --reset` （僅限開發；清除開發設定 + 憑證 + 會話 + 工作區）。
 
@@ -1979,7 +1979,7 @@ title: "常見問題"
     - 啟用或調整 **session pruning**（`agents.defaults.contextPruning`）以修剪舊的工具輸出。
     - 使用具有更大上下文視窗的模型。
 
-    文件：[壓縮](/en/concepts/compaction)、[Session pruning](/en/concepts/session-pruning)、[Session 管理](/en/concepts/session)。
+    文件：[壓縮](/zh-Hant/concepts/compaction)、[Session pruning](/zh-Hant/concepts/session-pruning)、[Session 管理](/zh-Hant/concepts/session)。
 
   </Accordion>
 
@@ -2011,7 +2011,7 @@ title: "常見問題"
     標題，例如 `# Heading`），OpenClaw 會跳過心跳執行以節省 API 呼叫。
     如果檔案不存在，心跳仍會執行，並由模型決定要做什麼。
 
-    針對單一代理程式的覆蓋設定使用 `agents.list[].heartbeat`。文件：[心跳](/en/gateway/heartbeat)。
+    針對單一代理程式的覆蓋設定使用 `agents.list[].heartbeat`。文件：[心跳](/zh-Hant/gateway/heartbeat)。
 
   </Accordion>
 
@@ -2050,7 +2050,7 @@ title: "常見問題"
     openclaw directory groups list --channel whatsapp
     ```
 
-    文件：[WhatsApp](/en/channels/whatsapp)、[Directory](/en/cli/directory)、[Logs](/en/cli/logs)。
+    文件：[WhatsApp](/zh-Hant/channels/whatsapp)、[Directory](/zh-Hant/cli/directory)、[Logs](/zh-Hant/cli/logs)。
 
   </Accordion>
 
@@ -2060,11 +2060,11 @@ title: "常見問題"
     - 提及閘門已開啟（預設）。您必須 @提及機器人（或符合 `mentionPatterns`）。
     - 您配置了 `channels.whatsapp.groups` 但未配置 `"*"`，且該群組未被列入白名單。
 
-    請參閱 [群組](/en/channels/groups) 和 [群組訊息](/en/channels/group-messages)。
+    請參閱 [群組](/zh-Hant/channels/groups) 和 [群組訊息](/zh-Hant/channels/group-messages)。
 
   </Accordion>
 
-<Accordion title="群組/主題是否與 DM 共享上下文？">直接聊天預設會折疊到主會話。群組/頻道有自己的會話金鑰，而 Telegram 主題 / Discord 執行緒是獨立的會話。請參閱 [群組](/en/channels/groups) 和 [群組訊息](/en/channels/group-messages)。</Accordion>
+<Accordion title="群組/主題是否與 DM 共享上下文？">直接聊天預設會折疊到主會話。群組/頻道有自己的會話金鑰，而 Telegram 主題 / Discord 執行緒是獨立的會話。請參閱 [群組](/zh-Hant/channels/groups) 和 [群組訊息](/zh-Hant/channels/group-messages)。</Accordion>
 
   <Accordion title="我可以建立多少個工作區和代理程式？">
     沒有硬性限制。幾十個（甚至幾百個）都沒問題，但請注意：
@@ -2096,8 +2096,8 @@ title: "常見問題"
     - 綁定到這些代理程式的 Slack 通道。
     - 視需要透過 Chrome MCP 或節點使用本機瀏覽器。
 
-    文件：[Multi-Agent Routing](/en/concepts/multi-agent)、[Slack](/en/channels/slack)、
-    [Browser](/en/tools/browser)、[Nodes](/en/nodes)。
+    文件：[Multi-Agent Routing](/zh-Hant/concepts/multi-agent)、[Slack](/zh-Hant/channels/slack)、
+    [Browser](/zh-Hant/tools/browser)、[Nodes](/zh-Hant/nodes)。
 
   </Accordion>
 </AccordionGroup>
@@ -2121,17 +2121,17 @@ title: "常見問題"
     **對於啟用工具或不受信任輸入的代理程式：** 優先考慮模型強度而非成本。
     **對於常規/低風險聊天：** 使用較便宜的備用模型並根據代理程式角色進行路由。
 
-    MiniMax 有自己的文件：[MiniMax](/en/providers/minimax) 和
-    [本機模型](/en/gateway/local-models)。
+    MiniMax 有自己的文件：[MiniMax](/zh-Hant/providers/minimax) 和
+    [本機模型](/zh-Hant/gateway/local-models)。
 
     經驗法則：對於高風險工作，使用您**能負擔得起的最好模型**，並對於常規聊天或摘要使用較便宜的模型。您可以根據代理程式路由模型，並使用子代理程式來
 
-並行化長任務（每個子代理程式都會消耗 Token）。請參閱 [模型](/en/concepts/models) 和
-[子代理程式](/en/tools/subagents)。
+並行化長任務（每個子代理程式都會消耗 Token）。請參閱 [模型](/zh-Hant/concepts/models) 和
+[子代理程式](/zh-Hant/tools/subagents)。
 
-    強烈警告：較弱/過度量化的模型更容易受到提示注入和不安全行為的影響。請參閱 [安全性](/en/gateway/security)。
+    強烈警告：較弱/過度量化的模型更容易受到提示注入和不安全行為的影響。請參閱 [安全性](/zh-Hant/gateway/security)。
 
-    更多背景資訊：[模型](/en/concepts/models)。
+    更多背景資訊：[模型](/zh-Hant/concepts/models)。
 
   </Accordion>
 
@@ -2150,7 +2150,7 @@ title: "常見問題"
     用於部分更新。
     如果您確實覆寫了設定，請從備份還原或重新執行 `openclaw doctor` 來修復。
 
-    文件：[模型](/en/concepts/models)、[設定](/en/cli/configure)、[Config](/en/cli/config)、[Doctor](/en/gateway/doctor)。
+    文件：[模型](/zh-Hant/concepts/models)、[設定](/zh-Hant/cli/configure)、[Config](/zh-Hant/cli/config)、[Doctor](/zh-Hant/gateway/doctor)。
 
   </Accordion>
 
@@ -2173,9 +2173,9 @@ title: "常見問題"
 
     安全性註記：較小或高度量化的模型更容易受到提示詞注入的影響。對於任何可以使用工具的機器人，我們強烈建議使用**大型模型**。如果您仍想使用小型模型，請啟用沙盒和嚴格的工具允許清單。
 
-    文件：[Ollama](/en/providers/ollama)、[本地模型](/en/gateway/local-models)、
-    [模型提供者](/en/concepts/model-providers)、[安全性](/en/gateway/security)、
-    [沙盒](/en/gateway/sandboxing)。
+    文件：[Ollama](/zh-Hant/providers/ollama)、[本地模型](/zh-Hant/gateway/local-models)、
+    [模型提供者](/zh-Hant/concepts/model-providers)、[安全性](/zh-Hant/gateway/security)、
+    [沙盒](/zh-Hant/gateway/sandboxing)。
 
   </Accordion>
 
@@ -2234,7 +2234,7 @@ title: "常見問題"
     - **預設值 + 切換：** 將 `agents.defaults.model.primary` 設定為 `openai/gpt-5.4`，然後在編碼時切換到 `openai-codex/gpt-5.4`（或反之亦然）。
     - **子代理程式：** 將編碼任務路由到具有不同預設模型的子代理程式。
 
-    參閱 [模型](/en/concepts/models) 和 [斜線指令](/en/tools/slash-commands)。
+    參閱 [模型](/zh-Hant/concepts/models) 和 [斜線指令](/zh-Hant/tools/slash-commands)。
 
   </Accordion>
 
@@ -2270,7 +2270,7 @@ title: "常見問題"
 
     對於 OpenAI，快速模式會在支援的原生 Responses 請求中對應到 `service_tier = "priority"`。會話 `/fast` 會覆寫配置預設值。
 
-    參閱 [思考與快速模式](/en/tools/thinking) 和 [OpenAI 快速模式](/en/providers/openai#openai-fast-mode)。
+    參閱 [思考與快速模式](/zh-Hant/tools/thinking) 和 [OpenAI 快速模式](/zh-Hant/providers/openai#openai-fast-mode)。
 
   </Accordion>
 
@@ -2308,7 +2308,7 @@ title: "常見問題"
 
        並從清單中選取（或在聊天中使用 `/model list`）。
 
-    參閱 [MiniMax](/en/providers/minimax) 和 [Models](/en/concepts/models)。
+    參閱 [MiniMax](/zh-Hant/providers/minimax) 和 [Models](/zh-Hant/concepts/models)。
 
   </Accordion>
 
@@ -2345,7 +2345,7 @@ title: "常見問題"
     - 代理程式 B 預設：OpenAI
     - 依代理程式路由或使用 `/agent` 進行切換
 
-    文件：[Models](/en/concepts/models)、[Multi-Agent Routing](/en/concepts/multi-agent)、[MiniMax](/en/providers/minimax)、[OpenAI](/en/providers/openai)。
+    文件：[Models](/zh-Hant/concepts/models)、[Multi-Agent Routing](/zh-Hant/concepts/multi-agent)、[MiniMax](/zh-Hant/providers/minimax)、[OpenAI](/zh-Hant/providers/openai)。
 
   </Accordion>
 
@@ -2531,7 +2531,7 @@ title: "常見問題"
 
 ## 驗證設定檔：它們是什麼以及如何管理它們
 
-相關連結：[/concepts/oauth](/en/concepts/oauth) （OAuth 流程、Token 儲存、多帳號模式）
+相關連結：[/concepts/oauth](/zh-Hant/concepts/oauth) （OAuth 流程、Token 儲存、多帳號模式）
 
 <AccordionGroup>
   <Accordion title="什麼是驗證設定檔？">
@@ -2696,7 +2696,7 @@ title: "常見問題"
     - 如果該輪換呼叫顯示被拒絕，請檢查兩件事：
       - 配對裝置工作階段只能輪換**其自身**的裝置，除非它們也擁有 `operator.admin`
       - 明確的 `--scope` 值不能超過呼叫端當前的操作員範圍
-    - 仍然卡住？請執行 `openclaw status --all` 並依照 [疑難排解](/en/gateway/troubleshooting) 操作。請參閱 [儀表板](/en/web/dashboard) 以了解驗證詳情。
+    - 仍然卡住？請執行 `openclaw status --all` 並依照 [疑難排解](/zh-Hant/gateway/troubleshooting) 操作。請參閱 [儀表板](/zh-Hant/web/dashboard) 以了解驗證詳情。
 
   </Accordion>
 
@@ -2729,7 +2729,7 @@ title: "常見問題"
     - 安裝各個 profile 的服務：`openclaw --profile <name> gateway install`。
 
     Profiles 也會為服務名稱加上後綴（`ai.openclaw.<profile>`；舊版 `com.openclaw.*`、`openclaw-gateway-<profile>.service`、`OpenClaw Gateway (<profile>)`）。
-    完整指南：[Multiple gateways](/en/gateway/multiple-gateways)。
+    完整指南：[Multiple gateways](/zh-Hant/gateway/multiple-gateways)。
 
   </Accordion>
 
@@ -2754,7 +2754,7 @@ title: "常見問題"
     openclaw tui --url ws://<host>:18789 --token <token>
     ```
 
-    通訊協定詳細資訊：[Gateway 通訊協定](/en/gateway/protocol)。
+    通訊協定詳細資訊：[Gateway 通訊協定](/zh-Hant/gateway/protocol)。
 
   </Accordion>
 </AccordionGroup>
@@ -2783,7 +2783,7 @@ title: "常見問題"
     - Linux：`journalctl --user -u openclaw-gateway[-<profile>].service -n 200 --no-pager`
     - Windows：`schtasks /Query /TN "OpenClaw Gateway (<profile>)" /V /FO LIST`
 
-    詳情請參閱 [疑難排解](/en/gateway/troubleshooting)。
+    詳情請參閱 [疑難排解](/zh-Hant/gateway/troubleshooting)。
 
   </Accordion>
 
@@ -2795,7 +2795,7 @@ title: "常見問題"
     openclaw gateway restart
     ```
 
-    如果您手動執行 gateway，`openclaw gateway --force` 可以收回連接埠。請參閱 [Gateway](/en/gateway)。
+    如果您手動執行 gateway，`openclaw gateway --force` 可以收回連接埠。請參閱 [Gateway](/zh-Hant/gateway)。
 
   </Accordion>
 
@@ -2833,7 +2833,7 @@ title: "常見問題"
     openclaw gateway run
     ```
 
-    文件：[Windows (WSL2)](/en/platforms/windows)、[Gateway service runbook](/en/gateway)。
+    文件：[Windows (WSL2)](/zh-Hant/platforms/windows)、[Gateway service runbook](/zh-Hant/gateway)。
 
   </Accordion>
 
@@ -2856,7 +2856,7 @@ title: "常見問題"
     如果您是遠端連線，請確認通道/Tailscale 連線已啟動，且
     Gateway WebSocket 可連線。
 
-    文件：[Channels](/en/channels)、[Troubleshooting](/en/gateway/troubleshooting)、[Remote access](/en/gateway/remote)。
+    文件：[Channels](/zh-Hant/channels)、[Troubleshooting](/zh-Hant/gateway/troubleshooting)、[Remote access](/zh-Hant/gateway/remote)。
 
   </Accordion>
 
@@ -2874,7 +2874,7 @@ title: "常見問題"
     openclaw logs --follow
     ```
 
-    文件：[Dashboard](/en/web/dashboard)、[Remote access](/en/gateway/remote)、[Troubleshooting](/en/gateway/troubleshooting)。
+    文件：[Dashboard](/zh-Hant/web/dashboard)、[Remote access](/zh-Hant/gateway/remote)、[Troubleshooting](/zh-Hant/gateway/troubleshooting)。
 
   </Accordion>
 
@@ -2893,7 +2893,7 @@ title: "常見問題"
 
     如果 Gateway 是遠端的，請確保您正在查看 Gateway 主機上的日誌。
 
-    文件：[Telegram](/en/channels/telegram)、[頻道疑難排解](/en/channels/troubleshooting)。
+    文件：[Telegram](/zh-Hant/channels/telegram)、[頻道疑難排解](/zh-Hant/channels/troubleshooting)。
 
   </Accordion>
 
@@ -2909,7 +2909,7 @@ title: "常見問題"
     在 TUI 中，使用 `/status` 查看目前的狀態。如果您預期在聊天頻道
     中收到回覆，請確保已啟用傳遞功能 (`/deliver on`)。
 
-    文件：[TUI](/en/web/tui)、[斜線指令](/en/tools/slash-commands)。
+    文件：[TUI](/zh-Hant/web/tui)、[斜線指令](/zh-Hant/tools/slash-commands)。
 
   </Accordion>
 
@@ -2930,7 +2930,7 @@ title: "常見問題"
     openclaw gateway run
     ```
 
-    文件：[Gateway 服務手冊](/en/gateway)。
+    文件：[Gateway 服務手冊](/zh-Hant/gateway)。
 
   </Accordion>
 
@@ -2951,7 +2951,7 @@ title: "常見問題"
 
 <AccordionGroup>
   <Accordion title="My skill generated an image/PDF, but nothing was sent">
-    從代理程式發出的輸出附件必須包含 `MEDIA:<path-or-url>` 行（在單獨的一行）。請參閱 [OpenClaw assistant setup](/en/start/openclaw) 和 [Agent send](/en/tools/agent-send)。
+    從代理程式發出的輸出附件必須包含 `MEDIA:<path-or-url>` 行（在單獨的一行）。請參閱 [OpenClaw assistant setup](/zh-Hant/start/openclaw) 和 [Agent send](/zh-Hant/tools/agent-send)。
 
     CLI 傳送：
 
@@ -2966,7 +2966,7 @@ title: "常見問題"
     - `tools.fs.workspaceOnly=true` 將本機路徑傳送限制為工作區、temp/media-store 和沙盒驗證的檔案。
     - `tools.fs.workspaceOnly=false` 允許 `MEDIA:` 傳送代理程式已可讀取的主機本機檔案，但僅限於媒體和安全文件類型（圖片、音訊、視訊、PDF 和 Office 文件）。純文字和類似祕密的檔案仍然被封鎖。
 
-    參閱 [Images](/en/nodes/images)。
+    參閱 [Images](/zh-Hant/nodes/images)。
 
   </Accordion>
 </AccordionGroup>
@@ -3003,7 +3003,7 @@ title: "常見問題"
       明確的外部內容邊界標記中，而不是直接傳遞原始檔案文字
     - 沙箱機制和嚴格的工具允許清單
 
-    詳細資訊：[安全性](/en/gateway/security)。
+    詳細資訊：[安全性](/zh-Hant/gateway/security)。
 
   </Accordion>
 
@@ -3012,7 +3012,7 @@ title: "常見問題"
 
     從小處著手。僅授予您實際需要的工具和帳號的存取權限，如有需要再進行擴展。
 
-    文件：[安全性](/en/gateway/security)、[配對](/en/channels/pairing)。
+    文件：[安全性](/zh-Hant/gateway/security)、[配對](/zh-Hant/channels/pairing)。
 
   </Accordion>
 
@@ -3024,11 +3024,11 @@ title: "常見問題"
     - 讓它先擬草稿，然後在**發送前進行審核**。
 
     如果您想進行實驗，請在專用帳號上進行並保持隔離。請參閱
-    [安全性](/en/gateway/security)。
+    [安全性](/zh-Hant/gateway/security)。
 
   </Accordion>
 
-<Accordion title="我可以將較便宜的模型用於個人助理任務嗎？">可以，**但前提是**該代理程式僅用於聊天，且輸入內容是受信任的。較低階層的模型更容易受到指令劫持，因此請避免在啟用工具的代理程式或讀取不受信任內容時使用。如果您必須使用較小的模型，請鎖定工具並在沙盒內運行。請參閱 [安全性](/en/gateway/security)。</Accordion>
+<Accordion title="我可以將較便宜的模型用於個人助理任務嗎？">可以，**但前提是**該代理程式僅用於聊天，且輸入內容是受信任的。較低階層的模型更容易受到指令劫持，因此請避免在啟用工具的代理程式或讀取不受信任內容時使用。如果您必須使用較小的模型，請鎖定工具並在沙盒內運行。請參閱 [安全性](/zh-Hant/gateway/security)。</Accordion>
 
   <Accordion title="我在 Telegram 中執行了 /start 但沒有收到配對碼">
     只有當未知的發送者向機器人發送訊息並且啟用了
@@ -3080,7 +3080,7 @@ title: "常見問題"
 
     如果仍然太吵雜，請檢查 Control UI 中的工作階段設定並將 verbose 設定為 **inherit**。同時確認您沒有使用在 config 中將 `verboseDefault` 設定為 `on` 的 bot 設定檔。
 
-    文件：[Thinking and verbose](/en/tools/thinking)、[Security](/en/gateway/security#reasoning-verbose-output-in-groups)。
+    文件：[Thinking and verbose](/zh-Hant/tools/thinking)、[Security](/zh-Hant/gateway/security#reasoning-verbose-output-in-groups)。
 
   </Accordion>
 
@@ -3117,7 +3117,7 @@ title: "常見問題"
     process action:kill sessionId:XXX
     ```
 
-    斜線指令概覽：請參閱 [斜線指令](/en/tools/slash-commands)。
+    斜線指令概覽：請參閱 [斜線指令](/zh-Hant/tools/slash-commands)。
 
     大多數指令必須以 `/` 開頭的 **獨立** 訊息傳送，但一些捷徑（例如 `/status`）也可以在列中對允許清單上的發送者運作。
 

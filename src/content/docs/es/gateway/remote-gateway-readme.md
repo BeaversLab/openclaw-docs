@@ -4,7 +4,7 @@ read_when: "Conexión de la aplicación macOS a una puerta de enlace remota a tr
 title: "Configuración de Puerta de Enlace Remota"
 ---
 
-> Este contenido se ha fusionado en [Acceso remoto](/en/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent). Consulte esa página para obtener la guía actual.
+> Este contenido se ha fusionado en [Acceso remoto](/es/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent). Consulte esa página para obtener la guía actual.
 
 # Ejecutar OpenClaw.app con una puerta de enlace remota
 

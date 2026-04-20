@@ -63,7 +63,7 @@ OpenClaw utiliza **perfiles de autenticación** tanto para claves de API como pa
 - Config `auth.profiles` / `auth.order` son **solo metadatos + enrutamiento** (sin secretos).
 - Archivo de OAuth heredado de solo importación: `~/.openclaw/credentials/oauth.json` (importado en `auth-profiles.json` en el primer uso).
 
-Más detalles: [/concepts/oauth](/en/concepts/oauth)
+Más detalles: [/concepts/oauth](/es/concepts/oauth)
 
 Tipos de credenciales:
 
@@ -318,7 +318,7 @@ Ese resumen del período de enfriamiento es consciente del modelo:
 
 ## Configuración relacionada
 
-Consulte [Configuración de Gateway](/en/gateway/configuration) para:
+Consulte [Configuración de Gateway](/es/gateway/configuration) para:
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
@@ -328,4 +328,4 @@ Consulte [Configuración de Gateway](/en/gateway/configuration) para:
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - enrutamiento `agents.defaults.imageModel`
 
-Consulte [Modelos](/en/concepts/models) para obtener una descripción general más amplia de la selección y reserva de modelos.
+Consulte [Modelos](/es/concepts/models) para obtener una descripción general más amplia de la selección y reserva de modelos.

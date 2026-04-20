@@ -21,13 +21,13 @@ title: "OpenClaw"
 </p>
 
 <Columns>
-  <Card title="Get Started" href="/en/start/getting-started" icon="rocket">
+  <Card title="Get Started" href="/zh/start/getting-started" icon="rocket">
     安装 OpenClaw 并在几分钟内启动 Gateway(网关)。
   </Card>
-  <Card title="Run 新手引导" href="/en/start/wizard" icon="sparkles">
+  <Card title="Run 新手引导" href="/zh/start/wizard" icon="sparkles">
     使用 `openclaw onboard` 和配对流程进行引导式设置。
   </Card>
-  <Card title="Open the Control UI" href="/en/web/control-ui" icon="layout-dashboard">
+  <Card title="Open the Control UI" href="/zh/web/control-ui" icon="layout-dashboard">
     启动浏览器仪表板，进行聊天、配置和会话管理。
   </Card>
 </Columns>
@@ -104,19 +104,19 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
     openclaw dashboard
     ```
 
-    或者连接一个渠道（[Telegram](/en/channels/telegram) 最快）并通过手机聊天。
+    或者连接一个渠道（[Telegram](/zh/channels/telegram) 最快）并通过手机聊天。
 
   </Step>
 </Steps>
 
-需要完整的安装和开发设置？请参阅 [入门指南](/en/start/getting-started)。
+需要完整的安装和开发设置？请参阅 [入门指南](/zh/start/getting-started)。
 
 ## 仪表板
 
 在 Gateway(网关) 启动后，打开浏览器控制 UI。
 
 - 本地默认： [http://127.0.0.1:18789/](http://127.0.0.1:18789/)
-- 远程访问：[Web 界面](/en/web) 和 [Tailscale](/en/gateway/tailscale)
+- 远程访问：[Web 界面](/zh/web) 和 [Tailscale](/zh/gateway/tailscale)
 
 <p align="center">
   <img src="/whatsapp-openclaw.jpg" alt="OpenClaw" width="420" />
@@ -146,22 +146,22 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
 ## 从这里开始
 
 <Columns>
-  <Card title="文档中心" href="/en/start/hubs" icon="book-open">
+  <Card title="文档中心" href="/zh/start/hubs" icon="book-open">
     所有文档和指南，按用例组织。
   </Card>
-  <Card title="配置" href="/en/gateway/configuration" icon="settings">
+  <Card title="配置" href="/zh/gateway/configuration" icon="settings">
     核心 Gateway(网关) 设置、令牌和提供商配置。
   </Card>
-  <Card title="Remote access" href="/en/gateway/remote" icon="globe">
+  <Card title="Remote access" href="/zh/gateway/remote" icon="globe">
     SSH 和 tailnet 访问模式。
   </Card>
-  <Card title="Channels" href="/en/channels/telegram" icon="message-square">
+  <Card title="Channels" href="/zh/channels/telegram" icon="message-square">
     针对飞书、Microsoft Teams、WhatsApp、Telegram、Discord 等的特定渠道设置。
   </Card>
-  <Card title="Nodes" href="/en/nodes" icon="smartphone">
+  <Card title="Nodes" href="/zh/nodes" icon="smartphone">
     支持配对、iOS、摄像头和设备操作的 Android 和 Canvas 节点。
   </Card>
-  <Card title="Help" href="/en/help" icon="life-buoy">
+  <Card title="Help" href="/zh/help" icon="life-buoy">
     常见修复方法和故障排除入口。
   </Card>
 </Columns>
@@ -169,19 +169,19 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
 ## 了解更多
 
 <Columns>
-  <Card title="Full feature list" href="/en/concepts/features" icon="list">
+  <Card title="Full feature list" href="/zh/concepts/features" icon="list">
     完整的渠道、路由和媒体功能。
   </Card>
-  <Card title="Multi-agent routing" href="/en/concepts/multi-agent" icon="route">
+  <Card title="Multi-agent routing" href="/zh/concepts/multi-agent" icon="route">
     工作区隔离和每个代理的会话。
   </Card>
-  <Card title="Security" href="/en/gateway/security" icon="shield">
+  <Card title="Security" href="/zh/gateway/security" icon="shield">
     令牌、允许列表和安全控制。
   </Card>
-  <Card title="Troubleshooting" href="/en/gateway/troubleshooting" icon="wrench">
+  <Card title="Troubleshooting" href="/zh/gateway/troubleshooting" icon="wrench">
     Gateway(网关) 诊断和常见错误。
   </Card>
-  <Card title="About and credits" href="/en/reference/credits" icon="info">
+  <Card title="About and credits" href="/zh/reference/credits" icon="info">
     项目起源、贡献者和许可证。
   </Card>
 </Columns>

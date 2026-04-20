@@ -113,10 +113,10 @@ Le catalogue de repli intégré inclut les références actuelles de Chutes :
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Fournisseurs de model" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Fournisseurs de model" href="/fr/concepts/model-providers" icon="layers">
     Règles de fournisseur, références de model et comportement de basculement.
   </Card>
-  <Card title="Référence de configuration" href="/en/gateway/configuration-reference" icon="gear">
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
     Schéma de configuration complet incluant les paramètres du fournisseur.
   </Card>
   <Card title="Chutes" href="https://chutes.ai" icon="arrow-up-right-from-square">

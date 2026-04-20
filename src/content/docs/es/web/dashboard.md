@@ -16,9 +16,9 @@ Apertura rápida (Gateway local):
 
 Referencias clave:
 
-- [Control UI](/en/web/control-ui) para el uso y las capacidades de la interfaz de usuario.
-- [Tailscale](/en/gateway/tailscale) para la automatización de Serve/Funnel.
-- [Web surfaces](/en/web) para los modos de enlace y notas de seguridad.
+- [Control UI](/es/web/control-ui) para el uso y las capacidades de la interfaz de usuario.
+- [Tailscale](/es/gateway/tailscale) para la automatización de Serve/Funnel.
+- [Web surfaces](/es/web) para los modos de enlace y notas de seguridad.
 
 La autenticación se aplica en el protocolo de enlace WebSocket a través de la ruta de autenticación de la gateway configurada:
 
@@ -27,7 +27,7 @@ La autenticación se aplica en el protocolo de enlace WebSocket a través de la 
 - Encabezados de identidad de Tailscale Serve cuando `gateway.auth.allowTailscale: true`
 - Encabezados de identidad de proxy de confianza cuando `gateway.auth.mode: "trusted-proxy"`
 
-Consulte `gateway.auth` en [Gateway configuration](/en/gateway/configuration).
+Consulte `gateway.auth` en [Gateway configuration](/es/gateway/configuration).
 
 Nota de seguridad: la interfaz de usuario de control es una **superficie de administración** (chat, configuración, aprobaciones de ejecución). No la exponga públicamente. La interfaz de usuario mantiene los tokens de URL del panel en sessionStorage para la sesión de la pestaña del navegador actual y la URL de la gateway seleccionada, y los elimina de la URL después de la carga. Se prefiere localhost, Tailscale Serve o un túnel SSH.
 
@@ -63,7 +63,7 @@ Nota de seguridad: la interfaz de usuario de control es una **superficie de admi
   `gateway.auth.mode: "trusted-proxy"`, o un túnel SSH. Las API HTTP aún usan
   autenticación de secreto compartido a menos que ejecute intencionalmente entrada privada
   `gateway.auth.mode: "none"` o autenticación HTTP de proxy confiable. Vea
-  [Superficies web](/en/web).
+  [Superficies web](/es/web).
 
 <a id="if-you-see-unauthorized-1008"></a>
 
@@ -75,7 +75,7 @@ Nota de seguridad: la interfaz de usuario de control es una **superficie de admi
 - En la ruta asincrónica de la interfaz de usuario de control de Tailscale Serve, los intentos fallidos para el mismo
   `{scope, ip}` se serializan antes de que el limitador de autenticación fallida los registre, por lo que
   el segundo reintento incorrecto concurrente ya puede mostrar `retry later`.
-- Para conocer los pasos de reparación de la divergencia del token, siga la [Lista de verificación de recuperación de divergencia de token](/en/cli/devices#token-drift-recovery-checklist).
+- Para conocer los pasos de reparación de la divergencia del token, siga la [Lista de verificación de recuperación de divergencia de token](/es/cli/devices#token-drift-recovery-checklist).
 - Recupere o proporcione el secreto compartido del host de la puerta de enlace:
   - Token: `openclaw config get gateway.auth.token`
   - Contraseña: resuelva el `gateway.auth.password` configurado o
