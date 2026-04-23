@@ -77,6 +77,6 @@ Flows coordinate tasks, not replace them. A single flow may drive multiple backg
 ## Related
 
 - [Background Tasks](/en/automation/tasks) — the detached work ledger that flows coordinate
-- [CLI: tasks](/en/cli/index#tasks) — CLI command reference for `openclaw tasks flow`
+- [CLI: tasks](/en/cli/tasks) — CLI command reference for `openclaw tasks flow`
 - [Automation Overview](/en/automation) — all automation mechanisms at a glance
 - [Cron Jobs](/en/automation/cron-jobs) — scheduled jobs that may feed into flows

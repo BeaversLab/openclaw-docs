@@ -91,4 +91,4 @@ Send "Hi" to your assistant on the channel you connected. OpenClaw will reply an
 ## Next steps
 
 - [Channels](/en/channels) -- connect Telegram, WhatsApp, Discord, and more
-- [Gateway configuration](/en/gateway/configuration) -- all config optionss
+- [Gateway configuration](/en/gateway/configuration) -- all config options
