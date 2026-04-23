@@ -10,22 +10,22 @@ title: "Features"
 ## Highlights
 
 <Columns>
-  <Card title="Channels" icon="message-square">
+  <Card title="Channels" icon="message-square" href="/en/channels">
     Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat, and more with a single Gateway.
   </Card>
-  <Card title="Plugins" icon="plug">
+  <Card title="Plugins" icon="plug" href="/en/tools/plugin">
     Bundled plugins add Matrix, Nextcloud Talk, Nostr, Twitch, Zalo, and more without separate installs in normal current releases.
   </Card>
-  <Card title="Routing" icon="route">
+  <Card title="Routing" icon="route" href="/en/concepts/multi-agent">
     Multi-agent routing with isolated sessions.
   </Card>
-  <Card title="Media" icon="image">
+  <Card title="Media" icon="image" href="/en/nodes/images">
     Images, audio, video, documents, and image/video generation.
   </Card>
-  <Card title="Apps and UI" icon="monitor">
+  <Card title="Apps and UI" icon="monitor" href="/en/web/control-ui">
     Web Control UI and macOS companion app.
   </Card>
-  <Card title="Mobile nodes" icon="smartphone">
+  <Card title="Mobile nodes" icon="smartphone" href="/en/nodes">
     iOS and Android nodes with pairing, voice/chat, and rich device commands.
   </Card>
 </Columns>

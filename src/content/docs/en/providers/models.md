@@ -25,8 +25,8 @@ model as `provider/model`.
 ## Supported providers (starter set)
 
 - [Alibaba Model Studio](/en/providers/alibaba)
-- [Anthropic (API + Claude CLI)](/en/providers/anthropic)
 - [Amazon Bedrock](/en/providers/bedrock)
+- [Anthropic (API + Claude CLI)](/en/providers/anthropic)
 - [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
 - [Chutes](/en/providers/chutes)
 - [ComfyUI](/en/providers/comfy)
