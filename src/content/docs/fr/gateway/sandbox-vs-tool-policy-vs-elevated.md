@@ -9,7 +9,7 @@ status: active
 
 OpenClaw has three related (but different) controls:
 
-1. **Sandbox** (`agents.defaults.sandbox.*` / `agents.list[].sandbox.*`) decides **where tools run** (Docker vs host).
+1. **Sandbox** (`agents.defaults.sandbox.*` / `agents.list[].sandbox.*`) décide **où les outils s'exécutent** (backend sandbox vs hôte).
 2. **Tool policy** (`tools.*`, `tools.sandbox.tools.*`, `agents.list[].tools.*`) decides **which tools are available/allowed**.
 3. **Elevated** (`tools.elevated.*`, `agents.list[].tools.elevated.*`) est une **échappatoire d'exécution uniquement** pour s'exécuter en dehors du bac à sable lorsque vous êtes sandboxé (`gateway` par défaut, ou `node` lorsque la cible d'exécution est configurée sur `node`).
 

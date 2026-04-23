@@ -14,7 +14,7 @@ Docker es **opcional**. Úselo solo si desea una puerta de enlace contenerizada 
 
 - **Sí**: desea un entorno de puerta de enlace aislado y desechable o ejecutar OpenClaw en un host sin instalaciones locales.
 - **No**: estás ejecutándolo en tu propia máquina y solo quieres el bucle de desarrollo más rápido. Utiliza el flujo de instalación normal.
-- **Nota sobre el aislamiento**: el aislamiento del agente también utiliza Docker, pero **no** requiere que la pasarela completa se ejecute en Docker. Consulte [Aislamiento](/es/gateway/sandboxing).
+- **Nota sobre el sandbox**: el backend de sandbox predeterminado utiliza Docker cuando el sandbox está activado, pero el sandbox está desactivado de forma predeterminada y **no** requiere que toda la pasarela se ejecute en Docker. También están disponibles los backends de sandbox SSH y OpenShell. Consulte [Sandboxing](/es/gateway/sandboxing).
 
 ## Requisitos previos
 
@@ -290,10 +290,7 @@ incluida la creación de binarios, la persistencia y las actualizaciones.
 
 ## Agente Sandbox
 
-Cuando `agents.defaults.sandbox` está habilitado, la puerta de enlace ejecuta las herramientas del agente
-(shell, lectura/escritura de archivos, etc.) dentro de contenedores Docker aislados mientras que la
-propia puerta de enlace permanece en el host. Esto proporciona un muro sólido alrededor de sesiones de agente
-que no son de confianza o multiinquilino sin necesidad de contenerizar toda la puerta de enlace.
+Cuando `agents.defaults.sandbox` está activado con el backend de Docker, la pasarela ejecuta la ejecución de herramientas del agente (shell, lectura/escritura de archivos, etc.) dentro de contenedores Docker aislados, mientras que la propia pasarela permanece en el host. Esto le proporciona un muro sólido alrededor de sesiones de agente no confiables o multiinquilino sin necesidad de contenedorizar toda la pasarela.
 
 El alcance del sandbox puede ser por agente (predeterminado), por sesión o compartido. Cada alcance
 obtiene su propio espacio de trabajo montado en `/workspace`. También puedes configurar

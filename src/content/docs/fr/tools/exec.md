@@ -66,7 +66,7 @@ Notes :
 - `tools.exec.ask` (par défaut : `off`)
 - L'exécution hôte sans approbation est la valeur par défaut pour la passerelle et le nœud. Si vous souhaitez un comportement d'approbations/de liste d'autorisation, renforcez à la fois `tools.exec.*` et l'hôte `~/.openclaw/exec-approvals.json` ; voir [Exec approvals](/fr/tools/exec-approvals#no-approval-yolo-mode).
 - Le mode YOLO provient des valeurs par défaut de la stratégie hôte (`security=full`, `ask=off`), et non de `host=auto`. Si vous souhaitez forcer le routage via la passerelle ou le nœud, définissez `tools.exec.host` ou utilisez `/exec host=...`.
-- En mode `security=full` plus `ask=off`, l'exécution hôte suit directement la stratégie configurée ; il n'y a pas de préfiltre heuristique d'obfuscation de commande supplémentaire.
+- En mode `security=full` plus `ask=off`, l'exécution hôte suit directement la stratégie configurée ; il n'y a pas de couche de préfiltrage heuristique d'obfuscation de commande ou de rejet préalable de script.
 - `tools.exec.node` (par défaut : non défini)
 - `tools.exec.strictInlineEval` (par défaut : false) : si vrai, les formes d'évaluation de l'interpréteur en ligne telles que `python -c`, `node -e`, `ruby -e`, `perl -e`, `php -r`, `lua -e` et `osascript -e` nécessitent toujours une approbation explicite. `allow-always` peut toujours conserver les appels bénins d'interpréteur/de script, mais les formes d'évaluation en ligne demandent toujours une confirmation à chaque fois.
 - `tools.exec.pathPrepend` : liste des répertoires à préfixer à `PATH` pour les exécutions exec (passerelle + bac à sable uniquement).

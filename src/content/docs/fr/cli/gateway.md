@@ -63,25 +63,30 @@ Remarques :
 - `--raw-stream`: enregistrer les événements bruts du flux de modèle dans l.
 - `--raw-stream-path <path>`: chemin l du flux brut.
 
+Profilage du démarrage :
+
+- Définissez `OPENCLAW_GATEWAY_STARTUP_TRACE=1` pour enregistrer les minutages des phases pendant le démarrage du Gateway.
+- Exécutez `pnpm test:startup:gateway -- --runs 5 --warmup 1` pour évaluer les performances de démarrage du Gateway. Le benchmark enregistre la première sortie de processus, `/healthz`, `/readyz`, et les minutages de trace de démarrage.
+
 ## Interroger un Gateway en cours d'exécution
 
-Toutes les commandes de requête utilisent le RPC WebSocket.
+Toutes les commandes de requête utilisent RPC WebSocket.
 
 Modes de sortie :
 
 - Par défaut : lisible par l'homme (coloré dans un TTY).
-- `--json`: JSON lisible par machine (sans style/indicateur de progression).
-- `--no-color` (ou `NO_COLOR=1`): désactiver l'ANSI tout en conservant la mise en page humaine.
+- `--json` : JSON lisible par machine (sans style/spinner).
+- `--no-color` (ou `NO_COLOR=1`) : désactiver l'ANSI tout en conservant la mise en page humaine.
 
-Options partagées (lorsque prises en charge) :
+Options partagées (lorsqu'elles sont prises en charge) :
 
-- `--url <url>`: URL WebSocket du Gateway.
-- `--token <token>`: jeton du Gateway.
-- `--password <password>`: mot de passe du Gateway.
-- `--timeout <ms>`: délai/budget (varie selon la commande).
-- `--expect-final`: attendre une réponse « finale » (appels d'agent).
+- `--url <url>` : URL WebSocket du Gateway.
+- `--token <token>` : jeton du Gateway.
+- `--password <password>` : mot de passe du Gateway.
+- `--timeout <ms>` : délai/budget (varie selon la commande).
+- `--expect-final` : attendre une réponse « finale » (appels d'agent).
 
-Remarque : lorsque vous définissez `--url`, le CLI n'utilise pas les identifiants de la configuration ou de l'environnement en repli.
+Remarque : lorsque vous définissez `--url`, le CLI n'utilise pas par défaut les identifiants de configuration ou d'environnement.
 Passez `--token` ou `--password` explicitement. L'absence d'identifiants explicites constitue une erreur.
 
 ### `gateway health`
@@ -89,6 +94,8 @@ Passez `--token` ou `--password` explicitement. L'absence d'identifiants explici
 ```bash
 openclaw gateway health --url ws://127.0.0.1:18789
 ```
+
+Le point de terminaison HTTP `/healthz` est une sonde de vivacité : il renvoie une réponse dès que le serveur peut répondre en HTTP. Le point de terminaison HTTP `/readyz` est plus strict et reste rouge tant que les sidecars de démarrage, les canaux ou les hooks configurés ne sont pas stabilisés.
 
 ### `gateway usage-cost`
 
@@ -102,11 +109,11 @@ openclaw gateway usage-cost --json
 
 Options :
 
-- `--days <days>`: nombre de jours à inclure (par défaut `30`).
+- `--days <days>` : nombre de jours à inclure (par défaut `30`).
 
 ### `gateway status`
 
-`gateway status` affiche le service Gateway (launchd/systemd/schtasks) ainsi qu'une sonde RPC facultative.
+`gateway status` affiche le service du Gateway (launchd/systemd/schtasks) ainsi qu'une sonde facultative de la capacité de connexion/authentification.
 
 ```bash
 openclaw gateway status
@@ -116,41 +123,43 @@ openclaw gateway status --require-rpc
 
 Options :
 
-- `--url <url>`: ajouter une cible de sonde explicite. Les distants configurés + localhost sont toujours sondés.
-- `--token <token>`: authentification par jeton pour la sonde.
-- `--password <password>`: authentification par mot de passe pour la sonde.
-- `--timeout <ms>`: délai d'expiration de la sonde (par défaut `10000`).
-- `--no-probe` : ignorer la sonde RPC (vue service uniquement).
+- `--url <url>` : ajouter une cible de sonde explicite. Les distants configurés + localhost sont toujours sondés.
+- `--token <token>` : authentification par jeton pour la sonde.
+- `--password <password>` : auth par mot de passe pour la sonde.
+- `--timeout <ms>` : délai d'attente de la sonde (par défaut `10000`).
+- `--no-probe` : ignorer la sonde de connectivité (vue service uniquement).
 - `--deep` : analyser également les services de niveau système.
-- `--require-rpc` : quitter avec un code non nul lorsque la sonde RPC échoue. Ne peut pas être combiné avec `--no-probe`.
+- `--require-rpc` : améliorer la sonde de connectivité par défaut avec une sonde de lecture et quitter avec un code non nul lorsque cette sonde de lecture échoue. Ne peut pas être combiné avec `--no-probe`.
 
 Remarques :
 
-- `gateway status` reste disponible pour le diagnostic même lorsque la configuration locale de la CLI est manquante ou non valide.
-- `gateway status` résout les SecretRefs d'auth configurés pour l'auth de la sonde lorsque c'est possible.
+- `gateway status` reste disponible pour le diagnostic même lorsque la configuration CLI locale est manquante ou non valide.
+- Par défaut, `gateway status` vérifie l'état du service, la connexion WebSocket et la capacité d'auth visible lors de la négociation. Il ne prouve pas les opérations de lecture/écriture/admin.
+- `gateway status` résout les SecretRefs d'auth configurés pour l'auth de la sonde lorsque cela est possible.
 - Si un SecretRef d'auth requis n'est pas résolu dans ce chemin de commande, `gateway status --json` signale `rpc.authWarning` lorsque la connectivité/l'auth de la sonde échoue ; passez `--token`/`--password` explicitement ou résolvez d'abord la source du secret.
 - Si la sonde réussit, les avertissements d'auth-ref non résolus sont supprimés pour éviter les faux positifs.
-- Utilisez `--require-rpc` dans les scripts et l'automatisation lorsqu'un service d'écoute ne suffit pas et que vous avez besoin que le Gateway RPC lui-même soit en bonne santé.
-- `--deep` ajoute une analyse de « best-effort » pour les installations launchd/systemd/schtasks supplémentaires. Lorsque plusieurs services de type passerelle sont détectés, la sortie humaine affiche des conseils de nettoyage et avertit que la plupart des configurations devraient exécuter une seule passerelle par machine.
-- La sortie humaine inclut le chemin du fichier journal résolu ainsi que l'instantané des chemins/validité de la config CLI-vs-service pour aider à diagnostiquer la dérive du profil ou du répertoire d'état.
-- Sur les installations Linux systemd, les vérifications de dérive d'auth de service lisent les valeurs `Environment=` et `EnvironmentFile=` depuis l'unité (y compris `%h`, les chemins entre guillemets, les fichiers multiples et les fichiers `-` optionnels).
-- Les vérifications de dérive résolvent les SecretRefs `gateway.auth.token` en utilisant l'environnement d'exécution fusionné (environnement de commande de service d'abord, puis repli sur l'environnement du processus).
-- Si l'auth par jeton n'est pas effectivement active (`gateway.auth.mode` explicite de `password`/`none`/`trusted-proxy`, ou mode non défini où le mot de passe peut l'emporter et aucun candidat jeton ne peut l'emporter), les vérifications de dérive de jeton ignorent la résolution du jeton de configuration.
+- Utilisez `--require-rpc` dans les scripts et l'automatisation lorsqu'un service d'écoute ne suffit pas et que vous avez besoin que les appels RPC de portée lecture soient également en bonne santé.
+- `--deep` ajoute une analyse de meilleure effort pour les installations launchd/systemd/schtasks supplémentaires. Lorsque plusieurs services de type passerelle sont détectés, la sortie humaine imprime des conseils de nettoyage et avertit que la plupart des configurations devraient exécuter une passerelle par machine.
+- La sortie humaine inclut le chemin du fichier journal résolu ainsi que l'instantané des chemins/validité de la configuration CLI-vs-service pour aider à diagnostiquer la dérive du profil ou du répertoire d'état.
+- Sur les installations systemd Linux, les contrôles de dérive d'auth de service lisent les valeurs `Environment=` et `EnvironmentFile=` à partir de l'unité (y compris `%h`, les chemins entre guillemets, les fichiers multiples et les fichiers `-` facultatifs).
+- Les contrôles de dérive résolvent les SecretRefs `gateway.auth.token` en utilisant l'environnement d'exécution fusionné (environnement de commande de service en premier, puis repli vers l'environnement de processus).
+- Si l'authentification par jeton n'est pas active de manière efficace (`gateway.auth.mode` explicite de `password`/`none`/`trusted-proxy`, ou mode non défini où le mot de passe peut l'emporter et aucun candidat jeton ne peut l'emporter), les vérifications de dérive de jeton ignorent la résolution du jeton de configuration.
 
 ### `gateway probe`
 
-`gateway probe` est la commande « déboguer tout ». Sonde toujours :
+`gateway probe` est la commande « tout déboguer ». Sonde toujours :
 
 - votre passerelle distante configurée (si définie), et
-- localhost (boucle locale) **même si une passerelle distante est configurée**.
+- localhost (boucle locale) **même si une adresse distante est configurée**.
 
-Si vous passez `--url`, cette cible explicite est ajoutée avant les deux. La sortie humaine étiquette les cibles comme suit :
+Si vous passez `--url`, cette cible explicite est ajoutée avant les deux autres. La sortie humaine étiquette les
+cibles comme :
 
 - `URL (explicit)`
 - `Remote (configured)` ou `Remote (configured, inactive)`
 - `Local loopback`
 
-Si plusieurs passerelles sont accessibles, elle les imprime toutes. Plusieurs passerelles sont prises en charge lorsque vous utilisez des profils/ports isolés (par exemple, un robot de secours), mais la plupart des installations exécutent toujours une seule passerelle.
+Si plusieurs passerelles sont accessibles, elles sont toutes imprimées. Plusieurs passerelles sont prises en charge lorsque vous utilisez des profils/ports isolés (par exemple, un bot de secours), mais la plupart des installations exécutent toujours une seule passerelle.
 
 ```bash
 openclaw gateway probe
@@ -160,34 +169,40 @@ openclaw gateway probe --json
 Interprétation :
 
 - `Reachable: yes` signifie qu'au moins une cible a accepté une connexion WebSocket.
-- `RPC: ok` signifie que les appels RPC détaillés (`health`/`status`/`system-presence`/`config.get`) ont également réussi.
-- `RPC: limited - missing scope: operator.read` signifie que la connexion a réussi mais que RPC détaillée est limitée en portée. Ceci est signalé comme une accessibilité **dégradée**, et non comme un échec total.
+- `Capability: read-only|write-capable|admin-capable|pairing-pending|connect-only` indique ce que la sonde a pu prouver concernant l'authentification. Ceci est distinct de l'accessibilité.
+- `Read probe: ok` signifie que les appels RPC de détail de portée de lecture (`health`/`status`/`system-presence`/`config.get`) ont également réussi.
+- `Read probe: limited - missing scope: operator.read` signifie que la connexion a réussi mais que le RPC de portée de lecture est limité. Ceci est signalé comme une accessibilité **dégradée**, et non comme un échec total.
 - Le code de sortie est non nul uniquement lorsqu'aucune cible sondée n'est accessible.
 
 Notes JSON (`--json`) :
 
 - Niveau supérieur :
   - `ok` : au moins une cible est accessible.
-  - `degraded` : au moins une cible avait RPC détaillée limitée en portée.
-  - `primaryTargetId` : meilleure cible à traiter comme le gagnant actuel dans cet ordre : URL explicite, tunnel SSH, distant configuré, puis boucle locale.
-  - `warnings[]` : enregistrements d'avertissement de meilleure effort avec `code`, `message`, et `targetIds` en option.
-  - `network` : indices d'URL de boucle locale/tailnet dérivés de la configuration actuelle et du réseau hôte.
-  - `discovery.timeoutMs` et `discovery.count` : le budget de découverte/nombre de résultats réel utilisé pour cette passe de sondage.
+  - `degraded` : au moins une cible avait un RPC de détail limité par la portée.
+  - `capability` : meilleure capacité observée sur les cibles accessibles (`read_only`, `write_capable`, `admin_capable`, `pairing_pending`, `connected_no_operator_scope`, ou `unknown`).
+  - `primaryTargetId` : meilleure cible à traiter comme le vainqueur actif dans cet ordre : URL explicite, tunnel SSH, distant configuré, puis local loopback.
+  - `warnings[]` : enregistrements d'avertissement de meilleure tentative avec `code` , `message` et `targetIds` facultatif.
+  - `network` : indices d'URL local loopback/tailnet dérivés de la configuration actuelle et du réseau de l'hôte.
+  - `discovery.timeoutMs` et `discovery.count` : le budget de découverte réel / le nombre de résultats utilisé pour cette passe de sonde.
 - Par cible (`targets[].connect`) :
   - `ok` : accessibilité après connexion + classification dégradée.
-  - `rpcOk` : succès RPC détaillée complet.
-  - `scopeLimited` : le RPC a échoué en raison d'une portée d'opérateur manquante.
+  - `rpcOk` : succès RPC détaillé complet.
+  - `scopeLimited` : échec du RPC détaillé en raison d'une portée d'opérateur manquante.
+- Par cible (`targets[].auth`) :
+  - `role` : rôle d'authentification signalé dans `hello-ok` lorsque disponible.
+  - `scopes` : portées accordées signalées dans `hello-ok` lorsque disponible.
+  - `capability` : la classification de capacité d'authentification exposée pour cette cible.
 
 Codes d'avertissement courants :
 
-- `ssh_tunnel_failed` : la configuration du tunnel SSH a échoué ; la commande est revenue à des sondes directes.
+- `ssh_tunnel_failed` : échec de la configuration du tunnel SSH ; la commande est revenue aux sondes directes.
 - `multiple_gateways` : plus d'une cible était accessible ; c'est inhabituel sauf si vous exécutez intentionnellement des profils isolés, comme un robot de secours.
-- `auth_secretref_unresolved` : une auth SecretRef configurée n'a pas pu être résolue pour une cible ayant échoué.
-- `probe_scope_limited` : la connexion WebSocket a réussi, mais le RPC de détail était limité par un `operator.read` manquant.
+- `auth_secretref_unresolved` : une authentification configurée SecretRef n'a pas pu être résolue pour une cible échouée.
+- `probe_scope_limited` : la connexion WebSocket a réussi, mais la sonde de lecture était limitée par l'absence de `operator.read` .
 
-#### À distance via SSH (parité avec l'application Mac)
+#### Distant via SSH (parité avec l'application Mac)
 
-Le mode « À distance via SSH » de l'application macOS utilise un transfert de port local afin que la passerelle distante (qui peut être liée uniquement à la boucle locale) devienne accessible sur `ws://127.0.0.1:<port>`.
+Le mode « Distant via SSH » de l'application macOS utilise un transfert de port local afin que la passerelle distante (qui peut être liée uniquement à la boucle locale) devienne accessible à `ws://127.0.0.1:<port>` .
 
 Équivalent CLI :
 
@@ -197,9 +212,9 @@ openclaw gateway probe --ssh user@gateway-host
 
 Options :
 
-- `--ssh <target>` : `user@host` ou `user@host:port` (le port par défaut est `22`).
+- `--ssh <target>` : `user@host` ou `user@host:port` (le port par défaut est `22` ).
 - `--ssh-identity <path>` : fichier d'identité.
-- `--ssh-auto` : choisir le premier hôte de passerelle découvert comme cible SSH à partir du point de terminaison de découverte résolu (`local.` plus le domaine étendu configuré, le cas échéant). Les indicateurs TXT-only sont ignorés.
+- `--ssh-auto` : choisir le premier hôte de passerelle découvert comme cible SSH à partir du point de terminaison de découverte résolu (`local.` plus le domaine étendu configuré, le cas échéant). Les indications TXT uniquement sont ignorées.
 
 Configuration (facultatif, utilisé comme valeurs par défaut) :
 
@@ -246,34 +261,34 @@ Options de commande :
 - `gateway install` : `--port`, `--runtime <node|bun>`, `--token`, `--force`, `--json`
 - `gateway uninstall|start|stop|restart` : `--json`
 
-Notes :
+Remarques :
 
 - `gateway install` prend en charge `--port`, `--runtime`, `--token`, `--force`, `--json`.
-- Lorsque l'authentification par jeton nécessite un jeton et que `gateway.auth.token` est géré par SecretRef, `gateway install` vérifie que le SecretRef peut être résolu, mais ne conserve pas le jeton résolu dans les métadonnées de l'environnement de service.
-- Si l'authentification par jeton nécessite un jeton et que le SecretRef de jeton configuré n'est pas résolu, l'installation échoue de manière sécurisée au lieu de conserver un texte en clair de secours.
-- Pour l'authentification par mot de passe sur `gateway run`, privilégiez `OPENCLAW_GATEWAY_PASSWORD`, `--password-file`, ou un `gateway.auth.password` soutenu par SecretRef plutôt que `--password` en ligne.
-- En mode d'authentification déduit, `OPENCLAW_GATEWAY_PASSWORD` uniquement shell ne relâche pas les exigences de jeton d'installation ; utilisez une configuration durable (`gateway.auth.password` ou config `env`) lors de l'installation d'un service géré.
-- Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés et que `gateway.auth.mode` n'est pas défini, l'installation est bloquée tant que le mode n'est pas défini explicitement.
+- Lorsque l'authentification par jeton nécessite un jeton et que `gateway.auth.token` est géré par SecretRef, `gateway install` vérifie que le SecretRef peut être résolu, mais ne persiste pas le jeton résolu dans les métadonnées de l'environnement de service.
+- Si l'authentification par jeton nécessite un jeton et que le SecretRef configuré pour le jeton n'est pas résolu, l'installation échoue de manière sécurisée au lieu de persister un texte de repli en clair.
+- Pour l'authentification par mot de passe sur `gateway run`, préférez `OPENCLAW_GATEWAY_PASSWORD`, `--password-file`, ou un `gateway.auth.password` pris en charge par SecretRef plutôt que le `--password` en ligne.
+- En mode d'authentification déduite, le `OPENCLAW_GATEWAY_PASSWORD` limité au shell ne relâche pas les exigences du jeton d'installation ; utilisez une configuration durable (`gateway.auth.password` ou `env` de configuration) lors de l'installation d'un service géré.
+- Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés et que `gateway.auth.mode` n'est pas défini, l'installation est bloquée jusqu'à ce que le mode soit défini explicitement.
 - Les commandes de cycle de vie acceptent `--json` pour les scripts.
 
-## Découvrir les gateways (Bonjour)
+## Découvrir les passerelles (Bonjour)
 
 `gateway discover` recherche les balises Gateway (`_openclaw-gw._tcp`).
 
 - Multicast DNS-SD : `local.`
-- DNS-SD monodiffusion (Bonjour grande distance) : choisissez un domaine (exemple : `openclaw.internal.`) et configurez un DNS scindé + un serveur DNS ; voir [/gateway/bonjour](/fr/gateway/bonjour)
+- Unicast DNS-SD (Bonjour étendu) : choisissez un domaine (exemple : `openclaw.internal.`) et configurez un DNS divisé + un serveur DNS ; voir [/gateway/bonjour](/fr/gateway/bonjour)
 
 Seules les passerelles avec la découverte Bonjour activée (par défaut) diffusent la balise.
 
-Les enregistrements de découverte grande distance incluent (TXT) :
+Les enregistrements de découverte étendue incluent (TXT) :
 
 - `role` (indication de rôle de passerelle)
 - `transport` (indication de transport, par ex. `gateway`)
 - `gatewayPort` (port WebSocket, généralement `18789`)
-- `sshPort` (facultatif ; les clients définissent par défaut les cibles SSH sur `22` en son absence)
+- `sshPort` (facultatif ; les clients définissent par défaut les cibles SSH sur `22` lorsqu'il est absent)
 - `tailnetDns` (nom d'hôte MagicDNS, si disponible)
-- `gatewayTls` / `gatewayTlsSha256` (TLS activé + empreinte du certificat)
-- `cliPath` (indication d'installation à distance écrite dans la zone grande distance)
+- `gatewayTls` / `gatewayTlsSha256` (TLS activé + empreinte de certificat)
+- `cliPath` (indication d'installation à distance écrite dans la zone étendue)
 
 ### `gateway discover`
 
@@ -283,8 +298,8 @@ openclaw gateway discover
 
 Options :
 
-- `--timeout <ms>` : délai d'attente par commande (parcours/résolution) ; par défaut `2000`.
-- `--json` : sortie lisible par machine (désactive également le style/barre de progression).
+- `--timeout <ms>` : délai d'expiration par commande (parcours/résolution) ; par défaut `2000`.
+- `--json` : sortie lisible par machine (désactive également le style/la barre de progression).
 
 Exemples :
 
@@ -295,6 +310,6 @@ openclaw gateway discover --json | jq '.beacons[].wsUrl'
 
 Notes :
 
-- La CLI analyse `local.` ainsi que le domaine grande distance configuré lorsque celui-ci est activé.
-- `wsUrl` dans la sortie JSON est dérivé du point de terminaison de service résolu, et non des indications de type TXT uniquement telles que `lanHost` ou `tailnetDns`.
-- Sur mDNS `local.`, `sshPort` et `cliPath` sont uniquement diffusés lorsque `discovery.mdns.mode` est `full`. Le DNS-SD grande distance écrit toujours `cliPath` ; `sshPort` reste également facultatif.
+- Le CLI analyse `local.` ainsi que le domaine de longue portée configuré lorsqu'un est activé.
+- `wsUrl` dans la sortie JSON est dérivé du point de terminaison du service résolu, et non des indications TXT uniquement telles que `lanHost` ou `tailnetDns`.
+- Sur mDNS `local.`, `sshPort` et `cliPath` sont uniquement diffusés lorsque `discovery.mdns.mode` est `full`. Le DNS-SD de longue portée écrit toujours `cliPath` ; `sshPort` reste également facultatif.

@@ -99,7 +99,7 @@ Pour les contributeurs ou toute personne souhaitant exécuter à partir d'une ex
 ```bash
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
-pnpm install && pnpm ui:build && pnpm build
+pnpm install && pnpm build && pnpm ui:build
 pnpm link --global
 openclaw onboard --install-daemon
 ```

@@ -210,7 +210,7 @@ Cuando elige **Kimi** durante `openclaw onboard` o
 `openclaw configure --section web`, OpenClaw también puede solicitar:
 
 - la región de la API de Moonshot (`https://api.moonshot.ai/v1` o `https://api.moonshot.cn/v1`)
-- el modelo de búsqueda web predeterminado de Kimi (por defecto `kimi-k2.5`)
+- el modelo de búsqueda web de Kimi predeterminado (por defecto es `kimi-k2.6`)
 
 Para `x_search`, configure `plugins.entries.xai.config.xSearch.*`. Utiliza el mismo respaldo `XAI_API_KEY` que la búsqueda web de Grok.
 La configuración heredada `tools.web.x_search.*` se migra automáticamente mediante `openclaw doctor --fix`.

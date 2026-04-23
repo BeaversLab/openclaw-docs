@@ -107,7 +107,7 @@ Si una ejecución ya está activa, los mensajes entrantes se pueden poner en col
 - Configurar mediante `messages.queue` (y `messages.queue.byChannel`).
 - Modos: `interrupt`, `steer`, `followup`, `collect`, además de variantes de acumulación.
 
-Detalles: [Poner en cola](/es/concepts/queue).
+Detalles: [Puesta en cola](/es/concepts/queue).
 
 ## Transmisión por bloques, fragmentación y procesamiento por lotes
 
@@ -123,7 +123,7 @@ Configuraciones clave:
 - `agents.defaults.humanDelay` (pausa similar a la humana entre respuestas de bloques)
 - Sobrescrituras de canal: `*.blockStreaming` y `*.blockStreamingCoalesce` (los canales que no sean Telegram requieren `*.blockStreaming: true` explícito)
 
-Detalles: [Streaming + chunking](/es/concepts/streaming).
+Detalles: [Streaming + fragmentación](/es/concepts/streaming).
 
 ## Visibilidad del razonamiento y tokens
 
@@ -133,7 +133,7 @@ OpenClaw puede exponer u ocultar el razonamiento del modelo:
 - El contenido del razonamiento sigue contando para el uso de tokens cuando es producido por el modelo.
 - Telegram soporta el flujo de razonamiento en la burbuja de borrador.
 
-Detalles: [Thinking + reasoning directives](/es/tools/thinking) y [Token use](/es/reference/token-use).
+Detalles: [Directivas de pensamiento + razonamiento](/es/tools/thinking) y [Uso de tokens](/es/reference/token-use).
 
 ## Prefijos, hilos y respuestas
 
@@ -142,11 +142,25 @@ El formato de los mensajes salientes está centralizado en `messages`:
 - `messages.responsePrefix`, `channels.<channel>.responsePrefix` y `channels.<channel>.accounts.<id>.responsePrefix` (cascada de prefijos salientes), más `channels.whatsapp.messagePrefix` (prefijo entrante de WhatsApp)
 - Hilos de respuesta mediante `replyToMode` y valores predeterminados por canal
 
-Detalles: [Configuración](/es/gateway/configuration-reference#messages) y documentación del canal.
+Detalles: [Configuración](/es/gateway/configuration-reference#messages) y documentación de canales.
+
+## Respuestas silenciosas
+
+El token silencioso exacto `NO_REPLY` / `no_reply` significa "no entregar una respuesta visible para el usuario".
+OpenClaw resuelve ese comportamiento según el tipo de conversación:
+
+- Las conversaciones directas no permiten el silencio de manera predeterminada y reescriben una respuesta silenciosa simple
+  a un respaldo visible breve.
+- Los grupos/canales permiten el silencio de manera predeterminada.
+- La orquestación interna permite el silencio de manera predeterminada.
+
+Los valores predeterminados se encuentran en `agents.defaults.silentReply` y
+`agents.defaults.silentReplyRewrite`; `surfaces.<id>.silentReply` y
+`surfaces.<id>.silentReplyRewrite` pueden anularlos por superficie.
 
 ## Relacionado
 
 - [Streaming](/es/concepts/streaming) — entrega de mensajes en tiempo real
-- [Retry](/es/concepts/retry) — comportamiento de reintento de entrega de mensajes
-- [Queue](/es/concepts/queue) — cola de procesamiento de mensajes
-- [Channels](/es/channels) — integraciones de plataformas de mensajería
+- [Reintento](/es/concepts/retry) — comportamiento de reintento de entrega de mensajes
+- [Cola](/es/concepts/queue) — cola de procesamiento de mensajes
+- [Canales](/es/channels) — integraciones de plataformas de mensajería

@@ -263,7 +263,7 @@ Por defecto, el complemento inicia Codex localmente con:
 codex app-server --listen stdio://
 ```
 
-Puedes mantener ese valor predeterminado y solo ajustar la política nativa de Codex:
+De forma predeterminada, OpenClaw le pide a Codex que solicite aprobaciones nativas. Puede ajustar aún más esa política, por ejemplo, endureciéndola y dirigiendo las revisiones a través del guardián:
 
 ```json5
 {
@@ -273,7 +273,8 @@ Puedes mantener ese valor predeterminado y solo ajustar la política nativa de C
         enabled: true,
         config: {
           appServer: {
-            approvalPolicy: "on-request",
+            approvalPolicy: "untrusted",
+            approvalsReviewer: "guardian_subagent",
             sandbox: "workspace-write",
             serviceTier: "priority",
           },
@@ -317,7 +318,7 @@ Campos `appServer` compatibles:
 | `authToken`         | sin establecer                           | Token de portador para el transporte WebSocket.                                                   |
 | `headers`           | `{}`                                     | Encabezados WebSocket adicionales.                                                                |
 | `requestTimeoutMs`  | `60000`                                  | Tiempo de espera para las llamadas al plano de control del servidor de aplicaciones.              |
-| `approvalPolicy`    | `"never"`                                | Política de aprobación nativa de Codex enviada al inicio/reanudación/turno del hilo.              |
+| `approvalPolicy`    | `"on-request"`                           | Política de aprobación nativa de Codex enviada al inicio/reanudación/turno del hilo.              |
 | `sandbox`           | `"workspace-write"`                      | Modo de espacio aislado (sandbox) nativo de Codex enviado al inicio/reanudación del hilo.         |
 | `approvalsReviewer` | `"user"`                                 | Usa `"guardian_subagent"` para permitir que el guardián de Codex revise las aprobaciones nativas. |
 | `serviceTier`       | sin establecer                           | Nivel de servicio de Codex opcional, por ejemplo `"priority"`.                                    |

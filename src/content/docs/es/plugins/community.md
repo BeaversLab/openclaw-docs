@@ -1,5 +1,5 @@
 ---
-summary: "Complementos de OpenClaw mantenidos por la comunidad: busque, instale y envíe los suyos"
+summary: "Complementos de OpenClaw mantenidos por la comunidad: navega, instala y envía los tuyos"
 read_when:
   - You want to find third-party OpenClaw plugins
   - You want to publish or list your own plugin
@@ -8,8 +8,8 @@ title: "Complementos de la comunidad"
 
 # Complementos de la comunidad
 
-Los complementos comunitarios son paquetes de terceros que amplían OpenClaw con nuevos
-canales, herramientas, proveedores u otras capacidades. Son construidos y mantenidos
+Los complementos de la comunidad son paquetes de terceros que amplían OpenClaw con nuevos
+canales, herramientas, proveedores u otras capacidades. Son creados y mantenidos
 por la comunidad, publicados en [ClawHub](/es/tools/clawhub) o npm, e
 instalables con un solo comando.
 
@@ -23,12 +23,27 @@ OpenClaw verifica ClawHub primero y recurre automáticamente a npm.
 
 ## Complementos listados
 
-### Puente del servidor de aplicaciones Codex
+### Apify
 
-Puente independiente de OpenClaw para conversaciones del servidor de aplicaciones Codex. Vincule un chat a un hilo de Codex, hable con él en texto plano y contólelo con comandos nativos del chat para reanudar, planificar, revisar, seleccionar modelos, compactación y más.
+Extrae datos de cualquier sitio web con más de 20,000 raspadores listos para usar. Permite que tu agente
+extraiga datos de Instagram, Facebook, TikTok, YouTube, Google Maps, Google
+Search, sitios de comercio electrónico y más, simplemente preguntando.
+
+- **npm:** `@apify/apify-openclaw-plugin`
+- **repositorio:** [github.com/apify/apify-openclaw-plugin](https://github.com/apify/apify-openclaw-plugin)
+
+```bash
+openclaw plugins install @apify/apify-openclaw-plugin
+```
+
+### Puente de Codex App Server
+
+Puente independiente de OpenClaw para conversaciones de Codex App Server. Vincula un chat a
+un hilo de Codex, háblale con texto plano y contóalo con comandos
+nativos del chat para reanudar, planificar, revisar, selección de modelos, compactación y más.
 
 - **npm:** `openclaw-codex-app-server`
-- **repo:** [github.com/pwrdrvr/openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server)
+- **repositorio:** [github.com/pwrdrvr/openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server)
 
 ```bash
 openclaw plugins install openclaw-codex-app-server
@@ -36,10 +51,11 @@ openclaw plugins install openclaw-codex-app-server
 
 ### DingTalk
 
-Integración de robot empresarial usando el modo Stream. Soporta mensajes de texto, imágenes y archivos a través de cualquier cliente de DingTalk.
+Integración de robots empresariales utilizando el modo Stream. Admite mensajes de texto, imágenes y
+archivos a través de cualquier cliente de DingTalk.
 
 - **npm:** `@largezhou/ddingtalk`
-- **repo:** [github.com/largezhou/openclaw-dingtalk](https://github.com/largezhou/openclaw-dingtalk)
+- **repositorio:** [github.com/largezhou/openclaw-dingtalk](https://github.com/largezhou/openclaw-dingtalk)
 
 ```bash
 openclaw plugins install @largezhou/ddingtalk
@@ -47,10 +63,12 @@ openclaw plugins install @largezhou/ddingtalk
 
 ### Lossless Claw (LCM)
 
-Complemento de gestión de contexto sin pérdidas para OpenClaw. Resumen de conversaciones basado en DAG con compactación incremental: preserva la fidelidad completa del contexto mientras reduce el uso de tokens.
+Complemento de gestión de contexto sin pérdidas para OpenClaw. Resumen de conversación
+basado en DAG con compactación incremental: preserva la fidelidad total del contexto
+mientras reduce el uso de tokens.
 
 - **npm:** `@martian-engineering/lossless-claw`
-- **repo:** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
+- **repositorio:** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
 
 ```bash
 openclaw plugins install @martian-engineering/lossless-claw
@@ -58,18 +76,30 @@ openclaw plugins install @martian-engineering/lossless-claw
 
 ### Opik
 
-Complemento oficial que exporta trazas de agentes a Opik. Monitoree el comportamiento del agente, costos, tokens, errores y más.
+Complemento oficial que exporta las trazas de los agentes a Opik. Monitorea el comportamiento de los agentes,
+costo, tokens, errores y más.
 
 - **npm:** `@opik/opik-openclaw`
-- **repo:** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
+- **repositorio:** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
 
 ```bash
 openclaw plugins install @opik/opik-openclaw
 ```
 
+### Prometheus Avatar
+
+Dale a tu agente OpenClaw un avatar Live2D con sincronización labial en tiempo real, expresiones de emoción y texto a voz. Incluye herramientas de creación para generación de activos con IA e implementación con un solo clic en el Mercado de Prometheus. Actualmente en alfa.
+
+- **npm:** `@prometheusavatar/openclaw-plugin`
+- **repo:** [github.com/myths-labs/prometheus-avatar](https://github.com/myths-labs/prometheus-avatar)
+
+```bash
+openclaw plugins install @prometheusavatar/openclaw-plugin
+```
+
 ### QQbot
 
-Conecte OpenClaw a QQ a través de la API de QQ Bot. Soporta chats privados, menciones de grupo, mensajes de canales y contenido multimedia enriquecido que incluye voz, imágenes, videos y archivos.
+Conecta OpenClaw con QQ a través de la API de QQ Bot. Soporta chats privados, menciones de grupo, mensajes de canales y medios enriquecidos que incluyen voz, imágenes, videos y archivos.
 
 - **npm:** `@tencent-connect/openclaw-qqbot`
 - **repo:** [github.com/tencent-connect/openclaw-qqbot](https://github.com/tencent-connect/openclaw-qqbot)
@@ -80,7 +110,7 @@ openclaw plugins install @tencent-connect/openclaw-qqbot
 
 ### wecom
 
-Complemento de canal WeCom para OpenClaw por el equipo de Tencent WeCom. Impulsado por conexiones persistentes de WebSocket del bot WeCom, admite mensajes directos y chats grupales, respuestas en streaming, mensajería proactiva, procesamiento de imágenes/archivos, formato Markdown, control de acceso integrado y habilidades de documentación/reuniones/mensajería.
+Complemento de canal WeCom para OpenClaw por el equipo de Tencent WeCom. Impulsado por conexiones persistentes de WebSocket de WeCom Bot, soporta mensajes directos y chats grupales, respuestas en streaming, mensajería proactiva, procesamiento de imágenes/archivos, formato Markdown, control de acceso integrado y habilidades de documentos/reuniones/mensajería.
 
 - **npm:** `@wecom/wecom-openclaw-plugin`
 - **repo:** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
@@ -89,44 +119,44 @@ Complemento de canal WeCom para OpenClaw por el equipo de Tencent WeCom. Impulsa
 openclaw plugins install @wecom/wecom-openclaw-plugin
 ```
 
-## Envíe su complemento
+## Envía tu complemento
 
-Damos la bienvenida a complementos de la comunidad que sean útiles, documentados y seguros de operar.
+Damos la bienvenida a los complementos de la comunidad que sean útiles, documentados y seguros de operar.
 
 <Steps>
   <Step title="Publicar en ClawHub o npm">
-    Su complemento debe ser instalable a través de `openclaw plugins install \<package-name\>`.
-    Publíquelo en [ClawHub](/es/tools/clawhub) (preferido) o npm.
-    Consulte [Building Plugins](/es/plugins/building-plugins) para obtener la guía completa.
+    Tu complemento debe ser instalable a través de `openclaw plugins install \<package-name\>`.
+    Publica en [ClawHub](/es/tools/clawhub) (preferido) o npm.
+    Consulta [Building Plugins](/es/plugins/building-plugins) para la guía completa.
 
   </Step>
 
   <Step title="Alojar en GitHub">
-    El código fuente debe estar en un repositorio público con documentación de configuración y un seguimiento de problemas.
+    El código fuente debe estar en un repositorio público con documentos de configuración y un seguimiento de problemas.
 
   </Step>
 
-  <Step title="Usar PRs de documentos solo para cambios en documentos fuente">
-    No necesita un PR de documentos solo para que su complemento sea detectable. Publíquelo en ClawHub en su lugar.
+  <Step title="Usar PRs de docs solo para cambios en docs de origen">
+    No necesitas un PR de docs solo para hacer que tu complemento sea descubrible. Publícalo en ClawHub en su lugar.
 
-    Abra un PR de documentos solo cuando los documentos fuente de OpenClaw necesiten un cambio real de contenido, como corregir la guía de instalación o agregar documentación entre repositorios que pertenezca al conjunto principal de documentos.
+    Abre un PR de docs solo cuando los documentos de origen de OpenClaw necesiten un cambio real de contenido, como corregir la guía de instalación o agregar documentación entre repositorios que pertenezca al conjunto principal de documentos.
 
   </Step>
 </Steps>
 
 ## Nivel de calidad
 
-| Requisito                            | Por qué                                                             |
-| ------------------------------------ | ------------------------------------------------------------------- |
-| Publicado en ClawHub o npm           | Los usuarios necesitan `openclaw plugins install` para que funcione |
-| Repositorio público de GitHub        | Revisión del código fuente, seguimiento de problemas, transparencia |
-| Documentación de configuración y uso | Los usuarios necesitan saber cómo configurarlo                      |
-| Mantenimiento activo                 | Actualizaciones recientes o manejo de problemas responsivo          |
+| Requisito                            | Por qué                                                        |
+| ------------------------------------ | -------------------------------------------------------------- |
+| Publicado en ClawHub o npm           | Los usuarios necesitan que `openclaw plugins install` funcione |
+| Repositorio público de GitHub        | Revisión de código, seguimiento de problemas, transparencia    |
+| Documentación de configuración y uso | Los usuarios necesitan saber cómo configurarlo                 |
+| Mantenimiento activo                 | Actualizaciones recientes o gestión responsiva de problemas    |
 
-Los envoltorios de bajo esfuerzo, la propiedad poco clara o los paquetes no mantenidos pueden ser rechazados.
+Pueden rechazarse envoltorios de bajo esfuerzo, propiedad poco clara o paquetes sin mantenimiento.
 
 ## Relacionado
 
-- [Install and Configure Plugins](/es/tools/plugin) — cómo instalar cualquier complemento
-- [Building Plugins](/es/plugins/building-plugins) — crear el suyo propio
-- [Plugin Manifest](/es/plugins/manifest) — esquema de manifiesto
+- [Instalar y configurar complementos](/es/tools/plugin) — cómo instalar cualquier complemento
+- [Construcción de complementos](/es/plugins/building-plugins) — crea el tuyo propio
+- [Manifiesto del complemento](/es/plugins/manifest) — esquema del manifiesto

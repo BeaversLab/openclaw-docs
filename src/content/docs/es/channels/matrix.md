@@ -1007,7 +1007,7 @@ La búsqueda en el directorio en vivo utiliza la cuenta de Matrix conectada:
 - `allowBots`: permitir mensajes de otras cuentas Matrix de OpenClaw configuradas (`true` o `"mentions"`).
 - `groupPolicy`: `open`, `allowlist` o `disabled`.
 - `contextVisibility`: modo de visibilidad de contexto de sala suplementario (`all`, `allowlist`, `allowlist_quote`).
-- `groupAllowFrom`: lista de permitidos de IDs de usuario para el tráfico de la sala. Las entradas deben ser IDs de usuario completos de Matrix; los nombres no resueltos se ignoran en tiempo de ejecución.
+- `groupAllowFrom`: lista blanca de IDs de usuario para el tráfico de la sala. Los IDs de usuario completos de Matrix son los más seguros; las coincidencias exactas de directorio se resuelven al inicio y cuando cambia la lista blanca mientras el monitor está en ejecución. Los nombres no resueltos se ignoran.
 - `historyLimit`: número máximo de mensajes de la sala para incluir como contexto del historial del grupo. Recurre a `messages.groupChat.historyLimit`; si ambos no están establecidos, el valor predeterminado efectivo es `0`. Establezca `0` para desactivar.
 - `replyToMode`: `off`, `first`, `all` o `batched`.
 - `markdown`: configuración opcional de renderizado de Markdown para el texto de salida de Matrix.
@@ -1028,7 +1028,7 @@ La búsqueda en el directorio en vivo utiliza la cuenta de Matrix conectada:
 - `autoJoinAllowlist`: salas/alias permitidos cuando `autoJoin` es `allowlist`. Las entradas de alias se resuelven en IDs de sala durante el manejo de invitaciones; OpenClaw no confía en el estado de alias declarado por la sala invitada.
 - `dm`: bloque de política de MD (`enabled`, `policy`, `allowFrom`, `sessionScope`, `threadReplies`).
 - `dm.policy`: controla el acceso a MD después de que OpenClaw se ha unido a la sala y la ha clasificado como MD. No cambia si una invitación se une automáticamente.
-- `dm.allowFrom`: las entradas deben ser IDs de usuario completos de Matrix, a menos que ya las haya resuelto mediante una búsqueda en directorio en vivo.
+- `dm.allowFrom`: lista blanca de IDs de usuario para el tráfico de MD. Los IDs de usuario completos de Matrix son los más seguros; las coincidencias exactas de directorio se resuelven al inicio y cuando cambia la lista blanca mientras el monitor está en ejecución. Los nombres no resueltos se ignoran.
 - `dm.sessionScope`: `per-user` (predeterminado) o `per-room`. Use `per-room` cuando desee que cada sala de MD de Matrix mantenga un contexto separado incluso si el interlocutor es el mismo.
 - `dm.threadReplies`: anulación de la política de hilos solo para MD (`off`, `inbound`, `always`). Anula la configuración `threadReplies` de nivel superior tanto para la ubicación de respuestas como para el aislamiento de sesiones en MD.
 - `execApprovals`: entrega de aprobación de ejecución nativa de Matrix (`enabled`, `approvers`, `target`, `agentFilter`, `sessionFilter`).

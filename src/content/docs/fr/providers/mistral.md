@@ -86,17 +86,17 @@ Utilisez Voxtral pour la transcription audio via le pipeline de compréhension d
 
 <AccordionGroup>
   <Accordion title="Raisonnement ajustable (mistral-small-latest)">
-    `mistral/mistral-small-latest` correspond à Mistral Small 4 et prend en charge le [raisonnement ajustable](https://docs.mistral.ai/capabilities/reasoning/adjustable) sur l'API Chat Completions via `reasoning_effort` (`none` minimise la réflexion supplémentaire dans la sortie ; `high` affiche les traces de réflexion complètes avant la réponse finale).
+    `mistral/mistral-small-latest` correspond à Mistral Small 4 et prend en charge le [raisonnement ajustable](https://docs.mistral.ai/capabilities/reasoning/adjustable) sur l'API de complétion de chat API via `reasoning_effort` (`none` minimise la réflexion supplémentaire dans la sortie ; `high` affiche les traces de réflexion complètes avant la réponse finale).
 
-    OpenClaw mappe le niveau de réflexion (**thinking**) de la session à l'API de Mistral :
+    OpenClaw mappe le niveau de **réflexion** de la session à l'API de Mistral :
 
     | Niveau de réflexion OpenClaw                          | `reasoning_effort` Mistral |
     | ------------------------------------------------ | -------------------------- |
     | **off** / **minimal**                            | `none`                     |
-    | **low** / **medium** / **high** / **xhigh** / **adaptive** | `high`             |
+    | **low** / **medium** / **high** / **xhigh** / **adaptive** / **max** | `high`     |
 
     <Note>
-    Les autres modèles du catalogue Mistral groupés n'utilisent pas ce paramètre. Continuez d'utiliser les modèles `magistral-*` lorsque vous souhaitez le comportement natif de raisonnement prioritaire de Mistral.
+    Les autres modèles du catalogue Mistral regroupés n'utilisent pas ce paramètre. Continuez d'utiliser les modèles `magistral-*` lorsque vous souhaitez le comportement natif prioritaire au raisonnement de Mistral.
     </Note>
 
   </Accordion>

@@ -12,57 +12,57 @@ Administra trabajos de cron para el programador del Gateway.
 
 Relacionado:
 
-- Trabajos de Cron: [Cron jobs](/es/automation/cron-jobs)
+- Trabajos cron: [Trabajos cron](/es/automation/cron-jobs)
 
 Sugerencia: ejecute `openclaw cron --help` para ver la superficie completa de comandos.
 
-Nota: los trabajos aislados de `cron add` utilizan de forma predeterminada la entrega `--announce`. Use `--no-deliver` para mantener
+Nota: `openclaw cron list` y `openclaw cron show <job-id>` previsualizan la
+ruta de entrega resuelta. Para `channel: "last"`, la vista previa muestra si la
+ruta se resolvió desde la sesión principal/actual o fallará cerrada.
+
+Nota: los trabajos `cron add` aislados por defecto usan entrega `--announce`. Use `--no-deliver` para mantener
 la salida interna. `--deliver` permanece como un alias obsoleto para `--announce`.
 
-Nota: las ejecuciones aisladas propiedad de cron esperan un resumen de texto plano y el ejecutor es propietario
-del camino final de envío. `--no-deliver` mantiene la ejecución interna; no entrega
-la devolución al mensaje de la herramienta del agente.
+Nota: la entrega de chat cron aislada se comparte. `--announce` es la entrega de respaldo del ejecutor
+para la respuesta final; `--no-deliver` deshabilita ese respaldo pero no
+elimina la herramienta `message` del agente cuando hay una ruta de chat disponible.
 
-Nota: los trabajos de una sola vez (`--at`) se eliminan tras el éxito de forma predeterminada. Use `--keep-after-run` para mantenerlos.
+Nota: los trabajos de una sola vez (`--at`) se eliminan después del éxito por defecto. Use `--keep-after-run` para mantenerlos.
 
-Nota: `--session` es compatible con `main`, `isolated`, `current` y `session:<id>`.
-Use `current` para vincularse a la sesión activa en el momento de la creación, o `session:<id>` para
+Nota: `--session` admite `main`, `isolated`, `current` y `session:<id>`.
+Use `current` para vincular a la sesión activa en el momento de creación, o `session:<id>` para
 una clave de sesión persistente explícita.
 
-Nota: para los trabajos de CLI de una sola vez, las fechas y horas de `--at` sin desplazamiento se tratan como UTC a menos que también pase
-`--tz <iana>`, que interpreta esa hora del reloj local en la zona horaria dada.
+Nota: para trabajos CLI de una sola vez, las fechas y horas `--at` sin desfase se tratan como UTC a menos que también pase
+`--tz <iana>`, que interpreta esa hora local del reloj en la zona horaria dada.
 
-Nota: los trabajos recurrentes ahora utilizan un retroceso de reintentos exponencial después de errores consecutivos (30 s → 1 m → 5 m → 15 m → 60 m) y luego regresan al horario normal después de la próxima ejecución exitosa.
+Nota: los trabajos recurrentes ahora usan retroceso exponencial de reintentos después de errores consecutivos (30s → 1m → 5m → 15m → 60m), luego regresan al horario normal después de la próxima ejecución exitosa.
 
-Nota: `openclaw cron run` ahora devuelve tan pronto como la ejecución manual se pone en cola para su ejecución. Las respuestas exitosas incluyen `{ ok: true, enqueued: true, runId }`; use `openclaw cron runs --id <job-id>` para seguir el resultado final.
+Nota: `openclaw cron run` ahora regresa tan pronto como la ejecución manual se pone en la cola. Las respuestas exitosas incluyen `{ ok: true, enqueued: true, runId }`; use `openclaw cron runs --id <job-id>` para seguir el resultado eventual.
 
-Nota: `openclaw cron run <job-id>` fuerza la ejecución de forma predeterminada. Use `--due` para mantener
-el comportamiento anterior "ejecutar solo si corresponde".
+Nota: `openclaw cron run <job-id>` se ejecuta a la fuerza por defecto. Use `--due` para mantener el
+comportamiento anterior "solo ejecutar si está programado".
 
-Nota: el cron aislado suprime las respuestas de reconocimiento obsoletas. Si el primer resultado es solo una actualización de estado provisional y ninguna ejecución de subagente descendente es responsable de la respuesta final, cron solicita nuevamente una vez para obtener el resultado real antes de la entrega.
+Nota: las ejecuciones de cron aisladas suprimen las respuestas de reconocimiento solo obsoletas. Si el primer resultado es solo una actualización de estado provisional y ninguna ejecución de subagente descendente es responsable de la respuesta final, cron vuelve a solicitar una vez el resultado real antes de la entrega.
 
-Nota: si una ejecución de cron aislada devuelve solo el token silencioso (`NO_REPLY` / `no_reply`), cron suprime tanto la entrega directa saliente como la ruta de resumen en cola de reserva, por lo que no se publica nada de vuelta en el chat.
+Nota: si una ejecución de cron aislada devuelve solo el token silencioso (`NO_REPLY` / `no_reply`), cron suprime tanto la entrega directa saliente como la ruta alternativa de resumen en cola, por lo que no se publica nada de vuelta en el chat.
 
-Nota: `cron add|edit --model ...` usa ese modelo permitido seleccionado para el trabajo. Si el modelo no está permitido, cron advierte y recurre a la selección del modelo del agente/predeterminado del trabajo en su lugar. Las cadenas de reserva configuradas aún se aplican, pero una anulación de modelo simple sin una lista de reserva explícita por trabajo ya no añade el agente principal como un objetivo adicional de reintento oculto.
+Nota: `cron add|edit --model ...` usa ese modelo permitido seleccionado para el trabajo. Si el modelo no está permitido, cron advierte y vuelve a la selección del modelo predeterminado/agente del trabajo en su lugar. Las cadenas de reserva configuradas todavía se aplican, pero una anulación de modelo simple sin una lista de reserva explícita por trabajo ya no añade el agente principal como un objetivo de reintento extra oculto.
 
-Nota: la precedencia del modelo de cron aislado es primero la anulación del gancho de Gmail, luego `--model` por trabajo, luego cualquier anulación de modelo de sesión de cron almacenada, y finalmente la selección normal de agente/predeterminado.
+Nota: la precedencia del modelo de cron aislado es primero la anulación del enlace de Gmail, luego `--model` por trabajo, luego cualquier anulación de modelo de sesión de cron almacenada, y finalmente la selección normal de agente/predeterminado.
 
-Nota: el modo rápido de cron aislado sigue la selección del modelo en vivo resuelto. La `params.fastMode` del modelo se aplica de manera predeterminada, pero una anulación de sesión almacenada `fastMode` todavía tiene prioridad sobre la configuración.
+Nota: el modo rápido de cron aislado sigue la selección del modelo en vivo resuelta. La configuración del modelo `params.fastMode` se aplica de forma predeterminada, pero una anulación de sesión almacenada `fastMode` todavía tiene prioridad sobre la configuración.
 
-Nota: si una ejecución aislada lanza `LiveSessionModelSwitchError`, cron persiste el proveedor/modelo cambiado (y la anulación del perfil de autenticación cambiado cuando está presente) antes de reintentar. El bucle de reintento externo está limitado a 2 reintentos de cambio después del intento inicial, luego se aborta en lugar de repetirse infinitamente.
+Nota: si una ejecución aislada lanza `LiveSessionModelSwitchError`, cron persiste el proveedor/modelo cambiado (y la anulación del perfil de autenticación cambiado cuando está presente) antes de reintentar. El bucle de reinterno exterior está limitado a 2 reintentos de cambio después del intento inicial, luego aborta en lugar de hacer un bucle para siempre.
 
-Nota: las notificaciones de fallas usan `delivery.failureDestination` primero, luego el `cron.failureDestination` global, y finalmente recurren al objetivo principal de anuncio del trabajo cuando no se configura un destino de falla explícito.
+Nota: las notificaciones de error usan primero `delivery.failureDestination`, luego `cron.failureDestination` global, y finalmente recurren al objetivo de anuncio principal del trabajo cuando no se configura ningún destino de error explícito.
 
 Nota: la retención/poda se controla en la configuración:
 
 - `cron.sessionRetention` (predeterminado `24h`) poda las sesiones de ejecución aisladas completadas.
 - `cron.runLog.maxBytes` + `cron.runLog.keepLines` podan `~/.openclaw/cron/runs/<jobId>.jsonl`.
 
-Nota de actualización: si tiene trabajos cron antiguos de antes del formato de entrega/almacenamiento actual, ejecute
-`openclaw doctor --fix`. Doctor ahora normaliza los campos cron heredados (`jobId`, `schedule.cron`,
-campos de entrega de nivel superior incluidos los heredados `threadId`, alias de entrega del payload `provider`) y migra los trabajos
-`notify: true` de respaldo de webhook simples a una entrega de webhook explícita cuando `cron.webhook` está
-configurado.
+Nota de actualización: si tiene trabajos cron antiguos anteriores al formato de entrega/almacenamiento actual, ejecute `openclaw doctor --fix`. Doctor ahora normaliza los campos cron heredados (`jobId`, `schedule.cron`, campos de entrega de nivel superior que incluyen el `threadId` heredado, alias de entrega del payload `provider`) y migra los trabajos de reserva de webhook `notify: true` simples a una entrega de webhook explícita cuando `cron.webhook` está configurado.
 
 ## Ediciones comunes
 
@@ -72,13 +72,13 @@ Actualizar la configuración de entrega sin cambiar el mensaje:
 openclaw cron edit <job-id> --announce --channel telegram --to "123456789"
 ```
 
-Deshabilitar la entrega para un trabajo aislado:
+Desactivar la entrega para un trabajo aislado:
 
 ```bash
 openclaw cron edit <job-id> --no-deliver
 ```
 
-Habilitar el contexto de arranque ligero para un trabajo aislado:
+Activar el contexto de arranque ligero para un trabajo aislado:
 
 ```bash
 openclaw cron edit <job-id> --light-context
@@ -102,25 +102,26 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` se aplica solo a trabajos aislados de turno de agente. Para las ejecuciones cron, el modo ligero mantiene el contexto de arranque vacío en lugar de inyectar el conjunto de arranque completo del espacio de trabajo.
+`--light-context` se aplica solo a trabajos de turno de agente aislados. Para las ejecuciones cron, el modo ligero mantiene el contexto de arranque vacío en lugar de inyectar el conjunto de arranque completo del espacio de trabajo.
 
-Nota sobre la propiedad de la entrega:
+Nota sobre la propiedad de entrega:
 
-- Los trabajos aislados propiedad de cron siempre enrutan la entrega final visible para el usuario a través del
-  ejecutor cron (`announce`, `webhook` o solo interno `none`).
-- Si la tarea menciona enviar un mensaje a algún destinatario externo, el agente debe
-  describir el destino previsto en su resultado en lugar de intentar enviarlo
-  directamente.
+- La entrega de chat cron aislada es compartida. El agente puede enviar directamente con la herramienta `message` cuando hay una ruta de chat disponible.
+- `announce` entrega por reserva la respuesta final solo cuando el agente no envió directamente al objetivo resuelto. `webhook` publica el payload terminado en una URL. `none` desactiva la entrega de reserva del ejecutor.
 
-## Comandos comunes de administración
+## Comandos de administración comunes
 
 Ejecución manual:
 
 ```bash
+openclaw cron list
+openclaw cron show <job-id>
 openclaw cron run <job-id>
 openclaw cron run <job-id> --due
 openclaw cron runs --id <job-id> --limit 50
 ```
+
+Las entradas `cron runs` incluyen diagnósticos de entrega con el objetivo cron previsto, el objetivo resuelto, envíos de la herramienta de mensaje, uso de reserva y estado de entrega.
 
 Redirección de agente/sesión:
 
@@ -140,10 +141,8 @@ openclaw cron edit <job-id> --no-best-effort-deliver
 openclaw cron edit <job-id> --no-deliver
 ```
 
-Nota sobre entrega en caso de fallo:
+Nota sobre entrega por fallo:
 
 - `delivery.failureDestination` es compatible con trabajos aislados.
-- Los trabajos de sesión principal solo pueden usar `delivery.failureDestination` cuando el modo de entrega
-  principal es `webhook`.
-- Si no establece ningún destino de fallo y el trabajo ya anuncia a un
-  canal, las notificaciones de fallo reutilizan ese mismo objetivo de anuncio.
+- Los trabajos de sesión principal solo pueden usar `delivery.failureDestination` cuando el modo de entrega principal es `webhook`.
+- Si no establece ningún destino de fallo y el trabajo ya anuncia a un canal, las notificaciones de fallo reutilizan ese mismo objetivo de anuncio.

@@ -21,7 +21,7 @@ Contexte de sécurité : [Sécurité](/fr/gateway/security)
 
 Lorsqu'un canal est configuré avec la stratégie de DM `pairing`, les expéditeurs inconnus reçoivent un code court et leur message n'est **pas traité** tant que vous ne l'avez pas approuvé.
 
-Les politiques DM par défaut sont documentées dans : [Sécurité](/fr/gateway/security)
+Les stratégies DM par défaut sont documentées dans : [Sécurité](/fr/gateway/security)
 
 Codes de couplage :
 
@@ -98,23 +98,30 @@ openclaw devices reject <requestId>
 
 Si le même appareil réessaie avec des détails d'authentification différents (par exemple un rôle/des portées/une clé publique différent), la demande en attente précédente est remplacée et un nouveau `requestId` est créé.
 
-### Stockage de l'état d'appairage des nœuds
+Important : un appareil déjà apparié n'obtient pas silencieusement un accès plus large. S'il
+se reconnecte en demandant davantage de portées ou un rôle plus large, OpenClaw conserve
+l'approbation existante telle quelle et crée une nouvelle demande de mise à niveau en attente. Utilisez
+`openclaw devices list` pour comparer l'accès actuellement approuvé avec le nouvel
+accès demandé avant d'approuver.
+
+### Stockage de l'état d'appareillage des nœuds
 
 Stocké sous `~/.openclaw/devices/` :
 
-- `pending.json` (à courte durée de vie ; les demandes en attente expirent)
+- `pending.json` (court terme ; les demandes en attente expirent)
 - `paired.json` (appareils appariés + jetons)
 
 ### Notes
 
-- L'ancien `node.pair.*` API (CLI : `openclaw nodes pending|approve|reject|rename`) est un magasin d'appairage distinct possédé par la passerelle. Les nœuds WS nécessitent toujours l'appairage des appareils.
-- L'enregistrement d'appairage est la source de vérité durable pour les rôles approuvés. Les jetons d'appareil actifs restent liés à cet ensemble de rôles approuvés ; une entrée de jeton erronée en dehors des rôles approuvés ne crée pas nouvel accès.
+- L'API `node.pair.*` héritée (CLI : `openclaw nodes pending|approve|reject|rename`) est un
+  magasin d'appareillage distinct détenu par la passerelle. Les nœuds WS nécessitent toujours l'appareillage de l'appareil.
+- L'enregistrement d'appariement est la source de vérité durable pour les rôles approuvés. Les jetons d'appareil actifs restent liés à cet ensemble de rôles approuvés ; une entrée de jeton isolée en dehors des rôles approuvés ne crée pas de nouvel accès.
 
 ## Documentation connexe
 
 - Modèle de sécurité + injection de prompt : [Sécurité](/fr/gateway/security)
 - Mise à jour en toute sécurité (exécuter doctor) : [Mise à jour](/fr/install/updating)
-- Configurations des canaux :
+- Configurations de canal :
   - Telegram : [Telegram](/fr/channels/telegram)
   - WhatsApp : [WhatsApp](/fr/channels/whatsapp)
   - Signal : [Signal](/fr/channels/signal)

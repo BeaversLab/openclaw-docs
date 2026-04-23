@@ -1092,7 +1092,7 @@ Documento dedicado: [Sandboxing](/es/gateway/sandboxing)
 Dos enfoques complementarios:
 
 - **Ejecute todo el Gateway en Docker** (límite del contenedor): [Docker](/es/install/docker)
-- **Sandbox de herramientas** (`agents.defaults.sandbox`, gateway host + herramientas aisladas en Docker): [Sandboxing](/es/gateway/sandboxing)
+- **Espacio aislado de herramientas** (`agents.defaults.sandbox`, host gateway + sandbox-isolated tools; Docker es el backend predeterminado): [Aislamiento](/es/gateway/sandboxing)
 
 Nota: para evitar el acceso entre agentes, mantenga `agents.defaults.sandbox.scope` en `"agent"` (predeterminado)
 o `"session"` para un aislamiento por sesión más estricto. `scope: "shared"` usa un

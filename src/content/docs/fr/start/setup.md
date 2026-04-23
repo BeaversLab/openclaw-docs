@@ -8,7 +8,7 @@ title: "Configuration"
 
 # Configuration
 
-<Note>Si vous configurez pour la première fois, commencez par [Getting Started](/fr/start/getting-started). Pour les détails sur l'intégration, voir [Onboarding (CLI)](/fr/start/wizard).</Note>
+<Note>Si vous configurez pour la première fois, commencez par [Getting Started](/fr/start/getting-started). Pour plus de détails sur l'onboarding, consultez [Onboarding (CLI)](/fr/start/wizard).</Note>
 
 ## TL;DR
 
@@ -19,8 +19,8 @@ title: "Configuration"
 ## Prérequis (à partir du code source)
 
 - Node 24 recommandé (Node 22 LTS, actuellement `22.14+`, toujours pris en charge)
-- `pnpm` préféré (ou Bun si vous utilisez intentionnellement le [flux de travail Bun](/fr/install/bun))
-- Docker (optionnel ; uniquement pour la configuration/e2e conteneurisés — voir [Docker](/fr/install/docker))
+- `pnpm` préférée (ou Bun si vous utilisez intentionnellement le [workflow Bun](/fr/install/bun))
+- Docker (optionnel ; uniquement pour une configuration conteneurisée/e2e — voir [Docker](/fr/install/docker))
 
 ## Stratégie d'adaptation (pour que les mises à jour ne fassent pas mal)
 
@@ -88,16 +88,22 @@ Si vous voulez aussi l'application macOS à la pointe :
 
 ```bash
 pnpm install
+# First run only (or after resetting local OpenClaw config/workspace)
+pnpm openclaw setup
 pnpm gateway:watch
 ```
 
-`gateway:watch` exécute la passerelle en mode watch et recharge lors des modifications pertinentes de la source,
-de la config et des métadonnées des plugins groupés.
+`gateway:watch` exécute la passerelle en mode surveillance et se recharge lors des modifications pertinentes de la source,
+de la configuration et des métadonnées des plugins groupés.
+`pnpm openclaw setup` est l'étape d'initialisation unique de la configuration/espace de travail local pour un nouveau checkout.
+`pnpm gateway:watch` ne reconstruit pas `dist/control-ui`, donc relancez `pnpm ui:build` après les modifications `ui/` ou utilisez `pnpm ui:dev` pendant le développement de l'interface de contrôle.
 
 Si vous utilisez intentionnellement le flux de travail Bun, les commandes équivalentes sont :
 
 ```bash
 bun install
+# First run only (or after resetting local OpenClaw config/workspace)
+bun run openclaw setup
 bun run gateway:watch
 ```
 
@@ -119,10 +125,10 @@ openclaw health
 
 ### Pièges courants
 
-- **Mauvais port :** Le WS du Gateway est par défaut sur `ws://127.0.0.1:18789` ; gardez l'application + le CLI sur le même port.
+- **Mauvais port :** Le WS de Gateway est par défaut sur `ws://127.0.0.1:18789` ; gardez l'application + CLI sur le même port.
 - **Où réside l'état :**
-  - État du canal/fournisseur : `~/.openclaw/credentials/`
-  - Profils d'auth modèle : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+  - État du channel/fournisseur : `~/.openclaw/credentials/`
+  - Profils d'authentification de modèle : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
   - Sessions : `~/.openclaw/agents/<agentId>/sessions/`
   - Journaux : `/tmp/openclaw/`
 
@@ -131,21 +137,21 @@ openclaw health
 Utilisez ceci lors du débogage de l'authentification ou pour décider quoi sauvegarder :
 
 - **WhatsApp** : `~/.openclaw/credentials/whatsapp/<accountId>/creds.json`
-- **Jeton de bot Telegram** : config/env ou `channels.telegram.tokenFile` (fichier régulier uniquement ; les liens symboliques sont rejetés)
+- **Jeton de bot Telegram** : config/env ou `channels.telegram.tokenFile` (fichier régulier uniquement ; liens symboliques rejetés)
 - **Jeton de bot Discord** : config/env ou SecretRef (fournisseurs env/file/exec)
 - **Jetons Slack** : config/env (`channels.slack.*`)
 - **Listes d'autorisation d'appairage** :
   - `~/.openclaw/credentials/<channel>-allowFrom.json` (compte par défaut)
   - `~/.openclaw/credentials/<channel>-<accountId>-allowFrom.json` (comptes non par défaut)
 - **Profils d'authentification de modèle** : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-- **Charge utile de secrets sauvegardés dans un fichier (optionnel)** : `~/.openclaw/secrets.json`
-- **Import OAuth hérité** : `~/.openclaw/credentials/oauth.json`
+- **Charge utile de secrets stockés dans un fichier (optionnel)** : `~/.openclaw/secrets.json`
+- **Importation OAuth héritée** : `~/.openclaw/credentials/oauth.json`
   Plus de détails : [Sécurité](/fr/gateway/security#credential-storage-map).
 
 ## Mise à jour (sans casser votre configuration)
 
-- Gardez `~/.openclaw/workspace` et `~/.openclaw/` comme « vos affaires » ; ne mettez pas de invites/config personnels dans le dépôt `openclaw`.
-- Mise à jour de la source : `git pull` + étape d'installation de votre gestionnaire de paquets choisi (`pnpm install` par défaut ; `bun install` pour le flux de travail Bun) + continuez à utiliser la commande `gateway:watch` correspondante.
+- Gardez `~/.openclaw/workspace` et `~/.openclaw/` comme "vos affaires" ; ne mettez pas de prompts/configurations personnelles dans le dépôt `openclaw`.
+- Mise à jour de la source : `git pull` + étape d'installation de votre gestionnaire de paquets choisi (`pnpm install` par défaut ; `bun install` pour le workflow Bun) + continuer à utiliser la commande `gateway:watch` correspondante.
 
 ## Linux (service utilisateur systemd)
 
@@ -158,12 +164,12 @@ sudo loginctl enable-linger $USER
 ```
 
 Pour les serveurs toujours actifs ou multi-utilisateurs, envisagez un service **système** au lieu d'un
-service utilisateur (pas de persistance nécessaire). Voir le [manuel de procédures Gateway](/fr/gateway) pour les notes systemd.
+service utilisateur (pas de persistance nécessaire). Consultez le [runbook Gateway](/fr/gateway) pour les notes sur systemd.
 
 ## Documentation connexe
 
-- [Manuel de procédures Gateway](/fr/gateway) (drapeaux, supervision, ports)
-- [Configuration Gateway](/fr/gateway/configuration) (schéma de config + exemples)
-- [Discord](/fr/channels/discord) et [Telegram](/fr/channels/telegram) (balises de réponse + paramètres replyToMode)
+- [Runbook Gateway](/fr/gateway) (flags, supervision, ports)
+- [Configuration Gateway](/fr/gateway/configuration) (schéma de configuration + exemples)
+- [Discord](/fr/channels/discord) et [Telegram](/fr/channels/telegram) (reply tags + paramètres replyToMode)
 - [Configuration de l'assistant OpenClaw](/fr/start/openclaw)
 - [Application macOS](/fr/platforms/macos) (cycle de vie de la passerelle)

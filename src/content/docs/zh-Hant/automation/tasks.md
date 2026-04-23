@@ -9,7 +9,7 @@ title: "背景工作"
 
 # 背景任務
 
-> **正在尋找排程功能嗎？** 請參閱 [Automation & Tasks](/zh-Hant/automation) 以選擇正確的機制。本頁面涵蓋的是**追蹤**背景工作，而非排程。
+> **正在尋找排程功能？** 參閱 [Automation & Tasks](/zh-Hant/automation) 以選擇正確的機制。本頁面涵蓋 **追蹤** 背景工作，而非進行排程。
 
 背景任務會追蹤在您的主要對話工作階段**之外**執行的工作：
 ACP 執行、子代理衍生、獨立 cron 工作執行，以及 CLI 初始的操作。
@@ -81,7 +81,7 @@ openclaw tasks flow cancel <lookup>
 
 **什麼不會建立任務：**
 
-- Heartbeat 輪次 — 主會話；請參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)
+- Heartbeat 輪次 — 主工作階段；參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)
 - 一般的互動式聊天輪次
 - 直接的 `/command` 回應
 
@@ -280,34 +280,34 @@ $OPENCLAW_STATE_DIR/tasks/runs.sqlite
 
 ### 任務與任務流程
 
-[Task Flow](/zh-Hant/automation/taskflow) 是位於背景任務之上的流程編排層。單一流程可以在其生命週期內使用受管理或鏡像同步模式協調多個任務。使用 `openclaw tasks` 檢查單個任務記錄，並使用 `openclaw tasks flow` 檢查編排流程。
+[Task Flow](/zh-Hant/automation/taskflow) 是位於背景任務之上的流程編排層。單一流程可在其生命週期內使用受管或鏡像同步模式來協調多個任務。使用 `openclaw tasks` 檢查個別任務記錄，並使用 `openclaw tasks flow` 檢查編排流程。
 
 詳情請參閱 [Task Flow](/zh-Hant/automation/taskflow)。
 
 ### 任務與排程
 
-Cron 工作**定義**位於 `~/.openclaw/cron/jobs.json` 中。**每次** cron 執行都會建立一個任務記錄——包括主會話和獨立執行。主會話 cron 任務預設使用 `silent` 通知策略，以便在追蹤時不產生通知。
+Cron 工作 **定義** 存在於 `~/.openclaw/cron/jobs.json` 中；執行階段狀態則存在於旁邊的 `~/.openclaw/cron/jobs-state.json` 中。**每一次** cron 執行都會建立一個任務記錄 — 無論是主工作階段還是隔離模式。主工作階段 cron 任務預設使用 `silent` 通知政策，以便在不產生通知的情況下進行追蹤。
 
-請參閱 [Cron Jobs](/zh-Hant/automation/cron-jobs)。
+參閱 [Cron Jobs](/zh-Hant/automation/cron-jobs)。
 
 ### 任務與心跳
 
 Heartbeat 執行是主會話輪次——它們不會建立任務記錄。當任務完成時，它可以觸發心跳喚醒，以便您能立即看到結果。
 
-請參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)。
+參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)。
 
 ### 任務與會話
 
-任務可能會參考 `childSessionKey`（工作執行的地方）和 `requesterSessionKey`（誰啟動了它）。會話是對話上下文；任務是基於此之上的活動追蹤。
+任務可能會參考 `childSessionKey` (工作執行處) 和 `requesterSessionKey` (發起者)。工作階段是對話語境；任務則是建構在其上的活動追蹤。
 
 ### 任務與代理執行
 
-任務的 `runId` 連結到執行工作的代理執行。代理生命週期事件（開始、結束、錯誤）會自動更新任務狀態——您無需手動管理生命週期。
+任務的 `runId` 連結至執行該工作的 Agent 執行。Agent 生命週期事件 (開始、結束、錯誤) 會自動更新任務狀態 — 您無需手動管理生命週期。
 
 ## 相關
 
 - [Automation & Tasks](/zh-Hant/automation) — 所有自動化機制一覽
-- [Task Flow](/zh-Hant/automation/taskflow) — 任務之上的流程編排
+- [Task Flow](/zh-Hant/automation/taskflow) — 位於任務之上的流程編排
 - [Scheduled Tasks](/zh-Hant/automation/cron-jobs) — 排程背景工作
-- [Heartbeat](/zh-Hant/gateway/heartbeat) — 定期主會話輪次
+- [Heartbeat](/zh-Hant/gateway/heartbeat) — 週期性主工作階段輪次
 - [CLI: Tasks](/zh-Hant/cli/index#tasks) — CLI 指令參考

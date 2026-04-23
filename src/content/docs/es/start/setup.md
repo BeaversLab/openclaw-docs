@@ -8,7 +8,7 @@ title: "Configuración"
 
 # Configuración
 
-<Note>Si es la primera vez que configuras, comienza con [Introducción](/es/start/getting-started). Para más detalles sobre la incorporación, consulta [Incorporación (CLI)](/es/start/wizard).</Note>
+<Note>Si está configurando por primera vez, comience con [Getting Started](/es/start/getting-started). Para obtener detalles sobre la incorporación, consulte [Onboarding (CLI)](/es/start/wizard).</Note>
 
 ## TL;DR
 
@@ -19,8 +19,8 @@ title: "Configuración"
 ## Requisitos previos (desde el código fuente)
 
 - Se recomienda Node 24 (Node 22 LTS, actualmente `22.14+`, todavía soportado)
-- Se prefiere `pnpm` (o Bun si utilizas intencionadamente el [Flujo de trabajo Bun](/es/install/bun))
-- Docker (opcional; solo para configuración/e2e en contenedores — consulta [Docker](/es/install/docker))
+- Se prefiere `pnpm` (o Bun si usa intencionalmente el [Bun workflow](/es/install/bun))
+- Docker (opcional; solo para configuración/e2e en contenedores — consulte [Docker](/es/install/docker))
 
 ## Estrategia de personalización (para que las actualizaciones no dañen)
 
@@ -88,16 +88,22 @@ Si también quieres la aplicación macOS en la última hora:
 
 ```bash
 pnpm install
+# First run only (or after resetting local OpenClaw config/workspace)
+pnpm openclaw setup
 pnpm gateway:watch
 ```
 
-`gateway:watch` ejecuta el gateway en modo vigilancia y se recarga ante cambios relevantes en la fuente,
-configuración y metadatos de plugins empaquetados.
+`gateway:watch` ejecuta el gateway en modo de observación y se recarga ante cambios relevantes en la fuente,
+configuración y metadatos de complementos empaquetados.
+`pnpm openclaw setup` es el paso de inicialización única de configuración/espacio de trabajo local para una nueva extracción.
+`pnpm gateway:watch` no reconstruye `dist/control-ui`, por lo que vuelva a ejecutar `pnpm ui:build` después de los cambios de `ui/` o use `pnpm ui:dev` mientras desarrolla la interfaz de usuario de Control.
 
 Si estás utilizando intencionadamente el flujo de trabajo Bun, los comandos equivalentes son:
 
 ```bash
 bun install
+# First run only (or after resetting local OpenClaw config/workspace)
+bun run openclaw setup
 bun run gateway:watch
 ```
 
@@ -119,7 +125,7 @@ openclaw health
 
 ### Errores comunes
 
-- **Puerto incorrecto:** Gateway WS por defecto es `ws://127.0.0.1:18789`; mantén la aplicación + CLI en el mismo puerto.
+- **Puerto incorrecto:** El WS del Gateway por defecto es `ws://127.0.0.1:18789`; mantenga la aplicación + CLI en el mismo puerto.
 - **Dónde reside el estado:**
   - Estado del canal/proveedor: `~/.openclaw/credentials/`
   - Perfiles de autenticación de modelo: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
@@ -131,21 +137,21 @@ openclaw health
 Úsalo al depurar la autenticación o al decidir qué respaldar:
 
 - **WhatsApp**: `~/.openclaw/credentials/whatsapp/<accountId>/creds.json`
-- **Token de bot de Telegram**: config/env o `channels.telegram.tokenFile` (solo archivo regular; se rechazan los enlaces simbólicos)
+- **Token de bot de Telegram**: config/env o `channels.telegram.tokenFile` (solo archivo normal; se rechazan los enlaces simbólicos)
 - **Token de bot de Discord**: config/env o SecretRef (proveedores env/file/exec)
 - **Tokens de Slack**: config/env (`channels.slack.*`)
 - **Listas de permitidos para emparejamiento**:
   - `~/.openclaw/credentials/<channel>-allowFrom.json` (cuenta predeterminada)
   - `~/.openclaw/credentials/<channel>-<accountId>-allowFrom.json` (cuentas no predeterminadas)
-- **Perfiles de autenticación de modelos**: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+- **Perfiles de autenticación de modelo**: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 - **Payload de secretos respaldados en archivo (opcional)**: `~/.openclaw/secrets.json`
 - **Importación de OAuth heredada**: `~/.openclaw/credentials/oauth.json`
-  Más detalles: [Seguridad](/es/gateway/security#credential-storage-map).
+  Más detalles: [Security](/es/gateway/security#credential-storage-map).
 
 ## Actualización (sin arruinar tu configuración)
 
-- Mantén `~/.openclaw/workspace` y `~/.openclaw/` como “tus cosas”; no pongas prompts/configuraciones personales en el repositorio `openclaw`.
-- Actualizar fuente: `git pull` + tu paso de instalación del gestor de paquetes elegido (`pnpm install` por defecto; `bun install` para el flujo de trabajo con Bun) + sigue usando el comando `gateway:watch` correspondiente.
+- Mantenga `~/.openclaw/workspace` y `~/.openclaw/` como "sus cosas"; no coloque avisos/configuraciones personales en el repositorio `openclaw`.
+- Actualizar fuente: `git pull` + el paso de instalación de tu gestor de paquetes elegido (`pnpm install` por defecto; `bun install` para el flujo de trabajo de Bun) + seguir usando el comando `gateway:watch` correspondiente.
 
 ## Linux (servicio de usuario systemd)
 
@@ -157,13 +163,12 @@ servicios de usuario al cerrar sesión o estar inactivo, lo que finaliza el Gate
 sudo loginctl enable-linger $USER
 ```
 
-Para servidores siempre activos o multiusuario, considera un servicio de **sistema** en lugar de un
-servicio de usuario (no se necesita “lingering”). Consulta las notas de systemd en el [Manual de operaciones de Gateway](/es/gateway).
+Para servidores siempre activos o multiusuario, considera un servicio de **sistema** en lugar de un servicio de usuario (no se necesita lingering). Consulta el [manual de Gateway](/es/gateway) para las notas de systemd.
 
 ## Documentos relacionados
 
-- [Manual de operaciones de Gateway](/es/gateway) (flags, supervisión, puertos)
+- [Manual de Gateway](/es/gateway) (flags, supervisión, puertos)
 - [Configuración de Gateway](/es/gateway/configuration) (esquema de configuración + ejemplos)
 - [Discord](/es/channels/discord) y [Telegram](/es/channels/telegram) (etiquetas de respuesta + configuraciones replyToMode)
 - [Configuración del asistente OpenClaw](/es/start/openclaw)
-- [Aplicación macOS](/es/platforms/macos) (ciclo de vida de Gateway)
+- [Aplicación macOS](/es/platforms/macos) (ciclo de vida del gateway)

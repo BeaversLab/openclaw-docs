@@ -14,7 +14,9 @@ GitHub Copilot 是 GitHub 的 AI 编程助手。它为您的 GitHub 账户和计
 
 <Tabs>
   <Tab title="内置提供商 (github-copilot)">
-    使用原生的设备登录流程获取 GitHub 令牌，然后在 API 运行时将其交换为 Copilot OpenClaw 令牌。这是 **默认** 且最简单的路径，因为它不需要 VS Code。
+    使用原生的设备登录流程获取 GitHub token，然后在 GitHub 运行时将其交换为
+    Copilot API token。这是**默认**且最简单的路径，
+    因为它不需要 VS Code。
 
     <Steps>
       <Step title="运行登录命令">
@@ -22,18 +24,21 @@ GitHub Copilot 是 GitHub 的 AI 编程助手。它为您的 GitHub 账户和计
         openclaw models auth login-github-copilot
         ```
 
-        您将收到提示，需要访问一个 URL 并输入一次性代码。在完成之前，请保持终端打开。
+        系统将提示您访问一个 URL 并输入一次性代码。在完成之前请
+        保持终端打开。
       </Step>
       <Step title="设置默认模型">
         ```bash
-        openclaw models set github-copilot/gpt-4o
+        openclaw models set github-copilot/claude-opus-4.6
         ```
 
-        或在配置中：
+        或在配置中设置：
 
         ```json5
         {
-          agents: { defaults: { model: { primary: "github-copilot/gpt-4o" } } },
+          agents: {
+            defaults: { model: { primary: "github-copilot/claude-opus-4.6" } },
+          },
         }
         ```
       </Step>

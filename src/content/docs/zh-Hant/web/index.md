@@ -122,5 +122,5 @@ openclaw gateway
 Gateway 從 `dist/control-ui` 提供靜態檔案。使用以下方式建置：
 
 ```bash
-pnpm ui:build # auto-installs UI deps on first run
+pnpm ui:build
 ```

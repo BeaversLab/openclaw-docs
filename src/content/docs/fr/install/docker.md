@@ -14,7 +14,7 @@ Docker est **optionnel**. Utilisez-le uniquement si vous souhaitez une passerell
 
 - **Oui** : vous souhaitez un environnement de passerelle isolé et éphémère ou exécuter OpenClaw sur un hôte sans installation locale.
 - **Non** : vous exécutez sur votre propre machine et vous voulez simplement la boucle de dev la plus rapide. Utilisez plutôt le flux d'installation normal.
-- **Sandboxing note** : le sandboxing de l'agent utilise également Docker, mais cela **ne** nécessite pas que la passerelle complète s'exécute dans Docker. Voir [Sandboxing](/fr/gateway/sandboxing).
+- **Sandboxing note** : le backend de sandboxing par défaut utilise Docker lorsque le sandboxing est activé, mais le sandboxing est désactivé par défaut et n'exige **pas** que l'intégralité de la passerelle s'exécute dans Docker. Les backends de sandboxing SSH et OpenShell sont également disponibles. Voir [Sandboxing](/fr/gateway/sandboxing).
 
 ## Prérequis
 
@@ -287,10 +287,11 @@ y compris l'intégration de binaires, la persistance et les mises à jour.
 
 ## Sandbox de l'agent
 
-Lorsque `agents.defaults.sandbox` est activé, la passerelle exécute l'outil de l'agent
-(shell, lecture/écriture de fichiers, etc.) dans des conteneurs Docker isolés tandis que la
-passerelle elle-même reste sur l'hôte. Cela vous offre une barrière stricte autour des sessions d'agent non fiables ou
-multi-locataires sans avoir à conteneuriser l'intégralité de la passerelle.
+Lorsque `agents.defaults.sandbox` est activé avec le backend Docker, la passerelle
+exécute l'exécution des outils d'agent (shell, lecture/écriture de fichiers, etc.) à l'intérieur de conteneurs Docker
+isolés, tandis que la passerelle elle-même reste sur l'hôte. Cela vous donne une barrière stricte
+autour des sessions d'agent non fiables ou multi-locataires sans conteneuriser l'intégralité de la
+passerelle.
 
 La portée du Sandbox peut être par agent (par défaut), par session, ou partagée. Chaque portée
 obtient son propre espace de travail monté sur `/workspace`. Vous pouvez également configurer

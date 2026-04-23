@@ -33,7 +33,7 @@ Lorsque vous choisissez **Kimi** lors de `openclaw onboard` ou
 - la région de l'Moonshot API :
   - `https://api.moonshot.ai/v1`
   - `https://api.moonshot.cn/v1`
-- le modèle de recherche web Kimi par défaut (par défaut `kimi-k2.5`)
+- le modèle de recherche web Kimi par défaut (par défaut `kimi-k2.6`)
 
 ## Config
 
@@ -46,7 +46,7 @@ Lorsque vous choisissez **Kimi** lors de `openclaw onboard` ou
           webSearch: {
             apiKey: "sk-...", // optional if KIMI_API_KEY or MOONSHOT_API_KEY is set
             baseUrl: "https://api.moonshot.ai/v1",
-            model: "kimi-k2.5",
+            model: "kimi-k2.6",
           },
         },
       },
@@ -73,7 +73,7 @@ avec `tools.web.search.kimi.baseUrl` lorsque vous avez besoin d'une URL de base 
 du Gateway. Pour une installation de passerelle, placez-le dans `~/.openclaw/.env`.
 
 Si vous omettez `baseUrl`, OpenClaw utilise par défaut `https://api.moonshot.ai/v1`.
-Si vous omettez `model`, OpenClaw utilise par défaut `kimi-k2.5`.
+Si vous omettez `model`, OpenClaw utilise par défaut `kimi-k2.6`.
 
 ## Fonctionnement
 

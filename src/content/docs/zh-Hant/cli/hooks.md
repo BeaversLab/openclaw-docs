@@ -23,7 +23,8 @@ title: "hooks"
 openclaw hooks list
 ```
 
-列出從工作區 (workspace)、受管 (managed)、額外 (extra) 和內建 (bundled) 目錄中發現的所有 hooks。
+列出從工作區、受管理、額外以及捆綁目錄中發現的所有 Hook。
+除非已設定至少一個內部 Hook，否則 Gateway 啟動時不會載入內部 Hook 處理程式。
 
 **選項：**
 

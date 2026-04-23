@@ -58,7 +58,7 @@ Non sandboxé :
 
 `agents.defaults.sandbox.backend` contrôle **quel runtime** fournit le bac à sable :
 
-- `"docker"` (par défaut) : runtime de bac à sable local supporté par Docker.
+- `"docker"` (par défaut lorsque le sandboxing est activé) : environnement d'exécution de sandbox local prenant en charge Docker.
 - `"ssh"` : runtime de bac à sable distant supporté par SSH générique.
 - `"openshell"` : runtime de bac à sable supporté par OpenShell.
 
@@ -79,7 +79,7 @@ La configuration spécifique à OpenShell se trouve sous `plugins.entries.opensh
 
 ### Backend Docker
 
-Le backend Docker est le runtime par défaut, exécutant les outils et les navigateurs de sandbox localement via le socket du démon Docker (`/var/run/docker.sock`). L'isolation du conteneur de sandbox est déterminée par les espaces de noms Docker.
+Le sandboxing est désactivé par défaut. Si vous activez le sandboxing et que vous ne choisissez pas de backend, OpenClaw utilise le backend Docker. Il exécute les outils et les navigateurs de sandbox localement via le socket du démon Docker (`/var/run/docker.sock`). L'isolation des conteneurs de sandbox est déterminée par les espaces de noms Docker.
 
 **Contraintes Docker-out-of-Docker (DooD)** :
 Si vous déployez le OpenClaw Gateway lui-même comme conteneur Docker, il orchestre les conteneurs de sandbox frères en utilisant le socket Docker de l'hôte (DooD). Cela introduit une contrainte spécifique de mappage de chemin :

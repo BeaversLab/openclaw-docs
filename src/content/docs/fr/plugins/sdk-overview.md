@@ -45,57 +45,57 @@ Les sous-chemins d'assistant réservés pour plugin groupé apparaissent toujour
 | `plugin-sdk/provider-entry` | `defineSingleProviderPluginEntry`                                                                                                      |
 
 <AccordionGroup>
-  <Accordion title="Sous-chemins du canal">
+  <Accordion title="Sous-chemins de canal">
     | Sous-chemin | Exportations clés |
     | --- | --- |
     | `plugin-sdk/channel-core` | `defineChannelPluginEntry`, `defineSetupPluginEntry`, `createChatChannelPlugin`, `createChannelPluginBase` |
     | `plugin-sdk/config-schema` | Exportation du schéma Zod `openclaw.json` racine (`OpenClawSchema`) |
     | `plugin-sdk/channel-setup` | `createOptionalChannelSetupSurface`, `createOptionalChannelSetupAdapter`, `createOptionalChannelSetupWizard`, ainsi que `DEFAULT_ACCOUNT_ID`, `createTopLevelChannelDmPolicy`, `setSetupChannelEnabled`, `splitSetupEntries` |
-    | `plugin-sdk/setup` | Assistants de configuration partagés, invites de liste d'autorisation, générateurs de statut de configuration |
+    | `plugin-sdk/setup` | Assistants partagés pour l'assistant de configuration, invites de liste d'autorisation, constructeurs de statut de configuration |
     | `plugin-sdk/setup-runtime` | `createPatchedAccountSetupAdapter`, `createEnvPatchedAccountSetupAdapter`, `createSetupInputPresenceValidator`, `noteChannelLookupFailure`, `noteChannelLookupSummary`, `promptResolvedAllowFrom`, `splitSetupEntries`, `createAllowlistSetupWizardProxy`, `createDelegatedSetupWizardProxy` |
     | `plugin-sdk/setup-adapter-runtime` | `createEnvPatchedAccountSetupAdapter` |
     | `plugin-sdk/setup-tools` | `formatCliCommand`, `detectBinary`, `extractArchive`, `resolveBrewExecutable`, `formatDocsLink`, `CONFIG_DIR` |
-    | `plugin-sdk/account-core` | Assistants de configuration/action-gate multi-comptes, assistants de repli du compte par défaut |
-    | `plugin-sdk/account-id` | `DEFAULT_ACCOUNT_ID`, assistants de normalisation de l'identifiant de compte |
-    | `plugin-sdk/account-resolution` | Assistants de recherche de compte + repli par défaut |
+    | `plugin-sdk/account-core` | Assistants de configuration/action-gate multi-comptes, assistants de repli de compte par défaut |
+    | `plugin-sdk/account-id` | `DEFAULT_ACCOUNT_ID`, assistants de normalisation de l'ID de compte |
+    | `plugin-sdk/account-resolution` | Recherche de compte + assistants de repli par défaut |
     | `plugin-sdk/account-helpers` | Assistants de liste de comptes/actions de compte restreints |
     | `plugin-sdk/channel-pairing` | `createChannelPairingController` |
     | `plugin-sdk/channel-reply-pipeline` | `createChannelReplyPipeline` |
     | `plugin-sdk/channel-config-helpers` | `createHybridChannelConfigAdapter` |
-    | `plugin-sdk/channel-config-schema` | Types de schéma de configuration du canal |
-    | `plugin-sdk/telegram-command-config` | Assistants de normalisation/validation des commandes personnalisées Telegram avec repli de contrat groupé |
+    | `plugin-sdk/channel-config-schema` | Types de schéma de configuration de canal |
+    | `plugin-sdk/telegram-command-config` | Assistants de normalisation/validation de commandes personnalisées Telegram avec repli de contrat groupé |
     | `plugin-sdk/command-gating` | Assistants de porte d'autorisation de commande restreints |
     | `plugin-sdk/channel-policy` | `resolveChannelGroupRequireMention` |
     | `plugin-sdk/channel-lifecycle` | `createAccountStatusSink` |
-    | `plugin-sdk/inbound-envelope` | Assistants de construction d'enveloppe et de routage entrant partagés |
-    | `plugin-sdk/inbound-reply-dispatch` | Assistants d'enregistrement et de répartition entrants partagés |
-    | `plugin-sdk/messaging-targets` | Assistants d'analyse et de correspondance des cibles |
-    | `plugin-sdk/outbound-media` | Assistants de chargement de média sortant partagés |
-    | `plugin-sdk/outbound-runtime` | Assistants de délégué d'identité/envoi sortant |
+    | `plugin-sdk/inbound-envelope` | Assistants partagés de route entrante + constructeur d'enveloppe |
+    | `plugin-sdk/inbound-reply-dispatch` | Assistants partagés d'enregistrement et de répartition entrants |
+    | `plugin-sdk/messaging-targets` | Assistants d'analyse et de correspondance de cibles |
+    | `plugin-sdk/outbound-media` | Assistants partagés de chargement de média sortant |
+    | `plugin-sdk/outbound-runtime` | Assistants d'identité sortante, de délégué d'envoi et de planification de charge utile |
     | `plugin-sdk/poll-runtime` | Assistants de normalisation de sondage restreints |
-    | `plugin-sdk/thread-bindings-runtime` | Assistants de cycle de vie et d'adaptateur de liaison de fil de discussion |
-    | `plugin-sdk/agent-media-payload` | Générateur de charge utile média d'agent hérité |
-    | `plugin-sdk/conversation-runtime` | Assistants de liaison de conversation/fil de discussion, d'appariement et de liaison configurée |
+    | `plugin-sdk/thread-bindings-runtime` | Assistants de cycle de vie et d'adaptateur de liaison de fil |
+    | `plugin-sdk/agent-media-payload` | Constructeur de charge utile média d'agent hérité |
+    | `plugin-sdk/conversation-runtime` | Assistants de liaison de conversation/fil, d'appairage et de liaison configurée |
     | `plugin-sdk/runtime-config-snapshot` | Assistant d'instantané de configuration d'exécution |
     | `plugin-sdk/runtime-group-policy` | Assistants de résolution de stratégie de groupe d'exécution |
-    | `plugin-sdk/channel-status` | Assistants d'instantané/résumé de l'état du canal partagés |
+    | `plugin-sdk/channel-status` | Assistants partagés d'instantané/résumé du statut du canal |
     | `plugin-sdk/channel-config-primitives` | Primitives de schéma de configuration de canal restreintes |
     | `plugin-sdk/channel-config-writes` | Assistants d'autorisation d'écriture de configuration de canal |
-    | `plugin-sdk/channel-plugin-common` | Exportations de préambule du plugin de canal partagé |
+    | `plugin-sdk/channel-plugin-common` | Exportations de préambule de plugin de canal partagé |
     | `plugin-sdk/allowlist-config-edit` | Assistants de modification/lecture de configuration de liste d'autorisation |
-    | `plugin-sdk/group-access` | Assistants de décision d'accès de groupe partagés |
-    | `plugin-sdk/direct-dm` | Assistants d'authentification/garde de Telegram direct partagés |
+    | `plugin-sdk/group-access` | Assistants partagés de décision d'accès au groupe |
+    | `plugin-sdk/direct-dm` | Assistants partagés d'authentification/garde DM direct |
     | `plugin-sdk/interactive-runtime` | Assistants de normalisation/réduction de charge utile de réponse interactive |
-    | `plugin-sdk/channel-inbound` | Baril de compatibilité pour les assistants de rebond entrant, de correspondance de mention, de stratégie de mention et d'enveloppe |
+    | `plugin-sdk/channel-inbound` | Baril de compatibilité pour les assistants d'anti-rebond entrant, de correspondance de mention, de stratégie de mention et d'enveloppe |
     | `plugin-sdk/channel-mention-gating` | Assistants de stratégie de mention restreints sans la surface d'exécution entrante plus large |
-    | `plugin-sdk/channel-location` | Assistants de contexte et de formatage de l'emplacement du canal |
+    | `plugin-sdk/channel-location` | Assistants de contexte et de formatage d'emplacement de canal |
     | `plugin-sdk/channel-logging` | Assistants de journalisation de canal pour les abandons entrants et les échecs de frappe/accusé de réception |
     | `plugin-sdk/channel-send-result` | Types de résultats de réponse |
     | `plugin-sdk/channel-actions` | `createMessageToolButtonsSchema`, `createMessageToolCardSchema` |
-    | `plugin-sdk/channel-targets` | Assistants d'analyse et de correspondance des cibles |
+    | `plugin-sdk/channel-targets` | Assistants d'analyse et de correspondance de cibles |
     | `plugin-sdk/channel-contract` | Types de contrat de canal |
-    | `plugin-sdk/channel-feedback` | Câblage des commentaires/réactions |
-    | `plugin-sdk/channel-secret-runtime` | Assistants de contrat secret restreints tels que `collectSimpleChannelFieldAssignments`, `getChannelSurface`, `pushAssignment` et les types de cibles secrètes |
+    | `plugin-sdk/channel-feedback` | Câblage de feedback/réaction |
+    | `plugin-sdk/channel-secret-runtime` | Assistants de contrat secret restreints tels que `collectSimpleChannelFieldAssignments`, `getChannelSurface`, `pushAssignment`, et les types de cibles secrètes |
   </Accordion>
 
 <Accordion title="Sous-chemins du fournisseur">

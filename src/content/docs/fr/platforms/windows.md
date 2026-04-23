@@ -1,5 +1,5 @@
 ---
-summary: "Prise en charge Windows : chemins d'installation natifs et WSL2, démon et mises en garde actuelles"
+summary: "Prise en charge de Windows : chemins d'installation natifs et WSL2, démon et avertissements actuels"
 read_when:
   - Installing OpenClaw on Windows
   - Choosing between native Windows and WSL2
@@ -15,7 +15,7 @@ Les applications compagnons natives Windows sont prévues.
 
 ## WSL2 (recommandé)
 
-- [Getting Started](/fr/start/getting-started) (à utiliser à l'intérieur de WSL)
+- [Getting Started](/fr/start/getting-started) (à utiliser dans WSL)
 - [Installation et mises à jour](/fr/install/updating)
 - Guide officiel WSL2 (Microsoft) : [https://learn.microsoft.com/windows/wsl/install](https://learn.microsoft.com/windows/wsl/install)
 
@@ -25,8 +25,8 @@ Les flux du Windows natif CLI s'améliorent, mais WSL2 reste le chemin recommand
 
 Ce qui fonctionne bien sur le Windows natif aujourd'hui :
 
-- installateur du site web via `install.ps1`
-- utilisation locale du CLI telle que `openclaw --version`, `openclaw doctor` et `openclaw plugins list --json`
+- programme d'installation du site Web via `install.ps1`
+- utilisation locale de la CLI telle que `openclaw --version`, `openclaw doctor` et `openclaw plugins list --json`
 - test de local-agent/provider intégré tel que :
 
 ```powershell
@@ -35,10 +35,10 @@ openclaw agent --local --agent main --thinking low -m "Reply with exactly WINDOW
 
 Avertissements actuels :
 
-- `openclaw onboard --non-interactive` s'attend toujours à une passerelle locale accessible, sauf si vous passez `--skip-health`
+- `openclaw onboard --non-interactive` attend toujours une passerelle locale accessible, sauf si vous passez `--skip-health`
 - `openclaw onboard --non-interactive --install-daemon` et `openclaw gateway install` essaient d'abord les tâches planifiées Windows
 - si la création de Tâche planifiée est refusée, OpenClaw revient à un élément de connexion de dossier Démarrage par utilisateur et démarre la passerelle immédiatement
-- si `schtasks` lui-même se bloque ou cesse de répondre, OpenClaw abandonne désormais rapidement ce chemin et revient à une solution alternative au lieu de rester bloqué indéfiniment
+- si `schtasks` lui-même se bloque ou cesse de répondre, OpenClaw abandonne désormais rapidement ce chemin et revient à la version précédente au lieu de bloquer indéfiniment
 - Les Tâches planifiées sont toujours préférées lorsqu'elles sont disponibles car elles offrent un meilleur statut de superviseur
 
 Si vous ne voulez que le CLI natif, sans installation du service de passerelle, utilisez l'un de ceux-ci :
@@ -59,7 +59,7 @@ Si la création de tâche planifiée est bloquée, le mode service de secours se
 
 ## Gateway
 
-- [Guide opérationnel Gateway](/fr/gateway)
+- [Manuel d'exécution du Gateway](/fr/gateway)
 - [Configuration](/fr/gateway/configuration)
 
 ## Installation du service Gateway (CLI)
@@ -118,7 +118,7 @@ Dans PowerShell en tant qu'Administrateur :
 schtasks /create /tn "WSL Boot" /tr "wsl.exe -d Ubuntu --exec /bin/true" /sc onstart /ru SYSTEM
 ```
 
-Remplacez `Ubuntu` par le nom de votre distribution depuis :
+Remplacez `Ubuntu` par le nom de votre distribution à partir de :
 
 ```powershell
 wsl --list --verbose
@@ -171,7 +171,7 @@ netsh interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.
 
 Notes :
 
-- Le SSH depuis une autre machine cible l'**IP hôte du Windows** (exemple : `ssh user@windows-host -p 2222`).
+- Le SSH d'une autre machine cible l'**IP de l'hôte Windows** (exemple : `ssh user@windows-host -p 2222`).
 - Les nœuds distants doivent pointer vers une URL de Gateway **accessible** (pas `127.0.0.1`) ; utilisez
   `openclaw status --all` pour confirmer.
 - Utilisez `listenaddress=0.0.0.0` pour l'accès LAN ; `127.0.0.1` le garde uniquement en local.
@@ -218,20 +218,30 @@ systemctl --user status
 
 ### 3) Installer OpenClaw (à l'intérieur de WSL)
 
-Suivez le flux Getting Started de Linux à l'intérieur de WSL :
+Pour une première configuration normale dans WSL, suivez le flux Getting Started Linux :
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 pnpm install
-pnpm ui:build # auto-installs UI deps on first run
 pnpm build
-openclaw onboard
+pnpm ui:build
+pnpm openclaw onboard --install-daemon
+```
+
+Si vous développez à partir du code source au lieu de faire une intégration pour la première fois, utilisez la
+boucle de développement à partir du code source de [Configuration](/fr/start/setup) :
+
+```bash
+pnpm install
+# First run only (or after resetting local OpenClaw config/workspace)
+pnpm openclaw setup
+pnpm gateway:watch
 ```
 
 Guide complet : [Getting Started](/fr/start/getting-started)
 
-## Application compagnon Windows
+## Application de compagnon Windows
 
-Nous n'avons pas encore d'application compagnon Windows. Les contributions sont les bienvenues si vous souhaitez
-contribuer à sa réalisation.
+Nous n'avons pas encore d'application de compagnon Windows. Les contributions sont les bienvenues si vous souhaitez
+contribuer à la rendre possible.

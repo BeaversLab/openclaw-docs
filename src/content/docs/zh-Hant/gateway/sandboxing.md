@@ -57,7 +57,7 @@ Gateway 始終停留在主機上；啟用時，工具執行會在隔離的沙箱
 
 `agents.defaults.sandbox.backend` 控制**哪個執行時**環境提供沙箱：
 
-- `"docker"`（預設值）：本機 Docker 支援的沙箱執行時。
+- `"docker"`（啟用沙盒時的預設值）：本機 Docker 支援的沙盒執行環境。
 - `"ssh"`：通用 SSH 支援的遠端沙箱執行時。
 - `"openshell"`：OpenShell 支援的沙箱執行時。
 
@@ -78,7 +78,7 @@ OpenShell 專用配置位於 `plugins.entries.openshell.config` 下。
 
 ### Docker 後端
 
-Docker 後端是預設的執行環境，透過 Docker daemon socket (`/var/run/docker.sock`) 在本機執行工具和沙箱瀏覽器。沙箱容器的隔離由 Docker 命名空間決定。
+預設情況下，沙盒是關閉的。如果您啟用沙盒但未選擇後端，OpenClaw 會使用 Docker 後端。它透過 Docker 守護程序 socket (`/var/run/docker.sock`) 在本機執行工具和沙盒瀏覽器。沙盒容器隔離由 Docker 命名空間決定。
 
 **Docker-out-of-Docker (DooD) 限制**：
 如果您將 OpenClaw Gateway 本身部署為 Docker 容器，它會使用主機的 Docker socket (DooD) 來編排同層級的沙箱容器。這會引入一個特定的路徑映射限制：

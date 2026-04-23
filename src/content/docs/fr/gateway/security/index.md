@@ -1078,7 +1078,7 @@ Document dédié : [Sandboxing](/fr/gateway/sandboxing)
 Deux approches complémentaires :
 
 - **Exécuter l'intégralité du Gateway dans Docker** (limite du conteneur) : [Docker](/fr/install/docker)
-- **Sandbox d'outils** (`agents.defaults.sandbox`, gateway hôte + outils isolés par Docker) : [Sandboxing](/fr/gateway/sandboxing)
+- **Bac à sable d'outils** (`agents.defaults.sandbox`, passerelle hôte + outils isolés dans un bac à sable ; Docker est le backend par défaut) : [Bac à sable](/fr/gateway/sandboxing)
 
 Remarque : pour éviter l'accès inter-agents, gardez `agents.defaults.sandbox.scope` à `"agent"` (par défaut)
 ou `"session"` pour une isolation plus stricte par session. `scope: "shared"` utilise un

@@ -58,7 +58,7 @@ No está en sandbox:
 
 `agents.defaults.sandbox.backend` controla **qué tiempo de ejecución** proporciona el sandbox:
 
-- `"docker"` (predeterminado): tiempo de ejecución de sandbox local respaldado por Docker.
+- `"docker"` (predeterminado cuando el aislamiento está habilitado): tiempo de ejecución de sandbox local respaldado por Docker.
 - `"ssh"`: tiempo de ejecución de sandbox remoto genérico respaldado por SSH.
 - `"openshell"`: tiempo de ejecución de sandbox respaldado por OpenShell.
 
@@ -79,7 +79,10 @@ La configuración específica de OpenShell reside en `plugins.entries.openshell.
 
 ### Backend de Docker
 
-El backend de Docker es el tiempo de ejecución predeterminado, ejecutando herramientas y navegadores sandbox localmente a través del socket del demonio de Docker (`/var/run/docker.sock`). El aislamiento del contenedor sandbox está determinado por los espacios de nombres (namespaces) de Docker.
+El aislamiento está desactivado de forma predeterminada. Si habilita el aislamiento y no elige un
+backend, OpenClaw utiliza el backend de Docker. Ejecuta herramientas y navegadores de sandbox
+localmente a través del socket del demonio Docker (`/var/run/docker.sock`). El aislamiento del contenedor de
+sandbox está determinado por los espacios de nombres de Docker.
 
 **Restricciones de Docker-out-of-Docker (DooD)**:
 Si implementa el Gateway de OpenClaw en sí mismo como un contenedor de Docker, orquesta contenedores sandbox hermanos utilizando el socket de Docker del host (DooD). Esto introduce una restricción específica de mapeo de rutas:

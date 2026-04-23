@@ -82,12 +82,12 @@ otherwise -> reply
 
 是的 — 如果您的「私人」流量是 **DMs**，而您的「公開」流量是 **groups**，這樣的效果很好。
 
-原因：在單代理模式下，DMs 通常會進入 **main** session key (`agent:main:main`)，而 groups 總是使用 **non-main** session keys (`agent:main:<channel>:group:<id>`)。如果您啟用 `mode: "non-main"`，這些 group sessions 將在 Docker 中運行，而您的主要 DM session 則保持在主機上。
+原因：在單一代理模式下，私人訊息通常會進入 **主** 會話金鑰 (`agent:main:main`)，而群組總是使用 **非主** 會話金鑰 (`agent:main:<channel>:group:<id>`)。如果你使用 `mode: "non-main"` 啟用沙盒，這些群組會話將在設定的沙盒後端運行，而你的主私人訊息會話則保持在主機上。如果你未選擇後端，Docker 是預設後端。
 
 這為您提供了一個代理「大腦」（共享工作區 + 記憶），但兩種執行模式：
 
 - **DMs**：完整工具（主機）
-- **Groups**：沙箱 + 受限工具（Docker）
+- **群組**：沙盒 + 受限工具
 
 > 如果您需要真正獨立的工作區/角色（「私人」和「公開」絕不能混合），請使用第二個代理 + 綁定。請參閱 [Multi-Agent Routing](/zh-Hant/concepts/multi-agent)。
 

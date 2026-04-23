@@ -45,12 +45,12 @@ Ansible playbook 會安裝並設定：
 
 1. **Tailscale** -- 用於安全遠端存取的 mesh VPN
 2. **UFW 防火牆** -- 僅開放 SSH + Tailscale 連接埠
-3. **Docker CE + Compose V2** -- 用於代理沙箱
+3. **Docker CE + Compose V2** -- 用於預設的代理沙箱後端
 4. **Node.js 24 + pnpm** -- 執行時相依性 (Node 22 LTS，目前為 `22.14+`，仍受支援)
 5. **OpenClaw** -- 基於主機，非容器化
 6. **Systemd 服務** -- 自動啟動並強化安全性
 
-<Note>閘道直接在主機上運行（而非在 Docker 中），但代理沙箱使用 Docker 進行隔離。詳情請參閱 [Sandboxing](/zh-Hant/gateway/sandboxing)。</Note>
+<Note>閘道直接在主機上運行（非在 Docker 中）。代理沙箱為 選用；此 playbook 安裝 Docker 是因為它是預設的沙箱 後端。詳見 [Sandboxing](/zh-Hant/gateway/sandboxing) 及其他後端。</Note>
 
 ## 安裝後設定
 

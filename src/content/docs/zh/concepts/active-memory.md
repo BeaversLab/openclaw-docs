@@ -607,7 +607,7 @@ plugins.entries.active-memory
 | `config.model`              | `string`                                                                                             | 可选的阻塞性记忆子代理模型引用；如果未设置，主动内存使用当前会话模型 |
 | `config.queryMode`          | `"message" \| "recent" \| "full"`                                                                    | 控制阻塞性记忆子代理可以看到多少对话内容                             |
 | `config.promptStyle`        | `"balanced" \| "strict" \| "contextual" \| "recall-heavy" \| "precision-heavy" \| "preference-only"` | 控制阻塞性记忆子代理在决定是否返回记忆时的积极程度或严格程度         |
-| `config.thinking`           | `"off" \| "minimal" \| "low" \| "medium" \| "high" \| "xhigh" \| "adaptive"`                         | 阻塞性记忆子代理的高级思考覆盖设置；默认为 `off` 以提高速度          |
+| `config.thinking`           | `"off" \| "minimal" \| "low" \| "medium" \| "high" \| "xhigh" \| "adaptive" \| "max"`                | 阻塞性记忆子代理的高级思考覆盖设置；默认为 `off` 以提高速度          |
 | `config.promptOverride`     | `string`                                                                                             | 高级完整提示词替换；不建议正常使用                                   |
 | `config.promptAppend`       | `string`                                                                                             | 附加到默认或覆盖提示词的高级额外指令                                 |
 | `config.timeoutMs`          | `number`                                                                                             | 阻塞性记忆子代理的硬超时时间，上限为 120000 毫秒                     |

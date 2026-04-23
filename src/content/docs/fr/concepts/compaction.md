@@ -119,9 +119,10 @@ Par défaut, le compactage utilise le modèle principal de votre agent. Vous pou
 }
 ```
 
-## Notification de début de compactage
+## Notifications de compactage
 
-Par défaut, le compactage s'exécute en silence. Pour afficher une brève notification lorsque le compactage commence, activez `notifyUser` :
+Par défaut, le compactage s'exécute en silence. Pour afficher de brèves notifications lorsque le compactage
+démarre et lorsqu'il se termine, activez `notifyUser` :
 
 ```json5
 {
@@ -135,7 +136,8 @@ Par défaut, le compactage s'exécute en silence. Pour afficher une brève notif
 }
 ```
 
-Lorsque activé, l'utilisateur voit un court message (par exemple, "Compactage du contexte...") au début de chaque exécution du compactage.
+Lorsqu'elle est activée, l'utilisateur voit de courts messages de statut autour de chaque exécution du compactage
+(par exemple, "Compactage du contexte..." et "Compactage terminé").
 
 ## Compactage vs élagage
 

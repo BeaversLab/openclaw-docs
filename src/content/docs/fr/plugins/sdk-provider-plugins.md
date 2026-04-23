@@ -16,7 +16,7 @@ une authentification par clé API et une résolution dynamique de modèle.
 
 <Info>Si vous n'avez jamais créé de plugin OpenClaw auparavant, lisez d'abord [Getting Started](/fr/plugins/building-plugins) pour connaître la structure de base du package et la configuration du manifeste.</Info>
 
-<Tip>Les plugins de fournisseur ajoutent des modèles à la boucle d'inférence normale de OpenClaw. Si le modèle doit passer par un démon d'agent natif qui gère les threads, la compactage ou les événements d'outil, associez le fournisseur à un [agent harness](/fr/plugins/sdk-agent-harness) au lieu de mettre les détails du protocole du démon dans le cœur.</Tip>
+<Tip>Les plugins provider ajoutent des modèles à la boucle d'inférence normale de OpenClaw. Si le modèle doit passer par un démon d'agent natif qui possède les threads, la compaction ou les événements d'outil, associez le provider à un [agent harness](/fr/plugins/sdk-agent-harness) au lieu de mettre les détails du protocole du démon dans le cœur.</Tip>
 
 ## Procédure pas à pas
 
@@ -272,9 +272,9 @@ une authentification par clé API et une résolution dynamique de modèle.
 
   <Step title="Ajouter des hooks d'exécution (si nécessaire)">
     La plupart des providers n'ont besoin que de `catalog` + `resolveDynamicModel`. Ajoutez des hooks
-    progressivement au fur et à mesure que votre provider en a besoin.
+    de manière incrémentale au fur et à mesure que votre provider en a besoin.
 
-    Les builders d'assistants partagés couvrent désormais les familles de reprise/compatibilité d'outils (replay/tool-compat) les plus courantes, les plugins n'ont donc généralement pas besoin de câbler chaque hook manuellement un par un :
+    Les générateurs d'assistants partagés couvrent désormais les familles de reprise/compatibilité d'outils (replay/tool-compat) les plus courantes, les plugins n'ont donc généralement pas besoin de câbler chaque hook manuellement un par un :
 
     ```typescript
     import { buildProviderReplayFamilyHooks } from "openclaw/plugin-sdk/provider-model-shared";
@@ -294,17 +294,17 @@ une authentification par clé API et une résolution dynamique de modèle.
     });
     ```
 
-    Familles de reprise (replay) disponibles aujourd'hui :
+    Familles de rejour (replay) disponibles aujourd'hui :
 
     | Famille | Ce qu'elle câble |
     | --- | --- |
-    | `openai-compatible` | Politique de reprise de style OpenAI partagée pour les transports compatibles OpenAI, incluant le nettoyage des tool-call-id, les corrections de l'ordre assistant-first, et la validation générique des tours Gemini lorsque le transport en a besoin |
-    | `anthropic-by-model` | Politique de reprise consciente Claude choisie par `modelId`, donc les transports de messages Anthropic ne reçoivent le nettoyage des blocs de pensée spécifiques à Claude que si le modèle résolu est réellement un id Claude |
-    | `google-gemini` | Politique de reprise native Gemini plus nettoyage de la reprise bootstrap et le mode de sortie de raisonnement balisé |
+    | `openai-compatible` | Politique de reprise commune style OpenAI pour les transports compatibles OpenAI, y compris le nettoyage des IDs d'appels d'outils, les corrections de l'ordre assistant en premier et la générique de validation des tours Gemini lorsque le transport en a besoin |
+    | `anthropic-by-model` | Politique de reprise consciente Claude choisie par `modelId`, de sorte que les transports à messages Anthropic ne reçoivent le nettoyage des blocs de pensée spécifiques à Claude que lorsque le modèle résolu est réellement un ID Claude |
+    | `google-gemini` | Politique de reprise native Gemini plus le nettoyage de reprise bootstrap et le mode de sortie de raisonnement balisé |
     | `passthrough-gemini` | Nettoyage de la signature de pensée Gemini pour les modèles Gemini fonctionnant via des transports proxy compatibles OpenAI ; n'active pas la validation de reprise native Gemini ni les réécritures bootstrap |
-    | `hybrid-anthropic-openai` | Politique hybride pour les providers qui mélangent des surfaces de modèle de messages Anthropic et compatibles OpenAI dans un seul plugin ; la suppression optionnelle des blocs de pensée Claude-only reste limitée au côté Anthropic |
+    | `hybrid-anthropic-openai` | Politique hybride pour les providers qui mélangent les surfaces de modèles à messages Anthropic et compatibles OpenAI dans un seul plugin ; la suppression optionnelle des blocs de pensée Claude-only reste limitée au côté Anthropic |
 
-    Exemples réels groupés :
+    Exemples réels fournis :
 
     - `google` et `google-gemini-cli` : `google-gemini`
     - `openrouter`, `kilocode`, `opencode`, et `opencode-go` : `passthrough-gemini`
@@ -312,19 +312,19 @@ une authentification par clé API et une résolution dynamique de modèle.
     - `minimax` : `hybrid-anthropic-openai`
     - `moonshot`, `ollama`, `xai`, et `zai` : `openai-compatible`
 
-    Familles de flux (stream) disponibles aujourd'hui :
+    Familles de flux disponibles aujourd'hui :
 
     | Famille | Ce qu'elle câble |
     | --- | --- |
     | `google-thinking` | Normalisation de la charge utile de pensée Gemini sur le chemin de flux partagé |
-    | `kilocode-thinking` | Enveloppe de raisonnement Kilo sur le chemin de flux proxy partagé, avec `kilo/auto` et les ids de raisonnement proxy non pris en charge ignorant la pensée injectée |
+    | `kilocode-thinking` | Enveloppeur de raisonnement Kilo sur le chemin de flux de proxy partagé, avec `kilo/auto` et les IDs de raisonnement proxy non pris en charge ignorant la pensée injectée |
     | `moonshot-thinking` | Mappage de charge utile de pensée native binaire Moonshot à partir de la configuration + niveau `/think` |
     | `minimax-fast-mode` | Réécriture de modèle en mode rapide MiniMax sur le chemin de flux partagé |
-    | `openai-responses-defaults` | Enveloppes de réponses natives OpenAI/Codex partagées : en-têtes d'attribution, `/fast`/`serviceTier`, verbosité du texte, recherche web Codex native, mise en forme de charge utile compat raisonnement, et gestion du contexte Responses |
-    | `openrouter-thinking` | Enveloppe de raisonnement OpenRouter pour les routes proxy, avec les sauts modèle-non-pris-en-charge/`auto` gérés centralement |
-    | `tool-stream-default-on` | Enveloppe `tool_stream` activée par défaut pour les providers comme Z.AI qui veulent le flux d'outils sauf s'il est explicitement désactivé |
+    | `openai-responses-defaults` | Enveloppeurs de réponses (Responses) natifs partagés OpenAI/Codex : en-têtes d'attribution, `/fast`/`serviceTier`, verbosité du texte, recherche web native Codex, mise en forme de charge utile de compatibilité de raisonnement, et gestion du contexte de réponses |
+    | `openrouter-thinking` | Enveloppeur de raisonnement OpenRouter pour les routes de proxy, avec les sauts de modèle non pris en charge/`auto` gérés centralement |
+    | `tool-stream-default-on` | Enveloppeur `tool_stream` activé par défaut pour les providers comme Z.AI qui veulent le streaming d'outils sauf s'il est explicitement désactivé |
 
-    Exemples réels groupés :
+    Exemples réels fournis :
 
     - `google` et `google-gemini-cli` : `google-thinking`
     - `kilocode` : `kilocode-thinking`
@@ -334,75 +334,75 @@ une authentification par clé API et une résolution dynamique de modèle.
     - `openrouter` : `openrouter-thinking`
     - `zai` : `tool-stream-default-on`
 
-    `openclaw/plugin-sdk/provider-model-shared` exporte également l'énumération de famille de reprise (replay-family) ainsi que les assistants partagés à partir desquels ces familles sont construites. Les exportations publiques courantes incluent :
+    `openclaw/plugin-sdk/provider-model-shared` exporte également l'énumération de famille de reprise ainsi que les assistants partagés à partir desquels ces familles sont construites. Les exportations publiques courantes incluent :
 
     - `ProviderReplayFamily`
     - `buildProviderReplayFamilyHooks(...)`
-    - builders de reprise partagés tels que `buildOpenAICompatibleReplayPolicy(...)`,
+    - générateurs de reprise partagés tels que `buildOpenAICompatibleReplayPolicy(...)`,
       `buildAnthropicReplayPolicyForModel(...)`,
       `buildGoogleGeminiReplayPolicy(...)`, et
       `buildHybridAnthropicOrOpenAIReplayPolicy(...)`
     - assistants de reprise Gemini tels que `sanitizeGoogleGeminiReplayHistory(...)`
       et `resolveTaggedReasoningOutputMode()`
-    - assistants de endpoint/modèle tels que `resolveProviderEndpoint(...)`,
+    - assistants de point de terminaison/modèle tels que `resolveProviderEndpoint(...)`,
       `normalizeProviderId(...)`, `normalizeGooglePreviewModelId(...)`, et
       `normalizeNativeXaiModelId(...)`
 
-    `openclaw/plugin-sdk/provider-stream` expose à la fois le builder de famille et
-    les assistants publics d'enveloppe que ces familles réutilisent. Les exportations publiques courantes incluent :
+    `openclaw/plugin-sdk/provider-stream` expose à la fois le générateur de famille et
+    les assistants d'enveloppeur publics que ces familles réutilisent. Les exportations publiques courantes incluent :
 
     - `ProviderStreamFamily`
     - `buildProviderStreamFamilyHooks(...)`
     - `composeProviderStreamWrappers(...)`
-    - enveloppes OpenAI/Codex partagées telles que
+    - enveloppeurs partagés OpenAI/Codex tels que
       `createOpenAIAttributionHeadersWrapper(...)`,
       `createOpenAIFastModeWrapper(...)`,
       `createOpenAIServiceTierWrapper(...)`,
       `createOpenAIResponsesContextManagementWrapper(...)`, et
       `createCodexNativeWebSearchWrapper(...)`
-    - enveloppes proxy/provider partagées telles que `createOpenRouterWrapper(...)`,
+    - enveloppeurs partagés de proxy/provider tels que `createOpenRouterWrapper(...)`,
       `createToolStreamWrapper(...)`, et `createMinimaxFastModeWrapper(...)`
 
-    Certains assistants de flux restent locaux au provider par conception. Exemple groupé actuel : `@openclaw/anthropic-provider` exporte
+    Certains assistants de flux restent spécifiques au provider par conception. Exemple actuel fourni :
+    `@openclaw/anthropic-provider` exporte
     `wrapAnthropicProviderStream`, `resolveAnthropicBetas`,
     `resolveAnthropicFastMode`, `resolveAnthropicServiceTier`, et les
-    builders d'enveloppe Anthropic de niveau inférieur à partir de sa couture (seam) publique `api.ts` /
+    générateurs d'enveloppeurs Anthropic de niveau inférieur à partir de son interface (seam) publique `api.ts` /
     `contract-api.ts`. Ces assistants restent spécifiques à Anthropic car
-    ils encodent également la gestion bêta OAuth de Claude OAuth et le filtrage `context1m`.
+    ils encodent également la gestion bêta Claude OAuth et le filtrage `context1m`.
 
-    D'autres providers groupés gardent également des enveloppes spécifiques au transport localement lorsque
-    le comportement n'est pas partagé proprement entre les familles. Exemple actuel : le
-    plugin xAI groupé conserve la mise en forme des réponses xAI natives dans son propre
+    D'autres providers fournis gardent également les enveloppeurs spécifiques au transport en local lorsque
+    le comportement n'est pas partagé proprement entre les familles. Exemple actuel : le plugin
+    xAI fourni garde la mise en forme des réponses xAI natives dans son propre
     `wrapStreamFn`, y compris les réécritures d'alias `/fast`, le `tool_stream` par défaut,
-    le nettoyage strict d'outils non pris en charge, et la suppression de charge utile de raisonnement spécifique à xAI.
+    le nettoyage des outils stricts non pris en charge, et la suppression de la charge utile de raisonnement spécifique à xAI.
 
-    `openclaw/plugin-sdk/provider-tools` expose actuellement une famille de schéma d'outil (tool-schema) partagée
-    plus des assistants de schéma/compatibilité partagés :
+    `openclaw/plugin-sdk/provider-tools` expose actuellement une famille de schéma d'outil partagée plus des assistants de schéma/compatibilité partagés :
 
-    - `ProviderToolCompatFamily` documente l'inventaire de la famille partagée aujourd'hui.
+    - `ProviderToolCompatFamily` documente l'inventaire des familles partagées aujourd'hui.
     - `buildProviderToolCompatFamilyHooks("gemini")` câble le nettoyage du schéma
-      Gemini + diagnostics pour les providers qui ont besoin de schémas d'outils sûrs pour Gemini.
+      Gemini + les diagnostics pour les providers qui ont besoin de schémas d'outils sûrs pour Gemini.
     - `normalizeGeminiToolSchemas(...)` et `inspectGeminiToolSchemas(...)`
       sont les assistants publics de schéma Gemini sous-jacents.
-    - `resolveXaiModelCompatPatch()` retourne le correctif de compatibilité xAI groupé :
+    - `resolveXaiModelCompatPatch()` renvoie le correctif de compatibilité xAI fourni :
       `toolSchemaProfile: "xai"`, mots-clés de schéma non pris en charge, support
       `web_search` natif, et décodage des arguments d'appel d'outil d'entités HTML.
     - `applyXaiModelCompat(model)` applique ce même correctif de compatibilité xAI à un
-    modèle résolu avant qu'il n'atteigne le runner.
+      modèle résolu avant qu'il n'atteigne le moteur d'exécution.
 
-    Exemple réel groupé : le plugin xAI utilise `normalizeResolvedModel` plus
+    Exemple réel fourni : le plugin xAI utilise `normalizeResolvedModel` plus
     `contributeResolvedModelCompat` pour garder ces métadonnées de compatibilité détenues par le
-    provider au lieu de coder en dur les règles xAI dans le core.
+    provider au lieu de coder en dur les règles xAI dans le cœur.
 
-    Le même modèle de racine de package (package-root) soutient également d'autres providers groupés :
+    Le même modèle de racine de package soutient également d'autres providers fournis :
 
-    - `@openclaw/openai-provider` : `api.ts` exporte les builders de provider,
-      les assistants de modèle par défaut, et les builders de provider temps réel
-    - `@openclaw/openrouter-provider` : `api.ts` exporte le builder de provider
-      plus les assistants d'intégration/configuration (onboarding/config)
+    - `@openclaw/openai-provider` : `api.ts` exporte les générateurs de providers,
+      les assistants de modèle par défaut, et les générateurs de providers en temps réel
+    - `@openclaw/openrouter-provider` : `api.ts` exporte le générateur de provider
+      plus les assistants d'intégration (onboarding)/configuration
 
     <Tabs>
-      <Tab title="Échange de jetons">
+      <Tab title="Échange de jetons (Token exchange)">
         Pour les providers qui ont besoin d'un échange de jetons avant chaque appel d'inférence :
 
         ```typescript
@@ -457,7 +457,7 @@ une authentification par clé API et une résolution dynamique de modèle.
         ```
       </Tab>
       <Tab title="Utilisation et facturation">
-        Pour les providers qui exposent des données d'utilisation/facturation :
+        Pour les providers qui exposent des données d'utilisation/de facturation :
 
         ```typescript
         resolveUsageAuth: async (ctx) => {
@@ -472,82 +472,84 @@ une authentification par clé API et une résolution dynamique de modèle.
     </Tabs>
 
     <Accordion title="Tous les hooks de provider disponibles">
-      OpenClaw appelle les hooks dans cet ordre. La plupart des providers n'en utilisent que 2 ou 3 :
+      OpenClaw appelle les hooks dans cet ordre. La plupart des providers n'en utilisent que 2-3 :
 
       | # | Hook | Quand l'utiliser |
       | --- | --- | --- |
       | 1 | `catalog` | Catalogue de modèles ou URL de base par défaut |
       | 2 | `applyConfigDefaults` | Valeurs par défaut globales détenues par le provider lors de la matérialisation de la configuration |
-      | 3 | `normalizeModelId` | Nettoyage des alias d'id de modèle hérités/preview avant la recherche |
-      | 4 | `normalizeTransport` | Nettoyage `api` / `baseUrl` de famille de provider avant l'assemblage de modèle générique |
-      | 5 | `normalizeConfig` | Normaliser la config `models.providers.<id>` |
-      | 6 | `applyNativeStreamingUsageCompat` | Réécritures de compatibilité d'utilisation de streaming natives pour les providers de config |
-      | 7 | `resolveConfigApiKey` | Résolution d'auth par marqueur d'environnement détenue par le provider |
-      | 8 | `resolveSyntheticAuth` | Auth synthétique local/auto-hébergé ou soutenue par la configuration |
-      | 9 | `shouldDeferSyntheticProfileAuth` | Abaisser les espaces réservés de profil stocké synthétiques derrière l'auth env/config |
-      | 10 | `resolveDynamicModel` | Accepter les IDs de modèle en amont arbitraires |
+      | 3 | `normalizeModelId` | Nettoyage des alias d'ID de modèle hérités/preview avant la recherche |
+      | 4 | `normalizeTransport` | Nettoyage de la famille de provider `api` / `baseUrl` avant l'assemblage de modèle générique |
+      | 5 | `normalizeConfig` | Normaliser la configuration `models.providers.<id>` |
+      | 6 | `applyNativeStreamingUsageCompat` | Réécritures de compatibilité d'utilisation de streaming native pour les providers de configuration |
+      | 7 | `resolveConfigApiKey` | Résolution d'authentification par marqueur d'environnement (env-marker) détenue par le provider |
+      | 8 | `resolveSyntheticAuth` | Authentification synthétique locale/auto-hébergée ou basée sur la configuration |
+      | 9 | `shouldDeferSyntheticProfileAuth` | Remplacer les espaces réservés de profil stocké synthétique par une authentification par environnement/config |
+      | 10 | `resolveDynamicModel` | Accepter les ID de modèles en amont arbitraires |
       | 11 | `prepareDynamicModel` | Récupération asynchrone de métadonnées avant la résolution |
-      | 12 | `normalizeResolvedModel` | Réécritures de transport avant le runner |
+      | 12 | `normalizeResolvedModel` | Réécritures de transport avant le moteur d'exécution |
 
     Notes de repli (fallback) d'exécution :
 
     - `normalizeConfig` vérifie d'abord le provider correspondant, puis les autres
       plugins de provider capables de hooks jusqu'à ce que l'un change réellement la configuration.
       Si aucun hook de provider ne réécrit une entrée de configuration de famille Google prise en charge, le
-      normaliseur de configuration Google groupé s'applique toujours.
-    - `resolveConfigApiKey` utilise le hook de provider lorsqu'il est exposé. Le chemin
-      `amazon-bedrock` groupé a également un résolveur de marqueur d'environnement AWS intégré ici,
-      même si l'auth d'exécution Bedrock utilise toujours la chaîne par défaut du AWS SDK.
+      normaliseur de configuration Google fourni s'applique toujours.
+    - `resolveConfigApiKey` utilise le hook du provider lorsqu'il est exposé. Le chemin
+      `amazon-bedrock` fourni a également ici un résolveur de marqueur d'environnement AWS intégré,
+      bien que l'authentification d'exécution Bedrock elle-même utilise toujours la chaîne par défaut du SDK AWS.
       | 13 | `contributeResolvedModelCompat` | Indicateurs de compatibilité pour les modèles de fournisseurs derrière un autre transport compatible |
       | 14 | `capabilities` | Sac de capacités statiques hérité ; compatibilité uniquement |
-      | 15 | `normalizeToolSchemas` | Nettoyage du schéma d'outil (tool-schema) détenue par le provider avant l'enregistrement |
-      | 16 | `inspectToolSchemas` | Diagnostics de schéma d'outil détenue par le provider |
-      | 17 | `resolveReasoningOutputMode` | Contrat de sortie de raisonnement balisé vs natif |
+      | 15 | `normalizeToolSchemas` | Nettoyage du schéma d'outil détenue par le provider avant l'enregistrement |
+      | 16 | `inspectToolSchemas` | Diagnostics de schéma d'outil détenus par le provider |
+      | 17 | `resolveReasoningOutputMode` | Contrat de sortie de raisonnement balisé par rapport à natif |
       | 18 | `prepareExtraParams` | Paramètres de requête par défaut |
       | 19 | `createStreamFn` | Transport StreamFn entièrement personnalisé |
-      | 20 | `wrapStreamFn` | Enveloppes d'en-têtes/corps personnalisés sur le chemin de flux normal |
+      | 20 | `wrapStreamFn` | Enveloppeurs d'en-têtes/corps personnalisés sur le chemin de flux normal |
       | 21 | `resolveTransportTurnState` | En-têtes/métadonnées natifs par tour |
-      | 22 | `resolveWebSocketSessionPolicy` | En-tètres/cool-down de session WS natifs |
+      | 22 | `resolveWebSocketSessionPolicy` | En-têtes de session WS natifs/refroidissement (cool-down) |
       | 23 | `formatApiKey` | Forme de jeton d'exécution personnalisée |
-      | 24 | `refreshOAuth` | Rafraîchissement OAuth personnalisé |
-      | 25 | `buildAuthDoctorHint` | Conseils de réparation d'auth |
+      | 24 | `refreshOAuth` | Actualisation OAuth personnalisée |
+      | 25 | `buildAuthDoctorHint` | Conseils de réparation d'authentification |
       | 26 | `matchesContextOverflowError` | Détection de dépassement détenue par le provider |
       | 27 | `classifyFailoverReason` | Classification de limite de taux/surcharge détenue par le provider |
-      | 28 | `isCacheTtlEligible` | Filtrage TTL du cache de prompt |
-      | 29 | `buildMissingAuthMessage` | Indicateur d'auth manquante personnalisé |
+      | 28 | `isCacheTtlEligible` | Filtrage (gating) TTL du cache de prompt |
+      | 29 | `buildMissingAuthMessage` | Indicateur d'authentification manquante personnalisé |
       | 30 | `suppressBuiltInModel` | Masquer les lignes en amont obsolètes |
-      | 31 | `augmentModelCatalog` | Lignes de compatibilité avant synthétiques |
-      | 32 | `isBinaryThinking` | Pensée binaire on/off |
+      | 31 | `augmentModelCatalog` | Lignes synthétiques de compatibilité future |
+      | 32 | `isBinaryThinking` | Pensée binaire activée/désactivée |
       | 33 | `supportsXHighThinking` | Support de raisonnement `xhigh` |
-      | 34 | `resolveDefaultThinkingLevel` | Politique `/think` par défaut |
-      | 35 | `isModernModelRef` | Correspondance de modèle live/smoke |
-      | 36 | `prepareRuntimeAuth` | Échange de jetons avant l'inférence |
-      | 37 | `resolveUsageAuth` | Analyse des identifiants d'utilisation personnalisés |
-      | 38 | `fetchUsageSnapshot` | Point de terminaison d'utilisation personnalisé |
-      | 39 | `createEmbeddingProvider` | Adaptateur d'embedding détenue par le provider pour la mémoire/recherche |
-      | 40 | `buildReplayPolicy` | Politique de reprise/compaction de transcription personnalisée |
-      | 41 | `sanitizeReplayHistory` | Réécritures de reprise spécifiques au provider après le nettoyage générique |
-      | 42 | `validateReplayTurns` | Validation stricte du tour de reprise avant le runner intégré |
-      | 43 | `onModelSelected` | Rappel post-sélection (ex. télémétrie) |
+      | 34 | `supportsAdaptiveThinking` | Support de pensée adaptative |
+      | 35 | `supportsMaxThinking` | Support de raisonnement `max` |
+      | 36 | `resolveDefaultThinkingLevel` | Politique `/think` par défaut |
+      | 37 | `isModernModelRef` | Correspondance de modèle en direct/de test (live/smoke) |
+      | 38 | `prepareRuntimeAuth` | Échange de jetons avant l'inférence |
+      | 39 | `resolveUsageAuth` | Analyse personnalisée des informations d'identification d'utilisation |
+      | 40 | `fetchUsageSnapshot` | Point de terminaison d'utilisation personnalisé |
+      | 41 | `createEmbeddingProvider` | Adaptateur d'incorporation (embedding) détenu par le provider pour la mémoire/recherche |
+      | 42 | `buildReplayPolicy` | Politique de rejeu/compactage de transcription personnalisée |
+      | 43 | `sanitizeReplayHistory` | Réécritures de relecture spécifiques au provider après le nettoyage générique |
+      | 44 | `validateReplayTurns` | Validation stricte du tour de reprise avant le moteur d'exécution intégré |
+      | 45 | `onModelSelected` | Rappel après sélection (par ex. télémétrie) |
 
       Note sur l'ajustement du prompt :
 
-      - `resolveSystemPromptContribution` permet à un provider d'injecter des directives
-        de système de prompt (system-prompt) conscientes du cache pour une famille de modèles.
-        Préférez-le à `before_prompt_build` lorsque le comportement appartient à une famille de provider/modèle
-        et doit préserver la division stable/dynamique du cache.
+    - `resolveSystemPromptContribution` permet à un provider d'injecter des directives de système de prompt
+      conscientes du cache pour une famille de modèles. Préférez-le à
+      `before_prompt_build` lorsque le comportement appartient à une famille de provider/modèle
+      et doit préserver la division stable/dynamique du cache.
 
-      Pour des descriptions détaillées et des exemples réels, voir
-      [Internes : Hooks d'exécution du provider](/fr/plugins/architecture#provider-runtime-hooks).
+    Pour des descriptions détaillées et des exemples réels, consultez
+    [Internes : Hooks d'exécution du provider](/fr/plugins/architecture#provider-runtime-hooks).
     </Accordion>
 
   </Step>
 
   <Step title="Ajouter des capacités supplémentaires (facultatif)">
     <a id="step-5-add-extra-capabilities"></a>
-    Un plugin de fournisseur peut enregistrer la reconnaissance vocale, la transcription en temps réel, la voix en temps réel,
+    Un plugin de fournisseur peut enregistrer la parole, la transcription en temps réel, la voix en temps réel,
     la compréhension des médias, la génération d'images, la génération de vidéos, la récupération web,
-    et la recherche web en plus de l'inférence de texte :
+    et la recherche web ainsi que l'inférence de texte :
 
     ```typescript
     register(api) {
@@ -657,17 +659,17 @@ une authentification par clé API et une résolution dynamique de modèle.
 
     OpenClaw classe cela comme un plugin à **capacités hybrides**. Il s'agit du
     modèle recommandé pour les plugins d'entreprise (un plugin par fournisseur). Voir
-    [Internes : Propriété des capacités](/fr/plugins/architecture#capability-ownership-model).
+    [Internals: Capability Ownership](/fr/plugins/architecture#capability-ownership-model).
 
-    Pour la génération vidéo, privilégiez la forme de capacité tenant compte du mode montrée ci-dessus :
+    Pour la génération vidéo, préférez la forme de capacité consciente du mode montrée ci-dessus :
     `generate`, `imageToVideo` et `videoToVideo`. Les champs agrégés plats tels
     que `maxInputImages`, `maxInputVideos` et `maxDurationSeconds` ne suffisent
-    pas à annoncer proprement la prise en charge du mode de transformation ou les modes désactivés.
+    pas à annoncer proprement le support du mode de transformation ou les modes désactivés.
 
-    Les fournisseurs de génération de musique doivent suivre le même modèle :
-    `generate` pour la génération basée uniquement sur une invite et `edit` pour la génération
+    Les fournisseurs de génération musicale doivent suivre le même modèle :
+    `generate` pour la génération basée uniquement sur le prompt et `edit` pour la génération
     basée sur une image de référence. Les champs agrégés plats tels que `maxInputImages`,
-    `supportsLyrics` et `supportsFormat` ne suffisent pas à annoncer la prise en charge
+    `supportsLyrics` et `supportsFormat` ne suffisent pas à annoncer le support
     de l'édition ; les blocs explicites `generate` / `edit` constituent le contrat attendu.
 
   </Step>
@@ -716,7 +718,7 @@ clawhub package publish your-org/your-plugin --dry-run
 clawhub package publish your-org/your-plugin
 ```
 
-N'utilisez pas ici l'alias de publication hérité réservé aux compétences ; les packages de plugins doivent utiliser
+N'utilisez pas ici l'alias de publication obsolète réservé aux compétences ; les packages de plugins doivent utiliser
 `clawhub package publish`.
 
 ## Structure des fichiers
@@ -746,6 +748,6 @@ fournisseurs intégrés :
 ## Étapes suivantes
 
 - [Plugins de canal](/fr/plugins/sdk-channel-plugins) — si votre plugin fournit également un canal
-- [Runtime du SDK](/fr/plugins/sdk-runtime) — assistants `api.runtime` (TTS, recherche, sous-agent)
-- [Vue d'ensemble du SDK](/fr/plugins/sdk-overview) — référence complète des importations de sous-chemins
-- [Fonctionnement interne des plugins](/fr/plugins/architecture#provider-runtime-hooks) — détails des hooks et exemples inclus
+- [SDK Runtime](/fr/plugins/sdk-runtime) — assistants `api.runtime` (TTS, recherche, sous-agent)
+- [Aperçu du SDK](/fr/plugins/sdk-overview) — référence complète des importations de sous-chemins
+- [Internes des plugins](/fr/plugins/architecture#provider-runtime-hooks) — détails des crochets (hooks) et exemples groupés

@@ -49,53 +49,53 @@ import { defineChannelPluginEntry } from "openclaw/plugin-sdk/channel-core";
     | 子路径 | 主要导出 |
     | --- | --- |
     | `plugin-sdk/channel-core` | `defineChannelPluginEntry`, `defineSetupPluginEntry`, `createChatChannelPlugin`, `createChannelPluginBase` |
-    | `plugin-sdk/config-schema` | 根 `openclaw.json` Zod 模式导出 (`OpenClawSchema`) |
+    | `plugin-sdk/config-schema` | 根 `openclaw.json` Zod schema 导出 (`OpenClawSchema`) |
     | `plugin-sdk/channel-setup` | `createOptionalChannelSetupSurface`, `createOptionalChannelSetupAdapter`, `createOptionalChannelSetupWizard`, 加上 `DEFAULT_ACCOUNT_ID`, `createTopLevelChannelDmPolicy`, `setSetupChannelEnabled`, `splitSetupEntries` |
-    | `plugin-sdk/setup` | 共享设置向导辅助工具、允许列表提示、设置状态构建器 |
+    | `plugin-sdk/setup` | 共享设置向导助手、允许列表提示、设置状态构建器 |
     | `plugin-sdk/setup-runtime` | `createPatchedAccountSetupAdapter`, `createEnvPatchedAccountSetupAdapter`, `createSetupInputPresenceValidator`, `noteChannelLookupFailure`, `noteChannelLookupSummary`, `promptResolvedAllowFrom`, `splitSetupEntries`, `createAllowlistSetupWizardProxy`, `createDelegatedSetupWizardProxy` |
     | `plugin-sdk/setup-adapter-runtime` | `createEnvPatchedAccountSetupAdapter` |
     | `plugin-sdk/setup-tools` | `formatCliCommand`, `detectBinary`, `extractArchive`, `resolveBrewExecutable`, `formatDocsLink`, `CONFIG_DIR` |
-    | `plugin-sdk/account-core` | 多账户配置/操作闸辅助工具、默认账户回退辅助工具 |
-    | `plugin-sdk/account-id` | `DEFAULT_ACCOUNT_ID`、账户 ID 规范化辅助工具 |
-    | `plugin-sdk/account-resolution` | 账户查找 + 默认回退辅助工具 |
-    | `plugin-sdk/account-helpers` | 窄化账户列表/账户操作辅助工具 |
+    | `plugin-sdk/account-core` | 多账户配置/操作门控助手，默认账户回退助手 |
+    | `plugin-sdk/account-id` | `DEFAULT_ACCOUNT_ID`，账户 ID 规范化助手 |
+    | `plugin-sdk/account-resolution` | 账户查找 + 默认回退助手 |
+    | `plugin-sdk/account-helpers` | 狭义账户列表/账户操作助手 |
     | `plugin-sdk/channel-pairing` | `createChannelPairingController` |
     | `plugin-sdk/channel-reply-pipeline` | `createChannelReplyPipeline` |
     | `plugin-sdk/channel-config-helpers` | `createHybridChannelConfigAdapter` |
-    | `plugin-sdk/channel-config-schema` | 渠道配置模式类型 |
-    | `plugin-sdk/telegram-command-config` | Telegram 自定义命令规范化/验证辅助工具，附带捆绑合约回退 |
-    | `plugin-sdk/command-gating` | 窄化命令授权闸辅助工具 |
+    | `plugin-sdk/channel-config-schema` | 渠道配置 schema 类型 |
+    | `plugin-sdk/telegram-command-config` | Telegram 自定义命令规范化/验证助手，附带 bundled-contract 回退 |
+    | `plugin-sdk/command-gating` | 狭义命令授权门控助手 |
     | `plugin-sdk/channel-policy` | `resolveChannelGroupRequireMention` |
     | `plugin-sdk/channel-lifecycle` | `createAccountStatusSink` |
-    | `plugin-sdk/inbound-envelope` | 共享入站路由 + 信封构建器辅助工具 |
-    | `plugin-sdk/inbound-reply-dispatch` | 共享入站记录和分发辅助工具 |
-    | `plugin-sdk/messaging-targets` | 目标解析/匹配辅助工具 |
-    | `plugin-sdk/outbound-media` | 共享出站媒体加载辅助工具 |
-    | `plugin-sdk/outbound-runtime` | 出站身份/发送委托辅助工具 |
-    | `plugin-sdk/poll-runtime` | 窄化投票规范化辅助工具 |
-    | `plugin-sdk/thread-bindings-runtime` | 线程绑定生命周期和适配器辅助工具 |
+    | `plugin-sdk/inbound-envelope` | 共享入站路由 + 信封构建器助手 |
+    | `plugin-sdk/inbound-reply-dispatch` | 共享入站记录和分发助手 |
+    | `plugin-sdk/messaging-targets` | 目标解析/匹配助手 |
+    | `plugin-sdk/outbound-media` | 共享出站媒体加载助手 |
+    | `plugin-sdk/outbound-runtime` | 出站身份、发送委托和负载规划助手 |
+    | `plugin-sdk/poll-runtime` | 狭义投票规范化助手 |
+    | `plugin-sdk/thread-bindings-runtime` | 线程绑定生命周期和适配器助手 |
     | `plugin-sdk/agent-media-payload` | 传统代理媒体负载构建器 |
-    | `plugin-sdk/conversation-runtime` | 对话/线程绑定、配对和配置绑定辅助工具 |
-    | `plugin-sdk/runtime-config-snapshot` | 运行时配置快照辅助工具 |
-    | `plugin-sdk/runtime-group-policy` | 运行时组策略解析辅助工具 |
-    | `plugin-sdk/channel-status` | 共享渠道状态快照/摘要辅助工具 |
-    | `plugin-sdk/channel-config-primitives` | 窄化渠道配置模式基元 |
-    | `plugin-sdk/channel-config-writes` | 渠道配置写入授权辅助工具 |
+    | `plugin-sdk/conversation-runtime` | 会话/线程绑定、配对和配置绑定助手 |
+    | `plugin-sdk/runtime-config-snapshot` | 运行时配置快照助手 |
+    | `plugin-sdk/runtime-group-policy` | 运行时组策略解析助手 |
+    | `plugin-sdk/channel-status` | 共享渠道状态快照/摘要助手 |
+    | `plugin-sdk/channel-config-primitives` | 狭义渠道配置 schema 原语 |
+    | `plugin-sdk/channel-config-writes` | 渠道配置写入授权助手 |
     | `plugin-sdk/channel-plugin-common` | 共享渠道插件前奏导出 |
-    | `plugin-sdk/allowlist-config-edit` | 允许列表配置编辑/读取辅助工具 |
-    | `plugin-sdk/group-access` | 共享组访问决策辅助工具 |
-    | `plugin-sdk/direct-dm` | 共享直接私信认证/守护辅助工具 |
-    | `plugin-sdk/interactive-runtime` | 交互式回复负载规范化/归约辅助工具 |
-    | `plugin-sdk/channel-inbound` | 入站防抖、提及匹配、提及策略辅助工具和信封辅助工具的兼容性桶 |
-    | `plugin-sdk/channel-mention-gating` | 窄化提及策略辅助工具，不包含更广泛的入站运行时表面 |
-    | `plugin-sdk/channel-location` | 渠道位置上下文和格式化辅助工具 |
-    | `plugin-sdk/channel-logging` | 用于入站丢弃和输入/确认失败的渠道日志记录辅助工具 |
+    | `plugin-sdk/allowlist-config-edit` | 允许列表配置编辑/读取助手 |
+    | `plugin-sdk/group-access` | 共享组访问决策助手 |
+    | `plugin-sdk/direct-dm` | 共享直接私信认证/守卫助手 |
+    | `plugin-sdk/interactive-runtime` | 交互式回复负载规范化/简化助手 |
+    | `plugin-sdk/channel-inbound` | 兼容性桶，包含入站防抖、提及匹配、提及策略助手和信封助手 |
+    | `plugin-sdk/channel-mention-gating` | 狭义提及策略助手，不包含更广泛的入站运行时表面 |
+    | `plugin-sdk/channel-location` | 渠道位置上下文和格式化助手 |
+    | `plugin-sdk/channel-logging` | 渠道日志记录助手，用于入站丢弃和输入/确认失败 |
     | `plugin-sdk/channel-send-result` | 回复结果类型 |
     | `plugin-sdk/channel-actions` | `createMessageToolButtonsSchema`, `createMessageToolCardSchema` |
-    | `plugin-sdk/channel-targets` | 目标解析/匹配辅助工具 |
+    | `plugin-sdk/channel-targets` | 目标解析/匹配助手 |
     | `plugin-sdk/channel-contract` | 渠道合约类型 |
     | `plugin-sdk/channel-feedback` | 反馈/反应连线 |
-    | `plugin-sdk/channel-secret-runtime` | 窄化秘密合约辅助工具，例如 `collectSimpleChannelFieldAssignments`、`getChannelSurface`、`pushAssignment` 和秘密目标类型 |
+    | `plugin-sdk/channel-secret-runtime` | 狭义 secret-contract 助手，例如 `collectSimpleChannelFieldAssignments`, `getChannelSurface`, `pushAssignment` 和 secret 目标类型 |
   </Accordion>
 
 <Accordion title="Provider subpaths">

@@ -23,7 +23,8 @@ Relacionado:
 openclaw hooks list
 ```
 
-Lista todos los hooks descubiertos de los directorios del espacio de trabajo, gestionados, extra y incluidos.
+Lista todos los hooks descubiertos de los directorios de espacio de trabajo, gestionados, extra y empaquetados.
+El inicio de la puerta de enlace no carga los controladores de hooks internos hasta que se configura al menos un hook interno.
 
 **Opciones:**
 

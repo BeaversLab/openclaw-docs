@@ -77,7 +77,7 @@ synchronisé vers chaque client. Recommandation : utilisez un appareil principal
 conversations afin d'éviter un contexte divergent. L'interface de contrôle et le TUI affichent toujours la
 transcription de session soutenue par la passerelle, ils constituent donc la source de vérité.
 
-Détails : [Gestion des sessions](/fr/concepts/session).
+Détails : [Gestion de session](/fr/concepts/session).
 
 ## Corps des messages entrants et contexte de l'historique
 
@@ -141,11 +141,24 @@ Le formatage des messages sortants est centralisé dans `messages` :
 - `messages.responsePrefix`, `channels.<channel>.responsePrefix` et `channels.<channel>.accounts.<id>.responsePrefix` (cascade de préfixes sortants), ainsi que `channels.whatsapp.messagePrefix` (préfixe entrant WhatsApp)
 - Fils de discussion de réponse via `replyToMode` et les valeurs par défaut par channel
 
-Détails : [Configuration](/fr/gateway/configuration-reference#messages) et documentation sur les channels.
+Détails : [Configuration](/fr/gateway/configuration-reference#messages) et docs de channel.
+
+## Réponses silencieuses
+
+Le jeton silencieux exact `NO_REPLY` / `no_reply` signifie « ne pas envoyer de réponse visible par l’utilisateur ».
+OpenClaw résout ce comportement par type de conversation :
+
+- Les conversations directes interdisent le silence par défaut et réécrivent une réponse silencieuse simple en un substitut visible court.
+- Les groupes/channels autorisent le silence par défaut.
+- L'orchestration interne autorise le silence par défaut.
+
+Les valeurs par défaut se trouvent sous `agents.defaults.silentReply` et
+`agents.defaults.silentReplyRewrite` ; `surfaces.<id>.silentReply` et
+`surfaces.<id>.silentReplyRewrite` peuvent les remplacer par surface.
 
 ## Connexes
 
 - [Streaming](/fr/concepts/streaming) — livraison de messages en temps réel
-- [Retry](/fr/concepts/retry) — comportement de nouvelle tentative de livraison de messages
-- [Queue](/fr/concepts/queue) — file de traitement des messages
+- [Nouvelle tentative](/fr/concepts/retry) — comportement de nouvelle tentative de livraison de messages
+- [File d'attente](/fr/concepts/queue) — file de traitement des messages
 - [Channels](/fr/channels) — intégrations de plateformes de messagerie

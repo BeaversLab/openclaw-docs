@@ -997,7 +997,7 @@ OpenClaw 对运行时 Matrix 流量和账户状态探测使用相同的代理设
 - `allowBots`: 允许来自其他已配置 OpenClaw Matrix 账户（`true` 或 `"mentions"`）的消息。
 - `groupPolicy`: `open`、`allowlist` 或 `disabled`。
 - `contextVisibility`: 补充房间上下文可见性模式（`all`、`allowlist`、`allowlist_quote`）。
-- `groupAllowFrom`: 房间流量的用户 ID 白名单。条目应为完整的 Matrix 用户 ID；运行时将忽略未解析的名称。
+- `groupAllowFrom`：房间流量的用户 ID 白名单。完整的 Matrix 用户 ID 是最安全的；精确的目录匹配项会在启动时以及监视器运行期间白名单发生变化时进行解析。未解析的名称将被忽略。
 - `historyLimit`: 作为组历史上下文包含的最大房间消息数。回退到 `messages.groupChat.historyLimit`；如果两者均未设置，有效默认值为 `0`。设置为 `0` 以禁用。
 - `replyToMode`: `off`、`first`、`all` 或 `batched`。
 - `markdown`: 用于出站 Matrix 文本的可选 Markdown 渲染配置。
@@ -1018,7 +1018,7 @@ OpenClaw 对运行时 Matrix 流量和账户状态探测使用相同的代理设
 - `autoJoinAllowlist`：当 `autoJoin` 为 `allowlist` 时允许的房间/别名。在处理邀请期间，别名条目会被解析为房间 ID；OpenClaw 不信任被邀请房间所声称的别名状态。
 - `dm`：私信策略块 (`enabled`, `policy`, `allowFrom`, `sessionScope`, `threadReplies`)。
 - `dm.policy`：控制 OpenClaw 加入房间并将其归类为私信后的私信访问权限。它不改变邀请是否自动加入。
-- `dm.allowFrom`：除非您已经通过实时目录查找解析了条目，否则条目应为完整的 Matrix 用户 ID。
+- `dm.allowFrom`：私信流量的用户 ID 白名单。完整的 Matrix 用户 ID 是最安全的；精确的目录匹配项会在启动时以及监视器运行期间白名单发生变化时进行解析。未解析的名称将被忽略。
 - `dm.sessionScope`：`per-user`（默认）或 `per-room`。当您希望每个 Matrix 私信房间即使对方相同也保持独立的上下文时，请使用 `per-room`。
 - `dm.threadReplies`：仅限私信的线程策略覆盖 (`off`, `inbound`, `always`)。它会覆盖顶层的 `threadReplies` 设置，该设置用于私信中的回复放置和会话隔离。
 - `execApprovals`：Matrix 原生的执行审批传递 (`enabled`, `approvers`, `target`, `agentFilter`, `sessionFilter`)。

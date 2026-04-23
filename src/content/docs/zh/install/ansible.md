@@ -45,12 +45,12 @@ Ansible playbook 将安装并配置以下内容：
 
 1. **Tailscale** —— 用于安全远程访问的网格 VPN
 2. **UFW 防火墙** —— 仅开放 SSH + Tailscale 端口
-3. **Docker CE + Compose V2** —— 用于代理沙箱
+3. **Docker CE + Compose V2** -- 用于默认代理沙箱后端
 4. **Node.js 24 + pnpm** -- 运行时依赖（目前受支持的 Node 22 LTS `22.14+` 仍受支持）
 5. **OpenClaw** —— 基于主机，非容器化
 6. **Systemd 服务** —— 自动启动并带有安全加固
 
-<Note>网关直接在主机上运行（不在 Docker 中），但代理沙箱使用 Docker 进行隔离。详情请参阅 [沙箱隔离](/zh/gateway/sandboxing)。</Note>
+<Note>网关直接在主机上运行（不在 Docker 中）。代理沙箱隔离是 可选的；此 playbook 安装 Docker 是因为它是默认的沙箱 后端。有关详细信息和其他后端，请参阅 [沙箱隔离](/zh/gateway/sandboxing)。</Note>
 
 ## 安装后设置
 

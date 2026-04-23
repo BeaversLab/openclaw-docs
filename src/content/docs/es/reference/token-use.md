@@ -26,7 +26,7 @@ OpenClaw ensambla su propio prompt del sistema en cada ejecución. Incluye:
 - Etiquetas de respuesta + comportamiento de latido
 - Metadatos de tiempo de ejecución (host/SO/modelo/pensamiento)
 
-Vea el desglose completo en [Prompt del Sistema](/es/concepts/system-prompt).
+Consulta el desglose completo en [System Prompt](/es/concepts/system-prompt).
 
 ## Qué cuenta en la ventana de contexto
 
@@ -56,7 +56,7 @@ Use `agents.defaults.imageMaxDimensionPx` (predeterminado: `1200`) para ajustar 
 - Los valores más bajos generalmente reducen el uso de tokens de visión y el tamaño de la carga útil.
 - Los valores más altos preservan más detalles visuales para capturas de pantalla con mucho contenido de OCR/interfaz de usuario.
 
-Para un desglose práctico (por archivo inyectado, herramientas, habilidades y tamaño del prompt del sistema), use `/context list` o `/context detail`. Consulte [Contexto](/es/concepts/context).
+Para obtener un desglose práctico (por archivo inyectado, herramientas, habilidades y tamaño del mensaje del sistema), utiliza `/context list` o `/context detail`. Consulta [Context](/es/concepts/context).
 
 ## Cómo ver el uso actual de tokens
 
@@ -77,24 +77,27 @@ Otras superficies:
   Proveedores actuales de ventana de uso: Anthropic, GitHub Copilot, Gemini CLI,
   OpenAI Codex, MiniMax, Xiaomi y z.ai.
 
-Las superficies de uso normalizan los alias comunes de campos nativos del proveedor antes de mostrarlos.
-Para el tráfico de Responses de la familia OpenAI, esto incluye tanto `input_tokens` /
-`output_tokens` como `prompt_tokens` / `completion_tokens`, por lo que los nombres de campos
-específicos del transporte no cambian `/status`, `/usage` ni los resúmenes de sesión.
+Las superficies de uso normalizan los alias de campo nativos comunes del proveedor antes de mostrarlos.
+Para el tráfico de Responses de la familia de OpenAI, eso incluye tanto `input_tokens` /
+`output_tokens` como `prompt_tokens` / `completion_tokens`, por lo que los nombres de campo\ específicos del transporte no cambian `/status`, `/usage` ni los resúmenes de sesión.
 El uso de JSON de la CLI de Gemini también se normaliza: el texto de respuesta proviene de `response`, y
-`stats.cached` se asigna a `cacheRead` usando `stats.input_tokens - stats.cached`
-cuando la CLI omite un campo explícito `stats.input`.
-Para el tráfico nativo de Responses de la familia OpenAI, los alias de uso de WebSocket/SSE se
-normalizan de la misma manera, y los totales vuelven a la entrada y salida normalizadas cuando
-`total_tokens` falta o es `0`.
-Cuando la instantánea de la sesión actual es dispersa, `/status` y `session_status` también pueden
-recuperar los contadores de tokens/caché y la etiqueta del modelo de tiempo de ejecución activo desde el
+`stats.cached` se asigna a `cacheRead` con `stats.input_tokens - stats.cached`
+utilizado cuando la CLI omite un campo `stats.input` explícito.
+Para el tráfico nativo de Responses de la familia de OpenAI, los alias de uso de WebSocket/SSE se
+normalizan de la misma manera, y los totales recurren a la entrada + salida normalizada cuando
+`total_tokens` falta o `0`.
+Cuando la instantánea de la sesión actual es escasa, `/status` y `session_status` también pueden
+recuperar los contadores de token/caché y la etiqueta del modelo de tiempo de ejecución activo desde el
 registro de uso de la transcripción más reciente. Los valores vivos distintos de cero existentes aún tienen
-prioridad sobre los valores de reserva de la transcripción, y los totales de transcripción orientados al prompt
-más grandes pueden prevalecer cuando los totales almacenados faltan o son más pequeños.
-La autenticación de uso para las ventanas de cuota del proveedor proviene de ganchos específicos del proveedor cuando
+prioridad sobre los valores de reserva de la transcripción, y los totales de la transcripción orientados a indicaciones más grandes
+ganan cuando los totales almacenados faltan o son más pequeños.
+La autenticación de uso para las ventanas de cuota del proveedor proviene de enlaces específicos del proveedor cuando
 están disponibles; de lo contrario, OpenClaw recurre a hacer coincidir las credenciales de OAuth/API-key
-desde los perfiles de autenticación, las variables de entorno o la configuración.
+de los perfiles de autenticación, el entorno o la configuración.
+Las entradas de la transcripción del asistente persisten en la misma forma de uso normalizada, incluyendo
+`usage.cost` cuando el modelo activo tiene precios configurados y el proveedor
+devuelve metadatos de uso. Esto da a `/usage cost` y al estado de sesión respaldado por transcripción
+una fuente estable incluso después de que el estado del tiempo de ejecución en vivo haya desaparecido.
 
 ## Estimación de costos (cuando se muestra)
 
@@ -104,8 +107,8 @@ Los costos se estiman a partir de la configuración de precios de su modelo:
 models.providers.<provider>.models[].cost
 ```
 
-Estos son **USD por 1M de tokens** para `input`, `output`, `cacheRead` y
-`cacheWrite`. Si falta el precio, OpenClaw solo muestra tokens. Los tokens de OAuth
+Estos son **USD por 1M tokens** para `input`, `output`, `cacheRead` y
+`cacheWrite`. Si falta la tarifa, OpenClaw muestra solo los tokens. Los tokens de OAuth
 nunca muestran el costo en dólares.
 
 ## Impacto del TTL de caché y la poda
@@ -116,21 +119,21 @@ ha expirado y luego restablece la ventana de caché para que las solicitudes pos
 contexto recién almacenado en caché en lugar de volver a almacenar en caché el historial completo. Esto mantiene los costos
 de escritura de caché más bajos cuando una sesión permanece inactiva más allá del TTL.
 
-Configúrelo en [Configuración de Gateway](/es/gateway/configuration) y vea los
-detalles del comportamiento en [Poda de sesiones](/es/concepts/session-pruning).
+Configúrelo en [Gateway configuration](/es/gateway/configuration) y vea los
+detalles del comportamiento en [Session pruning](/es/concepts/session-pruning).
 
-Heartbeat puede mantener la caché **caliente** durante los períodos de inactividad. Si el TTL de
-la caché de su modelo es `1h`, establecer el intervalo de heartbeat justo por debajo de ese (p. ej., `55m`) puede evitar
-volver a almacenar en caché el prompt completo, reduciendo los costos de escritura de caché.
+El latido (heartbeat) puede mantener la caché **activa** a través de intervalos de inactividad. Si el TTL de
+caché de su modelo es `1h`, establecer el intervalo de latido justo por debajo de ese valor (p. ej., `55m`) puede evitar
+volver a almacenar en caché el mensaje completo, reduciendo los costos de escritura de caché.
 
-En configuraciones multiagente, puede mantener una configuración de modelo compartida y ajustar el comportamiento de la caché
+En configuraciones de múltiples agentes, puede mantener una configuración de modelo compartida y ajustar el comportamiento de la caché
 por agente con `agents.list[].params.cacheRetention`.
 
-Para obtener una guía detallada paso a paso, consulte [Caché de prompts](/es/reference/prompt-caching).
+Para una guía completa control por control, consulte [Prompt Caching](/es/reference/prompt-caching).
 
-Para la precios de la API de Anthropic, las lecturas de caché son significativamente más baratas que los
-tokens de entrada, mientras que las escrituras de caché se facturan con un multiplicador más alto. Consulte la precios
-de caché de prompts de Anthropic para conocer las tarifas más recientes y los multiplicadores de TTL:
+Para la tarifa de la API de Anthropic, las lecturas de caché son significativamente más baratas que los
+tokens de entrada, mientras que las escrituras de caché se facturan con un multiplicador más alto. Consulte la
+tarifa de almacenamiento en caché de mensajes de Anthropic para ver las tasas más recientes y los multiplicadores de TTL:
 [https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
 
 ### Ejemplo: mantener la caché de 1 h caliente con heartbeat
@@ -169,13 +172,13 @@ agents:
         cacheRetention: "none" # avoid cache writes for bursty notifications
 ```
 
-`agents.list[].params` se fusiona encima del `params` del modelo seleccionado, por lo que puede
+`agents.list[].params` se combina encima de `params` del modelo seleccionado, por lo que puede
 anular solo `cacheRetention` y heredar otros valores predeterminados del modelo sin cambios.
 
 ### Ejemplo: habilitar el encabezado beta de contexto 1M de Anthropic
 
-La ventana de contexto de 1M de Anthropic actualmente está en beta. OpenClaw puede inyectar el
-valor `anthropic-beta` requerido cuando habilita `context1m` en los modelos Opus
+La ventana de contexto de 1M de Anthropic actualmente está en versión beta cerrada. OpenClaw puede inyectar el
+valor `anthropic-beta` requerido cuando habilita `context1m` en modelos Opus
 o Sonnet compatibles.
 
 ```yaml
@@ -189,12 +192,12 @@ agents:
 
 Esto se asigna al encabezado beta `context-1m-2025-08-07` de Anthropic.
 
-Esto solo se aplica cuando `context1m: true` se establece en esa entrada de modelo.
+Esto solo se aplica cuando `context1m: true` está configurado en esa entrada de modelo.
 
 Requisito: la credencial debe ser elegible para el uso de contexto largo. Si no,
 Anthropic responde con un error de límite de tasa del proveedor para esa solicitud.
 
-Si autentica a Anthropic con tokens de OAuth/suscripción (`sk-ant-oat-*`),
+Si autentica Anthropic con tokens de OAuth/suscripción (`sk-ant-oat-*`),
 OpenClaw omite el encabezado beta `context-1m-*` porque Anthropic actualmente
 rechaza esa combinación con HTTP 401.
 
@@ -206,4 +209,4 @@ rechaza esa combinación con HTTP 401.
 - Mantenga las descripciones de habilidades cortas (la lista de habilidades se inyecta en el prompt).
 - Prefiera modelos más pequeños para trabajos verbosos y exploratorios.
 
-Consulte [Skills](/es/tools/skills) para obtener la fórmula exacta de la sobrecarga de la lista de habilidades.
+Consulte [Skills](/es/tools/skills) para obtener la fórmula exacta de sobrecarga de la lista de habilidades.

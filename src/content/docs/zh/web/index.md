@@ -122,5 +122,5 @@ openclaw gateway
 Gateway(网关) 从 `dist/control-ui` 提供静态文件。使用以下命令构建它们：
 
 ```bash
-pnpm ui:build # auto-installs UI deps on first run
+pnpm ui:build
 ```

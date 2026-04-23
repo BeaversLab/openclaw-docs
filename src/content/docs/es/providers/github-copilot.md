@@ -14,7 +14,7 @@ GitHub Copilot es el asistente de codificación con IA de GitHub. Proporciona ac
 
 <Tabs>
   <Tab title="Proveedor integrado (github-copilot)">
-    Use el flujo nativo de inicio de sesión de dispositivo para obtener un token de GitHub, luego cámbielo por tokens de API de Copilot cuando OpenClaw se ejecute. Esta es la ruta **predeterminada** y más simple porque no requiere VS Code.
+    Use el flujo de inicio de sesión de dispositivo nativo para obtener un token de GitHub, luego cámbielo por tokens de la API de Copilot cuando OpenClaw se ejecute. Esta es la ruta **predeterminada** y más sencilla porque no requiere VS Code.
 
     <Steps>
       <Step title="Ejecute el comando de inicio de sesión">
@@ -26,14 +26,16 @@ GitHub Copilot es el asistente de codificación con IA de GitHub. Proporciona ac
       </Step>
       <Step title="Establezca un modelo predeterminado">
         ```bash
-        openclaw models set github-copilot/gpt-4o
+        openclaw models set github-copilot/claude-opus-4.6
         ```
 
         O en la configuración:
 
         ```json5
         {
-          agents: { defaults: { model: { primary: "github-copilot/gpt-4o" } } },
+          agents: {
+            defaults: { model: { primary: "github-copilot/claude-opus-4.6" } },
+          },
         }
         ```
       </Step>

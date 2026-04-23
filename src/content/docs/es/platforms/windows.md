@@ -35,10 +35,10 @@ openclaw agent --local --agent main --thinking low -m "Reply with exactly WINDOW
 
 Advertencias actuales:
 
-- `openclaw onboard --non-interactive` todavía espera un gateway local accesible a menos que pases `--skip-health`
+- `openclaw onboard --non-interactive` aún espera una puerta de enlace local accesible a menos que pases `--skip-health`
 - `openclaw onboard --non-interactive --install-daemon` y `openclaw gateway install` intentan primero las Tareas Programadas de Windows
 - si se deniega la creación de la Tarea Programada, OpenClaw recurre a un elemento de inicio de sesión de carpeta de Inicio por usuario e inicia el gateway inmediatamente
-- si `schtasks` mismo se bloquea o deja de responder, OpenClaw ahora aborta esa ruta rápidamente y usa la alternativa en lugar de colgarse para siempre
+- si `schtasks` se bloquea o deja de responder, OpenClaw ahora aborta esa ruta rápidamente y usa una alternativa en lugar de colgarse para siempre
 - Aún se prefieren las Tareas Programadas cuando están disponibles porque proporcionan un mejor estado de supervisor
 
 Si deseas solo la CLI nativa, sin instalación del servicio gateway, usa uno de estos:
@@ -59,7 +59,7 @@ Si la creación de la Tarea Programada está bloqueada, el modo de servicio alte
 
 ## Gateway
 
-- [Manual del Gateway](/es/gateway)
+- [Manual de la puerta de enlace](/es/gateway)
 - [Configuración](/es/gateway/configuration)
 
 ## Instalación del servicio Gateway (CLI)
@@ -173,9 +173,9 @@ netsh interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.
 Notas:
 
 - El SSH desde otra máquina apunta a la **IP del host de Windows** (ejemplo: `ssh user@windows-host -p 2222`).
-- Los nodos remotos deben apuntar a una URL de Gateway **accesible** (no `127.0.0.1`); usa
-  `openclaw status --all` para confirmarlo.
-- Usa `listenaddress=0.0.0.0` para el acceso a la LAN; `127.0.0.1` lo mantiene solo localmente.
+- Los nodos remotos deben apuntar a una URL de puerta de enlace **accesible** (no `127.0.0.1`); usa
+  `openclaw status --all` para confirmar.
+- Usa `listenaddress=0.0.0.0` para el acceso a la LAN; `127.0.0.1` lo mantiene solo local.
 - Si desea que esto sea automático, registre una Tarea Programada para ejecutar el paso de actualización
   al iniciar sesión.
 
@@ -219,20 +219,30 @@ systemctl --user status
 
 ### 3) Instalar OpenClaw (dentro de WSL)
 
-Siga el flujo de Primeros pasos de Linux dentro de WSL:
+Para una configuración normal por primera vez dentro de WSL, sigue el flujo de Introducción para Linux:
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 pnpm install
-pnpm ui:build # auto-installs UI deps on first run
 pnpm build
-openclaw onboard
+pnpm ui:build
+pnpm openclaw onboard --install-daemon
+```
+
+Si estás desarrollando desde el código fuente en lugar de hacer una incorporación por primera vez, usa el
+bucle de desarrollo desde [Configuración](/es/start/setup):
+
+```bash
+pnpm install
+# First run only (or after resetting local OpenClaw config/workspace)
+pnpm openclaw setup
+pnpm gateway:watch
 ```
 
 Guía completa: [Introducción](/es/start/getting-started)
 
-## Aplicación complementaria de Windows
+## Aplicación compañera de Windows
 
-Aún no tenemos una aplicación complementaria de Windows. Las contribuciones son bienvenidas si desea
-contribuciones para hacerla realidad.
+Aún no tenemos una aplicación compañera de Windows. Las contribuciones son bienvenidas si quieres
+contribuciones para que esto suceda.

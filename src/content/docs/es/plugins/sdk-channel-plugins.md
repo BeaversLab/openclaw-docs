@@ -160,8 +160,7 @@ más amplias:
   el cableado de registro y despacho
 - `openclaw/plugin-sdk/messaging-targets` para el análisis/ coincidencia de objetivos
 - `openclaw/plugin-sdk/outbound-media` y
-  `openclaw/plugin-sdk/outbound-runtime` para la carga de medios además de los
-  delegados de identidad/envío salientes
+  `openclaw/plugin-sdk/outbound-runtime` para la carga de medios, además de los delegados de identidad/envío salientes y la planificación de cargas útiles
 - `openclaw/plugin-sdk/thread-bindings-runtime` para el ciclo de vida de enlace de subprocesos
   y el registro del adaptador
 - `openclaw/plugin-sdk/agent-media-payload` solo cuando aún se requiere un diseño de campo de carga útil

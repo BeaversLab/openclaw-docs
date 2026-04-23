@@ -596,7 +596,7 @@ plugins.entries.active-memory
 | `config.model`              | `string`                                                                                             | 選用性阻斷式記憶子代理模型參考；若未設定，主動記憶將使用目前的工作階段模型 |
 | `config.queryMode`          | `"message" \| "recent" \| "full"`                                                                    | 控制阻斷式記憶子代理能看到多少對話內容                                     |
 | `config.promptStyle`        | `"balanced" \| "strict" \| "contextual" \| "recall-heavy" \| "precision-heavy" \| "preference-only"` | 控制阻斷式記憶子代理在決定是否回傳記憶時的積極或嚴格程度                   |
-| `config.thinking`           | `"off" \| "minimal" \| "low" \| "medium" \| "high" \| "xhigh" \| "adaptive"`                         | 阻斷式記憶子代理的進階思考覆寫；預設為 `off` 以提升速度                    |
+| `config.thinking`           | `"off" \| "minimal" \| "low" \| "medium" \| "high" \| "xhigh" \| "adaptive" \| "max"`                | 阻斷式記憶子代理的進階思考覆寫；預設為 `off` 以提升速度                    |
 | `config.promptOverride`     | `string`                                                                                             | 進階完整提示詞替換；不建議一般用途使用                                     |
 | `config.promptAppend`       | `string`                                                                                             | 附加至預設或覆寫提示詞的進階額外指令                                       |
 | `config.timeoutMs`          | `number`                                                                                             | 阻斷式記憶子代理的硬逾時時間，上限為 120000 毫秒                           |

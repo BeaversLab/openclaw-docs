@@ -8,12 +8,12 @@ title: "Hooks"
 
 # Hooks
 
-Les hooks sont de petits scripts qui s'exécutent lorsque quelque chose se produit dans le Gateway. Ils sont découverts automatiquement à partir des répertoires et peuvent être inspectés avec `openclaw hooks`.
+Les Hooks sont de petits scripts qui s'exécutent lorsque quelque chose se produit dans le Gateway. Ils peuvent être découverts à partir de répertoires et inspectés avec `openclaw hooks`. Le Gateway ne charge les hooks internes qu'une fois que vous avez activé les hooks ou configuré au moins une entrée de hook, un pack de hooks, un gestionnaire hérité ou un répertoire de hooks supplémentaire.
 
 Il existe deux types de hooks dans OpenClaw :
 
 - **Internal hooks** (cette page) : s'exécutent dans le Gateway lorsque des événements d'agent se déclenchent, comme `/new`, `/reset`, `/stop`, ou des événements de cycle de vie.
-- **Webhooks** : points de terminaison HTTP externes qui permettent à d'autres systèmes de déclencher des tâches dans OpenClaw. Voir [Webhooks](/fr/automation/cron-jobs#webhooks).
+- **Webhooks** : points de terminaison HTTP externes qui permettent à d'autres systèmes de déclencher des travaux dans OpenClaw. Voir [Webhooks](/fr/automation/cron-jobs#webhooks).
 
 Les hooks peuvent également être regroupés dans des plugins. `openclaw hooks list` affiche à la fois les hooks autonomes et les hooks gérés par des plugins.
 
@@ -138,24 +138,26 @@ Les hooks sont découverts à partir de ces répertoires, par ordre de priorité
 
 Les hooks d'espace de travail peuvent ajouter de nouveaux noms de hooks mais ne peuvent pas remplacer les hooks groupés, gérés ou fournis par des plugins portant le même nom.
 
+Le Gateway ignore la découverte de hooks internes au démarrage jusqu'à ce que les hooks internes soient configurés. Activez un hook groupé ou géré avec `openclaw hooks enable <name>`, installez un pack de hooks, ou définissez `hooks.internal.enabled=true` pour opter. Lorsque vous activez un hook nommé, le Gateway ne charge que le gestionnaire de ce hook ; `hooks.internal.enabled=true`, les répertoires de hooks supplémentaires et les gestionnaires hérités optent pour une découverte large.
+
 ### Packs de hooks
 
-Les packs de hooks sont des packages npm qui exportent des hooks via `openclaw.hooks` dans `package.json`. Installez avec :
+Les packs de hooks sont des paquets npm qui exportent des hooks via `openclaw.hooks` dans `package.json`. Installez avec :
 
 ```bash
 openclaw plugins install <path-or-spec>
 ```
 
-Les spécifications Npm sont uniquement pour le registre (nom du package + version exacte facultative ou dist-tag). Les spécifications Git/URL/fichier et les plages semver sont rejetées.
+Les spécifications Npm sont limitées au registre (nom du paquet + version exacte en option ou dist-tag). Les spécifications Git/URL/fichier et les plages semver sont rejetées.
 
 ## Hooks groupés
 
-| Hook                  | Événements                     | Ce qu'il fait                                                            |
-| --------------------- | ------------------------------ | ------------------------------------------------------------------------ |
-| session-memory        | `command:new`, `command:reset` | Enregistre le contexte de la session dans `<workspace>/memory/`          |
-| bootstrap-extra-files | `agent:bootstrap`              | Injecte des fichiers d'amorçage supplémentaires à partir de modèles glob |
-| command-logger        | `command`                      | Enregistre toutes les commandes dans `~/.openclaw/logs/commands.log`     |
-| boot-md               | `gateway:startup`              | Exécute `BOOT.md` au démarrage de la passerelle                          |
+| Hook                  | Événements                     | Ce qu'il fait                                                           |
+| --------------------- | ------------------------------ | ----------------------------------------------------------------------- |
+| session-memory        | `command:new`, `command:reset` | Enregistre le contexte de la session dans `<workspace>/memory/`         |
+| bootstrap-extra-files | `agent:bootstrap`              | Injecte des fichiers d'amorçage supplémentaires à partir de motifs glob |
+| command-logger        | `command`                      | Enregistre toutes les commandes dans `~/.openclaw/logs/commands.log`    |
+| boot-md               | `gateway:startup`              | Exécute `BOOT.md` au démarrage de la passerelle                         |
 
 Activer n'importe quel hook groupé :
 
@@ -167,11 +169,11 @@ openclaw hooks enable <hook-name>
 
 ### détails de session-memory
 
-Extrait les 15 derniers messages utilisateur/assistant, génère un slug de fichier descriptif via LLM, et enregistre dans `<workspace>/memory/YYYY-MM-DD-slug.md`. Nécessite que `workspace.dir` soit configuré.
+Extrait les 15 derniers messages utilisateur/assistant, génère un nom de fichier descriptif via LLM et enregistre dans `<workspace>/memory/YYYY-MM-DD-slug.md`. Nécessite que `workspace.dir` soit configuré.
 
 <a id="bootstrap-extra-files"></a>
 
-### config bootstrap-extra-files
+### configuration de bootstrap-extra-files
 
 ```json
 {
@@ -188,7 +190,7 @@ Extrait les 15 derniers messages utilisateur/assistant, génère un slug de fich
 }
 ```
 
-Les chemins sont résolus par rapport à l'espace de travail. Seuls les noms de base bootstrap reconnus sont chargés (`AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md`, `MEMORY.md`).
+Les chemins sont résolus par rapport à l'espace de travail. Seuls les noms de base d'amorçage reconnus sont chargés (`AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md`, `MEMORY.md`).
 
 <a id="command-logger"></a>
 
@@ -200,13 +202,13 @@ Enregistre chaque commande slash dans `~/.openclaw/logs/commands.log`.
 
 ### détails de boot-md
 
-Exécute `BOOT.md` depuis l'espace de travail actif au démarrage de la passerelle.
+Exécute `BOOT.md` à partir de l'espace de travail actif lorsque la passerelle démarre.
 
 ## Hooks de plugin
 
-Les plugins peuvent enregistrer des hooks via le Plugin SDK pour une intégration plus profonde : interception des appels d'outils, modification des invites, contrôle du flux de messages, et plus encore. Le Plugin SDK expose 28 hooks couvrant la résolution de modèle, le cycle de vie de l'agent, le flux de messages, l'exécution d'outils, la coordination des sous-agents et le cycle de vie de la passerelle.
+Les plugins peuvent enregistrer des hooks via le Plugin SDK pour une intégration plus approfondie : interception des appels d'outils, modification des invites, contrôle du flux des messages, etc. Le Plugin SDK expose 28 hooks couvrant la résolution des modèles, le cycle de vie des agents, le flux des messages, l'exécution des outils, la coordination des sous-agents et le cycle de vie de la passerelle.
 
-Pour la référence complète des hooks de plugin incluant `before_tool_call`, `before_agent_reply`, `before_install`, et tous les autres hooks de plugin, voir [Plugin Architecture](/fr/plugins/architecture#provider-runtime-hooks).
+Pour la référence complète des hooks de plugin, y compris `before_tool_call`, `before_agent_reply`, `before_install` et tous les autres hooks de plugin, consultez [Architecture des plugins](/fr/plugins/architecture#provider-runtime-hooks).
 
 ## Configuration
 
@@ -255,9 +257,9 @@ Répertoires de hooks supplémentaires :
 }
 ```
 
-<Note>The legacy `hooks.internal.handlers` array config format is still supported for backwards compatibility, but new hooks should use the discovery-based system.</Note>
+<Note>Le format de configuration de tableau `hooks.internal.handlers` hérité est toujours pris en charge pour la rétrocompatibilité, mais les nouveaux hooks doivent utiliser le système basé sur la découverte.</Note>
 
-## CLI reference
+## Référence CLI
 
 ```bash
 # List all hooks (add --eligible, --verbose, or --json)
@@ -274,16 +276,16 @@ openclaw hooks enable <hook-name>
 openclaw hooks disable <hook-name>
 ```
 
-## Best practices
+## Bonnes pratiques
 
-- **Keep handlers fast.** Hooks run during command processing. Fire-and-forget heavy work with `void processInBackground(event)`.
-- **Handle errors gracefully.** Wrap risky operations in try/catch; do not throw so other handlers can run.
-- **Filter events early.** Return immediately if the event type/action is not relevant.
-- **Use specific event keys.** Prefer `"events": ["command:new"]` over `"events": ["command"]` to reduce overhead.
+- **Gardez les gestionnaires rapides.** Les hooks s'exécutent pendant le traitement des commandes. Effectuez le travail lourd en mode tirer-et-oublier avec `void processInBackground(event)`.
+- **Gérez les erreurs avec élégance.** Enveloppez les opérations risquées dans des blocs try/catch ; ne lancez pas d'exceptions pour que les autres gestionnaires puissent s'exécuter.
+- **Filtrez les événements tôt.** Retournez immédiatement si le type/action de l'événement n'est pas pertinent.
+- **Utilisez des clés d'événement spécifiques.** Privilégiez `"events": ["command:new"]` à `"events": ["command"]` pour réduire la surcharge.
 
-## Troubleshooting
+## Dépannage
 
-### Hook not discovered
+### Hook non découvert
 
 ```bash
 # Verify directory structure
@@ -294,23 +296,23 @@ ls -la ~/.openclaw/hooks/my-hook/
 openclaw hooks list
 ```
 
-### Hook not eligible
+### Hook non éligible
 
 ```bash
 openclaw hooks info my-hook
 ```
 
-Check for missing binaries (PATH), environment variables, config values, or OS compatibility.
+Vérifiez les binaires manquants (PATH), les variables d'environnement, les valeurs de configuration ou la compatibilité du système d'exploitation.
 
-### Hook not executing
+### Hook ne s'exécutant pas
 
-1. Verify the hook is enabled: `openclaw hooks list`
-2. Restart your gateway process so hooks reload.
-3. Check gateway logs: `./scripts/clawlog.sh | grep hook`
+1. Vérifiez que le hook est activé : `openclaw hooks list`
+2. Redémarrez votre processus de passerelle pour que les hooks se rechargent.
+3. Vérifiez les journaux de la passerelle : `./scripts/clawlog.sh | grep hook`
 
-## Related
+## Connexes
 
-- [CLI Reference: hooks](/fr/cli/hooks)
+- [Référence CLI : hooks](/fr/cli/hooks)
 - [Webhooks](/fr/automation/cron-jobs#webhooks)
-- [Plugin Architecture](/fr/plugins/architecture#provider-runtime-hooks) — full plugin hook reference
+- [Architecture des plugins](/fr/plugins/architecture#provider-runtime-hooks) — référence complète des hooks de plugin
 - [Configuration](/fr/gateway/configuration-reference#hooks)

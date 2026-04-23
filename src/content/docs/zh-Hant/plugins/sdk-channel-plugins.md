@@ -149,8 +149,8 @@ ID、明確的 `baseConversationId` 以及任何
   和記錄與分發連線
 - `openclaw/plugin-sdk/messaging-targets` 用於目標解析/比對
 - `openclaw/plugin-sdk/outbound-media` 和
-  `openclaw/plugin-sdk/outbound-runtime` 用於媒體載入以及
-  傳出身分識別/發送委派
+  `openclaw/plugin-sdk/outbound-runtime` 用於媒體載入，加上出站
+  身分/發送委派和負載規劃
 - `openclaw/plugin-sdk/thread-bindings-runtime` 用於執行緒繫結生命週期
   和介面卡註冊
 - 僅當仍然需要舊版代理程式/媒體承載欄位佈局時，才使用 `openclaw/plugin-sdk/agent-media-payload`

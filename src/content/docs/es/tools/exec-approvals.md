@@ -113,7 +113,7 @@ Distinción importante:
 
 - `tools.exec.host=auto` elige dónde se ejecuta exec: sandbox cuando está disponible, de lo contrario gateway.
 - YOLO elige cómo se aprueba el exec del host: `security=full` más `ask=off`.
-- En modo YOLO, OpenClaw no añade una puerta de aprobación heurística separada de ofuscación de comandos encima de la política de ejecución del host configurada.
+- En modo YOLO, OpenClaw no añade una puerta de aprobación heurística de ofuscación de comandos ni una capa de rechazo de preverificación de script separadas además de la política de ejecución del host configurada.
 - `auto` no convierte el enrutamiento de gateway en una anulación gratuita desde una sesión en sandbox. Se permite una solicitud `host=node` por llamada desde `auto`, y `host=gateway` solo se permite desde `auto` cuando no hay un tiempo de ejecución de sandbox activo. Si desea un valor predeterminado no automático estable, establezca `tools.exec.host` o use `/exec host=...` explícitamente.
 
 Si desea una configuración más conservadora, restrinja cualquier capa nuevamente a `allowlist` / `on-miss`

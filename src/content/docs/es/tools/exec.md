@@ -66,7 +66,7 @@ Notas:
 - `tools.exec.ask` (predeterminado: `off`)
 - La ejecución del host sin aprobación es el valor predeterminado para la puerta de enlace (gateway) y el nodo. Si desea el comportamiento de aprobaciones/lista de permitidos, restrinja tanto `tools.exec.*` como el host `~/.openclaw/exec-approvals.json`; consulte [Aprobaciones de ejecución](/es/tools/exec-approvals#no-approval-yolo-mode).
 - YOLO proviene de los valores predeterminados de la política del host (`security=full`, `ask=off`), no de `host=auto`. Si desea forzar el enrutamiento a través de la puerta de enlace o del nodo, establezca `tools.exec.host` o utilice `/exec host=...`.
-- En el modo `security=full` más `ask=off`, la ejecución del host sigue la política configurada directamente; no hay ningún filtro previo heurístico adicional de ofuscación de comandos.
+- En modo `security=full` más `ask=off`, la ejecución en el host sigue la política configurada directamente; no hay una capa de prefiltrado heurística de ofuscación de comandos adicional ni una capa de rechazo de preverificación de scripts.
 - `tools.exec.node` (predeterminado: sin definir)
 - `tools.exec.strictInlineEval` (predeterminado: false): cuando es true, los formularios de evaluación del intérprete en línea, como `python -c`, `node -e`, `ruby -e`, `perl -e`, `php -r`, `lua -e` y `osascript -e`, siempre requieren una aprobación explícita. `allow-always` aún puede persistir invocaciones benignas de intérprete/scripts, pero los formularios de evaluación en línea seguirán solicitando confirmación cada vez.
 - `tools.exec.pathPrepend`: lista de directorios que se deben anteponer a `PATH` para las ejecuciones exec (solo puerta de enlace + entorno limitado/sandbox).

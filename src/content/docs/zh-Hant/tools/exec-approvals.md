@@ -109,7 +109,7 @@ macOS 區分：
 
 - `tools.exec.host=auto` 決定 exec 在何處執行：可用時在沙箱中執行，否則在閘道上執行。
 - YOLO 決定如何批准主機 exec：`security=full` 加上 `ask=off`。
-- 在 YOLO 模式下，OpenClaw 不會在設定的主機 exec 原則之上額外增加獨立的啟發式指令混淆核准閘門。
+- 在 YOLO 模式下，OpenClaw 不會在已設定的主機執行策略之上，新增獨立的啟發式命令混淆審核閘門或腳本預檢拒絕層。
 - `auto` 不會讓閘道路由成為從沙箱工作階段進行的免費覆寫。從 `auto` 允許每次呼叫的 `host=node` 請求，且僅當沒有沙箱執行環境處於作用中時，才允許從 `auto` 進行 `host=gateway`。如果您想要穩定的非自動預設值，請設定 `tools.exec.host` 或明確使用 `/exec host=...`。
 
 如果您想要更保守的設定，請將任一層級縮緊回 `allowlist` / `on-miss`

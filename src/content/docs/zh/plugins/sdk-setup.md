@@ -494,8 +494,10 @@ openclaw plugins install <package-name>
 
 <Info>对于来源于 npm 的安装，`openclaw plugins install` 运行 `npm install --ignore-scripts`（无生命周期脚本）。请保持插件依赖树为纯 JS/TS，并避免需要 `postinstall` 构建的包。</Info>
 
+OpenClaw 拥有的内置插件是唯一的启动修复例外：当打包安装程序通过插件配置、旧版渠道配置或其内置的默认启用清单发现某个此类插件已启用时，会在导入之前启动安装该插件缺失的运行时依赖项。第三方插件不应依赖启动安装；请继续使用显式插件安装程序。
+
 ## 相关
 
 - [SDK 入口点](/zh/plugins/sdk-entrypoints) -- `definePluginEntry` 和 `defineChannelPluginEntry`
-- [插件清单](/zh/plugins/manifest) -- 完整的清单模式参考
+- [插件清单](/zh/plugins/manifest) -- 完整的清单架构参考
 - [构建插件](/zh/plugins/building-plugins) -- 分步入门指南

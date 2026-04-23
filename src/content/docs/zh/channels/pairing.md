@@ -98,22 +98,24 @@ openclaw devices reject <requestId>
 
 如果同一设备使用不同的身份验证详细信息（例如不同的角色/范围/公钥）重试，则之前的待处理请求将被取代，并创建一个新的 `requestId`。
 
+注意：已配对的设备不会在静默中获得更广泛的访问权限。如果它重新连接并请求更多作用域或更广泛的角色，OpenClaw 将保持现有批准不变，并创建一个新的待处理升级请求。在批准之前，请使用 `openclaw devices list` 比较当前批准的访问权限与新请求的访问权限。
+
 ### 节点配对状态存储
 
 存储在 `~/.openclaw/devices/` 下：
 
-- `pending.json`（短期存在；待处理的请求会过期）
-- `paired.json`（已配对的设备 + 令牌）
+- `pending.json` （短期；待处理的请求会过期）
+- `paired.json` （已配对的设备 + 令牌）
 
 ### 注意事项
 
-- 传统的 `node.pair.*` API (CLI: `openclaw nodes pending|approve|reject|rename`) 是一个单独的网关拥有的配对存储。WS 节点仍然需要设备配对。
-- 配对记录是已批准角色的持久真实来源。活动的设备令牌始终绑定到该已批准的角色集；在已批准角色之外的孤立令牌条目不会创建新的访问权限。
+- 旧版 `node.pair.*` API（CLI：`openclaw nodes pending|approve|reject|rename`）是一个单独的、由网关拥有的配对存储。WS 节点仍需要设备配对。
+- 配对记录是已批准角色的持久真实来源。活动设备令牌仍受限于该批准的角色集；在批准角色之外的孤立令牌条目不会创建新的访问权限。
 
 ## 相关文档
 
-- 安全模型 + 提示词注入：[安全](/zh/gateway/security)
-- 安全更新（运行 doctor）：[更新](/zh/install/updating)
+- 安全模型 + 提示词注入：[Security](/zh/gateway/security)
+- 安全更新（运行医生）：[Updating](/zh/install/updating)
 - 频道配置：
   - Telegram：[Telegram](/zh/channels/telegram)
   - WhatsApp：[WhatsApp](/zh/channels/whatsapp)

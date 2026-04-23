@@ -27,7 +27,7 @@ Inbound message
 - `agents.defaults.*` 用於區塊串流與分塊的預設值。
 - 頻道覆寫（`channels.whatsapp.*`、`channels.telegram.*` 等）用於上限與串流切換。
 
-完整架構請參閱 [Configuration](/zh-Hant/gateway/configuration)。
+請參閱 [配置](/zh-Hant/gateway/configuration) 以取得完整架構。
 
 ## 傳入去重
 
@@ -69,7 +69,7 @@ Inbound message
 
 多個裝置/頻道可對應至同一個工作階段，但歷史記錄不會完全同步回每個用戶端。建議：長時間對話請使用一個主要裝置，以避免語境分歧。Control UI 與 TUI 一律顯示由閘道備份的工作階段文字記錄，因此其為真實來源。
 
-詳情：[Session management](/zh-Hant/concepts/session)。
+詳細資訊：[會話管理](/zh-Hant/concepts/session)。
 
 ## 傳入內容與歷史記錄語境
 
@@ -113,7 +113,7 @@ OpenClaw 會將 **提示主體** 與 **指令主體** 分離：
 - `agents.defaults.humanDelay` (區塊回覆之間的類人暫停)
 - 通道覆寫：`*.blockStreaming` 和 `*.blockStreamingCoalesce` (非 Telegram 通道需要明確的 `*.blockStreaming: true`)
 
-詳情：[串流 + 分塊](/zh-Hant/concepts/streaming)。
+詳細資訊：[串流 + 分塊](/zh-Hant/concepts/streaming)。
 
 ## 推理可見性和 Token
 
@@ -123,7 +123,7 @@ OpenClaw 可以顯示或隱藏模型推理：
 - 推理內容由模型生成時仍會計入 Token 使用量。
 - Telegram 支援將推理串流至草稿氣泡中。
 
-詳情：[思考 + 推理指令](/zh-Hant/tools/thinking) 和 [Token 使用](/zh-Hant/reference/token-use)。
+詳細資訊：[思考 + 推理指令](/zh-Hant/tools/thinking) 和 [Token 使用](/zh-Hant/reference/token-use)。
 
 ## 前綴、串回和回覆
 
@@ -132,7 +132,20 @@ OpenClaw 可以顯示或隱藏模型推理：
 - `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix` (出站前綴串聯)，加上 `channels.whatsapp.messagePrefix` (WhatsApp 入站前綴)
 - 透過 `replyToMode` 和各通道預設值進行回覆串回
 
-詳情：[組態](/zh-Hant/gateway/configuration-reference#messages) 和通道文件。
+詳細資訊：[配置](/zh-Hant/gateway/configuration-reference#messages) 和頻道文件。
+
+## 靜默回覆
+
+精確的靜默 Token `NO_REPLY` / `no_reply` 意味著「不傳遞使用者可見的回覆」。
+OpenClaw 會根據對話類型解析該行為：
+
+- 直接對話預設不允許靜默，並會將純靜默回覆重寫為簡短的可見備用回覆。
+- 群組/頻道預設允許靜默。
+- 內部編排預設允許靜默。
+
+預設值位於 `agents.defaults.silentReply` 和
+`agents.defaults.silentReplyRewrite` 之下；`surfaces.<id>.silentReply` 和
+`surfaces.<id>.silentReplyRewrite` 可以針對每個介面進行覆寫。
 
 ## 相關
 

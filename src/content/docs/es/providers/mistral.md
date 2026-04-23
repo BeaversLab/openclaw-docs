@@ -86,17 +86,17 @@ Usa Voxtral para la transcripción de audio a través de la canalización de com
 
 <AccordionGroup>
   <Accordion title="Razonamiento ajustable (mistral-small-latest)">
-    `mistral/mistral-small-latest` se asigna a Mistral Small 4 y es compatible con el [razonamiento ajustable](https://docs.mistral.ai/capabilities/reasoning/adjustable) en la API de Chat Completions a través de `reasoning_effort` (`none` minimiza el pensamiento adicional en la salida; `high` muestra las trazas de pensamiento completas antes de la respuesta final).
+    `mistral/mistral-small-latest` se asigna a Mistral Small 4 y es compatible con el [razonamiento ajustable](https://docs.mistral.ai/capabilities/reasoning/adjustable) en la API de Chat Completions mediante `reasoning_effort` (`none` minimiza el pensamiento adicional en la salida; `high` muestra las trazas de pensamiento completas antes de la respuesta final).
 
-    OpenClaw asigna el nivel de **pensamiento** de la sesión a la API de Mistral:
+    OpenClaw asigna el nivel de **pensamiento** (thinking) de la sesión a la API de Mistral:
 
     | Nivel de pensamiento de OpenClaw                          | Mistral `reasoning_effort` |
     | ------------------------------------------------ | -------------------------- |
     | **off** / **minimal**                            | `none`                     |
-    | **low** / **medium** / **high** / **xhigh** / **adaptive** | `high`             |
+    | **low** / **medium** / **high** / **xhigh** / **adaptive** / **max** | `high`     |
 
     <Note>
-    Otros modelos del catálogo incluido de Mistral no utilizan este parámetro. Siga utilizando los modelos `magistral-*` cuando desee el comportamiento nativo de prioridad de razonamiento de Mistral.
+    Otros modelos del catálogo empaquetado de Mistral no utilizan este parámetro. Sigue usando los modelos `magistral-*` cuando desees el comportamiento nativo de razonamiento primero de Mistral.
     </Note>
 
   </Accordion>

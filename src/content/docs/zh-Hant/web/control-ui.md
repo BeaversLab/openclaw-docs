@@ -50,89 +50,101 @@ openclaw devices approve <requestId>
 
 如果瀏覽器以變更後的驗證詳細資料（角色/範圍/公開金鑰）重試配對，先前的待處理請求將被取代，並建立一個新的 `requestId`。請在核准前重新執行 `openclaw devices list`。
 
-一旦核准，該裝置會被記住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤銷它，否則不需要重新核准。請參閱[裝置 CLI](/zh-Hant/cli/devices)以了解權杖輪換和撤銷。
+如果瀏覽器已經配對，並且您將其從唯讀存取權限變更為
+寫入/管理員存取權限，這將被視為權限升級，而不是靜默
+重新連線。OpenClaw 會保持舊的批准處於啟用狀態，阻止
+更廣泛的重新連線，並要求您明確批准新的範圍集。
+
+一旦獲得批准，該裝置將被記住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤銷它，
+否則將不需要重新批准。請參閱
+[Devices CLI](/zh-Hant/cli/devices) 以了解 Token 輪換和撤銷。
 
 **備註：**
 
-- 直接本機回送瀏覽器連線（`127.0.0.1` / `localhost`）會自動核准。
-- 來自 Tailnet 和區域網路 (LAN) 的瀏覽器連線仍然需要明確核准，即使它們來自同一台機器。
-- 每個瀏覽器設定檔都會產生一個唯一的裝置 ID，因此切換瀏覽器或清除瀏覽器資料將需要重新配對。
+- 直接的本機回送瀏覽器連線 (`127.0.0.1` / `localhost`) 會
+  自動獲得批准。
+- 來自 Tailnet 和 LAN 的瀏覽器連線仍然需要明確批准，即使
+  它們來自同一台機器。
+- 每個瀏覽器設定檔都會產生唯一的裝置 ID，因此切換瀏覽器或
+  清除瀏覽器資料將需要重新配對。
 
 ## 語言支援
 
-控制 UI 可以根據您的瀏覽器地區設定在首次載入時進行本地化。若要稍後覆寫它，請開啟 **Overview -> Gateway Access -> Language**。地區設定選擇器位於 Gateway Access 卡片中，而非 Appearance 底下。
+控制 UI 可以在首次載入時根據您的瀏覽器語言地區進行本地化。
+若稍後要變更，請開啟 **Overview -> Gateway Access -> Language**。
+地區選擇器位於 Gateway Access 卡片中，而不是在 Appearance 下。
 
-- 支援的地區設定：`en`、`zh-CN`、`zh-TW`、`pt-BR`、`de`、`es`、`ja-JP`、`ko`、`fr`、`tr`、`uk`、`id`、`pl`
-- 非英文翻譯會在瀏覽器中延遲載入。
-- 選取的語言地區會儲存在瀏覽器儲存空間中，並在未來造訪時重複使用。
-- 缺少的翻譯鍵會回退為英文。
+- 支援的地區：`en`、`zh-CN`、`zh-TW`、`pt-BR`、`de`、`es`、`ja-JP`、`ko`、`fr`、`tr`、`uk`、`id`、`pl`
+- 非英語翻�會在瀏覽器中以懶加載方式載入。
+- 選取的地區會儲存在瀏覽器儲存空間中，並在未來造訪時重複使用。
+- 遺漏的翻譯鍵會回退至英文。
 
-## 它目前可以做到什麼
+## 它目前的功能
 
 - 透過 Gateway WS 與模型聊天 (`chat.history`、`chat.send`、`chat.abort`、`chat.inject`)
-- 在聊天中串流工具呼叫 + 即時工具輸出卡片 (代理程式事件)
-- 頻道：內建以及捆綁/外部外掛頻道狀態、QR 登入和個別頻道設定 (`channels.status`、`web.login.*`、`config.patch`)
-- 實例：存在清單 + 重新整理 (`system-presence`)
-- 會話：清單 + 每個會話的模型/思考/快速/詳細/追蹤/推理覆寫 (`sessions.list`、`sessions.patch`)
-- 夢境：做夢狀態、啟用/停用切換，以及夢境日誌閱讀器 (`doctor.memory.status`、`doctor.memory.dreamDiary`、`config.patch`)
-- Cron 工作：清單/新增/編輯/執行/啟用/停用 + 執行歷史記錄 (`cron.*`)
-- 技能：狀態、啟用/停用、安裝、API 金鑰更新 (`skills.*`)
-- 節點：清單 + 權限 (`node.list`)
-- 執行核准：編輯閘道或節點允許清單 + 針對 `exec host=gateway/node` 的詢問策略 (`exec.approvals.*`)
-- 設定：檢視/編輯 `~/.openclaw/openclaw.json` (`config.get`、`config.set`)
-- 設定：套用 + 驗證後重新啟動 (`config.apply`) 並喚醒最後一個使用中的會話
-- 設定寫入包含基底雜湊防護，以防止覆寫並行編輯
-- 設定寫入 (`config.set`/`config.apply`/`config.patch`) 也會對提交的設定負載中的參照進行預先檢查作用中的 SecretRef 解析；未解析的作用中已提交參照會在寫入前被拒絕
+- 在聊天中串流工具呼叫 + 即時工具輸出卡片 (agent 事件)
+- 頻道：內建以及捆綁/外掛程式頻道狀態、QR 登入和各頻道設定 (`channels.status`、`web.login.*`、`config.patch`)
+- Instances: presence list + refresh (`system-presence`)
+- Sessions: list + per-session model/thinking/fast/verbose/trace/reasoning overrides (`sessions.list`, `sessions.patch`)
+- Dreams: dreaming status, enable/disable toggle, and Dream Diary reader (`doctor.memory.status`, `doctor.memory.dreamDiary`, `config.patch`)
+- Cron jobs: list/add/edit/run/enable/disable + run history (`cron.*`)
+- Skills: status, enable/disable, install, API key updates (`skills.*`)
+- Nodes: list + caps (`node.list`)
+- Exec approvals: edit gateway or node allowlists + ask policy for `exec host=gateway/node` (`exec.approvals.*`)
+- Config: view/edit `~/.openclaw/openclaw.json` (`config.get`, `config.set`)
+- Config: apply + restart with validation (`config.apply`) and wake the last active session
+- Config writes include a base-hash guard to prevent clobbering concurrent edits
+- Config writes (`config.set`/`config.apply`/`config.patch`) also preflight active SecretRef resolution for refs in the submitted config payload; unresolved active submitted refs are rejected before write
 - Config schema + form rendering (`config.schema` / `config.schema.lookup`,
   including field `title` / `description`, matched UI hints, immediate child
   summaries, docs metadata on nested object/wildcard/array/composition nodes,
   plus plugin + channel schemas when available); Raw JSON editor is
   available only when the snapshot has a safe raw round-trip
-- 如果快照無法安全地往返原始文字，Control UI 將強制使用表單模式並禁用該快照的原始模式
-- 結構化的 SecretRef 物件值在表單文字輸入中以唯讀方式呈現，以防止意外地將物件轉換為字串而損毀
+- If a snapshot cannot safely round-trip raw text, Control UI forces Form mode and disables Raw mode for that snapshot
+- Structured SecretRef object values are rendered read-only in form text inputs to prevent accidental object-to-string corruption
 - Debug: status/health/models snapshots + event log + manual RPC calls (`status`, `health`, `models.list`)
-- Logs: live tail of gateway file logs with filter/export (`logs.tail`)
-- Update: run a package/git update + restart (`update.run`) with a restart report
+- 日誌：即時追蹤 Gateway 檔案日誌並支援過濾/匯出 (`logs.tail`)
+- 更新：執行套件/Git 更新並重新啟動 (`update.run`)，隨附重新啟動報告
 
-Cron jobs 面板備註：
+Cron 工作面板註記：
 
-- 對於隔離任務，傳送預設為 announce summary。如果您只想內部執行，可以切換為 none。
-- 當選擇 announce 時，會顯示 Channel/target 欄位。
-- Webhook mode uses `delivery.mode = "webhook"` with `delivery.to` set to a valid HTTP(S) webhook URL.
-- 對於 main-session 任務，提供 webhook 和 none 傳送模式。
-- 進階編輯控制項包括 delete-after-run、清除 agent 覆寫、cron exact/stagger 選項、
-  agent model/thinking 覆寫，以及盡力而為傳送切換開關。
-- 表單驗證是內聯的，顯示欄位級別的錯誤；無效值會停用儲存按鈕，直到修正為止。
-- Set `cron.webhookToken` to send a dedicated bearer token, if omitted the webhook is sent without an auth header.
-- Deprecated fallback: stored legacy jobs with `notify: true` can still use `cron.webhook` until migrated.
+- 對於獨立工作，傳送方式預設為公告摘要。如果您僅用於內部執行，可以切換為無。
+- 選取公告時會顯示頻道/目標欄位。
+- Webhook 模式使用 `delivery.mode = "webhook"` 並將 `delivery.to` 設定為有效的 HTTP(S) webhook URL。
+- 對於主工作階段工作，可使用 webhook 和無傳送模式。
+- 進階編輯控制項包含執行後刪除、清除代理覆寫、cron 精確/交錯選項、代理模型/思考覆寫，以及盡力而為傳送切換開關。
+- 表單驗證為內聯顯示，包含欄位層級錯誤；無效值會停用儲存按鈕，直到修正為止。
+- 設定 `cron.webhookToken` 以傳送專屬的 bearer token，若省略則 webhook 會在無驗證標頭的情況下傳送。
+- 已棄用的後援：具有 `notify: true` 的儲存舊版工作仍可使用 `cron.webhook` 直到遷移為止。
 
-## Chat 行為
+## 聊天行為
 
-- `chat.send` is **non-blocking**: it acks immediately with `{ runId, status: "started" }` and the response streams via `chat` events.
-- Re-sending with the same `idempotencyKey` returns `{ status: "in_flight" }` while running, and `{ status: "ok" }` after completion.
-- `chat.history` responses are size-bounded for UI safety. When transcript entries are too large, Gateway may truncate long text fields, omit heavy metadata blocks, and replace oversized messages with a placeholder (`[chat.history omitted: message too large]`).
-- `chat.history` 也會從可見的助理文字中去除僅供顯示的內聯指令標籤（例如 `[[reply_to_*]]` 和 `[[audio_as_voice]]`）、純文字工具呼叫 XML 載荷（包括 `<tool_call>...</tool_call>`、`<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、`<function_calls>...</function_calls>` 以及被截斷的工具呼叫區塊），以及洩漏的 ASCII/全形模型控制權杖，並且會省略整個可見文字僅包含確切靜默權杖 `NO_REPLY` / `no_reply` 的助理條目。
-- `chat.inject` 會將助理附註附加到會話紀錄並廣播 `chat` 事件以進行僅限 UI 的更新（無代理執行，無通道傳送）。
-- 聊天標頭的模型和思考選取器會透過 `sessions.patch` 立即修補使用中的會話；它們是持續性的會話覆寫，而非僅限單次回覆的傳送選項。
+- `chat.send` 為 **非阻斷式**：它會立即以 `{ runId, status: "started" }` 確認且回應會透過 `chat` 事件串流。
+- 使用相同的 `idempotencyKey` 重新傳送會在執行時傳回 `{ status: "in_flight" }`，並在完成後傳回 `{ status: "ok" }`。
+- `chat.history` 回應會因 UI 安全而限制大小。當文字記錄項目過大時，Gateway 可能會截斷長文字欄位、省略龐大的中繼資料區塊，並以預留位置 (`[chat.history omitted: message too large]`) 取代過大的訊息。
+- `chat.history` 也會從可見的助理文字中移除僅供顯示的內聯指令標籤（例如 `[[reply_to_*]]` 和 `[[audio_as_voice]]`）、純文字工具呼叫 XML 載荷（包括 `<tool_call>...</tool_call>`、`<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、`<function_calls>...</function_calls>` 以及被截斷的工具呼叫區塊），以及外洩的 ASCII/全形模型控制權杖，並且會省略其整個可見文字僅為確切的靜默權杖 `NO_REPLY` / `no_reply` 的助理條目。
+- `chat.inject` 會將助理備註附加到會話紀錄，並廣播 `chat` 事件以進行僅限 UI 的更新（無 Agent 執行，無通道傳遞）。
+- 聊天標頭的模型和思考選擇器會透過 `sessions.patch` 立即修補活動會話；它們是持久的會話覆寫，而非僅限單次輪次的傳送選項。
 - 停止：
-  - 點擊 **Stop**（呼叫 `chat.abort`）
-  - 輸入 `/stop`（或獨立的中止詞組，例如 `stop`、`stop action`、`stop run`、`stop openclaw`、`please stop`）以中止非同步作業
-  - `chat.abort` 支援 `{ sessionKey }`（無 `runId`）以中止該會話的所有執行中作業
+  - 點擊 **Stop** （呼叫 `chat.abort`）
+  - 輸入 `/stop` （或獨立的中止短語，如 `stop`、`stop action`、`stop run`、`stop openclaw`、`please stop`）以帶外中止
+  - `chat.abort` 支援 `{ sessionKey }` （無 `runId`）以中止該會話的所有活動執行
 - 中止部分保留：
-  - 當執行中止時，部分助理文字仍可顯示在 UI 中
-  - 當存在緩衝輸出時，Gateway 會將中止的部分助理文字持久化到對話記錄歷史中
-  - 持久化的條目包含中止元數據，因此對話記錄的使用者可以區分中止的部分內容與正常完成輸出
+  - 當執行被中止時，部分的助理文字仍可顯示在 UI 中
+  - 當存在緩衝輸出時，Gateway 會將被中止的部分助理文字持久化到紀錄歷史中
+  - 持久化的條目包含中止元數據，以便紀錄消費者能區分中止的部分與正常完成輸出
 
-## 託管嵌入
+## 託管內嵌
 
-助理訊息可以使用 `[embed ...]` 簡碼在行內呈現託管的網頁內容。iframe 沙盒原則由
+助理訊息可以使用 `[embed ...]`
+短代碼內聯呈現託管的網頁內容。iframe sandbox 原則由
 `gateway.controlUi.embedSandbox` 控制：
 
-- `strict`：停用託管嵌入內的腳本執行
-- `scripts`：允許互動式嵌入，同時保持來源隔離；這是
-  預設值，通常足以用於自包含的瀏覽器遊戲/小工具
-- `trusted`：在 `allow-scripts` 之上新增 `allow-same-origin`，針對
-  故意需要更強權限的同站文件
+- `strict`：停用託管內嵌中的腳本執行
+- `scripts`: 允許互動式嵌入，同時保持來源隔離；這是
+  預設值，對於獨立的瀏覽器遊戲/小工具通常已足夠
+- `trusted`: 在 `allow-scripts` 之上為同站
+  文件新增 `allow-same-origin`，以滿足刻意需要更強權限的情況
 
 範例：
 
@@ -146,15 +158,18 @@ Cron jobs 面板備註：
 }
 ```
 
-僅當嵌入文件確實需要同源行為時才使用 `trusted`。對於大多數代理生成的遊戲和互動畫布，`scripts` 是更安全的選擇。
+僅當嵌入文件確實需要同源行為時才使用 `trusted`。對於大多數代理生成的遊戲和互動式畫布，`scripts` 是
+更安全的選擇。
 
-絕對外部 `http(s)` 嵌入 URL 預設保持封鎖狀態。如果您有意要 `[embed url="https://..."]` 載入第三方頁面，請設定 `gateway.controlUi.allowExternalEmbedUrls: true`。
+絕對外部 `http(s)` 嵌入 URL 預設保持封鎖。如果您
+刻意希望 `[embed url="https://..."]` 載入第三方頁面，請設定
+`gateway.controlUi.allowExternalEmbedUrls: true`。
 
-## Tailnet 存取（建議）
+## Tailnet 存取（推薦）
 
 ### 整合式 Tailscale Serve（首選）
 
-將 Gateway 保持在 loopback，並讓 Tailscale Serve 使用 HTTPS 對其進行代理：
+將 Gateway 保持在 loopback 上，並讓 Tailscale Serve 以 HTTPS 對其進行代理：
 
 ```bash
 openclaw gateway --tailscale serve
@@ -162,11 +177,22 @@ openclaw gateway --tailscale serve
 
 開啟：
 
-- `https://<magicdns>/` (或您設定的 `gateway.controlUi.basePath`)
+- `https://<magicdns>/` （或您設定的 `gateway.controlUi.basePath`）
 
-預設情況下，當 `gateway.auth.allowTailscale` 為 `true` 時，Control UI/WebSocket Serve 請求可以透過 Tailscale 身分標頭 (`tailscale-user-login`) 進行驗證。OpenClaw 透過使用 `tailscale whois` 解析 `x-forwarded-for` 位址並將其與標頭匹配來驗證身分，並且僅當請求透過 Tailscale 的 `x-forwarded-*` 標頭到達 loopback 時才接受這些請求。如果您想即使對於 Serve 流量也要求明確的共享金鑰憑證，請設定 `gateway.auth.allowTailscale: false`。然後使用 `gateway.auth.mode: "token"` 或 `"password"`。
-對於該非同步 Serve 身分路徑，相同客戶端 IP 和驗證範圍的失敗驗證嘗試會在速率限制寫入之前進行序列化。因此，來自同一個瀏覽器的併發錯誤重試可能會在第二個請求上顯示 `retry later`，而不是兩個普通的並行競爭不匹配。
-無 Token 的 Serve 驗證假設 gateway 主機是受信任的。如果不受信任的本機程式碼可能會在該主機上執行，請要求 token/密碼驗證。
+預設情況下，當 `gateway.auth.allowTailscale` 為 `true` 時，Control UI/WebSocket Serve 請求可以透過 Tailscale 身分標頭
+(`tailscale-user-login`) 進行驗證。OpenClaw
+會透過使用 `tailscale whois` 解析 `x-forwarded-for` 位址
+並將其與標頭進行比對來驗證身分，並且僅在請求透過 Tailscale 的 `x-forwarded-*` 標頭
+命中 loopback 時接受這些請求。如果您想對 Serve 流量也要求明確的共享金鑰
+認證，請設定
+`gateway.auth.allowTailscale: false`。然後使用 `gateway.auth.mode: "token"` 或
+`"password"`。
+對於該非同步 Serve 身分路徑，相同客戶端 IP
+和驗證範圍的失敗驗證嘗試會在速率限制寫入前進行序列化。因此，來自同一瀏覽器的並發失敗重試
+可能會在第二次請求時顯示 `retry later`
+，而不是兩個單純的比對失敗並行競爭。
+無 Token 的 Serve 驗證假設 gateway 主機是受信任的。如果該主機上可能執行不受信任的本地
+程式碼，請要求 token/密碼驗證。
 
 ### 綁定到 tailnet + token
 
@@ -176,26 +202,26 @@ openclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
 
 然後開啟：
 
-- `http://<tailscale-ip>:18789/` (或您設定的 `gateway.controlUi.basePath`)
+- `http://<tailscale-ip>:18789/` （或您設定的 `gateway.controlUi.basePath`）
 
-將匹配的共用金鑰貼上到 UI 設定中（傳送為 `connect.params.auth.token` 或 `connect.params.auth.password`）。
+將匹配的共用金鑰貼入 UI 設定中（作為 `connect.params.auth.token` 或 `connect.params.auth.password` 發送）。
 
 ## 不安全的 HTTP
 
-如果您透過純 HTTP (`http://<lan-ip>` 或 `http://<tailscale-ip>`) 開啟儀表板，
-瀏覽器將在**不安全的上下文**中運作並阻擋 WebCrypto。根據預設，
-OpenClaw 會**阻擋**沒有裝置身分的控制 UI 連線。
+如果您透過純 HTTP （`http://<lan-ip>` 或 `http://<tailscale-ip>`）開啟儀表板，
+瀏覽器將在 **非安全環境** 中執行並封鎖 WebCrypto。根據預設，
+OpenClaw 會 **封鎖** 沒有裝置身分的控制 UI 連線。
 
 記載的例外情況：
 
-- 僅限 localhost 的不安全 HTTP 相容性與 `gateway.controlUi.allowInsecureAuth=true`
+- 僅限 localhost 的不安全 HTTP 相容性，適用於 `gateway.controlUi.allowInsecureAuth=true`
 - 透過 `gateway.auth.mode: "trusted-proxy"` 成功進行操作員控制 UI 驗證
-- 緊急破門 `gateway.controlUi.dangerouslyDisableDeviceAuth=true`
+- 應急 `gateway.controlUi.dangerouslyDisableDeviceAuth=true`
 
-**建議的修復方法：** 使用 HTTPS (Tailscale Serve) 或在本地開啟 UI：
+**建議的解決方法：** 使用 HTTPS （Tailscale Serve）或在本地開啟 UI：
 
-- `https://<magicdns>/` (Serve)
-- `http://127.0.0.1:18789/` (在 gateway 主機上)
+- `https://<magicdns>/` （Serve）
+- `http://127.0.0.1:18789/` （在 Gateway 主機上）
 
 **不安全驗證切換行為：**
 
@@ -209,14 +235,14 @@ OpenClaw 會**阻擋**沒有裝置身分的控制 UI 連線。
 }
 ```
 
-`allowInsecureAuth` 僅是一個本地相容性切換開關：
+`allowInsecureAuth` 僅為本機相容性切換：
 
-- 它允許 localhost 控制 UI 工作階段在不安全的 HTTP 上下文中
-  無需裝置身分即可繼續。
-- 它不會繞過配對檢查。
-- 它不會放寬遠端 (非 localhost) 裝置身分要求。
+- 它允許 localhost 控制 UI 會話在非安全的 HTTP 環境中
+  無需裝置身分即可繼續進行。
+- 它不會略過配對檢查。
+- 它不會放寬遠端 （非 localhost） 裝置身分的要求。
 
-**僅限緊急破門：**
+**僅限應急：**
 
 ```json5
 {
@@ -228,75 +254,73 @@ OpenClaw 會**阻擋**沒有裝置身分的控制 UI 連線。
 }
 ```
 
-`dangerouslyDisableDeviceAuth` 會停用控制 UI 裝置身分檢查，這會導致
-嚴重的安全性降級。緊急使用後請盡快還原。
+`dangerouslyDisableDeviceAuth` 會停用控制 UI 裝置身分檢查，
+這會嚴重降低安全性。請在緊急使用後迅速還原。
 
-受信任 Proxy 說明：
+信任代理 注意事項：
 
-- 成功的受信任 Proxy 驗證可以允許沒有
-  裝置身分的 **操作員** 控制 UI 工作階段
-- 這並**不**適用於節點角色 (node-role) 的控制 UI 工作階段
-- 相同主機的迴路反向 Proxy 仍然無法滿足受信任 Proxy 驗證；請參閱
-  [受信任 Proxy 驗證](/zh-Hant/gateway/trusted-proxy-auth)
+- 成功的信任代理 驗證可允許 **操作員** 控制 UI 會話
+  無需裝置身分
+- 這 **不** 適用於節點角色 控制 UI 會話
+- 相同主機的迴路反向代理仍不滿足信任代理 驗證；請參閱
+  [信任代理 驗證](/zh-Hant/gateway/trusted-proxy-auth)
 
-請參閱 [Tailscale](/zh-Hant/gateway/tailscale) 以取得 HTTPS 設定指南。
+關於 HTTPS 設定指南，請參閱 [Tailscale](/zh-Hant/gateway/tailscale)。
 
 ## 建置 UI
 
-Gateway 從 `dist/control-ui` 提供靜態檔案。請使用以下指令建置：
+Gateway 會從 `dist/control-ui` 提供靜態檔案。使用以下指令進行建置：
 
 ```bash
-pnpm ui:build # auto-installs UI deps on first run
+pnpm ui:build
 ```
 
-選用的絕對基礎路徑 (當您需要固定的資產 URL 時)：
+選用的絕對基底 （當您想要固定的資產 URL 時）：
 
 ```bash
 OPENCLAW_CONTROL_UI_BASE_PATH=/openclaw/ pnpm ui:build
 ```
 
-對於本地開發 (獨立的 dev server)：
+若要進行本機開發 （獨立的開發伺服器）：
 
 ```bash
-pnpm ui:dev # auto-installs UI deps on first run
+pnpm ui:dev
 ```
 
-然後將 UI 指向您的 Gateway WS URL (例如 `ws://127.0.0.1:18789`)。
+接著將 UI 指向您的 Gateway WS URL （例如 `ws://127.0.0.1:18789`）。
 
-## 除錯/測試：dev server + 遠端 Gateway
+## 除錯/測試：開發伺服器 + 遠端 Gateway
 
-控制 UI 為靜態檔案；WebSocket 目標可設定，且可以
-與 HTTP 來源不同。當您想要在本地使用 Vite dev server
-但 Gateway 在其他地方運作時，這非常方便。
+控制 UI 是靜態檔案；WebSocket 目標是可配置的，且可以與 HTTP 來源不同。當您想要在本地使用 Vite 開發伺服器但 Gateway 在其他地方運行時，這非常方便。
 
-1. 啟動 UI dev server：`pnpm ui:dev`
-2. 開啟類似以下的 URL：
+1. 啟動 UI 開發伺服器：`pnpm ui:dev`
+2. 開啟類似這樣的 URL：
 
 ```text
 http://localhost:5173/?gatewayUrl=ws://<gateway-host>:18789
 ```
 
-選用的一次性驗證 (如果需要)：
+可選的一次性授權（如果需要）：
 
 ```text
 http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-token>
 ```
 
-說明：
+備註：
 
 - `gatewayUrl` 在載入後會儲存在 localStorage 中，並從 URL 中移除。
-- 應盡可能透過 URL 片段（`#token=...`）傳遞 `token`。片段不會傳送到伺服器，這可以避免請求日誌和 Referer 洩漏。舊版的 `?token=` 查詢參數為了相容性仍會被匯入一次，但僅作為備用方案，並會在啟動後立即被移除。
-- `password` 僅保存在記憶體中。
-- 當設定了 `gatewayUrl` 時，UI 不會回退到設定檔或環境變數的認證資訊。
-  請明確提供 `token`（或 `password`）。缺少明確的認證資訊會導致錯誤。
-- 當 Gateway 位於 TLS（Tailscale Serve、HTTPS 代理等）之後時，請使用 `wss://`。
-- 為了防止點擊劫持，`gatewayUrl` 僅在頂層視窗中被接受（不允許嵌入式）。
-- 非本機迴路的 Control UI 部署必須明確設定 `gateway.controlUi.allowedOrigins`
-  （完整的來源）。這包括遠端開發設定。
-- 除了在嚴格控制的
-  本地測試環境外，請勿使用 `gateway.controlUi.allowedOrigins: ["*"]`。這意味著允許任何瀏覽器來源，而不是「符合我正在使用的任何主機」。
+- 應盡可能透過 URL 片段 (`#token=...`) 傳遞 `token`。片段不會傳送到伺服器，這避免了請求日誌和 Referer 洩漏。舊版 `?token=` 查詢參數為了相容性仍會匯入一次，但僅作為後備方案，並會在啟動後立即剔除。
+- `password` 僅儲存在記憶體中。
+- 當設定了 `gatewayUrl` 時，UI 不會後退到使用設定檔或環境變數的憑證。
+  請明確提供 `token` (或 `password`)。缺少明確憑證視為錯誤。
+- 當 Gateway 位於 TLS (Tailscale Serve, HTTPS 代理等) 之後時，請使用 `wss://`。
+- 為了防止點擊劫持，`gatewayUrl` 僅在頂層視窗（非嵌入）中被接受。
+- 非本機回環 的控制 UI 部署必須明確設定
+  `gateway.controlUi.allowedOrigins`（完整來源）。這包括遠端開發設置。
+- 除了嚴格控制的
+  本地測試外，請勿使用 `gateway.controlUi.allowedOrigins: ["*"]`。這表示允許任何瀏覽器來源，而不是「符合我正在使用的任何主機」。
 - `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` 啟用
-  Host 標頭來源回退模式，但這是一個危險的安全模式。
+  Host 標頭來源後退模式，但這是一種危險的安全模式。
 
 範例：
 
@@ -310,7 +334,7 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-toke
 }
 ```
 
-遠端存取設定詳細資訊：[Remote access](/zh-Hant/gateway/remote)。
+遠端存取設置詳細資訊：[Remote access](/zh-Hant/gateway/remote)。
 
 ## 相關
 

@@ -249,7 +249,7 @@ openclaw gateway run
 codex app-server --listen stdio://
 ```
 
-您可以保留該預設值，並僅調整 Codex 原生政策：
+預設情況下，OpenClaw 會要求 Codex 請求原生核准。您可以進一步調整該策略，例如透過收緊策略並將審查路由至守護程式：
 
 ```json5
 {
@@ -259,7 +259,8 @@ codex app-server --listen stdio://
         enabled: true,
         config: {
           appServer: {
-            approvalPolicy: "on-request",
+            approvalPolicy: "untrusted",
+            approvalsReviewer: "guardian_subagent",
             sandbox: "workspace-write",
             serviceTier: "priority",
           },
@@ -303,7 +304,7 @@ codex app-server --listen stdio://
 | `authToken`         | 未設定                                   | 用於 WebSocket 傳輸的 Bearer token。                           |
 | `headers`           | `{}`                                     | 額外的 WebSocket 標頭。                                        |
 | `requestTimeoutMs`  | `60000`                                  | App-server 控制平面呼叫的逾時時間。                            |
-| `approvalPolicy`    | `"never"`                                | 傳送至執行緒啟動/恢復/回合的原生 Codex 審核政策。              |
+| `approvalPolicy`    | `"on-request"`                           | 傳送至執行緒啟動/恢復/回合的原生 Codex 審核政策。              |
 | `sandbox`           | `"workspace-write"`                      | 傳送至執行緒啟動/恢復的原生 Codex 沙箱模式。                   |
 | `approvalsReviewer` | `"user"`                                 | 使用 `"guardian_subagent"` 讓 Codex guardian 審核原生核准。    |
 | `serviceTier`       | 未設定                                   | 選用的 Codex 服務層級，例如 `"priority"`。                     |

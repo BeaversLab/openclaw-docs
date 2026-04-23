@@ -1057,7 +1057,7 @@ HTTP API 端點（例如 `/v1/*`、`/tools/invoke` 和 `/api/channels/*`）**不
 兩種互補的方法：
 
 - **在 Docker 中執行完整的 Gateway**（容器邊界）：[Docker](/zh-Hant/install/docker)
-- **工具沙箱**（`agents.defaults.sandbox`，主機 Gateway + Docker 隔離工具）：[沙箱機制](/zh-Hant/gateway/sandboxing)
+- **工具沙盒** (`agents.defaults.sandbox`，主機閘道 + 沙盒隔離工具；Docker 是預設後端)：[沙盒隔離](/zh-Hant/gateway/sandboxing)
 
 注意：為了防止跨代理存取，請將 `agents.defaults.sandbox.scope` 保持為 `"agent"` (預設值)，
 或使用 `"session"` 以進行更嚴格的每個會話隔離。`scope: "shared"` 使用單一容器/工作區。

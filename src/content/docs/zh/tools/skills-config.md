@@ -122,12 +122,11 @@ auth/API 密钥。典型示例：`GEMINI_API_KEY` 或 `GOOGLE_API_KEY` 用于
 
 ### 沙箱隔离技能 + 环境变量
 
-当会话处于 **沙箱隔离** 状态时，技能进程在 Docker 内部运行。沙箱
-**不** 继承主机的 `process.env`。
+当会话处于**沙箱隔离**状态时，技能进程将在配置的沙箱后端内运行。沙箱**不**继承主机 `process.env`。
 
 使用以下之一：
 
-- `agents.defaults.sandbox.docker.env` (或按代理的 `agents.list[].sandbox.docker.env`)
-- 将环境变量烘焙到您的自定义沙箱镜像中
+- 对于 Docker 后端（或每个代理的 `agents.list[].sandbox.docker.env`），请使用 `agents.defaults.sandbox.docker.env`
+- 将环境变量烘焙到您的自定义沙箱镜像或远程沙箱环境中
 
 全局 `env` 和 `skills.entries.<skill>.env/apiKey` 仅适用于 **host** 运行。

@@ -152,7 +152,7 @@ Pour les autres chemins critiques du channel, préférez les aides étroites aux
   le câblage d'enregistrement et de répartition
 - `openclaw/plugin-sdk/messaging-targets` pour l'analyse et la correspondance des cibles
 - `openclaw/plugin-sdk/outbound-media` et
-  `openclaw/plugin-sdk/outbound-runtime` pour le chargement des médias ainsi que les délégués d'identité et d'envoi sortant
+  `openclaw/plugin-sdk/outbound-runtime` pour le chargement des médias, ainsi que les délégués d'identité/d'envoi sortant et la planification des charges utiles
 - `openclaw/plugin-sdk/thread-bindings-runtime` pour le cycle de vie de liaison de thread
   et l'inscription de l'adaptateur
 - `openclaw/plugin-sdk/agent-media-payload` uniquement lorsque la disposition héritée des champs de payload agent/média est encore requise

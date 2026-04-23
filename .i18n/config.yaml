@@ -1,5 +1,10 @@
 batchTokens: 500
 parallelBatches: 3
+languages:
+  - zh
+  - zh-Hant
+  - fr
+  - es
 
 collect:
   exclude:

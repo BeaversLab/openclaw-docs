@@ -12,16 +12,20 @@ Gérer les tâches cron pour le planificateur du Gateway.
 
 Connexes :
 
-- Tâches Cron : [Tâches Cron](/fr/automation/cron-jobs)
+- Tâches cron : [Tâches cron](/fr/automation/cron-jobs)
 
 Astuce : exécutez `openclaw cron --help` pour l'interface complète des commandes.
 
-Remarque : les tâches isolées `cron add` sont par défaut livrées via `--announce`. Utilisez `--no-deliver` pour conserver
+Remarque : `openclaw cron list` et `openclaw cron show <job-id>` prévisualisent
+la route de livraison résolue. Pour `channel: "last"`, la prévisualisation indique si la
+route est résolue à partir de la session principale/actuelle ou échouera en mode fermé.
+
+Remarque : les tâches cron `cron add` isolées utilisent par défaut la livraison `--announce`. Utilisez `--no-deliver` pour garder
 la sortie en interne. `--deliver` reste un alias obsolète pour `--announce`.
 
-Remarque : les exécutions isolées possédées par cron attendent un résumé en texte brut et le runner possède
-le chemin d'envoi final. `--no-deliver` conserve l'exécution en interne ; il ne redonne
-pas la livraison à l'outil de messagerie de l'agent.
+Remarque : la livraison de chat cron isolée est partagée. `--announce` est la livraison de repli
+du lanceur pour la réponse finale ; `--no-deliver` désactive ce repli mais ne
+supprime pas l'`message` tool de l'agent lorsqu'une route de chat est disponible.
 
 Remarque : les tâches ponctuelles (`--at`) sont supprimées après succès par défaut. Utilisez `--keep-after-run` pour les conserver.
 
@@ -29,43 +33,44 @@ Remarque : `--session` prend en charge `main`, `isolated`, `current` et `session
 Utilisez `current` pour lier à la session active au moment de la création, ou `session:<id>` pour
 une clé de session persistante explicite.
 
-Remarque : pour les tâches ponctuelles CLI, les dates/heures `--at` sans fuseau sont traitées comme UTC, sauf si vous passez également
-`--tz <iana>`, qui interprète cette heure locale dans le fuseau horaire donné.
+Remarque : pour les tâches ponctuelles CLI, les datetimes `--at` sans décalage sont traités comme UTC sauf si vous passez également
+`--tz <iana>`, qui interprète cette heure locale d'horloge murale dans le fuseau horaire donné.
 
-Remarque : les tâches récurrentes utilisent désormais un réessai exponentiel après des erreurs consécutives (30 s → 1 min → 5 min → 15 min → 60 min), puis reviennent à la planification normale après la prochaine exécution réussie.
+Remarque : les tâches récurrentes utilisent désormais une temporisation exponentielle de nouvelle tentative après des erreurs consécutives (30 s → 1 min → 5 min → 15 min → 60 min), puis reviennent à la programmation normale après la prochaine exécution réussie.
 
-Remarque : `openclaw cron run` renvoie désormais dès que l'exécution manuelle est mise en file d'attente. Les réponses réussies incluent `{ ok: true, enqueued: true, runId }` ; utilisez `openclaw cron runs --id <job-id>` pour suivre le résultat final.
+Remarque : `openclaw cron run` retourne désormais dès que l'exécution manuelle est mise en file d'attente pour exécution. Les réponses réussies incluent `{ ok: true, enqueued: true, runId }` ; utilisez `openclaw cron runs --id <job-id>` pour suivre le résultat éventuel.
 
 Remarque : `openclaw cron run <job-id>` force l'exécution par défaut. Utilisez `--due` pour conserver
-l'ancien comportement "exécuter uniquement si prévu".
+l'ancien comportement « exécuter uniquement si dû ».
 
-Remarque : l'exécution isolée de cron supprime les réponses d'accusé de réception périmées. Si le premier résultat n'est qu'une mise à jour de l'état intérimaire et qu'aucune exécution de sous-agent descendant n'est responsable de la réponse finale, cron relance une fois la demande pour le vrai résultat avant la livraison.
+Remarque : les tâches cron isolées suppriment les réponses d'accusé de réception obsolètes. Si le premier résultat n'est qu'une mise à jour de l'état provisoire et qu'aucune exécution de sous-agent descendant n'est responsable de la réponse finale, cron interroge à nouveau une fois pour obtenir le résultat réel avant la livraison.
 
-Remarque : si une exécution cron isolée renvoie uniquement le jeton silencieux (`NO_REPLY` /
-`no_reply`), cron supprime la livraison sortante directe ainsi que le chemin de résumé mis en file d'attente de secours, de sorte que rien n'est renvoyé à la discussion.
+Remarque : si une exécution cron isolée ne renvoie que le jeton silencieux (`NO_REPLY` / `no_reply`), cron supprime à la fois la livraison sortante directe et le chemin de résumé mis en file d'attente de secours, de sorte que rien n'est renvoyé à la discussion.
 
-Remarque : `cron add|edit --model ...` utilise le modèle autorisé sélectionné pour la tâche.
-Si le modèle n'est pas autorisé, cron avertit et revient à la sélection de modèle par défaut/agent de la tâche à la place. Les chaînes de secours configurées s'appliquent toujours, mais un remplacement de modèle simple sans liste de secours explicite par tâche n'ajoute plus le principal de l'agent comme cible de retry supplémentaire cachée.
+Remarque : `cron add|edit --model ...` utilise le modèle autorisé sélectionné pour la tâche. Si le modèle n'est pas autorisé, cron avertit et revient plutôt à la sélection du modèle agent/défaut de la tâche. Les chaînes de secours configurées s'appliquent toujours, mais une substitution de modèle simple sans liste de secours explicite par tâche n'ajoute plus l'agent principal comme cible de nouvelle tentative cachée supplémentaire.
 
-Remarque : la priorité du modèle cron isolé est d'abord le remplacement du crochet Gmail, puis `--model` par tâche, puis tout remplacement de modèle de session cron stocké, et enfin la sélection normale par défaut/agent.
+Remarque : la priorité du modèle cron isolé est d'abord la substitution du crochet Gmail, puis `--model` par tâche, puis toute substitution de modèle de session cron stockée, puis enfin la sélection normale agent/défaut.
 
-Remarque : le mode rapide cron isolé suit la sélection de modèle en direct résolue. La `params.fastMode` de configuration du modèle s'applique par défaut, mais un remplacement de `fastMode` de session stockée l'emporte toujours sur la configuration.
+Remarque : le mode rapide cron isolé suit la sélection du modèle en direct résolue. La `params.fastMode` de configuration du modèle s'applique par défaut, mais une substitution de session stockée `fastMode` l'emporte toujours sur la configuration.
 
-Remarque : si une exécution isolée lève `LiveSessionModelSwitchError`, cron persiste le fournisseur/modèle commuté (et le remplacement de profil d'authentification commuté lorsqu'il est présent) avant de réessayer. La boucle de retry externe est limitée à 2 retry de commutation après la tentative initiale, puis abandonne au lieu de boucler indéfiniment.
+Remarque : si une exécution isolée génère `LiveSessionModelSwitchError`, cron rend persistant le fournisseur/modèle commuté (et la substitution de profil d'authentification commutée si présente) avant de réessayer. La boucle de nouvelle tentative externe est limitée à 2 nouvelles tentatives de commutation après la tentative initiale, puis abandonne au lieu de boucler indéfiniment.
 
-Remarque : les notifications d'échec utilisent d'abord `delivery.failureDestination`, puis
-`cron.failureDestination` global, et reviennent enfin à la cible d'annonce principale de la tâche lorsqu'aucune destination d'échec explicite n'est configurée.
+Remarque : les notifications d'échec utilisent d'abord `delivery.failureDestination`, puis `cron.failureDestination` global, et reviennent enfin à la cible d'annonce principale de la tâche lorsqu'aucune destination d'échec explicite n'est configurée.
 
 Remarque : la rétention/le nettoyage est contrôlé dans la configuration :
 
 - `cron.sessionRetention` (par défaut `24h`) nettoie les sessions d'exécution isolées terminées.
 - `cron.runLog.maxBytes` + `cron.runLog.keepLines` nettoient `~/.openclaw/cron/runs/<jobId>.jsonl`.
 
-Note de mise à niveau : si vous avez des tâches cron plus anciennes provenant d'avant le format de livraison/stockage actuel, exécutez `openclaw doctor --fix`. Doctor normalise désormais les champs cron hérités (`jobId`, `schedule.cron`, champs de livraison de niveau supérieur, y compris `threadId` hérité, alias de livraison payload `provider`) et migre les tâches de secours webhook simples `notify: true` vers une livraison webhook explicite lorsque `cron.webhook` est configuré.
+Note de mise à niveau : si vous avez des tâches cron plus anciennes provenant d'avant le format de livraison/stockage actuel, exécutez
+`openclaw doctor --fix`. Doctor normalise désormais les champs cron hérités (`jobId`, `schedule.cron`,
+champs de livraison de niveau supérieur incluant l'hérité `threadId`, les alias de livraison `provider` du payload) et migre les simples
+tâches de repli de webhook `notify: true` vers une livraison webhook explicite lorsque `cron.webhook` est
+configuré.
 
 ## Modifications courantes
 
-Mettre à jour les paramètres de livraison sans modifier le message :
+Mettre à jour les paramètres de livraison sans changer le message :
 
 ```bash
 openclaw cron edit <job-id> --announce --channel telegram --to "123456789"
@@ -77,7 +82,7 @@ Désactiver la livraison pour une tâche isolée :
 openclaw cron edit <job-id> --no-deliver
 ```
 
-Activer le contexte d'amorçage léger pour une tâche isolée :
+Activer le contexte d'amorçage léger (lightweight bootstrap) pour une tâche isolée :
 
 ```bash
 openclaw cron edit <job-id> --light-context
@@ -101,24 +106,32 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` s'applique uniquement aux tâches de tour d'agent isolées. Pour les exécutions cron, le mode léger maintient le contexte d'amorçage vide au lieu d'injecter l'ensemble d'amorçage complet de l'espace de travail.
+`--light-context` s'applique uniquement aux tâches isolées de tour d'agent (agent-turn). Pour les exécutions cron, le mode légarde le contexte d'amorçage vide au lieu d'injecter l'ensemble complet d'amorçage de l'espace de travail.
 
 Note sur la propriété de la livraison :
 
-- Les tâches isolées détenues par Cron acheminent toujours la livraison finale visible par l'utilisateur via le lanceur cron (`announce`, `webhook` ou `none` uniquement interne).
-- Si la tâche mentionne l'envoi d'un message à un destinataire externe, l'agent doit décrire la destination prévue dans son résultat au lieu d'essayer de l'envoyer directement.
+- La livraison de chat cron isolée est partagée. L'agent peut envoyer directement avec l'outil
+  `message` lorsqu'une route de chat est disponible.
+- `announce` effectue une livraison de repli (fallback-delivers) de la réponse finale uniquement lorsque l'agent n'a pas envoyé
+  directement à la cible résolue. `webhook` publie le payload terminé sur une URL.
+  `none` désactive la livraison de repli du runner.
 
 ## Commandes d'administration courantes
 
 Exécution manuelle :
 
 ```bash
+openclaw cron list
+openclaw cron show <job-id>
 openclaw cron run <job-id>
 openclaw cron run <job-id> --due
 openclaw cron runs --id <job-id> --limit 50
 ```
 
-Redirection de l'agent/session :
+Les entrées `cron runs` incluent des diagnostics de livraison avec la cible cron prévue,
+la cible résolue, les envois d'outil de message, l'utilisation du repli et l'état de livraison.
+
+Redirection d'agent/session :
 
 ```bash
 openclaw cron edit <job-id> --agent ops
@@ -139,5 +152,7 @@ openclaw cron edit <job-id> --no-deliver
 Note sur la livraison en cas d'échec :
 
 - `delivery.failureDestination` est pris en charge pour les tâches isolées.
-- Les tâches de session principale ne peuvent utiliser `delivery.failureDestination` que lorsque le mode de livraison principal est `webhook`.
-- Si vous ne définissez aucune destination d'échec et que la tâche annonce déjà à un channel, les notifications d'échec réutilisent cette même cible d'annonce.
+- Les tâches de session principale peuvent uniquement utiliser `delivery.failureDestination` lorsque le mode de
+  livraison principal est `webhook`.
+- Si vous ne définissez aucune destination d'échec et que la tâche annonce déjà à un
+  channel, les notifications d'échec réutilisent cette même cible d'annonce.

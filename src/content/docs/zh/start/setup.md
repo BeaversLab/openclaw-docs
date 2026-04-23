@@ -8,7 +8,7 @@ title: "设置"
 
 # 设置
 
-<Note>如果您是第一次设置，请从 [入门指南](/zh/start/getting-started) 开始。 有关新手引导的详细信息，请参阅 [新手引导 (CLI)](/zh/start/wizard)。</Note>
+<Note>如果您是首次设置，请从[入门指南](/zh/start/getting-started)开始。 有关新手引导的详细信息，请参阅[新手引导 (CLI)](/zh/start/wizard)。</Note>
 
 ## TL;DR
 
@@ -19,8 +19,8 @@ title: "设置"
 ## Prereqs (from source)
 
 - 推荐使用 Node 24（Node 22 LTS，目前为 `22.14+`，仍受支持）
-- 首选 `pnpm`（或者如果您有意使用 [Bun 工作流](/zh/install/bun)，则使用 Bun）
-- Docker（可选；仅用于容器化设置/e2e — 请参阅 [Docker](/zh/install/docker)）
+- `pnpm` 首选（或者如果您有意使用 [Bun 工作流](/zh/install/bun)，则使用 Bun）
+- Docker（可选；仅用于容器化设置/e2e 测试 — 请参阅 [Docker](/zh/install/docker)）
 
 ## Tailoring strategy (so updates do not hurt)
 
@@ -88,15 +88,21 @@ If you also want the macOS app on the bleeding edge:
 
 ```bash
 pnpm install
+# First run only (or after resetting local OpenClaw config/workspace)
+pnpm openclaw setup
 pnpm gateway:watch
 ```
 
-`gateway:watch` 以监视模式运行网关，并在相关的源代码、配置和捆绑插件元数据更改时重新加载。
+`gateway:watch` 在监视模式下运行 Gateway，并在相关的源代码、配置和捆绑插件元数据更改时重新加载。
+`pnpm openclaw setup` 是针对新检出的代码进行的一次性本地配置/工作区初始化步骤。
+`pnpm gateway:watch` 不会重新构建 `dist/control-ui`，因此在 `ui/` 更改后请重新运行 `pnpm ui:build`，或者在开发 Control UI 时使用 `pnpm ui:dev`。
 
 如果您有意使用 Bun 工作流，等效命令为：
 
 ```bash
 bun install
+# First run only (or after resetting local OpenClaw config/workspace)
+bun run openclaw setup
 bun run gateway:watch
 ```
 
@@ -118,10 +124,10 @@ openclaw health
 
 ### 常见陷阱
 
-- **端口错误：** Gateway(网关) WS 默认为 `ws://127.0.0.1:18789`；请保持应用和 CLI 在同一端口上。
+- **端口错误：** Gateway WS 默认使用 `ws://127.0.0.1:18789`；请确保应用程序和 CLI 处于同一端口。
 - **状态存储位置：**
-  - 渠道/提供商状态：`~/.openclaw/credentials/`
-  - 模型身份验证配置文件：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+  - Channel/提供商 状态：`~/.openclaw/credentials/`
+  - 模型认证配置文件：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
   - 会话：`~/.openclaw/agents/<agentId>/sessions/`
   - 日志：`/tmp/openclaw/`
 
@@ -130,21 +136,21 @@ openclaw health
 调试身份验证或决定要备份的内容时使用此功能：
 
 - **WhatsApp**：`~/.openclaw/credentials/whatsapp/<accountId>/creds.json`
-- **Telegram 机器人令牌**：config/env 或 `channels.telegram.tokenFile`（仅限常规文件；拒绝符号链接）
+- **Telegram bot token**：config/env 或 `channels.telegram.tokenFile`（仅限常规文件；拒绝符号链接）
 - **Discord 机器人令牌**：config/env 或 SecretRef（env/file/exec 提供程序）
-- **Slack 令牌**：config/env（`channels.slack.*`）
+- **Slack tokens**：config/env (`channels.slack.*`)
 - **配对允许列表**：
   - `~/.openclaw/credentials/<channel>-allowFrom.json`（默认账户）
   - `~/.openclaw/credentials/<channel>-<accountId>-allowFrom.json`（非默认账户）
-- **模型身份验证配置文件**：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-- **基于文件的机密负载（可选）**：`~/.openclaw/secrets.json`
-- **传统 OAuth 导入**：`~/.openclaw/credentials/oauth.json`
-  更多详情：[Security](/zh/gateway/security#credential-storage-map)。
+- **Model auth profiles**：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+- **文件支持的秘密载荷（可选）**：`~/.openclaw/secrets.json`
+- **旧版 OAuth 导入**：`~/.openclaw/credentials/oauth.json`
+  更多详细信息：[安全性](/zh/gateway/security#credential-storage-map)。
 
 ## 更新（不破坏你的设置）
 
-- 将 `~/.openclaw/workspace` 和 `~/.openclaw/` 视为“你自己的东西”；不要将个人提示词/配置放入 `openclaw` 仓库中。
-- 更新源代码：`git pull` + 你选择的包管理器安装步骤（默认为 `pnpm install`；Bun 工作流为 `bun install`）+ 继续使用匹配的 `gateway:watch` 命令。
+- 请将 `~/.openclaw/workspace` 和 `~/.openclaw/` 视为“您自己的东西”；不要将个人的提示词/配置放入 `openclaw` 仓库中。
+- 更新源码：`git pull` + 您选择的包管理器安装步骤（默认为 `pnpm install`；Bun 工作流则为 `bun install`）+ 继续使用匹配的 `gateway:watch` 命令。
 
 ## Linux（systemd 用户服务）
 
@@ -156,13 +162,12 @@ lingering（可能会提示输入 sudo）。如果它仍然是关闭的，请运
 sudo loginctl enable-linger $USER
 ```
 
-对于全天候运行或多用户服务器，请考虑使用 **系统**（system）服务而不是
-用户服务（无需 lingering）。有关 systemd 的说明，请参阅 [Gateway(网关) runbook](/zh/gateway)。
+对于全天候或多用户服务器，请考虑使用 **system** 服务而不是用户服务（不需要 lingering）。有关 systemd 的说明，请参阅 [Gateway(网关) 运维手册](/zh/gateway)。
 
 ## 相关文档
 
-- [Gateway(网关) runbook](/zh/gateway)（标志、监督、端口）
-- [Gateway(网关) configuration](/zh/gateway/configuration)（配置架构 + 示例）
+- [Gateway(网关) 运维手册](/zh/gateway)（标志、监管、端口）
+- [Gateway(网关) 配置](/zh/gateway/configuration)（配置架构 + 示例）
 - [Discord](/zh/channels/discord) 和 [Telegram](/zh/channels/telegram)（回复标签 + replyToMode 设置）
-- [OpenClaw assistant setup](/zh/start/openclaw)
-- [macOS app](/zh/platforms/macos)（网关生命周期）
+- [OpenClaw 助手设置](/zh/start/openclaw)
+- [macOS 应用](/zh/platforms/macos)（网关生命周期）

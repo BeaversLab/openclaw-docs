@@ -208,7 +208,7 @@ OpenClaw 还包含用于 X（前 Twitter）帖子的 `x_search` 和
 `openclaw configure --section web` 期间选择 **Kimi** 时，OpenClaw 还可以询问：
 
 - Moonshot API 区域（`https://api.moonshot.ai/v1` 或 `https://api.moonshot.cn/v1`）
-- 默认的 Kimi 网络搜索模型（默认为 `kimi-k2.5`）
+- 默认的 Kimi 网页搜索模型（默认为 `kimi-k2.6`）
 
 对于 `x_search`，请配置 `plugins.entries.xai.config.xSearch.*`。它使用与 Grok 网络搜索相同的 `XAI_API_KEY` 回退机制。
 旧的 `tools.web.x_search.*` 配置会由 `openclaw doctor --fix` 自动迁移。

@@ -499,8 +499,10 @@ openclaw plugins install <package-name>
 
 <Info>Pour les installations issues de npm, `openclaw plugins install` exécute `npm install --ignore-scripts` (pas de scripts de cycle de vie). Gardez les arbres de dépendances des plugins en JS/TS pur et évitez les packages qui nécessitent des builds `postinstall`.</Info>
 
+Les plugins empaquetés détenus par OpenClaw sont la seule exception de réparation au démarrage : lorsqu'une installation empaquetée en voit un activé par la configuration du plugin, la configuration de canal héritée, ou son manifeste activé par défaut par empaquetage, l'installation au démarrage installe les dépendances d'exécution manquantes de ce plugin avant l'importation. Les plugins tiers ne doivent pas compter sur les installations au démarrage ; continuez à utiliser l'installateur de plugin explicite.
+
 ## Connexes
 
 - [Points d'entrée du SDK](/fr/plugins/sdk-entrypoints) -- `definePluginEntry` et `defineChannelPluginEntry`
 - [Manifeste de plugin](/fr/plugins/manifest) -- référence complète du schéma de manifeste
-- [Création de plugins](/fr/plugins/building-plugins) -- guide de démarrage pas à pas
+- [Création de plugins](/fr/plugins/building-plugins) -- guide de démarrage étape par étape

@@ -1000,7 +1000,7 @@ Matrix 在 OpenClaw 要求您提供房間或使用者目標的任何地方都接
 - `allowBots`：允許來自其他已設定 OpenClaw Matrix 帳號（`true` 或 `"mentions"`）的訊息。
 - `groupPolicy`：`open`、`allowlist` 或 `disabled`。
 - `contextVisibility`：額外的房間情境可見性模式（`all`、`allowlist`、`allowlist_quote`）。
-- `groupAllowFrom`：房間流量的使用者 ID 允許清單。條目應為完整的 Matrix 使用者 ID；未解析的名稱會在執行時被忽略。
+- `groupAllowFrom`: 房間流量的使用者 ID 白名單。完整的 Matrix 使用者 ID 最安全；精確的目錄匹配會在啟動時以及監視器執行期間白名單變更時進行解析。無法解析的名稱將被忽略。
 - `historyLimit`：作為群組歷史情境包含的最大房間訊息數。會回退到 `messages.groupChat.historyLimit`；如果兩者皆未設定，有效預設值為 `0`。設定為 `0` 以停用。
 - `replyToMode`：`off`、`first`、`all` 或 `batched`。
 - `markdown`：傳出 Matrix 文字的可選 Markdown 渲染設定。
@@ -1021,7 +1021,7 @@ Matrix 在 OpenClaw 要求您提供房間或使用者目標的任何地方都接
 - `autoJoinAllowlist`：當 `autoJoin` 為 `allowlist` 時允許的房間/別名。別名項目會在處理邀請時解析為房間 ID；OpenClaw 不信任被邀請房間所聲稱的別名狀態。
 - `dm`：DM 政策區塊（`enabled`、`policy`、`allowFrom`、`sessionScope`、`threadReplies`）。
 - `dm.policy`：在 OpenClaw 加入房間並將其分類為 DM 後，控制 DM 存取權。這不會變更邀請是否自動加入。
-- `dm.allowFrom`：除非您已透過即時目錄查詢解析，否則條目應為完整的 Matrix 使用者 ID。
+- `dm.allowFrom`: 直訊流量的使用者 ID 白名單。完整的 Matrix 使用者 ID 最安全；精確的目錄匹配會在啟動時以及監視器執行期間白名單變更時進行解析。無法解析的名稱將被忽略。
 - `dm.sessionScope`：`per-user`（預設值）或 `per-room`。當您希望每個 Matrix DM 房間即使對象相同也保持獨立語境時，請使用 `per-room`。
 - `dm.threadReplies`：僅限 DM 的執行緒政策覆寫（`off`、`inbound`、`always`）。它會覆寫頂層 `threadReplies` 設定，同時影響 DM 中的回覆放置和階段隔離。
 - `execApprovals`：Matrix 原生執行核准傳遞（`enabled`、`approvers`、`target`、`agentFilter`、`sessionFilter`）。

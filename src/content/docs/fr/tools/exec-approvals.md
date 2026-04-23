@@ -99,7 +99,7 @@ Distinction importante :
 
 - `tools.exec.host=auto` choisit où l'exécution a lieu : bac à sable (sandbox) si disponible, sinon passerelle.
 - YOLO choisit comment l'exécution hôte est approuvée : `security=full` plus `ask=off`.
-- En mode YOLO, OpenClaw n'ajoute pas de porte d'approbation heuristique distincte pour l'obfuscation de commandes par-dessus la stratégie d'exécution sur l'hôte configurée.
+- En mode YOLO, OpenClaw n'ajoute pas de porte distincte d'approvation par heuristique d'obscurcissement de commande ou de couche de rejet de pré-vérification de script par-dessus la stratégie d'exécution hôte configurée.
 - `auto` ne fait pas du routage via la passerelle une priorité gratuite depuis une session sandboxée. Une demande `host=node` par appel est autorisée depuis `auto`, et `host=gateway` n'est autorisée depuis `auto` que lorsqu'aucun runtime de bac à sable n'est actif. Si vous souhaitez une valeur par défaut stable non automatique, définissez `tools.exec.host` ou utilisez `/exec host=...` explicitement.
 
 Si vous souhaitez une configuration plus prudente, resserrez l'une ou l'autre couche à `allowlist` / `on-miss`

@@ -14,7 +14,7 @@ GitHub Copilot est l'assistant de codage IA de GitHub. Il fournit l'accès aux m
 
 <Tabs>
   <Tab title="Fournisseur intégré (github-copilot)">
-    Utilisez le flux de connexion natif par appareil pour obtenir un jeton GitHub, puis échangez-le contre des jetons de l'API Copilot lors de l'exécution d'OpenClaw. Il s'agit du chemin **par défaut** et le plus simple car il ne nécessite pas VS Code.
+    Utilisez le flux natif de connexion par appareil pour obtenir un jeton GitHub, puis échangez-le contre des jetons d'API Copilot lorsqu'OpenClaw s'exécute. C'est le chemin **par défaut** et le plus simple car il ne nécessite pas VS Code.
 
     <Steps>
       <Step title="Exécuter la commande de connexion">
@@ -22,18 +22,21 @@ GitHub Copilot est l'assistant de codage IA de GitHub. Il fournit l'accès aux m
         openclaw models auth login-github-copilot
         ```
 
-        Il vous sera demandé de visiter une URL et d'entrer un code à usage unique. Gardez le terminal ouvert jusqu'à ce que l'opération soit terminée.
+        Vous serez invité à visiter une URL et à entrer un code à usage unique. Gardez le
+        terminal ouvert jusqu'à ce qu'il termine.
       </Step>
       <Step title="Définir un modèle par défaut">
         ```bash
-        openclaw models set github-copilot/gpt-4o
+        openclaw models set github-copilot/claude-opus-4.6
         ```
 
         Ou dans la configuration :
 
         ```json5
         {
-          agents: { defaults: { model: { primary: "github-copilot/gpt-4o" } } },
+          agents: {
+            defaults: { model: { primary: "github-copilot/claude-opus-4.6" } },
+          },
         }
         ```
       </Step>

@@ -122,10 +122,10 @@ más capaz para obtener mejores resúmenes:
 }
 ```
 
-## Aviso de inicio de compactación
+## Notificaciones de compactación
 
-De forma predeterminada, la compactación se ejecuta en silencio. Para mostrar un breve aviso cuando la compactación
-comienza, habilite `notifyUser`:
+De forma predeterminada, la compactación se ejecuta en silencio. Para mostrar breves notificaciones cuando la compactación
+comienza y cuando finaliza, habilite `notifyUser`:
 
 ```json5
 {
@@ -139,8 +139,8 @@ comienza, habilite `notifyUser`:
 }
 ```
 
-Cuando está habilitado, el usuario ve un mensaje corto (por ejemplo, "Compactando
-contexto...") al comienzo de cada ejecución de compactación.
+Cuando está habilitado, el usuario ve mensajes de estado breves alrededor de cada ejecución de compactación
+(por ejemplo, "Compactando contexto..." y "Compactación completada").
 
 ## Compactación vs poda
 

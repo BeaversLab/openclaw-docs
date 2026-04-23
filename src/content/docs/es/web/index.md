@@ -122,5 +122,5 @@ Abrir:
 El Gateway sirve archivos estáticos desde `dist/control-ui`. Constrúyalos con:
 
 ```bash
-pnpm ui:build # auto-installs UI deps on first run
+pnpm ui:build
 ```

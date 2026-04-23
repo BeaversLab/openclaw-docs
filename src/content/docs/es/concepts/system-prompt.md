@@ -24,75 +24,73 @@ Utilice las contribuciones propiedad del proveedor para el ajuste específico de
 `before_prompt_build` heredada para compatibilidad o cambios de prompt realmente globales,
 no para el comportamiento normal del proveedor.
 
+La superposición de la familia OpenAI GPT-5 mantiene la regla de ejecución principal pequeña y añade orientación específica del modelo para el anclaje de personalidad, salida concisa, disciplina de herramientas, búsqueda paralela, cobertura de entregables, verificación, contexto faltante e higiene de herramientas de terminal.
+
 ## Estructura
 
 El prompt es intencionalmente compacto y utiliza secciones fijas:
 
-- **Herramientas**: recordatorio de la fuente de verdad de la herramienta estructurada más la guía de uso de herramientas en tiempo de ejecución.
-- **Seguridad**: recordatorio breve de las barreras de seguridad para evitar conductas de búsqueda de poder o eludir la supervisión.
-- **Habilidades** (cuando están disponibles): indica al modelo cómo cargar las instrucciones de habilidades bajo demanda.
-- **Autoactualización de OpenClaw**: cómo inspeccionar la configuración de manera segura con
-  `config.schema.lookup`, parchear la configuración con `config.patch`, reemplazar la configuración
-  completa con `config.apply` y ejecutar `update.run` solo bajo solicitud explícita del
-  usuario. La herramienta `gateway` de solo propietario también se niega a reescribir
-  `tools.exec.ask` / `tools.exec.security`, incluidos los alias `tools.bash.*`
-  heredados que se normalizan a esas rutas de ejecución protegidas.
-- **Espacio de trabajo**: directorio de trabajo (`agents.defaults.workspace`).
-- **Documentación**: ruta local a los documentos de OpenClaw (repositorio o paquete npm) y cuándo leerlos.
-- **Archivos del espacio de trabajo (inyectados)**: indica que los archivos de arranque se incluyen a continuación.
-- **Sandbox** (cuando está habilitado): indica el tiempo de ejecución en sandbox, las rutas de sandbox y si la ejecución elevada está disponible.
-- **Fecha y hora actuales**: hora local del usuario, zona horaria y formato de hora.
-- **Etiquetas de respuesta**: sintaxis opcional de etiquetas de respuesta para proveedores compatibles.
-- **Latidos**: comportamiento del aviso de latido y reconocimiento, cuando los latidos están habilitados para el agente predeterminado.
-- **Tiempo de ejecución**: host, sistema operativo, nodo, modelo, raíz del repositorio (cuando se detecta), nivel de pensamiento (una línea).
-- **Razonamiento**: nivel de visibilidad actual + sugerencia de alternancia /reasoning.
+- **Tooling** (Herramientas): recordatorio de la fuente de verdad de la herramienta estructurada más orientación de uso de herramientas en tiempo de ejecución.
+- **Execution Bias** (Sesgo de ejecución): orientación compacta de seguimiento: actuar por turno en solicitudes accionables, continuar hasta terminar o bloquearse, recuperarse de resultados de herramientas débiles, verificar el estado mutable en vivo y verificar antes de finalizar.
+- **Safety** (Seguridad): recordatorio breve de las barreras de seguridad para evitar la búsqueda de poder o eludir la supervisión.
+- **Skills** (Habilidades, cuando están disponibles): indica al modelo cómo cargar las instrucciones de habilidades bajo demanda.
+- **OpenClaw Self-Update** (Autoactualización de OpenClaw): cómo inspeccionar la configuración de forma segura con `config.schema.lookup`, parchear la configuración con `config.patch`, reemplazar la configuración completa con `config.apply` y ejecutar `update.run` solo bajo solicitud explícita del usuario. La herramienta `gateway` solo para propietarios también se niega a reescribir `tools.exec.ask` / `tools.exec.security`, incluidos los alias heredados `tools.bash.*` que se normalizan a esas rutas de ejecución protegidas.
+- **Workspace** (Espacio de trabajo): directorio de trabajo (`agents.defaults.workspace`).
+- **Documentation** (Documentación): ruta local a los documentos de OpenClaw (repositorio o paquete npm) y cuándo leerlos.
+- **Workspace Files (injected)** (Archivos del espacio de trabajo inyectados): indica que los archivos de arranque se incluyen a continuación.
+- **Sandbox** (SandBox, cuando está habilitado): indica el tiempo de ejecución encajonado, las rutas de la sandbox y si la ejecución elevada está disponible.
+- **Current Date & Time** (Fecha y hora actual): hora local del usuario, zona horaria y formato de hora.
+- **Reply Tags** (Etiquetas de respuesta): sintaxis opcional de etiqueta de respuesta para proveedores compatibles.
+- **Heartbeats** (Latidos): prompt de latido y comportamiento de reconocimiento, cuando los latidos están habilitados para el agente predeterminado.
+- **Runtime** (Tiempo de ejecución): host, sistema operativo, nodo, modelo, raíz del repositorio (cuando se detecta), nivel de pensamiento (una línea).
+- **Reasoning** (Razonamiento): nivel de visibilidad actual + sugerencia de alternancia /reasoning.
 
-La sección Herramientas también incluye directrices de tiempo de ejecución para el trabajo de larga duración:
+La sección Tooling también incluye orientación de tiempo de ejecución para trabajos de larga duración:
 
-- use cron para seguimientos futuros (`check back later`, recordatorios, trabajo recurrente)
-  en lugar de `exec` bucles de espera, `yieldMs` trucos de retraso o `process`
+- usar cron para futuros seguimientos (`check back later`, recordatorios, trabajo recurrente)
+  en lugar de `exec` bucles de espera, `yieldMs` trucos de retardo o `process`
   sondeo repetido
-- use `exec` / `process` solo para comandos que comienzan ahora y continúan ejecutándose
+- usar `exec` / `process` solo para comandos que comienzan ahora y continúan ejecutándose
   en segundo plano
-- cuando el despertar de finalización automática está habilitado, inicie el comando una vez y confíe en
+- cuando está habilitado el despertar automático al completarse, inicie el comando una vez y confíe en
   la ruta de despertar basada en empuje (push) cuando emite salida o falla
-- use `process` para registros, estado, entrada o intervención cuando necesite
+- usar `process` para registros, estado, entrada o intervención cuando necesite
   inspeccionar un comando en ejecución
-- si la tarea es más grande, prefiera `sessions_spawn`; la finalización del subagente es
-  basada en empuje (push) y se anuncia automáticamente al solicitante
-- no sondee `subagents list` / `sessions_list` en un bucle solo para esperar la
-  finalización
+- si la tarea es más grande, preferir `sessions_spawn`; la finalización del sub-agente es
+  basada en empuje y se anuncia automáticamente al solicitante
+- no sondear `subagents list` / `sessions_list` en un bucle solo para esperar
+  la finalización
 
-Cuando la herramienta experimental `update_plan` está habilitada, Tooling también le indica al
-modelo que la use solo para trabajo de varios pasos no trivial, mantenga exactamente un paso
-`in_progress`, y evite repetir el plan completo después de cada actualización.
+Cuando la herramienta experimental `update_plan` está habilitada, Tooling también le indica
+al modelo que la use solo para trabajo de varios pasos no trivial, mantener exactamente un
+paso `in_progress` y evitar repetir todo el plan después de cada actualización.
 
-Las guardias de seguridad (guardrails) en el prompt del sistema son asesoras. Guían el comportamiento del modelo pero no hacen cumplir la política. Use la política de herramientas, aprobaciones de ejecución, sandboxing (sandbox) y listas de permitidos de canales para el cumplimiento estricto; los operadores pueden deshabilitarlos por diseño.
+Las barreras de seguridad en el prompt del sistema son consultivas. Guían el comportamiento del modelo pero no hacen cumplir la política. Utilice la política de herramientas, aprobaciones de ejecución, sandboxing y listas de permitidos de canales para el cumplimiento estricto; los operadores pueden deshabilitarlos por diseño.
 
-En canales con tarjetas/botones de aprobación nativos, el prompt de ejecución ahora le indica al
-agente que confíe primero en esa UI de aprobación nativa. Solo debe incluir un comando manual
-`/approve` cuando el resultado de la herramienta dice que las aprobaciones de chat no están disponibles o
+En los canales con tarjetas/botones de aprobación nativos, el prompt de tiempo de ejecución ahora le indica
+al agente que confíe primero en esa interfaz de usuario de aprobación nativa. Solo debe incluir un comando manual
+`/approve` cuando el resultado de la herramienta indica que las aprobaciones de chat no están disponibles o
 la aprobación manual es la única ruta.
 
 ## Modos de prompt
 
-OpenClaw puede representar prompts del sistema más pequeños para subagentes. El tiempo de ejecución establece un
+OpenClaw puede renderizar prompts del sistema más pequeños para sub-agentes. El tiempo de ejecución establece un
 `promptMode` para cada ejecución (no una configuración visible para el usuario):
 
 - `full` (predeterminado): incluye todas las secciones anteriores.
-- `minimal`: se usa para subagentes; omite **Habilidades (Skills)**, **Recuerdo de memoria**, **Autoactualización de OpenClaw**,
-  **Alias de modelo**, **Identidad de usuario**, **Etiquetas de respuesta**,
-  **Mensajería**, **Respuestas silenciosas** y **Latidos (Heartbeats)**. Tooling, **Seguridad**,
-  Workspace, Sandbox, Fecha y hora actual (cuando se conoce), Runtime y el contexto
-  inyectado siguen disponibles.
+- `minimal`: se usa para sub-agentes; omite **Habilidades**, **Recuerdo de memoria**, **OpenClaw
+  Self-Update**, **Alias de modelo**, **Identidad de usuario**, **Etiquetas de respuesta**,
+  **Mensajería**, **Respuestas silenciosas** y **Latidos**. Herramientas, **Seguridad**,
+  Espacio de trabajo, Sandbox, Fecha y hora actual (cuando se conoce), Tiempo de ejecución y contexto inyectado
+  permanecen disponibles.
 - `none`: devuelve solo la línea de identidad base.
 
-Cuando `promptMode=minimal`, los prompts adicionales inyectados se etiquetan como **Contexto del subagente**
-en lugar de **Contexto del chat grupal**.
+Cuando `promptMode=minimal`, los prompts adicionales inyectados se etiquetan como **Subagent
+Context** en lugar de **Group Chat Context**.
 
-## Inyección de arranque del espacio de trabajo
+## Inyección de inicialización del espacio de trabajo
 
-Los archivos de arranque se recortan y añaden bajo **Contexto del proyecto** para que el modelo vea el contexto de identidad y perfil sin necesidad de lecturas explícitas:
+Los archivos de inicialización se recortan y añaden bajo **Project Context** para que el modelo vea el contexto de identidad y perfil sin necesidad de lecturas explícitas:
 
 - `AGENTS.md`
 - `SOUL.md`
@@ -103,45 +101,50 @@ Los archivos de arranque se recortan y añaden bajo **Contexto del proyecto** pa
 - `BOOTSTRAP.md` (solo en espacios de trabajo totalmente nuevos)
 - `MEMORY.md` cuando está presente, de lo contrario `memory.md` como alternativa en minúsculas
 
-Todos estos archivos se **inyectan en la ventana de contexto** en cada turno a menos que se aplique una puerta específica del archivo. `HEARTBEAT.md` se omite en ejecuciones normales cuando los latidos están deshabilitados para el agente predeterminado o `agents.defaults.heartbeat.includeSystemPromptSection` es falso. Mantenga los archivos inyectados concisos, especialmente `MEMORY.md`, que puede crecer con el tiempo y llevar a un uso del contexto inesperadamente alto y a una compactación más frecuente.
+Todos estos archivos se **inyectan en la ventana de contexto** en cada turno a menos que
+se aplique una puerta de enlace específica del archivo. `HEARTBEAT.md` se omite en ejecuciones normales cuando
+los latidos están deshabilitados para el agente predeterminado o
+`agents.defaults.heartbeat.includeSystemPromptSection` es falso. Mantenga los archivos
+inyectados concisos — especialmente `MEMORY.md`, que puede crecer con el tiempo y provocar
+un uso del contexto inesperadamente alto y una compactación más frecuente.
 
-> **Nota:** `memory/*.md` archivos diarios **no** son parte del bootstrap normal
-> del Contexto del Proyecto. En turnos ordinarios se accede a ellos bajo demanda a través de las
+> **Nota:** Los archivos diarios `memory/*.md` **no** son parte de la inicialización
+> normal del Project Context. En turnos ordinarios se acceden a ellos bajo demanda a través de las
 > herramientas `memory_search` y `memory_get`, por lo que no cuentan contra la
 > ventana de contexto a menos que el modelo los lea explícitamente. Los turnos `/new` y
 > `/reset` simples son la excepción: el tiempo de ejecución puede anteponer la memoria diaria reciente
 > como un bloque de contexto de inicio único para ese primer turno.
 
-Los archivos grandes se truncan con un marcador. El tamaño máximo por archivo está controlado por
-`agents.defaults.bootstrapMaxChars` (predeterminado: 12000). El contenido total de arranque inyectado
-a través de los archivos está limitado por `agents.defaults.bootstrapTotalMaxChars`
-(predeterminado: 60000). Los archivos faltantes inyectan un marcador corto de archivo faltante. Cuando se produce
-el truncamiento, OpenClaw puede inyectar un bloque de advertencia en el Contexto del Proyecto; controle esto con
+Los archivos grandes se truncarán con un marcador. El tamaño máximo por archivo se controla mediante
+`agents.defaults.bootstrapMaxChars` (por defecto: 12000). El contenido total de arranque inyectado
+entre archivos se limita mediante `agents.defaults.bootstrapTotalMaxChars`
+(por defecto: 60000). Los archivos faltantes inyectan un marcador breve de archivo faltante. Cuando se produce
+el truncamiento, OpenClaw puede inyectar un bloque de advertencia en el contexto del proyecto; controlarlo con
 `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`;
-predeterminado: `once`).
+por defecto: `once`).
 
-Las sesiones de subagentes solo inyectan `AGENTS.md` y `TOOLS.md` (otros archivos de bootstrap
-se filtran para mantener el contexto del subagente pequeño).
+Las sesiones de subagentes solo inyectan `AGENTS.md` y `TOOLS.md` (otros archivos de arranque
+se filtran para mantener el contexto del subagente reducido).
 
-Los ganchos internos pueden interceptar este paso mediante `agent:bootstrap` para modificar o reemplazar
-los archivos de bootstrap inyectados (por ejemplo, intercambiando `SOUL.md` por una personalidad alternativa).
+Los enlaces internos pueden interceptar este paso a través de `agent:bootstrap` para mutar o reemplazar
+los archivos de arranque inyectados (por ejemplo, cambiar `SOUL.md` por una personalidad alternativa).
 
-Si desea que el agente suene menos genérico, comience con
+Si desea que el agente suene menos genérico, comience con la
 [Guía de personalidad SOUL.md](/es/concepts/soul).
 
-Para inspeccionar cuánto aporta cada archivo inyectado (sin procesar vs. inyectado, truncamiento, más sobrecarga del esquema de herramientas), use `/context list` o `/context detail`. Consulte [Contexto](/es/concepts/context).
+Para inspeccionar cuánto contribuye cada archivo inyectado (bruto frente a inyectado, truncamiento, más sobrecarga del esquema de herramientas), use `/context list` o `/context detail`. Consulte [Contexto](/es/concepts/context).
 
-## Manejo del tiempo
+## Gestión del tiempo
 
-El mensaje del sistema incluye una sección dedicada **Fecha y hora actual** cuando la
-zona horaria del usuario es conocida. Para mantener la caché del mensaje estable, ahora solo incluye
-la **zona horaria** (sin reloj dinámico o formato de hora).
+El sistema del mensaje incluye una sección dedicada de **Fecha y hora actual** cuando la
+zona horaria del usuario es conocida. Para mantener el caché del mensaje estable, ahora solo incluye
+la **zona horaria** (sin reloj dinámico ni formato de hora).
 
 Use `session_status` cuando el agente necesite la hora actual; la tarjeta de estado
-incluye una línea de marca de tiempo. La misma herramienta puede establecer opcionalmente una sobrescritura
-de modelo por sesión (`model=default` la borra).
+incluye una línea de marca de tiempo. La misma herramienta puede establecer opcionalmente una anulación del modelo por sesión
+(`model=default` la borra).
 
-Configure con:
+Configurar con:
 
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
@@ -152,12 +155,12 @@ Consulte [Fecha y hora](/es/date-time) para obtener detalles completos del compo
 
 Cuando existen habilidades elegibles, OpenClaw inyecta una **lista de habilidades disponibles** compacta
 (`formatSkillsForPrompt`) que incluye la **ruta de archivo** para cada habilidad. El
-prompt instruye al modelo a usar `read` para cargar el SKILL.md en la ubicación
-listada (espacio de trabajo, administrada o empaquetada). Si no hay habilidades elegibles, la
+prompt le indica al modelo que use `read` para cargar el SKILL.md en la ubicación
+listada (workspace, gestionada o empaquetada). Si no hay habilidades elegibles, la
 sección de Habilidades se omite.
 
-La elegibilidad incluye puertas de metadatos de habilidades, comprobaciones de entorno/configuración en tiempo de ejecución,
-y la lista de permitidos efectiva de habilidades del agente cuando `agents.defaults.skills` o
+La elegibilidad incluye puertas de metadatos de habilidades, verificaciones de entorno/configuración en tiempo de ejecución,
+y la lista blanca efectiva de habilidades del agente cuando `agents.defaults.skills` o
 `agents.list[].skills` están configurados.
 
 ```
@@ -170,26 +173,26 @@ y la lista de permitidos efectiva de habilidades del agente cuando `agents.defau
 </available_skills>
 ```
 
-Esto mantiene el mensaje base pequeño mientras sigue permitiendo el uso específico de habilidades.
+Esto mantiene el prompt base pequeño mientras permite el uso específico de habilidades.
 
 El presupuesto de la lista de habilidades es propiedad del subsistema de habilidades:
 
-- Predeterminado global: `skills.limits.maxSkillsPromptChars`
-- Invalidación por agente: `agents.list[].skillsLimits.maxSkillsPromptChars`
+- Valor predeterminado global: `skills.limits.maxSkillsPromptChars`
+- Anulación por agente: `agents.list[].skillsLimits.maxSkillsPromptChars`
 
-Los extractos de tiempo de ejecución acotados genéricos utilizan una superficie diferente:
+Los extractos de tiempo de ejecución delimitados genéricos usan una superficie diferente:
 
 - `agents.defaults.contextLimits.*`
 - `agents.list[].contextLimits.*`
 
-Esa división mantiene el tamaño de las habilidades separado del tamaño de lectura/inyección en tiempo de ejecución, tales
-como `memory_get`, resultados de herramientas en vivo y actualizaciones de AGENTS.md posteriores a la compactación.
+Esa división mantiene el tamaño de las habilidades separado del tamaño de lectura/inyección en tiempo de ejecución, como
+`memory_get`, resultados en vivo de herramientas y actualizaciones de AGENTS.md después de la compactación.
 
 ## Documentación
 
-Cuando está disponible, el prompt del sistema incluye una sección **Documentación** que apunta al
-directorio de documentación local de OpenClaw (ya sea `docs/` en el espacio de trabajo del repositorio o la documentación del
-paquete npm incluido) y también señala el espejo público, repositorio fuente, comunidad de Discord y
-ClawHub ([https://clawhub.ai](https://clawhub.ai)) para el descubrimiento de habilidades. El prompt instruye al modelo a consultar primero la documentación local
-sobre el comportamiento, comandos, configuración o arquitectura de OpenClaw, y ejecutar
-`openclaw status` por sí mismo cuando sea posible (preguntando al usuario solo cuando no tenga acceso).
+Cuando está disponible, el prompt del sistema incluye una sección de **Documentación** que apunta al
+directorio de documentos local de OpenClaw (ya sea `docs/` en el espacio de trabajo del repositorio o los documentos del paquete npm
+empaquetados) y también señala el espejo público, repositorio fuente, Discord de la comunidad y
+ClawHub ([https://clawhub.ai](https://clawhub.ai)) para el descubrimiento de habilidades. El prompt le indica al modelo que consulte primero los documentos locales
+sobre el comportamiento, comandos, configuración o arquitectura de OpenClaw, y que ejecute
+`openclaw status` por sí mismo cuando sea posible (solicitando al usuario solo cuando no tenga acceso).

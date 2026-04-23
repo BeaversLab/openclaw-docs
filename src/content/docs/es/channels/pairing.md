@@ -21,7 +21,7 @@ Contexto de seguridad: [Seguridad](/es/gateway/security)
 
 Cuando un canal está configurado con la política de MD `pairing`, los remitentes desconocidos reciben un código corto y su mensaje **no se procesa** hasta que usted lo apruebe.
 
-Las políticas de DM predeterminadas están documentadas en: [Seguridad](/es/gateway/security)
+Las políticas predeterminadas de DM están documentadas en: [Seguridad](/es/gateway/security)
 
 Códigos de emparejamiento:
 
@@ -98,21 +98,30 @@ openclaw devices reject <requestId>
 
 Si el mismo dispositivo vuelve a intentar con diferentes detalles de autenticación (por ejemplo, diferente rol/alcances/clave pública), la solicitud pendiente anterior es reemplazada y se crea una nueva `requestId`.
 
-### Almacenamiento del estado de emparejamiento de nodos
+Importante: un dispositivo ya vinculado no obtiene acceso más amplio silenciosamente. Si se
+vuelve a conectar solicitando más alcances o un rol más amplio, OpenClaw mantiene la
+aprobación existente tal cual y crea una nueva solicitud de actualización pendiente. Use
+`openclaw devices list` para comparar el acceso aprobado actualmente con el
+acceso recién solicitado antes de aprobar.
+
+### Almacenamiento del estado de vinculación de nodos
 
 Almacenado bajo `~/.openclaw/devices/`:
 
 - `pending.json` (de corta duración; las solicitudes pendientes caducan)
-- `paired.json` (dispositivos emparejados + tokens)
+- `paired.json` (dispositivos vinculados + tokens)
 
 ### Notas
 
-- La API heredada `node.pair.*` (CLI: `openclaw nodes pending|approve|reject|rename`) es un almacén de emparejamiento separado propiedad de la pasarela. Los nodos WS aún requieren emparejamiento de dispositivos.
-- El registro de emparejamiento es la fuente duradera de verdad para los roles aprobados. Los tokens de dispositivo activos permanecen vinculados a ese conjunto de roles aprobados; una entrada de token extraviada fuera de los roles aprobados no crea nuevo acceso.
+- La API heredada `node.pair.*` (CLI: `openclaw nodes pending|approve|reject|rename`) es un
+  almacén de vinculación separado propiedad de la puerta de enlace. Los nodos WS aún requieren vinculación de dispositivos.
+- El registro de vinculación es la fuente duradera de verdad para los roles aprobados. Los tokens
+  de dispositivo activos permanecen limitados a ese conjunto de roles aprobados; una entrada de token
+  errante fuera de los roles aprobados no crea nuevo acceso.
 
 ## Documentos relacionados
 
-- Modelo de seguridad + inyección de prompt: [Seguridad](/es/gateway/security)
+- Modelo de seguridad + inyección de prompts: [Seguridad](/es/gateway/security)
 - Actualización segura (ejecutar doctor): [Actualización](/es/install/updating)
 - Configuraciones de canales:
   - Telegram: [Telegram](/es/channels/telegram)

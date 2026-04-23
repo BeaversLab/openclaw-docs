@@ -27,7 +27,7 @@ Inbound message
 - `agents.defaults.*` 用于块流式传输和分块默认值。
 - 频道覆盖（`channels.whatsapp.*`、`channels.telegram.*` 等）用于上限和流式传输开关。
 
-有关完整架构，请参阅[配置](/zh/gateway/configuration)。
+有关完整架构，请参阅 [配置](/zh/gateway/configuration)。
 
 ## 入站去重
 
@@ -124,7 +124,7 @@ OpenClaw 可以暴露或隐藏模型推理：
 - 由模型生成推理内容时，该内容仍计入令牌使用量。
 - Telegram 支持将推理流传输到草稿气泡中。
 
-详情：[思考 + 推理指令](/zh/tools/thinking) 和 [令牌使用](/zh/reference/token-use)。
+详情：[思考 + 推理指令](/zh/tools/thinking) 和 [Token 使用](/zh/reference/token-use)。
 
 ## 前缀、串接和回复
 
@@ -133,11 +133,24 @@ OpenClaw 可以暴露或隐藏模型推理：
 - `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix`（出站前缀级联），以及 `channels.whatsapp.messagePrefix`（WhatsApp 入站前缀）
 - 通过 `replyToMode` 和各渠道默认值进行回复串接
 
-详情：[配置](/zh/gateway/configuration-reference#messages)和渠道文档。
+详情：[配置](/zh/gateway/configuration-reference#messages) 和渠道文档。
+
+## 静默回复
+
+确切的静默 token `NO_REPLY` / `no_reply` 意味着“不发送用户可见的回复”。
+OpenClaw 根据会话类型解析该行为：
+
+- 直接会话默认不允许静默，并将简单的静默回复重写为简短的可见回退。
+- 群组/渠道默认允许静默。
+- 内部编排默认允许静默。
+
+默认值位于 `agents.defaults.silentReply` 和
+`agents.defaults.silentReplyRewrite` 之下；`surfaces.<id>.silentReply` 和
+`surfaces.<id>.silentReplyRewrite` 可以针对每个界面覆盖它们。
 
 ## 相关
 
-- [Streaming](/zh/concepts/streaming) — 实时消息传送
-- [Retry](/zh/concepts/retry) — 消息传送重试行为
-- [Queue](/zh/concepts/queue) — 消息处理队列
-- [Channels](/zh/channels) — 消息平台集成
+- [流式传输](/zh/concepts/streaming) — 实时消息传送
+- [重试](/zh/concepts/retry) — 消息传送重试行为
+- [队列](/zh/concepts/queue) — 消息处理队列
+- [渠道](/zh/channels) — 消息平台集成

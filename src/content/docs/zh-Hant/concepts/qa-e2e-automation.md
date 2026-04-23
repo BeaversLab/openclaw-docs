@@ -55,18 +55,21 @@ pnpm openclaw qa matrix
 pnpm openclaw qa telegram
 ```
 
-該通道以一個真實的私人 Telegram 群組為目標，而不是佈建一次性伺服器。它需要 `OPENCLAW_QA_TELEGRAM_GROUP_ID`、`OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN` 和 `OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN`，以及同一個私人群組中的兩個不同的機器人。SUT 機器人必須具有 Telegram 使用者名稱，且當兩個機器人在 `@BotFather` 中啟用機器人對機器人通訊模式時，機器人對機器人的觀察效果最佳。
+該通道針對一個真實的私人 Telegram 群組，而不是佈建一次性伺服器。它需要 `OPENCLAW_QA_TELEGRAM_GROUP_ID`、
+`OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN` 和
+`OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN`，加上同一私人群組中的兩個不同的機器人。SUT 機器人必須擁有 Telegram 使用者名稱，並且當兩個機器人在 `@BotFather` 中啟用 Bot-to-Bot 通訊模式時，bot-to-bot 觀察效果最佳。
+當任何場景失敗時，該指令會以非零狀態碼退出。當您想要產生相關成果而不希望以失敗狀態碼退出時，請使用 `--allow-failures`。
 
 即時傳輸通道現在共用一個較小的合約，而不是各自發明自己的情境清單形狀：
 
-`qa-channel` 仍然是廣泛的合成產品行為套件，不是即時傳輸覆蓋率矩陣的一部分。
+`qa-channel` 仍然是廣泛的綜合產品行為測試套件，並且不是即時傳輸覆蓋率矩陣的一部分。
 
 | 通道     | 金絲雀 | 提及閘道 | 允許清單封鎖 | 頂層回覆 | 重新啟動恢復 | 執行緒後續追蹤 | 執行緒隔離 | 反應觀察 | 說明指令 |
 | -------- | ------ | -------- | ------------ | -------- | ------------ | -------------- | ---------- | -------- | -------- |
 | Matrix   | x      | x        | x            | x        | x            | x              | x          | x        |          |
 | Telegram | x      |          |              |          |              |                |            |          | x        |
 
-這將 `qa-channel` 保持為廣泛的產品行為套件，而 Matrix、Telegram 和未來的即時傳輸則共用一個明確的傳輸合約檢查清單。
+這保持了 `qa-channel` 作為廣泛的產品行為測試套件，而 Matrix、Telegram 和未來的即時傳輸則共用一個明確的傳輸合約檢查清單。
 
 若要使用一次性的 Linux VM 通道而不將 Docker 引入 QA 路徑，請執行：
 
@@ -74,35 +77,40 @@ pnpm openclaw qa telegram
 pnpm openclaw qa suite --runner multipass --scenario channel-chat-baseline
 ```
 
-這會啟動一個全新的 Multipass guest，安裝相依元件，在 guest 內建置 OpenClaw，執行 `qa suite`，然後將正常的 QA 報告和摘要複製回主機上的 `.artifacts/qa-e2e/...`。它會重複使用與主機上 `qa suite` 相同的情境選擇行為。主機和 Multipass 套件執行預設會透過獨立的 gateway worker 並行執行多個選定的情境，最多 64 個 worker 或選定的情境數量。使用 `--concurrency <count>` 調整 worker 數量，或使用 `--concurrency 1` 進行序列執行。即時執行會轉發對 guest 實用的支援 QA 驗證輸入：基於環境變數的提供者金鑰、QA 即時提供者設定路徑，以及存在的 `CODEX_HOME`。請將 `--output-dir` 保留在儲存庫根目錄下，以便 guest 可以透過掛載的工作區寫回資料。
+這會啟動一個全新的 Multipass 客體，安裝相依套件，在客體內部建置 OpenClaw，
+執行 `qa suite`，然後將正常的 QA 報告和
+摘要複製回主機上的 `.artifacts/qa-e2e/...`。
+它重用與主機上 `qa suite` 相同的場景選擇行為。
+預設情況下，主機和 Multipass 測試套件執行會使用獨立的 gateway worker 並行執行多個選定的場景。
+`qa-channel` 預設並發數為 4，並受選定場景數量的上限限制。使用 `--concurrency <count>` 來調整
+worker 數量，或使用 `--concurrency 1` 進行序列執行。
+當任何場景失敗時，該指令會以非零狀態碼退出。當您想要產生相關成果而不希望以失敗狀態碼退出時，請使用 `--allow-failures`。
+即時執行會轉發對客體而言實用的支援 QA 驗證輸入：基於環境變數的提供者金鑰、QA 即時提供者設定路徑，以及
+當存在時的 `CODEX_HOME`。請將 `--output-dir` 保持在儲存庫根目錄下，以便客體
+可以透過掛載的工作區寫回資料。
 
 ## Repo-backed seeds
 
-Seed assets live in `qa/`：
+Seed 資產位於 `qa/`：
 
 - `qa/scenarios/index.md`
 - `qa/scenarios/<theme>/*.md`
 
 這些有意放置在 git 中，以便 QA 計劃對人類和代理程式都可見。
 
-`qa-lab` should stay a generic markdown runner. Each scenario markdown file is
-the source of truth for one test run and should define:
+`qa-lab` 應保持為一個通用的 markdown 執行器。每個場景 markdown 檔案是
+單次測試執行的唯一來源，並應定義：
 
 - 情境元資料
 - optional category, capability, lane, and risk metadata
 - docs and code refs
 - optional plugin requirements
 - optional gateway config patch
-- the executable `qa-flow`
+- 可執行檔 `qa-flow`
 
-The reusable runtime surface that backs `qa-flow` is allowed to stay generic
-and cross-cutting. For example, markdown scenarios can combine transport-side
-helpers with browser-side helpers that drive the embedded Control UI through the
-Gateway `browser.request` seam without adding a special-case runner.
+支援 `qa-flow` 的可重複使用執行時期介面允許保持通用和跨領域的特性。例如，markdown 情境可以結合傳輸端輔助程式與瀏覽器端輔助程式，透過 Gateway `browser.request` 縫合來驅動嵌入式控制 UI，而無需新增特殊情況的執行器。
 
-Scenario files should be grouped by product capability rather than source tree
-folder. Keep scenario IDs stable when files move; use `docsRefs` and `codeRefs`
-for implementation traceability.
+情境檔案應按產品功能而非來源樹資料夾分組。當檔案移動時，請保持情境 ID 穩定；請使用 `docsRefs` 和 `codeRefs` 進行實作可追溯性。
 
 The baseline list should stay broad enough to cover:
 
@@ -118,35 +126,28 @@ The baseline list should stay broad enough to cover:
 
 ## Provider mock lanes
 
-`qa suite` has two local provider mock lanes:
+`qa suite` 有兩個本機提供者模擬通道：
 
-- `mock-openai` is the scenario-aware OpenClaw mock. It remains the default
-  deterministic mock lane for repo-backed QA and parity gates.
-- `aimock` starts an AIMock-backed provider server for experimental protocol,
-  fixture, record/replay, and chaos coverage. It is additive and does not
-  replace the `mock-openai` scenario dispatcher.
+- `mock-openai` 是具備情境感知能力的 OpenClaw 模擬。它仍然是支援 repo 的 QA 和對等閘道的預設決定性模擬通道。
+- `aimock` 啟動一個由 AIMock 支援的提供者伺服器，用於實驗性協定、fixture、錄製/重播和混亂測試覆蓋。它是附加性的，並不取代 `mock-openai` 情境調度器。
 
-Provider-lane implementation lives under `extensions/qa-lab/src/providers/`.
-Each provider owns its defaults, local server startup, gateway model config,
-auth-profile staging needs, and live/mock capability flags. Shared suite and
-gateway code should route through the provider registry instead of branching on
-provider names.
+提供者通道實作位於 `extensions/qa-lab/src/providers/` 下。每個提供者擁有其預設值、本機伺服器啟動、Gateway 模型配置、auth-profile 暫存需求，以及即時/模擬功能標誌。共享套件和 Gateway 程式碼應透過提供者註冊表路由，而不是根據提供者名稱進行分支。
 
 ## Transport adapters
 
-`qa-lab` 擁有用於 Markdown QA 場景的通用傳輸縫合。`qa-channel` 是該縫合上的第一個適配器，但設計目標更廣泛：未來的真實或合成通道應插入同一個套件執行器，而不是添加傳輸特定的 QA 執行器。
+`qa-lab` 擁有用於 markdown QA 情境的通用傳輸縫合。`qa-channel` 是該縫合上的第一個介面卡，但設計目標更廣泛：未來的真實或合成通道應插入到同一個套件執行器中，而不是新增傳輸專屬的 QA 執行器。
 
 在架構層面上，劃分如下：
 
-- `qa-lab` 負責通用場景執行、工作器並發、工件寫入和報告。
+- `qa-lab` 負責通用情境執行、工作並發、寫入產報表和報告。
 - 傳輸適配器負責閘道配置、就緒狀態、入站和出站觀察、傳輸操作以及規範化的傳輸狀態。
-- `qa/scenarios/` 下的 Markdown 場景文件定義了測試執行；`qa-lab` 提供了執行這些文件的可重複使用的執行時介面。
+- `qa/scenarios/` 下的 markdown 情境檔案定義了測試執行；`qa-lab` 提供了執行它們的可重複使用執行時期介面。
 
-針對維護者的新通道適配器採用指南位於 [測試](/zh-Hant/help/testing#adding-a-channel-to-qa)。
+針對維護者的新通道介面卡採用指南位於 [Testing](/zh-Hant/help/testing#adding-a-channel-to-qa)。
 
 ## 報告
 
-`qa-lab` 從觀察到的匯流排時間軸匯出 Markdown 協議報告。該報告應回答：
+`qa-lab` 從觀察到的匯流排時間軸匯出 Markdown 協定報告。該報告應回答：
 
 - 什麼有效
 - 什麼失敗
@@ -172,17 +173,15 @@ pnpm openclaw qa character-eval \
   --judge-concurrency 16
 ```
 
-該指令運行本機 QA 閘道子進程，而非 Docker。角色評估場景應透過 `SOUL.md` 設定角色，然後執行一般使用者輪次，例如聊天、工作區協助和小型檔案任務。不應告知候選模型它正在接受評估。該指令會保留每份完整逐字稿，記錄基本執行統計資料，然後要求評判模型在快速模式下，使用 `xhigh` 推理來依自然度、氛圍和幽默感對執行結果進行排名。
-比較提供者時請使用 `--blind-judge-models`：評判提示仍會取得每份逐字稿和執行狀態，但候選參照會被替換為中立標籤，例如 `candidate-01`；報表會在解析後將排名對應回真實參照。
-候選執行預設為 `high` 思考，支援此功能的 OpenAI 模型則使用 `xhigh`。可以針對特定候選內嵌使用 `--model provider/model,thinking=<level>` 覆寫設定。`--thinking <level>` 仍會設定全域備選，而較舊的 `--model-thinking <provider/model=level>` 形式則
-為了相容性而予以保留。
-OpenAI 候選參照預設為快速模式，因此在提供者支援的地方會使用優先處理。當單一候選或評判需要覆寫時，請內嵌新增 `,fast`、`,no-fast` 或 `,fast=false`。僅在您希望對所有候選模型強制開啟快速模式時才傳遞 `--fast`。候選和評判的持續時間會記錄在報表中用於基準分析，但評判提示會明確說明不要依速度排名。
-候選和評判模型執行的預設並行數皆為 16。當提供者限制或本機閘道壓力導致執行過於雜亂時，請降低 `--concurrency` 或 `--judge-concurrency`。
-當未傳遞候選 `--model` 時，角色評估會在未傳遞 `--model` 的情況下預設為 `openai/gpt-5.4`、`openai/gpt-5.2`、`openai/gpt-5`、`anthropic/claude-opus-4-6`、
+此指令執行本機 QA gateway 子進程，而非 Docker。角色評估場景應透過 `SOUL.md` 設定角色，然後執行一般使用者輪次，例如聊天、工作區幫助和小型檔案任務。不應告訴候選模型它正在接受評估。該指令會保留每份完整逐字稿，記錄基本執行統計數據，然後以 `xhigh` 推理的快速模式詢問評審模型，依自然度、氛圍和幽默感對執行結果進行排名。比較提供者時請使用 `--blind-judge-models`：評審提示詞仍然會取得每份逐字稿和執行狀態，但候選參照會被替換為中性標籤，例如 `candidate-01`；報表會在解析後將排名對應回真實參照。
+候選執行預設為 `high` 思考，支援此功能的 OpenAI 模型則使用 `xhigh`。可使用 `--model provider/model,thinking=<level>` 直接覆寫特定候選。`--thinking <level>` 仍會設定全域後備值，而較舊的 `--model-thinking <provider/model=level>` 形式則為了相容性而保留。
+OpenAI 候選參照預設為快速模式，因此在提供者支援的情況下會使用優先處理。當單一候選或評審需要覆寫時，可直接加入 `,fast`、`,no-fast` 或 `,fast=false`。僅當您想要對每個候選模型強制開啟快速模式時，才傳遞 `--fast`。候選和評審的持續時間會記錄在報表中用於基準分析，但評審提示詞會明確指出不要根據速度排名。
+候選和評審模型執行預設並行數皆為 16。當提供者限制或本機 gateway 壓力導致執行過於嘈雜時，請降低 `--concurrency` 或 `--judge-concurrency`。
+當未傳遞候選 `--model` 時，角色評估預設為 `openai/gpt-5.4`、`openai/gpt-5.2`、`openai/gpt-5`、`anthropic/claude-opus-4-6`、
 `anthropic/claude-sonnet-4-6`、`zai/glm-5.1`、
 `moonshot/kimi-k2.5` 和
-`google/gemini-3.1-pro-preview`。
-當未傳遞 `--judge-model` 時，評判會預設為
+`google/gemini-3.1-pro-preview` 當未傳遞 `--model` 時。
+當未傳遞 `--judge-model` 時，評審預設為
 `openai/gpt-5.4,thinking=xhigh,fast` 和
 `anthropic/claude-opus-4-6,thinking=high`。
 

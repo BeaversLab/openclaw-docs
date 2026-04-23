@@ -8,7 +8,7 @@ read_when:
 
 # Référence de configuration
 
-Référence de configuration principale pour `~/.openclaw/openclaw.json`. Pour une vue d'ensemble orientée tâche, voir [Configuration](/fr/gateway/configuration).
+Référence de configuration principale pour `~/.openclaw/openclaw.json`. Pour une présentation orientée tâche, voir [Configuration](/fr/gateway/configuration).
 
 Cette page couvre les surfaces de configuration principales OpenClaw et renvoie vers des liens externes lorsqu'un sous-système possède sa propre référence approfondie. Elle n'essaie **pas** d'incorporer en ligne chaque catalogue de commandes appartenant à un channel/plugin ou chaque paramètre avancé de mémoire/QMD sur une seule page.
 
@@ -20,8 +20,8 @@ Vérité du code :
 
 Références approfondies dédiées :
 
-- [Référence de configuration de la mémoire](/fr/reference/memory-config) pour `agents.defaults.memorySearch.*`, `memory.qmd.*`, `memory.citations` et la configuration de rêve sous `plugins.entries.memory-core.config.dreaming`
-- [Commandes Slash](/fr/tools/slash-commands) pour le catalogue actuel des commandes intégrées + groupées
+- [Référence de configuration de la mémoire](/fr/reference/memory-config) pour `agents.defaults.memorySearch.*`, `memory.qmd.*`, `memory.citations`, et la configuration de rêve sous `plugins.entries.memory-core.config.dreaming`
+- [Commandes Slash](/fr/tools/slash-commands) pour le catalogue de commandes intégré + groupé actuel
 - pages de propriétaire de channel/plugin pour les surfaces de commandes spécifiques aux channels
 
 Le format de configuration est **JSON5** (commentaires et virgules de fin autorisés). Tous les champs sont facultatifs — OpenClaw utilise des valeurs par défaut sécurisées en cas d'omission.
@@ -222,9 +222,9 @@ WhatsApp s'exécute via le web channel de la passerelle (Baileys Web). Il démar
 - `channels.telegram.defaultAccount` facultatif remplace la sélection de compte par défaut lorsqu'elle correspond à un id de compte configuré.
 - Dans les configurations multi-comptes (2+ identifiants de compte), définissez une valeur par défaut explicite (`channels.telegram.defaultAccount` ou `channels.telegram.accounts.default`) pour éviter le routage de repli ; `openclaw doctor` avertit lorsque cela est manquant ou invalide.
 - `configWrites: false` bloque les écritures de configuration initiées par Telegram (migrations d'ID de supergroupe, `/config set|unset`).
-- Les entrées `bindings[]` de premier niveau avec `type: "acp"` configurent les liaisons ACP persistantes pour les sujets de forum (utilisez le `chatId:topic:topicId` canonique dans `match.peer.id`). La sémantique des champs est partagée dans [ACP Agents](/fr/tools/acp-agents#channel-specific-settings).
+- Les entrées `bindings[]` de niveau supérieur avec `type: "acp"` configurent des liaisons ACP persistantes pour les sujets de forum (utilisez `chatId:topic:topicId` canonique dans `match.peer.id`). La sémantique des champs est partagée dans [Agents ACP](/fr/tools/acp-agents#channel-specific-settings).
 - Les aperçus de flux Telegram utilisent `sendMessage` + `editMessageText` (fonctionne dans les chats directs et de groupe).
-- Politique de réessai : voir [Retry policy](/fr/concepts/retry).
+- Politique de réessai : voir [Politique de réessai](/fr/concepts/retry).
 
 ### Discord
 
@@ -339,7 +339,7 @@ WhatsApp s'exécute via le web channel de la passerelle (Baileys Web). Il démar
   - `idleHours` : Remplacement Discord pour la désactivation automatique par inactivité en heures (`0` désactive)
   - `maxAgeHours` : Remplacement Discord pour l'âge maximal strict en heures (`0` désactive)
   - `spawnSubagentSessions` : Option d'activation pour la création/liaison automatique de fils `sessions_spawn({ thread: true })`
-- Les entrées `bindings[]` de premier niveau avec `type: "acp"` configurent les liaisons ACP persistantes pour les canaux et les fils (utilisez l'id du canal/fil dans `match.peer.id`). La sémantique des champs est partagée dans [ACP Agents](/fr/tools/acp-agents#channel-specific-settings).
+- Les entrées `bindings[]` de niveau supérieur avec `type: "acp"` configurent des liaisons ACP persistantes pour les channels et les fils de discussion (utilisez l'identifiant du channel/fil dans `match.peer.id`). La sémantique des champs est partagée dans [Agents ACP](/fr/tools/acp-agents#channel-specific-settings).
 - `channels.discord.ui.components.accentColor` définit la couleur d'accentuation pour les conteneurs de composants Discord v2.
 - `channels.discord.voice` active les conversations de canal vocal Discord et les remplacements optionnels d'auto-rejoindre + TTS.
 - `channels.discord.voice.daveEncryption` et `channels.discord.voice.decryptionFailureTolerance` sont transmis aux options DAVE de `@discordjs/voice` (`true` et `24` par défaut).
@@ -571,7 +571,7 @@ BlueBubbles est le chemin recommandé pour iMessage (pris en charge par un plugi
 
 - Principaux chemins de clés couverts ici : `channels.bluebubbles`, `channels.bluebubbles.dmPolicy`.
 - `channels.bluebubbles.defaultAccount` facultatif remplace la sélection du compte par défaut lorsqu'il correspond à un ID de compte configuré.
-- Les entrées `bindings[]` de niveau supérieur avec `type: "acp"` peuvent lier les conversations BlueBubbles à des sessions ACP persistantes. Utilisez un identifiant ou une chaîne cible BlueBubbles (`chat_id:*`, `chat_guid:*`, `chat_identifier:*`) dans `match.peer.id`. Sémantique de champ partagée : [ACP Agents](/fr/tools/acp-agents#channel-specific-settings).
+- Les entrées `bindings[]` de niveau supérieur avec `type: "acp"` peuvent lier des conversations BlueBubbles à des sessions ACP persistantes. Utilisez un identifiant ou une chaîne cible BlueBubbles (`chat_id:*`, `chat_guid:*`, `chat_identifier:*`) dans `match.peer.id`. Sémantique des champs partagée : [Agents ACP](/fr/tools/acp-agents#channel-specific-settings).
 - La configuration complète du channel BlueBubbles est documentée dans [BlueBubbles](/fr/channels/bluebubbles).
 
 ### iMessage
@@ -608,7 +608,7 @@ OpenClaw génère `imsg rpc` (JSON-RPC sur stdio). Aucun démon ou port requis.
 - `attachmentRoots` et `remoteAttachmentRoots` restreignent les chemins des pièces jointes entrantes (par défaut : `/Users/*/Library/Messages/Attachments`).
 - SCP utilise une vérification stricte de la clé de l'hôte, assurez-vous donc que la clé de l'hôte de relais existe déjà dans `~/.ssh/known_hosts`.
 - `channels.imessage.configWrites` : autoriser ou refuser les écritures de configuration initiées par iMessage.
-- Les entrées `bindings[]` de niveau supérieur avec `type: "acp"` peuvent lier des conversations iMessage à des sessions ACP persistantes. Utilisez un identifiant normalisé ou une cible de chat explicite (`chat_id:*`, `chat_guid:*`, `chat_identifier:*`) dans `match.peer.id`. Sémantique de champ partagée : [ACP Agents](/fr/tools/acp-agents#channel-specific-settings).
+- Les entrées `bindings[]` de niveau supérieur avec `type: "acp"` peuvent lier des conversations iMessage à des sessions ACP persistantes. Utilisez un identifiant normalisé ou une cible de chat explicite (`chat_id:*`, `chat_guid:*`, `chat_identifier:*`) dans `match.peer.id`. Sémantique des champs partagée : [Agents ACP](/fr/tools/acp-agents#channel-specific-settings).
 
 <Accordion title="Exemple de wrapper SSH iMessage">
 
@@ -748,7 +748,7 @@ Exécuter plusieurs comptes par canal (chacun avec son propre `accountId`) :
 ### Autres canaux d'extension
 
 De nombreux canaux d'extension sont configurés en tant que `channels.<id>` et documentés dans leurs pages de canal dédiées (par exemple Feishu, Matrix, LINE, Nostr, Zalo, Nextcloud Talk, Synology Chat et Twitch).
-Voir l'index complet des canaux : [Canaux](/fr/channels).
+Voir l'index complet des canaux : [Channels](/fr/channels).
 
 ### Filtrage des mentions dans les discussions de groupe
 
@@ -842,34 +842,34 @@ Incluez votre propre numéro dans `allowFrom` pour activer le mode self-chat (ig
 }
 ```
 
-<Accordion title="Command details">
+<Accordion title="Détails de la commande">
 
-- Ce bloc configure les surfaces de commande. Pour le catalogue de commandes intégré actuel, voir [Slash Commands](/fr/tools/slash-commands).
-- Cette page est une **référence des clés de configuration**, et non le catalogue complet des commandes. Les commandes détenues par le canal/plugin telles que QQ Bot `/bot-ping` `/bot-help` `/bot-logs`, LINE `/card`, device-pair `/pair`, memory `/dreaming`, phone-control `/phone` et Talk `/voice` sont documentées dans leurs pages de canal/plugin ainsi que dans [Slash Commands](/fr/tools/slash-commands).
+- Ce bloc configure les surfaces de commande. Pour le catalogue de commandes intégrées actuel + groupées, voir [Slash Commands](/fr/tools/slash-commands).
+- Cette page est une **référence de clé de configuration**, et non le catalogue complet des commandes. Les commandes détenues par le canal/le plugin, telles que le Bot QQ `/bot-ping` `/bot-help` `/bot-logs`, LINE `/card`, l'appairage d'appareil `/pair`, la mémoire `/dreaming`, le contrôle de téléphone `/phone` et Talk `/voice` sont documentées dans leurs pages de canal/plugin ainsi que dans [Slash Commands](/fr/tools/slash-commands).
 - Les commandes texte doivent être des messages **autonomes** commençant par `/`.
-- `native: "auto"` active les commandes natives pour Discord/Telegram, et les désactive pour Slack.
-- `nativeSkills: "auto"` active les commandes de compétences natives pour Discord/Telegram, et les désactive pour Slack.
+- `native: "auto"` active les commandes natives pour Discord/Telegram, laisse Slack désactivé.
+- `nativeSkills: "auto"` active les commandes de compétence natives pour Discord/Telegram, laisse Slack désactivé.
 - Remplacer par canal : `channels.discord.commands.native` (booléen ou `"auto"`). `false` efface les commandes précédemment enregistrées.
 - Remplacer l'enregistrement des compétences natives par canal avec `channels.<provider>.commands.nativeSkills`.
 - `channels.telegram.customCommands` ajoute des entrées de menu de bot Telegram supplémentaires.
-- `bash: true` active `! <cmd>` pour le shell hôte. Nécessite `tools.elevated.enabled` et l'expéditeur dans `tools.elevated.allowFrom.<channel>`.
-- `config: true` active `/config` (lit/écrit `openclaw.json`). Pour les clients passerelle `chat.send`, les écritures persistantes `/config set|unset` nécessitent également `operator.admin` ; la lecture seule `/config show` reste disponible pour les clients opérateur normaux avec un accès en écriture.
+- `bash: true` active `! <cmd>` pour l'hôte shell. Nécessite `tools.elevated.enabled` et l'expéditeur dans `tools.elevated.allowFrom.<channel>`.
+- `config: true` active `/config` (lecture/écriture `openclaw.json`). Pour les clients `chat.send` de passerelle, les écritures `/config set|unset` persistantes nécessitent également `operator.admin` ; la lecture seule `/config show` reste disponible pour les clients opérateur normaux avec scope d'écriture.
 - `mcp: true` active `/mcp` pour la configuration du serveur MCP gérée par OpenClaw sous `mcp.servers`.
-- `plugins: true` active `/plugins` pour la découverte, l'installation et les contrôles d'activation/désactivation des plugins.
+- `plugins: true` active `/plugins` pour la découverte de plugins, l'installation et les contrôles d'activation/désactivation.
 - `channels.<provider>.configWrites` verrouille les mutations de configuration par canal (par défaut : true).
 - Pour les canaux multi-comptes, `channels.<provider>.accounts.<id>.configWrites` verrouille également les écritures qui ciblent ce compte (par exemple `/allowlist --config --account <id>` ou `/config set channels.<provider>.accounts.<id>...`).
 - `restart: false` désactive `/restart` et les actions de l'outil de redémarrage de la passerelle. Par défaut : `true`.
 - `ownerAllowFrom` est la liste d'autorisation explicite du propriétaire pour les commandes/outils réservés au propriétaire. Elle est distincte de `allowFrom`.
 - `ownerDisplay: "hash"` hache les identifiants du propriétaire dans l'invite système. Définissez `ownerDisplaySecret` pour contrôler le hachage.
-- `allowFrom` est par fournisseur. Lorsqu'il est défini, c'est la **seule** source d'autorisation (les listes d'autorisation de canal/appairage et `useAccessGroups` sont ignorées).
+- `allowFrom` est par fournisseur. Lorsqu'il est défini, c'est la **seule** source d'autorisation (les listes d'autorisation/appairage de canal et `useAccessGroups` sont ignorés).
 - `useAccessGroups: false` permet aux commandes de contourner les stratégies de groupe d'accès lorsque `allowFrom` n'est pas défini.
-- Carte de la documentation des commandes :
+- Carte de documentation des commandes :
   - catalogue intégré + groupé : [Slash Commands](/fr/tools/slash-commands)
   - surfaces de commande spécifiques au canal : [Channels](/fr/channels)
   - commandes QQ Bot : [QQ Bot](/fr/channels/qqbot)
   - commandes d'appairage : [Pairing](/fr/channels/pairing)
   - commande de carte LINE : [LINE](/fr/channels/line)
-  - rêverie de la mémoire : [Dreaming](/fr/concepts/dreaming)
+  - rêve de mémoire : [Dreaming](/fr/concepts/dreaming)
 
 </Accordion>
 
@@ -1229,7 +1229,7 @@ Format de l'heure dans le prompt système. Par défaut : `auto` (préférence de
 - `model.primary` : format `provider/model` (par ex. `openai/gpt-5.4`). Si vous omettez le fournisseur, OpenClaw essaie d'abord un alias, puis une correspondance unique de fournisseur configuré pour cet ID de modèle exact, et ne revient ensuite qu'au fournisseur par défaut configuré (comportement de compatibilité obsolète, préférez donc un `provider/model` explicite). Si ce fournisseur n'expose plus le modèle par défaut configuré, OpenClaw revient au premier fournisseur/modèle configuré au lieu d'afficher un fournisseur par défaut obsolète supprimé.
 - `models` : le catalogue de modèles configuré et la liste d'autorisation pour `/model`. Chaque entrée peut inclure `alias` (raccourci) et `params` (spécifique au fournisseur, par exemple `temperature`, `maxTokens`, `cacheRetention`, `context1m`).
 - `params` : paramètres globaux par défaut du fournisseur appliqués à tous les modèles. Défini à `agents.defaults.params` (par ex. `{ cacheRetention: "long" }`).
-- Priorité de fusion `params` (config) : `agents.defaults.params` (base globale) est remplacé par `agents.defaults.models["provider/model"].params` (par modèle), puis `agents.list[].params` (ID d'agent correspondant) remplace par clé. Voir [Prompt Caching](/fr/reference/prompt-caching) pour les détails.
+- `params` priorité de fusion (config) : `agents.defaults.params` (base globale) est remplacé par `agents.defaults.models["provider/model"].params` (par modèle), puis `agents.list[].params` (id d'agent correspondant) remplace par clé. Voir [Prompt Caching](/fr/reference/prompt-caching) pour les détails.
 - `embeddedHarness` : stratégie d'exécution par défaut des agents intégrés de bas niveau. Utilisez `runtime: "auto"` pour permettre aux harnais de plugins enregistrés de revendiquer les modèles pris en charge, `runtime: "pi"` pour forcer le harnais PI intégré, ou un identifiant de harnais enregistré tel que `runtime: "codex"`. Définissez `fallback: "none"` pour désactiver le repli automatique vers PI.
 - Les rédacteurs de configuration qui modifient ces champs (par exemple `/models set`, `/models set-image`, et les commandes d'ajout/suppression de repli) enregistrent la forme canonique de l'objet et préservent les listes de repli existantes lorsque cela est possible.
 - `maxConcurrent` : nombre maximum d'exécutions parallèles d'agents sur les sessions (chaque session reste sérialisée). Par défaut : 4.
@@ -1381,7 +1381,7 @@ Exécutions périodiques de heartbeat.
         identifierInstructions: "Preserve deployment IDs, ticket IDs, and host:port pairs exactly.", // used when identifierPolicy=custom
         postCompactionSections: ["Session Startup", "Red Lines"], // [] disables reinjection
         model: "openrouter/anthropic/claude-sonnet-4-6", // optional compaction-only model override
-        notifyUser: true, // send a brief notice when compaction starts (default: false)
+        notifyUser: true, // send brief notices when compaction starts and completes (default: false)
         memoryFlush: {
           enabled: true,
           softThresholdTokens: 6000,
@@ -1394,14 +1394,14 @@ Exécutions périodiques de heartbeat.
 }
 ```
 
-- `mode` : `default` ou `safeguard` (résumé par blocs pour les historiques longs). Voir [Compaction](/fr/concepts/compaction).
-- `provider` : id d'un plugin provider de compaction enregistré. Lorsqu'il est défini, le `summarize()` du provider est appelé au lieu du résumé LLM intégré. Revient à l'intégré en cas d'échec. Définir un provider force `mode: "safeguard"`. Voir [Compaction](/fr/concepts/compaction).
+- `mode` : `default` ou `safeguard` (résumé par blocs pour les longs historiques). Voir [Compaction](/fr/concepts/compaction).
+- `provider` : id d'un plugin provider de compactage enregistré. Lorsqu'il est défini, la `summarize()` du provider est appelée au lieu du résumé LLM intégré. Replie sur l'intégré en cas d'échec. Définir un provider force `mode: "safeguard"`. Voir [Compaction](/fr/concepts/compaction).
 - `timeoutSeconds` : nombre de secondes maximum autorisé pour une seule opération de compaction avant qu'OpenClaw ne l'interrompe. Par défaut : `900`.
 - `identifierPolicy` : `strict` (par défaut), `off`, ou `custom`. `strict` préfixe les directives intégrées de rétention d'identifiant opaque lors du résumé de compaction.
 - `identifierInstructions` : texte personnalisé optionnel de préservation de l'identifiant utilisé lorsque `identifierPolicy=custom`.
 - `postCompactionSections` : noms de sections H2/H3 optionnels du fichier AGENTS.md à réinjecter après la compactage. Par défaut, `["Session Startup", "Red Lines"]` ; définir `[]` pour désactiver la réinjection. Lorsqu'il n'est pas défini ou défini explicitement sur cette paire par défaut, les anciens en-têtes `Every Session`/`Safety` sont également acceptés en tant que solution de repli pour l'héritage.
 - `model` : substitution optionnelle de `provider/model-id` pour la résumé de compactage uniquement. Utilisez ceci lorsque la session principale doit conserver un modèle mais que les résumés de compactage doivent s'exécuter sur un autre ; si non défini, le compactage utilise le modèle principal de la session.
-- `notifyUser` : lorsque `true`, envoie une brève notification à l'utilisateur lorsque le compactage commence (par exemple, « Compactage du contexte... »). Désactivé par défaut pour garder le compactage silencieux.
+- `notifyUser` : lorsque `true`, envoie de brèves notifications à l'utilisateur lorsque le compactage commence et lorsqu'il se termine (par exemple, « Compaction du contexte... » et « Compactage terminé »). Désactivé par défaut pour garder le compactage silencieux.
 - `memoryFlush` : tour agentique silencieux avant l'auto-compactage pour stocker des mémoires durables. Ignoré lorsque l'espace de travail est en lecture seule.
 
 ### `agents.defaults.contextPruning`
@@ -1446,7 +1446,7 @@ Notes :
 
 </Accordion>
 
-Voir [Nettoyage de session](/fr/concepts/session-pruning) pour les détails du comportement.
+Voir [Session Pruning](/fr/concepts/session-pruning) pour les détails de comportement.
 
 ### Block streaming
 
@@ -1468,7 +1468,7 @@ Voir [Nettoyage de session](/fr/concepts/session-pruning) pour les détails du c
 - Remplacements de canal : `channels.<channel>.blockStreamingCoalesce` (et variantes par compte). Signal/Slack/Discord/Google Chat par défaut `minChars: 1500`.
 - `humanDelay` : pause aléatoire entre les réponses par bloc. `natural` = 800–2500ms. Remplacement par agent : `agents.list[].humanDelay`.
 
-Voir [Streaming](/fr/concepts/streaming) pour le comportement + les détails de la segmentation.
+Voir [Streaming](/fr/concepts/streaming) pour les détails de comportement et de découpage.
 
 ### Indicateurs de frappe
 
@@ -1492,7 +1492,7 @@ Voir [Typing Indicators](/fr/concepts/typing-indicators).
 
 ### `agents.defaults.sandbox`
 
-Bac à sable (sandboxing) facultatif pour l'agent intégré. Voir [Sandboxing](/fr/gateway/sandboxing) pour le guide complet.
+Bac à sable optionnel pour l'agent intégré. Voir [Sandboxing](/fr/gateway/sandboxing) pour le guide complet.
 
 ```json5
 {
@@ -1766,7 +1766,7 @@ scripts/sandbox-browser-setup.sh   # optional browser image
 - `model` : le format chaîne remplace uniquement `primary` ; le format objet `{ primary, fallbacks }` remplace les deux (`[]` désactive les replis globaux). Les tâches Cron qui ne remplacent que `primary` héritent toujours des replis par défaut, sauf si vous définissez `fallbacks: []`.
 - `params` : paramètres de flux par agent fusionnés par-dessus l'entrée de modèle sélectionnée dans `agents.defaults.models`. Utilisez ceci pour des remplacements spécifiques à l'agent comme `cacheRetention`, `temperature` ou `maxTokens` sans dupliquer tout le catalogue de modèles.
 - `skills` : liste autorisée de compétences (allowlist) optionnelle par agent. Si omise, l'agent hérite de `agents.defaults.skills` lorsqu'elle est définie ; une liste explicite remplace les valeurs par défaut au lieu de fusionner, et `[]` signifie aucune compétence.
-- `thinkingDefault` : niveau de réflexion par défaut optionnel par agent (`off | minimal | low | medium | high | xhigh | adaptive`). Remplace `agents.defaults.thinkingDefault` pour cet agent lorsqu'aucun remplacement par message ou par session n'est défini.
+- `thinkingDefault` : niveau de réflexion par défaut par agent optionnel (`off | minimal | low | medium | high | xhigh | adaptive | max`). Remplace `agents.defaults.thinkingDefault` pour cet agent lorsqu'aucune substitution par message ou session n'est définie.
 - `reasoningDefault` : visibilité du raisonnement par défaut optionnelle par agent (`on | off | stream`). S'applique lorsqu'aucun remplacement de raisonnement par message ou par session n'est défini.
 - `fastModeDefault` : valeur par défaut optionnelle par agent pour le mode rapide (`true | false`). S'applique lorsqu'aucun remplacement de mode rapide par message ou par session n'est défini.
 - `embeddedHarness` : remplacement optionnel de la stratégie de harnais de bas niveau par agent. Utilisez `{ runtime: "codex", fallback: "none" }` pour rendre un agent Codex uniquement tandis que les autres agents gardent le repli PI par défaut.
@@ -1781,7 +1781,7 @@ scripts/sandbox-browser-setup.sh   # optional browser image
 
 ## Routage multi-agent
 
-Exécutez plusieurs agents isolés dans un seul Gateway. Voir [Multi-Agent](/fr/concepts/multi-agent).
+Exécuter plusieurs agents isolés dans un seul Gateway. Voir [Multi-Agent](/fr/concepts/multi-agent).
 
 ```json5
 {
@@ -2617,8 +2617,8 @@ Définissez `ZAI_API_KEY`. `z.ai/*` et `z-ai/*` sont des alias acceptés. Raccou
   env: { MOONSHOT_API_KEY: "sk-..." },
   agents: {
     defaults: {
-      model: { primary: "moonshot/kimi-k2.5" },
-      models: { "moonshot/kimi-k2.5": { alias: "Kimi K2.5" } },
+      model: { primary: "moonshot/kimi-k2.6" },
+      models: { "moonshot/kimi-k2.6": { alias: "Kimi K2.6" } },
     },
   },
   models: {
@@ -2630,11 +2630,11 @@ Définissez `ZAI_API_KEY`. `z.ai/*` et `z-ai/*` sont des alias acceptés. Raccou
         api: "openai-completions",
         models: [
           {
-            id: "kimi-k2.5",
-            name: "Kimi K2.5",
+            id: "kimi-k2.6",
+            name: "Kimi K2.6",
             reasoning: false,
             input: ["text", "image"],
-            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            cost: { input: 0.95, output: 4, cacheRead: 0.16, cacheWrite: 0 },
             contextWindow: 262144,
             maxTokens: 262144,
           },
@@ -2647,7 +2647,9 @@ Définissez `ZAI_API_KEY`. `z.ai/*` et `z-ai/*` sont des alias acceptés. Raccou
 
 Pour le point de terminaison Chine : `baseUrl: "https://api.moonshot.cn/v1"` ou `openclaw onboard --auth-choice moonshot-api-key-cn`.
 
-Les points de terminaison natifs Moonshot annoncent une compatibilité d'utilisation en streaming sur le transport partagé `openai-completions`, et les clés OpenClaw basées sur les capacités du point de terminaison plutôt que sur l'identifiant du fournisseur intégré seul.
+Les points de terminaison Moonshot natifs annoncent la compatibilité d'utilisation du streaming sur le transport
+`openai-completions` partagé, et les clés OpenClaw qui désactivent les capacités du point de terminaison
+plutôt que l'identifiant du fournisseur intégré seul.
 
 </Accordion>
 
@@ -2756,7 +2758,7 @@ Sur le chemin de streaming compatible Anthropic, OpenClaw désactive la réflexi
 
 <Accordion title="Modèles locaux (LM Studio)">
 
-Voir [Local Models](/fr/gateway/local-models). TL;DR : exécutez un grand modèle local via l'API des réponses LM Studio sur du matériel sérieux ; gardez les modèles hébergés fusionnés pour le repli.
+Voir [Modèles locaux](/fr/gateway/local-models). TL;DR : exécutez un grand modèle local via l'API Responses de LM Studio sur du matériel sérieux ; gardez les modèles hébergés fusionnés pour le repli.
 
 </Accordion>
 
@@ -2841,11 +2843,11 @@ Voir [Local Models](/fr/gateway/local-models). TL;DR : exécutez un grand modèl
 - `plugins.entries.xai.config.xSearch` : paramètres xAI X Search (recherche web Grok).
   - `enabled` : activer le fournisseur X Search.
   - `model` : modèle Grok à utiliser pour la recherche (par exemple `"grok-4-1-fast"`).
-- `plugins.entries.memory-core.config.dreaming` : paramètres de rêverie de la mémoire. Voir [Dreaming](/fr/concepts/dreaming) pour les phases et les seuils.
+- `plugins.entries.memory-core.config.dreaming` : paramètres de rêverie de la mémoire. Voir [Rêverie](/fr/concepts/dreaming) pour les phases et les seuils.
   - `enabled` : commutateur principal de rêverie (par défaut `false`).
   - `frequency` : cadence cron pour chaque balayage complet de rêverie (`"0 3 * * *"` par défaut).
   - les politiques de phase et les seuils sont des détails de mise en œuvre (pas des clés de configuration utilisateur).
-- La configuration complète de la mémoire se trouve dans [Memory configuration reference](/fr/reference/memory-config) :
+- La configuration complète de la mémoire se trouve dans [Référence de configuration de la mémoire](/fr/reference/memory-config) :
   - `agents.defaults.memorySearch.*`
   - `memory.backend`
   - `memory.citations`
@@ -2908,7 +2910,8 @@ Voir [Plugins](/fr/tools/plugin).
 - `profiles.*.cdpUrl` accepte `http://`, `https://`, `ws://` et `wss://`.
   Utilisez HTTP(S) lorsque vous souhaitez qu'OpenClaw découvre `/json/version` ; utilisez WS(S)
   lorsque votre fournisseur vous fournit une URL WebSocket DevTools directe.
-- Les profils `existing-session` sont réservés à l'hôte et utilisent Chrome MCP au lieu de CDP.
+- Les profils `existing-session` utilisent Chrome MCP au lieu de CDP et peuvent s'attacher
+  à l'hôte sélectionné ou via un nœud de navigateur connecté.
 - Les profils `existing-session` peuvent définir `userDataDir` pour cibler un profil de navigateur spécifique basé sur Chromium, tel que Brave ou Edge.
 - Les profils `existing-session` conservent les limites de route actuelles de Chrome MCP :
   actions basées sur des instantanés/références au lieu du ciblage par sélecteur CSS, crochets de téléchargement de fichier unique,
@@ -3004,44 +3007,44 @@ Voir [Plugins](/fr/tools/plugin).
 }
 ```
 
-<Accordion title="Détails des champs du Gateway">
+<Accordion title="Détails des champs de la Gateway">
 
-- `mode` : `local` (exécuter la passerelle) ou `remote` (se connecter à une passerelle distante). Le Gateway refuse de démarrer sauf si `local`.
+- `mode` : `local` (exécuter la Gateway) ou `remote` (se connecter à une Tailscale distante). La Docker refuse de démarrer sauf si `local`.
 - `port` : port multiplexé unique pour WS + HTTP. Priorité : `--port` > `OPENCLAW_GATEWAY_PORT` > `gateway.port` > `18789`.
-- `bind` : `auto`, `loopback` (par défaut), `lan` (`0.0.0.0`), `tailnet` (IP Tailscale uniquement), ou `custom`.
+- `bind` : `auto`, `loopback` (par défaut), `lan` (`0.0.0.0`), `tailnet` (IP Docker uniquement) ou `custom`.
 - **Alias de liaison hérités** : utilisez les valeurs du mode de liaison dans `gateway.bind` (`auto`, `loopback`, `lan`, `tailnet`, `custom`), et non les alias d'hôte (`0.0.0.0`, `127.0.0.1`, `localhost`, `::`, `::1`).
-- **Remarque Docker** : la liaison `loopback` par défaut écoute sur `127.0.0.1` à l'intérieur du conteneur. Avec le réseau pont Docker (`-p 18789:18789`), le trafic arrive sur `eth0`, donc la passerelle est inaccessible. Utilisez `--network host`, ou définissez `bind: "lan"` (ou `bind: "custom"` avec `customBindHost: "0.0.0.0"`) pour écouter sur toutes les interfaces.
-- **Authentification** : requise par défaut. Les liaisons non-bouclage nécessitent une authentification de passerelle. En pratique, cela signifie un jeton/mot de passe partagé ou un proxy inverse identitaire avec `gateway.auth.mode: "trusted-proxy"`. L'assistant d'intégration génère un jeton par défaut.
-- Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés (y compris via SecretRefs), définissez `gateway.auth.mode` explicitement sur `token` ou `password`. Les flux de démarrage et d'installation/réparation du service échouent lorsque les deux sont configurés et que le mode n'est pas défini.
-- `gateway.auth.mode: "none"` : mode sans authentification explicite. À utiliser uniquement pour les configurations de bouclage local de confiance ; cela n'est intentionnellement pas proposé par les invites d'intégration.
-- `gateway.auth.mode: "trusted-proxy"` : délègue l'authentification à un proxy inverse identitaire et fait confiance aux en-têtes d'identité provenant de `gateway.trustedProxies` (voir [Authentification de proxy de confiance](/fr/gateway/trusted-proxy-auth)). Ce mode s'attend à une source de proxy **non-bouclage** ; les proxies inverses de bouclage sur le même hôte ne satisfont pas l'authentification de proxy de confiance.
-- `gateway.auth.allowTailscale` : lorsque `true`, les en-têtes d'identité Tailscale Serve peuvent satisfaire l'authentification UI de contrôle/WebSocket (vérifiée via `tailscale whois`). Les points de terminaison HTTP API n'utilisent **pas** cette authentification par en-tête Tailscale ; ils suivent plutôt le mode d'authentification HTTP normal de la passerelle. Ce flux sans jeton suppose que l'hôte de la passerelle est de confiance. Par défaut `true` lorsque `tailscale.mode = "serve"`.
-- `gateway.auth.rateLimit` : limiteur d'échec d'authentification facultatif. S'applique par IP client et par portée d'authentification (secret partagé et jeton d'appareil suivis indépendamment). Les tentatives bloquées renvoient `429` + `Retry-After`.
-  - Sur le chemin asynchrone de l'UI de contrôle Tailscale Serve, les tentatives échouées pour le même `{scope, clientIp}` sont sérialisées avant l'écriture de l'échec. Les mauvaises tentatives simultanées du même client peuvent donc déclencher le limiteur dès la deuxième demande au lieu que les deux passent comme des inadéquations simples.
-  - `gateway.auth.rateLimit.exemptLoopback` est par défaut `true` ; définissez `false` si vous souhaitez également limiter le débit du trafic localhost (pour les configurations de test ou les déploiements de proxy stricts).
-- Les tentatives d'authentification WS d'origine navigateur sont toujours limitées avec l'exemption de bouclage désactivée (défense en profondeur contre la force brute localhost basée sur le navigateur).
-- En bouclage, ces verrouillages d'origine navigateur sont isolés par valeur `Origin` normalisée, de sorte que les échecs répétés d'une origine localhost ne verrouillent pas automatiquement une autre origine.
-- `tailscale.mode` : `serve` (tailnet uniquement, liaison de bouclage) ou `funnel` (public, nécessite une authentification).
-- `controlUi.allowedOrigins` : liste d'autorisation d'origine navigateur explicite pour les connexions WebSocket du Gateway. Requis lorsque des clients navigateur sont attendus provenant d'origines non-bouclage.
-- `controlUi.dangerouslyAllowHostHeaderOriginFallback` : mode dangereux qui active le repli d'origine d'en-tête Host pour les déploiements qui reposent intentionnellement sur la stratégie d'origine d'en-tête Host.
+- **Note Tailscale** : la liaison `loopback` par défaut écoute sur `127.0.0.1` à l'intérieur du conteneur. Avec le réseau pont API (`-p 18789:18789`), le trafic arrive sur `eth0`, de sorte que la Tailscale est inaccessible. Utilisez `--network host` ou définissez `bind: "lan"` (ou `bind: "custom"` avec `customBindHost: "0.0.0.0"`) pour écouter sur toutes les interfaces.
+- **Auth** : requis par défaut. Les liaisons non-boucle nécessitent l'authentification de la Tailscale. En pratique, cela signifie un jeton/mot de passe partagé ou un proxy inverse conscient de l'identité avec `gateway.auth.mode: "trusted-proxy"`. L'assistant de configuration génère un jeton par défaut.
+- Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés (y compris SecretRefs), définissez `gateway.auth.mode` explicitement sur `token` ou `password`. Les flux de démarrage et d'installation/réparation du service échouent lorsque les deux sont configurés et que le mode n'est pas défini.
+- `gateway.auth.mode: "none"` : mode sans authentification explicite. À utiliser uniquement pour les configurations de boucle locale de confiance ; cela n'est intentionnellement pas proposé par les invites de configuration.
+- `gateway.auth.mode: "trusted-proxy"` : déléguer l'authentification à un proxy inverse conscient de l'identité et faire confiance aux en-têtes d'identité de `gateway.trustedProxies` (voir [Trusted Proxy Auth](/fr/gateway/trusted-proxy-auth)). Ce mode attend une source de proxy **non-boucle** ; les proxies inverses de boucle sur le même hôte ne satisfont pas l'authentification de proxy de confiance.
+- `gateway.auth.allowTailscale` : lorsque `true`, les en-têtes d'identité Gateway Serve peuvent satisfaire l'authentification de l'interface de contrôle/WebSocket (vérifiée via `tailscale whois`). Les points de terminaison de l'iOS HTTP n'utilisent **pas** cette authentification par en-tête iOS ; ils suivent plutôt le mode d'authentification HTTP normal de la iOS. Ce flux sans jeton suppose que l'hôte de la Tailscale est fiable. La valeur par défaut est `true` lorsque `tailscale.mode = "serve"`.
+- `gateway.auth.rateLimit` : limiteur optionnel d'échec d'authentification. S'applique par IP client et par portée d'authentification (secret partagé et jeton d'appareil sont suivis indépendamment). Les tentatives bloquées renvoient `429` + `Retry-After`.
+  - Sur le chemin asynchrone de l'interface de contrôle Tailscale Serve, les tentatives échouées pour le même `{scope, clientIp}` sont sérialisées avant l'écriture de l'échec. Les mauvaises tentatives simultanées du même client peuvent donc déclencher le limiteur dès la deuxième demande au lieu que les deux se disputent comme des inadéquations simples.
+  - `gateway.auth.rateLimit.exemptLoopback` est par défaut `true` ; définissez `false` si vous souhaitez également que le trafic localhost soit limité en débit (pour les configurations de test ou les déploiements de proxy stricts).
+- Les tentatives d'authentification WS d'origine navigateur sont toujours limitées avec l'exemption de boucle désactivée (défense en profondeur contre la force brute localhost basée sur le navigateur).
+- Sur la boucle, ces verrouillages d'origine navigateur sont isolés par valeur `Origin` normalisée, de sorte que les échecs répétés d'une origine localhost ne verrouillent pas automatiquement une autre origine.
+- `tailscale.mode` : `serve` (tailnet uniquement, liaison de boucle) ou `funnel` (public, nécessite une authentification).
+- `controlUi.allowedOrigins` : liste d'autorisation d'origine navigateur explicite pour les connexions WebSocket de la Tailscale. Requis lorsque des clients navigateur sont attendus à partir d'origines non-boucle.
+- `controlUi.dangerouslyAllowHostHeaderOriginFallback` : mode dangereux qui active le repli d'origine d'en-tête d'hôte pour les déploiements qui s'appuient intentionnellement sur la stratégie d'origine d'en-tête d'hôte.
 - `remote.transport` : `ssh` (par défaut) ou `direct` (ws/wss). Pour `direct`, `remote.url` doit être `ws://` ou `wss://`.
-- `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` : remplacement côté client « briser la vitre » qui autorise `ws://` en clair vers des IP de réseau privé de confiance ; la valeur par défaut reste bouclage uniquement pour le texte en clair.
-- `gateway.remote.token` / `.password` sont des champs d'identification pour client distant. Ils ne configurent pas l'authentification de la passerelle par eux-mêmes.
-- `gateway.push.apns.relay.baseUrl` : URL HTTPS de base pour le relais APNs externe utilisé par les versions officielles/TestFlight iOS après avoir publié des inscriptions prises en charge par le relais vers la passerelle. Cette URL doit correspondre à l'URL du relais compilée dans la version iOS.
-- `gateway.push.apns.relay.timeoutMs` : délai d'envoi passerelle-vers-relais en millisecondes. Par défaut `10000`.
-- Les inscriptions prises en charge par le relais sont déléguées à une identité de passerelle spécifique. L'application iOS jumelée récupère `gateway.identity.get`, inclut cette identité dans l'inscription au relais et transmet une autorisation d'envoi délimitée par l'inscription à la passerelle. Une autre passerelle ne peut pas réutiliser cette inscription stockée.
+- `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` : remplacement côté client « break-glass » qui autorise le texte clair `ws://` vers des IP de réseau privé de confiance ; la valeur par défaut reste limitée à la boucle pour le texte clair.
+- `gateway.remote.token` / `.password` sont des champs d'identification pour les clients distants. Ils ne configurent pas l'authentification de la Tailscale par eux-mêmes.
+- `gateway.push.apns.relay.baseUrl` : URL HTTPS de base pour le relais APNs externe utilisé par les versions officielles/TestFlight Tailscale après avoir publié des enregistrements pris en charge par le relais vers la Tailscale. Cette URL doit correspondre à l'URL du relais compilée dans la version Tailscale.
+- `gateway.push.apns.relay.timeoutMs` : délai d'envoi de la Tailscale vers le relais en millisecondes. La valeur par défaut est `10000`.
+- Les enregistrements pris en charge par le relais sont délégués à une identité spécifique de Tailscale. L'application Tailscale couplée récupère `gateway.identity.get`, inclut cette identité dans l'enregistrement du relais et transfère une subvention d'envoi délimitée à l'enregistrement à la Tailscale. Une autre Tailscale ne peut pas réutiliser cet enregistrement stocké.
 - `OPENCLAW_APNS_RELAY_BASE_URL` / `OPENCLAW_APNS_RELAY_TIMEOUT_MS` : remplacements d'environnement temporaires pour la configuration de relais ci-dessus.
-- `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` : échappatoire de développement uniquement pour les URL de relais HTTP de bouclage. Les URL de relais de production doivent rester sur HTTPS.
+- `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` : échappement de développement uniquement pour les URL de relais HTTP de boucle. Les URL de relais de production doivent rester en HTTPS.
 - `gateway.channelHealthCheckMinutes` : intervalle de surveillance de santé du canal en minutes. Définissez `0` pour désactiver globalement les redémarrages de surveillance de santé. Par défaut : `5`.
 - `gateway.channelStaleEventThresholdMinutes` : seuil de socket périmé en minutes. Gardez-le supérieur ou égal à `gateway.channelHealthCheckMinutes`. Par défaut : `30`.
 - `gateway.channelMaxRestartsPerHour` : nombre maximum de redémarrages de surveillance de santé par canal/compte sur une heure glissante. Par défaut : `10`.
-- `channels.<provider>.healthMonitor.enabled` : option de refus par canal pour les redémarrages de surveillance de santé tout en maintenant le moniteur global activé.
-- `channels.<provider>.accounts.<accountId>.healthMonitor.enabled` : remplacement par compte pour les canaux multi-comptes. Lorsqu'il est défini, il prend la priorité sur le remplacement au niveau du canal.
-- Les chemins d'appel de passerelle locale peuvent utiliser `gateway.remote.*` comme repli uniquement lorsque `gateway.auth.*` n'est pas défini.
-- Si `gateway.auth.token` / `gateway.auth.password` est explicitement configuré via SecretRef et non résolu, la résolution échoue fermée (pas de masquage de repli distant).
-- `trustedProxies` : IP de proxy inverse qui terminent le TLS ou injectent des en-têtes de client transféré. Ne listez que les proxies que vous contrôlez. Les entrées de bouclage sont toujours valides pour les configurations de proxy sur le même hôte/détection locale (par exemple Tailscale Serve ou un proxy inverse local), mais elles ne rendent **pas** les demandes de bouclage éligibles pour `gateway.auth.mode: "trusted-proxy"`.
-- `allowRealIpFallback` : lorsque `true`, la passerelle accepte `X-Real-IP` si `X-Forwarded-For` est manquant. Par défaut `false` pour un comportement d'échec fermé.
-- `gateway.tools.deny` : noms d'outils supplémentaires bloqués pour le `POST /tools/invoke` HTTP (étend la liste de refus par défaut).
+- `channels.<provider>.healthMonitor.enabled` : désactivation par canal des redémarrages de surveillance de santé tout en maintenant le moniteur global activé.
+- `channels.<provider>.accounts.<accountId>.healthMonitor.enabled` : remplacement par compte pour les canaux multi-comptes. Lorsqu'il est défini, il prend le pas sur le remplacement au niveau du canal.
+- Les chemins d'appel de la Tailscale locale ne peuvent utiliser `gateway.remote.*` comme repli que lorsque `gateway.auth.*` n'est pas défini.
+- Si `gateway.auth.token` / `gateway.auth.password` est explicitement configuré via SecretRef et non résolu, la résolution échoue fermement (pas de masquage de repli distant).
+- `trustedProxies` : IP de proxy inverse qui terminent le TLS ou injectent des en-têtes de client transféré. Ne listez que les proxies que vous contrôlez. Les entrées de boucle sont toujours valides pour les configurations de proxy/détection locale sur le même hôte (par exemple Tailscale Serve ou un proxy inverse local), mais elles ne rendent **pas** les requêtes de boucle éligibles pour `gateway.auth.mode: "trusted-proxy"`.
+- `allowRealIpFallback` : lorsque `true`, la Tailscale accepte `X-Real-IP` si `X-Forwarded-For` est manquant. Par défaut `false` pour un comportement d'échec fermé.
+- `gateway.tools.deny` : noms d'outils supplémentaires bloqués pour `POST /tools/invoke` HTTP (étend la liste de refus par défaut).
 - `gateway.tools.allow` : supprimer les noms d'outils de la liste de refus HTTP par défaut.
 
 </Accordion>
@@ -3129,8 +3132,8 @@ Voir [Multiple Gateways](/fr/gateway/multiple-gateways).
     path: "/hooks",
     maxBodyBytes: 262144,
     defaultSessionKey: "hook:ingress",
-    allowRequestSessionKey: false,
-    allowedSessionKeyPrefixes: ["hook:"],
+    allowRequestSessionKey: true,
+    allowedSessionKeyPrefixes: ["hook:", "hook:gmail:"],
     allowedAgentIds: ["hooks", "main"],
     presets: ["gmail"],
     transformsDir: "~/.openclaw/hooks/transforms",
@@ -3161,13 +3164,15 @@ Notes de validation et de sécurité :
 - `hooks.token` doit être **distinct** de `gateway.auth.token` ; la réutilisation du jeton Gateway est rejetée.
 - `hooks.path` ne peut pas être `/` ; utilisez un sous-chemin dédié tel que `/hooks`.
 - Si `hooks.allowRequestSessionKey=true`, restreignez `hooks.allowedSessionKeyPrefixes` (par exemple `["hook:"]`).
+- Si un mappage ou un préréglage utilise un `sessionKey` basé sur un modèle, définissez `hooks.allowedSessionKeyPrefixes` et `hooks.allowRequestSessionKey=true`. Les clés de mappage statiques ne nécessitent pas cette option d'adhésion.
 
 **Points de terminaison :**
 
 - `POST /hooks/wake` → `{ text, mode?: "now"|"next-heartbeat" }`
 - `POST /hooks/agent` → `{ message, name?, agentId?, sessionKey?, wakeMode?, deliver?, channel?, to?, model?, thinking?, timeoutSeconds? }`
-  - `sessionKey` issu de la charge utile de la requête n'est accepté que lorsque `hooks.allowRequestSessionKey=true` (par défaut : `false`).
+  - `sessionKey` de la charge utile de la requête est accepté uniquement lorsque `hooks.allowRequestSessionKey=true` (par défaut : `false`).
 - `POST /hooks/<name>` → résolu via `hooks.mappings`
+  - Les valeurs `sessionKey` de mappage rendues par modèle sont traitées comme fournies en externe et nécessitent également `hooks.allowRequestSessionKey=true`.
 
 <Accordion title="Détails du mappage">
 
@@ -3175,18 +3180,22 @@ Notes de validation et de sécurité :
 - `match.source` correspond à un champ de payload pour les chemins génériques.
 - Les modèles comme `{{messages[0].subject}}` lisent le payload.
 - `transform` peut pointer vers un module JS/TS renvoyant une action de hook.
-  - `transform.module` doit être un chemin relatif et rester dans `hooks.transformsDir` (les chemins absolus et les traversées sont rejetés).
-- `agentId` achemine vers un agent spécifique ; les IDs inconnus reviennent à celui par défaut.
-- `allowedAgentIds` : restreint l'acheminement explicite (`*` ou omis = tout autoriser, `[]` = tout refuser).
+  - `transform.module` doit être un chemin relatif et rester dans `hooks.transformsDir` (les chemins absolus et les traversals sont rejetés).
+- `agentId` route vers un agent spécifique ; les ID inconnus reviennent à la valeur par défaut.
+- `allowedAgentIds` : restreint le routage explicite (`*` ou omis = tout autoriser, `[]` = tout refuser).
 - `defaultSessionKey` : clé de session fixe facultative pour les exécutions d'agent de hook sans `sessionKey` explicite.
-- `allowRequestSessionKey` : autoriser les appelants `/hooks/agent` à définir `sessionKey` (par défaut : `false`).
-- `allowedSessionKeyPrefixes` : liste d'autorisation de préfixe facultative pour les valeurs `sessionKey` explicites (requête + mappage), par ex. `["hook:"]`.
-- `deliver: true` envoie la réponse finale vers un canal ; `channel` est `last` par défaut.
+- `allowRequestSessionKey` : autoriser les appelants `/hooks/agent` et les clés de session de mappage pilotées par modèle à définir `sessionKey` (par défaut : `false`).
+- `allowedSessionKeyPrefixes` : liste d'autorisation de préfixe facultative pour les valeurs `sessionKey` explicites (requête + mappage), par ex. `["hook:"]`. Elle devient requise lorsqu'un mappage ou un préréglage utilise une `sessionKey` basée sur un modèle.
+- `deliver: true` envoie la réponse finale à un channel ; `channel` par défaut est `last`.
 - `model` remplace le LLM pour cette exécution de hook (doit être autorisé si le catalogue de modèles est défini).
 
 </Accordion>
 
 ### Intégration Gmail
+
+- Le préréglage Gmail intégré utilise `sessionKey: "hook:gmail:{{messages[0].id}}"`.
+- Si vous conservez ce routage par message, définissez `hooks.allowRequestSessionKey: true` et contraignez `hooks.allowedSessionKeyPrefixes` à correspondre à l'espace de noms Gmail, par exemple `["hook:", "hook:gmail:"]`.
+- Si vous avez besoin de `hooks.allowRequestSessionKey: false`, remplacez le préréglage par un `sessionKey` statique au lieu du modèle par défaut.
 
 ```json5
 {
@@ -3226,18 +3235,18 @@ Notes de validation et de sécurité :
 }
 ```
 
-- Sert du HTML/CSS/JS modifiable par l'agent et l'A2UI via HTTP sous le port du Gateway :
+- Sert du HTML/CSS/JS modifiable par l'agent et l'A2UI sur HTTP sous le port du Gateway :
   - `http://<gateway-host>:<gateway.port>/__openclaw__/canvas/`
   - `http://<gateway-host>:<gateway.port>/__openclaw__/a2ui/`
-- Local uniquement : gardez `gateway.bind: "loopback"` (par défaut).
-- Non-loopback binds: canvas routes require Gateway auth (token/password/trusted-proxy), same as other Gateway HTTP surfaces.
-- Node WebViews typically don't send auth headers; after a node is paired and connected, the Gateway advertises node-scoped capability URLs for canvas/A2UI access.
-- Capability URLs are bound to the active node WS session and expire quickly. IP-based fallback is not used.
-- Injects live-reload client into served HTML.
-- Auto-creates starter `index.html` when empty.
-- Also serves A2UI at `/__openclaw__/a2ui/`.
-- Changes require a gateway restart.
-- Disable live reload for large directories or `EMFILE` errors.
+- Local uniquement : conservez `gateway.bind: "loopback"` (par défaut).
+- Liaisons non bouclées : les routes canvas nécessitent une authentification Gateway (jeton/mot de passe/proxy de confiance), tout comme les autres surfaces HTTP Gateway.
+- Les Node WebViews n'envoient généralement pas d'en-têtes d'authentification ; après qu'un nœud est appairé et connecté, le Gateway annonce des URL de capacités délimitées au nœud pour l'accès canvas/A2UI.
+- Les URL de capacités sont liées à la session WS active du nœud et expirent rapidement. Le repli basé sur l'IP n'est pas utilisé.
+- Injecte le client de rechargement à chaud dans le HTML servi.
+- Crée automatiquement un `index.html` de démarrage lorsqu'il est vide.
+- Sert également l'A2UI à `/__openclaw__/a2ui/`.
+- Les modifications nécessitent un redémarrage de la passerelle.
+- Désactivez le rechargement à chaud pour les grands répertoires ou les erreurs `EMFILE`.
 
 ---
 
@@ -3255,11 +3264,11 @@ Notes de validation et de sécurité :
 }
 ```
 
-- `minimal` (default): omit `cliPath` + `sshPort` from TXT records.
-- `full`: include `cliPath` + `sshPort`.
-- Hostname defaults to `openclaw`. Override with `OPENCLAW_MDNS_HOSTNAME`.
+- `minimal` (par défaut) : omettre `cliPath` + `sshPort` des enregistrements TXT.
+- `full` : inclure `cliPath` + `sshPort`.
+- Le nom d'hôte est `openclaw` par défaut. Remplacez-le par `OPENCLAW_MDNS_HOSTNAME`.
 
-### Wide-area (DNS-SD)
+### Large portée (DNS-SD)
 
 ```json5
 {
@@ -3269,15 +3278,15 @@ Notes de validation et de sécurité :
 }
 ```
 
-Writes a unicast DNS-SD zone under `~/.openclaw/dns/`. For cross-network discovery, pair with a DNS server (CoreDNS recommended) + Tailscale split DNS.
+Écrit une zone DNS-SD unicast sous `~/.openclaw/dns/`. Pour la découverte inter-réseaux, associez à un serveur DNS (CoreDNS recommandé) + Tailscale DNS fractionné.
 
-Setup: `openclaw dns setup --apply`.
+Configuration : `openclaw dns setup --apply`.
 
 ---
 
-## Environment
+## Environnement
 
-### `env` (inline env vars)
+### `env` (env vars en ligne)
 
 ```json5
 {
@@ -3294,14 +3303,14 @@ Setup: `openclaw dns setup --apply`.
 }
 ```
 
-- Inline env vars are only applied if the process env is missing the key.
-- `.env` files: CWD `.env` + `~/.openclaw/.env` (neither overrides existing vars).
-- `shellEnv`: imports missing expected keys from your login shell profile.
-- See [Environment](/fr/help/environment) for full precedence.
+- Les variables d'environnement en ligne ne sont appliquées que si la clé est manquante dans l'environnement du processus.
+- Fichiers `.env` : CWD `.env` + `~/.openclaw/.env` (aucun ne remplace les vars existants).
+- `shellEnv` : importe les clés attendues manquantes depuis le profil de votre shell de connexion.
+- Voir [Environment](/fr/help/environment) pour la priorité complète.
 
-### Env var substitution
+### Substitution de variables d'environnement
 
-Reference env vars in any config string with `${VAR_NAME}`:
+Référencez les variables d'environnement dans n'importe quelle chaîne de configuration avec `${VAR_NAME}` :
 
 ```json5
 {
@@ -3311,20 +3320,20 @@ Reference env vars in any config string with `${VAR_NAME}`:
 }
 ```
 
-- Only uppercase names matched: `[A-Z_][A-Z0-9_]*`.
-- Missing/empty vars throw an error at config load.
-- Escape with `$${VAR}` for a literal `${VAR}`.
-- Works with `$include`.
+- Seuls les noms en majuscules sont correspondants : `[A-Z_][A-Z0-9_]*`.
+- Les variables manquantes ou vides lancent une erreur lors du chargement de la configuration.
+- Échappez avec `$${VAR}` pour un `${VAR}` littéral.
+- Fonctionne avec `$include`.
 
 ---
 
 ## Secrets
 
-Secret refs are additive: plaintext values still work.
+Les références de secrets sont additives : les valeurs en clair fonctionnent toujours.
 
 ### `SecretRef`
 
-Utiliser une forme d'objet :
+Utilisez une forme d'objet :
 
 ```json5
 { source: "env" | "file" | "exec", provider: "default", id: "..." }
@@ -3332,17 +3341,17 @@ Utiliser une forme d'objet :
 
 Validation :
 
-- modèle `provider` : `^[a-z][a-z0-9_-]{0,63}$`
-- modèle d'identifiant `source: "env"` : `^[A-Z][A-Z0-9_]{0,127}$`
-- identifiant `source: "file"` : pointeur JSON absolu (par exemple `"/providers/openai/apiKey"`)
-- modèle d'identifiant `source: "exec"` : `^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$`
-- les identifiants `source: "exec"` ne doivent pas contenir de segments de chemin délimités par des barres obliques `.` ou `..` (par exemple `a/../b` est rejeté)
+- motif `provider` : `^[a-z][a-z0-9_-]{0,63}$`
+- motif d'id `source: "env"` : `^[A-Z][A-Z0-9_]{0,127}$`
+- id `source: "file"` : pointeur JSON absolu (par exemple `"/providers/openai/apiKey"`)
+- motif d'id `source: "exec"` : `^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$`
+- les ids `source: "exec"` ne doivent pas contenir `.` ou `..` segments de chemin délimités par des slashs (par exemple `a/../b` est rejeté)
 
-### Surface d'identification prise en charge
+### Surface des identifiants prise en charge
 
-- Matrice canonique : [Surface d'identification SecretRef](/fr/reference/secretref-credential-surface)
-- `secrets apply` cible les chemins d'identification `openclaw.json` pris en charge.
-- Les références `auth-profiles.json` sont incluses dans la résolution du runtime et la couverture d'audit.
+- Matrice canonique : [SecretRef Credential Surface](/fr/reference/secretref-credential-surface)
+- `secrets apply` cible les chemins d'identifiants `openclaw.json` pris en charge.
+- Les références `auth-profiles.json` sont incluses dans la résolution d'exécution et la couverture d'audit.
 
 ### Configuration des fournisseurs de secrets
 
@@ -3376,9 +3385,9 @@ Notes :
 
 - Le fournisseur `file` prend en charge `mode: "json"` et `mode: "singleValue"` (`id` doit être `"value"` en mode singleValue).
 - Le fournisseur `exec` nécessite un chemin absolu `command` et utilise des charges utiles de protocole sur stdin/stdout.
-- Par défaut, les chemins de commande symbolique (symlink) sont rejetés. Définissez `allowSymlinkCommand: true` pour autoriser les chemins symboliques tout en validant le chemin cible résolu.
-- Si `trustedDirs` est configuré, la vérification du répertoire approuvé s'applique au chemin cible résolu.
-- L'environnement enfant `exec` est minimal par défaut ; passez les variables requises explicitement avec `passEnv`.
+- Par défaut, les chemins de commande symboliques sont rejetés. Définissez `allowSymlinkCommand: true` pour autoriser les chemins symboliques tout en validant le chemin cible résolu.
+- Si `trustedDirs` est configuré, la vérification du répertoire de confiance s'applique au chemin cible résolu.
+- L'environnement enfant de `exec` est minimal par défaut ; passez les variables requises explicitement avec `passEnv`.
 - Les références de secrets sont résolues au moment de l'activation dans un instantané en mémoire, puis les chemins de requête lisent uniquement l'instantané.
 - Le filtrage de surface active s'applique lors de l'activation : les références non résolues sur les surfaces activées échouent au démarrage/rechargement, tandis que les surfaces inactives sont ignorées avec des diagnostics.
 
@@ -3404,11 +3413,11 @@ Notes :
 
 - Les profils par agent sont stockés à `<agentDir>/auth-profiles.json`.
 - `auth-profiles.json` prend en charge les références au niveau des valeurs (`keyRef` pour `api_key`, `tokenRef` pour `token`) pour les modes d'identification statiques.
-- Les profils en mode OAuth (`auth.profiles.<id>.mode = "oauth"`) ne prennent pas en charge les identifiants de profil d'authentification basés sur SecretRef.
-- Les identifiants d'exécution statiques proviennent d'instantanés résolus en mémoire ; les entrées statiques héritées `auth.json` sont nettoyées lorsqu'elles sont découvertes.
-- Importations héritées OAuth à partir de `~/.openclaw/credentials/oauth.json`.
+- Les profils en mode OAuth (`auth.profiles.<id>.mode = "oauth"`) ne prennent pas en charge les identifiants de profil d'authentification sauvegardés par SecretRef.
+- Les identifiants d'exécution statiques proviennent d'instantanés résolus en mémoire ; les entrées `auth.json` statiques héritées sont nettoyées lorsqu'elles sont découvertes.
+- Importations héritées OAuth depuis `~/.openclaw/credentials/oauth.json`.
 - Voir [OAuth](/fr/concepts/oauth).
-- Comportement d'exécution des secrets et outils `audit/configure/apply` : [Gestion des secrets](/fr/gateway/secrets).
+- Comportement d'exécution des secrets et outils `audit/configure/apply` : [Secrets Management](/fr/gateway/secrets).
 
 ### `auth.cooldowns`
 
@@ -3430,15 +3439,16 @@ Notes :
 }
 ```
 
-- `billingBackoffHours` : délai de base en heures lorsqu'un profil échoue en raison de vraies erreurs de facturation/crédit insuffisant (par défaut : `5`). Un texte de facturation explicite peut toujours atterrir ici même sur les réponses `401`/`403`, mais les correspondances de texte spécifiques au fournisseur restent limitées au fournisseur qui les possède (par exemple OpenRouter `Key limit exceeded`). Les messages HTTP renouvelables `402` concernant la fenêtre d'utilisation ou les limites de dépenses de l'organisation/de l'espace de travail restent plutôt dans le chemin `rate_limit`.
-- `billingBackoffHoursByProvider` : substitutions optionnelles par fournisseur pour les heures de délai de facturation.
-- `billingMaxHours` : plafond en heures pour la croissance exponentielle du délai de facturation (par défaut : `24`).
-- `authPermanentBackoffMinutes` : délai de base en minutes pour les échecs `auth_permanent` à haute confiance (par défaut : `10`).
-- `authPermanentMaxMinutes` : plafond en minutes pour la croissance du délai `auth_permanent` (par défaut : `60`).
-- `failureWindowHours` : fenêtre glissante en heures utilisée pour les compteurs de délai (par défaut : `24`).
-- `overloadedProfileRotations` : nombre maximal de rotations de profils d'authentification du même fournisseur pour les erreurs de surcharge avant de passer au modèle de secours (par défaut : `1`). Les formes de fournisseur occupé telles que `ModelNotReadyException` aboutissent ici.
+- `billingBackoffHours` : attente de base en heures lorsqu'un profil échoue en raison de véritables erreurs de facturation/crédit insuffisant (par défaut : `5`). Un texte de facturation explicite peut toujours atterrir ici même sur des réponses `401`/`403`, mais les correspondances de texte spécifiques au fournisseur restent limitées au fournisseur qui les possède (par exemple OpenRouter
+  `Key limit exceeded`). Les messages HTTP réessayables `402` de fenêtre d'utilisation ou de limite de dépenses de l'organisation/espace de travail restent plutôt dans le chemin `rate_limit`.
+- `billingBackoffHoursByProvider` : remplacements facultatifs par fournisseur pour les heures d'attente de facturation.
+- `billingMaxHours` : plafond en heures pour la croissance exponentielle du backoff de facturation (par défaut : `24`).
+- `authPermanentBackoffMinutes` : backoff de base en minutes pour les échecs `auth_permanent` à haute confiance (par défaut : `10`).
+- `authPermanentMaxMinutes` : plafond en minutes pour la croissance du backoff `auth_permanent` (par défaut : `60`).
+- `failureWindowHours` : fenêtre glissante en heures utilisée pour les compteurs de backoff (par défaut : `24`).
+- `overloadedProfileRotations` : nombre maximum de rotations de profils d'authentification du même fournisseur pour les erreurs de surcharge avant de passer au repli du model (par défaut : `1`). Les formes de fournisseur occupé telles que `ModelNotReadyException` atterrissent ici.
 - `overloadedBackoffMs` : délai fixe avant de réessayer une rotation de fournisseur/profil surchargé (par défaut : `0`).
-- `rateLimitedProfileRotations` : nombre maximal de rotations de profils d'authentification du même fournisseur pour les erreurs de limitation de débit avant de passer au modèle de secours (par défaut : `1`). Ce compartiment de limitation de débit comprend du texte de forme fournisseur tel que `Too many concurrent requests`, `ThrottlingException`, `concurrency limit reached`, `workers_ai ... quota limit exceeded` et `resource exhausted`.
+- `rateLimitedProfileRotations` : nombre maximum de rotations de profils d'authentification du même fournisseur pour les erreurs de limite de taux avant de passer au repli du model (par défaut : `1`). Ce compartiment de limite de taux inclut le texte de forme fournisseur tel que `Too many concurrent requests`, `ThrottlingException`, `concurrency limit reached`, `workers_ai ... quota limit exceeded` et `resource exhausted`.
 
 ---
 
@@ -3460,7 +3470,7 @@ Notes :
 - Fichier journal par défaut : `/tmp/openclaw/openclaw-YYYY-MM-DD.log`.
 - Définissez `logging.file` pour un chemin stable.
 - `consoleLevel` passe à `debug` quand `--verbose`.
-- `maxFileBytes` : taille maximale du fichier journal en octets avant la suppression des écritures (entier positif ; par défaut : `524288000` = 500 Mo). Utilisez une rotation de journal externe pour les déploiements de production.
+- `maxFileBytes` : taille maximale du fichier journal en octets avant que les écritures ne soient supprimées (entier positif ; par défaut : `524288000` = 500 Mo). Utilisez une rotation de journal externe pour les déploiements en production.
 
 ---
 
@@ -3497,9 +3507,9 @@ Notes :
 }
 ```
 
-- `enabled` : commutateur principal pour la sortie d'instrumentation (par défaut : `true`).
-- `flags` : tableau de chaînes d'indicateurs activant la sortie de journal ciblée (prend en charge les caractères génériques comme `"telegram.*"` ou `"*"`).
-- `stuckSessionWarnMs` : seuil d'âge en ms pour émettre des avertissements de session bloquée pendant qu'une session reste à l'état de traitement.
+- `enabled` : interrupteur principal pour la sortie d'instrumentation (par défaut : `true`).
+- `flags` : tableau de chaînes de drapeaux activant une sortie journal ciblée (supporte les caractères génériques comme `"telegram.*"` ou `"*"`).
+- `stuckSessionWarnMs` : seuil d'âge en ms pour émettre des avertissements de session bloquée pendant qu'une session reste dans l'état de traitement.
 - `otel.enabled` : active le pipeline d'exportation OpenTelemetry (par défaut : `false`).
 - `otel.endpoint` : URL du collecteur pour l'exportation OTel.
 - `otel.protocol` : `"http/protobuf"` (par défaut) ou `"grpc"`.
@@ -3507,8 +3517,8 @@ Notes :
 - `otel.serviceName` : nom du service pour les attributs de ressource.
 - `otel.traces` / `otel.metrics` / `otel.logs` : activer l'exportation des traces, des métriques ou des journaux.
 - `otel.sampleRate` : taux d'échantillonnage des traces `0`–`1`.
-- `otel.flushIntervalMs` : intervalle de vidage périodique de la télémétrie en ms.
-- `cacheTrace.enabled` : enregistrer les instantanés de trace du cache pour les exécutions intégrées (par défaut : `false`).
+- `otel.flushIntervalMs` : intervalle de vidage de la télémétrie périodique en ms.
+- `cacheTrace.enabled` : journaliser les instantanés de trace du cache pour les exécutions intégrées (par défaut : `false`).
 - `cacheTrace.filePath` : chemin de sortie pour le JSONL de trace du cache (par défaut : `$OPENCLAW_STATE_DIR/logs/cache-trace.jsonl`).
 - `cacheTrace.includeMessages` / `includePrompt` / `includeSystem` : contrôler ce qui est inclus dans la sortie de trace du cache (tous par défaut : `true`).
 
@@ -3533,10 +3543,10 @@ Notes :
 ```
 
 - `channel` : canal de publication pour les installations npm/git — `"stable"`, `"beta"` ou `"dev"`.
-- `checkOnStart` : vérifier les mises à jour npm au démarrage de la passerelle (par défaut : `true`).
+- `checkOnStart` : rechercher les mises à jour npm au démarrage de la passerelle (par défaut : `true`).
 - `auto.enabled` : activer la mise à jour automatique en arrière-plan pour les installations de packages (par défaut : `false`).
 - `auto.stableDelayHours` : délai minimum en heures avant l'application automatique du canal stable (par défaut : `6` ; max : `168`).
-- `auto.stableJitterHours` : fenêtre de délai supplémentaire pour le déploiement du canal stable en heures (par défaut : `12` ; max : `168`).
+- `auto.stableJitterHours` : fenêtre de déploiement supplémentaire pour le canal stable en heures (par défaut : `12` ; max : `168`).
 - `auto.betaCheckIntervalHours` : fréquence des vérifications du canal bêta en heures (par défaut : `1` ; max : `24`).
 
 ---
@@ -3570,22 +3580,22 @@ Notes :
 }
 ```
 
-- `enabled` : gate global de fonctionnalité ACP (par défaut : `false`).
-- `dispatch.enabled` : gate indépendant pour la distribution des tours de session ACP (par défaut : `true`). Définissez `false` pour garder les commandes ACP disponibles tout en bloquant l'exécution.
-- `backend` : identifiant du backend d'exécution ACP par défaut (doit correspondre à un plugin d'exécution ACP enregistré).
-- `defaultAgent` : identifiant de l'agent cible ACP de repli lorsque les spawns ne spécifient pas de cible explicite.
-- `allowedAgents` : liste d'autorisation des identifiants d'agents autorisés pour les sessions d'exécution ACP ; vide signifie aucune restriction supplémentaire.
-- `maxConcurrentSessions` : nombre maximum de sessions ACP actives simultanément.
-- `stream.coalesceIdleMs` : fenêtre de vidange d'inactivité en ms pour le texte diffusé en flux.
-- `stream.maxChunkChars` : taille de chunk maximale avant de fractionner la projection de bloc diffusé en flux.
-- `stream.repeatSuppression` : supprimer les lignes de status/outil répétées par tour (par défaut : `true`).
-- `stream.deliveryMode` : `"live"` diffuse les flux de manière incrémentale ; `"final_only"` met en tampon jusqu'aux événements terminaux du tour.
+- `enabled` : interrupteur global de fonctionnalité ACP (par défaut : `false`).
+- `dispatch.enabled` : interrupteur indépendant pour la distribution des tours de session ACP (par défaut : `true`). Définir `false` pour garder les commandes ACP disponibles tout en bloquant l'exécution.
+- `backend` : identifiant du backend d'exécution ACP par défaut (doit correspondre à un plugin de runtime ACP enregistré).
+- `defaultAgent` : identifiant de l'agent cible ACP de repli lorsque les créations ne spécifient pas de cible explicite.
+- `allowedAgents` : liste verte des identifiants d'agents autorisés pour les sessions de runtime ACP ; vide signifie aucune restriction supplémentaire.
+- `maxConcurrentSessions` : nombre maximum de sessions ACP simultanément actives.
+- `stream.coalesceIdleMs` : fenêtre de vidange à l'inactivité en ms pour le texte diffusé en flux continu.
+- `stream.maxChunkChars` : taille de bloc maximale avant fractionnement de la projection de bloc diffusé en flux continu.
+- `stream.repeatSuppression` : supprimer les lignes de statut/out répétées par tour (par défaut : `true`).
+- `stream.deliveryMode` : `"live"` diffuse les flux de manière incrémentielle ; `"final_only"` met en mémoire tampon jusqu'aux événements terminaux du tour.
 - `stream.hiddenBoundarySeparator` : séparateur avant le texte visible après les événements d'outil masqués (par défaut : `"paragraph"`).
 - `stream.maxOutputChars` : nombre maximum de caractères de sortie de l'assistant projetés par tour ACP.
-- `stream.maxSessionUpdateChars` : nombre maximum de caractères pour les lignes de status/mise à jour ACP projetées.
-- `stream.tagVisibility` : enregistrement des noms de balises vers des remplacements de visibilité booléens pour les événements diffusés en flux.
-- `runtime.ttlMinutes` : TTL d'inactivité en minutes pour les workers de session ACP avant le nettoyage éligible.
-- `runtime.installCommand` : commande d'installation facultative à exécuter lors de l'amorçage d'un environnement d'exécution ACP.
+- `stream.maxSessionUpdateChars` : nombre maximum de caractères pour les lignes de statut/mise à jour ACP projetées.
+- `stream.tagVisibility` : enregistrement des noms de balises vers des substitutions de visibilité booléenne pour les événements diffusés en flux continu.
+- `runtime.ttlMinutes` : TTL d'inactivité en minutes pour les workers de session ACP avant éligibilité au nettoyage.
+- `runtime.installCommand` : commande d'installation optionnelle à exécuter lors de l'amorçage d'un environnement d'exécution ACP.
 
 ---
 
@@ -3601,11 +3611,11 @@ Notes :
 }
 ```
 
-- `cli.banner.taglineMode` contrôle le style du slogan de la bannière :
+- `cli.banner.taglineMode` contrôle le style de la bannière du slogan :
   - `"random"` (par défaut) : slogans amusants/saisonniers rotatifs.
   - `"default"` : slogan neutre fixe (`All your chats, one OpenClaw.`).
   - `"off"` : aucun texte de slogan (le titre/version de la bannière sont toujours affichés).
-- Pour masquer l'intégralité de la bannière (pas seulement les slogans), définissez la variable d'env `OPENCLAW_HIDE_BANNER=1`.
+- Pour masquer la bannière entière (pas seulement les slogans), définissez la variable d'environnement `OPENCLAW_HIDE_BANNER=1`.
 
 ---
 
@@ -3633,11 +3643,11 @@ Voir les champs d'identité `agents.list` sous [Agent defaults](#agent-defaults)
 
 ---
 
-## Pont (legacy, supprimé)
+## Pont (hérité, supprimé)
 
-Les versions actuelles n'incluent plus le pont TCP. Les nœuds se connectent via le WebSocket Gateway. Les clés `bridge.*` ne font plus partie du schéma de configuration (la validation échoue jusqu'à leur suppression ; `openclaw doctor --fix` peut supprimer les clés inconnues).
+Les versions actuelles n'incluent plus le pont TCP. Les nœuds se connectent via le WebSocket du Gateway. Les clés `bridge.*` ne font plus partie du schéma de configuration (la validation échoue jusqu'à leur suppression ; `openclaw doctor --fix` peut supprimer les clés inconnues).
 
-<Accordion title="Config du pont legacy (référence historique)">
+<Accordion title="Configuration du pont hérité (référence historique)">
 
 ```json
 {
@@ -3675,11 +3685,11 @@ Les versions actuelles n'incluent plus le pont TCP. Les nœuds se connectent via
 }
 ```
 
-- `sessionRetention` : durée de conservation des sessions d'exécution cron isolées terminées avant le nettoyage de `sessions.json`. Contrôle également le nettoyage des transcriptions cron supprimées et archivées. Par défaut : `24h` ; définissez `false` pour désactiver.
+- `sessionRetention` : durée de conservation des sessions d'exécution cron isolées terminées avant leur nettoyage depuis `sessions.json`. Contrôle également le nettoyage des transcriptions cron supprimées et archivées. Par défaut : `24h` ; définissez `false` pour désactiver.
 - `runLog.maxBytes` : taille maximale par fichier journal d'exécution (`cron/runs/<jobId>.jsonl`) avant nettoyage. Par défaut : `2_000_000` octets.
-- `runLog.keepLines` : plus récentes lignes conservées lorsque le nettoyage du journal d'exécution est déclenché. Par défaut : `2000`.
+- `runLog.keepLines` : nouvelles lignes conservées lorsque le nettoyage du journal d'exécution est déclenché. Par défaut : `2000`.
 - `webhookToken` : jeton bearer utilisé pour la livraison POST du webhook cron (`delivery.mode = "webhook"`), si omis aucun en-tête d'authentification n'est envoyé.
-- `webhook` : URL de webhook de repli legacy dépréciée (http/https) utilisée uniquement pour les tâches stockées qui ont encore `notify: true`.
+- `webhook` : URL de webhook de repli héritée déconseillée (http/https) utilisée uniquement pour les tâches stockées qui ont encore `notify: true`.
 
 ### `cron.retry`
 
@@ -3695,9 +3705,9 @@ Les versions actuelles n'incluent plus le pont TCP. Les nœuds se connectent via
 }
 ```
 
-- `maxAttempts` : nombre maximum de nouvelles tentatives pour les tâches ponctuelles en cas d'erreurs transitoires (par défaut : `3` ; plage : `0`–`10`).
-- `backoffMs` : tableau des délais d'attente en ms pour chaque tentative de réessai (par défaut : `[30000, 60000, 300000]` ; 1 à 10 entrées).
-- `retryOn` : types d'erreurs qui déclenchent de nouvelles tentatives — `"rate_limit"`, `"overloaded"`, `"network"`, `"timeout"`, `"server_error"`. Omettre pour réessayer tous les types transitoires.
+- `maxAttempts` : nombre maximal de tentatives pour les tâches ponctuelles en cas d'erreurs transitoires (par défaut : `3` ; plage : `0`–`10`).
+- `backoffMs` : tableau des délais d'attente exponentiels en ms pour chaque tentative de réessai (par défaut : `[30000, 60000, 300000]` ; 1 à 10 entrées).
+- `retryOn` : types d'erreurs qui déclenchent les tentatives — `"rate_limit"`, `"overloaded"`, `"network"`, `"timeout"`, `"server_error"`. Omettre pour réessayer tous les types transitoires.
 
 S'applique uniquement aux tâches cron ponctuelles. Les tâches récurrentes utilisent une gestion des échecs séparée.
 
@@ -3717,10 +3727,10 @@ S'applique uniquement aux tâches cron ponctuelles. Les tâches récurrentes uti
 }
 ```
 
-- `enabled` : activez les alertes d'échec pour les tâches cron (par défaut : `false`).
+- `enabled` : activer les alertes d'échec pour les tâches cron (par défaut : `false`).
 - `after` : échecs consécutifs avant le déclenchement d'une alerte (entier positif, min : `1`).
 - `cooldownMs` : durée minimale en millisecondes entre les alertes répétées pour la même tâche (entier non négatif).
-- `mode` : mode de livraison — `"announce"` envoie via un message de channel ; `"webhook"` publie sur le webhook configuré.
+- `mode` : mode de livraison — `"announce"` envoie via un message de channel ; `"webhook"` envoie vers le webhook configuré.
 - `accountId` : identifiant de compte ou de channel optionnel pour délimiter la livraison des alertes.
 
 ### `cron.failureDestination`
@@ -3744,45 +3754,45 @@ S'applique uniquement aux tâches cron ponctuelles. Les tâches récurrentes uti
 - `to` : cible d'annonce explicite ou URL de webhook. Requis pour le mode webhook.
 - `accountId` : substitution de compte optionnelle pour la livraison.
 - La substitution `delivery.failureDestination` par tâche remplace cette valeur par défaut globale.
-- Lorsque ni la destination d'échec globale ni par tâche n'est définie, les tâches qui livrent déjà via `announce` reviennent à cette cible d'annonce principale en cas d'échec.
-- `delivery.failureDestination` est uniquement pris en charge pour les tâches `sessionTarget="isolated"` sauf si le `delivery.mode` principal de la tâche est `"webhook"`.
+- Lorsque ni la destination d'échec globale ni celle par tâche n'est définie, les tâches qui sont déjà livrées via `announce` reviennent à cette cible d'annonce principale en cas d'échec.
+- `delivery.failureDestination` n'est pris en charge que pour les tâches `sessionTarget="isolated"`, sauf si le `delivery.mode` principal de la tâche est `"webhook"`.
 
-Voir [Tâches Cron](/fr/automation/cron-jobs). Les exécutions cron isolées sont suivies en tant que [tâches d'arrière-plan](/fr/automation/tasks).
-
----
-
-## Variables de modèle de média
-
-Espaces réservés de modèle développés dans `tools.media.models[].args` :
-
-| Variable           | Description                                          |
-| ------------------ | ---------------------------------------------------- |
-| `{{Body}}`         | Corps complet du message entrant                     |
-| `{{RawBody}}`      | Corps brut (sans enveloppes d'historique/expéditeur) |
-| `{{BodyStripped}}` | Body with group mentions stripped                    |
-| `{{From}}`         | Sender identifier                                    |
-| `{{To}}`           | Destination identifier                               |
-| `{{MessageSid}}`   | Channel message id                                   |
-| `{{SessionId}}`    | Current session UUID                                 |
-| `{{IsNewSession}}` | `"true"` when new session created                    |
-| `{{MediaUrl}}`     | Inbound media pseudo-URL                             |
-| `{{MediaPath}}`    | Local media path                                     |
-| `{{MediaType}}`    | Media type (image/audio/document/…)                  |
-| `{{Transcript}}`   | Audio transcript                                     |
-| `{{Prompt}}`       | Resolved media prompt for CLI entries                |
-| `{{MaxChars}}`     | Resolved max output chars for CLI entries            |
-| `{{ChatType}}`     | `"direct"` or `"group"`                              |
-| `{{GroupSubject}}` | Group subject (best effort)                          |
-| `{{GroupMembers}}` | Group members preview (best effort)                  |
-| `{{SenderName}}`   | Sender display name (best effort)                    |
-| `{{SenderE164}}`   | Sender phone number (best effort)                    |
-| `{{Provider}}`     | Provider hint (whatsapp, telegram, discord, etc.)    |
+Voir [Cron Jobs](/fr/automation/cron-jobs). Les exécutions cron isolées sont suivies comme [tâches d'arrière-plan](/fr/automation/tasks).
 
 ---
 
-## Config includes (`$include`)
+## Variables du modèle de média
 
-Split config into multiple files:
+Substituants du modèle développés dans `tools.media.models[].args` :
+
+| Variable           | Description                                                    |
+| ------------------ | -------------------------------------------------------------- |
+| `{{Body}}`         | Corps complet du message entrant                               |
+| `{{RawBody}}`      | Corps brut (sans wrappers d'historique/expéditeur)             |
+| `{{BodyStripped}}` | Corps sans les mentions de groupe                              |
+| `{{From}}`         | Identifiant de l'expéditeur                                    |
+| `{{To}}`           | Identifiant de la destination                                  |
+| `{{MessageSid}}`   | Identifiant du message de la chaîne                            |
+| `{{SessionId}}`    | UUID de la session actuelle                                    |
+| `{{IsNewSession}}` | `"true"` lors de la création d'une nouvelle session            |
+| `{{MediaUrl}}`     | Pseudo-URL du média entrant                                    |
+| `{{MediaPath}}`    | Chemin local du média                                          |
+| `{{MediaType}}`    | Type de média (image/audio/document/…)                         |
+| `{{Transcript}}`   | Transcription audio                                            |
+| `{{Prompt}}`       | Invite média résolue pour les entrées CLI                      |
+| `{{MaxChars}}`     | Nombre max de caractères de sortie résolu pour les entrées CLI |
+| `{{ChatType}}`     | `"direct"` ou `"group"`                                        |
+| `{{GroupSubject}}` | Sujet du groupe (au mieux)                                     |
+| `{{GroupMembers}}` | Aperçu des membres du groupe (au mieux)                        |
+| `{{SenderName}}`   | Nom d'affichage de l'expéditeur (au mieux)                     |
+| `{{SenderE164}}`   | Numéro de téléphone de l'expéditeur (au mieux)                 |
+| `{{Provider}}`     | Indication du fournisseur (whatsapp, telegram, discord, etc.)  |
+
+---
+
+## Inclusions de configuration (`$include`)
+
+Diviser la configuration en plusieurs fichiers :
 
 ```json5
 // ~/.openclaw/openclaw.json
@@ -3795,15 +3805,15 @@ Split config into multiple files:
 }
 ```
 
-**Merge behavior:**
+**Comportement de fusion :**
 
-- Single file: replaces the containing object.
-- Array of files: deep-merged in order (later overrides earlier).
-- Sibling keys: merged after includes (override included values).
-- Nested includes: up to 10 levels deep.
-- Paths: resolved relative to the including file, but must stay inside the top-level config directory (`dirname` of `openclaw.json`). Absolute/`../` forms are allowed only when they still resolve inside that boundary.
-- Errors: clear messages for missing files, parse errors, and circular includes.
+- Fichier unique : remplace l'objet contenant.
+- Tableau de fichiers : fusionnés en profondeur dans l'ordre (les suivants remplacent les précédents).
+- Clés frères : fusionnées après les inclusions (remplacent les valeurs incluses).
+- Inclusions imbriquées : jusqu'à 10 niveaux de profondeur.
+- Chemins : résolus par rapport au fichier inclus, mais doivent rester à l'intérieur du répertoire de configuration de premier niveau (`dirname` de `openclaw.json`). Les formes absolues/`../` ne sont autorisées que lorsqu'elles résolvent toujours à l'intérieur de cette limite.
+- Erreurs : messages clairs pour les fichiers manquants, les erreurs d'analyse et les inclusions circulaires.
 
 ---
 
-_Related: [Configuration](/fr/gateway/configuration) · [Configuration Examples](/fr/gateway/configuration-examples) · [Doctor](/fr/gateway/doctor)_
+_Connexe : [Configuration](/fr/gateway/configuration) · [Exemples de configuration](/fr/gateway/configuration-examples) · [Doctor](/fr/gateway/doctor)_

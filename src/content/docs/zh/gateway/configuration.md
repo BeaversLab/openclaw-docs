@@ -17,9 +17,9 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 - 设置模型、工具、沙箱隔离 或自动化 (cron, hooks)
 - 调整会话、媒体、网络或 UI
 
-有关所有可用字段，请参阅[完整参考](/zh/gateway/configuration-reference)。
+有关每个可用字段，请参阅[完整参考](/zh/gateway/configuration-reference)。
 
-<Tip>**不熟悉配置？** 从 `openclaw onboard` 开始进行交互式设置，或查看[配置示例](/zh/gateway/configuration-examples)指南以获取完整的复制粘贴配置。</Tip>
+<Tip>**配置新手？** 请从 `openclaw onboard` 开始进行交互式设置，或查看[配置示例](/zh/gateway/configuration-examples)指南以获取完整的复制粘贴配置。</Tip>
 
 ## 最小配置
 
@@ -36,8 +36,8 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 <Tabs>
   <Tab title="交互式向导">```bash openclaw onboard # full onboarding flow openclaw configure # config wizard ```</Tab>
   <Tab title="CLI (单行命令)">```bash openclaw config get agents.defaults.workspace openclaw config set agents.defaults.heartbeat.every "2h" openclaw config unset plugins.entries.brave.config.webSearch.apiKey ```</Tab>
-  <Tab title="控制 UI">打开 [http://127.0.0.1:18789](http://127.0.0.1:18789) 并使用 **Config** 选项卡。 控制 UI 根据实时配置架构渲染一个表单，包括字段 `title` / `description` 文档元数据，以及在可用时的插件和渠道架构， 并提供 **Raw JSON** 编辑器作为应急方案。对于钻取式 UI 和其他工具，Gateway 还会暴露 `config.schema.lookup` 以 获取单个路径范围内的架构节点以及直接子项摘要。</Tab>
-  <Tab title="直接编辑">直接编辑 `~/.openclaw/openclaw.json`。Gateway(网关) 会监视该文件并自动应用更改（参见 [热重载](#config-hot-reload)）。</Tab>
+  <Tab title="Control UI">打开 [http://127.0.0.1:18789](http://127.0.0.1:18789) 并使用 **Config** 选项卡。 Control UI 根据实时配置架构呈现表单，包括字段 `title` / `description` 文档元数据，以及在可用时的插件和渠道架构， 并提供一个 **Raw JSON** 编辑器作为备选方案。对于下钻 UI 和其他工具，网关还公开了 `config.schema.lookup` 以 获取单个路径范围架构节点以及直接子级摘要。</Tab>
+  <Tab title="Direct edit">直接编辑 `~/.openclaw/openclaw.json`。Gateway(网关) 会监视该文件并自动应用更改（请参阅[热重载](#config-hot-reload)）。</Tab>
 </Tabs>
 
 ## 严格验证
@@ -65,11 +65,22 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 - 运行 `openclaw doctor` 以查看确切问题
 - 运行 `openclaw doctor --fix`（或 `--yes`）以应用修复
 
+Gateway(网关) 还会在成功启动后保留一个受信任的已知良好副本。如果
+`openclaw.json` 随后在 OpenClaw 外部被更改且不再有效，启动
+和热重载会将损坏的文件保留为带时间戳的 `.clobbered.*` 快照，
+恢复已知良好的副本，并记录包含恢复原因的明显警告。
+下一个主代理轮次也会收到系统事件警告，告知其
+配置已恢复，不得盲目重写。已知良好提升
+会在验证启动和接受热重载后更新，包括
+OpenClaw 拥有的持久化文件哈希仍与接受的
+写入匹配的配置写入。当候选包含编辑过的机密
+占位符（如 `***`）或缩短的令牌值时，将跳过提升。
+
 ## 常见任务
 
 <AccordionGroup>
   <Accordion title="设置渠道（WhatsApp、Telegram、Discord 等）">
-    每个渠道在 `channels.<provider>` 下都有自己的配置部分。请参阅专门的渠道页面以了解设置步骤：
+    每个渠道在 `channels.<provider>` 下都有自己的配置部分。请参阅专门的渠道页面了解设置步骤：
 
     - [WhatsApp](/zh/channels/whatsapp) — `channels.whatsapp`
     - [Telegram](/zh/channels/telegram) — `channels.telegram`
@@ -100,7 +111,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
   </Accordion>
 
   <Accordion title="选择并配置模型">
-    设置主模型和可选的备用模型：
+    设置主要模型和可选的备用模型：
 
     ```json5
     {
@@ -121,28 +132,28 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     - `agents.defaults.models` 定义模型目录并作为 `/model` 的允许列表。
     - 模型引用使用 `provider/model` 格式（例如 `anthropic/claude-opus-4-6`）。
-    - `agents.defaults.imageMaxDimensionPx` 控制转录/工具图像的下采样（默认为 `1200`）；较低的值通常能减少大量截图运行时的视觉标记使用量。
-    - 请参阅 [模型 CLI](/zh/concepts/models) 以在聊天中切换模型，并参阅 [模型故障转移](/zh/concepts/model-failover) 以了解身份轮换和备用行为。
+    - `agents.defaults.imageMaxDimensionPx` 控制转录/工具图像的缩小（默认为 `1200`）；较低的值通常可以减少包含大量截图运行的视觉令牌使用量。
+    - 请参阅 [模型 CLI](/zh/concepts/models) 以在聊天中切换模型，以及 [模型故障转移](/zh/concepts/model-failover) 以了解身份验证轮换和备用行为。
     - 对于自定义/自托管提供商，请参阅参考文档中的 [自定义提供商](/zh/gateway/configuration-reference#custom-providers-and-base-urls)。
 
   </Accordion>
 
   <Accordion title="控制谁可以向机器人发送消息">
-    私信访问通过 `dmPolicy` 按渠道控制：
+    私信访问权限通过 `dmPolicy` 针对每个渠道进行控制：
 
-    - `"pairing"`（默认）：未知发送者会获得一次性配对代码以供批准
+    - `"pairing"` (默认)：未知发送者会收到一次性配对码以进行批准
     - `"allowlist"`：仅允许 `allowFrom` 中的发送者（或已配对的允许存储）
-    - `"open"`：允许所有传入私信（需要 `allowFrom: ["*"]`）
+    - `"open"`：允许所有入站私信（需要 `allowFrom: ["*"]`）
     - `"disabled"`：忽略所有私信
 
     对于群组，请使用 `groupPolicy` + `groupAllowFrom` 或特定于渠道的允许列表。
 
-    请参阅 [完整参考](/zh/gateway/configuration-reference#dm-and-group-access) 了解每个渠道的详细信息。
+    有关每个渠道的详细信息，请参阅[完整参考](/zh/gateway/configuration-reference#dm-and-group-access)。
 
   </Accordion>
 
-  <Accordion title="设置群聊提及限制">
-    群组消息默认为 **需要提及**。为每个代理配置模式：
+  <Accordion title="设置群组聊天提及门控">
+    群组消息默认为**需要提及**。为每个代理配置模式：
 
     ```json5
     {
@@ -164,13 +175,13 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     }
     ```
 
-    - **元数据提及**：原生的 @提及（WhatsApp 点击提及、Telegram @bot 等）
-    - **文本模式**：`mentionPatterns` 中的安全正则表达式模式
-    - 请参阅 [完整参考](/zh/gateway/configuration-reference#group-chat-mention-gating) 了解每个渠道的覆盖和自聊模式。
+    - **元数据提及**：原生 @提及（WhatsApp 点击提及，Telegram @bot 等）
+    - **文本模式**：`mentionPatterns` 中的安全正则模式
+    - 有关每个渠道的覆盖和自聊模式，请参阅[完整参考](/zh/gateway/configuration-reference#group-chat-mention-gating)。
 
   </Accordion>
 
-  <Accordion title="限制每个代理的技能">
+  <Accordion title="限制每个代理的 Skills">
     使用 `agents.defaults.skills` 作为共享基线，然后使用 `agents.list[].skills` 覆盖特定
     代理：
 
@@ -189,16 +200,16 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     }
     ```
 
-    - 默认情况下省略 `agents.defaults.skills` 以允许无限制的技能。
+    - 省略 `agents.defaults.skills` 以默认允许不受限的 Skills。
     - 省略 `agents.list[].skills` 以继承默认值。
-    - 设置 `agents.list[].skills: []` 表示没有技能。
-    - 请参阅 [Skills](/zh/tools/skills)、[Skills config](/zh/tools/skills-config) 和
-      [Configuration Reference](/zh/gateway/configuration-reference#agents-defaults-skills)。
+    - 设置 `agents.list[].skills: []` 以禁用所有 Skills。
+    - 请参阅 [Skills](/zh/tools/skills)、[Skills 配置](/zh/tools/skills-config) 和
+      [配置参考](/zh/gateway/configuration-reference#agents-defaults-skills)。
 
   </Accordion>
 
   <Accordion title="调整网关渠道健康监控">
-    控制网关重启看起来已过时的渠道的积极程度：
+    控制网关重启看起来已失效的渠道的激进程度：
 
     ```json5
     {
@@ -222,8 +233,8 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     - 设置 `gateway.channelHealthCheckMinutes: 0` 以全局禁用健康监控重启。
     - `channelStaleEventThresholdMinutes` 应大于或等于检查间隔。
-    - 使用 `channels.<provider>.healthMonitor.enabled` 或 `channels.<provider>.accounts.<id>.healthMonitor.enabled` 来禁用单个渠道或账户的自动重启，而无需禁用全局监控器。
-    - 请参阅 [Health Checks](/zh/gateway/health) 了解操作调试，并参阅 [full reference](/zh/gateway/configuration-reference#gateway) 了解所有字段。
+    - 使用 `channels.<provider>.healthMonitor.enabled` 或 `channels.<provider>.accounts.<id>.healthMonitor.enabled` 可以在不禁用全局监控的情况下，对单个渠道或帐户禁用自动重启。
+    - 请参阅 [健康检查](/zh/gateway/health) 了解操作调试，并参阅 [完整参考](/zh/gateway/configuration-reference#gateway) 了解所有字段。
 
   </Accordion>
 
@@ -248,15 +259,15 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     }
     ```
 
-    - `dmScope`: `main` (共享) | `per-peer` | `per-channel-peer` | `per-account-channel-peer`
-    - `threadBindings`: 线程绑定会话路由的全局默认值 (Discord 支持 `/focus`、`/unfocus`、`/agents`、`/session idle` 和 `/session max-age`)。
-    - 请参阅 [Session Management](/zh/concepts/session) 了解作用域、身份链接和发送策略。
-    - 请参阅 [full reference](/zh/gateway/configuration-reference#session) 了解所有字段。
+    - `dmScope`：`main`（共享） | `per-peer` | `per-channel-peer` | `per-account-channel-peer`
+    - `threadBindings`：线程绑定会话路由的全局默认值（Discord 支持 `/focus`、`/unfocus`、`/agents`、`/session idle` 和 `/session max-age`）。
+    - 请参阅 [会话管理](/zh/concepts/session) 了解作用域、身份链接和发送策略。
+    - 请参阅 [完整参考](/zh/gateway/configuration-reference#session) 了解所有字段。
 
   </Accordion>
 
   <Accordion title="启用沙箱隔离">
-    在独立的 Docker 容器中运行代理会话：
+    在隔离的沙箱运行时中运行代理会话：
 
     ```json5
     {
@@ -273,7 +284,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     首先构建镜像：`scripts/sandbox-setup.sh`
 
-    请参阅 [沙箱隔离](/zh/gateway/sandboxing) 获取完整指南，并参阅 [完整参考](/zh/gateway/configuration-reference#agentsdefaultssandbox) 了解所有选项。
+    请参阅 [沙箱隔离](/zh/gateway/sandboxing) 了解完整指南，并参阅 [完整参考](/zh/gateway/configuration-reference#agentsdefaultssandbox) 了解所有选项。
 
   </Accordion>
 
@@ -298,7 +309,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     }
     ```
 
-    CLI 等效方式：
+    CLI 等效项：
 
     ```bash
     openclaw config set gateway.push.apns.relay.baseUrl https://relay.example.com
@@ -306,31 +317,31 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     其作用如下：
 
-    - 允许网关通过外部中继发送 `push.test`、唤醒提醒和重连唤醒。
-    - 使用配对的 iOS 应用转发的注册范围发送授权。网关不需要部署范围的中继令牌。
-    - 将每个基于中继的注册绑定到 iOS 应用配对的网关身份，因此其他网关无法重用存储的注册。
-    - 将本地/手动 iOS 版本保留在直接 APNs 上。基于中继的发送仅适用于通过中继注册的官方分发版本。
-    - 必须与内置到官方/TestFlight iOS 版本中的中继基础 URL 匹配，以便注册和发送流量到达同一个中继部署。
+    - 允许网关通过外部中继发送 `push.test`、唤醒轻推和重连唤醒。
+    - 使用由配对的 iOS 应用转发的注册范围发送授权。网关不需要部署范围的中继令牌。
+    - 将每个基于中继的注册绑定到 iOS 应用与之配对的网关身份，因此其他网关无法重用存储的注册。
+    - 将本地/手动 iOS 版本保持在直接 APNs 上。基于中继的发送仅适用于通过中继注册的官方分发版本。
+    - 必须与官方/TestFlight iOS 版本中内置的中继基础 URL 匹配，以便注册和发送流量到达同一个中继部署。
 
     端到端流程：
 
     1. 安装使用相同中继基础 URL 编译的官方/TestFlight iOS 版本。
     2. 在网关上配置 `gateway.push.apns.relay.baseUrl`。
-    3. 将 iOS 应用与网关配对，并让节点和操作员会话连接。
-    4. iOS 应用获取网关身份，使用 App Attest 和应用收据向中继注册，然后将基于中继的 `push.apns.register` 负载发布到配对的网关。
-    5. 网关存储中继句柄和发送授权，然后将它们用于 `push.test`、唤醒提醒和重连唤醒。
+    3. 将 iOS 应用与网关配对，并让节点和操作员会话都连接。
+    4. iOS 应用获取网关身份，使用 App Attest 和应用收据向中继注册，然后将基于中继的 `push.apns.register` 有效负载发布到配对的网关。
+    5. 网关存储中继句柄和发送授权，然后将它们用于 `push.test`、唤醒轻推和重连唤醒。
 
     操作说明：
 
     - 如果将 iOS 应用切换到不同的网关，请重新连接应用，以便它可以发布绑定到该网关的新中继注册。
-    - 如果发布指向不同中继部署的新 iOS 版本，应用将刷新其缓存的中继注册，而不是重用旧的中继源。
+    - 如果发布了指向不同中继部署的新 iOS 版本，应用将刷新其缓存的中继注册，而不是重用旧的中继源。
 
     兼容性说明：
 
-    - `OPENCLAW_APNS_RELAY_BASE_URL` 和 `OPENCLAW_APNS_RELAY_TIMEOUT_MS` 仍然可以作为临时的环境变量覆盖。
-    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` 仍然是一个仅限回环开发的逃生舱；不要在配置中持久化 HTTP 中继 URL。
+    - `OPENCLAW_APNS_RELAY_BASE_URL` 和 `OPENCLAW_APNS_RELAY_TIMEOUT_MS` 仍然作为临时环境变量覆盖起作用。
+    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` 仍然是一个仅限回环的开发应急手段；不要在配置中持久化 HTTP 中继 URL。
 
-    有关端到端流程，请参阅 [iOS App](/zh/platforms/ios#relay-backed-push-for-official-builds)；有关中继安全模型，请参阅 [Authentication and trust flow](/zh/platforms/ios#authentication-and-trust-flow)。
+    请参阅 [iOS App](/zh/platforms/ios#relay-backed-push-for-official-builds) 了解端到端流程，参阅 [Authentication and trust flow](/zh/platforms/ios#authentication-and-trust-flow) 了解中继安全模型。
 
   </Accordion>
 
@@ -348,10 +359,10 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     }
     ```
 
-    - `every`: 持续时间字符串 (`30m`, `2h`)。设置为 `0m` 以禁用。
-    - `target`: `last` | `none` | `<channel-id>` (例如 `discord`, `matrix`, `telegram`, 或 `whatsapp`)
-    - `directPolicy`: `allow` (默认) 或 `block` 用于私聊风格的心跳目标
-    - 查阅 [Heartbeat](/zh/gateway/heartbeat) 获取完整指南。
+    - `every`: 持续时间字符串（`30m`, `2h`）。设置为 `0m` 以禁用。
+    - `target`: `last` | `none` | `<channel-id>`（例如 `discord`, `matrix`, `telegram`, 或 `whatsapp`）
+    - `directPolicy`: `allow`（默认）或 `block` 用于私信风格的心跳目标
+    - 有关完整指南，请参阅 [Heartbeat](/zh/gateway/heartbeat)。
 
   </Accordion>
 
@@ -370,13 +381,13 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     }
     ```
 
-    - `sessionRetention`: 从 `sessions.json` 中清理已完成的隔离运行会话 (默认 `24h`; 设置 `false` 以禁用)。
+    - `sessionRetention`: 从 `sessions.json` 中清理已完成的隔离运行会话（默认 `24h`；设置为 `false` 以禁用）。
     - `runLog`: 根据大小和保留行数清理 `cron/runs/<jobId>.jsonl`。
-    - 查阅 [Cron jobs](/zh/automation/cron-jobs) 获取功能概述和 CLI 示例。
+    - 有关功能概述和 CLI 示例，请参阅 [Cron jobs](/zh/automation/cron-jobs)。
 
   </Accordion>
 
-  <Accordion title="Set up webhooks (hooks)">
+  <Accordion title="设置 Webhook (hooks)">
     在 Gateway(网关) 上启用 HTTP webhook 端点：
 
     ```json5
@@ -403,17 +414,17 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     安全说明：
     - 将所有 hook/webhook 负载内容视为不受信任的输入。
     - 使用专用的 `hooks.token`；不要重用共享的 Gateway(网关) 令牌。
-    - Hook 认证仅限标头（`Authorization: Bearer ...` 或 `x-openclaw-token`）；查询字符串令牌将被拒绝。
+    - Hook 认证仅限 header (`Authorization: Bearer ...` 或 `x-openclaw-token`)；查询字符串令牌会被拒绝。
     - `hooks.path` 不能被 `/`；将 webhook 入口保留在专用子路径上，例如 `/hooks`。
-    - 保持不安全内容绕过标志处于禁用状态（`hooks.gmail.allowUnsafeExternalContent`、`hooks.mappings[].allowUnsafeExternalContent`），除非进行严格范围限定的调试。
+    - 保持不安全内容绕过标志禁用 (`hooks.gmail.allowUnsafeExternalContent`, `hooks.mappings[].allowUnsafeExternalContent`)，除非进行范围极小的调试。
     - 如果启用 `hooks.allowRequestSessionKey`，请同时设置 `hooks.allowedSessionKeyPrefixes` 以限制调用方选择的会话密钥。
-    - 对于由 hook 驱动的代理，建议使用强大的现代模型层级和严格的工具策略（例如，仅限消息传递并在可能的情况下进行沙箱隔离）。
+    - 对于由 hook 驱动的代理，建议使用强大的现代模型层级和严格的工具策略（例如仅限消息传递，并在可能的情况下使用沙箱隔离）。
 
-    参阅[完整参考](/zh/gateway/configuration-reference#hooks)了解所有映射选项和 Gmail 集成。
+    参阅 [完整参考](/zh/gateway/configuration-reference#hooks) 了解所有映射选项和 Gmail 集成。
 
   </Accordion>
 
-  <Accordion title="Configure multi-agent routing">
+  <Accordion title="配置多代理路由">
     运行多个具有独立工作区和会话的隔离代理：
 
     ```json5
@@ -431,11 +442,11 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     }
     ```
 
-    参阅[多代理](/zh/concepts/multi-agent)和[完整参考](/zh/gateway/configuration-reference#multi-agent-routing)了解绑定规则和每个代理的访问配置文件。
+    参阅 [多代理](/zh/concepts/multi-agent) 和 [完整参考](/zh/gateway/configuration-reference#multi-agent-routing) 了解绑定规则和每个代理的访问配置文件。
 
   </Accordion>
 
-  <Accordion title="Split config into multiple files ($include)">
+  <Accordion title="拆分配置到多个文件 ($include)">
     使用 `$include` 来组织大型配置：
 
     ```json5
@@ -449,28 +460,35 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     }
     ```
 
-    - **单文件**：替换包含的对象
-    - **文件数组**：按顺序深度合并（后者优先）
-    - **同级键**：在包含后合并（覆盖包含的值）
+    - **单个文件**：替换包含的对象
+    - **文件数组**：按顺序深度合并（后面的生效）
+    - **同级键**：在包含之后合并（覆盖包含的值）
     - **嵌套包含**：最多支持 10 层深度
-    - **相对路径**：相对于包含文件进行解析
-    - **错误处理**：针对缺失文件、解析错误和循环包含提供清晰错误信息
+    - **相对路径**：相对于包含文件解析
+    - **错误处理**：针对缺失文件、解析错误和循环包含提供清晰的错误信息
 
   </Accordion>
 </AccordionGroup>
 
 ## 配置热重载
 
-Gateway(网关) 会监视 `~/.openclaw/openclaw.json` 并自动应用更改 — 大多数设置无需手动重启。
+Gateway(网关) 监视 `~/.openclaw/openclaw.json` 并自动应用更改——对于大多数设置，无需手动重启。
 
-### 重新加载模式
+直接文件编辑在通过验证之前被视为不受信任。监视器会等待编辑器的临时写入/重命名平息，读取最终文件，并通过恢复最后已知的有效配置来拒绝无效的外部编辑。OpenClaw 拥有的配置写入在写入前使用相同的架构门控；诸如丢弃 `gateway.mode` 或将文件缩减一半以上的破坏性覆盖操作将被拒绝，并保存为 `.rejected.*` 以供检查。
 
-| 模式                  | 行为                                                  |
-| --------------------- | ----------------------------------------------------- |
-| **`hybrid`** （默认） | 立即热应用安全的更改。针对关键更改自动重启。          |
-| **`hot`**             | 仅热应用安全的更改。当需要重启时记录警告 — 由您处理。 |
-| **`restart`**         | 对任何配置更改都重启 Gateway(网关)，无论是否安全。    |
-| **`off`**             | 禁用文件监视。更改将在下次手动重启时生效。            |
+如果您在日志中看到 `Config auto-restored from last-known-good` 或
+`config reload restored last-known-good config`，请检查 `openclaw.json` 旁边匹配的
+`.clobbered.*` 文件，修复被拒绝的负载，然后运行
+`openclaw config validate`。有关恢复清单，请参阅 [Gateway(网关) 故障排除](/zh/gateway/troubleshooting#gateway-restored-last-known-good-config)。
+
+### 重载模式
+
+| 模式                 | 行为                                                 |
+| -------------------- | ---------------------------------------------------- |
+| **`hybrid`**（默认） | 即时热应用安全更改。对于关键更改，自动重启。         |
+| **`hot`**            | 仅热应用安全更改。需要重启时记录警告——由您处理。     |
+| **`restart`**        | 在任何配置更改（无论是否安全）时重启 Gateway(网关)。 |
+| **`off`**            | 禁用文件监视。更改在下次手动重启时生效。             |
 
 ```json5
 {
@@ -480,55 +498,56 @@ Gateway(网关) 会监视 `~/.openclaw/openclaw.json` 并自动应用更改 — 
 }
 ```
 
-### 热应用与需要重启的对比
+### 什么热应用 vs 什么需要重启
 
-大多数字段可以无停机热应用。在 `hybrid` 模式下，需要重启的更改会自动处理。
+大多数字段热应用不会造成停机。在 `hybrid` 模式下，需要重启的更改会自动处理。
 
-| 类别                 | 字段                                                   | 需要重启？ |
-| -------------------- | ------------------------------------------------------ | ---------- |
-| 渠道                 | `channels.*`， `web` (WhatsApp) — 所有内置和扩展渠道   | 否         |
-| 代理与模型           | `agent`， `agents`， `models`， `routing`              | 否         |
-| 自动化               | `hooks`， `cron`， `agent.heartbeat`                   | 否         |
-| 会话与消息           | `session`， `messages`                                 | 否         |
-| 工具与媒体           | `tools`， `browser`， `skills`， `audio`， `talk`      | 否         |
-| 界面与杂项           | `ui`， `logging`， `identity`， `bindings`             | 否         |
-| Gateway(网关) 服务器 | `gateway.*` （端口、绑定、认证、Tailscale、TLS、HTTP） | **是**     |
-| 基础设施             | `discovery`， `canvasHost`， `plugins`                 | **是**     |
+| 类别                 | 字段                                                  | 需要重启？ |
+| -------------------- | ----------------------------------------------------- | ---------- |
+| 渠道                 | `channels.*`，`web` (WhatsApp) — 所有内置和扩展渠道   | 否         |
+| 代理与模型           | `agent`，`agents`，`models`，`routing`                | 否         |
+| 自动化               | `hooks`，`cron`，`agent.heartbeat`                    | 否         |
+| 会话与消息           | `session`，`messages`                                 | 否         |
+| 工具与媒体           | `tools`, `browser`, `skills`, `audio`, `talk`         | 否         |
+| UI 与杂项            | `ui`, `logging`, `identity`, `bindings`               | 否         |
+| Gateway(网关) 服务器 | `gateway.*`（端口、绑定、认证、Tailscale、TLS、HTTP） | **是**     |
+| 基础设施             | `discovery`, `canvasHost`, `plugins`                  | **是**     |
 
-<Note>`gateway.reload` 和 `gateway.remote` 是例外 — 更改它们并**不**会触发重启。</Note>
+<Note>`gateway.reload` 和 `gateway.remote` 是例外 — 更改它们**不会**触发重启。</Note>
 
 ## 配置 RPC（编程更新）
 
-<Note>控制平面写入 RPC（`config.apply`、`config.patch`、`update.run`）的速率限制为每个 `deviceId+clientIp` 每 60 秒 **3 个请求**。当受到限制时，RPC 返回 `UNAVAILABLE` 并带有 `retryAfterMs`。</Note>
+<Note>控制平面写入 RPC（`config.apply`, `config.patch`, `update.run`）针对每个 `deviceId+clientIp` 限制为 **60 秒内 3 次请求**。受限时，RPC 将返回带有 `retryAfterMs` 的 `UNAVAILABLE`。</Note>
 
 安全/默认流程：
 
-- `config.schema.lookup`：使用浅层模式节点检查一个路径范围的配置子树、匹配的提示元数据和直接子项摘要
+- `config.schema.lookup`：检查一个路径范围的配置子树，附带浅层
+  架构节点、匹配的提示元数据和直接子级摘要
 - `config.get`：获取当前快照 + 哈希
 - `config.patch`：首选的部分更新路径
-- `config.apply`：仅限完整配置替换
+- `config.apply`：仅用于完整配置替换
 - `update.run`：显式自我更新 + 重启
 
-当您不替换整个配置时，首选 `config.schema.lookup`
+当您不替换整个配置时，请优先使用 `config.schema.lookup`
 然后 `config.patch`。
 
 <AccordionGroup>
-  <Accordion title="config.apply (完整替换)">
-    验证 + 写入完整配置并在一步中重启 Gateway(网关)。
+  <Accordion title="config.apply (full replace)">
+    验证并写入完整配置，然后一步重启 Gateway(网关)。
 
     <Warning>
-    `config.apply` 替换 **整个配置**。使用 `config.patch` 进行部分更新，或使用 `openclaw config set` 更新单个键。
+    `config.apply` 将替换**整个配置**。请使用 `config.patch` 进行部分更新，或使用 `openclaw config set` 更新单个键。
     </Warning>
 
     参数：
 
-    - `raw` (字符串) — 整个配置的 JSON5 负载
-    - `baseHash` (可选) — 来自 `config.get` 的配置哈希（配置存在时必需）
+    - `raw` (字符串) — 整个配置的 JSON5 载荷
+    - `baseHash` (可选) — 来自 `config.get` 的配置哈希（当配置存在时为必需）
     - `sessionKey` (可选) — 用于重启后唤醒 ping 的会话密钥
-    - `note` (可选) — 重启哨兵的说明
+    - `note` (可选) — 重启标记的备注
     - `restartDelayMs` (可选) — 重启前的延迟（默认 2000）
 
-    当一个重启请求已经待处理/进行中时，后续重启请求会被合并，并且在重启周期之间应用 30 秒的冷却时间。
+    当一个重启请求已经挂起或正在处理时，后续请求会被合并，且重启周期之间有 30 秒的冷却时间。
 
     ```bash
     openclaw gateway call config.get --params '{}'  # capture payload.hash
@@ -541,7 +560,7 @@ Gateway(网关) 会监视 `~/.openclaw/openclaw.json` 并自动应用更改 — 
 
   </Accordion>
 
-  <Accordion title="config.patch (部分更新)">
+  <Accordion title="config.patch (partial update)">
     将部分更新合并到现有配置中（JSON 合并补丁语义）：
 
     - 对象递归合并
@@ -552,9 +571,9 @@ Gateway(网关) 会监视 `~/.openclaw/openclaw.json` 并自动应用更改 — 
 
     - `raw` (字符串) — 仅包含要更改的键的 JSON5
     - `baseHash` (必需) — 来自 `config.get` 的配置哈希
-    - `sessionKey`, `note`, `restartDelayMs` — 同 `config.apply`
+    - `sessionKey`, `note`, `restartDelayMs` — 与 `config.apply` 相同
 
-    重启行为与 `config.apply` 一致：合并挂起的重启，且重启周期之间有 30 秒的冷却时间。
+    重启行为与 `config.apply` 一致：合并挂起的重启请求，且重启周期之间有 30 秒的冷却时间。
 
     ```bash
     openclaw gateway call config.patch --params '{
@@ -568,12 +587,12 @@ Gateway(网关) 会监视 `~/.openclaw/openclaw.json` 并自动应用更改 — 
 
 ## 环境变量
 
-OpenClaw 从父进程以及以下位置读取环境变量：
+OpenClaw 从父进程读取环境变量，此外还包括：
 
-- `.env` 来自当前工作目录（如果存在）
-- `~/.openclaw/.env` （全局后备）
+- 来自当前工作目录的 `.env`（如果存在）
+- `~/.openclaw/.env`（全局回退）
 
-这两个文件都不会覆盖现有的环境变量。您也可以在配置中设置内联环境变量：
+这两个文件都不会覆盖现有的环境变量。您还可以在配置中设置内联环境变量：
 
 ```json5
 {
@@ -584,8 +603,8 @@ OpenClaw 从父进程以及以下位置读取环境变量：
 }
 ```
 
-<Accordion title="Shell 环境导入（可选）">
-  如果启用且预期键名未设置，OpenClaw 将运行您的登录 Shell 并仅导入缺失的键：
+<Accordion title="Shell env import (optional)">
+  如果启用且OpenClaw未设置预期键名，OpenClaw 将运行您的登录 shell 并仅导入缺失的键名：
 
 ```json5
 {
@@ -595,12 +614,12 @@ OpenClaw 从父进程以及以下位置读取环境变量：
 }
 ```
 
-等效环境变量： `OPENCLAW_LOAD_SHELL_ENV=1`
+等效环境变量：`OPENCLAW_LOAD_SHELL_ENV=1`
 
 </Accordion>
 
-<Accordion title="配置值中的环境变量替换">
-  使用 `${VAR_NAME}` 在任何配置字符串值中引用环境变量：
+<Accordion title="Env var substitution in config values">
+  您可以使用 `${VAR_NAME}` 在任何配置字符串值中引用环境变量：
 
 ```json5
 {
@@ -613,9 +632,9 @@ OpenClaw 从父进程以及以下位置读取环境变量：
 
 - 仅匹配大写名称：`[A-Z_][A-Z0-9_]*`
 - 缺失/空的变量会在加载时抛出错误
-- 使用 `$${VAR}` 进行转义以获得字面输出
-- 在 `$include` 文件内有效
-- 内联替换： `"${BASE}/v1"` → `"https://api.example.com/v1"`
+- 使用 `$${VAR}` 进行转义以获取字面输出
+- 适用于 `$include` 文件内部
+- 内联替换：`"${BASE}/v1"` → `"https://api.example.com/v1"`
 
 </Accordion>
 
@@ -652,7 +671,7 @@ OpenClaw 从父进程以及以下位置读取环境变量：
 }
 ```
 
-SecretRef 的详细信息（包括 `secrets.providers` 适用于 `env`/`file`/`exec`）位于 [Secrets Management](/zh/gateway/secrets)。
+SecretRef 的详细信息（包括 `secrets.providers` 用于 `env`/`file`/`exec`）位于 [Secrets Management](/zh/gateway/secrets)。
 支持的凭据路径列在 [SecretRef Credential Surface](/zh/reference/secretref-credential-surface) 中。
 
 </Accordion>

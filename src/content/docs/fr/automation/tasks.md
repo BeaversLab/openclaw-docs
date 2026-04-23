@@ -9,7 +9,7 @@ title: "Tâches d'arrière-plan"
 
 # Tâches d'arrière-plan
 
-> **Vous cherchez à planifier ?** Consultez [Automation & Tasks](/fr/automation) pour choisir le bon mécanisme. Cette page couvre le **suivi** du travail d'arrière-plan, et non sa planification.
+> **Vous cherchez une planification ?** Consultez [Automation & Tasks](/fr/automation) pour choisir le bon mécanisme. Cette page couvre le **suivi** des travaux en arrière-plan, pas leur planification.
 
 Les tâches d'arrière-plan assurent le suivi du travail qui s'exécute **en dehors de votre session de conversation principale** :
 exécutions ACP, lancements de sous-agents, exécutions de tâches cron isolées et opérations initiées par la CLI.
@@ -283,13 +283,13 @@ Un nettoyeur s'exécute toutes les **60 secondes** et gère trois éléments :
 
 ### Tâches et flux de tâches
 
-[Task Flow](/fr/automation/taskflow) est la couche d'orchestration de flux au-dessus des tâches d'arrière-plan. Un seul flux peut coordonner plusieurs tâches au cours de sa durée de vie à l'aide des modes de synchronisation géré ou miroir. Utilisez `openclaw tasks` pour inspecter les enregistrements de tâches individuels et `openclaw tasks flow` pour inspecter le flux d'orchestration.
+[Task Flow](/fr/automation/taskflow) est la couche d'orchestration de flux au-dessus des tâches en arrière-plan. Un seul flux peut coordonner plusieurs tâches tout au long de sa durée de vie à l'aide des modes de synchronisation gérés ou en miroir. Utilisez `openclaw tasks` pour inspecter les enregistrements de tâches individuels et `openclaw tasks flow` pour inspecter le flux d'orchestration.
 
-Voir [Task Flow](/fr/automation/taskflow) pour plus de détails.
+Consultez [Task Flow](/fr/automation/taskflow) pour plus de détails.
 
 ### Tâches et cron
 
-Une **définition** de tâche cron réside dans `~/.openclaw/cron/jobs.json`. **Chaque** exécution de cron crée un enregistrement de tâche — à la fois dans la session principale et isolée. Les tâches cron de session principale ont par défaut la stratégie de notification `silent` afin qu'elles suivent le processus sans générer de notifications.
+Une **définition** de tâche cron réside dans `~/.openclaw/cron/jobs.json` ; l'état d'exécution au moment de l'exécution réside à côté dans `~/.openclaw/cron/jobs-state.json`. **Chaque** exécution cron crée un enregistrement de tâche — à la fois en session principale et isolée. Les tâches cron en session principale utilisent par défaut la stratégie de notification `silent` afin qu'elles effectuent un suivi sans générer de notifications.
 
 Voir [Cron Jobs](/fr/automation/cron-jobs).
 
@@ -301,16 +301,16 @@ Voir [Heartbeat](/fr/gateway/heartbeat).
 
 ### Tâches et sessions
 
-Une tâche peut référencer une `childSessionKey` (où le travail s'exécute) et une `requesterSessionKey` (qui l'a démarrée). Les sessions sont le contexte de conversation ; les tâches sont le suivi de l'activité par-dessus cela.
+Une tâche peut faire référence à une `childSessionKey` (où le travail s'exécute) et une `requesterSessionKey` (qui l'a démarrée). Les sessions sont le contexte de conversation ; les tâches sont le suivi de l'activité par-dessus cela.
 
 ### Tâches et exécutions d'agent
 
-La `runId` d'une tâche renvoie à l'exécution de l'agent effectuant le travail. Les événements du cycle de vie de l'agent (démarrage, fin, erreur) mettent automatiquement à jour le statut de la tâche — vous n'avez pas besoin de gérer le cycle de vie manuellement.
+Le `runId` d'une tâche pointe vers l'exécution de l'agent effectuant le travail. Les événements du cycle de vie de l'agent (démarrage, fin, erreur) mettent à jour automatiquement le statut de la tâche — vous n'avez pas besoin de gérer le cycle de vie manuellement.
 
 ## Connexes
 
 - [Automation & Tasks](/fr/automation) — tous les mécanismes d'automatisation en un coup d'œil
 - [Task Flow](/fr/automation/taskflow) — orchestration de flux au-dessus des tâches
-- [Scheduled Tasks](/fr/automation/cron-jobs) — planification du travail d'arrière-plan
-- [Heartbeat](/fr/gateway/heartbeat) — tours de session principale périodiques
+- [Scheduled Tasks](/fr/automation/cron-jobs) — planification des travaux en arrière-plan
+- [Heartbeat](/fr/gateway/heartbeat) — tours périodiques de session principale
 - [CLI : Tâches](/fr/cli/index#tasks) — référence de commande CLI

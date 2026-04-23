@@ -23,7 +23,8 @@ Voir aussi :
 openclaw hooks list
 ```
 
-Répertorie tous les hooks découverts depuis les répertoires de l'espace de travail, gérés, supplémentaires et groupés.
+Lister tous les hooks découverts dans les répertoires de l'espace de travail, gérés, supplémentaires et groupés.
+Le démarrage du Gateway ne charge pas les gestionnaires de hooks internes tant qu'au moins un hook interne n'est pas configuré.
 
 **Options :**
 

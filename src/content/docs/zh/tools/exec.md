@@ -63,7 +63,7 @@ title: "Exec Tool"
 - `tools.exec.ask` (默认值: `off`)
 - 网关和节点的默认配置是不需要批准的主机执行。如果您想要批准/允许列表行为，请同时收紧 `tools.exec.*` 和主机 `~/.openclaw/exec-approvals.json`；请参阅 [执行批准](/zh/tools/exec-approvals#no-approval-yolo-mode)。
 - YOLO 来自主机策略默认值（`security=full`、`ask=off`），而不是来自 `host=auto`。如果您想强制使用网关或节点路由，请设置 `tools.exec.host` 或使用 `/exec host=...`。
-- 在 `security=full` 加上 `ask=off` 模式下，主机执行直接遵循配置的策略；没有额外的启发式命令混淆预过滤器。
+- 在 `security=full` 加上 `ask=off` 模式下，主机执行直接遵循配置的策略；没有额外的启发式命令混淆预过滤器或脚本预检拒绝层。
 - `tools.exec.node`（默认值：未设置）
 - `tools.exec.strictInlineEval`（默认值：false）：为 true 时，内联解释器求值形式（如 `python -c`、`node -e`、`ruby -e`、`perl -e`、`php -r`、`lua -e` 和 `osascript -e`）始终需要明确批准。`allow-always` 仍可保留无害的解释器/脚本调用，但内联求值形式每次仍会提示。
 - `tools.exec.pathPrepend`：要在执行运行（仅限网关 + 沙盒）时添加到 `PATH` 前面的目录列表。

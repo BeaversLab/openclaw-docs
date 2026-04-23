@@ -121,12 +121,11 @@ title: "Skills 配置"
 
 ### 沙箱化技能 + 環境變數
 
-當會話處於 **沙箱化 (sandboxed)** 狀態時，技能程序會在 Docker 內執行。沙箱
-**不會** 繼承主機的 `process.env`。
+當會話被**沙盒化**時，技能程序會在設定的沙盒後端內執行。沙盒**不會**繼承主機的 `process.env`。
 
 使用以下其中之一：
 
-- `agents.defaults.sandbox.docker.env`（或每個代理程式的 `agents.list[].sandbox.docker.env`）
-- 將環境變數內建至您的自訂沙箱映像檔中
+- 針對 Docker 後端使用 `agents.defaults.sandbox.docker.env`（或針對各代理使用 `agents.list[].sandbox.docker.env`）
+- 將環境變數融入您的自訂沙盒映像檔或遠端沙盒環境中
 
 全域 `env` 和 `skills.entries.<skill>.env/apiKey` 僅適用於 **host** 執行。

@@ -14,7 +14,7 @@ Docker 是**選用**的。僅在您想要容器化的 Gateway 或是要驗證 Do
 
 - **是**：您想要一個隔離、可隨時丟棄的 Gateway 環境，或是想在沒有本地安裝的主機上執行 OpenClaw。
 - **否**：您是在自己的機器上執行，且只想要最快的開發迴圈。請改用一般的安裝流程。
-- **沙盒註記**：Agent 沙盒也使用 Docker，但它**不**要求完整的 Gateway 在 Docker 中執行。請參閱 [Sandboxing](/zh-Hant/gateway/sandboxing)。
+- **沙盒備註**：當啟用沙盒時，預設的沙盒後端會使用 Docker，但沙盒預設為關閉，並且**不**需要完整的閘道在 Docker 中執行。SSH 和 OpenShell 沙盒後端也可用。請參閱 [Sandboxing](/zh-Hant/gateway/sandboxing)。
 
 ## 必要條件
 
@@ -286,9 +286,7 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 
 ## Agent 沙箱
 
-當啟用 `agents.defaults.sandbox` 時，閘道會在獨立 Docker 容器中執行 agent 工具執行
-(Shell、檔案讀寫等)，而閘道本身則停留在主機上。這讓您在不將整個閘道容器化的情況下，
-對不受信任或多租戶 agent 工作階段建立堅固的防護。
+當使用 Docker 後端啟用 `agents.defaults.sandbox` 時，閘道會在獨立的 Docker 容器中執行代理程式工具操作（shell、檔案讀寫等），而閘道本身則停留在主機上。這讓你在不將整個閘道容器化的情況下，也能為不受信任或多租戶的代理程式會話提供強硬的隔離屏障。
 
 Sandbox 範圍可以是每個代理程式（預設）、每個工作階段或共用。每個範圍
 都有自己的工作區掛載於 `/workspace`。您也可以設定

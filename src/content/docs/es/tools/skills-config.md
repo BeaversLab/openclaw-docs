@@ -122,12 +122,11 @@ Campos por habilidad:
 
 ### Habilidades en entorno aislado + variables de entorno
 
-Cuando una sesión está **en un entorno aislado** (sandboxed), los procesos de las habilidades se ejecutan dentro de Docker. El entorno aislado
-**no** hereda el `process.env` del host.
+Cuando una sesión está **en sandbox**, los procesos de las habilidades se ejecutan dentro del backend de sandbox configurado. El sandbox **no** hereda el `process.env` del host.
 
 Use uno de:
 
-- `agents.defaults.sandbox.docker.env` (o por agente `agents.list[].sandbox.docker.env`)
-- incorpore las variables de entorno en su imagen de sandbox personalizada
+- `agents.defaults.sandbox.docker.env` para el backend de Docker (o `agents.list[].sandbox.docker.env` por agente)
+- incorpore las variables de entorno en su imagen personalizada de sandbox o en el entorno remoto de sandbox
 
 Los `env` y `skills.entries.<skill>.env/apiKey` globales solo se aplican a ejecuciones en el **host**.

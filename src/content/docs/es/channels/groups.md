@@ -82,12 +82,12 @@ Si quieres...
 
 Sí — esto funciona bien si su tráfico “personal” son **MDs** y su tráfico “público” son **grupos**.
 
-Por qué: en el modo de agente único, los MDs generalmente aterrizan en la **clave de sesión principal** (`agent:main:main`), mientras que los grupos siempre usan claves de sesión **no principales** (`agent:main:<channel>:group:<id>`). Si habilita el sandbox con `mode: "non-main"`, esas sesiones de grupo se ejecutan en Docker mientras que su sesión principal de MD se mantiene en el host.
+Por qué: en el modo de agente único, los MD generalmente aterrizan en la clave de sesión **principal** (`agent:main:main`), mientras que los grupos siempre usan claves de sesión **no principales** (`agent:main:<channel>:group:<id>`). Si habilitas el sandbox con `mode: "non-main"`, esas sesiones de grupo se ejecutan en el backend de sandbox configurado mientras tu sesión de MD principal se mantiene en el host. Docker es el backend predeterminado si no eliges uno.
 
 Esto le da un “cerebro” de agente (espacio de trabajo compartido + memoria), pero dos posturas de ejecución:
 
 - **MDs**: herramientas completas (host)
-- **Grupos**: sandbox + herramientas restringidas (Docker)
+- **Grupos**: sandbox + herramientas restringidas
 
 > Si necesita espacios de trabajo/personas verdaderamente separados (“personal” y “público” nunca deben mezclarse), use un segundo agente + enlaces. Consulte [Enrutamiento multiagente](/es/concepts/multi-agent).
 

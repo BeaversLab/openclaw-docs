@@ -127,7 +127,7 @@ read_when:
 - `openclaw/plugin-sdk/messaging-targets` 用于目标解析/匹配
 - `openclaw/plugin-sdk/outbound-media` 和
   `openclaw/plugin-sdk/outbound-runtime` 用于媒体加载以及出站
-  身份/发送委托
+  身份验证/发送委托和负载规划
 - `openclaw/plugin-sdk/thread-bindings-runtime` 用于线程绑定生命周期
   和适配器注册
 - 仅当仍然需要旧版代理/媒体有效负载字段布局时才使用 `openclaw/plugin-sdk/agent-media-payload`

@@ -8,12 +8,12 @@ title: "Hooks"
 
 # Hooks
 
-Los Hooks son pequeños scripts que se ejecutan cuando sucede algo dentro de la Gateway. Se detectan automáticamente desde los directorios y se pueden inspeccionar con `openclaw hooks`.
+Los Hooks son pequeños scripts que se ejecutan cuando sucede algo dentro del Gateway. Pueden ser descubiertos desde directorios e inspeccionados con `openclaw hooks`. El Gateway carga los hooks internos solo después de que habilites los hooks o configures al menos una entrada de hook, un paquete de hooks (hook pack), un controlador heredado (legacy handler) o un directorio de hooks extra.
 
 Hay dos tipos de hooks en OpenClaw:
 
 - **Hooks internos** (esta página): se ejecutan dentro de la Gateway cuando se activan eventos del agente, como `/new`, `/reset`, `/stop`, o eventos del ciclo de vida.
-- **Webhooks**: puntos finales HTTP externos que permiten a otros sistemas activar trabajos en OpenClaw. Consulte [Webhooks](/es/automation/cron-jobs#webhooks).
+- **Webhooks**: puntos finales HTTP externos que permiten a otros sistemas desencadenar trabajo en OpenClaw. Consulte [Webhooks](/es/automation/cron-jobs#webhooks).
 
 Los hooks también se pueden empaquetar dentro de complementos (plugins). `openclaw hooks list` muestra tanto los hooks independientes como los gestionados por complementos.
 
@@ -138,7 +138,9 @@ Los Hooks se descubren en estos directorios, en orden de prioridad de invalidaci
 
 Los Hooks del espacio de trabajo pueden añadir nuevos nombres de Hook, pero no pueden invalidar los Hooks incluidos, administrados o proporcionados por complementos con el mismo nombre.
 
-### Paquetes de Hooks
+El Gateway omite el descubrimiento de hooks internos al inicio hasta que se configuran los hooks internos. Habilite un hook incluido o administrado con `openclaw hooks enable <name>`, instale un paquete de hooks o establezca `hooks.internal.enabled=true` para optar por participar. Cuando habilita un hook con nombre, el Gateway carga solo el controlador de ese hook; `hooks.internal.enabled=true`, los directorios de hooks adicionales y los controladores heredados optan por el descubrimiento amplio.
+
+### Paquetes de hooks
 
 Los paquetes de hooks son paquetes npm que exportan hooks a través de `openclaw.hooks` en `package.json`. Instale con:
 
@@ -146,7 +148,7 @@ Los paquetes de hooks son paquetes npm que exportan hooks a través de `openclaw
 openclaw plugins install <path-or-spec>
 ```
 
-Las especificaciones de Npm son solo de registro (nombre del paquete + versión exacta opcional o etiqueta de distribución). Se rechazan las especificaciones de Git/URL/archivo y los rangos de semver.
+Las especificaciones de npm son solo de registro (nombre del paquete + versión exacta opcional o etiqueta de distribución). Se rechazan las especificaciones de Git/URL/archivo y los rangos de semver.
 
 ## Hooks incluidos
 
@@ -157,7 +159,7 @@ Las especificaciones de Npm son solo de registro (nombre del paquete + versión 
 | command-logger        | `command`                      | Registra todos los comandos en `~/.openclaw/logs/commands.log` |
 | boot-md               | `gateway:startup`              | Ejecuta `BOOT.md` cuando se inicia el gateway                  |
 
-Habilite cualquier Hook incluido:
+Habilite cualquier hook incluido:
 
 ```bash
 openclaw hooks enable <hook-name>
@@ -167,7 +169,7 @@ openclaw hooks enable <hook-name>
 
 ### detalles de session-memory
 
-Extrae los últimos 15 mensajes de usuario/asistente, genera un nombre de archivo descriptivo a través de LLM y guarda en `<workspace>/memory/YYYY-MM-DD-slug.md`. Requiere que `workspace.dir` esté configurado.
+Extrae los últimos 15 mensajes de usuario/asistente, genera un nombre de archivo descriptivo (slug) a través de LLM y guarda en `<workspace>/memory/YYYY-MM-DD-slug.md`. Requiere que `workspace.dir` esté configurado.
 
 <a id="bootstrap-extra-files"></a>
 
@@ -192,21 +194,21 @@ Las rutas se resuelven en relación con el espacio de trabajo. Solo se cargan lo
 
 <a id="command-logger"></a>
 
-### detalles de command-logger
+### detalles del command-logger
 
 Registra cada comando de barra en `~/.openclaw/logs/commands.log`.
 
 <a id="boot-md"></a>
 
-### detalles de boot-md
+### detalles del boot-md
 
-Ejecuta `BOOT.md` del espacio de trabajo activo cuando se inicia el gateway.
+Ejecuta `BOOT.md` del espacio de trabajo activo cuando se inicia la puerta de enlace.
 
-## Hooks de complementos
+## Ganchos de complementos
 
-Los complementos pueden registrar hooks a través del Plugin SDK para una integración más profunda: interceptar llamadas a herramientas, modificar indicaciones, controlar el flujo de mensajes y más. El Plugin SDK expone 28 hooks que cubren la resolución de modelos, el ciclo de vida del agente, el flujo de mensajes, la ejecución de herramientas, la coordinación de subagentes y el ciclo de vida del gateway.
+Los complementos pueden registrar ganchos a través del Plugin SDK para una integración más profunda: interceptar llamadas a herramientas, modificar indicaciones, controlar el flujo de mensajes y más. El Plugin SDK expone 28 ganchos que cubren la resolución de modelos, el ciclo de vida del agente, el flujo de mensajes, la ejecución de herramientas, la coordinación de subagentes y el ciclo de vida de la puerta de enlace.
 
-Para obtener la referencia completa de hooks de complementos, incluidos `before_tool_call`, `before_agent_reply`, `before_install` y todos los demás hooks de complementos, consulte [Plugin Architecture](/es/plugins/architecture#provider-runtime-hooks).
+Para obtener la referencia completa de los ganchos de complementos, incluyendo `before_tool_call`, `before_agent_reply`, `before_install` y todos los demás ganchos de complementos, consulte [Arquitectura de complementos](/es/plugins/architecture#provider-runtime-hooks).
 
 ## Configuración
 
@@ -224,7 +226,7 @@ Para obtener la referencia completa de hooks de complementos, incluidos `before_
 }
 ```
 
-Variables de entorno por hook:
+Variables de entorno por gancho:
 
 ```json
 {
@@ -241,7 +243,7 @@ Variables de entorno por hook:
 }
 ```
 
-Directorios de hooks adicionales:
+Directorios de ganchos adicionales:
 
 ```json
 {
@@ -255,9 +257,9 @@ Directorios de hooks adicionales:
 }
 ```
 
-<Note>El formato de configuración de array `hooks.internal.handlers` heredado todavía es compatible por razones de compatibilidad hacia atrás, pero los nuevos hooks deben usar el sistema basado en descubrimiento.</Note>
+<Note>El formato de configuración de matriz `hooks.internal.handlers` heredado aún es compatible por motivos de compatibilidad con versiones anteriores, pero los nuevos ganchos deben usar el sistema basado en descubrimiento.</Note>
 
-## Referencia de la CLI
+## Referencia de CLI
 
 ```bash
 # List all hooks (add --eligible, --verbose, or --json)
@@ -276,14 +278,14 @@ openclaw hooks disable <hook-name>
 
 ## Mejores prácticas
 
-- **Mantenga los controladores rápidos.** Los Hooks se ejecutan durante el procesamiento de comandos. Descargue el trabajo pesado con `void processInBackground(event)` de fuego y olvido.
-- **Maneje los errores con elegancia.** Envuelva las operaciones arriesgadas en try/catch; no lance excepciones para que otros controladores puedan ejecutarse.
+- **Mantenga los controladores rápidos.** Los ganchos se ejecutan durante el procesamiento de comandos. Realice trabajos pesados de manera asíncrona con `void processInBackground(event)`.
+- **Maneje los errores con elegancia.** Envuelva las operaciones riesgosas en try/catch; no lance excepciones para que otros controladores puedan ejecutarse.
 - **Filtre los eventos desde el principio.** Regrese inmediatamente si el tipo/acción del evento no es relevante.
 - **Use claves de eventos específicas.** Prefiera `"events": ["command:new"]` sobre `"events": ["command"]` para reducir la sobrecarga.
 
 ## Solución de problemas
 
-### Hook no descubierto
+### Gancho no descubierto
 
 ```bash
 # Verify directory structure
@@ -294,7 +296,7 @@ ls -la ~/.openclaw/hooks/my-hook/
 openclaw hooks list
 ```
 
-### Hook no elegible
+### Gancho no elegible
 
 ```bash
 openclaw hooks info my-hook
@@ -302,15 +304,15 @@ openclaw hooks info my-hook
 
 Compruebe si faltan binarios (PATH), variables de entorno, valores de configuración o compatibilidad con el sistema operativo.
 
-### Hook no se ejecuta
+### El gancho no se está ejecutando
 
-1. Verifique que el hook esté habilitado: `openclaw hooks list`
-2. Reinicie su proceso de puerta de enlace para que los hooks se recarguen.
-3. Revise los registros de la puerta de enlace: `./scripts/clawlog.sh | grep hook`
+1. Verifique que el gancho esté habilitado: `openclaw hooks list`
+2. Reinicie el proceso de su puerta de enlace para que los ganchos se vuelvan a cargar.
+3. Verifica los registros de la puerta de enlace (gateway): `./scripts/clawlog.sh | grep hook`
 
 ## Relacionado
 
-- [Referencia de la CLI: hooks](/es/cli/hooks)
+- [Referencia de CLI: hooks](/es/cli/hooks)
 - [Webhooks](/es/automation/cron-jobs#webhooks)
-- [Arquitectura de complementos](/es/plugins/architecture#provider-runtime-hooks) — referencia completa de hooks de complementos
+- [Arquitectura de Plugins](/es/plugins/architecture#provider-runtime-hooks) — referencia completa de hooks de plugins
 - [Configuración](/es/gateway/configuration-reference#hooks)

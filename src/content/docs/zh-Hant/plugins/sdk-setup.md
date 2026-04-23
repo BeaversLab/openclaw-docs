@@ -492,8 +492,10 @@ openclaw plugins install <package-name>
 
 <Info>對於來自 npm 的安裝，`openclaw plugins install` 會執行 `npm install --ignore-scripts`（無生命週期腳本）。請保持外掛依賴 樹為純 JS/TS，並避免需要 `postinstall` 建置的套件。</Info>
 
+OpenClaw 擁有的套件插件是唯一的啟動修復例外情況：當套件安裝發現某個插件透過插件配置、舊版頻道配置或其內建的預設啟用資訊清單被啟用時，會在匯入之前安裝該插件缺失的執行時期相依性。第三方插件不應依賴啟動安裝；請繼續使用明確的插件安裝程式。
+
 ## 相關
 
-- [SDK Entry Points](/zh-Hant/plugins/sdk-entrypoints) -- `definePluginEntry` 和 `defineChannelPluginEntry`
-- [Plugin Manifest](/zh-Hant/plugins/manifest) -- 完整的 Manifest 結構描述參考
+- [SDK 進入點](/zh-Hant/plugins/sdk-entrypoints) -- `definePluginEntry` 和 `defineChannelPluginEntry`
+- [Plugin Manifest](/zh-Hant/plugins/manifest) -- 完整的資訊清單架構參考
 - [Building Plugins](/zh-Hant/plugins/building-plugins) -- 逐步入門指南

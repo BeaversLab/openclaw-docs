@@ -1062,7 +1062,7 @@ HTTP 身份验证模式。
 两种互补的方法：
 
 - **在 Gateway(网关) 中运行完整的 Docker** (容器边界)：[Docker](/zh/install/docker)
-- **工具沙箱** (`agents.defaults.sandbox`，主机 Gateway + Docker-隔离工具)：[沙箱隔离](/zh/gateway/sandboxing)
+- **工具沙箱** (`agents.defaults.sandbox`，主机网关 + 沙箱隔离工具；Docker 是默认后端)：[沙箱隔离](/zh/gateway/sandboxing)
 
 注意：为了防止跨代理访问，请将 `agents.defaults.sandbox.scope` 保持在 `"agent"` (默认) 或设置为 `"session"` 以实现更严格的每个会话隔离。`scope: "shared"` 使用单个容器/工作区。
 

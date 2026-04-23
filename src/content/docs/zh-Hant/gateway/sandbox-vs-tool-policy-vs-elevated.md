@@ -9,7 +9,7 @@ status: active
 
 OpenClaw 有三個相關（但不同）的控制機制：
 
-1. **沙箱**（`agents.defaults.sandbox.*` / `agents.list[].sandbox.*`）決定了 **工具運行的位置**（Docker vs 主機）。
+1. **Sandbox** (`agents.defaults.sandbox.*` / `agents.list[].sandbox.*`) 決定 **工具在哪裡執行**（sandbox 後端 vs 主機）。
 2. **工具策略**（`tools.*`、`tools.sandbox.tools.*`、`agents.list[].tools.*`）決定了 **哪些工具可用/被允許**。
 3. **Elevated** (`tools.elevated.*`, `agents.list[].tools.elevated.*`) 是一個 **僅限執行的逃逸機制**，用於在您處於沙箱環境時在沙箱外執行 (預設為 `gateway`，或當 exec 目標配置為 `node` 時為 `node`)。
 

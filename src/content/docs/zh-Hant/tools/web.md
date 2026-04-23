@@ -209,7 +209,7 @@ OpenClaw 也包含用於 X（前稱 Twitter）貼文的 `x_search` 和
 `openclaw configure --section web` 期間選擇 **Kimi** 時，OpenClaw 也可以要求：
 
 - Moonshot API 區域 (`https://api.moonshot.ai/v1` 或 `https://api.moonshot.cn/v1`)
-- 預設的 Kimi 網頁搜尋模型 (預設為 `kimi-k2.5`)
+- 預設的 Kimi 網路搜尋模型（預設為 `kimi-k2.6`）
 
 對於 `x_search`，請設定 `plugins.entries.xai.config.xSearch.*`。它使用與 Grok 網頁搜尋相同的 `XAI_API_KEY` 備援機制。
 舊版 `tools.web.x_search.*` 設定會由 `openclaw doctor --fix` 自動遷移。

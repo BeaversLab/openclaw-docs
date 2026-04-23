@@ -8,7 +8,7 @@ title: "Hooks"
 
 # Hooks
 
-Hooks 是在 Gateway(网关) 内部发生某些事情时运行的小型脚本。它们会从目录中自动发现，并可以使用 `openclaw hooks` 进行检查。
+Hooks 是在 Gateway(网关) 内部发生事件时运行的小型脚本。它们可以从目录中发现，并使用 `openclaw hooks` 进行检查。只有在你启用 hooks 或配置至少一个 hook 条目、hook 包、legacy handler 或额外的 hook 目录后，Gateway(网关) 才会加载内部 hooks。
 
 OpenClaw 中有两种 Hooks：
 
@@ -138,26 +138,28 @@ Hook 按覆盖优先级递增的顺序从以下目录中发现：
 
 工作区 Hook 可以添加新的 Hook 名称，但不能覆盖同名的内置、托管或插件提供的 Hook。
 
+Gateway(网关) 在启动时会跳过内部 hook 发现，直到配置了内部 hooks。使用 `openclaw hooks enable <name>` 启用捆绑或托管的 hook，安装 hook 包，或设置 `hooks.internal.enabled=true` 以选择加入。当你启用一个命名的 hook 时，Gateway(网关) 仅加载该 hook 的处理程序；`hooks.internal.enabled=true`、额外的 hook 目录和 legacy handlers 则选择加入广泛发现。
+
 ### Hook 包
 
-Hook 包是通过 `openclaw.hooks` 在 `package.json` 中导出 hooks 的 npm 包。安装方法：
+Hook 包是通过 `package.json` 中的 `openclaw.hooks` 导出 hooks 的 npm 包。安装方法如下：
 
 ```bash
 openclaw plugins install <path-or-spec>
 ```
 
-Npm 规范仅限注册表（包名称 + 可选的确切版本或分发标签）。拒绝 Git/URL/文件规范和 semver 范围。
+Npm 规范仅限于注册表（包名称 + 可选的确切版本或 dist-tag）。Git/URL/文件规范和 semver 范围将被拒绝。
 
-## 内置 Hook
+## 捆绑的 hooks
 
 | Hook                  | 事件                           | 作用                                             |
 | --------------------- | ------------------------------ | ------------------------------------------------ |
-| 会话-memory           | `command:new`，`command:reset` | 将会话上下文保存到 `<workspace>/memory/`         |
+| 会话-memory           | `command:new`, `command:reset` | 将会话上下文保存到 `<workspace>/memory/`         |
 | bootstrap-extra-files | `agent:bootstrap`              | 从 glob 模式注入额外的引导文件                   |
 | command-logger        | `command`                      | 将所有命令记录到 `~/.openclaw/logs/commands.log` |
-| boot-md               | `gateway:startup`              | 当网关启动时运行 `BOOT.md`                       |
+| boot-md               | `gateway:startup`              | 在网关启动时运行 `BOOT.md`                       |
 
-启用任何内置 Hook：
+启用任何捆绑的 hook：
 
 ```bash
 openclaw hooks enable <hook-name>
@@ -188,13 +190,13 @@ openclaw hooks enable <hook-name>
 }
 ```
 
-路径相对于工作区解析。仅加载已识别的引导基本名称（`AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md`、`MEMORY.md`）。
+路径相对于工作区解析。仅加载已识别的引导基本文件名（`AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md`、`MEMORY.md`）。
 
 <a id="command-logger"></a>
 
 ### command-logger 详情
 
-将每个斜杠命令记录到 `~/.openclaw/logs/commands.log`。
+将每条斜杠命令记录到 `~/.openclaw/logs/commands.log`。
 
 <a id="boot-md"></a>
 
@@ -202,11 +204,11 @@ openclaw hooks enable <hook-name>
 
 当网关启动时，从活动工作区运行 `BOOT.md`。
 
-## 插件 Hooks
+## 插件钩子
 
-插件可以通过 Plugin SDK 注册 hooks 以实现更深入的集成：拦截工具调用、修改提示、控制消息流等。Plugin SDK 公开了 28 个 hooks，涵盖模型解析、代理生命周期、消息流、工具执行、子代理协调和网关生命周期。
+插件可以通过插件 SDK 注册钩子以实现更深层次的集成：拦截工具调用、修改提示词、控制消息流等。插件 SDK 提供了 28 个钩子，涵盖模型解析、代理生命周期、消息流、工具执行、子代理协调以及网关生命周期。
 
-有关完整的插件 hook 参考，包括 `before_tool_call`、`before_agent_reply`、`before_install` 和所有其他插件 hooks，请参阅 [Plugin Architecture](/zh/plugins/architecture#provider-runtime-hooks)。
+有关完整的插件钩子参考，包括 `before_tool_call`、`before_agent_reply`、`before_install` 和所有其他插件钩子，请参阅 [插件架构](/zh/plugins/architecture#provider-runtime-hooks)。
 
 ## 配置
 
@@ -224,7 +226,7 @@ openclaw hooks enable <hook-name>
 }
 ```
 
-针对每个 hook 的环境变量：
+每个钩子的环境变量：
 
 ```json
 {
@@ -241,7 +243,7 @@ openclaw hooks enable <hook-name>
 }
 ```
 
-额外的 hook 目录：
+额外的钩子目录：
 
 ```json
 {
@@ -255,7 +257,7 @@ openclaw hooks enable <hook-name>
 }
 ```
 
-<Note>传统的 `hooks.internal.handlers` 数组配置格式仍受支持以保持向后兼容，但新的 Hook 应使用基于发现的系统。</Note>
+<Note>传统的 `hooks.internal.handlers` 数组配置格式仍受支持以保持向后兼容，但新钩子应使用基于发现的系统。</Note>
 
 ## CLI 参考
 
@@ -276,14 +278,14 @@ openclaw hooks disable <hook-name>
 
 ## 最佳实践
 
-- **保持处理程序快速。** Hook 在命令处理期间运行。使用 `void processInBackground(event)` 即发即弃（fire-and-forget）繁重的工作。
+- **保持处理程序快速。** 钩子在命令处理期间运行。使用 `void processInBackground(event)` 发射后不管地处理繁重工作。
 - **优雅地处理错误。** 将有风险的操作包装在 try/catch 中；不要抛出错误，以便其他处理程序可以运行。
 - **尽早过滤事件。** 如果事件类型/操作不相关，则立即返回。
 - **使用特定的事件键。** 优先使用 `"events": ["command:new"]` 而不是 `"events": ["command"]` 以减少开销。
 
 ## 故障排除
 
-### 未发现 Hook
+### 未发现钩子
 
 ```bash
 # Verify directory structure
@@ -294,19 +296,19 @@ ls -la ~/.openclaw/hooks/my-hook/
 openclaw hooks list
 ```
 
-### Hook 不符合条件
+### 钩子不符合条件
 
 ```bash
 openclaw hooks info my-hook
 ```
 
-检查缺少的二进制文件 (PATH)、环境变量、配置值或操作系统兼容性。
+检查是否有缺失的二进制文件 (PATH)、环境变量、配置值或操作系统兼容性问题。
 
-### Hook 未执行
+### 钩子未执行
 
-1. 验证 Hook 是否已启用：`openclaw hooks list`
-2. 重启您的 gateway 进程以便重新加载 Hook。
-3. 检查 gateway 日志：`./scripts/clawlog.sh | grep hook`
+1. 验证钩子是否已启用：`openclaw hooks list`
+2. 重启您的网关进程以重新加载钩子。
+3. 检查网关日志：`./scripts/clawlog.sh | grep hook`
 
 ## 相关
 

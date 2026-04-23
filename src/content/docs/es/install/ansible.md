@@ -45,12 +45,12 @@ El playbook de Ansible instala y configura:
 
 1. **Tailscale** -- VPN de malla para acceso remoto seguro
 2. **Firewall UFW** -- solo puertos SSH + Tailscale
-3. **Docker CE + Compose V2** -- para entornos de prueba (sandboxes) de agentes
+3. **Docker CE + Compose V2** -- para el backend predeterminado del sandbox del agente
 4. **Node.js 24 + pnpm** -- dependencias de tiempo de ejecución (Node 22 LTS, actualmente `22.14+`, sigue siendo compatible)
 5. **OpenClaw** -- basado en el host, no en contenedores
 6. **Servicio Systemd** -- inicio automático con endurecimiento de seguridad
 
-<Note>La puerta de enlace se ejecuta directamente en el host (no en Docker), pero los entornos limitados del agente utilizan Docker para el aislamiento. Consulte [Sandboxing](/es/gateway/sandboxing) para obtener más detalles.</Note>
+<Note>La puerta de enlace se ejecuta directamente en el host (no en Docker). El aislamiento del agente es opcional; este libro de estrategias instala Docker porque es el backend predeterminado del sandbox. Consulte [Sandboxing](/es/gateway/sandboxing) para obtener detalles y otros backends.</Note>
 
 ## Configuración posterior a la instalación
 

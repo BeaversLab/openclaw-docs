@@ -261,7 +261,7 @@ Par défaut, le plugin lance Codex localement avec :
 codex app-server --listen stdio://
 ```
 
-Vous pouvez conserver cette valeur par défaut et régler uniquement la stratégie native de Codex :
+Par défaut, OpenClaw demande à Codex de solliciter des approbations natives. Vous pouvez affiner cette politique, par exemple en la renforçant et en acheminant les réexamens via le gardien :
 
 ```json5
 {
@@ -271,7 +271,8 @@ Vous pouvez conserver cette valeur par défaut et régler uniquement la stratég
         enabled: true,
         config: {
           appServer: {
-            approvalPolicy: "on-request",
+            approvalPolicy: "untrusted",
+            approvalsReviewer: "guardian_subagent",
             sandbox: "workspace-write",
             serviceTier: "priority",
           },
@@ -315,7 +316,7 @@ Champs `appServer` pris en charge :
 | `authToken`         | non défini                               | Jeton Bearer pour le transport WebSocket.                                                           |
 | `headers`           | `{}`                                     | En-têtes WebSocket supplémentaires.                                                                 |
 | `requestTimeoutMs`  | `60000`                                  | Délai d'expiration pour les appels au plan de contrôle de l'application serveur.                    |
-| `approvalPolicy`    | `"never"`                                | Stratégie d'approbation native Codex envoyée au démarrage/reprise/tour de fil.                      |
+| `approvalPolicy`    | `"on-request"`                           | Stratégie d'approbation native Codex envoyée au démarrage/reprise/tour de fil.                      |
 | `sandbox`           | `"workspace-write"`                      | Mode de bac à sable (sandbox) natif Codex envoyé au démarrage/reprise de fil.                       |
 | `approvalsReviewer` | `"user"`                                 | Utilisez `"guardian_subagent"` pour permettre au gardien Codex de réviser les approbations natives. |
 | `serviceTier`       | non défini                               | Niveau de service Codex facultatif, par exemple `"priority"`.                                       |

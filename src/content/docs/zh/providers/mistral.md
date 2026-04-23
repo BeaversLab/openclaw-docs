@@ -85,17 +85,17 @@ OpenClaw 目前附带此捆绑的 Mistral 目录:
 
 <AccordionGroup>
   <Accordion title="Adjustable reasoning (mistral-small-latest)">
-    `mistral/mistral-small-latest` 映射到 Mistral Small 4 并通过聊天补全 API 上的 `reasoning_effort` 支持[可调整的推理](https://docs.mistral.ai/capabilities/reasoning/adjustable)（`none` 最小化输出中的额外思考；`high` 在最终答案之前显示完整的思考轨迹）。
+    `mistral/mistral-small-latest` 映射到 Mistral Small 4，并支持通过 `reasoning_effort` 在聊天补全 API 上使用[可调整推理](https://docs.mistral.ai/capabilities/reasoning/adjustable)（`none` 最大限度减少输出中的额外思考；`high` 在最终答案之前展示完整的思考轨迹）。
 
-    API 将会话 **thinking** 级别映射到 Mistral 的 OpenClaw：
+    OpenClaw 将会话 **thinking** 级别映射到 Mistral 的 API：
 
-    | API thinking 级别                          | Mistral `reasoning_effort` |
+    | OpenClaw thinking 级别                          | Mistral `reasoning_effort` |
     | ------------------------------------------------ | -------------------------- |
     | **off** / **minimal**                            | `none`                     |
-    | **low** / **medium** / **high** / **xhigh** / **adaptive** | `high`             |
+    | **low** / **medium** / **high** / **xhigh** / **adaptive** / **max** | `high`     |
 
     <Note>
-    其他打包的 Mistral 目录模型不使用此参数。当您需要 Mistral 的原生推理优先行为时，请继续使用 `magistral-*` 模型。
+    其他捆绑的 Mistral 目录模型不使用此参数。当您需要 Mistral 原生的推理优先行为时，请继续使用 `magistral-*` 模型。
     </Note>
 
   </Accordion>

@@ -1006,7 +1006,7 @@ La recherche en direct dans l'annuaire utilise le compte Matrix connecté :
 - `allowBots` : autoriser les messages provenant d'autres comptes OpenClaw Matrix configurés (`true` ou `"mentions"`).
 - `groupPolicy` : `open`, `allowlist` ou `disabled`.
 - `contextVisibility` : mode de visibilité du contexte de salle supplémentaire (`all`, `allowlist`, `allowlist_quote`).
-- `groupAllowFrom` : liste d'autorisation des ID d'utilisateur pour le trafic de la salle. Les entrées doivent être des ID d'utilisateur Matrix complets ; les noms non résolus sont ignorés lors de l'exécution.
+- `groupAllowFrom` : liste d'autorisation des identifiants utilisateurs pour le trafic de la salle. Les identifiants utilisateurs Matrix complets sont les plus sûrs ; les correspondances exactes de répertoire sont résolues au démarrage et lorsque la liste d'autorisation change pendant que le moniteur est en cours d'exécution. Les noms non résolus sont ignorés.
 - `historyLimit` : nombre maximum de messages de salle à inclure comme contexte de l'historique du groupe. Revient à `messages.groupChat.historyLimit` ; si les deux ne sont pas définis, la valeur par défaut effective est `0`. Définissez `0` pour désactiver.
 - `replyToMode` : `off`, `first`, `all` ou `batched`.
 - `markdown` : configuration facultative du rendu Markdown pour le texte Matrix sortant.
@@ -1027,7 +1027,7 @@ La recherche en direct dans l'annuaire utilise le compte Matrix connecté :
 - `autoJoinAllowlist` : salons/alias autorisés lorsque `autoJoin` est `allowlist`. Les entrées d'alias sont résolues en ID de salon lors du traitement de l'invitation ; OpenClaw ne fait pas confiance à l'état de l'alias revendiqué par le salon invité.
 - `dm` : bloc de stratégie de DM (`enabled`, `policy`, `allowFrom`, `sessionScope`, `threadReplies`).
 - `dm.policy` : contrôle l'accès aux DM après que OpenClaw a rejoint le salon et l'a classé comme DM. Cela ne modifie pas si une invitation est rejointe automatiquement.
-- `dm.allowFrom` : les entrées doivent être des ID d'utilisateurs Matrix complets, sauf si vous les avez déjà résolus via une recherche en direct dans l'annuaire.
+- `dm.allowFrom` : liste d'autorisation des identifiants utilisateurs pour le trafic DM. Les identifiants utilisateurs Matrix complets sont les plus sûrs ; les correspondances exactes de répertoire sont résolues au démarrage et lorsque la liste d'autorisation change pendant que le moniteur est en cours d'exécution. Les noms non résolus sont ignorés.
 - `dm.sessionScope` : `per-user` (par défaut) ou `per-room`. Utilisez `per-room` lorsque vous souhaitez que chaque salon DM Matrix conserve un contexte distinct, même si l'interlocuteur est le même.
 - `dm.threadReplies` : remplacement de la stratégie de filtre pour DM uniquement (`off`, `inbound`, `always`). Il remplace le paramètre `threadReplies` de niveau supérieur pour le placement des réponses et l'isolement de session dans les DM.
 - `execApprovals` : livraison d'approbation d'exécution native Matrix (`enabled`, `approvers`, `target`, `agentFilter`, `sessionFilter`).

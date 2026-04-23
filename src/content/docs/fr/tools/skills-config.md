@@ -122,12 +122,11 @@ Champs par compétence :
 
 ### Compétences sandboxed + variables d'environnement
 
-Lorsqu'une session est **sandboxed**, les processus de compétence s'exécutent dans Docker. Le bac à sable
-n'hérite **pas** de `process.env` de l'hôte.
+Lorsqu'une session est **sandboxed**, les processus de compétences s'exécutent dans le backend de sandbox configuré. La sandbox **n'hérite pas** de la variable d'environnement hôte `process.env`.
 
 Utilisez l'une des options suivantes :
 
-- `agents.defaults.sandbox.docker.env` (ou `agents.list[].sandbox.docker.env` par agent)
-- intégrez l'environnement dans votre image de sandbox personnalisée
+- `agents.defaults.sandbox.docker.env` pour le backend Docker (ou `agents.list[].sandbox.docker.env` par agent)
+- intégrez l'environnement dans votre image de sandbox personnalisée ou dans l'environnement de sandbox distant
 
 Les `env` et `skills.entries.<skill>.env/apiKey` globaux s'appliquent uniquement aux exécutions sur l'**hôte**.

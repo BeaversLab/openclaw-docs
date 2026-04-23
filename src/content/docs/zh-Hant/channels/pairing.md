@@ -15,13 +15,13 @@ title: "配對"
 1. **DM 配對**（誰被允許與機器人交談）
 2. **節點配對**（哪些設備/節點被允許加入網關網絡）
 
-安全背景：[安全](/zh-Hant/gateway/security)
+安全性相關背景：[Security](/zh-Hant/gateway/security)
 
 ## 1) DM 配對（傳入聊天存取權限）
 
 當頻道使用 DM 政策 `pairing` 進行配置時，未知發送者會收到一個短代碼，並且在他們的訊息在您批准之前**不會被處理**。
 
-預設的 DM 政策記載於：[安全](/zh-Hant/gateway/security)
+預設的 DM 原則記錄於：[Security](/zh-Hant/gateway/security)
 
 配對代碼：
 
@@ -100,30 +100,36 @@ openclaw devices reject <requestId>
 role/scopes/public key）重試，之前的待處理請求將被取代，並創建一個新的
 `requestId`。
 
-### 節點配對狀態存儲
+注意：已配對的裝置不會在無聲無息中獲得更廣泛的存取權限。如果它
+重新連線並請求更多範圍或更廣泛的角色，OpenClaw 會
+保持現有的批准不變，並建立一個新的待處理升級請求。在您批准之前，請使用
+`openclaw devices list` 比較目前批准的存取權限與新
+請求的存取權限。
 
-存儲於 `~/.openclaw/devices/`：
+### 節點配對狀態儲存
 
-- `pending.json`（短期存在；待處理請求會過期）
-- `paired.json`（已配對設備 + 令牌）
+儲存在 `~/.openclaw/devices/` 下：
+
+- `pending.json` (短期存在；待處理的請求會過期)
+- `paired.json` (已配對的裝置 + 權杖)
 
 ### 備註
 
-- 舊版 `node.pair.*` API（CLI：`openclaw nodes pending|approve|reject|rename`) 是一個
-  獨立的網關擁有的配對存儲。WS 節點仍需要設備配對。
-- 配對記錄是已批准角色的持久性真實來源。活動
-  設備令牌保持綁定到該已批准角色集；在已批准角色之外的孤立令牌條目
-  不會創建新的訪問權限。
+- 舊版 `node.pair.*` API (CLI: `openclaw nodes pending|approve|reject|rename`) 是一個
+  獨立的、由閘道擁有的配對儲存。WS 節點仍然需要裝置配對。
+- 配對記錄是已批准角色的持久化真實來源。有效
+  的裝置權杖保持與該批准角色集綁定；在批准角色之外的
+  孤立權杖條目不會建立新的存取權。
 
-## 相關文檔
+## 相關文件
 
-- 安全模型 + 提示注入：[安全](/zh-Hant/gateway/security)
-- 安全更新（運行 doctor）：[更新](/zh-Hant/install/updating)
-- 頻道配置：
-  - Telegram：[Telegram](/zh-Hant/channels/telegram)
-  - WhatsApp：[WhatsApp](/zh-Hant/channels/whatsapp)
-  - Signal：[Signal](/zh-Hant/channels/signal)
-  - BlueBubbles (iMessage)：[BlueBubbles](/zh-Hant/channels/bluebubbles)
-  - iMessage (舊版)：[iMessage](/zh-Hant/channels/imessage)
-  - Discord：[Discord](/zh-Hant/channels/discord)
-  - Slack：[Slack](/zh-Hant/channels/slack)
+- 安全性模型 + 提示詞注入：[Security](/zh-Hant/gateway/security)
+- 安全更新 (執行 doctor)：[Updating](/zh-Hant/install/updating)
+- 頻道設定：
+  - Telegram: [Telegram](/zh-Hant/channels/telegram)
+  - WhatsApp: [WhatsApp](/zh-Hant/channels/whatsapp)
+  - Signal: [Signal](/zh-Hant/channels/signal)
+  - BlueBubbles (iMessage): [BlueBubbles](/zh-Hant/channels/bluebubbles)
+  - iMessage (舊版): [iMessage](/zh-Hant/channels/imessage)
+  - Discord: [Discord](/zh-Hant/channels/discord)
+  - Slack: [Slack](/zh-Hant/channels/slack)

@@ -64,7 +64,7 @@ Notes:
 - `tools.exec.ask` (預設值：`off`)
 - No-approval host exec 是 gateway + node 的預設值。如果您想要批准/允許清單行為，請同時收緊 `tools.exec.*` 和主機 `~/.openclaw/exec-approvals.json`；請參閱 [Exec approvals](/zh-Hant/tools/exec-approvals#no-approval-yolo-mode)。
 - YOLO 來自主機原則預設值 (`security=full`, `ask=off`)，而非來自 `host=auto`。如果您想要強制 gateway 或 node 路由，請設定 `tools.exec.host` 或使用 `/exec host=...`。
-- 在 `security=full` 加上 `ask=off` 模式下，host exec 會直接遵循設定的原則；沒有額外的啟發式命令混淆前過濾器。
+- 在 `security=full` 加上 `ask=off` 模式下，主機執行會直接遵循設定的原則；沒有額外的啟發式命令混淆前置過濾器或腳本預檢拒絕層。
 - `tools.exec.node` (預設：未設定)
 - `tools.exec.strictInlineEval` (預設：false)：當為 true 時，內嵌直譯器 eval 表單，例如 `python -c`、`node -e`、`ruby -e`、`perl -e`、`php -r`、`lua -e` 和 `osascript -e`，總是需要明確批准。`allow-always` 仍可持續執行良性直譯器/腳本調用，但內嵌 eval 表單每次仍會提示。
 - `tools.exec.pathPrepend`：要預先加入 `PATH` 以供 exec 執行的目錄清單 (僅限 gateway + sandbox)。

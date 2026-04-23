@@ -73,29 +73,30 @@ Para un carril de humo de transporte real de Telegram, ejecute:
 pnpm openclaw qa telegram
 ```
 
-Ese carril tiene como objetivo un grupo real privado de Telegram en lugar de
-aprovisionar un servidor desechable. Requiere `OPENCLAW_QA_TELEGRAM_GROUP_ID`,
+Ese lane apunta a un grupo privado real de Telegram en lugar de aprovisionar un
+servidor desechable. Requiere `OPENCLAW_QA_TELEGRAM_GROUP_ID`,
 `OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN` y
 `OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN`, además de dos bots distintos en el mismo
 grupo privado. El bot SUT debe tener un nombre de usuario de Telegram, y la
 observación de bot a bot funciona mejor cuando ambos bots tienen el Modo de
-comunicación de bot a bot habilitado en `@BotFather`.
+Comunicación Bot-a-Bot habilitado en `@BotFather`.
+El comando sale con un valor distinto de cero cuando falla cualquier escenario.
+Use `--allow-failures` cuando desee artefactos sin un código de salida fallido.
 
 Los carriles de transporte en vivo ahora comparten un contrato más pequeño en lugar de que cada uno invente
 su propia forma de lista de escenarios:
 
-`qa-channel` sigue siendo la suite amplia de comportamiento
-sintético del producto y no forma parte de la matriz de cobertura del transporte
-en vivo.
+`qa-channel` sigue siendo la suite sintética amplia de comportamiento del
+producto y no es parte de la matriz de cobertura de transporte en vivo.
 
 | Carril   | Canario | Bloqueo de mención | Bloqueo de lista de permitidos | Respuesta de nivel superior | Reanudación del reinicio | Seguimiento de hilo | Aislamiento de hilo | Observación de reacción | Comando de ayuda |
 | -------- | ------- | ------------------ | ------------------------------ | --------------------------- | ------------------------ | ------------------- | ------------------- | ----------------------- | ---------------- |
 | Matrix   | x       | x                  | x                              | x                           | x                        | x                   | x                   | x                       |                  |
 | Telegram | x       |                    |                                |                             |                          |                     |                     |                         | x                |
 
-Esto mantiene a `qa-channel` como la suite amplia de comportamiento
-del producto, mientras que Matrix, Telegram y futuros transportes en vivo
-comparten una lista de verificación explícita de contratos de transporte.
+Esto mantiene `qa-channel` como la suite amplia de comportamiento del producto
+mientras que Matrix, Telegram y futuros transportes en vivo comparten una lista
+de verificación de contrato de transporte explícita.
 
 Para un carril de VM Linux desechable sin traer Docker a la ruta de QA, ejecute:
 
@@ -103,50 +104,49 @@ Para un carril de VM Linux desechable sin traer Docker a la ruta de QA, ejecute:
 pnpm openclaw qa suite --runner multipass --scenario channel-chat-baseline
 ```
 
-Esto inicia un invitado nuevo de Multipass, instala dependencias, construye
-OpenClaw dentro del invitado, ejecuta `qa suite`, luego copia
-el informe y el resumen de QA normales de vuelta a `.artifacts/qa-e2e/...`
-en el host.
-Reutiliza el mismo comportamiento de selección de escenarios que
-`qa suite` en el host.
+Esto inicia un huésped Multipass nuevo, instala dependencias, compila OpenClaw
+dentro del huésped, ejecuta `qa suite` y luego copia el informe de QA normal
+y el resumen de vuelta a `.artifacts/qa-e2e/...` en el host.
+Reutiliza el mismo comportamiento de selección de escenarios que `qa suite` en el host.
 Las ejecuciones de suites en el host y en Multipass ejecutan múltiples escenarios
-seleccionados en paralelo con trabajadores de puerta de enlace aislados de forma
-predeterminada, hasta 64 trabajadores o el recuento de escenarios seleccionado.
-Use `--concurrency <count>` para ajustar el recuento de trabajadores, o
-`--concurrency 1` para ejecución en serie.
-Las ejecuciones en vivo reenvían las entradas de autenticación de QA admitidas
-que son prácticas para el invitado: claves de proveedor basadas en variables de
-entorno, la ruta de configuración del proveedor en vivo de QA y
-`CODEX_HOME` cuando está presente. Mantenga `--output-dir`
-debajo de la raíz del repositorio para que el invitado pueda volver a escribir
-a través del espacio de trabajo montado.
+seleccionados en paralelo con trabajadores de gateway aislados de forma predeterminada.
+`qa-channel` tiene una concurrencia predeterminada de 4, limitada por la
+cantidad de escenarios seleccionados. Use `--concurrency <count>` para ajustar la
+cantidad de trabajadores, o `--concurrency 1` para ejecución en serie.
+El comando sale con un valor distinto de cero cuando falla cualquier escenario.
+Use `--allow-failures` cuando desee artefactos sin un código de salida fallido.
+Las ejecuciones en vivo reenvían las entradas de autenticación de QA admitidas que
+son prácticas para el huésped: claves de proveedor basadas en entorno, la ruta de
+configuración del proveedor en vivo de QA y `CODEX_HOME` cuando está presente.
+Mantenga `--output-dir` bajo la raíz del repositorio para que el huésped
+pueda escribir de vuelta a través del espacio de trabajo montado.
 
 ## Semillas respaldadas por repositorio
 
-Los activos de semilla viven en `qa/`:
+Los recursos semilla viven en `qa/`:
 
 - `qa/scenarios/index.md`
 - `qa/scenarios/<theme>/*.md`
 
 Estos están intencionalmente en git para que el plan de QA sea visible tanto para humanos como para el agente.
 
-`qa-lab` debe seguir siendo un ejecutor de markdown genérico. Cada archivo de escenario de markdown es
-la fuente de verdad para una ejecución de prueba y debe definir:
+`qa-lab` debe seguir siendo un ejecutor de markdown genérico. Cada archivo
+markdown de escenario es la fuente de verdad para una ejecución de prueba y debe definir:
 
 - metadatos del escenario
 - metadatos opcionales de categoría, capacidad, carril y riesgo
 - documentación y referencias de código
 - requisitos de complemento opcionales
 - parche de configuración de gateway opcional
-- el `qa-flow` ejecutable
+- el ejecutable `qa-flow`
 
-Se permite que la superficie de tiempo de ejecución reutilizable que respalda a `qa-flow` se mantenga genérica
-y transversal. Por ejemplo, los escenarios de markdown pueden combinar asistentes del lado del transporte
-con asistentes del lado del navegador que impulsan la interfaz de usuario de Control integrada a través de la
-costura `browser.request` de Gateway sin agregar un ejecutor de caso especial.
+La superficie de runtime reutilizable que respalda `qa-flow` puede permanecer genérica
+y transversal. Por ejemplo, los escenarios de markdown pueden combinar auxiliares del lado del transporte
+con auxiliares del lado del navegador que controlan la interfaz de usuario de Control integrada a través de
+la costura `browser.request` de Gateway sin agregar un runner de caso especial.
 
-Los archivos de escenarios deben agruparse por capacidad del producto en lugar de por carpeta del árbol de fuentes.
-Mantenga los ID de escenarios estables cuando se muevan los archivos; use `docsRefs` y `codeRefs`
+Los archivos de escenarios deben agruparse por capacidad del producto en lugar de por carpeta del árbol de origen.
+Mantenga los ID de los escenarios estables cuando se muevan los archivos; use `docsRefs` y `codeRefs`
 para la trazabilidad de la implementación.
 
 La lista base debe mantenerse lo suficientemente amplia para cubrir:
@@ -163,34 +163,34 @@ La lista base debe mantenerse lo suficientemente amplia para cubrir:
 
 ## Carriles simulados de proveedor
 
-`qa suite` tiene dos carriles simulados de proveedor locales:
+`qa suite` tiene dos carriles (lanes) de simulación (mock) de proveedor locales:
 
-- `mock-openai` es el simulador de OpenClaw con reconocimiento de escenarios. Sigue siendo el carril
-  simulado determinista predeterminado para QA con respaldo en repositorio y puertas de paridad.
+- `mock-openai` es el simulador OpenClaw consciente de escenarios. Sigue siendo el carril
+  de simulación determinista predeterminado para QA respaldado por repositorio y puertas de paridad.
 - `aimock` inicia un servidor de proveedor respaldado por AIMock para protocolo experimental,
-  accesorios, grabación/reproducción y cobertura de caos. Es aditivo y no
+  accesorios (fixtures), grabación/reproducción y cobertura de caos. Es aditivo y no
   reemplaza al despachador de escenarios `mock-openai`.
 
-La implementación del carril del proveedor reside en `extensions/qa-lab/src/providers/`.
-Cada proveedor posee sus valores predeterminados, el inicio del servidor local, la configuración del modelo de gateway,
-las necesidades de almacenamiento de perfiles de autenticación y las banderas de capacidad en vivo/simulado. El código compartido y el
-código de gateway deben enrutar a través del registro del proveedor en lugar de bifurcarse en los
-nombres de los proveedores.
+La implementación del carril del proveedor reside bajo `extensions/qa-lab/src/providers/`.
+Cada proveedor posee sus valores predeterminados, el inicio del servidor local, la configuración del modelo de puerta de enlace,
+las necesidades de preparación del perfil de autenticación y los indicadores de capacidad en vivo/simulados. El código compartido del suite y
+de la puerta de enlace debe enrutar a través del registro del proveedor en lugar de bifurcarse según
+los nombres de los proveedores.
 
 ## Adaptadores de transporte
 
-`qa-lab` posee una costura de transporte genérica para escenarios de QA en markdown.
+`qa-lab` posee una costura de transporte genérica para escenarios QA de markdown.
 `qa-channel` es el primer adaptador en esa costura, pero el objetivo de diseño es más amplio:
-los canales reales o sintéticos futuros deben conectarse al mismo ejecutor de suite
+los canales reales o sintéticos futuros deben conectarse al mismo ejecutor de suites
 en lugar de agregar un ejecutor de QA específico del transporte.
 
 A nivel de arquitectura, la división es:
 
-- `qa-lab` se encarga de la ejecución genérica de escenarios, la concurrencia de trabajadores, la escritura de artefactos y los informes.
+- `qa-lab` posee la ejecución genérica de escenarios, la concurrencia de trabajadores, la escritura de artefactos y los informes.
 - el adaptador de transporte se encarga de la configuración de la puerta de enlace, la preparación, la observación de entrada y salida, las acciones de transporte y el estado de transporte normalizado.
-- los archivos de escenarios markdown bajo `qa/scenarios/` definen la ejecución de la prueba; `qa-lab` proporciona la superficie de ejecución reutilizable que los ejecuta.
+- los archivos de escenarios de markdown bajo `qa/scenarios/` definen la ejecución de la prueba; `qa-lab` proporciona la superficie de runtime reutilizable que los ejecuta.
 
-La guía de adopción para mantenedores de nuevos adaptadores de canal se encuentra en
+La guía de adopción orientada a los mantenedores para nuevos adaptadores de canal se encuentra en
 [Testing](/es/help/testing#adding-a-channel-to-qa).
 
 ## Informes
@@ -223,7 +223,7 @@ pnpm openclaw qa character-eval \
   --judge-concurrency 16
 ```
 
-El comando ejecuta procesos secundarios locales de la puerta de enlace de QA, no Docker. Los escenarios de evaluación de caracteres deben establecer el personaje a través de `SOUL.md`, luego ejecutar turnos de usuario ordinarios como chat, ayuda del espacio de trabajo y pequeñas tareas de archivos. No se debe informar al modelo candidato que está siendo evaluado. El comando conserva cada transcripción completa, registra estadísticas básicas de ejecución y luego pide a los modelos jueces en modo rápido con razonamiento `xhigh` que clasifiquen las ejecuciones por naturalidad, ambiente y humor. Use `--blind-judge-models` al comparar proveedores: el aviso del juez todavía recibe cada transcripción y estado de ejecución, pero las referencias de los candidatos se reemplazan con etiquetas neutras como `candidate-01`; el informe mapea las clasificaciones de vuelta a las referencias reales después del análisis. Las ejecuciones de los candidatos por defecto a pensamiento `high`, con `xhigh` para los modelos de OpenAI que lo soportan. Anule un candidato específico en línea con `--model provider/model,thinking=<level>`. `--thinking <level>` todavía establece un respaldo global, y la forma más antigua `--model-thinking <provider/model=level>` se mantiene por compatibilidad. Las referencias de los candidatos de OpenAI por defecto al modo rápido, por lo que se utiliza el procesamiento prioritario donde el proveedor lo soporta. Agregue `,fast`, `,no-fast`, o `,fast=false` en línea cuando un solo candidato o juez necesite una anulación. Pase `--fast` solo cuando desee forzar el modo rápido para cada modelo candidato. Las duraciones de los candidatos y los jueces se registran en el informe para el análisis de referencia, pero los avisos de los jueces dicen explícitamente que no clasifiquen por velocidad. Las ejecuciones de los modelos candidatos y de los jueces por defecto a una concurrencia de 16. Reduzca `--concurrency` o `--judge-concurrency` cuando los límites del proveedor o la presión de la puerta de enlace local hagan que una ejecución sea demasiado ruidosa. Cuando no se pasa ningún candidato `--model`, la evaluación de caracteres por defecto a `openai/gpt-5.4`, `openai/gpt-5.2`, `openai/gpt-5`, `anthropic/claude-opus-4-6`, `anthropic/claude-sonnet-4-6`, `zai/glm-5.1`, `moonshot/kimi-k2.5`, y `google/gemini-3.1-pro-preview` cuando no se pasa ningún `--model`. Cuando no se pasa ningún `--judge-model`, los jueces por defecto a `openai/gpt-5.4,thinking=xhigh,fast` y `anthropic/claude-opus-4-6,thinking=high`.
+El comando ejecuta procesos secundarios locales de la puerta de enlace de QA, no Docker. Los escenarios de evaluación de caracteres deben establecer el personaje a través de `SOUL.md` y luego ejecutar turnos de usuario ordinarios como chat, ayuda del espacio de trabajo y pequeñas tareas de archivos. No se debe informar al modelo candidato que está siendo evaluado. El comando conserva cada transcripción completa, registra estadísticas básicas de ejecución y luego pide a los modelos jueces en modo rápido con razonamiento `xhigh` que clasifiquen las ejecuciones por naturalidad, ambiente y humor. Use `--blind-judge-models` al comparar proveedores: el aviso del juez todavía recibe cada transcripción y estado de ejecución, pero las referencias de los candidatos se reemplazan por etiquetas neutrales como `candidate-01`; el informe asigna las clasificaciones a las referencias reales después del análisis. Las ejecuciones de los candidatos tienen por defecto el pensamiento `high`, con `xhigh` para los modelos de OpenAI que lo admiten. Anule un candidato específico en línea con `--model provider/model,thinking=<level>`. `--thinking <level>` todavía establece un respaldo global, y la forma más antigua `--model-thinking <provider/model=level>` se mantiene por compatibilidad. Las referencias de los candidatos de OpenAI tienen por defecto el modo rápido, por lo que se utiliza el procesamiento prioritario donde el proveedor lo admite. Agregue `,fast`, `,no-fast` o `,fast=false` en línea cuando un solo candidato o juez necesite una anulación. Pase `--fast` solo cuando desee forzar el modo rápido para cada modelo candidato. Las duraciones del candidato y del juez se registran en el informe para el análisis de referencia, pero los avisos de los jueces indican explícitamente que no clasifiquen por velocidad. Las ejecuciones de los modelos de candidatos y jueces tienen por defecto una concurrencia de 16. Reduzca `--concurrency` o `--judge-concurrency` cuando los límites del proveedor o la presión de la puerta de enlace local hagan que una ejecución sea demasiado ruidosa. Cuando no se pasa ningún candidato `--model`, la evaluación de caracteres tiene por defecto `openai/gpt-5.4`, `openai/gpt-5.2`, `openai/gpt-5`, `anthropic/claude-opus-4-6`, `anthropic/claude-sonnet-4-6`, `zai/glm-5.1`, `moonshot/kimi-k2.5` y `google/gemini-3.1-pro-preview` cuando no se pasa ningún `--model`. Cuando no se pasa ningún `--judge-model`, los jueces tienen por defecto `openai/gpt-5.4,thinking=xhigh,fast` y `anthropic/claude-opus-4-6,thinking=high`.
 
 ## Documentos relacionados
 
