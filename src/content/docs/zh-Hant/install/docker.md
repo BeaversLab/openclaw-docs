@@ -118,7 +118,7 @@ docker compose up -d openclaw-gateway
 | ------------------------------ | ----------------------------------------------------- |
 | `OPENCLAW_IMAGE`               | 使用遠端映像檔而非在本地建置                          |
 | `OPENCLAW_DOCKER_APT_PACKAGES` | 在建置期間安裝額外的 apt 套件（以空格分隔）           |
-| `OPENCLAW_EXTENSIONS`          | 在建置時預先安裝擴充功能相依項（以空格分隔的名稱）    |
+| `OPENCLAW_EXTENSIONS`          | 在構建時預先安裝外掛程式相依項（以空格分隔的名稱）    |
 | `OPENCLAW_EXTRA_MOUNTS`        | 額外主機綁定掛載（以逗號分隔 `source:target[:opts]`） |
 | `OPENCLAW_HOME_VOLUME`         | 將 `/home/node` 持久化到命名的 Docker volume 中       |
 | `OPENCLAW_SANDBOX`             | 選擇加入沙箱引導（`1`、`true`、`yes`、`on`）          |

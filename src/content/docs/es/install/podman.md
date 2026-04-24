@@ -60,7 +60,7 @@ Variables de entorno de compilación/configuración opcionales:
 
 - `OPENCLAW_IMAGE` o `OPENCLAW_PODMAN_IMAGE` -- use una imagen existente/descargada en lugar de compilar `openclaw:local`
 - `OPENCLAW_DOCKER_APT_PACKAGES` -- instala paquetes apt adicionales durante la compilación de la imagen
-- `OPENCLAW_EXTENSIONS` -- preinstala las dependencias de las extensiones en tiempo de compilación
+- `OPENCLAW_EXTENSIONS` -- preinstalar las dependencias de los complementos en el momento de la compilación
 
 Inicio del contenedor:
 

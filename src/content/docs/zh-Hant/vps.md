@@ -50,10 +50,10 @@ sidebarTitle: "Linux 伺服器"
   </Card>
 </CardGroup>
 
-**AWS (EC2 / Lightsail / 免費層)** 也很適用。
-社群影片逐步指南請參閱
+**AWS (EC2 / Lightsail / 免費層)** 也運作良好。
+社群影片逐步指南可在
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
-（社群資源——可能會變成無法使用）。
+取得（社群資源——可能會變得無法使用）。
 
 ## 雲端設定的運作方式
 
@@ -73,7 +73,7 @@ sidebarTitle: "Linux 伺服器"
 - 請勿將該執行環境登入個人的 Apple/Google 帳戶或個人的瀏覽器/密碼管理員設定檔。
 - 如果使用者之間存在敵對關係，請依 gateway/host/OS user 進行區隔。
 
-安全模型詳細資訊：[Security](/zh-Hant/gateway/security)。
+安全性模型詳細資訊：[安全性](/zh-Hant/gateway/security)。
 
 ## 搭配 VPS 使用節點
 
@@ -99,7 +99,7 @@ source ~/.bashrc
 - `NODE_COMPILE_CACHE` 可改善重複執行指令的啟動時間。
 - `OPENCLAW_NO_RESPAWN=1` 可避免來自自我重生路徑的額外啟動負擔。
 - 首次執行指令會預熱快取；後續執行會更快。
-- 關於 Raspberry Pi 的細節，請參閱 [Raspberry Pi](/zh-Hant/install/raspberry-pi)。
+- 關於 Raspberry Pi 的詳細資訊，請參閱 [Raspberry Pi](/zh-Hant/install/raspberry-pi)。
 
 ### systemd 調整檢查清單（選用）
 
@@ -132,5 +132,8 @@ TimeoutStartSec=90
 如果您是刻意安裝了系統單元，請透過 `sudo systemctl edit openclaw-gateway.service` 編輯
 `openclaw-gateway.service`。
 
-`Restart=` 策略如何協助自動修復：
-[systemd can automate service recovery](https://www.redhat.com/en/blog/systemd-automate-recovery)。
+`Restart=` 政策如何協助自動復原：
+[systemd 可以自動化服務復原](https://www.redhat.com/en/blog/systemd-automate-recovery)。
+
+關於 Linux OOM 行為、子程序受害者選擇和 `exit 137`
+診斷，請參閱 [Linux 記憶體壓力和 OOM 終止](/zh-Hant/platforms/linux#memory-pressure-and-oom-kills)。

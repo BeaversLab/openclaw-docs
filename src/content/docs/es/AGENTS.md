@@ -5,8 +5,8 @@ Este directorio es responsable de la redacción de la documentación, las reglas
 ## Reglas de Mintlify
 
 - La documentación se aloja en Mintlify (`https://docs.openclaw.ai`).
-- Los enlaces internos en `docs/**/*.md` deben mantenerse relativos a la raíz sin sufijos `.md` o `.mdx` (ejemplo: `[Config](/configuration)`).
-- Las referencias cruzadas de sección deben utilizar anclas en rutas relativas a la raíz (ejemplo: `[Hooks](/configuration#hooks)`).
+- Los enlaces internos a documentos en `docs/**/*.md` deben mantenerse relativos a la raíz, sin sufijos `.md` o `.mdx` (ejemplo: `[Config](/gateway/configuration)`).
+- Las referencias cruzadas de secciones deben usar anclas en rutas relativas a la raíz (ejemplo: `[Hooks](/gateway/configuration-reference#hooks)`).
 - Los encabezados de los documentos deben evitar los guiones largos y los apóstrofos porque la generación de anclas de Mintlify es frágil allí.
 - Los archivos README y otra documentación renderizada por GitHub deben mantener URLs de documentación absolutas para que los enlaces funcionen fuera de Mintlify.
 - El contenido de la documentación debe mantenerse genérico: sin nombres de dispositivos personales, nombres de host ni rutas locales; use marcadores de posición como `user@gateway-host`.

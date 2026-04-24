@@ -8,7 +8,7 @@ title: "acp"
 
 # acp
 
-运行与 OpenClaw Gateway(网关) 通信的 [Agent Client Protocol (ACP)](https://agentclientprotocol.com/) 网桥。
+运行与 OpenClaw Gateway(网关) 通信的 [Agent Client Protocol (ACP)](https://agentclientprotocol.com/) 桥接器。
 
 此命令通过 stdio 与 IDE 进行 ACP 通信，并通过 WebSocket 将提示转发给 Gateway(网关) 网关。
 它将 ACP 会话映射到 Gateway(网关) 网关 会话密钥。
@@ -17,7 +17,7 @@ title: "acp"
 运行时。它专注于会话路由、提示传递和基本的流式
 更新。
 
-如果您希望外部 MCP 客户端直接与 OpenClaw 渠道对话而不是托管 ACP 驱动会话，请改用 [`openclaw mcp serve`](/zh/cli/mcp)。
+如果您希望外部 MCP 客户端直接与 OpenClaw 渠道对话，而不是托管 ACP harness 会话，请改用 [`openclaw mcp serve`](/zh/cli/mcp)。
 
 ## 这并不是什么
 
@@ -29,12 +29,12 @@ title: "acp"
 - IDE 或 ACP 客户端连接到 OpenClaw
 - OpenClaw 将该工作转发到 Gateway(网关) 会话
 
-这与 [ACP Agents](/zh/tools/acp-agents) 不同，后者中 OpenClaw 通过 `acpx` 运行外部驱动程序（如 Codex 或 Claude Code）。
+这与 [ACP Agents](/zh/tools/acp-agents) 不同，后者是由 OpenClaw 通过 `acpx` 运行 Codex 或 Claude Code 等外部 harness。
 
 快速规则：
 
 - 编辑器/客户端希望以 ACP 协议与 OpenClaw 通信：使用 `openclaw acp`
-- OpenClaw 应将 Codex/Claude/Gemini 作为 ACP 驱动程序启动：使用 `/acp spawn` 和 [ACP Agents](/zh/tools/acp-agents)
+- OpenClaw 应将 Codex/Claude/Gemini 作为 ACP harness 启动：使用 `/acp spawn` 和 [ACP Agents](/zh/tools/acp-agents)
 
 ## 兼容性 Matrix
 
@@ -154,11 +154,11 @@ openclaw acp --session agent:qa:bug-123
 
 网桥模式不支持每个会话的 `mcpServers`。如果 ACP 客户端在 `newSession` 或 `loadSession` 期间发送它们，网桥将返回明确的错误，而不是默默忽略它们。
 
-如果您希望 ACPX 支持的会话能够看到 OpenClaw 插件工具，请启用网关端的 ACPX 插件网桥，而不是尝试传递每个会话的 `mcpServers`。参见 [ACP Agents](/zh/tools/acp-agents#plugin-tools-mcp-bridge)。
+如果您希望 ACPX 支持的会话能够看到 OpenClaw 插件工具或选定的内置工具（例如 `cron`），请启用网关端的 ACPX MCP 网桥，而不是尝试传递逐会话的 `mcpServers`。请参阅 [ACP Agents](/zh/tools/acp-agents#plugin-tools-mcp-bridge) 和 [OpenClaw tools MCP bridge](/zh/tools/acp-agents#openclaw-tools-mcp-bridge)。
 
-## 从 `acpx` 使用（Codex、Claude、其他 ACP 客户端）
+## 从 `acpx`（Codex、Claude、其他 ACP 客户端）使用
 
-如果您希望 Codex 或 Claude Code 等编码代理通过 ACP 与您的 OpenClaw 机器人对话，请使用带有内置 `openclaw` 目标的 `acpx`。
+如果您希望让 Codex 或 Claude Code 等编码代理通过 ACP 与您的 OpenClaw 机器人对话，请使用带有内置 `openclaw` 目标的 `acpx`。
 
 典型流程：
 
@@ -178,7 +178,7 @@ acpx openclaw -s codex-bridge --cwd /path/to/repo \
   "Ask my OpenClaw work agent for recent context relevant to this repo."
 ```
 
-如果您希望 `acpx openclaw` 每次都针对特定的 Gateway(网关) 和会话密钥，请在 `~/.acpx/config.json` 中覆盖 `openclaw` 代理命令：
+如果您希望 `acpx openclaw` 每次都针对特定的 Gateway(网关) 和会话密钥，请覆盖 `~/.acpx/config.json` 中的 `openclaw` 代理命令：
 
 ```json
 {
@@ -239,7 +239,7 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 
 - `--session <key>`：使用特定的 Gateway(网关) 会话密钥。
 - `--session-label <label>`：通过标签解析现有会话。
-- `--reset-session`：为该密钥生成一个新的会话 ID（相同的密钥，新的记录）。
+- `--reset-session`：为该密钥创建一个新的会话 ID（相同的密钥，新的记录）。
 
 如果您的 ACP 客户端支持元数据，您可以按会话覆盖：
 
@@ -266,25 +266,25 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 - `--session-label <label>`：要解析的默认会话标签。
 - `--require-existing`：如果会话密钥/标签不存在则失败。
 - `--reset-session`：在首次使用前重置会话密钥。
-- `--no-prefix-cwd`：不要在工作目录前加提示词前缀。
-- `--provenance <off|meta|meta+receipt>`：包含 ACP 来源元数据或回执。
-- `--verbose, -v`：详细日志输出到 stderr。
+- `--no-prefix-cwd`：不要在工作提示符前加上工作目录。
+- `--provenance <off|meta|meta+receipt>`：包含 ACP 来源元数据或收据。
+- `--verbose, -v`：将详细日志记录到 stderr。
 
 安全提示：
 
 - 在某些系统上，`--token` 和 `--password` 可能会在本地进程列表中可见。
-- 优先使用 `--token-file`/`--password-file` 或环境变量（`OPENCLAW_GATEWAY_TOKEN`、`OPENCLAW_GATEWAY_PASSWORD`）。
+- 首选 `--token-file`/`--password-file` 或环境变量（`OPENCLAW_GATEWAY_TOKEN`，`OPENCLAW_GATEWAY_PASSWORD`）。
 - Gateway(网关) 认证解析遵循其他 Gateway(网关) 客户端使用的共享协定：
-  - 本地模式：环境变量 (`OPENCLAW_GATEWAY_*`) -> `gateway.auth.*` -> `gateway.remote.*`，仅当 `gateway.auth.*` 未设置时才回退（已配置但未解析的本地 SecretRef 将失败关闭）
-  - 远程模式：`gateway.remote.*`，根据远程优先级规则使用环境变量/配置作为回退
-  - `--url` 是可安全覆盖的，不会重用隐式的配置/环境凭据；请传递显式的 `--token`/`--password`（或文件变体）
+  - local mode: env (`OPENCLAW_GATEWAY_*`) -> `gateway.auth.*` -> `gateway.remote.*` fallback 仅在 `gateway.auth.*` 未设置时生效（已配置但未解析的本地 SecretRefs 将失败关闭）
+  - remote mode: `gateway.remote.*` 带有根据远程优先级规则的 env/config 回退
+  - `--url` 是覆盖安全的（override-safe），并且不会重用隐式的 config/env 凭据；请传递显式的 `--token`/`--password`（或文件变体）
 - ACP 运行时后端子进程接收 `OPENCLAW_SHELL=acp`，可用于特定于上下文的 shell/profile 规则。
 - `openclaw acp client` 在生成的桥接进程上设置 `OPENCLAW_SHELL=acp-client`。
 
 ### `acp client` 选项
 
 - `--cwd <dir>`：ACP 会话的工作目录。
-- `--server <command>`：ACP 服务器命令（默认值：`openclaw`）。
+- `--server <command>`：ACP 服务器命令（默认：`openclaw`）。
 - `--server-args <args...>`：传递给 ACP 服务器的额外参数。
 - `--server-verbose`：在 ACP 服务器上启用详细日志记录。
 - `--verbose, -v`：详细的客户端日志记录。

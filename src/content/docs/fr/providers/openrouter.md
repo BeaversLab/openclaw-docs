@@ -13,8 +13,8 @@ OpenRouter fournit une **API unifiée (API)** qui achemine les requêtes vers de
 ## Getting started
 
 <Steps>
-  <Step title="Obtenez votre clé API">
-    Créez une clé API sur [openrouter.ai/keys](https://openrouter.ai/keys).
+  <Step title="Obtenez votre clé d'API">
+    Créez une clé d'API sur [openrouter.ai/keys](https://openrouter.ai/keys).
   </Step>
   <Step title="Lancer l'onboarding">
     ```bash
@@ -47,35 +47,48 @@ OpenRouter fournit une **API unifiée (API)** qui achemine les requêtes vers de
 ## Model references
 
 <Note>
-Les références de model suivent le modèle `openrouter/<provider>/<model>`. Pour la liste complète des providers et des models disponibles, consultez [/concepts/model-providers](/fr/concepts/model-providers).
+Les références de modèle suivent le modèle `openrouter/<provider>/<model>`. Pour la liste complète des
+fournisseurs et modèles disponibles, consultez [/concepts/model-providers](/fr/concepts/model-providers).
 </Note>
 
-## Authentication and headers
+Exemples de repli groupés :
 
-OpenRouter utilise un jeton Bearer avec votre clé API en arrière-plan.
+| Réf. modèle                          | Notes                          |
+| ------------------------------------ | ------------------------------ |
+| `openrouter/auto`                    | Routage automatique OpenRouter |
+| `openrouter/moonshotai/kimi-k2.6`    | Kimi K2.6 via MoonshotAI       |
+| `openrouter/openrouter/healer-alpha` | Route Alpha Healer OpenRouter  |
+| `openrouter/openrouter/hunter-alpha` | Route Alpha Hunter OpenRouter  |
 
-Sur les vraies requêtes OpenRouter (`https://openrouter.ai/api/v1`), OpenClaw ajoute également les en-têtes d'attribution d'application documentés d'OpenRouter :
+## Authentification et en-têtes
 
-| Header                    | Value                 |
+OpenRouter utilise un jeton Bearer avec votre clé d'API en arrière-plan.
+
+Sur les vraies requêtes OpenRouter (`https://openrouter.ai/api/v1`), OpenClaw ajoute également
+les en-têtes d'attribution d'application documentés de OpenRouter :
+
+| En-tête                   | Valeur                |
 | ------------------------- | --------------------- |
 | `HTTP-Referer`            | `https://openclaw.ai` |
 | `X-OpenRouter-Title`      | `OpenClaw`            |
 | `X-OpenRouter-Categories` | `cli-agent`           |
 
-<Warning>Si vous redirigez le provider OpenRouter vers un autre proxy ou URL de base, OpenClaw n'injecte **pas** ces en-têtes spécifiques à OpenRouter ni les marqueurs de cache Anthropic.</Warning>
+<Warning>Si vous redirigez le fournisseur OpenRouter vers un autre proxy ou URL de base, OpenClaw n'injecte **pas** ces en-têtes spécifiques à OpenRouter ou les marqueurs de cache Anthropic.</Warning>
 
-## Advanced notes
+## Notes avancées
 
 <AccordionGroup>
   <Accordion title="Marqueurs de cache Anthropic">
-    Sur les routes OpenRouter vérifiées, les références de model Anthropic conservent les marqueurs `cache_control` spécifiques à OpenRouter de Anthropic que OpenClaw utilise pour une meilleure réutilisation du cache de prompt sur les blocs de prompts système/développeur.
+    Sur les routes OpenRouter vérifiées, les références de modèle Anthropic conservent les
+    marqueurs `cache_control` OpenRouter spécifiques à Anthropic que OpenClaw utilise pour
+    une meilleure réutilisation du cache de prompt sur les blocs de prompt système/développeur.
   </Accordion>
 
-<Accordion title="Thinking / reasoning injection">Sur les routes non-`auto` prises en charge, OpenClaw mappe le niveau de réflexion sélectionné aux payloads de raisonnement du proxy OpenRouter. Les indications de modèle non prises en charge et `openrouter/auto` sautent cette injection de raisonnement.</Accordion>
+<Accordion title="Injection de réflexion / raisonnement">Sur les routes non-`auto` prises en charge, OpenClaw mappe le niveau de réflexion sélectionné aux charges utiles de raisonnement du proxy OpenRouter. Les indications de modèle non prises en charge et `openrouter/auto` ignorent cette injection de raisonnement.</Accordion>
 
-<Accordion title="OpenAI-only request shaping">OpenRouter passe toujours par le chemin compatible OpenAI de type proxy, donc la mise en forme des requêtes native uniquement OpenAI telle que `serviceTier`, Responses `store`, les payloads compatibles avec le raisonnement OpenAI et les indications de cache de prompt ne sont pas transmis.</Accordion>
+<Accordion title="OpenAI-only request shaping">OpenRouter transite toujours par le chemin compatible OpenAI de type proxy, de sorte que la mise en forme des requêtes native OpenAI-only telle que `serviceTier`, Responses `store`, les payloads de raisonnement compatibles OpenAI et les indices de cache de prompt ne sont pas transmis.</Accordion>
 
-<Accordion title="Gemini-backed routes">Les refs OpenRouter soutenues par Gemini restent sur le chemin proxy-Gemini : OpenClaw y maintient le nettoyage de la signature de pensée Gemini, mais n'active pas la validation de relecture native Gemini ou les réécritures d'amorçage.</Accordion>
+<Accordion title="Gemini-backed routes">Les références OpenRouter alimentées par Gemini restent sur le chemin proxy-Gemini : OpenClaw conserve le nettoyage des signatures de pensée Gemini à cet endroit, mais n'active pas la validation de relecture native Gemini ou les réécritures d'amorçage.</Accordion>
 
   <Accordion title="Provider routing metadata">
     Si vous transmettez le routage du fournisseur OpenRouter sous les paramètres du modèle, OpenClaw le transmet
@@ -83,13 +96,13 @@ Sur les vraies requêtes OpenRouter (`https://openrouter.ai/api/v1`), OpenClaw a
   </Accordion>
 </AccordionGroup>
 
-## Apparenté
+## Connexes
 
 <CardGroup cols={2}>
   <Card title="Model selection" href="/fr/concepts/model-providers" icon="layers">
-    Choix des fournisseurs, des références de modèle et du comportement de basculement.
+    Choix des fournisseurs, références de modèle et comportement de basculement.
   </Card>
   <Card title="Configuration reference" href="/fr/gateway/configuration-reference" icon="gear">
-    Référence de configuration complète pour les agents, les modèles et les fournisseurs.
+    Référence complète de la configuration pour les agents, les modèles et les fournisseurs.
   </Card>
 </CardGroup>

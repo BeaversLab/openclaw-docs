@@ -37,7 +37,7 @@ Si necesita detalles sobre el almacenamiento de transcripciones, consulte:
 Toda la higiene de la transcripción está centralizada en el ejecutor integrado:
 
 - Selección de política: `src/agents/transcript-policy.ts`
-- Aplicación de saneamiento/reparación: `sanitizeSessionHistory` en `src/agents/pi-embedded-runner/google.ts`
+- Aplicación de saneamiento/reparación: `sanitizeSessionHistory` en `src/agents/pi-embedded-runner/replay-history.ts`
 
 La política utiliza `provider`, `modelApi` y `modelId` para decidir qué aplicar.
 
@@ -73,7 +73,7 @@ parcialmente persistidas (por ejemplo, después de un fallo por límite de tasa)
 Implementación:
 
 - `sanitizeToolCallInputs` en `src/agents/session-transcript-repair.ts`
-- Aplicado en `sanitizeSessionHistory` en `src/agents/pi-embedded-runner/google.ts`
+- Aplicado en `sanitizeSessionHistory` en `src/agents/pi-embedded-runner/replay-history.ts`
 
 ---
 

@@ -14,7 +14,7 @@ endpoint y clave de API. Es compatible con OpenAI, por lo que la mayoría de los
 ## Para empezar
 
 <Steps>
-  <Step title="Obtén tu clave de API">
+  <Step title="Consigue tu clave de API">
     Crea una clave de API en [openrouter.ai/keys](https://openrouter.ai/keys).
   </Step>
   <Step title="Ejecuta la incorporación">
@@ -49,12 +49,21 @@ endpoint y clave de API. Es compatible con OpenAI, por lo que la mayoría de los
 
 <Note>
 Las referencias de modelos siguen el patrón `openrouter/<provider>/<model>`. Para ver la lista completa de
-proveedores y modelos disponibles, consulte [/concepts/model-providers](/es/concepts/model-providers).
+proveedores y modelos disponibles, consulta [/concepts/model-providers](/es/concepts/model-providers).
 </Note>
+
+Ejemplos de reserva agrupados:
+
+| Referencia del modelo                | Notas                                 |
+| ------------------------------------ | ------------------------------------- |
+| `openrouter/auto`                    | Enrutamiento automático de OpenRouter |
+| `openrouter/moonshotai/kimi-k2.6`    | Kimi K2.6 a través de MoonshotAI      |
+| `openrouter/openrouter/healer-alpha` | Ruta OpenRouter Healer Alpha          |
+| `openrouter/openrouter/hunter-alpha` | Ruta OpenRouter Hunter Alpha          |
 
 ## Autenticación y encabezados
 
-OpenRouter utiliza un token de portador con su clave de API entre bastidores.
+OpenRouter utiliza un token Bearer con tu clave de API en segundo plano.
 
 En las solicitudes reales a OpenRouter (`https://openrouter.ai/api/v1`), OpenClaw también añade
 los encabezados de atribución de la aplicación documentados por OpenRouter:
@@ -65,24 +74,24 @@ los encabezados de atribución de la aplicación documentados por OpenRouter:
 | `X-OpenRouter-Title`      | `OpenClaw`            |
 | `X-OpenRouter-Categories` | `cli-agent`           |
 
-<Warning>Si redirige el proveedor de OpenRouter a otro proxy o URL base, OpenClaw **no** inyecta esos encabezados específicos de OpenRouter ni los marcadores de caché de Anthropic.</Warning>
+<Warning>Si rediriges el proveedor OpenRouter a otro proxy o URL base, OpenClaw **no** inyecta esos encabezados específicos de OpenRouter ni los marcadores de caché de Anthropic.</Warning>
 
 ## Notas avanzadas
 
 <AccordionGroup>
   <Accordion title="Marcadores de caché de Anthropic">
-    En las rutas verificadas de OpenRouter, las referencias de modelos de Anthropic mantienen los
-    marcadores `cache_control` específicos de OpenRouter para Anthropic que OpenClaw utiliza para
-    una mejor reutilización del caché de indicaciones en los bloques de indicaciones del sistema/desarrollador.
+    En las rutas verificadas de OpenRouter, las referencias de modelos de Anthropic conservan los
+    marcadores específicos de Anthropic `cache_control` de OpenRouter que OpenClaw utiliza para
+    una mejor reutilización del caché de prompts en los bloques de prompts del sistema/desarrollador.
   </Accordion>
 
 <Accordion title="Inyección de pensamiento / razonamiento">En las rutas compatibles que no son de `auto`, OpenClaw asigna el nivel de pensamiento seleccionado a las cargas útiles de razonamiento del proxy de OpenRouter. Las sugerencias de modelo no compatibles y `openrouter/auto` omiten esa inyección de razonamiento.</Accordion>
 
-<Accordion title="Conformación de solicitudes solo de OpenAI">OpenRouter aún se ejecuta a través de la ruta compatible con OpenAI estilo proxy, por lo que la conformación nativa de solicitudes solo de OpenAI, como `serviceTier`, Responses `store`, las cargas útiles compatibles con el razonamiento de OpenAI y las sugerencias de caché de solicitudes no se reenvían.</Accordion>
+<Accordion title="OpenAI-only request shaping">OpenRouter aún se ejecuta a través de la ruta compatible con OpenAI de estilo proxy, por lo que el modelado de solicitudes nativas solo de OpenAI, como `serviceTier`, Responses `store`, las cargas útiles compatibles con el razonamiento de OpenAI y las sugerencias de caché de avisos no se reenvían.</Accordion>
 
-<Accordion title="Rutas respaldadas por Gemini">Las referencias de OpenRouter respaldadas por Gemini se mantienen en la ruta proxy-Gemini: OpenClaw mantiene allí la saneamiento de la firma de pensamiento de Gemini, pero no habilita la validación de reproducción nativa de Gemini ni las reescrituras de arranque.</Accordion>
+<Accordion title="Gemini-backed routes">Las referencias de OpenRouter respaldadas por Gemini se mantienen en la ruta proxy-Gemini: OpenClaw mantiene la limpieza de firmas de pensamiento de Gemini allí, pero no habilita la validación de repetición nativa de Gemini ni las reescrituras de arranque.</Accordion>
 
-  <Accordion title="Metadatos de enrutamiento del proveedor">
+  <Accordion title="Provider routing metadata">
     Si pasa el enrutamiento del proveedor de OpenRouter bajo los parámetros del modelo, OpenClaw lo reenvía
     como metadatos de enrutamiento de OpenRouter antes de que se ejecuten los contenedores de flujo compartidos.
   </Accordion>
@@ -91,10 +100,10 @@ los encabezados de atribución de la aplicación documentados por OpenRouter:
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
-    Elección de proveedores, referencias de modelo y comportamiento de conmutación por error.
+  <Card title="Model selection" href="/es/concepts/model-providers" icon="layers">
+    Elegir proveedores, referencias de modelo y comportamiento de conmutación por error.
   </Card>
-  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
+  <Card title="Configuration reference" href="/es/gateway/configuration-reference" icon="gear">
     Referencia completa de configuración para agentes, modelos y proveedores.
   </Card>
 </CardGroup>

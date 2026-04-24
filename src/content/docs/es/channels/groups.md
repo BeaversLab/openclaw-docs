@@ -405,6 +405,10 @@ El mensaje del sistema del agente incluye una introducción de grupo en el prime
 - Listar chats: `imsg chats --limit 20`.
 - Las respuestas de grupo siempre vuelven al mismo `chat_id`.
 
-## Especificidades de WhatsApp
+## Solicitudes del sistema de WhatsApp
 
-Consulte [Mensajes de grupo](/es/channels/group-messages) para obtener un comportamiento exclusivo de WhatsApp (inyección de historial, detalles del manejo de menciones).
+Consulte [WhatsApp](/es/channels/whatsapp#system-prompts) para conocer las reglas canónicas de las solicitudes del sistema de WhatsApp, incluida la resolución de solicitudes grupales y directas, el comportamiento de los comodines y la semántica de anulación de cuentas.
+
+## Específicos de WhatsApp
+
+Consulte [Mensajes de grupo](/es/channels/group-messages) para conocer el comportamiento exclusivo de WhatsApp (inyección de historial, detalles del manejo de menciones).

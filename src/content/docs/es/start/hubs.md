@@ -160,7 +160,7 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Habilidades de macOS](/es/platforms/mac/skills)
 - [Peekaboo en macOS](/es/platforms/mac/peekaboo)
 
-## Extensiones + complementos
+## Complementos
 
 - [Descripción general de complementos](/es/tools/plugin)
 - [Construcción de complementos](/es/plugins/building-plugins)

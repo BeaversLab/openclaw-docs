@@ -217,9 +217,21 @@ Lorsqu'il est activé, l'onglet **Dreams** du Gateway affiche :
 - une voie Scene ancrée distincte pour les entrées de rediffusion historique mises en scène
 - un lecteur de journal de rêve extensible soutenu par `doctor.memory.dreamDiary`
 
+## Dépannage
+
+### Le rêve ne s'exécute jamais (le statut indique bloqué)
+
+La cron gérée du rêve repose sur le heartbeat de l'agent par défaut. Si le heartbeat ne se déclenche pas pour cet agent, la cron met en file d'attente un événement système que personne ne consomme et le rêve ne s'exécute pas silencieusement. `openclaw memory status` et `/dreaming status` rapporteront `blocked` dans ce cas et nommeront l'agent dont le heartbeat est le bloqueur.
+
+Deux causes courantes :
+
+- Un autre agent déclare un bloc `heartbeat:` explicite. Lorsque n'importe quelle entrée de `agents.list` possède son propre bloc `heartbeat`, seuls ces agents ont un heartbeat — les valeurs par défaut cessent de s'appliquer à tous les autres, l'agent par défaut peut donc se taire. Déplacez les paramètres de heartbeat vers `agents.defaults.heartbeat`, ou ajoutez un bloc `heartbeat` explicite sur l'agent par défaut. Voir [Portée et précédence](/fr/gateway/heartbeat#scope-and-precedence).
+- `heartbeat.every` est `0`, vide ou non analysable. La cron n'a aucun intervalle de planification, le heartbeat est donc effectivement désactivé. Définissez `every` sur une durée positive telle que `30m`. Voir [Valeurs par défaut](/fr/gateway/heartbeat#defaults).
+
 ## Connexes
 
+- [Heartbeat](/fr/gateway/heartbeat)
 - [Mémoire](/fr/concepts/memory)
-- [Recherche de mémoire](/fr/concepts/memory-search)
+- [Recherche dans la mémoire](/fr/concepts/memory-search)
 - [memory CLI](/fr/cli/memory)
 - [Référence de configuration de la mémoire](/fr/reference/memory-config)

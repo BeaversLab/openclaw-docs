@@ -139,11 +139,18 @@ tiempo de espera solo cuando el contexto del proveedor es realmente OpenRouter. 
 genérico como `LLM request failed with an unknown error.` se mantiene
 conservador y no activa la conmutación por error por sí solo.
 
-Los períodos de enfriamiento por límite de tasa también pueden tener ámbito de modelo:
+De lo contrario, algunos SDK de proveedores podrían permanecer inactivos durante una `Retry-After` larga antes de
+devolver el control a OpenClaw. Para los SDK basados en Stainless, como Anthropic y
+OpenAI, OpenClaw limita las esperas internas del SDK de `retry-after-ms` / `retry-after` a 60
+segundos de forma predeterminada y expone inmediatamente las respuestas reintentables más largas para que
+se pueda ejecutar esta ruta de conmutación por error. Ajuste o desactive el límite con
+`OPENCLAW_SDK_RETRY_MAX_WAIT_SECONDS`; consulte [/concepts/retry](/es/concepts/retry).
 
-- OpenClaw registra `cooldownModel` para los fallos de límite de tasa cuando el id del
-  modelo con fallos es conocido.
-- Un modelo hermano en el mismo proveedor aún se puede intentar cuando el período de enfriamiento está
+Los períodos de enfriamiento por límite de tasa también pueden estar limitados al modelo:
+
+- OpenClaw registra `cooldownModel` para los fallos de límite de tasa cuando se conoce
+  el id del modelo fallido.
+- Aún se puede intentar un modelo hermano en el mismo proveedor cuando el enfriamiento está
   limitado a un modelo diferente.
 - Las ventanas de facturación/deshabilitadas siguen bloqueando todo el perfil entre modelos.
 
@@ -168,11 +175,20 @@ El estado se almacena en `auth-state.json` bajo `usageStats`:
 }
 ```
 
-## Desactivaciones de facturación
+## Deshabilitaciones por facturación
 
-Los fallos de facturación/crédito (por ejemplo, "créditos insuficientes" / "saldo de crédito demasiado bajo") se tratan como susceptibles de conmutación por error (failover), pero por lo general no son transitorios. En lugar de un periodo de enfriamiento breve, OpenClaw marca el perfil como **deshabilitado** (con un retroceso más largo) y rota al siguiente perfil/proveedor.
+Los fallos de facturación/crédito (por ejemplo, “créditos insuficientes” / “saldo de crédito demasiado bajo”) se tratan como aptos para la conmutación por error, pero por lo general no son transitorios. En lugar de un enfriamiento breve, OpenClaw marca el perfil como **deshabilitado** (con un retroceso más largo) y rota al siguiente perfil/proveedor.
 
-No todas las respuestas con forma de facturación son `402`, y no todos los HTTP `402` aterrizan aquí. OpenClaw mantiene el texto de facturación explícito en el carril de facturación incluso cuando un proveedor devuelve `401` o `403` en su lugar, pero los comparadores específicos del proveedor permanecen limitados al proveedor que los posee (por ejemplo, OpenRouter `403 Key limit exceeded`). Meanwhile temporary `402` ventana de uso y los errores de límite de gasto de organización/espacio de trabajo se clasifican como `rate_limit` cuando el mensaje parece reintentable (por ejemplo `weekly usage limit exhausted`, `daily limit reached, resets tomorrow`, or `organization spending limit exceeded`). Esos permanecen en la ruta de conmutación por error/enfriamiento breve en lugar de la ruta larga de deshabilitación por facturación.
+No todas las respuestas con forma de facturación son `402`, y no todos los `402` HTTP
+cal aquí. OpenClaw mantiene el texto de facturación explícito en el carril de facturación incluso cuando un
+proveedor devuelve `401` o `403` en su lugar, pero los comparadores específicos del proveedor se
+mantienen limitados al proveedor que los posee (por ejemplo, la ventana de uso de OpenRouter `403 Key limit
+exceeded`). Meanwhile temporary `402` y
+los errores de límite de gasto de la organización/espacio de trabajo se clasifican como `rate_limit` cuando
+el mensaje parece reintentable (por ejemplo, `weekly usage limit exhausted`, `daily
+limit reached, resets tomorrow`, or `organization spending limit exceeded`).
+Esos se mantienen en la ruta de enfriamiento/conmutación por error breve en lugar de en la ruta larga
+de deshabilitación de facturación.
 
 El estado se almacena en `auth-state.json`:
 
@@ -189,55 +205,63 @@ El estado se almacena en `auth-state.json`:
 
 Valores predeterminados:
 
-- El retroceso de facturación comienza en **5 horas**, se duplica por cada fallo de facturación y se limita a **24 horas**.
-- Los contadores de retroceso se restablecen si el perfil no ha fallado durante **24 horas** (configurable).
-- Los reintentos sobrecargados permiten **1 rotación de perfil del mismo proveedor** antes de la reserva del modelo (model fallback).
-- Los reintentos sobrecargados usan **0 ms de retroceso** de forma predeterminada.
+- El retroceso de facturación comienza en **5 horas**, se duplica por cada error de facturación y tiene un máximo de **24 horas**.
+- Los contadores de retroceso se restablecen si el perfil no ha tenido errores durante **24 horas** (configurable).
+- Los reintentos de sobrecarga permiten **1 rotación de perfil del mismo proveedor** antes de la recuperación del modelo.
+- Los reintentos de sobrecarga usan **0 ms de retroceso** de forma predeterminada.
 
-## Reserva del modelo (Model fallback)
+## Recuperación del modelo
 
-Si fallan todos los perfiles de un proveedor, OpenClaw pasa al siguiente modelo en `agents.defaults.model.fallbacks`. Esto se aplica a fallos de autenticación, límites de velocidad y tiempos de espera que agotaron la rotación de perfiles (otros errores no avanzan la reserva).
+Si fallan todos los perfiles de un proveedor, OpenClaw pasa al siguiente modelo en
+`agents.defaults.model.fallbacks`. Esto se aplica a errores de autenticación, límites de velocidad y
+tiempos de espera que agotaron la rotación de perfiles (otros errores no avanzan la recuperación).
 
-Los errores sobrecargados y de límite de velocidad se manejan de manera más agresiva que los períodos de enfriamiento de facturación. De forma predeterminada, OpenClaw permite un reintento de perfil de autenticación del mismo proveedor y luego cambia a la siguiente reserva de modelo configurada sin esperar. Las señales de proveedor ocupado, como `ModelNotReadyException`, caen en ese grupo sobrecargado. Ajuste esto con `auth.cooldowns.overloadedProfileRotations`, `auth.cooldowns.overloadedBackoffMs` y `auth.cooldowns.rateLimitedProfileRotations`.
+Los errores de sobrecarga y límite de velocidad se manejan de manera más agresiva que los
+períodos de inactividad por facturación. De forma predeterminada, OpenClaw permite un reintento de perfil de autenticación del mismo proveedor,
+luego cambia a la siguiente recuperación de modelo configurada sin esperar.
+Las señales de proveedor ocupado, como `ModelNotReadyException`, entran en ese depósito de sobrecarga.
+Ajuste esto con `auth.cooldowns.overloadedProfileRotations`,
+`auth.cooldowns.overloadedBackoffMs` y
+`auth.cooldowns.rateLimitedProfileRotations`.
 
-Cuando una ejecución comienza con una anulación de modelo (hooks o CLI), las alternativas aún terminan en
-`agents.defaults.model.primary` después de intentar cualquier alternativa configurada.
+Cuando una ejecución comienza con una anulación de modelo (hooks o CLI), las recuperaciones aún terminan en
+`agents.defaults.model.primary` después de intentar cualquier recuperación configurada.
 
 ### Reglas de la cadena de candidatos
 
 OpenClaw construye la lista de candidatos a partir del `provider/model` solicitado actualmente
-más las alternativas configuradas.
+más las recuperaciones configuradas.
 
 Reglas:
 
 - El modelo solicitado siempre es el primero.
-- Las alternativas configuradas explícitamente se deduplican pero no se filtran por la lista blanca de
-  modelos. Se tratan como una intención explícita del operador.
-- Si la ejecución actual ya está en una alternativa configurada en la misma familia
-  de proveedores, OpenClaw sigue usando la cadena configurada completa.
+- Las recuperaciones configuradas explícitamente se deduplican pero no se filtran por la lista
+  permitida del modelo. Se tratan como una intención explícita del operador.
+- Si la ejecución actual ya está en una recuperación configurada en la misma familia
+  de proveedor, OpenClaw sigue usando la cadena configurada completa.
 - Si la ejecución actual está en un proveedor diferente al de la configuración y ese modelo
-  actual aún no es parte de la cadena de alternativa configurada, OpenClaw no
-  añade alternativas configuradas no relacionadas de otro proveedor.
-- Cuando la ejecución comenzó desde una anulación, el principal configurado se añade al
+  actual aún no es parte de la cadena de recuperación configurada, OpenClaw no
+  agrega recuperaciones configuradas no relacionadas de otro proveedor.
+- Cuando la ejecución comenzó desde una anulación, el principal configurado se agrega al
   final para que la cadena pueda volver al valor predeterminado normal una vez que se agoten
   los candidatos anteriores.
 
-### Qué errores avanzan la alternativa
+### Qué errores avanzan la recuperación
 
-La alternativa del modelo continúa en:
+La recuperación del modelo continúa con:
 
-- fallos de autenticación
-- límites de frecuencia y agotamiento de enfriamiento
+- errores de autenticación
+- límites de velocidad y agotamiento del período de inactividad
 - errores de sobrecarga/proveedor ocupado
-- errores de alternativa con forma de tiempo de espera
-- desactivaciones de facturación
-- `LiveSessionModelSwitchError`, que se normaliza en una ruta de alternativa para que
+- errores de recuperación con forma de tiempo de espera
+- desactivaciones por facturación
+- `LiveSessionModelSwitchError`, que se normaliza en una ruta de conmutación por error para que
   un modelo persistente obsoleto no cree un bucle de reinterno externo
-- otros errores no reconocidos cuando aún quedan candidatos restantes
+- otros errores no reconocidos cuando todavía quedan candidatos
 
-La alternativa del modelo no continúa en:
+La conmutación por error del modelo no continúa en:
 
-- interrupciones explícitas que no tienen forma de tiempo de espera/alternativa
+- interrupciones explícitas que no son de tiempo de espera o forma de conmutación por error
 - errores de desbordamiento de contexto que deben permanecer dentro de la lógica de compactación/reintento
   (por ejemplo `request_too_large`, `INVALID_ARGUMENT: input exceeds the maximum
 number of tokens`, `input token count exceeds the maximum number of input
@@ -245,80 +269,67 @@ tokens`, `The input is too long for the model`, or `ollama error: context
 length exceeded`)
 - un error desconocido final cuando no quedan candidatos
 
-### Salto de enfriamiento vs comportamiento de sondeo
+### Omisión de tiempo de recuperación frente a comportamiento de sonda
 
-Cuando todos los perfiles de autenticación de un proveedor ya están en enfriamiento, OpenClaw no
-salta ese proveedor para siempre automáticamente. Toma una decisión por candidato:
+Cuando todos los perfiles de autenticación de un proveedor ya están en tiempo de recuperación, OpenClaw no
+omite automáticamente ese proveedor para siempre. Toma una decisión por candidato:
 
-- Los fallos de autenticación persistentes saltan todo el proveedor inmediatamente.
-- Las desactivaciones de facturación generalmente se saltan, pero el candidato principal aún puede sondearse
-  con limitación para que la recuperación sea posible sin reiniciar.
-- El candidato principal puede sondearse cerca de la expiración del enfriamiento, con una limitación
+- Los fallos persistentes de autenticación omiten todo el proveedor inmediatamente.
+- Las deshabilitaciones de facturación generalmente se omiten, pero el candidato principal todavía puede sondearse
+  en una limitación para que la recuperación sea posible sin reiniciar.
+- El candidato principal puede sondearse cerca de la expiración del tiempo de recuperación, con una limitación
   por proveedor.
-- Se pueden intentar hermanos de reserva del mismo proveedor a pesar del enfriamiento cuando el
+- Los hermanos de conmutación por error del mismo proveedor pueden intentarse a pesar del tiempo de recuperación cuando el
   fallo parece transitorio (`rate_limit`, `overloaded`, o desconocido). Esto es
-  especialmente relevante cuando un límite de tasa está limitado al modelo y un modelo hermano puede
+  especialmente relevante cuando un límite de tasa está en el ámbito del modelo y un modelo hermano puede
   aún recuperarse inmediatamente.
-- Los sondeos de enfriamiento transitorio se limitan a uno por proveedor por ejecución de reserva para que
-  un solo proveedor no detenga la reserva entre proveedores.
+- Las sondas de tiempo de recuperación transitorio se limitan a una por proveedor por ejecución de conmutación por error para que
+  un solo proveedor no detenga la conmutación por error entre proveedores.
 
-## Sobrescrituras de sesión y cambio en vivo de modelo
+## Anulaciones de sesión y cambio en vivo de modelo
 
-Los cambios de modelo de sesión son un estado compartido. El ejecutor activo, comando `/model`,
-actualizaciones de compactación/sesión y la conciliación de sesión en vivo todos leen o escriben
+Los cambios de modelo de sesión son un estado compartido. El ejecutor activo, el comando `/model`,
+las actualizaciones de compactación/sesión y la conciliación de sesión en vivo todos leen o escriben
 partes de la misma entrada de sesión.
 
-Esto significa que los reintentos de reserva deben coordinarse con el cambio en vivo de modelo:
+Eso significa que los reintentos de conmutación por error deben coordinarse con el cambio en vivo de modelo:
 
-- Solo los cambios de modelo explícitos impulsados por el usuario marcan un cambio en vivo pendiente. Eso
+- Solo los cambios explícitos de modelo impulsados por el usuario marcan un cambio en vivo pendiente. Eso
   incluye `/model`, `session_status(model=...)` y `sessions.patch`.
-- Los cambios de modelo impulsados por el sistema, como la rotación de reserva, las sobrescrituras de latido,
-  o la compactación nunca marcan un cambio en vivo pendiente por sí mismos.
-- Antes de que comience un reintento de reserva, el ejecutor de respuesta persiste los campos
-  de sobrescritura de reserva seleccionados en la entrada de sesión.
-- La conciliación de sesión en vivo prefiere las sobrescrituras de sesión persistentes sobre los campos
-  de modelo de ejecución obsoletos.
-- Si el intento de reserva falla, el ejecutor revierte solo los campos de sobrescritura
-  que escribió, y solo si aún coinciden con ese candidato fallido.
+- Los cambios de modelo impulsados por el sistema, como la rotación de reserva, las anulaciones de latido (heartbeat) o la compactación, nunca marcan por sí mismos un cambio en vivo pendiente.
+- Antes de que comience un reintento de reserva (fallback), el ejecutor de respuestas (reply runner) persiste los campos de anulación de reserva seleccionados en la entrada de sesión.
+- La conciliación de sesión en vivo prefiere las anulaciones de sesión persistidas sobre los campos de modelo de tiempo de ejecución obsoletos.
+- Si el intento de reserva falla, el ejecutor revierte solo los campos de anulación que escribió, y solo si todavía coinciden con ese candidato fallido.
 
 Esto evita la condición de carrera clásica:
 
 1. El principal falla.
 2. El candidato de reserva se elige en memoria.
-3. El almacenamiento de sesión sigue indicando el principal anterior.
+3. El almacén de sesión todavía indica el principal anterior.
 4. La conciliación de sesión en vivo lee el estado de sesión obsoleto.
-5. El reintento se regresa al modelo anterior antes de que comience el intento
-   de reserva.
+5. El reintento se revierte al modelo anterior antes de que comience el intento de reserva.
 
-La sobrescritura de reserva persistente cierra esa ventana, y la reversión limitada
-mantiene intactos los cambios de sesión manuales más nuevos o de ejecución.
+La anulación de reserva persistida cierra esa ventana, y la reversión limitada mantiene intactos los cambios manuales o de sesión de tiempo de ejecución más recientes.
 
 ## Observabilidad y resúmenes de fallos
 
-`runWithModelFallback(...)` registra detalles por intento que alimentan los registros y
-mensajes de enfriamiento visibles para el usuario:
+`runWithModelFallback(...)` registra detalles por intento que alimentan los registros y los mensajes de enfriamiento (cooldown) orientados al usuario:
 
 - proveedor/modelo intentado
-- razón (`rate_limit`, `overloaded`, `billing`, `auth`, `model_not_found`, y
-  razones de conmutación por error similares)
+- motivo (`rate_limit`, `overloaded`, `billing`, `auth`, `model_not_found` y motivos de conmutación por error similares)
 - estado/código opcional
-- resumen de errores legible por humanos
+- resumen de error legible por humanos
 
-Cuando fallan todos los candidatos, OpenClaw lanza `FallbackSummaryError`. El ejecutor
-externo de respuestas puede usarlo para construir un mensaje más específico, como "todos los modelos
-están temporalmente limitados por tasa" e incluir la expiración del período de enfriamiento más próxima cuando se
-conozca una.
+Cuando fallan todos los candidatos, OpenClaw lanza `FallbackSummaryError`. El ejecutor de respuestas externo puede usar esto para construir un mensaje más específico, como "todos los modelos están temporalmente limitados por tasa", e incluir la caducidad de enfriamiento más próxima cuando se conoce una.
 
-Ese resumen del período de enfriamiento es consciente del modelo:
+Ese resumen de enfriamiento es consciente del modelo:
 
-- se ignoran los límites de tasa no relacionados con el ámbito del modelo para la cadena
-  proveedor/modelo intentada
-- si el bloqueo restante es un límite de tasa coincidente con el ámbito del modelo, OpenClaw
-  informa la última expiración coincidente que aún bloquee ese modelo
+- se ignoran los límites de tasa con ámbito de modelo no relacionados para la cadena de proveedor/modelo intentada
+- si el bloque restante es un límite de tasa con ámbito de modelo coincidente, OpenClaw informa la última caducidad coincidente que todavía bloquea ese modelo
 
 ## Configuración relacionada
 
-Consulte [Configuración de Gateway](/es/gateway/configuration) para:
+Consulte [Configuración de la puerta de enlace](/es/gateway/configuration) para:
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
@@ -326,6 +337,6 @@ Consulte [Configuración de Gateway](/es/gateway/configuration) para:
 - `auth.cooldowns.overloadedProfileRotations` / `auth.cooldowns.overloadedBackoffMs`
 - `auth.cooldowns.rateLimitedProfileRotations`
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
-- enrutamiento `agents.defaults.imageModel`
+- Enrutamiento `agents.defaults.imageModel`
 
-Consulte [Modelos](/es/concepts/models) para obtener una descripción general más amplia de la selección y reserva de modelos.
+Consulte [Modelos](/es/concepts/models) para obtener una visión general más amplia de la selección y reserva de modelos.

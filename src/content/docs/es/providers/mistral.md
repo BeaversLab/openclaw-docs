@@ -1,20 +1,21 @@
 ---
-summary: "Usa los modelos Mistral y la transcripción Voxtral con OpenClaw"
+summary: "Usa los modelos de Mistral y la transcripción de Voxtral con OpenClaw"
 read_when:
   - You want to use Mistral models in OpenClaw
+  - You want Voxtral realtime transcription for Voice Call
   - You need Mistral API key onboarding and model refs
 title: "Mistral"
 ---
 
 # Mistral
 
-OpenClaw es compatible con Mistral tanto para el enrutamiento de modelos de texto/imagen (`mistral/...`) como para
-la transcripción de audio mediante Voxtral en la comprensión de medios.
+OpenClaw soporta Mistral tanto para el enrutamiento de modelos de texto/imagen (`mistral/...`) como
+para la transcripción de audio a través de Voxtral en la comprensión de medios.
 Mistral también se puede utilizar para incrustaciones de memoria (`memorySearch.provider = "mistral"`).
 
 - Proveedor: `mistral`
 - Autenticación: `MISTRAL_API_KEY`
-- API: Mistral Chat Completions (`https://api.mistral.ai/v1`)
+- API: Completaciones de chat de Mistral (`https://api.mistral.ai/v1`)
 
 ## Introducción
 
@@ -65,7 +66,8 @@ OpenClaw actualmente incluye este catálogo empaquetado de Mistral:
 
 ## Transcripción de audio (Voxtral)
 
-Usa Voxtral para la transcripción de audio a través de la canalización de comprensión de medios.
+Usa Voxtral para la transcripción de audio por lotes a través de la canalización
+de comprensión de medios.
 
 ```json5
 {
@@ -82,11 +84,49 @@ Usa Voxtral para la transcripción de audio a través de la canalización de com
 
 <Tip>La ruta de transcripción de medios usa `/v1/audio/transcriptions`. El modelo de audio predeterminado para Mistral es `voxtral-mini-latest`.</Tip>
 
+## STT de streaming de Voice Call
+
+El complemento `mistral` incluido registra Voxtral Realtime como un proveedor
+STT de streaming de Voice Call.
+
+| Configuración          | Ruta de configuración                                                  | Predeterminado                          |
+| ---------------------- | ---------------------------------------------------------------------- | --------------------------------------- |
+| Clave de API           | `plugins.entries.voice-call.config.streaming.providers.mistral.apiKey` | Recurre a `MISTRAL_API_KEY`             |
+| Modelo                 | `...mistral.model`                                                     | `voxtral-mini-transcribe-realtime-2602` |
+| Codificación           | `...mistral.encoding`                                                  | `pcm_mulaw`                             |
+| Frecuencia de muestreo | `...mistral.sampleRate`                                                | `8000`                                  |
+| Retardo objetivo       | `...mistral.targetStreamingDelayMs`                                    | `800`                                   |
+
+```json5
+{
+  plugins: {
+    entries: {
+      "voice-call": {
+        config: {
+          streaming: {
+            enabled: true,
+            provider: "mistral",
+            providers: {
+              mistral: {
+                apiKey: "${MISTRAL_API_KEY}",
+                targetStreamingDelayMs: 800,
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+}
+```
+
+<Note>OpenClaw establece de forma predeterminada el STT en tiempo real de Mistral en `pcm_mulaw` a 8 kHz para que Voice Call pueda reenviar los marcos de medios de Twilio directamente. Use `encoding: "pcm_s16le"` y un `sampleRate` coincidente solo si su flujo ascendente ya es PCM sin procesar.</Note>
+
 ## Configuración avanzada
 
 <AccordionGroup>
   <Accordion title="Razonamiento ajustable (mistral-small-latest)">
-    `mistral/mistral-small-latest` se asigna a Mistral Small 4 y es compatible con el [razonamiento ajustable](https://docs.mistral.ai/capabilities/reasoning/adjustable) en la API de Chat Completions mediante `reasoning_effort` (`none` minimiza el pensamiento adicional en la salida; `high` muestra las trazas de pensamiento completas antes de la respuesta final).
+    `mistral/mistral-small-latest` se asigna a Mistral Small 4 y es compatible con el [razonamiento ajustable](https://docs.mistral.ai/capabilities/reasoning/adjustable) en la API de Chat Completions a través de `reasoning_effort` (`none` minimiza el pensamiento adicional en la salida; `high` muestra rastros completos de pensamiento antes de la respuesta final).
 
     OpenClaw asigna el nivel de **pensamiento** (thinking) de la sesión a la API de Mistral:
 
@@ -96,13 +136,13 @@ Usa Voxtral para la transcripción de audio a través de la canalización de com
     | **low** / **medium** / **high** / **xhigh** / **adaptive** / **max** | `high`     |
 
     <Note>
-    Otros modelos del catálogo empaquetado de Mistral no utilizan este parámetro. Sigue usando los modelos `magistral-*` cuando desees el comportamiento nativo de razonamiento primero de Mistral.
+    Otros modelos del catálogo incluido de Mistral no utilizan este parámetro. Siga utilizando modelos `magistral-*` cuando desee el comportamiento nativo de razonamiento primero de Mistral.
     </Note>
 
   </Accordion>
 
   <Accordion title="Incrustaciones de memoria">
-    Mistral puede proporcionar incrustaciones de memoria a través de `/v1/embeddings` (modelo predeterminado: `mistral-embed`).
+    Mistral puede servir incrustaciones de memoria a través de `/v1/embeddings` (modelo predeterminado: `mistral-embed`).
 
     ```json5
     {
@@ -112,11 +152,11 @@ Usa Voxtral para la transcripción de audio a través de la canalización de com
 
   </Accordion>
 
-  <Accordion title="Autenticación y URL base">
+  <Accordion title="Auth y URL base">
     - La autenticación de Mistral usa `MISTRAL_API_KEY`.
-    - La URL base del proveedor se establece de forma predeterminada en `https://api.mistral.ai/v1`.
+    - La URL base del proveedor es `https://api.mistral.ai/v1` de forma predeterminada.
     - El modelo predeterminado de incorporación es `mistral/mistral-large-latest`.
-    - Z.AI utiliza la autenticación Bearer con su clave de API.
+    - Z.AI usa autenticación Bearer con su clave de API.
   </Accordion>
 </AccordionGroup>
 
@@ -126,7 +166,7 @@ Usa Voxtral para la transcripción de audio a través de la canalización de com
   <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Comprensión de medios" href="/es/tools/media-understanding" icon="microphone">
-    Configuración de transcripción de audio y selección de proveedor.
+  <Card title="Comprensión de medios" href="/es/nodes/media-understanding" icon="microphone">
+    Configuración de transcripción de audio y selección de proveedores.
   </Card>
 </CardGroup>

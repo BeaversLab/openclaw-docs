@@ -24,8 +24,8 @@ title: "OpenClaw"
   <Card title="Get Started" href="/fr/start/getting-started" icon="rocket">
     Installez OpenClaw et lancez la Gateway en quelques minutes.
   </Card>
-  <Card title="Exécuter l'onboarding" href="/fr/start/wizard" icon="sparkles">
-    Configuration guidée avec `openclaw onboard` et flux de couplage.
+  <Card title="Exécuter l'intégration" href="/fr/start/wizard" icon="sparkles">
+    Configuration guidée avec `openclaw onboard` et flux d'appairage.
   </Card>
   <Card title="Ouvrir l'interface de contrôle" href="/fr/web/control-ui" icon="layout-dashboard">
     Lancez le tableau de bord du navigateur pour le chat, la config et les sessions.
@@ -45,7 +45,7 @@ OpenClaw est une **passerelle auto-hébergée** qui connecte vos applications de
 - **Natif pour les agents** : conçu pour les agents de codation avec l'utilisation d'outils, les sessions, la mémoire et le routage multi-agents
 - **Open source** : sous licence MIT, piloté par la communauté
 
-**De quoi avez-vous besoin ?** Node 24 (recommandé) ou Node 22 LTS (`22.14+`) pour la compatibilité, une clé API de votre fournisseur choisi, et 5 minutes. Pour une meilleure qualité et sécurité, utilisez le modèle le plus puissant de dernière génération disponible.
+**De quoi avez-vous besoin ?** Node 24 (recommandé), ou Node 22 LTS (`22.14+`) pour la compatibilité, une clé API de votre fournisseur choisi, et 5 minutes. Pour une qualité et une sécurité optimales, utilisez le modèle le plus puissant de la dernière génération disponible.
 
 ## Fonctionnement
 
@@ -64,23 +64,23 @@ Le Gateway est la source unique de vérité pour les sessions, le routage et les
 ## Fonctionnalités clés
 
 <Columns>
-  <Card title="Multi-channel gateway" icon="network">
-    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat, et plus encore avec un seul processus de passerelle (Gateway).
+  <Card title="Passerelle multi-canal" icon="network" href="/fr/channels">
+    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat, et plus encore avec un seul processus Gateway.
   </Card>
-  <Card title="Plugin channels" icon="plug">
-    Les plugins groupés ajoutent Matrix, Nostr, Twitch, Zalo, et plus encore dans les versions actuelles normales.
+  <Card title="Canaux de plugins" icon="plug" href="/fr/tools/plugin">
+    Les plugins inclus ajoutent Matrix, Nostr, Twitch, Zalo, et plus encore dans les versions actuelles normales.
   </Card>
-  <Card title="Multi-agent routing" icon="route">
+  <Card title="Routage multi-agent" icon="route" href="/fr/concepts/multi-agent">
     Sessions isolées par agent, espace de travail ou expéditeur.
   </Card>
-  <Card title="Media support" icon="image">
+  <Card title="Support multimédia" icon="image" href="/fr/nodes/images">
     Envoyez et recevez des images, de l'audio et des documents.
   </Card>
-  <Card title="Web Control UI" icon="monitor">
+  <Card title="Interface de contrôle Web" icon="monitor" href="/fr/web/control-ui">
     Tableau de bord du navigateur pour le chat, la configuration, les sessions et les nœuds.
   </Card>
-  <Card title="Mobile nodes" icon="smartphone">
-    Associez les nœuds iOS et Android pour Canvas, l'appareil photo et les flux de travail activés par la voix.
+  <Card title="Nœuds mobiles" icon="smartphone" href="/fr/nodes">
+    Associez les nœuds iOS et Android pour les workflows Canvas, l'appareil photo et activés par voix.
   </Card>
 </Columns>
 
@@ -92,13 +92,13 @@ Le Gateway est la source unique de vérité pour les sessions, le routage et les
     npm install -g openclaw@latest
     ```
   </Step>
-  <Step title="Embarquement et installation du service">
+  <Step title="Intégration et installation du service">
     ```bash
     openclaw onboard --install-daemon
     ```
   </Step>
-  <Step title="Chat">
-    Ouvrez l'interface utilisateur de contrôle dans votre navigateur et envoyez un message :
+  <Step title="Discuter">
+    Ouvrez l'interface de contrôle dans votre navigateur et envoyez un message :
 
     ```bash
     openclaw dashboard
@@ -109,7 +109,7 @@ Le Gateway est la source unique de vérité pour les sessions, le routage et les
   </Step>
 </Steps>
 
-Besoin de la procédure complète d'installation et de configuration de développement ? Voir [Getting Started](/fr/start/getting-started).
+Besoin de la procédure d'installation complète et de la configuration de développement ? Voir [Getting Started](/fr/start/getting-started).
 
 ## Tableau de bord
 
@@ -127,7 +127,7 @@ Ouvrez l'interface utilisateur de contrôle du navigateur une fois le Gateway d�
 La configuration se trouve dans `~/.openclaw/openclaw.json`.
 
 - Si vous **ne faites rien**, OpenClaw utilise le binaire Pi inclus en mode RPC avec des sessions par expéditeur.
-- Si vous souhaitez le verrouiller, commencez par `channels.whatsapp.allowFrom` et (pour les groupes) les règles de mention.
+- Si vous souhaitez verrouiller l'accès, commencez par `channels.whatsapp.allowFrom` et (pour les groupes) les règles de mention.
 
 Exemple :
 
@@ -150,19 +150,19 @@ Exemple :
     Toute la documentation et les guides, organisés par cas d'usage.
   </Card>
   <Card title="Configuration" href="/fr/gateway/configuration" icon="settings">
-    Paramètres principaux du Gateway, jetons et configuration du provider.
+    Paramètres du Gateway central, jetons et configuration du provider.
   </Card>
   <Card title="Accès à distance" href="/fr/gateway/remote" icon="globe">
     Modèles d'accès SSH et tailnet.
   </Card>
-  <Card title="Channels" href="/fr/channels/telegram" icon="message-square">
-    Configuration spécifique au canal pour Feishu, Microsoft Teams, WhatsApp, Telegram, Discord, et plus encore.
+  <Card title="Canaux" href="/fr/channels/telegram" icon="message-square">
+    Configuration spécifique aux channels pour Feishu, Microsoft Teams, WhatsApp, Telegram, Discord, et plus encore.
   </Card>
   <Card title="Nodes" href="/fr/nodes" icon="smartphone">
-    Nœuds iOS et Android avec appairage, Canvas, caméra et actions de périphérique.
+    Nœuds iOS et Android avec appairage, Canvas, caméra et actions d'appareil.
   </Card>
   <Card title="Help" href="/fr/help" icon="life-buoy">
-    Solutions courantes et point d'entrée pour le troubleshooting.
+    Solutions courantes et point d'entrée pour le dépannage.
   </Card>
 </Columns>
 
@@ -170,16 +170,16 @@ Exemple :
 
 <Columns>
   <Card title="Full feature list" href="/fr/concepts/features" icon="list">
-    Capacités complètes de canal, de routage et de média.
+    Fonctionnalités complètes de canal, de routage et multimédia.
   </Card>
   <Card title="Multi-agent routing" href="/fr/concepts/multi-agent" icon="route">
-    Isolement de l'espace de travail et sessions par agent.
+    Isolation de l'espace de travail et sessions par agent.
   </Card>
   <Card title="Security" href="/fr/gateway/security" icon="shield">
     Jetons, listes d'autorisation et contrôles de sécurité.
   </Card>
   <Card title="Troubleshooting" href="/fr/gateway/troubleshooting" icon="wrench">
-    Diagnostics de la Gateway et erreurs courantes.
+    Diagnostics Gateway et erreurs courantes.
   </Card>
   <Card title="About and credits" href="/fr/reference/credits" icon="info">
     Origines du projet, contributeurs et licence.

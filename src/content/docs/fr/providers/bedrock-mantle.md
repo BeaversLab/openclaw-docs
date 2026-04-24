@@ -8,39 +8,39 @@ title: "Amazon Bedrock Mantle"
 
 # Amazon Bedrock Mantle
 
-OpenClaw inclut un provider **Amazon Bedrock Mantle** intégré qui se connecte
-au endpoint compatible OpenAI de Mantle. Mantle héberge des modèles open source et
-de tiers (GPT-OSS, Qwen, Kimi, GLM, et similaires) via une surface
+OpenClaw inclut un fournisseur intégré **Amazon Bedrock Mantle** qui se connecte au
+point de terminaison compatible OpenAI de Mantle. Mantle héberge des modèles open-source et
+de tiers (GPT-OSS, Qwen, Kimi, GLM, etc.) via une interface
 `/v1/chat/completions` standard soutenue par l'infrastructure Bedrock.
 
-| Propriété         | Valeur                                                                                                         |
-| ----------------- | -------------------------------------------------------------------------------------------------------------- |
-| ID du fournisseur | `amazon-bedrock-mantle`                                                                                        |
-| API               | `openai-completions` (compatible OpenAI)                                                                       |
-| Auth              | Jeton bearer `AWS_BEARER_TOKEN_BEDROCK` explicite ou génération de jetons bearer via chaîne de crédentiels IAM |
-| Région par défaut | `us-east-1` (remplacer par `AWS_REGION` ou `AWS_DEFAULT_REGION`)                                               |
+| Propriété         | Valeur                                                                                                               |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------- |
+| ID du fournisseur | `amazon-bedrock-mantle`                                                                                              |
+| API               | `openai-completions` (compatible OpenAI) ou `anthropic-messages` (itinéraire Messages Anthropic)                     |
+| Auth              | `AWS_BEARER_TOKEN_BEDROCK` explicite ou génération de jetons porteurs par chaîne d'informations d'identification IAM |
+| Région par défaut | `us-east-1` (remplacer par `AWS_REGION` ou `AWS_DEFAULT_REGION`)                                                     |
 
 ## Getting started
 
 Choisissez votre méthode d'authentification préférée et suivez les étapes de configuration.
 
 <Tabs>
-  <Tab title="Explicit bearer token">
-    **Idéal pour :** les environnements où vous possédez déjà un jeton bearer Mantle.
+  <Tab title="Jeton porteur explicite">
+    **Idéal pour :** les environnements où vous possédez déjà un jeton porteur Mantle.
 
     <Steps>
-      <Step title="Set the bearer token on the gateway host">
+      <Step title="Définir le jeton porteur sur l'hôte de la passerelle">
         ```bash
         export AWS_BEARER_TOKEN_BEDROCK="..."
         ```
 
-        Définissez éventuellement une région (par défaut `us-east-1`) :
+        Définissez facultativement une région (par défaut `us-east-1`) :
 
         ```bash
         export AWS_REGION="us-west-2"
         ```
       </Step>
-      <Step title="Verify models are discovered">
+      <Step title="Vérifier que les modèles sont découverts">
         ```bash
         openclaw models list
         ```
@@ -53,7 +53,7 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
   </Tab>
 
   <Tab title="Identifiants IAM">
-    **Idéal pour :** utiliser des informations d'identification compatibles avec le kit SDK AWS (configuration partagée, SSO, identité Web, rôles d'instance ou de tâche).
+    **Idéal pour :** l'utilisation d'informations d'identification compatibles avec le kit SDK AWS (configuration partagée, SSO, identité Web, rôles d'instance ou de tâche).
 
     <Steps>
       <Step title="Configurer les informations d'identification AWS sur l'hôte de la passerelle">
@@ -69,12 +69,12 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
         openclaw models list
         ```
 
-        OpenClaw génère automatiquement un jeton de porteur Mantle à partir de la chaîne d'informations d'identification.
+        OpenClaw génère automatiquement un jeton porteur Mantle à partir de la chaîne d'informations d'identification.
       </Step>
     </Steps>
 
     <Tip>
-    Lorsque `AWS_BEARER_TOKEN_BEDROCK` n'est pas défini, OpenClaw génère le jeton de porteur pour vous à partir de la chaîne d'informations d'identification AWS par défaut, y compris les profils d'informations d'identification/config partagés, SSO, l'identité Web, ainsi que les rôles d'instance ou de tâche.
+    Lorsque `AWS_BEARER_TOKEN_BEDROCK` n'est pas défini, OpenClaw génère pour vous le jeton porteur à partir de la chaîne d'informations d'identification par défaut d'AWS, y compris les profils d'informations d'identification/configuration partagés, SSO, l'identité Web, ainsi que les rôles d'instance ou de tâche.
     </Tip>
 
   </Tab>
@@ -83,14 +83,14 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
 ## Découverte automatique des modèles
 
 Lorsque `AWS_BEARER_TOKEN_BEDROCK` est défini, OpenClaw l'utilise directement. Sinon,
-OpenClaw tente de générer un jeton de porteur Mantle à partir de la chaîne d'informations d'identification AWS par défaut. Il découvre ensuite les modèles Mantle disponibles en interrogeant le point de terminaison `/v1/models` de la région.
+OpenClaw tente de générer un jeton porteur Mantle à partir de la chaîne d'informations d'identification par défaut d'AWS. Il découvre ensuite les modèles Mantle disponibles en interrogeant le point de terminaison `/v1/models` de la région.
 
 | Comportement               | Détail                                 |
 | -------------------------- | -------------------------------------- |
 | Cache de découverte        | Résultats mis en cache pendant 1 heure |
 | Actualisation du jeton IAM | Toutes les heures                      |
 
-<Note>Le jeton de porteur est le même `AWS_BEARER_TOKEN_BEDROCK` que celui utilisé par le fournisseur standard [Amazon Bedrock](/fr/providers/bedrock).</Note>
+<Note>Le jeton porteur est le même `AWS_BEARER_TOKEN_BEDROCK` que celui utilisé par le fournisseur standard [Amazon Bedrock](/fr/providers/bedrock).</Note>
 
 ### Régions prises en charge
 
@@ -131,19 +131,50 @@ Si vous préférez une configuration explicite plutôt que la découverte automa
 ## Notes avancées
 
 <AccordionGroup>
-  <Accordion title="Support du raisonnement">
-    Le support du raisonnement est déduit des identifiants de modèle contenant des modèles comme
+  <Accordion title="Prise en charge du raisonnement">
+    La prise en charge du raisonnement est déduite des ID de modèle contenant des modèles comme
     `thinking`, `reasoner` ou `gpt-oss-120b`. OpenClaw définit `reasoning: true`
     automatiquement pour les modèles correspondants lors de la découverte.
   </Accordion>
 
-<Accordion title="Indisponibilité du point de terminaison">Si le point de terminaison Mantle est indisponible ou ne renvoie aucun modèle, le fournisseur est ignoré silencieusement. OpenClaw ne génère pas d'erreur ; les autres fournisseurs configurés continuent de fonctionner normalement.</Accordion>
+<Accordion title="Indisponibilité du point de terminaison">Si le point de terminaison Mantle est indisponible ou ne renvoie aucun modèle, le fournisseur est silencieusement ignoré. OpenClaw ne génère pas d'erreur ; les autres fournisseurs configurés continuent de fonctionner normalement.</Accordion>
+
+  <Accordion title="Claude Opus 4.7 via la route Messages Anthropic">
+    Mantle expose également une route Messages Anthropic qui transporte les modèles Claude via le même chemin de streaming authentifié par porteur. Claude Opus 4.7 (`amazon-bedrock-mantle/claude-opus-4.7`) est appelable via cette route avec un streaming appartenant au fournisseur, les jetons porteurs AWS ne sont donc pas traités comme des clés Anthropic API.
+
+    Lorsque vous épinglez un modèle Messages Anthropic sur le fournisseur Mantle, OpenClaw utilise la surface API `anthropic-messages` au lieu de `openai-completions` pour ce modèle. L'authentification provient toujours de `AWS_BEARER_TOKEN_BEDROCK` (ou du jeton porteur IAM frappé).
+
+    ```json5
+    {
+      models: {
+        providers: {
+          "amazon-bedrock-mantle": {
+            models: [
+              {
+                id: "claude-opus-4.7",
+                name: "Claude Opus 4.7",
+                api: "anthropic-messages",
+                reasoning: true,
+                input: ["text", "image"],
+                contextWindow: 1000000,
+                maxTokens: 32000,
+              },
+            ],
+          },
+        },
+      },
+    }
+    ```
+
+    Les métadonnées de la fenêtre de contexte pour les modèles Mantle découverts utilisent les limites publiées connues lorsque disponibles et reviennent de manière conservative pour les modèles non répertoriés, afin que la compactage et la gestion des dépassements se comportent correctement pour les nouvelles entrées sans surestimer les modèles inconnus.
+
+  </Accordion>
 
   <Accordion title="Relation avec le fournisseur Amazon Bedrock">
-    Bedrock Mantle est un fournisseur distinct du fournisseur standard
-    [Amazon Bedrock](/fr/providers/bedrock). Mantle utilise une surface
-    `/v1` compatible avec OpenAI, tandis que le fournisseur Bedrock standard utilise
-    l'API API native.
+    Bedrock Mantle est un fournisseur distinct du fournisseur
+    [Amazon Bedrock](/fr/providers/bedrock) standard. Mantle utilise une surface
+    `/v1` compatible OpenAI, tandis que le fournisseur Bedrock standard utilise
+    l'API Bedrock native.
 
     Les deux fournisseurs partagent les mêmes informations d'identification `AWS_BEARER_TOKEN_BEDROCK` lorsqu'elles
     sont présentes.
@@ -158,10 +189,10 @@ Si vous préférez une configuration explicite plutôt que la découverte automa
     Fournisseur Bedrock natif pour les modèles Anthropic Claude, Titan et autres.
   </Card>
   <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
-    Choix des fournisseurs, références de modèle et comportement de basculement.
+    Choix des fournisseurs, des références de modèle et du comportement de basculement.
   </Card>
   <Card title="OAuth et auth" href="/fr/gateway/authentication" icon="key">
-    Détails d'authentification et règles de réutilisation des informations d'identification.
+    Détails d'authentification et règles de réutilisation des identifiants.
   </Card>
   <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
     Problèmes courants et comment les résoudre.

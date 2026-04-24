@@ -219,7 +219,7 @@ La limpieza al finalizar también es consciente del tiempo de ejecución:
 - La finalización del cron aislado cierra, con el mejor esfuerzo, las pestañas/procesos del navegador rastreados para la sesión cron antes de que la ejecución se cierre por completo.
 - La entrega del cron aislado espera el seguimiento del subagente descendente cuando es necesario y
   suprime el texto de reconocimiento del padre obsoleto en lugar de anunciarlo.
-- La entrega de finalización del subagente prefiere el último texto visible del asistente; si está vacío, recurre al texto saneado de la última herramienta/toolResult, y las ejecuciones de llamadas a herramientas que solo agotaron el tiempo pueden colapsarse en un breve resumen de progreso parcial.
+- La entrega de finalización de subagentes prefiere el texto del asistente visible más reciente; si está vacío, recurre al texto de herramienta/toolResult más reciente saneado, y las ejecuciones de llamadas a herramientas que solo terminan por tiempo de espera pueden colapsar en un resumen breve de progreso parcial. Las ejecuciones fallidas terminales anuncian el estado de fallo sin reproducir el texto de respuesta capturado.
 - Los fallos de limpieza no ocultan el resultado real de la tarea.
 
 ### `tasks flow list|show|cancel`
@@ -317,4 +317,4 @@ El `runId` de una tarea se vincula a la ejecución del agente que realiza el tra
 - [Task Flow](/es/automation/taskflow) — orquestación de flujos por encima de las tareas
 - [Scheduled Tasks](/es/automation/cron-jobs) — programación del trabajo en segundo plano
 - [Heartbeat](/es/gateway/heartbeat) — turnos periódicos de la sesión principal
-- [CLI: Tasks](/es/cli/index#tasks) — referencia de comandos de la CLI
+- [CLI: Tareas](/es/cli/tasks) — Referencia de comandos de CLI

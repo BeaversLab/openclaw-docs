@@ -82,16 +82,17 @@ Regla importante de tiempo de ejecución:
 - Los proxies inversos de bucle invertido del mismo host **no** satisfacen la autenticación de proxy de confianza.
 - Para configuraciones de proxy de bucle invertido del mismo host, utilice en su lugar la autenticación por token/contraseña, o enrute a través de una dirección de proxy de confianza que no sea de bucle invertido que OpenClaw pueda verificar.
 - Las implementaciones de la Interfaz de usuario de control (Control UI) que no son de bucle invertido aún necesitan `gateway.controlUi.allowedOrigins` explícito.
+- **La evidencia de encabezados reenviados prevalece sobre la localidad de loopback.** Si una solicitud llega en loopback pero lleva encabezados `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` que apuntan a un origen no local, esa evidencia descalifica la reclamación de localidad de loopback. La solicitud se trata como remota para el emparejamiento, la autenticación de proxy confiable y el filtrado de identidad de dispositivo de la UI de control. Esto evita que un proxy de loopback del mismo host blanquee la identidad de encabezados reenviados en la autenticación de proxy confiable.
 
 ### Referencia de configuración
 
-| Campo                                       | Obligatorio | Descripción                                                                                                |
-| ------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------- |
-| `gateway.trustedProxies`                    | Sí          | Matriz de direcciones IP de proxy para confiar. Las solicitudes de otras IP se rechazan.                   |
-| `gateway.auth.mode`                         | Sí          | Debe ser `"trusted-proxy"`                                                                                 |
-| `gateway.auth.trustedProxy.userHeader`      | Sí          | Nombre del encabezado que contiene la identidad del usuario autenticado                                    |
-| `gateway.auth.trustedProxy.requiredHeaders` | No          | Encabezados adicionales que deben estar presentes para que se confíe en la solicitud                       |
-| `gateway.auth.trustedProxy.allowUsers`      | No          | Lista de permitidos de identidades de usuario. Vacío significa permitir a todos los usuarios autenticados. |
+| Campo                                       | Obligatorio | Descripción                                                                                            |
+| ------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------ |
+| `gateway.trustedProxies`                    | Sí          | Matriz de direcciones IP de proxy para confiar. Las solicitudes de otras IP se rechazan.               |
+| `gateway.auth.mode`                         | Sí          | Debe ser `"trusted-proxy"`                                                                             |
+| `gateway.auth.trustedProxy.userHeader`      | Sí          | Nombre del encabezado que contiene la identidad del usuario autenticado                                |
+| `gateway.auth.trustedProxy.requiredHeaders` | No          | Encabezados adicionales que deben estar presentes para que la solicitud sea confiable                  |
+| `gateway.auth.trustedProxy.allowUsers`      | No          | Lista permitida de identidades de usuario. Vacío significa permitir a todos los usuarios autenticados. |
 
 ## Terminación TLS y HSTS
 
@@ -102,9 +103,9 @@ Utilice un punto de terminación TLS y aplique HSTS allí.
 Cuando su proxy inverso maneja HTTPS para `https://control.example.com`, configure
 `Strict-Transport-Security` en el proxy para ese dominio.
 
-- Adecuado para implementaciones orientadas a Internet.
+- Adecuado para despliegues orientados a Internet.
 - Mantiene el certificado + la política de endurecimiento HTTP en un solo lugar.
-- OpenClaw puede mantenerse en HTTP de bucle invertido detrás del proxy.
+- OpenClaw puede permanecer en HTTP de loopback detrás del proxy.
 
 Valor de encabezado de ejemplo:
 
@@ -114,7 +115,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 ### Terminación TLS de la puerta de enlace
 
-Si el propio OpenClaw sirve HTTPS directamente (sin proxy de terminación TLS), configure:
+Si OpenClaw mismo sirve HTTPS directamente (sin proxy que termine TLS), configure:
 
 ```json5
 {
@@ -129,21 +130,21 @@ Si el propio OpenClaw sirve HTTPS directamente (sin proxy de terminación TLS), 
 }
 ```
 
-`strictTransportSecurity` acepta un valor de encabezado de cadena o `false` para deshabilitar explícitamente.
+`strictTransportSecurity` acepta un valor de encabezado de cadena, o `false` para deshabilitar explícitamente.
 
 ### Guía de implementación
 
-- Comience con una antigüedad máxima corta primero (por ejemplo, `max-age=300`) mientras valida el tráfico.
-- Aumente a valores de larga duración (por ejemplo, `max-age=31536000`) solo después de tener una alta confianza.
+- Comience con una edad máxima corta primero (por ejemplo `max-age=300`) mientras valida el tráfico.
+- Aumente a valores de larga duración (por ejemplo `max-age=31536000`) solo después de tener una alta confianza.
 - Agregue `includeSubDomains` solo si cada subdominio está listo para HTTPS.
 - Use precarga solo si cumple intencionalmente los requisitos de precarga para su conjunto completo de dominios.
-- El desarrollo local exclusivamente de bucle invertido no se beneficia de HSTS.
+- El desarrollo local solo de loopback no se beneficia de HSTS.
 
 ## Ejemplos de configuración de proxy
 
 ### Pomerium
 
-Pomerium pasa la identidad en `x-pomerium-claim-email` (u otros encabezados de reclamos) y un JWT en `x-pomerium-jwt-assertion`.
+Pomerium pasa la identidad en `x-pomerium-claim-email` (u otros encabezados de reclamaciones) y un JWT en `x-pomerium-jwt-assertion`.
 
 ```json5
 {
@@ -177,7 +178,7 @@ routes:
 
 ### Caddy con OAuth
 
-Caddy con el plugin `caddy-security` puede autenticar usuarios y pasar encabezados de identidad.
+Caddy con el complemento `caddy-security` puede autenticar usuarios y pasar encabezados de identidad.
 
 ```json5
 {
@@ -262,17 +263,17 @@ location / {
 
 OpenClaw rechaza configuraciones ambiguas donde tanto un `gateway.auth.token` (o `OPENCLAW_GATEWAY_TOKEN`) como el modo `trusted-proxy` están activos al mismo tiempo. Las configuraciones de tokens mixtos pueden causar que las solicitudes de loopback se autentiquen silenciosamente en la ruta de autenticación incorrecta.
 
-Si ve un error `mixed_trusted_proxy_token` al iniciar:
+Si ve un error `mixed_trusted_proxy_token` al inicio:
 
-- Elimine el token compartido cuando use el modo trusted-proxy, o
-- Cambie `gateway.auth.mode` a `"token"` si pretende usar autenticación basada en tokens.
+- Elimine el token compartido al usar el modo trusted-proxy, o
+- Cambie `gateway.auth.mode` a `"token"` si tiene previsto usar autenticación basada en token.
 
-La autenticación trusted-proxy de loopback también falla de forma cerrada: los llamadores del mismo host deben suministrar los encabezados de identidad configurados a través de un proxy de confianza en lugar de autenticarse silenciosamente.
+La autenticación de proxy de confianza (trusted-proxy) en loopback también falla de forma cerrada: los llamadores del mismo host deben proporcionar los encabezados de identidad configurados a través de un proxy de confianza en lugar de ser autenticados silenciosamente.
 
 ## Encabezado de ámbitos de operador
 
-La autenticación trusted-proxy es un modo HTTP **con identidad**, por lo que los llamadores pueden
-opcionalmente declarar ámbitos de operador con `x-openclaw-scopes`.
+La autenticación de proxy de confianza es un modo HTTP **con identidad**, por lo que los llamadores pueden
+declarar opcionalmente los ámbitos del operador con `x-openclaw-scopes`.
 
 Ejemplos:
 
@@ -282,42 +283,40 @@ Ejemplos:
 
 Comportamiento:
 
-- Cuando el encabezado está presente, OpenClaw respeta el conjunto de ámbitos declarados.
+- Cuando el encabezado está presente, OpenClaw respeta el conjunto de ámbitos declarado.
 - Cuando el encabezado está presente pero vacío, la solicitud declara **ningún** ámbito de operador.
-- Cuando el encabezado está ausente, las APIs HTTP normales con identidad vuelven al conjunto estándar de ámbitos predeterminados del operador.
-- Las **rutas HTTP del complemento** de gateway-auth son más estrechas de forma predeterminada: cuando `x-openclaw-scopes` está ausente, su ámbito de tiempo de ejecución vuelve a `operator.write`.
-- Las solicitudes HTTP originadas en el navegador aún tienen que pasar `gateway.controlUi.allowedOrigins` (o el modo deliberado de reserva de encabezado Host) incluso después de que la autenticación trusted-proxy tenga éxito.
+- Cuando el encabezado está ausente, las API HTTP normales con identidad recurren al conjunto de ámbitos predeterminados del operador estándar.
+- Las **rutas HTTP del complemento** de autenticación de puerta de enlace (gateway-auth) son más estrechas de forma predeterminada: cuando `x-openclaw-scopes` está ausente, su ámbito de tiempo de ejecución recurre a `operator.write`.
+- Las solicitudes HTTP de origen del navegador aún deben pasar `gateway.controlUi.allowedOrigins` (o el modo deliberado de reserva de encabezado Host) incluso después de que la autenticación de proxy de confianza tenga éxito.
 
 Regla práctica:
 
-- Envíe `x-openclaw-scopes` explícitamente cuando desee que una solicitud de proxy confiable sea
-  más estricta que la configuración predeterminada, o cuando una ruta de complemento gateway-auth necesite
-  algo más fuerte que el ámbito de escritura.
+- Envíe `x-openclaw-scopes` explícitamente cuando desee que una solicitud de proxy confiable sea más estricta que los valores predeterminados, o cuando una ruta del complemento gateway-auth necesite algo más fuerte que el alcance de escritura.
 
 ## Lista de verificación de seguridad
 
 Antes de habilitar la autenticación de proxy confiable, verifique:
 
-- [ ] **El proxy es la única ruta**: El puerto del Gateway está protegido por un firewall contra todo excepto su proxy
+- [ ] **El proxy es la única ruta**: El puerto del Gateway está protegido por un firewall de todo excepto su proxy
 - [ ] **trustedProxies es mínimo**: Solo sus IPs de proxy reales, no subredes completas
-- [ ] **Sin fuente de proxy de bucle invertido**: la autenticación de proxy confiable falla de forma segura para las solicitudes de origen de bucle invertido
-- [ ] **El proxy elimina los encabezados**: Su proxy sobrescribe (no añade) los encabezados `x-forwarded-*` de los clientes
+- [ ] **Sin fuente de proxy de bucle local**: la autenticación de proxy confiable falla de forma cerrada para las solicitudes de origen de bucle local
+- [ ] **El proxy elimina encabezados**: Su proxy sobrescribe (no agrega) los encabezados `x-forwarded-*` de los clientes
 - [ ] **Terminación TLS**: Su proxy maneja TLS; los usuarios se conectan a través de HTTPS
-- [ ] **allowedOrigins es explícito**: La interfaz de usuario de Control que no sea de bucle invertido usa `gateway.controlUi.allowedOrigins` explícito
-- [ ] **allowUsers está configurado** (recomendado): Restrinja a usuarios conocidos en lugar de permitir a cualquier persona autenticada
-- [ ] **Sin configuración de token mixta**: No configure tanto `gateway.auth.token` como `gateway.auth.mode: "trusted-proxy"`
+- [ ] **allowedOrigins es explícito**: La IU de control que no es de bucle local usa `gateway.controlUi.allowedOrigins` explícito
+- [ ] **allowUsers está configurado** (recomendado): Restrinja a usuarios conocidos en lugar de permitir a cualquier usuario autenticado
+- [ ] **Sin configuración de token mixto**: No configure tanto `gateway.auth.token` como `gateway.auth.mode: "trusted-proxy"`
 
 ## Auditoría de seguridad
 
-`openclaw security audit` marcará la autenticación de proxy confiable con un hallazgo de severidad **crítica**. Esto es intencional: es un recordatorio de que está delegando la seguridad a su configuración de proxy.
+`openclaw security audit` marcará la autenticación de proxy confiable con un hallazgo de gravedad **crítica**. Esto es intencional: es un recordatorio de que está delegando la seguridad a su configuración de proxy.
 
 La auditoría verifica:
 
 - Recordatorio de advertencia/crítico de `gateway.trusted_proxy_auth` base
-- Falta la configuración `trustedProxies`
-- Falta la configuración `userHeader`
+- Falta la configuración de `trustedProxies`
+- Falta la configuración de `userHeader`
 - `allowUsers` vacío (permite cualquier usuario autenticado)
-- Política de origen de navegador con comodín o faltante en superficies de interfaz de usuario de Control expuestas
+- Política de origen de navegador comodín o faltante en las superficies de la IU de control expuestas
 
 ## Solución de problemas
 
@@ -325,75 +324,75 @@ La auditoría verifica:
 
 La solicitud no provino de una IP en `gateway.trustedProxies`. Verifique:
 
-- ¿Es correcta la IP del proxy? (Las IP de los contenedores Docker pueden cambiar)
+- ¿Es correcta la IP del proxy? (Las IP de los contenedores de Docker pueden cambiar)
 - ¿Hay un equilibrador de carga delante de su proxy?
 - Use `docker inspect` o `kubectl get pods -o wide` para encontrar las IP reales
 
 ### "trusted_proxy_loopback_source"
 
-OpenClaw rechazó una solicitud de proxy confiable de origen de bucle invertido.
+OpenClaw rechazó una solicitud de proxy confiable de origen de bucle local.
 
 Verifique:
 
-- ¿El proxy se está conectando desde `127.0.0.1` / `::1`?
-- ¿Está intentando usar la autenticación de proxy confiable con un proxy inverso de bucle invertido en el mismo host?
+- ¿Se está conectando el proxy desde `127.0.0.1` / `::1`?
+- ¿Está intentando usar la autenticación de proxy confiable con un proxy inverso de bucle local en el mismo host?
 
 Solución:
 
-- Use la autenticación por token/contraseña para configuraciones de proxy de bucle de retorno en el mismo host, o
-- Enrutamiento a través de una dirección de proxy de confianza que no sea de bucle de retorno y mantenga esa IP en `gateway.trustedProxies`.
+- Use token/password auth for same-host loopback proxy setups, or
+- Route through a non-loopback trusted proxy address and keep that IP in `gateway.trustedProxies`.
 
 ### "trusted_proxy_user_missing"
 
-El encabezado de usuario estaba vacío o faltaba. Verifique:
+The user header was empty or missing. Check:
 
-- ¿Está su proxy configurado para pasar encabezados de identidad?
-- ¿Es correcto el nombre del encabezado? (no distingue entre mayúsculas y minúsculas, pero la ortografía importa)
-- ¿Está el usuario realmente autenticado en el proxy?
+- Is your proxy configured to pass identity headers?
+- Is the header name correct? (case-insensitive, but spelling matters)
+- Is the user actually authenticated at the proxy?
 
 ### "trusted*proxy_missing_header*\*"
 
-Faltaba un encabezado requerido. Verifique:
+A required header wasn't present. Check:
 
-- La configuración de su proxy para esos encabezados específicos
-- Si los encabezados se están eliminando en algún lugar de la cadena
+- Your proxy configuration for those specific headers
+- Whether headers are being stripped somewhere in the chain
 
 ### "trusted_proxy_user_not_allowed"
 
-El usuario está autenticado pero no en `allowUsers`. Agréguelo o elimine la lista de permitidos.
+The user is authenticated but not in `allowUsers`. Either add them or remove the allowlist.
 
 ### "trusted_proxy_origin_not_allowed"
 
-La autenticación de proxy de confianza tuvo éxito, pero el encabezado `Origin` del navegador no pasó las verificaciones de origen de la interfaz de usuario de Control.
+Trusted-proxy auth succeeded, but the browser `Origin` header did not pass Control UI origin checks.
 
-Verifique:
+Check:
 
-- `gateway.controlUi.allowedOrigins` incluye el origen exacto del navegador
-- No está dependiendo de orígenes comodín a menos que intencionalmente desee un comportamiento de permitir todo
-- Si usa intencionalmente el modo de reserva del encabezado Host, `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` se establece deliberadamente
+- `gateway.controlUi.allowedOrigins` includes the exact browser origin
+- You are not relying on wildcard origins unless you intentionally want allow-all behavior
+- If you intentionally use Host-header fallback mode, `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` is set deliberately
 
-### WebSocket sigue fallando
+### WebSocket Still Failing
 
-Asegúrese de que su proxy:
+Make sure your proxy:
 
-- Admite actualizaciones de WebSocket (`Upgrade: websocket`, `Connection: upgrade`)
-- Pasa los encabezados de identidad en las solicitudes de actualización de WebSocket (no solo HTTP)
-- No tiene una ruta de autenticación separada para las conexiones WebSocket
+- Supports WebSocket upgrades (`Upgrade: websocket`, `Connection: upgrade`)
+- Passes the identity headers on WebSocket upgrade requests (not just HTTP)
+- Doesn't have a separate auth path for WebSocket connections
 
-## Migración desde la autenticación por token
+## Migration from Token Auth
 
-Si está pasando de la autenticación por token a la de proxy de confianza:
+If you're moving from token auth to trusted-proxy:
 
-1. Configure su proxy para autenticar usuarios y pasar encabezados
-2. Pruebe la configuración del proxy de forma independiente (curl con encabezados)
-3. Actualice la configuración de OpenClaw con autenticación de proxy de confianza
-4. Reinicie el Gateway
-5. Pruebe las conexiones WebSocket desde la interfaz de usuario de Control
-6. Ejecute `openclaw security audit` y revise los hallazgos
+1. Configure your proxy to authenticate users and pass headers
+2. Test the proxy setup independently (curl with headers)
+3. Update OpenClaw config with trusted-proxy auth
+4. Restart the Gateway
+5. Test WebSocket connections from the Control UI
+6. Run `openclaw security audit` and review findings
 
-## Relacionado
+## Related
 
-- [Seguridad](/es/gateway/security) — guía de seguridad completa
-- [Configuración](/es/gateway/configuration) — referencia de configuración
-- [Acceso remoto](/es/gateway/remote) — otros patrones de acceso remoto
-- [Tailscale](/es/gateway/tailscale) — alternativa más simple para acceso solo a tailnet
+- [Security](/es/gateway/security) — full security guide
+- [Configuration](/es/gateway/configuration) — config reference
+- [Remote Access](/es/gateway/remote) — other remote access patterns
+- [Tailscale](/es/gateway/tailscale) — simpler alternative for tailnet-only access

@@ -204,7 +204,7 @@ openclaw memory rem-harness --json
 
 階段策略、閾值和儲存行為是內部實作細節（非使用者面向的設定）。
 
-參閱 [記憶配置參考](/zh-Hant/reference/memory-config#dreaming)
+請參閱 [記憶體設定參考](/zh-Hant/reference/memory-config#dreaming)
 以取得完整的金鑰列表。
 
 ## Dreams UI
@@ -218,9 +218,21 @@ openclaw memory rem-harness --json
 - 一個獨立的已落實 Scene 頻道，用於已暫存的歷史重播項目
 - 一個由 `doctor.memory.dreamDiary` 支援的可擴充夢境日記閱讀器
 
+## 疑難排解
+
+### Dreaming 從未執行（狀態顯示為已封鎖）
+
+受控的 dreaming cron 依賴預設代理程式的心跳。如果該代理程式的心跳未觸發，cron 會將系統事件加入佇列，但沒有程式消耗該事件，導致 dreaming 在不知不覺中未執行。在這種情況下，`openclaw memory status` 和 `/dreaming status` 都會回報 `blocked`，並指出其心跳造成封鎖的代理程式。
+
+兩個常見原因：
+
+- 另一個代理程式宣告了明確的 `heartbeat:` 區塊。當 `agents.list` 中的任何項目有其自己的 `heartbeat` 區塊時，只有那些代理程式會產生心跳 — 預設設定停止套用到其他程式，因此預設代理程式可能會變成靜默狀態。請將心跳設定移至 `agents.defaults.heartbeat`，或者在預設代理程式上新增明確的 `heartbeat` 區塊。請參閱 [範圍與優先順序](/zh-Hant/gateway/heartbeat#scope-and-precedence)。
+- `heartbeat.every` 是 `0`、空的或無法解析。cron 沒有可排程的間隔，因此心跳實際上已停用。請將 `every` 設定為正數持續時間，例如 `30m`。請參閱 [預設值](/zh-Hant/gateway/heartbeat#defaults)。
+
 ## 相關
 
-- [記憶](/zh-Hant/concepts/memory)
-- [記憶搜尋](/zh-Hant/concepts/memory-search)
+- [心跳](/zh-Hant/gateway/heartbeat)
+- [記憶體](/zh-Hant/concepts/memory)
+- [記憶體搜尋](/zh-Hant/concepts/memory-search)
 - [memory CLI](/zh-Hant/cli/memory)
-- [記憶配置參考](/zh-Hant/reference/memory-config)
+- [記憶體設定參考](/zh-Hant/reference/memory-config)

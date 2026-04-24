@@ -6,36 +6,38 @@ read_when:
 title: "Northflank"
 ---
 
-Despliega OpenClaw en Northflank con una plantilla de un solo clic y accede a él a través de la interfaz de control web.
+# Northflank
+
+Despliega OpenClaw en Northflank con una plantilla de un solo clic y accede a él a través de la interfaz de usuario de Control web.
 Esta es la ruta más fácil "sin terminal en el servidor": Northflank ejecuta el Gateway por ti.
 
 ## Cómo empezar
 
-1. Haga clic en [Deploy OpenClaw](https://northflank.com/stacks/deploy-openclaw) para abrir la plantilla.
-2. Cree una [cuenta en Northflank](https://app.northflank.com/signup) si aún no tiene una.
-3. Haz clic en **Desplegar OpenClaw ahora**.
+1. Haz clic en [Deploy OpenClaw](https://northflank.com/stacks/deploy-openclaw) para abrir la plantilla.
+2. Crea una [cuenta en Northflank](https://app.northflank.com/signup) si aún no tienes una.
+3. Haz clic en **Deploy OpenClaw now**.
 4. Establezca la variable de entorno requerida: `OPENCLAW_GATEWAY_TOKEN` (use un valor aleatorio fuerte).
-5. Haz clic en **Desplegar stack** para compilar y ejecutar la plantilla de OpenClaw.
-6. Espera a que se complete el despliegue y luego haz clic en **Ver recursos**.
-7. Abre el servicio OpenClaw.
-8. Abra la URL pública de OpenClaw en `/openclaw` y conéctese usando el secreto compartido configurado. Esta plantilla usa `OPENCLAW_GATEWAY_TOKEN` de forma predeterminada; si la reemplaza con autenticación por contraseña, use esa contraseña en su lugar.
+5. Haz clic en **Deploy stack** para compilar y ejecutar la plantilla de OpenClaw.
+6. Espere a que se complete el despliegue y luego haga clic en **View resources**.
+7. Abra el servicio OpenClaw.
+8. Abra la URL pública de OpenClaw en `/openclaw` y conéctese utilizando el secreto compartido configurado. Esta plantilla utiliza `OPENCLAW_GATEWAY_TOKEN` de forma predeterminada; si la reemplaza con autenticación por contraseña, utilice esa contraseña en su lugar.
 
 ## Lo que obtienes
 
-- Gateway OpenClaw alojado + Interfaz de control
-- Almacenamiento persistente a través de un Volumen de Northflank (`/data`) para que `openclaw.json`,
-  `auth-profiles.json` por agente, el estado del canal/proveedor, las sesiones y
-  el espacio de trabajo sobrevivan a los reimplantes
+- OpenClaw Gateway alojado + Interfaz de usuario de Control
+- Almacenamiento persistente a través de Northflank Volume (`/data`) para que `openclaw.json`,
+  `auth-profiles.json` por agente, estado del canal/proveedor, sesiones y
+  el espacio de trabajo sobrevivan a los redespliegues
 
 ## Conectar un canal
 
-Use la Interfaz de Control en `/openclaw` o ejecute `openclaw onboard` a través de SSH para obtener instrucciones de configuración del canal:
+Use la interfaz de usuario de Control en `/openclaw` o ejecute `openclaw onboard` a través de SSH para obtener instrucciones de configuración del canal:
 
-- [Telegram](/es/channels/telegram) (el más rápido — solo se necesita un token de bot)
+- [Telegram](/es/channels/telegram) (el más rápido — solo un token de bot)
 - [Discord](/es/channels/discord)
 - [Todos los canales](/es/channels)
 
-## Próximos pasos
+## Siguientes pasos
 
 - Configure canales de mensajería: [Canales](/es/channels)
 - Configure el Gateway: [Configuración del Gateway](/es/gateway/configuration)

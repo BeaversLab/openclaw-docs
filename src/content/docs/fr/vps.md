@@ -52,10 +52,10 @@ qui s'applique partout.
   </Card>
 </CardGroup>
 
-**AWS (EC2 / Lightsail / offre gratuite)** fonctionne également bien.
-Un didacticiel vidéo communautaire est disponible sur
+**AWS (EC2 / Lightsail / free tier)** fonctionne également très bien.
+Un guide vidéo communautaire est disponible sur
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
-(ressource communautaire -- risque de devenir indisponible).
+(ressource communautaire -- susceptible de devenir indisponible).
 
 ## Fonctionnement des configurations cloud
 
@@ -65,7 +65,7 @@ Un didacticiel vidéo communautaire est disponible sur
 - Sécurité par défaut : gardez le Gateway en boucle locale (loopback) et accédez-y via un tunnel SSH ou Tailscale Serve.
   Si vous vous liez à `lan` ou `tailnet`, exigez `gateway.auth.token` ou `gateway.auth.password`.
 
-Pages connexes : [Gateway accès distant](/fr/gateway/remote), [Hub des plateformes](/fr/platforms).
+Pages connexes : [Gateway remote access](/fr/gateway/remote), [Platforms hub](/fr/platforms).
 
 ## Agent d'entreprise partagé sur un VPS
 
@@ -75,7 +75,7 @@ L'exécution d'un seul agent pour une équipe est une configuration valide lorsq
 - Ne connectez pas cet environnement d'exécution à des comptes personnels Apple/Google ou à des profils personnels de navigateur/gestionnaire de mots de passe.
 - Si les utilisateurs sont antagonistes les uns envers les autres, séparez-les par passerelle/hôte/utilisateur OS.
 
-Détails du modèle de sécurité : [Sécurité](/fr/gateway/security).
+Détails du modèle de sécurité : [Security](/fr/gateway/security).
 
 ## Utilisation des nœuds avec un VPS
 
@@ -83,7 +83,7 @@ Vous pouvez conserver le Gateway dans le cloud et associer des **nœuds** sur vo
 (Mac/iOS/Android/sans tête). Les nœuds fournissent des capacités d'écran/camera/canvas locales et `system.run`
 tandis que le Gateway reste dans le cloud.
 
-Docs : [Nodes](/fr/nodes), [Nodes CLI](/fr/cli/nodes).
+Documentation : [Nodes](/fr/nodes), [Nodes CLI](/fr/cli/nodes).
 
 ## Réglage du démarrage pour les petits VM et hôtes ARM
 
@@ -135,4 +135,7 @@ Si vous avez délibérément installé une unité système à la place, modifiez
 `openclaw-gateway.service` via `sudo systemctl edit openclaw-gateway.service`.
 
 Comment les stratégies `Restart=` aident à la récupération automatisée :
-[systemd peut automatiser la récupération de service](https://www.redhat.com/en/blog/systemd-automate-recovery).
+[systemd peut automatiser la récupération des services](https://www.redhat.com/en/blog/systemd-automate-recovery).
+
+Pour le comportement OOM de Linux, la sélection des processus enfants victimes et les diagnostics `exit 137`,
+voir [Linux memory pressure and OOM kills](/fr/platforms/linux#memory-pressure-and-oom-kills).

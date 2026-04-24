@@ -8,7 +8,7 @@ title: "LM Studio"
 
 # LM Studio
 
-LM Studio est une application conviviale mais puissante pour exécuter des modèles à poids ouverts sur votre propre matériel. Elle vous permet d'exécuter des modèles llama.cpp (GGUF) ou MLX (Apple Silicon). Disponible en package GUI ou en démon sans interface (`llmster`). Pour la documentation produit et la configuration, voir [lmstudio.ai](https://lmstudio.ai/).
+LM Studio est une application conviviale mais puissante pour exécuter des modèles à poids ouverts sur votre propre matériel. Elle vous permet d'exécuter des modèles llama.cpp (GGUF) ou MLX (Apple Silicon). Disponible en package GUI ou en démon sans interface (`llmster`). Pour la documentation produit et la configuration, consultez [lmstudio.ai](https://lmstudio.ai/).
 
 ## Quick start
 
@@ -30,7 +30,7 @@ lms daemon up
 lms server start --port 1234
 ```
 
-Si vous utilisez l'application, assurez-vous que le JIT est activé pour une expérience fluide. En savoir plus dans le [guide LM Studio JIT et TTL](https://lmstudio.ai/docs/developer/core/ttl-and-auto-evict).
+Si vous utilisez l'application, assurez-vous que le JIT est activé pour une expérience fluide. Pour en savoir plus, consultez le [guide LM Studio JIT et TTL](https://lmstudio.ai/docs/developer/core/ttl-and-auto-evict).
 
 3. OpenClaw nécessite une valeur de jeton LM Studio. Définissez `LM_API_TOKEN` :
 
@@ -44,7 +44,7 @@ Si l'authentification LM Studio est désactivée, utilisez n'importe quelle vale
 export LM_API_TOKEN="placeholder-key"
 ```
 
-Pour plus de détails sur la configuration de l'authentification LM Studio, voir [LM Studio Authentication](https://lmstudio.ai/docs/developer/core/authentication).
+Pour plus de détails sur la configuration de l'authentification LM Studio, consultez [Authentification LM Studio](https://lmstudio.ai/docs/developer/core/authentication).
 
 4. Exécutez l'onboarding et choisissez `LM Studio` :
 
@@ -102,6 +102,20 @@ La configuration interactive peut demander une longueur de contexte de chargemen
 
 ## Configuration
 
+### Compatibilité de l'utilisation en streaming
+
+OpenClaw marque LM Studio comme compatible avec l'utilisation en streaming, de sorte que la comptabilisation des jetons ne se dégrade plus en totaux inconnus ou obsolètes lors des complétions en streaming. OpenClaw récupère également les comptes de jetons à partir des métadonnées de type llama.cpp `timings.prompt_n` / `timings.predicted_n` lorsque LM Studio n'émet pas d'objet `usage` de forme OpenAI.
+
+Autres backends locaux compatibles OpenAI couverts par le même comportement :
+
+- vLLM
+- SGLang
+- llama.cpp
+- LocalAI
+- Jan
+- TabbyAPI
+- text-generation-webui
+
 ### Configuration explicite
 
 ```json5
@@ -151,9 +165,9 @@ curl http://localhost:1234/api/v1/models
 Si la configuration signale une erreur HTTP 401, vérifiez votre clé API :
 
 - Vérifiez que `LM_API_TOKEN` correspond à la clé configurée dans LM Studio.
-- Pour plus de détails sur la configuration de l'authentification LM Studio, consultez [LM Studio Authentication](https://lmstudio.ai/docs/developer/core/authentication).
+- Pour plus de détails sur la configuration de l'authentification LM Studio, consultez [Authentification LM Studio](https://lmstudio.ai/docs/developer/core/authentication).
 - Si votre serveur ne nécessite pas d'authentification, utilisez n'importe quelle valeur de jeton non vide pour `LM_API_TOKEN`.
 
 ### Chargement de modèle à la demande (Just-in-time)
 
-LM Studio prend en charge le chargement de modèle à la demande (JIT), où les modèles sont chargés lors de la première requête. Assurez-vous que cette fonctionnalité est activée pour éviter les erreurs 'Model not loaded'.
+LM Studio prend en charge le chargement de modèle à la demande (JIT), où les modèles sont chargés lors de la première requête. Assurez-vous que cette fonction est activée pour éviter les erreurs « Modèle non chargé ».

@@ -24,8 +24,8 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija uno, autentíquese y lu
 ## Proveedores compatibles (conjunto inicial)
 
 - [Alibaba Model Studio](/es/providers/alibaba)
-- [Anthropic (API + Claude CLI)](/es/providers/anthropic)
 - [Amazon Bedrock](/es/providers/bedrock)
+- [Anthropic (API + Claude CLI)](/es/providers/anthropic)
 - [BytePlus (International)](/es/concepts/model-providers#byteplus-international)
 - [Chutes](/es/providers/chutes)
 - [ComfyUI](/es/providers/comfy)

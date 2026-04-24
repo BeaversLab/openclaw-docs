@@ -77,6 +77,6 @@ openclaw tasks flow cancel <lookup>
 ## 相关内容
 
 - [后台任务](/zh/automation/tasks) — 流所协调的独立工作分类账
-- [CLI: tasks](/zh/cli/index#tasks) — `openclaw tasks flow` 的 CLI 命令参考
+- [CLI: tasks](/zh/cli/tasks) —— 用于 `openclaw tasks flow` 的 CLI 命令参考
 - [自动化概览](/zh/automation) — 所有自动化机制概览
 - [Cron 作业](/zh/automation/cron-jobs) — 可能输入到流的计划作业

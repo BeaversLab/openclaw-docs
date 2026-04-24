@@ -12,6 +12,8 @@ vLLM peut servir des modèles open source (et certains personnalisés) via une O
 
 OpenClaw peut également **découvrir automatiquement** les modèles disponibles auprès de vLLM lorsque vous activez l'option avec `VLLM_API_KEY` (n'importe quelle valeur fonctionne si votre serveur n'applique pas l'authentification) et que vous ne définissez pas d'entrée `models.providers.vllm` explicite.
 
+OpenClaw traite `vllm` comme un fournisseur local compatible OpenClaw qui prend en charge la comptabilité d'utilisation en streaming, afin que les décomptes de jetons d'état/contexte puissent être mis à jour à partir des réponses `stream_options.include_usage`.
+
 | Propriété              | Valeur                                   |
 | ---------------------- | ---------------------------------------- |
 | ID du fournisseur      | `vllm`                                   |
@@ -23,14 +25,14 @@ OpenClaw peut également **découvrir automatiquement** les modèles disponibles
 
 <Steps>
   <Step title="Démarrer vLLM avec un serveur compatible OpenAI">
-    Votre URL de base doit exposer des points de terminaison `/v1` (p. ex. `/v1/models`, `/v1/chat/completions`). vLLM s'exécute généralement sur :
+    Votre URL de base doit exposer des points de terminaison `/v1` (par ex. `/v1/models`, `/v1/chat/completions`). vLLM s'exécute généralement sur :
 
     ```
     http://127.0.0.1:8000/v1
     ```
 
   </Step>
-  <Step title="Définir la variable d'environnement de la clé d'API">
+  <Step title="Définir la variable d'environnement de la clé API">
     N'importe quelle valeur fonctionne si votre serveur n'applique pas l'authentification :
 
     ```bash
@@ -52,14 +54,14 @@ OpenClaw peut également **découvrir automatiquement** les modèles disponibles
     ```
 
   </Step>
-  <Step title="Vérifiez que le modèle est disponible">
+  <Step title="Vérifier que le modèle est disponible">
     ```bash
     openclaw models list --provider vllm
     ```
   </Step>
 </Steps>
 
-## Découverte de modèle (fournisseur implicite)
+## Découverte de modèles (fournisseur implicite)
 
 Lorsque `VLLM_API_KEY` est défini (ou qu'un profil d'authentification existe) et que vous **ne définissez pas** `models.providers.vllm`, OpenClaw interroge :
 
@@ -77,7 +79,7 @@ Utilisez une configuration explicite lorsque :
 
 - vLLM s'exécute sur un hôte ou un port différent
 - Vous souhaitez épingler les valeurs `contextWindow` ou `maxTokens`
-- Votre serveur nécessite une vraie clé API (ou vous souhaitez contrôler les en-têtes)
+- Votre serveur nécessite une vraie clé API (ou que vous souhaitez contrôler les en-têtes)
 
 ```json5
 {
@@ -108,22 +110,22 @@ Utilisez une configuration explicite lorsque :
 
 <AccordionGroup>
   <Accordion title="Comportement de type proxy">
-    vLLM est traité comme un backend OpenAI compatible de type proxy `/v1`, et non comme un point de terminaison natif
-    OpenAI. Cela signifie :
+    vLLM est traité comme un backend `/v1` compatible de style proxy, et non comme un point de terminaison
+    OpenAI natif. Cela signifie :
 
     | Comportement | Appliqué ? |
     |----------|----------|
-    | Formatage des requêtes natives OpenAI | Non |
+    | Mise en forme des requêtes natives OpenAI | Non |
     | `service_tier` | Non envoyé |
-    | Réponses `store` | Non envoyées |
-    | Indicateurs de cache de prompt (Prompt-cache hints) | Non envoyés |
-    | Formatage de la charge utile de compatibilité de raisonnement OpenAI | Non appliqué |
-    | En-têtes d'attribution OpenClaw masqués | Non injectés sur les URL de base personnalisées |
+    | Réponses `store` | Non envoyé |
+    | Indices de cache de prompt | Non envoyés |
+    | Mise en forme du payload de compatibilité de raisonnement OpenAI | Non appliquée |
+    | En-têtes d'attribution OpenAI masqués | Non injectés sur les URL de base personnalisées |
 
   </Accordion>
 
   <Accordion title="URL de base personnalisée">
-    Si votre serveur vLLM fonctionne sur un hôte ou un port non défini par défaut, définissez `baseUrl` dans la configuration explicite du fournisseur :
+    Si votre serveur vLLM fonctionne sur un hôte ou un port non défini par défaut, définissez `baseUrl` dans la configuration du fournisseur explicite :
 
     ```json5
     {
@@ -155,7 +157,7 @@ Utilisez une configuration explicite lorsque :
 ## Dépannage
 
 <AccordionGroup>
-  <Accordion title="Serveur injoignable">
+  <Accordion title="Serveur inaccessible">
     Vérifiez que le serveur vLLM est en cours d'exécution et accessible :
 
     ```bash
@@ -166,17 +168,17 @@ Utilisez une configuration explicite lorsque :
 
   </Accordion>
 
-  <Accordion title="Erreurs d'auth sur les requêtes">
-    Si les requêtes échouent avec des erreurs d'authentification, définissez une vraie `VLLM_API_KEY` correspondant à la configuration de votre serveur, ou configurez le fournisseur explicitement sous `models.providers.vllm`.
+  <Accordion title="Erreurs d'authentification sur les requêtes">
+    Si les requêtes échouent avec des erreurs d'authentification, définissez un `VLLM_API_KEY` réel qui correspond à la configuration de votre serveur, ou configurez le fournisseur explicitement sous `models.providers.vllm`.
 
     <Tip>
-    Si votre serveur vLLM n'applique pas l'authentification, toute valeur non vide pour `VLLM_API_KEY` fonctionne comme un signal d'acceptation pour OpenClaw.
+    Si votre serveur vLLM n'applique pas l'authentification, toute valeur non vide pour `VLLM_API_KEY` sert de signal d'adhésion pour OpenClaw.
     </Tip>
 
   </Accordion>
 
   <Accordion title="Aucun modèle découvert">
-    La découverte automatique nécessite que `VLLM_API_KEY` soit défini **et** qu'il n'y ait aucune entrée de configuration explicite `models.providers.vllm`. Si vous avez défini le fournisseur manuellement, OpenClaw ignore la découverte et utilise uniquement vos modèles déclarés.
+    La découverte automatique nécessite que `VLLM_API_KEY` soit défini **et** qu'il n'y ait aucune entrée de configuration `models.providers.vllm` explicite. Si vous avez défini le fournisseur manuellement, OpenClaw ignore la découverte et utilise uniquement vos modèles déclarés.
   </Accordion>
 </AccordionGroup>
 
@@ -189,10 +191,10 @@ Utilisez une configuration explicite lorsque :
     Choix des providers, des références de modèle et du comportement de basculement.
   </Card>
   <Card title="OpenAI" href="/fr/providers/openai" icon="bolt">
-    Provider natif OpenAI et comportement des routes compatibles OpenAI.
+    Provider natif OpenAI et comportement des routes compatibles avec OpenAI.
   </Card>
   <Card title="OAuth et auth" href="/fr/gateway/authentication" icon="key">
-    Détails d'authentification et règles de réutilisation des informations d'identification.
+    Détails d'authentification et règles de réutilisation des identifiants.
   </Card>
   <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
     Problèmes courants et comment les résoudre.

@@ -23,8 +23,8 @@ d'une étape de `openclaw plugins install` séparée.
 
 ## Configuration
 
-1. Allez sur la [Plateforme Ouverte QQ](https://q.qq.com/) et scannez le code QR avec votre
-   téléphone QQ pour vous enregistrer / vous connecter.
+1. Rendez-vous sur la [QQ Open Platform](https://q.qq.com/) et scannez le code QR avec votre
+   téléphone QQ pour vous inscrire / vous connecter.
 2. Cliquez sur **Create Bot** pour créer un nouveau QQ bot.
 3. Trouvez **AppID** et **AppSecret** sur la page des paramètres du bot et copiez-les.
 
@@ -171,23 +171,41 @@ Le comportement de téléchargement/transcodage audio sortant peut également ê
 
 Commandes intégrées interceptées avant la file d'attente IA :
 
-| Commande       | Description                                                    |
-| -------------- | -------------------------------------------------------------- |
-| `/bot-ping`    | Test de latence                                                |
-| `/bot-version` | Afficher la version du framework OpenClaw                      |
-| `/bot-help`    | Lister toutes les commandes                                    |
-| `/bot-upgrade` | Afficher le lien du guide de mise à jour de QQBot              |
-| `/bot-logs`    | Exporter les journaux de la passerelle récents dans un fichier |
+| Commande       | Description                                                                                                           |
+| -------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `/bot-ping`    | Test de latence                                                                                                       |
+| `/bot-version` | Afficher la version du framework OpenClaw                                                                             |
+| `/bot-help`    | Lister toutes les commandes                                                                                           |
+| `/bot-upgrade` | Afficher le lien du guide de mise à jour de QQBot                                                                     |
+| `/bot-logs`    | Exporter les journaux de la passerelle récents dans un fichier                                                        |
+| `/bot-approve` | Approuvez une action QQ Bot en attente (par exemple, confirmer un téléchargement C2C ou de groupe) via le flux natif. |
 
-Ajoutez `?` à n'importe quelle commande pour obtenir de l'aide (par exemple `/bot-upgrade ?`).
+Ajoutez `?` à n'importe quelle commande pour obtenir de l'aide sur l'utilisation (par exemple `/bot-upgrade ?`).
+
+## Architecture du moteur
+
+QQ Bot est fourni en tant que moteur autonome dans le plugin :
+
+- Chaque compte possède une pile de ressources isolée (connexion WebSocket, client API, cache de jetons, racine de stockage média) indexée par `appId`. Les comptes ne partagent jamais d'état entrant/sortant.
+- Le logger multi-compte étiquette les lignes de journal avec le compte propriétaire afin que les diagnostics restent séparables lorsque vous faites fonctionner plusieurs bots sous une seule passerelle.
+- Les chemins de pont entrant, sortant et de passerelle partagent une racine unique de payload média sous `~/.openclaw/media`, de sorte que les téléchargements, les téléversements et les caches de transcodage atterrissent dans un seul répertoire protégé au lieu d'une arborescence par sous-système.
+- Les identifiants peuvent être sauvegardés et restaurés dans le cadre des instantanés d'identifiants standard OpenClaw ; le moteur rattache la pile de ressources de chaque compte lors de la restauration sans nécessiter un nouveau jumelage par code QR.
+
+## Onboarding par code QR
+
+Comme alternative au collage manuel de `AppID:AppSecret`, le moteur prend en charge un flux d'onboarding par code QR pour lier un QQ Bot à OpenClaw :
+
+1. Exécutez le chemin de configuration QQ Bot (par exemple `openclaw channels add --channel qqbot`) et choisissez le flux par code QR lorsqu'on vous le demande.
+2. Scannez le code QR généré avec l'application mobile liée au QQ Bot cible.
+3. Approuvez le jumelage sur le téléphone. OpenClaw enregistre les identifiants renvoyés dans `credentials/` sous la bonne étendue de compte.
+
+Les invites d'approbation générées par le bot lui-même (par exemple, les flux « autoriser cette action ? » exposés par la API QQ Bot) apparaissent sous forme d'invites natives OpenClaw que vous pouvez accepter avec `/bot-approve` plutôt que de répondre via le client QQ brut.
 
 ## Dépannage
 
-- **Le bot répond "parti sur Mars" :** informations d'identification non configurées ou Gateway non démarré.
-- **Aucun message entrant :** vérifiez que `appId` et `clientSecret` sont corrects, et que
-  le bot est activé sur la plateforme ouverte QQ.
-- **La configuration avec `--token-file` affiche toujours non configuré :** `--token-file` définit uniquement
-  l'AppSecret. Vous avez toujours besoin de `appId` dans la configuration ou de `QQBOT_APP_ID`.
-- **Messages proactifs non arrivés :** QQ peut intercepter les messages initiés par le bot si
-  l'utilisateur n'a pas interagi récemment.
-- **Voix non transcrite :** assurez-vous que la STT est configurée et que le fournisseur est joignable.
+- **Le bot répond « gone to Mars » (parti sur Mars) :** identifiants non configurés ou Gateway non démarrée.
+- **Aucun message entrant :** vérifiez que `appId` et `clientSecret` sont corrects, et que le
+  bot est activé sur la QQ Open Platform.
+- **La configuration avec `--token-file` affiche toujours non configuré :** `--token-file` définit uniquement l'AppSecret. Vous avez toujours besoin de `appId` dans la configuration ou de `QQBOT_APP_ID`.
+- **Messages proactifs non reçus :** QQ peut intercepter les messages initiés par le bot si l'utilisateur n'a pas interagi récemment.
+- **Voix non transcrite :** assurez-vous que la STT est configurée et que le provider est accessible.

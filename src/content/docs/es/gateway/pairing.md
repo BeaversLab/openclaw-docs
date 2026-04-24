@@ -112,22 +112,49 @@ La aplicación macOS puede intentar opcionalmente una **aprobación silenciosa**
 
 Si la aprobación silenciosa falla, se recurre al mensaje normal de "Aprobar/Rechazar".
 
+## Autoaprobación de actualización de metadatos
+
+Cuando un dispositivo ya emparejado se vuelve a conectar solo con cambios de metadatos no sensibles
+(por ejemplo, nombre para mostrar o pistas de plataforma del cliente), OpenClaw lo trata
+como un `metadata-upgrade` y autoaprueba la reconexión sin
+solicitarlo. Las actualizaciones de ámbito (de lectura a escritura/admin) y los cambios de clave pública **no**
+son elegibles para la autoaprobación de actualización de metadatos; permanecen como solicitudes
+explícitas de reprobación.
+
+## Asistentes de emparejamiento QR
+
+`/pair qr` representa la carga útil de emparejamiento como medios estructurados para que los clientes
+móviles y de navegador puedan escanearla directamente. La eliminación de dispositivos ahora también elimina las solicitudes
+pendientes obsoletas para el mismo ID de dispositivo, por lo que `nodes pending` ya no
+muestra filas huérfanas después de una revocación.
+
+## Localidad y encabezados reenviados
+
+El emparejamiento de la puerta de enlace trata una conexión como bucle invertido (loopback) solo cuando tanto el socket sin procesar
+cualquier evidencia de proxy ascendente coinciden. Si una solicitud llega en bucle invertido pero
+lleva encabezados `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto`
+que apuntan a un origen no local, esa evidencia de encabezado reenviado descalifica
+la reclamación de localidad de bucle invertido. La ruta de emparejamiento luego requiere aprobación explícita
+en lugar de tratar silenciosamente la solicitud como una conexión del mismo host. Consulte
+[Trusted Proxy Auth](/es/gateway/trusted-proxy-auth) para la regla equivalente sobre
+la autenticación del operador.
+
 ## Almacenamiento (local, privado)
 
-El estado de emparejamiento se almacena en el directorio de estado de la Gateway (predeterminado `~/.openclaw`):
+El estado de emparejamiento se almacena en el directorio de estado de la puerta de enlace (predeterminado `~/.openclaw`):
 
 - `~/.openclaw/nodes/paired.json`
 - `~/.openclaw/nodes/pending.json`
 
-Si anulas `OPENCLAW_STATE_DIR`, la carpeta `nodes/` se mueve con ella.
+Si anulas `OPENCLAW_STATE_DIR`, la carpeta `nodes/` se mueve con él.
 
 Notas de seguridad:
 
 - Los tokens son secretos; trata `paired.json` como sensible.
-- La rotación de un token requiere una nueva aprobación (o la eliminación de la entrada del nodo).
+- Rotar un token requiere reaprobación (o eliminar la entrada del nodo).
 
 ## Comportamiento del transporte
 
-- El transporte es **sin estado**; no almacena la pertenencia.
+- El transporte es **sin estado** (stateless); no almacena la membresía.
 - Si la puerta de enlace está desconectada o el emparejamiento está deshabilitado, los nodos no pueden emparejarse.
-- Si la puerta de enlace está en modo remoto, el emparejamiento aún se realiza contra el almacén de la puerta de enlace remota.
+- Si la puerta de enlace está en modo remoto, el emparejamiento aún ocurre contra el almacén de la puerta de enlace remota.

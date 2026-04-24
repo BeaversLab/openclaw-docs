@@ -62,17 +62,23 @@ Las sesiones se reutilizan hasta que caducan:
 
 Cuando se configuran tanto el reinicio diario como el por inactividad, gana el que caduque primero.
 
+Las sesiones con una sesión CLI activa propiedad del proveedor no se cortan por el
+predeterminado diario implícito. Use `/reset` o configure `session.reset` explícitamente cuando esas
+sesiones deban caducar en un temporizador.
+
 ## Dónde reside el estado
 
-Todo el estado de la sesión es propiedad de la **puerta de enlace** (gateway). Los clientes de la interfaz de usuario consultan la puerta de enlace para
+Todo el estado de la sesión es propiedad del **gateway**. Los clientes de la IU consultan al gateway para
 obtener datos de la sesión.
 
 - **Almacenamiento:** `~/.openclaw/agents/<agentId>/sessions/sessions.json`
 - **Transcripciones:** `~/.openclaw/agents/<agentId>/sessions/<sessionId>.jsonl`
 
-## Mantenimiento de la sesión
+## Mantenimiento de sesiones
 
-OpenClaw delimita automáticamente el almacenamiento de la sesión a lo largo del tiempo. De forma predeterminada, se ejecuta en modo `warn` (informa qué se limpiaría). Establezca `session.maintenance.mode` en `"enforce"` para la limpieza automática:
+OpenClaw limita automáticamente el almacenamiento de sesiones con el tiempo. Por defecto, se ejecuta
+en modo `warn` (informa qué se limpiaría). Establezca `session.maintenance.mode`
+en `"enforce"` para la limpieza automática:
 
 ```json5
 {
@@ -90,7 +96,7 @@ Vista previa con `openclaw sessions cleanup --dry-run`.
 
 ## Inspeccionar sesiones
 
-- `openclaw status` -- ruta de almacenamiento de la sesión y actividad reciente.
+- `openclaw status` -- ruta del almacén de sesiones y actividad reciente.
 - `openclaw sessions --json` -- todas las sesiones (filtrar con `--active <minutes>`).
 - `/status` en el chat -- uso del contexto, modelo e interruptores.
 - `/context list` -- qué hay en el prompt del sistema.
@@ -100,8 +106,8 @@ Vista previa con `openclaw sessions cleanup --dry-run`.
 - [Poda de sesiones](/es/concepts/session-pruning) -- recortar resultados de herramientas
 - [Compactación](/es/concepts/compaction) -- resumir conversaciones largas
 - [Herramientas de sesión](/es/concepts/session-tool) -- herramientas de agente para trabajo entre sesiones
-- [Análisis profundo de la gestión de sesiones](/es/reference/session-management-compaction) --
+- [Profundización en la gestión de sesiones](/es/reference/session-management-compaction) --
   esquema de almacenamiento, transcripciones, política de envío, metadatos de origen y configuración avanzada
 - [Multiagente](/es/concepts/multi-agent) — enrutamiento y aislamiento de sesiones entre agentes
-- [Tareas en segundo plano](/es/automation/tasks) — cómo el trabajo desvinculado crea registros de tareas con referencias de sesión
+- [Tareas en segundo plano](/es/automation/tasks) — cómo el trabajo desacoplado crea registros de tareas con referencias de sesión
 - [Enrutamiento de canales](/es/channels/channel-routing) — cómo se enrutan los mensajes entrantes a las sesiones

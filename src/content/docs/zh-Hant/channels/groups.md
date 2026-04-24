@@ -405,6 +405,10 @@ otherwise -> reply
 - 列出聊天：`imsg chats --limit 20`。
 - 群組回覆總是會發回至相同的 `chat_id`。
 
+## WhatsApp 系統提示
+
+請參閱 [WhatsApp](/zh-Hant/channels/whatsapp#system-prompts) 以了解正式的 WhatsApp 系統提示規則，包括群組與直接提示解析、萬用字元行為以及帳號覆寫語意。
+
 ## WhatsApp 詳細資訊
 
 請參閱 [群組訊息](/zh-Hant/channels/group-messages) 以了解 WhatsApp 專屬行為（歷史記錄注入、提及處理細節）。

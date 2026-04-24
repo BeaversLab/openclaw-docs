@@ -53,22 +53,22 @@ title: "Agent Send"
 
 ## Flags
 
-| Flag                          | Description                                            |
-| ----------------------------- | ------------------------------------------------------ |
-| `--message \<text\>`          | 要发送的消息（必需）                                   |
-| `--to \<dest\>`               | 从目标（电话、聊天 ID）派生会话密钥                    |
-| `--agent \<id\>`              | 以已配置的代理为目标（使用其 `main` 会话）             |
-| `--session-id \<id\>`         | 通过 ID 重用现有会话                                   |
-| `--local`                     | 强制本地嵌入式运行时（跳过 Gateway(网关)）             |
-| `--deliver`                   | 将回复发送到聊天渠道                                   |
-| `--channel \<name\>`          | 投递渠道（whatsapp、telegram、discord、slack 等）      |
-| `--reply-to \<target\>`       | 投递目标覆盖                                           |
-| `--reply-channel \<name\>`    | 投递渠道覆盖                                           |
-| `--reply-account \<id\>`      | 投递账户 ID 覆盖                                       |
-| `--thinking \<level\>`        | 设置思考级别（off、minimal、low、medium、high、xhigh） |
-| `--verbose \<on\|full\|off\>` | 设置详细级别                                           |
-| `--timeout \<seconds\>`       | 覆盖代理超时                                           |
-| `--json`                      | 输出结构化 JSON                                        |
+| Flag                          | Description                                       |
+| ----------------------------- | ------------------------------------------------- |
+| `--message \<text\>`          | 要发送的消息（必需）                              |
+| `--to \<dest\>`               | 从目标（电话、聊天 ID）派生会话密钥               |
+| `--agent \<id\>`              | 以已配置的代理为目标（使用其 `main` 会话）        |
+| `--session-id \<id\>`         | 通过 ID 重用现有会话                              |
+| `--local`                     | 强制本地嵌入式运行时（跳过 Gateway(网关)）        |
+| `--deliver`                   | 将回复发送到聊天渠道                              |
+| `--channel \<name\>`          | 投递渠道（whatsapp、telegram、discord、slack 等） |
+| `--reply-to \<target\>`       | 投递目标覆盖                                      |
+| `--reply-channel \<name\>`    | 投递渠道覆盖                                      |
+| `--reply-account \<id\>`      | 投递账户 ID 覆盖                                  |
+| `--thinking \<level\>`        | 为所选模型配置设置思考级别                        |
+| `--verbose \<on\|full\|off\>` | 设置详细级别                                      |
+| `--timeout \<seconds\>`       | 覆盖代理超时                                      |
+| `--json`                      | 输出结构化 JSON                                   |
 
 ## Behavior
 

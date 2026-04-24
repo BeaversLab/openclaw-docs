@@ -115,42 +115,66 @@ Model output
 
 ### 通道映射
 
-| 通道     | `off` | `partial` | `block` | `progress`       |
-| -------- | ----- | --------- | ------- | ---------------- |
-| Telegram | ✅    | ✅        | ✅      | 映射到 `partial` |
-| Discord  | ✅    | ✅        | ✅      | 映射到 `partial` |
-| Slack    | ✅    | ✅        | ✅      | ✅               |
+| 通道       | `off` | `partial` | `block` | `progress`       |
+| ---------- | ----- | --------- | ------- | ---------------- |
+| Telegram   | ✅    | ✅        | ✅      | 映射到 `partial` |
+| Discord    | ✅    | ✅        | ✅      | 映射到 `partial` |
+| Slack      | ✅    | ✅        | ✅      | ✅               |
+| Mattermost | ✅    | ✅        | ✅      | ✅               |
 
-Slack 专用：
+Slack-only:
 
-- `channels.slack.streaming.nativeTransport` 在 `channels.slack.streaming.mode="partial"` 时切换 Slack 原生流式传输 API 调用（默认：`true`）。
-- Slack 原生流式传输和 Slack 助手线程状态需要一个回复线程目标；顶级 Slack 不显示该线程样式预览。
+- `channels.slack.streaming.nativeTransport` 切换 Slack 原生流式传输 API 调用，当 `channels.slack.streaming.mode="partial"`（默认：`true`）。
+- Slack 原生流式传输和 Slack 助手线程状态需要一个回复线程目标；顶层私信不显示该线程风格的预览。
 
-旧版密钥迁移：
+旧版键迁移：
 
 - Telegram：`streamMode` + 布尔值 `streaming` 自动迁移到 `streaming` 枚举。
 - Discord：`streamMode` + 布尔值 `streaming` 自动迁移到 `streaming` 枚举。
-- Slack：`streamMode` 自动迁移到 `streaming.mode`；布尔值 `streaming` 自动迁移到 `streaming.mode` 加上 `streaming.nativeTransport`；旧版 `nativeStreaming` 自动迁移到 `streaming.nativeTransport`。
+- Slack：`streamMode` 自动迁移到 `streaming.mode`；布尔值 `streaming` 自动迁移到 `streaming.mode` 加上 `streaming.nativeTransport`；传统的 `nativeStreaming` 自动迁移到 `streaming.nativeTransport`。
 
 ### 运行时行为
 
 Telegram：
 
-- 在私信和群组/话题中使用 `sendMessage` + `editMessageText` 预览更新。
-- 当明确启用 Telegram 块流式传输时，将跳过预览流式传输（以避免双重流式传输）。
-- `/reasoning stream` 可以将推理写入预览。
+- 在私信和群组/主题中，使用 `sendMessage` + `editMessageText` 预览更新。
+- 当明确启用 Telegram 分块流式传输时，将跳过预览流式传输（以避免双重流式传输）。
+- `/reasoning stream` 可以将推理内容写入预览。
 
 Discord：
 
 - 使用发送 + 编辑预览消息。
 - `block` 模式使用草稿分块（`draftChunk`）。
-- 当明确启用 Discord 块流式传输时，将跳过预览流式传输。
+- 当明确启用 Discord 分块流式传输时，将跳过预览流式传输。
+- 最终媒体、错误和显式回复载荷会取消待处理的预览，而不会刷新新草稿，然后使用正常投递方式。
 
 Slack：
 
-- `partial` 在可用时可以使用 Slack 原生流式传输（`chat.startStream`/`append`/`stop`）。
+- `partial` 可以在可用时使用 Slack 原生流式传输（`chat.startStream`/`append`/`stop`）。
 - `block` 使用追加式草稿预览。
 - `progress` 使用状态预览文本，然后是最终答案。
+- 最终媒体/错误载荷和进度终结器不会创建一次性草稿消息；只有可以编辑预览的文本/块终结器才会刷新待处理的草稿文本。
+
+Mattermost：
+
+- 将思考、工具活动和部分回复文本流式传输到单个草稿预览帖子中，当最终答案可以安全发送时，该帖子会在原位完成。
+- 如果在最终确定时预览帖子已被删除或因其他原因不可用，则回退到发送一条新的最终帖子。
+- 最终媒体/错误负载在正常交付之前取消挂起的预览更新，而不是刷新临时预览帖子。
+
+Matrix：
+
+- 当最终文本可以复用预览事件时，草稿预览会在原位完成。
+- 仅媒体、错误和回复目标不匹配的最终消息会在正常交付之前取消挂起的预览更新；已可见的过时预览将被撤回。
+
+### 工具进度预览更新
+
+预览流还可以包含 **工具进度** 更新 —— 即简短的状态行，例如“正在搜索网络”、“正在读取文件”或“正在调用工具” —— 它们在工具运行期间出现在同一条预览消息中，位于最终回复之前。这使得多步骤工具轮次在视觉上保持活跃，而不是在第一次思考预览和最终答案之间保持沉默。
+
+支持的平台：
+
+- **Discord**、**Slack** 和 **Telegram** 将工具进度流式传输到实时预览编辑中。
+- **Mattermost** 已经将工具活动折叠到其单个草稿预览帖子中（见上文）。
+- 工具进度编辑遵循活动的预览流式传输模式；当预览流式传输为 `off` 或当分块流式传输已接管消息时，它们将被跳过。
 
 ## 相关
 

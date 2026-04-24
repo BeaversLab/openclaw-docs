@@ -297,7 +297,8 @@ Los complementos de código deben incluir los metadatos requeridos de OpenClaw e
   "version": "1.0.0",
   "type": "module",
   "openclaw": {
-    "extensions": ["./index.ts"],
+    "extensions": ["./src/index.ts"],
+    "runtimeExtensions": ["./dist/index.js"],
     "compat": {
       "pluginApi": ">=2026.3.24-beta.2",
       "minGatewayVersion": "2026.3.24-beta.2"
@@ -310,30 +311,35 @@ Los complementos de código deben incluir los metadatos requeridos de OpenClaw e
 }
 ```
 
+Los paquetes publicados deben incluir JavaScript compilado y apuntar `runtimeExtensions`
+a esa salida. Las instalaciones de checkout de Git aún pueden volver al código fuente TypeScript
+cuando no existen archivos compilados, pero las entradas de tiempo de ejecución compiladas evitan la compilación de TypeScript
+en tiempo de ejecución en las rutas de inicio, doctor y carga de complementos.
+
 ## Detalles avanzados (técnicos)
 
-### Versionado y etiquetas
+### Control de versiones y etiquetas
 
-- Cada publicación crea un nuevo `SkillVersion` **semver**.
-- Las etiquetas (como `latest`) apuntan a una versión; mover las etiquetas te permite retroceder.
+- Cada publicación crea una nueva versión **semver** `SkillVersion`.
+- Las etiquetas (como `latest`) apuntan a una versión; mover las etiquetas le permite retroceder.
 - Los registros de cambios se adjuntan por versión y pueden estar vacíos al sincronizar o publicar actualizaciones.
 
-### Cambios locales vs. versiones del registro
+### Cambios locales vs. versiones de registro
 
 Las actualizaciones comparan el contenido de la habilidad local con las versiones del registro utilizando un hash de contenido. Si los archivos locales no coinciden con ninguna versión publicada, la CLI pregunta antes de sobrescribir (o requiere `--force` en ejecuciones no interactivas).
 
 ### Escaneo de sincronización y raíces de respaldo
 
-`clawhub sync` escanea primero tu directorio de trabajo actual. Si no se encuentran habilidades, recurre a ubicaciones heredadas conocidas (por ejemplo `~/openclaw/skills` y `~/.openclaw/skills`). Esto está diseñado para encontrar instalaciones de habilidades antiguas sin indicadores adicionales.
+`clawhub sync` escanea primero su directorio de trabajo actual. Si no se encuentran habilidades, recurre a ubicaciones heredadas conocidas (por ejemplo `~/openclaw/skills` y `~/.openclaw/skills`). Esto está diseñado para encontrar instalaciones de habilidades más antiguas sin indicadores adicionales.
 
 ### Almacenamiento y archivo de bloqueo
 
-- Las habilidades instaladas se registran en `.clawhub/lock.json` bajo tu directorio de trabajo.
-- Los tokens de autenticación se almacenan en el archivo de configuración de la CLI de ClawHub (se pueden anular mediante `CLAWHUB_CONFIG_PATH`).
+- Las habilidades instaladas se registran en `.clawhub/lock.json` en su directorio de trabajo.
+- Los tokens de autenticación se almacenan en el archivo de configuración de la CLI de ClawHub (anulación mediante `CLAWHUB_CONFIG_PATH`).
 
-### Telemetría (recuentos de instalaciones)
+### Telemetría (recuentos de instalación)
 
-Cuando ejecutas `clawhub sync` mientras estás conectado, la CLI envía una instantánea mínima para calcular los recuentos de instalaciones. Puedes desactivar esto por completo:
+Cuando ejecuta `clawhub sync` mientras tiene la sesión iniciada, la CLI envía una instantánea mínima para calcular los recuentos de instalación. Puede desactivar esto por completo:
 
 ```bash
 export CLAWHUB_DISABLE_TELEMETRY=1

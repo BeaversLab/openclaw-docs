@@ -53,22 +53,22 @@ title: "Agent Send"
 
 ## 標誌
 
-| 標誌                          | 說明                                                   |
-| ----------------------------- | ------------------------------------------------------ |
-| `--message \<text\>`          | 要傳送的訊息（必要）                                   |
-| `--to \<dest\>`               | 從目標（電話、聊天 ID）推導工作階段金鑰                |
-| `--agent \<id\>`              | 以已設定的代理為目標（使用其 `main` 工作階段）         |
-| `--session-id \<id\>`         | 依 ID 重複使用現有的工作階段                           |
-| `--local`                     | 強制使用本機嵌入式執行時期（跳過 Gateway）             |
-| `--deliver`                   | 將回覆傳送到聊天頻道                                   |
-| `--channel \<name\>`          | 傳送頻道（whatsapp、telegram、discord、slack 等）      |
-| `--reply-to \<target\>`       | 傳送目標覆寫                                           |
-| `--reply-channel \<name\>`    | 傳送頻道覆寫                                           |
-| `--reply-account \<id\>`      | 傳送帳號 ID 覆寫                                       |
-| `--thinking \<level\>`        | 設定思考等級（off、minimal、low、medium、high、xhigh） |
-| `--verbose \<on\|full\|off\>` | 設定詳細等級                                           |
-| `--timeout \<seconds\>`       | 覆寫代理逾時                                           |
-| `--json`                      | 輸出結構化 JSON                                        |
+| 標誌                          | 說明                                              |
+| ----------------------------- | ------------------------------------------------- |
+| `--message \<text\>`          | 要傳送的訊息（必要）                              |
+| `--to \<dest\>`               | 從目標（電話、聊天 ID）推導工作階段金鑰           |
+| `--agent \<id\>`              | 以已設定的代理為目標（使用其 `main` 工作階段）    |
+| `--session-id \<id\>`         | 依 ID 重複使用現有的工作階段                      |
+| `--local`                     | 強制使用本機嵌入式執行時期（跳過 Gateway）        |
+| `--deliver`                   | 將回覆傳送到聊天頻道                              |
+| `--channel \<name\>`          | 傳送頻道（whatsapp、telegram、discord、slack 等） |
+| `--reply-to \<target\>`       | 傳送目標覆寫                                      |
+| `--reply-channel \<name\>`    | 傳送頻道覆寫                                      |
+| `--reply-account \<id\>`      | 傳送帳號 ID 覆寫                                  |
+| `--thinking \<level\>`        | 設定所選模型設定檔的思考層級                      |
+| `--verbose \<on\|full\|off\>` | 設定詳細等級                                      |
+| `--timeout \<seconds\>`       | 覆寫代理逾時                                      |
+| `--json`                      | 輸出結構化 JSON                                   |
 
 ## 行為
 

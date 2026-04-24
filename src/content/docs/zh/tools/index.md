@@ -27,18 +27,22 @@ OpenClaw 有三个协同工作的层：
 
   </Step>
 
-  <Step title="Skills 教授代理何时以及如何">
-    Skills 是一个 Markdown 文件 (`SKILL.md`)，被注入到系统提示词中。
-    Skills 为代理提供上下文、约束和分步指导，以有效地使用工具。Skills 存在于您的工作区、共享文件夹中，或打包在插件内。
+  <Step title="Skills 教会代理何时以及如何">
+    Skill 是一个注入到系统提示词中的 Markdown 文件 (`SKILL.md`)。
+    Skills 为代理提供上下文、约束以及有效使用工具的逐步指导。Skills 存在于您的工作区中、共享文件夹中，或随插件一起提供。
 
     [Skills 参考](/zh/tools/skills) | [创建 Skills](/zh/tools/creating-skills)
 
   </Step>
 
-  <Step title="Plugins 将所有内容打包在一起">
-    Plugin 是一个可以注册任何能力组合的包：渠道、模型提供商、工具、Skills、语音、实时转录、实时语音、媒体理解、图像生成、视频生成、Web 获取、Web 搜索等。一些插件是 **核心**（随 OpenClaw 一起提供），另一些是 **外部**（由社区发布在 npm 上）。
+  <Step title="插件将所有内容打包在一起">
+    插件是一个可以注册任意功能组合的包：
+    渠道、模型提供商、工具、技能、语音、实时转录、
+    实时语音、媒体理解、图像生成、视频生成、
+    Web 获取、Web 搜索等。有些插件是**核心**的（随 OpenClaw 一起提供），
+    其他是**外部**的（由社区发布在 npm 上）。
 
-    [安装和配置插件](/zh/tools/plugin) | [构建您自己的插件](/zh/plugins/building-plugins)
+    [安装和配置插件](/zh/tools/plugin) | [构建你自己的插件](/zh/plugins/building-plugins)
 
   </Step>
 </Steps>
@@ -47,24 +51,24 @@ OpenClaw 有三个协同工作的层：
 
 这些工具随 OpenClaw 一起提供，无需安装任何插件即可使用：
 
-| 工具                                       | 功能                                      | 页面                                   |
-| ------------------------------------------ | ----------------------------------------- | -------------------------------------- |
-| `exec` / `process`                         | 运行 shell 命令，管理后台进程             | [Exec](/zh/tools/exec)                 |
-| `code_execution`                           | 运行沙箱隔离的远程 Python 分析            | [代码执行](/zh/tools/code-execution)   |
-| `browser`                                  | 控制 Chromium 浏览器（导航、点击、截图）  | [浏览器](/zh/tools/browser)            |
-| `web_search` / `x_search` / `web_fetch`    | 搜索网络、搜索 X 帖子、获取页面内容       | [Web](/zh/tools/web)                   |
-| `read` / `write` / `edit`                  | 工作区中的文件 I/O                        |                                        |
-| `apply_patch`                              | 多块文件补丁                              | [应用补丁](/zh/tools/apply-patch)      |
-| `message`                                  | 跨所有渠道发送消息                        | [代理发送](/zh/tools/agent-send)       |
-| `canvas`                                   | 驱动节点 Canvas（演示、评估、快照）       |                                        |
-| `nodes`                                    | 发现并定位配对的设备                      |                                        |
-| `cron` / `gateway`                         | 管理定时任务；检查、修补、重启或更新网关  |                                        |
-| `image` / `image_generate`                 | 分析或生成图像                            | [图像生成](/zh/tools/image-generation) |
-| `music_generate`                           | 生成音乐曲目                              | [音乐生成](/zh/tools/music-generation) |
-| `video_generate`                           | 生成视频                                  | [视频生成](/zh/tools/video-generation) |
-| `tts`                                      | 一次性文本转语音转换                      | [TTS](/zh/tools/tts)                   |
-| `sessions_*` / `subagents` / `agents_list` | 会话管理、状态和子代理编排                | [子代理](/zh/tools/subagents)          |
-| `session_status`                           | 轻量级 `/status` 风格的回放和会话模型覆盖 | [会话工具](/zh/concepts/session-tool)  |
+| 工具                                       | 功能                                      | 页面                                                          |
+| ------------------------------------------ | ----------------------------------------- | ------------------------------------------------------------- |
+| `exec` / `process`                         | 运行 shell 命令，管理后台进程             | [Exec](/zh/tools/exec), [Exec 审批](/zh/tools/exec-approvals) |
+| `code_execution`                           | 运行沙箱隔离的远程 Python 分析            | [代码执行](/zh/tools/code-execution)                          |
+| `browser`                                  | 控制 Chromium 浏览器（导航、点击、截图）  | [浏览器](/zh/tools/browser)                                   |
+| `web_search` / `x_search` / `web_fetch`    | 搜索网络、搜索 X 帖子、获取页面内容       | [Web](/zh/tools/web), [Web 获取](/zh/tools/web-fetch)         |
+| `read` / `write` / `edit`                  | 工作区中的文件 I/O                        |                                                               |
+| `apply_patch`                              | 多块文件补丁                              | [应用补丁](/zh/tools/apply-patch)                             |
+| `message`                                  | 跨所有渠道发送消息                        | [代理发送](/zh/tools/agent-send)                              |
+| `canvas`                                   | 驱动节点 Canvas（演示、评估、快照）       |                                                               |
+| `nodes`                                    | 发现并定位配对的设备                      |                                                               |
+| `cron` / `gateway`                         | 管理定时任务；检查、修补、重启或更新网关  |                                                               |
+| `image` / `image_generate`                 | 分析或生成图像                            | [图像生成](/zh/tools/image-generation)                        |
+| `music_generate`                           | 生成音乐曲目                              | [音乐生成](/zh/tools/music-generation)                        |
+| `video_generate`                           | 生成视频                                  | [视频生成](/zh/tools/video-generation)                        |
+| `tts`                                      | 一次性文本转语音转换                      | [TTS](/zh/tools/tts)                                          |
+| `sessions_*` / `subagents` / `agents_list` | 会话管理、状态和子代理编排                | [子代理](/zh/tools/subagents)                                 |
+| `session_status`                           | 轻量级 `/status` 风格的回放和会话模型覆盖 | [会话工具](/zh/concepts/session-tool)                         |
 
 对于图像处理，使用 `image` 进行分析，使用 `image_generate` 进行生成或编辑。如果您的目标是 `openai/*`、`google/*`、`fal/*` 或其他非默认图像提供商，请先配置该提供商的 auth/API 密钥。
 
@@ -90,18 +94,19 @@ OpenClaw 有三个协同工作的层：
 
 插件可以注册额外的工具。一些示例：
 
-- [Lobster](/zh/tools/lobster) — 具有可恢复审批的类型化工作流运行时
-- [LLM Task](/zh/tools/llm-task) — 用于结构化输出的仅 JSON LLM 步骤
-- [Music Generation](/zh/tools/music-generation) — 具有工作流支持提供者的共享 `music_generate` 工具
-- [Diffs](/zh/tools/diffs) — 差异查看器和渲染器
-- [OpenProse](/zh/prose) — 以 markdown 为首的工作流编排
+- [差异](/zh/tools/diffs) — diff viewer and renderer
+- [LLM 任务](/zh/tools/llm-task) — 用于结构化输出的纯 JSON LLM 步骤
+- [Lobster](/zh/tools/lobster) — 支持可恢复审批的类型化工作流运行时
+- [音乐生成](/zh/tools/music-generation) — 共享的 `music_generate` 工具，由工作流支持的提供商提供
+- [OpenProse](/zh/prose) — 以 Markdown 为首的工作流编排
+- [Tokenjuice](/zh/tools/tokenjuice) — 压缩嘈杂的 `exec` 和 `bash` 工具结果
 
 ## 工具配置
 
 ### 允许和拒绝列表
 
 通过配置中的 `tools.allow` / `tools.deny` 控制代理可以调用哪些工具。
-拒绝始终优先于允许。
+拒绝列表始终优先于允许列表。
 
 ```json5
 {
@@ -114,8 +119,8 @@ OpenClaw 有三个协同工作的层：
 
 ### 工具配置文件
 
-`tools.profile` 在应用 `allow`/`deny` 之前设置基本允许列表。
-每代理覆盖：`agents.list[].tools.profile`。
+`tools.profile` 在应用 `allow`/`deny` 之前设置基础允许列表。
+每个代理的覆盖设置：`agents.list[].tools.profile`。
 
 | 配置文件    | 包含内容                                                                                                                                          |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -124,13 +129,15 @@ OpenClaw 有三个协同工作的层：
 | `messaging` | `group:messaging`, `sessions_list`, `sessions_history`, `sessions_send`, `session_status`                                                         |
 | `minimal`   | 仅 `session_status`                                                                                                                               |
 
+`coding` 和 `messaging` 配置文件也允许在插件键 `bundle-mcp` 下配置的 bundle MCP 工具。当您希望配置文件保留其正常的内置工具但隐藏所有配置的 MCP 工具时，请添加 `tools.deny: ["bundle-mcp"]`。`minimal` 配置文件不包括 bundle MCP 工具。
+
 ### 工具组
 
-在允许/拒绝列表中使用 `group:*` 简写形式：
+在允许/拒绝列表中使用 `group:*` 简写：
 
 | 组                 | 工具                                                                                                      |
 | ------------------ | --------------------------------------------------------------------------------------------------------- |
-| `group:runtime`    | exec, process, code_execution（接受 `bash` 作为 `exec` 的别名）                                           |
+| `group:runtime`    | exec, process, code_execution（`bash` 被接受为 `exec` 的别名）                                            |
 | `group:fs`         | read, write, edit, apply_patch                                                                            |
 | `group:sessions`   | sessions_list, sessions_history, sessions_send, sessions_spawn, sessions_yield, subagents, session_status |
 | `group:memory`     | memory_search, memory_get                                                                                 |
@@ -143,11 +150,11 @@ OpenClaw 有三个协同工作的层：
 | `group:media`      | image, image_generate, music_generate, video_generate, tts                                                |
 | `group:openclaw`   | 所有内置 OpenClaw 工具（不包括插件工具）                                                                  |
 
-`sessions_history` 返回一个有界的、经过安全过滤的回顾视图。它会从助手文本中剥离思考标签、`<relevant-memories>` 脚手架、纯文本工具调用 XML 载荷（包括 `<tool_call>...</tool_call>`、`<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、`<function_calls>...</function_calls>` 和被截断的工具调用块）、降级的工具调用脚手架、泄露的 ASCII/全角模型控制令牌以及格式错误的 MiniMax 工具调用 XML，然后应用编辑/截断和可能的超大行占位符，而不是作为原始记录转储。
+`sessions_history` 返回一个有界、经过安全过滤的召回视图。它会从助手文本中剥离思考标签、`<relevant-memories>` 脚手架、纯文本 MiniMax 调用 XML 负载（包括 `<tool_call>...</tool_call>`、`<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、`<function_calls>...</function_calls>` 和截断的工具调用块）、降级的工具调用脚手架、泄露的 ASCII/全角模型控制令牌以及格式错误的 MiniMax 工具调用 XML，然后应用编辑/截断和可能的超大行占位符，而不是作为原始转录转储。
 
-### 特定于提供商的限制
+### 提供商特定的限制
 
-使用 `tools.byProvider` 来限制特定提供商的工具，而无需更改全局默认值：
+使用 `tools.byProvider` 为特定提供商限制工具，而无需更改全局默认值：
 
 ```json5
 {

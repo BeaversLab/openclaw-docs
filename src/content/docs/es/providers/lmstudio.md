@@ -8,7 +8,7 @@ title: "LM Studio"
 
 # LM Studio
 
-LM Studio es una aplicación amigable pero potente para ejecutar modelos de pesos abiertos en su propio hardware. Le permite ejecutar modelos llama.cpp (GGUF) o MLX (Apple Silicon). Viene en un paquete con interfaz gráfica o como demonio sin cabeza (`llmster`). Para obtener documentación del producto y la configuración, consulte [lmstudio.ai](https://lmstudio.ai/).
+LM Studio es una aplicación amigable pero potente para ejecutar modelos de pesos abiertos en su propio hardware. Le permite ejecutar modelos llama.cpp (GGUF) o modelos MLX (Apple Silicon). Viene en un paquete con interfaz gráfica o como demonio sin interfaz (`llmster`). Para ver la documentación del producto y la configuración, consulte [lmstudio.ai](https://lmstudio.ai/).
 
 ## Inicio rápido
 
@@ -30,7 +30,7 @@ lms daemon up
 lms server start --port 1234
 ```
 
-Si está utilizando la aplicación, asegúrese de tener JIT habilitado para una experiencia fluida. Obtenga más información en la [guía de LM Studio JIT y TTL](https://lmstudio.ai/docs/developer/core/ttl-and-auto-evict).
+Si está utilizando la aplicación, asegúrese de tener JIT habilitado para una experiencia fluida. Obtenga más información en la [guía de JIT y TTL de LM Studio](https://lmstudio.ai/docs/developer/core/ttl-and-auto-evict).
 
 3. OpenClaw requiere un valor de token de LM Studio. Configure `LM_API_TOKEN`:
 
@@ -102,6 +102,20 @@ La configuración interactiva puede solicitar una longitud de contexto de carga 
 
 ## Configuración
 
+### Compatibilidad de uso en streaming
+
+OpenClaw marca LM Studio como compatible con el uso en streaming, por lo que la contabilidad de tokens ya no degrada a totales desconocidos o obsoletos en las finalizaciones transmitidas. OpenClaw también recupera los recuentos de tokens de los metadatos `timings.prompt_n` / `timings.predicted_n` de estilo llama.cpp cuando LM Studio no emite un objeto `usage` con formato OpenAI.
+
+Otros backends locales compatibles con OpenAI cubiertos por el mismo comportamiento:
+
+- vLLM
+- SGLang
+- llama.cpp
+- LocalAI
+- Jan
+- TabbyAPI
+- text-generation-webui
+
 ### Configuración explícita
 
 ```json5
@@ -133,7 +147,7 @@ La configuración interactiva puede solicitar una longitud de contexto de carga 
 
 ### LM Studio no detectado
 
-Asegúrese de que LM Studio se esté ejecutando y de que haya configurado `LM_API_TOKEN` (para servidores sin autenticación, funciona cualquier valor de token que no esté vacío):
+Asegúrese de que LM Studio se esté ejecutando y de que haya configurado `LM_API_TOKEN` (para servidores no autenticados, funciona cualquier valor de token que no esté vacío):
 
 ```bash
 # Start via desktop app, or headless:
@@ -148,12 +162,12 @@ curl http://localhost:1234/api/v1/models
 
 ### Errores de autenticación (HTTP 401)
 
-Si la configuración informa un error HTTP 401, verifique su clave de API:
+Si la configuración indica HTTP 401, verifique su clave API:
 
 - Compruebe que `LM_API_TOKEN` coincida con la clave configurada en LM Studio.
-- Para obtener más detalles sobre la configuración de autenticación de LM Studio, consulte [LM Studio Authentication](https://lmstudio.ai/docs/developer/core/authentication).
+- Para obtener detalles sobre la configuración de autenticación de LM Studio, consulte [Autenticación de LM Studio](https://lmstudio.ai/docs/developer/core/authentication).
 - Si su servidor no requiere autenticación, utilice cualquier valor de token que no esté vacío para `LM_API_TOKEN`.
 
-### Carga de modelos justo a tiempo (JIT)
+### Carga de modelos Just-in-time
 
 LM Studio admite la carga de modelos justo a tiempo (JIT), donde los modelos se cargan en la primera solicitud. Asegúrese de tener esto habilitado para evitar errores de 'Modelo no cargado'.

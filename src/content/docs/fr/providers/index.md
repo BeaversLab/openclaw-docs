@@ -27,23 +27,25 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 
 - [Alibaba Model Studio](/fr/providers/alibaba)
 - [Amazon Bedrock](/fr/providers/bedrock)
+- [Manteau Amazon Bedrock](/fr/providers/bedrock-mantle)
 - [Anthropic (API + Claude CLI)](/fr/providers/anthropic)
 - [Arcee AI (modèles Trinity)](/fr/providers/arcee)
 - [BytePlus (International)](/fr/concepts/model-providers#byteplus-international)
 - [Chutes](/fr/providers/chutes)
-- [ComfyUI](/fr/providers/comfy)
 - [Cloudflare AI Gateway](/fr/providers/cloudflare-ai-gateway)
+- [ComfyUI](/fr/providers/comfy)
 - [DeepSeek](/fr/providers/deepseek)
+- [ElevenLabs](/fr/providers/elevenlabs)
 - [fal](/fr/providers/fal)
 - [Fireworks](/fr/providers/fireworks)
-- [GitHub Copilot](/fr/providers/github-copilot)
-- [modèles GLM](/fr/providers/glm)
+- [Copilot GitHub](/fr/providers/github-copilot)
+- [Modèles GLM](/fr/providers/glm)
 - [Google (Gemini)](/fr/providers/google)
 - [Groq (inférence LPU)](/fr/providers/groq)
 - [Hugging Face (Inférence)](/fr/providers/huggingface)
 - [inferrs (modèles locaux)](/fr/providers/inferrs)
 - [Kilocode](/fr/providers/kilocode)
-- [LiteLLM (passerelle unifiée)](/fr/providers/litellm)
+- [LiteLLM (passelle unifiée)](/fr/providers/litellm)
 - [LM Studio (modèles locaux)](/fr/providers/lmstudio)
 - [MiniMax](/fr/providers/minimax)
 - [Mistral](/fr/providers/mistral)
@@ -56,35 +58,40 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [OpenRouter](/fr/providers/openrouter)
 - [Perplexity (recherche web)](/fr/providers/perplexity-provider)
 - [Qianfan](/fr/providers/qianfan)
-- [Qwen Cloud](/fr/providers/qwen)
+- [Cloud Qwen](/fr/providers/qwen)
 - [Runway](/fr/providers/runway)
 - [SGLang (modèles locaux)](/fr/providers/sglang)
 - [StepFun](/fr/providers/stepfun)
 - [Synthetic](/fr/providers/synthetic)
+- [Tencent Cloud (TokenHub)](/fr/providers/tencent)
 - [Together AI](/fr/providers/together)
 - [Venice (Venice AI, axé sur la confidentialité)](/fr/providers/venice)
 - [Vercel AI Gateway](/fr/providers/vercel-ai-gateway)
-- [Vydra](/fr/providers/vydra)
 - [vLLM (modèles locaux)](/fr/providers/vllm)
 - [Volcengine (Doubao)](/fr/providers/volcengine)
+- [Vydra](/fr/providers/vydra)
 - [xAI](/fr/providers/xai)
 - [Xiaomi](/fr/providers/xiaomi)
 - [Z.AI](/fr/providers/zai)
 
 ## Pages de vue d'ensemble partagées
 
-- [Variantes groupées supplémentaires](/fr/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy et Gemini CLI OAuth
-- [Génération d'images](/fr/tools/image-generation) - `image_generate` tool partagé, sélection du fournisseur et basculement
-- [Génération de musique](/fr/tools/music-generation) - `music_generate` tool partagé, sélection du fournisseur et basculement
-- [Génération de vidéo](/fr/tools/video-generation) - `video_generate` tool partagé, sélection du fournisseur et basculement
+- [Variantes groupées supplémentaires](/fr/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy, et Gemini CLI OAuth
+- [Génération d'images](/fr/tools/image-generation) - Outil `image_generate` partagé, sélection de provider, et bascule
+- [Génération de musique](/fr/tools/music-generation) - Outil `music_generate` partagé, sélection de provider, et bascule
+- [Génération de vidéo](/fr/tools/video-generation) - Outil `video_generate` partagé, sélection de provider, et bascule
 
-## Fournisseurs de transcription
+## Providers de transcription
 
 - [Deepgram (transcription audio)](/fr/providers/deepgram)
+- [ElevenLabs](/fr/providers/elevenlabs#speech-to-text)
+- [Mistral](/fr/providers/mistral#audio-transcription-voxtral)
+- [OpenAI](/fr/providers/openai#speech-to-text)
+- [xAI](/fr/providers/xai#speech-to-text)
 
 ## Outils communautaires
 
 - [Claude Max API Proxy](/fr/providers/claude-max-api-proxy) - Proxy communautaire pour les identifiants d'abonnement Claude (vérifiez la politique/les conditions d'Anthropic avant utilisation)
 
 Pour le catalogue complet de providers (xAI, Groq, Mistral, etc.) et la configuration avancée,
-voir [Modèles de providers](/fr/concepts/model-providers).
+voyez [Model providers](/fr/concepts/model-providers).

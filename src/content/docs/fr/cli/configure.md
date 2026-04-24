@@ -9,7 +9,7 @@ title: "configure"
 
 Invite interactive pour configurer les identifiants, les appareils et les valeurs par défaut de l'agent.
 
-Remarque : La section **Modèle** comprend désormais une sélection multiple pour la liste d'autorisation `agents.defaults.models` (ce qui s'affiche dans `/model` et le sélecteur de modèle).
+Remarque : La section **Modèle** comprend désormais une sélection multiple pour la liste d'autorisation `agents.defaults.models` (ce qui s'affiche dans `/model` et le sélecteur de modèle). Les choix de configuration limités au fournisseur fusionnent leurs modèles sélectionnés dans la liste d'autorisation existante au lieu de remplacer les fournisseurs non liés déjà présents dans la configuration.
 
 Lorsque configure démarre à partir d'un choix d'authentification de fournisseur, les sélecteurs de modèle par défaut et de liste d'autorisation privilégient automatiquement ce fournisseur. Pour les fournisseurs associés tels que Volcengine/BytePlus, la même préférence correspond également à leurs variantes de plan de codage (`volcengine-plan/*`, `byteplus-plan/*`). Si le filtre de fournisseur préféré devait produire une liste vide, configure revient au catalogue non filtré au lieu d'afficher un sélecteur vide.
 

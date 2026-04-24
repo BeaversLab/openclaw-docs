@@ -104,18 +104,18 @@ Focus on model runs, image generation, video generation, audio transcription, TT
 
 此表格將常見的推論任務對應至對應的 infer 指令。
 
-| 任務              | 指令                                                                   | 備註                                    |
-| ----------------- | ---------------------------------------------------------------------- | --------------------------------------- |
-| 執行文字/模型提示 | `openclaw infer model run --prompt "..." --json`                       | 預設使用一般的本機路徑                  |
-| 產生影像          | `openclaw infer image generate --prompt "..." --json`                  | 當從現有檔案開始時，請使用 `image edit` |
-| 描述影像檔案      | `openclaw infer image describe --file ./image.png --json`              | `--model` 必須為 `<provider/model>`     |
-| 轉錄音訊          | `openclaw infer audio transcribe --file ./memo.m4a --json`             | `--model` 必須是 `<provider/model>`     |
-| 合成語音          | `openclaw infer tts convert --text "..." --output ./speech.mp3 --json` | `tts status` 是以閘道為導向的           |
-| 產生影片          | `openclaw infer video generate --prompt "..." --json`                  |                                         |
-| 描述影片檔案      | `openclaw infer video describe --file ./clip.mp4 --json`               | `--model` 必須是 `<provider/model>`     |
-| 搜尋網路          | `openclaw infer web search --query "..." --json`                       |                                         |
-| 擷取網頁          | `openclaw infer web fetch --url https://example.com --json`            |                                         |
-| 建立嵌入          | `openclaw infer embedding create --text "..." --json`                  |                                         |
+| 任務              | 指令                                                                   | 備註                                              |
+| ----------------- | ---------------------------------------------------------------------- | ------------------------------------------------- |
+| 執行文字/模型提示 | `openclaw infer model run --prompt "..." --json`                       | 預設使用一般的本機路徑                            |
+| 產生影像          | `openclaw infer image generate --prompt "..." --json`                  | 當從現有檔案開始時，請使用 `image edit`           |
+| 描述影像檔案      | `openclaw infer image describe --file ./image.png --json`              | `--model` 必須是具備影像功能的 `<provider/model>` |
+| 轉錄音訊          | `openclaw infer audio transcribe --file ./memo.m4a --json`             | `--model` 必須是 `<provider/model>`               |
+| 合成語音          | `openclaw infer tts convert --text "..." --output ./speech.mp3 --json` | `tts status` 是以閘道為導向的                     |
+| 產生影片          | `openclaw infer video generate --prompt "..." --json`                  |                                                   |
+| 描述影片檔案      | `openclaw infer video describe --file ./clip.mp4 --json`               | `--model` 必須是 `<provider/model>`               |
+| 搜尋網路          | `openclaw infer web search --query "..." --json`                       |                                                   |
+| 擷取網頁          | `openclaw infer web fetch --url https://example.com --json`            |                                                   |
+| 建立嵌入          | `openclaw infer embedding create --text "..." --json`                  |                                                   |
 
 ## 行為
 
@@ -123,13 +123,14 @@ Focus on model runs, image generation, video generation, audio transcription, TT
 - 當輸出將由另一個指令或指令碼使用時，請使用 `--json`。
 - 當需要特定後端時，請使用 `--provider` 或 `--model provider/model`。
 - 對於 `image describe`、`audio transcribe` 和 `video describe`，`--model` 必須使用 `<provider/model>` 格式。
-- 無狀態執行指令預設為本地。
+- 對於 `image describe`，明確的 `--model` 會直接執行該供應商/模型。該模型在模型目錄或供應商設定中必須具備影像功能。
+- 無狀態執行指令預設為本機。
 - 閘道管理的狀態指令預設為閘道。
-- 正常的本地路徑不需要閘道正在執行。
+- 一般的本機路徑不需要閘道正在執行。
 
 ## 模型
 
-使用 `model` 進行提供商支援的文字推斷和模型/提供商檢查。
+使用 `model` 進行供應商支援的文字推斷和模型/供應商檢查。
 
 ```bash
 openclaw infer model run --prompt "Reply with exactly: smoke-ok" --json
@@ -140,8 +141,8 @@ openclaw infer model inspect --name gpt-5.4 --json
 
 備註：
 
-- `model run` 重複使用代理執行階段，因此提供商/模型覆蓋的行為就像正常的代理執行一樣。
-- `model auth login`、`model auth logout` 和 `model auth status` 管理已儲存的提供商驗證狀態。
+- `model run` 重複使用代理程式執行時期，因此供應商/模型覆寫的行為如同正常的代理程式執行。
+- `model auth login`、`model auth logout` 和 `model auth status` 管理已儲存的供應商驗證狀態。
 
 ## 影像
 
@@ -152,12 +153,14 @@ openclaw infer image generate --prompt "friendly lobster illustration" --json
 openclaw infer image generate --prompt "cinematic product photo of headphones" --json
 openclaw infer image describe --file ./photo.jpg --json
 openclaw infer image describe --file ./ui-screenshot.png --model openai/gpt-4.1-mini --json
+openclaw infer image describe --file ./photo.jpg --model ollama/qwen2.5vl:7b --json
 ```
 
 備註：
 
-- 從現有的輸入檔案開始時，請使用 `image edit`。
-- 對於 `image describe`，`--model` 必須是 `<provider/model>`。
+- 從現有輸入檔案開始時，請使用 `image edit`。
+- 對於 `image describe`，`--model` 必須是具備影像功能的 `<provider/model>`。
+- 對於本機 Ollama 視覺模型，請先提取模型並將 `OLLAMA_API_KEY` 設定為任何預留位置值，例如 `ollama-local`。請參閱 [Ollama](/zh-Hant/providers/ollama#vision-and-image-description)。
 
 ## 音訊
 
@@ -171,12 +174,12 @@ openclaw infer audio transcribe --file ./memo.m4a --model openai/whisper-1 --jso
 
 備註：
 
-- `audio transcribe` 適用於檔案轉錄，而非即時工作階段管理。
+- `audio transcribe` 用於檔案轉錄，而非即時工作階段管理。
 - `--model` 必須是 `<provider/model>`。
 
 ## TTS
 
-使用 `tts` 進行語音合成和 TTS 提供商狀態管理。
+使用 `tts` 進行語音合成和 TTS 供應商狀態管理。
 
 ```bash
 openclaw infer tts convert --text "hello from openclaw" --output ./hello.mp3 --json
@@ -187,7 +190,7 @@ openclaw infer tts status --json
 
 備註：
 
-- `tts status` 預設為 gateway，因為它反映由 gateway 管理的 TTS 狀態。
+- `tts status` 預設為閘道，因為它反映閘道管理的 TTS 狀態。
 - 使用 `tts providers`、`tts voices` 和 `tts set-provider` 來檢查和設定 TTS 行為。
 
 ## 影片
@@ -203,7 +206,7 @@ openclaw infer video describe --file ./clip.mp4 --model openai/gpt-4.1-mini --js
 
 備註：
 
-- `--model` 必須是 `<provider/model>` 才能使用 `video describe`。
+- 對於 `video describe`，`--model` 必須是 `<provider/model>`。
 
 ## Web
 
@@ -218,11 +221,11 @@ openclaw infer web providers --json
 
 備註：
 
-- 使用 `web providers` 來檢查可用、已設定和已選取的供應商。
+- 使用 `web providers` 檢視可用、已設定及已選取的提供者。
 
 ## 嵌入
 
-使用 `embedding` 進行向量建立和嵌入供應商檢查。
+使用 `embedding` 進行向量建立及嵌入提供者檢視。
 
 ```bash
 openclaw infer embedding create --text "friendly lobster" --json
@@ -232,7 +235,7 @@ openclaw infer embedding providers --json
 
 ## JSON 輸出
 
-Infer 指令會將 JSON 輸出正規化至共用封套下：
+Infer 指令會在共用封裝下正規化 JSON 輸出：
 
 ```json
 {
@@ -240,7 +243,7 @@ Infer 指令會將 JSON 輸出正規化至共用封套下：
   "capability": "image.generate",
   "transport": "local",
   "provider": "openai",
-  "model": "gpt-image-1",
+  "model": "gpt-image-2",
   "attempts": [],
   "outputs": []
 }

@@ -18,7 +18,7 @@ Cuando `agents.defaults.typingMode` está **sin establecer**, OpenClaw mantiene 
 - **Chats directos**: la escritura comienza inmediatamente una vez que inicia el bucle del modelo.
 - **Chats grupales con mención**: la escritura comienza inmediatamente.
 - **Chats grupales sin mención**: la escritura comienza solo cuando el texto del mensaje comienza a transmitirse.
-- **Ejecuciones de latido (Heartbeat runs)**: la escritura está desactivada.
+- **Ejecuciones de latido (heartbeat runs)**: la escritura comienza cuando la ejecución del latido inicia si el objetivo de latido resuelto es un chat capaz de escribir y la escritura no está deshabilitada.
 
 ## Modos
 
@@ -64,6 +64,6 @@ Puede anular el modo o el cadencia por sesión:
   coincidencia sin distinción de mayúsculas y minúsculas).
 - `thinking` solo se activa si la ejecución transmite el razonamiento (`reasoningLevel: "stream"`).
   Si el modelo no emite deltas de razonamiento, no se iniciará la escritura.
-- Los latidos (heartbeats) nunca muestran escritura, independientemente del modo.
-- `typingIntervalSeconds` controla el **ritmo de actualización**, no la hora de inicio.
-  El valor predeterminado es 6 segundos.
+- La escritura de latido es una señal de actividad para el objetivo de entrega resuelto. Comienza al inicio de la ejecución del latido en lugar de seguir el tiempo del flujo `message` o `thinking`. Establezca `typingMode: "never"` para deshabilitarla.
+- Los latidos no muestran escritura cuando `target: "none"`, cuando el objetivo no puede resolverse, cuando la entrega de chat está deshabilitada para el latido, o cuando el canal no admite escritura.
+- `typingIntervalSeconds` controla el **ritmo de actualización**, no la hora de inicio. El valor predeterminado es 6 segundos.

@@ -6,67 +6,69 @@ read_when:
 title: "Railway"
 ---
 
-Implemente OpenClaw en Railway con una plantilla de un clic y acceda a él a través de la interfaz de usuario web de Control.
-Esta es la ruta más fácil "sin terminal en el servidor": Railway ejecuta el Gateway por usted.
+# Railway
+
+Implementa OpenClaw en Railway con una plantilla de un clic y accede a través de la interfaz de usuario web de Control.
+Esta es la ruta más fácil "sin terminal en el servidor": Railway ejecuta el Gateway por ti.
 
 ## Lista de verificación rápida (nuevos usuarios)
 
-1. Haga clic en **Deploy on Railway** (Implementar en Railway) (abajo).
-2. Añada un **Volume** (Volumen) montado en `/data`.
-3. Establezca las **Variables** requeridas (al menos `OPENCLAW_GATEWAY_PORT` y `OPENCLAW_GATEWAY_TOKEN`).
-4. Habilite el **Proxy HTTP** en el puerto `8080`.
-5. Abra `https://<your-railway-domain>/openclaw` y conéctese usando el secreto compartido configurado. Esta plantilla usa `OPENCLAW_GATEWAY_TOKEN` de forma predeterminada; si lo reemplaza con autenticación por contraseña, use esa contraseña.
+1. Haz clic en **Deploy on Railway** (abajo).
+2. Añade un **Volume** montado en `/data`.
+3. Establece las **Variables** requeridas (al menos `OPENCLAW_GATEWAY_PORT` y `OPENCLAW_GATEWAY_TOKEN`).
+4. Habilita **HTTP Proxy** en el puerto `8080`.
+5. Abre `https://<your-railway-domain>/openclaw` y conéctate usando el secreto compartido configurado. Esta plantilla usa `OPENCLAW_GATEWAY_TOKEN` por defecto; si lo reemplazas con autenticación por contraseña, usa esa contraseña en su lugar.
 
-## Implementación de un solo clic
+## Implementación con un clic
 
 <a href="https://railway.com/deploy/clawdbot-railway-template" target="_blank" rel="noreferrer">
   Desplegar en Railway
 </a>
 
-Después de la implementación, encuentre su URL pública en **Railway → su servicio → Settings → Domains**.
+Después de la implementación, encuentra tu URL pública en **Railway → tu servicio → Settings → Domains**.
 
-Railway hará lo siguiente:
+Railway ya sea:
 
-- le proporcionan un dominio generado (a menudo `https://<something>.up.railway.app`), o
-- usará su dominio personalizado si adjuntó uno.
+- te dará un dominio generado (a menudo `https://<something>.up.railway.app`), o
+- usará tu dominio personalizado si adjuntaste uno.
 
-Luego abra:
+Luego abre:
 
-- `https://<your-railway-domain>/openclaw` — Interfaz de usuario de Control
+- `https://<your-railway-domain>/openclaw` — Interfaz de Control
 
 ## Lo que obtienes
 
-- Gateway de OpenClaw alojado + Interfaz de usuario de Control
-- Almacenamiento persistente mediante Railway Volume (`/data`) para que `openclaw.json`,
-  el `auth-profiles.json` por agente, el estado del canal/proveedor, las sesiones y
-  el espacio de trabajo sobrevivan a los re despliegues
+- OpenClaw Gateway alojado + Interfaz de Control
+- Almacenamiento persistente a través de Railway Volume (`/data`) para que `openclaw.json`,
+  `auth-profiles.json` por agente, estado de canal/proveedor, sesiones y
+  espacio de trabajo sobrevivan a las reimplementaciones
 
 ## Configuración requerida de Railway
 
 ### Redes públicas
 
-Habilite el **Proxy HTTP** para el servicio.
+Habilita **HTTP Proxy** para el servicio.
 
 - Puerto: `8080`
 
 ### Volumen (requerido)
 
-Adjunte un volumen montado en:
+Adjunta un volumen montado en:
 
 - `/data`
 
 ### Variables
 
-Establezca estas variables en el servicio:
+Establece estas variables en el servicio:
 
-- `OPENCLAW_GATEWAY_PORT=8080` (obligatorio — debe coincidir con el puerto en Red Pública)
-- `OPENCLAW_GATEWAY_TOKEN` (obligatorio; trátelo como un secreto de administrador)
+- `OPENCLAW_GATEWAY_PORT=8080` (requerido — debe coincidir con el puerto en Redes públicas)
+- `OPENCLAW_GATEWAY_TOKEN` (requerido; trátalo como un secreto de administrador)
 - `OPENCLAW_STATE_DIR=/data/.openclaw` (recomendado)
 - `OPENCLAW_WORKSPACE_DIR=/data/workspace` (recomendado)
 
 ## Conectar un canal
 
-Use la Interfaz de Control en `/openclaw` o ejecute `openclaw onboard` a través del shell de Railway para obtener instrucciones de configuración del canal:
+Usa la Interfaz de Control en `/openclaw` o ejecuta `openclaw onboard` a través del shell de Railway para obtener instrucciones de configuración del canal:
 
 - [Telegram](/es/channels/telegram) (el más rápido — solo un token de bot)
 - [Discord](/es/channels/discord)
@@ -80,11 +82,10 @@ Exporte su estado, configuración, perfiles de autenticación y espacio de traba
 openclaw backup create
 ```
 
-Esto crea un archivo de copia de seguridad portátil con el estado de OpenClaw más cualquier espacio de trabajo
-configurado. Consulte [Backup](/es/cli/backup) para obtener más detalles.
+Esto crea un archivo de copia de seguridad portátil con el estado de OpenClaw más cualquier espacio de trabajo configurado. Consulte [Backup](/es/cli/backup) para obtener más detalles.
 
-## Siguientes pasos
+## Pasos siguientes
 
-- Configure canales de mensajería: [Canales](/es/channels)
-- Configure el Gateway: [Configuración del Gateway](/es/gateway/configuration)
-- Mantenga OpenClaw actualizado: [Actualización](/es/install/updating)
+- Configure canales de mensajería: [Channels](/es/channels)
+- Configure el Gateway: [Gateway configuration](/es/gateway/configuration)
+- Mantenga OpenClaw actualizado: [Updating](/es/install/updating)

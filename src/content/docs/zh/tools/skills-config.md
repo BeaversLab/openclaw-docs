@@ -50,7 +50,7 @@ auth/API 密钥。典型示例：`GEMINI_API_KEY` 或 `GOOGLE_API_KEY` 用于
 
 示例：
 
-- 原生 Nano Banana 风格设置：`agents.defaults.imageGenerationModel.primary: "google/gemini-3.1-flash-image-preview"`
+- 原生 Nano Banana Pro 风格设置：`agents.defaults.imageGenerationModel.primary: "google/gemini-3-pro-image-preview"`
 - 原生 fal 设置：`agents.defaults.imageGenerationModel.primary: "fal/fal-ai/flux/dev"`
 
 ## Agent Skills 允许列表

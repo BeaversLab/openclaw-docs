@@ -26,15 +26,15 @@ title: "agent"
 - `-t, --to <dest>`：用於推導 session 金鑰的收件者
 - `--session-id <id>`：明確的 session ID
 - `--agent <id>`：代理程式 ID；會覆寫路由綁定
-- `--thinking <off|minimal|low|medium|high|xhigh>`：代理程式思考等級
-- `--verbose <on|off>`：持續保存該 session 的詳細等級
-- `--channel <channel>`：傳遞管道；省略以使用主要的 session 管道
+- `--thinking <level>`：代理思維等級 (`off`、`minimal`、`low`、`medium`、`high`，加上供應商支援的自訂等級，例如 `xhigh`、`adaptive` 或 `max`)
+- `--verbose <on|off>`：為此階段持續保留詳細程度
+- `--channel <channel>`：傳遞通道；省略則使用主要階段通道
 - `--reply-to <target>`：傳遞目標覆寫
-- `--reply-channel <channel>`：傳遞管道覆寫
+- `--reply-channel <channel>`：傳遞通道覆寫
 - `--reply-account <id>`：傳遞帳號覆寫
-- `--local`：直接執行嵌入式代理程式（於外掛程式登錄檔預載之後）
-- `--deliver`：將回覆傳回至選定的管道/目標
-- `--timeout <seconds>`：覆寫代理程式逾時（預設 600 或設定值）
+- `--local`：直接執行內嵌代理 (於插件註冊表預載之後)
+- `--deliver`：將回覆傳回至選定的通道/目標
+- `--timeout <seconds>`：覆寫代理逾時 (預設為 600 或設定值)
 - `--json`：輸出 JSON
 
 ## 範例
@@ -50,8 +50,8 @@ openclaw agent --agent ops --message "Run locally" --local
 
 ## 備註
 
-- 當 Gateway 要求失敗時，Gateway 模式會退回到嵌入式代理程式。使用 `--local` 可在開頭強制執行嵌入式執行。
-- `--local` 仍然會先預載外掛程式登錄檔，因此外掛程式提供的提供者、工具和管道在嵌入式執行期間仍可使用。
-- `--channel`、`--reply-channel` 和 `--reply-account` 會影響回覆傳遞，而非 session 路由。
-- 當此指令觸發 `models.json` 重新生成時，由 SecretRef 管理的提供者憑證會以非秘密標記形式持續保存（例如環境變數名稱、`secretref-env:ENV_VAR_NAME` 或 `secretref-managed`），而非解析後的秘密純文字。
+- 當 Gateway 要求失敗時，Gateway 模式會回退至內嵌代理。使用 `--local` 以強制預先執行內嵌模式。
+- `--local` 仍會先預載插件註冊表，因此插件提供的供應商、工具和通道在內嵌執行期間仍可使用。
+- `--channel`、`--reply-channel` 和 `--reply-account` 影響回覆傳遞，而非階段路由。
+- 當此指令觸發 `models.json` 重新生成時，SecretRef 管理的供應商憑證會以非秘密標記 (例如環境變數名稱、`secretref-env:ENV_VAR_NAME` 或 `secretref-managed`) 持續保存，而非已解析的秘密明文。
 - 標記寫入是以來源為權威的：OpenClaw 會持續保存來自作用中來源設定快照的標記，而非來自解析後的執行時期秘密值。

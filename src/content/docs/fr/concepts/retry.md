@@ -25,20 +25,28 @@ title: "Stratégie de nouvelle tentative"
 
 ## Comportement
 
+### Fournisseurs de modèles
+
+- OpenClaw laisse les SDK des fournisseurs gérer les tentatives de courte durée normales.
+- Pour les SDK basés sur Stainless tels qu'Anthropic et OpenAI, les réponses réessayables (`408`, `409`, `429` et `5xx`) peuvent inclure `retry-after-ms` ou `retry-after`. Lorsque cette attente dépasse 60 secondes, OpenClaw injecte `x-should-retry: false` afin que le SDK signale l'erreur immédiatement et que le basculement de modèle puisse passer à un autre profil d'authentification ou à un modèle de repli.
+- Remplacez la limite avec `OPENCLAW_SDK_RETRY_MAX_WAIT_SECONDS=<seconds>`.
+  Définissez-la sur `0`, `false`, `off`, `none` ou `disabled` pour permettre aux SDK de respecter les longues
+  pauses `Retry-After` en interne.
+
 ### Discord
 
-- Nouvelle tentative uniquement en cas d'erreurs de limitation de débit (HTTP 429).
-- Utilise le Discord `retry_after` de Discord lorsqu'il est disponible, sinon un délai exponentiel.
+- Réessaie uniquement en cas d'erreurs de limite de taux (HTTP 429).
+- Utilise le `retry_after` de Discord lorsque disponible, sinon une temporisation exponentielle.
 
 ### Telegram
 
-- Nouvelle tentative en cas d'erreurs transitoires (429, expiration de délai, connexion/réinitialisation/fermeture, indisponible temporairement).
-- Utilise `retry_after` si disponible, sinon un backoff exponentiel.
+- Réessaie en cas d'erreurs transitoires (429, expiration, connexion/réinitialisation/fermée, indisponible temporairement).
+- Utilise `retry_after` lorsque disponible, sinon une temporisation exponentielle.
 - Les erreurs d'analyse Markdown ne sont pas réessayées ; elles reviennent au texte brut.
 
 ## Configuration
 
-Définissez la stratégie de réessai par provider dans `~/.openclaw/openclaw.json` :
+Définissez la stratégie de réessai par fournisseur dans `~/.openclaw/openclaw.json` :
 
 ```json5
 {
@@ -65,5 +73,5 @@ Définissez la stratégie de réessai par provider dans `~/.openclaw/openclaw.js
 
 ## Notes
 
-- Les tentatives s'appliquent par requête (envoi de message, téléchargement de média, réaction, sondage, sticker).
-- Les flux composites ne réessayent pas les étapes terminées.
+- Les tentatives s'appliquent par requête (envoi de message, téléchargement de média, réaction, sondage, autocollant).
+- Les flux composites ne réessaient pas les étapes terminées.

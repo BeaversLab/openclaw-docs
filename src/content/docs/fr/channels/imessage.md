@@ -51,7 +51,7 @@ imsg rpc --help
     imessage: {
       enabled: true,
       cliPath: "/usr/local/bin/imsg",
-      dbPath: "/Users/<you>/Library/Messages/chat.db",
+      dbPath: "/Users/user/Library/Messages/chat.db",
     },
   },
 }
@@ -67,14 +67,14 @@ openclaw gateway
 
       </Step>
 
-      <Step title="Approuver le premier appariement DM (dmPolicy par défaut)">
+      <Step title="Approuver le premier jumelage DM (dmPolicy par défaut)">
 
 ```bash
 openclaw pairing list imessage
 openclaw pairing approve imessage <CODE>
 ```
 
-        Les demandes d'appariement expirent après 1 heure.
+        Les demandes de jumelage expirent après 1 heure.
       </Step>
     </Steps>
 

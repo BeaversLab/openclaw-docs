@@ -8,7 +8,7 @@ title: "LM Studio"
 
 # LM Studio
 
-LM Studio 是一款友善且強大的應用程式，可讓您在自己的硬體上執行開放權重模型。它支援執行 llama.cpp (GGUF) 或 MLX 模型 (Apple Silicon)。提供圖形使用者介面套件或無頭守護程式 (`llmster`)。如需產品和設定文件，請參閱 [lmstudio.ai](https://lmstudio.ai/)。
+LM Studio 是一個友善且強大的應用程式，可讓您在自己的硬體上執行開放權重的模型。它讓您能夠執行 llama.cpp (GGUF) 或 MLX 模型 (Apple Silicon)。提供 GUI 套件或無後端守護程式 (`llmster`)。如需產品和設定文件，請參閱 [lmstudio.ai](https://lmstudio.ai/)。
 
 ## 快速開始
 
@@ -30,7 +30,7 @@ lms daemon up
 lms server start --port 1234
 ```
 
-如果您使用應用程式，請確保啟用 JIT 以獲得流暢的體驗。在 [LM Studio JIT 和 TTL 指南](https://lmstudio.ai/docs/developer/core/ttl-and-auto-evict) 中了解更多資訊。
+如果您使用的是應用程式，請確保您已啟用 JIT 以獲得順暢的體驗。請在 [LM Studio JIT 和 TTL 指南](https://lmstudio.ai/docs/developer/core/ttl-and-auto-evict) 中進一步了解。
 
 3. OpenClaw 需要 LM Studio 權杖值。設定 `LM_API_TOKEN`：
 
@@ -44,7 +44,7 @@ export LM_API_TOKEN="your-lm-studio-api-token"
 export LM_API_TOKEN="placeholder-key"
 ```
 
-如需 LM Studio 驗證設定詳細資訊，請參閱 [LM Studio 驗證](https://lmstudio.ai/docs/developer/core/authentication)。
+如需 LM Studio 驗證設定詳細資訊，請參閱 [LM Studio Authentication](https://lmstudio.ai/docs/developer/core/authentication)。
 
 4. 執行引導程式並選擇 `LM Studio`：
 
@@ -101,7 +101,21 @@ openclaw onboard \
 
 ## 組態
 
-### 明確組態
+### 串流使用相容性
+
+OpenClaw 將 LM Studio 標記為與串流使用相容，因此 Token 計算不再會在串流完成時降級為未知或過時的總計。當 LM Studio 未發出 OpenAI 格式的 `usage` 物件時，OpenClaw 也會從 llama.cpp 風格的 `timings.prompt_n` / `timings.predicted_n` 中繼資料中復原 Token 計數。
+
+受相同行為涵蓋的其他 OpenAI 相容本機後端：
+
+- vLLM
+- SGLang
+- llama.cpp
+- LocalAI
+- Jan
+- TabbyAPI
+- text-generation-webui
+
+### 明確設定
 
 ```json5
 {
@@ -130,9 +144,9 @@ openclaw onboard \
 
 ## 疑難排解
 
-### 偵測不到 LM Studio
+### 未偵測到 LM Studio
 
-請確保 LM Studio 正在執行，並且您設定了 `LM_API_TOKEN`（對於未經驗證的伺服器，任何非空的 token 值皆可）：
+請確保 LM Studio 正在執行，並且您已設定 `LM_API_TOKEN` (對於未經驗證的伺服器，任何非空的 token 值皆可運作)：
 
 ```bash
 # Start via desktop app, or headless:
@@ -150,9 +164,9 @@ curl http://localhost:1234/api/v1/models
 如果設定回報 HTTP 401，請驗證您的 API 金鑰：
 
 - 檢查 `LM_API_TOKEN` 是否符合 LM Studio 中設定的金鑰。
-- 有關 LM Studio 驗證設定的詳細資訊，請參閱 [LM Studio Authentication](https://lmstudio.ai/docs/developer/core/authentication)。
+- 如需 LM Studio 驗證設定詳細資訊，請參閱 [LM Studio Authentication](https://lmstudio.ai/docs/developer/core/authentication)。
 - 如果您的伺服器不需要驗證，請為 `LM_API_TOKEN` 使用任何非空的 token 值。
 
-### 及時模型載入
+### Just-in-time 模型載入
 
-LM Studio 支援及時 (JIT) 模型載入，即模型在首次請求時才載入。請確保您已啟用此功能，以避免「Model not loaded」錯誤。
+LM Studio 支援 just-in-time (JIT) 模型載入，即模型會在第一次請求時載入。請確保您已啟用此功能，以避免「Model not loaded」錯誤。

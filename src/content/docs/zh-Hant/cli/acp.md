@@ -14,7 +14,7 @@ title: "acp"
 
 `openclaw acp` 是一個由 Gateway 支援的 ACP 橋接器，而非完整的 ACP 原生編輯器執行環境。它專注於會話路由、提示傳遞和基本串流更新。
 
-如果您希望外部 MCP 用戶端直接與 OpenClaw 頻道對話交談，而不是託管 ACP harness 會話，請改用
+如果您想要外部 MCP 用戶端直接與 OpenClaw 頻道對話進行通訊，而不是託管 ACP harness session，請改用
 [`openclaw mcp serve`](/zh-Hant/cli/mcp)。
 
 ## 這不是什麼
@@ -27,7 +27,7 @@ title: "acp"
 - IDE 或 ACP 用戶端連接到 OpenClaw
 - OpenClaw 將該工作轉發到 Gateway 會話
 
-這與 [ACP Agents](/zh-Hant/tools/acp-agents) 不同，後者 OpenClaw 透過 `acpx` 執行外部 harness（如 Codex 或 Claude Code）。
+這與 [ACP Agents](/zh-Hant/tools/acp-agents) 不同，後者是 OpenClaw 透過 `acpx` 執行外部 harness（例如 Codex 或 Claude Code）。
 
 快速規則：
 
@@ -158,11 +158,15 @@ the key or label.
 
 橋接模式下不支援每個工作階段的 `mcpServers`。如果 ACP 用戶端在 `newSession` 或 `loadSession` 期間發送這些設定，橋接器會傳回一個明確的錯誤，而不是靜靜地忽略它們。
 
-如果您希望 ACPX 支援的工作階段能看到 OpenClaw 外掛程式工具，請啟用閘道端的 ACPX 外掛程式橋接器，而不是嘗試傳遞每個工作階段的 `mcpServers`。請參閱 [ACP Agents](/zh-Hant/tools/acp-agents#plugin-tools-mcp-bridge)。
+如果您希望 ACPX 支援的 session 能夠看到 OpenClaw 外掛工具或選定的內建工具（例如 `cron`），請啟用 gateway 端的 ACPX MCP bridges，而
+不要嘗試傳遞各個 session 的 `mcpServers`。請參閱
+[ACP Agents](/zh-Hant/tools/acp-agents#plugin-tools-mcp-bridge) 和
+[OpenClaw tools MCP bridge](/zh-Hant/tools/acp-agents#openclaw-tools-mcp-bridge)。
 
-## 從 `acpx` (Codex、Claude、其他 ACP 用戶端) 使用
+## 從 `acpx` 使用 (Codex, Claude, 其他 ACP 用戶端)
 
-如果您希望 Codex 或 Claude Code 等程式碼代理透過 ACP 與您的 OpenClaw 機器人對話，請使用內建 `openclaw` 目標的 `acpx`。
+如果您希望編碼代理程式（例如 Codex 或 Claude Code）透過 ACP 與您的
+OpenClaw 機器人通訊，請使用 `acpx` 及其內建的 `openclaw` 目標。
 
 典型流程：
 
@@ -182,7 +186,7 @@ acpx openclaw -s codex-bridge --cwd /path/to/repo \
   "Ask my OpenClaw work agent for recent context relevant to this repo."
 ```
 
-如果您希望 `acpx openclaw` 每次都指向特定的 Gateway 和工作階段金鑰，請在 `~/.acpx/config.json` 中覆寫 `openclaw` 代理程式指令：
+如果您希望 `acpx openclaw` 每次都鎖定特定的 Gateway 和 session key，請覆寫 `~/.acpx/config.json` 中的 `openclaw` 代理程式指令：
 
 ```json
 {
@@ -204,7 +208,7 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 
 ## Zed 編輯器設定
 
-在 `~/.config/zed/settings.json` 中新增自訂 ACP 代理程式 (或使用 Zed 的 Settings UI)：
+在 `~/.config/zed/settings.json` 中新增自訂 ACP 代理程式（或使用 Zed 的設定 UI）：
 
 ```json
 {
@@ -238,12 +242,12 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 
 ## 工作階段對應
 
-根據預設，ACP 工作階段會取得具有 `acp:` 前綴的獨立 Gateway 工作階段金鑰。
-若要重複使用已知的工作階段，請傳遞工作階段金鑰或標籤：
+根據預設，ACP session 會取得具有 `acp:` 前綴的獨立 Gateway session key。
+若要重複使用已知 session，請傳遞 session key 或標籤：
 
-- `--session <key>`：使用特定的 Gateway 工作階段金鑰。
-- `--session-label <label>`：根據標籤解析現有的工作階段。
-- `--reset-session`：為該金鑰建立新的工作階段 ID (相同的金鑰，新的對話紀錄)。
+- `--session <key>`：使用特定的 Gateway session key。
+- `--session-label <label>`：透過標籤解析現有 session。
+- `--reset-session`：為該 key 建立新的 session id（相同 key，新的對話紀錄）。
 
 如果您的 ACP 用戶端支援中繼資料，您可以針對每個工作階段進行覆寫：
 
@@ -257,38 +261,38 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 }
 ```
 
-在 [/concepts/session](/zh-Hant/concepts/session) 深入了解工作階段金鑰。
+在 [/concepts/session](/zh-Hant/concepts/session) 深入了解 session keys。
 
 ## 選項
 
-- `--url <url>`：Gateway WebSocket URL（預設為設定時的 gateway.remote.url）。
-- `--token <token>`：Gateway 認證 token。
-- `--token-file <path>`：從檔案讀取 Gateway 認證 token。
-- `--password <password>`：Gateway 認證密碼。
-- `--password-file <path>`：從檔案讀取 Gateway 認證密碼。
-- `--session <key>`：預設的 session key。
-- `--session-label <label>`：要解析的預設 session label。
-- `--require-existing`：如果 session key/label 不存在則失敗。
-- `--reset-session`：在首次使用前重設 session key。
-- `--no-prefix-cwd`：不要在工作目錄前為提示加上前綴。
-- `--provenance <off|meta|meta+receipt>`：包含 ACP 來源元數據或收據。
-- `--verbose, -v`：詳細記錄到 stderr。
+- `--url <url>`：Gateway WebSocket URL（設定時預設為 gateway.remote.url）。
+- `--token <token>`: Gateway 驗證權杖。
+- `--token-file <path>`: 從檔案讀取 Gateway 驗證權杖。
+- `--password <password>`: Gateway 驗證密碼。
+- `--password-file <path>`: 從檔案讀取 Gateway 驗證密碼。
+- `--session <key>`: 預設 session 金鑰。
+- `--session-label <label>`: 要解析的預設 session 標籤。
+- `--require-existing`: 如果 session 金鑰/標籤不存在則失敗。
+- `--reset-session`: 在首次使用前重設 session 金鑰。
+- `--no-prefix-cwd`: 不要在工作目錄前為提示加上前綴。
+- `--provenance <off|meta|meta+receipt>`: 包含 ACP 來源元資料或收據。
+- `--verbose, -v`: 詳細的日誌記錄到 stderr。
 
 安全性注意：
 
-- `--token` 和 `--password` 在某些系統上的本機程序列表中可能可見。
-- 建議優先使用 `--token-file`/`--password-file` 或環境變數（`OPENCLAW_GATEWAY_TOKEN`、`OPENCLAW_GATEWAY_PASSWORD`）。
+- 在某些系統上，`--token` 和 `--password` 可能會在本機程序列表中可見。
+- 建議優先使用 `--token-file`/`--password-file` 或環境變數 (`OPENCLAW_GATEWAY_TOKEN`, `OPENCLAW_GATEWAY_PASSWORD`)。
 - Gateway 認證解析遵循其他 Gateway 用戶端使用的共享合約：
-  - 本機模式：env (`OPENCLAW_GATEWAY_*`) -> `gateway.auth.*` -> `gateway.remote.*` 僅在 `gateway.auth.*` 未設定時才回退（已設定但未解析的本機 SecretRefs 將封閉式失敗）
-  - 遠端模式：`gateway.remote.*` 伴隨 env/config 回退，依據遠端優先順序規則
-  - `--url` 具有覆蓋安全性，不會重複使用隱含的 config/env 認證；請傳遞明確的 `--token`/`--password`（或檔案變體）
-- ACP 運行時後端子程序接收 `OPENCLAW_SHELL=acp`，可用於特定情境的 shell/profile 規則。
+  - 本機模式：env (`OPENCLAW_GATEWAY_*`) -> `gateway.auth.*` -> `gateway.remote.*` 僅在 `gateway.auth.*` 未設定時才回退 (已設定但未解析的本機 SecretRefs 將封閉式失敗)
+  - 遠端模式：`gateway.remote.*` 並根據遠端優先順序規則使用 env/config 回退
+  - `--url` 具有覆蓋安全性，不會重複使用隱含的 config/env 憑證；請傳遞明確的 `--token`/`--password` (或檔案變體)
+- ACP 執行階段後端子程序會接收 `OPENCLAW_SHELL=acp`，可用於特定於語境的 shell/profile 規則。
 - `openclaw acp client` 會在產生的 bridge 程序上設定 `OPENCLAW_SHELL=acp-client`。
 
 ### `acp client` 選項
 
-- `--cwd <dir>`：ACP session 的工作目錄。
-- `--server <command>`：ACP 伺服器指令（預設值：`openclaw`）。
-- `--server-args <args...>`：傳遞給 ACP 伺服器的額外參數。
-- `--server-verbose`：啟用 ACP 伺服器上的詳細日誌記錄。
-- `--verbose, -v`：詳細的客戶端日誌記錄。
+- `--cwd <dir>`: ACP session 的工作目錄。
+- `--server <command>`: ACP 伺服器指令 (預設: `openclaw`)。
+- `--server-args <args...>`: 傳遞給 ACP 伺服器的額外引數。
+- `--server-verbose`: 在 ACP 伺服器上啟用詳細記錄。
+- `--verbose, -v`：詳細的客戶端記錄。

@@ -10,9 +10,9 @@ title: "更新"
 
 保持 OpenClaw 為最新版本。
 
-## 建議：`openclaw update`
+## 建議使用：`openclaw update`
 
-最快的更新方式。它會偵測您的安裝類型（npm 或 git），擷取最新版本，執行 `openclaw doctor`，並重新啟動 gateway。
+最快的更新方式。它會偵測您的安裝類型（npm 或 git），取得最新版本，執行 `openclaw doctor`，並重新啟動閘道。
 
 ```bash
 openclaw update
@@ -26,9 +26,9 @@ openclaw update --tag main
 openclaw update --dry-run   # preview without applying
 ```
 
-`--channel beta` 偏好 beta，但當 beta 標籤遺失或比最新穩定版舊時，執行時會退回至穩定版/最新版。如果您想要一次性套用原始的 npm beta dist-tag，請使用 `--tag beta`。
+`--channel beta` 偏好 beta 版，但在 beta 標籤缺失或比最新穩定版舊時，執行階段會回退至 stable/latest。若您想要一次性套件更新的原始 npm beta dist-tag，請使用 `--tag beta`。
 
-關於版本通道的語意，請參閱[開發通道](/zh-Hant/install/development-channels)。
+請參閱 [Development channels](/zh-Hant/install/development-channels) 以了解頻道語意。
 
 ## 替代方案：重新執行安裝程式
 
@@ -36,7 +36,7 @@ openclaw update --dry-run   # preview without applying
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-新增 `--no-onboard` 以跳過入門引導。若是從原始碼安裝，請傳入 `--install-method git --no-onboard`。
+新增 `--no-onboard` 以跳過入門引導。若是原始碼安裝，請傳遞 `--install-method git --no-onboard`。
 
 ## 替代方案：手動使用 npm、pnpm 或 bun
 
@@ -52,9 +52,22 @@ pnpm add -g openclaw@latest
 bun add -g openclaw@latest
 ```
 
+### Root 擁有的全域 npm 安裝
+
+部分 Linux npm 設定會在 root 擁有的目錄下安裝全域套件，例如 `/usr/lib/node_modules/openclaw`。OpenClaw 支援該配置：已安裝的套件在執行時會被視為唯讀，且外掛執行階段的相依性會被部署至可寫入的執行階段目錄，而非直接修改套件樹。
+
+對於強化的 systemd 單元，請設定一個包含在 `ReadWritePaths` 中的可寫入暫存目錄：
+
+```ini
+Environment=OPENCLAW_PLUGIN_STAGE_DIR=/var/lib/openclaw/plugin-runtime-deps
+ReadWritePaths=/var/lib/openclaw /home/openclaw/.openclaw /tmp
+```
+
+若未設定 `OPENCLAW_PLUGIN_STAGE_DIR`，OpenClaw 在 systemd 提供時會使用 `$STATE_DIRECTORY`，否則會回退至 `~/.openclaw/plugin-runtime-deps`。
+
 ## 自動更新程式
 
-自動更新程式預設為關閉。在 `~/.openclaw/openclaw.json` 中啟用它：
+自動更新程式預設為關閉。請在 `~/.openclaw/openclaw.json` 中啟用它：
 
 ```json5
 {
@@ -70,13 +83,13 @@ bun add -g openclaw@latest
 }
 ```
 
-| 通道     | 行為                                                                                       |
-| -------- | ------------------------------------------------------------------------------------------ |
-| `stable` | 等待 `stableDelayHours`，然後套用並在 `stableJitterHours` 之間加上決定性抖動（分批推出）。 |
-| `beta`   | 每隔 `betaCheckIntervalHours` 檢查一次（預設：每小時）並立即套用。                         |
-| `dev`    | 不自動套用。請手動使用 `openclaw update`。                                                 |
+| 頻道     | 行為                                                                                 |
+| -------- | ------------------------------------------------------------------------------------ |
+| `stable` | 等待 `stableDelayHours`，然後在 `stableJitterHours` 內套用決定性抖動（分階段推出）。 |
+| `beta`   | 每隔 `betaCheckIntervalHours` 檢查一次（預設：每小時）並立即套用。                   |
+| `dev`    | 不自動套用。請手動使用 `openclaw update`。                                           |
 
-Gateway 也會在啟動時記錄更新提示（使用 `update.checkOnStart: false` 停用）。
+閘道也會在啟動時記錄更新提示（可用 `update.checkOnStart: false` 停用）。
 
 ## 更新後
 
@@ -88,9 +101,9 @@ Gateway 也會在啟動時記錄更新提示（使用 `update.checkOnStart: fals
 openclaw doctor
 ```
 
-遷移設定、稽核 DM 原則，並檢查 Gateway 健康狀態。詳情：[Doctor](/zh-Hant/gateway/doctor)
+遷移設定、稽核 DM 策略，並檢查閘道健康狀態。詳情：[Doctor](/zh-Hant/gateway/doctor)
 
-### 重新啟動 Gateway
+### 重新啟動閘道
 
 ```bash
 openclaw gateway restart
@@ -104,9 +117,9 @@ openclaw health
 
 </Steps>
 
-## 回滾
+## 還原
 
-### 釘選版本 (npm)
+### 鎖定版本 (npm)
 
 ```bash
 npm i -g openclaw@<version>
@@ -114,9 +127,9 @@ openclaw doctor
 openclaw gateway restart
 ```
 
-提示：`npm view openclaw version` 會顯示當前發布的版本。
+提示：`npm view openclaw version` 顯示當前發佈的版本。
 
-### 釘選提交 (source)
+### 鎖定提交
 
 ```bash
 git fetch origin
@@ -125,17 +138,17 @@ pnpm install && pnpm build
 openclaw gateway restart
 ```
 
-若要回到最新版：`git checkout main && git pull`。
+若要返回最新版本：`git checkout main && git pull`。
 
-## 如果您遇到困難
+## 如果您遇到問題
 
 - 再次執行 `openclaw doctor` 並仔細閱讀輸出內容。
-- 對於原始碼檢出上的 `openclaw update --channel dev`，更新程式會在需要時自動引導 `pnpm`。如果您看到 pnpm/corepack 引導錯誤，請手動安裝 `pnpm`（或重新啟用 `corepack`）並重新執行更新。
+- 對於原始碼結帳中的 `openclaw update --channel dev`，更新程式會在需要時自動引導 `pnpm`。如果您看到 pnpm/corepack 引導錯誤，請手動安裝 `pnpm`（或重新啟用 `corepack`）並重新執行更新。
 - 檢查：[疑難排解](/zh-Hant/gateway/troubleshooting)
-- 在 Discord 中詢問：[https://discord.gg/clawd](https://discord.gg/clawd)
+- 在 Discord 中提問：[https://discord.gg/clawd](https://discord.gg/clawd)
 
 ## 相關
 
-- [安裝概覽](/zh-Hant/install) — 所有安裝方法
-- [醫生工具](/zh-Hant/gateway/doctor) — 更新後的健康檢查
+- [安裝概覽](/zh-Hant/install) — 所有安裝方式
+- [Doctor](/zh-Hant/gateway/doctor) — 更新後的健康檢查
 - [遷移](/zh-Hant/install/migrating) — 主要版本遷移指南

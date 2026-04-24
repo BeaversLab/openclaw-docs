@@ -47,7 +47,7 @@ Cette page décrit le comportement actuel de la CLI. Si les commandes changent, 
 - [`tui`](/fr/cli/tui)
 - [`browser`](/fr/cli/browser)
 - [`cron`](/fr/cli/cron)
-- [`tasks`](/fr/cli/index#tasks)
+- [`tasks`](/fr/cli/tasks)
 - [`flows`](/fr/cli/flows)
 - [`dns`](/fr/cli/dns)
 - [`docs`](/fr/cli/docs)
@@ -431,7 +431,7 @@ Remarques :
 
 ## Plugins
 
-Gérer les extensions et leur configuration :
+Gérer les plugins et leur configuration :
 
 - `openclaw plugins list` — découvrir les plugins (utilisez `--json` pour la sortie machine).
 - `openclaw plugins inspect <id>` — afficher les détails d'un plugin (`info` est un alias).
@@ -453,7 +453,7 @@ Recherche vectorielle sur `MEMORY.md` + `memory/*.md` :
 
 ## Sandbox
 
-Gérez les runtimes de bac à sable pour l'exécution isolée d'agents. Voir [/cli/sandbox](/fr/cli/sandbox).
+Gérer les runtimes de bac à sable (sandbox) pour l'exécution isolée des agents. Voir [/cli/sandbox](/fr/cli/sandbox).
 
 Sous-commandes :
 
@@ -778,7 +778,7 @@ openclaw status --deep
 
 ### `directory`
 
-Rechercher les ID propres, les ID des pairs et les ID de groupe pour les canaux qui exposent une surface de répertoire. Voir [`openclaw directory`](/fr/cli/directory).
+Recherchez les IDs self, peer et de groupe pour les canaux qui exposent une surface de répertoire. Voir [`openclaw directory`](/fr/cli/directory).
 
 Options courantes :
 
@@ -859,7 +859,7 @@ Notes :
 
 ### `qr`
 
-Générer un QR de couplage mobile et un code de configuration à partir de la configuration actuelle du Gateway. Voir [`openclaw qr`](/fr/cli/qr).
+Générer un QR code d'appairage mobile et un code de configuration à partir de la configuration actuelle du Gateway. Voir [`openclaw qr`](/fr/cli/qr).
 
 Options :
 
@@ -920,7 +920,7 @@ Assistants de Webhook. L'interface intégrée actuelle concerne la configuration
 
 ### `webhooks gmail`
 
-Configuration + lanceur du hook Gmail Pub/Sub. Voir [Gmail Pub/Sub](/fr/automation/cron-jobs#gmail-pubsub-integration).
+Configuration + exécuteur du hook Gmail Pub/Sub. Voir [Gmail Pub/Sub](/fr/automation/cron-jobs#gmail-pubsub-integration).
 
 Sous-commandes :
 
@@ -940,7 +940,7 @@ Assistants DNS de découverte étendue (CoreDNS + Tailscale). Surface intégrée
 
 ### `dns setup`
 
-Assistant DNS de découverte étendue (CoreDNS + Tailscale). Voir [/gateway/discovery](/fr/gateway/discovery).
+Assistant DNS de découverte grande zone (CoreDNS + Tailscale). Voir [/gateway/discovery](/fr/gateway/discovery).
 
 Options :
 
@@ -992,7 +992,7 @@ Options :
 - `-t, --to <dest>` (pour la clé de session et la livraison optionnelle)
 - `--session-id <id>`
 - `--agent <id>` (id d'agent ; remplace les liaisons de routage)
-- `--thinking <off|minimal|low|medium|high|xhigh>` (la prise en charge du fournisseur varie ; non limité par le modèle au niveau CLI)
+- `--thinking <level>` (validé par rapport au profil du fournisseur du modèle sélectionné)
 - `--verbose <on|off>`
 - `--channel <channel>` (canal de livraison ; omettre pour utiliser le canal de session principal)
 - `--reply-to <target>` (remplacement de la cible de livraison, distinct du routage de session)
@@ -1258,7 +1258,7 @@ Notes :
 - Fournisseurs avec fenêtres d'utilisation actuelles : Anthropic, GitHub Copilot, Gemini CLI, OpenAI Codex, MiniMax, Xiaomi et z.ai.
 - Note MiniMax : brut `usage_percent` / `usagePercent` signifie le quota restant, donc OpenClaw l'inverse avant l'affichage ; les champs basés sur le comptage priment toujours lorsqu'ils sont présents. Les réponses `model_remains` privilégient l'entrée du modèle de chat, dérivent le libellé de la fenêtre à partir des horodatages si nécessaire et incluent le nom du modèle dans le libellé du plan.
 - L'authentification d'utilisation provient de hooks spécifiques au fournisseur lorsque disponible ; sinon OpenClaw se replie sur la correspondance des identifiants de clé OAuth/API à partir des profils d'authentification, des variables d'environnement ou de la configuration. Si aucun n'est résolu, l'utilisation est masquée.
-- Détails : voir [Suivi de l'utilisation](/fr/concepts/usage-tracking).
+- Détails : voir [Suivi d'utilisation](/fr/concepts/usage-tracking).
 
 ### `health`
 
@@ -1336,7 +1336,7 @@ Notes :
 
 ### `tasks`
 
-Répertorier et gérer les exécutions de [tâches d'arrière-plan](/fr/automation/tasks) sur les agents.
+Lister et gérer les exécutions de [tâches d'arrière-plan](/fr/automation/tasks) sur les agents.
 
 - `tasks list` — afficher les exécutions de tâches actives et récentes
 - `tasks show <id>` — afficher les détails d'une exécution de tâche spécifique
@@ -1411,7 +1411,7 @@ Notes :
 
 ### `daemon`
 
-Alias hérité pour les commandes de gestion de service Gateway. Voir [/cli/daemon](/fr/cli/daemon).
+Alias hérité pour les commandes de gestion de service du Gateway. Voir [/cli/daemon](/fr/cli/daemon).
 
 Sous-commandes :
 
@@ -1500,7 +1500,7 @@ Conseil : l'outil d'exécution `gateway` réservé au propriétaire refuse toujo
 
 ## Modèles
 
-Voir [/concepts/models](/fr/concepts/models) pour le comportement de secours et la stratégie d'analyse.
+Voir [/concepts/models](/fr/concepts/models) pour le comportement de repli et la stratégie de balayage.
 
 Remarque Anthropic : le personnel de Anthropic nous a informés que l'utilisation du OpenClaw Claude de style CLI est
 à nouveau autorisée, donc OpenClaw considère la réutilisation du CLI Claude et l'utilisation de `claude -p` comme
@@ -1526,9 +1526,11 @@ Options :
 
 - `--all`
 - `--local`
-- `--provider <name>`
+- `--provider <id>`
 - `--json`
 - `--plain`
+
+`--all` inclut les lignes de catalogue statique propriétaires du fournisseur groupées avant que l'authentification ne soit configurée. Les lignes restent indisponibles tant que les identifiants du fournisseur correspondants n'existent pas.
 
 ### `models status`
 
@@ -1536,16 +1538,16 @@ Options :
 
 - `--json`
 - `--plain`
-- `--check` (exit 1=expiré/manquant, 2=en voie d'expiration)
+- `--check` (exit 1=expiré/manquant, 2=expirant)
 - `--probe` (sonde en direct des profils d'authentification configurés)
 - `--probe-provider <name>`
-- `--probe-profile <id>` (répétition ou séparé par des virgules)
+- `--probe-profile <id>` (répéter ou séparé par des virgules)
 - `--probe-timeout <ms>`
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
 - `--agent <id>`
 
-Inclut toujours la vue d'ensemble de l'authentification et le statut d'expiration OAuth pour les profils dans le magasin d'authentification.
+Inclut toujours la vue d'ensemble de l'authentification et le statut d'expiration OAuth pour les profils dans le stock d'authentification.
 `--probe` exécute des requêtes en direct (peut consommer des jetons et déclencher des limites de taux).
 Les lignes de sonde peuvent provenir de profils d'authentification, d'identifiants d'environnement ou de `models.json`.
 Attendez-vous à des statuts de sonde tels que `ok`, `auth`, `rate_limit`, `billing`, `timeout`,
@@ -1608,18 +1610,18 @@ Options :
 
 Options :
 
-- `add` : assistant d'authentification interactive (flux d'authentification du provider ou coller de token)
+- `add` : assistant d'authentification interactive (flux d'authentification du fournisseur ou collage de jeton)
 - `login` : `--provider <name>`, `--method <method>`, `--set-default`
-- `login-github-copilot` : flux de connexion GitHub OAuth Copilot (`--yes`)
+- `login-github-copilot` : flux de connexion GitHub de OAuth Copilot (`--yes`)
 - `setup-token` : `--provider <name>`, `--yes`
 - `paste-token` : `--provider <name>`, `--profile-id <id>`, `--expires-in <duration>`
 
-Notes :
+Remarques :
 
-- `setup-token` et `paste-token` sont des commandes génériques de token pour les providers qui exposent des méthodes d'authentification par token.
-- `setup-token` nécessite un TTY interactif et exécute la méthode d'authentification par token du provider.
-- `paste-token` demande la valeur du token et par défaut l'ID de profil d'authentification `<provider>:manual` lorsque `--profile-id` est omis.
-- Anthropic `setup-token` / `paste-token` restent disponibles en tant que chemin de jeton OpenClaw pris en charge, mais OpenClaw préfère désormais la réutilisation du CLI Claude et `claude -p` lorsqu'ils sont disponibles.
+- `setup-token` et `paste-token` sont des commandes de jeton génériques pour les fournisseurs qui exposent des méthodes d'authentification par jeton.
+- `setup-token` nécessite un TTY interactif et exécute la méthode token-auth du fournisseur.
+- `paste-token` demande la valeur du jeton et utilise par défaut l'id de profil d'authentification `<provider>:manual` lorsque `--profile-id` est omis.
+- Les Anthropic `setup-token` / `paste-token` restent disponibles en tant que chemin de jeton OpenClaw pris en charge, mais OpenClaw préfère désormais la réutilisation du CLI Claude et `claude -p` lorsqu'ils sont disponibles.
 
 ### `models auth order get|set|clear`
 
@@ -1633,7 +1635,7 @@ Options :
 
 ### `system event`
 
-Mettre en file d'attente un événement système et déclencher éventuellement un battement de cœur (Gateway RPC).
+Mettre en file d'attente un événement système et déclencher éventuellement un heartbeat (Gateway RPC).
 
 Obligatoire :
 
@@ -1647,7 +1649,7 @@ Options :
 
 ### `system heartbeat last|enable|disable`
 
-Contrôles de battement de cœur (Gateway RPC).
+Contrôles du heartbeat (Gateway RPC).
 
 Options :
 
@@ -1656,7 +1658,7 @@ Options :
 
 ### `system presence`
 
-Lister les entrées de présence du système (Gateway RPC).
+Lister les entrées de présence système (Gateway RPC).
 
 Options :
 
@@ -1670,8 +1672,8 @@ Gérer les tâches planifiées (Gateway RPC). Voir [/automation/cron-jobs](/fr/a
 Sous-commandes :
 
 - `cron status [--json]`
-- `cron list [--all] [--json]` (sortie tableau par défaut ; utilisez `--json` pour les données brutes)
-- `cron add` (alias : `create` ; nécessite `--name` et exactement l'un des `--at` | `--every` | `--cron`, et exactement une charge utile de `--system-event` | `--message`)
+- `cron list [--all] [--json]` (sortie sous forme de tableau par défaut ; utilisez `--json` pour les données brutes)
+- `cron add` (alias : `create` ; nécessite `--name` et exactement un parmi `--at` | `--every` | `--cron`, et exactement une charge utile parmi `--system-event` | `--message`)
 - `cron edit <id>` (champs de correctif)
 - `cron rm <id>` (alias : `remove`, `delete`)
 - `cron enable <id>`
@@ -1681,18 +1683,13 @@ Sous-commandes :
 
 Toutes les commandes `cron` acceptent `--url`, `--token`, `--timeout`, `--expect-final`.
 
-`cron add|edit --model ...` utilise le modèle autorisé sélectionné pour la tâche. Si
-le modèle n'est pas autorisé, cron avertit et revient à la sélection de modèle
-de l'agent/par défaut de la tâche à la place. Les chaînes de repli configurées s'appliquent toujours,
-mais un remplacement de modèle simple sans liste de repli explicite par tâche n'ajoute plus
-le principal de l'agent comme cible de retry supplémentaire cachée.
+`cron add|edit --model ...` utilise le modèle autorisé sélectionné pour la tâche. Si le modèle n'est pas autorisé, cron avertit et revient à la sélection de modèle par défaut de l'agent/de la tâche à la place. Les chaînes de repli configurées s'appliquent toujours, mais un remplacement de modèle simple sans liste de repli explicite par tâche n'ajoute plus le principal de l'agent comme cible de réessai supplémentaire cachée.
 
 ## Hôte de nœud
 
 ### `node`
 
-`node` exécute un **hôte de nœud headless** ou le gère en tant que service d'arrière-plan. Voir
-[`openclaw node`](/fr/cli/node).
+`node` exécute un **hôte de nœud sans interface** ou le gère en tant que service d'arrière-plan. Voir [`openclaw node`](/fr/cli/node).
 
 Sous-commandes :
 
@@ -1703,14 +1700,14 @@ Sous-commandes :
 - `node stop`
 - `node restart`
 
-Notes d'auth :
+Notes d'authentification :
 
-- `node` résout l'auth du passerelle à partir de env/config (pas de drapeaux `--token`/`--password`) : `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`, puis `gateway.auth.*`. En mode local, l'hôte de nœud ignore intentionnellement `gateway.remote.*` ; dans `gateway.mode=remote`, `gateway.remote.*` participe selon les règles de priorité distantes.
-- La résolution d'auth de l'hôte de nœud honore uniquement les variables d'env `OPENCLAW_GATEWAY_*`.
+- `node` résout l'authentification de la passerelle à partir de env/config (pas de drapeaux `--token`/`--password`) : `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`, puis `gateway.auth.*`. En mode local, l'hôte du nœud ignore intentionnellement `gateway.remote.*` ; dans `gateway.mode=remote`, `gateway.remote.*` participe selon les règles de priorité distantes.
+- La résolution de l'authentification de l'hôte du nœud honore uniquement les variables d'environnement `OPENCLAW_GATEWAY_*`.
 
 ## Nœuds
 
-`nodes` communique avec le Gateway et cible les nœuds appariés. Voir [/nodes](/fr/nodes).
+`nodes` communique avec la Gateway et cible les nœuds associés. Voir [/nodes](/fr/nodes).
 
 Options courantes :
 
@@ -1728,7 +1725,7 @@ Sous-commandes :
 - `nodes invoke --node <id|name|ip> --command <command> [--params <json>] [--invoke-timeout <ms>] [--idempotency-key <key>]`
 - `nodes notify --node <id|name|ip> [--title <text>] [--body <text>] [--sound <name>] [--priority <passive|active|timeSensitive>] [--delivery <system|overlay|auto>] [--invoke-timeout <ms>]` (mac uniquement)
 
-Camera :
+Caméra :
 
 - `nodes camera list --node <id|name|ip>`
 - `nodes camera snap --node <id|name|ip> [--facing front|back|both] [--device-id <id>] [--max-width <px>] [--quality <0-1>] [--delay-ms <ms>] [--invoke-timeout <ms>]`
@@ -1745,13 +1742,13 @@ Canvas + écran :
 - `nodes canvas a2ui reset --node <id|name|ip> [--invoke-timeout <ms>]`
 - `nodes screen record --node <id|name|ip> [--screen <index>] [--duration <ms|10s>] [--fps <n>] [--no-audio] [--out <path>] [--invoke-timeout <ms>]`
 
-Lieu :
+Emplacement :
 
 - `nodes location get --node <id|name|ip> [--max-age <ms>] [--accuracy <coarse|balanced|precise>] [--location-timeout <ms>] [--invoke-timeout <ms>]`
 
 ## Navigateur
 
-CLI de contrôle du navigateur (Chrome/Brave/Edge/Chromium dédiés). Voir [`openclaw browser`](/fr/cli/browser) et l'[outil de navigation](/fr/tools/browser).
+CLI de contrôle du navigateur (Chrome/CLI/Edge/Chromium dédié). Voir [`openclaw browser`](/fr/cli/browser) et l'[outil de navigateur](/fr/tools/browser).
 
 Options courantes :
 
@@ -1813,15 +1810,15 @@ Commandes courantes :
 - `voicecall latency [--file <path>] [--last <n>]`
 - `voicecall expose [--mode off|serve|funnel] [--path <path>] [--port <port>] [--serve-path <path>]`
 
-## Recherche dans la documentation
+## Recherche de documentation
 
 ### `docs`
 
-Rechercher dans l'index en direct de la documentation OpenClaw.
+Rechercher l'index de la documentation en direct OpenClaw.
 
 ### `docs [query...]`
 
-Rechercher dans l'index en direct de la documentation.
+Rechercher l'index de la documentation en direct.
 
 ## TUI
 

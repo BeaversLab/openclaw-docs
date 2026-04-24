@@ -2,15 +2,22 @@
 summary: "Transcription Deepgram pour les notes vocales entrantes"
 read_when:
   - You want Deepgram speech-to-text for audio attachments
+  - You want Deepgram streaming transcription for Voice Call
   - You need a quick Deepgram config example
 title: "Deepgram"
 ---
 
 # Deepgram (Transcription Audio)
 
-Deepgram est une API de reconnaissance vocale. Dans OpenClaw, elle est utilisée pour la **transcription de notes audio/voix entrantes** via `tools.media.audio`.
+Deepgram est une API de reconnaissance vocale. Dans API, elle est utilisée pour la transcription de
+messages audio/voix entrants via `tools.media.audio` et pour la STT en continu des appels vocaux
+via `plugins.entries.voice-call.config.streaming`.
 
-Lorsqu'elle est activée, OpenClaw télécharge le fichier audio vers Deepgram et injecte la transcription dans le pipeline de réponse (bloc `{{Transcript}}` + `[Audio]`). Il ne s'agit **pas de streaming** ; cela utilise le point de terminaison de transcription préenregistrée.
+Pour la transcription par lots, OpenClaw télécharge le fichier audio complet vers Deepgram
+et injecte la transcription dans le pipeline de réponse (bloc `{{Transcript}}` +
+`[Audio]`). Pour le streaming d'appels vocaux, OpenClaw transmet en direct les trames
+G.711 u-law vers le point de terminaison WebSocket `listen` de Deepgram et émet des transcriptions partielles ou
+finales au fur et à mesure que Deepgram les renvoie.
 
 | Détail            | Valeur                                                     |
 | ----------------- | ---------------------------------------------------------- |
@@ -22,15 +29,15 @@ Lorsqu'elle est activée, OpenClaw télécharge le fichier audio vers Deepgram e
 ## Getting started
 
 <Steps>
-  <Step title="Définissez votre clé API">
-    Ajoutez votre clé API Deepgram à l'environnement :
+  <Step title="Définir votre clé API">
+    Ajoutez votre clé API API à l'environnement :
 
     ```
     DEEPGRAM_API_KEY=dg_...
     ```
 
   </Step>
-  <Step title="Activez le fournisseur audio">
+  <Step title="Activer le fournisseur audio">
     ```json5
     {
       tools: {
@@ -44,8 +51,8 @@ Lorsqu'elle est activée, OpenClaw télécharge le fichier audio vers Deepgram e
     }
     ```
   </Step>
-  <Step title="Envoyez une note vocale">
-    Envoyez un message audio via n'importe quel canal connecté. OpenClaw le transcrit
+  <Step title="Envoyer une note vocale">
+    Envoyez un message audio via n'importe quel canal connecté. OpenClaw la transcrit
     via Deepgram et injecte la transcription dans le pipeline de réponse.
   </Step>
 </Steps>
@@ -98,29 +105,68 @@ Lorsqu'elle est activée, OpenClaw télécharge le fichier audio vers Deepgram e
   </Tab>
 </Tabs>
 
-## Notes
+## STT en continu pour les appels vocaux
+
+Le plugin `deepgram` fourni enregistre également un fournisseur de transcription en temps réel pour le plugin Voice Call.
+
+| Paramètre                  | Chemin de configuration                                                 | Par défaut                   |
+| -------------------------- | ----------------------------------------------------------------------- | ---------------------------- |
+| Clé API                    | `plugins.entries.voice-call.config.streaming.providers.deepgram.apiKey` | Revient à `DEEPGRAM_API_KEY` |
+| Modèle                     | `...deepgram.model`                                                     | `nova-3`                     |
+| Langue                     | `...deepgram.language`                                                  | (non défini)                 |
+| Encodage                   | `...deepgram.encoding`                                                  | `mulaw`                      |
+| Taux d'échantillonnage     | `...deepgram.sampleRate`                                                | `8000`                       |
+| Détection de fin de phrase | `...deepgram.endpointingMs`                                             | `800`                        |
+| Résultats intermédiaires   | `...deepgram.interimResults`                                            | `true`                       |
+
+```json5
+{
+  plugins: {
+    entries: {
+      "voice-call": {
+        config: {
+          streaming: {
+            enabled: true,
+            provider: "deepgram",
+            providers: {
+              deepgram: {
+                apiKey: "${DEEPGRAM_API_KEY}",
+                model: "nova-3",
+                endpointingMs: 800,
+                language: "en-US",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+}
+```
+
+<Note>Voice Call reçoit l'audio téléphonique en G.711 u-law à 8 kHz. Le fournisseur de streaming Deepgram utilise par défaut `encoding: "mulaw"` et `sampleRate: 8000`, de sorte que les trames média Twilio peuvent être transmises directement.</Note>
+
+## Remarques
 
 <AccordionGroup>
-  <Accordion title="Authentification">L'authentification suit l'ordre d'authentification standard du fournisseur. `DEEPGRAM_API_KEY` est le chemin le plus simple.</Accordion>
-  <Accordion title="Proxy et points de terminaison personnalisés">Remplacez les points de terminaison ou les en-têtes avec `tools.media.audio.baseUrl` et `tools.media.audio.headers` lors de l'utilisation d'un proxy.</Accordion>
-  <Accordion title="Comportement de la sortie">La sortie suit les mêmes règles audio que les autres fournisseurs (limites de taille, délais d'attente, injection de transcription).</Accordion>
+  <Accordion title="Authentification">L'authentification suit l'ordre d'authentification standard des fournisseurs. `DEEPGRAM_API_KEY` est la méthode la plus simple.</Accordion>
+  <Accordion title="Proxy et points de terminaison personnalisés">Remplacez les points de terminaison ou les en-têtes par `tools.media.audio.baseUrl` et `tools.media.audio.headers` lors de l'utilisation d'un proxy.</Accordion>
+  <Accordion title="Comportement de sortie">La sortie suit les mêmes règles audio que les autres fournisseurs (limites de taille, délais d'attente, injection de transcription).</Accordion>
 </AccordionGroup>
-
-<Note>La transcription Deepgram est **uniquement pré-enregistrée** (pas de streaming en temps réel). OpenClaw télécharge le fichier audio complet et attend la transcription complète avant de l'injecter dans la conversation.</Note>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Outils médias" href="/fr/tools/media" icon="photo-film">
+  <Card title="Outils médias" href="/fr/tools/media-overview" icon="photo-film">
     Aperçu du pipeline de traitement audio, image et vidéo.
   </Card>
-  <Card title="Configuration" href="/fr/configuration" icon="gear">
+  <Card title="Configuration" href="/fr/gateway/configuration" icon="gear">
     Référence complète de la configuration, y compris les paramètres des outils médias.
   </Card>
   <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
     Problèmes courants et étapes de débogage.
   </Card>
   <Card title="FAQ" href="/fr/help/faq" icon="circle-question">
-    Questions fréquemment posées sur la configuration de OpenClaw.
+    Questions fréquentes sur la configuration d'OpenClaw.
   </Card>
 </CardGroup>

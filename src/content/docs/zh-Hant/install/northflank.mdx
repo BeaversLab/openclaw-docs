@@ -6,37 +6,39 @@ read_when:
 title: "Northflank"
 ---
 
+# Northflank
+
 使用一鍵範本在 Northflank 上部署 OpenClaw，並透過網頁控制 UI 進行存取。
-這是最簡單的「無需在伺服器上使用終端機」途徑：Northflank 會為您執行 Gateway。
+這是最簡單的「無需伺服器終端機」途徑：Northflank 會為您執行 Gateway。
 
 ## 如何開始
 
 1. 點擊 [Deploy OpenClaw](https://northflank.com/stacks/deploy-openclaw) 以開啟範本。
 2. 如果您還沒有帳戶，請建立一個 [Northflank 帳戶](https://app.northflank.com/signup)。
 3. 點擊 **Deploy OpenClaw now**。
-4. 設定所需的環境變數： `OPENCLAW_GATEWAY_TOKEN` (請使用強隨機值)。
-5. 點擊 **Deploy stack** 以建置並執行 OpenClaw 範本。
+4. 設定必要的環境變數：`OPENCLAW_GATEWAY_TOKEN`（請使用強隨機值）。
+5. 點擊 **Deploy stack** 以建構並執行 OpenClaw 範本。
 6. 等待部署完成，然後點擊 **View resources**。
 7. 開啟 OpenClaw 服務。
 8. 在 `/openclaw` 開啟公開的 OpenClaw URL，並使用設定的共享金鑰進行連線。此範本預設使用 `OPENCLAW_GATEWAY_TOKEN`；如果您將其替換為密碼驗證，請改用該密碼。
 
 ## 您將獲得
 
-- 託管的 OpenClaw Gateway + Control UI
-- 透過 Northflank Volume (`/data`) 提供持久儲存，因此 `openclaw.json`、
-  每個代理程式的 `auth-profiles.json`、通道/提供者狀態、工作階段和
-  工作區皆可在重新部署後保留
+- 託管的 OpenClaw Gateway + 控制介面
+- 透過 Northflank Volume (`/data`) 進行永續儲存，因此 `openclaw.json`、
+  每個代理程式的 `auth-profiles.json`、頻道/提供者狀態、工作階段和
+  工作區在重新部署後都能保留
 
 ## 連接頻道
 
-使用 `/openclaw` 的控制 UI，或透過 SSH 執行 `openclaw onboard` 以取得通道設定說明：
+使用位於 `/openclaw` 的控制介面，或透過 SSH 執行 `openclaw onboard` 以取得頻道設定說明：
 
-- [Telegram](/zh-Hant/channels/telegram) (最快 — 只需要機器人權杖)
+- [Telegram](/zh-Hant/channels/telegram)（最快 — 只需要機器人權杖）
 - [Discord](/zh-Hant/channels/discord)
-- [所有通道](/zh-Hant/channels)
+- [所有頻道](/zh-Hant/channels)
 
 ## 後續步驟
 
-- 設定訊息通道：[通道](/zh-Hant/channels)
+- 設定訊息頻道：[頻道](/zh-Hant/channels)
 - 設定 Gateway：[Gateway 配置](/zh-Hant/gateway/configuration)
-- 保持 OpenClaw 更新：[更新](/zh-Hant/install/updating)
+- 保持 OpenClaw 為最新狀態：[更新](/zh-Hant/install/updating)

@@ -55,14 +55,14 @@ chemin du transcript sur le disque lorsque vous avez besoin du transcript intég
   - les routes d'achèvement liées au fil ou à la conversation l'emportent lorsqu'elles sont disponibles
   - si l'origine de l'achèvement fournit uniquement un channel, OpenClaw remplit la cible/le compte manquant à partir de la route résolue de la session du demandeur (`lastChannel` / `lastTo` / `lastAccountId`) afin que la livraison directe fonctionne toujours
 - Le transfert de l'achèvement vers la session du demandeur est un contexte interne généré à l'exécution (et non du texte rédigé par l'utilisateur) et inclut :
-  - `Result` (texte de réponse `assistant` visible le plus récent, sinon texte nettoyé le plus récent de tool/toolResult)
+  - `Result` (dernier texte de réponse `assistant` visible, sinon dernier texte tool/toolResult nettoyé ; les exécutions ayant échoué de manière terminale ne réutilisent pas le texte de réponse capturé)
   - `Status` (`completed successfully` / `failed` / `timed out` / `unknown`)
   - statistiques compactes d'exécution/jetons
   - une instruction de livraison indiquant à l'agent demandeur de réécrire avec une voix d'assistant normale (ne pas transférer de métadonnées internes brutes)
 - `--model` et `--thinking` remplacent les valeurs par défaut pour cette exécution spécifique.
 - Utilisez `info`/`log` pour inspecter les détails et la sortie après achèvement.
 - `/subagents spawn` est le mode à tir unique (`mode: "run"`). Pour les sessions persistantes liées aux fils, utilisez `sessions_spawn` avec `thread: true` et `mode: "session"`.
-- Pour les sessions de harnais ACP (Codex, Claude Code, Gemini CLI), utilisez `sessions_spawn` avec `runtime: "acp"` et consultez [ACP Agents](/fr/tools/acp-agents).
+- Pour les sessions de harnais ACP (Codex, Claude Code, Gemini CLI), utilisez `sessions_spawn` avec `runtime: "acp"` et consultez [ACP Agents](/fr/tools/acp-agents), en particulier le [modèle de livraison ACP](/fr/tools/acp-agents#delivery-model) lors du débogage des complétions ou des boucles agent-à-agent.
 
 Objectifs principaux :
 
@@ -130,7 +130,7 @@ Commutateurs de configuration :
 - Défaut global : `session.threadBindings.enabled`, `session.threadBindings.idleHours`, `session.threadBindings.maxAgeHours`
 - La substitution de canal et les clés de liaison automatique de génération sont spécifiques à l'adaptateur. Voir **Canaux prenant en charge les fils** ci-dessus.
 
-Consultez la [Référence de configuration](/fr/gateway/configuration-reference) et les [Commandes slash](/fr/tools/slash-commands) pour les détails actuels de l'adaptateur.
+Consultez [Référence de configuration](/fr/gateway/configuration-reference) et [Commandes slash](/fr/tools/slash-commands) pour les détails actuels de l'adaptateur.
 
 Liste blanche :
 
@@ -246,7 +246,7 @@ Les sous-agents rapportent les résultats via une étape d'annonce :
   - clé/id de la session enfant
   - type d'annonce + libellé de la tâche
   - ligne d'état dérivée du résultat de l'exécution (`success`, `error`, `timeout` ou `unknown`)
-  - contenu du résultat sélectionné à partir du dernier texte visible de l'assistant, sinon le dernier texte tool/toolResult nettoyé
+  - contenu du résultat sélectionné à partir du dernier texte d'assistant visible, sinon dernier texte tool/toolResult nettoyé ; les exécutions ayant échoué de manière terminale signalent l'état d'échec sans rejouer le texte de réponse capturé
   - une instruction de suivi décrivant quand répondre ou rester silencieux
 - `Status` n'est pas déduit de la sortie du modèle ; il provient de signaux de résultat d'exécution.
 - En cas de timeout, si l'enfant n'a passé que des appels d'outils, l'annonce peut réduire cet historique en un bref résumé de progrès partiel au lieu de rejouer la sortie brute de l'outil.

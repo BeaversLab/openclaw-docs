@@ -32,7 +32,7 @@ title: "转录清理"
 所有脚本清理均集中在嵌入式运行器中：
 
 - 策略选择： `src/agents/transcript-policy.ts`
-- 清理/修复应用： `sanitizeSessionHistory` 中的 `src/agents/pi-embedded-runner/google.ts`
+- 清理/修复应用：`sanitizeSessionHistory` 中的 `src/agents/pi-embedded-runner/replay-history.ts`
 
 该策略使用 `provider`、`modelApi` 和 `modelId` 来决定应用哪些内容。
 
@@ -64,7 +64,7 @@ title: "转录清理"
 实现：
 
 - `src/agents/session-transcript-repair.ts` 中的 `sanitizeToolCallInputs`
-- 应用于 `src/agents/pi-embedded-runner/google.ts` 中的 `sanitizeSessionHistory`
+- 应用于 `sanitizeSessionHistory` 中的 `src/agents/pi-embedded-runner/replay-history.ts`
 
 ---
 

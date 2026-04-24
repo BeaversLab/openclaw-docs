@@ -70,7 +70,7 @@ OpenClaw reconoce dos formatos de complementos:
 | **Nativo**  | `openclaw.plugin.json` + módulo de tiempo de ejecución; se ejecuta en el proceso | Complementos oficiales, paquetes npm de la comunidad   |
 | **Paquete** | Diseño compatible con Codex/Claude/Cursor; asignado a funciones de OpenClaw      | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/` |
 
-Ambos aparecen bajo `openclaw plugins list`. Consulte [Plugin Bundles](/es/plugins/bundles) para obtener detalles sobre los paquetes.
+Ambos aparecen en `openclaw plugins list`. Consulte [Plugin Bundles](/es/plugins/bundles) para obtener detalles sobre los paquetes.
 
 Si está escribiendo un complemento nativo, comience con [Building Plugins](/es/plugins/building-plugins)
 y la [Plugin SDK Overview](/es/plugins/sdk-overview).
@@ -109,7 +109,7 @@ y la [Plugin SDK Overview](/es/plugins/sdk-overview).
   </Accordion>
 </AccordionGroup>
 
-¿Buscas plugins de terceros? Consulte [Plugins de la comunidad](/es/plugins/community).
+¿Busca complementos de terceros? Consulte [Community Plugins](/es/plugins/community).
 
 ## Configuración
 
@@ -119,7 +119,7 @@ y la [Plugin SDK Overview](/es/plugins/sdk-overview).
     enabled: true,
     allow: ["voice-call"],
     deny: ["untrusted-plugin"],
-    load: { paths: ["~/Projects/oss/voice-call-extension"] },
+    load: { paths: ["~/Projects/oss/voice-call-plugin"] },
     entries: {
       "voice-call": { enabled: true, config: { provider: "twilio" } },
     },
@@ -151,11 +151,11 @@ OpenClaw escanea los plugins en este orden (gana la primera coincidencia):
     `plugins.load.paths` — rutas de archivos explícitas o directorios.
   </Step>
 
-  <Step title="Extensiones del espacio de trabajo">
+  <Step title="Complementos del espacio de trabajo">
     `\<workspace\>/.openclaw/<plugin-root>/*.ts` y `\<workspace\>/.openclaw/<plugin-root>/*/index.ts`.
   </Step>
 
-  <Step title="Extensiones globales">
+  <Step title="Complementos globales">
     `~/.openclaw/<plugin-root>/*.ts` y `~/.openclaw/<plugin-root>/*/index.ts`.
   </Step>
 
@@ -216,8 +216,8 @@ openclaw plugins install <plugin> --marketplace <source>
 openclaw plugins install <plugin> --marketplace https://github.com/<owner>/<repo>
 openclaw plugins install <spec> --pin      # record exact resolved npm spec
 openclaw plugins install <spec> --dangerously-force-unsafe-install
-openclaw plugins update <id>             # update one plugin
-openclaw plugins update <id> --dangerously-force-unsafe-install
+openclaw plugins update <id-or-npm-spec> # update one plugin
+openclaw plugins update <id-or-npm-spec> --dangerously-force-unsafe-install
 openclaw plugins update --all            # update all
 openclaw plugins uninstall <id>          # remove config/install records
 openclaw plugins uninstall <id> --keep-files
@@ -232,43 +232,37 @@ Los plugins empaquetados se envían con OpenClaw. Muchos están habilitados de m
 los proveedores de modelos empaquetados, los proveedores de voz empaquetados y el plugin de navegador
 empaquetado). Otros plugins empaquetados aún necesitan `openclaw plugins enable <id>`.
 
-`--force` sobrescribe un plugin instalado o un paquete de hooks existente en su lugar.
-No es compatible con `--link`, que reutiliza la ruta de origen en lugar de
-copiar sobre un destino de instalación administrado.
+`--force` sobrescribe un complemento o paquete de hooks instalado existente en su lugar. Use
+`openclaw plugins update <id-or-npm-spec>` para actualizaciones de rutina de complementos
+rastreados de npm. No es compatible con `--link`, que reutiliza la ruta de origen en lugar
+de copiar sobre un destino de instalación administrado.
+
+`openclaw plugins update <id-or-npm-spec>` se aplica a instalaciones rastreadas. Pasar
+una especificación de paquete npm con una etiqueta de distribución o versión exacta resuelve el nombre del paquete
+de vuelta al registro del complemento rastreado y registra la nueva especificación para futuras actualizaciones.
+Pasar el nombre del paquete sin una versión mueve una instalación fijada exacta de vuelta a
+la línea de lanzamiento predeterminada del registro. Si el complemento npm instalado ya coincide
+con la versión resuelta y la identidad del artefacto registrado, OpenClaw omite la actualización
+sin descargar, reinstalar o reescribir la configuración.
 
 `--pin` es solo para npm. No es compatible con `--marketplace`, porque
-las instalaciones del mercado persisten en los metadatos de origen del mercado en lugar de una especificación npm.
+las instalaciones del mercado mantienen los metadatos de origen del mercado en lugar de una especificación npm.
 
-`--dangerously-force-unsafe-install` es una anulación de emergencia para falsos
-positivos del escáner de código peligroso integrado. Permite que las instalaciones y
-actualizaciones de plugins continúen más allá de los hallazgos de `critical` integrados, pero aun así
-no evita los bloqueos de política de plugin `before_install` ni el bloqueo por fallas de escaneo.
+`--dangerously-force-unsafe-install` es una anulación de emergencia para los falsos positivos del escáner de código peligroso integrado. Permite que las instalaciones y actualizaciones de complementos continúen a pesar de los hallazgos integrados de `critical`, pero aun así no evita los bloqueos de política del complemento `before_install` ni el bloqueo por fallas en el escaneo.
 
-Esta bandera de CLI se aplica solo a los flujos de instalación/actualización de plugins. Las instalaciones de
-dependencias de habilidades respaldadas por Gateway usan la anulación de solicitud `dangerouslyForceUnsafeInstall` correspondiente,
-mientras que `openclaw skills install` sigue siendo el flujo separado de descarga/instalación de habilidades de ClawHub.
+Este indicador de CLI se aplica solo a los flujos de instalación/actualización de complementos. Las instalaciones de dependencias de habilidades respaldadas por Gateway usan la anulación de solicitud `dangerouslyForceUnsafeInstall` coincidente, mientras que `openclaw skills install` sigue siendo el flujo de descarga/instalación de habilidades de ClawHub por separado.
 
-Los paquetes compatibles participan en el mismo flujo de lista/inspección/habilitación/deshabilitación de plugins.
-El soporte de tiempo de ejecución actual incluye habilidades de paquetes, habilidades de comandos de Claude,
-valores predeterminados de `settings.json` de Claude, `.lsp.json` de Claude y valores predeterminados
-`lspServers` declarados en el manifiesto, habilidades de comandos de Cursor y directorios de hooks de Codex compatibles.
+Los paquetes compatibles participan en el mismo flujo de listado/inspección/activación/desactivación de complementos. El soporte de tiempo de ejecución actual incluye habilidades de paquete, habilidades de comandos de Claude, valores predeterminados de `settings.json` de Claude, `.lsp.json` de Claude y valores predeterminados de `lspServers` declarados en el manifiesto, habilidades de comandos de Cursor y directorios de hook de Codex compatibles.
 
-`openclaw plugins inspect <id>` también informa las capacidades de paquete detectadas, además
-de las entradas de servidor MCP y LSP compatibles o no compatibles para los plugins respaldados por paquetes.
+`openclaw plugins inspect <id>` también informa las capacidades de paquete detectadas, además de las entradas de servidor MCP y LSP admitidas o no admitidas para complementos respaldados por paquetes.
 
-Las fuentes del marketplace pueden ser un nombre de marketplace conocido por Claude de
-`~/.claude/plugins/known_marketplaces.json`, una ruta raíz de un marketplace local o
-`marketplace.json`, una abreviatura de GitHub como `owner/repo`, una URL de
-repositorio de GitHub o una URL de git. Para marketplaces remotos, las entradas de plugins deben permanecer dentro del
-repositorio del marketplace clonado y usar solo fuentes de ruta relativa.
+Las fuentes del mercado pueden ser un nombre de mercado conocido de Claude de `~/.claude/plugins/known_marketplaces.json`, una ruta raíz de mercado local o ruta `marketplace.json`, una abreviatura de GitHub como `owner/repo`, una URL de repositorio de GitHub o una URL de git. Para mercados remotos, las entradas de complementos deben permanecer dentro del repositorio del mercado clonado y usar solo fuentes de ruta relativa.
 
 Consulte la [referencia de la CLI de `openclaw plugins`](/es/cli/plugins) para obtener detalles completos.
 
-## Resumen de la API de Plugins
+## Resumen de la API de complementos
 
-Los plugins nativos exportan un objeto de entrada que expone `register(api)`. Los plugins
-antiguos aún pueden usar `activate(api)` como un alias heredado, pero los nuevos plugins deben
-usar `register`.
+Los complementos nativos exportan un objeto de entrada que expone `register(api)`. Los complementos más antiguos aún pueden usar `activate(api)` como alias heredado, pero los nuevos complementos deben usar `register`.
 
 ```typescript
 export default definePluginEntry({
@@ -288,49 +282,46 @@ export default definePluginEntry({
 });
 ```
 
-OpenClaw carga el objeto de entrada y llama a `register(api)` durante la
-activación del plugin. El cargador todavía recurre a `activate(api)` para los plugins antiguos,
-pero los plugins empaquetados y los nuevos plugins externos deben tratar `register` como el
-contrato público.
+OpenClaw carga el objeto de entrada y llama a `register(api)` durante la activación del complemento. El cargador todavía recurre a `activate(api)` para los complementos más antiguos, pero los complementos empaquetados y los nuevos complementos externos deben tratar `register` como el contrato público.
 
 Métodos de registro comunes:
 
-| Método                                  | Lo que registra                       |
-| --------------------------------------- | ------------------------------------- |
-| `registerProvider`                      | Proveedor de modelo (LLM)             |
-| `registerChannel`                       | Canal de chat                         |
-| `registerTool`                          | Herramienta de agente                 |
-| `registerHook` / `on(...)`              | Ganchos del ciclo de vida             |
-| `registerSpeechProvider`                | Conversión de texto a voz / STT       |
-| `registerRealtimeTranscriptionProvider` | STT en tiempo real (streaming)        |
-| `registerRealtimeVoiceProvider`         | Voz en tiempo real dúplex             |
-| `registerMediaUnderstandingProvider`    | Análisis de imagen/audio              |
-| `registerImageGenerationProvider`       | Generación de imágenes                |
-| `registerMusicGenerationProvider`       | Generación de música                  |
-| `registerVideoGenerationProvider`       | Generación de video                   |
-| `registerWebFetchProvider`              | Proveedor de obtención/extracción web |
-| `registerWebSearchProvider`             | Búsqueda web                          |
-| `registerHttpRoute`                     | Endpoint HTTP                         |
-| `registerCommand` / `registerCli`       | Comandos CLI                          |
-| `registerContextEngine`                 | Motor de contexto                     |
-| `registerService`                       | Servicio en segundo plano             |
+| Método                                  | Lo que registra                          |
+| --------------------------------------- | ---------------------------------------- |
+| `registerProvider`                      | Proveedor de modelos (LLM)               |
+| `registerChannel`                       | Canal de chat                            |
+| `registerTool`                          | Herramienta de agente                    |
+| `registerHook` / `on(...)`              | Ganchos de ciclo de vida                 |
+| `registerSpeechProvider`                | Texto a voz / STT                        |
+| `registerRealtimeTranscriptionProvider` | STT en streaming                         |
+| `registerRealtimeVoiceProvider`         | Voz en tiempo real dúplex                |
+| `registerMediaUnderstandingProvider`    | Análisis de imagen/audio                 |
+| `registerImageGenerationProvider`       | Generación de imágenes                   |
+| `registerMusicGenerationProvider`       | Generación de música                     |
+| `registerVideoGenerationProvider`       | Generación de video                      |
+| `registerWebFetchProvider`              | Proveedor de recuperación/extracción web |
+| `registerWebSearchProvider`             | Búsqueda web                             |
+| `registerHttpRoute`                     | Endpoint HTTP                            |
+| `registerCommand` / `registerCli`       | Comandos de CLI                          |
+| `registerContextEngine`                 | Motor de contexto                        |
+| `registerService`                       | Servicio en segundo plano                |
 
-Comportamiento de guardia de enlace para ganchos de ciclo de vida tipados:
+Comportamiento de guardia de gancho para ganchos de ciclo de vida tipados:
 
-- `before_tool_call`: `{ block: true }` es terminal; se omiten los controladores de menor prioridad.
-- `before_tool_call`: `{ block: false }` es una operación nula y no borra un bloque anterior.
-- `before_install`: `{ block: true }` es terminal; se omiten los controladores de menor prioridad.
-- `before_install`: `{ block: false }` es una operación nula y no borra un bloque anterior.
-- `message_sending`: `{ cancel: true }` es terminal; se omiten los controladores de menor prioridad.
-- `message_sending`: `{ cancel: false }` es una operación nula y no borra una cancelación anterior.
+- `before_tool_call`: `{ block: true }` es terminal; los controladores de menor prioridad se omiten.
+- `before_tool_call`: `{ block: false }` es una no operación y no borra un bloque anterior.
+- `before_install`: `{ block: true }` es terminal; los controladores de menor prioridad se omiten.
+- `before_install`: `{ block: false }` es una no operación y no borra un bloque anterior.
+- `message_sending`: `{ cancel: true }` es terminal; los controladores de menor prioridad se omiten.
+- `message_sending`: `{ cancel: false }` es una no operación y no borra una cancelación anterior.
 
-Para obtener el comportamiento completo del hook tipado, consulte [Resumen del SDK](/es/plugins/sdk-overview#hook-decision-semantics).
+Para obtener el comportamiento completo de los ganchos tipados, consulte [Resumen del SDK](/es/plugins/sdk-overview#hook-decision-semantics).
 
 ## Relacionado
 
-- [Crear Plugins](/es/plugins/building-plugins) — crear tu propio plugin
-- [Paquetes de Plugins](/es/plugins/bundles) — compatibilidad de paquetes Codex/Claude/Cursor
-- [Manifiesto del Plugin](/es/plugins/manifest) — esquema del manifiesto
-- [Registrar Herramientas](/es/plugins/building-plugins#registering-agent-tools) — agregar herramientas de agente en un plugin
-- [Aspectos Internos del Plugin](/es/plugins/architecture) — modelo de capacidad y canalización de carga
-- [Plugins de la Comunidad](/es/plugins/community) — listados de terceros
+- [Construcción de plugins](/es/plugins/building-plugins) — crea tu propio plugin
+- [Paquetes de plugins](/es/plugins/bundles) — compatibilidad con paquetes Codex/Claude/Cursor
+- [Manifiesto de plugin](/es/plugins/manifest) — esquema de manifiesto
+- [Registro de herramientas](/es/plugins/building-plugins#registering-agent-tools) — agregar herramientas de agente en un plugin
+- [Plugin Internals](/es/plugins/architecture) — modelo de capacidades y canalización de carga
+- [Community Plugins](/es/plugins/community) — listados de terceros

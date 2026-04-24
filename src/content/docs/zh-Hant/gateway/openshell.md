@@ -262,27 +262,34 @@ openclaw sandbox recreate --all
 openclaw sandbox recreate --all
 ```
 
-## 目前的限制
+## 安全加固
 
-- OpenShell 後端不支援沙箱瀏覽器。
+讀取遠端工作區檔案的 OpenShell sandbox 輔助程式會針對工作區根目錄使用固定的檔案描述元 (pinned file descriptor)，並從該固定的 fd 開始向上遍歷，而不是在每次讀取時重新解析路徑。結合每次操作時的身分重新檢查，這可以防止中途切換符號連結或熱置換工作區掛載將讀取重導向至預期遠端工作區之外。
+
+- 工作區根目錄會被開啟一次並固定；後續的讀取會重複使用該 fd。
+- 向上遍歷會從固定的 fd 遍歷相對條目，因此無法被路徑中較高層級的替換目錄所重導向。
+- 在每次讀取之前都會重新檢查 sandbox 身分，因此重建或重新分配的 sandbox 無法靜默地提供來自不同工作區的檔案。
+
+## 目前限制
+
+- OpenShell 後端不支援 Sandbox 瀏覽器。
 - `sandbox.docker.binds` 不適用於 OpenShell。
-- `sandbox.docker.*` 下的 Docker 特定執行時期調整選項僅適用於 Docker
-  後端。
+- `sandbox.docker.*` 下的 Docker 特有執行時期 (runtime) 設定僅適用於 Docker 後端。
 
 ## 運作原理
 
-1. OpenClaw 呼叫 `openshell sandbox create`（根據配置帶有 `--from`、`--gateway`、
-   `--policy`、`--providers`、`--gpu` 標誌）。
-2. OpenClaw 呼叫 `openshell sandbox ssh-config <name>` 以取得沙箱的
-   SSH 連線詳細資料。
-3. Core 將 SSH 配置寫入暫存檔案，並使用與通用 SSH 後端相同的遠端檔案系統橋接器開啟 SSH 連線階段。
-4. 在 `mirror` 模式下：執行前同步本地到遠端，執行，執行後同步回來。
-5. 在 `remote` 模式下：建立時種入一次，然後直接在遠端
+1. OpenClaw 呼叫 `openshell sandbox create` (並根據設定使用 `--from`、`--gateway`、
+   `--policy`、`--providers`、`--gpu` 旗標)。
+2. OpenClaw 呼叫 `openshell sandbox ssh-config <name>` 以取得 sandbox 的
+   SSH 連線詳細資訊。
+3. Core 會將 SSH 設定寫入暫存檔，並使用與通用 SSH 後端相同的遠端檔案系統橋接器開啟 SSH 連線階段。
+4. 在 `mirror` 模式下：在 exec 之前將本地同步到遠端，執行，在 exec 之後同步回來。
+5. 在 `remote` 模式下：在建立時植入一次，然後直接在遠端
    工作區上操作。
 
 ## 另請參閱
 
 - [沙箱機制](/zh-Hant/gateway/sandboxing) -- 模式、範圍與後端比較
-- [沙箱與工具原則與提權](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated) -- 偵錯被封鎖的工具
-- [多代理程式沙箱與工具](/zh-Hant/tools/multi-agent-sandbox-tools) -- 每個代理程式的覆寫
-- [沙箱 CLI](/zh-Hant/cli/sandbox) -- `openclaw sandbox` 指令
+- [Sandbox vs Tool Policy vs Elevated](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated) -- 偵錯被封鎖的工具
+- [Multi-Agent Sandbox and Tools](/zh-Hant/tools/multi-agent-sandbox-tools) -- 每個代理程式的覆寫設定
+- [Sandbox CLI](/zh-Hant/cli/sandbox) -- `openclaw sandbox` 指令

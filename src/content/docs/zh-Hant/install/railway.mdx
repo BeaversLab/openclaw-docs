@@ -6,15 +6,17 @@ read_when:
 title: "Railway"
 ---
 
-使用一鍵範本在 Railway 上部署 OpenClaw，並透過網頁控制 UI 存取它。
-這是最簡單的「伺服器無需終端機」路徑：Railway 會為您執行閘道。
+# Railway
+
+使用一鍵範本在 Railway 上部署 OpenClaw，並透過網頁控制 UI 存取。
+這是最簡單的「伺服器上無需終端機」路徑：Railway 會為您執行閘道。
 
 ## 快速檢查清單（新使用者）
 
 1. 點擊 **Deploy on Railway**（下方）。
-2. 新增一個掛載於 `/data` 的 **Volume**。
-3. 設定必要的 **Variables**（至少 `OPENCLAW_GATEWAY_PORT` 和 `OPENCLAW_GATEWAY_TOKEN`）。
-4. 在連接埠 `8080` 上啟用 **HTTP Proxy**。
+2. 新增掛載於 `/data` 的 **Volume**。
+3. 設定所需的 **Variables**（至少包含 `OPENCLAW_GATEWAY_PORT` 和 `OPENCLAW_GATEWAY_TOKEN`）。
+4. 在連接埠 `8080` 啟用 **HTTP Proxy**。
 5. 開啟 `https://<your-railway-domain>/openclaw` 並使用設定的共用金鑰進行連線。此範本預設使用 `OPENCLAW_GATEWAY_TOKEN`；如果您將其替換為密碼驗證，請改用該密碼。
 
 ## 一鍵部署
@@ -23,23 +25,23 @@ title: "Railway"
   在 Railway 上部署
 </a>
 
-部署後，在 **Railway → 您的服務 → Settings → Domains** 中找到您的公開 URL。
+部署完成後，在 **Railway → 您的服務 → Settings → Domains** 中尋找您的公開 URL。
 
 Railway 將會：
 
-- 提供您一個產生的網域（通常是 `https://<something>.up.railway.app`），或
+- 提供一個產生的網域（通常是 `https://<something>.up.railway.app`），或是
 - 如果您附加了自訂網域，則使用該網域。
 
 然後開啟：
 
-- `https://<your-railway-domain>/openclaw` — 控制介面
+- `https://<your-railway-domain>/openclaw` — Control UI
 
-## 您會獲得
+## 您將獲得
 
-- 託管的 OpenClaw 閘道 + 控制介面
-- 透過 Railway Volume (`/data`) 進行持續性儲存，以便 `openclaw.json`、
-  每個代理程式的 `auth-profiles.json`、通道/提供者狀態、工作階段和
-  工作區在重新部署後仍然保留
+- 託管的 OpenClaw Gateway + Control UI
+- 透過 Railway Volume (`/data`) 提供的持久儲存空間，使 `openclaw.json`、
+  每個代理程式的 `auth-profiles.json`、頻道/提供者狀態、工作階段和
+  工作區在重新部署後得以保留
 
 ## 必要的 Railway 設定
 
@@ -49,7 +51,7 @@ Railway 將會：
 
 - 連接埠：`8080`
 
-### Volume (必要)
+### Volume（必要）
 
 附加一個掛載於以下位置的 Volume：
 
@@ -59,32 +61,32 @@ Railway 將會：
 
 在服務上設定這些變數：
 
-- `OPENCLAW_GATEWAY_PORT=8080` (必填 — 必須與公開網路中的連接埠相符)
-- `OPENCLAW_GATEWAY_TOKEN` (必填；請將其視為管理員金鑰)
-- `OPENCLAW_STATE_DIR=/data/.openclaw` (建議)
-- `OPENCLAW_WORKSPACE_DIR=/data/workspace` (建議)
+- `OPENCLAW_GATEWAY_PORT=8080`（必要 — 必須與公開網路中的連接埠相符）
+- `OPENCLAW_GATEWAY_TOKEN`（必要；請將其視為管理員密鑰）
+- `OPENCLAW_STATE_DIR=/data/.openclaw`（建議）
+- `OPENCLAW_WORKSPACE_DIR=/data/workspace`（建議）
 
 ## 連接頻道
 
-使用 `/openclaw` 的控制 UI，或透過 Railway 的 shell 執行 `openclaw onboard` 以取得通道設定說明：
+使用位於 `/openclaw` 的 Control UI，或透過 Railway 的 shell 執行 `openclaw onboard` 以取得頻道設定說明：
 
-- [Telegram](/zh-Hant/channels/telegram) (最快 — 只需機器人權杖)
+- [Telegram](/zh-Hant/channels/telegram)（最快 — 只需要機器人權杖）
 - [Discord](/zh-Hant/channels/discord)
-- [所有通道](/zh-Hant/channels)
+- [所有頻道](/zh-Hant/channels)
 
 ## 備份與遷移
 
-匯出您的狀態、設定、驗證設定檔和工作區：
+匯出您的狀態、設定、認證設定檔以及工作區：
 
 ```bash
 openclaw backup create
 ```
 
-這會建立一個包含 OpenClaw 狀態以及任何已設定
-工作區的可攜式備份封存。詳情請參閱 [備份](/zh-Hant/cli/backup)。
+這會建立一個可攜式備份封存檔，其中包含 OpenClaw 狀態以及所有已設定
+的工作區。詳情請參閱 [Backup](/zh-Hant/cli/backup)。
 
-## 後續步驟
+## 下一步
 
-- 設定訊息通道：[通道](/zh-Hant/channels)
-- 設定 Gateway：[Gateway 組態](/zh-Hant/gateway/configuration)
-- 保持 OpenClaw 為最新狀態：[更新](/zh-Hant/install/updating)
+- 設定訊息傳遞頻道：[Channels](/zh-Hant/channels)
+- 設定 Gateway：[Gateway configuration](/zh-Hant/gateway/configuration)
+- 保持 OpenClaw 為最新版本：[Updating](/zh-Hant/install/updating)

@@ -2,15 +2,22 @@
 summary: "Transcripción de Deepgram para notas de voz entrantes"
 read_when:
   - You want Deepgram speech-to-text for audio attachments
+  - You want Deepgram streaming transcription for Voice Call
   - You need a quick Deepgram config example
 title: "Deepgram"
 ---
 
 # Deepgram (Transcripción de audio)
 
-Deepgram es una API de voz a texto. En OpenClaw se utiliza para la **transcripción de notas de voz/audio entrantes** a través de `tools.media.audio`.
+Deepgram es una API de voz a texto. En OpenClaw se utiliza para la transcripción
+audio/nota de voz entrante a través de `tools.media.audio` y para STT de streaming
+de Llamadas de Voz a través de `plugins.entries.voice-call.config.streaming`.
 
-Cuando está habilitado, OpenClaw sube el archivo de audio a Deepgram e inyecta la transcripción en la canalización de respuesta (bloque `{{Transcript}}` + `[Audio]`). Esto **no es streaming**; utiliza el punto final de transcripción pregrabada.
+Para la transcripción por lotes, OpenClaw carga el archivo de audio completo en Deepgram
+e inyecta la transcripción en la canalización de respuesta (bloque `{{Transcript}}` +
+`[Audio]`). Para el streaming de Llamadas de Voz, OpenClaw reenvía los tramas G.711
+u-law en vivo a través del punto final WebSocket `listen` de Deepgram y emite transcripciones
+parciales o finales a medida que Deepgram las devuelve.
 
 | Detalle               | Valor                                                      |
 | --------------------- | ---------------------------------------------------------- |
@@ -46,7 +53,7 @@ Cuando está habilitado, OpenClaw sube el archivo de audio a Deepgram e inyecta 
   </Step>
   <Step title="Envíe una nota de voz">
     Envíe un mensaje de audio a través de cualquier canal conectado. OpenClaw lo transcribe
-    mediante Deepgram e inyecta la transcripción en la canalización de respuesta.
+    a través de Deepgram e inyecta la transcripción en la canalización de respuesta.
   </Step>
 </Steps>
 
@@ -98,24 +105,63 @@ Cuando está habilitado, OpenClaw sube el archivo de audio a Deepgram e inyecta 
   </Tab>
 </Tabs>
 
+## STT de streaming de Llamadas de Voz
+
+El complemento incluido `deepgram` también registra un proveedor de transcripción en tiempo real para el complemento Voice Call.
+
+| Ajuste                   | Ruta de configuración                                                   | Predeterminado               |
+| ------------------------ | ----------------------------------------------------------------------- | ---------------------------- |
+| API key                  | `plugins.entries.voice-call.config.streaming.providers.deepgram.apiKey` | Recurre a `DEEPGRAM_API_KEY` |
+| Modelo                   | `...deepgram.model`                                                     | `nova-3`                     |
+| Idioma                   | `...deepgram.language`                                                  | (sin establecer)             |
+| Codificación             | `...deepgram.encoding`                                                  | `mulaw`                      |
+| Tasa de muestreo         | `...deepgram.sampleRate`                                                | `8000`                       |
+| Puntos finales           | `...deepgram.endpointingMs`                                             | `800`                        |
+| Resultados provisionales | `...deepgram.interimResults`                                            | `true`                       |
+
+```json5
+{
+  plugins: {
+    entries: {
+      "voice-call": {
+        config: {
+          streaming: {
+            enabled: true,
+            provider: "deepgram",
+            providers: {
+              deepgram: {
+                apiKey: "${DEEPGRAM_API_KEY}",
+                model: "nova-3",
+                endpointingMs: 800,
+                language: "en-US",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+}
+```
+
+<Note>Voice Call recibe audio de telefonía como G.711 u-law a 8 kHz. El proveedor de transmisión Deepgram tiene como valores predeterminados `encoding: "mulaw"` y `sampleRate: 8000`, por lo que los fotogramas multimedia de Twilio se pueden reenviar directamente.</Note>
+
 ## Notas
 
 <AccordionGroup>
-  <Accordion title="Autenticación">La autenticación sigue el orden de autenticación estándar de proveedores. `DEEPGRAM_API_KEY` es la ruta más sencilla.</Accordion>
-  <Accordion title="Proxy y endpoints personalizados">Anule los endpoints o encabezados con `tools.media.audio.baseUrl` y `tools.media.audio.headers` cuando use un proxy.</Accordion>
-  <Accordion title="Comportamiento de salida">El resultado sigue las mismas reglas de audio que otros proveedores (límites de tamaño, tiempos de espera, inyección de transcripciones).</Accordion>
+  <Accordion title="Autenticación">La autenticación sigue el orden de autenticación de proveedores estándar. `DEEPGRAM_API_KEY` es la ruta más sencilla.</Accordion>
+  <Accordion title="Proxy y puntos de conexión personalizados">Anule los puntos de conexión o los encabezados con `tools.media.audio.baseUrl` y `tools.media.audio.headers` cuando use un proxy.</Accordion>
+  <Accordion title="Comportamiento de salida">La salida sigue las mismas reglas de audio que otros proveedores (límites de tamaño, tiempos de espera, inyección de transcripciones).</Accordion>
 </AccordionGroup>
-
-<Note>La transcripción de Deepgram es **solo pregrabada** (no es transmisión en tiempo real). OpenClaw sube el archivo de audio completo y espera la transcripción completa antes de inyectarla en la conversación.</Note>
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Herramientas de medios" href="/es/tools/media" icon="photo-film">
-    Resumen del pipeline de procesamiento de audio, imagen y video.
+  <Card title="Herramientas multimedia" href="/es/tools/media-overview" icon="photo-film">
+    Resumen de la canalización de procesamiento de audio, imagen y video.
   </Card>
-  <Card title="Configuración" href="/es/configuration" icon="gear">
-    Referencia completa de configuración, incluidos los ajustes de herramientas de medios.
+  <Card title="Configuración" href="/es/gateway/configuration" icon="gear">
+    Referencia de configuración completa, incluida la configuración de herramientas multimedia.
   </Card>
   <Card title="Solución de problemas" href="/es/help/troubleshooting" icon="wrench">
     Problemas comunes y pasos de depuración.

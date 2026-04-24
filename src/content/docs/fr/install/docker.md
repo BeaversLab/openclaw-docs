@@ -117,7 +117,7 @@ Le script d'installation accepte ces variables d'environnement optionnelles :
 | ------------------------------ | ---------------------------------------------------------------------------------------------------- |
 | `OPENCLAW_IMAGE`               | Utiliser une image distante au lieu de construire localement                                         |
 | `OPENCLAW_DOCKER_APT_PACKAGES` | Installer des paquets apt supplémentaires lors de la construction (séparés par des espaces)          |
-| `OPENCLAW_EXTENSIONS`          | Préinstaller les dépendances d'extension au moment de la construction (noms séparés par des espaces) |
+| `OPENCLAW_EXTENSIONS`          | Préinstaller les dépendances des plugins au moment de la construction (noms séparés par des espaces) |
 | `OPENCLAW_EXTRA_MOUNTS`        | Montages de liaison d'hôte supplémentaires (séparés par des virgules `source:target[:opts]`)         |
 | `OPENCLAW_HOME_VOLUME`         | Persister `/home/node` dans un volume nommé Docker                                                   |
 | `OPENCLAW_SANDBOX`             | Activer le bootstrap du bac à sable (`1`, `true`, `yes`, `on`)                                       |

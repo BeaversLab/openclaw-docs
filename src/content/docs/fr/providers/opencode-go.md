@@ -9,8 +9,8 @@ title: "OpenCode Go"
 # OpenCode Go
 
 OpenCode Go est le catalogue Go au sein de [OpenCode](/fr/providers/opencode).
-Il utilise le même `OPENCODE_API_KEY` que le catalogue Zen, mais conserve l'identifiant du
-provider d'exécution `opencode-go` afin que le routage en amont par modèle reste correct.
+Il utilise le même `OPENCODE_API_KEY` que le catalogue Zen, mais conserve l'identifiant
+du provider d'exécution `opencode-go` afin que le routage en amont par modèle reste correct.
 
 | Propriété             | Valeur                             |
 | --------------------- | ---------------------------------- |
@@ -20,16 +20,28 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
 
 ## Modèles pris en charge
 
-| Réf modèle                 | Nom          |
-| -------------------------- | ------------ |
-| `opencode-go/kimi-k2.5`    | Kimi K2.5    |
-| `opencode-go/glm-5`        | GLM 5        |
-| `opencode-go/minimax-m2.5` | MiniMax M2.5 |
+OpenClaw récupère le catalogue Go depuis le registre de modèles pi intégré. Exécutez
+`openclaw models list --provider opencode-go` pour obtenir la liste actuelle des modèles.
+
+Dans le catalogue pi intégré, le fournisseur inclut :
+
+| Réf de modèle              | Nom                    |
+| -------------------------- | ---------------------- |
+| `opencode-go/glm-5`        | GLM-5                  |
+| `opencode-go/glm-5.1`      | GLM-5.1                |
+| `opencode-go/kimi-k2.5`    | Kimi K2.5              |
+| `opencode-go/kimi-k2.6`    | Kimi K2.6 (limites 3x) |
+| `opencode-go/mimo-v2-omni` | MiMo V2 Omni           |
+| `opencode-go/mimo-v2-pro`  | MiMo V2 Pro            |
+| `opencode-go/minimax-m2.5` | MiniMax M2.5           |
+| `opencode-go/minimax-m2.7` | MiniMax M2.7           |
+| `opencode-go/qwen3.5-plus` | Qwen3.5 Plus           |
+| `opencode-go/qwen3.6-plus` | Qwen3.6 Plus           |
 
 ## Getting started
 
 <Tabs>
-  <Tab title="Interactif">
+  <Tab title="Interactive">
     <Steps>
       <Step title="Run onboarding">
         ```bash
@@ -49,7 +61,7 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
     </Steps>
   </Tab>
 
-  <Tab title="Non interactif">
+  <Tab title="Non-interactive">
     <Steps>
       <Step title="Pass the key directly">
         ```bash
@@ -65,7 +77,7 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
   </Tab>
 </Tabs>
 
-## Exemple de configuration
+## Config example
 
 ```json5
 {
@@ -74,7 +86,7 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
 }
 ```
 
-## Notes avancées
+## Advanced notes
 
 <AccordionGroup>
   <Accordion title="Comportement du routage">
@@ -82,7 +94,7 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
     `opencode-go/...`. Aucune configuration de fournisseur supplémentaire n'est requise.
   </Accordion>
 
-<Accordion title="Convention de référence d'exécution">Les références d'exécution restent explicites : `opencode/...` pour Zen, `opencode-go/...` pour Go. Cela permet de maintenir le routage amont par modèle correct sur les deux catalogues.</Accordion>
+<Accordion title="Convention de référence d'exécution">Les références d'exécution restent explicites : `opencode/...` pour Zen, `opencode-go/...` pour Go. Cela garantit que le routage en amont par modèle reste correct sur les deux catalogues.</Accordion>
 
   <Accordion title="Identifiants partagés">
     Le même `OPENCODE_API_KEY` est utilisé par les catalogues Zen et Go. Saisir
@@ -90,15 +102,15 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
   </Accordion>
 </AccordionGroup>
 
-<Tip>Voir [OpenCode](/fr/providers/opencode) pour la présentation de l'onboarding partagé et la référence complète du catalogue Zen + Go.</Tip>
+<Tip>Voir [OpenCode](/fr/providers/opencode) pour l'aperçu de l'intégration partagée et la référence complète des catalogues Zen + Go.</Tip>
 
-## Connexes
+## Related
 
 <CardGroup cols={2}>
   <Card title="OpenCode (parent)" href="/fr/providers/opencode" icon="server">
-    Onboarding partagé, présentation du catalogue et notes avancées.
+    Onboarding partagé, aperçu du catalogue et notes avancées.
   </Card>
-  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
-    Choix des fournisseurs, références de modèles et comportement de basculement.
+  <Card title="Model selection" href="/fr/concepts/model-providers" icon="layers">
+    Choix des fournisseurs, références de model et comportement de basculement.
   </Card>
 </CardGroup>

@@ -110,8 +110,8 @@ openclaw onboard --non-interactive \
   <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choisir les providers, les références de modèles et le comportement de basculement.
   </Card>
-  <Card title="Configuration" href="/fr/configuration" icon="gear">
-    Référence complète de la configuration pour les agents, les modèles et les fournisseurs.
+  <Card title="Configuration" href="/fr/gateway/configuration" icon="gear">
+    Référence de configuration complète pour les agents, les modèles et les fournisseurs.
   </Card>
   <Card title="Troubleshooting" href="/fr/help/troubleshooting" icon="wrench">
     Problèmes courants et étapes de débogage.

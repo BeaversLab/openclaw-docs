@@ -42,7 +42,7 @@ openclaw browser --browser-profile openclaw snapshot
 如果您收到「Browser disabled」（瀏覽器已停用），請在設定中啟用它（見下文）並重新啟動
 Gateway。
 
-如果完全缺少 `openclaw browser`，或者 Agent 表示瀏覽器工具無法使用，請跳至[缺少瀏覽器指令或工具](/zh-Hant/tools/browser#missing-browser-command-or-tool)。
+如果完全缺少 `openclaw browser`，或者代理程式表示瀏覽器工具無法使用，請跳至 [遺失瀏覽器指令或工具](/zh-Hant/tools/browser#missing-browser-command-or-tool)。
 
 ## 外掛程式控制
 
@@ -263,7 +263,7 @@ openclaw config set browser.executablePath "/usr/bin/google-chrome"
 
 ## Browserless（託管的遠端 CDP）
 
-[Browserless](https://browserless.io) 是一個託管的 Chromium 服務，透過 HTTPS 和 WebSocket 公開 CDP 連接 URL。OpenClaw 可以使用任一種形式，但對於遠端瀏覽器設定檔，最簡單的選項是來自 Browserless 連接文件的直接 WebSocket URL。
+[Browserless](https://browserless.io) 是一個託管的 Chromium 服務，透過 HTTPS 和 WebSocket 公開 CDP 連線 URL。OpenClaw 可以使用任一種形式，但對於遠端瀏覽器設定檔，最簡單的選項是來自 Browserless 連線文件的直接 WebSocket URL。
 
 範例：
 
@@ -303,21 +303,20 @@ openclaw config set browser.executablePath "/usr/bin/google-chrome"
   `wss://...` 並帶有 `/devtools/browser|page|worker|shared_worker|service_worker/<id>`
   路徑。OpenClaw 透過 WebSocket 握手直接連接並完全跳過
   `/json/version`。
-- **純 WebSocket 根目錄** — `ws://host[:port]` 或 `wss://host[:port]` 且沒有
-  `/devtools/...` 路徑 (例如 [Browserless](https://browserless.io),
-  [Browserbase](https://www.browserbase.com))。OpenClaw 首先嘗試 HTTP
-  `/json/version` 探索 (將協定正規化為 `http`/`https`)；
-  如果探索傳回 `webSocketDebuggerUrl` 則使用該 URL，否則 OpenClaw
-  會退回到在純根目錄進行直接 WebSocket 握手。這涵蓋了
-  類 Chrome 風格的遠端除錯連接埠和僅限 WebSocket 的提供者。
+- **純 WebSocket 根路徑** — 沒有 `/devtools/...` 路徑的 `ws://host[:port]` 或 `wss://host[:port]`（例如 [Browserless](https://browserless.io)、
+  [Browserbase](https://www.browserbase.com)）。OpenClaw 會先嘗試 HTTP
+  `/json/version` 探索（將協定正規化為 `http`/`https`）；
+  如果探索返回 `webSocketDebuggerUrl`，則使用該值，否則 OpenClaw
+  會退回到在純根路徑進行直接 WebSocket 握手。這涵蓋了
+  Chrome 樣式的遠端偵錯連接埠和僅 WebSocket 的提供者。
 
 指向本機 Chrome 執行個體且沒有 `/devtools/...` 路徑的純 `ws://host:port` / `wss://host:port` 透過優先探索的備援機制獲得支援 — Chrome 僅在接受來自 `/json/version` 傳回的特定瀏覽器或目標路徑上接受 WebSocket 升級，因此僅使用純根目錄握手會失敗。
 
 ### Browserbase
 
-[Browserbase](https://www.browserbase.com) 是一個雲端平台，用於執行
-具備內建驗證碼解決、隱身模式和住宅代理的
-無頭瀏覽器。
+[Browserbase](https://www.browserbase.com) 是一個用於執行
+無頭瀏覽器的雲端平台，具有內建的 CAPTCHA 解決、隱身模式和住宅
+代理。
 
 ```json5
 {
@@ -338,15 +337,15 @@ openclaw config set browser.executablePath "/usr/bin/google-chrome"
 
 備註：
 
-- [註冊](https://www.browserbase.com/sign-up) 並從 [總覽儀表板](https://www.browserbase.com/overview)
-  複製您的 **API 金鑰**。
+- [註冊](https://www.browserbase.com/sign-up) 並從 [總覽儀表板](https://www.browserbase.com/overview) 複製您的 **API 金鑰**
+  。
 - 將 `<BROWSERBASE_API_KEY>` 替換為您真實的 Browserbase API 金鑰。
 - Browserbase 會在連接 WebSocket 時自動建立瀏覽器階段，因此
   不需要手動建立階段。
-- 免費方案允許一個並行階段和每月一個瀏覽器小時。
-  請參閱 [價格](https://www.browserbase.com/pricing) 以了解付費方案的額度。
+- 免費層級允許每個月一個並行工作階段和一個瀏覽器小時。
+  請參閱 [價格](https://www.browserbase.com/pricing) 以了解付費方案的限制。
 - 請參閱 [Browserbase 文件](https://docs.browserbase.com) 以取得完整的 API
-  參考、SDK 指南和整合範例。
+  參考資料、SDK 指南和整合範例。
 
 ## 安全性
 
@@ -601,13 +600,14 @@ Agent 使用方式：
 元素截圖也會拒絕 `--full-page`；路由會傳回 `fullPage is
 not supported for element screenshots`。
 
-如果您看到 `Playwright is not available in this gateway build`，請安裝完整的
-Playwright 套件 (而非 `playwright-core`) 並重新啟動 gateway，或重新安裝
-含瀏覽器支援的 OpenClaw。
+如果您看到 `Playwright is not available in this gateway build`，請修復
+隨附的瀏覽器外掛程式執行階段相依性，以便安裝 `playwright-core`，
+然後重新啟動閘道。對於封裝安裝，請執行 `openclaw doctor --fix`。
+對於 Docker，還請如下所示安裝 Chromium 瀏覽器二進位檔。
 
 #### Docker Playwright 安裝
 
-如果您的 Gateway 在 Docker 中執行，請避免使用 `npx playwright` (npm 覆寫衝突)。
+如果您的 Gateway 在 Docker 中運行，請避免使用 `npx playwright`（npm 覆蓋衝突）。
 請改用內建的 CLI：
 
 ```bash
@@ -617,7 +617,7 @@ docker compose run --rm openclaw-cli \
 
 若要保存瀏覽器下載內容，請設定 `PLAYWRIGHT_BROWSERS_PATH`（例如，
 `/home/node/.cache/ms-playwright`），並確保 `/home/node` 透過
-`OPENCLAW_HOME_VOLUME` 或綁定掛載被保存。請參閱 [Docker](/zh-Hant/install/docker)。
+`OPENCLAW_HOME_VOLUME` 或繫結掛載 保存。請參閱 [Docker](/zh-Hant/install/docker)。
 
 ## 運作方式（內部）
 
@@ -633,7 +633,7 @@ docker compose run --rm openclaw-cli \
 ## CLI 快速參考
 
 所有指令都接受 `--browser-profile <name>` 以指定特定的設定檔。
-所有指令也接受 `--json` 以取得機器可讀的輸出（穩定的載荷）。
+所有指令也都接受 `--json` 以取得機器可讀的輸出（穩定的承載）。
 
 基礎：
 
@@ -666,9 +666,9 @@ docker compose run --rm openclaw-cli \
 
 生命週期註記：
 
-- 對於僅附加和遠端 CDP 設定檔，`openclaw browser stop` 在測試後
-  仍然是正確的清理指令。它會關閉作用中的控制工作階段並
-  清除暫時的模擬覆寫，而不是終止底層
+- 對於僅附加 和遠端 CDP 設定檔，`openclaw browser stop` 仍然是測試後
+  正確的清理指令。它會關閉作用中的控制工作階段並
+  清除暫時的模擬覆寫，而不是終結底層的
   瀏覽器。
 - `openclaw browser errors --clear`
 - `openclaw browser requests --filter api --clear`
@@ -720,45 +720,44 @@ docker compose run --rm openclaw-cli \
 
 註記：
 
-- `upload` 和 `dialog` 是**準備** 呼叫；在觸發選擇器/對話框的點擊/按壓
-  之前執行它們。
+- `upload` 和 `dialog` 是**準備 (arming)** 呼叫；在觸發選擇器/對話方塊的點擊/按下之前執行它們。
 - 下載和追蹤輸出路徑限制在 OpenClaw 暫存根目錄中：
-  - 追蹤： `/tmp/openclaw` (後備： `${os.tmpdir()}/openclaw`)
-  - 下載： `/tmp/openclaw/downloads` (後備： `${os.tmpdir()}/openclaw/downloads`)
+  - 追蹤 (traces)： `/tmp/openclaw` (備用： `${os.tmpdir()}/openclaw`)
+  - 下載 (downloads)： `/tmp/openclaw/downloads` (備用： `${os.tmpdir()}/openclaw/downloads`)
 - 上傳路徑限制在 OpenClaw 暫存上傳根目錄中：
-  - 上傳： `/tmp/openclaw/uploads` (後備： `${os.tmpdir()}/openclaw/uploads`)
+  - 上傳 (uploads)： `/tmp/openclaw/uploads` (備用： `${os.tmpdir()}/openclaw/uploads`)
 - `upload` 也可以透過 `--input-ref` 或 `--element` 直接設定檔案輸入。
 - `snapshot`：
-  - `--format ai` (安裝 Playwright 時的預設值)：傳回帶有數字參照 (`aria-ref="<n>"`) 的 AI 快照。
-  - `--format aria`：返回無障礙樹（無 ref；僅供檢查）。
-  - `--efficient`（或 `--mode efficient`）：精簡角色快照預設（interactive + compact + depth + lower maxChars）。
-  - 組態預設值（僅適用於工具/CLI）：設定 `browser.snapshotDefaults.mode: "efficient"` 以在呼叫端未傳遞模式時使用高效快照（請參閱 [Gateway 組態](/zh-Hant/gateway/configuration-reference#browser)）。
-  - 角色快照選項（`--interactive`、`--compact`、`--depth`、`--selector`）會強制執行具有像 `ref=e12` 這類 ref 的角色型快照。
-  - `--frame "<iframe selector>"` 將角色快照的範圍限制在 iframe（與像 `e12` 這類角色 ref 搭配使用）。
-  - `--interactive` 輸出一個扁平、易於挑選的互動元素列表（最適合驅動動作）。
-  - `--labels` 新增僅限視口的螢幕截圖，並覆蓋 ref 標籤（列印 `MEDIA:<path>`）。
-- `click`/`type`/等需要來自 `snapshot` 的 `ref`（可以是數值 `12` 或角色 ref `e12`）。
-  對於動作，刻意不支援 CSS 選擇器。
+  - `--format ai` (安裝 Playwright 時的預設值)：傳回包含數字參照的 AI 快照 (`aria-ref="<n>"`)。
+  - `--format aria`：傳回協助工具樹 (無參照；僅供檢查)。
+  - `--efficient` (或 `--mode efficient`)：精簡角色快照預設 (interactive + compact + depth + 較低的 maxChars)。
+  - 設定預設值 (僅限工具/CLI)：設定 `browser.snapshotDefaults.mode: "efficient"` 以便當呼叫者未傳遞模式時使用高效能快照 (請參閱 [Gateway configuration](/zh-Hant/gateway/configuration-reference#browser))。
+  - 角色快照選項 (`--interactive`、`--compact`、`--depth`、`--selector`) 會強制執行基於角色的快照，並包含類似 `ref=e12` 的參照。
+  - `--frame "<iframe selector>"` 將角色快照的範圍限定在 iframe (與類似 `e12` 的角色參照搭配使用)。
+  - `--interactive` 輸出一個扁平、易於選擇的互動元素列表 (最適合用於驅動操作)。
+  - `--labels` 加入一個僅限視口的螢幕截圖，上面覆蓋了參照標籤 (列印 `MEDIA:<path>`)。
+- `click`/`type`/等 需要來自 `snapshot` 的 `ref` (可以是數字 `12` 或角色參照 `e12`)。
+  操作刻意不支援 CSS 選擇器。
 
 ## 快照與參照
 
 OpenClaw 支援兩種「快照」樣式：
 
-- **AI 快照（數值參照）**：`openclaw browser snapshot`（預設值；`--format ai`）
+- **AI 快照 (數字參照)**：`openclaw browser snapshot` (預設；`--format ai`)
   - 輸出：包含數值參照的文字快照。
-  - 動作：`openclaw browser click 12`、`openclaw browser type 23 "hello"`。
-  - 在內部，參照是透過 Playwright 的 `aria-ref` 解析的。
+  - 操作：`openclaw browser click 12`、`openclaw browser type 23 "hello"`。
+  - 在內部，該參照是透過 Playwright 的 `aria-ref` 解析的。
 
-- **角色快照（像 `e12` 這類角色參照）**：`openclaw browser snapshot --interactive`（或 `--compact`、`--depth`、`--selector`、`--frame`）
-  - 輸出：具有 `[ref=e12]`（以及選用的 `[nth=1]`）的角色型列表/樹狀結構。
-  - 動作：`openclaw browser click e12`、`openclaw browser highlight e12`。
-  - 在內部，參照是透過 `getByRole(...)` 解析的（重複項則加上 `nth()`）。
-  - 新增 `--labels` 以包含帶有重疊 `e12` 標籤的視口螢幕截圖。
+- **角色快照 (類似 `e12` 的角色參照)**：`openclaw browser snapshot --interactive` (或 `--compact`、`--depth`、`--selector`、`--frame`)
+  - 輸出：一個帶有 `[ref=e12]` (以及可選的 `[nth=1]`) 的基於角色列表/樹狀結構。
+  - 操作：`openclaw browser click e12`、`openclaw browser highlight e12`。
+  - 在內部，該參照是透過 `getByRole(...)` 解析的 (對於重複項則再加上 `nth()`)。
+  - 加入 `--labels` 以包含帶有覆蓋 `e12` 標籤的視口螢幕截圖。
 
 參照行為：
 
-- 參照在導覽期間**不穩定**；如果發生錯誤，請重新執行 `snapshot` 並使用新的參照。
-- 如果角色快照是使用 `--frame` 拍攝的，角色參照將限定於該 iframe，直到下一個角色快照為止。
+- 參照 **在導覽之間並不穩定**；如果操作失敗，請重新執行 `snapshot` 並使用新的參照。
+- 如果角色快照是使用 `--frame` 擷取的，則角色參照將會限定於該 iframe，直到下一次角色快照為止。
 
 ## 等待增強功能
 
@@ -788,19 +787,19 @@ openclaw browser wait "#main" \
 當動作失敗時（例如「不可見」、「嚴格模式違規」、「被覆蓋」）：
 
 1. `openclaw browser snapshot --interactive`
-2. 使用 `click <ref>` / `type <ref>`（在互動模式下優先使用角色參照）
-3. 如果仍然失敗：`openclaw browser highlight <ref>` 以查看 Playwright 正在以什麼為目標
+2. 使用 `click <ref>` / `type <ref>`（在互動模式下建議使用角色參照）
+3. 如果仍然失敗：`openclaw browser highlight <ref>` 以查看 Playwright 的目標
 4. 如果頁面行為異常：
    - `openclaw browser errors --clear`
    - `openclaw browser requests --filter api --clear`
 5. 進行深度除錯：記錄追蹤：
    - `openclaw browser trace start`
    - 重現問題
-   - `openclaw browser trace stop` (列印 `TRACE:<path>`)
+   - `openclaw browser trace stop`（列印 `TRACE:<path>`）
 
 ## JSON 輸出
 
-`--json` 適用於腳本和結構化工具。
+`--json` 用於腳本和結構化工具。
 
 範例：
 
@@ -821,20 +820,21 @@ JSON 中的角色快照包含 `refs` 以及一個小的 `stats` 區塊（行/字
 - Storage：`storage local|session get|set|clear`
 - Offline：`set offline on|off`
 - Headers：`set headers --headers-json '{"X-Debug":"1"}'`（舊版 `set headers --json '{"X-Debug":"1"}'` 仍受支援）
-- HTTP 基本驗證：`set credentials user pass` (或 `--clear`)
-- 地理位置：`set geo <lat> <lon> --origin "https://example.com"` (或 `--clear`)
-- 媒體：`set media dark|light|no-preference|none`
+- HTTP basic auth：`set credentials user pass`（或 `--clear`）
+- Geolocation：`set geo <lat> <lon> --origin "https://example.com"`（或 `--clear`）
+- Media：`set media dark|light|no-preference|none`
 - 時區 / 地區設定：`set timezone ...`、`set locale ...`
 - 裝置 / 檢視區：
-  - `set device "iPhone 14"` (Playwright 裝置預設)
+  - `set device "iPhone 14"`（Playwright 裝置預設）
   - `set viewport 1280 720`
 
 ## 安全性與隱私
 
 - OpenClaw 瀏覽器設定檔可能包含已登入的工作階段；請將其視為敏感資料。
 - `browser act kind=evaluate` / `openclaw browser evaluate` 和 `wait --fn`
-  會在頁面上下文中執行任意的 JavaScript。提示詞注入可以引導這個過程。如果不需要，請使用 `browser.evaluateEnabled=false` 將其停用。
-- 關於登入和反機器人注意事項 (X/Twitter 等)，請參閱[瀏覽器登入 + X/Twitter 發文](/zh-Hant/tools/browser-login)。
+  在頁面上下文中執行任意 JavaScript。提示詞注入可以操縱
+  此行為。如果不需要，請使用 `browser.evaluateEnabled=false` 將其停用。
+- 關於登入和反機器人注意事項（X/Twitter 等），請參閱[瀏覽器登入 + X/Twitter 發佈](/zh-Hant/tools/browser-login)。
 - 請保持 Gateway/節點主機的私密性 (僅限 loopback 或 tailnet)。
 - 遠端 CDP 端點功能強大；請使用通道並加以保護。
 
@@ -854,7 +854,7 @@ JSON 中的角色快照包含 `refs` 以及一個小的 `stats` 區塊（行/字
 
 ## 疑難排解
 
-關於 Linux 特定問題 (特別是 snap Chromium)，請參閱
+關於 Linux 特定問題（特別是 snap Chromium），請參閱
 [瀏覽器疑難排解](/zh-Hant/tools/browser-linux-troubleshooting)。
 
 關於 WSL2 Gateway + Windows Chrome 分割主機設定，請參閱
@@ -873,7 +873,7 @@ JSON 中的角色快照包含 `refs` 以及一個小的 `stats` 區塊（行/字
   - `Chrome CDP websocket for profile "openclaw" is not reachable after start`
   - `Remote CDP for profile "<name>" is not reachable at <cdpUrl>`
 - 導覽 SSRF 封鎖：
-  - `open`、`navigate`、快照 或分頁開啟流程失敗，並顯示瀏覽器/網路原則錯誤，而 `start` 和 `tabs` 仍然正常運作
+  - `open`、`navigate`、snapshot 或分頁開啟流程因瀏覽器/網路原則錯誤而失敗，但 `start` 和 `tabs` 仍正常運作
 
 請使用這個最小順序來區分這兩者：
 
@@ -885,22 +885,22 @@ openclaw browser --browser-profile openclaw open https://example.com
 
 如何閱讀結果：
 
-- 如果 `start` 失敗並出現 `not reachable after start`，請先對 CDP 準備狀態進行故障排除。
-- 如果 `start` 成功但 `tabs` 失敗，控制平面仍然不健康。將此視為 CDP 連線性問題，而非頁面導航問題。
-- 如果 `start` 和 `tabs` 成功，但 `open` 或 `navigate` 失敗，則瀏覽器控制平面已啟動，故障出在導航策略或目標頁面。
-- 如果 `start`、`tabs` 和 `open` 全部成功，則基本的管理瀏覽器控制路徑狀態良好。
+- 如果 `start` 因 `not reachable after start` 而失敗，請先排除 CDP 準備度問題。
+- 如果 `start` 成功但 `tabs` 失敗，則控制平面仍不正常。請將此視為 CDP 連線問題，而非頁面瀏覽問題。
+- 如果 `start` 和 `tabs` 成功，但 `open` 或 `navigate` 失敗，表示瀏覽器控制平面已啟動，失敗原因出在瀏覽原則或目標網頁。
+- 如果 `start`、`tabs` 和 `open` 全部成功，則基本的受控瀏覽器控制路徑正常。
 
 重要的行為細節：
 
-- 即使您未配置 `browser.ssrfPolicy`，瀏覽器配置也預設為「失敗關閉」的 SSRF 策略物件。
-- 對於本機回送 `openclaw` 管理設定檔，CDP 健康檢查會刻意略過針對 OpenClaw 自身本機控制平面的瀏覽器 SSRF 連線性強制執行。
-- 導航保護是分開的。成功的 `start` 或 `tabs` 結果並不表示後續的 `open` 或 `navigate` 目標是允許的。
+- 即使您未設定 `browser.ssrfPolicy`，瀏覽器設定仍預設為「預設拒絕」（fail-closed）的 SSRF 原則物件。
+- 對於本地迴路 `openclaw` 受控設定檔，CDP 健康檢查會刻意略過針對 OpenClaw 自身本地控制平面的瀏覽器 SSRF 連線強制執行。
+- 瀏覽保護是分開的。成功的 `start` 或 `tabs` 結果並不代表之後的 `open` 或 `navigate` 目標是被允許的。
 
 安全性指導原則：
 
 - 預設情況下**請勿**放寬瀏覽器 SSRF 策略。
-- 優先使用狹隘的主機例外（例如 `hostnameAllowlist` 或 `allowedHostnames`），而不是廣泛的私人網路存取。
-- 僅在刻意信任、需要並已審查私人網路瀏覽器存取的環境中使用 `dangerouslyAllowPrivateNetwork: true`。
+- 優先使用狹窄的主機例外（例如 `hostnameAllowlist` 或 `allowedHostnames`），而非廣泛的私人網路存取權限。
+- 僅在經過審查且確實需要私人網路瀏覽器存取權的刻意信任環境中，才使用 `dangerouslyAllowPrivateNetwork: true`。
 
 範例：導航被封鎖，控制平面健康
 
@@ -912,7 +912,7 @@ openclaw browser --browser-profile openclaw open https://example.com
 
 範例：在導航變得重要之前啟動被封鎖
 
-- `start` 失敗並出現 `not reachable after start`
+- `start` 因 `not reachable after start` 而失敗
 - `tabs` 也失敗或無法執行
 
 這指向瀏覽器啟動或 CDP 連線性問題，而非頁面 URL 允許清單問題。
@@ -925,20 +925,20 @@ Agent 獲得**一個用於瀏覽器自動化的工具**：
 
 對應方式：
 
-- `browser snapshot` 會回傳一個穩定的 UI 樹 (AI 或 ARIA)。
-- `browser act` 使用快照 `ref` ID 來進行點擊/輸入/拖曳/選取。
-- `browser screenshot` 擷取像素 (完整頁面或元素)。
+- `browser snapshot` 會傳回穩定的 UI 樹（AI 或 ARIA）。
+- `browser act` 使用快照 `ref` ID 來點擊/輸入/拖曳/選取。
+- `browser screenshot` 擷取像素（完整頁面或元素）。
 - `browser` 接受：
-  - `profile` 以選擇命名的瀏覽器設定檔 (openclaw、chrome 或 remote CDP)。
-  - `target` (`sandbox` | `host` | `node`) 以選擇瀏覽器的所在位置。
+  - `profile` 用於選擇命名的瀏覽器設定檔（openclaw、chrome 或遠端 CDP）。
+  - `target` (`sandbox` | `host` | `node`) 用於選擇瀏覽器的位置。
   - 在沙盒化工作階段中，`target: "host"` 需要 `agents.defaults.sandbox.browser.allowHostControl=true`。
-  - 如果省略 `target`：沙盒化工作階段預設為 `sandbox`，非沙盒工作階段預設為 `host`。
-  - 如果連接了具備瀏覽器功能的節點，除非您釘選 `target="host"` 或 `target="node"`，否則該工具可能會自動路由至該節點。
+  - 如果省略了 `target`：沙盒化工作階段預設為 `sandbox`，非沙盒工作階段預設為 `host`。
+  - 如果連接了具備瀏覽器功能的節點，該工具可能會自動路由到該節點，除非您鎖定了 `target="host"` 或 `target="node"`。
 
 這能保持 Agent 的確定性，並避免脆弱的選取器。
 
 ## 相關
 
-- [工具總覽](/zh-Hant/tools) — 所有可用的 Agent 工具
-- [沙盒機制](/zh-Hant/gateway/sandboxing) — 沙盒環境中的瀏覽器控制
-- [安全性](/zh-Hant/gateway/security) — 瀏覽器控制的風險與加固
+- [工具概覽](/zh-Hant/tools) — 所有可用的代理程式工具
+- [沙盒化](/zh-Hant/gateway/sandboxing) — 在沙盒環境中進行瀏覽器控制
+- [安全性](/zh-Hant/gateway/security) — 瀏覽器控制的風險與強化

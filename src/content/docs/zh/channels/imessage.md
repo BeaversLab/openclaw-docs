@@ -34,7 +34,7 @@ title: "iMessage"
 <Tabs>
   <Tab title="Local Mac (fast path)">
     <Steps>
-      <Step title="Install and verify imsg">
+      <Step title="安装并验证 imsg">
 
 ```bash
 brew install steipete/tap/imsg
@@ -43,7 +43,7 @@ imsg rpc --help
 
       </Step>
 
-      <Step title="Configure OpenClaw">
+      <Step title="配置 OpenClaw">
 
 ```json5
 {
@@ -51,7 +51,7 @@ imsg rpc --help
     imessage: {
       enabled: true,
       cliPath: "/usr/local/bin/imsg",
-      dbPath: "/Users/<you>/Library/Messages/chat.db",
+      dbPath: "/Users/user/Library/Messages/chat.db",
     },
   },
 }
@@ -59,7 +59,7 @@ imsg rpc --help
 
       </Step>
 
-      <Step title="Start gateway">
+      <Step title="启动网关">
 
 ```bash
 openclaw gateway
@@ -67,7 +67,7 @@ openclaw gateway
 
       </Step>
 
-      <Step title="Approve first 私信 pairing (default dmPolicy)">
+      <Step title="批准首次私信配对（默认 dmPolicy）">
 
 ```bash
 openclaw pairing list imessage

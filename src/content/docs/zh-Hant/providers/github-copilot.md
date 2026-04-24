@@ -14,7 +14,9 @@ GitHub Copilot 是 GitHub 的 AI 程式設計助理。它根據您的 GitHub 帳
 
 <Tabs>
   <Tab title="內建提供者 (github-copilot)">
-    使用原生的裝置登入流程取得 GitHub 權杖，然後在 OpenClaw 執行時將其交換為 Copilot API 權杖。這是**預設**且最簡單的方式，因為它不需要 VS Code。
+    使用原生的裝置登入流程來取得 GitHub token，然後在 OpenClaw 執行時將其交換為
+    Copilot API token。這是**預設**且最簡單的方式，
+    因為它不需要 VS Code。
 
     <Steps>
       <Step title="執行登入指令">
@@ -22,11 +24,11 @@ GitHub Copilot 是 GitHub 的 AI 程式設計助理。它根據您的 GitHub 帳
         openclaw models auth login-github-copilot
         ```
 
-        您將被要求前往一個 URL 並輸入一次性代碼。請保持終端機開啟，直到完成為止。
+        您將被提示造訪一個 URL 並輸入一次性代碼。請保持終端機開啟，直到它完成為止。
       </Step>
       <Step title="設定預設模型">
         ```bash
-        openclaw models set github-copilot/claude-opus-4.6
+        openclaw models set github-copilot/claude-opus-4.7
         ```
 
         或在設定中：
@@ -34,7 +36,7 @@ GitHub Copilot 是 GitHub 的 AI 程式設計助理。它根據您的 GitHub 帳
         ```json5
         {
           agents: {
-            defaults: { model: { primary: "github-copilot/claude-opus-4.6" } },
+            defaults: { model: { primary: "github-copilot/claude-opus-4.7" } },
           },
         }
         ```

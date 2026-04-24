@@ -195,18 +195,20 @@ Le plugin LINE prend en charge l'envoi d'images, de vidéos et de fichiers audio
 - **Vidéos** : envoyées avec un aperçu explicite et une gestion du type de contenu.
 - **Audio** : envoyé sous forme de messages audio LINE.
 
-Les envois de médias génériques reviennent à l'itinéraire existant « images uniquement » lorsqu'un chemin spécifique à LINE n'est pas disponible.
+Les URL de média sortant doivent être des URL HTTPS publiques. OpenClaw valide le nom d'hôte cible avant de transmettre l'URL à LINE et rejette les cibles de bouclage, de liaison locale et de réseau privé.
+
+Les envois de médias génériques reviennent à la route existante images uniquement lorsqu'un chemin spécifique à LINE n'est pas disponible.
 
 ## Dépannage
 
-- **Échec de la vérification du webhook** : assurez-vous que l'URL du webhook est en HTTPS et que le `channelSecret` correspond à la console LINE.
-- **Aucun événement entrant** : confirmez que le chemin du webhook correspond à `channels.line.webhookPath` et que la passerelle est accessible depuis LINE.
-- **Erreurs de téléchargement de médias** : augmentez `channels.line.mediaMaxMb` si les médias dépassent la limite par défaut.
+- **Échec de la vérification du webhook :** assurez-vous que l'URL du webhook est HTTPS et que le `channelSecret` correspond à la console LINE.
+- **Aucun événement entrant :** confirmez que le chemin du webhook correspond à `channels.line.webhookPath` et que la passerelle est accessible depuis LINE.
+- **Erreurs de téléchargement de médias :** déclenchez `channels.line.mediaMaxMb` si le média dépasse la limite par défaut.
 
 ## Connexes
 
 - [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
-- [Appairage](/fr/channels/pairing) — flux d'authentification et d'appairage DM
+- [Appairage](/fr/channels/pairing) — authentification DM et processus d'appairage
 - [Groupes](/fr/channels/groups) — comportement des discussions de groupe et filtrage des mentions
 - [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
 - [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

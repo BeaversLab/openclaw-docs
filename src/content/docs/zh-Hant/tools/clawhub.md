@@ -112,8 +112,8 @@ pnpm add -g clawhub
 OpenClaw 會從 `<workspace>/skills` 載入工作區技能，並會在**下一次**工作階段中
 選用它們。如果您已經使用 `~/.openclaw/skills` 或內建技能，工作區技能具有優先權。
 
-關於技能如何載入、共用和管理的更多詳細資訊，請參閱
-[Skills](/zh-Hant/tools/skills)。
+有關技能如何載入、共享和設限的更多詳細資訊，請參閱
+[技能](/zh-Hant/tools/skills)。
 
 ## 技能系統概覽
 
@@ -287,7 +287,8 @@ clawhub package publish https://github.com/your-org/your-plugin
   "version": "1.0.0",
   "type": "module",
   "openclaw": {
-    "extensions": ["./index.ts"],
+    "extensions": ["./src/index.ts"],
+    "runtimeExtensions": ["./dist/index.js"],
     "compat": {
       "pluginApi": ">=2026.3.24-beta.2",
       "minGatewayVersion": "2026.3.24-beta.2"
@@ -300,21 +301,25 @@ clawhub package publish https://github.com/your-org/your-plugin
 }
 ```
 
-## 進階細節（技術性）
+發布的套件應包含建置好的 JavaScript，並將 `runtimeExtensions` 指向
+該輸出。當沒有建置檔案時，Git checkout 安裝仍然可以回退到 TypeScript 原始碼，
+但建置的執行時項目可以避免在啟動、診斷和外掛載入路徑中進行執行時 TypeScript 編譯。
+
+## 進階細節（技術）
 
 ### 版本控制與標籤
 
 - 每次發布都會建立一個新的 **semver** `SkillVersion`。
-- 標籤（例如 `latest`）指向某個版本；移動標籤可讓您回復。
-- 變更記錄是附加在每個版本上的，在同步或發布更新時可以為空。
+- 標籤（如 `latest`）指向某個版本；移動標籤可以讓您回滾。
+- 變更日誌是按版本附加的，並且在同步或發布更新時可以為空。
 
-### 本機變更與註冊表版本的比較
+### 本機變更與註冊表版本
 
-更新會使用內容雜湊將本地技能內容與登錄檔版本進行比較。如果本地檔案與任何已發布的版本不符，CLI 會在覆寫前詢問（或在非互動式執行中需要 `--force`）。
+更新會使用內容雜湊將本機技能內容與註冊表版本進行比較。如果本機檔案與任何已發布的版本都不匹配，CLI 會在覆寫之前詢問（或在非互動式執行中需要 `--force`）。
 
-### 同步掃描與備用根目錄
+### 同步掃描與後援根目錄
 
-`clawhub sync` 會先掃描您目前的工作目錄。如果找不到任何技能，它會回退到已知的舊版位置（例如 `~/openclaw/skills` 和 `~/.openclaw/skills`）。這是為了在不需要額外旗標的情況下找到舊的技能安裝。
+`clawhub sync` 首先掃描您目前的工作目錄。如果未找到技能，它會回退到已知的舊位置（例如 `~/openclaw/skills` 和 `~/.openclaw/skills`）。這旨在無需額外標誌即可找到較舊的技能安裝。
 
 ### 儲存與鎖定檔
 
@@ -323,7 +328,7 @@ clawhub package publish https://github.com/your-org/your-plugin
 
 ### 遙測（安裝計數）
 
-當您在登入狀態下執行 `clawhub sync` 時，CLI 會傳送最小化的快照以計算安裝次數。您可以完全停用此功能：
+當您登入時執行 `clawhub sync`，CLI 會傳送最小快照以計算安裝計數。您可以完全停用此功能：
 
 ```bash
 export CLAWHUB_DISABLE_TELEMETRY=1
@@ -332,7 +337,7 @@ export CLAWHUB_DISABLE_TELEMETRY=1
 ## 環境變數
 
 - `CLAWHUB_SITE`：覆蓋網站 URL。
-- `CLAWHUB_REGISTRY`：覆蓋登錄檔 API URL。
+- `CLAWHUB_REGISTRY`：覆蓋註冊表 API URL。
 - `CLAWHUB_CONFIG_PATH`：覆蓋 CLI 儲存權杖/設定的位置。
-- `CLAWHUB_WORKDIR`：覆蓋預設的工作目錄。
+- `CLAWHUB_WORKDIR`：覆蓋預設工作目錄。
 - `CLAWHUB_DISABLE_TELEMETRY=1`：停用 `sync` 上的遙測。

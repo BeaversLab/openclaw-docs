@@ -54,14 +54,14 @@ title: "子代理"
   - 线程绑定或对话绑定的完成路由在可用时优先
   - 如果完成源仅提供渠道，OpenClaw 会从请求者会话的解析路由（`lastChannel` / `lastTo` / `lastAccountId`）中填充缺失的目标/账户，以便直接传递仍然有效
 - 向请求者会话的完成传递是运行时生成的内部上下文（非用户编写的文本），包括：
-  - `Result`（最新的可见 `assistant` 回复文本，否则为经过清理的最新工具/toolResult 文本）
+  - `Result`（最新的可见 `assistant` 回复文本，否则为经过清理的最新工具/工具结果文本；终端失败运行不会重复使用捕获的回复文本）
   - `Status` (`completed successfully` / `failed` / `timed out` / `unknown`)
   - 紧凑的运行时/Token 统计信息
   - 一条交付指令，告诉请求代理以正常的助手口吻重写（而不是转发原始的内部元数据）
 - `--model` 和 `--thinking` 会覆盖该特定运行的默认设置。
 - 使用 `info`/`log` 在完成后检查详细信息和输出。
 - `/subagents spawn` 是一次性模式 (`mode: "run"`)。对于持久化的线程绑定会话，请将 `sessions_spawn` 与 `thread: true` 和 `mode: "session"` 结合使用。
-- 对于 ACP harness 会话 (Codex, Claude Code, Gemini CLI)，请将 `sessions_spawn` 与 `runtime: "acp"` 结合使用，并参阅 [ACP Agents](/zh/tools/acp-agents)。
+- 对于 ACP 线程会话（Codex、Claude Code、Gemini CLI），请将 `sessions_spawn` 与 `runtime: "acp"` 结合使用，并参阅 [ACP 代理](/zh/tools/acp-agents)，特别是在调试补全或代理对代理循环时参阅 [ACP 交付模型](/zh/tools/acp-agents#delivery-model)。
 
 主要目标：
 
@@ -243,7 +243,7 @@ title: "子代理"
   - 子会话密钥/ID
   - 公告类型 + 任务标签
   - 从运行结果派生的状态行 (`success`, `error`, `timeout`, 或 `unknown`)
-  - 从最新的可见助手文本中选择的结果内容，否则是经过清理的最新工具/toolResult文本
+  - 从最新的可见助手文本中选择的结果内容，否则为经过清理的最新工具/工具结果文本；终端失败运行报告失败状态，而不重播捕获的回复文本
   - 一条后续指令，描述何时回复以及何时保持静默
 - `Status` 不是从模型输出推断出来的；它来自运行时结果信号。
 - 超时时，如果子代仅完成了工具调用，announce 可以将那段历史折叠为一个简短的部分进度摘要，而不是重播原始工具输出。

@@ -56,6 +56,8 @@ openclaw memory index --agent main --verbose
 - `--fix` : réparer les verrous de rappel périmés et normaliser les métadonnées de promotion.
 - `--json` : afficher la sortie JSON.
 
+Si `memory status` affiche `Dreaming status: blocked`, la tâche cron de rêve gérée est activée mais le battement qui l'anime ne se déclenche pas pour l'agent par défaut. Voir [Le rêve ne s'exécute jamais](/fr/concepts/dreaming#dreaming-never-runs-status-shows-blocked) pour les deux causes courantes.
+
 `memory index` :
 
 - `--force` : forcer une réindexation complète.
@@ -72,7 +74,7 @@ openclaw memory index --agent main --verbose
 
 `memory promote` :
 
-Prévisualiser et appliquer les promotions de la mémoire à court terme.
+Prévisualiser et appliquer les promotions de mémoire à court terme.
 
 ```bash
 openclaw memory promote [--apply] [--limit <n>] [--include-promoted]
@@ -84,13 +86,13 @@ openclaw memory promote [--apply] [--limit <n>] [--include-promoted]
 
 Options complètes :
 
-- Classe les candidats à court terme provenant de `memory/YYYY-MM-DD.md` à l'aide de signaux de promotion pondérés (`frequency`, `relevance`, `query diversity`, `recency`, `consolidation`, `conceptual richness`).
-- Utilise des signaux à court terme provenant à la fois des rappels de mémoire et des passes d'ingestion quotidienne, ainsi que des signaux de renforcement des phases légère/REM.
+- Classe les candidats à court terme de `memory/YYYY-MM-DD.md` en utilisant des signaux de promotion pondérés (`frequency`, `relevance`, `query diversity`, `recency`, `consolidation`, `conceptual richness`).
+- Utilise des signaux à court terme provenant à la fois des rappels de mémoire et des passes d'ingestion quotidienne, ainsi que des signaux de renforcement des phases légères/REM.
 - Lorsque le rêve est activé, `memory-core` gère automatiquement une tâche cron qui exécute un balayage complet (`light -> REM -> deep`) en arrière-plan (aucun `openclaw cron add` manuel requis).
 - `--agent <id>` : limiter à un seul agent (par défaut : l'agent par défaut).
-- `--limit <n>` : nombre maximum de candidats à renvoyer/appliquer.
-- `--min-score <n>` : score de promotion pondéré minimum.
-- `--min-recall-count <n>` : nombre de rappels minimum requis pour un candidat.
+- `--limit <n>` : nombre maximal de candidats à renvoyer/appliquer.
+- `--min-score <n>` : score pondéré de promotion minimum.
+- `--min-recall-count <n>` : nombre minimum de rappels requis pour un candidat.
 - `--min-unique-queries <n>` : nombre minimum de requêtes distinctes requis pour un candidat.
 - `--apply` : ajouter les candidats sélectionnés dans `MEMORY.md` et les marquer comme promus.
 - `--include-promoted` : inclure les candidats déjà promus dans la sortie.
@@ -98,20 +100,20 @@ Options complètes :
 
 `memory promote-explain` :
 
-Expliquer un candidat à la promotion spécifique et la répartition de son score.
+Expliquer un candidat à la promotion spécifique et la décomposition de son score.
 
 ```bash
 openclaw memory promote-explain <selector> [--agent <id>] [--include-promoted] [--json]
 ```
 
-- `<selector>` : clé du candidat, fragment de chemin ou fragment d'extrait à rechercher.
+- `<selector>` : clé de candidat, fragment de chemin ou fragment d'extrait à rechercher.
 - `--agent <id>` : limiter à un seul agent (par défaut : l'agent par défaut).
 - `--include-promoted` : inclure les candidats déjà promus.
 - `--json` : afficher la sortie JSON.
 
 `memory rem-harness` :
 
-Prévisualiser les réflexions REM, les vérités candidates et la sortie de promotion profonde sans rien écrire.
+Aperçu des réflexions REM, des vérités candidates et de la sortie de promotion profonde sans rien écrire.
 
 ```bash
 openclaw memory rem-harness [--agent <id>] [--include-promoted] [--json]
@@ -123,17 +125,17 @@ openclaw memory rem-harness [--agent <id>] [--include-promoted] [--json]
 
 ## Rêve
 
-Le rêve est le système de consolidation de la mémoire en arrière-plan avec trois phases coopératives : **light** (trier/mettre en scène le matériel à court terme), **deep** (promouvoir des faits durables dans `MEMORY.md`) et **REM** (réfléchir et faire surface aux thèmes).
+Le rêve est le système de consolidation de la mémoire en arrière-plan avec trois phases coopératives : **light** (tri/mise en scène du matériel à court terme), **deep** (promotion des faits durables dans `MEMORY.md`) et **REM** (réflexion et surface des thèmes).
 
-- Activez avec `plugins.entries.memory-core.config.dreaming.enabled: true`.
-- Basculez depuis le chat avec `/dreaming on|off` (ou inspectez avec `/dreaming status`).
-- Le rêve fonctionne selon un programme de balayage géré (`dreaming.frequency`) et exécute les phases dans l'ordre : light, REM, deep.
+- Activer avec `plugins.entries.memory-core.config.dreaming.enabled: true`.
+- Basculer depuis le chat avec `/dreaming on|off` (ou inspecter avec `/dreaming status`).
+- Le rêve s'exécute selon un calendrier de balayage géré (`dreaming.frequency`) et exécute les phases dans l'ordre : light, REM, deep.
 - Seule la phase deep écrit une mémoire durable dans `MEMORY.md`.
 - Les sorties de phase lisibles par l'homme et les entrées de journal sont écrites dans `DREAMS.md` (ou `dreams.md` existant), avec des rapports optionnels par phase dans `memory/dreaming/<phase>/YYYY-MM-DD.md`.
-- Le classement utilise des signaux pondérés : fréquence de rappel, pertinence de la récupération, diversité des requêtes, récence temporelle, consolidation inter-jours et richesse des concepts dérivés.
+- Le classement utilise des signaux pondérés : fréquence de rappel, pertinence de la récupération, diversité des requêtes, récence temporelle, consolidation inter-jour et richesse des concepts dérivés.
 - La promotion relit la note quotidienne en direct avant d'écrire dans `MEMORY.md`, de sorte que les extraits à court terme modifiés ou supprimés ne soient pas promus à partir d'instantanés obsolètes du magasin de rappel.
-- Les exécutions planifiées et manuelles de `memory promote` partagent les mêmes valeurs par défaut de la phase deep, sauf si vous transmettez des substitutions de seuil CLI.
-- Les exécutions automatiques s'étendent sur les espaces de travail de mémoire configurés.
+- Les exécutions planifiées et manuelles de `memory promote` partagent les mêmes valeurs par défaut de phase profonde, sauf si vous transmettez des substitutions de seuil CLI.
+- Les exécutions automatiques se répartissent sur les espaces de travail mémoire configurés.
 
 Planification par défaut :
 
@@ -160,13 +162,13 @@ Exemple :
 
 Notes :
 
-- `memory index --verbose` imprime les détails par phase (provider, model, sources, activité par lot).
+- `memory index --verbose` affiche les détails par phase (provider, model, sources, activité de traitement par lot).
 - `memory status` inclut tous les chemins supplémentaires configurés via `memorySearch.extraPaths`.
-- Si les champs de clé API distante de mémoire effectivement active sont configurés en tant que SecretRefs, la commande résout ces valeurs à partir de l'instantané de la passerelle active. Si la passerelle n'est pas disponible, la commande échoue rapidement.
-- Remarque sur la disparité de version de la Gateway : ce chemin de commande nécessite une passerelle qui prend en charge `secrets.resolve` ; les passerelles plus anciennes renvoient une erreur de méthode inconnue.
-- Ajustez la cadence du nettoyage programmé avec `dreaming.frequency`. La stratégie de promotion approfondie est par ailleurs interne ; utilisez les drapeaux CLI sur `memory promote` lorsque vous avez besoin de substitutions manuelles ponctuelles.
+- Si les champs de clé d'API distante de la mémoire effectivement active sont configurés en tant que SecretRefs, la commande résout ces valeurs à partir de l'instantané de la passerelle active. Si la passerelle n'est pas disponible, la commande échoue rapidement.
+- Remarque sur la dérive de version de la Gateway : ce chemin de commande nécessite une passerelle qui prend en charge `secrets.resolve` ; les passerelles plus anciennes renvoient une erreur de méthode inconnue.
+- Ajustez la cadence de balayage planifiée avec `dreaming.frequency`. La politique de promotion profonde est par ailleurs interne ; utilisez les drapeaux CLI sur `memory promote` lorsque vous avez besoin de substitutions manuelles ponctuelles.
 - `memory rem-harness --path <file-or-dir> --grounded` prévisualise les `What Happened`, `Reflections` et `Possible Lasting Updates` ancrés à partir des notes quotidiennes historiques sans rien écrire.
 - `memory rem-backfill --path <file-or-dir>` écrit des entrées de journal ancrées réversibles dans `DREAMS.md` pour examen par l'interface utilisateur.
-- `memory rem-backfill --path <file-or-dir> --stage-short-term` ensemence également des candidats durables ancrés dans le stock de promotion à court terme en direct afin que la phase profonde normale puisse les classer.
+- `memory rem-backfill --path <file-or-dir> --stage-short-term` ensemence également des candidats durables ancrés dans le magasin de promotion à court terme en direct afin que la phase profonde normale puisse les classer.
 - `memory rem-backfill --rollback` supprime les entrées de journal ancrées précédemment écrites, et `memory rem-backfill --rollback-short-term` supprime les candidats à court terme ancrés précédemment mis en attente.
 - Voir [Dreaming](/fr/concepts/dreaming) pour les descriptions complètes des phases et la référence de configuration.

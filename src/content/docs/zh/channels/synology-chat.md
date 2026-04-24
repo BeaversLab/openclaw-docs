@@ -113,18 +113,17 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
 ```
 
 支持通过基于 URL 的文件传输发送媒体。
+出站文件 URL 必须使用 `http` 或 `https`，并且在 OpenClaw 将 URL 转发给 NAS webhook 之前，将拒绝私有或其他受阻止的网络目标。
 
 ## 多账户
 
-`channels.synology-chat.accounts` 下支持多个 Synology Chat 账户。
-每个账户可以覆盖 token、传入 URL、webhook 路径、私信策略和限制。
+在 `channels.synology-chat.accounts` 下支持多个 Synology Chat 账户。
+每个账户可以覆盖令牌、传入 URL、webhook 路径、私信策略和限制。
 私信会话按账户和用户隔离，因此两个不同 Synology 账户上相同的数字 `user_id`
-不会共享聊天记录状态。
-为每个启用的账户指定一个不同的 `webhookPath`。OpenClaw 现在会拒绝重复的精确路径，
-并拒绝启动在多账户设置中仅继承共享 webhook 路径的命名账户。
-如果您确实需要命名账户的旧版继承，请在该账户或 `channels.synology-chat` 上
-设置 `dangerouslyAllowInheritedWebhookPath: true`，但重复的精确路径仍会被故障安全拒绝。
-建议使用明确的每个账户路径。
+不共享聊天记录状态。
+为每个启用的账户指定一个不同的 `webhookPath`。OpenClaw 现在拒绝重复的完全相同的路径，并拒绝启动在多账户设置中仅继承共享 webhook 路径的命名账户。
+如果您有意需要命名账户的旧版继承，请在该账户或 `channels.synology-chat` 上设置
+`dangerouslyAllowInheritedWebhookPath: true`，但仍然会以失效安全（fail-closed）方式拒绝重复的完全相同的路径。优先使用明确的每个账户路径。
 
 ```json5
 {
@@ -151,13 +150,13 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
 
 ## 安全说明
 
-- 请妥善保管 `token`，如果发生泄露请轮换它。
-- 除非您明确信任自签名的本地 NAS 证书，否则请保持 `allowInsecureSsl: false` 开启。
+- 保密 `token`，如果泄露请轮换它。
+- 保持 `allowInsecureSsl: false` 开启，除非您明确信任自签名的本地 NAS 证书。
 - 入站 webhook 请求会经过 token 验证，并按发送者进行速率限制。
 - 无效 token 检查使用恒定时间密钥比较，并在失败时拒绝访问。
-- 生产环境建议优先使用 `dmPolicy: "allowlist"`。
-- 除非您明确需要基于旧版用户名的回复投递，否则请关闭 `dangerouslyAllowNameMatching`。
-- 除非您明确接受多账户设置中的共享路径路由风险，否则请保持 `dangerouslyAllowInheritedWebhookPath` 关闭。
+- 生产环境建议使用 `dmPolicy: "allowlist"`。
+- 保持 `dangerouslyAllowNameMatching` 关闭，除非您明确需要基于旧版用户名的回复传递。
+- 保持 `dangerouslyAllowInheritedWebhookPath` 关闭，除非您在多账户设置中明确接受共享路径路由风险。
 
 ## 故障排除
 
@@ -165,21 +164,21 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
   - 传出 Webhook 负载缺少必需字段之一
   - 如果 Synology 在标头中发送令牌，请确保网关/代理保留了这些标头
 - `Invalid token`：
-  - 传出 Webhook 密钥与 `channels.synology-chat.token` 不匹配
+  - 传出 webhook 密钥与 `channels.synology-chat.token` 不匹配
   - 请求命中了错误的账户/Webhook 路径
   - 反向代理在请求到达 OpenClaw 之前剥离了令牌标头
 - `Rate limit exceeded`：
   - 来自同一来源的过多无效令牌尝试可能会暂时锁定该来源
   - 经过身份验证的发件人也有单独的每用户消息速率限制
 - `Allowlist is empty. Configure allowedUserIds or use dmPolicy=open.`：
-  - `dmPolicy="allowlist"` 已启用但未配置任何用户
+  - `dmPolicy="allowlist"` 已启用但未配置用户
 - `User not authorized`：
-  - 发件人的数字 `user_id` 不在 `allowedUserIds` 中
+  - 发送者的数字 `user_id` 不在 `allowedUserIds` 中
 
 ## 相关
 
-- [频道概览](/zh/channels) — 所有支持的频道
-- [配对](/zh/channels/pairing) — 私信身份验证和配对流程
-- [群组](/zh/channels/groups) — 群聊行为和提及门控
-- [频道路由](/zh/channels/channel-routing) — 消息的会话路由
-- [安全](/zh/gateway/security) — 访问模型和加固
+- [通道概览](/zh/channels) — 所有支持的通道
+- [配对](/zh/channels/pairing) — 私信认证和配对流程
+- [群组](/zh/channels/groups) — 群聊行为和提及控制
+- [通道路由](/zh/channels/channel-routing) — 消息的会话路由
+- [安全性](/zh/gateway/security) — 访问模型和加固

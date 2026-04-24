@@ -110,7 +110,8 @@ pnpm add -g clawhub
 
 独立的 `clawhub` CLI 也会将 Skills 安装到当前工作目录下的 `./skills` 中。如果配置了 OpenClaw 工作区，`clawhub` 将回退到该工作区，除非你覆盖 `--workdir`（或 `CLAWHUB_WORKDIR`）。OpenClaw 会从 `<workspace>/skills` 加载工作区 Skills，并将在**下一次**会话中获取它们。如果你已经使用 `~/.openclaw/skills` 或捆绑的 Skills，工作区 Skills 将优先。
 
-有关如何加载、共享和限制 Skills 的更多详细信息，请参阅 [Skills](/zh/tools/skills)。
+有关如何加载、共享和限制 Skills 的更多详细信息，请参阅
+[Skills](/zh/tools/skills)。
 
 ## Skills 系统概述
 
@@ -279,7 +280,8 @@ clawhub package publish https://github.com/your-org/your-plugin
   "version": "1.0.0",
   "type": "module",
   "openclaw": {
-    "extensions": ["./index.ts"],
+    "extensions": ["./src/index.ts"],
+    "runtimeExtensions": ["./dist/index.js"],
     "compat": {
       "pluginApi": ">=2026.3.24-beta.2",
       "minGatewayVersion": "2026.3.24-beta.2"
@@ -292,30 +294,33 @@ clawhub package publish https://github.com/your-org/your-plugin
 }
 ```
 
+发布的包应附带已构建的 JavaScript，并将 `runtimeExtensions` 指向
+该输出。当不存在构建的文件时，Git 检出安装仍然可以回退到 TypeScript 源代码，但构建的运行时条目可以避免在启动、诊断和插件加载路径中出现运行时 TypeScript 编译。
+
 ## 高级详情（技术）
 
 ### 版本控制和标签
 
 - 每次发布都会创建一个新的 **semver** `SkillVersion`。
 - 标签（如 `latest`）指向某个版本；移动标签允许您回滚。
-- 更新日志附加于每个版本，在同步或发布更新时可以为空。
+- 变更日志按版本附加，在同步或发布更新时可以为空。
 
-### 本地更改与注册表版本的对比
+### 本地更改与注册表版本
 
-更新使用内容哈希将本地技能内容与注册表版本进行比较。如果本地文件与任何已发布的版本不匹配，CLI 会先询问再覆盖（在非交互式运行中则需要 `--force`）。
+更新使用内容哈希将本地技能内容与注册表版本进行比较。如果本地文件与任何已发布的版本不匹配，CLI 会在覆盖之前询问（或在非交互式运行中需要 `--force`）。
 
-### 同步扫描和回退根目录
+### 同步扫描和后备根目录
 
-`clawhub sync` 首先扫描您当前的工作目录。如果未找到技能，它会回退到已知的旧版位置（例如 `~/openclaw/skills` 和 `~/.openclaw/skills`）。这旨在无需额外标志即可找到较旧的技能安装。
+`clawhub sync` 首先扫描您当前的工作目录。如果没有找到技能，它会回退到已知的旧版位置（例如 `~/openclaw/skills` 和 `~/.openclaw/skills`）。此设计旨在无需额外标志即可找到较旧的技能安装。
 
 ### 存储和锁定文件
 
-- 已安装的技能记录在您工作目录下的 `.clawhub/lock.json` 中。
-- Auth token 存储在 ClawHub CLI 配置文件中（可通过 `CLAWHUB_CONFIG_PATH` 覆盖）。
+- 已安装的技能记录在工作目录下的 `.clawhub/lock.json` 中。
+- Auth 令牌存储在 ClawHub CLI 配置文件中（可通过 `CLAWHUB_CONFIG_PATH` 覆盖）。
 
 ### 遥测（安装计数）
 
-当您在登录状态下运行 `clawhub sync` 时，CLI 会发送一个最小快照以计算安装计数。您可以完全禁用此功能：
+当您在登录状态下运行 `clawhub sync` 时，CLI 会发送最小快照以计算安装次数。您可以完全禁用此功能：
 
 ```bash
 export CLAWHUB_DISABLE_TELEMETRY=1
@@ -325,6 +330,6 @@ export CLAWHUB_DISABLE_TELEMETRY=1
 
 - `CLAWHUB_SITE`：覆盖站点 URL。
 - `CLAWHUB_REGISTRY`：覆盖注册表 API URL。
-- `CLAWHUB_CONFIG_PATH`：覆盖 CLI 存储 token/配置 的位置。
+- `CLAWHUB_CONFIG_PATH`：覆盖 CLI 存储令牌/配置的位置。
 - `CLAWHUB_WORKDIR`：覆盖默认工作目录。
 - `CLAWHUB_DISABLE_TELEMETRY=1`：在 `sync` 上禁用遥测。

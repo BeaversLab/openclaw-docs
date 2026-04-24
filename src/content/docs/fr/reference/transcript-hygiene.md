@@ -37,7 +37,7 @@ Si vous avez besoin de détails sur le stockage des transcripts, consultez :
 Toute l'hygiène des transcripts est centralisée dans le runner intégré :
 
 - Sélection de la politique : `src/agents/transcript-policy.ts`
-- Application de la nettoyage/réparation : `sanitizeSessionHistory` dans `src/agents/pi-embedded-runner/google.ts`
+- Application de la nettoyage/réparation : `sanitizeSessionHistory` dans `src/agents/pi-embedded-runner/replay-history.ts`
 
 La politique utilise `provider`, `modelApi` et `modelId` pour décider quoi appliquer.
 
@@ -73,7 +73,7 @@ partiellement persistés (par exemple, après un échec de limite de taux).
 Mise en œuvre :
 
 - `sanitizeToolCallInputs` dans `src/agents/session-transcript-repair.ts`
-- Appliqué dans `sanitizeSessionHistory` dans `src/agents/pi-embedded-runner/google.ts`
+- Appliqué dans `sanitizeSessionHistory` dans `src/agents/pi-embedded-runner/replay-history.ts`
 
 ---
 

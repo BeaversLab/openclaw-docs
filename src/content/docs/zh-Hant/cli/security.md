@@ -25,22 +25,22 @@ openclaw security audit --fix
 openclaw security audit --json
 ```
 
-當多個 DM 發送者共用主會話時，審計會發出警告並建議使用 **安全 DM 模式**：對於共用收件箱，使用 `session.dmScope="per-channel-peer"`（對於多帳號通道則使用 `per-account-channel-peer`）。
-這是針對協作/共用收件箱的強化措施。由互不信任/對立的操作員共用單一 Gateway 並非建議的設定；請使用不同的 Gateway（或不同的 OS 使用者/主機）來分割信任邊界。
-當配置暗示可能存在共用使用者入口（例如開放 DM/群組原則、已配置的群組目標或萬用字元發送者規則）時，它也會發出 `security.trust_model.multi_user_heuristic`，並提醒您 OpenClaw 預設是個人助理信任模型。
-對於有意識的共用使用者設定，審計建議是將所有會話沙盒化，保持檔案系統存取限於工作區範圍，並且不要將個人/私人身分或憑證放入該執行環境。
+當多個 DM 傳送者共用主工作階段時，稽核會發出警告並建議使用 **安全 DM 模式**：針對共用收件匣使用 `session.dmScope="per-channel-peer"` （若是多帳號通道則使用 `per-account-channel-peer`）。
+這適用於協作/共用收件匣的強化。由相互不信任/對立的操作者共用單一 Gateway 並非建議的設定；請使用個別的 Gateway （或個別的 OS 使用者/主機）來分隔信任邊界。
+當設定顯示可能有共用使用者入口（例如開放 DM/群組原則、已設定的群組目標，或萬用字元傳送者規則）時，它也會發出 `security.trust_model.multi_user_heuristic`，並提醒您 OpenClaw 預設採用個人助理信任模型。
+對於刻意設定的共用使用者環境，稽核指引是將所有工作階段沙盒化、將檔案系統存取限制在工作區範圍內，並將個人/私人身分識別或憑證與該執行環境分離。
 當小型模型（`<=300B`）在未啟用沙盒且啟用了網頁/瀏覽器工具的情況下使用時，它也會發出警告。
-對於 Webhook 入口，當 `hooks.token` 重複使用 Gateway 權杖、當 `hooks.token` 過短、當 `hooks.path="/"`、當 `hooks.defaultSessionKey` 未設定、當 `hooks.allowedAgentIds` 不受限制、當請求 `sessionKey` 覆寫已啟用，以及當覆寫已啟用但未使用 `hooks.allowedSessionKeyPrefixes` 時，它會發出警告。
-當沙盒模式關閉時配置了沙盒 Docker 設定、當 `gateway.nodes.denyCommands` 使用無效的類模式/未知項目（僅限精確節點指令名稱匹配，而非 shell 文字過濾）、當 `gateway.nodes.allowCommands` 明確啟用了危險的節點指令、當全域 `tools.profile="minimal"` 被代理程式工具設定檔覆寫、當開放群組在沒有沙盒/工作區防護的情況下暴露執行時/檔案系統工具，以及當已安裝的擴充外掛工具可能在寬鬆的工具原則下被存取時，它也會發出警告。
-它也會標記 `gateway.allowRealIpFallback=true`（如果代理伺服器設定錯誤，則有標頭偽造風險）和 `discovery.mdns.mode="full"`（透過 mDNS TXT 記錄洩漏元資料）。
-當沙盒瀏覽器使用沒有 `sandbox.browser.cdpSourceRange` 的 Docker `bridge` 網路時，它也會發出警告。
-它也會標記危險的沙盒 Docker 網路模式（包括 `host` 和 `container:*` 命名空間連線）。
-當現有的沙盒瀏覽器 Docker 容器缺少/過期的雜湊標籤（例如遷移前的容器缺少 `openclaw.browserConfigEpoch`）時，它也會發出警告並建議 `openclaw sandbox recreate --browser --all`。
-當基於 npm 的外掛/掛鉤安裝記錄未固定、缺少完整性元資料，或與當前安裝的套件版本不一致時，它也會發出警告。
-當通道允許清單依賴可變更的名稱/電子郵件/標籤而非穩定的 ID（Discord、Slack、Google Chat、Microsoft Teams、Mattermost、IRC 適用範圍）時，它會發出警告。
-當 `gateway.auth.mode="none"` 讓 Gateway HTTP API 在沒有共用密鑰（`/tools/invoke` 加上任何已啟用的 `/v1/*` 端點）的情況下可被存取時，它會發出警告。
-前綴為 `dangerous`/`dangerously` 的設定是明確的緊急操作員覆寫；單獨啟用其中一項並不代表安全漏洞報告。
-如需完整的危險參數清單，請參閱 [安全性](/zh-Hant/gateway/security) 中的「不安全或危險旗標摘要」一節。
+針對 Webhook 入口，當 `hooks.token` 重複使用 Gateway Token、`hooks.token` 過短、`hooks.path="/"`、`hooks.defaultSessionKey` 未設定、`hooks.allowedAgentIds` 未受限制、啟用了請求 `sessionKey` 覆寫，以及啟用了覆寫但未設定 `hooks.allowedSessionKeyPrefixes` 時，它會發出警告。
+當沙盒模式關閉時設定沙盒 Docker 設定、`gateway.nodes.denyCommands` 使用無效的類模式/未知項目（僅限精確節點指令名稱比對，而非 shell 文字篩選）、`gateway.nodes.allowCommands` 明確啟用危險的節點指令、全域 `tools.profile="minimal"` 被代理程式工具設定檔覆寫、開放群組在無沙盒/工作區防護的情況下暴露執行/檔案系統工具，以及已安裝的外掛工具可能可在寬鬆的工具原則下存取時，它也會發出警告。
+它也會標示 `gateway.allowRealIpFallback=true` （若 Proxy 設定錯誤則有標頭偽造風險）和 `discovery.mdns.mode="full"` （透過 mDNS TXT 記錄洩漏中繼資料）。
+當沙盒瀏覽器使用 Docker `bridge` 網路卻未使用 `sandbox.browser.cdpSourceRange` 時，它也會發出警告。
+它也會標示危險的沙盒 Docker 網路模式（包括加入 `host` 和 `container:*` 命名空間）。
+當現有的沙盒瀏覽器 Docker 容器缺少/過時的雜湊標籤（例如遷移前的容器缺少 `openclaw.browserConfigEpoch`）時，它也會發出警告並建議 `openclaw sandbox recreate --browser --all`。
+當基於 npm 的外掛/掛鉤安裝記錄未鎖定、缺少完整性中繼資料，或與目前安裝的套件版本不一致時，它也會發出警告。
+當通道允許清單依賴可變更的名稱/電子郵件/標籤而非穩定的 ID 時（適用於 Discord、Slack、Google Chat、Microsoft Teams、Mattermost、IRC 範圍），它會發出警告。
+當 `gateway.auth.mode="none"` 讓 Gateway HTTP API 在沒有共用金鑰的情況下可被存取（`/tools/invoke` 加上任何已啟用的 `/v1/*` 端點）時，它會發出警告。
+前綴為 `dangerous`/`dangerously` 的設定是明確的緊急操作員覆寫；單獨啟用其中一個並不構成安全性弱點報告。
+如需完整的危險參數清單，請參閱 [Security](/zh-Hant/gateway/security) 中的「Insecure or dangerous flags summary」章節。
 
 SecretRef 行為：
 

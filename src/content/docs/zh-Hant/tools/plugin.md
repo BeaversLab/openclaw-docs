@@ -73,9 +73,9 @@ OpenClaw 辨識兩種外掛程式格式：
 | **原生**     | `openclaw.plugin.json` + runtime 模組；於程序內執行      | 官方外掛程式、社群 npm 套件                            |
 | **套件組合** | Codex/Claude/Cursor 相容的版面配置；對應至 OpenClaw 功能 | `.codex-plugin/`、`.claude-plugin/`、`.cursor-plugin/` |
 
-兩者都會顯示在 `openclaw plugins list` 下方。請參閱 [Plugin Bundles](/zh-Hant/plugins/bundles) 以了解套件組合的詳細資訊。
+兩者都會顯示在 `openclaw plugins list` 之下。請參閱 [Plugin Bundles](/zh-Hant/plugins/bundles) 以了解套件的詳細資訊。
 
-如果您正在撰寫原生外掛程式，請從 [Building Plugins](/zh-Hant/plugins/building-plugins)
+如果您正在編寫原生插件，請從 [Building Plugins](/zh-Hant/plugins/building-plugins)
 和 [Plugin SDK Overview](/zh-Hant/plugins/sdk-overview) 開始。
 
 ## 官方外掛程式
@@ -112,7 +112,7 @@ OpenClaw 辨識兩種外掛程式格式：
   </Accordion>
 </AccordionGroup>
 
-正在尋找協力廠商外掛嗎？請參閱 [社群外掛](/zh-Hant/plugins/community)。
+尋找第三方插件嗎？請參閱 [Community Plugins](/zh-Hant/plugins/community)。
 
 ## 設定
 
@@ -122,7 +122,7 @@ OpenClaw 辨識兩種外掛程式格式：
     enabled: true,
     allow: ["voice-call"],
     deny: ["untrusted-plugin"],
-    load: { paths: ["~/Projects/oss/voice-call-extension"] },
+    load: { paths: ["~/Projects/oss/voice-call-plugin"] },
     entries: {
       "voice-call": { enabled: true, config: { provider: "twilio" } },
     },
@@ -154,12 +154,12 @@ OpenClaw scans for plugins in this order (first match wins):
     `plugins.load.paths` — explicit file or directory paths.
   </Step>
 
-  <Step title="Workspace extensions">
-    `\<workspace\>/.openclaw/<plugin-root>/*.ts` and `\<workspace\>/.openclaw/<plugin-root>/*/index.ts`.
+  <Step title="Workspace 插件">
+    `\<workspace\>/.openclaw/<plugin-root>/*.ts` 和 `\<workspace\>/.openclaw/<plugin-root>/*/index.ts`。
   </Step>
 
-  <Step title="Global extensions">
-    `~/.openclaw/<plugin-root>/*.ts` and `~/.openclaw/<plugin-root>/*/index.ts`.
+  <Step title="全域插件">
+    `~/.openclaw/<plugin-root>/*.ts` 和 `~/.openclaw/<plugin-root>/*/index.ts`。
   </Step>
 
   <Step title="Bundled plugins">
@@ -219,8 +219,8 @@ openclaw plugins install <plugin> --marketplace <source>
 openclaw plugins install <plugin> --marketplace https://github.com/<owner>/<repo>
 openclaw plugins install <spec> --pin      # record exact resolved npm spec
 openclaw plugins install <spec> --dangerously-force-unsafe-install
-openclaw plugins update <id>             # update one plugin
-openclaw plugins update <id> --dangerously-force-unsafe-install
+openclaw plugins update <id-or-npm-spec> # update one plugin
+openclaw plugins update <id-or-npm-spec> --dangerously-force-unsafe-install
 openclaw plugins update --all            # update all
 openclaw plugins uninstall <id>          # remove config/install records
 openclaw plugins uninstall <id> --keep-files
@@ -233,31 +233,36 @@ openclaw plugins disable <id>
 
 隨附的外掛隨 OpenClaw 一起出廠。許多外掛預設為啟用狀態（例如隨附的模型提供者、隨附的語音提供者以及隨附的瀏覽器外掛）。其他隨附的外掛仍需要 `openclaw plugins enable <id>`。
 
-`--force` 會就地覆寫現有已安裝的外掛或 Hook 套件。它不支援與 `--link` 搭配使用，後者會重複使用來源路徑，而不是複製到受管理的安裝目標。
+`--force` 會就地覆寫現有已安裝的插件或 hook 套件。請使用
+`openclaw plugins update <id-or-npm-spec>` 來進行已追蹤 npm 插件的例行升級。
+`--link` 不支援此功能，因為它會重複使用來源路徑，
+而不是複製到受管理的安裝目標。
 
-`--pin` 僅適用於 npm。它不支援與 `--marketplace` 搭配使用，因為市集安裝會保留市集來源中繼資料，而非 npm 規格。
+`openclaw plugins update <id-or-npm-spec>` 適用於已追蹤的安裝。傳遞帶有
+dist-tag 或確切版本的 npm 套件規格，會將套件名稱解析回已追蹤的插件記錄，並記錄新規格以供未來更新。
+若傳遞不帶版本的套件名稱，會將確切釘選的安裝移回
+登錄檔的預設發行版本。如果已安裝的 npm 插件已符合
+解析後的版本和記錄的構件身分，OpenClaw 將會跳過更新，
+而不下載、重新安裝或重寫設定。
 
-`--dangerously-force-unsafe-install` 是針對內建危險代碼掃描器誤報的緊急覆寫機制。它允許外掛安裝和外掛更新繼續進行，忽略內建 `critical` 的發現，但仍不會繞過外掛 `before_install` 政策封鎖或掃描失敗的封鎖。
+`--pin` 僅適用於 npm。它不支援與 `--marketplace` 搭配使用，因為
+marketplace 安裝會保存 marketplace 來源中繼資料，而不是 npm 規格。
 
-此 CLI 旗標僅適用於外掛安裝/更新流程。Gateway 支援的技能依賴安裝則改用相符的 `dangerouslyForceUnsafeInstall` 請求覆寫，而 `openclaw skills install` 則維持為個別的 ClawHub 技能下載/安裝流程。
+`--dangerously-force-unsafe-install` 是針對內建危險代碼掃描器誤報的緊急覆寫機制。它允許外掛安裝和更新在遇到內建 `critical` 發現時繼續進行，但仍然無法繞過外掛 `before_install` 政策封鎖或掃描失敗封鎖。
 
-相容的套件會參與相同的外掛列表/檢查/啟用/停用流程。目前的執行階段支援包含套件技能、Claude 指令技能、Claude `settings.json` 預設值、Claude `.lsp.json` 和資訊清單宣告的 `lspServers` 預設值、Cursor 指令技能，以及相容的 Codex Hook 目錄。
+此 CLI 標誌僅適用於外掛安裝/更新流程。由 Gateway 支援的技能依賴安裝改用匹配的 `dangerouslyForceUnsafeInstall` 請求覆寫，而 `openclaw skills install` 則是單獨的 ClawHub 技能下載/安裝流程。
 
-`openclaw plugins inspect <id>` 也會回報偵測到的套件功能，以及套件支援外掛的支援或不支援的 MCP 和 LSP 伺服器項目。
+相容的套件參與相同的外掛列表/檢查/啟用/停用流程。目前的執行時期支援包括套件技能、Claude 指令技能、Claude `settings.json` 預設值、Claude `.lsp.json` 和清單宣告的 `lspServers` 預設值、Cursor 指令技能，以及相容的 Codex hook 目錄。
 
-Marketplace sources can be a Claude known-marketplace name from
-`~/.claude/plugins/known_marketplaces.json`, a local marketplace root or
-`marketplace.json` path, a GitHub shorthand like `owner/repo`, a GitHub repo
-URL, or a git URL. For remote marketplaces, plugin entries must stay inside the
-cloned marketplace repo and use relative path sources only.
+`openclaw plugins inspect <id>` 也會回報偵測到的套件功能，以及由套件支援的外掛所支援或不支援的 MCP 和 LSP 伺服器項目。
 
-See [`openclaw plugins` CLI reference](/zh-Hant/cli/plugins) for full details.
+Marketplace 來源可以是來自 `~/.claude/plugins/known_marketplaces.json` 的 Claude 已知市場名稱、本機 marketplace 根目錄或 `marketplace.json` 路徑、類似 `owner/repo` 的 GitHub 簡寫、GitHub 存儲庫 URL 或 git URL。對於遠端 marketplace，外掛項目必須保留在複製的 marketplace 存儲庫內，並且僅使用相對路徑來源。
 
-## Plugin API overview
+請參閱 [`openclaw plugins` CLI 參考資料](/zh-Hant/cli/plugins) 以了解完整細節。
 
-Native plugins export an entry object that exposes `register(api)`. Older
-plugins may still use `activate(api)` as a legacy alias, but new plugins should
-use `register`.
+## 外掛 API 概覽
+
+原生外掛會匯出一個公開 `register(api)` 的進入點物件。較舊的外掛可能仍會將 `activate(api)` 作為傳統別名使用，但新外掛應使用 `register`。
 
 ```typescript
 export default definePluginEntry({
@@ -277,49 +282,46 @@ export default definePluginEntry({
 });
 ```
 
-OpenClaw loads the entry object and calls `register(api)` during plugin
-activation. The loader still falls back to `activate(api)` for older plugins,
-but bundled plugins and new external plugins should treat `register` as the
-public contract.
+OpenClaw 會載入進入點物件並在外掛啟用期間呼叫 `register(api)`。載入器對於較舊的外掛仍會回退到 `activate(api)`，但套件外掛和新的外部外掛應將 `register` 視為公開契約。
 
-Common registration methods:
+常見的註冊方法：
 
-| Method                                  | What it registers           |
-| --------------------------------------- | --------------------------- |
-| `registerProvider`                      | Model provider (LLM)        |
-| `registerChannel`                       | Chat channel                |
-| `registerTool`                          | Agent tool                  |
-| `registerHook` / `on(...)`              | Lifecycle hooks             |
-| `registerSpeechProvider`                | Text-to-speech / STT        |
-| `registerRealtimeTranscriptionProvider` | Streaming STT               |
-| `registerRealtimeVoiceProvider`         | Duplex realtime voice       |
-| `registerMediaUnderstandingProvider`    | Image/audio analysis        |
-| `registerImageGenerationProvider`       | Image generation            |
-| `registerMusicGenerationProvider`       | Music generation            |
-| `registerVideoGenerationProvider`       | Video generation            |
-| `registerWebFetchProvider`              | Web fetch / scrape provider |
-| `registerWebSearchProvider`             | Web search                  |
-| `registerHttpRoute`                     | HTTP endpoint               |
-| `registerCommand` / `registerCli`       | CLI commands                |
-| `registerContextEngine`                 | Context engine              |
-| `registerService`                       | Background service          |
+| 方法                                    | 註冊內容              |
+| --------------------------------------- | --------------------- |
+| `registerProvider`                      | 模型提供者 (LLM)      |
+| `registerChannel`                       | 聊天頻道              |
+| `registerTool`                          | 代理工具              |
+| `registerHook` / `on(...)`              | 生命週期鉤子          |
+| `registerSpeechProvider`                | 文字轉語音 / STT      |
+| `registerRealtimeTranscriptionProvider` | 串流 STT              |
+| `registerRealtimeVoiceProvider`         | 雙工即時語音          |
+| `registerMediaUnderstandingProvider`    | 影像/音訊分析         |
+| `registerImageGenerationProvider`       | 影像生成              |
+| `registerMusicGenerationProvider`       | 音樂生成              |
+| `registerVideoGenerationProvider`       | 影片生成              |
+| `registerWebFetchProvider`              | 網頁擷取 / 爬取提供者 |
+| `registerWebSearchProvider`             | 網路搜尋              |
+| `registerHttpRoute`                     | HTTP 端點             |
+| `registerCommand` / `registerCli`       | CLI 指令              |
+| `registerContextEngine`                 | 語境引擎              |
+| `registerService`                       | 背景服務              |
 
-Hook guard behavior for typed lifecycle hooks:
+型別化生命週期鉤子的鉤子防護行為：
 
-- `before_tool_call`: `{ block: true }` is terminal; lower-priority handlers are skipped.
-- `before_tool_call`: `{ block: false }` 是一個空操作，不會清除先前的區塊。
-- `before_install`: `{ block: true }` 是終止的；較低優先級的處理程序將被跳過。
-- `before_install`: `{ block: false }` 是一個空操作，不會清除先前的區塊。
-- `message_sending`: `{ cancel: true }` 是終止的；較低優先級的處理程序將被跳過。
-- `message_sending`: `{ cancel: false }` 是一個空操作，不會清除先前的取消。
+- `before_tool_call`：`{ block: true }` 為終止指令；較低優先級的處理程序將被跳過。
+- `before_tool_call`：`{ block: false }` 為無操作指令，且不會清除先前的阻擋。
+- `before_install`：`{ block: true }` 為終止指令；較低優先級的處理程序將被跳過。
+- `before_install`：`{ block: false }` 為無操作指令，且不會清除先前的阻擋。
+- `message_sending`：`{ cancel: true }` 為終止指令；較低優先級的處理程序將被跳過。
+- `message_sending`：`{ cancel: false }` 為無操作指令，且不會清除先前的取消。
 
-有關完整的類型化掛鉤行為，請參閱 [SDK 概述](/zh-Hant/plugins/sdk-overview#hook-decision-semantics)。
+有關完整的型別化鉤子行為，請參閱 [SDK 概述](/zh-Hant/plugins/sdk-overview#hook-decision-semantics)。
 
 ## 相關
 
-- [建置外掛程式](/zh-Hant/plugins/building-plugins) — 建立您自己的外掛程式
-- [外掛程式套件](/zh-Hant/plugins/bundles) — Codex/Claude/Cursor 套件相容性
-- [外掛程式清單](/zh-Hant/plugins/manifest) — 清單架構
-- [註冊工具](/zh-Hant/plugins/building-plugins#registering-agent-tools) — 在外掛程式中新增代理程式工具
-- [外掛程式內部機制](/zh-Hant/plugins/architecture) — 功能模型和載入管線
-- [社群外掛程式](/zh-Hant/plugins/community) — 第三方列表
+- [建置外掛](/zh-Hant/plugins/building-plugins) — 建立您自己的外掛
+- [外掛套件](/zh-Hant/plugins/bundles) — Codex/Claude/Cursor 套件相容性
+- [外掛清單](/zh-Hant/plugins/manifest) — 清單架構
+- [註冊工具](/zh-Hant/plugins/building-plugins#registering-agent-tools) — 在外掛中新增代理工具
+- [Plugin Internals](/zh-Hant/plugins/architecture) — 能力模型與載入管線
+- [Community Plugins](/zh-Hant/plugins/community) — 第三方清單

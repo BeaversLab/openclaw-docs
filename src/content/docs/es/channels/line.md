@@ -195,18 +195,22 @@ El complemento LINE admite el envío de imágenes, videos y archivos de audio a 
 - **Videos**: se envían con manejo explícito de vista previa y tipo de contenido.
 - **Audio**: se envían como mensajes de audio de LINE.
 
-Los envíos de medios genéricos recurren a la ruta existente de solo imágenes cuando no hay una ruta específica de LINE disponible.
+Las URLs de medios salientes deben ser URLs HTTPS públicas. OpenClaw valida el nombre de host de destino antes de pasar la URL a LINE y rechaza los objetivos de loopback, link-local y red privada.
+
+Los envíos de medios genéricos vuelven a la ruta existente de solo imágenes cuando no hay disponible una ruta específica de LINE.
 
 ## Solución de problemas
 
-- **Error en la verificación del webhook:** asegúrese de que la URL del webhook sea HTTPS y que el `channelSecret` coincida con la consola de LINE.
-- **Sin eventos entrantes:** confirme que la ruta del webhook coincida con `channels.line.webhookPath` y que la puerta de enlace sea accesible desde LINE.
-- **Errores de descarga de medios:** aumente `channels.line.mediaMaxMb` si los medios superan el límite predeterminado.
+- **La verificación del webhook falla:** asegúrese de que la URL del webhook sea HTTPS y de que `channelSecret` coincida con la consola de LINE.
+- **Sin eventos entrantes:** confirme que la ruta del webhook coincida con `channels.line.webhookPath`
+  y que la pasarela sea accesible desde LINE.
+- **Errores de descarga de medios:** se genera `channels.line.mediaMaxMb` si el medio excede el
+  límite predeterminado.
 
 ## Relacionado
 
-- [Descripción general de canales](/es/channels) — todos los canales compatibles
-- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Resumen de canales](/es/channels) — todos los canales admitidos
+- [Emparejamiento](/es/channels/pairing) — autenticación DM y flujo de emparejamiento
 - [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
 - [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/es/gateway/security) — modelo de acceso y fortalecimiento
+- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

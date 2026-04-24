@@ -25,8 +25,8 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行驗證，然後
 ## 支援的供應商（入門組）
 
 - [Alibaba Model Studio](/zh-Hant/providers/alibaba)
-- [Anthropic (API + Claude CLI)](/zh-Hant/providers/anthropic)
 - [Amazon Bedrock](/zh-Hant/providers/bedrock)
+- [Anthropic (API + Claude CLI)](/zh-Hant/providers/anthropic)
 - [BytePlus (International)](/zh-Hant/concepts/model-providers#byteplus-international)
 - [Chutes](/zh-Hant/providers/chutes)
 - [ComfyUI](/zh-Hant/providers/comfy)

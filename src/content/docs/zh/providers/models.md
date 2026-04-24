@@ -24,8 +24,8 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，
 ## 支持的提供商（入门套件）
 
 - [Alibaba Model Studio](/zh/providers/alibaba)
-- [Anthropic (API + Claude CLI)](/zh/providers/anthropic)
 - [Amazon Bedrock](/zh/providers/bedrock)
+- [Anthropic (API + Claude CLI)](/zh/providers/anthropic)
 - [BytePlus (International)](/zh/concepts/model-providers#byteplus-international)
 - [Chutes](/zh/providers/chutes)
 - [ComfyUI](/zh/providers/comfy)

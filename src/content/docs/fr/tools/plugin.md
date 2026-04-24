@@ -66,10 +66,10 @@ OpenClaw reconnaît deux formats de plugins :
 | **Natif**  | `openclaw.plugin.json` + module d'exécution ; s'exécute en cours de processus           | Plugins officiels, packages communautaires npm         |
 | **Bundle** | Disposition compatible avec Codex/Claude/Cursor ; mappée aux fonctionnalités d'OpenClaw | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/` |
 
-Les deux apparaissent sous `openclaw plugins list`. Consultez [Plugin Bundles](/fr/plugins/bundles) pour plus de détails sur les bundles.
+Les deux apparaissent sous `openclaw plugins list`. Voir [Plugin Bundles](/fr/plugins/bundles) pour plus de détails sur les bundles.
 
-Si vous écrivez un plugin natif, commencez par [Building Plugins](/fr/plugins/building-plugins)
-et la [Présentation du SDK de Plugin](/fr/plugins/sdk-overview).
+Si vous rédigez un plugin natif, commencez par [Building Plugins](/fr/plugins/building-plugins)
+et la [Plugin SDK Overview](/fr/plugins/sdk-overview).
 
 ## Plugins officiels
 
@@ -80,9 +80,9 @@ et la [Présentation du SDK de Plugin](/fr/plugins/sdk-overview).
 | Matrix          | `@openclaw/matrix`     | [Matrix](/fr/channels/matrix)           |
 | Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/fr/channels/msteams) |
 | Nostr           | `@openclaw/nostr`      | [Nostr](/fr/channels/nostr)             |
-| Appel vocal     | `@openclaw/voice-call` | [Appel vocal](/fr/plugins/voice-call)   |
+| Appel vocal     | `@openclaw/voice-call` | [Voice Call](/fr/plugins/voice-call)    |
 | Zalo            | `@openclaw/zalo`       | [Zalo](/fr/channels/zalo)               |
-| Zalo Personnel  | `@openclaw/zalouser`   | [Zalo Personnel](/fr/plugins/zalouser)  |
+| Zalo Personnel  | `@openclaw/zalouser`   | [Zalo Personal](/fr/plugins/zalouser)   |
 
 ### Core (livré avec OpenClaw)
 
@@ -105,7 +105,7 @@ et la [Présentation du SDK de Plugin](/fr/plugins/sdk-overview).
   </Accordion>
 </AccordionGroup>
 
-Vous cherchez des plugins tiers ? Voir [Plugins communautaires](/fr/plugins/community).
+Vous cherchez des plugins tiers ? Voir [Community Plugins](/fr/plugins/community).
 
 ## Configuration
 
@@ -115,7 +115,7 @@ Vous cherchez des plugins tiers ? Voir [Plugins communautaires](/fr/plugins/comm
     enabled: true,
     allow: ["voice-call"],
     deny: ["untrusted-plugin"],
-    load: { paths: ["~/Projects/oss/voice-call-extension"] },
+    load: { paths: ["~/Projects/oss/voice-call-plugin"] },
     entries: {
       "voice-call": { enabled: true, config: { provider: "twilio" } },
     },
@@ -145,11 +145,11 @@ OpenClaw recherche les plugins dans cet ordre (la première correspondance l'emp
     `plugins.load.paths` — chemins de fichiers ou de répertoires explicites.
   </Step>
 
-  <Step title="Workspace extensions">
+  <Step title="Plugins d'espace de travail">
     `\<workspace\>/.openclaw/<plugin-root>/*.ts` et `\<workspace\>/.openclaw/<plugin-root>/*/index.ts`.
   </Step>
 
-  <Step title="Global extensions">
+  <Step title="Plugins globaux">
     `~/.openclaw/<plugin-root>/*.ts` et `~/.openclaw/<plugin-root>/*/index.ts`.
   </Step>
 
@@ -210,8 +210,8 @@ openclaw plugins install <plugin> --marketplace <source>
 openclaw plugins install <plugin> --marketplace https://github.com/<owner>/<repo>
 openclaw plugins install <spec> --pin      # record exact resolved npm spec
 openclaw plugins install <spec> --dangerously-force-unsafe-install
-openclaw plugins update <id>             # update one plugin
-openclaw plugins update <id> --dangerously-force-unsafe-install
+openclaw plugins update <id-or-npm-spec> # update one plugin
+openclaw plugins update <id-or-npm-spec> --dangerously-force-unsafe-install
 openclaw plugins update --all            # update all
 openclaw plugins uninstall <id>          # remove config/install records
 openclaw plugins uninstall <id> --keep-files
@@ -226,38 +226,36 @@ Les plugins groupés sont livrés avec OpenClaw. Beaucoup sont activés par déf
 les fournisseurs de model groupés, les fournisseurs de reconnaissance vocale groupés, et le plugin
 de navigateur groupé). D'autres plugins groupés nécessitent encore `openclaw plugins enable <id>`.
 
-`--force` écrase un plugin installé existant ou un pack de hooks sur place.
-Il n'est pas pris en charge avec `--link`, qui réutilise le chemin source au lieu de
-copier vers une cible d'installation gérée.
+`--force` écrase un plugin installé existant ou un pack de hooks sur place. Utilisez
+`openclaw plugins update <id-or-npm-spec>` pour les mises à niveau de routine des plugins npm
+suivis. Cela n'est pas pris en charge avec `--link`, qui réutilise le chemin source au lieu
+de copier sur une cible d'installation gérée.
 
-`--pin` est uniquement pour npm. Il n'est pas pris en charge avec `--marketplace`, car
-les installations depuis la marketplace conservent les métadonnées source de la marketplace au lieu d'une spécification npm.
+`openclaw plugins update <id-or-npm-spec>` s'applique aux installations suivies. Le fait de passer
+une spécification de paquet npm avec un dist-tag ou une version exacte résout le nom du paquet
+retour vers l'enregistrement du plugin suivi et enregistre la nouvelle spécification pour les futures mises à jour.
+Passer le nom du paquet sans version ramène une installation exacte épinglée à la ligne de publication par défaut du registre. Si le plugin npm installé correspond déjà
+à la version résolue et à l'identité de l'artefact enregistré, OpenClaw ignore la mise à jour
+sans télécharger, réinstaller ou réécrire la configuration.
 
-`--dangerously-force-unsafe-install` est une substitution de dernière chance pour les faux
-positifs du scanner de code dangereux intégré. Il permet aux installations et mises à jour de plugins
-de continuer malgré les résultats `critical` intégrés, mais il ne contourne
-pas pour autant les blocages de stratégie `before_install` du plugin ni le blocage en cas d'échec de l'analyse.
+`--pin` est réservé à npm. Il n'est pas pris en charge avec `--marketplace`, car
+les installations de la marketplace persistent les métadonnées sources de la marketplace au lieu d'une spécification npm.
 
-Ce drapeau CLI s'applique uniquement aux flux d'installation/mise à jour de plugins. Les installations de dépendances de compétences soutenues par Gateway
-utilisent plutôt la substitution de requête `dangerouslyForceUnsafeInstall` correspondante,
-tandis que `openclaw skills install` reste le flux distinct de téléchargement/installation
-de compétences ClawHub.
+`--dangerously-force-unsafe-install` est une option de contournement de dernière instance pour les faux positifs du scanneur de code dangereux intégré. Elle permet aux installations et mises à jour de plugins de se poursuivre malgré les résultats `critical` intégrés, mais elle ne contourne toujours pas les blocages de stratégie de plugin `before_install` ou le blocage en cas d'échec du scan.
 
-Les bundles compatibles participent au même flux de liste/inspection/activation/désactivation
-de plugins. La prise en charge de l'exécution actuelle inclut les compétences de bundle, les compétences de commande Claude,
-les `settings.json` par défaut Claude, les `.lsp.json` Claude et les `lspServers` par défaut déclarés dans le manifeste,
-les compétences de commande Cursor, et les répertoires de hooks Codex compatibles.
+Ce drapeau CLI s'applique uniquement aux flux d'installation et de mise à jour de plugins. Les installations de dépendances de compétences prises en charge par Gateway utilisent plutôt la substitution de requête `dangerouslyForceUnsafeInstall` correspondante, tandis que `openclaw skills install` reste le flux de téléchargement et d'installation de compétences distinct sur ClawHub.
 
-`openclaw plugins inspect <id>` signale également les capacités de bundle détectées ainsi que
-les entrées de serveur MCP et LSP prises en charge ou non pour les plugins soutenus par un bundle.
+Les bundles compatibles participent au même flux de liste/inspection/activation/désactivation de plugins. La prise en charge de l'exécution actuelle inclut les compétences de bundle, les compétences de commande Claude, les valeurs par défaut `settings.json` Claude, les `.lsp.json` Claude et les valeurs par défaut `lspServers` déclarées dans le manifeste, les compétences de commande Cursor et les répertoires de hooks Codex compatibles.
 
-Les sources de la marketplace peuvent être un nom de marketplace connu de Claude issu de `~/.claude/plugins/known_marketplaces.json`, un chemin racine de marketplace locale ou `marketplace.json`, une abréviation GitHub telle que `owner/repo`, une URL de dépôt GitHub, ou une URL git. Pour les marketplaces distantes, les entrées de plugins doivent rester dans le dépôt de la marketplace cloné et utiliser uniquement des sources de chemin relatif.
+`openclaw plugins inspect <id>` signale également les capacités de bundle détectées ainsi que les entrées de serveur MCP et LSP prises en charge ou non prises en charge pour les plugins basés sur des bundles.
 
-Consultez la [référence de la CLI `openclaw plugins`](/fr/cli/plugins) pour plus de détails.
+Les sources de la place de marché peuvent être un nom de place de marché connue de Claude provenant de `~/.claude/plugins/known_marketplaces.json`, un chemin racine de place de marché local ou un chemin `marketplace.json`, un raccourci GitHub tel que `owner/repo`, une URL de dépôt GitHub ou une URL git. Pour les places de marché distantes, les entrées de plugin doivent rester à l'intérieur du dépôt de la place de marché cloné et utiliser uniquement des sources de chemin relatif.
+
+Consultez la [référence CLI `openclaw plugins`](/fr/cli/plugins) pour plus de détails.
 
 ## Aperçu de l'API des plugins
 
-Les plugins natifs exportent un objet d'entrée qui expose `register(api)`. Les plugins plus anciens peuvent encore utiliser `activate(api)` comme un alias hérité, mais les nouveaux plugins devraient utiliser `register`.
+Les plugins natifs exportent un objet d'entrée qui expose `register(api)`. Les plugins plus anciens peuvent encore utiliser `activate(api)` comme alias hérité, mais les nouveaux plugins devraient utiliser `register`.
 
 ```typescript
 export default definePluginEntry({
@@ -283,17 +281,17 @@ Méthodes d'enregistrement courantes :
 
 | Méthode                                 | Ce qu'il enregistre                        |
 | --------------------------------------- | ------------------------------------------ |
-| `registerProvider`                      | Fournisseur de modèle (LLM)                |
+| `registerProvider`                      | Modèle de fournisseur (LLM)                |
 | `registerChannel`                       | Canal de chat                              |
 | `registerTool`                          | Outil d'agent                              |
 | `registerHook` / `on(...)`              | Crochets de cycle de vie                   |
 | `registerSpeechProvider`                | Synthèse vocale / STT                      |
 | `registerRealtimeTranscriptionProvider` | STT en continu                             |
-| `registerRealtimeVoiceProvider`         | Voix temps réel duplex                     |
+| `registerRealtimeVoiceProvider`         | Voix en temps réel duplex                  |
 | `registerMediaUnderstandingProvider`    | Analyse d'image/audio                      |
-| `registerImageGenerationProvider`       | Génération d'image                         |
+| `registerImageGenerationProvider`       | Génération d'images                        |
 | `registerMusicGenerationProvider`       | Génération de musique                      |
-| `registerVideoGenerationProvider`       | Génération de vidéo                        |
+| `registerVideoGenerationProvider`       | Génération vidéo                           |
 | `registerWebFetchProvider`              | Fournisseur de récupération/extraction Web |
 | `registerWebSearchProvider`             | Recherche Web                              |
 | `registerHttpRoute`                     | Point de terminaison HTTP                  |
@@ -301,22 +299,22 @@ Méthodes d'enregistrement courantes :
 | `registerContextEngine`                 | Moteur de contexte                         |
 | `registerService`                       | Service d'arrière-plan                     |
 
-Comportement du garde crochet pour les crochets de cycle de vie typés :
+Comportement de garde de crochet pour les crochets de cycle de vie typés :
 
 - `before_tool_call` : `{ block: true }` est terminal ; les gestionnaires de priorité inférieure sont ignorés.
-- `before_tool_call` : `{ block: false }` est une opération vide et ne supprime pas un bloc précédent.
-- `before_install` : `{ block: true }` est terminal ; les gestionnaires de moindre priorité sont ignorés.
-- `before_install` : `{ block: false }` est une opération vide et ne supprime pas un bloc précédent.
-- `message_sending` : `{ cancel: true }` est terminal ; les gestionnaires de moindre priorité sont ignorés.
-- `message_sending` : `{ cancel: false }` est une opération vide et ne supprime pas une annulation précédente.
+- `before_tool_call` : `{ block: false }` est une opération vide et ne efface pas un bloc précédent.
+- `before_install` : `{ block: true }` est terminal ; les gestionnaires de priorité inférieure sont ignorés.
+- `before_install` : `{ block: false }` est une opération vide et ne efface pas un bloc précédent.
+- `message_sending` : `{ cancel: true }` est terminal ; les gestionnaires de priorité inférieure sont ignorés.
+- `message_sending` : `{ cancel: false }` est une opération vide et ne efface pas une annulation précédente.
 
-Pour le comportement complet des hooks typés, consultez [Aperçu du SDK](/fr/plugins/sdk-overview#hook-decision-semantics).
+Pour le comportement complet des crochets typés, voir [Aperçu du SDK](/fr/plugins/sdk-overview#hook-decision-semantics).
 
 ## Connexes
 
-- [Créer des plugins](/fr/plugins/building-plugins) — créer votre propre plugin
-- [Plugins en bundle](/fr/plugins/bundles) — compatibilité des bundles Codex/Claude/Cursor
-- [Manifeste de plugin](/fr/plugins/manifest) — schéma du manifeste
+- [Création de plugins](/fr/plugins/building-plugins) — créer votre propre plugin
+- [Lots de plugins](/fr/plugins/bundles) — compatibilité des lots Codex/Claude/Cursor
+- [Manifeste de plugin](/fr/plugins/manifest) — schéma de manifeste
 - [Enregistrement des outils](/fr/plugins/building-plugins#registering-agent-tools) — ajouter des outils d'agent dans un plugin
-- [Fonctionnement interne des plugins](/fr/plugins/architecture) — modèle de capacité et pipeline de chargement
-- [Plugins communautaires](/fr/plugins/community) — listes tierces
+- [Plugin Internals](/fr/plugins/architecture) — modèle de capacité et pipeline de chargement
+- [Community Plugins](/fr/plugins/community) — listes de plugins tiers

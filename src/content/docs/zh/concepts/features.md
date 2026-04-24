@@ -10,23 +10,23 @@ title: "功能"
 ## 亮点
 
 <Columns>
-  <Card title="Channels" icon="message-square">
-    Discord、iMessage、Signal、Slack、Telegram、WhatsApp、WebChat 等，全部通过单个 Gateway(网关) 连接。
+  <Card title="频道" icon="message-square" href="/zh/channels">
+    通过单个 Discord 支持 iMessage、Signal、Slack、Telegram、WhatsApp、WebChat、Gateway(网关) 以及更多平台。
   </Card>
-  <Card title="Plugins" icon="plug">
-    捆绑插件增加了 Matrix、Nextcloud Talk、Nostr、Twitch、Zalo 等支持，在常规当前版本中无需单独安装。
+  <Card title="插件" icon="plug" href="/zh/tools/plugin">
+    内置插件添加了 Matrix、Nextcloud Talk、Nostr、Twitch、Zalo 以及更多支持，在正常当前版本中无需单独安装。
   </Card>
-  <Card title="Routing" icon="route">
-    支持会话隔离的多代理路由。
+  <Card title="路由" icon="route" href="/zh/concepts/multi-agent">
+    具有隔离会话的多智能体路由。
   </Card>
-  <Card title="Media" icon="image">
-    图片、音频、视频、文档以及图片/视频生成。
+  <Card title="Media" icon="image" href="/zh/nodes/images">
+    图片、音频、视频、文档以及图像/视频生成。
   </Card>
-  <Card title="Apps and UI" icon="monitor">
+  <Card title="Apps and UI" icon="monitor" href="/zh/web/control-ui">
     Web 控制界面和 macOS 伴侣应用。
   </Card>
-  <Card title="Mobile nodes" icon="smartphone">
-    支持配对、语音/聊天和丰富的设备指令的 iOS 和 Android 节点。
+  <Card title="Mobile nodes" icon="smartphone" href="/zh/nodes">
+    iOS 和 Android 节点，支持配对、语音/聊天以及丰富的设备命令。
   </Card>
 </Columns>
 
@@ -45,7 +45,7 @@ title: "功能"
 
 - 嵌入式智能体运行时，支持工具流式传输
 - 多智能体路由，每个工作区或发送方拥有隔离的会话
-- 会话：直接聊天会合并到共享的 `main` 中；群组则是隔离的
+- 会话：直接聊天会合并到共享的 `main`；群组则是隔离的
 - 支持长回复的流式传输和分块
 
 **身份验证和提供商：**

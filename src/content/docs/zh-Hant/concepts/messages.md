@@ -27,7 +27,7 @@ Inbound message
 - `agents.defaults.*` 用於區塊串流與分塊的預設值。
 - 頻道覆寫（`channels.whatsapp.*`、`channels.telegram.*` 等）用於上限與串流切換。
 
-請參閱 [配置](/zh-Hant/gateway/configuration) 以取得完整架構。
+參閱[設定](/zh-Hant/gateway/configuration)以取得完整的架構。
 
 ## 傳入去重
 
@@ -57,7 +57,7 @@ Inbound message
 備註：
 
 - 去彈跳僅適用於 **純文字** 訊息；媒體/附件會立即排空。
-- 控制指令會略過去彈跳，以保持其獨立性。
+- 控制指令會略過去抖動（debouncing），因此它們保持獨立——**除非**某個通道明確選擇啟用相同發送者 DM 合併（例如 [BlueBubbles `coalesceSameSenderDms`](/zh-Hant/channels/bluebubbles#coalescing-split-send-dms-command--url-in-one-composition)），在此情況下，DM 指令會在去抖動視窗內等待，以便分割發送的負載能加入同一個代理回合。
 
 ## 工作階段與裝置
 
@@ -69,15 +69,16 @@ Inbound message
 
 多個裝置/頻道可對應至同一個工作階段，但歷史記錄不會完全同步回每個用戶端。建議：長時間對話請使用一個主要裝置，以避免語境分歧。Control UI 與 TUI 一律顯示由閘道備份的工作階段文字記錄，因此其為真實來源。
 
-詳細資訊：[會話管理](/zh-Hant/concepts/session)。
+詳細資訊：[Session 管理](/zh-Hant/concepts/session)。
 
 ## 傳入內容與歷史記錄語境
 
 OpenClaw 會將 **提示主體** 與 **指令主體** 分離：
 
-- `Body`：傳送至代理程式的提示文字。這可能包含頻道信封與可選的歷史記錄包裝器。
+- `Body`：發送給代理的提示文字。這可能包含通道信封和
+  可選的歷史記錄包裝器。
 - `CommandBody`：用於指令/命令解析的原始使用者文字。
-- `RawBody`：`CommandBody` 的舊版別名（為了相容性而保留）。
+- `RawBody`：`CommandBody` 的舊版別名（為相容性而保留）。
 
 當頻道提供歷史記錄時，它使用一個共享的包裝器：
 
@@ -88,14 +89,18 @@ OpenClaw 會將 **提示主體** 與 **指令主體** 分離：
 
 歷史緩衝區是**僅限待處理**的：它們包含未觸發執行的群組訊息（例如，需要提及才觸發的訊息），並**排除**已經在會話記錄中的訊息。
 
-指令剝離僅適用於**當前訊息**部分，因此歷史記錄保持完整。包裝歷史記錄的頻道應將 `CommandBody`（或 `RawBody`）設定為原始訊息文字，並將 `Body` 保留為組合提示。
-歷史緩衝區可透過 `messages.groupChat.historyLimit`（全域預設值）和各頻道的覆寫（例如 `channels.slack.historyLimit` 或 `channels.telegram.accounts.<id>.historyLimit`，設定 `0` 以停用）進行配置。
+指令移除僅適用於**目前訊息**部分，因此歷史記錄
+保持完整。包裝歷史記錄的通道應將 `CommandBody`（或
+`RawBody`）設定為原始訊息文字，並將 `Body` 保留為組合提示。
+歷史記錄緩衝區可透過 `messages.groupChat.historyLimit`（全域
+預設值）和各通道覆寫（如 `channels.slack.historyLimit` 或
+`channels.telegram.accounts.<id>.historyLimit`）（設定 `0` 以停用）進行設定。
 
 ## 佇列與後續處理
 
 如果執行已在進行中，傳入訊息可以加入佇列、導入至當前執行，或收集以供後續輪次處理。
 
-- 透過 `messages.queue`（以及 `messages.queue.byChannel`）進行配置。
+- 透過 `messages.queue`（以及 `messages.queue.byChannel`）進行設定。
 - 模式：`interrupt`、`steer`、`followup`、`collect`，以及積壓變體。
 
 詳細資訊：[佇列處理](/zh-Hant/concepts/queue)。
@@ -106,12 +111,12 @@ OpenClaw 會將 **提示主體** 與 **指令主體** 分離：
 
 關鍵設定：
 
-- `agents.defaults.blockStreamingDefault`（`on|off`，預設關閉）
-- `agents.defaults.blockStreamingBreak`（`text_end|message_end`）
-- `agents.defaults.blockStreamingChunk`（`minChars|maxChars|breakPreference`）
-- `agents.defaults.blockStreamingCoalesce`（基於閒置的批次處理）
-- `agents.defaults.humanDelay` (區塊回覆之間的類人暫停)
-- 通道覆寫：`*.blockStreaming` 和 `*.blockStreamingCoalesce` (非 Telegram 通道需要明確的 `*.blockStreaming: true`)
+- `agents.defaults.blockStreamingDefault` (`on|off`，預設關閉)
+- `agents.defaults.blockStreamingBreak` (`text_end|message_end`)
+- `agents.defaults.blockStreamingChunk` (`minChars|maxChars|breakPreference`)
+- `agents.defaults.blockStreamingCoalesce` (基於閒置的批次處理)
+- `agents.defaults.humanDelay` (區塊回覆之間類人的暫停)
+- 通道覆寫：`*.blockStreaming` 和 `*.blockStreamingCoalesce`（非 Telegram 通道需要明確的 `*.blockStreaming: true`）
 
 詳細資訊：[串流 + 分塊](/zh-Hant/concepts/streaming)。
 
@@ -127,16 +132,16 @@ OpenClaw 可以顯示或隱藏模型推理：
 
 ## 前綴、串回和回覆
 
-出站訊息格式化集中在 `messages` 中：
+外寄訊息格式化集中在 `messages` 中：
 
-- `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix` (出站前綴串聯)，加上 `channels.whatsapp.messagePrefix` (WhatsApp 入站前綴)
-- 透過 `replyToMode` 和各通道預設值進行回覆串回
+- `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix`（外寄前綴級聯），加上 `channels.whatsapp.messagePrefix`（WhatsApp 內送前綴）
+- 透過 `replyToMode` 和各通道預設值進行回覆串接
 
-詳細資訊：[配置](/zh-Hant/gateway/configuration-reference#messages) 和頻道文件。
+詳細資訊：[設定](/zh-Hant/gateway/configuration-reference#messages) 和通道文件。
 
 ## 靜默回覆
 
-精確的靜默 Token `NO_REPLY` / `no_reply` 意味著「不傳遞使用者可見的回覆」。
+確切的靜默標記 `NO_REPLY` / `no_reply` 意味著「不傳送使用者可見的回覆」。
 OpenClaw 會根據對話類型解析該行為：
 
 - 直接對話預設不允許靜默，並會將純靜默回覆重寫為簡短的可見備用回覆。
@@ -147,9 +152,11 @@ OpenClaw 會根據對話類型解析該行為：
 `agents.defaults.silentReplyRewrite` 之下；`surfaces.<id>.silentReply` 和
 `surfaces.<id>.silentReplyRewrite` 可以針對每個介面進行覆寫。
 
+當父階段有一或多個待處理的產生子代理執行時，純靜默回覆會在所有介面上被丟棄而不是被重寫，因此父階段會保持靜默，直到子代理完成事件傳送真正的回覆。
+
 ## 相關
 
-- [串流](/zh-Hant/concepts/streaming) — 即時訊息傳遞
-- [重試](/zh-Hant/concepts/retry) — 訊息傳遞重試行為
+- [串流](/zh-Hant/concepts/streaming) — 即時訊息傳送
+- [重試](/zh-Hant/concepts/retry) — 訊息傳送重試行為
 - [佇列](/zh-Hant/concepts/queue) — 訊息處理佇列
-- [頻道](/zh-Hant/channels) — 訊息平台整合
+- [通道](/zh-Hant/channels) — 訊息平台整合

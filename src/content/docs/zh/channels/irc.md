@@ -8,8 +8,8 @@ read_when:
 
 # IRC
 
-当您需要在经典频道（`#room`）和直接消息中使用 OpenClaw 时，请使用 IRC。
-IRC 作为扩展插件提供，但在 `channels.irc` 下的主配置文件中进行配置。
+当您希望在经典频道 (`#room`) 和直接消息中使用 OpenClaw 时，请使用 IRC。
+IRC 作为捆绑插件提供，但在 `channels.irc` 下的主配置中进行配置。
 
 ## 快速开始
 

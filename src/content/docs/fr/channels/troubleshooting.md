@@ -39,7 +39,7 @@ Ligne de base saine :
 | Messages de groupe ignorés                    | Vérifiez `requireMention` + les modèles de mention dans la configuration | Mentionnez le bot ou assouplissez la stratégie de mention pour ce groupe. |
 | Boucles de déconnexion/reconnexion aléatoires | `openclaw channels status --probe` + journaux                            | Reconnectez-vous et vérifiez que le répertoire des identifiants est sain. |
 
-Dépannage complet : [/channels/whatsapp#troubleshooting](/fr/channels/whatsapp#troubleshooting)
+Dépannage complet : [Dépannage WhatsApp](/fr/channels/whatsapp#troubleshooting)
 
 ## Telegram
 
@@ -54,7 +54,7 @@ Dépannage complet : [/channels/whatsapp#troubleshooting](/fr/channels/whatsapp#
 | `setMyCommands` rejeté au démarrage            | Inspectez les journaux pour `BOT_COMMANDS_TOO_MUCH`              | Réduisez les commandes de plug-in/compétence/personnalisées Telegram ou désactivez les menus natifs.                                                                                |
 | Mis à niveau et la liste blanche vous bloque   | `openclaw security audit` et listes blanches de configuration    | Exécutez `openclaw doctor --fix` ou remplacez `@username` par des ID d'expéditeurs numériques.                                                                                      |
 
-Dépannage complet : [/channels/telegram#troubleshooting](/fr/channels/telegram#troubleshooting)
+Dépannage complet : [Dépannage Telegram](/fr/channels/telegram#troubleshooting)
 
 ## Discord
 
@@ -66,7 +66,7 @@ Dépannage complet : [/channels/telegram#troubleshooting](/fr/channels/telegram#
 | Messages de groupe ignorés                 | Vérifiez les journaux pour les abandons dus au filtrage par mention | Mentionnez le bot ou définissez la guilde/le canal `requireMention: false`. |
 | Réponses DM manquantes                     | `openclaw pairing list discord`                                     | Approuvez l'appariement DM ou ajustez la stratégie DM.                      |
 
-Dépannage complet : [/channels/discord#troubleshooting](/fr/channels/discord#troubleshooting)
+Dépannage complet : [Dépannage Discord](/fr/channels/discord#troubleshooting)
 
 ## Slack
 
@@ -78,7 +78,7 @@ Dépannage complet : [/channels/discord#troubleshooting](/fr/channels/discord#tr
 | DMs bloqués                              | `openclaw pairing list slack`                              | Approuvez l'appariement ou assouplissez la stratégie DM.                                                                                                                                              |
 | Message de canal ignoré                  | Vérifiez `groupPolicy` et la liste d'autorisation du canal | Autorisez le canal ou passez la stratégie à `open`.                                                                                                                                                   |
 
-Dépannage complet : [/channels/slack#troubleshooting](/fr/channels/slack#troubleshooting)
+Dépannage complet : [Dépannage Slack](/fr/channels/slack#troubleshooting)
 
 ## iMessage et BlueBubbles
 
@@ -92,8 +92,8 @@ Dépannage complet : [/channels/slack#troubleshooting](/fr/channels/slack#troubl
 
 Dépannage complet :
 
-- [/channels/imessage#troubleshooting](/fr/channels/imessage#troubleshooting)
-- [/channels/bluebubbles#troubleshooting](/fr/channels/bluebubbles#troubleshooting)
+- [Dépannage iMessage](/fr/channels/imessage#troubleshooting)
+- [Dépannage BlueBubbles](/fr/channels/bluebubbles#troubleshooting)
 
 ## Signal
 
@@ -105,7 +105,7 @@ Dépannage complet :
 | DM bloqué                                 | `openclaw pairing list signal`                                         | Approuvez l'expéditeur ou ajustez la stratégie DM.                      |
 | Les réponses de groupe ne déclenchent pas | Vérifiez la liste d'autorisation des groupes et les modèles de mention | Ajoutez l'expéditeur/le groupe ou assouplissez le filtrage.             |
 
-Dépannage complet : [/channels/signal#troubleshooting](/fr/channels/signal#troubleshooting)
+Dépannage complet : [Dépannage Signal](/fr/channels/signal#troubleshooting)
 
 ## QQ Bot
 
@@ -118,7 +118,7 @@ Dépannage complet : [/channels/signal#troubleshooting](/fr/channels/signal#trou
 | Voix non transcrite            | Vérifiez la configuration du fournisseur STT             | Configurez `channels.qqbot.stt` ou `tools.media.audio`.                   |
 | Messages proactifs non reçus   | Vérifiez les exigences d'interaction de la plateforme QQ | QQ peut bloquer les messages initiés par le bot sans interaction récente. |
 
-Dépannage complet : [/channels/qqbot#troubleshooting](/fr/channels/qqbot#troubleshooting)
+Dépannage complet : [Dépannage du bot QQ](/fr/channels/qqbot#troubleshooting)
 
 ## Matrix
 

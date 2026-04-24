@@ -18,7 +18,7 @@ title: "輸入指示器"
 - **直接聊天**：一旦模型迴圈開始，輸入指示器會立即啟動。
 - **包含提及的群組聊天**：輸入指示器會立即啟動。
 - **不包含提及的群組聊天**：僅當訊息文字開始串流時，輸入指示器才會啟動。
-- **Heartbeat 執行**：輸入指示器已停用。
+- **Heartbeat runs**：如果解析後的 heartbeat 目標是具備輸入功能的聊天，且未停用輸入，則當 heartbeat run 開始時開始輸入。
 
 ## 模式
 
@@ -61,5 +61,6 @@ title: "輸入指示器"
 
 - `message` 模式不會在整個 payload 完全為靜默 token 時，顯示純靜默回覆的輸入中狀態（例如 `NO_REPLY` / `no_reply`，匹配時不區分大小寫）。
 - 僅當 run 串流推論 (`reasoningLevel: "stream"`) 時，`thinking` 才會觸發。如果模型未發出推論增量，輸入中狀態將不會開始。
-- 無論模式為何，Heartbeats 永遠不會顯示輸入指示器。
-- `typingIntervalSeconds` 控制**更新頻率**，而非開始時間。預設為 6 秒。
+- Heartbeat 輸入是已解析傳送目標的活躍訊號。它會在 heartbeat run 開始時啟動，而不是依據 `message` 或 `thinking` 的串流時機。請設定 `typingMode: "never"` 來停用它。
+- 當 `target: "none"` 時、無法解析目標時、針對 heartbeat 停用聊天傳送時，或該頻道不支援輸入時，Heartbeats 不會顯示輸入狀態。
+- `typingIntervalSeconds` 控制的是 **重新整理頻率**，而非開始時間。預設值為 6 秒。

@@ -53,22 +53,22 @@ entrega programática.
 
 ## Opciones (Flags)
 
-| Opción                        | Descripción                                                              |
-| ----------------------------- | ------------------------------------------------------------------------ |
-| `--message \<text\>`          | Mensaje a enviar (requerido)                                             |
-| `--to \<dest\>`               | Derivar clave de sesión de un objetivo (teléfono, id de chat)            |
-| `--agent \<id\>`              | Apuntar a un agente configurado (usa su sesión `main`)                   |
-| `--session-id \<id\>`         | Reutilizar una sesión existente por id                                   |
-| `--local`                     | Forzar el tiempo de ejecución integrado local (omitir Gateway)           |
-| `--deliver`                   | Enviar la respuesta a un canal de chat                                   |
-| `--channel \<name\>`          | Canal de entrega (whatsapp, telegram, discord, slack, etc.)              |
-| `--reply-to \<target\>`       | Anulación del objetivo de entrega                                        |
-| `--reply-channel \<name\>`    | Anulación del canal de entrega                                           |
-| `--reply-account \<id\>`      | Anulación del id de cuenta de entrega                                    |
-| `--thinking \<level\>`        | Establecer nivel de pensamiento (off, minimal, low, medium, high, xhigh) |
-| `--verbose \<on\|full\|off\>` | Establecer nivel detallado                                               |
-| `--timeout \<seconds\>`       | Anular el tiempo de espera del agente                                    |
-| `--json`                      | Imprimir JSON estructurado                                               |
+| Opción                        | Descripción                                                               |
+| ----------------------------- | ------------------------------------------------------------------------- |
+| `--message \<text\>`          | Mensaje a enviar (requerido)                                              |
+| `--to \<dest\>`               | Derivar clave de sesión de un objetivo (teléfono, id de chat)             |
+| `--agent \<id\>`              | Apuntar a un agente configurado (usa su sesión `main`)                    |
+| `--session-id \<id\>`         | Reutilizar una sesión existente por id                                    |
+| `--local`                     | Forzar el tiempo de ejecución integrado local (omitir Gateway)            |
+| `--deliver`                   | Enviar la respuesta a un canal de chat                                    |
+| `--channel \<name\>`          | Canal de entrega (whatsapp, telegram, discord, slack, etc.)               |
+| `--reply-to \<target\>`       | Anulación del objetivo de entrega                                         |
+| `--reply-channel \<name\>`    | Anulación del canal de entrega                                            |
+| `--reply-account \<id\>`      | Anulación del id de cuenta de entrega                                     |
+| `--thinking \<level\>`        | Establecer el nivel de razonamiento para el perfil de modelo seleccionado |
+| `--verbose \<on\|full\|off\>` | Establecer nivel detallado                                                |
+| `--timeout \<seconds\>`       | Anular el tiempo de espera del agente                                     |
+| `--json`                      | Imprimir JSON estructurado                                                |
 
 ## Comportamiento
 

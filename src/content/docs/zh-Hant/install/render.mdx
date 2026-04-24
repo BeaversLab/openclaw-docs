@@ -6,28 +6,30 @@ read_when:
 title: "Render"
 ---
 
-使用基礎設施即程式碼在 Render 上部署 OpenClaw。隨附的 `render.yaml` Blueprint 以宣告方式定義了您的整個技術堆疊、服務、磁碟和環境變數，因此您可以單擊進行部署，並與程式碼一起對基礎設施進行版本控制。
+# Render
+
+使用基礎架構即程式碼在 Render 上部署 OpenClaw。隨附的 `render.yaml` 藍圖以宣告方式定義您的整個技術堆疊、服務、磁碟、環境變數，讓您只需按一下即可部署，並將基礎架構與程式碼一併進行版本控制。
 
 ## 先決條件
 
-- 一個 [Render 帳戶](https://render.com) （提供免費層級）
-- 來自您首選的 [模型提供者](/zh-Hant/providers) 的 API 金鑰
+- 一個 [Render 帳戶](https://render.com)（提供免費層級）
+- 來自您首選 [模型供應商](/zh-Hant/providers) 的 API 金鑰
 
-## 使用 Render Blueprint 部署
+## 使用 Render 藍圖進行部署
 
-[部署到 Render](https://render.com/deploy?repo=https://github.com/openclaw/openclaw)
+[部署至 Render](https://render.com/deploy?repo=https://github.com/openclaw/openclaw)
 
 點擊此連結將會：
 
-1. 根據此儲存庫根目錄中的 `render.yaml` Blueprint 建立一個新的 Render 服務。
+1. 根據此儲存庫根目錄中的 `render.yaml` 藍圖建立新的 Render 服務。
 2. 建置 Docker 映像檔並進行部署
 
 部署完成後，您的服務 URL 將遵循 `https://<service-name>.onrender.com` 模式。
 
-## 了解 Blueprint
+## 了解藍圖
 
-Render Blueprints 是定義基礎設施的 YAML 檔案。此儲存庫中的 `render.yaml`
-配置了執行 OpenClaw 所需的一切：
+Render 藍圖是用來定義基礎架構的 YAML 檔案。此儲存庫中的 `render.yaml`
+設定檔會設定執行 OpenClaw 所需的一切：
 
 ```yaml
 services:
@@ -51,48 +53,50 @@ services:
       sizeGB: 1
 ```
 
-使用的關鍵 Blueprint 功能：
+使用的主要藍圖功能：
 
-| 功能                  | 用途                                         |
-| --------------------- | -------------------------------------------- |
-| `runtime: docker`     | 從儲存庫的 Dockerfile 建置                   |
-| `healthCheckPath`     | Render 監控 `/health` 並重新啟動不健康的實例 |
-| `generateValue: true` | 自動生成密碼學安全的值                       |
-| `disk`                | 在重新部署後仍然存在的持久性儲存空間         |
+| 功能                  | 用途                                               |
+| --------------------- | -------------------------------------------------- |
+| `runtime: docker`     | 從儲存庫的 Dockerfile 建置                         |
+| `healthCheckPath`     | Render 監控 `/health` 並重新啟動狀況不佳的執行個體 |
+| `generateValue: true` | 自動產生密碼學安全的值                             |
+| `disk`                | 在重新部署後仍會保留的持續性儲存空間               |
 
 ## 選擇方案
 
-| 方案       | 休眠           | 磁碟   | 最適合             |
-| ---------- | -------------- | ------ | ------------------ |
-| 免費       | 閒置 15 分鐘後 | 不可用 | 測試、示範         |
-| 入門       | 永不           | 1GB+   | 個人使用、小團隊   |
-| 標準版以上 | 永不           | 1GB+   | 正式環境、多個頻道 |
+| 方案       | 休眠           | 磁碟     | 適用於             |
+| ---------- | -------------- | -------- | ------------------ |
+| 免費       | 閒置 15 分鐘後 | 無法使用 | 測試、展示         |
+| 入門       | 從不           | 1GB+     | 個人使用、小型團隊 |
+| 標準及以上 | 從不           | 1GB+     | 生產環境、多頻道   |
 
-Blueprint 預設為 `starter`。若要使用免費層，請在您 fork 的 `render.yaml` 中變更 `plan: free`（但請注意：沒有永續磁碟代表 OpenClaw 的狀態會在每次部署時重設）。
+藍圖預設為 `starter`。若要使用免費層級，請在您 fork 的 `render.yaml` 中變更 `plan: free`
+（但請注意：沒有持續性磁碟意味著每次部署時 OpenClaw 的狀態
+都會重置）。
 
 ## 部署完成後
 
-### 存取控制介面
+### 存取控制 UI
 
-網頁儀表板可在 `https://<your-service>.onrender.com/` 存取。
+Web 儀表板可在 `https://<your-service>.onrender.com/` 取得。
 
-使用設定的共用金鑰進行連線。此部署範本會自動產生
+使用設定的共享金鑰進行連線。此部署範本會自動產生
 `OPENCLAW_GATEWAY_TOKEN`（在 **Dashboard → 您的服務 →
-Environment** 中可以找到）；如果您將其替換為密碼驗證，請改用該密碼。
+Environment** 中即可找到）；如果您將其替換為密碼驗證，請改用該密碼。
 
-## Render Dashboard 功能
+## Render 儀表板功能
 
 ### 日誌
 
-在 **Dashboard → your service → Logs** 中檢視即時日誌。篩選條件：
+在 **Dashboard → your service → Logs** 中查看即時日誌。篩選條件：
 
 - 建置日誌（Docker 映像檔建立）
 - 部署日誌（服務啟動）
-- 執行時期日誌（應用程式輸出）
+- 執行時日誌（應用程式輸出）
 
 ### Shell 存取
 
-若要進行除錯，請透過 **Dashboard → your service → Shell** 開啟 shell 會話。永久性磁碟已掛載於 `/data`。
+為了進行除錯，請透過 **Dashboard → your service → Shell** 開啟 shell 工作階段。持久磁碟已掛載於 `/data`。
 
 ### 環境變數
 
@@ -100,50 +104,52 @@ Environment** 中可以找到）；如果您將其替換為密碼驗證，請改
 
 ### 自動部署
 
-如果您使用原始的 OpenClaw 存儲庫，Render 將不會自動部署您的 OpenClaw。若要更新，請從控制台執行手動 Blueprint 同步。
+如果您使用原始的 OpenClaw 儲存庫，Render 將不會自動部署您的 OpenClaw。若要更新，請從儀表板執行手動 Blueprint 同步。
 
 ## 自訂網域
 
 1. 前往 **Dashboard → your service → Settings → Custom Domains**
 2. 新增您的網域
-3. 按照指示設定 DNS（CNAME 到 `*.onrender.com`）
+3. 依照指示設定 DNS（CNAME 至 `*.onrender.com`）
 4. Render 會自動佈建 TLS 憑證
 
 ## 擴展
 
 Render 支援水平和垂直擴展：
 
-- **垂直**：變更方案以獲得更多 CPU/RAM
+- **垂直**：變更方案以取得更多 CPU/RAM
 - **水平**：增加執行個體數量（Standard 方案及以上）
 
-對於 OpenClaw，垂直擴展通常已足夠。水平擴展需要 sticky sessions 或外部狀態管理。
+對於 OpenClaw，垂直擴展通常已足夠。水平擴展需要sticky sessions或外部狀態管理。
 
-## 備份與移轉
+## 備份與遷移
 
-隨時使用 Render Dashboard 中的 shell 存取匯出您的狀態、設定、驗證設定檔和工作區：
+您隨時可以使用 Render Dashboard 中的 shell
+存取功能，匯出您的狀態、設定、設定檔和工作區：
 
 ```bash
 openclaw backup create
 ```
 
-這會建立一個包含 OpenClaw 狀態以及任何設定好工作區的可攜式備份封存。詳情請參閱 [Backup](/zh-Hant/cli/backup)。
+這會建立一個包含 OpenClaw 狀態以及任何已設定
+工作區的可攜式備份封存。詳情請參閱 [Backup](/zh-Hant/cli/backup)。
 
 ## 疑難排解
 
 ### 服務無法啟動
 
-檢查 Render Dashboard 中的部署日誌。常見問題：
+請檢查 Render Dashboard 中的部署日誌。常見問題：
 
-- 缺少 `OPENCLAW_GATEWAY_TOKEN` — 確認已在 **Dashboard → Environment** 中設定
-- 連接埠不符 — 確認已設定 `OPENCLAW_GATEWAY_PORT=8080`，以便閘道綁定至 Render 預期的連接埠
+- 缺少 `OPENCLAW_GATEWAY_TOKEN` — 請驗證其是否已在 **Dashboard → Environment** 中設定
+- 連接埠不符 — 請確保已設定 `OPENCLAW_GATEWAY_PORT=8080`，以便閘道綁定至 Render 預期的連接埠
 
-### 冷啟動緩慢（免費層級）
+### 冷啟動緩慢（免費方案）
 
-免費層級服務會在閒置 15 分鐘後休眠。休眠後的第一個請求在容器啟動時需要幾秒鐘。升級至 Starter 方案可保持隨時待命。
+免費方案的服務在閒置 15 分鐘後會進入休眠。休眠後的第一個請求需要幾秒鐘的時間讓容器啟動。升級至 Starter 方案可保持服務永遠在線。
 
 ### 重新部署後資料遺失
 
-這發生在免費方案上（無永續磁碟）。升級至付費方案，或
+這會發生在免費方案上（無持久磁碟）。請升級至付費方案，或
 透過 Render shell 中的 `openclaw backup create` 定期匯出完整備份。
 
 ### 健康檢查失敗
@@ -151,10 +157,10 @@ openclaw backup create
 Render 預期在 30 秒內從 `/health` 收到 200 回應。如果建置成功但部署失敗，可能是服務啟動時間過長。請檢查：
 
 - 檢查建置日誌中的錯誤
-- 容器是否可透過 `docker build && docker run` 在本機執行
+- 容器是否能在本機使用 `docker build && docker run` 執行
 
 ## 後續步驟
 
-- 設定訊息通道：[通道](/zh-Hant/channels)
-- 設定閘道：[閘道設定](/zh-Hant/gateway/configuration)
-- 保持 OpenClaw 為最新狀態：[更新](/zh-Hant/install/updating)
+- 設定訊息頻道：[頻道](/zh-Hant/channels)
+- 設定 Gateway：[Gateway 設定](/zh-Hant/gateway/configuration)
+- 保持 OpenClaw 更新：[更新](/zh-Hant/install/updating)

@@ -108,7 +108,7 @@ openclaw onboard --non-interactive \
   <Card title="Model selection" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="Configuration" href="/zh/configuration" icon="gear">
+  <Card title="Configuration" href="/zh/gateway/configuration" icon="gear">
     代理、模型和提供商的完整配置参考。
   </Card>
   <Card title="Troubleshooting" href="/zh/help/troubleshooting" icon="wrench">

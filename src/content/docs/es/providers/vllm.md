@@ -12,6 +12,10 @@ vLLM puede servir modelos de código abierto (y algunos personalizados) a travé
 
 OpenClaw también puede **detectar automáticamente** los modelos disponibles en vLLM cuando optas por esto con `VLLM_API_KEY` (cualquier valor funciona si tu servidor no aplica autenticación) y no defines una entrada `models.providers.vllm` explícita.
 
+OpenClaw trata `vllm` como un proveedor compatible con OpenAI local que admite
+contabilidad de uso transmitida (streamed), por lo que los recuentos de tokens de estado/contexto pueden actualizarse desde
+respuestas `stream_options.include_usage`.
+
 | Propiedad               | Valor                                        |
 | ----------------------- | -------------------------------------------- |
 | ID del proveedor        | `vllm`                                       |
@@ -19,11 +23,11 @@ OpenClaw también puede **detectar automáticamente** los modelos disponibles en
 | Autenticación           | variable de entorno `VLLM_API_KEY`           |
 | URL base predeterminada | `http://127.0.0.1:8000/v1`                   |
 
-## Para empezar
+## Cómo empezar
 
 <Steps>
-  <Step title="Iniciar vLLM con un servidor compatible con OpenAI">
-    Tu URL base debe exponer endpoints `/v1` (por ejemplo, `/v1/models`, `/v1/chat/completions`). vLLM comúnmente se ejecuta en:
+  <Step title="Inicie vLLM con un servidor compatible con OpenAI">
+    Su URL base debe exponer puntos finales `/v1` (p. ej., `/v1/models`, `/v1/chat/completions`). Por lo general, vLLM se ejecuta en:
 
     ```
     http://127.0.0.1:8000/v1
@@ -52,7 +56,7 @@ OpenClaw también puede **detectar automáticamente** los modelos disponibles en
     ```
 
   </Step>
-  <Step title="Verificar que el modelo esté disponible">
+  <Step title="Verifique que el modelo esté disponible">
     ```bash
     openclaw models list --provider vllm
     ```
@@ -61,7 +65,7 @@ OpenClaw también puede **detectar automáticamente** los modelos disponibles en
 
 ## Descubrimiento de modelos (proveedor implícito)
 
-Cuando `VLLM_API_KEY` está configurado (o existe un perfil de autenticación) y **no** define `models.providers.vllm`, OpenClaw consulta:
+Cuando `VLLM_API_KEY` está configurado (o existe un perfil de autenticación) y usted **no** define `models.providers.vllm`, OpenClaw consulta:
 
 ```
 GET http://127.0.0.1:8000/v1/models
@@ -69,7 +73,7 @@ GET http://127.0.0.1:8000/v1/models
 
 y convierte los IDs devueltos en entradas de modelo.
 
-<Note>Si establece `models.providers.vllm` explícitamente, se omite el descubrimiento automático y debe definir los modelos manualmente.</Note>
+<Note>Si configura `models.providers.vllm` explícitamente, se omitirá el autodescubrimiento y deberá definir los modelos manualmente.</Note>
 
 ## Configuración explícita (modelos manuales)
 
@@ -77,7 +81,7 @@ Use la configuración explícita cuando:
 
 - vLLM se ejecuta en un host o puerto diferente
 - Desea fijar los valores de `contextWindow` o `maxTokens`
-- Su servidor requiere una clave API real (o desea controlar los encabezados)
+- Su servidor requiere una clave de API real (o desea controlar los encabezados)
 
 ```json5
 {
@@ -107,17 +111,17 @@ Use la configuración explícita cuando:
 ## Notas avanzadas
 
 <AccordionGroup>
-  <Accordion title="Comportamiento tipo proxy">
-    vLLM se trata como un backend `/v1` compatible con OpenAI de tipo proxy, no como un
-    endpoint nativo de OpenAI. Esto significa:
+  <Accordion title="Comportamiento de estilo proxy">
+    vLLM se trata como un backend `/v1` compatible con OpenAI de estilo proxy, no como un
+    punto de conexión nativo de OpenAI. Esto significa:
 
     | Comportamiento | ¿Aplicado? |
     |----------|----------|
     | Formación de solicitudes nativa de OpenAI | No |
     | `service_tier` | No enviado |
-    | Respuestas `store` | No enviado |
-    | Sugerencias de caché de prompt | No enviadas |
-    | Formación de carga útil de compatibilidad de razonamiento de OpenAI | No aplicada |
+    | Respuestas `store` | No enviadas |
+    | Sugerencias de caché de avisos | No enviadas |
+    | Formación de carga útil compatible con razonamiento de OpenAI | No aplicada |
     | Encabezados de atribución ocultos de OpenClaw | No inyectados en URLs base personalizadas |
 
   </Accordion>
@@ -156,7 +160,7 @@ Use la configuración explícita cuando:
 
 <AccordionGroup>
   <Accordion title="Servidor no alcanzable">
-    Verifique que el servidor vLLM se esté ejecutando y sea accesible:
+    Compruebe que el servidor vLLM se esté ejecutando y sea accesible:
 
     ```bash
     curl http://127.0.0.1:8000/v1/models
@@ -167,16 +171,16 @@ Use la configuración explícita cuando:
   </Accordion>
 
   <Accordion title="Errores de autenticación en las solicitudes">
-    Si las solicitudes fallan con errores de autenticación, establezca una `VLLM_API_KEY` real que coincida con la configuración de su servidor, o configure el proveedor explícitamente bajo `models.providers.vllm`.
+    Si las solicitudes fallan con errores de autenticación, establezca un `VLLM_API_KEY` real que coincida con la configuración de su servidor, o configure el proveedor explícitamente bajo `models.providers.vllm`.
 
     <Tip>
-    Si su servidor vLLM no exige autenticación, cualquier valor no vacío para `VLLM_API_KEY` funciona como una señal de aceptación para OpenClaw.
+    Si su servidor vLLM no impone autenticación, cualquier valor no vacío para `VLLM_API_KEY` funciona como una señal de opt-in para OpenClaw.
     </Tip>
 
   </Accordion>
 
   <Accordion title="No se descubrieron modelos">
-    El autodescubrimiento requiere que `VLLM_API_KEY` esté establecido **y** que no haya una entrada de configuración explícita de `models.providers.vllm`. Si ha definido el proveedor manualmente, OpenClaw omite el descubrimiento y usa solo los modelos que declaró.
+    El autodescubrimiento requiere que `VLLM_API_KEY` esté establecido **y** que no haya ninguna entrada de configuración `models.providers.vllm` explícita. Si ha definido el proveedor manualmente, OpenClaw omite el descubrimiento y utiliza solo los modelos que haya declarado.
   </Accordion>
 </AccordionGroup>
 
@@ -185,7 +189,7 @@ Use la configuración explícita cuando:
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelos" href="/es/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
   <Card title="OpenAI" href="/es/providers/openai" icon="bolt">

@@ -53,22 +53,22 @@ la livraison programmée.
 
 ## Drapeaux
 
-| Drapeau                       | Description                                                             |
-| ----------------------------- | ----------------------------------------------------------------------- |
-| `--message \<text\>`          | Message à envoyer (requis)                                              |
-| `--to \<dest\>`               | Dériver la clé de session à partir d'une cible (téléphone, id de chat)  |
-| `--agent \<id\>`              | Cibler un agent configuré (utilise sa session `main`)                   |
-| `--session-id \<id\>`         | Réutiliser une session existante par id                                 |
-| `--local`                     | Forcer l'exécution locale intégrée (ignorer le Gateway)                 |
-| `--deliver`                   | Envoyer la réponse à un channel de chat                                 |
-| `--channel \<name\>`          | Channel de livraison (whatsapp, telegram, discord, slack, etc.)         |
-| `--reply-to \<target\>`       | Remplacement de la cible de livraison                                   |
-| `--reply-channel \<name\>`    | Remplacement du channel de livraison                                    |
-| `--reply-account \<id\>`      | Remplacement de l'id de compte de livraison                             |
-| `--thinking \<level\>`        | Définir le niveau de réflexion (off, minimal, low, medium, high, xhigh) |
-| `--verbose \<on\|full\|off\>` | Définir le niveau de verbosité                                          |
-| `--timeout \<seconds\>`       | Remplacer le délai d'attente de l'agent                                 |
-| `--json`                      | Sortie JSON structurée                                                  |
+| Drapeau                       | Description                                                            |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| `--message \<text\>`          | Message à envoyer (requis)                                             |
+| `--to \<dest\>`               | Dériver la clé de session à partir d'une cible (téléphone, id de chat) |
+| `--agent \<id\>`              | Cibler un agent configuré (utilise sa session `main`)                  |
+| `--session-id \<id\>`         | Réutiliser une session existante par id                                |
+| `--local`                     | Forcer l'exécution locale intégrée (ignorer le Gateway)                |
+| `--deliver`                   | Envoyer la réponse à un channel de chat                                |
+| `--channel \<name\>`          | Channel de livraison (whatsapp, telegram, discord, slack, etc.)        |
+| `--reply-to \<target\>`       | Remplacement de la cible de livraison                                  |
+| `--reply-channel \<name\>`    | Remplacement du channel de livraison                                   |
+| `--reply-account \<id\>`      | Remplacement de l'id de compte de livraison                            |
+| `--thinking \<level\>`        | Définir le niveau de réflexion pour le profil de modèle sélectionné    |
+| `--verbose \<on\|full\|off\>` | Définir le niveau de verbosité                                         |
+| `--timeout \<seconds\>`       | Remplacer le délai d'attente de l'agent                                |
+| `--json`                      | Sortie JSON structurée                                                 |
 
 ## Comportement
 

@@ -8,8 +8,8 @@ title: "故障排除"
 
 # Gateway(网关) 网关 故障排查
 
-此页面是深度运行手册。
-如果您想先进行快速分流，请从 [/help/故障排除](/zh/help/troubleshooting) 开始。
+本页面是详细的操作手册。
+如果您希望首先进行快速分流流程，请从 [/help/故障排除](/zh/help/troubleshooting) 开始。
 
 ## 命令阶梯
 
@@ -183,12 +183,12 @@ openclaw gateway status --json
 
 使用失败的 `connect` 响应中的 `error.details.code` 来选择下一步操作：
 
-| Detail code                  | Meaning                                                                                                                                                                      | Recommended action                                                                                                                                                                                                                              |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。                                                                                                                                                 | 在客户端中粘贴/设置令牌并重试。对于仪表板路径：`openclaw config get gateway.auth.token` 然后粘贴到 Control UI 设置中。                                                                                                                          |
-| `AUTH_TOKEN_MISMATCH`        | 共享令牌与 Gateway 认证令牌不匹配。                                                                                                                                          | 如果 `canRetryWithDeviceToken=true`，允许一次受信任的重试。缓存令牌的重试使用存储的已批准范围；显式 `deviceToken` / `scopes` 调用者保留请求的范围。如果仍然失败，请运行[令牌偏移恢复检查清单](/zh/cli/devices#token-drift-recovery-checklist)。 |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | 每个设备的缓存令牌已过期或被吊销。                                                                                                                                           | 使用 [devices CLI](/zh/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                                                                                                       |
-| `PAIRING_REQUIRED`           | 设备身份需要批准。检查 `error.details.reason` 中是否有 `not-paired`、`scope-upgrade`、`role-upgrade` 或 `metadata-upgrade`，并在存在时使用 `requestId` / `remediationHint`。 | 批准待处理的请求：`openclaw devices list` 然后 `openclaw devices approve <requestId>`。范围/角色升级在您审查请求的访问权限后使用相同的流程。                                                                                                    |
+| Detail code                  | Meaning                                                                                                                                                                      | Recommended action                                                                                                                                                                                                                                   |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。                                                                                                                                                 | 在客户端中粘贴/设置令牌并重试。对于仪表板路径：`openclaw config get gateway.auth.token` 然后粘贴到 Control UI 设置中。                                                                                                                               |
+| `AUTH_TOKEN_MISMATCH`        | 共享令牌与 Gateway 认证令牌不匹配。                                                                                                                                          | 如果 `canRetryWithDeviceToken=true`，允许一次受信任的重试。缓存令牌的重试会重用存储的已批准范围；显式 `deviceToken` / `scopes` 调用方会保留请求的范围。如果仍然失败，请运行 [令牌漂移恢复检查清单](/zh/cli/devices#token-drift-recovery-checklist)。 |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | 每个设备的缓存令牌已过期或被吊销。                                                                                                                                           | 使用 [devices CLI](/zh/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                                                                                                            |
+| `PAIRING_REQUIRED`           | 设备身份需要批准。检查 `error.details.reason` 中是否有 `not-paired`、`scope-upgrade`、`role-upgrade` 或 `metadata-upgrade`，并在存在时使用 `requestId` / `remediationHint`。 | 批准待处理的请求：`openclaw devices list` 然后 `openclaw devices approve <requestId>`。范围/角色升级在您审查请求的访问权限后使用相同的流程。                                                                                                         |
 
 设备认证 v2 迁移检查：
 
@@ -213,7 +213,7 @@ openclaw gateway status
 相关：
 
 - [/web/control-ui](/zh/web/control-ui)
-- [/gateway/configuration](/zh/gateway/configuration) (gateway auth modes)
+- [/gateway/configuration](/zh/gateway/configuration)（网关身份验证模式）
 - [/gateway/trusted-proxy-auth](/zh/gateway/trusted-proxy-auth)
 - [/gateway/remote](/zh/gateway/remote)
 - [/cli/devices](/zh/cli/devices)
@@ -243,7 +243,7 @@ openclaw gateway status --deep   # also scan system-level services
 - `Gateway start blocked: set gateway.mode=local` 或 `existing config is missing gateway.mode` → 本地网关模式未启用，或者配置文件被破坏并丢失了 `gateway.mode`。修复方法：在配置中设置 `gateway.mode="local"`，或重新运行 `openclaw onboard --mode local` / `openclaw setup` 以重新应用预期的本地模式配置。如果您是通过 Podman 运行 OpenClaw 的，默认配置路径是 `~/.openclaw/openclaw.json`。
 - `refusing to bind gateway ... without auth` → 非环回绑定且没有有效的网关认证路径（令牌/密码，或配置的可信代理）。
 - `another gateway instance is already listening` / `EADDRINUSE` → 端口冲突。
-- `Other gateway-like services detected (best effort)` → 存在过时的或并行的 launchd/systemd/schtasks 单元。大多数设置应该每台机器保留一个网关；如果您确实需要多个，请隔离端口 + 配置/状态/工作区。请参阅 [/gateway#multiple-gateways-same-host](/zh/gateway#multiple-gateways-same-host)。
+- `Other gateway-like services detected (best effort)` → 存在过时或并行的 launchd/systemd/schtasks 单元。大多数设置应该每台机器保留一个网关；如果您确实需要多个，请隔离端口 + 配置/状态/工作区。请参阅 [/gateway#multiple-gateways-same-host](/zh/gateway#multiple-gateways-same-host)。
 
 相关：
 
@@ -292,12 +292,13 @@ openclaw doctor
 - `.clobbered.*` 存在 → 恢复了外部直接编辑或启动读取。
 - `.rejected.*` 存在 → OpenClaw 拥有的配置写入在提交前未通过架构或覆盖检查。
 - `Config write rejected:` → 写入试图删除必需的形状、大幅缩小文件或持久化无效配置。
-- `Config last-known-good promotion skipped` → 候选配置包含编辑过的密钥占位符，例如 `***`。
+- `missing-meta-vs-last-good`、`gateway-mode-missing-vs-last-good` 或 `size-drop-vs-last-good:*` → 启动时将当前文件视为已损坏，因为与上次已知的良好备份相比，它丢失了字段或大小。
+- `Config last-known-good promotion skipped` → 候选文件包含编辑过的机密占位符，例如 `***`。
 
 修复选项：
 
-1. 如果恢复的活动配置正确，请保留它。
-2. 仅从 `.clobbered.*` 或 `.rejected.*` 复制所需的键，然后使用 `openclaw config set` 或 `config.patch` 应用它们。
+1. 如果恢复的当前配置正确，请保留它。
+2. 仅从 `.clobbered.*` 或 `.rejected.*` 中复制所需的键，然后使用 `openclaw config set` 或 `config.patch` 应用它们。
 3. 在重新启动之前运行 `openclaw config validate`。
 4. 如果您手动编辑，请保留完整的 JSON5 配置，而不仅仅是您想要更改的部分对象。
 
@@ -308,9 +309,9 @@ openclaw doctor
 - [/cli/config](/zh/cli/config)
 - [/gateway/doctor](/zh/gateway/doctor)
 
-## Gateway 探测警告
+## Gateway(网关) 探针警告
 
-当 `openclaw gateway probe` 到达某个目标但仍打印警告块时使用。
+当 `openclaw gateway probe` 能够到达目标但仍然打印警告块时，请使用此方法。
 
 ```bash
 openclaw gateway probe
@@ -321,15 +322,15 @@ openclaw gateway probe --ssh user@gateway-host
 查找：
 
 - JSON 输出中的 `warnings[].code` 和 `primaryTargetId`。
-- 无论警告是关于 SSH 回退、多个网关、缺少作用域还是未解析的身份验证引用。
+- 无论警告是关于 SSH 回退、多个网关、缺少范围还是未解析的认证引用。
 
 常见特征：
 
-- `SSH tunnel failed to start; falling back to direct probes.` → SSH 设置失败，但命令仍尝试直接配置/回环目标。
-- `multiple reachable gateways detected` → 多个目标响应。通常这意味着有意的多网关设置或过时/重复的侦听器。
-- `Read-probe diagnostics are limited by gateway scopes (missing operator.read)` → 连接成功，但详细 RPC 受到范围限制；请配对设备身份或使用具有 `operator.read` 的凭据。
-- `Capability: pairing-pending` 或 `gateway closed (1008): pairing required` → 网关已响应，但此客户端在正常操作员访问之前仍需要配对/批准。
-- 未解决的 `gateway.auth.*` / `gateway.remote.*` SecretRef 警告文本 → 在此命令路径中，失败目标的认证材料不可用。
+- `SSH tunnel failed to start; falling back to direct probes.` → SSH 设置失败，但该命令仍尝试了直接配置的/环回目标。
+- `multiple reachable gateways detected` → 多个目标做出了响应。通常这意味着有意设置的多网关环境，或者是过时/重复的监听器。
+- `Read-probe diagnostics are limited by gateway scopes (missing operator.read)` → 连接成功，但详细信息 RPC 受范围限制；请配对设备身份或使用具有 `operator.read` 的凭据。
+- `Capability: pairing-pending` 或 `gateway closed (1008): pairing required` → 网关做出了响应，但此客户端在正常操作员访问之前仍需要配对/批准。
+- unresolved `gateway.auth.*` / `gateway.remote.*` SecretRef 警告文本 → 对于失败的目标，在此命令路径中无法使用认证材料。
 
 相关：
 
@@ -337,9 +338,9 @@ openclaw gateway probe --ssh user@gateway-host
 - [/gateway#multiple-gateways-same-host](/zh/gateway#multiple-gateways-same-host)
 - [/gateway/remote](/zh/gateway/remote)
 
-## 渠道已连接但消息未流转
+## 渠道已连接但消息无法流动
 
-如果渠道状态显示已连接但消息流已中断，请重点关注策略、权限以及渠道特定的传递规则。
+如果渠道状态为已连接但消息流已中断，请重点关注策略、权限以及特定于渠道的投递规则。
 
 ```bash
 openclaw channels status --probe
@@ -349,7 +350,7 @@ openclaw logs --follow
 openclaw config get channels
 ```
 
-查找：
+检查：
 
 - 私信策略（`pairing`、`allowlist`、`open`、`disabled`）。
 - 群组白名单和提及要求。
@@ -357,8 +358,8 @@ openclaw config get channels
 
 常见特征：
 
-- `mention required` → 消息因群组提及策略被忽略。
-- `pairing` / 待批准的跟踪信息 → 发送方未获批准。
+- `mention required` → 消息被群组提及策略忽略。
+- `pairing` / 待审批追踪 → 发送者未获批准。
 - `missing_scope`、`not_in_channel`、`Forbidden`、`401/403` → 渠道认证/权限问题。
 
 相关：
@@ -368,9 +369,9 @@ openclaw config get channels
 - [/channels/telegram](/zh/channels/telegram)
 - [/channels/discord](/zh/channels/discord)
 
-## Cron 和心跳传递
+## Cron 和心跳投递
 
-如果 cron 或心跳未运行或未传递，请先验证调度程序状态，然后验证传递目标。
+如果 cron 或心跳未运行或未投递，请先验证调度器状态，然后验证投递目标。
 
 ```bash
 openclaw cron status
@@ -383,18 +384,18 @@ openclaw logs --follow
 查找：
 
 - Cron 已启用且存在下次唤醒时间。
-- 作业运行历史状态（`ok`、`skipped`、`error`）。
+- 作业运行历史状态 (`ok`、`skipped`、`error`)。
 - 心跳跳过原因 (`quiet-hours`, `requests-in-flight`, `alerts-disabled`, `empty-heartbeat-file`, `no-tasks-due`)。
 
 常见特征：
 
 - `cron: scheduler disabled; jobs will not run automatically` → cron 已禁用。
-- `cron: timer tick failed` → 调度器计时失败；检查文件/日志/运行时错误。
-- 带有 `reason=quiet-hours` 的 `heartbeat skipped` → 超出活动时间窗口。
-- 带有 `reason=empty-heartbeat-file` 的 `heartbeat skipped` → `HEARTBEAT.md` 存在但仅包含空行/markdown 标题，因此 OpenClaw 跳过模型调用。
-- 带有 `reason=no-tasks-due` 的 `heartbeat skipped` → `HEARTBEAT.md` 包含一个 `tasks:` 块，但本次计时没有任务到期。
-- `heartbeat: unknown accountId` → 心跳传递目标的账户 ID 无效。
-- 带有 `reason=dm-blocked` 的 `heartbeat skipped` → 心跳目标解析为 私信 风格的目的地，但 `agents.defaults.heartbeat.directPolicy`（或每代理覆盖）设置为 `block`。
+- `cron: timer tick failed` → 调度器时钟信号失败；请检查文件/日志/运行时错误。
+- `heartbeat skipped` 与 `reason=quiet-hours` → 超出活跃时间窗口。
+- `heartbeat skipped` 与 `reason=empty-heartbeat-file` → `HEARTBEAT.md` 存在但仅包含空行 / markdown 标题，因此 OpenClaw 跳过模型调用。
+- `heartbeat skipped` 与 `reason=no-tasks-due` → `HEARTBEAT.md` 包含 `tasks:` 块，但在此时钟信号中没有任何任务到期。
+- `heartbeat: unknown accountId` → 心跳传递目标的帐户 ID 无效。
+- 带有 `reason=dm-blocked` 的 `heartbeat skipped` → 心跳目标解析为 私信 样式的目标，而 `agents.defaults.heartbeat.directPolicy`（或每代理覆盖）设置为 `block`。
 
 相关：
 
@@ -404,7 +405,7 @@ openclaw logs --follow
 
 ## 节点配对工具失败
 
-如果节点已配对但工具失败，请隔离前台、权限和审批状态。
+如果节点已配对但工具失败，请隔离前台、权限和批准状态。
 
 ```bash
 openclaw nodes status
@@ -414,17 +415,17 @@ openclaw logs --follow
 openclaw status
 ```
 
-检查：
+查找：
 
-- 节点在线且具备预期功能。
-- 相机/麦克风/位置/屏幕的 OS 权限授予。
-- 执行审批和允许列表状态。
+- 节点在线且具备预期能力。
+- 针对摄像头/麦克风/位置/屏幕的操作系统权限授予。
+- 执行批准和允许列表状态。
 
 常见特征：
 
-- `NODE_BACKGROUND_UNAVAILABLE` → 节点应用必须在前台。
-- `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → 缺少 OS 权限。
-- `SYSTEM_RUN_DENIED: approval required` → 执行审批待处理。
+- `NODE_BACKGROUND_UNAVAILABLE` → 节点应用必须处于前台。
+- `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → 缺少操作系统权限。
+- `SYSTEM_RUN_DENIED: approval required` → 批准待处理。
 - `SYSTEM_RUN_DENIED: allowlist miss` → 命令被允许列表阻止。
 
 相关：
@@ -435,7 +436,7 @@ openclaw status
 
 ## 浏览器工具失败
 
-当网关本身健康但浏览器工具操作失败时使用此方法。
+当网关本身运行正常但浏览器工具操作失败时，请使用此章节。
 
 ```bash
 openclaw browser status
@@ -445,44 +446,44 @@ openclaw logs --follow
 openclaw doctor
 ```
 
-查找：
+检查：
 
-- `plugins.allow` 是否已设置并且包含 `browser`。
+- 是否已设置 `plugins.allow` 并且包含 `browser`。
 - 有效的浏览器可执行文件路径。
 - CDP 配置文件的可达性。
 - `existing-session` / `user` 配置文件的本地 Chrome 可用性。
 
 常见特征：
 
-- `unknown command "browser"` 或 `unknown command 'browser'` → 捆绑的浏览器插件被 `plugins.allow` 排除了。
-- browser 工具 missing / unavailable while `browser.enabled=true` → `plugins.allow` 排除了 `browser`，因此插件从未加载。
+- `unknown command "browser"` 或 `unknown command 'browser'` → 捆绑的浏览器插件被 `plugins.allow` 排除。
+- 浏览器工具缺失/不可用，而 `browser.enabled=true` → `plugins.allow` 排除了 `browser`，因此插件从未加载。
 - `Failed to start Chrome CDP on port` → 浏览器进程启动失败。
 - `browser.executablePath not found` → 配置的路径无效。
 - `browser.cdpUrl must be http(s) or ws(s)` → 配置的 CDP URL 使用了不支持的方案，例如 `file:` 或 `ftp:`。
 - `browser.cdpUrl has invalid port` → 配置的 CDP URL 端口错误或超出范围。
-- `Could not find DevToolsActivePort for chrome` → Chrome MCP 现有会话尚无法连接到所选的浏览器数据目录。打开浏览器检查页面，启用远程调试，保持浏览器打开，批准首次连接提示，然后重试。如果不需要登录状态，建议使用托管的 `openclaw` 配置文件。
-- `No Chrome tabs found for profile="user"` → Chrome MCP 连接配置文件没有打开的本地 Chrome 标签页。
+- `Could not find DevToolsActivePort for chrome` → Chrome MCP existing-会话 尚无法附加到所选浏览器数据目录。打开浏览器检查页面，启用远程调试，保持浏览器打开，批准第一个附加提示，然后重试。如果不需要登录状态，建议使用托管 `openclaw` 配置文件。
+- `No Chrome tabs found for profile="user"` → Chrome MCP 附加配置文件没有打开的本地 Chrome 标签页。
 - `Remote CDP for profile "<name>" is not reachable` → 配置的远程 CDP 端点无法从网关主机访问。
-- `Browser attachOnly is enabled ... not reachable` 或 `Browser attachOnly is enabled and CDP websocket ... is not reachable` → 仅连接配置文件没有可访问的目标，或者 HTTP 端点有响应但 CDP WebSocket 仍无法打开。
-- `Playwright is not available in this gateway build; '<feature>' is unsupported.` → 当前的网关安装缺少完整的 Playwright 包；ARIA 快照和基本页面截图仍然可以工作，但导航、AI 快照、CSS 选择器元素截图和 PDF 导出将不可用。
+- `Browser attachOnly is enabled ... not reachable` 或 `Browser attachOnly is enabled and CDP websocket ... is not reachable` → 仅附加配置文件没有可访问的目标，或者 HTTP 端点已响应但仍无法打开 CDP WebSocket。
+- `Playwright is not available in this gateway build; '<feature>' is unsupported.` → 当前的网关安装缺少捆绑的浏览器插件所需的 `playwright-core` 运行时依赖；请运行 `openclaw doctor --fix`，然后重启网关。ARIA 快照和基本页面截图仍然可以工作，但导航、AI 快照、CSS 选择器元素截图和 PDF 导出将不可用。
 - `fullPage is not supported for element screenshots` → 截图请求混合了 `--full-page` 与 `--ref` 或 `--element`。
 - `element screenshots are not supported for existing-session profiles; use ref from snapshot.` → Chrome MCP / `existing-session` 截图调用必须使用页面捕获或快照 `--ref`，而不是 CSS `--element`。
-- `existing-session file uploads do not support element selectors; use ref/inputRef.` → Chrome MCP 上传挂钩需要快照引用，而不是 CSS 选择器。
-- `existing-session file uploads currently support one file at a time.` → 在 Chrome MCP 配置文件上每次调用发送一个上传。
-- `existing-session dialog handling does not support timeoutMs.` → Chrome MCP 配置文件上的对话挂钩不支持超时覆盖。
+- `existing-session file uploads do not support element selectors; use ref/inputRef.` → Chrome MCP 上传钩子需要快照引用，而不是 CSS 选择器。
+- `existing-session file uploads currently support one file at a time.` → 在 Chrome MCP 配置文件上每次调用发送一次上传。
+- `existing-session dialog handling does not support timeoutMs.` → Chrome MCP 配置文件上的对话框挂钩不支持超时覆盖。
 - `response body is not supported for existing-session profiles yet.` → `responsebody` 仍然需要托管浏览器或原始 CDP 配置文件。
-- 仅附加或远程 CDP 配置文件上的视口/暗黑模式/区域/离线覆盖过期 → 运行 `openclaw browser stop --browser-profile <name>` 以关闭活动控制会话并释放 Playwright/CDP 仿真状态，而无需重启整个网关。
+- 仅附加或远程 CDP 配置文件上的过时视口/深色模式/区域设置/离线覆盖 → 运行 `openclaw browser stop --browser-profile <name>` 以关闭活动的控制会话并释放 Playwright/CDP 仿真状态，而无需重启整个网关。
 
-相关：
+相关内容：
 
 - [/tools/browser-linux-故障排除](/zh/tools/browser-linux-troubleshooting)
 - [/tools/browser](/zh/tools/browser)
 
-## 如果您升级后突然出现问题
+## 如果您进行了升级并且某些内容突然中断
 
-大多数升级后的问题是由于配置漂移或现在强制执行了更严格的默认设置。
+大多数升级后中断是由于配置漂移或现在执行了更严格的默认值。
 
-### 1) 身份验证和 URL 覆盖行为已更改
+### 1) Auth 和 URL 覆盖行为已更改
 
 ```bash
 openclaw gateway status
@@ -493,15 +494,15 @@ openclaw config get gateway.auth.mode
 
 检查事项：
 
-- 如果 `gateway.mode=remote`，CLI 调用可能指向远程，而您的本地服务正常。
-- 显式 `--url` 调用不会回退到存储的凭据。
+- 如果 `gateway.mode=remote`，CLI 调用可能定向到了远程，而您的本地服务是正常的。
+- 显式的 `--url` 调用不会回退到存储的凭据。
 
 常见特征：
 
 - `gateway connect failed:` → 错误的 URL 目标。
 - `unauthorized` → 端点可达但身份验证错误。
 
-### 2) 绑定和身份验证防护措施更严格
+### 2) 绑定和身份验证护栏更加严格
 
 ```bash
 openclaw config get gateway.bind
@@ -511,17 +512,17 @@ openclaw gateway status
 openclaw logs --follow
 ```
 
-检查事项：
+检查内容：
 
-- 非环回绑定（`lan`、`tailnet`、`custom`）需要有效的网关身份验证路径：共享令牌/密码身份验证，或正确配置的非环回 `trusted-proxy` 部署。
+- 非环回绑定（`lan`，`tailnet`，`custom`）需要有效的网关身份验证路径：共享令牌/密码身份验证，或正确配置的非环回 `trusted-proxy` 部署。
 - 像 `gateway.token` 这样的旧密钥不会替换 `gateway.auth.token`。
 
 常见特征：
 
-- `refusing to bind gateway ... without auth` → 非环回绑定没有有效的网关身份验证路径。
-- `Connectivity probe: failed` 而运行时正在运行 → 网关处于活动状态，但使用当前的 auth/url 无法访问。
+- `refusing to bind gateway ... without auth` → 非环回绑定缺少有效的网关身份验证路径。
+- `Connectivity probe: failed` 当运行时正在运行时 → 网关存活但无法通过当前的 auth/url 访问。
 
-### 3) 配对和设备标识状态已更改
+### 3) 配对和设备身份状态已更改
 
 ```bash
 openclaw devices list
@@ -532,15 +533,15 @@ openclaw doctor
 
 检查事项：
 
-- 仪表板/节点的待处理设备审批。
-- 策略或身份更改后，待处理的私信配对审批。
+- 针对仪表板/节点的待处理设备审批。
+- 策略或身份更改后的待处理私信（私信）配对审批。
 
 常见特征：
 
-- `device identity required` → 设备认证未满足。
-- `pairing required` → 发送方/设备必须被批准。
+- `device identity required` → 设备身份验证未满足。
+- `pairing required` → 发送方/设备必须经过审批。
 
-如果在检查后服务配置和运行时仍然不一致，请从相同的配置文件/状态目录重新安装服务元数据：
+如果检查后服务配置和运行时仍然不一致，请从相同的配置文件/状态目录重新安装服务元数据：
 
 ```bash
 openclaw gateway install --force

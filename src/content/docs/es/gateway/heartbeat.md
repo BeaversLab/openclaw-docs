@@ -8,13 +8,13 @@ title: "Heartbeat"
 
 # Heartbeat (Gateway)
 
-> **¿Latido o Cron?** Consulte [Automatización y tareas](/es/automation) para obtener orientación sobre cuándo usar cada uno.
+> **¿Heartbeat o Cron?** Consulte [Automatización y tareas](/es/automation) para obtener orientación sobre cuándo usar cada uno.
 
 Heartbeat ejecuta **turnos de agente periódicos** en la sesión principal para que el modelo pueda
 resaltar cualquier cosa que requiera atención sin enviarle spam.
 
-Latido es un turno de sesión principal programado: **no** crea registros de [tarea en segundo plano](/es/automation/tasks).
-Los registros de tareas son para trabajos separados (ejecuciones de ACP, subagentes, trabajos de cron aislados).
+Heartbeat es un turno programado de la sesión principal — **no** crea registros de [tarea en segundo plano](/es/automation/tasks).
+Los registros de tareas son para trabajo separado (ejecuciones de ACP, subagentes, trabajos cron aislados).
 
 Solución de problemas: [Tareas programadas](/es/automation/cron-jobs#troubleshooting)
 
@@ -67,11 +67,11 @@ El mensaje predeterminado es intencionalmente amplio:
 
 - **Tareas en segundo plano**: "Considere las tareas pendientes" impulsa al agente a revisar
   seguimientos (bandeja de entrada, calendario, recordatorios, trabajo en cola) y resaltar cualquier cosa urgente.
-- **Contacto humano**: "A veces chequee a su humano durante el día" impulsa un
-  mensaje ligero ocasional de "¿necesita algo?", pero evita el spam nocturno
+- **Registro humano**: “Checkup sometimes on your human during day time” impulsa un
+  mensaje ligero ocasional de “anything you need?”, pero evita el spam nocturno
   al usar su zona horaria local configurada (consulte [/concepts/timezone](/es/concepts/timezone)).
 
-El latido puede reaccionar a [tareas en segundo plano](/es/automation/tasks) completadas, pero una ejecución de latido en sí misma no crea un registro de tarea.
+Heartbeat puede reaccionar a [tareas en segundo plano](/es/automation/tasks) completadas, pero una ejecución de heartbeat en sí misma no crea un registro de tarea.
 
 Si desea que un latido haga algo muy específico (p. ej., "verificar estadísticas de Gmail PubSub"
 o "verificar el estado de la puerta de enlace"), establezca `agents.defaults.heartbeat.prompt` (o
@@ -227,8 +227,8 @@ Use `accountId` para apuntar a una cuenta específica en canales multi-cuenta co
 - `isolatedSession`: cuando es verdadero, cada heartbeat se ejecuta en una sesión nueva sin historial de conversación previo. Usa el mismo patrón de aislamiento que el cron `sessionTarget: "isolated"`. Reduce drásticamente el costo de tokens por heartbeat. Combine con `lightContext: true` para obtener el máximo ahorro. El enrutamiento de entrega aún usa el contexto de la sesión principal.
 - `session`: clave de sesión opcional para ejecuciones de heartbeat.
   - `main` (predeterminado): sesión principal del agente.
-  - Clave de sesión explícita (copiada de `openclaw sessions --json` o la [sessions CLI](/es/cli/sessions)).
-  - Formatos de clave de sesión: consulte [Sessions](/es/concepts/session) y [Groups](/es/channels/groups).
+  - Clave de sesión explícita (copiada de `openclaw sessions --json` o de la [CLI de sesiones](/es/cli/sessions)).
+  - Formatos de clave de sesión: consulte [Sesiones](/es/concepts/session) y [Grupos](/es/channels/groups).
 - `target`:
   - `last`: entrega al último canal externo utilizado.
   - canal explícito: cualquier canal configurado o id de complemento, por ejemplo `discord`, `matrix`, `telegram` o `whatsapp`.
@@ -262,13 +262,16 @@ Use `accountId` para apuntar a una cuenta específica en canales multi-cuenta co
   se envía ningún mensaje saliente.
 - Si `showOk`, `showAlerts` y `useIndicator` están todos desactivados, la ejecución se omite de antemano como `reason=alerts-disabled`.
 - Si solo la entrega de alertas está desactivada, OpenClaw aún puede ejecutar el Heartbeat, actualizar las marcas de tiempo de las tareas vencidas, restaurar la marca de tiempo de inactividad de la sesión y suprimir la carga útil de la alerta externa.
-- Las respuestas solo de Heartbeat **no** mantienen la sesión activa; se restaura el último `updatedAt`
-  para que la expiración por inactividad se comporte con normalidad.
-- Las [tareas en segundo plano] separadas(/en/automation/tasks) pueden poner en cola un evento del sistema y activar el Heartbeat cuando la sesión principal debería notar algo rápidamente. Esa activación no hace que el Heartbeat ejecute una tarea en segundo plano.
+- Si el objetivo de heartbeat resuelto admite escritura, OpenClaw muestra "escribiendo" mientras
+  la ejecución de heartbeat está activa. Esto usa el mismo objetivo al que el heartbeat
+  enviaría el resultado del chat, y está desactivado por `typingMode: "never"`.
+- Las respuestas solo de heartbeat **no** mantienen la sesión activa; se restaura el último `updatedAt`
+  para que la caducidad por inactividad se comporte normalmente.
+- Las [tareas en segundo plano](/es/automation/tasks) separadas pueden poner en cola un evento del sistema y despertar heartbeat cuando la sesión principal debería notar algo rápidamente. Ese despertador no hace que la ejecución de heartbeat sea una tarea en segundo plano.
 
 ## Controles de visibilidad
 
-Por defecto, los reconocimientos de `HEARTBEAT_OK` se suprimen mientras se entrega el contenido de la alerta.
+De forma predeterminada, los reconocimientos de `HEARTBEAT_OK` se suprimen mientras se entrega el contenido de la alerta.
 Puede ajustar esto por canal o por cuenta:
 
 ```yaml
@@ -292,11 +295,11 @@ Precedencia: por cuenta → por canal → valores predeterminados del canal → 
 
 ### Qué hace cada indicador
 
-- `showOk`: envía un reconocimiento de `HEARTBEAT_OK` cuando el modelo devuelve una respuesta solo OK.
+- `showOk`: envía un reconocimiento de `HEARTBEAT_OK` cuando el modelo devuelve una respuesta solo de OK.
 - `showAlerts`: envía el contenido de la alerta cuando el modelo devuelve una respuesta que no es OK.
-- `useIndicator`: emite eventos indicadores para las superficies de estado de la interfaz de usuario.
+- `useIndicator`: emite eventos de indicador para superficies de estado de la interfaz de usuario.
 
-Si los **tres** son falsos, OpenClaw omite por completo la ejecución del Heartbeat (sin llamada al modelo).
+Si **los tres** son falsos, OpenClaw omite por completo la ejecución del latido (sin llamada al modelo).
 
 ### Ejemplos por canal frente a por cuenta
 
@@ -321,30 +324,30 @@ channels:
 
 ### Patrones comunes
 
-| Objetivo                                                          | Configuración                                                                            |
-| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Comportamiento predeterminado (OK silenciosos, alertas activadas) | _(no se necesita configuración)_                                                         |
-| Completamente silencioso (sin mensajes, sin indicador)            | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: false }` |
-| Solo indicador (sin mensajes)                                     | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: true }`  |
-| OKs solo en un canal                                              | `channels.telegram.heartbeat: { showOk: true }`                                          |
+| Objetivo                                                           | Configuración                                                                            |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| Comportamiento predeterminado (OKs silenciosos, alertas activadas) | _(no se necesita configuración)_                                                         |
+| Completamente silencioso (sin mensajes, sin indicador)             | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: false }` |
+| Solo indicador (sin mensajes)                                      | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: true }`  |
+| OKs solo en un canal                                               | `channels.telegram.heartbeat: { showOk: true }`                                          |
 
 ## HEARTBEAT.md (opcional)
 
 Si existe un archivo `HEARTBEAT.md` en el espacio de trabajo, el mensaje predeterminado indica al
-agente que lo lea. Piénsalo como tu “lista de verificación de latidos”: pequeño, estable y
-seguro de incluir cada 30 minutos.
+agente que lo lea. Piensa en ello como tu “lista de verificación de latido”: pequeña, estable y
+segura de incluir cada 30 minutos.
 
-En ejecuciones normales, `HEARTBEAT.md` solo se inyecta cuando la guía de latidos está
-habilitada para el agente predeterminado. Deshabilitar el cadencia de latidos con `0m` o
-establecer `includeSystemPromptSection: false` lo omite del contexto de
-arranque normal.
+En ejecuciones normales, `HEARTBEAT.md` solo se inyecta cuando la guía de latido está
+activada para el agente predeterminado. Deshabilitar el ritmo del latido con `0m` o
+establecer `includeSystemPromptSection: false` lo omite del contexto de arranque
+normal.
 
-Si `HEARTBEAT.md` existe pero está efectivamente vacío (solo líneas en blanco y encabezados de markdown
-como `# Heading`), OpenClaw omite la ejecución del latido para ahorrar llamadas a la API.
+Si `HEARTBEAT.md` existe pero está efectivamente vacío (solo líneas en blanco y encabezados
+markdown como `# Heading`), OpenClaw omite la ejecución del latido para ahorrar llamadas a la API.
 Esa omisión se reporta como `reason=empty-heartbeat-file`.
 Si falta el archivo, el latido aún se ejecuta y el modelo decide qué hacer.
 
-Mantenlo diminuto (lista de verificación corta o recordatorios) para evitar la hinchazón del mensaje.
+Mantenlo pequeño (lista de verificación breve o recordatorios) para evitar la hinchazón del mensaje.
 
 Ejemplo de `HEARTBEAT.md`:
 
@@ -356,9 +359,9 @@ Ejemplo de `HEARTBEAT.md`:
 - If a task is blocked, write down _what is missing_ and ask Peter next time.
 ```
 
-### bloques `tasks:`
+### Bloques `tasks:`
 
-`HEARTBEAT.md` también admite un pequeño bloque estructurado `tasks:` para verificaciones
+`HEARTBEAT.md` también admite un pequeño bloque estructurado `tasks:` para comprobaciones
 basadas en intervalos dentro del propio latido.
 
 Ejemplo:
@@ -381,33 +384,33 @@ tasks:
 
 Comportamiento:
 
-- OpenClaw analiza el bloque `tasks:` y comprueba cada tarea contra su propio `interval`.
-- Solo se incluyen las tareas **vencidas** en el mensaje de latido para ese tick.
+- OpenClaw analiza el bloque `tasks:` y comprueba cada tarea con su propio `interval`.
+- Solo las tareas **vencidas** se incluyen en el mensaje de latido para ese tick.
 - Si no hay tareas vencidas, el latido se omite por completo (`reason=no-tasks-due`) para evitar una llamada al modelo desperdiciada.
-- El contenido que no sea de tarea en `HEARTBEAT.md` se conserva y se agrega como contexto adicional después de la lista de tareas vencidas.
+- El contenido que no es de tarea en `HEARTBEAT.md` se conserva y se añade como contexto adicional después de la lista de tareas vencidas.
 - Las marcas de tiempo de la última ejecución de las tareas se almacenan en el estado de la sesión (`heartbeatTaskState`), por lo que los intervalos sobreviven a los reinicios normales.
-- Las marcas de tiempo de las tareas solo avanzan después de que una ejecución de latido completa su ruta de respuesta normal. Las ejecuciones omitidas `empty-heartbeat-file` / `no-tasks-due` no marcan las tareas como completadas.
+- Las marcas de tiempo de las tareas solo se avanzan después de que una ejecución de latido completa su ruta de respuesta normal. Las ejecuciones omitidas de `empty-heartbeat-file` / `no-tasks-due` no marcan las tareas como completadas.
 
-El modo de tarea es útil cuando deseas que un archivo de latido contenga varias verificaciones periódicas sin pagar por todas ellas en cada tick.
+El modo de tarea es útil cuando deseas que un archivo de latido contenga varias comprobaciones periódicas sin pagar por todas ellas en cada tictac.
 
 ### ¿Puede el agente actualizar HEARTBEAT.md?
 
-Sí — si se lo pides.
+Sí, si se lo pides.
 
 `HEARTBEAT.md` es solo un archivo normal en el espacio de trabajo del agente, por lo que puedes decirle
 al agente (en un chat normal) algo como:
 
-- “Actualiza `HEARTBEAT.md` para añadir una comprobación diaria del calendario.”
+- “Actualiza `HEARTBEAT.md` para agregar una verificación diaria del calendario.”
 - “Reescribe `HEARTBEAT.md` para que sea más breve y se centre en el seguimiento de la bandeja de entrada.”
 
-Si quieres que esto ocurra de forma proactiva, también puedes incluir una línea explícita en
-el mensaje de latido como: “Si la lista de verificación se vuelve obsoleta, actualiza HEARTBEAT.md
+Si deseas que esto ocurra de manera proactiva, también puedes incluir una línea explícita en
+el aviso de latido como: “Si la lista de verificación se vuelve obsoleta, actualiza HEARTBEAT.md
 con una mejor.”
 
-Nota de seguridad: no pongas secretos (claves API, números de teléfono, tokens privados) en
-`HEARTBEAT.md` — se convierte en parte del contexto del mensaje.
+Nota de seguridad: no pongas secretos (claves de API, números de teléfono, tokens privados) en
+`HEARTBEAT.md` — se convierte en parte del contexto del aviso.
 
-## Despertar manual (bajo demanda)
+## Activación manual (bajo demanda)
 
 Puedes poner en cola un evento del sistema y activar un latido inmediato con:
 
@@ -415,38 +418,38 @@ Puedes poner en cola un evento del sistema y activar un latido inmediato con:
 openclaw system event --text "Check for urgent follow-ups" --mode now
 ```
 
-Si varios agentes tienen configurado `heartbeat`, un despertar manual ejecuta cada uno de esos
+Si varios agentes tienen `heartbeat` configurado, una activación manual ejecuta cada uno de esos
 latidos de agente inmediatamente.
 
-Usa `--mode next-heartbeat` para esperar el siguiente tic programado.
+Usa `--mode next-heartbeat` para esperar el próximo tictac programado.
 
 ## Entrega de razonamiento (opcional)
 
-Por defecto, los latidos entregan solo la carga útil final de “respuesta”.
+De forma predeterminada, los latidos entregan solo la carga útil final de la “respuesta”.
 
-Si quieres transparencia, activa:
+Si deseas transparencia, habilita:
 
 - `agents.defaults.heartbeat.includeReasoning: true`
 
-Cuando está activado, los latidos también entregarán un mensaje separado con el prefijo
+Cuando está habilitado, los latidos también entregarán un mensaje separado con el prefijo
 `Reasoning:` (misma forma que `/reasoning on`). Esto puede ser útil cuando el agente
-está gestionando múltiples sesiones/códices y quieres ver por qué decidió hacerte un “ping”
-— pero también puede filtrar más detalles internos de los que deseas. Es preferible mantenerlo
+gestiona múltiples sesiones/códices y deseas ver por qué decidió hacerte un
+ping, pero también puede filtrar más detalles internos de los deseados. Es preferible mantenerlo
 desactivado en chats grupales.
 
 ## Consciencia del costo
 
-Los latidos ejecutan turnos completos del agente. Los intervalos más cortos consumen más tokens. Para reducir el costo:
+Los latidos ejecutan turnos completos de agente. Intervalos más cortos queman más tokens. Para reducir el costo:
 
-- Usa `isolatedSession: true` para evitar enviar el historial completo de la conversación (de ~100K tokens a ~2-5K por ejecución).
+- Usa `isolatedSession: true` para evitar enviar el historial completo de la conversación (~100K tokens reducidos a ~2-5K por ejecución).
 - Usa `lightContext: true` para limitar los archivos de arranque solo a `HEARTBEAT.md`.
-- Establece un `model` más barato (ej. `ollama/llama3.2:1b`).
-- Mantén `HEARTBEAT.md` pequeño.
-- Usa `target: "none"` si solo quieres actualizaciones de estado interno.
+- Establece un `model` más barato (por ejemplo, `ollama/llama3.2:1b`).
+- Mantenga `HEARTBEAT.md` pequeño.
+- Use `target: "none"` si solo desea actualizaciones del estado interno.
 
 ## Relacionado
 
-- [Automatización y Tareas](/es/automation) — todos los mecanismos de automatización de un vistazo
-- [Tareas en segundo plano](/es/automation/tasks) — cómo se rastrea el trabajo desacoplado
-- [Zona horaria](/es/concepts/timezone) — cómo afecta la zona horaria a la programación del latido
+- [Automatización y tareas](/es/automation) — todos los mecanismos de automatización de un vistazo
+- [Tareas en segundo plano](/es/automation/tasks) — cómo se rastrea el trabajo separado
+- [Zona horaria](/es/concepts/timezone) — cómo la zona horaria afecta la programación del latido
 - [Solución de problemas](/es/automation/cron-jobs#troubleshooting) — depuración de problemas de automatización

@@ -9,7 +9,10 @@ title: "configure"
 
 Indicación interactiva para configurar las credenciales, los dispositivos y los valores predeterminados del agente.
 
-Nota: La sección **Modelo** ahora incluye una selección múltiple para la lista de permitidos de `agents.defaults.models` (lo que aparece en `/model` y el selector de modelos).
+Nota: La sección **Model** ahora incluye una selección múltiple para la
+lista blanca `agents.defaults.models` (lo que aparece en `/model` y el selector de modelos).
+Las opciones de configuración con ámbito de proveedor fusionan sus modelos seleccionados en la
+lista blanca existente en lugar de reemplazar a los proveedores no relacionados que ya están en la configuración.
 
 Cuando configure se inicia desde una elección de autenticación de proveedor, los selectores de modelo predeterminado y lista de permitidos prefieren automáticamente ese proveedor. Para proveedores emparejados como Volcengine/BytePlus, la misma preferencia también coincide con sus variantes de plan de codificación (`volcengine-plan/*`, `byteplus-plan/*`). Si el filtro de proveedor preferido produjera una lista vacía, configure vuelve al catálogo sin filtrar en lugar de mostrar un selector en blanco.
 

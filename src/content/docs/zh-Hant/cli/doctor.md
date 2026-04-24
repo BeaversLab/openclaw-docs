@@ -39,20 +39,22 @@ openclaw doctor --generate-gateway-token
 備註：
 
 - 互動式提示（例如鑰匙圈/OAuth 修復）僅在 stdin 是 TTY 且未設定 `--non-interactive` 時執行。無頭執行（cron、Telegram、無終端機）將會跳過提示。
-- `--fix`（`--repair` 的別名）會將備份寫入 `~/.openclaw/openclaw.json.bak` 並捨棄未知的設定鍵，列出每個移除項目。
-- 狀態完整性檢查現在可以偵測 sessions 目錄中的孤兒文字記錄檔，並可將其封存為 `.deleted.<timestamp>` 以安全地回收空間。
-- Doctor 也會掃描 `~/.openclaw/cron/jobs.json`（或 `cron.store`）尋找舊版 cron job 形狀，並可在排程器於執行時自動正規化之前就地重寫它們。
-- Doctor 會自動將舊版平面 Talk 設定（`talk.voiceId`、`talk.modelId` 及相關設定）遷移至 `talk.provider` + `talk.providers.<provider>`。
-- 重複執行 `doctor --fix` 不再會在唯一差異是物件鍵順序時回報/套用 Talk 正規化。
-- Doctor 包含記憶體搜尋就緒檢查，並可在缺少嵌入憑證時建議 `openclaw configure --section model`。
-- 如果啟用了沙盒模式但 Docker 無法使用，doctor 會回報高訊號警告並提供補救措施（`install Docker` 或 `openclaw config set agents.defaults.sandbox.mode off`）。
-- 如果 `gateway.auth.token`/`gateway.auth.password` 由 SecretRef 管理，且在當前指令路徑中不可用，doctor 會回報唯讀警告，並不會寫入純文字後備憑證。
-- 如果在修復路徑中檢查頻道 SecretRef 失敗，doctor 會繼續執行並回報警告，而不會提前結束。
-- Telegram `allowFrom` 使用者名稱自動解析 (`doctor --fix`) 需要在當前指令路徑中有可解析的 Telegram token。如果無法檢查 token，doctor 會回報警告並在該次檢查中跳過自動解析。
+- 效能：非互動式 `doctor` 執行會跳過積極式的外掛程式載入，讓無頭式 (headless) 健康檢查保持快速。當檢查需要互動式工作階段時，仍然會完整載入外掛程式。
+- `--fix` (`--repair` 的別名) 會將備份寫入 `~/.openclaw/openclaw.json.bak` 並捨棄未知的設定鍵，列出每一個移除項目。
+- 狀態完整性檢查現在會偵測 sessions 目錄中的孤兒轉錄檔 (transcript files)，並可將其封存為 `.deleted.<timestamp>` 以安全地回收空間。
+- Doctor 也會掃描 `~/.openclaw/cron/jobs.json` (或 `cron.store`) 尋找舊版的 cron job 格式，並可在排程器於執行時自動將其正規化之前就地重寫它們。
+- Doctor 可修復遺失的捆綁外掛程式執行時期相依項，而不需要對已安裝的 OpenClaw 套件擁有寫入權限。對於 root 擁有的 npm 安裝或強化的 systemd 單元，請將 `OPENCLAW_PLUGIN_STAGE_DIR` 設定為可寫入的目錄，例如 `/var/lib/openclaw/plugin-runtime-deps`。
+- Doctor 會自動將舊版的扁平 Talk 設定 (`talk.voiceId`、`talk.modelId` 和相關項目) 遷移至 `talk.provider` + `talk.providers.<provider>`。
+- 重複執行 `doctor --fix` 時，若唯一的差異僅在於物件鍵順序，將不再報告/套用 Talk 正規化。
+- Doctor 包含記憶體搜尋就緒檢查，並且在缺少嵌入憑證時可以建議 `openclaw configure --section model`。
+- 如果已啟用沙箱模式但 Docker 無法使用，doctor 會回報高信號警示並提供補救措施 (`install Docker` 或 `openclaw config set agents.defaults.sandbox.mode off`)。
+- 如果 `gateway.auth.token`/`gateway.auth.password` 是由 SecretRef 管理且在目前的指令路徑中無法使用，doctor 會回報唯讀警示且不會寫入純文字備用憑證。
+- 如果在修復路徑中頻道 SecretRef 檢查失敗，doctor 會繼續執行並回報警示，而不是提前結束。
+- Telegram `allowFrom` 使用者名稱自動解析 (`doctor --fix`) 需要在目前的指令路徑中有一個可解析的 Telegram 權杖。如果無法檢查權杖，doctor 會回報警告並跳過該回合的自動解析。
 
-## macOS：`launchctl` 環境變數覆蓋
+## macOS：`launchctl` 環境變數覆寫
 
-如果您先前執行過 `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (或 `...PASSWORD`)，該值會覆蓋您的設定檔，並可能導致持續的「未授權」錯誤。
+如果您之前執行過 `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (或 `...PASSWORD`)，該值會覆寫您的設定檔，並可能導致持續的「unauthorized」錯誤。
 
 ```bash
 launchctl getenv OPENCLAW_GATEWAY_TOKEN

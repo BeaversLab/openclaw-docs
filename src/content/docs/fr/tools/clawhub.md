@@ -114,7 +114,8 @@ L'installation anonyme de plugins ClawHub échoue également pour les packages p
 
 La CLI `clawhub` distincte installe également des compétences dans `./skills` sous votre répertoire de travail actuel. Si un espace de travail OpenClaw est configuré, `clawhub` revient à cet espace de travail à moins que vous ne remplaciez `--workdir` (ou `CLAWHUB_WORKDIR`). OpenClaw charge les compétences de l'espace de travail à partir de `<workspace>/skills` et les récupérera lors de la **prochaine** session. Si vous utilisez déjà `~/.openclaw/skills` ou des compétences groupées, les compétences de l'espace de travail ont la priorité.
 
-Pour plus de détails sur le chargement, le partage et le contrôle des compétences, consultez [Skills](/fr/tools/skills).
+Pour plus de détails sur le chargement, le partage et la restriction des compétences, consultez
+[Skills](/fr/tools/skills).
 
 ## Présentation du système de compétences
 
@@ -283,7 +284,8 @@ Les plugins de code doivent inclure les métadonnées requises OpenClaw dans `pa
   "version": "1.0.0",
   "type": "module",
   "openclaw": {
-    "extensions": ["./index.ts"],
+    "extensions": ["./src/index.ts"],
+    "runtimeExtensions": ["./dist/index.js"],
     "compat": {
       "pluginApi": ">=2026.3.24-beta.2",
       "minGatewayVersion": "2026.3.24-beta.2"
@@ -296,30 +298,35 @@ Les plugins de code doivent inclure les métadonnées requises OpenClaw dans `pa
 }
 ```
 
+Les packages publiés doivent contenir du JavaScript construit et pointer `runtimeExtensions`
+vers cette sortie. Les installations via Git checkout peuvent toujours revenir au code source TypeScript
+lorsqu'aucun fichier construit n'existe, mais les entrées d'exécution construites évitent la compilation TypeScript
+à l'exécution lors des chemins de démarrage, de diagnostic et de chargement des plugins.
+
 ## Détails avancés (technique)
 
-### Gestion de version et balises
+### Versionnage et balises
 
-- Chaque publication crée une nouvelle `SkillVersion` **semver**.
+- Chaque publication crée une nouvelle version **semver** `SkillVersion`.
 - Les balises (comme `latest`) pointent vers une version ; le déplacement des balises vous permet de revenir en arrière.
-- Les journaux des modifications sont attachés par version et peuvent être vides lors de la synchronisation ou de la publication de mises à jour.
+- Les journaux des modifications sont attachés par version et peuvent être vides lors de la synchronisation ou de la publication des mises à jour.
 
 ### Modifications locales vs versions du registre
 
-Les mises à jour comparent le contenu local des compétences aux versions du registre à l'aide d'un hachage de contenu. Si les fichiers locaux ne correspondent à aucune version publiée, la CLI demande confirmation avant d'écraser (ou exige `--force` lors des exécutions non interactives).
+Les mises à jour comparent le contenu des compétences locales aux versions du registre à l'aide d'un hachage de contenu. Si les fichiers locaux ne correspondent à aucune version publiée, le CLI demande avant d'écraser (ou nécessite `--force` dans les exécutions non interactives).
 
 ### Analyse de synchronisation et racines de repli
 
-`clawhub sync` analyse d'abord votre répertoire de travail actuel. Si aucune compétence n'est trouvée, elle revient aux anciens emplacements connus (par exemple `~/openclaw/skills` et `~/.openclaw/skills`). Ceci est conçu pour trouver les anciennes installations de compétences sans drapeaux supplémentaires.
+`clawhub sync` analyse d'abord votre répertoire de travail actuel. Si aucune compétence n'est trouvée, il revient aux emplacements hérités connus (par exemple `~/openclaw/skills` et `~/.openclaw/skills`). Cela est conçu pour trouver les anciennes installations de compétences sans indicateurs supplémentaires.
 
 ### Stockage et fichier de verrouillage
 
 - Les compétences installées sont enregistrées dans `.clawhub/lock.json` sous votre répertoire de travail.
-- Les jetons d'authentification sont stockés dans le fichier de configuration de la CLI ClawHub (remplaçable via `CLAWHUB_CONFIG_PATH`).
+- Les jetons d'authentification sont stockés dans le fichier de configuration de la ClawHub CLI (remplaçable via `CLAWHUB_CONFIG_PATH`).
 
 ### Télémétrie (comptes d'installation)
 
-Lorsque vous exécutez `clawhub sync` alors que vous êtes connecté, la CLI envoie un instantané minimal pour calculer les comptes d'installation. Vous pouvez désactiver cela entièrement :
+Lorsque vous exécutez `clawhub sync` alors que vous êtes connecté, la CLI envoie un instantané minimal pour calculer les comptes d'installation. Vous pouvez désactiver complètement ceci :
 
 ```bash
 export CLAWHUB_DISABLE_TELEMETRY=1

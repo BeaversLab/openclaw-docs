@@ -1,5 +1,5 @@
 ---
-summary: "Interface utilisateur terminal (TUI) : connectez-vous au Gateway depuis n'importe quelle machine"
+summary: "Interface utilisateur en terminal (TUI) : connectez-vous au Gateway ou exécutez localement en mode intégré"
 read_when:
   - You want a beginner-friendly walkthrough of the TUI
   - You need the complete list of TUI features, commands, and shortcuts
@@ -10,13 +10,15 @@ title: "TUI"
 
 ## Démarrage rapide
 
+### Mode Gateway
+
 1. Démarrez le Gateway.
 
 ```bash
 openclaw gateway
 ```
 
-2. Ouvrez la TUI.
+2. Ouvrez le TUI.
 
 ```bash
 openclaw tui
@@ -30,23 +32,39 @@ Gateway distant :
 openclaw tui --url ws://<host>:<port> --token <gateway-token>
 ```
 
-Utilisez `--password` si votre Gateway utilise l'authentification par mot de passe.
+Utilisez `--password` si votre Gateway utilise une authentification par mot de passe.
+
+### Mode local
+
+Exécutez le TUI sans Gateway :
+
+```bash
+openclaw chat
+# or
+openclaw tui --local
+```
+
+Notes :
+
+- `openclaw chat` et `openclaw terminal` sont des alias pour `openclaw tui --local`.
+- `--local` ne peut pas être combiné avec `--url`, `--token` ou `--password`.
+- Le mode local utilise directement le runtime de l'agent intégré. La plupart des outils locaux fonctionnent, mais les fonctionnalités exclusives au Gateway ne sont pas disponibles.
 
 ## Ce que vous voyez
 
 - En-tête : URL de connexion, agent actuel, session actuelle.
-- Journal de discussion : messages de l'utilisateur, réponses de l'assistant, avis système, cartes d'outil.
-- Ligne d'état : état de connexion/exécution (connexion, exécution, streaming, inactif, erreur).
-- Pied de page : état de la connexion + agent + session + model + think/fast/verbose/trace/reasoning + nombre de tokens + deliver.
-- Saisie : éditeur de texte avec saisie semi-automatique.
+- Journal de discussion : messages utilisateur, réponses de l'assistant, avis système, cartes d'outils.
+- Ligne d'état : état de connexion/exécution (connexion, en cours, streaming, inactif, erreur).
+- Pied de page : état de connexion + agent + session + model + réflexion/rapide/verbeux/trace/raisonnement + nombre de jetons + livrer.
+- Saisie : éditeur de texte avec autocomplétion.
 
 ## Modèle mental : agents + sessions
 
-- Les agents sont des identifiants uniques (par ex. `main`, `research`). Le Gateway expose la liste.
+- Les agents sont des slugs uniques (ex. `main`, `research`). Le Gateway expose la liste.
 - Les sessions appartiennent à l'agent actuel.
-- Les clés de session sont stockées sous `agent:<agentId>:<sessionKey>`.
+- Les clés de session sont stockées sous la forme `agent:<agentId>:<sessionKey>`.
   - Si vous tapez `/session main`, le TUI l'étend à `agent:<currentAgent>:main`.
-  - Si vous tapez `/session agent:other:main`, vous basculez explicitement vers cette session d'agent.
+  - Si vous tapez `/session agent:other:main`, vous passez explicitement à cette session d'agent.
 - Portée de la session :
   - `per-sender` (par défaut) : chaque agent possède plusieurs sessions.
   - `global` : le TUI utilise toujours la session `global` (le sélecteur peut être vide).
@@ -62,26 +80,26 @@ Utilisez `--password` si votre Gateway utilise l'authentification par mot de pas
 
 ## Sélecteurs + superpositions
 
-- Sélecteur de modèle : liste les modèles disponibles et définit la substitution de session.
-- Sélecteur d'agent : choisissez un autre agent.
-- Sélecteur de session : affiche uniquement les sessions de l'agent actuel.
-- Paramètres : activer/désactiver la livraison, l'extension de la sortie des outils et la visibilité de la réflexion.
+- Sélecteur de model : liste les models disponibles et définit la substitution de session.
+- Agent picker : choisir un agent différent.
+- Session picker : affiche uniquement les sessions de l'agent actuel.
+- Paramètres : basculer l'envoi, l'expansion de la sortie des outils et la visibilité de la réflexion.
 
 ## Raccourcis clavier
 
 - Entrée : envoyer le message
-- Échap : interrompre l'exécution active
-- Ctrl+C : effacer la saisie (appuyez deux fois pour quitter)
+- Échap : annuler l'exécution active
+- Ctrl+C : effacer la saisie (appuyer deux fois pour quitter)
 - Ctrl+D : quitter
-- Ctrl+L : sélecteur de model
+- Ctrl+L : sélecteur de modèle
 - Ctrl+G : sélecteur d'agent
 - Ctrl+P : sélecteur de session
-- Ctrl+O : basculer l'expansion de la sortie du tool
+- Ctrl+O : basculer l'expansion de la sortie des outils
 - Ctrl+T : basculer la visibilité de la réflexion (recharge l'historique)
 
 ## Commandes slash
 
-Cœur :
+Principales :
 
 - `/help`
 - `/status`
@@ -104,31 +122,75 @@ Contrôles de session :
 Cycle de vie de la session :
 
 - `/new` ou `/reset` (réinitialiser la session)
-- `/abort` (interrompre l'exécution active)
+- `/abort` (annuler l'exécution active)
 - `/settings`
 - `/exit`
 
-Les autres commandes slash du Gateway (par exemple, `/context`) sont transmises au Gateway et affichées comme sortie système. Voir [Slash commands](/fr/tools/slash-commands).
+Mode local uniquement :
 
-## Commandes de shell local
+- `/auth [provider]` ouvre le flux d'authentitation/connexion du fournisseur dans la TUI.
 
-- Préfixez une ligne avec `!` pour exécuter une commande de shell local sur l'hôte du TUI.
-- Le TUI demande une confirmation par session pour autoriser l'exécution locale ; le refus maintient `!` désactivé pour la session.
-- Les commandes s'exécutent dans un shell frais et non interactif dans le répertoire de travail du TUI (pas de `cd`/env persistant).
-- Les commandes de shell local reçoivent `OPENCLAW_SHELL=tui-local` dans leur environnement.
-- Un `!` seul est envoyé comme un message normal ; les espaces de début ne déclenchent pas l'exécution locale.
+D'autres commandes slash du Gateway (par exemple, `/context`) sont transmises au Gateway et affichées comme sortie système. Voir [Slash commands](/fr/tools/slash-commands).
 
-## Sortie de tool
+## Commandes shell locales
 
-- Les appels de tool s'affichent sous forme de cartes avec les arguments + résultats.
+- Préfixez une ligne avec `!` pour exécuter une commande shell locale sur l'hôte de la TUI.
+- La TUI demande une fois par session d'autoriser l'exécution locale ; refuser laisse `!` désactivé pour la session.
+- Les commandes s'exécutent dans un shell frais et non interactif dans le répertoire de travail de la TUI (pas de `cd`/env persistant).
+- Les commandes shell locales reçoivent `OPENCLAW_SHELL=tui-local` dans leur environnement.
+- Un `!` seul est envoyé en tant que message normal ; les espaces de début ne déclenchent pas l'exécution locale.
+
+## Réparer les configurations depuis le TUI local
+
+Utilisez le mode local lorsque la configuration actuelle est déjà validée et que vous souhaitez que l'agent embarqué l'inspecte sur la même machine, la compare à la documentation, et aide à réparer les dérives sans dépendre d'un Gateway en cours d'exécution.
+
+Si `openclaw config validate` échoue déjà, commencez par `openclaw configure`
+ou `openclaw doctor --fix`. `openclaw chat` ne contourne pas la garde de
+configuration invalide.
+
+Boucle typique :
+
+1. Démarrer le mode local :
+
+```bash
+openclaw chat
+```
+
+2. Demandez à l'agent ce que vous voulez vérifier, par exemple :
+
+```text
+Compare my gateway auth config with the docs and suggest the smallest fix.
+```
+
+3. Utilisez les commandes du shell local pour des preuves exactes et une validation :
+
+```text
+!openclaw config file
+!openclaw docs gateway auth token secretref
+!openclaw config validate
+!openclaw doctor
+```
+
+4. Appliquez des changements ciblés avec `openclaw config set` ou `openclaw configure`, puis relancez `!openclaw config validate`.
+5. Si Doctor recommande une migration ou une réparation automatique, révisez-la et lancez `!openclaw doctor --fix`.
+
+Conseils :
+
+- Préférez `openclaw config set` ou `openclaw configure` à l'édition manuelle de `openclaw.json`.
+- `openclaw docs "<query>"` recherche l'index de documentation en direct depuis la même machine.
+- `openclaw config validate --json` est utile lorsque vous voulez des erreurs de schéma structuré et de résolution SecretRef.
+
+## Sortie tool
+
+- Les appels tool s'affichent sous forme de cartes avec les arguments + résultats.
 - Ctrl+O bascule entre les vues réduites et développées.
-- Pendant que les tools s'exécutent, les mises à jour partielles sont diffusées dans la même carte.
+- Pendant l'exécution des tools, les mises à jour partielles diffusent dans la même carte.
 
 ## Couleurs du terminal
 
-- Le TUI conserve le texte du corps de l'assistant dans la couleur de premier plan par défaut de votre terminal afin que les terminaux clairs et sombres restent lisibles.
+- Le TUI conserve le texte du corps de l'assistant dans la couleur de premier plan par défaut de votre terminal pour que les terminaux clairs et sombres restent lisibles.
 - Si votre terminal utilise un arrière-plan clair et que la détection automatique est incorrecte, définissez `OPENCLAW_THEME=light` avant de lancer `openclaw tui`.
-- Pour forcer à la place la palette sombre originale, définissez `OPENCLAW_THEME=dark`.
+- Pour forcer la palette sombre originale à la place, définissez `OPENCLAW_THEME=dark`.
 
 ## Historique + streaming
 
@@ -143,35 +205,39 @@ Les autres commandes slash du Gateway (par exemple, `/context`) sont transmises 
 
 ## Options
 
+- `--local` : Exécuter avec le runtime d'agent local intégré
 - `--url <url>` : URL WebSocket du Gateway (par défaut la configuration ou `ws://127.0.0.1:<port>`)
-- `--token <token>` : jeton du Gateway (si requis)
-- `--password <password>` : mot de passe du Gateway (si requis)
-- `--session <key>` : clé de session (par défaut `main`, ou `global` lorsque la portée est globale)
+- `--token <token>` : Jeton du Gateway (si requis)
+- `--password <password>` : Mot de passe du Gateway (si requis)
+- `--session <key>` : Clé de session (par défaut : `main`, ou `global` si la portée est globale)
 - `--deliver` : Envoyer les réponses de l'assistant au fournisseur (désactivé par défaut)
 - `--thinking <level>` : Remplacer le niveau de réflexion pour les envois
 - `--message <text>` : Envoyer un message initial après la connexion
 - `--timeout-ms <ms>` : Délai d'attente de l'agent en ms (par défaut `agents.defaults.timeoutSeconds`)
 - `--history-limit <n>` : Entrées d'historique à charger (par défaut `200`)
 
-Remarque : lorsque vous définissez `--url`, le TUI n'utilise pas les informations d'identification de la configuration ou de l'environnement par défaut.
-Passez `--token` ou `--password` explicitement. L'absence d'informations d'identification explicites constitue une erreur.
+Remarque : lorsque vous définissez `--url`, la TUI n'utilise pas les identifiants de la configuration ou de l'environnement en secours.
+Passez `--token` ou `--password` explicitement. L'absence d'identifiants explicites constitue une erreur.
+En mode local, ne passez pas `--url`, `--token`, ou `--password`.
 
 ## Dépannage
 
 Aucune sortie après l'envoi d'un message :
 
-- Exécutez `/status` dans le TUI pour confirmer que le Gateway est connecté et inactif/occupé.
+- Exécutez `/status` dans la TUI pour confirmer que le Gateway est connecté et inactif/occupé.
 - Vérifiez les journaux du Gateway : `openclaw logs --follow`.
 - Confirmez que l'agent peut s'exécuter : `openclaw status` et `openclaw models status`.
 - Si vous attendez des messages dans un channel de chat, activez la livraison (`/deliver on` ou `--deliver`).
 
 ## Dépannage de la connexion
 
-- `disconnected` : assurez-vous que le Gateway est en cours d'exécution et que vos `--url/--token/--password` sont corrects.
+- `disconnected` : assurez-vous que le Gateway fonctionne et que vos `--url/--token/--password` sont corrects.
 - Aucun agent dans le sélecteur : vérifiez `openclaw agents list` et votre configuration de routage.
 - Sélecteur de session vide : vous êtes peut-être dans la portée globale ou vous n'avez pas encore de sessions.
 
 ## Connexes
 
 - [Control UI](/fr/web/control-ui) — interface de contrôle basée sur le web
+- [Config](/fr/cli/config) — inspecter, valider et modifier `openclaw.json`
+- [Doctor](/fr/cli/doctor) — vérifications guidées de réparation et de migration
 - [CLI Reference](/fr/cli) — référence complète des commandes CLI

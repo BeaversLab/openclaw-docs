@@ -160,7 +160,7 @@ title: "Docs Hubs"
 - [macOS 技能](/zh/platforms/mac/skills)
 - [macOS Peekaboo](/zh/platforms/mac/peekaboo)
 
-## 扩展 + 插件
+## 插件
 
 - [插件概览](/zh/tools/plugin)
 - [构建插件](/zh/plugins/building-plugins)

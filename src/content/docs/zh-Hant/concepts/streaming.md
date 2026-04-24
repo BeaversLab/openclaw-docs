@@ -116,16 +116,17 @@ Model output
 
 ### 頻道對應
 
-| 頻道     | `off` | `partial` | `block` | `progress`       |
-| -------- | ----- | --------- | ------- | ---------------- |
-| Telegram | ✅    | ✅        | ✅      | 對應至 `partial` |
-| Discord  | ✅    | ✅        | ✅      | 對應至 `partial` |
-| Slack    | ✅    | ✅        | ✅      | ✅               |
+| 頻道       | `off` | `partial` | `block` | `progress`       |
+| ---------- | ----- | --------- | ------- | ---------------- |
+| Telegram   | ✅    | ✅        | ✅      | 對應至 `partial` |
+| Discord    | ✅    | ✅        | ✅      | 對應至 `partial` |
+| Slack      | ✅    | ✅        | ✅      | ✅               |
+| Mattermost | ✅    | ✅        | ✅      | ✅               |
 
-Slack 專用：
+僅限 Slack：
 
-- 當 `channels.slack.streaming.mode="partial"`（預設值：`true`）時，`channels.slack.streaming.nativeTransport` 會切換 Slack 原生串流 API 呼叫。
-- Slack 原生串流和 Slack 助手執行緒狀態需要回覆執行緒目標；頂層 DM 不會顯示該執行緒樣式的預覽。
+- `channels.slack.streaming.nativeTransport` 當 `channels.slack.streaming.mode="partial"` 時切換 Slack 原生串流 API 呼叫（預設：`true`）。
+- Slack 原生串流和 Slack 助手執行緒狀態需要回覆執行緒目標；頂層私訊不會顯示該執行緒樣式的預覽。
 
 舊版金鑰遷移：
 
@@ -133,28 +134,51 @@ Slack 專用：
 - Discord：`streamMode` + 布林值 `streaming` 自動遷移至 `streaming` 列舉。
 - Slack：`streamMode` 自動遷移至 `streaming.mode`；布林值 `streaming` 自動遷移至 `streaming.mode` 加上 `streaming.nativeTransport`；舊版 `nativeStreaming` 自動遷移至 `streaming.nativeTransport`。
 
-### 執行時期行為
+### 執行時行為
 
 Telegram：
 
-- 跨 DM 和群組/主題使用 `sendMessage` + `editMessageText` 預覽更新。
+- 在私訊和群組/主題中使用 `sendMessage` + `editMessageText` 預覽更新。
 - 當明確啟用 Telegram 區塊串流時，會跳過預覽串流（以避免雙重串流）。
 - `/reasoning stream` 可以將推理寫入預覽。
 
 Discord：
 
 - 使用傳送 + 編輯預覽訊息。
-- `block` 模式使用草稿分塊（`draftChunk`）。
+- `block` 模式使用草稿區塊分割（`draftChunk`）。
 - 當明確啟用 Discord 區塊串流時，會跳過預覽串流。
+- 最終媒體、錯誤和明確回覆的內容會取消待處理的預覽，而不會排清新的草稿，然後使用正常傳送。
 
 Slack：
 
-- 當可用時，`partial` 可以使用 Slack 原生串流（`chat.startStream`/`append`/`stop`）。
+- `partial` 可在可用時使用 Slack 原生串流（`chat.startStream`/`append`/`stop`）。
 - `block` 使用附加樣式草稿預覽。
 - `progress` 使用狀態預覽文字，然後是最終答案。
+- 最終媒體/錯誤內容和進度最終結果不會建立可捨棄的草稿訊息；只有可編輯預覽的文字/區塊最終結果才會排清待處理的草稿文字。
+
+Mattermost：
+
+- 將思考、工具活動和部分回覆文字串流到單一的草稿預覽貼文，當最終答案可以安全傳送時就地定稿。
+- 如果在定稿時預覽貼文已被刪除或無法使用，則改為傳送全新的最終貼文。
+- 最終媒體/錯誤負載會在正常傳送之前取消待處理的預覽更新，而不是清除暫時的預覽貼文。
+
+Matrix：
+
+- 當最終文字可以重複使用預覽事件時，草稿預覽會就地定稿。
+- 僅媒體、錯誤以及回覆目標不匹配的最終訊息會在正常傳送之前取消待處理的預覽更新；已可見的過時預覽會被撤回。
+
+### 工具進度預覽更新
+
+預覽串流還可以包含 **tool-progress** 更新——例如「搜尋網路」、「讀取檔案」或「呼叫工具」等短狀態行——這些會在工具執行期間出現在同一條預覽訊息中，位於最終回覆之前。這讓多步驟工具回合在視覺上保持活躍，而不是在第一個思考預覽和最終答案之間保持沈默。
+
+支援的平台：
+
+- **Discord**、**Slack** 和 **Telegram** 將工具進度串流到即時預覽編輯中。
+- **Mattermost** 已將工具活動合併到其單一草稿預覽貼文中（見上文）。
+- 工具進度編輯遵循有效的預覽串流模式；當預覽串流為 `off` 或區塊串流已接管訊息時，會跳過這些編輯。
 
 ## 相關
 
-- [訊息](/zh-Hant/concepts/messages) — 訊息生命週期與傳遞
-- [重試](/zh-Hant/concepts/retry) — 傳遞失敗時的重試行為
-- [頻道](/zh-Hant/channels) — 各頻道串流支援
+- [訊息](/zh-Hant/concepts/messages) — 訊息生命週期與傳送
+- [重試](/zh-Hant/concepts/retry) — 傳送失敗時的重試行為
+- [頻道](/zh-Hant/channels) — 各頻道的串流支援

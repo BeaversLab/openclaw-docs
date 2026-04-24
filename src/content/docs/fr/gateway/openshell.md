@@ -268,28 +268,31 @@ Recréer après avoir modifié l'un de ces éléments :
 openclaw sandbox recreate --all
 ```
 
+## Durcissement de la sécurité
+
+Les assistants de Sandbox OpenShell qui lisent les fichiers de l'espace de travail distant utilisent un descripteur de fichier épinglé pour la racine de l'espace de travail et remontent les ancêtres à partir de ce fd épinglé au lieu de ré-resoudre le chemin pour chaque lecture. Combiné à une re-vérification de l'identité à chaque opération, cela empêche un échange de lien symbolique en cours de tour ou un montage d'espace de travail à chaud de rediriger les lectures en dehors de l'espace de travail distant prévu.
+
+- La racine de l'espace de travail est ouverte une fois et épinglée ; les lectures ultérieures réutilisent ce fd.
+- Les parcours d'ancêtres traversent les entrées relatives à partir du fd épinglé, ils ne peuvent donc pas être redirigés par un répertoire de remplacement plus haut dans le chemin.
+- L'identité du sandbox est vérifiée à nouveau avant chaque lecture, ainsi un sandbox recréé ou réaffecté ne peut pas servir silencieusement des fichiers provenant d'un autre espace de travail.
+
 ## Limitations actuelles
 
-- Le navigateur de sandbox n'est pas pris en charge sur le backend OpenShell.
+- Le navigateur de Sandbox n'est pas pris en charge sur le backend OpenShell.
 - `sandbox.docker.binds` ne s'applique pas à OpenShell.
-- Les paramètres d'exécution spécifiques à Docker sous `sandbox.docker.*` s'appliquent uniquement au backend
-  Docker.
+- Les commandes d'exécution spécifiques à Docker sous `sandbox.docker.*` ne s'appliquent qu'au backend Docker.
 
 ## Fonctionnement
 
-1. OpenClaw appelle `openshell sandbox create` (avec les indicateurs `--from`, `--gateway`,
-   `--policy`, `--providers`, `--gpu` tels que configurés).
-2. OpenClaw appelle `openshell sandbox ssh-config <name>` pour obtenir les détails de
-   la connexion SSH pour le sandbox.
-3. Core écrit la configuration SSH dans un fichier temporaire et ouvre une session SSH en utilisant le
-   même pont de système de fichiers distant que le backend SSH générique.
-4. En mode `mirror` : synchroniser le local vers le distant avant l'exécution, exécuter, puis resynchroniser après l'exécution.
-5. En mode `remote` : initialiser une fois lors de la création, puis opérer directement sur
-   l'espace de travail distant.
+1. OpenClaw appelle `openshell sandbox create` (avec les drapeaux `--from`, `--gateway`, `--policy`, `--providers`, `--gpu` selon la configuration).
+2. OpenClaw appelle `openshell sandbox ssh-config <name>` pour obtenir les détails de la connexion SSH pour le sandbox.
+3. Le cœur écrit la configuration SSH dans un fichier temporaire et ouvre une session SSH en utilisant le même pont de système de fichiers distant que le backend SSH générique.
+4. En mode `mirror` : synchroniser le local vers le distant avant l'exécution, exécuter, synchroniser le retour après l'exécution.
+5. En mode `remote` : amorcer une seule fois lors de la création, puis opérer directement sur l'espace de travail distant.
 
 ## Voir aussi
 
 - [Sandboxing](/fr/gateway/sandboxing) -- modes, portées et comparaison des backends
 - [Sandbox vs Tool Policy vs Elevated](/fr/gateway/sandbox-vs-tool-policy-vs-elevated) -- débogage des outils bloqués
-- [Multi-Agent Sandbox and Tools](/fr/tools/multi-agent-sandbox-tools) -- substitutions par agent
+- [Multi-Agent Sandbox and Tools](/fr/tools/multi-agent-sandbox-tools) -- remplacements par agent
 - [Sandbox CLI](/fr/cli/sandbox) -- commandes `openclaw sandbox`

@@ -52,10 +52,11 @@ sidebarTitle: "Linux Server"
   </Card>
 </CardGroup>
 
-**AWS (EC2 / Lightsail / 免费套餐)** 也很适用。
-社区视频教程可在
+**AWS (EC2 / Lightsail / 免费套餐)** 也能很好地工作。
+可以在
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
-观看（社区资源 —— 可能会失效）。
+查看社区视频演练
+（社区资源 —— 可能会变得不可用）。
 
 ## 云设置如何工作
 
@@ -65,7 +66,7 @@ sidebarTitle: "Linux Server"
 - 安全默认设置：将 Gateway(网关) 保留在本地回环，并通过 SSH 隧道或 Tailscale Serve 访问它。
   如果绑定到 `lan` 或 `tailnet`，请要求 `gateway.auth.token` 或 `gateway.auth.password`。
 
-相关页面：[Gateway(网关) 远程访问](/zh/gateway/remote)、[平台中心](/zh/platforms)。
+相关页面：[Gateway 远程访问](/zh/gateway/remote)、[平台中心](/zh/platforms)。
 
 ## 在 VPS 上共享公司代理
 
@@ -75,7 +76,7 @@ sidebarTitle: "Linux Server"
 - 切勿将该运行时登录到个人 Apple/Google 帐户或个人浏览器/密码管理器配置文件。
 - 如果用户之间存在对抗关系，请按 gateway/host/操作系统用户进行拆分。
 
-安全模型详情：[安全性](/zh/gateway/security)。
+安全模型详情：[安全](/zh/gateway/security)。
 
 ## 结合 VPS 使用节点
 
@@ -83,7 +84,7 @@ sidebarTitle: "Linux Server"
 (Mac/iOS/Android/headless)。节点提供本地屏幕/摄像头/画布和 `system.run`
 功能，而 Gateway(网关) 则保留在云端。
 
-文档：[节点](/zh/nodes)，[节点 CLI](/zh/cli/nodes)。
+文档：[节点](/zh/nodes)、[节点 CLI](/zh/cli/nodes)。
 
 ## 针对小型虚拟机和 ARM 主机的启动优化
 
@@ -101,7 +102,7 @@ source ~/.bashrc
 - `NODE_COMPILE_CACHE` 改善重复命令的启动时间。
 - `OPENCLAW_NO_RESPAWN=1` 避免来自自重生路径的额外启动开销。
 - 首次命令运行会预热缓存；后续运行会更快。
-- 有关 Raspberry Pi 的具体信息，请参阅 [Raspberry Pi](/zh/install/raspberry-pi)。
+- 关于 Raspberry Pi 的具体细节，请参阅 [Raspberry Pi](/zh/install/raspberry-pi)。
 
 ### systemd 调优检查清单（可选）
 
@@ -136,3 +137,6 @@ TimeoutStartSec=90
 
 `Restart=` 策略如何帮助自动恢复：
 [systemd 可以自动化服务恢复](https://www.redhat.com/en/blog/systemd-automate-recovery)。
+
+关于 Linux OOM 行为、子进程受害者选择以及 `exit 137`
+诊断，请参阅 [Linux 内存压力和 OOM 终止](/zh/platforms/linux#memory-pressure-and-oom-kills)。

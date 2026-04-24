@@ -25,7 +25,7 @@ Instalar desde una copia local:
 openclaw plugins install ./path/to/local/synology-chat-plugin
 ```
 
-Detalles: [Complementos](/es/tools/plugin)
+Detalles: [Plugins](/es/tools/plugin)
 
 ## Configuración rápida
 
@@ -111,19 +111,20 @@ openclaw message send --channel synology-chat --target 123456 --text "Hello from
 openclaw message send --channel synology-chat --target synology-chat:123456 --text "Hello again"
 ```
 
-Los envíos de medios son compatibles mediante la entrega de archivos basada en URL.
+Los envíos de medios son compatibles mediante la entrega de archivos por URL.
+Las URL de archivos salientes deben usar `http` o `https`, y los objetivos de red privados o bloqueados de otro modo se rechazan antes de que OpenClaw reenvíe la URL al webhook del NAS.
 
 ## Multicuenta
 
-Se admiten múltiples cuentas de Synology Chat en `channels.synology-chat.accounts`.
+Se admiten múltiples cuentas de Synology Chat bajo `channels.synology-chat.accounts`.
 Cada cuenta puede anular el token, la URL entrante, la ruta del webhook, la política de MD y los límites.
-Las sesiones de mensajes directos están aisladas por cuenta y usuario, por lo que el mismo `user_id` numérico
+Las sesiones de mensaje directo están aisladas por cuenta y usuario, por lo que el mismo `user_id` numérico
 en dos cuentas de Synology diferentes no comparte el estado de la transcripción.
 Asigne a cada cuenta habilitada un `webhookPath` distinto. OpenClaw ahora rechaza las rutas exactas duplicadas
-y se niega a iniciar cuentas con nombre que solo hereden una ruta de webhook compartida en configuraciones multicuenta.
-Si intencionalmente necesita la herencia heredada para una cuenta con nombre, establezca
+y se niega a iniciar cuentas con nombre que solo heredan una ruta de webhook compartida en configuraciones multicuenta.
+Si necesita intencionalmente la herencia heredada para una cuenta con nombre, establezca
 `dangerouslyAllowInheritedWebhookPath: true` en esa cuenta o en `channels.synology-chat`,
-pero las rutas exactas duplicadas aún se rechazan con fallo cerrado. Prefiera rutas explícitas por cuenta.
+pero las rutas exactas duplicadas aún se rechazan de forma segura (fail-closed). Se prefieren rutas explícitas por cuenta.
 
 ```json5
 {
@@ -155,8 +156,8 @@ pero las rutas exactas duplicadas aún se rechazan con fallo cerrado. Prefiera r
 - Las solicitudes entrantes de webhook se verifican por token y tienen límite de velocidad por remitente.
 - Las verificaciones de tokens no válidas utilizan una comparación de secreto de tiempo constante y fallan cerradas.
 - Prefiera `dmPolicy: "allowlist"` para producción.
-- Mantenga `dangerouslyAllowNameMatching` desactivado a menos que explícitamente necesite la entrega de respuestas basada en el nombre de usuario heredado.
-- Mantenga `dangerouslyAllowInheritedWebhookPath` desactivado a menos que acepte explícitamente el riesgo de enrutamiento de ruta compartida en una configuración de varias cuentas.
+- Mantenga `dangerouslyAllowNameMatching` desactivado a menos que necesite explícitamente la entrega de respuestas basada en el nombre de usuario heredado.
+- Mantenga `dangerouslyAllowInheritedWebhookPath` desactivado a menos que acepte explícitamente el riesgo de enrutamiento de ruta compartida en una configuración multicuenta.
 
 ## Solución de problemas
 
@@ -171,14 +172,14 @@ pero las rutas exactas duplicadas aún se rechazan con fallo cerrado. Prefiera r
   - demasiados intentos de token no válidos desde la misma fuente pueden bloquear temporalmente esa fuente
   - los remitentes autenticados también tienen un límite de tasa de mensajes separado por usuario
 - `Allowlist is empty. Configure allowedUserIds or use dmPolicy=open.`:
-  - `dmPolicy="allowlist"` está activado pero no hay usuarios configurados
+  - `dmPolicy="allowlist"` está habilitado pero no hay usuarios configurados
 - `User not authorized`:
   - el `user_id` numérico del remitente no está en `allowedUserIds`
 
 ## Relacionado
 
-- [Descripción general de canales](/es/channels) — todos los canales compatibles
-- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
-- [Grupos](/es/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
+- [Resumen de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación y flujo de emparejamiento de MD
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
 - [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesión para mensajes
 - [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

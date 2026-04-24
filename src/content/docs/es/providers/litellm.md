@@ -13,12 +13,13 @@ read_when:
 <Tip>
 **¿Por qué usar LiteLLM con OpenClaw?**
 
-- **Seguimiento de costos** — Vea exactamente qué gasta OpenClaw en todos los modelos
-- **Enrutamiento de modelos** — Cambie entre Claude, GPT-4, Gemini, Bedrock sin cambios en la configuración
+- **Seguimiento de costes** — Vea exactamente lo que gasta OpenClaw en todos los modelos
+- **Enrutamiento de modelos** — Cambie entre Claude, GPT-4, Gemini, Bedrock sin cambios de configuración
 - **Claves virtuales** — Cree claves con límites de gasto para OpenClaw
 - **Registro** — Registros completos de solicitudes/respuestas para depuración
-- **Respaldo (Fallbacks)** — Conmutación por error automática si su proveedor principal está caído
-  </Tip>
+- **Conmutación por error** — Conmutación por error automática si su proveedor principal está caído
+
+</Tip>
 
 ## Inicio rápido
 

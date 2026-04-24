@@ -77,6 +77,6 @@ Los flujos coordinan las tareas, no las reemplazan. Un solo flujo puede impulsar
 ## Relacionado
 
 - [Tareas en segundo plano](/es/automation/tasks) — el libro mayor de trabajo desacoplado que coordinan los flujos
-- [CLI: tareas](/es/cli/index#tasks) — referencia de comandos CLI para `openclaw tasks flow`
+- [CLI: tareas](/es/cli/tasks) — Referencia de comandos de CLI para `openclaw tasks flow`
 - [Descripción general de automatización](/es/automation) — todos los mecanismos de automatización de un vistazo
 - [Trabajos de Cron](/es/automation/cron-jobs) — trabajos programados que pueden alimentarse en los flujos

@@ -25,16 +25,28 @@ title: "Política de reintentos"
 
 ## Comportamiento
 
+### Proveedores de modelos
+
+- OpenClaw permite que los SDK de los proveedores manejen los reintentos cortos normales.
+- Para los SDK basados en Stainless como Anthropic y OpenAI, las respuestas reintentables
+  (`408`, `409`, `429` y `5xx`) pueden incluir `retry-after-ms` o
+  `retry-after`. Cuando esa espera es superior a 60 segundos, OpenClaw inyecta
+  `x-should-retry: false` para que el SDK muestre el error inmediatamente y el
+  failover del modelo pueda rotar a otro perfil de autenticación o modelo alternativo.
+- Anule el límite con `OPENCLAW_SDK_RETRY_MAX_WAIT_SECONDS=<seconds>`.
+  Establézcalo en `0`, `false`, `off`, `none` o `disabled` para permitir que los SDK respeten las
+  esperas `Retry-After` largas internamente.
+
 ### Discord
 
 - Solo reintentos en errores de límite de velocidad (HTTP 429).
-- Usa el `retry_after` de Discord cuando está disponible; de lo contrario, retroceso exponencial.
+- Usa el `retry_after` de Discord cuando está disponible, de lo contrario, retroceso exponencial.
 
 ### Telegram
 
-- Reintentos en errores transitorios (429, tiempo de espera, conexión/restablecimiento/cierre, no disponible temporalmente).
-- Usa `retry_after` cuando está disponible; de lo contrario, retroceso exponencial.
-- Los errores de análisis de Markdown no se reintentan; cambian a texto sin formato.
+- Reintentos en errores transitorios (429, tiempo de espera agotado, conexión/restablecimiento/cierre, no disponible temporalmente).
+- Usa `retry_after` cuando está disponible, de lo contrario, retroceso exponencial.
+- Los errores de análisis de Markdown no se reintentan; recurren a texto sin formato.
 
 ## Configuración
 

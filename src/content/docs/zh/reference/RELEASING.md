@@ -50,83 +50,71 @@ OpenClaw 拥有三个公共发布渠道：
 - 在每个带标签的发布之前运行 `pnpm release:check`
 - 发布检查现在在单独的手动工作流中运行：
   `OpenClaw Release Checks`
-- 跨操作系统安装和升级运行时验证是从
-  私有调用者工作流
-  `openclaw/releases-private/.github/workflows/openclaw-cross-os-release-checks.yml`
-  调度的，
-  该工作流调用可重用的公共工作流
-  `.github/workflows/openclaw-cross-os-release-checks-reusable.yml`
-- 这种拆分是有意的：保持真实的 npm 发布路径简短、
-  确定且专注于工件，而较慢的实时检查则留在
-  自己的通道中，以免它们延迟或阻止发布
-- 必须从 `main` 工作流引用或
-  `release/YYYY.M.D` 工作流引用调度发布检查，以便工作流逻辑和机密保持受控
-- 该工作流接受现有的发布标签或当前完整的
-  40 字符工作流分支提交 SHA
+- `OpenClaw Release Checks` 还在发布审批前运行 QA Lab 模拟奇偶校验门控以及实时的 Matrix 和 Telegram QA 通道。实时通道使用 `qa-live-shared` 环境；Telegram 也使用 Convex CI 凭证租约。
+- 跨操作系统安装和升级运行时验证是从私有调用方工作流 `openclaw/releases-private/.github/workflows/openclaw-cross-os-release-checks.yml` 调度的，后者调用可重用的公共工作流 `.github/workflows/openclaw-cross-os-release-checks-reusable.yml`
+- 这种拆分是有意的：保持真实的 npm 发布路径简短、确定性且专注于产物，而较慢的实时检查则留在自己的通道中，以免延迟或阻塞发布
+- 发布检查必须从 `main` 工作流引用或 `release/YYYY.M.D` 工作流引用进行调度，以确保工作流逻辑和机密保持受控
+- 该工作流程接受现有的发布标签或当前的完整 40 字符工作流分支提交 SHA
 - 在提交 SHA 模式下，它仅接受当前的工作流分支 HEAD；对于较旧的发布提交，请使用发布标签
-- `OpenClaw NPM Release` validation-only preflight 也接受当前的完整 40 字符 workflow-branch 提交 SHA，而无需推送的标签
-- 该 SHA 路径仅为验证用途，不能提升为真正的发布
-- 在 SHA 模式下，工作流仅为了检查包元数据而合成 `v<package.json version>`；真正的发布仍然需要真正的发布标签
-- 这两个工作流都将真正的发布和提升路径保留在 GitHub 托管的运行器上，而非变更的验证路径可以使用更大的 Blacksmith Linux 运行器
+- `OpenClaw NPM Release` 仅验证预检也接受当前的完整 40 字符工作流分支提交 SHA，而无需推送标签
+- 该 SHA 路径仅供验证使用，不能提升为真正的发布
+- 在 SHA 模式下，工作流程仅针对包元数据检查合成 `v<package.json version>`；真正的发布仍然需要真正的发布标签
+- 这两个工作流程都将真正的发布和提升路径保留在 GitHub 托管的运行器上，而非变更的验证路径可以使用更大的 Blacksmith Linux 运行器
 - 该工作流运行
   `OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_CACHE_TEST=1 pnpm test:live:cache`
-  使用 `OPENAI_API_KEY` 和 `ANTHROPIC_API_KEY` 工作流机密
-- npm 发布预检不再等待单独的发布检查通道
-- 在批准之前运行 `RELEASE_TAG=vYYYY.M.D node --import tsx scripts/openclaw-npm-release-check.ts`
+  并同时使用 `OPENAI_API_KEY` 和 `ANTHROPIC_API_KEY` 工作流密钥
+- npm 发布前检查不再等待单独的发布检查通道
+- 在批准之前，运行 `RELEASE_TAG=vYYYY.M.D node --import tsx scripts/openclaw-npm-release-check.ts`
   （或匹配的 beta/correction 标签）
 - 在 npm publish 之后，运行
   `node --import tsx scripts/openclaw-npm-postpublish-verify.ts YYYY.M.D`
-  （或匹配的 beta/correction 版本）以在新的临时前缀中验证已发布的注册表安装路径
+  （或匹配的 beta/correction 版本）以在新的临时前缀中验证已发布的注册表
+  安装路径
 - 维护者发布自动化现在使用 preflight-then-promote：
-  - 真正的 npm publish 必须通过成功的 npm `preflight_run_id`
-  - 真正的 npm publish 必须从与成功的预检运行相同的 `main` 或
-    `release/YYYY.M.D` 分支调度
-  - stable npm releases 默认为 `beta`
-  - stable npm publish 可以通过工作流输入明确指向 `latest`
+  - 真实的 npm publish 必须通过成功的 npm `preflight_run_id`
+  - 真实的 npm publish 必须从成功的预检运行所在的同一 `main` 或
+    `release/YYYY.M.D` 分支进行调度
+  - stable npm 版本默认使用 `beta`
+  - 稳定的 npm publish 可以通过 workflow 输入显式定位到 `latest`
   - 基于令牌的 npm dist-tag 变更现在位于
     `openclaw/releases-private/.github/workflows/openclaw-npm-dist-tags.yml`
-    中以确保安全，因为 `npm dist-tag add` 仍然需要 `NPM_TOKEN` 而公共仓库仅保留 OIDC 发布
-  - public `macOS Release` 仅为验证用途
-  - 真正的 private mac publish 必须通过成功的 private mac
+    中，出于安全原因，因为 `npm dist-tag add` 仍然需要 `NPM_TOKEN`，而
+    公共仓库仅保留 OIDC 发布
+  - 公共 `macOS Release` 仅用于验证
+  - 真正的私有 mac publish 必须通过成功的私有 mac
     `preflight_run_id` 和 `validate_run_id`
-  - 真正的发布路径提升准备好的工件，而不是再次重新构建它们
-- 对于像 `YYYY.M.D-N` 这样的稳定修正版本，发布后验证程序
-  也会检查从 `YYYY.M.D` 到 `YYYY.M.D-N` 的相同临时前缀升级路径，
-  以便版本修正不会静默地在基础稳定负载上留下旧的全局安装
-- 除非压缩包同时包含 `dist/control-ui/index.html` 和非空的 `dist/control-ui/assets/` 负载，
-  否则 npm 发布预检将失败并关闭，
-  这样我们就不会再次发布一个空的浏览器仪表板
-- `pnpm test:install:smoke` 还会对候选更新压缩包执行 npm pack `unpackedSize` 预算限制，
-  以便安装程序 e2e 能在发布发布路径之前捕获意外的打包膨胀
-- 如果发布工作涉及 CI 规划、扩展时间清单或
-  扩展测试矩阵，请在批准之前重新生成并审查规划器拥有的
-  `checks-node-extensions` 工作流矩阵输出（来自 `.github/workflows/ci.yml`），
-  以免发布说明描述过时的 CI 布局
-- 稳定 macOS 版本的准备就绪情况还包括更新程序界面：
-  - GitHub 发布最终必须包含打包好的 `.zip`、`.dmg` 和 `.dSYM.zip`
-  - `main` 上的 `appcast.xml` 必须在发布后指向新的稳定 zip 包
-  - 打包的应用程序必须保持非调试 bundle id、非空的 Sparkle feed
-    URL，以及一个 `CFBundleVersion`，该版本必须等于或高于该发布版本的
-    规范 Sparkle 构建底线
+  - 真正的发布路径会提升准备好的构件，而不是重新
+    构建它们
+- 对于像 `YYYY.M.D-N` 这样的稳定修正版本，发布后验证器
+  还会检查从 `YYYY.M.D` 到 `YYYY.M.D-N` 的相同临时前缀升级路径，
+  这样发布修正就不会在基础稳定负载上悄悄保留较旧的全局安装
+- npm 发布预检默认失败，除非压缩包同时包含 `dist/control-ui/index.html` 和非空的 `dist/control-ui/assets/` 载荷，这样我们就不会再次发布空的浏览器仪表板
+- 发布后验证还会检查已发布的注册表安装程序在根 `dist/*` 布局下是否包含非空的捆绑插件运行时依赖项。如果发布的版本缺少或具有空的捆绑插件依赖载荷，则无法通过发布后验证，并且不能提升到 `latest`。
+- `pnpm test:install:smoke` 还会对候选更新压缩包强制执行 npm 打包 `unpackedSize` 预算，以便安装程序 e2e 能在发布路径之前捕获意外的打包膨胀
+- 如果发布工作涉及 CI 规划、扩展时机清单或扩展测试矩阵，请在批准之前重新生成并审查 `checks-node-extensions` 工作流中由规划器拥有的 `.github/workflows/ci.yml` 矩阵输出，以确保发行说明不会描述过时的 CI 布局。
+- 稳定的 macOS 发布准备还包括更新程序界面：
+  - GitHub 版本发布最终必须包含打包好的 `.zip`、`.dmg` 和 `.dSYM.zip`
+  - `appcast.xml` 上的 `main` 必须在发布后指向新的 stable zip 文件
+  - 打包的应用程序必须保留非调试的 bundle id、非空的 Sparkle feed URL，以及一个 `CFBundleVersion`，该值必须等于或高于该发布版本的规范 Sparkle 构建底线
 
 ## NPM 工作流输入
 
-`OpenClaw NPM Release` 接受以下操作员控制的输入：
+`OpenClaw NPM Release` 接受以下由操作员控制的输入：
 
 - `tag`：必需的发布标签，例如 `v2026.4.2`、`v2026.4.2-1` 或
-  `v2026.4.2-beta.1`；当为 `preflight_only=true` 时，它也可以是当前
+  `v2026.4.2-beta.1`；当 `preflight_only=true` 时，它也可以是当前
   完整的 40 字符工作流分支提交 SHA，用于仅验证的预检
 - `preflight_only`：`true` 表示仅用于验证/构建/打包，`false` 表示
-  实际发布路径
-- `preflight_run_id`：在实际发布路径上必需，以便工作流重用
+  真实的发布路径
+- `preflight_run_id`：在真实发布路径上必需，以便工作流程重用
   来自成功预检运行的准备好的压缩包
-- `npm_dist_tag`：用于发布路径的 npm 目标标签；默认为 `beta`
+- `npm_dist_tag`：发布路径的 npm 目标标签；默认为 `beta`
 
-`OpenClaw Release Checks` 接受这些操作员控制的输入：
+`OpenClaw Release Checks` 接受以下由操作员控制的输入：
 
 - `ref`：现有的发布标签或当前的完整 40 字符 `main` 提交
-  SHA，用于从 `main` 调度时进行验证；对于发布分支，请使用
-  现有的发布标签或当前的完整 40 字符 release-branch 提交
+  SHA，当从 `main` 分发时进行验证；从发布分支时，使用
+  现有的发布标签或当前的完整 40 字符发布分支提交
   SHA
 
 规则：
@@ -134,44 +122,31 @@ OpenClaw 拥有三个公共发布渠道：
 - 稳定版和更正标签可以发布到 `beta` 或 `latest`
 - Beta 预发布标签只能发布到 `beta`
 - 对于 `OpenClaw NPM Release`，仅在
-  `preflight_only=true` 时才允许输入完整的提交 SHA
+  `preflight_only=true` 时才允许输入完整提交 SHA
 - `OpenClaw Release Checks` 始终仅用于验证，并且也接受
   当前工作流分支的提交 SHA
-- 发布检查的 commit-SHA 模式也需要当前的工作流分支 HEAD
-- 实际的发布路径必须使用与预检查期间相同的 `npm_dist_tag`；
-  工作流会在发布继续前验证该元数据
+- 发布检查 commit-SHA 模式还需要当前工作流分支的 HEAD
+- 实际的发布路径必须使用与预检期间相同的 `npm_dist_tag`；工作流会在发布继续前验证该元数据
 
-## 稳定版 npm 发布流程
+## Stable npm 发布序列
 
-在切分稳定版 npm 发布时：
+当创建 stable npm 发布时：
 
 1. 使用 `preflight_only=true` 运行 `OpenClaw NPM Release`
-   - 在标签存在之前，您可以使用当前完整的工作流分支提交
-     SHA 对预检查工作流进行仅验证的空运行
-2. 对于常规的 beta 优先流程，请选择 `npm_dist_tag=beta`；或者仅当您
-   故意想要直接发布稳定版时，选择 `latest`
-3. 当您需要实时的提示缓存覆盖时，请使用相同的标签或
-   当前完整的工作流分支提交 SHA 单独运行 `OpenClaw Release Checks`
-   - 这样设计是故意分开的，以便在不将长时间运行或不稳定的检查
-     重新耦合到发布工作流的情况下，保持实时覆盖可用
+   - 在标签存在之前，您可以使用当前的完整工作流分支提交 SHA 进行仅验证的预检工作流程空运行
+2. 选择 `npm_dist_tag=beta` 以进行常规的 beta 优先流程，或者仅当您有意进行直接 stable 发布时选择 `latest`
+3. 当您需要实时提示缓存、QA Lab 对等性、Matrix 和 Telegram 覆盖范围时，请使用相同的标签或当前的完整工作流分支提交 SHA 单独运行 `OpenClaw Release Checks`
+   - 这样做是有意分开的，以便实时覆盖范围保持可用，而无需将长时间运行或不稳定的检查重新耦合到发布工作流程中
 4. 保存成功的 `preflight_run_id`
-5. 使用 `preflight_only=false`、相同的
-   `tag`、相同的 `npm_dist_tag` 和保存的 `preflight_run_id` 再次运行 `OpenClaw NPM Release`
-6. 如果版本发布在 `beta` 上，请使用私有的
-   `openclaw/releases-private/.github/workflows/openclaw-npm-dist-tags.yml`
-   工作流将该稳定版本从 `beta` 提升到 `latest`
-7. 如果该版本有意直接发布到 `latest` 且 `beta`
-   应立即紧随同一稳定构建，请使用相同的私有
-   工作流将两个 dist-tags 指向该稳定版本，或者让其按计划
-   的自我修复同步稍后移动 `beta`
+5. 使用 `preflight_only=false`、相同的 `tag`、相同的 `npm_dist_tag` 以及保存的 `preflight_run_id` 再次运行 `OpenClaw NPM Release`
+6. 如果发布版本落在 `beta` 上，请使用私有 `openclaw/releases-private/.github/workflows/openclaw-npm-dist-tags.yml` 工作流将该稳定版本从 `beta` 升级到 `latest`
+7. 如果发布版本有意直接发布到 `latest` 并且 `beta` 应紧随相同的稳定版本，请使用相同的私有工作流将两个 dist-tags 指向该稳定版本，或者让其定时的自愈同步稍后移动 `beta`
 
-出于安全原因，dist-tag 的变更位于私有仓库中，因为它仍然
-需要 `NPM_TOKEN`，而公共仓库仅保留 OIDC 发布。
+出于安全考虑，dist-tag 的变更位于私有仓库中，因为它仍然需要 `NPM_TOKEN`，而公共仓库则保持仅使用 OIDC 发布。
 
-这使得直接发布路径和 beta 优先的提升路径都被
-记录在案并对操作者可见。
+这使得直接发布路径和 beta 优先的提升路径都有文档记录，并且对操作员可见。
 
-## 公开参考
+## 公共参考
 
 - [`.github/workflows/openclaw-npm-release.yml`](https://github.com/openclaw/openclaw/blob/main/.github/workflows/openclaw-npm-release.yml)
 - [`.github/workflows/openclaw-release-checks.yml`](https://github.com/openclaw/openclaw/blob/main/.github/workflows/openclaw-release-checks.yml)
@@ -180,6 +155,6 @@ OpenClaw 拥有三个公共发布渠道：
 - [`scripts/package-mac-dist.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-dist.sh)
 - [`scripts/make_appcast.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/make_appcast.sh)
 
-维护者使用
+维护人员使用
 [`openclaw/maintainers/release/README.md`](https://github.com/openclaw/maintainers/blob/main/release/README.md)
 中的私有发布文档来获取实际的运行手册。

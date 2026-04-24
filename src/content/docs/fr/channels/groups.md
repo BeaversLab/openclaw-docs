@@ -404,6 +404,10 @@ Le prompt système de l'agent inclut une introduction de groupe lors du premier 
 - Lister les chats : `imsg chats --limit 20`.
 - Les réponses de groupe vont toujours au même `chat_id`.
 
+## WhatsApp invites système
+
+Voir [WhatsApp](/fr/channels/whatsapp#system-prompts) pour les règles canoniques des invites système WhatsApp, y compris la résolution des invites de groupe et directes, le comportement des caractères génériques et la sémantique de priorité du compte.
+
 ## Spécificités WhatsApp
 
-Voir [Group messages](/fr/channels/group-messages) pour les comportements exclusifs à WhatsApp (injection d'historique, détails de gestion des mentions).
+Voir [Group messages](/fr/channels/group-messages) pour les comportements spécifiques à WhatsApp (injection de l'historique, détails de la gestion des mentions).

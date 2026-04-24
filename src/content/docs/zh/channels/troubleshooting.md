@@ -39,7 +39,7 @@ openclaw channels status --probe
 | 群组消息被忽略        | 检查 `requireMention` + 配置中的提及模式  | 提及机器人或放宽该群组的提及策略。  |
 | 随机断开/重新登录循环 | `openclaw channels status --probe` + 日志 | 重新登录并验证凭据目录是否健康。    |
 
-完整故障排除：[/channels/whatsapp#故障排除](/zh/channels/whatsapp#troubleshooting)
+完整故障排除：[WhatsApp 故障排除](/zh/channels/whatsapp#troubleshooting)
 
 ## Telegram
 
@@ -54,7 +54,7 @@ openclaw channels status --probe
 | `setMyCommands` 在启动时被拒绝 | 检查日志中的 `BOT_COMMANDS_TOO_MUCH`     | 减少插件/技能/自定义 Telegram 命令或禁用原生菜单。                                         |
 | 已升级但允许列表阻止了您       | `openclaw security audit` 和配置允许列表 | 运行 `openclaw doctor --fix` 或将 `@username` 替换为数字发送者 ID。                        |
 
-完整故障排除：[/channels/telegram#故障排除](/zh/channels/telegram#troubleshooting)
+完整故障排除：[Telegram 故障排除](/zh/channels/telegram#troubleshooting)
 
 ## Discord
 
@@ -66,7 +66,7 @@ openclaw channels status --probe
 | 群组消息被忽略           | 检查日志中因提及拦截而丢弃的记录   | 提及 bot 或设置 guild/渠道 `requireMention: false`。 |
 | 私信回复丢失             | `openclaw pairing list discord`    | 批准私信配对或调整私信策略。                         |
 
-完整故障排除：[/channels/discord#故障排除](/zh/channels/discord#troubleshooting)
+完整故障排除：[Discord 故障排除](/zh/channels/discord#troubleshooting)
 
 ## Slack
 
@@ -78,7 +78,7 @@ openclaw channels status --probe
 | 私信被阻止                | `openclaw pairing list slack`      | 批准配对或放宽私信策略。                                                                                                            |
 | 频道消息被忽略            | 检查 `groupPolicy` 和频道允许列表  | 允许该频道或将策略切换至 `open`。                                                                                                   |
 
-完整故障排除：[/channels/slack#故障排除](/zh/channels/slack#troubleshooting)
+完整故障排除：[Slack 故障排除](/zh/channels/slack#troubleshooting)
 
 ## iMessage 和 BlueBubbles
 
@@ -92,8 +92,8 @@ openclaw channels status --probe
 
 完整故障排除：
 
-- [/channels/imessage#故障排除](/zh/channels/imessage#troubleshooting)
-- [/channels/bluebubbles#故障排除](/zh/channels/bluebubbles#troubleshooting)
+- [iMessage 故障排除](/zh/channels/imessage#troubleshooting)
+- [BlueBubbles 故障排除](/zh/channels/bluebubbles#troubleshooting)
 
 ## Signal
 
@@ -105,7 +105,7 @@ openclaw channels status --probe
 | 私信被阻止                | `openclaw pairing list signal`     | 批准发送者或调整私信策略。                      |
 | 群组回复未触发            | 检查群组允许列表和提及模式         | 添加发送者/群组或放宽限制。                     |
 
-完整故障排除：[/channels/signal#故障排除](/zh/channels/signal#troubleshooting)
+完整故障排除：[Signal 故障排除](/zh/channels/signal#troubleshooting)
 
 ## QQ Bot
 
@@ -118,7 +118,7 @@ openclaw channels status --probe
 | 语音未转录             | 检查 STT 提供商配置                    | 配置 `channels.qqbot.stt` 或 `tools.media.audio`。  |
 | 主动消息未送达         | 检查 QQ 平台交互要求                   | 如果没有最近的交互，QQ 可能会阻止机器人发起的消息。 |
 
-完整故障排除：[/channels/qqbot#故障排除](/zh/channels/qqbot#troubleshooting)
+完整故障排除：[QQ Bot 故障排除](/zh/channels/qqbot#troubleshooting)
 
 ## Matrix
 

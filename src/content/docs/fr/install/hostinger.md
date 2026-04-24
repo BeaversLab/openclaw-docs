@@ -87,4 +87,4 @@ Envoyez "Bonjour" à votre assistant sur le canal que vous avez connecté. OpenC
 ## Étapes suivantes
 
 - [Canaux](/fr/channels) -- connectez Telegram, WhatsApp, Discord, et plus encore
-- [Configuration de la Gateway](/fr/gateway/configuration) -- toutes les options de configuration
+- [Configuration du Gateway](/fr/gateway/configuration) -- toutes les options de configuration

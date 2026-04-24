@@ -60,7 +60,7 @@ Quadlet 僅適用於 Linux，因為它依賴 systemd 使用者服務。
 
 - `OPENCLAW_IMAGE` 或 `OPENCLAW_PODMAN_IMAGE` —— 使用現有的/拉取的映像檔而不是建構 `openclaw:local`
 - `OPENCLAW_DOCKER_APT_PACKAGES` —— 在建構映像檔期間安裝額外的 apt 套件
-- `OPENCLAW_EXTENSIONS` —— 在建構時預先安裝擴充功能相依項
+- `OPENCLAW_EXTENSIONS` -- 在构建時預先安裝外掛依賴項
 
 容器啟動：
 

@@ -60,7 +60,7 @@ Env vars de construction/configuration facultatifs :
 
 - `OPENCLAW_IMAGE` ou `OPENCLAW_PODMAN_IMAGE` -- utilisez une image existante/extraite au lieu de construire `openclaw:local`
 - `OPENCLAW_DOCKER_APT_PACKAGES` -- installez des paquets apt supplémentaires lors de la construction de l'image
-- `OPENCLAW_EXTENSIONS` -- pré-installez les dépendances des extensions au moment de la construction
+- `OPENCLAW_EXTENSIONS` -- préinstaller les dépendances des plugins au moment de la construction
 
 Démarrage du conteneur :
 

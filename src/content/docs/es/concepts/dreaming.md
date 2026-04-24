@@ -229,9 +229,21 @@ Cuando está habilitado, la pestaña **Dreams** del Gateway muestra:
 - un carril de Escena anclado distintivo para entradas de repetición histórica preparadas
 - un lector de Dream Diary ampliable respaldado por `doctor.memory.dreamDiary`
 
+## Solución de problemas
+
+### Dreaming nunca se ejecuta (el estado muestra bloqueado)
+
+El cron gestionado de Dreaming depende del latido del agente predeterminado. Si el latido no se activa para ese agente, el cron pone en cola un evento del sistema que nadie consume y Dreaming no se ejecuta silenciosamente. Tanto `openclaw memory status` como `/dreaming status` informarán `blocked` en ese caso y nombrarán al agente cuyo latido es el bloqueador.
+
+Dos causas comunes:
+
+- Otro agente declara un bloque `heartbeat:` explícito. Cuando cualquier entrada en `agents.list` tiene su propio bloque `heartbeat`, solo esos agentes tienen latido; los valores predeterminados dejan de aplicarse a todos los demás, por lo que el agente predeterminado puede quedar en silencio. Mueva la configuración del latido a `agents.defaults.heartbeat` o añada un bloque `heartbeat` explícito en el agente predeterminado. Consulte [Alcance y precedencia](/es/gateway/heartbeat#scope-and-precedence).
+- `heartbeat.every` es `0`, está vacío o es inanalizable. El cron no tiene intervalo contra el cual programar, por lo que el latido se desactiva efectivamente. Establezca `every` en una duración positiva como `30m`. Consulte [Valores predeterminados](/es/gateway/heartbeat#defaults).
+
 ## Relacionado
 
-- [Memoria](/es/concepts/memory)
-- [Búsqueda de memoria](/es/concepts/memory-search)
-- [CLI de memoria](/es/cli/memory)
+- [Latido (Heartbeat)](/es/gateway/heartbeat)
+- [Memoria (Memory)](/es/concepts/memory)
+- [Búsqueda de memoria (Memory Search)](/es/concepts/memory-search)
+- [CLI de memoria (memory CLI)](/es/cli/memory)
 - [Referencia de configuración de memoria](/es/reference/memory-config)

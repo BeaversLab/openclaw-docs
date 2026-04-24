@@ -197,20 +197,23 @@ LINE 插件支持通过代理消息工具发送图片、视频和音频文件。
 - **视频**：发送时带有明确的预览和内容类型处理。
 - **音频**：作为 LINE 音频消息发送。
 
-当 LINE 特定的路径不可用时，通用媒体发送会回退到现有的仅图片路径。
+出站媒体 URL 必须是公共的 HTTPS URL。OpenClaw 在将 URL 传递给 LINE 之前会验证目标主机名，并拒绝回环、链路本地和专用网络目标。
+
+当没有特定的 LINE 路径时，通用媒体发送会退回到现有的仅限图像的路由。
 
 ## 故障排除
 
-- **Webhook 验证失败：** 请确保 webhook URL 是 HTTPS，并且 `channelSecret` 与 LINE 控制台匹配。
-- **没有入站事件：** 请确认 webhook 路径匹配 `channels.line.webhookPath`
-  并且网关可从 LINE 访问。
-- **媒体下载错误：** 如果媒体超过
-  默认限制，请提高 `channels.line.mediaMaxMb`。
+- **Webhook 验证失败：** 请确保 Webhook URL 是 HTTPS 并且
+  `channelSecret` 与 LINE 控制台匹配。
+- **没有入站事件：** 请确认 Webhook 路径匹配 `channels.line.webhookPath`
+  并且网关可被 LINE 访问。
+- **媒体下载错误：** 如果媒体超出
+  默认限制，则引发 `channels.line.mediaMaxMb`。
 
 ## 相关
 
-- [频道概览](/zh/channels) — 所有支持的频道
-- [配对](/zh/channels/pairing) — 私信认证和配对流程
-- [群组](/zh/channels/groups) — 群聊行为和提及限制
-- [频道路由](/zh/channels/channel-routing) — 消息的会话路由
-- [安全](/zh/gateway/security) — 访问模型和加固
+- [渠道概述](/zh/channels) — 所有支持的渠道
+- [配对](/zh/channels/pairing) — 私信身份验证和配对流程
+- [群组](/zh/channels/groups) — 群聊行为和提及控制
+- [渠道路由](/zh/channels/channel-routing) — 消息的会话路由
+- [安全性](/zh/gateway/security) — 访问模型和加固

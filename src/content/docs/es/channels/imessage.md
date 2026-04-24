@@ -51,7 +51,7 @@ imsg rpc --help
     imessage: {
       enabled: true,
       cliPath: "/usr/local/bin/imsg",
-      dbPath: "/Users/<you>/Library/Messages/chat.db",
+      dbPath: "/Users/user/Library/Messages/chat.db",
     },
   },
 }
@@ -59,7 +59,7 @@ imsg rpc --help
 
       </Step>
 
-      <Step title="Iniciar gateway">
+      <Step title="Iniciar puerta de enlace">
 
 ```bash
 openclaw gateway
@@ -67,14 +67,14 @@ openclaw gateway
 
       </Step>
 
-      <Step title="Aprobar el primer emparejamiento DM (dmPolicy predeterminado)">
+      <Step title="Aprobar el primer emparejamiento MD (dmPolicy predeterminado)">
 
 ```bash
 openclaw pairing list imessage
 openclaw pairing approve imessage <CODE>
 ```
 
-        Las solicitudes de emparejamiento expiran después de 1 hora.
+        Las solicitudes de emparejamiento caducan después de 1 hora.
       </Step>
     </Steps>
 

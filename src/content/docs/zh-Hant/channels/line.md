@@ -197,21 +197,23 @@ LINE 外掛支援透過代理訊息工具傳送圖片、影片和音訊檔案。
 - **影片**：發送時會包含明確的預覽和內容類型處理。
 - **音訊**：作為 LINE 音訊訊息發送。
 
-當無法使用 LINE 專用路徑時，一般媒體發送會回退到現有的僅圖片路徑。
+Outbound media URLs must be public HTTPS URLs. OpenClaw validates the target hostname before handing the URL to LINE and rejects loopback, link-local, and private-network targets.
+
+Generic media sends fall back to the existing image-only route when a LINE-specific path is not available.
 
 ## 疑難排解
 
-- **Webhook 驗證失敗：** 請確保 Webhook URL 是 HTTPS，且
-  `channelSecret` 與 LINE 控制台相符。
-- **沒有 inbound 事件：** 請確認 Webhook 路徑符合 `channels.line.webhookPath`，
-  且 LINE 可以連線到閘道。
-- **媒體下載錯誤：** 如果媒體超過
-  預設限制，請提高 `channels.line.mediaMaxMb`。
+- **Webhook verification fails:** ensure the webhook URL is HTTPS and the
+  `channelSecret` matches the LINE console.
+- **No inbound events:** confirm the webhook path matches `channels.line.webhookPath`
+  and that the gateway is reachable from LINE.
+- **Media download errors:** raise `channels.line.mediaMaxMb` if media exceeds the
+  default limit.
 
 ## 相關
 
-- [Channels Overview](/zh-Hant/channels) — 所有支援的頻道
-- [Pairing](/zh-Hant/channels/pairing) — 私訊驗證與配對流程
-- [Groups](/zh-Hant/channels/groups) — 群組聊天行為與提及閘道
-- [Channel Routing](/zh-Hant/channels/channel-routing) — 訊息的會話路由
-- [Security](/zh-Hant/gateway/security) — 存取模型與強化防護
+- [頻道總覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — 私訊驗證與配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及限制
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型與強化措施

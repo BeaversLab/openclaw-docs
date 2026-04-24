@@ -118,18 +118,19 @@ Modes :
 
 ### Mappage de canal
 
-| Canal    | `off` | `partial` | `block` | `progress`             |
-| -------- | ----- | --------- | ------- | ---------------------- |
-| Telegram | ✅    | ✅        | ✅      | correspond à `partial` |
-| Discord  | ✅    | ✅        | ✅      | correspond à `partial` |
-| Slack    | ✅    | ✅        | ✅      | ✅                     |
+| Canal      | `off` | `partial` | `block` | `progress`             |
+| ---------- | ----- | --------- | ------- | ---------------------- |
+| Telegram   | ✅    | ✅        | ✅      | correspond à `partial` |
+| Discord    | ✅    | ✅        | ✅      | correspond à `partial` |
+| Slack      | ✅    | ✅        | ✅      | ✅                     |
+| Mattermost | ✅    | ✅        | ✅      | ✅                     |
 
-Slack uniquement :
+Slack-only :
 
-- `channels.slack.streaming.nativeTransport` active les appels de l'API de diffusion native de Slack lorsque `channels.slack.streaming.mode="partial"` (par défaut : `true`).
-- La diffusion native de Slack et le statut du thread de l'assistant Slack nécessitent une cible de thread de réponse ; les Slack de premier niveau n'affichent pas cet aperçu de style thread.
+- `channels.slack.streaming.nativeTransport` bascule les appels de l'API de diffusion native Slack lorsque `channels.slack.streaming.mode="partial"` (par défaut : `true`).
+- La diffusion native Slack et le statut du fil de discussion de l'assistant Slack nécessitent une cible de fil de réponse ; les DMs de premier niveau n'affichent pas cet aperçu de style fil.
 
-Migration des clés héritées :
+Migration de clé héritée :
 
 - Telegram : `streamMode` + booléen `streaming` migrent automatiquement vers l'énumération `streaming`.
 - Discord : `streamMode` + booléen `streaming` migrent automatiquement vers l'énumération `streaming`.
@@ -139,24 +140,47 @@ Migration des clés héritées :
 
 Telegram :
 
-- Utilise les mises à jour d'aperçu `sendMessage` + `editMessageText` dans les DMs et les group/topics.
-- La diffusion de l'aperçu est ignorée lorsque la diffusion de blocs de Telegram est explicitement activée (pour éviter la double diffusion).
-- `/reasoning stream` peut écrire du raisonnement dans l'aperçu.
+- Utilise les mises à jour d'aperçu `sendMessage` + `editMessageText` sur les DMs et les groupes/sujets.
+- La diffusion d'aperçu est ignorée lorsque la diffusion de blocs Telegram est explicitement activée (pour éviter la double diffusion).
+- `/reasoning stream` peut écrire le raisonnement dans l'aperçu.
 
 Discord :
 
-- Utilise l'envoi et la modification de messages d'aperçu.
+- Utilise l'envoi et l'édition de messages d'aperçu.
 - Le mode `block` utilise le découpage de brouillon (`draftChunk`).
-- La diffusion de l'aperçu est ignorée lorsque la diffusion de blocs de Discord est explicitement activée.
+- La diffusion d'aperçu est ignorée lorsque la diffusion de blocs Discord est explicitement activée.
+- Les charges utiles finales de média/d'erreur et de réponse explicite annulent les aperçus en attente sans vider un nouveau brouillon, puis utilisent la livraison normale.
 
 Slack :
 
-- `partial` peut utiliser la diffusion native de Slack (`chat.startStream`/`append`/`stop`) lorsqu'elle est disponible.
+- `partial` peut utiliser la diffusion native Slack (`chat.startStream`/`append`/`stop`) si disponible.
 - `block` utilise des aperçus de brouillon de type ajout.
 - `progress` utilise le texte d'aperçu de statut, puis la réponse finale.
+- Les charges utiles finales de média/erreur et les fins de progression ne créent pas de messages de brouillon jetables ; seules les fins de texte/bloc qui peuvent modifier l'aperçu vident le texte de brouillon en attente.
+
+Mattermost :
+
+- Diffuse la réflexion, l'activité des outils et le texte de réponse partiel dans un seul message de prévisualisation de brouillon qui est finalisé sur place lorsque la réponse finale est prête à être envoyée.
+- Revient à l'envoi d'un nouveau message final si le message de prévisualisation a été supprimé ou n'est autrement pas disponible au moment de la finalisation.
+- Les charges utiles finales de média/erreur annulent les mises à jour de prévisualisation en attente avant la livraison normale au lieu de vider un message de prévisualisation temporaire.
+
+Matrix :
+
+- Les prévisualisations de brouillon sont finalisées sur place lorsque le texte final peut réutiliser l'événement de prévisualisation.
+- Les finales contenant uniquement des médias, des erreurs ou des inadéquations de cibles de réponse annulent les mises à jour de prévisualisation en attente avant la livraison normale ; une prévisualisation obsolète déjà visible est supprimée (redacted).
+
+### Mises à jour de prévisualisation de la progression des outils
+
+La diffusion en prévisualisation peut également inclure des mises à jour de la **progression des outils** — de courtes lignes de statut comme « recherche sur le web », « lecture de fichier » ou « appel d'outil » — qui apparaissent dans le même message de prévisualisation pendant que les outils sont en cours d'exécution, avant la réponse finale. Cela maintient visuellement les tours d'outils en plusieurs étapes actifs plutôt que silencieux entre la première prévisualisation de réflexion et la réponse finale.
+
+Surfaces prises en charge :
+
+- **Discord**, **Slack** et **Telegram** diffusent la progression des outils dans la modification de prévisualisation en direct.
+- **Mattermost** intègre déjà l'activité des outils dans son unique message de prévisualisation de brouillon (voir ci-dessus).
+- Les modifications de progression des outils suivent le mode de diffusion en prévisualisation actif ; elles sont ignorées lorsque la diffusion en prévisualisation est `off` ou lorsque la diffusion par bloc a pris le relais du message.
 
 ## Connexes
 
 - [Messages](/fr/concepts/messages) — cycle de vie et livraison des messages
-- [Réessai](/fr/concepts/retry) — comportement de nouvelle tentative en cas d'échec de livraison
-- [Canaux](/fr/channels) — support de la diffusion par canal
+- [Nouvelle tentative](/fr/concepts/retry) — comportement de nouvelle tentative en cas d'échec de livraison
+- [Canaux](/fr/channels) — prise en charge de la diffusion par canal

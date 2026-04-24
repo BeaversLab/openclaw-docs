@@ -8,7 +8,7 @@ read_when:
 
 # Fireworks
 
-[Fireworks](https://fireworks.ai) expose des modèles à poids ouverts et routés via une OpenAI compatible. API inclut un plugin provider Fireworks intégré.
+[Fireworks](https://fireworks.ai) expose des modèles à poids ouverts et acheminés via une API compatible OpenAI. API inclut un plugin de fournisseur Fireworks intégré.
 
 | Propriété         | Valeur                                                 |
 | ----------------- | ------------------------------------------------------ |
@@ -51,11 +51,12 @@ openclaw onboard --non-interactive \
 
 ## Catalogue intégré
 
-| Réf modèle                                             | Nom                         | Entrée      | Contexte | Sortie max | Notes                                                |
-| ------------------------------------------------------ | --------------------------- | ----------- | -------- | ---------- | ---------------------------------------------------- |
-| `fireworks/accounts/fireworks/routers/kimi-k2p5-turbo` | Kimi K2.5 Turbo (Fire Pass) | texte,image | 256,000  | 256,000    | Modèle de démarrage intégré par défaut sur Fireworks |
+| Réf modèle                                             | Nom                         | Entrée      | Contexte | Sortie max | Notes                                                                                                                                                                                    |
+| ------------------------------------------------------ | --------------------------- | ----------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fireworks/accounts/fireworks/models/kimi-k2p6`        | Kimi K2.6                   | texte,image | 262 144  | 262 144    | Dernier modèle Kimi sur Fireworks. La réflexion est désactivée pour les requêtes Fireworks K2.6 ; acheminez directement via Moonshot si vous avez besoin de la sortie de réflexion Kimi. |
+| `fireworks/accounts/fireworks/routers/kimi-k2p5-turbo` | Kimi K2.5 Turbo (Fire Pass) | text,image  | 256 000  | 256 000    | Modèle de démarrage par défaut fourni avec Fireworks                                                                                                                                     |
 
-<Tip>Si Fireworks publie un modèle plus récent tel qu'une nouvelle version de Qwen ou Gemma, vous pouvez basculer directement vers celui-ci en utilisant son identifiant de modèle Fireworks sans attendre de mise à jour du catalogue intégré.</Tip>
+<Tip>Si Fireworks publie un modèle plus récent tel qu'une nouvelle version de Qwen ou Gemma, vous pouvez directement basculer vers celui-ci en utilisant son identifiant de modèle Fireworks sans attendre de mise à jour du catalogue intégré.</Tip>
 
 ## Identifiants de modèle Fireworks personnalisés
 
@@ -85,10 +86,10 @@ OpenClaw accepte également les identifiants de modèle Fireworks dynamiques. Ut
   </Accordion>
 
   <Accordion title="Note sur l'environnement">
-    Si le Gateway s'exécute en dehors de votre shell interactif, assurez-vous que `FIREWORKS_API_KEY` est également disponible pour ce processus.
+    Si la Gateway s'exécute en dehors de votre shell interactif, assurez-vous que `FIREWORKS_API_KEY` est également disponible pour ce processus.
 
     <Warning>
-    Une clé résidant uniquement dans `~/.profile` n'aidera pas un démon launchd/systemd à moins que cet environnement ne soit également importé. Définissez la clé dans `~/.openclaw/.env` ou via `env.shellEnv` pour vous assurer que le processus de la passerelle peut la lire.
+    Une clé présente uniquement dans `~/.profile` ne sera pas utile pour un démon launchd/systemd, sauf si cet environnement est également importé. Définissez la clé dans `~/.openclaw/.env` ou via `env.shellEnv` pour garantir que le processus de la passerelle puisse la lire.
     </Warning>
 
   </Accordion>
@@ -97,10 +98,10 @@ OpenClaw accepte également les identifiants de modèle Fireworks dynamiques. Ut
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Sélection de modèle" href="/fr/concepts/model-providers" icon="layers">
-    Choix des fournisseurs, références de modèles et comportement de basculement.
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
+    Choisir les fournisseurs, les références de modèle et le comportement de basculement.
   </Card>
-  <Card title="Dépannage" href="/fr/help/troubleshooting" icon="wrench">
+  <Card title="Troubleshooting" href="/fr/help/troubleshooting" icon="wrench">
     Dépannage général et FAQ.
   </Card>
 </CardGroup>

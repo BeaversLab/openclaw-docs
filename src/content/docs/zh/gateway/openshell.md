@@ -273,28 +273,31 @@ openclaw sandbox recreate --all
 openclaw sandbox recreate --all
 ```
 
+## 安全加固
+
+读取远程工作区文件的 OpenShell 沙箱辅助程序会为工作区根目录使用固定的文件描述符，并从该固定 fd 向上遍历祖先目录，而不是在每次读取时重新解析路径。结合每次操作时的身份重新检查，这可以防止中途符号链接交换或热交换工作区挂载将读取重定向到预期的远程工作区之外。
+
+- 工作区根目录打开一次并被固定；后续读取将重用该 fd。
+- 祖先遍历从固定的 fd 遍历相对条目，因此它们无法被路径中更高级别的替换目录重定向。
+- 沙箱身份会在每次读取之前重新检查，因此重建或重新分配的沙箱无法静默地提供来自不同工作区的文件。
+
 ## 当前限制
 
 - OpenShell 后端不支持沙箱浏览器。
 - `sandbox.docker.binds` 不适用于 OpenShell。
-- Docker 特定的运行时控制项（位于 `sandbox.docker.*` 下）仅适用于 Docker
-  后端。
+- Docker 特定的运行时参数位于 `sandbox.docker.*` 下，仅适用于 Docker 后端。
 
 ## 工作原理
 
-1. OpenClaw 调用 `openshell sandbox create`（根据配置附带 `--from`、`--gateway`、
-   `--policy`、`--providers`、`--gpu` 标志）。
-2. OpenClaw 调用 `openshell sandbox ssh-config <name>` 以获取沙箱的 SSH 连接
-   详细信息。
-3. Core 将 SSH 配置写入临时文件，并使用与通用 SSH 后端相同的远程文件系统
-   桥接打开 SSH 会话。
-4. 在 `mirror` 模式下：在执行前将本地同步到远程，运行，然后在执行后同步回。
-5. 在 `remote` 模式下：创建时播种一次，然后直接在远程
-   工作区上操作。
+1. OpenClaw 调用 `openshell sandbox create`（根据配置带有 `--from`、`--gateway`、`--policy`、`--providers`、`--gpu` 标志）。
+2. OpenClaw 调用 `openshell sandbox ssh-config <name>` 来获取沙箱的 SSH 连接详细信息。
+3. Core 将 SSH 配置写入临时文件，并使用与通用 SSH 后端相同的远程文件系统桥打开 SSH 会话。
+4. 在 `mirror` 模式下：在执行前同步本地到远程，运行，在执行后同步回来。
+5. 在 `remote` 模式下：创建时播种一次，然后直接在远程工作区上操作。
 
 ## 另请参阅
 
-- [沙箱隔离](/zh/gateway/sandboxing) -- 模式、范围和后端比较
+- [沙箱隔离](/zh/gateway/sandboxing) -- 模式、作用域和后端比较
 - [沙箱 vs 工具策略 vs 提权](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) -- 调试被阻止的工具
 - [多代理沙箱和工具](/zh/tools/multi-agent-sandbox-tools) -- 每个代理的覆盖设置
 - [沙箱 CLI](/zh/cli/sandbox) -- `openclaw sandbox` 命令

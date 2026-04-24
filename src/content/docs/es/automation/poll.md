@@ -1,5 +1,5 @@
 ---
-summary: "Redirigir a /tools/message"
+summary: "Redirect to /cli/message"
 title: "Encuestas"
 ---
 

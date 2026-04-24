@@ -67,75 +67,73 @@ Recherche par nom :
 
 - `send`
   - Canaux : WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage/Matrix/Microsoft Teams
-  - Obligatoire : `--target`, plus `--message` ou `--media`
-  - Facultatif : `--media`, `--interactive`, `--buttons`, `--components`, `--card`, `--reply-to`, `--thread-id`, `--gif-playback`, `--force-document`, `--silent`
-  - Payloads interactifs partagés : `--interactive` envoie un payload JSON interactif natif au channel lorsque pris en charge
-  - Telegram uniquement : `--buttons` (nécessite `channels.telegram.capabilities.inlineButtons` pour l'autoriser)
-  - Telegram uniquement : `--force-document` (envoyer les images et les GIFs comme documents pour éviter la compression Telegram)
-  - Telegram uniquement : `--thread-id` (id du sujet de forum)
+  - Obligatoire : `--target`, plus `--message`, `--media` ou `--presentation`
+  - Optionnel : `--media`, `--presentation`, `--delivery`, `--pin`, `--reply-to`, `--thread-id`, `--gif-playback`, `--force-document`, `--silent`
+  - Charges utiles de présentation partagées : `--presentation` envoie des blocs sémantiques (`text`, `context`, `divider`, `buttons`, `select`) que le cœur génère via les capacités déclarées du channel sélectionné. Voir [Message Presentation](/fr/plugins/message-presentation).
+  - Préférences de livraison génériques : `--delivery` accepte des indices de livraison tels que `{ "pin": true }` ; `--pin` est une abréviation pour la livraison épinglée lorsque le channel le prend en charge.
+  - Telegram uniquement : `--force-document` (envoyer les images et les GIF sous forme de documents pour éviter la compression Telegram)
+  - Telegram uniquement : `--thread-id` (id du sujet du forum)
   - Slack uniquement : `--thread-id` (horodatage du fil ; `--reply-to` utilise le même champ)
-  - Discord uniquement : payload JSON `--components`
-  - Channels avec cartes adaptatives : payload JSON `--card` lorsque pris en charge
   - Telegram + Discord : `--silent`
   - WhatsApp uniquement : `--gif-playback`
 
 - `poll`
   - Channels : WhatsApp/Telegram/Discord/Matrix/Microsoft Teams
-  - Obligatoire : `--target`, `--poll-question`, `--poll-option` (à répéter)
-  - Facultatif : `--poll-multi`
+  - Obligatoire : `--target`, `--poll-question`, `--poll-option` (répéter)
+  - Optionnel : `--poll-multi`
   - Discord uniquement : `--poll-duration-hours`, `--silent`, `--message`
   - Telegram uniquement : `--poll-duration-seconds` (5-600), `--silent`, `--poll-anonymous` / `--poll-public`, `--thread-id`
 
 - `react`
-  - Chaînes : Discord/Google Chat/Slack/Telegram/WhatsApp/Signal/Matrix
+  - Channels : Discord/Google Chat/Slack/Telegram/WhatsApp/Signal/Matrix
   - Obligatoire : `--message-id`, `--target`
   - Optionnel : `--emoji`, `--remove`, `--participant`, `--from-me`, `--target-author`, `--target-author-uuid`
-  - Remarque : `--remove` nécessite `--emoji` (omettez `--emoji` pour effacer vos propres réactions lorsque cette fonction est prise en charge ; voir /tools/reactions)
+  - Remarque : `--remove` requiert `--emoji` (omettez `--emoji` pour effacer vos propres réactions lorsque pris en charge ; voir /tools/reactions)
   - WhatsApp uniquement : `--participant`, `--from-me`
-  - Réactions de groupe Signal : `--target-author` ou `--target-author-uuid` obligatoire(s)
+  - Réactions de groupe Signal : `--target-author` ou `--target-author-uuid` requis
 
 - `reactions`
-  - Chaînes : Discord/Google Chat/Slack/Matrix
+  - Canaux : Discord/Google Chat/Slack/Matrix
   - Obligatoire : `--message-id`, `--target`
   - Optionnel : `--limit`
 
 - `read`
-  - Chaînes : Discord/Slack/Matrix
+  - Canaux : Discord/Slack/Matrix
   - Obligatoire : `--target`
   - Optionnel : `--limit`, `--before`, `--after`
   - Discord uniquement : `--around`
 
 - `edit`
-  - Chaînes : Discord/Slack/Matrix
+  - Canaux : Discord/Slack/Matrix
   - Obligatoire : `--message-id`, `--message`, `--target`
 
 - `delete`
-  - Chaînes : Discord/Slack/Telegram/Matrix
+  - Canaux : Discord/Slack/Telegram/Matrix
   - Obligatoire : `--message-id`, `--target`
 
 - `pin` / `unpin`
-  - Chaînes : Discord/Slack/Matrix
+  - Canaux : Discord/Slack/Matrix
   - Obligatoire : `--message-id`, `--target`
 
 - `pins` (liste)
-  - Chaînes : Discord/Slack/Matrix
+  - Canaux : Discord/Slack/Matrix
   - Obligatoire : `--target`
 
 - `permissions`
-  - Chaînes : Discord/Matrix
+  - Canaux : Discord/Matrix
   - Obligatoire : `--target`
   - Matrix uniquement : disponible lorsque le chiffrement Matrix est activé et que les actions de vérification sont autorisées
 
 - `search`
-  - Chaînes : Discord
+  - Canaux : Discord
   - Obligatoire : `--guild-id`, `--query`
-  - Optionnel : `--channel-id`, `--channel-ids` (à répéter), `--author-id`, `--author-ids` (à répéter), `--limit`
+  - Optionnel : `--channel-id`, `--channel-ids` (répéter), `--author-id`, `--author-ids` (répéter), `--limit`
 
-### Fils de discussion
+### Fil de discussion
 
 - `thread create`
   - Canaux : Discord
-  - Obligatoire : `--thread-name`, `--target` (id de chaîne)
+  - Obligatoire : `--thread-name`, `--target` (id de channel)
   - Optionnel : `--message-id`, `--message`, `--auto-archive-min`
 
 - `thread list`
@@ -144,33 +142,33 @@ Recherche par nom :
   - Optionnel : `--channel-id`, `--include-archived`, `--before`, `--limit`
 
 - `thread reply`
-  - Chaînes : Discord
+  - Canaux : Discord
   - Obligatoire : `--target` (id de fil), `--message`
   - Optionnel : `--media`, `--reply-to`
 
-### Émojis
+### Emojis
 
 - `emoji list`
   - Discord : `--guild-id`
   - Slack : aucun indicateur supplémentaire
 
 - `emoji upload`
-  - Chaînes : Discord
+  - Canaux : Discord
   - Obligatoire : `--guild-id`, `--emoji-name`, `--media`
-  - Optionnel : `--role-ids` (à répéter)
+  - Optionnel : `--role-ids` (répéter)
 
 ### Autocollants
 
 - `sticker send`
   - Canaux : Discord
-  - Obligatoire : `--target`, `--sticker-id` (à répéter)
+  - Obligatoire : `--target`, `--sticker-id` (répéter)
   - Optionnel : `--message`
 
 - `sticker upload`
-  - Chaînes : Discord
+  - Canaux : Discord
   - Obligatoire : `--guild-id`, `--sticker-name`, `--sticker-desc`, `--sticker-tags`, `--media`
 
-### Rôles / Chaînes / Membres / Voix
+### Rôles / Canaux / Membres / Voix
 
 - `role info` (Discord) : `--guild-id`
 - `role add` / `role remove` (Discord) : `--guild-id`, `--user-id`, `--role-id`
@@ -187,7 +185,7 @@ Recherche par nom :
 
 ### Modération (Discord)
 
-- `timeout` : `--guild-id`, `--user-id` (facultatif `--duration-min` ou `--until` ; omettre les deux pour annuler le délai d'expiration)
+- `timeout` : `--guild-id`, `--user-id` (optionnel `--duration-min` ou `--until` ; omettez les deux pour annuler le temps d'attente)
 - `kick` : `--guild-id`, `--user-id` (+ `--reason`)
 - `ban` : `--guild-id`, `--user-id` (+ `--delete-days`, `--reason`)
   - `timeout` prend également en charge `--reason`
@@ -195,7 +193,7 @@ Recherche par nom :
 ### Diffusion
 
 - `broadcast`
-  - Canaux : n'importe quel canal configuré ; utilisez `--channel all` pour cibler tous les fournisseurs
+  - Chaînes : n'importe quelle chaîne configurée ; utilisez `--channel all` pour cibler tous les fournisseurs
   - Obligatoire : `--targets <target...>`
   - Optionnel : `--message`, `--media`, `--dry-run`
 
@@ -208,22 +206,22 @@ openclaw message send --channel discord \
   --target channel:123 --message "hi" --reply-to 456
 ```
 
-Envoyer un message Discord avec des composants :
+Envoyer un message avec des boutons sémantiques :
 
 ```
 openclaw message send --channel discord \
   --target channel:123 --message "Choose:" \
-  --components '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve","style":"success"},{"label":"Decline","style":"danger"}]}]}'
+  --presentation '{"blocks":[{"type":"buttons","buttons":[{"label":"Approve","value":"approve","style":"success"},{"label":"Decline","value":"decline","style":"danger"}]}]}'
 ```
 
-Voir [Composants Discord](/fr/channels/discord#interactive-components) pour le schéma complet.
+Le cœur du système rend la même charge utile `presentation` en composants Discord, blocs Slack, boutons en ligne Telegram, props Mattermost ou cartes Teams/Feishu selon les capacités de la chaîne. Voir [Message Presentation](/fr/plugins/message-presentation) pour le contrat complet et les règles de repli.
 
-Envoyer une charge utile interactive partagée :
+Envoyer une charge utile de présentation plus riche :
 
 ```bash
 openclaw message send --channel googlechat --target spaces/AAA... \
   --message "Choose:" \
-  --interactive '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve"},{"label":"Decline"}]}]}'
+  --presentation '{"title":"Deploy approval","tone":"warning","blocks":[{"type":"text","text":"Choose a path"},{"type":"buttons","buttons":[{"label":"Approve","value":"approve"},{"label":"Decline","value":"decline"}]}]}'
 ```
 
 Créer un sondage Discord :
@@ -277,22 +275,22 @@ openclaw message react --channel signal \
   --emoji "✅" --target-author-uuid 123e4567-e89b-12d3-a456-426614174000
 ```
 
-Envoyer des boutons en ligne Telegram :
+Envoyer des boutons en ligne Telegram via une présentation générique :
 
 ```
 openclaw message send --channel telegram --target @mychat --message "Choose:" \
-  --buttons '[ [{"text":"Yes","callback_data":"cmd:yes"}], [{"text":"No","callback_data":"cmd:no"}] ]'
+  --presentation '{"blocks":[{"type":"buttons","buttons":[{"label":"Yes","value":"cmd:yes"},{"label":"No","value":"cmd:no"}]}]}'
 ```
 
-Envoyer une carte adaptative Teams :
+Envoyer une carte Teams via une présentation générique :
 
 ```bash
 openclaw message send --channel msteams \
   --target conversation:19:abc@thread.tacv2 \
-  --card '{"type":"AdaptiveCard","version":"1.5","body":[{"type":"TextBlock","text":"Status update"}]}'
+  --presentation '{"title":"Status update","blocks":[{"type":"text","text":"Build completed"}]}'
 ```
 
-Envoyer une image Telegram en tant que document pour éviter la compression :
+Envoyer une image Telegram comme document pour éviter la compression :
 
 ```bash
 openclaw message send --channel telegram --target @mychat \

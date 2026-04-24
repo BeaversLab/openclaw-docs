@@ -77,6 +77,6 @@ openclaw tasks flow cancel <lookup>
 ## 相關
 
 - [背景任務](/zh-Hant/automation/tasks) — 流程所協調的獨立工作帳本
-- [CLI: tasks](/zh-Hant/cli/index#tasks) — `openclaw tasks flow` 的 CLI 指令參考
+- [CLI: tasks](/zh-Hant/cli/tasks) — `openclaw tasks flow` 的 CLI 指令參考
 - [自動化總覽](/zh-Hant/automation) — 所有自動化機制一覽
 - [Cron Jobs](/zh-Hant/automation/cron-jobs) — 可能輸入至流程的排程工作

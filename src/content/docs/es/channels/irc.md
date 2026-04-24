@@ -9,7 +9,7 @@ read_when:
 # IRC
 
 Usa IRC cuando quieras tener OpenClaw en canales clásicos (`#room`) y mensajes directos.
-IRC se distribuye como un plugin de extensión, pero se configura en la configuración principal bajo `channels.irc`.
+IRC se distribuye como un complemento incluido, pero se configura en la configuración principal bajo `channels.irc`.
 
 ## Inicio rápido
 

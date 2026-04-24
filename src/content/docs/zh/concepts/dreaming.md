@@ -217,9 +217,21 @@ openclaw memory rem-harness --json
 - 一个独立的落地场景通道，用于暂存的历史重放条目
 - 一个由 `doctor.memory.dreamDiary` 支持的可展开的梦境日记阅读器
 
+## 故障排除
+
+### Dreaming 永远不会运行（状态显示为 blocked）
+
+托管式 dreaming cron 依赖于默认代理的心跳。如果该代理的心跳未触发，cron 会将一个没有任何人消费的系统事件加入队列，从而导致 dreaming 静默地不运行。在这种情况下，`openclaw memory status` 和 `/dreaming status` 都会报告 `blocked`，并指出其心跳是阻碍因素的那个代理。
+
+两个常见原因：
+
+- 另一个代理声明了显式的 `heartbeat:` 块。当 `agents.list` 中的任何条目拥有自己的 `heartbeat` 块时，只有那些代理会发送心跳——默认设置不再适用于其他人，因此默认代理可以静默。将心跳设置移动到 `agents.defaults.heartbeat`，或者为默认代理添加一个显式的 `heartbeat` 块。参见[作用域和优先级](/zh/gateway/heartbeat#scope-and-precedence)。
+- `heartbeat.every` 是 `0`、为空或无法解析。Cron 没有可据此进行调度的时间间隔，因此心跳实际上被禁用了。将 `every` 设置为正持续时间，例如 `30m`。参见[默认值](/zh/gateway/heartbeat#defaults)。
+
 ## 相关
 
-- [Memory](/zh/concepts/memory)
-- [Memory Search](/zh/concepts/memory-search)
+- [心跳](/zh/gateway/heartbeat)
+- [记忆](/zh/concepts/memory)
+- [记忆搜索](/zh/concepts/memory-search)
 - [memory CLI](/zh/cli/memory)
 - [Memory configuration reference](/zh/reference/memory-config)

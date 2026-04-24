@@ -108,8 +108,8 @@ openclaw onboard --non-interactive \
   <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
     選擇提供者、模型參考和故障轉移行為。
   </Card>
-  <Card title="Configuration" href="/zh-Hant/configuration" icon="gear">
-    代理、模型和供應商的完整配置參考。
+  <Card title="Configuration" href="/zh-Hant/gateway/configuration" icon="gear">
+    代理、模型和提供商的完整設定參考。
   </Card>
   <Card title="Troubleshooting" href="/zh-Hant/help/troubleshooting" icon="wrench">
     常見問題和除錯步驟。

@@ -47,7 +47,7 @@ Esta página describe el comportamiento actual de la CLI. Si los comandos cambia
 - [`tui`](/es/cli/tui)
 - [`browser`](/es/cli/browser)
 - [`cron`](/es/cli/cron)
-- [`tasks`](/es/cli/index#tasks)
+- [`tasks`](/es/cli/tasks)
 - [`flows`](/es/cli/flows)
 - [`dns`](/es/cli/dns)
 - [`docs`](/es/cli/docs)
@@ -431,7 +431,7 @@ Notas:
 
 ## Complementos (Plugins)
 
-Gestionar extensiones y su configuración:
+Administra los complementos y su configuración:
 
 - `openclaw plugins list` — descubrir complementos (use `--json` para la salida de máquina).
 - `openclaw plugins inspect <id>` — mostrar detalles de un complemento (`info` es un alias).
@@ -440,7 +440,7 @@ Gestionar extensiones y su configuración:
 - `openclaw plugins enable <id>` / `disable <id>` — alternar `plugins.entries.<id>.enabled`.
 - `openclaw plugins doctor` — informar errores de carga de complementos.
 
-La mayoría de los cambios de complemento requieren un reinicio de la puerta de enlace. Consulte [/plugin](/es/tools/plugin).
+La mayoría de los cambios en los complementos requieren reiniciar la puerta de enlace. Consulte [/plugin](/es/tools/plugin).
 
 ## Memoria
 
@@ -453,7 +453,7 @@ Búsqueda vectorial sobre `MEMORY.md` + `memory/*.md`:
 
 ## Sandbox
 
-Administre los tiempos de ejecución del espacio aislado para la ejecución aislada del agente. Consulte [/cli/sandbox](/es/cli/sandbox).
+Administra tiempos de ejecución de sandbox para la ejecución aislada de agentes. Consulte [/cli/sandbox](/es/cli/sandbox).
 
 Subcomandos:
 
@@ -859,7 +859,7 @@ Notas:
 
 ### `qr`
 
-Genera un código QR de emparejamiento móvil y un código de configuración desde la configuración actual de Gateway. Consulte [`openclaw qr`](/es/cli/qr).
+Genere un código QR y un código de configuración para el emparejamiento móvil desde la configuración actual de Gateway. Consulte [`openclaw qr`](/es/cli/qr).
 
 Opciones:
 
@@ -992,7 +992,7 @@ Opciones:
 - `-t, --to <dest>` (para la clave de sesión y entrega opcional)
 - `--session-id <id>`
 - `--agent <id>` (id. de agente; anula los enlaces de enrutamiento)
-- `--thinking <off|minimal|low|medium|high|xhigh>` (el soporte del proveedor varía; no limitado por modelo a nivel de CLI)
+- `--thinking <level>` (validado con el perfil del proveedor del modelo seleccionado)
 - `--verbose <on|off>`
 - `--channel <channel>` (canal de entrega; omitir para usar el canal de sesión principal)
 - `--reply-to <target>` (anulación del destino de entrega, separada del enrutamiento de sesión)
@@ -1336,7 +1336,7 @@ Notas:
 
 ### `tasks`
 
-Administrar y enumerar las ejecuciones de [tareas en segundo plano](/es/automation/tasks) entre agentes.
+Liste y gestione las ejecuciones de [tareas en segundo plano](/es/automation/tasks) en todos los agentes.
 
 - `tasks list` — mostrar ejecuciones de tareas activas y recientes
 - `tasks show <id>` — mostrar detalles de una ejecución de tarea específica
@@ -1411,7 +1411,7 @@ Notas:
 
 ### `daemon`
 
-Alias heredado para los comandos de gestión de servicios de la puerta de enlace. Consulte [/cli/daemon](/es/cli/daemon).
+Alias heredado para los comandos de gestión de servicios de Gateway. Consulte [/cli/daemon](/es/cli/daemon).
 
 Subcomandos:
 
@@ -1526,9 +1526,12 @@ Opciones:
 
 - `--all`
 - `--local`
-- `--provider <name>`
+- `--provider <id>`
 - `--json`
 - `--plain`
+
+`--all` incluye filas de catálogo estático propiedad del proveedor agrupadas antes de que se configure la autenticación.
+Las filas no están disponibles hasta que existan las credenciales del proveedor coincidentes.
 
 ### `models status`
 
@@ -1536,16 +1539,16 @@ Opciones:
 
 - `--json`
 - `--plain`
-- `--check` (salida 1=caducado/faltante, 2=por caducar)
+- `--check` (salida 1=caducado/ausente, 2=a punto de caducar)
 - `--probe` (sondeo en vivo de perfiles de autenticación configurados)
 - `--probe-provider <name>`
-- `--probe-profile <id>` (repetir o separado por comas)
+- `--probe-profile <id>` (repetir o separados por comas)
 - `--probe-timeout <ms>`
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
 - `--agent <id>`
 
-Siempre incluye la descripción general de autenticación y el estado de caducidad de OAuth para los perfiles en el almacén de autenticación.
+Siempre incluye el resumen de autenticación y el estado de expiración de OAuth para los perfiles en el almacén de autenticación.
 `--probe` ejecuta solicitudes en vivo (puede consumir tokens y activar límites de velocidad).
 Las filas de sondeo pueden provenir de perfiles de autenticación, credenciales de entorno o `models.json`.
 Espere estados de sondeo como `ok`, `auth`, `rate_limit`, `billing`, `timeout`,
@@ -1617,9 +1620,9 @@ Opciones:
 Notas:
 
 - `setup-token` y `paste-token` son comandos de token genéricos para proveedores que exponen métodos de autenticación de token.
-- `setup-token` requiere un TTY interactivo y ejecuta el método de autenticación de token del proveedor.
+- `setup-token` requiere un TTY interactivo y ejecuta el método token-auth del proveedor.
 - `paste-token` solicita el valor del token y de forma predeterminada usa el id de perfil de autenticación `<provider>:manual` cuando se omite `--profile-id`.
-- Anthropic `setup-token` / `paste-token` permanecen disponibles como una ruta de token de OpenClaw compatible, pero OpenClaw ahora prefiere la reutilización de Claude CLI y `claude -p` cuando están disponibles.
+- Anthropic `setup-token` / `paste-token` siguen disponibles como una ruta de token compatible con OpenClaw, pero OpenClaw ahora prefiere el reuso de la CLI de Claude y `claude -p` cuando está disponible.
 
 ### `models auth order get|set|clear`
 
@@ -1633,9 +1636,9 @@ Opciones:
 
 ### `system event`
 
-Poner en cola un evento del sistema y, opcionalmente, activar un latido (Gateway RPC).
+Pone en cola un evento del sistema y opcionalmente activa un latido (Gateway RPC).
 
-Obligatorio:
+Requerido:
 
 - `--text <text>`
 
@@ -1656,7 +1659,7 @@ Opciones:
 
 ### `system presence`
 
-Listar las entradas de presencia del sistema (Gateway RPC).
+Enumerar las entradas de presencia del sistema (Gateway RPC).
 
 Opciones:
 
@@ -1665,12 +1668,12 @@ Opciones:
 
 ## Cron
 
-Gestionar trabajos programados (Gateway RPC). Consulte [/automation/cron-jobs](/es/automation/cron-jobs).
+Administrar trabajos programados (Gateway RPC). Consulte [/automation/cron-jobs](/es/automation/cron-jobs).
 
 Subcomandos:
 
 - `cron status [--json]`
-- `cron list [--all] [--json]` (salida de tabla por defecto; use `--json` para sin procesar)
+- `cron list [--all] [--json]` (salida de tabla por defecto; use `--json` para formato sin procesar)
 - `cron add` (alias: `create`; requiere `--name` y exactamente uno de `--at` | `--every` | `--cron`, y exactamente una carga de `--system-event` | `--message`)
 - `cron edit <id>` (campos de parche)
 - `cron rm <id>` (alias: `remove`, `delete`)
@@ -1681,18 +1684,17 @@ Subcomandos:
 
 Todos los comandos `cron` aceptan `--url`, `--token`, `--timeout`, `--expect-final`.
 
-`cron add|edit --model ...` usa el modelo permitido seleccionado para el trabajo. Si
+`cron add|edit --model ...` usa ese modelo permitido seleccionado para el trabajo. Si
 el modelo no está permitido, cron advierte y vuelve a la selección del modelo
-agente/predeterminado del trabajo en su lugar. Las cadenas de reserva configuradas
-aún se aplican, pero una anulación de modelo simple sin una lista de reserva
-explícita por trabajo ya no agrega el agente principal como un objetivo de
-reintento adicional oculto.
+agente/predeterminado del trabajo. Las cadenas de reserva configuradas todavía se aplican, pero una
+sustitución de modelo simple sin una lista de reserva por trabajo explícita ya no añade el
+agente principal como un objetivo de reintento adicional oculto.
 
-## Host del nodo
+## Node host
 
 ### `node`
 
-`node` ejecuta un **host de nodo sin cabeza** o lo gestiona como un servicio en segundo plano. Vea
+`node` ejecuta un **node host headless** o lo administra como un servicio en segundo plano. Consulte
 [`openclaw node`](/es/cli/node).
 
 Subcomandos:
@@ -1706,8 +1708,8 @@ Subcomandos:
 
 Notas de autenticación:
 
-- `node` resuelve la autenticación de la puerta de enlace desde env/config (sin marcas `--token`/`--password`): `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`, luego `gateway.auth.*`. En modo local, el host del nodo ignora intencionalmente `gateway.remote.*`; en `gateway.mode=remote`, `gateway.remote.*` participa según las reglas de precedencia remota.
-- La resolución de autenticación del host del nodo solo honra las variables de entorno `OPENCLAW_GATEWAY_*`.
+- `node` resuelve la autenticación de la puerta de enlace desde el entorno/configuración (sin marcas `--token`/`--password`): `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`, luego `gateway.auth.*`. En el modo local, el host del nodo ignora intencionalmente `gateway.remote.*`; en `gateway.mode=remote`, `gateway.remote.*` participa según las reglas de precedencia remota.
+- La resolución de autenticación del host de nodos solo respeta las variables de entorno `OPENCLAW_GATEWAY_*`.
 
 ## Nodos
 
@@ -1735,7 +1737,7 @@ Cámara:
 - `nodes camera snap --node <id|name|ip> [--facing front|back|both] [--device-id <id>] [--max-width <px>] [--quality <0-1>] [--delay-ms <ms>] [--invoke-timeout <ms>]`
 - `nodes camera clip --node <id|name|ip> [--facing front|back] [--device-id <id>] [--duration <ms|10s|1m>] [--no-audio] [--invoke-timeout <ms>]`
 
-Canvas + pantalla:
+Lienzo + pantalla:
 
 - `nodes canvas snapshot --node <id|name|ip> [--format png|jpg|jpeg] [--max-width <px>] [--quality <0-1>] [--invoke-timeout <ms>]`
 - `nodes canvas present --node <id|name|ip> [--target <urlOrPath>] [--x <px>] [--y <px>] [--width <px>] [--height <px>] [--invoke-timeout <ms>]`
@@ -1752,7 +1754,7 @@ Ubicación:
 
 ## Navegador
 
-CLI de control del navegador (Chrome/Brave/Edge/Chromium dedicado). Consulte [`openclaw browser`](/es/cli/browser) y la [herramienta Navegador](/es/tools/browser).
+CLI de control del navegador (Chrome/Brave/Edge/Chromium dedicado). Consulte [`openclaw browser`](/es/cli/browser) y la [herramienta del navegador](/es/tools/browser).
 
 Opciones comunes:
 
@@ -1818,17 +1820,17 @@ Comandos comunes:
 
 ### `docs`
 
-Buscar en el índice de documentos de OpenClaw en vivo.
+Busque el índice de documentos en vivo de OpenClaw.
 
 ### `docs [query...]`
 
-Buscar en el índice de documentos en vivo.
+Busque el índice de documentos en vivo.
 
-## TUI
+## Interfaz de usuario de terminal (TUI)
 
 ### `tui`
 
-Abrir la interfaz de usuario de terminal conectada a la Gateway.
+Abra la interfaz de usuario de terminal conectada a la puerta de enlace (Gateway).
 
 Opciones:
 
@@ -1839,5 +1841,5 @@ Opciones:
 - `--deliver`
 - `--thinking <level>`
 - `--message <text>`
-- `--timeout-ms <ms>` (el valor predeterminado es `agents.defaults.timeoutSeconds`)
+- `--timeout-ms <ms>` (predeterminado a `agents.defaults.timeoutSeconds`)
 - `--history-limit <n>`

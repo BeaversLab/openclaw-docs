@@ -15,13 +15,13 @@ OpenClaw también puede **detectar automáticamente** los modelos disponibles en
 por ello con `SGLANG_API_KEY` (cualquier valor funciona si su servidor no aplica autenticación)
 y no define una entrada `models.providers.sglang` explícita.
 
+OpenClaw trata `sglang` como un proveedor local compatible con OpenAI que admite contabilidad de uso en streaming, por lo que los recuentos de tokens de estado/contexto pueden actualizarse desde las respuestas `stream_options.include_usage`.
+
 ## Cómo empezar
 
 <Steps>
   <Step title="Iniciar SGLang">
-    Inicie SGLang con un servidor compatible con OpenAI. Su URL base debe exponer
-    los puntos finales `/v1` (por ejemplo `/v1/models`, `/v1/chat/completions`). SGLang
-    comúnmente se ejecuta en:
+    Inicie SGLang con un servidor compatible con OpenAI. Su URL base debe exponer los puntos finales `/v1` (por ejemplo `/v1/models`, `/v1/chat/completions`). SGLang generalmente se ejecuta en:
 
     - `http://127.0.0.1:30000/v1`
 
@@ -56,14 +56,13 @@ y no define una entrada `models.providers.sglang` explícita.
 
 ## Descubrimiento de modelos (proveedor implícito)
 
-Cuando `SGLANG_API_KEY` está establecido (o existe un perfil de autenticación) y usted **no**
-define `models.providers.sglang`, OpenClaw consultará:
+Cuando se establece `SGLANG_API_KEY` (o existe un perfil de autenticación) y usted **no** define `models.providers.sglang`, OpenClaw consultará:
 
 - `GET http://127.0.0.1:30000/v1/models`
 
-y convertirá los IDs devueltos en entradas de modelos.
+y convertirá los IDs devueltos en entradas de modelo.
 
-<Note>Si establece `models.providers.sglang` explícitamente, se omitirá el descubrimiento automático y debe definir los modelos manualmente.</Note>
+<Note>Si establece `models.providers.sglang` explícitamente, se omitirá el autodescubrimiento y debe definir los modelos manualmente.</Note>
 
 ## Configuración explícita (modelos manuales)
 
@@ -103,21 +102,21 @@ Use la configuración explícita cuando:
 <AccordionGroup>
   <Accordion title="Comportamiento estilo proxy">
     SGLang se trata como un backend `/v1` compatible con OpenAI estilo proxy, no como
-    un endpoint nativo de OpenAI.
+    un punto de conexión nativo de OpenAI.
 
     | Comportamiento | SGLang |
     |----------|--------|
-    | Formato de solicitudes solo de OpenAI | No aplicado |
-    | `service_tier`, Respuestas `store`, sugerencias de caché de prompt | No enviados |
-    | Formato de carga útil compatible con razonamiento | No aplicado |
+    | Configuración de solicitudes solo para OpenAI | No aplicada |
+    | `service_tier`, Respuestas `store`, sugerencias de caché de prompts | No enviados |
+    | Configuración de payloads compatible con razonamiento | No aplicada |
     | Encabezados de atribución ocultos (`originator`, `version`, `User-Agent`) | No inyectados en URL base personalizadas de SGLang |
 
   </Accordion>
 
   <Accordion title="Solución de problemas">
-    **Servidor no alcanzable**
+    **Servidor inalcanzable**
 
-    Verifique que el servidor esté ejecutándose y respondiendo:
+    Verifique que el servidor esté en ejecución y respondiendo:
 
     ```bash
     curl http://127.0.0.1:30000/v1/models
@@ -131,7 +130,7 @@ Use la configuración explícita cuando:
 
     <Tip>
     Si ejecuta SGLang sin autenticación, cualquier valor no vacío para
-    `SGLANG_API_KEY` es suficiente para aceptar el descubrimiento de modelos.
+    `SGLANG_API_KEY` es suficiente para optar por el descubrimiento de modelos.
     </Tip>
 
   </Accordion>
@@ -141,9 +140,9 @@ Use la configuración explícita cuando:
 
 <CardGroup cols={2}>
   <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
-    Elegir proveedores, referencias de modelos y comportamiento de conmutación por error.
+    Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
   <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
-    Esquema de configuración completo que incluye las entradas del proveedor.
+    Esquema de configuración completo, incluidas las entradas del proveedor.
   </Card>
 </CardGroup>

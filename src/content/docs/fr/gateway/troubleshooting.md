@@ -8,8 +8,8 @@ title: "Troubleshooting"
 
 # Dépannage de la passerelle
 
-Cette page est le guide de dépannage approfondi.
-Commencez par [/help/troubleshooting](/fr/help/troubleshooting) si vous souhaitez d'abord suivre le processus de triage rapide.
+Cette page est le runbook détaillé.
+Commencez par [/help/troubleshooting](/fr/help/troubleshooting) si vous souhaitez d'abord suivre le flux de triage rapide.
 
 ## Échelle de commande
 
@@ -178,12 +178,12 @@ Signatures courantes :
 
 Utilisez `error.details.code` à partir de la réponse `connect` échouée pour choisir l'action suivante :
 
-| Code de détail               | Signification                                                                                                                                                                                                                        | Action recommandée                                                                                                                                                                                                                                                                                                                                                                                             |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_TOKEN_MISSING`         | Le client n'a pas envoyé un jeton partagé requis.                                                                                                                                                                                    | Collez/définissez le jeton dans le client et réessayez. Pour les chemins du tableau de bord : `openclaw config get gateway.auth.token` puis collez dans les paramètres de l'interface de contrôle.                                                                                                                                                                                                             |
-| `AUTH_TOKEN_MISMATCH`        | Le jeton partagé ne correspond pas au jeton d'authentification de la passerelle.                                                                                                                                                     | Si `canRetryWithDeviceToken=true`, autorisez un nouvel essai de confiance. Les nouvelles tentatives avec jeton en cache réutilisent les étendues approuvées stockées ; les appelants `deviceToken` / `scopes` explicites conservent les étendues demandées. En cas d'échec persistant, exécutez la [liste de vérification de récupération de dérive de jeton](/fr/cli/devices#token-drift-recovery-checklist). |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | Le jeton par appareil en cache est périmé ou révoqué.                                                                                                                                                                                | Faites pivoter/approuvez de nouveau le jeton d'appareil en utilisant le [CLI des appareils](/fr/cli/devices), puis reconnectez-vous.                                                                                                                                                                                                                                                                           |
-| `PAIRING_REQUIRED`           | L'identité de l'appareil nécessite une approbation. Vérifiez `error.details.reason` pour `not-paired`, `scope-upgrade`, `role-upgrade`, ou `metadata-upgrade`, et utilisez `requestId` / `remediationHint` lorsqu'ils sont présents. | Approuver la demande en attente : `openclaw devices list` puis `openclaw devices approve <requestId>`. Les mises à niveau d'étendue/rôle utilisent le même processus après avoir examiné l'accès demandé.                                                                                                                                                                                                      |
+| Code de détail               | Signification                                                                                                                                                                                                                        | Action recommandée                                                                                                                                                                                                                                                                                                                                                                                              |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_TOKEN_MISSING`         | Le client n'a pas envoyé un jeton partagé requis.                                                                                                                                                                                    | Collez/définissez le jeton dans le client et réessayez. Pour les chemins du tableau de bord : `openclaw config get gateway.auth.token` puis collez dans les paramètres de l'interface de contrôle.                                                                                                                                                                                                              |
+| `AUTH_TOKEN_MISMATCH`        | Le jeton partagé ne correspond pas au jeton d'authentification de la passerelle.                                                                                                                                                     | Si `canRetryWithDeviceToken=true`, autorisez une nouvelle tentative de confiance. Les nouvelles tentatives avec jeton en cache réutilisent les portées approuvées stockées ; les appelants explicites `deviceToken` / `scopes` conservent les portées demandées. En cas d'échec persistant, exécutez la [liste de contrôle de récupération de dérive de jeton](/fr/cli/devices#token-drift-recovery-checklist). |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | Le jeton par appareil en cache est périmé ou révoqué.                                                                                                                                                                                | Faites pivoter/réapprouver le jeton de l'appareil à l'aide du [devices CLI](/fr/cli/devices), puis reconnectez-vous.                                                                                                                                                                                                                                                                                            |
+| `PAIRING_REQUIRED`           | L'identité de l'appareil nécessite une approbation. Vérifiez `error.details.reason` pour `not-paired`, `scope-upgrade`, `role-upgrade`, ou `metadata-upgrade`, et utilisez `requestId` / `remediationHint` lorsqu'ils sont présents. | Approuver la demande en attente : `openclaw devices list` puis `openclaw devices approve <requestId>`. Les mises à niveau d'étendue/rôle utilisent le même processus après avoir examiné l'accès demandé.                                                                                                                                                                                                       |
 
 Vérification de la migration de l'authentification des appareils v2 :
 
@@ -288,14 +288,15 @@ Signatures courantes :
 - `.clobbered.*` existe → une modification directe externe ou une lecture au démarrage a été restaurée.
 - `.rejected.*` existe → une écriture de configuration propriété d'OpenClaw a échoué aux vérifications de schéma ou d'écrasement avant la validation.
 - `Config write rejected:` → l'écriture a tenté de supprimer une forme requise, de réduire considérablement le fichier ou de rendre persistante une configuration non valide.
-- `Config last-known-good promotion skipped` → le candidat contenait des espaces réservés de secrets expurgés tels que `***`.
+- `missing-meta-vs-last-good`, `gateway-mode-missing-vs-last-good` ou `size-drop-vs-last-good:*` → le démarrage a traité le fichier actuel comme corrompu car il a perdu des champs ou de la taille par rapport à la sauvegarde dernière connue valide.
+- `Config last-known-good promotion skipped` → le candidat contenait des espaces réservés de secrets rédigés tels que `***`.
 
 Options de correction :
 
 1. Conservez la configuration active restaurée si elle est correcte.
 2. Copiez uniquement les clés prévues depuis `.clobbered.*` ou `.rejected.*`, puis appliquez-les avec `openclaw config set` ou `config.patch`.
 3. Exécutez `openclaw config validate` avant de redémarrer.
-4. Si vous modifiez manuellement, gardez la configuration JSON5 complète, et non seulement l'objet partiel que vous souhaitiez modifier.
+4. Si vous modifiez manuellement, conservez la configuration JSON5 complète, et non seulement l'objet partiel que vous souhaitiez modifier.
 
 Connexes :
 
@@ -304,9 +305,9 @@ Connexes :
 - [/cli/config](/fr/cli/config)
 - [/gateway/doctor](/fr/gateway/doctor)
 
-## Avertissements de sonde Gateway
+## Gateway avertissements de sonde
 
-Utilisez ceci quand `openclaw gateway probe` atteint quelque chose, mais imprime toujours un bloc d'avertissement.
+Utilisez ceci lorsque `openclaw gateway probe` atteint quelque chose, mais imprime toujours un bloc d'avertissement.
 
 ```bash
 openclaw gateway probe
@@ -321,13 +322,13 @@ Recherchez :
 
 Signatures courantes :
 
-- `SSH tunnel failed to start; falling back to direct probes.` → la configuration SSH a échoué, mais la commande a tout de même tenté les cibles configurées directes/boucle locale.
-- `multiple reachable gateways detected` → plus d'une cible a répondu. Cela signifie généralement une configuration intentionnelle multi-passerelle ou des écouteurs obsolètes/en double.
-- `Read-probe diagnostics are limited by gateway scopes (missing operator.read)` → la connexion a fonctionné, mais le RPC détaillé est limité dans la portée ; associez l'identité de l'appareil ou utilisez des informations d'identification avec `operator.read`.
+- `SSH tunnel failed to start; falling back to direct probes.` → la configuration SSH a échoué, mais la commande a tout de même essayé les cibles configurées/boucle directes.
+- `multiple reachable gateways detected` → plus d'une cible a répondu. Cela signifie généralement une configuration intentionnelle de multi-passerelle ou des écouteurs périmés/dupliqués.
+- `Read-probe diagnostics are limited by gateway scopes (missing operator.read)` → la connexion a réussi, mais le RPC de détail est limité par la portée ; associez l'identité de l'appareil ou utilisez des informations d'identification avec `operator.read`.
 - `Capability: pairing-pending` ou `gateway closed (1008): pairing required` → la passerelle a répondu, mais ce client a toujours besoin d'un couplage/approbation avant l'accès normal de l'opérateur.
 - texte d'avertissement SecretRef `gateway.auth.*` / `gateway.remote.*` non résolu → le matériel d'authentification n'était pas disponible dans ce chemin de commande pour la cible échouée.
 
-Connexe :
+Connexes :
 
 - [/cli/gateway](/fr/cli/gateway)
 - [/gateway#multiple-gateways-same-host](/fr/gateway#multiple-gateways-same-host)
@@ -348,16 +349,16 @@ openclaw config get channels
 Recherchez :
 
 - Stratégie DM (`pairing`, `allowlist`, `open`, `disabled`).
-- Liste d'autorisation de groupe et exigences de mention.
-- Autorisations/portées API du channel manquantes.
+- Liste blanche de groupe et exigences de mention.
+- Autorisations/portées de l'API du channel manquantes.
 
 Signatures courantes :
 
 - `mention required` → message ignoré par la stratégie de mention de groupe.
 - `pairing` / traces d'approbation en attente → l'expéditeur n'est pas approuvé.
-- `missing_scope`, `not_in_channel`, `Forbidden`, `401/403` → problème d'autorisations/authentification du channel.
+- `missing_scope`, `not_in_channel`, `Forbidden`, `401/403` → problème d'authentification/d'autorisations du channel.
 
-Connexe :
+Connexes :
 
 - [/channels/troubleshooting](/fr/channels/troubleshooting)
 - [/channels/whatsapp](/fr/channels/whatsapp)
@@ -379,18 +380,18 @@ openclaw logs --follow
 Recherchez :
 
 - Cron activé et prochain réveil présent.
-- Statut de l'historique des exécutions de tâches (`ok`, `skipped`, `error`).
-- Raisons de l'absence de heartbeat (`quiet-hours`, `requests-in-flight`, `alerts-disabled`, `empty-heartbeat-file`, `no-tasks-due`).
+- Statut de l'historique d'exécution des tâches (`ok`, `skipped`, `error`).
+- Raisons de l'ignorance du heartbeat (`quiet-hours`, `requests-in-flight`, `alerts-disabled`, `empty-heartbeat-file`, `no-tasks-due`).
 
 Signatures courantes :
 
 - `cron: scheduler disabled; jobs will not run automatically` → cron désactivé.
 - `cron: timer tick failed` → échec du tick du planificateur ; vérifiez les erreurs de fichier/journal/d'exécution.
-- `heartbeat skipped` avec `reason=quiet-hours` → en dehors de la fenêtre des heures actives.
-- `heartbeat skipped` avec `reason=empty-heartbeat-file` → `HEARTBEAT.md` existe mais ne contient que des lignes vides / des en-têtes markdown, donc OpenClaw ignore l'appel au model.
-- `heartbeat skipped` avec `reason=no-tasks-due` → `HEARTBEAT.md` contient un bloc `tasks:`, mais aucune des tâches n'est prévue pour ce tick.
-- `heartbeat: unknown accountId` → identifiant de compte invalide pour la cible de livraison de heartbeat.
-- `heartbeat skipped` avec `reason=dm-blocked` → la cible du heartbeat a été résolue vers une destination de style DM alors que `agents.defaults.heartbeat.directPolicy` (ou la substitution par agent) est défini sur `block`.
+- `heartbeat skipped` avec `reason=quiet-hours` → en dehors de la fenêtre d'heures actives.
+- `heartbeat skipped` avec `reason=empty-heartbeat-file` → `HEARTBEAT.md` existe mais ne contient que des lignes vides / en-têtes markdown, donc OpenClaw ignore l'appel au modèle.
+- `heartbeat skipped` avec `reason=no-tasks-due` → `HEARTBEAT.md` contient un bloc `tasks:`, mais aucune des tâches n'est due à ce tick.
+- `heartbeat: unknown accountId` → identifiant de compte invalide pour la cible de livraison du heartbeat.
+- `heartbeat skipped` avec `reason=dm-blocked` → la cible du heartbeat a été résolue vers une destination de style DM alors que `agents.defaults.heartbeat.directPolicy` (ou la priorité par agent) est défini sur `block`.
 
 Connexe :
 
@@ -398,9 +399,9 @@ Connexe :
 - [/automation/cron-jobs](/fr/automation/cron-jobs)
 - [/gateway/heartbeat](/fr/gateway/heartbeat)
 
-## Échec de l'outil couplé au nœud
+## Échec de l'outil appairé au nœud
 
-Si un nœud est couplé mais que les outils échouent, isolez les états de premier plan, d'autorisation et d'approbation.
+Si un nœud est appairé mais que les outils échouent, isolez l'état de premier plan, les autorisations et les approbations.
 
 ```bash
 openclaw nodes status
@@ -412,16 +413,16 @@ openclaw status
 
 Recherchez :
 
-- Nœud en ligne avec les capacités attendues.
-- Autorisations OS pour la caméra/micro/localisation/écran.
-- Approbations d'exécution et état de la liste blanche.
+- Nœud en ligne avec les fonctionnalités attendues.
+- Autorisations du système d'exploitation pour la caméra, le microphone, la localisation et l'écran.
+- Approbations d'exécution et état de la liste autorisée (allowlist).
 
 Signatures courantes :
 
 - `NODE_BACKGROUND_UNAVAILABLE` → l'application du nœud doit être au premier plan.
-- `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → autorisation OS manquante.
+- `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → autorisation du système d'exploitation manquante.
 - `SYSTEM_RUN_DENIED: approval required` → approbation d'exécution en attente.
-- `SYSTEM_RUN_DENIED: allowlist miss` → commande bloquée par la liste blanche.
+- `SYSTEM_RUN_DENIED: allowlist miss` → commande bloquée par la liste autorisée (allowlist).
 
 Connexe :
 
@@ -429,9 +430,9 @@ Connexe :
 - [/nodes/index](/fr/nodes/index)
 - [/tools/exec-approvals](/fr/tools/exec-approvals)
 
-## Échec de l'outil de navigation
+## Échec de l'outil navigateur
 
-Utilisez ceci lorsque les actions de l'outil de navigateur échouent même si la passerelle elle-même est en bonne santé.
+Utilisez ceci lorsque les actions de l'outil navigateur échouent même si la passerelle elle-même est saine.
 
 ```bash
 openclaw browser status
@@ -444,30 +445,30 @@ openclaw doctor
 Recherchez :
 
 - Si `plugins.allow` est défini et inclut `browser`.
-- Chemin d'exécutable du navigateur valide.
+- Chemin exécutable valide du navigateur.
 - Accessibilité du profil CDP.
 - Disponibilité locale de Chrome pour les profils `existing-session` / `user`.
 
 Signatures courantes :
 
-- `unknown command "browser"` ou `unknown command 'browser'` → le module externe du navigateur fourni est exclu par `plugins.allow`.
-- outil de navigateur manquant / indisponible alors que `browser.enabled=true` → `plugins.allow` exclut `browser`, donc le module ne s'est jamais chargé.
-- `Failed to start Chrome CDP on port` → le processus du navigateur n'a pas réussi à démarrer.
+- `unknown command "browser"` ou `unknown command 'browser'` → le plugin du navigateur inclus est exclu par `plugins.allow`.
+- outil navigateur manquant / indisponible alors que `browser.enabled=true` → `plugins.allow` exclut `browser`, donc le plugin n'a jamais été chargé.
+- `Failed to start Chrome CDP on port` → échec du lancement du processus du navigateur.
 - `browser.executablePath not found` → le chemin configuré n'est pas valide.
 - `browser.cdpUrl must be http(s) or ws(s)` → l'URL CDP configurée utilise un schéma non pris en charge tel que `file:` ou `ftp:`.
-- `browser.cdpUrl has invalid port` → l'URL CDP configurée a un port incorrect ou hors plage.
-- `Could not find DevToolsActivePort for chrome` → la session existante Chrome MCP n'a pas encore pu s'attacher au répertoire de données du navigateur sélectionné. Ouvrez la page d'inspection du navigateur, activez le débogage à distance, gardez le navigateur ouvert, approuvez la première invite d'attachement, puis réessayez. Si l'état de connexion n'est pas requis, privilégiez le profil géré `openclaw`.
+- `browser.cdpUrl has invalid port` → l'URL CDP configurée possède un port incorrect ou hors plage.
+- `Could not find DevToolsActivePort for chrome` → la session existante Chrome MCP n'a pas encore pu s'attacher au répertoire de données du navigateur sélectionné. Ouvrez la page d'inspection du navigateur, activez le débogage à distance, gardez le navigateur ouvert, approuvez la première invite d'attachement, puis réessayez. Si l'état de connexion n'est pas requis, préférez le profil géré `openclaw`.
 - `No Chrome tabs found for profile="user"` → le profil d'attachement Chrome MCP n'a aucun onglet Chrome local ouvert.
-- `Remote CDP for profile "<name>" is not reachable` → le point de terminaison CDP distant configuré n'est pas accessible à partir de l'hôte de la passerelle.
+- `Remote CDP for profile "<name>" is not reachable` → le point de terminaison CDP distant configuré n'est pas accessible depuis l'hôte de la passerelle.
 - `Browser attachOnly is enabled ... not reachable` ou `Browser attachOnly is enabled and CDP websocket ... is not reachable` → le profil d'attachement uniquement n'a aucune cible accessible, ou le point de terminaison HTTP a répondu mais le WebSocket CDP n'a toujours pas pu être ouvert.
-- `Playwright is not available in this gateway build; '<feature>' is unsupported.` → l'installation actuelle de la passerelle ne dispose pas du package Playwright complet ; les instantanés ARIA et les captures d'écran de base de la page peuvent toujours fonctionner, mais la navigation, les instantanés IA, les captures d'écran d'éléments par sélecteur CSS et l'exportation PDF restent indisponibles.
-- `fullPage is not supported for element screenshots` → demande de capture d'écran mixte `--full-page` avec `--ref` ou `--element`.
-- `element screenshots are not supported for existing-session profiles; use ref from snapshot.` → les appels de capture d'écran Chrome MCP / `existing-session` doivent utiliser une capture de page ou un instantané `--ref`, et non un `--element` CSS.
-- `existing-session file uploads do not support element selectors; use ref/inputRef.` → les hooks de téléchargement Chrome MCP ont besoin de références d'instantanés, et non de sélecteurs CSS.
+- `Playwright is not available in this gateway build; '<feature>' is unsupported.` → l'installation actuelle de la passerelle ne dispose pas de la dépendance d'exécution `playwright-core` du plugin de navigateur inclus ; exécutez `openclaw doctor --fix`, puis redémarrez la passerelle. Les instantanés ARIA et les captures d'écran de base de la page peuvent toujours fonctionner, mais la navigation, les instantanés IA, les captures d'écran d'éléments par sélecteur CSS et l'export PDF restent indisponibles.
+- `fullPage is not supported for element screenshots` → la demande de capture d'écran a mélangé `--full-page` avec `--ref` ou `--element`.
+- `element screenshots are not supported for existing-session profiles; use ref from snapshot.` → les appels de capture d'écran Chrome MCP / `existing-session` doivent utiliser la capture de page ou un instantané `--ref`, et non le CSS `--element`.
+- `existing-session file uploads do not support element selectors; use ref/inputRef.` → les hooks de téléchargement Chrome MCP nécessitent des références d'instantanés, pas des sélecteurs CSS.
 - `existing-session file uploads currently support one file at a time.` → envoyez un seul téléchargement par appel sur les profils Chrome MCP.
-- `existing-session dialog handling does not support timeoutMs.` → les hooks de dialogue sur les profils Chrome MCP ne prennent pas en charge la substitution du délai d'attente.
+- `existing-session dialog handling does not support timeoutMs.` → les hooks de boîte de dialogue sur les profils Chrome MCP ne prennent pas en charge les substitutions de délai d'attente.
 - `response body is not supported for existing-session profiles yet.` → `responsebody` nécessite toujours un navigateur géré ou un profil CDP brut.
-- substitutions de viewport / mode sombre / locale / hors ligne obsolètes sur les profils CDP de type attachement uniquement ou distant → exécutez `openclaw browser stop --browser-profile <name>` pour fermer la session de contrôle active et libérer l'état d'émulation Playwright/CDP sans redémarrer l'intégralité de la passerelle.
+- remplacements de viewport obsolète / mode sombre / langue / hors ligne sur les profils CDP attachement uniquement ou distant → exécutez `openclaw browser stop --browser-profile <name>` pour fermer la session de contrôle active et libérer l'état d'émulation Playwright/CDP sans redémarrer l'intégralité de la passerelle.
 
 Connexes :
 
@@ -476,9 +477,9 @@ Connexes :
 
 ## Si vous avez effectué une mise à niveau et que quelque chose s'est soudainement brisé
 
-La plupart des pannes après mise à niveau sont dues à une dérive de la configuration ou à des valeurs par défaut plus strictes désormais appliquées.
+La plupart des ruptures post-mise à niveau sont dues à une dérive de la configuration ou à des paramètres par défaut plus stricts désormais appliqués.
 
-### 1) Comportement d'authentification et de substitution d'URL modifié
+### 1) Le comportement de remplacement de l'authentification et de l'URL a changé
 
 ```bash
 openclaw gateway status
@@ -489,7 +490,7 @@ openclaw config get gateway.auth.mode
 
 Ce qu'il faut vérifier :
 
-- Si `gateway.mode=remote`, les appels CLI peuvent cibler le distant alors que votre service local fonctionne correctement.
+- Si `gateway.mode=remote`, les appels CLI peuvent cibler le service distant alors que votre service local est correct.
 - Les appels explicites `--url` ne reviennent pas aux identifiants stockés.
 
 Signatures courantes :
@@ -509,13 +510,13 @@ openclaw logs --follow
 
 Ce qu'il faut vérifier :
 
-- Les liaisons non-bouclage (`lan`, `tailnet`, `custom`) nécessitent un chemin d'authentification de passerelle valide : authentification par jeton/mot de passe partagé, ou un déploiement `trusted-proxy` non-bouclage correctement configuré.
+- Les liaisons non-boucle (`lan`, `tailnet`, `custom`) nécessitent un chemin d'authentification de passerelle valide : authentification par jeton partagé/mot de passe, ou un déploiement `trusted-proxy` non-boucle correctement configuré.
 - Les anciennes clés comme `gateway.token` ne remplacent pas `gateway.auth.token`.
 
 Signatures courantes :
 
-- `refusing to bind gateway ... without auth` → liaison non-bouclage sans chemin d'authentification de passerelle valide.
-- `Connectivity probe: failed` alors que le runtime est en cours d'exécution → la passerelle est active mais inaccessible avec l'auth/url actuelle.
+- `refusing to bind gateway ... without auth` → liaison non-boucle sans chemin d'authentification de passerelle valide.
+- `Connectivity probe: failed` alors que le runtime est en cours d'exécution → passerelle active mais inaccessible avec l'auth/URL actuelle.
 
 ### 3) L'état du jumelage et de l'identité de l'appareil a changé
 

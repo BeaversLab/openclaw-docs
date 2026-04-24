@@ -14,9 +14,9 @@ read_when:
 (LLM) 新增至 OpenClaw。最後，您將擁有一個包含模型目錄、
 API 金鑰驗證以及動態模型解析的提供者。
 
-<Info>如果您之前尚未建立任何 OpenClaw 外掛程式，請先閱讀 [Getting Started](/zh-Hant/plugins/building-plugins) 以了解基本的套件 結構和 manifest 設定。</Info>
+<Info>如果您之前尚未建構任何 OpenClaw 外掛程式，請先閱讀 [入門指南](/zh-Hant/plugins/building-plugins) 以了解基本套件 結構與 manifest 設定。</Info>
 
-<Tip>Provider 外掛程式會將模型新增至 OpenClaw 的正常推論迴圈中。如果模型 必須透過擁有執行緒、壓縮或工具 事件的原生代理程式守護程式執行，請將提供者與 [agent harness](/zh-Hant/plugins/sdk-agent-harness) 搭配使用，而不是將守護程式通訊協定詳細資訊放在核心中。</Tip>
+<Tip>提供者外掛程式會將模型加入 OpenClaw 的正常推論迴圈中。如果模型 必須透過擁有執行緒、壓縮或工具 事件的原生代理程式常駐程式執行，請將提供者與 [agent harness](/zh-Hant/plugins/sdk-agent-harness) 搭配使用，而不要將常駐程式通訊協定詳細資訊放在核心中。</Tip>
 
 ## 逐步解說
 
@@ -156,7 +156,7 @@ API 金鑰驗證以及動態模型解析的提供者。
     });
     ```
 
-    這就是一個可運作的提供者。使用者現在可以
+    這就是一個可運作的提供者。用戶現在可以
     `openclaw onboard --acme-ai-api-key <key>` 並選擇
     `acme-ai/acme-large` 作為他們的模型。
 
@@ -178,12 +178,10 @@ API 金鑰驗證以及動態模型解析的提供者。
     });
     ```
 
-    `input` 會在傳輸前重寫最終的系統提示詞和文字訊息內容。
-    `output` 會在 OpenClaw 解析其自身的控制標記或通道傳遞之前，
-    重寫助手文字增量 和最終文字。
+    `input` 會在傳輸之前重寫最終的系統提示和文字訊息內容。`output` 會在 OpenClaw 解析自己的控制標記或通道傳遞之前重寫助手文字增量（deltas）和最終文字。
 
-    對於只註冊一個使用 API 金鑰驗證的單一文字提供者加上一個目錄支援執行時的
-    捆綁提供者，建議使用範圍更窄的 `defineSingleProviderPluginEntry(...)` 輔助函式：
+    對於僅註冊一個具備 API 金鑰驗證以及單一目錄支援執行時的文字提供者之打包提供者，建議優先使用更狹隘的
+    `defineSingleProviderPluginEntry(...)` 輔助函式：
 
     ```typescript
     import { defineSingleProviderPluginEntry } from "openclaw/plugin-sdk/provider-entry";
@@ -213,29 +211,39 @@ API 金鑰驗證以及動態模型解析的提供者。
             baseUrl: "https://api.acme-ai.com/v1",
             models: [{ id: "acme-large", name: "Acme Large" }],
           }),
+          buildStaticProvider: () => ({
+            api: "openai-completions",
+            baseUrl: "https://api.acme-ai.com/v1",
+            models: [{ id: "acme-large", name: "Acme Large" }],
+          }),
         },
       },
     });
     ```
 
-    如果您的驗證流程還需要在入門流程 期間修補 `models.providers.*`、別名
-    和代理程式預設模型，請使用來自
-    `openclaw/plugin-sdk/provider-onboard` 的預設輔助函式。最窄的輔助函式是
+    `buildProvider` 是當 OpenClaw 可以解析真實提供者驗證時使用的即時目錄路徑。它可能會執行特定於提供者的探索。僅對在設定驗證之前顯示安全的離線資料列使用
+    `buildStaticProvider`；它絕不能要求憑證或發出網路請求。
+    OpenClaw 的 `models list --all` 顯示目前僅針對打包的提供者外掛程式執行靜態目錄，並搭配空設定、空環境以及無 agent/workspace 路徑。
+
+    如果您的驗證流程還需要在引導（onboarding）期間修補 `models.providers.*`、別名和
+    agent 預設模型，請使用
+    `openclaw/plugin-sdk/provider-onboard` 中的預設輔助函式。最狹隘的輔助函式是
     `createDefaultModelPresetAppliers(...)`、
     `createDefaultModelsPresetAppliers(...)` 和
     `createModelCatalogPresetAppliers(...)`。
 
-    當提供者的原生端點支援在標準 `openai-completions` 傳輸上的串流使用區塊 時，
-    請優先使用 `openclaw/plugin-sdk/provider-catalog-shared` 中的共享目錄輔助函式，而不是對
-    提供者 ID 進行硬編碼檢查。`supportsNativeStreamingUsageCompat(...)` 和
+    當提供者的原生端點在一般
+    `openai-completions` 傳輸上支援串流使用區塊時，請優先使用
+    `openclaw/plugin-sdk/provider-catalog-shared` 中的共用目錄輔助函式，而不是硬編碼
+    提供者 ID 檢查。`supportsNativeStreamingUsageCompat(...)` 和
     `applyProviderNativeStreamingUsageCompat(...)` 會從
-    端點功能對應 中偵測支援情況，因此原生的 Moonshot/DashScope 風格端點即使
-    外掛使用自訂提供者 ID，仍然能夠選擇加入。
+    端點功能映射中偵測支援，因此原生的 Moonshot/DashScope 風格端點
+    即使在外掛程式使用自訂提供者 ID 時仍會選擇加入。
 
   </Step>
 
-  <Step title="新增動態模型解析">
-    如果您的提供者接受任意的模型 ID (例如代理或路由器)，
+  <Step title="Add dynamic model resolution">
+    如果您的供應商接受任意模型 ID（例如代理或路由器），
     請新增 `resolveDynamicModel`：
 
     ```typescript
@@ -258,14 +266,14 @@ API 金鑰驗證以及動態模型解析的提供者。
     ```
 
     如果解析需要網路呼叫，請使用 `prepareDynamicModel` 進行非同步
-    預熱 — `resolveDynamicModel` 會在完成後再次執行。
+    預熱—— `resolveDynamicModel` 會在完成後再次執行。
 
   </Step>
 
-  <Step title="新增執行時掛鉤（視需要）">
-    大多數供應商僅需要 `catalog` + `resolveDynamicModel`。請根據供應商的需求逐步新增掛鉤。
+  <Step title="添加運行時鉤子（如需要）">
+    大多數供應商只需要 `catalog` + `resolveDynamicModel`。根據供應商的需求逐步添加鉤子。
 
-    共享輔助建構器現已涵蓋最常見的重新播放/工具相容性系列，因此外掛通常無需逐一手動連接每個掛鉤：
+    共享輔助構建器現在涵蓋了最常見的重放/工具兼容系列，因此外掛通常無需逐一手動連接每個鉤子：
 
     ```typescript
     import { buildProviderReplayFamilyHooks } from "openclaw/plugin-sdk/provider-model-shared";
@@ -285,104 +293,105 @@ API 金鑰驗證以及動態模型解析的提供者。
     });
     ```
 
-    目前可用的重新播放系列：
+    目前可用的重放系列：
 
-    | 系列 | 其連接內容 |
+    | 系列 | 內容 |
     | --- | --- |
-    | `openai-compatible` | 適用於 OpenAI 相容傳輸的共享 OpenAI 風格重新播放策略，包括工具呼叫 ID 清理、助手優先排序修復，以及傳輸需要的通用 Gemini 輪次驗證 |
-    | `anthropic-by-model` | 由 `modelId` 選擇的 Claude 感知重新播放策略，因此當解析的模型實際上是 Claude ID 時，Anthropic 訊息傳輸僅會獲得 Claude 特定的思考區塊清理 |
-    | `google-gemini` | 原生 Gemini 重新播放策略，加上引導式重新播放清理和標記的推理輸出模式 |
-    | `passthrough-gemini` | 針對透過 OpenAI 相容代理傳輸運行的 Gemini 模型進行 Gemini 思考簽章清理；不啟用原生 Gemini 重新播放驗證或引導式重寫 |
-    | `hybrid-anthropic-openai` | 混合策略，適用於在一個外掛中混合 Anthropic 訊息和 OpenAI 相容模型表面的供應商；可選的僅限 Claude 思考區塊刪除保持在 Anthropic 側 |
+    | `openai-compatible` | 適用於 OpenAI 相容傳輸的共享 OpenAI 風格重放策略，包括工具呼叫 ID 清理、助手優先排序修正，以及傳輸需要的通用 Gemini 輪次驗證 |
+    | `anthropic-by-model` | 由 `modelId` 選擇的 Claude 感知重放策略，因此 Anthropic-message 傳輸僅在解析的模型實際為 Claude ID 時才會執行 Claude 特定的思維區塊清理 |
+    | `google-gemini` | 原生 Gemini 重放策略，加上引導重放清理和標記推理輸出模式 |
+    | `passthrough-gemini` | 針對透過 OpenAI 相容代理傳輸運行的 Gemini 模型的 Gemini 思維簽名清理；不啟用原生 Gemini 重放驗證或引導重寫 |
+    | `hybrid-anthropic-openai` | 混合策略，適用於在一個外掛中混合 Anthropic-message 和 OpenAI 相容模型表面的供應商；可選的僅 Claude 思維區塊刪除仍僅限於 Anthropic 端 |
 
-    實際的套件範例：
+    實際打包範例：
 
-    - `google` 和 `google-gemini-cli`：`google-gemini`
-    - `openrouter`、`kilocode`、`opencode` 和 `opencode-go`：`passthrough-gemini`
-    - `amazon-bedrock` 和 `anthropic-vertex`：`anthropic-by-model`
-    - `minimax`：`hybrid-anthropic-openai`
-    - `moonshot`、`ollama`、`xai` 和 `zai`：`openai-compatible`
+    - `google` 和 `google-gemini-cli`: `google-gemini`
+    - `openrouter`、`kilocode`、`opencode` 和 `opencode-go`: `passthrough-gemini`
+    - `amazon-bedrock` 和 `anthropic-vertex`: `anthropic-by-model`
+    - `minimax`: `hybrid-anthropic-openai`
+    - `moonshot`、`ollama`、`xai` 和 `zai`: `openai-compatible`
 
     目前可用的串流系列：
 
-    | 系列 | 其連接內容 |
+    | 系列 | 內容 |
     | --- | --- |
-    | `google-thinking` | 共享串流路徑上的 Gemini 思考承載正規化 |
-    | `kilocode-thinking` | 共享代理串流路徑上的 Kilo 推理包裝函式，對於 `kilo/auto` 和不支援的代理推理 ID 會跳過注入的思考 |
-    | `moonshot-thinking` | 來自設定 + `/think` 層級的 Moonshot 二進位原生思考承載對應 |
+    | `google-thinking` | 共享串流路徑上的 Gemini 思維負載正規化 |
+    | `kilocode-thinking` | 共享代理串流路徑上的 Kilo 推理包裝器，對於 `kilo/auto` 和不支援的代理推理 ID 跳過注入的思維 |
+    | `moonshot-thinking` | 從設定 + `/think` 層級進行的 Moonshot 二進位原生思維負載映射 |
     | `minimax-fast-mode` | 共享串流路徑上的 MiniMax 快速模式模型重寫 |
-    | `openai-responses-defaults` | 共享原生 OpenAI/Codex Responses 包裝函式：歸因標頭、`/fast`/`serviceTier`、文字詳細程度、原生 Codex 網路搜尋、推理相容承載塑形以及 Responses 內容管理 |
-    | `openrouter-thinking` | 適用於代理路由的 OpenRouter 推理包裝函式，其中不支援的模型/`auto` 跳過由中央處理 |
-    | `tool-stream-default-on` | 針對像 Z.AI 這樣除非明確停用否則希望進行工具串流的供應商，預設開啟的 `tool_stream` 包裝函式 |
+    | `openai-responses-defaults` | 共享原生 OpenAI/Codex Responses 包裝器：歸屬標頭、`/fast`/`serviceTier`、文字詳細程度、原生 Codex 網頁搜尋、推理兼容負載塑形以及 Responses 內容管理 |
+    | `openrouter-thinking` | 適用於代理路由的 OpenRouter 推理包裝器，不支援的模型/`auto` 跳過由中央處理 |
+    | `tool-stream-default-on` | 預設開啟的 `tool_stream` 包裝器，適用於像 Z.AI 這樣除非明確停用否則希望工具串流的供應商 |
 
-    實際的套件範例：
+    實際打包範例：
 
-    - `google` 和 `google-gemini-cli`：`google-thinking`
-    - `kilocode`：`kilocode-thinking`
-    - `moonshot`：`moonshot-thinking`
-    - `minimax` 和 `minimax-portal`：`minimax-fast-mode`
-    - `openai` 和 `openai-codex`：`openai-responses-defaults`
-    - `openrouter`：`openrouter-thinking`
-    - `zai`：`tool-stream-default-on`
+    - `google` 和 `google-gemini-cli`: `google-thinking`
+    - `kilocode`: `kilocode-thinking`
+    - `moonshot`: `moonshot-thinking`
+    - `minimax` 和 `minimax-portal`: `minimax-fast-mode`
+    - `openai` 和 `openai-codex`: `openai-responses-defaults`
+    - `openrouter`: `openrouter-thinking`
+    - `zai`: `tool-stream-default-on`
 
-    `openclaw/plugin-sdk/provider-model-shared` 也會匯出重新播放系列列舉以及建構這些系列的共享輔助函式。常見的公開匯出包括：
+    `openclaw/plugin-sdk/provider-model-shared` 也匯出重放系列枚舉以及構建這些系列的共享輔助函數。常見的公開匯出包括：
 
     - `ProviderReplayFamily`
     - `buildProviderReplayFamilyHooks(...)`
-    - 共享重新播放建構器，例如 `buildOpenAICompatibleReplayPolicy(...)`、
+    - 共享重放構建器，例如 `buildOpenAICompatibleReplayPolicy(...)`、
       `buildAnthropicReplayPolicyForModel(...)`、
       `buildGoogleGeminiReplayPolicy(...)` 和
       `buildHybridAnthropicOrOpenAIReplayPolicy(...)`
-    - Gemini 重新播放輔助函式，例如 `sanitizeGoogleGeminiReplayHistory(...)`
+    - Gemini 重放輔助函數，例如 `sanitizeGoogleGeminiReplayHistory(...)`
       和 `resolveTaggedReasoningOutputMode()`
-    - 端點/模型輔助函式，例如 `resolveProviderEndpoint(...)`、
+    - 端點/模型輔助函數，例如 `resolveProviderEndpoint(...)`、
       `normalizeProviderId(...)`、`normalizeGooglePreviewModelId(...)` 和
       `normalizeNativeXaiModelId(...)`
 
-    `openclaw/plugin-sdk/provider-stream` 會公開系列建構器以及這些系列重複使用的公開包裝輔助函式。常見的公開匯出包括：
+    `openclaw/plugin-sdk/provider-stream` 暴露了系列構建器以及這些系列重複使用的公開包裝器輔助函數。常見的公開匯出包括：
 
     - `ProviderStreamFamily`
     - `buildProviderStreamFamilyHooks(...)`
     - `composeProviderStreamWrappers(...)`
-    - 共享 OpenAI/Codex 包裝函式，例如
+    - 共享 OpenAI/Codex 包裝器，例如
       `createOpenAIAttributionHeadersWrapper(...)`、
       `createOpenAIFastModeWrapper(...)`、
       `createOpenAIServiceTierWrapper(...)`、
       `createOpenAIResponsesContextManagementWrapper(...)` 和
       `createCodexNativeWebSearchWrapper(...)`
-    - 共享代理/供應商包裝函式，例如 `createOpenRouterWrapper(...)`、
+    - 共享代理/供應商包裝器，例如 `createOpenRouterWrapper(...)`、
       `createToolStreamWrapper(...)` 和 `createMinimaxFastModeWrapper(...)`
 
-    某些串流輔助函式會刻意保持供應商本機化。目前的套件範例：`@openclaw/anthropic-provider` 會
-    從其公開 `api.ts` /
-    `contract-api.ts` 介面匯出 `wrapAnthropicProviderStream`、`resolveAnthropicBetas`、
-    `resolveAnthropicFastMode`、`resolveAnthropicServiceTier` 以及底層的 Anthropic 包裝建構器。這些輔助函式仍保持 Anthropic 特有，因為它們還編碼了 Claude OAuth Beta 處理和 `context1m` 閘控。
+    某些串流輔助函數是有意保留在供應商本地的。目前的打包範例：`@openclaw/anthropic-provider` 匯出
+    `wrapAnthropicProviderStream`、`resolveAnthropicBetas`、
+    `resolveAnthropicFastMode`、`resolveAnthropicServiceTier` 以及來自其公開 `api.ts` /
+    `contract-api.ts` 縫隙的低階 Anthropic 包裝器構建器。這些輔助函數仍專屬於 Anthropic，因為它們還編碼了 Claude OAuth beta 處理和 `context1m` 閘控。
 
-    其他套件供應商也會在行為無法在系列間清晰共享時，保留傳輸特定的包裝函式為本機化。目前的範例：套件的 xAI 外掛會在其自己的
-    `wrapStreamFn` 中保留原生 xAI Responses 塑形，包括 `/fast` 別名重寫、預設 `tool_stream`、不支援的嚴格工具清理，以及 xAI 特定的推理承載移除。
+    其他打包供應商在行為未在系列之間清晰共享時，也會將特定於傳輸的包裝器保留在本地。目前的範例：打包的 xAI 外掛將原生 xAI Responses 塑形保留在其自己的
+    `wrapStreamFn` 中，包括 `/fast` 別名重寫、預設 `tool_stream`、
+    不支援的嚴格工具清理以及 xAI 特定的推理負載移除。
 
-    `openclaw/plugin-sdk/provider-tools` 目前會公開一個共享工具架構系列以及共享架構/相容性輔助函式：
+    `openclaw/plugin-sdk/provider-tools` 目前暴露一個共享工具架構系列以及共享架構/兼容輔助函數：
 
-    - `ProviderToolCompatFamily` 說明了目前的共享系列清單。
-    - `buildProviderToolCompatFamilyHooks("gemini")` 會為需要 Gemini 安全工具架構的供應商連接 Gemini 架構清理與診斷。
+    - `ProviderToolCompatFamily` 記錄了目前的共享系列清單。
+    - `buildProviderToolCompatFamilyHooks("gemini")` 連接 Gemini 架構清理和診斷，適用於需要 Gemini 安全工具架構的供應商。
     - `normalizeGeminiToolSchemas(...)` 和 `inspectGeminiToolSchemas(...)`
-      是底層的公開 Gemini 架構輔助函式。
-    - `resolveXaiModelCompatPatch()` 會傳回套件的 xAI 相容性修補程式：
+      是底層的公開 Gemini 架構輔助函數。
+    - `resolveXaiModelCompatPatch()` 返回打包的 xAI 兼容修補程式：
       `toolSchemaProfile: "xai"`、不支援的架構關鍵字、原生
-      `web_search` 支援，以及 HTML 實體工具呼叫引數解碼。
-    - `applyXaiModelCompat(model)` 會在解析的模型到達執行器之前，將相同的 xAI 相容性修補程式套用到該模型。
+      `web_search` 支援以及 HTML 實體工具呼叫參數解碼。
+    - `applyXaiModelCompat(model)` 在模型到達運行器之前，將相同的 xAI 兼容修補程式應用於已解析的模型。
 
-    實際的套件範例：xAI 外掛使用 `normalizeResolvedModel` 加上
-    `contributeResolvedModelCompat`，讓該相容性中繼資料由供應商擁有，而不是在核心中硬編碼 xAI 規則。
+    實際打包範例：xAI 外掛使用 `normalizeResolvedModel` 加上
+    `contributeResolvedModelCompat` 來保持該兼容元數據由供應商擁有，而不是在核心中硬編碼 xAI 規則。
 
-    相同的套件根目錄模式也支援其他套件供應商：
+    相同的套件根模式也支援其他打包供應商：
 
-    - `@openclaw/openai-provider`：`api.ts` 匯出供應商建構器、預設模型輔助函式和即時供應商建構器
-    - `@openclaw/openrouter-provider`：`api.ts` 匯出供應商建構器加上上架/設定輔助函式
+    - `@openclaw/openai-provider`: `api.ts` 匯出供應商構建器、預設模型輔助函數即時供應商構建器
+    - `@openclaw/openrouter-provider`: `api.ts` 匯出供應商構建器以及入門/設定輔助函數
 
     <Tabs>
       <Tab title="權杖交換">
-        對於需要在每次推斷呼叫前進行權杖交換的供應商：
+        對於在每次推論呼叫前需要權杖交換的供應商：
 
         ```typescript
         prepareRuntimeAuth: async (ctx) => {
@@ -414,7 +423,7 @@ API 金鑰驗證以及動態模型解析的提供者。
         ```
       </Tab>
       <Tab title="原生傳輸身分識別">
-        對於需要通用 HTTP 或 WebSocket 傳輸上的原生請求/工作階段標頭或中繼資料的供應商：
+        對於需要在通用 HTTP 或 WebSocket 傳輸上使用原生請求/工作階段標頭或元數據的供應商：
 
         ```typescript
         resolveTransportTurnState: (ctx) => ({
@@ -435,7 +444,7 @@ API 金鑰驗證以及動態模型解析的提供者。
         ```
       </Tab>
       <Tab title="使用量與計費">
-        對於公開使用量/計費資料的供應商：
+        對於暴露使用量/計費數據的供應商：
 
         ```typescript
         resolveUsageAuth: async (ctx) => {
@@ -449,78 +458,74 @@ API 金鑰驗證以及動態模型解析的提供者。
       </Tab>
     </Tabs>
 
-    <Accordion title="所有可用的供應商掛鉤">
-      OpenClaw 會按此順序呼叫掛鉤。大多數供應商僅使用 2-3 個：
+    <Accordion title="所有可用的供應商鉤子">
+      OpenClaw 按此順序呼叫鉤子。大多數供應商僅使用 2-3 個：
 
-      | # | 掛鉤 | 使用時機 |
+      | # | 鉤子 | 使用時機 |
       | --- | --- | --- |
       | 1 | `catalog` | 模型目錄或基礎 URL 預設值 |
-      | 2 | `applyConfigDefaults` | 設定具體化期間的供應商擁有全域預設值 |
-      | 3 | `normalizeModelId` | 查閱前的舊版/預覽模型 ID 別名清理 |
+      | 2 | `applyConfigDefaults` | 設定具體化期間供應商擁有的全域預設值 |
+      | 3 | `normalizeModelId` | 查詢前的舊版/預覽模型 ID 別名清理 |
       | 4 | `normalizeTransport` | 通用模型組裝前的供應商系列 `api` / `baseUrl` 清理 |
       | 5 | `normalizeConfig` | 正規化 `models.providers.<id>` 設定 |
-      | 6 | `applyNativeStreamingUsageCompat` | 設定供應商的原生串流使用量相容性重寫 |
-      | 7 | `resolveConfigApiKey` | 供應商擁有的環境標記驗證解析 |
-      | 8 | `resolveSyntheticAuth` | 本機/自我託管或設定支援的合成驗證 |
-      | 9 | `shouldDeferSyntheticProfileAuth` | 將合成儲存的設定檔預留位置置於環境/設定驗證之後 |
-      | 10 | `resolveDynamicModel` | 接受任意的上游模型 ID |
-      | 11 | `prepareDynamicModel` | 解析前的非同步中繼資料擷取 |
-      | 12 | `normalizeResolvedModel` | 執行器前的傳輸重寫 |
+      | 6 | `applyNativeStreamingUsageCompat` | 設定供應商的原生串流使用量兼容重寫 |
+      | 7 | `resolveConfigApiKey` | 供應商擁有的 env-marker 身份驗證解析 |
+      | 8 | `resolveSyntheticAuth` | 本地/自託管或設定支援的合成身份驗證 |
+      | 9 | `shouldDeferSyntheticProfileAuth` | 將合成儲存的設定檔預留位置降低到 env/config 身份驗證之後 |
+      | 10 | `resolveDynamicModel` | 接受任意上游模型 ID |
+      | 11 | `prepareDynamicModel` | 解析前的異步元數據獲取 |
+      | 12 | `normalizeResolvedModel` | 運行器之前的傳輸重寫 |
 
-    執行時回退備註：
+    運行時備援註記：
 
-    - `normalizeConfig` 會先檢查相符的供應商，然後檢查其他具有掛鉤功能的供應商外掛，直到其中一個實際變更設定為止。
-      如果沒有供應商掛鉤重寫受支援的 Google 系列設定項目，套件的 Google 設定正規化器仍然會套用。
-    - `resolveConfigApiKey` 會在公開時使用供應商掛鉤。套件的
-      `amazon-bedrock` 路徑在這裡也有內建的 AWS 環境標標解析器，
-      儘管 Bedrock 執行時驗證本身仍使用 AWS SDK 預設鏈。
-      | 13 | `contributeResolvedModelCompat` | 位於另一個相容傳輸後的供應商模型相容性旗標 |
-      | 14 | `capabilities` | 舊版靜態功能包；僅供相容性使用 |
-      | 15 | `normalizeToolSchemas` | 註冊前的供應商擁有工具架構清理 |
-      | 16 | `inspectToolSchemas` | 供應商擁有工具架構診斷 |
+    - `normalizeConfig` 首先檢查匹配的供應商，然後檢查其他具有鉤子能力的供應商外掛，直到其中一個實際更改設定為止。如果沒有供應商鉤子重寫受支援的 Google 系列設定條目，打包的 Google 設定正規化器仍然適用。
+    - `resolveConfigApiKey` 在暴露時使用供應商鉤子。打包的 `amazon-bedrock` 路徑在此處也有內建的 AWS env-marker 解析器，即使 Bedrock 運行時身份驗證本身仍使用 AWS SDK 預設鏈。
+      | 13 | `contributeResolvedModelCompat` | 位於另一個相容傳輸後的廠商模型的兼容標誌 |
+      | 14 | `capabilities` | 舊版靜態功能包；僅限兼容性 |
+      | 15 | `normalizeToolSchemas` | 註冊前的供應商擁有的工具架構清理 |
+      | 16 | `inspectToolSchemas` | 供應商擁有的工具架構診斷 |
       | 17 | `resolveReasoningOutputMode` | 標記與原生推理輸出合約 |
       | 18 | `prepareExtraParams` | 預設請求參數 |
       | 19 | `createStreamFn` | 完全自訂的 StreamFn 傳輸 |
-      | 20 | `wrapStreamFn` | 正常串流路徑上的自訂標頭/主體包裝函式 |
-      | 21 | `resolveTransportTurnState` | 原生每輪標頭/中繼資料 |
+      | 20 | `wrapStreamFn` | 正常串流路徑上的自訂標頭/主體包裝器 |
+      | 21 | `resolveTransportTurnState` | 原生每輪標頭/元數據 |
       | 22 | `resolveWebSocketSessionPolicy` | 原生 WS 工作階段標頭/冷卻 |
-      | 23 | `formatApiKey` | 自訂執行時權杖形狀 |
+      | 23 | `formatApiKey` | 自訂運行時權杖形狀 |
       | 24 | `refreshOAuth` | 自訂 OAuth 重新整理 |
-      | 25 | `buildAuthDoctorHint` | 驗證修復指引 |
-      | 26 | `matchesContextOverflowError` | 供應商擁有溢出偵測 |
-      | 27 | `classifyFailoverReason` | 供應商擁有速率限制/超載分類 |
+      | 25 | `buildAuthDoctorHint` | 身份驗證修復指引 |
+      | 26 | `matchesContextOverflowError` | 供應商擁有的溢出偵測 |
+      | 27 | `classifyFailoverReason` | 供應商擁有的速率限制/過載分類 |
       | 28 | `isCacheTtlEligible` | 提示快取 TTL 閘控 |
-      | 29 | `buildMissingAuthMessage` | 自訂缺少驗證提示 |
-      | 30 | `suppressBuiltInModel` | 隱藏過時的上游資料列 |
-      | 31 | `augmentModelCatalog` | 合成向前相容資料列 |
-      | 32 | `isBinaryThinking` | 二進位思考開啟/關閉 |
-      | 33 | `supportsXHighThinking` | `xhigh` 推理支援 |
-      | 34 | `supportsAdaptiveThinking` | 自適應思考支援 |
-      | 35 | `supportsMaxThinking` | `max` 推理支援 |
-      | 36 | `resolveDefaultThinkingLevel` | 預設 `/think` 策略 |
-      | 37 | `isModernModelRef` | 即時/冒煙模型比對 |
-      | 38 | `prepareRuntimeAuth` | 推斷前的權杖交換 |
-      | 39 | `resolveUsageAuth` | 自訂使用量憑證解析 |
-      | 40 | `fetchUsageSnapshot` | 自訂使用量端點 |
-      | 41 | `createEmbeddingProvider` | 供應商擁有記憶體/搜尋的嵌入介面卡 |
-      | 42 | `buildReplayPolicy` | 自訂逐字稿重新播放/壓縮策略 |
-      | 43 | `sanitizeReplayHistory` | 通用清理後的供應商特定重新播放重寫 |
-      | 44 | `validateReplayTurns` | 嵌入式執行器前的嚴格重新播放輪次驗證 |
-      | 45 | `onModelSelected` | 選取後回呼 (例如遙測) |
+      | 29 | `buildMissingAuthMessage` | 自訂缺少身份驗證提示 |
+      | 30 | `suppressBuiltInModel` | 隱藏過時的上游列 |
+      | 31 | `augmentModelCatalog` | 合成向前兼容列 |
+      | 32 | `resolveThinkingProfile` | 模型特定的 `/think` 選項集 |
+      | 33 | `isBinaryThinking` | 二進位思維開啟/關閉兼容性 |
+      | 34 | `supportsXHighThinking` | `xhigh` 推理支援兼容性 |
+      | 35 | `resolveDefaultThinkingLevel` | 預設 `/think` 策略兼容性 |
+      | 36 | `isModernModelRef` | 即時/冒煙模型匹配 |
+      | 37 | `prepareRuntimeAuth` | 推論前的權杖交換 |
+      | 38 | `resolveUsageAuth` | 自訂使用量憑證解析 |
+      | 39 | `fetchUsageSnapshot` | 自訂使用量端點 |
+      | 40 | `createEmbeddingProvider` | 供應商擁有的嵌入適配器，用於記憶體/搜尋 |
+      | 41 | `buildReplayPolicy` | 自訂對話重放/壓縮策略 |
+      | 42 | `sanitizeReplayHistory` | 通用清理後的供應商特定重寫重寫 |
+      | 43 | `validateReplayTurns` | 內嵌運行器前的嚴格重放輪次驗證 |
+      | 44 | `onModelSelected` | 選取後回調（例如遙測）|
 
-      提示微調備註：
+      提示微調註記：
 
-    - `resolveSystemPromptContribution` 允許供應商為模型系列注入快取感知的系統提示指引。當行為屬於某個供應商/模型系列且應保留穩定/動態快取分割時，請優先使用它而非 `before_prompt_build`。
+      - `resolveSystemPromptContribution` 允許供應商為模型系列注入具備快取感知的系統提示指引。當該行為屬於某個供應商/模型系列並且應保留穩定/動態快取分割時，優先於 `before_prompt_build` 使用。
 
-      如需詳細描述和實際範例，請參閱
-      [內部：供應商執行時掛鉤](/zh-Hant/plugins/architecture#provider-runtime-hooks)。
+      如需詳細描述和真實範例，請參閱
+      [內部結構：供應商運行時鉤子](/zh-Hant/plugins/architecture#provider-runtime-hooks)。
     </Accordion>
 
   </Step>
 
   <Step title="Add extra capabilities (optional)">
     <a id="step-5-add-extra-capabilities"></a>
-    提供者外掛程式可以註冊語音、即時轉錄、即時語音、媒體理解、影像生成、影片生成、網路擷取和網路搜尋，以及文字推論：
+    提供者外掛程式可以註冊語音、即時轉錄、即時語音、媒體理解、影像生成、影片生成、網路擷取，以及網路搜尋，與文字推論並存：
 
     ```typescript
     register(api) {
@@ -542,12 +547,34 @@ API 金鑰驗證以及動態模型解析的提供者。
         id: "acme-ai",
         label: "Acme Realtime Transcription",
         isConfigured: () => true,
-        createSession: (req) => ({
-          connect: async () => {},
-          sendAudio: () => {},
-          close: () => {},
-          isConnected: () => true,
-        }),
+        createSession: (req) => {
+          const apiKey = String(req.providerConfig.apiKey ?? "");
+          return createRealtimeTranscriptionWebSocketSession({
+            providerId: "acme-ai",
+            callbacks: req,
+            url: "wss://api.example.com/v1/realtime-transcription",
+            headers: { Authorization: `Bearer ${apiKey}` },
+            onMessage: (event, transport) => {
+              if (event.type === "session.created") {
+                transport.sendJson({ type: "session.update" });
+                transport.markReady();
+                return;
+              }
+              if (event.type === "transcript.final") {
+                req.onTranscript?.(event.text);
+              }
+            },
+            sendAudio: (audio, transport) => {
+              transport.sendJson({
+                type: "audio.append",
+                audio: audio.toString("base64"),
+              });
+            },
+            onClose: (transport) => {
+              transport.sendJson({ type: "audio.end" });
+            },
+          });
+        },
       });
 
       api.registerRealtimeVoiceProvider({
@@ -628,11 +655,15 @@ API 金鑰驗證以及動態模型解析的提供者。
     }
     ```
 
-    OpenClaw 將此分類為 **混合功能** 外掛程式。這是公司外掛程式的建議模式（每個供應商一個外掛程式）。請參閱 [Internals: Capability Ownership](/zh-Hant/plugins/architecture#capability-ownership-model)。
+    OpenClaw 將此歸類為 **混合功能 (hybrid-capability)** 外掛程式。這是公司外掛程式的建議模式（每個供應商一個外掛程式）。請參閱 [Internals: Capability Ownership](/zh-Hant/plugins/architecture#capability-ownership-model)。
 
-    對於影片生成，建議使用上述所示的模式感知功能形狀：`generate`、`imageToVideo` 和 `videoToVideo`。扁平聚合欄位（例如 `maxInputImages`、`maxInputVideos` 和 `maxDurationSeconds`) 不足以乾淨地宣傳轉換模式支援或已停用的模式。
+    對於影片生成，建議優先使用上述具備模式感知的功能形狀：`generate`、`imageToVideo` 和 `videoToVideo`。平坦的聚合欄位（如 `maxInputImages`、`maxInputVideos` 和 `maxDurationSeconds`）不足以乾淨地公告轉換模式支援或已停用的模式。
 
-    音樂生成提供者應遵循相同的模式：`generate` 用於僅提示詞生成，而 `edit` 用於基於參考影像的生成。扁平聚合欄位（例如 `maxInputImages`、`supportsLyrics` 和 `supportsFormat`) 不足以宣傳編輯支援；明確的 `generate` / `edit` 區塊才是預期的契約。
+    對於串流 STT 提供者，建議優先使用共用的 WebSocket 輔助程式。它能讓代理擷取、重連退避、關閉排清、就緒交握、音訊佇列以及關閉事件診斷在所有提供者之間保持一致，同時讓提供者程式碼僅需負責上游事件對應。
+
+    發送多部分音訊 POST 請求的批次 STT 提供者，應將 `openclaw/plugin-sdk/provider-http` 中的 `buildAudioTranscriptionFormData(...)` 與提供者 HTTP 請求輔助程式搭配使用。表單輔助程式會正規化上傳檔名，包括需要 M4A 樣式檔名以相容於轉錄 API 的 AAC 上傳。
+
+    音樂生成提供者應遵循相同的模式：`generate` 用於僅提示詞生成，而 `edit` 用於基於參考影像的生成。平坦的聚合欄位（如 `maxInputImages`、`supportsLyrics` 和 `supportsFormat`）不足以公告編輯支援；明確的 `generate` / `edit` 區塊才是預期的合約。
 
   </Step>
 
@@ -680,7 +711,7 @@ clawhub package publish your-org/your-plugin --dry-run
 clawhub package publish your-org/your-plugin
 ```
 
-請勿在此使用僅限舊版技能的發布別名；外掛程式套件應使用 `clawhub package publish`。
+請勿在此處使用僅限舊版技能的發行別名；外掛程式套件應使用 `clawhub package publish`。
 
 ## 檔案結構
 
@@ -707,7 +738,7 @@ clawhub package publish your-org/your-plugin
 
 ## 後續步驟
 
-- [頻道外掛程式](/zh-Hant/plugins/sdk-channel-plugins) — 如果您的外掛程式也提供頻道
-- [SDK 執行時期](/zh-Hant/plugins/sdk-runtime) — `api.runtime` 協助程式 (TTS、搜尋、subagent)
+- [頻道外掛](/zh-Hant/plugins/sdk-channel-plugins) — 如果您的外掛也提供頻道
+- [SDK 執行時](/zh-Hant/plugins/sdk-runtime) — `api.runtime` 助手（TTS、搜尋、子代理程式）
 - [SDK 概覽](/zh-Hant/plugins/sdk-overview) — 完整的子路徑匯入參考
-- [外掛程式內部機制](/zh-Hant/plugins/architecture#provider-runtime-hooks) — Hook 詳細資訊和隨附範例
+- [外掛內部機制](/zh-Hant/plugins/architecture#provider-runtime-hooks) — Hook 詳細資訊與隨附範例

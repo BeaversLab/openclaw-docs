@@ -9,7 +9,7 @@ read_when:
 # Vercel AI Gateway
 
 Le [Vercel AI Gateway](https://vercel.com/ai-gateway) fournit une API unifiée pour
-accéder à des centaines de modèles via un seul point de terminaison.
+accéder à des centaines de modèles via un point de terminaison unique.
 
 | Propriété            | Valeur                                     |
 | -------------------- | ------------------------------------------ |
@@ -18,7 +18,7 @@ accéder à des centaines de modèles via un seul point de terminaison.
 | API                  | Compatible avec Anthropic Messages         |
 | Catalogue de modèles | Découvert automatiquement via `/v1/models` |
 
-<Tip>OpenClaw découvre automatiquement le catalogue `/v1/models` du Gateway, donc `/models vercel-ai-gateway` inclut les références actuelles des modèles telles que `vercel-ai-gateway/openai/gpt-5.4`.</Tip>
+<Tip>OpenClaw détecte automatiquement le catalogue Gateway `/v1/models`, donc `/models vercel-ai-gateway` inclut les références de modèles actuelles telles que `vercel-ai-gateway/openai/gpt-5.4` et `vercel-ai-gateway/moonshotai/kimi-k2.6`.</Tip>
 
 ## Getting started
 
@@ -85,17 +85,18 @@ l'exécution :
     <Warning>
     Une clé définie uniquement dans `~/.profile` ne sera pas visible pour un démon
     launchd/systemd, sauf si cet environnement est explicitement importé. Définissez la clé dans
-    `~/.openclaw/.env` ou via `env.shellEnv` pour vous assurer que le processus de la passerelle peut
+    `~/.openclaw/.env` ou via `env.shellEnv` pour garantir que le processus de la passerelle puisse
     la lire.
     </Warning>
 
   </Accordion>
 
   <Accordion title="Routage du fournisseur">
-    Vercel AI Gateway route les demandes vers le fournisseur amont en fonction du préfixe de
+    Le Vercel AI Gateway achemine les requêtes vers le fournisseur amont en fonction du préfixe de
     référence du modèle. Par exemple, `vercel-ai-gateway/anthropic/claude-opus-4.6` route
     via Anthropic, tandis que `vercel-ai-gateway/openai/gpt-5.4` route via
-    OpenAI. Votre `AI_GATEWAY_API_KEY` unique gère l'authentification pour tous
+    OpenAI et `vercel-ai-gateway/moonshotai/kimi-k2.6` route via
+    MoonshotAI. Votre `AI_GATEWAY_API_KEY` unique gère l'authentification pour tous
     les fournisseurs amont.
   </Accordion>
 </AccordionGroup>

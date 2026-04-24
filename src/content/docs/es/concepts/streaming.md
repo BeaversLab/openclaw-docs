@@ -118,45 +118,69 @@ Modos:
 
 ### Asignación de canales
 
-| Canal    | `off` | `partial` | `block` | `progress`            |
-| -------- | ----- | --------- | ------- | --------------------- |
-| Telegram | ✅    | ✅        | ✅      | se asigna a `partial` |
-| Discord  | ✅    | ✅        | ✅      | se asigna a `partial` |
-| Slack    | ✅    | ✅        | ✅      | ✅                    |
+| Canal      | `off` | `partial` | `block` | `progress`            |
+| ---------- | ----- | --------- | ------- | --------------------- |
+| Telegram   | ✅    | ✅        | ✅      | se asigna a `partial` |
+| Discord    | ✅    | ✅        | ✅      | se asigna a `partial` |
+| Slack      | ✅    | ✅        | ✅      | ✅                    |
+| Mattermost | ✅    | ✅        | ✅      | ✅                    |
 
-Solo para Slack:
+Solo Slack:
 
 - `channels.slack.streaming.nativeTransport` alterna las llamadas a la API de transmisión nativa de Slack cuando `channels.slack.streaming.mode="partial"` (predeterminado: `true`).
 - La transmisión nativa de Slack y el estado del hilo del asistente de Slack requieren un objetivo de hilo de respuesta; los MD de nivel superior no muestran esa vista previa de estilo de hilo.
 
 Migración de clave heredada:
 
-- Telegram: `streamMode` + booleano `streaming` migran automáticamente al enumerado `streaming`.
-- Discord: `streamMode` + booleano `streaming` migran automáticamente al enumerado `streaming`.
-- Slack: `streamMode` migra automáticamente a `streaming.mode`; el booleano `streaming` migra automáticamente a `streaming.mode` más `streaming.nativeTransport`; `nativeStreaming` heredado migra automáticamente a `streaming.nativeTransport`.
+- Telegram: `streamMode` + booleano `streaming` se migran automáticamente al enumerador `streaming`.
+- Discord: `streamMode` + booleano `streaming` se migran automáticamente al enumerador `streaming`.
+- Slack: `streamMode` se migra automáticamente a `streaming.mode`; el booleano `streaming` se migra automáticamente a `streaming.mode` más `streaming.nativeTransport`; la `nativeStreaming` heredada se migra automáticamente a `streaming.nativeTransport`.
 
 ### Comportamiento en tiempo de ejecución
 
 Telegram:
 
-- Usa `sendMessage` + `editMessageText` actualizaciones de vista previa en MD y grupos/temas.
+- Usa `sendMessage` + `editMessageText` actualizaciones de vista previa en MDs y grupos/temas.
 - Se omite la transmisión de vista previa cuando la transmisión de bloques de Telegram está explícitamente habilitada (para evitar la doble transmisión).
-- `/reasoning stream` puede escribir razonamiento en la vista previa.
+- `/reasoning stream` puede escribir el razonamiento en la vista previa.
 
 Discord:
 
-- Usa mensajes de vista previa de envío y edición.
-- El modo `block` usa fragmentación de borrador (`draftChunk`).
+- Usa enviar + editar mensajes de vista previa.
+- El modo `block` usa fragmentación de borradores (`draftChunk`).
 - Se omite la transmisión de vista previa cuando la transmisión de bloques de Discord está explícitamente habilitada.
+- Las cargas útiles finales de medios, errores y respuestas explícitas cancelan las vistas previas pendientes sin vaciar un nuevo borrador, y luego usan la entrega normal.
 
 Slack:
 
 - `partial` puede usar la transmisión nativa de Slack (`chat.startStream`/`append`/`stop`) cuando esté disponible.
 - `block` usa vistas previas de borrador de estilo anexar.
-- `progress` usa texto de vista previa de estado y luego la respuesta final.
+- `progress` usa texto de vista previa de estado, luego la respuesta final.
+- Las cargas útiles finales de medios/errores y los finales de progreso no crean mensajes de borrador desechables; solo los finales de texto/bloque que pueden editar la vista previa vacían el texto de borrador pendiente.
+
+Mattermost:
+
+- Transmite el pensamiento, la actividad de las herramientas y el texto de respuesta parcial a una única publicación de vista previa de borrador que se finaliza en su lugar cuando es seguro enviar la respuesta final.
+- Recurre al envío de una publicación final nueva si la publicación de vista previa fue eliminada o no está disponible en el momento de la finalización.
+- Las cargas finales de medios o errores cancelan las actualizaciones de vista previa pendientes antes de la entrega normal, en lugar de enviar una publicación de vista previa temporal.
+
+Matrix:
+
+- Las vistas previas de borradores se finalizan en su lugar cuando el texto final puede reutilizar el evento de vista previa.
+- Los finales de solo medios, errores o discordancia en el objetivo de respuesta cancelan las actualizaciones de vista previa pendientes antes de la entrega normal; se redacta una vista previa obsoleta ya visible.
+
+### Actualizaciones de vista previa de progreso de herramientas
+
+La transmisión de vista previa también puede incluir actualizaciones de **progreso de herramientas** — breves líneas de estado como "buscando en la web", "leyendo archivo" o "llamando a herramienta" — que aparecen en el mismo mensaje de vista previa mientras se ejecutan las herramientas, antes de la respuesta final. Esto mantiene los turnos de herramientas de varios pasos visualmente activos en lugar de silenciosos entre la primera vista previa de pensamiento y la respuesta final.
+
+Superficies compatibles:
+
+- **Discord**, **Slack** y **Telegram** transmiten el progreso de las herramientas en la edición en vivo de la vista previa.
+- **Mattermost** ya incorpora la actividad de las herramientas en su única publicación de vista previa de borrador (ver más arriba).
+- Las ediciones de progreso de herramientas siguen el modo activo de transmisión de vista previa; se omiten cuando la transmisión de vista previa es `off` o cuando la transmisión por bloques ha tomado el control del mensaje.
 
 ## Relacionado
 
 - [Mensajes](/es/concepts/messages) — ciclo de vida y entrega de mensajes
-- [Reintentar](/es/concepts/retry) — comportamiento de reintento en caso de error de entrega
-- [Canales](/es/channels) — soporte de transmisión por canal
+- [Reintentar](/es/concepts/retry) — comportamiento de reintento ante fallos de entrega
+- [Canales](/es/channels) — compatibilidad de transmisión por canal

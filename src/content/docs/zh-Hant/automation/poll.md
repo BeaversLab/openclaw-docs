@@ -1,5 +1,5 @@
 ---
-summary: "重新導向至 /tools/message"
+summary: "重新導向至 /cli/message"
 title: "投票"
 ---
 

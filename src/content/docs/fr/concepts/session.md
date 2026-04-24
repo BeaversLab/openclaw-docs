@@ -62,19 +62,18 @@ Les sessions sont réutilisées jusqu'à leur expiration :
 
 Lorsque les réinitialisations quotidiennes et par inactivité sont toutes deux configurées, la première à expirer l'emporte.
 
+Les sessions avec une session CLI active détenue par le fournisseur ne sont pas interrompues par la valeur par défaut quotidienne implicite. Utilisez `/reset` ou configurez `session.reset` explicitement lorsque ces sessions doivent expirer sur une minuterie.
+
 ## Où réside l'état
 
-Tout l'état de session est détenu par la **passerelle**. Les clients UI interrogent la passerelle pour
-les données de session.
+Tout l'état de session est détenu par la **passerelle** (gateway). Les clients de l'interface utilisateur interrogent la passerelle pour les données de session.
 
-- **Stockage :** `~/.openclaw/agents/<agentId>/sessions/sessions.json`
+- **Stockage (Store) :** `~/.openclaw/agents/<agentId>/sessions/sessions.json`
 - **Transcriptions :** `~/.openclaw/agents/<agentId>/sessions/<sessionId>.jsonl`
 
-## Maintenance de session
+## Maintenance des sessions
 
-OpenClaw limite automatiquement le stockage des sessions au fil du temps. Par défaut, il fonctionne
-en mode `warn` (signale ce qui serait nettoyé). Définissez `session.maintenance.mode`
-sur `"enforce"` pour un nettoyage automatique :
+OpenClaw délimite automatiquement le stockage des sessions au fil du temps. Par défaut, il fonctionne en mode `warn` (signale ce qui serait nettoyé). Définissez `session.maintenance.mode` sur `"enforce"` pour un nettoyage automatique :
 
 ```json5
 {
@@ -88,22 +87,22 @@ sur `"enforce"` pour un nettoyage automatique :
 }
 ```
 
-Aperçu avec `openclaw sessions cleanup --dry-run`.
+Prévisualiser avec `openclaw sessions cleanup --dry-run`.
 
 ## Inspection des sessions
 
 - `openclaw status` -- chemin du magasin de sessions et activité récente.
 - `openclaw sessions --json` -- toutes les sessions (filtrer avec `--active <minutes>`).
-- `/status` dans le chat -- utilisation du contexte, model et bascules.
-- `/context list` -- ce qui se trouve dans le prompt système.
+- `/status` dans le chat -- utilisation du contexte, modèle, et bascules.
+- `/context list` -- ce qui est dans le prompt système.
 
 ## Pour aller plus loin
 
 - [Session Pruning](/fr/concepts/session-pruning) -- élagage des résultats des outils
 - [Compaction](/fr/concepts/compaction) -- résumé des longues conversations
-- [Session Tools](/fr/concepts/session-tool) -- outils de l'agent pour le travail inter-sessions
-- [Session Management Deep Dive](/fr/reference/session-management-compaction) --
+- [Session Tools](/fr/concepts/session-tool) -- outils d'agent pour le travail inter-sessions
+- [Approfondissement de la gestion de session](/fr/reference/session-management-compaction) --
   schéma du magasin, transcriptions, politique d'envoi, métadonnées d'origine et configuration avancée
-- [Multi-Agent](/fr/concepts/multi-agent) — routage et isolement des sessions entre les agents
-- [Background Tasks](/fr/automation/tasks) — comment le travail détaché crée des enregistrements de tâches avec des références de session
-- [Channel Routing](/fr/channels/channel-routing) — routage des messages entrants vers les sessions
+- [Multi-Agent](/fr/concepts/multi-agent) — routage et isolation des sessions entre les agents
+- [Tâches d'arrière-plan](/fr/automation/tasks) — comment le travail détaché crée des enregistrements de tâches avec des références de session
+- [Routage de canal](/fr/channels/channel-routing) — routage des messages entrants vers les sessions

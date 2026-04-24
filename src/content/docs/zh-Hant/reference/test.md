@@ -14,7 +14,7 @@ title: "測試"
 - `pnpm test:coverage:changed`：僅針對自 `origin/main` 以來變更的檔案執行單元覆蓋率。
 - `pnpm test:changed`：當差異僅涉及可路由的原始碼/測試檔案時，將變更的 git 路徑擴展為範圍化的 Vitest 通道。配置/設定變更仍然會回退到原生的根專案執行，因此在需要時會廣泛地重新執行接線編輯。
 - `pnpm changed:lanes`：顯示針對 `origin/main` 的差異所觸發的架構通道。
-- `pnpm check:changed`：針對 `origin/main` 的差異執行智慧變更閘門。它使用核心測試通道執行核心工作，使用擴充功能測試通道執行擴充功能工作，使用測試類型檢查/測試執行僅測試工作，並將公開的 Plugin SDK 或 plugin-contract 變更擴展至擴充功能驗證。
+- `pnpm check:changed`：針對與 `origin/main` 的差異執行智慧變更閘道。它使用核心測試通道執行核心工作，使用擴充功能測試通道執行擴充功能工作，使用測試型別檢查/僅測試來執行僅測試工作，將公開的 Plugin SDK 或 plugin-contract 變更擴展到擴充功能驗證，並將僅發行中繼資料的版本升級保留在目標版本/配置/根相依性檢查上。
 - `pnpm test`：透過範圍化的 Vitest 通道路由明確的檔案/目錄目標。無目標的執行使用固定的分片組並擴展至葉配置以進行本機並行執行；擴充功能組總是擴展至個別擴充功能的分片配置，而不是一個巨大的根專案程序。
 - 完整和擴充功能分片執行會更新 `.artifacts/vitest-shard-timings.json` 中的本機計時資料；後續執行會使用這些計時來平衡慢速和快速的分片。設定 `OPENCLAW_TEST_PROJECTS_TIMINGS=0` 以忽略本機計時產出。
 - 選取的 `plugin-sdk` 和 `commands` 測試檔案現在會透過專用的輕量級通道路由，該通道僅保留 `test/setup.ts`，將執行時間長的案例留在其現有通道上。

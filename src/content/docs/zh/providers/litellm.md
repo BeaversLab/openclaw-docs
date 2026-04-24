@@ -11,14 +11,15 @@ read_when:
 [LiteLLM](https://litellm.ai) 是一个开源的 LLM 网关，为 100 多个模型提供商提供统一的 API。通过 LiteLLM 路由 OpenClaw，即可获得集中的成本跟踪、日志记录，以及在不更改 OpenClaw 配置的情况下切换后端的灵活性。
 
 <Tip>
-**为什么要在 OpenClaw 中使用 LiteLLM？**
+**为什么在 OpenClaw 中使用 LiteLLM？**
 
-- **成本跟踪** — 精确查看 OpenClaw 在所有模型上的花费
-- **模型路由** — 在 Claude、GPT-4、Gemini、Bedrock 之间切换，无需更改配置
-- **虚拟密钥** — 为 OpenClaw 创建具有消费限制的密钥
-- **日志记录** — 用于调试的完整请求/响应日志
-- **故障转移** — 如果主提供商宕机，将自动故障转移
-  </Tip>
+- **成本跟踪** — 精确查看 OpenClaw 在所有模型上的支出
+- **模型路由** — 在 Claude、GPT-4、Gemini、Bedrock 之间切换而无需更改配置
+- **虚拟密钥** — 为 OpenClaw 创建具有支出限制的密钥
+- **日志记录** — 完整的请求/响应日志以便调试
+- **故障转移** — 如果主提供商宕机，自动故障转移
+
+</Tip>
 
 ## 快速开始
 

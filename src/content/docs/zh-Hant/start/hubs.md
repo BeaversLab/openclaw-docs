@@ -160,7 +160,7 @@ title: "文件中心"
 - [macOS 技能](/zh-Hant/platforms/mac/skills)
 - [macOS Peekaboo](/zh-Hant/platforms/mac/peekaboo)
 
-## 擴充功能 + 外掛程式
+## 外掛程式
 
 - [外掛程式概覽](/zh-Hant/tools/plugin)
 - [建置外掛程式](/zh-Hant/plugins/building-plugins)

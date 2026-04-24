@@ -10,23 +10,23 @@ title: "Fonctionnalités"
 ## Points forts
 
 <Columns>
-  <Card title="Chaînes" icon="message-square">
-    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat, et plus encore avec un seul Gateway.
+  <Card title="Channels" icon="message-square" href="/fr/channels">
+    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat et plus encore avec un seul Gateway.
   </Card>
-  <Card title="Plugins" icon="plug">
-    Les plugins inclus ajoutent Matrix, Nextcloud Talk, Nostr, Twitch, Zalo, et plus encore sans installation séparée dans les versions actuelles normales.
+  <Card title="Plugins" icon="plug" href="/fr/tools/plugin">
+    Les plugins inclus ajoutent Matrix, Nextcloud Talk, Nostr, Twitch, Zalo et plus encore sans installation séparée dans les versions actuelles normales.
   </Card>
-  <Card title="Routing" icon="route">
+  <Card title="Routing" icon="route" href="/fr/concepts/multi-agent">
     Routage multi-agent avec sessions isolées.
   </Card>
-  <Card title="Médias" icon="image">
-    Images, audio, vidéo, documents, et génération d'images/vidéo.
+  <Card title="Media" icon="image" href="/fr/nodes/images">
+    Images, audio, vidéo, documents et génération d'images/vidéo.
   </Card>
-  <Card title="Apps and UI" icon="monitor">
-    Interface de contrôle Web et application compagnon macOS.
+  <Card title="Apps and UI" icon="monitor" href="/fr/web/control-ui">
+    Interface utilisateur de contrôle Web et application compagnon macOS.
   </Card>
-  <Card title="Mobile nodes" icon="smartphone">
-    Nœuds iOS et Android avec appairage, voix/chat et commandes riches d'appareil.
+  <Card title="Mobile nodes" icon="smartphone" href="/fr/nodes">
+    Nœuds iOS et Android avec appairage, voix/chat et commandes riches de périphérique.
   </Card>
 </Columns>
 
@@ -45,7 +45,7 @@ title: "Fonctionnalités"
 
 - Runtime d'agent intégré avec streaming d'outils
 - Routage multi-agent avec sessions isolées par espace de travail ou expéditeur
-- Sessions : les conversations directes fusionnent dans une `main` partagée ; les groupes sont isolés
+- Sessions : les chats directs sont regroupés dans un `main` partagé ; les groupes sont isolés
 - Streaming et fractionnement pour les longues réponses
 
 **Auth et fournisseurs :**

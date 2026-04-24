@@ -9,7 +9,8 @@ title: "configure"
 
 用於設定認證、裝置和代理預設值的互動式提示。
 
-注意：**Model** 區段現在包含針對 `agents.defaults.models` 允許清單（顯示於 `/model` 和模型選擇器中的內容）的多重選取功能。
+注意：**Model** 部分现在包含一个用于 `agents.defaults.models` 允许列表的多选框（显示在 `/model` 和模型选择器中的内容）。
+作用域为提供者的设置选择会将选定的模型合并到现有的允许列表中，而不是替换配置中已有的不相关提供者。
 
 當 configure 從供應商授權選項啟動時，預設模型和允許清單選擇器會自動偏好該供應商。對於 Volcengine/BytePlus 等配對供應商，相同的偏好設定也會符合其編碼方案變體（`volcengine-plan/*`、`byteplus-plan/*`）。如果偏好的供應商篩選會產生空白清單，configure 將會回退至未篩選的目錄，而不是顯示空白的選擇器。
 

@@ -25,7 +25,7 @@ title: "OpenClaw"
     Instala OpenClaw y pon en marcha la puerta de enlace en minutos.
   </Card>
   <Card title="Ejecutar incorporación" href="/es/start/wizard" icon="sparkles">
-    Configuración guiada con `openclaw onboard` y flujos de vinculación.
+    Configuración guiada con `openclaw onboard` y flujos de emparejamiento.
   </Card>
   <Card title="Abrir la interfaz de control" href="/es/web/control-ui" icon="layout-dashboard">
     Inicia el panel del navegador para chat, configuración y sesiones.
@@ -45,7 +45,7 @@ OpenClaw es una **puerta de enlace autohospedada** que conecta tus aplicaciones 
 - **Nativo para agentes**: diseñado para agentes de programación con uso de herramientas, sesiones, memoria y enrutamiento multi-agente
 - **Código abierto**: con licencia MIT, impulsado por la comunidad
 
-**¿Qué necesitas?** Node 24 (recomendado), o Node 22 LTS (`22.14+`) para compatibilidad, una clave de API de tu proveedor elegido y 5 minutos. Para obtener la mejor calidad y seguridad, utiliza el modelo más potente de última generación disponible.
+**¿Qué necesitas?** Node 24 (recomendado), o Node 22 LTS (`22.14+`) para compatibilidad, una clave de API de tu proveedor elegido y 5 minutos. Para la mejor calidad y seguridad, utiliza el modelo más potente de última generación disponible.
 
 ## Cómo funciona
 
@@ -64,23 +64,23 @@ El Gateway es la única fuente de verdad para las sesiones, el enrutamiento y la
 ## Funciones clave
 
 <Columns>
-  <Card title="Puerta de enlace multicanal" icon="network">
-    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat y más con un único proceso de puerta de enlace.
+  <Card title="Pasarela multicanal" icon="network" href="/es/channels">
+    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat y más con un único proceso Gateway.
   </Card>
-  <Card title="Canales de complementos" icon="plug">
-    Los complementos incluidos añaden Matrix, Nostr, Twitch, Zalo y más en las versiones normales actuales.
+  <Card title="Canales de complementos" icon="plug" href="/es/tools/plugin">
+    Los complementos incluidos añaden Matrix, Nostr, Twitch, Zalo y más en las versiones actuales normales.
   </Card>
-  <Card title="Enrutamiento multiagente" icon="route">
+  <Card title="Enrutamiento multiagente" icon="route" href="/es/concepts/multi-agent">
     Sesiones aisladas por agente, espacio de trabajo o remitente.
   </Card>
-  <Card title="Soporte multimedia" icon="image">
+  <Card title="Soporte de medios" icon="image" href="/es/nodes/images">
     Envía y recibe imágenes, audio y documentos.
   </Card>
-  <Card title="Interfaz de control web" icon="monitor">
+  <Card title="Interfaz de control web" icon="monitor" href="/es/web/control-ui">
     Panel del navegador para chat, configuración, sesiones y nodos.
   </Card>
-  <Card title="Nodos móviles" icon="smartphone">
-    Empareja nodos iOS y Android para Canvas, cámara y flujos de trabajo con voz.
+  <Card title="Nodos móviles" icon="smartphone" href="/es/nodes">
+    Empareja nodos iOS y Android para flujos de trabajo con Canvas, cámara y voz habilitada.
   </Card>
 </Columns>
 
@@ -98,18 +98,18 @@ El Gateway es la única fuente de verdad para las sesiones, el enrutamiento y la
     ```
   </Step>
   <Step title="Chat">
-    Abre la interfaz de usuario de control en tu navegador y envía un mensaje:
+    Abra la Interfaz de Control en su navegador y envíe un mensaje:
 
     ```bash
     openclaw dashboard
     ```
 
-    O conecta un canal ([Telegram](/es/channels/telegram) es el más rápido) y chatea desde tu teléfono.
+    O conecte un canal ([Telegram](/es/channels/telegram) es el más rápido) y chatee desde su teléfono.
 
   </Step>
 </Steps>
 
-¿Necesitas la instalación completa y la configuración de desarrollo? Consulta [Introducción](/es/start/getting-started).
+¿Necesita la instalación completa y la configuración de desarrollo? Consulte [Introducción](/es/start/getting-started).
 
 ## Panel de control
 
@@ -127,7 +127,7 @@ Abre la interfaz de usuario de control en el navegador después de que se inicie
 La configuración se encuentra en `~/.openclaw/openclaw.json`.
 
 - Si **no haces nada**, OpenClaw usará el binario Pi incluido en modo RPC con sesiones por remitente.
-- Si deseas bloquearlo, comienza con `channels.whatsapp.allowFrom` y (para grupos) reglas de mención.
+- Si desea bloquearlo, comience con `channels.whatsapp.allowFrom` y (para grupos) reglas de mención.
 
 Ejemplo:
 
@@ -150,16 +150,16 @@ Ejemplo:
     Toda la documentación y guías, organizadas por caso de uso.
   </Card>
   <Card title="Configuración" href="/es/gateway/configuration" icon="settings">
-    Configuración principal de la puerta de enlace, tokens y configuración del proveedor.
+    Configuración central del Gateway, tokens y configuración del proveedor.
   </Card>
   <Card title="Acceso remoto" href="/es/gateway/remote" icon="globe">
     Patrones de acceso SSH y tailnet.
   </Card>
-  <Card title="Channels" href="/es/channels/telegram" icon="message-square">
+  <Card title="Canales" href="/es/channels/telegram" icon="message-square">
     Configuración específica del canal para Feishu, Microsoft Teams, WhatsApp, Telegram, Discord y más.
   </Card>
   <Card title="Nodes" href="/es/nodes" icon="smartphone">
-    Nodos de iOS y Android con emparejamiento, Canvas, cámara y acciones del dispositivo.
+    Nodos iOS y Android con emparejamiento, Canvas, cámara y acciones del dispositivo.
   </Card>
   <Card title="Help" href="/es/help" icon="life-buoy">
     Punto de entrada para soluciones comunes y solución de problemas.

@@ -162,8 +162,7 @@ OpenClaw actualmente incluye este catálogo integrado de Qwen. El catálogo conf
 
 ## Complementos multimodales
 
-La extensión `qwen` también expone capacidades multimodales en los puntos de conexión **Estándar**
-de DashScope (no en los puntos de conexión del plan de codificación):
+El complemento `qwen` también expone capacidades multimodales en los puntos de conexión **Standard** de DashScope (no en los puntos de conexión del Coding Plan):
 
 - **Comprensión de video** a través de `qwen-vl-max-latest`
 - **Generación de video Wan** a través de `wan2.6-t2v` (predeterminado), `wan2.6-i2v`, `wan2.6-r2v`, `wan2.6-r2v-flash`, `wan2.7-r2v`
@@ -213,17 +212,16 @@ Para usar Qwen como el proveedor de video predeterminado:
 
   </Accordion>
 
-  <Accordion title="Plan de capacidades">
-    La extensión `qwen` se está posicionando como el proveedor principal de toda la superficie de
-    Qwen Cloud, no solo de modelos de codificación/texto.
+  <Accordion title="Capability plan">
+    El complemento `qwen` se está posicionando como la sede del proveedor para toda la superficie de Qwen Cloud, no solo para modelos de codificación/texto.
 
-    - **Modelos de texto/chat:** incluidos ahora
-    - **Llamada a herramientas, salida estructurada, razonamiento:** heredados del transporte compatible con OpenAI
-    - **Generación de imágenes:** planeada en la capa de complementos del proveedor
-    - **Comprensión de imagen/vídeo:** incluida ahora en el punto de conexión Estándar
-    - **Voz/audio:** planeada en la capa de complementos del proveedor
-    - **Incrustaciones de memoria/reranking:** planeadas a través de la superficie del adaptador de incrustaciones
-    - **Generación de vídeo:** incluida ahora a través de la capacidad compartida de generación de vídeo
+    - **Text/chat models:** incluido ahora
+    - **Tool calling, structured output, thinking:** heredados del transporte compatible con OpenAI
+    - **Image generation:** previsto en la capa del complemento del proveedor
+    - **Image/video understanding:** incluido ahora en el punto de conexión Standard
+    - **Speech/audio:** previsto en la capa del complemento del proveedor
+    - **Memory embeddings/reranking:** previsto a través de la superficie del adaptador de incrustaciones
+    - **Video generation:** incluido ahora a través de la capacidad compartida de generación de video
 
   </Accordion>
 

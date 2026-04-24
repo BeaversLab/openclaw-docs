@@ -27,13 +27,15 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija un proveedor, autentíq
 
 - [Alibaba Model Studio](/es/providers/alibaba)
 - [Amazon Bedrock](/es/providers/bedrock)
+- [Amazon Bedrock Mantle](/es/providers/bedrock-mantle)
 - [Anthropic (API + Claude CLI)](/es/providers/anthropic)
 - [Arcee AI (modelos Trinity)](/es/providers/arcee)
 - [BytePlus (Internacional)](/es/concepts/model-providers#byteplus-international)
 - [Chutes](/es/providers/chutes)
-- [ComfyUI](/es/providers/comfy)
 - [Cloudflare AI Gateway](/es/providers/cloudflare-ai-gateway)
+- [ComfyUI](/es/providers/comfy)
 - [DeepSeek](/es/providers/deepseek)
+- [ElevenLabs](/es/providers/elevenlabs)
 - [fal](/es/providers/fal)
 - [Fireworks](/es/providers/fireworks)
 - [GitHub Copilot](/es/providers/github-copilot)
@@ -61,30 +63,35 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija un proveedor, autentíq
 - [SGLang (modelos locales)](/es/providers/sglang)
 - [StepFun](/es/providers/stepfun)
 - [Synthetic](/es/providers/synthetic)
+- [Tencent Cloud (TokenHub)](/es/providers/tencent)
 - [Together AI](/es/providers/together)
 - [Venice (Venice AI, centrado en la privacidad)](/es/providers/venice)
 - [Vercel AI Gateway](/es/providers/vercel-ai-gateway)
-- [Vydra](/es/providers/vydra)
 - [vLLM (modelos locales)](/es/providers/vllm)
 - [Volcengine (Doubao)](/es/providers/volcengine)
+- [Vydra](/es/providers/vydra)
 - [xAI](/es/providers/xai)
 - [Xiaomi](/es/providers/xiaomi)
 - [Z.AI](/es/providers/zai)
 
 ## Páginas de descripción general compartidas
 
-- [Variantes incluidas adicionales](/es/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy y Gemini CLI OAuth
-- [Generación de imágenes](/es/tools/image-generation) - Herramienta compartida `image_generate`, selección de proveedor y conmutación por error
-- [Generación de música](/es/tools/music-generation) - Herramienta compartida `music_generate`, selección de proveedor y conmutación por error
-- [Generación de video](/es/tools/video-generation) - Herramienta compartida `video_generate`, selección de proveedor y conmutación por error
+- [Variantes adicionales incluidas](/es/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy y Gemini CLI OAuth
+- [Generación de imágenes](/es/tools/image-generation) - Herramienta `image_generate` compartida, selección de proveedor y conmutación por error
+- [Generación de música](/es/tools/music-generation) - Herramienta `music_generate` compartida, selección de proveedor y conmutación por error
+- [Generación de video](/es/tools/video-generation) - Herramienta `video_generate` compartida, selección de proveedor y conmutación por error
 
 ## Proveedores de transcripción
 
 - [Deepgram (transcripción de audio)](/es/providers/deepgram)
+- [ElevenLabs](/es/providers/elevenlabs#speech-to-text)
+- [Mistral](/es/providers/mistral#audio-transcription-voxtral)
+- [OpenAI](/es/providers/openai#speech-to-text)
+- [xAI](/es/providers/xai#speech-to-text)
 
-## Herramientas de la comunidad
+## Herramientas comunitarias
 
-- [Claude Max API Proxy](/es/providers/claude-max-api-proxy) - Proxy comunitario para credenciales de suscripción a Claude (verifique la política/términos de Anthropic antes de usar)
+- [Claude Max API Proxy](/es/providers/claude-max-api-proxy) - Proxy comunitario para credenciales de suscripción de Claude (verifique la política/términos de Anthropic antes de usarlo)
 
 Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y la configuración avanzada,
-consulte [Model providers](/es/concepts/model-providers).
+consulte [Proveedores de modelos](/es/concepts/model-providers).

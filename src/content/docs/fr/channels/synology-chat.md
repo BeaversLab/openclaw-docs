@@ -112,19 +112,20 @@ openclaw message send --channel synology-chat --target 123456 --text "Hello from
 openclaw message send --channel synology-chat --target synology-chat:123456 --text "Hello again"
 ```
 
-Les envois de médias sont pris en charge via la livraison de fichiers par URL.
+L'envoi de médias est pris en charge via la livraison de fichiers par URL.
+Les URL de fichiers sortants doivent utiliser `http` ou `https`, et les cibles réseau privées ou autrement bloquées sont rejetées avant que OpenClaw ne transmette l'URL au webhook NAS.
 
 ## Multi-compte
 
 Plusieurs comptes Synology Chat sont pris en charge sous `channels.synology-chat.accounts`.
 Chaque compte peut remplacer le jeton, l'URL entrante, le chemin du webhook, la stratégie de DM et les limites.
-Les sessions de messages directs sont isolées par compte et par utilisateur, donc le même identifiant numérique `user_id`
-sur deux comptes Synology différents ne partage pas l'état de la transcription.
+Les sessions de message direct sont isolées par compte et par utilisateur, le même `user_id` numérique
+sur deux comptes Synology différents ne partage donc pas l'état de la transcription.
 Donnez à chaque compte activé un `webhookPath` distinct. OpenClaw rejette désormais les chemins exacts en double
-et refuse de démarrer les comptes nommés qui n'héritent que d'un chemin de webhook partagé dans les configurations multi-comptes.
-Si vous avez intentionnellement besoin de l'héritage hérité pour un compte nommé, définissez
+et refuse de démarrer les comptes nommés qui héritent uniquement d'un chemin de webhook partagé dans les configurations multi-comptes.
+Si vous avez besoin intentionnellement d'un héritage hérité pour un compte nommé, définissez
 `dangerouslyAllowInheritedWebhookPath: true` sur ce compte ou à `channels.synology-chat`,
-mais les chemins exacts en double sont toujours rejetés en mode échec (fail-closed). Préférez des chemins explicites par compte.
+mais les chemins exacts en double sont toujours rejetés en échec fermé. Préférez les chemins explicites par compte.
 
 ```json5
 {
@@ -151,13 +152,13 @@ mais les chemins exacts en double sont toujours rejetés en mode échec (fail-cl
 
 ## Notes de sécurité
 
-- Gardez `token` secret et faites-le tourner s'il est divulgué.
-- Gardez `allowInsecureSsl: false` sauf si vous faites explicitement confiance à un certificat NAS local auto-signé.
+- Gardez `token` secret et faites-le tourner s'il fuite.
+- Gardez `allowInsecureSsl: false` à moins que vous ne fassiez explicitement confiance à un certificat NAS local auto-signé.
 - Les demandes webhook entrantes sont vérifiées par jeton et limitées par taux par expéditeur.
 - Les vérifications de jeton invalides utilisent une comparaison secrète à temps constant et échouent de manière fermée (fail closed).
 - Préférez `dmPolicy: "allowlist"` pour la production.
-- Désactivez `dangerouslyAllowNameMatching` sauf si vous avez explicitement besoin de la livraison des réponses basée sur le nom d'utilisateur hérité.
-- Gardez `dangerouslyAllowInheritedWebhookPath` désactivé, sauf si vous acceptez explicitement les risques de routage par chemin partagé dans une configuration multi-compte.
+- Gardez `dangerouslyAllowNameMatching` désactivé à moins que vous n'ayez explicitement besoin de la livraison de réponses basée sur le nom d'utilisateur hérité.
+- Gardez `dangerouslyAllowInheritedWebhookPath` désactivé à moins que vous n'acceptiez explicitement le risque de routage de chemin partagé dans une configuration multi-comptes.
 
 ## Dépannage
 
@@ -174,12 +175,12 @@ mais les chemins exacts en double sont toujours rejetés en mode échec (fail-cl
 - `Allowlist is empty. Configure allowedUserIds or use dmPolicy=open.` :
   - `dmPolicy="allowlist"` est activé mais aucun utilisateur n'est configuré
 - `User not authorized` :
-  - l'identifiant numérique `user_id` de l'expéditeur n'est pas dans `allowedUserIds`
+  - le `user_id` numérique de l'expéditeur n'est pas dans `allowedUserIds`
 
 ## Connexes
 
 - [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
-- [Appariement](/fr/channels/pairing) — authentification DM et processus d'appariement
-- [Groupes](/fr/channels/groups) — comportement du chat de groupe et filtrage des mentions
+- [Jumelage](/fr/channels/pairing) — authentification DM et flux de jumelage
+- [Groupes](/fr/channels/groups) — comportement de chat de groupe et filtrage des mentions
 - [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
 - [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

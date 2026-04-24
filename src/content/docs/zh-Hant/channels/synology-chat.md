@@ -109,15 +109,17 @@ openclaw message send --channel synology-chat --target 123456 --text "Hello from
 openclaw message send --channel synology-chat --target synology-chat:123456 --text "Hello again"
 ```
 
-透過基於 URL 的檔案傳遞來支援媒體發送。
+媒體傳輸支援基於 URL 的檔案傳遞。
+傳出檔案 URL 必須使用 `http` 或 `https`，且在 OpenClaw 將 URL 轉發至 NAS webhook 之前，會拒絕私人或其他封鎖的網路目標。
 
 ## 多重帳號
 
 在 `channels.synology-chat.accounts` 下支援多個 Synology Chat 帳號。
-每個帳號都可以覆寫權杖、傳入 URL、webhook 路徑、DM 原則和限制。
-私訊會話是按帳號和使用者隔離的，因此兩個不同 Synology 帳號上相同的數字 `user_id` 不會共用對話狀態。
-請為每個已啟用的帳號指定一個獨特的 `webhookPath`。OpenClaw 現在會拒絕重複的確切路徑，並拒絕啟動在多重帳號設定中僅繼承共用 webhook 路徑的命名帳號。
-如果您確實需要命名帳號的舊版繼承功能，請在該帳號或 `channels.synology-chat` 上設定 `dangerouslyAllowInheritedWebhookPath: true`，但重複的確切路徑仍會被封閉式地拒絕。建議優先使用明確的個別帳號路徑。
+每個帳號都可以覆寫 token、傳入 URL、webhook 路徑、DM 政策和限制。
+直接訊息工作階段是按帳號和用戶隔離的，因此兩個不同 Synology 帳號上相同的數字 `user_id` 不會共享對話狀態。
+為每個啟用的帳號指定一個不同的 `webhookPath`。OpenClaw 現在會拒絕重複的確切路徑，並拒絕啟動在多帳號設定中僅繼承共享 webhook 路徑的命名帳號。
+如果您有意為命名帳號保留舊版繼承行為，請在該帳號或 `channels.synology-chat` 上設定
+`dangerouslyAllowInheritedWebhookPath: true`，但重複的確切路徑仍會被以失效封閉 (fail-closed) 的方式拒絕。建議優先使用明確的個別帳號路徑。
 
 ```json5
 {
@@ -144,13 +146,13 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
 
 ## 安全性注意事項
 
-- 請妥善保管 `token`，如果洩露請輪換它。
-- 請保持 `allowInsecureSsl: false` 開啟，除非您明確信任本機 NAS 的自簽憑證。
+- 請妥善保管 `token`，一旦洩露請立即更換。
+- 除非您明確信任本地 NAS 的自簽憑證，否則請保持 `allowInsecureSsl: false` 開啟。
 - 傳入 webhook 請求會經過權杖驗證，並按發送者進行速率限制。
 - 無效權杖檢查使用恆定時間的秘密比較並封閉式失敗。
 - 生產環境建議優先使用 `dmPolicy: "allowlist"`。
-- 除非您明確需要舊版基於使用者名稱的回覆傳遞，否則請關閉 `dangerouslyAllowNameMatching`。
-- 在多帳戶設定中，除非您明確接受共用路徑路由的風險，否則請將 `dangerouslyAllowInheritedWebhookPath` 保持關閉。
+- 除非您明確需要基於舊版使用者名稱的回覆傳遞，否則請將 `dangerouslyAllowNameMatching` 保持關閉。
+- 除非您明確接受多帳號設定中的共享路徑路由風險，否則請將 `dangerouslyAllowInheritedWebhookPath` 保持關閉。
 
 ## 疑難排解
 
@@ -158,7 +160,7 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
   - 傳出 Webhook 的負載中缺少一個必要欄位
   - 如果 Synology 在標頭中發送 Token，請確保閘道/代理伺服器保留了這些標頭
 - `Invalid token`：
-  - 傳出 Webhook 金鑰與 `channels.synology-chat.token` 不相符
+  - 傳出 webhook 密鑰與 `channels.synology-chat.token` 不符
   - 請求發送到了錯誤的帳戶/Webhook 路徑
   - 反向代理在請求到達 OpenClaw 之前剝離了 Token 標頭
 - `Rate limit exceeded`：
@@ -171,8 +173,8 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
 
 ## 相關
 
-- [頻道概覽](/zh-Hant/channels) — 所有支援的頻道
-- [配對](/zh-Hant/channels/pairing) — 私訊驗證與配對流程
-- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及閘門
-- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的工作階段路由
-- [安全性](/zh-Hant/gateway/security) — 存取模型與強化防護
+- [頻道總覽](/zh-Hant/channels) — 所有支援的頻道
+- [配對](/zh-Hant/channels/pairing) — DM 認證與配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及控制
+- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型與加固

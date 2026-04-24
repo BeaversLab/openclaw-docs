@@ -10,23 +10,23 @@ title: "Características"
 ## Destacados
 
 <Columns>
-  <Card title="Channels" icon="message-square">
-    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat y más con una única Gateway.
+  <Card title="Canales" icon="message-square" href="/es/channels">
+    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat y más con una única pasarela.
   </Card>
-  <Card title="Plugins" icon="plug">
-    Los plugins incluidos añaden Matrix, Nextcloud Talk, Nostr, Twitch, Zalo y más sin instalaciones separadas en las versiones actuales normales.
+  <Card title="Complementos" icon="plug" href="/es/tools/plugin">
+    Los complementos incluidos añaden Matrix, Nextcloud Talk, Nostr, Twitch, Zalo y más sin instalaciones separadas en las versiones actuales normales.
   </Card>
-  <Card title="Enrutamiento" icon="route">
+  <Card title="Enrutamiento" icon="route" href="/es/concepts/multi-agent">
     Enrutamiento multiagente con sesiones aisladas.
   </Card>
-  <Card title="Media" icon="image">
-    Imágenes, audio, video, documentos y generación de imágenes/video.
+  <Card title="Medios" icon="image" href="/es/nodes/images">
+    Imágenes, audio, vídeo, documentos y generación de imagen/vídeo.
   </Card>
-  <Card title="Aplicaciones e IU" icon="monitor">
-    Interfaz de usuario de control web y aplicación complementaria para macOS.
+  <Card title="Aplicaciones e interfaz" icon="monitor" href="/es/web/control-ui">
+    Interfaz de control web y aplicación complementaria para macOS.
   </Card>
-  <Card title="Nodos móviles" icon="smartphone">
-    Nodos iOS y Android con emparejamiento, voz/chat y comandos de dispositivo enriquecidos.
+  <Card title="Nodos móviles" icon="smartphone" href="/es/nodes">
+    Nodos de iOS y Android con emparejamiento, voz/chat y comandos de dispositivo enriquecidos.
   </Card>
 </Columns>
 
@@ -45,7 +45,7 @@ title: "Características"
 
 - Runtime de agente integrado con transmisión de herramientas
 - Enrutamiento multi-agente con sesiones aisladas por espacio de trabajo o remitente
-- Sesiones: los chats directos colapsan en una `main` compartida; los grupos están aislados
+- Sesiones: los chats directos se colapsan en `main` compartido; los grupos están aislados
 - Transmisión y fragmentación para respuestas largas
 
 **Autenticación y proveedores:**

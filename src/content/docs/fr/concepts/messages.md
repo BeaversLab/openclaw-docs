@@ -62,7 +62,7 @@ Configuration (par défaut global + redéfinitions par channel) :
 Notes :
 
 - L'anti-rebond s'applique aux messages **texte uniquement** ; les médias/pièces jointes sont envoyés immédiatement.
-- Les commandes de contrôle contournent l'anti-rebond pour qu'elles restent autonomes.
+- Les commandes de contrôle contournent le rebond (debouncing) pour rester autonomes — **sauf** lorsqu'un canal opte explicitement pour la fusion de DM du même expéditeur (ex. [BlueBubbles `coalesceSameSenderDms`](/fr/channels/bluebubbles#coalescing-split-send-dms-command--url-in-one-composition)), où les commandes DM attendent dans la fenêtre de rebond pour qu'une charge utile d'envoi fractionné puisse rejoindre le même tour d'agent.
 
 ## Sessions et appareils
 
@@ -77,15 +77,16 @@ synchronisé vers chaque client. Recommandation : utilisez un appareil principal
 conversations afin d'éviter un contexte divergent. L'interface de contrôle et le TUI affichent toujours la
 transcription de session soutenue par la passerelle, ils constituent donc la source de vérité.
 
-Détails : [Gestion de session](/fr/concepts/session).
+Détails : [Gestion des sessions](/fr/concepts/session).
 
 ## Corps des messages entrants et contexte de l'historique
 
 OpenClaw sépare le **corps du prompt** du **corps de la commande** :
 
-- `Body` : texte du prompt envoyé à l'agent. Cela peut inclure des enveloppes de channel et des wrappers d'historique optionnels.
+- `Body` : texte du prompt envoyé à l'agent. Cela peut inclure des enveloppes de canal et
+  des wrappers d'historique optionnels.
 - `CommandBody` : texte brut de l'utilisateur pour l'analyse des directives/commandes.
-- `RawBody` : alias historique pour `CommandBody` (conservé pour compatibilité).
+- `RawBody` : alias hérité pour `CommandBody` (conservé pour compatibilité).
 
 Lorsqu'un channel fournit un historique, il utilise un wrapper partagé :
 
@@ -96,8 +97,12 @@ Pour les **chats non directs** (groupes/channels/salons), le **corps du message 
 
 Les tampons d'historique sont **en attente uniquement** : ils incluent les messages de groupe qui n'ont _pas_ déclenché d'exécution (par exemple, les messages filtrés par mention) et **excluent** les messages déjà présents dans la transcription de la session.
 
-Le retrait des directives s'applique uniquement à la section du **message actuel** afin que l'historique reste intact. Les channels qui enveloppent l'historique doivent définir `CommandBody` (ou `RawBody`) sur le texte du message d'origine et garder `Body` comme le prompt combiné.
-Les tampons d'historique sont configurables via `messages.groupChat.historyLimit` (défaut global) et des remplacements par channel tels que `channels.slack.historyLimit` ou `channels.telegram.accounts.<id>.historyLimit` (définir `0` pour désactiver).
+Le retraitement des directives s'applique uniquement à la section du **message actuel** afin que l'historique
+reste intact. Les canaux qui encapsulent l'historique doivent définir `CommandBody` (ou
+`RawBody`) sur le texte du message original et garder `Body` comme le prompt combiné.
+Les tampons d'historique sont configurables via `messages.groupChat.historyLimit` (défaut
+global) et des redéfinitions par canal comme `channels.slack.historyLimit` ou
+`channels.telegram.accounts.<id>.historyLimit` (définir `0` pour désactiver).
 
 ## Mise en file d'attente et suivis
 
@@ -119,10 +124,10 @@ Paramètres clés :
 - `agents.defaults.blockStreamingBreak` (`text_end|message_end`)
 - `agents.defaults.blockStreamingChunk` (`minChars|maxChars|breakPreference`)
 - `agents.defaults.blockStreamingCoalesce` (traitement par lot basé sur l'inactivité)
-- `agents.defaults.humanDelay` (pause humaine entre les réponses par bloc)
-- Remplacements de channel : `*.blockStreaming` et `*.blockStreamingCoalesce` (les channels non-Telegram nécessitent un `*.blockStreaming: true` explicite)
+- `agents.defaults.humanDelay` (pause de type humain entre les réponses de bloc)
+- Redéfinitions de canal : `*.blockStreaming` et `*.blockStreamingCoalesce` (les canaux non-Telegram nécessitent un `*.blockStreaming: true` explicite)
 
-Détails : [Streaming + découpage](/fr/concepts/streaming).
+Détails : [Streaming + chunking](/fr/concepts/streaming).
 
 ## Visibilité du raisonnement et jetons
 
@@ -132,20 +137,20 @@ OpenClaw peut exposer ou masquer le raisonnement du model :
 - Le contenu du raisonnement compte toujours dans l'utilisation des jetons lorsqu'il est produit par le model.
 - Telegram prend en charge le flux de raisonnement dans la bulle de brouillon.
 
-Détails : [Directives de réflexion + raisonnement](/fr/tools/thinking) et [Utilisation des jetons](/fr/reference/token-use).
+Détails : [Thinking + reasoning directives](/fr/tools/thinking) et [Token use](/fr/reference/token-use).
 
 ## Préfixes, fils de discussion et réponses
 
 Le formatage des messages sortants est centralisé dans `messages` :
 
-- `messages.responsePrefix`, `channels.<channel>.responsePrefix` et `channels.<channel>.accounts.<id>.responsePrefix` (cascade de préfixes sortants), ainsi que `channels.whatsapp.messagePrefix` (préfixe entrant WhatsApp)
-- Fils de discussion de réponse via `replyToMode` et les valeurs par défaut par channel
+- `messages.responsePrefix`, `channels.<channel>.responsePrefix` et `channels.<channel>.accounts.<id>.responsePrefix` (cascade de préfixes sortants), plus `channels.whatsapp.messagePrefix` (préfixe entrant WhatsApp)
+- Enfilage des réponses via `replyToMode` et les valeurs par défaut par canal
 
-Détails : [Configuration](/fr/gateway/configuration-reference#messages) et docs de channel.
+Détails : [Configuration](/fr/gateway/configuration-reference#messages) et docs des canaux.
 
 ## Réponses silencieuses
 
-Le jeton silencieux exact `NO_REPLY` / `no_reply` signifie « ne pas envoyer de réponse visible par l’utilisateur ».
+Le jeton silencieux exact `NO_REPLY` / `no_reply` signifie « ne pas délivrer de réponse visible par l'utilisateur ».
 OpenClaw résout ce comportement par type de conversation :
 
 - Les conversations directes interdisent le silence par défaut et réécrivent une réponse silencieuse simple en un substitut visible court.
@@ -156,9 +161,11 @@ Les valeurs par défaut se trouvent sous `agents.defaults.silentReply` et
 `agents.defaults.silentReplyRewrite` ; `surfaces.<id>.silentReply` et
 `surfaces.<id>.silentReplyRewrite` peuvent les remplacer par surface.
 
+Lorsque la session parente a une ou plusieurs exécutions de sous-agent en attente, les réponses silencieuses nues sont abandonnées sur toutes les surfaces au lieu d'être réécrites, donc le parent reste silencieux jusqu'à ce que l'événement d'achèvement de l'enfant délivre la vraie réponse.
+
 ## Connexes
 
-- [Streaming](/fr/concepts/streaming) — livraison de messages en temps réel
-- [Nouvelle tentative](/fr/concepts/retry) — comportement de nouvelle tentative de livraison de messages
-- [File d'attente](/fr/concepts/queue) — file de traitement des messages
+- [Streaming](/fr/concepts/streaming) — livraison des messages en temps réel
+- [Retry](/fr/concepts/retry) — comportement de nouvelle tentative de livraison de messages
+- [Queue](/fr/concepts/queue) — file de traitement des messages
 - [Channels](/fr/channels) — intégrations de plateformes de messagerie

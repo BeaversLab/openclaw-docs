@@ -5,8 +5,8 @@
 ## Mintlify 規則
 
 - 文件託管在 Mintlify (`https://docs.openclaw.ai`) 上。
-- `docs/**/*.md` 中的內部文件連結必須保持相對於根目錄，且不帶 `.md` 或 `.mdx` 後綴（例如：`[Config](/configuration)`）。
-- 章節交叉引用應使用相對於根目錄的路徑錨點（例如：`[Hooks](/configuration#hooks)`）。
+- `docs/**/*.md` 中的內部文檔鏈接必須保持相對於根路徑，且不帶 `.md` 或 `.mdx` 後綴（例如：`[Config](/gateway/configuration)`）。
+- 章節交叉引用應在相對於根路徑的路徑上使用錨點（例如：`[Hooks](/gateway/configuration-reference#hooks)`）。
 - 文件標題應避免使用破折號和撇號，因為 Mintlify 的錨點生成機制在這方面比較脆弱。
 - README 和其他 GitHub 渲染的文件應保留絕對文件 URL，以便連結在 Mintlify 之外也能正常運作。
 - 文件內容必須保持通用：不得出現個人設備名稱、主機名稱或本地路徑；請使用如 `user@gateway-host` 等佔位符。

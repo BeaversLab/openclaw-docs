@@ -14,11 +14,12 @@ read_when:
 **Pourquoi utiliser LiteLLM avec OpenClaw ?**
 
 - **Suivi des coûts** — Voyez exactement ce que OpenClaw dépense pour tous les modèles
-- **Acheminement des modèles** — Basculez entre Claude, GPT-4, Gemini, Bedrock sans modification de configuration
+- **Routage de modèle** — Basculez entre Claude, GPT-4, Gemini, Bedrock sans modifier la configuration
 - **Clés virtuelles** — Créez des clés avec des limites de dépense pour OpenClaw
 - **Journalisation** — Journaux complets des requêtes/réponses pour le débogage
-- **Secours** — Bascule automatique si votre fournisseur principal est en panne
-  </Tip>
+- **Secours** — Bascule automatique si votre fournisseur principal est indisponible
+
+</Tip>
 
 ## Quick start
 

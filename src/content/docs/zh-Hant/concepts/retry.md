@@ -25,6 +25,18 @@ title: "Retry Policy"
 
 ## 行為
 
+### Model providers
+
+- OpenClaw 讓供應商 SDK 處理正常的短暫重試。
+- 對於基於 Stainless 的 SDK（例如 Anthropic 和 OpenAI），可重試的回應
+  (`408`、`409`、`429` 和 `5xx`) 可以包含 `retry-after-ms` 或
+  `retry-after`。當等待時間超過 60 秒時，OpenClaw 會注入
+  `x-should-retry: false`，以便 SDK 立即顯示錯誤，且模型
+  容錯移轉可以旋轉到其他驗證設定檔或後備模型。
+- 使用 `OPENCLAW_SDK_RETRY_MAX_WAIT_SECONDS=<seconds>` 覆寫上限。
+  將其設定為 `0`、`false`、`off`、`none` 或 `disabled`，以讓 SDK 在內部遵守長
+  `Retry-After` 休眠時間。
+
 ### Discord
 
 - 僅在速率限制錯誤 (HTTP 429) 時重試。
@@ -32,13 +44,13 @@ title: "Retry Policy"
 
 ### Telegram
 
-- 在暫時性錯誤 (429、逾時、連線/重置/關閉、暫時無法使用) 時重試。
+- 在暫時性錯誤 (429、逾時、連線/重設/關閉、暫時無法使用) 上重試。
 - 盡可能使用 `retry_after`，否則使用指數退避。
-- Markdown 剖析錯誤不會重試；會回退為純文字。
+- Markdown 解析錯誤不會重試；它們會退回到純文字。
 
-## 設定
+## Configuration
 
-在 `~/.openclaw/openclaw.json` 中為每個提供者設定重試政策：
+在 `~/.openclaw/openclaw.json` 中為每個供應商設定重試政策：
 
 ```json5
 {
@@ -63,7 +75,7 @@ title: "Retry Policy"
 }
 ```
 
-## 備註
+## Notes
 
-- 重試適用於每個請求 (傳送訊息、上傳媒體、回應、投票、貼圖)。
+- 重試適用於每個請求 (訊息發送、媒體上傳、反應、投票、貼圖)。
 - 複合流程不會重試已完成的步驟。

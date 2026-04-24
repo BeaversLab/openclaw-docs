@@ -27,7 +27,7 @@ Inbound message
 - `agents.defaults.*` 用于块流式传输和分块默认值。
 - 频道覆盖（`channels.whatsapp.*`、`channels.telegram.*` 等）用于上限和流式传输开关。
 
-有关完整架构，请参阅 [配置](/zh/gateway/configuration)。
+有关完整架构，请参阅 [Configuration](/zh/gateway/configuration)。
 
 ## 入站去重
 
@@ -58,7 +58,7 @@ Inbound message
 注意：
 
 - 防抖仅适用于**仅文本**消息；媒体/附件会立即刷新。
-- 控制命令会绕过防抖，以保持其独立存在。
+- 控制命令会绕过去抖动处理以保持独立——除非某个渠道明确选择加入同发送者私信合并（例如 [BlueBubbles `coalesceSameSenderDms`](/zh/channels/bluebubbles#coalescing-split-send-dms-command--url-in-one-composition)），在这种情况下，私信命令会在去抖动窗口内等待，以便拆分发送的负载可以加入同一个代理轮次。
 
 ## 会话和设备
 
@@ -70,15 +70,15 @@ Inbound message
 
 多个设备/通道可以映射到同一个会话，但历史记录不会完全同步回每个客户端。建议：对于长对话，请使用一个主设备以避免上下文分歧。控制 UI 和 TUI 始终显示网关支持的会话记录副本，因此它们是事实的来源。
 
-详情：[会话管理](/zh/concepts/session)。
+详情：[Session management](/zh/concepts/session)。
 
 ## 入站正文和历史上下文
 
 OpenClaw 将 **提示正文** 与 **命令正文** 分开：
 
-- `Body`：发送给代理的提示词文本。这可能包括渠道信封和可选的历史记录包装器。
+- `Body`：发送给代理的提示文本。这可能包括渠道信封和可选的历史包装器。
 - `CommandBody`：用于指令/命令解析的原始用户文本。
-- `RawBody`：`CommandBody` 的旧别名（保留以用于兼容）。
+- `RawBody`：`CommandBody` 的旧版别名（为兼容性而保留）。
 
 当渠道提供历史记录时，它使用共享的包装器：
 
@@ -89,8 +89,7 @@ OpenClaw 将 **提示正文** 与 **命令正文** 分开：
 
 历史记录缓冲区是**仅限待处理 (pending-only)** 的：它们包括未触发运行的群组消息（例如，提及门控的消息），并**排除**已在会话记录中的消息。
 
-指令剥离仅适用于**当前消息**部分，因此历史记录保持完整。包装历史记录的渠道应将 `CommandBody`（或 `RawBody`）设置为原始消息文本，并将 `Body` 保留为组合提示词。
-历史记录缓冲区可通过 `messages.groupChat.historyLimit`（全局默认值）和每个渠道的覆盖项（如 `channels.slack.historyLimit` 或 `channels.telegram.accounts.<id>.historyLimit`）进行配置（设置 `0` 以禁用）。
+指令剥离仅适用于**当前消息**部分，因此历史记录保持完整。包装历史记录的渠道应将 `CommandBody`（或 `RawBody`）设置为原始消息文本，并将 `Body` 保留为组合提示。历史缓冲区可通过 `messages.groupChat.historyLimit`（全局默认值）和每个渠道的覆盖项（如 `channels.slack.historyLimit` 或 `channels.telegram.accounts.<id>.historyLimit`）进行配置（将 `0` 设置为禁用）。
 
 ## 排队和后续跟进
 
@@ -99,7 +98,7 @@ OpenClaw 将 **提示正文** 与 **命令正文** 分开：
 - 通过 `messages.queue`（和 `messages.queue.byChannel`）进行配置。
 - 模式：`interrupt`、`steer`、`followup`、`collect`，以及积压变体。
 
-详情：[排队](/zh/concepts/queue)。
+详细信息：[队列](/zh/concepts/queue)。
 
 ## 流式传输、分块和批处理
 
@@ -107,12 +106,12 @@ OpenClaw 将 **提示正文** 与 **命令正文** 分开：
 
 关键设置：
 
-- `agents.defaults.blockStreamingDefault` (`on|off`，默认关闭)
-- `agents.defaults.blockStreamingBreak` (`text_end|message_end`)
-- `agents.defaults.blockStreamingChunk` (`minChars|maxChars|breakPreference`)
-- `agents.defaults.blockStreamingCoalesce` (基于空闲的批处理)
-- `agents.defaults.humanDelay` (块回复之间类似人类的停顿)
-- 通道覆盖：`*.blockStreaming` 和 `*.blockStreamingCoalesce`（非 Telegram 通道需要显式 `*.blockStreaming: true`）
+- `agents.defaults.blockStreamingDefault`（`on|off`，默认关闭）
+- `agents.defaults.blockStreamingBreak`（`text_end|message_end`）
+- `agents.defaults.blockStreamingChunk`（`minChars|maxChars|breakPreference`）
+- `agents.defaults.blockStreamingCoalesce`（基于空闲的批处理）
+- `agents.defaults.humanDelay`（块回复之间类似人类的停顿）
+- 频道覆盖：`*.blockStreaming` 和 `*.blockStreamingCoalesce`（非 Telegram 频道需要显式 `*.blockStreaming: true`）
 
 详情：[流式传输 + 分块](/zh/concepts/streaming)。
 
@@ -130,27 +129,30 @@ OpenClaw 可以暴露或隐藏模型推理：
 
 出站消息格式化集中在 `messages` 中：
 
-- `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix`（出站前缀级联），以及 `channels.whatsapp.messagePrefix`（WhatsApp 入站前缀）
-- 通过 `replyToMode` 和各渠道默认值进行回复串接
+- `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix`（出站前缀级联），加上 `channels.whatsapp.messagePrefix`（WhatsApp 入站前缀）
+- 通过 `replyToMode` 和每个渠道的默认值进行回复串联
 
 详情：[配置](/zh/gateway/configuration-reference#messages) 和渠道文档。
 
 ## 静默回复
 
-确切的静默 token `NO_REPLY` / `no_reply` 意味着“不发送用户可见的回复”。
-OpenClaw 根据会话类型解析该行为：
+确切的静默令牌 `NO_REPLY` / `no_reply` 意味着“不发送用户可见的回复”。
+OpenClaw 根据对话类型解析该行为：
 
 - 直接会话默认不允许静默，并将简单的静默回复重写为简短的可见回退。
 - 群组/渠道默认允许静默。
 - 内部编排默认允许静默。
 
 默认值位于 `agents.defaults.silentReply` 和
-`agents.defaults.silentReplyRewrite` 之下；`surfaces.<id>.silentReply` 和
+`agents.defaults.silentReplyRewrite` 之下；
+`surfaces.<id>.silentReply` 和
 `surfaces.<id>.silentReplyRewrite` 可以针对每个界面覆盖它们。
+
+当父会话有一个或多个待处理的衍生子代理运行时，简单的静默回复将在所有界面上被丢弃，而不是被重写，因此父会话将保持静默，直到子完成事件传递真正的回复。
 
 ## 相关
 
-- [流式传输](/zh/concepts/streaming) — 实时消息传送
-- [重试](/zh/concepts/retry) — 消息传送重试行为
+- [流式传输](/zh/concepts/streaming) — 实时消息传递
+- [重试](/zh/concepts/retry) — 消息传递重试行为
 - [队列](/zh/concepts/queue) — 消息处理队列
-- [渠道](/zh/channels) — 消息平台集成
+- [频道](/zh/channels) — 消息平台集成

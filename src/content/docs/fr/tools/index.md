@@ -28,8 +28,8 @@ OpenClaw possède trois couches qui fonctionnent ensemble :
   </Step>
 
   <Step title="Les Skills enseignent à l'agent quand et comment">
-    Une skill est un fichier markdown (`SKILL.md`) injecté dans le prompt système.
-    Les Skills donnent à l'agent du contexte, des contraintes et des instructions étape par étape pour
+    Une Skill est un fichier Markdown (`SKILL.md`) injecté dans le prompt système.
+    Les Skills fournissent à l'agent du contexte, des contraintes et des conseils étape par étape pour
     utiliser les outils efficacement. Les Skills résident dans votre espace de travail, dans des dossiers partagés,
     ou sont livrées dans des plugins.
 
@@ -37,11 +37,11 @@ OpenClaw possède trois couches qui fonctionnent ensemble :
 
   </Step>
 
-  <Step title="Les plugins regroupent le tout">
-    Un plugin est un paquet capable d'enregistrer n'importe quelle combinaison de fonctionnalités :
-    canaux, fournisseurs de modèles, outils, Skills, synthèse vocale, transcription en temps réel,
+  <Step title="Les Plugins regroupent le tout">
+    Un plugin est un package qui peut enregistrer n'importe quelle combinaison de capacités :
+    canaux, fournisseurs de modèles, outils, Skills, parole, transcription en temps réel,
     voix en temps réel, compréhension des médias, génération d'images, génération de vidéo,
-    récupération web, recherche web, et plus encore. Certains plugins sont **core** (livrés avec
+    récupération Web, recherche Web, et plus encore. Certains plugins sont **core** (livrés avec
     OpenClaw), d'autres sont **externes** (publiés sur npm par la communauté).
 
     [Installer et configurer les plugins](/fr/tools/plugin) | [Créer le vôtre](/fr/plugins/building-plugins)
@@ -53,24 +53,24 @@ OpenClaw possède trois couches qui fonctionnent ensemble :
 
 Ces outils sont livrés avec OpenClaw et sont disponibles sans installer de plugins :
 
-| Outil                                      | Ce qu'il fait                                                                                | Page                                                |
-| ------------------------------------------ | -------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| `exec` / `process`                         | Exécuter des commandes shell, gérer les processus en arrière-plan                            | [Exec](/fr/tools/exec)                              |
-| `code_execution`                           | Exécuter une analyse Python distante sandboxed                                               | [Exécution de code](/fr/tools/code-execution)       |
-| `browser`                                  | Contrôler un navigateur Chromium (navigation, clic, capture d'écran)                         | [Navigateur](/fr/tools/browser)                     |
-| `web_search` / `x_search` / `web_fetch`    | Rechercher sur le web, rechercher des publications X, récupérer le contenu de la page        | [Web](/fr/tools/web)                                |
-| `read` / `write` / `edit`                  | Entrées/Sorties de fichiers dans l'espace de travail                                         |                                                     |
-| `apply_patch`                              | Correctifs de fichiers multi-parties                                                         | [Appliquer un patch](/fr/tools/apply-patch)         |
-| `message`                                  | Envoyer des messages sur tous les canaux                                                     | [Envoi d'agent](/fr/tools/agent-send)               |
-| `canvas`                                   | Nœud de pilotage Canvas (présent, éval, instantané)                                          |                                                     |
-| `nodes`                                    | Découvrir et cibler les appareils appariés                                                   |                                                     |
-| `cron` / `gateway`                         | Gérer les tâches planifiées ; inspecter, corriger, redémarrer ou mettre à jour la passerelle |                                                     |
-| `image` / `image_generate`                 | Analyser ou générer des images                                                               | [Génération d'images](/fr/tools/image-generation)   |
-| `music_generate`                           | Générer des pistes musicales                                                                 | [Génération de musique](/fr/tools/music-generation) |
-| `video_generate`                           | Générer des vidéos                                                                           | [Génération de vidéo](/fr/tools/video-generation)   |
-| `tts`                                      | Conversion synthèse vocale ponctuelle                                                        | [TTS](/fr/tools/tts)                                |
-| `sessions_*` / `subagents` / `agents_list` | Gestion de session, statut et orchestration des sous-agents                                  | [Sous-agents](/fr/tools/subagents)                  |
-| `session_status`                           | Relecture légère de style `/status` et remplacement du modèle de session                     | [Outils de session](/fr/concepts/session-tool)      |
+| Outil                                      | Ce qu'il fait                                                                                | Page                                                                  |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `exec` / `process`                         | Exécuter des commandes shell, gérer les processus en arrière-plan                            | [Exec](/fr/tools/exec), [Approbations Exec](/fr/tools/exec-approvals) |
+| `code_execution`                           | Exécuter une analyse Python distante sandboxed                                               | [Exécution de code](/fr/tools/code-execution)                         |
+| `browser`                                  | Contrôler un navigateur Chromium (navigation, clic, capture d'écran)                         | [Navigateur](/fr/tools/browser)                                       |
+| `web_search` / `x_search` / `web_fetch`    | Rechercher sur le web, rechercher des publications X, récupérer le contenu de la page        | [Web](/fr/tools/web), [Récupération Web](/fr/tools/web-fetch)         |
+| `read` / `write` / `edit`                  | Entrées/Sorties de fichiers dans l'espace de travail                                         |                                                                       |
+| `apply_patch`                              | Correctifs de fichiers multi-parties                                                         | [Appliquer un patch](/fr/tools/apply-patch)                           |
+| `message`                                  | Envoyer des messages sur tous les canaux                                                     | [Envoi d'agent](/fr/tools/agent-send)                                 |
+| `canvas`                                   | Nœud de pilotage Canvas (présent, éval, instantané)                                          |                                                                       |
+| `nodes`                                    | Découvrir et cibler les appareils appariés                                                   |                                                                       |
+| `cron` / `gateway`                         | Gérer les tâches planifiées ; inspecter, corriger, redémarrer ou mettre à jour la passerelle |                                                                       |
+| `image` / `image_generate`                 | Analyser ou générer des images                                                               | [Génération d'images](/fr/tools/image-generation)                     |
+| `music_generate`                           | Générer des pistes musicales                                                                 | [Génération de musique](/fr/tools/music-generation)                   |
+| `video_generate`                           | Générer des vidéos                                                                           | [Génération de vidéo](/fr/tools/video-generation)                     |
+| `tts`                                      | Conversion synthèse vocale ponctuelle                                                        | [TTS](/fr/tools/tts)                                                  |
+| `sessions_*` / `subagents` / `agents_list` | Gestion de session, statut et orchestration des sous-agents                                  | [Sous-agents](/fr/tools/subagents)                                    |
+| `session_status`                           | Relecture légère de style `/status` et remplacement du modèle de session                     | [Outils de session](/fr/concepts/session-tool)                        |
 
 Pour le travail sur les images, utilisez `image` pour l'analyse et `image_generate` pour la génération ou l'édition. Si vous ciblez `openai/*`, `google/*`, `fal/*` ou un autre fournisseur d'images non défini par défaut, configurez d'abord la clé d'authentification/API de ce fournisseur.
 
@@ -96,11 +96,12 @@ Pour les modifications partielles, préférez `config.schema.lookup` puis `confi
 
 Les plugins peuvent enregistrer des outils supplémentaires. Voici quelques exemples :
 
-- [Lobster](/fr/tools/lobster) — moteur d'exécution de workflow typé avec approbations reprises
+- [Diffs](/fr/tools/diffs%%) — visualiseur et rendu de diffs
 - [Tâche LLM](/fr/tools/llm-task) — étape LLM JSON uniquement pour la sortie structurée
+- [Lobster](/fr/tools/lobster) — runtime de flux de travail typé avec approbations reprises
 - [Génération de musique](/fr/tools/music-generation) — outil `music_generate` partagé avec fournisseurs basés sur des workflows
-- [Diffs](/fr/tools/diffs) — visualiseur et rendu de différences
-- [OpenProse](/fr/prose) — orchestration de workflow markdown-first
+- [OpenProse](/fr/prose) — orchestration de workflow en priorité markdown
+- [Tokenjuice](/fr/tools/tokenjuice) — résultats d'outil `exec` et `bash` compacts et bruyants
 
 ## Configuration des outils
 
@@ -121,7 +122,7 @@ la configuration. Le refus l'emporte toujours sur l'autorisation.
 ### Profils d'outils
 
 `tools.profile` définit une liste d'autorisation de base avant que `allow`/`deny` ne soit appliqué.
-Redéfinition par agent : `agents.list[].tools.profile`.
+Remplacement par agent : `agents.list[].tools.profile`.
 
 | Profil      | Ce qu'il inclut                                                                                                                                   |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -130,13 +131,18 @@ Redéfinition par agent : `agents.list[].tools.profile`.
 | `messaging` | `group:messaging`, `sessions_list`, `sessions_history`, `sessions_send`, `session_status`                                                         |
 | `minimal`   | `session_status` uniquement                                                                                                                       |
 
+Les profils `coding` et `messaging` autorisent également les outils MCP de bundle configurés
+sous la clé de plugin `bundle-mcp`. Ajoutez `tools.deny: ["bundle-mcp"]` lorsque vous
+souhaitez qu'un profil conserve ses outils intégrés normaux mais masque tous les outils MCP configurés.
+Le profil `minimal` n'inclut pas les outils MCP de bundle.
+
 ### Groupes d'outils
 
 Utilisez les raccourcis `group:*` dans les listes d'autorisation/refus :
 
 | Groupe             | Outils                                                                                                    |
 | ------------------ | --------------------------------------------------------------------------------------------------------- |
-| `group:runtime`    | exec, process, code_execution (`bash` est accepté comme un alias pour `exec`)                             |
+| `group:runtime`    | exec, process, code_execution (`bash` est accepté comme alias pour `exec`)                                |
 | `group:fs`         | read, write, edit, apply_patch                                                                            |
 | `group:sessions`   | sessions_list, sessions_history, sessions_send, sessions_spawn, sessions_yield, subagents, session_status |
 | `group:memory`     | memory_search, memory_get                                                                                 |
@@ -147,13 +153,22 @@ Utilisez les raccourcis `group:*` dans les listes d'autorisation/refus :
 | `group:nodes`      | nodes                                                                                                     |
 | `group:agents`     | agents_list                                                                                               |
 | `group:media`      | image, image_generate, music_generate, video_generate, tts                                                |
-| `group:openclaw`   | Tous les outils intégrés OpenClaw (exclut les outils de plugin)                                           |
+| `group:openclaw`   | Tous les outils intégrés OpenClaw (exclut les outils de plugins)                                          |
 
-`sessions_history` renvoie une vue de rappel limitée et filtrée pour la sécurité. Il supprime les balises de réflexion, l'échafaudage `<relevant-memories>`, les charges utiles XML d'appel d'outil en texte brut (y compris `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` et les blocs d'appel d'outil tronqués), l'échafaudage d'appel d'outil dégradé, les jetons de contrôle de modèle ASCII/à pleine largeur divulgués et les XML d'appel d'outil MiniMax malformés du texte de l'assistant, puis applique une réduction/troncation et d'éventuels espaces réservés de ligne surdimensionnée au lieu d'agir comme une vidée de transcription brute.
+`sessions_history` renvoie une vue de rappel bornée et filtrée pour la sécurité. Il supprime
+les balises de réflexion, l'échafaudage `<relevant-memories>`, les charges utiles XML d'appels d'outils en
+texte brut (y compris `<tool_call>...</tool_call>`,
+`<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`,
+`<function_calls>...</function_calls>` et les blocs d'appels d'outils tronqués),
+l'échafaudage d'appels d'outils rétrogradé, les jetons de contrôle de modèle ASCII/pleine largeur fuités
+et les XML d'appels d'outils MiniMax malformés du texte de l'assistant, puis applique
+la rétractation/troncation et d'éventuels espaces réservés de ligne surdimensionnée au lieu d'agir
+comme une vidée de transcription brute.
 
 ### Restrictions spécifiques au fournisseur
 
-Utilisez `tools.byProvider` pour restreindre les outils pour des fournisseurs spécifiques sans modifier les valeurs par défaut globales :
+Utilisez `tools.byProvider` pour restreindre les outils pour des fournisseurs spécifiques sans
+modifier les valeurs par défaut globales :
 
 ```json5
 {

@@ -219,7 +219,7 @@ Le nettoyage après achèvement est également conscient du runtime :
 - L'achèvement du Cron isolé tente de fermer au mieux les onglets/processus de navigateur suivis pour la session Cron avant que l'exécution ne soit complètement démantelée.
 - La livraison du Cron isolé attend le suivi du sous-agent descendant lorsque cela est nécessaire et
   supprime le texte d'accusé de réception parent périmé au lieu de l'annoncer.
-- La livraison à l'achèvement du sous-agent préfère le dernier texte visible de l'assistant ; si celui-ci est vide, il revient au dernier texte nettoyé de l'outil/toolResult, et les exécutions d'appels d'outil avec uniquement un délai d'attente peuvent s'effondrer en un court résumé de progression partielle.
+- La livraison de l'achèvement du sous-agent privilégie le dernier texte de l'assistant visible ; si celui-ci est vide, il revient au dernier texte tool/toolResult nettoyé, et les exécutions d'appel d'outil en timeout uniquement peuvent être réduites à un bref résumé de progression partielle. Les exécutions ayant échoué de manière terminale annoncent le statut d'échec sans rejouer le texte de réponse capturé.
 - Les échecs de nettoyage ne masquent pas le résultat réel de la tâche.
 
 ### `tasks flow list|show|cancel`
@@ -313,4 +313,4 @@ Le `runId` d'une tâche pointe vers l'exécution de l'agent effectuant le travai
 - [Task Flow](/fr/automation/taskflow) — orchestration de flux au-dessus des tâches
 - [Scheduled Tasks](/fr/automation/cron-jobs) — planification des travaux en arrière-plan
 - [Heartbeat](/fr/gateway/heartbeat) — tours périodiques de session principale
-- [CLI : Tâches](/fr/cli/index#tasks) — référence de commande CLI
+- [CLI : Tâches](/fr/cli/tasks) — Référence de commande CLI

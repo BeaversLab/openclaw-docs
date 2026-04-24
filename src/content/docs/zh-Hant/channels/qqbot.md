@@ -19,8 +19,7 @@ QQ Bot 透過官方 QQ Bot API (WebSocket 閘道) 連接到 OpenClaw。此外掛
 
 ## 設定
 
-1. 前往 [QQ 開放平台](https://q.qq.com/) 並使用您的
-   手機 QQ 掃描 QR code 以註冊 / 登入。
+1. 前往 [QQ 開放平台](https://q.qq.com/) 並使用您的手機 QQ 掃描 QR code 以註冊 / 登入。
 2. 點擊 **建立機器人** 以建立新的 QQ 機器人。
 3. 在機器人的設定頁面上找到 **AppID** 和 **AppSecret** 並將其複製。
 
@@ -167,22 +166,42 @@ STT 和 TTS 支援兩級配置，並具備優先順序後援機制：
 
 在 AI 佇列之前攔截的內建指令：
 
-| 指令           | 描述                       |
-| -------------- | -------------------------- |
-| `/bot-ping`    | 延遲測試                   |
-| `/bot-version` | 顯示 OpenClaw 框架版本     |
-| `/bot-help`    | 列出所有指令               |
-| `/bot-upgrade` | 顯示 QQBot 升級指南連結    |
-| `/bot-logs`    | 將最近的網關日誌匯出為檔案 |
+| 指令           | 描述                                                              |
+| -------------- | ----------------------------------------------------------------- |
+| `/bot-ping`    | 延遲測試                                                          |
+| `/bot-version` | 顯示 OpenClaw 框架版本                                            |
+| `/bot-help`    | 列出所有指令                                                      |
+| `/bot-upgrade` | 顯示 QQBot 升級指南連結                                           |
+| `/bot-logs`    | 將最近的網關日誌匯出為檔案                                        |
+| `/bot-approve` | 透過原生流程批准待處理的 QQ Bot 動作（例如確認 C2C 或群組上傳）。 |
 
-在任何指令後附加 `?` 以獲取使用說明 (例如 `/bot-upgrade ?`)。
+在任何指令後附加 `?` 以取得使用說明（例如 `/bot-upgrade ?`）。
+
+## 引擎架構
+
+QQ Bot 作為一個獨立的引擎內建於外掛中：
+
+- 每個帳號擁有一組以 `appId` 為鍵的獨立資源堆疊（WebSocket 連線、API 客戶端、Token 快取、媒體儲存根目錄）。帳號之間從不共用輸入/輸出狀態。
+- 多帳號記錄器會將日誌行標記所屬帳號，因此當您在單一閘道下執行多個 Bot 時，診斷資訊仍可保持區分。
+- 輸入、輸出和閘道橋接路徑共用 `~/.openclaw/media` 下的一個單一媒體負載根目錄，因此上傳、下載和轉碼快取都會存放在同一個受保護的目錄下，而非分散在各自的子系統樹中。
+- 憑證可以作為標準 OpenClaw 憑證快照的一部分進行備份與還原；還原時，引擎會重新附加每個帳號的資源堆疊，而無需重新配對新的 QR code。
+
+## QR code 註冊
+
+除了手動貼上 `AppID:AppSecret` 之外，引擎也支援 QR code 註冊流程以將 QQ Bot 連結至 OpenClaw：
+
+1. 執行 QQ Bot 設定路徑（例如 `openclaw channels add --channel qqbot`）並在提示時選擇 QR code 流程。
+2. 使用綁定目標 QQ Bot 的手機應用程式掃描產生的 QR code。
+3. 在手機上批准配對。OpenClaw 會將傳回的憑證存入 `credentials/` 中正確的帳號範圍下。
+
+由 Bot 本身產生的批准提示（例如 QQ Bot API 顯示的「允許此動作？」流程）會顯示為原生 OpenClaw 提示，您可以使用 `/bot-approve` 接受，而不需要透過原始 QQ 客戶端回覆。
 
 ## 疑難排解
 
-- **Bot 回覆 "gone to Mars"：** 未設定憑證或 Gateway 未啟動。
-- **沒有收到傳入訊息：** 驗證 `appId` 和 `clientSecret` 是否正確，且
-  機器人已在 QQ 開放平台啟用。
-- **使用 `--token-file` 設定仍顯示未配置：** `--token-file` 僅設定
-  AppSecret。您仍然需要在設定中填寫 `appId` 或設定 `QQBOT_APP_ID`。
-- **主動訊息未送達：** 如果用戶最近沒有互動，QQ 可能會攔截機器人發起的訊息。
-- **語音未轉錄：** 確保已設定 STT 且提供者可連線。
+- **Bot 回應「gone to Mars」：** 未設定憑證或尚未啟動 Gateway。
+- **沒有收到訊息：** 請驗證 `appId` 和 `clientSecret` 是正確的，且
+  Bot 已在 QQ 開放平台上啟用。
+- **使用 `--token-file` 設定仍顯示未設定：** `--token-file` 只會設定
+  AppSecret。您仍然需要在設定檔中使用 `appId` 或 `QQBOT_APP_ID`。
+- **主動訊息未送達：** 如果使用者最近沒有互動，QQ 可能會攔截機器人發起的訊息。
+- **語音未轉錄：** 請確保已設定 STT 且提供者連線正常。

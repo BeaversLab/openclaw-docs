@@ -103,9 +103,21 @@ L'application macOS peut éventuellement tenter une **approbation silencieuse** 
 
 Si l'approbation silencieuse échoue, elle revient à l'invite normale « Approuver/Rejeter ».
 
+## Auto-approbation de mise à niveau des métadonnées
+
+Lorsqu'un appareil déjà associé se reconnecte avec uniquement des modifications de métadonnées non sensibles (par exemple, le nom d'affichage ou les indications de plate-forme cliente), OpenClaw considère cela comme une `metadata-upgrade` et approuve automatiquement la reconnexion sans invite. Les mises à niveau de portée (lecture vers écriture/admin) et les modifications de clés publiques ne sont **pas** éligibles pour l'auto-approbation de mise à niveau des métadonnées — elles restent des demandes de réapprobation explicites.
+
+## Assistants pour l'appariement QR
+
+`/pair qr` restitue la charge utile d'appariement sous forme de média structuré afin que les clients mobiles et navigateurs puissent la scanner directement. La suppression de l'appareil balaye désormais également les demandes d'appariement en attente obsolètes pour le même identifiant d'appareil, `nodes pending` n'affiche donc plus de lignes orphelines après une révocation.
+
+## Localité et en-têtes transmis
+
+L'appariement Gateway traite une connexion comme une boucle locale uniquement lorsque la socket brute et toutes les preuves de proxy en amont sont en accord. Si une demande arrive sur une boucle locale mais transporte des en-têtes `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` qui pointent vers une origine non locale, cette preuve d'en-tête transmis disqualifie la revendication de localité de boucle locale. Le chemin d'appariement nécessite alors une approbation explicite au lieu de traiter silencieusement la demande comme une connexion sur le même hôte. Voir [Trusted Proxy Auth](/fr/gateway/trusted-proxy-auth) pour la règle équivalente sur l'authentification de l'opérateur.
+
 ## Stockage (local, privé)
 
-L'état de l'association est stocké dans le répertoire d'état du Gateway (par défaut `~/.openclaw`) :
+L'état d'appariement est stocké dans le répertoire d'état du Gateway (par défaut `~/.openclaw`) :
 
 - `~/.openclaw/nodes/paired.json`
 - `~/.openclaw/nodes/pending.json`
@@ -115,10 +127,10 @@ Si vous remplacez `OPENCLAW_STATE_DIR`, le dossier `nodes/` se déplace avec lui
 Notes de sécurité :
 
 - Les jetons sont des secrets ; traitez `paired.json` comme sensible.
-- La rotation d'un jeton nécessite une nouvelle approbation (ou la suppression de l'entrée du nœud).
+- La rotation d'un jeton nécessite une réapprobation (ou la suppression de l'entrée du nœud).
 
 ## Comportement du transport
 
-- Le transport est **sans état** ; il ne stocke pas l'appartenance.
-- Si le Gateway est hors ligne ou si l'association est désactivée, les nœuds ne peuvent pas s'associer.
-- Si le Gateway est en mode distant, l'association se produit toujours par rapport au magasin du Gateway distant.
+- Le transport est **sans état** ; il ne stocke pas les adhésions.
+- Si le Gateway est hors ligne ou si l'appariement est désactivé, les nœuds ne peuvent pas s'associer.
+- Si le Gateway est en mode distant, l'appariement s'effectue toujours par rapport au stockage du Gateway distant.

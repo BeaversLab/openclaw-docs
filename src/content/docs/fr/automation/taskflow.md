@@ -77,6 +77,6 @@ Les flux coordonnent les tâches, ils ne les remplacent pas. Un seul flux peut p
 ## Connexes
 
 - [Tâches d'arrière-plan](/fr/automation/tasks) — le registre de travail détaché que coordonnent les flux
-- [CLI : tâches](/fr/cli/index#tasks) — référence de commande CLI pour `openclaw tasks flow`
+- [CLI : tâches](/fr/cli/tasks) — Référence des commandes CLI pour `openclaw tasks flow`
 - [Aperçu de l'automatisation](/fr/automation) — tous les mécanismes d'automatisation en un coup d'œil
 - [Tâches Cron](/fr/automation/cron-jobs) — tâches planifiées qui peuvent alimenter les flux

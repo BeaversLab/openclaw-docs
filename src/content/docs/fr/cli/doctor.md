@@ -39,20 +39,22 @@ openclaw doctor --generate-gateway-token
 Notes :
 
 - Les invites interactives (comme les correctifs de trousseau de clés/OAuth) ne s'exécutent que lorsque stdin est un TTY et que `--non-interactive` n'est **pas** défini. Les exécutions sans tête (cron, Telegram, sans terminal) ignoreront les invites.
+- Performance : les exécutions non interactives de `doctor` ignorent le chargement eager des plugins afin que les contrôles de santé sans tête restent rapides. Les sessions interactives chargent toujours entièrement les plugins lorsqu'une vérification nécessite leur contribution.
 - `--fix` (alias pour `--repair`) écrit une sauvegarde dans `~/.openclaw/openclaw.json.bak` et supprime les clés de configuration inconnues, en listant chaque suppression.
 - Les contrôles d'intégrité de l'état détectent désormais les fichiers de transcription orphelins dans le répertoire des sessions et peuvent les archiver sous `.deleted.<timestamp>` pour récupérer de l'espace en toute sécurité.
-- Doctor scanne également `~/.openclaw/cron/jobs.json` (ou `cron.store`) pour détecter les anciennes formes de tâches cron et peut les réécrire sur place avant que le planificateur n'ait à les normaliser automatiquement lors de l'exécution.
-- Doctor migre automatiquement l'ancienne configuration plate de Talk (`talk.voiceId`, `talk.modelId`, etc.) vers `talk.provider` + `talk.providers.<provider>`.
-- Les exécutions répétées de `doctor --fix` ne signalent plus n'appliquent plus la normalisation Talk lorsque la seule différence réside dans l'ordre des clés d'objet.
-- Doctor comprend une vérification de préparation de la recherche de mémoire et peut recommander `openclaw configure --section model` lorsque les identifiants d'intégration sont manquants.
-- Si le mode bac à sable est activé mais que Docker est indisponible, doctor signale un avertissement à fort signal avec une solution (`install Docker` ou `openclaw config set agents.defaults.sandbox.mode off`).
-- Si `gateway.auth.token`/`gateway.auth.password` sont gérés par SecretRef et indisponibles dans le chemin de commande actuel, doctor signale un avertissement en lecture seule et n'écrit pas les identifiants de repli en texte brut.
-- Si l'inspection du SecretRef de channel échoue dans un chemin de correction, doctor continue et signale un avertissement au lieu de quitter prématurément.
-- La résolution automatique du nom d'utilisateur `allowFrom` Telegram (`doctor --fix`) nécessite un jeton Telegram résolvable dans le chemin de commande actuel. Si l'inspection du jeton n'est pas disponible, doctor signale un avertissement et ignore la résolution automatique pour cette passe.
+- Doctor analyse également `~/.openclaw/cron/jobs.json` (ou `cron.store`) pour détecter les anciennes formes de tâches cron et peut les réécrire sur place avant que le planificateur ne doive les normaliser automatiquement lors de l'exécution.
+- Doctor répare les dépendances d'exécution manquantes des plugins groupés sans nécessiter d'accès en écriture au package OpenClaw installé. Pour les installations npm détenues par root ou les unités systemd renforcées, définissez `OPENCLAW_PLUGIN_STAGE_DIR` sur un répertoire accessible en écriture tel que `/var/lib/openclaw/plugin-runtime-deps`.
+- Doctor migre automatiquement l'ancienne configuration plate de Talk (`talk.voiceId`, `talk.modelId`, et autres) vers `talk.provider` + `talk.providers.<provider>`.
+- Les exécutions répétées de `doctor --fix` ne signalent plus n'appliquent plus la normalisation Talk lorsque la seule différence est l'ordre des clés d'objet.
+- Doctor comprend un contrôle de préparation de la recherche mémoire et peut recommander `openclaw configure --section model` lorsque les identifiants d'intégration sont manquants.
+- Si le mode bac à sable est activé mais que Docker est indisponible, doctor signale un avertissement à signal élevé avec une solution de contournement (`install Docker` ou `openclaw config set agents.defaults.sandbox.mode off`).
+- Si `gateway.auth.token`/`gateway.auth.password` sont gérés par SecretRef et indisponibles dans le chemin de commande actuel, doctor signale un avertissement en lecture seule et n'écrit pas d'identifiants de repli en texte brut.
+- Si l'inspection SecretRef du canal échoue dans un chemin de correction, doctor continue et signale un avertissement au lieu de quitter prématurément.
+- La résolution automatique du nom d'utilisateur Telegram `allowFrom` (`doctor --fix`) nécessite un jeton Telegram résolvable dans le chemin de commande actuel. Si l'inspection du jeton n'est pas disponible, doctor signale un avertissement et ignore la résolution automatique pour cette passe.
 
-## macOS : substitutions d'environnement `launchctl`
+## macOS : `launchctl` env overrides
 
-Si vous avez précédemment exécuté `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (ou `...PASSWORD`), cette valeur remplace votre fichier de configuration et peut provoquer des erreurs persistantes « non autorisé ».
+Si vous avez précédemment exécuté `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (ou `...PASSWORD`), cette valeur remplace votre fichier de configuration et peut provoquer des erreurs persistantes « non autorisées ».
 
 ```bash
 launchctl getenv OPENCLAW_GATEWAY_TOKEN

@@ -6,12 +6,14 @@ read_when:
 title: "Railway"
 ---
 
-Déployez OpenClaw sur Railway avec un modèle en un clic et accédez-y via l'interface web de contrôle.
+# Railway
+
+Déployez OpenClaw sur Railway avec un modèle en un clic et accédez-y via l'interface de contrôle web.
 C'est le chemin le plus simple « sans terminal sur le serveur » : Railway exécute le Gateway pour vous.
 
 ## Liste de contrôle rapide (nouveaux utilisateurs)
 
-1. Cliquez sur **Déployer sur Railway** (ci-dessous).
+1. Cliquez sur **Deploy on Railway** (ci-dessous).
 2. Ajoutez un **Volume** monté sur `/data`.
 3. Définissez les **Variables** requises (au moins `OPENCLAW_GATEWAY_PORT` et `OPENCLAW_GATEWAY_TOKEN`).
 4. Activez le **Proxy HTTP** sur le port `8080`.
@@ -20,38 +22,38 @@ C'est le chemin le plus simple « sans terminal sur le serveur » : Railway exé
 ## Déploiement en un clic
 
 <a href="https://railway.com/deploy/clawdbot-railway-template" target="_blank" rel="noreferrer">
-  Déployer sur Railway
+  Deploy on Railway
 </a>
 
-Après le déploiement, trouvez votre URL publique dans **Railway → votre service → Paramètres → Domaines**.
+Après le déploiement, trouvez votre URL publique dans **Railway → your service → Settings → Domains**.
 
-Railway effectuera soit :
+Railway soit :
 
-- vous fournir un domaine généré (souvent `https://<something>.up.railway.app`), ou
-- utiliser votre domaine personnalisé si vous en avez attaché un.
+- vous donnera un domaine généré (souvent `https://<something>.up.railway.app`), ou
+- utilisera votre domaine personnalisé si vous en avez attaché un.
 
 Ensuite, ouvrez :
 
-- `https://<your-railway-domain>/openclaw` — Interface de contrôle
+- `https://<your-railway-domain>/openclaw` — Control UI
 
 ## Ce que vous obtenez
 
-- Gateway OpenClaw hébergé + Interface de contrôle
-- Stockage persistant via Railway Volume (`/data`) afin que `openclaw.json`,
-  les `auth-profiles.json` par agent, l'état des channel/provider, les sessions et
+- OpenClaw Gateway hébergé + Control UI
+- Stockage persistant via Railway Volume (`/data`) pour que `openclaw.json`,
+  `auth-profiles.json` par agent, l'état du canal/fournisseur, les sessions et
   l'espace de travail survivent aux redéploiements
 
 ## Paramètres Railway requis
 
-### Mise en réseau publique
+### Réseau public
 
-Activez le **proxy HTTP** pour le service.
+Activez le **Proxy HTTP** pour le service.
 
 - Port : `8080`
 
 ### Volume (requis)
 
-Attachez un volume monté à :
+Attachez un volume monté sur :
 
 - `/data`
 
@@ -59,14 +61,14 @@ Attachez un volume monté à :
 
 Définissez ces variables sur le service :
 
-- `OPENCLAW_GATEWAY_PORT=8080` (requis — doit correspondre au port dans Public Networking)
-- `OPENCLAW_GATEWAY_TOKEN` (requis ; à traiter comme un secret administrateur)
+- `OPENCLAW_GATEWAY_PORT=8080` (requis — doit correspondre au port dans Réseau public)
+- `OPENCLAW_GATEWAY_TOKEN` (requis ; traitez-le comme un secret administrateur)
 - `OPENCLAW_STATE_DIR=/data/.openclaw` (recommandé)
 - `OPENCLAW_WORKSPACE_DIR=/data/workspace` (recommandé)
 
 ## Connecter un channel
 
-Utilisez l'interface de contrôle à `/openclaw` ou exécutez `openclaw onboard` via le shell de Railway pour les instructions de configuration du channel :
+Utilisez l'interface de contrôle sur `/openclaw` ou exécutez `openclaw onboard` via le shell de Railway pour les instructions de configuration du channel :
 
 - [Telegram](/fr/channels/telegram) (le plus rapide — juste un jeton de bot)
 - [Discord](/fr/channels/discord)
@@ -80,11 +82,10 @@ Exportez votre état, votre configuration, vos profils d'authentification et vot
 openclaw backup create
 ```
 
-Cela crée une archive de sauvegarde portable avec l'état OpenClaw plus tout
-espace de travail configuré. Voir [Backup](/fr/cli/backup) pour plus de détails.
+Cela crée une archive de sauvegarde portable avec l'état OpenClaw ainsi que tout espace de travail configuré. Voir [Sauvegarde](/fr/cli/backup) pour plus de détails.
 
 ## Étapes suivantes
 
-- Configurez les channels de messagerie : [Channels](/fr/channels)
-- Configurez le Gateway : [configuration du Gateway](/fr/gateway/configuration)
-- Gardez OpenClaw à jour : [Updating](/fr/install/updating)
+- Configurez les canaux de messagerie : [Canaux](/fr/channels)
+- Configurez le Gateway : [Configuration du Gateway](/fr/gateway/configuration)
+- Gardez OpenClaw à jour : [Mise à jour](/fr/install/updating)

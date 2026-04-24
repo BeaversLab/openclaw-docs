@@ -115,15 +115,15 @@ docker compose up -d openclaw-gateway
 
 El script de configuración acepta estas variables de entorno opcionales:
 
-| Variable                       | Propósito                                                                                       |
-| ------------------------------ | ----------------------------------------------------------------------------------------------- |
-| `OPENCLAW_IMAGE`               | Utilizar una imagen remota en lugar de compilar localmente                                      |
-| `OPENCLAW_DOCKER_APT_PACKAGES` | Instalar paquetes apt adicionales durante la compilación (separados por espacios)               |
-| `OPENCLAW_EXTENSIONS`          | Preinstalar dependencias de extensión en tiempo de compilación (nombres separados por espacios) |
-| `OPENCLAW_EXTRA_MOUNTS`        | Montajes de enlace de host adicionales (`source:target[:opts]` separados por comas)             |
-| `OPENCLAW_HOME_VOLUME`         | Persistir `/home/node` en un volumen de Docker con nombre                                       |
-| `OPENCLAW_SANDBOX`             | Optar por el arranque en sandbox (`1`, `true`, `yes`, `on`)                                     |
-| `OPENCLAW_DOCKER_SOCKET`       | Anular la ruta del socket de Docker                                                             |
+| Variable                       | Propósito                                                                                      |
+| ------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `OPENCLAW_IMAGE`               | Utilizar una imagen remota en lugar de compilar localmente                                     |
+| `OPENCLAW_DOCKER_APT_PACKAGES` | Instalar paquetes apt adicionales durante la compilación (separados por espacios)              |
+| `OPENCLAW_EXTENSIONS`          | Pre-instalar dependencias de plugins en tiempo de compilación (nombres separados por espacios) |
+| `OPENCLAW_EXTRA_MOUNTS`        | Montajes de enlace de host adicionales (`source:target[:opts]` separados por comas)            |
+| `OPENCLAW_HOME_VOLUME`         | Persistir `/home/node` en un volumen de Docker con nombre                                      |
+| `OPENCLAW_SANDBOX`             | Optar por el arranque en sandbox (`1`, `true`, `yes`, `on`)                                    |
+| `OPENCLAW_DOCKER_SOCKET`       | Anular la ruta del socket de Docker                                                            |
 
 ### Verificaciones de estado
 

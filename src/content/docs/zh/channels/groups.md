@@ -404,6 +404,10 @@ otherwise -> reply
 - 列出聊天：`imsg chats --limit 20`。
 - 群组回复总是回到同一个 `chat_id`。
 
-## WhatsApp 特性
+## WhatsApp 系统提示词
 
-有关 WhatsApp 特有的行为（历史记录注入、提及处理详细信息），请参阅 [Group messages](/zh/channels/group-messages)。
+有关 WhatsApp 系统提示词规则（包括群组和直接提示词解析、通配符行为以及帐户覆盖语义）的权威信息，请参阅 [WhatsApp](/zh/channels/whatsapp#system-prompts)。
+
+## WhatsApp 具体细节
+
+有关 WhatsApp 特有的行为（历史注入、提及处理详细信息），请参阅 [群组消息](/zh/channels/group-messages)。

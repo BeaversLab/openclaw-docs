@@ -30,21 +30,21 @@ OpenClaw tiene tres capas que trabajan juntas:
   <Step title="Las habilidades enseñan al agente cuándo y cómo">
     Una habilidad es un archivo markdown (`SKILL.md`) inyectado en el prompt del sistema.
     Las habilidades proporcionan al agente contexto, restricciones y guía paso a paso para
-    usar las herramientas de manera efectiva. Las habilidades residen en tu espacio de trabajo, en carpetas compartidas,
-    o se incluyen dentro de los complementos.
+    usar las herramientas de forma efectiva. Las habilidades residen en tu espacio de trabajo, en carpetas compartidas,
+    o se incluyen dentro de los plugins.
 
-    [Referencia de habilidades](/es/tools/skills) | [Crear habilidades](/es/tools/creating-skills)
+    [Referencia de habilidades](/es/tools/skills) | [Creación de habilidades](/es/tools/creating-skills)
 
   </Step>
 
-  <Step title="Los complementos empaquetan todo junto">
-    Un complemento es un paquete que puede registrar cualquier combinación de capacidades:
+  <Step title="Los plugins empaquetan todo junto">
+    Un plugin es un paquete que puede registrar cualquier combinación de capacidades:
     canales, proveedores de modelos, herramientas, habilidades, voz, transcripción en tiempo real,
     voz en tiempo real, comprensión de medios, generación de imágenes, generación de video,
-    obtención web, búsqueda web y más. Algunos complementos son **centrales** (enviados con
+    obtención web, búsqueda web y más. Algunos plugins son **centrales** (incluidos con
     OpenClaw), otros son **externos** (publicados en npm por la comunidad).
 
-    [Instalar y configurar complementos](/es/tools/plugin) | [Construir el tuyo propio](/es/plugins/building-plugins)
+    [Instalar y configurar plugins](/es/tools/plugin) | [Construir el tuyo propio](/es/plugins/building-plugins)
 
   </Step>
 </Steps>
@@ -53,24 +53,24 @@ OpenClaw tiene tres capas que trabajan juntas:
 
 Estas herramientas se incluyen con OpenClaw y están disponibles sin instalar ningún complemento:
 
-| Herramienta                                | Lo que hace                                                                                        | Página                                               |
-| ------------------------------------------ | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| `exec` / `process`                         | Ejecutar comandos de shell, gestionar procesos en segundo plano                                    | [Exec](/es/tools/exec)                               |
-| `code_execution`                           | Ejecutar análisis remoto de Python en sandbox                                                      | [Ejecución de código](/es/tools/code-execution)      |
-| `browser`                                  | Controlar un navegador Chromium (navegar, hacer clic, captura de pantalla)                         | [Navegador](/es/tools/browser)                       |
-| `web_search` / `x_search` / `web_fetch`    | Buscar en la web, buscar publicaciones de X, obtener contenido de la página                        | [Web](/es/tools/web)                                 |
-| `read` / `write` / `edit`                  | Entrada/Salida de archivos en el espacio de trabajo                                                |                                                      |
-| `apply_patch`                              | Parches de archivos de múltiples partes                                                            | [Aplicar parche](/es/tools/apply-patch)              |
-| `message`                                  | Enviar mensajes a través de todos los canales                                                      | [Envío de agente](/es/tools/agent-send)              |
-| `canvas`                                   | Controlar node Canvas (presentar, evaluar, instantánea)                                            |                                                      |
-| `nodes`                                    | Descubrir y apuntar a dispositivos emparejados                                                     |                                                      |
-| `cron` / `gateway`                         | Gestionar trabajos programados; inspeccionar, parchear, reiniciar o actualizar la puerta de enlace |                                                      |
-| `image` / `image_generate`                 | Analizar o generar imágenes                                                                        | [Generación de imágenes](/es/tools/image-generation) |
-| `music_generate`                           | Generar pistas de música                                                                           | [Generación de música](/es/tools/music-generation)   |
-| `video_generate`                           | Generar videos                                                                                     | [Generación de video](/es/tools/video-generation)    |
-| `tts`                                      | Conversión de texto a voz de un solo paso                                                          | [TTS](/es/tools/tts)                                 |
-| `sessions_*` / `subagents` / `agents_list` | Gestión de sesiones, estado y orquestación de sub-agentes                                          | [Sub-agentes](/es/tools/subagents)                   |
-| `session_status`                           | Lectura de estilo `/status` ligera y anulación del modelo de sesión                                | [Herramientas de sesión](/es/concepts/session-tool)  |
+| Herramienta                                | Lo que hace                                                                                        | Página                                                                |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `exec` / `process`                         | Ejecutar comandos de shell, gestionar procesos en segundo plano                                    | [Exec](/es/tools/exec), [Aprobaciones Exec](/es/tools/exec-approvals) |
+| `code_execution`                           | Ejecutar análisis remoto de Python en sandbox                                                      | [Ejecución de código](/es/tools/code-execution)                       |
+| `browser`                                  | Controlar un navegador Chromium (navegar, hacer clic, captura de pantalla)                         | [Navegador](/es/tools/browser)                                        |
+| `web_search` / `x_search` / `web_fetch`    | Buscar en la web, buscar publicaciones de X, obtener contenido de la página                        | [Web](/es/tools/web), [Obtención Web](/es/tools/web-fetch)            |
+| `read` / `write` / `edit`                  | Entrada/Salida de archivos en el espacio de trabajo                                                |                                                                       |
+| `apply_patch`                              | Parches de archivos de múltiples partes                                                            | [Aplicar Parche](/es/tools/apply-patch)                               |
+| `message`                                  | Enviar mensajes a través de todos los canales                                                      | [Envío de Agente](/es/tools/agent-send)                               |
+| `canvas`                                   | Controlar node Canvas (presentar, evaluar, instantánea)                                            |                                                                       |
+| `nodes`                                    | Descubrir y apuntar a dispositivos emparejados                                                     |                                                                       |
+| `cron` / `gateway`                         | Gestionar trabajos programados; inspeccionar, parchear, reiniciar o actualizar la puerta de enlace |                                                                       |
+| `image` / `image_generate`                 | Analizar o generar imágenes                                                                        | [Generación de Imágenes](/es/tools/image-generation)                  |
+| `music_generate`                           | Generar pistas de música                                                                           | [Generación de Música](/es/tools/music-generation)                    |
+| `video_generate`                           | Generar videos                                                                                     | [Generación de Video](/es/tools/video-generation)                     |
+| `tts`                                      | Conversión de texto a voz de un solo paso                                                          | [TTS](/es/tools/tts)                                                  |
+| `sessions_*` / `subagents` / `agents_list` | Gestión de sesiones, estado y orquestación de sub-agentes                                          | [Sub-agentes](/es/tools/subagents)                                    |
+| `session_status`                           | Lectura de estilo `/status` ligera y anulación del modelo de sesión                                | [Herramientas de Sesión](/es/concepts/session-tool)                   |
 
 Para trabajos de imagen, use `image` para el análisis y `image_generate` para la generación o edición. Si apunta a `openai/*`, `google/*`, `fal/*` u otro proveedor de imágenes que no sea el predeterminado, configure primero la clave de autenticación/API de ese proveedor.
 
@@ -96,18 +96,19 @@ Para cambios parciales, prefiera `config.schema.lookup` y luego `config.patch`. 
 
 Los complementos pueden registrar herramientas adicionales. Algunos ejemplos:
 
-- [Lobster](/es/tools/lobster) — tiempo de ejecución de flujos de trabajo tipados con aprobaciones reanudables
-- [LLM Task](/es/tools/llm-task) — paso de LLM solo JSON para salida estructurada
-- [Music Generation](/es/tools/music-generation) — herramienta `music_generate` compartida con proveedores respaldados por flujos de trabajo
-- [Diffs](/es/tools/diffs) — visor y renderizador de diferencias
+- [Diffs](/es/tools/diffs) — visor y renderizador de diffs
+- [Tarea LLM](/es/tools/llm-task) — paso LLM solo JSON para salida estructurada
+- [Lobster](/es/tools/lobster) — tiempo de ejecución de flujo de trabajo tipado con aprobaciones reanudables
+- [Generación de Música](/es/tools/music-generation) — herramienta compartida `music_generate` con proveedores respaldados por flujos de trabajo
 - [OpenProse](/es/prose) — orquestación de flujos de trabajo con prioridad en markdown
+- [Tokenjuice](/es/tools/tokenjuice) — resultados de herramientas `exec` y `bash` compactos y ruidosos
 
 ## Configuración de herramientas
 
 ### Listas de permitidos y denegados
 
 Controle qué herramientas puede llamar el agente mediante `tools.allow` / `tools.deny` en
-la configuración. Denegar siempre tiene prioridad sobre permitir.
+la configuración. Denegar siempre gana a permitir.
 
 ```json5
 {
@@ -120,23 +121,28 @@ la configuración. Denegar siempre tiene prioridad sobre permitir.
 
 ### Perfiles de herramientas
 
-`tools.profile` establece una lista base de permitidos antes de que se aplique `allow`/`deny`.
+`tools.profile` establece una lista de permitidos base antes de que se aplique `allow`/`deny`.
 Anulación por agente: `agents.list[].tools.profile`.
 
 | Perfil      | Lo que incluye                                                                                                                                    |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `full`      | Sin restricción (igual que sin configurar)                                                                                                        |
+| `full`      | Sin restricción (igual que sin establecer)                                                                                                        |
 | `coding`    | `group:fs`, `group:runtime`, `group:web`, `group:sessions`, `group:memory`, `cron`, `image`, `image_generate`, `music_generate`, `video_generate` |
 | `messaging` | `group:messaging`, `sessions_list`, `sessions_history`, `sessions_send`, `session_status`                                                         |
 | `minimal`   | Solo `session_status`                                                                                                                             |
 
+Los perfiles `coding` y `messaging` también permiten herramientas MCP de paquete configuradas
+bajo la clave de complemento `bundle-mcp`. Añada `tools.deny: ["bundle-mcp"]` cuando
+quiera que un perfil mantenga sus herramientas integradas normales pero oculte todas las herramientas MCP configuradas.
+El perfil `minimal` no incluye herramientas MCP de paquete.
+
 ### Grupos de herramientas
 
-Use abreviaturas de `group:*` en las listas de permitir/denegar:
+Use abreviaturas de `group:*` en las listas de permitidos/denegados:
 
 | Grupo              | Herramientas                                                                                              |
 | ------------------ | --------------------------------------------------------------------------------------------------------- |
-| `group:runtime`    | exec, process, code_execution (`bash` se acepta como alias para `exec`)                                   |
+| `group:runtime`    | exec, process, code_execution (`bash` se acepta como un alias para `exec`)                                |
 | `group:fs`         | read, write, edit, apply_patch                                                                            |
 | `group:sessions`   | sessions_list, sessions_history, sessions_send, sessions_spawn, sessions_yield, subagents, session_status |
 | `group:memory`     | memory_search, memory_get                                                                                 |
@@ -147,11 +153,11 @@ Use abreviaturas de `group:*` en las listas de permitir/denegar:
 | `group:nodes`      | nodes                                                                                                     |
 | `group:agents`     | agents_list                                                                                               |
 | `group:media`      | image, image_generate, music_generate, video_generate, tts                                                |
-| `group:openclaw`   | Todas las herramientas integradas de OpenClaw (excluye las herramientas de complementos)                  |
+| `group:openclaw`   | Todas las herramientas integradas de OpenClaw (excluye herramientas de complementos)                      |
 
-`sessions_history` devuelve una vista de recuperación limitada y filtrada por seguridad. Elimina las etiquetas de pensamiento, el andamiaje `<relevant-memories>`, las cargas útiles XML de llamadas a herramientas en texto sin formato (incluyendo `<tool_call>...</tool_call>`,
+`sessions_history` devuelve una vista de recuperación limitada y filtrada por seguridad. Elimina etiquetas de pensamiento, andamiaje `<relevant-memories>`, cargas útiles XML de llamadas a herramientas en texto plano (incluyendo `<tool_call>...</tool_call>`,
 `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`,
-`<function_calls>...</function_calls>` y bloques de llamadas a herramientas truncados), el andamiaje de llamadas a herramientas degradado, los tokens de control de modelo ASCII/ancho completo filtrados y el XML de llamadas a herramientas de MiniMax malformado del texto del asistente, y luego aplica redacción/truncamiento y posibles marcadores de posición de fila sobredimensionada en lugar de actuar como un volcado de transcripción sin procesar.
+`<function_calls>...</function_calls>` y bloques de llamadas a herramientas truncados), andamiaje de llamadas a herramientas degradados, tokens de control de modelo ASCII/ancho completo filtrados y XML de llamadas a herramientas de MiniMax con formato incorrecto del texto del asistente, y luego aplica redacción/truncamiento y posibles marcadores de posición de fila sobredimensionados en lugar de actuar como un volcado de transcripción sin procesar.
 
 ### Restricciones específicas del proveedor
 

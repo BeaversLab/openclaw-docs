@@ -6,8 +6,10 @@ read_when:
 title: "Northflank"
 ---
 
-Déployez OpenClaw sur Northflank avec un modèle en un clic et accédez-y via l'interface web de contrôle.
-C'est le chemin le plus simple « sans terminal sur le serveur » : Northflank exécute le Gateway pour vous.
+# Northflank
+
+Déployez OpenClaw sur Northflank avec un modèle en un clic et accédez-y via l'interface Web de Contrôle.
+C'est le chemin le plus simple « sans terminal sur le serveur » : Northflank exécute la Gateway pour vous.
 
 ## Comment démarrer
 
@@ -18,25 +20,25 @@ C'est le chemin le plus simple « sans terminal sur le serveur » : Northflank e
 5. Cliquez sur **Déployer la stack** pour construire et exécuter le modèle OpenClaw.
 6. Attendez que le déploiement soit terminé, puis cliquez sur **Voir les ressources**.
 7. Ouvrez le service OpenClaw.
-8. Ouvrez l'URL publique OpenClaw à l'adresse `/openclaw` et connectez-vous en utilisant le secret partagé configuré. Ce modèle utilise `OPENCLAW_GATEWAY_TOKEN` par défaut ; si vous le remplacez par une authentification par mot de passe, utilisez plutôt ce mot de passe.
+8. Ouvrez l'URL publique OpenClaw sur `/openclaw` et connectez-vous en utilisant le secret partagé configuré. Ce modèle utilise `OPENCLAW_GATEWAY_TOKEN` par défaut ; si vous le remplacez par une authentification par mot de passe, utilisez plutôt ce mot de passe.
 
 ## Ce que vous obtenez
 
-- OpenClaw Gateway hébergé + interface de contrôle
-- Stockage persistant via le volume Northflank (`/data`) pour que `openclaw.json`,
-  l'état `auth-profiles.json` par agent, l'état du canal/fournisseur, les sessions et
+- OpenClaw hébergé + Gateway + Interface de Contrôle
+- Stockage persistant via Volume Northflank (`/data`) pour que `openclaw.json`,
+  `auth-profiles.json` par agent, l'état des channel/provider, les sessions et
   l'espace de travail survivent aux redéploiements
 
 ## Connecter un channel
 
-Utilisez l'interface de contrôle à l'adresse `/openclaw` ou exécutez `openclaw onboard` via SSH pour les instructions de configuration du canal :
+Utilisez l'interface de Contrôle sur `/openclaw` ou exécutez `openclaw onboard` via SSH pour obtenir les instructions de configuration du channel :
 
-- [Telegram](/fr/channels/telegram) (le plus rapide —仅需 un jeton de bot)
+- [Telegram](/fr/channels/telegram) (le plus rapide — juste un jeton de bot)
 - [Discord](/fr/channels/discord)
-- [Tous les canaux](/fr/channels)
+- [Tous les channels](/fr/channels)
 
 ## Étapes suivantes
 
-- Configurez les canaux de messagerie : [Canaux](/fr/channels)
-- Configurez le Gateway : [Configuration du Gateway](/fr/gateway/configuration)
-- Gardez OpenClaw à jour : [Mise à jour](/fr/install/updating)
+- Configurer les channels de messagerie : [Channels](/fr/channels)
+- Configurer la Gateway : [Configuration de la Gateway](/fr/gateway/configuration)
+- Garder OpenClaw à jour : [Mise à jour](/fr/install/updating)

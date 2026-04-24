@@ -8,8 +8,8 @@ read_when:
 
 # IRC
 
-當您想要在頻道 (`#room`) 和直接訊息中使用 OpenClaw 時，請使用 IRC。
-IRC 隨附為擴充功能外掛程式，但它是設定在主設定檔的 `channels.irc` 之下。
+當您希望 OpenClaw 出現在頻道（`#room`）和私人訊息中時，請使用 IRC。
+IRC 作為捆綁插件隨附，但它在 `channels.irc` 下的主設定檔中進行設定。
 
 ## 快速開始
 

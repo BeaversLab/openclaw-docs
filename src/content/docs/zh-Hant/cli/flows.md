@@ -15,4 +15,4 @@ openclaw tasks flow show <lookup>
 openclaw tasks flow cancel <lookup>
 ```
 
-如需完整文件，請參閱 [Task Flow](/zh-Hant/automation/taskflow) 和 [tasks CLI 參考資料](/zh-Hant/cli/index#tasks)。
+如需完整文件，請參閱 [Task Flow](/zh-Hant/automation/taskflow) 和 [tasks CLI 參考資料](/zh-Hant/cli/tasks)。

@@ -69,10 +69,10 @@ OpenClaw 识别两种插件格式：
 | **原生**   | `openclaw.plugin.json` + 运行时模块；在进程内执行    | 官方插件，社区 npm 包                                  |
 | **捆绑包** | Codex/Claude/Cursor 兼容的布局；映射到 OpenClaw 功能 | `.codex-plugin/`，`.claude-plugin/`，`.cursor-plugin/` |
 
-两者都会显示在 `openclaw plugins list` 下。有关捆绑包的详细信息，请参阅[插件捆绑包](/zh/plugins/bundles)。
+两者都显示在 `openclaw plugins list` 下。有关包的详细信息，请参阅 [Plugin Bundles](/zh/plugins/bundles)。
 
-如果您正在编写原生插件，请从[构建插件](/zh/plugins/building-plugins)
-和[插件 SDK 概述](/zh/plugins/sdk-overview)开始。
+如果您正在编写原生插件，请从 [Building Plugins](/zh/plugins/building-plugins)
+和 [Plugin SDK Overview](/zh/plugins/sdk-overview) 开始。
 
 ## 官方插件
 
@@ -83,9 +83,9 @@ OpenClaw 识别两种插件格式：
 | Matrix          | `@openclaw/matrix`     | [Matrix](/zh/channels/matrix)           |
 | Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/zh/channels/msteams) |
 | Nostr           | `@openclaw/nostr`      | [Nostr](/zh/channels/nostr)             |
-| 语音通话        | `@openclaw/voice-call` | [语音通话](/zh/plugins/voice-call)      |
+| 语音通话        | `@openclaw/voice-call` | [Voice Call](/zh/plugins/voice-call)    |
 | Zalo            | `@openclaw/zalo`       | [Zalo](/zh/channels/zalo)               |
-| Zalo 个人版     | `@openclaw/zalouser`   | [Zalo 个人版](/zh/plugins/zalouser)     |
+| Zalo 个人版     | `@openclaw/zalouser`   | [Zalo Personal](/zh/plugins/zalouser)   |
 
 ### 核心（随 OpenClaw 附带）
 
@@ -108,7 +108,7 @@ OpenClaw 识别两种插件格式：
   </Accordion>
 </AccordionGroup>
 
-正在寻找第三方插件？请参阅[社区插件](/zh/plugins/community)。
+寻找第三方插件？请参阅 [Community Plugins](/zh/plugins/community)。
 
 ## 配置
 
@@ -118,7 +118,7 @@ OpenClaw 识别两种插件格式：
     enabled: true,
     allow: ["voice-call"],
     deny: ["untrusted-plugin"],
-    load: { paths: ["~/Projects/oss/voice-call-extension"] },
+    load: { paths: ["~/Projects/oss/voice-call-plugin"] },
     entries: {
       "voice-call": { enabled: true, config: { provider: "twilio" } },
     },
@@ -148,11 +148,11 @@ OpenClaw 按以下顺序扫描插件（找到第一个匹配项即停止）：
     `plugins.load.paths` — 显式的文件或目录路径。
   </Step>
 
-  <Step title="工作区扩展">
+  <Step title="工作区插件">
     `\<workspace\>/.openclaw/<plugin-root>/*.ts` 和 `\<workspace\>/.openclaw/<plugin-root>/*/index.ts`。
   </Step>
 
-  <Step title="Global extensions">
+  <Step title="全局插件">
     `~/.openclaw/<plugin-root>/*.ts` 和 `~/.openclaw/<plugin-root>/*/index.ts`。
   </Step>
 
@@ -213,8 +213,8 @@ openclaw plugins install <plugin> --marketplace <source>
 openclaw plugins install <plugin> --marketplace https://github.com/<owner>/<repo>
 openclaw plugins install <spec> --pin      # record exact resolved npm spec
 openclaw plugins install <spec> --dangerously-force-unsafe-install
-openclaw plugins update <id>             # update one plugin
-openclaw plugins update <id> --dangerously-force-unsafe-install
+openclaw plugins update <id-or-npm-spec> # update one plugin
+openclaw plugins update <id-or-npm-spec> --dangerously-force-unsafe-install
 openclaw plugins update --all            # update all
 openclaw plugins uninstall <id>          # remove config/install records
 openclaw plugins uninstall <id> --keep-files
@@ -227,31 +227,28 @@ openclaw plugins disable <id>
 
 捆绑插件随 OpenClaw 一起提供。许多插件默认处于启用状态（例如捆绑的模型提供商、捆绑的语音提供商以及捆绑的浏览器插件）。其他捆绑插件仍需 `openclaw plugins enable <id>`。
 
-`--force` 会就地覆盖现有的已安装插件或挂钩包。它不支持 `--link`，后者会重用源路径而不是复制到受控安装目标。
+`--force` 会就地覆盖现有已安装的插件或挂钩包。请对已跟踪的 npm 插件的常规升级使用
+`openclaw plugins update <id-or-npm-spec>`。它不支持 `--link`，后者会重用源路径，而不是复制到受管的安装目标。
 
-`--pin` 仅限 npm。它不支持 `--marketplace`，因为市场安装会保留市场源元数据，而不是 npm 规范。
+`openclaw plugins update <id-or-npm-spec>` 适用于已跟踪的安装。传递带有 dist-tag 或确切版本的 npm 包规范会将包名解析回已跟踪的插件记录，并记录新规范以供将来更新。传递不带版本的包名会将确切固定的安装移回注册表的默认发布线。如果已安装的 npm 插件已匹配解析的版本和记录的构件标识，OpenClaw 将跳过更新，而无需下载、重新安装或重写配置。
 
-`--dangerously-force-unsafe-install` 是针对内置危险代码扫描器误报的紧急覆盖选项。它允许插件安装和插件更新跳过内置的 `critical` 发现结果继续进行，但它仍然不能绕过插件 `before_install` 策略阻止或扫描失败阻止。
+`--pin` 仅限 npm。不支持与 `--marketplace` 结合使用，因为 marketplace 安装保留的是 marketplace 源元数据，而不是 npm 规范。
 
-此 CLI 标志仅适用于插件安装/更新流程。Gateway(网关) 支持的技能依赖项安装改为使用匹配的 `dangerouslyForceUnsafeInstall` 请求覆盖，而 `openclaw skills install` 仍然是单独的 ClawHub 技能下载/安装流程。
+`--dangerously-force-unsafe-install` 是针对内置危险代码扫描器误报的紧急覆盖选项。它允许插件安装和更新在遇到内置 `critical` 发现时继续进行，但它仍然不会绕过插件 `before_install` 策略阻止或扫描失败阻止。
 
-兼容的捆绑包参与相同的插件列表/检查/启用/禁用流程。当前的运行时支持包括捆绑包技能、Claude 命令技能、Claude `settings.json` 默认值、Claude `.lsp.json` 和清单声明的 `lspServers` 默认值、Cursor 命令技能以及兼容的 Codex 挂钩目录。
+此 CLI 标志仅适用于插件安装/更新流程。由 Gateway(网关) 支持的技能依赖项安装使用匹配的 `dangerouslyForceUnsafeInstall` 请求覆盖，而 `openclaw skills install` 仍然是单独的 ClawHub 技能下载/安装流程。
 
-`openclaw plugins inspect <id>` 还会报告检测到的捆绑包功能，以及捆绑包支持插件的支持或不支持的 MCP 和 LSP 服务器条目。
+兼容的包参与相同的插件列表/检查/启用/禁用流程。当前的运行时支持包括包技能、Claude 命令技能、Claude `settings.json` 默认值、Claude `.lsp.json` 和清单声明的 `lspServers` 默认值、Cursor 命令技能以及兼容的 Codex hook 目录。
 
-Marketplace sources can be a Claude known-marketplace name from
-`~/.claude/plugins/known_marketplaces.json`, a local marketplace root or
-`marketplace.json` path, a GitHub shorthand like `owner/repo`, a GitHub repo
-URL, or a git URL. For remote marketplaces, plugin entries must stay inside the
-cloned marketplace repo and use relative path sources only.
+`openclaw plugins inspect <id>` 还会报告检测到的包功能以及基于包的插件的受支持或不受支持的 MCP 和 LSP 服务器条目。
 
-See [`openclaw plugins` CLI reference](/zh/cli/plugins) for full details.
+Marketplace sources 可以是来自 `~/.claude/plugins/known_marketplaces.json` 的 Claude known-marketplace 名称、本地 marketplace 根目录或 `marketplace.json` 路径、类似于 `owner/repo` 的 GitHub 简写、GitHub 仓库 URL，或 git URL。对于远程 marketplace，插件条目必须保留在克隆的 marketplace 仓库内，并且仅使用相对路径源。
+
+有关完整详细信息，请参阅 [`openclaw plugins` CLI 参考](/zh/cli/plugins)。
 
 ## 插件 API 概述
 
-Native plugins export an entry object that exposes `register(api)`. Older
-plugins may still use `activate(api)` as a legacy alias, but new plugins should
-use `register`.
+原生插件导出一个暴露 `register(api)` 的入口对象。较旧的插件可能仍将 `activate(api)` 用作旧版别名，但新插件应使用 `register`。
 
 ```typescript
 export default definePluginEntry({
@@ -271,22 +268,19 @@ export default definePluginEntry({
 });
 ```
 
-OpenClaw loads the entry object and calls `register(api)` during plugin
-activation. The loader still falls back to `activate(api)` for older plugins,
-but bundled plugins and new external plugins should treat `register` as the
-public contract.
+OpenClaw 加载入口对象并在插件激活期间调用 `register(api)`。加载器仍然会对旧版插件回退到 `activate(api)`，但捆绑插件和新的外部插件应将 `register` 视为公共约定。
 
 常用注册方法：
 
 | 方法                                    | 注册内容              |
 | --------------------------------------- | --------------------- |
-| `registerProvider`                      | Model 提供商 (LLM)    |
+| `registerProvider`                      | 模型提供商 (LLM)      |
 | `registerChannel`                       | 聊天渠道              |
 | `registerTool`                          | 代理工具              |
 | `registerHook` / `on(...)`              | 生命周期钩子          |
-| `registerSpeechProvider`                | 文本转语音 / STT      |
+| `registerSpeechProvider`                | 语音合成 / STT        |
 | `registerRealtimeTranscriptionProvider` | 流式 STT              |
-| `registerRealtimeVoiceProvider`         | 全双工实时语音        |
+| `registerRealtimeVoiceProvider`         | 双工实时语音          |
 | `registerMediaUnderstandingProvider`    | 图像/音频分析         |
 | `registerImageGenerationProvider`       | 图像生成              |
 | `registerMusicGenerationProvider`       | 音乐生成              |
@@ -298,16 +292,16 @@ public contract.
 | `registerContextEngine`                 | 上下文引擎            |
 | `registerService`                       | 后台服务              |
 
-类型化生命周期钩子的钩子守卫行为：
+为类型化生命周期挂钩挂钩守卫行为：
 
-- `before_tool_call`: `{ block: true }` is terminal; lower-priority handlers are skipped.
-- `before_tool_call`: `{ block: false }` 是空操作，不会清除之前的块。
-- `before_install`: `{ block: true }` 是终止的；较低优先级的处理程序将被跳过。
-- `before_install`: `{ block: false }` 是空操作，不会清除之前的块。
-- `message_sending`: `{ cancel: true }` 是终止的；较低优先级的处理程序将被跳过。
-- `message_sending`: `{ cancel: false }` 是空操作，不会清除之前的取消。
+- `before_tool_call`: `{ block: true }` 是终端的；较低优先级的处理程序将被跳过。
+- `before_tool_call`: `{ block: false }` 是空操作，不会清除较早的阻止。
+- `before_install`: `{ block: true }` 是终端的；较低优先级的处理程序将被跳过。
+- `before_install`：`{ block: false }` 是空操作，不会清除之前的块。
+- `message_sending`：`{ cancel: true }` 是终态的；较低优先级的处理程序将被跳过。
+- `message_sending`：`{ cancel: false }` 是空操作，不会清除之前的取消操作。
 
-有关完整的类型化 hook 行为，请参阅 [SDK 概述](/zh/plugins/sdk-overview#hook-decision-semantics)。
+有关完整的类型化 Hook 行为，请参阅 [SDK 概述](/zh/plugins/sdk-overview#hook-decision-semantics)。
 
 ## 相关
 
@@ -315,5 +309,5 @@ public contract.
 - [插件包](/zh/plugins/bundles) — Codex/Claude/Cursor 包兼容性
 - [插件清单](/zh/plugins/manifest) — 清单架构
 - [注册工具](/zh/plugins/building-plugins#registering-agent-tools) — 在插件中添加代理工具
-- [插件内部机制](/zh/plugins/architecture) — 能力模型和加载管道
+- [插件内部机制](/zh/plugins/architecture) — 能力模型和加载流水线
 - [社区插件](/zh/plugins/community) — 第三方列表

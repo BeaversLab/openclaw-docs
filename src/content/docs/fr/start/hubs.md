@@ -160,7 +160,7 @@ Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondi
 - [Compétences macOS](/fr/platforms/mac/skills)
 - [macOS Peekaboo](/fr/platforms/mac/peekaboo)
 
-## Extensions + plugins
+## Plugins
 
 - [Présentation des plugins](/fr/tools/plugin)
 - [Création de plugins](/fr/plugins/building-plugins)

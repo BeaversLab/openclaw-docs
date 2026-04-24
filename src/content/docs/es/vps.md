@@ -51,7 +51,7 @@ Ejecute el OpenClaw Gateway en cualquier servidor Linux o VPS en la nube. Esta p
 </CardGroup>
 
 **AWS (EC2 / Lightsail / nivel gratuito)** también funciona bien.
-Un recorrido en video de la comunidad está disponible en
+Hay un video tutorial de la comunidad disponible en
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
 (recurso de la comunidad -- puede dejar de estar disponible).
 
@@ -99,7 +99,7 @@ source ~/.bashrc
 - `NODE_COMPILE_CACHE` mejora los tiempos de inicio de comandos repetidos.
 - `OPENCLAW_NO_RESPAWN=1` evita la sobrecarga de inicio adicional de una ruta de auto-reinicio.
 - La primera ejecución del comando calienta la caché; las ejecuciones posteriores son más rápidas.
-- Para detalles específicos de Raspberry Pi, consulta [Raspberry Pi](/es/install/raspberry-pi).
+- Para detalles específicos de Raspberry Pi, consulte [Raspberry Pi](/es/install/raspberry-pi).
 
 ### Lista de verificación de ajustes de systemd (opcional)
 
@@ -132,5 +132,8 @@ TimeoutStartSec=90
 Si instalaste deliberadamente una unidad del sistema en su lugar, edita
 `openclaw-gateway.service` a través de `sudo systemctl edit openclaw-gateway.service`.
 
-Cómo las políticas de `Restart=` ayudan a la recuperación automatizada:
+Cómo las políticas `Restart=` ayudan a la recuperación automatizada:
 [systemd puede automatizar la recuperación del servicio](https://www.redhat.com/en/blog/systemd-automate-recovery).
+
+Para el comportamiento OOM de Linux, la selección de víctimas del proceso secundario y los diagnósticos `exit 137`,
+consulte [Presión de memoria de Linux y eliminaciones OOM](/es/platforms/linux#memory-pressure-and-oom-kills).

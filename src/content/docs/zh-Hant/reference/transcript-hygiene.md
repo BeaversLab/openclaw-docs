@@ -32,7 +32,7 @@ title: "文字輸入清理"
 所有文字輸入清理都集中在內嵌執行器中：
 
 - 策略選取： `src/agents/transcript-policy.ts`
-- 清理/修復套用： `sanitizeSessionHistory` 於 `src/agents/pi-embedded-runner/google.ts`
+- 清理/修復應用：`sanitizeSessionHistory` 中的 `src/agents/pi-embedded-runner/replay-history.ts`
 
 策略使用 `provider`、`modelApi` 和 `modelId` 來決定套用什麼。
 
@@ -64,7 +64,7 @@ title: "文字輸入清理"
 實作：
 
 - `sanitizeToolCallInputs` 於 `src/agents/session-transcript-repair.ts`
-- 應用於 `src/agents/pi-embedded-runner/google.ts` 中的 `sanitizeSessionHistory`
+- 應用於 `src/agents/pi-embedded-runner/replay-history.ts` 中的 `sanitizeSessionHistory`
 
 ---
 

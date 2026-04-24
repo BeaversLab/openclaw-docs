@@ -34,7 +34,7 @@ title: "iMessage"
 <Tabs>
   <Tab title="Local Mac (fast path)">
     <Steps>
-      <Step title="Install and verify imsg">
+      <Step title="安裝並驗證 imsg">
 
 ```bash
 brew install steipete/tap/imsg
@@ -43,7 +43,7 @@ imsg rpc --help
 
       </Step>
 
-      <Step title="Configure OpenClaw">
+      <Step title="設定 OpenClaw">
 
 ```json5
 {
@@ -51,7 +51,7 @@ imsg rpc --help
     imessage: {
       enabled: true,
       cliPath: "/usr/local/bin/imsg",
-      dbPath: "/Users/<you>/Library/Messages/chat.db",
+      dbPath: "/Users/user/Library/Messages/chat.db",
     },
   },
 }
@@ -59,7 +59,7 @@ imsg rpc --help
 
       </Step>
 
-      <Step title="Start gateway">
+      <Step title="啟動閘道">
 
 ```bash
 openclaw gateway
@@ -67,14 +67,14 @@ openclaw gateway
 
       </Step>
 
-      <Step title="Approve first DM pairing (default dmPolicy)">
+      <Step title="批准首次 DM 配對（預設 dmPolicy）">
 
 ```bash
 openclaw pairing list imessage
 openclaw pairing approve imessage <CODE>
 ```
 
-        配對請求在 1 小時後過期。
+        配對請求會在 1 小時後過期。
       </Step>
     </Steps>
 

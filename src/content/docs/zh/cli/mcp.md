@@ -21,7 +21,7 @@ title: "mcp"
 - `list` / `show` / `set` / `unset` 是作为 MCP 客户端
   注册表运行的 OpenClaw，用于存储其运行时稍后可能使用的其他 MCP 服务器
 
-当 OpenClaw 应该自己托管编码工具会话并通过 ACP 路由该运行时时，请使用 [`openclaw acp`](/zh/cli/acp)。
+当 OpenClaw 应该托管编码工具会话本身并通过 ACP 路由该运行时时，请使用 [`openclaw acp`](/zh/cli/acp)。
 
 ## OpenClaw 作为 MCP 服务器
 
@@ -37,7 +37,7 @@ title: "mcp"
 - 您希望拥有一个可跨 OpenClaw 渠道后端工作的 MCP 服务器，
   而不是运行单独的每渠道桥接器
 
-当 OpenClaw 应该自己托管编码运行时并将代理会话保留在 OpenClaw 内部时，请改用 [`openclaw acp`](/zh/cli/acp)。
+当 OpenClaw 应该托管编码运行时本身并将代理会话保留在 OpenClaw 内部时，请改用 [`openclaw acp`](/zh/cli/acp)。
 
 ## 工作原理
 
@@ -296,7 +296,7 @@ pnpm test:docker:mcp-channels
 
 这是证明桥接有效而无需将真实的 Telegram、Discord 或 iMessage 账户连接到测试运行的最快方法。
 
-有关更广泛的测试上下文，请参阅[测试](/zh/help/testing)。
+有关更广泛的测试上下文，请参阅 [测试](/zh/help/testing)。
 
 ## 故障排除
 
@@ -336,10 +336,11 @@ pnpm test:docker:mcp-channels
 - 它们不连接到目标 MCP 服务器
 - 它们不验证命令、URL 或远程传输当前是否可访问
 - 运行时适配器在执行时决定它们实际支持哪些传输形式
+- 嵌入式 Pi 在常规 `coding` 和 `messaging` 工具配置文件中公开已配置的 MCP 工具；`minimal` 仍然隐藏它们，而 `tools.deny: ["bundle-mcp"]` 则明确禁用它们
 
 ## 已保存的 MCP 服务器定义
 
-OpenClaw 还在配置中存储了一个轻量级的 MCP 服务器注册表，供需要 OpenClaw 托管的 MCP 定义的界面使用。
+OpenClaw 还在配置中存储了一个轻量级的 MCP 服务器注册表，供需要 OpenClaw 管理的 MCP 定义的界面使用。
 
 命令：
 
@@ -350,9 +351,9 @@ OpenClaw 还在配置中存储了一个轻量级的 MCP 服务器注册表，供
 
 注意：
 
-- `list` 对服务器名称进行排序。
+- `list` 会对服务器名称进行排序。
 - 不带名称的 `show` 会打印完整的已配置 MCP 服务器对象。
-- `set` 需要命令行中有一个 JSON 对象值。
+- `set` 期望命令行上有一个 JSON 对象值。
 - 如果指定的服务器不存在，`unset` 将失败。
 
 示例：
@@ -394,15 +395,21 @@ openclaw mcp unset context7
 | `env`                      | 额外的环境变量             |
 | `cwd` / `workingDirectory` | 进程的工作目录             |
 
+#### Stdio 环境安全过滤器
+
+OpenClaw 会拒绝那些可能会在第一次 RPC 之前改变 stdio MCP 服务器启动方式的解释器启动环境键，即使它们出现在服务器的 `env` 块中。被阻止的键包括 `NODE_OPTIONS`、`PYTHONSTARTUP`、`PYTHONPATH`、`PERL5OPT`、`RUBYOPT`、`SHELLOPTS`、`PS4` 及类似的运行时控制变量。启动过程会以配置错误拒绝这些键，以防止它们注入隐式序言、交换解释器或针对 stdio 进程启用调试器。普通的凭证、代理和服务器特定的环境变量（`GITHUB_TOKEN`、`HTTP_PROXY`、自定义 `*_API_KEY` 等）不受影响。
+
+如果您的 MCP 服务器确实需要其中一个被阻止的变量，请将其设置在网关主机进程上，而不是在 stdio 服务器的 `env` 下。
+
 ### SSE / HTTP 传输
 
 通过 HTTP 服务器发送事件 (SSE) 连接到远程 MCP 服务器。
 
-| 字段                  | 描述                                       |
-| --------------------- | ------------------------------------------ |
-| `url`                 | 远程服务器的 HTTP 或 HTTPS URL（必需）     |
-| `headers`             | 可选的 HTTP 头键值映射（例如身份验证令牌） |
-| `connectionTimeoutMs` | 每个服务器的连接超时（以毫秒为单位，可选） |
+| 字段                  | 描述                                           |
+| --------------------- | ---------------------------------------------- |
+| `url`                 | 远程服务器的 HTTP 或 HTTPS URL（必填）         |
+| `headers`             | HTTP 标头的可选键值映射（例如身份验证令牌）    |
+| `connectionTimeoutMs` | 每个服务器的连接超时时间，以毫秒为单位（可选） |
 
 示例：
 
@@ -421,18 +428,19 @@ openclaw mcp unset context7
 }
 ```
 
-`url`（用户信息）和 `headers` 中的敏感值会在日志和状态输出中被隐藏。
+`url`（用户信息）和 `headers` 中的敏感值在日志和
+状态输出中会被编辑。
 
-### 可流式传输 HTTP 传输
+### 可流式 HTTP 传输
 
-`streamable-http` 是 `sse` 和 `stdio` 之外的另一种传输选项。它使用 HTTP 流式传输与远程 MCP 服务器进行双向通信。
+`streamable-http` 是除了 `sse` 和 `stdio` 之外的附加传输选项。它使用 HTTP 流与远程 MCP 服务器进行双向通信。
 
-| 字段                  | 描述                                                                       |
-| --------------------- | -------------------------------------------------------------------------- |
-| `url`                 | 远程服务器的 HTTP 或 HTTPS URL（必需）                                     |
-| `transport`           | 设置为 `"streamable-http"` 以选择此传输方式；如果省略，OpenClaw 使用 `sse` |
-| `headers`             | HTTP 标头的可选键值映射（例如身份验证令牌）                                |
-| `connectionTimeoutMs` | 每个服务器的连接超时时间，以毫秒为单位（可选）                             |
+| 字段                  | 描述                                                                         |
+| --------------------- | ---------------------------------------------------------------------------- |
+| `url`                 | 远程服务器的 HTTP 或 HTTPS URL（必需）                                       |
+| `transport`           | 设置为 `"streamable-http"` 以选择此传输方式；如果省略，OpenClaw 将使用 `sse` |
+| `headers`             | 可选的 HTTP 标头键值映射（例如身份验证令牌）                                 |
+| `connectionTimeoutMs` | 每个服务器的连接超时时间（毫秒）（可选）                                     |
 
 示例：
 
@@ -453,18 +461,16 @@ openclaw mcp unset context7
 }
 ```
 
-这些命令仅管理已保存的配置。它们不会启动渠道桥接，
-打开实时的 MCP 客户端会话，或证明目标服务器可达。
+这些命令仅管理已保存的配置。它们不会启动渠道桥接，打开实时 MCP 客户端会话，或验证目标服务器是否可达。
 
 ## 当前限制
 
-本页面记录了目前发布的桥接功能。
+本文档记录了目前发布的桥接器。
 
 当前限制：
 
 - 会话发现依赖于现有的 Gateway(网关) 会话路由元数据
-- 除了 Claude 特定的适配器外，没有通用的推送协议
-- 尚无消息编辑或响应工具
-- HTTP/SSE/streamable-http 传输连接到单个远程服务器；目前尚不支持多路复用上游
-- `permissions_list_open` 仅包含在桥接
-  连接期间观察到的审批
+- 除 Claude 专用适配器外，没有通用的推送协议
+- 暂无消息编辑或表情反应工具
+- HTTP/SSE/streamable-http 传输连接到单个远程服务器；尚不支持多路复用上游
+- `permissions_list_open` 仅包含在桥接器连接期间观察到的审批

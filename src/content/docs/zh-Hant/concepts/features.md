@@ -10,23 +10,23 @@ title: "功能"
 ## 亮點
 
 <Columns>
-  <Card title="Channels" icon="message-square">
-    單一 Gateway 即可支援 Discord、iMessage、Signal、Slack、Telegram、WhatsApp、WebChat 等更多平台。
+  <Card title="頻道" icon="message-square" href="/zh-Hant/channels">
+    透過單一閘道支援 Discord、iMessage、Signal、Slack、Telegram、WhatsApp、WebChat 等更多平台。
   </Card>
-  <Card title="Plugins" icon="plug">
-    內建外掛程式在一般目前版本中無需額外安裝，即可新增 Matrix、Nextcloud Talk、Nostr、Twitch、Zalo 等更多支援。
+  <Card title="外掛程式" icon="plug" href="/zh-Hant/tools/plugin">
+    內建外掛程式在一般的目前版本中已新增 Matrix、Nextcloud Talk、Nostr、Twitch、Zalo 等更多支援，無需額外安裝。
   </Card>
-  <Card title="路由" icon="route">
-    具有隔離會話的多代理程式路由。
+  <Card title="路由" icon="route" href="/zh-Hant/concepts/multi-agent">
+    具有隔離工作階段的多代理程式路由。
   </Card>
-  <Card title="Media" icon="image">
-    圖片、音訊、影片、文件以及圖片/影片生成。
+  <Card title="媒體" icon="image" href="/zh-Hant/nodes/images">
+    圖片、音訊、影片、文件，以及圖片/影片生成。
   </Card>
-  <Card title="應用程式與介面" icon="monitor">
+  <Card title="應用程式與 UI" icon="monitor" href="/zh-Hant/web/control-ui">
     Web 控制介面與 macOS 伴隨應用程式。
   </Card>
-  <Card title="行動裝置節點" icon="smartphone">
-    具備配對、語音/聊天及豐富裝置指令的 iOS 與 Android 節點。
+  <Card title="行動節點" icon="smartphone" href="/zh-Hant/nodes">
+    iOS 與 Android 節點，具備配對、語音/聊天功能以及豐富的裝置指令。
   </Card>
 </Columns>
 
@@ -45,7 +45,7 @@ title: "功能"
 
 - 內建 Agent 執行環境，支援工具串流
 - 多 Agent 路由，每個工作區或傳送者擁有獨立工作階段
-- 工作階段：直接聊天會合併至共用的 `main`；群組則保持獨立
+- 工作階段：直接訊息會合併至共用的 `main`；群組則彼此隔離
 - 長回應的串流與分塊傳輸
 
 **驗證與供應商：**

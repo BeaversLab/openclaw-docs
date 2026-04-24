@@ -104,18 +104,18 @@ Focus on model runs, image generation, video generation, audio transcription, TT
 
 下表将常见的推理任务映射到相应的 infer 命令。
 
-| 任务              | 命令                                                                   | 备注                                |
-| ----------------- | ---------------------------------------------------------------------- | ----------------------------------- |
-| 运行文本/模型提示 | `openclaw infer model run --prompt "..." --json`                       | 默认使用正常的本地路径              |
-| 生成图像          | `openclaw infer image generate --prompt "..." --json`                  | 从现有文件开始时使用 `image edit`   |
-| 描述图像文件      | `openclaw infer image describe --file ./image.png --json`              | `--model` 必须为 `<provider/model>` |
-| 转录音频          | `openclaw infer audio transcribe --file ./memo.m4a --json`             | `--model` 必须是 `<provider/model>` |
-| 合成语音          | `openclaw infer tts convert --text "..." --output ./speech.mp3 --json` | `tts status` 是面向 Gateway 的      |
-| 生成视频          | `openclaw infer video generate --prompt "..." --json`                  |                                     |
-| 描述视频文件      | `openclaw infer video describe --file ./clip.mp4 --json`               | `--model` 必须是 `<provider/model>` |
-| 搜索网络          | `openclaw infer web search --query "..." --json`                       |                                     |
-| 获取网页          | `openclaw infer web fetch --url https://example.com --json`            |                                     |
-| 创建嵌入          | `openclaw infer embedding create --text "..." --json`                  |                                     |
+| 任务              | 命令                                                                   | 备注                                                  |
+| ----------------- | ---------------------------------------------------------------------- | ----------------------------------------------------- |
+| 运行文本/模型提示 | `openclaw infer model run --prompt "..." --json`                       | 默认使用正常的本地路径                                |
+| 生成图像          | `openclaw infer image generate --prompt "..." --json`                  | 从现有文件开始时使用 `image edit`                     |
+| 描述图像文件      | `openclaw infer image describe --file ./image.png --json`              | `--model` 必须是具备图像处理能力的 `<provider/model>` |
+| 转录音频          | `openclaw infer audio transcribe --file ./memo.m4a --json`             | `--model` 必须是 `<provider/model>`                   |
+| 合成语音          | `openclaw infer tts convert --text "..." --output ./speech.mp3 --json` | `tts status` 是面向 Gateway 的                        |
+| 生成视频          | `openclaw infer video generate --prompt "..." --json`                  |                                                       |
+| 描述视频文件      | `openclaw infer video describe --file ./clip.mp4 --json`               | `--model` 必须是 `<provider/model>`                   |
+| 搜索网络          | `openclaw infer web search --query "..." --json`                       |                                                       |
+| 获取网页          | `openclaw infer web fetch --url https://example.com --json`            |                                                       |
+| 创建嵌入          | `openclaw infer embedding create --text "..." --json`                  |                                                       |
 
 ## 行为
 
@@ -123,9 +123,10 @@ Focus on model runs, image generation, video generation, audio transcription, TT
 - 当输出将被另一个命令或脚本使用时，请使用 `--json`。
 - 当需要特定的后端时，请使用 `--provider` 或 `--model provider/model`。
 - 对于 `image describe`、`audio transcribe` 和 `video describe`，`--model` 必须使用格式 `<provider/model>`。
+- 对于 `image describe`，显式的 `--model` 将直接运行该提供商/模型。该模型在模型目录或提供商配置中必须具备图像处理能力。
 - 无状态执行命令默认为本地。
-- Gateway(网关) 管理的状态命令默认为 gateway。
-- 正常的本地路径不需要 gateway 运行。
+- Gateway 管理的状态命令默认为 gateway。
+- 常规本地路径不需要 gateway 正在运行。
 
 ## 模型
 
@@ -138,9 +139,9 @@ openclaw infer model providers --json
 openclaw infer model inspect --name gpt-5.4 --json
 ```
 
-注意：
+注意事项：
 
-- `model run` 重用代理运行时，因此提供商/模型覆盖的行为类似于正常的代理执行。
+- `model run` 重用代理运行时，因此提供商/模型覆盖行为类似于常规代理执行。
 - `model auth login`、`model auth logout` 和 `model auth status` 管理已保存的提供商身份验证状态。
 
 ## 图像
@@ -152,12 +153,14 @@ openclaw infer image generate --prompt "friendly lobster illustration" --json
 openclaw infer image generate --prompt "cinematic product photo of headphones" --json
 openclaw infer image describe --file ./photo.jpg --json
 openclaw infer image describe --file ./ui-screenshot.png --model openai/gpt-4.1-mini --json
+openclaw infer image describe --file ./photo.jpg --model ollama/qwen2.5vl:7b --json
 ```
 
-注意：
+说明：
 
 - 当从现有输入文件开始时，请使用 `image edit`。
-- 对于 `image describe`，`--model` 必须是 `<provider/model>`。
+- 对于 `image describe`，`--model` 必须是支持图像的 `<provider/model>`。
+- 对于本地 Ollama 视觉模型，请先拉取模型并将 `OLLAMA_API_KEY` 设置为任意占位符值，例如 `ollama-local`。请参阅 [Ollama](/zh/providers/ollama#vision-and-image-description)。
 
 ## 音频
 
@@ -169,14 +172,14 @@ openclaw infer audio transcribe --file ./team-sync.m4a --language en --prompt "F
 openclaw infer audio transcribe --file ./memo.m4a --model openai/whisper-1 --json
 ```
 
-注意：
+说明：
 
-- `audio transcribe` 用于文件转录，而不是实时会话管理。
+- `audio transcribe` 用于文件转录，而非实时会话管理。
 - `--model` 必须是 `<provider/model>`。
 
 ## TTS
 
-使用 `tts` 进行语音合成和 TTS 提供商状态管理。
+使用 `tts` 进行语音合成以及获取 TTS 提供商状态。
 
 ```bash
 openclaw infer tts convert --text "hello from openclaw" --output ./hello.mp3 --json
@@ -185,9 +188,9 @@ openclaw infer tts providers --json
 openclaw infer tts status --json
 ```
 
-注意：
+说明：
 
-- `tts status` 默认为 gateway，因为它反映了由 gateway 管理的 TTS 状态。
+- `tts status` 默认为 gateway，因为它反映了 gateway 管理的 TTS 状态。
 - 使用 `tts providers`、`tts voices` 和 `tts set-provider` 来检查和配置 TTS 行为。
 
 ## 视频
@@ -201,13 +204,13 @@ openclaw infer video describe --file ./clip.mp4 --json
 openclaw infer video describe --file ./clip.mp4 --model openai/gpt-4.1-mini --json
 ```
 
-注意：
+说明：
 
-- 对于 `video describe`，`--model` 必须是 `<provider/model>`。
+- 对于 `video describe`，`--model` 必须为 `<provider/model>`。
 
 ## Web
 
-使用 `web` 进行搜索和提取工作流。
+使用 `web` 进行搜索和获取工作流。
 
 ```bash
 openclaw infer web search --query "OpenClaw docs" --json
@@ -216,9 +219,9 @@ openclaw infer web fetch --url https://docs.openclaw.ai/cli/infer --json
 openclaw infer web providers --json
 ```
 
-注意：
+说明：
 
-- 使用 `web providers` 检查可用、已配置和选定的提供商。
+- 使用 `web providers` 检查可用、已配置和已选定的提供商。
 
 ## 嵌入
 
@@ -232,7 +235,7 @@ openclaw infer embedding providers --json
 
 ## JSON 输出
 
-Infer 命令在共享信封下规范化 JSON 输出：
+Infer 命令在共享的信封下规范化 JSON 输出：
 
 ```json
 {
@@ -240,13 +243,13 @@ Infer 命令在共享信封下规范化 JSON 输出：
   "capability": "image.generate",
   "transport": "local",
   "provider": "openai",
-  "model": "gpt-image-1",
+  "model": "gpt-image-2",
   "attempts": [],
   "outputs": []
 }
 ```
 
-顶层字段是稳定的：
+顶级字段是稳定的：
 
 - `ok`
 - `capability`
@@ -275,6 +278,6 @@ openclaw infer audio transcribe --file ./memo.m4a --model whisper-1 --json
 openclaw infer audio transcribe --file ./memo.m4a --model openai/whisper-1 --json
 ```
 
-## 说明
+## 注意
 
 - `openclaw capability ...` 是 `openclaw infer ...` 的别名。

@@ -9,7 +9,7 @@ read_when:
 # Vercel AI Gateway
 
 El [Vercel AI Gateway](https://vercel.com/ai-gateway) proporciona una API unificada para
-acceder a cientos de modelos a través de un solo punto de conexión.
+acceder a cientos de modelos a través de un único punto de conexión.
 
 | Propiedad           | Valor                                                |
 | ------------------- | ---------------------------------------------------- |
@@ -18,7 +18,7 @@ acceder a cientos de modelos a través de un solo punto de conexión.
 | API                 | Compatible con Anthropic Messages                    |
 | Catálogo de modelos | Descubierto automáticamente a través de `/v1/models` |
 
-<Tip>OpenClaw descubre automáticamente el catálogo `/v1/models` de Gateway, por lo que `/models vercel-ai-gateway` incluye referencias de modelos actuales como `vercel-ai-gateway/openai/gpt-5.4`.</Tip>
+<Tip>OpenClaw detecta automáticamente el catálogo del Gateway `/v1/models`, por lo que `/models vercel-ai-gateway` incluye referencias de modelos actuales como `vercel-ai-gateway/openai/gpt-5.4` y `vercel-ai-gateway/moonshotai/kimi-k2.6`.</Tip>
 
 ## Cómo empezar
 
@@ -79,24 +79,25 @@ tiempo de ejecución:
 
 <AccordionGroup>
   <Accordion title="Variable de entorno para procesos demonio">
-    Si OpenClaw Gateway se ejecuta como un demonio (launchd/systemd), asegúrese
-    de que `AI_GATEWAY_API_KEY` esté disponible para ese proceso.
+    Si el OpenClaw Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que
+    `AI_GATEWAY_API_KEY` esté disponible para ese proceso.
 
     <Warning>
-    Una clave establecida solo en `~/.profile` no será visible para un
-    demonio launchd/systemd a menos que ese entorno se importe explícitamente.
-    Establezca la clave en `~/.openclaw/.env` o a través de `env.shellEnv` para asegurar que el proceso de la puerta de enlace pueda
+    Una clave establecida solo en `~/.profile` no será visible para un demonio
+    launchd/systemd a menos que ese entorno se importe explícitamente. Establezca la clave en
+    `~/.openclaw/.env` o a través de `env.shellEnv` para asegurar que el proceso del gateway pueda
     leerla.
     </Warning>
 
   </Accordion>
 
-  <Accordion title="Enrutamiento de proveedores">
-    Vercel AI Gateway enruta las solicitudes al proveedor ascendente basándose en el prefijo
-    de referencia del modelo. Por ejemplo, `vercel-ai-gateway/anthropic/claude-opus-4.6` se enruta
+  <Accordion title="Enrutamiento del proveedor">
+    Vercel AI Gateway enruta las solicitudes al proveedor ascendente basándose en el prefijo de
+    referencia del modelo. Por ejemplo, `vercel-ai-gateway/anthropic/claude-opus-4.6` se enruta
     a través de Anthropic, mientras que `vercel-ai-gateway/openai/gpt-5.4` se enruta a través de
-    OpenAI. Su único `AI_GATEWAY_API_KEY` maneja la autenticación para todos
-    los proveedores ascendentes.
+    OpenAI y `vercel-ai-gateway/moonshotai/kimi-k2.6` se enruta a través de
+    MoonshotAI. Su única `AI_GATEWAY_API_KEY` maneja la autenticación para todos los
+    proveedores ascendentes.
   </Accordion>
 </AccordionGroup>
 

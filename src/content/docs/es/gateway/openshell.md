@@ -267,27 +267,38 @@ Recrear después de cambiar cualquiera de estos:
 openclaw sandbox recreate --all
 ```
 
+## Endurecimiento de seguridad
+
+Los asistentes del sandbox de OpenShell que leen archivos del espacio de trabajo remoto utilizan un descriptor de archivo anclado para la raíz del espacio de trabajo y recorren los ancestros desde ese fd anclado en lugar de resolver nuevamente la ruta para cada lectura. Combinado con una verificación de identidad en cada operación, esto evita que un intercambio de enlace simbólico medio turno o una montura de espacio de trabajo intercambiada en caliente redirija las lecturas fuera del espacio de trabajo remoto previsto.
+
+- La raíz del espacio de trabajo se abre una vez y se ancla; las lecturas posteriores reutilizan ese fd.
+- Los recorridos de ancestros atraviesan entradas relativas desde el fd anclado, por lo que no pueden
+  ser redirigidos por un directorio de reemplazo más alto en la ruta.
+- La identidad del sandbox se vuelve a verificar antes de cada lectura, por lo que un sandbox recreado o
+  reasignado no puede servir silenciosamente archivos de un espacio de trabajo diferente.
+
 ## Limitaciones actuales
 
-- El navegador de sandbox no es compatible con el backend OpenShell.
+- El navegador de sandbox no es compatible con el backend de OpenShell.
 - `sandbox.docker.binds` no se aplica a OpenShell.
-- Los controles de tiempo de ejecución específicos de Docker bajo `sandbox.docker.*` se aplican solo al backend de Docker.
+- Los controles de tiempo de ejecución específicos de Docker bajo `sandbox.docker.*` se aplican solo al backend
+  de Docker.
 
 ## Cómo funciona
 
-1. OpenClaw llama a `openshell sandbox create` (con las marcas `--from`, `--gateway`,
+1. OpenClaw llama a `openshell sandbox create` (con los indicadores `--from`, `--gateway`,
    `--policy`, `--providers`, `--gpu` según lo configurado).
-2. OpenClaw llama a `openshell sandbox ssh-config <name>` para obtener los detalles de la conexión
+2. OpenClaw llama a `openshell sandbox ssh-config <name>` para obtener los detalles de conexión
    SSH para el sandbox.
-3. Core escribe la configuración de SSH en un archivo temporal y abre una sesión SSH utilizando el
+3. Core escribe la configuración SSH en un archivo temporal y abre una sesión SSH utilizando el
    mismo puente de sistema de archivos remoto que el backend SSH genérico.
-4. En el modo `mirror`: sincronizar de local a remoto antes de la ejecución, ejecutar, sincronizar de nuevo después de la ejecución.
-5. En el modo `remote`: sembrar una vez al crear, y luego operar directamente en el espacio de trabajo
+4. En el modo `mirror`: sincronizar de local a remoto antes de ejecutar, ejecutar, sincronizar de nuevo después de ejecutar.
+5. En el modo `remote`: sembrar una vez al crear, luego operar directamente en el espacio de trabajo
    remoto.
 
 ## Véase también
 
-- [Sandboxing](/es/gateway/sandboxing) -- modos, ámbitos y comparación de backends
+- [Sandboxing](/es/gateway/sandboxing) -- modos, alcances y comparación de backends
 - [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) -- depuración de herramientas bloqueadas
 - [Multi-Agent Sandbox and Tools](/es/tools/multi-agent-sandbox-tools) -- anulaciones por agente
 - [Sandbox CLI](/es/cli/sandbox) -- comandos `openclaw sandbox`

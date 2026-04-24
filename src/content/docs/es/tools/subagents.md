@@ -55,14 +55,14 @@ la ruta de la transcripción en el disco cuando necesite la transcripción compl
   - las rutas de finalización vinculadas al hilo (thread-bound) o a la conversación tienen prioridad cuando están disponibles
   - si el origen de finalización solo proporciona un canal, OpenClaw completa el objetivo/cuenta faltante desde la ruta resuelta de la sesión solicitante (`lastChannel` / `lastTo` / `lastAccountId`) para que la entrega directa siga funcionando
 - La entrega de finalización a la sesión solicitante es un contexto interno generado en tiempo de ejecución (no texto escrito por el usuario) e incluye:
-  - `Result` (texto de respuesta `assistant` visible más reciente, de lo contrario texto de herramienta/toolResult más reciente saneado)
+  - `Result` (texto de respuesta `assistant` visible más reciente; de lo contrario, texto tool/toolResult más recentesaneado; las ejecuciones fallidas terminales no reutilizan el texto de respuesta capturado)
   - `Status` (`completed successfully` / `failed` / `timed out` / `unknown`)
   - estadísticas compactas de tiempo de ejecución/tokens
   - una instrucción de entrega que indica al agente solicitante que reescriba con la voz normal del asistente (no reenviar metadatos internos sin procesar)
 - `--model` y `--thinking` anulan los valores predeterminados para esa ejecución específica.
 - Use `info`/`log` para inspeccionar los detalles y la salida después de la finalización.
 - `/subagents spawn` es el modo de un solo disparo (`mode: "run"`). Para sesiones persistentes ligadas a hilos, use `sessions_spawn` con `thread: true` y `mode: "session"`.
-- Para sesiones de arnés ACP (Codex, Claude Code, Gemini CLI), use `sessions_spawn` con `runtime: "acp"` y consulte [ACP Agents](/es/tools/acp-agents).
+- Para sesiones de arnés ACP (Codex, Claude Code, Gemini CLI), use `sessions_spawn` con `runtime: "acp"` y consulte [ACP Agents](/es/tools/acp-agents), especialmente el [ACP delivery model](/es/tools/acp-agents#delivery-model) al depurar finalizaciones o bucles de agente a agente.
 
 Objetivos principales:
 
@@ -130,7 +130,7 @@ Interruptores de configuración:
 - Valor predeterminado global: `session.threadBindings.enabled`, `session.threadBindings.idleHours`, `session.threadBindings.maxAgeHours`
 - La sobrescritura del canal y las claves de auto-vinculación al generar son específicas del adaptador. Consulte **Canales compatibles con hilos** más arriba.
 
-Consulte [Referencia de configuración](/es/gateway/configuration-reference) y [Comandos de barra](/es/tools/slash-commands) para obtener detalles actuales del adaptador.
+Consulte [Configuration Reference](/es/gateway/configuration-reference) y [Slash commands](/es/tools/slash-commands) para obtener detalles actuales del adaptador.
 
 Lista de permitidos:
 
@@ -246,7 +246,7 @@ Los sub-agentes informan a través de un paso de anuncio:
   - clave/id de sesión secundaria
   - tipo de anuncio + etiqueta de tarea
   - línea de estado derivada del resultado en tiempo de ejecución (`success`, `error`, `timeout` o `unknown`)
-  - contenido del resultado seleccionado del último texto visible del asistente, de lo contrario el último texto de herramienta/toolResult saneado
+  - contenido del resultado seleccionado del texto del asistente visible más reciente, de lo contrario texto tool/toolResult más recentesaneado; las ejecuciones fallidas terminales informan el estado de falto sin reproducir el texto de respuesta capturado
   - una instrucción de seguimiento que describe cuándo responder frente a cuándo permanecer en silencio
 - `Status` no se infiere de la salida del modelo; proviene de señales de resultado en tiempo de ejecución.
 - En caso de tiempo de espera, si el hijo solo logró pasar las llamadas a herramientas, el anuncio puede contraer ese historial en un breve resumen de progreso parcial en lugar de reproducir la salida sin procesar de la herramienta.

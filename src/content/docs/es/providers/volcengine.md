@@ -110,7 +110,7 @@ openclaw onboard --non-interactive \
   <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Configuration" href="/es/configuration" icon="gear">
+  <Card title="Configuración" href="/es/gateway/configuration" icon="gear">
     Referencia completa de configuración para agentes, modelos y proveedores.
   </Card>
   <Card title="Troubleshooting" href="/es/help/troubleshooting" icon="wrench">

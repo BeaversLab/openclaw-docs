@@ -8,7 +8,7 @@ title: "LM Studio"
 
 # LM Studio
 
-LM Studio 是一款友好且强大的应用程序，用于在自己的硬件上运行开源权重的模型。它允许您运行 llama.cpp (GGUF) 或 MLX 模型（Apple Silicon）。它提供 GUI 软件包或无头守护程序 (`llmster`)。有关产品和设置文档，请参阅 [lmstudio.ai](https://lmstudio.ai/)。
+LM Studio 是一款用户友好且功能强大的应用程序，用于在您自己的硬件上运行开源权重模型。它允许您运行 llama.cpp (GGUF) 或 MLX 模型（Apple Silicon）。以 GUI 软件包或无头守护进程 (`llmster`) 的形式提供。有关产品和设置文档，请参阅 [lmstudio.ai](https://lmstudio.ai/)。
 
 ## 快速开始
 
@@ -30,7 +30,7 @@ lms daemon up
 lms server start --port 1234
 ```
 
-如果您正在使用该应用程序，请确保启用了 JIT 以获得流畅的体验。在 [LM Studio JIT 和 TTL 指南](https://lmstudio.ai/docs/developer/core/ttl-and-auto-evict) 中了解更多信息。
+如果您正在使用该应用程序，请确保已启用 JIT 以获得流畅的体验。在 [LM Studio JIT 和 TTL 指南](https://lmstudio.ai/docs/developer/core/ttl-and-auto-evict) 中了解更多信息。
 
 3. OpenClaw 需要 LM Studio 令牌值。设置 `LM_API_TOKEN`：
 
@@ -101,6 +101,20 @@ openclaw onboard \
 
 ## 配置
 
+### 流式使用兼容性
+
+OpenClaw 将 LM Studio 标记为流式使用兼容，因此在流式完成时，token 计数不再降级为未知或陈旧的总数。当 LM Studio 未发出 OpenAI 格式的 `usage` 对象时，OpenClaw 还会从 llama.cpp 风格的 `timings.prompt_n` / `timings.predicted_n` 元数据中恢复 token 计数。
+
+受相同行为覆盖的其他 OpenAI 兼容本地后端：
+
+- vLLM
+- SGLang
+- llama.cpp
+- LocalAI
+- Jan
+- TabbyAPI
+- text-generation-webui
+
 ### 显式配置
 
 ```json5
@@ -132,7 +146,7 @@ openclaw onboard \
 
 ### 未检测到 LM Studio
 
-确保 LM Studio 正在运行，并且您设置了 `LM_API_TOKEN`（对于未经身份验证的服务器，任何非空的 token 值均可）：
+确保 LM Studio 正在运行，并且您已设置 `LM_API_TOKEN`（对于未经身份验证的服务器，任何非空的 token 值均可）：
 
 ```bash
 # Start via desktop app, or headless:
@@ -149,10 +163,10 @@ curl http://localhost:1234/api/v1/models
 
 如果设置报告 HTTP 401，请验证您的 API 密钥：
 
-- 检查 `LM_API_TOKEN` 是否与 LM Studio 中配置的密钥匹配。
-- 有关 LM Studio 身份验证设置的详细信息，请参阅 [LM Studio 身份验证](https://lmstudio.ai/docs/developer/core/authentication)。
-- 如果您的服务器不需要身份验证，请为 `LM_API_TOKEN` 使用任何非空的 token 值。
+- 检查 `LM_API_TOKEN` 是否与 LM Studio 中配置的密钥相匹配。
+- 有关 LM Studio 身份验证设置的详细信息，请参阅 [LM Studio Authentication](https://lmstudio.ai/docs/developer/core/authentication)。
+- 如果您的服务器不需要身份验证，请为 `LM_API_TOKEN` 使用任何非空的令牌值。
 
 ### 即时模型加载
 
-LM Studio 支持即时 (JIT) 模型加载，即在首次请求时加载模型。确保您已启用此功能以避免“Model not loaded”错误。
+LM Studio 支持即时 (JIT) 模型加载，即在首次请求时加载模型。请确保已启用此功能以避免“模型未加载”错误。

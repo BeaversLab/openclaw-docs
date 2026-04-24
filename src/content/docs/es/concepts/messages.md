@@ -62,7 +62,7 @@ Configuración (valor predeterminado global + anulaciones por canal):
 Notas:
 
 - El antirrebote se aplica a mensajes de **solo texto**; los medios/archivos adjuntos se envían inmediatamente.
-- Los comandos de control omiten el antirrebote para que permanezcan independientes.
+- Los comandos de control omiten el debouncing para que permanezcan independientes, **excepto** cuando un canal opta explícitamente por la combinación de MD del mismo remitente (p. ej. [BlueBubbles `coalesceSameSenderDms`](/es/channels/bluebubbles#coalescing-split-send-dms-command--url-in-one-composition)), donde los comandos de MD esperan dentro de la ventana de debouncing para que una carga de envío dividido pueda unirse al mismo turno del agente.
 
 ## Sesiones y dispositivos
 
@@ -83,9 +83,8 @@ Detalles: [Gestión de sesiones](/es/concepts/session).
 
 OpenClaw separa el **cuerpo del aviso** del **cuerpo del comando**:
 
-- `Body`: texto del aviso enviado al agente. Esto puede incluir sobres de canal y
-  contenedores de historial opcionales.
-- `CommandBody`: texto sin procesar del usuario para el análisis de directivas/comandos.
+- `Body`: texto del mensaje enviado al agente. Esto puede incluir sobres de canal y contenedores de historial opcionales.
+- `CommandBody`: texto de usuario sin procesar para el análisis de directivas/comandos.
 - `RawBody`: alias heredado de `CommandBody` (mantenido por compatibilidad).
 
 Cuando un canal proporciona el historial, utiliza un contenedor compartido:
@@ -97,15 +96,18 @@ Para **chats no directos** (grupos/canales/salas), el **cuerpo del mensaje actua
 
 Los búferes de historial son **solo pendientes**: incluyen mensajes grupales que _no_ activaron una ejecución (por ejemplo, mensajes restringidos por mención) y **excluyen** los mensajes que ya están en la transcripción de la sesión.
 
-La eliminación de directivas se aplica solo a la sección del **mensaje actual** para que el historial permanezca intacto. Los canales que envuelven el historial deben establecer `CommandBody` (o `RawBody`) al texto del mensaje original y mantener `Body` como el indicativo combinado.
-Los búferes de historial son configurables a través de `messages.groupChat.historyLimit` (predeterminado global) y anulaciones por canal como `channels.slack.historyLimit` o `channels.telegram.accounts.<id>.historyLimit` (establezca `0` para desactivar).
+La eliminación de directivas solo se aplica a la sección del **mensaje actual** para que el historial permanezca intacto. Los canales que envuelven el historial deben establecer `CommandBody` (o
+`RawBody`) en el texto del mensaje original y mantener `Body` como el mensaje combinado.
+Los búferes de historial son configurables mediante `messages.groupChat.historyLimit` (predeterminado
+global) y anulaciones por canal como `channels.slack.historyLimit` o
+`channels.telegram.accounts.<id>.historyLimit` (establezca `0` para desactivar).
 
 ## Poner en cola y seguimientos
 
 Si una ejecución ya está activa, los mensajes entrantes se pueden poner en cola, dirigir a la ejecución actual o recopilar para un turno de seguimiento.
 
-- Configurar mediante `messages.queue` (y `messages.queue.byChannel`).
-- Modos: `interrupt`, `steer`, `followup`, `collect`, además de variantes de acumulación.
+- Configure mediante `messages.queue` (y `messages.queue.byChannel`).
+- Modos: `interrupt`, `steer`, `followup`, `collect`, más variantes de acumulación.
 
 Detalles: [Puesta en cola](/es/concepts/queue).
 
@@ -119,11 +121,11 @@ Configuraciones clave:
 - `agents.defaults.blockStreamingDefault` (`on|off`, desactivado por defecto)
 - `agents.defaults.blockStreamingBreak` (`text_end|message_end`)
 - `agents.defaults.blockStreamingChunk` (`minChars|maxChars|breakPreference`)
-- `agents.defaults.blockStreamingCoalesce` (procesamiento por lotes basado inactividad)
+- `agents.defaults.blockStreamingCoalesce` (agrupación basada inactividad)
 - `agents.defaults.humanDelay` (pausa similar a la humana entre respuestas de bloques)
-- Sobrescrituras de canal: `*.blockStreaming` y `*.blockStreamingCoalesce` (los canales que no sean Telegram requieren `*.blockStreaming: true` explícito)
+- Anulaciones de canal: `*.blockStreaming` y `*.blockStreamingCoalesce` (los canales que no son Telegram requieren `*.blockStreaming: true` explícito)
 
-Detalles: [Streaming + fragmentación](/es/concepts/streaming).
+Detalles: [Streaming + chunking](/es/concepts/streaming).
 
 ## Visibilidad del razonamiento y tokens
 
@@ -133,21 +135,21 @@ OpenClaw puede exponer u ocultar el razonamiento del modelo:
 - El contenido del razonamiento sigue contando para el uso de tokens cuando es producido por el modelo.
 - Telegram soporta el flujo de razonamiento en la burbuja de borrador.
 
-Detalles: [Directivas de pensamiento + razonamiento](/es/tools/thinking) y [Uso de tokens](/es/reference/token-use).
+Detalles: [Thinking + reasoning directives](/es/tools/thinking) y [Token use](/es/reference/token-use).
 
 ## Prefijos, hilos y respuestas
 
 El formato de los mensajes salientes está centralizado en `messages`:
 
-- `messages.responsePrefix`, `channels.<channel>.responsePrefix` y `channels.<channel>.accounts.<id>.responsePrefix` (cascada de prefijos salientes), más `channels.whatsapp.messagePrefix` (prefijo entrante de WhatsApp)
-- Hilos de respuesta mediante `replyToMode` y valores predeterminados por canal
+- `messages.responsePrefix`, `channels.<channel>.responsePrefix` y `channels.<channel>.accounts.<id>.responsePrefix` (cascada de prefijos de salida), más `channels.whatsapp.messagePrefix` (prefijo de entrada de WhatsApp)
+- Hilos de respuestas a través de `replyToMode` y valores predeterminados por canal
 
-Detalles: [Configuración](/es/gateway/configuration-reference#messages) y documentación de canales.
+Detalles: [Configuration](/es/gateway/configuration-reference#messages) y documentación de canales.
 
 ## Respuestas silenciosas
 
 El token silencioso exacto `NO_REPLY` / `no_reply` significa "no entregar una respuesta visible para el usuario".
-OpenClaw resuelve ese comportamiento según el tipo de conversación:
+OpenClaw resuelve ese comportamiento por tipo de conversación:
 
 - Las conversaciones directas no permiten el silencio de manera predeterminada y reescriben una respuesta silenciosa simple
   a un respaldo visible breve.
@@ -158,9 +160,11 @@ Los valores predeterminados se encuentran en `agents.defaults.silentReply` y
 `agents.defaults.silentReplyRewrite`; `surfaces.<id>.silentReply` y
 `surfaces.<id>.silentReplyRewrite` pueden anularlos por superficie.
 
+Cuando la sesión principal tiene una o más ejecuciones de subagentes generadas pendientes, las respuestas silenciosas simples se descartan en todas las superficies en lugar de reescribirse, por lo que el padre permanece en silencio hasta que el evento de finalización del hijo entrega la respuesta real.
+
 ## Relacionado
 
 - [Streaming](/es/concepts/streaming) — entrega de mensajes en tiempo real
-- [Reintento](/es/concepts/retry) — comportamiento de reintento de entrega de mensajes
-- [Cola](/es/concepts/queue) — cola de procesamiento de mensajes
-- [Canales](/es/channels) — integraciones de plataformas de mensajería
+- [Retry](/es/concepts/retry) — comportamiento de reintentos de entrega de mensajes
+- [Queue](/es/concepts/queue) — cola de procesamiento de mensajes
+- [Channels](/es/channels) — integraciones de plataformas de mensajería

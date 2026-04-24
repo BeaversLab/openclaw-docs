@@ -159,7 +159,8 @@ OpenClaw fournit actuellement ce catalogue OpenClaw intégré. Le catalogue conf
 
 ## Compléments multimodaux
 
-L'extension `qwen` expose également les capacités multimodales sur les points de terminaison DashScope **Standard** (et non sur les points de terminaison du Coding Plan) :
+Le plugin `qwen` expose également des capacités multimodales sur les points de terminaison **Standard**
+DashScope (pas les points de terminaison Coding Plan) :
 
 - **Compréhension vidéo** via `qwen-vl-max-latest`
 - **Génération vidéo Wan** via `wan2.6-t2v` (par défaut), `wan2.6-i2v`, `wan2.6-r2v`, `wan2.6-r2v-flash`, `wan2.7-r2v`
@@ -207,17 +208,17 @@ Pour utiliser Qwen comme fournisseur vidéo par défaut :
 
   </Accordion>
 
-  <Accordion title="Plan des fonctionnalités">
-    L'extension `qwen` est positionnée comme la base du fournisseur pour l'ensemble de la surface Qwen
+  <Accordion title="Capability plan">
+    Le plugin `qwen` est positionné comme la base du fournisseur pour l'ensemble de la surface Qwen
     Cloud, et pas seulement pour les modèles de codage/texte.
 
-    - **Modèles de texte/chat :** intégrés maintenant
-    - **Appel d'outils, sortie structurée, réflexion :** hérités du transport compatible OpenAI
+    - **Modèles de texte/chat :** inclus désormais
+    - **Appel d'outils, sortie structurée, raisonnement :** hérité du transport compatible OpenAI
     - **Génération d'images :** prévu au niveau de la couche du plugin fournisseur
-    - **Compréhension d'images/vidéos :** intégré maintenant sur le point de terminaison Standard
-    - **Parole/audio :** prévu au niveau de la couche du plugin fournisseur
-    - **Embeddings de mémoire/reranking :** prévu via la surface de l'adaptateur d'embeddings
-    - **Génération vidéo :** intégré maintenant via la capacité partagée de génération vidéo
+    - **Compréhension d'images/vidéo :** inclus désormais sur le point de terminaison Standard
+    - **Voix/audio :** prévu au niveau de la couche du plugin fournisseur
+    - **Plongements de mémoire/reranking :** prévu via la surface de l'adaptateur d'embeddings
+    - **Génération de vidéo :** inclus désormais via la capacité partagée de génération de vidéo
 
   </Accordion>
 
