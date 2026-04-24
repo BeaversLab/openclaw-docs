@@ -4,10 +4,8 @@ read_when:
   - You want to run OpenClaw against a local inferrs server
   - You are serving Gemma or another model through inferrs
   - You need the exact OpenClaw compat flags for inferrs
-title: "inferrs"
+title: "Inferrs"
 ---
-
-# inferrs
 
 [inferrs](https://github.com/ericcurtin/inferrs) can serve local models behind an
 OpenAI-compatible `/v1` API. OpenClaw works with `inferrs` through the generic
@@ -81,7 +79,7 @@ This example uses Gemma 4 on a local `inferrs` server.
 }
 ```
 
-## Advanced
+## Advanced configuration
 
 <AccordionGroup>
   <Accordion title="Why requiresStringContent matters">
@@ -195,7 +193,7 @@ This example uses Gemma 4 on a local `inferrs` server.
 For general help, see [Troubleshooting](/en/help/troubleshooting) and [FAQ](/en/help/faq).
 </Tip>
 
-## See also
+## Related
 
 <CardGroup cols={2}>
   <Card title="Local models" href="/en/gateway/local-models" icon="server">
@@ -204,7 +202,7 @@ For general help, see [Troubleshooting](/en/help/troubleshooting) and [FAQ](/en/
   <Card title="Gateway troubleshooting" href="/en/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail" icon="wrench">
     Debugging local OpenAI-compatible backends that pass probes but fail agent runs.
   </Card>
-  <Card title="Model providers" href="/en/concepts/model-providers" icon="layers">
+  <Card title="Model selection" href="/en/concepts/model-providers" icon="layers">
     Overview of all providers, model refs, and failover behavior.
   </Card>
 </CardGroup>

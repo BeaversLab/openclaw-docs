@@ -4,7 +4,7 @@ read_when:
   - Looking for an overview of media capabilities
   - Deciding which media provider to configure
   - Understanding how async media generation works
-title: "Media Overview"
+title: "Media overview"
 ---
 
 # Media Generation and Understanding
@@ -72,3 +72,10 @@ voice contract can represent it.
 - [Music Generation](/en/tools/music-generation) -- creating music and audio tracks
 - [Text-to-Speech](/en/tools/tts) -- converting replies to spoken audio
 - [Media Understanding](/en/nodes/media-understanding) -- understanding inbound images, audio, and video
+
+## Related
+
+- [Image generation](/en/tools/image-generation)
+- [Video generation](/en/tools/video-generation)
+- [Music generation](/en/tools/music-generation)
+- [Text-to-speech](/en/tools/tts)

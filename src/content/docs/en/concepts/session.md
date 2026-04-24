@@ -3,10 +3,8 @@ summary: "How OpenClaw manages conversation sessions"
 read_when:
   - You want to understand session routing and isolation
   - You want to configure DM scope for multi-user setups
-title: "Session Management"
+title: "Session management"
 ---
-
-# Session Management
 
 OpenClaw organizes conversations into **sessions**. Each message is routed to a
 session based on where it came from -- DMs, group chats, cron jobs, etc.
@@ -118,3 +116,9 @@ Preview with `openclaw sessions cleanup --dry-run`.
 - [Multi-Agent](/en/concepts/multi-agent) — routing and session isolation across agents
 - [Background Tasks](/en/automation/tasks) — how detached work creates task records with session references
 - [Channel Routing](/en/channels/channel-routing) — how inbound messages are routed to sessions
+
+## Related
+
+- [Session pruning](/en/concepts/session-pruning)
+- [Session tools](/en/concepts/session-tool)
+- [Command queue](/en/concepts/queue)

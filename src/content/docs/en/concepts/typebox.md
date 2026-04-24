@@ -305,3 +305,8 @@ published raw file is typically available at:
    node scope classification.
 4. Run `pnpm protocol:check`.
 5. Commit the regenerated schema + Swift models.
+
+## Related
+
+- [Rich output protocol](/en/reference/rich-output-protocol)
+- [RPC adapters](/en/reference/rpc)

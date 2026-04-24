@@ -6,8 +6,6 @@ read_when:
 title: "Setup"
 ---
 
-# Setup
-
 <Note>
 If you are setting up for the first time, start with [Getting Started](/en/start/getting-started).
 For onboarding details, see [Onboarding (CLI)](/en/start/wizard).

@@ -1,12 +1,10 @@
 ---
-title: "Session Pruning"
 summary: "Trimming old tool results to keep context lean and caching efficient"
+title: "Session pruning"
 read_when:
   - You want to reduce context growth from tool outputs
   - You want to understand Anthropic prompt cache optimization
 ---
-
-# Session Pruning
 
 Session pruning trims **old tool results** from the context before each LLM
 call. It reduces context bloat from accumulated tool outputs (exec results, file
@@ -90,3 +88,9 @@ compaction cycles.
 - [Compaction](/en/concepts/compaction) -- summarization-based context reduction
 - [Gateway Configuration](/en/gateway/configuration) -- all pruning config knobs
   (`contextPruning.*`)
+
+## Related
+
+- [Session management](/en/concepts/session)
+- [Session tools](/en/concepts/session-tool)
+- [Context engine](/en/concepts/context-engine)

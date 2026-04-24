@@ -4,10 +4,8 @@ read_when:
   - Configuring broadcast groups
   - Debugging multi-agent replies in WhatsApp
 status: experimental
-title: "Broadcast Groups"
+title: "Broadcast groups"
 ---
-
-# Broadcast Groups
 
 **Status:** Experimental  
 **Version:** Added in 2026.1.9
@@ -440,3 +438,9 @@ Planned features:
 - [Multi-Agent Configuration](/en/tools/multi-agent-sandbox-tools)
 - [Routing Configuration](/en/channels/channel-routing)
 - [Session Management](/en/concepts/session)
+
+## Related
+
+- [Groups](/en/channels/groups)
+- [Channel routing](/en/channels/channel-routing)
+- [Pairing](/en/channels/pairing)
