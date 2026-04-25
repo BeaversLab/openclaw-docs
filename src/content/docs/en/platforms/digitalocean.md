@@ -258,7 +258,7 @@ free -h
 
 ---
 
-## See Also
+## Related
 
 - [Hetzner guide](/en/install/hetzner) — cheaper, more powerful
 - [Docker install](/en/install/docker) — containerized setup

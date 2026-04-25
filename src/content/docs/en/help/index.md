@@ -1,26 +1,38 @@
 ---
 summary: "Help hub: common fixes, install sanity, and where to look when something breaks"
 read_when:
-  - You’re new and want the “what do I click/run” guide
+  - You are new and want a "what do I click/run" guide
   - Something broke and you want the fastest path to a fix
 title: "Help"
 ---
 
-If you want a quick “get unstuck” flow, start here:
+Quick "get unstuck" path for the most common problems:
 
-- **Troubleshooting:** [Start here](/en/help/troubleshooting)
-- **Install sanity (Node/npm/PATH):** [Install](/en/install/node#troubleshooting)
-- **Gateway issues:** [Gateway troubleshooting](/en/gateway/troubleshooting)
-- **Logs:** [Logging](/en/logging) and [Gateway logging](/en/gateway/logging)
-- **Repairs:** [Doctor](/en/gateway/doctor)
+- [Troubleshooting](/en/help/troubleshooting) — symptom-first decision tree
+- [Debugging](/en/help/debugging) — watch mode, raw streams, dev profile
+- [Install sanity](/en/install/node#troubleshooting) — Node / npm / PATH checks
+- [Gateway troubleshooting](/en/gateway/troubleshooting) — gateway-specific issues
+- [Doctor](/en/gateway/doctor) — automated repair + diagnostic bundle
 
-If you’re looking for conceptual questions (not “something broke”):
+## FAQ
 
-- [FAQ (concepts)](/en/help/faq)
+- [FAQ](/en/help/faq) — day-to-day concepts and operational questions
+- [First-run FAQ](/en/help/faq-first-run) — install, onboard, auth, subscriptions, early failures
+- [Models FAQ](/en/help/faq-models) — model selection, failover, auth profiles
 
-## Environment and debugging
+## Diagnostics
 
-- **Environment variables:** [Where OpenClaw loads env vars and precedence](/en/help/environment)
-- **Debugging:** [Watch mode, raw streams, and dev profile](/en/help/debugging)
-- **Testing:** [Test suites, live tests, and Docker runners](/en/help/testing)
-- **Scripts:** [Repository helper scripts](/en/help/scripts)
+- [Environment variables](/en/help/environment) — where OpenClaw loads env vars and precedence
+- [Diagnostics flags](/en/diagnostics/flags) — runtime diagnostics and verbose modes
+- [Node + tsx crash](/en/debug/node-issue) — specific Node / tsx runtime crash scenarios
+
+## Testing
+
+- [Testing](/en/help/testing) — test suites and Docker runners
+- [Live tests](/en/help/testing-live) — network-touching provider and CLI smokes
+
+## Community and meta
+
+- [OpenClaw lore](/en/start/lore) — the story
+- [Docs hubs](/en/start/hubs) — how this documentation is organized
+- [Docs directory](/en/start/docs-directory) — full file map

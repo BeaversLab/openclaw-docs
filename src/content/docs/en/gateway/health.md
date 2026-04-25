@@ -6,8 +6,6 @@ read_when:
 title: "Health checks"
 ---
 
-# Health Checks (CLI)
-
 Short guide to verify channel connectivity without guessing.
 
 ## Quick checks
@@ -61,3 +59,9 @@ Options:
 - `--debug`: alias for `--verbose`
 
 The health snapshot includes: `ok` (boolean), `ts` (timestamp), `durationMs` (probe time), per-channel status, agent availability, and session-store summary.
+
+## Related
+
+- [Gateway runbook](/en/gateway)
+- [Diagnostics export](/en/gateway/diagnostics)
+- [Gateway troubleshooting](/en/gateway/troubleshooting)

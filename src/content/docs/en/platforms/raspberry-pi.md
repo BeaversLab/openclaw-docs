@@ -411,7 +411,7 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ---
 
-## See Also
+## Related
 
 - [Linux guide](/en/platforms/linux) — general Linux setup
 - [DigitalOcean guide](/en/platforms/digitalocean) — cloud alternative

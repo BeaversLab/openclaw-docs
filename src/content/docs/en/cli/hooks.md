@@ -15,7 +15,7 @@ Running `openclaw hooks` with no subcommand is equivalent to `openclaw hooks lis
 Related:
 
 - Hooks: [Hooks](/en/automation/hooks)
-- Plugin hooks: [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks)
+- Plugin hooks: [Plugin hooks](/en/plugins/hooks)
 
 ## List All Hooks
 
@@ -336,3 +336,8 @@ openclaw hooks enable boot-md
 ```
 
 **See:** [boot-md documentation](/en/automation/hooks#boot-md)
+
+## Related
+
+- [CLI reference](/en/cli)
+- [Automation hooks](/en/automation/hooks)

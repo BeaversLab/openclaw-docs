@@ -129,3 +129,8 @@ openclaw health
 ```
 
 Guide: [Updating](/en/install/updating)
+
+## Related
+
+- [Remote gateway](/en/gateway/remote)
+- [Install overview](/en/install)

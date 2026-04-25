@@ -18,3 +18,8 @@ Quick start is now part of [Getting Started](/en/start/getting-started).
     Full CLI onboarding reference and advanced options.
   </Card>
 </Columns>
+
+## Related
+
+- [Getting started](/en/start/getting-started)
+- [Install overview](/en/install)

@@ -154,3 +154,9 @@ Then open `http://localhost:18789`.
 - [Channels](/en/channels) -- connect Telegram, WhatsApp, Discord, and more
 - [Gateway configuration](/en/gateway/configuration) -- all config options
 - [Updating](/en/install/updating) -- keep OpenClaw up to date
+
+## Related
+
+- [Install overview](/en/install)
+- [GCP](/en/install/gcp)
+- [VPS hosting](/en/vps)

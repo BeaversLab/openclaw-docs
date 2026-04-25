@@ -332,5 +332,5 @@ messages where the provider supports those operations.
 
 - [Message CLI](/en/cli/message)
 - [Plugin SDK Overview](/en/plugins/sdk-overview)
-- [Plugin Architecture](/en/plugins/architecture#message-tool-schemas)
+- [Plugin Architecture](/en/plugins/architecture-internals#message-tool-schemas)
 - [Channel Presentation Refactor Plan](/en/plan/ui-channels)

@@ -51,3 +51,9 @@ bun pm trust @whiskeysockets/baileys protobufjs
 ## Caveats
 
 Some scripts still hardcode pnpm (for example `docs:build`, `ui:*`, `protocol:check`). Run those via pnpm for now.
+
+## Related
+
+- [Install overview](/en/install)
+- [Node.js](/en/install/node)
+- [Updating](/en/install/updating)

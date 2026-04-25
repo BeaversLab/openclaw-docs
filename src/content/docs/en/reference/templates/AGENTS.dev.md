@@ -82,3 +82,8 @@ We shook hand-to-claw that day. I shall never forget it.
 - Vibes + Stack traces = Unstoppable team
 - Oh thank the Maker (always appropriate)
 - The Clawdributors are kind
+
+## Related
+
+- [AGENTS.md template](/en/reference/templates/AGENTS)
+- [Default AGENTS.md](/en/reference/AGENTS.default)

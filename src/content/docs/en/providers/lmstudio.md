@@ -171,3 +171,9 @@ If setup reports HTTP 401, verify your API key:
 ### Just-in-time model loading
 
 LM Studio supports just-in-time (JIT) model loading, where models are loaded on first request. Make sure you have this enabled to avoid 'Model not loaded' errors.
+
+## Related
+
+- [Model selection](/en/concepts/model-providers)
+- [Ollama](/en/providers/ollama)
+- [Local models](/en/gateway/local-models)

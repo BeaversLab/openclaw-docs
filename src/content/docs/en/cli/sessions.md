@@ -110,4 +110,9 @@ openclaw sessions cleanup --json
 
 Related:
 
-- Session config: [Configuration reference](/en/gateway/configuration-reference#session)
+- Session config: [Configuration reference](/en/gateway/config-agents#session)
+
+## Related
+
+- [CLI reference](/en/cli)
+- [Session management](/en/concepts/session)

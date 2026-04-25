@@ -502,3 +502,10 @@ See [Fly.io pricing](https://fly.io/docs/about/pricing/) for details.
 - Set up messaging channels: [Channels](/en/channels)
 - Configure the Gateway: [Gateway configuration](/en/gateway/configuration)
 - Keep OpenClaw up to date: [Updating](/en/install/updating)
+
+## Related
+
+- [Install overview](/en/install)
+- [Hetzner](/en/install/hetzner)
+- [Docker](/en/install/docker)
+- [VPS hosting](/en/vps)

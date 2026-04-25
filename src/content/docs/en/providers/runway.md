@@ -85,7 +85,7 @@ Video-to-video currently requires `runway/gen4_aleph` specifically.
   <Card title="Video generation" href="/en/tools/video-generation" icon="video">
     Shared tool parameters, provider selection, and async behavior.
   </Card>
-  <Card title="Configuration reference" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="Configuration reference" href="/en/gateway/config-agents#agent-defaults" icon="gear">
     Agent default settings including video generation model.
   </Card>
 </CardGroup>

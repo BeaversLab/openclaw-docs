@@ -63,3 +63,8 @@ Options:
 - `pairing list` supports `--account <accountId>` for multi-account channels.
 - `pairing approve` supports `--account <accountId>` and `--notify`.
 - If only one pairing-capable channel is configured, `pairing approve <code>` is allowed.
+
+## Related
+
+- [CLI reference](/en/cli)
+- [Channel pairing](/en/channels/pairing)

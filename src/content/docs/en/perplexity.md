@@ -179,3 +179,8 @@ await web_search({
 
 See [Web tools](/en/tools/web) for the full web_search configuration.
 See [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) for more details.
+
+## Related
+
+- [Perplexity search](/en/tools/perplexity-search)
+- [Web search](/en/tools/web)

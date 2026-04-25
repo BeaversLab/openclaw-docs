@@ -101,3 +101,7 @@ await web_search({
 - Results are cached for 15 minutes by default (configurable via `cacheTtlMinutes`).
 
 See [Web tools](/en/tools/web) for the full web_search configuration.
+
+## Related
+
+- [Brave search](/en/tools/brave-search)

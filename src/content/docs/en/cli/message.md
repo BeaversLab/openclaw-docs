@@ -296,3 +296,8 @@ Send a Telegram image as a document to avoid compression:
 openclaw message send --channel telegram --target @mychat \
   --media ./diagram.png --force-document
 ```
+
+## Related
+
+- [CLI reference](/en/cli)
+- [Agent send](/en/tools/agent-send)

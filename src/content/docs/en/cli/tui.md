@@ -65,3 +65,8 @@ Then inside the TUI:
 
 Apply targeted fixes with `openclaw config set` or `openclaw configure`, then
 rerun `openclaw config validate`. See [TUI](/en/web/tui) and [Config](/en/cli/config).
+
+## Related
+
+- [CLI reference](/en/cli)
+- [TUI](/en/web/tui)

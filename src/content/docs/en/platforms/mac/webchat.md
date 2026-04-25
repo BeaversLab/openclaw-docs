@@ -47,3 +47,8 @@ agent (with a session switcher for other sessions).
 ## Known limitations
 
 - The UI is optimized for chat sessions (not a full browser sandbox).
+
+## Related
+
+- [WebChat](/en/web/webchat)
+- [macOS app](/en/platforms/macos)

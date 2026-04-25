@@ -89,3 +89,8 @@ openclaw webhooks gmail run --account you@example.com
 ```
 
 See [Gmail Pub/Sub documentation](/en/automation/cron-jobs#gmail-pubsub-integration) for the end-to-end setup flow and operational details.
+
+## Related
+
+- [CLI reference](/en/cli)
+- [Webhook automation](/en/automation/webhook)

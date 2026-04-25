@@ -115,3 +115,10 @@ How `Restart=` policies help automated recovery:
 
 For Linux OOM behavior, child process victim selection, and `exit 137`
 diagnostics, see [Linux memory pressure and OOM kills](/en/platforms/linux#memory-pressure-and-oom-kills).
+
+## Related
+
+- [Install overview](/en/install)
+- [DigitalOcean](/en/install/digitalocean)
+- [Fly.io](/en/install/fly)
+- [Hetzner](/en/install/hetzner)

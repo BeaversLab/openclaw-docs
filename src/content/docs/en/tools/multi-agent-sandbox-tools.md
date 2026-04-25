@@ -207,6 +207,12 @@ If `agents.list[].tools.sandbox.tools` is set, it replaces `tools.sandbox.tools`
 If `agents.list[].tools.profile` is set, it overrides `tools.profile` for that agent.
 Provider tool keys accept either `provider` (e.g. `google-antigravity`) or `provider/model` (e.g. `openai/gpt-5.4`).
 
+If any explicit allowlist in that chain leaves the run with no callable tools,
+OpenClaw stops before submitting the prompt to the model. This is intentional:
+an agent configured with a missing tool such as
+`agents.list[].tools.allow: ["query_db"]` should fail loudly until the plugin
+that registers `query_db` is enabled, not continue as a text-only agent.
+
 Tool policies support `group:*` shorthands that expand to multiple tools. See [Tool groups](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands) for the full list.
 
 Per-agent elevated overrides (`agents.list[].tools.elevated`) can further restrict elevated exec for specific agents. See [Elevated Mode](/en/tools/elevated) for details.
@@ -369,5 +375,5 @@ After configuring multi-agent sandbox and tools:
 - [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- debugging "why is this blocked?"
 - [Elevated Mode](/en/tools/elevated)
 - [Multi-Agent Routing](/en/concepts/multi-agent)
-- [Sandbox Configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- [Sandbox Configuration](/en/gateway/config-agents#agentsdefaultssandbox)
 - [Session Management](/en/concepts/session)

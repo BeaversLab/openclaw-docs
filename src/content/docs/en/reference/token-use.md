@@ -212,3 +212,9 @@ rejects that combination with HTTP 401.
 - Prefer smaller models for verbose, exploratory work.
 
 See [Skills](/en/tools/skills) for the exact skill list overhead formula.
+
+## Related
+
+- [API usage and costs](/en/reference/api-usage-costs)
+- [Prompt caching](/en/reference/prompt-caching)
+- [Usage tracking](/en/concepts/usage-tracking)

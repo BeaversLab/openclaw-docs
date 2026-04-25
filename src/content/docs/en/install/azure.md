@@ -309,3 +309,9 @@ This removes the resource group and everything inside it (VM, VNet, NSG, Bastion
 - Pair local devices as nodes: [Nodes](/en/nodes)
 - Configure the Gateway: [Gateway configuration](/en/gateway/configuration)
 - For more details on OpenClaw Azure deployment with the GitHub Copilot model provider: [OpenClaw on Azure with GitHub Copilot](https://github.com/johnsonshi/openclaw-azure-github-copilot)
+
+## Related
+
+- [Install overview](/en/install)
+- [GCP](/en/install/gcp)
+- [DigitalOcean](/en/install/digitalocean)

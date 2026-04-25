@@ -58,3 +58,9 @@ model as `provider/model`.
 
 For the full provider catalog (xAI, Groq, Mistral, etc.) and advanced configuration,
 see [Model providers](/en/concepts/model-providers).
+
+## Related
+
+- [Model selection](/en/concepts/model-providers)
+- [Model failover](/en/concepts/model-failover)
+- [Models CLI](/en/cli/models)

@@ -137,7 +137,7 @@ models, including any recently added entries.
   <Card title="Video generation" href="/en/tools/video-generation" icon="video">
     Shared video tool parameters and provider selection.
   </Card>
-  <Card title="Configuration reference" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="Configuration reference" href="/en/gateway/config-agents#agent-defaults" icon="gear">
     Agent defaults including image and video model selection.
   </Card>
 </CardGroup>

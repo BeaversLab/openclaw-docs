@@ -439,3 +439,9 @@ Use non-interactive flags/env vars for predictable runs.
     Usually a PATH issue. See [Node.js troubleshooting](/en/install/node#troubleshooting).
   </Accordion>
 </AccordionGroup>
+
+## Related
+
+- [Install overview](/en/install)
+- [Updating](/en/install/updating)
+- [Uninstall](/en/install/uninstall)

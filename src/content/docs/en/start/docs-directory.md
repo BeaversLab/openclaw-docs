@@ -63,3 +63,8 @@ For a complete map of the docs, see [Docs hubs](/en/start/hubs).
 - [Gmail hooks (Pub/Sub)](/en/automation/cron-jobs#gmail-pubsub-integration)
 - [Security](/en/gateway/security)
 - [Troubleshooting](/en/gateway/troubleshooting)
+
+## Related
+
+- [Getting started](/en/start/getting-started)
+- [Docs hubs](/en/start/hubs)

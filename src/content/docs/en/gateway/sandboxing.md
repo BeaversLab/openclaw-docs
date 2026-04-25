@@ -480,7 +480,7 @@ See [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) for prece
 ## Related docs
 
 - [OpenShell](/en/gateway/openshell) -- managed sandbox backend setup, workspace modes, and config reference
-- [Sandbox Configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- [Sandbox Configuration](/en/gateway/config-agents#agentsdefaultssandbox)
 - [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- debugging "why is this blocked?"
 - [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) -- per-agent overrides and precedence
 - [Security](/en/gateway/security)

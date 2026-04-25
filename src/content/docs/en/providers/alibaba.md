@@ -108,7 +108,7 @@ Reference image/video mode currently requires **remote http(s) URLs**. Local fil
   <Card title="Qwen" href="/en/providers/qwen" icon="microchip">
     Qwen provider setup and DashScope integration.
   </Card>
-  <Card title="Configuration reference" href="/en/gateway/configuration-reference#agent-defaults" icon="gear">
+  <Card title="Configuration reference" href="/en/gateway/config-agents#agent-defaults" icon="gear">
     Agent defaults and model configuration.
   </Card>
 </CardGroup>

@@ -164,6 +164,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 
 - [Plugins overview](/en/tools/plugin)
 - [Building plugins](/en/plugins/building-plugins)
+- [Plugin hooks](/en/plugins/hooks)
 - [Plugin manifest](/en/plugins/manifest)
 - [Agent tools](/en/plugins/building-plugins#registering-agent-tools)
 - [Plugin bundles](/en/plugins/bundles)
@@ -195,3 +196,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Testing](/en/reference/test)
 - [Release policy](/en/reference/RELEASING)
 - [Device models](/en/reference/device-models)
+
+## Related
+
+- [Getting started](/en/start/getting-started)

@@ -212,3 +212,8 @@ These require the official `obsidian` CLI on `PATH` when
 - `plugins.entries.memory-wiki.config.context.includeCompiledDigestPrompt`
 
 See [Memory Wiki plugin](/en/plugins/memory-wiki) for the full config model.
+
+## Related
+
+- [CLI reference](/en/cli)
+- [Memory wiki](/en/plugins/memory-wiki)

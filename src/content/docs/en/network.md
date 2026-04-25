@@ -67,3 +67,8 @@ Local trust:
 - [Gateway config reference](/en/gateway/configuration)
 - [Troubleshooting](/en/gateway/troubleshooting)
 - [Doctor](/en/gateway/doctor)
+
+## Related
+
+- [Gateway network model](/en/gateway/network-model)
+- [Remote access](/en/gateway/remote)

@@ -65,3 +65,8 @@ enter:
 - Model ID and optional alias
 
 Multiple custom endpoints can coexist — each gets its own endpoint ID.
+
+## Related
+
+- [Getting started](/en/start/getting-started)
+- [CLI setup reference](/en/start/wizard-cli-reference)

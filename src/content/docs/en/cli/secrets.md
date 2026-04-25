@@ -195,3 +195,8 @@ openclaw secrets audit --check
 ```
 
 If `audit --check` still reports plaintext findings, update the remaining reported target paths and rerun audit.
+
+## Related
+
+- [CLI reference](/en/cli)
+- [Secrets management](/en/gateway/secrets)
