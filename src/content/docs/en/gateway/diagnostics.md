@@ -129,9 +129,10 @@ diagnostic event collection:
 Disabling diagnostics reduces bug-report detail. It does not affect normal
 Gateway logging.
 
-## Related docs
+## Related
 
-- [Health Checks](/en/gateway/health)
+- [Health checks](/en/gateway/health)
 - [Gateway CLI](/en/cli/gateway#gateway-diagnostics-export)
-- [Gateway Protocol](/en/gateway/protocol#system-and-identity)
+- [Gateway protocol](/en/gateway/protocol#system-and-identity)
 - [Logging](/en/logging)
+- [OpenTelemetry export](/en/gateway/opentelemetry) — separate flow for streaming diagnostics to a collector

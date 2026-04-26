@@ -31,6 +31,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [Amazon Bedrock Mantle](/en/providers/bedrock-mantle)
 - [Anthropic (API + Claude CLI)](/en/providers/anthropic)
 - [Arcee AI (Trinity models)](/en/providers/arcee)
+- [Azure Speech](/en/providers/azure-speech)
 - [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
 - [Chutes](/en/providers/chutes)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
@@ -62,6 +63,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [Qianfan](/en/providers/qianfan)
 - [Qwen Cloud](/en/providers/qwen)
 - [Runway](/en/providers/runway)
+- [SenseAudio](/en/providers/senseaudio)
 - [SGLang (local models)](/en/providers/sglang)
 - [StepFun](/en/providers/stepfun)
 - [Synthetic](/en/providers/synthetic)
@@ -89,6 +91,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [ElevenLabs](/en/providers/elevenlabs#speech-to-text)
 - [Mistral](/en/providers/mistral#audio-transcription-voxtral)
 - [OpenAI](/en/providers/openai#speech-to-text)
+- [SenseAudio](/en/providers/senseaudio)
 - [xAI](/en/providers/xai#speech-to-text)
 
 ## Community tools
