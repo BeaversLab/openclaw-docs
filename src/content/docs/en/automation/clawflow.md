@@ -3,7 +3,7 @@ summary: "Redirect to Task Flow"
 title: "ClawFlow"
 ---
 
-ClawFlow was renamed to [Task Flow](/en/automation/taskflow). See [Task Flow](/en/automation/taskflow) for the current documentation.
+ClawFlow was renamed to [Task flow](/en/automation/taskflow).
 
 ## Related
 

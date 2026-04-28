@@ -7,7 +7,7 @@ title: "Authentication"
 ---
 
 <Note>
-This page covers **model provider** authentication (API keys, OAuth, Claude CLI reuse, and Anthropic setup-token). For **gateway connection** authentication (token, password, trusted-proxy), see [Configuration](/en/gateway/configuration) and [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth).
+This page is the **model provider** authentication reference (API keys, OAuth, Claude CLI reuse, and Anthropic setup-token). For **gateway connection** authentication (token, password, trusted-proxy), see [Configuration](/en/gateway/configuration) and [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth).
 </Note>
 
 OpenClaw supports OAuth and API keys for model providers. For always-on gateway

@@ -33,6 +33,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [Arcee AI (Trinity models)](/en/providers/arcee)
 - [Azure Speech](/en/providers/azure-speech)
 - [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
+- [Cerebras](/en/providers/cerebras)
 - [Chutes](/en/providers/chutes)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
 - [ComfyUI](/en/providers/comfy)

@@ -3,7 +3,7 @@ summary: "Redirect to /automation"
 title: "Cron vs heartbeat"
 ---
 
-This page moved to [Automation & Tasks](/en/automation). See [Automation & Tasks](/en/automation) for the decision guide comparing cron and heartbeat.
+The decision guide for cron vs heartbeat lives under [Automation and tasks](/en/automation).
 
 ## Related
 

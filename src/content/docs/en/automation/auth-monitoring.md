@@ -3,7 +3,7 @@ summary: "Redirect to /gateway/authentication"
 title: "Auth monitoring"
 ---
 
-This page moved to [Authentication](/en/gateway/authentication). See [Authentication](/en/gateway/authentication) for auth monitoring documentation.
+Auth monitoring lives under [Authentication](/en/gateway/authentication).
 
 ## Related
 
