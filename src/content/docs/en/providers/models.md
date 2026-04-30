@@ -31,6 +31,7 @@ model as `provider/model`.
 - [Chutes](/en/providers/chutes)
 - [ComfyUI](/en/providers/comfy)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
+- [DeepInfra](/en/providers/deepinfra)
 - [fal](/en/providers/fal)
 - [Fireworks](/en/providers/fireworks)
 - [GLM models](/en/providers/glm)

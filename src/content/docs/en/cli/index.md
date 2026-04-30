@@ -20,7 +20,7 @@ apply across the CLI.
 | Messaging and agents | [`message`](/en/cli/message) · [`agent`](/en/cli/agent) · [`agents`](/en/cli/agents) · [`acp`](/en/cli/acp) · [`mcp`](/en/cli/mcp)                                                                                                                       |
 | Health and sessions  | [`status`](/en/cli/status) · [`health`](/en/cli/health) · [`sessions`](/en/cli/sessions)                                                                                                                                                           |
 | Gateway and logs     | [`gateway`](/en/cli/gateway) · [`logs`](/en/cli/logs) · [`system`](/en/cli/system)                                                                                                                                                                 |
-| Models and inference | [`models`](/en/cli/models) · [`infer`](/en/cli/infer) · `capability` (alias for [`infer`](/en/cli/infer)) · [`memory`](/en/cli/memory) · [`wiki`](/en/cli/wiki)                                                                                          |
+| Models and inference | [`models`](/en/cli/models) · [`infer`](/en/cli/infer) · `capability` (alias for [`infer`](/en/cli/infer)) · [`memory`](/en/cli/memory) · [`commitments`](/en/cli/commitments) · [`wiki`](/en/cli/wiki)                                                      |
 | Network and nodes    | [`directory`](/en/cli/directory) · [`nodes`](/en/cli/nodes) · [`devices`](/en/cli/devices) · [`node`](/en/cli/node)                                                                                                                                   |
 | Runtime and sandbox  | [`approvals`](/en/cli/approvals) · `exec-policy` (see [`approvals`](/en/cli/approvals)) · [`sandbox`](/en/cli/sandbox) · [`tui`](/en/cli/tui) · `chat`/`terminal` (aliases for [`tui --local`](/en/cli/tui)) · [`browser`](/en/cli/browser)                 |
 | Automation           | [`cron`](/en/cli/cron) · [`tasks`](/en/cli/tasks) · [`hooks`](/en/cli/hooks) · [`webhooks`](/en/cli/webhooks)                                                                                                                                         |
@@ -121,6 +121,9 @@ openclaw [--dev] [--profile <name>] <command>
     status
     index
     search
+  commitments
+    list
+    dismiss
   wiki
     status
     doctor
