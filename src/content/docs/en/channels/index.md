@@ -16,20 +16,20 @@ Text is supported everywhere; media and reactions vary by channel.
 - Slack multi-person DMs route as group chats, so group policy, mention
   behavior, and group-session rules apply to MPIM conversations.
 - WhatsApp setup is install-on-demand: onboarding can show the setup flow before
-  Baileys runtime dependencies are staged, and the Gateway loads the WhatsApp
-  runtime only when the channel is actually active.
+  the plugin package is installed, and the Gateway loads the WhatsApp runtime
+  only when the channel is actually active.
 
 ## Supported channels
 
 - [BlueBubbles](/en/channels/bluebubbles) — **Recommended for iMessage**; uses the BlueBubbles macOS server REST API with full feature support (bundled plugin; edit, unsend, effects, reactions, group management — edit currently broken on macOS 26 Tahoe).
 - [Discord](/en/channels/discord) — Discord Bot API + Gateway; supports servers, channels, and DMs.
 - [Feishu](/en/channels/feishu) — Feishu/Lark bot via WebSocket (bundled plugin).
-- [Google Chat](/en/channels/googlechat) — Google Chat API app via HTTP webhook.
+- [Google Chat](/en/channels/googlechat) — Google Chat API app via HTTP webhook (downloadable plugin).
 - [iMessage (legacy)](/en/channels/imessage) — Legacy macOS integration via imsg CLI (deprecated, use BlueBubbles for new setups).
 - [IRC](/en/channels/irc) — Classic IRC servers; channels + DMs with pairing/allowlist controls.
-- [LINE](/en/channels/line) — LINE Messaging API bot (bundled plugin).
-- [Matrix](/en/channels/matrix) — Matrix protocol (bundled plugin).
-- [Mattermost](/en/channels/mattermost) — Bot API + WebSocket; channels, groups, DMs (bundled plugin).
+- [LINE](/en/channels/line) — LINE Messaging API bot (downloadable plugin).
+- [Matrix](/en/channels/matrix) — Matrix protocol (downloadable plugin).
+- [Mattermost](/en/channels/mattermost) — Bot API + WebSocket; channels, groups, DMs (downloadable plugin).
 - [Microsoft Teams](/en/channels/msteams) — Bot Framework; enterprise support (bundled plugin).
 - [Nextcloud Talk](/en/channels/nextcloud-talk) — Self-hosted chat via Nextcloud Talk (bundled plugin).
 - [Nostr](/en/channels/nostr) — Decentralized DMs via NIP-04 (bundled plugin).
