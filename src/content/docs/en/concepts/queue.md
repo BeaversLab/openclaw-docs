@@ -51,7 +51,8 @@ streaming surfaces can look like duplicates. Prefer `collect`/`steer` if you wan
 one response per inbound message.
 
 For runtime-specific timing and dependency behavior, see
-[Steering queue](/en/concepts/queue-steering).
+[Steering queue](/en/concepts/queue-steering). For the explicit `/steer <message>`
+command, see [Steer](/en/tools/steer).
 
 Configure globally or per channel via `messages.queue`:
 
@@ -121,4 +122,5 @@ keys.
 
 - [Session management](/en/concepts/session)
 - [Steering queue](/en/concepts/queue-steering)
+- [Steer](/en/tools/steer)
 - [Retry policy](/en/concepts/retry)

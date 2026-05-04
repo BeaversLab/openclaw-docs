@@ -40,6 +40,9 @@ Codex review and manual compaction turns reject same-turn steering. When a
 runtime cannot accept steering, OpenClaw falls back to the followup queue where
 that mode allows it.
 
+This page explains queue-mode steering for normal inbound messages. For the
+explicit `/steer <message>` command, see [Steer](/en/tools/steer).
+
 ## Modes
 
 | Mode            | Active-run behavior                                                                                                          | Later followup behavior                                                             |
@@ -86,5 +89,6 @@ sending the batched `turn/steer`.
 ## Related
 
 - [Command queue](/en/concepts/queue)
+- [Steer](/en/tools/steer)
 - [Messages](/en/concepts/messages)
 - [Agent loop](/en/concepts/agent-loop)
