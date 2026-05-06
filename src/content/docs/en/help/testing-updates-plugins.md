@@ -123,8 +123,8 @@ pnpm test:docker:published-upgrade-survivor
 ```
 
 Available scenarios are `base`, `feishu-channel`, `bootstrap-persona`,
-`plugin-deps-cleanup`, `configured-plugin-installs`, `tilde-log-path`, and
-`versioned-runtime-deps`. In aggregate runs,
+`plugin-deps-cleanup`, `configured-plugin-installs`,
+`stale-source-plugin-shadow`, `tilde-log-path`, and `versioned-runtime-deps`. In aggregate runs,
 `OPENCLAW_UPGRADE_SURVIVOR_SCENARIOS=reported-issues` expands to all reported
 issue-shaped scenarios, including the configured-plugin install migration.
 
@@ -167,7 +167,7 @@ targets the shipped npm package instead.
 Release checks call Package Acceptance with the package/update/plugin set:
 
 ```text
-doctor-switch update-channel-switch upgrade-survivor published-upgrade-survivor plugins-offline plugin-update
+doctor-switch update-channel-switch update-corrupt-plugin upgrade-survivor published-upgrade-survivor plugins-offline plugin-update
 ```
 
 They also pass:
@@ -178,9 +178,10 @@ published_upgrade_survivor_scenarios=reported-issues
 telegram_mode=mock-openai
 ```
 
-This keeps package migration, update channel switching, stale plugin dependency
-cleanup, offline plugin coverage, plugin update behavior, and Telegram package
-QA on the same resolved artifact.
+This keeps package migration, update channel switching, corrupt managed-plugin
+tolerance, stale plugin dependency cleanup, offline plugin coverage, plugin
+update behavior, and Telegram package QA on the same resolved artifact without
+making the default release package gate walk every published release.
 
 `all-since-2026.4.23` is the Full Release CI upgrade sample: every stable npm-published release from `2026.4.23` through `latest`. For exhaustive published
 update migration coverage, use `all-since-2026.4.23` in the separate Update

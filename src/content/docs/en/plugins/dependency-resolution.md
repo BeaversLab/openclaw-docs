@@ -51,6 +51,14 @@ the plugin package. OpenClaw scans the managed npm root before trusting the
 install and uses npm to remove npm-managed packages during uninstall, so hoisted
 runtime dependencies stay inside the managed cleanup boundary.
 
+Plugins that import `openclaw/plugin-sdk/*` declare `openclaw` as a peer
+dependency. OpenClaw does not let npm install a separate registry copy of the
+host package into the managed root, because stale host packages can affect npm
+peer resolution during later plugin installs. Instead, after npm finishes
+mutating the shared root during install, update, or uninstall, OpenClaw reasserts
+plugin-local `node_modules/openclaw` links for installed packages that declare
+the host peer.
+
 git installs clone or refresh the repository, then run:
 
 ```bash
@@ -85,9 +93,10 @@ openclaw plugins install <source>
 openclaw doctor --fix
 ```
 
-`doctor --fix` can clean legacy OpenClaw-generated dependency state and install
-configured downloadable plugins that are missing from the local install records.
-It does not repair dependencies for an already-installed local plugin.
+`doctor --fix` can clean legacy OpenClaw-generated dependency state and recover
+downloadable plugins that are missing from the local install records when config
+references them. Doctor does not repair dependencies for an already-installed
+local plugin.
 
 ## Bundled plugins
 
