@@ -93,6 +93,17 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 
 ## Related
 
-- [Agent CLI reference](/en/cli/agent)
-- [Sub-agents](/en/tools/subagents) — background sub-agent spawning
-- [Sessions](/en/concepts/session) — how session keys work
+<CardGroup cols={2}>
+  <Card title="Agent CLI reference" href="/en/cli/agent" icon="terminal">
+    Full `openclaw agent` flag and option reference.
+  </Card>
+  <Card title="Sub-agents" href="/en/tools/subagents" icon="users">
+    Background sub-agent spawning.
+  </Card>
+  <Card title="Sessions" href="/en/concepts/session" icon="comments">
+    How session keys work and how `--to`, `--agent`, and `--session-id` resolve them.
+  </Card>
+  <Card title="Slash commands" href="/en/tools/slash-commands" icon="slash">
+    Native command catalog used inside agent sessions.
+  </Card>
+</CardGroup>

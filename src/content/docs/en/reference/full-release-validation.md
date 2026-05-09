@@ -27,14 +27,6 @@ Child workflows use the trusted workflow ref for the harness and the input
 `ref` for the candidate under test. That keeps new validation logic available
 when validating an older release branch or tag.
 
-Plugin publish validation is intentionally split from core package publication.
-`OpenClaw Release Publish` dispatches npm plugin publishing and ClawHub
-publishing in parallel, starts the core npm publish after plugin npm succeeds,
-and keeps waiting for ClawHub. The ClawHub child retries transient CLI
-dependency install failures, publishes preview-passing plugins when a single
-preview cell flakes, and then verifies every expected package/version through
-the ClawHub API so a partial publish still fails loudly and can be rerun.
-
 By default, `release_profile=stable` runs the release-blocking lanes and skips
 the exhaustive live/Docker soak. Pass `run_release_soak=true` to include the
 soak lanes on a stable run. `release_profile=full` always enables soak lanes so
@@ -88,15 +80,15 @@ or Docker-facing stages need it.
 The Docker release-path stage runs these chunks when `live_suite_filter` is
 empty:
 
-| Chunk                                                           | Coverage                                                                |
-| --------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `core`                                                          | Core Docker release-path smoke lanes.                                   |
-| `package-update-openai`                                         | OpenAI package install and update behavior.                             |
-| `package-update-anthropic`                                      | Anthropic package install and update behavior.                          |
-| `package-update-core`                                           | Provider-neutral package and update behavior.                           |
-| `plugins-runtime-plugins`                                       | Plugin runtime lanes that exercise plugin behavior.                     |
-| `plugins-runtime-services`                                      | Service-backed plugin runtime lanes; includes OpenWebUI when requested. |
-| `plugins-runtime-install-a` through `plugins-runtime-install-h` | Plugin install/runtime batches split for parallel release validation.   |
+| Chunk                                                           | Coverage                                                                         |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `core`                                                          | Core Docker release-path smoke lanes.                                            |
+| `package-update-openai`                                         | OpenAI package install/update behavior, including Codex on-demand install.       |
+| `package-update-anthropic`                                      | Anthropic package install and update behavior.                                   |
+| `package-update-core`                                           | Provider-neutral package and update behavior.                                    |
+| `plugins-runtime-plugins`                                       | Plugin runtime lanes that exercise plugin behavior.                              |
+| `plugins-runtime-services`                                      | Service-backed and live plugin runtime lanes; includes OpenWebUI when requested. |
+| `plugins-runtime-install-a` through `plugins-runtime-install-h` | Plugin install/runtime batches split for parallel release validation.            |
 
 Use targeted `docker_lanes=<lane[,lane]>` on the reusable live/E2E workflow when
 only one Docker lane failed. The release artifacts include per-lane rerun

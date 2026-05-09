@@ -28,7 +28,7 @@ apply across the CLI.
 | Pairing and channels | [`pairing`](/en/cli/pairing) · [`qr`](/en/cli/qr) · [`channels`](/en/cli/channels)                                                                                                                                                                 |
 | Security and plugins | [`security`](/en/cli/security) · [`secrets`](/en/cli/secrets) · [`skills`](/en/cli/skills) · [`plugins`](/en/cli/plugins) · [`proxy`](/en/cli/proxy)                                                                                                     |
 | Legacy aliases       | [`daemon`](/en/cli/daemon) (gateway service) · [`clawbot`](/en/cli/clawbot) (namespace)                                                                                                                                                         |
-| Plugins (optional)   | [`voicecall`](/en/cli/voicecall) (if installed)                                                                                                                                                                                              |
+| Plugins (optional)   | [`path`](/en/cli/path) · [`voicecall`](/en/cli/voicecall) (if installed)                                                                                                                                                                        |
 
 ## Global flags
 
@@ -121,6 +121,12 @@ openclaw [--dev] [--profile <name>] <command>
     status
     index
     search
+  path
+    resolve
+    find
+    set
+    validate
+    emit
   commitments
     list
     dismiss

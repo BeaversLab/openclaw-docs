@@ -92,7 +92,7 @@ For a high-level overview, see [Onboarding (CLI)](/en/start/wizard).
       - Requires a non-empty env var in the onboarding process environment.
       - Cannot be combined with `--gateway-token`.
     - Disable auth only if you fully trust every local process.
-    - Non‑loopback binds still require auth.
+    - Non-loopback binds still require auth.
 
   </Step>
   <Step title="Channels">
@@ -102,8 +102,7 @@ For a high-level overview, see [Onboarding (CLI)](/en/start/wizard).
     - [Google Chat](/en/channels/googlechat): service account JSON + webhook audience.
     - [Mattermost](/en/channels/mattermost) (plugin): bot token + base URL.
     - [Signal](/en/channels/signal): optional `signal-cli` install + account config.
-    - [BlueBubbles](/en/channels/bluebubbles): **recommended for iMessage**; server URL + password + webhook.
-    - [iMessage](/en/channels/imessage): legacy `imsg` CLI path + DB access.
+    - [iMessage](/en/channels/imessage): `imsg` CLI path + Messages DB access; use an SSH wrapper when the Gateway runs off-Mac.
     - DM security: default is pairing. First DM sends a code; approve via `openclaw pairing approve <channel> <code>` or use allowlists.
 
   </Step>
@@ -164,7 +163,7 @@ openclaw onboard --non-interactive \
   --skip-skills
 ```
 
-Add `--json` for a machine‑readable summary.
+Add `--json` for a machine-readable summary.
 
 Gateway token SecretRef in non-interactive mode:
 
@@ -200,7 +199,7 @@ openclaw agents add work \
 ## Gateway wizard RPC
 
 The Gateway exposes the onboarding flow over RPC (`wizard.start`, `wizard.next`, `wizard.cancel`, `wizard.status`).
-Clients (macOS app, Control UI) can render steps without re‑implementing onboarding logic.
+Clients (macOS app, Control UI) can render steps without re-implementing onboarding logic.
 
 ## Signal setup (signal-cli)
 
@@ -249,5 +248,5 @@ will prompt to install it (npm or a local path) before it can be configured.
 - Onboarding overview: [Onboarding (CLI)](/en/start/wizard)
 - macOS app onboarding: [Onboarding](/en/start/onboarding)
 - Config reference: [Gateway configuration](/en/gateway/configuration)
-- Providers: [WhatsApp](/en/channels/whatsapp), [Telegram](/en/channels/telegram), [Discord](/en/channels/discord), [Google Chat](/en/channels/googlechat), [Signal](/en/channels/signal), [BlueBubbles](/en/channels/bluebubbles) (iMessage), [iMessage](/en/channels/imessage) (legacy)
+- Providers: [WhatsApp](/en/channels/whatsapp), [Telegram](/en/channels/telegram), [Discord](/en/channels/discord), [Google Chat](/en/channels/googlechat), [Signal](/en/channels/signal), [iMessage](/en/channels/imessage)
 - Skills: [Skills](/en/tools/skills), [Skills config](/en/tools/skills-config)
