@@ -109,7 +109,7 @@ This is the agent-facing decision tree:
 
 For the OpenAI-family prefix split, see [OpenAI](/en/providers/openai) and
 [Model providers](/en/concepts/model-providers). For the Codex runtime support
-contract, see [Codex harness](/en/plugins/codex-harness#v1-support-contract).
+contract, see [Codex harness runtime](/en/plugins/codex-harness-runtime#v1-support-contract).
 
 ## Runtime ownership
 
@@ -207,7 +207,7 @@ Use this shape for runtime docs:
 | What is intentionally unsupported?     | Users should not assume PI equivalence where the native runtime owns more state.                  |
 
 The Codex runtime support contract is documented in
-[Codex harness](/en/plugins/codex-harness#v1-support-contract).
+[Codex harness runtime](/en/plugins/codex-harness-runtime#v1-support-contract).
 
 ## Status labels
 
@@ -224,6 +224,7 @@ runtime policy first. Legacy session runtime pins no longer decide routing.
 ## Related
 
 - [Codex harness](/en/plugins/codex-harness)
+- [Codex harness runtime](/en/plugins/codex-harness-runtime)
 - [OpenAI](/en/providers/openai)
 - [Agent harness plugins](/en/plugins/sdk-agent-harness)
 - [Agent loop](/en/concepts/agent-loop)
