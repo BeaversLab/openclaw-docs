@@ -9,7 +9,7 @@ title: "Docs hubs"
 If you are new to OpenClaw, start with [Getting Started](/en/start/getting-started).
 </Note>
 
-Use these hubs to discover every page, including deep dives and reference docs that don’t appear in the left nav.
+Use these hubs to discover every page, including deep dives and reference docs that don't appear in the left nav.
 
 ## Start here
 
@@ -73,9 +73,8 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Discord](/en/channels/discord)
 - [Mattermost](/en/channels/mattermost)
 - [Signal](/en/channels/signal)
-- [BlueBubbles (iMessage)](/en/channels/bluebubbles)
 - [QQ Bot](/en/channels/qqbot)
-- [iMessage (legacy)](/en/channels/imessage)
+- [iMessage](/en/channels/imessage)
 - [Location parsing](/en/channels/location)
 - [WebChat](/en/web/webchat)
 - [Webhooks](/en/automation/cron-jobs#webhooks)
@@ -84,7 +83,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 ## Gateway + operations
 
 - [Gateway runbook](/en/gateway)
-- [Network model](/en/gateway/network-model)
+- [Network model](/en/network#core-model)
 - [Gateway pairing](/en/gateway/pairing)
 - [Gateway lock](/en/gateway/gateway-lock)
 - [Background process](/en/gateway/background-process)
@@ -168,7 +167,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Plugin manifest](/en/plugins/manifest)
 - [Agent tools](/en/plugins/building-plugins#registering-agent-tools)
 - [Plugin bundles](/en/plugins/bundles)
-- [Community plugins](/en/plugins/community)
+- [ClawHub](/en/clawhub)
 - [Capability cookbook](/en/tools/capability-cookbook)
 - [Voice call plugin](/en/plugins/voice-call)
 - [Zalo user plugin](/en/plugins/zalouser)
@@ -176,7 +175,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 ## Workspace + templates
 
 - [Skills](/en/tools/skills)
-- [ClawHub](/en/tools/clawhub)
+- [ClawHub](/en/clawhub)
 - [Skills config](/en/tools/skills-config)
 - [Default AGENTS](/en/reference/AGENTS.default)
 - [Templates: AGENTS](/en/reference/templates/AGENTS)

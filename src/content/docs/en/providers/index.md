@@ -6,8 +6,6 @@ read_when:
 title: "Provider directory"
 ---
 
-# Model Providers
-
 OpenClaw can use many LLM providers. Pick a provider, authenticate, then set the
 default model as `provider/model`.
 
@@ -42,9 +40,9 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [fal](/en/providers/fal)
 - [Fireworks](/en/providers/fireworks)
 - [GitHub Copilot](/en/providers/github-copilot)
-- [Gradium](/en/providers/gradium)
 - [GLM models](/en/providers/glm)
 - [Google (Gemini)](/en/providers/google)
+- [Gradium](/en/providers/gradium)
 - [Groq (LPU inference)](/en/providers/groq)
 - [Hugging Face (Inference)](/en/providers/huggingface)
 - [inferrs (local models)](/en/providers/inferrs)

@@ -23,10 +23,45 @@ Your agent has three memory-related files:
 
 These files live in the agent workspace (default `~/.openclaw/workspace`).
 
+## What goes where
+
+`MEMORY.md` is the compact, curated layer. Use it for durable facts,
+preferences, standing decisions, and short summaries that should be available at
+the start of a main private session. It is not meant to be a raw transcript,
+daily log, or exhaustive archive.
+
+`memory/YYYY-MM-DD.md` files are the working layer. Use them for detailed daily
+notes, observations, session summaries, and raw context that may still be useful
+later. These files are indexed for `memory_search` and `memory_get`, but they are
+not injected into the normal bootstrap prompt on every turn.
+
+Over time, the agent is expected to distill useful material from daily notes
+into `MEMORY.md` and remove stale long-term entries. The generated workspace
+instructions and heartbeat flow can do that periodically; you do not need to
+manually edit `MEMORY.md` for every remembered detail.
+
+If `MEMORY.md` grows past the bootstrap file budget, OpenClaw keeps the file on
+disk intact but truncates the copy injected into the model context. Treat that as
+a signal to move detailed material back into `memory/*.md`, keep only the
+durable summary in `MEMORY.md`, or raise the bootstrap limits if you explicitly
+want to spend more prompt budget. Use `/context list`, `/context detail`, or
+`openclaw doctor` to see raw vs injected sizes and truncation status.
+
 <Tip>
 If you want your agent to remember something, just ask it: "Remember that I
 prefer TypeScript." It will write it to the appropriate file.
 </Tip>
+
+## Inferred commitments
+
+Some future follow-ups are not durable facts. If you mention an interview
+tomorrow, the useful memory may be "check in after the interview," not "store
+this forever in `MEMORY.md`."
+
+[Commitments](/en/concepts/commitments) are opt-in, short-lived follow-up memories
+for that case. OpenClaw infers them in a hidden background pass, scopes them to
+the same agent and channel, and delivers due check-ins through heartbeat.
+Explicit reminders still use [scheduled tasks](/en/automation/cron-jobs).
 
 ## Memory tools
 
@@ -89,6 +124,10 @@ directories outside the workspace.
 AI-native cross-session memory with user modeling, semantic search, and
 multi-agent awareness. Plugin install.
 </Card>
+<Card title="LanceDB" icon="layers" href="/en/plugins/memory-lancedb">
+Bundled LanceDB-backed memory with OpenAI-compatible embeddings, auto-recall,
+auto-capture, and local Ollama embedding support.
+</Card>
 </CardGroup>
 
 ## Knowledge wiki layer
@@ -105,6 +144,26 @@ dashboards, bridge mode, and Obsidian-friendly workflows.
 Before [compaction](/en/concepts/compaction) summarizes your conversation, OpenClaw
 runs a silent turn that reminds the agent to save important context to memory
 files. This is on by default — you do not need to configure anything.
+
+To keep that housekeeping turn on a local model, set an exact memory-flush model
+override:
+
+```json
+{
+  "agents": {
+    "defaults": {
+      "compaction": {
+        "memoryFlush": {
+          "model": "ollama/qwen3:8b"
+        }
+      }
+    }
+  }
+}
+```
+
+The override applies only to the memory-flush turn and does not inherit the
+active session fallback chain.
 
 <Tip>
 The memory flush prevents context loss during compaction. If your agent has
@@ -179,6 +238,7 @@ openclaw memory index --force   # Rebuild the index
 - [Builtin memory engine](/en/concepts/memory-builtin): default SQLite backend.
 - [QMD memory engine](/en/concepts/memory-qmd): advanced local-first sidecar.
 - [Honcho memory](/en/concepts/memory-honcho): AI-native cross-session memory.
+- [Memory LanceDB](/en/plugins/memory-lancedb): LanceDB-backed plugin with OpenAI-compatible embeddings.
 - [Memory Wiki](/en/plugins/memory-wiki): compiled knowledge vault and wiki-native tools.
 - [Memory search](/en/concepts/memory-search): search pipeline, providers, and tuning.
 - [Dreaming](/en/concepts/dreaming): background promotion from short-term recall to long-term memory.
@@ -191,3 +251,5 @@ openclaw memory index --force   # Rebuild the index
 - [Memory search](/en/concepts/memory-search)
 - [Builtin memory engine](/en/concepts/memory-builtin)
 - [Honcho memory](/en/concepts/memory-honcho)
+- [Memory LanceDB](/en/plugins/memory-lancedb)
+- [Commitments](/en/concepts/commitments)

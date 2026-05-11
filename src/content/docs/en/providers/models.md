@@ -6,8 +6,6 @@ read_when:
 title: "Model provider quickstart"
 ---
 
-# Model Providers
-
 OpenClaw can use many LLM providers. Pick one, authenticate, then set the default
 model as `provider/model`.
 
@@ -31,6 +29,7 @@ model as `provider/model`.
 - [Chutes](/en/providers/chutes)
 - [ComfyUI](/en/providers/comfy)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
+- [DeepInfra](/en/providers/deepinfra)
 - [fal](/en/providers/fal)
 - [Fireworks](/en/providers/fireworks)
 - [GLM models](/en/providers/glm)

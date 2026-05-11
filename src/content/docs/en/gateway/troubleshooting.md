@@ -62,6 +62,53 @@ openclaw config get meta.lastTouchedVersion
 For intentional downgrade or emergency recovery only, set `OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1` for the single command. Leave it unset for normal operation.
 </Warning>
 
+## Skill symlink skipped as path escape
+
+Use this when logs include:
+
+```text
+Skipping escaped skill path outside its configured root: ... reason=symlink-escape
+```
+
+OpenClaw treats every skill root as a containment boundary. A symlink under
+`~/.agents/skills`, `<workspace>/.agents/skills`, `<workspace>/skills`, or
+`~/.openclaw/skills` is skipped when its real target resolves outside that root
+unless the target is explicitly trusted.
+
+Inspect the link:
+
+```bash
+ls -l ~/.agents/skills/<name>
+realpath ~/.agents/skills/<name>
+openclaw config get skills.load
+```
+
+If the target is intentional, configure both the direct skill root and the
+allowed symlink target:
+
+```json5
+{
+  skills: {
+    load: {
+      extraDirs: ["~/Projects/manager/skills"],
+      allowSymlinkTargets: ["~/Projects/manager/skills"],
+    },
+  },
+}
+```
+
+Then start a new session or wait for the skills watcher to refresh. Restart the
+gateway if the running process predates the config change.
+
+Do not use broad targets such as `~`, `/`, or a whole synced project folder.
+Keep `allowSymlinkTargets` scoped to the real skill root that contains trusted
+`SKILL.md` directories.
+
+Related:
+
+- [Skills config](/en/tools/skills-config#symlinked-sibling-repos)
+- [Configuration examples](/en/gateway/configuration-examples#symlinked-sibling-skill-repo)
+
 ## Anthropic 429 extra usage required for long context
 
 Use this when logs/errors include: `HTTP 429: rate_limit_error: Extra usage is required for long context requests`.
@@ -131,6 +178,7 @@ Look for:
     - `incomplete turn detected ... stopReason=stop payloads=0` → the backend completed the Chat Completions request but returned no user-visible assistant text for that turn. OpenClaw retries replay-safe empty OpenAI-compatible turns once; persistent failures usually mean the backend is emitting empty/non-text content or suppressing final-answer text.
     - direct tiny requests succeed, but OpenClaw agent runs fail with backend/model crashes (for example Gemma on some `inferrs` builds) → OpenClaw transport is likely already correct; the backend is failing on the larger agent-runtime prompt shape.
     - failures shrink after disabling tools but do not disappear → tool schemas were part of the pressure, but the remaining issue is still upstream model/server capacity or a backend bug.
+
   </Accordion>
   <Accordion title="Fix options">
     1. Set `compat.requiresStringContent: true` for string-only Chat Completions backends.
@@ -207,6 +255,7 @@ Look for:
     - `too many failed authentication attempts (retry later)` from a browser-origin loopback client → repeated failures from that same normalized `Origin` are locked out temporarily; another localhost origin uses a separate bucket.
     - repeated `unauthorized` after that retry → shared token/device token drift; refresh token config and re-approve/rotate device token if needed.
     - `gateway connect failed:` → wrong host/port/url target.
+
   </Accordion>
 </AccordionGroup>
 
@@ -288,6 +337,7 @@ Look for:
     - `Other gateway-like services detected (best effort)` → stale or parallel launchd/systemd/schtasks units exist. Most setups should keep one gateway per machine; if you do need more than one, isolate ports + config/state/workspace. See [/gateway#multiple-gateways-same-host](/en/gateway#multiple-gateways-same-host).
     - `System-level OpenClaw gateway service detected` from doctor → a systemd system unit exists while the user-level service is missing. Remove or disable the duplicate before allowing doctor to install a user service, or set `OPENCLAW_SERVICE_REPAIR_POLICY=external` if the system unit is the intended supervisor.
     - `Gateway service port does not match current gateway config` → the installed supervisor still pins the old `--port`. Run `openclaw doctor --fix` or `openclaw gateway install --force`, then restart the gateway service.
+
   </Accordion>
 </AccordionGroup>
 
@@ -297,9 +347,10 @@ Related:
 - [Configuration](/en/gateway/configuration)
 - [Doctor](/en/gateway/doctor)
 
-## Gateway restored last-known-good config
+## Gateway rejected invalid config
 
-Use this when the Gateway starts, but logs say it restored `openclaw.json`.
+Use this when Gateway startup fails with `Invalid config` or hot reload logs say
+it skipped an invalid edit.
 
 ```bash
 openclaw logs --follow
@@ -310,19 +361,20 @@ openclaw doctor
 
 Look for:
 
-- `Config auto-restored from last-known-good`
-- `gateway: invalid config was restored from last-known-good backup`
-- `config reload restored last-known-good config after invalid-config`
-- A timestamped `openclaw.json.clobbered.*` file beside the active config
-- A main-agent system event that starts with `Config recovery warning`
+- `Invalid config at ...`
+- `config reload skipped (invalid config): ...`
+- `Config write rejected: ...`
+- A timestamped `openclaw.json.rejected.*` file beside the active config
+- A timestamped `openclaw.json.clobbered.*` file if `doctor --fix` repaired a broken direct edit
 
 <AccordionGroup>
   <Accordion title="What happened">
-    - The rejected config did not validate during startup or hot reload.
-    - OpenClaw preserved the rejected payload as `.clobbered.*`.
-    - The active config was restored from the last validated last-known-good copy.
-    - The next main-agent turn is warned not to blindly rewrite the rejected config.
-    - If all validation issues were under `plugins.entries.<id>...`, OpenClaw would not restore the whole file. Plugin-local failures stay loud while unrelated user settings remain in the active config.
+    - The config did not validate during startup, hot reload, or an OpenClaw-owned write.
+    - Gateway startup fails closed instead of rewriting `openclaw.json`.
+    - Hot reload skips invalid external edits and keeps the current runtime config active.
+    - OpenClaw-owned writes reject invalid/destructive payloads before commit and save `.rejected.*`.
+    - `openclaw doctor --fix` owns repair. It can remove non-JSON prefixes or restore the last-known-good copy while preserving the rejected payload as `.clobbered.*`.
+
   </Accordion>
   <Accordion title="Inspect and repair">
     ```bash
@@ -334,14 +386,17 @@ Look for:
     ```
   </Accordion>
   <Accordion title="Common signatures">
-    - `.clobbered.*` exists → an external direct edit or startup read was restored.
+    - `.clobbered.*` exists → doctor preserved a broken external edit while repairing the active config.
     - `.rejected.*` exists → an OpenClaw-owned config write failed schema or clobber checks before commit.
     - `Config write rejected:` → the write tried to drop required shape, shrink the file sharply, or persist invalid config.
-    - `missing-meta-vs-last-good`, `gateway-mode-missing-vs-last-good`, or `size-drop-vs-last-good:*` → startup treated the current file as clobbered because it lost fields or size compared with the last-known-good backup.
+    - `config reload skipped (invalid config):` → a direct edit failed validation and was ignored by the running Gateway.
+    - `Invalid config at ...` → startup failed before Gateway services booted.
+    - `missing-meta-vs-last-good`, `gateway-mode-missing-vs-last-good`, or `size-drop-vs-last-good:*` → an OpenClaw-owned write was rejected because it lost fields or size compared with the last-known-good backup.
     - `Config last-known-good promotion skipped` → the candidate contained redacted secret placeholders such as `***`.
+
   </Accordion>
   <Accordion title="Fix options">
-    1. Keep the restored active config if it is correct.
+    1. Run `openclaw doctor --fix` to let doctor repair prefixed/clobbered config or restore last-known-good.
     2. Copy only the intended keys from `.clobbered.*` or `.rejected.*`, then apply them with `openclaw config set` or `config.patch`.
     3. Run `openclaw config validate` before restarting.
     4. If you edit by hand, keep the full JSON5 config, not just the partial object you wanted to change.
@@ -375,6 +430,7 @@ Common signatures:
 - `SSH tunnel failed to start; falling back to direct probes.` → SSH setup failed, but the command still tried direct configured/loopback targets.
 - `multiple reachable gateways detected` → more than one target answered. Usually this means an intentional multi-gateway setup or stale/duplicate listeners.
 - `Read-probe diagnostics are limited by gateway scopes (missing operator.read)` → connect worked, but detail RPC is scope-limited; pair device identity or use credentials with `operator.read`.
+- `Gateway accepted the WebSocket connection, but follow-up read diagnostics failed` → connect worked, but the full diagnostic RPC set timed out or failed. Treat this as a reachable Gateway with degraded diagnostics; compare `connect.ok` and `connect.rpcOk` in `--json` output.
 - `Capability: pairing-pending` or `gateway closed (1008): pairing required` → the gateway answered, but this client still needs pairing/approval before normal operator access.
 - unresolved `gateway.auth.*` / `gateway.remote.*` SecretRef warning text → auth material was unavailable in this command path for the failed target.
 
@@ -431,7 +487,7 @@ Look for:
 
 - Cron enabled and next wake present.
 - Job run history status (`ok`, `skipped`, `error`).
-- Heartbeat skip reasons (`quiet-hours`, `requests-in-flight`, `alerts-disabled`, `empty-heartbeat-file`, `no-tasks-due`).
+- Heartbeat skip reasons (`quiet-hours`, `requests-in-flight`, `cron-in-progress`, `lanes-busy`, `alerts-disabled`, `empty-heartbeat-file`, `no-tasks-due`).
 
 <AccordionGroup>
   <Accordion title="Common signatures">
@@ -442,6 +498,7 @@ Look for:
     - `heartbeat skipped` with `reason=no-tasks-due` → `HEARTBEAT.md` contains a `tasks:` block, but none of the tasks are due on this tick.
     - `heartbeat: unknown accountId` → invalid account id for heartbeat delivery target.
     - `heartbeat skipped` with `reason=dm-blocked` → heartbeat target resolved to a DM-style destination while `agents.defaults.heartbeat.directPolicy` (or per-agent override) is set to `block`.
+
   </Accordion>
 </AccordionGroup>
 
@@ -509,13 +566,15 @@ Look for:
     - `browser.executablePath not found` → configured path is invalid.
     - `browser.cdpUrl must be http(s) or ws(s)` → the configured CDP URL uses an unsupported scheme such as `file:` or `ftp:`.
     - `browser.cdpUrl has invalid port` → the configured CDP URL has a bad or out-of-range port.
-    - `Playwright is not available in this gateway build; '<feature>' is unsupported.` → the current gateway install lacks the bundled browser plugin's `playwright-core` runtime dependency; run `openclaw doctor --fix`, then restart the gateway. ARIA snapshots and basic page screenshots can still work, but navigation, AI snapshots, CSS-selector element screenshots, and PDF export stay unavailable.
+    - `Playwright is not available in this gateway build; '<feature>' is unsupported.` → the current gateway install lacks the core browser runtime dependency; reinstall or update OpenClaw, then restart the gateway. ARIA snapshots and basic page screenshots can still work, but navigation, AI snapshots, CSS-selector element screenshots, and PDF export stay unavailable.
+
   </Accordion>
   <Accordion title="Chrome MCP / existing-session signatures">
     - `Could not find DevToolsActivePort for chrome` → Chrome MCP existing-session could not attach to the selected browser data dir yet. Open the browser inspect page, enable remote debugging, keep the browser open, approve the first attach prompt, then retry. If signed-in state is not required, prefer the managed `openclaw` profile.
     - `No Chrome tabs found for profile="user"` → the Chrome MCP attach profile has no open local Chrome tabs.
     - `Remote CDP for profile "<name>" is not reachable` → the configured remote CDP endpoint is not reachable from the gateway host.
     - `Browser attachOnly is enabled ... not reachable` or `Browser attachOnly is enabled and CDP websocket ... is not reachable` → attach-only profile has no reachable target, or the HTTP endpoint answered but the CDP WebSocket still could not be opened.
+
   </Accordion>
   <Accordion title="Element / screenshot / upload signatures">
     - `fullPage is not supported for element screenshots` → screenshot request mixed `--full-page` with `--ref` or `--element`.
@@ -527,6 +586,7 @@ Look for:
     - `existing-session evaluate does not support timeoutMs overrides.` → omit `timeoutMs` for `act:evaluate` on `profile="user"` / Chrome MCP existing-session profiles, or use a managed/CDP browser profile when a custom timeout is required.
     - `response body is not supported for existing-session profiles yet.` → `responsebody` still requires a managed browser or raw CDP profile.
     - stale viewport / dark-mode / locale / offline overrides on attach-only or remote CDP profiles → run `openclaw browser stop --browser-profile <name>` to close the active control session and release Playwright/CDP emulation state without restarting the whole gateway.
+
   </Accordion>
 </AccordionGroup>
 
