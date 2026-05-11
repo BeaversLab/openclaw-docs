@@ -217,3 +217,7 @@ Molty，在 2026 年的大蛻殼之後
 ELU，在最終形態遷移期間，2026 年 1 月 30 日
 
     }
+
+## 相關
+
+- [入門指南](/zh-Hant/start/getting-started)

@@ -3,7 +3,7 @@ summary: "Perplexity Search API 和 Sonar/OpenRouter 的 web_search 兼容性"
 read_when:
   - You want to use Perplexity Search for web search
   - You need PERPLEXITY_API_KEY or OPENROUTER_API_KEY setup
-title: "Perplexity 搜索（旧版路径）"
+title: "Perplexity 搜索（旧路径）"
 ---
 
 # Perplexity Search API
@@ -175,5 +175,10 @@ await web_search({
 - Sonar/OpenRouter 兼容性返回一个带有引用的综合答案，而不是结构化的结果行
 - 结果默认缓存 15 分钟（可通过 `cacheTtlMinutes` 配置）
 
-有关完整的 web_search 配置，请参阅 [Web 工具](/zh/tools/web)。
-有关更多详细信息，请参阅 [Perplexity 搜索 API 文档](https://docs.perplexity.ai/docs/search/quickstart)。
+有关完整的 web_search 配置，请参阅 [Web tools](/zh/tools/web)。
+有关更多详细信息，请参阅 [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart)。
+
+## 相关
+
+- [Perplexity 搜索](/zh/tools/perplexity-search)
+- [Web 搜索](/zh/tools/web)

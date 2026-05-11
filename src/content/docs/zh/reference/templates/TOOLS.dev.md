@@ -1,6 +1,6 @@
 ---
-title: "TOOLS.dev 模板"
 summary: "开发代理工具笔记 (C-3PO)"
+title: "TOOLS.dev 模板"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -23,3 +23,7 @@ read_when:
 - 文本转语音：指定语音、目标扬声器/房间以及是否流式传输。
 
 添加您希望助手了解的有关您的本地工具链的其他任何内容。
+
+## 相关
+
+- [TOOLS.md 模板](/zh/reference/templates/TOOLS)

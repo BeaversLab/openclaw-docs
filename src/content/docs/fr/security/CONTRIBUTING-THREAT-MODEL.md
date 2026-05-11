@@ -1,6 +1,6 @@
 ---
-title: "Contribuer au modèle de menace"
 summary: "Comment contribuer au modèle de menace OpenClaw"
+title: "Contribution au modèle de menace"
 read_when:
   - You want to contribute security findings or threat scenarios
   - Reviewing or updating the threat model
@@ -14,7 +14,7 @@ Merci de nous aider à rendre OpenClaw plus sécurisé. Ce modèle de menace est
 
 ### Ajouter une menace
 
-Vous avez repéré un vecteur d'attaque ou un risque que nous n'avons pas couvert ? Ouvrez un ticket sur [openclaw/trust](https://github.com/openclaw/trust/issues) et décrivez-le avec vos propres mots. Vous n'avez pas besoin de connaître des cadres spécifiques ou de remplir tous les champs - décrivez simplement le scénario.
+Vous avez repéré un vecteur d'attaque ou un risque que nous n'avons pas couvert ? Ouvrez un problème sur [openclaw/trust](https://github.com/openclaw/trust/issues) et décrivez-le en vos propres termes. Vous n'avez pas besoin de connaître des cadres spécifiques ou de remplir tous les champs - il suffit de décrire le scénario.
 
 **Utile à inclure (mais non obligatoire) :**
 
@@ -25,7 +25,7 @@ Vous avez repéré un vecteur d'attaque ou un risque que nous n'avons pas couver
 
 Nous nous occuperons de la correspondance ATLAS, des identifiants de menace et de l'évaluation des risques lors de la révision. Si vous souhaitez inclure ces détails, c'est parfait - mais ce n'est pas attendu.
 
-> **Ceci est pour ajouter au modèle de menace, pas pour signaler des vulnérabilités actives.** Si vous avez trouvé une vulnérabilité exploitable, consultez notre [page Trust](https://trust.openclaw.ai) pour les instructions de divulgation responsable.
+> **Ceci est destiné à ajouter au modèle de menace, et non à signaler des vulnérabilités en direct.** Si vous avez trouvé une vulnérabilité exploitable, consultez notre [page Trust](https://trust.openclaw.ai) pour les instructions de divulgation responsable.
 
 ### Suggérer une atténuation
 
@@ -43,7 +43,7 @@ Fautes de frappe, clarifications, informations obsolètes, meilleurs exemples - 
 
 ### MITRE ATLAS
 
-Ce modèle de menace est basé sur [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems), un cadre conçu spécifiquement pour les menaces IA/ML telles que l'injection de prompt, l'abus d'outils et l'exploitation d'agents. Vous n'avez pas besoin de connaître ATLAS pour contribuer - nous associons les soumissions au cadre lors de la révision.
+Ce modèle de menace est basé sur [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems), un cadre conçu spécifiquement pour les menaces IA/ML telles que l'injection de prompt, l'abus d'outils et l'exploitation d'agents. Vous n'avez pas besoin de connaître ATLAS pour contribuer - nous cartographions les soumissions vers le cadre lors de la révision.
 
 ### Identifiants de menace
 
@@ -89,10 +89,15 @@ Si vous n'êtes pas sûr du niveau de risque, décrivez simplement l'impact et n
 
 ## Contact
 
-- **Vulnérabilités de sécurité :** Consultez notre [page de confiance](https://trust.openclaw.ai) pour les instructions de signalement
-- **Questions sur le modèle de menace :** Ouvrez un ticket sur [openclaw/trust](https://github.com/openclaw/trust/issues)
+- **Vulnérabilités de sécurité :** Consultez notre [page Trust](https://trust.openclaw.ai) pour les instructions de signalement
+- **Questions sur le modèle de menace :** Ouvrez un problème sur [openclaw/trust](https://github.com/openclaw/trust/issues)
 - **Discussion générale :** Discord channel #security
 
 ## Reconnaissance
 
 Les contributeurs au modèle de menace sont reconnus dans les remerciements du modèle de menace, les notes de version et le temple de la renommée de sécurité OpenClaw pour leurs contributions importantes.
+
+## Connexes
+
+- [Modèle de menace](/fr/security/THREAT-MODEL-ATLAS)
+- [Vérification formelle](/fr/security/formal-verification)

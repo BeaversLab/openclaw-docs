@@ -63,3 +63,8 @@ openclaw pairing approve --channel telegram --account work <code> --notify
 - `pairing list` 支援多帳號通道的 `--account <accountId>`。
 - `pairing approve` 支援 `--account <accountId>` 和 `--notify`。
 - 如果僅設定一個支援配對的通道，則允許使用 `pairing approve <code>`。
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)
+- [頻道配對](/zh-Hant/channels/pairing)

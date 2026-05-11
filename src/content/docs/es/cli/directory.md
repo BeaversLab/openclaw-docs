@@ -3,7 +3,7 @@ summary: "Referencia de CLI para `openclaw directory` (yo, pares, grupos)"
 read_when:
   - You want to look up contacts/groups/self ids for a channel
   - You are developing a channel directory adapter
-title: "directorio"
+title: "Directorio"
 ---
 
 # `openclaw directory`
@@ -61,3 +61,7 @@ openclaw directory groups list --channel zalouser
 openclaw directory groups list --channel zalouser --query "work"
 openclaw directory groups members --channel zalouser --group-id <id>
 ```
+
+## Relacionado
+
+- [Referencia de CLI](/es/cli)

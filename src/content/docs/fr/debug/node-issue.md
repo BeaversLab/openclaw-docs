@@ -3,7 +3,7 @@ summary: Notes de crash Node + tsx "__name is not a function" et solutions de co
 read_when:
   - Debugging Node-only dev scripts or watch mode failures
   - Investigating tsx/esbuild loader crashes in OpenClaw
-title: "Node + tsx Crash"
+title: "Node + tsx crash"
 ---
 
 # Node + tsx crash "\_\_name is not a function"
@@ -83,3 +83,8 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 - Reproduire sur Node 22/24 pour confirmer la régression de Node 25.
 - Testez `tsx` nightly ou fixez une version antérieure si une régression connue existe.
 - Si cela se reproduit sur Node LTS, signalez un repro minimal en amont avec la trace de pile `__name`.
+
+## Connexe
+
+- [Installation de Node.js](/fr/install/node)
+- [Dépannage Gateway](/fr/gateway/troubleshooting)

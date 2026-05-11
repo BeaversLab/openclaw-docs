@@ -2,7 +2,7 @@
 summary: "`openclaw docs` 的 CLI 参考（搜索实时文档索引）"
 read_when:
   - You want to search the live OpenClaw docs from the terminal
-title: "docs"
+title: "Docs"
 ---
 
 # `openclaw docs`
@@ -26,3 +26,7 @@ openclaw docs gateway token secretref
 
 - 如果没有查询，`openclaw docs` 会打开实时文档搜索入口。
 - 多词查询将作为一个搜索请求传递。
+
+## 相关
+
+- [CLI 参考](/zh/cli)

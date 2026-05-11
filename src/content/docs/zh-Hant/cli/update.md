@@ -1,9 +1,9 @@
 ---
-summary: "CLI 參考資料：`openclaw update` (安全原始碼更新 + 閘道自動重啟)"
+summary: "`openclaw update` 的 CLI 參考資料（相對安全的來源更新 + 閘道自動重新啟動）"
 read_when:
   - You want to update a source checkout safely
   - You need to understand `--update` shorthand behavior
-title: "update"
+title: "更新"
 ---
 
 # `openclaw update`
@@ -11,7 +11,7 @@ title: "update"
 安全地更新 OpenClaw 並在穩定版/測試版/開發版之間切換。
 
 如果您是透過 **npm/pnpm/bun** 安裝（全域安裝，無 git 元資料），
-更新會透過 [Updating](/zh-Hant/install/updating) 中的套件管理器流程進行。
+更新會透過[更新](/zh-Hant/install/updating)中的套件管理員流程進行。
 
 ## 使用方式
 
@@ -32,17 +32,17 @@ openclaw --update
 
 ## 選項
 
-- `--no-restart`：成功更新後跳過重新啟動 Gateway 服務。
-- `--channel <stable|beta|dev>`：設定更新頻道 (git + npm；會保留在設定中)。
-- `--tag <dist-tag|version|spec>`：僅針對此更新覆寫套件目標。對於套件安裝，`main` 會對應到 `github:openclaw/openclaw#main`。
-- `--dry-run`：預覽計劃的更新動作 (頻道/標籤/目標/重啟流程)，而不寫入設定、安裝、同步外掛或重新啟動。
-- `--json`：印出機器可讀的 `UpdateRunResult` JSON，包括當在更新後
-  外掛同步期間偵測到 npm 外掛構件漂移時的
-  `postUpdate.plugins.integrityDrifts`。
-- `--timeout <seconds>`：每步驟的逾時時間（預設為 1200s）。
-- `--yes`：略過確認提示（例如降級確認）
+- `--no-restart`：在成功更新後略過重新啟動閘道服務。會重新啟動閘道的套件管理員更新會驗證重新啟動的服務回報預期的更新版本，然後指令才會成功。
+- `--channel <stable|beta|dev>`：設定更新頻道（git + npm；持久化於設定中）。
+- `--tag <dist-tag|version|spec>`：僅針對此次更新覆寫套件目標。對於套件安裝，`main` 對應至 `github:openclaw/openclaw#main`。
+- `--dry-run`：預覽計劃的更新動作（頻道/標籤/目標/重新啟動流程），而不寫入設定、安裝、同步外掛或重新啟動。
+- `--json`：列印機器可讀取的 `UpdateRunResult` JSON，包括當
+  在更新後外掛同步期間偵測到 npm 外掛成品
+  漂移時的 `postUpdate.plugins.integrityDrifts`。
+- `--timeout <seconds>`：每步驟逾時（預設為 1800s）。
+- `--yes`：略過確認提示（例如降級確認）。
 
-注意：降級需要確認，因為舊版本可能會破壞設定。
+<Warning>降級需要確認，因為較舊的版本可能會導致設定檔損壞。</Warning>
 
 ## `update status`
 
@@ -56,69 +56,83 @@ openclaw update status --timeout 10
 
 選項：
 
-- `--json`：印出機器可讀的狀態 JSON。
-- `--timeout <seconds>`：檢查的逾時時間（預設為 3s）。
+- `--json`：列印機器可讀取的狀態 JSON。
+- `--timeout <seconds>`：檢查逾時（預設為 3s）。
 
 ## `update wizard`
 
-互動式流程，用於選擇更新頻道並確認更新後是否重新啟動 Gateway
-（預設為重新啟動）。如果您在沒有 git 檢出的情況下選擇 `dev`，它
-會提議建立一個。
+互動式流程以選擇更新頻道並確認更新後是否重新啟動閘道
+（預設為重新啟動）。如果您在沒有 git checkout 的情況下選擇 `dev`，它
+會提供建立一個。
 
 選項：
 
-- `--timeout <seconds>`：每個更新步驟的逾時時間（預設 `1200`）
+- `--timeout <seconds>`：每個更新步驟的逾時（預設 `1800`）
 
 ## 運作方式
 
-當您明確切換頻道（`--channel ...`）時，OpenClaw 也會讓
-安裝方法保持一致：
+當您明確切換頻道 (`--channel ...`) 時，OpenClaw 也會保持
+安裝方法一致：
 
-- `dev` → 確保 git 檢出（預設：`~/openclaw`，可使用 `OPENCLAW_GIT_DIR` 覆蓋），
-  更新它，並從該檢出安裝全域 CLI。
+- `dev` → 確保是 git checkout (預設：`~/openclaw`，可透過 `OPENCLAW_GIT_DIR` 覆蓋)，
+  更新它，並從該 checkout 安裝全域 CLI。
 - `stable` → 使用 `latest` 從 npm 安裝。
 - `beta` → 偏好 npm dist-tag `beta`，但當 beta
-  缺失或比當前穩定版本舊時，會回退到 `latest`。
+  遺失或比目前的穩定版舊時，會退回到 `latest`。
 
 Gateway 核心自動更新程式（透過設定啟用時）會重複使用此相同的更新路徑。
 
-對於套件管理器安裝，`openclaw update` 會在叫用套件管理器之前解析目標套件
-版本。如果安裝的版本完全
-符合目標，且不需要保留更新頻道變更，該
-指令會在套件安裝、外掛同步、完成重新整理、
-或 Gateway 重新啟動工作之前略過並結束。
+對於套件管理器安裝，`openclaw update` 會在呼叫套件管理器之前解析目標套件
+版本。npm 全域安裝使用分階段安裝：OpenClaw 將新套件安裝到暫時的 npm 前綴，驗證
+那裡打包的 `dist` 清單，然後將該乾淨的套件樹交換到
+真實的全域前綴中。如果驗證失敗，更新後的診斷、外掛同步和
+重啟工作不會從可疑的樹執行。即使已安裝的版本
+已經符合目標，該指令也會重新整理全域套件安裝，
+然後執行外掛同步、核心指令補齊重新整理以及重啟工作。這
+能保持打包的 sidecar 和頻道擁有的外掛記錄與
+已安裝的 OpenClaw 版本一致，同時將完整的外掛指令補齊重建留給
+明確的 `openclaw completion --write-state` 執行。
 
 ## Git 檢出流程
 
-頻道：
+### 頻道選擇
 
-- `stable`：檢出最新的非 beta 標籤，然後建置 + 執行檢查。
-- `beta`：優先使用最新的 `-beta` 標籤，但當 beta 缺失或較舊時，回退到最新的 stable 標籤。
-- `dev`：簽出 `main`，然後獲取 + 變基。
+- `stable`：checkout 最新的非 beta tag，然後建置和診斷。
+- `beta`：偏好最新的 `-beta` tag，但當 beta 遺失或較舊時退回到最新的穩定 tag。
+- `dev`：checkout `main`，然後 fetch 和 rebase。
 
-高級概覽：
+### 更新步驟
 
-1. 需要乾淨的工作樹（沒有未提交的更改）。
-2. 切換到選定的頻道（標籤或分支）。
-3. 獲取上游（僅限 dev）。
-4. 僅限 dev：在臨時工作樹中進行飛行前檢查 + TypeScript 構建；如果頂端失敗，則最多回溯 10 個提交以尋找最新的乾淨構建。
-5. 變基到選定的提交（僅限 dev）。
-6. 使用倉庫套件管理器安裝依賴項。對於 pnpm 簽出，更新程序會按需引導 `pnpm`（首先通過 `corepack`，然後是臨時的 `npm install pnpm@10` 備用方案），而不是在 pnpm 工作區內運行 `npm run build`。
-7. 構建並構建 Control UI。
-8. 運行 `openclaw doctor` 作為最後的「安全更新」檢查。
-9. 將插件同步到活動頻道（dev 使用捆綁的插件；stable/beta 使用 npm）並更新通過 npm 安裝的插件。
+<Steps>
+  <Step title="驗證乾淨的工作區">需要沒有未提交的變更。</Step>
+  <Step title="切換頻道">切換到選定的頻道 (tag 或 branch)。</Step>
+  <Step title="取得上游">僅限開發版本。</Step>
+  <Step title="預先建構（僅限開發版）">在臨時工作樹中執行 lint 和 TypeScript 建構。如果最新版本失敗，會回溯最多 10 個 commit 以尋找最新的乾淨建構。</Step>
+  <Step title="變基">對選定的 commit 進行變基（僅限開發版）。</Step>
+  <Step title="安裝相依套件">使用專案套件管理器。對於 pnpm 檢出，更新程式會按需引導 `pnpm`（首先透過 `corepack`，然後是臨時的 `npm install pnpm@10` 後援），而不是在 pnpm workspace 中執行 `npm run build`。</Step>
+  <Step title="建構控制 UI">建構 gateway 和控制 UI。</Step>
+  <Step title="執行 doctor">`openclaw doctor` 作為最終的安全更新檢查執行。</Step>
+  <Step title="同步外掛程式">將外掛程式同步至使用中頻道。開發版使用內建外掛程式；穩定版和測試版使用 npm。更新透過 npm 安裝的外掛程式。</Step>
+</Steps>
 
-如果精確鎖定的 npm 插件更新解析為一個與存儲的安裝記錄的完整性不同的工件，`openclaw update` 將中止該插件工件更新而不是安裝它。請在驗證您信任新工件後，才重新安裝或更新插件。
+<Warning>如果精確鎖定的 npm 外掛程式更新解析出的構件完整性與儲存的安裝記錄不同，`openclaw update` 將中止該外掛程式構件的更新，而不是安裝它。僅在驗證您信任新構件後，才明確重新安裝或更新外掛程式。</Warning>
 
-如果 pnpm 引導仍然失敗，更新程序現在會提前停止，並顯示特定於套件管理器的錯誤，而不是嘗試在簽出內部運行 `npm run build`。
+<Note>
+更新後的外掛程式同步失敗會導致更新結果失敗，並停止後續的重啟工作。修復外掛程式安裝或更新錯誤，然後重新執行 `openclaw update`。
+
+當更新後的 Gateway 啟動時，已啟用的內建外掛程式執行階段相依項會在外掛程式啟動之前進行暫存。更新觸發的重啟會在關閉 Gateway 之前清空所有進行中的執行階段相依項暫存，因此服務管理器重啟不會中斷正在進行的 npm 安裝。
+
+如果 pnpm 引導仍然失敗，更新程式會提前停止並顯示套件管理器特定的錯誤，而不是在檢出中嘗試 `npm run build`。
+
+</Note>
 
 ## `--update` 簡寫
 
-`openclaw --update` 會重寫為 `openclaw update`（對於 Shell 和啟動器腳本很有用）。
+`openclaw --update` 重寫為 `openclaw update`（對 shell 和啟動器腳本很有用）。
 
-## 另請參閱
+## 相關
 
-- `openclaw doctor`（在 git 簽出上提供先運行更新）
+- `openclaw doctor`（在 git checkout 上提供先執行 update）
 - [開發頻道](/zh-Hant/install/development-channels)
 - [更新](/zh-Hant/install/updating)
 - [CLI 參考](/zh-Hant/cli)

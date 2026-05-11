@@ -3,7 +3,7 @@ summary: "Référence CLI pour `openclaw webhooks` (webhook helpers + Gmail Pub/
 read_when:
   - You want to wire Gmail Pub/Sub events into OpenClaw
   - You want webhook helper commands
-title: "webhooks"
+title: "Webhooks"
 ---
 
 # `openclaw webhooks`
@@ -89,3 +89,8 @@ openclaw webhooks gmail run --account you@example.com
 ```
 
 Consultez la [documentation Gmail Pub/Sub](/fr/automation/cron-jobs#gmail-pubsub-integration) pour le flux de configuration de bout en bout et les détails opérationnels.
+
+## Connexes
+
+- [Référence CLI](/fr/cli)
+- [Automatisation des webhooks](/fr/automation/webhook)

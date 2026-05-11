@@ -1,10 +1,13 @@
 ---
-title: "Construcción de complementos (redirección)"
-summary: "Redirige a la guía actual de Construcción de complementos"
+summary: "Redirige a la guía actual de Creación de complementos"
+title: "Creación de complementos (redireccionamiento)"
 read_when:
   - Legacy link to building-extensions
 ---
 
-# Construcción de complementos
+Esta página se ha trasladado a [Creación de complementos](/es/plugins/building-plugins).
 
-Esta página se ha trasladado a [Construcción de complementos](/es/plugins/building-plugins).
+## Relacionado
+
+- [Creación de complementos](/es/plugins/building-plugins)
+- [Arquitectura de complementos](/es/plugins/architecture)

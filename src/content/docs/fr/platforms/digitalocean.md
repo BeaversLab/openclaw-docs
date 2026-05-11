@@ -3,7 +3,7 @@ summary: "OpenClaw sur DigitalOcean (option VPS payante simple)"
 read_when:
   - Setting up OpenClaw on DigitalOcean
   - Looking for cheap VPS hosting for OpenClaw
-title: "DigitalOcean (Platform)"
+title: "DigitalOcean (plateforme)"
 ---
 
 # OpenClaw sur DigitalOcean
@@ -207,7 +207,7 @@ openclaw backup create
 
 ---
 
-## Alternative gratuite Oracle Cloud
+## Alternative gratuite d'Oracle Cloud
 
 Oracle Cloud propose des instances ARM **Always Free** (toujours gratuites) qui sont significativement plus puissantes que toute option payante ici — pour 0 $/mois.
 
@@ -256,7 +256,7 @@ free -h
 
 ---
 
-## Voir aussi
+## Connexes
 
 - [Guide Hetzner](/fr/install/hetzner) — moins cher, plus puissant
 - [Installation Docker](/fr/install/docker) — installation conteneurisée

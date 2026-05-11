@@ -3,7 +3,7 @@ summary: "Plugin Webhooks : ingress TaskFlow authentifié pour l'automatisation 
 read_when:
   - You want to trigger or drive TaskFlows from an external system
   - You are configuring the bundled webhooks plugin
-title: "Plugin Webhooks"
+title: "Webhooks plugin"
 ---
 
 # Webhooks (plugin)

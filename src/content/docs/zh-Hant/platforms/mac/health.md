@@ -2,7 +2,7 @@
 summary: "macOS 應用程式如何回報 Gateway/Baileys 健康狀態"
 read_when:
   - Debugging mac app health indicators
-title: "健康檢查"
+title: "Health checks (macOS)"
 ---
 
 # macOS 上的健康檢查
@@ -32,3 +32,8 @@ title: "健康檢查"
 ## 若有疑慮
 
 - 您仍然可以使用 [Gateway health](/zh-Hant/gateway/health) 中的 CLI 流程（`openclaw status`、`openclaw status --deep`、`openclaw health --json`），並對 `/tmp/openclaw/openclaw-*.log` 執行 tail 指令以查看 `web-heartbeat` / `web-reconnect`。
+
+## 相關
+
+- [Gateway health](/zh-Hant/gateway/health)
+- [macOS app](/zh-Hant/platforms/macos)

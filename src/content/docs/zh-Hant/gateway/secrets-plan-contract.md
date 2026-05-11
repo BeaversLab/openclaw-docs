@@ -4,18 +4,16 @@ read_when:
   - Generating or reviewing `openclaw secrets apply` plans
   - Debugging `Invalid plan target path` errors
   - Understanding target type and path validation behavior
-title: "Secrets 應用計劃合約"
+title: "Secrets apply plan contract"
 ---
 
-# Secrets 應用計劃合約
+本頁定義了由 `openclaw secrets apply` 強制執行的嚴格合約。
 
-此頁面定義了 `openclaw secrets apply` 執行的嚴格合約。
+如果目標不符合這些規則，在變更配置之前，apply 將會失敗。
 
-如果目標不符合這些規則，apply 將在變更設定前失敗。
+## 計畫檔案形狀
 
-## 計劃檔案結構
-
-`openclaw secrets apply --from <plan.json>` 預期一個 `targets` 陣列作為計劃目標：
+`openclaw secrets apply --from <plan.json>` 預期一個計畫目標的 `targets` 陣列：
 
 ```json5
 {
@@ -42,17 +40,17 @@ title: "Secrets 應用計劃合約"
 
 ## 支援的目標範圍
 
-計劃目標在以下支援的憑證路徑中被接受：
+以下支援的憑證路徑接受計畫目標：
 
-- [SecretRef 憑證範圍](/zh-Hant/reference/secretref-credential-surface)
+- [SecretRef Credential Surface](/zh-Hant/reference/secretref-credential-surface)
 
 ## 目標類型行為
 
 一般規則：
 
-- `target.type` 必須被識別，且必須符合標準化的 `target.path` 結構。
+- `target.type` 必須被識別，且必須符合標準化的 `target.path` 形狀。
 
-相容性別名對於現有計劃仍然被接受：
+相容性別名仍被現有計畫接受：
 
 - `models.providers.apiKey`
 - `skills.entries.apiKey`
@@ -60,37 +58,37 @@ title: "Secrets 應用計劃合約"
 
 ## 路徑驗證規則
 
-每個目標都會使用以下所有規則進行驗證：
+每個目標都會使用以下所有項目進行驗證：
 
 - `type` 必須是可識別的目標類型。
-- `path` 必須是非空白的點分隔路徑。
+- `path` 必須是非空點路徑。
 - `pathSegments` 可以省略。如果提供，它必須標準化為與 `path` 完全相同的路徑。
 - 禁止的區段會被拒絕：`__proto__`、`prototype`、`constructor`。
-- 標準化路徑必須符合目標類型註冊的路徑結構。
+- 標準化路徑必須符合目標類型的註冊路徑形狀。
 - 如果設定了 `providerId` 或 `accountId`，它必須符合路徑中編碼的 id。
 - `auth-profiles.json` 目標需要 `agentId`。
 - 建立新的 `auth-profiles.json` 對應時，請包含 `authProfileProvider`。
 
 ## 失敗行為
 
-如果目標驗證失敗，apply 將會退出並顯示如下錯誤：
+如果目標驗證失敗，apply 將會顯示類似以下的錯誤並退出：
 
 ```text
 Invalid plan target path for models.providers.apiKey: models.providers.openai.baseUrl
 ```
 
-無效的計劃不會提交任何寫入。
+無效的計畫不會提交任何寫入操作。
 
 ## Exec 提供者同意行為
 
 - `--dry-run` 預設會跳過 exec SecretRef 檢查。
-- 包含 exec SecretRefs/提供者的計劃會在寫入模式下被拒絕，除非設定了 `--allow-exec`。
-- 在驗證/套用包含 exec 的計劃時，請在 dry-run 和 write 指令中傳遞 `--allow-exec`。
+- 除非設定了 `--allow-exec`，否則在寫入模式下會拒絕包含 exec SecretRef/提供者的計畫。
+- 當驗證/套用包含 exec 的計畫時，請在 dry-run 和寫入命令中傳遞 `--allow-exec`。
 
-## 執行階段和稽核範圍注意事項
+## 執行時段和稽核範圍備註
 
-- 僅限參照 (`keyRef`/`tokenRef`) 的 `auth-profiles.json` 項目包含在執行階段解析和稽核範圍內。
-- `secrets apply` 會寫入受支援的 `openclaw.json` 目標、受支援的 `auth-profiles.json` 目標以及選用的清除目標。
+- 僅參照（Ref-only）`auth-profiles.json` 項目 (`keyRef`/`tokenRef`) 包含在執行時期解析與稽核範圍中。
+- `secrets apply` 會寫入支援的 `openclaw.json` 目標、支援的 `auth-profiles.json` 目標，以及選用的清理（scrub）目標。
 
 ## 操作員檢查
 
@@ -106,11 +104,11 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-
 openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
 ```
 
-如果套用失敗並顯示無效的目標路徑訊息，請使用 `openclaw secrets configure` 重新產生計劃，或是將目標路徑修正為上述支援的格式。
+如果 apply 因無效的目標路徑訊息而失敗，請使用 `openclaw secrets configure` 重新產生計劃，或將目標路徑修正為上述支援的格式。
 
 ## 相關文件
 
-- [Secrets Management](/zh-Hant/gateway/secrets)
+- [機密管理](/zh-Hant/gateway/secrets)
 - [CLI `secrets`](/zh-Hant/cli/secrets)
-- [SecretRef Credential Surface](/zh-Hant/reference/secretref-credential-surface)
-- [Configuration Reference](/zh-Hant/gateway/configuration-reference)
+- [SecretRef 憑證介面](/zh-Hant/reference/secretref-credential-surface)
+- [組態參考](/zh-Hant/gateway/configuration-reference)

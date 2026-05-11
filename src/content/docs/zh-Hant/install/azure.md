@@ -22,7 +22,7 @@ title: "Azure"
 ## 您需要什麼
 
 - 具備建立運算和網路資源權限的 Azure 訂用帳戶
-- 已安裝 Azure CLI (如有需要，請參閱 [Azure CLI 安裝步驟](https://learn.microsoft.com/cli/azure/install-azure-cli))
+- 已安裝 Azure CLI（如有需要，請參閱 [Azure CLI 安裝步驟](https://learn.microsoft.com/cli/azure/install-azure-cli)）
 - SSH 金鑰組 (本指南涵蓋如需時如何產生金鑰組)
 - 約 20-30 分鐘
 
@@ -308,4 +308,10 @@ az group delete -n "${RG}" --yes --no-wait
 - 設定訊息通道：[通道](/zh-Hant/channels)
 - 將本機裝置配對為節點：[節點](/zh-Hant/nodes)
 - 設定 Gateway：[Gateway configuration](/zh-Hant/gateway/configuration)
-- 如需更多關於使用 GitHub Copilot 模型提供者在 Azure 上部署 OpenClaw 的詳細資訊：[OpenClaw on Azure with GitHub Copilot](https://github.com/johnsonshi/openclaw-azure-github-copilot)
+- 如需更多關於使用 GitHub Copilot 模型提供者部署 OpenClaw 至 Azure 的詳細資訊：[Azure 上的 OpenClaw 搭配 GitHub Copilot](https://github.com/johnsonshi/openclaw-azure-github-copilot)
+
+## 相關
+
+- [安裝概觀](/zh-Hant/install)
+- [GCP](/zh-Hant/install/gcp)
+- [DigitalOcean](/zh-Hant/install/digitalocean)

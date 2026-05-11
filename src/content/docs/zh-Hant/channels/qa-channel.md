@@ -1,33 +1,22 @@
 ---
-title: "QA 頻道"
-summary: "用於確定性 OpenClaw QA 場景的內建合成 Slack 類別頻道外掛程式"
+summary: "用於確定性 OpenClaw QA 場景的合成 Slack 類通道外掛程式"
+title: "QA 通道"
 read_when:
   - You are wiring the synthetic QA transport into a local or CI test run
   - You need the bundled qa-channel config surface
   - You are iterating on end-to-end QA automation
 ---
 
-# QA 頻道
+`qa-channel` 是一個內建的合成訊息傳輸，用於自動化 OpenClaw QA。它不是生產通道 — 其存在目的是為了演練真實傳輸所使用的相同通道外掛程式邊界，同時保持狀態的確定性和完全可檢查性。
 
-`qa-channel` 是一個內建的合成訊息傳輸，用於自動化 OpenClaw QA。
+## 功能
 
-它不是生產環境的頻道。它的存在是為了測試真實傳輸所使用的相同頻道外掛程式邊界，同時保持狀態的確定性且完全可檢查。
-
-## 目前的功能
-
-- Slack 類別目標語法：
+- Slack 類目標語法：
   - `dm:<user>`
   - `channel:<room>`
   - `thread:<room>/<thread>`
-- 基於 HTTP 的合成匯流排，用於：
-  - inbound message injection
-  - outbound transcript capture
-  - thread creation
-  - reactions
-  - edits
-  - deletes
-  - search and read actions
-- 內建的 Host 端自我檢查執行器，會產生 Markdown 報告
+- 基於 HTTP 的合成匯流排，用於傳入訊息注入、傳出逐字稿擷取、執行緒建立、反應、編輯、刪除以及搜尋/讀取動作。
+- 主機端自我檢查執行器，會將 Markdown 報告寫入 `.artifacts/qa-e2e/`。
 
 ## 設定
 
@@ -45,59 +34,53 @@ read_when:
 }
 ```
 
-支援的帳戶金鑰：
+帳戶金鑰：
 
-- `baseUrl`
-- `botUserId`
-- `botDisplayName`
-- `pollTimeoutMs`
-- `allowFrom`
-- `defaultTo`
-- `actions.messages`
-- `actions.reactions`
-- `actions.search`
-- `actions.threads`
+- `enabled` — 此帳戶的主總開關。
+- `name` — 選用顯示標籤。
+- `baseUrl` — 合成匯流排 URL。
+- `botUserId` — 在目標語法中使用的 Matrix 樣式機器人使用者 ID。
+- `botDisplayName` — 傳出訊息的顯示名稱。
+- `pollTimeoutMs` — 長輪詢等待視窗。介於 100 到 30000 之間的整數。
+- `allowFrom` — 寄件者允許清單 (使用者 ID 或 `"*"`)。
+- `defaultTo` — 未提供時的後備目標。
+- `actions.messages` / `actions.reactions` / `actions.search` / `actions.threads` — 依動作的工具控管。
+
+頂層的多帳戶金鑰：
+
+- `accounts` — 依帳戶 ID 索引的命名依帳戶覆寫記錄。
+- `defaultAccount` — 設定多個帳戶時的偏好帳戶 ID。
 
 ## 執行器
 
-目前的垂直切片：
+主機端自我檢查 (會在 `.artifacts/qa-e2e/` 下寫入 Markdown 報告)：
 
 ```bash
 pnpm qa:e2e
 ```
 
-現在透過內建的 `qa-lab` 擴充功能進行路由。它會啟動程式庫內的
-QA 匯流排、啟動內建的 `qa-channel` 執行時切片、執行確定性
-的自我檢查，並將 Markdown 報告寫入 `.artifacts/qa-e2e/`。
+這會透過 `qa-lab` 路由，啟動存放庫內的 QA 匯流排，啟動內建的 `qa-channel` 執行時區段，並執行確定性自我檢查。
 
-私人偵錯工具 UI：
-
-```bash
-pnpm qa:lab:up
-```
-
-這個單一命令會建置 QA 網站、啟動基於 Docker 的 gateway + QA Lab 堆疊，並列印 QA Lab URL。從該網站，您可以選擇場景、選擇模型通道、啟動個別執行，並即時觀看結果。
-
-完整的 repo-backed QA 套件：
+完整的存放庫支援場景套件：
 
 ```bash
 pnpm openclaw qa suite
 ```
 
-這會在本機 URL 啟動私有的 QA 除錯器，與隨附的 Control UI bundle 分開。
+針對 QA 閘道通道並行執行情境。請參閱 [QA 概觀](/zh-Hant/concepts/qa-e2e-automation) 以了解情境、設定檔和提供者模式。
 
-## 範圍
+Docker 支援的 QA 網站（閘道 + QA Lab 偵錯工具 UI 位於同一堆疊中）：
 
-目前的範圍刻意保持狹窄：
+```bash
+pnpm qa:lab:up
+```
 
-- bus + plugin transport
-- threaded routing grammar
-- channel-owned message actions
-- Markdown reporting
-- Docker-backed QA site with run controls
+建置 QA 網站，啟動 Docker 支援的閘道與 QA Lab 堆疊，並列印 QA Lab URL。之後您可以選擇情境、選擇模型通道、啟動個別執行並即時觀看結果。QA Lab 偵錯工具與出貨的 Control UI 套件是分開的。
 
-後續工作將新增：
+## 相關
 
-- provider/model matrix execution
-- richer scenario discovery
-- OpenClaw-native orchestration later
+- [QA 概觀](/zh-Hant/concepts/qa-e2e-automation) — 整體堆疊、傳輸配接器、情境撰寫
+- [Matrix QA](/zh-Hant/concepts/qa-matrix) — 驅動真實通道的即時傳輸執行器範例
+- [配對](/zh-Hant/channels/pairing)
+- [群組](/zh-Hant/channels/groups)
+- [通道概觀](/zh-Hant/channels)

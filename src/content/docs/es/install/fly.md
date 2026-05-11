@@ -1,6 +1,6 @@
 ---
+summary: "Despliegue paso a paso de Fly.io para OpenClaw con almacenamiento persistente y HTTPS"
 title: Fly.io
-summary: "Despliegue paso a paso de OpenClaw en Fly.io con almacenamiento persistente y HTTPS"
 read_when:
   - Deploying OpenClaw on Fly.io
   - Setting up Fly volumes, secrets, and first-run config
@@ -43,9 +43,9 @@ read_when:
   </Step>
 
   <Step title="Configurar fly.toml">
-    Edite `fly.toml` para que coincida con el nombre de su aplicación y sus requisitos.
+    Edite `fly.toml` para que coincida con el nombre de su aplicación y los requisitos.
 
-    **Nota de seguridad:** La configuración predeterminada expone una URL pública. Para un despliegue reforzado sin IP pública, consulte [Private Deployment](#private-deployment-hardened) o use `fly.private.toml`.
+    **Nota de seguridad:** La configuración predeterminada expone una URL pública. Para un despliegue reforzado sin IP pública, consulte [Despliegue privado](#private-deployment-hardened) o use `fly.private.toml`.
 
     ```toml
     app = "my-openclaw"  # Your app name
@@ -80,13 +80,13 @@ read_when:
       destination = "/data"
     ```
 
-    **Configuraciones clave:**
+    **Configuración clave:**
 
     | Configuración                        | Por qué                                                                         |
     | ------------------------------ | --------------------------------------------------------------------------- |
     | `--bind lan`                   | Se vincula a `0.0.0.0` para que el proxy de Fly pueda alcanzar la puerta de enlace                     |
     | `--allow-unconfigured`         | Se inicia sin un archivo de configuración (creará uno después)                      |
-    | `internal_port = 3000`         | Debe coincidir con `--port 3000` (o `OPENCLAW_GATEWAY_PORT`) para los controles de salud de Fly |
+    | `internal_port = 3000`         | Debe coincidir con `--port 3000` (o `OPENCLAW_GATEWAY_PORT`) para las comprobaciones de salud de Fly |
     | `memory = "2048mb"`            | 512MB es muy poco; se recomiendan 2GB                                         |
     | `OPENCLAW_STATE_DIR = "/data"` | Persiste el estado en el volumen                                                |
 
@@ -140,13 +140,13 @@ read_when:
   </Step>
 
   <Step title="Crear archivo de configuración">
-    Accede por SSH a la máquina para crear una configuración adecuada:
+    Conéctese por SSH a la máquina para crear una configuración adecuada:
 
     ```bash
     fly ssh console
     ```
 
-    Crea el directorio y el archivo de configuración:
+    Cree el directorio y el archivo de configuración:
 
     ```bash
     mkdir -p /data
@@ -193,7 +193,14 @@ read_when:
       },
       "gateway": {
         "mode": "local",
-        "bind": "auto"
+        "bind": "auto",
+        "controlUi": {
+          "allowedOrigins": [
+            "https://my-openclaw.fly.dev",
+            "http://localhost:3000",
+            "http://127.0.0.1:3000"
+          ]
+        }
       },
       "meta": {}
     }
@@ -202,14 +209,20 @@ read_when:
 
     **Nota:** Con `OPENCLAW_STATE_DIR=/data`, la ruta de configuración es `/data/openclaw.json`.
 
+    **Nota:** Reemplace `https://my-openclaw.fly.dev` con su origen real de la app de
+    Fly. El inicio del Gateway inicializa los orígenes locales de la Interfaz de Control a partir de los valores de tiempo de ejecución
+    `--bind` y `--port` para que el primer arranque pueda proceder antes de que exista la configuración,
+    pero el acceso a través del navegador en Fly aún necesita el origen HTTPS exacto listado en
+    `gateway.controlUi.allowedOrigins`.
+
     **Nota:** El token de Discord puede provenir de:
 
     - Variable de entorno: `DISCORD_BOT_TOKEN` (recomendado para secretos)
     - Archivo de configuración: `channels.discord.token`
 
-    Si usas la variable de entorno, no es necesario añadir el token a la configuración. La puerta de enlace lee `DISCORD_BOT_TOKEN` automáticamente.
+    Si usa una variable de entorno, no es necesario agregar el token a la configuración. El gateway lee `DISCORD_BOT_TOKEN` automáticamente.
 
-    Reinicia para aplicar los cambios:
+    Reinicie para aplicar:
 
     ```bash
     exit
@@ -218,8 +231,8 @@ read_when:
 
   </Step>
 
-  <Step title="Acceder a la puerta de enlace">
-    ### Interfaz de control
+  <Step title="Acceder al Gateway">
+    ### Interfaz de Control
 
     Abrir en el navegador:
 
@@ -227,11 +240,11 @@ read_when:
     fly open
     ```
 
-    O visitar `https://my-openclaw.fly.dev/`
+    O visite `https://my-openclaw.fly.dev/`
 
-    Autentícate con el secreto compartido configurado. Esta guía usa el token de
-    puerta de enlace de `OPENCLAW_GATEWAY_TOKEN`; si cambiaste a autenticación por
-    contraseña, usa esa contraseña en su lugar.
+    Autentíquese con el secreto compartido configurado. Esta guía utiliza el token de
+    gateway de `OPENCLAW_GATEWAY_TOKEN`; si cambió a autenticación por contraseña, use
+    esa contraseña en su lugar.
 
     ### Registros
 
@@ -253,21 +266,21 @@ read_when:
 
 ### "La aplicación no está escuchando en la dirección esperada"
 
-La puerta de enlace se está vinculando a `127.0.0.1` en lugar de a `0.0.0.0`.
+El gateway se está vinculando a `127.0.0.1` en lugar de a `0.0.0.0`.
 
-**Solución:** Añade `--bind lan` a tu comando de proceso en `fly.toml`.
+**Solución:** Agregue `--bind lan` a su comando de proceso en `fly.toml`.
 
 ### Fallos en las comprobaciones de salud / conexión rechazada
 
 Fly no puede alcanzar el gateway en el puerto configurado.
 
-**Solución:** Asegúrate de que `internal_port` coincida con el puerto de la puerta de enlace (configura `--port 3000` o `OPENCLAW_GATEWAY_PORT=3000`).
+**Solución:** Asegúrese de que `internal_port` coincida con el puerto del gateway (establezca `--port 3000` o `OPENCLAW_GATEWAY_PORT=3000`).
 
 ### Problemas de OOM / Memoria
 
-El contenedor se reinicia o se cierra repetidamente. Signos: `SIGABRT`, `v8::internal::Runtime_AllocateInYoungGeneration` o reinicios silenciosos.
+El contenedor se sigue reiniciando o finalizando. Señales: `SIGABRT`, `v8::internal::Runtime_AllocateInYoungGeneration`, o reinicios silenciosos.
 
-**Solución:** Aumenta la memoria en `fly.toml`:
+**Solución:** Aumente la memoria en `fly.toml`:
 
 ```toml
 [[vm]]
@@ -282,7 +295,7 @@ fly machine update <machine-id> --vm-memory 2048 -y
 
 **Nota:** 512MB es demasiado poco. 1GB puede funcionar pero puede provocar OOM bajo carga o con registros detallados. **Se recomiendan 2GB.**
 
-### Problemas de bloqueo de la pasarela
+### Problemas de bloqueo del Gateway
 
 La pasarela se niega a iniciarse con errores de "ya se está ejecutando".
 
@@ -295,11 +308,11 @@ fly ssh console --command "rm -f /data/gateway.*.lock"
 fly machine restart <machine-id>
 ```
 
-El archivo de bloqueo está en `/data/gateway.*.lock` (no en un subdirectorio).
+El archivo de bloqueo se encuentra en `/data/gateway.*.lock` (no en un subdirectorio).
 
-### Configuración no se está leyendo
+### Configuración no leída
 
-`--allow-unconfigured` solo omite la protección de inicio. No crea ni repara `/data/openclaw.json`, así que asegúrate de que tu configuración real exista e incluya `gateway.mode="local"` cuando desees un inicio normal de la puerta de enlace local.
+`--allow-unconfigured` solo omite el guardia de inicio. No crea ni repara `/data/openclaw.json`, así que asegúrate de que tu configuración real exista e incluya `gateway.mode="local"` cuando quieras un inicio normal de la puerta de enlace local.
 
 Verifique que la configuración existe:
 
@@ -309,7 +322,7 @@ fly ssh console --command "cat /data/openclaw.json"
 
 ### Escribir configuración a través de SSH
 
-El comando `fly ssh console -C` no soporta redirección de shell. Para escribir un archivo de configuración:
+El comando `fly ssh console -C` no admite la redirección de shell. Para escribir un archivo de configuración:
 
 ```bash
 # Use echo + tee (pipe from local to remote)
@@ -320,7 +333,7 @@ fly sftp shell
 > put /local/path/config.json /data/openclaw.json
 ```
 
-**Nota:** `fly sftp` puede fallar si el archivo ya existe. Elimínalo primero:
+**Nota:** `fly sftp` puede fallar si el archivo ya existe. Elimínelo primero:
 
 ```bash
 fly ssh console --command "rm /data/openclaw.json"
@@ -331,7 +344,7 @@ fly ssh console --command "rm /data/openclaw.json"
 Si pierdes perfiles de autenticación, estado del canal/proveedor o sesiones después de un reinicio,
 el directorio de estado se está escribiendo en el sistema de archivos del contenedor.
 
-**Solución:** Asegúrate de que `OPENCLAW_STATE_DIR=/data` esté configurado en `fly.toml` y vuelve a desplegar.
+**Solución:** Asegúrese de que `OPENCLAW_STATE_DIR=/data` esté establecido en `fly.toml` y vuelva a implementar.
 
 ## Actualizaciones
 
@@ -347,7 +360,7 @@ fly status
 fly logs
 ```
 
-### Comando de actualización de máquina
+### Actualización del comando de máquina
 
 Si necesita cambiar el comando de inicio sin una implementación completa:
 
@@ -362,11 +375,11 @@ fly machine update <machine-id> --command "node dist/index.js gateway --port 300
 fly machine update <machine-id> --vm-memory 2048 --command "node dist/index.js gateway --port 3000 --bind lan" -y
 ```
 
-**Nota:** Después de `fly deploy`, el comando de máquina puede restablecerse a lo que está en `fly.toml`. Si realizaste cambios manuales, vuelve a aplicarlos después del despliegue.
+**Nota:** Después de `fly deploy`, el comando de máquina puede restablecerse a lo que está en `fly.toml`. Si realizó cambios manuales, vuelva a aplicarlos después de la implementación.
 
-## Implementación privada (Endurecida)
+## Implementación privada (blindada)
 
-Por defecto, Fly asigna IPs públicas, haciendo que tu puerta de enlace sea accesible en `https://your-app.fly.dev`. Esto es conveniente pero significa que tu despliegue puede ser descubierto por escáneres de Internet (Shodan, Censys, etc.).
+De forma predeterminada, Fly asigna direcciones IP públicas, haciendo que su puerta de enlace sea accesible en `https://your-app.fly.dev`. Esto es conveniente pero significa que su implementación puede ser descubierta por escáneres de Internet (Shodan, Censys, etc.).
 
 Para una implementación endurecida con **sin exposición pública**, use la plantilla privada.
 
@@ -379,7 +392,7 @@ Para una implementación endurecida con **sin exposición pública**, use la pla
 
 ### Configuración
 
-Usa `fly.private.toml` en lugar de la configuración estándar:
+Use `fly.private.toml` en lugar de la configuración estándar:
 
 ```bash
 # Deploy with private config
@@ -469,7 +482,7 @@ Ejemplo de configuración de llamada de voz con ngrok:
 }
 ```
 
-El túnel ngrok se ejecuta dentro del contenedor y proporciona una URL de webhook pública sin exponer la aplicación de Fly en sí. Establece `webhookSecurity.allowedHosts` al nombre de host del túnel público para que se acepten los encabezados de host reenviados.
+El túnel ngrok se ejecuta dentro del contenedor y proporciona una URL pública de webhook sin exponer la aplicación de Fly en sí. Establezca `webhookSecurity.allowedHosts` al nombre de host del túnel público para que se acepten los encabezados de host reenviados.
 
 ### Beneficios de seguridad
 
@@ -484,21 +497,28 @@ El túnel ngrok se ejecuta dentro del contenedor y proporciona una URL de webhoo
 
 - Fly.io utiliza la **arquitectura x86** (no ARM)
 - El Dockerfile es compatible con ambas arquitecturas
-- Para la incorporación de WhatsApp/Telegram, usa `fly ssh console`
+- Para la incorporación de WhatsApp/Telegram, use `fly ssh console`
 - Los datos persistentes residen en el volumen en `/data`
 - Signal requiere Java + signal-cli; usa una imagen personalizada y mantén la memoria en 2GB o más.
 
 ## Coste
 
-Con la configuración recomendada (`shared-cpu-2x`, 2GB de RAM):
+Con la configuración recomendada (`shared-cpu-2x`, 2GB RAM):
 
 - ~$10-15/mes dependiendo del uso
 - El nivel gratuito incluye alguna asignación
 
-Consulta los [precios de Fly.io](https://fly.io/docs/about/pricing/) para más detalles.
+Consulte [precios de Fly.io](https://fly.io/docs/about/pricing/) para obtener más detalles.
 
 ## Próximos pasos
 
-- Configura canales de mensajería: [Canales](/es/channels)
-- Configura la puerta de enlace: [Configuración de la puerta de enlace](/es/gateway/configuration)
-- Mantén OpenClaw actualizado: [Actualización](/es/install/updating)
+- Configure los canales de mensajería: [Canales](/es/channels)
+- Configure la puerta de enlace: [Configuración de la puerta de enlace](/es/gateway/configuration)
+- Mantenga OpenClaw actualizado: [Actualización](/es/install/updating)
+
+## Relacionado
+
+- [Visión general de la instalación](/es/install)
+- [Hetzner](/es/install/hetzner)
+- [Docker](/es/install/docker)
+- [Alojamiento VPS](/es/vps)

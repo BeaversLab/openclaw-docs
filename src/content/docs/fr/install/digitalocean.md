@@ -6,9 +6,7 @@ read_when:
 title: "DigitalOcean"
 ---
 
-# DigitalOcean
-
-Exécutez une passerelle OpenClaw persistante sur un Droplet Gateway.
+Exécuter une passerelle OpenClaw persistante sur un Droplet DigitalOcean.
 
 ## Prérequis
 
@@ -21,7 +19,7 @@ Exécutez une passerelle OpenClaw persistante sur un Droplet Gateway.
 <Steps>
   <Step title="Créer un Droplet">
     <Warning>
-    Utilisez une image de base propre (Ubuntu 24.04 LTS). Évitez les images en un clic du tiers de la Marketplace, sauf si vous avez examiné leurs scripts de démarrage et les paramètres par défaut du pare-feu.
+    Utilisez une image de base propre (Ubuntu 24.04 LTS). Évitez les images en un clic du Marketplace tiers, sauf si vous avez examiné leurs scripts de démarrage et leurs paramètres de pare-feu par défaut.
     </Warning>
 
     1. Connectez-vous à [DigitalOcean](https://cloud.digitalocean.com/).
@@ -35,7 +33,7 @@ Exécutez une passerelle OpenClaw persistante sur un Droplet Gateway.
 
   </Step>
 
-  <Step title="Connecter et installer">
+  <Step title="Se connecter et installer">
     ```bash
     ssh root@YOUR_DROPLET_IP
 
@@ -57,11 +55,11 @@ Exécutez une passerelle OpenClaw persistante sur un Droplet Gateway.
     openclaw onboard --install-daemon
     ```
 
-    L'assistant vous guide à travers l'authentification du modèle, la configuration du canal, la génération de jetons de passerelle et l'installation du démon (systemd).
+    L'assistant vous guide à travers l'authentification du modèle, la configuration du canal, la génération du jeton de la passerelle et l'installation du démon (systemd).
 
   </Step>
 
-  <Step title="Ajouter du swap (recommandé pour les Droplets de 1 Go)">
+  <Step title="Ajouter de la swap (recommandé pour les Droplets de 1 Go)">
     ```bash
     fallocate -l 2G /swapfile
     chmod 600 /swapfile
@@ -71,10 +69,10 @@ Exécutez une passerelle OpenClaw persistante sur un Droplet Gateway.
     ```
   </Step>
 
-<Step title="Vérifiez la passerelle">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
+<Step title="Vérifier la passerelle">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
   <Step title="Accéder à l'interface de contrôle">
-    La passerelle se lie à l'interface locale (loopback) par défaut. Choisissez l'une de ces options.
+    La passerelle se lie à l'interface de bouclage par défaut. Choisissez l'une de ces options.
 
     **Option A : Tunnel SSH (le plus simple)**
 
@@ -96,7 +94,7 @@ Exécutez une passerelle OpenClaw persistante sur un Droplet Gateway.
 
     Ensuite, ouvrez `https://<magicdns>/` depuis n'importe quel appareil de votre tailnet.
 
-    **Option C : Liaison Tailnet (sans Serve)**
+    **Option C : Tailnet bind (sans Serve)**
 
     ```bash
     openclaw config set gateway.bind tailnet
@@ -110,14 +108,21 @@ Exécutez une passerelle OpenClaw persistante sur un Droplet Gateway.
 
 ## Dépannage
 
-**Le Gateway ne démarre pas** -- Exécutez `openclaw doctor --non-interactive` et vérifiez les journaux avec `journalctl --user -u openclaw-gateway.service -n 50`.
+**La passerelle ne démarre pas** -- Exécutez `openclaw doctor --non-interactive` et vérifiez les journaux avec `journalctl --user -u openclaw-gateway.service -n 50`.
 
 **Port déjà utilisé** -- Exécutez `lsof -i :18789` pour trouver le processus, puis arrêtez-le.
 
-**Mémoire insuffisante** -- Vérifiez que le swap est actif avec `free -h`. Si vous rencontrez toujours des erreurs OOM, utilisez des modèles basés sur l'API (Claude, GPT) plutôt que des modèles locaux, ou passez à un Droplet de 2 Go.
+**Manque de mémoire** -- Vérifiez que le swap est actif avec `free -h`. Si vous rencontrez toujours des erreurs OOM, utilisez des modèles basés sur l'API (Claude, GPT) plutôt que des modèles locaux, ou passez à un Droplet de 2 Go.
 
 ## Étapes suivantes
 
 - [Canaux](/fr/channels) -- connectez Telegram, WhatsApp, Discord, et plus
-- [Configuration du Gateway](/fr/gateway/configuration) -- toutes les options de configuration
+- [Configuration de la Gateway](/fr/gateway/configuration) -- toutes les options de configuration
 - [Mises à jour](/fr/install/updating) -- garder OpenClaw à jour
+
+## Connexes
+
+- [Aperçu de l'installation](/fr/install)
+- [Fly.io](/fr/install/fly)
+- [Hetzner](/fr/install/hetzner)
+- [Hébergement VPS](/fr/vps)

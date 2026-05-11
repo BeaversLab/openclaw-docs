@@ -3,7 +3,7 @@ summary: "Manejo de fecha y hora en sobres, avisos, herramientas y conectores"
 read_when:
   - You are changing how timestamps are shown to the model or users
   - You are debugging time formatting in messages or system prompt output
-title: "Fecha y Hora"
+title: "Fecha y hora"
 ---
 
 # Fecha y Hora

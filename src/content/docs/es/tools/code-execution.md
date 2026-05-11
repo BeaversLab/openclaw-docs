@@ -4,16 +4,14 @@ read_when:
   - You want to enable or configure code_execution
   - You want remote analysis without local shell access
   - You want to combine x_search or web_search with remote Python analysis
-title: "Ejecución de Código"
+title: "Ejecución de código"
 ---
 
-# Ejecución de Código
-
 `code_execution` ejecuta análisis remoto de Python en un entorno aislado en la API de Responses de xAI.
-Esto es diferente de [`exec`](/es/tools/exec) local:
+Esto es diferente del [`exec`](/es/tools/exec) local:
 
 - `exec` ejecuta comandos de shell en tu máquina o nodo
-- `code_execution` ejecuta Python en el sandbox remoto de xAI
+- `code_execution` ejecuta Python en el entorno aislado remoto de xAI
 
 Usa `code_execution` para:
 
@@ -23,8 +21,8 @@ Usa `code_execution` para:
 - análisis de estilo gráfico
 - analizar datos devueltos por `x_search` o `web_search`
 
-**No** lo uses cuando necesites archivos locales, tu shell, tu repositorio o dispositivos
-emparejados. Usa [`exec`](/es/tools/exec) para eso.
+**No** lo uses cuando necesites archivos locales, tu shell, tu repositorio o dispositivos emparejados.
+Usa [`exec`](/es/tools/exec) para eso.
 
 ## Configuración
 
@@ -57,7 +55,7 @@ Ejemplo:
 }
 ```
 
-## Cómo Usarlo
+## Cómo usarlo
 
 Pregunta de forma natural y haz explícita la intención del análisis:
 
@@ -78,13 +76,15 @@ la solicitud de análisis completa y cualquier dato en línea en un solo mensaje
 
 ## Límites
 
-- Esta es una ejecución remota de xAI, no una ejecución de proceso local.
+- Esta es una ejecución remota de xAI, no una ejecución de procesos local.
 - Debe tratarse como un análisis efímero, no como un cuaderno persistente.
 - No asumas acceso a archivos locales o a tu espacio de trabajo.
 - Para datos frescos de X, usa primero [`x_search`](/es/tools/web#x_search).
 
-## Véase También
+## Relacionado
 
+- [Herramienta Exec](/es/tools/exec)
+- [Aprobaciones de Exec](/es/tools/exec-approvals)
+- [Herramienta apply_patch](/es/tools/apply-patch)
 - [Herramientas web](/es/tools/web)
-- [Exec](/es/tools/exec)
 - [xAI](/es/providers/xai)

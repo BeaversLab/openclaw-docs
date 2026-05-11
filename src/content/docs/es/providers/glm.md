@@ -57,7 +57,7 @@ se accede mediante el proveedor `zai` e IDs de modelo como `zai/glm-5`.
 
 <Tip>`zai-api-key` permite que OpenClaw detecte el endpoint Z.AI coincidente a partir de la clave y aplique la URL base correcta automáticamente. Usa las opciones regionales explícitas cuando quieras forzar un Coding Plan específico o una superficie de API general.</Tip>
 
-## Modelos GLM incluidos
+## Catálogo integrado
 
 OpenClaw actualmente inicializa el proveedor `zai` incluido con estas referencias GLM:
 
@@ -74,7 +74,7 @@ OpenClaw actualmente inicializa el proveedor `zai` incluido con estas referencia
 
 <Note>La referencia del modelo incluido por defecto es `zai/glm-5.1`. Las versiones y disponibilidad de GLM pueden cambiar; consulta la documentación de Z.AI para obtener la más reciente.</Note>
 
-## Notas avanzadas
+## Configuración avanzada
 
 <AccordionGroup>
   <Accordion title="Detección automática de endpoint">

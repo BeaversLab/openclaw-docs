@@ -7,16 +7,13 @@ read_when:
 title: "Guide de personnalité SOUL.md"
 ---
 
-# Guide de personnalité SOUL.md
+`SOUL.md` est l'endroit où réside la voix de votre agent.
 
-`SOUL.md` est l'endroit où vit la voix de votre agent.
-
-OpenClaw l'injecte lors des sessions normales, il a donc un poids réel. Si votre agent
-sonne fade, hésitant ou bizarrement corporatif, c'est généralement le fichier à corriger.
+OpenClaw l'injecte lors des sessions normales, il a donc une réelle importance. Si votre agent a un son terne, hésitant ou bizarrement corporatif, c'est généralement le fichier à corriger.
 
 ## Ce qui appartient à SOUL.md
 
-Mettez les éléments qui modifient la sensation de parler avec l'agent :
+Mettez les éléments qui modifient la façon dont l'agent se sent lorsqu'il parle :
 
 - ton
 - opinions
@@ -25,40 +22,36 @@ Mettez les éléments qui modifient la sensation de parler avec l'agent :
 - limites
 - niveau de franchise par défaut
 
-Ne **transformez pas** ceci en :
+Ne **pas** en faire :
 
-- une histoire de vie
+- une biographie
 - un journal des modifications
 - un vidage de politique de sécurité
 - un immense mur de vibes sans effet comportemental
 
-Le court l'emporte sur le long. Le précis l'emporte sur le vague.
+Court l'emporte sur long. Précis l'emporte sur vague.
 
 ## Pourquoi cela fonctionne
 
-Cela s'aligne sur les conseils de prompt de OpenAI :
+Cela s'aligne sur les directives de prompt de OpenAI :
 
-- Le guide d'ingénierie de prompt indique que le comportement de haut niveau, le ton, les objectifs et
-  les exemples appartiennent à la couche d'instructions haute priorité, et non enfouis dans
-  le tour de l'utilisateur.
-- Le même guide recommande de traiter les prompts comme quelque chose que l'on itère,
-  que l'on épingleet que l'on évalue, et non comme une prose magique que l'on écrit une fois et que l'on oublie.
+- Le guide d'ingénierie de prompt indique que le comportement de haut niveau, le ton, les objectifs et les exemples doivent figurer dans la couche d'instructions haute priorité, et non être enterrés dans le tour de l'utilisateur.
+- Le même guide recommande de traiter les prompts comme quelque chose sur lequel on itère, que l'on épinglette et que l'on évalue, et non comme une prose magique que l'on écrit une fois et que l'on oublie.
 
 Pour OpenClaw, `SOUL.md` est cette couche.
 
-Si vous voulez une meilleure personnalité, écrivez des instructions plus fortes. Si vous voulez une personnalité
-stable, gardez-les concises et versionnées.
+Si vous souhaitez une meilleure personnalité, rédigez des instructions plus fortes. Si vous souhaitez une personnalité stable, gardez-les concises et versionnées.
 
-Réf OpenAI :
+Réf. OpenAI :
 
 - [Ingénierie de prompt](https://developers.openai.com/api/docs/guides/prompt-engineering)
-- [Rôles de message et suivi des instructions](https://developers.openai.com/api/docs/guides/prompt-engineering#message-roles-and-instruction-following)
+- [Rôles des messages et suivi des instructions](https://developers.openai.com/api/docs/guides/prompt-engineering#message-roles-and-instruction-following)
 
 ## Le prompt Molty
 
 Collez ceci dans votre agent et laissez-le réécrire `SOUL.md`.
 
-Chemin corrigé pour les espaces de travail OpenClaw : utilisez `SOUL.md`, pas `http://SOUL.md`.
+Chemin corrigé pour les espaces de travail OpenClaw : utilisez `SOUL.md`, et non `http://SOUL.md`.
 
 ```md
 Read your `SOUL.md`. Now rewrite it with these changes:
@@ -80,10 +73,10 @@ Save the new `SOUL.md`. Welcome to having a personality.
 Les bonnes règles `SOUL.md` ressemblent à ceci :
 
 - avoir un avis
-- sauter les remplissages
+- passer les remplissages
 - être drôle quand cela convient
 - signaler les mauvaises idées tôt
-- rester concis sauf si la profondeur est vraiment utile
+- rester concis sauf si la profondeur est réellement utile
 
 Les mauvaises règles `SOUL.md` ressemblent à ceci :
 
@@ -91,20 +84,18 @@ Les mauvaises règles `SOUL.md` ressemblent à ceci :
 - fournir une assistance complète et réfléchie
 - assurer une expérience positive et de soutien
 
-Cette deuxième liste est comment obtenir de la bouillie.
+Cette deuxième liste est ce qui vous donne de la bouillie.
 
 ## Un avertissement
 
 La personnalité n'est pas une permission d'être négligé.
 
-Gardez `AGENTS.md` pour les règles de fonctionnement. Gardez `SOUL.md` pour la voix, la posture et
-le style. Si votre agent travaille dans des canaux partagés, des réponses publiques ou des interfaces
-clients, assurez-vous que le ton reste adapté au contexte.
+Gardez `AGENTS.md` pour les règles de fonctionnement. Gardez `SOUL.md` pour la voix, la position et le style. Si votre agent travaille dans des canaux partagés, des réponses publiques ou des surfaces client, assurez-vous que le ton convient toujours à la salle.
 
-Tranchant est bon. Agaçant ne l'est pas.
+Précis est bon. Agaçant ne l'est pas.
 
-## Documentation connexe
+## Docs associés
 
 - [Espace de travail de l'agent](/fr/concepts/agent-workspace)
-- [Prompt système](/fr/concepts/system-prompt)
+- [Invite système](/fr/concepts/system-prompt)
 - [Modèle SOUL.md](/fr/reference/templates/SOUL)

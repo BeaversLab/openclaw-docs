@@ -7,7 +7,7 @@ title: "macOS 開發設定"
 
 # macOS 開發者設定
 
-本指南涵蓋從原始碼建置和執行 OpenClaw macOS 應用程式所需的步驟。
+從原始碼建置並執行 OpenClaw macOS 應用程式。
 
 ## 先決條件
 
@@ -34,7 +34,7 @@ pnpm install
 
 如果您沒有 Apple 開發者 ID 憑證，腳本將會自動使用 **臨時簽署** (`-`)。
 
-關於開發執行模式、簽署標誌和團隊 ID 故障排除，請參閱 macOS 應用程式 README：
+關於開發執行模式、簽署旗標和 Team ID 故障排除，請參閱 macOS 應用程式 README：
 [https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
 
 > **注意**：臨時簽署的應用程式可能會觸發安全性提示。如果應用程式立即崩潰並顯示 "Abort trap 6"，請參閱 [故障排除](#troubleshooting) 章節。
@@ -78,7 +78,7 @@ xcrun swift --version
 
 如果版本不符，請更新 macOS/Xcode 並重新執行建置。
 
-### 授予權限時應用程式崩潰
+### 應用程式在授與權限時當機
 
 如果您嘗試允許 **語音辨識** 或 **麥克風** 存取權限時應用程式崩潰，這可能是因為 TCC 快取損壞或簽章不相符。
 
@@ -90,7 +90,7 @@ xcrun swift --version
    tccutil reset All ai.openclaw.mac.debug
    ```
 
-2. 如果這樣失敗，請暫時變更 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中的 `BUNDLE_ID`，以強制 macOS 重新建立乾淨的狀態。
+2. 如果失敗，請暫時在 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中變更 `BUNDLE_ID`，以強制從 macOS 取得「全新狀態」。
 
 ### Gateway 持續顯示 "正在啟動..."
 
@@ -105,3 +105,8 @@ lsof -nP -iTCP:18789 -sTCP:LISTEN
 ```
 
 如果是手動執行的程序佔用了連接埠，請停止該程序 (Ctrl+C)。作為最後的手段，終止您上方找到的 PID。
+
+## 相關
+
+- [macOS 應用程式](/zh-Hant/platforms/macos)
+- [安裝概覽](/zh-Hant/install)

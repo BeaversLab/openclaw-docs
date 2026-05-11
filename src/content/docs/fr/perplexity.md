@@ -3,7 +3,7 @@ summary: "API de recherche Perplexity et compatibilité Sonar/OpenRouter pour we
 read_when:
   - You want to use Perplexity Search for web search
   - You need PERPLEXITY_API_KEY or OPENROUTER_API_KEY setup
-title: "Perplexity Search (chemin hérité)"
+title: "Recherche Perplexity (chemin hérité)"
 ---
 
 # API de recherche Perplexity
@@ -16,7 +16,7 @@ Si vous utilisez `OPENROUTER_API_KEY`, une clé `sk-or-...` dans `plugins.entrie
 
 ## Obtenir une clé API Perplexity
 
-1. Créez un compte Perplexity sur [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api)
+1. Créez un compte Perplexity à l'adresse [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api)
 2. Générez une clé API dans le tableau de bord
 3. Stockez la clé dans la configuration ou définissez `PERPLEXITY_API_KEY` dans l'environnement de la passerelle.
 
@@ -177,5 +177,10 @@ await web_search({
 - La compatibilité Sonar/OpenRouter renvoie une réponse synthétisée avec des citations, et non des lignes de résultats structurés
 - Les résultats sont mis en cache pendant 15 minutes par défaut (configurable via `cacheTtlMinutes`)
 
-Voir [Web tools](/fr/tools/web) pour la configuration complète de web_search.
-Voir [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) pour plus de détails.
+Voir [Outils Web](/fr/tools/web) pour la configuration complète de web_search.
+Voir la documentation de l'Perplexity de recherche API](https://docs.perplexity.ai/docs/search/quickstart) pour plus de détails.
+
+## Connexes
+
+- [Recherche Perplexity](/fr/tools/perplexity-search)
+- [Recherche Web](/fr/tools/web)

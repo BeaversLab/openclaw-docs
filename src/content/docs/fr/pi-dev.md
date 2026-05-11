@@ -1,24 +1,22 @@
 ---
-title: "Flux de développement Pi"
-summary: "Flux de travail développeur pour l'intégration Pi : build, test et validation en direct"
+summary: "Workflow de développeur pour l'intégration Pi : build, test et validation en direct"
+title: "Workflow de développement Pi"
 read_when:
   - Working on Pi integration code or tests
   - Running Pi-specific lint, typecheck, and live test flows
 ---
 
-# Flux de développement Pi
+Un workflow sain pour travailler sur l'intégration Pi dans OpenClaw.
 
-Ce guide résume un flux de travail sain pour travailler sur l'intégration pi dans OpenClaw.
+## Vérification de type et linting
 
-## Vérification de type et Linting
+- Passerelle locale par défaut : `pnpm check`
+- Passerelle de build : `pnpm build` lorsque le changement peut affecter la sortie de build, le packaging, ou les limites de lazy-loading/modules
+- Passerelle complète d'atterrissage pour les changements lourds liés à Pi : `pnpm check && pnpm test`
 
-- Default local gate: `pnpm check`
-- Build gate: `pnpm build` when the change can affect build output, packaging, or lazy-loading/module boundaries
-- Full landing gate for Pi-heavy changes: `pnpm check && pnpm test`
+## Exécution des tests Pi
 
-## Running Pi Tests
-
-Run the Pi-focused test set directly with Vitest:
+Exécuter directement la suite de tests axés sur Pi avec Vitest :
 
 ```bash
 pnpm test \
@@ -30,13 +28,13 @@ pnpm test \
   "src/agents/pi-hooks/**/*.test.ts"
 ```
 
-To include the live provider exercise:
+Pour inclure l'exercice en direct du provider :
 
 ```bash
 OPENCLAW_LIVE_TEST=1 pnpm test src/agents/pi-embedded-runner-extraparams.live.test.ts
 ```
 
-This covers the main Pi unit suites:
+Cela couvre les principales suites unitaires Pi :
 
 - `src/agents/pi-*.test.ts`
 - `src/agents/pi-embedded-*.test.ts`
@@ -45,36 +43,40 @@ This covers the main Pi unit suites:
 - `src/agents/pi-tool-definition-adapter.test.ts`
 - `src/agents/pi-hooks/*.test.ts`
 
-## Manual Testing
+## Test manuel
 
-Recommended flow:
+Flux recommandé :
 
-- Run the gateway in dev mode:
+- Lancer la passerelle en mode dev :
   - `pnpm gateway:dev`
-- Trigger the agent directly:
+- Déclencher l'agent directement :
   - `pnpm openclaw agent --message "Hello" --thinking low`
-- Use the TUI for interactive debugging:
+- Utiliser le TUI pour le débogage interactif :
   - `pnpm tui`
 
-For tool call behavior, prompt for a `read` or `exec` action so you can see tool streaming and payload handling.
+Pour le comportement des appels d'outils, demandez une action `read` ou `exec` afin de voir le streaming de l'outil et la gestion des payloads.
 
-## Clean Slate Reset
+## Réinitialisation propre
 
-State lives under the OpenClaw state directory. Default is `~/.openclaw`. If `OPENCLAW_STATE_DIR` is set, use that directory instead.
+L'état réside sous le répertoire d'état OpenClaw. La valeur par défaut est `~/.openclaw`. Si `OPENCLAW_STATE_DIR` est défini, utilisez ce répertoire à la place.
 
-To reset everything:
+Pour tout réinitialiser :
 
-- `openclaw.json` for config
-- `agents/<agentId>/agent/auth-profiles.json` for model auth profiles (API keys + OAuth)
-- `credentials/` for provider/channel state that still lives outside the auth profile store
-- `agents/<agentId>/sessions/` pour l'historique des session agent
-- `agents/<agentId>/sessions/sessions.json` for the session index
-- `sessions/` si des chemins hérités existent
+- `openclaw.json` pour la configuration
+- `agents/<agentId>/agent/auth-profiles.json` pour les profils d'auth de modèle (clés API + OAuth)
+- `credentials/` pour l'état provider/channel qui réside toujours en dehors du magasin de profils d'auth
+- `agents/<agentId>/sessions/` pour l'historique des sessions de l'agent
+- `agents/<agentId>/sessions/sessions.json` pour l'index des sessions
+- `sessions/` si les chemins hérités existent
 - `workspace/` si vous souhaitez un espace de travail vierge
 
-If you only want to reset sessions, delete `agents/<agentId>/sessions/` for that agent. If you want to keep auth, leave `agents/<agentId>/agent/auth-profiles.json` and any provider state under `credentials/` in place.
+Si vous souhaitez uniquement réinitialiser les sessions, supprimez `agents/<agentId>/sessions/` pour cet agent. Si vous souhaitez conserver l'auth, laissez `agents/<agentId>/agent/auth-profiles.json` et tout état provider sous `credentials/` en place.
 
 ## Références
 
 - [Tests](/fr/help/testing)
 - [Getting Started](/fr/start/getting-started)
+
+## Connexes
+
+- [Architecture de l'intégration Pi](/fr/pi)

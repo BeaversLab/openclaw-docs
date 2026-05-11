@@ -1,5 +1,5 @@
 ---
-summary: "安装 OpenClaw — 安装程序脚本、OpenClaw/pnpm/bun、从源码、npm 等"
+summary: "安装 OpenClaw — 安装脚本、npm/pnpm/bun、从源码、Docker 等"
 read_when:
   - You need an install method other than the Getting Started quickstart
   - You want to deploy to a cloud platform
@@ -7,18 +7,22 @@ read_when:
 title: "安装"
 ---
 
-# 安装
+## 系统要求
 
-## 推荐：安装程序脚本
+- **Node 24**（推荐）或 Node 22.14+ — 安装脚本会自动处理此要求
+- **macOS、Linux 或 Windows** — 同时支持原生 Windows 和 WSL2；WSL2 更稳定。请参阅 [Windows](/zh/platforms/windows)。
+- 仅当您从源码构建时才需要 `pnpm`
 
-最快的安装方式。它会检测你的操作系统，在需要时安装 Node，安装 OpenClaw，并启动新手引导。
+## 推荐：安装脚本
+
+最快的安装方式。它会检测您的操作系统，在需要时安装 Node，安装 OpenClaw，并启动新手引导。
 
 <Tabs>
   <Tab title="macOS / Linux / WSL2">```bash curl -fsSL https://openclaw.ai/install.sh | bash ```</Tab>
   <Tab title="Windows (PowerShell)">```powershell iwr -useb https://openclaw.ai/install.ps1 | iex ```</Tab>
 </Tabs>
 
-若要安装而不运行新手引导：
+要在不运行新手引导的情况下安装：
 
 <Tabs>
   <Tab title="macOS / Linux / WSL2">```bash curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-onboard ```</Tab>
@@ -27,28 +31,26 @@ title: "安装"
 
 有关所有标志和 CI/自动化选项，请参阅 [安装程序内部机制](/zh/install/installer)。
 
-## 系统要求
-
-- **Node 24**（推荐）或 Node 22.14+ — 安装程序脚本会自动处理此问题
-- **macOS、Linux 或 Windows** — 原生 Windows 和 WSL2 均受支持；WSL2 更稳定。请参阅 [Windows](/zh/platforms/windows)。
-- 仅当你从源码构建时才需要 `pnpm`
-
 ## 替代安装方法
 
 ### 本地前缀安装程序 (`install-cli.sh`)
 
-当你希望将 OpenClaw 和 Node 保留在本地前缀（例如
+当您希望将 OpenClaw 和 Node 保持在本地前缀（例如
 `~/.openclaw`）下而不依赖于系统范围的 Node 安装时，请使用此方法：
 
 ```bash
 curl -fsSL https://openclaw.ai/install-cli.sh | bash
 ```
 
-默认情况下它支持 npm 安装，此外还支持在同一前缀流程下的 git-checkout 安装。完整参考：[安装程序内部机制](/zh/install/installer#install-clish)。
+默认情况下，它支持 npm 安装，以及在同一前缀流程下的 git-checkout 安装。完整参考：[安装程序内部机制](/zh/install/installer#install-clish)。
+
+已经安装？使用
+`openclaw update --channel dev` 和 `openclaw update --channel stable` 在包和 git 安装之间切换。请参阅
+[更新](/zh/install/updating#switch-between-npm-and-git-installs)。
 
 ### npm、pnpm 或 bun
 
-如果你已经自行管理 Node：
+如果您已经自己管理 Node：
 
 <Tabs>
   <Tab title="npm">
@@ -65,7 +67,7 @@ curl -fsSL https://openclaw.ai/install-cli.sh | bash
     ```
 
     <Note>
-    pnpm requires explicit approval for packages with build scripts. Run `pnpm approve-builds -g` after the first install.
+    pnpm 需要明确批准包含构建脚本的包。在首次安装后运行 `pnpm approve-builds -g`。
     </Note>
 
   </Tab>
@@ -76,14 +78,14 @@ curl -fsSL https://openclaw.ai/install-cli.sh | bash
     ```
 
     <Note>
-    Bun 支持全局 CLI 安装路径。对于 Gateway 运行时，Node 仍然是推荐的守护进程运行时。
+    Bun 支持全局 CLI 安装路径。对于 Gateway(网关) 运行时，Node 仍然是推荐的守护进程运行时。
     </Note>
 
   </Tab>
 </Tabs>
 
 <Accordion title="故障排除：sharp 构建错误 (npm)">
-  如果 `sharp` 由于全局安装的 libvips 而失败：
+  如果 `sharp` 因全局安装的 libvips 而失败：
 
 ```bash
 SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
@@ -93,7 +95,7 @@ SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
 
 ### 从源代码安装
 
-适用于贡献者或任何希望从本地检出运行的用户：
+对于贡献者或任何想要从本地检出运行的人：
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -103,7 +105,7 @@ pnpm link --global
 openclaw onboard --install-daemon
 ```
 
-或者跳过链接，直接在仓库内部使用 `pnpm openclaw ...`。有关完整的开发工作流，请参阅 [Setup](/zh/start/setup)。
+或者跳过链接并从仓库内部使用 `pnpm openclaw ...`。有关完整的开发工作流，请参阅 [设置](/zh/start/setup)。
 
 ### 从 GitHub main 安装
 
@@ -127,7 +129,7 @@ npm install -g github:openclaw/openclaw#main
     自动化集群配置。
   </Card>
   <Card title="Bun" href="/zh/install/bun" icon="zap">
-    通过 Bun 运行时仅使用 CLI。
+    通过 CLI 运行时进行 Bun 专用操作。
   </Card>
 </CardGroup>
 
@@ -143,7 +145,7 @@ openclaw gateway status # verify the Gateway is running
 
 - macOS：通过 `openclaw onboard --install-daemon` 或 `openclaw gateway install` 使用 LaunchAgent
 - Linux/WSL2：通过相同的命令使用 systemd 用户服务
-- 原生 Windows：优先使用计划任务，如果拒绝创建任务，则回退到每用户启动文件夹登录项
+- 原生 Windows：首先使用计划任务，如果任务创建被拒绝，则回退到针对每个用户的启动文件夹登录项
 
 ## 托管和部署
 
@@ -151,7 +153,7 @@ openclaw gateway status # verify the Gateway is running
 
 <CardGroup cols={3}>
   <Card title="VPS" href="/zh/vps">
-    任意 Linux VPS
+    任何 Linux VPS
   </Card>
   <Card title="Docker VM" href="/zh/install/docker-vm-runtime">
     共享 Docker 步骤
@@ -186,7 +188,7 @@ openclaw gateway status # verify the Gateway is running
 
 <CardGroup cols={3}>
   <Card title="Updating" href="/zh/install/updating" icon="refresh-cw">
-    保持 OpenClaw 为最新。
+    保持 OpenClaw 为最新版本。
   </Card>
   <Card title="Migrating" href="/zh/install/migrating" icon="arrow-right">
     迁移到新机器。
@@ -196,9 +198,9 @@ openclaw gateway status # verify the Gateway is running
   </Card>
 </CardGroup>
 
-## 故障排除：未找到 `openclaw`
+## 故障排除：找不到 `openclaw`
 
-如果安装成功但在终端中未找到 `openclaw`：
+故障排除：找不到 `openclaw`
 
 ```bash
 node -v           # Node installed?
@@ -206,7 +208,7 @@ npm prefix -g     # Where are global packages?
 echo "$PATH"      # Is the global bin dir in PATH?
 ```
 
-如果 `$(npm prefix -g)/bin` 不在您的 `$PATH` 中，请将其添加到您的 shell 启动文件（`~/.zshrc` 或 `~/.bashrc`）中：
+如果 `$(npm prefix -g)/bin` 不在您的 `$PATH` 中，请将其添加到您的 Shell 启动文件（`~/.zshrc` 或 `~/.bashrc`）中：
 
 ```bash
 export PATH="$(npm prefix -g)/bin:$PATH"

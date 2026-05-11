@@ -1,15 +1,13 @@
 ---
-title: IRC
 summary: "IRC 插件设置、访问控制和故障排除"
+title: IRC
 read_when:
   - You want to connect OpenClaw to IRC channels or DMs
   - You are configuring IRC allowlists, group policy, or mention gating
 ---
 
-# IRC
-
-当您希望在经典频道 (`#room`) 和直接消息中使用 OpenClaw 时，请使用 IRC。
-IRC 作为捆绑插件提供，但在 `channels.irc` 下的主配置中进行配置。
+当您希望在经典渠道（`#room`）和私信中使用 OpenClaw 时，请使用 IRC。
+IRC 作为捆绑插件提供，但在主配置中的 `channels.irc` 下进行配置。
 
 ## 快速开始
 
@@ -31,7 +29,7 @@ IRC 作为捆绑插件提供，但在 `channels.irc` 下的主配置中进行配
 }
 ```
 
-为机器人协调首选私有 IRC 服务器。如果你有意使用公共 IRC 网络，常见的选择包括 Libera.Chat、OFTC 和 Snoonet。避免为机器人或群组后向流量使用可预测的公开频道。
+建议使用私有 IRC 服务器进行机器人协调。如果您有意使用公共 IRC 网络，常见的选择包括 Libera.Chat、OFTC 和 Snoonet。避免使用可预测的公共渠道进行机器人或群组后端流量传输。
 
 3. 启动/重启网关：
 
@@ -43,38 +41,38 @@ openclaw gateway run
 
 - `channels.irc.dmPolicy` 默认为 `"pairing"`。
 - `channels.irc.groupPolicy` 默认为 `"allowlist"`。
-- 使用 `groupPolicy="allowlist"` 时，设置 `channels.irc.groups` 来定义允许的频道。
-- 使用 TLS (`channels.irc.tls=true`)，除非你有意接受明文传输。
+- 使用 `groupPolicy="allowlist"` 时，设置 `channels.irc.groups` 以定义允许的渠道。
+- 除非您有意接受明文传输，否则请使用 TLS（`channels.irc.tls=true`）。
 
 ## 访问控制
 
-IRC 频道有两个独立的“关卡”：
+IRC 渠道有两个独立的“门”：
 
-1. **频道访问** (`groupPolicy` + `groups`)：机器人是否接受来自频道的消息。
-2. **发送者访问** (`groupAllowFrom` / 每频道 `groups["#channel"].allowFrom`)：谁被允许在该频道内触发机器人。
+1. **渠道访问**（`groupPolicy` + `groups`）：机器人是否完全接受来自某个渠道的消息。
+2. **发送者访问**（`groupAllowFrom` / 每渠道 `groups["#channel"].allowFrom`）：谁被允许在该渠道内触发机器人。
 
 配置键：
 
 - 私信允许列表（私信发送者访问）：`channels.irc.allowFrom`
-- 群组发送者允许列表（频道发送者访问）：`channels.irc.groupAllowFrom`
-- 每频道控制（频道 + 发送者 + 提及规则）：`channels.irc.groups["#channel"]`
-- `channels.irc.groupPolicy="open"` 允许未配置的频道（**默认仍受提及限制**）
+- 群组发送者允许列表（渠道发送者访问）：`channels.irc.groupAllowFrom`
+- 每渠道控制（渠道 + 发送者 + 提及规则）：`channels.irc.groups["#channel"]`
+- `channels.irc.groupPolicy="open"` 允许未配置的渠道（**默认仍受提及限制**）
 
-允许列表条目应使用稳定的发送者身份 (`nick!user@host`)。
-裸昵称匹配是可变的，仅在 `channels.irc.dangerouslyAllowNameMatching: true` 时启用。
+允许列表条目应使用稳定的发送者身份（`nick!user@host`）。
+纯昵称匹配是可变的，仅当 `channels.irc.dangerouslyAllowNameMatching: true` 时启用。
 
-### 常见陷阱：`allowFrom` 是用于私信的，不是用于频道的
+### 常见陷阱：`allowFrom` 适用于私信，而非渠道
 
-如果你看到如下日志：
+如果您看到如下日志：
 
 - `irc: drop group sender alice!ident@host (policy=allowlist)`
 
-……这意味着该发送者未被允许发送 **群组/频道** 消息。请通过以下任一方式修复：
+...这意味着该发送者未被允许用于**群组/渠道**消息。请通过以下方式之一修复：
 
-- 设置 `channels.irc.groupAllowFrom`（所有频道全局），或
-- 设置每频道发送者允许列表：`channels.irc.groups["#channel"].allowFrom`
+- 设置 `channels.irc.groupAllowFrom`（所有渠道的全局设置），或
+- 设置每个渠道的发送者允许列表：`channels.irc.groups["#channel"].allowFrom`
 
-示例（允许 `#tuirc-dev` 中的任何人跟机器人对话）：
+示例（允许 `#tuirc-dev` 中的任何人向机器人发送消息）：
 
 ```json5
 {
@@ -91,11 +89,11 @@ IRC 频道有两个独立的“关卡”：
 
 ## 回复触发（提及）
 
-即使频道是允许的（通过 `groupPolicy` + `groups`）且发送者是允许的，OpenClaw 在群组上下文中默认采用 **提及限制**。
+即使允许了某个渠道（通过 `groupPolicy` + `groups`）并且发送者也是允许的，OpenClaw 在群组上下文中默认为 **提及限制**（mention-gating）。
 
-这意味着除非消息包含与机器人匹配的提及模式，否则您可能会看到类似 `drop channel … (missing-mention)` 的日志。
+这意味着除非消息包含匹配机器人的提及模式，否则您可能会看到像 `drop channel … (missing-mention)` 这样的日志。
 
-若要机器人在 IRC 渠道中回复**而无需提及**，请为该渠道禁用提及限制：
+若要机器人在 IRC 渠道中回复而**无需提及**，请禁用该渠道的提及限制：
 
 ```json5
 {
@@ -113,7 +111,7 @@ IRC 频道有两个独立的“关卡”：
 }
 ```
 
-或者要允许**所有** IRC 渠道（无每渠道允许列表）并在无提及的情况下回复：
+或者允许 **所有** IRC 渠道（没有每个渠道的允许列表）并且仍然在无需提及的情况下回复：
 
 ```json5
 {
@@ -130,9 +128,10 @@ IRC 频道有两个独立的“关卡”：
 
 ## 安全说明（推荐用于公开渠道）
 
-如果您在公开渠道中允许 `allowFrom: ["*"]`，任何人都可以提示机器人。为了降低风险，请限制该渠道的工具。
+如果您在公开渠道中允许 `allowFrom: ["*"]`，任何人都可以向机器人发出提示。
+为了降低风险，请限制该渠道的工具。
 
-### 渠道内所有人使用相同的工具
+### 渠道中每个人都使用相同的工具
 
 ```json5
 {
@@ -151,7 +150,7 @@ IRC 频道有两个独立的“关卡”：
 }
 ```
 
-### 根据发送者使用不同的工具（所有者获得更多权限）
+### 每个发送者使用不同的工具（所有者拥有更多权限）
 
 使用 `toolsBySender` 对 `"*"` 应用更严格的策略，并对您的昵称应用较宽松的策略：
 
@@ -177,14 +176,14 @@ IRC 频道有两个独立的“关卡”：
 }
 ```
 
-备注：
+注意事项：
 
-- `toolsBySender` 键应使用 `id:` 作为 IRC 发送者标识值：
-  使用 `id:eigen` 或 `id:eigen!~eigen@174.127.248.171` 以进行更强的匹配。
-- 传统的无前缀键仍然被接受，并且仅作为 `id:` 进行匹配。
-- 第一个匹配的发送者策略获胜；`"*"` 是通配符后备。
+- `toolsBySender` 键应使用 `id:` 作为 IRC 发送者身份值：
+  `id:eigen` 或 `id:eigen!~eigen@174.127.248.171` 以进行更强的匹配。
+- 仍然接受旧的无前缀键，并且仅作为 `id:` 进行匹配。
+- 第一个匹配的发送者策略获胜；`"*"` 是通配符回退。
 
-有关组访问权限与提及限制（及其交互方式）的更多信息，请参阅：[/channels/groups](/zh/channels/groups)。
+有关群组访问与提及限制（以及它们如何交互）的更多信息，请参阅：[/channels/groups](/zh/channels/groups)。
 
 ## NickServ
 
@@ -204,7 +203,7 @@ IRC 频道有两个独立的“关卡”：
 }
 ```
 
-连接时的一次性可选注册：
+连接时可选的一次性注册：
 
 ```json5
 {
@@ -219,7 +218,7 @@ IRC 频道有两个独立的“关卡”：
 }
 ```
 
-注册昵称后禁用 `register`，以避免重复的 REGISTER 尝试。
+在昵称注册后禁用 `register` 以避免重复的 REGISTER 尝试。
 
 ## 环境变量
 
@@ -232,20 +231,22 @@ IRC 频道有两个独立的“关卡”：
 - `IRC_USERNAME`
 - `IRC_REALNAME`
 - `IRC_PASSWORD`
-- `IRC_CHANNELS` （逗号分隔）
+- `IRC_CHANNELS`（逗号分隔）
 - `IRC_NICKSERV_PASSWORD`
 - `IRC_NICKSERV_REGISTER_EMAIL`
 
+无法从工作区 `.env` 设置 `IRC_HOST`；请参阅 [工作区 `.env` 文件](/zh/gateway/security)。
+
 ## 故障排除
 
-- 如果机器人已连接但从未在渠道中回复，请验证 `channels.irc.groups` **以及**提及限制是否正在丢弃消息（`missing-mention`）。如果您希望它在无 Ping 的情况下回复，请为该渠道设置 `requireMention:false`。
+- 如果机器人已连接但在渠道中从不回复，请验证 `channels.irc.groups` **以及**提及拦截（mention-gating）是否丢弃了消息（`missing-mention`）。如果您希望它在没有 @ping 的情况下回复，请为该渠道设置 `requireMention:false`。
 - 如果登录失败，请验证昵称可用性和服务器密码。
 - 如果 TLS 在自定义网络上失败，请验证主机/端口和证书设置。
 
 ## 相关
 
-- [Channels Overview](/zh/channels) — 所有支持的频道
-- [Pairing](/zh/channels/pairing) — 私信认证和配对流程
-- [Groups](/zh/channels/groups) — 群聊行为和提及控制
-- [Channel Routing](/zh/channels/channel-routing) — 消息的会话路由
-- [Security](/zh/gateway/security) — 访问模型和加固
+- [渠道概览](/zh/channels) — 所有支持的渠道
+- [配对](/zh/channels/pairing) — 私信认证和配对流程
+- [群组](/zh/channels/groups) — 群聊行为和提及拦截
+- [渠道路由](/zh/channels/channel-routing) — 消息的会话路由
+- [安全性](/zh/gateway/security) — 访问模型和加固

@@ -6,8 +6,6 @@ read_when:
 title: "OpenCode"
 ---
 
-# OpenCode
-
 OpenCode expone dos catálogos alojados en OpenClaw:
 
 | Catálogo | Prefijo           | Proveedor de tiempo de ejecución |
@@ -15,9 +13,9 @@ OpenCode expone dos catálogos alojados en OpenClaw:
 | **Zen**  | `opencode/...`    | `opencode`                       |
 | **Go**   | `opencode-go/...` | `opencode-go`                    |
 
-Ambos catálogos utilizan la misma clave de API de OpenCode. OpenClaw mantiene los identificadores de proveedores de tiempo de ejecución separados para que el enrutamiento ascendente por modelo siga siendo correcto, pero el proceso de incorporación y la documentación los tratan como una única configuración de OpenCode.
+Ambos catálogos utilizan la misma clave de API de OpenCode. OpenClaw mantiene los identificadores de los proveedores de tiempo de ejecución separados para que el enrutamiento ascendente por modelo siga siendo correcto, pero la incorporación y la documentación los tratan como una única configuración de OpenCode.
 
-## Introducción
+## Comenzar
 
 <Tabs>
   <Tab title="Catálogo Zen">
@@ -29,7 +27,7 @@ Ambos catálogos utilizan la misma clave de API de OpenCode. OpenClaw mantiene l
         openclaw onboard --auth-choice opencode-zen
         ```
 
-        O pase la clave directamente:
+        O pasar la clave directamente:
 
         ```bash
         openclaw onboard --opencode-zen-api-key "$OPENCODE_API_KEY"
@@ -58,7 +56,7 @@ Ambos catálogos utilizan la misma clave de API de OpenCode. OpenClaw mantiene l
         openclaw onboard --auth-choice opencode-go
         ```
 
-        O pase la clave directamente:
+        O pasar la clave directamente:
 
         ```bash
         openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
@@ -66,7 +64,7 @@ Ambos catálogos utilizan la misma clave de API de OpenCode. OpenClaw mantiene l
       </Step>
       <Step title="Establecer un modelo Go como predeterminado">
         ```bash
-        openclaw config set agents.defaults.model.primary "opencode-go/kimi-k2.5"
+        openclaw config set agents.defaults.model.primary "opencode-go/kimi-k2.6"
         ```
       </Step>
       <Step title="Verificar que los modelos estén disponibles">
@@ -88,47 +86,47 @@ Ambos catálogos utilizan la misma clave de API de OpenCode. OpenClaw mantiene l
 }
 ```
 
-## Catálogos
+## Catálogos integrados
 
 ### Zen
 
 | Propiedad                        | Valor                                                                   |
 | -------------------------------- | ----------------------------------------------------------------------- |
 | Proveedor de tiempo de ejecución | `opencode`                                                              |
-| Modelos de ejemplo               | `opencode/claude-opus-4-6`, `opencode/gpt-5.4`, `opencode/gemini-3-pro` |
+| Modelos de ejemplo               | `opencode/claude-opus-4-6`, `opencode/gpt-5.5`, `opencode/gemini-3-pro` |
 
 ### Go
 
 | Propiedad                        | Valor                                                                    |
 | -------------------------------- | ------------------------------------------------------------------------ |
 | Proveedor de tiempo de ejecución | `opencode-go`                                                            |
-| Modelos de ejemplo               | `opencode-go/kimi-k2.5`, `opencode-go/glm-5`, `opencode-go/minimax-m2.5` |
+| Modelos de ejemplo               | `opencode-go/kimi-k2.6`, `opencode-go/glm-5`, `opencode-go/minimax-m2.5` |
 
-## Notas avanzadas
+## Configuración avanzada
 
 <AccordionGroup>
   <Accordion title="Alias de clave de API">
-    `OPENCODE_ZEN_API_KEY` también es compatible como alias para `OPENCODE_API_KEY`.
+    `OPENCODE_ZEN_API_KEY` también está soportado como alias de `OPENCODE_API_KEY`.
   </Accordion>
 
-<Accordion title="Credenciales compartidas">Ingresar una clave de OpenCode durante la configuración guarda las credenciales para ambos proveedores de tiempo de ejecución. No es necesario incorporar cada catálogo por separado.</Accordion>
+<Accordion title="Credenciales compartidas">Ingresar una clave de OpenCode durante la configuración guarda las credenciales para ambos proveedores de tiempo de ejecución. No necesita integrar cada catálogo por separado.</Accordion>
 
-<Accordion title="Facturación y panel de control">Inicia sesión en OpenCode, agrega los detalles de facturación y copia tu clave de API. La facturación y la disponibilidad del catálogo se gestionan desde el panel de control de OpenCode.</Accordion>
+<Accordion title="Facturación y panel">Inicia sesión en OpenCode, agrega los detalles de facturación y copia tu clave de API. La facturación y la disponibilidad del catálogo se gestionan desde el panel de OpenCode.</Accordion>
 
-<Accordion title="Comportamiento de repetición de Gemini">Las referencias de OpenCode con respaldo de Gemini se mantienen en la ruta proxy-Gemini, por lo que OpenClaw mantiene la limpieza de firmas de pensamiento de Gemini allí sin habilitar la validación de repetición nativa de Gemini ni las reescrituras de arranque.</Accordion>
+<Accordion title="Comportamiento de repetición de Gemini">Las referencias de OpenCode con respaldo de Gemini se mantienen en la ruta proxy-Gemini, por lo que OpenClaw mantiene la saneamiento de firmas de pensamiento de Gemini allí sin habilitar la validación nativa de repetición de Gemini o reescrituras de arranque.</Accordion>
 
   <Accordion title="Comportamiento de repetición no Gemini">
     Las referencias de OpenCode que no son de Gemini mantienen la política de repetición mínima compatible con OpenAI.
   </Accordion>
 </AccordionGroup>
 
-<Tip>Ingresar una clave de OpenCode durante la configuración guarda las credenciales para ambos proveedores de tiempo de ejecución, Zen y Go, por lo que solo necesitas incorporarte una vez.</Tip>
+<Tip>Ingresar una clave de OpenCode durante la configuración guarda las credenciales para ambos proveedores de tiempo de ejecución, Zen y Go, por lo que solo necesita integrarse una vez.</Tip>
 
 ## Relacionado
 
 <CardGroup cols={2}>
   <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
-    Elegir proveedores, referencias de modelo y comportamiento de conmutación por error.
+    Elección de proveedores, referencias de modelo y comportamiento de conmutación por error.
   </Card>
   <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
     Referencia completa de configuración para agentes, modelos y proveedores.

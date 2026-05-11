@@ -6,16 +6,15 @@ read_when:
 title: "平台"
 ---
 
-# 平台
-
 OpenClaw 核心是用 TypeScript 编写的。**Node 是推荐的运行时**。
-不推荐在 Gateway(网关) 网关 上使用 Bun（存在 WhatsApp/Telegram Bug）。
+不推荐在 Bun 上使用 Gateway(网关) —— 已知 WhatsApp 和
+Telegram 渠道存在问题；有关详细信息，请参阅 [Bun (实验性)](/zh/install/bun)。
 
-存在适用于 macOS（菜单栏应用）和移动节点（iOS/Android）的伴侣应用。目前计划推出 Windows 和
-Linux 伴侣应用，但 Gateway(网关) 网关 目前已获得完全支持。
-同时也计划推出 Windows 原生伴侣应用；对于 Windows，推荐通过 WSL2 使用 Gateway(网关) 网关。
+存在适用于 macOS（菜单栏应用）和移动节点（iOS/Android）的配套应用。Windows 和
+Linux 的配套应用已在计划中，但 Gateway(网关) 目前已完全支持。
+适用于 Windows 的原生配套应用也在计划中；建议通过 Gateway(网关) 使用 WSL2。
 
-## 选择您的操作系统
+## 选择你的操作系统
 
 - macOS: [macOS](/zh/platforms/macos)
 - iOS: [iOS](/zh/platforms/ios)
@@ -25,31 +24,37 @@ Linux 伴侣应用，但 Gateway(网关) 网关 目前已获得完全支持。
 
 ## VPS 与托管
 
-- VPS hub: [VPS hosting](/zh/vps)
+- VPS 中心: [VPS 托管](/zh/vps)
 - Fly.io: [Fly.io](/zh/install/fly)
 - Hetzner (Docker): [Hetzner](/zh/install/hetzner)
 - GCP (Compute Engine): [GCP](/zh/install/gcp)
-- Azure (Linux VM): [Azure](/zh/install/azure)
-- exe.dev (VM + HTTPS proxy): [exe.dev](/zh/install/exe-dev)
+- Azure (Linux 虚拟机): [Azure](/zh/install/azure)
+- exe.dev (虚拟机 + HTTPS 代理): [exe.dev](/zh/install/exe-dev)
 
 ## 常用链接
 
-- Install guide: [入门指南](/zh/start/getting-started)
-- Gateway(网关) runbook: [Gateway(网关)](/zh/gateway)
-- Gateway(网关) configuration: [Configuration](/zh/gateway/configuration)
-- 服务状态：`openclaw gateway status`
+- 安装指南: [入门指南](/zh/start/getting-started)
+- Gateway(网关) 运维手册: [Gateway(网关)](/zh/gateway)
+- Gateway(网关) 配置: [配置](/zh/gateway/configuration)
+- 服务状态: `openclaw gateway status`
 
 ## Gateway(网关) 服务安装 (CLI)
 
-使用以下其中一种（均已支持）：
+使用其中之一（均支持）：
 
-- 向导（推荐）：`openclaw onboard --install-daemon`
-- 直接：`openclaw gateway install`
-- 配置流程：`openclaw configure` → 选择 **Gateway(网关) service**
-- 修复/迁移：`openclaw doctor`（提供安装或修复服务）
+- 向导（推荐）: `openclaw onboard --install-daemon`
+- 直接方式: `openclaw gateway install`
+- 配置流程: `openclaw configure` → 选择 **Gateway(网关) 服务**
+- 修复/迁移: `openclaw doctor` (提供安装或修复服务)
 
 服务目标取决于操作系统：
 
 - macOS: LaunchAgent (`ai.openclaw.gateway` 或 `ai.openclaw.<profile>`; 旧版 `com.openclaw.*`)
 - Linux/WSL2: systemd 用户服务 (`openclaw-gateway[-<profile>].service`)
-- Native Windows: Scheduled Task (`OpenClaw Gateway` or `OpenClaw Gateway (<profile>)`), with a per-user Startup-folder login item fallback if task creation is denied
+- 原生 Windows: 计划任务 (`OpenClaw Gateway` 或 `OpenClaw Gateway (<profile>)`)，如果创建任务被拒绝，则回退到针对每个用户的 Startup-folder 登录项
+
+## 相关
+
+- [安装概述](/zh/install)
+- [macOS 应用](/zh/platforms/macos)
+- [iOS 应用](/zh/platforms/ios)

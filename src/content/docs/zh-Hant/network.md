@@ -63,3 +63,8 @@ devices across localhost, LAN, and tailnet.
 - [Gateway 設定參考](/zh-Hant/gateway/configuration)
 - [疑難排解](/zh-Hant/gateway/troubleshooting)
 - [Doctor](/zh-Hant/gateway/doctor)
+
+## 相關
+
+- [Gateway 網路模型](/zh-Hant/gateway/network-model)
+- [遠端存取](/zh-Hant/gateway/remote)

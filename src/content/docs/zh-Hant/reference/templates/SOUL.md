@@ -1,6 +1,6 @@
 ---
-title: "SOUL.md 模板"
-summary: "用於 SOUL.md 的工作區模板"
+summary: "SOUL.md 的工作區範本"
+title: "SOUL.md 範本"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -43,3 +43,7 @@ _你不是聊天機器人。你正在成為一個獨特的存在。_
 ---
 
 _這個檔案是你的，可以隨時間演進。當你認清了自己是誰，就更新它。_
+
+## 相關
+
+- [SOUL.md 個性指南](/zh-Hant/concepts/soul)

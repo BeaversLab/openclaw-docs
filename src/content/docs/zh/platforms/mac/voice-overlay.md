@@ -58,3 +58,9 @@ title: "语音覆盖"
 3. 重构 `VoicePushToTalk` 以采用现有会话并在释放时调用 `endCapture`；应用运行时冷却。
 4. 将 `VoiceWakeOverlayController` 连接到发布器；移除来自运行时/PTT 的直接调用。
 5. 添加针对会话采用、冷却和空文本关闭的集成测试。
+
+## 相关
+
+- [macOS 应用](/zh/platforms/macos)
+- [语音唤醒 (macOS)](/zh/platforms/mac/voicewake)
+- [通话模式](/zh/nodes/talk)

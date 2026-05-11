@@ -3,15 +3,13 @@ summary: "Tareas de LLM solo JSON para flujos de trabajo (herramienta de complem
 read_when:
   - You want a JSON-only LLM step inside workflows
   - You need schema-validated LLM output for automation
-title: "Tarea de LLM"
+title: "Tarea LLM"
 ---
 
-# Tarea de LLM
-
-`llm-task` es una **herramienta de complemento opcional** que ejecuta una tarea de LLM solo JSON y
+`llm-task` es una **herramienta de complemento opcional** que ejecuta una tarea LLM solo JSON y
 devuelve salida estructurada (opcionalmente validada contra JSON Schema).
 
-Esto es ideal para motores de flujo de trabajo como Lobster: puedes agregar un solo paso de LLM
+Esto es ideal para motores de flujo de trabajo como Lobster: puedes agregar un solo paso LLM
 sin escribir código OpenClaw personalizado para cada flujo de trabajo.
 
 ## Habilitar el complemento
@@ -28,7 +26,7 @@ sin escribir código OpenClaw personalizado para cada flujo de trabajo.
 }
 ```
 
-2. Añadir la herramienta a la lista de permitidos (está registrada con `optional: true`):
+2. Permitir la herramienta (está registrada con `optional: true`):
 
 ```json
 {
@@ -53,9 +51,9 @@ sin escribir código OpenClaw personalizado para cada flujo de trabajo.
         "enabled": true,
         "config": {
           "defaultProvider": "openai-codex",
-          "defaultModel": "gpt-5.4",
+          "defaultModel": "gpt-5.5",
           "defaultAuthProfileId": "main",
-          "allowedModels": ["openai-codex/gpt-5.4"],
+          "allowedModels": ["openai/gpt-5.4"],
           "maxTokens": 800,
           "timeoutMs": 30000
         }
@@ -70,9 +68,9 @@ fuera de la lista es rechazada.
 
 ## Parámetros de la herramienta
 
-- `prompt` (cadena, obligatorio)
+- `prompt` (cadena, requerido)
 - `input` (cualquiera, opcional)
-- `schema` (objeto, esquema JSON opcional)
+- `schema` (objeto, JSON Schema opcional)
 - `provider` (cadena, opcional)
 - `model` (cadena, opcional)
 - `thinking` (cadena, opcional)
@@ -112,8 +110,14 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 
 ## Notas de seguridad
 
-- La herramienta es **solo JSON** e instruye al modelo para que genere solo JSON (sin
-  vallas de código, sin comentarios).
+- La herramienta es **solo JSON** e instruye al modelo para que solo produzca JSON (sin
+  cercas de código, sin comentarios).
 - No se exponen herramientas al modelo para esta ejecución.
-- Trate la salida como que no es de confianza a menos que valide con `schema`.
-- Coloque aprobaciones antes de cualquier paso con efectos secundarios (send, post, exec).
+- Trate la salida como no confiable a menos que valide con `schema`.
+- Coloque aprobaciones antes de cualquier paso con efectos secundarios (enviar, publicar, ejecutar).
+
+## Relacionado
+
+- [Niveles de pensamiento](/es/tools/thinking)
+- [Subagentes](/es/tools/subagents)
+- [Comandos de barra](/es/tools/slash-commands)

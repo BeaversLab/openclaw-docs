@@ -59,3 +59,8 @@ Agent -> Gateway -> Node Service (WS)
 - Toute la communication reste locale uniquement ; aucune socket réseau n'est exposée.
 - Les invites TCC proviennent uniquement du bundle de l'application GUI ; gardez l'ID de bundle signé stable lors des reconstructions.
 - Durcissement de l'IPC : mode de socket `0600`, jeton, vérifications de l'UID homologue, défi/réponse HMAC, TTL court.
+
+## Connexes
+
+- [application macOS](/fr/platforms/macos)
+- [flux macOS IPC (Exec approvals)](/fr/tools/exec-approvals-advanced#macos-ipc-flow)

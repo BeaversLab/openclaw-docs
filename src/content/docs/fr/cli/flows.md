@@ -2,7 +2,7 @@
 summary: "Redirection : les commandes de flux se trouvent sous `openclaw tasks flow`"
 read_when:
   - You encounter openclaw flows in older docs or release notes
-title: "flux (redirection)"
+title: "Flows (redirection)"
 ---
 
 # `openclaw tasks flow`
@@ -16,3 +16,8 @@ openclaw tasks flow cancel <lookup>
 ```
 
 Pour une documentation complète, voir [Task Flow](/fr/automation/taskflow) et la [référence des tâches CLI](/fr/cli/tasks).
+
+## Connexes
+
+- [Référence CLI](/fr/cli)
+- [Automatisation](/fr/automation)

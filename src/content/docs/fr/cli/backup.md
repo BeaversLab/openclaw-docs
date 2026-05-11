@@ -3,7 +3,7 @@ summary: "Référence CLI pour `openclaw backup` (créer des archives de sauvega
 read_when:
   - You want a first-class backup archive for local OpenClaw state
   - You want to preview which paths would be included before reset or uninstall
-title: "backup"
+title: "Sauvegarde"
 ---
 
 # `openclaw backup`
@@ -82,3 +82,7 @@ Les limites pratiques proviennent de la machine locale et du système de fichier
 Les grands espaces de travail sont généralement le principal facteur de taille de l'archive. Si vous souhaitez une sauvegarde plus petite ou plus rapide, utilisez `--no-include-workspace`.
 
 Pour la plus petite archive, utilisez `--only-config`.
+
+## Associé
+
+- [CLI référence](/fr/cli)

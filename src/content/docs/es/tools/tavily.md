@@ -8,23 +8,21 @@ read_when:
 title: "Tavily"
 ---
 
-# Tavily
+OpenClaw puede utilizar **Tavily** de dos formas:
 
-OpenClaw puede utilizar **Tavily** de dos maneras:
-
-- como proveedor `web_search`
+- como el proveedor `web_search`
 - como herramientas de complemento explícitas: `tavily_search` y `tavily_extract`
 
 Tavily es una API de búsqueda diseñada para aplicaciones de IA, que devuelve resultados estructurados
-optimizados para el consumo de LLM. Admite una profundidad de búsqueda configurable, filtrado de
-temas, filtros de dominio, resúmenes de respuestas generados por IA y extracción de contenido
-de URL (incluidas las páginas renderizadas con JavaScript).
+optimizados para el consumo de LLM. Admite una profundidad de búsqueda configurable, filtrado
+de temas, filtros de dominio, resúmenes de respuestas generados por IA y extracción de contenido
+de URLs (incluidas las páginas renderizadas con JavaScript).
 
 ## Obtener una clave de API
 
 1. Cree una cuenta de Tavily en [tavily.com](https://tavily.com/).
 2. Genere una clave de API en el panel de control.
-3. Almacénela en la configuración o establezca `TAVILY_API_KEY` en el entorno de la pasarela.
+3. Guárdela en la configuración o configure `TAVILY_API_KEY` en el entorno de la puerta de enlace.
 
 ## Configurar la búsqueda de Tavily
 
@@ -55,19 +53,19 @@ de URL (incluidas las páginas renderizadas con JavaScript).
 
 Notas:
 
-- Elegir Tavily en la incorporación o en `openclaw configure --section web` habilita
+- Elegir Tavily en la incorporación o `openclaw configure --section web` habilita
   automáticamente el complemento Tavily incluido.
-- Almacene la configuración de Tavily en `plugins.entries.tavily.config.webSearch.*`.
+- Guarde la configuración de Tavily en `plugins.entries.tavily.config.webSearch.*`.
 - `web_search` con Tavily admite `query` y `count` (hasta 20 resultados).
 - Para controles específicos de Tavily como `search_depth`, `topic`, `include_answer`,
   o filtros de dominio, use `tavily_search`.
 
-## Herramientas del complemento Tavily
+## Herramientas de complemento de Tavily
 
 ### `tavily_search`
 
-Use esto cuando quiera controles de búsqueda específicos de Tavily en lugar de
-`web_search` genéricos.
+Úselo cuando desee controles de búsqueda específicos de Tavily en lugar de
+`web_search` genérico.
 
 | Parámetro         | Descripción                                                                      |
 | ----------------- | -------------------------------------------------------------------------------- |
@@ -82,39 +80,39 @@ Use esto cuando quiera controles de búsqueda específicos de Tavily en lugar de
 
 **Profundidad de búsqueda:**
 
-| Profundidad | Velocidad  | Relevancia  | Mejor para                                      |
+| Profundidad | Velocidad  | Relevancia  | Lo mejor para                                   |
 | ----------- | ---------- | ----------- | ----------------------------------------------- |
-| `basic`     | Más rápido | Alto        | Consultas de propósito general (predeterminado) |
-| `advanced`  | Más lento  | El más alto | Precisión, hechos específicos, investigación    |
+| `basic`     | Más rápido | Alta        | Consultas de propósito general (predeterminado) |
+| `advanced`  | Más lento  | La más alta | Precisión, hechos específicos, investigación    |
 
 ### `tavily_extract`
 
-Úsalo para extraer contenido limpio de una o más URL. Maneja
-páginas renderizadas con JavaScript y admite la división enfocada en consultas para una
+Úselo para extraer contenido limpio de una o más URL. Maneja
+páginas renderizadas con JavaScript y admite fragmentación enfocada en consultas para una
 extracción dirigida.
 
-| Parámetro           | Descripción                                                                 |
-| ------------------- | --------------------------------------------------------------------------- |
-| `urls`              | Matriz de URL para extraer (1-20 por solicitud)                             |
-| `query`             | Volver a ordenar los fragmentos extraídos por relevancia para esta consulta |
-| `extract_depth`     | `basic` (predeterminado, rápido) o `advanced` (para páginas con mucho JS)   |
-| `chunks_per_source` | Fragmentos por URL, 1-5 (requiere `query`)                                  |
-| `include_images`    | Incluir URL de imagen en los resultados (predeterminado: falso)             |
+| Parámetro           | Descripción                                                                    |
+| ------------------- | ------------------------------------------------------------------------------ |
+| `urls`              | Matriz de URL para extraer (1-20 por solicitud)                                |
+| `query`             | Volver a clasificar los fragmentos extraídos por relevancia para esta consulta |
+| `extract_depth`     | `basic` (predeterminado, rápido) o `advanced` (para páginas con mucho JS)      |
+| `chunks_per_source` | Fragmentos por URL, 1-5 (requiere `query`)                                     |
+| `include_images`    | Incluir URL de imágenes en los resultados (predeterminado: falso)              |
 
 **Profundidad de extracción:**
 
-| Profundidad | Cuándo usar                                          |
-| ----------- | ---------------------------------------------------- |
-| `basic`     | Páginas simples: prueba esto primero                 |
-| `advanced`  | SPAs renderizadas con JS, contenido dinámico, tablas |
+| Profundidad | Cuándo usar                                         |
+| ----------- | --------------------------------------------------- |
+| `basic`     | Páginas simples: pruebe esto primero                |
+| `advanced`  | SPA renderizadas con JS, contenido dinámico, tablas |
 
 Consejos:
 
-- Máximo de 20 URL por solicitud. Agrupa listas más grandes en múltiples llamadas.
-- Usa `query` + `chunks_per_source` para obtener solo el contenido relevante en lugar de páginas completas.
-- Intenta primero con `basic`; usa `advanced` si falta contenido o está incompleto.
+- Máximo 20 URL por solicitud. Procese por lotes listas más grandes en múltiples llamadas.
+- Use `query` + `chunks_per_source` para obtener solo el contenido relevante en lugar de páginas completas.
+- Intente `basic` primero; recurra a `advanced` si el contenido falta o está incompleto.
 
-## Elegir la herramienta adecuada
+## Elegir la herramienta correcta
 
 | Necesidad                                        | Herramienta      |
 | ------------------------------------------------ | ---------------- |
@@ -125,5 +123,5 @@ Consejos:
 ## Relacionado
 
 - [Descripción general de la búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
-- [Firecrawl](/es/tools/firecrawl) -- búsqueda + extracción con extracción de contenido
+- [Firecrawl](/es/tools/firecrawl) -- búsqueda + scraping con extracción de contenido
 - [Exa Search](/es/tools/exa-search) -- búsqueda neuronal con extracción de contenido

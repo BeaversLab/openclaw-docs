@@ -1,10 +1,13 @@
 ---
-title: "Building Plugins (redirection)"
-summary: "Redirige vers le guide actuel de Building Plugins"
+summary: "Redirige vers le guide actuel de construction de plugins"
+title: "Construction de plugins (redirection)"
 read_when:
   - Legacy link to building-extensions
 ---
 
-# Building Plugins
+Cette page a été déplacée vers [Construction de plugins](/fr/plugins/building-plugins).
 
-Cette page a été déplacée vers [Building Plugins](/fr/plugins/building-plugins).
+## Connexes
+
+- [Construction de plugins](/fr/plugins/building-plugins)
+- [Architecture des plugins](/fr/plugins/architecture)

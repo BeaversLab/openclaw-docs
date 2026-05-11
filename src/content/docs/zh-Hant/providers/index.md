@@ -3,7 +3,7 @@ summary: "OpenClaw 支援的模型供應商 (LLMs)"
 read_when:
   - You want to choose a model provider
   - You need a quick overview of supported LLM backends
-title: "供應商目錄"
+title: "提供者目錄"
 ---
 
 # 模型供應商
@@ -30,7 +30,9 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 - [Amazon Bedrock Mantle](/zh-Hant/providers/bedrock-mantle)
 - [Anthropic (API + Claude CLI)](/zh-Hant/providers/anthropic)
 - [Arcee AI (Trinity models)](/zh-Hant/providers/arcee)
+- [Azure Speech](/zh-Hant/providers/azure-speech)
 - [BytePlus (International)](/zh-Hant/concepts/model-providers#byteplus-international)
+- [Cerebras](/zh-Hant/providers/cerebras)
 - [Chutes](/zh-Hant/providers/chutes)
 - [Cloudflare AI Gateway](/zh-Hant/providers/cloudflare-ai-gateway)
 - [ComfyUI](/zh-Hant/providers/comfy)
@@ -39,6 +41,7 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 - [fal](/zh-Hant/providers/fal)
 - [Fireworks](/zh-Hant/providers/fireworks)
 - [GitHub Copilot](/zh-Hant/providers/github-copilot)
+- [Gradium](/zh-Hant/providers/gradium)
 - [GLM models](/zh-Hant/providers/glm)
 - [Google (Gemini)](/zh-Hant/providers/google)
 - [Groq (LPU inference)](/zh-Hant/providers/groq)
@@ -60,38 +63,40 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 - [Qianfan](/zh-Hant/providers/qianfan)
 - [Qwen Cloud](/zh-Hant/providers/qwen)
 - [Runway](/zh-Hant/providers/runway)
+- [SenseAudio](/zh-Hant/providers/senseaudio)
 - [SGLang (local models)](/zh-Hant/providers/sglang)
 - [StepFun](/zh-Hant/providers/stepfun)
 - [Synthetic](/zh-Hant/providers/synthetic)
 - [Tencent Cloud (TokenHub)](/zh-Hant/providers/tencent)
 - [Together AI](/zh-Hant/providers/together)
-- [Venice (Venice AI, privacy-focused)](/zh-Hant/providers/venice)
+- [Venice (Venice AI，注重隱私)](/zh-Hant/providers/venice)
 - [Vercel AI Gateway](/zh-Hant/providers/vercel-ai-gateway)
-- [vLLM (local models)](/zh-Hant/providers/vllm)
-- [Volcengine (Doubao)](/zh-Hant/providers/volcengine)
+- [vLLM (本機模型)](/zh-Hant/providers/vllm)
+- [Volcengine (豆包)](/zh-Hant/providers/volcengine)
 - [Vydra](/zh-Hant/providers/vydra)
 - [xAI](/zh-Hant/providers/xai)
-- [Xiaomi](/zh-Hant/providers/xiaomi)
+- [小米](/zh-Hant/providers/xiaomi)
 - [Z.AI](/zh-Hant/providers/zai)
 
-## 共用概覽頁面
+## 共享概覽頁面
 
-- [Additional bundled variants](/zh-Hant/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
-- [Image Generation](/zh-Hant/tools/image-generation) - 共用 `image_generate` 工具、提供者選擇和故障轉移
-- [Music Generation](/zh-Hant/tools/music-generation) - 共用 `music_generate` 工具、提供者選擇和故障轉移
-- [Video Generation](/zh-Hant/tools/video-generation) - 共用 `video_generate` 工具、提供者選擇和故障轉移
+- [額外內建變體](/zh-Hant/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
+- [圖像生成](/zh-Hant/tools/image-generation) - 共用 `image_generate` 工具、提供者選擇與故障轉移
+- [音樂生成](/zh-Hant/tools/music-generation) - 共用 `music_generate` 工具、提供者選擇與故障轉移
+- [影片生成](/zh-Hant/tools/video-generation) - 共用 `video_generate` 工具、提供者選擇與故障轉移
 
 ## 轉錄提供者
 
-- [Deepgram (audio transcription)](/zh-Hant/providers/deepgram)
+- [Deepgram (音訊轉錄)](/zh-Hant/providers/deepgram)
 - [ElevenLabs](/zh-Hant/providers/elevenlabs#speech-to-text)
 - [Mistral](/zh-Hant/providers/mistral#audio-transcription-voxtral)
 - [OpenAI](/zh-Hant/providers/openai#speech-to-text)
+- [SenseAudio](/zh-Hant/providers/senseaudio)
 - [xAI](/zh-Hant/providers/xai#speech-to-text)
 
 ## 社群工具
 
-- [Claude Max API Proxy](/zh-Hant/providers/claude-max-api-proxy) - 適用於 Claude 訂閱憑證的社群 Proxy（使用前請確認 Anthropic 政策/條款）
+- [Claude Max API Proxy](/zh-Hant/providers/claude-max-api-proxy) - Claude 訂閱憑證的社群代理（使用前請驗證 Anthropic 的政策/條款）
 
-如需完整的提供者目錄（xAI、Groq、Mistral 等）及進階設定，
-請參閱 [Model providers](/zh-Hant/concepts/model-providers)。
+若要查看完整的提供者目錄（xAI、Groq、Mistral 等）與進階設定，
+請參閱[模型提供者](/zh-Hant/concepts/model-providers)。

@@ -3,7 +3,7 @@ summary: "CLI 參考 for `openclaw completion` (generate/install shell completio
 read_when:
   - You want shell completions for zsh/bash/fish/PowerShell
   - You need to cache completion scripts under OpenClaw state
-title: "completion"
+title: "Completion"
 ---
 
 # `openclaw completion`
@@ -33,3 +33,7 @@ openclaw completion --shell bash --write-state
 - `--install` 會在您的 Shell 設定檔中寫入一個小型的「OpenClaw Completion」區塊，並將其指向快取的腳本。
 - 若沒有使用 `--install` 或 `--write-state`，此指令會將腳本列印至標準輸出。
 - 生成自動補完時會積極載入指令樹，以包含巢狀子指令。
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)

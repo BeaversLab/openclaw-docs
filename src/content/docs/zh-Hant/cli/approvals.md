@@ -183,3 +183,8 @@ openclaw approvals allowlist remove "~/Projects/**/bin/rg"
 - `--agent` 預設為 `"*"`，這適用於所有代理程式。
 - 節點主機必須通告 `system.execApprovals.get/set` (macOS 應用程式或無頭節點主機)。
 - 核准檔案按主機儲存在 `~/.openclaw/exec-approvals.json`。
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)
+- [執行核准](/zh-Hant/tools/exec-approvals)

@@ -1,12 +1,10 @@
 ---
-title: "DeepSeek"
 summary: "Configuración de DeepSeek (autenticación + selección de modelo)"
+title: "DeepSeek"
 read_when:
   - You want to use DeepSeek with OpenClaw
   - You need the API key env var or CLI auth choice
 ---
-
-# DeepSeek
 
 [DeepSeek](https://www.deepseek.com) proporciona modelos de IA potentes con una API compatible con OpenAI.
 
@@ -17,30 +15,38 @@ read_when:
 | API           | Compatible con OpenAI      |
 | URL base      | `https://api.deepseek.com` |
 
-## Cómo empezar
+## Introducción
 
 <Steps>
   <Step title="Obtén tu clave de API">
     Crea una clave de API en [platform.deepseek.com](https://platform.deepseek.com/api_keys).
   </Step>
-  <Step title="Ejecuta la configuración inicial">
+  <Step title="Ejecuta la incorporación">
     ```bash
     openclaw onboard --auth-choice deepseek-api-key
     ```
 
-    Esto te solicitará tu clave de API y establecerá `deepseek/deepseek-chat` como el modelo predeterminado.
+    Esto solicitará tu clave de API y establecerá `deepseek/deepseek-v4-flash` como el modelo predeterminado.
 
   </Step>
-  <Step title="Verifique que los modelos estén disponibles">
+  <Step title="Verifica que los modelos estén disponibles">
     ```bash
     openclaw models list --provider deepseek
     ```
+
+    Para inspeccionar el catálogo estático incluido sin requerir un Gateway en ejecución,
+    usa:
+
+    ```bash
+    openclaw models list --all --provider deepseek
+    ```
+
   </Step>
 </Steps>
 
 <AccordionGroup>
   <Accordion title="Configuración no interactiva">
-    Para instalaciones con scripts o sin interfaz gráfica, pasa todas las banderas directamente:
+    Para instalaciones con secuencias de comandos o sin interfaz gráfica, pasa todas las banderas directamente:
 
     ```bash
     openclaw onboard --non-interactive \
@@ -56,14 +62,53 @@ read_when:
 
 <Warning>Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrate de que `DEEPSEEK_API_KEY` esté disponible para ese proceso (por ejemplo, en `~/.openclaw/.env` o a través de `env.shellEnv`).</Warning>
 
-## Catálogo integrado
+## Catálogo incorporado
 
-| Ref. de modelo               | Nombre            | Entrada | Contexto | Salida máxima | Notas                                                          |
-| ---------------------------- | ----------------- | ------- | -------- | ------------- | -------------------------------------------------------------- |
-| `deepseek/deepseek-chat`     | DeepSeek Chat     | texto   | 131.072  | 8.192         | Modelo predeterminado; superficie de DeepSeek V3.2 no pensante |
-| `deepseek/deepseek-reasoner` | DeepSeek Reasoner | texto   | 131.072  | 65.536        | Superficie V3.2 con capacidad de razonamiento                  |
+| Referencia del modelo        | Nombre            | Entrada | Contexto  | Salida máxima | Notas                                                             |
+| ---------------------------- | ----------------- | ------- | --------- | ------------- | ----------------------------------------------------------------- |
+| `deepseek/deepseek-v4-flash` | DeepSeek V4 Flash | texto   | 1,000,000 | 384,000       | Modelo predeterminado; superficie V4 con capacidad de pensamiento |
+| `deepseek/deepseek-v4-pro`   | DeepSeek V4 Pro   | texto   | 1,000,000 | 384,000       | Superficie V4 con capacidad de pensamiento                        |
+| `deepseek/deepseek-chat`     | DeepSeek Chat     | texto   | 131,072   | 8,192         | Superficie DeepSeek V3.2 sin capacidad de pensamiento             |
+| `deepseek/deepseek-reasoner` | DeepSeek Reasoner | texto   | 131,072   | 65,536        | Superficie V3.2 con razonamiento habilitado                       |
 
-<Tip>Ambos modelos incluidos actualmente anuncian compatibilidad de uso con transmisión (streaming) en el código fuente.</Tip>
+<Tip>Los modelos V4 admiten el control `thinking` de DeepSeek. OpenClaw también reproduce el `reasoning_content` de DeepSeek en los turnos de seguimiento para que las sesiones de pensamiento con llamadas a herramientas puedan continuar.</Tip>
+
+## Pensamiento y herramientas
+
+Las sesiones de pensamiento de DeepSeek V4 tienen un contrato de reproducción más estricto que la mayoría
+de los proveedores compatibles con OpenAI: cuando un mensaje de asistente con pensamiento habilitado incluye
+llamadas a herramientas, DeepSeek espera que el `reasoning_content` del asistente anterior se envíe
+de nuevo en la solicitud de seguimiento. OpenClaw maneja esto internamente en el complemento DeepSeek,
+por lo que el uso normal de herramientas de varios turnos funciona con `deepseek/deepseek-v4-flash` y
+`deepseek/deepseek-v4-pro`.
+
+Si cambia una sesión existente de otro proveedor compatible con OpenAI a un
+modelo DeepSeek V4, los turnos de llamadas a herramientas del asistente más antiguos pueden no tener el
+`reasoning_content` nativo de DeepSeek. OpenClaw completa ese campo faltante para las solicitudes de pensamiento
+de DeepSeek V4 para que el proveedor pueda aceptar el historial de llamadas a herramientas reproducido
+sin requerir `/new`.
+
+Cuando el pensamiento está deshabilitado en OpenClaw (incluida la selección **Ninguno** en la interfaz de usuario),
+OpenClaw envía `thinking: { type: "disabled" }` de DeepSeek y elimina el `reasoning_content` reproducido
+del historial saliente. Esto mantiene las sesiones con pensamiento deshabilitado en la ruta sin pensamiento de DeepSeek.
+
+Use `deepseek/deepseek-v4-flash` para la ruta rápida predeterminada. Use
+`deepseek/deepseek-v4-pro` cuando desee el modelo V4 más fuerte y pueda aceptar
+un mayor costo o latencia.
+
+## Pruebas en vivo
+
+El conjunto de modelos en vivo directo incluye DeepSeek V4 en el conjunto de modelos modernos. Para
+ejecutar solo las comprobaciones del modelo directo de DeepSeek V4:
+
+```bash
+OPENCLAW_LIVE_PROVIDERS=deepseek \
+OPENCLAW_LIVE_MODELS="deepseek/deepseek-v4-flash,deepseek/deepseek-v4-pro" \
+pnpm test:live src/agents/models.profiles.live.test.ts
+```
+
+Esa comprobación en vivo verifica que ambos modelos V4 puedan completarse y que los turnos de seguimiento de pensamiento/herramientas
+preserven la carga útil de reproducción que DeepSeek requiere.
 
 ## Ejemplo de configuración
 
@@ -72,7 +117,7 @@ read_when:
   env: { DEEPSEEK_API_KEY: "sk-..." },
   agents: {
     defaults: {
-      model: { primary: "deepseek/deepseek-chat" },
+      model: { primary: "deepseek/deepseek-v4-flash" },
     },
   },
 }

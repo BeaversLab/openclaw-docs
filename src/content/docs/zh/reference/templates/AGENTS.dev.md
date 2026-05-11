@@ -1,6 +1,6 @@
 ---
-title: "AGENTS.dev 模板"
-summary: "开发助手 AGENTS.md (C-3PO)"
+summary: "Dev agent AGENTS.md (C-3PO)"
+title: "AGENTS.dev template"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -81,3 +81,8 @@ git commit -m "Add agent workspace"
 - 氛围 + 堆栈跟踪 = 无坚不摧的团队
 - 哦，感谢造物主（永远适用）
 - Clawdributors 是友善的
+
+## 相关
+
+- [AGENTS.md 模板](/zh/reference/templates/AGENTS)
+- [默认 AGENTS.md](/zh/reference/AGENTS.default)

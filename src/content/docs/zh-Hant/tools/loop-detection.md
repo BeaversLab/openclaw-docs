@@ -1,26 +1,24 @@
 ---
-title: "工具迴圈偵測"
-summary: "如何啟用並調整偵測重複工具呼叫迴圈的防護機制"
+summary: "如何啟用和調整偵測重複工具呼叫循環的防護機"
+title: "工具循環偵測"
 read_when:
   - A user reports agents getting stuck repeating tool calls
   - You need to tune repetitive-call protection
   - You are editing agent tool/runtime policies
 ---
 
-# 工具迴圈偵測
-
-OpenClaw 可以防止代理陷入重複的工具呼叫模式中。
+OpenClaw 可以防止代理程式陷入重複的工具呼叫模式。
 此防護機制**預設為停用**。
 
-請僅在必要的地方啟用它，因為在嚴格的設定下，它可能會阻擋合理的重複呼叫。
+請僅在需要時啟用它，因為在嚴格設定下，它可能會阻擋合理的重複呼叫。
 
-## 為何存在此功能
+## 存在原因
 
 - 偵測無法取得進度的重複序列。
-- 偵測高頻率且無結果的迴圈（相同工具、相同輸入、重複錯誤）。
-- 針對已知的輪詢工具偵測特定的重複呼叫模式。
+- 偵測高頻率的無結果循環（相同工具、相同輸入、重複錯誤）。
+- 針對已知的輪詢工具，偵測特定的重複呼叫模式。
 
-## 配置區塊
+## 設定區塊
 
 全域預設值：
 
@@ -43,7 +41,7 @@ OpenClaw 可以防止代理陷入重複的工具呼叫模式中。
 }
 ```
 
-各代理覆寫（選用）：
+各代理程式覆寫（選用）：
 
 ```json5
 {
@@ -66,24 +64,27 @@ OpenClaw 可以防止代理陷入重複的工具呼叫模式中。
 
 ### 欄位行為
 
-- `enabled`：主開關。`false` 表示不執行迴圈偵測。
+- `enabled`：主開關。`false` 表示不執行循環偵測。
 - `historySize`：保留用於分析的近期工具呼叫數量。
-- `warningThreshold`：將模式分類為僅警告前的閾值。
-- `criticalThreshold`：阻擋重複迴圈模式的閾值。
-- `globalCircuitBreakerThreshold`：全域無進度中斷器閾值。
+- `warningThreshold`：將模式分類為僅警告之前的臨界值。
+- `criticalThreshold`：封鎖重複循環模式的臨界值。
+- `globalCircuitBreakerThreshold`：全域無進度中斷器臨界值。
 - `detectors.genericRepeat`：偵測重複的相同工具 + 相同參數模式。
-- `detectors.knownPollNoProgress`：偵測已知的類輪詢模式且無狀態變更。
+- `detectors.knownPollNoProgress`：偵測已知的無狀態變更類輪詢模式。
 - `detectors.pingPong`：偵測交替的乒乓模式。
+
+對於 `exec`，無進度檢查會比較穩定的命令結果，並忽略變動的執行階段中繼資料，例如持續時間、PID、工作階段 ID 和工作目錄。
+當有執行 ID 可用時，僅會評估該執行內的近期工具呼叫歷史記錄，因此排程的心跳週期和全新執行不會繼承先前執行的過期循環計數。
 
 ## 建議設定
 
 - 從 `enabled: true` 開始，保持預設值不變。
-- 保持閾值的順序為 `warningThreshold < criticalThreshold < globalCircuitBreakerThreshold`。
+- 請保持臨界值的順序為 `warningThreshold < criticalThreshold < globalCircuitBreakerThreshold`。
 - 如果發生誤報：
   - 提高 `warningThreshold` 和/或 `criticalThreshold`
   - （選用）提高 `globalCircuitBreakerThreshold`
   - 僅停用造成問題的偵測器
-  - 降低 `historySize` 以減少嚴格的歷史記錄背景
+  - 降低 `historySize` 以減少嚴格的歷史記錄內容
 
 ## 日誌與預期行為
 
@@ -95,6 +96,12 @@ OpenClaw 可以防止代理陷入重複的工具呼叫模式中。
 
 ## 備註
 
-- `tools.loopDetection` 與代理層級的覆蓋合併。
+- `tools.loopDetection` 會與代理程式層級的覆寫設定合併。
 - 個別代理配置完全覆蓋或擴展全域值。
 - 如果不存在配置，防護機制保持關閉。
+
+## 相關
+
+- [執行核准](/zh-Hant/tools/exec-approvals)
+- [思考層級](/zh-Hant/tools/thinking)
+- [子代理](/zh-Hant/tools/subagents)

@@ -3,19 +3,17 @@ summary: "Étapes d'exécution partagées de VM Docker pour les hôtes OpenClaw 
 read_when:
   - You are deploying OpenClaw on a cloud VM with Docker
   - You need the shared binary bake, persistence, and update flow
-title: "Docker VM Runtime"
+title: "Docker VM runtime"
 ---
 
-# Docker VM Runtime
-
-Étapes d'exécution partagées pour les installations Docker basées sur une VM telles que GCP, Hetzner et des fournisseurs de VPS similaires.
+Étapes d'exécution partagées pour les installations Docker basées sur VM telles que GCP, Hetzner et des fournisseurs de VPS similaires.
 
 ## Intégrer les binaires requis dans l'image
 
-Installer des binaires dans un conteneur en cours d'exécution est un piège.
+Installer des binaires à l'intérieur d'un conteneur en cours d'exécution est un piège.
 Tout ce qui est installé au moment de l'exécution sera perdu au redémarrage.
 
-Tous les binaires externes requis par les compétences (skills) doivent être installés au moment de la construction de l'image.
+Tous les binaires externes requis par les compétences doivent être installés au moment de la construction de l'image.
 
 Les exemples ci-dessous ne montrent que trois binaires courants :
 
@@ -71,7 +69,7 @@ ENV NODE_ENV=production
 CMD ["node","dist/index.js"]
 ```
 
-<Note>Les URLs de téléchargement ci-dessus sont pour x86_64 (amd64). Pour les VM basées sur ARM (par ex. Hetzner ARM, GCP Tau T2A), remplacez les URLs de téléchargement par les variantes ARM64 appropriées à partir de la page de publication de chaque outil.</Note>
+<Note>Les URL de téléchargement ci-dessus sont pour x86_64 (amd64). Pour les VM basées sur ARM (par ex. Hetzner ARM, GCP Tau T2A), remplacez les URL de téléchargement par les variantes ARM64 appropriées à partir de la page de publication de chaque outil.</Note>
 
 ## Construire et lancer
 
@@ -80,7 +78,7 @@ docker compose build
 docker compose up -d openclaw-gateway
 ```
 
-Si la construction échoue avec `Killed` ou `exit code 137` pendant `pnpm install --frozen-lockfile`, la VM n'a plus de mémoire.
+Si la construction échoue avec `Killed` ou `exit code 137` pendant `pnpm install --frozen-lockfile`, la VM est à court de mémoire.
 Utilisez une classe de machine plus grande avant de réessayer.
 
 Vérifier les binaires :
@@ -99,7 +97,7 @@ Sortie attendue :
 /usr/local/bin/wacli
 ```
 
-Vérifier Gateway :
+Vérifier la passerelle :
 
 ```bash
 docker compose logs -f openclaw-gateway
@@ -111,7 +109,7 @@ Sortie attendue :
 [gateway] listening on ws://0.0.0.0:18789
 ```
 
-## Ce qui persiste où
+## Ce qui persiste et où
 
 OpenClaw s'exécute dans Docker, mais Docker n'est pas la source de vérité.
 Tout état de longue durée doit survivre aux redémarrages, reconstructions et reboots.
@@ -120,21 +118,27 @@ Tout état de longue durée doit survivre aux redémarrages, reconstructions et 
 | ---------------------------- | --------------------------------- | -------------------------- | ------------------------------------------------------------- |
 | Config Gateway               | `/home/node/.openclaw/`           | Montage de volume hôte     | Inclut `openclaw.json`, `.env`                                |
 | Profils d'auth de modèle     | `/home/node/.openclaw/agents/`    | Montage de volume hôte     | `agents/<agentId>/agent/auth-profiles.json` (OAuth, clés API) |
-| Configs de compétence        | `/home/node/.openclaw/skills/`    | Montage de volume hôte     | État au niveau de la compétence                               |
+| Configs de compétences       | `/home/node/.openclaw/skills/`    | Montage de volume hôte     | État au niveau des compétences                                |
 | Espace de travail de l'agent | `/home/node/.openclaw/workspace/` | Montage de volume hôte     | Code et artefacts d'agent                                     |
-| Session WhatsApp             | `/home/node/.openclaw/`           | Montage de volume hôte     | Préserve la connexion QR                                      |
+| Session WhatsApp             | `/home/node/.openclaw/`           | Montage de volume hôte     | Conserve la connexion QR                                      |
 | Trousseau de clés Gmail      | `/home/node/.openclaw/`           | Volume hôte + mot de passe | Nécessite `GOG_KEYRING_PASSWORD`                              |
-| Binaires externes            | `/usr/local/bin/`                 | Image Docker               | Doit être inclus au moment de la construction                 |
-| Runtime Node                 | Système de fichiers conteneur     | Image Docker               | Reconstruit à chaque construction d'image                     |
-| Paquets OS                   | Système de fichiers conteneur     | Image Docker               | Ne pas installer à l'exécution                                |
-| Conteneur Docker             | Éphémère                          | Redémarrable               | Sûr à détruire                                                |
+| Binaires externes            | `/usr/local/bin/`                 | Docker image               | Must be baked at build time                                   |
+| Node runtime                 | Container filesystem              | Docker image               | Rebuilt every image build                                     |
+| OS packages                  | Container filesystem              | Docker image               | Do not install at runtime                                     |
+| Docker container             | Ephemeral                         | Restartable                | Safe to destroy                                               |
 
-## Mises à jour
+## Updates
 
-Pour mettre à jour OpenClaw sur la VM :
+To update OpenClaw on the VM:
 
 ```bash
 git pull
 docker compose build
 docker compose up -d
 ```
+
+## Related
+
+- [Docker](/fr/install/docker)
+- [Podman](/fr/install/podman)
+- [ClawDock](/fr/install/clawdock)

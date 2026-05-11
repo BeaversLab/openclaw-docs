@@ -2,7 +2,7 @@
 summary: "Référence CLI pour `openclaw agents` (list/add/delete/bindings/bind/unbind/set identity)"
 read_when:
   - You want multiple isolated agents (workspaces + routing + auth)
-title: "agents"
+title: "Agents"
 ---
 
 # `openclaw agents`
@@ -11,9 +11,9 @@ Gérez des agents isolés (espaces de travail + auth + routage).
 
 Connexes :
 
-- Routage multi-agent : [Multi-Agent Routing](/fr/concepts/multi-agent)
-- Espace de travail de l'agent : [Agent workspace](/fr/concepts/agent-workspace)
-- Configuration de la visibilité des Skills : [Skills config](/fr/tools/skills-config)
+- [Multi-agent routing](/fr/concepts/multi-agent)
+- [Agent workspace](/fr/concepts/agent-workspace)
+- [Skills config](/fr/tools/skills-config) : configuration de la visibilité des compétences.
 
 ## Exemples
 
@@ -34,7 +34,7 @@ openclaw agents delete work
 
 Utilisez les liaisons de routage pour épingler le trafic entrant du channel à un agent spécifique.
 
-Si vous souhaitez également des Skills visibles différentes pour chaque agent, configurez `agents.defaults.skills` et `agents.list[].skills` dans `openclaw.json`. Consultez la [configuration des Skills](/fr/tools/skills-config) et le [référentiel de configuration](/fr/gateway/configuration-reference#agents-defaults-skills).
+Si vous souhaitez également des compétences visibles différentes pour chaque agent, configurez `agents.defaults.skills` et `agents.list[].skills` dans `openclaw.json`. Voir [Skills config](/fr/tools/skills-config) et [Configuration reference](/fr/gateway/config-agents#agents-defaults-skills).
 
 Lister les liaisons :
 
@@ -147,6 +147,9 @@ Notes :
 - `main` ne peut pas être supprimé.
 - Sans `--force`, une confirmation interactive est requise.
 - Les répertoires de l'espace de travail, de l'état de l'agent et de la transcription de session sont déplacés vers la Corbeille, et non supprimés définitivement.
+- Si l'espace de travail d'un autre agent se trouve sur le même chemin, à l'intérieur de cet espace de travail, ou contient cet espace de travail,
+  l'espace de travail est conservé et `--json` signale `workspaceRetained`,
+  `workspaceRetainedReason` et `workspaceSharedWith`.
 
 ## Fichiers d'identité
 
@@ -181,16 +184,16 @@ Options :
 Remarques :
 
 - `--agent` ou `--workspace` peuvent être utilisés pour sélectionner l'agent cible.
-- Si vous vous fiez à `--workspace` et que plusieurs agents partagent cet espace de travail, la commande échoue et vous demande de passer `--agent`.
-- Lorsqu'aucun champ d'identité explicite n'est fourni, la commande lit les données d'identité à partir de `IDENTITY.md`.
+- Si vous dépendez de `--workspace` et que plusieurs agents partagent cet espace de travail, la commande échoue et vous demande de passer `--agent`.
+- Lorsqu'aucun champ d'identité explicite n'est fourni, la commande lit les données d'identité depuis `IDENTITY.md`.
 
-Charger à partir de `IDENTITY.md` :
+Charger depuis `IDENTITY.md` :
 
 ```bash
 openclaw agents set-identity --workspace ~/.openclaw/workspace --from-identity
 ```
 
-Remplacer les champs explicitement :
+Remplacer explicitement les champs :
 
 ```bash
 openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞" --avatar avatars/openclaw.png
@@ -215,3 +218,9 @@ Exemple de configuration :
   },
 }
 ```
+
+## Connexes
+
+- [Référence CLI](/fr/cli)
+- [Routage multi-agent](/fr/concepts/multi-agent)
+- [Espace de travail de l'agent](/fr/concepts/agent-workspace)

@@ -2,7 +2,7 @@
 summary: "Estados y animaciones del icono de la barra de menú para OpenClaw en macOS"
 read_when:
   - Changing menu bar icon behavior
-title: "Icono de la barra de menú"
+title: "Icono de la barra de menús"
 ---
 
 # Estados del icono de la barra de menú
@@ -29,3 +29,8 @@ Notas de comportamiento
 
 - Sin alternancia externa de CLI/broker para orejas/en funcionamiento; manténgalo interno a las señales de la propia aplicación para evitar aleteos accidentales.
 - Mantenga los TTL cortos (&lt;10 s) para que el icono vuelva a la línea de base rápidamente si un trabajo se bloquea.
+
+## Relacionado
+
+- [Barra de menús](/es/platforms/mac/menu-bar)
+- [app de macOS](/es/platforms/macos)

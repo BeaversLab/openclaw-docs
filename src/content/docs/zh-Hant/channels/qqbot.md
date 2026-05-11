@@ -4,26 +4,29 @@ read_when:
   - You want to connect OpenClaw to QQ
   - You need QQ Bot credential setup
   - You want QQ Bot group or private chat support
-title: QQ Bot
+title: QQ 機器人
 ---
 
-# QQ Bot
+QQ 機器人透過官方 QQ 機器人 API (WebSocket 閘道) 連接至 OpenClaw。
+此外掛程式支援 C2C 私人聊天、群組 @訊息，以及包含多媒體（圖片、語音、影片、檔案）的
+頻道訊息。
 
-QQ Bot 透過官方 QQ Bot API (WebSocket 閘道) 連接到 OpenClaw。此外掛程式支援 C2C 私人聊天、群組 @訊息，以及頻道訊息，並包含多媒體（圖片、語音、影片、檔案）。
+狀態：內建外掛程式。支援直接訊息、群組聊天、頻道及
+多媒體。不支援反應和討論串。
 
-狀態：內建外掛。支援私訊、群組聊天、公會頻道和媒體。不支援表情回應和討論串。
+## 內建外掛程式
 
-## 內建外掛
-
-目前的 OpenClaw 發行版本已包含 QQ Bot，因此一般的封裝版本不需要單獨進行 `openclaw plugins install` 步驟。
+目前的 OpenClaw 發行版本已包含 QQ 機器人，因此一般的封裝版本不需要
+額外的 `openclaw plugins install` 步驟。
 
 ## 設定
 
-1. 前往 [QQ 開放平台](https://q.qq.com/) 並使用您的手機 QQ 掃描 QR code 以註冊 / 登入。
+1. 前往 [QQ 開放平台](https://q.qq.com/) 並使用您的
+   手機 QQ 掃描 QR code 以註冊 / 登入。
 2. 點擊 **建立機器人** 以建立新的 QQ 機器人。
-3. 在機器人的設定頁面上找到 **AppID** 和 **AppSecret** 並將其複製。
+3. 在機器人的設定頁面上尋找 **AppID** 和 **AppSecret** 並複製它們。
 
-> AppSecret 不會以純文字儲存 — 如果您離開頁面且未將其儲存，
+> AppSecret 不會以明文儲存 — 如果您離開頁面且未儲存它，
 > 您將必須重新產生一個新的。
 
 4. 新增頻道：
@@ -32,7 +35,7 @@ QQ Bot 透過官方 QQ Bot API (WebSocket 閘道) 連接到 OpenClaw。此外掛
 openclaw channels add --channel qqbot --token "AppID:AppSecret"
 ```
 
-5. 重新啟動閘道。
+5. 重新啟動 Gateway。
 
 互動式設定路徑：
 
@@ -78,10 +81,10 @@ openclaw configure --section channels
 
 備註：
 
-- 環境變數後援僅適用於預設的 QQ Bot 帳號。
+- 環境變數後援僅適用於預設的 QQ 機器人帳號。
 - `openclaw channels add --channel qqbot --token-file ...` 僅提供
-  AppSecret；AppID 必須已於配置或 `QQBOT_APP_ID` 中設定。
-- `clientSecret` 也接受 SecretRef 輸入，而不僅是純文字字串。
+  AppSecret；AppID 必須已設定於配置或 `QQBOT_APP_ID` 中。
+- `clientSecret` 也接受 SecretRef 輸入，而不僅僅是明文字串。
 
 ### 多帳號設定
 
@@ -107,7 +110,7 @@ openclaw configure --section channels
 ```
 
 每個帳號都會啟動自己的 WebSocket 連線並維護獨立的
-權杖快取（以 `appId` 隔離）。
+權杖快取（由 `appId` 隔離）。
 
 透過 CLI 新增第二個機器人：
 
@@ -117,12 +120,12 @@ openclaw channels add --channel qqbot --account bot2 --token "222222222:secret-o
 
 ### 語音 (STT / TTS)
 
-STT 和 TTS 支援兩級配置，並具備優先順序後援機制：
+STT 和 TTS 支援具有優先順序後援的兩級配置：
 
-| 設定 | 外掛程式特定         | 框架後援                      |
-| ---- | -------------------- | ----------------------------- |
-| STT  | `channels.qqbot.stt` | `tools.media.audio.models[0]` |
-| TTS  | `channels.qqbot.tts` | `messages.tts`                |
+| 設定 | 外掛程式特定                                              | 框架後援                      |
+| ---- | --------------------------------------------------------- | ----------------------------- |
+| STT  | `channels.qqbot.stt`                                      | `tools.media.audio.models[0]` |
+| TTS  | `channels.qqbot.tts`、 `channels.qqbot.accounts.<id>.tts` | `messages.tts`                |
 
 ```json5
 {
@@ -137,15 +140,26 @@ STT 和 TTS 支援兩級配置，並具備優先順序後援機制：
         model: "your-tts-model",
         voice: "your-voice",
       },
+      accounts: {
+        qq-main: {
+          tts: {
+            providers: {
+              openai: { voice: "shimmer" },
+            },
+          },
+        },
+      },
     },
   },
 }
 ```
 
-在其中任一項設定 `enabled: false` 以停用。
+在任一項目上設定 `enabled: false` 以停用。
+帳號層級的 TTS 覆蓋使用與 `messages.tts` 相同的結構，並在頻道/全域 TTS 配置上進行深度合併。
 
-出站音訊上傳/轉碼行為也可以透過
-`channels.qqbot.audioFormatPolicy` 進行調整：
+入站 QQ 語音附件會以音訊媒體元數據的形式展示給代理，同時將原始語音檔案排除在通用 `MediaPaths` 之外。當已設定 TTS 時，`[[audio_as_voice]]` 純文字回覆會合成 TTS 並發送原生的 QQ 語音訊息。
+
+出站音訊上傳/轉碼行為也可以透過 `channels.qqbot.audioFormatPolicy` 進行調整：
 
 - `sttDirectFormats`
 - `uploadDirectFormats`
@@ -181,27 +195,37 @@ STT 和 TTS 支援兩級配置，並具備優先順序後援機制：
 
 QQ Bot 作為一個獨立的引擎內建於外掛中：
 
-- 每個帳號擁有一組以 `appId` 為鍵的獨立資源堆疊（WebSocket 連線、API 客戶端、Token 快取、媒體儲存根目錄）。帳號之間從不共用輸入/輸出狀態。
+- 每個帳戶擁有一個以 `appId` 為鍵值的獨立資源堆疊（WebSocket 連線、API 客戶端、令牌快取、媒體儲存根目錄）。帳戶之間從不共用入站/出站狀態。
 - 多帳號記錄器會將日誌行標記所屬帳號，因此當您在單一閘道下執行多個 Bot 時，診斷資訊仍可保持區分。
-- 輸入、輸出和閘道橋接路徑共用 `~/.openclaw/media` 下的一個單一媒體負載根目錄，因此上傳、下載和轉碼快取都會存放在同一個受保護的目錄下，而非分散在各自的子系統樹中。
+- 入站、出站和閘道橋接路徑共用 `~/.openclaw/media` 下的一個單一媒體承載根目錄，因此上傳、下載和轉碼快取都會置於同一個受保護的目錄下，而不是每個子系統的樹狀結構中。
 - 憑證可以作為標準 OpenClaw 憑證快照的一部分進行備份與還原；還原時，引擎會重新附加每個帳號的資源堆疊，而無需重新配對新的 QR code。
 
 ## QR code 註冊
 
-除了手動貼上 `AppID:AppSecret` 之外，引擎也支援 QR code 註冊流程以將 QQ Bot 連結至 OpenClaw：
+除了手動貼上 `AppID:AppSecret` 之外，引擎還支援二維碼入站流程，用於將 QQ Bot 連結到 OpenClaw：
 
-1. 執行 QQ Bot 設定路徑（例如 `openclaw channels add --channel qqbot`）並在提示時選擇 QR code 流程。
+1. 執行 QQ Bot 設定路徑（例如 `openclaw channels add --channel qqbot`）並在提示時選擇二維碼流程。
 2. 使用綁定目標 QQ Bot 的手機應用程式掃描產生的 QR code。
-3. 在手機上批准配對。OpenClaw 會將傳回的憑證存入 `credentials/` 中正確的帳號範圍下。
+3. 在手機上批准配對。OpenClaw 會將傳回的憑證儲存在正確的帳戶範圍下的 `credentials/` 中。
 
-由 Bot 本身產生的批准提示（例如 QQ Bot API 顯示的「允許此動作？」流程）會顯示為原生 OpenClaw 提示，您可以使用 `/bot-approve` 接受，而不需要透過原始 QQ 客戶端回覆。
+由 Bot 本身產生的批准提示（例如，QQ Bot API 公開的「允許此操作？」流程）會顯示為原生的 OpenClaw 提示，您可以使用 `/bot-approve` 接受，而不是透過原始 QQ 客戶端回覆。
 
 ## 疑難排解
 
 - **Bot 回應「gone to Mars」：** 未設定憑證或尚未啟動 Gateway。
-- **沒有收到訊息：** 請驗證 `appId` 和 `clientSecret` 是正確的，且
-  Bot 已在 QQ 開放平台上啟用。
-- **使用 `--token-file` 設定仍顯示未設定：** `--token-file` 只會設定
-  AppSecret。您仍然需要在設定檔中使用 `appId` 或 `QQBOT_APP_ID`。
+- **沒有入站訊息：** 驗證 `appId` 和 `clientSecret` 是否正確，並且
+  Bot 已在 QQ 開放平台啟用。
+- **重複的自我回覆：** OpenClaw 會將 QQ 外向引用索引記錄為
+  由機器人建立，並忽略當前 `msgIdx` 符合該
+  相同機器人帳號的輸入事件。這可防止平台回圈，同時仍允許使用者
+  引用或回覆先前的機器人訊息。
+- **使用 `--token-file` 設定仍顯示未設定：** `--token-file` 僅設定
+  AppSecret。您仍然需要在設定中使用 `appId` 或 `QQBOT_APP_ID`。
 - **主動訊息未送達：** 如果使用者最近沒有互動，QQ 可能會攔截機器人發起的訊息。
-- **語音未轉錄：** 請確保已設定 STT 且提供者連線正常。
+- **語音未轉錄：** 確保已設定 STT 且提供者可連線。
+
+## 相關
+
+- [配對](/zh-Hant/channels/pairing)
+- [群組](/zh-Hant/channels/groups)
+- [頻道疑難排解](/zh-Hant/channels/troubleshooting)

@@ -3,7 +3,7 @@ summary: "用于 `openclaw security`（审计和修复常见安全隐患）的 C
 read_when:
   - You want to run a quick security audit on config/state
   - You want to apply safe “fix” suggestions (permissions, tighten defaults)
-title: "security"
+title: "Security"
 ---
 
 # `openclaw security`
@@ -82,3 +82,8 @@ openclaw security audit --fix --json | jq '{fix: .fix.ok, summary: .report.summa
 - 禁用工具 (`gateway`, `cron`, `exec` 等)
 - 更改网关绑定/身份验证/网络暴露选择
 - 删除或重写插件/技能
+
+## 相关
+
+- [CLI 参考](/zh/cli)
+- [安全审计](/zh/gateway/security)

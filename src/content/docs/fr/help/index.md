@@ -1,28 +1,38 @@
 ---
 summary: "Centre d'aide : solutions courantes, install sanity et où regarder en cas de problème"
 read_when:
-  - You’re new and want the “what do I click/run” guide
+  - You are new and want a "what do I click/run" guide
   - Something broke and you want the fastest path to a fix
 title: "Aide"
 ---
 
-# Aide
+Chemin rapide pour « get unstuck » pour les problèmes les plus courants :
 
-Si vous souhaitez un processus rapide pour « get unstuck », commencez ici :
+- [Troubleshooting](/fr/help/troubleshooting) — arbre de décision basé sur les symptômes
+- [Debugging](/fr/help/debugging) — mode watch, flux bruts, profil de développement
+- [Install sanity](/fr/install/node#troubleshooting) — vérifications de Node / npm / PATH
+- [Gateway troubleshooting](/fr/gateway/troubleshooting) — problèmes spécifiques à la passerelle
+- [Doctor](/fr/gateway/doctor) — réparation automatisée + bundle de diagnostic
 
-- **Troubleshooting :** [Commencez ici](/fr/help/troubleshooting)
-- **Installer la saine (Node/npm/PATH) :** [Installer](/fr/install/node#troubleshooting)
-- **Problèmes de Gateway :** [Gateway troubleshooting](/fr/gateway/troubleshooting)
-- **Journaux :** [Logging](/fr/logging) et [Gateway logging](/fr/gateway/logging)
-- **Réparations :** [Doctor](/fr/gateway/doctor)
+## FAQ
 
-Si vous cherchez des réponses à des questions conceptuelles (pas « quelque chose ne marche pas ») :
+- [FAQ](/fr/help/faq) — concepts du quotidien et questions opérationnelles
+- [First-run FAQ](/fr/help/faq-first-run) — installation, intégration, authentification, abonnements, premiers échecs
+- [Models FAQ](/fr/help/faq-models) — sélection de modèle, basculement, profils d'authentification
 
-- [FAQ (concepts)](/fr/help/faq)
+## Diagnostics
 
-## Environnement et débogage
+- [Environment variables](/fr/help/environment) — où OpenClaw charge les env vars et la priorité
+- [Diagnostics flags](/fr/diagnostics/flags) — diagnostics d'exécution et modes verbeux
+- [Node + tsx crash](/fr/debug/node-issue) — scénarios de crash d'exécution spécifiques à Node / tsx
 
-- **Variables d'environnement :** [Où OpenClaw charge les env vars et la priorité](/fr/help/environment)
-- **Débogage :** [Mode surveillance, flux bruts et profil de développement](/fr/help/debugging)
-- **Tests :** [Suites de tests, tests en direct et exécuteurs Docker](/fr/help/testing)
-- **Scripts :** [Scripts d'aide du référentiel](/fr/help/scripts)
+## Tests
+
+- [Testing](/fr/help/testing) — suites de tests et exécuteurs Docker
+- [Live tests](/fr/help/testing-live) — tests de fumée pour le fournisseur et la CLI touchant le réseau
+
+## Communauté et méta
+
+- [OpenClaw lore](/fr/start/lore) — l'histoire
+- [Docs hubs](/fr/start/hubs) — organisation de cette documentation
+- [Docs directory](/fr/start/docs-directory) — carte complète des fichiers

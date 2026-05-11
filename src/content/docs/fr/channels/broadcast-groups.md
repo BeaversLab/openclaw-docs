@@ -5,12 +5,10 @@ read_when:
   - Debugging multi-agent replies in WhatsApp
 status: expérimental
 title: "Groupes de diffusion"
+sidebarTitle: "Groupes de diffusion"
 ---
 
-# Groupes de diffusion
-
-**Statut :** Expérimental  
-**Version :** Ajouté dans 2026.1.9
+<Note>**Statut :** Expérimental. Ajouté dans 2026.1.9.</Note>
 
 ## Aperçu
 
@@ -22,58 +20,58 @@ Les groupes de diffusion sont évalués après les listes d'autorisation de chan
 
 ## Cas d'usage
 
-### 1. Équipes d'agents spécialisés
+<AccordionGroup>
+  <Accordion title="1. Équipes d'agents spécialisés">
+    Déployez plusieurs agents avec des responsabilités atomiques et ciblées :
 
-Déployez plusieurs agents avec des responsabilités atomiques et ciblées :
+    ```
+    Group: "Development Team"
+    Agents:
+      - CodeReviewer (reviews code snippets)
+      - DocumentationBot (generates docs)
+      - SecurityAuditor (checks for vulnerabilities)
+      - TestGenerator (suggests test cases)
+    ```
 
-```
-Group: "Development Team"
-Agents:
-  - CodeReviewer (reviews code snippets)
-  - DocumentationBot (generates docs)
-  - SecurityAuditor (checks for vulnerabilities)
-  - TestGenerator (suggests test cases)
-```
+    Chaque agent traite le même message et fournit sa perspective spécialisée.
 
-Chaque agent traite le même message et fournit sa perspective spécialisée.
-
-### 2. Support multilingue
-
-```
-Group: "International Support"
-Agents:
-  - Agent_EN (responds in English)
-  - Agent_DE (responds in German)
-  - Agent_ES (responds in Spanish)
-```
-
-### 3. Workflows d'assurance qualité
-
-```
-Group: "Customer Support"
-Agents:
-  - SupportAgent (provides answer)
-  - QAAgent (reviews quality, only responds if issues found)
-```
-
-### 4. Automatisation des tâches
-
-```
-Group: "Project Management"
-Agents:
-  - TaskTracker (updates task database)
-  - TimeLogger (logs time spent)
-  - ReportGenerator (creates summaries)
-```
+  </Accordion>
+  <Accordion title="2. Support multilingue">
+    ```
+    Group: "International Support"
+    Agents:
+      - Agent_EN (responds in English)
+      - Agent_DE (responds in German)
+      - Agent_ES (responds in Spanish)
+    ```
+  </Accordion>
+  <Accordion title="3. Workflows d'assurance qualité">
+    ```
+    Group: "Customer Support"
+    Agents:
+      - SupportAgent (provides answer)
+      - QAAgent (reviews quality, only responds if issues found)
+    ```
+  </Accordion>
+  <Accordion title="4. Automatisation des tâches">
+    ```
+    Group: "Project Management"
+    Agents:
+      - TaskTracker (updates task database)
+      - TimeLogger (logs time spent)
+      - ReportGenerator (creates summaries)
+    ```
+  </Accordion>
+</AccordionGroup>
 
 ## Configuration
 
 ### Configuration de base
 
-Ajoutez une section `broadcast` de premier niveau (à côté de `bindings`). Les clés sont les identifiants de pairs WhatsApp :
+Ajoutez une section de niveau supérieur `broadcast` (à côté de `bindings`). Les clés sont les identifiants de pairs WhatsApp :
 
-- group chats : JID de groupe (par ex. `120363403215116621@g.us`)
-- DMs : numéro de téléphone E.164 (par ex. `+15551234567`)
+- groupes de discussion : JID de groupe (ex. `120363403215116621@g.us`)
+- DMs : numéro de téléphone E.164 (ex. `+15551234567`)
 
 ```json
 {
@@ -83,37 +81,40 @@ Ajoutez une section `broadcast` de premier niveau (à côté de `bindings`). Les
 }
 ```
 
-**Résultat :** Lorsque OpenClaw répondrait dans ce chat, il exécutera les trois agents.
+**Résultat :** Lorsque OpenClaw répondrait dans cette discussion, il exécutera les trois agents.
 
 ### Stratégie de traitement
 
-Contrôlez comment les agents traitent les messages :
+Contrôlez la façon dont les agents traitent les messages :
 
-#### Parallèle (Par défaut)
+<Tabs>
+  <Tab title="parallèle (par défaut)">
+    Tous les agents traitent simultanément :
 
-Tous les agents traitent simultanément :
+    ```json
+    {
+      "broadcast": {
+        "strategy": "parallel",
+        "120363403215116621@g.us": ["alfred", "baerbel"]
+      }
+    }
+    ```
 
-```json
-{
-  "broadcast": {
-    "strategy": "parallel",
-    "120363403215116621@g.us": ["alfred", "baerbel"]
-  }
-}
-```
+  </Tab>
+  <Tab title="séquentiel">
+    Les agents traitent dans l'ordre (un attend la fin du précédent) :
 
-#### Séquentiel
+    ```json
+    {
+      "broadcast": {
+        "strategy": "sequential",
+        "120363403215116621@g.us": ["alfred", "baerbel"]
+      }
+    }
+    ```
 
-Les agents traitent dans l'ordre (un attend la fin du précédent) :
-
-```json
-{
-  "broadcast": {
-    "strategy": "sequential",
-    "120363403215116621@g.us": ["alfred", "baerbel"]
-  }
-}
-```
+  </Tab>
+</Tabs>
 
 ### Exemple complet
 
@@ -154,121 +155,108 @@ Les agents traitent dans l'ordre (un attend la fin du précédent) :
 
 ### Flux de messages
 
-1. **Message entrant** arrive dans un groupe WhatsApp
-2. **Vérification de diffusion** : Le système vérifie si l'ID du pair est dans `broadcast`
-3. **Si dans la liste de diffusion** :
-   - Tous les agents répertoriés traitent le message
-   - Chaque agent possède sa propre clé de session et son contexte isolé
-   - Les agents traitent en parallèle (par défaut) ou séquentiellement
-4. **Si pas dans la liste de diffusion** :
-   - Le routage normal s'applique (première liaison correspondante)
+<Steps>
+  <Step title="Arrivée du message entrant">Un message de groupe WhatsApp ou de DM arrive.</Step>
+  <Step title="Vérification de diffusion">Le système vérifie si l'ID de pair est dans `broadcast`.</Step>
+  <Step title="Si dans la liste de diffusion">- Tous les agents listés traitent le message. - Chaque agent possède sa propre clé de session et un contexte isolé. - Les agents traitent en parallèle (par défaut) ou séquentiellement.</Step>
+  <Step title="Si pas dans la liste de diffusion">Le routage normal s'applique (première liaison correspondante).</Step>
+</Steps>
 
-Remarque : les groupes de diffusion ne contournent pas les listes d'autorisation de channel ou les règles d'activation de groupe (mentions/commandes/etc.). Ils ne modifient que les agents qui s'exécutent lorsqu'un message est éligible au traitement.
+<Note>Les groupes de diffusion ne contournent pas les listes d'autorisation de channel ou les règles d'activation de groupe (mentions/commandes/etc.). Ils ne modifient que _les agents qui s'exécutent_ lorsqu'un message est éligible au traitement.</Note>
 
-### Isolement de session
+### Isolement des sessions
 
-Chaque agent d'un groupe de diffusion maintient des éléments complètement séparés :
+Chaque agent dans un groupe de diffusion maintient des éléments entièrement séparés :
 
 - **Clés de session** (`agent:alfred:whatsapp:group:120363...` vs `agent:baerbel:whatsapp:group:120363...`)
-- **Historique des conversations** (l'agent ne voit pas les messages des autres agents)
-- **Espace de travail** (bacs à sable séparés si configuré)
-- **Accès aux outils** (différentes listes d'autorisation/refus)
+- **Historique de conversation** (l'agent ne voit pas les messages des autres agents)
+- **Espace de travail** (bacs à sable séparés si configurés)
+- **Accès aux outils** (listes d'autorisation/refus différentes)
 - **Mémoire/contexte** (IDENTITY.md, SOUL.md, etc. séparés)
-- **Tampon de contexte de groupe** (messages de groupe récents utilisés pour le contexte) est partagé par pair, de sorte que tous les agents de diffusion voient le même contexte lorsqu'ils sont déclenchés
+- **Tampon de contexte de groupe** (les messages récents du groupe utilisés pour le contexte) est partagé par pair, donc tous les agents de diffusion voient le même contexte lorsqu'ils sont déclenchés
 
 Cela permet à chaque agent d'avoir :
 
-- Différentes personnalités
-- Différents accès aux outils (par exemple, lecture seule vs lecture-écriture)
-- Différents modèles (par exemple, opus vs sonnet)
-- Différentes compétences installées
+- Des personnalités différentes
+- Un accès aux outils différent (par ex., lecture seule vs lecture-écriture)
+- Des modèles différents (par ex., opus vs sonnet)
+- Des compétences différentes installées
 
-### Exemple : Sessions isolées
+### Exemple : sessions isolées
 
 Dans le groupe `120363403215116621@g.us` avec les agents `["alfred", "baerbel"]` :
 
-**Contexte d'Alfred :**
-
-```
-Session: agent:alfred:whatsapp:group:120363403215116621@g.us
-History: [user message, alfred's previous responses]
-Workspace: /Users/user/openclaw-alfred/
-Tools: read, write, exec
-```
-
-**Contexte de Bärbel :**
-
-```
-Session: agent:baerbel:whatsapp:group:120363403215116621@g.us
-History: [user message, baerbel's previous responses]
-Workspace: /Users/user/openclaw-baerbel/
-Tools: read only
-```
+<Tabs>
+  <Tab title="Contexte d'Alfred">``` Session: agent:alfred:whatsapp:group:120363403215116621@g.us History: [user message, alfred's previous responses] Workspace: /Users/user/openclaw-alfred/ Tools: read, write, exec ```</Tab>
+  <Tab title="Contexte de Bärbel">``` Session: agent:baerbel:whatsapp:group:120363403215116621@g.us History: [user message, baerbel's previous responses] Workspace: /Users/user/openclaw-baerbel/ Tools: read only ```</Tab>
+</Tabs>
 
 ## Bonnes pratiques
 
-### 1. Garder les agents concentrés
+<AccordionGroup>
+  <Accordion title="1. Garder les agents concentrés">
+    Concevez chaque agent avec une seule responsabilité claire :
 
-Concevez chaque agent avec une responsabilité unique et claire :
-
-```json
-{
-  "broadcast": {
-    "DEV_GROUP": ["formatter", "linter", "tester"]
-  }
-}
-```
-
-✅ **Bon :** Chaque agent a un seul travail  
-❌ **Mauvais :** Un agent générique d'« aide au développement »
-
-### 2. Utiliser des noms descriptifs
-
-Rendez clair ce que fait chaque agent :
-
-```json
-{
-  "agents": {
-    "security-scanner": { "name": "Security Scanner" },
-    "code-formatter": { "name": "Code Formatter" },
-    "test-generator": { "name": "Test Generator" }
-  }
-}
-```
-
-### 3. Configurer différents accès aux outils
-
-Donnez aux agents uniquement les outils dont ils ont besoin :
-
-```json
-{
-  "agents": {
-    "reviewer": {
-      "tools": { "allow": ["read", "exec"] } // Read-only
-    },
-    "fixer": {
-      "tools": { "allow": ["read", "write", "edit", "exec"] } // Read-write
+    ```json
+    {
+      "broadcast": {
+        "DEV_GROUP": ["formatter", "linter", "tester"]
+      }
     }
-  }
-}
-```
+    ```
 
-### 4. Surveiller les performances
+    ✅ **Bon :** Chaque agent a un travail. ❌ **Mauvais :** Un agent générique "dev-helper".
 
-Avec de nombreux agents, envisagez :
+  </Accordion>
+  <Accordion title="2. Utiliser des noms descriptifs">
+    Rendez clair ce que fait chaque agent :
 
-- Utiliser `"strategy": "parallel"` (par défaut) pour la vitesse
-- Limiter les groupes de diffusion à 5 à 10 agents
-- Utiliser des modèles plus rapides pour les agents plus simples
+    ```json
+    {
+      "agents": {
+        "security-scanner": { "name": "Security Scanner" },
+        "code-formatter": { "name": "Code Formatter" },
+        "test-generator": { "name": "Test Generator" }
+      }
+    }
+    ```
 
-### 5. Gérer les échecs avec élégance
+  </Accordion>
+  <Accordion title="3. Configure different tool access">
+    Give agents only the tools they need:
 
-Les agents échouent indépendamment. L'erreur d'un agent ne bloque pas les autres :
+    ```json
+    {
+      "agents": {
+        "reviewer": {
+          "tools": { "allow": ["read", "exec"] } // Read-only
+        },
+        "fixer": {
+          "tools": { "allow": ["read", "write", "edit", "exec"] } // Read-write
+        }
+      }
+    }
+    ```
 
-```
-Message → [Agent A ✓, Agent B ✗ error, Agent C ✓]
-Result: Agent A and C respond, Agent B logs error
-```
+  </Accordion>
+  <Accordion title="4. Monitor performance">
+    With many agents, consider:
+
+    - Using `"strategy": "parallel"` (default) for speed
+    - Limiting broadcast groups to 5-10 agents
+    - Using faster models for simpler agents
+
+  </Accordion>
+  <Accordion title="5. Handle failures gracefully">
+    Agents fail independently. One agent's error doesn't block others:
+
+    ```
+    Message → [Agent A ✓, Agent B ✗ error, Agent C ✓]
+    Result: Agent A and C respond, Agent B logs error
+    ```
+
+  </Accordion>
+</AccordionGroup>
 
 ## Compatibilité
 
@@ -299,101 +287,112 @@ Les groupes de diffusion fonctionnent parallèlement au routage existant :
 }
 ```
 
-- `GROUP_A` : Seul alfred répond (routage normal)
-- `GROUP_B` : agent1 AND agent2 respond (broadcast)
+- `GROUP_A` : Seul alfred répond (routage normal).
+- `GROUP_B` : agent1 ET agent2 répondent (diffusion).
 
-**Priorité :** `broadcast` prend la priorité sur `bindings`.
+<Note>**Priorité :** `broadcast` est prioritaire sur `bindings`.</Note>
 
 ## Dépannage
 
-### Les agents ne répondent pas
+<AccordionGroup>
+  <Accordion title="Agents not responding">
+    **Check:**
 
-**Vérification :**
+    1. Agent IDs exist in `agents.list`.
+    2. Peer ID format is correct (e.g., `120363403215116621@g.us`).
+    3. Agents are not in deny lists.
 
-1. Les ID des agents existent dans `agents.list`
-2. Le format de l'ID du pair est correct (par ex., `120363403215116621@g.us`)
-3. Les agents ne sont pas dans les listes de refus
+    **Debug:**
 
-**Débogage :**
+    ```bash
+    tail -f ~/.openclaw/logs/gateway.log | grep broadcast
+    ```
 
-```bash
-tail -f ~/.openclaw/logs/gateway.log | grep broadcast
-```
+  </Accordion>
+  <Accordion title="Only one agent responding">
+    **Cause:** Peer ID might be in `bindings` but not `broadcast`.
 
-### Un seul agent répond
+    **Fix:** Add to broadcast config or remove from bindings.
 
-**Cause :** L'ID du pair pourrait être dans `bindings` mais pas dans `broadcast`.
+  </Accordion>
+  <Accordion title="Performance issues">
+    If slow with many agents:
 
-**Solution :** Ajouter à la configuration de diffusion ou supprimer des liaisons.
+    - Reduce number of agents per group.
+    - Use lighter models (sonnet instead of opus).
+    - Check sandbox startup time.
 
-### Problèmes de performances
-
-**En cas de lenteur avec de nombreux agents :**
-
-- Réduire le nombre d'agents par groupe
-- Utiliser des modèles plus légers (sonnet au lieu de opus)
-- Vérifier le temps de démarrage du bac à sable
+  </Accordion>
+</AccordionGroup>
 
 ## Exemples
 
-### Exemple 1 : Équipe de révision de code
-
-```json
-{
-  "broadcast": {
-    "strategy": "parallel",
-    "120363403215116621@g.us": ["code-formatter", "security-scanner", "test-coverage", "docs-checker"]
-  },
-  "agents": {
-    "list": [
-      {
-        "id": "code-formatter",
-        "workspace": "~/agents/formatter",
-        "tools": { "allow": ["read", "write"] }
+<AccordionGroup>
+  <Accordion title="Exemple 1 : Équipe de révision de code">
+    ```json
+    {
+      "broadcast": {
+        "strategy": "parallel",
+        "120363403215116621@g.us": [
+          "code-formatter",
+          "security-scanner",
+          "test-coverage",
+          "docs-checker"
+        ]
       },
-      {
-        "id": "security-scanner",
-        "workspace": "~/agents/security",
-        "tools": { "allow": ["read", "exec"] }
+      "agents": {
+        "list": [
+          {
+            "id": "code-formatter",
+            "workspace": "~/agents/formatter",
+            "tools": { "allow": ["read", "write"] }
+          },
+          {
+            "id": "security-scanner",
+            "workspace": "~/agents/security",
+            "tools": { "allow": ["read", "exec"] }
+          },
+          {
+            "id": "test-coverage",
+            "workspace": "~/agents/testing",
+            "tools": { "allow": ["read", "exec"] }
+          },
+          { "id": "docs-checker", "workspace": "~/agents/docs", "tools": { "allow": ["read"] } }
+        ]
+      }
+    }
+    ```
+
+    **L'utilisateur envoie :** Extrait de code.
+
+    **Réponses :**
+
+    - code-formatter : "Indentation corrigée et indications de type ajoutées"
+    - security-scanner : "⚠️ Vulnérabilité par injection SQL à la ligne 12"
+    - test-coverage : "La couverture est de 45 %, tests manquants pour les cas d'erreur"
+    - docs-checker : "Docstring manquante pour la fonction `process_data`"
+
+  </Accordion>
+  <Accordion title="Exemple 2 : Support multilingue">
+    ```json
+    {
+      "broadcast": {
+        "strategy": "sequential",
+        "+15555550123": ["detect-language", "translator-en", "translator-de"]
       },
-      {
-        "id": "test-coverage",
-        "workspace": "~/agents/testing",
-        "tools": { "allow": ["read", "exec"] }
-      },
-      { "id": "docs-checker", "workspace": "~/agents/docs", "tools": { "allow": ["read"] } }
-    ]
-  }
-}
-```
+      "agents": {
+        "list": [
+          { "id": "detect-language", "workspace": "~/agents/lang-detect" },
+          { "id": "translator-en", "workspace": "~/agents/translate-en" },
+          { "id": "translator-de", "workspace": "~/agents/translate-de" }
+        ]
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
 
-**L'utilisateur envoie :** Extrait de code  
-**Réponses :**
-
-- code-formatter : "Indentation corrigée et indications de type ajoutées"
-- security-scanner : "⚠️ Vulnérabilité d'injection SQL à la ligne 12"
-- test-coverage : "La couverture est de 45 %, tests manquants pour les cas d'erreur"
-- docs-checker : "Docstring manquante pour la fonction `process_data`"
-
-### Exemple 2 : Support multilingue
-
-```json
-{
-  "broadcast": {
-    "strategy": "sequential",
-    "+15555550123": ["detect-language", "translator-en", "translator-de"]
-  },
-  "agents": {
-    "list": [
-      { "id": "detect-language", "workspace": "~/agents/lang-detect" },
-      { "id": "translator-en", "workspace": "~/agents/translate-en" },
-      { "id": "translator-de", "workspace": "~/agents/translate-de" }
-    ]
-  }
-}
-```
-
-## Référence de l'API
+## API reference
 
 ### Schéma de configuration
 
@@ -408,30 +407,33 @@ interface OpenClawConfig {
 
 ### Champs
 
-- `strategy` (facultatif) : Comment traiter les agents
-  - `"parallel"` (par défaut) : Tous les agents traitent simultanément
-  - `"sequential"` : Les agents traitent dans l'ordre du tableau
-- `[peerId]` : JID de groupe WhatsApp, numéro E.164 ou autre ID de pair
-  - Valeur : Tableau des ID d'agents qui doivent traiter les messages
+<ParamField path="strategy" type='"parallel" | "sequential"' default='"parallel"'>
+  Comment traiter les agents. `parallel` exécute tous les agents simultanément ; `sequential` les exécute dans l'ordre du tableau.
+</ParamField>
+<ParamField path="[peerId]" type="string[]">
+  JID de groupe WhatsApp, numéro E.164 ou autre ID de pair. La valeur est le tableau des ID d'agents qui doivent traiter les messages.
+</ParamField>
 
 ## Limitations
 
-1. **Max agents :** Aucune limite stricte, mais 10+ agents peuvent être lents
-2. **Contexte partagé :** Les agents ne voient pas les réponses des autres (par conception)
-3. **Ordre des messages :** Les réponses parallèles peuvent arriver dans n'importe quel ordre
-4. **Limites de débit :** Tous les agents comptent dans les limites de débit WhatsApp
+1. **Max agents :** Aucune limite stricte, mais 10+ agents peuvent être lents.
+2. **Contexte partagé :** Les agents ne voient pas les réponses des autres (par conception).
+3. **Ordre des messages :** Les réponses parallèles peuvent arriver dans n'importe quel ordre.
+4. **Limites de débit :** Tous les agents comptent dans les limites de débit WhatsApp.
 
 ## Améliorations futures
 
 Fonctionnalités prévues :
 
 - [ ] Mode de contexte partagé (les agents voient les réponses des autres)
-- [ ] Coordination des agents (les agents peuvent se signaler)
+- [ ] Coordination des agents (les agents peuvent se signaler entre eux)
 - [ ] Sélection dynamique d'agents (choisir les agents en fonction du contenu du message)
 - [ ] Priorités des agents (certains agents répondent avant d'autres)
 
-## Voir aussi
+## Connexes
 
-- [Configuration multi-agent](/fr/tools/multi-agent-sandbox-tools)
-- [Configuration du routage](/fr/channels/channel-routing)
-- [Gestion des sessions](/fr/concepts/session)
+- [Routage de canal](/fr/channels/channel-routing)
+- [Groupes](/fr/channels/groups)
+- [Outils de bac à sable multi-agents](/fr/tools/multi-agent-sandbox-tools)
+- [Jumelage](/fr/channels/pairing)
+- [Gestion de session](/fr/concepts/session)

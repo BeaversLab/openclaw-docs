@@ -71,3 +71,9 @@ El canal de WhatsApp se ejecuta a través de **Baileys Web**. Este documento cap
 - Cubra los flujos de envío + respuesta para los casos de imagen/audio/documento.
 - Valide la recompresión para imágenes (límite de tamaño) y el indicador de nota de voz para audio.
 - Asegúrese de que las respuestas multimedia se distribuyan como envíos secuenciales.
+
+## Relacionado
+
+- [Captura de cámara](/es/nodes/camera)
+- [Comprensión de medios](/es/nodes/media-understanding)
+- [Audio y notas de voz](/es/nodes/audio)

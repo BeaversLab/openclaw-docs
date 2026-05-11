@@ -6,26 +6,24 @@ read_when:
 title: "ClawDock"
 ---
 
-# ClawDock
-
 ClawDock 是一个用于基于 Docker 的 OpenClaw 安装的小型 shell 辅助层。
 
-它为您提供 `clawdock-start`、`clawdock-dashboard` 和 `clawdock-fix-token` 等简短命令，以代替冗长的 `docker compose ...` 调用。
+它提供了 `clawdock-start`、`clawdock-dashboard` 和 `clawdock-fix-token` 等简短命令，而不是较长的 `docker compose ...` 调用。
 
 如果您尚未设置 Docker，请从 [Docker](/zh/install/docker) 开始。
 
 ## 安装
 
-使用标准的辅助路径：
+使用标准辅助路径：
 
 ```bash
 mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/openclaw/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
 echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
-如果您之前从 `scripts/shell-helpers/clawdock-helpers.sh` 安装了 ClawDock，请从新的 `scripts/clawdock/clawdock-helpers.sh` 路径重新安装。旧的原始 GitHub 路径已被移除。
+如果您以前从 `scripts/shell-helpers/clawdock-helpers.sh` 安装过 ClawDock，请从新的 `scripts/clawdock/clawdock-helpers.sh` 路径重新安装。旧的 GitHub 原始路径已被移除。
 
-## 功能介绍
+## 功能概览
 
 ### 基本操作
 
@@ -57,7 +55,7 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 
 | 命令                 | 描述                   |
 | -------------------- | ---------------------- |
-| `clawdock-fix-token` | 在容器内配置网关令牌   |
+| `clawdock-fix-token` | 配置容器内的网关令牌   |
 | `clawdock-update`    | 拉取、重新构建并重启   |
 | `clawdock-rebuild`   | 仅重新构建 Docker 镜像 |
 | `clawdock-clean`     | 移除容器和卷           |
@@ -70,10 +68,10 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 | `clawdock-token`       | 打印网关令牌             |
 | `clawdock-cd`          | 跳转到 OpenClaw 项目目录 |
 | `clawdock-config`      | 打开 `~/.openclaw`       |
-| `clawdock-show-config` | 打印已编辑值的配置文件   |
+| `clawdock-show-config` | 打印带有编辑值的配置文件 |
 | `clawdock-workspace`   | 打开工作区目录           |
 
-## 首次运行流程
+## 首次使用流程
 
 ```bash
 clawdock-start
@@ -81,7 +79,7 @@ clawdock-fix-token
 clawdock-dashboard
 ```
 
-如果浏览器显示需要配对：
+如果浏览器提示需要进行配对：
 
 ```bash
 clawdock-devices
@@ -92,9 +90,9 @@ clawdock-approve <request-id>
 
 ClawDock 使用与 [Docker](/zh/install/docker) 中描述的相同的 Docker 配置分离方式：
 
-- `<project>/.env` 用于 Docker 特定的值，如镜像名称、端口和网关令牌
-- `~/.openclaw/.env` 用于支持环境变量的提供商密钥和机器人令牌
-- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 用于存储的提供商 OAuth/API-key 身份验证
+- `<project>/.env` 用于 Docker 特定的值，例如镜像名称、端口和网关令牌
+- `~/.openclaw/.env` 用于基于环境的提供商密钥和机器人令牌
+- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 用于存储的提供商 OAuth/API 密钥身份验证
 - `~/.openclaw/openclaw.json` 用于行为配置
 
 当您想要快速检查 `.env` 文件和 `openclaw.json` 时，请使用 `clawdock-show-config`。它会在打印输出中编辑 `.env` 值。

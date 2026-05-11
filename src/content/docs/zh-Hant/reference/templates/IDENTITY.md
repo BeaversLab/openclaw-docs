@@ -1,6 +1,6 @@
 ---
-title: "IDENTITY 模板"
-summary: "代理身分記錄"
+summary: "Agent identity record"
+title: "IDENTITY template"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -28,3 +28,7 @@ _在第一次對話時填寫此內容。使其屬於你。_
 
 - 將此檔案儲存在工作區根目錄中，命名為 `IDENTITY.md`。
 - 對於頭像，請使用像 `avatars/openclaw.png` 這樣的工作區相對路徑。
+
+## 相關
+
+- [Agent workspace](/zh-Hant/concepts/agent-workspace)

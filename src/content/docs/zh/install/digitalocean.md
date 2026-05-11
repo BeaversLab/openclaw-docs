@@ -6,13 +6,11 @@ read_when:
 title: "DigitalOcean"
 ---
 
-# DigitalOcean
+在 DigitalOcean Droplet 上运行持久的 OpenClaw Gateway(网关)。
 
-在 DigitalOcean Droplet 上运行持久化的 OpenClaw Gateway(网关)。
+## 前提条件
 
-## 先决条件
-
-- DigitalOcean 账户 ([注册](https://cloud.digitalocean.com/registrations/new))
+- DigitalOcean 账户（[注册](https://cloud.digitalocean.com/registrations/new））
 - SSH 密钥对（或愿意使用密码认证）
 - 大约 20 分钟
 
@@ -21,17 +19,17 @@ title: "DigitalOcean"
 <Steps>
   <Step title="创建 Droplet">
     <Warning>
-    请使用纯净的基础镜像（Ubuntu 24.04 LTS）。除非您已审查过第三方 Marketplace 一键镜像的启动脚本和防火墙默认设置，否则请避免使用它们。
+    使用干净的基础镜像（Ubuntu 24.04 LTS）。除非您已审查其启动脚本和防火墙默认设置，否则请避免使用第三方 Marketplace 一键镜像。
     </Warning>
 
     1. 登录 [DigitalOcean](https://cloud.digitalocean.com/)。
     2. 点击 **Create > Droplets**。
     3. 选择：
-       - **Region（区域）：** 距离您最近的区域
-       - **Image（镜像）：** Ubuntu 24.04 LTS
-       - **Size（规格）：** Basic, Regular, 1 vCPU / 1 GB RAM / 25 GB SSD
-       - **Authentication（认证）：** SSH 密钥（推荐）或密码
-    4. 点击 **Create Droplet** 并记录 IP 地址。
+       - **Region：** 离你最近的区域
+       - **Image：** Ubuntu 24.04 LTS
+       - **Size：** Basic, Regular, 1 vCPU / 1 GB RAM / 25 GB SSD
+       - **Authentication：** SSH 密钥（推荐）或密码
+    4. 点击 **Create Droplet** 并记下 IP 地址。
 
   </Step>
 
@@ -57,11 +55,11 @@ title: "DigitalOcean"
     openclaw onboard --install-daemon
     ```
 
-    向导将引导您完成模型认证、渠道设置、网关令牌生成和守护程序安装（systemd）。
+    该向导将指导您完成模型认证、渠道设置、网关令牌生成和守护进程安装 (systemd)。
 
   </Step>
 
-  <Step title="添加交换空间（推荐用于 1 GB Droplet）">
+  <Step title="添加交换空间（推荐用于 1 GB Droplets）">
     ```bash
     fallocate -l 2G /swapfile
     chmod 600 /swapfile
@@ -73,7 +71,7 @@ title: "DigitalOcean"
 
 <Step title="验证网关">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
-  <Step title="访问控制界面">
+  <Step title="访问控制 UI">
     网关默认绑定到环回地址。请选择以下选项之一。
 
     **选项 A：SSH 隧道（最简单）**
@@ -112,12 +110,19 @@ title: "DigitalOcean"
 
 **Gateway(网关) 无法启动** -- 运行 `openclaw doctor --non-interactive` 并使用 `journalctl --user -u openclaw-gateway.service -n 50` 检查日志。
 
-**端口已被占用** -- 运行 `lsof -i :18789` 查找进程，然后将其停止。
+**端口已被占用** -- 运行 `lsof -i :18789` 查找进程，然后停止它。
 
-**内存不足** -- 使用 `free -h` 验证交换空间是否处于活动状态。如果仍然遇到内存不足（OOM），请使用基于 API 的模型（Claude、GPT）而不是本地模型，或者升级到 2 GB 的 Droplet。
+**内存不足** -- 使用 `free -h` 验证 swap 是否处于活动状态。如果仍然遇到 OOM，请使用基于 API 的模型（Claude、GPT），而不是本地模型，或者升级到 2 GB Droplet。
 
 ## 后续步骤
 
-- [频道](/zh/channels) -- 连接 Telegram、WhatsApp、Discord 等
+- [频道](/zh/channels) -- 连接 Telegram、WhatsApp、Discord 等更多平台
 - [Gateway(网关) 配置](/zh/gateway/configuration) -- 所有配置选项
-- [更新](/zh/install/updating) -- 保持 OpenClaw 为最新版本
+- [更新](/zh/install/updating) -- 保持 OpenClaw 最新
+
+## 相关
+
+- [安装概述](/zh/install)
+- [Fly.io](/zh/install/fly)
+- [Hetzner](/zh/install/hetzner)
+- [VPS 托管](/zh/vps)

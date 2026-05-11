@@ -41,7 +41,7 @@ kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GAT
 
 ## 使用 Kind 進行本地測試
 
-如果您沒有叢集，請使用 [Kind](https://kind.sigs.k8s.io/) 在本地建立一個：
+如果您沒有叢集，請使用 [Kind](https://kind.sigs.k8s.io/) 在本機建立一個：
 
 ```bash
 ./scripts/k8s/create-kind.sh           # auto-detects docker or podman
@@ -189,3 +189,9 @@ scripts/k8s/
     ├── pvc.yaml                # 10Gi persistent storage
     └── service.yaml            # ClusterIP on 18789
 ```
+
+## 相關
+
+- [Docker](/zh-Hant/install/docker)
+- [Docker VM runtime](/zh-Hant/install/docker-vm-runtime)
+- [安裝概覽](/zh-Hant/install)

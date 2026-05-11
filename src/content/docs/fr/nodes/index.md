@@ -7,25 +7,27 @@ read_when:
 title: "Nodes"
 ---
 
-# Nodes
-
-Un **nœud** est un appareil compagnon (macOS/iOS/Android/sans tête) qui se connecte au **WebSocket** du Gateway (même port que les opérateurs) avec `role: "node"` et expose une surface de commande (ex. `canvas.*`, `camera.*`, `device.*`, `notifications.*`, `system.*`) via `node.invoke`. Détails du protocole : [Gateway protocol](/fr/gateway/protocol).
+Un **node** est un appareil compagnon (macOS/iOS/Android/sans tête) qui se connecte au **WebSocket** du Gateway (même port que les opérateurs) avec `role: "node"` et expose une surface de commande (par exemple `canvas.*`, `camera.*`, `device.*`, `notifications.*`, `system.*`) via `node.invoke`. Détails du protocole : [Gateway protocol](/fr/gateway/protocol).
 
 Transport hérité : [Bridge protocol](/fr/gateway/bridge-protocol) (TCP JSONL ;
 historique uniquement pour les nœuds actuels).
 
-Le macOS peut également fonctionner en **mode node** : l'application de la barre de menus se connecte au serveur WS du Gateway et expose ses commandes canvas/camera locales en tant que node (donc `openclaw nodes …` fonctionne sur ce Mac).
+macOS peut également fonctionner en **mode node** : l'application de la barre de menus se connecte au serveur WS du Gateway
+et expose ses commandes de canevas/caméra locales en tant que nœud (ainsi
+`openclaw nodes …` fonctionne sur ce Mac). En mode de passerelle distant, l'automatisation du
+navigateur est gérée par l'hôte de nœud CLI (`openclaw node run` ou le
+service de nœud installé), et non par le nœud d'application native.
 
 Notes :
 
-- Les nodes sont des **périphériques**, pas des passerelles. Elles n'exécutent pas le service de passerelle.
-- Les messages Telegram/WhatsApp/etc. atterrissent sur la **passerelle**, pas sur les nodes.
+- Les nœuds sont des **périphériques**, pas des passerelles. Ils n'exécutent pas le service de passerelle.
+- Les messages Telegram/WhatsApp/etc. atterrissent sur la **passerelle**, et non sur les nœuds.
 - Guide de dépannage : [/nodes/troubleshooting](/fr/nodes/troubleshooting)
 
-## Appairage + statut
+## Jumelage + statut
 
-**Les nodes WS utilisent l'appairage d'appareils.** Les nodes présentent une identité d'appareil lors du `connect` ; le Gateway
-crée une demande d'appairage d'appareil pour `role: node`. Approuvez via le CLI des appareils (ou l'interface utilisateur).
+**Les nœuds WS utilisent le jumelage d'appareil.** Les nœuds présentent une identité d'appareil lors de `connect` ; le Gateway
+crée une demande de jumelage d'appareil pour `role: node`. Approuvez via le CLI des appareils (ou l'interface utilisateur).
 
 CLI rapide :
 
@@ -38,28 +40,35 @@ openclaw nodes describe --node <idOrNameOrIp>
 ```
 
 Si un nœud réessaie avec des détails d'authentification modifiés (rôle/portées/clé publique), la demande
-en attente précédente est remplacée et un nouveau `requestId` est créé. Relancez
+en attente précédente est remplacée et un nouveau `requestId` est créé. Réexécutez
 `openclaw devices list` avant d'approuver.
 
 Notes :
 
-- `nodes status` marque un nœud comme **appairé** lorsque son rôle d'appareil d'appairage inclut `node`.
-- L'enregistrement d'appairage de l'appareil est le contrat durable de rôle approuvé. La rotation des jetons reste à l'intérieur de ce contrat ; elle ne peut pas mettre à niveau un nœud appairé vers un rôle différent que l'approbation d'appairage n'a jamais accordé.
-- `node.pair.*` (CLI : `openclaw nodes pending/approve/reject/rename`) est un magasin d'appairage de nœud distinct appartenant à la passerelle ; il ne **bloque pas** la poignée de main WS `connect`.
+- `nodes status` marque un nœud comme **jumelé** lorsque son rôle de jumelage d'appareil inclut `node`.
+- L'enregistrement de jumelage d'appareil est le contrat durable de rôle approuvé. La rotation
+  des jetons reste à l'intérieur de ce contrat ; elle ne peut pas mettre à niveau un nœud jumelé en un
+  rôle différent que l'approbation de jumelage n'a jamais accordé.
+- `node.pair.*` (CLI : `openclaw nodes pending/approve/reject/remove/rename`) est un magasin de jumelage de nœud distinct
+  propriété du Gateway ; il ne **bloque pas** la poignée de main WS `connect`.
+- `openclaw nodes remove --node <id|name|ip>` supprime les entrées obsolètes de ce
+  magasin d'appairage de nœuds distinct appartenant à la passerelle.
 - La portée de l'approbation suit les commandes déclarées de la demande en attente :
-  - demande sans commande : `operator.pairing`
-  - commandes de nœud non-exec : `operator.pairing` + `operator.write`
+  - requête sans commande : `operator.pairing`
+  - commandes de nœud non exécutables : `operator.pairing` + `operator.write`
   - `system.run` / `system.run.prepare` / `system.which` : `operator.pairing` + `operator.admin`
 
 ## Hôte de nœud distant (system.run)
 
-Utilisez un **hôte de nœud** lorsque votre Gateway s'exécute sur une machine et que vous souhaitez que les commandes s'exécutent sur une autre. Le modèle communique toujours avec la **passerelle** ; la passerelle transfère les appels `exec` à l'**hôte de nœud** lorsque `host=node` est sélectionné.
+Utilisez un **node host** lorsque votre Gateway s'exécute sur une machine et que vous voulez que les commandes
+s'exécutent sur une autre. Le model communique toujours avec le **gateway** ; le gateway
+transfère les appels `exec` au **node host** lorsque `host=node` est sélectionné.
 
 ### Ce qui s'exécute où
 
 - **Hôte Gateway** : reçoit les messages, exécute le modèle, achemine les appels d'outils.
-- **Hôte de nœud** : exécute `system.run`/`system.which` sur la machine du nœud.
-- **Approbations** : appliquées sur l'hôte de nœud via `~/.openclaw/exec-approvals.json`.
+- **Node host** : exécute `system.run`/`system.which` sur la machine du nœud.
+- **Approvals** : appliqué sur le node host via `~/.openclaw/exec-approvals.json`.
 
 Note d'approbation :
 
@@ -77,7 +86,9 @@ openclaw node run --host <gateway-host> --port 18789 --display-name "Build Node"
 
 ### Gateway distante via tunnel SSH (liaison de boucle)
 
-Si la Gateway est liée à la boucle (`gateway.bind=loopback`, par défaut en mode local), les hôtes de nœuds distants ne peuvent pas se connecter directement. Créez un tunnel SSH et pointez l'hôte du nœud vers l'extrémité locale du tunnel.
+Si le Gateway est lié à loopback (`gateway.bind=loopback`, valeur par défaut en mode local),
+les node hosts distants ne peuvent pas se connecter directement. Créez un tunnel SSH et dirigez le
+node host vers l'extrémité locale du tunnel.
 
 Exemple (hôte de nœud -> hôte de passerelle) :
 
@@ -93,17 +104,18 @@ openclaw node run --host 127.0.0.1 --port 18790 --display-name "Build Node"
 Notes :
 
 - `openclaw node run` prend en charge l'authentification par jeton ou par mot de passe.
-- Les env vars sont préférés : `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`.
+- Les variables d'environnement sont préférées : `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`.
 - Le repli de configuration est `gateway.auth.token` / `gateway.auth.password`.
-- En mode local, l'hôte du nœud ignore intentionnellement `gateway.remote.token` / `gateway.remote.password`.
+- En mode local, le node host ignore intentionnellement `gateway.remote.token` / `gateway.remote.password`.
 - En mode distant, `gateway.remote.token` / `gateway.remote.password` sont éligibles selon les règles de priorité distantes.
-- Si des SecretRefs `gateway.auth.*` locaux actifs sont configurés mais non résolus, l'authentification de l'hôte de nœud échoue en mode fermé.
-- La résolution de l'authentification de l'hôte de nœud honore uniquement les env vars `OPENCLAW_GATEWAY_*`.
+- Si des SecretRefs `gateway.auth.*` locaux actifs sont configurés mais non résolus, l'authentification du node host échoue en mode fermé.
+- La résolution de l'authentification du node host honore uniquement les variables d'environnement `OPENCLAW_GATEWAY_*`.
 
 ### Démarrer un hôte de nœud (service)
 
 ```bash
 openclaw node install --host <gateway-host> --port 18789 --display-name "Build Node"
+openclaw node start
 openclaw node restart
 ```
 
@@ -117,7 +129,8 @@ openclaw devices approve <requestId>
 openclaw nodes status
 ```
 
-Si le nœud réessaie avec des détails d'authentification modifiés, relancez `openclaw devices list` et approuvez le `requestId` actuel.
+Si le nœud réessaie avec des détails d'authentification modifiés, réexécutez `openclaw devices list`
+et approuvez le `requestId` actuel.
 
 Options de nommage :
 
@@ -133,7 +146,7 @@ openclaw approvals allowlist add --node <id|name|ip> "/usr/bin/uname"
 openclaw approvals allowlist add --node <id|name|ip> "/usr/bin/sw_vers"
 ```
 
-Les approbations résident sur l'hôte du nœud à `~/.openclaw/exec-approvals.json`.
+Les approbations résident sur le node host à `~/.openclaw/exec-approvals.json`.
 
 ### Pointer l'exécution vers le nœud
 
@@ -151,13 +164,13 @@ Ou par session :
 /exec host=node security=allowlist node=<id-or-name>
 ```
 
-Une fois configuré, tout appel `exec` avec `host=node` s'exécute sur l'hôte du nœud (sous réserve de la liste d'autorisation/approbations du nœud).
+Une fois défini, tout appel `exec` avec `host=node` s'exécute sur l'hôte du nœud (sous réserve de la liste d'autorisation/approbations du nœud).
 
-`host=auto` ne choisira pas implicitement le nœud par lui-même, mais une demande `host=node` explicite par appel est autorisée depuis `auto`. Si vous souhaitez que l'exécution sur le nœud soit la valeur par défaut pour la session, définissez `tools.exec.host=node` ou `/exec host=node ...` explicitement.
+`host=auto` ne choisira pas implicitement le nœud par lui-même, mais une demande explicite `host=node` par appel est autorisée depuis `auto`. Si vous souhaitez que l'exécution sur le nœud soit la valeur par défaut pour la session, définissez `tools.exec.host=node` ou `/exec host=node ...` explicitement.
 
 Connexes :
 
-- [Hôte de nœud CLI](/fr/cli/node)
+- [CLI de l'hôte du nœud](/fr/cli/node)
 - [Outil Exec](/fr/tools/exec)
 - [Approbations Exec](/fr/tools/exec-approvals)
 
@@ -193,8 +206,8 @@ openclaw nodes canvas eval --node <idOrNameOrIp> --js "document.title"
 
 Notes :
 
-- `canvas present` accepte les URL ou les chemins de fichiers locaux (`--target`), ainsi qu'un `--x/--y/--width/--height` facultatif pour le positionnement.
-- `canvas eval` accepte du JS en ligne (`--js`) ou un argument positionnel.
+- `canvas present` accepte les URL ou les chemins de fichiers locaux (`--target`), ainsi qu'un `--x/--y/--width/--height` optionnel pour le positionnement.
+- `canvas eval` accepte le JS en ligne (`--js`) ou un argument positionnel.
 
 ### A2UI (Canvas)
 
@@ -228,7 +241,7 @@ openclaw nodes camera clip --node <idOrNameOrIp> --duration 3000 --no-audio
 Notes :
 
 - Le nœud doit être en **premier plan** pour `canvas.*` et `camera.*` (les appels en arrière-plan renvoient `NODE_BACKGROUND_UNAVAILABLE`).
-- La durée du clip est limitée (actuellement `<= 60s`) pour éviter des payloads base64 trop volumineux.
+- La durée du clip est limitée (actuellement `<= 60s`) pour éviter les charges utiles base64 trop volumineuses.
 - Android demandera les autorisations `CAMERA`/`RECORD_AUDIO` si possible ; les autorisations refusées échouent avec `*_PERMISSION_REQUIRED`.
 
 ## Enregistrements d'écran (nœuds)
@@ -244,8 +257,8 @@ Notes :
 
 - La disponibilité de `screen.record` dépend de la plateforme du nœud.
 - Les enregistrements d'écran sont limités à `<= 60s`.
-- `--no-audio` désactive la capture du microphone sur les plates-formes prises en charge.
-- Utilisez `--screen <index>` pour sélectionner un écran lorsque plusieurs écrans sont disponibles.
+- `--no-audio` désactive la capture du microphone sur les plateformes prises en charge.
+- Utilisez `--screen <index>` pour sélectionner un affichage lorsque plusieurs écrans sont disponibles.
 
 ## Localisation (nœuds)
 
@@ -266,7 +279,7 @@ Notes :
 
 ## SMS (nœuds Android)
 
-Les nœuds Android peuvent exposer `sms.send` lorsque l'utilisateur accorde l'autorisation **SMS** et que l'appareil prend en charge la téléphonie.
+Les nœuds Android peuvent exposer `sms.send` lorsque l'utilisateur accorde la permission **SMS** et que l'appareil prend en charge la téléphonie.
 
 Appel de bas niveau :
 
@@ -321,26 +334,26 @@ openclaw nodes invoke --node <idOrNameOrIp> --command system.which --params '{"n
 Notes :
 
 - `system.run` renvoie stdout/stderr/le code de sortie dans la charge utile.
-- L'exécution du shell passe maintenant par l'outil `exec` avec `host=node` ; `nodes` reste la surface RPC directe pour les commandes de nœud explicites.
+- L'exécution du shell passe maintenant par l'outil `exec` avec `host=node` ; `nodes` reste la surface directe RPC pour les commandes de nœud explicites.
 - `nodes invoke` n'expose pas `system.run` ou `system.run.prepare` ; ceux-ci restent uniquement sur le chemin d'exécution.
 - Le chemin d'exécution prépare un `systemRunPlan` canonique avant l'approbation. Une fois
   l'approbation accordée, la passerelle transmet ce plan stocké, et non les champs
-  ultérieurs modifiés par l'appelant (commande/répertoire/session).
-- `system.notify` respecte l'état des autorisations de notification sur l'application macOS.
-- Les métadonnées `platform` / `deviceFamily` de nœud non reconnues utilisent une liste d'autorisation (allowlist) par défaut prudente qui exclut `system.run` et `system.which`. Si vous avez intentionnellement besoin de ces commandes pour une plateforme inconnue, ajoutez-les explicitement via `gateway.nodes.allowCommands`.
+  command/cwd/session modifiés ultérieurement par l'appelant.
+- `system.notify` respecte l'état de la permission de notification sur l'application macOS.
+- Les métadonnées de nœud non reconnues `platform` / `deviceFamily` utilisent une liste d'autorisation (allowlist) par défaut prudente qui exclut `system.run` et `system.which`. Si vous avez intentionnellement besoin de ces commandes pour une plateforme inconnue, ajoutez-les explicitement via `gateway.nodes.allowCommands`.
 - `system.run` prend en charge `--cwd`, `--env KEY=VAL`, `--command-timeout` et `--needs-screen-recording`.
-- Pour les enveloppeurs de shell (`bash|sh|zsh ... -c/-lc`), les valeurs `--env` limitées à la demande sont réduites à une liste d'autorisation explicite (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
-- Pour les décisions « autoriser toujours » en mode liste d'autorisation, les enveloppeurs de répartition connus (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) persistent les chemins d'exécutables internes au lieu des chemins d'enveloppeurs. Si le déballage n'est pas sûr, aucune entrée de liste d'autorisation n'est persistée automatiquement.
-- Sur les hôtes de nœud Windows en mode liste d'autorisation, les exécutions via enveloppeur de shell par `cmd.exe /c` nécessitent une approbation (une entrée de liste d'autorisation seule n'autorise pas automatiquement la forme enveloppeur).
+- Pour les wrappers de shell (`bash|sh|zsh ... -c/-lc`), les valeurs `--env` liées à la requête sont réduites à une liste d'autorisation explicite (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
+- Pour les décisions « autoriser toujours » en mode liste d'autorisation, les wrappers de répartition connus (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) enregistrent les chemins des exécutables internes au lieu des chemins des wrappers. Si le déballage n'est pas sûr, aucune entrée de liste d'autorisation n'est enregistrée automatiquement.
+- Sur les hôtes de nœud Windows en mode liste d'autorisation, les exécutions de wrappers de shell via `cmd.exe /c` nécessitent une approbation (une entrée de liste d'autorisation seule n'autorise pas automatiquement le formulaire du wrapper).
 - `system.notify` prend en charge `--priority <passive|active|timeSensitive>` et `--delivery <system|overlay|auto>`.
-- Les hôtes de nœud ignorent les remplacements de `PATH` et suppriment les clés de démarrage/shell dangereuses (`DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`). Si vous avez besoin d'entrées PATH supplémentaires, configurez l'environnement du service de l'hôte de nœud (ou installez les outils dans des emplacements standard) au lieu de passer `PATH` via `--env`.
-- En mode nœud macOS, `system.run` est limité par les approbations d'exécution dans l'application macOS (Paramètres → Approbations d'exécution).
-  Demande/liste blanche/plein se comportent comme l'hôte de nœud headless ; les invites refusées renvoient `SYSTEM_RUN_DENIED`.
-- Sur l'hôte de nœud headless, `system.run` est limité par les approbations d'exécution (`~/.openclaw/exec-approvals.json`).
+- Les hôtes de nœud ignorent les substitutions `PATH` et suppriment les clés de démarrage/shell dangereuses (`DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`). Si vous avez besoin d'entrées PATH supplémentaires, configurez l'environnement du service d'hôte de nœud (ou installez les outils dans des emplacements standards) au lieu de passer `PATH` via `--env`.
+- En mode nœud macOS, `system.run` est soumis à des approbations d'exécution dans l'application macOS (Paramètres → Approuver les exécutions).
+  Demande/liste d'autorisation/complet se comportent comme l'hôte de nœud headless ; les invites refusées renvoient `SYSTEM_RUN_DENIED`.
+- Sur l'hôte de nœud headless, `system.run` est soumis à des approbations d'exécution (`~/.openclaw/exec-approvals.json`).
 
 ## Liaison de nœud d'exécution
 
-Lorsque plusieurs nœuds sont disponibles, vous pouvez lier l'exécution à un nœud spécifique.
+Lorsque plusieurs nœuds sont disponibles, vous pouvez lier exec à un nœud spécifique.
 Cela définit le nœud par défaut pour `exec host=node` (et peut être remplacé par agent).
 
 Par défaut global :
@@ -365,12 +378,12 @@ openclaw config unset agents.list[0].tools.exec.node
 
 ## Carte des autorisations
 
-Les nœuds peuvent inclure une carte `permissions` dans `node.list` / `node.describe`, indexée par nom d'autorisation (par ex. `screenRecording`, `accessibility`) avec des valeurs booléennes (`true` = accordée).
+Les nœuds peuvent inclure une carte `permissions` dans `node.list` / `node.describe`, indexée par nom d'autorisation (par exemple `screenRecording`, `accessibility`) avec des valeurs booléennes (`true` = accordé).
 
 ## Hôte de nœud headless (multiplateforme)
 
-OpenClaw peut exécuter un **hôte de nœud headless** (sans interface utilisateur) qui se connecte au Gateway
-WebSocket et expose `system.run` / `system.which`. C'est utile sur Linux/Windows
+OpenClaw peut exécuter un **hôte de nœud sans interface** (sans interface utilisateur) qui se connecte au WebSocket Gateway
+et expose `system.run` / `system.which`. Cela est utile sur Linux/Windows
 ou pour exécuter un nœud minimaliste à côté d'un serveur.
 
 Démarrez-le :
@@ -382,13 +395,15 @@ openclaw node run --host <gateway-host> --port 18789
 Notes :
 
 - Le couplage est toujours requis (le Gateway affichera une invite de couplage d'appareil).
-- L'hôte de nœud stocke son identifiant de nœud, son jeton, son nom d'affichage et ses informations de connexion à la passerelle dans `~/.openclaw/node.json`.
-- Les approbations d'exécution sont appliquées localement via `~/.openclaw/exec-approvals.json`
-  (voir [Approbations d'exécution](/fr/tools/exec-approvals)).
-- Sur macOS, l'hôte de nœud sans interface exécute `system.run` localement par défaut. Définissez `OPENCLAW_NODE_EXEC_HOST=app` pour router `system.run` via l'hôte d'exécution de l'application compagnon ; ajoutez `OPENCLAW_NODE_EXEC_FALLBACK=0` pour exiger l'hôte de l'application et échouer en mode fermé s'il n'est pas disponible.
-- Ajoutez `--tls` / `--tls-fingerprint` lorsque le WS du Gateway utilise TLS.
+- L'hôte du nœud stocke son identifiant de nœud, son jeton, son nom d'affichage et les informations de connexion à la passerelle dans `~/.openclaw/node.json`.
+- Les approbations exec sont appliquées localement via `~/.openclaw/exec-approvals.json`
+  (voir [Exec approvals](/fr/tools/exec-approvals)).
+- Sur macOS, l'hôte de nœud sans interface exécute `system.run` localement par défaut. Définissez
+  `OPENCLAW_NODE_EXEC_HOST=app` pour acheminer `system.run` via l'hôte exec de l'application compagnon ; ajoutez
+  `OPENCLAW_NODE_EXEC_FALLBACK=0` pour exiger l'hôte de l'application et échouer en mode fermé s'il n'est pas disponible.
+- Ajoutez `--tls` / `--tls-fingerprint` lorsque le WS Gateway utilise TLS.
 
 ## Mode nœud Mac
 
-- L'application de barre de menus macOS se connecte au serveur WS du macOS en tant que nœud (donc `openclaw nodes …` fonctionne contre ce Mac).
-- En mode distant, l'application ouvre un tunnel SSH pour le port du Gateway et se connecte à `localhost`.
+- L'application de barre de menus macOS se connecte au serveur WS Gateway en tant que nœud (donc `openclaw nodes …` fonctionne contre ce Mac).
+- En mode distant, l'application ouvre un tunnel SSH pour le port Gateway et se connecte à `localhost`.

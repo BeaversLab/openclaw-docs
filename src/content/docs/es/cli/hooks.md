@@ -3,7 +3,7 @@ summary: "Referencia de CLI para `openclaw hooks` (ganchos del agente)"
 read_when:
   - You want to manage agent hooks
   - You want to inspect hook availability or enable workspace hooks
-title: "ganchos"
+title: "Hooks"
 ---
 
 # `openclaw hooks`
@@ -15,7 +15,7 @@ Ejecutar `openclaw hooks` sin un subcomando es equivalente a `openclaw hooks lis
 Relacionado:
 
 - Hooks: [Hooks](/es/automation/hooks)
-- Plugin hooks: [Plugin hooks](/es/plugins/architecture#provider-runtime-hooks)
+- Plugin hooks: [Plugin hooks](/es/plugins/hooks)
 
 ## Listar todos los hooks
 
@@ -100,7 +100,7 @@ Requirements:
   Config: ✓ workspace.dir
 ```
 
-## Verificar elegibilidad de hooks
+## Verificar la elegibilidad de los hooks
 
 ```bash
 openclaw hooks check
@@ -194,10 +194,11 @@ openclaw hooks disable command-logger
 - `openclaw hooks list --json`, `info --json` y `check --json` escriben JSON estructurado directamente en stdout.
 - Los hooks administrados por complementos no se pueden habilitar ni deshabilitar aquí; en su lugar, habilite o deshabilite el complemento propietario.
 
-## Instalar Paquetes de Hooks
+## Instalar paquetes de hooks
 
 ```bash
 openclaw plugins install <package>        # ClawHub first, then npm
+openclaw plugins install npm:<package>    # npm only
 openclaw plugins install <package> --pin  # pin version
 openclaw plugins install <path>           # local path
 ```
@@ -207,9 +208,10 @@ Instale paquetes de hooks a través del instalador unificado de complementos.
 `openclaw hooks install` todavía funciona como un alias de compatibilidad, pero imprime una
 advertencia de obsolescencia y reenvía a `openclaw plugins install`.
 
-Las especificaciones de npm son **solo de registro** (nombre del paquete + **versión exacta** opcional o
-**dist-tag**). Las especificaciones de Git/URL/archivo y los rangos de semver son rechazados. Las
-instalaciones de dependencias se ejecutan con `--ignore-scripts` por seguridad.
+Las especificaciones de Npm son **solo de registro** (nombre del paquete + **versión exacta** opcional o
+**dist-tag**). Se rechazan las especificaciones de Git/URL/archivo y los rangos de semver. Las
+instalaciones de dependencias se ejecutan localmente en el proyecto con `--ignore-scripts` por seguridad, incluso cuando su
+shell tiene configuraciones globales de instalación de npm.
 
 Las especificaciones simples y `@latest` se mantienen en la pista estable. Si npm resuelve cualquiera de
 esas a una versión preliminar, OpenClaw se detiene y le pide que se suscriba explícitamente con una
@@ -247,7 +249,7 @@ openclaw plugins install -l ./my-hook-pack
 Los paquetes de hooks enlazados se tratan como hooks administrados desde un directorio configurado por el operador,
 no como hooks del espacio de trabajo.
 
-## Actualizar Paquetes de Hooks
+## Actualizar paquetes de hooks
 
 ```bash
 openclaw plugins update <id>
@@ -336,3 +338,8 @@ openclaw hooks enable boot-md
 ```
 
 **Consulte:** [documentación de boot-md](/es/automation/hooks#boot-md)
+
+## Relacionado
+
+- [Referencia de CLI](/es/cli)
+- [Hooks de automatización](/es/automation/hooks)

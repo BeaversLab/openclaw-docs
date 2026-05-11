@@ -2,7 +2,7 @@
 summary: "Histoire et contexte de OpenClaw pour le contexte et le ton"
 read_when:
   - Writing docs or UX copy that reference lore
-title: "OpenClaw Lore"
+title: "OpenClaw lore"
 ---
 
 # La Lore de OpenClaw 🦞📖
@@ -217,3 +217,7 @@ _"La pince est la loi."_
 — ELU, lors de la migration vers la Forme Finale, 30 janvier 2026
 
 🦞💙
+
+## Connexes
+
+- [Getting started](/fr/start/getting-started)

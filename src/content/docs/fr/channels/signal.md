@@ -6,25 +6,23 @@ read_when:
 title: "Signal"
 ---
 
-# Signal (signal-cli)
-
 Statut : intégration CLI externe. Gateway communique avec `signal-cli` via HTTP JSON-RPC + SSE.
 
 ## Prérequis
 
 - OpenClaw installé sur votre serveur (le flux Linux ci-dessous a été testé sur Ubuntu 24).
-- `signal-cli` disponible sur l'hôte où la passerelle s'exécute.
-- Un numéro de téléphone pouvant recevoir un SMS de vérification (pour le chemin d'inscription par SMS).
-- Accès navigateur pour le captcha Signal (`signalcaptchas.org`) lors de l'inscription.
+- `signal-cli` disponible sur l'hôte où la gateway s'exécute.
+- Un numéro de téléphone pouvant recevoir un SMS de vérification (pour le chemin d'enregistrement par SMS).
+- Accès navigateur pour le captcha Signal (`signalcaptchas.org`) lors de l'enregistrement.
 
 ## Configuration rapide (débutant)
 
-1. Utilisez un **numéro Signal séparé** pour le bot (recommandé).
+1. Utilisez un **numéro Signal distinct** pour le bot (recommandé).
 2. Installez `signal-cli` (Java requis si vous utilisez la version JVM).
 3. Choisissez un chemin de configuration :
    - **Chemin A (lien QR) :** `signal-cli link -n "OpenClaw"` et scannez avec Signal.
-   - **Chemin B (inscription SMS) :** inscrivez un numéro dédié avec captcha + vérification SMS.
-4. Configurez OpenClaw et redémarrez la passerelle.
+   - **Chemin B (enregistrement SMS) :** enregistrez un numéro dédié avec captcha + vérification SMS.
+4. Configurez OpenClaw et redémarrez la gateway.
 5. Envoyez un premier DM et approuvez l'appariement (`openclaw pairing approve signal <CODE>`).
 
 Configuration minimale :
@@ -45,22 +43,22 @@ Configuration minimale :
 
 Référence des champs :
 
-| Champ       | Description                                                           |
-| ----------- | --------------------------------------------------------------------- |
-| `account`   | Numéro de téléphone du bot au format E.164 (`+15551234567`)           |
-| `cliPath`   | Chemin vers `signal-cli` (`signal-cli` si sur `PATH`)                 |
-| `dmPolicy`  | Politique d'accès DM (`pairing` recommandé)                           |
-| `allowFrom` | Numéros de téléphone ou valeurs `uuid:<id>` autorisés à envoyer un DM |
+| Champ       | Description                                                            |
+| ----------- | ---------------------------------------------------------------------- |
+| `account`   | Numéro de téléphone du bot au format E.164 (`+15551234567`)            |
+| `cliPath`   | Chemin vers `signal-cli` (`signal-cli` si sur `PATH`)                  |
+| `dmPolicy`  | Stratégie d'accès DM (`pairing` recommandé)                            |
+| `allowFrom` | Numéros de téléphone ou valeurs `uuid:<id>` autorisés à envoyer des DM |
 
 ## Ce que c'est
 
 - Canal Signal via `signal-cli` (pas de libsignal intégré).
 - Routage déterministe : les réponses vont toujours à Signal.
-- Les DMs partagent la session principale de l'agent ; les groupes sont isolés (`agent:<agentId>:signal:group:<groupId>`).
+- Les DM partagent la session principale de l'agent ; les groupes sont isolés (`agent:<agentId>:signal:group:<groupId>`).
 
 ## Écritures de configuration
 
-Par défaut, Signal est autorisé à écrire des mises à jour de configuration déclenchées par `/config set|unset` (nécessite `commands.config: true`).
+Par défaut, Signal est autorisé à écrire des mises à jour de configuration déclenchées par `/config set|unset` (requiert `commands.config: true`).
 
 Désactiver avec :
 
@@ -72,8 +70,8 @@ Désactiver avec :
 
 ## Le modèle de numéro (important)
 
-- La passerelle se connecte à un **appareil Signal** (le compte `signal-cli`).
-- Si vous exécutez le bot sur **votre compte personnel Signal**, il ignorera vos propres messages (protection contre les boucles).
+- La gateway se connecte à un **appareil Signal** (le compte `signal-cli`).
+- Si vous exécutez le bot sur **votre compte Signal personnel**, il ignorera vos propres messages (protection contre la boucle).
 - Pour « J'envoie un message au bot et il répond », utilisez un **numéro de bot distinct**.
 
 ## Chemin de configuration A : lier un compte Signal existant (QR)
@@ -99,13 +97,13 @@ Exemple :
 }
 ```
 
-Prise en charge multi-compte : utilisez `channels.signal.accounts` avec une configuration par compte et `name` en option. Voir [`gateway/configuration`](/fr/gateway/configuration-reference#multi-account-all-channels) pour le modèle partagé.
+Support multi-compte : utilisez `channels.signal.accounts` avec une configuration par compte et `name` en option. Consultez [`gateway/configuration`](/fr/gateway/config-channels#multi-account-all-channels) pour le modèle partagé.
 
 ## Chemin de configuration B : enregistrer un numéro de bot dédié (SMS, Linux)
 
-Utilisez cette méthode lorsque vous souhaitez un numéro de bot dédié au lieu de lier un compte d'application Signal existant.
+Utilisez cette méthode si vous souhaitez un numéro de bot dédié au lieu de lier un compte d'application Signal existant.
 
-1. Obtenez un numéro capable de recevoir des SMS (ou une vérification vocale pour les lignes fixes).
+1. Obtenez un numéro qui peut recevoir des SMS (ou une vérification vocale pour les lignes fixes).
    - Utilisez un numéro de bot dédié pour éviter les conflits de compte/session.
 2. Installez `signal-cli` sur l'hôte de la passerelle :
 
@@ -118,7 +116,7 @@ signal-cli --version
 ```
 
 Si vous utilisez la version JVM (`signal-cli-${VERSION}.tar.gz`), installez d'abord JRE 25+.
-Gardez `signal-cli` à jour ; les notes en amont indiquent que les anciennes versions peuvent cesser de fonctionner lorsque les API du serveur Signal changent.
+Gardez `signal-cli` à jour ; les mainteneurs indiquent que les anciennes versions peuvent cesser de fonctionner lorsque les API du serveur Signal changent.
 
 3. Enregistrez et vérifiez le numéro :
 
@@ -130,7 +128,7 @@ Si un captcha est requis :
 
 1. Ouvrez `https://signalcaptchas.org/registration/generate.html`.
 2. Complétez le captcha, copiez la cible du lien `signalcaptcha://...` depuis « Ouvrir Signal ».
-3. Exécutez à partir de la même IP externe que la session du navigateur lorsque cela est possible.
+3. Exécutez depuis la même IP externe que la session du navigateur si possible.
 4. Exécutez l'enregistrement à nouveau immédiatement (les jetons de captcha expirent rapidement) :
 
 ```bash
@@ -138,7 +136,7 @@ signal-cli -a +<BOT_PHONE_NUMBER> register --captcha '<SIGNALCAPTCHA_URL>'
 signal-cli -a +<BOT_PHONE_NUMBER> verify <VERIFICATION_CODE>
 ```
 
-4. Configurez OpenClaw, redémarrez la passerelle, vérifiez le channel :
+4. Configurez OpenClaw, redémarrez la passerelle, vérifiez le canal :
 
 ```bash
 # If you run the gateway as a user systemd service:
@@ -152,19 +150,19 @@ openclaw channels status --probe
 5. Associez votre expéditeur DM :
    - Envoyez n'importe quel message au numéro du bot.
    - Approuvez le code sur le serveur : `openclaw pairing approve signal <PAIRING_CODE>`.
-   - Enregistrez le numéro du bot comme contact sur votre téléphone pour éviter « Contact inconnu ».
+   - Sauvegardez le numéro du bot comme un contact sur votre téléphone pour éviter « Contact inconnu ».
 
-Important : l'enregistrement d'un compte de numéro de téléphone avec `signal-cli` peut déconnecter la session de l'application principale Signal pour ce numéro. Préférez un numéro de bot dédié, ou utilisez le mode de liaison par QR si vous devez conserver la configuration de votre application de téléphone actuelle.
+<Warning>Enregistrer un compte de numéro de téléphone avec `signal-cli` peut déconnecter la session principale de l'application Signal pour ce numéro. Préférez un numéro de bot dédié, ou utilisez le mode de lien QR si vous devez conserver votre configuration d'application téléphonique existante.</Warning>
 
 Références en amont :
 
 - README `signal-cli` : `https://github.com/AsamK/signal-cli`
-- Flux Captcha : `https://github.com/AsamK/signal-cli/wiki/Registration-with-captcha`
+- Flux de captcha : `https://github.com/AsamK/signal-cli/wiki/Registration-with-captcha`
 - Flux de liaison : `https://github.com/AsamK/signal-cli/wiki/Linking-other-devices-(Provisioning)`
 
 ## Mode démon externe (httpUrl)
 
-Si vous souhaitez gérer `signal-cli` vous-même (démarrages à froid JVM lents, initialisation du conteneur ou CPU partagés), exécutez le démon séparément et pointez OpenClaw vers celui-ci :
+Si vous souhaitez gérer `signal-cli` vous-même (démarrages à froid JVM lents, initialisation de conteneur, ou CPU partagés), exécutez le démon séparément et pointez OpenClaw vers celui-ci :
 
 ```json5
 {
@@ -177,7 +175,7 @@ Si vous souhaitez gérer `signal-cli` vous-même (démarrages à froid JVM lents
 }
 ```
 
-Cela évite le lancement automatique et l'attente de démarrage à l'intérieur de OpenClaw. Pour les démarrages lents lors du lancement automatique, définissez `channels.signal.startupTimeoutMs`.
+Cela évite le démarrage automatique et l'attente de démarrage à l'intérieur de OpenClaw. Pour les démarrages lents lors du démarrage automatique, définissez `channels.signal.startupTimeoutMs`.
 
 ## Contrôle d'accès (DMs + groupes)
 
@@ -197,33 +195,34 @@ Groupes :
 - `channels.signal.groupAllowFrom` contrôle qui peut déclencher dans les groupes lorsque `allowlist` est défini.
 - `channels.signal.groups["<group-id>" | "*"]` peut remplacer le comportement de groupe avec `requireMention`, `tools` et `toolsBySender`.
 - Utilisez `channels.signal.accounts.<id>.groups` pour des remplacements par compte dans les configurations multi-comptes.
-- Remarque d'exécution : si `channels.signal` est complètement manquant, l'exécution revient à `groupPolicy="allowlist"` pour les vérifications de groupe (même si `channels.defaults.groupPolicy` est défini).
+- Note d'exécution : si `channels.signal` est complètement manquant, l'exécution revient à `groupPolicy="allowlist"` pour les vérifications de groupe (même si `channels.defaults.groupPolicy` est défini).
 
 ## Fonctionnement (comportement)
 
 - `signal-cli` s'exécute en tant que démon ; la passerelle lit les événements via SSE.
-- Les messages entrants sont normalisés dans l'enveloppe de channel partagée.
-- Les réponses sont toujours routées vers le même numéro ou groupe.
+- Les messages entrants sont normalisés dans l'enveloppe de canal partagé.
+- Les réponses sont toujours acheminées vers le même numéro ou groupe.
 
 ## Médias + limites
 
-- Le texte sortant est découpé par morceaux de `channels.signal.textChunkLimit` (par défaut 4000).
-- Découpage optionnel par nouvelle ligne : définissez `channels.signal.chunkMode="newline"` pour diviser sur les lignes vides (limites de paragraphe) avant le découpage par longueur.
-- Pièces jointes prises en charge (base64 récupéré depuis `signal-cli`).
+- Le texte sortant est découpé en morceaux de `channels.signal.textChunkLimit` (par défaut 4000).
+- Découpage facultatif par nouvelle ligne : définissez `channels.signal.chunkMode="newline"` pour diviser sur les lignes vides (limites de paragraphe) avant le découpage par longueur.
+- Pièces jointes prises en charge (base64 récupérées depuis `signal-cli`).
+- Les pièces jointes de notes vocales utilisent le nom de fichier `signal-cli` comme repli MIME lorsque `contentType` est manquant, afin que la transcription audio puisse toujours classer les mémos vocaux AAC.
 - Limite de média par défaut : `channels.signal.mediaMaxMb` (par défaut 8).
 - Utilisez `channels.signal.ignoreAttachments` pour ignorer le téléchargement des médias.
-- Le contexte de l'historique de groupe utilise `channels.signal.historyLimit` (ou `channels.signal.accounts.*.historyLimit`), en revenant à `messages.groupChat.historyLimit`. Définissez `0` pour désactiver (par défaut 50).
+- Le contexte d'historique de groupe utilise `channels.signal.historyLimit` (ou `channels.signal.accounts.*.historyLimit`), revenant à `messages.groupChat.historyLimit`. Définissez `0` pour désactiver (par défaut 50).
 
 ## Indicateur de frappe + accusés de lecture
 
 - **Indicateurs de frappe** : OpenClaw envoie des signaux de frappe via `signal-cli sendTyping` et les actualise pendant qu'une réponse est en cours.
-- **Accusés de lecture** : quand `channels.signal.sendReadReceipts` est vrai, OpenClaw transfère les accusés de lecture pour les DMs autorisés.
+- **Accusés de réception** : lorsque `channels.signal.sendReadReceipts` est vrai, OpenClaw transmet les accusés de réception pour les DMs autorisés.
 - Signal-cli n'expose pas les accusés de lecture pour les groupes.
 
 ## Réactions (tool de message)
 
 - Utilisez `message action=react` avec `channel=signal`.
-- Cibles : expéditeur E.164 ou UUID (utilisez `uuid:<id>` depuis la sortie de l'appairage ; l'UUID seul fonctionne aussi).
+- Cibles : E.164 ou UUID de l'expéditeur (utilisez `uuid:<id>` à partir de la sortie de l'appairage ; l'UUID seul fonctionne aussi).
 - `messageId` est l'horodatage Signal du message auquel vous réagissez.
 - Les réactions de groupe nécessitent `targetAuthor` ou `targetAuthorUuid`.
 
@@ -239,14 +238,14 @@ Config :
 
 - `channels.signal.actions.reactions` : activer/désactiver les actions de réaction (par défaut vrai).
 - `channels.signal.reactionLevel` : `off | ack | minimal | extensive`.
-  - `off`/`ack` désactive les réactions de l'agent (le tool de message `react` générera une erreur).
+  - `off`/`ack` désactive les réactions de l'agent (l'outil de message `react` générera une erreur).
   - `minimal`/`extensive` active les réactions de l'agent et définit le niveau de guidage.
 - Remplacements par compte : `channels.signal.accounts.<id>.actions.reactions`, `channels.signal.accounts.<id>.reactionLevel`.
 
 ## Cibles de livraison (CLI/cron)
 
 - DMs : `signal:+15551234567` (ou E.164 brut).
-- UUID DMs : `uuid:<id>` (ou UUID brut).
+- DMs UUID : `uuid:<id>` (ou UUID seul).
 - Groupes : `signal:group:<groupId>`.
 - Noms d'utilisateur : `username:<name>` (si pris en charge par votre compte Signal).
 
@@ -270,11 +269,11 @@ openclaw pairing list signal
 
 Pannes courantes :
 
-- Démon accessible mais pas de réponse : vérifiez les paramètres du compte/démon (`httpUrl`, `account`) et le mode de réception.
+- Démon accessible mais aucune réponse : vérifiez les paramètres de compte/démon (`httpUrl`, `account`) et le mode de réception.
 - DMs ignorés : l'expéditeur est en attente d'approbation de jumelage.
 - Messages de groupe ignorés : le filtrage de l'expéditeur/de la mention dans le groupe bloque la livraison.
-- Erreurs de validation de la configuration après modifications : exécutez `openclaw doctor --fix`.
-- Signal manquant dans le diagnostic : confirmez `channels.signal.enabled: true`.
+- Erreurs de validation de configuration après modifications : exécutez `openclaw doctor --fix`.
+- Signal absent des diagnostics : confirmez `channels.signal.enabled: true`.
 
 Vérifications supplémentaires :
 
@@ -290,7 +289,7 @@ Pour le flux de triage : [/channels/troubleshooting](/fr/channels/troubleshootin
 
 - `signal-cli` stocke les clés de compte localement (généralement `~/.local/share/signal-cli/data/`).
 - Sauvegardez l'état du compte Signal avant la migration ou la reconstruction du serveur.
-- Conservez `channels.signal.dmPolicy: "pairing"` à moins que vous ne souhaitiez explicitement un accès DM plus large.
+- Conservez `channels.signal.dmPolicy: "pairing"` sauf si vous souhaitez explicitement un accès DM plus large.
 - La vérification par SMS n'est nécessaire que pour les flux d'enregistrement ou de récupération, mais la perte de contrôle du numéro/compte peut compliquer la ré-inscription.
 
 ## Référence de configuration (Signal)
@@ -299,39 +298,39 @@ Configuration complète : [Configuration](/fr/gateway/configuration)
 
 Options du fournisseur :
 
-- `channels.signal.enabled` : activer/désactiver le démarrage du channel.
+- `channels.signal.enabled` : activer/désactiver le démarrage du canal.
 - `channels.signal.account` : E.164 pour le compte bot.
-- `channels.signal.cliPath` : chemin vers `signal-cli`.
+- `channels.signal.cliPath` : chemin d'accès à `signal-cli`.
 - `channels.signal.httpUrl` : URL complète du démon (remplace l'hôte/le port).
 - `channels.signal.httpHost`, `channels.signal.httpPort` : liaison du démon (par défaut 127.0.0.1:8080).
-- `channels.signal.autoStart` : démarrage automatique du démon (vrai par défaut si `httpUrl` n'est pas défini).
-- `channels.signal.startupTimeoutMs` : délai d'attente de démarrage en ms (max 120000).
+- `channels.signal.autoStart` : lancement automatique du démon (vrai par défaut si `httpUrl` n'est pas défini).
+- `channels.signal.startupTimeoutMs` : délai d'attente de démarrage en ms (plafond 120000).
 - `channels.signal.receiveMode` : `on-start | manual`.
-- `channels.signal.ignoreAttachments` : ignorer le téléchargement des pièces jointes.
-- `channels.signal.ignoreStories` : ignorer les stories du démon.
-- `channels.signal.sendReadReceipts` : transférer les accusés de réception.
+- `channels.signal.ignoreAttachments` : ignorer les téléchargements de pièces jointes.
+- `channels.signal.ignoreStories` : ignorer les stories provenant du démon.
+- `channels.signal.sendReadReceipts` : transmettre les accusés de lecture.
 - `channels.signal.dmPolicy` : `pairing | allowlist | open | disabled` (par défaut : appairage).
-- `channels.signal.allowFrom` : liste d'autorisation de DM (E.164 ou `uuid:<id>`). `open` nécessite `"*"`. Signal n'a pas de noms d'utilisateur ; utilisez les identifiants de téléphone/UUID.
+- `channels.signal.allowFrom` : liste d'autorisation DM (E.164 ou `uuid:<id>`). `open` nécessite `"*"`. Signal n'a pas de noms d'utilisateur ; utilisez les identifiants téléphone/UUID.
 - `channels.signal.groupPolicy` : `open | allowlist | disabled` (par défaut : liste d'autorisation).
 - `channels.signal.groupAllowFrom` : liste d'autorisation des expéditeurs de groupe.
 - `channels.signal.groups` : substitutions par groupe indexées par l'ID de groupe Signal (ou `"*"`). Champs pris en charge : `requireMention`, `tools`, `toolsBySender`.
 - `channels.signal.accounts.<id>.groups` : version par compte de `channels.signal.groups` pour les configurations multi-comptes.
-- `channels.signal.historyLimit` : nombre maximum de messages de groupe à inclure en tant que contexte (0 désactive).
+- `channels.signal.historyLimit` : nombre maximum de messages de groupe à inclure en contexte (0 désactive).
 - `channels.signal.dmHistoryLimit` : limite d'historique DM en tours utilisateur. Substitutions par utilisateur : `channels.signal.dms["<phone_or_uuid>"].historyLimit`.
-- `channels.signal.textChunkLimit` : taille des blocs sortants (caractères).
+- `channels.signal.textChunkLimit` : taille de segment sortant (caractères).
 - `channels.signal.chunkMode` : `length` (par défaut) ou `newline` pour diviser sur les lignes vides (limites de paragraphe) avant le découpage par longueur.
 - `channels.signal.mediaMaxMb` : limite de média entrant/sortant (Mo).
 
 Options globales connexes :
 
 - `agents.list[].groupChat.mentionPatterns` (Signal ne prend pas en charge les mentions natives).
-- `messages.groupChat.mentionPatterns` (repli global).
+- `messages.groupChat.mentionPatterns` (solution de repli globale).
 - `messages.responsePrefix`.
 
 ## Connexes
 
-- [Aperçu des canaux](/fr/channels) — tous les canaux pris en charge
-- [Appairage](/fr/channels/pairing) — authentification DM et flux d'appairage
-- [Groupes](/fr/channels/groups) — comportement de la discussion de groupe et filtrage des mentions
+- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appairage](/fr/channels/pairing) — authentification et flux d'appairage DM
+- [Groupes](/fr/channels/groups) — comportement des discussions de groupe et filtrage des mentions
 - [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
 - [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

@@ -1,47 +1,45 @@
 ---
-title: Lobster
 summary: "Runtime de workflow typé pour OpenClaw avec des portes d'approbation reprises."
+title: Lobster
 read_when:
   - You want deterministic multi-step workflows with explicit approvals
   - You need to resume a workflow without re-running earlier steps
 ---
 
-# Lobster
+Lobster est un shell de workflow qui permet à OpenClaw d'exécuter des séquences d'outils en plusieurs étapes en une seule opération déterministe avec des points de contrôle d'approbation explicites.
 
-Lobster est un shell de workflow qui permet à OpenClaw d'exécuter des séquences d'outils en plusieurs étapes en une seule opération déterministe avec des points d'approbation explicites.
+Lobster est une couche de création au-dessus du travail en arrière-plan détaché. Pour l'orchestration des flux au-dessus des tâches individuelles, consultez [Task Flow](/fr/automation/taskflow) (`openclaw tasks flow`). Pour le grand livre des activités de tâche, consultez [`openclaw tasks`](/fr/automation/tasks).
 
-Lobster est une couche de rédaction située au-dessus du travail en arrière-plan détaché. Pour l'orchestration des flux au-dessus des tâches individuelles, consultez [Task Flow](/fr/automation/taskflow) (`openclaw tasks flow`). Pour le registre des activités des tâches, consultez [`openclaw tasks`](/fr/automation/tasks).
+## Accroche
 
-## Hook
-
-Votre assistant peut construire les outils qui le gèrent eux-mêmes. Demandez un workflow, et 30 minutes plus tard, vous disposez d'une CLI ainsi que de pipelines qui s'exécutent en un seul appel. Lobster est la pièce manquante : des pipelines déterministes, des approbations explicites et un état résiliable.
+Votre assistant peut créer les outils qui le gèrent. Demandez un workflow, et 30 minutes plus tard, vous disposez d'un CLI plus de pipelines qui s'exécutent en un seul appel. Lobster est la pièce manquante : des pipelines déterministes, des approbations explicites et un état reprise.
 
 ## Pourquoi
 
-Aujourd'hui, les workflows complexes nécessitent de nombreux allers-retours d'appels d'outils. Chaque appel coûte des tokens, et le LLM doit orchestrer chaque étape. Lobster déplace cette orchestration vers un runtime typé :
+Aujourd'hui, les workflows complexes nécessitent de nombreux allers-retours d'appels d'outils. Chaque appel coûte des jetons, et le LLM doit orchestrer chaque étape. Lobster déplace cette orchestration dans un runtime typé :
 
-- **Un seul appel au lieu de plusieurs** : OpenClaw exécute un appel d'outil Lobster et obtient un résultat structuré.
-- **Approbations intégrées** : Les effets secondaires (envoyer un e-mail, poster un commentaire) interrompent le workflow jusqu'à ce qu'ils soient explicitement approuvés.
-- **Résiliable** : Les workflows interrompus renvoient un jeton ; approuvez et reprenez sans tout réexécuter.
+- **Un appel au lieu de plusieurs** : OpenClaw exécute un appel d'outil Lobster et obtient un résultat structuré.
+- **Approbations intégrées** : Les effets secondaires (envoyer un e-mail, poster un commentaire) arrêtent le workflow jusqu'à ce qu'ils soient explicitement approuvés.
+- **Reprise possible** : Les workflows arrêtés renvoient un jeton ; approuvez et reprenez sans tout réexécuter.
 
-## Pourquoi un DSL au lieu de programmes classiques ?
+## Pourquoi un DSL au lieu de programmes simples ?
 
-Lobster est volontairement petit. L'objectif n'est pas « un nouveau langage », mais une spécification de pipeline prévisible et conviviale pour l'IA avec des approbations de première classe et des jetons de reprise.
+Lobster est volontairement petit. L'objectif n'est pas « un nouveau langage », c'est une spécification de pipeline prévisible et adaptée à l'IA avec des approbations et des jetons de reprise de première classe.
 
-- **Approbation/reprise intégrée** : Un programme classique peut solliciter un humain, mais il ne peut pas _mettre en pause et reprendre_ avec un jeton durable sans que vous inventiez vous-même ce runtime.
-- **Déterminisme + auditabilité** : Les pipelines sont des données, ils sont donc faciles à journaliser, comparer, réexécuter et réviser.
-- **Surface contrainte pour l'IA** : Une grammaire minime + le piping JSON réduisent les chemins de code « créatifs » et rendent la validation réaliste.
-- **Stratégie de sécurité intégrée** : Les délais d'attente, les limites de sortie, les vérifications de bac à sable et les listes d'autorisation sont appliqués par le runtime, et non par chaque script.
+- **Approbation/reprise intégrée** : Un programme normal peut demander une intervention humaine, mais il ne peut pas _mettre en pause et reprendre_ avec un jeton durable sans que vous inventiez vous-même ce runtime.
+- **Déterminisme + auditabilité** : Les pipelines sont des données, ils sont donc faciles à journaliser, à comparer, à rejouer et à réviser.
+- **Surface contrainte pour l'IA** : Une grammaire minuscule + le canalisation JSON réduit les chemins de code « créatifs » et rend la validation réaliste.
+- **Stratégie de sécurité intégrée** : Les délais d'expiration, les limites de sortie, les contrôles de bac à sable et les listes d'autorisation sont appliqués par le runtime, et non par chaque script.
 - **Toujours programmable** : Chaque étape peut appeler n'importe quel CLI ou script. Si vous souhaitez du JS/TS, générez des fichiers `.lobster` à partir du code.
 
-## Fonctionnement
+## Comment cela fonctionne
 
-OpenClaw exécute les workflows Lobster **en cours de traitement** (**in-process**) à l'aide d'un exécuteur intégré. Aucun sous-processus CLI externe n'est généré ; le moteur de workflow s'exécute à l'intérieur du processus de la passerelle et renvoie directement une enveloppe JSON.
+OpenClaw exécute les flux de travail Lobster **en processus** en utilisant un moteur intégré. Aucun sous-processus CLI externe n'est généré ; le moteur de flux de travail s'exécute à l'intérieur du processus de la passerelle et renvoie directement une enveloppe JSON.
 Si le pipeline fait une pause pour approbation, l'outil renvoie un `resumeToken` afin que vous puissiez continuer plus tard.
 
-## Modèle : petit CLI + canaux JSON + approbations
+## Motif : petit CLI + canaux JSON + approbations
 
-Créez de minuscules commandes qui parlent JSON, puis enchaînez-les dans un seul appel Lobster. (Noms de commandes exemple ci-dessous — remplacez-les par les vôtres.)
+Créez de minuscules commandes qui parlent JSON, puis enchaînez-les dans un seul appel Lobster. (Noms de commandes d'exemple ci-dessous — remplacez-les par les vôtres.)
 
 ```bash
 inbox list --json
@@ -67,9 +65,9 @@ Si le pipeline demande une approbation, reprenez avec le jeton :
 }
 ```
 
-L'IA déclenche le workflow ; Lobster exécute les étapes. Les portes d'approbation gardent les effets secondaires explicites et vérifiables.
+L'IA déclenche le flux de travail ; Lobster exécute les étapes. Les portes d'approbation maintiennent les effets secondaires explicites et auditables.
 
-Exemple : mapper les éléments d'entrée en appels d'outil :
+Exemple : mapper les éléments d'entrée dans des appels d'outils :
 
 ```bash
 gog.gmail.search --query 'newer_than:1d' \
@@ -78,10 +76,10 @@ gog.gmail.search --query 'newer_than:1d' \
 
 ## Étapes LLM JSON uniquement (llm-task)
 
-Pour les workflows qui nécessitent une **étape LLM structurée**, activez l'outil de plugin optionnel
-`llm-task` et appelez-le depuis Lobster. Cela permet de garder le workflow déterministe tout en vous laissant classifier/résumer/rédiger avec un modèle.
+Pour les flux de travail qui nécessitent une étape LLM **structurée**, activez l'outil de plugin facultatif
+`llm-task` et appelez-le depuis Lobster. Cela permet de garder le flux de travail déterministe tout en vous laissant classifier/résumer/rédiger avec un modèle.
 
-Activez l'outil :
+Activer l'outil :
 
 ```json
 {
@@ -120,11 +118,11 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 }'
 ```
 
-Consultez [LLM Task](/fr/tools/llm-task) pour plus de détails et les options de configuration.
+Voir [Tâche LLM](/fr/tools/llm-task) pour plus de détails et les options de configuration.
 
-## Fichiers de workflow (.lobster)
+## Fichiers de flux de travail (.lobster)
 
-Lobster peut exécuter des fichiers de workflow YAML/JSON avec les champs `name`, `args`, `steps`, `env`, `condition` et `approval`. Dans les appels d'outils OpenClaw, définissez `pipeline` sur le chemin du fichier.
+Lobster peut exécuter des fichiers de flux de travail YAML/JSON avec les champs `name`, `args`, `steps`, `env`, `condition` et `approval`. Dans les appels d'outils OpenClaw, définissez `pipeline` sur le chemin du fichier.
 
 ```yaml
 name: inbox-triage
@@ -147,20 +145,20 @@ steps:
     condition: $approve.approved
 ```
 
-Notes :
+Remarques :
 
 - `stdin: $step.stdout` et `stdin: $step.json` transmettent la sortie d'une étape précédente.
-- `condition` (ou `when`) peuvent conditionner les étapes sur `$step.approved`.
+- `condition` (ou `when`) peut verrouiller les étapes sur `$step.approved`.
 
 ## Installer Lobster
 
-Les workflows Lobster regroupés s'exécutent en cours de traitement (**in-process**) ; aucun binaire `lobster` distinct n'est requis. L'exécuteur intégré est fourni avec le plugin Lobster.
+Les flux de travail Lobster groupés s'exécutent en processus ; aucun binaire `lobster` séparé n'est requis. Le moteur intégré est fourni avec le plugin Lobster.
 
-Si vous avez besoin de la CLI Lobster autonome pour le développement ou des pipelines externes, installez-la à partir du [dépôt Lobster](https://github.com/openclaw/lobster) et assurez-vous que `lobster` est sur `PATH`.
+Si vous avez besoin du Lobster CLI autonome pour le développement ou les pipelines externes, installez-le depuis le [dépôt Lobster](https://github.com/openclaw/lobster) et assurez-vous que `lobster` est dans `PATH`.
 
 ## Activer l'outil
 
-Lobster est un outil de plugin **optionnel** (non activé par défaut).
+Lobster est un outil de plugin **facultatif** (non activé par défaut).
 
 Recommandé (additif, sans danger) :
 
@@ -189,13 +187,11 @@ Ou par agent :
 }
 ```
 
-Évitez d'utiliser `tools.allow: ["lobster"]` sauf si vous avez l'intention de fonctionner en mode de liste d'autorisation restrictive.
+Évitez d'utiliser `tools.allow: ["lobster"]` sauf si vous avez l'intention d'exécuter en mode liste blanche restrictive.
 
-Remarque : les listes d'autorisation sont optionnelles pour les plugins optionnels. Si votre liste d'autorisation ne nomme
-que les outils de plugin (comme `lobster`), OpenClaw garde les outils de base activés. Pour restreindre les outils
-de base, incluez également les outils ou groupes de base que vous souhaitez dans la liste d'autorisation.
+<Note>Les listes blanches sont opt-in pour les plugins optionnels. Si votre liste blanche ne nomme que les outils de plugin (comme `lobster`), OpenClaw garde les outils de base activés. Pour restreindre les outils de base, incluez également les outils de base ou les groupes que vous souhaitez dans la liste blanche.</Note>
 
-## Exemple : tri des courriels
+## Exemple : tri des e-mails
 
 Sans Lobster :
 
@@ -246,7 +242,7 @@ L'utilisateur approuve → reprendre :
 }
 ```
 
-Un seul workflow. Déterministe. Sûr.
+Un seul flux de travail. Déterministe. Sûr.
 
 ## Paramètres de l'outil
 
@@ -264,7 +260,7 @@ Exécuter un pipeline en mode outil.
 }
 ```
 
-Exécuter un fichier de workflow avec des arguments :
+Exécuter un fichier de flux de travail avec des arguments :
 
 ```json
 {
@@ -276,7 +272,7 @@ Exécuter un fichier de workflow avec des arguments :
 
 ### `resume`
 
-Continuer un workflow interrompu après approbation.
+Reprendre un flux de travail interrompu après approbation.
 
 ```json
 {
@@ -289,28 +285,28 @@ Continuer un workflow interrompu après approbation.
 ### Entrées optionnelles
 
 - `cwd` : Répertoire de travail relatif pour le pipeline (doit rester dans le répertoire de travail de la passerelle).
-- `timeoutMs` : Abandonner le workflow s'il dépasse cette durée (par défaut : 20000).
-- `maxStdoutBytes` : Abandonner le workflow si la sortie dépasse cette taille (par défaut : 512000).
-- `argsJson` : Chaîne JSON transmise à `lobster run --args-json` (fichiers de workflow uniquement).
+- `timeoutMs` : Interrompre le flux de travail s'il dépasse cette durée (par défaut : 20000).
+- `maxStdoutBytes` : Interrompre le flux de travail si la sortie dépasse cette taille (par défaut : 512000).
+- `argsJson` : Chaîne JSON transmise à `lobster run --args-json` (fichiers de flux de travail uniquement).
 
 ## Enveloppe de sortie
 
 Lobster renvoie une enveloppe JSON avec l'un des trois états :
 
 - `ok` → terminé avec succès
-- `needs_approval` → en pause ; `requiresApproval.resumeToken` est nécessaire pour reprendre
+- `needs_approval` → en pause ; `requiresApproval.resumeToken` est requis pour reprendre
 - `cancelled` → explicitement refusé ou annulé
 
-L'outil présente l'enveloppe à la fois dans `content` (JSON joli) et `details` (objet brut).
+L'outil affiche l'enveloppe à la fois dans `content` (JSON pretty) et `details` (objet brut).
 
 ## Approbations
 
 Si `requiresApproval` est présent, inspectez l'invite et décidez :
 
 - `approve: true` → reprendre et continuer les effets secondaires
-- `approve: false` → annuler et finaliser le workflow
+- `approve: false` → annuler et finaliser le flux de travail
 
-Utilisez `approve --preview-from-stdin --limit N` pour attacher un aperçu JSON aux demandes d'approbation sans colle jq/heredoc personnalisée. Les jetons de reprise sont désormais compacts : Lobster stocke l'état de reprise du workflow sous son répertoire d'état et renvoie une petite clé de jeton.
+Utilisez `approve --preview-from-stdin --limit N` pour joindre un aperçu JSON aux demandes d'approbation sans colle jq/heredoc personnalisée. Les jetons de reprise sont désormais compacts : Lobster stocke l'état de reprise du flux de travail dans son répertoire d'état et renvoie une petite clé de jeton.
 
 ## OpenProse
 
@@ -318,17 +314,17 @@ OpenProse se marie bien avec Lobster : utilisez `/prose` pour orchestrer la pré
 
 ## Sécurité
 
-- **Local et en processus uniquement** — les flux de travail s'exécutent à l'intérieur du processus de la passerelle ; aucun appel réseau provenant du plugin lui-même.
+- **Local uniquement, en cours de traitement** — les workflows s'exécutent à l'intérieur du processus de la passerelle ; aucun appel réseau provenant du plugin lui-même.
 - **Aucun secret** — Lobster ne gère pas OAuth ; il appelle les outils OpenClaw qui le font.
-- **Conscient du bac à sable** — désactivé lorsque le contexte de l'outil est sandboxed.
-- **Renforcé** — les délais d'attente et les limites de sortie sont appliqués par le runner intégré.
+- **Conscience du bac à sable** — désactivé lorsque le contexte de l'outil est sandboxed.
+- **Renforcé** — délais d'attente et limites de sortie appliqués par le runner intégré.
 
 ## Dépannage
 
-- **`lobster timed out`** → augmentez `timeoutMs` ou divisez un pipeline long.
+- **`lobster timed out`** → augmentez `timeoutMs`, ou divisez un long pipeline.
 - **`lobster output exceeded maxStdoutBytes`** → augmentez `maxStdoutBytes` ou réduisez la taille de la sortie.
 - **`lobster returned invalid JSON`** → assurez-vous que le pipeline s'exécute en mode outil et n'imprime que du JSON.
-- **`lobster failed`** → consultez les journaux de la passerelle pour les détails de l'erreur du runner intégré.
+- **`lobster failed`** → vérifiez les journaux de la passerelle pour les détails de l'erreur du runner intégré.
 
 ## En savoir plus
 
@@ -337,13 +333,13 @@ OpenProse se marie bien avec Lobster : utilisez `/prose` pour orchestrer la pré
 
 ## Étude de cas : workflows communautaires
 
-Un exemple public : une « second cerveau » CLI + pipelines Lobster qui gèrent trois coffres Markdown (personnel, partenaire, partagé). La CLI émet du JSON pour les statistiques, les listes de boîte de réception et les analyses de péremption ; Lobster enchaîne ces commandes dans des workflows tels que `weekly-review`, `inbox-triage`, `memory-consolidation` et `shared-task-sync`, chacun avec des portes d'approbation. L'IA gère le jugement (catégorisation) lorsque disponible et revient à des règles déterministes sinon.
+Un exemple public : une CLI « second cerveau » + des pipelines Lobster qui gèrent trois coffres Markdown (personnel, partenaire, partagé). La CLI émet du JSON pour les statistiques, les listes de boîte de réception et les analyses obsolètes ; Lobster enchaîne ces commandes dans des workflows tels que `weekly-review`, `inbox-triage`, `memory-consolidation` et `shared-task-sync`, chacun avec des portes d'approbation. L'IA gère le jugement (catégorisation) lorsque disponible et revient à des règles déterministes sinon.
 
 - Fil : [https://x.com/plattenschieber/status/2014508656335770033](https://x.com/plattenschieber/status/2014508656335770033)
 - Dépôt : [https://github.com/bloomedai/brain-cli](https://github.com/bloomedai/brain-cli)
 
 ## Connexes
 
-- [Automatisation et Tâches](/fr/automation) — planification des workflows Lobster
+- [Automatisation et tâches](/fr/automation) — planification des workflows Lobster
 - [Vue d'ensemble de l'automatisation](/fr/automation) — tous les mécanismes d'automatisation
 - [Vue d'ensemble des outils](/fr/tools) — tous les outils d'agent disponibles

@@ -1,28 +1,31 @@
 ---
-summary: "Logging 概覽：檔案記錄、控制台輸出、CLI 追蹤以及 Control UI"
+summary: "檔案日誌、主控台輸出、CLI 即時追蹤以及控制 UI 的日誌分頁"
 read_when:
-  - You need a beginner-friendly overview of logging
-  - You want to configure log levels or formats
+  - You need a beginner-friendly overview of OpenClaw logging
+  - You want to configure log levels, formats, or redaction
   - You are troubleshooting and need to find logs quickly
-title: "Logging 概覽"
+title: "記錄"
 ---
 
-# 日誌
+OpenClaw 有兩個主要的日誌表面：
 
-OpenClaw 有兩個主要的記錄介面：
+- **檔案日誌** (JSON 行) 由 Gateway 寫入。
+- **主控台輸出** 顯示在終端機和 Gateway Debug UI 中。
 
-- 由 Gateway 寫入的**檔案日誌**（JSON 行）。
-- 在終端機和 Gateway Debug UI 中顯示的 **Console output**（控制台輸出）。
-
-Control UI 的 **Logs** 分頁會追蹤 gateway 檔案記錄。本頁面說明了記錄檔的位置、如何閱讀記錄，以及如何設定記錄層級和格式。
+控制 UI 的 **日誌** 分頁會追蹤 gateway 的檔案日誌。本頁面說明日誌存在於何處、如何閱讀日誌，以及如何設定日誌層級和格式。
 
 ## 日誌存放位置
 
-預設情況下，Gateway 會在以下位置寫入滾動日誌檔案：
+根據預設，Gateway 會在以下位置寫入輪替日誌檔案：
 
 `/tmp/openclaw/openclaw-YYYY-MM-DD.log`
 
 日期使用 gateway 主機的當地時區。
+
+當檔案達到 `logging.maxFileBytes` (預設：100 MB) 時，每個檔案會輪替。
+OpenClaw 會在現用檔案旁保留最多五個編號的封存檔，例如
+`openclaw-YYYY-MM-DD.1.log`，並持續寫入到新的現用日誌，而不是
+抑制診斷輸出。
 
 您可以在 `~/.openclaw/openclaw.json` 中覆寫此設定：
 
@@ -46,28 +49,32 @@ openclaw logs --follow
 
 有用的目前選項：
 
-- `--local-time`：以您當地的時區顯示時間戳記
-- `--url <url>` / `--token <token>` / `--timeout <ms>`：標準 Gateway RPC 標誌
-- `--expect-final`：agent-backed RPC 最終回應等待標誌（此處透過共用的客戶端層接受）
+- `--local-time`：以您的當地時區呈現時間戳記
+- `--url <url>` / `--token <token>` / `--timeout <ms>`：標準 Gateway RPC 旗標
+- `--expect-final`：agent 支援的 RPC 最終回應等待旗標 (此處透過共用客戶端層接受)
 
 輸出模式：
 
 - **TTY sessions**（TTY 工作階段）：美觀、色彩化、結構化的記錄行。
 - **Non-TTY sessions**（非 TTY 工作階段）：純文字。
-- `--json`：換行分隔的 JSON（每行一個記錄事件）。
-- `--plain`：在 TTY 工作階段中強制使用純文字。
+- `--json`：以行分隔的 JSON (每行一個日誌事件)。
+- `--plain`：在 TTY 會話中強制使用純文字。
 - `--no-color`：停用 ANSI 顏色。
 
-當您傳遞明確的 `--url` 時，CLI 不會自動套用設定或環境認證；如果目標 Gateway 需要認證，請自行包含 `--token`。
+當您傳遞明確的 `--url` 時，CLI 不會自動套用設定或
+環境認證；如果目標 Gateway
+需要認證，請自行包含 `--token`。
 
 在 JSON 模式下，CLI 會發出帶有 `type` 標籤的物件：
 
-- `meta`：串流中繼資料（檔案、游標、大小）
-- `log`：已解析的記錄項目
+- `meta`：串流中繼資料 (檔案、游標、大小)
+- `log`：已解析的日誌項目
 - `notice`：截斷 / 輪替提示
-- `raw`：未解析的記錄行
+- `raw`：未解析的日誌行
 
-如果本地 loopback Gateway 要求配對，`openclaw logs` 會自動回退到設定的本地記錄檔。明確的 `--url` 目標不會使用此回退機制。
+如果本地回送 Gateway 要求配對，`openclaw logs` 會自動
+還原到設定的本地日誌檔案。明確的 `--url` 目標
+不會使用此還原機制。
 
 如果 Gateway 無法連線，CLI 會印出一個簡短的提示來執行：
 
@@ -77,7 +84,8 @@ openclaw doctor
 
 ### Control UI (web)
 
-Control UI 的 **Logs** 分頁使用 `logs.tail` 追蹤同一個檔案。請參閱 [/web/control-ui](/zh-Hant/web/control-ui) 了解如何開啟它。
+控制 UI 的 **Logs** 標籤頁使用 `logs.tail` 追蹤同一個檔案。
+請參閱 [/web/control-ui](/zh-Hant/web/control-ui) 以了解如何開啟它。
 
 ### 僅限 Channel 的記錄
 
@@ -93,23 +101,33 @@ openclaw channels logs --channel whatsapp
 
 日誌檔中的每一行都是一個 JSON 物件。CLI 和 Control UI 會解析這些條目，以呈現結構化輸出（時間、層級、子系統、訊息）。
 
+檔案日誌 JSONL 記錄在可用時也包含可機器過濾的頂層欄位：
+
+- `hostname`：Gateway 主機名稱。
+- `message`：扁平化的日誌訊息文字，用於全文搜尋。
+- `agent_id`：當日誌呼叫帶有代理程式 (agent) 語境時的啟用代理程式 ID。
+- `session_id`：當日誌呼叫帶有 session 語境時的啟用 session ID/金鑰。
+- `channel`：當日誌呼叫帶有頻道 (channel) 語境時的啟用頻道。
+
+OpenClaw 會在這些欄位旁保留原始的結構化日誌引數，以便現有讀取編號 tslog 引數金鑰的剖析器 (parser) 能繼續運作。
+
 ### 主控台輸出
 
-主控台日誌具有 **TTY 感知** 並格式化以提升可讀性：
+主控台日誌具備 **TTY 感知** (TTY-aware) 並已針對可讀性進行格式化：
 
-- 子系統前綴（例如 `gateway/channels/whatsapp`）
+- 子系統前綴 (例如 `gateway/channels/whatsapp`)
 - 層級著色 (info/warn/error)
-- 可選的精簡或 JSON 模式
+- 可選的精簡 或 JSON 模式
 
-主控台格式由 `logging.consoleStyle` 控制。
+主控台格式化由 `logging.consoleStyle` 控制。
 
 ### Gateway WebSocket 日誌
 
-`openclaw gateway` 也具有針對 RPC 流量的 WebSocket 協議日誌記錄：
+`openclaw gateway` 也有針對 RPC 流量的 WebSocket 協定日誌記錄：
 
-- 正常模式：僅顯示有趣的結果（錯誤、解析錯誤、慢速呼叫）
+- 一般模式：僅顯示有趣的結果 (錯誤、剖析錯誤、緩慢的呼叫)
 - `--verbose`：所有請求/回應流量
-- `--ws-log auto|compact|full`：選擇詳細的呈現樣式
+- `--ws-log auto|compact|full`：選擇詳細的轉譯樣式
 - `--compact`：`--ws-log compact` 的別名
 
 範例：
@@ -120,9 +138,9 @@ openclaw gateway --verbose --ws-log compact
 openclaw gateway --verbose --ws-log full
 ```
 
-## 設定日誌
+## 設定日誌記錄
 
-所有日誌配置都位於 `~/.openclaw/openclaw.json` 中的 `logging` 之下。
+所有日誌設定都位於 `~/.openclaw/openclaw.json` 中的 `logging` 之下。
 
 ```json
 {
@@ -142,237 +160,84 @@ openclaw gateway --verbose --ws-log full
 - `logging.level`：**檔案日誌** (JSONL) 層級。
 - `logging.consoleLevel`：**主控台** 詳細程度層級。
 
-您可以透過 **`OPENCLAW_LOG_LEVEL`** 環境變數覆寫這兩者（例如 `OPENCLAW_LOG_LEVEL=debug`）。環境變數的優先順序高於配置檔案，因此您可以提高單次執行的詳細程度，而不需編輯 `openclaw.json`。您也可以傳遞全域 CLI 選項 **`--log-level <level>`**（例如 `openclaw --log-level debug gateway run`），這會覆寫該指令的環境變數。
+您可以透過 **`OPENCLAW_LOG_LEVEL`** 環境變數 (例如 `OPENCLAW_LOG_LEVEL=debug`) 覆寫這兩者。環境變數的優先順序高於設定檔，因此您可以提高單次執行的詳細程度，而不需編輯 `openclaw.json`。您也可以傳遞全域 CLI 選項 **`--log-level <level>`** (例如 `openclaw --log-level debug gateway run`)，該選項會覆寫該指令的環境變數。
 
-`--verbose` 僅影響主控台輸出和 WS 日誌詳細程度；它不會變更檔案日誌層級。
+`--verbose` 僅影響主控台輸出和 WS 記錄詳細程度；它不會改變
+檔案記錄層級。
+
+### 追蹤關聯
+
+檔案記錄為 JSONL。當記錄呼叫攜帶有效的診斷追蹤上下文時，
+OpenClaw 會將追蹤欄位寫入為頂層 JSON 金鑰 (`traceId`, `spanId`,
+`parentSpanId`, `traceFlags`)，以便外部記錄處理器能將該行
+與 OTEL spans 和提供者的 `traceparent` 傳播相關聯。
+
+Gateway HTTP 請求和 Gateway WebSocket 框架會建立一個內部請求
+追蹤範圍。在該非同步範圍內發出的記錄和診斷事件，若未傳遞明確的追蹤上下文，則會繼承
+請求追蹤。Agent 執行和
+模型呼叫追蹤會成為活動請求追蹤的子項，因此本機記錄、
+診斷快照、OTEL spans 和受信任提供者的 `traceparent` 標頭可以
+透過 `traceId` 結合，而無需記錄原始請求或模型內容。
+
+### 模型呼叫大小和計時
+
+模型呼叫診斷會記錄有限的請求/回應測量值，而不
+擷取原始提示或回應內容：
+
+- `requestPayloadBytes`：最終模型請求負載的 UTF-8 位元組大小
+- `responseStreamBytes`：串流模型回應事件的 UTF-8 位元組大小
+- `timeToFirstByteMs`：第一次串流回應事件之前的經過時間
+- `durationMs`：總模型呼叫持續時間
+
+當啟用診斷匯出時，這些欄位可用於診斷快照、模型呼叫外掛攔截器和
+OTEL 模型呼叫 spans/metrics。
 
 ### 主控台樣式
 
 `logging.consoleStyle`：
 
-- `pretty`：人性化、彩色、帶有時間戳記。
-- `compact`：更緊湊的輸出（最適合長時間工作階段）。
-- `json`：每行 JSON（適用於日誌處理器）。
+- `pretty`：友善易讀、彩色、並帶有時間戳記。
+- `compact`：更緊湊的輸出（適用於長時間的工作階段）。
+- `json`：每行 JSON（適用於記錄處理器）。
 
-### 編校
+### 編修
 
-工具摘要可以在敏感權杖輸出到主控台之前將其編校：
+OpenClaw 可以在敏感權杖輸出到主控台、檔案記錄、
+OTLP 記錄或持久化的工作階段文字記錄之前進行編修：
 
-- `logging.redactSensitive`: `off` | `tools` (預設值: `tools`)
-- `logging.redactPatterns`: 用來覆蓋預設集合的 regex 字串清單
+- `logging.redactSensitive`： `off` | `tools` (預設： `tools`)
+- `logging.redactPatterns`：用於覆蓋預設集合的正規表示式字串列表
 
-刪除僅影響**主控台輸出**，不會變更檔案日誌。
+檔案記錄和工作階段記錄保持 JSONL 格式，但在將行或訊息寫入磁碟之前，會對符合的機密值進行遮罩。遮罩是盡力而為的：它適用於包含文字的訊息內容和記錄字串，而非每個識別碼或二進位負載欄位。
 
-## 診斷 + OpenTelemetry
+## 診斷與 OpenTelemetry
 
-診斷是用於模型執行**以及**訊息流程遙測 (webhooks、佇列、工作階段狀態) 的結構化、機器可讀取事件。它們**不會**取代日誌；它們的存在是為了提供指標、追蹤和其他匯出器。
+診斷是指用於模型執行和訊息流程遙測（webhooks、佇列、工作階段狀態）的結構化、機器可讀取事件。它們**不**會取代記錄——它們提供指標、追蹤和匯出器。無論您是否匯出這些事件，它們都會在程式內發出。
 
-診斷事件是在處理程序內發出的，但只有在啟用診斷和匯出器外掛程式時，匯出器才會附加。
+兩個相鄰的介面：
 
-### OpenTelemetry vs OTLP
+- **OpenTelemetry 匯出** — 透過 OTLP/HTTP 將指標、追蹤和記錄傳送到任何相容 OpenTelemetry 的收集器或後端（Grafana、Datadog、Honeycomb、New Relic、Tempo 等）。完整的組態、訊號目錄、指標/範圍名稱、環境變數和隱私模型位於專用頁面：[OpenTelemetry 匯出](/zh-Hant/gateway/opentelemetry)。
+- **診斷旗標** — 目標除錯記錄旗標，可將額外記錄路由至 `logging.file` 而不會提高 `logging.level`。旗標不區分大小寫，並支援萬用字元（`telegram.*`、`*`）。在 `diagnostics.flags` 下組態，或透過 `OPENCLAW_DIAGNOSTICS=...` 環境變數覆寫。完整指南：[診斷旗標](/zh-Hant/diagnostics/flags)。
 
-- **OpenTelemetry (OTel)**：用於追蹤、指標和日誌的資料模型 + SDK。
-- **OTLP**：用於將 OTel 資料匯出至收集器/後端的有線通訊協定。
-- OpenClaw 目前透過 **OTLP/HTTP (protobuf)** 進行匯出。
+若要在沒有 OTLP 匯出的情況下啟用外掛程式或自訂接收器的診斷事件：
 
-### 匯出的訊號
-
-- **指標**：計數器 + 直方圖 (Token 使用量、訊息流程、佇列)。
-- **追蹤**：模型使用量 + webhook/訊息處理的範圍 (spans)。
-- **日誌**：當啟用 `diagnostics.otel.logs` 時透過 OTLP 匯出。日誌
-  量可能很高；請留意 `logging.level` 和匯出器篩選器。
-
-### 診斷事件目錄
-
-模型使用量：
-
-- `model.usage`：tokens、成本、持續時間、上下文、提供者/模型/通道、工作階段 ID。
-
-訊息流程：
-
-- `webhook.received`：每個通道的 webhook 進入。
-- `webhook.processed`：webhook 已處理 + 持續時間。
-- `webhook.error`：webhook 處理常式錯誤。
-- `message.queued`：訊息已加入佇列以進行處理。
-- `message.processed`：結果 + 持續時間 + 選用錯誤。
-
-佇列 + 工作階段：
-
-- `queue.lane.enqueue`：指令佇列通道加入佇列 + 深度。
-- `queue.lane.dequeue`：指令佇列通道移出佇列 + 等待時間。
-- `session.state`：工作階段狀態轉換 + 原因。
-- `session.stuck`：工作階段停滯警告 + 存在時間。
-- `run.attempt`：執行重試/嘗試中繼資料。
-- `diagnostic.heartbeat`：彙總計數器 (webhooks/佇列/工作階段)。
-
-### 啟用診斷 (無匯出器)
-
-如果您希望插件或自定義接收器能夠使用診斷事件，請使用此選項：
-
-```json
+```json5
 {
-  "diagnostics": {
-    "enabled": true
-  }
+  diagnostics: { enabled: true },
 }
 ```
 
-### 診斷標誌（目標日誌）
+如需透過 OTLP 匯出到收集器，請參閱 [OpenTelemetry 匯出](/zh-Hant/gateway/opentelemetry)。
 
-使用標誌來開啟額外的、目標明確的除錯日誌，而無需提高 `logging.level`。
-標誌不區分大小寫，並支援萬用字元（例如 `telegram.*` 或 `*`）。
-
-```json
-{
-  "diagnostics": {
-    "flags": ["telegram.http"]
-  }
-}
-```
-
-環境變數覆寫（一次性）：
-
-```
-OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
-```
-
-注意事項：
-
-- 標誌日誌會輸出到標準日誌檔案（與 `logging.file` 相同）。
-- 輸出仍會根據 `logging.redactSensitive` 進行編輯。
-- 完整指南：[/diagnostics/flags](/zh-Hant/diagnostics/flags)。
-
-### 匯出至 OpenTelemetry
-
-診斷資料可以透過 `diagnostics-otel` 外掛程式（OTLP/HTTP）匯出。這
-可與任何接受 OTLP/HTTP 的 OpenTelemetry 收集器/後端搭配使用。
-
-```json
-{
-  "plugins": {
-    "allow": ["diagnostics-otel"],
-    "entries": {
-      "diagnostics-otel": {
-        "enabled": true
-      }
-    }
-  },
-  "diagnostics": {
-    "enabled": true,
-    "otel": {
-      "enabled": true,
-      "endpoint": "http://otel-collector:4318",
-      "protocol": "http/protobuf",
-      "serviceName": "openclaw-gateway",
-      "traces": true,
-      "metrics": true,
-      "logs": true,
-      "sampleRate": 0.2,
-      "flushIntervalMs": 60000
-    }
-  }
-}
-```
-
-注意事項：
-
-- 您也可以使用 `openclaw plugins enable diagnostics-otel` 來啟用外掛程式。
-- `protocol` 目前僅支援 `http/protobuf`。`grpc` 會被忽略。
-- 指標包括 token 使用量、成本、內容大小、執行持續時間，以及訊息流
-  計數器/直方圖（webhooks、佇列、會話狀態、佇列深度/等待時間）。
-- 追蹤/指標可以使用 `traces` / `metrics` 切換（預設：開啟）。啟用時，追蹤
-  包含模型使用範圍以及 webhook/訊息處理範圍。
-- 當您的收集器需要驗證時，請設定 `headers`。
-- 支援的環境變數：`OTEL_EXPORTER_OTLP_ENDPOINT`、
-  `OTEL_SERVICE_NAME`、`OTEL_EXPORTER_OTLP_PROTOCOL`。
-
-### 匯出的指標（名稱 + 類型）
-
-模型使用量：
-
-- `openclaw.tokens` (計數器，屬性：`openclaw.token`、`openclaw.channel`、
-  `openclaw.provider`、`openclaw.model`)
-- `openclaw.cost.usd` (計數器，屬性：`openclaw.channel`、`openclaw.provider`、
-  `openclaw.model`)
-- `openclaw.run.duration_ms` (直方圖，屬性：`openclaw.channel`、
-  `openclaw.provider`、`openclaw.model`)
-- `openclaw.context.tokens` (histogram, attrs: `openclaw.context`,
-  `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
-
-訊息流程：
-
-- `openclaw.webhook.received` (counter, attrs: `openclaw.channel`,
-  `openclaw.webhook`)
-- `openclaw.webhook.error` (counter, attrs: `openclaw.channel`,
-  `openclaw.webhook`)
-- `openclaw.webhook.duration_ms` (histogram, attrs: `openclaw.channel`,
-  `openclaw.webhook`)
-- `openclaw.message.queued` (counter, attrs: `openclaw.channel`,
-  `openclaw.source`)
-- `openclaw.message.processed` (counter, attrs: `openclaw.channel`,
-  `openclaw.outcome`)
-- `openclaw.message.duration_ms` (histogram, attrs: `openclaw.channel`,
-  `openclaw.outcome`)
-
-佇列 + 會話：
-
-- `openclaw.queue.lane.enqueue` (counter, attrs: `openclaw.lane`)
-- `openclaw.queue.lane.dequeue` (counter, attrs: `openclaw.lane`)
-- `openclaw.queue.depth` (histogram, attrs: `openclaw.lane` 或
-  `openclaw.channel=heartbeat`)
-- `openclaw.queue.wait_ms` (histogram, attrs: `openclaw.lane`)
-- `openclaw.session.state` (counter, attrs: `openclaw.state`, `openclaw.reason`)
-- `openclaw.session.stuck` (counter, attrs: `openclaw.state`)
-- `openclaw.session.stuck_age_ms` (histogram, attrs: `openclaw.state`)
-- `openclaw.run.attempt` (counter, attrs: `openclaw.attempt`)
-
-### 匯出的 Span (名稱 + 關鍵屬性)
-
-- `openclaw.model.usage`
-  - `openclaw.channel`, `openclaw.provider`, `openclaw.model`
-  - `openclaw.sessionKey`, `openclaw.sessionId`
-  - `openclaw.tokens.*` (input/output/cache_read/cache_write/total)
-- `openclaw.webhook.processed`
-  - `openclaw.channel`, `openclaw.webhook`, `openclaw.chatId`
-- `openclaw.webhook.error`
-  - `openclaw.channel`, `openclaw.webhook`, `openclaw.chatId`,
-    `openclaw.error`
-- `openclaw.message.processed`
-  - `openclaw.channel`, `openclaw.outcome`, `openclaw.chatId`,
-    `openclaw.messageId`, `openclaw.sessionKey`, `openclaw.sessionId`,
-    `openclaw.reason`
-- `openclaw.session.stuck`
-  - `openclaw.state`, `openclaw.ageMs`, `openclaw.queueDepth`,
-    `openclaw.sessionKey`, `openclaw.sessionId`
-
-### 採樣 + 排清
-
-- 追蹤採樣：`diagnostics.otel.sampleRate` (0.0–1.0，僅限 root spans)。
-- 指標匯出間隔：`diagnostics.otel.flushIntervalMs` (最少 1000ms)。
-
-### 協定說明
-
-- OTLP/HTTP 端點可以透過 `diagnostics.otel.endpoint` 或
-  `OTEL_EXPORTER_OTLP_ENDPOINT` 設定。
-- 如果端點已經包含 `/v1/traces` 或 `/v1/metrics`，則會直接使用。
-- 如果端點已經包含 `/v1/logs`，則會直接用於日誌。
-- `diagnostics.otel.logs` 啟用主要記錄器輸出的 OTLP 日誌匯出功能。
-
-### 日誌匯出行為
-
-- OTLP 日誌使用寫入至 `logging.file` 的相同結構化記錄。
-- 遵守 `logging.level` (檔案日誌層級)。主控台刪減**不**適用
-  於 OTLP 日誌。
-- 大量安裝應優先使用 OTLP 收集器採樣/過濾。
-
-## 疑難排解提示
+## 故障排除提示
 
 - **無法連線到 Gateway？** 請先執行 `openclaw doctor`。
-- **日誌空白？** 請檢查 Gateway 是否正在執行，以及是否正在寫入
-  `logging.file` 中的檔案路徑。
+- **記錄是空的？** 檢查 Gateway 是否正在執行，以及是否正在寫入 `logging.file` 中的檔案路徑。
 - **需要更多細節？** 將 `logging.level` 設定為 `debug` 或 `trace` 並重試。
 
-## 相關內容
+## 相關
 
-- [Gateway 日誌內部機制](/zh-Hant/gateway/logging) — WS 日誌樣式、子系統前綴與主控台擷取
-- [診斷](/zh-Hant/gateway/configuration-reference#diagnostics) — OpenTelemetry 匯出與快取追蹤組態
+- [OpenTelemetry 匯出](/zh-Hant/gateway/opentelemetry) — OTLP/HTTP 匯出、指標/範圍目錄、隱私模型
+- [診斷旗標](/zh-Hant/diagnostics/flags) — 目標除錯記錄旗標
+- [Gateway logging internals](/zh-Hant/gateway/logging) — WS 日誌樣式、子系統前綴和主控台捕獲
+- [Configuration reference](/zh-Hant/gateway/configuration-reference#diagnostics) — 完整的 `diagnostics.*` 欄位參考

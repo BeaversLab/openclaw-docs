@@ -3,7 +3,7 @@ summary: "Référence CLI pour `openclaw uninstall` (supprimer le service de pas
 read_when:
   - You want to remove the gateway service and/or local state
   - You want a dry-run first
-title: "uninstall"
+title: "Désinstaller"
 ---
 
 # `openclaw uninstall`
@@ -37,3 +37,8 @@ Notes :
 - Exécutez `openclaw backup create` d'abord si vous souhaitez une instantanérestaurable avant de supprimer l'état ou les espaces de travail.
 - `--all` est une abréviation pour supprimer le service, l'état, l'espace de travail et l'application ensemble.
 - `--non-interactive` nécessite `--yes`.
+
+## Connexe
+
+- [Référence CLI](/fr/cli)
+- [Désinstaller](/fr/install/uninstall)

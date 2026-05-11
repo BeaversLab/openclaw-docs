@@ -4,34 +4,32 @@ read_when:
   - You want to connect OpenClaw to QQ
   - You need QQ Bot credential setup
   - You want QQ Bot group or private chat support
-title: QQ Bot
+title: Bot QQ
 ---
 
-# QQ Bot
-
-QQ Bot se connecte à OpenClaw via l'API officiel de QQ Bot (passerelle WebSocket). Le
-plugin prend en charge le chat privé C2C, les messages de groupe @messages, et les messages de canal de guilde avec
+Le Bot QQ se connecte à OpenClaw via l'API officielle du Bot QQ (passerelle WebSocket). Le
+plugin prend en charge le chat privé C2C, les messages de groupe @messages, et les messages des channel de guilde avec
 des médias riches (images, voix, vidéo, fichiers).
 
-Statut : plugin intégré. Les messages directs, les discussions de groupe, les canaux de guilde et
+État : plugin inclus. Les messages directs, les chats de groupe, les channel de guilde et
 les médias sont pris en charge. Les réactions et les fils de discussion ne sont pas pris en charge.
 
-## Plugin intégré
+## Plugin inclus
 
-Les versions actuelles d'OpenClaw incluent QQ Bot, les versions empaquetées standard n'ont donc pas besoin
-d'une étape de `openclaw plugins install` séparée.
+Les versions actuelles de OpenClaw incluent le Bot QQ, donc les builds empaquetés normaux n'ont pas besoin
+'une étape d'`openclaw plugins install` séparée.
 
 ## Configuration
 
-1. Rendez-vous sur la [QQ Open Platform](https://q.qq.com/) et scannez le code QR avec votre
-   téléphone QQ pour vous inscrire / vous connecter.
-2. Cliquez sur **Create Bot** pour créer un nouveau QQ bot.
+1. Allez sur la [Plateforme Ouverte QQ](https://q.qq.com/) et scannez le code QR avec votre
+   QQ mobile pour vous enregistrer / vous connecter.
+2. Cliquez sur **Créer un Bot** pour créer un nouveau bot QQ.
 3. Trouvez **AppID** et **AppSecret** sur la page des paramètres du bot et copiez-les.
 
-> AppSecret n'est pas stocké en clair — si vous quittez la page sans l'enregistrer,
-> vous devrez en en générer un nouveau.
+> L'AppSecret n'est pas stocké en clair — si vous quittez la page sans l'enregistrer,
+> vous devrez en régénérer un nouveau.
 
-4. Ajoutez le canal :
+4. Ajoutez le channel :
 
 ```bash
 openclaw channels add --channel qqbot --token "AppID:AppSecret"
@@ -67,7 +65,7 @@ Variables d'environnement du compte par défaut :
 - `QQBOT_APP_ID`
 - `QQBOT_CLIENT_SECRET`
 
-AppSecret basé sur un fichier :
+AppSecret sauvegardé dans un fichier :
 
 ```json5
 {
@@ -81,16 +79,16 @@ AppSecret basé sur un fichier :
 }
 ```
 
-Notes :
+Remarques :
 
-- La repli d'env (fallback) s'applique uniquement au compte QQ Bot par défaut.
+- Le repli d'environnement (env fallback) s'applique uniquement au compte Bot QQ par défaut.
 - `openclaw channels add --channel qqbot --token-file ...` fournit uniquement
   l'AppSecret ; l'AppID doit déjà être défini dans la configuration ou `QQBOT_APP_ID`.
-- `clientSecret` accepte également les entrées SecretRef, et pas seulement une chaîne en clair.
+- `clientSecret` accepte également les entrées SecretRef, pas seulement une chaîne en clair.
 
 ### Configuration multi-compte
 
-Exécutez plusieurs QQ bots sous une seule instance OpenClaw :
+Faire fonctionner plusieurs bots QQ sous une seule instance OpenClaw :
 
 ```json5
 {
@@ -111,10 +109,10 @@ Exécutez plusieurs QQ bots sous une seule instance OpenClaw :
 }
 ```
 
-Chaque compte lance sa propre connexion WebSocket et maintient un cache
-de tokens indépendant (isolé par `appId`).
+Chaque compte lance sa propre connexion WebSocket et maintient un cache de
+token indépendant (isolé par `appId`).
 
-Ajoutez un deuxième bot via CLI :
+Ajouter un second bot via CLI :
 
 ```bash
 openclaw channels add --channel qqbot --account bot2 --token "222222222:secret-of-bot-2"
@@ -122,12 +120,12 @@ openclaw channels add --channel qqbot --account bot2 --token "222222222:secret-o
 
 ### Voix (STT / TTS)
 
-STT et TTS prennent en charge une configuration à deux niveaux avec repli prioritaire :
+Le STT et le TTS prennent en charge une configuration à deux niveaux avec repli prioritaire :
 
-| Paramètre | Spécifique au plugin | Repli du framework            |
-| --------- | -------------------- | ----------------------------- |
-| STT       | `channels.qqbot.stt` | `tools.media.audio.models[0]` |
-| TTS       | `channels.qqbot.tts` | `messages.tts`                |
+| Paramètre | Spécifique au plugin                                     | Repli du framework            |
+| --------- | -------------------------------------------------------- | ----------------------------- |
+| STT       | `channels.qqbot.stt`                                     | `tools.media.audio.models[0]` |
+| TTS       | `channels.qqbot.tts`, `channels.qqbot.accounts.<id>.tts` | `messages.tts`                |
 
 ```json5
 {
@@ -142,15 +140,27 @@ STT et TTS prennent en charge une configuration à deux niveaux avec repli prior
         model: "your-tts-model",
         voice: "your-voice",
       },
+      accounts: {
+        qq-main: {
+          tts: {
+            providers: {
+              openai: { voice: "shimmer" },
+            },
+          },
+        },
+      },
     },
   },
 }
 ```
 
 Définissez `enabled: false` sur l'un ou l'autre pour désactiver.
+Les remplacements TTS au niveau du compte utilisent la même structure que `messages.tts` et fusionnent en profondeur
+avec la configuration TTS channel/global.
 
-Le comportement de téléchargement/transcodage audio sortant peut également être ajusté avec
-`channels.qqbot.audioFormatPolicy` :
+Les pièces jointes vocales QQ entrantes sont exposées aux agents en tant que métadonnées de média audio tout en gardant les fichiers vocaux bruts hors de `MediaPaths` générique. Les réponses en texte plain `[[audio_as_voice]]` synthétisent le TTS et envoient un message vocal natif QQ lorsque le TTS est configuré.
+
+Le comportement de téléchargement/transcodage audio sortant peut également être réglé avec `channels.qqbot.audioFormatPolicy` :
 
 - `sttDirectFormats`
 - `uploadDirectFormats`
@@ -186,26 +196,32 @@ Ajoutez `?` à n'importe quelle commande pour obtenir de l'aide sur l'utilisatio
 
 QQ Bot est fourni en tant que moteur autonome dans le plugin :
 
-- Chaque compte possède une pile de ressources isolée (connexion WebSocket, client API, cache de jetons, racine de stockage média) indexée par `appId`. Les comptes ne partagent jamais d'état entrant/sortant.
+- Chaque compte possède une pile de ressources isolée (connexion WebSocket, client API, cache de jetons, racine de stockage média) indexée par `appId`. Les comptes ne partagent jamais l'état entrant/sortant.
 - Le logger multi-compte étiquette les lignes de journal avec le compte propriétaire afin que les diagnostics restent séparables lorsque vous faites fonctionner plusieurs bots sous une seule passerelle.
-- Les chemins de pont entrant, sortant et de passerelle partagent une racine unique de payload média sous `~/.openclaw/media`, de sorte que les téléchargements, les téléversements et les caches de transcodage atterrissent dans un seul répertoire protégé au lieu d'une arborescence par sous-système.
+- Les chemins de pont entrants, sortants et de passerelle partagent une seule racine de charge utile média sous `~/.openclaw/media`, de sorte que les téléchargements, les téléchargements et les caches de transcodage atterrissent dans un répertoire protégé au lieu d'un arbre par sous-système.
 - Les identifiants peuvent être sauvegardés et restaurés dans le cadre des instantanés d'identifiants standard OpenClaw ; le moteur rattache la pile de ressources de chaque compte lors de la restauration sans nécessiter un nouveau jumelage par code QR.
 
 ## Onboarding par code QR
 
 Comme alternative au collage manuel de `AppID:AppSecret`, le moteur prend en charge un flux d'onboarding par code QR pour lier un QQ Bot à OpenClaw :
 
-1. Exécutez le chemin de configuration QQ Bot (par exemple `openclaw channels add --channel qqbot`) et choisissez le flux par code QR lorsqu'on vous le demande.
+1. Exécutez le chemin de configuration du QQ Bot (par exemple `openclaw channels add --channel qqbot`) et choisissez le flux par code QR lorsque vous y êtes invité.
 2. Scannez le code QR généré avec l'application mobile liée au QQ Bot cible.
-3. Approuvez le jumelage sur le téléphone. OpenClaw enregistre les identifiants renvoyés dans `credentials/` sous la bonne étendue de compte.
+3. Approuvez le jumelage sur le téléphone. OpenClaw enregistre les informations d'identification renvoyées dans `credentials/` sous le bon périmètre de compte.
 
-Les invites d'approbation générées par le bot lui-même (par exemple, les flux « autoriser cette action ? » exposés par la API QQ Bot) apparaissent sous forme d'invites natives OpenClaw que vous pouvez accepter avec `/bot-approve` plutôt que de répondre via le client QQ brut.
+Les invites d'approbation générées par le bot lui-même (par exemple, les flux « autoriser cette action ? » exposés par le API du QQ Bot) s'affichent sous forme d'invites natives OpenClaw que vous pouvez accepter avec `/bot-approve` plutôt que de répondre via le client QQ brut.
 
 ## Dépannage
 
 - **Le bot répond « gone to Mars » (parti sur Mars) :** identifiants non configurés ou Gateway non démarrée.
-- **Aucun message entrant :** vérifiez que `appId` et `clientSecret` sont corrects, et que le
-  bot est activé sur la QQ Open Platform.
-- **La configuration avec `--token-file` affiche toujours non configuré :** `--token-file` définit uniquement l'AppSecret. Vous avez toujours besoin de `appId` dans la configuration ou de `QQBOT_APP_ID`.
+- **Aucun message entrant :** vérifiez que `appId` et `clientSecret` sont corrects, et que le bot est activé sur la Plateforme Ouverte QQ.
+- **Réponses automatiques répétées :** OpenClaw enregistre les index de référence sortants QQ comme étant créés par le bot et ignore les événements entrants dont le `msgIdx` actuel correspond à ce même compte bot. Cela empêche les boucles d'écho de la plateforme tout en permettant toujours aux utilisateurs de citer ou de répondre aux messages précédents du bot.
+- **La configuration avec `--token-file` affiche toujours "non configuré" :** `--token-file` définit uniquement l'AppSecret. Vous avez toujours besoin de `appId` dans la configuration ou de `QQBOT_APP_ID`.
 - **Messages proactifs non reçus :** QQ peut intercepter les messages initiés par le bot si l'utilisateur n'a pas interagi récemment.
 - **Voix non transcrite :** assurez-vous que la STT est configurée et que le provider est accessible.
+
+## Connexes
+
+- [Appariement](/fr/channels/pairing)
+- [Groupes](/fr/channels/groups)
+- [Dépannage des canaux](/fr/channels/troubleshooting)

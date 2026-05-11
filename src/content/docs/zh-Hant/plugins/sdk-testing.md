@@ -1,50 +1,46 @@
 ---
-title: "Plugin Testing"
-sidebarTitle: "Testing"
-summary: "Testing utilities and patterns for OpenClaw plugins"
+summary: "OpenClaw 外掛程式的測試工具與模式"
+title: "外掛程式測試"
+sidebarTitle: "測試"
 read_when:
   - You are writing tests for a plugin
   - You need test utilities from the plugin SDK
   - You want to understand contract tests for bundled plugins
 ---
 
-# Plugin Testing
+OpenClaw 外掛程式的測試工具、模式與 Lint 強制執行參考。
 
-Reference for test utilities, patterns, and lint enforcement for OpenClaw
-plugins.
+<Tip>**正在尋找測試範例？** 操作指南包含實作測試範例： [Channel plugin tests](/zh-Hant/plugins/sdk-channel-plugins#step-6-test) 和 [Provider plugin tests](/zh-Hant/plugins/sdk-provider-plugins#step-6-test)。</Tip>
 
-<Tip>**尋找測試範例？** 操作指南包含完整的測試範例： [通道外掛程式測試](/zh-Hant/plugins/sdk-channel-plugins#step-6-test) 和 [提供者外掛程式測試](/zh-Hant/plugins/sdk-provider-plugins#step-6-test)。</Tip>
-
-## Test utilities
+## 測試工具
 
 **Import:** `openclaw/plugin-sdk/testing`
 
-The testing subpath exports a narrow set of helpers for plugin authors:
+測試子路徑匯出了少量的輔助函式供外掛程式作者使用：
 
 ```typescript
 import { installCommonResolveTargetErrorCases, shouldAckReaction, removeAckReactionAfterReply } from "openclaw/plugin-sdk/testing";
 ```
 
-### Available exports
+### 可用的匯出項目
 
-| Export                                 | Purpose                                                |
-| -------------------------------------- | ------------------------------------------------------ |
-| `installCommonResolveTargetErrorCases` | Shared test cases for target resolution error handling |
-| `shouldAckReaction`                    | Check whether a channel should add an ack reaction     |
-| `removeAckReactionAfterReply`          | Remove ack reaction after reply delivery               |
+| 匯出項目                               | 用途                               |
+| -------------------------------------- | ---------------------------------- |
+| `installCommonResolveTargetErrorCases` | 用於目標解析錯誤處理的共享測試案例 |
+| `shouldAckReaction`                    | 檢查頻道是否應新增 ack 回應        |
+| `removeAckReactionAfterReply`          | 在回覆傳遞後移除 ack 回應          |
 
-### Types
+### 類型
 
-The testing subpath also re-exports types useful in test files:
+測試子路徑也會重新匯出在測試檔案中實用的類型：
 
 ```typescript
 import type { ChannelAccountSnapshot, ChannelGatewayContext, OpenClawConfig, PluginRuntime, RuntimeEnv, MockFn } from "openclaw/plugin-sdk/testing";
 ```
 
-## Testing target resolution
+## 測試目標解析
 
-Use `installCommonResolveTargetErrorCases` to add standard error cases for
-channel target resolution:
+使用 `installCommonResolveTargetErrorCases` 為頻道目標解析新增標準錯誤案例：
 
 ```typescript
 import { describe } from "vitest";
@@ -66,9 +62,19 @@ describe("my-channel target resolution", () => {
 });
 ```
 
-## Testing patterns
+## 測試模式
 
-### Unit testing a channel plugin
+### 測試註冊合約
+
+將手寫的 `api` mock 傳遞給 `register(api)` 的單元測試不會執行 OpenClaw 的載入器驗證閘道。請為您的插件依賴的每個註冊介面新增至少一個以載入器為基礎的冒煙測試 (smoke test)，特別是 Hooks 和獨佔功能（如記憶體）。
+
+真實的載入器會在缺少必要的中繼資料或外掛程式呼叫其不擁有的功能 API 時使外掛程式註冊失敗。例如，`api.registerHook(...)` 需要 Hook 名稱，而 `api.registerMemoryCapability(...)` 需要外掛程式清單或匯出的項目來宣告 `kind: "memory"`。
+
+### 測試執行時配置存取
+
+測試捆綁的外掛程式時，請優先使用儲存庫測試輔助程式中的共享外掛程式執行時 mock。其已棄用的 `runtime.config.loadConfig()` 和 `runtime.config.writeConfigFile(...)` mock 預設會擲出錯誤，以便測試能夠捕捉到相容性 API 的最新使用。只有在測試明確涵蓋舊版相容性行為時，才應覆寫這些 mock。
+
+### 單元測試頻道外掛程式
 
 ```typescript
 import { describe, it, expect, vi } from "vitest";
@@ -104,7 +110,7 @@ describe("my-channel plugin", () => {
 });
 ```
 
-### Unit testing a provider plugin
+### 單元測試提供者插件
 
 ```typescript
 import { describe, it, expect } from "vitest";
@@ -132,9 +138,9 @@ describe("my-provider plugin", () => {
 });
 ```
 
-### Mocking the plugin runtime
+### 模擬插件運行時
 
-For code that uses `createPluginRuntimeStore`, mock the runtime in tests:
+對於使用 `createPluginRuntimeStore` 的程式碼，請在測試中模擬運行時：
 
 ```typescript
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
@@ -152,8 +158,9 @@ const mockRuntime = {
     // ... other mocks
   },
   config: {
-    loadConfig: vi.fn(),
-    writeConfigFile: vi.fn(),
+    current: vi.fn(() => ({}) as const),
+    mutateConfigFile: vi.fn(),
+    replaceConfigFile: vi.fn(),
   },
   // ... other namespaces
 } as unknown as PluginRuntime;
@@ -164,9 +171,9 @@ store.setRuntime(mockRuntime);
 store.clearRuntime();
 ```
 
-### Testing with per-instance stubs
+### 使用個體存根進行測試
 
-Prefer per-instance stubs over prototype mutation:
+優先使用個體存根而非原型變異：
 
 ```typescript
 // Preferred: per-instance stub
@@ -177,30 +184,30 @@ client.sendMessage = vi.fn().mockResolvedValue({ id: "msg-1" });
 // MyChannelClient.prototype.sendMessage = vi.fn();
 ```
 
-## Contract tests (in-repo plugins)
+## 合約測試 (存放庫內插件)
 
-Bundled plugins have contract tests that verify registration ownership:
+內建插件具有合約測試，用於驗證註冊所有權：
 
 ```bash
 pnpm test -- src/plugins/contracts/
 ```
 
-These tests assert:
+這些測試斷言：
 
-- Which plugins register which providers
-- Which plugins register which speech providers
-- Registration shape correctness
-- Runtime contract compliance
+- 哪些插件註冊了哪些提供者
+- 哪些插件註冊了哪些語音提供者
+- 註冊形狀正確性
+- 運行時合規性
 
-### Running scoped tests
+### 執行限定範圍的測試
 
-For a specific plugin:
+針對特定插件：
 
 ```bash
 pnpm test -- <bundled-plugin-root>/my-channel/
 ```
 
-For contract tests only:
+僅針對合約測試：
 
 ```bash
 pnpm test -- src/plugins/contracts/shape.contract.test.ts
@@ -208,19 +215,19 @@ pnpm test -- src/plugins/contracts/auth.contract.test.ts
 pnpm test -- src/plugins/contracts/runtime.contract.test.ts
 ```
 
-## Lint enforcement (in-repo plugins)
+## Lint 強制執行 (存放庫內插件)
 
-Three rules are enforced by `pnpm check` for in-repo plugins:
+對於存放庫內的插件，`pnpm check` 強制執行三項規則：
 
-1. **No monolithic root imports** -- `openclaw/plugin-sdk` root barrel is rejected
-2. **No direct `src/` imports** -- plugins cannot import `../../src/` directly
-3. **No self-imports** -- plugins cannot import their own `plugin-sdk/<name>` subpath
+1. **禁止單體根匯入** -- 拒絕 `openclaw/plugin-sdk` 根 barrel
+2. **禁止直接匯入 `src/`** -- 插件不能直接匯入 `../../src/`
+3. **禁止自匯入** -- 插件不能匯入自己的 `plugin-sdk/<name>` 子路徑
 
-外部外掛不受這些 lint 規則約束，但建議遵循相同的模式。
+外部插件不受這些 Lint 規則約束，但建議遵循相同的模式。
 
-## 測試配置
+## 測試設定
 
-OpenClaw 使用帶有 V8 覆蓋率閾值的 Vitest。對於外掛測試：
+OpenClaw 使用帶有 V8 覆蓋率閾值的 Vitest。對於插件測試：
 
 ```bash
 # Run all tests
@@ -244,7 +251,7 @@ OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test
 
 ## 相關
 
-- [SDK 概觀](/zh-Hant/plugins/sdk-overview) -- import 約定
-- [SDK 頻道外掛](/zh-Hant/plugins/sdk-channel-plugins) -- 頻道外掛介面
-- [SDK 提供者外掛](/zh-Hant/plugins/sdk-provider-plugins) -- 提供者外掛鉤子
-- [建構外掛](/zh-Hant/plugins/building-plugins) -- 入門指南
+- [SDK 概觀](/zh-Hant/plugins/sdk-overview) -- 匯入慣例
+- [SDK 通道插件](/zh-Hant/plugins/sdk-channel-plugins) -- 通道插件介面
+- [SDK 提供者插件](/zh-Hant/plugins/sdk-provider-plugins) -- 提供者插件掛鉤
+- [建構插件](/zh-Hant/plugins/building-plugins) -- 入門指南

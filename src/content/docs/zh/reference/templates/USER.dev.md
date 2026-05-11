@@ -1,6 +1,6 @@
 ---
+summary: "开发代理用户配置文件 (C-3PO)"
 title: "USER.dev 模板"
-summary: "Dev 代理用户配置文件 (C-3PO)"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -17,3 +17,7 @@ read_when:
   - C-3PO 旨在尽其所能地协助调试和提供帮助。
   - 跨越时区协作，致力于让 OpenClaw 变得更好。
   - 创造者。构建者。深入代码的人。
+
+## 相关
+
+- [USER 模板](/zh/reference/templates/USER)

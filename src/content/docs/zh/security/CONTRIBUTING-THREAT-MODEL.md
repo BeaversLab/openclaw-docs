@@ -1,6 +1,6 @@
 ---
+summary: "如何为 OpenClaw 威胁模型做出贡献"
 title: "为威胁模型做贡献"
-summary: "如何为 OpenClaw 威胁模型做贡献"
 read_when:
   - You want to contribute security findings or threat scenarios
   - Reviewing or updating the threat model
@@ -14,7 +14,7 @@ read_when:
 
 ### 添加威胁
 
-发现了我们未覆盖的攻击向量或风险？在 [openclaw/trust](https://github.com/openclaw/trust/issues) 上提一个 issue，并用您自己的话进行描述。您不需要了解任何框架或填写每个字段——只需描述场景即可。
+发现了我们未涵盖的攻击向量或风险？请在 [openclaw/trust](https://github.com/openclaw/trust/issues) 上开启一个 Issue 并用自己的话描述它。您不需要了解任何框架或填写每个字段——只需描述该场景即可。
 
 **最好包括以下内容（但非必需）：**
 
@@ -25,7 +25,7 @@ read_when:
 
 我们将在审查期间处理 ATLAS 映射、威胁 ID 和风险评估。如果您想包含这些详细信息，那很好——但这并不是预期的。
 
-> **这是为了添加到威胁模型中，而不是报告实时漏洞。** 如果您发现了可利用的漏洞，请参阅我们的 [Trust 页面](https://trust.openclaw.ai) 了解负责任披露说明。
+> **这是为了添加到威胁模型中，而不是报告现存的漏洞。** 如果您发现了可利用的漏洞，请参阅我们的 [Trust 页面](https://trust.openclaw.ai) 了解负责任的披露说明。
 
 ### 建议缓解措施
 
@@ -39,11 +39,11 @@ read_when:
 
 拼写错误、澄清说明、过时信息、更好的示例——欢迎 PR，无需 issue。
 
-## 我们使用的工具
+## 我们使用的内容
 
 ### MITRE ATLAS
 
-此威胁模型基于 [MITRE ATLAS](https://atlas.mitre.org/)（人工智能系统对抗性威胁全景）构建，该框架专为提示注入、工具滥用和代理利用等 AI/ML 威胁而设计。您无需了解 ATLAS 即可做出贡献——我们会在审查期间将提交的内容映射到该框架。
+此威胁模型基于 [MITRE ATLAS](https://atlas.mitre.org/)（针对 AI 系统的对抗性威胁景观）构建，该框架专为 AI/ML 威胁设计，例如提示注入、工具滥用和代理利用。您不需要了解 ATLAS 即可做出贡献——我们会在审查期间将提交的内容映射到该框架。
 
 ### 威胁 ID
 
@@ -62,7 +62,7 @@ read_when:
 
 ID 由维护者在审查期间分配。您无需自行选择。
 
-### 风险等级
+### 风险级别
 
 | 等级     | 含义                                      |
 | -------- | ----------------------------------------- |
@@ -89,10 +89,15 @@ ID 由维护者在审查期间分配。您无需自行选择。
 
 ## 联系方式
 
-- **安全漏洞：** 请参阅我们的[信任页面](https://trust.openclaw.ai)以获取报告说明
-- **威胁模型问题：** 在 [openclaw/trust](https://github.com/openclaw/trust/issues) 上提出问题
+- **安全漏洞：** 请参阅我们的 [Trust 页面](https://trust.openclaw.ai) 了解报告说明
+- **威胁模型问题：** 在 [openclaw/trust](https://github.com/openclaw/trust/issues) 上开启一个 Issue
 - **一般交流：** Discord #security 渠道
 
 ## 致谢
 
 威胁模型的贡献者将在威胁模型致谢、发布说明以及 OpenClaw 安全名人堂中获得认可，以表彰其重要贡献。
+
+## 相关内容
+
+- [威胁模型](/zh/security/THREAT-MODEL-ATLAS)
+- [形式化验证](/zh/security/formal-verification)

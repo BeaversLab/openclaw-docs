@@ -3,7 +3,7 @@ summary: "OpenClaw 支援的模型供應商 (LLMs)"
 read_when:
   - You want to choose a model provider
   - You want quick setup examples for LLM auth + model selection
-title: "模型供應商快速入門"
+title: "模型提供者快速入門"
 ---
 
 # 模型供應商
@@ -57,3 +57,9 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行驗證，然後
 - `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要在本地安裝 `gemini`（`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`）；預設模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
 
 如需完整的供應商目錄（xAI、Groq、Mistral 等）及進階設定，請參閱 [Model providers](/zh-Hant/concepts/model-providers)。
+
+## 相關
+
+- [模型選擇](/zh-Hant/concepts/model-providers)
+- [模型失效切換](/zh-Hant/concepts/model-failover)
+- [Models CLI](/zh-Hant/cli/models)

@@ -4,84 +4,77 @@ read_when:
   - Building or debugging node clients (iOS/Android/macOS node mode)
   - Investigating pairing or bridge auth failures
   - Auditing the node surface exposed by the gateway
-title: "Bridge Protocol"
+title: "Bridge 协议"
 ---
 
-# 网桥协议（旧版节点传输）
+<Warning>TCP 桥接已被**移除**。当前的 OpenClaw 构建版本不包含桥接监听器，并且 `bridge.*` 配置键已不再存在于架构中。此页面仅作为历史参考保留。请将 [Gateway Protocol](/zh/gateway/protocol) 用于所有节点/操作员客户端。</Warning>
 
-<Warning>TCP 桥接已被**移除**。目前的 OpenClaw 版本不再包含桥接监听器，且 `bridge.*` 配置键也不再包含在架构中。本页面仅作为历史参考保留。所有节点/操作员客户端请使用 [Gateway(网关) Protocol](/zh/gateway/protocol)。</Warning>
+## 存在原因
 
-## 为何存在
-
-- **安全边界**：桥接暴露的是一个小型的允许列表，而不是
-  完整的 gateway API 表面。
-- **配对 + 节点身份**：节点准入由 gateway 管理，并绑定
-  到特定于节点的令牌。
-- **设备发现用户体验**：节点可以通过局域网上的 Bonjour 发现 gateway，或通过 tailnet
-  直接连接。
-- **Loopback WS**：完整的 WS 控制平面保持本地，除非通过 SSH 隧道传输。
+- **安全边界**：桥接暴露了一个小型允许列表，而不是完整的 gateway API 表面。
+- **配对 + 节点身份**：节点准入由 gateway 拥有，并与每个节点的令牌绑定。
+- **设备发现体验**：节点可以通过局域网上的 Bonjour 发现 gateway，或者通过 tailnet 直接连接。
+- **Loopback WS**：完整的 WS 控制平面保持本地状态，除非通过 SSH 隧道传输。
 
 ## 传输
 
 - TCP，每行一个 JSON 对象 (JSONL)。
-- 可选 TLS （当 `bridge.tls.enabled` 为 true 时）。
-- 历史默认监听端口为 `18790`（当前版本不启动
-  TCP 桥接）。
+- 可选 TLS（当 `bridge.tls.enabled` 为 true 时）。
+- 历史上的默认监听端口是 `18790`（当前构建版本不会启动 TCP 桥接）。
 
-当启用 TLS 时，设备发现 TXT 记录包含 `bridgeTls=1` 以及
-`bridgeTlsSha256` 作为非机密提示。请注意，Bonjour/mDNS TXT 记录是
-未经身份验证的；在没有明确的用户意图或其他带外验证的情况下，客户端
-不得将通告的指纹视为权威的固定值。
+启用 TLS 后，设备发现 TXT 记录包含 `bridgeTls=1` 加上 `bridgeTlsSha256` 作为非机密提示。请注意，Bonjour/mDNS TXT 记录是未经身份验证的；在未经明确的用户意图或其他带外验证的情况下，客户端不得将公布的指纹视为权威 pin。
 
 ## 握手 + 配对
 
 1. 客户端发送 `hello`，其中包含节点元数据 + 令牌（如果已配对）。
 2. 如果未配对，gateway 回复 `error` (`NOT_PAIRED`/`UNAUTHORIZED`)。
 3. 客户端发送 `pair-request`。
-4. Gateway(网关) 等待批准，然后发送 `pair-ok` 和 `hello-ok`。
+4. Gateway 等待批准，然后发送 `pair-ok` 和 `hello-ok`。
 
-历史上，`hello-ok` 返回 `serverName` 并且可以包含
-`canvasHostUrl`。
+历史上，`hello-ok` 返回 `serverName` 并且可能包含 `canvasHostUrl`。
 
 ## 帧
 
-客户端 → Gateway(网关)：
+客户端 → Gateway：
 
-- `req` / `res`：作用域内 gateway RPC （聊天、会话、配置、健康、语音唤醒、skills.bins）
-- `event`：节点信号（语音转录、代理请求、聊天订阅、exec 生命周期）
+- `req` / `res`：限定范围的 gateway RPC（聊天、会话、配置、健康、语音唤醒、skills.bins）
+- `event`：节点信号（语音转录、代理请求、聊天订阅、执行生命周期）
 
-Gateway(网关) → 客户端：
+Gateway → 客户端：
 
-- `invoke` / `invoke-res`: 节点命令 (`canvas.*`, `camera.*`, `screen.record`,
-  `location.get`, `sms.send`)
-- `event`: 已订阅会话的聊天更新
-- `ping` / `pong`: 保活
+- `invoke` / `invoke-res`：节点命令（`canvas.*`、`camera.*`、`screen.record`、
+  `location.get`、`sms.send`）
+- `event`：已订阅会话的聊天更新
+- `ping` / `pong`：保活
 
-旧版允许列表强制执行位于 `src/gateway/server-bridge.ts`（已移除）中。
+旧版允许列表执行存在于 `src/gateway/server-bridge.ts` 中（已移除）。
 
-## 执行生命周期事件
+## Exec 生命周期事件
 
 节点可以发出 `exec.finished` 或 `exec.denied` 事件以展示 system.run 活动。
-这些事件会在网关中映射到系统事件。（旧版节点可能仍会发出 `exec.started`。）
+这些事件会被映射到 Gateway(网关)中的系统事件。（旧版节点可能仍会发出 `exec.started`。）
 
-Payload 字段（除非另有说明，均为可选）：
+有效载荷字段（除非另有说明，否则均为可选）：
 
-- `sessionKey`（必需）：接收系统事件的代理会话。
-- `runId`：用于分组的唯一执行 ID。
+- `sessionKey`（必需）：接收系统事件的 agent 会话。
+- `runId`：用于分组的唯一 exec id。
 - `command`：原始或格式化的命令字符串。
-- `exitCode`, `timedOut`, `success`, `output`：完成详细信息（仅限已完成）。
+- `exitCode`、`timedOut`、`success`、`output`：完成详细信息（仅限已完成）。
 - `reason`：拒绝原因（仅限已拒绝）。
 
-## 历史 tailnet 使用情况
+## 历史 tailnet 用法
 
-- 将桥接绑定到 tailnet IP：`bridge.bind: "tailnet"` 于
-  `~/.openclaw/openclaw.json` 中（仅限历史用途；`bridge.*` 不再有效）。
-- 客户端通过 MagicDNS 名称或 Tailnet IP 进行连接。
-- Bonjour **不**跨网络工作；需要时请使用手动主机/端口或广域 DNS‑SD
-  。
+- 将 bridge 绑定到 tailnet IP：`bridge.bind: "tailnet"` 位于
+  `~/.openclaw/openclaw.json` 中（仅限历史记录；`bridge.*` 不再有效）。
+- 客户端通过 MagicDNS 名称或 tailnet IP 进行连接。
+- Bonjour **不**跨越网络；如有需要，请使用手动主机/端口或广域 DNS‑SD。
 
 ## 版本控制
 
-该桥接是 **隐式 v1**（无最小/最大协商）。本节仅作
-历史参考；当前的节点/操作员客户端使用 WebSocket
-[Gateway(网关) Protocol](/zh/gateway/protocol)。
+该 bridge 为 **隐式 v1**（无最小/最大协商）。本节仅供参考；当前的节点/操作员客户端使用 WebSocket
+[Gateway(网关) 协议](/zh/gateway/protocol)。
+
+## 相关
+
+- [Gateway(网关) 协议](/zh/gateway/protocol)
+- [节点](/zh/nodes)

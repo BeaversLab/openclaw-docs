@@ -6,11 +6,9 @@ read_when:
 title: "Tailscale"
 ---
 
-# Tailscale (tableau de bord du Gateway)
-
 OpenClaw peut configurer automatiquement Tailscale **Serve** (tailnet) ou **Funnel** (public) pour le
-tableau de bord du Gateway et le port WebSocket. Cela permet de garder le Gateway lié au boucle local (loopback) tandis que
-Tailscale fournit le HTTPS, le routage et (pour Serve) les en-têtes d'identité.
+tableau de bord du Gateway et le port WebSocket. Cela maintient le Gateway lié au bouclage local (loopback) tandis que
+Tailscale fournit HTTPS, le routage et (pour Serve) les en-têtes d'identité.
 
 ## Modes
 
@@ -18,30 +16,40 @@ Tailscale fournit le HTTPS, le routage et (pour Serve) les en-têtes d'identité
 - `funnel` : HTTPS public via `tailscale funnel`. OpenClaw nécessite un mot de passe partagé.
 - `off` : Par défaut (pas d'automatisation Tailscale).
 
+Le statut et la sortie d'audit utilisent l'**exposition Tailscale** pour ce mode Serve/Funnel
+OpenClaw. `off` signifie que OpenClaw ne gère pas Serve ou Funnel ; cela ne signifie pas que
+le démon local Tailscale est arrêté ou déconnecté.
+
 ## Auth
 
-Définissez `gateway.auth.mode` pour contrôler la poignée de main :
+Définissez `gateway.auth.mode` pour contrôler la négociation (handshake) :
 
-- `none` (ingrès privé uniquement)
+- `none` (entrée privée uniquement)
 - `token` (par défaut lorsque `OPENCLAW_GATEWAY_TOKEN` est défini)
-- `password` (secret partagé via `OPENCLAW_GATEWAY_PASSWORD` ou configuration)
-- `trusted-proxy` (proxy inverse conscient de l'identité ; voir [Authentification de proxy de confiance](/fr/gateway/trusted-proxy-auth))
+- `password` (secret partagé via `OPENCLAW_GATEWAY_PASSWORD` ou la configuration)
+- `trusted-proxy` (proxy inverse conscient de l'identité ; voir [Trusted Proxy Auth](/fr/gateway/trusted-proxy-auth))
 
 Lorsque `tailscale.mode = "serve"` et que `gateway.auth.allowTailscale` est `true`,
 l'authentification de l'interface de contrôle/WebSocket peut utiliser les en-têtes d'identité Tailscale
 (`tailscale-user-login`) sans fournir de jeton/mot de passe. OpenClaw vérifie
 l'identité en résolvant l'adresse `x-forwarded-for` via le démon local Tailscale
-(`tailscale whois`) et en la faisant correspondre à l'en-tête avant de l'accepter.
+(`tailscale whois`) et en la correspondant à l'en-tête avant de l'accepter.
 OpenClaw ne traite une requête comme Serve que lorsqu'elle provient du bouclage local avec
-les en-têtes `x-forwarded-for`, `x-forwarded-proto` et `x-forwarded-host` de Tailscale.
+les en-têtes `x-forwarded-for`, `x-forwarded-proto` et `x-forwarded-host`
+de Tailscale.
+Pour les sessions opérateur de l'interface de contrôle qui incluent l'identité de l'appareil du navigateur, ce
+chemin Serve vérifié évite également l'aller-retour pour le couplage de l'appareil. Cela ne contourne pas
+l'identité de l'appareil du navigateur : les clients sans appareil sont toujours rejetés, et les connexions
+WebSocket de rôle de nœud ou hors interface de contrôle suivent toujours les vérifications de couplage et
+d'authentification normales.
 Les points de terminaison de l'API HTTP (par exemple `/v1/*`, `/tools/invoke` et `/api/channels/*`)
-n'utilisent **pas** l'authentification par en-tête d'identité Tailscale. Ils suivent toujours le mode
-d'authentification HTTP normal de la passerelle : authentification par secret partagé par défaut, ou une configuration
-intentionnelle de proxy de confiance / ingrès privé `none`.
-Ce flux sans jeton suppose que l'hôte de la passerelle est fiable. Si du code local non fiable
+n'utilisent **pas** l'authentification par en-tête d'identité Tailscale. Ils suivent toujours le mode d'authentification
+HTTP normal de la passerelle : authentification par secret partagé par défaut, ou une configuration
+intentionnelle de proxy de confiance / accès privé `none`.
+Ce flux sans jeton suppose que l'hôte de la passerelle est de confiance. Si du code local non fiable
 peut s'exécuter sur le même hôte, désactivez `gateway.auth.allowTailscale` et exigez
 plutôt une authentification par jeton/mot de passe.
-Pour exiger des identifiants explicites par secret partagé, définissez `gateway.auth.allowTailscale: false`
+Pour exiger des identifiants explicites de secret partagé, définissez `gateway.auth.allowTailscale: false`
 et utilisez `gateway.auth.mode: "token"` ou `"password"`.
 
 ## Exemples de configuration
@@ -57,7 +65,7 @@ et utilisez `gateway.auth.mode: "token"` ou `"password"`.
 }
 ```
 
-Ouvrir : `https://<magicdns>/` (ou votre `gateway.controlUi.basePath` configuré)
+Open : `https://<magicdns>/` (ou votre `gateway.controlUi.basePath` configuré)
 
 ### Tailnet uniquement (lier à l'IP Tailnet)
 
@@ -77,7 +85,7 @@ Se connecter depuis un autre appareil Tailnet :
 - Interface de contrôle : `http://<tailscale-ip>:18789/`
 - WebSocket : `ws://<tailscale-ip>:18789`
 
-Remarque : le bouclage local (`http://127.0.0.1:18789`) ne fonctionnera **pas** dans ce mode.
+<Note>Le bouclage local (`http://127.0.0.1:18789`) ne fonctionnera **pas** dans ce mode.</Note>
 
 ### Internet public (Funnel + mot de passe partagé)
 
@@ -91,7 +99,7 @@ Remarque : le bouclage local (`http://127.0.0.1:18789`) ne fonctionnera **pas** 
 }
 ```
 
-Préférez `OPENCLAW_GATEWAY_PASSWORD` plutôt que de valider un mot de passe sur le disque.
+Privilégiez `OPENCLAW_GATEWAY_PASSWORD` plutôt que de stocker un mot de passe sur le disque.
 
 ## Exemples CLI
 
@@ -102,12 +110,12 @@ openclaw gateway --tailscale funnel --auth password
 
 ## Notes
 
-- Le Serve/Funnel de Tailscale nécessite que l'`tailscale` CLI soit installé et connecté.
-- `tailscale.mode: "funnel"` refuse de démarrer sauf si le mode d'authentification est `password` pour éviter une exposition publique.
-- Définissez `gateway.tailscale.resetOnExit` si vous souhaitez que OpenClaw annule la configuration `tailscale serve`
+- Le Tailscale Serve/Funnel nécessite que le CLI `tailscale` soit installé et connecté.
+- `tailscale.mode: "funnel"` refuse de démarrer sauf si le mode d'authentification est `password` afin d'éviter une exposition publique.
+- Définissez `gateway.tailscale.resetOnExit` si vous souhaitez qu'OpenClaw annule la configuration `tailscale serve`
   ou `tailscale funnel` à l'arrêt.
 - `gateway.bind: "tailnet"` est une liaison directe au Tailnet (pas de HTTPS, pas de Serve/Funnel).
-- `gateway.bind: "auto"` préfère le bouclage local (loopback) ; utilisez `tailnet` si vous voulez un accès Tailnet uniquement.
+- `gateway.bind: "auto"` préfère le bouclage local (loopback) ; utilisez `tailnet` si vous souhaitez un accès Tailnet uniquement.
 - Serve/Funnel expose uniquement l'**interface de contrôle Gateway + WS**. Les nœuds se connectent via
   le même point de terminaison WS Gateway, donc Serve peut fonctionner pour l'accès aux nœuds.
 
@@ -133,3 +141,9 @@ Le Gateway fera transiter les actions du navigateur vers le nœud ; aucun serveu
 - Commande `tailscale serve` : [https://tailscale.com/kb/1242/tailscale-serve](https://tailscale.com/kb/1242/tailscale-serve)
 - Aperçu de Tailscale Funnel : [https://tailscale.com/kb/1223/tailscale-funnel](https://tailscale.com/kb/1223/tailscale-funnel)
 - Commande `tailscale funnel` : [https://tailscale.com/kb/1311/tailscale-funnel](https://tailscale.com/kb/1311/tailscale-funnel)
+
+## Connexes
+
+- [Accès à distance](/fr/gateway/remote)
+- [Discovery](/fr/gateway/discovery)
+- [Authentification](/fr/gateway/authentication)

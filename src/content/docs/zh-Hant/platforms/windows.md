@@ -7,60 +7,58 @@ read_when:
 title: "Windows"
 ---
 
-# Windows
+OpenClaw 同時支援 **原生 Windows** 和 **WSL2**。WSL2 是較穩定的路徑，且為獲得完整體驗的推薦選項 — CLI、Gateway 和工具均在 Linux 內執行，具備完整相容性。原生 Windows 適用於核心 CLI 和 Gateway 使用，但有一些下方註明的注意事項。
 
-OpenClaw 支援 **原生 Windows** 和 **WSL2**。WSL2 是更穩定的路徑，建議用於完整體驗 — CLI、Gateway 和工具在 Linux 內部執行，具有完全相容性。原生 Windows 適用於核心 CLI 和 Gateway 使用，但有一些注意事項如下所述。
+原生 Windows 的伴隨應用程式已列在計畫中。
 
-原生 Windows 伴隨應用程式已在規劃中。
+## WSL2 (推薦)
 
-## WSL2 (建議)
-
-- [快速入門](/zh-Hant/start/getting-started) (於 WSL 內使用)
+- [快速入門](/zh-Hant/start/getting-started) (在 WSL 內使用)
 - [安裝與更新](/zh-Hant/install/updating)
-- 官方 WSL2 指南 (Microsoft)：[https://learn.microsoft.com/windows/wsl/install](https://learn.microsoft.com/windows/wsl/install)
+- 官方 WSL2 指南 (Microsoft): [https://learn.microsoft.com/windows/wsl/install](https://learn.microsoft.com/windows/wsl/install)
 
 ## 原生 Windows 狀態
 
-原生 Windows CLI 流程正在改善，但 WSL2 仍然是建議的路徑。
+原生 Windows CLI 流程正在改善中，但 WSL2 仍然是推薦的路徑。
 
-目前原生 Windows 上運作良好的功能：
+目前在原生 Windows 上運作良好的項目：
 
-- 透過 `install.ps1` 的網站安裝程式
+- 透過 `install.ps1` 進行網站安裝程式安裝
 - 本機 CLI 使用，例如 `openclaw --version`、`openclaw doctor` 和 `openclaw plugins list --json`
-- 嵌入式本機代理程式/提供者測試例如：
+- 嵌入式本機代理/提供者測試，例如：
 
 ```powershell
 openclaw agent --local --agent main --thinking low -m "Reply with exactly WINDOWS-HATCH-OK."
 ```
 
-當前注意事項：
+目前的注意事項：
 
-- `openclaw onboard --non-interactive` 仍然預期一個可連線的本機 gateway，除非您傳遞 `--skip-health`
-- `openclaw onboard --non-interactive --install-daemon` 和 `openclaw gateway install` 會先嘗試 Windows 排定的工作
-- 如果工作排程器建立被拒絕，OpenClaw 會退回到個別使用者的啟動資料夾登入項目，並立即啟動 gateway
-- 如果 `schtasks` 本身卡住或停止回應，OpenClaw 現在會快速中止該路徑並改用備援方案，而不是永遠停滯
-- 當可用時，工作排程器仍然是首選，因為它們提供更好的監督者狀態
+- `openclaw onboard --non-interactive` 仍然預期可連線的本機 gateway，除非您傳入 `--skip-health`
+- `openclaw onboard --non-interactive --install-daemon` 和 `openclaw gateway install` 會優先嘗試 Windows 排定的工作
+- 如果建立排定的工作被拒絕，OpenClaw 會改用每個使用者的啟動資料夾登入項目，並立即啟動 gateway
+- 如果 `schtasks` 本身卡住或停止回應，OpenClaw 現在會快速中止該路徑並改用備案，而不是永遠掛起
+- 當可使用時，排定的工作仍然較受偏好，因為它們能提供更好的監督者狀態
 
-如果您只想要原生 CLI，而不安裝 gateway 服務，請使用以下其中之一：
+如果您只想要原生 CLI，而不安裝 gateway 服務，請使用下列其中一項：
 
 ```powershell
 openclaw onboard --non-interactive --skip-health
 openclaw gateway run
 ```
 
-如果您確實想要原生 Windows 上的管理啟動：
+如果您確實想要在原生 Windows 上進行管理的啟動：
 
 ```powershell
 openclaw gateway install
 openclaw gateway status --json
 ```
 
-如果工作排程器建立被封鎖，退回服務模式仍會透過目前使用者的啟動資料夾在登入後自動啟動。
+如果建立排定的工作被封鎖，備用服務模式仍會透過目前使用者的啟動資料夾在登入後自動啟動。
 
 ## Gateway
 
-- [Gateway 操作手冊](/zh-Hant/gateway)
-- [組態設定](/zh-Hant/gateway/configuration)
+- [Gateway 執行手冊](/zh-Hant/gateway)
+- [組態](/zh-Hant/gateway/configuration)
 
 ## Gateway 服務安裝 (CLI)
 
@@ -70,7 +68,7 @@ openclaw gateway status --json
 openclaw onboard --install-daemon
 ```
 
-或者：
+或：
 
 ```
 openclaw gateway install
@@ -82,7 +80,7 @@ openclaw gateway install
 openclaw configure
 ```
 
-出現提示時，選擇 **Gateway service**。
+當系統提示時，選取 **Gateway 服務**。
 
 修復/遷移：
 
@@ -90,13 +88,13 @@ openclaw configure
 openclaw doctor
 ```
 
-## Windows 登入前自動啟動 Gateway
+## Gateway 在 Windows 登入前自動啟動
 
-對於無介面設置，請確保即使沒有人登入 Windows，完整的啟動鏈也能運行。
+對於無頭式 (headless) 設定，請確保完整的啟動鏈即使沒有人登入 Windows 也會執行。
 
-### 1) 保持使用者服務在未登入時運行
+### 1) 保持使用者服務在未登入時執行
 
-在 WSL 內部：
+在 WSL 內：
 
 ```bash
 sudo loginctl enable-linger "$(whoami)"
@@ -104,21 +102,21 @@ sudo loginctl enable-linger "$(whoami)"
 
 ### 2) 安裝 OpenClaw gateway 使用者服務
 
-在 WSL 內部：
+在 WSL 中：
 
 ```bash
 openclaw gateway install
 ```
 
-### 3) 在 Windows 開機時自動啟動 WSL
+### 3) 在 Windows 啟動時自動啟動 WSL
 
-以系統管理員身分在 PowerShell 中：
+在系統管理員身分的 PowerShell 中：
 
 ```powershell
 schtasks /create /tn "WSL Boot" /tr "wsl.exe -d Ubuntu --exec /bin/true" /sc onstart /ru SYSTEM
 ```
 
-將 `Ubuntu` 取換為您的發行版本名稱，來自：
+將 `Ubuntu` 替換為您從中取得的發行版本名稱：
 
 ```powershell
 wsl --list --verbose
@@ -126,20 +124,21 @@ wsl --list --verbose
 
 ### 驗證啟動鏈
 
-重新開機後（在 Windows 登入前），從 WSL 檢查：
+重新啟動後（在 Windows 登入前），從 WSL 檢查：
 
 ```bash
 systemctl --user is-enabled openclaw-gateway.service
 systemctl --user status openclaw-gateway.service --no-pager
 ```
 
-## 進階：透過 LAN 暴露 WSL 服務 (portproxy)
+## 進階：透過 LAN (portproxy) 對外暴露 WSL 服務
 
-WSL 擁有自己的虛擬網路。如果另一台機器需要連線到在 **WSL 內部** 執行的服務
-（SSH、本地 TTS 伺服器或 Gateway），您必須將 Windows 埠轉發到目前的 WSL IP。WSL IP 會在重啟後變更，
+WSL 擁有自己的虛擬網路。如果另一台機器需要連接到運作於 **WSL 內部** 的服務
+（SSH、本地 TTS 伺服器或 Gateway），您必須
+將 Windows 連接埠轉發到目前的 WSL IP。WSL IP 會在重新啟動後改變，
 因此您可能需要重新整理轉發規則。
 
-範例（以 **系統管理員** 身分執行 PowerShell）：
+範例（以**系統管理員**身分執行 PowerShell）：
 
 ```powershell
 $Distro = "Ubuntu-24.04"
@@ -153,14 +152,14 @@ netsh interface portproxy add v4tov4 listenaddress=0.0.0.0 listenport=$ListenPor
   connectaddress=$WslIp connectport=$TargetPort
 ```
 
-允許埠通過 Windows 防火牆（一次性）：
+在 Windows 防火牆中允許該連接埠（僅需一次）：
 
 ```powershell
 New-NetFirewallRule -DisplayName "WSL SSH $ListenPort" -Direction Inbound `
   -Protocol TCP -LocalPort $ListenPort -Action Allow
 ```
 
-WSL 重啟後重新整理 portproxy：
+在 WSL 重新啟動後重新整理 portproxy：
 
 ```powershell
 netsh interface portproxy delete v4tov4 listenport=$ListenPort listenaddress=0.0.0.0 | Out-Null
@@ -170,18 +169,17 @@ netsh interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.
 
 備註：
 
-- 從另一台機器進行 SSH 是以 **Windows 主機 IP** 為目標 (例如：`ssh user@windows-host -p 2222`)。
-- 遠端節點必須指向一個**可連線** 的 Gateway URL (而非 `127.0.0.1`)；請使用
+- 從另一台機器進行 SSH 的目標是 **Windows 主機 IP**（例如：`ssh user@windows-host -p 2222`）。
+- 遠端節點必須指向 **可連線** 的 Gateway URL（而非 `127.0.0.1`）；請使用
   `openclaw status --all` 進行確認。
-- 請使用 `listenaddress=0.0.0.0` 進行區域網路存取；`127.0.0.1` 則將其保持僅限本機。
-- 如果您希望自動執行此操作，請註冊一個排程任務以在登入時執行重新整理
-  步驟。
+- 使用 `listenaddress=0.0.0.0` 進行 LAN 存取；`127.0.0.1` 則將其保持在本地。
+- 如果您希望自動完成此操作，請註冊一個排定的工作，以便在登�入時執行重新整理步驟。
 
 ## WSL2 逐步安裝
 
 ### 1) 安裝 WSL2 + Ubuntu
 
-開啟 PowerShell (系統管理員)：
+開啟 PowerShell（系統管理員）：
 
 ```powershell
 wsl --install
@@ -190,7 +188,7 @@ wsl --list --online
 wsl --install -d Ubuntu-24.04
 ```
 
-如果 Windows 要求，請重新開機。
+如果 Windows 要求，請重新啟動。
 
 ### 2) 啟用 systemd（安裝 gateway 所需）
 
@@ -203,7 +201,7 @@ systemd=true
 EOF
 ```
 
-然後從 PowerShell：
+然後從 PowerShell 執行：
 
 ```powershell
 wsl --shutdown
@@ -215,9 +213,9 @@ wsl --shutdown
 systemctl --user status
 ```
 
-### 3) 安裝 OpenClaw（在 WSL 內）
+### 3) 安裝 OpenClaw（在 WSL 中）
 
-若要在 WSL 內進行一般的首次設定，請依照 Linux 的快速入門流程：
+若要在 WSL 中進行一般的首次設定，請依照 Linux 入門流程操作：
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -228,8 +226,8 @@ pnpm ui:build
 pnpm openclaw onboard --install-daemon
 ```
 
-如果您是從原始碼進行開發，而不是進行首次入門，請使用
-來自 [設定](/zh-Hant/start/setup) 的原始碼開發迴圈：
+如果您是從原始碼進行開發，而不是進行首次入門，請使用來自 [Setup](/zh-Hant/start/setup) 的
+來源開發迴圈：
 
 ```bash
 pnpm install
@@ -238,8 +236,13 @@ pnpm openclaw setup
 pnpm gateway:watch
 ```
 
-完整指南：[快速入門](/zh-Hant/start/getting-started)
+完整指南：[Getting Started](/zh-Hant/start/getting-started)
 
 ## Windows 伴隨應用程式
 
-我們尚未推出 Windows 伴隨應用程式。如果您希望促成此事，歡迎貢獻。
+我們尚未推出 Windows 伴隨應用程式。如果您希望透過貢獻促成此事，我們歡迎貢獻。
+
+## 相關
+
+- [安裝概覽](/zh-Hant/install)
+- [平台](/zh-Hant/platforms)

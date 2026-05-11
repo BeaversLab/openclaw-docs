@@ -6,9 +6,7 @@ read_when:
 title: "Réactions"
 ---
 
-# Réactions
-
-L'agent peut ajouter et supprimer des réactions emoji sur les messages à l'aide de l'outil `message` avec l'action `react`. Le comportement des réactions varie selon le channel.
+L'agent peut ajouter et supprimer des réactions emoji sur les messages à l'aide de l'`message` avec l'action `react`. Le comportement des réactions varie selon le channel.
 
 ## Fonctionnement
 
@@ -22,23 +20,23 @@ L'agent peut ajouter et supprimer des réactions emoji sur les messages à l'aid
 
 - `emoji` est requis lors de l'ajout d'une réaction.
 - Définissez `emoji` sur une chaîne vide (`""`) pour supprimer la ou les réactions du bot.
-- Définissez `remove: true` pour supprimer un emoji spécifique (nécessite un `emoji` non vide).
+- Définissez `remove: true` pour supprimer un emoji spécifique (requiert `emoji` non vide).
 
-## Comportement du canal
+## Comportement du channel
 
 <AccordionGroup>
   <Accordion title="Discord et Slack">
-    - Un `emoji` vide supprime toutes les réactions du bot sur le message.
+    - `emoji` vide supprime toutes les réactions du bot sur le message.
     - `remove: true` supprime uniquement l'emoji spécifié.
   </Accordion>
 
-<Accordion title="Google Chat">- Un `emoji` vide supprime les réactions de l'application sur le message. - `remove: true` supprime uniquement l'emoji spécifié.</Accordion>
+<Accordion title="Google Chat">- `emoji` vide supprime les réactions de l'application sur le message. - `remove: true` supprime uniquement l'emoji spécifié.</Accordion>
 
-<Accordion title="Telegram">- Un `emoji` vide supprime les réactions du bot. - `remove: true` supprime également les réactions mais nécessite toujours un `emoji` non vide pour la validation de l'outil.</Accordion>
+<Accordion title="Telegram">- `emoji` vide supprime les réactions du bot. - `remove: true` supprime également les réactions mais nécessite tout de même un `emoji` non vide pour la validation de l'outil.</Accordion>
 
-<Accordion title="WhatsApp">- Un `emoji` vide supprime la réaction du bot. - `remove: true` correspond en interne à un emoji vide (nécessite tout de même `emoji` dans l'appel de l'outil).</Accordion>
+<Accordion title="WhatsApp">- `emoji` vide supprime la réaction du bot. - `remove: true` correspond en interne à un emoji vide (nécessite toujours `emoji` dans l'appel de l'outil).</Accordion>
 
-<Accordion title="Zalo Personnel (zalouser)">- Nécessite un `emoji` non vide. - `remove: true` supprime cette réaction emoji spécifique.</Accordion>
+<Accordion title="Zalo Personal (zalouser)">- Nécessite `emoji` non vide. - `remove: true` supprime cette réaction emoji spécifique.</Accordion>
 
 <Accordion title="Feishu/Lark">- Utilisez l'outil `feishu_reaction` avec les actions `add`, `remove` et `list`. - L'ajout/suppression nécessite `emoji_type` ; la suppression nécessite également `reaction_id`.</Accordion>
 
@@ -49,14 +47,14 @@ L'agent peut ajouter et supprimer des réactions emoji sur les messages à l'aid
 
 ## Niveau de réaction
 
-La configuration `reactionLevel` par channel contrôle l'étendue de l'utilisation des réactions par l'agent. Les valeurs sont généralement `off`, `ack`, `minimal` ou `extensive`.
+La configuration `reactionLevel` par canal contrôle l'étendue de l'utilisation des réactions par l'agent. Les valeurs sont généralement `off`, `ack`, `minimal` ou `extensive`.
 
 - [Telegram reactionLevel](/fr/channels/telegram#reaction-notifications) — `channels.telegram.reactionLevel`
 - [WhatsApp reactionLevel](/fr/channels/whatsapp#reaction-level) — `channels.whatsapp.reactionLevel`
 
-Définissez `reactionLevel` sur des channels individuels pour régler la manière dont l'agent réagit activement aux messages sur chaque plateforme.
+Définissez `reactionLevel` sur des canaux individuels pour ajuster la manière dont l'agent réagit activement aux messages sur chaque plateforme.
 
 ## Connexes
 
 - [Agent Send](/fr/tools/agent-send) — l'outil `message` qui inclut `react`
-- [Channels](/fr/channels) — configuration spécifique au channel
+- [Channels](/fr/channels) — configuration spécifique au canal

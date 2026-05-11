@@ -7,11 +7,9 @@ read_when:
 title: "DuckDuckGo 搜索"
 ---
 
-# DuckDuckGo 搜索
+OpenClaw 支持 DuckDuckGo 作为 **免密钥** `web_search` 提供商。不需要 OpenClaw 密钥或帐户。
 
-OpenClaw 支持 DuckDuckGo 作为 **免密钥** 的 `web_search` 提供商。无需 API 密钥或账户。
-
-<Warning>DuckDuckGo 是一个 **实验性的、非官方的** 集成，它从 DuckDuckGo 的非 JavaScript 搜索页面中提取结果 —— 而非官方 API。请预期因机器人挑战页面或 HTML 变更而导致的偶尔中断。</Warning>
+<Warning>DuckDuckGo 是一项 **实验性、非官方** 的集成，它从 DuckDuckGo 的非 JavaScript 搜索页面获取结果 — 而非官方 API。请预期偶尔会由于机器人挑战页面或 HTML 变更导致服务中断。</Warning>
 
 ## 设置
 
@@ -35,7 +33,7 @@ OpenClaw 支持 DuckDuckGo 作为 **免密钥** 的 `web_search` 提供商。无
 }
 ```
 
-用于区域和 SafeSearch 的可选插件级设置：
+插件级别的可选区域和 SafeSearch 设置：
 
 ```json5
 {
@@ -56,28 +54,37 @@ OpenClaw 支持 DuckDuckGo 作为 **免密钥** 的 `web_search` 提供商。无
 
 ## 工具参数
 
-| 参数         | 描述                                                    |
-| ------------ | ------------------------------------------------------- |
-| `query`      | 搜索查询（必需）                                        |
-| `count`      | 返回结果数（1-10，默认：5）                             |
-| `region`     | DuckDuckGo 区域代码（例如 `us-en`, `uk-en`, `de-de`）   |
-| `safeSearch` | SafeSearch 级别：`strict`, `moderate`（默认），或 `off` |
+<ParamField path="query" type="string" required>
+  搜索查询。
+</ParamField>
 
-区域和 SafeSearch 也可以在插件配置中设置（见上文）——工具参数会在每次查询时覆盖配置值。
+<ParamField path="count" type="number" default="5">
+  要返回的结果数（1–10）。
+</ParamField>
+
+<ParamField path="region" type="string">
+  DuckDuckGo 区域代码（例如 `us-en`、`uk-en`、`de-de`）。
+</ParamField>
+
+<ParamField path="safeSearch" type="'strict' | 'moderate' | 'off'" default="moderate">
+  安全搜索级别。
+</ParamField>
+
+区域和安全搜索也可以在插件配置中设置（见上文） — 工具参数会在每次查询时覆盖配置值。
 
 ## 注意事项
 
-- **无 API 密钥** —— 开箱即用，零配置
-- **实验性功能** —— 从 DuckDuckGo 的非 JavaScript HTML 搜索页面收集结果，而非官方 API 或 SDK
-- **机器人验证风险** —— 在重度使用或自动化使用时，DuckDuckGo 可能会显示 CAPTCHA 验证码或阻止请求
-- **HTML 解析** —— 结果取决于页面结构，该结构可能在不另行通知的情况下发生变化
-- **自动检测顺序** —— DuckDuckGo 是自动检测中的第一个免密钥备选方案（顺序 100）。配置了密钥的 API 支持的提供商优先运行，然后是 Ollama Web Search（顺序 110），最后是 SearXNG（顺序 200）
-- **SafeSearch 默认为适度** 未配置时
+- **无 API 密钥** — 开箱即用，零配置
+- **实验性** — 从 DuckDuckGo 的非 JavaScript HTML 搜索页面收集结果，而非官方 API 或 SDK
+- **机器人验证风险** — 在频繁或自动化使用时，DuckDuckGo 可能会提供验证码或阻止请求
+- **HTML 解析** — 结果取决于页面结构，该结构可能会在无通知的情况下发生变化
+- **自动检测顺序** — 在自动检测中，DuckDuckGo 是第一个免密钥回退项（顺序 100）。配置了密钥的 API 支持的提供商会优先运行，然后是 Ollama 网络搜索（顺序 110），接着是 SearXNG（顺序 200）
+- **安全搜索默认为中等级别**（如果未配置）
 
 <Tip>对于生产环境，请考虑使用 [Brave Search](/zh/tools/brave-search)（提供免费层）或其他 API 支持的提供商。</Tip>
 
 ## 相关
 
-- [Web Search 概述](/zh/tools/web) -- 所有提供商和自动检测
-- [Brave Search](/zh/tools/brave-search) -- 带有免费层的结构化结果
-- [Exa Search](/zh/tools/exa-search) -- 带有内容提取的神经搜索
+- [网络搜索概述](/zh/tools/web) -- 所有提供商和自动检测
+- [Brave Search](/zh/tools/brave-search) -- 提供免费层级的结构化结果
+- [Exa Search](/zh/tools/exa-search) -- 带有内容提取功能的神经搜索

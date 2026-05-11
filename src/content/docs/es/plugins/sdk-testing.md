@@ -1,24 +1,22 @@
 ---
-title: "Pruebas de complementos"
+summary: "Utilidades y patrones de prueba para complementos de OpenClaw"
+title: "Prueba de complementos"
 sidebarTitle: "Pruebas"
-summary: "Utilidades y patrones de pruebas para complementos de OpenClaw"
 read_when:
   - You are writing tests for a plugin
   - You need test utilities from the plugin SDK
   - You want to understand contract tests for bundled plugins
 ---
 
-# Pruebas de complementos
-
 Referencia de utilidades de prueba, patrones y aplicación de reglas de lint para complementos de OpenClaw.
 
-<Tip>**¿Buscas ejemplos de pruebas?** Las guías prácticas incluyen ejemplos de pruebas completos: [Pruebas de complementos de canal](/es/plugins/sdk-channel-plugins#step-6-test) y [Pruebas de complementos de proveedor](/es/plugins/sdk-provider-plugins#step-6-test).</Tip>
+<Tip>**¿Buscas ejemplos de pruebas?** Las guías prácticas incluyen ejemplos de pruebas completas: [Pruebas de complementos de canal](/es/plugins/sdk-channel-plugins#step-6-test) y [Pruebas de complementos de proveedor](/es/plugins/sdk-provider-plugins#step-6-test).</Tip>
 
 ## Utilidades de prueba
 
 **Importar:** `openclaw/plugin-sdk/testing`
 
-La subruta de pruebas exporta un conjunto limitado de auxiliares para los autores de complementos:
+La subruta de prueba exporta un conjunto limitado de asistentes para los autores de complementos:
 
 ```typescript
 import { installCommonResolveTargetErrorCases, shouldAckReaction, removeAckReactionAfterReply } from "openclaw/plugin-sdk/testing";
@@ -26,24 +24,23 @@ import { installCommonResolveTargetErrorCases, shouldAckReaction, removeAckReact
 
 ### Exportaciones disponibles
 
-| Exportación                            | Propósito                                                                        |
+| Exportar                               | Propósito                                                                        |
 | -------------------------------------- | -------------------------------------------------------------------------------- |
 | `installCommonResolveTargetErrorCases` | Casos de prueba compartidos para el manejo de errores de resolución de objetivos |
-| `shouldAckReaction`                    | Verificar si un canal debe añadir una reacción de acknowledgment                 |
-| `removeAckReactionAfterReply`          | Eliminar la reacción de acknowledgment después de la entrega de la respuesta     |
+| `shouldAckReaction`                    | Comprueba si un canal debe añadir una reacción de acuse de recibo                |
+| `removeAckReactionAfterReply`          | Eliminar la reacción de acuse de recibo después de la entrega de la respuesta    |
 
 ### Tipos
 
-La subruta de pruebas también reexporta tipos útiles en los archivos de prueba:
+La subruta de prueba también vuelve a exportar tipos útiles en los archivos de prueba:
 
 ```typescript
 import type { ChannelAccountSnapshot, ChannelGatewayContext, OpenClawConfig, PluginRuntime, RuntimeEnv, MockFn } from "openclaw/plugin-sdk/testing";
 ```
 
-## Prueba de la resolución de objetivos
+## Prueba de resolución de objetivos
 
-Usa `installCommonResolveTargetErrorCases` para añadir casos de error estándar para la
-resolución de objetivos del canal:
+Usa `installCommonResolveTargetErrorCases` para añadir casos de error estándar para la resolución de objetivos del canal:
 
 ```typescript
 import { describe } from "vitest";
@@ -65,7 +62,17 @@ describe("my-channel target resolution", () => {
 });
 ```
 
-## Patrones de pruebas
+## Patrones de prueba
+
+### Prueba de contratos de registro
+
+Las pruebas unitarias que pasan un simulacro `api` escrito a mano a `register(api)` no ejercitan las puertas de aceptación del cargador de OpenClaw. Añade al menos una prueba de humo respaldada por el cargador para cada superficie de registro de la que dependa tu complemento, especialmente los ganchos y las capacidades exclusivas como la memoria.
+
+El cargador real falla el registro del complemento cuando faltan los metadatos requeridos o un complemento llama a una API de capacidad que no posee. Por ejemplo, `api.registerHook(...)` requiere un nombre de gancho y `api.registerMemoryCapability(...)` requiere que el manifiesto del complemento o la entrada exportada declare `kind: "memory"`.
+
+### Prueba de acceso a la configuración en tiempo de ejecución
+
+Prefiere el simulacro de tiempo de ejecución de complementos compartido de los asistentes de prueba del repositorio al probar complementos integrados. Sus simuladores obsoletos `runtime.config.loadConfig()` y `runtime.config.writeConfigFile(...)` lanzan errores de forma predeterminada para que las pruebas detecten un nuevo uso de las API de compatibilidad. Anula esos simuladores solo cuando la prueba cubra explícitamente el comportamiento de compatibilidad heredado.
 
 ### Prueba unitaria de un complemento de canal
 
@@ -103,7 +110,7 @@ describe("my-channel plugin", () => {
 });
 ```
 
-### Prueba unitaria de un complemento de proveedor
+### Pruebas unitarias de un plugin de proveedor
 
 ```typescript
 import { describe, it, expect } from "vitest";
@@ -131,9 +138,9 @@ describe("my-provider plugin", () => {
 });
 ```
 
-### Simulación del tiempo de ejecución del complemento
+### Simulación del runtime del plugin
 
-Para el código que usa `createPluginRuntimeStore`, simula el tiempo de ejecución en las pruebas:
+Para el código que usa `createPluginRuntimeStore`, simula el runtime en las pruebas:
 
 ```typescript
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
@@ -151,8 +158,9 @@ const mockRuntime = {
     // ... other mocks
   },
   config: {
-    loadConfig: vi.fn(),
-    writeConfigFile: vi.fn(),
+    current: vi.fn(() => ({}) as const),
+    mutateConfigFile: vi.fn(),
+    replaceConfigFile: vi.fn(),
   },
   // ... other namespaces
 } as unknown as PluginRuntime;
@@ -163,9 +171,9 @@ store.setRuntime(mockRuntime);
 store.clearRuntime();
 ```
 
-### Pruebas con simulaciones por instancia
+### Pruebas con stubs por instancia
 
-Prefiera las simulaciones por instancia sobre la mutación del prototipo:
+Prefiere los stubs por instancia sobre la mutación del prototipo:
 
 ```typescript
 // Preferred: per-instance stub
@@ -176,9 +184,9 @@ client.sendMessage = vi.fn().mockResolvedValue({ id: "msg-1" });
 // MyChannelClient.prototype.sendMessage = vi.fn();
 ```
 
-## Pruebas de contrato (complementos en el repositorio)
+## Pruebas de contrato (plugins en el repositorio)
 
-Los complementos integrados tienen pruebas de contrato que verifican la propiedad del registro:
+Los plugins empaquetados tienen pruebas de contrato que verifican la propiedad del registro:
 
 ```bash
 pnpm test -- src/plugins/contracts/
@@ -186,14 +194,14 @@ pnpm test -- src/plugins/contracts/
 
 Estas pruebas afirman:
 
-- Qué complementos registran qué proveedores
-- Qué complementos registran qué proveedores de voz
+- Qué plugins registran qué proveedores
+- Qué plugins registran qué proveedores de voz
 - Corrección de la forma del registro
-- Cumplimiento del contrato de tiempo de ejecución
+- Cumplimiento del contrato en tiempo de ejecución
 
-### Ejecución de pruebas con ámbito
+### Ejecutar pruebas con ámbito
 
-Para un complemento específico:
+Para un plugin específico:
 
 ```bash
 pnpm test -- <bundled-plugin-root>/my-channel/
@@ -207,19 +215,19 @@ pnpm test -- src/plugins/contracts/auth.contract.test.ts
 pnpm test -- src/plugins/contracts/runtime.contract.test.ts
 ```
 
-## Aplicación de reglas de lint (complementos en el repositorio)
+## Aplicación de reglas Lint (plugins en el repositorio)
 
-Tres reglas son aplicadas por `pnpm check` para los complementos en el repositorio:
+Se aplican tres reglas mediante `pnpm check` para los plugins en el repositorio:
 
 1. **Sin importaciones raíz monolíticas** -- se rechaza el barril raíz `openclaw/plugin-sdk`
-2. **Sin importaciones directas de `src/`** -- los complementos no pueden importar `../../src/` directamente
-3. **No hay autoimportaciones** -- los complementos no pueden importar su propia sub-ruta `plugin-sdk/<name>`
+2. **Sin importaciones directas de `src/`** -- los plugins no pueden importar `../../src/` directamente
+3. **Sin autoimportaciones** -- los plugins no pueden importar su propia subruta `plugin-sdk/<name>`
 
-Los complementos externos no están sujetos a estas reglas de linting, pero se recomienda seguir los mismos patrones.
+Los plugins externos no están sujetos a estas reglas de lint, pero se recomienda seguir los mismos patrones.
 
 ## Configuración de pruebas
 
-OpenClaw usa Vitest con umbrales de cobertura de V8. Para las pruebas de complementos:
+OpenClaw utiliza Vitest con umbrales de cobertura V8. Para las pruebas de plugins:
 
 ```bash
 # Run all tests
@@ -244,6 +252,6 @@ OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test
 ## Relacionado
 
 - [Descripción general del SDK](/es/plugins/sdk-overview) -- convenciones de importación
-- [Complementos de canal del SDK](/es/plugins/sdk-channel-plugins) -- interfaz del complemento de canal
-- [Complementos de proveedor del SDK](/es/plugins/sdk-provider-plugins) -- hooks del complemento de proveedor
-- [Creación de complementos](/es/plugins/building-plugins) -- guía de introducción
+- [Plugins de canal del SDK](/es/plugins/sdk-channel-plugins) -- interfaz del plugin de canal
+- [Plugins de proveedor del SDK](/es/plugins/sdk-provider-plugins) -- hooks del plugin de proveedor
+- [Creación de plugins](/es/plugins/building-plugins) -- guía de inicio

@@ -1,6 +1,6 @@
 ---
-title: "TOOLS.md 模板"
-summary: "TOOLS.md 的工作區模板"
+summary: "TOOLS.md 的工作區範本"
+title: "TOOLS.md 範本"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -45,3 +45,7 @@ read_when:
 ---
 
 新增任何有助於您完成工作的內容。這是您的參考手冊。
+
+## 相關
+
+- [Agent 工作區](/zh-Hant/concepts/agent-workspace)

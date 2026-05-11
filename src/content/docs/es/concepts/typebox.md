@@ -287,3 +287,8 @@ archivo crudo publicado generalmente está disponible en:
    de nodo.
 4. Ejecuta `pnpm protocol:check`.
 5. Confirma el esquema regenerado + los modelos de Swift.
+
+## Relacionado
+
+- [Protocolo de salida enriquecido](/es/reference/rich-output-protocol)
+- [Adaptadores RPC](/es/reference/rpc)

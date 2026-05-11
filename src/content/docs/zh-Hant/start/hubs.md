@@ -5,33 +5,31 @@ read_when:
 title: "文件中心"
 ---
 
-# 文件中心
+<Note>如果您是初次接觸 OpenClaw，請從 [入門指南](/zh-Hant/start/getting-started) 開始。</Note>
 
-<Note>如果您剛接觸 OpenClaw，請從[入門指南](/zh-Hant/start/getting-started)開始。</Note>
-
-使用這些中心探索每一個頁面，包括未出現在左側導航中的深入探討和參考文件。
+使用這些中心來探索每一個頁面，包括左側導航中未顯示的深度剖析和參考文檔。
 
 ## 從這裡開始
 
 - [索引](/zh-Hant/)
 - [入門指南](/zh-Hant/start/getting-started)
-- [入門培訓](/zh-Hant/start/onboarding)
-- [入門培訓 (CLI)](/zh-Hant/start/wizard)
+- [入職](/zh-Hant/start/onboarding)
+- [入職 (CLI)](/zh-Hant/start/wizard)
 - [設定](/zh-Hant/start/setup)
-- [儀表板（本機 Gateway）](http://127.0.0.1:18789/)
+- [儀表板 (本機 Gateway)](http://127.0.0.1:18789/)
 - [說明](/zh-Hant/help)
 - [文件目錄](/zh-Hant/start/docs-directory)
-- [設定](/zh-Hant/gateway/configuration)
-- [設定範例](/zh-Hant/gateway/configuration-examples)
+- [組態](/zh-Hant/gateway/configuration)
+- [組態範例](/zh-Hant/gateway/configuration-examples)
 - [OpenClaw 助理](/zh-Hant/start/openclaw)
 - [展示](/zh-Hant/start/showcase)
 - [背景故事](/zh-Hant/start/lore)
 
-## 安裝與更新
+## 安裝 + 更新
 
 - [Docker](/zh-Hant/install/docker)
 - [Nix](/zh-Hant/install/nix)
-- [更新 / 還原](/zh-Hant/install/updating)
+- [更新 / 回復](/zh-Hant/install/updating)
 - [Bun 工作流程 (實驗性)](/zh-Hant/install/bun)
 
 ## 核心概念
@@ -39,34 +37,34 @@ title: "文件中心"
 - [架構](/zh-Hant/concepts/architecture)
 - [功能](/zh-Hant/concepts/features)
 - [網路中心](/zh-Hant/network)
-- [Agent 執行時期](/zh-Hant/concepts/agent)
-- [Agent 工作區](/zh-Hant/concepts/agent-workspace)
+- [代理運行時](/zh-Hant/concepts/agent)
+- [代理工作區](/zh-Hant/concepts/agent-workspace)
 - [記憶體](/zh-Hant/concepts/memory)
-- [Agent 迴圈](/zh-Hant/concepts/agent-loop)
+- [代理循環](/zh-Hant/concepts/agent-loop)
 - [串流 + 分塊](/zh-Hant/concepts/streaming)
-- [多 Agent 路由](/zh-Hant/concepts/multi-agent)
+- [多代理路由](/zh-Hant/concepts/multi-agent)
 - [壓縮](/zh-Hant/concepts/compaction)
-- [會話](/zh-Hant/concepts/session)
-- [會話修剪](/zh-Hant/concepts/session-pruning)
-- [會話工具](/zh-Hant/concepts/session-tool)
+- [工作階段](/zh-Hant/concepts/session)
+- [工作階段修剪](/zh-Hant/concepts/session-pruning)
+- [工作階段工具](/zh-Hant/concepts/session-tool)
 - [佇列](/zh-Hant/concepts/queue)
 - [斜線指令](/zh-Hant/tools/slash-commands)
 - [RPC 配接器](/zh-Hant/reference/rpc)
 - [TypeBox 綱要](/zh-Hant/concepts/typebox)
 - [時區處理](/zh-Hant/concepts/timezone)
-- [上線狀態](/zh-Hant/concepts/presence)
+- [線上狀態](/zh-Hant/concepts/presence)
 - [探索 + 傳輸](/zh-Hant/gateway/discovery)
 - [Bonjour](/zh-Hant/gateway/bonjour)
-- [通道路由](/zh-Hant/channels/channel-routing)
+- [頻道路由](/zh-Hant/channels/channel-routing)
 - [群組](/zh-Hant/channels/groups)
 - [群組訊息](/zh-Hant/channels/group-messages)
 - [模型故障轉移](/zh-Hant/concepts/model-failover)
 - [OAuth](/zh-Hant/concepts/oauth)
 
-## 供應商 + 通道進入
+## 提供者 + 進入
 
-- [聊天通道中心](/zh-Hant/channels)
-- [模型供應商中心](/zh-Hant/providers/models)
+- [聊天頻道中心](/zh-Hant/channels)
+- [模型提供者中心](/zh-Hant/providers/models)
 - [WhatsApp](/zh-Hant/channels/whatsapp)
 - [Telegram](/zh-Hant/channels/telegram)
 - [Slack](/zh-Hant/channels/slack)
@@ -75,49 +73,49 @@ title: "文件中心"
 - [Signal](/zh-Hant/channels/signal)
 - [BlueBubbles (iMessage)](/zh-Hant/channels/bluebubbles)
 - [QQ 機器人](/zh-Hant/channels/qqbot)
-- [iMessage（舊版）](/zh-Hant/channels/imessage)
+- [iMessage (舊版)](/zh-Hant/channels/imessage)
 - [位置解析](/zh-Hant/channels/location)
 - [WebChat](/zh-Hant/web/webchat)
 - [Webhooks](/zh-Hant/automation/cron-jobs#webhooks)
 - [Gmail Pub/Sub](/zh-Hant/automation/cron-jobs#gmail-pubsub-integration)
 
-## Gateway + 操作
+## 閘道 + 操作
 
-- [Gateway 操作手冊](/zh-Hant/gateway)
+- [閘道手冊](/zh-Hant/gateway)
 - [網路模型](/zh-Hant/gateway/network-model)
-- [Gateway 配對](/zh-Hant/gateway/pairing)
-- [Gateway 鎖定](/zh-Hant/gateway/gateway-lock)
-- [背景處理程序](/zh-Hant/gateway/background-process)
+- [閘道配對](/zh-Hant/gateway/pairing)
+- [閘道鎖](/zh-Hant/gateway/gateway-lock)
+- [背景程序](/zh-Hant/gateway/background-process)
 - [健康狀態](/zh-Hant/gateway/health)
 - [心跳](/zh-Hant/gateway/heartbeat)
-- [診斷工具](/zh-Hant/gateway/doctor)
+- [診斷](/zh-Hant/gateway/doctor)
 - [日誌記錄](/zh-Hant/gateway/logging)
 - [沙盒機制](/zh-Hant/gateway/sandboxing)
 - [儀表板](/zh-Hant/web/dashboard)
 - [控制介面](/zh-Hant/web/control-ui)
 - [遠端存取](/zh-Hant/gateway/remote)
-- [遠端 Gateway 說明](/zh-Hant/gateway/remote-gateway-readme)
+- [遠端閘道說明](/zh-Hant/gateway/remote-gateway-readme)
 - [Tailscale](/zh-Hant/gateway/tailscale)
 - [安全性](/zh-Hant/gateway/security)
-- [疑難排解](/zh-Hant/gateway/troubleshooting)
+- [故障排除](/zh-Hant/gateway/troubleshooting)
 
 ## 工具 + 自動化
 
 - [工具介面](/zh-Hant/tools)
 - [OpenProse](/zh-Hant/prose)
-- [CLI 參考](/zh-Hant/cli)
+- [CLI 參考手冊](/zh-Hant/cli)
 - [Exec 工具](/zh-Hant/tools/exec)
 - [PDF 工具](/zh-Hant/tools/pdf)
 - [提升權限模式](/zh-Hant/tools/elevated)
-- [Cron 排程工作](/zh-Hant/automation/cron-jobs)
+- [Cron 排程任務](/zh-Hant/automation/cron-jobs)
 - [自動化與任務](/zh-Hant/automation)
 - [思考 + 詳細輸出](/zh-Hant/tools/thinking)
 - [模型](/zh-Hant/concepts/models)
-- [子代理程式](/zh-Hant/tools/subagents)
+- [子代理](/zh-Hant/tools/subagents)
 - [Agent send CLI](/zh-Hant/tools/agent-send)
 - [終端機介面](/zh-Hant/web/tui)
 - [瀏覽器控制](/zh-Hant/tools/browser)
-- [瀏覽器（Linux 疑難排解）](/zh-Hant/tools/browser-linux-troubleshooting)
+- [瀏覽器 (Linux 疑難排解)](/zh-Hant/tools/browser-linux-troubleshooting)
 - [投票](/zh-Hant/cli/message)
 
 ## 節點、媒體、語音
@@ -128,7 +126,7 @@ title: "文件中心"
 - [音訊](/zh-Hant/nodes/audio)
 - [位置指令](/zh-Hant/nodes/location-command)
 - [語音喚醒](/zh-Hant/nodes/voicewake)
-- [交談模式](/zh-Hant/nodes/talk)
+- [對話模式](/zh-Hant/nodes/talk)
 
 ## 平台
 
@@ -140,43 +138,44 @@ title: "文件中心"
 - [Linux](/zh-Hant/platforms/linux)
 - [Web 介面](/zh-Hant/web)
 
-## macOS 伴隨應用程式（進階）
+## macOS 伴隨應用程式 (進階)
 
 - [macOS 開發設定](/zh-Hant/platforms/mac/dev-setup)
 - [macOS 選單列](/zh-Hant/platforms/mac/menu-bar)
 - [macOS 語音喚醒](/zh-Hant/platforms/mac/voicewake)
 - [macOS 語音覆蓋層](/zh-Hant/platforms/mac/voice-overlay)
 - [macOS WebChat](/zh-Hant/platforms/mac/webchat)
-- [macOS Canvas](/zh-Hant/platforms/mac/canvas)
+- [macOS 畫布](/zh-Hant/platforms/mac/canvas)
 - [macOS 子行程](/zh-Hant/platforms/mac/child-process)
 - [macOS 健康狀態](/zh-Hant/platforms/mac/health)
 - [macOS 圖示](/zh-Hant/platforms/mac/icon)
 - [macOS 記錄](/zh-Hant/platforms/mac/logging)
 - [macOS 權限](/zh-Hant/platforms/mac/permissions)
 - [macOS 遠端](/zh-Hant/platforms/mac/remote)
-- [macOS 簽署](/zh-Hant/platforms/mac/signing)
-- [macOS 閘道 (launchd)](/zh-Hant/platforms/mac/bundled-gateway)
+- [macOS 簽章](/zh-Hant/platforms/mac/signing)
+- [macOS gateway (launchd)](/zh-Hant/platforms/mac/bundled-gateway)
 - [macOS XPC](/zh-Hant/platforms/mac/xpc)
-- [macOS 技能](/zh-Hant/platforms/mac/skills)
+- [macOS skills](/zh-Hant/platforms/mac/skills)
 - [macOS Peekaboo](/zh-Hant/platforms/mac/peekaboo)
 
-## 外掛程式
+## 外掛
 
-- [外掛程式概覽](/zh-Hant/tools/plugin)
-- [建置外掛程式](/zh-Hant/plugins/building-plugins)
-- [外掛程式清單](/zh-Hant/plugins/manifest)
-- [Agent 工具](/zh-Hant/plugins/building-plugins#registering-agent-tools)
-- [外掛程式套件組合](/zh-Hant/plugins/bundles)
-- [社群外掛程式](/zh-Hant/plugins/community)
+- [外掛概覽](/zh-Hant/tools/plugin)
+- [建置外掛](/zh-Hant/plugins/building-plugins)
+- [外掛 Hook](/zh-Hant/plugins/hooks)
+- [外掛清單](/zh-Hant/plugins/manifest)
+- [代理工具](/zh-Hant/plugins/building-plugins#registering-agent-tools)
+- [外掛套件](/zh-Hant/plugins/bundles)
+- [社群外掛](/zh-Hant/plugins/community)
 - [能力食譜](/zh-Hant/tools/capability-cookbook)
-- [語音通話外掛程式](/zh-Hant/plugins/voice-call)
-- [Zalo 使用者外掛程式](/zh-Hant/plugins/zalouser)
+- [語音通話外掛](/zh-Hant/plugins/voice-call)
+- [Zalo 使用者外掛](/zh-Hant/plugins/zalouser)
 
 ## 工作區 + 範本
 
 - [技能](/zh-Hant/tools/skills)
 - [ClawHub](/zh-Hant/tools/clawhub)
-- [技能配置](/zh-Hant/tools/skills-config)
+- [技能設定](/zh-Hant/tools/skills-config)
 - [預設 AGENTS](/zh-Hant/reference/AGENTS.default)
 - [範本：AGENTS](/zh-Hant/reference/templates/AGENTS)
 - [範本：BOOTSTRAP](/zh-Hant/reference/templates/BOOTSTRAP)
@@ -188,10 +187,14 @@ title: "文件中心"
 
 ## 專案
 
-- [貢獻者](/zh-Hant/reference/credits)
+- [鳴謝](/zh-Hant/reference/credits)
 
 ## 測試 + 發布
 
 - [測試](/zh-Hant/reference/test)
 - [發布政策](/zh-Hant/reference/RELEASING)
 - [裝置型號](/zh-Hant/reference/device-models)
+
+## 相關
+
+- [開始使用](/zh-Hant/start/getting-started)

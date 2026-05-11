@@ -4,7 +4,7 @@ read_when:
   - Setting up OpenClaw on a Raspberry Pi
   - Running OpenClaw on ARM devices
   - Building a cheap always-on personal AI
-title: "Raspberry Pi (Plateforme)"
+title: "Raspberry Pi (plateforme)"
 ---
 
 # OpenClaw sur Raspberry Pi
@@ -109,13 +109,13 @@ sudo sysctl -p
 
 ## 6) Installer OpenClaw
 
-### Option A : Installation standard (Recommandée)
+### Option A : installation standard (recommandée)
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-### Option B : Installation modifiable (Pour le bricolage)
+### Option B : installation modifiable (pour bricolage)
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -411,7 +411,7 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ---
 
-## Voir aussi
+## Connexes
 
 - [guide Linux](/fr/platforms/linux) — configuration Linux générale
 - [guide DigitalOcean](/fr/platforms/digitalocean) — alternative cloud

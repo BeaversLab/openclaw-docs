@@ -3,7 +3,7 @@ summary: "CLI 參考 for `openclaw clawbot` (legacy alias namespace)"
 read_when:
   - You maintain older scripts using `openclaw clawbot ...`
   - You need migration guidance to current commands
-title: "clawbot"
+title: "Clawbot"
 ---
 
 # `openclaw clawbot`
@@ -19,3 +19,7 @@ title: "clawbot"
 建議直接使用現代化的頂層指令：
 
 - `openclaw clawbot qr` -> `openclaw qr`
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)

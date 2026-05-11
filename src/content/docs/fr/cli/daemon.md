@@ -3,7 +3,7 @@ summary: "Référence CLI pour `openclaw daemon` (alias legacy pour la gestion d
 read_when:
   - You still use `openclaw daemon ...` in scripts
   - You need service lifecycle commands (install/start/stop/restart/status)
-title: "daemon"
+title: "Daemon"
 ---
 
 # `openclaw daemon`
@@ -55,3 +55,8 @@ Remarques :
 ## Préférences
 
 Utilisez [`openclaw gateway`](/fr/cli/gateway) pour la documentation et les exemples actuels.
+
+## Connexes
+
+- [CLI référence](/fr/cli)
+- [Gateway runbook](/fr/gateway)

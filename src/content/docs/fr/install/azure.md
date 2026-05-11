@@ -22,7 +22,7 @@ Ce guide configure une Azure Linux VM avec Azure CLI, applique le durcissement d
 ## Ce dont vous avez besoin
 
 - Un abonnement Azure avec l'autorisation de créer des ressources de calcul et réseau
-- Azure CLI installé (voir les [étapes d'installation d'Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) si nécessaire)
+- Azure CLI installée (voir les [étapes d'installation de l'Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) si nécessaire)
 - Une paire de clés SSH (le guide couvre la génération d'une paire si nécessaire)
 - ~20-30 minutes
 
@@ -308,4 +308,10 @@ Cela supprime le groupe de ressources et tout ce qu'il contient (machine virtuel
 - Configurer les canaux de messagerie : [Canaux](/fr/channels)
 - Associer les appareils locaux en tant que nœuds : [Nœuds](/fr/nodes)
 - Configurer le Gateway : [Configuration du Gateway](/fr/gateway/configuration)
-- Pour plus de détails sur le déploiement OpenClaw sur Azure avec le fournisseur de modèles GitHub Copilot : [OpenClaw sur Azure avec GitHub Copilot](https://github.com/johnsonshi/openclaw-azure-github-copilot)
+- Pour plus de détails sur le déploiement Azure OpenClaw avec le fournisseur de modèle Copilot GitHub : [OpenClaw sur Azure avec Copilot GitHub](https://github.com/johnsonshi/openclaw-azure-github-copilot)
+
+## Connexes
+
+- [Vue d'ensemble de l'installation](/fr/install)
+- [GCP](/fr/install/gcp)
+- [DigitalOcean](/fr/install/digitalocean)

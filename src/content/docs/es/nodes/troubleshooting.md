@@ -6,9 +6,7 @@ read_when:
 title: "Solución de problemas de nodos"
 ---
 
-# Solución de problemas de nodos
-
-Use esta página cuando un nodo es visible en el estado, pero las herramientas del nodo fallan.
+Use esta página cuando un nodo sea visible en el estado pero las herramientas del nodo fallen.
 
 ## Escalera de comandos
 
@@ -20,7 +18,7 @@ openclaw doctor
 openclaw channels status --probe
 ```
 
-Luego ejecute verificaciones específicas del nodo:
+A continuación, ejecute comprobaciones específicas del nodo:
 
 ```bash
 openclaw nodes status
@@ -28,11 +26,11 @@ openclaw nodes describe --node <idOrNameOrIp>
 openclaw approvals get --node <idOrNameOrIp>
 ```
 
-Señales saludables:
+Señales de funcionamiento correcto:
 
 - El nodo está conectado y emparejado para el rol `node`.
 - `nodes describe` incluye la capacidad que está llamando.
-- Las aprobaciones de exec muestran el modo/lista blanca esperada.
+- Las aprobaciones de ejecución muestran el modo/lista blanca esperados.
 
 ## Requisitos en primer plano
 
@@ -46,23 +44,23 @@ openclaw nodes canvas snapshot --node <idOrNameOrIp>
 openclaw logs --follow
 ```
 
-Si ve `NODE_BACKGROUND_UNAVAILABLE`, traiga la aplicación del nodo al primer plano y vuelva a intentarlo.
+Si ve `NODE_BACKGROUND_UNAVAILABLE`, traiga la aplicación del nodo al primer plano y reintente.
 
 ## Matriz de permisos
 
-| Capacidad                    | iOS                                          | Android                                                 | Aplicación de nodo macOS                | Código de error típico         |
-| ---------------------------- | -------------------------------------------- | ------------------------------------------------------- | --------------------------------------- | ------------------------------ |
-| `camera.snap`, `camera.clip` | Cámara (+ micrófono para audio de clip)      | Cámara (+ micrófono para audio de clip)                 | Cámara (+ micrófono para audio de clip) | `*_PERMISSION_REQUIRED`        |
-| `screen.record`              | Grabación de pantalla (+ micrófono opcional) | Solicitud de captura de pantalla (+ micrófono opcional) | Grabación de pantalla                   | `*_PERMISSION_REQUIRED`        |
-| `location.get`               | Mientras se usa o siempre (depende del modo) | Ubicación en primer plano/segundo plano según el modo   | Permiso de ubicación                    | `LOCATION_PERMISSION_REQUIRED` |
-| `system.run`                 | n/a (ruta de host del nodo)                  | n/a (ruta de host del nodo)                             | Aprobaciones de exec requeridas         | `SYSTEM_RUN_DENIED`            |
+| Capacidad                    | iOS                                          | Android                                                   | Aplicación de nodo macOS                | Código de error típico         |
+| ---------------------------- | -------------------------------------------- | --------------------------------------------------------- | --------------------------------------- | ------------------------------ |
+| `camera.snap`, `camera.clip` | Cámara (+ micrófono para audio de clip)      | Cámara (+ micrófono para audio de clip)                   | Cámara (+ micrófono para audio de clip) | `*_PERMISSION_REQUIRED`        |
+| `screen.record`              | Grabación de pantalla (+ micrófono opcional) | Solicitud de captura de pantalla (+ micrófono opcional)   | Grabación de pantalla                   | `*_PERMISSION_REQUIRED`        |
+| `location.get`               | Mientras se usa o siempre (depende del modo) | Ubicación en primer plano/segundo plano basada en el modo | Permiso de ubicación                    | `LOCATION_PERMISSION_REQUIRED` |
+| `system.run`                 | n/a (ruta del host del nodo)                 | n/a (ruta de host del nodo)                               | Aprobaciones de ejecución requeridas    | `SYSTEM_RUN_DENIED`            |
 
 ## Emparejamiento frente a aprobaciones
 
-Estos son diferentes obstáculos:
+Estas son diferentes puertas:
 
 1. **Emparejamiento de dispositivos**: ¿puede este nodo conectarse a la puerta de enlace?
-2. **Política de comandos del nodo de puerta de enlace**: ¿está el ID de comando RPC permitido por `gateway.nodes.allowCommands` / `denyCommands` y los valores predeterminados de la plataforma?
+2. **Política de comandos del nodo de puerta de enlace**: ¿está permitido el ID de comando RPC por `gateway.nodes.allowCommands` / `denyCommands` y los valores predeterminados de la plataforma?
 3. **Aprobaciones de ejecución**: ¿puede este nodo ejecutar un comando de shell específico localmente?
 
 Verificaciones rápidas:
@@ -75,28 +73,25 @@ openclaw approvals allowlist add --node <idOrNameOrIp> "/usr/bin/uname"
 ```
 
 Si falta el emparejamiento, apruebe primero el dispositivo del nodo.
-Si a `nodes describe` le falta un comando, verifique la política de comandos del nodo de puerta de enlace y si el nodo declaró realmente ese comando al conectarse.
-Si el emparejamiento está bien pero `system.run` falla, corrija las aprobaciones/listas de permitidos de ejecución en ese nodo.
+Si a `nodes describe` le falta un comando, verifique la política de comandos del nodo de puerta de enlace y si el nodo declaró ese comando al conectarse.
+Si el emparejamiento es correcto pero `system.run` falla, corrija las aprobaciones/listas blancas de ejecución en ese nodo.
 
 El emparejamiento de nodos es una puerta de identidad/confianza, no una superficie de aprobación por comando. Para `system.run`, la política por nodo reside en el archivo de aprobaciones de ejecución de ese nodo (`openclaw approvals get --node ...`), no en el registro de emparejamiento de la puerta de enlace.
 
-Para ejecuciones `host=node` respaldadas por aprobaciones, la puerta de enlace también vincula la ejecución al
-`systemRunPlan` canónico preparado. Si un interlocutor posterior muta el comando/cwd o
-los metadatos de la sesión antes de que se reenvíe la ejecución aprobada, la puerta de enlace rechaza la
-ejecución como una discrepancia de aprobación en lugar de confiar en la carga útil editada.
+Para ejecuciones de `host=node` respaldadas por aprobación, la puerta de enlace también vincula la ejecución al `systemRunPlan` canónico preparado. Si un llamador posterior muta el comando/directorio de trabajo o los metadatos de la sesión antes de que se reenvíe la ejecución aprobada, la puerta de enlace rechaza la ejecución como una discrepancia de aprobación en lugar de confiar en la carga útil editada.
 
 ## Códigos de error comunes de nodos
 
-- `NODE_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano; tráela a primer plano.
-- `CAMERA_DISABLED` → el interruptor de cámara está desactivado en la configuración del nodo.
-- `*_PERMISSION_REQUIRED` → permiso del SO faltante/denegado.
+- `NODE_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano; póngala en primer plano.
+- `CAMERA_DISABLED` → el interruptor de la cámara está deshabilitado en la configuración del nodo.
+- `*_PERMISSION_REQUIRED` → falta o se denegó el permiso del SO.
 - `LOCATION_DISABLED` → el modo de ubicación está desactivado.
-- `LOCATION_PERMISSION_REQUIRED` → modo de ubicación solicitado no otorgado.
-- `LOCATION_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano, pero solo existe el permiso Mientras se usa.
+- `LOCATION_PERMISSION_REQUIRED` → no se otorgó el modo de ubicación solicitado.
+- `LOCATION_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano pero solo existe el permiso "Mientras se usa".
 - `SYSTEM_RUN_DENIED: approval required` → la solicitud de ejecución necesita aprobación explícita.
-- `SYSTEM_RUN_DENIED: allowlist miss` → comando bloqueado por el modo de lista de permitidos.
-  En los hosts de nodos Windows, las formas de envoltorio de shell como `cmd.exe /c ...` se tratan como fallos de lista de permitidos en
-  el modo de lista de permitidos a menos que se aprueben mediante el flujo ask.
+- `SYSTEM_RUN_DENIED: allowlist miss` → comando bloqueado por el modo de lista permitida.
+  En los hosts de nodos de Windows, los formularios de contenedor de shell como `cmd.exe /c ...` se tratan como fallos de la lista permitida en
+  el modo de lista permitida a menos que se aprueben mediante el flujo de solicitud (ask flow).
 
 ## Bucle de recuperación rápida
 
@@ -110,9 +105,9 @@ openclaw logs --follow
 Si sigue atascado:
 
 - Volver a aprobar el emparejamiento del dispositivo.
-- Volver a abrir la aplicación del nodo (primer plano).
+- Volver a abrir la aplicación del nodo (en primer plano).
 - Volver a otorgar permisos del SO.
-- Volver a crear/ajustar la política de aprobación de ejecución.
+- Recrear/ajustar la política de aprobación de ejecución.
 
 Relacionado:
 
@@ -121,3 +116,9 @@ Relacionado:
 - [/nodes/location-command](/es/nodes/location-command)
 - [/tools/exec-approvals](/es/tools/exec-approvals)
 - [/gateway/pairing](/es/gateway/pairing)
+
+## Relacionado
+
+- [Descripción general de nodos](/es/nodes)
+- [Solución de problemas de la puerta de enlace](/es/gateway/troubleshooting)
+- [Solución de problemas de canales](/es/channels/troubleshooting)

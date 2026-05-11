@@ -7,25 +7,23 @@ read_when:
 title: "环境变量"
 ---
 
-# 环境变量
-
-OpenClaw 从多个来源获取环境变量。其原则是**绝不覆盖现有值**。
+OpenClaw 从多个来源获取环境变量。规则是 **绝不覆盖现有值**。
 
 ## 优先级（从高到低）
 
-1. **进程环境**（Gateway(网关) 网关 进程从父 shell/daemon 继承的环境）。
-2. **当前工作目录中的 `.env`**（dotenv 默认值；不覆盖现有值）。
-3. 位于 `~/.openclaw/.env` 的 **全局 `.env`**（又称 `$OPENCLAW_STATE_DIR/.env`；不覆盖现有值）。
-4. `~/.openclaw/openclaw.json` 中的 **配置 `env` 块**（仅在缺失时应用）。
-5. **可选登录 Shell 导入**（`env.shellEnv.enabled` 或 `OPENCLAW_LOAD_SHELL_ENV=1`），仅应用于缺失的预期键名。
+1. **进程环境**（即 Gateway(网关) 进程已从父 shell/daemon 获取的环境）。
+2. **当前工作目录中的 `.env`**（dotenv 默认值；不覆盖）。
+3. 位于 `~/.openclaw/.env` 的 **全局 `.env`**（即 `$OPENCLAW_STATE_DIR/.env`；不覆盖）。
+4. `~/.openclaw/openclaw.json` 中的 **Config `env` 块**（仅在缺失时应用）。
+5. **可选的 login-shell 导入**（`env.shellEnv.enabled` 或 `OPENCLAW_LOAD_SHELL_ENV=1`），仅针对缺失的预期键名应用。
 
-在使用默认状态目录的 Ubuntu 全新安装上，OpenClaw 还将 `~/.config/openclaw/gateway.env` 视为全局 `.env` 之后的兼容性回退项。如果两个文件都存在且不一致，OpenClaw 将保留 `~/.openclaw/.env` 并打印警告。
+在默认状态目录的全新 Ubuntu 安装中，OpenClaw 还将 `~/.config/openclaw/gateway.env` 视为全局 `.env` 之后的兼容性回退项。如果两个文件都存在且内容不一致，OpenClaw 将保留 `~/.openclaw/.env` 并打印警告。
 
-如果配置文件完全缺失，则跳过步骤 4；如果已启用，Shell 导入仍会运行。
+如果完全缺少配置文件，则跳过第 4 步；但如果启用了 shell 导入，它仍会运行。
 
-## 配置 `env` 块
+## Config `env` 块
 
-设置内联环境变量的两种等效方式（两者均不覆盖）：
+设置内联环境变量的两种等效方法（两者均不覆盖）：
 
 ```json5
 {
@@ -38,9 +36,9 @@ OpenClaw 从多个来源获取环境变量。其原则是**绝不覆盖现有值
 }
 ```
 
-## Shell 环境导入
+## Shell 环境变量导入
 
-`env.shellEnv` 运行您的登录 Shell 并仅导入**缺失的**预期键名：
+`env.shellEnv` 运行您的登录 shell 并仅导入**缺失的**预期键名：
 
 ```json5
 {
@@ -53,7 +51,7 @@ OpenClaw 从多个来源获取环境变量。其原则是**绝不覆盖现有值
 }
 ```
 
-环境变量等效项：
+等效的环境变量：
 
 - `OPENCLAW_LOAD_SHELL_ENV=1`
 - `OPENCLAW_SHELL_ENV_TIMEOUT_MS=15000`
@@ -64,10 +62,10 @@ OpenClaw 还会将上下文标记注入到生成的子进程中：
 
 - `OPENCLAW_SHELL=exec`：为通过 `exec` 工具运行的命令设置。
 - `OPENCLAW_SHELL=acp`：为 ACP 运行时后端进程生成设置（例如 `acpx`）。
-- `OPENCLAW_SHELL=acp-client`：为 `openclaw acp client` 生成 ACP 桥接进程时设置。
-- `OPENCLAW_SHELL=tui-local`：为本地 TUI `!` Shell 命令设置。
+- `OPENCLAW_SHELL=acp-client`：为 `openclaw acp client` 生成 ACP 网桥进程时设置。
+- `OPENCLAW_SHELL=tui-local`：为本地 TUI `!` shell 命令设置。
 
-这些是运行时标记（不是必需的用户配置）。它们可以在 Shell/Profile 逻辑中用于应用特定于上下文的规则。
+这些是运行时标记（不是必需的用户配置）。它们可以在 shell/profile 逻辑中用于应用特定于上下文的规则。
 
 ## UI 环境变量
 
@@ -75,7 +73,7 @@ OpenClaw 还会将上下文标记注入到生成的子进程中：
 - `OPENCLAW_THEME=dark`：强制使用深色 TUI 调色板。
 - `COLORFGBG`：如果您的终端导出了它，OpenClaw 将使用背景颜色提示自动选择 TUI 调色板。
 
-## 配置中的环境变量替换
+## Env var substitution in config
 
 您可以使用 `${VAR_NAME}` 语法在配置字符串值中直接引用环境变量：
 
@@ -93,32 +91,32 @@ OpenClaw 还会将上下文标记注入到生成的子进程中：
 
 有关详细信息，请参阅 [Configuration: Env var substitution](/zh/gateway/configuration-reference#env-var-substitution)。
 
-## 机密引用与 `${ENV}` 字符串
+## Secret refs vs `${ENV}` strings
 
 OpenClaw 支持两种由环境驱动的模式：
 
 - 配置值中的 `${VAR}` 字符串替换。
-- 支持机密引用字段的 SecretRef 对象（`{ source: "env", provider: "default", id: "VAR" }`）。
+- SecretRef 对象 (`{ source: "env", provider: "default", id: "VAR" }`)，用于支持机密引用的字段。
 
-两者都在激活时从进程环境中解析。有关 SecretRef 的详细信息，请参阅[机密管理](/zh/gateway/secrets)。
+两者均在激活时从进程环境中解析。SecretRef 的详细信息记录在 [Secrets Management](/zh/gateway/secrets) 中。
 
-## 与环境变量相关的路径
+## Path-related 环境变量
 
-| 变量                   | 用途                                                                                                                     |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `OPENCLAW_HOME`        | 覆盖用于所有内部路径解析（`~/.openclaw/`、代理目录、会话、凭据）的主目录。当以专用服务用户身份运行 OpenClaw 时非常有用。 |
-| `OPENCLAW_STATE_DIR`   | 覆盖状态目录（默认 `~/.openclaw`）。                                                                                     |
-| `OPENCLAW_CONFIG_PATH` | 覆盖配置文件路径（默认 `~/.openclaw/openclaw.json`）。                                                                   |
+| 变量                   | 用途                                                                                                                    |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_HOME`        | 覆盖用于所有内部路径解析的主目录 (`~/.openclaw/`、代理目录、会话、凭证)。在将 OpenClaw 作为专用服务用户运行时非常有用。 |
+| `OPENCLAW_STATE_DIR`   | 覆盖状态目录（默认 `~/.openclaw`）。                                                                                    |
+| `OPENCLAW_CONFIG_PATH` | 覆盖配置文件路径（默认 `~/.openclaw/openclaw.json`）。                                                                  |
 
-## 日志记录
+## Logging
 
 | 变量                 | 用途                                                                                                                                            |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_LOG_LEVEL` | 覆盖文件和控​​制台的日志级别（例如 `debug`、`trace`）。优先级高于配置中的 `logging.level` 和 `logging.consoleLevel`。无效值将被忽略并发出警告。 |
+| `OPENCLAW_LOG_LEVEL` | 覆盖文件和控制台的日志级别（例如 `debug`、`trace`）。优先级高于配置中的 `logging.level` 和 `logging.consoleLevel`。无效的值将被忽略并显示警告。 |
 
 ### `OPENCLAW_HOME`
 
-设置后，`OPENCLAW_HOME` 将替换系统主目录（`$HOME` / `os.homedir()`）用于所有内部路径解析。这为无头服务帐户启用完整的文件系统隔离。
+设置后，`OPENCLAW_HOME` 将替换用于所有内部路径解析的系统主目录 (`$HOME` / `os.homedir()`)。这为无头服务帐户启用了完整的文件系统隔离。
 
 **优先级：** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
 
@@ -132,18 +130,18 @@ OpenClaw 支持两种由环境驱动的模式：
 </dict>
 ```
 
-`OPENCLAW_HOME` 也可以设置为波浪号路径（例如 `~/svc`），该路径在使用前会使用 `$HOME` 进行扩展。
+`OPENCLAW_HOME` 也可以设置为波浪号路径（例如 `~/svc`），该路径会在使用前通过 `$HOME` 进行扩展。
 
-## nvm 用户：web_fetch TLS 失败
+## nvm 用户：web_fetch TLS 故障
 
-如果 Node.js 是通过 **nvm** 安装的（而不是系统包管理器），则内置的 `fetch()` 使用
-nvm 捆绑的 CA 存储，该存储可能缺少现代根 CA（Let's Encrypt 的 ISRG Root X1/X2，
+如果 Node.js 是通过 **nvm** 安装的（而非系统包管理器），则内置的 `fetch()` 会使用
+nvm 自带的 CA 存储，这可能缺少现代根 CA（例如 Let's Encrypt 的 ISRG Root X1/X2、
 DigiCert Global Root G2 等）。这会导致 `web_fetch` 在大多数 HTTPS 站点上因 `"fetch failed"` 而失败。
 
 在 Linux 上，OpenClaw 会自动检测 nvm 并在实际启动环境中应用修复：
 
 - `openclaw gateway install` 将 `NODE_EXTRA_CA_CERTS` 写入 systemd 服务环境
-- 在 Node 启动之前，`openclaw` CLI 入口点会重新执行自身并设置 `NODE_EXTRA_CA_CERTS`
+- `openclaw` CLI 入口点会在 Node 启动前设置 `NODE_EXTRA_CA_CERTS` 并重新执行自身
 
 **手动修复（适用于旧版本或直接 `node ...` 启动）：**
 
@@ -154,7 +152,7 @@ export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
 openclaw gateway run
 ```
 
-不要依赖仅将此变量写入 `~/.openclaw/.env`；Node 在进程启动时读取
+不要仅依赖写入 `~/.openclaw/.env` 来设置此变量；Node 会在进程启动时读取
 `NODE_EXTRA_CA_CERTS`。
 
 ## 相关

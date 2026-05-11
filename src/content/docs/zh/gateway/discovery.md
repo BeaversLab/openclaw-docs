@@ -4,7 +4,7 @@ read_when:
   - Implementing or changing Bonjour discovery/advertising
   - Adjusting remote connection modes (direct vs SSH)
   - Designing node discovery + pairing for remote nodes
-title: "发现与传输"
+title: "设备发现与传输"
 ---
 
 # 发现与传输
@@ -22,9 +22,9 @@ OpenClaw 有两个表面看起来相似但实际上截然不同的问题：
 - **Gateway(网关) 网关 WS（控制平面）**：默认情况下 `127.0.0.1:18789` 上的 WebSocket 端点；可以通过 `gateway.bind` 绑定到局域网/tailnet。
 - **直接 WS 传输**：面向局域网/tailnet 的 Gateway(网关) 网关 WS 端点（无 SSH）。
 - **SSH 传输（备用）**：通过 SSH 转发 `127.0.0.1:18789` 进行远程控制。
-- **Legacy TCP bridge (removed)**: 旧版节点传输（请参阅
-  [Bridge protocol](/zh/gateway/bridge-protocol)); 不再为
-  发现而广播，也不再是当前构建的一部分。
+- **Legacy TCP bridge (removed)**: 较旧的节点传输（参见
+  [Bridge protocol](/zh/gateway/bridge-protocol)）；不再进行
+  设备发现广播，也不再属于当前构建的一部分。
 
 协议详情：
 
@@ -57,7 +57,7 @@ OpenClaw 有两个表面看起来相似但实际上截然不同的问题：
 - **Gateway** 通过 Bonjour 广播其 WS 端点。
 - 客户端浏览并显示“选择一个 Gateway”列表，然后存储所选的端点。
 
-故障排除和信标详细信息：[Bonjour](/zh/gateway/bonjour)。
+故障排除和信标详情：[Bonjour](/zh/gateway/bonjour)。
 
 #### 服务信标详细信息
 
@@ -86,56 +86,65 @@ OpenClaw 有两个表面看起来相似但实际上截然不同的问题：
 禁用/覆盖：
 
 - `OPENCLAW_DISABLE_BONJOUR=1` 禁用广播。
-- `~/.openclaw/openclaw.json` 中的 `gateway.bind` 控制网关的绑定模式。
-- 当发出 `sshPort` 时，`OPENCLAW_SSH_PORT` 会覆盖广播的 SSH 端口。
-- `OPENCLAW_TAILNET_DNS` 会发布 `tailnetDns` 提示（MagicDNS）。
-- `OPENCLAW_CLI_PATH` 会覆盖广播的 CLI 路径。
+- 当未设置 `OPENCLAW_DISABLE_BONJOUR` 时，Bonjour 会在普通主机上进行广播，
+  并在检测到的容器内自动禁用。请仅在主机、macvlan
+  或其他支持 mDNS 的网络上使用 `0`；使用 `1` 强制禁用。
+- `gateway.bind` 中的 `~/.openclaw/openclaw.json` 控制 Gateway(网关) 绑定模式。
+- 当发出 `sshPort` 时，`OPENCLAW_SSH_PORT` 会覆盖通告的 SSH 端口。
+- `OPENCLAW_TAILNET_DNS` 发布 `tailnetDns` 提示 (MagicDNS)。
+- `OPENCLAW_CLI_PATH` 覆盖通告的 CLI 路径。
 
-### 2) Tailnet（跨网络）
+### 2) Tailnet (跨网络)
 
-对于伦敦/维也纳风格的设置，Bonjour 没有帮助。推荐的“直连”目标是：
+对于伦敦/维也纳风格的设置，Bonjour 无济于事。推荐的“直连”目标是：
 
 - Tailscale MagicDNS 名称（首选）或稳定的 tailnet IP。
 
-如果网关检测到它在 Tailscale 下运行，它会发布 `tailnetDns` 作为给客户端的可选提示（包括广域网信标）。
+如果 Gateway(网关) 检测到自己在 Tailscale 下运行，它会发布 `tailnetDns` 作为客户端的可选提示（包括广域信标）。
 
-macOS 应用现在在网关发现时首选 MagicDNS 名称而不是原始的 Tailscale IP。这提高了 tailnet IP 更改时的可靠性（例如节点重启或 CGNAT 重新分配后），因为 MagicDNS 名称会自动解析为当前的 IP。
+macOS 应用现在更喜欢使用 MagicDNS 名称而不是原始的 Tailscale IP 进行 Gateway(网关) 发现。当 tailnet IP 发生变化时（例如在节点重启或 CGNAT 重新分配后），这提高了可靠性，因为 MagicDNS 名称会自动解析为当前 IP。
 
-对于移动节点配对，发现提示不会降低 tailnet/公共路由上的传输安全性：
+对于移动节点配对，设备发现提示不会放宽 tailnet/公共路由上的传输安全性：
 
 - iOS/Android 仍然需要安全的首次 tailnet/公共连接路径（`wss://` 或 Tailscale Serve/Funnel）。
-- 发现的原始 tailnet IP 是一个路由提示，而不是使用纯文本远程 `ws://` 的许可。
-- 私有局域网直连 `ws://` 仍然受支持。
-- 如果您想要移动节点最简单的 Tailscale 路径，请使用 Tailscale Serve，以便发现和设置代码都解析到同一个安全的 MagicDNS 端点。
+- 发现的原始 tailnet IP 是路由提示，而不是使用明文远程 `ws://` 的权限。
+- 私有 LAN 直连 `ws://` 仍然受支持。
+- 如果您想要移动节点最简单的 Tailscale 路径，请使用 Tailscale Serve，这样发现和设置代码都会解析到同一个安全的 MagicDNS 端点。
 
 ### 3) 手动 / SSH 目标
 
-当没有直连路由（或直连被禁用）时，客户端始终可以通过转发环回网关端口通过 SSH 连接。
+当没有直接路由（或者直接连接被禁用）时，客户端可以通过转发环回网关端口始终通过 SSH 连接。
 
-参见 [远程访问](/zh/gateway/remote)。
+请参阅[远程访问](/zh/gateway/remote)。
 
 ## 传输选择（客户端策略）
 
 推荐的客户端行为：
 
-1. 如果已配置并可达配对的直接端点，则使用它。
-2. 否则，如果在 `local.` 或配置的广域域上发现网关，则提供一键“使用此网关”选项，并将其保存为直接端点。
+1. 如果配置了配对的直接端点且可访问，请使用它。
+2. 否则，如果发现在 `local.` 或配置的广域网上有网关，提供一键“使用此网关”的选项并将其保存为直接端点。
 3. 否则，如果配置了 tailnet DNS/IP，请尝试直接连接。
-   对于 tailnet/公共路由上的移动节点，direct 意味着安全端点，而不是明文远程 `ws://`。
+   对于 tailnet/公共路由上的移动节点，直接连接指的是安全端点，而不是纯文本远程 `ws://`。
 4. 否则，回退到 SSH。
 
 ## 配对 + 认证（直接传输）
 
-网关是节点/客户端准入的事实来源。
+网关是节点/客户端准入的单一事实来源。
 
-- 配对请求在网关中创建/批准/拒绝（请参阅 [Gateway(网关) 配对](/zh/gateway/pairing)）。
+- 配对请求在网关中创建/批准/拒绝（请参阅[Gateway(网关) 配对](/zh/gateway/pairing)）。
 - 网关强制执行：
-  - auth（令牌 / 密钥对）
-  - scopes/ACL（网关不是每种方法的原始代理）
+  - 认证（令牌 / 密钥对）
+  - 范围/ACL（网关不是通往每个方法的原始代理）
   - 速率限制
 
-## 按组件划分的职责
+## 各组件职责
 
 - **Gateway(网关)**：发布发现信标，拥有配对决策权，并托管 WS 端点。
-- **macOS 应用**：帮助您选择网关，显示配对提示，并仅将 SSH 作为回退手段使用。
-- **iOS/Android 节点**：浏览 Bonjour 作为便利手段，并连接到配对的 Gateway(网关) WS。
+- **macOS 应用**：帮助您选择网关，显示配对提示，并仅将 SSH 作为备用手段。
+- **iOS/Android 节点**：为了方便起见浏览 Bonjour 并连接到已配对的 Gateway(网关) WS。
+
+## 相关
+
+- [远程访问](/zh/gateway/remote)
+- [Tailscale](/zh/gateway/tailscale)
+- [Bonjour 发现](/zh/gateway/bonjour)

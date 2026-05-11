@@ -6,15 +6,15 @@ read_when:
 title: "设置"
 ---
 
-# 设置
-
-<Note>如果您是首次设置，请从[入门指南](/zh/start/getting-started)开始。 有关新手引导的详细信息，请参阅[新手引导 (CLI)](/zh/start/wizard)。</Note>
+<Note>如果您是首次进行设置，请从[入门指南](/zh/start/getting-started)开始。 有关新手引导的详细信息，请参阅[新手引导 (CLI)](/zh/start/wizard)。</Note>
 
 ## TL;DR
 
-- **个性化配置位于仓库之外：** `~/.openclaw/workspace` (工作区) + `~/.openclaw/openclaw.json` (配置)。
-- **Stable workflow:** install the macOS app; let it run the bundled Gateway(网关).
-- **最新前沿工作流：** 通过 `pnpm gateway:watch` 自己运行 Gateway(网关)，然后让 macOS 应用以本地模式连接。
+根据您希望更新频率以及是否想自行运行 Gateway(网关) 来选择设置工作流：
+
+- **Tailoring lives outside the repo:** 将您的配置和工作区保留在 `~/.openclaw/openclaw.json` 和 `~/.openclaw/workspace/` 中，这样仓库更新不会影响它们。
+- **Stable workflow (recommended for most):** 安装 macOS 应用程序并让它运行捆绑的 Gateway(网关)。
+- **Bleeding edge workflow (dev):** 通过 `pnpm gateway:watch` 自行运行 Gateway(网关)，然后让 macOS 应用程序以本地模式（Local mode）连接。
 
 ## Prereqs (from source)
 

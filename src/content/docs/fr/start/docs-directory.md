@@ -5,42 +5,40 @@ read_when:
 title: "Docs directory"
 ---
 
-# Annuaire de la documentation
-
-<Note>Cette page est un index sélectionné. Si vous êtes nouveau, commencez par [Getting Started](/fr/start/getting-started). Pour une carte complète de la documentation, consultez [Docs hubs](/fr/start/hubs).</Note>
+<Note>Cette page est un index sélectionné. Si vous débutez, commencez par [Getting Started](/fr/start/getting-started). Pour une carte complète de la documentation, voir [Docs hubs](/fr/start/hubs).</Note>
 
 ## Commencer ici
 
-- [Hubs de documentation (toutes les pages liées)](/fr/start/hubs)
+- [Docs hubs (toutes les pages liées)](/fr/start/hubs)
 - [Aide](/fr/help)
 - [Configuration](/fr/gateway/configuration)
 - [Exemples de configuration](/fr/gateway/configuration-examples)
 - [Commandes slash](/fr/tools/slash-commands)
 - [Routage multi-agent](/fr/concepts/multi-agent)
-- [Mise à jour et retour à une version antérieure](/fr/install/updating)
-- [Appairage (DM et nœuds)](/fr/channels/pairing)
+- [Mise à jour et retour en arrière](/fr/install/updating)
+- [Jumelage (DM et nœuds)](/fr/channels/pairing)
 - [Nix mode](/fr/install/nix)
-- [configuration de l'assistant OpenClaw](/fr/start/openclaw)
+- [OpenClaw assistant setup](/fr/start/openclaw)
 - [Skills](/fr/tools/skills)
 - [Config Skills](/fr/tools/skills-config)
 - [Modèles d'espace de travail](/fr/reference/templates/AGENTS)
-- [RPC adaptateurs](/fr/reference/rpc)
+- [RPC adapters](/fr/reference/rpc)
 - [Gateway runbook](/fr/gateway)
 - [Nœuds (iOS et Android)](/fr/nodes)
-- [Surfaces web (interface utilisateur de contrôle)](/fr/web)
-- [Discovery et transports](/fr/gateway/discovery)
+- [Surfaces Web (UI de contrôle)](/fr/web)
+- [Découverte et transports](/fr/gateway/discovery)
 - [Accès à distance](/fr/gateway/remote)
 
 ## Fournisseurs et UX
 
 - [WebChat](/fr/web/webchat)
-- [Contrôle de l'interface utilisateur (navigateur)](/fr/web/control-ui)
+- [UI de contrôle (navigateur)](/fr/web/control-ui)
 - [Telegram](/fr/channels/telegram)
 - [Discord](/fr/channels/discord)
 - [Mattermost](/fr/channels/mattermost)
 - [BlueBubbles (iMessage)](/fr/channels/bluebubbles)
 - [Bot QQ](/fr/channels/qqbot)
-- [iMessage (legacy)](/fr/channels/imessage)
+- [iMessage (ancien)](/fr/channels/imessage)
 - [Groupes](/fr/channels/groups)
 - [Messages de groupe WhatsApp](/fr/channels/group-messages)
 - [Images médias](/fr/nodes/images)
@@ -57,8 +55,13 @@ title: "Docs directory"
 ## Opérations et sécurité
 
 - [Sessions](/fr/concepts/session)
-- [Tâches cron](/fr/automation/cron-jobs)
+- [Tâches planifiées](/fr/automation/cron-jobs)
 - [Webhooks](/fr/automation/cron-jobs#webhooks)
-- [Hooks Gmail (Pub/Sub)](/fr/automation/cron-jobs#gmail-pubsub-integration)
+- [Gmail hooks (Pub/Sub)](/fr/automation/cron-jobs#gmail-pubsub-integration)
 - [Sécurité](/fr/gateway/security)
 - [Dépannage](/fr/gateway/troubleshooting)
+
+## Connexes
+
+- [Getting started](/fr/start/getting-started)
+- [Docs hubs](/fr/start/hubs)

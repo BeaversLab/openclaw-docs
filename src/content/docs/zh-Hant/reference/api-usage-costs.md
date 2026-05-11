@@ -38,7 +38,7 @@ Anthropic 說明：Anthropic 人員告訴我們，OpenClaw 風格的 Claude CLI 
   聊天模型項目，必要時從時間戳記推導視窗標籤，並在方案標籤中包含模型名稱。
 - 那些配額視窗的使用權限驗證來自供應商特定的掛鉤（如果可用）；否則 OpenClaw 會退而求其次，從驗證設定檔、環境變數或設定中匹配 OAuth/API 金鑰憑證。
 
-詳情和範例請參閱 [Token use & costs](/zh-Hant/reference/token-use)。
+詳情與範例請參閱 [Token use & costs](/zh-Hant/reference/token-use)。
 
 ## 如何探索金鑰
 
@@ -61,7 +61,7 @@ OpenClaw 可以從以下位置獲取憑證：
 編碼方案**、**MiniMax 編碼方案**、**Z.AI / GLM 編碼方案**，以及
 Anthropic 的 OpenClaw Claude 登入路徑且已啟用 **額外使用量**。
 
-價格設定請參閱 [Models](/zh-Hant/providers/models)，顯示相關資訊請參閱 [Token use & costs](/zh-Hant/reference/token-use)。
+價格設定請參閱 [Models](/zh-Hant/providers/models)，顯示資訊請參閱 [Token use & costs](/zh-Hant/reference/token-use)。
 
 ### 2) 媒體理解（音訊/圖片/影片）
 
@@ -85,7 +85,7 @@ Anthropic 的 OpenClaw Claude 登入路徑且已啟用 **額外使用量**。
 `qwen/wan2.6-t2v`。
 
 請參閱 [Image generation](/zh-Hant/tools/image-generation)、[Qwen Cloud](/zh-Hant/providers/qwen)
-和 [Models](/zh-Hant/concepts/models)。
+以及 [Models](/zh-Hant/concepts/models)。
 
 ### 4) 記憶嵌入 + 語意搜尋
 
@@ -114,27 +114,27 @@ Anthropic 的 OpenClaw Claude 登入路徑且已啟用 **額外使用量**。
 - **Grok (xAI)**: `XAI_API_KEY` 或 `plugins.entries.xai.config.webSearch.apiKey`
 - **Kimi (Moonshot)**: `KIMI_API_KEY`、`MOONSHOT_API_KEY` 或 `plugins.entries.moonshot.config.webSearch.apiKey`
 - **MiniMax Search**: `MINIMAX_CODE_PLAN_KEY`、`MINIMAX_CODING_API_KEY`、`MINIMAX_API_KEY` 或 `plugins.entries.minimax.config.webSearch.apiKey`
-- **Ollama Web Search**: 預設無需金鑰，但需要可連線的 Ollama 主機以及 `ollama signin`；當主機有要求時，也可以重複使用一般的 Ollama 提供者 bearer auth
-- **Perplexity Search API**: `PERPLEXITY_API_KEY`、`OPENROUTER_API_KEY` 或 `plugins.entries.perplexity.config.webSearch.apiKey`
-- **Tavily**: `TAVILY_API_KEY` 或 `plugins.entries.tavily.config.webSearch.apiKey`
+- **Ollama Web Search**：對於可連線且已登入的本機 Ollama 主機不需要金鑰；直接 `https://ollama.com` 搜尋使用 `OLLAMA_API_KEY`，而有身分驗證保護的主機可以重複使用一般的 Ollama 提供者 bearer auth
+- **Perplexity Search API**：`PERPLEXITY_API_KEY`、`OPENROUTER_API_KEY` 或 `plugins.entries.perplexity.config.webSearch.apiKey`
+- **Tavily**：`TAVILY_API_KEY` 或 `plugins.entries.tavily.config.webSearch.apiKey`
 - **DuckDuckGo**: 無金鑰的備選方案 (無 API 計費，但為非官方且基於 HTML)
-- **SearXNG**: `SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl` （免鑰匙/自託管；無託管 API 計費）
+- **SearXNG**：`SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl` (免金鑰/自託管；無代管 API 計費)
 
-舊版 `tools.web.search.*` 提供者路徑仍透過暫時性相容性墊片載入，但這些路徑不再是建議的設定介面。
+舊版 `tools.web.search.*` 提供者路徑仍會透過暫時性相容性 shim 載入，但它們不再是建議的設定介面。
 
 **Brave Search 免費額度：** 每個 Brave 方案包含每月 5 美元的續期免費額度。Search 方案每 1,000 次請求收費 5 美元，因此該額度可覆蓋每月 1,000 次免費請求。請在 Brave 儀表板中設定使用量上限，以避免意外費用。
 
-請參閱 [Web 工具](/zh-Hant/tools/web)。
+請參閱 [Web tools](/zh-Hant/tools/web)。
 
 ### 5) Web 取用工具 (Firecrawl)
 
-當存在 API 金鑰時，`web_fetch` 可以呼叫 **Firecrawl**：
+當有 API 金鑰時，`web_fetch` 可以呼叫 **Firecrawl**：
 
 - `FIRECRAWL_API_KEY` 或 `plugins.entries.firecrawl.config.webFetch.apiKey`
 
-如果未設定 Firecrawl，該工具會退回至直接取用 + 可讀性處理（無付費 API）。
+如果未設定 Firecrawl，該工具會退回至直接擷取以及內建的 `web-readability` 外掛程式 (無付費 API)。停用 `plugins.entries.web-readability.enabled` 以跳過本機 Readability 擷取。
 
-請參閱 [Web 工具](/zh-Hant/tools/web)。
+請參閱 [Web tools](/zh-Hant/tools/web)。
 
 ### 6) 提供者使用量快照 (狀態/健康狀況)
 
@@ -150,11 +150,12 @@ Anthropic 的 OpenClaw Claude 登入路徑且已啟用 **額外使用量**。
 
 壓縮防護功能可以使用 **目前模型** 摘要工作階段歷史記錄，這會在執行時呼叫提供者 API。
 
-請參閱 [工作階段管理 + 壓縮](/zh-Hant/reference/session-management-compaction)。
+請參閱 [Session management + compaction](/zh-Hant/reference/session-management-compaction)。
 
 ### 8) 模型掃描 / 探測
 
-`openclaw models scan` 可以探測 OpenRouter 模型，並在啟用探測時使用 `OPENROUTER_API_KEY`。
+`openclaw models scan` 可以探測 OpenRouter 模型，並在啟用
+探測時使用 `OPENROUTER_API_KEY`。
 
 請參閱 [Models CLI](/zh-Hant/cli/models)。
 
@@ -164,10 +165,17 @@ Anthropic 的 OpenClaw Claude 登入路徑且已啟用 **額外使用量**。
 
 - `ELEVENLABS_API_KEY` 或 `talk.providers.elevenlabs.apiKey`
 
-請參閱 [語音模式](/zh-Hant/nodes/talk)。
+參閱 [對話模式](/zh-Hant/nodes/talk)。
 
 ### 10) 技能 (第三方 API)
 
-技能可以在 `skills.entries.<name>.apiKey` 中儲存 `apiKey`。如果技能使用該金鑰存取外部 API，可能會根據該技能的提供者產生費用。
+技能可以將 `apiKey` 儲存在 `skills.entries.<name>.apiKey` 中。如果技能使用該金鑰呼叫外部
+API，則可能會根據技能的供應商產生費用。
 
-請參閱 [技能](/zh-Hant/tools/skills)。
+參閱 [技能](/zh-Hant/tools/skills)。
+
+## 相關
+
+- [Token 使用與成本](/zh-Hant/reference/token-use)
+- [提示詞快取](/zh-Hant/reference/prompt-caching)
+- [使用情況追蹤](/zh-Hant/concepts/usage-tracking)

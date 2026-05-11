@@ -1,28 +1,26 @@
 ---
-summary: "社区维护的 OpenClaw 插件：浏览、安装并提交您自己的插件"
+summary: "社区维护的 OpenClaw 插件：浏览、安装和提交您自己的插件"
 read_when:
   - You want to find third-party OpenClaw plugins
   - You want to publish or list your own plugin
 title: "社区插件"
 ---
 
-# 社区插件
+社区插件是第三方包，它们通过新的渠道、工具、提供者或其他功能来扩展 OpenClaw。它们由社区构建和维护，发布在 [ClawHub](/zh/tools/clawhub) 或 npm 上，并且可以通过一条命令进行安装。
 
-社区插件是由社区构建和维护的第三方软件包，它们通过新的渠道、工具、提供商或其他功能扩展 OpenClaw。它们发布在 [ClawHub](/zh/tools/clawhub) 或 npm 上，并且可以通过单个命令安装。
-
-ClawHub 是社区插件的官方发现平台。不要为了仅在此处添加您的插件以增加可见性而仅提交文档相关的 PR；请将其发布到 ClawHub。
+ClawHub 是社区插件的权威发现平台。不要为了在此处提高可见性而仅提交文档相关的 PR；请将其发布到 ClawHub 上。
 
 ```bash
 openclaw plugins install <package-name>
 ```
 
-OpenClaw 会首先检查 ClawHub 并自动回退到 npm。
+OpenClaw 首先检查 ClawHub，然后自动回退到 npm。
 
-## 已列出的插件
+## 列出的插件
 
 ### Apify
 
-使用 20,000 多个现成的爬虫从任何网站抓取数据。让您的智能体从 Instagram、Facebook、TikTok、YouTube、Google 地图、Google 搜索、电子商务网站等提取数据——只需发问即可。
+利用 20,000 多个现成的爬虫从任何网站抓取数据。只需通过简单的指令，即可让您的 Agent 从 Instagram、Facebook、TikTok、YouTube、Google Maps、Google 搜索、电商网站等提取数据。
 
 - **npm:** `@apify/apify-openclaw-plugin`
 - **repo:** [github.com/apify/apify-openclaw-plugin](https://github.com/apify/apify-openclaw-plugin)
@@ -33,7 +31,7 @@ openclaw plugins install @apify/apify-openclaw-plugin
 
 ### Codex App Server Bridge
 
-用于 Codex App Server 对话的独立 OpenClaw 网桥。将聊天绑定到 Codex 线程，使用纯文本与其对话，并使用聊天原生命令控制它，以进行恢复、规划、审查、模型选择、压缩等操作。
+用于 Codex App Server 对话的独立 OpenClaw 桥接器。将聊天绑定到 Codex 线程，使用纯文本与其对话，并使用聊天原生命令控制其恢复、规划、审查、模型选择、压缩等操作。
 
 - **npm:** `openclaw-codex-app-server`
 - **repo:** [github.com/pwrdrvr/openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server)
@@ -44,7 +42,7 @@ openclaw plugins install openclaw-codex-app-server
 
 ### DingTalk
 
-使用流模式的企业机器人集成。通过任何钉钉客户端支持文本、图片和文件消息。
+使用流模式的企业级机器人集成。通过任何钉钉客户端支持文本、图片和文件消息。
 
 - **npm:** `@largezhou/ddingtalk`
 - **repo:** [github.com/largezhou/openclaw-dingtalk](https://github.com/largezhou/openclaw-dingtalk)
@@ -55,7 +53,7 @@ openclaw plugins install @largezhou/ddingtalk
 
 ### Lossless Claw (LCM)
 
-用于 OpenClaw 的无损上下文管理插件。基于 DAG 的对话摘要与增量压缩——在减少令牌使用的同时保持完整的上下文保真度。
+OpenClaw 的无损上下文管理插件。基于 DAG 的对话摘要，采用增量压缩 —— 在减少 token 使用的同时保留完整的上下文保真度。
 
 - **npm:** `@martian-engineering/lossless-claw`
 - **repo:** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
@@ -66,7 +64,7 @@ openclaw plugins install @martian-engineering/lossless-claw
 
 ### Opik
 
-将智能体跟踪导出到 Opik 的官方插件。监控智能体行为、成本、令牌、错误等。
+将 agent 追踪数据导出到 Opik 的官方插件。监控 agent 行为、成本、token、错误等。
 
 - **npm:** `@opik/opik-openclaw`
 - **repo:** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
@@ -77,7 +75,7 @@ openclaw plugins install @opik/opik-openclaw
 
 ### Prometheus Avatar
 
-为您的 OpenClaw 代理配备 Live2D 虚拟形象，支持实时口型同步、表情表达和文本转语音。包含用于 AI 资产生成的创建者工具，以及一键部署到 Prometheus Marketplace 的功能。目前处于 alpha 阶段。
+为您的 OpenClaw 代理提供具有实时口型同步、表情表达和文本转语音功能的 Live2D 头像。包括用于 AI 资产生成的创作者工具以及一键部署到 Prometheus 市场。目前处于 Alpha 阶段。
 
 - **npm：** `@prometheusavatar/openclaw-plugin`
 - **repo：** [github.com/myths-labs/prometheus-avatar](https://github.com/myths-labs/prometheus-avatar)
@@ -88,7 +86,9 @@ openclaw plugins install @prometheusavatar/openclaw-plugin
 
 ### QQbot
 
-通过 QQ Bot OpenClaw 将 API 连接到 QQ。支持私聊、群组提及、渠道消息，以及语音、图片、视频和文件等富媒体。
+通过 QQ Bot OpenClaw 将 API 连接到 QQ。支持私聊、群提及、渠道消息以及包括语音、图片、视频和文件在内的富媒体。
+
+当前的 OpenClaw 版本捆绑了 QQ Bot。对于正常安装，请使用 [QQ Bot](/zh/channels/qqbot) 中的捆绑设置；仅当您确实需要腾讯维护的独立软件包时，才此外部插件。
 
 - **npm：** `@tencent-connect/openclaw-qqbot`
 - **repo：** [github.com/tencent-connect/openclaw-qqbot](https://github.com/tencent-connect/openclaw-qqbot)
@@ -102,50 +102,63 @@ openclaw plugins install @tencent-connect/openclaw-qqbot
 由腾讯企业微信团队为 OpenClaw 开发的企业微信渠道插件。基于企业微信 Bot WebSocket 持久连接，支持直接消息与群聊、流式回复、主动消息、图片/文件处理、Markdown 格式、内置访问控制，以及文档/会议/消息技能。
 
 - **npm：** `@wecom/wecom-openclaw-plugin`
-- **repo：** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
+- **repo:** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
 
 ```bash
 openclaw plugins install @wecom/wecom-openclaw-plugin
 ```
 
+### Yuanbao
+
+由腾讯 Yuanbao 团队开发的 OpenClaw Yuanbao 渠道插件。基于 WebSocket 持久连接，支持私信与群聊、流式回复、主动消息、图片/文件/音频/视频处理、Markdown 格式化、内置访问控制以及斜杠命令菜单。
+
+- **npm：** `openclaw-plugin-yuanbao`
+- **repo:** [github.com/yb-claw/openclaw-plugin-yuanbao](https://github.com/yb-claw/openclaw-plugin-yuanbao)
+
+```bash
+openclaw plugins install openclaw-plugin-yuanbao
+```
+
 ## 提交您的插件
 
-我们欢迎有用、有文档记录且安全运行社区插件。
+我们欢迎实用、有文档且安全可运行的社区插件。
 
 <Steps>
   <Step title="发布到 ClawHub 或 npm">
-    您的插件必须能够通过 `openclaw plugins install \<package-name\>` 安装。
-    发布到 [ClawHub](/zh/tools/clawhub)（首选）或 npm。
-    参阅[构建插件](/zh/plugins/building-plugins)获取完整指南。
+    您的插件必须可以通过 `openclaw plugins install \<package-name\>` 安装。
+    请发布到 [ClawHub](/zh/tools/clawhub)（推荐）或 npm。
+    请参阅[构建插件](/zh/plugins/building-plugins)以获取完整指南。
 
   </Step>
 
-  <Step title="托管在 GitHub 上">
-    源代码必须位于包含设置文档和问题跟踪器的公共存储库中。
+  <Step title="托管在 GitHub">
+    源代码必须位于包含设置文档和问题跟踪器的公共仓库中。
 
   </Step>
 
-  <Step title="文档 PR 仅用于源文档更改">
-    您不需要仅仅为了让插件被发现而提交文档 PR。请将其发布到 ClawHub。
+  <Step title="Use docs PRs only for source-doc changes">
+    您无需仅仅为了提高插件的可见性而提交文档 PR。请将其发布到
+    ClawHub 上。
 
-    仅当 OpenClaw 的源文档需要实际的内容更改时，例如更正安装指南或添加属于主文档集的跨存储库文档时，才打开文档 PR。
+    仅当 OpenClaw 的源文档需要进行实际的内容更改时，
+    才提交文档 PR，例如修正安装指南或添加属于主文档集的跨仓库文档。
 
   </Step>
 </Steps>
 
 ## 质量门槛
 
-| 要求                    | 原因                                         |
-| ----------------------- | -------------------------------------------- |
-| 已发布到 ClawHub 或 npm | 用户需要 `openclaw plugins install` 才能工作 |
-| 公共 GitHub 仓库        | 源代码审查、问题跟踪、透明度                 |
-| 安装与使用文档          | 用户需要知道如何进行配置                     |
-| 积极维护                | 近期有更新或对 Issue 处理及时                |
+| 要求                    | 原因                                           |
+| ----------------------- | ---------------------------------------------- |
+| 已发布于 ClawHub 或 npm | 用户需要 `openclaw plugins install` 能正常工作 |
+| 公开的 GitHub 仓库      | 源代码审查、问题跟踪、透明度                   |
+| 设置和使用文档          | 用户需要知道如何进行配置                       |
+| 积极维护                | 最近有更新或积极处理问题                       |
 
-低质量的封装、所有权不明确或无人维护的软件包可能会被拒绝。
+低质量的封装、所有权不明确或未维护的包可能会被拒绝。
 
-## 相关
+## 相关内容
 
 - [安装和配置插件](/zh/tools/plugin) — 如何安装任何插件
-- [构建插件](/zh/plugins/building-plugins) — 创建你自己的插件
+- [构建插件](/zh/plugins/building-plugins) — 创建您自己的插件
 - [插件清单](/zh/plugins/manifest) — 清单架构

@@ -3,7 +3,7 @@ summary: "CLI 参考文档，用于 `openclaw wiki`（memory-wiki vault status, 
 read_when:
   - You want to use the memory-wiki CLI
   - You are documenting or changing `openclaw wiki`
-title: "wiki"
+title: "Wiki"
 ---
 
 # `openclaw wiki`
@@ -207,3 +207,8 @@ openclaw wiki get syntheses/alpha-summary.md --from 1 --lines 80
 - `plugins.entries.memory-wiki.config.context.includeCompiledDigestPrompt`
 
 有关完整的配置模型，请参阅 [Memory Wiki plugin](/zh/plugins/memory-wiki)。
+
+## 相关
+
+- [CLI 参考](/zh/cli)
+- [Memory wiki](/zh/plugins/memory-wiki)

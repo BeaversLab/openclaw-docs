@@ -299,3 +299,8 @@ fichier brut publié est généralement disponible à :
    nœud.
 4. Exécutez `pnpm protocol:check`.
 5. Validez le schéma régénéré + les modèles Swift.
+
+## Connexes
+
+- [Protocole de sortie enrichie](/fr/reference/rich-output-protocol)
+- [Adaptateurs RPC](/fr/reference/rpc)

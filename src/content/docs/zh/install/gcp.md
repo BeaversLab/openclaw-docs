@@ -68,12 +68,12 @@ Ubuntu 也可用；请相应地映射软件包。
 ---
 
 <Steps>
-  <Step title="安装 gcloud CLI （或使用控制台）">
+  <Step title="安装 gcloud CLI（或使用控制台）">
     **选项 A：gcloud CLI**（推荐用于自动化）
 
     从 [https://cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install) 安装
 
-    初始化并验证身份：
+    初始化并认证：
 
     ```bash
     gcloud init
@@ -82,7 +82,7 @@ Ubuntu 也可用；请相应地映射软件包。
 
     **选项 B：Cloud Console**
 
-    所有步骤均可在 [https://console.cloud.google.com](https://console.cloud.google.com) 的 Web UI 中完成
+    所有步骤均可通过位于 [https://console.cloud.google.com](https://console.cloud.google.com) 的 Web UI 完成
 
   </Step>
 
@@ -104,10 +104,10 @@ Ubuntu 也可用；请相应地映射软件包。
 
     **Console：**
 
-    1. 转到 IAM & Admin > Create Project
+    1. 前往 IAM & Admin（IAM 和管理员） > Create Project（创建项目）
     2. 命名并创建
     3. 为项目启用计费
-    4. 导航至 APIs & Services > Enable APIs > 搜索“Compute Engine API” > Enable
+    4. 导航至 APIs & Services（API 和服务） > Enable APIs（启用 API） > 搜索 "Compute Engine API" > Enable（启用）
 
   </Step>
 
@@ -398,7 +398,7 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 避免在自动化中使用 Owner 角色。请遵循最小权限原则。
 
-请参阅 [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles) 了解 IAM 角色详细信息。
+有关 IAM 角色的详细信息，请参阅 [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles)。
 
 ---
 
@@ -407,3 +407,9 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 - 设置消息通道：[通道](/zh/channels)
 - 将本地设备配对为节点：[节点](/zh/nodes)
 - 配置 Gateway(网关)：[Gateway(网关) 配置](/zh/gateway/configuration)
+
+## 相关
+
+- [安装概述](/zh/install)
+- [Azure](/zh/install/azure)
+- [VPS 托管](/zh/vps)

@@ -3,19 +3,17 @@ summary: "Instale OpenClaw y ejecute su primer chat en minutos."
 read_when:
   - First time setup from zero
   - You want the fastest path to a working chat
-title: "Primeros pasos"
+title: "Introducción"
 ---
 
-# Para comenzar
-
-Instala OpenClaw, ejecuta la integración y chatea con tu asistente de IA — todo en
-unos 5 minutos. Al final tendrás un Gateway en funcionamiento, autenticación
-configurada y una sesión de chat operativa.
+Instale OpenClaw, ejecute la incorporación y chatee con su asistente de IA — todo en
+unos 5 minutos. Al final tendrá un Gateway en ejecución, autenticación configurada
+y una sesión de chat funcional.
 
 ## Lo que necesitas
 
 - **Node.js** — Se recomienda Node 24 (también se admite Node 22.14+)
-- **Una clave de API** de un proveedor de modelos (Anthropic, OpenAI, Google, etc.) — la integración te lo solicitará
+- **Una clave de API** de un proveedor de modelos (Anthropic, OpenAI, Google, etc.) — la incorporación le pedirá que la ingrese
 
 <Tip>Verifique su versión de Node con `node --version`. **Usuarios de Windows:** se admiten tanto Windows nativo como WSL2. WSL2 es más estable y se recomienda para la experiencia completa. Consulte [Windows](/es/platforms/windows). ¿Necesita instalar Node? Consulte [Configuración de Node](/es/install/node).</Tip>
 
@@ -30,7 +28,7 @@ configurada y una sesión de chat operativa.
         ```
         <img
   src="/assets/install-script.svg"
-  alt="Proceso de Script de Instalación"
+  alt="Proceso de instalación del script"
   className="rounded-lg"
 />
       </Tab>
@@ -42,7 +40,7 @@ configurada y una sesión de chat operativa.
     </Tabs>
 
     <Note>
-    Otros métodos de instalación (Docker, Nix, npm): [Instalación](/es/install).
+    Otros métodos de instalación (Docker, Nix, npm): [Instalar](/es/install).
     </Note>
 
   </Step>
@@ -51,8 +49,9 @@ configurada y una sesión de chat operativa.
     openclaw onboard --install-daemon
     ```
 
-    El asistente le guía a la hora de elegir un proveedor de modelos, configurar una clave de API
-    y configurar el Gateway. Toma unos 2 minutos.
+    El asistente lo guiará a través de la elección de un proveedor de modelos, el establecimiento de una clave de API
+
+y la configuración del Gateway. Toma unos 2 minutos.
 
     Consulte [Incorporación (CLI)](/es/start/wizard) para obtener la referencia completa.
 
@@ -70,22 +69,22 @@ configurada y una sesión de chat operativa.
     openclaw dashboard
     ```
 
-    Esto abre la Interfaz de Control en su navegador. Si se carga, todo está funcionando.
+    Esto abre la interfaz de usuario de control en su navegador. Si se carga, todo está funcionando.
 
   </Step>
-  <Step title="Enviar su primer mensaje">
-    Escriba un mensaje en el chat de la Interfaz de Control y debería recibir una respuesta de la IA.
+  <Step title="Envía tu primer mensaje">
+    Escribe un mensaje en el chat de la Interfaz de Control (Control UI) y deberías recibir una respuesta de la IA.
 
-    ¿Prefiere chatear desde su teléfono? El canal más rápido de configurar es
-    [Telegram](/es/channels/telegram) (solo se necesita un token de bot). Consulte [Canales](/es/channels)
+    ¿Prefieres chatear desde tu teléfono? El canal más rápido de configurar es
+    [Telegram](/es/channels/telegram) (solo se necesita un token de bot). Consulta [Canales](/es/channels)
     para ver todas las opciones.
 
   </Step>
 </Steps>
 
-<Accordion title="Avanzado: montar una compilación personalizada de la Interfaz de Usuario de Control">
-  Si mantiene una compilación localizada o personalizada del panel, dirija
-  `gateway.controlUi.root` a un directorio que contenga sus activos estáticos
+<Accordion title="Avanzado: montar una compilación personalizada de la Interfaz de Control">
+  Si mantienes una compilación localizada o personalizada del panel, apunta
+  `gateway.controlUi.root` a un directorio que contenga tus activos estáticos
   compilados y `index.html`.
 
 ```bash
@@ -93,7 +92,7 @@ mkdir -p "$HOME/.openclaw/control-ui-custom"
 # Copy your built static files into that directory.
 ```
 
-A continuación, configure:
+A continuación, establece:
 
 ```json
 {
@@ -106,7 +105,7 @@ A continuación, configure:
 }
 ```
 
-Reinicie la puerta de enlace y vuelva a abrir el panel:
+Reinicia la puerta de enlace (gateway) y vuelve a abrir el panel:
 
 ```bash
 openclaw gateway restart
@@ -118,13 +117,13 @@ openclaw dashboard
 ## Qué hacer a continuación
 
 <Columns>
-  <Card title="Conectar un canal" href="/es/channels" icon="message-square">
+  <Card title="Conecta un canal" href="/es/channels" icon="message-square">
     Discord, Feishu, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo y más.
   </Card>
   <Card title="Emparejamiento y seguridad" href="/es/channels/pairing" icon="shield">
-    Controle quién puede enviar mensajes a su agente.
+    Controla quién puede enviar mensajes a tu agente.
   </Card>
-  <Card title="Configurar la puerta de enlace" href="/es/gateway/configuration" icon="settings">
+  <Card title="Configura la Gateway" href="/es/gateway/configuration" icon="settings">
     Modelos, herramientas, sandbox y configuración avanzada.
   </Card>
   <Card title="Explorar herramientas" href="/es/tools" icon="wrench">
@@ -133,7 +132,7 @@ openclaw dashboard
 </Columns>
 
 <Accordion title="Avanzado: variables de entorno">
-  Si ejecuta OpenClaw como una cuenta de servicio o desea rutas personalizadas:
+  Si ejecutas OpenClaw como una cuenta de servicio o deseas rutas personalizadas:
 
 - `OPENCLAW_HOME` — directorio principal para la resolución de rutas internas
 - `OPENCLAW_STATE_DIR` — anular el directorio de estado
@@ -142,3 +141,9 @@ openclaw dashboard
 Referencia completa: [Variables de entorno](/es/help/environment).
 
 </Accordion>
+
+## Relacionado
+
+- [Descripción general de la instalación](/es/install)
+- [Descripción general de canales](/es/channels)
+- [Configuración](/es/start/setup)

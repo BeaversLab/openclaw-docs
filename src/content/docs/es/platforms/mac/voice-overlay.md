@@ -58,3 +58,9 @@ Público: colaboradores de la aplicación macOS. Objetivo: mantener la superposi
 3. Refactorice `VoicePushToTalk` para adoptar sesiones existentes y llamar a `endCapture` al liberar; aplique tiempo de espera de ejecución.
 4. Conecte `VoiceWakeOverlayController` al editor; elimine las llamadas directas del tiempo de ejecución/PTT.
 5. Agregue pruebas de integración para la adopción de sesión, el tiempo de espera y el descarte de texto vacío.
+
+## Relacionado
+
+- [Aplicación macOS](/es/platforms/macos)
+- [Activación por voz (macOS)](/es/platforms/mac/voicewake)
+- [Modo de conversación](/es/nodes/talk)

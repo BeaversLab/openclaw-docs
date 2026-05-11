@@ -6,15 +6,15 @@ read_when:
 title: "Configuración"
 ---
 
-# Configuración
-
-<Note>Si está configurando por primera vez, comience con [Getting Started](/es/start/getting-started). Para obtener detalles sobre la incorporación, consulte [Onboarding (CLI)](/es/start/wizard).</Note>
+<Note>Si es la primera vez que configuras, comienza con [Getting Started](/es/start/getting-started). Para más detalles sobre la incorporación, consulta [Onboarding (CLI)](/es/start/wizard).</Note>
 
 ## TL;DR
 
-- **La personalización reside fuera del repositorio:** `~/.openclaw/workspace` (espacio de trabajo) + `~/.openclaw/openclaw.json` (configuración).
-- **Flujo de trabajo estable:** instala la aplicación macOS; déjala ejecutar el Gateway incluido.
-- **Flujo de trabajo de última hora:** ejecuta el Gateway tú mismo a través de `pnpm gateway:watch`, luego permite que la aplicación macOS se adjunte en modo Local.
+Elige un flujo de trabajo de configuración según la frecuencia con la que quieras recibir actualizaciones y si deseas ejecutar el Gateway por tu cuenta:
+
+- **Tailoring lives outside the repo:** guarda tu configuración y espacio de trabajo en `~/.openclaw/openclaw.json` y `~/.openclaw/workspace/` para que las actualizaciones del repositorio no las afecten.
+- **Stable workflow (recommended for most):** instala la aplicación de macOS y déjala ejecutar el Gateway incluido.
+- **Bleeding edge workflow (dev):** ejecuta el Gateway por tu cuenta mediante `pnpm gateway:watch` y luego permite que la aplicación de macOS se conecte en modo Local.
 
 ## Requisitos previos (desde el código fuente)
 

@@ -4,7 +4,7 @@ read_when:
   - Setting up OpenClaw on Oracle Cloud
   - Looking for low-cost VPS hosting for OpenClaw
   - Want 24/7 OpenClaw on a small server
-title: "Oracle Cloud (Platform)"
+title: "Oracle Cloud (platform)"
 ---
 
 # 在 Oracle Cloud (OCI) 上部署 OpenClaw
@@ -193,14 +193,14 @@ https://openclaw.<tailnet-name>.ts.net/
 | 僅 SSH 密鑰身份驗證 | 否         | Tailscale 通過您的 tailnet 進行身份驗證          |
 | IPv6 加固           | 通常不需要 | 取決於您的 VCN/子網設置；驗證實際分配/暴露的內容 |
 
-### 仍然建議
+### 仍然推薦
 
 - **憑證權限：** `chmod 700 ~/.openclaw`
 - **安全審計：** `openclaw security audit`
 - **系統更新：** 定期 `sudo apt update && sudo apt upgrade`
 - **監控 Tailscale：** 在 [Tailscale 管理控制台](https://login.tailscale.com/admin) 中查看設備
 
-### 驗證安全姿態
+### 驗證安全狀況
 
 ```bash
 # Confirm no public ports listening
@@ -296,7 +296,7 @@ openclaw backup create
 
 ---
 
-## 參見
+## 相關
 
 - [Gateway 遠程訪問](/zh-Hant/gateway/remote) — 其他遠程訪問模式
 - [Tailscale 集成](/zh-Hant/gateway/tailscale) — 完整的 Tailscale 文檔

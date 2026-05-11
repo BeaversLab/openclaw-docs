@@ -4,7 +4,7 @@ read_when:
   - Setting up OpenClaw on a Raspberry Pi
   - Running OpenClaw on ARM devices
   - Building a cheap always-on personal AI
-title: "Raspberry Pi (Plataforma)"
+title: "Raspberry Pi (plataforma)"
 ---
 
 # OpenClaw en Raspberry Pi
@@ -19,7 +19,7 @@ Perfecto para:
 - Centro de automatización del hogar
 - Bot de Telegram/WhatsApp de bajo consumo y siempre disponible
 
-## Requisitos de Hardware
+## Requisitos de hardware
 
 | Modelo Pi       | RAM     | ¿Funciona?  | Notas                                   |
 | --------------- | ------- | ----------- | --------------------------------------- |
@@ -109,13 +109,13 @@ sudo sysctl -p
 
 ## 6) Instalar OpenClaw
 
-### Opción A: Instalación Estándar (Recomendada)
+### Opción A: instalación estándar (recomendada)
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-### Opción B: Instalación Modificable (Para experimentar)
+### Opción B: instalación modificable (para experimentar)
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -183,7 +183,7 @@ Para acceso remoto permanente, consulta [Tailscale](/es/gateway/tailscale).
 
 ---
 
-## Optimizaciones de Rendimiento
+## Optimizaciones de rendimiento
 
 ### Use un SSD USB (Gran Mejora)
 
@@ -254,7 +254,7 @@ sudo loginctl enable-linger "$(whoami)"
 Cómo las políticas de `Restart=` ayudan a la recuperación automatizada:
 [systemd puede automatizar la recuperación del servicio](https://www.redhat.com/en/blog/systemd-automate-recovery).
 
-### Reducir el Uso de Memoria
+### Reducir el uso de memoria
 
 ```bash
 # Disable GPU memory allocation (headless)
@@ -264,7 +264,7 @@ echo 'gpu_mem=16' | sudo tee -a /boot/config.txt
 sudo systemctl disable bluetooth
 ```
 
-### Monitorear Recursos
+### Monitorear recursos
 
 ```bash
 # Check memory
@@ -281,7 +281,7 @@ htop
 
 ## Notas Específicas de ARM
 
-### Compatibilidad Binaria
+### Compatibilidad binaria
 
 La mayoría de las funciones de OpenClaw funcionan en ARM64, pero algunos binarios externos pueden necesitar compilaciones ARM:
 
@@ -306,7 +306,7 @@ uname -m
 
 ---
 
-## Configuración de Modelo Recomendada
+## Configuración de modelo recomendada
 
 Dado que la Pi es solo la Pasarela (los modelos se ejecutan en la nube), utiliza modelos basados en API:
 
@@ -396,7 +396,7 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ---
 
-## Comparación de costes
+## Comparación de costos
 
 | Configuración  | Coste único | Coste mensual | Notas                            |
 | -------------- | ----------- | ------------- | -------------------------------- |
@@ -411,7 +411,7 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ---
 
-## Ver también
+## Relacionado
 
 - [Guía de Linux](/es/platforms/linux) — configuración general de Linux
 - [Guía de DigitalOcean](/es/platforms/digitalocean) — alternativa en la nube

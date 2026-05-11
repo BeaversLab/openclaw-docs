@@ -4,14 +4,12 @@ read_when:
   - Generating or reviewing `openclaw secrets apply` plans
   - Debugging `Invalid plan target path` errors
   - Understanding target type and path validation behavior
-title: "Contrat du plan d'application des secrets"
+title: "Secrets apply plan contract"
 ---
-
-# Contrat du plan d'application des secrets
 
 Cette page définit le contrat strict appliqué par `openclaw secrets apply`.
 
-Si une cible ne correspond pas à ces règles, l'application échoue avant de modifier la configuration.
+Si une cible ne correspond pas à ces règles, l'application échoue avant la mutation de la configuration.
 
 ## Structure du fichier de plan
 
@@ -40,17 +38,17 @@ Si une cible ne correspond pas à ces règles, l'application échoue avant de mo
 }
 ```
 
-## Étendue de la cible prise en charge
+## Portée de la cible prise en charge
 
 Les cibles de plan sont acceptées pour les chemins d'identification pris en charge dans :
 
-- [SecretRef Credential Surface](/fr/reference/secretref-credential-surface)
+- [Surface d'informations d'identification SecretRef](/fr/reference/secretref-credential-surface)
 
 ## Comportement du type de cible
 
 Règle générale :
 
-- `target.type` doit être reconnu et doit correspondre à la structure normalisée `target.path`.
+- `target.type` doit être reconnu et doit correspondre à la forme normalisée `target.path`.
 
 Les alias de compatibilité restent acceptés pour les plans existants :
 
@@ -63,17 +61,17 @@ Les alias de compatibilité restent acceptés pour les plans existants :
 Chaque cible est validée avec tous les éléments suivants :
 
 - `type` doit être un type de cible reconnu.
-- `path` doit être un chemin en pointillés non vide.
-- `pathSegments` peut être omis. S'il est fourni, il doit être normalisé vers exactement le même chemin que `path`.
+- `path` doit être un chemin en points non vide.
+- `pathSegments` peut être omis. S'il est fourni, il doit être normalisé exactement au même chemin que `path`.
 - Les segments interdits sont rejetés : `__proto__`, `prototype`, `constructor`.
-- Le chemin normalisé doit correspondre à la structure de chemin enregistrée pour le type de cible.
+- Le chemin normalisé doit correspondre à la forme de chemin enregistrée pour le type de cible.
 - Si `providerId` ou `accountId` est défini, il doit correspondre à l'identifiant encodé dans le chemin.
 - Les cibles `auth-profiles.json` nécessitent `agentId`.
 - Lors de la création d'un nouveau mappage `auth-profiles.json`, incluez `authProfileProvider`.
 
 ## Comportement en cas d'échec
 
-Si la validation d'une cible échoue, l'application se termine avec une erreur du type :
+Si une cible échoue à la validation, l'application se termine avec une erreur telle que :
 
 ```text
 Invalid plan target path for models.providers.apiKey: models.providers.openai.baseUrl
@@ -81,16 +79,16 @@ Invalid plan target path for models.providers.apiKey: models.providers.openai.ba
 
 Aucune écriture n'est validée pour un plan invalide.
 
-## Comportement de consentement du provider d'exécution
+## Comportement du consentement du fournisseur d'exécution
 
-- `--dry-run` ignore les vérifications exec SecretRef par défaut.
-- Les plans contenant des exec SecretRefs/providers sont rejetés en mode écriture, sauf si `--allow-exec` est défini.
-- Lors de la validation ou de l'application de plans contenant des exec, passez `--allow-exec` dans les commandes de simulation (dry-run) et d'écriture.
+- `--dry-run` ignore les vérifications SecretRef d'exécution par défaut.
+- Les plans contenant des SecretRefs/fournisseurs d'exécution sont rejetés en mode écriture, sauf si `--allow-exec` est défini.
+- Lors de la validation ou de l'application de plans contenant des exécutions, passez `--allow-exec` dans les commandes d'exécution à blanc (dry-run) et d'écriture.
 
-## Notes sur la portée d'exécution et d'audit
+## Notes sur la portée de l'exécution et de l'audit
 
-- Les entrées `auth-profiles.json` de type ref uniquement (`keyRef`/`tokenRef`) sont incluses dans la résolution d'exécution et la couverture d'audit.
-- `secrets apply` écrit les cibles `openclaw.json` prises en charge, les cibles `auth-profiles.json` prises en charge et les cibles de nettoyage (scrub) facultatives.
+- Les entrées `auth-profiles.json` uniquement par référence (`keyRef`/`tokenRef`) sont incluses dans la résolution lors de l'exécution et la couverture d'audit.
+- `secrets apply` écrit les cibles `openclaw.json` prises en charge, les cibles `auth-profiles.json` prises en charge et les cibles de nettoyage facultatives.
 
 ## Vérifications de l'opérateur
 
@@ -106,11 +104,11 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-
 openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
 ```
 
-Si l'application échoue avec un message de chemin cible non valide, régénérez le plan avec `openclaw secrets configure` ou corrigez le chemin cible vers une forme prise en charge ci-dessus.
+Si l'application échoue avec un message de chemin cible non valide, régénérez le plan avec `openclaw secrets configure` ou corrigez le chemin cible pour qu'il corresponde à une forme prise en charge ci-dessus.
 
 ## Documentation connexe
 
 - [Gestion des secrets](/fr/gateway/secrets)
 - [CLI `secrets`](/fr/cli/secrets)
-- [Surface d'identification SecretRef](/fr/reference/secretref-credential-surface)
+- [Surface des informations d'identification SecretRef](/fr/reference/secretref-credential-surface)
 - [Référence de configuration](/fr/gateway/configuration-reference)

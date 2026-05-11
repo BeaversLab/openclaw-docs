@@ -21,10 +21,15 @@ OpenClaw = CLAW + TARDIS，因為每隻太空龍蝦都需要一台時光機。
 
 - **Maxim Vovshin** (@Hyaxia, [36747317+Hyaxia@users.noreply.github.com](mailto:36747317+Hyaxia@users.noreply.github.com)) - Blogwatcher 技能
 - **Nacho Iacovino** (@nachoiacovino, [nacho.iacovino@gmail.com](mailto:nacho.iacovino@gmail.com)) - 位置解析（Telegram 和 WhatsApp）
-- **Vincent Koc** ([@vincentkoc](https://github.com/vincentkoc), [@vincent_koc](https://x.com/vincent_koc)) - 代理、遙測、掛鉤、安全
+- **Vincent Koc** ([@vincentkoc](https://github.com/vincentkoc), [@vincent_koc](https://x.com/vincent_koc)) - Agents（代理）、Telemetry（遙測）、Hooks（鉤子）、Security（安全）
 
 ## 授權
 
 MIT - 如海洋中的龍蝦般自由。
 
 > 「我們都只是在玩弄自己的提示詞。」（一個 AI，可能 Token 用多了）
+
+## 相關
+
+- [Token 使用和費用](/zh-Hant/reference/token-use)
+- [發布政策](/zh-Hant/reference/RELEASING)

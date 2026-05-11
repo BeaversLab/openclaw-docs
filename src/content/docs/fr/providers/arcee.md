@@ -1,14 +1,12 @@
 ---
+summary: "Configuration d'Arcee AI (auth + sélection de modèle)"
 title: "Arcee AI"
-summary: "Configuration Arcee AI (auth + sélection de model)"
 read_when:
   - You want to use Arcee AI with OpenClaw
   - You need the API key env var or CLI auth choice
 ---
 
-# Arcee AI
-
-[Arcee AI](https://arcee.ai) fournit l'accès à la famille Trinity de modèles mixture-of-experts via une OpenAI compatible API. Tous les modèles Trinity sont sous licence Apache 2.0.
+[Arcee AI](https://arcee.ai) donne accès à la famille de modèles de mélange d'experts Trinity via une OpenAI compatible API. Tous les modèles Trinity sont sous licence Apache 2.0.
 
 Les modèles Arcee AI sont accessibles directement via la plateforme Arcee ou via [OpenRouter](/fr/providers/openrouter).
 
@@ -32,7 +30,7 @@ Les modèles Arcee AI sont accessibles directement via la plateforme Arcee ou vi
         openclaw onboard --auth-choice arceeai-api-key
         ```
       </Step>
-      <Step title="Définir un model par défaut">
+      <Step title="Définir un modèle par défaut">
         ```json5
         {
           agents: {
@@ -56,7 +54,7 @@ Les modèles Arcee AI sont accessibles directement via la plateforme Arcee ou vi
         openclaw onboard --auth-choice arceeai-openrouter
         ```
       </Step>
-      <Step title="Définir un model par défaut">
+      <Step title="Définir un modèle par défaut">
         ```json5
         {
           agents: {
@@ -67,7 +65,7 @@ Les modèles Arcee AI sont accessibles directement via la plateforme Arcee ou vi
         }
         ```
 
-        Les mêmes références de model fonctionnent pour les configurations directes et OpenRouter (par exemple `arcee/trinity-large-thinking`).
+        Les mêmes références de modèle fonctionnent pour les configurations directes et OpenRouter (par exemple `arcee/trinity-large-thinking`).
       </Step>
     </Steps>
 
@@ -100,13 +98,13 @@ Les modèles Arcee AI sont accessibles directement via la plateforme Arcee ou vi
 
 OpenClaw fournit actuellement ce catalogue Arcee intégré :
 
-| Réf modèle                     | Nom                    | Entrée | Contexte | Coût (entrée/sortie par 1M) | Notes                                    |
-| ------------------------------ | ---------------------- | ------ | -------- | --------------------------- | ---------------------------------------- |
-| `arcee/trinity-large-thinking` | Trinity Large Thinking | texte  | 256K     | $0.25 / $0.90               | Modèle par défaut ; raisonnement activé  |
-| `arcee/trinity-large-preview`  | Trinity Large Preview  | texte  | 128K     | $0.25 / $1.00               | Usage général ; 400B params, 13B actifs  |
-| `arcee/trinity-mini`           | Trinity Mini 26B       | texte  | 128K     | $0.045 / $0.15              | Rapide et économique ; appel de fonction |
+| Réf. model                     | Nom                    | Entrée | Contexte | Coût (entrée/sortie par 1M) | Notes                                   |
+| ------------------------------ | ---------------------- | ------ | -------- | --------------------------- | --------------------------------------- |
+| `arcee/trinity-large-thinking` | Trinity Large Thinking | texte  | 256K     | $0,25 / $0,90               | Modèle par défaut ; raisonnement activé |
+| `arcee/trinity-large-preview`  | Trinity Large Preview  | texte  | 128K     | $0,25 / $1,00               | Usage général ; 400B params, 13B actifs |
+| `arcee/trinity-mini`           | Trinity Mini 26B       | texte  | 128K     | $0,045 / $0,15              | Rapide et rentable ; appel de fonction  |
 
-<Tip>La préréglage d'intégration définit `arcee/trinity-large-thinking` comme le modèle par défaut.</Tip>
+<Tip>La préréglage d'intégration (onboarding) définit `arcee/trinity-large-thinking` comme modèle par défaut.</Tip>
 
 ## Fonctionnalités prises en charge
 
@@ -138,7 +136,7 @@ OpenClaw fournit actuellement ce catalogue Arcee intégré :
   <Card title="OpenRouter" href="/fr/providers/openrouter" icon="shuffle">
     Accédez aux modèles Arcee et à bien d'autres via une seule clé API.
   </Card>
-  <Card title="Sélection de modèle" href="/fr/concepts/model-providers" icon="layers">
-    Choix des fournisseurs, des références de modèle et du comportement de basculement.
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
+    Choisir les fournisseurs, les références de modèle et le comportement de basculement.
   </Card>
 </CardGroup>

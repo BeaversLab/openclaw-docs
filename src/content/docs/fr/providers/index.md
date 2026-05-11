@@ -30,7 +30,9 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [Manteau Amazon Bedrock](/fr/providers/bedrock-mantle)
 - [Anthropic (API + Claude CLI)](/fr/providers/anthropic)
 - [Arcee AI (modèles Trinity)](/fr/providers/arcee)
+- [Azure Speech](/fr/providers/azure-speech)
 - [BytePlus (International)](/fr/concepts/model-providers#byteplus-international)
+- [Cerebras](/fr/providers/cerebras)
 - [Chutes](/fr/providers/chutes)
 - [Cloudflare AI Gateway](/fr/providers/cloudflare-ai-gateway)
 - [ComfyUI](/fr/providers/comfy)
@@ -38,28 +40,30 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [ElevenLabs](/fr/providers/elevenlabs)
 - [fal](/fr/providers/fal)
 - [Fireworks](/fr/providers/fireworks)
-- [Copilot GitHub](/fr/providers/github-copilot)
-- [Modèles GLM](/fr/providers/glm)
+- [GitHub Copilot](/fr/providers/github-copilot)
+- [Gradium](/fr/providers/gradium)
+- [GLM models](/fr/providers/glm)
 - [Google (Gemini)](/fr/providers/google)
 - [Groq (inférence LPU)](/fr/providers/groq)
 - [Hugging Face (Inférence)](/fr/providers/huggingface)
 - [inferrs (modèles locaux)](/fr/providers/inferrs)
 - [Kilocode](/fr/providers/kilocode)
-- [LiteLLM (passelle unifiée)](/fr/providers/litellm)
+- [LiteLLM (passerelle unifiée)](/fr/providers/litellm)
 - [LM Studio (modèles locaux)](/fr/providers/lmstudio)
 - [MiniMax](/fr/providers/minimax)
 - [Mistral](/fr/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/fr/providers/moonshot)
 - [NVIDIA](/fr/providers/nvidia)
-- [Ollama (cloud + modèles locaux)](/fr/providers/ollama)
+- [Ollama (modèles cloud + locaux)](/fr/providers/ollama)
 - [OpenAI (API + Codex)](/fr/providers/openai)
 - [OpenCode](/fr/providers/opencode)
 - [OpenCode Go](/fr/providers/opencode-go)
 - [OpenRouter](/fr/providers/openrouter)
 - [Perplexity (recherche web)](/fr/providers/perplexity-provider)
 - [Qianfan](/fr/providers/qianfan)
-- [Cloud Qwen](/fr/providers/qwen)
+- [Qwen Cloud](/fr/providers/qwen)
 - [Runway](/fr/providers/runway)
+- [SenseAudio](/fr/providers/senseaudio)
 - [SGLang (modèles locaux)](/fr/providers/sglang)
 - [StepFun](/fr/providers/stepfun)
 - [Synthetic](/fr/providers/synthetic)
@@ -74,12 +78,12 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [Xiaomi](/fr/providers/xiaomi)
 - [Z.AI](/fr/providers/zai)
 
-## Pages de vue d'ensemble partagées
+## Pages d'aperçu partagées
 
-- [Variantes groupées supplémentaires](/fr/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy, et Gemini CLI OAuth
-- [Génération d'images](/fr/tools/image-generation) - Outil `image_generate` partagé, sélection de provider, et bascule
-- [Génération de musique](/fr/tools/music-generation) - Outil `music_generate` partagé, sélection de provider, et bascule
-- [Génération de vidéo](/fr/tools/video-generation) - Outil `video_generate` partagé, sélection de provider, et bascule
+- [Variant groupées supplémentaires](/fr/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy et Gemini CLI OAuth
+- [Génération d'images](/fr/tools/image-generation) - outil `image_generate` partagé, sélection de provider et basculement
+- [Génération de musique](/fr/tools/music-generation) - outil `music_generate` partagé, sélection de provider et basculement
+- [Génération de vidéo](/fr/tools/video-generation) - outil `video_generate` partagé, sélection de provider et basculement
 
 ## Providers de transcription
 
@@ -87,11 +91,12 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [ElevenLabs](/fr/providers/elevenlabs#speech-to-text)
 - [Mistral](/fr/providers/mistral#audio-transcription-voxtral)
 - [OpenAI](/fr/providers/openai#speech-to-text)
+- [SenseAudio](/fr/providers/senseaudio)
 - [xAI](/fr/providers/xai#speech-to-text)
 
 ## Outils communautaires
 
-- [Claude Max API Proxy](/fr/providers/claude-max-api-proxy) - Proxy communautaire pour les identifiants d'abonnement Claude (vérifiez la politique/les conditions d'Anthropic avant utilisation)
+- [Claude Max API Proxy](/fr/providers/claude-max-api-proxy) - Proxy communautaire pour les identifiants d'abonnement Claude (vérifiez la politique/conditions d'Anthropic avant utilisation)
 
-Pour le catalogue complet de providers (xAI, Groq, Mistral, etc.) et la configuration avancée,
-voyez [Model providers](/fr/concepts/model-providers).
+Pour le catalogue complet des providers (xAI, Groq, Mistral, etc.) et la configuration avancée,
+voir [Model providers](/fr/concepts/model-providers).

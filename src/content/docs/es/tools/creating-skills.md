@@ -1,19 +1,17 @@
 ---
-title: "Crear habilidades"
 summary: "Construye y prueba habilidades personalizadas del espacio de trabajo con SKILL.md"
+title: "Creación de habilidades"
 read_when:
   - You are creating a new custom skill in your workspace
   - You need a quick starter workflow for SKILL.md-based skills
 ---
 
-# Crear habilidades
-
-Las habilidades enseñan al agente cómo y cuándo utilizar las herramientas. Cada habilidad es un directorio
+Las habilidades enseñan al agente cómo y cuándo usar las herramientas. Cada habilidad es un directorio
 que contiene un archivo `SKILL.md` con frontmatter YAML e instrucciones en markdown.
 
-Para obtener información sobre cómo se cargan y priorizan las habilidades, consulte [Skills](/es/tools/skills).
+Para saber cómo se cargan y priorizan las habilidades, consulta [Skills](/es/tools/skills).
 
-## Crear tu primera habilidad
+## Crea tu primera habilidad
 
 <Steps>
   <Step title="Crear el directorio de la habilidad">
@@ -26,8 +24,8 @@ Para obtener información sobre cómo se cargan y priorizan las habilidades, con
   </Step>
 
   <Step title="Escribir SKILL.md">
-    Crea `SKILL.md` dentro de ese directorio. El frontmatter define los metadatos
-    y el cuerpo markdown contiene las instrucciones para el agente.
+    Crea `SKILL.md` dentro de ese directorio. El frontmatter define los metadatos,
+    y el cuerpo markdown contiene instrucciones para el agente.
 
     ```markdown
     ---
@@ -46,7 +44,7 @@ Para obtener información sobre cómo se cargan y priorizan las habilidades, con
   <Step title="Añadir herramientas (opcional)">
     Puedes definir esquemas de herramientas personalizados en el frontmatter o instruir al agente
     para que use herramientas del sistema existentes (como `exec` o `browser`). Las habilidades también pueden
-    distribuirse dentro de complementos junto con las herramientas que documentan.
+    incluirse dentro de complementos junto a las herramientas que documentan.
 
   </Step>
 
@@ -81,7 +79,7 @@ Para obtener información sobre cómo se cargan y priorizan las habilidades, con
   </Step>
 </Steps>
 
-## Referencia de metadatos de habilidad
+## Referencia de metadatos de habilidades
 
 El frontmatter YAML admite estos campos:
 
@@ -95,25 +93,25 @@ El frontmatter YAML admite estos campos:
 
 ## Mejores prácticas
 
-- **Sea conciso** — instruya al modelo sobre _qué_ hacer, no sobre cómo ser una IA
-- **Seguridad ante todo** — si su habilidad usa `exec`, asegúrese de que los mensajes no permitan la inyección de comandos arbitrarios desde entradas que no son confiables
-- **Pruebe localmente** — use `openclaw agent --message "..."` para probar antes de compartir
-- **Use ClawHub** — navegue y contribuya con habilidades en [ClawHub](https://clawhub.ai)
+- **Sé conciso** — indica al modelo _qué_ hacer, no cómo ser una IA
+- **Seguridad primero** — si tu habilidad usa `exec`, asegúrate de que los prompts no permitan la inyección de comandos arbitrarios desde entradas que no son de confianza
+- **Probar localmente** — usa `openclaw agent --message "..."` para probar antes de compartir
+- **Usar ClawHub** — navega y contribuye con habilidades en [ClawHub](https://clawhub.ai)
 
-## Ubicación de las habilidades
+## Dónde residen las habilidades
 
-| Ubicación                       | Precedencia | Alcance                             |
+| Ubicación                       | Precedencia | Ámbito                              |
 | ------------------------------- | ----------- | ----------------------------------- |
 | `\<workspace\>/skills/`         | La más alta | Por agente                          |
-| `\<workspace\>/.agents/skills/` | Alto        | Agente por espacio de trabajo       |
-| `~/.agents/skills/`             | Medio       | Perfil de agente compartido         |
-| `~/.openclaw/skills/`           | Medio       | Compartido (todos los agentes)      |
-| Incluido (enviado con OpenClaw) | Bajo        | Global                              |
-| `skills.load.extraDirs`         | El más bajo | Carpetas compartidas personalizadas |
+| `\<workspace\>/.agents/skills/` | Alta        | Por agente del espacio de trabajo   |
+| `~/.agents/skills/`             | Media       | Perfil de agente compartido         |
+| `~/.openclaw/skills/`           | Media       | Compartido (todos los agentes)      |
+| Incluido (enviado con OpenClaw) | Baja        | Global                              |
+| `skills.load.extraDirs`         | La más baja | Carpetas compartidas personalizadas |
 
 ## Relacionado
 
-- [Referencia de habilidades](/es/tools/skills) — reglas de carga, precedencia y bloqueo
+- [Referencia de habilidades](/es/tools/skills) — carga, precedencia y reglas de bloqueo
 - [Configuración de habilidades](/es/tools/skills-config) — esquema de configuración de `skills.*`
 - [ClawHub](/es/tools/clawhub) — registro público de habilidades
-- [Crear complementos](/es/plugins/building-plugins) — los complementos pueden incluir habilidades
+- [Construcción de Plugins](/es/plugins/building-plugins) — los plugins pueden incluir habilidades

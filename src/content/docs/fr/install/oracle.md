@@ -7,13 +7,11 @@ read_when:
 title: "Oracle Cloud"
 ---
 
-# Oracle Cloud
-
-Exécutez une passerelle OpenClaw Gateway persistante sur le niveau ARM **Always Free** de Oracle Cloud (jusqu'à 4 OCPU, 24 Go de RAM, 200 Go de stockage) gratuitement.
+Exécutez un OpenClaw Gateway persistant sur le niveau ARM **Always Free** de Oracle Cloud (jusqu'à 4 OCPU, 24 Go de RAM, 200 Go de stockage) sans frais.
 
 ## Prérequis
 
-- Compte Oracle Cloud ([inscription](https://www.oracle.com/cloud/free/)) -- consultez le [guide d'inscription de la communauté](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd) en cas de problème
+- Compte Oracle Cloud ([inscription](https://www.oracle.com/cloud/free/)) -- consultez le [guide d'inscription communautaire](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd) en cas de problème
 - Compte Tailscale (gratuit sur [tailscale.com](https://tailscale.com))
 - Une paire de clés SSH
 - Environ 30 minutes
@@ -28,19 +26,19 @@ Exécutez une passerelle OpenClaw Gateway persistante sur le niveau ARM **Always
        - **Name :** `openclaw`
        - **Image :** Ubuntu 24.04 (aarch64)
        - **Shape :** `VM.Standard.A1.Flex` (Ampere ARM)
-       - **OCPUs :** 2 (ou jusqu'à 4)
-       - **Memory :** 12 Go (ou jusqu'à 24 Go)
+       - **OCPUs :** 2 (jusqu'à 4)
+       - **Memory :** 12 Go (jusqu'à 24 Go)
        - **Boot volume :** 50 Go (jusqu'à 200 Go gratuits)
        - **SSH key :** Ajoutez votre clé publique
     4. Cliquez sur **Create** et notez l'adresse IP publique.
 
     <Tip>
-    Si la création de l'instance échoue avec le message "Out of capacity", essayez un domaine de disponibilité différent ou réessayez plus tard. La capacité de la offre gratuite est limitée.
+    Si la création de l'instance échoue avec "Out of capacity", essayez un domaine de disponibilité différent ou réessayez plus tard. La capacité de la offre gratuite est limitée.
     </Tip>
 
   </Step>
 
-  <Step title="Connecter et mettre à jour le système">
+  <Step title="Se connecter et mettre à jour le système">
     ```bash
     ssh ubuntu@YOUR_PUBLIC_IP
 
@@ -84,7 +82,7 @@ Exécutez une passerelle OpenClaw Gateway persistante sur le niveau ARM **Always
   </Step>
 
   <Step title="Configurer la passerelle">
-    Utilisez l'authentification par jeton avec Tailscale Serve pour un accès à distance sécurisé.
+    Utilisez l'authentification par jeton avec Tailscale Serve pour un accès distant sécurisé.
 
     ```bash
     openclaw config set gateway.bind loopback
@@ -96,23 +94,23 @@ Exécutez une passerelle OpenClaw Gateway persistante sur le niveau ARM **Always
     systemctl --user restart openclaw-gateway.service
     ```
 
-    `gateway.trustedProxies=["127.0.0.1"]` ici est uniquement pour la gestion des IP transférées/clients locaux du proxy Tailscale Serve local. Ce n'est **pas** `gateway.auth.mode: "trusted-proxy"`. Les routes du visualiseur de différences conservent un comportement de fermeture par échec dans cette configuration : les requêtes brutes du visualiseur `127.0.0.1` sans en-têtes de proxy transféré peuvent renvoyer `Diff not found`. Utilisez `mode=file` / `mode=both` pour les pièces jointes, ou activez intentionnellement les visualiseurs distants et définissez `plugins.entries.diffs.config.viewerBaseUrl` (ou passez un proxy `baseUrl`) si vous avez besoin de liens de visualisation partageables.
+    `gateway.trustedProxies=["127.0.0.1"]` ici sert uniquement à la gestion des IP transférées/clients locaux du proxy Tailscale Serve local. Ce n'est **pas** `gateway.auth.mode: "trusted-proxy"`. Les routes de la visionneuse de diff conservent un comportement de fermeture en échec dans cette configuration : les requêtes brutes de la visionneuse `127.0.0.1` sans en-têtes de proxy transféré peuvent renvoyer `Diff not found`. Utilisez `mode=file` / `mode=both` pour les pièces jointes, ou activez intentionnellement les visionneuses distantes et définissez `plugins.entries.diffs.config.viewerBaseUrl` (ou passez un proxy `baseUrl`) si vous avez besoin de liens de visionneuse partageables.
 
   </Step>
 
   <Step title="Verrouiller la sécurité du VCN">
-    Bloquez tout le trafic sauf Tailscale à la limite du réseau :
+    Bloquez tout le trafic sauf Tailscale au niveau de la périphérie du réseau :
 
-    1. Allez dans **Networking > Virtual Cloud Networks** dans la Console OCI.
-    2. Cliquez sur votre VCN, puis sur **Security Lists > Default Security List**.
+    1. Allez dans **Réseau > Réseaux cloud virtuels** dans la console OCI.
+    2. Cliquez sur votre VCN, puis sur **Listes de sécurité > Liste de sécurité par défaut**.
     3. **Supprimez** toutes les règles d'entrée sauf `0.0.0.0/0 UDP 41641` (Tailscale).
     4. Conservez les règles de sortie par défaut (autoriser tout le trafic sortant).
 
-    Cela bloque le SSH sur le port 22, HTTP, HTTPS et tout autre élément à la limite du réseau. Vous ne pouvez plus vous connecter que via Tailscale à partir de maintenant.
+    Cela bloque le SSH sur le port 22, HTTP, HTTPS et tout le reste au niveau de la périphérie du réseau. Vous ne pouvez vous connecter que via Tailscale à partir de maintenant.
 
   </Step>
 
-  <Step title="Verify">
+  <Step title="Vérifier">
     ```bash
     openclaw --version
     systemctl --user status openclaw-gateway.service
@@ -131,7 +129,7 @@ Exécutez une passerelle OpenClaw Gateway persistante sur le niveau ARM **Always
   </Step>
 </Steps>
 
-## Solution de secours : Tunnel SSH
+## Solution de repli : tunnel SSH
 
 Si Tailscale Serve ne fonctionne pas, utilisez un tunnel SSH depuis votre machine locale :
 
@@ -143,16 +141,22 @@ Ensuite, ouvrez `http://localhost:18789`.
 
 ## Dépannage
 
-**La création de l'instance échoue ("Out of capacity")** -- Les instances ARM de la offre gratuite sont très demandées. Essayez un autre domaine de disponibilité ou réessayez aux heures creuses.
+**La création de l'instance échoue (« Out of capacity »)** -- Les instances ARM de la offre gratuite sont très demandées. Essayez un domaine de disponibilité différent ou réessayez aux heures creuses.
 
-**Tailscale ne se connecte pas** -- Exécutez `sudo tailscale up --ssh --hostname=openclaw --reset` pour vous réauthentifier.
+**Tailscale ne parvient pas à se connecter** -- Exécutez `sudo tailscale up --ssh --hostname=openclaw --reset` pour vous réauthentifier.
 
-**Gateway ne démarre pas** -- Exécutez `openclaw doctor --non-interactive` et vérifiez les journaux avec `journalctl --user -u openclaw-gateway.service -n 50`.
+**La passerelle ne démarre pas** -- Exécutez `openclaw doctor --non-interactive` et vérifiez les journaux avec `journalctl --user -u openclaw-gateway.service -n 50`.
 
-**Problèmes de binaire ARM** -- La plupart des paquets npm fonctionnent sur ARM64. Pour les binaires natifs, recherchez les versions `linux-arm64` ou `aarch64`. Vérifiez l'architecture avec `uname -m`.
+**Problèmes de binaires ARM** -- La plupart des packages npm fonctionnent sur ARM64. Pour les binaires natifs, recherchez les versions `linux-arm64` ou `aarch64`. Vérifiez l'architecture avec `uname -m`.
 
 ## Étapes suivantes
 
-- [Canaux](/fr/channels) -- connectez Telegram, WhatsApp, Discord, et plus encore
-- [Configuration Gateway](/fr/gateway/configuration) -- toutes les options de configuration
+- [Canaux](/fr/channels) -- connectez Telegram, WhatsApp, Discord et plus encore
+- [Configuration de la Gateway](/fr/gateway/configuration) -- toutes les options de configuration
 - [Mise à jour](/fr/install/updating) -- garder OpenClaw à jour
+
+## Connexes
+
+- [Aperçu de l'installation](/fr/install)
+- [GCP](/fr/install/gcp)
+- [Hébergement VPS](/fr/vps)

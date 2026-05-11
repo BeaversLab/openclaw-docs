@@ -4,7 +4,7 @@ read_when:
   - You want to understand which features may call paid APIs
   - You need to audit keys, costs, and usage visibility
   - You’re explaining /status or /usage cost reporting
-title: "API 使用和成本"
+title: "API 使用情况和费用"
 ---
 
 # API 使用与成本
@@ -66,7 +66,7 @@ OpenClaw 可以从以下位置获取凭据：
 Coding Plan**、**MiniMax Coding Plan**、**Z.AI / GLM Coding Plan**，以及
 Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 
-有关价格配置，请参阅 [Models](/zh/providers/models)；有关显示，请参阅 [Token use & costs](/zh/reference/token-use)。
+有关价格配置，请参阅 [Models](/zh/providers/models)；有关显示信息，请参阅 [Token use & costs](/zh/reference/token-use)。
 
 ### 2) 媒体理解（音频/图像/视频）
 
@@ -119,27 +119,27 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 - **Grok (xAI)**：`XAI_API_KEY` 或 `plugins.entries.xai.config.webSearch.apiKey`
 - **Kimi (Moonshot)**：`KIMI_API_KEY`、`MOONSHOT_API_KEY` 或 `plugins.entries.moonshot.config.webSearch.apiKey`
 - **MiniMax Search**：`MINIMAX_CODE_PLAN_KEY`、`MINIMAX_CODING_API_KEY`、`MINIMAX_API_KEY` 或 `plugins.entries.minimax.config.webSearch.apiKey`
-- **Ollama Web Search**：默认无密钥，但需要可访问的 Ollama 主机以及 `ollama signin`；当主机需要时，也可以复用普通的 Ollama 提供商 bearer auth
+- **Ollama Web Search**：对于可访问且已登录的本地 Ollama 主机免费；直接 `https://ollama.com` 搜索使用 `OLLAMA_API_KEY`，且受身份验证保护的主机可以重用常规 Ollama 提供商 bearer auth
 - **Perplexity Search API**：`PERPLEXITY_API_KEY`、`OPENROUTER_API_KEY` 或 `plugins.entries.perplexity.config.webSearch.apiKey`
 - **Tavily**：`TAVILY_API_KEY` 或 `plugins.entries.tavily.config.webSearch.apiKey`
 - **DuckDuckGo**：无密钥回退选项（无 API 计费，但非官方且基于 HTML）
-- **SearXNG**: `SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl`（无密钥/自托管；无托管 API 计费）
+- **SearXNG**：`SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl`（免费/自托管；无托管 API 计费）
 
-旧版 `tools.web.search.*` 提供商路径仍然通过临时兼容性垫片加载，但它们不再是推荐的配置界面。
+传统的 `tools.web.search.*` 提供商路径仍然通过临时兼容性垫片加载，但它们不再是推荐的配置界面。
 
 **Brave 搜索免费额度：** 每个 Brave 计划都包含每月 $5 的可续期免费额度。搜索计划每 1,000 次请求费用为 $5，因此该额度可覆盖每月 1,000 次免费请求。在 Brave 仪表板中设置您的使用限制，以避免意外收费。
 
-请参阅 [Web 工具](/zh/tools/web)。
+请参阅 [Web tools](/zh/tools/web)。
 
 ### 5) Web 获取工具 (Firecrawl)
 
-`web_fetch` 可以在存在 Firecrawl 密钥时调用 **API**：
+当存在 API 密钥时，`web_fetch` 可以调用 **Firecrawl**：
 
 - `FIRECRAWL_API_KEY` 或 `plugins.entries.firecrawl.config.webFetch.apiKey`
 
-如果未配置 Firecrawl，该工具将回退到直接获取 + 可读性处理（无付费 API）。
+如果未配置 Firecrawl，该工具将回退到直接获取以及捆绑的 `web-readability` 插件（无付费 API）。禁用 `plugins.entries.web-readability.enabled` 以跳过本地 Readability 提取。
 
-请参阅 [Web 工具](/zh/tools/web)。
+请参阅 [Web tools](/zh/tools/web)。
 
 ### 6) 提供商使用快照 (status/health)
 
@@ -149,19 +149,20 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-请参阅 [模型 CLI](/zh/cli/models)。
+请参阅 [Models CLI](/zh/cli/models)。
 
 ### 7) 压缩安全摘要
 
 压缩安全机制可以使用 **当前模型** 对会话历史进行摘要，这会在其运行时调用提供商 API。
 
-请参阅 [会话管理 + 压缩](/zh/reference/session-management-compaction)。
+请参阅 [Session management + compaction](/zh/reference/session-management-compaction)。
 
 ### 8) 模型扫描 / 探测
 
-`openclaw models scan` 可以探测 OpenRouter 模型，并在启用探测时使用 `OPENROUTER_API_KEY`。
+`openclaw models scan` 可以探测 OpenRouter 模型，并且在启用探测时使用
+`OPENROUTER_API_KEY`。
 
-请参阅 [模型 CLI](/zh/cli/models)。
+请参阅 [Models CLI](/zh/cli/models)。
 
 ### 9) 通话 (语音)
 
@@ -169,11 +170,16 @@ Anthropic 的 OpenClaw Claude-login 路径并启用了 **Extra Usage**。
 
 - `ELEVENLABS_API_KEY` 或 `talk.providers.elevenlabs.apiKey`
 
-请参阅 [通话模式](/zh/nodes/talk)。
+请参阅[对话模式](/zh/nodes/talk)。
 
 ### 10) Skills (第三方 API)
 
-Skills 可以在 `skills.entries.<name>.apiKey` 中存储 `apiKey`。如果 skill 使用该密钥访问外部
-API，则可能会根据 skill 的提供商产生费用。
+Skills 可以将 `apiKey` 存储在 `skills.entries.<name>.apiKey` 中。如果 skill 使用该密钥访问外部 API，则可能会根据 skill 的提供商产生费用。
 
 请参阅 [Skills](/zh/tools/skills)。
+
+## 相关
+
+- [Token 使用和成本](/zh/reference/token-use)
+- [提示词缓存](/zh/reference/prompt-caching)
+- [使用情况跟踪](/zh/concepts/usage-tracking)

@@ -1,85 +1,83 @@
 ---
-title: "GPT-5.4 / Codex Parity 維護者說明"
-summary: "如何將 GPT-5.4 / Codex parity 程式審查為四個合併單元"
+summary: "如何以四個合併單元審查 GPT-5.4 / Codex parity 程式"
+title: "GPT-5.4 / Codex parity 維護者筆記"
 read_when:
   - Reviewing the GPT-5.4 / Codex parity PR series
   - Maintaining the six-contract agentic architecture behind the parity program
 ---
 
-# GPT-5.4 / Codex Parity 維護者說明
-
-本說明解釋如何將 GPT-5.4 / Codex parity 程式審查為四個合併單元，而不會失去原本的六項合約架構。
+本說明解釋了如何在不遺失原始六個合約架構的情況下，將 GPT-5.4 / Codex parity 程式作為四個合併單元進行審查。
 
 ## 合併單元
 
 ### PR A：嚴格代理執行
 
-包含：
+擁有：
 
 - `executionContract`
-- GPT-5-first 同回合跟進執行
-- 作為非終端進度追蹤的 `update_plan`
-- 明確的阻擋狀態，而非僅限計畫的靜默停止
+- GPT-5-first 同輪次跟進
+- `update_plan` 作為非終端進度追蹤
+- 明確的受阻狀態，而非僅計畫中的靜默停止
 
-不包含：
+不擁有：
 
 - auth/runtime 失敗分類
 - 權限真實性
-- replay/continuation 重新設計
+- 重播/延續重新設計
 - parity 基準測試
 
 ### PR B：runtime 真實性
 
-包含：
+擁有：
 
 - Codex OAuth 範圍正確性
-- 類型化的 provider/runtime 失敗分類
-- 真實的 `/elevated full` 可用性與阻擋原因
+- 型別化 provider/runtime 失敗分類
+- 真實的 `/elevated full` 可用性及受阻原因
 
-不包含：
+不擁有：
 
 - 工具架構正規化
-- replay/liveness 狀態
-- 基準測試閘道
+- 重播/存活狀態
+- 基準閘道
 
 ### PR C：執行正確性
 
-包含：
+擁有：
 
 - provider 擁有的 OpenAI/Codex 工具相容性
-- 無參數的嚴格架構處理
-- replay-invalid 揭露
-- 已暫停、阻擋與已放棄的長任務狀態可見性
+- 無參數嚴格架構處理
+- 重播無效顯示
+- 已暫停、受阻和已放棄的長任務狀態可見性
 
-不包含：
+不擁有：
 
-- 自選續行
-- provider hooks 之外的一般 Codex 方言行為
-- 基準測試閘道
+- 自選延續
+- provider hooks 之外的通用 Codex 方言行為
+- 基準閘道
 
-### PR D：parity 鞍具
+### PR D：parity 駕馭
 
-包含：
+擁有：
 
-- 第一波 GPT-5.4 對比 Opus 4.6 情境套件
+- 第一波 GPT-5.4 對決 Opus 4.6 情境套件
 - parity 文件
-- parity 報告與 release-gate 機制
+- parity 報告和發布閘道機制
 
-不包含：
+不擁有：
 
 - QA-lab 之外的 runtime 行為變更
-- 鞍具內部的 auth/proxy/DNS 模擬
+- 駕馭內部的 auth/proxy/DNS 模擬
 
-## 對應回原本的六項合約
+## 對映回原始六個合約
 
-| 原始合約                            | 合併單元 |
-| ----------------------------------- | -------- |
-| Provider transport/auth 正確性      | PR B     |
-| 工具合約/架構相容性                 | PR C     |
-| 同回合執行                          | PR A     |
-| 權限真實性                          | PR B     |
-| Replay/continuation/liveness 正確性 | PR C     |
-| 基準測試/release 閘道               | PR D     |
+| 原始合約                  | 合併單元 |
+| ------------------------- | -------- |
+| Provider 傳輸/auth 正確性 | PR B     |
+| 工具合約/架構相容性       | PR C     |
+| 同輪次執行                | PR A     |
+| 權限真實性                | PR B     |
+| 重播/延續/存活正確性      | PR C     |
+| 基準/發布閘道             | PR D     |
 
 ## 審查順序
 
@@ -88,15 +86,15 @@ read_when:
 3. PR C
 4. PR D
 
-PR D 是驗證層。它不應成為延遲 runtime-correctness PR 的原因。
+PR D 是證明層。它不應成為延遲 runtime 正確性 PR 的原因。
 
-## 檢查重點
+## 注意事項
 
 ### PR A
 
-- GPT-5 執行 act 或 fail closed，而不是停留在評論階段
-- `update_plan` 不再單獨被視為進度
-- 行為保持 GPT-5-first 且範圍限於 embedded-Pi
+- GPT-5 執行動作或封閉式失敗，而非停留在評論
+- `update_plan` 本身不再看起來像是進度
+- 行為保持 GPT-5-first 和 embedded-Pi 範圍
 
 ### PR B
 
@@ -163,10 +161,14 @@ The parity harness is not the only evidence source. Keep this split explicit in 
 
 ## Reviewer shorthand: before vs after
 
-| User-visible problem before                          | Review signal after                                                         |
-| ---------------------------------------------------- | --------------------------------------------------------------------------- |
-| GPT-5.4 stopped after planning                       | PR A shows act-or-block behavior instead of commentary-only completion      |
-| 在嚴格的 OpenAI/Codex 架構下，工具使用感覺起來很脆弱 | PR C 讓工具註冊和無參數調用變得可預測                                       |
-| `/elevated full` 提示有時會產生誤導                  | PR B 將指導方針與實際的運行時能力及阻斷原因聯繫起來                         |
-| 長時間任務可能會在重放/壓縮的歧義中消失              | PR C 會發出明確的已暫停、已阻斷、已放棄和重放無效狀態                       |
-| 對等性聲明缺乏系統性證據                             | PR D 會生成一份報告以及 JSON 判定，並確保兩個模型在相同場景覆蓋率下進行評估 |
+| User-visible problem before                    | Review signal after                                                    |
+| ---------------------------------------------- | ---------------------------------------------------------------------- |
+| GPT-5.4 stopped after planning                 | PR A shows act-or-block behavior instead of commentary-only completion |
+| 在嚴格的 OpenAI/Codex 架構下，工具使用顯得脆弱 | PR C 讓工具註冊和無參數調用變得可預測                                  |
+| `/elevated full` 提示有時會產生誤導            | PR B 將指導與實際執行時期能力及阻斷原因掛鉤                            |
+| 長時間任務可能會消失在重放/合併的歧義中        | PR C 發出明確的暫停、阻斷、放棄和重放無效狀態                          |
+| 平權聲明僅屬趣聞                               | PR D 產生一份報告以及 JSON 判決，並確保兩個模型具有相同的場景覆蓋率    |
+
+## 相關
+
+- [GPT-5.4 / Codex agentic parity](/zh-Hant/help/gpt54-codex-agentic-parity)

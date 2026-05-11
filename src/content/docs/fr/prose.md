@@ -7,16 +7,14 @@ read_when:
 title: "OpenProse"
 ---
 
-# OpenProse
-
-OpenProse est un format de workflow portable, basé sur le markdown, pour orchestrer des sessions d'IA. Dans OpenClaw, il est livré sous forme de plugin qui installe un pack de compétences OpenProse ainsi qu'une commande slash `/prose`. Les programmes résident dans des fichiers `.prose` et peuvent générer plusieurs sous-agents avec un flux de contrôle explicite.
+OpenProse est un format de workflow priorisant le markdown, portable, pour orchestrer les sessions d'IA. Dans OpenClaw, il est fourni sous forme de plugin qui installe un pack de compétences OpenProse ainsi qu'une commande slash `/prose`. Les programmes résident dans des fichiers `.prose` et peuvent générer plusieurs sous-agents avec un flux de contrôle explicite.
 
 Site officiel : [https://www.prose.md](https://www.prose.md)
 
 ## Ce qu'il peut faire
 
 - Recherche et synthèse multi-agents avec un parallélisme explicite.
-- Workflows reproductibles et sûrs en matière d'approbations (revue de code, triage d'incidents, pipelines de contenu).
+- Workflows reproductibles et sûrs en matière d'approbation (révision de code, triage d'incidents, pipelines de contenu).
 - Programmes `.prose` réutilisables que vous pouvez exécuter sur les runtimes d'agents pris en charge.
 
 ## Installer + activer
@@ -29,9 +27,9 @@ openclaw plugins enable open-prose
 
 Redémarrez la Gateway après avoir activé le plugin.
 
-Dév/checkout local : `openclaw plugins install ./path/to/local/open-prose-plugin`
+Checkout dev/local : `openclaw plugins install ./path/to/local/open-prose-plugin`
 
-Documentation connexe : [Plugins](/fr/tools/plugin), [Manifeste de plugin](/fr/plugins/manifest), [Compétences](/fr/tools/skills).
+Documentation connexe : [Plugins](/fr/tools/plugin), [Manifeste de plugin](/fr/plugins/manifest), [Skills](/fr/tools/skills).
 
 ## Commande slash
 
@@ -108,7 +106,7 @@ OpenProse prend en charge plusieurs backends d'état :
 Notes :
 
 - sqlite/postgres sont optionnels et expérimentaux.
-- les identifiants postgres transitent dans les journaux des sous-agents ; utilisez une base de données dédiée avec le moins de privilèges possible.
+- Les identifiants postgres se retrouvent dans les journaux des sous-agents ; utilisez une base de données dédiée avec les privilèges minimum.
 
 ## Programmes distants
 
@@ -119,16 +117,21 @@ Les URL directes sont récupérées telles quelles. Cela utilise l'outil `web_fe
 
 Les programmes OpenProse correspondent aux primitives OpenClaw :
 
-| Concept OpenProse            | Outil OpenClaw   |
-| ---------------------------- | ---------------- |
-| Spawn session / Task tool    | `sessions_spawn` |
-| Lecture/écriture de fichiers | `read` / `write` |
-| Récupération Web             | `web_fetch`      |
+| Concept OpenProse           | Outil OpenClaw   |
+| --------------------------- | ---------------- |
+| Outil Spawn session / Task  | `sessions_spawn` |
+| Lecture/écriture de fichier | `read` / `write` |
+| Récupération Web            | `web_fetch`      |
 
-Si votre liste blanche d'outils bloque ces outils, les programmes OpenProse échoueront. Voir [Skills config](/fr/tools/skills-config).
+Si votre liste blanche d'outils bloque ces outils, les programmes OpenProse échoueront. Voir [Configuration des Skills](/fr/tools/skills-config).
 
 ## Sécurité + approbations
 
-Traitez les fichiers `.prose` comme du code. Révisez-les avant exécution. Utilisez les listes blanches d'outils OpenClaw et les portails d'approbation pour contrôler les effets secondaires.
+Traitez les fichiers `.prose` comme du code. Révisez-les avant exécution. Utilisez les listes blanches d'outils et les portières d'approbation OpenClaw pour contrôler les effets secondaires.
 
-Pour des flux de travail déterministes et soumis à approbation, comparer avec [Lobster](/fr/tools/lobster).
+Pour des workflows déterministes et soumis à approbation, comparez avec [Lobster](/fr/tools/lobster).
+
+## Connexes
+
+- [Synthèse vocale](/fr/tools/tts)
+- [Formatage Markdown](/fr/concepts/markdown-formatting)

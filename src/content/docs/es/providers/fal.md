@@ -1,31 +1,29 @@
 ---
-title: "fal"
 summary: "configuración de generación de imágenes y videos de fal en OpenClaw"
+title: "Fal"
 read_when:
   - You want to use fal image generation in OpenClaw
   - You need the FAL_KEY auth flow
   - You want fal defaults for image_generate or video_generate
 ---
 
-# fal
-
-OpenClaw incluye un proveedor `fal` integrado para la generación alojada de imágenes y videos.
+OpenClaw incluye un proveedor `fal` integrado para la generación de imágenes y videos alojados.
 
 | Propiedad     | Valor                                                                 |
 | ------------- | --------------------------------------------------------------------- |
 | Proveedor     | `fal`                                                                 |
 | Autenticación | `FAL_KEY` (canónico; `FAL_API_KEY` también funciona como alternativa) |
-| API           | Endpoints de modelos de fal                                           |
+| API           | endpoints de modelos de fal                                           |
 
-## Introducción
+## Cómo empezar
 
 <Steps>
-  <Step title="Configurar la clave de API">
+  <Step title="Establecer la clave de API">
     ```bash
     openclaw onboard --auth-choice fal-api-key
     ```
   </Step>
-  <Step title="Configurar un modelo de imagen predeterminado">
+  <Step title="Establecer un modelo de imagen predeterminado">
     ```json5
     {
       agents: {
@@ -52,8 +50,13 @@ El proveedor de generación de imágenes `fal` incluido tiene como valor predete
 | Sobrescrituras de tamaño | Compatible                         |
 | Relación de aspecto      | Compatible                         |
 | Resolución               | Compatible                         |
+| Formato de salida        | `png` o `jpeg`                     |
 
-<Warning>El endpoint de edición de imágenes de fal **no** admite sobrescrituras de `aspectRatio`.</Warning>
+<Warning>El endpoint de edición de imágenes de fal **no** admite anulaciones de `aspectRatio`.</Warning>
+
+Use `outputFormat: "png"` cuando desee salida PNG. fal no declara un
+control explícito de fondo transparente en OpenClaw, por lo que `background:
+"transparent"` se reporta como una anulación ignorada para los modelos de fal.
 
 Para usar fal como proveedor de imágenes predeterminado:
 
@@ -71,13 +74,13 @@ Para usar fal como proveedor de imágenes predeterminado:
 
 ## Generación de video
 
-El proveedor de generación de video `fal` incluido tiene como valor predeterminado
+El proveedor de generación de videos `fal` incluido tiene como valor predeterminado
 `fal/fal-ai/minimax/video-01-live`.
 
 | Capacidad           | Valor                                                                               |
 | ------------------- | ----------------------------------------------------------------------------------- |
-| Modos               | Texto a video, referencia de imagen única                                           |
-| Tiempo de ejecución | Flujo de envío/estado/resultado respaldado por cola para trabajos de larga duración |
+| Modos               | Texto a video, referencia de imagen única, referencia a video de Seedance           |
+| Tiempo de ejecución | Flujo de envío/estado/resultado con soporte de cola para trabajos de larga duración |
 
 <AccordionGroup>
   <Accordion title="Modelos de video disponibles">
@@ -89,8 +92,10 @@ El proveedor de generación de video `fal` incluido tiene como valor predetermin
 
     - `fal/bytedance/seedance-2.0/fast/text-to-video`
     - `fal/bytedance/seedance-2.0/fast/image-to-video`
+    - `fal/bytedance/seedance-2.0/fast/reference-to-video`
     - `fal/bytedance/seedance-2.0/text-to-video`
     - `fal/bytedance/seedance-2.0/image-to-video`
+    - `fal/bytedance/seedance-2.0/reference-to-video`
 
   </Accordion>
 
@@ -108,7 +113,26 @@ El proveedor de generación de video `fal` incluido tiene como valor predetermin
     ```
   </Accordion>
 
-  <Accordion title="Ejemplo de configuración del agente de video HeyGen">
+  <Accordion title="Ejemplo de configuración de referencia a video de Seedance 2.0">
+    ```json5
+    {
+      agents: {
+        defaults: {
+          videoGenerationModel: {
+            primary: "fal/bytedance/seedance-2.0/fast/reference-to-video",
+          },
+        },
+      },
+    }
+    ```
+
+    La referencia a video acepta hasta 9 imágenes, 3 videos y 3 referencias de audio
+    a través de los parámetros compartidos `video_generate` `images`, `videos` y `audioRefs`,
+    con un máximo de 12 archivos de referencia en total.
+
+  </Accordion>
+
+  <Accordion title="Ejemplo de configuración de video-agente de HeyGen">
     ```json5
     {
       agents: {
@@ -123,18 +147,18 @@ El proveedor de generación de video `fal` incluido tiene como valor predetermin
   </Accordion>
 </AccordionGroup>
 
-<Tip>Use `openclaw models list --provider fal` para ver la lista completa de modelos de fal disponibles, incluidas las entradas añadidas recientemente.</Tip>
+<Tip>Use `openclaw models list --provider fal` para ver la lista completa de modelos fal disponibles, incluyendo cualquier entrada agregada recientemente.</Tip>
 
 ## Relacionado
 
 <CardGroup cols={2}>
   <Card title="Generación de imágenes" href="/es/tools/image-generation" icon="image">
-    Parámetros compartidos de la herramienta de imagen y selección de proveedor.
+    Parámetros compartidos de la herramienta de imagen y selección del proveedor.
   </Card>
-  <Card title="Generación de video" href="/es/tools/video-generation" icon="video">
+  <Card title="Generación de videos" href="/es/tools/video-generation" icon="video">
     Parámetros compartidos de la herramienta de video y selección del proveedor.
   </Card>
-  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference#agent-defaults" icon="gear">
-    Valores predeterminados del agente, incluida la selección de modelos de imagen y video.
+  <Card title="Referencia de configuración" href="/es/gateway/config-agents#agent-defaults" icon="gear">
+    Valores predeterminados del agente, incluyendo la selección de modelos de imagen y video.
   </Card>
 </CardGroup>

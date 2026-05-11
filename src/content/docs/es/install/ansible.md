@@ -22,7 +22,7 @@ Implemente OpenClaw en servidores de producción con **[openclaw-ansible](https:
 | **Red**     | Conexión a Internet para la instalación de paquetes              |
 | **Ansible** | 2.14+ (instalado automáticamente por el script de inicio rápido) |
 
-## Lo que obtiene
+## Lo que obtienes
 
 - **Seguridad con prioridad en el firewall** -- UFW + aislamiento de Docker (solo accesible SSH + Tailscale)
 - **Tailscale VPN** -- acceso remoto seguro sin exponer servicios públicamente

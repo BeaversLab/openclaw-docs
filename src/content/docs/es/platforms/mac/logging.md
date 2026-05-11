@@ -3,7 +3,7 @@ summary: "Registro de OpenClaw: registro de archivo de diagnóstico rotativo + i
 read_when:
   - Capturing macOS logs or investigating private data logging
   - Debugging voice wake/session lifecycle issues
-title: "Registro de macOS"
+title: "registro de macOS"
 ---
 
 # Registro (macOS)
@@ -24,7 +24,7 @@ Notas:
 
 ## Datos privados de registro unificado en macOS
 
-El registro unificado redacta la mayoría de las cargas útiles a menos que un subsistema opte por `privacy -off`. Según el artículo de Peter sobre las [travesuras de privacidad del registro](https://steipete.me/posts/2025/logging-privacy-shenanigans) de macOS (2025), esto se controla mediante un plist en `/Library/Preferences/Logging/Subsystems/` con clave por el nombre del subsistema. Solo las nuevas entradas de registro adoptan el indicador, así que habilítelo antes de reproducir un problema.
+El registro unificado redacta la mayoría de las cargas útiles a menos que un subsistema opte por `privacy -off`. Según el artículo de Peter sobre las [travesuras de privacidad de registro](https://steipete.me/posts/2025/logging-privacy-shenanigans) de macOS (2025), esto se controla mediante un plist en `/Library/Preferences/Logging/Subsystems/` con clave por el nombre del subsistema. Solo las entradas de registro nuevas adoptan la marca, así que actívela antes de reproducir un problema.
 
 ## Habilitar para OpenClaw (`ai.openclaw`)
 
@@ -55,3 +55,8 @@ sudo install -m 644 -o root -g wheel /tmp/ai.openclaw.plist /Library/Preferences
 - Elimine la anulación: `sudo rm /Library/Preferences/Logging/Subsystems/ai.openclaw.plist`.
 - Opcionalmente, ejecute `sudo log config --reload` para forzar a logd a eliminar la anulación de inmediato.
 - Recuerde que esta superficie puede incluir números de teléfono y cuerpos de mensajes; mantenga el plist en su lugar solo mientras necesite activamente el detalle adicional.
+
+## Relacionado
+
+- [app de macOS](/es/platforms/macos)
+- [Registro de puerta de enlace](/es/gateway/logging)

@@ -1,6 +1,6 @@
 ---
-title: "AGENTS.dev 範本"
 summary: "Dev agent AGENTS.md (C-3PO)"
+title: "AGENTS.dev 範本"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -81,3 +81,8 @@ git commit -m "Add agent workspace"
 - 氛圍 + 堆疊追蹤 = 無法阻擋的團隊
 - 噢，感謝造物主（永遠適用）
 - Clawdributors 是善良的
+
+## 相關
+
+- [AGENTS.md 範本](/zh-Hant/reference/templates/AGENTS)
+- [預設 AGENTS.md](/zh-Hant/reference/AGENTS.default)

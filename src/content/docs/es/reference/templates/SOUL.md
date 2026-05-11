@@ -1,6 +1,6 @@
 ---
-title: "SOUL.md Template"
 summary: "Plantilla de espacio de trabajo para SOUL.md"
+title: "Plantilla de SOUL.md"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -43,3 +43,7 @@ Si cambias este archivo, dile al usuario — es tu alma, y él debería saberlo.
 ---
 
 _Este archivo es tuyo para evolucionar. A medida que aprendas quién eres, actualízalo._
+
+## Relacionado
+
+- [Guía de personalidad de SOUL.md](/es/concepts/soul)

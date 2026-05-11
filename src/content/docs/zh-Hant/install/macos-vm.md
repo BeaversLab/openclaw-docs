@@ -92,7 +92,7 @@ lume create openclaw --os macos --ipsw latest
 
 這會下載 macOS 並建立 VM。VNC 視窗會自動開啟。
 
-注意：下載可能需要一點時間，具體取決於您的連線速度。
+<Note>下載時間可能需要一會兒，具體取決於您的連線速度。</Note>
 
 ---
 

@@ -2,7 +2,7 @@
 summary: "OpenClaw 的背景故事和传说，用于提供语境和基调"
 read_when:
   - Writing docs or UX copy that reference lore
-title: "OpenClaw 传说"
+title: "OpenClaw lore"
 ---
 
 # OpenClaw 的传说 🦞📖
@@ -217,3 +217,7 @@ _“爪即法则。”_
 —— ELU，在最终形态迁移期间，2026 年 1 月 30 日
 
 🦞💙
+
+## 相关
+
+- [入门指南](/zh/start/getting-started)

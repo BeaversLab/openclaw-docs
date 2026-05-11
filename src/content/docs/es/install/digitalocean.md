@@ -6,9 +6,7 @@ read_when:
 title: "DigitalOcean"
 ---
 
-# DigitalOcean
-
-Ejecute un Gateway de OpenClaw persistente en un Droplet de DigitalOcean.
+Ejecute un OpenClaw Gateway persistente en un DigitalOcean Droplet.
 
 ## Requisitos previos
 
@@ -21,16 +19,16 @@ Ejecute un Gateway de OpenClaw persistente en un Droplet de DigitalOcean.
 <Steps>
   <Step title="Crear un Droplet">
     <Warning>
-    Utilice una imagen base limpia (Ubuntu 24.04 LTS). Evite las imágenes de un clic del Marketplace de terceros a menos que haya revisado sus scripts de inicio y configuraciones predeterminadas del firewall.
+    Utilice una imagen base limpia (Ubuntu 24.04 LTS). Evite las imágenes de un clic de Marketplace de terceros a menos que haya revisado sus scripts de inicio y las configuraciones predeterminadas del firewall.
     </Warning>
 
     1. Inicie sesión en [DigitalOcean](https://cloud.digitalocean.com/).
     2. Haga clic en **Create > Droplets**.
     3. Elija:
-       - **Región:** La más cercana a usted
-       - **Imagen:** Ubuntu 24.04 LTS
-       - **Tamaño:** Basic, Regular, 1 vCPU / 1 GB RAM / 25 GB SSD
-       - **Autenticación:** Clave SSH (recomendado) o contraseña
+       - **Region:** La más cercana a usted
+       - **Image:** Ubuntu 24.04 LTS
+       - **Size:** Basic, Regular, 1 vCPU / 1 GB RAM / 25 GB SSD
+       - **Authentication:** Clave SSH (recomendado) o contraseña
     4. Haga clic en **Create Droplet** y anote la dirección IP.
 
   </Step>
@@ -52,16 +50,16 @@ Ejecute un Gateway de OpenClaw persistente en un Droplet de DigitalOcean.
 
   </Step>
 
-  <Step title="Ejecutar el asistente de configuración">
+  <Step title="Ejecutar la configuración inicial">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    El asistente lo guía a través de la autenticación del modelo, la configuración del canal, la generación del token de la puerta de enlace y la instalación del demonio (systemd).
+    El asistente lo guiará a través de la autenticación del modelo, la configuración del canal, la generación del token de la puerta de enlace y la instalación del demonio (systemd).
 
   </Step>
 
-  <Step title="Añadir memoria de intercambio (recomendado para Droplets de 1 GB)">
+  <Step title="Añadir swap (recomendado para Droplets de 1 GB)">
     ```bash
     fallocate -l 2G /swapfile
     chmod 600 /swapfile
@@ -73,10 +71,10 @@ Ejecute un Gateway de OpenClaw persistente en un Droplet de DigitalOcean.
 
 <Step title="Verificar la puerta de enlace">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
-  <Step title="Acceder a la interfaz de usuario de control">
-    La puerta de enlace se vincula al loopback de forma predeterminada. Elija una de estas opciones.
+  <Step title="Acceder a la interfaz de control">
+    De forma predeterminada, la puerta de enlace se enlaza a loopback. Elija una de estas opciones.
 
-    **Opción A: Túnel SSH (el más simple)**
+    **Opción A: Túnel SSH (la más sencilla)**
 
     ```bash
     # From your local machine
@@ -96,7 +94,7 @@ Ejecute un Gateway de OpenClaw persistente en un Droplet de DigitalOcean.
 
     Luego abra `https://<magicdns>/` desde cualquier dispositivo en su tailnet.
 
-    **Opción C: Tailnet bind (sin Serve)**
+    **Opción C: Enlace Tailnet (sin Serve)**
 
     ```bash
     openclaw config set gateway.bind tailnet
@@ -110,14 +108,21 @@ Ejecute un Gateway de OpenClaw persistente en un Droplet de DigitalOcean.
 
 ## Solución de problemas
 
-**Gateway no se inicia** -- Ejecute `openclaw doctor --non-interactive` y verifique los registros con `journalctl --user -u openclaw-gateway.service -n 50`.
+**La puerta de enlace no se inicia** -- Ejecute `openclaw doctor --non-interactive` y verifique los registros con `journalctl --user -u openclaw-gateway.service -n 50`.
 
-**Puerto ya en uso** -- Ejecute `lsof -i :18789` para encontrar el proceso, luego deténgalo.
+**Puerto ya en uso** -- Ejecute `lsof -i :18789` para encontrar el proceso y luego deténgalo.
 
-**Sin memoria** -- Verifique que swap esté activo con `free -h`. Si sigue alcanzando OOM, use modelos basados en API (Claude, GPT) en lugar de modelos locales, o actualice a un Droplet de 2 GB.
+**Memoria insuficiente** -- Verifica que el intercambio (swap) esté activo con `free -h`. Si sigues experimentando errores de falta de memoria (OOM), utiliza modelos basados en API (Claude, GPT) en lugar de modelos locales, o actualiza a un Droplet de 2 GB.
 
-## Pasos siguientes
+## Próximos pasos
 
-- [Canales](/es/channels) -- conecte Telegram, WhatsApp, Discord y más
+- [Canales](/es/channels) -- conecta Telegram, WhatsApp, Discord y más
 - [Configuración del Gateway](/es/gateway/configuration) -- todas las opciones de configuración
-- [Actualización](/es/install/updating) -- mantenga OpenClaw actualizado
+- [Actualización](/es/install/updating) -- mantén OpenClaw actualizado
+
+## Relacionado
+
+- [Resumen de instalación](/es/install)
+- [Fly.io](/es/install/fly)
+- [Hetzner](/es/install/hetzner)
+- [Alojamiento VPS](/es/vps)

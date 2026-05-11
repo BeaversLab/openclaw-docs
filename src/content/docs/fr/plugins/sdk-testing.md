@@ -1,50 +1,46 @@
 ---
-title: "Plugin Testing"
-sidebarTitle: "Testing"
-summary: "Testing utilities and patterns for OpenClaw plugins"
+summary: "Utilitaires et modèles de test pour les plugins OpenClaw"
+title: "Test de plugin"
+sidebarTitle: "Test"
 read_when:
   - You are writing tests for a plugin
   - You need test utilities from the plugin SDK
   - You want to understand contract tests for bundled plugins
 ---
 
-# Plugin Testing
-
-Reference for test utilities, patterns, and lint enforcement for OpenClaw
-plugins.
+Référence pour les utilitaires de test, les modèles et l'application des règles de lint pour les plugins OpenClaw.
 
 <Tip>**Vous cherchez des exemples de tests ?** Les guides pratiques incluent des exemples de tests détaillés : [Tests de plugins de canal](/fr/plugins/sdk-channel-plugins#step-6-test) et [Tests de plugins de fournisseur](/fr/plugins/sdk-provider-plugins#step-6-test).</Tip>
 
-## Test utilities
+## Utilitaires de test
 
-**Import:** `openclaw/plugin-sdk/testing`
+**Importation :** `openclaw/plugin-sdk/testing`
 
-The testing subpath exports a narrow set of helpers for plugin authors:
+Le sous-chemin de testing exporte un ensemble restreint de assistants pour les auteurs de plugins :
 
 ```typescript
 import { installCommonResolveTargetErrorCases, shouldAckReaction, removeAckReactionAfterReply } from "openclaw/plugin-sdk/testing";
 ```
 
-### Available exports
+### Exports disponibles
 
-| Export                                 | Purpose                                                |
-| -------------------------------------- | ------------------------------------------------------ |
-| `installCommonResolveTargetErrorCases` | Shared test cases for target resolution error handling |
-| `shouldAckReaction`                    | Check whether a channel should add an ack reaction     |
-| `removeAckReactionAfterReply`          | Remove ack reaction after reply delivery               |
+| Export                                 | Objectif                                                                     |
+| -------------------------------------- | ---------------------------------------------------------------------------- |
+| `installCommonResolveTargetErrorCases` | Cas de test partagés pour la gestion des erreurs de résolution de cible      |
+| `shouldAckReaction`                    | Vérifier si un canal doit ajouter une réaction d'accusé de réception         |
+| `removeAckReactionAfterReply`          | Supprimer la réaction d'accusé de réception après la livraison de la réponse |
 
 ### Types
 
-The testing subpath also re-exports types useful in test files:
+Le sous-chemin de testing réexporte également des types utiles dans les fichiers de test :
 
 ```typescript
 import type { ChannelAccountSnapshot, ChannelGatewayContext, OpenClawConfig, PluginRuntime, RuntimeEnv, MockFn } from "openclaw/plugin-sdk/testing";
 ```
 
-## Testing target resolution
+## Test de la résolution de cible
 
-Use `installCommonResolveTargetErrorCases` to add standard error cases for
-channel target resolution:
+Utilisez `installCommonResolveTargetErrorCases` pour ajouter des cas d'erreur standard pour la résolution de cible de canal :
 
 ```typescript
 import { describe } from "vitest";
@@ -66,9 +62,19 @@ describe("my-channel target resolution", () => {
 });
 ```
 
-## Testing patterns
+## Modèles de test
 
-### Unit testing a channel plugin
+### Test des contrats d'enregistrement
+
+Les tests unitaires qui passent un mock `api` écrit à la main à `register(api)` n'exercent pas les barrières d'acceptation du chargeur de OpenClaw. Ajoutez au moins un test de fumée (smoke test) soutenu par le chargeur pour chaque surface d'enregistrement dont dépend votre plugin, en particulier les hooks et les capacités exclusives telles que la mémoire.
+
+Le vrai chargeur échoue l'enregistrement du plugin lorsque les métadonnées requises sont manquantes ou qu'un plugin appelle une API de capacité qu'il ne possède pas. Par exemple, `api.registerHook(...)` nécessite un nom de hook, et `api.registerMemoryCapability(...)` nécessite que le manifeste du plugin ou l'entrée exportée déclare `kind: "memory"`.
+
+### Test de l'accès à la configuration d'exécution
+
+Préférez le mock d'exécution de plugin partagé des assistants de test du dépôt lors du test des plugins groupés. Ses mocks obsolètes `runtime.config.loadConfig()` et `runtime.config.writeConfigFile(...)` lancent des exceptions par défaut afin que les tests détectent toute nouvelle utilisation d'API de compatibilité. Ne remplacez ces mocks que lorsque le test couvre explicitement un comportement de compatibilité hérité.
+
+### Test unitaire d'un plugin de canal
 
 ```typescript
 import { describe, it, expect, vi } from "vitest";
@@ -104,7 +110,7 @@ describe("my-channel plugin", () => {
 });
 ```
 
-### Unit testing a provider plugin
+### Tests unitaires d'un plugin provider
 
 ```typescript
 import { describe, it, expect } from "vitest";
@@ -132,9 +138,9 @@ describe("my-provider plugin", () => {
 });
 ```
 
-### Mocking the plugin runtime
+### Simuler le runtime du plugin
 
-For code that uses `createPluginRuntimeStore`, mock the runtime in tests:
+Pour le code qui utilise `createPluginRuntimeStore`, simulez le runtime dans les tests :
 
 ```typescript
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
@@ -152,8 +158,9 @@ const mockRuntime = {
     // ... other mocks
   },
   config: {
-    loadConfig: vi.fn(),
-    writeConfigFile: vi.fn(),
+    current: vi.fn(() => ({}) as const),
+    mutateConfigFile: vi.fn(),
+    replaceConfigFile: vi.fn(),
   },
   // ... other namespaces
 } as unknown as PluginRuntime;
@@ -164,9 +171,9 @@ store.setRuntime(mockRuntime);
 store.clearRuntime();
 ```
 
-### Testing with per-instance stubs
+### Tests avec des stubs par instance
 
-Prefer per-instance stubs over prototype mutation:
+Préférez les stubs par instance à la mutation du prototype :
 
 ```typescript
 // Preferred: per-instance stub
@@ -177,30 +184,30 @@ client.sendMessage = vi.fn().mockResolvedValue({ id: "msg-1" });
 // MyChannelClient.prototype.sendMessage = vi.fn();
 ```
 
-## Contract tests (in-repo plugins)
+## Tests de contrat (plugins in-repo)
 
-Bundled plugins have contract tests that verify registration ownership:
+Les plugins groupés disposent de tests de contrat qui vérifient la propriété de l'enregistrement :
 
 ```bash
 pnpm test -- src/plugins/contracts/
 ```
 
-These tests assert:
+Ces tests vérifient :
 
-- Which plugins register which providers
-- Which plugins register which speech providers
-- Registration shape correctness
-- Runtime contract compliance
+- Quels plugins enregistrent quels providers
+- Quels plugins enregistrent quels providers de synthèse vocale
+- Correction de la forme de l'enregistrement
+- Conformité au contrat d'exécution
 
-### Running scoped tests
+### Exécution de tests délimités
 
-For a specific plugin:
+Pour un plugin spécifique :
 
 ```bash
 pnpm test -- <bundled-plugin-root>/my-channel/
 ```
 
-For contract tests only:
+Pour les tests de contrat uniquement :
 
 ```bash
 pnpm test -- src/plugins/contracts/shape.contract.test.ts
@@ -208,15 +215,15 @@ pnpm test -- src/plugins/contracts/auth.contract.test.ts
 pnpm test -- src/plugins/contracts/runtime.contract.test.ts
 ```
 
-## Lint enforcement (in-repo plugins)
+## Application des règles de linting (plugins in-repo)
 
-Three rules are enforced by `pnpm check` for in-repo plugins:
+Trois règles sont appliquées par `pnpm check` pour les plugins in-repo :
 
-1. **No monolithic root imports** -- `openclaw/plugin-sdk` root barrel is rejected
-2. **No direct `src/` imports** -- plugins cannot import `../../src/` directly
+1. **Pas d'imports racine monolithiques** -- le module principal `openclaw/plugin-sdk` est rejeté
+2. **Pas d'imports directs `src/`** -- les plugins ne peuvent pas importer `../../src/` directement
 3. **Pas d'auto-imports** -- les plugins ne peuvent pas importer leur propre sous-chemin `plugin-sdk/<name>`
 
-Les plugins externes ne sont pas soumis à ces règles de lint, mais il est recommandé de suivre les mêmes modèles.
+Les plugins externes ne sont pas soumis à ces règles de linting, mais il est recommandé de suivre les mêmes modèles.
 
 ## Configuration des tests
 
@@ -244,7 +251,7 @@ OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test
 
 ## Connexes
 
-- [Présentation du SDK](/fr/plugins/sdk-overview) -- conventions d'importation
-- [SDK Channel Plugins](/fr/plugins/sdk-channel-plugins) -- interface de plugin channel
-- [SDK Provider Plugins](/fr/plugins/sdk-provider-plugins) -- provider plugin hooks
+- [Aperçu du SDK](/fr/plugins/sdk-overview) -- conventions d'importation
+- [Plugins Channel du SDK](/fr/plugins/sdk-channel-plugins) -- interface du plugin channel
+- [Plugins Provider du SDK](/fr/plugins/sdk-provider-plugins) -- hooks du plugin provider
 - [Création de plugins](/fr/plugins/building-plugins) -- guide de démarrage

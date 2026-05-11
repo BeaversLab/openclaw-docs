@@ -2,7 +2,7 @@
 summary: "Referencia de la CLI para `openclaw health` (instantánea de salud de la puerta de enlace a través de RPC)"
 read_when:
   - You want to quickly check the running Gateway’s health
-title: "health"
+title: "Salud"
 ---
 
 # `openclaw health`
@@ -34,3 +34,8 @@ Notas:
 - `--verbose` fuerza una sondel en vivo, imprime los detalles de conexión de la puerta de enlace y expande la
   salida legible por humanos en todas las cuentas y agentes configurados.
 - La salida incluye almacenes de sesión por agente cuando se configuran múltiples agentes.
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)
+- [Estado de la puerta de enlace](/es/gateway/health)

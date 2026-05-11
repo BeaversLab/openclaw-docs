@@ -3,7 +3,7 @@ summary: "Guía de extremo a extremo para ejecutar OpenClaw como asistente perso
 read_when:
   - Onboarding a new assistant instance
   - Reviewing safety/permission implications
-title: "Configuración del Asistente Personal"
+title: "Configuración del asistente personal"
 ---
 
 # Construyendo un asistente personal con OpenClaw
@@ -66,7 +66,7 @@ openclaw gateway --port 18789
 
 Ahora envíe un mensaje al número del asistente desde su teléfono autorizado.
 
-Cuando finaliza la integración, abrimos automáticamente el panel e imprimimos un enlace limpio (sin tokenizar). Si solicita autenticación, pega el secreto compartido configurado en la configuración de la interfaz de usuario de control. La integración utiliza un token por defecto (`gateway.auth.token`), pero la autenticación por contraseña también funciona si cambias `gateway.auth.mode` a `password`. Para volver a abrir más tarde: `openclaw dashboard`.
+Cuando finalice la incorporación, OpenClaw abrirá automáticamente el panel e imprimirá un enlace limpio (sin token). Si el panel solicita autenticación, pegue el secreto compartido configurado en la configuración de Control UI. La incorporación utiliza un token de forma predeterminada (`gateway.auth.token`), pero la autenticación por contraseña también funciona si cambió `gateway.auth.mode` a `password`. Para volver a abrirlo más tarde: `openclaw dashboard`.
 
 ## Dar al agente un espacio de trabajo (AGENTES)
 
@@ -74,7 +74,7 @@ OpenClaw lee las instrucciones de funcionamiento y la "memoria" de su directorio
 
 Por defecto, OpenClaw usa `~/.openclaw/workspace` como el espacio de trabajo del agente, y lo creará (junto con los `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md` iniciales) automáticamente en la configuración/primera ejecución del agente. `BOOTSTRAP.md` solo se crea cuando el espacio de trabajo es nuevo (no debería reaparecer después de eliminarlo). `MEMORY.md` es opcional (no se crea automáticamente); cuando está presente, se carga para sesiones normales. Las sesiones de subagente solo inyectan `AGENTS.md` y `TOOLS.md`.
 
-Consejo: trata esta carpeta como la "memoria" de OpenClaw y conviértela en un repositorio git (idealmente privado) para que tus archivos `AGENTS.md` + de memoria estén respaldados. Si git está instalado, los espacios de trabajo nuevos se inicializan automáticamente.
+<Tip>Trate esta carpeta como la memoria de OpenClaw y conviértala en un repositorio git (idealmente privado) para que sus `AGENTS.md` y archivos de memoria estén respaldados. Si git está instalado, los espacios de trabajo nuevos se inicializan automáticamente.</Tip>
 
 ```bash
 openclaw setup
@@ -87,8 +87,10 @@ Opcional: elige un espacio de trabajo diferente con `agents.defaults.workspace` 
 
 ```json5
 {
-  agent: {
-    workspace: "~/.openclaw/workspace",
+  agents: {
+    defaults: {
+      workspace: "~/.openclaw/workspace",
+    },
   },
 }
 ```
@@ -97,8 +99,10 @@ Si ya envías tus propios archivos de espacio de trabajo desde un repositorio, p
 
 ```json5
 {
-  agent: {
-    skipBootstrap: true,
+  agents: {
+    defaults: {
+      skipBootstrap: true,
+    },
   },
 }
 ```
@@ -223,3 +227,9 @@ Los registros se encuentran bajo `/tmp/openclaw/` (predeterminado: `openclaw-YYY
 - Estado de Windows: [Windows (WSL2)](/es/platforms/windows)
 - Estado de Linux: [aplicación para Linux](/es/platforms/linux)
 - Seguridad: [Seguridad](/es/gateway/security)
+
+## Relacionado
+
+- [Para comenzar](/es/start/getting-started)
+- [Configuración](/es/start/setup)
+- [Descripción general de canales](/es/channels)

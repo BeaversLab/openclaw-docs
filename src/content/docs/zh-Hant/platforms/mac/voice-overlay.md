@@ -2,7 +2,7 @@
 summary: "當喚醒詞與按住講話重疊時的語音覆蓋層生命週期"
 read_when:
   - Adjusting voice overlay behavior
-title: "Voice Overlay"
+title: "語音覆蓋"
 ---
 
 # Voice Overlay 生命週期 (macOS)
@@ -58,3 +58,9 @@ title: "Voice Overlay"
 3. 重構 `VoicePushToTalk` 以採用現有的 sessions 並在釋放時呼叫 `endCapture`；套用 runtime 冷卻。
 4. 將 `VoiceWakeOverlayController` 連接到發佈器；移除來自 runtime/PTT 的直接呼叫。
 5. 新增 session 採用、冷卻和空文字解除的整合測試。
+
+## 相關
+
+- [macOS 應用程式](/zh-Hant/platforms/macos)
+- [語音喚醒 (macOS)](/zh-Hant/platforms/mac/voicewake)
+- [交談模式](/zh-Hant/nodes/talk)

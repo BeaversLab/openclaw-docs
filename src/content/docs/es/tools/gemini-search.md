@@ -4,15 +4,13 @@ read_when:
   - You want to use Gemini for web_search
   - You need a GEMINI_API_KEY
   - You want Google Search grounding
-title: "Búsqueda de Gemini"
+title: "Búsqueda Gemini"
 ---
 
-# Búsqueda de Gemini
-
-OpenClaw admite modelos Gemini con
-[fundamentación en Google Search](https://ai.google.dev/gemini-api/docs/grounding)
-integrada, que devuelve respuestas sintetizadas por IA respaldadas por
-resultados en vivo de Google Search con citas.
+OpenClaw admite modelos de Gemini con
+[grounding de Google Search](https://ai.google.dev/gemini-api/docs/grounding) integrado,
+que devuelve respuestas sintetizadas por IA respaldadas por resultados en vivo de Google Search con
+citaciones.
 
 ## Obtener una clave de API
 
@@ -58,36 +56,37 @@ resultados en vivo de Google Search con citas.
 ```
 
 **Alternativa de entorno:** establezca `GEMINI_API_KEY` en el entorno de Gateway.
-Para una instalación de puerta de enlace, colóquelo en `~/.openclaw/.env`.
+Para una instalación de gateway, póngalo en `~/.openclaw/.env`.
 
 ## Cómo funciona
 
 A diferencia de los proveedores de búsqueda tradicionales que devuelven una lista de enlaces y fragmentos,
-Gemini utiliza la fundamentación en Google Search para producir respuestas sintetizadas por IA con
-citas en línea. Los resultados incluyen tanto la respuesta sintetizada como las URL de origen.
+Gemini utiliza el grounding de Google Search para producir respuestas sintetizadas por IA con
+citaciones en línea. Los resultados incluyen tanto la respuesta sintetizada como las URL de
+fuente.
 
-- Las URL de cita de la fundamentación de Gemini se resuelven automáticamente desde las URL de
-  redirección de Google a URL directas.
-- La resolución de redirecciones utiliza la ruta de protección SSRF (HEAD + comprobaciones de redirección +
-  validación http/https) antes de devolver la URL de cita final.
-- La resolución de redirecciones utiliza los valores predeterminados SSRF estrictos, por lo que las redirecciones a
-  objetivos privados/internos están bloqueadas.
+- Las URL de citación del grounding de Gemini se resuelven automáticamente desde las
+  URL de redirección de Google a URL directas.
+- La resolución de redireccionamientos utiliza la ruta de protección SSRF (HEAD + verificaciones de redirección +
+  validación http/https) antes de devolver la URL de citación final.
+- La resolución de redireccionamientos utiliza valores predeterminados SSRF estrictos, por lo que los redireccionamientos a
+  objetivos privados/internos están bloqueados.
 
-## Parámetros compatibles
+## Parámetros admitidos
 
 La búsqueda de Gemini admite `query`.
 
-Se acepta `count` para la compatibilidad compartida con `web_search`, pero la fundamentación de Gemini
-todavía devuelve una respuesta sintetizada con citas en lugar de una lista de N
-resultados.
+Se acepta `count` para la compatibilidad compartida de `web_search`, pero el grounding de Gemini
+aún devuelve una respuesta sintetizada con citas en lugar de una lista de
+N resultados.
 
-Filtros específicos del proveedor como `country`, `language`, `freshness` y
+Los filtros específicos del proveedor como `country`, `language`, `freshness` y
 `domain_filter` no son compatibles.
 
-## Selección de modelo
+## Selección del modelo
 
-El modelo predeterminado es `gemini-2.5-flash` (rápido y rentable). Se puede utilizar cualquier modelo
-Gemini que admita fundamentación a través de
+El modelo predeterminado es `gemini-2.5-flash` (rápido y rentable). Cualquier modelo
+de Gemini que admita grounding se puede utilizar mediante
 `plugins.entries.google.config.webSearch.model`.
 
 ## Relacionado

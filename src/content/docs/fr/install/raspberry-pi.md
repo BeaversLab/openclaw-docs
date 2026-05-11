@@ -7,14 +7,12 @@ read_when:
 title: "Raspberry Pi"
 ---
 
-# Raspberry Pi
-
-Exécutez une passerelle OpenClaw persistante et toujours active sur un Gateway. Puisque le Pi n'est que la passerelle (les modèles s'exécutent dans le cloud via Raspberry Pi), même un Pi modeste gère bien la charge de travail.
+Exécutez une passerelle OpenClaw persistante et toujours active sur un Raspberry Pi. Comme le Pi ne sert que de passerelle (les modèles s'exécutent dans le cloud via l'API), même un Pi modeste gère bien la charge de travail.
 
 ## Prérequis
 
 - Raspberry Pi 4 ou 5 avec 2 Go de RAM ou plus (4 Go recommandés)
-- Carte MicroSD (16 Go+) ou SSD USB (meilleures performances)
+- Carte MicroSD (16 Go ou plus) ou SSD USB (meilleures performances)
 - Alimentation Pi officielle
 - Connexion réseau (Ethernet ou WiFi)
 - Raspberry Pi OS 64 bits (requis -- n'utilisez pas la version 32 bits)
@@ -33,13 +31,13 @@ Exécutez une passerelle OpenClaw persistante et toujours active sur un Gateway.
        - Activer SSH
        - Définir le nom d'utilisateur et le mot de passe
        - Configurer le WiFi (si vous n'utilisez pas Ethernet)
-    4. Flashez sur votre carte SD ou clé USB, insérez-la et démarrez le Pi.
+    4. Flashez sur votre carte SD ou votre clé USB, insérez-la et démarrez le Pi.
 
   </Step>
 
-<Step title="Connecter via SSH">```bash ssh user@gateway-host ```</Step>
+<Step title="Connect via SSH">```bash ssh user@gateway-host ```</Step>
 
-  <Step title="Mettre à jour le système">
+  <Step title="Update the system">
     ```bash
     sudo apt update && sudo apt upgrade -y
     sudo apt install -y git curl build-essential
@@ -50,9 +48,9 @@ Exécutez une passerelle OpenClaw persistante et toujours active sur un Gateway.
 
   </Step>
 
-<Step title="Installer Node.js 24">```bash curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash - sudo apt install -y nodejs node --version ```</Step>
+<Step title="Install Node.js 24">```bash curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash - sudo apt install -y nodejs node --version ```</Step>
 
-  <Step title="Ajouter de la mémoire d'échange (important pour 2 Go ou moins)">
+  <Step title="Add swap (important for 2 GB or less)">
     ```bash
     sudo fallocate -l 2G /swapfile
     sudo chmod 600 /swapfile
@@ -67,14 +65,14 @@ Exécutez une passerelle OpenClaw persistante et toujours active sur un Gateway.
 
   </Step>
 
-<Step title="Installer OpenClaw">```bash curl -fsSL https://openclaw.ai/install.sh | bash ```</Step>
+<Step title="Install OpenClaw">```bash curl -fsSL https://openclaw.ai/install.sh | bash ```</Step>
 
-  <Step title="Exécuter l'intégration">
+  <Step title="Run onboarding">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    Suivez l'assistant. Les clés API sont recommandées plutôt que OAuth pour les appareils sans interface graphique. Telegram est le canal le plus simple pour commencer.
+    Suivez l'assistant. Les clés API sont recommandées plutôt que OAuth pour les appareils sans tête. Telegram est le canal le plus simple pour commencer.
 
   </Step>
 
@@ -100,9 +98,9 @@ Exécutez une passerelle OpenClaw persistante et toujours active sur un Gateway.
 
 ## Conseils de performance
 
-**Utilisez un SSD USB** -- les cartes SD sont lentes et s'usent. Un SSD USB améliore considérablement les performances. Consultez le [guide de démarrage USB du Pi](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot).
+**Utiliser un SSD USB** -- Les cartes SD sont lentes et s'usent. Un SSD USB améliore considérablement les performances. Consultez le [guide de démarrage USB Pi](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot).
 
-**Activer le cache de compilation des modules** -- Accélère les appels répétés de la CLI sur les Pi peu puissants :
+**Activer le cache de compilation des modules** -- Accélère les appels CLI répétés sur les Pi de faible puissance :
 
 ```bash
 grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF' # pragma: allowlist secret
@@ -122,18 +120,24 @@ sudo systemctl disable bluetooth
 
 ## Dépannage
 
-**Mémoire insuffisante** -- Vérifiez que le swap est actif avec `free -h`. Désactivez les services inutilisés (`sudo systemctl disable cups bluetooth avahi-daemon`). Utilisez uniquement des modèles basés sur API.
+**Mémoire insuffisante** -- Vérifiez que le swap est actif avec `free -h`. Désactivez les services inutilisés (`sudo systemctl disable cups bluetooth avahi-daemon`). Utilisez uniquement des modèles basés sur l'API.
 
 **Performances lentes** -- Utilisez un SSD USB au lieu d'une carte SD. Vérifiez le throttling du CPU avec `vcgencmd get_throttled` (devrait retourner `0x0`).
 
-**Le service ne démarre pas** -- Vérifiez les journaux avec `journalctl --user -u openclaw-gateway.service --no-pager -n 100` et exécutez `openclaw doctor --non-interactive`. S'il s'agit d'un Pi sans tête, vérifiez également que la persistance est activée : `sudo loginctl enable-linger "$(whoami)"`.
+**Le service ne démarre pas** -- Consultez les journaux avec `journalctl --user -u openclaw-gateway.service --no-pager -n 100` et exécutez `openclaw doctor --non-interactive`. S'il s'agit d'un Pi sans écran, vérifiez également que la persistance est activée : `sudo loginctl enable-linger "$(whoami)"`.
 
 **Problèmes de binaire ARM** -- Si une compétence échoue avec "exec format error", vérifiez si le binaire dispose d'une version ARM64. Vérifiez l'architecture avec `uname -m` (devrait afficher `aarch64`).
 
-**Déconnexions WiFi** -- Désactivez la gestion de l'alimentation WiFi : `sudo iwconfig wlan0 power off`.
+**Déconnexions WiFi** -- Désactivez la gestion de l'énergie WiFi : `sudo iwconfig wlan0 power off`.
 
 ## Étapes suivantes
 
-- [Canaux](/fr/channels) -- connectez Telegram, WhatsApp, Discord, et plus
+- [Canaux](/fr/channels) -- connecter Telegram, WhatsApp, Discord, et plus
 - [Configuration du Gateway](/fr/gateway/configuration) -- toutes les options de configuration
-- [Mise à jour](/fr/install/updating) -- garder OpenClaw à jour
+- [Mises à jour](/fr/install/updating) -- garder OpenClaw à jour
+
+## Connexes
+
+- [Vue d'ensemble de l'installation](/fr/install)
+- [Serveur Linux](/fr/vps)
+- [Plateformes](/fr/platforms)

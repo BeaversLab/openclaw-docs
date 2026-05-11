@@ -3,7 +3,7 @@ summary: "Referencia de la CLI para `openclaw completion` (generar/instalar scri
 read_when:
   - You want shell completions for zsh/bash/fish/PowerShell
   - You need to cache completion scripts under OpenClaw state
-title: "completado"
+title: "Completion"
 ---
 
 # `openclaw completion`
@@ -33,3 +33,7 @@ openclaw completion --shell bash --write-state
 - `--install` escribe un pequeño bloque "OpenClaw Completion" en tu perfil de shell y lo apunta al script en caché.
 - Sin `--install` o `--write-state`, el comando imprime el script en stdout.
 - La generación de completado carga con avidez los árboles de comandos para que se incluyan los subcomandos anidados.
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)

@@ -1,6 +1,6 @@
 ---
-title: "Plantilla de AGENTS.md"
-summary: "Plantilla del espacio de trabajo para AGENTS.md"
+summary: "Plantilla de espacio de trabajo para AGENTS.md"
+title: "Plantilla AGENTS.md"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -219,3 +219,7 @@ El objetivo: Ser útil sin ser molesto. Pasa un par de veces al día, haz trabaj
 ## Hazlo Tuyo
 
 Este es un punto de partida. Agrega tus propias convenciones, estilo y reglas a medida que averiguas qué funciona.
+
+## Relacionado
+
+- [AGENTS.md predeterminado](/es/reference/AGENTS.default)

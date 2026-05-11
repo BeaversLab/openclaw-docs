@@ -2,7 +2,7 @@
 summary: "Mac 应用中的语音唤醒和按键通话模式以及路由详细信息"
 read_when:
   - Working on voice wake or PTT pathways
-title: "Voice Wake (macOS)"
+title: "语音唤醒 (macOS)"
 ---
 
 # 语音唤醒与按住通话
@@ -65,3 +65,9 @@ title: "Voice Wake (macOS)"
 
 - 开启按住通话，按住 Cmd+Fn，说话，松开：覆盖层应显示部分文本然后发送。
 - 按住时，菜单栏耳朵应保持放大（使用 `triggerVoiceEars(ttl:nil)`）；释放后它们会恢复。
+
+## 相关
+
+- [语音唤醒](/zh/nodes/voicewake)
+- [语音覆盖层](/zh/platforms/mac/voice-overlay)
+- [macOS 应用](/zh/platforms/macos)

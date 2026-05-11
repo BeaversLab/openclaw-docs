@@ -3,7 +3,7 @@ summary: "用於瀏覽器自動化的手動登入 + X/Twitter 發文"
 read_when:
   - You need to log into sites for browser automation
   - You want to post updates to X/Twitter
-title: "瀏覽器登入"
+title: "Browser login"
 ---
 
 # 瀏覽器登入 + X/Twitter 發文
@@ -71,3 +71,9 @@ openclaw browser open https://x.com --browser-profile openclaw --target host
 ```
 
 或者針對發布更新的代理程式停用沙盒。
+
+## 相關
+
+- [瀏覽器](/zh-Hant/tools/browser)
+- [瀏覽器 Linux 疑難排解](/zh-Hant/tools/browser-linux-troubleshooting)
+- [瀏覽器 WSL2 疑難排解](/zh-Hant/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

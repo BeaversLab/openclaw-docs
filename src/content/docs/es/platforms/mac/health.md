@@ -2,7 +2,7 @@
 summary: "Cómo la aplicación de macOS informa los estados de salud de la puerta de enlace/Baileys"
 read_when:
   - Debugging mac app health indicators
-title: "Comprobaciones de estado (macOS)"
+title: "Verificaciones de estado (macOS)"
 ---
 
 # Verificaciones de Estado en macOS
@@ -32,3 +32,8 @@ Cómo ver si el canal vinculado está sano desde la aplicación de la barra de m
 ## En caso de duda
 
 - Todavía puede usar el flujo de CLI en [Salud de la puerta de enlace](/es/gateway/health) (`openclaw status`, `openclaw status --deep`, `openclaw health --json`) y hacer seguimiento de `/tmp/openclaw/openclaw-*.log` para `web-heartbeat` / `web-reconnect`.
+
+## Relacionado
+
+- [Estado de la puerta de enlace](/es/gateway/health)
+- [Aplicación macOS](/es/platforms/macos)

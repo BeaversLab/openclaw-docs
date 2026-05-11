@@ -5,28 +5,26 @@ read_when:
 title: "Fonctionnalités"
 ---
 
-# Fonctionnalités
-
 ## Points forts
 
 <Columns>
-  <Card title="Channels" icon="message-square" href="/fr/channels">
-    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat et plus encore avec un seul Gateway.
+  <Card title="Canaux" icon="message-square" href="/fr/channels">
+    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat, et bien d'autres avec un Gateway unique.
   </Card>
   <Card title="Plugins" icon="plug" href="/fr/tools/plugin">
-    Les plugins inclus ajoutent Matrix, Nextcloud Talk, Nostr, Twitch, Zalo et plus encore sans installation séparée dans les versions actuelles normales.
+    Les plugins inclus ajoutent Matrix, Nextcloud Talk, Nextcloud, Nostr, Twitch, et bien d'autres sans installation séparée dans les versions actuelles normales.
   </Card>
-  <Card title="Routing" icon="route" href="/fr/concepts/multi-agent">
+  <Card title="Routage" icon="route" href="/fr/concepts/multi-agent">
     Routage multi-agent avec sessions isolées.
   </Card>
-  <Card title="Media" icon="image" href="/fr/nodes/images">
-    Images, audio, vidéo, documents et génération d'images/vidéo.
+  <Card title="Médias" icon="image" href="/fr/nodes/images">
+    Images, audio, vidéo, documents et génération d'images/vidéos.
   </Card>
-  <Card title="Apps and UI" icon="monitor" href="/fr/web/control-ui">
+  <Card title="Apps et interface utilisateur" icon="monitor" href="/fr/web/control-ui">
     Interface utilisateur de contrôle Web et application compagnon macOS.
   </Card>
-  <Card title="Mobile nodes" icon="smartphone" href="/fr/nodes">
-    Nœuds iOS et Android avec appairage, voix/chat et commandes riches de périphérique.
+  <Card title="Nœuds mobiles" icon="smartphone" href="/fr/nodes">
+    Nœuds iOS et Android avec appairage, voix/discussion et commandes enrichies d'appareil.
   </Card>
 </Columns>
 
@@ -34,43 +32,48 @@ title: "Fonctionnalités"
 
 **Canaux :**
 
-- Les chaînes intégrées incluent Discord, Google Chat, iMessage (hérité), IRC, Signal, Slack, Telegram, WebChat et WhatsApp
-- Les chaînes de plugins inclus comprennent BlueBubbles pour iMessage, Feishu, LINE, Matrix, Mattermost, Microsoft Teams, Nextcloud Talk, Nostr, QQ Bot, Synology Chat, Tlon, Twitch, Zalo et Zalo Personal
-- Les plugins de canal installés séparément en option incluent les appels vocaux et des packages tiers tels que WeChat
-- Les plugins de canal tiers peuvent étendre davantage le Gateway, tels que WeChat
-- Prise en charge des conversations de groupe avec activation basée sur les mentions
-- Sécurité des MD avec des listes d'autorisation et l'appariement
+- Les canaux intégrés incluent Discord, Google Chat, iMessage (legacy), IRC, Signal, Slack, Telegram, WebChat et WhatsApp
+- Les canaux de plugins inclus comportent BlueBubbles pour iMessage, Feishu, LINE, Matrix, Mattermost, Microsoft Teams, Nextcloud Talk, Nextcloud, QQ Bot, Synology Chat, Nostr, Tlon, Twitch et Zalo Personal
+- Les plugins de canal installés séparément en option incluent Voice Call et des packages tiers tels que WeChat
+- Les plugins de canal tiers peuvent étendre davantage la Gateway, comme WeChat
+- Prise en charge des discussions de groupe avec activation basée sur les mentions
+- Sécurité des messages privés avec listes d'autorisation et appairage
 
 **Agent :**
 
-- Runtime d'agent intégré avec streaming d'outils
+- Runtime d'agent intégré avec flux d'outils
 - Routage multi-agent avec sessions isolées par espace de travail ou expéditeur
-- Sessions : les chats directs sont regroupés dans un `main` partagé ; les groupes sont isolés
-- Streaming et fractionnement pour les longues réponses
+- Sessions : les chats directs fusionnent dans un `main` partagé ; les groupes sont isolés
+- Streaming et découpage (chunking) pour les longues réponses
 
 **Auth et fournisseurs :**
 
 - 35+ fournisseurs de modèles (Anthropic, OpenAI, Google, et plus)
-- Auth d'abonnement via OAuth (ex: OpenAI Codex)
-- Prise en charge de fournisseurs personnalisés et auto-hébergés (vLLM, SGLang, Ollama, et tout point de terminaison compatible OpenAI ou Anthropic)
+- Auth par abonnement via OAuth (ex. OpenAI Codex)
+- Support pour les fournisseurs personnalisés et auto-hébergés (vLLM, SGLang, Ollama, et tout point de terminaison compatible OpenAI ou Anthropic)
 
-**Médias :**
+**Média :**
 
 - Images, audio, vidéo et documents en entrée et sortie
-- Surfaces de capacité de génération d'images et de vidéos partagées
+- Surfaces de capacités de génération d'images et de vidéos partagées
 - Transcription de notes vocales
 - Synthèse vocale avec plusieurs fournisseurs
 
 **Applications et interfaces :**
 
-- WebChat et interface de contrôle de navigateur
-- Application compagnon de barre de menu macOS
-- Nœud iOS avec appariement, Canvas, caméra, enregistrement d'écran, localisation et voix
-- Nœud Android avec appairage, chat, voix, Canvas, caméra et commandes d'appareil
+- WebChat et interface de contrôle navigateur
+- Application compagnon de la barre de menus macOS
+- Nœud iOS avec appairage, Canvas, caméra, enregistrement d'écran, localisation et voix
+- Nœud Android avec appairage, chat, voix, Canvas, caméra et commandes de périphérique
 
 **Outils et automatisation :**
 
-- Automatisation du navigateur, exec, sandboxing
-- Recherche Web (Brave, DuckDuckGo, Exa, Firecrawl, Gemini, Grok, Kimi, MiniMax Search, Ollama Web Search, Perplexity, SearXNG, Tavily)
-- Tâches Cron et planification des pulsations (heartbeat)
-- Skills, plugins et pipelines de workflow (Lobster)
+- Automatisation de navigateur, exec, sandboxing
+- Recherche web (Brave, DuckDuckGo, Exa, Firecrawl, Gemini, Grok, Kimi, Recherche MiniMax, Recherche web Ollama, Perplexity, SearXNG, Tavily)
+- Tâches cron et planification de heartbeat
+- Compétences, plugins et pipelines de workflow (Lobster)
+
+## Connexes
+
+- [Fonctionnalités expérimentales](/fr/concepts/experimental-features)
+- [Runtime de l'agent](/fr/concepts/agent)

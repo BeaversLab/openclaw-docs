@@ -64,3 +64,8 @@ Confianza local:
 - [Gateway config reference](/es/gateway/configuration)
 - [Troubleshooting](/es/gateway/troubleshooting)
 - [Doctor](/es/gateway/doctor)
+
+## Relacionado
+
+- [Modelo de red de puerta de enlace](/es/gateway/network-model)
+- [Acceso remoto](/es/gateway/remote)

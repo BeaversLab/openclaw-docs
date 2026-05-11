@@ -2,7 +2,7 @@
 summary: "Logique de l'état de la barre de menus et ce qui est affiché aux utilisateurs"
 read_when:
   - Tweaking mac menu UI or status logic
-title: "Barre de menus"
+title: "Barre de menu"
 ---
 
 # Logique de l'état de la barre de menus
@@ -79,3 +79,8 @@ title: "Barre de menus"
 - Démarrer la session principale alors qu'une autre est active : l'icône bascule immédiatement vers la principale.
 - Rafales d'outils rapides : s'assurer que le badge ne clignote pas (délai de grâce TTL sur les résultats des outils).
 - La ligne de santé réapparaît une fois toutes les sessions inactives.
+
+## Connexes
+
+- [App macOS](/fr/platforms/macos)
+- [Icône de la barre de menu](/fr/platforms/mac/icon)

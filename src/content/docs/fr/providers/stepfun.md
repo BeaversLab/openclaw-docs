@@ -6,25 +6,23 @@ read_when:
 title: "StepFun"
 ---
 
-# StepFun
+OpenClaw inclut un plugin provider StepFun intégré avec deux identifiants de provider :
 
-OpenClaw comprend un plugin de fournisseur StepFun intégré avec deux identifiants de fournisseur :
+- `stepfun` pour le endpoint standard
+- `stepfun-plan` pour le endpoint Step Plan
 
-- `stepfun` pour le point de terminaison standard
-- `stepfun-plan` pour le point de terminaison Step Plan
+<Warning>Standard et Step Plan sont des **providers distincts** avec des endpoints et des préfixes de référence de modèle différents (`stepfun/...` vs `stepfun-plan/...`). Utilisez une clé Chine avec les endpoints `.com` et une clé globale avec les endpoints `.ai`.</Warning>
 
-<Warning>Standard et Step Plan sont des **providers distincts** avec des points de terminaison et des préfixes de référence de modèle différents (`stepfun/...` vs `stepfun-plan/...`). Utilisez une clé Chine avec les points de terminaison `.com` et une clé mondiale avec les points de terminaison `.ai`.</Warning>
+## Vue d'ensemble de la région et du endpoint
 
-## Vue d'ensemble des régions et des points de terminaison
-
-| Point de terminaison | Chine (`.com`)                         | Monde (`.ai`)                         |
-| -------------------- | -------------------------------------- | ------------------------------------- |
-| Standard             | `https://api.stepfun.com/v1`           | `https://api.stepfun.ai/v1`           |
-| Step Plan            | `https://api.stepfun.com/step_plan/v1` | `https://api.stepfun.ai/step_plan/v1` |
+| Endpoint  | Chine (`.com`)                         | Mondial (`.ai`)                       |
+| --------- | -------------------------------------- | ------------------------------------- |
+| Standard  | `https://api.stepfun.com/v1`           | `https://api.stepfun.ai/v1`           |
+| Step Plan | `https://api.stepfun.com/step_plan/v1` | `https://api.stepfun.ai/step_plan/v1` |
 
 Env var d'auth : `STEPFUN_API_KEY`
 
-## Catalogues intégrés
+## Catalogue intégré
 
 Standard (`stepfun`) :
 
@@ -41,16 +39,16 @@ Step Plan (`stepfun-plan`) :
 
 ## Getting started
 
-Choisissez votre interface de provider et suivez les étapes de configuration.
+Choisissez votre surface de provider et suivez les étapes de configuration.
 
 <Tabs>
   <Tab title="Standard">
     **Idéal pour :** usage général via le point de terminaison standard StepFun.
 
     <Steps>
-      <Step title="Choisissez votre région de point de terminaison">
-        | Choix d'authentification               | Point de terminaison                   | Région        |
-        | -------------------------------------- | -------------------------------------- | ------------- |
+      <Step title="Choisir votre région de point de terminaison">
+        | Choix d'authentification          | Point de terminaison               | Région        |
+        | -------------------------------- | -------------------------------- | ------------- |
         | `stepfun-standard-api-key-intl`  | `https://api.stepfun.ai/v1`     | International |
         | `stepfun-standard-api-key-cn`    | `https://api.stepfun.com/v1`    | Chine         |
       </Step>
@@ -88,9 +86,9 @@ Choisissez votre interface de provider et suivez les étapes de configuration.
     **Idéal pour :** point de terminaison de raisonnement Step Plan.
 
     <Steps>
-      <Step title="Choisissez votre région de point de terminaison">
-        | Choix d'authentification           | Point de terminaison                          | Région        |
-        | ---------------------------------- | --------------------------------------------- | ------------- |
+      <Step title="Choisir votre région de point de terminaison">
+        | Choix d'authentification      | Point de terminaison                      | Région        |
+        | ---------------------------- | --------------------------------------- | ------------- |
         | `stepfun-plan-api-key-intl`  | `https://api.stepfun.ai/step_plan/v1`  | International |
         | `stepfun-plan-api-key-cn`    | `https://api.stepfun.com/step_plan/v1` | Chine         |
       </Step>
@@ -126,10 +124,10 @@ Choisissez votre interface de provider et suivez les étapes de configuration.
   </Tab>
 </Tabs>
 
-## Avancé
+## Configuration avancée
 
 <AccordionGroup>
-  <Accordion title="Full config: Standard provider">
+  <Accordion title="Config complète : Provider standard">
     ```json5
     {
       env: { STEPFUN_API_KEY: "your-key" },
@@ -159,7 +157,7 @@ Choisissez votre interface de provider et suivez les étapes de configuration.
     ```
   </Accordion>
 
-  <Accordion title="Full config: Step Plan provider">
+  <Accordion title="Full config : Fournisseur Step Plan">
     ```json5
     {
       env: { STEPFUN_API_KEY: "your-key" },
@@ -199,28 +197,28 @@ Choisissez votre interface de provider et suivez les étapes de configuration.
   </Accordion>
 
   <Accordion title="Notes">
-    - Le fournisseur est inclus avec OpenClaw, il n'y a donc pas d'étape d'installation de plugin séparée.
+    - Le fournisseur est intégré à OpenClaw, il n'y a donc pas d'étape d'installation de plugin distincte.
     - `step-3.5-flash-2603` est actuellement exposé uniquement sur `stepfun-plan`.
-    - Un seul flux d'authentification écrit des profils correspondant à la région pour `stepfun` et `stepfun-plan`, afin que les deux surfaces puissent être découvertes ensemble.
+    - Un flux d'authentification unique écrit des profils correspondant à la région pour `stepfun` et `stepfun-plan`, de sorte que les deux interfaces peuvent être découvertes ensemble.
     - Utilisez `openclaw models list` et `openclaw models set <provider/model>` pour inspecter ou changer de modèles.
   </Accordion>
 </AccordionGroup>
 
-<Note>Pour une vue d'ensemble plus large des fournisseurs, consultez [Model providers](/fr/concepts/model-providers).</Note>
+<Note>Pour une vue d'ensemble plus large des fournisseurs, consultez [Fournisseurs de modèles](/fr/concepts/model-providers).</Note>
 
-## Associé
+## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Model providers" href="/fr/concepts/model-providers" icon="layers">
-    Vue d'ensemble de tous les fournisseurs, références de modèles et comportements de basculement.
+  <Card title="Sélection de model" href="/fr/concepts/model-providers" icon="layers">
+    Vue d’ensemble de tous les providers, références de models et comportement de basculement.
   </Card>
-  <Card title="Configuration reference" href="/fr/gateway/configuration-reference" icon="gear">
-    Schéma de configuration complet pour les fournisseurs, modèles et plugins.
+  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
+    Schéma de configuration complet pour les fournisseurs, les modèles et les plugins.
   </Card>
-  <Card title="Model selection" href="/fr/concepts/models" icon="brain">
+  <Card title="Sélection de modèle" href="/fr/concepts/models" icon="brain">
     Comment choisir et configurer les modèles.
   </Card>
-  <Card title="StepFun Platform" href="https://platform.stepfun.com" icon="globe">
-    Gestion des clés API et documentation StepFun.
+  <Card title="Plateforme StepFun" href="https://platform.stepfun.com" icon="globe">
+    Gestion des clés d'API et documentation StepFun.
   </Card>
 </CardGroup>

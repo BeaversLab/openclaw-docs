@@ -56,3 +56,9 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，
 - `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要本地安装 `gemini`（`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`）；默认模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
 
 有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，请参阅 [Model providers](/zh/concepts/model-providers)。
+
+## 相关
+
+- [模型选择](/zh/concepts/model-providers)
+- [模型故障转移](/zh/concepts/model-failover)
+- [模型 CLI](/zh/cli/models)

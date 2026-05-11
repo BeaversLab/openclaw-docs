@@ -7,13 +7,11 @@ title: "CLI 自動化"
 sidebarTitle: "CLI 自動化"
 ---
 
-# CLI 自動化
-
 使用 `--non-interactive` 來自動化 `openclaw onboard`。
 
-<Note>`--json` 並不意味著非互動模式。在腳本中請使用 `--non-interactive` (以及 `--workspace`)。</Note>
+<Note>`--json` 並不意味著非互動模式。請在腳本中使用 `--non-interactive` (以及 `--workspace`)。</Note>
 
-## 基準非互動範例
+## 基礎非互動式範例
 
 ```bash
 openclaw onboard --non-interactive \
@@ -25,16 +23,19 @@ openclaw onboard --non-interactive \
   --gateway-bind loopback \
   --install-daemon \
   --daemon-runtime node \
+  --skip-bootstrap \
   --skip-skills
 ```
 
-新增 `--json` 以取得機器可讀的摘要。
+新增 `--json` 以取得機器可讀取的摘要。
 
-使用 `--secret-input-mode ref` 將環境變數支援的參照儲存在驗證設定檔中，而非明文值。
-在入門流程中，可選擇性地在環境變數參照與已設定的供應商參照 (`file` 或 `exec`) 之間進行互動式選擇。
+當您的自動化預先植入工作區檔案，並且不希望入門流程建立預設的啟動檔案時，請使用 `--skip-bootstrap`。
 
-在非互動式 `ref` 模式下，必須在程序環境中設定供應商環境變數。
-若在沒有對應環境變數的情況下傳遞內聯金鑰旗標，現在會快速失敗。
+使用 `--secret-input-mode ref` 將環境變數支援的參照 (env-backed refs) 儲存在設定檔中，而不是純文字值。
+在入門流程中，可以進行環境變數參照與已設定的提供者參照 (`file` 或 `exec`) 之間的互動式選擇。
+
+在非互動式 `ref` 模式下，必須在程序環境中設定提供者環境變數。
+現在，如果傳遞內聯金鑰旗標但沒有相符的環境變數，將會快速失敗。
 
 範例：
 
@@ -153,7 +154,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="自訂提供者範例">
+  <Accordion title="Custom provider 範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -167,7 +168,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` 是選用的。若省略，onboarding 會檢查 `CUSTOM_API_KEY`。
+    `--custom-api-key` 是選用的。如果省略，入門流程會檢查 `CUSTOM_API_KEY`。
 
     參照模式變體：
 
@@ -185,7 +186,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    在此模式下，onboarding 會將 `apiKey` 儲存為 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
+    在此模式下，入站流程會將 `apiKey` 儲存為 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
 
   </Accordion>
 </AccordionGroup>
@@ -194,13 +195,13 @@ Anthropic setup-token 仍然可用作支援的 onboarding token 路徑，但 Ope
 
 ## 新增另一個代理程式
 
-使用 `openclaw agents add <name>` 建立一個擁有獨立工作區、
-工作階段和 auth 設定檔的個別代理程式。未帶 `--workspace` 執行會啟動精靈。
+使用 `openclaw agents add <name>` 建立具有自己的工作區、
+工作階段和設定檔的個別代理程式。如果不執行 `--workspace`，則會啟動精靈。
 
 ```bash
 openclaw agents add work \
   --workspace ~/.openclaw/workspace-work \
-  --model openai/gpt-5.4 \
+  --model openai/gpt-5.5 \
   --bind whatsapp:biz \
   --non-interactive \
   --json
@@ -215,11 +216,11 @@ openclaw agents add work \
 備註：
 
 - 預設工作區遵循 `~/.openclaw/workspace-<agentId>`。
-- 新增 `bindings` 以路由傳入訊息（精靈可以執行此操作）。
+- 新增 `bindings` 以路由傳入訊息 (精靈可以執行此操作)。
 - 非互動式標誌：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
 
 ## 相關文件
 
-- 入學中心：[入學 (CLI)](/zh-Hant/start/wizard)
-- 完整參考：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference)
-- 指令參考：[`openclaw onboard`](/zh-Hant/cli/onboard)
+- 入門中心：[Onboarding (CLI)](/zh-Hant/start/wizard)
+- 完整參考資料：[CLI Setup Reference](/zh-Hant/start/wizard-cli-reference)
+- 指令參考資料：[`openclaw onboard`](/zh-Hant/cli/onboard)

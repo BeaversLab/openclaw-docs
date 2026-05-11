@@ -6,15 +6,18 @@ read_when:
 title: "快速入門"
 ---
 
-# 快速入門
-
-<Info>Quick start 現在是 [Getting Started](/zh-Hant/start/getting-started) 的一部分。</Info>
+<Info>快速入門現已包含在 [Getting Started](/zh-Hant/start/getting-started) 中。</Info>
 
 <Columns>
   <Card title="Getting Started" href="/zh-Hant/start/getting-started">
-    安裝 OpenClaw 並在幾分鐘內執行您的第一次聊天。
+    在幾分鐘內安裝 OpenClaw 並執行您的第一次聊天。
   </Card>
   <Card title="Onboarding (CLI)" href="/zh-Hant/start/wizard">
-    完整的 CLI 入門參考文件和進階選項。
+    完整的 CLI 入門參考和進階選項。
   </Card>
 </Columns>
+
+## 相關
+
+- [Getting started](/zh-Hant/start/getting-started)
+- [Install overview](/zh-Hant/install)

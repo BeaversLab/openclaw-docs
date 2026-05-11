@@ -4,7 +4,7 @@ read_when:
   - You want to enqueue a system event without creating a cron job
   - You need to enable or disable heartbeats
   - You want to inspect system presence entries
-title: "system"
+title: "Système"
 ---
 
 # `openclaw system`
@@ -69,3 +69,7 @@ Indicateurs :
 
 - Nécessite un Gateway en cours d'exécution accessible via votre configuration actuelle (locale ou distante).
 - Les événements système sont éphémères et ne sont pas persistants après les redémarrages.
+
+## Connexe
+
+- [Référence CLI](/fr/cli)

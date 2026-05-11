@@ -6,14 +6,12 @@ read_when:
 title: "平台"
 ---
 
-# 平台
+OpenClaw 核心是使用 TypeScript 編寫的。**Node 是建議的運行時環境**。
+不建議在 Gateway 上使用 Bun —— WhatsApp 和 Telegram 頻道存在已知問題；詳情請參閱 [Bun (實驗性)](/zh-Hant/install/bun)。
 
-OpenClaw 核心是以 TypeScript 撰寫的。**Node 是推薦的執行時期**。
-不推薦將 Bun 用於 Gateway (WhatsApp/Telegram 錯誤)。
-
-目前有 macOS (選單列應用程式) 和行動節點 (iOS/Android) 的伴隨應用程式。Windows 和
-Linux 伴隨應用程式正在計畫中，但 Gateway 目前已完全支援。
-Windows 的原生伴隨應用程式也在計畫中；建議透過 WSL2 使用 Gateway。
+存在適用於 macOS (選單列應用程式) 和行動節點 (iOS/Android) 的配套應用程式。Windows 和
+Linux 配套應用程式已在計劃中，但 Gateway 目前已完全支援。
+原生 Windows 配套應用程式也已在計劃中；建議透過 WSL2 使用 Gateway。
 
 ## 選擇您的作業系統
 
@@ -34,22 +32,28 @@ Windows 的原生伴隨應用程式也在計畫中；建議透過 WSL2 使用 Ga
 
 ## 常用連結
 
-- Install guide: [Getting Started](/zh-Hant/start/getting-started)
-- Gateway runbook: [Gateway](/zh-Hant/gateway)
-- Gateway configuration: [Configuration](/zh-Hant/gateway/configuration)
-- 服務狀態：`openclaw gateway status`
+- 安裝指南: [Getting Started](/zh-Hant/start/getting-started)
+- Gateway 手冊: [Gateway](/zh-Hant/gateway)
+- Gateway 配置: [Configuration](/zh-Hant/gateway/configuration)
+- 服務狀態: `openclaw gateway status`
 
 ## Gateway 服務安裝 (CLI)
 
-使用其中一種 (全部支援)：
+使用以下任一方式 (全部支援)：
 
-- 精靈 (推薦)：`openclaw onboard --install-daemon`
-- 直接：`openclaw gateway install`
-- 設定流程：`openclaw configure` → 選擇 **Gateway 服務**
-- 修復/遷移：`openclaw doctor` (提供安裝或修復服務)
+- 精靈 (建議): `openclaw onboard --install-daemon`
+- 直接: `openclaw gateway install`
+- 配置流程: `openclaw configure` → 選擇 **Gateway service**
+- 修復/遷移: `openclaw doctor` (提供安裝或修復服務的選項)
 
 服務目標取決於作業系統：
 
 - macOS: LaunchAgent (`ai.openclaw.gateway` 或 `ai.openclaw.<profile>`; 舊版 `com.openclaw.*`)
 - Linux/WSL2: systemd 使用者服務 (`openclaw-gateway[-<profile>].service`)
-- Native Windows: Scheduled Task (`OpenClaw Gateway` 或 `OpenClaw Gateway (<profile>)`)，若拒絕建立工作則退回至每個使用者的啟動資料夾登入項目
+- 原生 Windows: 排程的工作 (`OpenClaw Gateway` 或 `OpenClaw Gateway (<profile>)`)，如果拒絕建立工作，則會有針對每位使用者的 Startup-folder 登入項目後備方案
+
+## 相關
+
+- [安裝概覽](/zh-Hant/install)
+- [macOS 應用程式](/zh-Hant/platforms/macos)
+- [iOS 應用程式](/zh-Hant/platforms/ios)

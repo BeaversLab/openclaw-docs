@@ -3,7 +3,7 @@ summary: "`openclaw reset`（重置本地状态/配置）的 CLI 参考"
 read_when:
   - You want to wipe local state while keeping the CLI installed
   - You want a dry-run of what would be removed
-title: "reset"
+title: "重置"
 ---
 
 # `openclaw reset`
@@ -33,3 +33,7 @@ openclaw reset --scope full --yes --non-interactive
 - 如果您希望在删除本地状态之前拥有可恢复的快照，请先运行 `openclaw backup create`。
 - 如果您省略 `--scope`，`openclaw reset` 将使用交互式提示来选择要删除的内容。
 - `--non-interactive` 仅在同时设置了 `--scope` 和 `--yes` 时有效。
+
+## 相关
+
+- [CLI 参考](/zh/cli)

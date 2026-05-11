@@ -1,19 +1,17 @@
 ---
+summary: "Génération vidéo Wan dans Alibaba Model Studio pour OpenClaw"
 title: "Alibaba Model Studio"
-summary: "Génération vidéo Wan Alibaba Model Studio dans OpenClaw"
 read_when:
   - You want to use Alibaba Wan video generation in OpenClaw
   - You need Model Studio or DashScope API key setup for video generation
 ---
 
-# Alibaba Model Studio
-
-OpenClaw est fourni avec un provider de `alibaba` vidéo intégré pour les modèles Wan sur
+OpenClaw est livré avec un provider `alibaba` de génération vidéo intégré pour les modèles Wan sur
 Alibaba Model Studio / DashScope.
 
-- Provider : `alibaba`
+- Fournisseur : `alibaba`
 - Auth préférée : `MODELSTUDIO_API_KEY`
-- Également accepté : `DASHSCOPE_API_KEY`, `QWEN_API_KEY`
+- Aussi accepté : `DASHSCOPE_API_KEY`, `QWEN_API_KEY`
 - API : Génération vidéo asynchrone DashScope / Model Studio
 
 ## Getting started
@@ -44,13 +42,13 @@ Alibaba Model Studio / DashScope.
   </Step>
 </Steps>
 
-<Note>N'importe laquelle des clés d'authentification acceptées (`MODELSTUDIO_API_KEY`, `DASHSCOPE_API_KEY`, `QWEN_API_KEY`) fonctionnera. Le choix d'intégration `qwen-standard-api-key` configure les identifiants partagés DashScope.</Note>
+<Note>N'importe quelle clé d'authentification acceptée (`MODELSTUDIO_API_KEY`, `DASHSCOPE_API_KEY`, `QWEN_API_KEY`) fonctionnera. Le choix d'onboarding `qwen-standard-api-key` configure les informations d'identification partagées DashScope.</Note>
 
 ## Modèles Wan intégrés
 
-Le fournisseur intégré `alibaba` enregistre actuellement :
+Le provider `alibaba` intégré enregistre actuellement :
 
-| Réf modèle                 | Mode                          |
+| Réf du modèle              | Mode                          |
 | -------------------------- | ----------------------------- |
 | `alibaba/wan2.6-t2v`       | Texte vers vidéo              |
 | `alibaba/wan2.6-i2v`       | Image vers vidéo              |
@@ -75,18 +73,18 @@ Le fournisseur intégré `alibaba` enregistre actuellement :
 
 <AccordionGroup>
   <Accordion title="Relation avec Qwen">
-    Le fournisseur intégré `qwen` utilise également les points de terminaison DashScope hébergés par Alibaba pour
+    Le provider `qwen` intégré utilise également les points de terminaison DashScope hébergés par Alibaba pour
     la génération vidéo Wan. Utilisez :
 
-    - `qwen/...` lorsque vous souhaitez l'interface du fournisseur Qwen canonique
+    - `qwen/...` lorsque vous souhaitez l'interface canonique du provider Qwen
     - `alibaba/...` lorsque vous souhaitez l'interface vidéo Wan directe du fournisseur
 
-    Consultez la [documentation du fournisseur Qwen](/fr/providers/qwen) pour plus de détails.
+    Consultez la [documentation du provider Qwen](/fr/providers/qwen) pour plus de détails.
 
   </Accordion>
 
-  <Accordion title="Priorité de la clé d'auth">
-    OpenClaw vérifie les clés d'auth dans cet ordre :
+  <Accordion title="Priorité de la clé d'authentification">
+    OpenClaw vérifie les clés d'authentification dans l'ordre suivant :
 
     1. `MODELSTUDIO_API_KEY` (préféré)
     2. `DASHSCOPE_API_KEY`
@@ -106,7 +104,7 @@ Le fournisseur intégré `alibaba` enregistre actuellement :
   <Card title="Qwen" href="/fr/providers/qwen" icon="microchip">
     Configuration du provider Qwen et intégration DashScope.
   </Card>
-  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference#agent-defaults" icon="gear">
-    Valeurs par défaut de l'agent et configuration du model.
+  <Card title="Référence de configuration" href="/fr/gateway/config-agents#agent-defaults" icon="gear">
+    Valeurs par défaut de l'agent et configuration du modèle.
   </Card>
 </CardGroup>

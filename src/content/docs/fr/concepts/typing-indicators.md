@@ -5,34 +5,33 @@ read_when:
 title: "Indicateurs de frappe"
 ---
 
-# Indicateurs de frappe
-
 Les indicateurs de frappe sont envoyés au channel de discussion pendant qu'une exécution est active. Utilisez
 `agents.defaults.typingMode` pour contrôler **quand** la frappe commence et `typingIntervalSeconds`
-pour contrôler **à quelle fréquence** elle s'actualise.
+pour contrôler **la fréquence** de son actualisation.
 
 ## Valeurs par défaut
 
 Lorsque `agents.defaults.typingMode` est **non défini**, OpenClaw conserve le comportement hérité :
 
-- **Discussions directes** : la frappe commence dès que la boucle du modèle démarre.
+- **Discussions directes** : la frappe commence immédiatement dès que la boucle du model démarre.
 - **Discussions de groupe avec une mention** : la frappe commence immédiatement.
-- **Discussions de groupe sans mention** : la frappe commence uniquement lorsque le flux du texte du message commence.
-- **Exécutions de heartbeat** : la saisie commence lorsque l'exécution du heartbeat commence si la cible de heartbeat résolue est un chat capable de saisie et que la saisie n'est pas désactivée.
+- **Discussions de groupe sans mention** : la frappe commence uniquement lorsque le texte du message commence à être diffusé.
+- **Exécutions de heartbeat** : la frappe commence lorsque l'exécution du heartbeat commence si la
+  cible de heartbeat résolue est une discussion capable de frappe et si la frappe n'est pas désactivée.
 
 ## Modes
 
-Définissez `agents.defaults.typingMode` à l'une des valeurs suivantes :
+Définissez `agents.defaults.typingMode` sur l'une des valeurs suivantes :
 
 - `never` — aucun indicateur de frappe, jamais.
-- `instant` — commencer la frappe **dès que la boucle du modèle démarre**, même si l'exécution
-  renvoie ensuite uniquement le jeton de réponse silencieuse.
-- `thinking` — commencer la frappe sur la **première delta de raisonnement** (nécessite
+- `instant` — commence à taper **dès que la boucle du model démarre**, même si l'exécution
+  renvoie ultérieurement uniquement le jeton de réponse silencieux.
+- `thinking` — commence à taper sur la **première différence de raisonnement** (requiert
   `reasoningLevel: "stream"` pour l'exécution).
-- `message` — commencer la frappe sur la **première delta de texte non silencieux** (ignore
-  le `NO_REPLY` jeton silencieux).
+- `message` — commence à taper sur la **première différence de texte non silencieuse** (ignore
+  le jeton silencieux `NO_REPLY`).
 
-Ordre de "déclenchement précoce" :
+Ordre de « rapidité de déclenchement » :
 `never` → `message` → `thinking` → `instant`
 
 ## Configuration
@@ -59,11 +58,18 @@ Vous pouvez remplacer le mode ou la cadence par session :
 
 ## Notes
 
-- Le mode `message` n'affichera pas la saisie pour les réponses silencieuses lorsque la
-  charge utile entière est le jeton silencieux exact (par exemple `NO_REPLY` / `no_reply`,
+- Le mode `message` n'affichera pas la frappe pour les réponses entièrement silencieuses lorsque la
+  charge utile entière correspond exactement au jeton silencieux (par exemple `NO_REPLY` / `no_reply`,
   correspondance insensible à la casse).
 - `thinking` ne se déclenche que si l'exécution diffuse le raisonnement (`reasoningLevel: "stream"`).
-  Si le modèle n'émet pas de deltas de raisonnement, la saisie ne démarrera pas.
-- La saisie de heartbeat est un signal de présence pour la cible de livraison résolue. Elle commence au début de l'exécution du heartbeat au lieu de suivre le `message` ou la durée du flux `thinking`. Définissez `typingMode: "never"` pour la désactiver.
-- Les heartbeats n'affichent pas de saisie lorsque `target: "none"`, lorsque la cible ne peut pas être résolue, lorsque la livraison par chat est désactivée pour le heartbeat, ou lorsque le channel ne prend pas en charge la saisie.
-- `typingIntervalSeconds` contrôle la **cadence de rafraîchissement**, et non l'heure de début. La valeur par défaut est 6 secondes.
+  Si le model n'émet pas de différences de raisonnement, la frappe ne commencera pas.
+- La frappe heartbeat est un signal de vivacité pour la cible de livraison résolue. Elle
+  commence au démarrage de l'exécution du heartbeat au lieu de suivre le `message` ou le `thinking`
+  de diffusion du flux. Définissez `typingMode: "never"` pour la désactiver.
+- Les signaux de présence (heartbeats) n'affichent pas la frappe lorsque `target: "none"`, lorsque la cible ne peut pas être résolue, lorsque la livraison du chat est désactivée pour le signal de présence, ou lorsque le channel ne prend pas en charge la frappe.
+- `typingIntervalSeconds` contrôle la **cadence de rafraîchissement**, et non l'heure de début. La valeur par défaut est de 6 secondes.
+
+## Connexes
+
+- [Présence](/fr/concepts/presence)
+- [Streaming et découpage en morceaux](/fr/concepts/streaming)

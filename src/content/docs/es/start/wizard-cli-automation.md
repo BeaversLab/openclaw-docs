@@ -7,11 +7,9 @@ title: "Automatización de CLI"
 sidebarTitle: "Automatización de CLI"
 ---
 
-# Automatización de CLI
-
 Use `--non-interactive` para automatizar `openclaw onboard`.
 
-<Note>`--json` no implica el modo no interactivo. Use `--non-interactive` (y `--workspace`) para secuencias de comandos.</Note>
+<Note>`--json` no implica el modo no interactivo. Use `--non-interactive` (y `--workspace`) para scripts.</Note>
 
 ## Ejemplo no interactivo de línea base
 
@@ -25,15 +23,18 @@ openclaw onboard --non-interactive \
   --gateway-bind loopback \
   --install-daemon \
   --daemon-runtime node \
+  --skip-bootstrap \
   --skip-skills
 ```
 
-Agregue `--json` para obtener un resumen legible por máquina.
+Añada `--json` para obtener un resumen legible por máquina.
 
-Use `--secret-input-mode ref` para almacenar referencias respaldadas por env en perfiles de autenticación en lugar de valores de texto sin formato.
-La selección interactiva entre referencias de env y referencias de proveedor configuradas (`file` o `exec`) está disponible en el flujo de incorporación.
+Use `--skip-bootstrap` cuando su automatización precargue los archivos del espacio de trabajo y no desea que la incorporación cree los archivos de arranque predeterminados.
 
-En el modo `ref` no interactivo, las variables de entorno del proveedor deben configurarse en el entorno del proceso.
+Use `--secret-input-mode ref` para almacenar referencias respaldadas por variables de entorno en perfiles de autenticación en lugar de valores de texto plano.
+La selección interactiva entre referencias de entorno y referencias de proveedor configuradas (`file` o `exec`) está disponible en el flujo de incorporación.
+
+En el modo `ref` no interactivo, las variables de entorno del proveedor deben establecerse en el entorno del proceso.
 Pasar indicadores de clave en línea sin la variable de entorno correspondiente ahora falla rápidamente.
 
 Ejemplo:
@@ -131,7 +132,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Ejemplo de OpenCode">
+  <Accordion title="Abrir ejemplo de código">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -167,9 +168,9 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` es opcional. Si se omite, el onboarding verifica `CUSTOM_API_KEY`.
+    `--custom-api-key` es opcional. Si se omite, la incorporación verifica `CUSTOM_API_KEY`.
 
-    Variante de modo de referencia:
+    Variante en modo de referencia:
 
     ```bash
     export CUSTOM_API_KEY="your-key"
@@ -185,7 +186,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    En este modo, el onboarding almacena `apiKey` como `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
+    En este modo, la incorporación almacena `apiKey` como `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
 
   </Accordion>
 </AccordionGroup>
@@ -201,7 +202,7 @@ sesiones y perfiles de autenticación. Ejecutar sin `--workspace` inicia el asis
 ```bash
 openclaw agents add work \
   --workspace ~/.openclaw/workspace-work \
-  --model openai/gpt-5.4 \
+  --model openai/gpt-5.5 \
   --bind whatsapp:biz \
   --non-interactive \
   --json
@@ -216,8 +217,8 @@ Lo que configura:
 Notas:
 
 - Los espacios de trabajo predeterminados siguen `~/.openclaw/workspace-<agentId>`.
-- Añade `bindings` para enrutar los mensajes entrantes (el asistente puede hacer esto).
-- Opciones no interactivas: `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
+- Añada `bindings` para enrutar los mensajes entrantes (el asistente puede hacer esto).
+- Marcas no interactivas: `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
 
 ## Documentos relacionados
 

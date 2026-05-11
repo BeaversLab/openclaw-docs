@@ -3,19 +3,15 @@ summary: "从 CLI 运行代理轮次，并选择性地将回复发送到渠道"
 read_when:
   - You want to trigger agent runs from scripts or the command line
   - You need to deliver agent replies to a chat channel programmatically
-title: "Agent Send"
+title: "Agent send"
 ---
 
-# Agent Send
-
-`openclaw agent` 从命令行运行单个代理轮次，而无需
-传入聊天消息。将其用于脚本化工作流、测试和
-程序化投递。
+`openclaw agent` 从命令行运行单次 Agent 轮次，而无需传入聊天消息。将其用于脚本化工作流、测试和程序化交付。
 
 ## 快速开始
 
 <Steps>
-  <Step title="运行一个简单的代理轮次">
+  <Step title="运行简单的 Agent 轮次">
     ```bash
     openclaw agent --message "What is the weather today?"
     ```
@@ -24,7 +20,7 @@ title: "Agent Send"
 
   </Step>
 
-  <Step title="以特定代理或会话为目标">
+  <Step title="定位特定的 Agent 或会话">
     ```bash
     # Target a specific agent
     openclaw agent --agent ops --message "Summarize logs"
@@ -38,7 +34,7 @@ title: "Agent Send"
 
   </Step>
 
-  <Step title="将回复发送到渠道">
+  <Step title="将回复投递到渠道">
     ```bash
     # Deliver to WhatsApp (default channel)
     openclaw agent --to +15555550123 --message "Report ready" --deliver
@@ -51,34 +47,34 @@ title: "Agent Send"
   </Step>
 </Steps>
 
-## Flags
+## 标志
 
-| Flag                          | Description                                       |
+| 标志                          | 描述                                              |
 | ----------------------------- | ------------------------------------------------- |
-| `--message \<text\>`          | 要发送的消息（必需）                              |
+| `--message \<text\>`          | 要发送的消息（必填）                              |
 | `--to \<dest\>`               | 从目标（电话、聊天 ID）派生会话密钥               |
-| `--agent \<id\>`              | 以已配置的代理为目标（使用其 `main` 会话）        |
+| `--agent \<id\>`              | 定位已配置的 Agent（使用其 `main` 会话）          |
 | `--session-id \<id\>`         | 通过 ID 重用现有会话                              |
-| `--local`                     | 强制本地嵌入式运行时（跳过 Gateway(网关)）        |
+| `--local`                     | 强制使用本地嵌入式运行时（跳过 Gateway(网关)）    |
 | `--deliver`                   | 将回复发送到聊天渠道                              |
 | `--channel \<name\>`          | 投递渠道（whatsapp、telegram、discord、slack 等） |
 | `--reply-to \<target\>`       | 投递目标覆盖                                      |
 | `--reply-channel \<name\>`    | 投递渠道覆盖                                      |
 | `--reply-account \<id\>`      | 投递账户 ID 覆盖                                  |
-| `--thinking \<level\>`        | 为所选模型配置设置思考级别                        |
+| `--thinking \<level\>`        | 为所选模型配置文件设置思考级别                    |
 | `--verbose \<on\|full\|off\>` | 设置详细级别                                      |
-| `--timeout \<seconds\>`       | 覆盖代理超时                                      |
+| `--timeout \<seconds\>`       | 覆盖 Agent 超时时间                               |
 | `--json`                      | 输出结构化 JSON                                   |
 
-## Behavior
+## 行为
 
-- 默认情况下，CLI **通过 Gateway(网关)** 传输。添加 `--local` 以强制
-  在当前计算机上使用嵌入式运行时。
+- 默认情况下，CLI **通过 Gateway(网关)** 运行。添加 `--local` 以强制使用
+  当前计算机上的嵌入式运行时。
 - 如果 Gateway(网关) 无法访问，CLI 将**回退**到本地嵌入式运行。
-- Session selection: `--to` 推导会话密钥（群组/渠道目标
-  保持隔离；直接聊天折叠为 `main`）。
-- Thinking 和 verbose 标志会持久化到会话存储中。
-- 输出：默认为纯文本，或者使用 `--json` 获取结构化负载 + 元数据。
+- 会话选择：`--to` 派生会话密钥（群组/渠道目标
+  保持隔离；直接聊天会合并为 `main`）。
+- 思考和详细标志会持久化到会话存储中。
+- Output: 默认为纯文本，或使用 `--json` 获取结构化负载 + 元数据。
 
 ## 示例
 
@@ -93,8 +89,8 @@ openclaw agent --session-id 1234 --message "Summarize inbox" --thinking medium
 openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram --reply-to "@admin"
 ```
 
-## 相关
+## 相关内容
 
-- [Agent CLI reference](/zh/cli/agent)
+- [Agent CLI 参考](/zh/cli/agent)
 - [Sub-agents](/zh/tools/subagents) — 后台子代理生成
 - [Sessions](/zh/concepts/session) — 会话密钥的工作原理

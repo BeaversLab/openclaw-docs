@@ -1,6 +1,6 @@
 ---
-title: "Modèle TOOLS.md"
 summary: "Modèle d'espace de travail pour TOOLS.md"
+title: "modèle TOOLS.md"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -45,3 +45,7 @@ Les compétences sont partagées. Votre configuration vous appartient. Les garde
 ---
 
 Ajoutez tout ce qui vous aide à faire votre travail. C'est votre antisèche.
+
+## Connexes
+
+- [Espace de travail de l'agent](/fr/concepts/agent-workspace)

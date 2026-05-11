@@ -3,7 +3,7 @@ summary: "CLI 参考 `openclaw daemon`（网关服务管理的旧版别名）"
 read_when:
   - You still use `openclaw daemon ...` in scripts
   - You need service lifecycle commands (install/start/stop/restart/status)
-title: "daemon"
+title: "Daemon"
 ---
 
 # `openclaw daemon`
@@ -55,3 +55,8 @@ openclaw daemon uninstall
 ## 推荐
 
 请使用 [`openclaw gateway`](/zh/cli/gateway) 查看当前文档和示例。
+
+## 相关
+
+- [CLI 参考](/zh/cli)
+- [Gateway(网关) 运维手册](/zh/gateway)

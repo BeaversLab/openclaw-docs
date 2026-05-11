@@ -1,6 +1,6 @@
 ---
-title: "GPT-5.4 / Codex Agentic Parity"
-summary: "How OpenClaw closes agentic execution gaps for GPT-5.4 and Codex-style models"
+summary: "OpenClaw 如何縮小 GPT-5.4 和 Codex 類型模型的 Agentic 執行差距"
+title: "GPT-5.4 / Codex agentic parity"
 read_when:
   - Debugging GPT-5.4 or Codex agent behavior
   - Comparing OpenClaw agentic behavior across frontier models
@@ -226,3 +226,7 @@ flowchart LR
 - 您希望保留現有的較寬鬆行為
 - 您未使用 GPT-5 系列模型
 - 您正在測試提示詞而非運行時強制執行
+
+## 相關
+
+- [GPT-5.4 / Codex parity 維護者筆記](/zh-Hant/help/gpt54-codex-agentic-parity-maintainers)

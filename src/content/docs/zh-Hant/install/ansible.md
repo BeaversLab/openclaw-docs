@@ -22,7 +22,7 @@ title: "Ansible"
 | **網路**     | 用於套件安裝的網際網路連線       |
 | **Ansible**  | 2.14+ (由快速入門指令碼自動安裝) |
 
-## 您將獲得什麼
+## 您將獲得
 
 - **防火牆優先的安全** -- UFW + Docker 隔離 (僅存取 SSH + Tailscale)
 - **Tailscale VPN** -- 安全的遠端存取，無需公開公開服務
@@ -79,7 +79,7 @@ sudo -i -u openclaw
 openclaw channels login
 ```
 
-## 安全性架構
+## 安全架構
 
 部署使用 4 層防禦模型：
 

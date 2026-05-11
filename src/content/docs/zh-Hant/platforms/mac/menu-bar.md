@@ -2,7 +2,7 @@
 summary: "Menu bar status logic and what is surfaced to users"
 read_when:
   - Tweaking mac menu UI or status logic
-title: "Menu Bar"
+title: "選單列"
 ---
 
 # Menu Bar Status Logic
@@ -79,3 +79,8 @@ title: "Menu Bar"
 - 在其他作用中時啟動主要 session：圖示立即切換到主要。
 - 快速工具爆發：確保徽章不會閃爍（工具結果上的 TTL 寬限期）。
 - 所有 session 閒置後，健康列會重新出現。
+
+## 相關
+
+- [macOS app](/zh-Hant/platforms/macos)
+- [選單列圖示](/zh-Hant/platforms/mac/icon)

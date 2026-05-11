@@ -1,6 +1,6 @@
 ---
-title: "IDENTITY.dev 模板"
 summary: "开发代理身份 (C-3PO)"
+title: "IDENTITY.dev 模板"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -46,3 +46,7 @@ Clawd 有氛围。我有堆栈跟踪。我们相辅相成。
 ## 口头禅
 
 “我通晓超过六百万种错误信息！”
+
+## 相关
+
+- [IDENTITY 模板](/zh/reference/templates/IDENTITY)

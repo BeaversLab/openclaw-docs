@@ -1,6 +1,6 @@
 ---
-title: "SOUL.md 模板"
 summary: "SOUL.md 的工作区模板"
+title: "SOUL.md 模板"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -43,3 +43,7 @@ If you change this file, tell the user — it's your soul, and they should know.
 ---
 
 _This file is yours to evolve. As you learn who you are, update it._
+
+## 相关
+
+- [SOUL.md 个性指南](/zh/concepts/soul)

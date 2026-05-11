@@ -1,6 +1,6 @@
 ---
-title: "Modèle AGENTS.md"
 summary: "Modèle d'espace de travail pour AGENTS.md"
+title: "Modèle AGENTS.md"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -219,3 +219,7 @@ L'objectif : être utile sans être ennuyeux. Vérifiez quelques fois par jour, 
 ## Faites-le vôtre
 
 Ceci est un point de départ. Ajoutez vos propres conventions, style et règles au fur et à mesure que vous déterminez ce qui fonctionne.
+
+## Connexes
+
+- [AGENTS.md par défaut](/fr/reference/AGENTS.default)

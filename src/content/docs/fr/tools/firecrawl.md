@@ -8,13 +8,11 @@ read_when:
 title: "Firecrawl"
 ---
 
-# Firecrawl
-
 OpenClaw peut utiliser **Firecrawl** de trois manières :
 
-- en tant que fournisseur `web_search`
+- en tant que provider `web_search`
 - en tant qu'outils de plugin explicites : `firecrawl_search` et `firecrawl_scrape`
-- en tant qu'extracteur de repli pour `web_fetch`
+- en tant qu'extracteur de secours pour `web_fetch`
 
 C'est un service d'extraction/recherche hébergé qui prend en charge la contournement des bots et la mise en cache,
 ce qui aide pour les sites lourds en JS ou les pages qui bloquent les récupérations HTTP simples.
@@ -53,11 +51,11 @@ ce qui aide pour les sites lourds en JS ou les pages qui bloquent les récupéra
 
 Notes :
 
-- Choisir Firecrawl lors de l'intégration ou `openclaw configure --section web` active automatiquement le plugin Firecrawl inclus.
+- Choisir Firecrawl lors de l'onboarding ou `openclaw configure --section web` active automatiquement le plugin Firecrawl groupé.
 - `web_search` avec Firecrawl prend en charge `query` et `count`.
 - Pour les contrôles spécifiques à Firecrawl comme `sources`, `categories`, ou le scraping de résultats, utilisez `firecrawl_search`.
 - Les remplacements de `baseUrl` doivent rester sur `https://api.firecrawl.dev`.
-- `FIRECRAWL_BASE_URL` est la valeur de repli d'environnement partagée pour les URL de base de recherche et de scraping Firecrawl.
+- `FIRECRAWL_BASE_URL` est le repli d'environnement partagé pour les URL de base de recherche et de scraping Firecrawl.
 
 ## Configurer le scraping Firecrawl + le repli web_fetch
 
@@ -85,9 +83,9 @@ Notes :
 Notes :
 
 - Les tentatives de repli Firecrawl ne s'exécutent que lorsqu'une clé API est disponible (`plugins.entries.firecrawl.config.webFetch.apiKey` ou `FIRECRAWL_API_KEY`).
-- `maxAgeMs` contrôle l'ancienneté maximale des résultats mis en cache (ms). La valeur par défaut est 2 jours.
+- `maxAgeMs` contrôle l'âge maximal des résultats mis en cache (ms). La valeur par défaut est de 2 jours.
 - L'ancienne configuration `tools.web.fetch.firecrawl.*` est automatiquement migrée par `openclaw doctor --fix`.
-- Les remplacements d'URL de base/scraping Firecrawl sont restreints à `https://api.firecrawl.dev`.
+- Les remplacements d'URL de base/scraping Firecrawl sont limités à `https://api.firecrawl.dev`.
 
 `firecrawl_scrape` réutilise les mêmes paramètres `plugins.entries.firecrawl.config.webFetch.*` et variables d'environnement.
 
@@ -95,7 +93,7 @@ Notes :
 
 ### `firecrawl_search`
 
-Utilisez ceci lorsque vous souhaitez des contrôles de recherche spécifiques à Firecrawl au lieu de `web_search` génériques.
+Utilisez ceci lorsque vous souhaitez des contrôles de recherche spécifiques à Firecrawl au lieu de `web_search` générique.
 
 Paramètres principaux :
 
@@ -125,23 +123,23 @@ Paramètres principaux :
 
 Firecrawl expose un paramètre de **mode proxy** pour le contournement des bots (`basic`, `stealth` ou `auto`).
 OpenClaw utilise toujours `proxy: "auto"` plus `storeInCache: true` pour les requêtes Firecrawl.
-Si le proxy est omis, Firecrawl utilise par défaut `auto`. `auto` réessaie avec des proxys furtifs si une tentative de base échoue, ce qui peut utiliser plus de crédits
-que le scraping basique uniquement.
+Si le proxy est omis, Firecrawl utilise par défaut `auto`. `auto` réessaie avec des proxies furtifs si une tentative de base échoue, ce qui peut utiliser plus de crédits
+qu'un scraping basique uniquement.
 
 ## Comment `web_fetch` utilise Firecrawl
 
-`web_fetch` ordre d'extraction :
+Ordre d'extraction `web_fetch` :
 
-1. Lisibilité (locale)
-2. Firecrawl (si sélectionné ou détecté automatiquement comme le secours actif de web-fetch)
-3. Nettoyage HTML de base (dernier recours)
+1. Readabilité (local)
+2. Firecrawl (si sélectionné ou détecté automatiquement comme le mode de repli web-fetch actif)
+3. Nettoyage HTML basique (dernier recours)
 
 Le bouton de sélection est `tools.web.fetch.provider`. Si vous l'omettez, OpenClaw
-détecte automatiquement le premier provider web-fetch prêt parmi les informations d'identification disponibles.
+détecte automatiquement le premier provider web-fetch prêt parmi les identifiants disponibles.
 Aujourd'hui, le provider inclus est Firecrawl.
 
 ## Connexes
 
-- [Aperçu de la recherche Web](/fr/tools/web) -- tous les providers et détection automatique
-- [Récupération Web](/fr/tools/web-fetch) -- outil web_fetch avec secours Firecrawl
+- [Aperçu de la recherche Web](/fr/tools/web) -- tous les providers et l'auto-détection
+- [Web Fetch](/fr/tools/web-fetch) -- outil web_fetch avec repli Firecrawl
 - [Tavily](/fr/tools/tavily) -- outils de recherche et d'extraction

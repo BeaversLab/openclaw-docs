@@ -4,12 +4,10 @@ read_when:
   - Generating or reviewing `openclaw secrets apply` plans
   - Debugging `Invalid plan target path` errors
   - Understanding target type and path validation behavior
-title: "Contrato de plan de aplicación de Secrets"
+title: "Contrato del plan de aplicación de secretos"
 ---
 
-# Contrato de plan de aplicación de Secrets
-
-Esta página define el contrato estricto impuesto por `openclaw secrets apply`.
+Esta página define el contrato estricto aplicado por `openclaw secrets apply`.
 
 Si un destino no coincide con estas reglas, la aplicación falla antes de mutar la configuración.
 
@@ -40,7 +38,7 @@ Si un destino no coincide con estas reglas, la aplicación falla antes de mutar 
 }
 ```
 
-## Alcance de destino admitido
+## Ámbito de destino admitido
 
 Los destinos de plan se aceptan para rutas de credenciales admitidas en:
 
@@ -58,22 +56,22 @@ Los alias de compatibilidad siguen siendo aceptados para los planes existentes:
 - `skills.entries.apiKey`
 - `channels.googlechat.serviceAccount`
 
-## Reglas de validación de rutas
+## Reglas de validación de ruta
 
-Cada destino se valida con todo lo siguiente:
+Cada destino se valida con lo siguiente:
 
 - `type` debe ser un tipo de destino reconocido.
 - `path` debe ser una ruta de puntos no vacía.
-- `pathSegments` se puede omitir. Si se proporciona, debe normalizarse a exactamente la misma ruta que `path`.
+- `pathSegments` se puede omitir. Si se proporciona, debe normalizarse exactamente a la misma ruta que `path`.
 - Los segmentos prohibidos se rechazan: `__proto__`, `prototype`, `constructor`.
 - La ruta normalizada debe coincidir con la forma de ruta registrada para el tipo de destino.
-- Si se establece `providerId` o `accountId`, debe coincidir con el id codificado en la ruta.
+- Si se establece `providerId` o `accountId`, debe coincidir con el ID codificado en la ruta.
 - Los destinos `auth-profiles.json` requieren `agentId`.
 - Al crear una nueva asignación `auth-profiles.json`, incluya `authProfileProvider`.
 
 ## Comportamiento de fallo
 
-Si un destino falla la validación, la aplicación se cierra con un error como:
+Si un destino falla la validación, la aplicación sale con un error como:
 
 ```text
 Invalid plan target path for models.providers.apiKey: models.providers.openai.baseUrl
@@ -81,16 +79,16 @@ Invalid plan target path for models.providers.apiKey: models.providers.openai.ba
 
 No se confirman escrituras para un plan no válido.
 
-## Comportamiento del consentimiento del proveedor exec
+## Comportamiento de consentimiento del proveedor exec
 
-- `--dry-run` omite las comprobaciones exec SecretRef de forma predeterminada.
+- `--dry-run` omite las comprobaciones de exec SecretRef de forma predeterminada.
 - Los planes que contienen exec SecretRefs/proveedores se rechazan en modo de escritura a menos que se establezca `--allow-exec`.
-- Al validar/aplicar planes que contienen exec, pase `--allow-exec` tanto en comandos de simulación como de escritura.
+- Al validar/aplicar planes que contienen exec, pase `--allow-exec` tanto en comandos de ejecución en seco como de escritura.
 
-## Notas sobre el alcance de tiempo de ejecución y auditoría
+## Notas sobre el ámbito de tiempo de ejecución y auditoría
 
-- Las entradas solo de referencia `auth-profiles.json` (`keyRef`/`tokenRef`) se incluyen en la resolución en tiempo de ejecución y la cobertura de auditoría.
-- `secrets apply` escribe objetivos `openclaw.json` admitidos, objetivos `auth-profiles.json` admitidos y objetivos de limpieza opcionales.
+- Las entradas de solo referencia `auth-profiles.json` (`keyRef`/`tokenRef`) se incluyen en la resolución en tiempo de ejecución y la cobertura de auditoría.
+- `secrets apply` escribe objetivos `openclaw.json` compatibles, objetivos `auth-profiles.json` compatibles y objetivos de limpieza opcionales.
 
 ## Comprobaciones del operador
 
@@ -106,7 +104,7 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-
 openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
 ```
 
-Si la aplicación falla con un mensaje de ruta de destino no válida, regenere el plan con `openclaw secrets configure` o corrija la ruta de destino a una forma admitida anteriormente.
+Si la aplicación falla con un mensaje de ruta de objetivo no válida, regenere el plan con `openclaw secrets configure` o corrija la ruta del objetivo a una forma compatible arriba.
 
 ## Documentos relacionados
 

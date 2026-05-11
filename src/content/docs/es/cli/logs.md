@@ -3,7 +3,7 @@ summary: "Referencia de CLI para `openclaw logs` (ver registros de gateway a tra
 read_when:
   - You need to tail Gateway logs remotely (without SSH)
   - You want JSON log lines for tooling
-title: "registros"
+title: "Registros"
 ---
 
 # `openclaw logs`
@@ -57,3 +57,8 @@ openclaw logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
 
 - Use `--local-time` para renderizar marcas de tiempo en su zona horaria local.
 - Si el Gateway de bucle invertido local solicita emparejamiento, `openclaw logs` recurre automáticamente al archivo de registro local configurado. Los destinos explícitos `--url` no utilizan esta reserva.
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)
+- [Registro de Gateway](/es/gateway/logging)

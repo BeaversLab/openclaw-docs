@@ -1,6 +1,6 @@
 ---
-title: "GPT-5.4 / Parité Agentic Codex"
-summary: "Comment OpenClaw comble les lacunes d'exécution agentic pour GPT-5.4 et les modèles de style Codex"
+summary: "Comment OpenClaw comble les lacunes d'exécution agentique pour GPT-5.4 et les modèles de style Codex"
+title: "Parité agentique GPT-5.4 / Codex"
 read_when:
   - Debugging GPT-5.4 or Codex agent behavior
   - Comparing OpenClaw agentic behavior across frontier models
@@ -226,3 +226,7 @@ Conservez le contrat par défaut lorsque :
 - vous voulez le comportement existant plus souple
 - vous n'utilisez pas les modèles de la famille GPT-5
 - vous testez des invites plutôt que l'exécution du runtime
+
+## Connexe
+
+- [Notes de maintenance pour la parité GPT-5.4 / Codex](/fr/help/gpt54-codex-agentic-parity-maintainers)

@@ -2,7 +2,7 @@
 summary: "CLI 參考資料：`openclaw health` (透過 RPC 取得 Gateway 健康狀態快照)"
 read_when:
   - You want to quickly check the running Gateway’s health
-title: "health"
+title: "Health"
 ---
 
 # `openclaw health`
@@ -34,3 +34,8 @@ openclaw health --debug
 - `--verbose` 會強制進行即時探測，列印 Gateway 連線詳細資訊，並將
   人類可讀的輸出擴展至所有設定的帳戶和代理程式。
 - 當設定多個代理程式時，輸出包含每個代理程式的會話存放區。
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)
+- [Gateway 健康狀態](/zh-Hant/gateway/health)

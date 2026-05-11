@@ -4,7 +4,7 @@ read_when:
   - You want to see which skills are available and ready to run
   - You want to search, install, or update skills from ClawHub
   - You want to debug missing binaries/env/config for skills
-title: "habilidades"
+title: "Habilidades"
 ---
 
 # `openclaw skills`
@@ -53,3 +53,8 @@ Notas:
 - `list`, `info` y `check` escriben su salida renderizada en stdout. Con
   `--json`, eso significa que la carga legible por máquina se mantiene en stdout para tuberías
   y scripts.
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)
+- [Habilidades](/es/tools/skills)

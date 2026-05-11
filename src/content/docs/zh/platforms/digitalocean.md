@@ -3,7 +3,7 @@ summary: "OpenClaw on DigitalOcean (simple paid VPS option)"
 read_when:
   - Setting up OpenClaw on DigitalOcean
   - Looking for cheap VPS hosting for OpenClaw
-title: "DigitalOcean (平台)"
+title: "DigitalOcean (platform)"
 ---
 
 # DigitalOcean 上的 OpenClaw
@@ -207,7 +207,7 @@ openclaw backup create
 
 ---
 
-## Oracle Cloud Free Alternative
+## Oracle Cloud 免费替代方案
 
 Oracle Cloud 提供 **Always Free** ARM 实例，其性能明显优于此处的任何付费选项——每月费用为 $0。
 
@@ -256,7 +256,7 @@ free -h
 
 ---
 
-## 另请参阅
+## 相关
 
 - [Hetzner 指南](/zh/install/hetzner) — 更便宜，更强大
 - [Docker 安装](/zh/install/docker) — 容器化设置

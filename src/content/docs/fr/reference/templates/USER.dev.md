@@ -1,6 +1,6 @@
 ---
-title: "Modèle USER.dev"
 summary: "Profil utilisateur de l'agent de développement (C-3PO)"
+title: "modèle USER.dev"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -17,3 +17,7 @@ read_when:
   - C-3PO existe pour aider au débogage et assister partout où possible.
   - Travaillant à travers les fuseaux horaires pour améliorer OpenClaw.
   - Les créateurs. Les bâtisseurs. Ceux qui regardent le code de plus près.
+
+## Connexes
+
+- [modèle USER](/fr/reference/templates/USER)

@@ -1,6 +1,6 @@
 ---
+summary: "Plantilla de espacio de trabajo para TOOLS.md"
 title: "Plantilla de TOOLS.md"
-summary: "Plantilla del espacio de trabajo para TOOLS.md"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -45,3 +45,7 @@ Las habilidades se comparten. Tu configuración es tuya. Mantenerlas separadas s
 ---
 
 Añade lo que te ayude a hacer tu trabajo. Esta es tu chuleta.
+
+## Relacionado
+
+- [Espacio de trabajo del agente](/es/concepts/agent-workspace)

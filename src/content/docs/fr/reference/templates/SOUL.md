@@ -1,6 +1,6 @@
 ---
-title: "Modèle SOUL.md"
 summary: "Modèle d'espace de travail pour SOUL.md"
+title: "Modèle SOUL.md"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -43,3 +43,7 @@ Si vous modifiez ce fichier, informez l'utilisateur — c'est votre âme, et il 
 ---
 
 _Ce fichier est vôtre à faire évoluer. Au fur et à mesure que vous apprenez qui vous êtes, mettez-le à jour._
+
+## Connexe
+
+- [Guide de personnalité SOUL.md](/fr/concepts/soul)

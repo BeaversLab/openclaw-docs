@@ -1,19 +1,17 @@
 ---
-summary: "Palabras de activación por voz globales (propiedad de Gateway) y cómo se sincronizan entre nodos"
+summary: "Palabras de activación de voz globales (propiedad del Gateway) y cómo se sincronizan entre nodos"
 read_when:
   - Changing voice wake words behavior or defaults
   - Adding new node platforms that need wake word sync
-title: "Activación por Voz"
+title: "Activación por voz"
 ---
 
-# Activación por Voz (Palabras de activación globales)
-
-OpenClaw trata las **palabras de activación como una única lista global** propiedad del **Gateway**.
+OpenClaw trata las **palabras de activación como una sola lista global** propiedad del **Gateway**.
 
 - **No hay palabras de activación personalizadas por nodo**.
-- **Cualquier interfaz de nodo/aplicación puede editar** la lista; los cambios son guardados por el Gateway y transmitidos a todos.
-- macOS e iOS mantienen interruptores locales de **Activación por Voz activada/desactivada** (la UX local y los permisos difieren).
-- Actualmente, Android mantiene la Activación por Voz apagada y usa un flujo de micrófono manual en la pestaña Voz.
+- **Cualquier interfaz de usuario de nodo/aplicación puede editar** la lista; los cambios son guardados por el Gateway y transmitidos a todos.
+- macOS e iOS mantienen interruptores locales de **Activación por voz activada/desactivada** (la UX local y los permisos difieren).
+- Android actualmente mantiene la Activación por voz apagada y usa un flujo de micrófono manual en la pestaña Voice.
 
 ## Almacenamiento (host Gateway)
 
@@ -36,31 +34,60 @@ Forma:
 
 Notas:
 
-- Los activadores se normalizan (se recortan los espacios, se eliminan los vacíos). Las listas vacías vuelven a los valores predeterminados.
+- Los activadores se normalizan (se recortan espacios, se eliminan los vacíos). Las listas vacías vuelven a los valores predeterminados.
 - Se aplican límites por seguridad (límites de recuento/longitud).
+
+### Métodos de enrutamiento (activador → objetivo)
+
+- `voicewake.routing.get` → `{ config: VoiceWakeRoutingConfig }`
+- `voicewake.routing.set` con parámetros `{ config: VoiceWakeRoutingConfig }` → `{ config: VoiceWakeRoutingConfig }`
+
+Forma `VoiceWakeRoutingConfig`:
+
+```json
+{
+  "version": 1,
+  "defaultTarget": { "mode": "current" },
+  "routes": [{ "trigger": "robot wake", "target": { "sessionKey": "agent:main:main" } }],
+  "updatedAtMs": 1730000000000
+}
+```
+
+Los objetivos de ruta soportan exactamente uno de:
+
+- `{ "mode": "current" }`
+- `{ "agentId": "main" }`
+- `{ "sessionKey": "agent:main:main" }`
 
 ### Eventos
 
-- carga útil `voicewake.changed` `{ triggers: string[] }`
+- payload `voicewake.changed` `{ triggers: string[] }`
+- payload `voicewake.routing.changed` `{ config: VoiceWakeRoutingConfig }`
 
 Quién lo recibe:
 
 - Todos los clientes WebSocket (aplicación macOS, WebChat, etc.)
-- Todos los nodos conectados (iOS/Android), y también al conectar el nodo como un envío inicial de "estado actual".
+- Todos los nodos conectados (iOS/Android), y también al conectar el nodo como un envío inicial del "estado actual".
 
 ## Comportamiento del cliente
 
-### aplicación macOS
+### Aplicación macOS
 
 - Usa la lista global para filtrar los activadores `VoiceWakeRuntime`.
-- Editar "Palabras de activación" en la configuración de Activación por Voz llama a `voicewake.set` y luego confía en la transmisión para mantener sincronizados los demás clientes.
+- Editar "Palabras activadoras" en la configuración de Activación por voz llama a `voicewake.set` y luego se basa en la transmisión para mantener sincronizados a otros clientes.
 
-### nodo iOS
+### Nodo iOS
 
 - Usa la lista global para la detección de activadores `VoiceWakeManager`.
-- Editar Palabras de activación en Configuración llama a `voicewake.set` (a través del Gateway WS) y también mantiene la detección de palabras de activación local responsiva.
+- Editar las palabras de activación en Ajustes llama a `voicewake.set` (a través del WS de la Gateway) y también mantiene la detección local de palabras de activación con capacidad de respuesta.
 
-### nodo Android
+### Nodo Android
 
-- La Activación por Voz está actualmente deshabilitada en el tiempo de ejecución/Configuración de Android.
-- La voz de Android usa la captura manual del micrófono en la pestaña Voz en lugar de los activadores de palabras de activación.
+- Activación por voz está actualmente deshabilitada en el tiempo de ejecución/Ajustes de Android.
+- La voz de Android utiliza la captura manual del micrófono en la pestaña Voz en lugar de los activadores de palabras de activación.
+
+## Relacionado
+
+- [Modo de conversación](/es/nodes/talk)
+- [Notas de audio y voz](/es/nodes/audio)
+- [Comprensión de medios](/es/nodes/media-understanding)

@@ -3,7 +3,7 @@ summary: "`openclaw hooks` (agent hooks) 的 CLI 参考"
 read_when:
   - You want to manage agent hooks
   - You want to inspect hook availability or enable workspace hooks
-title: "hooks"
+title: "Hooks"
 ---
 
 # `openclaw hooks`
@@ -15,9 +15,9 @@ title: "hooks"
 相关内容：
 
 - Hooks: [Hooks](/zh/automation/hooks)
-- 插件 Hooks: [Plugin hooks](/zh/plugins/architecture#provider-runtime-hooks)
+- 插件挂钩：[Plugin hooks](/zh/plugins/hooks)
 
-## 列出所有 Hooks
+## 列出所有挂钩
 
 ```bash
 openclaw hooks list
@@ -60,7 +60,7 @@ openclaw hooks list --json
 
 返回结构化 JSON 以便以编程方式使用。
 
-## 获取 Hook 信息
+## 获取挂钩信息
 
 ```bash
 openclaw hooks info <name>
@@ -100,7 +100,7 @@ Requirements:
   Config: ✓ workspace.dir
 ```
 
-## 检查 Hooks 资格
+## 检查挂钩资格
 
 ```bash
 openclaw hooks check
@@ -193,10 +193,11 @@ openclaw hooks disable command-logger
 - `openclaw hooks list --json`、`info --json` 和 `check --json` 会将结构化的 JSON 直接写入 stdout。
 - 此处无法启用或禁用由插件管理的钩子；请改为启用或禁用所属插件。
 
-## 安装钩子包
+## 安装挂钩包
 
 ```bash
 openclaw plugins install <package>        # ClawHub first, then npm
+openclaw plugins install npm:<package>    # npm only
 openclaw plugins install <package> --pin  # pin version
 openclaw plugins install <path>           # local path
 ```
@@ -205,7 +206,10 @@ openclaw plugins install <path>           # local path
 
 `openclaw hooks install` 仍可作为兼容性别名使用，但它会打印弃用警告并转发到 `openclaw plugins install`。
 
-Npm 规范是**仅限注册表**的（包名称 + 可选的**确切版本**或**分发标签**）。会拒绝 Git/URL/文件规范和 semver 范围。依赖安装出于安全考虑会以 `--ignore-scripts` 运行。
+Npm 规范是**仅限注册表**的（包名称 + 可选的**精确版本**或
+**dist-tag**）。拒绝 Git/URL/文件规范和 semver 范围。依赖安装
+出于安全原因在项目本地使用 `--ignore-scripts` 运行，即使您的
+shell 具有全局 npm 安装设置。
 
 裸规范和 `@latest` 保持在稳定轨道上。如果 npm 将其中任何一个解析为预发布版本，OpenClaw 将停止并要求您通过预发布标签（如 `@beta`/`@rc`）或确切的预发布版本明确选择加入。
 
@@ -240,7 +244,7 @@ openclaw plugins install -l ./my-hook-pack
 
 链接的钩子包被视为来自操作员配置目录的托管钩子，而不是工作区钩子。
 
-## 更新钩子包
+## 更新挂钩包
 
 ```bash
 openclaw plugins update <id>
@@ -258,7 +262,7 @@ openclaw plugins update --all
 
 当存在存储的完整性哈希且获取的构件哈希发生变化时，OpenClaw 会打印警告并在继续之前请求确认。使用全局 `--yes` 以在 CI/非交互式运行中绕过提示。
 
-## 内置 Hooks
+## 内置挂钩
 
 ### 会话-memory
 
@@ -326,3 +330,8 @@ openclaw hooks enable boot-md
 ```
 
 **参见：** [boot-md 文档](/zh/automation/hooks#boot-md)
+
+## 相关
+
+- [CLI reference](/zh/cli)
+- [Automation hooks](/zh/automation/hooks)

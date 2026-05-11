@@ -6,14 +6,12 @@ read_when:
 title: "`openclaw tasks`"
 ---
 
-# `openclaw tasks`
+Inspect durable background tasks and Task Flow state. With no subcommand,
+`openclaw tasks` is equivalent to `openclaw tasks list`.
 
-Inspecter les tâches en arrière-plan durables et l'état du flux de tâches. Sans sous-commande,
-`openclaw tasks` est équivalent à `openclaw tasks list`.
+See [Background Tasks](/fr/automation/tasks) for the lifecycle and delivery model.
 
-Voir [Tâches en arrière-plan](/fr/automation/tasks) pour le cycle de vie et le modèle de livraison.
-
-## Utilisation
+## Usage
 
 ```bash
 openclaw tasks
@@ -31,13 +29,13 @@ openclaw tasks flow show <lookup>
 openclaw tasks flow cancel <lookup>
 ```
 
-## Options racine
+## Root Options
 
-- `--json` : sortie JSON.
-- `--runtime <name>` : filtrer par type : `subagent`, `acp`, `cron` ou `cli`.
-- `--status <name>` : filtrer par statut : `queued`, `running`, `succeeded`, `failed`, `timed_out`, `cancelled` ou `lost`.
+- `--json`: output JSON.
+- `--runtime <name>`: filter by kind: `subagent`, `acp`, `cron`, or `cli`.
+- `--status <name>`: filter by status: `queued`, `running`, `succeeded`, `failed`, `timed_out`, `cancelled`, or `lost`.
 
-## Sous-commandes
+## Subcommands
 
 ### `list`
 
@@ -45,7 +43,7 @@ openclaw tasks flow cancel <lookup>
 openclaw tasks list [--runtime <name>] [--status <name>] [--json]
 ```
 
-Liste les tâches en arrière-plan suivies, des plus récentes aux plus anciennes.
+Lists tracked background tasks newest first.
 
 ### `show`
 
@@ -53,7 +51,7 @@ Liste les tâches en arrière-plan suivies, des plus récentes aux plus ancienne
 openclaw tasks show <lookup> [--json]
 ```
 
-Affiche une tâche par ID de tâche, ID d'exécution ou clé de session.
+Shows one task by task ID, run ID, or session key.
 
 ### `notify`
 
@@ -61,7 +59,7 @@ Affiche une tâche par ID de tâche, ID d'exécution ou clé de session.
 openclaw tasks notify <lookup> <done_only|state_changes|silent>
 ```
 
-Modifie la stratégie de notification pour une tâche en cours d'exécution.
+Changes the notification policy for a running task.
 
 ### `cancel`
 
@@ -69,7 +67,7 @@ Modifie la stratégie de notification pour une tâche en cours d'exécution.
 openclaw tasks cancel <lookup>
 ```
 
-Annule une tâche en arrière-plan en cours d'exécution.
+Cancels a running background task.
 
 ### `audit`
 
@@ -77,7 +75,7 @@ Annule une tâche en arrière-plan en cours d'exécution.
 openclaw tasks audit [--severity <warn|error>] [--code <name>] [--limit <n>] [--json]
 ```
 
-Signale les enregistrements de tâches et de flux de tâches périmés, perdus, ayant échoué lors de la livraison ou autrement incohérents.
+Surfaces stale, lost, delivery-failed, or otherwise inconsistent task and Task Flow records. Lost tasks retained until `cleanupAfter` are warnings; expired or unstamped lost tasks are errors.
 
 ### `maintenance`
 
@@ -85,7 +83,11 @@ Signale les enregistrements de tâches et de flux de tâches périmés, perdus, 
 openclaw tasks maintenance [--apply] [--json]
 ```
 
-Prévisualise ou applique la réconciliation, l'horodatage du nettoyage et l'élagage des tâches et des flux de tâches.
+Previews or applies task and Task Flow reconciliation, cleanup stamping, and pruning.
+For cron tasks, reconciliation uses persisted run logs/job state before marking an
+old active task `lost`, so completed cron runs do not become false audit errors
+just because the in-memory Gateway runtime state is gone. Offline CLI audit is
+not authoritative for the Gateway's process-local cron active-job set.
 
 ### `flow`
 
@@ -95,4 +97,9 @@ openclaw tasks flow show <lookup> [--json]
 openclaw tasks flow cancel <lookup>
 ```
 
-Inspecte ou annule l'état durable du flux de tâches sous le grand livre des tâches.
+Inspects or cancels durable Task Flow state under the task ledger.
+
+## Related
+
+- [CLI reference](/fr/cli)
+- [Background tasks](/fr/automation/tasks)

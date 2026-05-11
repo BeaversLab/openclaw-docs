@@ -1,28 +1,26 @@
 ---
-title: "Détection de boucle d'outils"
 summary: "Comment activer et régler les garde-fous qui détectent les boucles d'appels d'outils répétitifs"
+title: "Détection de boucles d'outils"
 read_when:
   - A user reports agents getting stuck repeating tool calls
   - You need to tune repetitive-call protection
   - You are editing agent tool/runtime policies
 ---
 
-# Détection des boucles d'outils
-
 OpenClaw peut empêcher les agents de rester bloqués dans des modèles d'appels d'outils répétitifs.
-Ce garde-fou est **désactivé par défaut**.
+Le garde-fou est **désactivé par défaut**.
 
-Activez-le uniquement là où c'est nécessaire, car il peut bloquer des appels répétitifs légitimes avec des paramètres stricts.
+Activez-le uniquement là où c'est nécessaire, car il peut bloquer les appels répétitifs légitimes avec des paramètres stricts.
 
 ## Pourquoi cela existe
 
 - Détecter les séquences répétitives qui ne progressent pas.
 - Détecter les boucles sans résultat à haute fréquence (même outil, mêmes entrées, erreurs répétées).
-- Détecter des modèles d'appels répétitifs spécifiques pour les outils de sondage connus.
+- Détecter des modèles d'appels répétitifs spécifiques pour les outils de polling connus.
 
 ## Bloc de configuration
 
-Valeurs par défaut globales :
+Paramètres globaux par défaut :
 
 ```json5
 {
@@ -43,7 +41,7 @@ Valeurs par défaut globales :
 }
 ```
 
-Remplacement par agent (facultatif) :
+Remplacement par agent (optionnel) :
 
 ```json5
 {
@@ -69,19 +67,22 @@ Remplacement par agent (facultatif) :
 - `enabled` : Interrupteur principal. `false` signifie qu'aucune détection de boucle n'est effectuée.
 - `historySize` : nombre d'appels d'outils récents conservés pour l'analyse.
 - `warningThreshold` : seuil avant de classer un modèle comme avertissement uniquement.
-- `criticalThreshold` : seuil pour bloquer les modèles de boucles répétitives.
-- `globalCircuitBreakerThreshold` : seuil global du coupe-circuit sans progression.
+- `criticalThreshold` : seuil pour bloquer les modèles de boucles répétitifs.
+- `globalCircuitBreakerThreshold` : seuil global de rupture sans progression.
 - `detectors.genericRepeat` : détecte les modèles répétés de même outil + mêmes paramètres.
-- `detectors.knownPollNoProgress` : détecte les modèles de type sondage connus sans changement d'état.
-- `detectors.pingPong` : détecte les modèles alternatifs de type ping-pong.
+- `detectors.knownPollNoProgress` : détecte les modèles connus de type polling sans changement d'état.
+- `detectors.pingPong` : détecte les modèles de ping-pong alternés.
+
+Pour `exec`, les contrôles sans progression comparent les résultats stables des commandes et ignorent les métadonnées d'exécution volatiles telles que la durée, le PID, l'ID de session et le répertoire de travail.
+Lorsqu'un identifiant d'exécution (run id) est disponible, l'historique récent des appels d'outils n'est évalué que dans le cadre de cette exécution, afin que les cycles de battement programmés et les nouvelles exécutions n'héritent pas des comptes de boucles obsolètes des exécutions précédentes.
 
 ## Configuration recommandée
 
-- Commencez avec `enabled: true`, valeurs par défaut inchangées.
+- Commencez avec `enabled: true`, paramètres par défaut inchangés.
 - Gardez les seuils ordonnés comme `warningThreshold < criticalThreshold < globalCircuitBreakerThreshold`.
 - En cas de faux positifs :
   - augmentez `warningThreshold` et/ou `criticalThreshold`
-  - (facultativement) augmentez `globalCircuitBreakerThreshold`
+  - (optionnel) augmentez `globalCircuitBreakerThreshold`
   - désactivez uniquement le détecteur causant des problèmes
   - réduisez `historySize` pour un contexte historique moins strict
 
@@ -98,3 +99,9 @@ Cela protège les utilisateurs contre les dépenses excessives de jetons et les 
 - `tools.loopDetection` est fusionné avec les remplacements au niveau de l'agent.
 - La configuration par agent remplace complètement ou étend les valeurs globales.
 - Si aucune configuration n'existe, les garde-fous restent désactivés.
+
+## Connexes
+
+- [Approbations d'exécution](/fr/tools/exec-approvals)
+- [Niveaux de réflexion](/fr/tools/thinking)
+- [Sous-agents](/fr/tools/subagents)

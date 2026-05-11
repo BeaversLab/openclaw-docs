@@ -5,28 +5,26 @@ read_when:
 title: "Características"
 ---
 
-# Características
-
-## Destacados
+## Aspectos destacados
 
 <Columns>
   <Card title="Canales" icon="message-square" href="/es/channels">
-    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat y más con una única pasarela.
+    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat y más con una única puerta de enlace.
   </Card>
   <Card title="Complementos" icon="plug" href="/es/tools/plugin">
-    Los complementos incluidos añaden Matrix, Nextcloud Talk, Nostr, Twitch, Zalo y más sin instalaciones separadas en las versiones actuales normales.
+    Los complementos incluidos añaden Matrix, Nextcloud Talk, Nostr, Twitch, Zalo y más sin instalaciones adicionales en las versiones actuales normales.
   </Card>
   <Card title="Enrutamiento" icon="route" href="/es/concepts/multi-agent">
     Enrutamiento multiagente con sesiones aisladas.
   </Card>
   <Card title="Medios" icon="image" href="/es/nodes/images">
-    Imágenes, audio, vídeo, documentos y generación de imagen/vídeo.
+    Imágenes, audio, vídeo, documentos y generación de imágenes/vídeo.
   </Card>
   <Card title="Aplicaciones e interfaz" icon="monitor" href="/es/web/control-ui">
-    Interfaz de control web y aplicación complementaria para macOS.
+    Interfaz de usuario de control web y aplicación complementaria para macOS.
   </Card>
   <Card title="Nodos móviles" icon="smartphone" href="/es/nodes">
-    Nodos de iOS y Android con emparejamiento, voz/chat y comandos de dispositivo enriquecidos.
+    Nodos iOS y Android con emparejamiento, voz/chat y comandos de dispositivo enriquecidos.
   </Card>
 </Columns>
 
@@ -35,35 +33,35 @@ title: "Características"
 **Canales:**
 
 - Los canales integrados incluyen Discord, Google Chat, iMessage (heredado), IRC, Signal, Slack, Telegram, WebChat y WhatsApp
-- Los canales de plugins incluidos incluyen BlueBubbles para iMessage, Feishu, LINE, Matrix, Mattermost, Microsoft Teams, Nextcloud Talk, Nostr, QQ Bot, Synology Chat, Tlon, Twitch, Zalo y Zalo Personal
-- Los plugins de canales instalados opcionalmente por separado incluyen Llamada de voz y paquetes de terceros como WeChat
-- Los plugins de canales de terceros pueden ampliar la Gateway aún más, como WeChat
-- Soporte de chat grupal con activación basada en menciones
-- Seguridad en MD con listas de permitidos y emparejamiento
+- Los canales de complementos incluidos incluyen BlueBubbles para iMessage, Feishu, LINE, Matrix, Mattermost, Microsoft Teams, Nextcloud Talk, Nostr, QQ Bot, Synology Chat, Tlon, Twitch, Zalo y Zalo Personal
+- Los complementos de canal instalados opcionalmente por separado incluyen Llamada de voz y paquetes de terceros como WeChat
+- Los complementos de canal de terceros pueden ampliar aún más la puerta de enlace, como WeChat
+- Soporte para chat en grupo con activación basada en menciones
+- Seguridad de MD con listas de permitidos y emparejamiento
 
 **Agente:**
 
-- Runtime de agente integrado con transmisión de herramientas
-- Enrutamiento multi-agente con sesiones aisladas por espacio de trabajo o remitente
-- Sesiones: los chats directos se colapsan en `main` compartido; los grupos están aislados
+- Tiempo de ejecución del agente integrado con transmisión de herramientas
+- Enrutamiento multiagente con sesiones aisladas por espacio de trabajo o remitente
+- Sesiones: los chats directos se agrupan en un `main` compartido; los grupos están aislados
 - Transmisión y fragmentación para respuestas largas
 
 **Autenticación y proveedores:**
 
 - Más de 35 proveedores de modelos (Anthropic, OpenAI, Google y más)
-- Autenticación de suscripción vía OAuth (ej. OpenAI Codex)
-- Soporte para proveedores personalizados y autoalojados (vLLM, SGLang, Ollama y cualquier punto final compatible con OpenAI o Anthropic)
+- Autenticación de suscripción vía OAuth (p. ej., OpenAI Codex)
+- Soporte para proveedores personalizados y autohospedados (vLLM, SGLang, Ollama y cualquier endpoint compatible con OpenAI o Anthropic)
 
 **Medios:**
 
-- Entrada y salida de imágenes, audio, video y documentos
-- Capacidades compartidas de generación de imágenes y video
+- Imágenes, audio, video y documentos de entrada y salida
+- Superficies de capacidades compartidas para generación de imágenes y videos
 - Transcripción de notas de voz
 - Conversión de texto a voz con múltiples proveedores
 
 **Aplicaciones e interfaces:**
 
-- WebChat e interfaz de Control del navegador
+- WebChat e interfaz de control del navegador
 - Aplicación complementaria de la barra de menús de macOS
 - Nodo iOS con emparejamiento, Canvas, cámara, grabación de pantalla, ubicación y voz
 - Nodo Android con emparejamiento, chat, voz, Canvas, cámara y comandos de dispositivo
@@ -72,5 +70,10 @@ title: "Características"
 
 - Automatización del navegador, exec, sandboxing
 - Búsqueda web (Brave, DuckDuckGo, Exa, Firecrawl, Gemini, Grok, Kimi, MiniMax Search, Ollama Web Search, Perplexity, SearXNG, Tavily)
-- Trabajos Cron y programación de latidos (heartbeat)
+- Trabajos Cron y programación de latidos
 - Habilidades, complementos y canalizaciones de flujo de trabajo (Lobster)
+
+## Relacionado
+
+- [Características experimentales](/es/concepts/experimental-features)
+- [Tiempo de ejecución del agente](/es/concepts/agent)

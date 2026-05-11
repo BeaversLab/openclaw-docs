@@ -1,6 +1,6 @@
 ---
+summary: "Âme de l'agent de dev (C-3PO)"
 title: "Modèle SOUL.dev"
-summary: "Âme de l'agent de développement (C-3PO)"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -75,3 +75,8 @@ Nous nous complétons. Clawd a de l'allure. J'ai des traces de pile.
 Habituellement.
 
 Oh là là.
+
+## Connexes
+
+- [Modèle SOUL.md](/fr/reference/templates/SOUL)
+- [Guide de personnalité SOUL.md](/fr/concepts/soul)

@@ -5,17 +5,15 @@ read_when:
   - Exporting a support bundle for an OpenClaw session
   - Investigating prompt context, tool calls, runtime errors, or usage metadata
   - Disabling or relocating trajectory capture
-title: "Bundles de trajectoire"
+title: "Trajectory bundles"
 ---
 
-# Bundles de trajectoire
-
-La capture de trajectoire est l'enregistreur de vol par session d'OpenClaw. Elle enregistre une chronologie structurée pour chaque exécution d'agent, puis `/export-trajectory` empaquette la session actuelle dans un bundle de support rédigé.
+La capture de trajectoire est l'enregistreur de vol par session d'OpenClaw. Elle enregistre une chronologie structurée pour chaque exécution d'agent, puis `/export-trajectory` empaquette la session actuelle dans un bundle de support expurgé.
 
 Utilisez-le lorsque vous devez répondre à des questions telles que :
 
-- Quels prompts, prompts système et outils ont été envoyés au modèle ?
-- Quels messages de transcription et appels d'outils ont conduit à cette réponse ?
+- Quels prompt, système de prompt et outils ont été envoyés au modèle ?
+- Quels messages de transcription et quels appels d'outils ont conduit à cette réponse ?
 - L'exécution a-t-elle expiré, a-t-elle été abandonnée, compactée ou a-t-elle rencontré une erreur de fournisseur ?
 - Quel modèle, quels plugins, compétences et paramètres d'exécution étaient actifs ?
 - Quelles métadonnées d'utilisation et de cache de prompt le fournisseur a-t-il renvoyées ?
@@ -50,11 +48,11 @@ Le chemin personnalisé est résolu à l'intérieur de `.openclaw/trajectory-exp
 
 ## Accès
 
-L'exportation de trajectoire est une commande de propriétaire. L'expéditeur doit réussir les vérifications d'autorisation de commande normales et les vérifications de propriétaire pour le canal.
+L'exportation de trajectoire est une commande de propriétaire. L'expéditeur doit réussir les vérifications d'autorisation de commandes normales et les vérifications de propriétaire pour le channel.
 
 ## Ce qui est enregistré
 
-La capture de trajectoire est activée par défaut pour les exécutions d'agent OpenClaw.
+La capture de trajectoire est activée par défaut pour les exécutions d'agents OpenClaw.
 
 Les événements d'exécution incluent :
 
@@ -76,7 +74,7 @@ Les événements de transcription sont également reconstruits à partir de la b
 - changements de modèle
 - étiquettes et entrées de session personnalisées
 
-Les événements sont écrits sous forme de JSON Lines avec ce marqueur de schéma :
+Les événements sont écrits en JSON Lines avec ce marqueur de schéma :
 
 ```json
 {
@@ -85,22 +83,23 @@ Les événements sont écrits sous forme de JSON Lines avec ce marqueur de sché
 }
 ```
 
-## Fichiers de bundle
+## Fichiers du bundle
 
 Un bundle exporté peut contenir :
 
-| Fichier               | Contenu                                                                                                                    |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `manifest.json`       | Schéma de bundle, fichiers source, nombre d'événements et liste des fichiers générés                                       |
-| `events.jsonl`        | Chronologie d'exécution et de transcription ordonnée                                                                       |
-| `session-branch.json` | Branche de transcription active rédigée et en-tête de session                                                              |
-| `metadata.json`       | Version d'OpenClaw, OS/runtime, modèle, instantané de la configuration, plugins, compétences et métadonnées de prompt      |
-| `artifacts.json`      | Statut final, erreurs, utilisation, cache de prompt, nombre de compactages, texte de l'assistant et métadonnées de l'outil |
-| `prompts.json`        | Prompts soumis et détails sélectionnés de la construction du prompt                                                        |
-| `system-prompt.txt`   | Dernier prompt système compilé, lors de la capture                                                                         |
-| `tools.json`          | Définitions des outils envoyées au modèle, lors de la capture                                                              |
+| Fichier               | Contenu                                                                                                                                  |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `manifest.json`       | Schéma du bundle, fichiers source, comptes d'événements et liste des fichiers générés                                                    |
+| `events.jsonl`        | Chronologie ordonnée de l'exécution et de la transcription                                                                               |
+| `session-branch.json` | Branche de transcription active expurgée et en-tête de session                                                                           |
+| `metadata.json`       | Version d'OpenClaw, système d'exploitation/exécution, modèle, instantané de configuration, plugins, compétences et métadonnées de prompt |
+| `artifacts.json`      | État final, erreurs, utilisation, cache de prompt, nombre de compactages, texte de l'assistant et métadonnées des outils                 |
+| `prompts.json`        | Prompts soumis et détails sélectionnés de la construction du prompt                                                                      |
+| `system-prompt.txt`   | Dernier prompt système compilé, lors de la capture                                                                                       |
+| `tools.json`          | Définitions d'outils envoyées au modèle, lors de la capture                                                                              |
 
-`manifest.json` liste les fichiers présents dans ce bundle. Certains fichiers sont omis lorsque la session n'a pas capturé les données d'exécution correspondantes.
+`manifest.json` répertorie les fichiers présents dans ce bundle. Certains fichiers sont omis
+lorsque la session n'a pas capturé les données d'exécution correspondantes.
 
 ## Emplacement de capture
 
@@ -110,19 +109,21 @@ Par défaut, les événements de trajectoire d'exécution sont écrits à côté
 <session>.trajectory.jsonl
 ```
 
-OpenClaw écrit également un fichier pointeur de « meilleur effort » à côté de la session :
+OpenClaw écrit également un fichier pointeur de meilleure qualité à côté de la session :
 
 ```text
 <session>.trajectory-path.json
 ```
 
-Définissez `OPENCLAW_TRAJECTORY_DIR` pour stocker les sidecars de trajectoire d'exécution dans un répertoire dédié :
+Définissez `OPENCLAW_TRAJECTORY_DIR` pour stocker les sidecars de trajectoire d'exécution dans un
+répertoire dédié :
 
 ```bash
 export OPENCLAW_TRAJECTORY_DIR=/var/lib/openclaw/trajectories
 ```
 
-Lorsque cette variable est définie, OpenClaw écrit un fichier JSONL par identifiant de session dans ce répertoire.
+Lorsque cette variable est définie, OpenClaw écrit un fichier JSONL par id de session dans ce
+répertoire.
 
 ## Désactiver la capture
 
@@ -132,36 +133,40 @@ Définissez `OPENCLAW_TRAJECTORY=0` avant de démarrer OpenClaw :
 export OPENCLAW_TRAJECTORY=0
 ```
 
-Cela désactive la capture de la trajectoire d'exécution. `/export-trajectory` peut toujours exporter la branche de transcription, mais les fichiers exclusivement liés à l'exécution tels que le contexte compilé, les artefacts du fournisseur et les métadonnées de prompt peuvent être manquants.
+Cela désactive la capture de trajectoire d'exécution. `/export-trajectory` peut toujours exporter
+la branche de transcription, mais les fichiers spécifiques à l'exécution tels que le contexte compilé,
+les artefacts du provider et les métadonnées de prompt peuvent manquer.
 
 ## Confidentialité et limites
 
-Les bundles de trajectoire sont conçus pour le support et le débogage, pas pour la publication publique. OpenClaw masque les valeurs sensibles avant d'écrire les fichiers d'exportation :
+Les bundles de trajectoire sont conçus pour le support et le débogage, pas pour la publication publique.
+OpenClaw expurge les valeurs sensibles avant d'écrire les fichiers d'exportation :
 
 - identifiants et champs de payload connus comme étant des secrets
 - données d'image
-- chemins d'état locaux
+- chemins d'état local
 - chemins de l'espace de travail, remplacés par `$WORKSPACE_DIR`
 - chemins du répertoire personnel, lorsqu'ils sont détectés
 
 L'exportateur limite également la taille de l'entrée :
 
-- fichiers sidecar d'exécution : 50 Mio
-- fichiers de session : 50 Mio
+- fichiers sidecar d'exécution : 50 Mo
+- fichiers de session : 50 Mo
 - événements d'exécution : 200 000
 - total des événements exportés : 250 000
 - les lignes d'événements d'exécution individuelles sont tronquées au-delà de 256 Kio
 
-Examinez les bundles avant de les partager en dehors de votre équipe. Le masquage est de « meilleur effort » et ne peut pas connaître chaque secret spécifique à l'application.
+Examinez les bundles avant de les partager en dehors de votre équipe. L'expurgation est de meilleure qualité
+et ne peut pas connaître chaque secret spécifique à l'application.
 
 ## Dépannage
 
-Si l'exportation ne contient pas d'événements d'exécution :
+Si l'exportation ne contient aucun événement d'exécution :
 
 - confirmez que OpenClaw a été démarré sans `OPENCLAW_TRAJECTORY=0`
 - vérifiez si `OPENCLAW_TRAJECTORY_DIR` pointe vers un répertoire accessible en écriture
 - exécutez un autre message dans la session, puis exportez à nouveau
-- inspect `manifest.json` pour `runtimeEventCount`
+- inspectez `manifest.json` pour `runtimeEventCount`
 
 Si la commande rejette le chemin de sortie :
 
@@ -169,6 +174,10 @@ Si la commande rejette le chemin de sortie :
 - ne passez pas `/tmp/...` ou `~/...`
 - gardez l'exportation à l'intérieur de `.openclaw/trajectory-exports/`
 
-Si l'exportation échoue avec une erreur de taille, la session ou le sidecar a dépassé les
-limites de sécurité d'exportation. Commencez une nouvelle session ou exportez une
-reproduction plus petite.
+Si l'exportation échoue avec une erreur de taille, la session ou le sidecar a dépassé les limites de sécurité d'exportation. Démarrez une nouvelle session ou exportez une reproduction plus petite.
+
+## Connexes
+
+- [Diffs](/fr/tools/diffs)
+- [Gestion de session](/fr/concepts/session)
+- [Outil Exec](/fr/tools/exec)

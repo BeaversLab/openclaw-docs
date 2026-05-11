@@ -1,18 +1,16 @@
 ---
+summary: "Créer et tester des compétences d'espace de travail personnalisées avec SKILL.md"
 title: "Création de compétences"
-summary: "Créez et testez des compétences d'espace de travail personnalisées avec SKILL.md"
 read_when:
   - You are creating a new custom skill in your workspace
   - You need a quick starter workflow for SKILL.md-based skills
 ---
 
-# Création de compétences
-
 Les compétences enseignent à l'agent comment et quand utiliser les outils. Chaque compétence est un répertoire contenant un fichier `SKILL.md` avec des en-têtes YAML et des instructions markdown.
 
-Pour savoir comment les compétences sont chargées et priorisées, consultez [Skills](/fr/tools/skills).
+Pour savoir comment les compétences sont chargées et priorisées, consultez [Compétences](/fr/tools/skills).
 
-## Créez votre première compétence
+## Créer votre première compétence
 
 <Steps>
   <Step title="Créer le répertoire de la compétence">
@@ -43,14 +41,14 @@ Pour savoir comment les compétences sont chargées et priorisées, consultez [S
   </Step>
 
   <Step title="Ajouter des outils (optionnel)">
-    Vous pouvez définir des schémas d'outils personnalisés dans l'en-tête ou instruire l'agent
+    Vous pouvez définir des schémas d'outils personnalisés dans l'en-tête ou demander à l'agent
     d'utiliser les outils système existants (comme `exec` ou `browser`). Les compétences peuvent également
-    être livrées dans des plugins aux côtés des outils qu'elles documentent.
+    être fournies dans des plugins à côté des outils qu'elles documentent.
 
   </Step>
 
   <Step title="Charger la compétence">
-    Démarrez une nouvelle session pour que OpenClaw prenne en charge la compétence :
+    Démarrez une nouvelle session pour que OpenClaw prenne en compte la compétence :
 
     ```bash
     # From chat
@@ -68,51 +66,51 @@ Pour savoir comment les compétences sont chargées et priorisées, consultez [S
 
   </Step>
 
-  <Step title="Tester">
+  <Step title="Testez-la">
     Envoyez un message qui devrait déclencher la compétence :
 
     ```bash
     openclaw agent --message "give me a greeting"
     ```
 
-    Ou discutez simplement avec l'agent et demandez une salutation.
+    Ou simplement discutez avec l'agent et demandez une salutation.
 
   </Step>
 </Steps>
 
-## Référence des métadonnées des compétences
+## Référence des métadonnées de compétence
 
 L'en-tête YAML prend en charge ces champs :
 
-| Champ                               | Obligatoire | Description                                 |
-| ----------------------------------- | ----------- | ------------------------------------------- |
-| `name`                              | Oui         | Identifiant unique (snake_case)             |
-| `description`                       | Oui         | Description en une ligne montrée à l'agent  |
-| `metadata.openclaw.os`              | Non         | Filtre OS (`["darwin"]`, `["linux"]`, etc.) |
-| `metadata.openclaw.requires.bins`   | Non         | Binaires requis sur le PATH                 |
-| `metadata.openclaw.requires.config` | Non         | Clés de configuration requises              |
+| Champ                               | Obligatoire | Description                                  |
+| ----------------------------------- | ----------- | -------------------------------------------- |
+| `name`                              | Oui         | Identifiant unique (snake_case)              |
+| `description`                       | Oui         | Description sur une ligne affichée à l'agent |
+| `metadata.openclaw.os`              | Non         | Filtre OS (`["darwin"]`, `["linux"]`, etc.)  |
+| `metadata.openclaw.requires.bins`   | Non         | Binaires requis sur le PATH                  |
+| `metadata.openclaw.requires.config` | Non         | Clés de configuration requises               |
 
 ## Meilleures pratiques
 
 - **Soyez concis** — indiquez au modèle _quoi_ faire, pas comment être une IA
-- **Sécurité avant tout** — si votre skill utilise `exec`, assurez-vous que les invites ne permettent pas l'injection de commandes arbitraires à partir d'une entrée non fiable
+- **Sécurité avant tout** — si votre skill utilise `exec`, assurez-vous que les invites n'autorisent pas l'injection de commandes arbitraires depuis une entrée non fiable
 - **Testez localement** — utilisez `openclaw agent --message "..."` pour tester avant de partager
 - **Utilisez ClawHub** — parcourez et contribuez aux compétences sur [ClawHub](https://clawhub.ai)
 
-## Emplacement des skills
+## Où se trouvent les skills
 
-| Emplacement                     | Priorité       | Portée                          |
-| ------------------------------- | -------------- | ------------------------------- |
-| `\<workspace\>/skills/`         | La plus élevée | Par agent                       |
-| `\<workspace\>/.agents/skills/` | Élevé          | Agent par espace de travail     |
-| `~/.agents/skills/`             | Moyen          | Profil d'agent partagé          |
-| `~/.openclaw/skills/`           | Moyen          | Partagé (tous les agents)       |
-| Groupé (livré avec OpenClaw)    | Faible         | Global                          |
-| `skills.load.extraDirs`         | Le plus faible | Dossiers partagés personnalisés |
+| Emplacement                     | Priorité       | Portée                           |
+| ------------------------------- | -------------- | -------------------------------- |
+| `\<workspace\>/skills/`         | La plus élevée | Par agent                        |
+| `\<workspace\>/.agents/skills/` | Élevée         | Par agent de l'espace de travail |
+| `~/.agents/skills/`             | Moyenne        | Profil d'agent partagé           |
+| `~/.openclaw/skills/`           | Moyenne        | Partagé (tous les agents)        |
+| Groupé (livré avec OpenClaw)    | Faible         | Global                           |
+| `skills.load.extraDirs`         | La plus faible | Dossiers partagés personnalisés  |
 
 ## Connexes
 
-- [Référence des compétences](/fr/tools/skills) — chargement, priorité et règles de blocage
-- [Configuration des compétences](/fr/tools/skills-config) — schéma de configuration `skills.*`
+- [Référence des Skills](/fr/tools/skills) — chargement, priorité et règles de filtrage
+- [Configuration des Skills](/fr/tools/skills-config) — schéma de configuration `skills.*`
 - [ClawHub](/fr/tools/clawhub) — registre public de compétences
 - [Création de plugins](/fr/plugins/building-plugins) — les plugins peuvent fournir des compétences

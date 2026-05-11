@@ -12,9 +12,9 @@ OpenClaw prend en charge l'API de recherche Brave en tant que fournisseur `web_s
 
 ## Obtenir une clé API
 
-1. Créez un compte API Brave Search sur [https://brave.com/search/api/](https://brave.com/search/api/)
+1. Créez un compte pour l'API de recherche Brave à [https://brave.com/search/api/](https://brave.com/search/api/)
 2. Dans le tableau de bord, choisissez le forfait **Search** et générez une clé API.
-3. Stockez la clé dans la configuration ou définissez `BRAVE_API_KEY` dans l'environnement Gateway.
+3. Stockez la clé dans la configuration ou définissez `BRAVE_API_KEY` dans l'environnement de la Gateway.
 
 ## Exemple de configuration
 
@@ -49,22 +49,46 @@ L'ancien `tools.web.search.apiKey` se charge toujours via le shim de compatibili
 
 `webSearch.mode` contrôle le transport Brave :
 
-- `web` (par défaut) : recherche web normale Brave avec des titres, des URL et des extraits
-- `llm-context` : API de contexte LLM Brave avec des extraits de texte pré-extraits et des sources pour le grounding
+- `web` (par défaut) : recherche web Brave normale avec des titres, des URL et des extraits
+- `llm-context` : API de contexte LLM Brave avec des blocs de texte pré-extraits et des sources pour le grounding
 
 ## Paramètres de l'outil
 
-| Paramètre     | Description                                                                              |
-| ------------- | ---------------------------------------------------------------------------------------- |
-| `query`       | Requête de recherche (requis)                                                            |
-| `count`       | Nombre de résultats à renvoyer (1-10, par défaut : 5)                                    |
-| `country`     | Code de pays ISO à 2 lettres (par exemple, "US", "DE")                                   |
-| `language`    | Code de langue ISO 639-1 pour les résultats de recherche (par exemple, "en", "de", "fr") |
-| `search_lang` | Code de langue de recherche Brave (par exemple, `en`, `en-gb`, `zh-hans`)                |
-| `ui_lang`     | Code de langue ISO pour les éléments de l'interface utilisateur                          |
-| `freshness`   | Filtre temporel : `day` (24h), `week`, `month` ou `year`                                 |
-| `date_after`  | Uniquement les résultats publiés après cette date (YYYY-MM-DD)                           |
-| `date_before` | Uniquement les résultats publiés avant cette date (YYYY-MM-DD)                           |
+<ParamField path="query" type="string" required>
+  Requête de recherche.
+</ParamField>
+
+<ParamField path="count" type="number" default="5">
+  Nombre de résultats à renvoyer (1–10).
+</ParamField>
+
+<ParamField path="country" type="string">
+  Code de pays ISO à 2 lettres (ex. `US`, `DE`).
+</ParamField>
+
+<ParamField path="language" type="string">
+  Code de langue ISO 639-1 pour les résultats de recherche (ex. `en`, `de`, `fr`).
+</ParamField>
+
+<ParamField path="search_lang" type="string">
+  Code de langue de recherche Brave (ex. `en`, `en-gb`, `zh-hans`).
+</ParamField>
+
+<ParamField path="ui_lang" type="string">
+  Code de langue ISO pour les éléments de l'interface utilisateur.
+</ParamField>
+
+<ParamField path="freshness" type="'day' | 'week' | 'month' | 'year'">
+  Filtre de temps — `day` correspond à 24 heures.
+</ParamField>
+
+<ParamField path="date_after" type="string">
+  Uniquement les résultats publiés après cette date (`YYYY-MM-DD`).
+</ParamField>
+
+<ParamField path="date_before" type="string">
+  Uniquement les résultats publiés avant cette date (`YYYY-MM-DD`).
+</ParamField>
 
 **Exemples :**
 
@@ -92,16 +116,16 @@ await web_search({
 
 ## Notes
 
-- OpenClaw utilise le plan Brave **Search**. Si vous disposez d'un abonnement hérité (par exemple, le plan Free original avec 2 000 requêtes/mois), il reste valide mais n'inclut pas les nouvelles fonctionnalités telles que le contexte LLM ou des limites de débit plus élevées.
-- Chaque plan Brave comprend **\$5/mois de crédit gratuit** (renouvelable). Le plan Search coûte \$5 pour 1 000 requêtes, donc le crédit couvre 1 000 requêtes/mois. Définissez votre limite d'utilisation dans le tableau de bord Brave pour éviter des frais inattendus. Consultez le [portail API Brave](https://brave.com/search/api/) pour les plans actuels.
-- Le plan Search inclut le point de terminaison de contexte LLM et les droits d'inférence IA. Le stockage des résultats pour entraîner ou affiner des modèles nécessite un plan avec des droits de stockage explicites. Consultez les [Conditions d'utilisation](https://api-dashboard.search.brave.com/terms-of-service) de Brave.
-- Le mode `llm-context` renvoie des entrées de source grounded au lieu de la forme d'extrait de recherche web normale.
-- `llm-context` mode ne prend pas en charge `ui_lang`, `freshness`, `date_after` ou `date_before`.
+- OpenClaw utilise le plan Brave **Search**. Si vous disposez d'un abonnement hérité (par exemple, le plan Free original avec 2 000 requêtes/mois), il reste valide mais n'inclut pas les fonctionnalités plus récentes telles que le contexte LLM ou des limites de débit plus élevées.
+- Chaque plan Brave inclut **\$5/mois de crédit gratuit** (renouvelable). Le plan Search coûte \$5 pour 1 000 requêtes, donc le crédit couvre 1 000 requêtes/mois. Définissez votre limite d'utilisation dans le tableau de bord Brave pour éviter des frais inattendus. Consultez le [portail Brave API](https://brave.com/search/api/) pour les plans actuels.
+- Le plan Search inclut le point de terminaison de contexte LLM et les droits d'inférence IA. Le stockage des résultats pour entraîner ou régler des modèles nécessite un plan avec des droits de stockage explicites. Consultez les [Conditions d'utilisation](https://api-dashboard.search.brave.com/terms-of-service) de Brave.
+- Le mode `llm-context` renvoie des entrées de source ancrées au lieu de la forme d'extrait de recherche web normale.
+- Le mode `llm-context` ne prend pas en charge `ui_lang`, `freshness`, `date_after` ou `date_before`.
 - `ui_lang` doit inclure une sous-balise de région comme `en-US`.
 - Les résultats sont mis en cache pendant 15 minutes par défaut (configurable via `cacheTtlMinutes`).
 
 ## Connexes
 
 - [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
-- [Perplexity Search](/fr/tools/perplexity-search) -- résultats structurés avec filtrage par domaine
-- [Recherche Exa](/fr/tools/exa-search) -- recherche neurale avec extraction de contenu
+- [Recherche Perplexity](/fr/tools/perplexity-search) -- résultats structurés avec filtrage de domaine
+- [Recherche Exa](/fr/tools/exa-search) -- recherche neuronale avec extraction de contenu

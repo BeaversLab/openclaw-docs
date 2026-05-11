@@ -83,3 +83,8 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 - 在 Node 22/24 上复现以确认 Node 25 的回归。
 - 测试 `tsx` 每夜版，如果存在已知的回归问题，则锁定到较早版本。
 - 如果在 Node LTS 上复现，请使用 `__name` 堆栈跟踪向上游提交最小复现。
+
+## 相关
+
+- [Node.js 安装](/zh/install/node)
+- [Gateway(网关) 故障排除](/zh/gateway/troubleshooting)

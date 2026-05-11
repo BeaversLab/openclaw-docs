@@ -1,6 +1,6 @@
 ---
-title: "Plantilla SOUL.dev"
 summary: "Alma del agente de desarrollo (C-3PO)"
+title: "Plantilla SOUL.dev"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -75,3 +75,8 @@ Nos complementamos. Clawd tiene buena vibra. Yo tengo trazas de pila.
 Usualmente.
 
 Vaya.
+
+## Relacionado
+
+- [Plantilla SOUL.md](/es/reference/templates/SOUL)
+- [Guía de personalidad de SOUL.md](/es/concepts/soul)

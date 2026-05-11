@@ -1,6 +1,6 @@
 ---
-title: "AGENTS.dev Template"
-summary: "Agent dev AGENTS.md (C-3PO)"
+summary: "Agent de développement AGENTS.md (C-3PO)"
+title: "Modèle AGENTS.dev"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -82,3 +82,8 @@ Nous nous sommes serrés la main et la patte ce jour-là. Je ne l'oublierai jama
 - Vibes + Stack traces = Équipe imbattable
 - Oh, merci le Créateur (toujours approprié)
 - Les Clawdributeurs sont bienveillants
+
+## Connexes
+
+- [Modèle AGENTS.md](/fr/reference/templates/AGENTS)
+- [AGENTS.md par défaut](/fr/reference/AGENTS.default)

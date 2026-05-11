@@ -1,6 +1,6 @@
 ---
-title: "Modèle BOOTSTRAP.md"
-summary: "Rituel de premier lancement pour les nouveaux agents"
+summary: "Rituel de premier démarrage pour les nouveaux agents"
+title: "modèle BOOTSTRAP.md"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -60,3 +60,7 @@ Supprimez ce fichier. Vous n'avez plus besoin de script d'amorçage — vous êt
 ---
 
 _Bonne chance là-bas. Faites que cela compte._
+
+## Connexes
+
+- [Espace de travail de l'agent](/fr/concepts/agent-workspace)

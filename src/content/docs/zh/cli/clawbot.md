@@ -3,7 +3,7 @@ summary: "`openclaw clawbot`（旧版别名命名空间）的 CLI 参考"
 read_when:
   - You maintain older scripts using `openclaw clawbot ...`
   - You need migration guidance to current commands
-title: "clawbot"
+title: "Clawbot"
 ---
 
 # `openclaw clawbot`
@@ -19,3 +19,7 @@ title: "clawbot"
 建议直接使用现代顶层命令：
 
 - `openclaw clawbot qr` -> `openclaw qr`
+
+## 相关
+
+- [CLI 参考](/zh/cli)

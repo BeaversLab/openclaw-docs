@@ -2,7 +2,7 @@
 summary: "Lógica de estado de la barra de menús y lo que se muestra a los usuarios"
 read_when:
   - Tweaking mac menu UI or status logic
-title: "Barra de menús"
+title: "Barra de menú"
 ---
 
 # Lógica de estado de la barra de menús
@@ -79,3 +79,8 @@ title: "Barra de menús"
 - Iniciar la principal mientras otra está activa: el icono cambia instantáneamente a la principal.
 - Ráfagas rápidas de herramientas: asegurar que la insignia no parpadee (gracia TTL en los resultados de herramientas).
 - La fila de estado (Health) vuelve a aparecer una vez que todas las sesiones están inactivas.
+
+## Relacionado
+
+- [aplicación macOS](/es/platforms/macos)
+- [Icono de la barra de menú](/es/platforms/mac/icon)

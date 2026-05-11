@@ -8,11 +8,11 @@ title: "Recherche Perplexity"
 
 # API de recherche Perplexity
 
-OpenClaw prend en charge l'API de recherche Perplexity en tant que fournisseur `web_search`.
+OpenClaw prend en charge l'API de recherche Perplexity en tant que `web_search` provider.
 Elle renvoie des résultats structurés avec les champs `title`, `url` et `snippet`.
 
-Pour assurer la compatibilité, OpenClaw prend également en charge les configurations Perplexity Sonar/OpenRouter existantes.
-Si vous utilisez `OPENROUTER_API_KEY`, une clé `sk-or-...` dans `plugins.entries.perplexity.config.webSearch.apiKey`, ou définissez `plugins.entries.perplexity.config.webSearch.baseUrl` / `model`, le fournisseur bascule vers le chemin chat-completions et renvoie des réponses synthétisées par l'IA avec des citations au lieu des résultats structurés de l'API de recherche.
+Pour des raisons de compatibilité, OpenClaw prend également en charge les configurations héritées Perplexity Sonar/OpenRouter.
+Si vous utilisez `OPENROUTER_API_KEY`, une clé `sk-or-...` dans `plugins.entries.perplexity.config.webSearch.apiKey`, ou définissez `plugins.entries.perplexity.config.webSearch.baseUrl` / `model`, le provider bascule vers le chemin chat-completions et renvoie des réponses synthétisées par l'IA avec des citations au lieu des résultats structurés de l'API de recherche.
 
 ## Obtenir une clé API Perplexity
 
@@ -22,7 +22,7 @@ Si vous utilisez `OPENROUTER_API_KEY`, une clé `sk-or-...` dans `plugins.entrie
 
 ## Compatibilité OpenRouter
 
-Si vous utilisiez déjà OpenRouter pour Perplexity Sonar, gardez `provider: "perplexity"` et définissez `OPENROUTER_API_KEY` dans l'environnement de la Gateway, ou stockez une clé `sk-or-...` dans `plugins.entries.perplexity.config.webSearch.apiKey`.
+Si vous utilisiez déjà OpenRouter pour Perplexity Sonar, conservez `provider: "perplexity"` et définissez `OPENROUTER_API_KEY` dans l'environnement de la Gateway, ou stockez une clé `sk-or-...` dans `plugins.entries.perplexity.config.webSearch.apiKey`.
 
 Contrôles de compatibilité optionnels :
 
@@ -85,39 +85,65 @@ Contrôles de compatibilité optionnels :
 
 ## Où définir la clé
 
-**Via la configuration :** exécutez `openclaw configure --section web`. Cela stocke la clé dans
+**Via la configuration :** exécutez `openclaw configure --section web`. Elle stocke la clé dans
 `~/.openclaw/openclaw.json` sous `plugins.entries.perplexity.config.webSearch.apiKey`.
 Ce champ accepte également les objets SecretRef.
 
 **Via l'environnement :** définissez `PERPLEXITY_API_KEY` ou `OPENROUTER_API_KEY`
-dans l'environnement de processus du Gateway. Pour une installation de passerelle, placez-le dans
-`~/.openclaw/.env` (ou votre environnement de service). Voir [Variables d'environnement](/fr/help/faq#env-vars-and-env-loading).
+dans l'environnement du processus Gateway. Pour une installation de passerelle, placez-la dans
+`~/.openclaw/.env` (ou dans votre environnement de service). Voir [Env vars](/fr/help/faq#env-vars-and-env-loading).
 
-Si `provider: "perplexity"` est configuré et que le SecretRef de la clé Perplexity n'est pas résolu sans solution de repli d'environnement, le démarrage/rechargement échoue rapidement.
+Si `provider: "perplexity"` est configuré et que le SecretRef de la clé Perplexity n'est pas résolu sans repli vers l'environnement, le démarrage/rechargement échoue rapidement.
 
 ## Paramètres de l'outil
 
 Ces paramètres s'appliquent au chemin de l'API native Perplexity Search API.
 
-| Paramètre             | Description                                                           |
-| --------------------- | --------------------------------------------------------------------- |
-| `query`               | Requête de recherche (requis)                                         |
-| `count`               | Nombre de résultats à renvoyer (1-10, par défaut : 5)                 |
-| `country`             | Code pays ISO à 2 lettres (par exemple, "US", "DE")                   |
-| `language`            | Code de langue ISO 639-1 (par exemple, "en", "de", "fr")              |
-| `freshness`           | Filtre temporel : `day` (24h), `week`, `month` ou `year`              |
-| `date_after`          | Uniquement les résultats publiés après cette date (YYYY-MM-DD)        |
-| `date_before`         | Uniquement les résultats publiés avant cette date (YYYY-MM-DD)        |
-| `domain_filter`       | Tableau de liste d'autorisation/liste de blocage de domaines (max 20) |
-| `max_tokens`          | Budget total de contenu (par défaut : 25000, max : 1000000)           |
-| `max_tokens_per_page` | Limite de jetons par page (par défaut : 2048)                         |
+<ParamField path="query" type="string" required>
+  Requête de recherche.
+</ParamField>
+
+<ParamField path="count" type="number" default="5">
+  Nombre de résultats à renvoyer (1–10).
+</ParamField>
+
+<ParamField path="country" type="string">
+  Code pays ISO à deux lettres (par ex. `US`, `DE`).
+</ParamField>
+
+<ParamField path="language" type="string">
+  Code de langue ISO 639-1 (par ex. `en`, `de`, `fr`).
+</ParamField>
+
+<ParamField path="freshness" type="'day' | 'week' | 'month' | 'year'">
+  Filtre temporel — `day` correspond à 24 heures.
+</ParamField>
+
+<ParamField path="date_after" type="string">
+  Uniquement les résultats publiés après cette date (`YYYY-MM-DD`).
+</ParamField>
+
+<ParamField path="date_before" type="string">
+  Uniquement les résultats publiés avant cette date (`YYYY-MM-DD`).
+</ParamField>
+
+<ParamField path="domain_filter" type="string[]">
+  Tableau de liste d'autorisation/liste de blocage de domaines (max 20).
+</ParamField>
+
+<ParamField path="max_tokens" type="number" default="25000">
+  Budget total de contenu (max 1000000).
+</ParamField>
+
+<ParamField path="max_tokens_per_page" type="number" default="2048">
+  Limite de jetons par page.
+</ParamField>
 
 Pour le chemin de compatibilité hérité Sonar/OpenRouter :
 
 - `query`, `count` et `freshness` sont acceptés
-- `count` n'est là que pour la compatibilité ; la réponse est toujours une réponse
-  synthétisée unique avec des citations plutôt qu'une liste de résultats N
-- Les filtres exclusifs à la API de recherche tels que `country`, `language`, `date_after`,
+- `count` n'est là que pour la compatibilité ; la réponse est toujours une réponse synthétisée unique avec citations plutôt qu'une liste de N résultats
+- Les filtres exclusifs à l'API de API tels que `country`, `language`, `date_after`,
   `date_before`, `domain_filter`, `max_tokens` et `max_tokens_per_page`
   renvoient des erreurs explicites
 
@@ -168,18 +194,18 @@ await web_search({
 
 - Maximum 20 domaines par filtre
 - Impossible de mélanger la liste d'autorisation et la liste de blocage dans la même requête
-- Utilisez le préfixe `-` pour les entrées de la liste de blocage (ex : `["-reddit.com"]`)
+- Utilisez le préfixe `-` pour les entrées de la liste de blocage (par ex., `["-reddit.com"]`)
 
 ## Notes
 
-- La Perplexity de recherche API renvoie des résultats de recherche web structurés (`title`, `url`, `snippet`)
-- OpenRouter ou les commutateurs explicites `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` ramènent Perplexity aux complétés de chat Sonar pour la compatibilité
+- L'API Perplexity Search renvoie des résultats de recherche Web structurés (`title`, `url`, `snippet`)
+- OpenRouter ou les commutateurs explicites `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` ramènent Perplexity aux complétions de chat Sonar pour la compatibilité
 - La compatibilité Sonar/OpenRouter renvoie une réponse synthétisée unique avec des citations, et non des lignes de résultats structurés
 - Les résultats sont mis en cache pendant 15 minutes par défaut (configurable via `cacheTtlMinutes`)
 
 ## Connexes
 
-- [Aperçu de la recherche web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
-- [Docs de la Perplexity de recherche API](https://docs.perplexity.ai/docs/search/quickstart) -- documentation officielle de Perplexity
+- [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
+- [Documentation de l'API Perplexity Search](https://docs.perplexity.ai/docs/search/quickstart) -- documentation officielle de Perplexity
 - [Recherche Brave](/fr/tools/brave-search) -- résultats structurés avec des filtres de pays/langue
 - [Recherche Exa](/fr/tools/exa-search) -- recherche neurale avec extraction de contenu

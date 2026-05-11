@@ -1,53 +1,55 @@
 ---
-title: "Élagage de session"
-summary: "Suppression des anciens résultats d'outils pour garder le contexte léger et le cache efficace"
+summary: "Taillage des anciens résultats d'outils pour garder le contexte léger et le cache efficace"
+title: "Taillage de session"
 read_when:
   - You want to reduce context growth from tool outputs
   - You want to understand Anthropic prompt cache optimization
 ---
 
-# Élagage de session
+Le taillage de session supprime les **anciens résultats d'outils** du contexte avant chaque appel LLM. Cela réduit le gonflement du contexte dû aux sorties d'outils accumulées (résultats d'exécution, lectures de fichiers, résultats de recherche) sans réécrire le texte normal de la conversation.
 
-L'élagage de session supprime les **anciens résultats d'outils** du contexte avant chaque appel au LLM. Cela réduit l'encombrement du contexte causé par l'accumulation des sorties d'outils (résultats d'exécution, lectures de fichiers, résultats de recherche) sans réécrire le texte normal de la conversation.
-
-<Info>L'élagage s'effectue uniquement en mémoire -- il ne modifie pas la transcription de session sur disque. Votre historique complet est toujours préservé.</Info>
+<Info>Le taillage s'effectue uniquement en mémoire -- il ne modifie pas la transcription de session sur disque. Votre historique complet est toujours préservé.</Info>
 
 ## Pourquoi c'est important
 
-Les longues sessions accumulent des sorties d'outils qui gonflent la fenêtre de contexte. Cela augmente les coûts et peut forcer la [compaction](/fr/concepts/compaction) plus tôt que nécessaire.
+Les sessions longues accumulent des sorties d'outils qui gonflent la fenêtre de contexte. Cela augmente les coûts et peut forcer la [compaction](/fr/concepts/compaction) plus tôt que nécessaire.
 
-L'élagage est particulièrement précieux pour le **cache de prompt Anthropic**. Une fois le TTL du cache expiré, la requête suivante remet en cache le prompt complet. L'élagage réduit la taille de l'écriture dans le cache, ce qui réduit directement les coûts.
+Le taillage est particulièrement précieux pour le **cache de prompt Anthropic**. Une fois le TTL du cache expiré, la requête suivante remet en cache le prompt complet. Le taillage réduit la taille d'écriture du cache, abaissant directement les coûts.
 
-## Comment cela fonctionne
+## Comment ça marche
 
-1. Attendez l'expiration du TTL du cache (par défaut 5 minutes).
-2. Trouve les anciens résultats d'outils pour l'élagage normal (le texte de la conversation est laissé intact).
-3. **Couper en douceur** les résultats trop volumineux -- gardez le début et la fin, insérez `...`.
-4. **Effacer fermement** le reste -- remplacez par un espace réservé.
-5. Réinitialisez le TTL pour que les requêtes de suivi réutilisent le cache frais.
+1. Attendre l'expiration du TTL du cache (par défaut 5 minutes).
+2. Trouver les anciens résultats d'outils pour le taillage normal (le texte de conversation est laissé tel quel).
+3. **Tailler en douceur** les résultats trop volumineux -- garder le début et la fin, insérer `...`.
+4. **Effacer fermement** le reste -- remplacer par un espace réservé.
+5. Réinitialiser le TTL pour que les requêtes de suivi réutilisent le cache fraîchement créé.
 
 ## Nettoyage des images héritées
 
-OpenClaw exécute également un nettoyage idempotent séparé pour les sessions héritées plus anciennes qui ont persisté des blocs d'images brutes dans l'historique.
+OpenClaw construit également une vue de relecture idempotente distincte pour les sessions qui conservent des blocs d'images bruts ou des marqueurs de média d'hydratation de prompt dans l'historique.
 
-- Il préserve les **3 tours complétés les plus récents** octet par octet afin que les préfixes du cache de prompt pour les suivis récents restent stables.
-- Les anciens blocs d'images déjà traités dans l'historique `user` ou `toolResult` peuvent être remplacés par `[image data removed - already processed by model]`.
-- Ceci est distinct de l'élagage normal du cache-TTL. Il existe pour empêcher les charges utiles d'images répétées de casser les caches de prompt lors des tours ultérieurs.
+- Il préserve les **3 derniers tours complétés** octet par octet afin que les préfixes de cache de prompt pour les suivis récents restent stables.
+- Dans la vue de relecture, les anciens blocs d'images déjà traités de l'historique `user` ou `toolResult` peuvent être remplacés par `[image data removed - already processed by model]`.
+- Les anciennes références de média textuel telles que `[media attached: ...]`, `[Image: source: ...]` et `media://inbound/...` peuvent être remplacées par `[media reference removed - already processed by model]`. Les marqueurs de pièces jointes du tour en cours restent intacts pour que les modèles de vision puissent encore hydrater des images fraîches.
+- La transcription brute de la session n'est pas réécrite, les visualiseurs d'historique peuvent donc toujours afficher les entrées de message originales et leurs images.
+- Ceci est distinct de l'élagage normal du cache-TTL. Cela sert à empêcher les
+  charges d'images répétées ou les références médias obsolètes de casser les caches de
+  invites lors des tours ultérieurs.
 
 ## Valeurs par défaut intelligentes
 
 OpenClaw active automatiquement l'élagage pour les profils Anthropic :
 
-| Type de profil                                                         | Élagage activé | Fréquence cardiaque |
-| ---------------------------------------------------------------------- | -------------- | ------------------- |
-| Auth Anthropic /jeton OAuth (y compris la réutilisation du CLI Claude) | Oui            | 1 heure             |
-| Clé API                                                                | Oui            | 30 min              |
+| Type de profil                                                   | Élagage activé | Intervalle (Heartbeat) |
+| ---------------------------------------------------------------- | -------------- | ---------------------- |
+| Auth Anthropic/token (incluant la réutilisation du OAuth Claude) | Oui            | 1 heure                |
+| Clé API                                                          | Oui            | 30 min                 |
 
 Si vous définissez des valeurs explicites, OpenClaw ne les remplacera pas.
 
 ## Activer ou désactiver
 
-L'élagage est désactivé par défaut pour les fournisseurs autres que Anthropic. Pour activer :
+L'élagage est désactivé par défaut pour les fournisseurs non-Anthropic. Pour activer :
 
 ```json5
 {
@@ -61,17 +63,25 @@ L'élagage est désactivé par défaut pour les fournisseurs autres que Anthropi
 
 Pour désactiver : définissez `mode: "off"`.
 
-## Élagage vs Compaction
+## Élagage vs compactage
 
-|                  | Élagage                         | Compaction                  |
-| ---------------- | ------------------------------- | --------------------------- |
-| **Quoi**         | Supprime les résultats d'outils | Résume la conversation      |
-| **Sauvegardé ?** | Non (par requête)               | Oui (dans la transcription) |
-| **Portée**       | Résultats d'outils uniquement   | Conversation entière        |
+|                  | Élagage                        | Compactage                  |
+| ---------------- | ------------------------------ | --------------------------- |
+| **Quoi**         | Supprime les résultats d'outil | Résume la conversation      |
+| **Sauvegardé ?** | Non (par requête)              | Oui (dans la transcription) |
+| **Portée**       | Résultats d'outil uniquement   | Conversation entière        |
 
-Ils se complètent -- l'élagage maintient les sorties d'outils légères entre les cycles de compaction.
+Ils se complètent -- l'élagage maintient les sorties d'outil légères entre
+les cycles de compactage.
 
 ## Pour aller plus loin
 
-- [Compaction](/fr/concepts/compaction) -- réduction du contexte basée sur le résumé
-- [Configuration de la Gateway](/fr/gateway/configuration) -- tous les paramètres de configuration d'élagage (`contextPruning.*`)
+- [Compactage](/fr/concepts/compaction) -- réduction du contexte basée sur le résumé
+- [Configuration du Gateway](/fr/gateway/configuration) -- tous les paramètres de config d'élagage
+  (`contextPruning.*`)
+
+## Connexe
+
+- [Gestion de session](/fr/concepts/session)
+- [Outils de session](/fr/concepts/session-tool)
+- [Moteur de contexte](/fr/concepts/context-engine)

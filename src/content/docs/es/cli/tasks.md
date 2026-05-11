@@ -6,12 +6,10 @@ read_when:
 title: "`openclaw tasks`"
 ---
 
-# `openclaw tasks`
-
-Inspeccione las tareas en segundo plano duraderas y el estado del flujo de tareas. Sin un subcomando,
+Inspeccione tareas en segundo plano duraderas y el estado de Task Flow. Sin un subcomando,
 `openclaw tasks` es equivalente a `openclaw tasks list`.
 
-Consulte [Tareas en segundo plano](/es/automation/tasks) para obtener información sobre el ciclo de vida y el modelo de entrega.
+Consulte [Tareas en segundo plano](/es/automation/tasks) para conocer el ciclo de vida y el modelo de entrega.
 
 ## Uso
 
@@ -45,7 +43,7 @@ openclaw tasks flow cancel <lookup>
 openclaw tasks list [--runtime <name>] [--status <name>] [--json]
 ```
 
-Enumera las tareas en segundo plano rastreadas comenzando por las más recientes.
+Lista las tareas en segundo plano rastreadas, primero las más recientes.
 
 ### `show`
 
@@ -61,7 +59,7 @@ Muestra una tarea por ID de tarea, ID de ejecución o clave de sesión.
 openclaw tasks notify <lookup> <done_only|state_changes|silent>
 ```
 
-Cambia la política de notificación de una tarea en ejecución.
+Cambia la política de notificación para una tarea en ejecución.
 
 ### `cancel`
 
@@ -77,7 +75,7 @@ Cancela una tarea en segundo plano en ejecución.
 openclaw tasks audit [--severity <warn|error>] [--code <name>] [--limit <n>] [--json]
 ```
 
-Muestra registros de tareas y flujos de tareas obsoletos, perdidos, con fallos de entrega o inconsistentes.
+Muestra registros de tareas y flujos de tareas obsoletos, perdidos, con fallas de entrega o inconsistentes. Las tareas perdidas conservadas hasta `cleanupAfter` son advertencias; las tareas perdidas caducadas o sin marca son errores.
 
 ### `maintenance`
 
@@ -85,7 +83,11 @@ Muestra registros de tareas y flujos de tareas obsoletos, perdidos, con fallos d
 openclaw tasks maintenance [--apply] [--json]
 ```
 
-Vista previa o aplica la conciliación de tareas y flujos de tareas, el sellado de limpieza y la poda.
+Vista previa o aplica la conciliación de tareas y flujos de tareas, la limpieza de marcas y la poda.
+Para las tareas cron, la conciliación utiliza los registros de ejecución/estado del trabajo persistidos antes de marcar una
+tarea activa antigua como `lost`, por lo que las ejecuciones cron completadas no se convierten en errores de auditoría falsos
+solo porque el estado de ejecución en memoria de Gateway se ha ido. La auditoría de CLI sin conexión no
+es autorizada para el conjunto de trabajos activos de cron local del proceso de Gateway.
 
 ### `flow`
 
@@ -96,3 +98,8 @@ openclaw tasks flow cancel <lookup>
 ```
 
 Inspecciona o cancela el estado duradero del flujo de tareas bajo el libro mayor de tareas.
+
+## Relacionado
+
+- [Referencia de CLI](/es/cli)
+- [Tareas en segundo plano](/es/automation/tasks)

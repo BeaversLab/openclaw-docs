@@ -3,7 +3,7 @@ summary: "Referencia de la CLI para `openclaw channels` (cuentas, estado, inicio
 read_when:
   - You want to add/remove channel accounts (WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage/Matrix)
   - You want to check channel status or tail channel logs
-title: "canales"
+title: "Canales"
 ---
 
 # `openclaw channels`
@@ -12,7 +12,7 @@ Administra las cuentas de los canales de chat y su estado de tiempo de ejecució
 
 Documentos relacionados:
 
-- Guías de canales: [Canales](/es/channels/index)
+- Guías de canales: [Canales](/es/channels)
 - Configuración de Gateway: [Configuración](/es/gateway/configuration)
 
 ## Comandos comunes
@@ -44,7 +44,7 @@ openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
 openclaw channels remove --channel telegram --delete
 ```
 
-Sugerencia: `openclaw channels add --help` muestra indicadores por canal (token, clave privada, token de aplicación, rutas de signal-cli, etc.).
+<Tip>`openclaw channels add --help` muestra las marcas por canal (token, clave privada, token de aplicación, rutas de signal-cli, etc.).</Tip>
 
 Las superficies de añadir no interactivas comunes incluyen:
 
@@ -56,37 +56,37 @@ Las superficies de añadir no interactivas comunes incluyen:
 - Campos de Tlon: `--ship`, `--url`, `--code`, `--group-channels`, `--dm-allowlist`, `--auto-discover-channels`
 - `--use-env` para autenticación predeterminada basada en entorno donde sea compatible
 
-Cuando ejecutas `openclaw channels add` sin marcas, el asistente interactivo puede solicitar:
+Si es necesario instalar un complemento de canal durante un comando de adición controlado por marcas, OpenClaw utiliza la fuente de instalación predeterminada del canal sin abrir el mensaje de instalación interactiva del complemento.
+
+Cuando ejecuta `openclaw channels add` sin marcas, el asistente interactivo puede solicitar:
 
 - ids de cuenta por cada canal seleccionado
 - nombres de visualización opcionales para esas cuentas
 - `Bind configured channel accounts to agents now?`
 
-Si confirmas el enlace ahora, el asistente pregunta qué agente debe ser propietario de cada cuenta de canal configurada y escribe enlaces de enrutamiento con ámbito de cuenta.
+Si confirma vincular ahora, el asistente pregunta qué agente debe ser propietario de cada cuenta de canal configurada y escribe enlaces de enrutamiento con ámbito de cuenta.
 
-También puedes gestionar las mismas reglas de enrutamiento más adelante con `openclaw agents bindings`, `openclaw agents bind` y `openclaw agents unbind` (consulta [agents](/es/cli/agents)).
+También puede administrar las mismas reglas de enrutamiento más tarde con `openclaw agents bindings`, `openclaw agents bind` y `openclaw agents unbind` (consulte [agents](/es/cli/agents)).
 
-Cuando añades una cuenta no predeterminada a un canal que aún está usando configuraciones de nivel superior de una sola cuenta, OpenClaw promueve los valores de nivel superior con ámbito de cuenta al mapa de cuentas del canal antes de escribir la nueva cuenta. La mayoría de los canales colocan esos valores en `channels.<channel>.accounts.default`, pero los canales agrupados pueden preservar una cuenta promovida coincidente existente en su lugar. Matrix es el ejemplo actual: si ya existe una cuenta con nombre, o `defaultAccount` apunta a una cuenta con nombre existente, la promoción preserva esa cuenta en lugar de crear una nueva `accounts.default`.
+Cuando agrega una cuenta no predeterminada a un canal que aún está utilizando configuraciones de nivel superior de una sola cuenta, OpenClaw promueve los valores de nivel superior con ámbito de cuenta al mapa de cuentas del canal antes de escribir la nueva cuenta. La mayoría de los canales ubican esos valores en `channels.<channel>.accounts.default`, pero los canales agrupados pueden conservar una cuenta promovida coincidente existente en su lugar. Matrix es el ejemplo actual: si ya existe una cuenta con nombre, o `defaultAccount` apunta a una cuenta con nombre existente, la promoción conserva esa cuenta en lugar de crear una nueva `accounts.default`.
 
-El comportamiento de enrutamiento permanece constante:
+El comportamiento del enrutamiento se mantiene constante:
 
-- Los enlaces existentes solo de canal (sin `accountId`) continúan coincidiendo con la cuenta predeterminada.
+- Los enlaces solo de canal existentes (sin `accountId`) continúan coincidiendo con la cuenta predeterminada.
 - `channels add` no crea ni reescribe automáticamente los enlaces en modo no interactivo.
-- La configuración interactiva puede añadir opcionalmente enlaces con ámbito de cuenta.
+- La configuración interactiva puede agregar opcionalmente enlaces con ámbito de cuenta.
 
-Si su configuración ya estaba en un estado mixto (cuentas con nombre presentes y valores de cuenta única de nivel superior aún establecidos), ejecute `openclaw doctor --fix` para mover los valores con ámbito de cuenta a la cuenta promovida elegida para ese canal. La mayoría de los canales promueven a `accounts.default`; Matrix puede preservar un objetivo con nombre/predeterminado existente en su lugar.
+Si su configuración ya estaba en un estado mixto (cuentas con nombre presentes y valores de nivel superior de una sola cuenta aún establecidos), ejecute `openclaw doctor --fix` para mover los valores con ámbito de cuenta a la cuenta promovida elegida para ese canal. La mayoría de los canales promocionan a `accounts.default`; Matrix puede conservar un objetivo con nombre/predeterminado existente en su lugar.
 
-## Inicio de sesión / cierre de sesión (interactivo)
+## Inicio de sesión y cierre de sesión (interactivo)
 
 ```bash
 openclaw channels login --channel whatsapp
 openclaw channels logout --channel whatsapp
 ```
 
-Notas:
-
 - `channels login` admite `--verbose`.
-- `channels login` / `logout` pueden inferir el canal cuando solo hay configurado un objetivo de inicio de sesión admitido.
+- `channels login` y `logout` pueden inferir el canal cuando solo hay un objetivo de inicio de sesión compatible configurado.
 
 ## Solución de problemas
 
@@ -126,3 +126,8 @@ Notas:
 - Use `--kind user|group|auto` para forzar el tipo de objetivo.
 - La resolución prefiere coincidencias activas cuando varias entradas comparten el mismo nombre.
 - `channels resolve` es de solo lectura. Si una cuenta seleccionada está configurada mediante SecretRef pero esa credencial no está disponible en la ruta de comando actual, el comando devuelve resultados degradados no resueltos con notas en lugar de abortar toda la ejecución.
+
+## Relacionado
+
+- [Referencia de CLI](/es/cli)
+- [Descripción general de canales](/es/channels)

@@ -7,27 +7,25 @@ read_when:
 title: "ElevenLabs"
 ---
 
-# ElevenLabs
+OpenClaw utiliza ElevenLabs para conversión de texto a voz, conversión de voz a texto por lotes con Scribe
+v2, y transmisión de STT (conversión de voz a texto) en tiempo real para Voice Call con Scribe v2 Realtime.
 
-OpenClaw usa ElevenLabs para texto a voz, conversión de voz a texto por lotes con Scribe
-v2, y STT de streaming para Voice Call con Scribe v2 Realtime.
-
-| Capacidad                              | Superficie de OpenClaw                        | Por defecto              |
-| -------------------------------------- | --------------------------------------------- | ------------------------ |
-| Texto a voz                            | `messages.tts` / `talk`                       | `eleven_multilingual_v2` |
-| Conversión de voz a texto por lotes    | `tools.media.audio`                           | `scribe_v2`              |
-| Conversión de voz a texto en streaming | Voice Call `streaming.provider: "elevenlabs"` | `scribe_v2_realtime`     |
+| Capacidad                                | Superficie de OpenClaw                        | Predeterminado           |
+| ---------------------------------------- | --------------------------------------------- | ------------------------ |
+| Conversión de texto a voz                | `messages.tts` / `talk`                       | `eleven_multilingual_v2` |
+| Conversión de voz a texto por lotes      | `tools.media.audio`                           | `scribe_v2`              |
+| Conversión de voz a texto en transmisión | Voice Call `streaming.provider: "elevenlabs"` | `scribe_v2_realtime`     |
 
 ## Autenticación
 
-Establezca `ELEVENLABS_API_KEY` en el entorno. También se acepta `XI_API_KEY`
-para compatibilidad con las herramientas existentes de ElevenLabs.
+Establezca `ELEVENLABS_API_KEY` en el entorno. También se acepta `XI_API_KEY` para
+compatibilidad con las herramientas existentes de ElevenLabs.
 
 ```bash
 export ELEVENLABS_API_KEY="..."
 ```
 
-## Texto a voz
+## Conversión de texto a voz
 
 ```json5
 {
@@ -44,6 +42,9 @@ export ELEVENLABS_API_KEY="..."
   },
 }
 ```
+
+Establezca `modelId` en `eleven_v3` para usar ElevenLabs v3 TTS. OpenClaw mantiene
+`eleven_multilingual_v2` como el valor predeterminado para las instalaciones existentes.
 
 ## Voz a texto
 
@@ -68,7 +69,7 @@ OpenClaw envía audio multiparte a ElevenLabs `/v1/speech-to-text` con
 ## STT de streaming Voice Call
 
 El complemento `elevenlabs` incluido registra Scribe v2 Realtime para la transcripción
-en streaming de Voice Call.
+en transmisión de Voice Call.
 
 | Configuración              | Ruta de configuración                                                     | Por defecto                                   |
 | -------------------------- | ------------------------------------------------------------------------- | --------------------------------------------- |
@@ -104,4 +105,9 @@ en streaming de Voice Call.
 }
 ```
 
-<Note>Voice Call recibe medios de Twilio como G.711 u-law de 8 kHz. El proveedor en tiempo eal de ElevenLabs usa por defecto `ulaw_8000`, por lo que los marcos de telefonía pueden reenviarse sin transcodificación.</Note>
+<Note>Voice Call recibe medios de Twilio como G.711 u-law de 8 kHz. El proveedor en tiempo real de ElevenLabs usa `ulaw_8000` de forma predeterminada, por lo que los marcos de telefonía pueden reenviarse sin transcodificación.</Note>
+
+## Relacionado
+
+- [Conversión de texto a voz](/es/tools/tts)
+- [Selección de modelo](/es/concepts/model-providers)

@@ -1,6 +1,6 @@
 ---
-title: "AGENTS.md 範本"
 summary: "AGENTS.md 的工作區範本"
+title: "AGENTS.md 範本"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -219,3 +219,7 @@ read_when:
 ## 使其成為您自己的
 
 這只是一個起點。在您找出有效的方法時，加入您自己的慣例、風格和規則。
+
+## 相關
+
+- [預設 AGENTS.md](/zh-Hant/reference/AGENTS.default)

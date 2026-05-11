@@ -4,7 +4,7 @@ read_when:
   - Setting up OpenClaw on a Raspberry Pi
   - Running OpenClaw on ARM devices
   - Building a cheap always-on personal AI
-title: "Raspberry Pi (平台)"
+title: "Raspberry Pi (platform)"
 ---
 
 # OpenClaw 在Raspberry Pi上（Raspberry Pi）
@@ -115,7 +115,7 @@ sudo sysctl -p
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-### 选项 B：可破解安装（适合折腾）
+### 选项 B：可修改安装（适合折腾）
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -304,7 +304,7 @@ uname -m
 
 ---
 
-## 推荐型号设置
+## 推荐的模型设置
 
 由于 Pi 只是 Gateway(网关)（模型在云端运行），请使用基于 API 的模型：
 
@@ -409,7 +409,7 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ---
 
-## 另请参阅
+## 相关
 
 - [Linux 指南](/zh/platforms/linux) — 通用 Linux 设置
 - [DigitalOcean 指南](/zh/platforms/digitalocean) — 云替代方案

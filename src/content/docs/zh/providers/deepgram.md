@@ -7,11 +7,10 @@ read_when:
 title: "Deepgram"
 ---
 
-# Deepgram（音频转录）
+Deepgram 是一个语音转文本 API。在 OpenClaw 中，它用于通过 `tools.media.audio` 进行入站音频/语音笔记转录，以及通过 `plugins.entries.voice-call.config.streaming` 进行语音通话流式 STT。
 
-Deepgram 是一个语音转文本 API。在 OpenClaw 中，它用于通过 `tools.media.audio` 进行入站音频/语音备忘录转录，并通过 `plugins.entries.voice-call.config.streaming` 进行语音通话流式 STT。
-
-对于批量转录，OpenClaw 将完整的音频文件上传到 Deepgram，并将转录内容注入到回复管道中（`{{Transcript}}` + `[Audio]` 块）。对于语音通话流式传输，OpenClaw 通过 Deepgram 的 WebSocket `listen` 端点转发实时 G.711 u-law 帧，并在 Deepgram 返回时发出部分或最终转录内容。
+对于批量转录，OpenClaw 会将完整的音频文件上传到 Deepgram，并将转录文本注入到回复管道中（`{{Transcript}}` +
+`[Audio]` 块）。对于语音通话流式传输，OpenClaw 通过 Deepgram 的 WebSocket `listen` 端点转发实时 G.711 u-law 帧，并在 Deepgram 返回时发出部分或最终转录文本。
 
 | 详情     | 值                                                         |
 | -------- | ---------------------------------------------------------- |
@@ -45,20 +44,20 @@ Deepgram 是一个语音转文本 API。在 OpenClaw 中，它用于通过 `tool
     }
     ```
   </Step>
-  <Step title="发送语音消息">
-    通过任意已连接的渠道发送音频消息。OpenClaw 将通过 Deepgram 进行转录，并将转录内容注入到回复管道中。
+  <Step title="发送语音笔记">
+    通过任何连接的渠道发送音频消息。OpenClaw 会通过 Deepgram 将其转录，并将转录文本注入到回复管道中。
   </Step>
 </Steps>
 
 ## 配置选项
 
-| 选项              | 路径                                                         | 描述                                 |
-| ----------------- | ------------------------------------------------------------ | ------------------------------------ |
-| `model`           | `tools.media.audio.models[].model`                           | Deepgram 模型 ID（默认值：`nova-3`） |
-| `language`        | `tools.media.audio.models[].language`                        | 语言提示（可选）                     |
-| `detect_language` | `tools.media.audio.providerOptions.deepgram.detect_language` | 启用语言检测（可选）                 |
-| `punctuate`       | `tools.media.audio.providerOptions.deepgram.punctuate`       | 启用标点符号（可选）                 |
-| `smart_format`    | `tools.media.audio.providerOptions.deepgram.smart_format`    | 启用智能格式化（可选）               |
+| 选项              | 路径                                                         | 描述                               |
+| ----------------- | ------------------------------------------------------------ | ---------------------------------- |
+| `model`           | `tools.media.audio.models[].model`                           | Deepgram 模型 ID（默认：`nova-3`） |
+| `language`        | `tools.media.audio.models[].language`                        | 语言提示（可选）                   |
+| `detect_language` | `tools.media.audio.providerOptions.deepgram.detect_language` | 启用语言检测（可选）               |
+| `punctuate`       | `tools.media.audio.providerOptions.deepgram.punctuate`       | 启用标点符号（可选）               |
+| `smart_format`    | `tools.media.audio.providerOptions.deepgram.smart_format`    | 启用智能格式（可选）               |
 
 <Tabs>
   <Tab title="带语言提示">
@@ -75,7 +74,7 @@ Deepgram 是一个语音转文本 API。在 OpenClaw 中，它用于通过 `tool
     }
     ```
   </Tab>
-  <Tab title="带 Deepgram 选项">
+  <Tab title="使用 Deepgram 选项">
     ```json5
     {
       tools: {
@@ -137,24 +136,24 @@ Deepgram 是一个语音转文本 API。在 OpenClaw 中，它用于通过 `tool
 }
 ```
 
-<Note>Voice Call 接收的电话音频为 8 kHz G.711 u-law。Deepgram 流式提供商默认为 `encoding: "mulaw"` 和 `sampleRate: 8000`，因此 可以直接转发 Twilio 媒体帧。</Note>
+<Note>语音通话以 8 kHz G.711 u-law 格式接收电话音频。Deepgram 流式提供商默认为 `encoding: "mulaw"` 和 `sampleRate: 8000`，因此 Twilio 媒体帧可以直接转发。</Note>
 
-## 说明
+## 注意事项
 
 <AccordionGroup>
-  <Accordion title="认证">认证遵循标准提供商认证顺序。`DEEPGRAM_API_KEY` 是 最简单的路径。</Accordion>
-  <Accordion title="Proxy and custom endpoints">使用代理时，使用 `tools.media.audio.baseUrl` 和 `tools.media.audio.headers` 覆盖终端节点或请求头。</Accordion>
-  <Accordion title="Output behavior">输出遵循与其他提供商相同的音频规则（大小上限、超时、 转录注入）。</Accordion>
+  <Accordion title="身份验证">身份验证遵循标准提供商身份验证顺序。`DEEPGRAM_API_KEY` 是 最简单的路径。</Accordion>
+  <Accordion title="代理和自定义端点">使用代理时，可以通过 `tools.media.audio.baseUrl` 和 `tools.media.audio.headers` 覆盖端点或标头。</Accordion>
+  <Accordion title="输出行为">输出遵循与其他提供商相同的音频规则（大小上限、超时、 转录注入）。</Accordion>
 </AccordionGroup>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Media tools" href="/zh/tools/media-overview" icon="photo-film">
-    音频、图像和视频处理流程概述。
+  <Card title="媒体工具" href="/zh/tools/media-overview" icon="photo-film">
+    音频、图像和视频处理管道概述。
   </Card>
   <Card title="配置" href="/zh/gateway/configuration" icon="gear">
-    完整的配置参考，包括媒体工具设置。
+    包括媒体工具设置的完整配置参考。
   </Card>
   <Card title="故障排除" href="/zh/help/troubleshooting" icon="wrench">
     常见问题和调试步骤。

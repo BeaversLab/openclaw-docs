@@ -3,6 +3,9 @@ summary: "重定向至 /gateway/authentication"
 title: "身份验证监控"
 ---
 
-# 身份验证监控
+身份验证监控位于 [身份验证](/zh/gateway/authentication) 之下。
 
-此页面已移至[身份验证](/zh/gateway/authentication)。请参阅[身份验证](/zh/gateway/authentication)以获取身份验证监控文档。
+## 相关内容
+
+- [自动化故障排除](/zh/automation/troubleshooting)
+- [钩子](/zh/automation/hooks)

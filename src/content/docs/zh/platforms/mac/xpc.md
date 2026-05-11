@@ -59,3 +59,8 @@ Agent -> Gateway -> Node Service (WS)
 - 所有通信保持仅限本地；不暴露任何网络套接字。
 - TCC 提示仅源自 GUI app 包；在重新构建期间保持签名 Bundle ID 的稳定。
 - IPC 加固：socket 模式 `0600`、令牌、对等 UID 检查、HMAC 质询/响应、短 TTL。
+
+## 相关
+
+- [macOS 应用](/zh/platforms/macos)
+- [macOS IPC 流程（执行批准）](/zh/tools/exec-approvals-advanced#macos-ipc-flow)

@@ -39,7 +39,7 @@ WhatsApp 頻道透過 **Baileys Web** 執行。此文件記錄了目前針對發
 - 當存在媒體時，網頁發送器會使用與 `openclaw message send` 相同的管線來解析本機路徑或 URL。
 - 若提供多個媒體項目，將會依序發送。
 
-## 傳入媒體至指令 (Pi)
+## 傳送至指令的媒體 (Pi)
 
 - 當傳入的網頁訊息包含媒體時，OpenClaw 會將其下載至暫存檔並公開範本變數：
   - `{{MediaUrl}}` 傳入媒體的偽 URL。
@@ -71,3 +71,9 @@ WhatsApp 頻道透過 **Baileys Web** 執行。此文件記錄了目前針對發
 - 涵蓋圖像/音訊/文件案例的傳送 + 回覆流程。
 - 驗證圖像的重新壓縮 (大小限制) 以及音訊的語音備忘錄標記。
 - 確保多媒體回覆作為連續傳送分散執行。
+
+## 相關
+
+- [相機擷取](/zh-Hant/nodes/camera)
+- [媒體理解](/zh-Hant/nodes/media-understanding)
+- [音訊與語音備忘錄](/zh-Hant/nodes/audio)

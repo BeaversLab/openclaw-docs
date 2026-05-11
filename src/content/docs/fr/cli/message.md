@@ -3,7 +3,7 @@ summary: "Référence CLI pour `openclaw message` (send + actions de channel)"
 read_when:
   - Adding or modifying message CLI actions
   - Changing outbound channel behavior
-title: "message"
+title: "Message"
 ---
 
 # `openclaw message`
@@ -296,3 +296,8 @@ Envoyer une image Telegram comme document pour éviter la compression :
 openclaw message send --channel telegram --target @mychat \
   --media ./diagram.png --force-document
 ```
+
+## Connexes
+
+- [Référence CLI](/fr/cli)
+- [Envoi d'agent](/fr/tools/agent-send)

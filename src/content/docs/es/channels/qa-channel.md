@@ -1,35 +1,22 @@
 ---
+summary: "Complemento de canal sintético tipo Slack para escenarios QA de OpenClaw deterministas"
 title: "Canal QA"
-summary: "Complemento de canal de clase Slack sintético para escenarios QA de OpenClaw deterministas"
 read_when:
   - You are wiring the synthetic QA transport into a local or CI test run
   - You need the bundled qa-channel config surface
   - You are iterating on end-to-end QA automation
 ---
 
-# Canal QA
+`qa-channel` es un transporte de mensajes sintético incluido para QA automatizada de OpenClaw. No es un canal de producción; existe para ejercer el mismo límite del complemento de canal que utilizan los transportes reales, manteniendo el estado determinista y totalmente inspeccionable.
 
-`qa-channel` es un transporte de mensajes sintético incluido para QA automatizada de OpenClaw.
+## Lo que hace
 
-No es un canal de producción. Existe para ejercer el mismo límite del complemento
-del canal que utilizan los transportes reales, manteniendo el estado determinista y totalmente
-inspeccionable.
-
-## Lo que hace hoy
-
-- Gramática de destino de clase Slack:
+- Gramática de destino tipo Slack:
   - `dm:<user>`
   - `channel:<room>`
   - `thread:<room>/<thread>`
-- Bus sintético respaldado por HTTP para:
-  - inyección de mensajes entrantes
-  - captura de transcripciones salientes
-  - creación de hilos
-  - reacciones
-  - ediciones
-  - eliminaciones
-  - acciones de búsqueda y lectura
-- Ejecutor de autoverificación del lado del host incluido que escribe un informe Markdown
+- Bus sintético respaldado por HTTP para la inyección de mensajes entrantes, la captura de transcripciones salientes, la creación de hilos, reacciones, ediciones, eliminaciones y acciones de búsqueda/lectura.
+- Ejecutor de autocomprobación del lado del host que escribe un informe Markdown en `.artifacts/qa-e2e/`.
 
 ## Configuración
 
@@ -47,59 +34,53 @@ inspeccionable.
 }
 ```
 
-Claves de cuenta compatibles:
+Claves de cuenta:
 
-- `baseUrl`
-- `botUserId`
-- `botDisplayName`
-- `pollTimeoutMs`
-- `allowFrom`
-- `defaultTo`
-- `actions.messages`
-- `actions.reactions`
-- `actions.search`
-- `actions.threads`
+- `enabled` — interruptor maestro para esta cuenta.
+- `name` — etiqueta de visualización opcional.
+- `baseUrl` — URL del bus sintético.
+- `botUserId` — id de usuario de bot estilo Matrix utilizado en la gramática de destino.
+- `botDisplayName` — nombre para mostrar para mensajes salientes.
+- `pollTimeoutMs` — ventana de espera de sondeo prolongado. Entero entre 100 y 30000.
+- `allowFrom` — lista de permitidos de remitentes (ids de usuario o `"*"`).
+- `defaultTo` — destino de reserva cuando no se proporciona ninguno.
+- `actions.messages` / `actions.reactions` / `actions.search` / `actions.threads` — habilitación de herramientas por acción.
 
-## Ejecutor
+Claves multicuenta en el nivel superior:
 
-Segmento vertical actual:
+- `accounts` — registro de anulaciones por cuenta con nombre claveadas por id de cuenta.
+- `defaultAccount` — id de cuenta preferida cuando hay varias configuradas.
+
+## Ejecutores
+
+Autocomprobación del lado del host (escribe un informe Markdown en `.artifacts/qa-e2e/`):
 
 ```bash
 pnpm qa:e2e
 ```
 
-Esto ahora se enruta a través de la extensión incluida `qa-lab`. Inicia el bus de QA
-en el repositorio, arranca el segmento de tiempo de ejecución `qa-channel` incluido, ejecuta una autoverificación
-determinista y escribe un informe Markdown bajo `.artifacts/qa-e2e/`.
+Esto se enruta a través de `qa-lab`, inicia el bus QA en el repositorio, carga el segmento de tiempo de ejecución `qa-channel` incluido y ejecuta una autocomprobación determinista.
 
-Interfaz de usuario de depurador privada:
-
-```bash
-pnpm qa:lab:up
-```
-
-Ese único comando construye el sitio de QA, inicia la puerta de enlace y la pila de QA Lab respaldadas por Docker, e imprime la URL de QA Lab. Desde ese sitio puedes elegir escenarios, seleccionar el carril del modelo, lanzar ejecuciones individuales y ver los resultados en vivo.
-
-Suite de QA completa respaldada por el repositorio:
+Suite de escenarios completa respaldada por el repositorio:
 
 ```bash
 pnpm openclaw qa suite
 ```
 
-Eso inicia el depurador privado de QA en una URL local, separado del paquete de interfaz de usuario de Control enviado.
+Ejecuta escenarios en paralelo contra el carril de la puerta de enlace de QA. Consulte la [visión general de QA](/es/concepts/qa-e2e-automation) para obtener información sobre escenarios, perfiles y modos de proveedor.
 
-## Alcance
+Sitio de QA con respaldo de Docker (puerta de enlace + interfaz de usuario de depuración de QA Lab en una sola pila):
 
-El alcance actual es intencionalmente limitado:
+```bash
+pnpm qa:lab:up
+```
 
-- bus + transporte de complementos
-- gramática de enrutamiento con subprocesos
-- acciones de mensajes propiedad del canal
-- informes en Markdown
-- sitio de QA respaldado por Docker con controles de ejecución
+Construye el sitio de QA, inicia la pila de puerta de enlace con respaldo de Docker + QA Lab e imprime la URL de QA Lab. Desde allí puede seleccionar escenarios, elegir el carril del modelo, lanzar ejecuciones individuales y ver los resultados en vivo. El depurador de QA Lab es independiente del paquete de interfaz de usuario de Control enviado.
 
-El trabajo de seguimiento agregará:
+## Relacionado
 
-- ejecución de matriz de proveedor/modelo
-- descubrimiento de escenarios más rico
-- orquestación nativa de OpenClaw más adelante
+- [Visión general de QA](/es/concepts/qa-e2e-automation) — pila general, adaptadores de transporte, creación de escenarios
+- [Matrix QA](/es/concepts/qa-matrix) — ejemplo de ejecutor de transporte en vivo que impulsa un canal real
+- [Emparejamiento](/es/channels/pairing)
+- [Grupos](/es/channels/groups)
+- [Visión general de canales](/es/channels)

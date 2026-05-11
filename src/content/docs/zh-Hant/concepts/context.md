@@ -7,31 +7,29 @@ read_when:
 title: "Context"
 ---
 
-# Context
+「Context」是 **OpenClaw 在單次執行中發送給模型的所有內容**。它受到模型 **context window**（token 限制）的限制。
 
-“Context” 是 **OpenClaw 在一次執行中發送給模型的所有內容**。它受模型的 **context window**（token 限制）所限制。
+初學者心智模型：
 
-初學者的心智模型：
+- **System prompt**（由 OpenClaw 建構）：規則、工具、技能清單、時間/執行時，以及注入的工作區檔案。
+- **對話歷史**：您的訊息 + 此階段中助手的訊息。
+- **工具呼叫/結果 + 附件**：指令輸出、檔案讀取、影像/音訊等。
 
-- **System prompt**（由 OpenClaw 建構）：規則、工具、技能列表、時間/運行時，以及已注入的工作區檔案。
-- **Conversation history**：您的訊息 + 此會程中助手的訊息。
-- **Tool calls/results + attachments**：指令輸出、檔案讀取、圖片/音訊等。
+Context 與「記憶」_並不相同_：記憶可以儲存在磁碟上並在稍後重新載入；context 則是目前位於模型視窗中的內容。
 
-Context _並不相同_ 於“記憶”：記憶可以儲存在磁碟上並在之後重新載入；context 則是模型當前視窗內的內容。
+## 快速入門（檢查 context）
 
-## Quick start (inspect context)
-
-- `/status` → 快速查看「我的視窗有多滿？」 + 會話設定。
-- `/context list` → 已注入的內容 + 粗略大小（每個檔案 + 總計）。
-- `/context detail` → 更深入的分析：每個檔案、每個工具 schema 大小、每個技能項目大小，以及 system prompt 大小。
-- `/usage tokens` → 將每次回覆的使用情況頁尾附加到正常回覆中。
+- `/status` → 快速查看「我的視窗有多滿？」+ 階段設定。
+- `/context list` → 顯示注入的內容 + 大略大小（個別檔案 + 總計）。
+- `/context detail` → 更深入的分析：每個檔案、每個工具的 schema 大小、每個技能項目的大小，以及系統提示的大小。
+- `/usage tokens` → 將每次回覆的使用量頁尾附加到一般回覆中。
 - `/compact` → 將較舊的歷史記錄摘要為一個精簡項目，以釋放視窗空間。
 
-另請參閱：[斜線指令](/zh-Hant/tools/slash-commands)、[Token 使用與成本](/zh-Hant/reference/token-use)、[壓縮](/zh-Hant/concepts/compaction)。
+另請參閱：[斜線指令](/zh-Hant/tools/slash-commands)、[Token 使用與成本](/zh-Hant/reference/token-use)、[精簡](/zh-Hant/concepts/compaction)。
 
-## Example output
+## 輸出範例
 
-數值會根據模型、提供者、工具原則以及您的工作區內容而有所不同。
+數值會因模型、提供者、工具策略以及您工作區中的內容而異。
 
 ### `/context list`
 
@@ -76,31 +74,31 @@ Top tools (schema size):
 … (+N more tools)
 ```
 
-## What counts toward the context window
+## 什麼會計入 context window
 
-模型接收到的所有內容都算在內，包括：
+模型接收到的所有內容都會計入，包括：
 
-- System prompt（所有部分）。
-- Conversation history。
-- Tool calls + tool results。
-- Attachments/transcripts（圖片/音訊/檔案）。
-- Compaction summaries and pruning artifacts。
-- Provider “wrappers” 或 hidden headers（不可見，但仍計算在內）。
+- 系統提示（所有部分）。
+- 對話歷史。
+- 工具呼叫 + 工具結果。
+- 附件/文字記錄（影像/音訊/檔案）。
+- 精簡摘要與修剪產生的資料。
+- 提供者的「包裝器」或隱藏標頭（不可見，但仍會計算）。
 
-## How OpenClaw builds the system prompt
+## OpenClaw 如何建構系統提示
 
-System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包括：
+系統提示是 **OpenClaw 擁有的**，並在每次執行時重建。它包括：
 
-- Tool list + short descriptions。
-- Skills list（僅限中繼資料；見下文）。
-- Workspace location。
-- Time（UTC + 如果有設定則轉換使用者時間）。
-- Runtime metadata（主機/作業系統/模型/思考）。
-- 在 **Project Context** 下注入的工作區引導檔案。
+- 工具清單 + 簡短描述。
+- 技能清單（僅中繼資料；見下文）。
+- 工作區位置。
+- 時間（UTC + 轉換後的使用者時間，若有設定）。
+- 執行時期中繼資料（主機/作業系統/模型/思考）。
+- 在 **Project Context** 下注入的工作區啟動檔案。
 
-完整說明：[系統提示詞](/zh-Hant/concepts/system-prompt)。
+完整分析：[系統提示](/zh-Hant/concepts/system-prompt)。
 
-## 注入的工作區檔案（專案上下文 Project Context）
+## 注入的工作區檔案（專案內容）
 
 根據預設，OpenClaw 會注入一組固定的工作區檔案（如果存在的話）：
 
@@ -110,70 +108,63 @@ System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包
 - `IDENTITY.md`
 - `USER.md`
 - `HEARTBEAT.md`
-- `BOOTSTRAP.md`（僅首次執行時）
+- `BOOTSTRAP.md`（僅限首次執行）
 
-大型檔案會根據 `agents.defaults.bootstrapMaxChars`（預設 `12000` 個字元）逐個檔案截斷。OpenClaw 還會透過 `agents.defaults.bootstrapTotalMaxChars`（預設 `60000` 個字元）對所有檔案的啟動注入總量強制執行上限。`/context` 會顯示「原始與注入」的大小以及是否發生了截斷。
+大型檔案會使用 `agents.defaults.bootstrapMaxChars` 逐個檔案截斷（預設 `12000` 個字元）。OpenClaw 也會使用 `agents.defaults.bootstrapTotalMaxChars` 強制執行跨檔案的總啟動注入上限（預設 `60000` 個字元）。`/context` 會顯示 **原始大小與注入大小** 以及是否發生了截斷。
 
-當發生截斷時，執行環境可以在 Project Context 下注入提示詞內的警告區塊。您可以透過 `agents.defaults.bootstrapPromptTruncationWarning` 進行設定（`off`、`once`、`always`；預設 `once`）。
+當發生截斷時，執行時間可以在「專案上下文」下注入提示內警告區塊。使用 `agents.defaults.bootstrapPromptTruncationWarning` 進行設定（`off`、`once`、`always`；預設 `once`）。
 
 ## 技能：注入與按需加載
 
-系統提示詞包含一個精簡的 **技能清單**（名稱 + 描述 + 位置）。此清單會佔用實際的額外空間。
+系統提示包含一個簡潔的 **技能列表**（名稱 + 描述 + 位置）。這個列表佔用了實際的開銷。
 
-根據預設，_不會_ 包含技能指令。預期模型僅在需要時 `read` 技能的 `SKILL.md`。
+根據預設，_不會_ 包含技能指令。模型預期僅在 **需要時** `read` 技能的 `SKILL.md`。
 
 ## 工具：有兩種成本
 
 工具會以兩種方式影響上下文：
 
-1. 系統提示詞中的 **工具清單文字**（您看到的「Tooling」）。
-2. **工具架構**（JSON）。這些會傳送給模型以便其呼叫工具。即使您沒有以純文字形式看到它們，它們也會佔用上下文額度。
+1. 系統提示中的 **工具列表文字**（你看到的「Tooling」）。
+2. **工具架構**（JSON）。這些會被發送給模型以便模型可以呼叫工具。即使你不會以純文字形式看到它們，它們仍會計入上下文。
 
-`/context detail` 會細分最大的工具架構，讓您了解主要佔用者為何。
+`/context detail` 分解了最大的工具架構，讓你了解什麼佔據了主導地位。
 
-## 指令、指示和「內聯快捷方式」
+## 指令、指令標記和「內聯捷徑」
 
-斜線指令由閘道 處理。有幾種不同的行為：
+斜線指令由 Gateway 處理。有幾種不同的行為：
 
-- **獨立指令**：僅包含 `/...` 的訊息會以指令形式執行。
-- **指令**：`/think`、`/verbose`、`/trace`、`/reasoning`、`/elevated`、`/model`、`/queue` 會在模型看到訊息之前被移除。
-  - 僅包含指令的訊息會保留工作階段設定。
-  - 一般訊息中的內嵌指令會作為單則訊息的提示。
-- **內聯捷徑** (僅限允許清單中的傳送者)：一般訊息內的某些 `/...` token 可以立即執行 (例如：「嘿 /status」)，並且會在模型看到其餘文字之前被移除。
+- **獨立指令**：僅包含 `/...` 的訊息會作為指令執行。
+- **指令標記**：`/think`、`/verbose`、`/trace`、`/reasoning`、`/elevated`、`/model`、`/queue` 會在模型看到訊息之前被移除。
+  - 僅指令的訊息會保存工作階段設定。
+  - 一般訊息中的內聯指令作為單則訊息的提示。
+- **內聯快捷鍵**（僅限允許清單中的傳送者）：一般訊息中的特定 `/...` 標記可以立即執行（例如：「hey /status」），並且在模型看到其餘文字之前會被移除。
 
 詳細資訊：[斜線指令](/zh-Hant/tools/slash-commands)。
 
-## 工作階段、壓縮與修剪 (保留的內容)
+## 工作階段、壓縮與修剪（什麼會被保留）
 
 跨訊息保留的內容取決於機制：
 
-- **一般歷史記錄** 會保留在工作階段紀錄中，直到被原則壓縮或修剪。
-- **壓縮** 會將摘要保留在紀錄中，並保持最近的訊息完整不動。
-- **修剪** 會從執行作業的 _記憶體中_ 提示詞中移除舊的工具結果，但不會重寫紀錄。
+- **一般歷史記錄**會保留在工作階段紀錄中，直到被原則壓縮或修剪。
+- **壓縮**會將摘要保留到紀錄中，並保持最近的訊息完整無缺。
+- **修剪**會從 _記憶體中_ 的提示中捨棄舊的工具結果以釋放內容視窗空間，但不會重寫工作階段紀錄 —— 完整的歷史記錄仍然可以在磁碟上檢查。
 
-文件：[Session](/zh-Hant/concepts/session)、[Compaction](/zh-Hant/concepts/compaction)、[Session pruning](/zh-Hant/concepts/session-pruning)。
+文件：[工作階段](/zh-Hant/concepts/session)、[壓縮](/zh-Hant/concepts/compaction)、[工作階段修剪](/zh-Hant/concepts/session-pruning)。
 
-預設情況下，OpenClaw 使用內建的 `legacy` 引擎進行組裝和
-壓縮。如果您安裝了提供 `kind: "context-engine"` 的外掛程式
-並使用 `plugins.slots.contextEngine` 選取它，OpenClaw 會將上下文
-組裝、`/compact` 和相關的子代理程式上下文生命週期掛鉤委派給該
-引擎。`ownsCompaction: false` 不會自動回退到舊版
-引擎；使用中的引擎仍必須正確實作 `compact()`。請參閱
-[Context Engine](/zh-Hant/concepts/context-engine) 以了解完整的
-可插拔介面、生命週期掛鉤和設定。
+預設情況下，OpenClaw 使用內建的 `legacy` 語境引擎進行組裝和壓縮。如果您安裝了提供 `kind: "context-engine"` 的外掛程式並使用 `plugins.slots.contextEngine` 選擇它，OpenClaw 會將語境組裝、`/compact` 和相關的子代理語境生命週期掛鉤委派給該引擎。`ownsCompaction: false` 不會自動回退到舊版引擎；使用中的引擎仍必須正確實作 `compact()`。請參閱[語境引擎](/zh-Hant/concepts/context-engine)以了解完整的可插入介面、生命週期掛鉤和設定。
 
 ## `/context` 實際回報的內容
 
-`/context` 在可用時偏好使用最新的 **執行時組建** 系統提示詞報告：
+`/context` 在可用時偏好使用最新的 **執行建置** 系統提示回報：
 
-- `System prompt (run)` = 從上次內嵌 (具備工具能力) 的執行中擷取並持續儲存於 session store 中。
-- `System prompt (estimate)` = 當不存在執行報告時 (或是透過不產生報告的 CLI 後端執行時) 即時計算。
+- `System prompt (run)` = 從上次內嵌（具備工具能力）的執行中擷取，並保留在工作階段儲存庫中。
+- `System prompt (estimate)` = 當不存在執行回報時（或是透過不產生該回報的 CLI 後端執行時）即時計算。
 
-無論如何，它都會報告大小和主要貢獻者；它**不會**傾印完整的系統提示詞或工具架構。
+無論哪種方式，它都會回報大小和主要貢獻者；它**不會**傾印完整的系統提示或工具架構。
 
 ## 相關
 
-- [Context Engine](/zh-Hant/concepts/context-engine) — 透過外掛程式自訂上下文插入
-- [壓縮](/zh-Hant/concepts/compaction) — 總結長對話
-- [系統提示詞](/zh-Hant/concepts/system-prompt) — 系統提示詞是如何建構的
-- [Agent 迴圈](/zh-Hant/concepts/agent-loop) — 完整的 Agent 執行週期
+- [Context Engine](/zh-Hant/concepts/context-engine) — 透過外掛程式自訂內容注入
+- [Compaction](/zh-Hant/concepts/compaction) — 總結長對話
+- [System Prompt](/zh-Hant/concepts/system-prompt) — 系統提示詞的建構方式
+- [Agent Loop](/zh-Hant/concepts/agent-loop) — 完整的 Agent 執行週期

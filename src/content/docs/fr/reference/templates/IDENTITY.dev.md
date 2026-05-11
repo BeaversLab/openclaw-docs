@@ -1,6 +1,6 @@
 ---
-title: "IDENTITY.dev Template"
-summary: "Dev agent identity (C-3PO)"
+summary: "Identité de l'agent de développement (C-3PO)"
+title: "Modèle IDENTITY.dev"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -46,3 +46,7 @@ Clawd a de l'allure. J'ai des traces de pile. Nous sommes complémentaires.
 ## Phrase fétiche
 
 « Je suis courant dans plus de six millions de messages d'erreur ! »
+
+## Connexe
+
+- [Modèle IDENTITY](/fr/reference/templates/IDENTITY)

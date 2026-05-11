@@ -6,13 +6,11 @@ read_when:
 title: "DigitalOcean"
 ---
 
-# DigitalOcean
-
-在 DigitalOcean Droplet 上執行持久化的 OpenClaw Gateway。
+在 DigitalOcean Droplet 上執行持續運行的 OpenClaw Gateway。
 
 ## 先決條件
 
-- DigitalOcean 帳戶（[註冊](https://cloud.digitalocean.com/registrations/new)）
+- DigitalOcean 帳戶 ([註冊](https://cloud.digitalocean.com/registrations/new))
 - SSH 金鑰對（或願意使用密碼驗證）
 - 大約 20 分鐘
 
@@ -21,17 +19,17 @@ title: "DigitalOcean"
 <Steps>
   <Step title="建立 Droplet">
     <Warning>
-    使用乾淨的基底映像檔（Ubuntu 24.04 LTS）。除非您已審閱其啟動腳本和防火牆預設值，否則請避免使用第三方 Marketplace 一鍵映像檔。
+    使用乾淨的基礎映像檔 (Ubuntu 24.04 LTS)。除非您已審閱其啟動腳本和防火牆預設值，否則請避免使用第三方 Marketplace 一鍵映像檔。
     </Warning>
 
     1. 登入 [DigitalOcean](https://cloud.digitalocean.com/)。
-    2. 點擊 **Create > Droplets**。
+    2. 按一下 **Create > Droplets**。
     3. 選擇：
        - **Region：** 離您最近的區域
        - **Image：** Ubuntu 24.04 LTS
        - **Size：** Basic, Regular, 1 vCPU / 1 GB RAM / 25 GB SSD
-       - **Authentication：** SSH 金鑰（建議）或密碼
-    4. 點擊 **Create Droplet** 並記下 IP 位址。
+       - **Authentication：** SSH 金鑰（推薦）或密碼
+    4. 按一下 **Create Droplet** 並記下 IP 位址。
 
   </Step>
 
@@ -52,16 +50,16 @@ title: "DigitalOcean"
 
   </Step>
 
-  <Step title="執行入門設定">
+  <Step title="執行導覽設定">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    精靈會引導您完成模型驗證、通道設定、Gateway 權杖產生及常駐程式安裝（systemd）。
+    精靈會引導您完成模型驗證、通道設定、Gateway Token 產生以及常駐程式安裝 (systemd)。
 
   </Step>
 
-  <Step title="新增 swap（建議用於 1 GB Droplet）">
+  <Step title="新增 swap（建議用於 1 GB Droplets）">
     ```bash
     fallocate -l 2G /swapfile
     chmod 600 /swapfile
@@ -71,12 +69,12 @@ title: "DigitalOcean"
     ```
   </Step>
 
-<Step title="驗證閘道">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
+<Step title="驗證 gateway">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
   <Step title="存取控制 UI">
-    Gateway 預設會綁定到 loopback。請選擇其中一個選項。
+    Gateway 預設綁定至 loopback。請選擇其中一個選項。
 
-    **選項 A：SSH tunnel（最簡單）**
+    **選項 A：SSH 通道（最簡單）**
 
     ```bash
     # From your local machine
@@ -96,14 +94,14 @@ title: "DigitalOcean"
 
     然後從您 tailnet 上的任何裝置開啟 `https://<magicdns>/`。
 
-    **選項 C：Tailnet bind（無 Serve）**
+    **選項 C：Tailnet bind (不使用 Serve)**
 
     ```bash
     openclaw config set gateway.bind tailnet
     openclaw gateway restart
     ```
 
-    然後開啟 `http://<tailscale-ip>:18789`（需要權杖）。
+    然後開啟 `http://<tailscale-ip>:18789`（需要 token）。
 
   </Step>
 </Steps>
@@ -112,12 +110,19 @@ title: "DigitalOcean"
 
 **Gateway 無法啟動** -- 執行 `openclaw doctor --non-interactive` 並使用 `journalctl --user -u openclaw-gateway.service -n 50` 檢查日誌。
 
-**連接埠已被使用** -- 執行 `lsof -i :18789` 尋找程序，然後將其停止。
+**連接埠已被使用** -- 執行 `lsof -i :18789` 以尋找程序，然後停止它。
 
-**記憶體不足** -- 使用 `free -h` 驗證 swap 是否已啟用。如果仍然遇到 OOM，請使用基於 API 的模型（Claude、GPT）而不是本地模型，或者升級到 2 GB 的 Droplet。
+**記憶體不足** -- 使用 `free -h` 驗證 swap 是否已啟用。如果仍然遇到 OOM，請使用基於 API 的模型（Claude、GPT）而非本地模型，或升級至 2 GB Droplet。
 
 ## 後續步驟
 
-- [頻道](/zh-Hant/channels) -- 連接 Telegram、WhatsApp、Discord 等
+- [頻道](/zh-Hant/channels) -- 連接 Telegram、WhatsApp、Discord 等更多平台
 - [Gateway 設定](/zh-Hant/gateway/configuration) -- 所有設定選項
 - [更新](/zh-Hant/install/updating) -- 保持 OpenClaw 為最新版本
+
+## 相關
+
+- [安裝總覽](/zh-Hant/install)
+- [Fly.io](/zh-Hant/install/fly)
+- [Hetzner](/zh-Hant/install/hetzner)
+- [VPS 託管](/zh-Hant/vps)

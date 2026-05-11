@@ -2,7 +2,7 @@
 summary: "每个渠道（WhatsApp、Telegram、Discord、Slack）的路由规则及共享上下文"
 read_when:
   - Changing channel routing or inbox behavior
-title: "渠道路由"
+title: "Channel routing"
 ---
 
 # 渠道与路由
@@ -133,3 +133,9 @@ Inbound replies include:
 - 引用上下文会作为 `[Replying to ...]` 块附加到 `Body`。
 
 这在所有渠道中保持一致。
+
+## 相关
+
+- [组](/zh/channels/groups)
+- [广播组](/zh/channels/broadcast-groups)
+- [配对](/zh/channels/pairing)

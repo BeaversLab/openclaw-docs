@@ -3,16 +3,14 @@ summary: "Flujo de trabajo de Bun (experimental): instalaciones y problemas fren
 read_when:
   - You want the fastest local dev loop (bun + watch)
   - You hit Bun install/patch/lifecycle script issues
-title: "Bun (Experimental)"
+title: "Bun (experimental)"
 ---
 
-# Bun (Experimental)
+<Warning>Bun is **not recommended for gateway runtime** (known issues with WhatsApp and Telegram). Use Node for production.</Warning>
 
-<Warning>Bun **no está recomendado para el runtime de gateway** (problemas conocidos con WhatsApp y Telegram). Use Node para producción.</Warning>
+Bun es un tiempo de ejecución local opcional para ejecutar TypeScript directamente (`bun run ...`, `bun --watch ...`). El administrador de paquetes predeterminado sigue siendo `pnpm`, que es totalmente compatible y utilizado por las herramientas de documentación. Bun no puede usar `pnpm-lock.yaml` y lo ignorará.
 
-Bun es un runtime local opcional para ejecutar TypeScript directamente (`bun run ...`, `bun --watch ...`). El gestor de paquetes predeterminado sigue siendo `pnpm`, que es totalmente compatible y utilizado por las herramientas de documentación. Bun no puede usar `pnpm-lock.yaml` y lo ignorará.
-
-## Instalación
+## Instalar
 
 <Steps>
   <Step title="Install dependencies">
@@ -20,14 +18,14 @@ Bun es un runtime local opcional para ejecutar TypeScript directamente (`bun run
     bun install
     ```
 
-    `bun.lock` / `bun.lockb` están ignorados por git, por lo que no hay cambios excesivos en el repositorio. Para omitir por completo la escritura de archivos de bloqueo:
+    `bun.lock` / `bun.lockb` están en gitignore, por lo que no hay cambios en el repositorio. Para omitir por completo las escrituras del archivo de bloqueo:
 
     ```sh
     bun install --no-save
     ```
 
   </Step>
-  <Step title="Compila y prueba">
+  <Step title="Build and test">
     ```sh
     bun run build
     bun run vitest run
@@ -37,10 +35,10 @@ Bun es un runtime local opcional para ejecutar TypeScript directamente (`bun run
 
 ## Scripts de ciclo de vida
 
-Bun bloquea los scripts de ciclo de vida de las dependencias a menos que se confíe explícitamente en ellos. Para este repositorio, los scripts comúnmente bloqueados no son necesarios:
+Bun bloquea los scripts de ciclo de vida de las dependencias a menos que sean de confianza explícita. Para este repositorio, los scripts comúnmente bloqueados no son necesarios:
 
-- `@whiskeysockets/baileys` `preinstall` -- comprueba que Node major >= 20 (OpenClaw por defecto usa Node 24 y todavía soporta Node 22 LTS, actualmente `22.14+`)
-- `protobufjs` `postinstall` -- emite advertencias sobre esquemas de versiones incompatibles (sin artefactos de compilación)
+- `@whiskeysockets/baileys` `preinstall` -- comprueba si la versión principal de Node es >= 20 (OpenClaw usa por defecto Node 24 y todavía es compatible con Node 22 LTS, actualmente `22.14+`)
+- `protobufjs` `postinstall` -- emite advertencias sobre esquemas de versión incompatibles (sin artefactos de compilación)
 
 Si encuentras un problema en tiempo de ejecución que requiere estos scripts, confía en ellos explícitamente:
 
@@ -50,4 +48,10 @@ bun pm trust @whiskeysockets/baileys protobufjs
 
 ## Advertencias
 
-Algunos scripts todavía tienen pnpm codificado (por ejemplo `docs:build`, `ui:*`, `protocol:check`). Ejecuta esos a través de pnpm por ahora.
+Algunos scripts aún tienen pnpm codificado de forma rígida (por ejemplo `docs:build`, `ui:*`, `protocol:check`). Ejecuta esos a través de pnpm por ahora.
+
+## Relacionado
+
+- [Resumen de instalación](/es/install)
+- [Node.js](/es/install/node)
+- [Actualizando](/es/install/updating)

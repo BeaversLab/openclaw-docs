@@ -308,4 +308,10 @@ az group delete -n "${RG}" --yes --no-wait
 - 设置消息传递频道：[频道](/zh/channels)
 - 将本地设备配对为节点：[节点](/zh/nodes)
 - 配置 Gateway(网关)：[Gateway(网关) 配置](/zh/gateway/configuration)
-- 有关 OpenClaw Azure 部署（使用 GitHub Copilot 模型提供商）的更多详细信息：[OpenClaw on Azure with GitHub Copilot](https://github.com/johnsonshi/openclaw-azure-github-copilot)
+- 有关结合 OpenClaw Copilot 模型提供商在 Azure 上部署 GitHub 的更多详情：[结合 OpenClaw Copilot 在 Azure 上使用 GitHub](https://github.com/johnsonshi/openclaw-azure-github-copilot)
+
+## 相关
+
+- [安装概述](/zh/install)
+- [GCP](/zh/install/gcp)
+- [DigitalOcean](/zh/install/digitalocean)

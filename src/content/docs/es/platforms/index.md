@@ -6,13 +6,12 @@ read_when:
 title: "Plataformas"
 ---
 
-# Plataformas
-
 El núcleo de OpenClaw está escrito en TypeScript. **Node es el tiempo de ejecución recomendado**.
-No se recomienda Bun para el Gateway (errores de WhatsApp/Telegram).
+No se recomienda Bun para el Gateway: hay problemas conocidos con los canales de
+WhatsApp y Telegram; consulte [Bun (experimental)](/es/install/bun) para obtener más detalles.
 
-Existen aplicaciones complementarias para macOS (aplicación de la barra de menús) y nodos móviles (iOS/Android). Se planean
-aplicaciones complementarias para Windows y Linux, pero hoy el Gateway es totalmente compatible.
+Existen aplicaciones complementarias para macOS (aplicación de la barra de menús) y nodos móviles (iOS/Android). Se planean aplicaciones complementarias para Windows y
+Linux, pero hoy en día el Gateway es totalmente compatible.
 También se planean aplicaciones complementarias nativas para Windows; se recomienda el Gateway a través de WSL2.
 
 ## Elige tu sistema operativo
@@ -25,18 +24,18 @@ También se planean aplicaciones complementarias nativas para Windows; se recomi
 
 ## VPS y alojamiento
 
-- VPS hub: [VPS hosting](/es/vps)
+- Centro de VPS: [Alojamiento VPS](/es/vps)
 - Fly.io: [Fly.io](/es/install/fly)
 - Hetzner (Docker): [Hetzner](/es/install/hetzner)
 - GCP (Compute Engine): [GCP](/es/install/gcp)
-- Azure (Linux VM): [Azure](/es/install/azure)
-- exe.dev (VM + HTTPS proxy): [exe.dev](/es/install/exe-dev)
+- Azure (VM de Linux): [Azure](/es/install/azure)
+- exe.dev (VM + proxy HTTPS): [exe.dev](/es/install/exe-dev)
 
 ## Enlaces comunes
 
-- Install guide: [Getting Started](/es/start/getting-started)
-- Gateway runbook: [Gateway](/es/gateway)
-- Gateway configuration: [Configuration](/es/gateway/configuration)
+- Guía de instalación: [Cómo empezar](/es/start/getting-started)
+- Manual del Gateway: [Gateway](/es/gateway)
+- Configuración del Gateway: [Configuración](/es/gateway/configuration)
 - Estado del servicio: `openclaw gateway status`
 
 ## Instalación del servicio Gateway (CLI)
@@ -46,10 +45,16 @@ Use uno de estos (todos compatibles):
 - Asistente (recomendado): `openclaw onboard --install-daemon`
 - Directo: `openclaw gateway install`
 - Flujo de configuración: `openclaw configure` → seleccione **Gateway service**
-- Reparar/migrar: `openclaw doctor` (ofrece instalar o reparar el servicio)
+- Reparar/migrar: `openclaw doctor` (ofrece instalar o solucionar el servicio)
 
 El destino del servicio depende del sistema operativo:
 
 - macOS: LaunchAgent (`ai.openclaw.gateway` o `ai.openclaw.<profile>`; heredado `com.openclaw.*`)
 - Linux/WSL2: servicio de usuario systemd (`openclaw-gateway[-<profile>].service`)
-- Native Windows: Scheduled Task (`OpenClaw Gateway` o `OpenClaw Gateway (<profile>)`), con un elemento de inicio de sesión de carpeta de inicio por usuario como alternativa si se deniega la creación de la tarea
+- Windows nativo: Tarea programada (`OpenClaw Gateway` o `OpenClaw Gateway (<profile>)`), con una alternativa de elemento de inicio de sesión en la carpeta de Inicio por usuario si se deniega la creación de la tarea
+
+## Relacionado
+
+- [Resumen de instalación](/es/install)
+- [aplicación de macOS](/es/platforms/macos)
+- [aplicación de iOS](/es/platforms/ios)

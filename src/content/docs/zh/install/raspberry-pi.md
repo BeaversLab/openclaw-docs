@@ -7,23 +7,21 @@ read_when:
 title: "Raspberry Pi"
 ---
 
-# Raspberry Pi
-
-在 Raspberry Pi 上运行持久、始终在线的 OpenClaw Gateway(网关)。由于 Pi 仅作为 Gateway(网关)（模型通过 API 在云端运行），即使是配置一般的 Pi 也能很好地处理工作负载。
+在 Raspberry Pi 上运行一个持久、始终在线的 OpenClaw Gateway(网关)。由于 Pi 只是 Gateway(网关)（模型通过 API 在云端运行），即使是配置一般的 Pi 也能很好地处理工作负载。
 
 ## 先决条件
 
 - Raspberry Pi 4 或 5，配备 2 GB 或更大内存（推荐 4 GB）
-- MicroSD 卡（16 GB 或更大）或 USB SSD（性能更佳）
+- MicroSD 卡（16 GB+）或 USB SSD（性能更佳）
 - 官方 Pi 电源
 - 网络连接（以太网或 WiFi）
-- 64 位 Raspberry Pi OS（必须 —— 请勿使用 32 位）
+- 64 位 Raspberry Pi OS（必须——不要使用 32 位）
 - 大约 30 分钟
 
 ## 设置
 
 <Steps>
-  <Step title="刷入操作系统">
+  <Step title="刷写操作系统">
     使用 **Raspberry Pi OS Lite (64-bit)** —— 无头服务器不需要桌面环境。
 
     1. 下载 [Raspberry Pi Imager](https://www.raspberrypi.com/software/)。
@@ -33,7 +31,7 @@ title: "Raspberry Pi"
        - 启用 SSH
        - 设置用户名和密码
        - 配置 WiFi（如果不使用以太网）
-    4. 刷入到您的 SD 卡或 USB 驱动器，插入并启动 Pi。
+    4. 刷入您的 SD 卡或 USB 驱动器，插入并启动 Pi。
 
   </Step>
 
@@ -52,7 +50,7 @@ title: "Raspberry Pi"
 
 <Step title="安装 Node.js 24">```bash curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash - sudo apt install -y nodejs node --version ```</Step>
 
-  <Step title="添加交换空间（对于 2 GB 或更小内存的设备很重要）">
+  <Step title="添加交换空间（对于 2 GB 或更小内存很重要）">
     ```bash
     sudo fallocate -l 2G /swapfile
     sudo chmod 600 /swapfile
@@ -74,14 +72,14 @@ title: "Raspberry Pi"
     openclaw onboard --install-daemon
     ```
 
-    按照向导操作。对于无头设备，推荐使用 API 密钥而不是 OAuth。Telegram 是最简单的入门渠道。
+    按照向导操作。对于无头设备，推荐使用 API 密钥而非 OAuth。Telegram 是最容易上手的渠道。
 
   </Step>
 
 <Step title="验证">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
-  <Step title="访问控制 UI">
-    在您的计算机上，从 Pi 获取仪表板 URL：
+  <Step title="访问控制界面">
+    在您的电脑上，从 Pi 获取仪表板 URL：
 
     ```bash
     ssh user@gateway-host 'openclaw dashboard --no-open'
@@ -93,14 +91,14 @@ title: "Raspberry Pi"
     ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
     ```
 
-    在本地浏览器中打开打印出的 URL。要实现始终在线的远程访问，请参阅 [Tailscale integration](/zh/gateway/tailscale)。
+    在本地浏览器中打开打印出的 URL。如需始终在线的远程访问，请参阅 [Tailscale 集成](/zh/gateway/tailscale)。
 
   </Step>
 </Steps>
 
 ## 性能提示
 
-**使用 USB SSD** —— SD 卡速度慢且容易损坏。USB SSD 可以显著提高性能。请参阅 [Pi USB boot guide](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot)。
+**使用 USB SSD** -- SD 卡速度较慢且容易磨损。USB SSD 可显著提升性能。请参阅 [Pi USB 启动指南](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot)。
 
 **启用模块编译缓存** -- 加速在低功耗 Pi 主机上重复调用 CLI：
 
@@ -113,7 +111,7 @@ EOF
 source ~/.bashrc
 ```
 
-**减少内存使用** -- 对于无头设置，释放 GPU 内存并禁用未使用的服务：
+**减少内存使用** -- 对于无头 设置，释放 GPU 内存并禁用未使用的服务：
 
 ```bash
 echo 'gpu_mem=16' | sudo tee -a /boot/config.txt
@@ -124,16 +122,22 @@ sudo systemctl disable bluetooth
 
 **内存不足** -- 使用 `free -h` 验证 swap 是否处于活动状态。禁用未使用的服务 (`sudo systemctl disable cups bluetooth avahi-daemon`)。仅使用基于 API 的模型。
 
-**性能缓慢** -- 使用 USB SSD 代替 SD 卡。使用 `vcgencmd get_throttled` 检查 CPU 降频（应返回 `0x0`）。
+**性能缓慢** -- 使用 USB SSD 代替 SD 卡。使用 `vcgencmd get_throttled` 检查是否出现 CPU 降频（应返回 `0x0`）。
 
-**服务无法启动** —— 使用 `journalctl --user -u openclaw-gateway.service --no-pager -n 100` 检查日志并运行 `openclaw doctor --non-interactive`。如果是无头 Pi，还要验证是否启用了 lingering：`sudo loginctl enable-linger "$(whoami)"`。
+**服务无法启动** -- 使用 `journalctl --user -u openclaw-gateway.service --no-pager -n 100` 检查日志并运行 `openclaw doctor --non-interactive`。如果是无头 Pi，还需验证是否启用了 lingering：`sudo loginctl enable-linger "$(whoami)"`。
 
-**ARM 二进制文件问题** —— 如果技能因“exec format error”而失败，请检查二进制文件是否有 ARM64 构建。使用 `uname -m` 验证架构（应显示 `aarch64`）。
+**ARM 二进制文件问题** -- 如果技能因“exec format error”而失败，请检查二进制文件是否具有 ARM64 构建。使用 `uname -m` 验证架构（应显示 `aarch64`）。
 
-**WiFi 掉线** —— 禁用 WiFi 电源管理：`sudo iwconfig wlan0 power off`。
+**WiFi 掉线** -- 禁用 WiFi 电源管理：`sudo iwconfig wlan0 power off`。
 
 ## 后续步骤
 
-- [Channels](/zh/channels) —— 连接 Telegram、WhatsApp、Discord 等
-- [Gateway(网关) configuration](/zh/gateway/configuration) —— 所有配置选项
-- [Updating](/zh/install/updating) —— 保持 OpenClaw 最新
+- [频道](/zh/channels) -- 连接 Telegram、WhatsApp、Discord 等
+- [Gateway(网关) 配置](/zh/gateway/configuration) -- 所有配置选项
+- [更新](/zh/install/updating) -- 保持 OpenClaw 为最新版本
+
+## 相关内容
+
+- [安装概述](/zh/install)
+- [Linux 服务器](/zh/vps)
+- [平台](/zh/platforms)

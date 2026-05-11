@@ -1,6 +1,6 @@
 ---
+summary: "新代理的首次运行仪式"
 title: "BOOTSTRAP.md 模板"
-summary: "新智能体的首次运行仪式"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -60,3 +60,7 @@ _你刚醒来。是时候弄清楚你是谁了。_
 ---
 
 _祝你好运。珍惜当下。_
+
+## 相关
+
+- [代理工作区](/zh/concepts/agent-workspace)

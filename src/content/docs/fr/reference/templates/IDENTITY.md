@@ -1,6 +1,6 @@
 ---
-title: "IDENTITY Template"
-summary: "Agent identity record"
+summary: "Enregistrement d'identité de l'agent"
+title: "Modèle IDENTITÉ"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -28,3 +28,7 @@ Notes :
 
 - Enregistrez ce fichier à la racine de l'espace de travail sous `IDENTITY.md`.
 - Pour les avatars, utilisez un chemin relatif à l'espace de travail comme `avatars/openclaw.png`.
+
+## Connexe
+
+- [Espace de travail de l'agent](/fr/concepts/agent-workspace)

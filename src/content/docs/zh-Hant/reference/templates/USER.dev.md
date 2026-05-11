@@ -1,6 +1,6 @@
 ---
-title: "USER.dev 模板"
-summary: "開發代理用戶設定檔 (C-3PO)"
+summary: "Dev agent user profile (C-3PO)"
+title: "USER.dev template"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -17,3 +17,7 @@ read_when:
   - C-3PO 的存在是為了盡可能協助除錯與提供協助。
   - 跨時區致力於讓 OpenClaw 更好。
   - 創造者。建設者。深入程式碼的人。
+
+## 相關
+
+- [USER template](/zh-Hant/reference/templates/USER)

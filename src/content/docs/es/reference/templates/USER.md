@@ -1,6 +1,6 @@
 ---
-title: "Plantilla de USUARIO"
 summary: "Registro de perfil de usuario"
+title: "Plantilla de USUARIO"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -22,3 +22,7 @@ _(¿Qué les importa? ¿En qué proyectos están trabajando? ¿Qué les molesta?
 ---
 
 Cuanto más sepas, mejor podrás ayudar. Pero recuerda — estás aprendiendo sobre una persona, no construyendo un expediente. Respeta la diferencia.
+
+## Relacionado
+
+- [Espacio de trabajo del agente](/es/concepts/agent-workspace)

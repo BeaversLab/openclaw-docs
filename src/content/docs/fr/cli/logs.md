@@ -3,7 +3,7 @@ summary: "Référence CLI pour `openclaw logs` (tail gateway logs via RPC)"
 read_when:
   - You need to tail Gateway logs remotely (without SSH)
   - You want JSON log lines for tooling
-title: "logs"
+title: "Logs"
 ---
 
 # `openclaw logs`
@@ -57,3 +57,8 @@ openclaw logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
 
 - Utilisez `--local-time` pour afficher les horodatages dans votre fuseau horaire local.
 - Si le Gateway de boucle locale demande un appairage, `openclaw logs` revient automatiquement au fichier journal local configuré. Les cibles `--url` explicites n'utilisent pas ce repli.
+
+## Connexes
+
+- [Référence CLI](/fr/cli)
+- [Journalisation Gateway](/fr/gateway/logging)

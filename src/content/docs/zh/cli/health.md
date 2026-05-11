@@ -2,7 +2,7 @@
 summary: "CLI 参考手册，用于 `openclaw health`（通过 RPC 获取网关健康快照）"
 read_when:
   - You want to quickly check the running Gateway’s health
-title: "health"
+title: "Health"
 ---
 
 # `openclaw health`
@@ -34,3 +34,8 @@ openclaw health --debug
 - `--verbose` 强制进行实时探测，打印网关连接详细信息，并在所有配置的账户和代理上展开
   人类可读的输出。
 - 当配置了多个代理时，输出包含每个代理的会话存储。
+
+## 相关
+
+- [CLI 参考](/zh/cli)
+- [Gateway(网关) 健康](/zh/gateway/health)

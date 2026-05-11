@@ -12,7 +12,7 @@ title: "頻道"
 
 相關文件：
 
-- 頻道指南：[頻道](/zh-Hant/channels/index)
+- 頻道指南：[頻道](/zh-Hant/channels)
 - Gateway 組態：[組態](/zh-Hant/gateway/configuration)
 
 ## 常用指令
@@ -47,7 +47,7 @@ openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
 openclaw channels remove --channel telegram --delete
 ```
 
-提示：`openclaw channels add --help` 會顯示各頻道的旗標（token、私鑰、app token、signal-cli 路徑等）。
+<Tip>`openclaw channels add --help` 顯示各頻道的旗標（token、私鑰、app token、signal-cli 路徑等）。</Tip>
 
 常見的非互動式新增介面包括：
 
@@ -59,37 +59,37 @@ openclaw channels remove --channel telegram --delete
 - Tlon 欄位：`--ship`、`--url`、`--code`、`--group-channels`、`--dm-allowlist`、`--auto-discover-channels`
 - `--use-env` 用於受支援的基於環境變數的預設帳戶驗證
 
-當您不帶旗標執行 `openclaw channels add` 時，互動式精靈可能會提示：
+如果在由旗標驅動的 add 指令期間需要安裝頻道外掛，OpenClaw 會使用該頻道的預設安裝來源，而不會開啟互動式外掛安裝提示。
+
+當您在無旗標的情況下執行 `openclaw channels add` 時，互動式精靈可能會提示：
 
 - 每個所選頻道的帳戶 ID
 - 這些帳戶的選用顯示名稱
 - `Bind configured channel accounts to agents now?`
 
-如果您確認現在綁定，精靈會詢問哪個代理應該擁有每個已設定的頻道帳戶，並寫入帳戶範圍的路由綁定。
+如果您確認立即綁定，精靈會詢問哪個代理程式應擁有每個已設定的頻道帳戶，並寫入帳戶範圍的路由綁定。
 
-您稍後也可以使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 管理相同的路由規則（請參閱 [agents](/zh-Hant/cli/agents)）。
+您也可以稍後使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 來管理相同的路由規則（請參閱 [agents](/zh-Hant/cli/agents)）。
 
-當您新增非預設帳戶到仍在使用單一帳戶頂層設定的頻道時，OpenClaw 會在寫入新帳戶之前，將帳戶範圍的頂層值提升至頻道的帳戶對映中。大多數頻道會將這些值放入 `channels.<channel>.accounts.default`，但捆綁頻道可以保留現有的相符提升帳戶。Matrix 是目前的範例：如果一個命名帳戶已經存在，或者 `defaultAccount` 指向現有的命名帳戶，提升操作會保留該帳戶，而不是建立新的 `accounts.default`。
+當您將非預設帳戶新增至仍使用單一帳戶頂層設定的頻道時，OpenClaw 會在寫入新帳戶之前，將帳戶範圍的頂層值升級至該頻道的帳戶對應表中。大多數頻道會將這些值置入 `channels.<channel>.accounts.default`，但打包頻道可以改為保留現有的相符升級帳戶。Matrix 是目前的範例：如果已存在一個具名帳戶，或者 `defaultAccount` 指向現有的具名帳戶，升級作業將保留該帳戶，而不是建立新的 `accounts.default`。
 
 路由行為保持一致：
 
-- 現有的僅頻道綁定（無 `accountId`）繼續符合預設帳戶。
+- 現有的僅頻道綁定（無 `accountId`）會繼續符合預設帳戶。
 - `channels add` 不會在非互動模式下自動建立或重寫綁定。
-- 互動式設定可以選擇性新增帳戶範圍的綁定。
+- 互動式設定可以選擇性地新增帳戶範圍的綁定。
 
-如果您的配置已處於混合狀態（存在命名帳戶且仍設定了頂層單一帳戶值），請執行 `openclaw doctor --fix` 將帳戶範圍的值移至為該頻道選擇的升級帳戶。大多數頻道會升級至 `accounts.default`；Matrix 可以保留現有的命名/預設目標。
+如果您的設定已處於混合狀態（存在具名帳戶且仍設定頂層單一帳戶值），請執行 `openclaw doctor --fix` 以將帳戶範圍的值移至為該頻道選擇的升級帳戶中。大多數頻道會升級至 `accounts.default`；Matrix 可以改為保留現有的具名/預設目標。
 
-## 登入 / 登出（互動式）
+## 登入和登出（互動式）
 
 ```bash
 openclaw channels login --channel whatsapp
 openclaw channels logout --channel whatsapp
 ```
 
-注意：
-
 - `channels login` 支援 `--verbose`。
-- 當僅設定了一個支援的登入目標時，`channels login` / `logout` 可以推斷頻道。
+- `channels login` 和 `logout` 可以在僅配置了一個支援的登入目標時推斷出通道。
 
 ## 疑難排解
 
@@ -129,3 +129,8 @@ openclaw channels resolve --channel matrix "Project Room"
 - 使用 `--kind user|group|auto` 強制指定目標類型。
 - 當多個條目共用相同名稱時，解析會優先考慮活動的相符項。
 - `channels resolve` 是唯讀的。如果選取的帳戶是透過 SecretRef 設定，但該憑證在目前的指令路徑中無法使用，該指令會傳回附帶註記的降級未解析結果，而不是中止整個執行程序。
+
+## 相關
+
+- [CLI 參考資料](/zh-Hant/cli)
+- [通道概覽](/zh-Hant/channels)

@@ -1,6 +1,6 @@
 ---
+summary: "Instructions par défaut de l'agent OpenClaw et liste des compétences pour la configuration de l'assistant personnel"
 title: "AGENTS.md par défaut"
-summary: "Instructions de l'agent OpenClaw par défaut et liste des compétences pour la configuration de l'assistant personnel"
 read_when:
   - Starting a new OpenClaw agent session
   - Enabling or auditing default skills
@@ -49,7 +49,7 @@ cp docs/reference/AGENTS.default.md ~/.openclaw/workspace/AGENTS.md
 ## Début de session (requis)
 
 - Lisez `SOUL.md`, `USER.md`, et aujourd'hui+hier dans `memory/`.
-- Lisez `MEMORY.md` lorsqu'il est présent ; n'utilisez `memory.md` en minuscules qu'en cas d'absence de `MEMORY.md`.
+- Lisez `MEMORY.md` si présent.
 - Faites-le avant de répondre.
 
 ## Âme (requis)
@@ -67,19 +67,19 @@ cp docs/reference/AGENTS.default.md ~/.openclaw/workspace/AGENTS.md
 
 - Journal quotidien : `memory/YYYY-MM-DD.md` (créez `memory/` si nécessaire).
 - Mémoire à long terme : `MEMORY.md` pour les faits durables, les préférences et les décisions.
-- La version en minuscule `memory.md` n'est qu'une solution de repli héritée ; ne gardez pas les deux fichiers racine exprès.
-- Au début de la session, lisez aujourd'hui + hier + `MEMORY.md` si présent, sinon `memory.md`.
+- La version en minuscule `memory.md` est une entrée de réparation d'ancienne génération uniquement ; ne gardez pas les deux fichiers racine exprès.
+- Au début de la session, lisez aujourd'hui + hier + `MEMORY.md` si présent.
 - Capturez : les décisions, les préférences, les contraintes, les tâches en cours.
 - Évitez les secrets sauf demande explicite.
 
 ## Outils et compétences
 
 - Les outils résident dans les compétences ; suivez le `SKILL.md` de chaque compétence lorsque vous en avez besoin.
-- Conservez les notes spécifiques à l'environnement dans `TOOLS.md` (Notes pour les compétences).
+- Gardez les notes spécifiques à l'environnement dans `TOOLS.md` (Notes pour les compétences).
 
 ## Conseil de sauvegarde (recommandé)
 
-Si vous considérez cet espace de travail comme la « mémoire » de Clawd, faites-en un dépôt git (idéalement privé) afin que `AGENTS.md` et vos fichiers de mémoire soient sauvegardés.
+Si vous traitez cet espace de travail comme la « mémoire » de Clawd, faites-en un dépôt git (idéalement privé) afin que `AGENTS.md` et vos fichiers de mémoire soient sauvegardés.
 
 ```bash
 cd ~/.openclaw/workspace
@@ -92,8 +92,8 @@ git commit -m "Add Clawd workspace"
 ## Ce que fait OpenClaw
 
 - Exécute la passerelle WhatsApp et l'agent de codage Pi pour que l'assistant puisse lire/écrire des discussions, récupérer le contexte et exécuter des compétences via l'hôte Mac.
-- L'application macOS gère les autorisations (enregistrement d'écran, notifications, microphone) et expose la `openclaw` CLI via son binaire intégré.
-- Les discussions directes sont fusionnées dans la session `main` de l'agent par défaut ; les groupes restent isolés en tant que `agent:<agentId>:<channel>:group:<id>` (salons/canaux : `agent:<agentId>:<channel>:channel:<id>`) ; les battements de cœur maintiennent les tâches d'arrière-plan en vie.
+- L'application macOS gère les autorisations (enregistrement d'écran, notifications, microphone) et expose la CLI `openclaw` via son binaire inclus.
+- Les discussions directes s'effondrent dans la session `main` de l'agent par défaut ; les groupes restent isolés en tant que `agent:<agentId>:<channel>:group:<id>` (salons/canaux : `agent:<agentId>:<channel>:channel:<id>`) ; les signaux de maintien (heartbeats) gardent les tâches d'arrière-plan en vie.
 
 ## Compétences principales (activer dans Paramètres → Compétences)
 
@@ -104,7 +104,7 @@ git commit -m "Add Clawd workspace"
 - **eightctl** — Contrôlez votre sommeil, depuis le terminal.
 - **imsg** — Envoyer, lire, diffuser iMessage et SMS.
 - **wacli** — WhatsApp CLI : synchroniser, rechercher, envoyer.
-- **discord** — Actions Discord : réagir, stickers, sondages. Utilisez les cibles `user:<id>` ou `channel:<id>` (les identifiants numériques seuls sont ambigus).
+- **discord** — Actions Discord : réagir, autocollants, sondages. Utilisez les cibles `user:<id>` ou `channel:<id>` (les identifiants numériques seuls sont ambigus).
 - **gog** — CLI Google Suite : Gmail, Agenda, Drive, Contacts.
 - **spotify-player** — Client Spotify en terminal pour rechercher/mettre en file d'attente/contrôler la lecture.
 - **sag** — Synthèse vocale ElevenLabs avec UX de style mac « say » ; diffuse vers les haut-parleurs par défaut.
@@ -117,10 +117,15 @@ git commit -m "Add Clawd workspace"
 
 ## Notes d'utilisation
 
-- Privilégiez le CLI `openclaw` pour les scripts ; l'application mac gère les autorisations.
+- Préférez la CLI `openclaw` pour les scripts ; l'application Mac gère les autorisations.
 - Lancez les installations depuis l'onglet Skills ; il masque le bouton si un binaire est déjà présent.
 - Gardez les battements de cœur (heartbeats) activés pour que l'assistant puisse planifier des rappels, surveiller les boîtes de réception et déclencher des captures de caméra.
 - L'interface utilisateur Canvas s'exécute en plein écran avec des superpositions natives. Évitez de placer des contrôles critiques sur les bords haut-gauche/haut-droit/bas ; ajoutez des gouttières explicites dans la mise en page et ne comptez pas sur les marges de sécurité.
-- Pour la vérification pilotée par navigateur, utilisez `openclaw browser` (onglets/état/capture d'écran) avec le profil Chrome géré par OpenClaw.
+- Pour la vérification pilotée par le navigateur, utilisez `openclaw browser` (onglets/statut/capture d'écran) avec le profil Chrome géré par OpenClaw.
 - Pour l'inspection du DOM, utilisez `openclaw browser eval|query|dom|snapshot` (et `--json`/`--out` lorsque vous avez besoin d'une sortie machine).
-- Pour les interactions, utilisez `openclaw browser click|type|hover|drag|select|upload|press|wait|navigate|back|evaluate|run` (clic/tape nécessitent des références d'instantané ; utilisez `evaluate` pour les sélecteurs CSS).
+- Pour les interactions, utilisez `openclaw browser click|type|hover|drag|select|upload|press|wait|navigate|back|evaluate|run` (clic/frappe nécessitent des références de snapshot ; utilisez `evaluate` pour les sélecteurs CSS).
+
+## Connexes
+
+- [Espace de travail de l'agent](/fr/concepts/agent-workspace)
+- [Environnement d'exécution de l'agent](/fr/concepts/agent)

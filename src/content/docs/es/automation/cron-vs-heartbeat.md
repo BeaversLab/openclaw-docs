@@ -1,8 +1,11 @@
 ---
 summary: "Redirect to /automation"
-title: "Cron vs Heartbeat"
+title: "Cron frente a heartbeat"
 ---
 
-# Cron vs Heartbeat
+La guía de decisión sobre cron frente a heartbeat se encuentra en [Automatización y tareas](/es/automation).
 
-Esta página se ha movido a [Automation & Tasks](/es/automation). Consulte [Automation & Tasks](/es/automation) para ver la guía de decisión que compara cron y heartbeat.
+## Relacionado
+
+- [Tareas programadas](/es/automation/cron-jobs)
+- [Tareas en segundo plano](/es/automation/tasks)

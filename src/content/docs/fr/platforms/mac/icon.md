@@ -29,3 +29,8 @@ Notes comportementales
 
 - Aucun basculement CLI/broker externe pour les oreilles/travail ; gardez-le interne aux signaux propres de l'application pour éviter les battements accidentels.
 - Gardez les TTL courts (&lt;10s) pour que l'icône revienne rapidement à la ligne de base si une tâche se bloque.
+
+## Connexes
+
+- [Barre de menus](/fr/platforms/mac/menu-bar)
+- [Application macOS](/fr/platforms/macos)

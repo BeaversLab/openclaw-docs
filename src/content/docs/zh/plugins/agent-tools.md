@@ -8,3 +8,8 @@ title: "注册工具"
 # 在插件中注册工具
 
 此页面已移动。请参阅[构建插件：注册 Agent 工具](/zh/plugins/building-plugins#registering-agent-tools)。
+
+## 相关
+
+- [构建插件](/zh/plugins/building-plugins)
+- [插件 SDK 设置](/zh/plugins/sdk-setup)

@@ -1,6 +1,6 @@
 ---
-title: "Modelo de amenazas (MITRE ATLAS)"
 summary: "Modelo de amenazas de OpenClaw asignado al marco MITRE ATLAS"
+title: "Modelo de amenazas (MITRE ATLAS)"
 read_when:
   - Reviewing security posture or threat scenarios
   - Working on security features or audit responses
@@ -17,7 +17,7 @@ read_when:
 
 ### Atribución del marco
 
-Este modelo de amenazas se basa en [MITRE ATLAS](https://atlas.mitre.org/), el marco estándar de la industria para documentar amenazas adversariales a sistemas de IA/ML. ATLAS es mantenido por [MITRE](https://www.mitre.org/) en colaboración con la comunidad de seguridad de IA.
+Este modelo de amenazas se basa en [MITRE ATLAS](https://atlas.mitre.org/), el marco estándar de la industria para documentar amenazas adversarias a los sistemas de IA/ML. ATLAS es mantenido por [MITRE](https://www.mitre.org/) en colaboración con la comunidad de seguridad de IA.
 
 **Recursos clave de ATLAS:**
 
@@ -606,3 +606,8 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 ---
 
 _Este modelo de amenazas es un documento vivo. Reporte problemas de seguridad a security@openclaw.ai_
+
+## Relacionado
+
+- [Verificación formal](/es/security/formal-verification)
+- [Contribuir al modelo de amenazas](/es/security/CONTRIBUTING-THREAT-MODEL)

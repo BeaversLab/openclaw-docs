@@ -3,12 +3,10 @@ summary: "Indicateurs de diagnostic pour les journaux de débogage ciblés"
 read_when:
   - You need targeted debug logs without raising global logging levels
   - You need to capture subsystem-specific logs for support
-title: "Indicateurs de diagnostic"
+title: "Diagnostics flags"
 ---
 
-# Indicateurs de diagnostic
-
-Les indicateurs de diagnostic vous permettent d'activer des journaux de débogage ciblés sans activer la journalisation détaillée partout. Les indicateurs sont opt-in et n'ont aucun effet à moins qu'un sous-système ne les vérifie.
+Les indicateurs de diagnostic vous permettent d'activer les journaux de débogage ciblés sans activer la journalisation détaillée partout. Les indicateurs sont opt-in et n'ont aucun effet à moins qu'un sous-système ne les vérifie.
 
 ## Fonctionnement
 
@@ -28,7 +26,7 @@ Les indicateurs de diagnostic vous permettent d'activer des journaux de débogag
 }
 ```
 
-Plusieurs indicateurs :
+Indicateurs multiples :
 
 ```json
 {
@@ -60,7 +58,7 @@ Les indicateurs émettent des journaux dans le fichier de journal de diagnostic 
 /tmp/openclaw/openclaw-YYYY-MM-DD.log
 ```
 
-Si vous définissez `logging.file`, utilisez plutôt ce chemin. Les journaux sont au format JSONL (un objet JSON par ligne). La suppression des informations sensibles s'applique toujours en fonction de `logging.redactSensitive`.
+Si vous définissez `logging.file`, utilisez ce chemin à la place. Les journaux sont au format JSONL (un objet JSON par ligne). La suppression des informations sensibles s'applique toujours en fonction de `logging.redactSensitive`.
 
 ## Extraire les journaux
 
@@ -76,7 +74,7 @@ Filtrer pour les diagnostics HTTP Telegram :
 rg "telegram http error" /tmp/openclaw/openclaw-*.log
 ```
 
-Ou suivre en temps réel lors de la reproduction :
+Ou surveillez en temps réel (tail) pendant la reproduction :
 
 ```bash
 tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
@@ -84,8 +82,13 @@ tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
 
 Pour les passerelles distantes, vous pouvez également utiliser `openclaw logs --follow` (voir [/cli/logs](/fr/cli/logs)).
 
-## Notes
+## Remarques
 
-- Si `logging.level` est défini plus haut que `warn`, ces journaux peuvent être supprimés. La valeur par défaut `info` convient.
-- Il est possible de laisser les indicateurs activés ; ils n'affectent que le volume des journaux pour le sous-système spécifique.
+- Si `logging.level` est défini à un niveau supérieur à `warn`, ces journaux peuvent être supprimés. La valeur par défaut `info` convient.
+- Il est sans risque de laisser les indicateurs activés ; ils n'affectent que le volume des journaux pour le sous-système spécifique.
 - Utilisez [/logging](/fr/logging) pour modifier les destinations des journaux, les niveaux et la suppression des informations sensibles.
+
+## Connexes
+
+- [Diagnostics de la passerelle](/fr/gateway/diagnostics)
+- [Dépannage de la passerelle](/fr/gateway/troubleshooting)

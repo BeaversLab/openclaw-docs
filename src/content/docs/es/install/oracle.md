@@ -7,21 +7,19 @@ read_when:
 title: "Oracle Cloud"
 ---
 
-# Oracle Cloud
-
 Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free** de Oracle Cloud (hasta 4 OCPU, 24 GB de RAM, 200 GB de almacenamiento) sin costo.
 
 ## Requisitos previos
 
-- Cuenta de Oracle Cloud ([registro](https://www.oracle.com/cloud/free/)) -- consulte la [guía de registro de la comunidad](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd) si encuentra problemas
+- Cuenta de Oracle Cloud ([registrarse](https://www.oracle.com/cloud/free/)) -- consulte la [guía de registro de la comunidad](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd) si encuentra problemas
 - Cuenta de Tailscale (gratis en [tailscale.com](https://tailscale.com))
 - Un par de claves SSH
-- Aproximadamente 30 minutos
+- Unos 30 minutos
 
 ## Configuración
 
 <Steps>
-  <Step title="Crear una instancia OCI">
+  <Step title="Crear una instancia de OCI">
     1. Inicie sesión en [Oracle Cloud Console](https://cloud.oracle.com/).
     2. Vaya a **Compute > Instances > Create Instance**.
     3. Configure:
@@ -31,11 +29,11 @@ Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free*
        - **OCPUs:** 2 (o hasta 4)
        - **Memory:** 12 GB (o hasta 24 GB)
        - **Boot volume:** 50 GB (hasta 200 GB gratis)
-       - **SSH key:** Añada su clave pública
+       - **SSH key:** Agregue su clave pública
     4. Haga clic en **Create** y anote la dirección IP pública.
 
     <Tip>
-    Si la creación de la instancia falla con "Out of capacity", intente con un dominio de disponibilidad diferente o vuelva a intentarlo más tarde. La capacidad de la capa gratuita es limitada.
+    Si la creación de la instancia falla con "Out of capacity", pruebe con un dominio de disponibilidad diferente o reintente más tarde. La capacidad de nivel gratuito es limitada.
     </Tip>
 
   </Step>
@@ -48,7 +46,7 @@ Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free*
     sudo apt install -y build-essential
     ```
 
-    `build-essential` es obligatorio para la compilación ARM de algunas dependencias.
+    `build-essential` es necesario para la compilación ARM de algunas dependencias.
 
   </Step>
 
@@ -59,7 +57,7 @@ Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free*
     sudo loginctl enable-linger ubuntu
     ```
 
-    Habilitar linger mantiene los servicios de usuario en ejecución después de cerrar sesión.
+    Habilitar linger mantiene los servicios de usuario ejecutándose después de cerrar sesión.
 
   </Step>
 
@@ -83,8 +81,8 @@ Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free*
 
   </Step>
 
-  <Step title="Configurar el gateway">
-    Utilice la autenticación por token con Tailscale Serve para un acceso remoto seguro.
+  <Step title="Configurar la puerta de enlace">
+    Utilice la autenticación por token con Tailscale Serve para el acceso remoto seguro.
 
     ```bash
     openclaw config set gateway.bind loopback
@@ -96,16 +94,16 @@ Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free*
     systemctl --user restart openclaw-gateway.service
     ```
 
-    `gateway.trustedProxies=["127.0.0.1"]` aquí es solo para el manejo de IP reenviada/cliente local del proxy local Tailscale Serve. **No** es `gateway.auth.mode: "trusted-proxy"`. Las rutas del visor de diferencias mantienen el comportamiento de cierre por fallo en esta configuración: las solicitudes del visor `127.0.0.1` sin encabezados de proxy reenviados pueden devolver `Diff not found`. Use `mode=file` / `mode=both` para los archivos adjuntos, o habilite intencionalmente los visores remotos y configure `plugins.entries.diffs.config.viewerBaseUrl` (o pase un proxy `baseUrl`) si necesita enlaces de visor compartibles.
+    `gateway.trustedProxies=["127.0.0.1"]` aquí es solo para el manejo de IP reenviada/cliente local del proxy local de Tailscale Serve. **No** es `gateway.auth.mode: "trusted-proxy"`. Las rutas del visor de diferencias mantienen el comportamiento de cierre seguro (fail-closed) en esta configuración: las solicitudes del visor `127.0.0.1` sin encabezados de proxy reenviados pueden devolver `Diff not found`. Use `mode=file` / `mode=both` para los adjuntos, o habilite intencionalmente los visores remotos y configure `plugins.entries.diffs.config.viewerBaseUrl` (o pase un proxy `baseUrl`) si necesita enlaces de visor compartibles.
 
   </Step>
 
-  <Step title="Bloquear la seguridad de VCN">
+  <Step title="Bloquear la seguridad de la VCN">
     Bloquee todo el tráfico excepto Tailscale en el borde de la red:
 
     1. Vaya a **Networking > Virtual Cloud Networks** en la consola de OCI.
     2. Haga clic en su VCN, luego en **Security Lists > Default Security List**.
-    3. **Elimine** todas las reglas de ingreso excepto `0.0.0.0/0 UDP 41641` (Tailscale).
+    3. **Elimine** todas las reglas de entrada excepto `0.0.0.0/0 UDP 41641` (Tailscale).
     4. Mantenga las reglas de salida predeterminadas (permitir todo el tráfico saliente).
 
     Esto bloquea SSH en el puerto 22, HTTP, HTTPS y todo lo demás en el borde de la red. A partir de este momento, solo puede conectarse a través de Tailscale.
@@ -120,7 +118,7 @@ Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free*
     curl http://localhost:18789
     ```
 
-    Acceda a la interfaz de usuario de Control desde cualquier dispositivo de su tailnet:
+    Acceda a la Interfaz de Control desde cualquier dispositivo en su tailnet:
 
     ```
     https://openclaw.<tailnet-name>.ts.net/
@@ -131,7 +129,7 @@ Ejecute una puerta de enlace OpenClaw persistente en el nivel ARM **Always Free*
   </Step>
 </Steps>
 
-## Alternativa: túnel SSH
+## Alternativa: Túnel SSH
 
 Si Tailscale Serve no funciona, use un túnel SSH desde su máquina local:
 
@@ -143,16 +141,22 @@ Luego abra `http://localhost:18789`.
 
 ## Solución de problemas
 
-**La creación de la instancia falla ("Sin capacidad")** -- Las instancias ARM de nivel gratuito son populares. Intente con un dominio de disponibilidad diferente o reintente en horas fuera de punta.
+**La creación de la instancia falla ("Out of capacity")** -- Las instancias ARM de nivel gratuito son populares. Intente con un dominio de disponibilidad diferente o reintente fuera de las horas pico.
 
 **Tailscale no se conectará** -- Ejecute `sudo tailscale up --ssh --hostname=openclaw --reset` para volver a autenticarse.
 
-**El Gateway no se iniciará** -- Ejecute `openclaw doctor --non-interactive` y verifique los registros con `journalctl --user -u openclaw-gateway.service -n 50`.
+**La puerta de enlace no se iniciará** -- Ejecute `openclaw doctor --non-interactive` y verifique los registros con `journalctl --user -u openclaw-gateway.service -n 50`.
 
-**Problemas con binarios ARM** -- La mayoría de los paquetes npm funcionan en ARM64. Para binarios nativos, busque versiones `linux-arm64` o `aarch64`. Verifique la arquitectura con `uname -m`.
+**Problemas con binarios ARM** -- La mayoría de los paquetes npm funcionan en ARM64. Para binarios nativos, busca lanzamientos `linux-arm64` o `aarch64`. Verifica la arquitectura con `uname -m`.
 
-## Siguientes pasos
+## Pasos siguientes
 
-- [Canales](/es/channels) -- conecte Telegram, WhatsApp, Discord y más
+- [Canales](/es/channels) -- conecta Telegram, WhatsApp, Discord y más
 - [Configuración del Gateway](/es/gateway/configuration) -- todas las opciones de configuración
-- [Actualización](/es/install/updating) -- mantener OpenClaw actualizado
+- [Actualización](/es/install/updating) -- mantén OpenClaw actualizado
+
+## Relacionado
+
+- [Resumen de instalación](/es/install)
+- [GCP](/es/install/gcp)
+- [Alojamiento VPS](/es/vps)

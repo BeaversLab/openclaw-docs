@@ -4,23 +4,26 @@ read_when:
   - You want to install a Codex, Claude, or Cursor-compatible bundle
   - You need to understand how OpenClaw maps bundle content into native features
   - You are debugging bundle detection or missing capabilities
-title: "外掛程式套件"
+title: "Plugin bundles"
 ---
 
-# 外掛程式套件
+OpenClaw 可以從三個外部生態系統安裝外掛：**Codex**、**Claude**
+和 **Cursor**。這些稱為 **bundles**（套件）—— OpenClaw 將其映射為技
+能、鉤子和 MCP 工具等原生功能的內容和元數據包。
 
-OpenClaw 可以從三個外部生態系統安裝外掛程式：**Codex**、**Claude** 和 **Cursor**。這些被稱為**套件**（bundles）—— OpenClaw 會將其內容和元資料套件映射到技能、掛鉤和 MCP 工具等原生功能。
+<Info>Bundles **並不**等同於原生 OpenClaw 外掛。原生外掛在進程內 運行，並可以註冊任何功能。Bundles 是內容包，具有選擇性的 功能映射和更狹窄的信任邊界。</Info>
 
-<Info>套件與原生的 OpenClaw 外掛並**不**相同。原生外掛在 進程內運行，並可以註冊任何功能。套件則是內容套件，具有 選擇性的功能映射和更狹窄的信任邊界。</Info>
+## 為什麼存在 bundles
 
-## 為何存在套件
+許多有用的外掛以 Codex、Claude 或 Cursor 格式發布。OpenClaw
+檢測這些格式，並將其支持的內容映射到原生功能集中，而不是要求
+作者將其重寫為原生 OpenClaw 外掛。這意味著您可以安裝 Claude 指令包
+或 Codex 技能包並立即使用。
 
-許多實用的外掛程式是以 Codex、Claude 或 Cursor 格式發布的。OpenClaw 不會要求作者將其重寫為原生 OpenClaw 外掛程式，而是會偵測這些格式，並將其支援的內容映射到原生功能集中。這意味著您可以安裝 Claude 指令套件或 Codex 技能套件並立即使用。
-
-## 安裝套件
+## 安裝 bundle
 
 <Steps>
-  <Step title="從目錄、歸檔或市集安裝">
+  <Step title="從目錄、歸檔或市場安裝">
     ```bash
     # Local directory
     openclaw plugins install ./my-bundle
@@ -35,71 +38,76 @@ OpenClaw 可以從三個外部生態系統安裝外掛程式：**Codex**、**Cla
 
   </Step>
 
-  <Step title="驗證偵測">
+  <Step title="驗證檢測">
     ```bash
     openclaw plugins list
     openclaw plugins inspect <id>
     ```
 
-    套件會顯示為 `Format: bundle`，子類型為 `codex`、`claude` 或 `cursor`。
+    Bundles 顯示為 `Format: bundle`，其子類型為 `codex`、`claude` 或 `cursor`。
 
   </Step>
 
-  <Step title="重新啟動並使用">
+  <Step title="重啟並使用">
     ```bash
     openclaw gateway restart
     ```
 
-    對應的功能（技能、鉤子、MCP 工具、LSP 預設值）將在下次工作階段中可用。
+    映射的功能（技能、鉤子、MCP 工具、LSP 預設值）將在下一個工作階段中可用。
 
   </Step>
 </Steps>
 
-## OpenClaw 從套件對應的內容
+## OpenClaw 從 bundles 映射的內容
 
-並非所有套件功能目前都能在 OpenClaw 中運作。以下列出可用的功能以及已被偵測但尚未連線的功能。
+並非所有 bundle 功能都能在 OpenClaw 中運行。以下是目前可用的功能
+以及已檢測到但尚未連接的功能。
 
-### 目前支援
+### 目前已支持
 
-| 功能       | 對應方式                                                                      | 適用於         |
-| ---------- | ----------------------------------------------------------------------------- | -------------- |
-| 技能內容   | 套件技能根目錄會作為一般 OpenClaw 技能載入                                    | 所有格式       |
-| 指令       | `commands/` 和 `.cursor/commands/` 被視為技能根目錄                           | Claude、Cursor |
-| Hook 套件  | OpenClaw 風格的 `HOOK.md` + `handler.ts` 佈局                                 | Codex          |
-| MCP 工具   | 套件 MCP 設定合併至內嵌 Pi 設定；支援的 stdio 與 HTTP 伺服器已載入            | 所有格式       |
-| LSP 伺服器 | Claude `.lsp.json` 與 manifest 中宣告的 `lspServers` 合併至內嵌 Pi LSP 預設值 | Claude         |
-| 設定       | Claude `settings.json` 匯入為內嵌 Pi 預設值                                   | Claude         |
+| 功能       | 映射方式                                                                    | 適用於         |
+| ---------- | --------------------------------------------------------------------------- | -------------- |
+| 技能內容   | Bundle 技能根目錄作為普通的 OpenClaw 技能加載                               | 所有格式       |
+| 指令       | `commands/` 和 `.cursor/commands/` 被視為技能根目錄                         | Claude、Cursor |
+| 鉤子包     | OpenClaw 風格的 `HOOK.md` + `handler.ts` 佈局                               | Codex          |
+| MCP 工具   | Bundle MCP 配置合併到嵌入式 Pi 設定中；支持的 stdio 和 HTTP 伺服器被加載    | 所有格式       |
+| LSP 伺服器 | Claude `.lsp.json` 和宣告清單中的 `lspServers` 合併到嵌入式 Pi LSP 預設值中 | Claude         |
+| 設定       | Claude `settings.json` 作為嵌入式 Pi 預設值匯入                             | Claude         |
 
 #### 技能內容
 
-- 套件技能根目錄會作為一般 OpenClaw 技能根目錄載入
+- 套件技能根目錄作為一般 OpenClaw 技能根目錄載入
 - Claude `commands` 根目錄被視為額外的技能根目錄
 - Cursor `.cursor/commands` 根目錄被視為額外的技能根目錄
 
-這表示 Claude Markdown 指令檔案透過一般 OpenClaw 技能載入器運作。Cursor 指令 Markdown 也透過相同路徑運作。
+這意味著 Claude markdown 指令檔案透過一般 OpenClaw 技能
+載入器運作。Cursor 指令 markdown 透過相同路徑運作。
 
 #### Hook 套件
 
 - 套件 hook 根目錄**僅**在它們使用一般 OpenClaw hook-pack
-  佈局時運作。目前這主要是指相容 Codex 的情況：
+  佈局時運作。目前這主要是 Codex 相容的情況：
   - `HOOK.md`
   - `handler.ts` 或 `handler.js`
 
 #### Pi 的 MCP
 
-- 啟用的套件可以提供 MCP 伺服器設定
-- OpenClaw 會將套件 MCP 設定合併到有效的嵌入式 Pi 設定中，作為
+- 已啟用的套件可以貢獻 MCP 伺服器設定
+- OpenClaw 將套件 MCP 設定合併到有效嵌入式 Pi 設定中作為
   `mcpServers`
-- OpenClaw 透過啟動 stdio 伺服器或連線到 HTTP 伺服器，在嵌入式 Pi 代理程式輪次期間公開支援的套件 MCP 工具
-- `coding` 和 `messaging` 工具設定檔預設包含套件 MCP 工具；針對特定代理程式或閘道，可使用 `tools.deny: ["bundle-mcp"]` 來選擇退出
-- 在套件預設值之後，專案本機 Pi 設定仍然適用，因此在必要時工作區設定可以覆寫套件 MCP 項目
-- 套件 MCP 工具目錄在註冊前會經過確定性排序，因此上游 `listTools()` 順序的變更不會導致提示快取工具區塊的重新整理
+- OpenClaw 在嵌入式 Pi 代理輪次期間透過
+  啟動 stdio 伺服器或連接到 HTTP 伺服器來公開支援的套件 MCP 工具
+- `coding` 和 `messaging` 工具設定檔預設包含套件 MCP 工具；
+  使用 `tools.deny: ["bundle-mcp"]` 讓代理或網關選擇退出
+- 專案本機 Pi 設定在套件預設值之後仍然適用，因此工作區設定可以在需要時覆寫套件 MCP 項目
+- 套件 MCP 工具目錄在註冊前會進行確定性排序，因此
+  上游 `listTools()` 順序的變更不會破壞提示快取工具區塊
 
 ##### 傳輸方式
 
-MCP 伺服器可以使用 stdio 或 HTTP 傳輸：
+MCP 伺服器可以使用 stdio 或 HTTP 傳輸方式：
 
-**Stdio** 會啟動一個子行程：
+**Stdio** 會啟動子程序：
 
 ```json
 {
@@ -115,7 +123,7 @@ MCP 伺服器可以使用 stdio 或 HTTP 傳輸：
 }
 ```
 
-**HTTP** 預設透過 `sse` 連接到執行中的 MCP 伺服器，或在有要求時使用 `streamable-http`：
+**HTTP** 預設透過 `sse` 連接到正在運行的 MCP 伺服器，或在要求時透過 `streamable-http`：
 
 ```json
 {
@@ -134,24 +142,25 @@ MCP 伺服器可以使用 stdio 或 HTTP 傳輸：
 }
 ```
 
-- `transport` 可設為 `"streamable-http"` 或 `"sse"`；若省略，OpenClaw 會使用 `sse`
-- 僅允許 `http:` 和 `https:` URL 網址方案
+- `transport` 可設定為 `"streamable-http"` 或 `"sse"`；省略時，OpenClaw 使用 `sse`
+- `type: "http"` 是 CLI 原生的下游形狀；在 OpenClaw 設定中使用 `transport: "streamable-http"`。`openclaw mcp set` 和 `openclaw doctor --fix` 會正規化通用別名。
+- 僅允許 `http:` 和 `https:` URL 網協
 - `headers` 值支援 `${ENV_VAR}` 插值
-- 同時包含 `command` 和 `url` 的伺服器項目會被拒絕
+- 同時包含 `command` 和 `url` 的伺服器項目將被拒絕
 - URL 憑證（使用者資訊和查詢參數）會從工具描述和日誌中編輯移除
 - `connectionTimeoutMs` 會覆寫 stdio 和 HTTP 傳輸預設的 30 秒連線逾時
 
 ##### 工具命名
 
-OpenClaw 會使用提供者安全名稱來註冊套件 MCP 工具，格式為 `serverName__toolName`。舉例來說，鍵值為 `"vigil-harbor"` 的伺服器若公開 `memory_search` 工具，將註冊為 `vigil-harbor__memory_search`。
+OpenClaw 會以提供者安全的名稱形式註冊套件 MCP 工具，例如 `serverName__toolName`。舉例來說，一個金鑰為 `"vigil-harbor"` 且公開 `memory_search` 工具的伺服器會註冊為 `vigil-harbor__memory_search`。
 
 - `A-Za-z0-9_-` 以外的字元會被替換為 `-`
 - 伺服器前綴上限為 30 個字元
 - 完整工具名稱上限為 64 個字元
-- 空的伺服器名稱會退回到 `mcp`
+- 空的伺服器名稱會退回至 `mcp`
 - 重複的清理名稱會加上數字尾碼以消除歧義
 - 最終公開的工具順序依安全名稱決定，以保持重複 Pi 輪次的快取穩定性
-- 設定檔過濾會將來自單一套件 MCP 伺服器的所有工具視為由 `bundle-mcp` 外掛程式所擁有，因此設定檔允許清單和拒絕清單可以包含個別公開的工具名稱或 `bundle-mcp` 外掛程式金鑰
+- 設定檔過濾會將來自單一套件 MCP 伺服器的所有工具視為由 `bundle-mcp` 擁有，因此設定檔允許清單和拒絕清單可以包含個別公開的工具名稱或 `bundle-mcp` 外掛程式金鑰
 
 #### 嵌入式 Pi 設定
 
@@ -166,9 +175,9 @@ OpenClaw 會使用提供者安全名稱來註冊套件 MCP 工具，格式為 `s
 #### 嵌入式 Pi LSP
 
 - 啟用的 Claude 套件可以提供 LSP 伺服器設定
-- OpenClaw 會載入 `.lsp.json` 加上任何宣告資訊清單的 `lspServers` 路徑
+- OpenClaw 會載入 `.lsp.json` 以及任何清單中宣告的 `lspServers` 路徑
 - 套件 LSP 設定會合併至有效的嵌入式 Pi LSP 預設值中
-- 目前僅支援受支援的 stdio 支援 LSP 伺服器可執行；不支援的傳輸仍會顯示在 `openclaw plugins inspect <id>` 中
+- 目前僅支援執行以 stdio 為基礎的 LSP 伺服器；不支援的傳輸方式仍會顯示在 `openclaw plugins inspect <id>` 中
 
 ### 已偵測但未執行
 
@@ -181,12 +190,12 @@ OpenClaw 會使用提供者安全名稱來註冊套件 MCP 工具，格式為 `s
 ## 套件格式
 
 <AccordionGroup>
-  <Accordion title="Codex bundles">
+  <Accordion title="Codex 套件">
     標記：`.codex-plugin/plugin.json`
 
     選用內容：`skills/`、`hooks/`、`.mcp.json`、`.app.json`
 
-    當 Codex 套件使用技能根目錄和 OpenClaw 風格的掛鉤套件目錄 (`HOOK.md` + `handler.ts`) 時，最適合 OpenClaw。
+    當 Codex 套件使用技能根目錄和 OpenClaw 風格的掛勾套件目錄（`HOOK.md` + `handler.ts`）時，最適合 OpenClaw。
 
   </Accordion>
 
@@ -194,26 +203,26 @@ OpenClaw 會使用提供者安全名稱來註冊套件 MCP 工具，格式為 `s
     兩種偵測模式：
 
     - **基於清單 (Manifest-based)：** `.claude-plugin/plugin.json`
-    - **無清單 (Manifestless)：** 預設的 Claude 版面配置 (`skills/`、 `commands/`、 `agents/`、 `hooks/`、 `.mcp.json`、 `.lsp.json`、 `settings.json`)
+    - **無清單 (Manifestless)：** 預設 Claude 版面配置 (`skills/`、`commands/`、`agents/`、`hooks/`、`.mcp.json`、`.lsp.json`、`settings.json`)
 
-    Claude 專屬行為：
+    Claude 特定行為：
 
     - `commands/` 被視為技能內容
-    - `settings.json` 被匯入至內嵌的 Pi 設定 (shell 覆寫鍵會被清理)
-    - `.mcp.json` 將支援的 stdio 工具公開給內嵌的 Pi
-    - `.lsp.json` 加上清單中宣告的 `lspServers` 路徑會載入至內嵌 Pi 的 LSP 預設值
-    - `hooks/hooks.json` 會被偵測到但不會執行
-    - 清單中的自訂元件路徑具有累加性 (它們會擴展預設值，而非取代它們)
+    - `settings.json` 被匯入至內嵌 Pi 設定 (shell 覆寫鍵會被清理)
+    - `.mcp.json` 將支援的 stdio 工具暴露給內嵌 Pi
+    - `.lsp.json` 加上清單中宣告的 `lspServers` 路徑會載入至內嵌 Pi LSP 預設值
+    - `hooks/hooks.json` 會被偵測到但不執行
+    - 清單中的自訂元件路徑為累加性 (它們會擴充預設值，而非取代)
 
   </Accordion>
 
   <Accordion title="Cursor 套件">
     標記： `.cursor-plugin/plugin.json`
 
-    選用內容： `skills/`、 `.cursor/commands/`、 `.cursor/agents/`、 `.cursor/rules/`、 `.cursor/hooks.json`、 `.mcp.json`
+    選用內容： `skills/`、`.cursor/commands/`、`.cursor/agents/`、`.cursor/rules/`、`.cursor/hooks.json`、`.mcp.json`
 
     - `.cursor/commands/` 被視為技能內容
-    - `.cursor/rules/`、 `.cursor/agents/` 和 `.cursor/hooks.json` 僅供偵測
+    - `.cursor/rules/`、`.cursor/agents/` 和 `.cursor/hooks.json` 僅供偵測
 
   </Accordion>
 </AccordionGroup>
@@ -222,16 +231,24 @@ OpenClaw 會使用提供者安全名稱來註冊套件 MCP 工具，格式為 `s
 
 OpenClaw 會優先檢查原生外掛程式格式：
 
-1. `openclaw.plugin.json` 或具有 `openclaw.extensions` 的有效 `package.json` — 視為 **原生外掛程式**
-2. 套件標記 (`.codex-plugin/`、 `.claude-plugin/` 或預設 Claude/Cursor 版面配置) — 視為 **套件**
+1. `openclaw.plugin.json` 或包含 `openclaw.extensions` 的有效 `package.json` — 視為 **原生外掛**
+2. 套件標記 (`.codex-plugin/`、`.claude-plugin/` 或預設 Claude/Cursor 版面配置) — 視為 **套件**
 
 如果目錄同時包含兩者，OpenClaw 會使用原生路徑。這可以防止雙格式套件被部分安裝為套件。
 
-## 安全性
+## 執行時期相依性與清理
 
-套件的信任邊界比原生外掛程式更狹窄：
+- Bundled plugin runtime dependencies ship inside the OpenClaw package under
+  `dist/*`. OpenClaw does **not** run `npm install` at startup for bundled
+  plugins; the release pipeline is responsible for shipping a complete bundled
+  dependency payload (see the postpublish verification rule in
+  [Releasing](/zh-Hant/reference/RELEASING)).
 
-- OpenClaw **不會** 在行程內載入任意的套件執行階段模組
+## Security
+
+Bundles have a narrower trust boundary than native plugins:
+
+- OpenClaw does **not** load arbitrary bundle runtime modules in-process
 - Skills and hook-pack paths must stay inside the plugin root (boundary-checked)
 - Settings files are read with the same boundary checks
 - Supported stdio MCP servers may be launched as subprocesses

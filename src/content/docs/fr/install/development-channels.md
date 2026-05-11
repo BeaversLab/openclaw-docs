@@ -4,7 +4,7 @@ read_when:
   - You want to switch between stable/beta/dev
   - You want to pin a specific version, tag, or SHA
   - You are tagging or publishing prereleases
-title: "Canaux de publication"
+title: "Release channels"
 sidebarTitle: "Canaux de publication"
 ---
 
@@ -46,8 +46,7 @@ méthode d'installation :
   `OPENCLAW_GIT_DIR`), bascule sur `main`, effectue un rebase sur upstream, compile, et
   installe le CLI global depuis ce checkout.
 
-Astuce : si vous voulez stable + dev en parallèle, gardez deux clones et pointez votre
-passerelle sur celui stable.
+<Tip>Si vous souhaitez utiliser stable et dev en parallèle, gardez deux clones et pointez votre passerelle vers celui de stable.</Tip>
 
 ## Ciblage ponctuel de version ou de tag
 
@@ -121,3 +120,8 @@ Les versions bêta et dev peuvent **ne pas** inclure une version d'application m
 
 - La balise git et la dist-tag npm peuvent toujours être publiées.
 - Indiquez « pas de build macOS pour cette bêta » dans les notes de version ou le journal des modifications.
+
+## Articles connexes
+
+- [Mise à jour](/fr/install/updating)
+- [Fonctionnement interne de l'installateur](/fr/install/installer)

@@ -70,11 +70,11 @@ Ubuntu 也可以使用；請相應地對照套件。
 
 <Steps>
   <Step title="安裝 gcloud CLI (或使用 Console)">
-    **選項 A：gcloud CLI** (推薦用於自動化)
+    **選項 A：gcloud CLI** (建議用於自動化)
 
     從 [https://cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install) 安裝
 
-    初始化並進行身份驗證：
+    初始化並進行驗證：
 
     ```bash
     gcloud init
@@ -83,7 +83,7 @@ Ubuntu 也可以使用；請相應地對照套件。
 
     **選項 B：Cloud Console**
 
-    所有步驟均可透過位於 [https://console.cloud.google.com](https://console.cloud.google.com) 的網頁 UI 完成
+    所有步驟均可透過位於 [https://console.cloud.google.com](https://console.cloud.google.com) 的網頁介面完成
 
   </Step>
 
@@ -401,7 +401,7 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 避免對自動化作業使用 Owner 角色。請遵循最小權限原則。
 
-請參閱 [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles) 以了解 IAM 角色的詳細資訊。
+請參閱 [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles) 以了解 IAM 角色詳情。
 
 ---
 
@@ -410,3 +410,9 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 - 設定訊息通道：[通道](/zh-Hant/channels)
 - 將本地裝置配對為節點：[節點](/zh-Hant/nodes)
 - 設定閘道：[閘道設定](/zh-Hant/gateway/configuration)
+
+## 相關
+
+- [安裝總覽](/zh-Hant/install)
+- [Azure](/zh-Hant/install/azure)
+- [VPS 託管](/zh-Hant/vps)

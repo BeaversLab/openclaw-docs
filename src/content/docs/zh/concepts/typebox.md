@@ -286,3 +286,8 @@ Swift 生成器发出：
    更新 `src/gateway/method-scopes.ts`。
 4. 运行 `pnpm protocol:check`。
 5. 提交重新生成的 Schema 和 Swift 模型。
+
+## 相关
+
+- [富输出协议](/zh/reference/rich-output-protocol)
+- [RPC 适配器](/zh/reference/rpc)

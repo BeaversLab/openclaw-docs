@@ -1,5 +1,5 @@
 ---
-summary: "符合 Schema 的常見 OpenClaw 設定範例"
+summary: "符合架構的常見 OpenClaw 設定範例"
 read_when:
   - Learning how to configure OpenClaw
   - Looking for configuration examples
@@ -7,13 +7,11 @@ read_when:
 title: "設定範例"
 ---
 
-# 設定範例
-
-以下範例與目前的設定架構一致。若要查看完整的參考資料與各欄位說明，請參閱 [Configuration](/zh-Hant/gateway/configuration)。
+以下範例與目前的設定架構一致。若要查看完整參考與各欄位說明，請參閱[設定](/zh-Hant/gateway/configuration)。
 
 ## 快速開始
 
-### 絕對最低限度
+### 絕對最小值
 
 ```json5
 {
@@ -22,9 +20,9 @@ title: "設定範例"
 }
 ```
 
-儲存至 `~/.openclaw/openclaw.json`，您即可從該號碼傳送私訊給機器人。
+儲存至 `~/.openclaw/openclaw.json`，您就可以從該號碼傳送私訊給機器人。
 
-### 推薦入門
+### 建議的入門設定
 
 ```json5
 {
@@ -48,7 +46,7 @@ title: "設定範例"
 
 ## 擴充範例（主要選項）
 
-> JSON5 允許您使用註解和尾隨逗號。一般 JSON 也適用。
+> JSON5 允許您使用註解與尾隨逗號。標準 JSON 也可以運作。
 
 ```json5
 {
@@ -371,7 +369,7 @@ title: "設定範例"
   cron: {
     enabled: true,
     store: "~/.openclaw/cron/cron.json",
-    maxConcurrentRuns: 2,
+    maxConcurrentRuns: 2, // cron dispatch + isolated cron agent-turn execution
     sessionRetention: "24h",
     runLog: {
       maxBytes: "2mb",
@@ -461,7 +459,7 @@ title: "設定範例"
 
 ## 常見模式
 
-### 共用技能基線與單一覆寫
+### 具有單一覆寫的共享技能基線
 
 ```json5
 {
@@ -478,8 +476,8 @@ title: "設定範例"
 }
 ```
 
-- `agents.defaults.skills` 是共用的基線。
-- `agents.list[].skills` 會取代單一代理程式的該基線。
+- `agents.defaults.skills` 是共享基線。
+- `agents.list[].skills` 會取代單一代理程式的基線。
 - 當代理程式不應該看到任何技能時，請使用 `skills: []`。
 
 ### 多平台設定
@@ -503,9 +501,27 @@ title: "設定範例"
 }
 ```
 
-### 安全 DM 模式 (共用收件匣 / 多使用者 DM)
+### 受信任節點網路自動核准
 
-如果不只一個人可以 DM 您的機器人 (`allowFrom` 中有多個項目、多人的配對核准，或 `dmPolicy: "open"`)，請啟用 **安全 DM 模式**，如此來自不同發送者的 DM 預設就不會共用同一個 context：
+除非您控制網路路徑，否則請保持裝置配對為手動。對於專屬實驗室或 tailnet 子網路，您可以選擇使用精確 CIDR 或 IP 啟用首次節點裝置自動核准：
+
+```json5
+{
+  gateway: {
+    nodes: {
+      pairing: {
+        autoApproveCidrs: ["192.168.1.0/24", "fd00:1234:5678::/64"],
+      },
+    },
+  },
+}
+```
+
+若未設定則保持關閉。這僅適用於沒有要求範圍的新 `role: node` 配對。操作員/瀏覽器用戶端以及角色、範圍、中繼資料或公開金鑰升級仍需手動核准。
+
+### 安全私訊模式（共用收件匣 / 多使用者私訊）
+
+如果多個人可以私訊您的機器人（`allowFrom` 中有多個項目、多人的配對核准，或 `dmPolicy: "open"`），請啟用 **安全私訊模式**，讓不同寄件者的私訊預設不會共用同一個情境：
 
 ```json5
 {
@@ -529,10 +545,10 @@ title: "設定範例"
 }
 ```
 
-對於 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，發送者授權預設以 ID 為優先。
-只有在您明確接受該風險時，才透過每個頻道的 `dangerouslyAllowNameMatching: true` 啟用直接的可變名稱/電子郵件/暱稱比對。
+對於 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，寄件者授權預設以 ID 為優先。
+只有在您明確接受相關風險時，才使用各頻道的 `dangerouslyAllowNameMatching: true` 啟用直接可變名稱/電子郵件/暱稱比對。
 
-### Anthropic API 金鑰 + MiniMax 後援
+### Anthropic API 金鑰 + MiniMax 備援
 
 ```json5
 {
@@ -566,7 +582,7 @@ title: "設定範例"
 }
 ```
 
-### 工作機器人 (受限存取)
+### 工作機器人（受限存取）
 
 ```json5
 {
@@ -626,6 +642,11 @@ title: "設定範例"
 ## 提示
 
 - 如果您設定 `dmPolicy: "open"`，相符的 `allowFrom` 清單必須包含 `"*"`。
-- 提供者 ID 不同 (電話號碼、使用者 ID、頻道 ID)。請使用提供者文件來確認格式。
-- 稍後新增的可選區段：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 如需更深入的設定說明，請參閱 [Providers](/zh-Hant/providers) 和 [Troubleshooting](/zh-Hant/gateway/troubleshooting)。
+- 提供者 ID 不同（電話號碼、使用者 ID、頻道 ID）。請使用提供者文件確認格式。
+- 稍後可新增的選用區段：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
+- 請參閱 [Providers](/zh-Hant/providers) 與 [Troubleshooting](/zh-Hant/gateway/troubleshooting) 以獲得更深入的設定說明。
+
+## 相關
+
+- [Configuration reference](/zh-Hant/gateway/configuration-reference)
+- [Configuration](/zh-Hant/gateway/configuration)

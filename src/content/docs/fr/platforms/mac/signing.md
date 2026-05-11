@@ -2,16 +2,16 @@
 summary: "Étapes de signature pour les versions de débogage macOS générées par les scripts de packaging"
 read_when:
   - Building or signing mac debug builds
-title: "macOS Signature"
+title: "Signature macOS"
 ---
 
 # signature mac (versions de débogage)
 
-Cette application est généralement construite à partir de [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh), qui maintenant :
+Cette application est généralement générée à partir de [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh), qui désormais :
 
 - définit un identifiant de bundle de débogage stable : `ai.openclaw.mac.debug`
 - écrit le Info.plist avec cet identifiant de bundle (remplacer via `BUNDLE_ID=...`)
-- appelle [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) pour signer le binaire principal et le bundle de l'application afin que macOS traite chaque reconstruction comme le même bundle signé et conserve les autorisations TCC (notifications, accessibilité, enregistrement d'écran, microphone, reconnaissance vocale). Pour des autorisations stables, utilisez une véritable identité de signature ; la signature ad-hoc est optionnelle et fragile (voir [macOS permissions](/fr/platforms/mac/permissions)).
+- appelle [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) pour signer le fichier binaire principal et le bundle d'application, afin que macOS traite chaque reconstruction comme le même bundle signé et conserve les autorisations TCC (notifications, accessibilité, enregistrement d'écran, micro, synthèse vocale). Pour des autorisations stables, utilisez une véritable identité de signature ; la signature ad-hoc est facultative et fragile (voir [autorisations macOS](/fr/platforms/mac/permissions)).
 - utilise `CODESIGN_TIMESTAMP=auto` par défaut ; il active les horodatages de confiance pour les signatures d'ID de développeur. Définissez `CODESIGN_TIMESTAMP=off` pour ignorer l'horodatage (versions de débogage hors ligne).
 - injecte les métadonnées de construction dans le Info.plist : `OpenClawBuildTimestamp` (UTC) et `OpenClawGitCommit` (hash court) afin que le panneau À propos puisse afficher la version, git, et le channel de débogage/release.
 - **Le packaging utilise par défaut Node 24** : le script exécute les builds TS et le build de l'interface de contrôle. Node 22 LTS, actuellement `22.14+`, reste pris en charge pour la compatibilité.
@@ -45,3 +45,8 @@ L'onglet À propos lit ces clés pour afficher la version, la date de build, le 
 ## Pourquoi
 
 Les permissions TCC sont liées à l'identifiant du bundle _et_ à la signature du code. Les builds de débogage non signées avec des UUID changeants faisaient oublier les autorisations par macOS après chaque rebuild. La signature des binaires (ad‑hoc par défaut) et le maintien d'un identifiant/chemin de bundle fixe (`dist/OpenClaw.app`) préservent les autorisations entre les builds, correspondant à l'approche VibeTunnel.
+
+## Connexes
+
+- [application macOS](/fr/platforms/macos)
+- [autorisations macOS](/fr/platforms/mac/permissions)

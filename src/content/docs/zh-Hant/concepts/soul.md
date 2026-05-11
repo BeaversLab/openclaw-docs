@@ -7,57 +7,51 @@ read_when:
 title: "SOUL.md 個性指南"
 ---
 
-# SOUL.md 個性指南
+`SOUL.md` 是您代理語氣所在的地方。
 
-`SOUL.md` 是您代理聲音的所在之處。
+OpenClaw 會在一般會話中注入它，因此它具有實際的權重。如果您的代理聽起來平淡、迴避或奇怪地充滿官僚氣氛，這通常是需要修復的檔案。
 
-OpenClaw 會在一般階段注入它，因此它具有實際的份量。如果您的代理
-聽起來平淡、猶豫不決，或充滿了奇怪的企業腔，這通常就是需要修正的檔案。
+## SOUL.md 中應包含什麼
 
-## 什麼內容屬於 SOUL.md
-
-放入能改變代理交談感受的內容：
+放入那些能改變代理交談感受的內容：
 
 - 語氣
 - 觀點
-- 簡潔度
-- 幽默感
-- 界線
+- 簡潔
+- 幽默
+- 界限
 - 預設的直白程度
 
 請**勿**將其變成：
 
 - 生活故事
 - 變更日誌
-- 安全政策傾倒
-- 一大段毫無行為影響的氛圍文字
+- 傾倒安全策略
+- 一大段沒有行為影響的氛围描述
 
 簡短勝於冗長。犀利勝於模糊。
 
-## 為什麼這樣做有效
+## 為什麼這有效
 
-這與 OpenAI 的提示詞指導方針一致：
+這與 OpenAI 的提示詞指導一致：
 
-- 提示詞工程指南指出，高層級的行為、語氣、目標和範例
-  應屬於高優先級的指令層，而不是埋沒在使用者輪次中。
-- 同一份指南建議將提示詞視為需要反覆迭代、
-  固定並評估的內容，而不是寫一次就忘記的神奇散文。
+- 提示詞工程指南指出，高層級的行為、語氣、目標和範例屬於高優先級指令層，而不應埋沒在使用者輪次中。
+- 同一份指南建議將提示詞視為您反覆迭代、固定和評估的內容，而不是寫一次就忘記的魔法散文。
 
 對於 OpenClaw，`SOUL.md` 就是那一層。
 
-如果您想要更好的個性，請撰寫更強有力的指令。如果您想要穩定的
-個性，請保持簡潔並進行版本控制。
+如果您想要更好的個性，請撰寫更強的指令。如果您想要穩定的個性，請保持簡潔並進行版本控制。
 
 OpenAI 參考資料：
 
 - [提示詞工程](https://developers.openai.com/api/docs/guides/prompt-engineering)
 - [訊息角色與指令遵循](https://developers.openai.com/api/docs/guides/prompt-engineering#message-roles-and-instruction-following)
 
-## The Molty 提示詞
+## Molty 提示詞
 
-將此貼上到您的代理中，並讓它重寫 `SOUL.md`。
+將其貼上到您的代理中，並讓它重寫 `SOUL.md`。
 
-路徑已針對 OpenClaw 工作區修正：請使用 `SOUL.md`，而非 `http://SOUL.md`。
+路徑已針對 OpenClaw 工作區修正：請使用 `SOUL.md`，而不是 `http://SOUL.md`。
 
 ```md
 Read your `SOUL.md`. Now rewrite it with these changes:
@@ -78,30 +72,30 @@ Save the new `SOUL.md`. Welcome to having a personality.
 
 好的 `SOUL.md` 規則聽起來像這樣：
 
-- 要有看法
+- 要有自己的看法
 - 跳過填充詞
-- 適時表現幽默
-- 儘早指出壞主意
+- 適時發揮幽默
+- 及早指出糟糕的想法
 - 保持簡潔，除非深度確實有用
 
 糟糕的 `SOUL.md` 規則聽起來像這樣：
 
-- 時時保持專業
-- 提供全面且貼心的協助
-- 確保積極且支援的體驗
+- 隨時保持專業
+- 提供全面且周到的協助
+- 確保積極且支持的體驗
 
-第二份清單就是讓您變得軟弱的元兇。
+這第二份清單就是您會變得模糊不清的原因。
 
 ## 一個警告
 
-個性不是草率行事藉口。
+個性不是草率行事的許可。
 
-將 `AGENTS.md` 用於操作規則。將 `SOUL.md` 用於語氣、立場和風格。如果您的代理在共用頻道、公開回覆或客戶介面上運作，請確保語氣仍然適合該場合。
+將 `AGENTS.md` 用於操作規則。將 `SOUL.md` 用於語氣、立場和風格。如果您的代理在共享頻道、公開回覆或客戶介面上工作，請確保語氣仍然適合該場合。
 
 犀利是好的。煩人則不然。
 
 ## 相關文件
 
-- [代理工作區](/zh-Hant/concepts/agent-workspace)
-- [系統提示](/zh-Hant/concepts/system-prompt)
-- [SOUL.md 模板](/zh-Hant/reference/templates/SOUL)
+- [Agent workspace](/zh-Hant/concepts/agent-workspace)
+- [System prompt](/zh-Hant/concepts/system-prompt)
+- [SOUL.md template](/zh-Hant/reference/templates/SOUL)

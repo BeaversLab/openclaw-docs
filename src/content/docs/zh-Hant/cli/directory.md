@@ -3,7 +3,7 @@ summary: "CLI 參考資料，用於 `openclaw directory`（自己、對象、群
 read_when:
   - You want to look up contacts/groups/self ids for a channel
   - You are developing a channel directory adapter
-title: "directory"
+title: "目錄"
 ---
 
 # `openclaw directory`
@@ -61,3 +61,7 @@ openclaw directory groups list --channel zalouser
 openclaw directory groups list --channel zalouser --query "work"
 openclaw directory groups members --channel zalouser --group-id <id>
 ```
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)

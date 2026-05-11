@@ -3,7 +3,7 @@ summary: "Plugin de Webhooks: entrada TaskFlow autenticada para automatización 
 read_when:
   - You want to trigger or drive TaskFlows from an external system
   - You are configuring the bundled webhooks plugin
-title: "Plugin de Webhooks"
+title: "Complemento de Webhooks"
 ---
 
 # Webhooks (plugin)

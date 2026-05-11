@@ -1,28 +1,25 @@
 ---
+summary: "輕度、深度和 REM 階段加上夢境日記的背景記憶整合"
 title: "做夢"
-summary: "包含淺層、深層與 REM 階段的背景記憶整合，以及夢境日記"
+sidebarTitle: "做夢"
 read_when:
   - You want memory promotion to run automatically
   - You want to understand what each dreaming phase does
   - You want to tune consolidation without polluting MEMORY.md
 ---
 
-# 做夢
+做夢是 `memory-core` 中的背景記憶整合系統。它能幫助 OpenClaw 將強烈的短期訊號轉移到持久記憶中，同時保持過程可解釋和可審查。
 
-做夢是 `memory-core` 中的背景記憶整合系統。
-它能協助 OpenClaw 將強大的短期訊號轉移至持久記憶，同時
-保持過程的可解釋性與可審閱性。
-
-做夢功能是 **選用 (opt-in)** 的，預設為停用。
+<Note>做夢功能是**可選加入 (opt-in)** 的，且預設為停用。</Note>
 
 ## 做夢寫入的內容
 
 做夢會保留兩種輸出：
 
-- `memory/.dreams/` 中的 **機器狀態**（回溯儲存、階段訊號、攝入檢查點、鎖定）。
-- `DREAMS.md`（或現有的 `dreams.md`）中的 **人類可讀輸出**，以及 `memory/dreaming/<phase>/YYYY-MM-DD.md` 下的選用階段報告檔案。
+- `memory/.dreams/` 中的**機器狀態**（回憶儲存庫、階段訊號、攝入檢查點、鎖定）。
+- `DREAMS.md`（或現有的 `dreams.md`）中的**人類可讀輸出**，以及 `memory/dreaming/<phase>/YYYY-MM-DD.md` 下的可選階段報告檔案。
 
-長期晉升仍僅寫入 `MEMORY.md`。
+長期提升仍然只寫入 `MEMORY.md`。
 
 ## 階段模型
 
@@ -34,127 +31,126 @@ read_when:
 | 深度 | 評分並提升持久候選項目   | 是 (`MEMORY.md`) |
 | REM  | 反思主題和重複出現的想法 | 否               |
 
-這些階段是內部實作細節，並非分開的「模式」
-供使用者設定。
+這些階段是內部實作細節，而非獨立的使用者設定「模式」。
 
-### 輕度階段
+<AccordionGroup>
+  <Accordion title="輕度階段">
+    輕度階段會攝入最近的每日記憶訊號和回憶追蹤，對其進行去重，並暫存候選行。
 
-輕度階段會攝入最近的每日記憶訊號和回憶追蹤，對其進行去重，
-並暫存候選行。
+    - 從短期回憶狀態、最近的每日記憶檔案，以及在可用時讀取編輯過的會話逐字稿。
+    - 當儲存空間包含內聯輸出時，會寫入受管理的 `## Light Sleep` 區塊。
+    - 記錄強化訊號以供後續深度排名使用。
+    - 決不寫入 `MEMORY.md`。
 
-- 從短期回憶狀態、最近的每日記憶檔案以及可用的經過編輯的會話記錄中讀取。
-- 當儲存包含內聯輸出時，會寫入受管理的 `## Light Sleep` 區塊。
-- 記錄強化訊號以供稍後的深度排名使用。
-- 絕不寫入 `MEMORY.md`。
+  </Accordion>
+  <Accordion title="深度階段">
+    深度階段決定什麼會成為長期記憶。
 
-### 深度階段
+    - 使用加權評分和閾值門檻來對候選項進行排名。
+    - 需要 `minScore`、`minRecallCount` 和 `minUniqueQueries` 通過。
+    - 在寫入之前從即時每日檔案中還原片段，因此會跳過過時/已刪除的片段。
+    - 將提升的條目附加到 `MEMORY.md`。
+    - 將 `## Deep Sleep` 摘要寫入 `DREAMS.md` 並可選地寫入 `memory/dreaming/deep/YYYY-MM-DD.md`。
 
-深度階段決定什麼內容會成為長期記憶。
+  </Accordion>
+  <Accordion title="REM 階段">
+    REM 階段會提取模式與反思信號。
 
-- 使用加權評分和閾值門檻來排列候選項目。
-- 需要 `minScore`、`minRecallCount` 和 `minUniqueQueries` 通過。
-- 在寫入之前，從即時的每日檔案中重新還原片段，因此會跳過過時/已刪除的片段。
-- 將晉升的條目附加到 `MEMORY.md`。
-- 將 `## Deep Sleep` 摘要寫入 `DREAMS.md`，並選擇性寫入 `memory/dreaming/deep/YYYY-MM-DD.md`。
+    - 根據最近的短期追蹤記錄建構主題與反思摘要。
+    - 當儲存包含內聯輸出時，寫入受管理的 `## REM Sleep` 區塊。
+    - 記錄深度排名所使用的 REM 增強信號。
+    - 永不寫入 `MEMORY.md`。
 
-### REM 階段
+  </Accordion>
+</AccordionGroup>
 
-REM 階段提取模式和反思訊號。
+## Session transcript ingestion
 
-- 根據最近的短期追蹤記錄，建立主題與反思摘要。
-- 當儲存包含內聯輸出時，會寫入受管理的 `## REM Sleep` 區塊。
-- 記錄深度排名所使用的 REM 增強訊號。
-- 絕不寫入 `MEMORY.md`。
-
-## 會話記錄擷取
-
-Dreaming 可以將經過編輯的會話記錄擷取到夢境語料庫中。當記錄可用時，它們會與每日記憶訊號和回憶痕跡一起被輸入到淺層階段。個人與敏感內容在擷取前會經過編輯。
+Dreaming 可以將編輯過的會話逐字稿攝入到夢境語料庫中。當逐字稿可用時，它們會與每日記憶信號和回溯追蹤一起被送入輕量階段。個人與敏感內容在攝入前會被編輯。
 
 ## 夢境日記
 
-Dreaming 也會在 `DREAMS.md` 中維護一份敘事性的 **夢境日記**。
-在每個階段累積足夠的素材後，`memory-core` 會盡力運行一個背景子代理程式回合（使用預設的運行時模型），並附加一則簡短的日記條目。
+Dreaming 也會在 `DREAMS.md` 中保存一份敘事性的 **夢境日記**。當每個階段累積了足夠的材料後，`memory-core` 會盡力運行背景子代理並附加一則簡短的日記條目。除非配置了 `dreaming.model`，否則它會使用預設的執行時模型。
 
-此日記供人類在 Dreams UI 中閱讀，並非晉升來源。
-Dreaming 生成的日記/報告構件被排除在短期晉升之外。
-只有有依據的記憶片段才有資格晉升至
-`MEMORY.md`。
+<Note>這份日記是供人類在 Dreams UI 中閱讀的，而非升級來源。由 Dreaming 產生的日記/報表工件會被排除在短期升級之外。只有植基於事實的記憶片段才具備升級至 `MEMORY.md` 的資格。</Note>
 
-還有一個基於歷史記錄的回填通道用於審查和恢復工作：
+還有一條用於審查與恢復工作的植基式歷史回填管道：
 
-- `memory rem-harness --path ... --grounded` 預覽來自歷史 `YYYY-MM-DD.md` 筆記的有依據日記輸出。
-- `memory rem-backfill --path ...` 將可逆轉的有依據日記條目寫入 `DREAMS.md`。
-- `memory rem-backfill --path ... --stage-short-term` 將有依據的持久候選暫存至正常深層階段已使用的同一個短期證據存儲中。
-- `memory rem-backfill --rollback` 和 `--rollback-short-term` 移除那些暫存的回填構件，而不觸及普通日記條目或即時短期回憶。
+<AccordionGroup>
+  <Accordion title="Backfill commands">
+    - `memory rem-harness --path ... --grounded` 預覽來自歷史 `YYYY-MM-DD.md` 筆記的植基式日記輸出。 - `memory rem-backfill --path ...` 將可逆轉的植基式日記條目寫入 `DREAMS.md`。 - `memory rem-backfill --path ... --stage-short-term` 將植基式持久候選項暫存到正常深度階段已使用的同一個短期證據儲存中。 - `memory rem-backfill --rollback` 和 `--rollback-short-term`
+    會移除那些暫存的回填工件，而不會影響一般日記條目或即時短期回溯。
+  </Accordion>
+</AccordionGroup>
 
-控制 UI 公開了相同的日記回填/重置流程，以便您在決定基礎候選項是否值得提升之前，先在 Dreams 場景中檢查結果。該場景也會顯示一個獨立的基礎通道，讓您可以看到哪些暫存的短期條目來自歷史重播，哪些提升項目是由基礎引導的，並且僅清除僅包含基礎的暫存條目，而不觸及普通的即時短期狀態。
+控制 UI 暴露了相同的日記回填/重置流程，以便您在決定那些基於事實的候選項是否值得提升之前，可以在「夢境」場景中檢查結果。該場景還顯示了一個獨特的「基於事實」通道，讓您可以看到哪些暫存的短期條目來自歷史重放，哪些提升的項目是由基於事實的引導所驅動，並且可以清除僅包含基於事實的暫存條目，而不會影響普通的即時短期狀態。
 
-## 深層排序訊號
+## 深度排名訊號
 
-深層排序使用六個加權基礎訊號加上階段增強：
+深度排名使用六個加權基礎訊號加上階段強化：
 
 | 訊號       | 權重 | 描述                        |
 | ---------- | ---- | --------------------------- |
 | 頻率       | 0.24 | 該條目累積了多少短期訊號    |
 | 相關性     | 0.30 | 該條目的平均檢索品質        |
-| 查詢多樣性 | 0.15 | 顯示它的不同查詢/每日上下文 |
-| 新近度     | 0.15 | 時間衰減的新鮮度分數        |
-| 鞏固       | 0.10 | 多日重複強度                |
-| 概念豐富度 | 0.06 | 片段/路徑的概念標籤密度     |
+| 查詢多樣性 | 0.15 | 呈現它的不同查詢/日語境     |
+| 近期性     | 0.15 | 隨時間衰減的新鮮度分數      |
+| 整合       | 0.10 | 多天重複出現的強度          |
+| 概念豐富度 | 0.06 | 來自片段/路徑的概念標籤密度 |
 
-淺層和 REM 階段的命中會從
-`memory/.dreams/phase-signals.json` 增加一個微小的近期衰減提升。
+輕度和快速動眼期（REM）階段的命中會從 `memory/.dreams/phase-signals.json` 增加一個小幅的、隨時間遞減的加成。
 
 ## 排程
 
-啟用後，`memory-core` 會自動管理一個 cron 任務以進行完整的做夢掃描。
-每次掃描按順序執行各階段：淺層 -> REM -> 深層。
+啟用後，`memory-core` 會自動管理一個 cron 任務以執行完整的夢境檢視。每次檢視會按順序執行各階段：輕度 → REM → 深度。
 
 預設頻率行為：
 
 | 設定                 | 預設值      |
 | -------------------- | ----------- |
 | `dreaming.frequency` | `0 3 * * *` |
+| `dreaming.model`     | 預設模型    |
 
 ## 快速開始
 
-啟用夢境功能：
-
-```json
-{
-  "plugins": {
-    "entries": {
-      "memory-core": {
-        "config": {
-          "dreaming": {
-            "enabled": true
+<Tabs>
+  <Tab title="啟用夢境">
+    ```json
+    {
+      "plugins": {
+        "entries": {
+          "memory-core": {
+            "config": {
+              "dreaming": {
+                "enabled": true
+              }
+            }
           }
         }
       }
     }
-  }
-}
-```
-
-啟用夢境功能並自訂掃描頻率：
-
-```json
-{
-  "plugins": {
-    "entries": {
-      "memory-core": {
-        "config": {
-          "dreaming": {
-            "enabled": true,
-            "timezone": "America/Los_Angeles",
-            "frequency": "0 */6 * * *"
+    ```
+  </Tab>
+  <Tab title="自訂檢視頻率">
+    ```json
+    {
+      "plugins": {
+        "entries": {
+          "memory-core": {
+            "config": {
+              "dreaming": {
+                "enabled": true,
+                "timezone": "America/Los_Angeles",
+                "frequency": "0 */6 * * *"
+              }
+            }
           }
         }
       }
     }
-  }
-}
-```
+    ```
+  </Tab>
+</Tabs>
 
 ## 斜線指令
 
@@ -167,72 +163,70 @@ Dreaming 生成的日記/報告構件被排除在短期晉升之外。
 
 ## CLI 工作流程
 
-使用 CLI 晉升以進行預覽或手動套用：
+<Tabs>
+  <Tab title="Promotion preview / apply">
+    ```bash
+    openclaw memory promote
+    openclaw memory promote --apply
+    openclaw memory promote --limit 5
+    openclaw memory status --deep
+    ```
 
-```bash
-openclaw memory promote
-openclaw memory promote --apply
-openclaw memory promote --limit 5
-openclaw memory status --deep
-```
+    Manual `memory promote` uses deep-phase thresholds by default unless overridden with CLI flags.
 
-手動 `memory promote` 預設使用深層階段閾值，除非使用
-CLI 標誌覆蓋。
+  </Tab>
+  <Tab title="Explain promotion">
+    Explain why a specific candidate would or would not promote:
 
-解釋為什麼特定候選者會或不會晉升：
+    ```bash
+    openclaw memory promote-explain "router vlan"
+    openclaw memory promote-explain "router vlan" --json
+    ```
 
-```bash
-openclaw memory promote-explain "router vlan"
-openclaw memory promote-explain "router vlan" --json
-```
+  </Tab>
+  <Tab title="REM harness preview">
+    Preview REM reflections, candidate truths, and deep promotion output without writing anything:
 
-預覽 REM 反思、候選事實以及 deep 晉升輸出，而不寫入任何內容：
+    ```bash
+    openclaw memory rem-harness
+    openclaw memory rem-harness --json
+    ```
 
-```bash
-openclaw memory rem-harness
-openclaw memory rem-harness --json
-```
+  </Tab>
+</Tabs>
 
 ## 主要預設值
 
-所有設定均位於 `plugins.entries.memory-core.config.dreaming` 之下。
+所有設定都位於 `plugins.entries.memory-core.config.dreaming` 之下。
 
-| 鍵          | 預設值      |
-| ----------- | ----------- |
-| `enabled`   | `false`     |
-| `frequency` | `0 3 * * *` |
+<ParamField path="enabled" type="boolean" default="false">
+  啟用或停用夢境清理。
+</ParamField>
+<ParamField path="frequency" type="string" default="0 3 * * *">
+  完整夢境清理的 Cron 排程頻率。
+</ParamField>
+<ParamField path="model" type="string">
+  可選的夢境日記子代理模型覆寫。在設定子代理 `allowedModels` 允許清單時，請使用標準 `provider/model` 值。
+</ParamField>
 
-階段策略、閾值和儲存行為是內部實作細節（非使用者面向的設定）。
+<Warning>`dreaming.model` 需要 `plugins.entries.memory-core.subagent.allowModelOverride: true`。若要限制它，請同時設定 `plugins.entries.memory-core.subagent.allowedModels`。</Warning>
 
-請參閱 [記憶體設定參考](/zh-Hant/reference/memory-config#dreaming)
-以取得完整的金鑰列表。
+<Note>階段策略、閾值和儲存行為屬於內部實作細節（非使用者面向的設定）。完整的金鑰清單請參閱 [記憶體設定參考](/zh-Hant/reference/memory-config#dreaming)。</Note>
 
-## Dreams UI
+## 夢境 UI
 
-啟用後，Gateway 的 **Dreams** 分頁會顯示：
+啟用後，Gateway 的 **夢境** 分頁會顯示：
 
-- 目前的夢境啟用狀態
-- 階段層級的狀態與受管理的掃描工作是否存在
-- 短期、已落實、訊號和今日晉升的計數
+- 目前夢境啟用狀態
+- 階段層級狀態和受管理清理的存在
+- 短期、已落地、訊號和今日提升的計數
 - 下一次排程執行的時間
-- 一個獨立的已落實 Scene 頻道，用於已暫存的歷史重播項目
-- 一個由 `doctor.memory.dreamDiary` 支援的可擴充夢境日記閱讀器
-
-## 疑難排解
-
-### Dreaming 從未執行（狀態顯示為已封鎖）
-
-受控的 dreaming cron 依賴預設代理程式的心跳。如果該代理程式的心跳未觸發，cron 會將系統事件加入佇列，但沒有程式消耗該事件，導致 dreaming 在不知不覺中未執行。在這種情況下，`openclaw memory status` 和 `/dreaming status` 都會回報 `blocked`，並指出其心跳造成封鎖的代理程式。
-
-兩個常見原因：
-
-- 另一個代理程式宣告了明確的 `heartbeat:` 區塊。當 `agents.list` 中的任何項目有其自己的 `heartbeat` 區塊時，只有那些代理程式會產生心跳 — 預設設定停止套用到其他程式，因此預設代理程式可能會變成靜默狀態。請將心跳設定移至 `agents.defaults.heartbeat`，或者在預設代理程式上新增明確的 `heartbeat` 區塊。請參閱 [範圍與優先順序](/zh-Hant/gateway/heartbeat#scope-and-precedence)。
-- `heartbeat.every` 是 `0`、空的或無法解析。cron 沒有可排程的間隔，因此心跳實際上已停用。請將 `every` 設定為正數持續時間，例如 `30m`。請參閱 [預設值](/zh-Hant/gateway/heartbeat#defaults)。
+- 一個專屬的已落地場景通道，用於暫存的歷史重播項目
+- 由 `doctor.memory.dreamDiary` 支援的可展開夢境日記閱讀器
 
 ## 相關
 
-- [心跳](/zh-Hant/gateway/heartbeat)
 - [記憶體](/zh-Hant/concepts/memory)
-- [記憶體搜尋](/zh-Hant/concepts/memory-search)
-- [memory CLI](/zh-Hant/cli/memory)
+- [記憶體 CLI](/zh-Hant/cli/memory)
 - [記憶體設定參考](/zh-Hant/reference/memory-config)
+- [記憶體搜尋](/zh-Hant/concepts/memory-search)

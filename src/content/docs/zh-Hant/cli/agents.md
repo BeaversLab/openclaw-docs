@@ -2,7 +2,7 @@
 summary: "CLI reference for `openclaw agents` (list/add/delete/bindings/bind/unbind/set identity)"
 read_when:
   - You want multiple isolated agents (workspaces + routing + auth)
-title: "agents"
+title: "代理程式"
 ---
 
 # `openclaw agents`
@@ -11,9 +11,9 @@ title: "agents"
 
 相關連結：
 
-- Multi-agent routing: [Multi-Agent Routing](/zh-Hant/concepts/multi-agent)
-- Agent workspace: [Agent workspace](/zh-Hant/concepts/agent-workspace)
-- Skill visibility config: [Skills config](/zh-Hant/tools/skills-config)
+- [多代理程式路由](/zh-Hant/concepts/multi-agent)
+- [代理程式工作區](/zh-Hant/concepts/agent-workspace)
+- [技能設定](/zh-Hant/tools/skills-config)：技能可見度設定。
 
 ## 範例
 
@@ -34,11 +34,7 @@ openclaw agents delete work
 
 使用路由綁定將入站通道流量固定到特定代理程式。
 
-如果您還希望每個代理程式具有不同的可見技能，請在
-`openclaw.json` 中設定
-`agents.defaults.skills` 和 `agents.list[].skills`。請參閱
-[Skills config](/zh-Hant/tools/skills-config) 和
-[Configuration Reference](/zh-Hant/gateway/configuration-reference#agents-defaults-skills)。
+如果您還希望每個代理程式有不同的可見技能，請在 `openclaw.json` 中設定 `agents.defaults.skills` 和 `agents.list[].skills`。請參閱[技能設定](/zh-Hant/tools/skills-config)和[設定參考](/zh-Hant/gateway/config-agents#agents-defaults-skills)。
 
 列出綁定：
 
@@ -151,15 +147,18 @@ openclaw agents unbind --agent work --all
 - `main` 無法被刪除。
 - 若沒有 `--force`，則需要互動式確認。
 - 工作區、代理程式狀態和工作階段記錄目錄會被移至垃圾桶，而非永久刪除。
+- 如果另一個代理程式的工作區是相同路徑、位於此工作區內，或包含此工作區，
+  則會保留該工作區，並且 `--json` 會回報 `workspaceRetained`、
+  `workspaceRetainedReason` 和 `workspaceSharedWith`。
 
 ## 身分識別檔案
 
 每個代理程式工作區都可以在工作區根目錄包含一個 `IDENTITY.md`：
 
 - 範例路徑：`~/.openclaw/workspace/IDENTITY.md`
-- `set-identity --from-identity` 會從工作區根目錄讀取 (或指定的 `--identity-file`)
+- `set-identity --from-identity` 會從工作區根目錄（或明確的 `--identity-file`）讀取
 
-頭像路徑會相對於工作區根目錄解析。
+大頭貼路徑是相對於工作區根目錄解析的。
 
 ## 設定身分識別
 
@@ -184,9 +183,9 @@ openclaw agents unbind --agent work --all
 
 備註：
 
-- 可以使用 `--agent` 或 `--workspace` 來選擇目標代理程式。
-- 如果您依賴 `--workspace` 且有多個代理程式共用該工作區，指令會失敗並要求您傳遞 `--agent`。
-- 當未提供明確的身分識別欄位時，指令會從 `IDENTITY.md` 讀取身分識別資料。
+- 可以使用 `--agent` 或 `--workspace` 來選取目標代理程式。
+- 如果您依賴 `--workspace` 且多個代理程式共用該工作區，則該指令會失敗並要求您傳遞 `--agent`。
+- 當未提供明確的身分識別欄位時，該指令會從 `IDENTITY.md` 讀取身分識別資料。
 
 從 `IDENTITY.md` 載入：
 
@@ -219,3 +218,9 @@ openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞" --ava
   },
 }
 ```
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)
+- [多 Agent 路由](/zh-Hant/concepts/multi-agent)
+- [Agent 工作區](/zh-Hant/concepts/agent-workspace)

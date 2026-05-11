@@ -2,7 +2,7 @@
 summary: "用于发送、网关和代理回复的图像与媒体处理规则"
 read_when:
   - Modifying media pipeline or attachments
-title: "图像与媒体支持"
+title: "图像和媒体支持"
 ---
 
 # 图片与媒体支持 (2025-12-05)
@@ -39,7 +39,7 @@ WhatsApp 渠道通过 **Baileys Web** 运行。本文档记录了目前针对发
 - 当存在媒体时，Web 发送者使用与 `openclaw message send` 相同的流水线来解析本地路径或 URL。
 - 如果提供了多个媒体条目，则按顺序发送。
 
-## 入站媒体到命令 (Pi)
+## 传入媒体到命令 (Pi)
 
 - 当入站 Web 消息包含媒体时，OpenClaw 会将其下载到临时文件并公开模板变量：
   - `{{MediaUrl}}` 用于入站媒体的伪 URL。
@@ -71,3 +71,9 @@ WhatsApp 渠道通过 **Baileys Web** 运行。本文档记录了目前针对发
 - 覆盖图像/音频/文档案例的发送 + 回复流程。
 - 验证图像的重新压缩（大小限制）和音频的语音笔记标志。
 - 确保多媒体回复作为顺序发送进行分发。
+
+## 相关
+
+- [相机拍照](/zh/nodes/camera)
+- [媒体理解](/zh/nodes/media-understanding)
+- [音频和语音笔记](/zh/nodes/audio)

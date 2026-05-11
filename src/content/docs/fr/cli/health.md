@@ -2,7 +2,7 @@
 summary: "Référence CLI pour `openclaw health` (instantané de santé de la passerelle via RPC)"
 read_when:
   - You want to quickly check the running Gateway’s health
-title: "health"
+title: "Health"
 ---
 
 # `openclaw health`
@@ -34,3 +34,8 @@ Notes :
 - `--verbose` force une sonde en direct, imprime les détails de connexion de la passerelle et étend la
   sortie lisible par l'homme sur tous les comptes et agents configurés.
 - La sortie inclut les magasins de session par agent lorsque plusieurs agents sont configurés.
+
+## Associé
+
+- [CLI reference](/fr/cli)
+- [Gateway health](/fr/gateway/health)

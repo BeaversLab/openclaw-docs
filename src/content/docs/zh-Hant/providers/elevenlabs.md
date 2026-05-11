@@ -7,8 +7,6 @@ read_when:
 title: "ElevenLabs"
 ---
 
-# ElevenLabs
-
 OpenClaw 使用 ElevenLabs 進行文字轉語音、使用 Scribe v2 進行批次語音轉文字，以及使用 Scribe v2 Realtime 進行語音通話串流 STT。
 
 | 功能           | OpenClaw 介面                               | 預設                     |
@@ -43,6 +41,8 @@ export ELEVENLABS_API_KEY="..."
 }
 ```
 
+將 `modelId` 設定為 `eleven_v3` 以使用 ElevenLabs v3 TTS。OpenClaw 將 `eleven_multilingual_v2` 保持為現有安裝的預設值。
+
 ## 語音轉文字
 
 對於傳入的音訊附件和簡短的錄製語音片段，請使用 Scribe v2：
@@ -60,22 +60,20 @@ export ELEVENLABS_API_KEY="..."
 }
 ```
 
-OpenClaw 將多部分音訊傳送到 ElevenLabs `/v1/speech-to-text` 並帶有
-`model_id: "scribe_v2"`。當存在語言提示時，其會對應到 `language_code`。
+OpenClaw 使用 `model_id: "scribe_v2"` 將多部分音訊傳送到 ElevenLabs `/v1/speech-to-text`。當存在語言提示時，會對應到 `language_code`。
 
 ## 語音通話串流 STT
 
-內建的 `elevenlabs` 外掛註冊了 Scribe v2 Realtime 用於語音通話
-串流轉錄。
+內建的 `elevenlabs` 外掛註冊了 Scribe v2 Realtime 以用於語音通話串流轉錄。
 
-| 設定     | 設定路徑                                                                  | 預設                                         |
-| -------- | ------------------------------------------------------------------------- | -------------------------------------------- |
-| API 金鑰 | `plugins.entries.voice-call.config.streaming.providers.elevenlabs.apiKey` | 會退回到 `ELEVENLABS_API_KEY` / `XI_API_KEY` |
-| 模型     | `...elevenlabs.modelId`                                                   | `scribe_v2_realtime`                         |
-| 音訊格式 | `...elevenlabs.audioFormat`                                               | `ulaw_8000`                                  |
-| 取樣率   | `...elevenlabs.sampleRate`                                                | `8000`                                       |
-| 提交策略 | `...elevenlabs.commitStrategy`                                            | `vad`                                        |
-| 語言     | `...elevenlabs.languageCode`                                              | (未設定)                                     |
+| 設定     | 設定路徑                                                                  | 預設                                       |
+| -------- | ------------------------------------------------------------------------- | ------------------------------------------ |
+| API 金鑰 | `plugins.entries.voice-call.config.streaming.providers.elevenlabs.apiKey` | 退回到 `ELEVENLABS_API_KEY` / `XI_API_KEY` |
+| 模型     | `...elevenlabs.modelId`                                                   | `scribe_v2_realtime`                       |
+| 音訊格式 | `...elevenlabs.audioFormat`                                               | `ulaw_8000`                                |
+| 取樣率   | `...elevenlabs.sampleRate`                                                | `8000`                                     |
+| 提交策略 | `...elevenlabs.commitStrategy`                                            | `vad`                                      |
+| 語言     | `...elevenlabs.languageCode`                                              | (未設定)                                   |
 
 ```json5
 {
@@ -102,4 +100,9 @@ OpenClaw 將多部分音訊傳送到 ElevenLabs `/v1/speech-to-text` 並帶有
 }
 ```
 
-<Note>語音通話接收 Twilio 媒體為 8 kHz G.711 u-law。ElevenLabs 即時 提供者預設為 `ulaw_8000`，因此電訊框架可以在無需 轉碼的情況下轉發。</Note>
+<Note>語音通話以 8 kHz G.711 u-law 格式接收 Twilio 媒體。ElevenLabs 即時提供者預設為 `ulaw_8000`，因此可以在不進行轉碼的情況下轉發電話框架。</Note>
+
+## 相關
+
+- [文字轉語音](/zh-Hant/tools/tts)
+- [模型選擇](/zh-Hant/concepts/model-providers)

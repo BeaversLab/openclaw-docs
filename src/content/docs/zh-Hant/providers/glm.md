@@ -56,7 +56,7 @@ GLM 是一個可透過 Z.AI 平台使用的**模型系列**（而非公司）。
 
 <Tip>`zai-api-key` 讓 OpenClaw 從金鑰中偵測相符的 Z.AI 端點，並自動套用正確的基礎 URL。當您想要強制使用特定的 Coding Plan 或一般 API 介面時，請使用明確的區域選項。</Tip>
 
-## 內建的 GLM 模型
+## 內建目錄
 
 OpenClaw 目前使用這些 GLM 參考來初始化內建的 `zai` 提供者：
 
@@ -73,7 +73,7 @@ OpenClaw 目前使用這些 GLM 參考來初始化內建的 `zai` 提供者：
 
 <Note>預設的內建模組參照是 `zai/glm-5.1`。GLM 版本和可用性 可能會變更；請查看 Z.AI 文件以取得最新資訊。</Note>
 
-## 進階說明
+## 進階設定
 
 <AccordionGroup>
   <Accordion title="端點自動偵測">

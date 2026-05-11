@@ -4,93 +4,91 @@ read_when:
   - You want persistent knowledge beyond plain MEMORY.md notes
   - You are configuring the bundled memory-wiki plugin
   - You want to understand wiki_search, wiki_get, or bridge mode
-title: "記憶維基"
+title: "Memory wiki"
 ---
 
-# 記憶 Wiki
+`memory-wiki` 是一個隨附的插件，可以將持久記憶轉換為編譯後的知識庫。
 
-`memory-wiki` 是一個內建插件，可將持久記憶轉換為編譯的知識庫。
+它**並不**取代 active memory 插件。Active memory 插件仍然擁有召回、晉升、索引和做夢功能。`memory-wiki` 位於其旁邊，並將持久的知識編譯成一個具有確定性頁面、結構化主張、來源、儀表板和機器可讀摘要的可導航 wiki。
 
-它**不**會取代活動記憶插件。活動記憶插件仍然擁有召回、提升、索引和做夢功能。`memory-wiki` 位於其旁邊，並將持久知識編譯成具有決定性頁面、結構化主張、來源、儀表板和機器可讀摘要的可導航維基。
+當您希望記憶的行為更像一個維護良好的知識層，而不僅僅是一堆 Markdown 文件時，請使用它。
 
-當您希望記憶的運作方式更接近維護良好的知識層，而非一堆 Markdown 檔案時，請使用它。
+## 它增加了什麼
 
-## 新增的功能
+- 一個具有確定性頁面佈局的專用 wiki 庫
+- 結構化的主張和證據元數據，而不僅僅是散文
+- 頁面級別的來源、信心、矛盾和未解決的問題
+- 為代理/運行時使用者編譯的摘要
+- Wiki 原生的搜尋/獲取/應用/檢查工具
+- 可選的橋接模式，用於從 active memory 插件匯入公共成品
+- 可選的 Obsidian 友好渲染模式和 CLI 整合
 
-- 具有確定性頁面佈局的專用 Wiki 保存庫
-- 結構化的主張和證據元資料，而不只是散文
-- 頁面層級的出處、信心度、矛盾和待解決問題
-- 供代理程式/執行階段消費者使用的編譯摘要
-- Wiki 原生的搜尋/取得/應用/檢查工具
-- 可選的橋接模式，從作用中的記憶外掛程式匯入公用成果
-- 可選的 Obsidian 友善渲染模式和 CLI 整合
+## 它如何與記憶配合
 
-## 它如何與記憶整合
+可以這樣理解這種分工：
 
-可以這樣看待這種區分：
+| 層級                                               | 擁有                                                                    |
+| -------------------------------------------------- | ----------------------------------------------------------------------- |
+| Active memory 插件 (`memory-core`, QMD, Honcho 等) | 召回、語意搜尋、晉升、做夢、記憶運行時                                  |
+| `memory-wiki`                                      | 編譯的 wiki 頁面、富含來源的綜合資訊、儀表板、wiki 特定的搜尋/獲取/應用 |
 
-| 層級                                          | 擁有                                                                    |
-| --------------------------------------------- | ----------------------------------------------------------------------- |
-| 活動記憶插件（`memory-core`、QMD、Honcho 等） | 召回、語意搜尋、晉升、夢境、記憶執行階段                                |
-| `memory-wiki`                                 | 編譯的 Wiki 頁面、豐富出處的綜合摘要、儀表板、Wiki 專屬的搜尋/取得/應用 |
+如果 active memory 插件暴露了共享的召回成品，OpenClaw 可以使用 `memory_search corpus=all` 在一次通過中搜尋這兩個層級。
 
-如果活動記憶插件公開共享的召回工件，OpenClaw 可以使用 `memory_search corpus=all` 在一次通過中搜尋這兩個層級。
-
-當您需要 Wiki 專屬的排序、出處或直接存取頁面時，請改用 Wiki 原生工具。
+當您需要 wiki 特定的排名、來源或直接頁面存取時，請改用 wiki 原生工具。
 
 ## 推薦的混合模式
 
-對於本地優先的設置，一個強大的預設值是：
+對於本地優先的設定，一個強大的預設值是：
 
-- 使用 QMD 作為活動記憶後端進行召回和廣泛的語義搜尋
-- 使用 `memory-wiki` 的 `bridge` 模式來建立持久合成知識頁面
+- QMD 作為用於召回和廣泛語意搜尋的 active memory 後端
+- `memory-wiki` 處於 `bridge` 模式，用於持久的綜合知識頁面
 
-這種分離效果很好，因為每個層級都保持專注：
+這種分工運作良好，因為每個層級都保持專注：
 
-- QMD 保持原始筆記、會話匯出和額外集合的可搜尋性
+- QMD 保持原始筆記、會話匯出和額外的集合可被搜尋
 - `memory-wiki` 編譯穩定的實體、主張、儀表板和來源頁面
 
 實用規則：
 
-- 當您想要跨記憶體進行一次廣泛召回時，請使用 `memory_search`
-- 當您想要具備來源感知能力的維基結果時，請使用 `wiki_search` 和 `wiki_get`
-- 當您想要共享搜尋跨越這兩個層級時，請使用 `memory_search corpus=all`
+- 當您想要在記憶中進行一次廣泛的召回通過時，請使用 `memory_search`
+- 當您想要具有來源感知的 wiki 結果時，請使用 `wiki_search` 和 `wiki_get`
+- 當您希望共用搜尋涵蓋這兩個層級時，請使用 `memory_search corpus=all`
 
-如果橋接模式報告零個匯出工件，則活動記憶插件目前尚未公開公開橋接輸入。先執行 `openclaw wiki doctor`，然後確認活動記憶插件支援公開工件。
+如果橋接模式報告零個匯出的產物，表示主動記憶體外掛目前尚未公開公開的橋接輸入。請先執行 `openclaw wiki doctor`，然後確認主動記憶體外掛支援公開產物。
 
-## 保存庫模式
+## Vault 模式
 
-`memory-wiki` 支援三種保存庫模式：
+`memory-wiki` 支援三種 Vault 模式：
 
 ### `isolated`
 
-擁有自己的保存庫、自己的來源，不依賴 `memory-core`。
+擁有自己的 Vault，擁有自己的來源，不依賴 `memory-core`。
 
-當您希望維基成為其自己的策展知識儲存庫時，請使用此模式。
+當您希望 wiki 成為自己策劃的知識庫時，請使用此模式。
 
 ### `bridge`
 
-透過公開外掛程式 SDK 縫隙，從主動記憶外掛程式讀取公開記憶產出和記憶事件。
+透過公開外掛 SDK 縫隙，從主動記憶體外掛讀取公開記憶體產物和記憶體事件。
 
-當您希望 Wiki 編譯並整理記憶外掛程式的匯出產出，而不深入存取私有外掛程式內部時，請使用此模式。
+當您希望 wiki 編譯和整理記憶體外掛匯出的產物，而不深入私人外掛內部時，請使用此模式。
 
 橋接模式可以索引：
 
-- 匯出的記憶產出
+- 匯出的記憶體產物
 - 夢境報告
 - 每日筆記
-- 記憶根目錄檔案
-- 記憶事件日誌
+- 記憶體根檔案
+- 記憶體事件日誌
 
 ### `unsafe-local`
 
-針對本機私有路徑的明確同機逃逸方法。
+針對本機私人路徑的明確同機逃離通道。
 
-此模式是有意設計為實驗性且不可移植的。僅當您了解信任邊界並且特別需要橋接模式無法提供的本機檔案系統存取權限時才使用它。
+此模式故意設計為實驗性且不可移植的。僅當您了解信任邊界並且特別需要橋接模式無法提供的本機檔案系統存取權時，才使用它。
 
 ## Vault 版面配置
 
-外掛程式初始化 Vault 的方式如下：
+外掛會像這樣初始化 Vault：
 
 ```text
 <vault>/
@@ -108,21 +106,21 @@ title: "記憶維基"
   .openclaw-wiki/
 ```
 
-受管理的內容保留在生成的區塊內。人類筆記區塊會被保留。
+受管理的內容保留在產生的區塊內。人類筆記區塊會被保留。
 
 主要頁面群組包括：
 
-- `sources/` 用於匯入的原始素材和橋接支援的頁面
+- `sources/` 用於匯入的原始材料和橋接支援的頁面
 - `entities/` 用於持久的事物、人員、系統、專案和物件
 - `concepts/` 用於想法、抽象、模式和政策
-- `syntheses/` 用於編譯摘要和維護的匯總
-- `reports/` 用於生成的儀表板
+- `syntheses/` 用於編譯摘要和維護的彙總
+- `reports/` 用於產生的儀表板
 
-## 結構化主張和證據
+## 結構化聲明與證據
 
-頁面可以攜帶結構化的 `claims` 前置元數據，而不僅僅是自由形式文字。
+頁面可以攜帶結構化的 `claims` 前置資料，而不僅僅是自由形式的文字。
 
-每個主張可以包含：
+每個聲明可以包含：
 
 - `id`
 - `text`
@@ -131,7 +129,7 @@ title: "記憶維基"
 - `evidence[]`
 - `updatedAt`
 
-證據條目可以包含：
+證據條目可以包括：
 
 - `sourceId`
 - `path`
@@ -140,27 +138,27 @@ title: "記憶維基"
 - `note`
 - `updatedAt`
 
-這就是讓 Wiki 表現得更像信念層而不是被動筆記傾倒的原因。主張可以被追蹤、評分、爭論，並回溯解析到來源。
+這就是讓 wiki 運作得更像一個信念層，而不是被動的傾倒筆記的原因。主張可以被追蹤、評分、爭議，並解決回源頭。
 
-## 編譯管線
+## 編譯管道
 
-編譯步驟讀取 Wiki 頁面，正規化摘要，並在以下位置發出穩定的機器可讀產出：
+編譯步驟會讀取 wiki 頁面、標準化摘要，並在以下位置輸出穩定的機器可讀構件：
 
 - `.openclaw-wiki/cache/agent-digest.json`
 - `.openclaw-wiki/cache/claims.jsonl`
 
-這些摘要的存在是為了讓代理程式和執行時代碼不必抓取 Markdown 頁面。
+這些摘要的存在是為了讓代理程式和執行時代碼不必去抓取 Markdown 頁面。
 
-編譯輸出還支持：
+編譯輸出也提供支援給：
 
-- 用於搜尋/獲取流程的首輪 wiki 索引
-- 依據 claim-id 查詢回所屬頁面
-- 精簡的提示詞補充
+- 搜尋/取得流程的初步 wiki 索引
+- 根據主題 ID 反查擁有頁面
+- 緊湊的提示詞補充
 - 報告/儀表板生成
 
 ## 儀表板與健康報告
 
-當 `render.createDashboards` 啟用時，編譯會在 `reports/` 下維護儀表板。
+當啟用 `render.createDashboards` 時，編譯會維護 `reports/` 下的儀表板。
 
 內建報告包括：
 
@@ -170,23 +168,23 @@ title: "記憶維基"
 - `reports/claim-health.md`
 - `reports/stale-pages.md`
 
-這些報告追蹤諸如：
+這些報告追蹤以下事項：
 
-- 矛盾筆記叢集
-- 競爭聲明叢集
-- 缺少結構化證據的聲明
-- 低信心度的頁面與聲明
-- 陳舊或新鮮度未知
-- 有未解決問題的頁面
+- 矛盾筆記群集
+- 競爭主張群集
+- 缺少結構化證據的主張
+- 低信心度的頁面與主張
+- 陳舊或不明的新鮮度
+- 包含未解決問題的頁面
 
 ## 搜尋與檢索
 
 `memory-wiki` 支援兩種搜尋後端：
 
-- `shared`：可用時使用共享記憶體搜尋流程
-- `local`：本地搜尋 wiki
+- `shared`：在可用時使用共用的記憶搜尋流程
+- `local`：在本機搜尋 wiki
 
-它還支援三種語料庫：
+它也支援三種語料庫：
 
 - `wiki`
 - `memory`
@@ -194,20 +192,19 @@ title: "記憶維基"
 
 重要行為：
 
-- `wiki_search` 和 `wiki_get` 盡可能使用編譯摘要作為首輪
-- claim id 可以解析回所屬頁面
-- 有爭議/陳舊/新鮮的聲明會影響排序
-- 來源標籤可以保留到結果中
+- `wiki_search` 和 `wiki_get` 盡可能會將編譯摘要作為第一遍使用
+- 主題 ID 可以解析回擁有頁面
+- 有爭議/陳舊/新鮮的主張會影響排名
+- 出處標籤可以保留在結果中
 
 實用規則：
 
 - 使用 `memory_search corpus=all` 進行一次廣泛的召回
-- 當您關注 wiki 特定的排序、來源或頁面級信念結構時，
-  使用 `wiki_search` + `wiki_get`
+- 當您關注 wiki 特定的排名、出處或頁面層級的信念結構時，請使用 `wiki_search` + `wiki_get`
 
-## 代理工具
+## Agent 工具
 
-該外掛註冊了這些工具：
+此外掛註冊了這些工具：
 
 - `wiki_status`
 - `wiki_search`
@@ -215,33 +212,35 @@ title: "記憶維基"
 - `wiki_apply`
 - `wiki_lint`
 
-它們的作用：
+它們的功能：
 
-- `wiki_status`：目前儲存庫模式、健康狀況、Obsidian CLI 可用性
-- `wiki_search`：搜尋 wiki 頁面，且若經配置，搜尋共享記憶體語料庫
-- `wiki_get`：透過 id/路徑讀取 wiki 頁面，或退回至共享記憶體語料庫
-- `wiki_apply`：狹義的綜合/元資料變更，而不涉及自由形式的頁面手術
-- `wiki_lint`：結構檢查、來源缺口、矛盾、未解問題
+- `wiki_status`：目前的 vault 模式、健康狀況、Obsidian CLI 可用性
+- `wiki_search`：搜尋 wiki 頁面，若經設定，亦包含共享的記憶語料庫
+- `wiki_get`：透過 id/path 讀取 wiki 頁面，或退回共享記憶語料庫
+- `wiki_apply`：狹隘的綜合/元資料變異，而非自由形式的頁面手術
+- `wiki_lint`：結構檢查、出處缺口、矛盾、未解問題
 
-該外掛也註冊了一個非獨佔的記憶語料庫補充，因此當啟用記憶外掛支援語料庫選擇時，共享的 `memory_search` 和 `memory_get` 可以存取該 Wiki。
+此外掛也註冊了一個非獨佔的記憶語料庫補充，因此當 active memory
+外掛支援語料庫選擇時，共享的 `memory_search` 和 `memory_get` 可以存取 wiki。
 
-## 提示詞與上下文行為
+## 提示與上下文行為
 
-當啟用 `context.includeCompiledDigestPrompt` 時，記憶提示詞區段會附加來自 `agent-digest.json` 的精簡編譯快照。
+當啟用 `context.includeCompiledDigestPrompt` 時，記憶提示區段會
+附加來自 `agent-digest.json` 的精簡編譯快照。
 
-該快照特意保持精簡且高訊號量：
+該快照刻意保持小巧且高訊號價值：
 
-- 僅限頂層頁面
-- 僅限頂層主張
+- 僅包含頂層頁面
+- 僅包含頂層聲明
 - 矛盾計數
 - 問題計數
-- 信心/新穎度限定詞
+- 信心/新鮮度限定詞
 
-這是選用的，因為它會改變提示詞形狀，且主要對明確使用記憶補充的上下文引擎或舊版提示詞組建有幫助。
+這是選用的，因為它會改變提示的形狀，且主要對明確消耗記憶補充的上下文引擎或舊版提示組裝有用。
 
 ## 設定
 
-將設定放在 `plugins.entries.memory-wiki.config` 下：
+將設定置於 `plugins.entries.memory-wiki.config` 下：
 
 ```json5
 {
@@ -293,21 +292,21 @@ title: "記憶維基"
 }
 ```
 
-主要切換選項：
+主要切換開關：
 
 - `vaultMode`：`isolated`、`bridge`、`unsafe-local`
 - `vault.renderMode`：`native` 或 `obsidian`
-- `bridge.readMemoryArtifacts`：匯入啟用記憶外掛的公共產物
+- `bridge.readMemoryArtifacts`：匯入 active memory 外掛的公開成品
 - `bridge.followMemoryEvents`：在橋接模式中包含事件日誌
 - `search.backend`：`shared` 或 `local`
-- `search.corpus`：`wiki`、`memory` 或 `all`
-- `context.includeCompiledDigestPrompt`：將精簡摘要快照附加至記憶提示詞區段
+- `search.corpus`: `wiki`、`memory` 或 `all`
+- `context.includeCompiledDigestPrompt`：將緊湊摘要快照附加至記憶提示區段
 - `render.createBacklinks`：生成決定性相關區塊
 - `render.createDashboards`：生成儀表板頁面
 
-### 範例：QMD + 橋接模式
+### 示例：QMD + 橋接模式
 
-當您希望使用 QMD 進行回憶並使用 `memory-wiki` 作為維護的知識層時，請使用此設定：
+當您希望使用 QMD 進行檢索並使用 `memory-wiki` 作為維護的知識層時，請使用此選項：
 
 ```json5
 {
@@ -339,11 +338,11 @@ title: "記憶維基"
 }
 ```
 
-這保留了：
+這將保持：
 
-- QMD 負責啟用記憶回憶
+- QMD 負責主動記憶檢索
 - `memory-wiki` 專注於編譯頁面和儀表板
-- 在您刻意啟用編譯摘要提示詞之前，提示詞形狀保持不變
+- 在您刻意啟用編譯摘要提示之前，提示結構保持不變
 
 ## CLI
 
@@ -363,36 +362,35 @@ openclaw wiki bridge import
 openclaw wiki obsidian status
 ```
 
-請參閱 [CLI: wiki](/zh-Hant/cli/wiki) 以取得完整的命令參考。
+完整的指令參考請參見 [CLI: wiki](/zh-Hant/cli/wiki)。
 
 ## Obsidian 支援
 
-當 `vault.renderMode` 為 `obsidian` 時，外掛會寫入 Obsidian 友善的
-Markdown，並可選擇性地使用官方 `obsidian` CLI。
+當 `vault.renderMode` 為 `obsidian` 時，外掛會寫入 Obsidian 友善的 Markdown，並可選擇使用官方 `obsidian` CLI。
 
 支援的工作流程包括：
 
 - 狀態探測
-- vault 搜尋
+- 存放庫搜尋
 - 開啟頁面
 - 呼叫 Obsidian 指令
-- 跳至每日筆記
+- 跳轉至日記
 
-這是可選的。Wiki 仍可在沒有 Obsidian 的原生模式下運作。
+這是可選的。Wiki 仍可在不使用 Obsidian 的原生模式下運作。
 
 ## 推薦工作流程
 
-1. 保留您的作用中記憶體外掛用於召回/提升/做夢。
+1. 保留您的主動記憶外掛用於檢索/升級/夢境。
 2. 啟用 `memory-wiki`。
-3. 從 `isolated` 模式開始，除非您明確想要橋接模式。
-4. 當出處很重要時使用 `wiki_search` / `wiki_get`。
-5. 對於狹隘的綜合或元資料更新，使用 `wiki_apply`。
+3. 除非您明確需要橋接模式，否則請從 `isolated` 模式開始。
+4. 當來源很重要時，請使用 `wiki_search` / `wiki_get`。
+5. 使用 `wiki_apply` 進行狹窄的綜合或元數據更新。
 6. 在有意義的變更之後執行 `wiki_lint`。
-7. 如果您想要查看過時/矛盾的內容，請開啟儀表板。
+7. 如果您希望查看過期/矛盾的內容，請開啟儀表板。
 
 ## 相關文件
 
-- [記憶體概觀](/zh-Hant/concepts/memory)
+- [記憶概觀](/zh-Hant/concepts/memory)
 - [CLI: memory](/zh-Hant/cli/memory)
 - [CLI: wiki](/zh-Hant/cli/wiki)
 - [外掛 SDK 概觀](/zh-Hant/plugins/sdk-overview)

@@ -3,7 +3,7 @@ summary: "Referencia de la CLI para `openclaw approvals` y `openclaw exec-policy
 read_when:
   - You want to edit exec approvals from the CLI
   - You need to manage allowlists on gateway or node hosts
-title: "aprobaciones"
+title: "Aprobaciones"
 ---
 
 # `openclaw approvals`
@@ -182,3 +182,8 @@ Notas de destino:
 - `--agent` por defecto es `"*"`, lo que se aplica a todos los agentes.
 - El host de nodo debe anunciar `system.execApprovals.get/set` (aplicación macOS o host de nodo sin interfaz gráfica).
 - Los archivos de aprobaciones se almacenan por host en `~/.openclaw/exec-approvals.json`.
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)
+- [Aprobaciones de ejecución](/es/tools/exec-approvals)

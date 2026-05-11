@@ -6,13 +6,11 @@ read_when:
 title: "Tâche LLM"
 ---
 
-# Tâche LLM
+`llm-task` est un **outil de plugin optionnel** qui exécute une tâche LLM JSON uniquement et
+retourne une sortie structurée (éventuellement validée par JSON Schema).
 
-`llm-task` est un **outil de plugin facultatif** qui exécute une tâche LLM JSON uniquement et
-renvoie une sortie structurée (éventuellement validée par rapport au schéma JSON).
-
-C'est idéal pour les moteurs de flux de travail comme Lobster : vous pouvez ajouter une seule étape LLM
-sans écrire de code OpenClaw personnalisé pour chaque flux de travail.
+C'est idéal pour les moteurs de workflow comme Lobster : vous pouvez ajouter une seule étape LLM
+sans écrire de code OpenClaw personnalisé pour chaque workflow.
 
 ## Activer le plugin
 
@@ -28,7 +26,7 @@ sans écrire de code OpenClaw personnalisé pour chaque flux de travail.
 }
 ```
 
-2. Ajouter l'outil à la liste autorisée (il est enregistré avec `optional: true`) :
+2. Ajouter l'outil à la liste blanche (il est enregistré avec `optional: true`) :
 
 ```json
 {
@@ -43,7 +41,7 @@ sans écrire de code OpenClaw personnalisé pour chaque flux de travail.
 }
 ```
 
-## Config (facultatif)
+## Config (optionnel)
 
 ```json
 {
@@ -53,9 +51,9 @@ sans écrire de code OpenClaw personnalisé pour chaque flux de travail.
         "enabled": true,
         "config": {
           "defaultProvider": "openai-codex",
-          "defaultModel": "gpt-5.4",
+          "defaultModel": "gpt-5.5",
           "defaultAuthProfileId": "main",
-          "allowedModels": ["openai-codex/gpt-5.4"],
+          "allowedModels": ["openai/gpt-5.4"],
           "maxTokens": 800,
           "timeoutMs": 30000
         }
@@ -65,30 +63,30 @@ sans écrire de code OpenClaw personnalisé pour chaque flux de travail.
 }
 ```
 
-`allowedModels` est une liste autorisée de chaînes `provider/model`. Si défini, toute demande
+`allowedModels` est une liste blanche de chaînes `provider/model`. Si défini, toute requête
 en dehors de la liste est rejetée.
 
 ## Paramètres de l'outil
 
 - `prompt` (chaîne, requis)
-- `input` (tout, facultatif)
-- `schema` (objet, schéma JSON facultatif)
-- `provider` (chaîne, facultatif)
-- `model` (chaîne, facultatif)
-- `thinking` (chaîne, facultatif)
-- `authProfileId` (chaîne, facultatif)
-- `temperature` (nombre, facultatif)
-- `maxTokens` (nombre, facultatif)
-- `timeoutMs` (nombre, facultatif)
+- `input` (n'importe quel type, optionnel)
+- `schema` (objet, JSON Schema optionnel)
+- `provider` (chaîne, optionnel)
+- `model` (chaîne, optionnel)
+- `thinking` (chaîne, optionnel)
+- `authProfileId` (chaîne, optionnel)
+- `temperature` (nombre, optionnel)
+- `maxTokens` (nombre, optionnel)
+- `timeoutMs` (nombre, optionnel)
 
 `thinking` accepte les préréglages de raisonnement standard OpenClaw, tels que `low` ou `medium`.
 
 ## Sortie
 
-Renvoie `details.json` contenant le JSON analysé (et valide par rapport à
+Retourne `details.json` contenant le JSON analysé (et valide par rapport à
 `schema` lorsque fourni).
 
-## Exemple : étape de flux de travail Lobster
+## Exemple : étape de workflow Lobster
 
 ```lobster
 openclaw.invoke --tool llm-task --action json --args-json '{
@@ -110,10 +108,16 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 }'
 ```
 
-## Notes de sécurité
+## Remarques de sécurité
 
-- L'outil est **JSON uniquement** et instruit le modèle pour qu'il ne produise que du JSON (pas
+- L'outil est **JSON uniquement** et instruit le model pour qu'il ne sorte que du JSON (pas
   de clôtures de code, pas de commentaire).
-- Aucun outil n'est exposé au modèle pour cette exécution.
-- Traitez la sortie comme non fiable sauf si vous la validez avec `schema`.
-- Placez les approbations avant toute étape avec effets secondaires (envoyer, publier, exécuter).
+- Aucun outil n'est exposé au model pour cette exécution.
+- Traitez la sortie comme non fiable à moins que vous ne la validiez avec `schema`.
+- Placez les approbations avant toute étape ayant des effets secondaires (send, post, exec).
+
+## Connexes
+
+- [Niveaux de réflexion](/fr/tools/thinking)
+- [Sous-agents](/fr/tools/subagents)
+- [Commandes slash](/fr/tools/slash-commands)

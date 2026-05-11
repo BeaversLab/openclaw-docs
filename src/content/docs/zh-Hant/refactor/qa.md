@@ -6,61 +6,59 @@ read_when:
 title: "QA 重構"
 ---
 
-# QA 重構
-
-狀態：基礎遷移已落地。
+狀態：基礎遷移已完成。
 
 ## 目標
 
-將 OpenClaw QA 從分散定義模型轉移至單一真實來源：
+將 OpenClaw QA 從分割定義模型轉移到單一真實來源：
 
 - 場景元數據
-- 發送至模型的提示詞
-- 設定與拆解
-- 測試架構邏輯
+- 發送給模型的提示詞
+- 設置與拆除
+- 測試線束邏輯
 - 斷言與成功標準
-- 產出物與報告提示
+- 產出成果與報告提示
 
-期望的最終狀態是一個通用的 QA 測試架構，它載入功能強大的場景定義檔案，而不是在 TypeScript 中硬編碼大多數行為。
+期望的最終狀態是一個通用的 QA 測試線束，它加載強大的場景定義文件，而不是在 TypeScript 中硬編碼大多數行為。
 
-## 目前狀態
+## 當前狀態
 
-主要的真實來源現在位於 `qa/scenarios/index.md`，外加 `qa/scenarios/<theme>/*.md` 下每個場景的一個檔案。
+現在主要的真實來源位於 `qa/scenarios/index.md`，以及在 `qa/scenarios/<theme>/*.md` 下每個場景一個文件。
 
 已實作：
 
 - `qa/scenarios/index.md`
-  - 正規的 QA 套件元數據
+  - 規範 QA 套件元數據
   - 操作員身分
   - 啟動任務
 - `qa/scenarios/<theme>/*.md`
-  - 每個場景一個 markdown 檔案
+  - 每個場景一個 markdown 文件
   - 場景元數據
-  - 處理器綁定
-  - 特定場景的執行設定
+  - 處理程序綁定
+  - 場景特定的執行配置
 - `extensions/qa-lab/src/scenario-catalog.ts`
   - markdown 套件解析器 + zod 驗證
 - `extensions/qa-lab/src/qa-agent-bootstrap.ts`
-  - 從 markdown 套件渲染計畫
+  - 從 markdown 套件渲染計劃
 - `extensions/qa-lab/src/qa-agent-workspace.ts`
-  - seeds 生成的相容性檔案加上 `QA_SCENARIOS.md`
+  - 種子生成相容性文件加上 `QA_SCENARIOS.md`
 - `extensions/qa-lab/src/suite.ts`
-  - 透過 markdown 定義的處理器綁定選取可執行的場景
+  - 通過 markdown 定義的處理程序綁定選擇可執行場景
 - QA bus 協定 + UI
-  - 用於圖片/影片/音訊/檔案渲染的通用內嵌附件
+  - 用於圖片/影片/音訊/文件渲染的通用內嵌附件
 
-剩餘的分散表面：
+剩餘的分割介面：
 
 - `extensions/qa-lab/src/suite.ts`
-  - 仍然擁有大多數可執行的自訂處理器邏輯
+  - 仍然擁有大多數可執行的自訂處理程序邏輯
 - `extensions/qa-lab/src/report.ts`
-  - 仍然從執行時輸出推導報告結構
+  - 仍然從執行時輸出衍生報告結構
 
-因此真實來源的分散已修復，但執行仍然主要依賴處理器，而非完全宣告式。
+因此，真實來源的分割已修復，但執行仍然主要由處理程序支持，而非完全聲明式。
 
-## 真實的場景表面長什麼樣子
+## 真實場景介面長什麼樣子
 
-閱讀當前的套件顯示出幾種不同的場景類別。
+閱讀當前的套件顯示了幾種不同的場景類別。
 
 ### 簡單互動
 
@@ -68,73 +66,73 @@ title: "QA 重構"
 - DM 基準
 - 執行緒後續
 - 模型切換
-- 批准執行
+- 批准後續處理
 - 反應/編輯/刪除
 
-### 設定與執行時變更
+### 配置與執行時變更
 
-- 設定修補技能停用
-- 設定套用重啟喚醒
-- 設定重啟能力切換
+- 配置修補技能停用
+- 配置應用重新啟動喚醒
+- 配置重新啟動功能切換
 - 執行時清單漂移檢查
 
 ### 檔案系統與 repo 斷言
 
 - source/docs 探索報告
-- 建構 Lobster Invaders
-- 生成圖像工件查找
+- 建置 Lobster Invaders
+- 生成的圖像產出成果查找
 
 ### 記憶體編排
 
-- 記憶檢索
-- 頻道上下文中的記憶工具
-- 記憶失效回退
+- 記憶體回憶
+- 頻道上下文中的記憶體工具
+- 記憶體失敗後備
 - 會話記憶排名
 - 執行緒記憶隔離
-- 記憶夢境清理
+- 記憶夢境掃描
 
 ### 工具和外掛整合
 
 - MCP 外掛工具呼叫
 - 技能可見性
 - 技能熱安裝
-- 原生圖像生成
-- 圖像來回傳遞
-- 從附件理解圖像
+- 原生影像生成
+- 影像往返
+- 從附件理解影像
 
-### 多輪和多執行者
+### 多輪與多執行者
 
-- 子代理交接
+- 子代理移交
 - 子代理分發合成
-- 重啟恢復樣式流程
+- 重新啟動恢復樣式流程
 
-這些類別至關重要，因為它們驅動了 DSL 的需求。一個簡單的提示詞加預期文本列表是不夠的。
+這些分類很重要，因為它們驅動了 DSL 需求。一份單純的提示詞加上預期文字的清單是不夠的。
 
 ## 方向
 
-### 單一事實來源
+### 單一真實來源
 
 使用 `qa/scenarios/index.md` 加上 `qa/scenarios/<theme>/*.md` 作為編寫的
-事實來源。
+單一真實來源。
 
-該套件應保持：
+打包檔案應保持：
 
-- 在審查中具有人類可讀性
+- 在審查時具備人類可讀性
 - 機器可解析
 - 足夠豐富以驅動：
   - 套件執行
-  - QA 工作區引導
+  - QA 工作區啟動
   - QA Lab UI 元資料
   - 文件/探索提示詞
   - 報告生成
 
-### 首選編寫格式
+### 偏好的編寫格式
 
-使用 Markdown 作為頂層格式，其中包含結構化的 YAML。
+使用 Markdown 作為頂層格式，並在其中包含結構化的 YAML。
 
 建議的結構：
 
-- YAML 前置元資料
+- YAML 前置資料
   - id
   - title
   - surface
@@ -143,7 +141,7 @@ title: "QA 重構"
   - code refs
   - model/provider overrides
   - prerequisites
-- prose sections
+- 散文區塊
   - objective
   - notes
   - debugging hints
@@ -153,15 +151,15 @@ title: "QA 重構"
   - assertions
   - cleanup
 
-這提供了：
+這能提供：
 
 - 比巨大的 JSON 更好的 PR 可讀性
-- 比純 YAML 更豐富的上下文
+- 比純 YAML 更豐富的語境
 - 嚴格的解析和 zod 驗證
 
-原始 JSON 僅作為中間生成形式是可接受的。
+原始 JSON 僅作為中間生成的形式是可以接受的。
 
-## 建議的場景檔案結構
+## 提議的情境檔案結構
 
 範例：
 
@@ -234,11 +232,11 @@ Verify generated media is reattached on the follow-up turn.
 ```
 ````
 
-## DSL 必須涵蓋的執行器功能
+## Runner Capabilities The DSL Must Cover
 
-根據目前的測試套件，通用執行器需要的功能不僅僅是提示詞執行。
+Based on the current suite, the generic runner needs more than prompt execution.
 
-### 環境與設定動作
+### Environment and setup actions
 
 - `bus.reset`
 - `gateway.waitHealthy`
@@ -247,14 +245,14 @@ Verify generated media is reattached on the follow-up turn.
 - `thread.create`
 - `workspace.writeSkill`
 
-### Agent 回合動作
+### Agent turn actions
 
 - `agent.send`
 - `agent.wait`
 - `bus.injectInbound`
 - `bus.injectOutbound`
 
-### 設定與執行時動作
+### Config and runtime actions
 
 - `config.get`
 - `config.patch`
@@ -263,7 +261,7 @@ Verify generated media is reattached on the follow-up turn.
 - `tools.effective`
 - `skills.status`
 
-### 檔案與構件動作
+### File and artifact actions
 
 - `file.write`
 - `file.read`
@@ -272,7 +270,7 @@ Verify generated media is reattached on the follow-up turn.
 - `artifact.captureGeneratedImage`
 - `artifact.capturePath`
 
-### 記憶體與 cron 動作
+### Memory and cron actions
 
 - `memory.indexForce`
 - `memory.searchCli`
@@ -282,11 +280,11 @@ Verify generated media is reattached on the follow-up turn.
 - `cron.waitCompletion`
 - `sessionTranscript.write`
 
-### MCP 動作
+### MCP actions
 
 - `mcp.callTool`
 
-### 斷言
+### Assertions
 
 - `outbound.textIncludes`
 - `outbound.inThread`
@@ -302,137 +300,137 @@ Verify generated media is reattached on the follow-up turn.
 - `cron.managedPresent`
 - `artifact.exists`
 
-## 變數與構件參考
+## Variables and Artifact References
 
-DSL 必須支援儲存輸出以及後續參考。
+The DSL must support saved outputs and later references.
 
-目前套件中的範例：
+Examples from the current suite:
 
-- 建立一個執行緒，然後重複使用 `threadId`
-- 建立一個對話，然後重複使用 `sessionKey`
+- create a thread, then reuse `threadId`
+- 建立一個 session，然後重複使用 `sessionKey`
 - 生成一張圖片，然後在下一輪附加該檔案
-- 生成一個喚醒標記字串，然後斷言它隨後出現
+- 生成一個 wake marker 字串，然後斷言它稍後會出現
 
 所需功能：
 
 - `saveAs`
 - `${vars.name}`
 - `${artifacts.name}`
-- 用於路徑、對話金鑰、執行緒 ID、標記和工具輸出的型別參考
+- 針對路徑、session 金鑰、thread id、marker、工具輸出的型別參照
 
-如果沒有變數支援，測試框架將不斷將場景邏輯洩漏回 TypeScript。
+如果沒有變數支援，harness 將會持續將情境邏輯洩漏回 TypeScript 中。
 
-## 什麼應該保留作為逃逸機制
+## 什麼應保留作為緊急應變手段
 
-在第一階段，完全純粹的宣告式執行器是不現實的。
+在第 1 階段，完全純粹的宣告式執行器是不切實際的。
 
-某些場景本質上涉及大量編排：
+某些情境本質上涉及大量編排：
 
-- 記憶體夢境掃描
-- 組態套用重啟喚醒
-- 組態重啟功能翻轉
-- 透過時間戳記/路徑解析生成的圖片產出
-- 探索報告評估
+- memory dreaming sweep
+- config apply restart wake-up
+- config restart capability flip
+- 透過時間戳記/路徑解析生成的圖片成品
+- discovery-report evaluation
 
-這些目前應該使用明確的自訂處理程序。
+這些目前應該使用明確的自訂處理器。
 
 建議規則：
 
 - 85-90% 宣告式
-- 對於其餘困難部分，使用明確的 `customHandler` 步驟
-- 僅使用具名且記載的自訂處理程序
-- 場景檔案中不包含匿名內嵌程式碼
+- 針對困難的其餘部分使用明確的 `customHandler` 步驟
+- 僅限已命名且有文件記錄的自訂處理器
+- 情境檔案中不允許匿名行內程式碼
 
-這保持了通用引擎的乾淨，同時仍允許進度。
+這既能保持通用引擎的乾淨，同時仍允許進展。
 
 ## 架構變更
 
-### 當前
+### 目前
 
-場景 markdown 已經是以下內容的事實來源：
+情境 markdown 已經是以下項目的真實來源：
 
 - 套件執行
-- 工作區啟動檔案
-- QA Lab UI 場景目錄
-- 報告元數據
-- 探索提示
+- 工作區引導檔案
+- QA Lab UI 情境目錄
+- 報表中繼資料
+- discovery prompts
 
-生成的相容性：
+產生的相容性：
 
-- 植入的工作區仍然包含 `QA_KICKOFF_TASK.md`
-- 植入的工作區仍然包含 `QA_SCENARIO_PLAN.md`
-- 植入的工作區現在也包括 `QA_SCENARIOS.md`
+- 已植入的工作區仍然包含 `QA_KICKOFF_TASK.md`
+- 已植入的工作區仍然包含 `QA_SCENARIO_PLAN.md`
+- 已植入的工作區現在也包含 `QA_SCENARIOS.md`
 
 ## 重構計劃
 
-### 階段 1：載入器和架構
+### 第 1 階段：載入器與結構描述
 
 完成。
 
 - 新增了 `qa/scenarios/index.md`
-- 將場景拆分為 `qa/scenarios/<theme>/*.md`
-- 新增了具名 markdown YAML 封包內容的解析器
+- 將情境拆分為 `qa/scenarios/<theme>/*.md`
+- 新增了命名 markdown YAML pack 內容的解析器
 - 使用 zod 進行驗證
-- 將消費者切換到解析後的封包
-- 移除了儲存庫層級的 `qa/seed-scenarios.json` 和 `qa/QA_KICKOFF_TASK.md`
+- 將消費者切換到已解析的 pack
+- 移除了 repo 層級的 `qa/seed-scenarios.json` 和 `qa/QA_KICKOFF_TASK.md`
 
-### 階段 2：通用引擎
+### 第 2 階段：通用引擎
 
 - 將 `extensions/qa-lab/src/suite.ts` 拆分為：
   - 載入器
   - 引擎
   - 動作註冊表
   - 斷言註冊表
-  - 自訂處理程序
+  - 自訂處理器
 - 將現有的輔助函式保留為引擎操作
 
 交付成果：
 
-- 引擎執行簡單的宣告式場景
+- 引擎執行簡單的宣告式情境
 
-從大多由 prompt + wait + assert 組成的情境開始：
+從主要包含 prompt + wait + assert 的情境開始：
 
-- 執行續後續追蹤
-- 從附件進行圖片理解
-- 技能可見性與叫用
-- 頻道基準
+- 執行緒後續追蹤
+- 透過附件進行圖片理解
+- 技能可見性和調用
+- 通道基準
 
 交付成果：
 
-- 第一批透過通用引擎交付的實際 markdown 定義情境
+- 首批真正的透過通用引擎發送的 Markdown 定義場景
 
-### 階段 4：遷移中等情境
+### 第 4 階段：遷移中等場景
 
-- 圖片生成往返
-- 頻道語境中的記憶工具
-- 工作階段記憶排序
-- 子代理交涉
-- 子代理分發綜合
+- 圖像生成往返
+- 通道上下文中的記憶工具
+- 會話記憶排名
+- 子代理交接
+- 子代理分散式綜合
 
 交付成果：
 
 - 變數、產物、工具斷言、請求日誌斷言已驗證
 
-### 階段 5：將困難情境保留在自訂處理程式上
+### 第 5 階段：將困難場景保留在自訂處理程序上
 
-- 記憶重構整理
-- 組態套用重新啟動喚醒
-- 組態重新啟動功能切換
-- 執行時期清單漂移
+- 記憶夢境掃描
+- 配置應用重新啟動 喚醒
+- 配置重新啟動能力翻轉
+- 執行時清單漂移
 
 交付成果：
 
-- 相同的撰寫格式，但在需要時包含明確的自訂步驟區塊
+- 相同的編寫格式，但在需要的地方包含明確的自訂步驟區塊
 
-### 階段 6：刪除硬式編碼的情境對應
+### 第 6 階段：刪除硬編碼場景映射
 
 一旦套件覆蓋率足夠好：
 
-- 從 `extensions/qa-lab/src/suite.ts` 移除大多數特定情境的 TypeScript 分支
+- 從 `extensions/qa-lab/src/suite.ts` 中移除大多數特定場景的 TypeScript 分支
 
-## Fake Slack / Rich Media Support
+## 偽 Slack / 豐富媒體支援
 
-目前的 QA bus 是以文字為優先。
+目前的 QA 匯流排是以文字為先的。
 
 相關檔案：
 
@@ -442,17 +440,17 @@ DSL 必須支援儲存輸出以及後續參考。
 - `extensions/qa-lab/src/bus-server.ts`
 - `extensions/qa-lab/web/src/ui-render.ts`
 
-目前 QA bus 支援：
+目前 QA 匯流排支援：
 
 - 文字
 - 反應
-- 執行緒
+- 串列
 
-它尚未建立內嵌媒體附件的模型。
+它尚未對內聯媒體附件進行建模。
 
-### 所需的傳輸合約
+### 所需的傳輸協定
 
-新增通用的 QA bus 附件模型：
+新增一個通用的 QA 匯流排附件模型：
 
 ```ts
 type QaBusAttachment = {
@@ -471,67 +469,71 @@ type QaBusAttachment = {
 };
 ```
 
-然後將 `attachments?: QaBusAttachment[]` 新增至：
+然後將 `attachments?: QaBusAttachment[]` 新增到：
 
 - `QaBusMessage`
 - `QaBusInboundMessageInput`
 - `QaBusOutboundMessageInput`
 
-### 為何要先從通用著手
+### 為何先從通用開始
 
 不要建立僅限 Slack 的媒體模型。
 
-取而代之：
+相反地：
 
 - 一個通用的 QA 傳輸模型
-- 其上的多個轉譯器
+- 在其之上的多個渲染器
   - 目前的 QA Lab 聊天
-  - 未來的 fake Slack web
-  - 任何其他假造的傳輸檢視
+  - 未來的偽 Slack Web
+  - 任何其他偽傳輸視圖
 
-這可以避免重複邏輯，並讓媒體情境保持傳輸無關性。
+這可以防止重複邏輯，並讓媒體場景保持傳輸不可知。
 
 ### 所需的 UI 工作
 
-更新 QA UI 以轉譯：
+更新 QA UI 以渲染：
 
-- 內嵌圖片預覽
-- 內嵌音訊播放器
-- 內嵌影片播放器
-- 檔案附件標籤
+- 內聯圖像預覽
+- 內聯音訊播放器
+- 內聯視訊播放器
+- 檔案附件晶片
 
-目前的 UI 已經可以轉譯執行緒和反應，因此附件轉譯應該要架構在相同的訊息卡片模型上。
+目前的 UI 已經可以渲染串列和反應，因此附件渲染應該分層在相同的訊息卡片模型上。
 
-### 由媒體傳輸啟用的情境工作
+### 由媒體傳輸啟用的場景工作
 
-一旦附件通過 QA bus，我們就可以新增更豐富的假聊天情境：
+一旦附件在 QA 匯流排中流動，我們就可以新增更豐富的偽聊市場景：
 
-- fake Slack 中的內嵌圖片回覆
+- 偽 Slack 中的內聯圖像回覆
 - 音訊附件理解
-- 影片附件理解
-- 混合附加順序
-- 帶有保留媒體的執行緒回覆
+- 視訊附件理解
+- 混合附件排序
+- 保留媒體的串列回覆
 
 ## 建議
 
 下一個實作區塊應該是：
 
-1. 新增 markdown 場景載入器 + zod schema
-2. 從 markdown 產生目前的目錄
+1. 新增 markdown 場景載入器 + zod 架構
+2. 從 markdown 生成目前的目錄
 3. 先遷移幾個簡單的場景
-4. 新增通用 QA bus 附加支援
-5. 在 QA UI 中呈現內聯圖片
-6. 然後擴充到音訊和視訊
+4. 新增通用的 QA 總線附加支援
+5. 在 QA UI 中渲染內嵌圖片
+6. 然後擴展至音訊和影片
 
-這是證明這兩個目標的最小路徑：
+這是能驗證這兩個目標的最短路徑：
 
 - 通用的 markdown 定義 QA
-- 更豐富的假訊息介面
+- 更豐富的模擬訊息介面
 
 ## 未解決的問題
 
 - 場景檔案是否應允許帶有變數插值的內嵌 markdown 提示詞範本
-- 設定/清理應該是命名區段還是僅是排序的動作清單
-- 成品參照是否應在 schema 中強型別或基於字串
-- 自訂處理器應該位於一個註冊表中還是各介面各自的註冊表中
-- 產生的 JSON 相容性檔案是否應在遷移期間保持簽入
+- setup/cleanup 應該是具名區塊還是有序的動作列表
+- artifact 參照應該在架構中使用強型別還是字串
+- 自訂處理器應該放在同一個登錄檔中還是每個介面各自的登錄檔中
+- 遷移期間產生的 JSON 相容性檔案是否應保持簽入狀態
+
+## 相關
+
+- [QA E2E automation](/zh-Hant/concepts/qa-e2e-automation)

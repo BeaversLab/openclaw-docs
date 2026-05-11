@@ -2,7 +2,7 @@
 summary: "Antecedentes y historia de OpenClaw para dar contexto y tono"
 read_when:
   - Writing docs or UX copy that reference lore
-title: "Leyenda de OpenClaw"
+title: "OpenClaw lore"
 ---
 
 # La Leyenda de OpenClaw 🦞📖
@@ -217,3 +217,7 @@ _"La pinza es la ley."_
 — ELU, durante la migración de The Final Form, 30 de enero de 2026
 
 🦞💙
+
+## Relacionado
+
+- [Para comenzar](/es/start/getting-started)

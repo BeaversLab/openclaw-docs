@@ -1,23 +1,21 @@
 ---
+summary: "Exécuter OpenClaw via le proxy LiteLLM pour un accès unifié aux modèles et le suivi des coûts"
 title: "LiteLLM"
-summary: "Exécuter OpenClaw via le proxy LiteLLM pour un accès unifié au modèle et le suivi des coûts"
 read_when:
   - You want to route OpenClaw through a LiteLLM proxy
   - You need cost tracking, logging, or model routing through LiteLLM
 ---
 
-# LiteLLM
-
-[LiteLLM](https://litellm.ai) est une passerelle LLM open source qui fournit une API unifiée pour plus de 100 fournisseurs de modèles. Acheminez OpenClaw via LiteLLM pour bénéficier d'un suivi centralisé des coûts, de journaux et de la flexibilité de changer de backend sans modifier votre configuration OpenClaw.
+[LiteLLM](https://litellm.ai) est une passerelle LLM open source qui fournit une API unifiée à plus de 100 fournisseurs de modèles. Acheminez OpenClaw via LiteLLM pour obtenir un centralisé suivi des coûts, des journaux et la flexibilité de changer de backend sans modifier votre configuration OpenClaw.
 
 <Tip>
 **Pourquoi utiliser LiteLLM avec OpenClaw ?**
 
 - **Suivi des coûts** — Voyez exactement ce que OpenClaw dépense pour tous les modèles
-- **Routage de modèle** — Basculez entre Claude, GPT-4, Gemini, Bedrock sans modifier la configuration
-- **Clés virtuelles** — Créez des clés avec des limites de dépense pour OpenClaw
+- **Acheminement de modèle** — Basculez entre Claude, GPT-4, Gemini, Bedrock sans modifier la configuration
+- **Clés virtuelles** — Créez des clés avec des limites de dépenses pour OpenClaw
 - **Journalisation** — Journaux complets des requêtes/réponses pour le débogage
-- **Secours** — Bascule automatique si votre fournisseur principal est indisponible
+- **Replis** — Bascule automatique si votre fournisseur principal est en panne
 
 </Tip>
 
@@ -25,7 +23,7 @@ read_when:
 
 <Tabs>
   <Tab title="Onboarding (recommended)">
-    **Idéal pour :** la voie la plus rapide vers une configuration LiteLLM fonctionnelle.
+    **Idéal pour :** le chemin le plus rapide vers une configuration LiteLLM fonctionnelle.
 
     <Steps>
       <Step title="Run onboarding">
@@ -38,7 +36,7 @@ read_when:
   </Tab>
 
   <Tab title="Manual setup">
-    **Idéal pour :** un contrôle total de l'installation et de la configuration.
+    **Idéal pour :** un contrôle total sur l'installation et la configuration.
 
     <Steps>
       <Step title="Start LiteLLM Proxy">
@@ -54,7 +52,7 @@ read_when:
         openclaw
         ```
 
-        C'est tout. OpenClaw transite désormais par LiteLLM.
+        C'est tout. OpenClaw transite maintenant via LiteLLM.
       </Step>
     </Steps>
 
@@ -108,10 +106,42 @@ export LITELLM_API_KEY="sk-litellm-key"
 }
 ```
 
-## Advanced topics
+## Advanced configuration
+
+### Image generation
+
+LiteLLM peut également prendre en charge l'outil `image_generate` via les routes OpenAI-compatibles
+`/images/generations` et `/images/edits`. Configurez un modèle d'image LiteLLM
+sous `agents.defaults.imageGenerationModel` :
+
+```json5
+{
+  models: {
+    providers: {
+      litellm: {
+        baseUrl: "http://localhost:4000",
+        apiKey: "${LITELLM_API_KEY}",
+      },
+    },
+  },
+  agents: {
+    defaults: {
+      imageGenerationModel: {
+        primary: "litellm/gpt-image-2",
+        timeoutMs: 180_000,
+      },
+    },
+  },
+}
+```
+
+Les URL de bouclage LiteLLM telles que `http://localhost:4000` fonctionnent sans redéfinition
+de réseau privé global. Pour un proxy hébergé sur un LAN, définissez
+`models.providers.litellm.request.allowPrivateNetwork: true` car la clé API
+sera envoyée à l'hôte du proxy configuré.
 
 <AccordionGroup>
-  <Accordion title="Virtual keys">
+  <Accordion title="Clés virtuelles">
     Créez une clé dédiée pour OpenClaw avec des limites de dépense :
 
     ```bash
@@ -129,8 +159,8 @@ export LITELLM_API_KEY="sk-litellm-key"
 
   </Accordion>
 
-  <Accordion title="Model routing">
-    LiteLLM peut acheminer les demandes de modèles vers différents backends. Configurez cela dans votre `config.yaml` LiteLLM :
+  <Accordion title="Routage de modèle">
+    LiteLLM peut router les demandes de modèle vers différents backends. Configurez-le dans votre `config.yaml` LiteLLM :
 
     ```yaml
     model_list:
@@ -145,11 +175,11 @@ export LITELLM_API_KEY="sk-litellm-key"
           api_key: os.environ/OPENAI_API_KEY
     ```
 
-    OpenClaw continue de demander `claude-opus-4-6` — LiteLLM gère l'acheminement.
+    OpenClaw continue de demander `claude-opus-4-6` — LiteLLM gère le routage.
 
   </Accordion>
 
-  <Accordion title="Viewing usage">
+  <Accordion title="Affichage de l'utilisation">
     Vérifiez le tableau de bord ou l'API de LiteLLM :
 
     ```bash
@@ -166,31 +196,30 @@ export LITELLM_API_KEY="sk-litellm-key"
 
   <Accordion title="Notes sur le comportement du proxy">
     - LiteLLM s'exécute sur `http://localhost:4000` par défaut
-    - OpenClaw se connecte via le point de terminaison compatible OpenAI de style proxy `/v1`
-      de LiteLLM
-    - La mise en forme des requêtes native exclusivement OpenAI ne s'applique pas via LiteLLM :
-      pas de `service_tier`, pas de `store` Responses, pas d'indications de cache de prompt, et pas de
-      mise en forme de payload compatible raisonnement OpenAI
-    - Les en-têtes d'attribution masqués d'OpenClaw (`originator`, `version`, `User-Agent`)
+    - OpenClaw se connecte via le point de terminaison `/v1` compatible OpenAI de style proxy de LiteLLM
+    - Le formatage des demandes natif uniquement OpenAI ne s'applique pas via LiteLLM :
+      pas de `service_tier`, pas de `store` de réponses, pas d'indications de cache de prompt, et pas de
+      formatage de payload compatible avec le raisonnement OpenAI
+    - Les en-têtes d'attribution OpenClaw masqués (`originator`, `version`, `User-Agent`)
       ne sont pas injectés sur les URL de base LiteLLM personnalisées
   </Accordion>
 </AccordionGroup>
 
-<Note>Pour la configuration générale des providers et le comportement de basculement, voir [Model Providers](/fr/concepts/model-providers).</Note>
+<Note>Pour la configuration générale des fournisseurs et le comportement de basculement, consultez [Model Providers](/fr/concepts/model-providers).</Note>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Documentation LiteLLM" href="https://docs.litellm.ai" icon="book">
+  <Card title="Docs LiteLLM" href="https://docs.litellm.ai" icon="book">
     Documentation officielle et référence de l'API LiteLLM.
   </Card>
-  <Card title="Model providers" href="/fr/concepts/model-providers" icon="layers">
-    Vue d'ensemble de tous les providers, références de modèles et comportements de basculement.
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
+    Aperçu de tous les fournisseurs, des références de modèles et du comportement de basculement.
   </Card>
   <Card title="Configuration" href="/fr/gateway/configuration" icon="gear">
     Référence complète de la configuration.
   </Card>
-  <Card title="Sélection de modèle" href="/fr/concepts/models" icon="brain">
-    Comment choisir et configurer les modèles.
+  <Card title="Model selection" href="/fr/concepts/models" icon="brain">
+    Comment choisir et configurer des modèles.
   </Card>
 </CardGroup>

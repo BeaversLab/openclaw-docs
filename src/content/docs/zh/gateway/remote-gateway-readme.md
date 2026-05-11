@@ -1,7 +1,7 @@
 ---
 summary: "OpenClaw.app 连接到远程网关的 SSH 隧道设置"
 read_when: "通过 SSH 将 macOS 应用程序连接到远程网关"
-title: "远程 Gateway(网关) 网关 设置"
+title: "Remote gateway setup"
 ---
 
 > 此内容已合并至[远程访问](/zh/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent)。请参阅该页面以获取最新指南。
@@ -162,3 +162,8 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 | `RunAtLoad`                          | 当代理加载时启动隧道                  |
 
 OpenClaw.app 连接到您客户端机器上的 `ws://127.0.0.1:18789`。SSH 隧道将该连接转发到运行 Gateway(网关) 的远程机器上的端口 18789。
+
+## 相关
+
+- [远程访问](/zh/gateway/remote)
+- [Tailscale](/zh/gateway/tailscale)

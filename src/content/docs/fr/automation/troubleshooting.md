@@ -1,8 +1,12 @@
 ---
 summary: "Redirection vers /automation/cron-jobs"
-title: "Dépannage de l'automatisation"
+title: "Automation troubleshooting"
 ---
 
-# Dépannage de l'automatisation
+Cette page a été déplacée vers [Scheduled Tasks](/fr/automation/cron-jobs#troubleshooting). Consultez [Scheduled Tasks](/fr/automation/cron-jobs#troubleshooting) pour la documentation de troubleshooting.
 
-Cette page a été déplacée vers [Tâches planifiées](/fr/automation/cron-jobs#troubleshooting). Voir [Tâches planifiées](/fr/automation/cron-jobs#troubleshooting) pour la documentation de dépannage.
+## Connexe
+
+- [Hooks](/fr/automation/hooks)
+- [Background tasks](/fr/automation/tasks)
+- [Gateway troubleshooting](/fr/gateway/troubleshooting)

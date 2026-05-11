@@ -3,7 +3,7 @@ summary: "CLI 參考，用於 `openclaw daemon`（閘道服務管理的舊版別
 read_when:
   - You still use `openclaw daemon ...` in scripts
   - You need service lifecycle commands (install/start/stop/restart/status)
-title: "daemon"
+title: "Daemon"
 ---
 
 # `openclaw daemon`
@@ -55,3 +55,8 @@ openclaw daemon uninstall
 ## 建議
 
 請使用 [`openclaw gateway`](/zh-Hant/cli/gateway) 獲取最新的文件和示例。
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)
+- [Gateway 操作手冊](/zh-Hant/gateway)

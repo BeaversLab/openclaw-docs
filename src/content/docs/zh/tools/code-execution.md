@@ -7,12 +7,10 @@ read_when:
 title: "代码执行"
 ---
 
-# 代码执行
-
 `code_execution` 在 xAI 的 Responses API 上运行沙箱隔离的远程 Python 分析。
 这与本地的 [`exec`](/zh/tools/exec) 不同：
 
-- `exec` 在您的计算机或节点上运行 Shell 命令
+- `exec` 在您的机器或节点上运行 shell 命令
 - `code_execution` 在 xAI 的远程沙箱中运行 Python
 
 使用 `code_execution` 进行：
@@ -23,11 +21,11 @@ title: "代码执行"
 - 图表风格分析
 - 分析由 `x_search` 或 `web_search` 返回的数据
 
-当您需要本地文件、您的 Shell、您的仓库或配对设备时，请**不要**使用它。为此请使用 [`exec`](/zh/tools/exec)。
+当您需要本地文件、shell、代码库或配对设备时，请**不要**使用它。请为此使用 [`exec`](/zh/tools/exec)。
 
 ## 设置
 
-您需要一个 xAI API 密钥。以下任意一种均可：
+您需要一个 xAI API 密钥。以下任一方式均可：
 
 - `XAI_API_KEY`
 - `plugins.entries.xai.config.webSearch.apiKey`
@@ -58,7 +56,7 @@ title: "代码执行"
 
 ## 如何使用
 
-自然地提问，并明确说明分析意图：
+自然地提问并明确分析意图：
 
 ```text
 Use code_execution to calculate the 7-day moving average for these numbers: ...
@@ -72,17 +70,19 @@ Use x_search to find posts mentioning OpenClaw this week, then use code_executio
 Use web_search to gather the latest AI benchmark numbers, then use code_execution to compare percent changes.
 ```
 
-该工具在内部接受一个单一的 `task` 参数，因此 Agent 应在一个提示中发送完整的分析请求和任何内联数据。
+该工具内部接受一个单独的 `task` 参数，因此代理应在一个提示中发送完整的分析请求和任何内联数据。
 
 ## 限制
 
-- 这是 xAI 远程执行，而非本地进程执行。
-- 应将其视为临时分析，而非持久化笔记本。
+- 这是远程 xAI 执行，而非本地进程执行。
+- 它应被视为临时分析，而非持久化笔记本。
 - 不要假设可以访问本地文件或您的工作区。
 - 对于最新的 X 数据，请先使用 [`x_search`](/zh/tools/web#x_search)。
 
-## 另请参阅
+## 相关
 
+- [Exec 工具](/zh/tools/exec)
+- [Exec 批准](/zh/tools/exec-approvals)
+- [apply_patch 工具](/zh/tools/apply-patch)
 - [Web 工具](/zh/tools/web)
-- [Exec](/zh/tools/exec)
 - [xAI](/zh/providers/xai)

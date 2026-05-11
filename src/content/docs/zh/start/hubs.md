@@ -2,14 +2,12 @@
 summary: "Hubs that link to every OpenClaw doc"
 read_when:
   - You want a complete map of the documentation
-title: "Docs Hubs"
+title: "文档中心"
 ---
-
-# 文档中心
 
 <Note>如果您是 OpenClaw 的新手，请从 [入门指南](/zh/start/getting-started) 开始。</Note>
 
-使用这些中心来探索每一个页面，包括左侧导航中未显示的深度剖析和参考文档。
+利用这些中心探索所有页面，包括左侧导航栏中未显示的深度解析和参考文档。
 
 ## 从这里开始
 
@@ -18,7 +16,7 @@ title: "Docs Hubs"
 - [新手引导](/zh/start/onboarding)
 - [新手引导 (CLI)](/zh/start/wizard)
 - [设置](/zh/start/setup)
-- [Dashboard (local Gateway(网关))](http://127.0.0.1:18789/)
+- [仪表板（本地 Gateway(网关)）](http://127.0.0.1:18789/)
 - [帮助](/zh/help)
 - [文档目录](/zh/start/docs-directory)
 - [配置](/zh/gateway/configuration)
@@ -32,22 +30,22 @@ title: "Docs Hubs"
 - [Docker](/zh/install/docker)
 - [Nix](/zh/install/nix)
 - [更新 / 回滚](/zh/install/updating)
-- [Bun 工作流 (实验性)](/zh/install/bun)
+- [Bun 工作流（实验性）](/zh/install/bun)
 
 ## 核心概念
 
 - [架构](/zh/concepts/architecture)
 - [功能](/zh/concepts/features)
 - [网络中心](/zh/network)
-- [Agent 运行时](/zh/concepts/agent)
-- [Agent 工作区](/zh/concepts/agent-workspace)
+- [代理运行时](/zh/concepts/agent)
+- [代理工作区](/zh/concepts/agent-workspace)
 - [记忆](/zh/concepts/memory)
-- [Agent 循环](/zh/concepts/agent-loop)
+- [代理循环](/zh/concepts/agent-loop)
 - [流式传输 + 分块](/zh/concepts/streaming)
-- [多 Agent 路由](/zh/concepts/multi-agent)
+- [多代理路由](/zh/concepts/multi-agent)
 - [压缩](/zh/concepts/compaction)
 - [会话](/zh/concepts/session)
-- [会话清理](/zh/concepts/session-pruning)
+- [会话修剪](/zh/concepts/session-pruning)
 - [会话工具](/zh/concepts/session-tool)
 - [队列](/zh/concepts/queue)
 - [斜杠命令](/zh/tools/slash-commands)
@@ -63,9 +61,9 @@ title: "Docs Hubs"
 - [模型故障转移](/zh/concepts/model-failover)
 - [OAuth](/zh/concepts/oauth)
 
-## 提供商 + 入口
+## 提供商 + 接入
 
-- [聊天渠道中心](/zh/channels)
+- [聊天频道中心](/zh/channels)
 - [模型提供商中心](/zh/providers/models)
 - [WhatsApp](/zh/channels/whatsapp)
 - [Telegram](/zh/channels/telegram)
@@ -74,56 +72,56 @@ title: "Docs Hubs"
 - [Mattermost](/zh/channels/mattermost)
 - [Signal](/zh/channels/signal)
 - [BlueBubbles (iMessage)](/zh/channels/bluebubbles)
-- [QQ Bot](/zh/channels/qqbot)
-- [iMessage (legacy)](/zh/channels/imessage)
-- [Location parsing](/zh/channels/location)
+- [QQ 机器人](/zh/channels/qqbot)
+- [iMessage (旧版)](/zh/channels/imessage)
+- [位置解析](/zh/channels/location)
 - [WebChat](/zh/web/webchat)
 - [Webhooks](/zh/automation/cron-jobs#webhooks)
 - [Gmail Pub/Sub](/zh/automation/cron-jobs#gmail-pubsub-integration)
 
-## Gateway(网关) + operations
+## Gateway(网关) + 运维
 
-- [Gateway(网关) runbook](/zh/gateway)
+- [Gateway(网关) 运维手册](/zh/gateway)
 - [网络模型](/zh/gateway/network-model)
-- [Gateway(网关) pairing](/zh/gateway/pairing)
-- [Gateway(网关) lock](/zh/gateway/gateway-lock)
-- [Background process](/zh/gateway/background-process)
-- [Health](/zh/gateway/health)
-- [Heartbeat](/zh/gateway/heartbeat)
-- [Doctor](/zh/gateway/doctor)
-- [Logging](/zh/gateway/logging)
+- [Gateway(网关) 配对](/zh/gateway/pairing)
+- [Gateway(网关) 锁](/zh/gateway/gateway-lock)
+- [后台进程](/zh/gateway/background-process)
+- [健康检查](/zh/gateway/health)
+- [心跳](/zh/gateway/heartbeat)
+- [诊断](/zh/gateway/doctor)
+- [日志](/zh/gateway/logging)
 - [沙箱隔离](/zh/gateway/sandboxing)
-- [Dashboard](/zh/web/dashboard)
-- [Control UI](/zh/web/control-ui)
-- [Remote access](/zh/gateway/remote)
-- [Remote gateway README](/zh/gateway/remote-gateway-readme)
+- [仪表板](/zh/web/dashboard)
+- [控制界面](/zh/web/control-ui)
+- [远程访问](/zh/gateway/remote)
+- [远程 Gateway(网关) 说明](/zh/gateway/remote-gateway-readme)
 - [Tailscale](/zh/gateway/tailscale)
-- [Security](/zh/gateway/security)
+- [安全](/zh/gateway/security)
 - [故障排除](/zh/gateway/troubleshooting)
 
 ## 工具 + 自动化
 
-- [Tools surface](/zh/tools)
+- [工具概览](/zh/tools)
 - [OpenProse](/zh/prose)
-- [CLI reference](/zh/cli)
+- [CLI 参考](/zh/cli)
 - [Exec 工具](/zh/tools/exec)
 - [PDF 工具](/zh/tools/pdf)
-- [Elevated mode](/zh/tools/elevated)
-- [Cron jobs](/zh/automation/cron-jobs)
-- [Automation & Tasks](/zh/automation)
-- [Thinking + verbose](/zh/tools/thinking)
+- [提升模式](/zh/tools/elevated)
+- [Cron 作业](/zh/automation/cron-jobs)
+- [自动化与任务](/zh/automation)
+- [思考与详细输出](/zh/tools/thinking)
 - [模型](/zh/concepts/models)
-- [Sub-agents](/zh/tools/subagents)
+- [子代理](/zh/tools/subagents)
 - [Agent send CLI](/zh/tools/agent-send)
-- [Terminal UI](/zh/web/tui)
-- [Browser control](/zh/tools/browser)
-- [Browser (Linux 故障排除)](/zh/tools/browser-linux-troubleshooting)
-- [Polls](/zh/cli/message)
+- [终端 UI](/zh/web/tui)
+- [浏览器控制](/zh/tools/browser)
+- [浏览器（Linux 故障排除）](/zh/tools/browser-linux-troubleshooting)
+- [轮询](/zh/cli/message)
 
 ## 节点、媒体、语音
 
 - [节点概览](/zh/nodes)
-- [摄像头](/zh/nodes/camera)
+- [相机](/zh/nodes/camera)
 - [图像](/zh/nodes/images)
 - [音频](/zh/nodes/audio)
 - [位置命令](/zh/nodes/location-command)
@@ -142,14 +140,14 @@ title: "Docs Hubs"
 
 ## macOS 伴侣应用（高级）
 
-- [macOS 开发环境设置](/zh/platforms/mac/dev-setup)
+- [macOS 开发设置](/zh/platforms/mac/dev-setup)
 - [macOS 菜单栏](/zh/platforms/mac/menu-bar)
 - [macOS 语音唤醒](/zh/platforms/mac/voicewake)
 - [macOS 语音覆盖层](/zh/platforms/mac/voice-overlay)
 - [macOS WebChat](/zh/platforms/mac/webchat)
 - [macOS Canvas](/zh/platforms/mac/canvas)
 - [macOS 子进程](/zh/platforms/mac/child-process)
-- [macOS 健康状况](/zh/platforms/mac/health)
+- [macOS 健康状态](/zh/platforms/mac/health)
 - [macOS 图标](/zh/platforms/mac/icon)
 - [macOS 日志记录](/zh/platforms/mac/logging)
 - [macOS 权限](/zh/platforms/mac/permissions)
@@ -157,13 +155,14 @@ title: "Docs Hubs"
 - [macOS 签名](/zh/platforms/mac/signing)
 - [macOS 网关 (launchd)](/zh/platforms/mac/bundled-gateway)
 - [macOS XPC](/zh/platforms/mac/xpc)
-- [macOS 技能](/zh/platforms/mac/skills)
+- [macOS Skills](/zh/platforms/mac/skills)
 - [macOS Peekaboo](/zh/platforms/mac/peekaboo)
 
 ## 插件
 
-- [插件概览](/zh/tools/plugin)
+- [插件概述](/zh/tools/plugin)
 - [构建插件](/zh/plugins/building-plugins)
+- [插件钩子](/zh/plugins/hooks)
 - [插件清单](/zh/plugins/manifest)
 - [代理工具](/zh/plugins/building-plugins#registering-agent-tools)
 - [插件包](/zh/plugins/bundles)
@@ -188,10 +187,14 @@ title: "Docs Hubs"
 
 ## 项目
 
-- [贡献者](/zh/reference/credits)
+- [致谢](/zh/reference/credits)
 
 ## 测试 + 发布
 
 - [测试](/zh/reference/test)
 - [发布策略](/zh/reference/RELEASING)
 - [设备型号](/zh/reference/device-models)
+
+## 相关
+
+- [入门指南](/zh/start/getting-started)

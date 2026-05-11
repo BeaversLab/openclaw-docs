@@ -4,7 +4,7 @@ read_when:
   - You want to enqueue a system event without creating a cron job
   - You need to enable or disable heartbeats
   - You want to inspect system presence entries
-title: "系统"
+title: "System"
 ---
 
 # `openclaw system`
@@ -66,3 +66,7 @@ openclaw system presence
 
 - 需要一个正在运行的 Gateway(网关)，且该 Gateway(网关) 可通过您当前的配置（本地或远程）访问。
 - 系统事件是暂时的，不会在重启后持久保留。
+
+## 相关
+
+- [CLI 参考](/zh/cli)

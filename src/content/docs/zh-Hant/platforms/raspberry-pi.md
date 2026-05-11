@@ -115,7 +115,7 @@ sudo sysctl -p
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-### 選項 B：可駭版安裝（適合客製化）
+### 選項 B：可破解安裝（適合 tinkering）
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -410,7 +410,7 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ---
 
-## 參見
+## 相關
 
 - [Linux 指南](/zh-Hant/platforms/linux) — 一般 Linux 設定
 - [DigitalOcean 指南](/zh-Hant/platforms/digitalocean) — 雲端替代方案

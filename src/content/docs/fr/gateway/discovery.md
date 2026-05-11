@@ -4,7 +4,7 @@ read_when:
   - Implementing or changing Bonjour discovery/advertising
   - Adjusting remote connection modes (direct vs SSH)
   - Designing node discovery + pairing for remote nodes
-title: "Discovery and Transports"
+title: "Discovery et transports"
 ---
 
 # Discovery & transports
@@ -22,7 +22,7 @@ L'objectif de conception est de conserver toute la découverte/publicité résea
 - **Gateway WS (plan de contrôle)** : le point de terminaison WebSocket sur `127.0.0.1:18789` par défaut ; peut être lié au réseau local/tailnet via `gateway.bind`.
 - **Transport WS direct** : un point de terminaison Gateway WS orienté réseau local/tailnet (pas de SSH).
 - **Transport SSH (secours)** : contrôle à distance en transférant `127.0.0.1:18789` via SSH.
-- **Pont TCP hérité (supprimé)** : ancien protocole de transport de nœud (voir
+- **Pont TCP hérité (supprimé)** : ancien transport de nœud (voir
   [Protocole de pont](/fr/gateway/bridge-protocol)) ; n'est plus annoncé pour
   la découverte et ne fait plus partie des versions actuelles.
 
@@ -86,49 +86,52 @@ Notes de sécurité :
 Désactiver/remplacer :
 
 - `OPENCLAW_DISABLE_BONJOUR=1` désactive la publicité.
+- Lorsque `OPENCLAW_DISABLE_BONJOUR` n'est pas défini, Bonjour publie une annonce sur les hôtes normaux
+  et se désactive automatiquement dans les conteneurs détectés. Utilisez `0` uniquement sur l'hôte, macvlan
+  ou un autre réseau compatible mDNS ; utilisez `1` pour forcer la désactivation.
 - `gateway.bind` dans `~/.openclaw/openclaw.json` contrôle le mode de liaison du Gateway.
 - `OPENCLAW_SSH_PORT` remplace le port SSH annoncé lorsque `sshPort` est émis.
-- `OPENCLAW_TAILNET_DNS` publie un indice `tailnetDns` (MagicDNS).
+- `OPENCLAW_TAILNET_DNS` publie une indication `tailnetDns` (MagicDNS).
 - `OPENCLAW_CLI_PATH` remplace le chemin CLI annoncé.
 
 ### 2) Tailnet (inter-réseau)
 
-Pour les configurations de type Londres/Vienne, Bonjour ne sera d'aucune aide. La cible « directe » recommandée est :
+Pour les configurations de style Londres/Vienne, Bonjour ne sera pas utile. La cible « directe » recommandée est :
 
 - Nom MagicDNS Tailscale (préféré) ou une IP tailnet stable.
 
-Si la passerelle peut détecter qu'elle fonctionne sous Tailscale, elle publie `tailnetDns` comme indice optionnel pour les clients (y compris les balises de zone étendue).
+Si le Tailscale peut détecter qu'il fonctionne sous Tailscale, il publie `tailnetDns` comme indication optionnelle pour les clients (y compris les balises grande zone).
 
-L'application macOS préfère désormais les noms MagicDNS aux IP Tailscale brutes pour la découverte de passerelles. Cela améliore la fiabilité lorsque les IP tailnet changent (par exemple après le redémarrage des nœuds ou la réaffectation CGNAT), car les noms MagicDNS résolvent automatiquement l'IP actuelle.
+L'application macOS préfère désormais les noms MagicDNS aux IP brutes Tailscale pour la découverte de passerelles. Cela améliore la fiabilité lorsque les IP tailnet changent (par exemple après le redémarrage de nœuds ou la réattribution CGNAT), car les noms MagicDNS résolvent automatiquement l'IP actuelle.
 
-Pour le jumelage de nœuds mobiles, les indices de découverte ne relâchent pas la sécurité du transport sur les itinéraires tailnet/publics :
+Pour le couplage de nœuds mobiles, les indications de découverte ne relâchent pas la sécurité du transport sur les routes tailnet/publiques :
 
-- iOS/Android exigent toujours un chemin de connexion sécurisé pour la première fois sur tailnet/public (`wss://` ou Tailscale Serve/Funnel).
-- Une IP tailnet brute découverte est un indice de routage, et non une autorisation d'utiliser une `ws://` distante en clair.
-- La `ws://` en connexion directe LAN privé reste prise en charge.
-- Si vous souhaitez le chemin Tailscale le plus simple pour les nœuds mobiles, utilisez Tailscale Serve afin que la découverte et le code de configuration résolvent tous deux vers le même point de terminaison MagicDNS sécurisé.
+- iOS/Android nécessitent toujours un chemin de connexion sécurisé tailnet/public pour la première fois (`wss://` ou Tailscale Serve/Funnel).
+- Une IP tailnet brute découverte est une indication de routage, et non une permission d'utiliser un `ws://` distant en texte clair.
+- Le `ws://` en connexion directe LAN privé reste pris en charge.
+- Si vous voulez le chemin Tailscale le plus simple pour les nœuds mobiles, utilisez Tailscale Serve afin que la découverte et le code de configuration résolvent tous deux vers le même point de terminaison sécurisé MagicDNS.
 
 ### 3) Manuel / Cible SSH
 
-Lorsqu'il n'y a pas d'itinéraire direct (ou que le mode direct est désactivé), les clients peuvent toujours se connecter via SSH en transférant le port de passerelle de bouclage.
+Lorsqu'il n'y a pas de route directe (ou que le mode direct est désactivé), les clients peuvent toujours se connecter via SSH en transférant le port de passerelle de bouclage.
 
 Voir [Accès à distance](/fr/gateway/remote).
 
-## Sélection du transport (politique client)
+## Sélection du transport (stratégie client)
 
 Comportement client recommandé :
 
 1. Si un point de terminaison direct apparié est configuré et accessible, utilisez-le.
-2. Sinon, si la découverte trouve une passerelle sur `local.` ou le domaine étendu configuré, proposez un choix « Utiliser cette passerelle » en un appui et enregistrez-la comme point de terminaison direct.
-3. Sinon, si un DNS/IP de tailnet est configuré, essayez en direct.
-   Pour les nœuds mobiles sur les routes tailnet/publiques, direct signifie un point de terminaison sécurisé, et non un `ws://` distant en clair.
-4. Sinon, revenez à SSH.
+2. Sinon, si la découverte trouve une passerelle sur `local.` ou le domaine étendu configuré, proposez un choix « Utiliser cette passerelle » en un appui et enregistrez-le comme point de terminaison direct.
+3. Sinon, si un DNS/IP de tailnet est configuré, essayez le mode direct.
+   Pour les nœuds mobiles sur les routes tailnet/publiques, direct signifie un point de terminaison sécurisé, et non un `ws://` distant en texte clair.
+4. Sinon, repliez-vous sur SSH.
 
 ## Appairage + auth (transport direct)
 
 La passerelle est la source de vérité pour l'admission des nœuds/clients.
 
-- Les demandes d'appairage sont créées/approuvées/rejetées dans la passerelle (voir [Appairage Gateway](/fr/gateway/pairing)).
+- Les demandes d'appariement sont créées/approuvées/rejetées dans la passerelle (voir [Appairage Gateway](/fr/gateway/pairing)).
 - La passerelle applique :
   - auth (jeton / paire de clés)
   - portées/ACL (la passerelle n'est pas un proxy brut vers chaque méthode)
@@ -136,6 +139,12 @@ La passerelle est la source de vérité pour l'admission des nœuds/clients.
 
 ## Responsabilités par composant
 
-- **Gateway** : annonce les balises de découverte, possède les décisions d'appairage et héberge le point de terminaison WS.
-- **Application macOS** : vous aide à choisir une passerelle, affiche les invites d'appairage et utilise SSH uniquement en dernier recours.
-- **Nœuds iOS/Android** : parcourent Bonjour pour plus de commodité et se connectent au WS Gateway apparié.
+- **Gateway** : diffuse les balises de découverte, possède les décisions d'appariement et héberge le point de terminaison WS.
+- **Application macOS** : vous aide à choisir une passerelle, affiche les invites d'appariement et utilise SSH uniquement en repli.
+- **Nœuds iOS/Android** : recherchent Bonjour pour plus de commodité et se connectent au WS du Gateway apparié.
+
+## Connexes
+
+- [Accès à distance](/fr/gateway/remote)
+- [Tailscale](/fr/gateway/tailscale)
+- [Découverte Bonjour](/fr/gateway/bonjour)

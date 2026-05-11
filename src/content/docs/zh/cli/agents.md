@@ -2,7 +2,7 @@
 summary: "`openclaw agents` 的 CLI 参考（list/add/delete/bindings/bind/unbind/set identity）"
 read_when:
   - You want multiple isolated agents (workspaces + routing + auth)
-title: "agents"
+title: "Agents"
 ---
 
 # `openclaw agents`
@@ -11,9 +11,9 @@ title: "agents"
 
 相关：
 
-- 多智能体路由：[多智能体路由](/zh/concepts/multi-agent)
-- 智能体工作区：[智能体工作区](/zh/concepts/agent-workspace)
-- Skills 可见性配置：[Skills 配置](/zh/tools/skills-config)
+- [Multi-agent routing](/zh/concepts/multi-agent)
+- [Agent workspace](/zh/concepts/agent-workspace)
+- [Skills config](/zh/tools/skills-config)：Skills 可见性配置。
 
 ## 示例
 
@@ -34,7 +34,7 @@ openclaw agents delete work
 
 使用路由绑定将入站渠道流量固定到特定智能体。
 
-如果您还希望每个代理具有不同的可见 Skills，请在 `openclaw.json` 中配置 `agents.defaults.skills` 和 `agents.list[].skills`。请参阅 [Skills config](/zh/tools/skills-config) 和 [Configuration Reference](/zh/gateway/configuration-reference#agents-defaults-skills)。
+如果您还希望每个 Agent 具有不同的可见 Skills，请在 `openclaw.json` 中配置 `agents.defaults.skills` 和 `agents.list[].skills`。请参阅 [Skills config](/zh/tools/skills-config) 和 [Configuration reference](/zh/gateway/config-agents#agents-defaults-skills)。
 
 列出绑定：
 
@@ -147,15 +147,18 @@ openclaw agents unbind --agent work --all
 - `main` 无法被删除。
 - 如果没有 `--force`，则需要进行交互式确认。
 - 工作区、代理状态和会话记录目录将被移至废纸篓，而非硬删除。
+- 如果另一个 Agent 的工作区是同一路径、在此工作区内，或包含此工作区，
+  则该工作区将被保留，并且 `--json` 会报告 `workspaceRetained`、
+  `workspaceRetainedReason` 和 `workspaceSharedWith`。
 
 ## 身份文件
 
-每个代理工作区都可以在工作区根目录包含一个 `IDENTITY.md`：
+每个 Agent 工作区都可以在工作区根目录包含一个 `IDENTITY.md`：
 
 - 示例路径：`~/.openclaw/workspace/IDENTITY.md`
 - `set-identity --from-identity` 从工作区根目录（或显式的 `--identity-file`）读取
 
-头像路径相对于工作区根目录解析。
+头像路径是相对于工作区根目录解析的。
 
 ## 设置身份
 
@@ -164,7 +167,7 @@ openclaw agents unbind --agent work --all
 - `name`
 - `theme`
 - `emoji`
-- `avatar` (相对于工作区的路径、http(s) URL 或数据 URI)
+- `avatar`（相对于工作区的路径、http(s) URL 或 data URI）
 
 选项：
 
@@ -178,11 +181,11 @@ openclaw agents unbind --agent work --all
 - `--avatar <value>`
 - `--json`
 
-注意事项：
+注意：
 
-- 可以使用 `--agent` 或 `--workspace` 来选择目标代理。
-- 如果您依赖 `--workspace` 且多个代理共享该工作区，命令将失败并要求您传递 `--agent`。
-- 当未提供显式身份字段时，该命令将从 `IDENTITY.md` 读取身份数据。
+- 可以使用 `--agent` 或 `--workspace` 来选择目标 Agent。
+- 如果您依赖 `--workspace` 且多个 Agent 共享该工作区，则命令将失败并要求您传递 `--agent`。
+- 当未提供显式身份字段时，该命令会从 `IDENTITY.md` 读取身份数据。
 
 从 `IDENTITY.md` 加载：
 
@@ -215,3 +218,9 @@ openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞" --ava
   },
 }
 ```
+
+## 相关内容
+
+- [CLI 参考](/zh/cli)
+- [多智能体路由](/zh/concepts/multi-agent)
+- [智能体工作区](/zh/concepts/agent-workspace)

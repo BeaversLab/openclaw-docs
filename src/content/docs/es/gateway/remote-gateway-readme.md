@@ -1,7 +1,7 @@
 ---
 summary: "Configuración del túnel SSH para OpenClaw.app conectándose a una puerta de enlace remota"
 read_when: "Conexión de la aplicación macOS a una puerta de enlace remota a través de SSH"
-title: "Configuración de Puerta de Enlace Remota"
+title: "Configuración de puerta de enlace remota"
 ---
 
 > Este contenido se ha fusionado en [Acceso remoto](/es/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent). Consulte esa página para obtener la guía actual.
@@ -162,3 +162,8 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 | `RunAtLoad`                          | Inicia el túnel cuando se carga el agente                  |
 
 OpenClaw.app se conecta a `ws://127.0.0.1:18789` en su máquina cliente. El túnel SSH reenvía esa conexión al puerto 18789 en la máquina remota donde se está ejecutando la puerta de enlace.
+
+## Relacionado
+
+- [Acceso remoto](/es/gateway/remote)
+- [Tailscale](/es/gateway/tailscale)

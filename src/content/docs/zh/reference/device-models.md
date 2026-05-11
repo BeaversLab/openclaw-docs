@@ -6,17 +6,15 @@ read_when:
 title: "设备型号数据库"
 ---
 
-# 设备型号数据库（友好名称）
+macOS 配套应用通过将 Apple 型号标识符（例如 `iPad16,6`、`Mac16,6`）映射为可读的名称，在 **Instances** UI 中显示友好的 Apple 设备型号名称。
 
-macOS 伴侣应用通过将 Apple 型号标识符（例如 `iPad16,6`、`Mac16,6`）映射为人类可读的名称，在 **Instances** UI 中显示友好的 Apple 设备型号名称。
-
-该映射作为 JSON 打包在以下位置：
+该映射作为 JSON 文件位于：
 
 - `apps/macos/Sources/OpenClaw/Resources/DeviceModels/`
 
-## 数据来源
+## 数据源
 
-我们目前从 MIT 许可的仓库打包该映射：
+我们目前从 MIT 许可的仓库中获取该映射：
 
 - `kyle-seongwoo-jun/apple-device-identifiers`
 
@@ -24,9 +22,9 @@ macOS 伴侣应用通过将 Apple 型号标识符（例如 `iPad16,6`、`Mac16,6
 
 ## 更新数据库
 
-1. 选择您要固定到的上游提交（一个用于 iOS，一个用于 macOS）。
+1. 选择你要固定的上游提交（一个用于 iOS，一个用于 macOS）。
 2. 更新 `apps/macos/Sources/OpenClaw/Resources/DeviceModels/NOTICE.md` 中的提交哈希值。
-3. 重新下载 JSON 文件，并固定到这些提交：
+3. 重新下载固定到这些提交的 JSON 文件：
 
 ```bash
 IOS_COMMIT="<commit sha for ios-device-identifiers.json>"
@@ -39,9 +37,14 @@ curl -fsSL "https://raw.githubusercontent.com/kyle-seongwoo-jun/apple-device-ide
   -o apps/macos/Sources/OpenClaw/Resources/DeviceModels/mac-device-identifiers.json
 ```
 
-4. 确保 `apps/macos/Sources/OpenClaw/Resources/DeviceModels/LICENSE.apple-device-identifiers.txt` 仍然与上游匹配（如果上游许可证发生更改，请替换它）。
+4. 确保 `apps/macos/Sources/OpenClaw/Resources/DeviceModels/LICENSE.apple-device-identifiers.txt` 仍与上游匹配（如果上游许可证发生变化，请替换它）。
 5. 验证 macOS 应用是否能干净地构建（无警告）：
 
 ```bash
 swift build --package-path apps/macos
 ```
+
+## 相关
+
+- [节点](/zh/nodes)
+- [节点故障排除](/zh/nodes/troubleshooting)

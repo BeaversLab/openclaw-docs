@@ -2,7 +2,7 @@
 summary: "Gateway(网关) 网关 lifecycle on macOS (launchd)"
 read_when:
   - Integrating the mac app with the gateway lifecycle
-title: "Gateway(网关) 网关 Lifecycle"
+title: "Gateway(网关) lifecycle"
 ---
 
 # macOS 上的 Gateway(网关) 网关 生命周期
@@ -60,3 +60,8 @@ remote host and connects over that tunnel.
 
 如果再次需要真正的子进程模式，应将其记录为一个
 独立的、仅用于开发的显式模式。
+
+## 相关
+
+- [macOS app](/zh/platforms/macos)
+- [Gateway(网关) runbook](/zh/gateway)

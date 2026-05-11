@@ -3,7 +3,7 @@ summary: "Referencia de CLI para `openclaw backup` (crear archivos de copia de s
 read_when:
   - You want a first-class backup archive for local OpenClaw state
   - You want to preview which paths would be included before reset or uninstall
-title: "backup"
+title: "Copia de seguridad"
 ---
 
 # `openclaw backup`
@@ -82,3 +82,7 @@ Los límites prácticos provienen de la máquina local y el sistema de archivos 
 Los espacios de trabajo grandes suelen ser el factor principal del tamaño del archivo. Si deseas una copia de seguridad más pequeña o más rápida, usa `--no-include-workspace`.
 
 Para obtener el archivo más pequeño, usa `--only-config`.
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)

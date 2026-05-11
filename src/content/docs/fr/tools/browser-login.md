@@ -3,7 +3,7 @@ summary: "Connexions manuelles pour l'automatisation du navigateur + publication
 read_when:
   - You need to log into sites for browser automation
   - You want to post updates to X/Twitter
-title: "Connexion via le navigateur"
+title: "Connexion via navigateur"
 ---
 
 # Connexion via le navigateur + publications sur X/Twitter
@@ -71,3 +71,9 @@ openclaw browser open https://x.com --browser-profile openclaw --target host
 ```
 
 Ou désactivez le sandboxing pour l'agent qui publie des mises à jour.
+
+## Associé
+
+- [Navigateur](/fr/tools/browser)
+- [Dépannage Navigateur Linux](/fr/tools/browser-linux-troubleshooting)
+- [Dépannage Navigateur WSL2](/fr/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

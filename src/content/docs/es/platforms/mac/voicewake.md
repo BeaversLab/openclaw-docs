@@ -2,7 +2,7 @@
 summary: "Modos de activación por voz y pulsar para hablar, más detalles de enrutamiento en la aplicación de Mac"
 read_when:
   - Working on voice wake or PTT pathways
-title: "Voice Wake (macOS)"
+title: "Activación por voz (macOS)"
 ---
 
 # Activación por voz y pulsar para hablar
@@ -65,3 +65,9 @@ Endurecimiento:
 
 - Active la pulsación para hablar, mantenga presionado Cmd+Fn, hable, suelte: la superposición debería mostrar los parciales y luego enviar.
 - Mientras se mantiene presionado, los “oídos” de la barra de menú deben permanecer agrandados (usan `triggerVoiceEars(ttl:nil)`); se reducen después de soltar.
+
+## Relacionado
+
+- [Activación por voz](/es/nodes/voicewake)
+- [Superposición de voz](/es/platforms/mac/voice-overlay)
+- [Aplicación de macOS](/es/platforms/macos)

@@ -3,7 +3,7 @@ summary: "Fournisseurs de modèles (LLM) pris en charge par OpenClaw"
 read_when:
   - You want to choose a model provider
   - You want quick setup examples for LLM auth + model selection
-title: "Démarrage rapide du fournisseur de modèles"
+title: "Démarrage rapide du provider de modèles"
 ---
 
 # Fournisseurs de modèles
@@ -57,3 +57,9 @@ OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentif
 
 Pour le catalogue complet des fournisseurs (xAI, Groq, Mistral, etc.) et la configuration avancée,
 voyez [Model providers](/fr/concepts/model-providers).
+
+## Connexes
+
+- [Sélection du modèle](/fr/concepts/model-providers)
+- [Bascule de modèle](/fr/concepts/model-failover)
+- [CLI de modèles](CLI)(/en/cli/models)

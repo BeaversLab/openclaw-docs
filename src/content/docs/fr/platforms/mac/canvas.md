@@ -7,13 +7,11 @@ read_when:
 title: "Canvas"
 ---
 
-# Canvas (application macOS)
-
-L'application macOS intègre un **panneau Canvas** contrôlé par un agent en utilisant `WKWebView`. C'est un espace de travail visuel léger pour HTML/CSS/JS, A2UI, et de petites surfaces UI interactives.
+L'application macOS intègre un panneau **Canvas** contrôlé par un agent en utilisant `WKWebView`. Il s'agit d'un espace de travail visuel léger pour HTML/CSS/JS, A2UI et de petites surfaces d'interface utilisateur interactives.
 
 ## Emplacement de Canvas
 
-L'état de Canvas est stocké dans Application Support :
+L'état de Canvas est stocké sous Application Support :
 
 - `~/Library/Application Support/OpenClaw/canvas/<session>/...`
 
@@ -27,27 +25,27 @@ Exemples :
 - `openclaw-canvas://main/assets/app.css` → `<canvasRoot>/main/assets/app.css`
 - `openclaw-canvas://main/widgets/todo/` → `<canvasRoot>/main/widgets/todo/index.html`
 
-Si aucun `index.html` n'existe à la racine, l'application affiche une **page de structure intégrée**.
+Si aucun `index.html` n'existe à la racine, l'application affiche une **page d'échafaudage intégrée**.
 
 ## Comportement du panneau
 
-- Panneau sans bordure, redimensionnable, ancré près de la barre de menus (ou du curseur de la souris).
+- Panneau redimensionnable sans bordure, ancré près de la barre de menus (ou du curseur de la souris).
 - Mémorise la taille et la position par session.
-- Recharge automatiquement lorsque les fichiers canvas locaux changent.
+- Se recharge automatiquement lorsque les fichiers Canvas locaux changent.
 - Un seul panneau Canvas est visible à la fois (la session est changée si nécessaire).
 
 Canvas peut être désactivé depuis Paramètres → **Autoriser Canvas**. Lorsqu'il est désactivé, les commandes de nœud canvas renvoient `CANVAS_DISABLED`.
 
 ## Surface de l'API de l'agent
 
-Canvas est exposé via le **WebSocket Gateway**, donc l'agent peut :
+Canvas est exposé via le **WebSocket du Gateway**, ce qui permet à l'agent de :
 
 - afficher/masquer le panneau
 - naviguer vers un chemin ou une URL
 - évaluer du JavaScript
 - capturer une image instantanée
 
-Exemples CLI :
+Exemples de CLI :
 
 ```bash
 openclaw nodes canvas present --node <id>
@@ -56,14 +54,14 @@ openclaw nodes canvas eval --node <id> --js "document.title"
 openclaw nodes canvas snapshot --node <id>
 ```
 
-Remarques :
+Notes :
 
-- `canvas.navigate` accepte les **chemins canvas locaux**, les URLs `http(s)` et les URLs `file://`.
-- Si vous passez `"/"`, le Canvas affiche la structure locale ou `index.html`.
+- `canvas.navigate` accepte les **chemins Canvas locaux**, les URLs `http(s)` et les URLs `file://`.
+- Si vous passez `"/"`, le Canvas affiche l'échafaudage local ou le `index.html`.
 
 ## A2UI dans Canvas
 
-A2UI est hébergé par l'hôte canvas du Gateway et rendu à l'intérieur du panneau Canvas. Lorsque le Gateway annonce un hôte Canvas, l'application macOS navigue automatiquement vers la page d'hôte A2UI lors de la première ouverture.
+A2UI est hébergé par l'hôte de canvas Gateway et rendu à l'intérieur du panneau Canvas. Lorsque le Gateway annonce un hôte Canvas, l'application Canvas navigue automatiquement vers la page de l'hôte A2UI lors de la première ouverture.
 
 URL de l'hôte A2UI par défaut :
 
@@ -73,7 +71,7 @@ http://<gateway-host>:18789/__openclaw__/a2ui/
 
 ### Commandes A2UI (v0.8)
 
-Canvas accepte actuellement les messages serveur→client Canvas v0.8 :
+Canvas accepte actuellement les messages serveur→client **A2UI v0.8** :
 
 - `beginRendering`
 - `surfaceUpdate`
@@ -82,7 +80,7 @@ Canvas accepte actuellement les messages serveur→client Canvas v0.8 :
 
 `createSurface` (v0.9) n'est pas pris en charge.
 
-Exemple CLI :
+Exemple de CLI :
 
 ```bash
 cat > /tmp/a2ui-v0.8.jsonl <<'EOFA2'
@@ -99,7 +97,7 @@ Test rapide :
 openclaw nodes canvas a2ui push --node <id> --text "Hello from A2UI"
 ```
 
-## Déclenchement d'exécutions d'agent depuis Canvas
+## Déclenchement des exécutions d'agent depuis Canvas
 
 Canvas peut déclencher de nouvelles exécutions d'agent via des liens profonds :
 
@@ -111,10 +109,15 @@ Exemple (en JS) :
 window.location.href = "openclaw://agent?message=Review%20this%20design";
 ```
 
-L'application demande confirmation sauf si une clé valide est fournie.
+L'application demande confirmation, sauf si une clé valide est fournie.
 
 ## Notes de sécurité
 
-- Le schéma Canvas bloque le traversée de répertoires ; les fichiers doivent se trouver sous la racine de la session.
-- Le contenu Canvas local utilise un schéma personnalisé (aucun serveur de bouclage requis).
-- Les URLs `http(s)` externes sont autorisées uniquement lorsqu'elles sont explicitement naviguées.
+- Le schéma Canvas bloque la traversée de répertoires ; les fichiers doivent se trouver à la racine de la session.
+- Le contenu local Canvas utilise un schéma personnalisé (aucun serveur de bouclage requis).
+- Les URLs `http(s)` externes sont autorisées uniquement lors d'une navigation explicite.
+
+## Connexes
+
+- [Application macOS](/fr/platforms/macos)
+- [WebChat](/fr/web/webchat)

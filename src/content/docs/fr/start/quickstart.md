@@ -6,8 +6,6 @@ read_when:
 title: "Quick start"
 ---
 
-# Quick start
-
 <Info>Quick start fait désormais partie de [Getting Started](/fr/start/getting-started).</Info>
 
 <Columns>
@@ -15,6 +13,11 @@ title: "Quick start"
     Installez OpenClaw et lancez votre premier chat en quelques minutes.
   </Card>
   <Card title="Onboarding (CLI)" href="/fr/start/wizard">
-    Guide complet sur l'onboarding CLI et options avancées.
+    Référence complète de l'onboarding CLI et options avancées.
   </Card>
 </Columns>
+
+## Connexes
+
+- [Getting started](/fr/start/getting-started)
+- [Vue d'ensemble de l'installation](/fr/install)

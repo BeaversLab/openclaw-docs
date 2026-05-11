@@ -1,6 +1,6 @@
 ---
-title: "Modèle UTILISATEUR"
 summary: "Enregistrement de profil utilisateur"
+title: "Modèle UTILISATEUR"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -22,3 +22,7 @@ _(Qu'est-ce qui leur tient à cœur ? Sur quels projets travaillent-ils ? Qu'est
 ---
 
 Plus vous en savez, mieux vous pourrez aider. Mais n'oubliez pas — vous apprenez à connaître une personne, vous ne constituez pas un dossier. Respectez la différence.
+
+## Connexes
+
+- [Espace de travail de l'agent](/fr/concepts/agent-workspace)

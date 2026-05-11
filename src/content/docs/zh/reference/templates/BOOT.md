@@ -1,6 +1,6 @@
 ---
-title: "BOOT.md 模板"
 summary: "BOOT.md 的工作区模板"
+title: "BOOT.md 模板"
 read_when:
   - Adding a BOOT.md checklist
 ---
@@ -10,3 +10,7 @@ read_when:
 添加简短、明确的指令，说明 OpenClaw 启动时应执行的操作（启用 `hooks.internal.enabled`）。
 如果任务发送消息，请使用消息工具，然后回复确切的
 静默令牌 `NO_REPLY` / `no_reply`。
+
+## 相关
+
+- [Agent 工作区](/zh/concepts/agent-workspace)

@@ -1,109 +1,94 @@
 ---
-title: "Construcción de complementos de canal"
+summary: "Guía paso a paso para crear un complemento de canal de mensajería para OpenClaw"
+title: "Crear complementos de canal"
 sidebarTitle: "Complementos de canal"
-summary: "Guía paso a paso para construir un complemento de canal de mensajería para OpenClaw"
 read_when:
   - You are building a new messaging channel plugin
   - You want to connect OpenClaw to a messaging platform
   - You need to understand the ChannelPlugin adapter surface
 ---
 
-# Creación de complementos de canales
-
 Esta guía explica cómo crear un complemento de canal que conecte OpenClaw con una
-plataforma de mensajería. Al final, tendrá un canal funcional con seguridad de MD,
+plataforma de mensajería. Al final tendrás un canal funcional con seguridad de MD,
 emparejamiento, hilos de respuesta y mensajería saliente.
 
-<Info>Si no has construido ningún plugin de OpenClaw antes, lee [Introducción](/es/plugins/building-plugins) primero para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
+<Info>Si no has creado ningún complemento de OpenClaw antes, lee [Primeros pasos](/es/plugins/building-plugins) primero para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
 
-## Cómo funcionan los complementos de canales
+## Cómo funcionan los complementos de canal
 
-Los complementos de canal no necesitan sus propias herramientas de envío/edición/reacción. OpenClaw mantiene una
-herramienta `message` compartida en el núcleo. Su complemento posee:
+Los complementos de canal no necesitan sus propias herramientas de enviar/editar/reaccionar. OpenClaw mantiene una
+herramienta compartida `message` en el núcleo. Tu complemento posee:
 
-- **Configuración** — resolución de cuenta y asistente de configuración
+- **Config** — resolución de cuenta y asistente de configuración
 - **Seguridad** — política de MD y listas de permitidos
 - **Emparejamiento** — flujo de aprobación de MD
-- **Gramática de sesión** — cómo se asignan los ids de conversación específicos del proveedor a chats base, ids de hilo y reservas principales
+- **Gramática de sesión** — cómo se asignan los IDs de conversación específicos del proveedor a chats base, IDs de hilo y respaldos principales
 - **Saliente** — envío de texto, medios y encuestas a la plataforma
-- **Hilos** — cómo se hilvanan las respuestas
-- **Heartbeat typing** — señales opcionales de escritura/ocupado para los objetivos de entrega de latidos.
+- **Hilos** — cómo se agrupan las respuestas
+- **Latido de escritura** — señales opcionales de escritura/ocupado para objetivos de entrega de latido
 
-Core posee la herramienta de mensajes compartida, el cableado de prompts, la forma de la clave de sesión externa,
+El núcleo es propietario de la herramienta de mensajes compartida, el cableado de avisos (prompt), la forma de la clave de sesión externa,
 la contabilidad genérica de `:thread:` y el despacho.
 
-Si tu canal admite indicadores de escritura fuera de las respuestas entrantes, expón
-`heartbeat.sendTyping(...)` en el plugin del canal. Core lo llama con el
-objetivo de entrega de latidos resuelto antes de que se inicie la ejecución del modelo de latidos
-y utiliza el ciclo de vida compartido de mantenimiento/limpieza de escritura. Añade `heartbeat.clearTyping(...)`
-cuando la plataforma necesite una señal de detención explícita.
+Si tu canal admite indicadores de escritura fuera de las respuestas entrantes, expone
+`heartbeat.sendTyping(...)` en el complemento del canal. El núcleo lo llama con el
+objetivo de entrega de latido resuelto antes de que comience la ejecución del modelo de latido
+y usa el ciclo de vida compartido de mantenimiento/limpieza de escritura. Agrega `heartbeat.clearTyping(...)`
+cuando la plataforma necesita una señal de detención explícita.
 
-Si tu canal añade parámetros a la herramienta de mensajes que transportan fuentes multimedia, expone esos
-nombres de parámetros a través de `describeMessageTool(...).mediaSourceParams`. Core utiliza
-esa lista explícita para la normalización de rutas de sandbox y la política de acceso
-multimedia de salida, por lo que los plugins no necesitan casos especiales en el núcleo compartido para parámetros
+Si tu canal añade parámetros de herramienta de mensaje que llevan fuentes de medios, expone esos
+nombres de parámetros a través de `describeMessageTool(...).mediaSourceParams`. El núcleo usa
+esa lista explícita para la normalización de rutas del sandbox y la política de acceso a medios
+saliente, por lo que los complementos no necesitan casos especiales en el núcleo compartido para parámetros
 de avatar, archivo adjunto o imagen de portada específicos del proveedor.
 Se prefiere devolver un mapa con clave de acción como
-`{ "set-profile": ["avatarUrl", "avatarPath"] }` para que las acciones no relacionadas no
-hereden los argumentos multimedia de otra acción. Una matriz plana sigue funcionando para parámetros que
-se comparten intencionadamente en todas las acciones expuestas.
+`{ "set-profile": ["avatarUrl", "avatarPath"] }` para que acciones no relacionadas no
+hereden los argumentos de medios de otra acción. Una matriz plana todavía funciona para parámetros que
+se comparten intencionalmente en cada acción expuesta.
 
-Si tu plataforma almacena un alcance adicional dentro de los IDs de conversación, mantén ese análisis
-en el plugin con `messaging.resolveSessionConversation(...)`. Ese es el
-enlace canónico para mapear `rawId` al ID de conversación base, el ID de hilo opcional,
-el `baseConversationId` explícito y cualquier `parentConversationCandidates`.
-Cuando devuelvas `parentConversationCandidates`, manténlos ordenados del
-padre más estrecho al más amplio/conversación base.
+Si tu plataforma almacena un alcance adicional dentro de los IDs de conversación, mantén ese análisis en el complemento con `messaging.resolveSessionConversation(...)`. Ese es el enlace canónico para mapear `rawId` al ID de conversación base, ID de hilo opcional, `baseConversationId` explícito y cualquier `parentConversationCandidates`. Cuando devuelvas `parentConversationCandidates`, mantenlos ordenados desde el padre más estrecho hasta la conversación más amplia/base.
 
-Los plugins empaquetados que necesitan el mismo análisis antes de que se inicie el registro del canal
-también pueden exponer un archivo `session-key-api.ts` de nivel superior con una exportación
-`resolveSessionConversation(...)` coincidente. Core utiliza esa superficie segura para el arranque
-solo cuando el registro de plugins en tiempo de ejecución aún no está disponible.
+Los complementos agrupados que necesitan el mismo análisis antes de que se inicie el registro del canal también pueden exponer un archivo `session-key-api.ts` de nivel superior con una exportación `resolveSessionConversation(...)` coincidente. Core utiliza esa superficie segura para el arranque solo cuando el registro del complemento en tiempo de ejecución aún no está disponible.
 
-`messaging.resolveParentConversationCandidates(...)` permanece disponible como
-un mecanismo de compatibilidad heredado cuando un complemento solo necesita respaldos parentales encima
-del id genérico/sin procesar. Si existen ambos ganchos, el núcleo usa
-`resolveSessionConversation(...).parentConversationCandidates` primero y solo
-retrocede a `resolveParentConversationCandidates(...)` cuando el gancho canónico
-los omite.
+`messaging.resolveParentConversationCandidates(...)` sigue disponible como mecanismo de respaldo para compatibilidad heredada cuando un complemento solo necesita respaldos principales encima del ID genérico/sin procesar. Si existen ambos enlaces, core usa `resolveSessionConversation(...).parentConversationCandidates` primero y solo recurre a `resolveParentConversationCandidates(...)` cuando el enlace canónico los omite.
 
 ## Aprobaciones y capacidades del canal
 
 La mayoría de los complementos de canal no necesitan código específico para aprobaciones.
 
-- El núcleo gestiona el mismo chat `/approve`, las cargas útiles compartidas del botón de aprobación y la entrega de respaldo genérica.
-- Prefiera un objeto `approvalCapability` en el complemento del canal cuando el canal necesita comportamiento específico de aprobación.
-- `ChannelPlugin.approvals` se eliminó. Coloque los datos de entrega/nativo/renderizado/autenticación de aprobación en `approvalCapability`.
-- `plugin.auth` es solo para iniciar sesión/cerrar sesión; el núcleo ya no lee los ganchos de autenticación de aprobación de ese objeto.
-- `approvalCapability.authorizeActorAction` y `approvalCapability.getActionAvailabilityState` son la interfaz canónica de autenticación de aprobaciones.
-- Use `approvalCapability.getActionAvailabilityState` para la disponibilidad de autenticación de aprobación del mismo chat.
-- Si su canal expone aprobaciones de ejecución nativas, use `approvalCapability.getExecInitiatingSurfaceState` para el estado de la superficie iniciadora/cliente nativo cuando difiera de la autenticación de aprobación del mismo chat. El núcleo usa ese gancho específico de ejecución para distinguir `enabled` vs `disabled`, decidir si el canal iniciador admite aprobaciones de ejecución nativas e incluir el canal en la guía de respaldo del cliente nativo. `createApproverRestrictedNativeApprovalCapability(...)` completa esto para el caso común.
-- Use `outbound.shouldSuppressLocalPayloadPrompt` o `outbound.beforeDeliverPayload` para el comportamiento del ciclo de vida de la carga útil específico del canal, como ocultar avisos de aprobación local duplicados o enviar indicadores de escritura antes de la entrega.
-- Use `approvalCapability.delivery` solo para el enrutamiento de aprobaciones nativas o la supresión de respaldo.
-- Use `approvalCapability.nativeRuntime` para los datos de aprobación nativa propiedad del canal. Manténgalo diferido en los puntos de entrada frecuentes del canal con `createLazyChannelApprovalNativeRuntimeAdapter(...)`, que puede importar su módulo de tiempo de ejecución bajo demanda mientras permite que el núcleo ensamble el ciclo de vida de la aprobación.
-- Use `approvalCapability.render` solo cuando un canal realmente necesita cargas útiles de aprobación personalizadas en lugar del renderizador compartido.
-- Use `approvalCapability.describeExecApprovalSetup` cuando el canal desea que la respuesta de ruta deshabilitada explique los ajustes de configuración exactos necesarios para habilitar las aprobaciones de ejecución nativas. El hook recibe `{ channel, channelLabel, accountId }`; los canales de cuentas con nombre deben mostrar rutas con alcance de cuenta como `channels.<channel>.accounts.<id>.execApprovals.*` en lugar de los valores predeterminados de nivel superior.
-- Si un canal puede inferir identidades de DM estables tipo propietario desde la configuración existente, use `createResolvedApproverActionAuthAdapter` de `openclaw/plugin-sdk/approval-runtime` para restringir `/approve` del mismo chat sin agregar lógica central específica para aprobaciones.
-- Si un canal necesita entrega de aprobaciones nativas, mantenga el código del canal enfocado en la normalización de objetivos más los hechos de transporte/presentación. Use `createChannelExecApprovalProfile`, `createChannelNativeOriginTargetResolver`, `createChannelApproverDmTargetResolver` y `createApproverRestrictedNativeApprovalCapability` de `openclaw/plugin-sdk/approval-runtime`. Coloque los hechos específicos del canal detrás de `approvalCapability.nativeRuntime`, idealmente a través de `createChannelApprovalNativeRuntimeAdapter(...)` o `createLazyChannelApprovalNativeRuntimeAdapter(...)`, para que el núcleo pueda ensamblar el controlador y ser responsable del filtrado de solicitudes, enrutamiento, deduplicación, caducidad, suscripción a la puerta de enlace y avisos de enrutado a otro lugar. `nativeRuntime` se divide en algunos puntos de conexión más pequeños:
+- Core posee el `/approve` en el mismo chat, las cargas útiles compartidas del botón de aprobación y la entrega de respaldo genérica.
+- Prefiere un objeto `approvalCapability` en el complemento de canal cuando el canal necesita un comportamiento específico para aprobaciones.
+- `ChannelPlugin.approvals` se ha eliminado. Coloca los datos de entrega/nativo/renderizado/autenticación de aprobaciones en `approvalCapability`.
+- `plugin.auth` es solo para inicio de sesión/cierre de sesión; core ya no lee enlaces de autenticación de aprobación de ese objeto.
+- `approvalCapability.authorizeActorAction` y `approvalCapability.getActionAvailabilityState` son la costura canónica de autenticación de aprobaciones.
+- Usa `approvalCapability.getActionAvailabilityState` para la disponibilidad de autenticación de aprobaciones en el mismo chat.
+- Si tu canal expone aprobaciones de ejecución nativas, usa `approvalCapability.getExecInitiatingSurfaceState` para el estado de la superficie de inicio/cliente nativo cuando difiera de la autenticación de aprobación del mismo chat. Core usa ese enlace específico de ejecución para distinguir `enabled` vs `disabled`, decidir si el canal de inicio admite aprobaciones de ejecución nativas e incluir el canal en la guía de contingencia del cliente nativo. `createApproverRestrictedNativeApprovalCapability(...)` rellena esto para el caso común.
+- Usa `outbound.shouldSuppressLocalPayloadPrompt` o `outbound.beforeDeliverPayload` para el comportamiento del ciclo de vida de la carga útil específica del canal, como ocultar indicadores de aprobación local duplicados o enviar indicadores de escritura antes de la entrega.
+- Usa `approvalCapability.delivery` solo para el enrutamiento de aprobación nativa o la supresión de la contingencia.
+- Usa `approvalCapability.nativeRuntime` para los datos de aprobación nativa propiedad del canal. Mantenlo diferido en los puntos de entrada frecuentes del canal con `createLazyChannelApprovalNativeRuntimeAdapter(...)`, que puede importar tu módulo de tiempo de ejecución bajo demanda mientras aún permite a core ensamblar el ciclo de vida de aprobación.
+- Usa `approvalCapability.render` solo cuando un canal realmente necesite cargas útiles de aprobación personalizadas en lugar del renderizador compartido.
+- Usa `approvalCapability.describeExecApprovalSetup` cuando el canal quiera que la respuesta de ruta deshabilitada explique los ajustes de configuración exactos necesarios para habilitar las aprobaciones de ejecución nativas. El enlace recibe `{ channel, channelLabel, accountId }`; los canales de cuenta con nombre deben renderizar rutas con alcance de cuenta como `channels.<channel>.accounts.<id>.execApprovals.*` en lugar de los valores predeterminados de nivel superior.
+- Si un canal puede inferir identidades de MD estables tipo propietario desde la configuración existente, usa `createResolvedApproverActionAuthAdapter` de `openclaw/plugin-sdk/approval-runtime` para restringir el `/approve` del mismo chat sin agregar lógica central específica de aprobación.
+- Si un canal necesita entrega de aprobaciones nativa, mantenga el código del canal enfocado en la normalización de objetivos más los hechos de transporte/presentación. Use `createChannelExecApprovalProfile`, `createChannelNativeOriginTargetResolver`, `createChannelApproverDmTargetResolver` y `createApproverRestrictedNativeApprovalCapability` de `openclaw/plugin-sdk/approval-runtime`. Ponga los hechos específicos del canal detrás de `approvalCapability.nativeRuntime`, idealmente a través de `createChannelApprovalNativeRuntimeAdapter(...)` o `createLazyChannelApprovalNativeRuntimeAdapter(...)`, para que el núcleo pueda ensamblar el controlador y asumir el filtrado de solicitudes, enrutamiento, deduplicación, caducidad, suscripción a la puerta de enlace y avisos de enrutado a otro lugar. `nativeRuntime` se divide en varias juntas más pequeñas:
 - `availability` — si la cuenta está configurada y si se debe manejar una solicitud
-- `presentation` — asigne el modelo de vista de aprobación compartido en cargas útiles nativas pendientes/resueltas/caducadas o acciones finales
-- `transport` — prepare los objetivos más envíe/actualice/elimine mensajes de aprobación nativos
-- `interactions` — ganchos opcionales de vincular/desvincular/limpiar-acción para botones nativos o reacciones
+- `presentation` — asignar el modelo de vista de aprobación compartido a cargas útiles nativas pendientes/resueltas/caducadas o acciones finales
+- `transport` — preparar objetivos más enviar/actualizar/eliminar mensajes de aprobación nativos
+- `interactions` — ganchos opcionales de vinculación/desvinculación/limpieza de acciones para botones o reacciones nativas
 - `observe` — ganchos opcionales de diagnóstico de entrega
-- Si el canal necesita objetos propiedad del tiempo de ejecución como un cliente, token, aplicación Bolt o receptor de webhooks, regístrelos a través de `openclaw/plugin-sdk/channel-runtime-context`. El registro genérico de contexto de tiempo de ejecución permite al núcleo inicializar controladores impulsados por capacidades desde el estado de inicio del canal sin agregar pegamento de contenedor específico para aprobaciones.
-- Recurra a `createChannelApprovalHandler` o `createChannelNativeApprovalRuntime` de menor nivel solo cuando la costura basada en capacidades aún no sea lo suficientemente expresiva.
-- Los canales de aprobación nativos deben enrutar tanto `accountId` como `approvalKind` a través de esos ayudantes. `accountId` mantiene la política de aprobación de múltiples cuentas limitada a la cuenta de bot correcta, y `approvalKind` mantiene disponible el comportamiento de aprobación de ejecución frente a complemento para el canal sin ramificaciones codificadas en el núcleo.
-- El núcleo ahora también posee los avisos de reruteo de aprobación. Los complementos del canal no deben enviar sus propios mensajes de seguimiento de "la aprobación pasó a los MD / otro canal" desde `createChannelNativeApprovalRuntime`; en su lugar, exponga el enrutamiento preciso de origen + MD del aprobador a través de los ayudantes de capacidad de aprobación compartidos y deje que el núcleo agregue las entregas reales antes de publicar cualquier aviso de vuelta al chat iniciador.
+- Si el canal necesita objetos propiedad del tiempo de ejecución, como un cliente, token, aplicación Bolt o receptor de webhooks, regístrelos a través de `openclaw/plugin-sdk/channel-runtime-context`. El registro genérico de contexto de tiempo de ejecución permite al núcleo arrancar controladores impulsados por capacidades desde el estado de inicio del canal sin agregar pegamento de contenedor específico para aprobaciones.
+- Recurra a `createChannelApprovalHandler` o `createChannelNativeApprovalRuntime` de menor nivel solo cuando la junta impulsada por capacidades aún no sea lo suficientemente expresiva.
+- Los canales de aprobación nativos deben enrutar tanto `accountId` como `approvalKind` a través de esos ayudantes. `accountId` mantiene la política de aprobación de múltiples cuentas limitada a la cuenta de bot correcta, y `approvalKind` mantiene el comportamiento de aprobación de ejecución frente a complemento disponible para el canal sin ramificaciones codificadas en el núcleo.
+- Ahora el núcleo también posee los avisos de redirección de aprobaciones. Los complementos de canal no deben enviar sus propios mensajes de seguimiento de "la aprobación pasó a los MD / otro canal" desde `createChannelNativeApprovalRuntime`; en su lugar, expongan el enrutamiento preciso de origen + MD del aprobador a través de los asistentes de capacidad de aprobación compartidos y permitan que el núcleo agregue las entregas reales antes de publicar cualquier aviso de vuelta al chat iniciador.
 - Conservar el tipo de id de aprobación entregado de extremo a extremo. Los clientes nativos no deben
-  adivinar ni reescribir el enrutamiento de aprobación de ejecución frente a complemento desde el estado local del canal.
+  adivinar ni reescribir el enrutamiento de aprobaciones exec vs. plugin desde el estado local del canal.
 - Diferentes tipos de aprobación pueden exponer intencionalmente diferentes superficies nativas.
-  Ejemplos empaquetados actuales:
-  - Slack mantiene disponible el enrutamiento de aprobación nativo tanto para ids de ejecución como de complemento.
-  - Matrix mantiene el mismo enrutamiento nativo de MD/canal y la experiencia de usuario de reacción para aprobaciones
-    de ejecución y de complementos, al tiempo que todavía permite que la autenticación difiera según el tipo de aprobación.
+  Ejemplos incluidos actuales:
+  - Slack mantiene disponible el enrutamiento de aprobación nativo tanto para ids exec como de complemento.
+  - Matrix mantiene el mismo enrutamiento nativo de MD/canal y la experiencia de usuario de reacciones para las aprobaciones
+    exec y de complemento, mientras que aún permite que la autenticación difiera por tipo de aprobación.
 - `createApproverRestrictedNativeApprovalAdapter` todavía existe como un contenedor de compatibilidad, pero el código nuevo debería preferir el constructor de capacidades y exponer `approvalCapability` en el complemento.
 
-Para los puntos de entrada del canal activos, prefiera las subrutas de tiempo de ejecución más estrechas cuando solo
+Para los puntos de entrada de canal activos, prefiera las subrutas de tiempo de ejecución más estrechas cuando solo
 necesite una parte de esa familia:
 
 - `openclaw/plugin-sdk/approval-auth-runtime`
@@ -120,45 +105,57 @@ De manera similar, prefiera `openclaw/plugin-sdk/setup-runtime`,
 `openclaw/plugin-sdk/setup-adapter-runtime`,
 `openclaw/plugin-sdk/reply-runtime`,
 `openclaw/plugin-sdk/reply-dispatch-runtime`,
-`openclaw/plugin-sdk/reply-reference` y
+`openclaw/plugin-sdk/reply-reference`, y
 `openclaw/plugin-sdk/reply-chunking` cuando no necesite la superficie general
-paraguas.
+más amplia.
 
 Específicamente para la configuración:
 
-- `openclaw/plugin-sdk/setup-runtime` cubre los auxiliares de configuración seguros en tiempo de ejecución:
-  adaptadores de parches de configuración seguros de importación (`createPatchedAccountSetupAdapter`,
+- `openclaw/plugin-sdk/setup-runtime` cubre los asistentes de configuración seguros en tiempo de ejecución:
+  adaptadores de parches de configuración seguros para importar (`createPatchedAccountSetupAdapter`,
   `createEnvPatchedAccountSetupAdapter`,
   `createSetupInputPresenceValidator`), salida de nota de búsqueda,
-  `promptResolvedAllowFrom`, `splitSetupEntries` y los constructores
-  delegados de proxy de configuración
-- `openclaw/plugin-sdk/setup-adapter-runtime` es la costura del adaptador limitada y consciente del entorno
-  para `createEnvPatchedAccountSetupAdapter`
+  `promptResolvedAllowFrom`, `splitSetupEntries`, y los constructores
+  de proxy de configuración delegados
+- `openclaw/plugin-sdk/setup-adapter-runtime` es la costura del adaptador
+  consciente del entorno estrecho para `createEnvPatchedAccountSetupAdapter`
 - `openclaw/plugin-sdk/channel-setup` cubre los constructores de configuración de instalación opcional
-  además de algunos primitivos seguros para la configuración:
+  más algunos primitivos seguros para la configuración:
   `createOptionalChannelSetupSurface`, `createOptionalChannelSetupAdapter`,
 
-Si su canal admite configuración o autenticación impulsada por el entorno y los flujos genéricos de inicio/configuración
+Si su canal admite configuración o autenticación controlada por variables de entorno y los flujos genéricos de inicio/configuración
 deben conocer esos nombres de entorno antes de que se cargue el tiempo de ejecución, declárelos en el
-manifiesto del complemento con `channelEnvVars`. Mantenga el tiempo de ejecución del canal `envVars` o constantes
-locales solo para el texto dirigido al operador.
+manifiesto del complemento con `channelEnvVars`. Mantenga el tiempo de ejecución del canal `envVars` o las constantes
+locales solo para el texto orientado al operador.
 
-Si su canal puede aparecer en `status`, `channels list`, `channels status` o
+Si su canal puede aparecer en `status`, `channels list`, `channels status`, o
 escaneos SecretRef antes de que se inicie el tiempo de ejecución del complemento, agregue `openclaw.setupEntry` en
 `package.json`. Ese punto de entrada debe ser seguro de importar en rutas de comandos
-de solo lectura y debe devolver los metadatos del canal, el adaptador de configuración seguro para la configuración, el adaptador
-de estado y los metadatos del objetivo secreto del canal necesarios para esos resúmenes. No
+de solo lectura y debe devolver los metadatos del canal, el adaptador de configuración seguro para la configuración, el adaptador de estado
+y los metadatos del objetivo secreto del canal necesarios para esos resúmenes. No
 inicie clientes, oyentes o tiempos de ejecución de transporte desde la entrada de configuración.
 
+Mantenga también la ruta de importación de entrada del canal principal estrecha. El descubrimiento puede evaluar la
+entrada y el módulo del complemento del canal para registrar capacidades sin activar
+el canal. Los archivos como `channel-plugin-api.ts` deben exportar el objeto del
+complemento del canal sin importar asistentes de configuración, clientes de transporte,
+oyentes de sockets, iniciadores de subprocesos o módulos de inicio de servicio. Coloque esas piezas de
+tiempo de ejecución en módulos cargados desde `registerFull(...)`, establecedores de tiempo de ejecución o adaptadores
+de capacidad diferidos.
+
 `createOptionalChannelSetupWizard`, `DEFAULT_ACCOUNT_ID`,
-`createTopLevelChannelDmPolicy`, `setSetupChannelEnabled` y
+`createTopLevelChannelDmPolicy`, `setSetupChannelEnabled`, y
 `splitSetupEntries`
 
-- use la costura más amplia `openclaw/plugin-sdk/setup` solo cuando también necesite los
-  auxiliares compartidos de configuración/configuración más pesados, como
+- use la costura `openclaw/plugin-sdk/setup` más amplia solo cuando también necesite los
+  asistentes compartidos de configuración/inicio más pesados como
   `moveSingleAccountChannelSectionToDefaultAccount(...)`
 
-Si su canal solo desea anunciar "instale este complemento primero" en las superficies de configuración, prefiera `createOptionalChannelSetupSurface(...)`. El adaptador/asistente generado falla cerrado en la escritura y finalización de la configuración, y reutilizan el mismo mensaje de instalación requerida en la validación, finalización y copia del enlace a la documentación.
+Si su canal solo quiere anunciar "instale este complemento primero" en las superficies de
+configuración, prefiera `createOptionalChannelSetupSurface(...)`. El adaptador/asistente
+generado falla de forma cerrada en las escrituras y finalización de la configuración, y reutiliza
+el mismo mensaje de instalación requerida en la validación, finalización y texto de
+enlace a la documentación.
 
 Para otras rutas activas del canal, prefiera los ayudantes estrechos sobre las superficies heredadas más amplias:
 
@@ -166,23 +163,24 @@ Para otras rutas activas del canal, prefiera los ayudantes estrechos sobre las s
   `openclaw/plugin-sdk/account-id`,
   `openclaw/plugin-sdk/account-resolution` y
   `openclaw/plugin-sdk/account-helpers` para la configuración multicuenta y
-  la reserva de cuenta predeterminada
+  la reserva a la cuenta predeterminada
 - `openclaw/plugin-sdk/inbound-envelope` y
-  `openclaw/plugin-sdk/inbound-reply-dispatch` para el enrutamiento/sobre entrante y
-  el cableado de registro y envío
-- `openclaw/plugin-sdk/messaging-targets` para el análisis/coincidencia de objetivos
+  `openclaw/plugin-sdk/inbound-reply-dispatch` para la ruta/sobre de entrada y
+  el cableado de registro y despacho
+- `openclaw/plugin-sdk/messaging-targets` para el análisis/emparejamiento de objetivos
 - `openclaw/plugin-sdk/outbound-media` y
-  `openclaw/plugin-sdk/outbound-runtime` para la carga de medios más los delegados
-  de identidad/envío saliente y la planificación de carga útil
+  `openclaw/plugin-sdk/outbound-runtime` para la carga de medios, además de los delegados de identidad/envío de salida y la planificación de cargas útiles
 - `buildThreadAwareOutboundSessionRoute(...)` de
-  `openclaw/plugin-sdk/channel-core` cuando una ruta saliente debe preservar un
-  `replyToId`/`threadId` explícito o recuperar la sesión `:thread:` actual
-  después de que la clave de sesión base todavía coincida. Los complementos del proveedor pueden anular la precedencia, el comportamiento del sufijo y la normalización del ID del hilo cuando su plataforma tiene semánticas de entrega de hilos nativas.
+  `openclaw/plugin-sdk/channel-core` cuando una ruta de salida debe preservar un
+  `replyToId`/`threadId` explícito o recuperar la sesión actual de `:thread:`
+  después de que la clave de sesión base aún coincida. Los complementos del proveedor pueden anular
+  la precedencia, el comportamiento del sufijo y la normalización del ID del hilo cuando su plataforma
+  tiene semánticas de entrega de hilos nativas.
 - `openclaw/plugin-sdk/thread-bindings-runtime` para el ciclo de vida de vinculación de hilos
-  y el registro del adaptador
-- `openclaw/plugin-sdk/agent-media-payload` solo cuando todavía se requiere un diseño de campo de carga útil de agente/medios heredado
+  y el registro de adaptadores
+- `openclaw/plugin-sdk/agent-media-payload` solo cuando todavía se requiere un diseño de campo de carga útil de agente/medias heredado
 - `openclaw/plugin-sdk/telegram-command-config` para la normalización de comandos personalizados de Telegram,
-  la validación de duplicados/conflictos y un contrato de configuración de comando estable de reserva
+  la validación de duplicados/conflictos y un contrato de configuración de comandos con reserva estable
 
 Los canales de solo autenticación generalmente pueden detenerse en la ruta predeterminada: el núcleo maneja las aprobaciones y el complemento solo expone capacidades de autenticación y salida. Los canales de aprobación nativos como Matrix, Slack, Telegram y transportes de chat personalizados deben usar los asistentes nativos compartidos en lugar de crear su propio ciclo de vida de aprobación.
 
@@ -193,9 +191,8 @@ Mantenga el manejo de menciones entrantes dividido en dos capas:
 - recopilación de evidencia propiedad del complemento
 - evaluación de políticas compartidas
 
-Use `openclaw/plugin-sdk/channel-mention-gating` para las decisiones de política de menciones.
-Use `openclaw/plugin-sdk/channel-inbound` solo cuando necesite el asistente de entrada
-barril más amplio.
+Use `openclaw/plugin-sdk/channel-mention-gating` para las decisiones de política de mención.
+Use `openclaw/plugin-sdk/channel-inbound` solo cuando necesite el barril de ayuda de entrada más amplio.
 
 Adecuado para la lógica local del complemento:
 
@@ -250,7 +247,7 @@ if (decision.shouldSkip) return;
 ```
 
 `api.runtime.channel.mentions` expone los mismos asistentes de mención compartidos para
-los complementos de canal empaquetados que ya dependen de la inyección en tiempo de ejecución:
+los complementos de canal incluidos que ya dependen de la inyección en tiempo de ejecución:
 
 - `buildMentionRegexes`
 - `matchesMentionPatterns`
@@ -259,12 +256,11 @@ los complementos de canal empaquetados que ya dependen de la inyección en tiemp
 - `resolveInboundMentionDecision`
 
 Si solo necesita `implicitMentionKindWhen` y
-`resolveInboundMentionDecision`, importe desde
-`openclaw/plugin-sdk/channel-mention-gating` para evitar cargar asistentes de tiempo de ejecución
-de entrada no relacionados.
+`resolveInboundMentionDecision`, impórtelos de
+`openclaw/plugin-sdk/channel-mention-gating` para evitar cargar asistentes de tiempo de ejecución de entrada no relacionados.
 
-Los antiguos asistentes `resolveMentionGating*` permanecen en
-`openclaw/plugin-sdk/channel-inbound` solo como exportaciones de compatibilidad. El código nuevo
+Los helpers `resolveMentionGating*` antiguos permanecen en
+`openclaw/plugin-sdk/channel-inbound` solo como exportaciones de compatibilidad. El nuevo código
 debería usar `resolveInboundMentionDecision({ facts, policy })`.
 
 ## Tutorial
@@ -273,7 +269,7 @@ debería usar `resolveInboundMentionDecision({ facts, policy })`.
   <a id="step-1-package-and-manifest"></a>
   <Step title="Paquete y manifiesto">
     Cree los archivos estándar del complemento. El campo `channel` en `package.json` es
-    lo que hace que este sea un complemento de canal. Para obtener la superficie completa de metadatos del paquete,
+    lo que convierte a esto en un complemento de canal. Para conocer la superficie completa de metadatos del paquete,
     consulte [Configuración y configuración de complementos](/es/plugins/sdk-setup#openclaw-channel):
 
     <CodeGroup>
@@ -304,15 +300,25 @@ debería usar `resolveInboundMentionDecision({ facts, policy })`.
       "configSchema": {
         "type": "object",
         "additionalProperties": false,
-        "properties": {
-          "acme-chat": {
+        "properties": {}
+      },
+      "channelConfigs": {
+        "acme-chat": {
+          "schema": {
             "type": "object",
+            "additionalProperties": false,
             "properties": {
               "token": { "type": "string" },
               "allowFrom": {
                 "type": "array",
                 "items": { "type": "string" }
               }
+            }
+          },
+          "uiHints": {
+            "token": {
+              "label": "Bot token",
+              "sensitive": true
             }
           }
         }
@@ -321,9 +327,14 @@ debería usar `resolveInboundMentionDecision({ facts, policy })`.
     ```
     </CodeGroup>
 
+    `configSchema` valida `plugins.entries.acme-chat.config`. Úselo para
+    la configuración propiedad del complemento que no sea la configuración de la cuenta del canal. `channelConfigs`
+    valida `channels.acme-chat` y es la fuente de ruta fría utilizada por el esquema de configuración,
+    la configuración y las superficies de la interfaz de usuario antes de que se cargue el tiempo de ejecución del complemento.
+
   </Step>
 
-  <Step title="Construir el objeto del complemento de canal">
+  <Step title="Compilar el objeto del complemento de canal">
     La interfaz `ChannelPlugin` tiene muchas superficies de adaptador opcionales. Comience con
     lo mínimo — `id` y `setup` — y agregue adaptadores según los necesite.
 
@@ -426,18 +437,26 @@ debería usar `resolveInboundMentionDecision({ facts, policy })`.
 
       | Opción | Lo que conecta |
       | --- | --- |
-      | `security.dm` | Solucionador de seguridad de DM con ámbito desde campos de configuración |
+      | `security.dm` | Resolvedor de seguridad de DM con alcance desde campos de configuración |
       | `pairing.text` | Flujo de emparejamiento de DM basado en texto con intercambio de códigos |
-      | `threading` | Solucionador de modo de respuesta (fijo, con ámbito de cuenta o personalizado) |
+      | `threading` | Resolvedor de modo de respuesta (fijo, con alcance de cuenta o personalizado) |
       | `outbound.attachedResults` | Funciones de envío que devuelven metadatos de resultado (ID de mensajes) |
 
-      También puede pasar objetos de adaptador sin procesar en lugar de las opciones
-      declarativas si necesita un control total.
+      También puede pasar objetos de adaptador sin procesar en lugar de las opciones declarativas
+      si necesita control total.
+
+      Los adaptadores de salida sin procesar pueden definir una función `chunker(text, limit, ctx)`.
+      El `ctx.formatting` opcional lleva decisiones de formato en el momento de entrega
+      como `maxLinesPerMessage`; aplíquelo antes de enviar para que el hilado de respuestas
+      y los límites de los fragmentos se resuelvan una vez mediante la entrega de salida compartida.
+      Los contextos de envío también incluyen `replyToIdSource` (`implicit` o `explicit`)
+      cuando se resolvió un objetivo de respuesta nativo, por lo que los asistentes de carga útil pueden preservar
+      etiquetas de respuesta explícitas sin consumir un espacio de respuesta implícito de un solo uso.
     </Accordion>
 
   </Step>
 
-  <Step title="Conectar el punto de entrada">
+  <Step title="Conecte el punto de entrada">
     Cree `index.ts`:
 
     ```typescript index.ts
@@ -475,10 +494,10 @@ debería usar `resolveInboundMentionDecision({ facts, policy })`.
 
     Coloque los descriptores de CLI propiedad del canal en `registerCliMetadata(...)` para que OpenClaw
     pueda mostrarlos en la ayuda raíz sin activar el tiempo de ejecución completo del canal,
-    mientras que las cargas completas normales aún recogen los mismos descriptores para el registro real de
+    mientras que las cargas completas normales todavía recogen los mismos descriptores para el registro real de
     comandos. Mantenga `registerFull(...)` para el trabajo exclusivo del tiempo de ejecución.
     Si `registerFull(...)` registra métodos RPC de puerta de enlace, use un
-    prefijo específico del complemento. Los espacios de nombres de administración principales (`config.*`,
+    prefijo específico del complemento. Los espacios de nombres de administración principal (`config.*`,
     `exec.approvals.*`, `wizard.*`, `update.*`) permanecen reservados y siempre
     resuelven a `operator.admin`.
     `defineChannelPluginEntry` maneja la división del modo de registro automáticamente. Vea
@@ -497,14 +516,14 @@ debería usar `resolveInboundMentionDecision({ facts, policy })`.
     export default defineSetupPluginEntry(acmeChatPlugin);
     ```
 
-    OpenClaw carga esto en lugar de la entrada completa cuando el canal está deshabilitado
-    o sin configurar. Evita引入 código de ejecución pesado durante los flujos de configuración.
-    Consulte [Configuración y ajustes](/es/plugins/sdk-setup#setup-entry) para obtener más detalles.
+    OpenClaw carga esto en lugar de la entrada completa cuando el canal está desactivado
+    o sin configurar. Evita cargar código pesado de tiempo de ejecución durante los flujos de configuración.
+    Vea [Configuración y ajuste](/es/plugins/sdk-setup#setup-entry) para obtener detalles.
 
-    Los canales del espacio de trabajo empaquetados que dividen las exportaciones seguras para la configuración en módulos auxiliares
-    pueden usar `defineBundledChannelSetupEntry(...)` de
+    Los canales del espacio de trabajo empaquetados que dividen las exportaciones seguras para la configuración en módulos
+    adjuntos pueden usar `defineBundledChannelSetupEntry(...)` de
     `openclaw/plugin-sdk/channel-entry-contract` cuando también necesitan un
-    definidor explícito de tiempo de ejecución en la configuración.
+    definidor de tiempo de ejecución explícito para el momento de la configuración.
 
   </Step>
 
@@ -543,7 +562,7 @@ debería usar `resolveInboundMentionDecision({ facts, policy })`.
   </Step>
 
 <a id="step-6-test"></a>
-<Step title="Probar">
+<Step title="Prueba">
 Escriba pruebas colocadas en `src/channel.test.ts`:
 
     ```typescript src/channel.test.ts
@@ -582,7 +601,7 @@ Escriba pruebas colocadas en `src/channel.test.ts`:
     pnpm test -- <bundled-plugin-root>/acme-chat/
     ```
 
-    Para obtener asistentes de pruebas compartidos, consulte [Pruebas](/es/plugins/sdk-testing).
+    Para los asistentes de pruebas compartidos, consulte [Pruebas](/es/plugins/sdk-testing).
 
   </Step>
 </Steps>
@@ -613,7 +632,7 @@ Escriba pruebas colocadas en `src/channel.test.ts`:
   <Card title="Integración de herramientas de mensajes" icon="puzzle" href="/es/plugins/architecture#channel-plugins-and-the-shared-message-tool">
     describeMessageTool y descubrimiento de acciones
   </Card>
-  <Card title="Resolución de objetivos" icon="crosshair" href="/es/plugins/architecture#channel-target-resolution">
+  <Card title="Resolución de objetivos" icon="crosshair" href="/es/plugins/architecture-internals#channel-target-resolution">
     inferTargetChatType, looksLikeId, resolveTarget
   </Card>
   <Card title="Asistentes de tiempo de ejecución" icon="settings" href="/es/plugins/sdk-runtime">
@@ -625,7 +644,13 @@ Escriba pruebas colocadas en `src/channel.test.ts`:
 
 ## Próximos pasos
 
-- [Plugins de proveedores](/es/plugins/sdk-provider-plugins) — si tu plugin también proporciona modelos
-- [Resumen del SDK](/es/plugins/sdk-overview) — referencia completa de importación de subrutas
-- [Pruebas del SDK](/es/plugins/sdk-testing) — utilidades de pruebas y pruebas de contrato
-- [Manifiesto del Plugin](/es/plugins/manifest) — esquema completo del manifiesto
+- [Complementos de proveedores](/es/plugins/sdk-provider-plugins) — si su complemento también proporciona modelos
+- [Resumen del SDK](/es/plugins/sdk-overview) — referencia de importación completa de subrutas
+- [Pruebas del SDK](/es/plugins/sdk-testing) — utilidades de prueba y pruebas de contrato
+- [Manifiesto del complemento](/es/plugins/manifest) — esquema completo del manifiesto
+
+## Relacionado
+
+- [Configuración del SDK de complementos](/es/plugins/sdk-setup)
+- [Construcción de complementos](/es/plugins/building-plugins)
+- [Complementos de arnés de agente](/es/plugins/sdk-agent-harness)

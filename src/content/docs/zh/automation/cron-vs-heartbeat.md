@@ -1,8 +1,11 @@
 ---
 summary: "重定向到 /automation"
-title: "Cron vs Heartbeat"
+title: "Cron vs heartbeat"
 ---
 
-# Cron vs Heartbeat
+关于 Cron 与心跳的决策指南位于 [Automation and tasks](/zh/automation) 中。
 
-此页面已移至 [Automation & Tasks](/zh/automation)。请参阅 [Automation & Tasks](/zh/automation) 了解比较 cron 和 heartbeat 的决策指南。
+## 相关
+
+- [Scheduled tasks](/zh/automation/cron-jobs)
+- [Background tasks](/zh/automation/tasks)

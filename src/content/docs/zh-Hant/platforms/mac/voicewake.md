@@ -65,3 +65,9 @@ title: "語音喚醒 (macOS)"
 
 - Toggle push-to-talk on, hold Cmd+Fn, speak, release: overlay should show partials then send.
 - While holding, menu-bar ears should stay enlarged (uses `triggerVoiceEars(ttl:nil)`); they drop after release.
+
+## 相關
+
+- [語音喚醒](/zh-Hant/nodes/voicewake)
+- [語音覆蓋層](/zh-Hant/platforms/mac/voice-overlay)
+- [macOS 應用程式](/zh-Hant/platforms/macos)

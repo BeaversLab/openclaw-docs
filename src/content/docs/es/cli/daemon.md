@@ -3,7 +3,7 @@ summary: "Referencia de la CLI para `openclaw daemon` (alias heredado para la ge
 read_when:
   - You still use `openclaw daemon ...` in scripts
   - You need service lifecycle commands (install/start/stop/restart/status)
-title: "daemon"
+title: "Demonio"
 ---
 
 # `openclaw daemon`
@@ -55,3 +55,8 @@ Notas:
 ## Preferir
 
 Utilice [`openclaw gateway`](/es/cli/gateway) para la documentación y los ejemplos actuales.
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)
+- [Manual de procedimientos de Gateway](/es/gateway)

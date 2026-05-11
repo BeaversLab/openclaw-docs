@@ -1,6 +1,6 @@
 ---
-title: "Plantilla de IDENTIDAD"
 summary: "Registro de identidad del agente"
+title: "Plantilla IDENTIDAD"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -28,3 +28,7 @@ Notas:
 
 - Guarda este archivo en la raíz del espacio de trabajo como `IDENTITY.md`.
 - Para los avatares, usa una ruta relativa al espacio de trabajo como `avatars/openclaw.png`.
+
+## Relacionado
+
+- [Espacio de trabajo del agente](/es/concepts/agent-workspace)

@@ -1,6 +1,6 @@
 ---
-title: "Kilocode"
 summary: "Usa la API unificada de Kilo Gateway para acceder a muchos modelos en OpenClaw"
+title: "Kilocode"
 read_when:
   - You want a single API key for many LLMs
   - You want to run models via Kilo Gateway in OpenClaw
@@ -49,7 +49,7 @@ propiedad del proveedor y gestionado por Kilo Gateway.
 
 <Note>OpenClaw trata `kilocode/kilo/auto` como la referencia predeterminada estable, pero no publica una asignación de tarea a modelo ascendente respaldada por el código fuente para esa ruta. El enrutamiento ascendente exacto detrás de `kilocode/kilo/auto` es propiedad de Kilo Gateway, no está codificado en OpenClaw.</Note>
 
-## Modelos disponibles
+## Catálogo integrado
 
 OpenClaw descubre dinámicamente los modelos disponibles en Kilo Gateway al inicio. Use
 `/models kilocode` para ver la lista completa de modelos disponibles con su cuenta.
@@ -60,7 +60,7 @@ Cualquier modelo disponible en la puerta de enlace se puede usar con el prefijo 
 | -------------------------------------- | ----------------------------------------- |
 | `kilocode/kilo/auto`                   | Predeterminado — enrutamiento inteligente |
 | `kilocode/anthropic/claude-sonnet-4`   | Anthropic a través de Kilo                |
-| `kilocode/openai/gpt-5.4`              | OpenAI a través de Kilo                   |
+| `kilocode/openai/gpt-5.5`              | OpenAI a través de Kilo                   |
 | `kilocode/google/gemini-3-pro-preview` | Google a través de Kilo                   |
 | ...y muchos más                        | Use `/models kilocode` para listar todos  |
 
@@ -116,7 +116,7 @@ Cualquier modelo disponible en la puerta de enlace se puede usar con el prefijo 
   <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
     Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Referencia de configuración" href="/es/gateway/configuration" icon="gear">
+  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
     Referencia completa de configuración de OpenClaw.
   </Card>
   <Card title="Kilo Gateway" href="https://app.kilo.ai" icon="arrow-up-right-from-square">

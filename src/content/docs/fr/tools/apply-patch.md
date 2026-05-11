@@ -3,14 +3,12 @@ summary: "Appliquer des correctifs multi-fichiers avec le tool apply_patch"
 read_when:
   - You need structured file edits across multiple files
   - You want to document or debug patch-based edits
-title: "Tool apply_patch"
+title: "apply_patch tool"
 ---
-
-# tool apply_patch
 
 Appliquer des modifications de fichiers à l'aide d'un format de correctif structuré. C'est idéal pour les modifications multi-fichiers ou multi-hunk où un seul appel `edit` serait fragile.
 
-L'tool accepte une seule chaîne `input` qui encapsule une ou plusieurs opérations de fichiers :
+L'tool accepte une seule chaîne `input` qui englobe une ou plusieurs opérations sur fichiers :
 
 ```
 *** Begin Patch
@@ -27,19 +25,17 @@ L'tool accepte une seule chaîne `input` qui encapsule une ou plusieurs opérati
 
 ## Paramètres
 
-- `input` (requis) : Contenu complet du correctif, y compris `*** Begin Patch` et `*** End Patch`.
+- `input` (obligatoire) : Contenu complet du correctif, y compris `*** Begin Patch` et `*** End Patch`.
 
 ## Notes
 
 - Les chemins de correctif prennent en charge les chemins relatifs (à partir du répertoire de l'espace de travail) et les chemins absolus.
-- `tools.exec.applyPatch.workspaceOnly` est défini par défaut sur `true` (contenu dans l'espace de travail). Définissez-le sur `false` uniquement si vous souhaitez intentionnellement que `apply_patch` écrive/supprime en dehors du répertoire de l'espace de travail.
+- `tools.exec.applyPatch.workspaceOnly` est par défaut `true` (contenu dans l'espace de travail). Définissez-le sur `false` uniquement si vous souhaitez intentionnellement que `apply_patch` écrive/supprime en dehors du répertoire de l'espace de travail.
 - Utilisez `*** Move to:` dans un hunk `*** Update File:` pour renommer des fichiers.
 - `*** End of File` marque une insertion en fin de fichier (EOF uniquement) si nécessaire.
-- Disponible par défaut pour les modèles OpenAI et OpenAI Codex. Définissez
-  `tools.exec.applyPatch.enabled: false` pour le désactiver.
-- Optionnellement filtrer par modèle via
-  `tools.exec.applyPatch.allowModels`.
-- La configuration se trouve uniquement sous `tools.exec`.
+- Disponible par défaut pour les modèles OpenAI et OpenAI Codex. Définissez `tools.exec.applyPatch.enabled: false` pour le désactiver.
+- Conditionnez éventuellement par model via `tools.exec.applyPatch.allowModels`.
+- La configuration n'est disponible que sous `tools.exec`.
 
 ## Exemple
 
@@ -49,3 +45,9 @@ L'tool accepte une seule chaîne `input` qui encapsule une ou plusieurs opérati
   "input": "*** Begin Patch\n*** Update File: src/index.ts\n@@\n-const foo = 1\n+const foo = 2\n*** End Patch"
 }
 ```
+
+## Connexes
+
+- [Diffs](/fr/tools/diffs)
+- [Exec tool](/fr/tools/exec)
+- [Code execution](/fr/tools/code-execution)

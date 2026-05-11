@@ -46,8 +46,7 @@ método de instalación:
   `OPENCLAW_GIT_DIR`), cambia a `main`, hace rebase en upstream, compila e
   instala la CLI global desde ese checkout.
 
-Sugerencia: si desea tener stable + dev en paralelo, mantenga dos clones y apunte su
-gateway al estable.
+<Tip>Si quieres tener las versiones stable y dev en paralelo, mantén dos clonas y apunta tu gateway a la estable.</Tip>
 
 ## Destino de versión o etiqueta única
 
@@ -129,3 +128,8 @@ Las versiones beta y de desarrollo **pueden no** incluir una versión de la apli
 
 - La etiqueta de git y la dist-tag de npm aún se pueden publicar.
 - Indique "sin compilación de macOS para esta beta" en las notas de la versión o el registro de cambios.
+
+## Relacionado
+
+- [Actualización](/es/install/updating)
+- [Funcionamiento interno del instalador](/es/install/installer)

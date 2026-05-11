@@ -4,7 +4,7 @@ read_when:
   - Re-resolving secret refs at runtime
   - Auditing plaintext residues and unresolved refs
   - Configuring SecretRefs and applying one-way scrub changes
-title: "secrets"
+title: "Secrets"
 ---
 
 # `openclaw secrets`
@@ -195,3 +195,8 @@ openclaw secrets audit --check
 ```
 
 如果 `audit --check` 仍然报告明文发现，请更新剩余报告的目标路径并重新运行审计。
+
+## 相关
+
+- [CLI 参考](/zh/cli)
+- [Secrets 管理](/zh/gateway/secrets)

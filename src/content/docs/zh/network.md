@@ -66,3 +66,8 @@ title: "网络"
 - [Gateway(网关) 配置参考](/zh/gateway/configuration)
 - [故障排除](/zh/gateway/troubleshooting)
 - [Doctor](/zh/gateway/doctor)
+
+## 相关
+
+- [Gateway(网关) network 模型](/zh/gateway/network-model)
+- [Remote access](/zh/gateway/remote)

@@ -3,7 +3,7 @@ summary: "Référence CLI pour `openclaw hooks` (hooks d'agent)"
 read_when:
   - You want to manage agent hooks
   - You want to inspect hook availability or enable workspace hooks
-title: "hooks"
+title: "Hooks"
 ---
 
 # `openclaw hooks`
@@ -15,7 +15,7 @@ L'exécution de `openclaw hooks` sans sous-commande est équivalente à `opencla
 Voir aussi :
 
 - Hooks : [Hooks](/fr/automation/hooks)
-- Hooks de plugin : [Plugin hooks](/fr/plugins/architecture#provider-runtime-hooks)
+- Plugin hooks : [Plugin hooks](/fr/plugins/hooks)
 
 ## Lister tous les hooks
 
@@ -60,7 +60,7 @@ openclaw hooks list --json
 
 Renvoie du JSON structuré pour un usage programmatique.
 
-## Obtenir des informations sur un hook
+## Obtenir les informations du hook
 
 ```bash
 openclaw hooks info <name>
@@ -197,6 +197,7 @@ openclaw hooks disable command-logger
 
 ```bash
 openclaw plugins install <package>        # ClawHub first, then npm
+openclaw plugins install npm:<package>    # npm only
 openclaw plugins install <package> --pin  # pin version
 openclaw plugins install <path>           # local path
 ```
@@ -206,9 +207,9 @@ Installez les packs de hooks via l'installateur unifié de plugins.
 `openclaw hooks install` fonctionne toujours comme un alias de compatibilité, mais il affiche un
 avertissement d'obsolescence et redirige vers `openclaw plugins install`.
 
-Les specs npm sont **uniquement de registre** (nom du package + **version exacte** optionnelle ou
-**dist-tag**). Les specs Git/URL/fichier et les plages semver sont rejetées. Les installations
-de dépendances s'exécutent avec `--ignore-scripts` pour la sécurité.
+Les spécifications npm sont **uniquement de registre** (nom du package + **version exacte** facultative ou
+**dist-tag**). Les spécifications Git/URL/fichier et les plages semver sont rejetées. Les installations de dépendances s'exécutent localement dans le projet avec `--ignore-scripts` pour la sécurité, même lorsque votre
+shell dispose de paramètres d'installation npm globaux.
 
 Les specs nues et `@latest` restent sur la voie stable. Si npm résout l'un de
 ces éléments vers une préversion, OpenClaw s'arrête et vous demande d'accepter explicitement avec une
@@ -333,3 +334,8 @@ openclaw hooks enable boot-md
 ```
 
 **Voir :** [documentation boot-md](/fr/automation/hooks#boot-md)
+
+## Connexes
+
+- [Référence CLI](/fr/cli)
+- [Hooks d'automatisation](/fr/automation/hooks)

@@ -4,22 +4,20 @@ read_when:
   - You want to use MiniMax for web_search
   - You need a MiniMax Coding Plan key
   - You want MiniMax CN/global search host guidance
-title: "Búsqueda MiniMax"
+title: "Búsqueda de MiniMax"
 ---
 
-# Búsqueda MiniMax
+OpenClaw es compatible con MiniMax como proveedor `web_search` a través de la API de búsqueda del Coding Plan de MiniMax. Devuelve resultados de búsqueda estructurados con títulos, URLs, fragmentos y consultas relacionadas.
 
-OpenClaw es compatible con MiniMax como proveedor `web_search` a través de la API de búsqueda Coding Plan de MiniMax. Devuelve resultados de búsqueda estructurados con títulos, URL, fragmentos y consultas relacionadas.
-
-## Obtener una clave Coding Plan
+## Obtener una clave del Coding Plan
 
 <Steps>
   <Step title="Crear una clave">
-    Cree o copie una clave MiniMax Coding Plan desde
-    [MiniMax Platform](https://platform.minimax.io/user-center/basic-information/interface-key).
+    Cree o copie una clave del Coding Plan de MiniMax desde
+    [Plataforma de MiniMax](https://platform.minimax.io/user-center/basic-information/interface-key).
   </Step>
   <Step title="Guardar la clave">
-    Establezca `MINIMAX_CODE_PLAN_KEY` en el entorno Gateway, o configure a través de:
+    Establezca `MINIMAX_CODE_PLAN_KEY` en el entorno de Gateway, o configure a través de:
 
     ```bash
     openclaw configure --section web
@@ -29,7 +27,7 @@ OpenClaw es compatible con MiniMax como proveedor `web_search` a través de la A
 </Steps>
 
 OpenClaw también acepta `MINIMAX_CODING_API_KEY` como un alias de entorno. `MINIMAX_API_KEY`
-se sigue leyendo como alternativa de compatibilidad cuando ya apunta a un token coding-plan.
+se sigue leyendo como método alternativo de compatibilidad cuando ya apunta a un token de coding-plan.
 
 ## Configuración
 
@@ -57,12 +55,12 @@ se sigue leyendo como alternativa de compatibilidad cuando ya apunta a un token 
 }
 ```
 
-**Alternativa de entorno:** establezca `MINIMAX_CODE_PLAN_KEY` en el entorno Gateway.
+**Alternativa de entorno:** establezca `MINIMAX_CODE_PLAN_KEY` en el entorno de Gateway.
 Para una instalación de gateway, póngalo en `~/.openclaw/.env`.
 
 ## Selección de región
 
-La Búsqueda MiniMax utiliza estos puntos finales:
+La búsqueda de MiniMax utiliza estos puntos finales:
 
 - Global: `https://api.minimax.io/v1/coding_plan/search`
 - CN: `https://api.minimaxi.com/v1/coding_plan/search`
@@ -70,28 +68,28 @@ La Búsqueda MiniMax utiliza estos puntos finales:
 Si `plugins.entries.minimax.config.webSearch.region` no está establecido, OpenClaw resuelve
 la región en este orden:
 
-1. `tools.web.search.minimax.region` / plugin-owned `webSearch.region`
+1. `tools.web.search.minimax.region` / `webSearch.region` propiedad del complemento
 2. `MINIMAX_API_HOST`
 3. `models.providers.minimax.baseUrl`
 4. `models.providers.minimax-portal.baseUrl`
 
-Esto significa que el registro en CN o `MINIMAX_API_HOST=https://api.minimaxi.com/...`
-mantiene automáticamente la Búsqueda MiniMax también en el host de CN.
+Eso significa que la incorporación en CN o `MINIMAX_API_HOST=https://api.minimaxi.com/...`
+mantiene automáticamente la búsqueda de MiniMax en el host de CN también.
 
-Incluso cuando haya autenticado MiniMax a través de la ruta OAuth `minimax-portal`,
-la búsqueda web aún se registra como ID de proveedor `minimax`; la URL base del proveedor OAuth
-solo se utiliza como sugerencia de región para la selección de host CN/global.
+Incluso cuando autenticó MiniMax a través de la ruta OAuth `minimax-portal`,
+la búsqueda web todavía se registra como id de proveedor `minimax`; la URL base del proveedor OAuth
+solo se usa como sugerencia de región para la selección de host CN/global.
 
 ## Parámetros compatibles
 
-La Búsqueda MiniMax admite:
+La búsqueda de MiniMax es compatible con:
 
 - `query`
-- `count` (OpenClaw recorta la lista de resultados devuelta al conteo solicitado)
+- `count` (OpenClaw recorta la lista de resultados devuelta a la cantidad solicitada)
 
-Los filtros específicos del proveedor no son compatibles actualmente.
+Los filtros específicos del proveedor actualmente no son compatibles.
 
 ## Relacionado
 
-- [Resumen de búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
-- [MiniMax](/es/providers/minimax) -- configuración de modelo, imagen, voz y autenticación
+- [Descripción general de la búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [MiniMax](/es/providers/minimax) -- modelo, imagen, voz y configuración de autenticación

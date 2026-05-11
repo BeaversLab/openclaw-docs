@@ -6,9 +6,7 @@ read_when:
 title: "Synthetic"
 ---
 
-# Synthetic
-
-[Synthetic](https://synthetic.new) expose des points de terminaison compatibles Anthropic.
+[Synthetic](https://synthetic.new) expose des points de terminaison compatibles avec Anthropic.
 OpenClaw l'enregistre en tant que fournisseur `synthetic` et utilise l'Anthropic de messages API.
 
 | Propriété   | Valeur                                |
@@ -21,7 +19,7 @@ OpenClaw l'enregistre en tant que fournisseur `synthetic` et utilise l'Anthropic
 ## Getting started
 
 <Steps>
-  <Step title="Obtenir une clé API">Obtenez un `SYNTHETIC_API_KEY` à partir de votre compte Synthetic, ou laissez l'assistant de configuration vous en demander un.</Step>
+  <Step title="Obtenir une clé API">Obtenez une `SYNTHETIC_API_KEY` à partir de votre compte Synthetic, ou laissez l'assistant de configuration vous en demander une.</Step>
   <Step title="Exécuter l'intégration">```bash openclaw onboard --auth-choice synthetic-api-key ```</Step>
   <Step title="Vérifier le modèle par défaut">Après l'intégration, le modèle par défaut est défini sur : ``` synthetic/hf:MiniMaxAI/MiniMax-M2.5 ```</Step>
 </Steps>
@@ -63,11 +61,11 @@ OpenClaw l'enregistre en tant que fournisseur `synthetic` et utilise l'Anthropic
 }
 ```
 
-## Catalogue de modèles
+## Catalogue intégré
 
-Tous les modèles Synthetic utilisent le coût `0` (entrée/sortie/cache).
+Tous les modèles Synthetic utilisent le coût `0` (entrée/sortique/cache).
 
-| ID du modèle                                           | Fenêtre de contexte | Max tokens | Raisonnement | Entrée        |
+| ID du modèle                                           | Fenêtre de contexte | Jetons max | Raisonnement | Entrée        |
 | ------------------------------------------------------ | ------------------- | ---------- | ------------ | ------------- |
 | `hf:MiniMaxAI/MiniMax-M2.5`                            | 192,000             | 65,536     | non          | texte         |
 | `hf:moonshotai/Kimi-K2-Thinking`                       | 256,000             | 8,192      | oui          | texte         |
@@ -98,9 +96,9 @@ compte.
 </Tip>
 
 <AccordionGroup>
-  <Accordion title="Liste d'autorisation de modèles">
-    Si vous activez une liste d'autorisation de modèles (`agents.defaults.models`), ajoutez chaque
-    modèle Synthetic que vous prévoyez d'utiliser. Les modèles qui ne figurent pas dans la liste d'autorisation seront masqués
+  <Accordion title="Liste blanche de modèles">
+    Si vous activez une liste blanche de modèles (`agents.defaults.models`), ajoutez chaque
+    modèle Synthetic que vous prévoyez d'utiliser. Les modèles qui ne figurent pas dans la liste blanche seront masqués
     pour l'agent.
   </Accordion>
 
@@ -119,7 +117,7 @@ compte.
     }
     ```
 
-    N'oubliez pas que OpenClaw ajoute `/v1` automatiquement.
+    Rappelez-vous que OpenClaw ajoute `/v1` automatiquement.
 
   </Accordion>
 </AccordionGroup>
@@ -127,11 +125,11 @@ compte.
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Fournisseurs de modèles" href="/fr/concepts/model-providers" icon="layers">
-    Règles de fournisseur, références de modèle et comportement de basculement.
+  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
+    Règles de provider, références de modèle et comportement de basculement.
   </Card>
   <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
-    Schéma de configuration complet incluant les paramètres du fournisseur.
+    Schéma de configuration complet incluant les paramètres du provider.
   </Card>
   <Card title="Synthetic" href="https://synthetic.new" icon="arrow-up-right-from-square">
     Tableau de bord Synthetic et documentation API.

@@ -6,21 +6,19 @@ read_when:
 title: "Nostr"
 ---
 
-# Nostr
+**Estado:** Complemento incluido opcional (desactivado de forma predeterminada hasta que se configure).
 
-**Estado:** Plugin incluido opcional (desactivado por defecto hasta que se configure).
+Nostr es un protocolo descentralizado para redes sociales. Este canal permite que OpenClaw reciba y responda a mensajes directos (DM) encriptados a través de NIP-04.
 
-Nostr es un protocolo descentralizado para redes sociales. Este canal permite a OpenClaw recibir y responder a mensajes directos cifrados (DM) a través de NIP-04.
+## Complemento incluido
 
-## Plugin incluido
-
-Las versiones actuales de OpenClaw incluyen Nostr como un plugin empaquetado, por lo que las construcciones empaquetadas normales no necesitan una instalación separada.
+Las versiones actuales de OpenClaw incluyen Nostr como un complemento incluido, por lo que las compilaciones empaquetadas normales no necesitan una instalación por separado.
 
 ### Instalaciones antiguas/personalizadas
 
-- Onboarding (`openclaw onboard`) y `openclaw channels add` todavía muestran
+- El onboarding (`openclaw onboard`) y `openclaw channels add` todavía muestran
   Nostr desde el catálogo de canales compartido.
-- Si su compilación excluye el Nostr incluido, instálelo manualmente.
+- Si su compilación excluye Nostr incluido, instálelo manualmente.
 
 ```bash
 openclaw plugins install @openclaw/nostr
@@ -32,7 +30,7 @@ Use una copia local (flujos de trabajo de desarrollo):
 openclaw plugins install --link <path-to-local-nostr-plugin>
 ```
 
-Reinicie el Gateway después de instalar o habilitar plugins.
+Reinicie la Gateway después de instalar o activar complementos.
 
 ### Configuración no interactiva
 
@@ -52,7 +50,7 @@ Use `--use-env` para mantener `NOSTR_PRIVATE_KEY` en el entorno en lugar de alma
 nak key generate
 ```
 
-2. Añadir a la configuración:
+2. Agregue a la configuración:
 
 ```json5
 {
@@ -64,29 +62,29 @@ nak key generate
 }
 ```
 
-3. Exportar la clave:
+3. Exporte la clave:
 
 ```bash
 export NOSTR_PRIVATE_KEY="nsec1..."
 ```
 
-4. Reinicie el Gateway.
+4. Reinicie la Gateway.
 
 ## Referencia de configuración
 
-| Clave        | Tipo     | Por defecto                                 | Descripción                                   |
+| Clave        | Tipo     | Predeterminado                              | Descripción                                   |
 | ------------ | -------- | ------------------------------------------- | --------------------------------------------- |
-| `privateKey` | string   | requerido                                   | Clave privada en formato `nsec` o hexadecimal |
+| `privateKey` | string   | obligatorio                                 | Clave privada en formato `nsec` o hexadecimal |
 | `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | URLs de Relay (WebSocket)                     |
-| `dmPolicy`   | string   | `pairing`                                   | Política de acceso de DM                      |
+| `dmPolicy`   | string   | `pairing`                                   | Política de acceso a DM                       |
 | `allowFrom`  | string[] | `[]`                                        | Claves públicas de remitentes permitidos      |
-| `enabled`    | boolean  | `true`                                      | Habilitar/deshabilitar canal                  |
+| `enabled`    | boolean  | `true`                                      | Activar/desactivar canal                      |
 | `name`       | string   | -                                           | Nombre para mostrar                           |
-| `profile`    | object   | -                                           | Metadatos de perfil NIP-01                    |
+| `profile`    | object   | -                                           | Metadatos del perfil NIP-01                   |
 
 ## Metadatos del perfil
 
-Los datos del perfil se publican como un evento NIP-01 `kind:0`. Puede gestionarlo desde la UI de Control (Canales -> Nostr -> Perfil) o establecerlo directamente en la configuración.
+Los datos del perfil se publican como un evento NIP-01 `kind:0`. Puede gestionarlos desde la interfaz de usuario de Control (Canales -> Nostr -> Perfil) o configurarlos directamente en el archivo de configuración.
 
 Ejemplo:
 
@@ -112,19 +110,19 @@ Ejemplo:
 
 Notas:
 
-- Las URL de perfil deben usar `https://`.
-- La importación desde relays fusiona los campos y conserva las anulaciones locales.
+- Las URLs de perfil deben usar `https://`.
+- La importación desde relays combina los campos y conserva las anulaciones locales.
 
 ## Control de acceso
 
 ### Políticas de DM
 
-- **pairing** (por defecto): los remitentes desconocidos reciben un código de emparejamiento.
+- **pairing** (predeterminado): los remitentes desconocidos reciben un código de emparejamiento.
 - **allowlist**: solo las claves públicas en `allowFrom` pueden enviar DM.
-- **open**: DM entrantes públicos (requiere `allowFrom: ["*"]`).
-- **disabled**: ignorar DM entrantes.
+- **open**: DMs entrantes públicos (requiere `allowFrom: ["*"]`).
+- **deshabilitado**: ignorar los MD entrantes.
 
-Notas de cumplimiento:
+Notas sobre la aplicación:
 
 - Las firmas de eventos entrantes se verifican antes de la política del remitente y el descifrado NIP-04, por lo que los eventos falsificados se rechazan temprano.
 - Las respuestas de emparejamiento se envían sin procesar el cuerpo del MD original.
@@ -151,7 +149,7 @@ Formatos aceptados:
 - **Clave privada:** `nsec...` o hexadecimal de 64 caracteres
 - **Claves públicas (`allowFrom`):** `npub...` o hexadecimal
 
-## Relés
+## Repetidores
 
 Predeterminados: `relay.damus.io` y `nos.lol`.
 
@@ -168,23 +166,23 @@ Predeterminados: `relay.damus.io` y `nos.lol`.
 
 Consejos:
 
-- Use 2-3 relés para redundancia.
-- Evite demasiados relés (latencia, duplicación).
-- Los relés de pago pueden mejorar la confiabilidad.
-- Los relés locales son adecuados para pruebas (`ws://localhost:7777`).
+- Use 2-3 repetidores para redundancia.
+- Evite demasiados repetidores (latencia, duplicación).
+- Los repetidores de pago pueden mejorar la confiabilidad.
+- Los repetidores locales funcionan bien para pruebas (`ws://localhost:7777`).
 
 ## Soporte de protocolo
 
-| NIP    | Estado      | Descripción                                     |
-| ------ | ----------- | ----------------------------------------------- |
-| NIP-01 | Soportado   | Formato básico de eventos + metadatos de perfil |
-| NIP-04 | Soportado   | MD cifrados (`kind:4`)                          |
-| NIP-17 | Planificado | MD envueltos para regalo                        |
-| NIP-44 | Planificado | Cifrado con versiones                           |
+| NIP    | Estado      | Descripción                                    |
+| ------ | ----------- | ---------------------------------------------- |
+| NIP-01 | Compatible  | Formato de evento básico + metadatos de perfil |
+| NIP-04 | Compatible  | MD cifrados (`kind:4`)                         |
+| NIP-17 | Planificado | MD envueltos (gift-wrapped)                    |
+| NIP-44 | Planificado | Cifrado con versiones                          |
 
 ## Pruebas
 
-### Relé local
+### Repetidor local
 
 ```bash
 # Start strfry
@@ -211,22 +209,22 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ## Solución de problemas
 
-### No recibir mensajes
+### No se reciben mensajes
 
 - Verifique que la clave privada sea válida.
-- Asegúrese de que las URL de los relés sean accesibles y usen `wss://` (o `ws://` para locales).
+- Asegúrese de que las URL de los repetidores sean accesibles y usen `wss://` (o `ws://` para local).
 - Confirme que `enabled` no sea `false`.
-- Verifique los registros de Gateway para ver errores de conexión de relé.
+- Revise los registros de la Gateway en busca de errores de conexión al repetidor.
 
-### No enviar respuestas
+### No se envían respuestas
 
-- Compruebe que el relé acepte escrituras.
-- Verifique la conectividad saliente.
-- Vigile los límites de tasa del relé.
+- Compruebe que el repetidor acepte escrituras.
+- Verifique la conectividad de salida.
+- Vigile las limitaciones de tasa del repetidor.
 
 ### Respuestas duplicadas
 
-- Esperado al usar múltiples relés.
+- Esperado al usar múltiples repetidores.
 - Los mensajes se deduplican por ID de evento; solo la primera entrega activa una respuesta.
 
 ## Seguridad
@@ -240,12 +238,12 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 - Solo mensajes directos (sin chats grupales).
 - Sin archivos adjuntos multimedia.
-- Solo NIP-04 (envoltorio para regalo NIP-17 planificado).
+- Solo NIP-04 (se planea NIP-17 gift-wrap).
 
 ## Relacionado
 
-- [Descripción general de canales](/es/channels) — todos los canales compatibles
-- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Resumen de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — flujo de autenticación y emparejamiento de MD
 - [Grupos](/es/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
 - [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
 - [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

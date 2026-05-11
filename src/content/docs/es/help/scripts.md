@@ -6,24 +6,22 @@ read_when:
 title: "Scripts"
 ---
 
-# Scripts
-
 El directorio `scripts/` contiene scripts auxiliares para flujos de trabajo locales y tareas de operaciones.
-Úselos cuando una tarea esté claramente vinculada a un script; de lo contrario, prefiera la CLI.
+Use estos cuando una tarea esté claramente vinculada a un script; de lo contrario, prefiera la CLI.
 
 ## Convenciones
 
 - Los scripts son **opcionales**, a menos que se mencionen en la documentación o en las listas de verificación de lanzamiento.
 - Prefiera las interfaces de la CLI cuando existan (ejemplo: la supervisión de autenticación usa `openclaw models status --check`).
-- Suponga que los scripts son específicos del host; léalos antes de ejecutarlos en una máquina nueva.
+- Asuma que los scripts son específicos del host; léalos antes de ejecutarlos en una máquina nueva.
 
 ## Scripts de supervisión de autenticación
 
-La supervisión de autenticación se trata en [Authentication](/es/gateway/authentication). Los scripts en `scripts/` son extras opcionales para flujos de trabajo de systemd/Termux en teléfonos.
+La supervisión de autenticación se trata en [Autenticación](/es/gateway/authentication). Los scripts en `scripts/` son extras opcionales para flujos de trabajo de systemd/Termux en teléfonos.
 
 ## Asistente de lectura de GitHub
 
-Use `scripts/gh-read` cuando quiera que `gh` use un token de instalación de GitHub App para llamadas de lectura con ámbito de repositorio, dejando el `gh` normal en su inicio de sesión personal para acciones de escritura.
+Use `scripts/gh-read` cuando quiera que `gh` use un token de instalación de GitHub App para llamadas de lectura con ámbito de repositorio, mientras deja el `gh` normal en su inicio de sesión personal para acciones de escritura.
 
 Entorno requerido:
 
@@ -32,8 +30,8 @@ Entorno requerido:
 
 Entorno opcional:
 
-- `OPENCLAW_GH_READ_INSTALLATION_ID` cuando quiera omitir la búsqueda de instalación basada en el repositorio
-- `OPENCLAW_GH_READ_PERMISSIONS` como una anulación separada por comas para el subconjunto de permisos de lectura a solicitar
+- `OPENCLAW_GH_READ_INSTALLATION_ID` cuando desee omitir la búsqueda de instalación basada en el repositorio
+- `OPENCLAW_GH_READ_PERMISSIONS` como una invalidación separada por comas para el subconjunto de permisos de lectura solicitado
 
 Orden de resolución del repositorio:
 
@@ -50,4 +48,9 @@ Ejemplos:
 ## Al agregar scripts
 
 - Mantenga los scripts enfocados y documentados.
-- Agregue una breve entrada en el documento relevante (o cree uno si falta).
+- Agregue una entrada breve en el documento relevante (o cree uno si falta).
+
+## Relacionado
+
+- [Pruebas](/es/help/testing)
+- [Pruebas en vivo](/es/help/testing-live)

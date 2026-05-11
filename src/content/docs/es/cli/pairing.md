@@ -2,7 +2,7 @@
 summary: "Referencia de la CLI para `openclaw pairing` (aprobar/listar solicitudes de emparejamiento)"
 read_when:
   - You’re using pairing-mode DMs and need to approve senders
-title: "emparejamiento"
+title: "Emparejamiento"
 ---
 
 # `openclaw pairing`
@@ -63,3 +63,8 @@ Opciones:
 - `pairing list` soporta `--account <accountId>` para canales multi-cuenta.
 - `pairing approve` soporta `--account <accountId>` y `--notify`.
 - Si solo hay configurado un canal con capacidad de vinculación, se permite `pairing approve <code>`.
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)
+- [Emparejamiento de canales](/es/channels/pairing)

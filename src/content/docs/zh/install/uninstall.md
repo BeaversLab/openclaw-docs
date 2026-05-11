@@ -6,14 +6,12 @@ read_when:
 title: "卸载"
 ---
 
-# 卸载
+两种路径：
 
-两种方式：
-
-- 如果 `openclaw` 仍然安装，则使用**简单路径**。
+- **简单路径**，如果 `openclaw` 仍然已安装。
 - **手动移除服务**，如果 CLI 已消失但服务仍在运行。
 
-## 简单方式（CLI 仍已安装）
+## 简单路径（CLI 仍然已安装）
 
 推荐：使用内置卸载程序：
 
@@ -48,15 +46,15 @@ openclaw gateway uninstall
 rm -rf "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"
 ```
 
-如果您将 `OPENCLAW_CONFIG_PATH` 设置为状态目录之外的自定义位置，请也删除该文件。
+如果您将 `OPENCLAW_CONFIG_PATH` 设置为状态目录之外的自定义位置，请同时删除该文件。
 
-4. 删除您的工作区（可选，移除代理文件）：
+4. 删除您的工作区（可选，会移除代理文件）：
 
 ```bash
 rm -rf ~/.openclaw/workspace
 ```
 
-5. 移除 CLI 安装（选择您使用过的那个）：
+5. 移除 CLI 安装（选择您使用的那一个）：
 
 ```bash
 npm rm -g openclaw
@@ -70,14 +68,14 @@ bun remove -g openclaw
 rm -rf /Applications/OpenClaw.app
 ```
 
-注意：
+注意事项：
 
 - 如果您使用了配置文件（`--profile` / `OPENCLAW_PROFILE`），请对每个状态目录重复步骤 3（默认为 `~/.openclaw-<profile>`）。
-- 在远程模式下，状态目录位于 **网关主机** 上，因此请在那里也运行步骤 1-4。
+- 在远程模式下，状态目录位于 **网关主机** 上，因此也需要在那里运行步骤 1-4。
 
 ## 手动移除服务（CLI 未安装）
 
-如果网关服务持续运行但 `openclaw` 已丢失，请使用此方法。
+如果网关服务持续运行但 `openclaw` 缺失，请使用此方法。
 
 ### macOS (launchd)
 
@@ -88,9 +86,9 @@ launchctl bootout gui/$UID/ai.openclaw.gateway
 rm -f ~/Library/LaunchAgents/ai.openclaw.gateway.plist
 ```
 
-如果您使用了配置文件，请将标签和 plist 名称替换为 `ai.openclaw.<profile>`。如果存在任何旧的 `com.openclaw.*` plist，请将其删除。
+如果您使用了配置文件，请将标签和 plist 名称替换为 `ai.openclaw.<profile>`。如果存在，请删除任何旧的 `com.openclaw.*` plist 文件。
 
-### Linux (systemd 用户单元)
+### Linux (systemd user unit)
 
 默认单元名称是 `openclaw-gateway.service`（或 `openclaw-gateway-<profile>.service`）：
 
@@ -100,7 +98,7 @@ rm -f ~/.config/systemd/user/openclaw-gateway.service
 systemctl --user daemon-reload
 ```
 
-### Windows（计划任务）
+### Windows (Scheduled Task)
 
 默认任务名称是 `OpenClaw Gateway`（或 `OpenClaw Gateway (<profile>)`）。
 任务脚本位于您的状态目录下。
@@ -114,15 +112,20 @@ Remove-Item -Force "$env:USERPROFILE\.openclaw\gateway.cmd"
 
 ## 正常安装与源码检出
 
-### 正常安装（install.sh / npm / pnpm / bun）
+### 正常安装 (install.sh / npm / pnpm / bun)
 
 如果您使用了 `https://openclaw.ai/install.sh` 或 `install.ps1`，则 CLI 是通过 `npm install -g openclaw@latest` 安装的。
-请使用 `npm rm -g openclaw` 将其删除（如果您是通过该方式安装的，也可以使用 `pnpm remove -g` / `bun remove -g`）。
+请使用 `npm rm -g openclaw` 将其移除（或者如果您是通过这种方式安装的，则使用 `pnpm remove -g` / `bun remove -g`）。
 
-### 源码检出（git clone）
+### 源码检出 (git clone)
 
-如果您从代码仓库检出运行（`git clone` + `openclaw ...` / `bun run openclaw ...`）：
+如果您是从代码仓库检出运行的（`git clone` + `openclaw ...` / `bun run openclaw ...`）：
 
-1. 在删除代码仓库**之前**卸载网关服务（使用上面的简易路径或手动服务移除）。
+1. 在删除代码仓库**之前**，请卸载网关服务（使用上述的简单路径或手动移除服务）。
 2. 删除代码仓库目录。
-3. 如上所示移除状态和工作区。
+3. 如上所示，移除状态和工作区。
+
+## 相关内容
+
+- [安装概述](/zh/install)
+- [迁移指南](/zh/install/migrating)

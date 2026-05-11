@@ -46,8 +46,7 @@ openclaw update --channel dev
   `OPENCLAW_GIT_DIR` 覆盖），切换到 `main`，在上游上变基，构建，并
   从该检出安装全局 CLI。
 
-提示：如果您想同时使用 stable 和 dev，请保留两个克隆副本，并将您的
-网关指向 stable 那个。
+<Tip>如果您想同时使用 stable 和 dev，请保留两个克隆副本，并将您的网关指向 stable 那个。</Tip>
 
 ## 一次性版本或标签定位
 
@@ -120,3 +119,8 @@ Beta 和 dev 构建可能**不**包含 macOS 应用版本。这是正常的：
 
 - git 标签和 npm dist-tag 仍然可以发布。
 - 在发布说明或更新日志中指出“此 beta 版没有 macOS 构建”。
+
+## 相关
+
+- [更新](/zh/install/updating)
+- [安装程序内部原理](/zh/install/installer)

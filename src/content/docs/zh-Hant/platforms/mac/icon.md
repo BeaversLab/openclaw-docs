@@ -29,3 +29,8 @@ title: "選單列圖示"
 
 - 沒有用於耳朵/運作中的外部 CLI/broker 切換；將其保留在應用程式自身的訊號內，以避免意外跳變。
 - 保持 TTL 短暫（&lt;10 秒），以便如果工作掛起，圖示能快速回到基線。
+
+## 相關
+
+- [選單列](/zh-Hant/platforms/mac/menu-bar)
+- [macOS app](/zh-Hant/platforms/macos)

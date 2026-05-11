@@ -3,14 +3,12 @@ summary: "Workflow Bun (expérimental) : installations et pièges par rapport à
 read_when:
   - You want the fastest local dev loop (bun + watch)
   - You hit Bun install/patch/lifecycle script issues
-title: "Bun (Expérimental)"
+title: "Bun (expérimental)"
 ---
 
-# Bun (Expérimental)
+<Warning>Bun n'est **pas recommandé pour le runtime de passerelle** (problèmes connus avec WhatsApp et Telegram). Utilisez Node pour la production.</Warning>
 
-<Warning>Bun est **déconseillé pour le runtime de passerelle** (problèmes connus avec WhatsApp et Telegram). Utilisez Node pour la production.</Warning>
-
-Bun est un runtime local facultatif pour exécuter TypeScript directement (`bun run ...`, `bun --watch ...`). Le gestionnaire de paquets par défaut reste `pnpm`, qui est entièrement pris en charge et utilisé par les outils de documentation. Bun ne peut pas utiliser `pnpm-lock.yaml` et l'ignorera.
+Bun est un runtime local optionnel pour exécuter TypeScript directement (`bun run ...`, `bun --watch ...`). Le gestionnaire de packages par défaut reste `pnpm`, qui est entièrement pris en charge et utilisé par les outils de documentation. Bun ne peut pas utiliser `pnpm-lock.yaml` et l'ignorera.
 
 ## Installer
 
@@ -20,7 +18,7 @@ Bun est un runtime local facultatif pour exécuter TypeScript directement (`bun 
     bun install
     ```
 
-    `bun.lock` / `bun.lockb` sont ignorés par git, il n'y a donc pas de modifications inutiles dans le dépôt. Pour sauter entièrement les écritures de fichiers de verrouillage :
+    `bun.lock` / `bun.lockb` sont ignorés par git, il n'y a donc pas de turnover dans le dépôt. Pour sauter complètement les écritures de fichiers de verrouillage :
 
     ```sh
     bun install --no-save
@@ -37,9 +35,9 @@ Bun est un runtime local facultatif pour exécuter TypeScript directement (`bun 
 
 ## Scripts de cycle de vie
 
-Bun bloque les scripts de cycle de vie des dépendances sauf s'ils sont explicitement approuvés. Pour ce dépôt, les scripts couramment bloqués ne sont pas requis :
+Bun bloque les scripts de cycle de vie des dépendances à moins qu'ils ne soient explicitement approuvés. Pour ce dépôt, les scripts couramment bloqués ne sont pas requis :
 
-- `@whiskeysockets/baileys` `preinstall` -- vérifie que la version majeure de Node est >= 20 (OpenClaw utilise par défaut Node 24 et prend toujours en charge Node 22 LTS, actuellement `22.14+`)
+- `@whiskeysockets/baileys` `preinstall` -- vérifie que la version majeure de Node est >= 20 (OpenClaw est par défaut sur Node 24 et prend toujours en charge Node 22 LTS, actuellement `22.14+`)
 - `protobufjs` `postinstall` -- émet des avertissements concernant les schémas de version incompatibles (pas d'artefacts de build)
 
 Si vous rencontrez un problème d'exécution nécessitant ces scripts, accordez-leur explicitement votre confiance :
@@ -50,4 +48,10 @@ bun pm trust @whiskeysockets/baileys protobufjs
 
 ## Mises en garde
 
-Certains scripts codent encore en dur pnpm (par exemple `docs:build`, `ui:*`, `protocol:check`). Exécutez-les via pnpm pour l'instant.
+Certains scripts codent encore en dur pnpm (par exemple `docs:build`, `ui:*`, `protocol:check`). Exécutez ceux-ci via pnpm pour l'instant.
+
+## Connexes
+
+- [Vue d'ensemble de l'installation](/fr/install)
+- [Node.js](/fr/install/node)
+- [Mise à jour](/fr/install/updating)

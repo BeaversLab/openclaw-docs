@@ -3,7 +3,7 @@ summary: "CLI 參考資料：`openclaw logs` (透過 RPC 追蹤 Gateway 日誌)"
 read_when:
   - You need to tail Gateway logs remotely (without SSH)
   - You want JSON log lines for tooling
-title: "logs"
+title: "記錄"
 ---
 
 # `openclaw logs`
@@ -57,3 +57,8 @@ openclaw logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
 
 - 使用 `--local-time` 以您的當地時區顯示時間戳記。
 - 如果本機回環 Gateway 要求配對，`openclaw logs` 會自動回退至已設定的本機日誌檔。明確的 `--url` 目標不會使用此回退機制。
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)
+- [Gateway 記錄](/zh-Hant/gateway/logging)

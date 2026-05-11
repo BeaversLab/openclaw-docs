@@ -13,18 +13,23 @@ OpenClaw = CLAW + TARDIS, car chaque homard spatial a besoin d'une machine à vo
 
 ## Crédits
 
-- **Peter Steinberger** ([@steipete](https://x.com/steipete)) - Créateur, souffleur d'homards
-- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Créateur de Pi, testeur de sécurité en pénétration
+- **Peter Steinberger** ([@steipete](https://x.com/steipete)) - Créateur, chuchoteur de homards
+- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Créateur de Pi, testeur de pénération de sécurité
 - **Clawd** - L'homard spatial qui exigeait un meilleur nom
 
 ## Contributeurs principaux
 
 - **Maxim Vovshin** (@Hyaxia, [36747317+Hyaxia@users.noreply.github.com](mailto:36747317+Hyaxia@users.noreply.github.com)) - Compétence Blogwatcher
 - **Nacho Iacovino** (@nachoiacovino, [nacho.iacovino@gmail.com](mailto:nacho.iacovino@gmail.com)) - Analyse de l'emplacement (Telegram et WhatsApp)
-- **Vincent Koc** ([@vincentkoc](https://github.com/vincentkoc), [@vincent_koc](https://x.com/vincent_koc)) - Agents, Télémétrie, Crochets, Sécurité
+- **Vincent Koc** ([@vincentkoc](https://github.com/vincentkoc), [@vincent_koc](https://x.com/vincent_koc)) - Agents, Télémétrie, Hooks, Sécurité
 
 ## Licence
 
 MIT - Libre comme un homard dans l'océan.
 
 > "Nous jouons tous juste avec nos propres invites." (Une IA, probablement high sur des jetons)
+
+## Connexes
+
+- [Utilisation et coûts des jetons](/fr/reference/token-use)
+- [Politique de publication](/fr/reference/RELEASING)

@@ -3,7 +3,7 @@ summary: "Brave Search API 設定用於 web_search"
 read_when:
   - You want to use Brave Search for web_search
   - You need a BRAVE_API_KEY or plan details
-title: "Brave Search (舊版路徑)"
+title: "Brave 搜尋（舊版路徑）"
 ---
 
 # Brave Search API
@@ -93,11 +93,15 @@ await web_search({
 ## 備註
 
 - OpenClaw 使用 Brave 的 **Search** 方案。如果您擁有舊版訂閱 (例如每月 2,000 次查詢的原始免費方案)，該方案仍然有效，但不包含較新的功能，例如 LLM Context 或更高的速率限制。
-- 每個 Brave 方案都包含 **每月 $5 的免費額度** (會更新)。Search 方案每 1,000 次請求費用為 $5，因此額度可覆蓋每月 1,000 次查詢。請在 Brave 儀表板中設定您的使用上限，以避免意外收費。請參閱 [Brave API portal](https://brave.com/search/api/) 了解目前的方案。
-- Search 方案包含 LLM Context 端點和 AI 推理權限。儲存結果以訓練或調整模型需要具有明確儲存權限的方案。請參閱 Brave [服務條款](https://api-dashboard.search.brave.com/terms-of-service)。
+- 每個 Brave 方案都包含 **每月 5 美元的免費額度**（可續期）。搜尋方案的費用為每 1,000 次請求 5 美元，因此該額度可覆蓋每月 1,000 次查詢。請在 Brave 儀表板中設定您的使用限制，以避免意外收費。請參閱 [Brave API 入口網站](https://brave.com/search/api/) 以了解最新的方案資訊。
+- 搜尋方案包含 LLM Context 端點和 AI 推理權限。若要儲存結果以訓練或調整模型，則需要具有明確儲存權限的方案。請參閱 Brave [服務條款](https://api-dashboard.search.brave.com/terms-of-service)。
 - `llm-context` 模式會傳回基礎知識支援的來源項目，而非標準網頁搜尋摘要格式。
 - `llm-context` 模式不支援 `ui_lang`、`freshness`、`date_after` 或 `date_before`。
 - `ui_lang` 必須包含地區子標籤，例如 `en-US`。
 - 結果預設會快取 15 分鐘（可透過 `cacheTtlMinutes` 設定）。
 
 請參閱 [Web 工具](/zh-Hant/tools/web) 以取得完整的 web_search 設定。
+
+## 相關
+
+- [Brave 搜尋](/zh-Hant/tools/brave-search)

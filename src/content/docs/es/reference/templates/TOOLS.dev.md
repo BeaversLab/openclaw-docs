@@ -1,6 +1,6 @@
 ---
-title: "Plantilla TOOLS.dev"
 summary: "Notas de herramientas del agente de desarrollo (C-3PO)"
+title: "Plantilla TOOLS.dev"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -23,3 +23,7 @@ No define qué herramientas existen; OpenClaw proporciona herramientas integrada
 - Texto a voz: especifique la voz, el altavoz/sala de destino y si se debe transmitir.
 
 Añada cualquier otra cosa que desee que el asistente sepa sobre su cadena de herramientas local.
+
+## Relacionado
+
+- [Plantilla TOOLS.md](/es/reference/templates/TOOLS)

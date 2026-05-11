@@ -3,23 +3,21 @@ summary: "Hugging Face Inference 設定（驗證 + 模型選擇）"
 read_when:
   - You want to use Hugging Face Inference with OpenClaw
   - You need the HF token env var or CLI auth choice
-title: "Hugging Face (Inference)"
+title: "Hugging Face (inference)"
 ---
 
-# Hugging Face (Inference)
+[Hugging Face Inference Providers](https://huggingface.co/docs/inference-providers) 提供透過單一路由器 API 相容 OpenAI 的聊天完成功能。您可以使用一個 Token 存取多種模型（DeepSeek、Llama 等）。OpenClaw 使用 **OpenAI 相容端點**（僅限聊天完成）；若要進行文字轉圖片、嵌入或語音功能，請直接使用 [HF inference clients](https://huggingface.co/docs/api-inference/quicktour)。
 
-[Hugging Face Inference Providers](https://huggingface.co/docs/inference-providers) 提供透過單一路由器 API 相容 OpenAI 的聊天完成。您可以透過一個 Token 存取多種模型（DeepSeek、Llama 等）。OpenClaw 使用 **OpenAI 相容端點**（僅限聊天完成）；若需文字轉圖片、嵌入或語音功能，請直接使用 [HF 推論用戶端](https://huggingface.co/docs/api-inference/quicktour)。
-
-- 供應商：`huggingface`
-- 驗證：`HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`（具有 **Make calls to Inference Providers** 權限的精細權限 Token）
+- 提供者：`huggingface`
+- 驗證：`HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`（具備 **Make calls to Inference Providers** 權限的細粒度 Token）
 - API：OpenAI 相容 (`https://router.huggingface.co/v1`)
-- 計費：單一 HF Token；[價格](https://huggingface.co/docs/inference-providers/pricing) 依照供應商費率並提供免費層級。
+- 計費：單一 HF Token；[價格](https://huggingface.co/docs/inference-providers/pricing) 遵循提供者費率，並提供免費層級。
 
 ## 開始使用
 
 <Steps>
-  <Step title="建立精細權限 Token">
-    前往 [Hugging Face Settings Tokens](https://huggingface.co/settings/tokens/new?ownUserPermissions=inference.serverless.write&tokenType=fineGrained) 並建立一個新的精細權限 Token。
+  <Step title="建立細粒度 Token">
+    前往 [Hugging Face Settings Tokens](https://huggingface.co/settings/tokens/new?ownUserPermissions=inference.serverless.write&tokenType=fineGrained) 並建立一個新的細粒度 Token。
 
     <Warning>
     Token 必須啟用 **Make calls to Inference Providers** 權限，否則 API 請求將會被拒絕。
@@ -27,15 +25,15 @@ title: "Hugging Face (Inference)"
 
   </Step>
   <Step title="執行引導設定">
-    在供應商下拉選單中選擇 **Hugging Face**，然後在提示時輸入您的 API 金鑰：
+    在提供者下拉選單中選擇 **Hugging Face**，然後在提示時輸入您的 API 金鑰：
 
     ```bash
     openclaw onboard --auth-choice huggingface-api-key
     ```
 
   </Step>
-  <Step title="選取預設模型">
-    在 **Default Hugging Face model** 下拉選單中，挑選您想要的模型。當您擁有有效的 Token 時，清單會從推論 API 載入；否則會顯示內建清單。您的選擇會被儲存為預設模型。
+  <Step title="選擇預設模型">
+    在 **Default Hugging Face model** 下拉選單中，選取您想要的模型。當您擁有有效的 Token 時，清單會從 Inference API 載入；否則會顯示內建清單。您的選擇會被儲存為預設模型。
 
     您也可以稍後在設定中設定或變更預設模型：
 
@@ -66,13 +64,13 @@ openclaw onboard --non-interactive \
   --huggingface-api-key "$HF_TOKEN"
 ```
 
-這將會設定 `huggingface/deepseek-ai/DeepSeek-R1` 為預設模型。
+這會將 `huggingface/deepseek-ai/DeepSeek-R1` 設定為預設模型。
 
 ## 模型 ID
 
 模型參照使用 `huggingface/<org>/<model>` 格式（Hub 風格 ID）。以下清單來自 **GET** `https://router.huggingface.co/v1/models`；您的目錄可能包含更多內容。
 
-| 模型                   | 參照（加上 `huggingface/` 前綴）    |
+| 模型                   | Ref（前綴為 `huggingface/`）        |
 | ---------------------- | ----------------------------------- |
 | DeepSeek R1            | `deepseek-ai/DeepSeek-R1`           |
 | DeepSeek V3.2          | `deepseek-ai/DeepSeek-V3.2`         |
@@ -85,21 +83,21 @@ openclaw onboard --non-interactive \
 | GLM 4.7                | `zai-org/GLM-4.7`                   |
 | Kimi K2.5              | `moonshotai/Kimi-K2.5`              |
 
-<Tip>您可以將 `:fastest` 或 `:cheapest` 附加到任何模型 ID。您可以在 [推論提供者設定](https://hf.co/settings/inference-providers) 中設定預設順序；請參閱 [推論提供者](https://huggingface.co/docs/inference-providers) 及 **GET** `https://router.huggingface.co/v1/models` 以取得完整清單。</Tip>
+<Tip>您可以將 `:fastest` 或 `:cheapest` 附加到任何模型 ID。在 [推論提供者設定](https://hf.co/settings/inference-providers) 中設定您的預設順序；參閱 [推論提供者](https://huggingface.co/docs/inference-providers) 和 **GET** `https://router.huggingface.co/v1/models` 以取得完整清單。</Tip>
 
-## 進階詳細資訊
+## 進階設定
 
 <AccordionGroup>
-  <Accordion title="模型探索與上線下拉式選單">
+  <Accordion title="Model discovery and onboarding dropdown">
     OpenClaw 透過直接呼叫 **推論端點** 來探索模型：
 
     ```bash
     GET https://router.huggingface.co/v1/models
     ```
 
-    （選用：傳送 `Authorization: Bearer $HUGGINGFACE_HUB_TOKEN` 或 `$HF_TOKEN` 以取得完整清單；部分端點在未經授權的情況下僅傳回子集。）回應為 OpenAI 格式的 `{ "object": "list", "data": [ { "id": "Qwen/Qwen3-8B", "owned_by": "Qwen", ... }, ... ] }`。
+    （選用：發送 `Authorization: Bearer $HUGGINGFACE_HUB_TOKEN` 或 `$HF_TOKEN` 以取得完整清單；某些端點在未經授權的情況下會傳回子集。）回應為 OpenAI 風格的 `{ "object": "list", "data": [ { "id": "Qwen/Qwen3-8B", "owned_by": "Qwen", ... }, ... ] }`。
 
-    當您設定 Hugging Face API 金鑰（透過上線流程、`HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`）時，OpenClaw 會使用此 GET 要求來探索可用的聊天完成模型。在 **互動式設定** 期間，輸入權杖後，您會看到由該清單填入的 **預設 Hugging Face 模型** 下拉式選單（若要求失敗，則使用內建目錄）。在執行階段（例如 Gateway 啟動）時，若存在金鑰，OpenClaw 會再次呼叫 **GET** `https://router.huggingface.co/v1/models` 來重新整理目錄。此清單會與內建目錄合併（用於內容視窗和成本等中繼資料）。若要求失敗或未設定金鑰，則僅使用內建目錄。
+    當您設定 Hugging Face API 金鑰（透過 onboarding、`HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`）時，OpenClaw 會使用此 GET 來探索可用的聊天完成模型。在 **互動式設定** 期間，輸入 Token 後，您會看到一個從該清單填入的 **預設 Hugging Face 模型** 下拉式選單（如果請求失敗，則使用內建目錄）。在執行時期（例如 Gateway 啟動），當金鑰存在時，OpenClaw 會再次呼叫 **GET** `https://router.huggingface.co/v1/models` 來重新整理目錄。此清單會與內建目錄合併（用於上下文視窗和成本等元資料）。如果請求失敗或未設定金鑰，則僅使用內建目錄。
 
   </Accordion>
 
@@ -158,7 +156,7 @@ openclaw onboard --non-interactive \
     ```
   </Accordion>
 
-  <Accordion title="Config: Qwen with cheapest and fastest variants">
+  <Accordion title="Config: 使用最便宜且最快的 Qwen 變體">
     ```json5
     {
       agents: {
@@ -175,7 +173,7 @@ openclaw onboard --non-interactive \
     ```
   </Accordion>
 
-  <Accordion title="Config: DeepSeek + Llama + GPT-OSS with aliases">
+  <Accordion title="Config: 使用別名設定的 DeepSeek + Llama + GPT-OSS">
     ```json5
     {
       agents: {
@@ -198,7 +196,7 @@ openclaw onboard --non-interactive \
     ```
   </Accordion>
 
-  <Accordion title="設定：多個 Qwen 和 DeepSeek 並搭配原則後綴">
+  <Accordion title="Config: 使用原則後綴的多個 Qwen 和 DeepSeek">
     ```json5
     {
       agents: {
@@ -220,16 +218,16 @@ openclaw onboard --non-interactive \
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="Model providers" href="/zh-Hant/concepts/model-providers" icon="layers">
-    所有供應商、模型參考和故障轉移行為的概覽。
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
+    所有提供者、模型參照和故障轉移行為的概覽。
   </Card>
-  <Card title="Model selection" href="/zh-Hant/concepts/models" icon="brain">
-    如何選擇和配置模型。
+  <Card title="模型選擇" href="/zh-Hant/concepts/models" icon="brain">
+    如何選擇和設定模型。
   </Card>
-  <Card title="Inference Providers docs" href="https://huggingface.co/docs/inference-providers" icon="book">
-    Hugging Face 推理供應商官方文件。
+  <Card title="推論提供者文件" href="https://huggingface.co/docs/inference-providers" icon="book">
+    Hugging Face 推論提供者官方文件。
   </Card>
-  <Card title="Configuration" href="/zh-Hant/gateway/configuration" icon="gear">
-    完整配置參考。
+  <Card title="設定" href="/zh-Hant/gateway/configuration" icon="gear">
+    完整設定參考。
   </Card>
 </CardGroup>

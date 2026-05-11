@@ -4,7 +4,7 @@ read_when:
   - You want to see which skills are available and ready to run
   - You want to search, install, or update skills from ClawHub
   - You want to debug missing binaries/env/config for skills
-title: "技能"
+title: "Skills"
 ---
 
 # `openclaw skills`
@@ -53,3 +53,8 @@ openclaw skills check --json
 - 当未提供子命令时，`list` 是默认操作。
 - `list`、`info` 和 `check` 将其渲染输出写入 stdout。使用
   `--json` 时，这意味着机器可读的负载保留在 stdout 上，以便通过管道和脚本使用。
+
+## 相关
+
+- [CLI 参考](/zh/cli)
+- [Skills](/zh/tools/skills)

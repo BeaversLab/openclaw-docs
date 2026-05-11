@@ -5,60 +5,58 @@ read_when:
 title: "功能"
 ---
 
-# 功能
-
 ## 亮点
 
 <Columns>
-  <Card title="频道" icon="message-square" href="/zh/channels">
-    通过单个 Discord 支持 iMessage、Signal、Slack、Telegram、WhatsApp、WebChat、Gateway(网关) 以及更多平台。
+  <Card title="渠道" icon="message-square" href="/zh/channels">
+    Discord、iMessage、Signal、Slack、Telegram、WhatsApp、WebChat 等更多渠道，仅通过一个 Gateway(网关) 即可支持。
   </Card>
   <Card title="插件" icon="plug" href="/zh/tools/plugin">
-    内置插件添加了 Matrix、Nextcloud Talk、Nostr、Twitch、Zalo 以及更多支持，在正常当前版本中无需单独安装。
+    捆绑的插件增加了 Matrix、Nextcloud Talk、Nostr、Twitch、Zalo 等更多功能，在正常当前版本中无需单独安装。
   </Card>
   <Card title="路由" icon="route" href="/zh/concepts/multi-agent">
     具有隔离会话的多智能体路由。
   </Card>
-  <Card title="Media" icon="image" href="/zh/nodes/images">
-    图片、音频、视频、文档以及图像/视频生成。
+  <Card title="媒体" icon="image" href="/zh/nodes/images">
+    图片、音频、视频、文档以及图片/视频生成。
   </Card>
-  <Card title="Apps and UI" icon="monitor" href="/zh/web/control-ui">
+  <Card title="应用和界面" icon="monitor" href="/zh/web/control-ui">
     Web 控制界面和 macOS 伴侣应用。
   </Card>
-  <Card title="Mobile nodes" icon="smartphone" href="/zh/nodes">
-    iOS 和 Android 节点，支持配对、语音/聊天以及丰富的设备命令。
+  <Card title="移动节点" icon="smartphone" href="/zh/nodes">
+    支持 iOS 和 Android 节点，具有配对、语音/聊天以及丰富的设备命令。
   </Card>
 </Columns>
 
 ## 完整列表
 
-**频道：**
+**渠道：**
 
 - 内置渠道包括 Discord、Google Chat、iMessage（旧版）、IRC、Signal、Slack、Telegram、WebChat 和 WhatsApp
-- 捆绑的插件渠道包括用于 BlueBubbles 的 iMessage、飞书、LINE、Matrix、Mattermost、Microsoft Teams、Nextcloud Talk、Nostr、QQ 机器人、群晖 Chat、Tlon、Twitch、Zalo 和 Zalo 个人版
-- 可选的单独安装的渠道插件包括语音通话和第三方软件包，例如微信
+- 捆绑的插件渠道包括用于 BlueBubbles 的 iMessage、飞书、LINE、Matrix、Mattermost、Microsoft Teams、Nextcloud Talk、Nostr、QQ 机器人、Synology Chat、Tlon、Twitch、Zalo 和 Zalo 个人版
+- 可选的单独安装渠道插件包括语音通话和第三方软件包，例如微信
 - 第三方渠道插件可以进一步扩展 Gateway(网关)，例如微信
-- 群聊支持，并支持基于提及的激活
-- 私信安全性，支持允许列表和配对
+- 支持群聊，具有基于提及的激活功能
+- 具有允许列表和配对功能的私信安全
 
 **智能体：**
 
-- 嵌入式智能体运行时，支持工具流式传输
-- 多智能体路由，每个工作区或发送方拥有隔离的会话
-- 会话：直接聊天会合并到共享的 `main`；群组则是隔离的
-- 支持长回复的流式传输和分块
+- 带有工具流传输的嵌入式智能体运行时
+- 针对每个工作区或发送者使用隔离会话的多智能体路由
+- 会话：直接聊天会合并到共享 `main` 中；群组是隔离的
+- 针对长响应的流式传输和分块
 
 **身份验证和提供商：**
 
-- 35+ 个模型提供商（Anthropic、OpenAI、Google 等）
+- 35+ 模型提供商（Anthropic、OpenAI、Google 等）
 - 通过 OAuth 进行订阅身份验证（例如 OpenAI Codex）
-- 自定义和自托管提供商支持（vLLM、SGLang、Ollama 以及任何兼容 OpenAI 或 Anthropic 的端点）
+- 自定义和自托管提供商支持（vLLM、SGLang、Ollama，以及任何 OpenAI 兼容或 Anthropic 兼容的端点）
 
 **媒体：**
 
 - 图片、音频、视频和文档的输入与输出
-- 共享的图片生成和视频生成能力界面
-- 语音笔记转录
+- 共享的图片生成和视频生成能力表面
+- 语音备忘录转录
 - 支持多个提供商的文本转语音
 
 **应用和界面：**
@@ -70,7 +68,12 @@ title: "功能"
 
 **工具和自动化：**
 
-- 浏览器自动化、exec、沙箱隔离
+- 浏览器自动化、执行、沙箱隔离
 - 网络搜索（Brave、DuckDuckGo、Exa、Firecrawl、Gemini、Grok、Kimi、MiniMax Search、Ollama Web Search、Perplexity、SearXNG、Tavily）
-- Cron 任务和心跳调度
+- Cron 作业和心跳调度
 - Skills、插件和工作流管道（Lobster）
+
+## 相关
+
+- [实验性功能](/zh/concepts/experimental-features)
+- [Agent 运行时](/zh/concepts/agent)

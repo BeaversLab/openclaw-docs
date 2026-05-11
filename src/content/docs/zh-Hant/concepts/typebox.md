@@ -285,3 +285,8 @@ Swift 生成器會產生：
 3. 當新的 RPC 需要操作員或節點 範圍分類時，更新 `src/gateway/method-scopes.ts`。
 4. 執行 `pnpm protocol:check`。
 5. 提交重新生成的 Schema 和 Swift 模型。
+
+## 相關
+
+- [Rich output protocol](/zh-Hant/reference/rich-output-protocol)
+- [RPC adapters](/zh-Hant/reference/rpc)

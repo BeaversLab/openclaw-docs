@@ -58,3 +58,9 @@ Public : contributeurs à l'application macOS. Objectif : garder la superpositio
 3. Refactor `VoicePushToTalk` to adopt existing sessions and call `endCapture` on release; apply runtime cooldown.
 4. Wire `VoiceWakeOverlayController` to the publisher; remove direct calls from runtime/PTT.
 5. Add integration tests for session adoption, cooldown, and empty-text dismissal.
+
+## Connexes
+
+- [Application macOS](/fr/platforms/macos)
+- [Réveil vocal (macOS)](/fr/platforms/mac/voicewake)
+- [Mode discussion](/fr/nodes/talk)

@@ -3,6 +3,10 @@ summary: "重定向到 Task Flow"
 title: "ClawFlow"
 ---
 
-# ClawFlow
+ClawFlow 已重命名为 [Task flow](/zh/automation/taskflow)。
 
-ClawFlow 已更名为 [Task Flow](/zh/automation/taskflow)。请参阅 [Task Flow](/zh/automation/taskflow) 获取最新文档。
+## 相关
+
+- [Task flow](/zh/automation/taskflow)
+- [Standing orders](/zh/automation/standing-orders)
+- [Hooks](/zh/automation/hooks)

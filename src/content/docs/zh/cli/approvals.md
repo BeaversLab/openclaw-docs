@@ -3,7 +3,7 @@ summary: "CLI 参考，适用于 `openclaw approvals` 和 `openclaw exec-policy`
 read_when:
   - You want to edit exec approvals from the CLI
   - You need to manage allowlists on gateway or node hosts
-title: "批准"
+title: "审批"
 ---
 
 # `openclaw approvals`
@@ -182,3 +182,8 @@ openclaw approvals allowlist remove "~/Projects/**/bin/rg"
 - `--agent` 默认为 `"*"`，这适用于所有代理。
 - 节点主机必须通告 `system.execApprovals.get/set`（macOS 应用或无头节点主机）。
 - 审批文件按主机存储在 `~/.openclaw/exec-approvals.json` 处。
+
+## 相关内容
+
+- [CLI 参考](/zh/cli)
+- [执行审批](/zh/tools/exec-approvals)

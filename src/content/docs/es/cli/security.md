@@ -3,7 +3,7 @@ summary: "Referencia de CLI para `openclaw security` (auditar y corregir problem
 read_when:
   - You want to run a quick security audit on config/state
   - You want to apply safe “fix” suggestions (permissions, tighten defaults)
-title: "security"
+title: "Seguridad"
 ---
 
 # `openclaw security`
@@ -84,3 +84,8 @@ openclaw security audit --fix --json | jq '{fix: .fix.ok, summary: .report.summa
 - deshabilita herramientas (`gateway`, `cron`, `exec`, etc.)
 - cambia las opciones de enlace/autenticación/exposición de red de la puerta de enlace
 - elimina o reescribe complementos/habilidades
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)
+- [Auditoría de seguridad](/es/gateway/security)

@@ -6,31 +6,29 @@ read_when:
 title: "Scripts"
 ---
 
-# Scripts
-
 Le répertoire `scripts/` contient des scripts d'assistance pour les flux de travail locaux et les tâches d'exploitation.
 Utilisez-les lorsqu'une tâche est clairement liée à un script ; sinon, préférez la CLI.
 
 ## Conventions
 
-- Les scripts sont **facultatifs**, sauf s'ils sont mentionnés dans la documentation ou les listes de contrôle de version.
-- Privilégiez les interfaces de CLI lorsqu'elles existent (exemple : la surveillance d'authentification utilise `openclaw models status --check`).
+- Les scripts sont **optionnels** sauf s'ils sont référencés dans la documentation ou les listes de vérification de version.
+- Privilégiez les interfaces de la CLI lorsqu'elles existent (exemple : la surveillance d'authentification utilise `openclaw models status --check`).
 - Supposez que les scripts sont spécifiques à l'hôte ; lisez-les avant de les exécuter sur une nouvelle machine.
 
 ## Scripts de surveillance d'authentification
 
-La surveillance de l'authentification est traitée dans [Authentification](/fr/gateway/authentication). Les scripts sous `scripts/` sont des suppléments optionnels pour les flux de travail systemd/Termux sur téléphone.
+La surveillance de l'authentification est traitée dans [Authentification](/fr/gateway/authentication). Les scripts sous `scripts/` sont des extras optionnels pour les flux de travail systemd/Termux sur téléphone.
 
 ## Assistant de lecture GitHub
 
 Utilisez `scripts/gh-read` lorsque vous voulez que `gh` utilise un jeton d'installation d'application GitHub pour les appels de lecture limités au dépôt, tout en laissant le `gh` normal sur votre connexion personnelle pour les actions d'écriture.
 
-Variables d'environnement requises :
+Env requis :
 
 - `OPENCLAW_GH_READ_APP_ID`
 - `OPENCLAW_GH_READ_PRIVATE_KEY_FILE`
 
-Variables d'environnement optionnelles :
+Env optionnel :
 
 - `OPENCLAW_GH_READ_INSTALLATION_ID` lorsque vous souhaitez ignorer la recherche d'installation basée sur le dépôt
 - `OPENCLAW_GH_READ_PERMISSIONS` comme une substitution séparée par des virgules pour le sous-ensemble de permissions de lecture à demander
@@ -50,4 +48,9 @@ Exemples :
 ## Lors de l'ajout de scripts
 
 - Gardez les scripts ciblés et documentés.
-- Ajoutez une courte entrée dans la documentation appropriée (ou créez-en une si elle manque).
+- Ajoutez une courte entrée dans la documentation pertinente (ou créez-en une si elle manque).
+
+## Connexes
+
+- [Tests](/fr/help/testing)
+- [Tests en direct](/fr/help/testing-live)

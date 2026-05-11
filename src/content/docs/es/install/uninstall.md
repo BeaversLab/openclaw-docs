@@ -6,16 +6,14 @@ read_when:
 title: "Desinstalar"
 ---
 
-# Desinstalar
-
 Dos caminos:
 
-- **Camino fácil** si `openclaw` sigue instalado.
+- **Camino fácil** si `openclaw` aún está instalado.
 - **Eliminación manual del servicio** si la CLI ha desaparecido pero el servicio sigue ejecutándose.
 
 ## Camino fácil (CLI todavía instalada)
 
-Recomendado: usar el desinstalador integrado:
+Recomendado: use el desinstalador integrado:
 
 ```bash
 openclaw uninstall
@@ -30,33 +28,33 @@ npx -y openclaw uninstall --all --yes --non-interactive
 
 Pasos manuales (mismo resultado):
 
-1. Detener el servicio de puerta de enlace:
+1. Detenga el servicio de puerta de enlace:
 
 ```bash
 openclaw gateway stop
 ```
 
-2. Desinstalar el servicio de puerta de enlace (launchd/systemd/schtasks):
+2. Desinstale el servicio de puerta de enlace (launchd/systemd/schtasks):
 
 ```bash
 openclaw gateway uninstall
 ```
 
-3. Eliminar estado + configuración:
+3. Elimine el estado + la configuración:
 
 ```bash
 rm -rf "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"
 ```
 
-Si estableció `OPENCLAW_CONFIG_PATH` en una ubicación personalizada fuera del directorio de estado, elimine también ese archivo.
+Si configuró `OPENCLAW_CONFIG_PATH` en una ubicación personalizada fuera del directorio de estado, elimine también ese archivo.
 
-4. Eliminar su espacio de trabajo (opcional, elimina los archivos del agente):
+4. Elimine su espacio de trabajo (opcional, elimina los archivos del agente):
 
 ```bash
 rm -rf ~/.openclaw/workspace
 ```
 
-5. Eliminar la instalación de la CLI (elija la que usó):
+5. Elimine la instalación de la CLI (elija la que usó):
 
 ```bash
 npm rm -g openclaw
@@ -73,15 +71,15 @@ rm -rf /Applications/OpenClaw.app
 Notas:
 
 - Si usó perfiles (`--profile` / `OPENCLAW_PROFILE`), repita el paso 3 para cada directorio de estado (los predeterminados son `~/.openclaw-<profile>`).
-- En modo remoto, el directorio de estado reside en el **host de puerta de enlace**, por lo que también debe ejecutar los pasos 1-4 allí.
+- En modo remoto, el directorio de estado reside en el **host de la puerta de enlace**, por lo que también debe ejecutar los pasos 1-4 allí.
 
 ## Eliminación manual del servicio (CLI no instalada)
 
-Use esto si el servicio de puerta de enlace sigue ejecutándose pero `openclaw` falta.
+Use esto si el servicio de puerta de enlace sigue ejecutándose pero falta `openclaw`.
 
 ### macOS (launchd)
 
-La etiqueta predeterminada es `ai.openclaw.gateway` (o `ai.openclaw.<profile>`; la versión heredada `com.openclaw.*` todavía puede existir):
+La etiqueta predeterminada es `ai.openclaw.gateway` (o `ai.openclaw.<profile>`; la heredada `com.openclaw.*` aún puede existir):
 
 ```bash
 launchctl bootout gui/$UID/ai.openclaw.gateway
@@ -103,26 +101,31 @@ systemctl --user daemon-reload
 ### Windows (Tarea programada)
 
 El nombre de tarea predeterminado es `OpenClaw Gateway` (o `OpenClaw Gateway (<profile>)`).
-El script de la tarea se encuentra en su directorio de estado.
+El script de la tarea reside en su directorio de estado.
 
 ```powershell
 schtasks /Delete /F /TN "OpenClaw Gateway"
 Remove-Item -Force "$env:USERPROFILE\.openclaw\gateway.cmd"
 ```
 
-Si usó un perfil, elimine el nombre de la tarea correspondiente y `~\.openclaw-<profile>\gateway.cmd`.
+Si usó un perfil, elimine el nombre de tarea coincidente y `~\.openclaw-<profile>\gateway.cmd`.
 
-## Instalación normal vs checkout del código fuente
+## Instalación normal vs. fuente obtenida
 
 ### Instalación normal (install.sh / npm / pnpm / bun)
 
 Si usó `https://openclaw.ai/install.sh` o `install.ps1`, la CLI se instaló con `npm install -g openclaw@latest`.
 Elimínela con `npm rm -g openclaw` (o `pnpm remove -g` / `bun remove -g` si la instaló de esa manera).
 
-### Código fuente (git clone)
+### Fuente obtenida (git clone)
 
-Si ejecuta desde una clonación del repositorio (`git clone` + `openclaw ...` / `bun run openclaw ...`):
+Si ejecutas desde una clonación del repositorio (`git clone` + `openclaw ...` / `bun run openclaw ...`):
 
-1. Desinstale el servicio de pasarela **antes** de eliminar el repositorio (use la ruta fácil anterior o la eliminación manual del servicio).
-2. Elimine el directorio del repositorio.
-3. Elimine el estado + el espacio de trabajo como se muestra arriba.
+1. Desinstala el servicio de puerta de enlace **antes** de eliminar el repositorio (usa la ruta fácil anterior o la eliminación manual del servicio).
+2. Elimina el directorio del repositorio.
+3. Elimina el estado y el espacio de trabajo como se muestra arriba.
+
+## Relacionado
+
+- [Resumen de instalación](/es/install)
+- [Guía de migración](/es/install/migrating)

@@ -136,3 +136,9 @@ Las respuestas entrantes incluyen:
 - El contexto citado se añade a `Body` como un bloque `[Replying to ...]`.
 
 Esto es coherente en todos los canales.
+
+## Relacionado
+
+- [Grupos](/es/channels/groups)
+- [Grupos de difusión](/es/channels/broadcast-groups)
+- [Emparejamiento](/es/channels/pairing)

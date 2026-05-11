@@ -1,8 +1,11 @@
 ---
 summary: "重新導向至 /gateway/authentication"
-title: "驗證監控"
+title: "Auth 監控"
 ---
 
-# 驗證監控
+Auth 監控位於 [驗證](/zh-Hant/gateway/authentication) 之下。
 
-此頁面已移至 [驗證](/zh-Hant/gateway/authentication)。請參閱 [驗證](/zh-Hant/gateway/authentication) 以取得驗證監控文件。
+## 相關
+
+- [Automation 疑難排解](/zh-Hant/automation/troubleshooting)
+- [Hooks](/zh-Hant/automation/hooks)

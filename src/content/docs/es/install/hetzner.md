@@ -252,10 +252,17 @@ Para equipos que prefieren flujos de trabajo de infraestructura como código, un
 
 Este enfoque complementa la configuración de Docker anterior con implementaciones reproducibles, infraestructura controlada por versiones y recuperación ante desastres automatizada.
 
-> **Nota:** Mantenido por la comunidad. Para problemas o contribuciones, consulte los enlaces del repositorio anteriores.
+<Note>Mantenido por la comunidad. Para problemas o contribuciones, consulte los enlaces de los repositorios anteriores.</Note>
 
 ## Siguientes pasos
 
 - Configurar canales de mensajería: [Canales](/es/channels)
 - Configurar el Gateway: [Configuración del Gateway](/es/gateway/configuration)
 - Mantener OpenClaw actualizado: [Actualización](/es/install/updating)
+
+## Relacionado
+
+- [Resumen de instalación](/es/install)
+- [Fly.io](/es/install/fly)
+- [Docker](/es/install/docker)
+- [Alojamiento VPS](/es/vps)

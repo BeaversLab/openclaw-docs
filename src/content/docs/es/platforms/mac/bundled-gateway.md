@@ -7,25 +7,23 @@ read_when:
 title: "Gateway en macOS"
 ---
 
-# Gateway en macOS (launchd externo)
-
-OpenClaw.app ya no incluye Node/Bun ni el tiempo de ejecución de Gateway. La aplicación de macOS espera una instalación de la CLI `openclaw` **externa**, no inicia Gateway como proceso secundario y gestiona un servicio launchd por usuario para mantener Gateway en ejecución (o se conecta a un Gateway local existente si ya se está ejecutando).
+OpenClaw.app ya no incluye Node/Bun ni el tiempo de ejecución de Gateway. La aplicación de macOS espera una instalación de la CLI `openclaw` **externa**, no inicia Gateway como un proceso secundario y gestiona un servicio launchd por usuario para mantener Gateway en ejecución (o se conecta a un Gateway local existente si ya hay uno en ejecución).
 
 ## Instalar la CLI (necesario para el modo local)
 
-Node 24 es el tiempo de ejecución predeterminado en Mac. Node 22 LTS, actualmente `22.14+`, todavía funciona por compatibilidad. Luego, instale `openclaw` globalmente:
+Node 24 es el tiempo de ejecución predeterminado en Mac. Node 22 LTS, actualmente `22.14+`, todavía funciona por compatibilidad. Luego instale `openclaw` globalmente:
 
 ```bash
 npm install -g openclaw@<version>
 ```
 
-El botón **Instalar CLI** de la aplicación macOS ejecuta el mismo flujo de instalación global que la aplicación utiliza internamente: prefiere npm primero, luego pnpm, luego bun si ese es el único gestor de paquetes detectado. Node sigue siendo el tiempo de ejecución recomendado para Gateway.
+El botón **Install CLI** de la aplicación de macOS ejecuta el mismo flujo de instalación global que la aplicación utiliza internamente: prefiere npm primero, luego pnpm, luego bun si ese es el único gestor de paquetes detectado. Node sigue siendo el tiempo de ejecución de Gateway recomendado.
 
 ## Launchd (Gateway como LaunchAgent)
 
 Etiqueta:
 
-- `ai.openclaw.gateway` (o `ai.openclaw.<profile>`; `com.openclaw.*` antiguo puede permanecer)
+- `ai.openclaw.gateway` (o `ai.openclaw.<profile>`; puede permanecer el `com.openclaw.*` heredado)
 
 Ubicación del plist (por usuario):
 
@@ -34,22 +32,22 @@ Ubicación del plist (por usuario):
 
 Gestor:
 
-- La aplicación de macOS es responsable de la instalación/actualización de LaunchAgent en modo Local.
+- La aplicación de macOS gestiona la instalación/actualización de LaunchAgent en modo Local.
 - La CLI también puede instalarlo: `openclaw gateway install`.
 
 Comportamiento:
 
 - “OpenClaw Active” habilita/deshabilita el LaunchAgent.
 - Salir de la aplicación **no** detiene el gateway (launchd lo mantiene activo).
-- Si ya hay un Gateway ejecutándose en el puerto configurado, la aplicación se conecta a él en lugar de iniciar uno nuevo.
+- Si un Gateway ya se está ejecutando en el puerto configurado, la aplicación se conecta a él en lugar de iniciar uno nuevo.
 
 Registro:
 
-- launchd stdout/err: `/tmp/openclaw/openclaw-gateway.log`
+- stdout/err de launchd: `/tmp/openclaw/openclaw-gateway.log`
 
 ## Compatibilidad de versiones
 
-La aplicación de macOS verifica la versión del gateway con su propia versión. Si son incompatibles, actualice la CLI global para que coincida con la versión de la aplicación.
+La aplicación de macOS comprueba la versión del gateway contra su propia versión. Si son incompatibles, actualice la CLI global para que coincida con la versión de la aplicación.
 
 ## Prueba rápida
 
@@ -66,3 +64,8 @@ Luego:
 ```bash
 openclaw gateway call health --url ws://127.0.0.1:18999 --timeout 3000
 ```
+
+## Relacionado
+
+- [macOS app](/es/platforms/macos)
+- [Gateway runbook](/es/gateway)

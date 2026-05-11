@@ -4,7 +4,7 @@ read_when:
   - Setting up OpenClaw on Oracle Cloud
   - Looking for low-cost VPS hosting for OpenClaw
   - Want 24/7 OpenClaw on a small server
-title: "Oracle Cloud (Plataforma)"
+title: "Oracle Cloud (plataforma)"
 ---
 
 # OpenClaw en Oracle Cloud (OCI)
@@ -18,7 +18,7 @@ El nivel gratuito de Oracle puede ser una gran opción para OpenClaw (especialme
 - Arquitectura ARM (la mayoría de las cosas funcionan, pero algunos binarios pueden ser solo x86)
 - La capacidad y el registro pueden ser complicados
 
-## Comparación de costos (2026)
+## Comparación de costes (2026)
 
 | Proveedor    | Plan            | Especificaciones       | Precio/mes | Notas                               |
 | ------------ | --------------- | ---------------------- | ---------- | ----------------------------------- |
@@ -193,7 +193,7 @@ Esta configuración a menudo elimina la _necesidad_ de reglas de firewall basada
 | Autenticación solo por clave SSH | No            | Tailscale se autentica a través de tu tailnet                                               |
 | Endurecimiento de IPv6           | Usualmente no | Depende de la configuración de tu VCN/subred; verifica qué está realmente asignado/expuesto |
 
-### Aún recomendado
+### Sigue recomendado
 
 - **Permisos de credenciales:** `chmod 700 ~/.openclaw`
 - **Auditoría de seguridad:** `openclaw security audit`
@@ -296,7 +296,7 @@ openclaw backup create
 
 ---
 
-## Véase también
+## Relacionado
 
 - [Acceso remoto a Gateway](/es/gateway/remote) — otros patrones de acceso remoto
 - [Integración con Tailscale](/es/gateway/tailscale) — documentación completa de Tailscale

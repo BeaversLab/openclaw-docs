@@ -177,5 +177,10 @@ await web_search({
 - La compatibilidad con Sonar/OpenRouter devuelve una respuesta sintetizada con citas, no filas de resultados estructurados
 - Los resultados se almacenan en caché durante 15 minutos de forma predeterminada (configurable a través de `cacheTtlMinutes`)
 
-Consulte [Web tools](/es/tools/web) para ver la configuración completa de web_search.
-Consulte [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) para obtener más detalles.
+Consulte [Herramientas web](/es/tools/web) para la configuración completa de web_search.
+Consulte [Documentación de la API de búsqueda de Perplexity](https://docs.perplexity.ai/docs/search/quickstart) para obtener más detalles.
+
+## Relacionado
+
+- [Búsqueda de Perplexity](/es/tools/perplexity-search)
+- [Búsqueda web](/es/tools/web)

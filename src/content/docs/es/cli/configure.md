@@ -2,31 +2,34 @@
 summary: "Referencia de la CLI para `openclaw configure` (indicaciones interactivas de configuración)"
 read_when:
   - You want to tweak credentials, devices, or agent defaults interactively
-title: "configure"
+title: "Configurar"
 ---
 
 # `openclaw configure`
 
 Indicación interactiva para configurar las credenciales, los dispositivos y los valores predeterminados del agente.
 
-Nota: La sección **Model** ahora incluye una selección múltiple para la
-lista blanca `agents.defaults.models` (lo que aparece en `/model` y el selector de modelos).
-Las opciones de configuración con ámbito de proveedor fusionan sus modelos seleccionados en la
-lista blanca existente en lugar de reemplazar a los proveedores no relacionados que ya están en la configuración.
+<Note>
+La sección **Modelo** incluye una selección múltiple para la lista de permitidos (allowlist) de `agents.defaults.models` (lo que aparece en `/model` y el selector de modelos). Las opciones de configuración con alcance de proveedor fusionan sus modelos seleccionados en la lista de permitidos existente en lugar de reemplazar a los proveedores no relacionados ya presentes en la configuración. Volver a ejecutar la autenticación del proveedor desde configure preserva un `agents.defaults.model.primary` existente. Use `openclaw models auth login --provider <id> --set-default` o `openclaw models set <model>` cuando intencionalmente desee cambiar el modelo predeterminado.
+</Note>
 
-Cuando configure se inicia desde una elección de autenticación de proveedor, los selectores de modelo predeterminado y lista de permitidos prefieren automáticamente ese proveedor. Para proveedores emparejados como Volcengine/BytePlus, la misma preferencia también coincide con sus variantes de plan de codificación (`volcengine-plan/*`, `byteplus-plan/*`). Si el filtro de proveedor preferido produjera una lista vacía, configure vuelve al catálogo sin filtrar en lugar de mostrar un selector en blanco.
+Cuando configure se inicia desde una elección de autenticación de proveedor, los selectores de modelo predeterminado y lista de permitidos prefieren automáticamente ese proveedor. Para proveedores emparejados como Volcengine y BytePlus, la misma preferencia también coincide con sus variantes de plan de codificación (`volcengine-plan/*`, `byteplus-plan/*`). Si el filtro de proveedor preferido produjera una lista vacía, configure recurre al catálogo sin filtrar en lugar de mostrar un selector en blanco.
 
-Consejo: `openclaw config` sin un subcomando abre el mismo asistente. Use `openclaw config get|set|unset` para ediciones no interactivas.
+<Tip>`openclaw config` sin un subcomando abre el mismo asistente. Use `openclaw config get|set|unset` para ediciones no interactivas.</Tip>
 
-Para la búsqueda web, `openclaw configure --section web` le permite elegir un proveedor y configurar sus credenciales. Algunos proveedores también muestran mensajes de seguimiento específicos del proveedor:
+Para la búsqueda web, `openclaw configure --section web` le permite elegir un proveedor
+y configurar sus credenciales. Algunos proveedores también muestran
+preguntas de seguimiento específicas del proveedor:
 
-- **Grok** puede ofrecer una configuración opcional de `x_search` con el mismo `XAI_API_KEY` y permitirle elegir un modelo `x_search`.
-- **Kimi** puede solicitar la región de la API de Moonshot (`api.moonshot.ai` vs `api.moonshot.cn`) y el modelo de búsqueda web predeterminado de Kimi.
+- **Grok** puede ofrecer una configuración opcional de `x_search` con el mismo `XAI_API_KEY` y
+  permitirle elegir un modelo `x_search`.
+- **Kimi** puede solicitar la región de la API de Moonshot (`api.moonshot.ai` vs
+  `api.moonshot.cn`) y el modelo de búsqueda web predeterminado de Kimi.
 
 Relacionado:
 
-- Referencia de configuración de Gateway: [Configuration](/es/gateway/configuration)
-- CLI de Config: [Config](/es/cli/config)
+- Referencia de configuración de Gateway: [Configuración](/es/gateway/configuration)
+- CLI de configuración: [Config](/es/cli/config)
 
 ## Opciones
 
@@ -48,7 +51,7 @@ Notas:
 
 - Elegir dónde se ejecuta el Gateway siempre actualiza `gateway.mode`. Puede seleccionar "Continuar" sin otras secciones si eso es todo lo que necesita.
 - Los servicios orientados a canales (Slack/Discord/Matrix/Microsoft Teams) solicitan listas de permitidos de canales/salas durante la configuración. Puede ingresar nombres o IDs; el asistente resuelve los nombres a IDs cuando es posible.
-- Si ejecuta el paso de instalación del demonio, la autenticación por token requiere un token, y si `gateway.auth.token` está administrado por SecretRef, configure valida el SecretRef pero no persiste los valores de token de texto plano resueltos en los metadatos del entorno del servicio supervisor.
+- Si ejecuta el paso de instalación del demonio, la autenticación con token requiere un token, y si `gateway.auth.token` está administrado por SecretRef, configure valida el SecretRef pero no persiste los valores de token de texto plano resueltos en los metadatos del entorno del servicio supervisor.
 - Si la autenticación por token requiere un token y la referencia secreta (SecretRef) del token configurado no está resuelta, configure bloquea la instalación del demonio con una guía de remediation accionable.
 - Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, configure bloquea la instalación del demonio hasta que el modo se establezca explícitamente.
 
@@ -60,3 +63,8 @@ openclaw configure --section web
 openclaw configure --section model --section channels
 openclaw configure --section gateway --section daemon
 ```
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)
+- [Configuración](/es/gateway/configuration)

@@ -3,7 +3,7 @@ summary: "通过 Gateway(网关) 网关 HTTP 端点直接调用单个工具"
 read_when:
   - Calling tools without running a full agent turn
   - Building automations that need tool policy enforcement
-title: "Tools Invoke API"
+title: "工具调用 %%PH:GLOSSARY:92:46ca4df%%"
 ---
 
 # Tools Invoke (HTTP)
@@ -159,3 +159,8 @@ curl -sS http://127.0.0.1:18789/tools/invoke \
     "args": {}
   }'
 ```
+
+## 相关
+
+- [Gateway(网关) 协议](/zh/gateway/protocol)
+- [工具和插件](/zh/tools)

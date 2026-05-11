@@ -7,38 +7,36 @@ read_when:
 title: "Claude Max API 代理"
 ---
 
-# Claude Max API 代理
+**claude-max-api-proxy** 是一個社群工具，能將您的 Claude Max/Pro 訂閱作為 OpenAI 相容的 API 端點暴露出來。這讓您能在任何支援 OpenAI API 格式的工具中使用您的訂閱。
 
-**claude-max-api-proxy** 是一款社群工具，可將您的 Claude Max/Pro 訂閱公開為 OpenAI 相容的 API 端點。這讓您能透過任何支援 OpenAI API 格式的工具來使用您的訂閱。
-
-<Warning>此路徑僅供技術相容性使用。Anthropic 過去曾封鎖部分在 Claude Code 之外的訂閱使用。您必須自行決定是否使用，並在依賴之前確認 Anthropic 目前的條款。</Warning>
+<Warning>此路徑僅為技術相容性。Anthropic 過去曾封鎖部分在 Claude Code 之外的訂閱使用。您必須自行決定是否使用，並在依賴之前確認 Anthropic 的當前條款。</Warning>
 
 ## 為什麼使用這個？
 
-| 方案            | 費用                                             | 適用於                     |
-| --------------- | ------------------------------------------------ | -------------------------- |
-| Anthropic API   | 按 token 計費（Opus 輸入約 $15/M，輸出約 $75/M） | 生產環境應用程式，大量使用 |
-| Claude Max 訂閱 | 每月固定 $200                                    | 個人使用、開發、無限使用   |
+| 方式            | 成本                                           | 最適合                   |
+| --------------- | ---------------------------------------------- | ------------------------ |
+| Anthropic API   | 按 token 付費（Opus 輸入約 $15/M，輸出 $75/M） | 生產應用程式，大量使用   |
+| Claude Max 訂閱 | 每月 $200 固定費用                             | 個人使用、開發、無限使用 |
 
-如果您擁有 Claude Max 訂閱並想搭配 OpenAI 相容工具使用，此代理可能會降低部分工作流程的成本。對於生產環境使用，API 金鑰仍是更明確的合規途徑。
+如果您有 Claude Max 訂閱並希望與 OpenAI 相容的工具搭配使用，此代理可能會降低某些工作流程的成本。對於生產使用，API 金鑰仍是更明確的政策路徑。
 
-## 運作原理
+## 運作方式
 
 ```
 Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscription)
      (OpenAI format)              (converts format)      (uses your login)
 ```
 
-此代理：
+該代理：
 
-1. 在 `http://localhost:3456/v1/chat/completions` 接受 OpenAI 格式請求
+1. 在 `http://localhost:3456/v1/chat/completions` 接受 OpenAI 格式的請求
 2. 將其轉換為 Claude Code CLI 指令
 3. 以 OpenAI 格式回傳回應（支援串流）
 
 ## 開始使用
 
 <Steps>
-  <Step title="安裝代理程式">
+  <Step title="安裝代理">
     需要 Node.js 20+ 和 Claude Code CLI。
 
     ```bash
@@ -55,7 +53,7 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
     # Server runs at http://localhost:3456
     ```
   </Step>
-  <Step title="測試代理程式">
+  <Step title="測試代理">
     ```bash
     # Health check
     curl http://localhost:3456/health
@@ -74,7 +72,7 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
 
   </Step>
   <Step title="設定 OpenClaw">
-    將 OpenClaw 指向代理程式，作為自訂的 OpenAI 相容端點：
+    將 OpenClaw 指向該代理，作為自訂 OpenAI 相容端點：
 
     ```json5
     {
@@ -93,7 +91,7 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
   </Step>
 </Steps>
 
-## 可用模型
+## 內建目錄
 
 | 模型 ID           | 對應至          |
 | ----------------- | --------------- |
@@ -101,20 +99,23 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
 | `claude-sonnet-4` | Claude Sonnet 4 |
 | `claude-haiku-4`  | Claude Haiku 4  |
 
-## 進階
+## 進階設定
 
 <AccordionGroup>
-  <Accordion title="代理式 OpenAI 相容說明">
-    此路徑使用與其他自訂 `/v1` 後端相同的代理式 OpenAI 相容路線：
+  <Accordion title="Proxy-style OpenAI-compatible notes">
+    此路徑使用與其他自訂
+    `/v1` 後端相同的代理式 OpenAI 相容路由：
 
     - 原生僅限 OpenAI 的請求塑形不適用
-    - 無 `service_tier`、無 Responses `store`、無提示快取提示，且無 OpenAI 推理相容負載塑形
-    - 隱藏的 OpenClaw 歸屬標頭（`originator`、`version`、`User-Agent`）不會在代理 URL 上注入
+    - 無 `service_tier`，無 Responses `store`，無提示快取提示，且無
+      OpenAI 推理相容負載塑形
+    - 隱藏的 OpenClaw 歸屬標頭（`originator`、`version`、`User-Agent`）
+      不會在代理 URL 上注入
 
   </Accordion>
 
-  <Accordion title="使用 LaunchAgent 在 macOS 上自動啟動">
-    建立一個 LaunchAgent 以自動執行代理程式：
+  <Accordion title="Auto-start on macOS with LaunchAgent">
+    建立一個 LaunchAgent 以自動執行代理：
 
     ```bash
     cat > ~/Library/LaunchAgents/com.claude-max-api.plist << 'EOF'
@@ -152,28 +153,28 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
 
 - **npm：** [https://www.npmjs.com/package/claude-max-api-proxy](https://www.npmjs.com/package/claude-max-api-proxy)
 - **GitHub：** [https://github.com/atalovesyou/claude-max-api-proxy](https://github.com/atalovesyou/claude-max-api-proxy)
-- **問題回報：** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
+- **問題：** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
 
 ## 備註
 
 - 這是一個 **社群工具**，並非由 Anthropic 或 OpenClaw 官方支援
-- 需要有效的 Claude Max/Pro 訂閱，並已透過 Claude Code CLI 進行身分驗證
-- 代理程式在本機執行，不會將資料傳送至任何第三方伺服器
+- 需要有效的 Claude Max/Pro 訂閱，並已驗證 Claude Code CLI
+- 代理在本地執行，不會將資料發送到任何第三方伺服器
 - 完全支援串流回應
 
-<Note>如需透過 Claude CLI 或 API 金鑰進行原生 Anthropic 整合，請參閱 [Anthropic 提供者](/zh-Hant/providers/anthropic)。如需 OpenAI/Codex 訂閱，請參閱 [OpenAI 提供者](/zh-Hant/providers/openai)。</Note>
+<Note>若要使用 Claude CLI 或 API 金鑰進行原生 Anthropic 整合，請參閱 [Anthropic 提供者](/zh-Hant/providers/anthropic)。若要使用 OpenAI/Codex 訂閱，請參閱 [OpenAI 提供者](/zh-Hant/providers/openai)。</Note>
 
 ## 相關
 
 <CardGroup cols={2}>
   <Card title="Anthropic provider" href="/zh-Hant/providers/anthropic" icon="bolt">
-    透過 Claude CLI 或 API 金鑰進行原生 OpenClaw 整合。
+    使用 Claude CLI 或 API 金鑰的原生 OpenClaw 整合。
   </Card>
   <Card title="OpenAI provider" href="/zh-Hant/providers/openai" icon="robot">
     適用於 OpenAI/Codex 訂閱。
   </Card>
-  <Card title="Model providers" href="/zh-Hant/concepts/model-providers" icon="layers">
-    所有提供者、模型參照和容錯移轉行為的概覽。
+  <Card title="Model selection" href="/zh-Hant/concepts/model-providers" icon="layers">
+    所有提供者、模型參照和故障轉移行為的概覽。
   </Card>
   <Card title="Configuration" href="/zh-Hant/gateway/configuration" icon="gear">
     完整設定參考。

@@ -6,44 +6,42 @@ read_when:
 title: "Comando de ubicación"
 ---
 
-# Comando de ubicación (nodos)
-
-## TL;DR
+## Resumen
 
 - `location.get` es un comando de nodo (vía `node.invoke`).
-- Desactivado por defecto.
-- Los ajustes de la aplicación de Android usan un selector: Desactivado / Mientras se usa.
+- Desactivado de forma predeterminada.
+- La configuración de la aplicación de Android utiliza un selector: Desactivado / Mientras se usa.
 - Interruptor separado: Ubicación precisa.
 
-## Por qué un selector (no solo un interruptor)
+## Por qué un selector (y no solo un interruptor)
 
 Los permisos del SO son multinivel. Podemos exponer un selector en la aplicación, pero el SO aún decide la concesión real.
 
-- iOS/macOS puede exponer **Mientras se usa** o **Siempre** en los indicadores del sistema/ajustes.
-- La aplicación de Android actualmente solo admite ubicación en primer plano.
-- La ubicación precisa es una concesión separada (iOS 14+ “Precise”, Android “fine” vs “coarse”).
+- iOS/macOS puede exponer **Mientras se usa** o **Siempre** en los mensajes del sistema/Configuración.
+- La aplicación de Android actualmente solo admite la ubicación en primer plano.
+- La ubicación precisa es una concesión separada (iOS 14+ “Precisa”, Android “precisa” frente a “aproximada”).
 
-El selector en la IU controla nuestro modo solicitado; la concesión real reside en los ajustes del SO.
+El selector en la interfaz de usuario impulsa nuestro modo solicitado; la concesión real reside en la configuración del SO.
 
-## Modelo de ajustes
+## Modelo de configuración
 
 Por dispositivo de nodo:
 
 - `location.enabledMode`: `off | whileUsing`
 - `location.preciseEnabled`: bool
 
-Comportamiento de la IU:
+Comportamiento de la interfaz de usuario:
 
 - Seleccionar `whileUsing` solicita permiso en primer plano.
 - Si el SO deniega el nivel solicitado, volver al nivel más alto concedido y mostrar el estado.
 
 ## Asignación de permisos (node.permissions)
 
-Opcional. El nodo macOS informa `location` a través del mapa de permisos; iOS/Android pueden omitirlo.
+Opcional. El nodo de macOS informa `location` a través del mapa de permisos; iOS/Android pueden omitirlo.
 
 ## Comando: `location.get`
 
-Llamado vía `node.invoke`.
+Llamado a través de `node.invoke`.
 
 Parámetros (sugeridos):
 
@@ -76,7 +74,7 @@ Errores (códigos estables):
 - `LOCATION_DISABLED`: el selector está desactivado.
 - `LOCATION_PERMISSION_REQUIRED`: falta el permiso para el modo solicitado.
 - `LOCATION_BACKGROUND_UNAVAILABLE`: la aplicación está en segundo plano pero solo se permite Mientras se usa.
-- `LOCATION_TIMEOUT`: sin fijación a tiempo.
+- `LOCATION_TIMEOUT`: sin solución a tiempo.
 - `LOCATION_UNAVAILABLE`: fallo del sistema / sin proveedores.
 
 ## Comportamiento en segundo plano
@@ -85,14 +83,20 @@ Errores (códigos estables):
 - Mantenga OpenClaw abierto al solicitar la ubicación en Android.
 - Otras plataformas de nodos pueden diferir.
 
-## Integración con modelo/herramientas
+## Integración de modelo/herramientas
 
-- Superficie de la herramienta: la herramienta `nodes` añade la acción `location_get` (se requiere nodo).
+- Superficie de la herramienta: la herramienta `nodes` añade la acción `location_get` (se requiere el nodo).
 - CLI: `openclaw nodes location get --node <id>`.
-- Directrices del agente: solo llamar cuando el usuario haya activado la ubicación y entienda el alcance.
+- Pautas para el agente: llamar solo cuando el usuario haya habilitado la ubicación y comprenda el alcance.
 
-## Texto de UX (sugerido)
+## Texto de la interfaz de usuario (sugerido)
 
-- Desactivado: “El uso compartido de ubicación está desactivado.”
+- Desactivado: “La ubicación compartida está deshabilitada.”
 - Mientras se usa: “Solo cuando OpenClaw está abierto.”
-- Precisa: “Usar ubicación GPS precisa. Desactívela para compartir la ubicación aproximada.”
+- Preciso: “Usar ubicación GPS precisa. Desactívela para compartir ubicación aproximada.”
+
+## Relacionado
+
+- [Análisis de la ubicación del canal](/es/channels/location)
+- [Captura de cámara](/es/nodes/camera)
+- [Modo de conversación](/es/nodes/talk)

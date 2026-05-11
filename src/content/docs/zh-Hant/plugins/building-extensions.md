@@ -1,10 +1,13 @@
 ---
-title: "Building Plugins (重新導向)"
-summary: "重新導向至目前的 Building Plugins 指南"
+summary: "重新導向至目前的「建構外掛程式」指南"
+title: "建構外掛程式 (重新導向)"
 read_when:
   - Legacy link to building-extensions
 ---
 
-# Building Plugins
+本頁面已移至 [建構外掛程式](/zh-Hant/plugins/building-plugins)。
 
-此頁面已移至 [Building Plugins](/zh-Hant/plugins/building-plugins)。
+## 相關
+
+- [建構外掛程式](/zh-Hant/plugins/building-plugins)
+- [外掛程式架構](/zh-Hant/plugins/architecture)

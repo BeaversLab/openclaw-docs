@@ -4,7 +4,7 @@ read_when:
   - You want to see which skills are available and ready to run
   - You want to search, install, or update skills from ClawHub
   - You want to debug missing binaries/env/config for skills
-title: "compétences"
+title: "Skills"
 ---
 
 # `openclaw skills`
@@ -49,3 +49,8 @@ Notes :
 - `update --all` met à jour uniquement les installations ClawHub suivies dans l'espace de travail actif.
 - `list` est l'action par défaut lorsqu'aucune sous-commande n'est fournie.
 - `list`, `info` et `check` écrivent leur sortie rendue sur stdout. Avec `--json`, cela signifie que la payload lisible par machine reste sur stdout pour les tubes et les scripts.
+
+## Connexes
+
+- [Référence CLI](/fr/cli)
+- [Skills](/fr/tools/skills)

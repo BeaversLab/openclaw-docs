@@ -247,14 +247,21 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
 **儲存庫：**
 
 - 基礎架構：[openclaw-terraform-hetzner](https://github.com/andreesg/openclaw-terraform-hetzner)
-- Docker 配置：[openclaw-docker-config](https://github.com/andreesg/openclaw-docker-config)
+- Docker 設定：[openclaw-docker-config](https://github.com/andreesg/openclaw-docker-config)
 
 此方法透過可重現的部署、版本控制的基礎架構和自動化災難恢復，補充了上述 Docker 設定。
 
-> **注意：** 由社群維護。如有問題或貢獻，請參閱上方儲存庫連結。
+<Note>由社群維護。如遇問題或貢獻，請參閱上方儲存庫連結。</Note>
 
 ## 後續步驟
 
 - 設置訊息通道：[Channels](/zh-Hant/channels)
 - 配置網關：[Gateway configuration](/zh-Hant/gateway/configuration)
 - 保持 OpenClaw 更新：[Updating](/zh-Hant/install/updating)
+
+## 相關
+
+- [安裝總覽](/zh-Hant/install)
+- [Fly.io](/zh-Hant/install/fly)
+- [Docker](/zh-Hant/install/docker)
+- [VPS 託管](/zh-Hant/vps)

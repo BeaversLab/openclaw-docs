@@ -3,7 +3,7 @@ summary: "Referencia de CLI para `openclaw wiki` (estado de la bóveda memory-wi
 read_when:
   - You want to use the memory-wiki CLI
   - You are documenting or changing `openclaw wiki`
-title: "wiki"
+title: "Wiki"
 ---
 
 # `openclaw wiki`
@@ -212,3 +212,8 @@ El comportamiento de `openclaw wiki` está determinado por:
 - `plugins.entries.memory-wiki.config.context.includeCompiledDigestPrompt`
 
 Consulte [Memory Wiki plugin](/es/plugins/memory-wiki) para ver el modelo de configuración completo.
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)
+- [Wiki de memoria](/es/plugins/memory-wiki)

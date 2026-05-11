@@ -92,7 +92,7 @@ lume create openclaw --os macos --ipsw latest
 
 Esto descarga macOS y crea la máquina virtual. Se abre automáticamente una ventana VNC.
 
-Nota: La descarga puede tardar un poco dependiendo de tu conexión.
+<Note>La descarga puede tardar un poco dependiendo de su conexión.</Note>
 
 ---
 

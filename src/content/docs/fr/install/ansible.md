@@ -31,7 +31,7 @@ Déployez OpenClaw sur des serveurs de production avec **[openclaw-ansible](http
 - **Intégration Systemd** -- démarrage automatique au boot avec durcissement
 - **Installation en une seule commande** -- déploiement complet en quelques minutes
 
-## Démarrage rapide
+## Quick start
 
 Installation en une seule commande :
 

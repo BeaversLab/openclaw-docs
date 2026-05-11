@@ -14,7 +14,7 @@ OpenClaw = CLAW + TARDIS, porque cada langosta espacial necesita una máquina de
 ## Créditos
 
 - **Peter Steinberger** ([@steipete](https://x.com/steipete)) - Creador, susurrador de langostas
-- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Creador de Pi, probador de seguridad de penetración
+- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Creador de Pi, experto en pruebas de penetración de seguridad
 - **Clawd** - La langosta espacial que exigió un mejor nombre
 
 ## Colaboradores principales
@@ -28,3 +28,8 @@ OpenClaw = CLAW + TARDIS, porque cada langosta espacial necesita una máquina de
 MIT - Libre como una langosta en el océano.
 
 > "Todos estamos jugando con nuestros propios prompts." (Una IA, probablemente alta en tokens)
+
+## Relacionado
+
+- [Uso y costes de tokens](/es/reference/token-use)
+- [Política de lanzamientos](/es/reference/RELEASING)

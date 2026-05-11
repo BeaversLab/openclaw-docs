@@ -1,6 +1,6 @@
 ---
-title: "Contribuir al modelo de amenazas"
 summary: "Cómo contribuir al modelo de amenazas de OpenClaw"
+title: "Contribuir al modelo de amenazas"
 read_when:
   - You want to contribute security findings or threat scenarios
   - Reviewing or updating the threat model
@@ -25,7 +25,7 @@ Gracias por ayudar a que OpenClaw sea más seguro. Este modelo de amenazas es un
 
 Nos encargaremos de la asignación a ATLAS, los IDs de amenaza y la evaluación de riesgos durante la revisión. Si deseas incluir esos detalles, genial; pero no se espera.
 
-> **Esto es para añadir al modelo de amenazas, no para reportar vulnerabilidades en vivo.** Si has encontrado una vulnerabilidad explotable, consulta nuestra [página de confianza](https://trust.openclaw.ai) para obtener instrucciones sobre divulgación responsable.
+> **Esto es para añadir al modelo de amenazas, no para reportar vulnerabilidades en vivo.** Si has encontrado una vulnerabilidad explotable, consulta nuestra [página de Trust](https://trust.openclaw.ai) para obtener instrucciones sobre divulgación responsable.
 
 ### Sugerir una mitigación
 
@@ -43,7 +43,7 @@ Errores tipográficos, aclaraciones, información desactualizada, mejores ejempl
 
 ### MITRE ATLAS
 
-Este modelo de amenazas se basa en [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems), un marco diseñado específicamente para amenazas de IA/ML como la inyección de indicaciones, el uso indebido de herramientas y la explotación de agentes. No necesitas conocer ATLAS para contribuir - mapeamos las envíos al marco durante la revisión.
+Este modelo de amenazas se basa en [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems), un marco diseñado específicamente para amenazas de IA/ML como la inyección de prompts, el uso indebido de herramientas y la explotación de agentes. No necesitas conocer ATLAS para contribuir; mapeamos las envíos al marco durante la revisión.
 
 ### ID de Amenazas
 
@@ -62,7 +62,7 @@ Cada amenaza recibe un ID como `T-EXEC-003`. Las categorías son:
 
 Los ID son asignados por los mantenedores durante la revisión. No necesitas elegir uno.
 
-### Niveles de Riesgo
+### Niveles de riesgo
 
 | Nivel       | Significado                                                            |
 | ----------- | ---------------------------------------------------------------------- |
@@ -73,7 +73,7 @@ Los ID son asignados por los mantenedores durante la revisión. No necesitas ele
 
 Si no estás seguro del nivel de riesgo, simplemente describe el impacto y nosotros lo evaluaremos.
 
-## Proceso de Revisión
+## Proceso de revisión
 
 1. **Triaje** - Revisamos los nuevos envíos dentro de las 48 horas
 2. **Evaluación** - Verificamos la viabilidad, asignamos el mapeo ATLAS y el ID de amenaza, validamos el nivel de riesgo
@@ -84,15 +84,20 @@ Si no estás seguro del nivel de riesgo, simplemente describe el impacto y nosot
 
 - [Sitio web de ATLAS](https://atlas.mitre.org/)
 - [Técnicas de ATLAS](https://atlas.mitre.org/techniques/)
-- [Estudios de caso de ATLAS](https://atlas.mitre.org/studies/)
+- [Casos de estudio de ATLAS](https://atlas.mitre.org/studies/)
 - [Modelo de amenazas de OpenClaw](/es/security/THREAT-MODEL-ATLAS)
 
 ## Contacto
 
-- **Vulnerabilidades de seguridad:** Consulte nuestra [página de Confianza](https://trust.openclaw.ai) para obtener instrucciones de reporte
-- **Preguntas sobre el modelo de amenazas:** Abra un issue en [openclaw/trust](https://github.com/openclaw/trust/issues)
+- **Vulnerabilidades de seguridad:** Consulta nuestra [página de Trust](https://trust.openclaw.ai) para obtener instrucciones de reporte
+- **Preguntas sobre el modelo de amenazas:** Abre un issue en [openclaw/trust](https://github.com/openclaw/trust/issues)
 - **Chat general:** Canal #security de Discord
 
 ## Reconocimiento
 
 Los colaboradores del modelo de amenazas son reconocidos en los agradecimientos del modelo de amenazas, las notas de la versión y el salón de la fama de seguridad de OpenClaw por contribuciones significativas.
+
+## Relacionado
+
+- [Modelo de amenazas](/es/security/THREAT-MODEL-ATLAS)
+- [Verificación formal](/es/security/formal-verification)

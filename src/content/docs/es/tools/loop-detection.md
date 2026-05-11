@@ -1,28 +1,26 @@
 ---
+summary: "Cómo habilitar y ajustar las barreras de seguridad que detectan bucles de llamadas a herramientas repetitivas"
 title: "Detección de bucles de herramientas"
-summary: "Cómo activar y ajustar las barreras de protección que detectan bucles repetitivos de llamadas a herramientas"
 read_when:
   - A user reports agents getting stuck repeating tool calls
   - You need to tune repetitive-call protection
   - You are editing agent tool/runtime policies
 ---
 
-# Detección de bucles de herramientas
+OpenClaw puede evitar que los agentes se queden atrapados en patrones de llamadas a herramientas repetitivos.
+El guardián está **desactivado por defecto**.
 
-OpenClaw puede evitar que los agentes se queden atrapados en patrones repetitivos de llamadas a herramientas.
-El protector está **desactivado por defecto**.
+Actívelo solo donde sea necesario, ya que con configuraciones estrictas puede bloquear llamadas repetitivas legítimas.
 
-Actívelo solo donde sea necesario, ya que puede bloquear llamadas repetitivas legítimas con configuraciones estrictas.
+## Por qué esto existe
 
-## Por qué existe esto
-
-- Detectar secuencias repetitivas que no avanzan.
+- Detectar secuencias repetitivas que no progresan.
 - Detectar bucles de alta frecuencia sin resultados (misma herramienta, mismas entradas, errores repetidos).
-- Detectar patrones específicos de llamadas repetidas para herramientas de sondeo conocidas.
+- Detectar patrones de llamadas repetitivas específicos para herramientas de sondeo conocidas.
 
 ## Bloque de configuración
 
-Valores predeterminados globales:
+Valores globales predeterminados:
 
 ```json5
 {
@@ -43,7 +41,7 @@ Valores predeterminados globales:
 }
 ```
 
-Invalidación por agente (opcional):
+Anulación por agente (opcional):
 
 ```json5
 {
@@ -66,14 +64,17 @@ Invalidación por agente (opcional):
 
 ### Comportamiento del campo
 
-- `enabled`: Interruptor maestro. `false` significa que no se realiza ninguna detección de bucle.
-- `historySize`: número de llamadas recientes a herramientas mantenidas para el análisis.
+- `enabled`: Interruptor maestro. `false` significa que no se realiza ninguna detección de bucles.
+- `historySize`: número de llamadas a herramientas recientes mantenidas para el análisis.
 - `warningThreshold`: umbral antes de clasificar un patrón como solo de advertencia.
-- `criticalThreshold`: umbral para bloquear patrones de bucle repetitivos.
-- `globalCircuitBreakerThreshold`: umbral global del interruptor de sin progreso.
-- `detectors.genericRepeat`: detecta patrones repetitivos de misma herramienta + mismos parámetros.
+- `criticalThreshold`: umbral para bloquear patrones de bucles repetitivos.
+- `globalCircuitBreakerThreshold`: umbral global del rompedor de sin progreso.
+- `detectors.genericRepeat`: detecta patrones repetidos de misma herramienta + mismos parámetros.
 - `detectors.knownPollNoProgress`: detecta patrones conocidos de tipo sondeo sin cambio de estado.
 - `detectors.pingPong`: detecta patrones de ping-pong alternantes.
+
+Para `exec`, las comprobaciones de sin progreso comparan resultados estables de comandos e ignoran metadatos volátiles de tiempo de ejecución como la duración, PID, ID de sesión y directorio de trabajo.
+Cuando hay un id de ejecución disponible, el historial de llamadas a herramientas recientes se evalúa solo dentro de esa ejecución, por lo que los ciclos de latido programados y las ejecuciones nuevas no heredan conteos de bucles obsoletos de ejecuciones anteriores.
 
 ## Configuración recomendada
 
@@ -95,6 +96,12 @@ Esto protege a los usuarios contra gastos descontrolados de tokens y bloqueos, p
 
 ## Notas
 
-- `tools.loopDetection` se combina con las invalidaciones a nivel de agente.
+- `tools.loopDetection` se fusiona con las anulaciones a nivel de agente.
 - La configuración por agente anula o amplía completamente los valores globales.
 - Si no existe configuración, las protecciones permanecen desactivadas.
+
+## Relacionado
+
+- [Aprobaciones de ejecución](/es/tools/exec-approvals)
+- [Niveles de pensamiento](/es/tools/thinking)
+- [Subagentes](/es/tools/subagents)

@@ -66,7 +66,7 @@ openclaw gateway --port 18789
 
 Envoyez maintenant un message au numéro de l'assistant depuis votre téléphone autorisé.
 
-Lorsque l'intégration est terminée, nous ouvrons automatiquement le tableau de bord et affichons un lien propre (non tokenisé). Si une authentification est demandée, collez le secret partagé configuré dans les paramètres de l'interface de contrôle (Control UI). L'intégration utilise un jeton par défaut (`gateway.auth.token`), mais l'authentification par mot de passe fonctionne également si vous avez changé `gateway.auth.mode` pour `password`. Pour rouvrir plus tard : `openclaw dashboard`.
+Une fois l'onboarding terminé, OpenClaw ouvre automatiquement le tableau de bord et affiche un lien propre (non tokenisé). Si le tableau de bord demande une authentification, collez le secret partagé configuré dans les paramètres du Control UI. L'onboarding utilise un jeton par défaut (`gateway.auth.token`), mais l'authentification par mot de passe fonctionne également si vous avez changé `gateway.auth.mode` en `password`. Pour rouvrir plus tard : `openclaw dashboard`.
 
 ## Donner à l'agent un espace de travail (AGENTS)
 
@@ -74,7 +74,7 @@ OpenClaw lit les instructions de fonctionnement et la "mémoire" à partir de so
 
 Par défaut, OpenClaw utilise `~/.openclaw/workspace` comme espace de travail de l'agent, et le créera (ainsi que les fichiers de démarrage `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`) automatiquement lors de la configuration/première exécution de l'agent. `BOOTSTRAP.md` n'est créé que lorsque l'espace de travail est tout neuf (il ne devrait pas réapparaître après l'avoir supprimé). `MEMORY.md` est facultatif (non créé automatiquement) ; lorsqu'il est présent, il est chargé pour les sessions normales. Les sessions de sous-agent n'injectent que `AGENTS.md` et `TOOLS.md`.
 
-Conseil : traitez ce dossier comme la "mémoire" d'OpenClaw et faites-en un dépôt git (idéalement privé) afin que vos `AGENTS.md` + fichiers de mémoire soient sauvegardés. Si git est installé, les nouveaux espaces de travail sont automatiquement initialisés.
+<Tip>Traitez ce dossier comme la mémoire de OpenClaw et faites-en un dépôt git (de préférence privé) afin que vos `AGENTS.md` et fichiers de mémoire soient sauvegardés. Si git est installé, les nouveaux espaces de travail sont automatiquement initialisés.</Tip>
 
 ```bash
 openclaw setup
@@ -87,8 +87,10 @@ Optionnel : choisir un espace de travail différent avec `agents.defaults.worksp
 
 ```json5
 {
-  agent: {
-    workspace: "~/.openclaw/workspace",
+  agents: {
+    defaults: {
+      workspace: "~/.openclaw/workspace",
+    },
   },
 }
 ```
@@ -97,8 +99,10 @@ Si vous fournissez déjà vos propres fichiers d'espace de travail depuis un dé
 
 ```json5
 {
-  agent: {
-    skipBootstrap: true,
+  agents: {
+    defaults: {
+      skipBootstrap: true,
+    },
   },
 }
 ```
@@ -223,3 +227,9 @@ Les journaux se trouvent sous `/tmp/openclaw/` (par défaut : `openclaw-YYYY-MM-
 - Statut Windows : [Windows (WSL2)](/fr/platforms/windows)
 - Statut Linux : [application Linux](/fr/platforms/linux)
 - Sécurité : [Sécurité](/fr/gateway/security)
+
+## Connexes
+
+- [Getting started](/fr/start/getting-started)
+- [Configuration](/fr/start/setup)
+- [Vue d'ensemble des canaux](/fr/channels)

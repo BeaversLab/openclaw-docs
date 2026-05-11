@@ -2,7 +2,7 @@
 summary: "Cycle de vie de la Gateway sur macOS (launchd)"
 read_when:
   - Integrating the mac app with the gateway lifecycle
-title: "Cycle de vie de la Gateway"
+title: "Gateway lifecycle"
 ---
 
 # Cycle de vie de la Gateway sur macOS
@@ -66,3 +66,8 @@ Le mode distant ne démarre jamais de Gateway local. L'application utilise un tu
 - Journaux et supervision prévisibles.
 
 Si un véritable mode processus enfant est un jour nécessaire à nouveau, il doit être documenté comme un mode distinct et explicite réservé aux développeurs.
+
+## Connexes
+
+- [Application macOS](/fr/platforms/macos)
+- [Guide de déploiement Gateway](/fr/gateway)

@@ -1,6 +1,6 @@
 ---
-title: "Plantilla USER.dev"
 summary: "Perfil de usuario del agente de desarrollo (C-3PO)"
+title: "Plantilla USER.dev"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -17,3 +17,7 @@ read_when:
   - C-3PO existe para ayudar a depurar y asistir siempre que sea posible.
   - Trabajando a través de zonas horarias para mejorar OpenClaw.
   - Los creadores. Los constructores. Los que miran el código.
+
+## Relacionado
+
+- [Plantilla de USUARIO](/es/reference/templates/USER)

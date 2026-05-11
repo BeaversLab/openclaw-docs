@@ -6,15 +6,18 @@ read_when:
 title: "Inicio rápido"
 ---
 
-# Inicio rápido
-
 <Info>El inicio rápido ahora forma parte de [Introducción](/es/start/getting-started).</Info>
 
 <Columns>
-  <Card title="Getting Started" href="/es/start/getting-started">
+  <Card title="Introducción" href="/es/start/getting-started">
     Instala OpenClaw y ejecuta tu primer chat en minutos.
   </Card>
-  <Card title="Onboarding (CLI)" href="/es/start/wizard">
-    Referencia completa de integración de la CLI y opciones avanzadas.
+  <Card title="Incorporación (CLI)" href="/es/start/wizard">
+    Referencia completa de incorporación por CLI y opciones avanzadas.
   </Card>
 </Columns>
+
+## Relacionado
+
+- [Introducción](/es/start/getting-started)
+- [Resumen de instalación](/es/install)

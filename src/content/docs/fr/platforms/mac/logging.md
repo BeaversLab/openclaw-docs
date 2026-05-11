@@ -24,7 +24,7 @@ Notes :
 
 ## Données privées de journalisation unifiée sur macOS
 
-La journalisation unifiée masque la plupart des charges utiles, sauf si un sous-système opte pour `privacy -off`. Selon l'article de Peter sur les [turbulences de confidentialité de la journalisation](https://steipete.me/posts/2025/logging-privacy-shenanigans) macOS (2025), cela est contrôlé par un plist dans `/Library/Preferences/Logging/Subsystems/` indexé par le nom du sous-système. Seuls les nouveaux enregistrements de journal prennent en compte l'indicateur, alors activez-le avant de reproduire un problème.
+La journalisation unifiée censure la plupart des charges utiles, sauf si un sous-système opte pour `privacy -off`. Selon l'article de Peter sur les [turbas de confidentialité de journalisation](https://steipete.me/posts/2025/logging-privacy-shenanigans) de macOS (2025), cela est contrôlé par un plist dans `/Library/Preferences/Logging/Subsystems/` indexé par le nom du sous-système. Seuls les nouveaux enregistrements de journal prennent en compte l'indicateur, activez-le donc avant de reproduire un problème.
 
 ## Activer pour OpenClaw (`ai.openclaw`)
 
@@ -55,3 +55,8 @@ sudo install -m 644 -o root -g wheel /tmp/ai.openclaw.plist /Library/Preferences
 - Supprimez la substitution : `sudo rm /Library/Preferences/Logging/Subsystems/ai.openclaw.plist`.
 - Exécutez éventuellement `sudo log config --reload` pour forcer logd à abandonner immédiatement la substitution.
 - N'oubliez pas que cette surface peut inclure des numéros de téléphone et le corps des messages ; ne conservez le plist en place que tant que vous avez activement besoin du détail supplémentaire.
+
+## Connexes
+
+- [Application macOS](/fr/platforms/macos)
+- [Journalisation Gateway](/fr/gateway/logging)

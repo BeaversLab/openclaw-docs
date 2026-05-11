@@ -3,14 +3,14 @@ summary: "Plugin Zalo Personal : connexion QR + messagerie via zca-js natif (ins
 read_when:
   - You want Zalo Personal (unofficial) support in OpenClaw
   - You are configuring or developing the zalouser plugin
-title: "Plugin Zalo Personnel"
+title: "Plugin personnel Zalo"
 ---
 
 # Zalo Personnel (plugin)
 
 Support Zalo Personnel pour OpenClaw via un plugin, utilisant `zca-js` natif pour automatiser un compte utilisateur Zalo normal.
 
-> **Avertissement :** L'automatisation non officielle peut entraîner une suspension ou un bannissement de compte. Utilisation à vos propres risques.
+<Warning>L'automatisation non officielle peut entraîner la suspension ou le bannissement du compte. Utilisez-le à vos propres risques.</Warning>
 
 ## Nommage
 
@@ -76,3 +76,8 @@ Nom de l'outil : `zalouser`
 Actions : `send`, `image`, `link`, `friends`, `groups`, `me`, `status`
 
 Les actions de message du channel prennent également en charge `react` pour les réactions aux messages.
+
+## Connexes
+
+- [Création de plugins](/fr/plugins/building-plugins)
+- [Plugins communautaires](/fr/plugins/community)

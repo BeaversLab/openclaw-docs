@@ -1,21 +1,21 @@
 ---
-title: "Recherche de mémoire"
-summary: "Comment la recherche de mémoire trouve des notes pertinentes en utilisant des embeddings et une récupération hybride"
+summary: "Comment la recherche mémoire trouve des notes pertinentes à l'aide d'embeddings et d'une récupération hybride"
+title: "Recherche mémoire"
 read_when:
   - You want to understand how memory_search works
   - You want to choose an embedding provider
   - You want to tune search quality
 ---
 
-# Recherche de mémoire
-
-`memory_search` trouve des notes pertinentes dans vos fichiers de mémoire, même lorsque
-la formulation diffère du texte original. Il fonctionne en indexant la mémoire en petits
-morceaux et en les recherchant à l'aide d'embeddings, de mots-clés ou des deux.
+`memory_search` trouve des notes pertinentes dans vos fichiers de mémoire, même lorsque le
+formulation diffère du texte original. Il fonctionne en indexant la mémoire en petits
+blocs et en les recherchant à l'aide d'embeddings, de mots-clés, ou des deux.
 
 ## Quick start
 
-Si vous avez un abonnement GitHub Copilot, une clé API OpenAI, Gemini, Voyage ou Mistral configurée, la recherche de mémoire fonctionne automatiquement. Pour définir explicitement un fournisseur :
+Si vous avez un abonnement GitHub Copilot, une clé OpenAI configurée pour API, Gemini, Voyage ou Mistral,
+la recherche mémoire fonctionne automatiquement. Pour définir un provider
+explicitement :
 
 ```json5
 {
@@ -29,8 +29,13 @@ Si vous avez un abonnement GitHub Copilot, une clé API OpenAI, Gemini, Voyage o
 }
 ```
 
-Pour les embeddings locaux sans clé API, utilisez `provider: "local"` (nécessite
-node-llama-cpp).
+Pour les embeddings locaux sans clé API, installez le package d'exécution
+optionnel `node-llama-cpp` à côté de OpenClaw et utilisez `provider: "local"`.
+
+Certains points de terminaison d'embeddings compatibles avec OpenAI nécessitent des étiquettes asymétriques telles que
+`input_type: "query"` pour les recherches et `input_type: "document"` ou `"passage"`
+pour les blocs indexés. Configurez-les avec `memorySearch.queryInputType` et
+`memorySearch.documentInputType` ; voir la [Référence de configuration de la mémoire](/fr/reference/memory-config#provider-specific-config).
 
 ## Providers pris en charge
 
@@ -67,7 +72,7 @@ flowchart LR
 
 Si un seul chemin est disponible (pas d'embeddings ou pas de recherche en texte intégral), l'autre s'exécute seul.
 
-Lorsque les embeddings ne sont pas disponibles, OpenClaw utilise toujours le classement lexical sur les résultats de recherche en texte intégral au lieu de revenir à un classement par correspondance exacte brute uniquement. Ce mode dégradé privilégie les segments avec une couverture plus forte des termes de la requête et des chemins de fichiers pertinents, ce qui maintient le rappel utile même sans `sqlite-vec` ou de fournisseur d'embeddings.
+Lorsque les embeddings ne sont pas disponibles, OpenClaw utilise toujours un classement lexical sur les résultats FTS au lieu de revenir à un classement par correspondance exacte brute uniquement. Ce mode dégradé privilégie les blocs ayant une plus forte couverture des termes de la requête et des chemins de fichiers pertinents, ce qui maintient le rappel utile même sans `sqlite-vec` ou de provider d'embeddings.
 
 ## Amélioration de la qualité de la recherche
 
@@ -75,9 +80,9 @@ Deux fonctionnalités optionnelles aident lorsque vous avez un historique de not
 
 ### Décroissance temporelle
 
-Les anciennes notes perdent progressivement du poids dans le classement afin que les informations récentes apparaissent en premier.
-Avec la demi-vie par défaut de 30 jours, une note du mois dernier est notée à 50 % de
-son poids d'origine. Les fichiers pérennes comme `MEMORY.md` ne sont jamais soumis à la décroissance.
+Les anciennes notes perdent progressivement leur poids dans le classement afin que les informations récentes apparaissent en premier.
+Avec la demi-vie par défaut de 30 jours, une note du mois dernier obtient un score de 50 % de
+son poids initial. Les fichiers intemporels comme `MEMORY.md` ne sont jamais dépréciés.
 
 <Tip>Activez la décroissance temporelle si votre agent a des mois de notes quotidiennes et si des informations obsolètes surclassent constamment le contexte récent.</Tip>
 
@@ -86,7 +91,7 @@ son poids d'origine. Les fichiers pérennes comme `MEMORY.md` ne sont jamais sou
 Réduit les résultats redondants. Si cinq notes mentionnent toutes la même configuration de routeur, le MMR
 assure que les principaux résultats couvrent différents sujets au lieu de se répéter.
 
-<Tip>Activez le MMR si `memory_search` continue à renvoyer des extraits presque identiques provenant de différentes notes quotidiennes.</Tip>
+<Tip>Activez MMR si `memory_search` continue à renvoyer des extraits presque en double à partir de différentes notes quotidiennes.</Tip>
 
 ### Activer les deux
 
@@ -110,34 +115,41 @@ assure que les principaux résultats couvrent différents sujets au lieu de se r
 ## Mémoire multimodale
 
 Avec Gemini Embedding 2, vous pouvez indexer des images et des fichiers audio
-alongside du Markdown. Les requêtes de recherche restent textuelles, mais elles
-portent sur le contenu visuel et audio. Consultez la [référence de
-configuration de la mémoire](/fr/reference/memory-config) pour le
-paramétrage.
+alongside Markdown. Search queries remain text, but they match against visual and
+audio content. See the [Memory configuration reference](/fr/reference/memory-config) for
+setup.
 
 ## Recherche de mémoire de session
 
-Vous pouvez éventuellement indexer les transcriptions de session afin que
-`memory_search` puisse se rappeler les conversations
-précédentes. C'est optionnel via `memorySearch.experimental.sessionMemory`. Consultez la
-[référence de configuration](/fr/reference/memory-config) pour les détails.
+You can optionally index session transcripts so `memory_search` can recall
+earlier conversations. This is opt-in via
+`memorySearch.experimental.sessionMemory`. See the
+[configuration reference](/fr/reference/memory-config) for details.
 
 ## Dépannage
 
-**Pas de résultats ?** Exécutez `openclaw memory status` pour vérifier
-l'index. S'il est vide, exécutez `openclaw memory index --force`.
-
-**Uniquement des correspondances par mots-clés ?** Votre provider d'embedding
-n'est peut-être pas configuré. Vérifiez `openclaw memory status --deep`.
-
-**Texte CJK introuvable ?** Reconstruisez l'index FTS avec
+**No results?** Run `openclaw memory status` to check the index. If empty, run
 `openclaw memory index --force`.
 
-## Pour aller plus loin
+**Only keyword matches?** Your embedding provider may not be configured. Check
+`openclaw memory status --deep`.
 
-- [Mémoire active](/fr/concepts/active-memory) -- mémoire de sous-agent
-  pour les sessions de chat interactives
-- [Mémoire](/fr/concepts/memory) -- disposition des fichiers,
-  backends, outils
-- [Référence de configuration de la mémoire](/fr/reference/memory-config)
-  -- tous les paramètres de configuration
+**Local embeddings time out?** `ollama`, `lmstudio`, and `local` use a longer
+inline batch timeout by default. If the host is simply slow, set
+`agents.defaults.memorySearch.sync.embeddingBatchTimeoutSeconds` and rerun
+`openclaw memory index --force`.
+
+**CJK text not found?** Rebuild the FTS index with
+`openclaw memory index --force`.
+
+## Further reading
+
+- [Active Memory](/fr/concepts/active-memory) -- sub-agent memory for interactive chat sessions
+- [Memory](/fr/concepts/memory) -- file layout, backends, tools
+- [Memory configuration reference](/fr/reference/memory-config) -- all config knobs
+
+## Related
+
+- [Memory overview](/fr/concepts/memory)
+- [Active memory](/fr/concepts/active-memory)
+- [Builtin memory engine](/fr/concepts/memory-builtin)

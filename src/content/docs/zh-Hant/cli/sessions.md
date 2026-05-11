@@ -2,7 +2,7 @@
 summary: "CLI reference for `openclaw sessions` (列出已儲存的會話 + 用法)"
 read_when:
   - You want to list stored sessions and see recent activity
-title: "sessions"
+title: "Sessions"
 ---
 
 # `openclaw sessions`
@@ -106,4 +106,9 @@ openclaw sessions cleanup --json
 
 相關：
 
-- Session 配置: [Configuration reference](/zh-Hant/gateway/configuration-reference#session)
+- Session config: [Configuration reference](/zh-Hant/gateway/config-agents#session)
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)
+- [Session 管理](/zh-Hant/concepts/session)

@@ -3,7 +3,7 @@ summary: "Référence CLI pour `openclaw channels` (comptes, statut, connexion/d
 read_when:
   - You want to add/remove channel accounts (WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage/Matrix)
   - You want to check channel status or tail channel logs
-title: "channels"
+title: "Canaux"
 ---
 
 # `openclaw channels`
@@ -12,7 +12,7 @@ Gérer les comptes de channel de chat et leur statut d'exécution sur le Gateway
 
 Documentation associée :
 
-- Guides de channel : [Channels](/fr/channels/index)
+- Guides de canal : [Canaux](/fr/channels)
 - Configuration du Gateway : [Configuration](/fr/gateway/configuration)
 
 ## Commandes courantes
@@ -47,7 +47,7 @@ openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
 openclaw channels remove --channel telegram --delete
 ```
 
-Conseil : `openclaw channels add --help` affiche les indicateurs par channel (jeton, clé privée, jeton d'application, chemins signal-cli, etc).
+<Tip>`openclaw channels add --help` affiche les indicateurs par canal (jeton, clé privée, jeton d'application, chemins signal-cli, etc.).</Tip>
 
 Les interfaces d'ajout non interactives courantes incluent :
 
@@ -59,37 +59,37 @@ Les interfaces d'ajout non interactives courantes incluent :
 - Tlon champs : `--ship`, `--url`, `--code`, `--group-channels`, `--dm-allowlist`, `--auto-discover-channels`
 - `--use-env` pour l'authentification par env default-account lorsque prise en charge
 
+Si un plugin de canal doit être installé lors d'une commande d'ajout pilotée par des indicateurs, OpenClaw utilise la source d'installation par défaut du canal sans ouvrir l'invite d'installation interactive du plugin.
+
 Lorsque vous exécutez `openclaw channels add` sans indicateurs, l'assistant interactif peut demander :
 
-- identifiants de compte par channel sélectionné
+- identifiants de compte par canal sélectionné
 - noms d'affichage facultatifs pour ces comptes
 - `Bind configured channel accounts to agents now?`
 
-Si vous confirmez la liaison maintenant, l'assistant demande quel agent doit posséder chaque compte de channel configuré et écrit les liaisons de routage délimitées au compte.
+Si vous confirmez la liaison maintenant, l'assistant demande quel agent doit posséder chaque compte de canal configuré et écrit les liaisons de routage délimitées au compte.
 
 Vous pouvez également gérer les mêmes règles de routage ultérieurement avec `openclaw agents bindings`, `openclaw agents bind` et `openclaw agents unbind` (voir [agents](/fr/cli/agents)).
 
-Lorsque vous ajoutez un compte non par défaut à un channel qui utilise encore des paramètres de niveau supérieur à compte unique, OpenClaw promeut les valeurs de niveau supérieur délimitées au compte dans la carte de comptes du channel avant d'écrire le nouveau compte. La plupart des channels placent ces valeurs dans `channels.<channel>.accounts.default`, mais les channels groupés peuvent conserver à la place un compte promu existant correspondant. Matrix est l'exemple actuel : si un compte nommé existe déjà, ou si `defaultAccount` pointe vers un compte nommé existant, la promotion conserve ce compte au lieu d'en créer un nouveau `accounts.default`.
+Lorsque vous ajoutez un compte non par défaut à un canal qui utilise encore des paramètres de niveau supérieur à compte unique, OpenClaw promeut les valeurs de niveau supérieur délimitées au compte dans la carte des comptes du canal avant d'écrire le nouveau compte. La plupart des canaux placent ces valeurs dans `channels.<channel>.accounts.default`, mais les canaux groupés peuvent préserver à la place un compte promu correspondant existant. Matrix est l'exemple actuel : si un compte nommé existe déjà, ou si `defaultAccount` pointe vers un compte nommé existant, la promotion préserve ce compte au lieu d'en créer un nouveau `accounts.default`.
 
 Le comportement de routage reste cohérent :
 
-- Les liaisons channel uniquement existantes (pas `accountId`) continuent à correspondre au compte par défaut.
-- `channels add` ne crée pas ou ne réécrit pas automatiquement les liaisons en mode non interactif.
+- Les liaisons canal uniquement existantes (pas de `accountId`) continuent de correspondre au compte par défaut.
+- `channels add` ne crée pas automatiquement ni ne réécrit les liaisons en mode non interactif.
 - La configuration interactive peut ajouter facultativement des liaisons délimitées au compte.
 
-Si votre configuration était déjà dans un état mixte (comptes nommés présents et valeurs de compte unique de niveau supérieur toujours définies), exécutez `openclaw doctor --fix` pour déplacer les valeurs délimitées au compte dans le compte promu choisi pour ce channel. La plupart des channels promeuvent vers `accounts.default`; Matrix peut conserver à la place une cible nommée/définie par défaut existante.
+Si votre configuration était déjà dans un état mixte (comptes nommés présents et valeurs de niveau supérieur à compte unique toujours définies), exécutez `openclaw doctor --fix` pour déplacer les valeurs délimitées au compte vers le compte promu choisi pour ce canal. La plupart des canaux promeuvent vers `accounts.default` ; Matrix peut à la place préserver une cible nommée/définie par défaut existante.
 
-## Login / logout (interactif)
+## Connexion et déconnexion (interactif)
 
 ```bash
 openclaw channels login --channel whatsapp
 openclaw channels logout --channel whatsapp
 ```
 
-Notes :
-
 - `channels login` prend en charge `--verbose`.
-- `channels login` / `logout` peut déduire le channel lorsqu'une seule cible de connexion prise en charge est configurée.
+- `channels login` et `logout` peuvent déduire le channel lorsqu'une seule cible de connexion prise en charge est configurée.
 
 ## Dépannage
 
@@ -129,3 +129,8 @@ Notes :
 - Utilisez `--kind user|group|auto` pour forcer le type de cible.
 - La résolution privilégie les correspondances actives lorsque plusieurs entrées partagent le même nom.
 - `channels resolve` est en lecture seule. Si un compte sélectionné est configuré via SecretRef mais que ces informations d'identification ne sont pas disponibles dans le chemin de commande actuel, la commande renvoie des résultats non résolus dégradés avec des notes au lieu d'interrompre toute l'exécution.
+
+## Connexes
+
+- [Référence CLI](/fr/cli)
+- [Aperçu des Channels](/fr/channels)

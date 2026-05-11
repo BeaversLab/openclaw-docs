@@ -69,8 +69,8 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
 ---
 
 <Steps>
-  <Step title="Instalar gcloud CLI (o usar Console)">
-    **Opción A: gcloud CLI** (recomendado para automatización)
+  <Step title="Instalar la CLI de gcloud (o usar la Consola)">
+    **Opción A: CLI de gcloud** (recomendado para automatización)
 
     Instalar desde [https://cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install)
 
@@ -81,9 +81,9 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
     gcloud auth login
     ```
 
-    **Opción B: Cloud Console**
+    **Opción B: Consola en la nube**
 
-    Todos los pasos se pueden realizar a través de la interfaz web en [https://console.cloud.google.com](https://console.cloud.google.com)
+    Todos los pasos se pueden realizar a través de la interfaz de usuario web en [https://console.cloud.google.com](https://console.cloud.google.com)
 
   </Step>
 
@@ -95,9 +95,9 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
     gcloud config set project my-openclaw-project
     ```
 
-    Active la facturación en [https://console.cloud.google.com/billing](https://console.cloud.google.com/billing) (obligatorio para Compute Engine).
+    Activa la facturación en [https://console.cloud.google.com/billing](https://console.cloud.google.com/billing) (necesario para Compute Engine).
 
-    Active la API de Compute Engine:
+    Habilita la API de Compute Engine:
 
     ```bash
     gcloud services enable compute.googleapis.com
@@ -105,10 +105,10 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
 
     **Consola:**
 
-    1. Vaya a IAM y administración > Crear proyecto
-    2. Nómbrelo y cree
-    3. Active la facturación para el proyecto
-    4. Navegue a API y servicios > Habilitar API > busque "Compute Engine API" > Habilitar
+    1. Ve a IAM y administración > Crear proyecto
+    2. Nómbralo y créalo
+    3. Activa la facturación para el proyecto
+    4. Navega a API y servicios > Habilitar API > busca "Compute Engine API" > Habilitar
 
   </Step>
 
@@ -410,3 +410,9 @@ Consulte [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.g
 - Configure los canales de mensajería: [Canales](/es/channels)
 - Emparejar dispositivos locales como nodos: [Nodos](/es/nodes)
 - Configurar el Gateway: [Configuración del Gateway](/es/gateway/configuration)
+
+## Relacionado
+
+- [Resumen de instalación](/es/install)
+- [Azure](/es/install/azure)
+- [Alojamiento VPS](/es/vps)

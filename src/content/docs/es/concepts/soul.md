@@ -4,19 +4,17 @@ read_when:
   - You want your agent to sound less generic
   - You are editing SOUL.md
   - You want a stronger personality without breaking safety or brevity
-title: "Guía de personalidad de SOUL.md"
+title: "guía de personalidad SOUL.md"
 ---
-
-# Guía de personalidad de SOUL.md
 
 `SOUL.md` es donde reside la voz de tu agente.
 
 OpenClaw lo inyecta en sesiones normales, por lo que tiene un peso real. Si tu agente
-suena soso, cauteloso o extrañamente corporativo, este suele ser el archivo que debes corregir.
+suena soso, evasivo o extrañamente corporativo, este suele ser el archivo que debes corregir.
 
-## Qué pertenece a SOUL.md
+## Qué incluir en SOUL.md
 
-Pon las cosas que cambian cómo se siente hablar con el agente:
+Incluye las cosas que cambian cómo se siente el agente al hablar:
 
 - tono
 - opiniones
@@ -27,10 +25,10 @@ Pon las cosas que cambian cómo se siente hablar con el agente:
 
 **No** lo conviertas en:
 
-- una historia de vida
+- una biografía
 - un registro de cambios
-- un vertido de políticas de seguridad
-- un gran muro de vibras sin ningún efecto conductual
+- un volcado de políticas de seguridad
+- un muro gigante de "vibes" sin ningún efecto conductual
 
 Corto gana a largo. Directo gana a vago.
 
@@ -47,16 +45,16 @@ Esto se alinea con la guía de instrucciones de OpenAI:
 Para OpenClaw, `SOUL.md` es esa capa.
 
 Si quieres una mejor personalidad, escribe instrucciones más fuertes. Si quieres una personalidad
-estable, mantenlas concisas y con control de versiones.
+estable, manténlas concisas y versionadas.
 
 Referencias de OpenAI:
 
-- [Ingeniería de instrucciones](https://developers.openai.com/api/docs/guides/prompt-engineering)
+- [Ingeniería de instrucciones (prompt engineering)](https://developers.openai.com/api/docs/guides/prompt-engineering)
 - [Roles de mensajes y seguimiento de instrucciones](https://developers.openai.com/api/docs/guides/prompt-engineering#message-roles-and-instruction-following)
 
 ## La instrucción Molty
 
-Pega esto en tu agente y déjalo reescribir `SOUL.md`.
+Pega esto en tu agente y deja que reescriba `SOUL.md`.
 
 Ruta corregida para espacios de trabajo de OpenClaw: usa `SOUL.md`, no `http://SOUL.md`.
 
@@ -75,15 +73,15 @@ Read your `SOUL.md`. Now rewrite it with these changes:
 Save the new `SOUL.md`. Welcome to having a personality.
 ```
 
-## Cómo es lo bueno
+## Aspecto de lo bueno
 
 Las buenas reglas de `SOUL.md` suenan así:
 
-- ten una opinión
-- omite los rellenos
-- sé gracioso cuando encaje
-- señala las malas ideas pronto
-- mantente conciso a menos que la profundidad sea realmente útil
+- tener una opinión
+- omitir relleno
+- ser gracioso cuando encaje
+- señalar malas ideas pronto
+- mantenerse conciso a menos que la profundidad sea realmente útil
 
 Las malas reglas de `SOUL.md` suenan así:
 
@@ -91,15 +89,17 @@ Las malas reglas de `SOUL.md` suenan así:
 - proporcionar asistencia integral y reflexiva
 - asegurar una experiencia positiva y de apoyo
 
-Esa segunda lista es cómo obtienes una papilla.
+Esa segunda lista es cómo obtienes algo blando e insípido.
 
 ## Una advertencia
 
 La personalidad no es permiso para ser descuidado.
 
-Mantenga `AGENTS.md` para las reglas de funcionamiento. Mantenga `SOUL.md` para la voz, la postura y el estilo. Si su agente trabaja en canales compartidos, respuestas públicas o superficies de atención al cliente, asegúrese de que el tono siga siendo apropiado para el entorno.
+Mantén `AGENTS.md` para las reglas de operación. Mantén `SOUL.md` para la voz, la postura y
+el estilo. Si tu agente trabaja en canales compartidos, respuestas públicas o superficies
+para clientes, asegúrate de que el tono aún se ajuste al entorno.
 
-Ser directo es bueno. Ser molesto no lo es.
+Ser directo es bueno. Ser molesto no.
 
 ## Documentos relacionados
 

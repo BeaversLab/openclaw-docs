@@ -1,15 +1,13 @@
 ---
+summary: "Installer et configurer Node.js pour OpenClaw — exigences de version, options d'installation et dépannage du PATH"
 title: "Node.js"
-summary: "Installer et configurer Node.js pour OpenClaw — exigences de version, options d'installation et résolution des problèmes PATH"
 read_when:
   - "You need to install Node.js before installing OpenClaw"
   - "You installed OpenClaw but `openclaw` is command not found"
   - "npm install -g fails with permissions or PATH issues"
 ---
 
-# Node.js
-
-OpenClaw nécessite **Node 22.14 ou une version plus récente**. **Node 24 est l'environnement d'exécution par défaut et recommandé** pour les installations, l'intégration continue et les workflows de publication. Node 22 reste pris en charge via la ligne LTS active. Le [script d'installation](/fr/install#alternative-install-methods) détectera et installera Node automatiquement — cette page est destinée aux cas où vous souhaitez configurer Node vous-même et vous assurer que tout est correctement connecté (versions, PATH, installations globales).
+OpenClaw nécessite **Node 22.14 ou une version plus récente**. **Node 24 est l'environnement d'exécution par défaut et recommandé** pour les installations, l'intégration continue et les workflows de publication. Node 22 continue d'être pris en charge via la ligne LTS active. Le [script d'installation](/fr/install#alternative-install-methods) détectera et installera Node automatiquement — cette page est destinée au cas où vous souhaiteriez configurer Node vous-même et vous assurer que tout est correctement connecté (versions, PATH, installations globales).
 
 ## Vérifiez votre version
 
@@ -17,7 +15,7 @@ OpenClaw nécessite **Node 22.14 ou une version plus récente**. **Node 24 est l
 node -v
 ```
 
-Si cela affiche `v24.x.x` ou une version supérieure, vous êtes sur la version par défaut recommandée. Si cela affiche `v22.14.x` ou une version supérieure, vous êtes sur la ligne Node 22 LTS prise en charge, mais nous recommandons tout de même de passer à Node 24 lorsque cela est possible. Si Node n'est pas installé ou si la version est trop ancienne, choisissez une méthode d'installation ci-dessous.
+Si cela affiche `v24.x.x` ou une version supérieure, vous utilisez la version par défaut recommandée. Si cela affiche `v22.14.x` ou une version supérieure, vous êtes sur la voie LTS Node 22 prise en charge, mais nous recommandons tout de même de passer à Node 24 lorsque cela est possible. Si Node n'est pas installé ou si la version est trop ancienne, choisissez une méthode d'installation ci-dessous.
 
 ## Installer Node
 
@@ -56,7 +54,7 @@ Si cela affiche `v24.x.x` ou une version supérieure, vous êtes sur la version 
     winget install OpenJS.NodeJS.LTS
     ```
 
-    **Chocolatey** :
+    **Chocolatey :**
 
     ```powershell
     choco install nodejs-lts
@@ -67,8 +65,8 @@ Si cela affiche `v24.x.x` ou une version supérieure, vous êtes sur la version 
   </Tab>
 </Tabs>
 
-<Accordion title="Utilisation d'un gestionnaire de versions (nvm, fnm, mise, asdf)">
-  Les gestionnaires de versions vous permettent de passer facilement d'une version de Node à l'autre. Options populaires :
+<Accordion title="Utiliser un gestionnaire de versions (nvm, fnm, mise, asdf)">
+  Les gestionnaires de versions vous permettent de basculer facilement entre les versions de Node. Options populaires :
 
 - [**fnm**](https://github.com/Schniz/fnm) — rapide, multiplateforme
 - [**nvm**](https://github.com/nvm-sh/nvm) — largement utilisé sur macOS/Linux
@@ -82,7 +80,7 @@ fnm use 24
 ```
 
   <Warning>
-  Assurez-vous que votre gestionnaire de versions est initialisé dans votre fichier de démarrage de shell (`~/.zshrc` ou `~/.bashrc`). Sinon, `openclaw` pourrait ne pas être trouvé dans les nouvelles sessions de terminal car le PATH n'inclura pas le répertoire bin de Node.
+  Assurez-vous que votre gestionnaire de versions est initialisé dans votre fichier de démarrage de shell (`~/.zshrc` ou `~/.bashrc`). Sinon, `openclaw` risque de ne pas être trouvé dans les nouvelles sessions de terminal car le PATH n'inclura pas le répertoire bin de Node.
   </Warning>
 </Accordion>
 
@@ -93,7 +91,7 @@ fnm use 24
 Cela signifie presque toujours que le répertoire bin global de npm n'est pas dans votre PATH.
 
 <Steps>
-  <Step title="Trouvez votre préfixe global npm">
+  <Step title="Trouver votre préfixe global npm">
     ```bash
     npm prefix -g
     ```
@@ -118,7 +116,7 @@ Cela signifie presque toujours que le répertoire bin global de npm n'est pas da
         Ouvrez ensuite un nouveau terminal (ou exécutez `rehash` dans zsh / `hash -r` dans bash).
       </Tab>
       <Tab title="Windows">
-        Ajoutez la sortie de `npm prefix -g` à votre PATH système via Paramètres → Système → Variables d'environnement.
+        Ajoutez la sortie de `npm prefix -g` à votre variable d'environnement PATH système via Paramètres → Système → Variables d'environnement.
       </Tab>
     </Tabs>
 
@@ -127,7 +125,7 @@ Cela signifie presque toujours que le répertoire bin global de npm n'est pas da
 
 ### Erreurs de permission sur `npm install -g` (Linux)
 
-Si vous voyez des erreurs `EACCES`, changez le préfixe global de npm pour un dossier accessible en écriture par l'utilisateur :
+Si vous voyez des erreurs `EACCES`, modifiez le préfixe global de npm pour pointer vers un répertoire accessible en écriture par l'utilisateur :
 
 ```bash
 mkdir -p "$HOME/.npm-global"
@@ -140,5 +138,5 @@ Ajoutez la ligne `export PATH=...` à votre `~/.bashrc` ou `~/.zshrc` pour rendr
 ## Connexes
 
 - [Vue d'ensemble de l'installation](/fr/install) — toutes les méthodes d'installation
-- [Mises à jour](/fr/install/updating) — garder OpenClaw à jour
+- [Mise à jour](/fr/install/updating) — tenir OpenClaw à jour
 - [Getting Started](/fr/start/getting-started) — premiers pas après l'installation

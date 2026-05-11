@@ -3,7 +3,7 @@ summary: "Référence CLI pour `openclaw qr` (générer QR d'appairage mobile + 
 read_when:
   - You want to pair a mobile node app with a gateway quickly
   - You need setup-code output for remote/manual sharing
-title: "qr"
+title: "QR"
 ---
 
 # `openclaw qr`
@@ -50,3 +50,8 @@ openclaw qr --url wss://gateway.example/ws
 - Après le scan, approuvez le jumelage de l'appareil avec :
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`
+
+## Connexes
+
+- [CLI reference](/fr/cli)
+- [Jumelage](/fr/cli/pairing)

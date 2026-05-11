@@ -6,55 +6,53 @@ read_when:
 title: "StepFun"
 ---
 
-# StepFun
+OpenClaw incluye un complemento de proveedor StepFun integrado con dos id. de proveedor:
 
-OpenClaw incluye un complemento de proveedor StepFun integrado con dos ids de proveedor:
+- `stepfun` para el punto de conexión estándar
+- `stepfun-plan` para el punto de conexión Step Plan
 
-- `stepfun` para el endpoint estándar
-- `stepfun-plan` para el endpoint Step Plan
+<Warning>Estándar y Step Plan son **proveedores separados** con diferentes puntos de conexión y prefijos de referencia de modelo (`stepfun/...` frente a `stepfun-plan/...`). Use una clave de China con los puntos de conexión `.com` y una clave global con los puntos de conexión `.ai`.</Warning>
 
-<Warning>Standard y Step Plan son **proveedores separados** con diferentes endpoints y prefijos de referencia de modelo (`stepfun/...` vs `stepfun-plan/...`). Use una clave de China con los endpoints `.com` y una clave global con los endpoints `.ai`.</Warning>
+## Resumen de región y punto de conexión
 
-## Resumen de región y endpoint
+| Punto de conexión | China (`.com`)                         | Global (`.ai`)                        |
+| ----------------- | -------------------------------------- | ------------------------------------- |
+| Estándar          | `https://api.stepfun.com/v1`           | `https://api.stepfun.ai/v1`           |
+| Step Plan         | `https://api.stepfun.com/step_plan/v1` | `https://api.stepfun.ai/step_plan/v1` |
 
-| Endpoint  | China (`.com`)                         | Global (`.ai`)                        |
-| --------- | -------------------------------------- | ------------------------------------- |
-| Estándar  | `https://api.stepfun.com/v1`           | `https://api.stepfun.ai/v1`           |
-| Step Plan | `https://api.stepfun.com/step_plan/v1` | `https://api.stepfun.ai/step_plan/v1` |
+Var. de entorno de autenticación: `STEPFUN_API_KEY`
 
-Var de entorno de autenticación: `STEPFUN_API_KEY`
-
-## Catálogos integrados
+## Catálogo integrado
 
 Estándar (`stepfun`):
 
-| Ref de modelo            | Contexto | Salida máxima | Notas                          |
+| Referencia de modelo     | Contexto | Salida máxima | Notas                          |
 | ------------------------ | -------- | ------------- | ------------------------------ |
 | `stepfun/step-3.5-flash` | 262,144  | 65,536        | Modelo estándar predeterminado |
 
 Step Plan (`stepfun-plan`):
 
-| Ref de modelo                      | Contexto | Salida máxima | Notas                           |
+| Referencia de modelo               | Contexto | Salida máxima | Notas                           |
 | ---------------------------------- | -------- | ------------- | ------------------------------- |
 | `stepfun-plan/step-3.5-flash`      | 262,144  | 65,536        | Modelo Step Plan predeterminado |
 | `stepfun-plan/step-3.5-flash-2603` | 262,144  | 65,536        | Modelo Step Plan adicional      |
 
-## Primeros pasos
+## Para comenzar
 
 Elija su superficie de proveedor y siga los pasos de configuración.
 
 <Tabs>
   <Tab title="Estándar">
-    **Lo mejor para:** uso general a través del punto de conexión estándar de StepFun.
+    **Mejor para:** uso general a través del punto de conexión estándar de StepFun.
 
     <Steps>
-      <Step title="Elija su región de punto de conexión">
-        | Elección de autenticación             | Punto de conexión                   | Región        |
-        | ----------------------------------- | ----------------------------------- | ------------- |
+      <Step title="Elige tu región de punto de conexión">
+        | Elección de autenticación        | Punto de conexión                         | Región        |
+        | -------------------------------- | -------------------------------- | ------------- |
         | `stepfun-standard-api-key-intl`  | `https://api.stepfun.ai/v1`     | Internacional |
         | `stepfun-standard-api-key-cn`    | `https://api.stepfun.com/v1`    | China         |
       </Step>
-      <Step title="Ejecutar la incorporación">
+      <Step title="Ejecutar incorporación">
         ```bash
         openclaw onboard --auth-choice stepfun-standard-api-key-intl
         ```
@@ -84,17 +82,17 @@ Elija su superficie de proveedor y siga los pasos de configuración.
 
   </Tab>
 
-  <Tab title="Plan de pasos">
-    **Lo mejor para:** punto de conexión de razonamiento Step Plan.
+  <Tab title="Step Plan">
+    **Mejor para:** punto de conexión de razonamiento Step Plan.
 
     <Steps>
-      <Step title="Elija su región de punto de conexión">
-        | Elección de autenticación         | Punto de conexión                          | Región        |
-        | ------------------------------ | ----------------------------------------- | ------------- |
+      <Step title="Elige tu región de punto de conexión">
+        | Elección de autenticación      | Punto de conexión                                | Región        |
+        | ---------------------------- | --------------------------------------- | ------------- |
         | `stepfun-plan-api-key-intl`  | `https://api.stepfun.ai/step_plan/v1`  | Internacional |
         | `stepfun-plan-api-key-cn`    | `https://api.stepfun.com/step_plan/v1` | China         |
       </Step>
-      <Step title="Ejecutar la incorporación">
+      <Step title="Ejecutar incorporación">
         ```bash
         openclaw onboard --auth-choice stepfun-plan-api-key-intl
         ```
@@ -126,7 +124,7 @@ Elija su superficie de proveedor y siga los pasos de configuración.
   </Tab>
 </Tabs>
 
-## Avanzado
+## Configuración avanzada
 
 <AccordionGroup>
   <Accordion title="Configuración completa: Proveedor estándar">
@@ -159,7 +157,7 @@ Elija su superficie de proveedor y siga los pasos de configuración.
     ```
   </Accordion>
 
-  <Accordion title="Configuración completa: Proveedor Step Plan">
+  <Accordion title="Configuración completa: proveedor Step Plan">
     ```json5
     {
       env: { STEPFUN_API_KEY: "your-key" },
@@ -199,25 +197,25 @@ Elija su superficie de proveedor y siga los pasos de configuración.
   </Accordion>
 
   <Accordion title="Notas">
-    - El proveedor está incluido con OpenClaw, por lo que no hay un paso de instalación de complemento separado.
-    - `step-3.5-flash-2603` actualmente solo se expone en `stepfun-plan`.
-    - Un único flujo de autenticación escribe perfiles coincidentes con la región tanto para `stepfun` como para `stepfun-plan`, por lo que ambas superficies se pueden descubrir juntas.
-    - Utilice `openclaw models list` y `openclaw models set <provider/model>` para inspeccionar o cambiar modelos.
+    - El proveedor se incluye con OpenClaw, por lo que no hay un paso separado de instalación del complemento.
+    - `step-3.5-flash-2603` actualmente se expone solo en `stepfun-plan`.
+    - Un único flujo de autenticación escribe perfiles coincidentes por región tanto para `stepfun` como para `stepfun-plan`, por lo que ambas superficies pueden descubrirse juntas.
+    - Use `openclaw models list` y `openclaw models set <provider/model>` para inspeccionar o cambiar modelos.
   </Accordion>
 </AccordionGroup>
 
-<Note>Para obtener una visión general más amplia de los proveedores, consulte [Proveedores de modelos](/es/concepts/model-providers).</Note>
+<Note>Para obtener una visión general más amplia del proveedor, consulte [Proveedores de modelos](/es/concepts/model-providers).</Note>
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Proveedores de modelos" href="/es/concepts/model-providers" icon="layers">
-    Resumen de todos los proveedores, referencias de modelos y comportamiento de conmutación por error.
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="capas">
+    Resumen de todos los proveedores, referencias de modelo y comportamiento de conmutación por error.
   </Card>
   <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
     Esquema de configuración completo para proveedores, modelos y complementos.
   </Card>
-  <Card title="Selección de modelos" href="/es/concepts/models" icon="brain">
+  <Card title="Selección de modelo" href="/es/concepts/models" icon="brain">
     Cómo elegir y configurar modelos.
   </Card>
   <Card title="Plataforma StepFun" href="https://platform.stepfun.com" icon="globe">

@@ -1,6 +1,6 @@
 ---
-title: "Modèle TOOLS.dev"
 summary: "Notes sur les outils de l'agent de développement (C-3PO)"
+title: "Modèle TOOLS.dev"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -23,3 +23,7 @@ Il ne définit pas les outils existants ; OpenClaw fournit des outils intégrés
 - Synthèse vocale : spécifier la voix, le haut-parleur/la pièce cible et s'il faut diffuser en continu.
 
 Ajoutez tout ce que vous souhaitez que l'assistant sache à propos de votre chaîne d'outils locale.
+
+## Connexes
+
+- [Modèle TOOLS.md](/fr/reference/templates/TOOLS)

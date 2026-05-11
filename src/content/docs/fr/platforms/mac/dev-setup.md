@@ -2,12 +2,12 @@
 summary: "Guide de configuration pour les développeurs travaillant sur l'application OpenClaw macOS"
 read_when:
   - Setting up the macOS development environment
-title: "macOS Dev Setup"
+title: "macOS dev setup"
 ---
 
 # Configuration du développeur macOS
 
-Ce guide couvre les étapes nécessaires pour compiler et exécuter l'application OpenClaw macOS à partir des sources.
+Générez et exécutez l'application OpenClaw macOS à partir du code source.
 
 ## Prérequis
 
@@ -60,7 +60,7 @@ Pour le runtime Gateway, Node reste la méthode recommandée.
 
 ## Dépannage
 
-### Échec de la build : Inadéquation de la chaîne d'outils ou du SDK
+### Échec de la génération : inadéquation de la chaîne d'outils ou du SDK
 
 La build de l'application macOS s'attend au dernier SDK macOS et à la chaîne d'outils Swift 6.2.
 
@@ -78,7 +78,7 @@ xcrun swift --version
 
 Si les versions ne correspondent pas, mettez à jour macOS/Xcode et relancez la build.
 
-### L'application plante lors de l'octroi d'autorisations
+### L'application plante lors de l'octroi des autorisations
 
 Si l'application plante lorsque vous essayez d'autoriser l'accès à la **Reconnaissance vocale** ou au **Microphone**, cela peut être dû à un cache TCC corrompu ou à une inadéquation de signature.
 
@@ -90,7 +90,7 @@ Si l'application plante lorsque vous essayez d'autoriser l'accès à la **Reconn
    tccutil reset All ai.openclaw.mac.debug
    ```
 
-2. Si cela échoue, modifiez temporairement le `BUNDLE_ID` dans [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) pour forcer un "propre départ" de la part de macOS.
+2. Si cela échoue, modifiez temporairement `BUNDLE_ID` dans [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) pour forcer un « nouveau départ » de la part de macOS.
 
 ### Gateway "Démarrage..." indéfiniment
 
@@ -105,3 +105,8 @@ lsof -nP -iTCP:18789 -sTCP:LISTEN
 ```
 
 Si une exécution manuelle occupe le port, arrêtez ce processus (Ctrl+C). En dernier recours, tuez le PID que vous avez trouvé ci-dessus.
+
+## Connexes
+
+- [Application macOS](/fr/platforms/macos)
+- [Vue d'ensemble de l'installation](/fr/install)

@@ -6,46 +6,44 @@ read_when:
 title: "StepFun"
 ---
 
-# StepFun
-
-OpenClaw 包含一個捆綁的 StepFun 提供者插件，具有兩個提供者 ID：
+OpenClaw 包含一個捆綁的 StepFun 提供者外掛，具有兩個提供者 ID：
 
 - `stepfun` 用於標準端點
 - `stepfun-plan` 用於 Step Plan 端點
 
-<Warning>Standard 和 Step Plan 是**獨立的提供商**，具有不同的端點和模型引用前綴（`stepfun/...` vs `stepfun-plan/...`）。請在 `.com` 端點使用中國金鑰，在 `.ai` 端點使用全域金鑰。</Warning>
+<Warning>Standard 和 Step Plan 是具有不同端點和模型參考前綴的 **獨立提供者**（`stepfun/...` vs `stepfun-plan/...`）。請將中國金鑰用於 `.com` 端點，將全球金鑰用於 `.ai` 端點。</Warning>
 
-## 區域和端點概覽
+## 區域與端點概覽
 
 | 端點      | 中國 (`.com`)                          | 全球 (`.ai`)                          |
 | --------- | -------------------------------------- | ------------------------------------- |
 | Standard  | `https://api.stepfun.com/v1`           | `https://api.stepfun.ai/v1`           |
 | Step Plan | `https://api.stepfun.com/step_plan/v1` | `https://api.stepfun.ai/step_plan/v1` |
 
-Auth env var: `STEPFUN_API_KEY`
+認證環境變數：`STEPFUN_API_KEY`
 
 ## 內建目錄
 
 Standard (`stepfun`)：
 
-| Model ref                | Context | Max output | 備註               |
-| ------------------------ | ------- | ---------- | ------------------ |
-| `stepfun/step-3.5-flash` | 262,144 | 65,536     | 預設 Standard 模型 |
+| 模型參考                 | 語境    | 最大輸出 | 備註         |
+| ------------------------ | ------- | -------- | ------------ |
+| `stepfun/step-3.5-flash` | 262,144 | 65,536   | 預設標準模型 |
 
 Step Plan (`stepfun-plan`)：
 
-| Model ref                          | Context | Max output | 備註                  |
-| ---------------------------------- | ------- | ---------- | --------------------- |
-| `stepfun-plan/step-3.5-flash`      | 262,144 | 65,536     | 預設 Step Plan 模型   |
-| `stepfun-plan/step-3.5-flash-2603` | 262,144 | 65,536     | 額外的 Step Plan 模型 |
+| 模型參考                           | 語境    | 最大輸出 | 備註                  |
+| ---------------------------------- | ------- | -------- | --------------------- |
+| `stepfun-plan/step-3.5-flash`      | 262,144 | 65,536   | 預設 Step Plan 模型   |
+| `stepfun-plan/step-3.5-flash-2603` | 262,144 | 65,536   | 額外的 Step Plan 模型 |
 
 ## 開始使用
 
-選擇您的提供商介面並依照設定步驟進行。
+選擇您的提供者介面並依照設定步驟進行。
 
 <Tabs>
   <Tab title="Standard">
-    **最適合於：** 透過標準 StepFun 端點進行一般用途使用。
+    **最適合：** 透過標準 StepFun 端點進行一般用途使用。
 
     <Steps>
       <Step title="Choose your endpoint region">
@@ -85,7 +83,7 @@ Step Plan (`stepfun-plan`)：
   </Tab>
 
   <Tab title="Step Plan">
-    **最適合於：** Step Plan 推理端點。
+    **最適合：** Step Plan 推理端點。
 
     <Steps>
       <Step title="Choose your endpoint region">
@@ -126,10 +124,10 @@ Step Plan (`stepfun-plan`)：
   </Tab>
 </Tabs>
 
-## 進階
+## 進階設定
 
 <AccordionGroup>
-  <Accordion title="Full config: Standard provider">
+  <Accordion title="完整設定：標準供應商">
     ```json5
     {
       env: { STEPFUN_API_KEY: "your-key" },
@@ -159,7 +157,7 @@ Step Plan (`stepfun-plan`)：
     ```
   </Accordion>
 
-  <Accordion title="Full config: Step Plan provider">
+  <Accordion title="完整設定：Step Plan 供應商">
     ```json5
     {
       env: { STEPFUN_API_KEY: "your-key" },
@@ -198,29 +196,29 @@ Step Plan (`stepfun-plan`)：
     ```
   </Accordion>
 
-  <Accordion title="Notes">
-    - 此提供者已內建於 OpenClaw 中，因此無需額外安裝外掛程式。
+  <Accordion title="備註">
+    - 該供應商已隨附於 OpenClaw 中，因此無需額外的外掛程式安裝步驟。
     - `step-3.5-flash-2603` 目前僅在 `stepfun-plan` 上公開。
-    - 單一驗證流程會為 `stepfun` 和 `stepfun-plan` 寫入區域相符的設定檔，因此可以同時探索這兩個服務介面。
+    - 單一驗證流程會同時為 `stepfun` 和 `stepfun-plan` 寫入符合區域的設定檔，因此可以同時探索這兩個介面。
     - 使用 `openclaw models list` 和 `openclaw models set <provider/model>` 來檢查或切換模型。
   </Accordion>
 </AccordionGroup>
 
-<Note>如需更廣泛的提供者概覽，請參閱 [模型提供者](/zh-Hant/concepts/model-providers)。</Note>
+<Note>若要查看更廣泛的供應商概覽，請參閱[模型供應商](/zh-Hant/concepts/model-providers)。</Note>
 
 ## 相關
 
 <CardGroup cols={2}>
-  <Card title="Model providers" href="/zh-Hant/concepts/model-providers" icon="layers">
-    所有提供者、模型參照和故障轉移行為的概覽。
+  <Card title="模型選擇" href="/zh-Hant/concepts/model-providers" icon="layers">
+    所有供應商、模型參照和故障轉移行為的概覽。
   </Card>
-  <Card title="Configuration reference" href="/zh-Hant/gateway/configuration-reference" icon="gear">
-    提供者、模型和外掛程式的完整設定架構。
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration-reference" icon="gear">
+    供應商、模型和外掛程式的完整設定架構。
   </Card>
-  <Card title="Model selection" href="/zh-Hant/concepts/models" icon="brain">
+  <Card title="模型選擇" href="/zh-Hant/concepts/models" icon="brain">
     如何選擇和設定模型。
   </Card>
-  <Card title="StepFun Platform" href="https://platform.stepfun.com" icon="globe">
-    StepFun API 金鑰管理與文件。
+  <Card title="StepFun 平台" href="https://platform.stepfun.com" icon="globe">
+    StepFun API 金鑰管理和文件。
   </Card>
 </CardGroup>

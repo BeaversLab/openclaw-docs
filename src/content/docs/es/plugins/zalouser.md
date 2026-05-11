@@ -3,14 +3,14 @@ summary: "Complemento de Zalo Personal: inicio de sesión QR y mensajería media
 read_when:
   - You want Zalo Personal (unofficial) support in OpenClaw
   - You are configuring or developing the zalouser plugin
-title: "Complemento de Zalo Personal"
+title: "Complemento personal de Zalo"
 ---
 
 # Zalo Personal (complemento)
 
 Soporte de Zalo Personal para OpenClaw a través de un complemento, utilizando `zca-js` nativo para automatizar una cuenta de usuario normal de Zalo.
 
-> **Advertencia:** La automatización no oficial puede dar lugar a la suspensión o prohibición de la cuenta. Úselo bajo su propia responsabilidad.
+<Warning>La automatización no oficial puede provocar la suspensión o prohibición de la cuenta. Úsalo bajo tu propia responsabilidad.</Warning>
 
 ## Nomenclatura
 
@@ -76,3 +76,8 @@ Nombre de la herramienta: `zalouser`
 Acciones: `send`, `image`, `link`, `friends`, `groups`, `me`, `status`
 
 Las acciones de mensajes del canal también admiten `react` para reacciones a mensajes.
+
+## Relacionado
+
+- [Crear complementos](/es/plugins/building-plugins)
+- [Complementos de la comunidad](/es/plugins/community)

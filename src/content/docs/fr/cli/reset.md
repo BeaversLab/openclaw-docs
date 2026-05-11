@@ -3,7 +3,7 @@ summary: "Référence de la CLI pour `openclaw reset` (réinitialiser l'état/la
 read_when:
   - You want to wipe local state while keeping the CLI installed
   - You want a dry-run of what would be removed
-title: "reset"
+title: "Reset"
 ---
 
 # `openclaw reset`
@@ -33,3 +33,7 @@ Notes :
 - Exécutez `openclaw backup create` d'abord si vous souhaitez une instantanée restaurable avant de supprimer l'état local.
 - Si vous omettez `--scope`, `openclaw reset` utilise une invite interactive pour choisir ce qu'il faut supprimer.
 - `--non-interactive` n'est valide que lorsque `--scope` et `--yes` sont définis.
+
+## Connexes
+
+- [CLI reference](/fr/cli)

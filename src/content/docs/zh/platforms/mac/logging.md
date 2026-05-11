@@ -24,7 +24,7 @@ OpenClaw 通过 swift-log（默认为统一日志记录）路由 macOS 应用日
 
 ## macOS 上的统一日志记录私有数据
 
-统一日志会编辑大多数有效负载，除非子系统选择加入 `privacy -off`。根据 Peter 关于 macOS [日志隐私恶作剧](https://steipete.me/posts/2025/logging-privacy-shenanigans) (2025) 的文章，这由 `/Library/Preferences/Logging/Subsystems/` 中的 plist 控制，以子系统名称为键。只有新的日志条目会获取该标志，因此请在重现问题之前启用它。
+统一日志记录会隐藏大多数负载内容，除非子系统选择加入 `privacy -off`。根据 Peter 关于 macOS [日志隐私恶作剧](https://steipete.me/posts/2025/logging-privacy-shenanigans) (2025) 的文章，这是由 `/Library/Preferences/Logging/Subsystems/` 中的 plist 控制的，键为子系统名称。只有新的日志条目会获取该标志，因此在重现问题之前请启用它。
 
 ## 为 OpenClaw (`ai.openclaw`) 启用
 
@@ -55,3 +55,8 @@ sudo install -m 644 -o root -g wheel /tmp/ai.openclaw.plist /Library/Preferences
 - 移除覆盖：`sudo rm /Library/Preferences/Logging/Subsystems/ai.openclaw.plist`。
 - 可以选择运行 `sudo log config --reload` 以强制 logd 立即丢弃覆盖。
 - 请记住，此界面可能包含电话号码和消息正文；仅在您主动需要额外详细信息时才保留 plist。
+
+## 相关
+
+- [macOS 应用](/zh/platforms/macos)
+- [Gateway(网关) 日志记录](/zh/gateway/logging)

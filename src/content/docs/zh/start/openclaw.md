@@ -3,7 +3,7 @@ summary: "运行 OpenClaw 作为个人助理的端到端指南，包含安全注
 read_when:
   - Onboarding a new assistant instance
   - Reviewing safety/permission implications
-title: "个人助理设置"
+title: "个人助手设置"
 ---
 
 # 使用 OpenClaw 构建个人助手
@@ -66,7 +66,7 @@ openclaw gateway --port 18789
 
 现在从您的白名单手机向助手号码发送消息。
 
-当新手引导完成时，我们会自动打开仪表板并打印一个干净的（非令牌化）链接。如果提示进行身份验证，请将配置的共享密钥粘贴到 Control UI 设置中。新手引导默认使用令牌 (`gateway.auth.token`)，但如果您将 `gateway.auth.mode` 切换为 `password`，密码身份验证也可以使用。稍后重新打开：`openclaw dashboard`。
+当新手引导完成时，OpenClaw 会自动打开仪表盘并打印一个干净的（非令牌化的）链接。如果仪表盘提示进行身份验证，请将配置的共享密钥粘贴到 Control UI 设置中。新手引导默认使用令牌（`gateway.auth.token`），但如果您将 `gateway.auth.mode` 切换为 `password`，密码身份验证也可以工作。要稍后重新打开：`openclaw dashboard`。
 
 ## 给智能体一个工作区 (AGENTS)
 
@@ -74,7 +74,7 @@ OpenClaw 从其工作区目录读取操作指令和“记忆”。
 
 默认情况下，OpenClaw 使用 `~/.openclaw/workspace` 作为代理工作区，并将在设置/首次代理运行时自动创建它（以及初始的 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`）。仅当工作区是全新时才会创建 `BOOTSTRAP.md`（删除它后不应重新出现）。`MEMORY.md` 是可选的（不会自动创建）；如果存在，则会为普通会话加载它。子代理会话仅注入 `AGENTS.md` 和 `TOOLS.md`。
 
-提示：将此文件夹视为 OpenClaw 的“记忆”并将其设为 git 仓库（最好是私有的），以便备份您的 `AGENTS.md` + 记忆文件。如果安装了 git，全新工作区将自动初始化。
+<Tip>将此文件夹视为 OpenClaw 的记忆，并将其设为 git 仓库（最好是私有的），以便您的 `AGENTS.md` 和记忆文件得到备份。如果安装了 git，全新的工作区将自动初始化。</Tip>
 
 ```bash
 openclaw setup
@@ -87,8 +87,10 @@ openclaw setup
 
 ```json5
 {
-  agent: {
-    workspace: "~/.openclaw/workspace",
+  agents: {
+    defaults: {
+      workspace: "~/.openclaw/workspace",
+    },
   },
 }
 ```
@@ -97,8 +99,10 @@ openclaw setup
 
 ```json5
 {
-  agent: {
-    skipBootstrap: true,
+  agents: {
+    defaults: {
+      skipBootstrap: true,
+    },
   },
 }
 ```
@@ -223,3 +227,9 @@ openclaw health --json   # gateway health snapshot (WS; default can return a fre
 - Windows 状态：[Windows (WSL2)](/zh/platforms/windows)
 - Linux 状态：[Linux app](/zh/platforms/linux)
 - 安全性：[Security](/zh/gateway/security)
+
+## 相关
+
+- [入门指南](/zh/start/getting-started)
+- [设置](/zh/start/setup)
+- [频道概览](/zh/channels)

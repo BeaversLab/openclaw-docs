@@ -5,22 +5,17 @@ read_when:
 title: "Tlon"
 ---
 
-# Tlon
+Tlon est un messager décentralisé construit sur Urbit. OpenClaw se connecte à votre vaisseau Urbit et peut répondre aux DMs et aux messages de chat de groupe. Les réponses de groupe nécessitent une mention @ par défaut et peuvent être davantage restreintes via des listes d'autorisation.
 
-Tlon est un messenger décentralisé basé sur Urbit. OpenClaw se connecte à votre vaisseau Urbit et peut répondre aux DMs et aux messages de chat de groupe. Les réponses de groupe nécessitent une mention @ par défaut et peuvent être davantage restreintes via des listes d'autorisation.
+Statut : plugin inclus. Les DMs, les mentions de groupe, les réponses aux fils de discussion, le formatage de texte enrichi et les téléchargements d'images sont pris en charge. Les réactions et les sondages ne sont pas encore pris en charge.
 
-Statut : plugin groupé. Les DMs, les mentions de groupe, les réponses aux fils de discussion, le formatage de texte enrichi et
-les téléchargements d'images sont pris en charge. Les réactions et les sondages ne sont pas encore pris en charge.
+## Plugin inclus
 
-## Plugin groupé
+Tlon est fourni en tant que plugin inclus dans les versions actuelles de OpenClaw, les versions empaquetées normales n'ont donc pas besoin d'une installation séparée.
 
-Tlon est fourni en tant que plugin groupé dans les versions actuelles de OpenClaw. Les versions empaquetées
-standard n'ont donc pas besoin d'installation séparée.
+Si vous êtes sur une ancienne version ou une installation personnalisée qui exclut Tlon, installez-le manuellement :
 
-Si vous utilisez une version ancienne ou une installation personnalisée qui exclut Tlon, installez-le
-manuellement :
-
-Installation via CLI (registre npm) :
+Installer via CLI (registre npm) :
 
 ```bash
 openclaw plugins install @openclaw/tlon
@@ -39,7 +34,7 @@ Détails : [Plugins](/fr/tools/plugin)
 1. Assurez-vous que le plugin Tlon est disponible.
    - Les versions empaquetées actuelles de OpenClaw l'incluent déjà.
    - Les installations anciennes/personnalisées peuvent l'ajouter manuellement avec les commandes ci-dessus.
-2. Récupérez l'URL de votre vaisseau et votre code de connexion.
+2. Rassemblez l'URL de votre vaisseau et votre code de connexion.
 3. Configurez `channels.tlon`.
 4. Redémarrez la passerelle.
 5. Envoyez un DM au bot ou mentionnez-le dans un channel de groupe.
@@ -60,11 +55,9 @@ Configuration minimale (compte unique) :
 }
 ```
 
-## Vaisseaux privés/réseau local (LAN)
+## Vaisseaux privés/LAN
 
-Par défaut, OpenClaw bloque les noms d'hôte privés/internes et les plages d'adresses IP pour la protection SSRF.
-Si votre vaisseau fonctionne sur un réseau privé (localhost, IP LAN ou nom d'hôte interne),
-vous devez explicitement l'accepter :
+Par défaut, OpenClaw bloque les noms d'hôte privés/internes et les plages d'adresses IP pour la protection SSRF. Si votre vaisseau fonctionne sur un réseau privé (localhost, IP LAN ou nom d'hôte interne), vous devez explicitement l'accepter :
 
 ```json5
 {
@@ -83,12 +76,11 @@ Cela s'applique aux URL telles que :
 - `http://192.168.x.x:8080`
 - `http://my-ship.local:8080`
 
-⚠️ N'activez ceci que si vous faites confiance à votre réseau local. Ce paramètre désactive les protections SSRF
-pour les requêtes vers l'URL de votre vaisseau.
+⚠️ N'activez cela que si vous faites confiance à votre réseau local. Ce paramètre désactive les protections SSRF pour les demandes vers l'URL de votre vaisseau.
 
-## Channels de groupe
+## Canaux de groupe
 
-La découverte automatique est activée par défaut. Vous pouvez également épingler des channels manuellement :
+La découverte automatique est activée par défaut. Vous pouvez également épingler manuellement les canaux :
 
 ```json5
 {
@@ -114,7 +106,7 @@ Désactiver la découverte automatique :
 
 ## Contrôle d'accès
 
-Liste blanche de DMs (vide = aucun DM autorisé, utilisez `ownerShip` pour le flux d'approbation) :
+Liste d'autorisation DM (vide = aucun DM autorisé, utilisez `ownerShip` pour le processus d'approbation) :
 
 ```json5
 {
@@ -163,19 +155,17 @@ Définissez un vaisseau propriétaire pour recevoir les demandes d'approbation l
 }
 ```
 
-Le vaisseau propriétaire est **automatiquement autorisé partout** — les invitations DM sont acceptées automatiquement et
-les messages dans les channels sont toujours autorisés. Vous n'avez pas besoin d'ajouter le propriétaire à `dmAllowlist` ou
-`defaultAuthorizedShips`.
+Le vaisseau propriétaire est **automatiquement autorisé partout** — les invitations DM sont acceptées automatiquement et les messages de canal sont toujours autorisés. Vous n'avez pas besoin d'ajouter le propriétaire à `dmAllowlist` ou `defaultAuthorizedShips`.
 
 Lorsqu'il est défini, le propriétaire reçoit des notifications DM pour :
 
-- Demandes DM de vaisseaux non présents sur la liste blanche
+- Demandes DM de vaisseaux ne figurant pas sur la liste d'autorisation
 - Mentions dans les channels sans autorisation
-- Demandes d'invitation à un groupe
+- Demandes d'invitation de groupe
 
 ## Paramètres d'acceptation automatique
 
-Acceptation automatique des invitations DM (pour les vaisseaux dans dmAllowlist) :
+Accepter automatiquement les invitations DM (pour les vaisseaux dans dmAllowlist) :
 
 ```json5
 {
@@ -187,7 +177,7 @@ Acceptation automatique des invitations DM (pour les vaisseaux dans dmAllowlist)
 }
 ```
 
-Acceptation automatique des invitations de groupe :
+Accepter automatiquement les invitations de groupe :
 
 ```json5
 {
@@ -206,17 +196,17 @@ Utilisez ceux-ci avec `openclaw message send` ou la livraison cron :
 - DM : `~sampel-palnet` ou `dm/~sampel-palnet`
 - Groupe : `chat/~host-ship/channel` ou `group:~host-ship/channel`
 
-## Compétence intégrée
+## Compétence groupée
 
-Le plugin Tlon inclut une compétence intégrée ([`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill))
+Le plugin Tlon inclut une compétence groupée ([`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill))
 qui fournit un accès CLI aux opérations Tlon :
 
-- **Contacts** : obtenir/mettre à jour des profils, lister les contacts
-- **Canaux** : lister, créer, publier des messages, récupérer l'historique
+- **Contacts** : obtenir/mettre à jour les profils, lister les contacts
+- **Channels** : lister, créer, publier des messages, récupérer l'historique
 - **Groupes** : lister, créer, gérer les membres
 - **DMs** : envoyer des messages, réagir aux messages
-- **Réactions** : ajouter/supprimer des réactions emoji aux publications et DMs
-- **Paramètres** : gérer les permissions du plugin via les commandes slash
+- **Réactions** : ajouter/supprimer des réactions emoji aux posts et DMs
+- **Paramètres** : gérer les autorisations du plugin via les commandes slash
 
 La compétence est automatiquement disponible lorsque le plugin est installé.
 
@@ -225,17 +215,17 @@ La compétence est automatiquement disponible lorsque le plugin est installé.
 | Fonctionnalité     | Statut                                                 |
 | ------------------ | ------------------------------------------------------ |
 | Messages directs   | ✅ Pris en charge                                      |
-| Groupes/canaux     | ✅ Pris en charge (limité par mention par défaut)      |
+| Groupes/channels   | ✅ Pris en charge (limité aux mentions par défaut)     |
 | Fils de discussion | ✅ Pris en charge (réponses automatiques dans le fil)  |
 | Texte enrichi      | ✅ Markdown converti au format Tlon                    |
 | Images             | ✅ Téléversées vers le stockage Tlon                   |
-| Réactions          | ✅ Via [compétence intégrée](#bundled-skill)           |
+| Réactions          | ✅ Via [compétence groupée](#bundled-skill)            |
 | Sondages           | ❌ Pas encore pris en charge                           |
 | Commandes natives  | ✅ Pris en charge (propriétaire uniquement par défaut) |
 
 ## Dépannage
 
-Exécutez d'abord cette échelle (ladder) :
+Exécutez d'abord cette échelle :
 
 ```bash
 openclaw status
@@ -244,12 +234,12 @@ openclaw logs --follow
 openclaw doctor
 ```
 
-Pannes courantes :
+Échecs courants :
 
 - **DMs ignorés** : l'expéditeur n'est pas dans `dmAllowlist` et aucun `ownerShip` n'est configuré pour le flux d'approbation.
-- **Messages de groupe ignorés** : canal non découvert ou expéditeur non autorisé.
+- **Messages de groupe ignorés** : channel non découvert ou expéditeur non autorisé.
 - **Erreurs de connexion** : vérifiez que l'URL du vaisseau est accessible ; activez `allowPrivateNetwork` pour les vaisseaux locaux.
-- **Erreurs d'authentification** : vérifiez que le code de connexion est à jour (les codes changent).
+- **Erreurs d'authentification** : vérifiez que le code de connexion est actuel (les codes tournent).
 
 ## Référence de configuration
 
@@ -257,32 +247,32 @@ Configuration complète : [Configuration](/fr/gateway/configuration)
 
 Options du fournisseur :
 
-- `channels.tlon.enabled` : activer/désactiver le démarrage du canal.
+- `channels.tlon.enabled` : activer/désactiver le démarrage du channel.
 - `channels.tlon.ship` : nom du vaisseau Urbit du bot (par ex. `~sampel-palnet`).
 - `channels.tlon.url` : URL du vaisseau (par ex. `https://sampel-palnet.tlon.network`).
 - `channels.tlon.code` : code de connexion du vaisseau.
 - `channels.tlon.allowPrivateNetwork` : autoriser les URL localhost/LAN (contournement SSRF).
-- `channels.tlon.ownerShip` : vaisseau propriétaire pour le système d'approbation (toujours autorisé).
+- `channels.tlon.ownerShip` : navire propriétaire pour le système d'approbation (toujours autorisé).
 - `channels.tlon.dmAllowlist` : navires autorisés à envoyer des DM (vide = aucun).
-- `channels.tlon.autoAcceptDmInvites` : accepter automatiquement les DM des navires autorisés.
+- `channels.tlon.autoAcceptDmInvites` : accepter automatiquement les DM des navires sur la liste autorisée.
 - `channels.tlon.autoAcceptGroupInvites` : accepter automatiquement toutes les invitations de groupe.
 - `channels.tlon.autoDiscoverChannels` : découverte automatique des canaux de groupe (par défaut : true).
 - `channels.tlon.groupChannels` : nids de canaux épinglés manuellement.
 - `channels.tlon.defaultAuthorizedShips` : navires autorisés pour tous les canaux.
 - `channels.tlon.authorization.channelRules` : règles d'authentification par canal.
-- `channels.tlon.showModelSignature` : ajouter le nom du model aux messages.
+- `channels.tlon.showModelSignature` : ajouter le nom du modèle aux messages.
 
 ## Notes
 
 - Les réponses de groupe nécessitent une mention (par ex. `~your-bot-ship`) pour répondre.
 - Réponses de fil : si le message entrant est dans un fil, OpenClaw répond dans le fil.
-- Texte riche : le formatage Markdown (gras, italique, code, en-têtes, listes) est converti au format natif de Tlon.
+- Texte enrichi : le formatage Markdown (gras, italique, code, en-têtes, listes) est converti au format natif de Tlon.
 - Images : les URL sont téléchargées vers le stockage Tlon et intégrées sous forme de blocs d'image.
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
-- [Appairage](/fr/channels/pairing) — authentification DM et flux d'appairage
-- [Groupes](/fr/channels/groups) — comportement du chat de groupe et filtrage par mention
+- [Aperçu des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appairage](/fr/channels/pairing) — authentification DM et processus d'appairage
+- [Groupes](/fr/channels/groups) — comportement du chat de groupe et filtrage des mentions
 - [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
-- [Sécurité](/fr/gateway/security) — model d'accès et durcissement
+- [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

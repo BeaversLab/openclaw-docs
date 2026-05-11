@@ -1,6 +1,6 @@
 ---
+summary: "用户配置文件记录"
 title: "USER 模板"
-summary: "用户档案记录"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -22,3 +22,7 @@ _(他们关心什么？他们在做什么项目？什么会让他们烦恼？什
 ---
 
 您了解得越多，就能提供越好的帮助。但请记住——您是在了解一个人，而不是建立档案。请尊重其中的差别。
+
+## 相关
+
+- [代理工作区](/zh/concepts/agent-workspace)

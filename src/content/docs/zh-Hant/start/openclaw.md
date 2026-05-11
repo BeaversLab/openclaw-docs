@@ -66,7 +66,7 @@ openclaw gateway --port 18789
 
 現在從您允許清單中的手機傳送訊息給助理號碼。
 
-當上線完成時，我們會自動開啟儀表板並列印一個乾淨（非權杖化）的連結。如果提示身份驗證，請將設定的共用金鑰貼上到 Control UI 設定中。上線預設使用權杖 (`gateway.auth.token`)，但如果您將 `gateway.auth.mode` 切換為 `password`，密碼驗證也可以運作。若要稍後重新開啟：`openclaw dashboard`。
+當入職完成後，OpenClaw 會自動開啟儀表板並列印一個乾淨的（非令牌化）連結。如果儀表板提示需要身份驗證，請將設定的共享密鑰貼上到 Control UI 設定中。入職預設使用令牌（`gateway.auth.token`），但如果您將 `gateway.auth.mode` 切換為 `password`，密碼驗證也可以使用。若要稍後重新開啟：`openclaw dashboard`。
 
 ## 給代理一個工作區 (AGENTS)
 
@@ -74,7 +74,7 @@ OpenClaw 從其工作區目錄讀取操作指令和「記憶」。
 
 預設情況下，OpenClaw 使用 `~/.openclaw/workspace` 作為代理程式工作區，並會在設定/首次代理程式執行時自動建立它（加上起始 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`）。`BOOTSTRAP.md` 僅在工作區是全新的時候建立（刪除後不應該再出現）。`MEMORY.md` 是可選的（不自動建立）；當存在時，它會載入到正常工作階段中。子代理程式工作階段僅注入 `AGENTS.md` 和 `TOOLS.md`。
 
-提示：將此資料夾視為 OpenClaw 的「記憶體」，並使其成為 git 儲存庫（最好是私有的），以便您的 `AGENTS.md` + 記憶體檔案能夠備份。如果安裝了 git，全新的工作區會自動初始化。
+<Tip>將此資料夾視為 OpenClaw 的記憶體，並將其設為 git 儲存庫（最好是私有的），以便您的 `AGENTS.md` 和記憶體檔案都能備份。如果已安裝 git，全新的工作區將會自動初始化。</Tip>
 
 ```bash
 openclaw setup
@@ -87,8 +87,10 @@ openclaw setup
 
 ```json5
 {
-  agent: {
-    workspace: "~/.openclaw/workspace",
+  agents: {
+    defaults: {
+      workspace: "~/.openclaw/workspace",
+    },
   },
 }
 ```
@@ -97,8 +99,10 @@ openclaw setup
 
 ```json5
 {
-  agent: {
-    skipBootstrap: true,
+  agents: {
+    defaults: {
+      skipBootstrap: true,
+    },
   },
 }
 ```
@@ -223,3 +227,9 @@ openclaw health --json   # gateway health snapshot (WS; default can return a fre
 - Windows 狀態：[Windows (WSL2)](/zh-Hant/platforms/windows)
 - Linux 狀態：[Linux app](/zh-Hant/platforms/linux)
 - 安全性：[Security](/zh-Hant/gateway/security)
+
+## 相關
+
+- [開始使用](/zh-Hant/start/getting-started)
+- [設定](/zh-Hant/start/setup)
+- [頻道總覽](/zh-Hant/channels)

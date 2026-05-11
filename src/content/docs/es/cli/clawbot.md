@@ -3,7 +3,7 @@ summary: "Referencia de la CLI para `openclaw clawbot` (espacio de nombres de al
 read_when:
   - You maintain older scripts using `openclaw clawbot ...`
   - You need migration guidance to current commands
-title: "clawbot"
+title: "Clawbot"
 ---
 
 # `openclaw clawbot`
@@ -19,3 +19,7 @@ Alias admitido actualmente:
 Prefiera los comandos modernos de nivel superior directamente:
 
 - `openclaw clawbot qr` -> `openclaw qr`
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)

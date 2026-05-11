@@ -1,6 +1,6 @@
 ---
-title: "GPT-5.4 / Paridad Agentic de Codex"
-summary: "Cómo OpenClaw cierra las brechas de ejecución agentic para GPT-5.4 y modelos estilo Codex"
+summary: "Cómo OpenClaw cierra las brechas de ejecución de agente para los modelos GPT-5.4 y de estilo Codex"
+title: "Paridad de agente GPT-5.4 / Codex"
 read_when:
   - Debugging GPT-5.4 or Codex agent behavior
   - Comparing OpenClaw agentic behavior across frontier models
@@ -226,3 +226,7 @@ Mantenga el contrato predeterminado cuando:
 - quiera el comportamiento más flexible existente
 - no está usando modelos de la familia GPT-5
 - está probando indicadores en lugar del cumplimiento del tiempo de ejecución
+
+## Relacionado
+
+- [Notas del mantenedor de paridad GPT-5.4 / Codex](/es/help/gpt54-codex-agentic-parity-maintainers)

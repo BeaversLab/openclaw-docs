@@ -3,14 +3,12 @@ summary: "Exécuter des tours d'agent depuis le CLI et livrer facultativement le
 read_when:
   - You want to trigger agent runs from scripts or the command line
   - You need to deliver agent replies to a chat channel programmatically
-title: "Agent Send"
+title: "Envoi d'agent"
 ---
 
-# Agent Send
-
 `openclaw agent` exécute un seul tour d'agent depuis la ligne de commande sans avoir besoin
-d'un message de chat entrant. Utilisez-le pour les flux de travail scriptés, les tests et
-la livraison programmée.
+d'un message de chat entrant. Utilisez-le pour les workflows scriptés, les tests et la
+livraison programmée.
 
 ## Quick start
 
@@ -38,7 +36,7 @@ la livraison programmée.
 
   </Step>
 
-  <Step title="Livrer la réponse à un channel">
+  <Step title="Envoyer la réponse à un channel">
     ```bash
     # Deliver to WhatsApp (default channel)
     openclaw agent --to +15555550123 --message "Report ready" --deliver
@@ -51,9 +49,9 @@ la livraison programmée.
   </Step>
 </Steps>
 
-## Drapeaux
+## Flags
 
-| Drapeau                       | Description                                                            |
+| Flag                          | Description                                                            |
 | ----------------------------- | ---------------------------------------------------------------------- |
 | `--message \<text\>`          | Message à envoyer (requis)                                             |
 | `--to \<dest\>`               | Dériver la clé de session à partir d'une cible (téléphone, id de chat) |
@@ -65,20 +63,20 @@ la livraison programmée.
 | `--reply-to \<target\>`       | Remplacement de la cible de livraison                                  |
 | `--reply-channel \<name\>`    | Remplacement du channel de livraison                                   |
 | `--reply-account \<id\>`      | Remplacement de l'id de compte de livraison                            |
-| `--thinking \<level\>`        | Définir le niveau de réflexion pour le profil de modèle sélectionné    |
-| `--verbose \<on\|full\|off\>` | Définir le niveau de verbosité                                         |
-| `--timeout \<seconds\>`       | Remplacer le délai d'attente de l'agent                                |
+| `--thinking \<level\>`        | Définir le niveau de réflexion pour le profil de model sélectionné     |
+| `--verbose \<on\|full\|off\>` | Définir le niveau verbosité                                            |
+| `--timeout \<seconds\>`       | Remplacer le délai d'expiration de l'agent                             |
 | `--json`                      | Sortie JSON structurée                                                 |
 
 ## Comportement
 
-- Par défaut, le CLI passe **via le Gateway**. Ajoutez `--local` pour forcer l'
+- Par défaut, la CLI passe **par le Gateway**. Ajoutez `--local` pour forcer le
   runtime intégré sur la machine actuelle.
-- Si le Gateway est inaccessible, le CLI **revient** à l'exécution intégrée locale.
+- Si le Gateway est inaccessible, la CLI **revient** à l'exécution locale intégrée.
 - Sélection de session : `--to` dérive la clé de session (les cibles de groupe/channel
-  préservent l'isolement ; les discussions directes sont réduites à `main`).
-- Les indicateurs de réflexion et de mode détaillé (verbose) sont conservés dans le magasin de session.
-- Sortie : texte brut par défaut, ou `--json` pour une charge utile structurée + métadonnées.
+  préservent l'isolation ; les chats directs s'effondrent vers `main`).
+- Les flags de réflexion et de verbosité sont conservés dans le magasin de session.
+- Sortie : texte brut par défaut, ou `--json` pour une charge utile structurée + des métadonnées.
 
 ## Exemples
 
@@ -95,6 +93,6 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 
 ## Connexes
 
-- [Référence de l'agent CLI](/fr/cli/agent)
+- [Référence de l'CLI Agent](/fr/cli/agent)
 - [Sous-agents](/fr/tools/subagents) — génération de sous-agents en arrière-plan
 - [Sessions](/fr/concepts/session) — fonctionnement des clés de session

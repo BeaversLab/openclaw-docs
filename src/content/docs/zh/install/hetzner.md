@@ -254,10 +254,17 @@ Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果
 
 此方法在上述 Docker 设置的基础上增加了可复现的部署、版本控制的基础架构和自动灾难恢复功能。
 
-> **注意：** 由社区维护。如有问题或贡献，请参阅上面的仓库链接。
+<Note>社区维护。如遇问题或贡献代码，请查看上面的仓库链接。</Note>
 
 ## 后续步骤
 
 - 设置消息通道：[Channels](/zh/channels)
 - 配置 Gateway(网关)：[Gateway(网关) configuration](/zh/gateway/configuration)
 - 保持 OpenClaw 更新：[Updating](/zh/install/updating)
+
+## 相关
+
+- [安装概述](/zh/install)
+- [Fly.io](/zh/install/fly)
+- [Docker](/zh/install/docker)
+- [VPS 托管](/zh/vps)

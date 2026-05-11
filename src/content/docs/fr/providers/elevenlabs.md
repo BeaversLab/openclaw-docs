@@ -7,21 +7,17 @@ read_when:
 title: "ElevenLabs"
 ---
 
-# ElevenLabs
+OpenClaw utilise ElevenLabs pour la synthèse vocale, la transcription de parole en texte par lots avec Scribe v2, et la transcription en flux STT pour les appels vocaux avec Scribe v2 Realtime.
 
-OpenClaw utilise ElevenLabs pour la synthèse vocale, la STT par lot avec Scribe
-v2, et le flux STT pour les appels vocaux avec Scribe v2 Realtime.
-
-| Fonctionnalité      | Surface OpenClaw                               | Par défaut               |
-| ------------------- | ---------------------------------------------- | ------------------------ |
-| Synthèse vocale     | `messages.tts` / `talk`                        | `eleven_multilingual_v2` |
-| STT par lot         | `tools.media.audio`                            | `scribe_v2`              |
-| STT en flux continu | Appel vocal `streaming.provider: "elevenlabs"` | `scribe_v2_realtime`     |
+| Capacité                                         | Surface OpenClaw                               | Par défaut               |
+| ------------------------------------------------ | ---------------------------------------------- | ------------------------ |
+| Synthèse vocale                                  | `messages.tts` / `talk`                        | `eleven_multilingual_v2` |
+| Transcription de parole en texte par lots        | `tools.media.audio`                            | `scribe_v2`              |
+| Transcription de parole en texte en flux continu | Appel vocal `streaming.provider: "elevenlabs"` | `scribe_v2_realtime`     |
 
 ## Authentification
 
-Définissez `ELEVENLABS_API_KEY` dans l'environnement. `XI_API_KEY` est également accepté pour
-la compatibilité avec les outils existants d'ElevenLabs.
+Définissez `ELEVENLABS_API_KEY` dans l'environnement. `XI_API_KEY` est également accepté pour la compatibilité avec les outils ElevenLabs existants.
 
 ```bash
 export ELEVENLABS_API_KEY="..."
@@ -45,6 +41,8 @@ export ELEVENLABS_API_KEY="..."
 }
 ```
 
+Définissez `modelId` sur `eleven_v3` pour utiliser le TTS ElevenLabs v3. OpenClaw conserve `eleven_multilingual_v2` par défaut pour les installations existantes.
+
 ## Speech-to-text
 
 Utilisez Scribe v2 pour les pièces jointes audio entrantes et les segments vocaux enregistrés courts :
@@ -62,17 +60,15 @@ Utilisez Scribe v2 pour les pièces jointes audio entrantes et les segments voca
 }
 ```
 
-OpenClaw envoie de l'audio multipart à ElevenLabs `/v1/speech-to-text` avec
-`model_id: "scribe_v2"`. Les indices de langue correspondent à `language_code` lorsqu'ils sont présents.
+OpenClaw envoie de l'audio multipartie à ElevenLabs `/v1/speech-to-text` avec `model_id: "scribe_v2"`. Les indices de langue correspondent à `language_code` lorsqu'ils sont présents.
 
 ## STT en flux continu pour les appels vocaux
 
-Le plugin `elevenlabs` inclus enregistre Scribe v2 Realtime pour la transcription
-en flux continu des appels vocaux.
+Le plugin `elevenlabs` inclus enregistre Scribe v2 Realtime pour la transcription en flux des appels vocaux.
 
 | Paramètre               | Chemin de configuration                                                   | Par défaut                                    |
 | ----------------------- | ------------------------------------------------------------------------- | --------------------------------------------- |
-| Clé API                 | `plugins.entries.voice-call.config.streaming.providers.elevenlabs.apiKey` | Revient à `ELEVENLABS_API_KEY` / `XI_API_KEY` |
+| Clé API                 | `plugins.entries.voice-call.config.streaming.providers.elevenlabs.apiKey` | Revenir à `ELEVENLABS_API_KEY` / `XI_API_KEY` |
 | Modèle                  | `...elevenlabs.modelId`                                                   | `scribe_v2_realtime`                          |
 | Format audio            | `...elevenlabs.audioFormat`                                               | `ulaw_8000`                                   |
 | Taux d'échantillonnage  | `...elevenlabs.sampleRate`                                                | `8000`                                        |
@@ -104,4 +100,9 @@ en flux continu des appels vocaux.
 }
 ```
 
-<Note>L'appel vocal reçoit les médias Twilio en G.711 u-law à 8 kHz. Le fournisseur temps réel d'ElevenLabs est configuré par défaut sur `ulaw_8000`, ce qui permet de transmettre les trames téléphoniques sans transcodage.</Note>
+<Note>Voice Call reçoit les médias Twilio en G.711 u-law à 8 kHz. Le provider temps réel ElevenLabs est par défaut `ulaw_8000`, les trames téléphoniques peuvent donc être transmises sans transcodage.</Note>
+
+## Connexes
+
+- [Synthèse vocale](/fr/tools/tts)
+- [Sélection du modèle](/fr/concepts/model-providers)

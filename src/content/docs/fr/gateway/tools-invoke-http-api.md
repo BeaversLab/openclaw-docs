@@ -3,7 +3,7 @@ summary: "Invoquer un seul tool directement via le point de terminaison HTTP du 
 read_when:
   - Calling tools without running a full agent turn
   - Building automations that need tool policy enforcement
-title: "Outil d'appel API"
+title: "Appel d'API d'outils"
 ---
 
 # Outil d'appel (HTTP)
@@ -159,3 +159,8 @@ curl -sS http://127.0.0.1:18789/tools/invoke \
     "args": {}
   }'
 ```
+
+## Connexes
+
+- [Protocole Gateway](/fr/gateway/protocol)
+- [Outils et plugins](/fr/tools)

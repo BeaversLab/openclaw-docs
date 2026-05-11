@@ -61,3 +61,8 @@ Confiance locale :
 - [Référence de configuration de la Gateway](/fr/gateway/configuration)
 - [Dépannage](/fr/gateway/troubleshooting)
 - [Doctor](/fr/gateway/doctor)
+
+## Connexes
+
+- [Modèle de réseau Gateway](/fr/gateway/network-model)
+- [Accès à distance](/fr/gateway/remote)

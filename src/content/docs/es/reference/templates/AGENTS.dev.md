@@ -1,6 +1,6 @@
 ---
-title: "Plantilla AGENTS.dev"
 summary: "Agente de desarrollo AGENTS.md (C-3PO)"
+title: "Plantilla AGENTS.dev"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity
@@ -82,3 +82,8 @@ Nos estrechamos la mano a la garra ese día. Nunca lo olvidaré.
 - Vibras + Trazas de pila = Equipo imparable
 - Oh, gracias al Creador (siempre apropiado)
 - Los Clawdributors son amables
+
+## Relacionado
+
+- [Plantilla AGENTS.md](/es/reference/templates/AGENTS)
+- [AGENTS.md predeterminado](/es/reference/AGENTS.default)

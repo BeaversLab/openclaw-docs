@@ -12,7 +12,7 @@ OpenClaw 支持 Brave Search API 作为 `web_search` 提供商。
 
 ## 获取 API 密钥
 
-1. 在 [https://brave.com/search/api/](https://brave.com/search/api/) 创建 Brave Search API 账户
+1. 在 [https://brave.com/search/api/](https://brave.com/search/api/) 创建一个 Brave 搜索 API 账户
 2. 在仪表板中，选择 **Search** 计划并生成 API 密钥。
 3. 将密钥存储在配置中，或在 Gateway(网关) 网关 环境中设置 `BRAVE_API_KEY`。
 
@@ -93,11 +93,15 @@ await web_search({
 ## 注意事项
 
 - OpenClaw 使用 Brave **搜索** 计划。如果您拥有旧版订阅（例如每月包含 2,000 次查询的原始免费计划），它仍然有效，但不包括较新的功能，如 LLM 上下文或更高的速率限制。
-- 每个 Brave 计划都包含 **每月 5 美元的免费额度**（自动续期）。搜索计划每 1,000 次请求费用为 5 美元，因此该额度涵盖每月 1,000 次查询。请在 Brave 仪表板中设置您的使用限制，以避免意外收费。有关当前计划，请参阅 [Brave API 门户](https://brave.com/search/api/)。
-- 搜索计划包含 LLM 上下文端点和 AI 推理权限。存储结果以训练或微调模型需要具有明确存储权限的计划。请参阅 Brave [服务条款](https://api-dashboard.search.brave.com/terms-of-service)。
+- 每个 Brave 计划都包含 **每月 5 美元的免费额度**（可续期）。搜索计划的价格为每 1,000 次请求 5 美元，因此该额度可覆盖每月 1,000 次查询。请在 Brave 仪表板中设置您的使用限制，以避免意外扣费。有关当前计划，请参阅 [Brave API 门户](https://brave.com/search/api/)。
+- 搜索计划包括 LLM 上下文端点和 AI 推理权限。存储结果以训练或调整模型需要具有明确存储权限的计划。请参阅 Brave [服务条款](https://api-dashboard.search.brave.com/terms-of-service)。
 - `llm-context` 模式返回基于依据的源条目，而不是常规网页搜索摘要的格式。
 - `llm-context` 模式不支持 `ui_lang`、`freshness`、`date_after` 或 `date_before`。
 - `ui_lang` 必须包含区域子标签，例如 `en-US`。
 - 结果默认缓存 15 分钟（可通过 `cacheTtlMinutes` 配置）。
 
 有关完整的 web_search 配置，请参阅 [Web 工具](/zh/tools/web)。
+
+## 相关
+
+- [Brave 搜索](/zh/tools/brave-search)

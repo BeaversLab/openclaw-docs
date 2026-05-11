@@ -2,12 +2,12 @@
 summary: "Guía de configuración para desarrolladores que trabajan en la aplicación de OpenClaw para macOS"
 read_when:
   - Setting up the macOS development environment
-title: "Configuración de desarrollo de macOS"
+title: "configuración de desarrollo de macOS"
 ---
 
-# Configuración de desarrollo de macOS
+# configuración de desarrollo de macOS
 
-Esta guía cubre los pasos necesarios para compilar y ejecutar la aplicación de OpenClaw para macOS desde el código fuente.
+Compila y ejecuta la aplicación de OpenClaw para macOS desde el código fuente.
 
 ## Requisitos previos
 
@@ -34,7 +34,7 @@ Para compilar la aplicación de macOS y empaquetarla en `dist/OpenClaw.app`, eje
 
 Si no tiene un certificado de ID de desarrollador de Apple, el script utilizará automáticamente **firma ad-hoc** (`-`).
 
-Para los modos de ejecución de desarrollo, marcas de firma y solución de problemas de ID de equipo, consulta el LÉEME de la aplicación macOS:
+Para los modos de ejecución de desarrollo, las marcas de firma y la solución de problemas del ID de equipo, consulta el README de la aplicación macOS:
 [https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
 
 > **Nota**: Las aplicaciones firmadas ad hoc pueden activar avisos de seguridad. Si la aplicación falla inmediatamente con "Abort trap 6", consulta la sección [Solución de problemas](#troubleshooting).
@@ -60,7 +60,7 @@ Para el tiempo de ejecución de Gateway, Node sigue siendo la ruta recomendada.
 
 ## Solución de problemas
 
-### Error de compilación: Discordancia en la cadena de herramientas o SDK
+### Error de compilación: falta de coincidencia de la cadena de herramientas o del SDK
 
 La compilación de la aplicación macOS espera el último SDK de macOS y la cadena de herramientas Swift 6.2.
 
@@ -90,7 +90,7 @@ Si la aplicación falla cuando intentas permitir el acceso al **Reconocimiento d
    tccutil reset All ai.openclaw.mac.debug
    ```
 
-2. Si eso falla, cambia el `BUNDLE_ID` temporalmente en [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) para forzar una "hoja en blanco" por parte de macOS.
+2. Si eso falla, cambia el `BUNDLE_ID` temporalmente en [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) para forzar una "limpieza" desde macOS.
 
 ### Gateway "Iniciando..." indefinidamente
 
@@ -105,3 +105,8 @@ lsof -nP -iTCP:18789 -sTCP:LISTEN
 ```
 
 Si una ejecución manual está reteniendo el puerto, detén ese proceso (Ctrl+C). Como último recurso, mata el PID que encontraste arriba.
+
+## Relacionado
+
+- [aplicación macOS](/es/platforms/macos)
+- [Resumen de instalación](/es/install)

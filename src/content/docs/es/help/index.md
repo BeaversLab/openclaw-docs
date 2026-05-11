@@ -1,28 +1,38 @@
 ---
 summary: "Centro de ayuda: soluciones comunes, estado de la instalación y dónde buscar cuando algo falla"
 read_when:
-  - You’re new and want the “what do I click/run” guide
+  - You are new and want a "what do I click/run" guide
   - Something broke and you want the fastest path to a fix
 title: "Ayuda"
 ---
 
-# Ayuda
+Camino rápido para "desatascarse" de los problemas más comunes:
 
-Si quieres un flujo rápido para "desbloquearte", empieza aquí:
+- [Solución de problemas](/es/help/troubleshooting) — árbol de decisiones basado en síntomas
+- [Depuración](/es/help/debugging) — modo de observación, flujos sin procesar, perfil de desarrollo
+- [Instalar sanity](/es/install/node#troubleshooting) — comprobaciones de Node / npm / PATH
+- [Solución de problemas de la puerta de enlace](/es/gateway/troubleshooting) — problemas específicos de la puerta de enlace
+- [Doctor](/es/gateway/doctor) — reparación automática + paquete de diagnóstico
 
-- **Solución de problemas:** [Empieza aquí](/es/help/troubleshooting)
-- **Instalar sanity (Node/npm/PATH):** [Instalar](/es/install/node#troubleshooting)
-- **Problemas de puerta de enlace:** [Solución de problemas de puerta de enlace](/es/gateway/troubleshooting)
-- **Registros:** [Registro](/es/logging) y [Registro de puerta de enlace](/es/gateway/logging)
-- **Reparaciones:** [Doctor](/es/gateway/doctor)
+## Preguntas frecuentes
 
-Si buscas respuestas a preguntas conceptuales (no "algo se rompió"):
+- [Preguntas frecuentes](/es/help/faq) — conceptos del día a día y preguntas operativas
+- [Preguntas frecuentes de primera ejecución](/es/help/faq-first-run) — instalación, incorporación, autenticación, suscripciones, fallos tempranos
+- [Preguntas frecuentes sobre modelos](/es/help/faq-models) — selección de modelos, conmutación por error, perfiles de autenticación
 
-- [Preguntas frecuentes (conceptos)](/es/help/faq)
+## Diagnósticos
 
-## Entorno y depuración
+- [Variables de entorno](/es/help/environment) — dónde carga OpenClaw las variables de entorno y precedencia
+- [Marcadores de diagnóstico](/es/diagnostics/flags) — diagnósticos en tiempo de ejecución y modos detallados
+- [Fallo de Node + tsx](/es/debug/node-issue) — escenarios específicos de fallos en tiempo de ejecución de Node / tsx
 
-- **Variables de entorno:** [Dónde OpenClaw carga las variables de entorno y precedencia](/es/help/environment)
-- **Depuración:** [Modo observador, flujos sin procesar y perfil de desarrollo](/es/help/debugging)
-- Pruebas:\*\* [Suites de pruebas, pruebas en vivo y ejecutores Docker](/es/help/testing)
-- **Scripts:** [Scripts auxiliares del repositorio](/es/help/scripts)
+## Pruebas
+
+- [Pruebas](/es/help/testing) — suites de pruebas y ejecutores Docker
+- [Pruebas en vivo](/es/help/testing-live) — pruebas de humo del proveedor y de la CLI que tocan la red
+
+## Comunidad y meta
+
+- [Historia de OpenClaw](/es/start/lore) — la historia
+- [Hubs de documentación](/es/start/hubs) — cómo se organiza esta documentación
+- [Directorio de documentos](/es/start/docs-directory) — mapa completo de archivos

@@ -71,3 +71,9 @@ openclaw browser open https://x.com --browser-profile openclaw --target host
 ```
 
 O deshabilita el sandboxing para el agente que publica actualizaciones.
+
+## Relacionado
+
+- [Navegador](/es/tools/browser)
+- [Solución de problemas del navegador en Linux](/es/tools/browser-linux-troubleshooting)
+- [Solución de problemas del navegador en WSL2](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

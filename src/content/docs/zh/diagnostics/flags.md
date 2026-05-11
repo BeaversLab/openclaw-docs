@@ -6,9 +6,7 @@ read_when:
 title: "诊断标志"
 ---
 
-# 诊断标志
-
-诊断标志允许您启用针对特定目标的调试日志，而无需到处开启详细日志记录。标志是可选项，除非子系统检查它们，否则不会生效。
+诊断标志允许您启用有针对性的调试日志，而无需到处开启详细日志记录。标志是可选加入的，除非子系统检查它们，否则没有任何效果。
 
 ## 工作原理
 
@@ -38,7 +36,7 @@ title: "诊断标志"
 }
 ```
 
-更改标志后请重启网关。
+更改标志后重启网关。
 
 ## 环境变量覆盖（一次性）
 
@@ -52,15 +50,15 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 OPENCLAW_DIAGNOSTICS=0
 ```
 
-## 日志位置
+## 日志去向
 
-标志会将日志输出到标准诊断日志文件中。默认情况下：
+标志将日志输出到标准诊断日志文件。默认情况下：
 
 ```
 /tmp/openclaw/openclaw-YYYY-MM-DD.log
 ```
 
-如果您设置了 `logging.file`，则改为使用该路径。日志采用 JSONL 格式（每行一个 JSON 对象）。根据 `logging.redactSensitive` 进行的编辑仍会生效。
+如果您设置了 `logging.file`，请改用该路径。日志是 JSONL 格式（每行一个 JSON 对象）。根据 `logging.redactSensitive`，编辑仍然适用。
 
 ## 提取日志
 
@@ -70,13 +68,13 @@ OPENCLAW_DIAGNOSTICS=0
 ls -t /tmp/openclaw/openclaw-*.log | head -n 1
 ```
 
-筛选 Telegram HTTP 诊断信息：
+筛选 Telegram HTTP 诊断：
 
 ```bash
 rg "telegram http error" /tmp/openclaw/openclaw-*.log
 ```
 
-或者在重现问题时跟踪日志：
+或在重现时实时跟踪：
 
 ```bash
 tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
@@ -86,6 +84,11 @@ tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
 
 ## 注意事项
 
-- 如果 `logging.level` 设置得高于 `warn`，这些日志可能会被抑制。默认的 `info` 即可。
-- 保持标志启用是安全的；它们仅影响特定子系统的日志量。
-- 使用 [/logging](/zh/logging) 来更改日志目标、级别和编辑。
+- 如果 `logging.level` 设置得高于 `warn`，这些日志可能会被抑制。默认的 `info` 是没问题的。
+- 保持启用标志是安全的；它们仅影响特定子系统的日志量。
+- 使用 [/logging](/zh/logging) 更改日志目标、级别和编辑。
+
+## 相关
+
+- [Gateway 诊断](/zh/gateway/diagnostics)
+- [Gateway 故障排除](/zh/gateway/troubleshooting)

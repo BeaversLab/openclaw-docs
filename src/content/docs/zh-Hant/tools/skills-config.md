@@ -3,13 +3,11 @@ summary: "Skills 配置結構描述與範例"
 read_when:
   - Adding or modifying skills config
   - Adjusting bundled allowlist or install behavior
-title: "Skills 配置"
+title: "Skills config"
 ---
 
-# Skills Config
-
-大多數 Skills 載入器/安裝設定位於 `skills` 中的
-`~/.openclaw/openclaw.json`。特定 Agent 的 Skills 可見性位於
+大多數技能載入器/安裝配置位於 `skills` 中的
+`~/.openclaw/openclaw.json`。特定於代理的技能可見性位於
 `agents.defaults.skills` 和 `agents.list[].skills`。
 
 ```json5
@@ -40,22 +38,22 @@ title: "Skills 配置"
 }
 ```
 
-對於內建的圖片產生/編輯，建議優先使用 `agents.defaults.imageGenerationModel`
-加上核心 `image_generate` 工具。`skills.entries.*` 僅適用於自訂或
-第三方的 Skills 工作流程。
+對於內建影像生成/編輯，建議優先使用 `agents.defaults.imageGenerationModel`
+搭配核心 `image_generate` 工具。`skills.entries.*` 僅適用於自訂或
+第三方技能工作流程。
 
-如果您選擇了特定的圖片提供者/模型，也請配置該提供者的
+如果您選擇特定的影像供應商/模型，請同時設定該供應商的
 驗證/API 金鑰。典型範例：`GEMINI_API_KEY` 或 `GOOGLE_API_KEY` 用於
-`google/*`，`OPENAI_API_KEY` 用於 `openai/*`，以及 `FAL_KEY` 用於 `fal/*`。
+`google/*`、`OPENAI_API_KEY` 用於 `openai/*`，以及 `FAL_KEY` 用於 `fal/*`。
 
 範例：
 
 - 原生 Nano Banana Pro 風格設定：`agents.defaults.imageGenerationModel.primary: "google/gemini-3-pro-image-preview"`
 - 原生 fal 設定：`agents.defaults.imageGenerationModel.primary: "fal/fal-ai/flux/dev"`
 
-## Agent Skills 允許清單
+## 代理技能允許清單
 
-當您想要使用相同的機器/工作區 Skills 根目錄，但每個 Agent 有不同的可見 Skills 集合時，請使用 Agent 設定。
+當您希望使用相同的機器/工作區技能根目錄，但每個代理具有不同的可見技能集時，請使用代理配置。
 
 ```json5
 {
@@ -74,58 +72,65 @@ title: "Skills 配置"
 
 規則：
 
-- `agents.defaults.skills`：省略
-  `agents.list[].skills` 的 Agents 之共用基準允許清單。
-- 省略 `agents.defaults.skills` 可讓 Skills 預設不受限制。
-- `agents.list[].skills`：該 Agent 的明確最終 Skills 集；它不會
+- `agents.defaults.skills`：針對省略
+  `agents.list[].skills` 之代理的共享基準允許清單。
+- 省略 `agents.defaults.skills` 以預設讓技能不受限制。
+- `agents.list[].skills`：該代理的明確最終技能集；它不會
   與預設值合併。
-- `agents.list[].skills: []`：對該 Agent 不顯示任何 Skills。
+- `agents.list[].skills: []`：不對該代理公開任何技能。
 
 ## 欄位
 
-- 內建 Skills 根目錄總是包含 `~/.openclaw/skills`、`~/.agents/skills`、
+- 內建技能根目錄總是包含 `~/.openclaw/skills`、`~/.agents/skills`、
   `<workspace>/.agents/skills` 和 `<workspace>/skills`。
-- `allowBundled`：僅適用於 **內建 (bundled)** Skills 的選用允許清單。設定後，
-  只有清單中的內建 Skills 符合資格（受控、Agent 和工作區 Skills 不受影響）。
-- `load.extraDirs`：要掃描的其他 Skills 目錄（優先順序最低）。
-- `load.watch`：監看 Skills 資料夾並重新整理 Skills 快照（預設：true）。
-- `load.watchDebounceMs`：技能監視器事件的防抖時間，以毫秒為單位（預設值：250）。
-- `install.preferBrew`：如果可用，優先使用 brew 安裝程式（預設值：true）。
-- `install.nodeManager`：node 安裝程式偏好（`npm` | `pnpm` | `yarn` | `bun`，預設值：npm）。
-  這僅影響 **技能安裝**；Gateway 執行時仍應為 Node
-  （不建議在 WhatsApp/Telegram 上使用 Bun）。
-  - `openclaw setup --node-manager` 較為狹窄，目前接受 `npm`、
+- `allowBundled`：僅針對 **隨附** 技能的可選允許清單。設定後，清單中
+  的隨附技能才符合資格（受管理、代理和工作區技能不受影響）。
+- `load.extraDirs`：要掃描的其他技能目錄（優先順序最低）。
+- `load.watch`：監看技能資料夾並重新整理技能快照（預設：true）。
+- `load.watchDebounceMs`：技能監看者事件的防動時間，以毫秒為單位（預設：250）。
+- `install.preferBrew`：盡可能使用 brew 安裝程式（預設值：true）。
+- `install.nodeManager`：node 安裝程式偏好設定（`npm` | `pnpm` | `yarn` | `bun`，預設值：npm）。
+  這僅影響 **skill 安裝**；Gateway 執行時仍應為 Node
+  （不建議將 Bun 用於 WhatsApp/Telegram）。
+  - `openclaw setup --node-manager` 較嚴格，目前接受 `npm`、
     `pnpm` 或 `bun`。如果您
-    想要使用 Yarn 支援的技能安裝，請手動設定 `skills.install.nodeManager: "yarn"`。
-- `entries.<skillKey>`：針對個別技能的覆寫。
-- `agents.defaults.skills`：可選的預設技能允許清單，由省略
+    想要使用 Yarn 支援的 skill 安裝，請手動設定 `skills.install.nodeManager: "yarn"`。
+- `entries.<skillKey>`：各個 skill 的覆寫設定。
+- `agents.defaults.skills`：選用的預設 skill 允許清單，由省略
   `agents.list[].skills` 的代理程式繼承。
-- `agents.list[].skills`：可選的針對個別代理程式的最終技能允許清單；明確的
-  清單會取代繼承的預設值，而不是合併。
+- `agents.list[].skills`：選用的各個代理程式最終 skill 允許清單；明確
+  指定的清單會取代繼承的預設值，而不是合併。
 
-個別技能欄位：
+各個 skill 的欄位：
 
-- `enabled`：設定 `false` 以停用技能，即使該技能已捆綁/安裝。
+- `enabled`：設定 `false` 以停用 skill，即使其已打包/安裝。
 - `env`：為代理程式執行注入的環境變數（僅在尚未設定時）。
-- `apiKey`：針對宣告主要環境變數之技能的可選便利功能。
+- `apiKey`：適用於宣告主要環境變數之 skill 的選用便利功能。
   支援純文字字串或 SecretRef 物件（`{ source, provider, id }`）。
 
 ## 備註
 
-- `entries` 下的鍵預設對應至技能名稱。如果技能定義了
-  `metadata.openclaw.skillKey`，請改用該鍵。
+- `entries` 下的索引鍵預設對應至 skill 名稱。如果 skill 定義
+  了 `metadata.openclaw.skillKey`，請改用該索引鍵。
 - 載入優先順序為 `<workspace>/skills` → `<workspace>/.agents/skills` →
-  `~/.agents/skills` → `~/.openclaw/skills` → 捆綁技能 →
+  `~/.agents/skills` → `~/.openclaw/skills` → bundled skills →
   `skills.load.extraDirs`。
-- 當啟用監視器時，技能的變更會在下一輪代理程式回合中生效。
+- 當監看器已啟用時，skill 的變更會在下一輪代理程式回合時被套用。
 
-### 沙箱化技能 + 環境變數
+### 沙盒化 skills + 環境變數
 
-當會話被**沙盒化**時，技能程序會在設定的沙盒後端內執行。沙盒**不會**繼承主機的 `process.env`。
+當工作階段處於 **沙盒化** 狀態時，skill 程序會在設定的
+沙盒後端內執行。沙盒 **不會** 繼承主機的 `process.env`。
 
 使用以下其中之一：
 
-- 針對 Docker 後端使用 `agents.defaults.sandbox.docker.env`（或針對各代理使用 `agents.list[].sandbox.docker.env`）
-- 將環境變數融入您的自訂沙盒映像檔或遠端沙盒環境中
+- 用於 Docker 後端的 `agents.defaults.sandbox.docker.env`（或各個代理程式的 `agents.list[].sandbox.docker.env`）
+- 將環境變數內建到您的自訂沙盒映像檔或遠端沙盒環境中
 
 全域 `env` 和 `skills.entries.<skill>.env/apiKey` 僅適用於 **host** 執行。
+
+## 相關
+
+- [技能](/zh-Hant/tools/skills)
+- [建立技能](/zh-Hant/tools/creating-skills)
+- [斜線指令](/zh-Hant/tools/slash-commands)

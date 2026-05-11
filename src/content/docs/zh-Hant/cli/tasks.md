@@ -6,11 +6,10 @@ read_when:
 title: "`openclaw tasks`"
 ---
 
-# `openclaw tasks`
+檢查持久的背景工作和任務流程狀態。如果不指定子命令，
+`openclaw tasks` 等同於 `openclaw tasks list`。
 
-檢查持久背景工作和工作流程狀態。若未指定子指令，`openclaw tasks` 等同於 `openclaw tasks list`。
-
-請參閱 [背景工作](/zh-Hant/automation/tasks) 以了解生命週期和傳遞模型。
+請參閱[背景工作](/zh-Hant/automation/tasks)以了解生命週期和傳遞模型。
 
 ## 用法
 
@@ -30,13 +29,13 @@ openclaw tasks flow show <lookup>
 openclaw tasks flow cancel <lookup>
 ```
 
-## 根選項
+## 根目錄選項
 
 - `--json`：輸出 JSON。
 - `--runtime <name>`：依種類篩選：`subagent`、`acp`、`cron` 或 `cli`。
 - `--status <name>`：依狀態篩選：`queued`、`running`、`succeeded`、`failed`、`timed_out`、`cancelled` 或 `lost`。
 
-## 子指令
+## 子命令
 
 ### `list`
 
@@ -44,7 +43,7 @@ openclaw tasks flow cancel <lookup>
 openclaw tasks list [--runtime <name>] [--status <name>] [--json]
 ```
 
-列出已追蹤的背景工作，最新的優先。
+列出追蹤的背景工作，最新的在前。
 
 ### `show`
 
@@ -76,7 +75,7 @@ openclaw tasks cancel <lookup>
 openclaw tasks audit [--severity <warn|error>] [--code <name>] [--limit <n>] [--json]
 ```
 
-顯示過時、遺失、傳遞失敗或其他不一致的工作及工作流程記錄。
+顯示過期、遺失、傳遞失敗或其他不一致的工作和任務流程記錄。保留至 `cleanupAfter` 的遺失工作為警告；過期或未加戳記的遺失工作為錯誤。
 
 ### `maintenance`
 
@@ -84,7 +83,11 @@ openclaw tasks audit [--severity <warn|error>] [--code <name>] [--limit <n>] [--
 openclaw tasks maintenance [--apply] [--json]
 ```
 
-預覽或執行工作和工作流程的調解、清理標記與修剪。
+預覽或套用工作和任務流程的對帳、清理戳記和修剪。
+對於 cron 工作，對帳會在將舊的使用中工作標記為
+`lost` 之前使用持久的執行日誌/工作狀態，因此完成的 cron 執行不會僅因為
+記憶體中的 Gateway 執行時間狀態已消失而成為錯誤的稽核錯誤。離線 CLI 稽核
+對於 Gateway 的處理程序本機 cron 使用中工作集並不具權威性。
 
 ### `flow`
 
@@ -94,4 +97,9 @@ openclaw tasks flow show <lookup> [--json]
 openclaw tasks flow cancel <lookup>
 ```
 
-檢查或取消工作帳本下的持久工作流程狀態。
+檢查或取消工作帳本下的持久任務流程狀態。
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)
+- [背景工作](/zh-Hant/automation/tasks)

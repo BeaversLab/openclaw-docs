@@ -1,6 +1,6 @@
 ---
-title: "威胁模型 (MITRE ATLAS)"
 summary: "映射到 MITRE ATLAS 框架的 OpenClaw 威胁模型"
+title: "威胁模型 (MITRE ATLAS)"
 read_when:
   - Reviewing security posture or threat scenarios
   - Working on security features or audit responses
@@ -10,19 +10,19 @@ read_when:
 
 ## MITRE ATLAS 框架
 
-**Version:** 1.0-draft
-**Last Updated:** 2026-02-04
-**Methodology:** MITRE ATLAS + 数据流图
-**Framework:** [MITRE ATLAS](https://atlas.mitre.org/) (针对人工智能系统的对抗性威胁全景)
+**版本：** 1.0-draft
+**最后更新：** 2026-02-04
+**方法论：** MITRE ATLAS + 数据流图
+**框架：** [MITRE ATLAS](https://atlas.mitre.org/) (针对 AI 系统的对抗性威胁全景)
 
 ### 框架归属
 
-此威胁模型基于 [MITRE ATLAS](https://atlas.mitre.org/) 构建，这是记录 AI/ML 系统对抗性威胁的行业标准框架。ATLAS 由 [MITRE](https://www.mitre.org/) 与 AI 安全社区协作维护。
+本威胁模型基于 [MITRE ATLAS](https://atlas.mitre.org/) 构建，它是记录针对 AI/ML 系统的对抗性威胁的行业标准框架。ATLAS 由 [MITRE](https://www.mitre.org/) 与 AI 安全社区协作维护。
 
 **关键 ATLAS 资源：**
 
 - [ATLAS 技术](https://atlas.mitre.org/techniques/)
-- [ATLAS 战术](https://atlas.mitre.org/tactics/)
+- [ATLAS 策略](https://atlas.mitre.org/tactics/)
 - [ATLAS 案例研究](https://atlas.mitre.org/studies/)
 - [ATLAS GitHub](https://github.com/mitre-atlas/atlas-data)
 - [为 ATLAS 做贡献](https://atlas.mitre.org/resources/contribute)
@@ -606,3 +606,8 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 ---
 
 _此威胁模型是一份活文档。请将安全问题报告至 security@openclaw.ai_
+
+## 相关
+
+- [形式化验证](/zh/security/formal-verification)
+- [为威胁模型做贡献](/zh/security/CONTRIBUTING-THREAT-MODEL)

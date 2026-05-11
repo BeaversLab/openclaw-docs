@@ -1,35 +1,33 @@
 ---
+summary: "Administrar los tiempos de ejecución del espacio aislado e inspeccionar la política efectiva del espacio aislado"
 title: CLI de Sandbox
-summary: "Administra los tiempos de ejecución del sandbox e inspecciona la política efectiva del sandbox"
 read_when: "Estás administrando los tiempos de ejecución del sandbox o depurando el comportamiento del sandbox/herramientas de política."
 status: active
 ---
 
-# CLI de Sandbox
-
-Administra los tiempos de ejecución del sandbox para la ejecución aislada del agente.
+Administra los tiempos de ejecución del espacio aislado para la ejecución aislada de agentes.
 
 ## Resumen
 
-OpenClaw puede ejecutar agentes en tiempos de ejecución de sandbox aislados por seguridad. Los comandos `sandbox` le ayudan a inspeccionar y recrear esos tiempos de ejecución después de actualizaciones o cambios de configuración.
+OpenClaw puede ejecutar agentes en tiempos de ejecución de espacios aislados (sandbox) aislados por seguridad. Los comandos `sandbox` le ayudan a inspeccionar y recrear esos tiempos de ejecución después de actualizaciones o cambios de configuración.
 
-Hoy en día, eso generalmente significa:
+Hoy eso generalmente significa:
 
-- Contenedores de sandbox de Docker
-- Tiempos de ejecución de sandbox SSH cuando `agents.defaults.sandbox.backend = "ssh"`
-- Tiempos de ejecución de sandbox OpenShell cuando `agents.defaults.sandbox.backend = "openshell"`
+- Contenedores de espacio aislado de Docker
+- Tiempos de ejecución de espacio aislado SSH cuando `agents.defaults.sandbox.backend = "ssh"`
+- Tiempos de ejecución de espacio aislado OpenShell cuando `agents.defaults.sandbox.backend = "openshell"`
 
 Para `ssh` y OpenShell `remote`, recrear es más importante que con Docker:
 
-- el espacio de trabajo remoto es canónico después de la semilla inicial
-- `openclaw sandbox recreate` elimina ese espacio de trabajo remoto canónico para el ámbito seleccionado
-- el siguiente uso lo siembra nuevamente desde el espacio de trabajo local actual
+- el espacio de trabajo remoto es canónico después de la inicialización inicial
+- `openclaw sandbox recreate` elimina ese espacio de trabajo remoto canónico para el alcance seleccionado
+- el siguiente uso lo inicializa de nuevo desde el espacio de trabajo local actual
 
 ## Comandos
 
 ### `openclaw sandbox explain`
 
-Inspeccione el **modo/ámbito/acceso al espacio de trabajo** efectivo del sandbox, la política de herramientas del sandbox y las puertas elevadas (con rutas de clave de configuración de solución).
+Inspecciona el modo/alcance/acceso al espacio de trabajo del espacio aislado **efectivo**, la política de herramientas del espacio aislado y las puertas elevadas (con rutas de clave de configuración de solución).
 
 ```bash
 openclaw sandbox explain
@@ -40,7 +38,7 @@ openclaw sandbox explain --json
 
 ### `openclaw sandbox list`
 
-Enumere todos los tiempos de ejecución del sandbox con su estado y configuración.
+Enumera todos los tiempos de ejecución del espacio aislado con su estado y configuración.
 
 ```bash
 openclaw sandbox list
@@ -53,13 +51,13 @@ openclaw sandbox list --json     # JSON output
 - Nombre y estado del tiempo de ejecución
 - Backend (`docker`, `openshell`, etc.)
 - Etiqueta de configuración y si coincide con la configuración actual
-- Antigüedad (tiempo transcurrido desde su creación)
+- Antigüedad (tiempo desde la creación)
 - Tiempo de inactividad (tiempo desde el último uso)
 - Sesión/agente asociado
 
 ### `openclaw sandbox recreate`
 
-Elimine los tiempos de ejecución del sandbox para forzar la recreación con la configuración actualizada.
+Elimina los tiempos de ejecución del espacio aislado para forzar su recreación con la configuración actualizada.
 
 ```bash
 openclaw sandbox recreate --all                # Recreate all containers
@@ -71,13 +69,13 @@ openclaw sandbox recreate --all --force        # Skip confirmation
 
 **Opciones:**
 
-- `--all`: Recrear todos los contenedores del sandbox
+- `--all`: Recrear todos los contenedores del espacio aislado
 - `--session <key>`: Recrear contenedor para una sesión específica
 - `--agent <id>`: Recrear contenedores para un agente específico
 - `--browser`: Solo recrear contenedores del navegador
 - `--force`: Omitir el mensaje de confirmación
 
-**Importante:** Los tiempos de ejecución se recrean automáticamente cuando se usa el agente la próxima vez.
+<Note>Los tiempos de ejecución se recrean automáticamente cuando el agente se usa la próxima vez.</Note>
 
 ## Casos de uso
 
@@ -95,7 +93,7 @@ docker tag openclaw-sandbox:latest openclaw-sandbox:bookworm-slim
 openclaw sandbox recreate --all
 ```
 
-### Después de cambiar la configuración del sandbox
+### Después de cambiar la configuración del espacio aislado
 
 ```bash
 # Edit config: agents.defaults.sandbox.* (or agents.list[].sandbox.*)
@@ -118,7 +116,7 @@ openclaw sandbox recreate --all
 ```
 
 Para el backend `ssh` principal, recreate elimina la raíz del espacio de trabajo remoto por ámbito
-en el destino SSH. La siguiente ejecución la vuelve a inicializar desde el espacio de trabajo local.
+en el destino SSH. La siguiente ejecución lo vuelve a inicializar desde el espacio de trabajo local.
 
 ### Después de cambiar el origen, la política o el modo de OpenShell
 
@@ -150,22 +148,21 @@ openclaw sandbox recreate --agent family
 openclaw sandbox recreate --agent alfred
 ```
 
-## ¿Por qué es necesario?
+## Por qué es necesario
 
-**Problema:** Cuando actualizas la configuración del entorno de ejecución:
+Cuando actualiza la configuración del sandbox:
 
-- Los entornos de ejecución existentes siguen ejecutándose con la configuración anterior
-- Los entornos de ejecución solo se eliminan después de 24 h de inactividad
-- Los agentes utilizados regularmente mantienen los entornos de ejecución antiguos indefinidamente
+- Los entornos de ejecución existentes continúan ejecutándose con la configuración antigua.
+- Los entornos de ejecución solo se eliminan después de 24 horas de inactividad.
+- Los agentes utilizados regularmente mantienen los entornos de ejecución antiguos indefinidamente.
 
-**Solución:** Usa `openclaw sandbox recreate` para forzar la eliminación de los entornos de ejecución antiguos. Se volverán a crear automáticamente con la configuración actual cuando sean necesarios la próxima vez.
+Use `openclaw sandbox recreate` para forzar la eliminación de los entornos de ejecución antiguos. Se recrean automáticamente con la configuración actual cuando se necesiten nuevamente.
 
-Consejo: prefiere `openclaw sandbox recreate` sobre la limpieza manual específica del backend.
-Utiliza el registro de entornos de ejecución del Gateway y evita discordancias cuando cambian las claves de ámbito/sesión.
+<Tip>Prefiera `openclaw sandbox recreate` sobre la limpieza manual específica del backend. Utiliza el registro de tiempo de ejecución de Gateway y evita discrepancias cuando cambian las claves de ámbito o sesión.</Tip>
 
 ## Configuración
 
-La configuración del entorno de ejecución reside en `~/.openclaw/openclaw.json` bajo `agents.defaults.sandbox` (las anulaciones por agente van en `agents.list[].sandbox`):
+La configuración del sandbox reside en `~/.openclaw/openclaw.json` bajo `agents.defaults.sandbox` (las anulaciones por agente van en `agents.list[].sandbox`):
 
 ```jsonc
 {
@@ -190,8 +187,9 @@ La configuración del entorno de ejecución reside en `~/.openclaw/openclaw.json
 }
 ```
 
-## Véase también
+## Relacionado
 
-- [Documentación del entorno de ejecución](/es/gateway/sandboxing)
-- [Configuración del agente](/es/concepts/agent-workspace)
-- [Comando Doctor](/es/gateway/doctor) - Comprobar la configuración del entorno de ejecución
+- [Referencia de la CLI](/es/cli)
+- [Aislamiento (Sandboxing)](/es/gateway/sandboxing)
+- [Espacio de trabajo del agente](/es/concepts/agent-workspace)
+- [Doctor](/es/gateway/doctor): verifica la configuración del sandbox.

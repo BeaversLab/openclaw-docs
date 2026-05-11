@@ -6,35 +6,60 @@ read_when:
 title: "壓縮"
 ---
 
-# 壓縮
+每個模型都有一個上下文視窗：即其可以處理的最大 token 數量。當對話接近該限制時，OpenClaw 會將較舊的訊息**壓縮**成摘要，以便聊天能夠繼續。
 
-每個模型都有一個上下文視窗——即其能處理的最大 token 數量。
-當對話接近該限制時，OpenClaw 會將較舊的訊息**壓縮**
-為摘要，以便聊天能夠繼續進行。
+## 運作方式
 
-## 運作原理
-
-1. 較舊的對話輪次會被總結為一個壓縮條目。
-2. 摘要會儲存在會話紀錄檔中。
+1. 較舊的對話輪次會被摘要成一個壓縮條目。
+2. 摘要會儲存在對話記錄中。
 3. 最近的訊息會保持完整。
 
-當 OpenClaw 將歷史記錄分割為壓縮區塊時，它會將助理工具呼叫與其對應的 `toolResult` 項目保持配對。如果分割點落在工具區塊內，OpenClaw 會移動邊界，使該對保持在一起，並保留當前未摘要的尾部。
+當 OpenClaw 將歷史記錄分割成壓縮區塊時，它會將助理的工具呼叫與其對應的 `toolResult` 條目配對。如果分割點落在工具區塊內，OpenClaw 會移動邊界，使這一對保持在一起，並保留目前未摘要的尾部。
 
-完整的對話歷史記錄會保留在磁碟上。壓縮只會改變模型在下一輪看到的內容。
+完整的對話歷史記錄會保留在磁碟上。壓縮只會改變模型在下一輪所看到的內容。
 
 ## 自動壓縮
 
-自動壓縮預設為開啟。當工作階段接近上下文限制，或模型返回上下文溢出錯誤時（在這種情況下，OpenClaw 會進行壓縮並重試），它就會執行。典型的溢出特徵包括 `request_too_large`、`context length exceeded`、`input exceeds the maximum
-number of tokens`, `input token count exceeds the maximum number of input
-tokens`, `input is too long for the model`, and `ollama error: context length
-exceeded`。
+預設會開啟自動壓縮。當對話接近上下文限制，或當模型返回上下文溢位錯誤時（在這種情況下，OpenClaw 會進行壓縮並重試），它就會執行。
+
+您將會看到：
+
+- `🧹 Auto-compaction complete` 在詳細模式下。
+- `/status` 顯示 `🧹 Compactions: <count>`。
 
 <Info>在壓縮之前，OpenClaw 會自動提醒代理將重要筆記儲存到 [memory](/zh-Hant/concepts/memory) 檔案中。這可以防止上下文遺失。</Info>
 
-使用您的 `openclaw.json` 中的 `agents.defaults.compaction` 設定來設定壓縮行為（模式、目標 token 等）。
-壓縮摘要預設會保留不透明識別碼 (`identifierPolicy: "strict"`)。您可以使用 `identifierPolicy: "off"` 覆蓋此設定，或使用 `identifierPolicy: "custom"` 和 `identifierInstructions` 提供自訂文字。
+<AccordionGroup>
+  <Accordion title="可辨識的溢位特徵">
+    OpenClaw 會根據這些提供者的錯誤模式偵測上下文溢位：
 
-您可以透過 `agents.defaults.compaction.model` 指定不同的模型來進行壓縮摘要。當您的主要模型是本機或小型模型，並且希望由能力更強的模型產生壓縮摘要時，這非常有用。此覆蓋接受任何 `provider/model-id` 字串：
+    - `request_too_large`
+    - `context length exceeded`
+    - `input exceeds the maximum number of tokens`
+    - `input token count exceeds the maximum number of input tokens`
+    - `input is too long for the model`
+    - `ollama error: context length exceeded`
+
+  </Accordion>
+</AccordionGroup>
+
+## 手動壓縮
+
+在任何聊天中輸入 `/compact` 以強制進行壓縮。新增指示以引導摘要：
+
+```
+/compact Focus on the API design decisions
+```
+
+當設定 `agents.defaults.compaction.keepRecentTokens` 時，手動壓縮會遵循該 Pi 切割點，並在重建的上下文中保留最近的尾部。如果沒有明確的保留預算，手動壓縮會充當硬檢查點，並僅從新摘要繼續。
+
+## 組態
+
+在您的 `openclaw.json` 中的 `agents.defaults.compaction` 下配置壓縮。以下列出了最常見的選項；如需完整參考，請參閱[會話管理深度解析](/zh-Hant/reference/session-management-compaction)。
+
+### 使用不同的模型
+
+預設情況下，壓縮使用代理程式的主要模型。設定 `agents.defaults.compaction.model` 可將摘要處理委派給能力更強或更專門的模型。此覆寫接受任何 `provider/model-id` 字串：
 
 ```json
 {
@@ -48,7 +73,7 @@ exceeded`。
 }
 ```
 
-這也適用於本機模型，例如專用於摘要的第二個 Ollama 模型或微調過的壓縮專家模型：
+這也適用於本地模型，例如專門用於摘要處理的第二個 Ollama 模型：
 
 ```json
 {
@@ -62,66 +87,28 @@ exceeded`。
 }
 ```
 
-未設定時，壓縮會使用代理的主要模型。
+未設定時，壓縮使用代理程式的主要模型。
 
-## 可插拔的壓縮提供者
+### 識別碼保留
 
-外掛程式可以透過外掛程式 API 上的 `registerCompactionProvider()` 註冊自訂壓縮提供者。當註冊並配置了提供者時，OpenClaw 會將摘要工作委派給它，而不是使用內建的 LLM 管線。
+壓縮摘要預設會保留不透明識別碼 (`identifierPolicy: "strict"`)。使用 `identifierPolicy: "off"` 覆寫以停用，或使用 `identifierPolicy: "custom"` 加上 `identifierInstructions` 進行自訂引導。
 
-若要使用已註冊的提供者，請在您的配置中設定提供者 ID：
+### 動態文字紀錄位元組守衛
 
-```json
-{
-  "agents": {
-    "defaults": {
-      "compaction": {
-        "provider": "my-provider"
-      }
-    }
-  }
-}
-```
+當設定 `agents.defaults.compaction.maxActiveTranscriptBytes` 時，如果動態 JSONL 達到該大小，OpenClaw 會在執行前觸發正常的本地壓縮。這對於長時間執行的會話非常有用，因為在這種情況下，提供者端的內容管理可能會保持模型內容的健康，而本地文字紀錄會持續增長。它不會分割原始 JSONL 位元組；它會要求正常的壓縮管線建立語意摘要。
 
-設定 `provider` 會自動強制 `mode: "safeguard"`。提供者會收到與內建路徑相同的壓縮指令和識別符保留原則，而 OpenClaw 仍會在提供者輸出之後保留最近輪次和分割輪次的後綴上下文。如果提供者失敗或傳回空結果，OpenClaw 將會回退到內建的 LLM 摘要。
+<Warning>位元組守衛需要 `truncateAfterCompaction: true`。如果沒有文字紀錄輪替，動態檔案將不會縮小，且守衛將保持不活動狀態。</Warning>
 
-## 自動壓縮（預設開啟）
+### 後續文字紀錄
 
-當工作階段接近或超過模型的上下文視窗時，OpenClaw 會觸發自動壓縮，並可能使用壓縮後的上下文重試原始請求。
+啟用 `agents.defaults.compaction.truncateAfterCompaction` 後，OpenClaw 不會就地重寫現有的文字紀錄。它會根據壓縮摘要、保留的狀態和未摘要的尾部建立一個新的動態後續文字紀錄，然後將先前的 JSONL 保留為封存的檢查點來源。
+後續文字紀錄也會捨棄在短暫重試視窗內到達的重複長使用者輪次，因此通道重試風暴不會在壓縮後被帶入下一個動態文字紀錄中。
 
-您會看到：
+壓縮前的檢查點僅在其保持在 OpenClaw 的檢查點大小上限以下時才會保留；過大的動態文字紀錄仍會進行壓縮，但 OpenClaw 會跳過大型除錯快照，而不是讓磁碟使用量加倍。
 
-- 在詳細模式下的 `🧹 Auto-compaction complete`
-- 顯示 `🧹 Compactions: <count>` 的 `/status`
+### 壓縮通知
 
-在壓縮之前，OpenClaw 可以執行 **靜默記憶體清除 (silent memory flush)** 輪次，將持久的筆記儲存到磁碟。請參閱 [記憶體 (Memory)](/zh-Hant/concepts/memory) 以了解詳細資訊和配置。
-
-## 手動壓縮
-
-在任何聊天中輸入 `/compact` 以強制執行壓縮。加入指令以引導摘要：
-
-```
-/compact Focus on the API design decisions
-```
-
-## 使用不同的模型
-
-預設情況下，壓縮使用您代理程式的主要模型。您可以使用能力更強的模型來獲得更好的摘要：
-
-```json5
-{
-  agents: {
-    defaults: {
-      compaction: {
-        model: "openrouter/anthropic/claude-sonnet-4-6",
-      },
-    },
-  },
-}
-```
-
-## 壓縮通知
-
-預設情況下，壓縮會靜默執行。若要顯示壓縮開始和完成時的簡要通知，請啟用 `notifyUser`：
+預設情況下，壓縮過程會靜默運作。設定 `notifyUser` 以在壓縮開始和完成時顯示簡短的狀態訊息：
 
 ```json5
 {
@@ -135,35 +122,55 @@ exceeded`。
 }
 ```
 
-啟用後，使用者會在每次壓縮執行時看到簡短的狀態訊息（例如，「正在壓縮上下文...」和「壓縮完成」）。
+### 記憶體排空
 
-## 壓縮與修剪
+在壓縮之前，OpenClaw 可以執行一個 **靜默記憶體排空** 步驟，將持久化的筆記儲存到磁碟。詳情與設定請參閱 [Memory](/zh-Hant/concepts/memory)。
 
-|                | 壓縮                   | 修剪                         |
-| -------------- | ---------------------- | ---------------------------- |
-| **作用**       | 摘要較舊的對話         | 修剪舊的工具結果             |
-| **是否保留？** | 是（在工作階段記錄中） | 否（僅在記憶體中，每次請求） |
-| **範圍**       | 整個對話               | 僅限工具結果                 |
+## 可插拔壓縮提供者
 
-[工作階段修剪 (Session pruning)](/zh-Hant/concepts/session-pruning) 是一個更輕量的輔助功能，用於在不進行摘要的情況下修剪工具輸出。
+外掛程式可以透過外掛 API 上的 `registerCompactionProvider()` 註冊自訂壓縮提供者。當註冊並設定好提供者後，OpenClaw 會將摘要工作委派給它，而不是使用內建的 LLM 流程。
+
+若要使用已註冊的提供者，請在您的設定中設定其 id：
+
+```json
+{
+  "agents": {
+    "defaults": {
+      "compaction": {
+        "provider": "my-provider"
+      }
+    }
+  }
+}
+```
+
+設定 `provider` 會自動強制啟用 `mode: "safeguard"`。提供者會收到與內建路徑相同的壓縮指令和識別碼保留策略，而且 OpenClaw 仍會在提供者輸出後保留最近的對話輪次和分割輪次的後綴內容。
+
+<Note>如果提供者失敗或傳回空結果，OpenClaw 將會回退到內建的 LLM 摘要功能。</Note>
+
+## 壓縮 vs 修剪
+
+|                | 壓縮               | 修剪                         |
+| -------------- | ------------------ | ---------------------------- |
+| **作用**       | 摘要較舊的對話內容 | 修剪舊的工具結果             |
+| **是否儲存？** | 是（在對話紀錄中） | 否（僅在記憶體中，每次請求） |
+| **範圍**       | 整個對話           | 僅限工具結果                 |
+
+[Session pruning](/zh-Hant/concepts/session-pruning) 是一種更輕量的補充機制，它會修剪工具輸出而不進行摘要。
 
 ## 疑難排解
 
-**壓縮太過頻繁？** 模型的上下文視窗可能太小，或者工具輸出可能太大。請嘗試啟用
-[session pruning](/zh-Hant/concepts/session-pruning)。
+**壓縮太過頻繁？** 模型的上下文視窗可能太小，或是工具輸出太大。嘗試啟用 [session pruning](/zh-Hant/concepts/session-pruning)。
 
-**壓縮後上下文感覺陳舊？** 使用 `/compact Focus on <topic>` 來
-指引摘要，或啟用 [memory flush](/zh-Hant/concepts/memory) 以讓
-筆記保留。
+**壓縮後內容感覺過時？** 使用 `/compact Focus on <topic>` 來引導摘要，或啟用 [memory flush](/zh-Hant/concepts/memory) 以保留筆記。
 
-**需要從頭開始？** `/new` 啟動一個新的會話而不進行壓縮。
+**需要重新開始？** `/new` 會啟動一個全新的對話而不進行壓縮。
 
-若需進階設定（保留 token、識別符保留、自訂上下文引擎、OpenAI 伺服器端壓縮），請參閱
-[Session Management Deep Dive](/zh-Hant/reference/session-management-compaction)。
+如需進階設定（保留 token、識別碼保留、自訂內容引擎、OpenAI 伺服器端壓縮），請參閱 [Session management deep dive](/zh-Hant/reference/session-management-compaction)。
 
 ## 相關內容
 
-- [Session](/zh-Hant/concepts/session) — 會話管理與生命週期
-- [Session Pruning](/zh-Hant/concepts/session-pruning) — 修剪工具結果
-- [Context](/zh-Hant/concepts/context) — 如何為 agent 回合建立上下文
-- [Hooks](/zh-Hant/automation/hooks) — 壓縮生命週期鉤子（before_compaction, after_compaction）
+- [Session](/zh-Hant/concepts/session)：對話管理與生命週期。
+- [Session pruning](/zh-Hant/concepts/session-pruning)：修剪工具結果。
+- [Context](/zh-Hant/concepts/context): 如何為代理回合建構內容。
+- [Hooks](/zh-Hant/automation/hooks): 壓縮生命週期掛鉤 (`before_compaction`, `after_compaction`)。

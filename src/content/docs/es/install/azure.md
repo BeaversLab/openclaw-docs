@@ -308,4 +308,10 @@ Esto elimina el grupo de recursos y todo lo que contiene dentro (máquina virtua
 - Configure los canales de mensajería: [Canales](/es/channels)
 - Empareje dispositivos locales como nodos: [Nodos](/es/nodes)
 - Configure el Gateway: [Configuración del Gateway](/es/gateway/configuration)
-- Para más detalles sobre el despliegue de OpenClaw en Azure con el proveedor de modelos de GitHub Copilot: [OpenClaw en Azure con GitHub Copilot](https://github.com/johnsonshi/openclaw-azure-github-copilot)
+- Para obtener más detalles sobre la implementación de OpenClaw en Azure con el proveedor de modelos de GitHub Copilot: [OpenClaw en Azure con GitHub Copilot](https://github.com/johnsonshi/openclaw-azure-github-copilot)
+
+## Relacionado
+
+- [Información general de la instalación](/es/install)
+- [GCP](/es/install/gcp)
+- [DigitalOcean](/es/install/digitalocean)

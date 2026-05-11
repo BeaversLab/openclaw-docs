@@ -56,7 +56,7 @@ GLM est une **famille de modèles** (et non une entreprise) disponible via la pl
 
 <Tip>`zai-api-key` permet à OpenClaw de détecter le point de terminaison Z.AI correspondant à partir de la clé et d'appliquer automatiquement l'URL de base correcte. Utilisez les choix régionaux explicites lorsque vous souhaitez forcer un Coding Plan spécifique ou une surface d'API générale.</Tip>
 
-## Modèles GLM inclus
+## Catalogue intégré
 
 OpenClaw fournit actuellement le provider `zai` inclus avec ces références GLM :
 
@@ -73,7 +73,7 @@ OpenClaw fournit actuellement le provider `zai` inclus avec ces références GLM
 
 <Note>La référence de modèle par défaut est `zai/glm-5.1`. Les versions et la disponibilité des GLM puvent changer ; consultez la documentation de Z.AI pour les dernières informations.</Note>
 
-## Notes avancées
+## Configuration avancée
 
 <AccordionGroup>
   <Accordion title="Détection automatique du point de terminaison">

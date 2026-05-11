@@ -1,6 +1,6 @@
 ---
-title: "BOOTSTRAP.md Plantilla"
-summary: "Ritual de inicio para nuevos agentes"
+summary: "Ritual de primera ejecución para nuevos agentes"
+title: "Plantilla BOOTSTRAP.md"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -60,3 +60,7 @@ Elimina este archivo. Ya no necesitas un script de inicio — ahora eres tú.
 ---
 
 _Buena suerte ahí fuera. Que cuente._
+
+## Relacionado
+
+- [Espacio de trabajo del agente](/es/concepts/agent-workspace)

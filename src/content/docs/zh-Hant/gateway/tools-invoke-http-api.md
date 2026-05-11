@@ -3,7 +3,7 @@ summary: "透過 Gateway HTTP 端點直接叫用單一工具"
 read_when:
   - Calling tools without running a full agent turn
   - Building automations that need tool policy enforcement
-title: "Tools Invoke API"
+title: "Tools invoke API"
 ---
 
 # Tools Invoke (HTTP)
@@ -159,3 +159,8 @@ curl -sS http://127.0.0.1:18789/tools/invoke \
     "args": {}
   }'
 ```
+
+## 相關
+
+- [Gateway protocol](/zh-Hant/gateway/protocol)
+- [Tools and plugins](/zh-Hant/tools)

@@ -1,6 +1,6 @@
 ---
-title: "TOOLS.md 模板"
 summary: "TOOLS.md 的工作区模板"
+title: "TOOLS.md 模板"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -45,3 +45,7 @@ read_when:
 ---
 
 添加任何对你工作有帮助的内容。这是你的备忘单。
+
+## 相关
+
+- [Agent 工作区](/zh/concepts/agent-workspace)

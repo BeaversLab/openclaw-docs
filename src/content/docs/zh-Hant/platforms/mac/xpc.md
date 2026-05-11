@@ -59,3 +59,8 @@ Agent -> Gateway -> Node Service (WS)
 - 所有通訊僅限於本機；不會開放網路 socket。
 - TCC 提示僅來自 GUI app bundle；請在重新建置時保持已簽署的 bundle ID 穩定。
 - IPC 加固：socket 模式 `0600`、token、同級 UID 檢查、HMAC 挑戰/回應、短暫 TTL。
+
+## 相關
+
+- [macOS app](/zh-Hant/platforms/macos)
+- [macOS IPC flow (Exec approvals)](/zh-Hant/tools/exec-approvals-advanced#macos-ipc-flow)

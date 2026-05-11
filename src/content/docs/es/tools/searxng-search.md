@@ -7,16 +7,12 @@ read_when:
 title: "Búsqueda SearXNG"
 ---
 
-# Búsqueda SearXNG
-
-OpenClaw soporta [SearXNG](https://docs.searxng.org/) como proveedor `web_search` **autoalojado,
-sin clave**. SearXNG es un metabuscador de código abierto
-que agrega resultados de Google, Bing, DuckDuckGo y otras fuentes.
+OpenClaw admite [SearXNG](https://docs.searxng.org/) como un proveedor `web_search` **autoalojado y sin clave**. SearXNG es un metabuscador de código abierto que agrega resultados de Google, Bing, DuckDuckGo y otras fuentes.
 
 Ventajas:
 
 - **Gratis e ilimitado** -- no se requiere clave de API ni suscripción comercial
-- **Privacidad / air-gap** -- las consultas nunca salen de su red
+- **Privacidad / aire aislado** -- las consultas nunca salen de su red
 - **Funciona en cualquier lugar** -- sin restricciones regionales en las API de búsqueda comercial
 
 ## Configuración
@@ -27,8 +23,8 @@ Ventajas:
     docker run -d -p 8888:8080 searxng/searxng
     ```
 
-    O utilice cualquier implementación de SearXNG existente a la que tenga acceso. Consulte la
-    [documentación de SearXNG](https://docs.searxng.org/) para la configuración de producción.
+    O utilice cualquier despliegue de SearXNG existente al que tenga acceso. Consulte la
+    [documentación de SearXNG](https://docs.searxng.org/) para la configuración en producción.
 
   </Step>
   <Step title="Configurar">
@@ -46,7 +42,7 @@ Ventajas:
   </Step>
 </Steps>
 
-## Config
+## Configuración
 
 ```json5
 {
@@ -96,34 +92,32 @@ Establezca `SEARXNG_BASE_URL` como alternativa a la configuración:
 export SEARXNG_BASE_URL="http://localhost:8888"
 ```
 
-Cuando `SEARXNG_BASE_URL` está establecido y no hay ningún proveedor explícito configurado, la detección automática
-elige SearXNG automáticamente (con la prioridad más baja: primero gana cualquier proveedor con API
-y clave configurada).
+Cuando se establece `SEARXNG_BASE_URL` y no se configura ningún proveedor explícito, la detección automática elige SearXNG automáticamente (con la menor prioridad: primero gana cualquier proveedor con API que tenga una clave).
 
 ## Referencia de configuración del complemento
 
-| Campo        | Descripción                                                       |
-| ------------ | ----------------------------------------------------------------- |
-| `baseUrl`    | URL base de su instancia SearXNG (obligatorio)                    |
-| `categories` | Categorías separadas por comas como `general`, `news` o `science` |
-| `language`   | Código de idioma para los resultados como `en`, `de` o `fr`       |
+| Campo        | Descripción                                                        |
+| ------------ | ------------------------------------------------------------------ |
+| `baseUrl`    | URL base de su instancia de SearXNG (requerido)                    |
+| `categories` | Categorías separadas por comas, como `general`, `news` o `science` |
+| `language`   | Código de idioma para los resultados, como `en`, `de` o `fr`       |
 
 ## Notas
 
-- **API JSON** -- utiliza el punto final `format=json` nativo de SearXNG, no scraping HTML
-- **Sin clave API** -- funciona con cualquier instancia SearXNG de inmediato
+- **API JSON** -- utiliza el punto final `format=json` nativo de SearXNG, no raspado HTML
+- **Sin clave de API** -- funciona con cualquier instancia de SearXNG de inmediato
 - **Validación de URL base** -- `baseUrl` debe ser una `http://` o `https://`
-  válida; los hosts públicos deben usar `https://`
-- **Orden de detección automática** -- SearXNG se verifica al final (orden 200) en
+  URL válida; los hosts públicos deben usar `https://`
+- **Orden de detección automática** -- SearXNG se verifica en último lugar (orden 200) en
   la detección automática. Los proveedores con API y claves configuradas se ejecutan primero, luego
   DuckDuckGo (orden 100), luego Ollama Web Search (orden 110)
-- **Autoalojado** -- usted controla la instancia, las consultas y los motores de búsqueda ascendentes
-- **Categorías** por defecto son `general` cuando no se configuran
+- **Autoalojado** -- controlas la instancia, las consultas y los motores de búsqueda ascendentes
+- **Categorías** por defecto son `general` cuando no están configuradas
 
-<Tip>Para que la API JSON de SearXNG funcione, asegúrese de que su instancia de SearXNG tenga el formato `json` habilitado en su `settings.yml` bajo `search.formats`.</Tip>
+<Tip>Para que la API JSON de SearXNG funcione, asegúrate de que tu instancia de SearXNG tenga el formato `json` habilitado en su `settings.yml` bajo `search.formats`.</Tip>
 
 ## Relacionado
 
 - [Resumen de búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
-- [Búsqueda DuckDuckGo](/es/tools/duckduckgo-search) -- otra alternativa sin clave
+- [Búsqueda DuckDuckGo](/es/tools/duckduckgo-search) -- otro respaldo sin clave
 - [Búsqueda Brave](/es/tools/brave-search) -- resultados estructurados con nivel gratuito

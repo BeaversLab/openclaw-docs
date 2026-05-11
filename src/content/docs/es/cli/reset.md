@@ -3,7 +3,7 @@ summary: "Referencia de la CLI para `openclaw reset` (restablecer el estado/conf
 read_when:
   - You want to wipe local state while keeping the CLI installed
   - You want a dry-run of what would be removed
-title: "restablecer"
+title: "Restablecer"
 ---
 
 # `openclaw reset`
@@ -33,3 +33,7 @@ Notas:
 - Ejecute primero `openclaw backup create` si desea una instantánea restaurable antes de eliminar el estado local.
 - Si omite `--scope`, `openclaw reset` usa un mensaje interactivo para elegir qué eliminar.
 - `--non-interactive` solo es válido cuando se establecen tanto `--scope` como `--yes`.
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)

@@ -3,7 +3,7 @@ summary: Node + tsx "__name is not a function" 潰潰筆記與解決方法
 read_when:
   - Debugging Node-only dev scripts or watch mode failures
   - Investigating tsx/esbuild loader crashes in OpenClaw
-title: "Node + tsx 潰潰"
+title: "Node + tsx 當機"
 ---
 
 # Node + tsx "\_\_name is not a function" 潰潰
@@ -83,3 +83,8 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 - 在 Node 22/24 上重現問題，以確認是否為 Node 25 的回歸問題。
 - 測試 `tsx` 每夜版本或如果存在已知的迴歸，則鎖定到較早版本。
 - 如果在 Node LTS 上重現，請使用 `__name` 堆疊追蹤向上游提交最小重現案例。
+
+## 相關
+
+- [Node.js 安裝](/zh-Hant/install/node)
+- [Gateway 疑難排解](/zh-Hant/gateway/troubleshooting)

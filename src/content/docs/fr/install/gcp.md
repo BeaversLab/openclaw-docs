@@ -72,9 +72,9 @@ Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
   <Step title="Installer la gcloud CLI (ou utiliser la Console)">
     **Option A : gcloud CLI** (recommandé pour l'automatisation)
 
-    Installer depuis [https://cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install)
+    Installer à partir de [https://cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install)
 
-    Initialiser et authentifier :
+    Initialiser et s'authentifier :
 
     ```bash
     gcloud init
@@ -83,7 +83,7 @@ Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
 
     **Option B : Cloud Console**
 
-    Toutes les étapes peuvent être effectuées via l'interface web à l'adresse [https://console.cloud.google.com](https://console.cloud.google.com)
+    Toutes les étapes peuvent être effectuées via l'interface Web à [https://console.cloud.google.com](https://console.cloud.google.com)
 
   </Step>
 
@@ -105,10 +105,10 @@ Pour le flux générique Docker, consultez [Docker](/fr/install/docker).
 
     **Console :**
 
-    1. Allez dans IAM & Admin > Créer un projet
-    2. Nommez-le et créez-le
-    3. Activez la facturation pour le projet
-    4. Accédez à API et services > Activer les API > recherchez "Compute Engine API" > Activer
+    1. Accéder à IAM et administration > Créer un projet
+    2. Nommer le projet et le créer
+    3. Activer la facturation pour le projet
+    4. Naviguer vers API et services > Activer les API > rechercher "API Compute Engine" > Activer
 
   </Step>
 
@@ -413,3 +413,9 @@ Voir [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.googl
 - Configurer les canaux de messagerie : [Canaux](/fr/channels)
 - Coupler les appareils locaux en tant que nœuds : [Nœuds](/fr/nodes)
 - Configurer le Gateway : [Configuration du Gateway](/fr/gateway/configuration)
+
+## Connexes
+
+- [Vue d'ensemble de l'installation](/fr/install)
+- [Azure](/fr/install/azure)
+- [Hébergement VPS](/fr/vps)

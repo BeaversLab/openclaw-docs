@@ -7,13 +7,11 @@ read_when:
 title: "配置示例"
 ---
 
-# 配置示例
-
-以下示例与当前配置架构一致。有关详尽的参考和按字段说明，请参阅 [Configuration](/zh/gateway/configuration)。
+以下示例与当前的配置架构一致。有关详尽的参考和字段说明，请参阅 [配置](/zh/gateway/configuration)。
 
 ## 快速开始
 
-### 绝对最小配置
+### 绝对最小
 
 ```json5
 {
@@ -22,9 +20,9 @@ title: "配置示例"
 }
 ```
 
-保存到 `~/.openclaw/openclaw.json`，然后您就可以通过该号码私信机器人了。
+保存到 `~/.openclaw/openclaw.json`，然后你可以从该号码向机器人发送私信。
 
-### 推荐起步配置
+### 推荐入门
 
 ```json5
 {
@@ -48,7 +46,7 @@ title: "配置示例"
 
 ## 扩展示例（主要选项）
 
-> JSON5 允许您使用注释和尾随逗号。常规 JSON 也可以正常工作。
+> JSON5 允许你使用注释和尾随逗号。常规 JSON 也可以。
 
 ```json5
 {
@@ -371,7 +369,7 @@ title: "配置示例"
   cron: {
     enabled: true,
     store: "~/.openclaw/cron/cron.json",
-    maxConcurrentRuns: 2,
+    maxConcurrentRuns: 2, // cron dispatch + isolated cron agent-turn execution
     sessionRetention: "24h",
     runLog: {
       maxBytes: "2mb",
@@ -461,7 +459,7 @@ title: "配置示例"
 
 ## 常见模式
 
-### 具有一个覆盖项的共享技能基线
+### 共享技能基线，单项覆盖
 
 ```json5
 {
@@ -479,8 +477,8 @@ title: "配置示例"
 ```
 
 - `agents.defaults.skills` 是共享基线。
-- `agents.list[].skills` 会替换某个代理的该基线。
-- 当代理不应看到任何技能时，请使用 `skills: []`。
+- `agents.list[].skills` 替换了一个代理的该基线。
+- 当代理不应该看到任何技能时，使用 `skills: []`。
 
 ### 多平台设置
 
@@ -503,9 +501,30 @@ title: "配置示例"
 }
 ```
 
-### 安全私信模式（共享收件箱 / 多用户私信）
+### 受信任节点网络自动批准
 
-如果不止一个人可以向您的机器人发送私信（`allowFrom` 中有多个条目、多个人的配对批准，或 `dmPolicy: "open"`），请启用 **安全私信模式**，这样默认情况下来自不同发送者的私信不会共享同一个上下文：
+除非你控制网络路径，否则保持设备配对手动。对于专用
+实验室或 tailnet 子网，你可以选择加入首次节点设备自动批准
+并指定精确的 CIDR 或 IP：
+
+```json5
+{
+  gateway: {
+    nodes: {
+      pairing: {
+        autoApproveCidrs: ["192.168.1.0/24", "fd00:1234:5678::/64"],
+      },
+    },
+  },
+}
+```
+
+未设置时此项保持关闭。它仅适用于没有请求作用域的新 `role: node` 配对。
+操作员/浏览器客户端以及角色、作用域、元数据或公钥升级仍需手动批准。
+
+### 安全私信模式（共享收件箱/多用户私信）
+
+如果不止一个人可以向你的机器人发送私信（`allowFrom` 中有多个条目，多人的配对批准，或 `dmPolicy: "open"`），请启用**安全私信模式**，以便来自不同发送者的私信默认不共享同一个上下文：
 
 ```json5
 {
@@ -529,8 +548,8 @@ title: "配置示例"
 }
 ```
 
-对于 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，发送者授权默认优先使用 ID。
-仅当您明确接受该风险时，才通过每个渠道的 `dangerouslyAllowNameMatching: true` 启用直接的可变名称/邮箱/昵称匹配。
+对于 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，发送者授权默认为 ID 优先。
+只有在你明确接受该风险的情况下，才应启用每个渠道 `dangerouslyAllowNameMatching: true` 的直接可变名称/邮箱/昵称匹配。
 
 ### Anthropic API 密钥 + MiniMax 回退
 
@@ -591,7 +610,7 @@ title: "配置示例"
 }
 ```
 
-### 仅限本地模型
+### 仅本地模型
 
 ```json5
 {
@@ -625,7 +644,12 @@ title: "配置示例"
 
 ## 提示
 
-- 如果您设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
-- 提供商 ID 各不相同（电话号码、用户 ID、渠道 ID）。请查阅提供商文档以确认格式。
-- 稍后添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 有关更深入的设置说明，请参阅 [Providers](/zh/providers) 和 [Troubleshooting](/zh/gateway/troubleshooting)。
+- 如果你设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
+- 提供商 ID 各不相同（电话号码、用户 ID、渠道 ID）。请使用提供商文档确认格式。
+- 稍后可添加的可选章节：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
+- 有关更深入的设置说明，请参阅[提供程序](/zh/providers)和[故障排除](/zh/gateway/troubleshooting)。
+
+## 相关
+
+- [配置参考](/zh/gateway/configuration-reference)
+- [配置](/zh/gateway/configuration)

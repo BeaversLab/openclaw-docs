@@ -3,39 +3,37 @@ summary: "OpenClaw 入門選項與流程概述"
 read_when:
   - Choosing an onboarding path
   - Setting up a new environment
-title: "入門概述"
+title: "入門概覽"
 sidebarTitle: "入門概述"
 ---
 
-# 入門概述
-
-OpenClaw 有兩種入門途徑。兩者都會設定認證、Gateway 和
-選用的聊天頻道 — 它們僅在您與設定互動的方式上有所不同。
+OpenClaw 有兩種入門途徑。兩者都會設定驗證、Gateway 以及
+選用聊天頻道 — 它們的差別僅在於您與設定流程的互動方式。
 
 ## 我應該使用哪種途徑？
 
-|            | CLI 入門                            | macOS 應用程式入門    |
-| ---------- | ----------------------------------- | --------------------- |
-| **平台**   | macOS、Linux、Windows (原生或 WSL2) | 僅限 macOS            |
-| **介面**   | 終端機精靈                          | 應用程式中的引導式 UI |
-| **最適合** | 伺服器、無介面、完全控制            | 桌面 Mac、視覺化設定  |
-| **自動化** | `--non-interactive` 用於腳本        | 僅限手動              |
-| **指令**   | `openclaw onboard`                  | 啟動應用程式          |
+|              | CLI 入門                            | macOS 應用程式入門     |
+| ------------ | ----------------------------------- | ---------------------- |
+| **支援平台** | macOS、Linux、Windows (原生或 WSL2) | 僅限 macOS             |
+| **介面**     | 終端機精靈                          | 應用程式中的引導式介面 |
+| **最適合**   | 伺服器、無介面環境、完整控制        | 桌面 Mac、視覺化設定   |
+| **自動化**   | `--non-interactive` 適用於腳本      | 僅限手動               |
+| **指令**     | `openclaw onboard`                  | 啟動應用程式           |
 
-大多數使用者應從 **CLI 入門** 開始 — 它適用於任何地方並提供
-您最高的控制權。
+大多數使用者應該從 **CLI 入門** 開始 — 它適用於所有平台並且
+能提供您最大的控制權。
 
-## 入門設定了什麼
+## 入門會設定什麼
 
-無論您選擇哪種途徑，入門都會設定：
+無論您選擇哪種途徑，入門流程都會設定：
 
-1. **模型提供者和驗證** — 您選擇的提供者的 API 金鑰、OAuth 或設定權杖
-2. **工作區** — 用於代理程式檔案、啟動範本和記憶體的目錄
+1. **模型供應商和驗證** — 您所選供應商的 API 金鑰、OAuth 或設定 token
+2. **工作區** — 用於儲存 Agent 檔案、啟動範本和記憶體的目錄
 3. **Gateway** — 連接埠、綁定位址、驗證模式
-4. **頻道** (選用) — 內建並隨附的聊天頻道，例如
+4. **頻道** (選用) — 內建和內建的聊天頻道，例如
    BlueBubbles、Discord、Feishu、Google Chat、Mattermost、Microsoft Teams、
    Telegram、WhatsApp 等等
-5. **常駐程式** (選用) — 背景服務，讓 Gateway 自動啟動
+5. **Daemon** (選用) — 背景服務，讓 Gateway 能自動啟動
 
 ## CLI 入門
 
@@ -45,7 +43,7 @@ OpenClaw 有兩種入門途徑。兩者都會設定認證、Gateway 和
 openclaw onboard
 ```
 
-新增 `--install-daemon` 以一步安裝背景服務。
+加入 `--install-daemon` 即可在同一個步驟中一併安裝背景服務。
 
 完整參考：[入門 (CLI)](/zh-Hant/start/wizard)
 CLI 指令文件：[`openclaw onboard`](/zh-Hant/cli/onboard)
@@ -56,13 +54,17 @@ CLI 指令文件：[`openclaw onboard`](/zh-Hant/cli/onboard)
 
 完整參考：[入門 (macOS 應用程式)](/zh-Hant/start/onboarding)
 
-## 自訂或未列出的提供者
+## 自訂或未列出的供應商
 
-如果您的提供者未列在入門中，請選擇 **Custom Provider** (自訂提供者) 並
-輸入：
+如果您的供應商未列在入門清單中，請選擇 **Custom Provider** 並輸入：
 
 - API 相容模式 (OpenAI 相容、Anthropic 相容或自動偵測)
-- 基礎 URL 和 API 金鑰
+- Base URL 和 API 金鑰
 - 模型 ID 和選用別名
 
-多個自訂端點可以並存 — 每個都有自己的端點 ID。
+多個自訂端點可以並存 — 每個都會有自己的端點 ID。
+
+## 相關
+
+- [開始使用](/zh-Hant/start/getting-started)
+- [CLI 設定參考](/zh-Hant/start/wizard-cli-reference)

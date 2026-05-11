@@ -3,7 +3,7 @@ summary: "Référence CLI pour `openclaw clawbot` (espace de noms d'alias hérit
 read_when:
   - You maintain older scripts using `openclaw clawbot ...`
   - You need migration guidance to current commands
-title: "clawbot"
+title: "Clawbot"
 ---
 
 # `openclaw clawbot`
@@ -19,3 +19,7 @@ Alias actuellement pris en charge :
 Privilégiez directement les commandes modernes de premier niveau :
 
 - `openclaw clawbot qr` -> `openclaw qr`
+
+## Associé
+
+- [Référence CLI](/fr/cli)

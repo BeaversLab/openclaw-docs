@@ -3,7 +3,7 @@ summary: "CLI 參考資料：`openclaw message` (send + channel actions)"
 read_when:
   - Adding or modifying message CLI actions
   - Changing outbound channel behavior
-title: "message"
+title: "訊息"
 ---
 
 # `openclaw message`
@@ -296,3 +296,8 @@ openclaw message send --channel msteams \
 openclaw message send --channel telegram --target @mychat \
   --media ./diagram.png --force-document
 ```
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)
+- [Agent send](/zh-Hant/tools/agent-send)

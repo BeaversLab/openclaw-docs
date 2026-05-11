@@ -41,7 +41,7 @@ Para la depuración local, `./scripts/k8s/deploy.sh --show-token` imprime el tok
 
 ## Pruebas locales con Kind
 
-Si no tiene un clúster, cree uno localmente con [Kind](https://kind.sigs.k8s.io/):
+Si no tienes un clúster, crea uno localmente con [Kind](https://kind.sigs.k8s.io/):
 
 ```bash
 ./scripts/k8s/create-kind.sh           # auto-detects docker or podman
@@ -189,3 +189,9 @@ scripts/k8s/
     ├── pvc.yaml                # 10Gi persistent storage
     └── service.yaml            # ClusterIP on 18789
 ```
+
+## Relacionado
+
+- [Docker](/es/install/docker)
+- [Docker VM runtime](/es/install/docker-vm-runtime)
+- [Resumen de instalación](/es/install)

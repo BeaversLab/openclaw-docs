@@ -1,24 +1,22 @@
 ---
+summary: "用于 OpenClaw 插件的测试工具和模式"
 title: "插件测试"
 sidebarTitle: "测试"
-summary: "OpenClaw 插件的测试工具和模式"
 read_when:
   - You are writing tests for a plugin
   - You need test utilities from the plugin SDK
   - You want to understand contract tests for bundled plugins
 ---
 
-# 插件测试
+OpenClaw 插件的测试工具、模式和 Lint 强制执行的参考。
 
-OpenClaw 插件的测试工具、模式和 Lint 执行参考。
-
-<Tip>**正在寻找测试示例？** 操作指南包含详细的测试示例： [渠道插件测试](/zh/plugins/sdk-channel-plugins#step-6-test) 和 [提供商插件测试](/zh/plugins/sdk-provider-plugins#step-6-test)。</Tip>
+<Tip>**正在寻找测试示例？** 操作指南包含完整的测试示例： [渠道插件测试](/zh/plugins/sdk-channel-plugins#step-6-test) 和 [提供者插件测试](/zh/plugins/sdk-provider-plugins#step-6-test)。</Tip>
 
 ## 测试工具
 
 **导入：** `openclaw/plugin-sdk/testing`
 
-测试子路径导出了一组有限的辅助工具，供插件作者使用：
+测试子路径导出了一组有限的辅助工具，专供插件作者使用：
 
 ```typescript
 import { installCommonResolveTargetErrorCases, shouldAckReaction, removeAckReactionAfterReply } from "openclaw/plugin-sdk/testing";
@@ -29,12 +27,12 @@ import { installCommonResolveTargetErrorCases, shouldAckReaction, removeAckReact
 | 导出                                   | 用途                               |
 | -------------------------------------- | ---------------------------------- |
 | `installCommonResolveTargetErrorCases` | 用于目标解析错误处理的共享测试用例 |
-| `shouldAckReaction`                    | 检查渠道是否应添加确认反应         |
-| `removeAckReactionAfterReply`          | 在回复传递后移除确认反应           |
+| `shouldAckReaction`                    | 检查渠道是否应添加确认（ack）反应  |
+| `removeAckReactionAfterReply`          | 回复发送后移除确认（ack）反应      |
 
 ### 类型
 
-测试子路径还重新导出了测试文件中有用的类型：
+测试子路径还重新导出了在测试文件中有用的类型：
 
 ```typescript
 import type { ChannelAccountSnapshot, ChannelGatewayContext, OpenClawConfig, PluginRuntime, RuntimeEnv, MockFn } from "openclaw/plugin-sdk/testing";
@@ -42,7 +40,7 @@ import type { ChannelAccountSnapshot, ChannelGatewayContext, OpenClawConfig, Plu
 
 ## 测试目标解析
 
-使用 `installCommonResolveTargetErrorCases` 为渠道目标解析添加标准错误用例：
+使用 `installCommonResolveTargetErrorCases` 为渠道目标解析添加标准错误情况：
 
 ```typescript
 import { describe } from "vitest";
@@ -65,6 +63,24 @@ describe("my-channel target resolution", () => {
 ```
 
 ## 测试模式
+
+### 测试注册约定
+
+将手写的 `api` 模拟对象传递给 `register(api)` 的单元测试不会执行
+OpenClaw 的加载器接受检查。请为插件依赖的每个注册表面添加至少一个基于加载器的冒烟测试，
+特别是钩子（hooks）和内存等独占功能。
+
+当缺少必需的元数据或插件调用了其不具备的功能 API 时，真实的加载器会导致插件注册失败。
+例如，`api.registerHook(...)` 需要钩子名称，
+`api.registerMemoryCapability(...)` 需要插件清单或导出的
+入口来声明 `kind: "memory"`。
+
+### 测试运行时配置访问
+
+测试捆绑插件时，请优先使用仓库测试辅助工具中的共享插件运行时模拟对象。
+其已弃用的 `runtime.config.loadConfig()` 和
+`runtime.config.writeConfigFile(...)` 模拟对象默认情况下会抛出异常，以便测试捕获
+对兼容性 API 的新使用。仅当测试明确涵盖旧版兼容性行为时，才覆盖这些模拟对象。
 
 ### 渠道插件的单元测试
 
@@ -102,7 +118,7 @@ describe("my-channel plugin", () => {
 });
 ```
 
-### 提供商插件的单元测试
+### 提供商插件单元测试
 
 ```typescript
 import { describe, it, expect } from "vitest";
@@ -150,8 +166,9 @@ const mockRuntime = {
     // ... other mocks
   },
   config: {
-    loadConfig: vi.fn(),
-    writeConfigFile: vi.fn(),
+    current: vi.fn(() => ({}) as const),
+    mutateConfigFile: vi.fn(),
+    replaceConfigFile: vi.fn(),
   },
   // ... other namespaces
 } as unknown as PluginRuntime;
@@ -162,9 +179,9 @@ store.setRuntime(mockRuntime);
 store.clearRuntime();
 ```
 
-### 使用每个实例的存根进行测试
+### 使用逐实例存根进行测试
 
-优先使用每个实例的存根，而不是原型修改：
+相比于修改原型，更推荐使用逐实例存根：
 
 ```typescript
 // Preferred: per-instance stub
@@ -175,9 +192,9 @@ client.sendMessage = vi.fn().mockResolvedValue({ id: "msg-1" });
 // MyChannelClient.prototype.sendMessage = vi.fn();
 ```
 
-## 合约测试（仓库内插件）
+## 契约测试（代码库内插件）
 
-捆绑插件具有验证注册所有权的合约测试：
+内置插件拥有契约测试来验证注册所有权：
 
 ```bash
 pnpm test -- src/plugins/contracts/
@@ -188,17 +205,17 @@ pnpm test -- src/plugins/contracts/
 - 哪些插件注册了哪些提供商
 - 哪些插件注册了哪些语音提供商
 - 注册形状的正确性
-- 运行时合约合规性
+- 运行时契约合规性
 
-### 运行范围限定测试
+### 运行范围测试
 
-对于特定插件：
+针对特定插件：
 
 ```bash
 pnpm test -- <bundled-plugin-root>/my-channel/
 ```
 
-仅对于合约测试：
+仅针对契约测试：
 
 ```bash
 pnpm test -- src/plugins/contracts/shape.contract.test.ts
@@ -206,15 +223,15 @@ pnpm test -- src/plugins/contracts/auth.contract.test.ts
 pnpm test -- src/plugins/contracts/runtime.contract.test.ts
 ```
 
-## Lint 执行（仓库内插件）
+## Lint 强制执行（代码库内插件）
 
-对于仓库内插件，`pnpm check` 强制执行三条规则：
+对于代码库内插件，`pnpm check` 强制执行三项规则：
 
-1. **禁止单体根导入** -- 拒绝 `openclaw/plugin-sdk` 根桶
-2. **禁止直接导入 `src/`** -- 插件无法直接导入 `../../src/`
-3. **禁止自导入** -- 插件无法导入自己的 `plugin-sdk/<name>` 子路径
+1. **禁止整体根导入** -- 拒绝 `openclaw/plugin-sdk` 根桶（root barrel）
+2. **禁止直接 `src/` 导入** -- 插件不能直接导入 `../../src/`
+3. **禁止自导入** -- 插件不能导入其自己的 `plugin-sdk/<name>` 子路径
 
-外部插件不受这些 Lint 规则约束，但建议遵循相同的模式。
+外部插件不受这些 Lint 规则的约束，但建议遵循相同的模式。
 
 ## 测试配置
 
@@ -240,7 +257,7 @@ pnpm test:coverage
 OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test
 ```
 
-## 相关内容
+## 相关
 
 - [SDK 概述](/zh/plugins/sdk-overview) -- 导入约定
 - [SDK 渠道插件](/zh/plugins/sdk-channel-plugins) -- 渠道插件接口

@@ -3,7 +3,7 @@ summary: "Configuration de l'API Brave Search pour web_search"
 read_when:
   - You want to use Brave Search for web_search
   - You need a BRAVE_API_KEY or plan details
-title: "Brave Search (chemin hérité)"
+title: "Recherche Brave (chemin hérité)"
 ---
 
 # API Brave Search
@@ -12,7 +12,7 @@ OpenClaw prend en charge l'API Brave Search en tant que `web_search` provider.
 
 ## Obtenir une clé API
 
-1. Créez un compte Brave Search API à l'adresse [https://brave.com/search/api/](https://brave.com/search/api/)
+1. Créez un compte API de Recherche Brave sur [https://brave.com/search/api/](https://brave.com/search/api/)
 2. Dans le tableau de bord, choisissez le forfait **Search** et générez une clé API.
 3. Stockez la clé dans la configuration ou définissez `BRAVE_API_KEY` dans l'environnement de la Gateway.
 
@@ -93,11 +93,15 @@ await web_search({
 ## Notes
 
 - OpenClaw utilise le plan **Search** Brave. Si vous disposez d'un abonnement hérité (par exemple, le plan Free original avec 2 000 requêtes/mois), il reste valide mais n'inclut pas les fonctionnalités plus récentes telles que LLM Context ou des limites de débit plus élevées.
-- Chaque plan Brave inclut **\$5/mois de crédit gratuit** (renouvelable). Le plan Search coûte \$5 pour 1 000 requêtes, le crédit couvre donc 1 000 requêtes/mois. Définissez votre limite d'utilisation dans le tableau de bord Brave pour éviter des frais inattendus. Consultez le [portail Brave API](https://brave.com/search/api/) pour les plans actuels.
-- Le plan Search inclut le point de terminaison Context LLM et les droits d'inférence IA. Le stockage des résultats pour entraîner ou régler des modèles nécessite un plan avec des droits de stockage explicites. Consultez les [Conditions d'utilisation](https://api-dashboard.search.brave.com/terms-of-service) de Brave.
+- Chaque plan Brave comprend **\$5/mois de crédit gratuit** (renouvelable). Le plan Recherche coûte \$5 pour 1 000 requêtes, donc le crédit couvre 1 000 requêtes/mois. Définissez votre limite d'utilisation dans le tableau de bord Brave pour éviter des frais inattendus. Consultez le [portail API Brave](https://brave.com/search/api/) pour les plans actuels.
+- Le plan Recherche comprend le point de terminaison Contexte LLM et les droits d'inférence IA. Le stockage des résultats pour entraîner ou régler des modèles nécessite un plan avec des droits de stockage explicites. Consultez les [Conditions d'utilisation](https://api-dashboard.search.brave.com/terms-of-service) de Brave.
 - Le mode `llm-context` renvoie des entrées de source grounded au lieu de la forme normale d'extrait de recherche web.
 - `llm-context` mode ne prend pas en charge `ui_lang`, `freshness`, `date_after` ou `date_before`.
 - `ui_lang` doit inclure une sous-région comme `en-US`.
 - Les résultats sont mis en cache pendant 15 minutes par défaut (configurable via `cacheTtlMinutes`).
 
 Voir [Web tools](/fr/tools/web) pour la configuration complète de web_search.
+
+## Connexes
+
+- [Recherche Brave](/fr/tools/brave-search)

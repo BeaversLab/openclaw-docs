@@ -59,3 +59,8 @@ Agent -> Gateway -> Node Service (WS)
 - Toda la comunicación permanece solo local; no se exponen sockets de red.
 - Las solicitudes de TCC se originan solo desde el paquete de la aplicación GUI; mantenga estable el ID de paquete firmado entre reconstrucciones.
 - Endurecimiento de IPC: modo de socket `0600`, token, verificaciones de UID del par, desafío/respuesta HMAC, TTL corto.
+
+## Relacionado
+
+- [macOS app](/es/platforms/macos)
+- [macOS IPC flow (Exec approvals)](/es/tools/exec-approvals-advanced#macos-ipc-flow)

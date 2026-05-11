@@ -2,7 +2,7 @@
 summary: "Redireccionamiento: los comandos de flujo se encuentran en `openclaw tasks flow`"
 read_when:
   - You encounter openclaw flows in older docs or release notes
-title: "flows (redireccionamiento)"
+title: "Flujos (redireccionamiento)"
 ---
 
 # `openclaw tasks flow`
@@ -16,3 +16,8 @@ openclaw tasks flow cancel <lookup>
 ```
 
 Para ver la documentación completa, consulte [Flujo de tareas](/es/automation/taskflow) y la [referencia de la CLI de tareas](/es/cli/tasks).
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)
+- [Automatización](/es/automation)

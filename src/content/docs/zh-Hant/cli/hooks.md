@@ -3,7 +3,7 @@ summary: "`openclaw hooks` （代理 hooks）的 CLI 參考"
 read_when:
   - You want to manage agent hooks
   - You want to inspect hook availability or enable workspace hooks
-title: "hooks"
+title: "Hooks"
 ---
 
 # `openclaw hooks`
@@ -15,9 +15,9 @@ title: "hooks"
 相關：
 
 - Hooks：[Hooks](/zh-Hant/automation/hooks)
-- Plugin hooks：[Plugin hooks](/zh-Hant/plugins/architecture#provider-runtime-hooks)
+- Plugin hooks: [Plugin hooks](/zh-Hant/plugins/hooks)
 
-## 列出所有 Hooks
+## 列出所有 hooks
 
 ```bash
 openclaw hooks list
@@ -60,7 +60,7 @@ openclaw hooks list --json
 
 傳回結構化的 JSON 以供程式設計使用。
 
-## 取得 Hook 資訊
+## 取得 hook 資訊
 
 ```bash
 openclaw hooks info <name>
@@ -100,7 +100,7 @@ Requirements:
   Config: ✓ workspace.dir
 ```
 
-## 檢查 Hook 資格
+## 檢查 hooks 資格
 
 ```bash
 openclaw hooks check
@@ -194,10 +194,11 @@ openclaw hooks disable command-logger
 - `openclaw hooks list --json`、`info --json` 和 `check --json` 會將結構化 JSON 直接寫入標準輸出。
 - 外掛程式管理的 hooks 無法在此啟用或停用；請改為啟用或停用擁有該 hook 的外掛程式。
 
-## 安裝 Hook 套件
+## 安裝 hook 套件
 
 ```bash
 openclaw plugins install <package>        # ClawHub first, then npm
+openclaw plugins install npm:<package>    # npm only
 openclaw plugins install <package> --pin  # pin version
 openclaw plugins install <path>           # local path
 ```
@@ -206,7 +207,9 @@ openclaw plugins install <path>           # local path
 
 `openclaw hooks install` 仍可作為相容性別名使用，但它會列印棄用警告並轉發至 `openclaw plugins install`。
 
-Npm 規格**僅限 registry**（套件名稱 + 可選的**確切版本**或 **dist-tag**）。會拒絕 Git/URL/檔案規格和 semver 範圍。相依性安裝會以 `--ignore-scripts` 執行以確保安全。
+Npm 規格僅支援 **registry-only**（套件名稱 + 選用的 **確切版本** 或
+**dist-tag**）。不接受 Git/URL/檔案規格和 semver 範圍。為安全起見，相依性安裝會在專案本機使用 `--ignore-scripts` 執行，即使您的
+shell 已設有全域 npm 安裝設定。
 
 裸規格和 `@latest` 會保持在穩定軌道上。如果 npm 將其中任一解析為 pre-release，OpenClaw 會停止並要求您使用 pre-release 標籤（例如 `@beta`/`@rc`）或確切的 pre-release 版本明確選擇加入。
 
@@ -241,7 +244,7 @@ openclaw plugins install -l ./my-hook-pack
 
 連結的 hook 套件會被視為來自操作員設定目錄的受管理 hooks，而不是工作區 hooks。
 
-## 更新 Hook 套件
+## 更新 hook 套件
 
 ```bash
 openclaw plugins update <id>
@@ -261,7 +264,7 @@ openclaw plugins update --all
 OpenClaw 會列印警告並在繼續之前要求確認。請使用
 全域 `--yes` 在 CI/非互動式執行中略過提示。
 
-## 內建 Hooks
+## 內建的 hooks
 
 ### session-memory
 
@@ -329,3 +332,8 @@ openclaw hooks enable boot-md
 ```
 
 **參閱：** [boot-md 文件](/zh-Hant/automation/hooks#boot-md)
+
+## 相關內容
+
+- [CLI 參考資料](/zh-Hant/cli)
+- [Automation hooks](/zh-Hant/automation/hooks)

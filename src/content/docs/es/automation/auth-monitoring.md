@@ -3,6 +3,9 @@ summary: "Redirigir a /gateway/authentication"
 title: "Supervisión de autenticación"
 ---
 
-# Supervisión de autenticación
+La supervisión de autenticación se encuentra en [Authentication](/es/gateway/authentication).
 
-Esta página se ha trasladado a [Authentication](/es/gateway/authentication). Consulte [Authentication](/es/gateway/authentication) para la documentación sobre la supervisión de autenticación.
+## Relacionado
+
+- [Solución de problemas de automatización](/es/automation/troubleshooting)
+- [Hooks](/es/automation/hooks)

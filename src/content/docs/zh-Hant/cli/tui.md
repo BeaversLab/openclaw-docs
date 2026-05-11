@@ -5,7 +5,7 @@ read_when:
   - You want to pass url/token/session from scripts
   - You want to run the TUI in local embedded mode without a Gateway
   - You want to use openclaw chat or openclaw tui --local
-title: "tui"
+title: "TUI"
 ---
 
 # `openclaw tui`
@@ -62,3 +62,8 @@ openclaw chat
 
 使用 `openclaw config set` 或 `openclaw configure` 套用特定的修復，然後
 重新執行 `openclaw config validate`。請參閱 [TUI](/zh-Hant/web/tui) 和 [Config](/zh-Hant/cli/config)。
+
+## 相關
+
+- [CLI 參考資料](/zh-Hant/cli)
+- [TUI](/zh-Hant/web/tui)

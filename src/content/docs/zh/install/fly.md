@@ -1,6 +1,6 @@
 ---
+summary: "在具有持久化存储和HTTPS的Fly.io上逐步部署OpenClaw"
 title: Fly.io
-summary: "在 Fly.io 上逐步部署 OpenClaw，包含持久化存储和 HTTPS"
 read_when:
   - Deploying OpenClaw on Fly.io
   - Setting up Fly volumes, secrets, and first-run config
@@ -8,7 +8,7 @@ read_when:
 
 # Fly.io 部署
 
-**目标：** 在 [Fly.io](https://fly.io) 机器上运行具有持久存储、自动 HTTPS 以及 Discord/渠道访问权限的 OpenClaw Gateway(网关)。
+**目标：** 在一台具有持久化存储、自动HTTPS以及Discord/渠道访问权限的[OpenClaw](https://fly.io)机器上运行Gateway(网关) Fly.io。
 
 ## 准备工作
 
@@ -42,10 +42,10 @@ read_when:
 
   </Step>
 
-  <Step title="配置 fly.toml">
+  <Step title="Configure fly.toml">
     编辑 `fly.toml` 以匹配您的应用名称和需求。
 
-    **安全提示：** 默认配置会暴露公共 URL。如需没有公共 IP 的强化部署，请参阅 [Private Deployment](#private-deployment-hardened) 或使用 `fly.private.toml`。
+    **安全提示：** 默认配置会暴露一个公共URL。如需没有公共IP的加固部署，请参阅[私有部署](#private-deployment-hardened)或使用 `fly.private.toml`。
 
     ```toml
     app = "my-openclaw"  # Your app name
@@ -84,10 +84,10 @@ read_when:
 
     | 设置                        | 原因                                                                         |
     | ------------------------------ | --------------------------------------------------------------------------- |
-    | `--bind lan`                   | 绑定到 `0.0.0.0` 以便 Fly 的代理可以访问网关                     |
+    | `--bind lan`                   | 绑定到 `0.0.0.0`，以便Fly的代理可以访问网关                     |
     | `--allow-unconfigured`         | 在没有配置文件的情况下启动（您稍后会创建一个）                      |
-    | `internal_port = 3000`         | 必须与 `--port 3000`（或 `OPENCLAW_GATEWAY_PORT`）匹配以便进行 Fly 健康检查 |
-    | `memory = "2048mb"`            | 512MB 太小；建议 2GB                                         |
+    | `internal_port = 3000`         | 必须匹配 `--port 3000`（或 `OPENCLAW_GATEWAY_PORT`）以通过Fly健康检查 |
+    | `memory = "2048mb"`            | 512MB 太小；推荐 2GB                                         |
     | `OPENCLAW_STATE_DIR = "/data"` | 在卷上持久化状态                                                |
 
   </Step>
@@ -140,7 +140,7 @@ read_when:
   </Step>
 
   <Step title="创建配置文件">
-    SSH 进入机器以创建正确的配置：
+    通过 SSH 进入机器以创建合适的配置：
 
     ```bash
     fly ssh console
@@ -193,7 +193,14 @@ read_when:
       },
       "gateway": {
         "mode": "local",
-        "bind": "auto"
+        "bind": "auto",
+        "controlUi": {
+          "allowedOrigins": [
+            "https://my-openclaw.fly.dev",
+            "http://localhost:3000",
+            "http://127.0.0.1:3000"
+          ]
+        }
       },
       "meta": {}
     }
@@ -202,14 +209,19 @@ read_when:
 
     **注意：** 使用 `OPENCLAW_STATE_DIR=/data` 时，配置路径为 `/data/openclaw.json`。
 
-    **注意：** Discord 令牌可以来自以下任一来源：
+    **注意：** 将 `https://my-openclaw.fly.dev` 替换为您真实的 Fly 应用
+    origin。Gateway(网关) 启动时会从运行时
+    `--bind` 和 `--port` 值中植入本地控制 UI 源，以便在配置存在之前完成首次启动，
+    但通过 Fly 进行的浏览器访问仍需 `gateway.controlUi.allowedOrigins` 中列出的确切 HTTPS origin。
 
-    - 环境变量：`DISCORD_BOT_TOKEN`（推荐用于机密）
+    **注意：** Discord 令牌可以来自以下任一方式：
+
+    - 环境变量：`DISCORD_BOT_TOKEN`（推荐用于机密信息）
     - 配置文件：`channels.discord.token`
 
-    如果使用环境变量，则无需将令牌添加到配置中。Gateway 会自动读取 `DISCORD_BOT_TOKEN`。
+    如果使用环境变量，则无需将令牌添加到配置中。网关会自动读取 `DISCORD_BOT_TOKEN`。
 
-    重启以应用：
+    重启以应用更改：
 
     ```bash
     exit
@@ -219,7 +231,7 @@ read_when:
   </Step>
 
   <Step title="访问 Gateway(网关)">
-    ### 控制 UI
+    ### 控制界面 UI
 
     在浏览器中打开：
 
@@ -229,7 +241,8 @@ read_when:
 
     或访问 `https://my-openclaw.fly.dev/`
 
-    使用配置的共享密钥进行身份验证。本指南使用来自 `OPENCLAW_GATEWAY_TOKEN` 的 gateway 令牌；如果您切换到密码身份验证，请改用该密码。
+    使用配置的共享密钥进行身份验证。本指南使用来自 `OPENCLAW_GATEWAY_TOKEN` 的网关
+    令牌；如果您切换到密码身份验证，请改用该密码。
 
     ### 日志
 
@@ -251,21 +264,21 @@ read_when:
 
 ### "应用未在预期地址上监听"
 
-Gateway 正在绑定到 `127.0.0.1` 而不是 `0.0.0.0`。
+网关正在绑定到 `127.0.0.1` 而不是 `0.0.0.0`。
 
-**修复：** 将 `--bind lan` 添加到 `fly.toml` 中的进程命令。
+**修复方法：** 在 `fly.toml` 的进程命令中添加 `--bind lan`。
 
 ### 健康检查失败 / 连接被拒绝
 
 Fly 无法在配置的端口上访问网关。
 
-**修复：** 确保 `internal_port` 与 gateway 端口匹配（设置 `--port 3000` 或 `OPENCLAW_GATEWAY_PORT=3000`）。
+**修复方法：** 确保 `internal_port` 与网关端口匹配（设置 `--port 3000` 或 `OPENCLAW_GATEWAY_PORT=3000`）。
 
 ### OOM / 内存问题
 
 容器不断重启或被终止。迹象：`SIGABRT`、`v8::internal::Runtime_AllocateInYoungGeneration` 或静默重启。
 
-**修复：** 在 `fly.toml` 中增加内存：
+**修复方法：** 在 `fly.toml` 中增加内存：
 
 ```toml
 [[vm]]
@@ -295,9 +308,9 @@ fly machine restart <machine-id>
 
 锁文件位于 `/data/gateway.*.lock`（不在子目录中）。
 
-### 配置未读取
+### 配置未被读取
 
-`--allow-unconfigured` 仅绕过启动保护。它不会创建或修复 `/data/openclaw.json`，因此请确保您的真实配置存在，并在您希望正常启动本地 gateway 时包含 `gateway.mode="local"`。
+`--allow-unconfigured` 仅绕过启动保护。它不会创建或修复 `/data/openclaw.json`，因此请确保您的真实配置存在，并且当您想要正常的本地网关启动时包含 `gateway.mode="local"`。
 
 验证配置是否存在：
 
@@ -359,11 +372,11 @@ fly machine update <machine-id> --command "node dist/index.js gateway --port 300
 fly machine update <machine-id> --vm-memory 2048 --command "node dist/index.js gateway --port 3000 --bind lan" -y
 ```
 
-**注意：** 在 `fly deploy` 之后，machine 命令可能会重置为 `fly.toml` 中的内容。如果您进行了手动更改，请在部署后重新应用它们。
+**注意：** 在 `fly deploy` 之后，机器命令可能会重置为 `fly.toml` 中的内容。如果您进行了手动更改，请在部署后重新应用它们。
 
-## 私有部署（强化）
+## 私有部署（加固版）
 
-默认情况下，Fly 会分配公共 IP，使您的网关可以在 `https://your-app.fly.dev` 访问。这很方便，但也意味着您的部署可以被互联网扫描器（如 Shodan、Censys 等）发现。
+默认情况下，Fly 分配公共 IP，使您的网关可以在 `https://your-app.fly.dev` 访问。这很方便，但也意味着您的部署可以被互联网扫描器（Shodan、Censys 等）发现。
 
 要进行**无公网暴露**的强化部署，请使用私有模板。
 
@@ -466,7 +479,7 @@ fly ssh console -a my-openclaw
 }
 ```
 
-ngrok 隧道在容器内运行，并提供公共 webhook URL，而无需暴露 Fly 应用本身。将 `webhookSecurity.allowedHosts` 设置为公共隧道主机名，以便接受转发的主机标头。
+ngrok 隧道在容器内运行，并提供公共 webhook URL，而无需暴露 Fly 应用本身。将 `webhookSecurity.allowedHosts` 设置为公共隧道主机名，以便接受转发的主机头。
 
 ### 安全优势
 
@@ -481,8 +494,8 @@ ngrok 隧道在容器内运行，并提供公共 webhook URL，而无需暴露 F
 
 - Fly.io 使用 **x86 架构**（非 ARM）
 - Dockerfile 兼容这两种架构
-- 对于 WhatsApp/Telegram 的新手引导，请使用 `fly ssh console`
-- 持久化数据位于卷上的 `/data`
+- 对于 WhatsApp/Telegram 的新手引导，使用 `fly ssh console`
+- 持久数据位于卷的 `/data`
 - Signal 需要 Java + signal-cli；请使用自定义镜像并将内存保持在 2GB 以上。
 
 ## 费用
@@ -492,10 +505,17 @@ ngrok 隧道在容器内运行，并提供公共 webhook URL，而无需暴露 F
 - 每月约 $10-15，具体取决于使用情况
 - 免费层包含一定额度
 
-有关详细信息，请参阅 [Fly.io 定价](https://fly.io/docs/about/pricing/)。
+详情请参见 [Fly.io 定价](https://fly.io/docs/about/pricing/)。
 
 ## 后续步骤
 
-- 设置消息渠道：[渠道](/zh/channels)
+- 设置消息频道：[频道](/zh/channels)
 - 配置 Gateway(网关)：[Gateway(网关) 配置](/zh/gateway/configuration)
 - 保持 OpenClaw 为最新：[更新](/zh/install/updating)
+
+## 相关
+
+- [安装概述](/zh/install)
+- [Hetzner](/zh/install/hetzner)
+- [Docker](/zh/install/docker)
+- [VPS 托管](/zh/vps)

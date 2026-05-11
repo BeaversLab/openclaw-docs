@@ -162,3 +162,8 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 | `RunAtLoad`                          | Démarre le tunnel lorsque l'agent se charge                           |
 
 OpenClaw.app se connecte à `ws://127.0.0.1:18789` sur votre machine cliente. Le tunnel SSH transfère cette connexion vers le port 18789 sur la machine distante où le Gateway est en cours d'exécution.
+
+## Connexes
+
+- [Accès distant](/fr/gateway/remote)
+- [Tailscale](/fr/gateway/tailscale)

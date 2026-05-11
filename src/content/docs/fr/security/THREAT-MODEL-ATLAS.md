@@ -1,6 +1,6 @@
 ---
-title: "Modèle de Menace (MITRE ATLAS)"
-summary: "OpenClaw modèle de menace mappé sur le cadre MITRE ATLAS"
+summary: "Modèle de menace OpenClaw mappé au framework MITRE ATLAS"
+title: "Modèle de menace (MITRE ATLAS)"
 read_when:
   - Reviewing security posture or threat scenarios
   - Working on security features or audit responses
@@ -13,11 +13,11 @@ read_when:
 **Version :** 1.0-brouillon
 **Dernière mise à jour :** 2026-02-04
 **Méthodologie :** MITRE ATLAS + Diagrammes de flux de données
-**Cadre :** [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems)
+**Framework :** [MITRE ATLAS](https://atlas.mitre.org/) (Paysage des menaces adverses pour les systèmes d'IA)
 
-### Attribution du cadre
+### Attribution du framework
 
-Ce modèle de menace est basé sur [MITRE ATLAS](https://atlas.mitre.org/), le cadre standard de l'industrie pour documenter les menaces adverses contre les systèmes IA/ML. ATLAS est maintenu par [MITRE](https://www.mitre.org/) en collaboration avec la communauté de sécurité de l'IA.
+Ce modèle de menace est basé sur [MITRE ATLAS](https://atlas.mitre.org/), le framework standard de l'industrie pour documenter les menaces adverses aux systèmes d'IA/ML. ATLAS est maintenu par [MITRE](https://www.mitre.org/) en collaboration avec la communauté de sécurité de l'IA.
 
 **Ressources clés ATLAS :**
 
@@ -606,3 +606,8 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 ---
 
 _Ce modèle de menace est un document vivant. Signalez les problèmes de sécurité à security@openclaw.ai_
+
+## Connexes
+
+- [Vérification formelle](/fr/security/formal-verification)
+- [Contribuer au modèle de menace](/fr/security/CONTRIBUTING-THREAT-MODEL)

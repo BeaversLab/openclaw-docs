@@ -3,7 +3,7 @@ summary: "CLI 参考，用于 `openclaw backup`（创建本地备份档案）"
 read_when:
   - You want a first-class backup archive for local OpenClaw state
   - You want to preview which paths would be included before reset or uninstall
-title: "backup"
+title: "备份"
 ---
 
 # `openclaw backup`
@@ -81,3 +81,7 @@ OpenClaw 不强制执行内置的最大备份大小或单文件大小限制。
 大型工作区通常是存档大小的主要驱动因素。如果您希望备份更小或更快，请使用 `--no-include-workspace`。
 
 要获得最小的存档，请使用 `--only-config`。
+
+## 相关
+
+- [CLI 参考](/zh/cli)

@@ -1,6 +1,6 @@
 ---
+summary: "OpenClaw 威脅模型對應至 MITRE ATLAS 框架"
 title: "威脅模型 (MITRE ATLAS)"
-summary: "對應至 MITRE ATLAS 架構的 OpenClaw 威脅模型"
 read_when:
   - Reviewing security posture or threat scenarios
   - Working on security features or audit responses
@@ -13,11 +13,11 @@ read_when:
 **版本：** 1.0-draft
 **最後更新：** 2026-02-04
 **方法論：** MITRE ATLAS + 資料流程圖
-**框架：** [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems)
+**框架：** [MITRE ATLAS](https://atlas.mitre.org/) (AI 系統的對手威脅景觀)
 
-### 架構歸屬
+### 框架歸屬
 
-此威脅模型基於 [MITRE ATLAS](https://atlas.mitre.org/) 構建，這是記錄 AI/ML 系統對抗性威脅的業界標準框架。ATLAS 由 [MITRE](https://www.mitre.org/) 與 AI 安全社群共同維護。
+此威脅模型建立在 [MITRE ATLAS](https://atlas.mitre.org/) 之上，這是記錄 AI/ML 系統對手威脅的業界標準框架。ATLAS 由 [MITRE](https://www.mitre.org/) 與 AI 安全社群合作維護。
 
 **主要 ATLAS 資源：**
 
@@ -606,3 +606,8 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 ---
 
 _此威脅模型為持續更新的文件。請將安全問題回報至 security@openclaw.ai_
+
+## 相關
+
+- [形式化驗證](/zh-Hant/security/formal-verification)
+- [貢獻威脅模型](/zh-Hant/security/CONTRIBUTING-THREAT-MODEL)

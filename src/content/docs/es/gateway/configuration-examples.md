@@ -7,9 +7,7 @@ read_when:
 title: "Ejemplos de configuración"
 ---
 
-# Ejemplos de configuración
-
-Los ejemplos a continuación están alineados con el esquema de configuración actual. Para obtener la referencia exhaustiva y las notas por campo, consulte [Configuration](/es/gateway/configuration).
+Los siguientes ejemplos se alinean con el esquema de configuración actual. Para la referencia exhaustiva y notas por campo, consulte [Configuración](/es/gateway/configuration).
 
 ## Inicio rápido
 
@@ -22,7 +20,7 @@ Los ejemplos a continuación están alineados con el esquema de configuración a
 }
 ```
 
-Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot desde ese número.
+Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos (DM) al bot desde ese número.
 
 ### Inicio recomendado
 
@@ -46,9 +44,9 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
 }
 ```
 
-## Ejemplo expandido (opciones principales)
+## Ejemplo ampliado (opciones principales)
 
-> JSON5 le permite usar comentarios y comas finales. El JSON normal también funciona.
+> JSON5 le permite usar comentarios y comas finales. JSON regular también funciona.
 
 ```json5
 {
@@ -371,7 +369,7 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
   cron: {
     enabled: true,
     store: "~/.openclaw/cron/cron.json",
-    maxConcurrentRuns: 2,
+    maxConcurrentRuns: 2, // cron dispatch + isolated cron agent-turn execution
     sessionRetention: "24h",
     runLog: {
       maxBytes: "2mb",
@@ -503,9 +501,27 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
 }
 ```
 
-### Modo de MD seguro (bandeja de entrada compartida / MD de múltiples usuarios)
+### Aprobación automática de red de nodos de confianza
 
-Si más de una persona puede enviar MD a su bot (múltiples entradas en `allowFrom`, aprobaciones de vinculación para múltiples personas, o `dmPolicy: "open"`), habilite el **modo de MD seguro** para que los MD de diferentes remitentes no compartan un contexto por defecto:
+Mantenga el emparejamiento de dispositivos manual a menos que controle la ruta de red. Para un subred de laboratorio dedicado o tailnet, puede optar por la aprobación automática de dispositivos de nodo por primera vez con CIDRs o IPs exactas:
+
+```json5
+{
+  gateway: {
+    nodes: {
+      pairing: {
+        autoApproveCidrs: ["192.168.1.0/24", "fd00:1234:5678::/64"],
+      },
+    },
+  },
+}
+```
+
+Esto permanece apagado si no se establece. Solo se aplica al emparejamiento `role: node` fresco sin alcances solicitados. Los clientes de operador/navegador y las actualizaciones de rol, alcance, metadatos o clave pública aún requieren aprobación manual.
+
+### Modo DM seguro (bandeja de entrada compartida / DMs multiusuario)
+
+Si más de una persona puede enviar DM a su bot (múltiples entradas en `allowFrom`, aprobaciones de emparejamiento para múltiples personas, o `dmPolicy: "open"`), habilite el **modo DM seguro** para que los DM de diferentes remitentes no compartan un contexto por defecto:
 
 ```json5
 {
@@ -529,10 +545,10 @@ Si más de una persona puede enviar MD a su bot (múltiples entradas en `allowFr
 }
 ```
 
-Para Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC, la autorización del remitente es por ID por defecto.
+Para Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC, la autorización del remitente es primero por ID de forma predeterminada.
 Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutable con el `dangerouslyAllowNameMatching: true` de cada canal si acepta explícitamente ese riesgo.
 
-### Clave de API de Anthropic + respaldo de MiniMax
+### Clave de API de Anthropic + respaldo MiniMax
 
 ```json5
 {
@@ -626,6 +642,11 @@ Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutabl
 ## Consejos
 
 - Si establece `dmPolicy: "open"`, la lista `allowFrom` coincidente debe incluir `"*"`.
-- Los ID del proveedor difieren (números de teléfono, ID de usuario, ID de canal). Use la documentación del proveedor para confirmar el formato.
+- Los ID de proveedor difieren (números de teléfono, ID de usuario, ID de canal). Utilice la documentación del proveedor para confirmar el formato.
 - Secciones opcionales para agregar más tarde: `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
 - Consulte [Proveedores](/es/providers) y [Solución de problemas](/es/gateway/troubleshooting) para obtener notas de configuración más detalladas.
+
+## Relacionado
+
+- [Referencia de configuración](/es/gateway/configuration-reference)
+- [Configuración](/es/gateway/configuration)

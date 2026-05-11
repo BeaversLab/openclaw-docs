@@ -6,13 +6,11 @@ read_when:
 title: "Política de reintentos"
 ---
 
-# Política de reintentos
-
 ## Objetivos
 
 - Reintentar por cada solicitud HTTP, no por cada flujo de varios pasos.
-- Mantener el orden reintentando solo el paso actual.
-- Evitar duplicar operaciones no idempotentes.
+- Conservar el orden reintentando solo el paso actual.
+- Evitar la duplicación de operaciones no idempotentes.
 
 ## Valores predeterminados
 
@@ -28,25 +26,25 @@ title: "Política de reintentos"
 ### Proveedores de modelos
 
 - OpenClaw permite que los SDK de los proveedores manejen los reintentos cortos normales.
-- Para los SDK basados en Stainless como Anthropic y OpenAI, las respuestas reintentables
+- Para los SDK basados en Stainless, como Anthropic y OpenAI, las respuestas reintentables
   (`408`, `409`, `429` y `5xx`) pueden incluir `retry-after-ms` o
   `retry-after`. Cuando esa espera es superior a 60 segundos, OpenClaw inyecta
-  `x-should-retry: false` para que el SDK muestre el error inmediatamente y el
-  failover del modelo pueda rotar a otro perfil de autenticación o modelo alternativo.
+  `x-should-retry: false` para que el SDK muestre el error inmediatamente y el conmutación por error del modelo
+  pueda rotar a otro perfil de autenticación o modelo alternativo.
 - Anule el límite con `OPENCLAW_SDK_RETRY_MAX_WAIT_SECONDS=<seconds>`.
-  Establézcalo en `0`, `false`, `off`, `none` o `disabled` para permitir que los SDK respeten las
-  esperas `Retry-After` largas internamente.
+  Establezca el valor en `0`, `false`, `off`, `none` o `disabled` para permitir que los SDK respeten
+  las esperas `Retry-After` largas internamente.
 
 ### Discord
 
-- Solo reintentos en errores de límite de velocidad (HTTP 429).
-- Usa el `retry_after` de Discord cuando está disponible, de lo contrario, retroceso exponencial.
+- Solo se reintentan los errores de límite de velocidad (HTTP 429).
+- Usa el `retry_after` de Discord cuando está disponible, de lo contrario usa retroceso exponencial.
 
 ### Telegram
 
-- Reintentos en errores transitorios (429, tiempo de espera agotado, conexión/restablecimiento/cierre, no disponible temporalmente).
-- Usa `retry_after` cuando está disponible, de lo contrario, retroceso exponencial.
-- Los errores de análisis de Markdown no se reintentan; recurren a texto sin formato.
+- Reintenta en errores transitorios (429, tiempo de espera agotado, conexión/restablecimiento/cierre, no disponible temporalmente).
+- Usa `retry_after` cuando está disponible, de lo contrario usa retroceso exponencial.
+- Los errores de análisis de Markdown no se reintentan; se recurre a texto sin formato.
 
 ## Configuración
 
@@ -79,3 +77,8 @@ Establezca la política de reintentos por proveedor en `~/.openclaw/openclaw.jso
 
 - Los reintentos se aplican por solicitud (envío de mensaje, carga de medios, reacción, encuesta, pegatina).
 - Los flujos compuestos no reintentan los pasos completados.
+
+## Relacionado
+
+- [Conmutación por error del modelo](/es/concepts/model-failover)
+- [Cola de comandos](/es/concepts/queue)

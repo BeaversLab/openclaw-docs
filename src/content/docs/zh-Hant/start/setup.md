@@ -6,15 +6,15 @@ read_when:
 title: "設定"
 ---
 
-# 設定
-
-<Note>如果您是第一次進行設置，請從 [快速入門](/zh-Hant/start/getting-started) 開始。 有關入職培訓的詳細資訊，請參閱 [Onboarding (CLI)](/zh-Hant/start/wizard)。</Note>
+<Note>如果您是第一次進行設定，請從[入門指南](/zh-Hant/start/getting-started)開始。 關於入門的詳細資訊，請參閱[入門 (CLI)](/zh-Hant/start/wizard)。</Note>
 
 ## TL;DR
 
-- **客製化設定位於 repo 之外：** `~/.openclaw/workspace` (workspace) + `~/.openclaw/openclaw.json` (config)。
-- **穩定工作流程：** 安裝 macOS 應用程式；讓它執行內建的 Gateway。
-- **最前線工作流程：** 透過 `pnpm gateway:watch` 自行執行 Gateway，然後讓 macOS 應用程式以本機模式連接。
+根據您希望更新的頻率以及是否想自行執行 Gateway，選擇一種設定工作流程：
+
+- **客製化設定位於 repo 之外：** 請將您的設定和工作區保留在 `~/.openclaw/openclaw.json` 和 `~/.openclaw/workspace/` 中，以免 repo 更新影響到它們。
+- **穩定工作流程（推薦給大多數人）：** 安裝 macOS 應用程式並讓它執行內建的 Gateway。
+- **最新工作流程（開發者）：** 透過 `pnpm gateway:watch` 自行執行 Gateway，然後讓 macOS 應用程式以本地模式連接。
 
 ## 先決條件 (從原始碼)
 

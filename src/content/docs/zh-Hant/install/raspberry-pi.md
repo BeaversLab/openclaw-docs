@@ -7,33 +7,31 @@ read_when:
 title: "Raspberry Pi"
 ---
 
-# Raspberry Pi
-
-在 Raspberry Pi 上執行持續運作的 OpenClaw Gateway。由於 Pi 僅作為閘道（模型透過 API 在雲端執行），即使是規格一般的 Pi 也能妥善處理工作負載。
+在 Raspberry Pi 上執行持久、永遠在線的 OpenClaw Gateway。由於 Pi 只是閘道（模型透過 API 在雲端執行），即使是規格一般的 Pi 也能很好地處理工作負載。
 
 ## 先決條件
 
-- Raspberry Pi 4 或 5，記憶體 2 GB 以上（建議 4 GB）
-- MicroSD 卡（16 GB 以上）或 USB SSD（效能更佳）
+- Raspberry Pi 4 或 5，配備 2 GB 以上 RAM（建議 4 GB）
+- MicroSD 卡（16 GB 以上）或 USB SSD（效能較佳）
 - 官方 Pi 電源供應器
 - 網路連線（乙太網路或 WiFi）
 - 64 位元 Raspberry Pi OS（必要 — 請勿使用 32 位元）
-- 大約 30 分鐘
+- 約 30 分鐘
 
 ## 設定
 
 <Steps>
-  <Step title="Flash the OS">
-    使用 **Raspberry Pi OS Lite (64-bit)** -- 無桌面環境的無頭伺服器不需要此功能。
+  <Step title="安裝作業系統">
+    使用 **Raspberry Pi OS Lite (64-bit)** — 無人伺服器不需要桌面環境。
 
     1. 下載 [Raspberry Pi Imager](https://www.raspberrypi.com/software/)。
-    2. 選擇作業系統：**Raspberry Pi OS Lite (64-bit)**。
+    2. 選擇 OS：**Raspberry Pi OS Lite (64-bit)**。
     3. 在設定對話方塊中，預先設定：
-       - 主機名稱： `gateway-host`
+       - 主機名稱：`gateway-host`
        - 啟用 SSH
        - 設定使用者名稱和密碼
-       - 設定 WiFi (如果不使用乙太網路)
-    4. 燒錄至您的 SD 卡或 USB 隨身碟，插入並啟動 Pi。
+       - 設定 WiFi（如果不使用乙太網路）
+    4. 將系統刷入 SD 卡或 USB 隨身碟，插入並啟動 Pi。
 
   </Step>
 
@@ -52,7 +50,7 @@ title: "Raspberry Pi"
 
 <Step title="安裝 Node.js 24">```bash curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash - sudo apt install -y nodejs node --version ```</Step>
 
-  <Step title="新增 Swap（對 2 GB 或以下記憶體很重要）">
+  <Step title="新增 swap（對 2 GB 或以下容量很重要）">
     ```bash
     sudo fallocate -l 2G /swapfile
     sudo chmod 600 /swapfile
@@ -69,18 +67,18 @@ title: "Raspberry Pi"
 
 <Step title="安裝 OpenClaw">```bash curl -fsSL https://openclaw.ai/install.sh | bash ```</Step>
 
-  <Step title="執行上架精靈">
+  <Step title="執行入門設定">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    請依照精靈指示操作。對於無人頭裝置，建議使用 API 金鑰而非 OAuth。Telegram 是最容易入手的頻道。
+    請依照精靈指示操作。對於無人裝置，建議使用 API 金鑰而非 OAuth。Telegram 是最簡單的入門管道。
 
   </Step>
 
-<Step title="Verify">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
+<Step title="驗證">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
-  <Step title="Access the Control UI">
+  <Step title="存取控制 UI">
     在您的電腦上，從 Pi 取得儀表板 URL：
 
     ```bash
@@ -100,9 +98,9 @@ title: "Raspberry Pi"
 
 ## 效能提示
 
-**使用 USB SSD** -- SD 卡速度慢且容易損壞。USB SSD 可大幅提升效能。請參閱 [Pi USB 開機指南](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot)。
+**使用 USB SSD** -- SD 卡速度慢且容易磨損。USB SSD 可大幅提升效能。請參閱 [Pi USB 開機指南](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot)。
 
-**啟用模組編譯快取** -- 在低功耗 Pi 主機上加速重複的 CLI 呼叫：
+**啟用模組編譯快取** -- 加速在低功耗 Pi 主機上重複的 CLI 呼叫：
 
 ```bash
 grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF' # pragma: allowlist secret
@@ -113,7 +111,7 @@ EOF
 source ~/.bashrc
 ```
 
-**減少記憶體使用量** -- 針對無介面設定，釋放 GPU 記憶體並停用未使用的服務：
+**降低記憶體使用量** -- 對於無介面設置，釋放 GPU 記憶體並停用未使用的服務：
 
 ```bash
 echo 'gpu_mem=16' | sudo tee -a /boot/config.txt
@@ -124,16 +122,22 @@ sudo systemctl disable bluetooth
 
 **記憶體不足** -- 使用 `free -h` 驗證 swap 是否已啟用。停用未使用的服務 (`sudo systemctl disable cups bluetooth avahi-daemon`)。僅使用基於 API 的模型。
 
-**效能緩慢** -- 使用 USB SSD 代替 SD 卡。使用 `vcgencmd get_throttled` 檢查 CPU 節流情況 (應傳回 `0x0`)。
+**效能緩慢** -- 使用 USB SSD 取代 SD 卡。使用 `vcgencmd get_throttled` 檢查 CPU 是否出現降頻 (應回傳 `0x0`)。
 
-**服務無法啟動** -- 使用 `journalctl --user -u openclaw-gateway.service --no-pager -n 100` 檢查日誌並執行 `openclaw doctor --non-interactive`。如果這是無頭 Pi，請同時驗證是否已啟用 lingering： `sudo loginctl enable-linger "$(whoami)"`。
+**服務無法啟動** -- 使用 `journalctl --user -u openclaw-gateway.service --no-pager -n 100` 檢查日誌並執行 `openclaw doctor --non-interactive`。如果這是無介面 Pi，請同時驗證是否已啟用 lingering：`sudo loginctl enable-linger "$(whoami)"`。
 
-**ARM 二進位檔問題** -- 如果某個技能失敗並顯示「exec format error」，請檢查該二進位檔是否有 ARM64 建置版本。使用 `uname -m` 驗證架構 (應顯示 `aarch64`)。
+**ARM 二進位檔問題** -- 如果技能因「exec format error」而失敗，請檢查二進位檔是否有 ARM64 版本。使用 `uname -m` 驗證架構 (應顯示 `aarch64`)。
 
-**WiFi 斷線** -- 停用 WiFi 電源管理： `sudo iwconfig wlan0 power off`。
+**WiFi 斷線** -- 停用 WiFi 電源管理：`sudo iwconfig wlan0 power off`。
 
 ## 下一步
 
-- [Channels](/zh-Hant/channels) -- 連接 Telegram、WhatsApp、Discord 等更多服務
-- [Gateway configuration](/zh-Hant/gateway/configuration) -- 所有設定選項
-- [Updating](/zh-Hant/install/updating) -- 讓 OpenClaw 保持最新狀態
+- [頻道](/zh-Hant/channels) -- 連接 Telegram、WhatsApp、Discord 等
+- [Gateway 設定](/zh-Hant/gateway/configuration) -- 所有設定選項
+- [更新](/zh-Hant/install/updating) -- 保持 OpenClaw 為最新狀態
+
+## 相關
+
+- [安裝概覽](/zh-Hant/install)
+- [Linux 伺服器](/zh-Hant/vps)
+- [平台](/zh-Hant/platforms)

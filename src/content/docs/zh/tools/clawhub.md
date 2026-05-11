@@ -1,278 +1,288 @@
 ---
-summary: "ClawHub 指南：公共注册表、原生 OpenClaw 安装流程以及 ClawHub CLI 工作流"
+summary: "ClawHub：用于 OpenClaw skills 和 plugins 的公共注册表、本机安装流程以及 clawhub OpenClaw"
 read_when:
-  - Introducing ClawHub to new users
-  - Installing, searching, or publishing skills or plugins
-  - Explaining ClawHub CLI flags and sync behavior
+  - Searching for, installing, or updating skills or plugins
+  - Publishing skills or plugins to the registry
+  - Configuring the clawhub CLI or its environment overrides
 title: "ClawHub"
+sidebarTitle: "ClawHub"
 ---
-
-# ClawHub
 
 ClawHub 是 **OpenClaw Skills 和插件** 的公共注册表。
 
-- 使用原生 `openclaw` 命令从 ClawHub 搜索/安装/更新 Skills 并安装插件。
-- 当您需要注册表身份验证、发布、删除、取消删除或同步工作流时，请使用独立的 `clawhub` CLI。
+- 使用本机 `openclaw` 命令搜索、安装和更新 skills，并从 ClawHub 安装 plugins。
+- 使用单独的 `clawhub` CLI 进行注册表身份验证、发布、删除/取消删除和同步工作流。
 
-网站：[clawhub.ai](https://clawhub.ai)
+站点：[clawhub.ai](https://clawhub.ai)
+
+## 快速开始
+
+<Steps>
+  <Step title="搜索">
+    ```bash
+    openclaw skills search "calendar"
+    ```
+  </Step>
+  <Step title="安装">
+    ```bash
+    openclaw skills install <skill-slug>
+    ```
+  </Step>
+  <Step title="使用">
+    启动一个新的 OpenClaw 会话 — 它将获取新的 skill。
+  </Step>
+  <Step title="发布（可选）">
+    对于需要注册表身份验证的工作流（发布、同步、管理），请安装
+    单独的 `clawhub` CLI：
+
+    ```bash
+    npm i -g clawhub
+    # or
+    pnpm add -g clawhub
+    ```
+
+  </Step>
+</Steps>
 
 ## 原生 OpenClaw 流程
 
-Skills：
+<Tabs>
+  <Tab title="Skills">
+    ```bash
+    openclaw skills search "calendar"
+    openclaw skills install <skill-slug>
+    openclaw skills update --all
+    ```
 
-```bash
-openclaw skills search "calendar"
-openclaw skills install <skill-slug>
-openclaw skills update --all
-```
+    原生 `openclaw` 命令会安装到您当前的活动工作区中，并
+    保留源元数据，以便后续的 `update` 调用可以继续停留在 ClawHub 上。
 
-插件：
+  </Tab>
+  <Tab title="Plugins">
+    ```bash
+    openclaw plugins install clawhub:<package>
+    openclaw plugins update --all
+    ```
 
-```bash
-openclaw plugins install clawhub:<package>
-openclaw plugins update --all
-```
+    也会在 npm 之前尝试针对 ClawHub 解析裸 npm 安全 plugin 规范：
 
-在尝试 npm 之前，也会针对 ClawHub 尝试裸 npm 安全插件规范：
+    ```bash
+    openclaw plugins install openclaw-codex-app-server
+    ```
 
-```bash
-openclaw plugins install openclaw-codex-app-server
-```
+    当您想要仅通过 npm 解析而不进行
+    ClawHub 查找时，请使用 `npm:<package>`：
 
-原生 `openclaw` 命令会安装到您的活动工作区，并持久化源元数据，以便后续的 `update` 调用可以保持在 ClawHub 上。
+    ```bash
+    openclaw plugins install npm:openclaw-codex-app-server
+    ```
 
-插件安装程序在运行归档安装之前，会先验证声明的 `pluginApi` 和 `minGatewayVersion`
-兼容性，因此不兼容的主机会提前失败关闭，而不是部分安装软件包。
+    Plugin 安装会在运行存档安装之前验证声明的 `pluginApi` 和
+    `minGatewayVersion` 兼容性，因此
+    不兼容的主机会提前封闭失败，而不是部分安装
+    该软件包。
 
-`openclaw plugins install clawhub:...` 仅接受可安装的插件系列。
-如果 ClawHub 包实际上是技能，OpenClaw 将停止并引导您使用
-`openclaw skills install <slug>`。
+  </Tab>
+</Tabs>
 
-## ClawHub 是什么
+<Note>
+`openclaw plugins install clawhub:...` 仅接受可安装的插件
+系列。如果 ClawHub 包实际上是 skill，OpenClaw 会停止并
+指向 `openclaw skills install <slug>`。
 
-- 用于 OpenClaw 技能和插件的公共注册表。
-- 技能包和元数据的版本化存储。
-- 用于搜索、标签和使用信号的发现界面。
+匿名 ClawHub 插件安装对于私有包也会失败关闭。
+社区或其他非官方渠道仍可安装，但 OpenClaw
+会发出警告，以便操作员在启用之前审查来源和验证信息。
 
-## 工作原理
+</Note>
 
-1. 用户发布技能包（文件 + 元数据）。
-2. ClawHub 存储该包，解析元数据，并分配版本。
-3. 注册表对技能进行索引以便搜索和发现。
-4. 用户在 OpenClaw 中浏览、下载和安装技能。
+## 什么是 ClawHub
 
-## 您可以做什么
+- OpenClaw Skills 和插件的公共注册表。
+- Skill 包和元数据的版本化存储。
+- 用于搜索、标签和使用信号发现的界面。
 
-- 发布新技能和现有技能的新版本。
-- 通过名称、标签或搜索发现技能。
-- 下载技能包并检查其文件。
-- 举报滥用或不安全的技能。
-- 如果您是管理员，可以隐藏、取消隐藏、删除或禁止。
-
-## 适用人群（对初学者友好）
-
-如果您想为 OpenClaw 代理添加新功能，ClawHub 是查找和安装技能的最简单方式。您无需了解后端的工作原理。您可以：
-
-- 使用自然语言搜索技能。
-- 将技能安装到您的工作区中。
-- 稍后使用一条命令更新技能。
-- 通过发布您自己的技能来备份它们。
-
-## 快速开始（非技术性）
-
-1. 搜索您需要的内容：
-   - `openclaw skills search "calendar"`
-2. 安装技能：
-   - `openclaw skills install <skill-slug>`
-3. 启动一个新的 OpenClaw 会话，以便它识别新技能。
-4. 如果您想发布或管理注册表身份验证，请另外安装
-   `clawhub` CLI。
-
-## 安装 ClawHub CLI
-
-您只需要将其用于注册表认证的工作流，例如发布/同步：
-
-```bash
-npm i -g clawhub
-```
-
-```bash
-pnpm add -g clawhub
-```
-
-## 如何融入 OpenClaw
-
-原生 `openclaw skills install` 安装到活动工作区 `skills/`
-目录中。`openclaw plugins install clawhub:...` 会记录一次正常的受管
-插件安装以及用于更新的 ClawHub 源元数据。
-
-对于私有包，匿名 ClawHub 插件安装也会以失败关闭。社区或其他非官方渠道仍然可以安装，但 OpenClaw 会发出警告，以便操作员在启用之前审查来源和验证信息。
-
-独立的 `clawhub` CLI 也会将 Skills 安装到当前工作目录下的 `./skills` 中。如果配置了 OpenClaw 工作区，`clawhub` 将回退到该工作区，除非你覆盖 `--workdir`（或 `CLAWHUB_WORKDIR`）。OpenClaw 会从 `<workspace>/skills` 加载工作区 Skills，并将在**下一次**会话中获取它们。如果你已经使用 `~/.openclaw/skills` 或捆绑的 Skills，工作区 Skills 将优先。
-
-有关如何加载、共享和限制 Skills 的更多详细信息，请参阅
-[Skills](/zh/tools/skills)。
-
-## Skills 系统概述
-
-Skill 是一个版本化的文件包，用于教 OpenClaw 如何执行特定任务。每次发布都会创建一个新版本，注册表会保留版本历史记录，以便用户审查更改。
-
-典型的 Skill 包括：
+典型的 Skill 是包含以下内容的版本化文件包：
 
 - 包含主要描述和用法的 `SKILL.md` 文件。
 - Skill 使用的可选配置、脚本或支持文件。
-- 元数据，例如标签、摘要和安装要求。
+- 元数据，如标签、摘要和安装要求。
 
-ClawHub 使用元数据来支持发现并安全地展示 Skill 功能。注册表还会跟踪使用信号（例如星标和下载量）以提高排名和可见度。
+ClawHub 利用元数据来驱动发现并安全地暴露 Skill
+功能。注册表跟踪使用信号（星标、下载量）以
+提高排名和可见性。每次发布都会创建一个新的 semver
+版本，注册表保留版本历史记录以便用户审计
+更改。
 
-## 服务提供的内容（功能）
+## 工作区和 Skill 加载
 
-- Skills 及其 `SKILL.md` 内容的**公开浏览**。
-- 由嵌入（向量搜索）驱动的**搜索**，而不仅仅是关键词。
-- 使用 semver、变更日志和标签（包括 `latest`）进行的**版本控制**。
-- 按版本**下载**为 zip 文件。
-- 用于社区反馈的**星标和评论**。
-- 用于审批和审计的**审核**钩子。
-- 用于自动化和脚本的 **CLI 友好的 API**。
+独立的 `clawhub` CLI 还会将 Skills 安装到当前工作目录下的
+`./skills` 中。如果配置了 OpenClaw 工作区，
+除非你覆盖 `--workdir`
+（或 `CLAWHUB_WORKDIR`），否则 `clawhub` 将回退到该工作区。OpenClaw 从
+`<workspace>/skills` 加载工作区 Skills，并
+在**下一次**会话中获取它们。
 
-## 安全与审核
+如果你已经使用 `~/.openclaw/skills` 或捆绑的 Skills，工作区
+Skills 优先。有关如何加载、共享和
+限制 Skills 的更多详细信息，请参阅 [Skills](/zh/tools/skills)。
 
-ClawHub 默认是开放的。任何人都可以上传 Skills，但 GitHub 账户必须至少注册一周才能发布。这有助于在不阻止合法贡献者的情况下减缓滥用行为。
+## 服务功能
 
-举报和审核：
+| 功能           | 说明                                      |
+| -------------- | ----------------------------------------- |
+| 公共浏览       | Skills 及其 `SKILL.md` 内容是公开可见的。 |
+| 搜索           | 基于嵌入（向量搜索），而不仅仅是关键字。  |
+| 版本控制       | Semver、变更日志和标签（包括 `latest`）。 |
+| 下载           | 每个版本的 Zip 包。                       |
+| 星标和评论     | 社区反馈。                                |
+| 审核           | 批准和审计。                              |
+| CLI 友好的 API | 适用于自动化和脚本编写。                  |
 
-- 任何登录用户都可以举报 Skill。
-- 举报理由是必填的，并会被记录。
-- 每个用户最多可以同时拥有 20 个活跃的举报。
-- 有超过 3 个不同用户举报的 Skills 默认会被自动隐藏。
-- 版主可以查看隐藏的 Skills，将其取消隐藏、删除，或封禁用户。
-- 滥用举报功能可能会导致帐户被封禁。
+## 安全和审核
 
-有兴趣成为版主吗？请在 OpenClaw Discord 中询问并联系
-版主或维护者。
+ClawHub 默认是开放的 —— 任何人都可以上传技能，但 GitHub
+账号必须**注册至少一周**才能发布。这可以在不阻碍合法贡献者的情况下减缓滥用行为。
 
-## CLI 命令和参数
+<AccordionGroup>
+  <Accordion title="Reporting">- 任何登录用户都可以举报一个技能。 - 必须提供并记录举报原因。 - 每个用户同时最多可以拥有 20 个活跃的举报。 - 超过 3 个独立举报的技能默认会被自动隐藏。</Accordion>
+  <Accordion title="Moderation">- 审核员可以查看隐藏的技能、取消隐藏、删除它们或封禁用户。 - 滥用举报功能可能导致账号被封禁。 - 有兴趣成为审核员？请在 OpenClaw Discord 中询问，并联系审核员或维护者。</Accordion>
+</AccordionGroup>
 
-全局选项（适用于所有命令）：
+## ClawHub CLI
 
-- `--workdir <dir>`：工作目录（默认：当前目录；回退到 OpenClaw 工作区）。
-- `--dir <dir>`：Skills 目录，相对于工作目录（默认：`skills`）。
-- `--site <url>`：站点基础 URL（浏览器登录）。
-- `--registry <url>`：注册表 API 基础 URL。
-- `--no-input`：禁用提示（非交互式）。
-- `-V, --cli-version`：打印 CLI 版本。
+仅在需要注册表身份验证的工作流程（如发布/同步）时才需要此功能。
 
-身份验证：
+### 全局选项
 
-- `clawhub login`（浏览器流程）或 `clawhub login --token <token>`
-- `clawhub logout`
-- `clawhub whoami`
+<ParamField path="--workdir <dir>" type="string">
+  工作目录。默认：当前目录；回退到 OpenClaw 工作区。
+</ParamField>
+<ParamField path="--dir <dir>" type="string" default="skills">
+  技能目录，相对于工作目录。
+</ParamField>
+<ParamField path="--site <url>" type="string">
+  站点基础 URL（浏览器登录）。
+</ParamField>
+<ParamField path="--registry <url>" type="string">
+  注册表 API 基础 URL。
+</ParamField>
+<ParamField path="--no-input" type="boolean">
+  禁用提示（非交互式）。
+</ParamField>
+<ParamField path="-V, --cli-version" type="boolean">
+  打印 CLI 版本。
+</ParamField>
 
-选项：
+### 命令
 
-- `--token <token>`：粘贴 API 令牌。
-- `--label <label>`：为浏览器登录令牌存储的标签（默认：`CLI token`）。
-- `--no-browser`：不打开浏览器（需要 `--token`）。
+<AccordionGroup>
+  <Accordion title="Auth (login / logout / whoami)">
+    ```bash
+    clawhub login              # browser flow
+    clawhub login --token <token>
+    clawhub logout
+    clawhub whoami
+    ```
 
-搜索：
+    登录选项：
 
-- `clawhub search "query"`
-- `--limit <n>`：最大结果数。
+    - `--token <token>` — 粘贴 API 令牌。
+    - `--label <label>` — 为浏览器登录令牌存储的标签（默认：`CLI token`）。
+    - `--no-browser` — 不打开浏览器（需要 `--token`）。
 
-安装：
+  </Accordion>
+  <Accordion title="搜索">
+    ```bash
+    clawhub search "query"
+    ```
 
-- `clawhub install <slug>`
-- `--version <version>`：安装特定版本。
-- `--force`：如果文件夹已存在则覆盖。
+    - `--limit <n>` — 最大结果数。
 
-更新：
+  </Accordion>
+  <Accordion title="安装 / 更新 / 列表">
+    ```bash
+    clawhub install <slug>
+    clawhub update <slug>
+    clawhub update --all
+    clawhub list
+    ```
 
-- `clawhub update <slug>`
-- `clawhub update --all`
-- `--version <version>`：更新到特定版本（仅限单个 slug）。
-- `--force`：当本地文件与任何已发布的版本不匹配时覆盖。
+    选项：
 
-列表：
+    - `--version <version>` — 安装或更新到特定版本（在 `update` 上仅支持单个 slug）。
+    - `--force` — 如果文件夹已存在，或者本地文件与任何已发布的版本不匹配时，则覆盖。
+    - `clawhub list` 读取 `.clawhub/lock.json`。
 
-- `clawhub list`（读取 `.clawhub/lock.json`）
+  </Accordion>
+  <Accordion title="发布技能">
+    ```bash
+    clawhub skill publish <path>
+    ```
 
-发布 Skills：
+    选项：
 
-- `clawhub skill publish <path>`
-- `--slug <slug>`：Skill slug。
-- `--name <name>`：显示名称。
-- `--version <version>`：Semver 版本。
-- `--changelog <text>`：更新日志文本（可以为空）。
-- `--tags <tags>`：逗号分隔的标签（默认：`latest`）。
+    - `--slug <slug>` — 技能 slug。
+    - `--name <name>` — 显示名称。
+    - `--version <version>` — semver 版本。
+    - `--changelog <text>` — 更新日志文本（可以为空）。
+    - `--tags <tags>` — 逗号分隔的标签（默认：`latest`）。
 
-发布插件：
+  </Accordion>
+  <Accordion title="发布插件">
+    ```bash
+    clawhub package publish <source>
+    ```
 
-- `clawhub package publish <source>`
-- `<source>` 可以是本地文件夹、`owner/repo`、`owner/repo@ref` 或 GitHub URL。
-- `--dry-run`：构建确切的发布计划而不上传任何内容。
-- `--json`：输出可供 CI 解析的机器可读输出。
-- `--source-repo`、`--source-commit`、`--source-ref`：自动检测不足时的可选覆盖参数。
+    `<source>` 可以是本地文件夹、`owner/repo`、`owner/repo@ref` 或
+    GitHub URL。
 
-删除/取消删除（仅所有者/管理员）：
+    选项：
 
-- `clawhub delete <slug> --yes`
-- `clawhub undelete <slug> --yes`
+    - `--dry-run` — 构建确切的发布计划而不上传任何内容。
+    - `--json` — 输出可供 CI 读取的机器可读输出。
+    - `--source-repo`、`--source-commit`、`--source-ref` — 当自动检测不够时的可选覆盖项。
 
-同步（扫描本地技能 + 发布新项/更新项）：
+  </Accordion>
+  <Accordion title="删除 / 恢复（所有者或管理员）">
+    ```bash
+    clawhub delete <slug> --yes
+    clawhub undelete <slug> --yes
+    ```
+  </Accordion>
+  <Accordion title="Sync (scan local + publish new or updated)">
+    ```bash
+    clawhub sync
+    ```
 
-- `clawhub sync`
-- `--root <dir...>`：额外的扫描根目录。
-- `--all`：不经提示直接上传所有内容。
-- `--dry-run`：显示将要上传的内容。
-- `--bump <type>`：更新时 `patch|minor|major`（默认：`patch`）。
-- `--changelog <text>`：非交互式更新的更新日志。
-- `--tags <tags>`：逗号分隔的标签（默认：`latest`）。
-- `--concurrency <n>`：注册表检查（默认为 4）。
+    Options:
 
-## 代理的常见工作流程
+    - `--root <dir...>` — 额外的扫描根目录。
+    - `--all` — 无提示上传所有内容。
+    - `--dry-run` — 显示将要上传的内容。
+    - `--bump <type>` — 更新的 `patch|minor|major`（默认：`patch`）。
+    - `--changelog <text>` — 非交互式更新的变更日志。
+    - `--tags <tags>` — 逗号分隔的标签（默认：`latest`）。
+    - `--concurrency <n>` — 注册表检查（默认：`4`）。
 
-### 搜索技能
+  </Accordion>
+</AccordionGroup>
 
-```bash
-clawhub search "postgres backups"
-```
+## 常见工作流
 
-### 下载新技能
+<Tabs>
+  <Tab title="Search">```bash clawhub search "postgres backups" ```</Tab>
+  <Tab title="Install">```bash clawhub install my-skill-pack ```</Tab>
+  <Tab title="Update all">```bash clawhub update --all ```</Tab>
+  <Tab title="Publish a single skill">```bash clawhub skill publish ./my-skill --slug my-skill --name "My Skill" --version 1.0.0 --tags latest ```</Tab>
+  <Tab title="Sync many skills">```bash clawhub sync --all ```</Tab>
+  <Tab title="从 GitHub 发布插件">```bash clawhub package publish your-org/your-plugin --dry-run clawhub package publish your-org/your-plugin clawhub package publish your-org/your-plugin@v1.0.0 clawhub package publish https://github.com/your-org/your-plugin ```</Tab>
+</Tabs>
 
-```bash
-clawhub install my-skill-pack
-```
+### 插件包元数据
 
-### 更新已安装的技能
-
-```bash
-clawhub update --all
-```
-
-### 备份您的技能（发布或同步）
-
-对于单个技能文件夹：
-
-```bash
-clawhub skill publish ./my-skill --slug my-skill --name "My Skill" --version 1.0.0 --tags latest
-```
-
-要一次扫描并备份多个技能：
-
-```bash
-clawhub sync --all
-```
-
-### 从 GitHub 发布插件
-
-```bash
-clawhub package publish your-org/your-plugin --dry-run
-clawhub package publish your-org/your-plugin
-clawhub package publish your-org/your-plugin@v1.0.0
-clawhub package publish https://github.com/your-org/your-plugin
-```
-
-代码插件必须在 `package.json` 中包含所需的 OpenClaw 元数据：
+代码插件必须在
+`package.json` 中包含必需的 OpenClaw 元数据：
 
 ```json
 {
@@ -294,42 +304,56 @@ clawhub package publish https://github.com/your-org/your-plugin
 }
 ```
 
-发布的包应附带已构建的 JavaScript，并将 `runtimeExtensions` 指向
-该输出。当不存在构建的文件时，Git 检出安装仍然可以回退到 TypeScript 源代码，但构建的运行时条目可以避免在启动、诊断和插件加载路径中出现运行时 TypeScript 编译。
+发布的包应附带 **已构建的 JavaScript** 并将
+`runtimeExtensions` 指向该输出。当没有已构建的文件时，Git 检出安装仍然可以回退到 TypeScript 源代码，但在启动、诊断和
+插件加载路径中，构建的运行时条目可以避免运行时 TypeScript 编译。
 
-## 高级详情（技术）
+## 版本控制、锁定文件和遥测
 
-### 版本控制和标签
+<AccordionGroup>
+  <Accordion title="版本控制和标签">
+    - 每次发布都会创建一个新的 **semver** `SkillVersion`。
+    - 标签（例如 `latest`）指向某个版本；移动标签可以让你回滚。
+    - 变更日志按版本附加，在同步或发布更新时可以为空。
+  </Accordion>
+  <Accordion title="本地更改与注册表版本">
+    更新会使用内容哈希将本地技能内容与注册表版本进行比较。
+    如果本地文件与任何已发布的版本不匹配，
+    CLI 会在覆盖之前询问（或在非交互式运行中要求 `--force`）。
+  </Accordion>
+  <Accordion title="同步扫描和备用根目录">
+    `clawhub sync` 首先扫描你当前的工作目录。如果没有找到
+    技能，它会回退到已知的旧版位置（例如
+    `~/openclaw/skills` 和 `~/.openclaw/skills`）。这是为了在不使用额外标志的情况下
+    找到较旧的技能安装而设计的。
+  </Accordion>
+  <Accordion title="存储和锁定文件">
+    - 已安装的技能记录在 `.clawhub/lock.json` 下的你工作目录中。
+    - 认证令牌存储在 ClawHub CLI 配置文件中（可通过 `CLAWHUB_CONFIG_PATH` 覆盖）。
+  </Accordion>
+  <Accordion title="遥测（安装计数）">
+    当你在登录状态下运行 `clawhub sync` 时，CLI 会发送一个最小化的
+    快照以计算安装计数。你可以完全禁用此功能：
 
-- 每次发布都会创建一个新的 **semver** `SkillVersion`。
-- 标签（如 `latest`）指向某个版本；移动标签允许您回滚。
-- 变更日志按版本附加，在同步或发布更新时可以为空。
+    ```bash
+    export CLAWHUB_DISABLE_TELEMETRY=1
+    ```
 
-### 本地更改与注册表版本
-
-更新使用内容哈希将本地技能内容与注册表版本进行比较。如果本地文件与任何已发布的版本不匹配，CLI 会在覆盖之前询问（或在非交互式运行中需要 `--force`）。
-
-### 同步扫描和后备根目录
-
-`clawhub sync` 首先扫描您当前的工作目录。如果没有找到技能，它会回退到已知的旧版位置（例如 `~/openclaw/skills` 和 `~/.openclaw/skills`）。此设计旨在无需额外标志即可找到较旧的技能安装。
-
-### 存储和锁定文件
-
-- 已安装的技能记录在工作目录下的 `.clawhub/lock.json` 中。
-- Auth 令牌存储在 ClawHub CLI 配置文件中（可通过 `CLAWHUB_CONFIG_PATH` 覆盖）。
-
-### 遥测（安装计数）
-
-当您在登录状态下运行 `clawhub sync` 时，CLI 会发送最小快照以计算安装次数。您可以完全禁用此功能：
-
-```bash
-export CLAWHUB_DISABLE_TELEMETRY=1
-```
+  </Accordion>
+</AccordionGroup>
 
 ## 环境变量
 
-- `CLAWHUB_SITE`：覆盖站点 URL。
-- `CLAWHUB_REGISTRY`：覆盖注册表 API URL。
-- `CLAWHUB_CONFIG_PATH`：覆盖 CLI 存储令牌/配置的位置。
-- `CLAWHUB_WORKDIR`：覆盖默认工作目录。
-- `CLAWHUB_DISABLE_TELEMETRY=1`：在 `sync` 上禁用遥测。
+| 变量                          | 作用                           |
+| ----------------------------- | ------------------------------ |
+| `CLAWHUB_SITE`                | 覆盖站点 URL。                 |
+| `CLAWHUB_REGISTRY`            | 覆盖注册表 API URL。           |
+| `CLAWHUB_CONFIG_PATH`         | 覆盖 CLI 存储令牌/配置的位置。 |
+| `CLAWHUB_WORKDIR`             | 覆盖默认工作目录。             |
+| `CLAWHUB_DISABLE_TELEMETRY=1` | 在 `sync` 上禁用遥测。         |
+
+## 相关
+
+- [社区插件](/zh/plugins/community)
+- [插件](/zh/tools/plugin)
+- [Skills](/zh/tools/skills)

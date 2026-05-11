@@ -65,3 +65,8 @@ rm ~/.openclaw/disable-launchagent
 - 可預測的日誌與監督。
 
 如果日後真正需要子進程模式，應將其記載為一個獨立、明確且僅限開發的模式。
+
+## 相關
+
+- [macOS 應用程式](/zh-Hant/platforms/macos)
+- [Gateway 手冊](/zh-Hant/gateway)

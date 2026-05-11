@@ -3,7 +3,7 @@ summary: "Referencia de CLI para `openclaw doctor` (comprobaciones de estado + r
 read_when:
   - You have connectivity/auth issues and want guided fixes
   - You updated and want a sanity check
-title: "doctor"
+title: "Doctor"
 ---
 
 # `openclaw doctor`
@@ -43,18 +43,21 @@ Notas:
 - `--fix` (alias para `--repair`) escribe una copia de seguridad en `~/.openclaw/openclaw.json.bak` y elimina las claves de configuración desconocidas, enumerando cada eliminación.
 - Las comprobaciones de integridad del estado ahora detectan archivos de transcripción huérfanos en el directorio de sesiones y pueden archivarlos como `.deleted.<timestamp>` para recuperar espacio de forma segura.
 - Doctor también escanea `~/.openclaw/cron/jobs.json` (o `cron.store`) en busca de formas de trabajos cron heredadas y puede reescribirlas en su lugar antes de que el planificador tenga que normalizarlas automáticamente en tiempo de ejecución.
-- Doctor repara las dependencias de tiempo de ejecución de los complementos empaquetados faltantes sin requerir acceso de escritura al paquete OpenClaw instalado. Para instalaciones de npm propiedad de root o unidades systemd endurecidas, configure `OPENCLAW_PLUGIN_STAGE_DIR` en un directorio escribible como `/var/lib/openclaw/plugin-runtime-deps`.
-- Doctor migra automáticamente la configuración heredada plana de Talk (`talk.voiceId`, `talk.modelId`, y amigos) a `talk.provider` + `talk.providers.<provider>`.
-- Las ejecuciones repetidas de `doctor --fix` ya no reportan ni aplican la normalización de Talk cuando la única diferencia es el orden de las claves del objeto.
-- Doctor incluye una comprobación de preparación de búsqueda de memoria y puede recomendar `openclaw configure --section model` cuando faltan las credenciales incrustadas.
+- Doctor repara las dependencias de tiempo de ejecución del plugin empaquetado que faltan sin escribir en las instalaciones globales empaquetadas. Para instalaciones de npm propiedad de root o unidades de systemd endurecidas, establezca `OPENCLAW_PLUGIN_STAGE_DIR` en un directorio con permisos de escritura como `/var/lib/openclaw/plugin-runtime-deps`; también puede ser una lista de rutas como `/opt/openclaw/plugin-runtime-deps:/var/lib/openclaw/plugin-runtime-deps`, donde las raíces anteriores son capas de búsqueda de solo lectura y la raíz final es el objetivo de reparación.
+- Doctor repara la configuración obsoleta del plugin eliminando los IDs de plugins que faltan de `plugins.allow`/`plugins.entries`, además de la configuración colgante del canal coincidente, objetivos de latido y anulaciones del modelo del canal cuando el descubrimiento de plugins es saludable.
+- Doctor pone en cuarentena la configuración inválida del plugin deshabilitando la entrada `plugins.entries.<id>` afectada y eliminando su carga útil `config` inválida. El inicio de la puerta de enlace ya omite solo ese plugin defectuoso para que otros plugins y canales puedan seguir ejecutándose.
+- Establezca `OPENCLAW_SERVICE_REPAIR_POLICY=external` cuando otro supervisor sea el propietario del ciclo de vida de la puerta de enlace. Doctor todavía informa sobre el estado de la puerta de enlace/servicio y aplica reparaciones que no son del servicio, pero omite la instalación/inicio/reinicio/arranque del servicio y la limpieza del servicio heredado.
+- Doctor migra automáticamente la configuración plana heredada de Talk (`talk.voiceId`, `talk.modelId` y amigos) a `talk.provider` + `talk.providers.<provider>`.
+- Las ejecuciones repetidas de `doctor --fix` ya no informan ni aplican la normalización de Talk cuando la única diferencia es el orden de las claves del objeto.
+- Doctor incluye una verificación de preparación de búsqueda en memoria y puede recomendar `openclaw configure --section model` cuando faltan las credenciales incrustadas.
 - Si el modo sandbox está habilitado pero Docker no está disponible, doctor informa una advertencia de alta señal con una solución (`install Docker` o `openclaw config set agents.defaults.sandbox.mode off`).
-- Si `gateway.auth.token`/`gateway.auth.password` están administrados por SecretRef y no están disponibles en la ruta de comando actual, doctor informa una advertencia de solo lectura y no escribe credenciales de reserva en texto plano.
-- Si la inspección de SecretRef del canal falla en una ruta de corrección, doctor continúa e informa una advertencia en lugar de salir anticipadamente.
-- La auto-resolución del nombre de usuario de Telegram `allowFrom` (`doctor --fix`) requiere un token de Telegram resolvable en la ruta de comandos actual. Si la inspección del token no está disponible, el doctor informa una advertencia y omite la auto-resolución para ese paso.
+- Si `gateway.auth.token`/`gateway.auth.password` están gestionados por SecretRef y no están disponibles en la ruta de comandos actual, doctor informa una advertencia de solo lectura y no escribe credenciales de respaldo en texto sin formato.
+- Si la inspección del SecretRef del canal falla en una ruta de corrección, doctor continúa e informa una advertencia en lugar de salir anticipadamente.
+- La auto-resolución del nombre de usuario de Telegram `allowFrom` (`doctor --fix`) requiere un token de Telegram resoluble en la ruta de comandos actual. Si la inspección del token no está disponible, doctor informa una advertencia y omite la auto-resolución en ese paso.
 
-## macOS: `launchctl` sobrescrituras de entorno
+## macOS: `launchctl` anulaciones de env
 
-Si anteriormente ejecutaste `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (o `...PASSWORD`), ese valor sobrescribe tu archivo de configuración y puede causar errores persistentes de “no autorizado”.
+Si anteriormente ejecutó `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (o `...PASSWORD`), ese valor anula su archivo de configuración y puede causar errores persistentes de "no autorizado".
 
 ```bash
 launchctl getenv OPENCLAW_GATEWAY_TOKEN
@@ -63,3 +66,8 @@ launchctl getenv OPENCLAW_GATEWAY_PASSWORD
 launchctl unsetenv OPENCLAW_GATEWAY_TOKEN
 launchctl unsetenv OPENCLAW_GATEWAY_PASSWORD
 ```
+
+## Relacionado
+
+- [Referencia de la CLI](/es/cli)
+- [Gateway doctor](/es/gateway/doctor)

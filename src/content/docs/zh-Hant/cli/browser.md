@@ -4,7 +4,7 @@ read_when:
   - You use `openclaw browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
   - You want to attach to your local signed-in Chrome via Chrome MCP
-title: "browser"
+title: "Browser"
 ---
 
 # `openclaw browser`
@@ -33,13 +33,16 @@ openclaw browser --browser-profile openclaw open https://example.com
 openclaw browser --browser-profile openclaw snapshot
 ```
 
+Agent 可以使用 `browser({ action: "doctor" })` 執行相同的就緒檢查。
+
 ## 快速疑難排解
 
-如果 `start` 失敗並顯示 `not reachable after start`，請先針對 CDP 就緒狀況進行疑難排解。如果 `start` 和 `tabs` 成功但 `open` 或 `navigate` 失敗，表示瀏覽器控制平面狀況良好，失敗通常是因為導航 SSRF 原則。
+如果 `start` 失敗並顯示 `not reachable after start`，請先針對 CDP 就緒狀態進行疑難排解。如果 `start` 和 `tabs` 成功，但 `open` 或 `navigate` 失敗，表示瀏覽器控制平面正常，失敗原因通常是導覽 SSRF 原則。
 
-最短程序：
+最小序列：
 
 ```bash
+openclaw browser --browser-profile openclaw doctor
 openclaw browser --browser-profile openclaw start
 openclaw browser --browser-profile openclaw tabs
 openclaw browser --browser-profile openclaw open https://example.com
@@ -51,25 +54,39 @@ openclaw browser --browser-profile openclaw open https://example.com
 
 ```bash
 openclaw browser status
+openclaw browser doctor
+openclaw browser doctor --deep
 openclaw browser start
+openclaw browser start --headless
 openclaw browser stop
 openclaw browser --browser-profile openclaw reset-profile
 ```
 
 備註：
 
+- `doctor --deep` 會新增即時快照探測。當基本 CDP
+  就緒狀態顯示正常，但您想要證明可以檢查目前分頁時，這很有用。
 - 對於 `attachOnly` 和遠端 CDP 設定檔，`openclaw browser stop` 會關閉
-  作用中的控制工作階段並清除暫時的模擬覆寫，即使 OpenClaw
-  本身並未啟動瀏覽器程序也是如此。
-- 對於本機受管理設定檔，`openclaw browser stop` 會停止產生的瀏覽器
+  作用中的控制工作階段並清除暫時模擬覆寫，即使
+  OpenClaw 並未啟動瀏覽器程序本身。
+- 對於本機受控設定檔，`openclaw browser stop` 會停止產生的瀏覽器
   程序。
+- `openclaw browser start --headless` 僅適用於該啟動請求，
+  且僅在 OpenClaw 啟動本機受控瀏覽器時適用。它不會重寫
+  `browser.headless` 或設定檔組態，對於已執行中
+  的瀏覽器則為空操作。
+- 在沒有 `DISPLAY` 或 `WAYLAND_DISPLAY` 的 Linux 主機上，本機受控設定檔
+  會自動以無頭模式執行，除非 `OPENCLAW_BROWSER_HEADLESS=0`、
+  `browser.headless=false` 或 `browser.profiles.<name>.headless=false`
+  明確要求可見的瀏覽器。
 
 ## 如果缺少指令
 
-如果 `openclaw browser` 是未知指令，請檢查 `plugins.allow` 中
-的 `~/.openclaw/openclaw.json`。
+如果 `openclaw browser` 是未知指令，請檢查 `plugins.allow` 中的
+`~/.openclaw/openclaw.json`。
 
-當存在 `plugins.allow` 時，必須明確列出內建的瀏覽器外掛程式：
+當存在 `plugins.allow` 時，請明確列出內建的瀏覽器外掛程式，
+除非組態已經有根 `browser` 區塊：
 
 ```json5
 {
@@ -79,18 +96,18 @@ openclaw browser --browser-profile openclaw reset-profile
 }
 ```
 
-當外掛程式允許清單排除 `browser` 時，
-`browser.enabled=true` 不會還原 CLI 子指令。
+明確的根 `browser` 區塊，例如 `browser.enabled=true` 或
+`browser.profiles.<name>`，也會在嚴格的外掛程式允許清單下啟用捆綁的瀏覽器外掛程式。
 
 相關：[瀏覽器工具](/zh-Hant/tools/browser#missing-browser-command-or-tool)
 
 ## 設定檔
 
-設定檔是命名的瀏覽器路由配置。實際上：
+設定檔是命名的瀏覽器路由設定。實際上：
 
-- `openclaw`：啟動或附加至專屬的 OpenClaw 管理的 Chrome 實例（獨立的使用者資料目錄）。
+- `openclaw`：啟動或連接到專屬的 OpenClaw 管理的 Chrome 實例（隔離的使用者資料目錄）。
 - `user`：透過 Chrome DevTools MCP 控制您現有的已登入 Chrome 工作階段。
-- 自訂 CDP 設定檔：指向本機或遠端 CDP 端點。
+- 自訂 CDP 設定檔：指向本地或遠端 CDP 端點。
 
 ```bash
 openclaw browser profiles
@@ -100,7 +117,7 @@ openclaw browser create-profile --name remote --cdp-url https://browser-host.exa
 openclaw browser delete-profile --name work
 ```
 
-使用特定設定檔：
+使用特定的設定檔：
 
 ```bash
 openclaw browser --browser-profile work tabs
@@ -110,13 +127,24 @@ openclaw browser --browser-profile work tabs
 
 ```bash
 openclaw browser tabs
-openclaw browser tab new
+openclaw browser tab new --label docs
+openclaw browser tab label t1 docs
 openclaw browser tab select 2
 openclaw browser tab close 2
-openclaw browser open https://docs.openclaw.ai
-openclaw browser focus <targetId>
-openclaw browser close <targetId>
+openclaw browser open https://docs.openclaw.ai --label docs
+openclaw browser focus docs
+openclaw browser close t1
 ```
+
+`tabs` 首先回傳 `suggestedTargetId`，然後是穩定的 `tabId`（例如 `t1`）、
+可選的標籤以及原始的 `targetId`。代理程式應將
+`suggestedTargetId` 傳回給 `focus`、`close`、快照和動作。您可以使用
+`open --label`、`tab new --label` 或 `tab label` 指派標籤；系統接受標籤、
+tab id、原始 target id 和唯一的 target-id 前綴。
+當 Chromium 在導覽或表單提交期間替換底層的原始目標時，只要能證明
+匹配，OpenClaw 就會將穩定的 `tabId`/標籤附加到替換分頁上。
+原始 target id 保持不穩定；請優先使用
+`suggestedTargetId`。
 
 ## 快照 / 截圖 / 動作
 
@@ -124,6 +152,7 @@ openclaw browser close <targetId>
 
 ```bash
 openclaw browser snapshot
+openclaw browser snapshot --urls
 ```
 
 截圖：
@@ -132,20 +161,24 @@ openclaw browser snapshot
 openclaw browser screenshot
 openclaw browser screenshot --full-page
 openclaw browser screenshot --ref e12
+openclaw browser screenshot --labels
 ```
 
 備註：
 
-- `--full-page` 僅用於頁面擷取；它無法與 `--ref`
+- `--full-page` 僅用於頁面擷取；無法與 `--ref`
   或 `--element` 結合使用。
-- `existing-session` / `user` 設定檔支援頁面截圖以及來自快照輸出的 `--ref`
+- `existing-session` / `user` 設定檔支援頁面截圖和來自快照輸出的 `--ref`
   截圖，但不支援 CSS `--element` 截圖。
+- `--labels` 會在截圖上疊加目前的快照參照。
+- `snapshot --urls` 會將探索到的連結目標附加到 AI 快照中，以便代理可以選擇直接導覽目標，而不是僅從連結文字進行猜測。
 
-導覽/點擊/輸入 (基於 ref 的 UI 自動化)：
+導覽/點擊/輸入（基於 ref 的 UI 自動化）：
 
 ```bash
 openclaw browser navigate https://example.com
 openclaw browser click <ref>
+openclaw browser click-coords 120 340
 openclaw browser type <ref> "hello"
 openclaw browser press Enter
 openclaw browser hover <ref>
@@ -157,6 +190,8 @@ openclaw browser wait --text "Done"
 openclaw browser evaluate --fn '(el) => el.textContent' --ref <ref>
 ```
 
+動作回應會在動作觸發頁面替換後，且 OpenClaw 能證明替換分頁時，傳回目前的原始 `targetId`。腳本仍應儲存並傳遞 `suggestedTargetId`/labels 以用於長期執行的工作流程。
+
 檔案 + 對話方塊輔助工具：
 
 ```bash
@@ -165,6 +200,8 @@ openclaw browser waitfordownload
 openclaw browser download <ref> report.pdf
 openclaw browser dialog --accept
 ```
+
+受管理的 Chrome 設定檔會將一般點擊觸發的下載儲存到 OpenClaw 下載目錄中（預設為 `/tmp/openclaw/downloads`，或設定的暫存根目錄）。當代理需要等待特定檔案並傳回其路徑時，請使用 `waitfordownload` 或 `download`；這些明確的等待器會擁有下一個下載項。
 
 ## 狀態與儲存空間
 
@@ -183,7 +220,7 @@ openclaw browser set headers '{"x-test":"1"}'
 openclaw browser set credentials myuser mypass
 ```
 
-Cookies + 儲存空間：
+Cookie + 儲存空間：
 
 ```bash
 openclaw browser cookies
@@ -194,7 +231,7 @@ openclaw browser storage local set token abc123
 openclaw browser storage session clear
 ```
 
-## 除錯
+## 偵錯
 
 ```bash
 openclaw browser console --level error
@@ -207,7 +244,7 @@ openclaw browser trace start
 openclaw browser trace stop --out trace.zip
 ```
 
-## 透過 MCP 存取現有的 Chrome
+## 透過 MCP 使用現有的 Chrome
 
 使用內建的 `user` 設定檔，或建立您自己的 `existing-session` 設定檔：
 
@@ -218,28 +255,34 @@ openclaw browser create-profile --name brave-live --driver existing-session --us
 openclaw browser --browser-profile chrome-live tabs
 ```
 
-此路徑僅適用於主機。對於 Docker、無頭伺服器、Browserless 或其他遠端設定，請改用 CDP 設定檔。
+此路徑僅適用於主機。對於 Docker、無介面伺服器、Browserless 或其他遠端設定，請改用 CDP 設定檔。
 
 目前現有工作階段的限制：
 
-- 快照驅動的動作使用 refs，而非 CSS 選擇器
+- 由快照驅動的動作使用 refs，而非 CSS 選擇器
+- 當呼叫者省略 `timeoutMs` 時，`browser.actionTimeoutMs` 會將支援的 `act` 要求預設設為 60000 毫秒；每次呼叫的 `timeoutMs` 仍然優先。
 - `click` 僅支援左鍵點擊
 - `type` 不支援 `slowly=true`
 - `press` 不支援 `delayMs`
-- `hover`、`scrollintoview`、`drag`、`select`、`fill` 和 `evaluate` 會拒絕
-  每次呼叫的逾時覆寫
+- `hover`、`scrollintoview`、`drag`、`select`、`fill` 和 `evaluate` 會拒絕每次呼叫的逾時覆寫
 - `select` 僅支援一個值
 - 不支援 `wait --load networkidle`
 - 檔案上傳需要 `--ref` / `--input-ref`，不支援 CSS
   `--element`，且目前一次僅支援一個檔案
-- 對話方塊勾點不支援 `--timeout`
+- 對話框掛鉤不支援 `--timeout`
 - 螢幕截圖支援頁面擷取和 `--ref`，但不支援 CSS `--element`
-- `responsebody`、下載攔截、PDF 匯出和批次操作仍需要受管理的瀏覽器或原始 CDP 設定檔
+- `responsebody`、下載攔截、PDF 匯出以及批次操作仍
+  需要受管理的瀏覽器或原始 CDP 設定檔
 
 ## 遠端瀏覽器控制（節點主機代理）
 
-如果 Gateway 與瀏覽器在不同的機器上運行，請在裝有 Chrome/Brave/Edge/Chromium 的機器上執行 **node host**。Gateway 會將瀏覽器操作代理到該節點（不需要獨立的瀏覽器控制伺服器）。
+如果 Gateway 在與瀏覽器不同的機器上執行，請在安裝了 Chrome/Brave/Edge/Chromium 的機器上執行 **node host**。Gateway 會將瀏覽器操作代理到該節點（不需要單獨的瀏覽器控制伺服器）。
 
-使用 `gateway.nodes.browser.mode` 來控制自動路由，如果連接了多個節點，使用 `gateway.nodes.browser.node` 來固定特定節點。
+使用 `gateway.nodes.browser.mode` 來控制自動路由，並在連接了多個節點時使用 `gateway.nodes.browser.node` 來釘選特定節點。
 
-安全性 + 遠端設定：[Browser tool](/zh-Hant/tools/browser)、[Remote access](/zh-Hant/gateway/remote)、[Tailscale](/zh-Hant/gateway/tailscale)、[Security](/zh-Hant/gateway/security)
+安全性 + 遠端設定：[瀏覽器工具](/zh-Hant/tools/browser)、[遠端存取](/zh-Hant/gateway/remote)、[Tailscale](/zh-Hant/gateway/tailscale)、[安全性](/zh-Hant/gateway/security)
+
+## 相關
+
+- [CLI 參考](/zh-Hant/cli)
+- [瀏覽器](/zh-Hant/tools/browser)
