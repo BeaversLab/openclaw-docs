@@ -74,7 +74,7 @@ and troubleshooting see the main [FAQ](/en/help/faq).
     In task mode, due timestamps are only advanced after a real heartbeat run
     completes. Skipped runs do not mark tasks as completed.
 
-    Docs: [Heartbeat](/en/gateway/heartbeat), [Automation & Tasks](/en/automation).
+    Docs: [Heartbeat](/en/gateway/heartbeat), [Automation](/en/automation).
 
   </Accordion>
 
