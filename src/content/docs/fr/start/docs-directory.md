@@ -36,32 +36,31 @@ title: "Docs directory"
 - [Telegram](/fr/channels/telegram)
 - [Discord](/fr/channels/discord)
 - [Mattermost](/fr/channels/mattermost)
-- [BlueBubbles (iMessage)](/fr/channels/bluebubbles)
-- [Bot QQ](/fr/channels/qqbot)
-- [iMessage (ancien)](/fr/channels/imessage)
+- [QQ Bot](/fr/channels/qqbot)
+- [iMessage](iMessage/en/channels/imessage)
 - [Groupes](/fr/channels/groups)
-- [Messages de groupe WhatsApp](/fr/channels/group-messages)
-- [Images médias](/fr/nodes/images)
-- [Audio média](/fr/nodes/audio)
+- [Messages de groupe WhatsApp](WhatsApp/en/channels/group-messages)
+- [Images multimédias](/fr/nodes/images)
+- [Audio multimédia](/fr/nodes/audio)
 
 ## Companion apps
 
-- [Application macOS](/fr/platforms/macos)
-- [Application iOS](/fr/platforms/ios)
-- [Application Android](/fr/platforms/android)
-- [Windows (WSL2)](/fr/platforms/windows)
-- [Application Linux](/fr/platforms/linux)
+- [Application macOS](macOS/en/platforms/macos)
+- [Application iOS](iOS/en/platforms/ios)
+- [Application Android](Android/en/platforms/android)
+- [Windows (WSL2)](WindowsWSL2/en/platforms/windows)
+- [Application Linux](Linux/en/platforms/linux)
 
 ## Opérations et sécurité
 
 - [Sessions](/fr/concepts/session)
-- [Tâches planifiées](/fr/automation/cron-jobs)
+- [Tâches planifiées (Cron jobs)](/fr/automation/cron-jobs)
 - [Webhooks](/fr/automation/cron-jobs#webhooks)
-- [Gmail hooks (Pub/Sub)](/fr/automation/cron-jobs#gmail-pubsub-integration)
+- [Hooks Gmail (Pub/Sub)](/fr/automation/cron-jobs#gmail-pubsub-integration)
 - [Sécurité](/fr/gateway/security)
 - [Dépannage](/fr/gateway/troubleshooting)
 
 ## Connexes
 
 - [Getting started](/fr/start/getting-started)
-- [Docs hubs](/fr/start/hubs)
+- [Hubs de documentation](/fr/start/hubs)

@@ -16,7 +16,7 @@ contenido integrada (resaltados, texto, resúmenes).
 <Steps>
   <Step title="Crear una cuenta">
     Regístrate en [exa.ai](https://exa.ai/) y genera una clave de API desde tu
-dashboard.
+    panel de control.
   </Step>
   <Step title="Guardar la clave">
     Establezca `EXA_API_KEY` en el entorno de Gateway, o configure a través de:
@@ -38,6 +38,7 @@ dashboard.
         config: {
           webSearch: {
             apiKey: "exa-...", // optional if EXA_API_KEY is set
+            baseUrl: "https://api.exa.ai", // optional; OpenClaw appends /search
           },
         },
       },
@@ -55,6 +56,14 @@ dashboard.
 
 **Alternativa de entorno:** establezca `EXA_API_KEY` en el entorno de Gateway.
 Para una instalación de gateway, colóquela en `~/.openclaw/.env`.
+
+## Anulación de la URL base
+
+Establezca `plugins.entries.exa.config.webSearch.baseUrl` cuando las solicitudes de búsqueda de Exa
+deban pasar a través de un proxy compatible o de un punto de conexión de Exa alternativo. OpenClaw
+normaliza los hosts simples agregando `https://` al principio y `/search` al final, a menos que
+la ruta ya termine allí. El punto de conexión resuelto se incluye en la clave de caché
+de búsqueda, por lo que no se comparten los resultados de diferentes puntos de conexión de Exa.
 
 ## Parámetros de la herramienta
 
@@ -103,11 +112,11 @@ await web_search({
 });
 ```
 
-| Opción de contenidos | Tipo                                                                  | Descripción                         |
-| -------------------- | --------------------------------------------------------------------- | ----------------------------------- |
-| `text`               | `boolean \| { maxCharacters }`                                        | Extraer texto completo de la página |
-| `highlights`         | `boolean \| { maxCharacters, query, numSentences, highlightsPerUrl }` | Extraer oraciones clave             |
-| `summary`            | `boolean \| { query }`                                                | Resumen generado por IA             |
+| Opción de contenidos | Tipo                                                                  | Descripción                      |
+| -------------------- | --------------------------------------------------------------------- | -------------------------------- |
+| `text`               | `boolean \| { maxCharacters }`                                        | Extraer texto de página completa |
+| `highlights`         | `boolean \| { maxCharacters, query, numSentences, highlightsPerUrl }` | Extraer frases clave             |
+| `summary`            | `boolean \| { query }`                                                | Resumen generado por IA          |
 
 ### Modos de búsqueda
 
@@ -122,19 +131,19 @@ await web_search({
 
 ## Notas
 
-- Si no se proporciona ninguna opción `contents`, Exa usa por defecto `{ highlights: true }`
-  para que los resultados incluyan extractos de oraciones clave
-- Los resultados conservan los campos `highlightScores` y `summary` de la respuesta
-  de la API de Exa cuando están disponibles
-- Las descripciones de los resultados se resuelven primero a partir de destacados, luego del resumen y luego
+- Si no se proporciona la opción `contents`, Exa utiliza `{ highlights: true }`
+  de forma predeterminada para que los resultados incluyan extractos de frases clave
+- Los resultados conservan los campos `highlightScores` y `summary` de la respuesta de
+  la API de Exa cuando están disponibles
+- Las descripciones de los resultados se obtienen primero de los resaltados, luego del resumen y luego
   del texto completo — lo que esté disponible
-- `freshness` y `date_after`/`date_before` no se pueden combinar — use un
+- `freshness` y `date_after`/`date_before` no se pueden combinar: use un
   modo de filtro de tiempo
 - Se pueden devolver hasta 100 resultados por consulta (sujeto a los límites del
   tipo de búsqueda de Exa)
-- Los resultados se almacenan en caché durante 15 minutos de forma predeterminada (configurable mediante
+- Los resultados se almacenan en caché durante 15 minutos de forma predeterminada (configurable a través de
   `cacheTtlMinutes`)
-- Exa es una integración oficial de la API con respuestas JSON estructuradas
+- Exa es una integración oficial de API con respuestas JSON estructuradas
 
 ## Relacionado
 

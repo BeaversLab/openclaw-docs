@@ -156,10 +156,21 @@ Controle cómo los agentes procesan los mensajes:
 ### Flujo de mensajes
 
 <Steps>
-  <Step title="Llega el mensaje entrante">Llega un mensaje de grupo o mensaje directo de WhatsApp.</Step>
-  <Step title="Verificación de difusión">El sistema verifica si el ID del par está en `broadcast`.</Step>
-  <Step title="Si está en la lista de difusión">- Todos los agentes listados procesan el mensaje. - Cada agente tiene su propia clave de sesión y contexto aislado. - Los agentes procesan en paralelo (predeterminado) o secuencialmente.</Step>
-  <Step title="Si no está en la lista de difusión">Se aplica el enrutamiento normal (primer enlace coincidente).</Step>
+  <Step title="Llega el mensaje entrante">
+    Llega un mensaje de grupo o mensaje directo de WhatsApp.
+  </Step>
+  <Step title="Verificación de difusión">
+    El sistema verifica si el ID del par está en `broadcast`.
+  </Step>
+  <Step title="Si está en la lista de difusión">
+    - Todos los agentes listados procesan el mensaje.
+    - Cada agente tiene su propia clave de sesión y contexto aislado.
+    - Los agentes procesan en paralelo (predeterminado) o secuencialmente.
+
+  </Step>
+  <Step title="Si no está en la lista de difusión">
+    Se aplica el enrutamiento normal (primer enlace coincidente).
+  </Step>
 </Steps>
 
 <Note>Los grupos de difusión no omiten las listas de permitidos del canal ni las reglas de activación de grupos (menciones/comandos/etc.). Solo cambian _qué agentes se ejecutan_ cuando un mensaje es elegible para ser procesado.</Note>
@@ -222,28 +233,30 @@ En el grupo `120363403215116621@g.us` con los agentes `["alfred", "baerbel"]`:
     ```
 
   </Accordion>
-  <Accordion title="3. Configure diferentes accesos a herramientas">
-    Dale a los agentes solo las herramientas que necesitan:
+  <Accordion title="3. Configure el acceso a diferentes herramientas">
+    Dé a los agentes solo las herramientas que necesitan:
 
     ```json
     {
       "agents": {
         "reviewer": {
-          "tools": { "allow": ["read", "exec"] } // Read-only
+          "tools": { "allow": ["read", "exec"] }
         },
         "fixer": {
-          "tools": { "allow": ["read", "write", "edit", "exec"] } // Read-write
+          "tools": { "allow": ["read", "write", "edit", "exec"] }
         }
       }
     }
     ```
 
+    `reviewer` es de solo lectura. `fixer` puede leer y escribir.
+
   </Accordion>
-  <Accordion title="4. Supervisar el rendimiento">
-    Con muchos agentes, considera:
+  <Accordion title="4. Monitorear el rendimiento">
+    Con muchos agentes, considere:
 
     - Usar `"strategy": "parallel"` (predeterminado) para mayor velocidad
-    - Limitar los grupos de transmisión a 5-10 agentes
+    - Limitar los grupos de difusión a 5-10 agentes
     - Usar modelos más rápidos para agentes más simples
 
   </Accordion>
@@ -288,14 +301,14 @@ Los grupos de transmisión funcionan junto con el enrutamiento existente:
 ```
 
 - `GROUP_A`: Solo alfred responde (enrutamiento normal).
-- `GROUP_B`: agent1 Y agent2 responden (transmisión).
+- `GROUP_B`: agent1 Y agent2 responden (difusión).
 
 <Note>**Precedencia:** `broadcast` tiene prioridad sobre `bindings`.</Note>
 
 ## Solución de problemas
 
 <AccordionGroup>
-  <Accordion title="Los agentes no responden">
+  <Accordion title="Agentes que no responden">
     **Verificar:**
 
     1. Los IDs de los agentes existen en `agents.list`.
@@ -310,9 +323,9 @@ Los grupos de transmisión funcionan junto con el enrutamiento existente:
 
   </Accordion>
   <Accordion title="Solo un agente responde">
-    **Causa:** El ID del par podría estar en `bindings` pero no en `broadcast`.
+    **Causa:** Es posible que el ID del par esté en `bindings` pero no en `broadcast`.
 
-    **Solución:** Añadir a la configuración de transmisión o eliminar de los enlaces.
+    **Solución:** Agregar a la configuración de difusión o eliminar de los enlaces.
 
   </Accordion>
   <Accordion title="Problemas de rendimiento">
@@ -408,10 +421,10 @@ interface OpenClawConfig {
 ### Campos
 
 <ParamField path="strategy" type='"parallel" | "sequential"' default='"parallel"'>
-  Cómo procesar los agentes. `parallel` ejecuta todos los agentes simultáneamente; `sequential` los ejecuta en el orden del array.
+  Cómo procesar los agentes. `parallel` ejecuta todos los agentes simultáneamente; `sequential` los ejecuta en orden de matriz.
 </ParamField>
 <ParamField path="[peerId]" type="string[]">
-  JID de grupo de WhatsApp, número E.164 u otro ID de par. El valor es el array de IDs de agentes que deben procesar los mensajes.
+  JID de grupo de WhatsApp, número E.164 u otro ID de par. El valor es la matriz de IDs de agentes que deben procesar mensajes.
 </ParamField>
 
 ## Limitaciones
@@ -434,6 +447,6 @@ Funcionalidades planificadas:
 
 - [Enrutamiento de canales](/es/channels/channel-routing)
 - [Grupos](/es/channels/groups)
-- [Herramientas de zona de pruebas multiagente](/es/tools/multi-agent-sandbox-tools)
+- [Herramientas de entorno limitado multiagente](/es/tools/multi-agent-sandbox-tools)
 - [Emparejamiento](/es/channels/pairing)
 - [Gestión de sesiones](/es/concepts/session)

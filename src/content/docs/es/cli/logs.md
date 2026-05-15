@@ -12,7 +12,7 @@ Ver los registros de archivo de Gateway a través de RPC (funciona en modo remot
 
 Relacionado:
 
-- Resumen de registros: [Registros](/es/logging)
+- Resumen de registros: [Logging](/es/logging)
 - CLI de Gateway: [gateway](/es/cli/gateway)
 
 ## Opciones
@@ -56,9 +56,10 @@ openclaw logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
 ## Notas
 
 - Use `--local-time` para renderizar marcas de tiempo en su zona horaria local.
-- Si el Gateway de bucle invertido local solicita emparejamiento, `openclaw logs` recurre automáticamente al archivo de registro local configurado. Los destinos explícitos `--url` no utilizan esta reserva.
+- Si el Gateway de loopback local implícito solicita emparejamiento, se cierra durante la conexión o agota el tiempo de espera antes de que `logs.tail` responda, `openclaw logs` recurre automáticamente al archivo de registro del Gateway configurado. Los destinos `--url` explícitos no utilizan esta alternativa.
+- Al usar `--follow`, las desconexiones transitorias de la puerta de enlace (cierre de WebSocket, tiempo de espera, caída de conexión) activan la reconexión automática con retroceso exponencial (hasta 8 reintentos, limitados a 30 s entre intentos). Se imprime una advertencia en stderr en cada reintento y se imprime un aviso `[logs] gateway reconnected` una vez que una consulta tiene éxito. En el modo `--json`, tanto la advertencia de reintento como la transición de reconexión se emiten como registros `{"type":"notice"}` en stderr. Los errores irrecuperables (fallo de autenticación, configuración incorrecta) todavía salen inmediatamente.
 
 ## Relacionado
 
 - [Referencia de la CLI](/es/cli)
-- [Registro de Gateway](/es/gateway/logging)
+- [Registro de puerta de enlace](/es/gateway/logging)

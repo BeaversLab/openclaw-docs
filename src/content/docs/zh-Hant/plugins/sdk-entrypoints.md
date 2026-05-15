@@ -23,11 +23,11 @@ read_when:
 }
 ```
 
-`extensions` 和 `setupEntry` 仍是工作區 (workspace) 和 git 檢出開發的有效來源項目。當 OpenClaw 載入已安裝的套件時，偏好使用 `runtimeExtensions` 和 `runtimeSetupEntry`，這讓 npm 套件能避免執行時期的 TypeScript 編譯。如果已安裝的套件僅宣告 TypeScript 來源項目，OpenClaw 會在存在時使用相符的建置 `dist/*.js` 對應項，然後再回退到 TypeScript 來源。
+`extensions` 和 `setupEntry` 仍然是 workspace 和 git checkout 開發的有效來源項目。當 OpenClaw 載入已安裝的套件時，`runtimeExtensions` 和 `runtimeSetupEntry` 是較佳的選擇，它們能讓 npm 套件避免執行時期的 TypeScript 編譯。必須明確指定執行時期項目：`runtimeSetupEntry` 需要 `setupEntry`，並且缺少 `runtimeExtensions` 或 `runtimeSetupEntry` 成果會導致安裝/探索失敗，而不是無聲地回退到來源。如果已安裝的套件僅宣告了 TypeScript 來源項目，OpenClaw 會在存在時使用相符的建置 `dist/*.js` 同位項目，然後再回退到 TypeScript 來源。
 
-所有項目路徑必須保留在外掛程式套件目錄內。執行時期項目和推斷的建置 JavaScript 對應項並不會讓跳脫的 `extensions` 或 `setupEntry` 來源路徑變成有效路徑。
+所有進入點路徑必須保持在插件套件目錄內。執行時進入點和推斷的已建置 JavaScript 同位點並不會使逸出 `extensions` 或 `setupEntry` 來源路徑變為有效。
 
-<Tip>**正在尋找逐步指南？** 請參閱 [頻道外掛程式](/zh-Hant/plugins/sdk-channel-plugins) 或 [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins)。</Tip>
+<Tip>**尋找逐步指南？** 請參閱 [頻道插件](/zh-Hant/plugins/sdk-channel-plugins) 或 [提供者插件](/zh-Hant/plugins/sdk-provider-plugins) 以獲得逐步指導。</Tip>
 
 ## `definePluginEntry`
 
@@ -55,15 +55,15 @@ export default definePluginEntry({
 
 | 欄位           | 類型                                                             | 必要 | 預設值     |
 | -------------- | ---------------------------------------------------------------- | ---- | ---------- |
-| `id`           | `string`                                                         | 是   | —          |
-| `name`         | `string`                                                         | 是   | —          |
-| `description`  | `string`                                                         | 是   | —          |
-| `kind`         | `string`                                                         | 否   | —          |
+| `id`           | `string`                                                         | 是   | -          |
+| `name`         | `string`                                                         | 是   | -          |
+| `description`  | `string`                                                         | 是   | -          |
+| `kind`         | `string`                                                         | 否   | -          |
 | `configSchema` | `OpenClawPluginConfigSchema \| () => OpenClawPluginConfigSchema` | 否   | 空物件架構 |
-| `register`     | `(api: OpenClawPluginApi) => void`                               | 是   | —          |
+| `register`     | `(api: OpenClawPluginApi) => void`                               | 是   | -          |
 
 - `id` 必須符合您的 `openclaw.plugin.json` 資訊清單。
-- `kind` 適用於獨佔插槽：`"memory"` 或 `"context-engine"`。
+- `kind` 用於專用插槽：`"memory"` 或 `"context-engine"`。
 - `configSchema` 可以是一個用於延遲求值的函數。
 - OpenClaw 會在首次存取時解析並記憶該 schema，因此昂貴的 schema
   建構器只會執行一次。
@@ -72,9 +72,9 @@ export default definePluginEntry({
 
 **匯入：** `openclaw/plugin-sdk/channel-core`
 
-使用通道特定的接線來包裝 `definePluginEntry`。自動呼叫
-`api.registerChannel({ plugin })`，公開一個可選的根目錄說明 CLI 元資料
-縫隙，並根據註冊模式來控制 `registerFull`。
+使用通道專用接線包裝 `definePluginEntry`。自動呼叫
+`api.registerChannel({ plugin })`，暴露可選的根幫助 CLI 元數據
+接縫，並根據註冊模式對 `registerFull` 進行閘控。
 
 ```typescript
 import { defineChannelPluginEntry } from "openclaw/plugin-sdk/channel-core";
@@ -96,38 +96,41 @@ export default defineChannelPluginEntry({
 
 | 欄位                  | 類型                                                             | 必填 | 預設值        |
 | --------------------- | ---------------------------------------------------------------- | ---- | ------------- |
-| `id`                  | `string`                                                         | 是   | —             |
-| `name`                | `string`                                                         | 是   | —             |
-| `description`         | `string`                                                         | 是   | —             |
-| `plugin`              | `ChannelPlugin`                                                  | 是   | —             |
+| `id`                  | `string`                                                         | 是   | -             |
+| `name`                | `string`                                                         | 是   | -             |
+| `description`         | `string`                                                         | 是   | -             |
+| `plugin`              | `ChannelPlugin`                                                  | 是   | -             |
 | `configSchema`        | `OpenClawPluginConfigSchema \| () => OpenClawPluginConfigSchema` | 否   | 空物件 schema |
-| `setRuntime`          | `(runtime: PluginRuntime) => void`                               | 否   | —             |
-| `registerCliMetadata` | `(api: OpenClawPluginApi) => void`                               | 否   | —             |
-| `registerFull`        | `(api: OpenClawPluginApi) => void`                               | 否   | —             |
+| `setRuntime`          | `(runtime: PluginRuntime) => void`                               | 否   | -             |
+| `registerCliMetadata` | `(api: OpenClawPluginApi) => void`                               | 否   | -             |
+| `registerFull`        | `(api: OpenClawPluginApi) => void`                               | 否   | -             |
 
-- `setRuntime` 會在註冊期間被呼叫，因此您可以儲存執行時期參照
-  (通常透過 `createPluginRuntimeStore`)。在 CLI 元資料
-  擷取期間會略過它。
-- `registerCliMetadata` 會在 `api.registrationMode === "cli-metadata"`、
+- `setRuntime` 在註冊期間被呼叫，以便您可以儲存執行時期參照
+  （通常透過 `createPluginRuntimeStore`）。在 CLI 中繼資料
+  擷取期間會跳過它。
+- `registerCliMetadata` 在 `api.registrationMode === "cli-metadata"`、
   `api.registrationMode === "discovery"` 和
-  `api.registrationMode === "full"` 期間執行。
-  將其作為通道擁有的 CLI 描述符的規範位置，以便根目錄說明
-  保持非啟動狀態、探索快照包含靜態指令元資料，以及
-  一般 CLI 指令註冊與完整外掛載入保持相容。
-- 探索註冊是非啟動的，而非免匯入的。OpenClaw 可能會
-  評估受信任的外掛進入點和通道外掛模組以建構
-  快照，因此請確保頂層匯入沒有副作用，並將 sockets、
-  clients、workers 和 services 放在僅限 `"full"` 的路徑之後。
-- `registerFull` 僅在 `api.registrationMode === "full"` 時運行。在僅設定載入期間會跳過。
-- 與 `definePluginEntry` 類似，`configSchema` 可以是一個惰性工廠，OpenClaw 會在首次存取時將解析後的 schema 記憶化。
-- 對於外掛擁有的根層級 CLI 指令，如果您希望該指令保持惰性載入且不從根 CLI 解析樹中消失，請優先使用 `api.registerCli(..., { descriptors: [...] })`。對於通道外掛，請優先從 `registerCliMetadata(...)` 註冊這些描述符，並讓 `registerFull(...)` 專注於僅執行時期的工作。
-- 如果 `registerFull(...)` 也註冊了閘道 RPC 方法，請將其保留在特定於外掛的字首上。保留的核心管理命名空間（`config.*`、`exec.approvals.*`、`wizard.*`、`update.*`）將始終被強制轉換為 `operator.admin`。
+  `api.registrationMode === "full"` 期間運行。
+  將其用作頻道擁有的 CLI 描述符的規範位置，以便根目錄説明保持非啟用狀態，發現快照包含靜態命令元數據，並且
+  正常的 CLI 命令註冊與完整外掛程式加載保持相容。
+- 發現註冊是非啟用的，而非無導入的。OpenClaw 可能會
+  評估受信任的外掛程式入口和頻道外掛程式模組以構建
+  快照，因此請保持頂層導入無副作用，並將 sockets、
+  clients、workers 和 services 放在僅 `"full"` 路徑之後。
+- `registerFull` 僅在 `api.registrationMode === "full"` 時運行。它在
+  僅設定加載期間被跳過。
+- 就像 `definePluginEntry` 一樣，`configSchema` 可以是一個惰性工廠（lazy factory），OpenClaw 會在首次存取時將解析後的架構記憶化。
+- 對於外掛程式擁有的根 CLI 指令，當您希望該指令保持延遲載入但又不從根 CLI 解析樹中消失時，請優先使用 `api.registerCli(..., { descriptors: [...] })`。對於配對節點（paired-node）功能指令，請優先使用 `api.registerNodeCliFeature(...)`，以便該指令歸屬於 `openclaw nodes` 之下。對於其他巢狀外掛指令，請新增 `parentPath` 並在傳遞給註冊器的 `program` 物件上註冊指令；OpenClaw 會在呼叫外掛程式之前將其解析為父指令。對於通道外掛，建議從 `registerCliMetadata(...)` 註冊這些描述符，並讓 `registerFull(...)` 專注於僅執行時期的工作。
+- 如果 `registerFull(...)` 也註冊了網關 RPC 方法，請將它們保持在特定於外掛的前綴上。保留的核心管理命名空間（`config.*`、
+  `exec.approvals.*`、`wizard.*`、`update.*`）將始終被強制轉換為
+  `operator.admin`。
 
 ## `defineSetupPluginEntry`
 
 **匯入：** `openclaw/plugin-sdk/channel-core`
 
-用於輕量級的 `setup-entry.ts` 檔案。僅傳回 `{ plugin }`，不包含執行時期或 CLI 連線。
+用於輕量級的 `setup-entry.ts` 檔案。僅傳回 `{ plugin }` 而不包含
+執行時期或 CLI 連線。
 
 ```typescript
 import { defineSetupPluginEntry } from "openclaw/plugin-sdk/channel-core";
@@ -135,17 +138,24 @@ import { defineSetupPluginEntry } from "openclaw/plugin-sdk/channel-core";
 export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
-當通道被停用、未設定或啟用延遲載入時，OpenClaw 會載入此項目而非完整的進入點。請參閱[設定與配置](/zh-Hant/plugins/sdk-setup#setup-entry)以了解其適用時機。
+當通道被停用、未配置或啟用延遲載入時，OpenClaw 會載入此項而非完整進入點。請參閱
+[設定與配置](/zh-Hant/plugins/sdk-setup#setup-entry) 以瞭解這何時重要。
 
-實務上，將 `defineSetupPluginEntry(...)` 與以下狹義的設定輔助函式系列搭配使用：
+在實務上，請將 `defineSetupPluginEntry(...)` 與狹窄的設定輔助函式系列搭配使用：
 
-- `openclaw/plugin-sdk/setup-runtime` 用於執行時期安全的設定輔助函式，例如匯入安全的設定修補介面卡、lookup-note 輸出、`promptResolvedAllowFrom`、`splitSetupEntries` 和委派設定代理
-- `openclaw/plugin-sdk/channel-setup` 用於選用安裝的設定介面
-- `openclaw/plugin-sdk/setup-tools` 用於設定/安裝 CLI/封存/文件輔助函式
+- `openclaw/plugin-sdk/setup-runtime` 用於執行時安全的設定輔助程式，例如
+  匯入安全的設定修補配接器、lookup-note 輸出、
+  `promptResolvedAllowFrom`、`splitSetupEntries` 以及委派的設定代理程式
+- `openclaw/plugin-sdk/channel-setup` 用於可選安裝的設定介面
+- `openclaw/plugin-sdk/setup-tools` 用於設定/安裝 CLI/歸檔/文件輔助程式
 
 請將繁重的 SDK、CLI 註冊和長期執行的執行時服務保留在完整入口中。
 
-分離設定和執行時期介面的捆綁工作區通道可以改用來自 `openclaw/plugin-sdk/channel-entry-contract` 的 `defineBundledChannelSetupEntry(...)`。該契約允許設定進入點保留設定安全的外掛/機密匯出，同時仍公開執行時期 setter：
+分割設定與執行時介面的綑綁工作區頻道可以改用
+`openclaw/plugin-sdk/channel-entry-contract` 中的
+`defineBundledChannelSetupEntry(...)`。該合約讓
+設定入口點得以保留設定安全的 plugin/secrets 匯出，同時仍公開
+執行時設定器：
 
 ```typescript
 import { defineBundledChannelSetupEntry } from "openclaw/plugin-sdk/channel-entry-contract";
@@ -167,7 +177,7 @@ export default defineBundledChannelSetupEntry({
 
 ## 註冊模式
 
-`api.registrationMode` 告訴您的外掛它是如何被載入的：
+`api.registrationMode` 告訴您的外掛程式它是如何被載入的：
 
 | 模式              | 時機                    | 要註冊的內容                                                                         |
 | ----------------- | ----------------------- | ------------------------------------------------------------------------------------ |
@@ -177,8 +187,7 @@ export default defineBundledChannelSetupEntry({
 | `"setup-runtime"` | 設置流程，運行時可用    | 通道註冊，加上在完整條目加載之前所需的輕量級運行時                                   |
 | `"cli-metadata"`  | 根說明 / CLI 元數據捕獲 | 僅 CLI 描述符                                                                        |
 
-`defineChannelPluginEntry` 會自動處理此拆分。如果你直接對通道使用
-`definePluginEntry`，請自行檢查模式：
+`defineChannelPluginEntry` 會自動處理這種分割。如果您直接針對通道使用 `definePluginEntry`，請自行檢查模式：
 
 ```typescript
 register(api) {
@@ -205,22 +214,17 @@ register(api) {
 受信任但輕量的：在頂層不得有網路客戶端、子程序、監聽器、資料庫
 連接、背景 worker、憑證讀取或其他實時運行時副作用。
 
-將 `"setup-runtime"` 視為一個視窗，僅設置的啟動表面必須
-存在於此，而無需重新進入完整的打包通道運行時。合適的選擇是
-通道註冊、設置安全的 HTTP 路由、設置安全的 gateway 方法，以及
-委派的設置輔助函數。繁重的背景服務、CLI 註冊器和
-提供者/客戶端 SDK 引導程序仍應放在 `"full"` 中。
+將 `"setup-runtime"` 視為一個視窗，僅設定的啟動介面必須存在於此，而無需重新進入完整的捆綁通道執行時。適合的項目包括通道註冊、設定安全的 HTTP 路由、設定安全的閘道方法以及委派的設定輔助程式。繁重的背景服務、CLI 註冊器和提供者/用戶端 SDK 啟動程序仍屬於 `"full"`。
 
 特別對於 CLI 註冊器：
 
-- 當註冊器擁有一個或多個根命令並且你希望
-  OpenClaw 在第一次調用時延遲加載真實的 CLI 模組時，請使用 `descriptors`
+- 當註冊器擁有一或多個根命令，且您希望 OpenClaw 在第一次叫用時延遲載入真正的 CLI 模組時，請使用 `descriptors`
 - 確保這些描述符覆蓋註冊器公開的
   每個頂層命令根
 - 將描述符命令名稱限制為字母、數字、連字符和底線，
   以字母或數字開頭；OpenClaw 會拒絕該形狀之外的描述符名稱，並在
   渲染說明之前從描述中剝離終端機控制序列
-- 僅對急切相容性路徑單獨使用 `commands`
+- 僅針對急切相容性路徑單獨使用 `commands`
 
 ## Plugin shapes
 
@@ -233,12 +237,12 @@ OpenClaw 根據加載插件的註冊行為對其進行分類：
 | **僅 hook**           | 只有 hooks，沒有能力                    |
 | **非能力**            | 工具/指令/服務但沒有能力                |
 
-使用 `openclaw plugins inspect <id>` 查看插件的外形。
+使用 `openclaw plugins inspect <id>` 來查看外掛程式的形狀。
 
 ## 相關
 
-- [SDK 概覽](/zh-Hant/plugins/sdk-overview) — 註冊 API 和子路徑參考
-- [Runtime Helpers](/zh-Hant/plugins/sdk-runtime) — `api.runtime` 和 `createPluginRuntimeStore`
-- [設定與配置](/zh-Hant/plugins/sdk-setup) — manifest、設定入口、延遲載入
-- [Channel Plugins](/zh-Hant/plugins/sdk-channel-plugins) — 建構 `ChannelPlugin` 物件
-- [Provider Plugins](/zh-Hant/plugins/sdk-provider-plugins) — provider 註冊與 hooks
+- [SDK 概覽](/zh-Hant/plugins/sdk-overview) - 註冊 API 與子路徑參考
+- [執行時期輔助函式](/zh-Hant/plugins/sdk-runtime) - `api.runtime` 與 `createPluginRuntimeStore`
+- [設定與組態](/zh-Hant/plugins/sdk-setup) - 清單、設定入口、延遲載入
+- [頻道外掛](/zh-Hant/plugins/sdk-channel-plugins) - 建構 `ChannelPlugin` 物件
+- [提供者外掛](/zh-Hant/plugins/sdk-provider-plugins) - 提供者註冊與鉤子

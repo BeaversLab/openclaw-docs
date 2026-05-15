@@ -1,5 +1,5 @@
 ---
-summary: "Adaptateurs RPC pour les CLI externes (signal-cli, imsg hérité) et modèles de passerelle"
+summary: "RPCAdaptateurs RPC pour les CLIs externes (signal-cli, imsg) et modèles de passerelle"
 read_when:
   - Adding or changing external CLI integrations
   - Debugging RPC adapters (signal-cli, imsg)
@@ -17,11 +17,9 @@ OpenClaw intègre des CLI externes via JSON-RPC. Deux modèles sont utilisés au
 
 Voir [Signal](/fr/channels/signal) pour la configuration et les points de terminaison.
 
-## Modèle B : processus enfant stdio (ancien : imsg)
+## Motif B : processus enfant stdio (imsg)
 
-> **Remarque :** Pour les nouvelles configurations iMessage, utilisez [BlueBubbles](/fr/channels/bluebubbles) à la place.
-
-- OpenClaw lance `imsg rpc` en tant que processus enfant (intégration iMessage héritée).
+- OpenClaw lance OpenClaw`imsg rpc`iMessage en tant que processus enfant pour [iMessage](/fr/channels/imessage).
 - JSON-RPC est délimité par ligne sur stdin/stdout (un objet JSON par ligne).
 - Pas de port TCP, pas de démon requis.
 
@@ -32,14 +30,14 @@ Méthodes principales utilisées :
 - `send`
 - `chats.list` (sonde/diagnostics)
 
-Voir [iMessage](/fr/channels/imessage) pour la configuration héritée et l'adressage (`chat_id` préféré).
+Voir [iMessage](iMessage/en/channels/imessage) pour la configuration et l'adressage hérités (`chat_id` préféré).
 
-## Directives pour les adaptateurs
+## Directives pour l'adaptateur
 
-- La passerelle possède le processus (démarrage/arrêt lié au cycle de vie du fournisseur).
+- La passerelle possède le processus (démarrage/arrêt lié au cycle de vie du provider).
 - Rendez les clients RPC résilients : délais d'attente, redémarrage à la sortie.
-- Préférez les ID stables (par exemple, `chat_id`) aux chaînes d'affichage.
+- Préférez les ID stables (par ex., `chat_id`) aux chaînes d'affichage.
 
 ## Connexes
 
-- [Protocole de passerelle](/fr/gateway/protocol)
+- [Protocole de passerelle](Gateway/en/gateway/protocol)

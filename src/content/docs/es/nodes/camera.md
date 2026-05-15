@@ -116,7 +116,7 @@ La aplicación complementaria de macOS expone una casilla de verificación:
 
 - **Configuración → General → Permitir cámara** (`openclaw.cameraEnabled`)
   - Predeterminado: **desactivado**
-  - Cuando está desactivado: las solicitudes de cámara devuelven "Cámara desactivada por el usuario".
+  - Cuando está desactivado: las solicitudes de la cámara devuelven "Cámara desactivada por el usuario".
 
 ### Auxiliar de CLI (invocación de nodo)
 

@@ -156,10 +156,21 @@ Contrôlez la façon dont les agents traitent les messages :
 ### Flux de messages
 
 <Steps>
-  <Step title="Arrivée du message entrant">Un message de groupe WhatsApp ou de DM arrive.</Step>
-  <Step title="Vérification de diffusion">Le système vérifie si l'ID de pair est dans `broadcast`.</Step>
-  <Step title="Si dans la liste de diffusion">- Tous les agents listés traitent le message. - Chaque agent possède sa propre clé de session et un contexte isolé. - Les agents traitent en parallèle (par défaut) ou séquentiellement.</Step>
-  <Step title="Si pas dans la liste de diffusion">Le routage normal s'applique (première liaison correspondante).</Step>
+  <Step title="Arrivée du message entrant">
+    Un message de groupe WhatsApp ou de DM arrive.
+  </Step>
+  <Step title="Vérification de diffusion">
+    Le système vérifie si l'ID de pair est dans `broadcast`.
+  </Step>
+  <Step title="Si dans la liste de diffusion">
+    - Tous les agents listés traitent le message.
+    - Chaque agent possède sa propre clé de session et son contexte isolé.
+    - Les agents traitent en parallèle (par défaut) ou séquentiellement.
+
+  </Step>
+  <Step title="Si pas dans la liste de diffusion">
+    Le routage normal s'applique (première liaison correspondante).
+  </Step>
 </Steps>
 
 <Note>Les groupes de diffusion ne contournent pas les listes d'autorisation de channel ou les règles d'activation de groupe (mentions/commandes/etc.). Ils ne modifient que _les agents qui s'exécutent_ lorsqu'un message est éligible au traitement.</Note>
@@ -222,29 +233,31 @@ Dans le groupe `120363403215116621@g.us` avec les agents `["alfred", "baerbel"]`
     ```
 
   </Accordion>
-  <Accordion title="3. Configure different tool access">
-    Give agents only the tools they need:
+  <Accordion title="3. Configurer différents accès aux outils">
+    Donnez aux agents uniquement les outils dont ils ont besoin :
 
     ```json
     {
       "agents": {
         "reviewer": {
-          "tools": { "allow": ["read", "exec"] } // Read-only
+          "tools": { "allow": ["read", "exec"] }
         },
         "fixer": {
-          "tools": { "allow": ["read", "write", "edit", "exec"] } // Read-write
+          "tools": { "allow": ["read", "write", "edit", "exec"] }
         }
       }
     }
     ```
 
-  </Accordion>
-  <Accordion title="4. Monitor performance">
-    With many agents, consider:
+    `reviewer` est en lecture seule. `fixer` peut lire et écrire.
 
-    - Using `"strategy": "parallel"` (default) for speed
-    - Limiting broadcast groups to 5-10 agents
-    - Using faster models for simpler agents
+  </Accordion>
+  <Accordion title="4. Surveiller les performances">
+    Avec de nombreux agents, envisagez :
+
+    - D'utiliser `"strategy": "parallel"` (par défaut) pour la vitesse
+    - De limiter les groupes de diffusion à 5-10 agents
+    - D'utiliser des modèles plus rapides pour les agents plus simples
 
   </Accordion>
   <Accordion title="5. Handle failures gracefully">
@@ -295,24 +308,24 @@ Les groupes de diffusion fonctionnent parallèlement au routage existant :
 ## Dépannage
 
 <AccordionGroup>
-  <Accordion title="Agents not responding">
-    **Check:**
+  <Accordion title="Les agents ne répondent pas">
+    **Vérifiez :**
 
-    1. Agent IDs exist in `agents.list`.
-    2. Peer ID format is correct (e.g., `120363403215116621@g.us`).
-    3. Agents are not in deny lists.
+    1. Les ID d'agents existent dans `agents.list`.
+    2. Le format de l'ID du pair est correct (par ex., `120363403215116621@g.us`).
+    3. Les agents ne sont pas dans les listes de refus.
 
-    **Debug:**
+    **Débogage :**
 
     ```bash
     tail -f ~/.openclaw/logs/gateway.log | grep broadcast
     ```
 
   </Accordion>
-  <Accordion title="Only one agent responding">
-    **Cause:** Peer ID might be in `bindings` but not `broadcast`.
+  <Accordion title="Un seul agent répond">
+    **Cause :** L'ID du pair est peut-être dans `bindings` mais pas dans `broadcast`.
 
-    **Fix:** Add to broadcast config or remove from bindings.
+    **Correction :** Ajoutez à la configuration de diffusion ou supprimez des liaisons.
 
   </Accordion>
   <Accordion title="Performance issues">
@@ -367,10 +380,10 @@ Les groupes de diffusion fonctionnent parallèlement au routage existant :
 
     **Réponses :**
 
-    - code-formatter : "Indentation corrigée et indications de type ajoutées"
-    - security-scanner : "⚠️ Vulnérabilité par injection SQL à la ligne 12"
-    - test-coverage : "La couverture est de 45 %, tests manquants pour les cas d'erreur"
-    - docs-checker : "Docstring manquante pour la fonction `process_data`"
+    - code-formatter : « Indentation corrigée et indications de type ajoutées »
+    - security-scanner : « ⚠️ Vulnérabilité par injection SQL à la ligne 12 »
+    - test-coverage : « La couverture est de 45 %, tests manquants pour les cas d'erreur »
+    - docs-checker : « Docstring manquante pour la fonction `process_data` »
 
   </Accordion>
   <Accordion title="Exemple 2 : Support multilingue">
@@ -408,7 +421,7 @@ interface OpenClawConfig {
 ### Champs
 
 <ParamField path="strategy" type='"parallel" | "sequential"' default='"parallel"'>
-  Comment traiter les agents. `parallel` exécute tous les agents simultanément ; `sequential` les exécute dans l'ordre du tableau.
+  Mode de traitement des agents. `parallel` exécute tous les agents simultanément ; `sequential` les exécute dans l'ordre du tableau.
 </ParamField>
 <ParamField path="[peerId]" type="string[]">
   JID de groupe WhatsApp, numéro E.164 ou autre ID de pair. La valeur est le tableau des ID d'agents qui doivent traiter les messages.
@@ -435,5 +448,5 @@ Fonctionnalités prévues :
 - [Routage de canal](/fr/channels/channel-routing)
 - [Groupes](/fr/channels/groups)
 - [Outils de bac à sable multi-agents](/fr/tools/multi-agent-sandbox-tools)
-- [Jumelage](/fr/channels/pairing)
+- [Appariement](/fr/channels/pairing)
 - [Gestion de session](/fr/concepts/session)

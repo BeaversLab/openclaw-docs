@@ -10,7 +10,7 @@ sidebarTitle: "音乐生成"
 
 `music_generate` 工具允许代理通过共享音乐生成功能及已配置的提供商（目前包括 Google、MiniMax 和工作流配置的 ComfyUI）来创建音乐或音频。
 
-对于基于会话的代理运行，OpenClaw 会将音乐生成作为后台任务启动，在任务账本中跟踪它，然后在音轨准备就绪时再次唤醒代理，以便代理可以将完成的音频发布回原始渠道。
+对于基于会话的代理运行，OpenClaw 会将音乐生成为后台任务，在任务分类账中对其进行跟踪，然后在音轨准备好时再次唤醒代理，以便代理可以告知用户并附加完成的音频。在使用仅消息工具可见传递的群组/渠道聊天中，代理会通过消息工具中继结果。如果完成代理仅编写私密最终回复，OpenClaw 将回退到通过直接渠道发送生成的媒体。完成唤醒会明确警告代理，在这些路由中，正常的最终回复是私密的。
 
 <Note>内置共享工具仅在至少有一个音乐生成提供商可用时才会出现。如果您在代理的工具中看不到 `music_generate`，请配置 `agents.defaults.musicGenerationModel` 或设置提供商 API 密钥。</Note>
 
@@ -117,7 +117,7 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
 ## 工具参数
 
 <ParamField path="prompt" type="string" required>
-  音乐生成提示词。`action: "generate"` 所必需的。
+  音乐生成提示词。`action: "generate"` 必需。
 </ParamField>
 <ParamField path="action" type='"generate" | "status" | "list"' default="generate">
   `"status"` 返回当前会话任务；`"list"` 检查提供商。
@@ -129,16 +129,16 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
   当提供商支持显式歌词输入时的可选歌词。
 </ParamField>
 <ParamField path="instrumental" type="boolean">
-  当提供商支持时请求纯器乐输出。
+  当提供商支持时，请求仅纯音乐输出。
 </ParamField>
 <ParamField path="image" type="string">
-  单个参考图像路径或 URL。
+  单个参考图片路径或 URL。
 </ParamField>
 <ParamField path="images" type="string[]">
-  多个参考图像（支持的提供商上最多 10 个）。
+  多个参考图片（支持的提供商最多 10 张）。
 </ParamField>
 <ParamField path="durationSeconds" type="number">
-  当提供商支持持续时间提示时的目标持续时间（以秒为单位）。
+  当提供商支持持续时间提示时，以秒为单位的目标持续时间。
 </ParamField>
 <ParamField path="format" type='"mp3" | "wav"'>
   当提供商支持时的输出格式提示。
@@ -147,7 +147,7 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
   输出文件名提示。
 </ParamField>
 <ParamField path="timeoutMs" type="number">
-  可选的提供商请求超时（以毫秒为单位）。
+  可选的提供商请求超时（以毫秒为单位）。低于 10000ms 的值将被提升至 10000ms，并在工具结果中报告。
 </ParamField>
 
 <Note>并非所有提供商都支持所有参数。OpenClaw 仍会在提交前验证硬性限制，例如输入计数。当提供商支持持续时间但使用的最大值小于请求的值时，OpenClaw 会将其限制为最接近的支持的持续时间。当所选提供商或模型无法遵守真正不支持的可选提示时，这些提示将被忽略并发出警告。工具结果报告已应用的设置；`details.normalization` 捕获任何从请求到应用的映射。</Note>

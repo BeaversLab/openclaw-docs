@@ -12,7 +12,7 @@ Autor: steipete · Actualizado: 2025-12-06 · Ámbito: aplicación de macOS (`ap
 - **Inactivo:** Animación de icono normal (parpadeo, movimiento ocasional).
 - **Pausado:** El elemento de estado usa `appearsDisabled`; sin movimiento.
 - **Activador por voz (orejas grandes):** El detector de activación por voz llama a `AppState.triggerVoiceEars(ttl: nil)` cuando se escucha la palabra de activación, manteniendo `earBoostActive=true` mientras se captura la expresión. Las orejas se agrandan (1.9x), adquieren orificios circulares para mayor legibilidad y luego caen mediante `stopVoiceEars()` después de 1 s de silencio. Solo se activa desde la canalización de voz de la aplicación.
-- **En funcionamiento (agente en ejecución):** `AppState.isWorking=true` impulsa un micromovimiento de “carrera de cola/patas”: movimiento de patas más rápido y un ligero desplazamiento mientras el trabajo está en curso. Actualmente se alterna durante las ejecuciones del agente WebChat; agregue la misma alternancia para otras tareas largas cuando las conecte.
+- **En funcionamiento (agente ejecutándose):** `AppState.isWorking=true` impulsa un micromovimiento de "carrera de cola/patas": movimiento más rápido de las patas y un ligero desplazamiento mientras el trabajo está en curso. Actualmente se alterna durante las ejecuciones del agente WebChat; añada el mismo cambio para otras tareas largas cuando las implemente.
 
 Puntos de conexión
 
@@ -23,11 +23,11 @@ Formas y tamaños
 
 - Icono base dibujado en `CritterIconRenderer.makeIcon(blink:legWiggle:earWiggle:earScale:earHoles:)`.
 - La escala de las orejas predeterminada es `1.0`; el impulso de voz establece `earScale=1.9` y alterna `earHoles=true` sin cambiar el marco general (imagen de plantilla de 18×18 pt renderizada en un almacén de respaldo Retina de 36×36 px).
-- El movimiento rápido utiliza el movimiento de patas de hasta ~1.0 con una pequeña vibración horizontal; es aditivo a cualquier movimiento inactivo existente.
+- El movimiento rápido utiliza el movimiento de patas hasta ~1.0 con una pequeña oscilación horizontal; es aditivo a cualquier movimiento de inactividad existente.
 
 Notas de comportamiento
 
-- Sin alternancia externa de CLI/broker para orejas/en funcionamiento; manténgalo interno a las señales de la propia aplicación para evitar aleteos accidentales.
+- No hay un cambio externo de CLI/intermediario para orejas/en funcionamiento; manténgalo interno a las señales propias de la aplicación para evitar aleteos accidentales.
 - Mantenga los TTL cortos (&lt;10 s) para que el icono vuelva a la línea de base rápidamente si un trabajo se bloquea.
 
 ## Relacionado

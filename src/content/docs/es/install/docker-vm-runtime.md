@@ -17,7 +17,7 @@ Todos los binarios externos requeridos por las habilidades deben instalarse en e
 
 Los ejemplos a continuación muestran solo tres binarios comunes:
 
-- `gog` para el acceso a Gmail
+- `gog` (de `gogcli`) para el acceso a Gmail
 - `goplaces` para Google Places
 - `wacli` para WhatsApp
 
@@ -37,17 +37,23 @@ FROM node:24-bookworm
 
 RUN apt-get update && apt-get install -y socat && rm -rf /var/lib/apt/lists/*
 
-# Example binary 1: Gmail CLI
-RUN curl -L https://github.com/steipete/gog/releases/latest/download/gog_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/gog
+# Example binary 1: Gmail CLI (gogcli — installs as `gog`)
+# Copy the current Linux asset URL from https://github.com/steipete/gogcli/releases
+RUN curl -L https://github.com/steipete/gogcli/releases/latest/download/gogcli_linux_amd64.tar.gz \
+  | tar -xzO gog > /usr/local/bin/gog; \
+  chmod +x /usr/local/bin/gog
 
 # Example binary 2: Google Places CLI
-RUN curl -L https://github.com/steipete/goplaces/releases/latest/download/goplaces_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/goplaces
+# Copy the current Linux asset URL from https://github.com/steipete/goplaces/releases
+RUN curl -L https://github.com/steipete/goplaces/releases/latest/download/goplaces_linux_amd64.tar.gz \
+  | tar -xzO goplaces > /usr/local/bin/goplaces; \
+  chmod +x /usr/local/bin/goplaces
 
 # Example binary 3: WhatsApp CLI
-RUN curl -L https://github.com/steipete/wacli/releases/latest/download/wacli_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/wacli
+# Copy the current Linux asset URL from https://github.com/steipete/wacli/releases
+RUN curl -L https://github.com/steipete/wacli/releases/latest/download/wacli-linux-amd64.tar.gz \
+  | tar -xzO wacli > /usr/local/bin/wacli; \
+  chmod +x /usr/local/bin/wacli
 
 # Add more binaries below using the same pattern
 
@@ -69,7 +75,7 @@ ENV NODE_ENV=production
 CMD ["node","dist/index.js"]
 ```
 
-<Note>Las URL de descarga anteriores son para x86_64 (amd64). Para máquinas virtuales basadas en ARM (p. ej., Hetzner ARM, GCP Tau T2A), reemplace las URL de descarga con las variantes ARM64 apropiadas de la página de lanzamiento de cada herramienta.</Note>
+<Note>Las URL anteriores son ejemplos. Para máquinas virtuales basadas en ARM, elija los activos `arm64`. Para compilaciones reproducibles, ancle las URL de lanzamiento con versiones.</Note>
 
 ## Compilar y lanzar
 
@@ -78,7 +84,7 @@ docker compose build
 docker compose up -d openclaw-gateway
 ```
 
-Si la compilación falla con `Killed` o `exit code 137` durante `pnpm install --frozen-lockfile`, la máquina virtual se quedó sin memoria.
+Si la compilación falla con `Killed` o `exit code 137` durante `pnpm install --frozen-lockfile`, la máquina virtual se ha quedado sin memoria.
 Use una clase de máquina más grande antes de reintentar.
 
 Verificar binarios:
@@ -114,18 +120,19 @@ Salida esperada:
 OpenClaw se ejecuta en Docker, pero Docker no es la fuente de verdad.
 Todo el estado de larga duración debe sobrevivir a reinicios, reconstrucciones y rearranques.
 
-| Componente                           | Ubicación                          | Mecanismo de persistencia     | Notas                                                           |
-| ------------------------------------ | ---------------------------------- | ----------------------------- | --------------------------------------------------------------- |
-| Configuración de Gateway             | `/home/node/.openclaw/`            | Montaje de volumen del host   | Incluye `openclaw.json`, `.env`                                 |
-| Perfiles de autenticación de modelos | `/home/node/.openclaw/agents/`     | Montaje de volumen del host   | `agents/<agentId>/agent/auth-profiles.json` (OAuth, claves API) |
-| Configuraciones de habilidades       | `/home/node/.openclaw/skills/`     | Montaje de volumen del host   | Estado a nivel de habilidad                                     |
-| Espacio de trabajo del agente        | `/home/node/.openclaw/workspace/`  | Montaje de volumen del host   | Código y artefactos del agente                                  |
-| Sesión de WhatsApp                   | `/home/node/.openclaw/`            | Montaje de volumen del host   | Conserva el inicio de sesión QR                                 |
-| Llavero de Gmail                     | `/home/node/.openclaw/`            | Volumen del host + contraseña | Requiere `GOG_KEYRING_PASSWORD`                                 |
-| Binarios externos                    | `/usr/local/bin/`                  | Imagen Docker                 | Debe estar incluido en el momento de la compilación             |
-| Tiempo de ejecución de Node          | Sistema de archivos del contenedor | Imagen Docker                 | Reconstruido en cada compilación de imagen                      |
-| Paquetes del sistema operativo       | Sistema de archivos del contenedor | Imagen Docker                 | No instalar en tiempo de ejecución                              |
-| Contenedor Docker                    | Efímero                            | Reiniciable                   | Seguro de destruir                                              |
+| Componente                           | Ubicación                                              | Mecanismo de persistencia     | Notas                                                           |
+| ------------------------------------ | ------------------------------------------------------ | ----------------------------- | --------------------------------------------------------------- |
+| Configuración de Gateway             | `/home/node/.openclaw/`                                | Montaje de volumen del host   | Incluye `openclaw.json`, `.env`                                 |
+| Perfiles de autenticación de modelos | `/home/node/.openclaw/agents/`                         | Montaje de volumen del host   | `agents/<agentId>/agent/auth-profiles.json` (OAuth, claves API) |
+| Configuraciones de habilidades       | `/home/node/.openclaw/skills/`                         | Montaje de volumen del host   | Estado a nivel de habilidad                                     |
+| Espacio de trabajo del agente        | `/home/node/.openclaw/workspace/`                      | Montaje de volumen del host   | Código y artefactos del agente                                  |
+| Sesión de WhatsApp                   | `/home/node/.openclaw/`                                | Montaje de volumen del host   | Conserva el inicio de sesión QR                                 |
+| Llavero de Gmail                     | `/home/node/.openclaw/`                                | Volumen del host + contraseña | Requiere `GOG_KEYRING_PASSWORD`                                 |
+| Paquetes de complementos             | `/home/node/.openclaw/npm`, `/home/node/.openclaw/git` | Montaje de volumen del host   | Raíces de paquetes de complementos descargables                 |
+| Binarios externos                    | `/usr/local/bin/`                                      | Imagen Docker                 | Debe incorporarse en tiempo de compilación                      |
+| Tiempo de ejecución de Node          | Sistema de archivos del contenedor                     | Imagen Docker                 | Reconstruido en cada compilación de imagen                      |
+| Paquetes del sistema operativo       | Sistema de archivos del contenedor                     | Imagen de Docker              | No instalar en tiempo de ejecución                              |
+| Contenedor de Docker                 | Efímero                                                | Reiniciable                   | Seguro de destruir                                              |
 
 ## Actualizaciones
 

@@ -17,16 +17,20 @@ Les pièces jointes distantes `MEDIA:` doivent être des URLs publiques `https:`
 bouclage, lien local, privés et internes sont ignorés en tant que directives
 de pièce jointe ; les récupérateurs de médias côté serveur appliquent toujours leurs propres gardes réseau.
 
-La syntaxe d'image Markdown brute reste du texte par défaut. Les canaux qui mappent intentionnellement
-les réponses images Markdown vers des pièces jointes médias optent pour cela au niveau de leur adaptateur
-sortant ; Telegram fait cela afin que `![alt](url)` puisse toujours devenir une réponse média.
+Les pièces jointes locales `MEDIA:` peuvent utiliser des chemins absolus, relatifs à l'espace de travail ou
+relatifs au répertoire personnel `~/`. Ils passent toujours par la stratégie de lecture de fichiers de l'agent et
+les vérifications de type de média avant la livraison.
 
-Ces directives sont distinctes. `MEDIA:` et les balises de réponse/voix restent des métadonnées de livraison ; `[embed ...]` est le chemin de rendu riche uniquement web.
-Les médias de résultats d'outil de confiance utilisent le même analyseur `MEDIA:` / `[[audio_as_voice]]` avant la livraison, afin que les sorties d'outil texte puissent toujours marquer une pièce jointe audio comme une note vocale.
+La syntaxe d'image Markdown reste du texte par défaut. Les canaux qui mappent intentionnellement
+les réponses images Markdown aux pièces jointes multimédias optent pour cela au niveau de leur adaptateur
+sortant ; Telegram le fait pour que `![alt](url)` puisse toujours devenir une réponse multimédia.
+
+Ces directives sont distinctes. `MEDIA:` et les balises reply/voice restent des métadonnées de livraison ; `[embed ...]` est le chemin de rendu riche réservé au web.
+Les médias de résultats d'outils de confiance utilisent le même analyseur `MEDIA:` / `[[audio_as_voice]]` avant la livraison, de sorte que les sorties texte des outils peuvent toujours marquer une pièce jointe audio comme une note vocale.
 
 Lorsque le block streaming est activé, `MEDIA:` reste des métadonnées de livraison unique pour un
-tour. Si la même URL média est envoyée dans un bloc diffusé et répétée dans la charge utile finale
-de l'assistant, OpenClaw livre la pièce jointe une seule fois et supprime le doublon
+tour. Si la même URL multimédia est envoyée dans un bloc diffusé et répétée dans la charge utile finale
+de l'assistant, OpenClaw livre la pièce jointe une fois et supprime le doublon
 de la charge utile finale.
 
 ## `[embed ...]`
@@ -42,11 +46,11 @@ Exemple auto-fermant :
 Règles :
 
 - `[view ...]` n'est plus valide pour les nouvelles sorties.
-- Les shortcodes d'intégration s'affichent uniquement dans la surface du message de l'assistant.
-- Seules les intégrations basées sur des URL sont restituées. Utilisez `ref="..."` ou `url="..."`.
-- Les shortcodes d'intégration HTML en ligne de forme bloc ne sont pas restitués.
-- L'interface web supprime le shortcode du texte visible et restitue l'intégration en ligne.
-- `MEDIA:` n'est pas un alias d'intégration et ne doit pas être utilisé pour le rendu riche intégré.
+- Les shortcodes d'intégration s'affichent uniquement dans la surface des messages de l'assistant.
+- Seules les intégrations basées sur une URL sont rendues. Utilisez `ref="..."` ou `url="..."`.
+- Les shortcodes d'intégration HTML en ligne sous forme de bloc ne sont pas rendus.
+- L'interface web supprime le shortcode du texte visible et rend l'intégration en ligne.
+- `MEDIA:` n'est pas un alias d'intégration et ne doit pas être utilisé pour le rendu riche des intégrations.
 
 ## Forme de rendu stockée
 

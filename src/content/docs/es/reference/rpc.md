@@ -1,5 +1,5 @@
 ---
-summary: "Adaptadores RPC para CLIs externos (signal-cli, imsg heredado) y patrones de puerta de enlace"
+summary: "Adaptadores RPC para CLIs externos (signal-cli, imsg) y patrones de pasarela"
 read_when:
   - Adding or changing external CLI integrations
   - Debugging RPC adapters (signal-cli, imsg)
@@ -17,11 +17,9 @@ OpenClaw integra CLIs externos a través de JSON-RPC. Hoy se utilizan dos patron
 
 Consulte [Signal](/es/channels/signal) para la configuración y los endpoints.
 
-## Patrón B: Proceso hijo stdio (heredado: imsg)
+## Patrón B: proceso hijo stdio (imsg)
 
-> **Nota:** Para nuevas configuraciones de iMessage, use [BlueBubbles](/es/channels/bluebubbles) en su lugar.
-
-- OpenClaw inicia `imsg rpc` como un proceso secundario (integración heredada de iMessage).
+- OpenClaw inicia `imsg rpc` como un proceso hijo para [iMessage](/es/channels/imessage).
 - JSON-RPC está delimitado por líneas sobre stdin/stdout (un objeto JSON por línea).
 - No se requiere puerto TCP ni demonio.
 
@@ -30,15 +28,15 @@ Métodos principales utilizados:
 - `watch.subscribe` → notificaciones (`method: "message"`)
 - `watch.unsubscribe`
 - `send`
-- `chats.list` (sonda/diagnósticos)
+- `chats.list` (sondeo/diagnósticos)
 
-Consulte [iMessage](/es/channels/imessage) para la configuración y el direccionamiento heredados (se prefiere `chat_id`).
+Consulte [iMessage](/es/channels/imessage) para la configuración heredada y el direccionamiento (se prefiere `chat_id`).
 
-## Directrices de adaptadores
+## Directrices del adaptador
 
 - La pasarela es propietaria del proceso (inicio/parada vinculado al ciclo de vida del proveedor).
-- Mantenga los clientes RPC resilientes: tiempos de espera, reinicio al salir.
-- Prefiera IDs estables (por ejemplo, `chat_id`) sobre cadenas de visualización.
+- Mantenga los clientes RPC resistentes: tiempos de espera, reinicio al salir.
+- Prefiera identificadores estables (p. ej., `chat_id`) sobre cadenas de visualización.
 
 ## Relacionado
 

@@ -12,10 +12,14 @@ Le tool `music_generate` permet à l'agent de créer de la musique ou de l'audio
 capacité de génération de musique partagée avec des providers configurés — Google,
 MiniMax et ComfyUI configuré par workflow aujourd'hui.
 
-Pour les exécutions d'agent soutenues par une session, OpenClaw lance la génération de musique en tant que
-tâche d'arrière-plan, la suit dans le registre des tâches, puis réveille l'agent à nouveau
-lorsque la piste est prête afin que l'agent puisse renvoyer l'audio terminé dans le
-channel d'origine.
+Pour les exécutions d'agent basées sur une session, OpenClaw lance la génération de musique en tant que
+tâche d'arrière-plan, la suit dans le registre des tâches, puis réveille à nouveau l'agent
+lorsque la piste est prête afin que l'agent puisse informer l'utilisateur et joindre
+l'audio terminé. Dans les chats de groupe/canal qui utilisent une diffusion visible
+uniquement via l'outil de message, l'agent relaie le résultat via l'outil de message. Si
+l'agent de complétion n'écrit qu'une réponse finale privée, OpenClaw revient à un
+envoi direct sur le canal avec le média généré. Le réveil de complétion avertit
+explicitement l'agent que les réponses finales normales sont privées dans ces itinéraires.
 
 <Note>L'outil partagé intégré n'apparaît que lorsqu'au moins un provider de génération de musique est disponible. Si vous ne voyez pas `music_generate` dans les outils de votre agent, configurez `agents.defaults.musicGenerationModel` ou configurez une clé API de provider.</Note>
 
@@ -131,10 +135,10 @@ Exemple de génération directe :
   `"status"` renvoie la tâche de session actuelle ; `"list"` inspecte les providers.
 </ParamField>
 <ParamField path="model" type="string">
-  Surcharge de provider/model (p. ex. `google/lyria-3-pro-preview`, `comfy/workflow`).
+  Remplacement de provider/model (p. ex. `google/lyria-3-pro-preview`, `comfy/workflow`).
 </ParamField>
 <ParamField path="lyrics" type="string">
-  Paroles facultatives lorsque le provider prend en charge la saisie explicite de paroles.
+  Paroles optionnelles lorsque le provider prend en charge la saisie explicite de paroles.
 </ParamField>
 <ParamField path="instrumental" type="boolean">
   Demander une sortie instrumentale uniquement lorsque le provider le prend en charge.
@@ -143,7 +147,7 @@ Exemple de génération directe :
   Chemin ou URL d'une image de référence unique.
 </ParamField>
 <ParamField path="images" type="string[]">
-  Plusieurs images de référence (jusqu'à 10 sur les providers prenant en charge cette fonctionnalité).
+  Plusieurs images de référence (jusqu'à 10 sur les providers prenant en charge).
 </ParamField>
 <ParamField path="durationSeconds" type="number">
   Durée cible en secondes lorsque le provider prend en charge les indications de durée.
@@ -155,7 +159,7 @@ Exemple de génération directe :
   Indication de nom de fichier de sortie.
 </ParamField>
 <ParamField path="timeoutMs" type="number">
-  Délai d'expiration facultatif de la demande du provider en millisecondes.
+  Délai d'expiration de la requête provider optionnel en millisecondes. Les valeurs inférieures à 10000 ms sont élevées à 10000 ms et signalées dans le résultat de l'outil.
 </ParamField>
 
 <Note>

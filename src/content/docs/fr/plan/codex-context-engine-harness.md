@@ -124,14 +124,14 @@ Par conséquent, la mise en œuvre nécessite une couche de projection. La premi
 
 Pour les moteurs tels que lossless-claw, le contexte assemblé doit être déterministe pour des entrées inchangées. N'ajoutez pas d'horodatages, d'identifiants aléatoires ou d'ordre non déterministe au texte de contexte généré.
 
-### La sémantique de repli PI ne change pas
+### La sémantique de sélection à l'exécution ne change pas
 
 La sélection du harnais reste telle quelle :
 
 - `runtime: "pi"` force PI
 - `runtime: "codex"` sélectionne le harnais Codex enregistré
 - `runtime: "auto"` permet aux harnais de plugins de revendiquer les fournisseurs pris en charge
-- `fallback: "none"` désactive le repli PI lorsqu'aucun harnais de plugin ne correspond
+- les exécutions `auto` sans correspondance utilisent PI
 
 Ce travail modifie ce qui se passe après la sélection du harnais Codex.
 

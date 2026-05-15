@@ -24,7 +24,7 @@ Instalar desde una copia local:
 openclaw plugins install ./path/to/local/synology-chat-plugin
 ```
 
-Detalles: [Complementos](/es/tools/plugin)
+Detalles: [Plugins](/es/tools/plugin)
 
 ## Configuración rápida
 
@@ -87,16 +87,16 @@ Para la cuenta predeterminada, puede usar variables de entorno:
 
 Los valores de configuración anulan las variables de entorno.
 
-`SYNOLOGY_CHAT_INCOMING_URL` no se puede establecer desde un espacio de trabajo `.env`; consulte [Archivos `.env` del espacio de trabajo](/es/gateway/security).
+`SYNOLOGY_CHAT_INCOMING_URL` no se puede establecer desde un `.env` del espacio de trabajo; consulte [Archivos `.env` del espacio de trabajo](/es/gateway/security).
 
 ## Política de MD y control de acceso
 
 - `dmPolicy: "allowlist"` es el valor predeterminado recomendado.
 - `allowedUserIds` acepta una lista (o una cadena separada por comas) de IDs de usuario de Synology.
-- En el modo `allowlist`, una lista `allowedUserIds` vacía se trata como una configuración errónea y la ruta del webhook no se iniciará (use `dmPolicy: "open"` para permitir todo).
-- `dmPolicy: "open"` permite cualquier remitente.
-- `dmPolicy: "disabled"` bloquea los MDs.
-- El enlace del destinatario de la respuesta se mantiene en el `user_id` numérico estable de forma predeterminada. `channels.synology-chat.dangerouslyAllowNameMatching: true` es un modo de compatibilidad de emergencia que vuelve a habilitar la búsqueda mutable de nombre de usuario/apodo para la entrega de respuestas.
+- En el modo `allowlist`, una lista `allowedUserIds` vacía se trata como una configuración incorrecta y la ruta del webhook no se iniciará (use `dmPolicy: "open"` con `allowedUserIds: ["*"]` para permitir todo).
+- `dmPolicy: "open"` permite mensajes directos (DM) públicos solo cuando `allowedUserIds` incluye `"*"`; con entradas restrictivas, solo los usuarios coincidentes pueden chatear.
+- `dmPolicy: "disabled"` bloquea los mensajes directos.
+- El enlace del destinatario de la respuesta se mantiene en el `user_id` numérico establecido de forma predeterminada. `channels.synology-chat.dangerouslyAllowNameMatching: true` es un modo de compatibilidad de emergencia que vuelve a habilitar la búsqueda de nombre de usuario/apodo mutable para la entrega de respuestas.
 - Las aprobaciones de emparejamiento funcionan con:
   - `openclaw pairing list synology-chat`
   - `openclaw pairing approve synology-chat <CODE>`
@@ -110,22 +110,23 @@ Ejemplos:
 ```bash
 openclaw message send --channel synology-chat --target 123456 --text "Hello from OpenClaw"
 openclaw message send --channel synology-chat --target synology-chat:123456 --text "Hello again"
+openclaw message send --channel synology-chat --target synology:123456 --text "Short prefix"
 ```
 
-El envío de medios es compatible con la entrega de archivos basada en URL.
+Los envíos de medios son compatibles mediante la entrega de archivos basada en URL.
 Las URL de archivos salientes deben usar `http` o `https`, y los objetivos de red privados o bloqueados se rechazan antes de que OpenClaw reenvíe la URL al webhook del NAS.
 
 ## Multicuenta
 
-Se admiten múltiples cuentas de Synology Chat en `channels.synology-chat.accounts`.
-Cada cuenta puede anular el token, la URL entrante, la ruta del webhook, la política de MD y los límites.
+Se admiten varias cuentas de Synology Chat en `channels.synology-chat.accounts`.
+Cada cuenta puede anular el token, la URL entrante, la ruta del webhook, la política de DM y los límites.
 Las sesiones de mensajes directos están aisladas por cuenta y usuario, por lo que el mismo `user_id` numérico
 en dos cuentas de Synology diferentes no comparte el estado de la transcripción.
-Asigne a cada cuenta habilitada un `webhookPath` distinto. OpenClaw ahora rechaza rutas exactas duplicadas
-y se niega a iniciar cuentas con nombre que solo heredan una ruta de webhook compartida en configuraciones de múltiples cuentas.
-Si intencionalmente necesita herencia heredada para una cuenta con nombre, configure
+Asigne a cada cuenta habilitada un `webhookPath` distinto. OpenClaw ahora rechaza las rutas exactas duplicadas
+y se niega a iniciar cuentas con nombre que solo hereden una ruta de webhook compartida en configuraciones multicuenta.
+Si intencionalmente necesita la herencia heredada para una cuenta con nombre, establezca
 `dangerouslyAllowInheritedWebhookPath: true` en esa cuenta o en `channels.synology-chat`,
-pero las rutas exactas duplicadas siguen siendo rechazadas con cierre seguro (fail-closed). Se prefieren rutas explícitas por cuenta.
+pero las rutas exactas duplicadas aún se rechazan con cierre seguro. Prefiera rutas explícitas por cuenta.
 
 ```json5
 {
@@ -156,7 +157,7 @@ pero las rutas exactas duplicadas siguen siendo rechazadas con cierre seguro (fa
 - Mantenga `allowInsecureSsl: false` a menos que confíe explícitamente en un certificado NAS local autofirmado.
 - Las solicitudes entrantes de webhook se verifican por token y tienen límite de velocidad por remitente.
 - Las verificaciones de tokens no válidas utilizan una comparación de secreto de tiempo constante y fallan cerradas.
-- Prefiera `dmPolicy: "allowlist"` para producción.
+- Se prefiere `dmPolicy: "allowlist"` para producción.
 - Mantenga `dangerouslyAllowNameMatching` desactivado a menos que necesite explícitamente la entrega de respuestas heredada basada en nombre de usuario.
 - Mantenga `dangerouslyAllowInheritedWebhookPath` desactivado a menos que acepte explícitamente el riesgo de enrutamiento de ruta compartida en una configuración de múltiples cuentas.
 
@@ -172,15 +173,15 @@ pero las rutas exactas duplicadas siguen siendo rechazadas con cierre seguro (fa
 - `Rate limit exceeded`:
   - demasiados intentos de token no válidos desde la misma fuente pueden bloquear temporalmente esa fuente
   - los remitentes autenticados también tienen un límite de tasa de mensajes separado por usuario
-- `Allowlist is empty. Configure allowedUserIds or use dmPolicy=open.`:
-  - `dmPolicy="allowlist"` está habilitado pero no hay usuarios configurados
+- `Allowlist is empty. Configure allowedUserIds or use dmPolicy=open with allowedUserIds=["*"].`:
+  - `dmPolicy="allowlist"` está activado pero no hay usuarios configurados
 - `User not authorized`:
   - el `user_id` numérico del remitente no está en `allowedUserIds`
 
 ## Relacionado
 
-- [Resumen de canales](/es/channels) — todos los canales compatibles
-- [Emparejamiento](/es/channels/pairing) — autenticación de DM y flujo de emparejamiento
-- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación y flujo de emparejamiento DM
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y control de menciones
 - [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
 - [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

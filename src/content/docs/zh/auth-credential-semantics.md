@@ -44,32 +44,57 @@ Token credentials (`type: "token"`) 支持内联 `token` 和/或 `tokenRef`。
 2. 对于具备资格的 profile，可以从内联值或 `tokenRef` 解析 token material。
 3. 无法解析的引用会在 `models status --probe` 输出中产生 `unresolved_ref`。
 
-## Explicit auth order filtering
+## Agent 副本可移植性
 
-- 当为提供商设置了 `auth.order.<provider>` 或 auth-store 顺序覆盖时，`models status --probe` 仅探测该提供商解析出的认证顺序中剩余的配置文件 ID。
-- 该提供商的存储配置文件如果从显式顺序中省略，则不会在后续静默尝试。探测输出将使用 `reasonCode: excluded_by_auth_order` 和详细信息 `Excluded by auth.order for this provider.` 进行报告。
+Agent 身份验证继承是透传的。当 Agent 没有本地配置文件时，它可以在运行时从默认/主 Agent 存储解析配置文件，而无需将机密材料复制到其自己的 `auth-profiles.json` 中。
+
+显式复制流程（例如 `openclaw agents add`）使用此可移植性策略：
+
+- `api_key` 配置文件是可移植的，除非 `copyToAgents: false`。
+- `token` 配置文件是可移植的，除非 `copyToAgents: false`。
+- `oauth` 配置文件默认不可移植，因为刷新令牌可能是单次使用的或对轮换敏感的。
+- 提供商拥有的 OAuth 流程只有在跨 Agent 复制刷新材料已知安全的情况下，才能通过 `copyToAgents: true` 选择加入。
+
+不可移植的配置文件通过透传继承保持可用，除非目标 Agent 单独登录并创建其自己的本地配置文件。
+
+## 仅配置的身份验证路由
+
+带有 `mode: "aws-sdk"` 的 `auth.profiles` 条目是路由元数据，而不是存储的凭据。当目标提供商使用 `models.providers.<id>.auth: "aws-sdk"` 或内置 Amazon Bedrock 默认 AWS SDK 路由时，它们是有效的。即使 `auth-profiles.json` 中不存在匹配的条目，这些配置文件 ID 也可能出现在 `auth.order` 和会话覆盖中。
+
+不要将 `type: "aws-sdk"` 写入 `auth-profiles.json`。如果旧版安装存在此类标记，`openclaw doctor --fix` 会将其移动到 `auth.profiles` 并从凭据存储中删除该标记。
+
+## 显式身份验证顺序筛选
+
+- 当为提供商设置了 `auth.order.<provider>` 或身份验证存储顺序覆盖时，`models status --probe` 仅探测保留在该提供商的已解析身份验证顺序中的配置文件 ID。
+- 从显式顺序中省略的该提供商的存储配置文件不会在稍后静默尝试。探测输出会使用 `reasonCode: excluded_by_auth_order` 和详细信息 `Excluded by auth.order for this provider.` 对其进行报告。
 
 ## 探测目标解析
 
-- 探测目标可以来自认证配置文件、环境凭据或 `models.json`。
-- 如果提供商拥有凭据但 OpenClaw 无法为其解析出可探测的模型候选者，`models status --probe` 将报告 `status: no_model` 并附带 `reasonCode: no_model`。
+- 探测目标可以来自身份验证配置文件、环境凭据或 `models.json`。
+- 如果提供商拥有凭据，但 OpenClaw 无法为其解析可探测的模型候选项，OpenClaw`models status --probe` 会报告 `status: no_model` 并附带 `reasonCode: no_model`。
+
+## 外部 CLI 凭据发现
+
+- 仅当提供商、运行时或身份验证配置文件在当前操作范围内时，或者当该外部源的已存储本地配置文件已存在时，才会发现由外部 CLI 拥有的仅运行时凭据。
+- Auth-store 调用者应选择一种显式的外部 CLI 发现模式：CLI`none` 用于仅持久化/插件身份验证，`existing`CLI 用于刷新已存储的外部 CLI 配置文件，或 `scoped` 用于具体的提供商/配置文件集。
+- 只读/状态路径传递 `allowKeychainPrompt: false`CLImacOS；它们仅使用文件支持的外部 CLI 凭据，并且不读取或重用 macOS 钥匙串结果。
 
 ## OAuth SecretRef 策略守卫
 
 - SecretRef 输入仅适用于静态凭据。
 - 如果配置文件凭据是 `type: "oauth"`，则不支持该配置文件凭据材料的 SecretRef 对象。
-- 如果 `auth.profiles.<id>.mode` 为 `"oauth"`，则拒绝该配置文件的 SecretRef 支持的 `keyRef`/`tokenRef` 输入。
-- 违规操作在启动/重新加载认证解析路径中属于硬故障。
+- 如果 `auth.profiles.<id>.mode` 为 `"oauth"`，则该配置文件的 SecretRef 支持的 `keyRef`/`tokenRef` 输入将被拒绝。
+- 违规行为在启动/重新加载身份验证解析路径中属于硬失败。
 
-## 传统兼容消息传递
+## 兼容旧版的消息传递
 
 为了脚本兼容性，探测错误保持第一行不变：
 
 `Auth profile credentials are missing or expired.`
 
-人类友好的详细信息和稳定的原因代码可以在后续行中添加。
+人类可读的详细信息以及稳定的原因代码可能会在后续行中添加。
 
 ## 相关
 
 - [密钥管理](/zh/gateway/secrets)
-- [认证存储](/zh/concepts/oauth)
+- [身份验证存储](/zh/concepts/oauth)

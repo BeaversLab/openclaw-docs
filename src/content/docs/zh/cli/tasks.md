@@ -9,7 +9,7 @@ title: "`openclaw tasks`"
 检查持久的后台任务和 Task Flow 状态。不带子命令时，
 `openclaw tasks` 等同于 `openclaw tasks list`。
 
-有关生命周期和交付模型，请参阅 [Background Tasks](/zh/automation/tasks)。
+有关生命周期和交付模型，请参阅[后台任务](/zh/automation/tasks)。
 
 ## 用法
 
@@ -83,8 +83,9 @@ openclaw tasks audit [--severity <warn|error>] [--code <name>] [--limit <n>] [--
 openclaw tasks maintenance [--apply] [--json]
 ```
 
-预览或应用任务和 Task Flow 协调、清理标记和修剪。
-对于 cron 任务，协调会在将旧的活跃任务标记为 `lost` 之前使用持久的运行日志/作业状态，因此已完成的 cron 运行不会仅仅因为内存中的 Gateway(网关) 运行时状态消失而变成虚假的审计错误。离线 CLI 审计对于 Gateway(网关) 的进程本地 cron 活跃作业集不具有权威性。
+预览或应用任务和Task Flow协调、清理标记、修剪以及过时的cron运行会话注册表清理。
+对于cron任务，协调会在将旧的活动任务标记为 `lost`Gateway(网关)CLIGateway(网关)CLI 之前使用持久化的运行日志/作业状态，因此已完成的cron运行不会仅仅因为内存中的Gateway(网关)运行时状态消失而成为错误的审计错误。离线CLI审计对于Gateway(网关)的进程本地cron活动作业集不具有权威性。当具有运行ID/源ID的CLI任务的实时Gateway(网关)运行上下文消失时，即使存在旧的子会话行，这些任务也会被标记为 `lost`Gateway(网关)。
+应用时，维护还会修剪 `cron:<jobId>:run:<uuid>` 会话注册表中超过7天的行，同时保留当前正在运行的cron作业，并且不触碰非cron会话行。
 
 ### `flow`
 
@@ -98,5 +99,5 @@ openclaw tasks flow cancel <lookup>
 
 ## 相关
 
-- [CLI 参考](/zh/cli)
+- [CLI 参考](CLI/en/cli)
 - [后台任务](/zh/automation/tasks)

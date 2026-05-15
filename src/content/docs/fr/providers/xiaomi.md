@@ -6,22 +6,28 @@ read_when:
 title: "Xiaomi MiMo"
 ---
 
-Xiaomi MiMo est la plateforme API pour les modèles **MiMo**. OpenClaw utilise le point de terminaison compatible Xiaomi de OpenAI avec une authentification par clé API.
+Xiaomi MiMo est la plateforme API pour les modèles **MiMo**. OpenClaw inclut un plugin intégré XiaomiAPIOpenClaw`xiaomi`OpenAI qui enregistre à la fois un fournisseur de chat compatible OpenAI et un fournisseur de synthèse vocale (TTS) sur le même `XIAOMI_API_KEY`.
 
-| Propriété   | Valeur                          |
-| ----------- | ------------------------------- |
-| Fournisseur | `xiaomi`                        |
-| Auth        | `XIAOMI_API_KEY`                |
-| API         | compatible OpenAI               |
-| URL de base | `https://api.xiaomimimo.com/v1` |
+| Propriété                | Valeur                                         |
+| ------------------------ | ---------------------------------------------- |
+| ID du fournisseur        | `xiaomi`                                       |
+| Plugin                   | intégré, `enabledByDefault: true`              |
+| Variable d'env d'auth    | `XIAOMI_API_KEY`                               |
+| Indicateur d'intégration | `--auth-choice xiaomi-api-key`                 |
+| Indicateur direct CLI    | `--xiaomi-api-key <key>`                       |
+| Contrats                 | complétions de chat + `speechProviders`        |
+| API                      | Compatible OpenAI (OpenAI`openai-completions`) |
+| URL de base              | `https://api.xiaomimimo.com/v1`                |
+| Modèle par défaut        | `xiaomi/mimo-v2-flash`                         |
+| Par défaut TTS           | `mimo-v2.5-tts`, voix `mimo_default`           |
 
 ## Getting started
 
 <Steps>
-  <Step title="Obtenir une clé API">
+  <Step title="APIObtenir une clé API"APIXiaomi>
     Créez une clé API dans la [console Xiaomi MiMo](https://platform.xiaomimimo.com/#/console/api-keys).
   </Step>
-  <Step title="Exécuter l'onboarding">
+  <Step title="Exécuter l'intégration">
     ```bash
     openclaw onboard --auth-choice xiaomi-api-key
     ```
@@ -42,27 +48,25 @@ Xiaomi MiMo est la plateforme API pour les modèles **MiMo**. OpenClaw utilise l
 
 ## Catalogue intégré
 
-| Réf modèle             | Entrée      | Contexte  | Sortie max | Raisonnement | Notes             |
-| ---------------------- | ----------- | --------- | ---------- | ------------ | ----------------- |
-| `xiaomi/mimo-v2-flash` | text        | 262,144   | 8,192      | Non          | Modèle par défaut |
-| `xiaomi/mimo-v2-pro`   | text        | 1,048,576 | 32,000     | Oui          | Grand contexte    |
-| `xiaomi/mimo-v2-omni`  | text, image | 262,144   | 32,000     | Oui          | Multimodal        |
+| Réf modèle             | Entrée       | Contexte  | Sortie max | Raisonnement | Notes             |
+| ---------------------- | ------------ | --------- | ---------- | ------------ | ----------------- |
+| `xiaomi/mimo-v2-flash` | texte        | 262,144   | 8 192      | Non          | Modèle par défaut |
+| `xiaomi/mimo-v2-pro`   | texte        | 1 048 576 | 32 000     | Oui          | Grand contexte    |
+| `xiaomi/mimo-v2-omni`  | texte, image | 262 144   | 32 000     | Oui          | Multimodal        |
 
 <Tip>La référence du modèle par défaut est `xiaomi/mimo-v2-flash`. Le fournisseur est injecté automatiquement lorsque `XIAOMI_API_KEY` est défini ou qu'un profil d'authentification existe.</Tip>
 
 ## Synthèse vocale
 
-Le plugin `xiaomi` inclus enregistre également Xiaomi MiMo en tant que fournisseur vocal pour
-`messages.tts`. Il appelle le contrat TTS de chat-completions de Xiaomi avec le texte comme
-message `assistant` et un guide de style optionnel comme message `user`.
+Le plugin `xiaomi`Xiaomi inclus enregistre également Xiaomi MiMo en tant que fournisseur de synthèse vocale pour `messages.tts`Xiaomi. Il appelle le contrat TTS de fin de chat de Xiaomi avec le texte en tant que message `assistant` et des directives de style facultatives en tant que message `user`.
 
-| Propriété  | Valeur                                       |
-| ---------- | -------------------------------------------- |
-| ID TTS     | `xiaomi` (alias `mimo`)                      |
-| Auth       | `XIAOMI_API_KEY`                             |
-| API        | `POST /v1/chat/completions` avec `audio`     |
-| Par défaut | `mimo-v2.5-tts`, voix `mimo_default`         |
-| Sortie     | MP3 par défaut ; WAV lorsqu'il est configuré |
+| Propriété  | Valeur                                   |
+| ---------- | ---------------------------------------- |
+| ID TTS     | `xiaomi` (alias `mimo`)                  |
+| Auth       | `XIAOMI_API_KEY`                         |
+| API        | `POST /v1/chat/completions` avec `audio` |
+| Par défaut | `mimo-v2.5-tts`, voix `mimo_default`     |
+| Sortie     | MP3 par défaut ; WAV lorsque configuré   |
 
 ```json5
 {
@@ -84,11 +88,7 @@ message `assistant` et un guide de style optionnel comme message `user`.
 }
 ```
 
-Les voix intégrées prises en charge incluent `mimo_default`, `default_zh`, `default_en`,
-`Mia`, `Chloe`, `Milo` et `Dean`. `mimo-v2-tts` est pris en charge pour les anciens comptes
-TTS MiMo ; la valeur par défaut utilise le modèle TTS actuel MiMo-V2.5. Pour les cibles de notes vocales
-telles que Feishu et Telegram, OpenClaw transcode la sortie Xiaomi en Opus 48kHz
-avec `ffmpeg` avant la livraison.
+Les voix intégrées prises en charge incluent `mimo_default`, `default_zh`, `default_en`, `Mia`, `Chloe`, `Milo` et `Dean`. `mimo-v2-tts` est pris en charge pour les anciens comptes TTS MiMo ; la valeur par défaut utilise le modèle TTS MiMo-V2.5 actuel. Pour les cibles de notes vocales telles que Feishu et Telegram, OpenClawXiaomi transcode la sortie Xiaomi en Opus 48 kHz avec `ffmpeg` avant la livraison.
 
 ## Exemple de configuration
 
@@ -144,9 +144,9 @@ avec `ffmpeg` avant la livraison.
   </Accordion>
 
   <Accordion title="Détails du modèle">
-    - **mimo-v2-flash** — léger et rapide, idéal pour les tâches textuelles générales. Aucune prise en charge du raisonnement.
-    - **mimo-v2-pro** — prend en charge le raisonnement avec une fenêtre de contexte de 1M de jetons pour les charges de travail de documents longs.
-    - **mimo-v2-omni** — modèle multimodal avec raisonnement qui accepte à la fois des entrées texte et image.
+    - **mimo-v2-flash** — léger et rapide, idéal pour les tâches textuelles générales. Pas de support de raisonnement.
+    - **mimo-v2-pro** — prend en charge le raisonnement avec une fenêtre de contexte de 1M de jetons pour les charges de travail sur de longs documents.
+    - **mimo-v2-omni** — modèle multimodal avec raisonnement qui accepte les entrées texte et image.
 
     <Note>
     Tous les modèles utilisent le préfixe `xiaomi/` (par exemple `xiaomi/mimo-v2-pro`).
@@ -155,11 +155,11 @@ avec `ffmpeg` avant la livraison.
   </Accordion>
 
   <Accordion title="Dépannage">
-    - Si les modèles n'apparaissent pas, confirmez que `XIAOMI_API_KEY` est défini et valide.
+    - Si les modèles n'apparaissent pas, vérifiez que `XIAOMI_API_KEY` est défini et valide.
     - Lorsque le Gateway s'exécute en tant que démon, assurez-vous que la clé est disponible pour ce processus (par exemple dans `~/.openclaw/.env` ou via `env.shellEnv`).
 
     <Warning>
-    Les clés définies uniquement dans votre shell interactif ne sont pas visibles pour les processus de passerelle gérés par le démon. Utilisez la configuration `~/.openclaw/.env` ou `env.shellEnv` pour une disponibilité persistante.
+    Les clés définies uniquement dans votre shell interactif ne sont pas visibles pour les processus de passerère gérés par le démon. Utilisez la configuration `~/.openclaw/.env` ou `env.shellEnv` pour une disponibilité persistante.
     </Warning>
 
   </Accordion>
@@ -169,7 +169,7 @@ avec `ffmpeg` avant la livraison.
 
 <CardGroup cols={2}>
   <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
-    Choix des fournisseurs, des références de modèle et du comportement de basculement.
+    Choisir les fournisseurs, les références de modèles et le comportement de basculement.
   </Card>
   <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
     Référence complète de la configuration OpenClaw.

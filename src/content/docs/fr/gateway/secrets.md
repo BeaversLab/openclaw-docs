@@ -36,10 +36,20 @@ Les SecretRefs sont validés uniquement sur les surfaces effectivement actives.
 
 <AccordionGroup>
   <Accordion title="Exemples de surfaces inactives">
-    - Entrées de canal/compte désactivées. - Identifiants de canal de premier niveau dont aucun compte activé n'hérite. - Surfaces d'outil/fonctionnalité désactivées. - Clés spécifiques au provider de recherche Web qui ne sont pas sélectionnées par `tools.web.search.provider`. En mode auto (provider non défini), les clés sont consultées par ordre de priorité pour la détection automatique du
-    provider jusqu'à ce que l'une soit résolue. Après sélection, les clés des providers non sélectionnés sont traitées comme inactives jusqu'à sélection. - Le matériel d'authentification SSH du Sandbox (`agents.defaults.sandbox.ssh.identityData`, `certificateData`, `knownHostsData`, plus les remplacements par agent) n'est actif que lorsque le backend sandbox effectif est `ssh` pour l'agent par
-    défaut ou un agent activé. - Les SecretRefs `gateway.remote.token` / `gateway.remote.password` sont actifs si l'une de ces conditions est vraie : - `gateway.mode=remote` - `gateway.remote.url` est configuré - `gateway.tailscale.mode` est `serve` ou `funnel` - En mode local sans ces surfaces distantes : - `gateway.remote.token` est actif lorsque l'auth par jeton peut gagner et qu'aucun jeton
-    env/auth n'est configuré. - `gateway.remote.password` est actif uniquement lorsque l'auth par mot de passe peut gagner et qu'aucun mot de passe env/auth n'est configuré. - Le SecretRef `gateway.auth.token` est inactif pour la résolution d'auth au démarrage lorsque `OPENCLAW_GATEWAY_TOKEN` est défini, car l'entrée de jeton env l'emporte pour cet environnement d'exécution.
+    - Entrées de canal/compte désactivées.
+    - Informations d'identification de canal de premier niveau dont aucun compte activé n'hérite.
+    - Surfaces d'outil/fonctionnalité désactivées.
+    - Clés spécifiques au fournisseur de recherche Web qui ne sont pas sélectionnées par `tools.web.search.provider`. En mode auto (fournisseur non défini), les clés sont consultées par priorité pour la détection automatique du fournisseur jusqu'à ce que l'une soit résolue. Après sélection, les clés des fournisseurs non sélectionnés sont traitées comme inactives jusqu'à ce qu'elles soient sélectionnées.
+    - Le matériel d'authentification SSH du Sandbox (`agents.defaults.sandbox.ssh.identityData`, `certificateData`, `knownHostsData`, plus les substitutions par agent) n'est actif que lorsque le backend Sandbox effectif est `ssh` pour l'agent par défaut ou un agent activé.
+    - Les SecretRefs `gateway.remote.token` / `gateway.remote.password` sont actifs si l'une de ces conditions est vraie :
+      - `gateway.mode=remote`
+      - `gateway.remote.url` est configuré
+      - `gateway.tailscale.mode` est `serve` ou `funnel`
+      - En mode local sans ces surfaces distantes :
+        - `gateway.remote.token` est actif lorsque l'authentification par jeton peut l'emporter et qu'aucun jeton d'authentification/env n'est configuré.
+        - `gateway.remote.password` est actif uniquement lorsque l'authentification par mot de passe peut l'emporter et qu'aucun mot de passe d'authentification/env n'est configuré.
+    - Le SecretRef `gateway.auth.token` est inactif pour la résolution de l'authentification au démarrage lorsque `OPENCLAW_GATEWAY_TOKEN` est défini, car la saisie du jeton d'environnement l'emporte pour cette exécution.
+
   </Accordion>
 </AccordionGroup>
 
@@ -145,16 +155,18 @@ Définissez les providers sous `secrets.providers` :
 ```
 
 <AccordionGroup>
-  <Accordion title="Env provider">
-    - Allowlist facultative via `allowlist`.
-    - Les valeurs d'env manquantes ou vides font échouer la résolution.
+  <Accordion title="Fournisseur Env">
+    - Liste d'autorisation optionnelle via `allowlist`.
+    - Les valeurs d'environnement manquantes/vides entraînent l'échec de la résolution.
+
   </Accordion>
-  <Accordion title="File provider">
-    - Lit un fichier local depuis `path`.
+  <Accordion title="Fournisseur de fichiers">
+    - Lit le fichier local depuis `path`.
     - `mode: "json"` attend une charge utile d'objet JSON et résout `id` comme pointeur.
-    - `mode: "singleValue"` attend l'id de ref `"value"` et retourne le contenu du fichier.
-    - Le chemin doit réussir les vérifications de propriétaire/permissions.
-    - Note d'échec fermé Windows : si la vérification ACL n'est pas disponible pour un chemin, la résolution échoue. Pour les chemins de confiance uniquement, définissez `allowInsecurePath: true` sur ce provider pour contourner les vérifications de sécurité du chemin.
+    - `mode: "singleValue"` attend l'id de référence `"value"` et retourne le contenu du fichier.
+    - Le chemin doit réussir les vérifications de propriétaire/droits.
+    - Remarque d'échec fermé de Windows : si la vérification ACL est indisponible pour un chemin, la résolution échoue. Pour les chemins de confiance uniquement, définissez `allowInsecurePath: true` sur ce fournisseur pour contourner les vérifications de sécurité du chemin.
+
   </Accordion>
   <Accordion title="Fournisseur Exec">
     - Exécute le chemin binaire absolu configuré, sans shell.

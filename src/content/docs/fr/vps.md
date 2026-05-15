@@ -48,8 +48,8 @@ Exécutez la passerelle OpenClaw sur n'importe quel serveur Linux ou VPS cloud. 
   </Card>
 </CardGroup>
 
-**AWS (EC2 / Lightsail / offre gratuite)** fonctionne également très bien.
-Un didacticiel vidéo communautaire est disponible sur
+**AWS (EC2 / Lightsail / free tier)** fonctionne également très bien.
+Une visite guidée vidéo communautaire est disponible sur
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
 (ressource communautaire -- risque de devenir indisponible).
 
@@ -63,25 +63,40 @@ Un didacticiel vidéo communautaire est disponible sur
 
 Pages connexes : [Accès distant Gateway](/fr/gateway/remote), [Centre plateformes](/fr/platforms).
 
+## Sécuriser d'abord l'accès administrateur
+
+Avant d'installer OpenClaw sur un VPS public, décidez de la manière dont vous souhaitez administrer
+la machine elle-même.
+
+- Si vous souhaitez un accès administrateur uniquement via Tailnet, installez d'abord Tailscale, rejoignez le VPS
+  à votre tailnet, vérifiez une seconde session SSH via l'IP Tailscale ou
+  le nom MagicDNS, puis restreignez l'accès SSH public.
+- Si vous n'utilisez pas Tailscale, appliquez le durcissement équivalent pour votre
+  chemin SSH avant d'exposer d'autres services.
+- Ceci est distinct de l'accès Gateway. Vous pouvez toujours garder OpenClaw lié
+  au loopback et utiliser un tunnel SSH ou Tailscale Serve pour le tableau de bord.
+
+Les options spécifiques à Tailscale pour le Gateway se trouvent dans [Tailscale](/fr/gateway/tailscale).
+
 ## Agent d'entreprise partagé sur un VPS
 
-Faire fonctionner un seul agent pour une équipe est une configuration valide lorsque chaque utilisateur est dans la même limite de confiance et que l'agent est réservé à un usage professionnel.
+L'exécution d'un seul agent pour une équipe est une configuration valide lorsque chaque utilisateur se trouve dans la même limite de confiance et que l'agent est uniquement à usage professionnel.
 
-- Gardez-le sur un environnement d'exécution dédié (VPS/VM/conteneur + utilisateur système/comptes dédiés).
-- Ne connectez pas cet environnement d'exécution à des comptes personnels Apple/Google ou à des profils personnels de navigateur/gestionnaire de mots de passe.
-- Si les utilisateurs sont adversaires les uns envers les autres, séparez par passerelle/hôte/utilisateur OS.
+- Gardez-le sur un runtime dédié (VPS/VM/conteneur + utilisateur/comptes OS dédiés).
+- Ne connectez pas ce runtime à des comptes personnels Apple/Google ou à des profils personnels de navigateur/gestionnaire de mots de passe.
+- Si les utilisateurs sont adversaires les uns envers les autres, séparez-les par passerelle/hôte/utilisateur OS.
 
 Détails du modèle de sécurité : [Sécurité](/fr/gateway/security).
 
 ## Utilisation des nœuds avec un VPS
 
-Vous pouvez conserver la Gateway dans le cloud et jumeler des **nœuds** sur vos appareils locaux
-(Mac/iOS/Android/headless). Les nœuds fournissent des capacités d'écran/caméra/canvas et `system.run`
-locales tandis que la Gateway reste dans le cloud.
+Vous pouvez conserver le Gateway dans le cloud et associer des **nœuds** sur vos appareils locaux
+(Mac/iOS/Android/headless). Les nœuds fournissent des capacités d'écran/caméra/canvas local et `system.run`
+tandis que le Gateway reste dans le cloud.
 
-Documentation : [Nœuds](/fr/nodes), [CLI Nœuds](/fr/cli/nodes).
+Documentation : [Nœuds](/fr/nodes), [CLI des nœuds](/fr/cli/nodes).
 
-## Réglage du démarrage pour les petits VM et hôtes ARM
+## Réglages de démarrage pour les petits VM et hôtes ARM
 
 Si les commandes CLI semblent lentes sur les VM de faible puissance (ou hôtes ARM), activez le cache de compilation des modules de Node :
 
@@ -96,21 +111,21 @@ source ~/.bashrc
 
 - `NODE_COMPILE_CACHE` améliore les temps de démarrage des commandes répétées.
 - `OPENCLAW_NO_RESPAWN=1` évite la surcharge de démarrage supplémentaire d'un chemin de redémarrage automatique.
-- La première exécution de commande réchauffe le cache ; les exécutions suivantes sont plus rapides.
+- La première exécution de la commande réchauffe le cache ; les exécutions suivantes sont plus rapides.
 - Pour les spécificités du Raspberry Pi, voir [Raspberry Pi](/fr/install/raspberry-pi).
 
-### Liste de contrôle du réglage systemd (facultatif)
+### Liste de contrôle pour le réglage systemd (optionnel)
 
-Pour les hôtes de VM utilisant `systemd`, envisagez :
+Pour les hôtes VM utilisant `systemd`, considérez :
 
-- Ajoutez des variables d'environnement de service pour un chemin de démarrage stable :
+- Ajoutez une variable d'environnement de service pour un chemin de démarrage stable :
   - `OPENCLAW_NO_RESPAWN=1`
   - `NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache`
 - Gardez le comportement de redémarrage explicite :
   - `Restart=always`
   - `RestartSec=2`
   - `TimeoutStartSec=90`
-- Préférez les disques SSD pour les chemins d'état/cache afin de réduire les pénalités de démarrage à froid liées aux E/S aléatoires.
+- Privilégiez les disques sauvegardés par SSD pour les chemins d'état/de cache afin de réduire les pénalités de démarrage à froid liées aux E/S aléatoires.
 
 Pour le chemin standard `openclaw onboard --install-daemon`, modifiez l'unité utilisateur :
 
@@ -127,18 +142,18 @@ RestartSec=2
 TimeoutStartSec=90
 ```
 
-Si vous avez volontairement installé une unité système à la place, modifiez
+Si vous avez délibérément installé une unité système à la place, modifiez
 `openclaw-gateway.service` via `sudo systemctl edit openclaw-gateway.service`.
 
 Comment les stratégies `Restart=` aident à la récupération automatisée :
 [systemd peut automatiser la récupération de service](https://www.redhat.com/en/blog/systemd-automate-recovery).
 
-Pour le comportement OOM Linux, la sélection des victimes du processus fils et les diagnostics `exit 137`,
-voyez [Pression mémoire Linux et tueurs OOM](/fr/platforms/linux#memory-pressure-and-oom-kills).
+Pour le comportement OOM Linux, la sélection des processus enfants victimes et les diagnostics `exit 137`,
+voir [Linux memory pressure and OOM kills](/fr/platforms/linux#memory-pressure-and-oom-kills).
 
 ## Connexes
 
-- [Vue d'ensemble de l'installation](/fr/install)
+- [Aperçu de l'installation](/fr/install)
 - [DigitalOcean](/fr/install/digitalocean)
 - [Fly.io](/fr/install/fly)
 - [Hetzner](/fr/install/hetzner)

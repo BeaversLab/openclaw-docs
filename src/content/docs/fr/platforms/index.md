@@ -22,7 +22,7 @@ Les Companion apps natives pour Windows sont également prévues ; le Gateway es
 - Windows : [Windows](/fr/platforms/windows)
 - Linux : [Linux](/fr/platforms/linux)
 
-## VPS & hébergement
+## VPS et hébergement
 
 - Hub VPS : [Hébergement VPS](/fr/vps)
 - Fly.io : [Fly.io](/fr/install/fly)

@@ -12,7 +12,7 @@ y una sesión de chat funcional.
 
 ## Lo que necesitas
 
-- **Node.js** — Se recomienda Node 24 (también se admite Node 22.14+)
+- **Node.js** — Se recomienda Node 24 (también se admite Node 22.16+)
 - **Una clave de API** de un proveedor de modelos (Anthropic, OpenAI, Google, etc.) — la incorporación le pedirá que la ingrese
 
 <Tip>Verifique su versión de Node con `node --version`. **Usuarios de Windows:** se admiten tanto Windows nativo como WSL2. WSL2 es más estable y se recomienda para la experiencia completa. Consulte [Windows](/es/platforms/windows). ¿Necesita instalar Node? Consulte [Configuración de Node](/es/install/node).</Tip>

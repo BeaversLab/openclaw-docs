@@ -212,7 +212,7 @@ Skill Workshop 是工作区技能的过程性记忆。它允许代理将
 - `toolsAllow: []`
 - `disableMessageTool: true`
 
-审核者返回 `{ "action": "none" }` 或一个提案。`action` 字段为 `create`、`append` 或 `replace` —— 当存在相关技能时优先使用 `append`/`replace`；仅在没有现有技能适用时才使用 `create`。
+审核者返回 `{ "action": "none" }` 或一个提案。`action` 字段为 `create`、`append` 或 `replace` - 当已存在相关技能时，优先使用 `append`/`replace`；仅当没有现有技能适用时才使用 `create`。
 
 `create` 示例：
 
@@ -349,7 +349,7 @@ skill_workshop
 ```
 
 <AccordionGroup>
-  <Accordion title="强制安全写入 (apply: true)">
+  <Accordion title="在自动模式下请求立即写入 (apply: true)">
 
 ```json
 {
@@ -360,6 +360,9 @@ skill_workshop
   "body": "## Workflow\n\n- Verify true animation.\n- Record attribution."
 }
 ```
+
+使用 `approvalPolicy: "pending"` 时，`apply: true` 仍会将提案加入队列。审核该提案，然后在批准后使用
+`apply` 操作。
 
   </Accordion>
 
@@ -409,6 +412,8 @@ skill_workshop
 
 应用待定的提案。
 
+使用 `approvalPolicy: "pending"` 时，此操作会在写入工作区技能之前请求操作员批准。
+
 ```json
 {
   "action": "apply",
@@ -416,7 +421,7 @@ skill_workshop
 }
 ```
 
-`apply` 拒绝隔离的提案：
+`apply` 会拒绝被隔离的提案：
 
 ```text
 quarantined proposal cannot be applied
@@ -455,12 +460,11 @@ quarantined proposal cannot be applied
 }
 ```
 
-支持文件的范围限于工作区，会检查路径，通过
-`maxSkillBytes` 限制字节，进行扫描，并原子性地写入。
+支持文件受工作区范围限制、经过路径检查、受 `maxSkillBytes` 的字节限制、经过扫描，并且是原子写入的。
 
 ## 技能写入
 
-Skill Workshop 仅写入以下位置：
+Skill Workshop 仅在以下位置写入：
 
 ```text
 <workspace>/skills/<normalized-skill-name>/
@@ -470,50 +474,50 @@ Skill Workshop 仅写入以下位置：
 
 - 小写
 - 非 `[a-z0-9_-]` 运行变为 `-`
-- 移除开头/结尾的非字母数字字符
+- 前导/尾随的非字母数字字符将被移除
 - 最大长度为 80 个字符
 - 最终名称必须匹配 `[a-z0-9][a-z0-9_-]{1,79}`
 
 对于 `create`：
 
 - 如果技能不存在，Skill Workshop 会写入一个新的 `SKILL.md`
-- 如果它已存在，Skill Workshop 会将正文追加到 `## Workflow`
+- 如果技能已存在，Skill Workshop 会将正文追加到 `## Workflow`
 
 对于 `append`：
 
 - 如果技能存在，Skill Workshop 会追加到请求的部分
-- 如果不存在，Skill Workshop 会创建一个最小技能，然后追加
+- 如果技能不存在，Skill Workshop 会创建一个最小技能然后进行追加
 
 对于 `replace`：
 
 - 该技能必须已存在
-- `oldText` 必须准确存在
-- 仅替换第一个精确匹配项
+- `oldText` 必须完全匹配
+- 仅替换第一个完全匹配的项
 
-所有写入操作都是原子的，并且会立即刷新内存中的技能快照，因此
-无需重启 Gateway(网关) 即可使新技能或更新后的技能可见。
+所有写入操作都是原子的，并立即刷新内存中的技能快照，因此
+无需重启 Gateway(网关) 即可使新技能或更新后的技能生效。
 
 ## 安全模型
 
 Skill Workshop 对生成的 `SKILL.md` 内容和支持文件
-具有安全扫描程序。
+设有安全扫描器。
 
-严重发现会将提案隔离：
+严重发现会隔离提案：
 
 | 规则 ID                                | 阻止以下内容...                                           |
 | -------------------------------------- | --------------------------------------------------------- |
-| `prompt-injection-ignore-instructions` | 告诉代理忽略先前/更高级别的指令                           |
-| `prompt-injection-system`              | 引用系统提示词、开发者消息或隐藏指令                      |
-| `prompt-injection-tool`                | 鼓励绕过工具权限/批准                                     |
-| `shell-pipe-to-shell`                  | 包括通过管道传输到 `sh`、`bash` 或 `zsh` 的 `curl`/`wget` |
+| `prompt-injection-ignore-instructions` | 指示代理忽略先前/更高级别的指令                           |
+| `prompt-injection-system`              | 引用系统提示、开发者消息或隐藏指令                        |
+| `prompt-injection-tool`                | 鼓励绕过工具权限/审批                                     |
+| `shell-pipe-to-shell`                  | 包括通过管道传递给 `sh`、`bash` 或 `zsh` 的 `curl`/`wget` |
 | `secret-exfiltration`                  | 似乎通过网络发送环境/进程环境数据                         |
 
 警告发现会被保留，但本身不会阻止：
 
 | 规则 ID              | 警告...                  |
 | -------------------- | ------------------------ |
-| `destructive-delete` | 广泛的 `rm -rf` 风格命令 |
-| `unsafe-permissions` | `chmod 777` 风格权限使用 |
+| `destructive-delete` | 广泛的 `rm -rf` 样式命令 |
+| `unsafe-permissions` | `chmod 777` 样式权限使用 |
 
 隔离的提案：
 
@@ -522,37 +526,39 @@ Skill Workshop 对生成的 `SKILL.md` 内容和支持文件
 - 出现在 `list_quarantine` 中
 - 无法通过 `apply` 应用
 
-要从隔离的提案中恢复，请创建一个新的安全提案并移除不安全的内容。请勿手动编辑存储 JSON。
+要从隔离的提案中恢复，请创建一个新的安全提案，并
+移除不安全的内容。请勿手动编辑存储 JSON。
 
-## 提示词指导
+## 提示指导
 
-启用后，Skill Workshop 会注入一段简短的提示词部分，告诉代理使用 `skill_workshop` 来实现持久的程序性记忆。
+启用后，Skill Workshop 会注入一个简短的提示部分，告诉代理
+使用 `skill_workshop` 作为持久的过程记忆。
 
 该指导强调：
 
-- 程序而非事实/偏好
-- 用户更正
-- 非显而易见的成功程序
+- 过程，而非事实/偏好
+- 用户纠正
+- 非显而易见的成功过程
 - 反复出现的陷阱
-- 通过追加/替换来修复过时/单薄/错误的技能
-- 在漫长的工具循环或艰难的修复后保存可复用的程序
-- 简短的祈使句技能文本
-- 无转录堆砌
+- 通过追加/替换修复过时/单薄/错误的技能
+- 在漫长的工具循环或艰难修复后保存可复用的过程
+- 简短的命令式技能文本
+- 无对话记录转储
 
-写入模式文本随 `approvalPolicy` 而变化：
+写入模式文本会随 `approvalPolicy` 变化：
 
-- 待定模式：对建议进行排队；仅在明确批准后应用
-- 自动模式：当明显可复用时应用安全的工作区技能更新
+- pending 模式：将建议排队；在明确批准后使用 `apply`
+- auto 模式：应用安全的工作区技能更新，除非 `apply: false` 改为排队
 
-## 成本与运行时行为
+## 成本和运行时行为
 
 启发式捕获不调用模型。
 
 LLM 审查在活动/默认代理模型上使用嵌入式运行。它是基于阈值的，因此默认情况下不会在每一轮都运行。
 
-审查者：
+审查器：
 
-- 在可用时使用相同配置的提供商/模型上下文
+- 在可用时使用相同的配置提供商/模型上下文
 - 回退到运行时代理默认值
 - 具有 `reviewTimeoutMs`
 - 使用轻量级引导上下文
@@ -560,18 +566,18 @@ LLM 审查在活动/默认代理模型上使用嵌入式运行。它是基于阈
 - 不直接写入任何内容
 - 只能发出经过正常扫描器和批准/隔离路径的提案
 
-如果审查者失败、超时或返回无效的 JSON，插件会记录警告/调试消息并跳过该审查步骤。
+如果审查器失败、超时或返回无效的 JSON，插件会记录警告/调试消息并跳过该次审查。
 
 ## 操作模式
 
 当用户说以下内容时使用 Skill Workshop：
 
-- “下次，做 X”
-- “从现在起，优先考虑 Y”
-- “务必验证 Z”
-- “将其保存为工作流”
-- “这花了一段时间；记住这个过程”
-- “为此更新本地技能”
+- "下次，做 X"
+- "从现在开始，优先选择 Y"
+- "一定要验证 Z"
+- "将其保存为工作流"
+- "这花了一段时间；记住这个过程"
+- "更新此内容的本地技能"
 
 好的技能文本：
 
@@ -585,19 +591,19 @@ LLM 审查在活动/默认代理模型上使用嵌入式运行。它是基于阈
 - Verify the local asset renders in the target UI before final reply.
 ```
 
-差的技能文本：
+糟糕的技能文本：
 
 ```markdown
 The user asked about a GIF and I searched two websites. Then one was blocked by
 Cloudflare. The final answer said to check attribution.
 ```
 
-不应保存差版本的原因：
+糟糕的版本不应保存的原因：
 
-- transcript-shaped
+- 像转录一样的形状
 - 非命令式
 - 包含嘈杂的一次性细节
-- 不指示下一个代理做什么
+- 没有告诉下一个代理做什么
 
 ## 调试
 
@@ -607,19 +613,19 @@ Cloudflare. The final answer said to check attribution.
 openclaw plugins list --enabled
 ```
 
-从代理/工具上下文检查建议计数：
+检查来自代理/工具上下文的提案计数：
 
 ```json
 { "action": "status" }
 ```
 
-检查待定建议：
+检查待处理的提案：
 
 ```json
 { "action": "list_pending" }
 ```
 
-检查隔离建议：
+检查隔离的提案：
 
 ```json
 { "action": "list_quarantine" }
@@ -627,15 +633,15 @@ openclaw plugins list --enabled
 
 常见症状：
 
-| 症状                       | 可能原因                                                       | 检查                                                                |
-| -------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------- |
-| 工具不可用                 | 插件条目未启用                                                 | `plugins.entries.skill-workshop.enabled` 和 `openclaw plugins list` |
-| 未出现自动建议             | `autoCapture: false`、`reviewMode: "off"` 或未达到阈值         | 配置、建议状态、Gateway(网关) 日志                                  |
-| 启发式未捕获               | 用户措辞不匹配更正模式                                         | 使用显式 `skill_workshop.suggest` 或启用 LLM 审阅者                 |
-| 审阅者未创建建议           | 审阅者返回 `none`、无效 JSON 或超时                            | Gateway(网关) 日志，`reviewTimeoutMs`，阈值                         |
-| 提案未应用                 | `approvalPolicy: "pending"`                                    | `list_pending`，然后 `apply`                                        |
-| 提案从待处理中消失         | 重复的提案被重用，达到最大待处理数量修剪，或已被应用/拒绝/隔离 | `status`，带有状态过滤器的 `list_pending`，`list_quarantine`        |
-| 技能文件存在但模型未能识别 | Skill 快照未刷新或 skill 限制将其排除                          | `openclaw skills` 状态和工作区 skill 资格                           |
+| 症状                        | 可能原因                                                         | 检查                                                                |
+| --------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------- |
+| 工具不可用                  | 插件条目未启用                                                   | `plugins.entries.skill-workshop.enabled` 和 `openclaw plugins list` |
+| 没有出现自动提案            | `autoCapture: false`、`reviewMode: "off"` 或未达到阈值           | 配置、提案状态、Gateway(网关) 日志                                  |
+| 启发式未捕获                | 用户措辞与更正模式不匹配                                         | 使用显式的 `skill_workshop.suggest` 或启用 LLM 审查器               |
+| 审查器未创建提案            | 审查器返回了 `none`、无效的 JSON 或超时                          | Gateway(网关) 日志、`reviewTimeoutMs`、阈值                         |
+| 提案未应用                  | `approvalPolicy: "pending"`                                      | `list_pending`，然后 `apply`                                        |
+| 提案从待处理中消失          | 重复的提案被重用、达到待处理上限并进行清理，或已被应用/拒绝/隔离 | `status`，带有状态过滤器的 `list_pending`，`list_quarantine`        |
+| Skills 文件存在但模型未发现 | Skills 快照未刷新或 skills 筛选将其排除                          | `openclaw skills` 状态和 workspace skills 资格                      |
 
 相关日志：
 
@@ -654,7 +660,7 @@ openclaw plugins list --enabled
 - `qa/scenarios/plugins/skill-workshop-pending-approval.md`
 - `qa/scenarios/plugins/skill-workshop-reviewer-autonomous.md`
 
-运行确定性覆盖：
+运行确定性覆盖率测试：
 
 ```bash
 pnpm openclaw qa suite \
@@ -663,7 +669,7 @@ pnpm openclaw qa suite \
   --concurrency 1
 ```
 
-运行审查器覆盖：
+运行审查器覆盖率：
 
 ```bash
 pnpm openclaw qa suite \
@@ -671,24 +677,22 @@ pnpm openclaw qa suite \
   --concurrency 1
 ```
 
-审查器场景有意分开，因为它启用了
-`reviewMode: "llm"` 并运行嵌入式审查器流程。
+审查器场景被有意分离，因为它启用了 `reviewMode: "llm"` 并演练嵌入式审查流程。
 
 ## 何时不启用自动应用
 
-在以下情况下避免使用 `approvalPolicy: "auto"`：
+在以下情况下避免 `approvalPolicy: "auto"`：
 
-- 工作区包含敏感流程
+- 工作区包含敏感程序
 - 代理正在处理不受信任的输入
-- skills 在广泛团队间共享
+- skills 在大范围内团队间共享
 - 您仍在调整提示词或扫描器规则
-- 模型频繁处理充满敌意的网络/电子邮件内容
+- 模型频繁处理敌对的网页/电子邮件内容
 
-请先使用待定模式。仅在该工作区中审查了代理提议的
-skills 类型后，再切换到自动模式。
+请先使用待处理模式。仅在该工作区中审查了代理提议的 skills 类型后，再切换到自动模式。
 
 ## 相关文档
 
 - [Skills](/zh/tools/skills)
-- [插件](/zh/tools/plugin)
-- [测试](/zh/reference/test)
+- [Plugins](/zh/tools/plugin)
+- [Testing](/zh/reference/test)

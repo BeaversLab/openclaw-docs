@@ -6,7 +6,7 @@ read_when:
 title: "Mode élevé"
 ---
 
-Lorsqu'un agent s'exécute dans un sandbox, ses commandes `exec` sont confinées à l'environnement du sandbox. Le **Mode élevé** permet à l'agent de s'échapper et d'exécuter des commandes à l'extérieur du sandbox à la place, avec des portes d'approbation configurables.
+Lorsqu'un agent s'exécute dans un bac à sable (sandbox), ses commandes `exec` sont confinées à l'environnement du bac à sable. Le **Mode élevé** permet à l'agent de s'échapper et d'exécuter des commandes à l'extérieur du bac à sable, avec des portes d'approbation configurables.
 
 <Info>Le mode élevé ne modifie le comportement que lorsque l'agent est **sandboxed**. Pour les agents non sandboxés, exec s'exécute déjà sur l'hôte.</Info>
 
@@ -62,10 +62,10 @@ Envoyez `/elevated` sans argument pour voir le niveau actuel.
 
   </Step>
 
-  <Step title="Les commandes s'exécutent à l'extérieur du sandbox">
-    Avec le mode élevé actif, les appels `exec` quittent le sandbox. L'hôte effectif est
-    `gateway` par défaut, ou `node` lorsque la cible d'exécution configurée/de session est
-    `node`. En mode `full`, les approbations exec sont ignorées. En mode `on`/`ask`,
+  <Step title="Commands run outside the sandbox">
+    Avec le mode élevé actif, les appels `exec` quittent le bac à sable. L'hôte effectif est
+    `gateway` par défaut, ou `node` lorsque la cible d'exécution configurée/session est
+    `node`. En mode `full`, les approbations d'exécution sont ignorées. En mode `on`/`ask`,
     les règles d'approbation configurées s'appliquent toujours.
   </Step>
 </Steps>
@@ -78,11 +78,11 @@ Envoyez `/elevated` sans argument pour voir le niveau actuel.
 
 ## Disponibilité et listes d'autorisation
 
-- **Portail global** : `tools.elevated.enabled` (doit être `true`)
-- **Liste d'autorisation de l'expéditeur** : `tools.elevated.allowFrom` avec des listes par canal
-- **Portail par agent** : `agents.list[].tools.elevated.enabled` (ne peut que restreindre davantage)
-- **Liste d'autorisation par agent** : `agents.list[].tools.elevated.allowFrom` (l'expéditeur doit correspondre à la fois au global et au par agent)
-- **Repli Discord** : si `tools.elevated.allowFrom.discord` est omis, `channels.discord.allowFrom` est utilisé comme solution de repli
+- **Porte globale** : `tools.elevated.enabled` (doit être `true`)
+- **Liste d'autorisation de l'expéditeur** : `tools.elevated.allowFrom` avec des listes par channel
+- **Porte par agent** : `agents.list[].tools.elevated.enabled` (ne peut que restreindre davantage)
+- **Liste d'autorisation par agent** : `agents.list[].tools.elevated.allowFrom` (l'expéditeur doit correspondre à la fois à la globale + celle par agent)
+- **Discord de repli** : si `tools.elevated.allowFrom.discord` est omis, `channels.discord.allowFrom` est utilisé comme valeur de repli
 - **Tous les portails doivent être validés** ; sinon le mode élevé est considéré comme indisponible
 
 Formats d'entrée de liste d'autorisation :
@@ -97,13 +97,25 @@ Formats d'entrée de liste d'autorisation :
 
 ## Ce que le mode élevé ne contrôle pas
 
-- **Stratégie d'outil** : si `exec` est refusé par la stratégie d'outil, le mode élevé ne peut pas l'outrepasser
-- **Stratégie de sélection de l'hôte** : le mode élevé ne transforme pas `auto` en une substitution libre entre hôtes. Il utilise les règles de cible d'exécution configurées/session, choisissant `node` uniquement lorsque la cible est déjà `node`.
-- **Distinct de `/exec`** : la directive `/exec` ajuste les défauts d'exécution par session pour les expéditeurs autorisés et ne nécessite pas le mode élevé
+- **Stratégie d'outil** : si `exec` est refusé par la stratégie d'outil, le mode élevé ne peut pas le remplacer.
+- **Stratégie de sélection de l'hôte** : le mode élevé ne transforme pas `auto` en une substitution libre entre hôtes. Il utilise les règles de cible d'exécution configurées/session, en choisissant `node` uniquement lorsque la cible est déjà `node`.
+- **Distinct de `/exec`** : la directive `/exec` ajuste les valeurs par défaut d'exécution par session pour les expéditeurs autorisés et ne nécessite pas le mode élevé.
+
+<Note>La commande de chat bash (préfixe `!` ; alias `/bash`) est une porte séparée qui nécessite que `tools.elevated` soit activé en plus de son propre indicateur `tools.bash.enabled`. Désactiver le mode élevé verrouille également les commandes shell `!`.</Note>
 
 ## Connexes
 
-- [Outil Exec](/fr/tools/exec) — exécution de commandes shell
-- [Approbations Exec](/fr/tools/exec-approvals) — système d'approbation et de liste d'autorisation
-- [Mise en bac à sable (Sandboxing)](/fr/gateway/sandboxing) — configuration du bac à sable
-- [Bac à sable vs Stratégie d'outil vs Mode élevé](/fr/gateway/sandbox-vs-tool-policy-vs-elevated)
+<CardGroup cols={2}>
+  <Card title="Outil Exec" href="/fr/tools/exec" icon="terminal">
+    Exécution de commandes shell à partir de l'agent.
+  </Card>
+  <Card title="Approbations Exec" href="/fr/tools/exec-approvals" icon="shield">
+    Système d'approbation et de liste d'autorisation pour `exec`.
+  </Card>
+  <Card title="Sandboxing" href="/fr/gateway/sandboxing" icon="box">
+    Configuration du sandbox au niveau Gateway.
+  </Card>
+  <Card title="Sandbox vs Stratégie d'outil vs Mode élevé" href="/fr/gateway/sandbox-vs-tool-policy-vs-elevated" icon="scale-balanced">
+    Comment les trois portes composent lors d'un appel d'outil.
+  </Card>
+</CardGroup>

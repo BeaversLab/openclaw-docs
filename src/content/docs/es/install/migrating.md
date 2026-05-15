@@ -1,5 +1,5 @@
 ---
-summary: "Centro de migración: importaciones entre sistemas, traslados de máquina a máquina y actualizaciones de complementos"
+summary: "Centro de migración: importaciones entre sistemas, traslados entre máquinas y actualizaciones de complementos"
 read_when:
   - You are moving OpenClaw to a new laptop or server
   - You are coming from another agent system and want to keep state
@@ -14,35 +14,35 @@ OpenClaw admite tres rutas de migración: importar desde otro sistema de agentes
 Utilice los proveedores de migración incluidos para traer instrucciones, servidores MCP, habilidades, configuración de modelo y (opcional) claves API a OpenClaw. Los planes se previsualizan antes de cualquier cambio, los secretos se redactan en los informes y la aplicación está respaldada por una copia de seguridad verificada.
 
 <CardGroup cols={2}>
-  <Card title="Migración desde Claude" href="/es/install/migrating-claude" icon="brain">
-    Importe el estado de Claude Code y Claude Desktop, incluyendo `CLAUDE.md`, servidores MCP, habilidades y comandos de proyecto.
+  <Card title="Migrating from Claude" href="/es/install/migrating-claude" icon="brain">
+    Importar el estado de Claude Code y Claude Desktop, incluyendo `CLAUDE.md`, servidores MCP, habilidades y comandos de proyecto.
   </Card>
-  <Card title="Migración desde Hermes" href="/es/install/migrating-hermes" icon="feather">
-    Importe la configuración de Hermes, proveedores, servidores MCP, memoria, habilidades y claves `.env` compatibles.
+  <Card title="Migrating from Hermes" href="/es/install/migrating-hermes" icon="feather">
+    Importar la configuración de Hermes, proveedores, servidores MCP, memoria, habilidades y claves `.env` admitidas.
   </Card>
 </CardGroup>
 
-El punto de entrada de la CLI es [`openclaw migrate`](/es/cli/migrate). El proceso de incorporación también puede ofrecer la migración cuando detecta un origen conocido (`openclaw onboard --flow import`).
+El punto de entrada de la CLI es [`openclaw migrate`](/es/cli/migrate). La incorporación también puede ofrecer migración cuando detecta un origen conocido (`openclaw onboard --flow import`).
 
 ## Mover OpenClaw a una nueva máquina
 
-Copie el **directorio de estado** (`~/.openclaw/` por defecto) y su **espacio de trabajo** para preservar:
+Copie el **directorio de estado** (`~/.openclaw/` de forma predeterminada) y su **espacio de trabajo** para conservar:
 
-- **Configuración** — `openclaw.json` y todas las configuraciones de puerta de enlace.
-- **Autenticación** — `auth-profiles.json` por agente (claves API más OAuth), además de cualquier estado de canal o proveedor bajo `credentials/`.
+- **Configuración** — `openclaw.json` y todos los ajustes de la puerta de enlace.
+- **Autenticación** — `auth-profiles.json` por agente (claves de API más OAuth), más cualquier estado de canal o proveedor bajo `credentials/`.
 - **Sesiones** — historial de conversaciones y estado del agente.
 - **Estado del canal** — inicio de sesión de WhatsApp, sesión de Telegram y similares.
-- **Archivos del espacio de trabajo** — `MEMORY.md`, `USER.md`, habilidades y prompts.
+- **Archivos del espacio de trabajo** — `MEMORY.md`, `USER.md`, habilidades y avisos.
 
 <Tip>
-Ejecute `openclaw status` en la máquina antigua para confirmar la ruta de su directorio de estado. Los perfiles personalizados utilizan `~/.openclaw-<profile>/` o una ruta establecida mediante `OPENCLAW_STATE_DIR`.
+Ejecute `openclaw status` en la máquina antigua para confirmar la ruta de su directorio de estado. Los perfiles personalizados usan `~/.openclaw-<profile>/` o una ruta establecida mediante `OPENCLAW_STATE_DIR`.
 </Tip>
 
 ### Pasos de la migración
 
 <Steps>
-  <Step title="Detenga la puerta de enlace y haga una copia de seguridad">
-    En la máquina **antigua**, detenga la puerta de enlace para que los archivos no cambien a mitad de la copia, y luego archive:
+  <Step title="Stop the gateway and back up">
+    En la máquina **antigua**, detenga la puerta de enlace para que los archivos no cambien a mitad de la copia y luego archive:
 
     ```bash
     openclaw gateway stop
@@ -50,26 +50,26 @@ Ejecute `openclaw status` en la máquina antigua para confirmar la ruta de su di
     tar -czf openclaw-state.tgz .openclaw
     ```
 
-    Si utiliza varios perfiles (por ejemplo `~/.openclaw-work`), archive cada uno por separado.
+    Si utiliza varios perfiles (por ejemplo, `~/.openclaw-work`), archive cada uno por separado.
 
   </Step>
 
-<Step title="Instalar OpenClaw en la nueva máquina">[Instale](/es/install) la CLI (y Node si es necesario) en la nueva máquina. Es aceptable que la incorporación cree un `~/.openclaw/` nuevo. Lo sobrescribirá a continuación.</Step>
+<Step title="Instalar OpenClaw en la nueva máquina">[Instale](/es/install) la CLI (y Node si es necesario) en la nueva máquina. Está bien si la incorporación crea un `~/.openclaw/` nuevo. Lo sobrescribirá a continuación.</Step>
 
   <Step title="Copiar el directorio de estado y el espacio de trabajo">
-    Transfiera el archivo mediante `scp`, `rsync -a` o una unidad externa, y luego extráigalo:
+    Transfiera el archivo a través de `scp`, `rsync -a` o una unidad externa, luego extráigalo:
 
     ```bash
     cd ~
     tar -xzf openclaw-state.tgz
     ```
 
-    Asegúrese de que se hayan incluido los directorios ocultos y que la propiedad de los archivos coincida con el usuario que ejecutará la puerta de enlace.
+    Asegúrese de que se hayan incluido los directorios ocultos y que la propiedad de los archivos coincida con el usuario que ejecutará el gateway.
 
   </Step>
 
   <Step title="Ejecutar doctor y verificar">
-    En la nueva máquina, ejecute [Doctor](/es/gateway/doctor) para aplicar migraciones de configuración y reparar servicios:
+    En la nueva máquina, ejecute [Doctor](/es/gateway/doctor) para aplicar las migraciones de configuración y reparar los servicios:
 
     ```bash
     openclaw doctor
@@ -80,23 +80,31 @@ Ejecute `openclaw status` en la máquina antigua para confirmar la ruta de su di
   </Step>
 </Steps>
 
-### Problemas comunes
+Si Telegram o Discord utilizan la reserva de entorno predeterminada (`TELEGRAM_BOT_TOKEN` o `DISCORD_BOT_TOKEN`), verifique que el directorio de estado migrado `.env` contenga esas claves sin imprimir los valores secretos:
+
+```bash
+awk -F= '/^(TELEGRAM_BOT_TOKEN|DISCORD_BOT_TOKEN)=/ { print $1 "=present" }' ~/.openclaw/.env
+```
+
+`openclaw doctor` también advierte cuando una cuenta predeterminada de Telegram o Discord habilitada no tiene un token configurado y la variable de entorno coincidente no está disponible para el proceso del doctor.
+
+### Errores comunes
 
 <AccordionGroup>
   <Accordion title="Discrepancia de perfil o directorio de estado">
-    Si la puerta de enlace antigua utilizaba `--profile` o `OPENCLAW_STATE_DIR` y la nueva no, los canales aparecerán desconectados y las sesiones estarán vacías. Inicie la puerta de enlace con el **mismo** perfil o directorio de estado que migró, y luego vuelva a ejecutar `openclaw doctor`.
+    Si el gateway antiguo usaba `--profile` o `OPENCLAW_STATE_DIR` y el nuevo no, los canales aparecerán desconectados y las sesiones estarán vacías. Inicie el gateway con el **mismo** perfil o directorio de estado que migró, luego vuelva a ejecutar `openclaw doctor`.
   </Accordion>
 
   <Accordion title="Copiar solo openclaw.">
-    El archivo de configuración por sí solo no es suficiente. Los perfiles de autenticación del modelo se encuentran en `agents/<agentId>/agent/auth-profiles.json`, y el estado de los canales y proveedores se encuentra en `credentials/`. Migre siempre el directorio de estado **completo**.
+    Solo el archivo de configuración no es suficiente. Los perfiles de autenticación del modelo se encuentran en `agents/<agentId>/agent/auth-profiles.json` y el estado del canal y del proveedor se encuentra en `credentials/`. Migre siempre el directorio de estado **completo**.
   </Accordion>
 
-<Accordion title="Permisos y propiedad">Si copió como root o cambió de usuario, la puerta de enlace podría fallar al leer las credenciales. Asegúrese de que el directorio de estado y el espacio de trabajo sean propiedad del usuario que ejecuta la puerta de enlace.</Accordion>
+<Accordion title="Permisos y propiedad">Si copió como root o cambió de usuario, es posible que la puerta de enlace no pueda leer las credenciales. Asegúrese de que el directorio de estado y el espacio de trabajo sean propiedad del usuario que ejecuta la puerta de enlace.</Accordion>
 
-<Accordion title="Modo remoto">Si su interfaz apunta a una puerta de enlace **remota**, el host remoto es el propietario de las sesiones y el espacio de enlace. Migre el host de la puerta de enlace en sí, no su computadora portátil local. Consulte las [Preguntas frecuentes](/es/help/faq#where-things-live-on-disk).</Accordion>
+<Accordion title="Modo remoto">Si su interfaz apunta a una puerta de enlace **remota**, el host remoto posee las sesiones y el espacio de trabajo. Migre el host de la puerta de enlace en sí, no su computadora portátil local. Consulte las [preguntas frecuentes](/es/help/faq#where-things-live-on-disk).</Accordion>
 
-  <Accordion title="Secretos en las copias de seguridad">
-    El directorio de estado contiene perfiles de autenticación, credenciales de canal y otro estado del proveedor. Almacene las copias de seguridad cifradas, evite canales de transferencia inseguros y rote las claves si sospecha de una exposición.
+  <Accordion title="Secretos en copias de seguridad">
+    El directorio de estado contiene perfiles de autenticación, credenciales de canal y otro estado del proveedor. Almacene las copias de seguridad cifradas, evite canales de transferencia inseguros y rote las claves si sospecha una exposición.
   </Accordion>
 </AccordionGroup>
 
@@ -105,19 +113,19 @@ Ejecute `openclaw status` en la máquina antigua para confirmar la ruta de su di
 En la nueva máquina, confirme:
 
 - [ ] `openclaw status` muestra que la puerta de enlace se está ejecutando.
-- [ ] Los canales siguen conectados (no es necesario volver a emparejar).
+- [ ] Los canales siguen conectados (no es necesario volver a emparejarlos).
 - [ ] El panel se abre y muestra las sesiones existentes.
 - [ ] Los archivos del espacio de trabajo (memoria, configuraciones) están presentes.
 
 ## Actualizar un complemento en su lugar
 
-Las actualizaciones de complementos en su lugar conservan el mismo id de complemento y claves de configuración, pero pueden mover el estado en disco al diseño actual. Las guías de actualización específicas del complemento se encuentran junto a sus canales:
+Las actualizaciones de complementos en su lugar conservan el mismo id y claves de configuración del complemento, pero pueden mover el estado en disco al diseño actual. Las guías de actualización específicas de cada complemento se encuentran junto a sus canales:
 
-- [Migración de Matrix](/es/channels/matrix-migration): límites de recuperación de estado cifrado, comportamiento de instantáneas automáticas y comandos de recuperación manual.
+- [Migración de Matrix](/es/channels/matrix-migration): límites de recuperación del estado cifrado, comportamiento de las instantáneas automáticas y comandos de recuperación manual.
 
 ## Relacionado
 
 - [`openclaw migrate`](/es/cli/migrate): referencia de CLI para importaciones entre sistemas.
 - [Resumen de instalación](/es/install): todos los métodos de instalación.
-- [Doctor](/es/gateway/doctor): verificación de salud posterior a la migración.
-- [Desinstalar](/es/install/uninstall): eliminación limpia de OpenClaw.
+- [Doctor](/es/gateway/doctor): verificación de estado posterior a la migración.
+- [Desinstalar](/es/install/uninstall): eliminar OpenClaw por completo.

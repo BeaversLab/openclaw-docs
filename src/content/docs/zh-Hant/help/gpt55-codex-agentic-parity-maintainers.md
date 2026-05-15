@@ -98,7 +98,7 @@ PR D 是驗證層。它不應成為延遲執行正確性 PR 的原因。
 
 ### PR B
 
-- auth/proxy/runtime 錯誤停止歸併到通用的「模型失敗」處理中
+- auth/proxy/runtime 失敗不再合併到通用的「model failed」處理中
 - `/elevated full` 僅在實際可用時才被描述為可用
 - 封鎖原因對模型和使用者面向的執行時均可見
 

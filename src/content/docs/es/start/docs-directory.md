@@ -36,11 +36,10 @@ title: "Directorio de documentos"
 - [Telegram](/es/channels/telegram)
 - [Discord](/es/channels/discord)
 - [Mattermost](/es/channels/mattermost)
-- [BlueBubbles (iMessage)](/es/channels/bluebubbles)
-- [Bot de QQ](/es/channels/qqbot)
-- [iMessage (heredado)](/es/channels/imessage)
+- [QQ Bot](/es/channels/qqbot)
+- [iMessage](/es/channels/imessage)
 - [Grupos](/es/channels/groups)
-- [Mensajes de grupo de WhatsApp](/es/channels/group-messages)
+- [Mensajes grupales de WhatsApp](/es/channels/group-messages)
 - [Imágenes multimedia](/es/nodes/images)
 - [Audio multimedia](/es/nodes/audio)
 
@@ -55,7 +54,7 @@ title: "Directorio de documentos"
 ## Operaciones y seguridad
 
 - [Sesiones](/es/concepts/session)
-- [Trabajos de Cron](/es/automation/cron-jobs)
+- [Trabajos Cron](/es/automation/cron-jobs)
 - [Webhooks](/es/automation/cron-jobs#webhooks)
 - [Gmail hooks (Pub/Sub)](/es/automation/cron-jobs#gmail-pubsub-integration)
 - [Seguridad](/es/gateway/security)
@@ -63,5 +62,5 @@ title: "Directorio de documentos"
 
 ## Relacionado
 
-- [Introducción](/es/start/getting-started)
-- [Hubs de documentación](/es/start/hubs)
+- [Primeros pasos](/es/start/getting-started)
+- [Centros de documentación](/es/start/hubs)

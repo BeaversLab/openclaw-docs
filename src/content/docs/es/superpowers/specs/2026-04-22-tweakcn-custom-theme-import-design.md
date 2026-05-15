@@ -281,22 +281,21 @@ Archivos principales:
 Probables nuevos ayudantes:
 
 - `ui/src/ui/custom-theme.ts`
-- `ui/src/ui/custom-theme-import.ts`
 
 Pruebas:
 
 - `ui/src/ui/app-settings.test.ts`
 - `ui/src/ui/storage.node.test.ts`
 - `ui/src/ui/views/config.browser.test.ts`
-- nuevas pruebas enfocadas para el análisis de URL y la normalización de payloads
+- nuevas pruebas enfocadas en el análisis de URL y la normalización de payloads
 
 ## Pruebas
 
-Cobertura mínima de la implementación:
+Cobertura mínima de implementación:
 
-- analizar la URL del enlace compartido en un id de tema tweakcn
-- normalizar `/themes/{id}` y `/r/themes/{id}` en la URL de recuperación
-- rechazar hosts no admitidos e ids mal formados
+- analizar la URL del enlace compartido en el ID del tema tweakcn
+- normalizar `/themes/{id}` y `/r/themes/{id}` en la URL de búsqueda
+- rechazar hosts no admitidos e IDs malformados
 - validar la forma del payload de tweakcn
 - mapear un payload válido de tweakcn en mapas de tokens normalizados de OpenClaw claro y oscuro
 - cargar y guardar el payload personalizado en la configuración local del navegador
@@ -307,11 +306,11 @@ Cobertura mínima de la implementación:
 
 Objetivo de verificación manual:
 
-- importar un tema tweakcn conocido desde Configuración
-- cambiar entre `light`, `dark` y `system`
-- cambiar entre `custom` y las familias integradas
-- recarga la página y confirma que el tema personalizado importado persiste localmente
+- importar un tema conocido de tweakcn desde Configuración
+- alternar entre `light`, `dark` y `system`
+- alternar entre `custom` y las familias integradas
+- recargar la página y confirmar que el tema personalizado importado persiste localmente
 
 ## Notas de implementación
 
-Esta característica es intencionalmente pequeña. Si los usuarios solicitan más adelante múltiples temas importados, cambiar el nombre, exportar o la sincronización entre dispositivos, trátelo como un diseño de seguimiento. No construyas previamente una abstracción de biblioteca de temas en esta implementación.
+Esta característica es intencionalmente pequeña. Si los usuarios piden más adelante múltiples temas importados, cambiar el nombre, exportar o la sincronización entre dispositivos, trátelo como un diseño de seguimiento. No construya previamente una abstracción de biblioteca de temas en esta implementación.

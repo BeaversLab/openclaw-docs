@@ -13,7 +13,7 @@ MiniMax 還提供：
 - 透過 T2A v2 整合的語音合成
 - 透過 `MiniMax-VL-01` 整合的圖像理解
 - 透過 `music-2.6` 整合的音樂生成
-- 透過 MiniMax Coding Plan 搜尋 API 整合的 `web_search`
+- 透過 MiniMax Token Plan 搜尋 API 捆綁的 `web_search`
 
 提供者區分：
 
@@ -41,7 +41,7 @@ MiniMax 還提供：
 
 <Tabs>
   <Tab title="OAuth (Coding Plan)">
-    **最適用於：** 透過 OAuth 使用 MiniMax Coding Plan 快速設定，不需要 API 金鑰。
+    **最適用於：** 透過 OAuth 使用 MiniMax Coding Plan 進行快速設置，無需 API 金鑰。
 
     <Tabs>
       <Tab title="International">
@@ -51,7 +51,7 @@ MiniMax 還提供：
             openclaw onboard --auth-choice minimax-global-oauth
             ```
 
-            這會透過 `api.minimax.io` 進行驗證。
+            這將針對 `api.minimax.io` 進行身份驗證。
           </Step>
           <Step title="Verify the model is available">
             ```bash
@@ -67,7 +67,7 @@ MiniMax 還提供：
             openclaw onboard --auth-choice minimax-cn-oauth
             ```
 
-            這會透過 `api.minimaxi.com` 進行驗證。
+            這將針對 `api.minimaxi.com` 進行身份驗證。
           </Step>
           <Step title="Verify the model is available">
             ```bash
@@ -79,7 +79,7 @@ MiniMax 還提供：
     </Tabs>
 
     <Note>
-    OAuth 設定使用 `minimax-portal` 提供者 ID。模型參照遵循 `minimax-portal/MiniMax-M2.7` 格式。
+    OAuth 設置使用 `minimax-portal` 提供者 ID。模型參照遵循 `minimax-portal/MiniMax-M2.7` 形式。
     </Note>
 
     <Tip>
@@ -247,7 +247,7 @@ MiniMax 外掛為 `image_generate` 工具註冊了 `image-01` 模型。它支援
 `MiniMax-M2.7-highspeed` 具體化為純文字聊天模型。圖像理解功能
 則透過外掛擁有的 `MiniMax-VL-01` 媒體供應商單獨公開。
 
-<Note>請參閱 [圖像生成](/zh-Hant/tools/image-generation) 以了解共用工具參數、供應商選擇和故障轉移行為。</Note>
+<Note>請參閱 [圖像生成](/zh-Hant/tools/image-generation) 以了解共享工具參數、提供者選擇和故障轉移行為。</Note>
 
 ### 文字轉語音
 
@@ -308,7 +308,7 @@ MiniMax 外掛為 `image_generate` 工具註冊了 `image-01` 模型。它支援
 }
 ```
 
-<Note>請參閱[音樂生成](/zh-Hant/tools/music-generation)以了解共用工具參數、提供商選擇和故障轉移行為。</Note>
+<Note>請參閱 [音樂生成](/zh-Hant/tools/music-generation) 以了解共享工具參數、提供者選擇和故障轉移行為。</Note>
 
 ### 視訊生成
 
@@ -334,7 +334,7 @@ MiniMax 外掛為 `image_generate` 工具註冊了 `image-01` 模型。它支援
 }
 ```
 
-<Note>請參閱[視訊生成](/zh-Hant/tools/video-generation)以了解共用工具參數、提供商選擇和故障轉移行為。</Note>
+<Note>請參閱 [影片生成](/zh-Hant/tools/video-generation) 以了解共享工具參數、提供者選擇和故障轉移行為。</Note>
 
 ### 圖像理解
 
@@ -349,42 +349,43 @@ MiniMax 外掛程式會將圖像理解與文字目錄分別註冊：
 
 ### 網路搜尋
 
-MiniMax 外掛程式也透過 MiniMax Coding Plan 搜尋 API 註冊 `web_search`。
+MiniMax 外掛程式也透過 MiniMax Token Plan
+搜尋 API 註冊 `web_search`。
 
 - 供應商 ID：`minimax`
 - 結構化結果：標題、網址、摘要、相關查詢
 - 首選環境變數：`MINIMAX_CODE_PLAN_KEY`
-- 接受的環境變數別名：`MINIMAX_CODING_API_KEY`
-- 相容性備援方案：當 `MINIMAX_API_KEY` 已指向 coding-plan token 時使用
-- 區域重複使用：先 `plugins.entries.minimax.config.webSearch.region`，接著 `MINIMAX_API_HOST`，然後是 MiniMax 供應商基礎 URL
-- 搜尋保持在供應商 ID `minimax` 上；OAuth CN/global 設定仍可透過 `models.providers.minimax-portal.baseUrl` 間接調整區域
+- 接受的環境變數別名：`MINIMAX_CODING_API_KEY`、`MINIMAX_OAUTH_TOKEN`
+- 相容性備援：當 `MINIMAX_API_KEY` 已指向 token-plan 憑證時
+- 區域重用：`plugins.entries.minimax.config.webSearch.region`，然後是 `MINIMAX_API_HOST`，然後是 MiniMax 提供者基礎 URL
+- 搜尋保留在供應商 ID `minimax`；OAuth CN/global 設定可以透過 `models.providers.minimax-portal.baseUrl` 間接引導區域，並可以透過 `MINIMAX_OAUTH_TOKEN` 提供 bearer auth
 
 設定位於 `plugins.entries.minimax.config.webSearch.*` 之下。
 
-<Note>完整的網路搜尋設定與使用方式，請參閱 [MiniMax Search](/zh-Hant/tools/minimax-search)。</Note>
+<Note>請參閱 [MiniMax Search](/zh-Hant/tools/minimax-search) 以取得完整的網頁搜尋設定與用法。</Note>
 
 ## 進階設定
 
 <AccordionGroup>
-  <Accordion title="Configuration options">
-    | Option | Description |
+  <Accordion title="設定選項">
+    | 選項 | 描述 |
     | --- | --- |
-    | `models.providers.minimax.baseUrl` | 偏好 `https://api.minimax.io/anthropic` (Anthropic 相容)；`https://api.minimax.io/v1` 對於 OpenAI 相容的 payload 是可選的 |
-    | `models.providers.minimax.api` | 偏好 `anthropic-messages`；`openai-completions` 對於 OpenAI 相容的 payload 是可選的 |
+    | `models.providers.minimax.baseUrl` | 偏好 `https://api.minimax.io/anthropic` (Anthropic 相容)；`https://api.minimax.io/v1` 對於 OpenAI 相容的 payload 為可選 |
+    | `models.providers.minimax.api` | 偏好 `anthropic-messages`；`openai-completions` 對於 OpenAI 相容的 payload 為可選 |
     | `models.providers.minimax.apiKey` | MiniMax API 金鑰 (`MINIMAX_API_KEY`) |
     | `models.providers.minimax.models` | 定義 `id`、`name`、`reasoning`、`contextWindow`、`maxTokens`、`cost` |
-    | `agents.defaults.models` | 為您希望加入允許清單的模型設定別名 |
-    | `models.mode` | 如果您想將 MiniMax 與內建模型一起加入，請保留 `merge` |
+    | `agents.defaults.models` | 為您想要在允許清單中的模型設定別名 |
+    | `models.mode` | 如果您想將 MiniMax 與內建供應商一起加入，請保留 `merge` |
   </Accordion>
 
-  <Accordion title="Thinking defaults">
-    在 `api: "anthropic-messages"` 上，除非已在參數/設定中明確設定思考，否則 OpenClaw 會注入 `thinking: { type: "disabled" }`。
+  <Accordion title="思考預設值">
+    在 `api: "anthropic-messages"` 上，除非在 params/config 中已明確設定思考，否則 OpenClaw 會注入 `thinking: { type: "disabled" }`。
 
-    這可以防止 MiniMax 的串流端點在 OpenAI 風格的增量區塊中發出 `reasoning_content`，從而導致內部推理洩漏到可見的輸出中。
+    這可以防止 MiniMax 的串流端點在 OpenAI 風格的 delta 區塊中發出 `reasoning_content`，導致內部推理洩漏到可見的輸出中。
 
   </Accordion>
 
-<Accordion title="Fast mode">`/fast on` 或 `params.fastMode: true` 會在 Anthropic 相容的串流路徑上將 `MiniMax-M2.7` 重寫為 `MiniMax-M2.7-highspeed`。</Accordion>
+<Accordion title="快速模式">`/fast on` 或 `params.fastMode: true` 會在 Anthropic 相容的串流路徑上將 `MiniMax-M2.7` 重寫為 `MiniMax-M2.7-highspeed`。</Accordion>
 
   <Accordion title="Fallback example">
     **最適用於：** 將您最強大的最新世代模型作為主要模型，並在失敗時切換至 MiniMax M2.7。以下範例使用 Opus 作為具體的主要模型；您可以將其替換為您偏好的最新世代主要模型。
@@ -409,11 +410,13 @@ MiniMax 外掛程式也透過 MiniMax Coding Plan 搜尋 API 註冊 `web_search`
 
   </Accordion>
 
-  <Accordion title="Coding Plan 使用詳情">
-    - Coding Plan 使用 API：`https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains`（需要 Coding Plan 金鑰）。
-    - OpenClaw 會將 MiniMax coding-plan 的使用量標準化為與其他供應商相同的 `% left` 顯示方式。MiniMax 的原始 `usage_percent` / `usagePercent` 欄位代表剩餘配額，而非已用配額，因此 OpenClaw 會將其反轉。當存在基於計數的欄位時，優先使用該欄位。
-    - 當 API 返回 `model_remains` 時，OpenClaw 偏好使用聊天模型條目，並在需要時從 `start_time` / `end_time` 推導視窗標籤，同時將選定的模型名稱包含在計劃標籤中，以便更容易區分 coding-plan 視窗。
-    - 使用量快照將 `minimax`、`minimax-cn` 和 `minimax-portal` 視為同一個 MiniMax 配額介面，並且在回退到 Coding Plan 金鑰環境變數之前，優先使用已儲存的 MiniMax OAuth。
+  <Accordion title="編碼計畫使用詳情">
+    - 編碼計畫使用 API：`https://api.minimaxi.com/v1/token_plan/remains` 或 `https://api.minimax.io/v1/token_plan/remains`（需要編碼計畫金鑰）。
+    - 使用量輪詢會從 `models.providers.minimax-portal.baseUrl` 或 `models.providers.minimax.baseUrl` 推導主機（若已設定），因此使用 `https://api.minimax.io/anthropic` 的全域設定會輪詢 `api.minimax.io`。為了相容性，缺少或格式錯誤的基礎 URL 會保留 CN 備援。
+    - OpenClaw 會將 MiniMax 編碼計畫的使用量正規化為與其他提供者相同的 `% left` 顯示方式。MiniMax 原始的 `usage_percent` / `usagePercent` 欄位代表剩餘配額，而非已用配額，因此 OpenClaw 會將其反轉。當存在以計數為基礎的欄位時優先使用。
+    - 當 API 傳回 `model_remains` 時，OpenClaw 偏好聊天模型條目，必要時從 `start_time` / `end_time` 推導視窗標籤，並將選取的模型名稱包含在計畫標籤中，以便區分編碼計畫視窗。
+    - 使用量快照將 `minimax`、`minimax-cn` 和 `minimax-portal` 視為相同的 MiniMax 配額層面，並在回退到編碼計畫金鑰環境變數之前優先使用已儲存的 MiniMax OAuth。
+
   </Accordion>
 </AccordionGroup>
 
@@ -423,26 +426,26 @@ MiniMax 外掛程式也透過 MiniMax Coding Plan 搜尋 API 註冊 `web_search`
   - API 金鑰設定：`minimax/<model>`
   - OAuth 設定：`minimax-portal/<model>`
 - 預設聊天模型：`MiniMax-M2.7`
-- 備用聊天模型：`MiniMax-M2.7-highspeed`
+- 替代聊天模型：`MiniMax-M2.7-highspeed`
 - 入門和直接 API 金鑰設定會為這兩種 M2.7 變體撰寫僅限文字的模型定義
-- 圖像理解使用外掛程式擁有的 `MiniMax-VL-01` 媒體供應商
+- 圖像理解使用外掛程式擁有的 `MiniMax-VL-01` 媒體提供者
 - 如果您需要精確的成本追蹤，請更新 `models.json` 中的定價數值
-- 使用 `openclaw models list` 確認目前的供應商 ID，然後使用 `openclaw models set minimax/MiniMax-M2.7` 或 `openclaw models set minimax-portal/MiniMax-M2.7` 進行切換
+- 使用 `openclaw models list` 確認目前的提供者 ID，然後使用 `openclaw models set minimax/MiniMax-M2.7` 或 `openclaw models set minimax-portal/MiniMax-M2.7` 進行切換
 
-<Tip>MiniMax Coding Plan 的推薦連結（九折）：[MiniMax Coding Plan](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)</Tip>
+<Tip>MiniMax 編碼計畫的推薦連結（九折優惠）：[MiniMax Coding Plan](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)</Tip>
 
-<Note>參閱 [Model providers](/zh-Hant/concepts/model-providers) 以了解供應商規則。</Note>
+<Note>請參閱 [Model providers](/zh-Hant/concepts/model-providers) 以了解提供者規則。</Note>
 
 ## 疑難排解
 
 <AccordionGroup>
   <Accordion title='"Unknown model: minimax/MiniMax-M2.7"'>
-    這通常表示 **MiniMax 提供者未設定**（找不到相符的提供者項目，也找不到 MiniMax 認證設定檔/環境金鑰）。針對此偵測問題的修復在 **2026.1.12** 版中。修復方法：
+    這通常表示 **未設定 MiniMax 提供者**（找不到符合的提供者項目，也找不到 MiniMax 驗證設定檔/環境金鑰）。針對此偵測問題的修復已包含在 **2026.1.12** 版本中。解決方式為：
 
-    - 升級至 **2026.1.12**（或從原始碼執行 `main`），然後重新啟動閘道。
-    - 執行 `openclaw configure` 並選擇 **MiniMax** 認證選項，或
-    - 手動新增相符的 `models.providers.minimax` 或 `models.providers.minimax-portal` 區塊，或
-    - 設定 `MINIMAX_API_KEY`、`MINIMAX_OAUTH_TOKEN` 或 MiniMax 認證設定檔，以便插入相符的提供者。
+    - 升級至 **2026.1.12**（或從原始碼執行 `main`），然後重新啟動 gateway。
+    - 執行 `openclaw configure` 並選擇一個 **MiniMax** 驗證選項，或
+    - 手動新增符合的 `models.providers.minimax` 或 `models.providers.minimax-portal` 區塊，或
+    - 設定 `MINIMAX_API_KEY`、`MINIMAX_OAUTH_TOKEN` 或 MiniMax 驗證設定檔，以便注入符合的提供者。
 
     請確保模型 ID **區分大小寫**：
 
@@ -476,7 +479,7 @@ MiniMax 外掛程式也透過 MiniMax Coding Plan 搜尋 API 註冊 `web_search`
     共用的影片工具參數和提供者選擇。
   </Card>
   <Card title="MiniMax Search" href="/zh-Hant/tools/minimax-search" icon="magnifying-glass">
-    透過 MiniMax Coding Plan 進行網路搜尋設定。
+    透過 MiniMax Token Plan 進行網路搜尋設定。
   </Card>
   <Card title="Troubleshooting" href="/zh-Hant/help/troubleshooting" icon="wrench">
     一般疑難排解與常見問題。

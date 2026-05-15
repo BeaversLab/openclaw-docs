@@ -49,7 +49,7 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 
 ## Notas / hipótesis
 
-- `tsx` utiliza esbuild para transformar TS/ESM. El `keepNames` de esbuild emite un helper `__name` y envuelve las definiciones de funciones con `__name(...)`.
+- `tsx` usa esbuild para transformar TS/ESM. El `keepNames` de esbuild emite una función auxiliar `__name` y envuelve las definiciones de funciones con `__name(...)`.
 - El fallo indica que `__name` existe pero no es una función en tiempo de ejecución, lo que implica que el helper falta o ha sido sobrescrito para este módulo en la ruta del cargador de Node 25.
 - Se han reportado problemas similares con el helper `__name` en otros consumidores de esbuild cuando el helper falta o es reescrito.
 

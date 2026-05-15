@@ -97,10 +97,11 @@ OpenClaw 為內建的 Chutes 目錄註冊了三個便利別名：
 
   </Accordion>
 
-  <Accordion title="備註">
-    - API 金鑰和 OAuth 探索都使用相同的 `chutes` 提供者 ID。
+  <Accordion title="Notes">
+    - API Key 和 OAuth 探索均使用相同的 `chutes` 提供者 ID。
     - Chutes 模型註冊為 `chutes/<model-id>`。
-    - 如果啟動時探索失敗，將會自動使用內建的靜態目錄。
+    - 如果在啟動時探索失敗，系統會自動使用內建的靜態目錄。
+
   </Accordion>
 </AccordionGroup>
 

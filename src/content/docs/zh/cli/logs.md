@@ -12,8 +12,8 @@ title: "日志"
 
 相关：
 
-- 日志概览：[日志](/zh/logging)
-- Gateway(网关) CLI：[gateway](/zh/cli/gateway)
+- 日志概述：[日志](/zh/logging)
+- Gateway CLI：[gateway](<Gateway(网关)CLI/en/cli/gateway>)
 
 ## 选项
 
@@ -56,9 +56,10 @@ openclaw logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
 ## 注
 
 - 使用 `--local-time` 以您的本地时区渲染时间戳。
-- 如果本地环回 Gateway(网关) 请求配对，`openclaw logs` 会自动回退到配置的本地日志文件。显式的 `--url` 目标不使用此回退机制。
+- 如果隐式 local loopback Gateway(网关) 请求配对、在连接期间关闭或在 Gateway(网关)`logs.tail` 响应之前超时，`openclaw logs`Gateway(网关) 将自动回退到配置的 Gateway(网关) 文件日志。显式 `--url` 目标不使用此回退机制。
+- 使用 `--follow` 时，瞬态 Gateway(网关) 断开连接（WebSocket 关闭、超时、连接丢失）会触发带有指数退避的自动重新连接（最多重试 8 次，尝试间隔上限为 30 秒）。每次重试时会向 stderr 打印警告，并在轮询成功后打印一次 `[logs] gateway reconnected` 通知。在 `--json` 模式下，重试警告和重新连接转换均作为 `{"type":"notice"}` 记录输出到 stderr。不可恢复的错误（身份验证失败、配置错误）仍会立即退出。
 
 ## 相关
 
-- [CLI 参考](/zh/cli)
-- [Gateway(网关) 日志记录](/zh/gateway/logging)
+- [CLI 参考](CLI/en/cli)
+- [Gateway(网关) 日志记录](<Gateway(网关)/en/gateway/logging>)

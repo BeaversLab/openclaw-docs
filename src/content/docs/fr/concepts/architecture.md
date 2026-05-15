@@ -7,8 +7,7 @@ title: "Architecture de la Gateway"
 
 ## Vue d'ensemble
 
-- Une seule et unique instance Gateway de longue durée possède toutes les surfaces de messagerie (WhatsApp via
-  Baileys, Telegram via grammY, Slack, Discord, Signal, iMessage, WebChat).
+- Un seul **Gateway** de longue durée possède toutes les surfaces de messagerie (WhatsApp via Baileys, Telegram via grammY, Slack, Discord, Signal, iMessage, WebChat).
 - Les clients du plan de contrôle (application macOS, CLI, interface Web Web UI, automatisations) se connectent à la
   Gateway via **WebSocket** sur l'hôte de liaison configuré (par défaut
   `127.0.0.1:18789`).
@@ -25,7 +24,7 @@ title: "Architecture de la Gateway"
 ### Gateway (démon)
 
 - Maintient les connexions des providers.
-- Expose une API WS typée (requêtes, réponses, événements push serveur).
+- Expose une API WS typée (requêtes, réponses, événements de poussée serveur).
 - Valide les trames entrantes par rapport au schéma JSON.
 - Émet des événements tels que `agent`, `chat`, `presence`, `health`, `heartbeat`, `cron`.
 
@@ -38,8 +37,7 @@ title: "Architecture de la Gateway"
 ### Nœuds (macOS / iOS / Android / headless)
 
 - Se connecter au **même serveur WS** avec `role: node`.
-- Fournir une identité d'appareil dans `connect` ; le couplage est **basé sur l'appareil** (rôle `node`) et
-  l'approbation réside dans le stockage de couplage des appareils.
+- Fournir une identité d'appareil dans `connect` ; l'appariement est **basé sur l'appareil** (rôle `node`) et l'approbation réside dans le stockage d'appariement des appareils.
 - Exposer des commandes telles que `canvas.*`, `camera.*`, `screen.record`, `location.get`.
 
 Détails du protocole :
@@ -83,7 +81,7 @@ sequenceDiagram
 - L'authentification par secret partagé utilise `connect.params.auth.token` ou `connect.params.auth.password`, selon le mode d'authentification de la passerelle configuré.
 - Les modes porteurs d'identité tels que Tailscale Serve (`gateway.auth.allowTailscale: true`) ou le `gateway.auth.mode: "trusted-proxy"` non-bouclé satisfont l'authentification via les en-têtes de requête au lieu de `connect.params.auth.*`.
 - Le `gateway.auth.mode: "none"` d'entrée privée désactive entièrement l'authentification par secret partagé ; gardez ce mode hors des entrées publiques ou non fiables.
-- Les clés d'idempotence sont requises pour les méthodes à effets de bord (`send`, `agent`) pour réessayer en toute sécurité ; le serveur conserve un cache de déduplication éphémère.
+- Les clés d'idempotence sont requises pour les méthodes ayant des effets secondaires (`send`, `agent`) pour réessayer en toute sécurité ; le serveur conserve un cache de déduplication de courte durée.
 - Les nœuds doivent inclure `role: "node"` ainsi que les capacités/commandes/autorisations dans `connect`.
 
 ## Appariement + confiance locale
@@ -95,7 +93,7 @@ sequenceDiagram
 - Les connexions Tailnet et LAN, y compris les liaisons Tailnet same-host, nécessitent toujours une approbation d'appariement explicite.
 - Toutes les connexions doivent signer le nonce `connect.challenge`.
 - Le payload de signature `v3` lie également `platform` + `deviceFamily` ; la passerelle épingle les métadonnées appariées à la reconnexion et exige un appariement de réparation pour les modifications de métadonnées.
-- **Non‑local** connects still require explicit approval.
+- Les connexions **non locales** nécessitent toujours une approbation explicite.
 - Gateway auth (`gateway.auth.*`) still applies to **all** connections, local or
   remote.
 
@@ -124,12 +122,12 @@ Details: [Gateway protocol](/fr/gateway/protocol), [Pairing](/fr/channels/pairin
 
 - Start: `openclaw gateway` (foreground, logs to stdout).
 - Health: `health` over WS (also included in `hello-ok`).
-- Supervision: launchd/systemd for auto‑restart.
+- Supervision : launchd/systemd pour le redémarrage automatique.
 
 ## Invariants
 
 - Exactly one Gateway controls a single Baileys session per host.
-- Handshake is mandatory; any non‑JSON or non‑connect first frame is a hard close.
+- La poignée de main est obligatoire ; toute première trame non JSON ou non connect entraîne une fermeture brutale.
 - Events are not replayed; clients must refresh on gaps.
 
 ## Related

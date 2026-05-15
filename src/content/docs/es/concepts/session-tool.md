@@ -84,81 +84,93 @@ respuesta:
   inmediatamente.
 - **Esperar respuesta:** configure un tiempo de espera y obtenga la respuesta en línea.
 
-Después de que el objetivo responda, OpenClaw puede ejecutar un **bucle de respuesta** donde los
-agentes alternan mensajes (hasta 5 turnos). El agente objetivo puede responder
-`REPLY_SKIP` para detenerse antes.
+Las sesiones de chat con alcance de hilo (thread), como las claves de Slack o Discord que terminan en
+`:thread:<id>`, no son destinos `sessions_send` válidos. Utilice la clave de sesión del canal principal
+para la coordinación entre agentes, de modo que los mensajes enrutados por herramientas no aparezcan
+dentro de un hilo activo orientado al usuario.
 
-## Asistentes de estado y orquestación
+Los mensajes y las respuestas de seguimiento A2A se marcan como datos entre sesiones en el
+prompt de recepción (`[Inter-session message ... isUser=false]`) y en la procedencia de la transcripción.
+El agente receptor debe tratarlos como datos enrutados por herramientas, no como una
+instrucción directa escrita por el usuario final.
+
+Después de que el objetivo responda, OpenClaw puede ejecutar un **bucle de respuesta (reply-back loop)** donde los
+agentes alternan mensajes (hasta 5 turnos). El agente objetivo puede responder
+`REPLY_SKIP` para detenerse antes de tiempo.
+
+## Ayudantes de estado y orquestación
 
 `session_status` es la herramienta ligera equivalente a `/status` para la sesión
-actual u otra visible. Reporta el uso, el tiempo, el estado del modelo/ejecución y el
+actual u otra sesión visible. Informa sobre el uso, el tiempo, el estado del modelo/ejecución y el
 contexto de tareas en segundo plano vinculadas cuando están presentes. Al igual que `/status`, puede rellenar
-contadores dispersos de tokens/caché desde la entrada de uso de la transcripción más reciente, y
-`model=default` borra una anulación por sesión. Use `sessionKey="current"` para
-la sesión actual de la persona que llama; las etiquetas visibles del cliente como `openclaw-tui` no
+contadores dispersos de tokens/caché desde la entrada de uso más reciente de la transcripción, y
+`model=default` borra una anulación por sesión. Utilice `sessionKey="current"` para
+la sesión actual del autor de la llamada; las etiquetas visibles del cliente como `openclaw-tui` no
 son claves de sesión.
 
-`sessions_yield` finaliza intencionalmente el turno actual para que el siguiente mensaje pueda ser
-el evento de seguimiento que está esperando. Úselo después de generar subagentes cuando
+`sessions_yield` termina intencionalmente el turno actual para que el siguiente mensaje pueda ser
+el evento de seguimiento que está esperando. Úselo después de generar sub-agentes cuando
 quiera que los resultados de finalización lleguen como el siguiente mensaje en lugar de construir
-bucles de sondeo.
+bucles de sondeo (poll loops).
 
-`subagents` es el asistente del plano de control para subagentes de OpenClaw
-ya generados. Admite:
+`subagents` es el asistente del plano de control para sub-agentes de OpenClaw ya generados.
+Admite:
 
 - `action: "list"` para inspeccionar ejecuciones activas/recientes
 - `action: "steer"` para enviar orientación de seguimiento a un hijo en ejecución
-- `action: "kill"` para detener a un hijo o `all`
+- `action: "kill"` para detener un hijo o `all`
 
-## Generación de subagentes
+## Generación de sub-agentes
 
 `sessions_spawn` crea una sesión aislada para una tarea en segundo plano de forma predeterminada.
-Siempre es no bloqueante -- devuelve inmediatamente un `runId` y
+Siempre es no bloqueante: devuelve inmediatamente un `runId` y
 `childSessionKey`.
 
 Opciones clave:
 
 - `runtime: "subagent"` (predeterminado) o `"acp"` para agentes de arnés externos.
-- Sobrescrituras de `model` y `thinking` para la sesión secundaria.
-- `thread: true` para vincular el inicio generado a un hilo de chat (Discord, Slack, etc.).
-- `sandbox: "require"` para forzar el sandbox en el proceso secundario.
-- `context: "fork"` para sub-agentes nativos cuando el proceso secundario necesita la transcripción
-  del solicitante actual; omítalo o usa `context: "isolated"` para un proceso secundario limpio.
+- `model` y `thinking` sobrescripciones para la sesión secundaria.
+- `thread: true` para vincular la generación a un hilo de chat (Discord, Slack, etc.).
+- `sandbox: "require"` para imponer el aislamiento en el secundario.
+- `context: "fork"` para sub-agentes nativos cuando el secundario necesita la transcripción
+  del solicitante actual; omítalo o usa `context: "isolated"` para un secundario limpio.
+  Los sub-agentes nativos vinculados a un hilo por defecto son `context: "fork"` a menos que
+  `threadBindings.defaultSpawnContext` indique lo contrario.
 
 Los sub-agentes hoja predeterminados no obtienen herramientas de sesión. Cuando
-`maxSpawnDepth >= 2`, los sub-agentes orquestadores de profundidad 1 reciben adicionalmente
+`maxSpawnDepth >= 2`, los sub-agentes orquestadores de profundidad 1 adicionalmente reciben
 `sessions_spawn`, `subagents`, `sessions_list`, y `sessions_history` para que
-puedan administrar sus propios hijos. Las ejecuciones hoja aún no obtienen herramientas
+can gestionar a sus propios hijos. Las ejecuciones hoja todavía no obtienen herramientas
 de orquestación recursivas.
 
 Después de la finalización, un paso de anuncio publica el resultado en el canal del solicitante.
 La entrega de finalización preserva el enrutamiento de hilo/tema vinculado cuando está disponible, y si
-el origen de finalización solo identifica un canal, OpenClaw aún puede reutilizar la
+el origen de finalización solo identifica un canal OpenClaw aún puede reutilizar la
 ruta almacenada de la sesión del solicitante (`lastChannel` / `lastTo`) para entrega
 directa.
 
-Para el comportamiento específico de ACP, consulte [ACP Agents](/es/tools/acp-agents).
+Para un comportamiento específico de ACP, consulte [ACP Agents](/es/tools/acp-agents).
 
 ## Visibilidad
 
-Las herramientas de sesión tienen un alcance para limitar lo que el agente puede ver:
+Las herramientas de sesión tienen un ámbito para limitar lo que el agente puede ver:
 
-| Nivel   | Alcance                                                |
+| Nivel   | Ámbito                                                 |
 | ------- | ------------------------------------------------------ |
 | `self`  | Solo la sesión actual                                  |
 | `tree`  | Sesión actual + sub-agentes generados                  |
 | `agent` | Todas las sesiones para este agente                    |
 | `all`   | Todas las sesiones (entre agentes si está configurado) |
 
-El valor predeterminado es `tree`. Las sesiones en sandbox se limitan a `tree` independientemente de
+El valor predeterminado es `tree`. Las sesiones aisladas se limitan a `tree` independientemente de
 la configuración.
 
 ## Lectura adicional
 
 - [Gestión de sesiones](/es/concepts/session) -- enrutamiento, ciclo de vida, mantenimiento
-- [ACP Agents](/es/tools/acp-agents) -- generación de arnes externos
+- [Agentes ACP](/es/tools/acp-agents) -- generación de arnés externos
 - [Multi-agent](/es/concepts/multi-agent) -- arquitectura multiagente
-- [Configuración de puerta de enlace](/es/gateway/configuration) -- controles de configuración de herramientas de sesión
+- [Gateway Configuration](/es/gateway/configuration) -- controles de configuración de herramientas de sesión
 
 ## Relacionado
 

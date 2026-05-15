@@ -36,11 +36,20 @@ Los SecretRefs solo se validan en superficies efectivamente activas.
 
 <AccordionGroup>
   <Accordion title="Ejemplos de superficies inactivas">
-    - Entradas de canal/cuenta deshabilitadas. - Credenciales de canal de nivel superior que ninguna cuenta habilitada hereda. - Superficies de herramientas/funcionalidades deshabilitadas. - Claves específicas del proveedor de búsqueda web que no están seleccionadas por `tools.web.search.provider`. En el modo automático (proveedor no establecido), se consultan las claves por precedencia para la
-    detección automática del proveedor hasta que una se resuelva. Después de la selección, las claves del proveedor no seleccionado se tratan como inactivas hasta que sean seleccionadas. - El material de autenticación SSH de Sandbox (`agents.defaults.sandbox.ssh.identityData`, `certificateData`, `knownHostsData`, más anulaciones por agente) solo está activo cuando el backend de sandbox efectivo es
-    `ssh` para el agente predeterminado o un agente habilitado. - Los SecretRefs `gateway.remote.token` / `gateway.remote.password` están activos si se cumple una de estas condiciones: - `gateway.mode=remote` - `gateway.remote.url` está configurado - `gateway.tailscale.mode` es `serve` o `funnel` - En modo local sin esas superficies remotas: - `gateway.remote.token` está activo cuando la
-    autenticación por token puede ganar y no se ha configurado ningún token de entorno/autenticación. - `gateway.remote.password` está activo solo cuando la autenticación por contraseña puede ganar y no se ha configurado ninguna contraseña de entorno/autenticación. - El SecretRef `gateway.auth.token` está inactivo para la resolución de autenticación de inicio cuando `OPENCLAW_GATEWAY_TOKEN` está
-    establecido, porque la entrada de token de entorno tiene prioridad para ese tiempo de ejecución.
+    - Entradas de canal/cuenta deshabilitadas.
+    - Credenciales de canal de nivel superior que ninguna cuenta habilitada hereda.
+    - Superficies de herramientas/características deshabilitadas.
+    - Claves específicas del proveedor de búsqueda web que no están seleccionadas por `tools.web.search.provider`. En modo automático (proveedor no establecido), se consultan las claves por precedencia para la detección automática del proveedor hasta que una se resuelva. Después de la selección, las claves del proveedor no seleccionado se tratan como inactivas hasta que se seleccionen.
+    - El material de autenticación SSH de Sandbox (`agents.defaults.sandbox.ssh.identityData`, `certificateData`, `knownHostsData`, más anulaciones por agente) está activo solo cuando el backend efectivo de sandbox es `ssh` para el agente predeterminado o un agente habilitado.
+    - Los SecretRefs `gateway.remote.token` / `gateway.remote.password` están activos si se cumple una de estas condiciones:
+      - `gateway.mode=remote`
+      - `gateway.remote.url` está configurado
+      - `gateway.tailscale.mode` es `serve` o `funnel`
+      - En modo local sin esas superficies remotas:
+        - `gateway.remote.token` está activo cuando la autenticación por token puede ganar y no se ha configurado ningún token de env/auth.
+        - `gateway.remote.password` está activo solo cuando la autenticación por contraseña puede ganar y no se ha configurado ninguna contraseña de env/auth.
+    - El SecretRef `gateway.auth.token` está inactivo para la resolución de autenticación de inicio cuando `OPENCLAW_GATEWAY_TOKEN` está establecido, porque la entrada del token de env gana para ese tiempo de ejecución.
+
   </Accordion>
 </AccordionGroup>
 
@@ -146,16 +155,18 @@ Defina proveedores bajo `secrets.providers`:
 ```
 
 <AccordionGroup>
-  <Accordion title="Env provider">
+  <Accordion title="Proveedor de entorno">
     - Lista de permitidos opcional a través de `allowlist`.
-    - Los valores de entorno faltantes o vacíos fallan la resolución.
+    - Los valores de entorno faltantes/vacíos fallan la resolución.
+
   </Accordion>
-  <Accordion title="File provider">
+  <Accordion title="Proveedor de archivos">
     - Lee el archivo local desde `path`.
     - `mode: "json"` espera una carga útil de objeto JSON y resuelve `id` como puntero.
     - `mode: "singleValue"` espera el id de referencia `"value"` y devuelve el contenido del archivo.
     - La ruta debe pasar las verificaciones de propiedad/permisos.
-    - Nota de cierre de seguridad en Windows: si la verificación de ACL no está disponible para una ruta, la resolución falla. Solo para rutas confiables, establezca `allowInsecurePath: true` en ese proveedor para omitir las verificaciones de seguridad de la ruta.
+    - Nota de fail-closed de Windows: si la verificación de ACL no está disponible para una ruta, la resolución falla. Solo para rutas de confianza, configure `allowInsecurePath: true` en ese proveedor para omitir las verificaciones de seguridad de la ruta.
+
   </Accordion>
   <Accordion title="Proveedor Exec">
     - Ejecuta la ruta binaria absoluta configurada, sin shell.

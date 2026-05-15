@@ -7,16 +7,13 @@ read_when:
 title: "Recherche Exa"
 ---
 
-OpenClaw prend en charge [Exa AI](https://exa.ai/) en tant que `web_search` provider. Exa
-offre des modes de recherche neurale, par mots-clés et hybride avec extraction de
-contenu intégrée (surbrillances, texte, résumés).
+OpenClaw prend en charge [Exa AI](OpenClawhttps://exa.ai/) en tant que fournisseur `web_search`. Exa propose des modes de recherche neurale, par mots-clés et hybride avec une extraction de contenu intégrée (surlignages, texte, résumés).
 
 ## Obtenir une clé API
 
 <Steps>
   <Step title="Créer un compte">
-    Inscrivez-vous sur [exa.ai](https://exa.ai/) et générez une clé API depuis votre
-    tableau de bord.
+    Inscrivez-vous sur [exa.ai](https://exa.ai/) et générez une clé API à partir de votre tableau de bord.
   </Step>
   <Step title="Stocker la clé">
     Définissez `EXA_API_KEY` dans l'environnement du Gateway ou configurez via :
@@ -38,6 +35,7 @@ contenu intégrée (surbrillances, texte, résumés).
         config: {
           webSearch: {
             apiKey: "exa-...", // optional if EXA_API_KEY is set
+            baseUrl: "https://api.exa.ai", // optional; OpenClaw appends /search
           },
         },
       },
@@ -55,6 +53,10 @@ contenu intégrée (surbrillances, texte, résumés).
 
 **Alternative d'environnement :** définissez `EXA_API_KEY` dans l'environnement du Gateway.
 Pour une installation de passerelle, placez-la dans `~/.openclaw/.env`.
+
+## Remplacement de l'URL de base
+
+Définissez `plugins.entries.exa.config.webSearch.baseUrl`OpenClaw lorsque les requêtes de recherche Exa doivent passer par un proxy compatible ou un autre point de terminaison Exa. OpenClaw normalise les hôtes nus en ajoutant `https://` au début et en ajoutant `/search` à la fin, sauf si le chemin se termine déjà là. Le point de terminaison résolu est inclus dans la clé du cache de recherche, de sorte que les résultats de différents points de terminaison Exa ne sont pas partagés.
 
 ## Paramètres de l'outil
 
@@ -88,8 +90,7 @@ Pour une installation de passerelle, placez-la dans `~/.openclaw/.env`.
 
 ### Extraction de contenu
 
-Exa peut renvoyer du contenu extrait en plus des résultats de recherche. Passez un objet `contents`
-pour activer :
+Exa peut renvoyer du contenu extrait avec les résultats de recherche. Passez un objet `contents` pour activer :
 
 ```javascript
 await web_search({
@@ -126,10 +127,10 @@ await web_search({
   afin que les résultats incluent des extraits de phrases clés
 - Les résultats préservent les champs `highlightScores` et `summary` de la réponse de l'API Exa
   lorsqu'ils sont disponibles
-- Les descriptions des résultats sont d'abord extraites des highlights, puis du résumé, puis
+- Les descriptions des résultats sont résolues d'abord à partir des highlights, puis du résumé, puis
   du texte complet — selon ce qui est disponible
 - `freshness` et `date_after`/`date_before` ne peuvent pas être combinés — utilisez un seul
-  mode de filtrage temporel
+  mode de filtre temporel
 - Jusqu'à 100 résultats peuvent être renvoyés par requête (sous réserve des limites
   de type de recherche Exa)
 - Les résultats sont mis en cache pendant 15 minutes par défaut (configurable via

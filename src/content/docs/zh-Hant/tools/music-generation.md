@@ -10,7 +10,7 @@ sidebarTitle: "音樂生成"
 
 `music_generate` 工具讓代理透過共用的音樂生成功能及設定的供應商（目前包括 Google、MiniMax 和工作流程設定的 ComfyUI）來建立音樂或音訊。
 
-對於具會話支援的代理執行，OpenClaw 會將音樂生成作為背景任務啟動，在任務分類帳中追蹤，然後在曲目準備好時再次喚醒代理，以便代理可以將完成的音訊貼回原始頻道。
+對於基於會話的代理執行，OpenClaw 會將音樂生成啟動為背景任務，在任務帳本中追蹤它，然後當音軌準備好時再次喚醒代理，以便代理可以通知用戶並附加完成的音頻。在僅使用訊息工具可見交付的群組/頻道聊天中，代理會透過訊息工具轉發結果。如果完成代理僅編寫私人最終回覆，OpenClaw 將回退到直接通道發送生成的媒體。完成喚醒會明確警告代理，在那些路徑中正常的最終回覆是私人的。
 
 <Note>內建的共用工具僅在至少有一個音樂生成供應商可用時才會出現。如果您在代理的工具中看不到 `music_generate`，請設定 `agents.defaults.musicGenerationModel` 或設定供應商 API 金鑰。</Note>
 
@@ -114,19 +114,19 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
 ## 工具參數
 
 <ParamField path="prompt" type="string" required>
-  音樂生成提示詞。`action: "generate"` 所必需。
+  音樂生成提示詞。`action: "generate"` 的必要參數。
 </ParamField>
 <ParamField path="action" type='"generate" | "status" | "list"' default="generate">
-  `"status"` 返回當前會話任務；`"list"` 檢查提供者。
+  `"status"` 返回目前的工作階段任務；`"list"` 檢視提供者。
 </ParamField>
 <ParamField path="model" type="string">
   提供者/模型覆寫（例如 `google/lyria-3-pro-preview`、 `comfy/workflow`）。
 </ParamField>
 <ParamField path="lyrics" type="string">
-  當提供者支援明確歌詞輸入時可選的歌詞。
+  當提供者支援明確的歌詞輸入時，可選用的歌詞。
 </ParamField>
 <ParamField path="instrumental" type="boolean">
-  當提供者支援時，要求僅輸出器樂。
+  當提供者支援時，請求僅輸出器樂。
 </ParamField>
 <ParamField path="image" type="string">
   單一參考圖片路徑或 URL。
@@ -135,16 +135,16 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
   多個參考圖片（支援的提供者最多 10 張）。
 </ParamField>
 <ParamField path="durationSeconds" type="number">
-  當提供者支援持續時間提示時的目標持續時間（秒）。
+  當提供者支援持續時間提示時，以秒為單位的目標持續時間。
 </ParamField>
 <ParamField path="format" type='"mp3" | "wav"'>
   當提供者支援時的輸出格式提示。
 </ParamField>
 <ParamField path="filename" type="string">
-  輸出檔名提示。
+  輸出檔案名稱提示。
 </ParamField>
 <ParamField path="timeoutMs" type="number">
-  選用的提供者請求逾時（毫秒）。
+  選用的提供者請求逾時時間（毫秒）。低於 10000ms 的數值會被提高至 10000ms，並在工具結果中回報。
 </ParamField>
 
 <Note>並非所有提供者都支援所有參數。在提交之前，OpenClaw 仍會驗證輸入計數等硬性限制。當提供者支援持續時間但使用的最大值小於請求值時，OpenClaw 會將其限制為最接近的支援持續時間。當選定的提供者或模型無法遵守真正不支援的選用提示時，這些提示將被忽略並發出警告。工具結果會回報套用的設定；`details.normalization` 會擷取任何請求到套用的對應關係。</Note>

@@ -63,11 +63,27 @@ OpenClaw 提供三個安裝程式腳本，可從 `openclaw.ai` 取得。
 ### 流程 (install.sh)
 
 <Steps>
-  <Step title="偵測作業系統">支援 macOS 和 Linux (包括 WSL)。如果偵測到 macOS，會在缺少時安裝 Homebrew。</Step>
-  <Step title="預設確保 Node.js 24">檢查 Node 版本並視需要安裝 Node 24 (macOS 上使用 Homebrew，Linux apt/dnf/yum 上使用 NodeSource 設定腳本)。為了相容性，OpenClaw 目前仍支援 Node 22 LTS，目前版本為 `22.14+`。</Step>
-  <Step title="確保 Git">如果缺少 Git 則進行安裝。</Step>
-  <Step title="安裝 OpenClaw">- `npm` 方法 (預設)：全域 npm 安裝 - `git` 方法：複製/更新倉庫，使用 pnpm 安裝依賴，建置，然後在 `~/.local/bin/openclaw` 安裝包裝器</Step>
-  <Step title="安裝後任務">- 盡力重新整理已載入的閘道服務（`openclaw gateway install --force`，然後重新啟動） - 在升級和 Git 安裝時執行 `openclaw doctor --non-interactive`（盡力而為） - 在適當時候嘗試引導（TTY 可用、未停用引導且 bootstrap/config 檢查通過） - 預設為 `SHARP_IGNORE_GLOBAL_LIBVIPS=1`</Step>
+  <Step title="偵測作業系統">
+    支援 macOS 和 Linux (包括 WSL)。如果偵測到 macOS，會在缺少時安裝 Homebrew。
+  </Step>
+  <Step title="預設確保 Node.js 24">
+    檢查 Node 版本並視需求安裝 Node 24（macOS 上使用 Homebrew，Linux apt/dnf/yum 上使用 NodeSource 設定腳本）。為了相容性，OpenClaw 仍支援 Node 22 LTS，目前為 `22.16+`。
+  </Step>
+  <Step title="確保 Git">
+    如果缺少 Git 則進行安裝。
+  </Step>
+  <Step title="安裝 OpenClaw">
+    - `npm` 方法（預設）：全域 npm 安裝
+    - `git` 方法：複製/更新 repo，使用 pnpm 安裝相依套件，建置，然後將安裝包裝器安裝至 `~/.local/bin/openclaw`
+
+  </Step>
+  <Step title="安裝後任務">
+    - 盡力重新整理已載入的閘道服務（`openclaw gateway install --force`，然後重新啟動）
+    - 在升級和 git 安裝時執行 `openclaw doctor --non-interactive`（盡力而為）
+    - 在適當時機嘗試入門引導（TTY 可用、未停用入門引導，且 bootstrap/config 檢查通過）
+    - 預設為 `SHARP_IGNORE_GLOBAL_LIBVIPS=1`
+
+  </Step>
 </Steps>
 
 ### 原始碼結帳偵測
@@ -148,9 +164,10 @@ OpenClaw 提供三個安裝程式腳本，可從 `openclaw.ai` 取得。
   <Step title="確保 Git">
     如果缺少 Git，嘗試在 Linux 上透過 apt/dnf/yum 或在 macOS 上透過 Homebrew 安裝。
   </Step>
-  <Step title="在前綴下安裝 OpenClaw">
-    - `npm` 方法 (預設)：使用 npm 在前綴下安裝，然後將包裝程式寫入 `<prefix>/bin/openclaw`
-    - `git` 方法：複製/更新檢出 (預設 `~/openclaw`) 並仍將包裝程式寫入 `<prefix>/bin/openclaw`
+  <Step title="在字首下安裝 OpenClaw">
+    - `npm` 方法（預設）：使用 npm 在字首下安裝，然後將包裝器寫入 `<prefix>/bin/openclaw`
+    - `git` 方法：複製/更新 checkout（預設為 `~/openclaw`），並仍將包裝器寫入 `<prefix>/bin/openclaw`
+
   </Step>
   <Step title="重新載入已載入的閘道服務">
     如果已經從相同的前綴載入了閘道服務，該腳本會執行
@@ -215,11 +232,26 @@ OpenClaw 提供三個安裝程式腳本，可從 `openclaw.ai` 取得。
 ### Flow (install.ps1)
 
 <Steps>
-  <Step title="確保 PowerShell + Windows 環境">需要 PowerShell 5+。</Step>
-  <Step title="確保預設使用 Node.js 24">若缺失，將嘗試透過 winget、Chocolatey，然後 Scoop 進行安裝。為了相容性，目前仍支援 Node 22 LTS (`22.14+`)。</Step>
-  <Step title="安裝 OpenClaw">- `npm` 方式 (預設)：使用選定的 `-Tag` 進行全域 npm 安裝 - `git` 方式：克隆/更新 repo，使用 pnpm 安裝/建置，並在 `%USERPROFILE%\.local\bin\openclaw.cmd` 安裝包裝器</Step>
-  <Step title="安裝後任務">- 盡可能將所需的 bin 目錄加入使用者 PATH - 盡力重新整理已載入的閘道服務 (`openclaw gateway install --force`，然後重新啟動) - 在升級和 Git 安裝時執行 `openclaw doctor --non-interactive` (盡力而為)</Step>
-  <Step title="處理失敗">`iwr ... | iex` 和 scriptblock 安裝會回報終止錯誤，而不會關閉目前的 PowerShell 會話。直接的 `powershell -File` / `pwsh -File` 安裝仍會以非零值退出，以便自動化處理。</Step>
+  <Step title="確保 PowerShell + Windows 環境">
+    需要 PowerShell 5+。
+  </Step>
+  <Step title="預設確保 Node.js 24">
+    如果缺少，會嘗試透過 winget，然後 Chocolatey，再來 Scoop 進行安裝。為了相容性，Node 22 LTS，目前為 `22.16+`，仍受支援。
+  </Step>
+  <Step title="安裝 OpenClaw">
+    - `npm` 方法（預設）：使用選定的 `-Tag` 進行全域 npm 安裝，從可寫入的安裝程式暫存目錄啟動，以便在受保護資料夾（例如 `C:\`）中開啟的 Shell 仍能正常運作
+    - `git` 方法：複製/更新存放庫，使用 pnpm 安裝/建置，並在 `%USERPROFILE%\.local\bin\openclaw.cmd` 安裝包裝程式
+
+  </Step>
+  <Step title="安裝後任務">
+    - 盡可能將所需的 bin 目錄新增至使用者 PATH
+    - 盡力重新整理已載入的閘道服務（`openclaw gateway install --force`，然後重新啟動）
+    - 在升級和 git 安裝時執行 `openclaw doctor --non-interactive`（盡力而為）
+
+  </Step>
+  <Step title="處理失敗">
+    `iwr ... | iex` 和 scriptblock 安裝會回報終止錯誤，而不會關閉目前的 PowerShell 工作階段。直接 `powershell -File` / `pwsh -File` 安裝仍會傳回非零結束代碼以利自動化。
+  </Step>
 </Steps>
 
 ### Examples (install.ps1)
@@ -236,14 +268,14 @@ OpenClaw 提供三個安裝程式腳本，可從 `openclaw.ai` 取得。
 <AccordionGroup>
   <Accordion title="旗標參考">
 
-| Flag                        | Description                                   |
-| --------------------------- | --------------------------------------------- |
-| `-InstallMethod npm\|git`   | 安裝方式 (預設: `npm`)                        |
-| `-Tag <tag\|version\|spec>` | npm dist-tag、版本或套件規格 (預設: `latest`) |
-| `-GitDir <path>`            | 簽出目錄 (預設: `%USERPROFILE%\openclaw`)     |
-| `-NoOnboard`                | 略過入門引導                                  |
-| `-NoGitUpdate`              | 略過 `git pull`                               |
-| `-DryRun`                   | 僅列印動作                                    |
+| 旗標                        | 描述                                           |
+| --------------------------- | ---------------------------------------------- |
+| `-InstallMethod npm\|git`   | 安裝方法（預設：`npm`）                        |
+| `-Tag <tag\|version\|spec>` | npm dist-tag、版本或套件規格（預設：`latest`） |
+| `-GitDir <path>`            | 簽出目錄（預設：`%USERPROFILE%\openclaw`）     |
+| `-NoOnboard`                | 略過入門引導                                   |
+| `-NoGitUpdate`              | 略過 `git pull`                                |
+| `-DryRun`                   | 僅列印動作                                     |
 
   </Accordion>
 
@@ -252,15 +284,15 @@ OpenClaw 提供三個安裝程式腳本，可從 `openclaw.ai` 取得。
 | 變數                               | 說明          |
 | ---------------------------------- | ------------- |
 | `OPENCLAW_INSTALL_METHOD=git\|npm` | 安裝方法      |
-| `OPENCLAW_GIT_DIR=<path>`          | Checkout 目錄 |
-| `OPENCLAW_NO_ONBOARD=1`            | 跳過引導      |
+| `OPENCLAW_GIT_DIR=<path>`          | 檢出目錄      |
+| `OPENCLAW_NO_ONBOARD=1`            | 略過引導      |
 | `OPENCLAW_GIT_UPDATE=0`            | 停用 git pull |
 | `OPENCLAW_DRY_RUN=1`               | 試執行模式    |
 
   </Accordion>
 </AccordionGroup>
 
-<Note>如果使用了 `-InstallMethod git` 但缺少 Git，腳本將退出並列印 Git for Windows 連結。</Note>
+<Note>如果使用了 `-InstallMethod git` 但系統缺少 Git，腳本將會退出並顯示 Git for Windows 的連結。</Note>
 
 ---
 
@@ -281,13 +313,13 @@ OpenClaw 提供三個安裝程式腳本，可從 `openclaw.ai` 取得。
 
 <AccordionGroup>
   <Accordion title="為什麼需要 Git？">
-    `git` 安裝方法需要 Git。對於 `npm` 安裝，仍然會檢查/安裝 Git，以避免當相依套件使用 git URL 時發生 `spawn git ENOENT` 錯誤。
+    `git` 安裝方法需要 Git。對於 `npm` 安裝，仍然會檢查/安裝 Git，以避免當相依套件使用 git URL 時發生 `spawn git ENOENT` 失敗。
   </Accordion>
 
-<Accordion title="為什麼 npm 在 Linux 上會遇到 EACCES？">某些 Linux 設定將 npm 全域前綴指向 root 擁有的路徑。`install.sh` 可以將前綴切換到 `~/.npm-global`，並將 PATH 匯出附加到 shell rc 檔案（當這些檔案存在時）。</Accordion>
+<Accordion title="為什麼 npm 在 Linux 上會遇到 EACCES？">部分 Linux 設定將 npm 的全域前綴指向 root 擁有的路徑。`install.sh` 可以將前綴切換至 `~/.npm-global` 並將 PATH 匯出附加至 shell rc 檔案（當這些檔案存在時）。</Accordion>
 
   <Accordion title="sharp/libvips 問題">
-    腳本預設 `SHARP_IGNORE_GLOBAL_LIBVIPS=1` 以避免 sharp 针對系統 libvips 進行建置。若要覆蓋：
+    這些腳本預設 `SHARP_IGNORE_GLOBAL_LIBVIPS=1` 以避免 sharp 針對系統 libvips 進行建置。若要覆寫：
 
     ```bash
     SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
@@ -297,11 +329,11 @@ OpenClaw 提供三個安裝程式腳本，可從 `openclaw.ai` 取得。
 
 <Accordion title='Windows: "npm error spawn git / ENOENT"'>安裝適用於 Windows 的 Git，重新開啟 PowerShell，然後重新執行安裝程式。</Accordion>
 
-<Accordion title='Windows: "openclaw is not recognized"'>執行 `npm config get prefix` 並將該目錄新增至您的使用者 PATH（Windows 上不需要 `\bin` 後綴），然後重新開啟 PowerShell。</Accordion>
+<Accordion title="Windows：「無法辨識 openclaw」">執行 `npm config get prefix` 並將該目錄新增至您的使用者 PATH（Windows 上不需要 `\bin` 後綴），然後重新開啟 PowerShell。</Accordion>
 
-  <Accordion title="Windows: how to get verbose installer output">
+  <Accordion title="Windows：如何取得詳細的安裝程式輸出">
     `install.ps1` 目前未公開 `-Verbose` 選項。
-    使用 PowerShell 追蹤進行腳本級別的診斷：
+    使用 PowerShell 追蹤進行腳本層級的診斷：
 
     ```powershell
     Set-PSDebug -Trace 1
@@ -311,7 +343,7 @@ OpenClaw 提供三個安裝程式腳本，可從 `openclaw.ai` 取得。
 
   </Accordion>
 
-  <Accordion title="openclaw not found after install">
+  <Accordion title="安裝後找不到 openclaw">
     通常是 PATH 問題。請參閱 [Node.js 疑難排解](/zh-Hant/install/node#troubleshooting)。
   </Accordion>
 </AccordionGroup>

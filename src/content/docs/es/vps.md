@@ -51,7 +51,7 @@ que se aplica en todas partes.
 </CardGroup>
 
 **AWS (EC2 / Lightsail / nivel gratuito)** también funciona bien.
-Está disponible un video tutorial de la comunidad en
+Hay un recorrido en video comunitario disponible en
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
 (recurso de la comunidad -- puede dejar de estar disponible).
 
@@ -65,27 +65,42 @@ Está disponible un video tutorial de la comunidad en
 
 Páginas relacionadas: [Acceso remoto a Gateway](/es/gateway/remote), [Centro de plataformas](/es/platforms).
 
-## Agente empresarial compartido en un VPS
+## Endurezca el acceso de administrador primero
 
-Ejecutar un solo agente para un equipo es una configuración válida cuando cada usuario está dentro del mismo límite de confianza y el agente es exclusivamente para el negocio.
+Antes de instalar OpenClaw en un VPS público, decida cómo desea administrar
+el servidor en sí.
 
-- Manténlo en un tiempo de ejecución dedicado (VPS/VM/contenedor + usuario de sistema/cuentas dedicado).
-- No inicies sesión en ese tiempo de ejecución con cuentas personales de Apple/Google ni perfiles personales de navegador/gestor de contraseñas.
-- Si los usuarios son adversarios entre sí, sepáralos por gateway/host/usuario del SO.
+- Si desea acceso de administrador solo a través de Tailnet, instale Tailscale primero, una el VPS
+  a su tailnet, verifique una segunda sesión SSH a través de la IP de Tailscale o
+  el nombre de MagicDNS, y luego restringa el SSH público.
+- Si no está utilizando Tailscale, aplique el endurecimiento equivalente para su ruta
+  de SSH antes de exponer más servicios.
+- Esto es independiente del acceso a Gateway. Aún puede mantener OpenClaw vinculado
+  al loopback y usar un túnel SSH o Tailscale Serve para el panel de control.
+
+Las opciones de Gateway específicas de Tailscale se encuentran en [Tailscale](/es/gateway/tailscale).
+
+## Agente compartido de la empresa en un VPS
+
+Ejecutar un solo agente para un equipo es una configuración válida cuando cada usuario está en el mismo límite de confianza y el agente es exclusivamente para negocios.
+
+- Manténgalo en un tiempo de ejecución dedicado (VPS/VM/contenedor + usuario de SO/cuentas dedicado).
+- No inicie sesión en ese tiempo de ejecución con cuentas personales de Apple/Google o perfiles personales de navegador/gestor de contraseñas.
+- Si los usuarios son adversarios entre sí, sepárelos por gateway/host/usuario de SO.
 
 Detalles del modelo de seguridad: [Seguridad](/es/gateway/security).
 
 ## Uso de nodos con un VPS
 
 Puede mantener el Gateway en la nube y emparejar **nodos** en sus dispositivos locales
-(Mac/iOS/Android/headless). Los nodos proporcionan capacidades de pantalla/cámara/lienzo locales y `system.run`
-mientras el Gateway permanece en la nube.
+(Mac/iOS/Android/headless). Los nodos proporcionan pantalla/cámara/lienzo local y `system.run`
+capacidades mientras el Gateway permanece en la nube.
 
 Documentación: [Nodos](/es/nodes), [CLI de Nodos](/es/cli/nodes).
 
-## Ajustes de inicio para máquinas virtuales pequeñas y hosts ARM
+## Ajuste de inicio para pequeñas VMs y hosts ARM
 
-Si los comandos de la CLI parecen lentos en máquinas virtuales de baja potencia (o hosts ARM), habilite el caché de compilación de módulos de Node:
+Si los comandos de la CLI se sienten lentos en VMs de baja potencia (o hosts ARM), habilite la caché de compilación de módulos de Node:
 
 ```bash
 grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF'
@@ -97,22 +112,22 @@ source ~/.bashrc
 ```
 
 - `NODE_COMPILE_CACHE` mejora los tiempos de inicio de comandos repetidos.
-- `OPENCLAW_NO_RESPAWN=1` evita la sobrecarga de inicio adicional de una ruta de auto-crecimiento.
-- La primera ejecución del comando calienta el caché; las ejecuciones posteriores son más rápidas.
+- `OPENCLAW_NO_RESPAWN=1` evita la sobrecarga de inicio adicional de una ruta de auto-reinicio.
+- La primera ejecución del comando calienta la caché; las ejecuciones posteriores son más rápidas.
 - Para detalles específicos de Raspberry Pi, consulte [Raspberry Pi](/es/install/raspberry-pi).
 
-### lista de verificación de ajustes de systemd (opcional)
+### Lista de verificación de ajuste de systemd (opcional)
 
 Para hosts de VM que usan `systemd`, considere:
 
-- Añadir variable de entorno al servicio para una ruta de inicio estable:
+- Añada env de servicio para una ruta de inicio estable:
   - `OPENCLAW_NO_RESPAWN=1`
   - `NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache`
-- Mantener el comportamiento de reinicio explícito:
+- Mantenga el comportamiento de reinicio explícito:
   - `Restart=always`
   - `RestartSec=2`
   - `TimeoutStartSec=90`
-- Se prefieren discos con respaldo SSD para rutas de estado/caché a fin de reducir las penalizaciones de arranque en frío por E/S aleatoria.
+- Prefiera discos con soporte SSD para las rutas de estado/caché para reducir las penalizaciones de inicio en frío por E/S aleatoria.
 
 Para la ruta estándar `openclaw onboard --install-daemon`, edite la unidad de usuario:
 
@@ -130,17 +145,17 @@ TimeoutStartSec=90
 ```
 
 Si instaló deliberadamente una unidad del sistema en su lugar, edite
-`openclaw-gateway.service` a través de `sudo systemctl edit openclaw-gateway.service`.
+`openclaw-gateway.service` mediante `sudo systemctl edit openclaw-gateway.service`.
 
 Cómo las políticas de `Restart=` ayudan a la recuperación automatizada:
 [systemd puede automatizar la recuperación del servicio](https://www.redhat.com/en/blog/systemd-automate-recovery).
 
-Para el comportamiento OOM de Linux, la selección de víctimas de procesos secundarios y el diagnóstico de `exit 137`,
-consulte [Presión de memoria y eliminaciones OOM en Linux](/es/platforms/linux#memory-pressure-and-oom-kills).
+Para el comportamiento OOM de Linux, la selección de víctimas de procesos secundarios y los diagnósticos de `exit 137`,
+consulte [Presión de memoria de Linux y eliminaciones OOM](/es/platforms/linux#memory-pressure-and-oom-kills).
 
 ## Relacionado
 
-- [Descripción general de la instalación](/es/install)
+- [Resumen de instalación](/es/install)
 - [DigitalOcean](/es/install/digitalocean)
 - [Fly.io](/es/install/fly)
 - [Hetzner](/es/install/hetzner)

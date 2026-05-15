@@ -191,5 +191,5 @@ Modelo de respaldo filtrado por páginas:
 
 ## Relacionado
 
-- [Descripción general de herramientas](/es/tools) — todas las herramientas de agente disponibles
-- [Referencia de configuración](/es/gateway/config-agents#agent-defaults) — configuración de pdfMaxBytesMb y pdfMaxPages
+- [Resumen de herramientas](/es/tools) - todas las herramientas de agente disponibles
+- [Referencia de configuración](/es/gateway/config-agents#agent-defaults) - configuración de pdfMaxBytesMb y pdfMaxPages

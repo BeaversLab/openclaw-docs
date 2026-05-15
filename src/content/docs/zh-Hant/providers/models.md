@@ -6,14 +6,11 @@ read_when:
 title: "模型提供者快速入門"
 ---
 
-# 模型供應商
-
-OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行驗證，然後將預設
-模型設定為 `provider/model`。
+OpenClaw 可以使用許多 LLM 提供商。選擇一個，進行身份驗證，然後將預設模型設定為 `provider/model`。
 
 ## 快速入門（兩個步驟）
 
-1. 向供應商進行驗證（通常透過 `openclaw onboard`）。
+1. 向提供商進行身份驗證（通常透過 `openclaw onboard`）。
 2. 設定預設模型：
 
 ```json5
@@ -22,7 +19,7 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行驗證，然後
 }
 ```
 
-## 支援的供應商（入門組）
+## 支援的提供商（入門組合）
 
 - [Alibaba Model Studio](/zh-Hant/providers/alibaba)
 - [Amazon Bedrock](/zh-Hant/providers/bedrock)
@@ -31,6 +28,7 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行驗證，然後
 - [Chutes](/zh-Hant/providers/chutes)
 - [ComfyUI](/zh-Hant/providers/comfy)
 - [Cloudflare AI Gateway](/zh-Hant/providers/cloudflare-ai-gateway)
+- [DeepInfra](/zh-Hant/providers/deepinfra)
 - [fal](/zh-Hant/providers/fal)
 - [Fireworks](/zh-Hant/providers/fireworks)
 - [GLM models](/zh-Hant/providers/glm)
@@ -56,10 +54,10 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行驗證，然後
 - `copilot-proxy` - 本機 VS Code Copilot Proxy 橋接器；使用 `openclaw onboard --auth-choice copilot-proxy`
 - `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要在本地安裝 `gemini`（`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`）；預設模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
 
-如需完整的供應商目錄（xAI、Groq、Mistral 等）及進階設定，請參閱 [Model providers](/zh-Hant/concepts/model-providers)。
+如需完整的提供商目錄（xAI、Groq、Mistral 等）和進階設定，請參閱 [Model providers](/zh-Hant/concepts/model-providers)。
 
 ## 相關
 
-- [模型選擇](/zh-Hant/concepts/model-providers)
-- [模型失效切換](/zh-Hant/concepts/model-failover)
+- [Model selection](/zh-Hant/concepts/model-providers)
+- [Model failover](/zh-Hant/concepts/model-failover)
 - [Models CLI](/zh-Hant/cli/models)

@@ -13,14 +13,14 @@ title: "registro de macOS"
 OpenClaw enruta los registros de la aplicación de macOS a través de swift-log (registro unificado de forma predeterminada) y puede escribir un registro de archivo local y rotativo en el disco cuando necesite una captura duradera.
 
 - Verbosidad: **Panel Depuración → Registros → Registro de aplicaciones → Verbosidad**
-- Habilitar: **Panel Depuración → Registros → Registro de aplicaciones → “Escribir registro de diagnóstico rotativo (JSONL)”**
+- Activar: **Panel de depuración → Registros → Registro de aplicaciones → "Escribir registro de diagnóstico rotativo (JSONL)"**
 - Ubicación: `~/Library/Logs/OpenClaw/diagnostics.jsonl` (rota automáticamente; los archivos antiguos tienen el sufijo `.1`, `.2`, …)
-- Borrar: **Panel Depuración → Registros → Registro de aplicaciones → “Borrar”**
+- Borrar: **Panel de depuración → Registros → Registro de aplicaciones → "Borrar"**
 
 Notas:
 
 - Esto está **desactivado de forma predeterminada**. Habilítelo solo mientras depura activamente.
-- Trate el archivo como confidencial; no lo comparta sin revisión.
+- Trate el archivo como confidencial; no lo comparta sin revisarlo.
 
 ## Datos privados de registro unificado en macOS
 

@@ -16,7 +16,7 @@ Public : contributeurs à l'application macOS. Objectif : garder la superpositio
 
 ## Implémenté (9 déc. 2025)
 
-- Les sessions de superposition transportent désormais un jeton par capture (mot d'éveil ou appui-parler). Les mises à jour partielles/finales/envoi/rejet/niveau sont ignorées lorsque le jeton ne correspond pas, évitant ainsi les rappels obsolètes.
+- Les sessions de superportement transportent désormais un jeton par capture (mot de réveil ou appuyer pour parler). Les mises à jour partielles/finales/envoi/rejet/niveau sont ignorées lorsque le jeton ne correspond pas, évitant ainsi les rappels obsolètes.
 - L'appui-parler adopte tout texte visible de la superposition comme préfixe (ainsi, appuyer sur la touche de raccourci alors que la superposition d'éveil est active conserve le texte et ajoute la nouvelle parole). Il attend jusqu'à 1,5 s une transcription finale avant de revenir au texte actuel.
 - La journalisation de la sonnerie/superposition est émise à `info` dans les catégories `voicewake.overlay`, `voicewake.ptt` et `voicewake.chime` (début de session, partiel, final, envoi, rejet, raison de la sonnerie).
 
@@ -35,7 +35,7 @@ Public : contributeurs à l'application macOS. Objectif : garder la superpositio
 4. **Chemin d'envoi unifié**
    - Sur `endCapture` : si le texte coupé est vide → fermer ; sinon `performSend(session:)` (joue la sonnerie d'envoi une fois, transfère, ferme).
    - Push-to-talk : pas de délai ; mot de réveil : délai optionnel pour l'envoi automatique.
-   - Appliquez un court cooldown au runtime de réveil après la fin du push-to-talk pour que le mot de réveil ne se redéclenche pas immédiatement.
+   - Appliquez un court temps de recharge au runtime de réveil après la fin de l'appui pour parler afin que le mot de réveil ne se redéclenche pas immédiatement.
 5. **Journalisation**
    - Le coordinateur émet des journaux `.info` dans le sous-système `ai.openclaw`, catégories `voicewake.overlay` et `voicewake.chime`.
    - Événements clés : `session_started`, `adopted_by_push_to_talk`, `partial`, `finalized`, `send`, `dismiss`, `cancel`, `cooldown`.

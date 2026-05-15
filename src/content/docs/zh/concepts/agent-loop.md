@@ -6,9 +6,7 @@ read_when:
 title: "Agent loop"
 ---
 
-An agentic loop is the full “real” run of an agent: intake → context assembly → 模型 inference →
-工具 execution → streaming replies → persistence. It’s the authoritative path that turns a message
-into actions and a final reply, while keeping 会话 state consistent.
+Agent 循环是 agent 的完整“真实”运行过程：intake → context assembly → 模型 inference → 工具 execution → streaming replies → persistence。这是一条权威路径，将消息转换为操作和最终回复，同时保持 会话 状态一致。
 
 In OpenClaw, a loop is a single, serialized run per 会话 that emits lifecycle and stream events
 as the 模型 thinks, calls tools, and streams output. This doc explains how that authentic loop is
@@ -32,140 +30,144 @@ wired end-to-end.
    - 解析模型 + 认证配置文件并构建 pi 会话
    - 订阅 pi 事件并流式传输助手/工具增量
    - 强制执行超时 -> 如果超时则中止运行
-   - 返回负载 + 使用情况元数据
-4. `subscribeEmbeddedPiSession` 将 pi-agent-core 事件桥接到 OpenClaw `agent` 流：
-   - 工具事件 => `stream: "tool"`
-   - 助手增量 => `stream: "assistant"`
-   - 生命周期事件 => `stream: "lifecycle"` (`phase: "start" | "end" | "error"`)
+   - 对于 Codex app-server 轮次，中止已接受的轮次，该轮次在终止事件之前停止产生 app-server 进度
+   - 返回 payloads + usage metadata
+4. `subscribeEmbeddedPiSession` 将 pi-agent-core 事件桥接到 OpenClaw `agent` stream：
+   - 工具 events => `stream: "tool"`
+   - assistant deltas => `stream: "assistant"`
+   - lifecycle events => `stream: "lifecycle"` (`phase: "start" | "end" | "error"`)
 5. `agent.wait` 使用 `waitForAgentRun`：
-   - 等待 `runId` 的 **生命周期结束/错误**
+   - 等待 `runId` 的 **lifecycle end/error**
    - 返回 `{ status: ok|error|timeout, startedAt, endedAt, error? }`
 
-## 排队 + 并发
+## 队列 + 并发
 
-- 运行按会话键（会话通道）串行化，并可选择通过全局通道。
-- 这可以防止工具/会话竞争，并保持会话历史记录的一致性。
-- 消息传递通道可以选择队列模式（collect/steer/followup），这些模式输入到此通道系统。
+- 运行是按 会话 键（会话 lane）序列化的，并且可以选择通过全局 lane 进行。
+- 这可以防止 工具/会话 竞争，并保持 会话 历史记录的一致性。
+- 消息传递通道可以选择队列模式（collect/steer/followup），这些模式馈送到此 lane 系统。
   请参阅 [Command Queue](/zh/concepts/queue)。
-- Transcript 写入也由会话文件上的会话写入锁保护。该锁是进程感知的且基于文件的，因此它会捕获绕过进程内队列或来自另一个进程的写入者。
-- 会话写入锁默认是不可重入的。如果一个辅助程序在保持一个逻辑写入者的同时故意嵌套获取同一个锁，则必须使用 `allowReentrant: true` 显式选择加入。
+- Transcript 写入也受到 会话 文件上的 会话 写锁保护。该锁是进程感知且基于文件的，因此它可以捕获绕过进程内队列或来自另一个进程的写入者。Session transcript 写入者最多等待 `session.writeLock.acquireTimeoutMs`
+  然后将 会话 报告为忙碌；默认值为 `60000` 毫秒。
+- Session 写锁默认是不可重入的。如果辅助程序有意在保持一个逻辑写入者的同时嵌套获取同一锁，则必须使用
+  `allowReentrant: true` 显式选择加入。
 
-## 会话 + 工作区准备
+## Session + 工作区准备
 
-- 工作区被解析并创建；沙箱隔离运行可能会重定向到沙箱工作区根目录。
-- Skills 被加载（或从快照中重用）并注入到环境和提示中。
-- Bootstrap/context 文件被解析并注入到系统提示报告中。
-- 获取会话写入锁；`SessionManager` 在流式传输之前被打开并准备。任何后续的 transcript 重写、压缩或截断路径必须在打开或更改 transcript 文件之前获取相同的锁。
+- 工作区被解析和创建；沙箱隔离运行可能会重定向到沙箱工作区根目录。
+- Skills 被加载（或从快照中重用）并注入到 env 和 prompt 中。
+- Bootstrap/context 文件被解析并注入到系统 prompt 报告中。
+- 获取会话写锁；在流式传输之前，`SessionManager` 被打开并准备就绪。任何后续的转录重写、压缩或截断路径必须在打开或变更转录文件之前获取相同的锁。
 
-## 提示组装 + 系统提示
+## 提示词组装 + 系统提示词
 
-- 系统提示由 OpenClaw 的基础提示、skills 提示、bootstrap 上下文和每次运行的覆盖构建而成。
-- 特定于模型的限制和压缩保留令牌将被强制执行。
+- 系统提示词由 OpenClaw 的基础提示词、技能提示词、引导上下文以及每次运行的覆盖内容构建而成。
+- 执行特定于模型的限制和压缩保留令牌。
 - 有关模型看到的内容，请参阅 [System prompt](/zh/concepts/system-prompt)。
 
-## 挂钩点（您可以拦截的地方）
+## Hook 点（您可以拦截的位置）
 
-OpenClaw 有两个挂钩系统：
+OpenClaw 有两个 Hook 系统：
 
-- **内部挂钩**（Gateway(网关) 挂钩）：用于命令和生命周期事件的事件驱动脚本。
-- **插件挂钩**：agent/工具 生命周期和 gateway 管道内的扩展点。
+- **内部 Hooks** (Gateway(网关) hooks)：用于命令和生命周期事件的事件驱动脚本。
+- **Plugin hooks**：agent/工具 生命周期和 gateway 管道内部的扩展点。
 
-### 内部挂钩（Gateway(网关) 挂钩）
+### 内部 Hooks (Gateway(网关) hooks)
 
-- **`agent:bootstrap`**：在系统提示完成之前构建 bootstrap 文件时运行。
-  使用它来添加/删除 bootstrap 上下文文件。
-- **命令挂钩**：`/new`、`/reset`、`/stop` 和其他命令事件（请参阅挂钩文档）。
+- **`agent:bootstrap`**：在系统提示词最终确定之前构建引导文件时运行。使用此方法添加/删除引导上下文文件。
+- **命令 Hooks**：`/new`、`/reset`、`/stop` 和其他命令事件（请参阅 Hooks 文档）。
 
 有关设置和示例，请参阅 [Hooks](/zh/automation/hooks)。
 
-### 插件挂钩（agent + gateway 生命周期）
+### Plugin hooks (agent + gateway lifecycle)
 
 这些在 agent 循环或 gateway 管道内运行：
 
-- **`before_model_resolve`**：在会话之前运行（无 `messages`），以便在模型解析之前确定性地覆盖提供商/模型。
-- **`before_prompt_build`**：在加载会话后（带有 `messages`）运行，以便在提交提示之前注入 `prependContext`、`systemPrompt`、`prependSystemContext` 或 `appendSystemContext`。使用 `prependContext` 处理每轮动态文本，使用 system-context 字段处理应位于系统提示空间内的稳定指导。
-- **`before_agent_start`**：遗留兼容性挂钩，可能在任一阶段运行；首选上述显式挂钩。
+- **`before_model_resolve`**：在会话前运行（无 `messages`），以便在模型解析之前确定性地覆盖 提供商/模型。
+- **`before_prompt_build`**：在加载会话后运行（具有 `messages`），以便在提交提示词之前注入 `prependContext`、`systemPrompt`、`prependSystemContext` 或 `appendSystemContext`。使用 `prependContext` 获取每轮动态文本，并使用 system-context 字段获取应位于系统提示词空间中的稳定指导。
+- **`before_agent_start`**：遗留兼容性 Hook，可能在此任一阶段中运行；最好使用上述显式 Hooks。
 - **`before_agent_reply`**：在内联操作之后和 LLM 调用之前运行，允许插件声明该轮次并返回合成回复或完全静默该轮次。
 - **`agent_end`**：在完成后检查最终消息列表和运行元数据。
 - **`before_compaction` / `after_compaction`**：观察或注释压缩周期。
 - **`before_tool_call` / `after_tool_call`**：拦截工具参数/结果。
-- **`before_install`**：检查内置扫描结果，并可选择阻止技能或插件安装。
+- **`before_install`**：检查内置扫描结果，并可选择阻止技能或插件的安装。
 - **`tool_result_persist`**：在工具结果写入 OpenClaw 拥有的会话记录之前，同步转换工具结果。
-- **`message_received` / `message_sending` / `message_sent`**：入站和出站消息挂钩。
+- **`message_received` / `message_sending` / `message_sent`**：入站 + 出站消息钩子。
 - **`session_start` / `session_end`**：会话生命周期边界。
 - **`gateway_start` / `gateway_stop`**：网关生命周期事件。
 
-出站/工具防护的挂钩决策规则：
+出站/工具守卫的钩子决策规则：
 
-- `before_tool_call`：`{ block: true }` 是终止性的，会停止低优先级的处理程序。
-- `before_tool_call`：`{ block: false }` 是无操作，不会清除先前的阻止。
-- `before_install`：`{ block: true }` 是终止性的，会停止低优先级的处理程序。
-- `before_install`：`{ block: false }` 是一个空操作，不会清除先前的阻塞。
-- `message_sending`：`{ cancel: true }` 是终止性的，会停止较低优先级的处理程序。
-- `message_sending`：`{ cancel: false }` 是一个空操作，不会清除先前的取消。
+- `before_tool_call`：`{ block: true }` 是终止操作，会停止较低优先级的处理程序。
+- `before_tool_call`：`{ block: false }` 是空操作，不会清除先前的阻止。
+- `before_install`：`{ block: true }` 是终止操作，会停止较低优先级的处理程序。
+- `before_install`：`{ block: false }` 是空操作，不会清除先前的阻止。
+- `message_sending`：`{ cancel: true }` 是终止操作，会停止较低优先级的处理程序。
+- `message_sending`：`{ cancel: false }` 是空操作，不会清除先前的取消。
 
-有关 hook API 和注册详细信息，请参阅 [Plugin hooks](/zh/plugins/hooks)。
+有关钩子 API 和注册详细信息，请参阅 [插件钩子](/zh/plugins/hooks)。
 
-Harness 可能会以不同方式调整这些 hooks。Codex 应用服务器 harness 将 OpenClaw 插件 hooks 作为已记录镜像表面的兼容性契约，而 Codex 原生 hooks 仍然是单独的较低级别的 Codex 机制。
+Harness 可能会以不同方式调整这些钩子。Codex app-server harness 将 OpenClaw 插件钩子作为已记录的镜像表面的兼容性契约，而 Codex 原生钩子仍然是一个单独的较低级别的 Codex 机制。
 
 ## 流式传输 + 部分回复
 
-- Assistant 增量从 pi-agent-core 流式传输，并作为 `assistant` 事件发出。
+- Assistant 增量从 pi-agent-core 流式传输并作为 `assistant` 事件发出。
 - 分块流式传输可以在 `text_end` 或 `message_end` 上发出部分回复。
-- 推理流式传输可以作为单独的流或作为分块回复发出。
-- 有关分块和块回复行为，请参阅 [Streaming](/zh/concepts/streaming)。
+- 推理流式传输可以作为单独的流或作为块回复发出。
+- 有关分块和块回复行为，请参阅[流式传输](/zh/concepts/streaming)。
 
 ## 工具执行 + 消息传递工具
 
 - 工具开始/更新/结束事件在 `tool` 流上发出。
-- 工具结果在记录/发出之前会针对大小和图像负载进行清理。
-- 消息传递工具的发送会被跟踪，以抑制重复的 Assistant 确认。
+- 工具结果在记录/发出之前会经过大小和图像负载的清理。
+- 消息传递工具的发送会被跟踪，以抑制重复的助理确认。
 
-## 回复整形 + 抑制
+## 回复塑形 + 抑制
 
-- 最终负载由以下内容组装：
-  - assistant 文本（和可选推理）
-  - 内联工具摘要（当详细且被允许时）
-  - 模型错误时的 assistant 错误文本
+- 最终负载由以下内容组装而成：
+  - 助理文本（和可选的推理）
+  - 内联工具摘要（当详细模式 + 允许时）
+  - 当模型出错时的助理错误文本
 - 确切的静默令牌 `NO_REPLY` / `no_reply` 会从传出负载中过滤掉。
-- 消息工具的重复项会从最终负载列表中移除。
-- 如果没有剩余的可渲染负载且工具出错，则会发送回退工具错误回复（除非消息工具已发送了用户可见的回复）。
+- 重复的消息传递工具会从最终负载列表中删除。
+- 如果没有剩余可呈现的负载且工具出错，则会发出后备工具错误回复（除非消息传递工具已发送用户可见的回复）。
 
 ## 压缩 + 重试
 
-- 自动压缩会发出 `compaction` 流事件并可能触发重试。
+- 自动压缩会发出 `compaction` 流事件，并可以触发重试。
 - 重试时，内存缓冲区和工具摘要会被重置，以避免重复输出。
-- 有关压缩管道，请参阅 [Compaction](/zh/concepts/compaction)。
+- 有关压缩管道，请参阅[压缩](/zh/concepts/compaction)。
 
-## 事件流（今天）
+## 事件流（当前）
 
-- `lifecycle`：由 `subscribeEmbeddedPiSession` 发出（并作为 `agentCommand` 的回退）
+- `lifecycle`：由 `subscribeEmbeddedPiSession` 发出（并由 `agentCommand` 作为后备发出）
 - `assistant`：来自 pi-agent-core 的流式增量
 - `tool`：来自 pi-agent-core 的流式工具事件
 
 ## 聊天渠道处理
 
 - Assistant 增量被缓冲到聊天 `delta` 消息中。
-- 在 **生命周期结束/错误** 时发出聊天 `final`。
+- 当**生命周期结束/出错**时，会发出一个聊天 `final`。
 
 ## 超时
 
-- `agent.wait` 默认值：30s（仅等待）。`timeoutMs` 参数覆盖。
-- Agent 运行时：`agents.defaults.timeoutSeconds` 默认 172800s（48 小时）；在 `runEmbeddedPiAgent` 中止计时器中强制执行。
-- 模型空闲超时：如果在空闲窗口内没有响应块到达，OpenClaw 会中止模型请求。`models.providers.<id>.timeoutSeconds` 会针对缓慢的本地/自托管提供商延长此空闲监视程序；否则，如果配置了 `agents.defaults.timeoutSeconds`，OpenClaw 将使用该值，默认上限为 120 秒。没有显式模型或代理超时的 Cron 触发运行会禁用空闲监视程序，并依赖 cron 外部超时。
-- 提供商 HTTP 请求超时：`models.providers.<id>.timeoutSeconds` 适用于该提供商的模型 HTTP 获取，包括连接、标头、正文、SDK 请求超时、总的受保护获取中止处理和模型流空闲监视程序。对于像 Ollama 这样缓慢的本地/自托管提供商，请在增加整个代理运行时超时之前使用此设置。
+- `agent.wait` 默认值：30秒（仅等待）。`timeoutMs` 参数会覆盖此设置。
+- Agent 运行时：`agents.defaults.timeoutSeconds` 默认为 172800秒（48小时）；在 `runEmbeddedPiAgent` 中止计时器中强制执行。
+- Cron 运行时：孤立的 agent-turn `timeoutSeconds` 归 cron 所有。调度器在执行开始时启动该计时器，在配置的截止时间中止底层运行，然后在记录超时之前运行有界的清理工作，以确保过时的子会话不会阻塞通道。
+- 会话存活诊断：启用诊断后，`diagnostics.stuckSessionWarnMs` 会对没有观察到回复、工具、状态、块或 ACP 进度的长 `processing` 会话进行分类。活动的嵌入式运行、模型调用和工具调用报告为 `session.long_running`；没有近期进度报告的活动工作报告为 `session.stalled`；`session.stuck` 保留给没有活动工作的过时会话簿记。过时会话簿记会立即释放受影响的会话通道；仅当 `diagnostics.stuckSessionAbortMs` 后（默认：至少 10 分钟和警告阈值的 5 倍），才会中止排空停滞的嵌入式运行，以便排队的工作可以恢复，而不会切断仅仅缓慢的运行。恢复会发出结构化的请求/完成结果，并且仅当相同的处理代次仍然是最新的时，诊断状态才会被标记为空闲。当会话保持不变时，重复的 `session.stuck` 诊断会进行退避。
+- 模型空闲超时：当在空闲窗口之前没有响应块到达时，OpenClaw 会中止模型请求。`models.providers.<id>.timeoutSeconds` 会针对缓慢的本地/自托管提供商延长此空闲监视计时器；否则 OpenClaw 在配置时使用 `agents.defaults.timeoutSeconds`，默认上限为 120秒。没有明确模型或 agent 超时的 Cron 触发运行会禁用空闲监视计时器，并依赖于 cron 外部超时。
+- 提供商 HTTP 请求超时：`models.providers.<id>.timeoutSeconds` 适用于该提供商的模型 HTTP 获取操作，包括连接、标头、正文、SDK 请求超时、总的 guarded-fetch 中止处理以及模型流空闲监视器。在增加整个代理运行时超时之前，请针对缓慢的本地/自托管提供商（如 Ollama）使用此设置。
 
-## 提前结束的情况
+## 流程可能提前结束的位置
 
-- 代理超时（中止）
-- AbortSignal（取消）
+- 代理超时 (中止)
+- AbortSignal (取消)
 - Gateway(网关) 断开连接或 RPC 超时
-- `agent.wait` 超时（仅等待，不会停止代理）
+- `agent.wait` 超时 (仅等待，不会停止代理)
 
-## 相关
+## 相关内容
 
-- [Tools](/zh/tools) — 可用的代理工具
-- [Hooks](/zh/automation/hooks) — 由代理生命周期事件触发的 event-driven 脚本
-- [Compaction](/zh/concepts/compaction) — 长对话的摘要方式
-- [Exec Approvals](/zh/tools/exec-approvals) — shell 命令的批准门控
-- [Thinking](/zh/tools/thinking) — 思考/推理级别配置
+- [工具](/zh/tools) — 可用的代理工具
+- [钩子](/zh/automation/hooks) — 由代理生命周期事件触发的事件驱动脚本
+- [压缩](/zh/concepts/compaction) — 长对话如何被摘要
+- [执行批准](/zh/tools/exec-approvals) — Shell 命令的批准关卡
+- [思考](/zh/tools/thinking) — 思考/推理级别配置

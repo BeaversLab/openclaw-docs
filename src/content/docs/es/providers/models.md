@@ -6,9 +6,7 @@ read_when:
 title: "Inicio rápido del proveedor de modelos"
 ---
 
-# Proveedores de modelos
-
-OpenClaw puede utilizar muchos proveedores de LLM. Elija uno, autentíquese y luego establezca el modelo predeterminado como `provider/model`.
+OpenClaw puede usar muchos proveedores de LLM. Elija uno, autentíquese y luego establezca el modelo predeterminado como `provider/model`.
 
 ## Inicio rápido (dos pasos)
 
@@ -21,7 +19,7 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija uno, autentíquese y lu
 }
 ```
 
-## Proveedores compatibles (conjunto inicial)
+## Proveedores admitidos (conjunto inicial)
 
 - [Alibaba Model Studio](/es/providers/alibaba)
 - [Amazon Bedrock](/es/providers/bedrock)
@@ -30,6 +28,7 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija uno, autentíquese y lu
 - [Chutes](/es/providers/chutes)
 - [ComfyUI](/es/providers/comfy)
 - [Cloudflare AI Gateway](/es/providers/cloudflare-ai-gateway)
+- [DeepInfra](/es/providers/deepinfra)
 - [fal](/es/providers/fal)
 - [Fireworks](/es/providers/fireworks)
 - [Modelos GLM](/es/providers/glm)
@@ -55,11 +54,10 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija uno, autentíquese y lu
 - `copilot-proxy` - puente local del Proxy de VS Code Copilot; use `openclaw onboard --auth-choice copilot-proxy`
 - `google-gemini-cli` - flujo OAuth de la CLI de Gemini no oficial; requiere una instalación local de `gemini` (`brew install gemini-cli` o `npm install -g @google/gemini-cli`); modelo predeterminado `google-gemini-cli/gemini-3-flash-preview`; use `openclaw onboard --auth-choice google-gemini-cli` o `openclaw models auth login --provider google-gemini-cli --set-default`
 
-Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y la configuración avanzada,
-consulte [Proveedores de modelos](/es/concepts/model-providers).
+Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y la configuración avanzada, consulte [Proveedores de modelos](/es/concepts/model-providers).
 
 ## Relacionado
 
-- [Selección de modelos](/es/concepts/model-providers)
-- [Conmutación por error de modelos](/es/concepts/model-failover)
-- [CLI de modelos](/es/cli/models)
+- [Selección de modelo](/es/concepts/model-providers)
+- [Conmutación por error de modelo](/es/concepts/model-failover)
+- [CLI de Models](/es/cli/models)

@@ -197,10 +197,11 @@ Step Plan (`stepfun-plan`)：
   </Accordion>
 
   <Accordion title="備註">
-    - 該供應商已隨附於 OpenClaw 中，因此無需額外的外掛程式安裝步驟。
+    - 此提供者已內建於 OpenClaw 中，因此無需額外安裝外掛程式。
     - `step-3.5-flash-2603` 目前僅在 `stepfun-plan` 上公開。
-    - 單一驗證流程會同時為 `stepfun` 和 `stepfun-plan` 寫入符合區域的設定檔，因此可以同時探索這兩個介面。
+    - 單一驗證流程會同時為 `stepfun` 和 `stepfun-plan` 寫入符合區域的設定檔，因此兩個介面可以一起被探索到。
     - 使用 `openclaw models list` 和 `openclaw models set <provider/model>` 來檢查或切換模型。
+
   </Accordion>
 </AccordionGroup>
 

@@ -127,7 +127,7 @@ Devuelve el resultado de la revocación como JSON.
 ## Notas
 
 - La rotación de tokens devuelve un nuevo token (sensible). Trátelo como un secreto.
-- Estos comandos requieren el ámbito `operator.pairing` (o `operator.admin`).
+- Estos comandos requieren el alcance `operator.pairing` (o `operator.admin`). Algunas aprobaciones también requieren que el solicitante posea los alcances del operador que el dispositivo de destino acuñaría o heredaría; consulte [Operator scopes](/es/gateway/operator-scopes).
 - `gateway.nodes.pairing.autoApproveCidrs` es una política opcional de la puerta de enlace para
   el emparejamiento de dispositivos de nodo nuevos únicamente; no cambia la autoridad de aprobación de la CLI.
 - La rotación y revocación de tokens se mantienen dentro del conjunto de roles de emparejamiento aprobados y la línea de base de ámbito aprobado para ese dispositivo. Una entrada de token en caché extraviada no
@@ -182,7 +182,7 @@ Notas:
 Relacionado:
 
 - [Solución de problemas de autenticación del Dashboard](/es/web/dashboard#if-you-see-unauthorized-1008)
-- [Solución de problemas de la pasarela](/es/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Solución de problemas de la puerta de enlace](/es/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
 ## Relacionado
 

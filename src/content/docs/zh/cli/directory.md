@@ -8,7 +8,7 @@ title: "Directory"
 
 # `openclaw directory`
 
-针对支持该功能的渠道（联系人/对等方、群组和“我”）进行的目录查找。
+支持目录查询的渠道（联系人/对等点、群组和“我”）。
 
 ## 通用标志
 
@@ -20,9 +20,10 @@ title: "Directory"
 
 - `directory` 旨在帮助您找到可以粘贴到其他命令（尤其是 `openclaw message send --target ...`）中的 ID。
 - 对于许多渠道，结果是基于配置的（允许列表/已配置群组），而不是实时的提供商目录。
-- 默认输出为用制表符分隔的 `id`（有时为 `name`）；请使用 `--json` 进行脚本编写。
+- 已安装的渠道插件可能仍不提供目录支持；在这种情况下，该命令将报告不支持的目录操作，而不是重新安装插件。
+- 默认输出为 `id`（有时为 `name`），以制表符分隔；请使用 `--json` 进行脚本编写。
 
-## 与 `message send` 一起使用结果
+## 将结果与 `message send` 配合使用
 
 ```bash
 openclaw directory peers list --channel slack --query "U0"
@@ -31,22 +32,22 @@ openclaw message send --channel slack --target user:U012ABCDEF --message "hello"
 
 ## ID 格式（按渠道）
 
-- WhatsApp：`+15551234567`（私信），`1234567890-1234567890@g.us`（群组）
+- WhatsApp：`+15551234567`（私信）、`1234567890-1234567890@g.us`（群组）、`120363123456789@newsletter`（频道/时事通讯出站目标）
 - Telegram：`@username` 或数字聊天 ID；群组为数字 ID
 - Slack：`user:U…` 和 `channel:C…`
 - Discord：`user:<id>` 和 `channel:<id>`
 - Matrix（插件）：`user:@user:server`、`room:!roomId:server` 或 `#alias:server`
 - Microsoft Teams（插件）：`user:<id>` 和 `conversation:<id>`
-- Zalo (插件)：user id (Bot API)
-- Zalo 个人版 / `zalouser`（插件）：来自 `zca`（`me`、`friend list`、`group list`）的会话 ID（私信/群组）
+- Zalo（插件）：用户 ID（Bot API）
+- Zalo 个人版 / `zalouser`（插件）：来自 `zca` 的会话 ID（私信/群组）（`me`、`friend list`、`group list`）
 
-## 自己（"me"）
+## 自己（“我”）
 
 ```bash
 openclaw directory self --channel zalouser
 ```
 
-## 对等方（联系人/用户）
+## 对等点（联系人/用户）
 
 ```bash
 openclaw directory peers list --channel zalouser

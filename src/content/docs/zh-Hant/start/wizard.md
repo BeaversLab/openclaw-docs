@@ -32,11 +32,21 @@ openclaw agents add <name>
 入門從 **QuickStart**（預設值）與 **Advanced**（完整控制）開始。
 
 <Tabs>
-  <Tab title="QuickStart (預設值)">
-    - 本機 Gateway (loopback) - 工作區預設值 (或現有工作區) - Gateway 連接埠 **18789** - Gateway 驗證 **Token** (自動產生，即使在 loopback 上) - 新本機設定的工具原則預設值：`tools.profile: "coding"` (現有的明確設定檔將會被保留) - DM 隔離預設值：若未設定，本機入門會寫入 `session.dmScope: "per-channel-peer"`。詳細資訊：[CLI Setup Reference](/zh-Hant/start/wizard-cli-reference#outputs-and-internals) -
-    Tailscale 暴露 **關** - Telegram + WhatsApp DM 預設為 **allowlist** (系統會提示您輸入電話號碼)
+  <Tab title="快速入門（預設值）">
+    - 本機閘道（loopback）
+    - 工作區預設值（或現有工作區）
+    - 閘道連接埠 **18789**
+    - 閘道驗證 **Token**（自動生成，即使是在 loopback 上）
+    - 新增本機設定的工具政策預設值：`tools.profile: "coding"`（現有的明確設定檔會被保留）
+    - DM 隔離預設值：當未設定時，本機入門會寫入 `session.dmScope: "per-channel-peer"`。詳細資訊：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference#outputs-and-internals)
+    - Tailscale 暴露 **關閉**
+    - Telegram + WhatsApp DM 預設為 **允許清單**（系統會提示您輸入電話號碼）
+
   </Tab>
-  <Tab title="Advanced (完整控制)">- 顯示每個步驟 (模式、工作區、Gateway、頻道、守護程序、技能)。</Tab>
+  <Tab title="進階（完整控制）">
+    - 公開每個步驟（模式、工作區、閘道、頻道、守護程式、技能）。
+
+  </Tab>
 </Tabs>
 
 ## 入門設定的內容
@@ -54,7 +64,7 @@ openclaw agents add <name>
 3. **閘道** — 連接埠、綁定位址、認證模式、Tailscale 曝光。
    在互動式令牌模式下，選擇預設純文字令牌儲存或選擇加入 SecretRef。
    非互動式令牌 SecretRef 路徑：`--gateway-token-ref-env <ENV_VAR>`。
-4. **頻道** — 內建和捆綁的聊天頻道，例如 BlueBubbles、Discord、飛書、Google Chat、Mattermost、Microsoft Teams、QQ 機器人、Signal、Slack、Telegram、WhatsApp 等等。
+4. **頻道** — 內建及打包的聊天頻道，例如 iMessage、Discord、Feishu、Google Chat、Mattermost、Microsoft Teams、QQ Bot、Signal、Slack、Telegram、WhatsApp 等等。
 5. **Daemon** — 安裝 LaunchAgent (macOS)、systemd 使用者單元 (Linux/WSL2)，或原生 Windows 排程任務，並附帶每個使用者的啟動資料夾備援方案。
    如果 token 驗證需要 token 且 `gateway.auth.token` 由 SecretRef 管理，daemon 安裝程式會驗證它，但不會將解析的 token 保存到 supervisor 服務環境元資料中。
    如果 token 驗證需要 token 且設定的 token SecretRef 未解析，daemon 安裝將會被阻止，並提供可操作的指引。

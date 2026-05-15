@@ -9,7 +9,7 @@ read_when:
 Las habilidades enseñan al agente cómo y cuándo usar las herramientas. Cada habilidad es un directorio
 que contiene un archivo `SKILL.md` con frontmatter YAML e instrucciones en markdown.
 
-Para saber cómo se cargan y priorizan las habilidades, consulta [Skills](/es/tools/skills).
+Para obtener información sobre cómo se cargan y priorizan las habilidades, consulte [Habilidades](/es/tools/skills).
 
 ## Crea tu primera habilidad
 
@@ -24,12 +24,12 @@ Para saber cómo se cargan y priorizan las habilidades, consulta [Skills](/es/to
   </Step>
 
   <Step title="Escribir SKILL.md">
-    Crea `SKILL.md` dentro de ese directorio. El frontmatter define los metadatos,
-    y el cuerpo markdown contiene instrucciones para el agente.
+    Cree `SKILL.md` dentro de ese directorio. Los metadatos del frontmatter definen
+    y el cuerpo de markdown contiene instrucciones para el agente.
 
     ```markdown
     ---
-    name: hello_world
+    name: hello-world
     description: A simple skill that says hello.
     ---
 
@@ -39,12 +39,15 @@ Para saber cómo se cargan y priorizan las habilidades, consulta [Skills](/es/to
     "Hello from your custom skill!".
     ```
 
+    Use guiones (hyphen-case) con letras minúsculas, dígitos y guiones para la habilidad
+    `name`. Mantenga el nombre de la carpeta y el frontmatter `name` alineados.
+
   </Step>
 
   <Step title="Añadir herramientas (opcional)">
-    Puedes definir esquemas de herramientas personalizados en el frontmatter o instruir al agente
-    para que use herramientas del sistema existentes (como `exec` o `browser`). Las habilidades también pueden
-    incluirse dentro de complementos junto a las herramientas que documentan.
+    Puede definir esquemas de herramientas personalizados en el frontmatter o instruir al agente
+    para que utilice herramientas del sistema existentes (como `exec` o `browser`). Las habilidades también pueden
+    incluirse dentro de complementos junto con las herramientas que documentan.
 
   </Step>
 
@@ -83,20 +86,20 @@ Para saber cómo se cargan y priorizan las habilidades, consulta [Skills](/es/to
 
 El frontmatter YAML admite estos campos:
 
-| Campo                               | Obligatorio | Descripción                                       |
-| ----------------------------------- | ----------- | ------------------------------------------------- |
-| `name`                              | Sí          | Identificador único (snake_case)                  |
-| `description`                       | Sí          | Descripción de una línea que se muestra al agente |
-| `metadata.openclaw.os`              | No          | Filtro de SO (`["darwin"]`, `["linux"]`, etc.)    |
-| `metadata.openclaw.requires.bins`   | No          | Binarios requeridos en PATH                       |
-| `metadata.openclaw.requires.config` | No          | Claves de configuración requeridas                |
+| Campo                               | Obligatorio | Descripción                                                          |
+| ----------------------------------- | ----------- | -------------------------------------------------------------------- |
+| `name`                              | Sí          | Identificador único que utiliza letras minúsculas, dígitos y guiones |
+| `description`                       | Sí          | Descripción de una línea que se muestra al agente                    |
+| `metadata.openclaw.os`              | No          | Filtro de sistema operativo (`["darwin"]`, `["linux"]`, etc.)        |
+| `metadata.openclaw.requires.bins`   | No          | Binarios requeridos en PATH                                          |
+| `metadata.openclaw.requires.config` | No          | Claves de configuración requeridas                                   |
 
 ## Mejores prácticas
 
 - **Sé conciso** — indica al modelo _qué_ hacer, no cómo ser una IA
-- **Seguridad primero** — si tu habilidad usa `exec`, asegúrate de que los prompts no permitan la inyección de comandos arbitrarios desde entradas que no son de confianza
-- **Probar localmente** — usa `openclaw agent --message "..."` para probar antes de compartir
-- **Usar ClawHub** — navega y contribuye con habilidades en [ClawHub](https://clawhub.ai)
+- **Seguridad ante todo** — si su habilidad utiliza `exec`, asegúrese de que los mensajes no permitan la inyección de comandos arbitrarios desde entradas que no son confiables
+- **Probar localmente** — use `openclaw agent --message "..."` para probar antes de compartir
+- **Use ClawHub** — navegue y contribuya con habilidades en [ClawHub](https://clawhub.ai)
 
 ## Dónde residen las habilidades
 
@@ -111,7 +114,7 @@ El frontmatter YAML admite estos campos:
 
 ## Relacionado
 
-- [Referencia de habilidades](/es/tools/skills) — carga, precedencia y reglas de bloqueo
+- [Referencia de habilidades](/es/tools/skills) — reglas de carga, precedencia y bloqueo
 - [Configuración de habilidades](/es/tools/skills-config) — esquema de configuración de `skills.*`
-- [ClawHub](/es/tools/clawhub) — registro público de habilidades
-- [Construcción de Plugins](/es/plugins/building-plugins) — los plugins pueden incluir habilidades
+- [ClawHub](/es/clawhub) — registro público de habilidades
+- [Construcción de complementos](/es/plugins/building-plugins) — los complementos pueden incluir habilidades

@@ -8,7 +8,7 @@ title: "Grok 搜索"
 
 OpenClaw 支持 Grok 作为 `web_search` 提供商，利用 xAI 网络基础响应生成由实时搜索结果和引用支持的 AI 综合答案。
 
-同一个 `XAI_API_KEY` 也可以为内置的 `x_search` X（前身为 Twitter）帖子搜索工具提供支持。如果您将密钥存储在 `plugins.entries.xai.config.webSearch.apiKey` 下，OpenClaw 现在也会将其重用为捆绑的 xAI 模型提供商的备用选项。
+同一个 xAI API 密钥也可以为内置的 API`x_search` 工具（用于 X（前身为 Twitter）帖子搜索）和 `code_execution` 工具提供支持。如果您将密钥存储在 `plugins.entries.xai.config.webSearch.apiKey`OpenClaw 下，OpenClaw 现在也会将其作为捆绑的 xAI 模型提供商的备用方案重用。
 
 对于帖子级别的 X 指标（如转发、回复、书签或浏览量），请优先使用 `x_search` 并提供确切的帖子 URL 或状态 ID，而不是广泛的搜索查询。
 
@@ -30,7 +30,7 @@ OpenClaw 可以显示一个单独的后续步骤，以使用相同的 `XAI_API_K
 ## 获取 API 密钥
 
 <Steps>
-  <Step title="创建密钥">
+  <Step title="创建密钥"API>
     从 [xAI](https://console.x.ai/) 获取 API 密钥。
   </Step>
   <Step title="存储密钥">
@@ -53,6 +53,7 @@ OpenClaw 可以显示一个单独的后续步骤，以使用相同的 `XAI_API_K
         config: {
           webSearch: {
             apiKey: "xai-...", // optional if XAI_API_KEY is set
+            baseUrl: "https://api.x.ai/v1", // optional Responses API proxy/base URL override
           },
         },
       },
@@ -83,8 +84,14 @@ Grok 搜索支持 `query`。
 
 目前不支持特定于提供商的过滤器。
 
+Grok 使用特定于提供商的 60 秒默认超时时间，因为 xAI Responses 的网络基础搜索运行时间可能比共享的 `web_search` 默认值更长。设置 `tools.web.search.timeoutSeconds` 以覆盖它。
+
+## 基础 URL 覆盖
+
+当 Grok 网络搜索需要通过运营商代理或兼容 xAI 的 Responses 端点进行路由时，请设置 `plugins.entries.xai.config.webSearch.baseUrl`OpenClaw。OpenClaw 会在去除尾部斜杠后向 `<baseUrl>/responses` 发送请求。除非设置了 `plugins.entries.xai.config.xSearch.baseUrl`，否则 `x_search` 使用相同的 `webSearch.baseUrl` 备用方案。
+
 ## 相关
 
-- [Web Search 概述](/zh/tools/web) -- 所有提供商和自动检测
-- [Web Search 中的 x_search](/zh/tools/web#x_search) -- 通过 xAI 进行一流的 X 搜索
-- [Gemini Search](/zh/tools/gemini-search) -- 通过 Google 基础获取 AI 综合答案
+- [网络搜索概述](/zh/tools/web) -- 所有提供商和自动检测
+- [网络搜索中的 x_search](/zh/tools/web#x_search) -- 通过 xAI 进行一流的 X 搜索
+- [Gemini 搜索](/zh/tools/gemini-search) -- 通过 Google Grounding 生成的 AI 综合答案

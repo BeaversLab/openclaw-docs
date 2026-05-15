@@ -8,7 +8,14 @@ title: "Référence CLI"
 
 `openclaw` est le point d'entrée principal de la CLI. Chaque commande principale dispose soit d'une page de référence dédiée, soit est documentée avec la commande qu'elle remplace ; cet index répertorie les commandes, les indicateurs globaux et les règles de style de sortie qui s'appliquent à l'ensemble de la CLI.
 
-## Pages de commande
+Utilisez les commandes de configuration selon l'intention :
+
+- `openclaw setup` crée la configuration de base et l'espace de travail sans parcourir le flux complet d'intégration guidée (onboarding).
+- `openclaw onboard` est le chemin complet guidé de première exécution pour la passerelle, l'authentification du modèle, l'espace de travail, les canaux, les compétences et la santé.
+- `openclaw configure` modifie des parties ciblées d'une configuration existante, telles que l'authentification du modèle, la passerelle, les canaux, les plugins ou les compétences.
+- `openclaw channels add` configure les comptes de canaux une fois la base établie ; exécutez-la sans indicateurs pour une configuration guidée des canaux ou avec des indicateurs spécifiques au canal pour les scripts.
+
+## Pages de commandes
 
 | Zone                                | Commandes                                                                                                                                                                                                                                                         |
 | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -17,7 +24,7 @@ title: "Référence CLI"
 | Messagerie et agents                | [`message`](/fr/cli/message) · [`agent`](/fr/cli/agent) · [`agents`](/fr/cli/agents) · [`acp`](/fr/cli/acp) · [`mcp`](/fr/cli/mcp)                                                                                                                                |
 | Santé et sessions                   | [`status`](/fr/cli/status) · [`health`](/fr/cli/health) · [`sessions`](/fr/cli/sessions)                                                                                                                                                                          |
 | Gateway et journaux                 | [`gateway`](/fr/cli/gateway) · [`logs`](/fr/cli/logs) · [`system`](/fr/cli/system)                                                                                                                                                                                |
-| Modèles et inférence                | [`models`](/fr/cli/models) · [`infer`](/fr/cli/infer) · `capability` (alias pour [`infer`](/fr/cli/infer)) · [`memory`](/fr/cli/memory) · [`wiki`](/fr/cli/wiki)                                                                                                  |
+| Modèles et inférence                | [`models`](/fr/cli/models) · [`infer`](/fr/cli/infer) · `capability` (alias pour [`infer`](/fr/cli/infer)) · [`memory`](/fr/cli/memory) · [`commitments`](/fr/cli/commitments) · [`wiki`](/fr/cli/wiki)                                                           |
 | Réseau et nœuds                     | [`directory`](/fr/cli/directory) · [`nodes`](/fr/cli/nodes) · [`devices`](/fr/cli/devices) · [`node`](/fr/cli/node)                                                                                                                                               |
 | Runtime et bac à sable              | [`approvals`](/fr/cli/approvals) · `exec-policy` (voir [`approvals`](/fr/cli/approvals)) · [`sandbox`](/fr/cli/sandbox) · [`tui`](/fr/cli/tui) · `chat`/`terminal` (alias pour [`tui --local`](/fr/cli/tui)) · [`browser`](/fr/cli/browser)                       |
 | Automatisation                      | [`cron`](/fr/cli/cron) · [`tasks`](/fr/cli/tasks) · [`hooks`](/fr/cli/hooks) · [`webhooks`](/fr/cli/webhooks)                                                                                                                                                     |
@@ -25,7 +32,7 @@ title: "Référence CLI"
 | Appairage et canaux                 | [`pairing`](/fr/cli/pairing) · [`qr`](/fr/cli/qr) · [`channels`](/fr/cli/channels)                                                                                                                                                                                |
 | Sécurité et plugins                 | [`security`](/fr/cli/security) · [`secrets`](/fr/cli/secrets) · [`skills`](/fr/cli/skills) · [`plugins`](/fr/cli/plugins) · [`proxy`](/fr/cli/proxy)                                                                                                              |
 | Alias hérités                       | [`daemon`](/fr/cli/daemon) (service de passerelle) · [`clawbot`](/fr/cli/clawbot) (espace de noms)                                                                                                                                                                |
-| Plugins (facultatifs)               | [`voicecall`](/fr/cli/voicecall) (si installé)                                                                                                                                                                                                                    |
+| Plugins (en option)                 | [`path`](/fr/cli/path) · [`voicecall`](/fr/cli/voicecall) (si installé)                                                                                                                                                                                           |
 
 ## Indicateurs globaux
 
@@ -41,8 +48,8 @@ title: "Référence CLI"
 ## Modes de sortie
 
 - Les couleurs ANSI et les indicateurs de progression ne s'affichent que dans les sessions TTY.
-- Les hyperliens OSC-8 s'affichent sous forme de liens cliquables lorsque pris en charge ; sinon, le
-  CLI revient à des URL simples.
+- Les hyperliens OSC-8 s'affichent sous forme de liens cliquables lorsque pris en charge ; sinon, la
+  CLI revient aux URL brutes.
 - `--json` (et `--plain` lorsque pris en charge) désactive le style pour une sortie propre.
 - Les commandes de longue durée affichent un indicateur de progression (OSC 9;4 lorsque pris en charge).
 
@@ -50,7 +57,7 @@ Source de vérité de la palette : `src/terminal/palette.ts`.
 
 ## Arborescence des commandes
 
-<Accordion title="Arborescence complète des commandes">
+<Accordion title="Arbre de commandes complet">
 
 ```
 openclaw [--dev] [--profile <name>] <command>
@@ -118,6 +125,15 @@ openclaw [--dev] [--profile <name>] <command>
     status
     index
     search
+  path
+    resolve
+    find
+    set
+    validate
+    emit
+  commitments
+    list
+    dismiss
   wiki
     status
     doctor
@@ -352,25 +368,21 @@ Les plugins peuvent ajouter des commandes de niveau supérieur supplémentaires 
 
 Les messages de chat prennent en charge les commandes `/...`. Voir [slash commands](/fr/tools/slash-commands).
 
-Points forts :
+Points clés :
 
 - `/status` — diagnostics rapides.
 - `/trace` — lignes de trace/débogage de plugin limitées à la session.
 - `/config` — modifications de configuration persistantes.
-- `/debug` — substitutions de configuration uniquement au moment de l'exécution (en mémoire, pas sur le disque ; nécessite `commands.debug: true`).
+- `/debug` — substitutions de configuration uniquement à l'exécution (en mémoire, pas sur disque ; nécessite `commands.debug: true`).
 
 ## Suivi de l'utilisation
 
-`openclaw status --usage` et l'interface de contrôle affichent l'utilisation/quota du fournisseur lorsque
-les identifiants OAuth/API sont disponibles. Les données proviennent directement des points de terminaison d'utilisation du fournisseur
-et sont normalisées en `X% left`. Fournisseurs avec des fenêtres d'utilisation actuelles :
-Anthropic, GitHub Copilot, Gemini CLI, OpenAI Codex, MiniMax,
-Xiaomi et z.ai.
+`openclaw status --usage` et l'interface utilisateur de Control affichent l'utilisation/le quota du fournisseur lorsque les identifiants OAuth/API sont disponibles. Les données proviennent directement des points de terminaison d'utilisation du fournisseur et sont normalisées en `X% left`. Fournisseurs avec des fenêtres d'utilisation actuelles : Anthropic, GitHub Copilot, Gemini CLI, OpenAI Codex, MiniMax, Xiaomi et z.ai.
 
-Voir [Suivi de l'utilisation](/fr/concepts/usage-tracking) pour plus de détails.
+Voir [Usage tracking](/fr/concepts/usage-tracking) pour plus de détails.
 
 ## Connexes
 
-- [Commandes slash](/fr/tools/slash-commands)
+- [Slash commands](/fr/tools/slash-commands)
 - [Configuration](/fr/gateway/configuration)
-- [Environnement](/fr/help/environment)
+- [Environment](/fr/help/environment)

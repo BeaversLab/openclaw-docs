@@ -36,7 +36,7 @@ title: "Politique de réessai"
 
 ### Discord
 
-- Réessaie uniquement en cas d'erreurs de limitation de débit (HTTP 429).
+- Nouvelles tentatives en cas d'erreurs de limite de débit (HTTP 429), de délais d'attente de requête, de réponses HTTP 5xx, et de pannes de transport temporaires telles que des échecs de recherche DNS, des réinitialisations de connexion, des fermetures de socket et des échecs de récupération.
 - Utilise le `retry_after` de Discord lorsque disponible, sinon un exponentiel backoff.
 
 ### Telegram

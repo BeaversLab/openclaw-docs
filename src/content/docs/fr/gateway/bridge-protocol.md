@@ -7,7 +7,7 @@ read_when:
 title: "Protocole de pont"
 ---
 
-<Warning>Le pont TCP a été **supprimé**. Les versions actuelles d'OpenClaw n'incluent plus l'écouteur du pont et les clés de configuration `bridge.*` ne figurent plus dans le schéma. Cette page est conservée uniquement à des fins historiques. Utilisez le [Protocole Gateway](/fr/gateway/protocol) pour tous les clients nœud/opérateur.</Warning>
+<Warning>Le pont TCP a été **supprimé**. Les versions actuelles d'OpenClaw n'incluent plus l'écouteur du pont et les clés de configuration OpenClaw`bridge.*`Gateway ne sont plus dans le schéma. Cette page est conservée à titre historique uniquement. Utilisez le [Protocole Gateway](/fr/gateway/protocol) pour tous les clients nœuds/opérateurs.</Warning>
 
 ## Pourquoi il existait
 
@@ -38,15 +38,17 @@ pas authentifiés ; les clients ne doivent pas traiter l'empreinte digitale anno
 3. Le client envoie `pair-request`.
 4. Le Gateway attend l'approbation, puis envoie `pair-ok` et `hello-ok`.
 
-Historiquement, `hello-ok` renvoyait `serverName` et pouvait inclure
-`canvasHostUrl`.
+Historiquement, `hello-ok` renvoyait `serverName`; les surfaces de plugins hébergés sont maintenant
+annoncées via `pluginSurfaceUrls`Canvas. Canvas/A2UI utilise
+`pluginSurfaceUrls.canvas`; l'alias obsolète `canvasHostUrl` ne fait pas partie du
+protocole refactorisé.
 
 ## Trames
 
 Client → Gateway :
 
-- `req` / `res` : RPC gateway délimité (chat, sessions, config, santé, voicewake, skills.bins)
-- `event` : signaux de nœud (transcription vocale, demande d'agent, abonnement chat, cycle de vie exec)
+- `req` / `res`RPC : RPC passerelle avec portée (chat, sessions, config, santé, voicewake, skills.bins)
+- `event` : signaux de nœud (transcription vocale, requête d'agent, abonnement chat, cycle de vie exec)
 
 Gateway → Client :
 
@@ -55,36 +57,36 @@ Gateway → Client :
 - `event` : mises à jour de chat pour les sessions abonnées
 - `ping` / `pong` : keepalive
 
-L'application de l'allowlist héritée se trouvait dans `src/gateway/server-bridge.ts` (supprimé).
+L'application héritée de la liste d'autorisation résidait dans `src/gateway/server-bridge.ts` (supprimé).
 
 ## Événements de cycle de vie de l'exécution
 
 Les nœuds peuvent émettre des événements `exec.finished` ou `exec.denied` pour exposer l'activité system.run.
-Ces événements sont mappés à des événements système dans la passerelle. (Les nœuds hérités peuvent encore émettre `exec.started`.)
+Ceux-ci sont mappés aux événements système dans la passerelle. (Les nœuds hérités peuvent encore émettre `exec.started`.)
 
 Champs de payload (tous optionnels sauf indication contraire) :
 
-- `sessionKey` (requis) : session de l'agent pour recevoir l'événement système.
-- `runId` : identifiant unique d'exécution pour le regroupement.
+- `sessionKey` (requis) : session agent pour recevoir l'événement système.
+- `runId` : id exec unique pour le regroupement.
 - `command` : chaîne de commande brute ou formatée.
 - `exitCode`, `timedOut`, `success`, `output` : détails de finition (terminé uniquement).
 - `reason` : motif du refus (refusé uniquement).
 
 ## Utilisation historique du tailnet
 
-- Liez le pont à une IP de tailnet : `bridge.bind: "tailnet"` dans
+- Lier le pont à une IP tailnet : `bridge.bind: "tailnet"` dans
   `~/.openclaw/openclaw.json` (historique uniquement ; `bridge.*` n'est plus valide).
 - Les clients se connectent via le nom MagicDNS ou l'IP du tailnet.
-- Bonjour ne traverse **pas** les réseaux ; utilisez l'hôte/port manuel ou le DNS‑SD étendu
+- Bonjour ne **traverse pas** les réseaux ; utilisez un hôte/port manuel ou un DNS-SD étendu
   si nécessaire.
 
 ## Versionnage
 
-Le pont était en **v1 implicite** (sans négociation min/max). Cette section est
-fournie uniquement à titre historique ; les clients nœud/opérateur actuels utilisent le WebSocket
+Le pont était en **v1 implicite** (sans négociation min/max). Cette section est une
+référence historique uniquement ; les clients nœud/opérateur actuels utilisent le WebSocket
 [Gateway Protocol](/fr/gateway/protocol).
 
 ## Connexes
 
 - [Gateway protocol](/fr/gateway/protocol)
-- [Nœuds](/fr/nodes)
+- [Nodes](/fr/nodes)

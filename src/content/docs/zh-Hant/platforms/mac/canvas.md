@@ -7,7 +7,9 @@ read_when:
 title: "Canvas"
 ---
 
-macOS 應用程式使用 `WKWebView` 嵌入了一個由 Agent 控制的 **Canvas 面板**。這是一個輕量級的視覺化工作區，適用於 HTML/CSS/JS、A2UI 和小型互動式 UI 介面。
+macOS 應用程式使用 `WKWebView` 嵌入了一個由代理程式控制的 **Canvas 面板**。它是
+一個輕量級的視覺化工作區，用於 HTML/CSS/JS、A2UI 和小型互動式
+UI 介面。
 
 ## Canvas 的位置
 
@@ -25,7 +27,7 @@ Canvas 面板透過 **自訂 URL 配置** 提供這些檔案：
 - `openclaw-canvas://main/assets/app.css` → `<canvasRoot>/main/assets/app.css`
 - `openclaw-canvas://main/widgets/todo/` → `<canvasRoot>/main/widgets/todo/index.html`
 
-如果根目錄下沒有 `index.html`，應用程式會顯示一個 **內建的鷹架頁面**。
+如果根目錄中不存在 `index.html`，應用程式會顯示一個 **內建的腳手架頁面**。
 
 ## 面板行為
 
@@ -61,7 +63,9 @@ openclaw nodes canvas snapshot --node <id>
 
 ## Canvas 中的 A2UI
 
-A2UI 由 Gateway canvas host 託管，並在 Canvas 面板內呈現。當 Gateway 公告 Canvas host 時，macOS 應用程式會在首次開啟時自動導覽至 A2UI host 頁面。
+A2UI 由 Gateway canvas host 託管，並在 Canvas 面板內進行轉譯。
+當 Gateway 發布 Canvas host 時，macOS 應用程式會在首次開啟時
+自動瀏覽至 A2UI host 頁面。
 
 預設 A2UI host URL：
 

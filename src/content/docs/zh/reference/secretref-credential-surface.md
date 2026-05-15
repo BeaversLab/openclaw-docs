@@ -50,6 +50,8 @@ title: "SecretRef 凭证范围"
 - `plugins.entries.firecrawl.config.webSearch.apiKey`
 - `plugins.entries.minimax.config.webSearch.apiKey`
 - `plugins.entries.tavily.config.webSearch.apiKey`
+- `plugins.entries.voice-call.config.realtime.providers.*.apiKey`
+- `plugins.entries.voice-call.config.streaming.providers.*.apiKey`
 - `plugins.entries.voice-call.config.tts.providers.*.apiKey`
 - `plugins.entries.voice-call.config.twilio.authToken`
 - `tools.web.search.apiKey`
@@ -80,14 +82,14 @@ title: "SecretRef 凭证范围"
 - `channels.irc.nickserv.password`
 - `channels.irc.accounts.*.password`
 - `channels.irc.accounts.*.nickserv.password`
-- `channels.bluebubbles.password`
-- `channels.bluebubbles.accounts.*.password`
 - `channels.feishu.appSecret`
 - `channels.feishu.encryptKey`
 - `channels.feishu.verificationToken`
 - `channels.feishu.accounts.*.appSecret`
 - `channels.feishu.accounts.*.encryptKey`
 - `channels.feishu.accounts.*.verificationToken`
+- `channels.qqbot.clientSecret`
+- `channels.qqbot.accounts.*.clientSecret`
 - `channels.msteams.appPassword`
 - `channels.mattermost.botToken`
 - `channels.mattermost.accounts.*.botToken`
@@ -103,34 +105,34 @@ title: "SecretRef 凭证范围"
 - `channels.zalo.webhookSecret`
 - `channels.zalo.accounts.*.botToken`
 - `channels.zalo.accounts.*.webhookSecret`
-- 通过同级 `serviceAccountRef` 实现的 `channels.googlechat.serviceAccount`（兼容性例外）
-- 通过同级 `serviceAccountRef` 实现的 `channels.googlechat.accounts.*.serviceAccount`（兼容性例外）
+- `channels.googlechat.serviceAccount` 通过同级 `serviceAccountRef`（兼容性例外）
+- `channels.googlechat.accounts.*.serviceAccount` 通过同级 `serviceAccountRef`（兼容性例外）
 
 ### `auth-profiles.json` 目标（`secrets configure` + `secrets apply` + `secrets audit`）
 
-- `profiles.*.keyRef`（`type: "api_key"`；当存在 `auth.profiles.<id>.mode = "oauth"` 时不支持）
-- `profiles.*.tokenRef`（`type: "token"`；当存在 `auth.profiles.<id>.mode = "oauth"` 时不支持）
+- `profiles.*.keyRef` (`type: "api_key"`；当 `auth.profiles.<id>.mode = "oauth"` 时不支持)
+- `profiles.*.tokenRef` (`type: "token"`；当 `auth.profiles.<id>.mode = "oauth"` 时不支持)
 
 [//]: # "secretref-supported-list-end"
 
-注：
+注意：
 
 - Auth-profile 计划目标需要 `agentId`。
-- 计划条目目标是 `profiles.*.key` / `profiles.*.token` 并写入同级引用（`keyRef` / `tokenRef`）。
+- 计划条目目标为 `profiles.*.key` / `profiles.*.token` 并写入同级引用 (`keyRef` / `tokenRef`)。
 - Auth-profile 引用包含在运行时解析和审计覆盖范围内。
-- 在 `openclaw.json` 中，SecretRefs 必须使用诸如 `{"source":"env","provider":"default","id":"DISCORD_BOT_TOKEN"}` 之类的结构化对象。传统的 `secretref-env:<ENV_VAR>` 标记字符串在 SecretRef 凭证路径上会被拒绝；请运行 `openclaw doctor --fix` 以迁移有效的标记。
-- OAuth 策略守护：`auth.profiles.<id>.mode = "oauth"` 不能与该配置文件的 SecretRef 输入结合使用。当违反此策略时，启动/重新加载和身份验证配置文件解析会快速失败。
-- 对于由 SecretRef 管理的模型提供商，生成的 `agents/*/agent/models.json` 条目会为 `apiKey`/header 表面保留非秘密标记（而非已解析的秘密值）。
-- 标记持久性是以源为准的：OpenClaw 从活动源配置快照（解析前）写入标记，而不是从已解析的运行时秘密值写入。
+- 在 `openclaw.json` 中，SecretRefs 必须使用结构化对象，例如 `{"source":"env","provider":"default","id":"DISCORD_BOT_TOKEN"}`。SecretRef 凭据路径上会拒绝旧版 `secretref-env:<ENV_VAR>` 标记字符串；运行 `openclaw doctor --fix` 以迁移有效的标记。
+- OAuth 策略守卫：`auth.profiles.<id>.mode = "oauth"` 不能与该配置文件的 SecretRef 输入结合使用。当违反此策略时，启动/重载和 auth-profile 解析会快速失败。
+- 对于由 SecretRef 管理的模型提供商，生成的 `agents/*/agent/models.json` 条目会为 `apiKey`/header 表面保留非秘密标记（而非解析后的秘密值）。
+- 标记持久性以源为权威：OpenClaw 从活动源配置快照（解析前）写入标记，而不是从解析后的运行时秘密值写入。
 - 对于网络搜索：
-  - 在显式提供商模式下（设置了 `tools.web.search.provider`），仅所选的提供商密钥处于活动状态。
-  - 在自动模式下（未设置 `tools.web.search.provider`），仅按优先级解析的第一个提供商密钥处于活动状态。
-  - 在自动模式下，未选定的提供商引用在被选中之前被视为非活动状态。
-  - 传统的 `tools.web.search.*` 提供商路径在兼容性窗口期间仍然会解析，但规范的 SecretRef 表面是 `plugins.entries.<plugin>.config.webSearch.*`。
+  - 在显式提供商模式（设置 `tools.web.search.provider`）下，仅选定的提供商密钥处于活动状态。
+  - 在自动模式（未设置 `tools.web.search.provider`）下，只有按优先级解析的第一个提供商密钥处于活动状态。
+  - 在自动模式下，未选定的提供商引用在被选定之前被视为非活动状态。
+  - 在兼容性窗口期间，旧版 `tools.web.search.*` 提供商路径仍然会解析，但规范的 SecretRef 表面是 `plugins.entries.<plugin>.config.webSearch.*`。
 
-## 不支持的凭证
+## 不支持的凭据
 
-超出范围的凭证包括：
+超出范围的凭据包括：
 
 [//]: # "secretref-unsupported-list-start"
 
@@ -148,9 +150,9 @@ title: "SecretRef 凭证范围"
 
 基本原理：
 
-- 这些凭证是由系统创建的、轮换的、持载会话的或 OAuth 持久类，不适合只读外部 SecretRef 解析。
+- 这些凭据是由系统创建、轮换、包含会话或具有 OAuth 持久性的类别，不适合只读的外部 SecretRef 解析。
 
-## 相关
+## 相关内容
 
-- [Secrets management](/zh/gateway/secrets)
+- [Secrets 管理](/zh/gateway/secrets)
 - [Auth credential semantics](/zh/auth-credential-semantics)

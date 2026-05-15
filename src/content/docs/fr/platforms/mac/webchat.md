@@ -33,7 +33,7 @@ L’application de barre de menus macOS intègre l’interface utilisateur WebCh
   omises, et les lignes trop volumineuses peuvent être remplacées par des espaces réservés.
 - Session : utilise par défaut la session principale (`main`, ou `global` lorsque la portée est
   globale). L’interface utilisateur peut basculer entre les sessions.
-- L’intégration (Onboarding) utilise une session dédiée pour séparer la configuration de première exécution.
+- L'onboarding utilise une session dédiée pour garder la configuration du premier lancement séparée.
 
 ## Surface de sécurité
 

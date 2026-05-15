@@ -1,32 +1,56 @@
 ---
-summary: "针对 Hy3 预览版配置腾讯云 TokenHub"
-title: "腾讯云 (TokenHub)"
+summary: "Tencent Cloud TokenHub 设置用于 Hy3 预览"
+title: "Tencent Cloud (TokenHub)"
 read_when:
   - You want to use Tencent Hy3 preview with OpenClaw
   - You need the TokenHub API key setup
 ---
 
-# 腾讯云 TokenHub
+Tencent Cloud 作为捆绑的提供商插件内置于 OpenClaw 中。它通过 TokenHub 端点 (`tencent-tokenhub`) 使用兼容 OpenAI 的 API 提供对 Tencent Hy3 预览的访问。
 
-腾讯云作为 OpenClaw 中的 **捆绑提供商插件** (bundled 提供商 plugin) 提供。它通过 TokenHub 端点 (`tencent-tokenhub`) 提供对腾讯 Hy3 预览版的访问权限。
-
-该提供商使用与 OpenAI 兼容的 API。
-
-| 属性     | 值                                         |
-| -------- | ------------------------------------------ |
-| 提供商   | `tencent-tokenhub`                         |
-| 默认模型 | `tencent-tokenhub/hy3-preview`             |
-| 身份验证 | `TOKENHUB_API_KEY`                         |
-| API      | OpenAI 兼容的聊天补全                      |
-| 基础 URL | `https://tokenhub.tencentmaas.com/v1`      |
-| 全球 URL | `https://tokenhub-intl.tencentmaas.com/v1` |
+| 属性          | 值                                                |
+| ------------- | ------------------------------------------------- |
+| 提供商 ID     | `tencent-tokenhub`                                |
+| 插件          | 内置, `enabledByDefault: true`                    |
+| 认证环境变量  | `TOKENHUB_API_KEY`                                |
+| 新手引导标志  | `--auth-choice tokenhub-api-key`                  |
+| 直接 CLI 标志 | `--tokenhub-api-key <key>`                        |
+| API           | 兼容 OpenAI (`openai-completions`)                |
+| 默认基础 URL  | `https://tokenhub.tencentmaas.com/v1`             |
+| 全局基础 URL  | `https://tokenhub-intl.tencentmaas.com/v1` (覆盖) |
+| 默认模型      | `tencent-tokenhub/hy3-preview`                    |
 
 ## 快速开始
 
 <Steps>
-  <Step title="创建 TokenHub API 密钥">在腾讯云 TokenHub 中创建 API 密钥。如果您为密钥选择了有限的访问范围，请在允许的模型中包含 **Hy3 预览版**。</Step>
-  <Step title="运行新手引导">```bash openclaw onboard --auth-choice tokenhub-api-key ```</Step>
-  <Step title="验证模型">```bash openclaw models list --provider tencent-tokenhub ```</Step>
+  <Step title="创建 TokenHub API 密钥">
+    在 Tencent Cloud TokenHub 中创建 API 密钥。如果您为密钥选择受限的访问范围，请确保在允许的模型中包含 **Hy3 preview**。
+  </Step>
+  <Step title="运行新手引导">
+    <CodeGroup>
+
+```bash Onboarding
+openclaw onboard --auth-choice tokenhub-api-key
+```
+
+```bash Direct flag
+openclaw onboard --non-interactive \
+  --auth-choice tokenhub-api-key \
+  --tokenhub-api-key "$TOKENHUB_API_KEY"
+```
+
+```bash Env only
+export TOKENHUB_API_KEY=...
+```
+
+    </CodeGroup>
+
+  </Step>
+  <Step title="Verify the model">
+    ```bash
+    openclaw models list --provider tencent-tokenhub
+    ```
+  </Step>
 </Steps>
 
 ## 非交互式设置
@@ -42,43 +66,63 @@ openclaw onboard --non-interactive \
 
 ## 内置目录
 
-| 模型引用                       | 名称                  | 输入 | 上下文  | 最大输出 | 备注           |
-| ------------------------------ | --------------------- | ---- | ------- | -------- | -------------- |
-| `tencent-tokenhub/hy3-preview` | Hy3 预览版 (TokenHub) | 文本 | 256,000 | 64,000   | 默认；支持推理 |
+| 模型引用                       | 名称                   | 输入 | 上下文  | 最大输出 | 备注           |
+| ------------------------------ | ---------------------- | ---- | ------- | -------- | -------------- |
+| `tencent-tokenhub/hy3-preview` | Hy3 preview (TokenHub) | 文本 | 256,000 | 64,000   | 默认；启用推理 |
 
-Hy3 预览版是腾讯混元 (Hunyuan) 用于推理、长上下文指令遵循、代码和智能体工作流的大型 MoE 语言模型。腾讯的 OpenAI 兼容示例使用 `hy3-preview` 作为模型 ID，并支持标准的聊天补全工具调用以及 `reasoning_effort`。
+Hy3 preview 是腾讯混元用于推理、长上下文指令遵循、代码和代理工作流的大型 MoE 语言模型。腾讯兼容 OpenAI 的示例使用 `hy3-preview` 作为模型 ID，并支持标准聊天补全工具调用以及 `reasoning_effort`。
 
-<Tip>模型 ID 是 `hy3-preview`。请勿将其与腾讯的 `HY-3D-*` 模型混淆，后者是 3D 生成 API，并非由此提供商配置的 OpenClaw 聊天模型。</Tip>
+<Tip>模型 ID 为 `hy3-preview`。请勿将其与腾讯的 `HY-3D-*` 模型混淆，后者是 3D 生成 API，并非由此提供商配置的 OpenClaw 聊天模型。</Tip>
 
-## 端点覆盖
+## 分级定价
 
-OpenClaw 默认使用腾讯云的 `https://tokenhub.tencentmaas.com/v1` 端点。腾讯还记录了一个国际版 TokenHub 端点：
+内置目录附带了随输入窗口长度缩放的分层成本元数据，因此无需手动覆盖即可填充成本估算。
 
-```bash
-openclaw config set models.providers.tencent-tokenhub.baseUrl "https://tokenhub-intl.tencentmaas.com/v1"
-```
+| 输入 Token 范围 | 输入费率 | 输出费率 | 缓存读取 |
+| --------------- | -------- | -------- | -------- |
+| 0 - 16,000      | 0.176    | 0.587    | 0.059    |
+| 16,000 - 32,000 | 0.235    | 0.939    | 0.088    |
+| 32,000+         | 0.293    | 1.173    | 0.117    |
 
-仅当您的 TokenHub 账户或区域需要时才覆盖端点。
+费率为腾讯公布的每百万 Token 美元价格。仅当您需要使用不同的界面时，才在 `models.providers.tencent-tokenhub` 下覆盖定价。
 
-## 备注
+## 高级配置
 
-- TokenHub 模型引用使用 `tencent-tokenhub/<modelId>`。
-- 内置目录目前包括 `hy3-preview`。
-- 该插件将 Hy3 预览版标记为具备推理能力和流式使用能力。
-- 该插件附带了分级的 Hy3 定价元数据，因此无需手动覆盖定价即可填充成本估算。
-- 仅在必要时在 `models.providers` 中覆盖定价、上下文或端点元数据。
+<AccordionGroup>
+  <Accordion title="Endpoint override"OpenClaw>
+    OpenClaw 默认使用腾讯云的 `https://tokenhub.tencentmaas.com/v1` 端点。腾讯还记录了一个国际 TokenHub 端点：
 
-## 环境说明
+    ```bash
+    openclaw config set models.providers.tencent-tokenhub.baseUrl "https://tokenhub-intl.tencentmaas.com/v1"
+    ```
 
-如果 Gateway(网关) 作为守护进程运行，请确保 `TOKENHUB_API_KEY`
-对该进程可用（例如，在 `~/.openclaw/.env` 中或通过
-`env.shellEnv`）。
+    仅当您的 TokenHub 账户或区域需要时，才覆盖端点。
 
-## 相关文档
+  </Accordion>
 
-- [OpenClaw 配置](/zh/gateway/configuration)
-- [模型提供商](/zh/concepts/model-providers)
-- [Tencent TokenHub 产品页面](https://cloud.tencent.com/product/tokenhub)
-- [Tencent TokenHub 文本生成](https://cloud.tencent.com/document/product/1823/130079)
-- [Tencent TokenHub Cline Hy3 预览版设置](https://cloud.tencent.com/document/product/1823/130932)
-- [Tencent Hy3 预览版模型卡片](https://huggingface.co/tencent/Hy3-preview)
+  <Accordion title="Environment availability for the daemon"Gateway(网关)Docker>
+    如果 Gateway(网关) 作为托管服务（launchd、systemd、Docker）运行，`TOKENHUB_API_KEY` 对该进程必须可见。在 `~/.openclaw/.env` 中设置或通过 `env.shellEnv`Docker 设置，以便 launchd、systemd 或 Docker exec 环境可以读取它。
+
+    <Warning>
+      仅在 `~/.profile` 中设置的密钥对托管网关进程不可见。请使用环境文件或配置接缝以实现持久可用性。
+    </Warning>
+
+  </Accordion>
+</AccordionGroup>
+
+## 相关
+
+<CardGroup cols={2}>
+  <Card title="Model providers" href="/zh/concepts/model-providers" icon="layers">
+    选择提供商、模型引用和故障转移行为。
+  </Card>
+  <Card title="Configuration reference" href="/zh/gateway/configuration" icon="gear">
+    包含提供商设置的完整配置架构。
+  </Card>
+  <Card title="Tencent TokenHub" href="https://cloud.tencent.com/product/tokenhub" icon="arrow-up-right-from-square">
+    腾讯云的 TokenHub 产品页面。
+  </Card>
+  <Card title="Hy3 预览模型卡片" href="https://huggingface.co/tencent/Hy3-preview" icon="square-poll-horizontal">
+    Tencent Hunyuan Hy3 预览详情和基准测试。
+  </Card>
+</CardGroup>

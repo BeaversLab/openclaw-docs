@@ -10,11 +10,11 @@ title: "Búsqueda DuckDuckGo"
 OpenClaw es compatible con DuckDuckGo como proveedor `web_search` **sin clave**. No se requiere
 ninguna clave de API ni cuenta.
 
-<Warning>DuckDuckGo es una integración **experimental y no oficial** que obtiene resultados de las páginas de búsqueda sin JavaScript de DuckDuckGo, no de una API oficial. Espere interrupciones ocasionales debido a páginas de desafío para bots o cambios en HTML.</Warning>
+<Warning>DuckDuckGo es una integración **experimental y no oficial** que obtiene resultados de las páginas de búsqueda sin JavaScript de DuckDuckGo; no es una API oficial. Espere interrupciones ocasionales debido a páginas de desafío de bots o cambios en el HTML.</Warning>
 
 ## Configuración
 
-No se necesita clave de API — simplemente configure DuckDuckGo como su proveedor:
+No se necesita clave de API: simplemente configure DuckDuckGo como su proveedor:
 
 <Steps>
   <Step title="Configurar">```bash openclaw configure --section web # Select "duckduckgo" as the provider ```</Step>
@@ -60,7 +60,7 @@ Configuraciones opcionales a nivel de complemento para la región y Búsqueda Se
 </ParamField>
 
 <ParamField path="count" type="number" default="5">
-  Resultados a devolver (1–10).
+  Resultados a devolver (1-10).
 </ParamField>
 
 <ParamField path="region" type="string">
@@ -71,21 +71,21 @@ Configuraciones opcionales a nivel de complemento para la región y Búsqueda Se
   Nivel de SafeSearch.
 </ParamField>
 
-La región y SafeSearch también se pueden configurar en la configuración del complemento (ver arriba) — los
+La región y SafeSearch también se pueden configurar en la configuración del complemento (ver arriba); los
 parámetros de la herramienta anulan los valores de configuración por consulta.
 
 ## Notas
 
-- **Sin clave de API** — funciona de inmediato, configuración cero
-- **Experimental** — recopila resultados de las páginas de búsqueda HTML
+- **Sin clave de API** - funciona directamente, sin configuración
+- **Experimental** - recopila resultados de las páginas de búsqueda HTML
   sin JavaScript de DuckDuckGo, no de una API o SDK oficial
-- **Riesgo de desafío para bots** — DuckDuckGo puede mostrar CAPTCHAs o bloquear solicitudes
-  bajo uso intenso o automatizado
-- **Análisis de HTML** — los resultados dependen de la estructura de la página, la cual puede cambiar sin
-  previo aviso
-- **Orden de detección automática** — DuckDuckGo es la primera alternativa sin clave
+- **Riesgo de desafío de bots** - DuckDuckGo puede mostrar CAPTCHAs o bloquear solicitudes
+  en caso de uso intensivo o automatizado
+- **Análisis de HTML** - los resultados dependen de la estructura de la página, la cual puede cambiar
+  sin previo aviso
+- **Orden de detección automática** - DuckDuckGo es la primera alternativa sin clave
   (orden 100) en la detección automática. Los proveedores con API y claves configuradas se ejecutan
-  primero, luego Búsqueda web de Ollama (orden 110) y luego SearXNG (orden 200)
+  primero, luego Ollama Web Search (orden 110) y luego SearXNG (orden 200)
 - **SafeSearch se establece en moderado por defecto** cuando no se configura
 
 <Tip>Para uso en producción, considere [Brave Search](/es/tools/brave-search) (capa gratuita disponible) u otro proveedor con API.</Tip>

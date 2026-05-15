@@ -9,7 +9,7 @@ title: "`openclaw tasks`"
 檢查持久的背景工作和任務流程狀態。如果不指定子命令，
 `openclaw tasks` 等同於 `openclaw tasks list`。
 
-請參閱[背景工作](/zh-Hant/automation/tasks)以了解生命週期和傳遞模型。
+請參閱 [Background Tasks](/zh-Hant/automation/tasks) 以了解生命週期和傳遞模型。
 
 ## 用法
 
@@ -83,11 +83,9 @@ openclaw tasks audit [--severity <warn|error>] [--code <name>] [--limit <n>] [--
 openclaw tasks maintenance [--apply] [--json]
 ```
 
-預覽或套用工作和任務流程的對帳、清理戳記和修剪。
-對於 cron 工作，對帳會在將舊的使用中工作標記為
-`lost` 之前使用持久的執行日誌/工作狀態，因此完成的 cron 執行不會僅因為
-記憶體中的 Gateway 執行時間狀態已消失而成為錯誤的稽核錯誤。離線 CLI 稽核
-對於 Gateway 的處理程序本機 cron 使用中工作集並不具權威性。
+預覽或套用任務和 Task Flow 協調、清除標記、修剪，以及過時 cron 執行階段登錄檔清理。
+對於 cron 任務，協調會在將舊的作用中任務標記為 `lost` 之前使用持久化的執行記錄/工作狀態，因此已完成的 cron 執行不會僅因記憶體中的 Gateway 執行時狀態已消失而成為虛假的稽核錯誤。離線 CLI 稽核對於 Gateway 的處理程序本機 cron 作用中工作集並不具權威性。當具有執行 ID/來源 ID 的 CLI 任務的即時 Gateway 執行環境消失時，即使仍有舊的子階段資料列存在，也會被標記為 `lost`。
+當套用時，維護也會修剪超過 7 天的 `cron:<jobId>:run:<uuid>` 階段登錄檔資料列，同時保留目前執行中的 cron 工作並保留非 cron 階段資料列不動。
 
 ### `flow`
 
@@ -101,5 +99,5 @@ openclaw tasks flow cancel <lookup>
 
 ## 相關
 
-- [CLI 參考](/zh-Hant/cli)
-- [背景工作](/zh-Hant/automation/tasks)
+- [CLI 參考資料](/zh-Hant/cli)
+- [背景任務](/zh-Hant/automation/tasks)

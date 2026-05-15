@@ -108,12 +108,12 @@ OpenClaw actualmente incluye este catálogo de Arcee:
 
 ## Funciones admitidas
 
-| Función                                        | Admitido                    |
-| ---------------------------------------------- | --------------------------- |
-| Transmisión (Streaming)                        | Sí                          |
-| Uso de herramientas / llamada a funciones      | Sí                          |
-| Salida estructurada (modo JSON y esquema JSON) | Sí                          |
-| Pensamiento extendido                          | Sí (Trinity Large Thinking) |
+| Función                                        | Admitido                                                 |
+| ---------------------------------------------- | -------------------------------------------------------- |
+| Transmisión (Streaming)                        | Sí                                                       |
+| Uso de herramientas / llamada a funciones      | Sí (Trinity Mini, Trinity Large Preview)                 |
+| Salida estructurada (modo JSON y esquema JSON) | Sí                                                       |
+| Pensamiento extendido                          | Sí (Trinity Large Thinking; herramientas deshabilitadas) |
 
 <AccordionGroup>
   <Accordion title="Nota sobre el entorno">

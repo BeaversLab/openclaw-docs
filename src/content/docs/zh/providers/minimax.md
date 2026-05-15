@@ -13,7 +13,7 @@ MiniMax 还提供：
 - 通过 T2A v2 捆绑的语音合成
 - 通过 `MiniMax-VL-01` 捆绑的图像理解
 - 通过 `music-2.6` 捆绑的音乐生成
-- 通过 MiniMax Coding Plan 搜索 API 捆绑的 `web_search`
+- 通过 MiniMax Token Plan 搜索 API 捆绑的 `web_search`
 
 提供商拆分：
 
@@ -40,20 +40,20 @@ MiniMax 还提供：
 选择您偏好的认证方法并按照设置步骤操作。
 
 <Tabs>
-  <Tab title="OAuth（Coding Plan）">
-    **最适用于：** 通过 MiniMax 使用 OAuth Coding Plan 快速设置，无需 API 密钥。
+  <Tab title="OAuth (Coding Plan)">
+    **最适用于：** 通过 MiniMax 快速设置 OAuth Coding Plan，无需 API 密钥。
 
     <Tabs>
       <Tab title="International">
         <Steps>
-          <Step title="运行新手引导">
+          <Step title="Run 新手引导">
             ```bash
             openclaw onboard --auth-choice minimax-global-oauth
             ```
 
-            这将针对 `api.minimax.io` 进行身份验证。
+            此操作针对 `api.minimax.io` 进行身份验证。
           </Step>
-          <Step title="验证模型是否可用">
+          <Step title="Verify the 模型 is available">
             ```bash
             openclaw models list --provider minimax-portal
             ```
@@ -62,14 +62,14 @@ MiniMax 还提供：
       </Tab>
       <Tab title="China">
         <Steps>
-          <Step title="运行新手引导">
+          <Step title="Run 新手引导">
             ```bash
             openclaw onboard --auth-choice minimax-cn-oauth
             ```
 
-            这将针对 `api.minimaxi.com` 进行身份验证。
+            此操作针对 `api.minimaxi.com` 进行身份验证。
           </Step>
-          <Step title="验证模型是否可用">
+          <Step title="Verify the 模型 is available">
             ```bash
             openclaw models list --provider minimax-portal
             ```
@@ -79,11 +79,11 @@ MiniMax 还提供：
     </Tabs>
 
     <Note>
-    OAuth 设置使用 `minimax-portal` 提供商 ID。模型引用遵循 `minimax-portal/MiniMax-M2.7` 形式。
+    OAuth 设置使用 `minimax-portal` 提供商 ID。模型引用遵循 `minimax-portal/MiniMax-M2.7` 格式。
     </Note>
 
     <Tip>
-    MiniMax Coding Plan（九折优惠）的推荐链接：[MiniMax Coding Plan](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)
+    MiniMax Coding Plan 的推荐链接（9折优惠）：[MiniMax Coding Plan](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)
     </Tip>
 
   </Tab>
@@ -302,7 +302,7 @@ MiniMax 插件为 `image_generate` 工具注册了 `image-01` 模型。它支持
 }
 ```
 
-<Note>请参阅[音乐生成](/zh/tools/music-generation)以了解共享工具参数、提供商选择和故障转移行为。</Note>
+<Note>有关共享工具参数、提供商选择和故障转移行为，请参阅 [音乐生成](/zh/tools/music-generation)。</Note>
 
 ### 视频生成
 
@@ -327,7 +327,7 @@ MiniMax 插件为 `image_generate` 工具注册了 `image-01` 模型。它支持
 }
 ```
 
-<Note>请参阅[视频生成](/zh/tools/video-generation)以了解共享工具参数、提供商选择和故障转移行为。</Note>
+<Note>有关共享工具参数、提供商选择和故障转移行为，请参阅 [视频生成](/zh/tools/video-generation)。</Note>
 
 ### 图像理解
 
@@ -342,19 +342,20 @@ MiniMax 插件将图像理解与文本目录分开注册：
 
 ### 网页搜索
 
-MiniMax 插件还通过 MiniMax Coding Plan 搜索 API 注册了 `web_search`。
+MiniMax 插件还通过 MiniMax Token Plan
+搜索 API 注册了 `web_search`。
 
 - 提供商 ID：`minimax`
 - 结构化结果：标题、URL、摘要、相关查询
 - 首选环境变量：`MINIMAX_CODE_PLAN_KEY`
-- 接受的环境变量别名：`MINIMAX_CODING_API_KEY`
-- 兼容性回退：当它已经指向 coding-plan 令牌时，使用 `MINIMAX_API_KEY`
-- 区域重用：`plugins.entries.minimax.config.webSearch.region`，然后是 `MINIMAX_API_HOST`，最后是 MiniMax 提供商基础 URL
-- 搜索保持在提供商 ID `minimax` 上；OAuth CN/全局设置仍然可以通过 `models.providers.minimax-portal.baseUrl` 间接引导区域
+- 接受的环境变量别名：`MINIMAX_CODING_API_KEY`、`MINIMAX_OAUTH_TOKEN`
+- 兼容性回退：当 `MINIMAX_API_KEY` 已指向 token-plan 凭证时
+- 区域重用：`plugins.entries.minimax.config.webSearch.region`，然后 `MINIMAX_API_HOST`MiniMax，然后 MiniMax 提供商基本 URL
+- 搜索保持在提供商 ID `minimax`OAuth 上；OAuth CN/全局设置可以通过 `models.providers.minimax-portal.baseUrl` 间接引导区域，并可以通过 `MINIMAX_OAUTH_TOKEN` 提供 bearer 认证
 
-配置位于 `plugins.entries.minimax.config.webSearch.*` 下。
+配置位于 `plugins.entries.minimax.config.webSearch.*` 之下。
 
-<Note>有关完整的网页搜索配置和用法，请参阅 [MiniMax Search](/zh/tools/minimax-search)。</Note>
+<Note>有关完整的 Web 搜索配置和用法，请参阅 [MiniMax 搜索](MiniMax/en/tools/minimax-search)。</Note>
 
 ## 高级配置
 
@@ -362,22 +363,22 @@ MiniMax 插件还通过 MiniMax Coding Plan 搜索 API 注册了 `web_search`。
   <Accordion title="配置选项">
     | 选项 | 描述 |
     | --- | --- |
-    | `models.providers.minimax.baseUrl` | 首选 `https://api.minimax.io/anthropic` (Anthropic兼容)； `https://api.minimax.io/v1` 对于 OpenAI兼容的载荷是可选的 |
-    | `models.providers.minimax.api` | 首选 `anthropic-messages`； `openai-completions` 对于 OpenAI兼容的载荷是可选的 |
-    | `models.providers.minimax.apiKey` | MiniMax API 密钥 (`MINIMAX_API_KEY`) |
-    | `models.providers.minimax.models` | 定义 `id`、 `name`、 `reasoning`、 `contextWindow`、 `maxTokens`、 `cost` |
+    | `models.providers.minimax.baseUrl` | 优先使用 `https://api.minimax.io/anthropic`Anthropic（Anthropic 兼容）；`https://api.minimax.io/v1`OpenAI 对于 OpenAI 兼容载荷是可选的 |
+    | `models.providers.minimax.api` | 优先使用 `anthropic-messages`；`openai-completions`OpenAI 对于 OpenAI 兼容载荷是可选的 |
+    | `models.providers.minimax.apiKey`MiniMaxAPI | MiniMax API 密钥（`MINIMAX_API_KEY`） |
+    | `models.providers.minimax.models` | 定义 `id`、`name`、`reasoning`、`contextWindow`、`maxTokens`、`cost` |
     | `agents.defaults.models` | 为你想要加入允许列表的模型设置别名 |
-    | `models.mode` | 如果你想要将 MiniMax 与内置模型一起添加，请保留 `merge` |
+    | `models.mode` | 如果你想要在内置模型之外添加 MiniMax，请保留 `merge`MiniMax |
   </Accordion>
 
-  <Accordion title="思考默认值">
-    在 `api: "anthropic-messages"` 上，除非在参数/配置中已显式设置思考，否则 OpenClaw 会注入 `thinking: { type: "disabled" }`。
+  <Accordion title="Thinking defaults">
+    在 `api: "anthropic-messages"`OpenClaw 上，除非在 params/config 中已明确设置了 thinking，否则 OpenClaw 会注入 `thinking: { type: "disabled" }`MiniMax。
 
-    这可以防止 MiniMax 的流式端点在 OpenAI风格的 delta 块中发出 `reasoning_content`，从而避免将内部推理泄露到可见输出中。
+    这可以防止 MiniMax 的流式端点在 OpenAI 风格的增量块中发出 `reasoning_content`OpenAI，从而避免内部推理泄露到可见输出中。
 
   </Accordion>
 
-<Accordion title="快速模式">`/fast on` 或 `params.fastMode: true` 会在 Anthropic兼容的流路径上将 `MiniMax-M2.7` 重写为 `MiniMax-M2.7-highspeed`。</Accordion>
+<Accordion title="Fast mode">`/fast on` 或 `params.fastMode: true` 会在 Anthropic 兼容的流路径上将 `MiniMax-M2.7` 重写为 `MiniMax-M2.7-highspeed`Anthropic。</Accordion>
 
   <Accordion title="回退示例">
     **最适用于：** 将你最强大的最新一代模型作为主模型，回退到 MiniMax M2.7。下面的示例使用 Opus 作为具体的主模型；请将其替换为你偏好的最新一代主模型。
@@ -402,42 +403,44 @@ MiniMax 插件还通过 MiniMax Coding Plan 搜索 API 注册了 `web_search`。
 
   </Accordion>
 
-  <Accordion title="Coding Plan 使用详情">
-    - Coding Plan 使用 API：`https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains`（需要一个 coding plan 密钥）。
-    - OpenClaw 将 MiniMax coding-plan 使用情况标准化为与其他提供商相同的 `% left` 显示方式。MiniMax 的原始 `usage_percent` / `usagePercent` 字段是剩余配额，而非已用配额，因此 OpenClaw 对其进行了反转。当存在基于计数的字段时，优先使用这些字段。
-    - 当 API 返回 `model_remains` 时，OpenClaw 优先选择聊天模型条目，并在需要时从 `start_time` / `end_time` 推导窗口标签，同时在计划标签中包含所选模型名称，以便更容易区分 coding-plan 窗口。
-    - 使用快照将 `minimax`、`minimax-cn` 和 `minimax-portal` 视为同一个 MiniMax 配额范围，并在回退到 Coding Plan 密钥环境变量之前优先使用存储的 MiniMax OAuth。
+  <Accordion title="Coding Plan 使用详情"API>
+    - Coding Plan 使用 API：`https://api.minimaxi.com/v1/token_plan/remains` 或 `https://api.minimax.io/v1/token_plan/remains`（需要 coding plan key）。
+    - 使用情况轮询在配置时从 `models.providers.minimax-portal.baseUrl` 或 `models.providers.minimax.baseUrl` 获取主机，因此使用 `https://api.minimax.io/anthropic` 的全局设置会轮询 `api.minimax.io`OpenClawMiniMax。缺失或格式错误的 base URL 为了兼容性会保留 CN 回退。
+    - OpenClaw 将 MiniMax coding-plan 使用情况标准化为与其他提供商相同的 `% left`MiniMax 显示。MiniMax 的原始 `usage_percent` / `usagePercent`OpenClawAPI 字段是剩余配额，而非已用配额，因此 OpenClaw 对其进行了反转。如果存在基于计数的字段，则优先使用。
+    - 当 API 返回 `model_remains`OpenClaw 时，OpenClaw 优先使用聊天模型条目，需要时从 `start_time` / `end_time` 推导窗口标签，并在计划标签中包含所选模型名称，以便更容易区分 coding-plan 窗口。
+    - 使用快照将 `minimax`、`minimax-cn` 和 `minimax-portal`MiniMaxMiniMaxOAuth 视为同一个 MiniMax 配额表面，并优先使用存储的 MiniMax OAuth，然后再回退到 Coding Plan key 环境变量。
+
   </Accordion>
 </AccordionGroup>
 
 ## 注意事项
 
 - 模型引用遵循身份验证路径：
-  - API 密钥设置：`minimax/<model>`
-  - OAuth 设置：`minimax-portal/<model>`
+  - API-key 设置：API`minimax/<model>`
+  - OAuth 设置：OAuth`minimax-portal/<model>`
 - 默认聊天模型：`MiniMax-M2.7`
 - 备用聊天模型：`MiniMax-M2.7-highspeed`
 - 新手引导和直接 API 密钥设置会为两个 M2.7 变体编写仅文本模型定义
 - 图像理解使用插件拥有的 `MiniMax-VL-01` 媒体提供商
-- 如果您需要精确的成本跟踪，请更新 `models.json` 中的定价值
-- 使用 `openclaw models list` 确认当前的提供商 ID，然后使用 `openclaw models set minimax/MiniMax-M2.7` 或 `openclaw models set minimax-portal/MiniMax-M2.7` 进行切换
+- 如果需要精确的成本跟踪，请更新 `models.json` 中的定价值
+- 使用 `openclaw models list` 确认当前提供商 ID，然后使用 `openclaw models set minimax/MiniMax-M2.7` 或 `openclaw models set minimax-portal/MiniMax-M2.7` 进行切换
 
-<Tip>MiniMax Coding Plan 的推荐链接（10% 折扣）：[MiniMax Coding Plan](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)</Tip>
+<Tip>MiniMax 编程计划推荐链接（9折优惠）：[MiniMax 编程计划](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)</Tip>
 
-<Note>请参阅 [模型提供商](/zh/concepts/model-providers) 了解提供商规则。</Note>
+<Note>有关提供商规则，请参阅 [模型提供商](/zh/concepts/model-providers)。</Note>
 
 ## 故障排除
 
 <AccordionGroup>
   <Accordion title='"Unknown 模型: minimax/MiniMax-M2.7"'>
-    这通常意味着 **MiniMax 提供商未配置**（未找到匹配的提供商条目和 MiniMax 身份验证配置文件/环境密钥）。针对此检测的修复包含在 **2026.1.12** 版本中。可通过以下方式修复：
+    这通常意味着 **未配置 MiniMax 提供商**（未找到匹配的提供商条目和 MiniMax 认证配置文件/环境密钥）。针对此检测的修复包含在 **2026.1.12** 版本中。修复方法如下：
 
-    - 升级到 **2026.1.12** 版本（或从源码运行 `main`），然后重启网关。
-    - 运行 `openclaw configure` 并选择一个 **MiniMax** 身份验证选项，或
-    - 手动添加匹配的 `models.providers.minimax` 或 `models.providers.minimax-portal` 代码块，或
-    - 设置 `MINIMAX_API_KEY`、`MINIMAX_OAUTH_TOKEN` 或 MiniMax 身份验证配置文件，以便注入匹配的提供商。
+    - 升级到 **2026.1.12**（或从源代码 `main` 运行），然后重启网关。
+    - 运行 `openclaw configure` 并选择 **MiniMax** 认证选项，或者
+    - 手动添加匹配的 `models.providers.minimax` 或 `models.providers.minimax-portal` 块，或者
+    - 设置 `MINIMAX_API_KEY`、`MINIMAX_OAUTH_TOKEN` 或 MiniMax 认证配置文件，以便注入匹配的提供商。
 
-    确保模型 ID **区分大小写**：
+    请确保模型 ID **区分大小写**：
 
     - API 密钥路径：`minimax/MiniMax-M2.7` 或 `minimax/MiniMax-M2.7-highspeed`
     - OAuth 路径：`minimax-portal/MiniMax-M2.7` 或 `minimax-portal/MiniMax-M2.7-highspeed`
@@ -468,8 +471,8 @@ MiniMax 插件还通过 MiniMax Coding Plan 搜索 API 注册了 `web_search`。
   <Card title="Video generation" href="/zh/tools/video-generation" icon="video">
     共享的视频工具参数和提供商选择。
   </Card>
-  <Card title="MiniMax 搜索" href="/zh/tools/minimax-search" icon="magnifying-glass">
-    通过 MiniMax Coding Plan 进行网页搜索配置。
+  <Card title="MiniMax Search" href="/zh/tools/minimax-search" icon="magnifying-glass">
+    通过 MiniMax Token 计划配置网络搜索。
   </Card>
   <Card title="故障排除" href="/zh/help/troubleshooting" icon="wrench">
     常规故障排除和常见问题。

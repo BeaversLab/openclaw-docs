@@ -15,7 +15,7 @@ L'exécution de `openclaw hooks` sans sous-commande est équivalente à `opencla
 Voir aussi :
 
 - Hooks : [Hooks](/fr/automation/hooks)
-- Plugin hooks : [Plugin hooks](/fr/plugins/hooks)
+- Hooks de plugin : [Plugin hooks](/fr/plugins/hooks)
 
 ## Lister tous les hooks
 
@@ -130,7 +130,7 @@ openclaw hooks enable <name>
 
 Activer un hook spécifique en l'ajoutant à votre configuration (`~/.openclaw/openclaw.json` par défaut).
 
-**Remarque :** Les hooks de l'espace de travail sont désactivés par défaut jusqu'à ce qu'ils soient activés ici ou dans la configuration. Les hooks gérés par des plugins affichent `plugin:<id>` dans `openclaw hooks list` et ne peuvent pas être activés/désactivés ici. Activez/désactivez plutôt le plugin.
+**Remarque :** Les hooks de l'espace de travail sont désactivés par défaut jusqu'à ce qu'ils soient activés ici ou dans la configuration. Les hooks gérés par les plugins affichent `plugin:<id>` dans `openclaw hooks list` et ne peuvent pas être activés/désactivés ici. Activez/désactivez plutôt le plugin.
 
 **Arguments :**
 
@@ -196,7 +196,7 @@ openclaw hooks disable command-logger
 ## Installer les packs de hooks
 
 ```bash
-openclaw plugins install <package>        # ClawHub first, then npm
+openclaw plugins install <package>        # npm by default
 openclaw plugins install npm:<package>    # npm only
 openclaw plugins install <package> --pin  # pin version
 openclaw plugins install <path>           # local path
@@ -278,13 +278,13 @@ Sauvegarde le contexte de la session en mémoire lorsque vous émettez `/new` ou
 openclaw hooks enable session-memory
 ```
 
-**Sortie :** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
+**Sortie :** `~/.openclaw/workspace/memory/YYYY-MM-DD-HHMM.md` par défaut. Définissez `hooks.internal.entries.session-memory.llmSlug: true` pour les slugs de nom de fichier générés par le model.
 
 **Voir :** [documentation session-memory](/fr/automation/hooks#session-memory)
 
 ### bootstrap-extra-files
 
-Injecte des fichiers d'amorçage supplémentaires (par exemple `AGENTS.md` / `TOOLS.md` locaux au monorepo) lors de `agent:bootstrap`.
+Injecte des fichiers d'amorçage supplémentaires (par exemple `AGENTS.md` / `TOOLS.md` local au monorepo) pendant `agent:bootstrap`.
 
 **Activer :**
 

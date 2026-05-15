@@ -7,14 +7,9 @@ read_when:
 title: "Wiki mémoire"
 ---
 
-`memory-wiki` est un plugin inclus qui transforme la mémoire durable en un
-coffre de connaissances compilé.
+`memory-wiki` est un plugin inclus qui transforme la mémoire durable en un coffre-fort de connaissances compilées.
 
-Il ne remplace **pas** le plugin de mémoire active. Le plugin de mémoire active gère
-toujours le rappel, la promotion, l'indexation et le rêve. `memory-wiki` se place à côté
-et compile les connaissances durables en un wiki navigable avec des pages
-déterministes, des revendications structurées, la provenance, des tableaux de bord
-et des synthèses lisibles par la machine.
+Il ne remplace **pas** le plugin de mémoire active. Le plugin de mémoire active possède toujours la fonction de rappel, la promotion, l'indexation et le rêve. `memory-wiki` se place à côté de lui et compile les connaissances durables en un wiki navigable avec des pages déterministes, des revendications structurées, une provenance, des tableaux de bord et des résumés lisibles par machine.
 
 Utilisez-le lorsque vous voulez que la mémoire se comporte davantage comme une couche
 de connaissances entretenue et moins comme une pile de fichiers Markdown.
@@ -38,8 +33,7 @@ Concevez la division comme ceci :
 | Plugin de mémoire active (`memory-core`, QMD, Honcho, etc.) | Rappel, recherche sémantique, promotion, rêve, temps d'exécution de la mémoire                                                    |
 | `memory-wiki`                                               | Pages de wiki compilées, synthèses riches en provenance, tableaux de bord, recherche/récupération/application spécifiques au wiki |
 
-Si le plugin de mémoire active expose des artefacts de rappel partagés, OpenClaw peut rechercher
-les deux couches en une seule passe avec `memory_search corpus=all`.
+Si le plugin de mémoire active expose des artefacts de rappel partagés, OpenClaw peut rechercher les deux couches en une seule passe avec `memory_search corpus=all`.
 
 Lorsque vous avez besoin d'un classement spécifique au wiki, d'une provenance ou d'un accès direct aux pages, utilisez plutôt
 les outils natifs du wiki.
@@ -54,15 +48,17 @@ Une valeur par défaut solide pour les configurations local-first est :
 Cette division fonctionne bien car chaque couche reste concentrée :
 
 - QMD garde les notes brutes, les exportations de session et les collections supplémentaires consultables
-- `memory-wiki` compile les entités stables, les revendications, les tableaux de bord et les pages source
+- `memory-wiki` compile des entités stables, des revendications, des tableaux de bord et des pages sources
 
 Règle pratique :
 
-- utilisez `memory_search` lorsque vous voulez une passe de rappel large dans toute la mémoire
-- utilisez `wiki_search` et `wiki_get` lorsque vous souhaitez des résultats wiki tenant compte de la provenance
+- utilisez `memory_search` lorsque vous souhaitez une passe de rappel large à travers la mémoire
+- utilisez `wiki_search` et `wiki_get` lorsque vous souhaitez des résultats wiki conscients de la provenance
 - utilisez `memory_search corpus=all` lorsque vous souhaitez que la recherche partagée couvre les deux couches
 
-Si le mode pont signale zéro artefact exporté, le plugin de mémoire active n'expose pas encore les entrées publiques du pont. Exécutez d'abord `openclaw wiki doctor`, puis confirmez que le plugin de mémoire active prend en charge les artefacts publics.
+Si le mode pont signale zéro artefact exporté, le plugin de mémoire active n'expose pas encore les entrées de pont publiques. Exécutez d'abord `openclaw wiki doctor`, puis confirmez que le plugin de mémoire active prend en charge les artefacts publics.
+
+Lorsque le mode pont est actif et que `bridge.readMemoryArtifacts` est activé, `openclaw wiki status`, `openclaw wiki doctor` et `openclaw wiki bridge import` lisent à travers le Gateway en cours d'exécution. Cela maintient les vérifications de pont CLI alignées avec le contexte du plugin de mémoire d'exécution. Si le pont est désactivé ou si la lecture des artefacts est désactivée, ces commandes conservent leur comportement local/hors ligne.
 
 ## Modes de coffre-fort
 
@@ -70,15 +66,15 @@ Si le mode pont signale zéro artefact exporté, le plugin de mémoire active n'
 
 ### `isolated`
 
-Propre coffre-fort, propres sources, aucune dépendance à `memory-core`.
+Propre coffre, propres sources, aucune dépendance à `memory-core`.
 
-Utilisez ceci lorsque vous souhaitez que le wiki soit son propre magasin de connaissances organisé.
+Utilisez ceci lorsque vous voulez que le wiki soit son propre magasin de connaissances organisé.
 
 ### `bridge`
 
-Lit les artefacts de mémoire publics et les événements de mémoire du plugin de mémoire active via les coutures publiques du SDK de plugin.
+Lit les artefacts de mémoire publics et les événements de mémoire à partir du plugin de mémoire actif via les points d'entrée publics du SDK du plugin.
 
-Utilisez ceci lorsque vous souhaitez que le wiki compile et organise les artefacts exportés par le plugin de mémoire sans accéder aux éléments internes privés du plugin.
+Utilisez ce mode lorsque vous souhaitez que le wiki compile et organise les artefacts exportés par le plugin de mémoire sans accéder aux éléments internes privés du plugin.
 
 Le mode pont peut indexer :
 
@@ -90,13 +86,13 @@ Le mode pont peut indexer :
 
 ### `unsafe-local`
 
-Échappatoire explicite sur la même machine pour les chemins privés locaux.
+Échappatoire explicite pour la même machine pour les chemins privés locaux.
 
 Ce mode est intentionnellement expérimental et non portable. Utilisez-le uniquement lorsque vous comprenez la limite de confiance et que vous avez spécifiquement besoin d'un accès au système de fichiers local que le mode pont ne peut pas fournir.
 
-## Disposition du coffre-fort
+## Disposition du coffre
 
-Le plugin initialise un coffre-fort comme ceci :
+Le plugin initialise un coffre comme ceci :
 
 ```text
 <vault>/
@@ -118,7 +114,7 @@ Le contenu géré reste à l'intérieur des blocs générés. Les blocs de notes
 
 Les principaux groupes de pages sont :
 
-- `sources/` pour la matière première importée et les pages soutenues par le pont
+- `sources/` pour la matière première importée et les pages soutenues par le pont (bridge)
 - `entities/` pour les choses durables, les personnes, les systèmes, les projets et les objets
 - `concepts/` pour les idées, les abstractions, les modèles et les politiques
 - `syntheses/` pour les résumés compilés et les synthèses maintenues
@@ -126,7 +122,7 @@ Les principaux groupes de pages sont :
 
 ## Revendications structurées et preuves
 
-Les pages peuvent contenir des frontmatter structurés `claims`, et pas seulement du texte libre.
+Les pages peuvent porter des métadonnées frontmatter `claims` structurées, et pas seulement du texte libre.
 
 Chaque revendication peut inclure :
 
@@ -139,34 +135,109 @@ Chaque revendication peut inclure :
 
 Les entrées de preuve peuvent inclure :
 
+- `kind`
 - `sourceId`
 - `path`
 - `lines`
 - `weight`
+- `confidence`
+- `privacyTier`
 - `note`
 - `updatedAt`
 
-C'est ce qui fait que le wiki agit plus comme une couche de croyances que comme un dépôt de notes passif. Les revendications peuvent être suivies, notées, contestées et résolues en revenant aux sources.
+C'est ce qui fait que le wiki agit plus comme une couche de croyances que comme un dépôt passif de notes. Les affirmations peuvent être suivies, notées, contestées et résolues jusqu'aux sources.
+
+## Métadonnées d'entité orientées agent
+
+Les pages d'entité peuvent également porter des métadonnées de routage pour une utilisation par l'agent. Il s'agit de métadonnées frontmatter génériques, elles fonctionnent donc pour les personnes, les équipes, les systèmes, les projets ou tout autre type d'entité.
+
+Les champs courants incluent :
+
+- `entityType` : par exemple `person`, `team`, `system` ou `project`
+- `canonicalId` : clé d'identité stable utilisée entre les alias et les importations
+- `aliases` : noms, pseudonymes ou étiquettes qui doivent pointer vers la même page
+- `privacyTier` : `public`, `local-private`, `sensitive` ou `confirm-before-use`
+- `bestUsedFor` / `notEnoughFor` : indices de routage compacts
+- `lastRefreshedAt` : horodatage de rafraîchissement de la source distinct de l'heure de modification de la page
+- `personCard` : carte de routage spécifique à la personne en option avec les pseudonymes, réseaux sociaux,
+  e-mails, fuseau horaire, voie, demandes, éléments à éviter, confiance et confidentialité
+- `relationships` : arêtes typées vers les pages connexes avec la cible, le type, le poids,
+  la confiance, le type de preuve, le niveau de confidentialité et la note
+
+Pour un wiki sur les personnes, l'agent doit généralement commencer par
+`reports/person-agent-directory.md`, puis ouvrir la page de la personne avec `wiki_get`
+avant d'utiliser les coordonnées ou les faits déduits.
+
+Exemple :
+
+```yaml
+pageType: entity
+entityType: person
+id: entity.brad-groux
+canonicalId: maintainer.brad-groux
+aliases:
+  - Brad
+  - bgroux
+privacyTier: local-private
+bestUsedFor:
+  - Microsoft Teams and Azure routing
+notEnoughFor:
+  - legal approval
+lastRefreshedAt: "2026-04-29T00:00:00.000Z"
+personCard:
+  handles:
+    - "@bgroux"
+  socials:
+    - "https://x.example/bgroux"
+  emails:
+    - brad@example.com
+  timezone: America/Chicago
+  lane: Microsoft ecosystem
+  askFor:
+    - Teams rollout questions
+  avoidAskingFor:
+    - unrelated billing decisions
+  confidence: 0.8
+  privacyTier: confirm-before-use
+relationships:
+  - targetId: entity.alice
+    targetTitle: Alice
+    kind: collaborates-with
+    confidence: 0.7
+    evidenceKind: discrawl-stat
+claims:
+  - id: claim.brad.teams
+    text: Brad is useful for Microsoft Teams routing.
+    status: supported
+    confidence: 0.9
+    evidence:
+      - kind: maintainer-whois
+        sourceId: source.maintainers
+        privacyTier: local-private
+```
 
 ## Pipeline de compilation
 
-L'étape de compilation lit les pages du wiki, normalise les résumés et émet des artefacts stables orientés machine sous :
+L'étape de compilation lit les pages du wiki, normalise les résumés et émet des artefacts
+stables orientés machine sous :
 
 - `.openclaw-wiki/cache/agent-digest.json`
 - `.openclaw-wiki/cache/claims.jsonl`
 
-Ces résumés existent pour que les agents et le code d'exécution n'aient pas à parcourir les pages Markdown.
+Ces résumés existent pour que les agents et le code d'exécution n'aient pas à parcourir les pages
+Markdown.
 
 La sortie compilée alimente également :
 
-- l'indexation wiki de premier passage pour les flux de recherche/récupération
-- la recherche par ID de revendication vers les pages propriétaires
-- des suppléments de prompt compacts
-- la génération de rapports/tableaux de bord
+- indexation wiki de premier passage pour les flux de recherche/récupération
+- recherche par ID de revendication vers les pages propriétaires
+- suppléments de prompt compacts
+- génération de rapports/tableaux de bord
 
-## Tableaux de bord et rapports d'état
+## Tableaux de bord et rapports d'intégrité
 
-Lorsque `render.createDashboards` est activé, la compilation maintient des tableaux de bord sous `reports/`.
+Lorsque `render.createDashboards` est activé, la compilation maintient des tableaux de bord sous
+`reports/`.
 
 Les rapports intégrés incluent :
 
@@ -175,21 +246,29 @@ Les rapports intégrés incluent :
 - `reports/low-confidence.md`
 - `reports/claim-health.md`
 - `reports/stale-pages.md`
+- `reports/person-agent-directory.md`
+- `reports/relationship-graph.md`
+- `reports/provenance-coverage.md`
+- `reports/privacy-review.md`
 
 Ces rapports suivent des éléments tels que :
 
-- les grappes de notes contradictoires
-- les grappes de revendications concurrentes
-- les revendications manquant des preuves structurées
-- les pages et les revendications à faible confiance
-- la fraîcheur périmée ou inconnue
-- les pages avec des questions non résolues
+- amas de notes contradictoires
+- amas de revendications concurrentes
+- revendications manquant de preuves structurées
+- pages et revendications à faible confiance
+- fraîcheur périmée ou inconnue
+- pages avec des questions non résolues
+- cartes de routage personne/entité
+- arêtes de relation structurées
+- couverture des classes de preuves
+- niveaux de confidentialité non publics nécessitant une révision avant utilisation
 
 ## Recherche et récupération
 
 `memory-wiki` prend en charge deux moteurs de recherche :
 
-- `shared` : utiliser le flux de recherche de mémoire partagée lorsque disponible
+- `shared` : utiliser le flux de recherche de mémoire partagé lorsqu'il est disponible
 - `local` : rechercher localement dans le wiki
 
 Il prend également en charge trois corpus :
@@ -200,16 +279,26 @@ Il prend également en charge trois corpus :
 
 Comportement important :
 
-- `wiki_search` et `wiki_get` utilisent les résumés compilés comme premier passage lorsque cela est possible
-- les ID de revendication peuvent être résolus vers la page propriétaire
+- `wiki_search` et `wiki_get` utilisent des résumés compilés comme première passe lorsque cela est possible
+- les identifiants de revendication peuvent faire référence à la page propriétaire
 - les revendications contestées/périmées/fraîches influencent le classement
-- les étiquettes de provenance peuvent survivre dans les résultats
+- les étiquettes de provenance peuvent se retrouver dans les résultats
+- le mode de recherche peut biaiser le classement pour la recherche de personnes, le routage des questions, les preuves sources ou les revendications brutes
 
 Règle pratique :
 
-- utiliser `memory_search corpus=all` pour une passe de rappel large
-- utilisez `wiki_search` + `wiki_get` lorsque vous vous souciez du classement spécifique au wiki,
-  de la provenance ou de la structure des croyances au niveau de la page
+- utilisez `memory_search corpus=all` pour une passe de rappel large unique
+- utilisez `wiki_search` + `wiki_get` lorsque vous vous souciez du classement spécifique au wiki, de la provenance ou de la structure des croyances au niveau de la page
+
+Modes de recherche :
+
+- `auto` : valeur par défaut équilibrée
+- `find-person` : favoriser les entités de type personne, les alias, les pseudos, les réseaux sociaux et les identifiants canoniques
+- `route-question` : favoriser les cartes d'agent, les indices de demande, les indices d'utilisation optimale et le contexte relationnel
+- `source-evidence` : favoriser les pages sources et les métadonnées de preuves structurées
+- `raw-claim` : favoriser les revendications structurées correspondantes et renvoyer les métadonnées de revendication/preuve dans les résultats
+
+Lorsqu'un résultat correspond à une revendication structurée, `wiki_search` peut renvoyer `matchedClaimId`, `matchedClaimStatus`, `matchedClaimConfidence`, `evidenceKinds` et `evidenceSourceIds` dans ses détails. La sortie textuelle inclut également des lignes compactes `Claim:` et `Evidence:` lorsque disponibles.
 
 ## Outils d'agent
 
@@ -223,35 +312,31 @@ Le plugin enregistre ces outils :
 
 Ce qu'ils font :
 
-- `wiki_status` : mode de coffre actuel, santé, disponibilité du CLI Obsidian
-- `wiki_search` : rechercher des pages wiki et, si configuré, des corpus de mémoire partagés
+- `wiki_status`CLI : mode de coffre actuel, santé, disponibilité du CLI Obsidian
+- `wiki_search` : rechercher des pages wiki et, si configuré, des corpus de mémoire partagés ; accepte `mode` pour la recherche de personnes, le routage des questions, les preuves sources ou l'exploration de revendications brutes
 - `wiki_get` : lire une page wiki par id/chemin ou revenir au corpus de mémoire partagé
-- `wiki_apply` : mutations de synthèse/métadonnées ciblées sans modification libre de page
+- `wiki_apply` : mutations de synthèse/métadonnées étroites sans chirurgie de page libre
 - `wiki_lint` : vérifications structurelles, lacunes de provenance, contradictions, questions ouvertes
 
-Le plugin enregistre également un supplément de corpus de mémoire non exclusif, afin que les
-`memory_search` et `memory_get` partagés puissent atteindre le wiki lorsque le plugin de mémoire
-actif prend en charge la sélection de corpus.
+Le plugin enregistre également un supplément de corpus de mémoire non exclusif, afin que le `memory_search` et le `memory_get` partagés puissent accéder au wiki lorsque le plugin de mémoire active prend en charge la sélection de corpus.
 
 ## Comportement du prompt et du contexte
 
-Lorsque `context.includeCompiledDigestPrompt` est activé, les sections de prompt de mémoire
-ajoutent un instantané compilé compact de `agent-digest.json`.
+Lorsque `context.includeCompiledDigestPrompt` est activé, les sections de prompt de mémoire ajoutent un instantané compilé compact provenant de `agent-digest.json`.
 
-Cet instantané est intentionnellement petit et à signal fort :
+Cet instantané est intentionnellement petit et à fort signal :
 
-- uniquement les principales pages
-- uniquement les principales revendications
+- uniquement les pages principales
+- uniquement les revendications principales
 - nombre de contradictions
 - nombre de questions
 - qualificateurs de confiance/fraîcheur
 
-Ceci est optionnel car cela modifie la forme du prompt et est principalement utile pour les moteurs
-de contexte ou l'assemblage de prompts hérités qui consomment explicitement des suppléments de mémoire.
+C'est une option d'adhésion car elle modifie la forme du prompt et est principalement utile pour les moteurs de contexte ou l'assemblage de legs de prompts qui consomment explicitement des suppléments de mémoire.
 
 ## Configuration
 
-Mettez la configuration sous `plugins.entries.memory-wiki.config` :
+Placez la configuration sous `plugins.entries.memory-wiki.config` :
 
 ```json5
 {
@@ -303,15 +388,15 @@ Mettez la configuration sous `plugins.entries.memory-wiki.config` :
 }
 ```
 
-Commutateurs clés :
+Bascules clés :
 
-- `vaultMode` : `isolated`, `bridge`, `unsafe-local`
+- `vaultMode` : `isolated` , `bridge` , `unsafe-local`
 - `vault.renderMode` : `native` ou `obsidian`
 - `bridge.readMemoryArtifacts` : importer les artefacts publics du plugin de mémoire active
 - `bridge.followMemoryEvents` : inclure les journaux d'événements en mode pont
 - `search.backend` : `shared` ou `local`
-- `search.corpus` : `wiki`, `memory` ou `all`
-- `context.includeCompiledDigestPrompt` : ajouter une instantané compact de résumé aux sections de prompt mémoire
+- `search.corpus` : `wiki` , `memory` , ou `all`
+- `context.includeCompiledDigestPrompt` : ajouter un instantané de digest compact aux sections de prompt de mémoire
 - `render.createBacklinks` : générer des blocs connexes déterministes
 - `render.createDashboards` : générer des pages de tableau de bord
 
@@ -324,6 +409,9 @@ couche de connaissances maintenue :
 {
   memory: {
     backend: "qmd",
+  },
+  plugins: {
+    entries: {
       "memory-wiki": {
         enabled: true,
         config: {
@@ -350,15 +438,15 @@ couche de connaissances maintenue :
 }
 ```
 
-Cela permet de conserver :
+Cela permet de garder :
 
 - QMD en charge du rappel de la mémoire active
 - `memory-wiki` concentré sur les pages compilées et les tableaux de bord
-- la forme du prompt inchangée jusqu'à ce que vous activiez intentionnellement les prompts de résumé compilés
+- la forme du prompt inchangée jusqu'à ce que vous activiez intentionnellement les prompts de digest compilés
 
 ## CLI
 
-`memory-wiki` expose également une surface CLI de premier niveau :
+`memory-wiki`CLI expose également une interface CLI de premier niveau :
 
 ```bash
 openclaw wiki status
@@ -374,20 +462,20 @@ openclaw wiki bridge import
 openclaw wiki obsidian status
 ```
 
-Voir [CLI : wiki](/fr/cli/wiki) pour la référence complète des commandes.
+Voir [CLI : wiki](CLI/en/cli/wiki) pour la référence complète des commandes.
 
 ## Prise en charge d'Obsidian
 
-Lorsque `vault.renderMode` est `obsidian`, le plugin écrit du Markdown
-compatible avec Obsidian et peut optionnellement utiliser le `obsidian` CLI officiel.
+Lorsque `vault.renderMode` est `obsidian`, le plugin écrit du Markdown compatible avec Obsidian
+et peut optionnellement utiliser le CLI officiel `obsidian`CLI.
 
 Les flux de travail pris en charge incluent :
 
 - sondage de statut
 - recherche dans le coffre
 - ouverture d'une page
-- invoquer une commande Obsidian
-- aller à la note quotidienne
+- invocation d'une commande Obsidian
+- saut vers la note quotidienne
 
 Ceci est optionnel. Le wiki fonctionne toujours en mode natif sans Obsidian.
 
@@ -395,15 +483,15 @@ Ceci est optionnel. Le wiki fonctionne toujours en mode natif sans Obsidian.
 
 1. Conservez votre plugin de mémoire active pour le rappel/la promotion/le rêve.
 2. Activez `memory-wiki`.
-3. Commencez par le mode `isolated` à moins que vous ne vouliez explicitement le mode pont.
-4. Utilisez `wiki_search` / `wiki_get` lorsque la provenance est importante.
-5. Utilisez `wiki_apply` pour des synthèses étroites ou des mises à jour de métadonnées.
-6. Exécutez `wiki_lint` après des changements significatifs.
-7. Activez les tableaux de bord si vous voulez visibilité sur les éléments périmés/contradictoires.
+3. Commencez par le mode `isolated` sauf si vous voulez explicitement le mode pont.
+4. Utilisez `wiki_search` / `wiki_get` lorsque la provenance compte.
+5. Utilisez `wiki_apply` pour des synthèses ciblées ou des mises à jour de métadonnées.
+6. Exécutez `wiki_lint` après des modifications importantes.
+7. Activez les tableaux de bord si vous voulez voir les éléments obsolètes/contradictoires.
 
 ## Documentation connexe
 
 - [Aperçu de la mémoire](/fr/concepts/memory)
-- [CLI : memory](/fr/cli/memory)
-- [CLI : wiki](/fr/cli/wiki)
-- [Aperçu du SDK Plugin](/fr/plugins/sdk-overview)
+- [CLI : mémoire](CLI/en/cli/memory)
+- [CLI : wiki](CLI/en/cli/wiki)
+- [Aperçu du SDK de plugins](/fr/plugins/sdk-overview)

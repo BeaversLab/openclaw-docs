@@ -271,40 +271,45 @@ const adapter: ChannelOutboundAdapter = {
 橋接舊程式碼時，請使用 `openclaw/plugin-sdk/interactive-runtime` 中的輔助函式：
 
 ```ts
-import { interactiveReplyToPresentation, normalizeMessagePresentation, presentationToInteractiveReply, renderMessagePresentationFallbackText } from "openclaw/plugin-sdk/interactive-runtime";
+import { interactiveReplyToPresentation, normalizeMessagePresentation, presentationToInteractiveControlsReply, presentationToInteractiveReply, renderMessagePresentationFallbackText } from "openclaw/plugin-sdk/interactive-runtime";
 ```
 
 新程式碼應直接接受或產生 `MessagePresentation`。
 
-## 傳送釘選
+`presentationToInteractiveReply(...)` 透過將標題、文字、內容、按鈕和選取項對應到較舊的 `InteractiveReply` 形狀，來保留可見的呈現文字。原生繪製標題、文字、內容和分隔區塊的元件渲染器應改用 `presentationToInteractiveControlsReply(...)`，然後僅附加按鈕和選取控制項。
 
-釘選是傳送行為，而不是呈現方式。請使用 `delivery.pin` 而非提供者原生欄位（例如 `channelData.telegram.pin`）。
+`renderMessagePresentationFallbackText(...)` 會針對沒有文字後援的呈現區塊（例如僅含分隔線的呈現）傳回空字串。需要非空傳送主體的傳輸層可以傳遞 `emptyFallback` 以選擇採用最小主體，而不變更預設後援合約。
+
+## 傳遞釘選
+
+釘選是傳遞行為，而非呈現方式。請使用 `delivery.pin` 取代供應商原生欄位（例如 `channelData.telegram.pin`）。
 
 語意：
 
-- `pin: true` 會釘選第一個成功傳送的訊息。
+- `pin: true` 會釘選第一個成功傳遞的訊息。
 - `pin.notify` 預設為 `false`。
 - `pin.required` 預設為 `false`。
-- 選用的釘選失敗會降級，並保留已傳送的訊息。
-- 必要的釘選失敗會導致傳送失敗。
-- 分塊訊息會釘選第一個傳送的區塊，而不是尾部區塊。
+- 選用性釘選失敗會降級並保持傳送訊息完整。
+- 必要釘選失敗會導致傳遞失敗。
+- 分塊訊息會釘選第一個傳遞的分塊，而非尾部分塊。
 
-對於提供者支援這些作業的現有訊息，手動 `pin`、`unpin` 和 `pins` 訊息動作仍然存在。
+手動 `pin`、`unpin` 和 `pins` 訊息動作仍然存在，適用於供應商支援這些操作的現有訊息。
 
-## 外掛作者檢查清單
+## 外掛程式作者檢查清單
 
-- 當頻道可以呈現或安全降級語意呈現時，請從 `describeMessageTool(...)` 宣告 `presentation`。
+- 當管道能夠呈現或安全降級語意呈現時，請從 `describeMessageTool(...)` 宣告 `presentation`。
 - 將 `presentationCapabilities` 新增至執行時間輸出轉接器。
-- 請在執行時間程式碼中實作 `renderPresentation`，而非控制平面外掛設定程式碼。
-- 請將原生 UI 程式庫排除在熱設定/目錄路徑之外。
+- 請在執行時間程式碼中實作 `renderPresentation`，而非在控制平面外掛程式設定程式碼中。
+- 請勿將原生 UI 程式庫放入熱設定/目錄路徑中。
 - 請在渲染器和測試中保留平台限制。
-- 針對不支援的按鈕、選擇器、URL 按鈕、標題/文字重複，以及混合 `message` 加上 `presentation` 傳送，加入後備測試。
-- 僅當提供者能釘選已傳送訊息 ID 時，才透過 `deliveryCapabilities.pin` 和 `pinDeliveredMessage` 新增傳遞釘選支援。
-- 不要透過共享訊息動作架構暴露新的提供者原生卡片/區塊/元件/按鈕欄位。
+- 針對不支援的按鈕、選取項、URL 按鈕、標題/文字重複，以及混合 `message` 加 `presentation` 的傳送，請新增後援測試。
+- 僅當提供者能夠釘選已發送訊息 ID 時，才透過 `deliveryCapabilities.pin` 和
+  `pinDeliveredMessage` 新增遞送釘選支援。
+- 請勿透過共用訊息動作架構暴露新的提供者原生卡片/區塊/元件/按鈕欄位。
 
 ## 相關文件
 
 - [訊息 CLI](/zh-Hant/cli/message)
 - [Plugin SDK 概觀](/zh-Hant/plugins/sdk-overview)
-- [Plugin 架構](/zh-Hant/plugins/architecture-internals#message-tool-schemas)
+- [外掛程式架構](/zh-Hant/plugins/architecture-internals#message-tool-schemas)
 - [通道呈現重構計畫](/zh-Hant/plan/ui-channels)

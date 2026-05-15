@@ -6,7 +6,7 @@ read_when:
 title: "Agent send"
 ---
 
-`openclaw agent` 从命令行运行单次 Agent 轮次，而无需传入聊天消息。将其用于脚本化工作流、测试和程序化交付。
+`openclaw agent` 从命令行运行单个 Agent 轮次，而无需传入聊天消息。将其用于脚本化工作流、测试和程序化交付。
 
 ## 快速开始
 
@@ -53,7 +53,7 @@ title: "Agent send"
 | ----------------------------- | ------------------------------------------------- |
 | `--message \<text\>`          | 要发送的消息（必填）                              |
 | `--to \<dest\>`               | 从目标（电话、聊天 ID）派生会话密钥               |
-| `--agent \<id\>`              | 定位已配置的 Agent（使用其 `main` 会话）          |
+| `--agent \<id\>`              | 以已配置的 Agent 为目标（使用其 `main` 会话）     |
 | `--session-id \<id\>`         | 通过 ID 重用现有会话                              |
 | `--local`                     | 强制使用本地嵌入式运行时（跳过 Gateway(网关)）    |
 | `--deliver`                   | 将回复发送到聊天渠道                              |
@@ -68,13 +68,11 @@ title: "Agent send"
 
 ## 行为
 
-- 默认情况下，CLI **通过 Gateway(网关)** 运行。添加 `--local` 以强制使用
-  当前计算机上的嵌入式运行时。
+- 默认情况下，CLI **通过 Gateway(网关)** 运行。添加 `--local` 以强制使用当前机器上的嵌入式运行时。
 - 如果 Gateway(网关) 无法访问，CLI 将**回退**到本地嵌入式运行。
-- 会话选择：`--to` 派生会话密钥（群组/渠道目标
-  保持隔离；直接聊天会合并为 `main`）。
+- 会话选择：`--to` 派生会话密钥（群组/渠道目标保持隔离；直接聊天折叠为 `main`）。
 - 思考和详细标志会持久化到会话存储中。
-- Output: 默认为纯文本，或使用 `--json` 获取结构化负载 + 元数据。
+- 输出：默认为纯文本，或使用 `--json` 获取结构化负载和元数据。
 
 ## 示例
 
@@ -91,6 +89,17 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 
 ## 相关内容
 
-- [Agent CLI 参考](/zh/cli/agent)
-- [Sub-agents](/zh/tools/subagents) — 后台子代理生成
-- [Sessions](/zh/concepts/session) — 会话密钥的工作原理
+<CardGroup cols={2}>
+  <Card title="Agent CLI 参考" href="/zh/cli/agent" icon="terminal">
+    完整的 `openclaw agent` 标志和选项参考。
+  </Card>
+  <Card title="子代理" href="/zh/tools/subagents" icon="users">
+    后台子代理生成。
+  </Card>
+  <Card title="会话" href="/zh/concepts/session" icon="comments">
+    会话密钥的工作原理以及 `--to`、`--agent` 和 `--session-id` 如何解析它们。
+  </Card>
+  <Card title="Slash commands" href="/zh/tools/slash-commands" icon="slash">
+    在 Agent 会话中使用的原生命令目录。
+  </Card>
+</CardGroup>

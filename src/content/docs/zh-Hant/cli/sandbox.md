@@ -158,9 +158,18 @@ openclaw sandbox recreate --agent alfred
 
 <Tip>建議優先使用 `openclaw sandbox recreate` 而非手動進行特定後端的清理。它會使用 Gateway 的運行環境註冊表，並避免當範圍或會話金鑰變更時發生不一致的情況。</Tip>
 
+## 註冊表遷移
+
+OpenClaw 將沙盒運行時元數據以每個容器/瀏覽器條目一個 JSON 分片的形式儲存在沙盒狀態目錄下。較舊的安裝可能仍具有單一的舊版文件：
+
+- `~/.openclaw/sandbox/containers.json`
+- `~/.openclaw/sandbox/browsers.json`
+
+常規的沙盒運行時讀取不會重寫這些文件。請執行 `openclaw doctor --fix` 以將有效的舊版條目遷移到分片的註冊表目錄中。無效的舊版文件會被隔離，因此一個損壞的舊註冊表不會隱藏當前的運行時條目。
+
 ## 配置
 
-沙箱設定位於 `~/.openclaw/openclaw.json` 下的 `agents.defaults.sandbox` 中（每個 Agent 的覆寫則放在 `agents.list[].sandbox` 中）：
+沙盒設定位於 `agents.defaults.sandbox` 下的 `~/.openclaw/openclaw.json` 中（每個代理的覆寫設定位於 `agents.list[].sandbox`）：
 
 ```jsonc
 {
@@ -185,9 +194,9 @@ openclaw sandbox recreate --agent alfred
 }
 ```
 
-## 相關連結
+## 相關
 
-- [CLI 參考資料](/zh-Hant/cli)
-- [沙箱機制](/zh-Hant/gateway/sandboxing)
+- [CLI 參考](/zh-Hant/cli)
+- [沙盒機制](/zh-Hant/gateway/sandboxing)
 - [Agent 工作區](/zh-Hant/concepts/agent-workspace)
-- [Doctor](/zh-Hant/gateway/doctor)：檢查沙箱設定。
+- [Doctor](/zh-Hant/gateway/doctor)：檢查沙盒設定。

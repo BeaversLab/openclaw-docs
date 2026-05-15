@@ -1,7 +1,7 @@
 ---
 summary: "`openclaw pairing` 的 CLI 参考（批准/列出配对请求）"
 read_when:
-  - You’re using pairing-mode DMs and need to approve senders
+  - You're using pairing-mode DMs and need to approve senders
 title: "配对"
 ---
 
@@ -57,14 +57,21 @@ openclaw pairing approve --channel telegram --account work <code> --notify
 - `--account <accountId>`：多账户渠道的账户 id
 - `--notify`：在同一渠道上向请求者发回确认
 
+所有者引导：
+
+- 如果您在批准配对码时 `commands.ownerAllowFrom`OpenClaw 为空，OpenClaw 还会将批准的发送者记录为命令所有者，使用诸如 `telegram:123456789` 之类的渠道范围条目。
+- 这只会引导第一个所有者。后续的配对批准不会替换或扩展 `commands.ownerAllowFrom`。
+- 命令所有者是被允许运行仅限所有者的命令并批准危险操作（如 `/diagnostics`、`/export-trajectory`、`/config` 和 exec 批准）的人工操作员账户。
+
 ## 注意
 
 - 渠道输入：按位置传递 (`pairing list telegram`) 或使用 `--channel <channel>`。
-- `pairing list` 支持用于多账户渠道的 `--account <accountId>`。
+- `pairing list` 支持多账户渠道的 `--account <accountId>`。
 - `pairing approve` 支持 `--account <accountId>` 和 `--notify`。
-- 如果仅配置了一个支持配对的渠道，则允许使用 `pairing approve <code>`。
+- 如果只配置了一个支持配对的渠道，则允许 `pairing approve <code>`。
+- 如果您在此引导功能存在之前批准了发送者，请运行 `openclaw doctor`；当未配置命令所有者时它会发出警告，并显示 `openclaw config set commands.ownerAllowFrom ...` 命令以进行修复。
 
 ## 相关
 
-- [CLI 参考](/zh/cli)
-- [频道配对](/zh/channels/pairing)
+- [CLI 参考](CLI/en/cli)
+- [渠道配对](/zh/channels/pairing)

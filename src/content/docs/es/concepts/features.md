@@ -32,8 +32,8 @@ title: "Características"
 
 **Canales:**
 
-- Los canales integrados incluyen Discord, Google Chat, iMessage (heredado), IRC, Signal, Slack, Telegram, WebChat y WhatsApp
-- Los canales de complementos incluidos incluyen BlueBubbles para iMessage, Feishu, LINE, Matrix, Mattermost, Microsoft Teams, Nextcloud Talk, Nostr, QQ Bot, Synology Chat, Tlon, Twitch, Zalo y Zalo Personal
+- Los canales integrados incluyen Discord, Google Chat, iMessage, IRC, Signal, Slack, Telegram, WebChat y WhatsApp
+- Los canales de complementos incluidos incluyen Feishu, LINE, Matrix, Mattermost, Microsoft Teams, Nextcloud Talk, Nostr, QQ Bot, Synology Chat, Tlon, Twitch, Zalo y Zalo Personal
 - Los complementos de canal instalados opcionalmente por separado incluyen Llamada de voz y paquetes de terceros como WeChat
 - Los complementos de canal de terceros pueden ampliar aún más la puerta de enlace, como WeChat
 - Soporte para chat en grupo con activación basada en menciones
@@ -43,7 +43,7 @@ title: "Características"
 
 - Tiempo de ejecución del agente integrado con transmisión de herramientas
 - Enrutamiento multiagente con sesiones aisladas por espacio de trabajo o remitente
-- Sesiones: los chats directos se agrupan en un `main` compartido; los grupos están aislados
+- Sesiones: los chats directos se agrupan en una `main` compartida; los grupos están aislados
 - Transmisión y fragmentación para respuestas largas
 
 **Autenticación y proveedores:**
@@ -75,5 +75,17 @@ title: "Características"
 
 ## Relacionado
 
-- [Características experimentales](/es/concepts/experimental-features)
-- [Tiempo de ejecución del agente](/es/concepts/agent)
+<CardGroup cols={2}>
+  <Card title="Funciones experimentales" href="/es/concepts/experimental-features" icon="flask">
+    Funciones opcionales que aún no se han implementado en la superficie predeterminada.
+  </Card>
+  <Card title="Tiempo de ejecución del agente" href="/es/concepts/agent" icon="robot">
+    Modelo de tiempo de ejecución del agente y cómo se despachan las ejecuciones.
+  </Card>
+  <Card title="Canales" href="/es/channels" icon="message-square">
+    Conecta Telegram, WhatsApp, Discord, Slack y más desde una sola puerta de enlace.
+  </Card>
+  <Card title="Complementos" href="/es/tools/plugin" icon="plug">
+    Complementos de terceros e incluidos que amplían OpenClaw.
+  </Card>
+</CardGroup>

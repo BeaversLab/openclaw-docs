@@ -40,10 +40,10 @@ Venice ofrece dos niveles de privacidad; comprender esto es clave para elegir su
 ## Primeros pasos
 
 <Steps>
-  <Step title="Obtenga su clave de API">
-    1. Regístrese en [venice.ai](https://venice.ai)
-    2. Vaya a **Settings > API Keys > Create new key**
-    3. Copie su clave de API (formato: `vapi_xxxxxxxxxxxx`)
+  <Step title="Obtén tu clave de API">
+    1. Regístrate en [venice.ai](https://venice.ai)
+    2. Ve a **Settings > API Keys > Create new key**
+    3. Copia tu clave de API (formato: `vapi_xxxxxxxxxxxx`)
   </Step>
   <Step title="Configurar OpenClaw">
     Elija su método de configuración preferido:
@@ -101,7 +101,7 @@ openclaw models set venice/claude-opus-4-6
 Listar todos los modelos disponibles:
 
 ```bash
-openclaw models list | grep venice
+openclaw models list --all --provider venice
 ```
 
 También puede ejecutar `openclaw configure`, seleccionar **Model/auth** y elegir **Venice AI**.
@@ -124,11 +124,7 @@ Use la tabla siguiente para elegir el modelo adecuado para su caso de uso.
 ## Comportamiento de repetición de DeepSeek V4
 
 Si Venice expone modelos DeepSeek V4 como `venice/deepseek-v4-pro` o
-`venice/deepseek-v4-flash`, OpenClaw completa el marcador de posición de repetición `reasoning_content` requerido de DeepSeek V4
-en los turnos de llamada a herramienta del asistente cuando el
-proxy lo omite. Venice rechaza el control `thinking` de nivel superior nativo de DeepSeek,
-por lo que OpenClaw mantiene esa corrección de repetición específica del proveedor separada de los
-controles de pensamiento del proveedor nativo DeepSeek.
+`venice/deepseek-v4-flash`, OpenClaw completa el marcador de posición de repetición `reasoning_content` requerido por DeepSeek V4 en los mensajes del asistente cuando el proxy lo omite. Venice rechaza el control `thinking` de nivel superior nativo de DeepSeek, por lo que OpenClaw mantiene esa corrección de repetición específica del proveedor separada de los controles de pensamiento del proveedor nativo de DeepSeek.
 
 ## Catálogo integrado (41 en total)
 
@@ -187,22 +183,22 @@ controles de pensamiento del proveedor nativo DeepSeek.
 
 ## Descubrimiento de modelos
 
-OpenClaw descubre automáticamente los modelos de la API de Venice cuando `VENICE_API_KEY` está configurado. Si la API es inaccesible, recurre a un catálogo estático.
+OpenClaw incluye un catálogo semilla de Venice respaldado por manifiesto para el listado de modelos de solo lectura. La actualización en tiempo de ejecución aún puede descubrir modelos desde la API de Venice y recurre al catálogo de manifiestos si la API es inalcanzable.
 
-El punto final `/models` es público (no se requiere autenticación para listar), pero la inferencia requiere una clave de API válida.
+El punto final `/models` es público (no se requiere autenticación para el listado), pero la inferencia requiere una clave de API válida.
 
 ## Soporte de transmisión y herramientas
 
-| Característica                              | Soporte                                                              |
-| ------------------------------------------- | -------------------------------------------------------------------- |
-| **Transmisión (Streaming)**                 | Todos los modelos                                                    |
-| **Llamada de funciones (Function calling)** | La mayoría de modelos (consulte `supportsFunctionCalling` en la API) |
-| **Visión/Imágenes**                         | Modelos marcados con la característica "Visión"                      |
-| **Modo JSON**                               | Soportado a través de `response_format`                              |
+| Característica                              | Soporte                                                                  |
+| ------------------------------------------- | ------------------------------------------------------------------------ |
+| **Transmisión (Streaming)**                 | Todos los modelos                                                        |
+| **Llamada de funciones (Function calling)** | La mayoría de los modelos (consulta `supportsFunctionCalling` en la API) |
+| **Visión/Imágenes**                         | Modelos marcados con la característica "Visión"                          |
+| **Modo JSON**                               | Soportado a través de `response_format`                                  |
 
 ## Precios
 
-Venice utiliza un sistema basado en créditos. Consulte [venice.ai/pricing](https://venice.ai/pricing) para conocer las tarifas actuales:
+Venice utiliza un sistema basado en créditos. Consulta [venice.ai/pricing](https://venice.ai/pricing) para las tarifas actuales:
 
 - **Modelos privados**: Generalmente menor costo
 - **Modelos anonimizados**: Similar a la precios de la API directa + pequeña tarifa de Venice
@@ -244,14 +240,14 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
     openclaw models list | grep venice
     ```
 
-    Asegúrese de que la clave comience con `vapi_`.
+    Asegúrate de que la clave comience con `vapi_`.
 
   </Accordion>
 
-<Accordion title="Modelo no disponible">El catálogo de modelos de Venice se actualiza dinámicamente. Ejecute `openclaw models list` para ver los modelos disponibles actualmente. Algunos modelos pueden estar temporalmente fuera de línea.</Accordion>
+<Accordion title="Modelo no disponible">El catálogo de modelos de Venice se actualiza dinámicamente. Ejecuta `openclaw models list` para ver los modelos disponibles actualmente. Algunos modelos pueden estar temporalmente fuera de línea.</Accordion>
 
   <Accordion title="Problemas de conexión">
-    La API de Venice está en `https://api.venice.ai/api/v1`. Asegúrese de que su red permita conexiones HTTPS.
+    La API de Venice está en `https://api.venice.ai/api/v1`. Asegúrate de que tu red permita conexiones HTTPS.
   </Accordion>
 </AccordionGroup>
 

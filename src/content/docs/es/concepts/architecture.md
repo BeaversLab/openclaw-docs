@@ -25,7 +25,7 @@ title: "Arquitectura del Gateway"
 ### Gateway (demonio)
 
 - Mantiene las conexiones de los proveedores.
-- Expone una API WS tipada (solicitudes, respuestas, eventos de inserción del servidor).
+- Expone una API de WS con tipos (solicitudes, respuestas, eventos de inserción del servidor).
 - Valida las tramas entrantes contra JSON Schema.
 - Emite eventos como `agent`, `chat`, `presence`, `health`, `heartbeat`, `cron`.
 
@@ -38,7 +38,7 @@ title: "Arquitectura del Gateway"
 ### Nodos (macOS / iOS / Android / headless)
 
 - Se conectan al **mismo servidor WS** con `role: node`.
-- Proporcionan una identidad de dispositivo en `connect`; el emparejamiento es **basado en dispositivos** (rol `node`) y
+- Proporciona una identidad de dispositivo en `connect`; el emparejamiento es **basado en dispositivos** (rol `node`) y
   la aprobación reside en el almacén de emparejamiento de dispositivos.
 - Exponen comandos como `canvas.*`, `camera.*`, `screen.record`, `location.get`.
 
@@ -90,8 +90,8 @@ sequenceDiagram
   en lugar de `connect.params.auth.*`.
 - El `gateway.auth.mode: "none"` de ingreso privado (private-ingress) deshabilita la autenticación de secreto compartido
   por completo; mantenga ese modo fuera del ingreso público/no confiable.
-- Las claves de idempotencia son obligatorias para los métodos con efectos secundarios (`send`, `agent`) para
-  reintentar de manera segura; el servidor mantiene un caché de deduplicación de corta duración.
+- Las claves de idempotencia son necesarias para los métodos con efectos secundarios (`send`, `agent`) para
+  reintentar de manera segura; el servidor mantiene una caché de deduplicación de corta duración.
 - Los nodos deben incluir `role: "node"` además de capacidades/comandos/permisos en `connect`.
 
 ## Emparejamiento + confianza local
@@ -109,7 +109,7 @@ sequenceDiagram
 - La carga útil de la firma `v3` también vincula `platform` + `deviceFamily`; el gateway
   fija los metadatos emparejados al reconectar y requiere un emparejamiento de reparación para los cambios
   en los metadatos.
-- **Las conexiones no locales** todavía requieren aprobación explícita.
+- Las conexiones **no locales** todavía requieren aprobación explícita.
 - La autenticación del Gateway (`gateway.auth.*`) todavía se aplica a **todas** las conexiones, locales o
   remotas.
 
@@ -138,12 +138,12 @@ Detalles: [Gateway protocol](/es/gateway/protocol), [Pairing](/es/channels/pairi
 
 - Inicio: `openclaw gateway` (primer plano, registros a stdout).
 - Salud: `health` sobre WS (también incluido en `hello-ok`).
-- Supervisión: launchd/systemd para reinicio automático.
+- Supervisión: launchd/systemd para el reinicio automático.
 
 ## Invariantes
 
 - Exactamente un Gateway controla una sola sesión de Baileys por host.
-- El handshake es obligatorio; cualquier primer marco que no sea JSON o no sea de conexión es un cierre abrupto.
+- El protocolo de enlace es obligatorio; cualquier primer trama que no sea JSON o de conexión es un cierre duro.
 - Los eventos no se reproducen; los clientes deben actualizar en caso de brechas.
 
 ## Relacionado

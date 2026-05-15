@@ -14,22 +14,24 @@ title: "Bloqueo de puerta de enlace"
 
 ## Mecanismo
 
-- La puerta de enlace vincula el escucha de WebSocket (predeterminado `ws://127.0.0.1:18789`) inmediatamente al inicio utilizando un escucha TCP exclusivo.
+- La puerta de enlace primero adquiere un archivo de bloqueo por configuración en el directorio de bloqueos de estado y sondea el puerto configurado para un oyente existente.
+- Si el propietario del bloqueo registrado ha desaparecido, el puerto está libre o el bloqueo está obsoleto, el inicio reclama el bloqueo y continúa.
+- La puerta de enlace luego vincula el oyente HTTP/WebSocket (por defecto `ws://127.0.0.1:18789`) usando un oyente TCP exclusivo.
 - Si el enlace falla con `EADDRINUSE`, el inicio lanza `GatewayLockError("another gateway instance is already listening on ws://127.0.0.1:<port>")`.
-- El sistema operativo libera el escucha automáticamente en cualquier salida del proceso, incluyendo fallos y SIGKILL; no se necesita un archivo de bloqueo separado ni un paso de limpieza.
-- Al apagarse, la puerta de enlace cierra el servidor WebSocket y el servidor HTTP subyacente para liberar el puerto rápidamente.
+- Al apagarse, la puerta de enlace cierra el servidor HTTP/WebSocket y elimina el archivo de bloqueo.
 
 ## Superficie de error
 
-- Si otro proceso retiene el puerto, el inicio lanza `GatewayLockError("another gateway instance is already listening on ws://127.0.0.1:<port>")`.
+- Si otro proceso mantiene el puerto, el inicio lanza `GatewayLockError("another gateway instance is already listening on ws://127.0.0.1:<port>")`.
 - Otros fallos de enlace aparecen como `GatewayLockError("failed to bind gateway socket on ws://127.0.0.1:<port>: …")`.
 
 ## Notas operativas
 
 - Si el puerto está ocupado por _otro_ proceso, el error es el mismo; libere el puerto o elija otro con `openclaw gateway --port <port>`.
-- La aplicación de macOS todavía mantiene su propio guardia de PID ligero antes de generar la puerta de enlace; el bloqueo en tiempo de ejecución se impone mediante el enlace de WebSocket.
+- Bajo un supervisor de servicios, un nuevo proceso de puerta de enlace que ve un respondedor `/healthz` existente y saludable deja ese proceso a cargo. En systemd, el iniciador duplicado sale con el código 78 para que el `RestartPreventExitStatus=78` predeterminado evite que `Restart=always` haga un bucle en un bloqueo o un conflicto de `EADDRINUSE`. Si el proceso existente nunca llega a estar saludable, los reintentos están limitados y el inicio falla con un error de bloqueo claro en lugar de hacer un bucle para siempre.
+- La aplicación macOS todavía mantiene su propia protección ligera de PID antes de iniciar la puerta de enlace; el bloqueo en tiempo de ejecución se aplica mediante el archivo de bloqueo más el enlace HTTP/WebSocket.
 
 ## Relacionado
 
 - [Múltiples puertas de enlace](/es/gateway/multiple-gateways) — ejecución de múltiples instancias con puertos únicos
-- [Solución de problemas](/es/gateway/troubleshooting) — diagnóstico de `EADDRINUSE` y conflictos de puerto
+- [Solución de problemas](/es/gateway/troubleshooting) — diagnóstico de `EADDRINUSE` y conflictos de puertos

@@ -19,7 +19,7 @@ Los permisos del SO son multinivel. Podemos exponer un selector en la aplicació
 
 - iOS/macOS puede exponer **Mientras se usa** o **Siempre** en los mensajes del sistema/Configuración.
 - La aplicación de Android actualmente solo admite la ubicación en primer plano.
-- La ubicación precisa es una concesión separada (iOS 14+ “Precisa”, Android “precisa” frente a “aproximada”).
+- La ubicación precisa es un permiso independiente (iOS 14+ "Precise", Android "fine" frente a "coarse").
 
 El selector en la interfaz de usuario impulsa nuestro modo solicitado; la concesión real reside en la configuración del SO.
 
@@ -91,9 +91,9 @@ Errores (códigos estables):
 
 ## Texto de la interfaz de usuario (sugerido)
 
-- Desactivado: “La ubicación compartida está deshabilitada.”
-- Mientras se usa: “Solo cuando OpenClaw está abierto.”
-- Preciso: “Usar ubicación GPS precisa. Desactívela para compartir ubicación aproximada.”
+- Desactivado: "El uso compartido de la ubicación está desactivado."
+- Mientras se usa: "Solo cuando OpenClaw está abierto."
+- Precisa: "Usar la ubicación GPS precisa. Desactivar para compartir la ubicación aproximada."
 
 ## Relacionado
 

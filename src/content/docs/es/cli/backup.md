@@ -53,9 +53,13 @@ omiten.
 
 La carga útil del archivo almacena el contenido de los archivos de esos árboles de origen, y el `manifest.json` incrustado registra las rutas de origen absolutas resueltas más el diseño del archivo utilizado para cada activo.
 
+Durante la creación del archivo, OpenClaw omite los archivos conocidos de mutación en vivo que no tienen valor de restauración, incluidas las transcripciones de sesiones de agente activas, registros de ejecución de cron, registros rotativos, colas de entrega, archivos de socket/pid/temp en el directorio de estado y archivos temporales de colas duraderas relacionadas. El resultado JSON incluye `skippedVolatileCount` para que la automatización pueda ver cuántos archivos se omitieron intencionalmente.
+
+Se incluyen los archivos de origen y manifiesto del complemento instalado en el árbol `extensions/` del directorio de estado, pero se omiten sus árboles de dependencia `node_modules/` anidados. Esas dependencias son artefactos de instalación reconstruibles; después de restaurar un archivo, use `openclaw plugins update <id>` o reinstale el complemento con `openclaw plugins install <spec> --force` cuando un complemento restaurado informe dependencias faltantes.
+
 ## Comportamiento de configuración no válida
 
-`openclaw backup` omite intencionalmente el preflight normal de configuración para que aún pueda ayudar durante la recuperación. Dado que el descubrimiento de espacios de trabajo depende de una configuración válida, `openclaw backup create` ahora falla rápido cuando el archivo de configuración existe pero no es válido y la copia de seguridad del espacio de trabajo aún está habilitada.
+`openclaw backup` omite intencionalmente la verificación previa normal de configuración para que aún pueda ayudar durante la recuperación. Dado que el descubrimiento del espacio de trabajo depende de una configuración válida, `openclaw backup create` ahora falla rápidamente cuando el archivo de configuración existe pero no es válido y la copia de seguridad del espacio de trabajo todavía está habilitada.
 
 Si aún desea una copia de seguridad parcial en esa situación, vuelva a ejecutar:
 
@@ -63,10 +67,9 @@ Si aún desea una copia de seguridad parcial en esa situación, vuelva a ejecuta
 openclaw backup create --no-include-workspace
 ```
 
-Eso mantiene el estado, la configuración y el directorio externo de credenciales dentro del alcance mientras
-omite por completo el descubrimiento de espacios de trabajo.
+Eso mantiene el estado, la configuración y el directorio de credenciales externas dentro del alcance mientras se omite por completo el descubrimiento del espacio de trabajo.
 
-Si solo necesita una copia del propio archivo de configuración, `--only-config` también funciona cuando la configuración está malformada porque no depende del análisis de la configuración para el descubrimiento de espacios de trabajo.
+Si solo necesita una copia del archivo de configuración en sí, `--only-config` también funciona cuando la configuración está malformada porque no depende del análisis de la configuración para el descubrimiento del espacio de trabajo.
 
 ## Tamaño y rendimiento
 
@@ -77,11 +80,11 @@ Los límites prácticos provienen de la máquina local y el sistema de archivos 
 - Espacio disponible para la escritura temporal del archivo más el archivo final
 - Tiempo para recorrer grandes árboles de espacios de trabajo y comprimirlos en un `.tar.gz`
 - Tiempo para volver a escanear el archivo si usa `openclaw backup create --verify` o ejecuta `openclaw backup verify`
-- Comportamiento del sistema de archivos en la ruta de destino. OpenClaw prefiere un paso de publicación con enlaces duros sin sobrescritura y recurre a una copia exclusiva cuando los enlaces duros no son compatibles.
+- Comportamiento del sistema de archivos en la ruta de destino. OpenClaw prefiere un paso de publicación de enlace duro sin sobrescritura y recurre a una copia exclusiva cuando los enlaces duros no son compatibles
 
-Los espacios de trabajo grandes suelen ser el factor principal del tamaño del archivo. Si deseas una copia de seguridad más pequeña o más rápida, usa `--no-include-workspace`.
+Los espacios de trabajo grandes suelen ser el principal factor del tamaño del archivo. Si desea una copia de seguridad más pequeña o más rápida, use `--no-include-workspace`.
 
-Para obtener el archivo más pequeño, usa `--only-config`.
+Para obtener el archivo más pequeño, use `--only-config`.
 
 ## Relacionado
 

@@ -6,20 +6,17 @@ read_when:
 title: "Plugins communautaires"
 ---
 
-Les plugins communautaires sont des packages tiers qui étendent OpenClaw avec de nouveaux
-canaux, outils, fournisseurs ou autres capacités. Ils sont construits et maintenus
-par la communauté, publiés sur [ClawHub](/fr/tools/clawhub) ou npm, et
-installables avec une seule commande.
+Les plugins communautaires sont des packages tiers qui étendent OpenClaw avec de nouveaux canaux, outils, fournisseurs ou autres capacités. Ils sont construits et maintenus par la communauté, généralement publiés sur [ClawHub](/fr/clawhub), et installables avec une seule commande. npm reste l'option par défaut pour les spécifications de packages simples tandis que les installations de packs ClawHub se généralisent.
 
 ClawHub est la surface de découverte canonique pour les plugins communautaires. N'ouvrez pas
 de PR de documentation uniquement pour ajouter votre plugin ici pour sa découvrabilité ; publiez-le plutôt
 sur ClawHub.
 
 ```bash
-openclaw plugins install <package-name>
+openclaw plugins install clawhub:<package-name>
 ```
 
-OpenClaw vérifie d'abord ClawHub et se rabat automatiquement sur npm.
+Utilisez `openclaw plugins install <package-name>` pour les packages hébergés par npm.
 
 ## Plugins listés
 
@@ -30,7 +27,7 @@ extraire des données d'Instagram, Facebook, TikTok, YouTube, Google Maps, Googl
 Recherche, de sites e-commerce et plus encore — simplement en le demandant.
 
 - **npm :** `@apify/apify-openclaw-plugin`
-- **dépôt :** [github.com/apify/apify-openclaw-plugin](https://github.com/apify/apify-openclaw-plugin)
+- **repo :** [github.com/apify/apify-openclaw-plugin](https://github.com/apify/apify-openclaw-plugin)
 
 ```bash
 openclaw plugins install @apify/apify-openclaw-plugin
@@ -43,7 +40,7 @@ un fil Codex, parlez-lui en texte clair et contrôlez-le avec des commandes nati
 au chat pour la reprise, la planification, la révision, la sélection de modèle, la compactage et plus encore.
 
 - **npm :** `openclaw-codex-app-server`
-- **dépôt :** [github.com/pwrdrvr/openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server)
+- **repo :** [github.com/pwrdrvr/openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server)
 
 ```bash
 openclaw plugins install openclaw-codex-app-server
@@ -55,7 +52,7 @@ Intégration de robot d'entreprise utilisant le mode Stream. Prend en charge les
 messages de fichiers via n'importe quel client DingTalk.
 
 - **npm :** `@largezhou/ddingtalk`
-- **dépôt :** [github.com/largezhou/openclaw-dingtalk](https://github.com/largezhou/openclaw-dingtalk)
+- **repo :** [github.com/largezhou/openclaw-dingtalk](https://github.com/largezhou/openclaw-dingtalk)
 
 ```bash
 openclaw plugins install @largezhou/ddingtalk
@@ -68,7 +65,7 @@ avec compactage incrémental — préserve la fidélité complète du contexte
 tout en réduisant l'utilisation des tokens.
 
 - **npm :** `@martian-engineering/lossless-claw`
-- **dépôt :** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
+- **repo :** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
 
 ```bash
 openclaw plugins install @martian-engineering/lossless-claw
@@ -80,7 +77,7 @@ Plugin officiel qui exporte les traces d'agents vers Opik. Surveillez le comport
 le coût, les tokens, les erreurs et plus encore.
 
 - **npm :** `@opik/opik-openclaw`
-- **repo:** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
+- **repo :** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
 
 ```bash
 openclaw plugins install @opik/opik-openclaw
@@ -101,7 +98,7 @@ openclaw plugins install @prometheusavatar/openclaw-plugin
 
 Connectez OpenClaw à QQ via l'API QQ Bot. Prend en charge les chats privés, les mentions de groupe, les messages de channel et les médias riches, y compris la voix, les images, les vidéos et les fichiers.
 
-Les versions actuelles de OpenClaw incluent QQ Bot. Utilisez la configuration intégrée dans [QQ Bot](/fr/channels/qqbot) pour les installations normales ; n'installez ce plugin externe que si vous souhaitez intentionnellement le package autonome maintenu par Tencent.
+Les versions actuelles de OpenClaw incluent le QQ Bot. Utilisez la configuration intégrée dans [QQ Bot](/fr/channels/qqbot) pour les installations normales ; n'installez ce plugin externe que si vous souhaitez intentionnellement le package autonome maintenu par Tencent.
 
 - **npm :** `@tencent-connect/openclaw-qqbot`
 - **repo :** [github.com/tencent-connect/openclaw-qqbot](https://github.com/tencent-connect/openclaw-qqbot)
@@ -126,7 +123,7 @@ openclaw plugins install @wecom/wecom-openclaw-plugin
 Plugin de channel Yuanbao pour OpenClaw par l'équipe Tencent Yuanbao. Alimenté par des connexions persistantes WebSocket, il prend en charge les messages directs et les discussions de groupe, les réponses en streaming, la messagerie proactive, le traitement d'image/fichier/audio/vidéo, le formatage Markdown, le contrôle d'accès intégré et les menus de commandes slash.
 
 - **npm :** `openclaw-plugin-yuanbao`
-- **repo :** [github.com/yb-claw/openclaw-plugin-yuanbao](https://github.com/yb-claw/openclaw-plugin-yuanbao)
+- **repo :** [github.com/YuanbaoTeam/yuanbao-openclaw-plugin](https://github.com/YuanbaoTeam/yuanbao-openclaw-plugin)
 
 ```bash
 openclaw plugins install openclaw-plugin-yuanbao
@@ -137,10 +134,11 @@ openclaw plugins install openclaw-plugin-yuanbao
 Nous accueillons favorablement les plugins communautaires utiles, documentés et sûrs à utiliser.
 
 <Steps>
-  <Step title="Publier sur ClawHub ou npm">
-    Votre plugin doit être installable via `openclaw plugins install \<package-name\>`.
-    Publiez sur [ClawHub](/fr/tools/clawhub) (préféré) ou npm.
-    Consultez [Building Plugins](/fr/plugins/building-plugins) pour le guide complet.
+  <Step title="ClawHubnpmPublier sur ClawHub ou npm">
+    Votre plugin doit être installable via `openclaw plugins install \<package-name\>`ClawHub.
+    Publiez sur [ClawHub](/fr/clawhubnpm) sauf si vous avez spécifiquement besoin d'une distribution
+    exclusivement via npm.
+    Consultez [Création de plugins](/fr/plugins/building-plugins) pour le guide complet.
 
   </Step>
 
@@ -162,17 +160,17 @@ Nous accueillons favorablement les plugins communautaires utiles, documentés et
 
 ## Niveau de qualité
 
-| Exigence                                      | Pourquoi                                                              |
-| --------------------------------------------- | --------------------------------------------------------------------- |
-| Publié sur ClawHub ou npm                     | Les utilisateurs ont besoin que `openclaw plugins install` fonctionne |
-| Dépôt GitHub public                           | Revue du code, suivi des problèmes, transparence                      |
-| Documentation d'installation et d'utilisation | Les utilisateurs doivent savoir comment le configurer                 |
-| Maintenance active                            | Mises à jour récentes ou gestion réactive des problèmes               |
+| Exigence                                      | Pourquoi                                                                   |
+| --------------------------------------------- | -------------------------------------------------------------------------- |
+| Publié sur ClawHub ou npm                     | Les utilisateurs ont besoin de `openclaw plugins install` pour fonctionner |
+| Dépôt GitHub public                           | Revue du code, suivi des problèmes, transparence                           |
+| Documentation d'installation et d'utilisation | Les utilisateurs doivent savoir comment le configurer                      |
+| Maintenance active                            | Mises à jour récentes ou gestion réactive des problèmes                    |
 
 Les enveloppements (wrappers) à faible effort, la propriété peu claire ou les paquets non maintenus peuvent être refusés.
 
 ## Connexes
 
 - [Installer et configurer des plugins](/fr/tools/plugin) — comment installer n'importe quel plugin
-- [Créer des plugins](/fr/plugins/building-plugins) — créer le vôtre
+- [Création de plugins](/fr/plugins/building-plugins) — créer le vôtre
 - [Manifeste de plugin](/fr/plugins/manifest) — schéma du manifeste

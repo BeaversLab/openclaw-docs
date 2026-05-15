@@ -160,6 +160,15 @@ Use `openclaw sandbox recreate` para forzar la eliminación de los entornos de e
 
 <Tip>Prefiera `openclaw sandbox recreate` sobre la limpieza manual específica del backend. Utiliza el registro de tiempo de ejecución de Gateway y evita discrepancias cuando cambian las claves de ámbito o sesión.</Tip>
 
+## Migración del registro
+
+OpenClaw almacena los metadatos del tiempo de ejecución del sandbox como un fragmento JSON por entrada de contenedor/navegador en el directorio de estado del sandbox. Las instalaciones antiguas aún pueden tener archivos heredados monolíticos:
+
+- `~/.openclaw/sandbox/containers.json`
+- `~/.openclaw/sandbox/browsers.json`
+
+Las lecturas regulares del tiempo de ejecución del sandbox no reescriben esos archivos. Ejecute `openclaw doctor --fix` para migrar las entradas heredadas válidas a los directorios del registro fragmentado. Los archivos heredados no válidos se ponen en cuarentena para que un registro antiguo incorrecto no pueda ocultar las entradas actuales del tiempo de ejecución.
+
 ## Configuración
 
 La configuración del sandbox reside en `~/.openclaw/openclaw.json` bajo `agents.defaults.sandbox` (las anulaciones por agente van en `agents.list[].sandbox`):
@@ -189,7 +198,7 @@ La configuración del sandbox reside en `~/.openclaw/openclaw.json` bajo `agents
 
 ## Relacionado
 
-- [Referencia de la CLI](/es/cli)
-- [Aislamiento (Sandboxing)](/es/gateway/sandboxing)
+- [Referencia de CLI](/es/cli)
+- [Sandboxing](/es/gateway/sandboxing)
 - [Espacio de trabajo del agente](/es/concepts/agent-workspace)
 - [Doctor](/es/gateway/doctor): verifica la configuración del sandbox.

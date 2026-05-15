@@ -7,19 +7,18 @@ read_when:
 title: "Red"
 ---
 
-# Concentrador de red
-
-Este concentrador vincula los documentos principales sobre cómo OpenClaw conecta, empareja y asegura dispositivos a través de localhost, LAN y tailnet.
+Este centro vincula la documentación principal sobre cómo OpenClaw conecta, empareja y protege dispositivos a través de localhost, LAN y tailnet.
 
 ## Modelo principal
 
-La mayoría de las operaciones fluyen a través del Gateway (`openclaw gateway`), un único proceso de larga ejecución que posee las conexiones de los canales y el plano de control WebSocket.
+La mayoría de las operaciones fluyen a través del Gateway (`openclaw gateway`), un único proceso de larga ejecución que posee las conexiones de canal y el plano de control WebSocket.
 
-- **Primero loopback**: el Gateway WS por defecto es `ws://127.0.0.1:18789`.
-  Los enlaces no loopback requieren una ruta de autenticación de gateway válida: token de secreto compartido/autenticación de contraseña, o un despliegue `trusted-proxy` no loopback configurado correctamente.
-- Se recomienda **un Gateway por host**. Para el aislamiento, ejecute múltiples gateways con perfiles y puertos aislados ([Multiple Gateways](/es/gateway/multiple-gateways)).
-- El **host de Canvas** se sirve en el mismo puerto que el Gateway (`/__openclaw__/canvas/`, `/__openclaw__/a2ui/`), protegido por la autenticación del Gateway cuando se enlaza más allá del loopback.
-- El **acceso remoto** suele ser mediante túnel SSH o VPN Tailscale ([Remote Access](/es/gateway/remote)).
+- **Loopback primero**: el WS del Gateway predeterminado es `ws://127.0.0.1:18789`.
+  Los enlaces no loopback requieren una ruta de autenticación de gateway válida: autenticación de token/contraseña de secreto compartido
+  o un despliegue `trusted-proxy` no loopback configurado correctamente.
+- **Se recomienda un Gateway por host**. Para el aislamiento, ejecute múltiples gateways con perfiles y puertos aislados ([Multiple Gateways](/es/gateway/multiple-gateways)).
+- **Canvas host** se sirve en el mismo puerto que el Gateway (`/__openclaw__/canvas/`, `/__openclaw__/a2ui/`), protegido por la autenticación del Gateway cuando se enlaza más allá del loopback.
+- **Acceso remoto** es típicamente túnel SSH o VPN Tailscale ([Remote Access](/es/gateway/remote)).
 
 Referencias clave:
 
@@ -37,16 +36,16 @@ Referencias clave:
 
 Confianza local:
 
-- Las conexiones directas de loopback local pueden ser aprobadas automáticamente para el emparejamiento y mantener
+- Las conexiones directas de loopback local pueden aprobarse automáticamente para el emparejamiento y mantener
   la UX del mismo host fluida.
-- OpenClaw también tiene una ruta estrecha de autoconexión local de backend/contenedor para
+- OpenClaw también tiene una ruta estrecha de autoconexión de backend/container-local para
   flujos de ayuda de secreto compartido de confianza.
-- Los clientes de tailnet y LAN, incluidos los enlaces tailnet del mismo host, todavía requieren
+- Los clientes de Tailnet y LAN, incluidos los enlaces tailnet del mismo host, aún requieren
   aprobación de emparejamiento explícita.
 
 ## Descubrimiento + transportes
 
-- [Discovery & transports](/es/gateway/discovery)
+- [Discovery and transports](/es/gateway/discovery)
 - [Bonjour / mDNS](/es/gateway/bonjour)
 - [Remote access (SSH)](/es/gateway/remote)
 - [Tailscale](/es/gateway/tailscale)
@@ -55,17 +54,17 @@ Confianza local:
 
 - [Nodes overview](/es/nodes)
 - [Bridge protocol (legacy nodes, historical)](/es/gateway/bridge-protocol)
-- [Node runbook: iOS](/es/platforms/ios)
-- [Node runbook: Android](/es/platforms/android)
+- [Manual del nodo: iOS](/es/platforms/ios)
+- [Manual del nodo: Android](/es/platforms/android)
 
 ## Seguridad
 
-- [Security overview](/es/gateway/security)
-- [Gateway config reference](/es/gateway/configuration)
-- [Troubleshooting](/es/gateway/troubleshooting)
+- [Descripción general de seguridad](/es/gateway/security)
+- [Referencia de configuración de Gateway](/es/gateway/configuration)
+- [Solución de problemas](/es/gateway/troubleshooting)
 - [Doctor](/es/gateway/doctor)
 
 ## Relacionado
 
-- [Modelo de red de puerta de enlace](/es/gateway/network-model)
+- [Manual de Gateway](/es/gateway)
 - [Acceso remoto](/es/gateway/remote)

@@ -8,7 +8,7 @@ title: "ClawDock"
 
 ClawDock est une petite couche d'aide shell pour les installations d'OpenClaw basées sur Docker.
 
-Il vous fournit des commandes courtes comme `clawdock-start`, `clawdock-dashboard` et `clawdock-fix-token` au lieu d'invocations plus longues comme `docker compose ...`.
+Il vous fournit des commandes courtes comme `clawdock-start`, `clawdock-dashboard` et `clawdock-fix-token` au lieu d'invocations plus longues de `docker compose ...`.
 
 Si vous n'avez pas encore configuré Docker, commencez par [Docker](/fr/install/docker).
 
@@ -90,15 +90,23 @@ clawdock-approve <request-id>
 
 ClawDock fonctionne avec le même découpage de configuration Docker décrit dans [Docker](/fr/install/docker) :
 
-- `<project>/.env` pour les valeurs spécifiques à Docker telles que le nom de l'image, les ports et le jeton de passerelle
-- `~/.openclaw/.env` pour les clés de provider et les jetons de bot basés sur des variables d'environnement
-- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` pour l'authentification par OAuth/clé API du provider stockée
+- `<project>/.env` pour les valeurs spécifiques à Docker comme le nom de l'image, les ports et le jeton de passerelle
+- `~/.openclaw/.env` pour les clés de provider et les jetons de bot sauvegardés dans les variables d'environnement
+- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` pour l'authentification par OAuth/clé d'API des providers stockée
 - `~/.openclaw/openclaw.json` pour la configuration du comportement
 
 Utilisez `clawdock-show-config` lorsque vous souhaitez inspecter rapidement les fichiers `.env` et `openclaw.json`. Il masque les valeurs `.env` dans sa sortie imprimée.
 
-## Pages connexes
+## Connexes
 
-- [Docker](/fr/install/docker)
-- [Runtime VM Docker](/fr/install/docker-vm-runtime)
-- [Mise à jour](/fr/install/updating)
+<CardGroup cols={2}>
+  <Card title="DockerDocker" href="/fr/install/docker" icon="docker" DockerOpenClaw>
+    Installation Docker standard pour OpenClaw.
+  </Card>
+  <Card title="DockerDocker VM runtime" href="/fr/install/docker-vm-runtime" icon="cube" Docker>
+    Runtime VM géré par Docker pour une isolation renforcée.
+  </Card>
+  <Card title="Updating" href="/fr/install/updating" icon="arrow-up-right-from-square" OpenClaw>
+    Mise à jour du package OpenClaw et des services gérés.
+  </Card>
+</CardGroup>

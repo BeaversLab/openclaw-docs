@@ -1,7 +1,7 @@
 ---
 summary: "Referencia de la CLI para `openclaw pairing` (aprobar/listar solicitudes de emparejamiento)"
 read_when:
-  - You’re using pairing-mode DMs and need to approve senders
+  - You're using pairing-mode DMs and need to approve senders
 title: "Emparejamiento"
 ---
 
@@ -11,7 +11,7 @@ Aprobar o inspeccionar solicitudes de emparejamiento de MD (para canales que adm
 
 Relacionado:
 
-- Flujo de vinculación: [Vinculación](/es/channels/pairing)
+- Flujo de emparejamiento: [Emparejamiento](/es/channels/pairing)
 
 ## Comandos
 
@@ -57,14 +57,21 @@ Opciones:
 - `--account <accountId>`: id de cuenta para canales multi-cuenta
 - `--notify`: envía una confirmación de vuelta al solicitante en el mismo canal
 
+Inicialización del propietario:
+
+- Si `commands.ownerAllowFrom` está vacío cuando apruebas un código de emparejamiento, OpenClaw también registra el remitente aprobado como el propietario del comando, utilizando una entrada con alcance de canal como `telegram:123456789`.
+- Esto solo inicializa el primer propietario. Las aprobaciones de emparejamiento posteriores no reemplazan ni expanden `commands.ownerAllowFrom`.
+- El propietario del comando es la cuenta de operador humano autorizada a ejecutar comandos solo para propietarios y aprobar acciones peligrosas como `/diagnostics`, `/export-trajectory`, `/config` y aprobaciones de ejecución.
+
 ## Notas
 
-- Entrada de canal: pásalo de forma posicional (`pairing list telegram`) o con `--channel <channel>`.
-- `pairing list` soporta `--account <accountId>` para canales multi-cuenta.
-- `pairing approve` soporta `--account <accountId>` y `--notify`.
-- Si solo hay configurado un canal con capacidad de vinculación, se permite `pairing approve <code>`.
+- Entrada de canal: pásalo posicionalmente (`pairing list telegram`) o con `--channel <channel>`.
+- `pairing list` admite `--account <accountId>` para canales multicuenta.
+- `pairing approve` admite `--account <accountId>` y `--notify`.
+- Si solo hay un canal compatible con emparejamiento configurado, se permite `pairing approve <code>`.
+- Si aprobaste un remitente antes de que existiera esta inicialización, ejecuta `openclaw doctor`; advierte cuando no hay ningún propietario de comando configurado y muestra el comando `openclaw config set commands.ownerAllowFrom ...` para solucionarlo.
 
 ## Relacionado
 
-- [Referencia de la CLI](/es/cli)
+- [Referencia de CLI](/es/cli)
 - [Emparejamiento de canales](/es/channels/pairing)

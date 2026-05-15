@@ -6,14 +6,14 @@ read_when:
 title: "Application macOS"
 ---
 
-L'application macOS est le **compagnon de la barre de menu** pour OpenClaw. Elle possède les permissions, gère/se connecte à la Gateway localement (launchd ou manuel), et expose les fonctionnalités macOS à l'agent en tant que nœud.
+L'application macOS est le **compagnon de la barre de menus** pour OpenClaw. Elle possède les autorisations, gère/attache la Gateway localement (via launchd ou manuellement), et expose les fonctionnalités macOS à l'agent en tant que nœud.
 
 ## Ce qu'elle fait
 
 - Affiche les notifications natives et le statut dans la barre de menu.
 - Gère les invites TCC (Notifications, Accessibilité, Enregistrement d'écran, Microphone, Reconnaissance vocale, Automatisation/AppleScript).
 - Exécute ou se connecte à la Gateway (locale ou distante).
-- Expose des outils propres à macOS (Canvas, Caméra, Enregistrement d'écran, `system.run`).
+- Expose des outils exclusifs à macOS (Canvas, Camera, Screen Recording, macOSCanvas`system.run`).
 - Démarre le service d'hôte de nœud local en mode **distant** (launchd) et l'arrête en mode **local**.
 - Héberge optionnellement **PeekabooBridge** pour l'automatisation de l'interface utilisateur.
 - Installe la CLI globale (`openclaw`) sur demande via npm, pnpm ou bun (l'application préfère npm, puis pnpm, puis bun ; Node reste le runtime recommandé pour la Gateway).
@@ -25,7 +25,8 @@ L'application macOS est le **compagnon de la barre de menu** pour OpenClaw. Elle
 
 ## Contrôle Launchd
 
-L'application gère un LaunchAgent par utilisateur étiqueté `ai.openclaw.gateway` (ou `ai.openclaw.<profile>` lors de l'utilisation de `--profile`/`OPENCLAW_PROFILE` ; l'ancien `com.openclaw.*` est toujours déchargé).
+L'application gère un LaunchAgent par utilisateur étiqueté `ai.openclaw.gateway`
+(ou `ai.openclaw.<profile>` lors de l'utilisation de `--profile`/`OPENCLAW_PROFILE` ; l'ancien `com.openclaw.*` se décharge toujours).
 
 ```bash
 launchctl kickstart -k gui/$UID/ai.openclaw.gateway
@@ -34,7 +35,8 @@ launchctl bootout gui/$UID/ai.openclaw.gateway
 
 Remplacez l'étiquette par `ai.openclaw.<profile>` lors de l'exécution d'un profil nommé.
 
-Si le LaunchAgent n'est pas installé, activez-le depuis l'application ou exécutez `openclaw gateway install`.
+Si le LaunchAgent n'est pas installé, activez-le depuis l'application ou exécutez
+`openclaw gateway install`.
 
 ## Capacités du nœud (mac)
 
@@ -45,7 +47,7 @@ L'application macOS se présente comme un nœud. Commandes courantes :
 - Écran : `screen.snapshot`, `screen.record`
 - Système : `system.run`, `system.notify`
 
-Le nœud signale une carte `permissions` afin que les agents puissent décider ce qui est autorisé.
+Le nœud signale une carte `permissions` afin que les agents puissent décider de ce qui est autorisé.
 
 Service de nœud + IPC de l'application :
 
@@ -93,8 +95,8 @@ Remarques :
 
 - Les entrées `allowlist` sont des motifs glob pour les chemins binaires résolus, ou des noms de commande nus pour les commandes invoquées par PATH.
 - Le texte de commande shell brut qui contient une syntaxe de contrôle ou d'expansion de shell (`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) est traité comme un échec de la liste blanche et nécessite une approbation explicite (ou l'ajout du binaire shell à la liste blanche).
-- Le choix de « Toujours autoriser » dans l'invite ajoute cette commande à la liste blanche.
-- Les substitutions d'environnement `system.run` sont filtrées (supprime `PATH`, `DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`) puis fusionnées avec l'environnement de l'application.
+- Choisir « Toujours autoriser » dans l'invite ajoute cette commande à la liste d'autorisation.
+- Les redéfinitions d'environnement `system.run` sont filtrées (supprime `PATH`, `DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`) puis fusionnées avec l'environnement de l'application.
 - Pour les wrappers de shell (`bash|sh|zsh ... -c/-lc`), les substitutions d'environnement limitées à la requête sont réduites à une petite liste d'autorisation explicite (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
 - Pour les décisions d'autorisation permanente en mode liste d'autorisation, les wrappers de répartition connus (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) enregistrent les chemins des exécutables internes au lieu des chemins des wrappers. Si le déballage n'est pas sûr, aucune entrée de liste d'autorisation n'est enregistrée automatiquement.
 
@@ -151,7 +153,7 @@ Si `openclaw doctor` détecte un état sous :
 
 il avertira et recommandera de revenir à un chemin local.
 
-## Workflow de compilation et de développement (natif)
+## Workflow de build et de développement (natif)
 
 - `cd apps/macos && swift build`
 - `swift run OpenClaw` (ou Xcode)
@@ -177,7 +179,7 @@ Options de connexion :
 
 Options de Gateway :
 
-- `--include-local` : inclure les passerelles qui seraient filtrées en tant que « local »
+- `--include-local` : inclure les passerelles qui seraient filtrées comme « locales »
 - `--timeout <ms>` : fenêtre globale de Gateway (par défaut : `2000`)
 - `--json` : sortie structurée pour les différences
 

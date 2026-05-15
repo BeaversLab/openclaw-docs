@@ -50,7 +50,7 @@ OpenClaw est fourni avec trois scripts d'installation, accessibles via `openclaw
   </Tab>
 </Tabs>
 
-<Note>Si l'installation réussit mais que `openclaw` n'est pas trouvé dans un nouveau terminal, consultez le [dépannage Node.js](/fr/install/node#troubleshooting).</Note>
+<Note>Si l'installation réussit mais que `openclaw` n'est pas trouvé dans un nouveau terminal, consultez la section Node.js troubleshooting (/en/install/node#troubleshooting).</Note>
 
 ---
 
@@ -63,12 +63,26 @@ OpenClaw est fourni avec trois scripts d'installation, accessibles via `openclaw
 ### Flow (install.sh)
 
 <Steps>
-  <Step title="Détecter le système d'exploitation">Prend en charge macOS et Linux (y compris WSL). Si macOS est détecté, installe Homebrew s'il est manquant.</Step>
-  <Step title="Garantir Node.js 24 par défaut">Vérifie la version de Node et installe Node 24 si nécessaire (Homebrew sur macOS, scripts de configuration NodeSource sur Linux apt/dnf/yum). OpenClaw prend toujours en charge Node 22 LTS, actuellement `22.14+`, pour la compatibilité.</Step>
-  <Step title="Assurer Git">Installe Git s'il est manquant.</Step>
-  <Step title="Installer OpenClaw">- Méthode `npm` (par défaut) : installation globale npm - Méthode `git` : cloner/mettre à jour le dépôt, installer les dépendances avec pnpm, construire, puis installer le wrapper à `~/.local/bin/openclaw`</Step>
+  <Step title="Détecter le système d'exploitation">
+    Prend en charge macOS et Linux (y compris WSL). Si macOS est détecté, installe Homebrew s'il est manquant.
+  </Step>
+  <Step title="Garantir Node.js 24 par défaut">
+    Vérifie la version de Node et installe Node 24 si nécessaire (Homebrew sur macOS, scripts de configuration NodeSource sur Linux apt/dnf/yum). OpenClaw prend toujours en charge Node 22 LTS, actuellement `22.16+`, pour la compatibilité.
+  </Step>
+  <Step title="Assurer Git">
+    Installe Git s'il est manquant.
+  </Step>
+  <Step title="Installer OpenClaw">
+    - Méthode `npm` (par défaut) : installation globale npm
+    - Méthode `git` : cloner/mettre à jour le dépôt, installer les dépendances avec pnpm, construire, puis installer le wrapper dans `~/.local/bin/openclaw`
+
+  </Step>
   <Step title="Tâches post-installation">
-    - Actualise le service de passerelle chargé si possible (`openclaw gateway install --force`, puis redémarre) - Exécute `openclaw doctor --non-interactive` lors des mises à niveau et des installations git (si possible) - Tente l'onboarding si approprié (TTY disponible, onboarding non désactivé, et vérifications bootstrap/config réussies) - Définit `SHARP_IGNORE_GLOBAL_LIBVIPS=1` par défaut
+    - Actualise un service de passerelle chargé au mieux (`openclaw gateway install --force`, puis redémarre)
+    - Exécute `openclaw doctor --non-interactive` lors des mises à niveau et des installations git (au mieux)
+    - Tente l'onboarding lorsque cela est approprié (TTY disponible, onboarding non désactivé, et les vérifications bootstrap/config réussissent)
+    - Définit `SHARP_IGNORE_GLOBAL_LIBVIPS=1` par défaut
+
   </Step>
 </Steps>
 
@@ -151,8 +165,9 @@ Le script se termine avec le code `2` pour une sélection de méthode invalide o
     Si Git est manquant, tente une installation via apt/dnf/yum sur Linux ou Homebrew sur macOS.
   </Step>
   <Step title="Installer OpenClaw sous le préfixe">
-    - méthode `npm` (défaut) : installe sous le préfixe avec npm, puis écrit un wrapper vers `<prefix>/bin/openclaw`
-    - méthode `git` : clone/met à jour un checkout (défaut `~/openclaw`) et écrit toujours le wrapper vers `<prefix>/bin/openclaw`
+    - Méthode `npm` (par défaut) : installe sous le préfixe avec npm, puis écrit le wrapper dans `<prefix>/bin/openclaw`
+    - Méthode `git` : clone/met à jour une extraction (par défaut `~/openclaw`) et écrit toujours le wrapper dans `<prefix>/bin/openclaw`
+
   </Step>
   <Step title="Actualiser le service de passerelle chargé">
     Si un service de passerelle est déjà chargé à partir du même préfixe, le script exécute
@@ -217,11 +232,26 @@ Le script se termine avec le code `2` pour une sélection de méthode invalide o
 ### Flux (install.ps1)
 
 <Steps>
-  <Step title="S'assurer de l'environnement PowerShell + Windows">Nécessite PowerShell 5+.</Step>
-  <Step title="Assurer Node.js 24 par défaut">Si manquant, tente l'installation via winget, puis Chocolatey, puis Scoop. Node 22 LTS, actuellement `22.14+`, reste pris en charge pour la compatibilité.</Step>
-  <Step title="Installer OpenClaw">- méthode `npm` (par défaut) : installation npm globale en utilisant le `-Tag` sélectionné - méthode `git` : clone/mise à jour du repo, installation/build avec pnpm, et installation du wrapper à `%USERPROFILE%\.local\bin\openclaw.cmd`</Step>
-  <Step title="Tâches post-installation">- Ajoute le répertoire bin nécessaire au PATH utilisateur quand c'est possible - Rafraîchit un service de passerelle chargé au mieux (`openclaw gateway install --force`, puis redémarrage) - Exécute `openclaw doctor --non-interactive` lors des mises à niveau et installations git (au mieux)</Step>
-  <Step title="Handle failures">`iwr ... | iex` et les installations scriptblock signalent une erreur d'arrêt sans fermer la session PowerShell actuelle. Les installations directes `powershell -File` / `pwsh -File` sortent toujours avec un code non nul pour l'automatisation.</Step>
+  <Step title="S'assurer de l'environnement PowerShell + Windows">
+    Nécessite PowerShell 5+.
+  </Step>
+  <Step title="Node.jsS'assurer que Node.js 24 est utilisé par défaut">
+    S'il est manquant, tente l'installation via winget, puis Chocolatey, puis Scoop. Node 22 LTS, actuellement `22.16+`, reste pris en charge pour la compatibilité.
+  </Step>
+  <Step title="OpenClawInstaller OpenClaw">
+    - Méthode `npm`npm (par défaut) : installation npm globale utilisant le `-Tag` sélectionné, lancée à partir d'un répertoire temporaire de l'installateur accessible en écriture afin que les shells ouverts dans des dossiers protégés tels que `C:\` fonctionnent toujours
+    - Méthode `git` : clone/mise à jour du dépôt, installation/construction avec pnpm, et installation du wrapper à `%USERPROFILE%\.local\bin\openclaw.cmd`
+
+  </Step>
+  <Step title="Tâches post-installation">
+    - Ajoute le répertoire bin nécessaire au PATH utilisateur lorsque possible
+    - Tente de rafraîchir un service de passerelle chargé (`openclaw gateway install --force`, puis redémarrage)
+    - Exécute `openclaw doctor --non-interactive` lors des mises à niveau et des installations git (au mieux)
+
+  </Step>
+  <Step title="Gérer les échecs">
+    Les installations `iwr ... | iex` et de blocs de script signalent une erreur sans fermer la session PowerShell actuelle. Les installations directes `powershell -File` / `pwsh -File` sortent toujours avec un code non nul pour l'automatisation.
+  </Step>
 </Steps>
 
 ### Exemples (install.ps1)
@@ -238,14 +268,14 @@ Le script se termine avec le code `2` pour une sélection de méthode invalide o
 <AccordionGroup>
   <Accordion title="Référence des drapeaux">
 
-| Drapeau                     | Description                                                               |
-| --------------------------- | ------------------------------------------------------------------------- |
-| `-InstallMethod npm\|git`   | Méthode d'installation (par défaut : `npm`)                               |
-| `-Tag <tag\|version\|spec>` | npm dist-tag, version ou spécification de package (par défaut : `latest`) |
-| `-GitDir <path>`            | Répertoire de checkout (par défaut : `%USERPROFILE%\openclaw`)            |
-| `-NoOnboard`                | Ignorer l'onboarding                                                      |
-| `-NoGitUpdate`              | Ignorer `git pull`                                                        |
-| `-DryRun`                   | Afficher uniquement les actions                                           |
+| Drapeau                        | Description                                                              |
+| ------------------------------ | ------------------------------------------------------------------------ |
+| `-InstallMethod npm\|git`      | Méthode d'installation (par défaut : `npm`)                              |
+| `-Tag <tag\|version\|spec>`npm | dist-tag npm, version ou spécification de paquet (par défaut : `latest`) |
+| `-GitDir <path>`               | Répertoire de checkout (par défaut : `%USERPROFILE%\openclaw`)           |
+| `-NoOnboard`                   | Ignorer l'onboarding                                                     |
+| `-NoGitUpdate`                 | Ignorer `git pull`                                                       |
+| `-DryRun`                      | Afficher uniquement les actions                                          |
 
   </Accordion>
 
@@ -257,7 +287,7 @@ Le script se termine avec le code `2` pour une sélection de méthode invalide o
 | `OPENCLAW_GIT_DIR=<path>`          | Répertoire de checkout |
 | `OPENCLAW_NO_ONBOARD=1`            | Ignorer l'onboarding   |
 | `OPENCLAW_GIT_UPDATE=0`            | Désactiver git pull    |
-| `OPENCLAW_DRY_RUN=1`               | Mode simulation        |
+| `OPENCLAW_DRY_RUN=1`               | Mode Dry run           |
 
   </Accordion>
 </AccordionGroup>
@@ -283,13 +313,13 @@ Utilisez les drapeaux/variables d'environnement non interactifs pour des exécut
 
 <AccordionGroup>
   <Accordion title="Pourquoi Git est-il requis ?">
-    Git est requis pour la méthode d'installation `git`. Pour les installations `npm`, Git est toujours vérifié/installé pour éviter les échecs `spawn git ENOENT` lorsque les dépendances utilisent des URL git.
+    Git est requis pour la méthode d'installation `git`. Pour les installations `npm`, Git est tout de même vérifié/installé pour éviter les échecs `spawn git ENOENT` lorsque les dépendances utilisent des URL git.
   </Accordion>
 
-<Accordion title="Pourquoi npm rencontre-t-il EACCES sur Linux ?">Certaines configurations Linux pointent le préfixe global npm vers des chemins détenus par root. `install.sh` peut changer le préfixe vers `~/.npm-global` et ajouter des exports PATH aux fichiers rc du shell (lorsque ces fichiers existent).</Accordion>
+<Accordion title="Pourquoi npm rencontre-t-il EACCES sur Linux ?">Certaines configurations Linux font pointer le préfixe global npm vers des chemins détenus par root. `install.sh` peut modifier le préfixe vers `~/.npm-global` et ajouter des exports PATH aux fichiers rc du shell (lorsque ces fichiers existent).</Accordion>
 
-  <Accordion title="Problèmes sharp/libvips">
-    Les scripts définissent `SHARP_IGNORE_GLOBAL_LIBVIPS=1` par défaut pour éviter que sharp ne soit construit par rapport à libvips du système. Pour remplacer :
+  <Accordion title="sharp/libvips issues">
+    Par défaut, les scripts définissent `SHARP_IGNORE_GLOBAL_LIBVIPS=1` pour éviter que sharp ne soit compilé avec la libvips du système. Pour remplacer :
 
     ```bash
     SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
@@ -299,9 +329,9 @@ Utilisez les drapeaux/variables d'environnement non interactifs pour des exécut
 
 <Accordion title='Windows: "npm error spawn git / ENOENT"'>Installez Git pour Windows, rouvrez PowerShell, relancez l'installateur.</Accordion>
 
-<Accordion title='Windows: "openclaw is not recognized"'>Exécutez `npm config get prefix` et ajoutez ce répertoire à votre PATH utilisateur (pas de suffixe `\bin` nécessaire sous Windows), puis rouvrez PowerShell.</Accordion>
+<Accordion title='WindowsWindows: "openclaw is not recognized"'>Exécutez `npm config get prefix` et ajoutez ce répertoire à votre PATH utilisateur (le suffixe `\bin`Windows n'est pas nécessaire sous Windows), puis rouvrez PowerShell.</Accordion>
 
-  <Accordion title="Windows: how to get verbose installer output">
+  <Accordion title="WindowsWindows: how to get verbose installer output">
     `install.ps1` n'expose pas actuellement de commutateur `-Verbose`.
     Utilisez le traçage PowerShell pour les diagnostics au niveau du script :
 
@@ -313,13 +343,13 @@ Utilisez les drapeaux/variables d'environnement non interactifs pour des exécut
 
   </Accordion>
 
-  <Accordion title="openclaw not found after install">
+  <Accordion title="openclaw not found after install"Node.js>
     Généralement un problème de PATH. Voir [Node.js troubleshooting](/fr/install/node#troubleshooting).
   </Accordion>
 </AccordionGroup>
 
 ## Connexes
 
-- [Vue d'ensemble de l'installation](/fr/install)
-- [Mise à jour](/fr/install/updating)
-- [Désinstallation](/fr/install/uninstall)
+- [Install overview](/fr/install)
+- [Updating](/fr/install/updating)
+- [Uninstall](/fr/install/uninstall)

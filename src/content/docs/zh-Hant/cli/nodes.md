@@ -1,7 +1,7 @@
 ---
 summary: "CLI 參考指南 for `openclaw nodes` (status, pairing, invoke, camera/canvas/screen)"
 read_when:
-  - You’re managing paired nodes (cameras, screen, canvas)
+  - You're managing paired nodes (cameras, screen, canvas)
   - You need to approve requests or invoke node commands
 title: "節點"
 ---
@@ -12,9 +12,9 @@ title: "節點"
 
 相關：
 
-- 節點概覽：[節點](/zh-Hant/nodes)
-- 相機：[相機節點](/zh-Hant/nodes/camera)
-- 影像：[影像節點](/zh-Hant/nodes/images)
+- Nodes 概覽：[Nodes](/zh-Hant/nodes)
+- Camera：[Camera nodes](/zh-Hant/nodes/camera)
+- Images：[Image nodes](/zh-Hant/nodes/images)
 
 常用選項：
 
@@ -64,11 +64,10 @@ openclaw nodes invoke --node <id|name|ip> --command <command> --params <json>
 - `--idempotency-key <key>`：選用的等冪性金鑰。
 - 此處封鎖 `system.run` 和 `system.run.prepare`；請使用 `exec` 工具搭配 `host=node` 進行 Shell 執行。
 
-若要在節點上執行 Shell，請使用 `exec` 工具搭配 `host=node`，而不要使用 `openclaw nodes run`。
-`nodes` CLI 現已著重於功能：透過 `nodes invoke` 進行直接 RPC，以及配對、相機、
-螢幕、位置、畫布和通知。
+若要在節點上執行 Shell，請使用 `exec` 工具搭配 `host=node`，而不是 `openclaw nodes run`。
+`nodes` CLI 現在以功能為導向：透過 `nodes invoke` 進行直接 RPC，以及配對、Camera、Screen、Location、Canvas 和通知。Canvas 指令由內附的實驗性 Canvas 外掛程式實作；核心保留相容性掛鉤，使它們仍位於 `openclaw nodes canvas` 之下。
 
 ## 相關
 
 - [CLI 參考](/zh-Hant/cli)
-- [節點](/zh-Hant/nodes)
+- [Nodes](/zh-Hant/nodes)

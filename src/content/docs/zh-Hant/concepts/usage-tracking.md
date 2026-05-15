@@ -15,12 +15,12 @@ title: "使用量追蹤"
 
 ## 顯示位置
 
-- 聊天中的 `/status`：包含工作階段 token + 估算成本（僅限 API 金鑰）的豐富表情符號狀態卡。提供者使用量會顯示**目前模型提供者**的資訊（如有），並以標準化的 `X% left` 視窗呈現。
+- `/status` 在對話中：包含 Session 權杖與預估成本（僅限 API 金鑰）的豐富 Emoji 狀態卡片。當可用時，提供者使用量會以標準化的 `X% left` 視窗顯示 **目前的模型提供者** 使用情況。
 - 聊天中的 `/usage off|tokens|full`：個別回應的使用量頁尾（OAuth 僅顯示 token）。
 - 聊天中的 `/usage cost`：從 OpenClaw 工作階段日誌彙總的本機成本摘要。
 - CLI：`openclaw status --usage` 會列印完整的各提供者明細。
 - CLI：`openclaw channels list` 會在提供者設定旁列印相同的使用量快照（使用 `--no-usage` 跳過）。
-- macOS 选單列：Context 下的「Usage」區段（僅在可用時顯示）。
+- macOS 選單列：Context 下的「Usage」區段（僅在可用時顯示）。
 
 ## 提供者 + 憑證
 
@@ -31,15 +31,18 @@ title: "使用量追蹤"
 - **OpenAI Codex**：驗證設定檔中的 OAuth 權杖（如有 accountId 則會使用）。
 - **MiniMax**：API 金鑰或 MiniMax OAuth 設定檔。OpenClaw 將
   `minimax`、`minimax-cn` 和 `minimax-portal` 視為相同的 MiniMax 配額
-  介面，如果存在儲存的 MiniMax OAuth 則優先使用，否則回退
-  至 `MINIMAX_CODE_PLAN_KEY`、`MINIMAX_CODING_API_KEY` 或 `MINIMAX_API_KEY`。
-  MiniMax 的原始 `usage_percent` / `usagePercent` 欄位表示**剩餘**
-  配額，因此 OpenClaw 會在顯示前將其反轉；如果存在基於計數的欄位，則優先使用。
-  - Coding-plan 視窗標籤來自提供商的小時/分鐘欄位（如果
-    存在），然後回退至 `start_time` / `end_time` 範圍。
-  - 如果 coding-plan 端點返回 `model_remains`，OpenClaw 會優先使用
-    chat-model 條目，當缺少明確的
-    `window_hours` / `window_minutes` 欄位時，從時間戳記推導視窗標籤，並在計畫標籤中包含模型
+  介面，若存在則優先使用已儲存的 MiniMax OAuth，否則退回到
+  `MINIMAX_CODE_PLAN_KEY`、`MINIMAX_CODING_API_KEY` 或 `MINIMAX_API_KEY`。
+  使用量輪詢會從 `models.providers.minimax-portal.baseUrl`
+  或 `models.providers.minimax.baseUrl` 推導 Coding Plan 主機（當已設定時），否則使用
+  MiniMax CN 主機。
+  MiniMax 的原始 `usage_percent` / `usagePercent` 欄位代表 **剩餘**
+  配額，因此 OpenClaw 會在顯示前將其反轉；當存在以計數為基礎的欄位時則優先採用。
+  - Coding-plan 視窗標籤優先取自提供者的小時/分鐘欄位（當存在時），
+    然後退回到 `start_time` / `end_time` 期間。
+  - 如果 coding-plan 端點回傳 `model_remains`，OpenClaw 優先採用
+    chat-model 項目，當缺乏明確的
+    `window_hours` / `window_minutes` 欄位時，會從時間戳記推導視窗標籤，並在計畫標籤中包含模型
     名稱。
 - **Xiaomi MiMo**：透過 env/config/auth store 的 API 金鑰 (`XIAOMI_API_KEY`)。
 - **z.ai**：透過 env/config/auth store 的 API 金鑰。
@@ -51,6 +54,6 @@ title: "使用量追蹤"
 
 ## 相關
 
-- [Token 使用量與成本](/zh-Hant/reference/token-use)
-- [API 使用量與成本](/zh-Hant/reference/api-usage-costs)
-- [提示快取](/zh-Hant/reference/prompt-caching)
+- [Token use and costs](/zh-Hant/reference/token-use)
+- [API usage and costs](/zh-Hant/reference/api-usage-costs)
+- [Prompt caching](/zh-Hant/reference/prompt-caching)

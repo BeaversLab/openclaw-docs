@@ -6,15 +6,13 @@ read_when:
 title: "Complemento personal de Zalo"
 ---
 
-# Zalo Personal (complemento)
+Soporte personal de Zalo para OpenClaw a través de un complemento, utilizando `zca-js` nativo para automatizar una cuenta de usuario normal de Zalo.
 
-Soporte de Zalo Personal para OpenClaw a través de un complemento, utilizando `zca-js` nativo para automatizar una cuenta de usuario normal de Zalo.
-
-<Warning>La automatización no oficial puede provocar la suspensión o prohibición de la cuenta. Úsalo bajo tu propia responsabilidad.</Warning>
+<Warning>La automatización no oficial puede llevar a la suspensión o prohibición de la cuenta. Úselo bajo su propio riesgo.</Warning>
 
 ## Nomenclatura
 
-El ID del canal es `zalouser` para dejar claro que esto automatiza una **cuenta de usuario personal de Zalo** (no oficial). Mantenemos `zalo` reservado para una posible futura integración con la API oficial de Zalo.
+El ID del canal es `zalouser` para dejar explícito que esto automatiza una **cuenta de usuario personal de Zalo** (no oficial). Mantenemos `zalo` reservado para una potencial futura integración con la API oficial de Zalo.
 
 ## Dónde se ejecuta
 
@@ -22,7 +20,7 @@ Este complemento se ejecuta **dentro del proceso Gateway**.
 
 Si utiliza un Gateway remoto, instálelo/configúrelo en la **máquina que ejecuta el Gateway** y luego reinicie el Gateway.
 
-No se requiere ningún binario CLI externo `zca`/`openzca`.
+No se requiere ningún binario externo `zca`/`openzca` CLI.
 
 ## Instalación
 
@@ -31,6 +29,9 @@ No se requiere ningún binario CLI externo `zca`/`openzca`.
 ```bash
 openclaw plugins install @openclaw/zalouser
 ```
+
+Use el paquete básico para seguir la etiqueta de lanzamiento oficial actual. Fije una versión exacta
+solo cuando necesite una instalación reproducible.
 
 Reinicie el Gateway después.
 
@@ -80,4 +81,4 @@ Las acciones de mensajes del canal también admiten `react` para reacciones a me
 ## Relacionado
 
 - [Crear complementos](/es/plugins/building-plugins)
-- [Complementos de la comunidad](/es/plugins/community)
+- [ClawHub](/es/clawhub)

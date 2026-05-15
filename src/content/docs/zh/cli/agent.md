@@ -54,12 +54,14 @@ openclaw agent --agent ops --message "Run locally" --local
 
 - 当 Gateway(网关) 请求失败时，Gateway(网关) 模式会回退到嵌入式代理。使用 `--local` 强制在前端执行嵌入式运行。
 - `--local` 仍然会首先预加载插件注册表，因此在嵌入式运行期间，插件提供的提供商、工具 和渠道 保持可用。
-- 每次 `openclaw agent` 调用都被视为一次性运行。为该运行打开的捆绑或用户配置的 MCP 服务器会在回复后关闭，即使命令使用的是 Gateway(网关) 路径，因此 stdio MCP 子进程不会在脚本调用之间保持活动状态。
-- `--channel`、`--reply-channel` 和 `--reply-account` 影响的是回复交付，而不是会话 路由。
-- `--json` 将 stdout 保留用于 JSON 响应。Gateway(网关)、插件和嵌入式回退诊断信息会被路由到 stderr，以便脚本可以直接解析 stdout。
-- 嵌入式回退 JSON 包含 `meta.transport: "embedded"` 和 `meta.fallbackFrom: "gateway"`，以便脚本区分回退运行与 Gateway(网关) 运行。
-- 当此命令触发 `models.json` 重新生成时，SecretRef 管理的提供商凭据将作为非机密标记（例如环境变量名称、`secretref-env:ENV_VAR_NAME` 或 `secretref-managed`）持久化，而不是已解析的机密明文。
-- 标记写入具有源权威性：OpenClaw 从活动的源配置快照持久化标记，而不是从解析的运行时机密值持久化。
+- `--local` 和嵌入式回退运行被视为一次性运行。为该本地进程捆绑的 MCP 回环资源和已预热 Claude stdio 会话在回复后会被停用，因此脚本调用不会使本地子进程保持活动状态。
+- 由 Gateway(网关) 支持的运行会将 Gateway(网关) 拥有的 MCP 回环资源保留在正在运行的 Gateway(网关) 进程下；较旧的客户端可能仍会发送历史清理标志，但 Gateway(网关) 会将其作为兼容性的空操作接受。
+- `--channel`、`--reply-channel` 和 `--reply-account` 影响回复传递，而不影响会话路由。
+- `--json` 会将 stdout 保留给 JSON 响应。Gateway(网关)、插件和嵌入式回退诊断信息会路由到 stderr，以便脚本可以直接解析 stdout。
+- 嵌入式回退 JSON 包含 `meta.transport: "embedded"` 和 `meta.fallbackFrom: "gateway"`，以便脚本区分回退运行和 Gateway(网关) 运行。
+- 如果 Gateway(网关) 接受了代理运行，但 CLI 在等待最终回复时超时，嵌入式回退将使用新的显式 `gateway-fallback-*` 会话/运行 ID，并报告 `meta.fallbackReason: "gateway_timeout"` 以及回退会话字段。这可以避免与 Gateway(网关) 拥有的对话记录锁竞争，或静默替换原始路由的对话会话。
+- 当此命令触发 `models.json` 重新生成时，由 SecretRef 管理的提供商凭证将作为非机密标记（例如环境变量名称、`secretref-env:ENV_VAR_NAME` 或 `secretref-managed`）持久化，而不是已解析的机密明文。
+- 标记写入以源为权威：OpenClaw 持久化来自活动源配置快照的标记，而不是来自已解析的运行时机密值。
 
 ## 相关
 

@@ -6,17 +6,15 @@ read_when:
 title: "Webhooks 插件"
 ---
 
-# Webhooks（插件）
-
 Webhooks 插件添加了经过身份验证的 HTTP 路由，将外部自动化绑定到 OpenClaw TaskFlows。
 
-当您希望一个受信任的系统（如 Zapier、n8n、CI 作业或内部服务）在无需先编写自定义插件的情况下创建并驱动托管的 TaskFlows 时，请使用它。
+当您希望信任的系统（如 Zapier、n8n、CI 作业或内部服务）在无需先编写自定义插件的情况下创建和驱动托管 TaskFlows 时，请使用它。
 
 ## 运行位置
 
-Webhooks 插件运行在 Gateway(网关) 进程内部。
+Webhooks 插件在 Gateway(网关) 进程内运行。
 
-如果您的 Gateway(网关) 运行在另一台机器上，请在该 Gateway(网关) 主机上安装并配置该插件，然后重启 Gateway(网关)。
+如果您的 Gateway(网关) 运行在另一台机器上，请在该 Gateway(网关) 主机上安装并配置插件，然后重启 Gateway(网关)。
 
 ## 配置路由
 
@@ -53,9 +51,9 @@ Webhooks 插件运行在 Gateway(网关) 进程内部。
 
 - `enabled`：可选，默认为 `true`
 - `path`：可选，默认为 `/plugins/webhooks/<routeId>`
-- `sessionKey`：拥有绑定 TaskFlows 的所需会话（会话）
-- `secret`：所需的共享密钥或 SecretRef
-- `controllerId`：所创建托管流的可选控制器 ID
+- `sessionKey`：拥有绑定 TaskFlows 的必选会话
+- `secret`：必选的共享密钥或 SecretRef
+- `controllerId`：创建的托管流的可选控制器 ID
 - `description`：可选的操作员说明
 
 支持的 `secret` 输入：
@@ -67,26 +65,26 @@ Webhooks 插件运行在 Gateway(网关) 进程内部。
 
 ## 安全模型
 
-每个路由都被信任以使用其配置的 `sessionKey` 的 TaskFlow 权限进行操作。
+每个路由都受信任，以其配置的 `sessionKey` 的 TaskFlow 权限进行操作。
 
-这意味着该路由可以检查和修改由该会话拥有的 TaskFlows，因此您应该：
+这意味着该路由可以检查和变更属于该会话的 TaskFlows，因此您应该：
 
-- 为每个路由使用强唯一密钥
-- 优先使用密钥引用而非内联纯文本密钥
-- 将路由绑定到适合该工作流的最窄范围的会话
-- 仅公开您需要的特定 webhook 路径
+- 为每条路由使用强唯一的密钥
+- 优先使用密钥引用而非内联明文密钥
+- 将路由绑定到适合工作流的最窄会话
+- 仅公开您所需的特定 webhook 路径
 
 该插件应用：
 
 - 共享密钥身份验证
-- 请求正文大小和超时保护
+- 请求正文大小和超时防护
 - 固定窗口速率限制
-- 进行中的请求限制
-- 通过 `api.runtime.taskFlow.bindSession(...)` 进行所有者绑定的 TaskFlow 访问
+- 进行中请求限制
+- 通过 `api.runtime.tasks.managedFlows.bindSession(...)` 进行所有者绑定的 TaskFlow 访问
 
 ## 请求格式
 
-发送包含以下内容的 `POST` 请求：
+发送具有以下内容的 `POST` 请求：
 
 - `Content-Type: application/json`
 - `Authorization: Bearer <secret>` 或 `x-openclaw-webhook-secret: <secret>`
@@ -102,7 +100,7 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 
 ## 支持的操作
 
-该插件目前接受以下 JSON `action` 值：
+该插件当前接受这些 JSON `action` 值：
 
 - `create_flow`
 - `get_flow`
@@ -120,7 +118,7 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 
 ### `create_flow`
 
-为路由绑定的会话创建托管 TaskFlow。
+为路由绑定的会话创建一个托管 TaskFlow。
 
 示例：
 
@@ -135,7 +133,7 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 
 ### `run_task`
 
-在现有托管 TaskFlow 中创建托管子任务。
+在现有的托管 TaskFlow 中创建一个托管的子任务。
 
 允许的运行时包括：
 
@@ -154,7 +152,7 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 }
 ```
 
-## 响应形状
+## 响应格式
 
 成功的响应返回：
 
@@ -178,10 +176,10 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 }
 ```
 
-该插件有意从 webhook 响应中擦除所有者/会话元数据。
+该插件有意从 webhook 响应中清理掉所有者/会话元数据。
 
 ## 相关文档
 
 - [插件运行时 SDK](/zh/plugins/sdk-runtime)
 - [Hooks 和 webhooks 概述](/zh/automation/hooks)
-- [CLI webhooks](/zh/cli/webhooks)
+- [CLI webhooks](CLI/en/cli/webhooks)

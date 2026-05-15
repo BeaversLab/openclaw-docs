@@ -1,5 +1,5 @@
 ---
-summary: "Instalar y configurar Node.js para OpenClaw: requisitos de versión, opciones de instalación y solución de problemas de PATH"
+summary: "Instalar y configurar Node.js para OpenClaw - requisitos de versión, opciones de instalación y solución de problemas de PATH"
 title: "Node.js"
 read_when:
   - "You need to install Node.js before installing OpenClaw"
@@ -7,7 +7,7 @@ read_when:
   - "npm install -g fails with permissions or PATH issues"
 ---
 
-OpenClaw requiere **Node 22.14 o más reciente**. **Node 24 es el tiempo de ejecución predeterminado y recomendado** para instalaciones, flujos de trabajo de CI y lanzamientos. Node 22 sigue siendo compatible a través de la línea LTS activa. El [script de instalación](/es/install#alternative-install-methods) detectará e instalará Node automáticamente; esta página es para cuando desees configurar Node tú mismo y asegurarte de que todo esté conectado correctamente (versiones, PATH, instalaciones globales).
+OpenClaw requiere **Node 22.16 o más reciente**. **Node 24 es el tiempo de ejecución predeterminado y recomendado** para instalaciones, CI y flujos de trabajo de lanzamiento. Node 22 sigue siendo compatible a través de la línea LTS activa. El [script de instalador](/es/install#alternative-install-methods) detectará e instalará Node automáticamente; esta página es para cuando deseas configurar Node tú mismo y asegurarte de que todo esté conectado correctamente (versiones, PATH, instalaciones globales).
 
 ## Verifica tu versión
 
@@ -15,7 +15,7 @@ OpenClaw requiere **Node 22.14 o más reciente**. **Node 24 es el tiempo de ejec
 node -v
 ```
 
-Si esto imprime `v24.x.x` o superior, estás en el valor predeterminado recomendado. Si imprime `v22.14.x` o superior, estás en la ruta compatible de Node 22 LTS, pero aun así recomendamos actualizar a Node 24 cuando sea conveniente. Si Node no está instalado o la versión es demasiado antigua, elige un método de instalación a continuación.
+Si esto imprime `v24.x.x` o superior, estás en el valor predeterminado recomendado. Si imprime `v22.16.x` o superior, estás en la ruta compatible Node 22 LTS, pero aún recomendamos actualizar a Node 24 cuando sea conveniente. Si Node no está instalado o la versión es demasiado antigua, elige un método de instalación a continuación.
 
 ## Instalar Node
 
@@ -68,9 +68,9 @@ Si esto imprime `v24.x.x` o superior, estás en el valor predeterminado recomend
 <Accordion title="Usar un gestor de versiones (nvm, fnm, mise, asdf)">
   Los gestores de versiones te permiten cambiar fácilmente entre versiones de Node. Opciones populares:
 
-- [**fnm**](https://github.com/Schniz/fnm) — rápido, multiplataforma
-- [**nvm**](https://github.com/nvm-sh/nvm) — muy utilizado en macOS/Linux
-- [**mise**](https://mise.jdx.dev/) — políglota (Node, Python, Ruby, etc.)
+- [**fnm**](https://github.com/Schniz/fnm) - rápido, multiplataforma
+- [**nvm**](https://github.com/nvm-sh/nvm) - ampliamente utilizado en macOS/Linux
+- [**mise**](https://mise.jdx.dev/) - políglota (Node, Python, Ruby, etc.)
 
 Ejemplo con fnm:
 
@@ -80,7 +80,7 @@ fnm use 24
 ```
 
   <Warning>
-  Asegúrate de que tu gestor de versiones esté inicializado en tu archivo de inicio de shell (`~/.zshrc` o `~/.bashrc`). Si no lo está, es posible que `openclaw` no se encuentre en nuevas sesiones de terminal porque el PATH no incluirá el directorio bin de Node.
+  Asegúrate de que tu gestor de versiones esté inicializado en tu archivo de inicio de shell (`~/.zshrc` o `~/.bashrc`). Si no lo está, `openclaw` puede no encontrarse en nuevas sesiones de terminal porque el PATH no incluirá el directorio bin de Node.
   </Warning>
 </Accordion>
 
@@ -137,6 +137,6 @@ Agrega la línea `export PATH=...` a tu `~/.bashrc` o `~/.zshrc` para hacerlo pe
 
 ## Relacionado
 
-- [Resumen de instalación](/es/install) — todos los métodos de instalación
-- [Actualización](/es/install/updating) — mantener OpenClaw actualizado
-- [Primeros pasos](/es/start/getting-started) — primeros pasos después de la instalación
+- [Resumen de instalación](/es/install) - todos los métodos de instalación
+- [Actualización](/es/install/updating) - mantener OpenClaw actualizado
+- [Primeros pasos](/es/start/getting-started) - primeros pasos después de la instalación

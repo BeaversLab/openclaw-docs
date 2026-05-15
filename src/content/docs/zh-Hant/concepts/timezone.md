@@ -1,95 +1,47 @@
 ---
-summary: "針對代理、信封和提示的時區處理"
+summary: "時區在 OpenClaw 中的顯現位置 — 信封、工具負載、系統提示"
 read_when:
-  - You need to understand how timestamps are normalized for the model
-  - Configuring the user timezone for system prompts
+  - You want a quick mental model for timezone handling
+  - You are deciding where to set or override a timezone
 title: "時區"
 ---
 
-OpenClaw 標準化時間戳，使模型看到**單一參考時間**。
+OpenClaw 將時間戳標準化，讓模型看到的是**單一參考時間**，而不是混合了提供者本地時鐘的時間。時區會在三個介面上顯現，各有其用途：
 
-## 訊息信封（預設為本地時間）
+## 三個時區介面
 
-傳入訊息被包裹在一個信封中，如下所示：
+| 介面     | 顯示內容                                                                                     | 預設值                                | 設定方式                           |
+| -------- | -------------------------------------------------------------------------------------------- | ------------------------------------- | ---------------------------------- |
+| 訊息信封 | 包裝輸入通道訊息：`[Signal +1555 2026-01-18 00:19 PST] hello`                                | 主機本地                              | `agents.defaults.envelopeTimezone` |
+| 工具負載 | 通道 `readMessages` 風格的工具會傳回原始提供者時間 + 標準化的 `timestampMs` / `timestampUtc` | UTC 欄位始終存在                      | 不可設定 — 保留提供者原生時間戳    |
+| 系統提示 | 一個小型的 `Current Date & Time` 區塊，僅包含**時區**（無時鐘值，以維持快取穩定性）          | 若未設定 `userTimezone`，則為主機時區 | `agents.defaults.userTimezone`     |
 
-```
-[Provider ... 2026-01-05 16:26 PST] message text
-```
+系統提示刻意省略即時時鐘，以在對話輪次之間保持提示快取的穩定性。當代理需要當前時間時，會呼叫 `session_status`。
 
-信封中的時間戳**預設為主機本地時間**，精確到分鐘。
-
-您可以透過以下方式覆寫此設定：
+## 設定使用者時區
 
 ```json5
 {
   agents: {
     defaults: {
-      envelopeTimezone: "local", // "utc" | "local" | "user" | IANA timezone
-      envelopeTimestamp: "on", // "on" | "off"
-      envelopeElapsed: "on", // "on" | "off"
+      userTimezone: "America/Chicago",
     },
   },
 }
 ```
 
-- `envelopeTimezone: "utc"` 使用 UTC。
-- `envelopeTimezone: "user"` 使用 `agents.defaults.userTimezone`（若未設定則回退至主機時區）。
-- 使用明確的 IANA 時區（例如 `"Europe/Vienna"`）以取得固定偏移量。
-- `envelopeTimestamp: "off"` 會從信封標頭中移除絕對時間戳。
-- `envelopeElapsed: "off"` 會移除經過時間後綴（`+2m` 樣式）。
+若未設定 `userTimezone`，OpenClaw 會在執行時解析主機時區（不寫入設定）。`agents.defaults.timeFormat` (`auto` | `12` | `24`) 控制信封和下游介面中的 12 小時/24 小時渲染，而非在系統提示區段中。
 
-### 範例
+## 何時覆寫
 
-**本地時間（預設）：**
+- 當您希望跨不同區域的主機具有穩定的時間戳，或希望 UTC 對齊的日誌與診斷輸出相符時，**請使用 UTC 信封** (`envelopeTimezone: "utc"`)。
+- 當閘道主機位於一個時區但使用者位於另一個時區，且不論主機遷移如何都希望信封以使用者的時區顯示時，**請使用固定的 IANA 時區**（例如 `"Europe/Vienna"`）。
+- 當時間戳上下文對對話無用時，**請設定 `envelopeTimestamp: "off"`** 以使用低權杖信封。
 
-```
-[Signal Alice +1555 2026-01-18 00:19 PST] hello
-```
-
-**固定時區：**
-
-```
-[Signal Alice +1555 2026-01-18 06:19 GMT+1] hello
-```
-
-**經過時間：**
-
-```
-[Signal Alice +1555 +2m 2026-01-18T05:19Z] follow-up
-```
-
-## 工具載荷（原始供應商資料 + 正規化欄位）
-
-工具呼叫（`channels.discord.readMessages`、`channels.slack.readMessages` 等）會返回**原始供應商時間戳**。
-我們也會附加正規化欄位以確保一致性：
-
-- `timestampMs`（UTC 紀元毫秒）
-- `timestampUtc`（ISO 8601 UTC 字串）
-
-原始供應商欄位會被保留。
-
-## 系統提示的使用者時區
-
-設定 `agents.defaults.userTimezone` 以告知模型使用者的本地時區。若未
-設定，OpenClaw 將在執行時解析**主機時區**（無需寫入設定）。
-
-```json5
-{
-  agents: { defaults: { userTimezone: "America/Chicago" } },
-}
-```
-
-系統提示包含：
-
-- `Current Date & Time` 區塊，包含本地時間和時區
-- `Time format: 12-hour` 或 `24-hour`
-
-您可以使用 `agents.defaults.timeFormat`（`auto` | `12` | `24`）控制提示格式。
-
-請參閱 [日期與時間](/zh-Hant/date-time) 以了解完整行為和範例。
+有關完整的行為參考、各供應商的範例以及經過時間格式化，請參閱 [日期與時間](/zh-Hant/date-time)。
 
 ## 相關
 
-- [Heartbeat](/zh-Hant/gateway/heartbeat) — 活躍小時使用時區進行排程
-- [Cron Jobs](/zh-Hant/automation/cron-jobs) — cron 表達式使用時區進行排程
-- [日期與時間](/zh-Hant/date-time) — 完整的日期/時間行為和範例
+- [日期與時間](/zh-Hant/date-time) — 完整的信封/工具/提示行為與範例。
+- [Heartbeat](/zh-Hant/gateway/heartbeat) — 活躍時段使用時區進行排程。
+- [Cron Jobs](/zh-Hant/automation/cron-jobs) — cron 表示式使用時區進行排程。

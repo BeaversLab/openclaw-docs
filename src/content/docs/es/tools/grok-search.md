@@ -10,10 +10,7 @@ OpenClaw admite Grok como proveedor de `web_search`, utilizando respuestas de xA
 para producir respuestas sintetizadas por IA respaldadas por resultados de búsqueda en vivo
 con citas.
 
-La misma `XAI_API_KEY` también puede alimentar la herramienta `x_search` integrada para la
-búsqueda de publicaciones de X (antes Twitter). Si almacena la clave en
-`plugins.entries.xai.config.webSearch.apiKey`, OpenClaw ahora la reutiliza como
-alternativa para el proveedor de modelo xAI incluido también.
+La misma clave de API de xAI también puede alimentar la herramienta integrada `x_search` para la búsqueda de publicaciones de X (antes Twitter) y la herramienta `code_execution`. Si almacena la clave bajo `plugins.entries.xai.config.webSearch.apiKey`, OpenClaw ahora la reutiliza como alternativa para el proveedor de modelo xAI incluido también.
 
 Para métricas de X a nivel de publicación, como republicaciones, respuestas, marcadores o vistas, prefiera
 `x_search` con la URL exacta de la publicación o el ID de estado en lugar de una
@@ -61,6 +58,7 @@ Si lo omite, puede habilitar o cambiar `x_search` más tarde en la configuració
         config: {
           webSearch: {
             apiKey: "xai-...", // optional if XAI_API_KEY is set
+            baseUrl: "https://api.x.ai/v1", // optional Responses API proxy/base URL override
           },
         },
       },
@@ -93,8 +91,14 @@ devuelve una respuesta sintetizada con citas en lugar de una lista de N resultad
 
 Los filtros específicos del proveedor no son compatibles actualmente.
 
+Grok utiliza un tiempo de espera predeterminado de 60 segundos específico del proveedor porque las búsquedas fundamentadas en la web de xAI Responses pueden tardar más que el valor predeterminado compartido `web_search`. Establezca `tools.web.search.timeoutSeconds` para anularlo.
+
+## Anulaciones de URL base
+
+Establezca `plugins.entries.xai.config.webSearch.baseUrl` cuando la búsqueda web de Grok deba enrutar a través de un proxy de operador o un punto de conexión de Responses compatible con xAI. OpenClaw publica en `<baseUrl>/responses` después de recortar las barras diagonales finales. `x_search` utiliza la misma alternativa `webSearch.baseUrl` a menos que se establezca `plugins.entries.xai.config.xSearch.baseUrl`.
+
 ## Relacionado
 
-- [Información general de la búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [Descripción general de la búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
 - [x_search en la búsqueda web](/es/tools/web#x_search) -- búsqueda de X de primera clase a través de xAI
-- [Búsqueda de Gemini](/es/tools/gemini-search) -- respuestas sintetizadas por IA a través de la base de Google
+- [Gemini Search](/es/tools/gemini-search) -- respuestas sintetizadas por IA mediante fundamentación de Google

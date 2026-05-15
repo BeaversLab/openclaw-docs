@@ -6,7 +6,7 @@ read_when:
   - You need the API key env var or CLI auth choice
 ---
 
-[Vercel AI Gateway(网关)](https://vercel.com/ai-gateway) 提供了统一的 API，
+[Vercel AI Gateway(网关)](https://vercel.com/ai-gateway) 提供了一个统一的 API，
 通过单一端点访问数百个模型。
 
 | 属性     | 值                         |
@@ -77,12 +77,12 @@ OpenClaw 接受 Vercel Claude 简写模型引用，并在
 
 <AccordionGroup>
   <Accordion title="Environment variable for daemon processes">
-    如果 OpenClaw Gateway 作为守护进程运行，请确保
+    如果 OpenClaw Gateway(网关) 作为守护进程（launchd/systemd）运行，请确保
     `AI_GATEWAY_API_KEY` 对该进程可用。
 
     <Warning>
-    仅在 `~/.profile` 中设置的密钥对 launchd/systemd
-    守护进程不可见，除非明确导入了该环境。请确保在
+    除非显式导入该环境，否则仅在 `~/.profile` 中设置的密钥对于 launchd/systemd
+    守护进程是不可见的。请在
     `~/.openclaw/.env` 中或通过 `env.shellEnv` 设置密钥，以确保网关进程可以
     读取它。
     </Warning>
@@ -90,22 +90,29 @@ OpenClaw 接受 Vercel Claude 简写模型引用，并在
   </Accordion>
 
   <Accordion title="Provider routing">
-    Vercel AI Gateway 根据模型
-    ref 前缀将请求路由到上游提供商。例如，`vercel-ai-gateway/anthropic/claude-opus-4.6` 通过
+    Vercel AI Gateway(网关) 根据模型
+    引用前缀将请求路由到上游提供商。例如，`vercel-ai-gateway/anthropic/claude-opus-4.6` 通过
     Anthropic 路由，而 `vercel-ai-gateway/openai/gpt-5.5` 通过
-    OpenAI 路由，`vercel-ai-gateway/moonshotai/kimi-k2.6` 通过
-    MoonshotAI 路由。您的单个 `AI_GATEWAY_API_KEY` 处理所有
+    OpenAI 路由，`vercel-ai-gateway/moonshotai/kimi-k2.6` 则通过
+    MoonshotAI 路由。您唯一的 `AI_GATEWAY_API_KEY` 处理所有
     上游提供商的身份验证。
+  </Accordion>
+  <Accordion title="Thinking levels">
+    当 OpenClaw 知道上游提供商合同时，`/think`OpenClaw 选项遵循受信任的上游模型前缀。`vercel-ai-gateway/anthropic/...` 使用
+    Claude 思考配置文件，包括 Claude 4.6 模型的自适应默认值。
+    `vercel-ai-gateway/openai/gpt-5.4`、`gpt-5.5` 和 Codex 风格的引用
+    像 OpenAI/OpenAI Codex 提供商一样暴露 `/think xhigh`OpenAIOpenAI。其他
+    命名空间引用保持正常的推理级别，除非其目录元数据声明了更多。
   </Accordion>
 </AccordionGroup>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Model selection" href="/zh/concepts/model-providers" icon="layers">
-    选择提供商、模型 ref 和故障转移行为。
+  <Card title="模型选择" href="/zh/concepts/model-providers" icon="layers">
+    选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="Troubleshooting" href="/zh/help/troubleshooting" icon="wrench">
+  <Card title="故障排除" href="/zh/help/troubleshooting" icon="wrench">
     常规故障排除和常见问题。
   </Card>
 </CardGroup>

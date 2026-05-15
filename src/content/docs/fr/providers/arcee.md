@@ -108,12 +108,12 @@ OpenClaw fournit actuellement ce catalogue Arcee intégré :
 
 ## Fonctionnalités prises en charge
 
-| Fonctionnalité                               | Pris en charge               |
-| -------------------------------------------- | ---------------------------- |
-| Streaming                                    | Oui                          |
-| Utilisation d'outils / appel de fonction     | Oui                          |
-| Sortie structurée (mode JSON et schéma JSON) | Oui                          |
-| Réflexion étendue                            | Oui (Trinity Large Thinking) |
+| Fonctionnalité                               | Pris en charge                                   |
+| -------------------------------------------- | ------------------------------------------------ |
+| Streaming                                    | Oui                                              |
+| Utilisation d'outils / appel de fonction     | Oui (Trinity Mini, Aperçu de Trinity Large)      |
+| Sortie structurée (mode JSON et schéma JSON) | Oui                                              |
+| Réflexion étendue                            | Oui (Trinity Large Thinking ; outils désactivés) |
 
 <AccordionGroup>
   <Accordion title="Note d'environnement">

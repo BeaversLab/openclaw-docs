@@ -1,7 +1,7 @@
 ---
 summary: "Referencia de CLI para `openclaw nodes` (estado, emparejamiento, invocación, cámara/canvas/pantalla)"
 read_when:
-  - You’re managing paired nodes (cameras, screen, canvas)
+  - You're managing paired nodes (cameras, screen, canvas)
   - You need to approve requests or invoke node commands
 title: "Nodes"
 ---
@@ -67,10 +67,10 @@ Invocar indicadores:
 - `system.run` y `system.run.prepare` están bloqueados aquí; use la herramienta `exec` con `host=node` para la ejecución de shell.
 
 Para la ejecución de shell en un nodo, use la herramienta `exec` con `host=node` en lugar de `openclaw nodes run`.
-La CLI de `nodes` ahora se centra en las capacidades: RPC directo a través de `nodes invoke`, además de emparejamiento, cámara,
-pantalla, ubicación, lienzo y notificaciones.
+La CLI de `nodes` ahora se centra en capacidades: RPC directo a través de `nodes invoke`, además de emparejamiento, cámara,
+pantalla, ubicación, Canvas y notificaciones. Los comandos de Canvas son implementados por el complemento Canvas experimental incluido; el núcleo mantiene un enlace de compatibilidad para que permanezcan bajo `openclaw nodes canvas`.
 
 ## Relacionado
 
-- [Referencia de CLI](/es/cli)
+- [Referencia de la CLI](/es/cli)
 - [Nodos](/es/nodes)

@@ -6,9 +6,9 @@ read_when:
 title: "Envoi d'agent"
 ---
 
-`openclaw agent` exécute un seul tour d'agent depuis la ligne de commande sans avoir besoin
-d'un message de chat entrant. Utilisez-le pour les workflows scriptés, les tests et la
-livraison programmée.
+`openclaw agent` exécute un seul tour d'agent à partir de la ligne de commande sans avoir besoin
+d'un message de chat entrant. Utilisez-le pour les flux de travail scriptés, les tests et la
+livraison programmatique.
 
 ## Quick start
 
@@ -55,7 +55,7 @@ livraison programmée.
 | ----------------------------- | ---------------------------------------------------------------------- |
 | `--message \<text\>`          | Message à envoyer (requis)                                             |
 | `--to \<dest\>`               | Dériver la clé de session à partir d'une cible (téléphone, id de chat) |
-| `--agent \<id\>`              | Cibler un agent configuré (utilise sa session `main`)                  |
+| `--agent \<id\>`              | Ciblez un agent configuré (utilise sa session `main`)                  |
 | `--session-id \<id\>`         | Réutiliser une session existante par id                                |
 | `--local`                     | Forcer l'exécution locale intégrée (ignorer le Gateway)                |
 | `--deliver`                   | Envoyer la réponse à un channel de chat                                |
@@ -70,13 +70,13 @@ livraison programmée.
 
 ## Comportement
 
-- Par défaut, la CLI passe **par le Gateway**. Ajoutez `--local` pour forcer le
-  runtime intégré sur la machine actuelle.
+- Par défaut, la CLI passe **par le Gateway**. Ajoutez `--local` pour forcer
+  le runtime embarqué sur la machine actuelle.
 - Si le Gateway est inaccessible, la CLI **revient** à l'exécution locale intégrée.
 - Sélection de session : `--to` dérive la clé de session (les cibles de groupe/channel
-  préservent l'isolation ; les chats directs s'effondrent vers `main`).
+  préservent l'isolement ; les chats directs se réduisent à `main`).
 - Les flags de réflexion et de verbosité sont conservés dans le magasin de session.
-- Sortie : texte brut par défaut, ou `--json` pour une charge utile structurée + des métadonnées.
+- Sortie : texte brut par défaut, ou `--json` pour une charge utile structurée + métadonnées.
 
 ## Exemples
 
@@ -93,6 +93,17 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 
 ## Connexes
 
-- [Référence de l'CLI Agent](/fr/cli/agent)
-- [Sous-agents](/fr/tools/subagents) — génération de sous-agents en arrière-plan
-- [Sessions](/fr/concepts/session) — fonctionnement des clés de session
+<CardGroup cols={2}>
+  <Card title="CLIRéférence CLI de l'agent" href="/fr/cli/agent" icon="terminal">
+    Référence complète des indicateurs et options `openclaw agent`.
+  </Card>
+  <Card title="Sous-agents" href="/fr/tools/subagents" icon="users">
+    Génération de sous-agents en arrière-plan.
+  </Card>
+  <Card title="Sessions" href="/fr/concepts/session" icon="comments">
+    Fonctionnement des clés de session et comment `--to`, `--agent` et `--session-id` les résolvent.
+  </Card>
+  <Card title="Commandes slash" href="/fr/tools/slash-commands" icon="slash">
+    Catalogue de commandes natif utilisé dans les sessions d'agent.
+  </Card>
+</CardGroup>

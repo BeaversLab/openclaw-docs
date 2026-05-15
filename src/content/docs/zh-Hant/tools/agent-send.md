@@ -6,9 +6,7 @@ read_when:
 title: "Agent send"
 ---
 
-`openclaw agent` 從命令列執行單次 agent 週期，無需
-連入的聊天訊息。將其用於腳本化工作流程、測試和
-程式化遞送。
+`openclaw agent` 從命令列執行單一 agent 輪次，無需傳入的聊天訊息。將其用於腳本化工作流程、測試和程式化傳遞。
 
 ## 快速入門
 
@@ -55,7 +53,7 @@ title: "Agent send"
 | ----------------------------- | ------------------------------------------------- |
 | `--message \<text\>`          | 要發送的訊息（必填）                              |
 | `--to \<dest\>`               | 從目標（電話、聊天 ID）推導 session 金鑰          |
-| `--agent \<id\>`              | 指定已設定的 agent（使用其 `main` session）       |
+| `--agent \<id\>`              | 目標指定已配置的 agent (使用其 `main` session)    |
 | `--session-id \<id\>`         | 依 ID 重複使用現有的 session                      |
 | `--local`                     | 強制使用本機內嵌執行階段（跳過 Gateway）          |
 | `--deliver`                   | 將回覆發送到聊天頻道                              |
@@ -70,13 +68,13 @@ title: "Agent send"
 
 ## 行為
 
-- 預設情況下，CLI 會**透過 Gateway** 執行。加入 `--local` 以強制
-  使用目前機器上的內嵌執行階段。
+- 預設情況下，CLI 會 **透過 Gateway** 執行。新增 `--local` 以強制使用
+  當前機器上的嵌入式執行環境。
 - 如果 Gateway 無法連線，CLI 將**回退**到本機內嵌執行。
-- Session 選擇：`--to` 推導 session 金鑰（群組/頻道目標
-  會保持隔離；直接聊天則收斂至 `main`）。
+- Session 選擇：`--to` 導出 session 金鑰 (群組/頻道目標
+  會保持隔離；直接聊天則合併為 `main`)。
 - 思考和詳細標誌會持續存在於 session store 中。
-- Output: 預設為純文字，或使用 `--json` 取得結構化載荷與中繼資料。
+- 輸出：預設為純文字，或是使用 `--json` 取得結構化 payload + 中繼資料。
 
 ## 範例
 
@@ -93,6 +91,17 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 
 ## 相關
 
-- [Agent CLI 參考](/zh-Hant/cli/agent)
-- [子代理程式](/zh-Hant/tools/subagents) — 背景子代理程式生成
-- [Sessions](/zh-Hant/concepts/session) — Session 金鑰運作方式
+<CardGroup cols={2}>
+  <Card title="Agent CLI 參考資料" href="/zh-Hant/cli/agent" icon="terminal">
+    完整的 `openclaw agent` flag 和選項參考資料。
+  </Card>
+  <Card title="Sub-agents" href="/zh-Hant/tools/subagents" icon="users">
+    背景子 agent 生成。
+  </Card>
+  <Card title="Sessions" href="/zh-Hant/concepts/session" icon="comments">
+    Session 金鑰的運作方式，以及 `--to`、`--agent` 和 `--session-id` 如何解析它們。
+  </Card>
+  <Card title="斜線指令" href="/zh-Hant/tools/slash-commands" icon="slash">
+    在 agent sessions 中使用的原生指令目錄。
+  </Card>
+</CardGroup>

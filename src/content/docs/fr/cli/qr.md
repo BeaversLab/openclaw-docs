@@ -38,20 +38,20 @@ openclaw qr --url wss://gateway.example/ws
 - Dans le processus d'amorçage de nœud/opérateur intégré, le jeton de nœud principal atterrit toujours avec `scopes: []`.
 - Si la transmission de l'amorçage émet également un jeton d'opérateur, il reste lié à la liste d'autorisation d'amorçage : `operator.approvals`, `operator.read`, `operator.talk.secrets`, `operator.write`.
 - Les vérifications de portée d'amorçage sont préfixées par rôle. Cette liste d'autorisation d'opérateur ne satisfait que les requêtes d'opérateur ; les rôles non-opérateurs ont toujours besoin de portées sous leur propre préfixe de rôle.
-- L'appairage mobile échoue de manière sécurisée pour les URLs de passerelle Tailscale/publiques `ws://`. Le LAN privé `ws://` reste pris en charge, mais les itinéraires mobiles Tailscale/publics devraient utiliser Tailscale Serve/Funnel ou une URL de passerelle `wss://`.
-- Avec `--remote`, OpenClaw nécessite soit `gateway.remote.url` soit
+- L'appairage mobile échoue fermé pour les URL de passerelle Tailscale`ws://` Tailscale/publiques. Les adresses LAN privées et les hôtes `.local`Bonjour Bonjour restent pris en charge sur `ws://`TailscaleTailscale, mais les itinéraires mobiles Tailscale/publics doivent utiliser Tailscale Serve/Funnel ou une URL de passerelle `wss://`.
+- Avec `--remote`OpenClaw, OpenClaw nécessite `gateway.remote.url` ou
   `gateway.tailscale.mode=serve|funnel`.
-- Avec `--remote`, si des informations d'identification à distance effectivement actives sont configurées en tant que SecretRefs et que vous ne passez pas `--token` ou `--password`, la commande les résout à partir de l'instantané de la passerelle active. Si la passerelle n'est pas disponible, la commande échoue rapidement.
-- Sans `--remote`, les SecretRefs d'authentification de la passerelle locale sont résolus lorsqu'aucune substitution d'authentification CLI n'est passée :
+- Avec `--remote`, si des identifiants distants effectivement actifs sont configurés en tant que SecretRefs et que vous ne transmettez pas `--token` ou `--password`, la commande les résout à partir du instantané de la passerelle active. Si la passerelle n'est pas disponible, la commande échoue rapidement.
+- Sans `--remote`CLI, les SecretRefs d'authentification de la passerelle locale sont résolus lorsqu'aucune substitution d'authentification CLI n'est transmise :
   - `gateway.auth.token` se résout lorsque l'authentification par jeton peut l'emporter (`gateway.auth.mode="token"` explicite ou mode inféré où aucune source de mot de passe ne l'emporte).
-  - `gateway.auth.password` se résout lorsque l'authentification par mot de passe peut l'emporter (`gateway.auth.mode="password"` explicite ou mode inféré sans jeton gagnant provenant de auth/env).
-- Si à la fois `gateway.auth.token` et `gateway.auth.password` sont configurés (y compris les SecretRefs) et que `gateway.auth.mode` n'est pas défini, la résolution du code de configuration échoue jusqu'à ce que le mode soit défini explicitement.
-- Remarque sur la dérive de version de Gateway : ce chemin de commande nécessite une passerelle prenant en charge `secrets.resolve` ; les passerelles plus anciennes renvoient une erreur de méthode inconnue.
+  - `gateway.auth.password` se résout lorsque l'authentification par mot de passe peut l'emporter (`gateway.auth.mode="password"` explicite ou mode inféré sans jeton gagnant provenant de l'auth/env).
+- Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés (y compris les SecretRefs) et que `gateway.auth.mode` n'est pas défini, la résolution du code de configuration échoue jusqu'à ce que le mode soit défini explicitement.
+- Remarque sur la disparité de version de la passerelle : ce chemin de commande nécessite une passerelle prenant en charge Gateway`secrets.resolve` ; les passerelles plus anciennes renvoient une erreur de méthode inconnue.
 - Après le scan, approuvez le jumelage de l'appareil avec :
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`
 
 ## Connexes
 
-- [CLI reference](/fr/cli)
-- [Jumelage](/fr/cli/pairing)
+- [Référence CLI](CLI/en/cli)
+- [Appairage](/fr/cli/pairing)

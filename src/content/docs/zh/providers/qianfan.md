@@ -92,9 +92,10 @@ Qianfan 是百度的 MaaS 平台，提供 **统一的 API**，将请求路由到
   </Accordion>
 
   <Accordion title="故障排除">
-    - 确保您的 API 密钥以 `bce-v3/ALTAK-` 开头，并且已在百度云控制台中启用 Qianfan API 访问权限。
-    - 如果未列出模型，请确认您的账户已激活 Qianfan 服务。
-    - 默认基础 URL 为 `https://qianfan.baidubce.com/v2`。仅当您使用自定义端点或代理时才更改它。
+    - 确保您的 API 密钥以 `bce-v3/ALTAK-` 开头，并且已在百度云控制台中启用了千帆 API 访问权限。
+    - 如果未列出模型，请确认您的账户已激活千帆服务。
+    - 默认基础 URL 为 `https://qianfan.baidubce.com/v2`。仅在使用自定义端点或代理时才更改它。
+
   </Accordion>
 </AccordionGroup>
 

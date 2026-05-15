@@ -7,22 +7,22 @@ read_when:
 title: "Gateway sur macOS"
 ---
 
-OpenClaw.app n'inclut plus Node/Bun ou le runtime Gateway. L'application macOS
-attend une installation `openclaw` CLI **externe**, ne lance pas le Gateway en tant que
+OpenClaw.app n'inclut plus Node/Bun ni le runtime Gateway. L'application macOS
+s'attend à une installation **externe** de la OpenClawBunGatewaymacOS`openclaw`CLIGatewayGatewayGateway CLI, ne lance pas le Gateway en tant que
 processus enfant, et gère un service launchd par utilisateur pour maintenir le Gateway
 en cours d'exécution (ou se connecte à un Gateway local existant si un est déjà en cours d'exécution).
 
 ## Installer le CLI (requis pour le mode local)
 
-Node 24 est le runtime par défaut sur Mac. Node 22 LTS, actuellement `22.14+`, fonctionne toujours pour la compatibilité. Ensuite, installez `openclaw` globalement :
+Node 24 est le runtime par défaut sur le Mac. Node 22 LTS, actuellement `22.16+`, fonctionne toujours pour la compatibilité. Installez ensuite `openclaw` globalement :
 
 ```bash
 npm install -g openclaw@<version>
 ```
 
-Le bouton **Installer CLI** de l'application macOS exécute le même flux d'installation globale que l'application
-utilise en interne : il privilégie npm d'abord, puis pnpm, puis bun si c'est le seul
-gestionnaire de paquets détecté. Node reste le runtime Gateway recommandé.
+Le bouton **Installer la CLI** de l'application macOS exécute le même flux d'installation globale que l'application
+utilise en interne : il privilégie d'abord npm, puis pnpm, puis bun si c'est le seul
+gestionnaire de paquets détecté. Node reste le runtime recommandé pour le Gateway.
 
 ## Launchd (Gateway en tant que LaunchAgent)
 
@@ -42,7 +42,7 @@ Gestionnaire :
 
 Comportement :
 
-- « OpenClaw Actif » active/désactive le LaunchAgent.
+- "OpenClaw Actif" active/désactive le LaunchAgent.
 - La fermeture de l'application n'arrête **pas** le gateway (launchd le maintient en vie).
 - Si un Gateway est déjà en cours d'exécution sur le port configuré, l'application s'y connecte
   au lieu d'en démarrer un nouveau.
@@ -54,7 +54,7 @@ Journalisation :
 ## Compatibilité des versions
 
 L'application macOS vérifie la version du gateway par rapport à sa propre version. Si elles sont
-incompatibles, mettez à jour le CLI global pour qu'il corresponde à la version de l'application.
+incompatibles, mettez à jour la CLI globale pour qu'elle corresponde à la version de l'application.
 
 ## Test de fumée
 

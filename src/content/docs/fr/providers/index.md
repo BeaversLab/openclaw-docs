@@ -6,16 +6,14 @@ read_when:
 title: "Annuaire des fournisseurs"
 ---
 
-# Fournisseurs de modèles
+OpenClaw peut utiliser de nombreux providers de LLM. Choisissez un provider, authentifiez-vous, puis définissez le model par défaut comme `provider/model`.
 
-OpenClaw peut utiliser de nombreux fournisseurs de LLM. Choisissez un fournisseur, authentifiez-vous, puis définissez le modèle par défaut comme `provider/model`.
+Vous cherchez de la documentation sur les canaux de chat (WhatsApp/Telegram/Discord/Slack/Mattermost (plugin)/etc.) ? Voir [Canaux](/fr/channels).
 
-Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegram/Discord/Slack/Mattermost (plugin)/etc.) ? Voir [Canaux](/fr/channels).
+## Quick start
 
-## Démarrage rapide
-
-1. Authentifiez-vous auprès du fournisseur (généralement via `openclaw onboard`).
-2. Définir le modèle par défaut :
+1. Authentifiez-vous auprès du provider (généralement via `openclaw onboard`).
+2. Définissez le model par défaut :
 
 ```json5
 {
@@ -23,13 +21,13 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 }
 ```
 
-## Documentation des fournisseurs
+## Provider docs
 
 - [Alibaba Model Studio](/fr/providers/alibaba)
 - [Amazon Bedrock](/fr/providers/bedrock)
-- [Manteau Amazon Bedrock](/fr/providers/bedrock-mantle)
+- [Amazon Bedrock Mantle](/fr/providers/bedrock-mantle)
 - [Anthropic (API + Claude CLI)](/fr/providers/anthropic)
-- [Arcee AI (modèles Trinity)](/fr/providers/arcee)
+- [Arcee AI (Trinity models)](/fr/providers/arcee)
 - [Azure Speech](/fr/providers/azure-speech)
 - [BytePlus (International)](/fr/concepts/model-providers#byteplus-international)
 - [Cerebras](/fr/providers/cerebras)
@@ -41,20 +39,20 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [fal](/fr/providers/fal)
 - [Fireworks](/fr/providers/fireworks)
 - [GitHub Copilot](/fr/providers/github-copilot)
-- [Gradium](/fr/providers/gradium)
 - [GLM models](/fr/providers/glm)
 - [Google (Gemini)](/fr/providers/google)
-- [Groq (inférence LPU)](/fr/providers/groq)
-- [Hugging Face (Inférence)](/fr/providers/huggingface)
-- [inferrs (modèles locaux)](/fr/providers/inferrs)
+- [Gradium](/fr/providers/gradium)
+- [Groq (LPU inference)](/fr/providers/groq)
+- [Hugging Face (Inference)](/fr/providers/huggingface)
+- [inferrs (local models)](/fr/providers/inferrs)
 - [Kilocode](/fr/providers/kilocode)
-- [LiteLLM (passerelle unifiée)](/fr/providers/litellm)
-- [LM Studio (modèles locaux)](/fr/providers/lmstudio)
+- [LiteLLM (unified gateway)](/fr/providers/litellm)
+- [LM Studio (local models)](/fr/providers/lmstudio)
 - [MiniMax](/fr/providers/minimax)
 - [Mistral](/fr/providers/mistral)
-- [Moonshot AI (Kimi + Kimi Coding)](/fr/providers/moonshot)
+- [Moonshot IA (Kimi + Kimi Coding)](/fr/providers/moonshot)
 - [NVIDIA](/fr/providers/nvidia)
-- [Ollama (modèles cloud + locaux)](/fr/providers/ollama)
+- [Ollama (cloud + modèles locaux)](/fr/providers/ollama)
 - [OpenAI (API + Codex)](/fr/providers/openai)
 - [OpenCode](/fr/providers/opencode)
 - [OpenCode Go](/fr/providers/opencode-go)
@@ -69,8 +67,8 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [Synthetic](/fr/providers/synthetic)
 - [Tencent Cloud (TokenHub)](/fr/providers/tencent)
 - [Together AI](/fr/providers/together)
-- [Venice (Venice AI, axé sur la confidentialité)](/fr/providers/venice)
-- [Vercel AI Gateway](/fr/providers/vercel-ai-gateway)
+- [Venice (Venice IA, axé sur la confidentialité)](/fr/providers/venice)
+- [Vercel IA Gateway](/fr/providers/vercel-ai-gateway)
 - [vLLM (modèles locaux)](/fr/providers/vllm)
 - [Volcengine (Doubao)](/fr/providers/volcengine)
 - [Vydra](/fr/providers/vydra)
@@ -78,25 +76,25 @@ Vous cherchez de la documentation sur les canaux de discussion (WhatsApp/Telegra
 - [Xiaomi](/fr/providers/xiaomi)
 - [Z.AI](/fr/providers/zai)
 
-## Pages d'aperçu partagées
+## Pages de vue d'ensemble partagées
 
-- [Variant groupées supplémentaires](/fr/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy et Gemini CLI OAuth
-- [Génération d'images](/fr/tools/image-generation) - outil `image_generate` partagé, sélection de provider et basculement
-- [Génération de musique](/fr/tools/music-generation) - outil `music_generate` partagé, sélection de provider et basculement
-- [Génération de vidéo](/fr/tools/video-generation) - outil `video_generate` partagé, sélection de provider et basculement
+- [Variantes groupées supplémentaires](/fr/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy et CLI OAuth
+- [Génération d'images](/fr/tools/image-generation) - `image_generate` tool partagé, sélection du provider et basculement
+- [Génération de musique](/fr/tools/music-generation) - `music_generate` tool partagé, sélection du provider et basculement
+- [Génération vidéo](/fr/tools/video-generation) - outil `video_generate` partagé, sélection de provider et basculement
 
 ## Providers de transcription
 
-- [Deepgram (transcription audio)](/fr/providers/deepgram)
+- [Deepgram (transcription audio)](Deepgram/en/providers/deepgram)
 - [ElevenLabs](/fr/providers/elevenlabs#speech-to-text)
 - [Mistral](/fr/providers/mistral#audio-transcription-voxtral)
-- [OpenAI](/fr/providers/openai#speech-to-text)
+- [OpenAI](OpenAI/en/providers/openai#speech-to-text)
 - [SenseAudio](/fr/providers/senseaudio)
 - [xAI](/fr/providers/xai#speech-to-text)
 
 ## Outils communautaires
 
-- [Claude Max API Proxy](/fr/providers/claude-max-api-proxy) - Proxy communautaire pour les identifiants d'abonnement Claude (vérifiez la politique/conditions d'Anthropic avant utilisation)
+- [Claude Max API Proxy](API/en/providers/claude-max-api-proxyAnthropic) - Proxy communautaire pour les identifiants d'abonnement Claude (vérifiez la politique/les conditions d'utilisation d'Anthropic avant emploi)
 
 Pour le catalogue complet des providers (xAI, Groq, Mistral, etc.) et la configuration avancée,
 voir [Model providers](/fr/concepts/model-providers).

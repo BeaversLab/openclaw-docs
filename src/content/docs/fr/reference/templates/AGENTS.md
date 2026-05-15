@@ -94,7 +94,7 @@ Dans les discussions de groupe où vous recevez chaque message, soyez **intellig
 - Correction de fausses informations importantes
 - Résumé lorsqu'on vous le demande
 
-**Restez silencieux (HEARTBEAT_OK) lorsque :**
+**Restez silencieux lorsque :**
 
 - Ce n'est qu'une banalité entre humains
 - Quelqu'un a déjà répondu à la question

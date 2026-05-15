@@ -47,9 +47,15 @@ sidebarTitle: "MCP"
 </Steps>
 
 <AccordionGroup>
-  <Accordion title="Important behavior">
-    - 即時佇列狀態在橋接器連線時開始 - 較舊的逐字稿歷史會透過 `messages_read` 讀取 - Claude 推播通知僅在 MCP Session 存活時存在 - 當用戶端斷線時，橋接器會退出且即時佇列會消失 - 單次代理進入點（例如 `openclaw agent` 和 `openclaw infer model run`）會在回覆完成時關閉它們開啟的任何配套 MCP 運行環境，因此重複的腳本執行不會累積 stdio MCP 子程序 - 由 OpenClaw 啟動的 stdio MCP
-    伺服器（無論是內建或使用者設定）會在關機時以程序樹的形式被終結，因此由伺服器啟動的子程序不會在父級 stdio 用戶端退出後繼續存在 - 刪除或重設 Session 會透過共享運行環境清理路徑釋放該 Session 的 MCP 用戶端，因此不會有殘留的 stdio 連線繫結到已移除的 Session
+  <Accordion title="重要行為">
+    - 即時佇列狀態在橋接器連線時開始
+    - 較舊的逐字稿歷史記錄是使用 `messages_read` 讀取的
+    - Claude 推播通知僅在 MCP 工作階段存續期間存在
+    - 當客戶端斷線時，橋接器會退出且即時佇列會消失
+    - 諸如 `openclaw agent` 和 `openclaw infer model run` 之類的單次代理進入點，會在回覆完成時終止其開啟的任何配套 MCP 執行時，因此重複的腳本執行不會累積 stdio MCP 子程序
+    - 由 OpenClaw 啟動的 stdio MCP 伺服器（內建或使用者設定）會在關機時以程序樹的形式拆解，因此由伺服器啟動的子程序不會在父 stdio 客戶端退出後繼續存在
+    - 刪除或重設工作階段會透過共用執行時清理路徑釋放該工作階段的 MCP 客戶端，因此不會有殘留的 stdio 連線繫結至已移除的工作階段
+
   </Accordion>
 </AccordionGroup>
 
@@ -108,7 +114,7 @@ sidebarTitle: "MCP"
 
   </Accordion>
   <Accordion title="conversation_get">
-    根據 `session_key` 傳回單一對話。
+    使用直接 Gateway 工作階段查詢，透過 `session_key` 傳回一個對話。
   </Accordion>
   <Accordion title="messages_read">
     讀取單一會話支援對話的最近逐字稿訊息。
@@ -161,7 +167,12 @@ sidebarTitle: "MCP"
 - `plugin_approval_resolved`
 - `claude_permission_request`
 
-<Warning>- 佇列僅供即時使用；它會在 MCP 橋接器啟動時開始 - `events_poll` 和 `events_wait` 本身不會重播較舊的 Gateway 歷史記錄 - 永久待辦事項應使用 `messages_read` 讀取</Warning>
+<Warning>
+- 佇列僅限即時；它在 MCP 橋接器啟動時開始
+- `events_poll` 和 `events_wait` 不會自行重播較舊的 Gateway 歷史記錄
+- 持久性待辦事項應使用 `messages_read` 讀取
+
+</Warning>
 
 ### Claude 頻道通知
 
@@ -297,8 +308,13 @@ pnpm test:docker:mcp-channels
 
 <AccordionGroup>
   <Accordion title="重要行為">
-    - 這些指令僅讀取或寫入 OpenClaw 設定 - 它們不連線到目標 MCP 伺服器 - 它們不驗證指令、URL 或遠端傳輸目前是否可到達 - 執行時期配接器在執行時決定它們實際支援的傳輸形狀 - 嵌入式 Pi 在一般 `coding` 和 `messaging` 工具設定檔中公開已設定的 MCP 工具；`minimal` 仍然會隱藏它們，而 `tools.deny: ["bundle-mcp"]` 會明確停用它們 - 會議範圍的捆綁 MCP 執行環境在閒置 `mcp.sessionIdleTtlMs`
-    毫秒後會被回收（預設為 10 分鐘；設定 `0` 以停用），而一次性嵌入式執行會在執行結束時將其清理
+    - 這些指令僅讀取或寫入 OpenClaw 配置
+    - 它們不連接到目標 MCP 伺服器
+    - 它們不驗證指令、URL 或遠端傳輸目前是否可達
+    - 執行階段適配器在執行時決定它們實際支援的傳輸形狀
+    - 內嵌 Pi 在正常的 `coding` 和 `messaging` 工具設定檔中公開已設定的 MCP 工具；`minimal` 仍會隱藏它們，而 `tools.deny: ["bundle-mcp"]` 則會明確停用它們
+    - 會話範圍的捆綁 MCP 執行階段在閒置 `mcp.sessionIdleTtlMs` 毫秒後會被回收（預設為 10 分鐘；設定 `0` 以停用），且一次性內嵌執行會在執行結束時將其清理
+
   </Accordion>
 </AccordionGroup>
 

@@ -18,11 +18,13 @@ Las versiones actuales de OpenClaw incluyen Nostr como un complemento incluido, 
 
 - El onboarding (`openclaw onboard`) y `openclaw channels add` todavía muestran
   Nostr desde el catálogo de canales compartido.
-- Si su compilación excluye Nostr incluido, instálelo manualmente.
+- Si tu compilación excluye el Nostr incluido, instala el paquete npm directamente.
 
 ```bash
 openclaw plugins install @openclaw/nostr
 ```
+
+Usa el paquete básico para seguir la etiqueta oficial de lanzamiento actual. Fija una versión exacta solo cuando necesites una instalación reproducible.
 
 Use una copia local (flujos de trabajo de desarrollo):
 
@@ -30,7 +32,7 @@ Use una copia local (flujos de trabajo de desarrollo):
 openclaw plugins install --link <path-to-local-nostr-plugin>
 ```
 
-Reinicie la Gateway después de instalar o activar complementos.
+Reinicie el Gateway después de instalar o habilitar plugins.
 
 ### Configuración no interactiva
 
@@ -50,7 +52,7 @@ Use `--use-env` para mantener `NOSTR_PRIVATE_KEY` en el entorno en lugar de alma
 nak key generate
 ```
 
-2. Agregue a la configuración:
+2. Añadir a la configuración:
 
 ```json5
 {
@@ -62,29 +64,29 @@ nak key generate
 }
 ```
 
-3. Exporte la clave:
+3. Exportar la clave:
 
 ```bash
 export NOSTR_PRIVATE_KEY="nsec1..."
 ```
 
-4. Reinicie la Gateway.
+4. Reinicie el Gateway.
 
 ## Referencia de configuración
 
-| Clave        | Tipo     | Predeterminado                              | Descripción                                   |
+| Clave        | Tipo     | Por defecto                                 | Descripción                                   |
 | ------------ | -------- | ------------------------------------------- | --------------------------------------------- |
-| `privateKey` | string   | obligatorio                                 | Clave privada en formato `nsec` o hexadecimal |
+| `privateKey` | string   | requerido                                   | Clave privada en formato `nsec` o hexadecimal |
 | `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | URLs de Relay (WebSocket)                     |
-| `dmPolicy`   | string   | `pairing`                                   | Política de acceso a DM                       |
+| `dmPolicy`   | string   | `pairing`                                   | Política de acceso de DM                      |
 | `allowFrom`  | string[] | `[]`                                        | Claves públicas de remitentes permitidos      |
-| `enabled`    | boolean  | `true`                                      | Activar/desactivar canal                      |
+| `enabled`    | boolean  | `true`                                      | Habilitar/deshabilitar canal                  |
 | `name`       | string   | -                                           | Nombre para mostrar                           |
-| `profile`    | object   | -                                           | Metadatos del perfil NIP-01                   |
+| `profile`    | object   | -                                           | Metadatos de perfil NIP-01                    |
 
 ## Metadatos del perfil
 
-Los datos del perfil se publican como un evento NIP-01 `kind:0`. Puede gestionarlos desde la interfaz de usuario de Control (Canales -> Nostr -> Perfil) o configurarlos directamente en el archivo de configuración.
+Los datos del perfil se publican como un evento NIP-01 `kind:0`. Puede gestionarlo desde la UI de Control (Canales -> Nostr -> Perfil) o establecerlo directamente en la configuración.
 
 Ejemplo:
 
@@ -110,19 +112,19 @@ Ejemplo:
 
 Notas:
 
-- Las URLs de perfil deben usar `https://`.
-- La importación desde relays combina los campos y conserva las anulaciones locales.
+- Las URL de perfil deben usar `https://`.
+- La importación desde relays fusiona los campos y conserva las anulaciones locales.
 
 ## Control de acceso
 
 ### Políticas de DM
 
-- **pairing** (predeterminado): los remitentes desconocidos reciben un código de emparejamiento.
+- **pairing** (por defecto): los remitentes desconocidos reciben un código de emparejamiento.
 - **allowlist**: solo las claves públicas en `allowFrom` pueden enviar DM.
-- **open**: DMs entrantes públicos (requiere `allowFrom: ["*"]`).
-- **deshabilitado**: ignorar los MD entrantes.
+- **open**: DM entrantes públicos (requiere `allowFrom: ["*"]`).
+- **disabled**: ignorar DM entrantes.
 
-Notas sobre la aplicación:
+Notas de cumplimiento:
 
 - Las firmas de eventos entrantes se verifican antes de la política del remitente y el descifrado NIP-04, por lo que los eventos falsificados se rechazan temprano.
 - Las respuestas de emparejamiento se envían sin procesar el cuerpo del MD original.
@@ -149,7 +151,7 @@ Formatos aceptados:
 - **Clave privada:** `nsec...` o hexadecimal de 64 caracteres
 - **Claves públicas (`allowFrom`):** `npub...` o hexadecimal
 
-## Repetidores
+## Relés
 
 Predeterminados: `relay.damus.io` y `nos.lol`.
 
@@ -166,23 +168,23 @@ Predeterminados: `relay.damus.io` y `nos.lol`.
 
 Consejos:
 
-- Use 2-3 repetidores para redundancia.
-- Evite demasiados repetidores (latencia, duplicación).
-- Los repetidores de pago pueden mejorar la confiabilidad.
-- Los repetidores locales funcionan bien para pruebas (`ws://localhost:7777`).
+- Use 2-3 relés para redundancia.
+- Evite demasiados relés (latencia, duplicación).
+- Los relés de pago pueden mejorar la confiabilidad.
+- Los relés locales son adecuados para pruebas (`ws://localhost:7777`).
 
 ## Soporte de protocolo
 
-| NIP    | Estado      | Descripción                                    |
-| ------ | ----------- | ---------------------------------------------- |
-| NIP-01 | Compatible  | Formato de evento básico + metadatos de perfil |
-| NIP-04 | Compatible  | MD cifrados (`kind:4`)                         |
-| NIP-17 | Planificado | MD envueltos (gift-wrapped)                    |
-| NIP-44 | Planificado | Cifrado con versiones                          |
+| NIP    | Estado      | Descripción                                     |
+| ------ | ----------- | ----------------------------------------------- |
+| NIP-01 | Soportado   | Formato básico de eventos + metadatos de perfil |
+| NIP-04 | Soportado   | MD cifrados (`kind:4`)                          |
+| NIP-17 | Planificado | MD envueltos para regalo                        |
+| NIP-44 | Planificado | Cifrado con versiones                           |
 
 ## Pruebas
 
-### Repetidor local
+### Relé local
 
 ```bash
 # Start strfry
@@ -209,22 +211,22 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ## Solución de problemas
 
-### No se reciben mensajes
+### No recibir mensajes
 
 - Verifique que la clave privada sea válida.
-- Asegúrese de que las URL de los repetidores sean accesibles y usen `wss://` (o `ws://` para local).
+- Asegúrese de que las URL de los relés sean accesibles y usen `wss://` (o `ws://` para locales).
 - Confirme que `enabled` no sea `false`.
-- Revise los registros de la Gateway en busca de errores de conexión al repetidor.
+- Verifique los registros de Gateway para ver errores de conexión de relé.
 
-### No se envían respuestas
+### No enviar respuestas
 
-- Compruebe que el repetidor acepte escrituras.
-- Verifique la conectividad de salida.
-- Vigile las limitaciones de tasa del repetidor.
+- Compruebe que el relé acepte escrituras.
+- Verifique la conectividad saliente.
+- Vigile los límites de tasa del relé.
 
 ### Respuestas duplicadas
 
-- Esperado al usar múltiples repetidores.
+- Esperado al usar múltiples relés.
 - Los mensajes se deduplican por ID de evento; solo la primera entrega activa una respuesta.
 
 ## Seguridad
@@ -238,12 +240,12 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 - Solo mensajes directos (sin chats grupales).
 - Sin archivos adjuntos multimedia.
-- Solo NIP-04 (se planea NIP-17 gift-wrap).
+- Solo NIP-04 (envoltorio para regalo NIP-17 planificado).
 
 ## Relacionado
 
-- [Resumen de canales](/es/channels) — todos los canales compatibles
-- [Emparejamiento](/es/channels/pairing) — flujo de autenticación y emparejamiento de MD
+- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
 - [Grupos](/es/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
 - [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
 - [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

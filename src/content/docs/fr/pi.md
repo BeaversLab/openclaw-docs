@@ -23,10 +23,10 @@ OpenClaw utilise le SDK Pi pour intégrer un agent de codage IA dans son archite
 
 ```json
 {
-  "@mariozechner/pi-agent-core": "0.70.2",
-  "@mariozechner/pi-ai": "0.70.2",
-  "@mariozechner/pi-coding-agent": "0.70.2",
-  "@mariozechner/pi-tui": "0.70.2"
+  "@mariozechner/pi-agent-core": "0.73.0",
+  "@mariozechner/pi-ai": "0.73.0",
+  "@mariozechner/pi-coding-agent": "0.73.0",
+  "@mariozechner/pi-tui": "0.73.0"
 }
 ```
 
@@ -332,7 +332,7 @@ const compactResult = await compactEmbeddedPiSessionDirect({
 });
 ```
 
-## Authentification et résolution de modèle
+## Authentification et résolution de model
 
 ### Profils d'authentification
 
@@ -408,7 +408,7 @@ if (cfg?.agents?.defaults?.contextPruning?.mode === "cache-ttl") {
 }
 ```
 
-## Diffusion et réponses par bloc
+## Réponses en continu et en bloc
 
 ### Découpage en blocs
 

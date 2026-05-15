@@ -7,7 +7,7 @@ read_when:
 title: "Ejemplos de configuración"
 ---
 
-Los siguientes ejemplos se alinean con el esquema de configuración actual. Para la referencia exhaustiva y notas por campo, consulte [Configuración](/es/gateway/configuration).
+Los ejemplos a continuación se alinean con el esquema de configuración actual. Para la referencia exhaustiva y notas por campo, consulte [Configuración](/es/gateway/configuration).
 
 ## Inicio rápido
 
@@ -20,7 +20,7 @@ Los siguientes ejemplos se alinean con el esquema de configuración actual. Para
 }
 ```
 
-Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos (DM) al bot desde ese número.
+Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos al bot desde ese número.
 
 ### Inicio recomendado
 
@@ -39,6 +39,12 @@ Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos (DM) al 
     whatsapp: {
       allowFrom: ["+15555550123"],
       groups: { "*": { requireMention: true } },
+    },
+  },
+  messages: {
+    visibleReplies: "automatic",
+    groupChat: {
+      visibleReplies: "message_tool", // default; use "automatic" for legacy room replies
     },
   },
 }
@@ -96,30 +102,27 @@ Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos (DM) al 
   // Message formatting
   messages: {
     messagePrefix: "[openclaw]",
+    visibleReplies: "automatic",
     responsePrefix: ">",
     ackReaction: "👀",
     ackReactionScope: "group-mentions",
-  },
-
-  // Routing + queue
-  routing: {
     groupChat: {
-      mentionPatterns: ["@openclaw", "openclaw"],
       historyLimit: 50,
+      visibleReplies: "message_tool", // normal final replies stay private in groups/channels
     },
     queue: {
-      mode: "collect",
-      debounceMs: 1000,
+      mode: "steer",
+      debounceMs: 500,
       cap: 20,
       drop: "summarize",
       byChannel: {
-        whatsapp: "collect",
-        telegram: "collect",
-        discord: "collect",
-        slack: "collect",
-        signal: "collect",
-        imessage: "collect",
-        webchat: "collect",
+        whatsapp: "steer",
+        telegram: "steer",
+        discord: "steer",
+        slack: "steer",
+        signal: "steer",
+        imessage: "steer",
+        webchat: "steer",
       },
     },
   },
@@ -163,7 +166,6 @@ Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos (DM) al 
       mode: "warn",
       pruneAfter: "30d",
       maxEntries: 500,
-      rotateBytes: "10mb",
       resetArchiveRetention: "30d", // duration or false
       maxDiskBytes: "500mb", // optional
       highWaterBytes: "400mb", // optional (defaults to 80% of maxDiskBytes)
@@ -247,6 +249,8 @@ Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos (DM) al 
       skills: ["github", "weather"], // inherited by agents that omit list[].skills
       thinkingDefault: "low",
       verboseDefault: "off",
+      toolProgressDetail: "explain",
+      reasoningDefault: "off",
       elevatedDefault: "on",
       blockStreamingDefault: "off",
       blockStreamingBreak: "text_end",
@@ -304,6 +308,9 @@ Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos (DM) al 
         id: "main",
         default: true,
         // inherits defaults.skills -> github, weather
+        groupChat: {
+          mentionPatterns: ["@openclaw", "openclaw"],
+        },
         thinkingDefault: "high", // per-agent thinking override
         reasoningDefault: "on", // per-agent reasoning visibility
         fastModeDefault: false, // per-agent fast mode
@@ -440,10 +447,12 @@ Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos (DM) al 
     allowBundled: ["gemini", "peekaboo"],
     load: {
       extraDirs: ["~/Projects/agent-scripts/skills"],
+      allowSymlinkTargets: ["~/Projects/agent-scripts/skills"],
     },
     install: {
       preferBrew: true,
       nodeManager: "npm", // npm | pnpm | yarn | bun
+      allowUploadedArchives: false,
     },
     entries: {
       "image-lab": {
@@ -456,6 +465,24 @@ Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos (DM) al 
   },
 }
 ```
+
+### Repositorio de habilidades (skills) vinculado simbólicamente (symlinked sibling)
+
+Use esto cuando una raíz de habilidad integrada contiene un enlace simbólico a un repositorio hermano, por ejemplo `~/.agents/skills/manager -> ~/Projects/manager/skills`.
+
+```json5
+{
+  skills: {
+    load: {
+      extraDirs: ["~/Projects/manager/skills"],
+      allowSymlinkTargets: ["~/Projects/manager/skills"],
+    },
+  },
+}
+```
+
+- `extraDirs` escanea el repositorio hermano como una raíz de habilidad explícita.
+- `allowSymlinkTargets` permite que las carpetas de habilidades enlazadas simbólicamente se resuelvan en esa raíz de destino real de confianza sin permitir escapes arbitrarios de enlaces simbólicos.
 
 ## Patrones comunes
 
@@ -478,7 +505,7 @@ Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos (DM) al 
 
 - `agents.defaults.skills` es la línea base compartida.
 - `agents.list[].skills` reemplaza esa línea base para un agente.
-- Use `skills: []` cuando un agente no deba ver ninguna habilidad.
+- Use `skills: []` cuando un agente no debe ver ninguna habilidad.
 
 ### Configuración multiplataforma
 
@@ -501,9 +528,9 @@ Guarde en `~/.openclaw/openclaw.json` y podrá enviar mensajes directos (DM) al 
 }
 ```
 
-### Aprobación automática de red de nodos de confianza
+### Aprobación automática de la red de nodos de confianza
 
-Mantenga el emparejamiento de dispositivos manual a menos que controle la ruta de red. Para un subred de laboratorio dedicado o tailnet, puede optar por la aprobación automática de dispositivos de nodo por primera vez con CIDRs o IPs exactas:
+Mantenga el emparejamiento de dispositivos manual a menos que controle la ruta de red. Para un laboratorio dedicado o subred tailnet, puede optar por la aprobación automática de dispositivos de nodo por primera vez con CIDRs o IPs exactas:
 
 ```json5
 {
@@ -517,11 +544,11 @@ Mantenga el emparejamiento de dispositivos manual a menos que controle la ruta d
 }
 ```
 
-Esto permanece apagado si no se establece. Solo se aplica al emparejamiento `role: node` fresco sin alcances solicitados. Los clientes de operador/navegador y las actualizaciones de rol, alcance, metadatos o clave pública aún requieren aprobación manual.
+Esto permanece desactivado si no se establece. Solo se aplica al emparejamiento `role: node` fresco sin alcances solicitados. Los clientes de operador/navegador y las actualizaciones de rol, alcance, metadatos o clave pública aún requieren aprobación manual.
 
-### Modo DM seguro (bandeja de entrada compartida / DMs multiusuario)
+### Modo de MD seguro (bandeja de entrada compartida / MD multiusuario)
 
-Si más de una persona puede enviar DM a su bot (múltiples entradas en `allowFrom`, aprobaciones de emparejamiento para múltiples personas, o `dmPolicy: "open"`), habilite el **modo DM seguro** para que los DM de diferentes remitentes no compartan un contexto por defecto:
+Si más de una persona puede enviar MD a su bot (múltiples entradas en `allowFrom`, aprobaciones de emparejamiento para varias personas, o `dmPolicy: "open"`), habilite el **modo de MD seguro** para que los MD de diferentes remitentes no compartan un contexto de forma predeterminada:
 
 ```json5
 {
@@ -545,10 +572,9 @@ Si más de una persona puede enviar DM a su bot (múltiples entradas en `allowFr
 }
 ```
 
-Para Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC, la autorización del remitente es primero por ID de forma predeterminada.
-Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutable con el `dangerouslyAllowNameMatching: true` de cada canal si acepta explícitamente ese riesgo.
+Para Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC, la autorización del remitente es primero por ID de forma predeterminada. Solo habilite la coincidencia directa de nombre/correo/apodo mutable con el `dangerouslyAllowNameMatching: true` de cada canal si acepta explícitamente ese riesgo.
 
-### Clave de API de Anthropic + respaldo MiniMax
+### Clave de API de Anthropic + respaldo de MiniMax
 
 ```json5
 {
@@ -641,10 +667,10 @@ Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutabl
 
 ## Consejos
 
-- Si establece `dmPolicy: "open"`, la lista `allowFrom` coincidente debe incluir `"*"`.
-- Los ID de proveedor difieren (números de teléfono, ID de usuario, ID de canal). Utilice la documentación del proveedor para confirmar el formato.
-- Secciones opcionales para agregar más tarde: `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
-- Consulte [Proveedores](/es/providers) y [Solución de problemas](/es/gateway/troubleshooting) para obtener notas de configuración más detalladas.
+- Si configuras `dmPolicy: "open"`, la lista `allowFrom` coincidente debe incluir `"*"`.
+- Los IDs del proveedor difieren (números de teléfono, IDs de usuario, IDs de canal). Usa la documentación del proveedor para confirmar el formato.
+- Secciones opcionales para agregar más tarde: `web`, `browser`, `ui`, `discovery`, `plugins`, `talk`, `signal`, `imessage`.
+- Consulta [Proveedores](/es/providers) y [Solución de problemas](/es/gateway/troubleshooting) para obtener notas de configuración más detalladas.
 
 ## Relacionado
 

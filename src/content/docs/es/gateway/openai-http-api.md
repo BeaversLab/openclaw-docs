@@ -5,14 +5,14 @@ read_when:
 title: "OpenAI chat completions"
 ---
 
-La puerta de enlace de OpenClaw puede servir un pequeño punto final de Chat Completions compatible con OpenAI.
+El Gateway de OpenClaw puede servir un pequeño punto de conexión de Chat Completions compatible con OpenAI.
 
 Este punto final está **deshabilitado por defecto**. Habilítelo primero en la configuración.
 
 - `POST /v1/chat/completions`
 - Mismo puerto que la puerta de enlace (WS + HTTP multiplex): `http://<gateway-host>:<port>/v1/chat/completions`
 
-Cuando la superficie HTTP compatible con OpenAI de la puerta de enlace está habilitada, también sirve:
+Cuando la superficie HTTP compatible con OpenAI del Gateway está habilitada, también sirve:
 
 - `GET /v1/models`
 - `GET /v1/models/{id}`
@@ -40,9 +40,8 @@ Notas:
 - Cuando `gateway.auth.mode="token"`, use `gateway.auth.token` (o `OPENCLAW_GATEWAY_TOKEN`).
 - Cuando `gateway.auth.mode="password"`, use `gateway.auth.password` (o `OPENCLAW_GATEWAY_PASSWORD`).
 - Cuando `gateway.auth.mode="trusted-proxy"`, la solicitud HTTP debe provenir de una
-  fuente de proxy confiable configurada que no sea de bucle local; los proxies de bucle local del mismo host no
-  satisfacen este modo.
-- Si `gateway.auth.rateLimit` está configurado y ocurren demasiados fallos de autenticación, el punto final devuelve `429` con `Retry-After`.
+  fuente de proxy de confianza configurada; los proxies de bucle de retorno del mismo host requieren `gateway.auth.trustedProxy.allowLoopback = true` explícito.
+- Si `gateway.auth.rateLimit` está configurado y ocurren demasiados errores de autenticación, el punto de conexión devuelve `429` con `Retry-After`.
 
 ## Límite de seguridad (importante)
 
@@ -52,8 +51,8 @@ Trate este punto final como una superficie de **acceso completo de operador** pa
 - Un token/contraseña de puerta de enlace válido para este punto final debe tratarse como una credencial de propietario operador.
 - Las solicidades se ejecutan a través del mismo camino de agente del plano de control que las acciones de operador confiables.
 - No existe un límite de herramientas independiente para no propietarios/por usuario en este punto final; una vez que un autor de la llamada pasa la autenticación del Gateway aquí, OpenClaw trata a ese autor de la llamada como un operador de confianza para este gateway.
-- Para los modos de autenticación de secreto compartido (`token` y `password`), el punto final restaura los valores predeterminados normales del operador completo, incluso si el autor de la llamada envía un encabezado `x-openclaw-scopes` más estrecho.
-- Los modos HTTP de identidad de confianza (por ejemplo, autenticación de proxy de confianza o `gateway.auth.mode="none"`) respetan `x-openclaw-scopes` cuando está presente y, de lo contrario, vuelven al conjunto predeterminado de alcance del operador normal.
+- Para los modos de autenticación de secreto compartido (`token` y `password`), el punto de conexión restaura los valores predeterminados normales completos del operador incluso si el llamador envía un encabezado `x-openclaw-scopes` más restringido.
+- Los modos HTTP de identidad de confianza (por ejemplo, autenticación de proxy de confianza o `gateway.auth.mode="none"`) respetan `x-openclaw-scopes` cuando está presente y, de lo contrario, recurren al conjunto predeterminado de ámbito del operador normal.
 - Si la política del agente de destino permite herramientas confidenciales, este punto final puede usarlas.
 - Mantenga este punto final solo en loopback/tailnet/ingreso privado; no lo exponga directamente a la Internet pública.
 
@@ -61,16 +60,16 @@ Matriz de autenticación:
 
 - `gateway.auth.mode="token"` o `"password"` + `Authorization: Bearer ...`
   - demuestra la posesión del secreto compartido del operador del gateway
-  - ignora `x-openclaw-scopes` más estrecho
-  - restaura el conjunto completo de alcances predeterminados del operador:
+  - ignora `x-openclaw-scopes` más restringido
+  - restaura el conjunto completo de ámbitos predeterminados del operador:
     `operator.admin`, `operator.approvals`, `operator.pairing`,
     `operator.read`, `operator.talk.secrets`, `operator.write`
   - trata los turnos de chat en este punto final como turnos de remitente propietario
 - modos HTTP de identidad de confianza (por ejemplo, autenticación de proxy de confianza o `gateway.auth.mode="none"` en ingreso privado)
   - autentica alguna identidad de confianza externa o límite de implementación
-  - respeta `x-openclaw-scopes` cuando el encabezado está presente
+  - respetan `x-openclaw-scopes` cuando el encabezado está presente
   - vuelve al conjunto de alcances predeterminados del operador normal cuando el encabezado está ausente
-  - solo pierde la semántica de propietario cuando el autor de la llamada estrecha explícitamente los alcances y omite `operator.admin`
+  - solo pierden la semántica de propietario cuando el llamador restringe explícitamente los ámbitos y omite `operator.admin`
 
 Consulte [Seguridad](/es/gateway/security) y [Acceso remoto](/es/gateway/remote).
 
@@ -84,10 +83,10 @@ OpenClaw trata el campo `model` de OpenAI como un **objetivo de agente**, no com
 
 Encabezados de solicitud opcionales:
 
-- `x-openclaw-model: <provider/model-or-bare-id>` anula el modelo backend para el agente seleccionado.
-- `x-openclaw-agent-id: <agentId>` sigue siendo compatible como anulación de compatibilidad.
+- `x-openclaw-model: <provider/model-or-bare-id>` anula el modelo de backend para el agente seleccionado.
+- `x-openclaw-agent-id: <agentId>` sigue siendo compatible como una anulación de compatibilidad.
 - `x-openclaw-session-key: <sessionKey>` controla completamente el enrutamiento de la sesión.
-- `x-openclaw-message-channel: <channel>` establece el contexto del canal de ingreso sintético para indicaciones y políticas conscientes del canal.
+- `x-openclaw-message-channel: <channel>` establece el contexto sintético del canal de entrada para prompts y políticas conscientes del canal.
 
 Alias de compatibilidad aún aceptados:
 
@@ -130,7 +129,7 @@ Establezca `gateway.http.endpoints.chatCompletions.enabled` en `false`:
 
 Por defecto, el endpoint es **sin estado por solicitud** (se genera una nueva clave de sesión en cada llamada).
 
-Si la solicitud incluye una cadena `user` de OpenAI, el Gateway deriva una clave de sesión estable a partir de ella, por lo que las llamadas repetidas pueden compartir una sesión de agente.
+Si la solicitud incluye una cadena `user` de OpenAI, la Gateway deriva una clave de sesión estable a partir de ella, por lo que las llamadas repetidas pueden compartir una sesión de agente.
 
 ## Por qué esta superficie es importante
 
@@ -138,65 +137,65 @@ Este es el conjunto de compatibilidad de mayor impacto para frontends y herramie
 
 - La mayoría de las configuraciones de Open WebUI, LobeChat y LibreChat esperan `/v1/models`.
 - Muchos sistemas RAG esperan `/v1/embeddings`.
-- Los clientes de chat de OpenAI existentes generalmente pueden comenzar con `/v1/chat/completions`.
-- Cada vez más clientes nativos de agentes prefieren `/v1/responses`.
+- Los clientes de chat existentes de OpenAI generalmente pueden comenzar con `/v1/chat/completions`.
+- Los clientes más nativos de agentes prefieren cada vez más `/v1/responses`.
 
 ## Lista de modelos y enrutamiento de agentes
 
 <AccordionGroup>
   <Accordion title="¿Qué devuelve `/v1/models`?">
-    Una lista de destinos de agente de OpenClaw.
+    Una lista de objetivos de agente de OpenClaw.
 
     Los ids devueltos son entradas `openclaw`, `openclaw/default` y `openclaw/<agentId>`.
     Úselos directamente como valores de OpenAI `model`.
 
   </Accordion>
-  <Accordion title="¿`/v1/models` lista agentes o subagentes?">
-    Lista los destinos de agentes de nivel superior, no los modelos del proveedor backend ni los subagentes.
+  <Accordion title="¿`/v1/models` enumera agentes o sub-agentes?">
+    Enumera objetivos de agente de nivel superior, no modelos de proveedores de backend ni sub-agentes.
 
-    Los subagentes permanecen como topología de ejecución interna. No aparecen como pseudomodelos.
+    Los sub-agentes permanecen como topología de ejecución interna. No aparecen como pseudomodelos.
 
   </Accordion>
   <Accordion title="¿Por qué se incluye `openclaw/default`?">
     `openclaw/default` es el alias estable para el agente predeterminado configurado.
 
-    Eso significa que los clientes pueden seguir usando un id predecible incluso si el id real del agente predeterminado cambia entre entornos.
+    Eso significa que los clientes pueden seguir usando un id predecible, incluso si el id real del agente predeterminado cambia entre entornos.
 
   </Accordion>
-  <Accordion title="¿Cómo anulo el modelo de backend?">
+  <Accordion title="¿Cómo anulo el modelo del backend?">
     Use `x-openclaw-model`.
 
     Ejemplos:
     `x-openclaw-model: openai/gpt-5.4`
     `x-openclaw-model: gpt-5.5`
 
-    Si lo omite, el agente seleccionado se ejecuta con su elección de modelo configurada normalmente.
+    Si lo omite, el agente seleccionado se ejecuta con su opción de modelo configurada normal.
 
   </Accordion>
-  <Accordion title="¿Cómo se ajustan los incrustaciones (embeddings) a este contrato?">
-    `/v1/embeddings` usa los mismos ids de destino de agente `model`.
+  <Accordion title="¿Cómo encajan las incrustaciones en este contrato?">
+    `/v1/embeddings` utiliza los mismos ids de destino de agente `model`.
 
     Use `model: "openclaw/default"` o `model: "openclaw/<agentId>"`.
     Cuando necesite un modelo de incrustación específico, envíelo en `x-openclaw-model`.
-    Sin ese encabezado, la solicitud pasa a través de la configuración de incrustación normal del agente seleccionado.
+    Sin ese encabezado, la solicitud se transmite a la configuración de incrustación normal del agente seleccionado.
 
   </Accordion>
 </AccordionGroup>
 
 ## Transmisión (SSE)
 
-Establezca `stream: true` para recibir Eventos Enviados por el Servidor (SSE):
+Establezca `stream: true` para recibir eventos enviados por el servidor (SSE):
 
 - `Content-Type: text/event-stream`
 - Cada línea de evento es `data: <json>`
-- La transmisión termina con `data: [DONE]`
+- El flujo termina con `data: [DONE]`
 
 ## Configuración rápida de Open WebUI
 
 Para una conexión básica de Open WebUI:
 
 - URL base: `http://127.0.0.1:18789/v1`
-- URL base de Docker en macOS: `http://host.docker.internal:18789/v1`
+- Docker en macOS URL base: `http://host.docker.internal:18789/v1`
 - Clave API: su token de portador (bearer token) de Gateway
 - Modelo: `openclaw/default`
 
@@ -272,10 +271,10 @@ curl -sS http://127.0.0.1:18789/v1/embeddings \
 
 Notas:
 
-- `/v1/models` devuelve objetivos de agente de OpenClaw, no catálogos de proveedores brutos.
-- `openclaw/default` siempre está presente, por lo que un id estable funciona en todos los entornos.
-- Las anulaciones de proveedor/modelo del backend pertenecen a `x-openclaw-model`, no al campo `model` de OpenAI.
-- `/v1/embeddings` admite `input` como una cadena o una matriz de cadenas.
+- `/v1/models` devuelve objetivos de agente OpenClaw, no catálogos de proveedores sin procesar.
+- `openclaw/default` siempre está presente para que un id estable funcione en diferentes entornos.
+- Las anulaciones de proveedor/modelo de backend pertenecen a `x-openclaw-model`, no al campo `model` de OpenAI.
+- `/v1/embeddings` admite `input` como una cadena o matriz de cadenas.
 
 ## Relacionado
 

@@ -5,7 +5,7 @@ read_when:
 title: "Accès à distance"
 ---
 
-Ce dépôt prend en charge « le mode distant sur SSH » en maintenant un seul Gateway (le maître) en fonctionnement sur un hôte dédié (bureau/serveur) et en y connectant les clients.
+Ce dépôt prend en charge le « accès distant via SSH » en maintenant un seul Gateway (le maître) en cours d'exécution sur un hôte dédié (bureau/serveur) et en connectant les clients à celui-ci.
 
 - Pour **les opérateurs (vous / l'application macOS)** : le tunneling SSH est le repli universel.
 - Pour **les nœuds (iOS/Android et les futurs appareils)** : connectez-vous au **WebSocket** du Gateway (LAN/tailnet ou tunnel SSH selon les besoins).
@@ -61,7 +61,7 @@ Exemple de flux (Telegram → nœud) :
 Notes :
 
 - **Les nœuds n'exécutent pas le service de passerelle.** Une seule passerelle doit s'exécuter par hôte, sauf si vous exécutez intentionnellement des profils isolés (voir [Multiple gateways](/fr/gateway/multiple-gateways)).
-- Le « mode nœud » de l'application macOS est simplement un client nœud via le WebSocket de la Gateway.
+- L'application macOS en « mode nœud » est simplement un client nœud via le WebSocket Gateway.
 
 ## Tunnel SSH (CLI + outils)
 
@@ -96,7 +96,7 @@ Vous pouvez rendre une cible distante persistante pour que les commandes CLI l'u
 }
 ```
 
-Lorsque la passerelle est en boucle locale uniquement, conservez l'URL à `ws://127.0.0.1:18789` et ouvrez d'abord le tunnel SSH.
+Lorsque la passerelle est en boucle locale uniquement, conservez l'URL à `ws://127.0.0.1:18789`macOS et ouvrez d'abord le tunnel SSH.
 Dans le transport de tunnel SSH de l'application macOS, les noms d'hôte de passerelle découverts appartiennent à
 `gateway.remote.sshTarget` ; `gateway.remote.url` reste l'URL du tunnel local.
 
@@ -123,7 +123,7 @@ La résolution des identifiants de la Gateway suit un contrat unique partagé en
 WebChat n'utilise plus de port HTTP distinct. L'interface utilisateur de chat SwiftUI se connecte directement au WebSocket Gateway.
 
 - Transférer `18789` via SSH (voir ci-dessus), puis connecter les clients à `ws://127.0.0.1:18789`.
-- Sur macOS, privilégiez le mode « Remote over SSH » de l'application, qui gère le tunnel automatiquement.
+- Sur macOS, privilégiez le mode « Accès distant via SSH » de l'application, qui gère le tunnel automatiquement.
 
 ## Application macOS Accès distant via SSH
 
@@ -133,7 +133,7 @@ Manuel de procédures : [accès distant macOS](/fr/platforms/mac/remote).
 
 ## Règles de sécurité (accès distant/VPN)
 
-Version courte : **gardez le Gateway en loopback uniquement** sauf si vous êtes sûr de devoir faire un bind.
+Version courte : **gardez le Gateway en boucle locale uniquement** à moins d'être sûr de needing d'une liaison.
 
 - **Loopback + SSH/Tailscale Serve** est le réglage par défaut le plus sûr (aucune exposition publique).
 - Par défaut, `ws://` en texte clair est limité à la boucle locale. Pour les réseaux privés de confiance,
@@ -146,7 +146,8 @@ Version courte : **gardez le Gateway en loopback uniquement** sauf si vous êtes
 - Si `gateway.auth.token` / `gateway.auth.password` est explicitement configuré via SecretRef et non résolu, la résolution échoue de manière fermée (aucun masquage de repli distant).
 - `gateway.remote.tlsFingerprint` épingle le certificat TLS distant lors de l'utilisation de `wss://`.
 - **Tailscale Serve** peut authentifier le trafic de l'interface de contrôle/WebSocket via des en-têtes d'identité lorsque `gateway.auth.allowTailscale: true` ; les points de terminaison de l'API HTTP n'utilisent pas cette authentification par en-tête Tailscale et suivent plutôt le mode d'authentification HTTP normal de la passerelle. Ce flux sans jeton suppose que l'hôte de la passerelle est approuvé. Réglez-le sur `false` si vous souhaitez une authentification par secret partagé partout.
-- L'authentification **Trusted-proxy** est uniquement destinée aux configurations de proxy avec sensibilisation à l'identité non en boucle locale (non-loopback). Les proxies inverses en boucle locale sur le même hôte ne satisfont pas `gateway.auth.mode: "trusted-proxy"`.
+- L'authentification **Trusted-proxy** s'attend par défaut à des configurations de proxy conscient de l'identité non en boucle locale.
+  Les proxys inversés en boucle locale sur le même hôte nécessitent un `gateway.auth.trustedProxy.allowLoopback = true` explicite.
 - Traitez le contrôle via le navigateur comme un accès opérateur : uniquement sur le tailnet + jumelage délibéré des nœuds.
 
 Approfondissement : [Sécurité](/fr/gateway/security).

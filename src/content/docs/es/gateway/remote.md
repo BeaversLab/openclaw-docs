@@ -5,7 +5,7 @@ read_when:
 title: "Acceso remoto"
 ---
 
-Este repositorio admite "remoto a través de SSH" manteniendo una sola pasarela (el maestro) ejecutándose en un host dedicado (escritorio/servidor) y conectando clientes a ella.
+Este repositorio admite "remoto a través de SSH" manteniendo un solo Gateway (el maestro) ejecutándose en un host dedicado (escritorio/servidor) y conectando clientes a él.
 
 - Para **operadores (usted / la aplicación macOS)**: el túnel SSH es el recurso de reserva universal.
 - Para **nodos (iOS/Android y dispositivos futuros)**: conéctese a la **WebSocket** de la pasarela (LAN/tailnet o túnel SSH según sea necesario).
@@ -61,7 +61,7 @@ Ejemplo de flujo (Telegram → nodo):
 Notas:
 
 - **Los nodos no ejecutan el servicio de puerta de enlace.** Solo se debe ejecutar una puerta de enlace por host, a menos que ejecute intencionalmente perfiles aislados (consulte [Multiple gateways](/es/gateway/multiple-gateways)).
-- El “modo nodo” de la aplicación macOS es solo un cliente de nodo a través del WebSocket de Gateway.
+- El "modo nodo" de la aplicación macOS es simplemente un cliente nodo a través del WebSocket del Gateway.
 
 ## Túnel SSH (CLI + herramientas)
 
@@ -96,8 +96,8 @@ Puede conservar un destino remoto para que los comandos de la CLI lo usen de for
 }
 ```
 
-Cuando la puerta de enlace es solo de bucle de retorno (loopback), mantenga la URL en `ws://127.0.0.1:18789` y abra el túnel SSH primero.
-En el transporte de túnel SSH de la aplicación macOS, los nombres de host de puerta de enlace descubiertos pertenecen a
+Cuando el gateway es solo de loopback, mantenga la URL en `ws://127.0.0.1:18789` y abra primero el túnel SSH.
+En el transporte de túnel SSH de la aplicación macOS, los nombres de host del gateway descubierto pertenecen a
 `gateway.remote.sshTarget`; `gateway.remote.url` sigue siendo la URL del túnel local.
 
 ## Precedencia de credenciales
@@ -133,7 +133,7 @@ Manual de procedimientos: [acceso remoto de macOS](/es/platforms/mac/remote).
 
 ## Reglas de seguridad (remoto/VPN)
 
-Versión corta: **mantenga el Gateway solo en loopback** a menos que esté seguro de que necesita un enlace.
+Versión corta: **mantenga el Gateway solo de loopback** a menos que esté seguro de que necesita un bind.
 
 - **Loopback + SSH/Tailscale Serve** es la opción predeterminada más segura (sin exposición pública).
 - El texto sin cifrar `ws://` es solo de bucle local (loopback) de forma predeterminada. Para redes privadas de confianza,
@@ -146,7 +146,8 @@ Versión corta: **mantenga el Gateway solo en loopback** a menos que esté segur
 - Si `gateway.auth.token` / `gateway.auth.password` está configurado explícitamente a través de SecretRef y sin resolver, la resolución falla cerrada (sin enmascaramiento de respaldo remoto).
 - `gateway.remote.tlsFingerprint` fija el certificado TLS remoto cuando se usa `wss://`.
 - **Tailscale Serve** puede autenticar el tráfico de la Interfaz de usuario de control/WebSocket a través de encabezados de identidad cuando `gateway.auth.allowTailscale: true`; los puntos finales de la API HTTP no usan esa autenticación de encabezado de Tailscale y, en su lugar, siguen el modo de autenticación HTTP normal de la puerta de enlace. Este flujo sin token asume que el host de la puerta de enlace es confiable. Establézcalo en `false` si desea autenticación de secreto compartido en todas partes.
-- La autenticación de **proxy de confianza** es solo para configuraciones de proxy con reconocimiento de identidad que no sean de bucle invertido. Los proxies inversos de bucle invertido del mismo host no cumplen con `gateway.auth.mode: "trusted-proxy"`.
+- La autenticación **Trusted-proxy** espera configuraciones de proxy con conocimiento de identidad que no sean de loopback de forma predeterminada.
+  Los proxies inversos de loopback en el mismo host requieren `gateway.auth.trustedProxy.allowLoopback = true` explícito.
 - Trate el control del navegador como el acceso del operador: solo tailnet + emparejamiento deliberado de nodos.
 
 Profundización: [Seguridad](/es/gateway/security).

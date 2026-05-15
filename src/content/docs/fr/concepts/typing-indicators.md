@@ -23,12 +23,12 @@ Lorsque `agents.defaults.typingMode` est **non défini**, OpenClaw conserve le c
 
 Définissez `agents.defaults.typingMode` sur l'une des valeurs suivantes :
 
-- `never` — aucun indicateur de frappe, jamais.
-- `instant` — commence à taper **dès que la boucle du model démarre**, même si l'exécution
+- `never` - aucun indicateur de frappe, jamais.
+- `instant` - commencer à taper **dès que la boucle du modèle commence**, même si l'exécution
   renvoie ultérieurement uniquement le jeton de réponse silencieux.
-- `thinking` — commence à taper sur la **première différence de raisonnement** (requiert
+- `thinking` - commencer à taper lors de la **première différence de raisonnement** (requiert
   `reasoningLevel: "stream"` pour l'exécution).
-- `message` — commence à taper sur la **première différence de texte non silencieuse** (ignore
+- `message` - commencer à taper lors de la **première différence de texte non silencieuse** (ignore
   le jeton silencieux `NO_REPLY`).
 
 Ordre de « rapidité de déclenchement » :
@@ -61,15 +61,24 @@ Vous pouvez remplacer le mode ou la cadence par session :
 - Le mode `message` n'affichera pas la frappe pour les réponses entièrement silencieuses lorsque la
   charge utile entière correspond exactement au jeton silencieux (par exemple `NO_REPLY` / `no_reply`,
   correspondance insensible à la casse).
-- `thinking` ne se déclenche que si l'exécution diffuse le raisonnement (`reasoningLevel: "stream"`).
-  Si le model n'émet pas de différences de raisonnement, la frappe ne commencera pas.
-- La frappe heartbeat est un signal de vivacité pour la cible de livraison résolue. Elle
-  commence au démarrage de l'exécution du heartbeat au lieu de suivre le `message` ou le `thinking`
-  de diffusion du flux. Définissez `typingMode: "never"` pour la désactiver.
-- Les signaux de présence (heartbeats) n'affichent pas la frappe lorsque `target: "none"`, lorsque la cible ne peut pas être résolue, lorsque la livraison du chat est désactivée pour le signal de présence, ou lorsque le channel ne prend pas en charge la frappe.
-- `typingIntervalSeconds` contrôle la **cadence de rafraîchissement**, et non l'heure de début. La valeur par défaut est de 6 secondes.
+- `thinking` ne se déclenche que si l'exécution diffuse du raisonnement (`reasoningLevel: "stream"`).
+  Si le modèle n'émet pas de différences de raisonnement, la frappe ne commencera pas.
+- La frappe de pulsation (heartbeat) est un signal de vivacité pour la cible de livraison résolue. Elle
+  commence au démarrage de la pulsation au lieu de suivre `message` ou `thinking`
+  le timing du flux. Définissez `typingMode: "never"` pour la désactiver.
+- Les pulsations n'affichent pas la frappe lorsque `target: "none"`, lorsque la cible ne peut pas
+  être résolue, lorsque la livraison par chat est désactivée pour la pulsation, ou lorsque le
+  channel ne prend pas en charge la frappe.
+- `typingIntervalSeconds` contrôle la **cadence d'actualisation**, et non l'heure de début.
+  La valeur par défaut est de 6 secondes.
 
 ## Connexes
 
-- [Présence](/fr/concepts/presence)
-- [Streaming et découpage en morceaux](/fr/concepts/streaming)
+<CardGroup cols={2}>
+  <Card title="Présence" href="/fr/concepts/presence" icon="signal">
+    Comment le Gateway suit les clients connectés et les affiche dans l'onglet Instances macOS.
+  </Card>
+  <Card title="Streaming and chunking" href="/fr/concepts/streaming" icon="bars-staggered">
+    Comportement du flux sortant, limites des segments et livraison spécifique au channel.
+  </Card>
+</CardGroup>

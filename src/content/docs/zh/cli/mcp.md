@@ -48,8 +48,14 @@ sidebarTitle: "MCP"
 
 <AccordionGroup>
   <Accordion title="重要行为">
-    - 实时队列状态在网桥连接时开始 - 较旧的转录历史记录通过 `messages_read` 读取 - Claude 推送通知仅在 MCP 会话存活期间存在 - 当客户端断开连接时，网桥退出且实时队列消失 - 一次性代理入口点（如 `openclaw agent` 和 `openclaw infer model run`）会在回复完成时关闭它们打开的任何捆绑 MCP 运行时，因此重复的脚本运行不会累积 stdio MCP 子进程 - OpenClaw 启动的 stdio MCP
-    服务器（捆绑或用户配置）会在关闭时作为进程树被拆除，因此服务器启动的子进程不会在父 stdio 客户端退出后继续存在 - 删除或重置会话会通过共享运行时清理路径释放该会话的 MCP 客户端，因此不会有残留的 stdio 连接绑定到已删除的会话
+    - 实时队列状态在桥接连接时启动
+    - 较旧的对话记录历史通过 `messages_read` 读取
+    - Claude 推送通知仅在 MCP 会话存活期间存在
+    - 当客户端断开连接时，桥接退出且实时队列消失
+    - 一次性代理入口点（如 `openclaw agent` 和 `openclaw infer model run`OpenClaw）会在回复完成后关闭它们打开的任何捆绑的 MCP 运行时，因此重复的脚本运行不会累积 stdio MCP 子进程
+    - 由 OpenClaw 启动的 stdio MCP 服务器（捆绑的或用户配置的）会在关闭时作为进程树被拆除，因此由服务器启动的子子进程不会在父 stdio 客户端退出后继续存在
+    - 删除或重置会话会通过共享运行时清理路径释放该会话的 MCP 客户端，因此不存在与已删除会话绑定的残留 stdio 连接
+
   </Accordion>
 </AccordionGroup>
 
@@ -108,7 +114,7 @@ sidebarTitle: "MCP"
 
   </Accordion>
   <Accordion title="conversation_get">
-    根据 `session_key` 返回一个对话。
+    使用直接的 Gateway(网关) 会话查找通过 `session_key`Gateway(网关) 返回一个对话。
   </Accordion>
   <Accordion title="messages_read">
     读取一个基于会话的对话的最近转录消息。
@@ -161,7 +167,12 @@ sidebarTitle: "MCP"
 - `plugin_approval_resolved`
 - `claude_permission_request`
 
-<Warning>- 队列仅限实时；它在 MCP 桥接器启动时开始 - `events_poll` 和 `events_wait` 本身不会重播旧的 Gateway(网关) 历史记录 - 应使用 `messages_read` 读取持久化的积压记录</Warning>
+<Warning>
+- 队列仅限实时；它在 MCP 桥接启动时开始
+- `events_poll` 和 `events_wait`Gateway(网关) 本身不会重播旧的 Gateway(网关) 历史
+- 持久积压工作应使用 `messages_read` 读取
+
+</Warning>
 
 ### Claude 渠道通知
 
@@ -297,8 +308,13 @@ pnpm test:docker:mcp-channels
 
 <AccordionGroup>
   <Accordion title="重要行为">
-    - 这些命令仅读取或写入 OpenClaw 配置 - 它们不连接到目标 MCP 服务器 - 它们不验证命令、URL 或远程传输当前是否可达 - 运行时适配器在执行时决定其实际支持的传输形式 - 嵌入式 Pi 在普通 `coding` 和 `messaging` 工具配置文件中公开已配置的 MCP 工具；`minimal` 仍然隐藏它们，而 `tools.deny: ["bundle-mcp"]` 会明确禁用它们 - 会话范围的捆绑 MCP 运行时在空闲 `mcp.sessionIdleTtlMs` 毫秒后（默认 10 分钟；设置
-    `0` 以禁用）被回收，一次性嵌入运行则在运行结束时清理它们
+    - 这些命令仅读取或写入 OpenClaw 配置
+    - 它们不连接到目标 MCP 服务器
+    - 它们不验证命令、URL 或远程传输当前是否可达
+    - 运行时适配器在执行时决定其实际支持的传输形式
+    - 嵌入式 Pi 在正常的 `coding` 和 `messaging` 工具配置文件中暴露已配置的 MCP 工具；`minimal` 仍然隐藏它们，而 `tools.deny: ["bundle-mcp"]` 则显式禁用它们
+    - 会话范围的捆绑 MCP 运行时在空闲 `mcp.sessionIdleTtlMs` 毫秒后（默认为 10 分钟；设置 `0` 以禁用）被回收，而一次性嵌入式运行则在运行结束时清理它们
+
   </Accordion>
 </AccordionGroup>
 

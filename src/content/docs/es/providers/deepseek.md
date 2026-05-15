@@ -71,30 +71,31 @@ read_when:
 | `deepseek/deepseek-chat`     | DeepSeek Chat     | texto   | 131,072   | 8,192         | Superficie DeepSeek V3.2 sin capacidad de pensamiento             |
 | `deepseek/deepseek-reasoner` | DeepSeek Reasoner | texto   | 131,072   | 65,536        | Superficie V3.2 con razonamiento habilitado                       |
 
-<Tip>Los modelos V4 admiten el control `thinking` de DeepSeek. OpenClaw también reproduce el `reasoning_content` de DeepSeek en los turnos de seguimiento para que las sesiones de pensamiento con llamadas a herramientas puedan continuar.</Tip>
+<Tip>Los modelos V4 soportan el control `thinking` de DeepSeek. OpenClaw también reproduce el `reasoning_content` de DeepSeek en turnos de seguimiento para que las sesiones de pensamiento con llamadas a herramientas puedan continuar. Usa `/think xhigh` o `/think max` con los modelos V4 de DeepSeek para solicitar el `reasoning_effort` máximo de DeepSeek.</Tip>
 
 ## Pensamiento y herramientas
 
 Las sesiones de pensamiento de DeepSeek V4 tienen un contrato de reproducción más estricto que la mayoría
-de los proveedores compatibles con OpenAI: cuando un mensaje de asistente con pensamiento habilitado incluye
-llamadas a herramientas, DeepSeek espera que el `reasoning_content` del asistente anterior se envíe
-de nuevo en la solicitud de seguimiento. OpenClaw maneja esto internamente en el complemento DeepSeek,
-por lo que el uso normal de herramientas de varios turnos funciona con `deepseek/deepseek-v4-flash` y
-`deepseek/deepseek-v4-pro`.
+de los proveedores compatibles con OpenAI: después de que un turno con pensamiento activado use herramientas, DeepSeek
+espera que los mensajes del asistente reproducidos de ese turno incluyan
+`reasoning_content` en las solicitudes de seguimiento. OpenClaw maneja esto dentro del
+complemento DeepSeek, por lo que el uso normal de herramientas de varios turnos funciona con
+`deepseek/deepseek-v4-flash` y `deepseek/deepseek-v4-pro`.
 
-Si cambia una sesión existente de otro proveedor compatible con OpenAI a un
-modelo DeepSeek V4, los turnos de llamadas a herramientas del asistente más antiguos pueden no tener el
-`reasoning_content` nativo de DeepSeek. OpenClaw completa ese campo faltante para las solicitudes de pensamiento
-de DeepSeek V4 para que el proveedor pueda aceptar el historial de llamadas a herramientas reproducido
-sin requerir `/new`.
+Si cambias una sesión existente de otro proveedor compatible con OpenAI a un
+modelo DeepSeek V4, los turnos antiguos de llamadas a herramientas del asistente pueden no tener el `reasoning_content`
+nativo de DeepSeek. OpenClaw completa ese campo faltante en los mensajes
+reproducidos del asistente para solicitudes de pensamiento de DeepSeek V4 para que el proveedor pueda aceptar
+el historial sin requerir `/new`.
 
-Cuando el pensamiento está deshabilitado en OpenClaw (incluida la selección **Ninguno** en la interfaz de usuario),
-OpenClaw envía `thinking: { type: "disabled" }` de DeepSeek y elimina el `reasoning_content` reproducido
-del historial saliente. Esto mantiene las sesiones con pensamiento deshabilitado en la ruta sin pensamiento de DeepSeek.
+Cuando el pensamiento está desactivado en OpenClaw (incluida la selección **Ninguno** de la interfaz de usuario),
+OpenClaw envía `thinking: { type: "disabled" }` a DeepSeek y elimina el `reasoning_content` reproducido
+del historial saliente. Esto mantiene las sesiones con pensamiento desactivado
+en la ruta sin pensamiento de DeepSeek.
 
-Use `deepseek/deepseek-v4-flash` para la ruta rápida predeterminada. Use
-`deepseek/deepseek-v4-pro` cuando desee el modelo V4 más fuerte y pueda aceptar
-un mayor costo o latencia.
+Usa `deepseek/deepseek-v4-flash` para la ruta rápida predeterminada. Usa
+`deepseek/deepseek-v4-pro` cuando quieras el modelo V4 más potente y puedas aceptar
+un costo o latencia más altos.
 
 ## Pruebas en vivo
 

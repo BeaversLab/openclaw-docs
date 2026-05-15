@@ -1,5 +1,5 @@
 ---
-summary: "常见 OpenClaw 设置的符合架构的配置示例"
+summary: "OpenClaw符合架构的常见 OpenClaw 设置配置示例"
 read_when:
   - Learning how to configure OpenClaw
   - Looking for configuration examples
@@ -7,7 +7,7 @@ read_when:
 title: "配置示例"
 ---
 
-以下示例与当前的配置架构一致。有关详尽的参考和字段说明，请参阅 [配置](/zh/gateway/configuration)。
+以下示例与当前的配置架构一致。有关详尽的参考和每个字段的说明，请参阅[配置](/zh/gateway/configuration)。
 
 ## 快速开始
 
@@ -39,6 +39,12 @@ title: "配置示例"
     whatsapp: {
       allowFrom: ["+15555550123"],
       groups: { "*": { requireMention: true } },
+    },
+  },
+  messages: {
+    visibleReplies: "automatic",
+    groupChat: {
+      visibleReplies: "message_tool", // default; use "automatic" for legacy room replies
     },
   },
 }
@@ -96,30 +102,27 @@ title: "配置示例"
   // Message formatting
   messages: {
     messagePrefix: "[openclaw]",
+    visibleReplies: "automatic",
     responsePrefix: ">",
     ackReaction: "👀",
     ackReactionScope: "group-mentions",
-  },
-
-  // Routing + queue
-  routing: {
     groupChat: {
-      mentionPatterns: ["@openclaw", "openclaw"],
       historyLimit: 50,
+      visibleReplies: "message_tool", // normal final replies stay private in groups/channels
     },
     queue: {
-      mode: "collect",
-      debounceMs: 1000,
+      mode: "steer",
+      debounceMs: 500,
       cap: 20,
       drop: "summarize",
       byChannel: {
-        whatsapp: "collect",
-        telegram: "collect",
-        discord: "collect",
-        slack: "collect",
-        signal: "collect",
-        imessage: "collect",
-        webchat: "collect",
+        whatsapp: "steer",
+        telegram: "steer",
+        discord: "steer",
+        slack: "steer",
+        signal: "steer",
+        imessage: "steer",
+        webchat: "steer",
       },
     },
   },
@@ -163,7 +166,6 @@ title: "配置示例"
       mode: "warn",
       pruneAfter: "30d",
       maxEntries: 500,
-      rotateBytes: "10mb",
       resetArchiveRetention: "30d", // duration or false
       maxDiskBytes: "500mb", // optional
       highWaterBytes: "400mb", // optional (defaults to 80% of maxDiskBytes)
@@ -247,6 +249,8 @@ title: "配置示例"
       skills: ["github", "weather"], // inherited by agents that omit list[].skills
       thinkingDefault: "low",
       verboseDefault: "off",
+      toolProgressDetail: "explain",
+      reasoningDefault: "off",
       elevatedDefault: "on",
       blockStreamingDefault: "off",
       blockStreamingBreak: "text_end",
@@ -304,6 +308,9 @@ title: "配置示例"
         id: "main",
         default: true,
         // inherits defaults.skills -> github, weather
+        groupChat: {
+          mentionPatterns: ["@openclaw", "openclaw"],
+        },
         thinkingDefault: "high", // per-agent thinking override
         reasoningDefault: "on", // per-agent reasoning visibility
         fastModeDefault: false, // per-agent fast mode
@@ -440,10 +447,12 @@ title: "配置示例"
     allowBundled: ["gemini", "peekaboo"],
     load: {
       extraDirs: ["~/Projects/agent-scripts/skills"],
+      allowSymlinkTargets: ["~/Projects/agent-scripts/skills"],
     },
     install: {
       preferBrew: true,
       nodeManager: "npm", // npm | pnpm | yarn | bun
+      allowUploadedArchives: false,
     },
     entries: {
       "image-lab": {
@@ -457,9 +466,29 @@ title: "配置示例"
 }
 ```
 
+### 符号链接的同级技能仓库
+
+当内置技能根目录包含指向同级仓库的符号链接时使用此设置，例如
+`~/.agents/skills/manager -> ~/Projects/manager/skills`。
+
+```json5
+{
+  skills: {
+    load: {
+      extraDirs: ["~/Projects/manager/skills"],
+      allowSymlinkTargets: ["~/Projects/manager/skills"],
+    },
+  },
+}
+```
+
+- `extraDirs` 将同级仓库作为显式技能根目录进行扫描。
+- `allowSymlinkTargets` 允许符号链接的技能文件夹解析到该受信任的
+  真实目标根目录，而不允许任意的符号链接逃逸。
+
 ## 常见模式
 
-### 共享技能基线，单项覆盖
+### 具有一个覆盖项的共享技能基线
 
 ```json5
 {
@@ -477,8 +506,8 @@ title: "配置示例"
 ```
 
 - `agents.defaults.skills` 是共享基线。
-- `agents.list[].skills` 替换了一个代理的该基线。
-- 当代理不应该看到任何技能时，使用 `skills: []`。
+- `agents.list[].skills` 替换某个代理的该基线。
+- 当某个代理不应看到任何技能时，请使用 `skills: []`。
 
 ### 多平台设置
 
@@ -503,9 +532,8 @@ title: "配置示例"
 
 ### 受信任节点网络自动批准
 
-除非你控制网络路径，否则保持设备配对手动。对于专用
-实验室或 tailnet 子网，你可以选择加入首次节点设备自动批准
-并指定精确的 CIDR 或 IP：
+除非你控制网络路径，否则请保持设备配对为手动操作。对于专用的
+实验室或 tailnet 子网，你可以选择使用精确的 CIDR 或 IP 启用首次节点设备自动批准：
 
 ```json5
 {
@@ -519,12 +547,12 @@ title: "配置示例"
 }
 ```
 
-未设置时此项保持关闭。它仅适用于没有请求作用域的新 `role: node` 配对。
-操作员/浏览器客户端以及角色、作用域、元数据或公钥升级仍需手动批准。
+未设置时，此选项保持关闭状态。它仅适用于没有请求作用域的全新 `role: node` 配对。操作员/浏览器客户端以及角色、作用域、元数据或
+公钥升级仍需手动批准。
 
-### 安全私信模式（共享收件箱/多用户私信）
+### 安全私信模式（共享收件箱 / 多用户私信）
 
-如果不止一个人可以向你的机器人发送私信（`allowFrom` 中有多个条目，多人的配对批准，或 `dmPolicy: "open"`），请启用**安全私信模式**，以便来自不同发送者的私信默认不共享同一个上下文：
+如果不止一个人可以向你的机器人发送私信（`allowFrom` 中有多个条目，多人的配对批准，或 `dmPolicy: "open"`），请启用**安全私信模式**，以便来自不同发件人的私信默认不会共享同一个上下文：
 
 ```json5
 {
@@ -548,10 +576,10 @@ title: "配置示例"
 }
 ```
 
-对于 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，发送者授权默认为 ID 优先。
-只有在你明确接受该风险的情况下，才应启用每个渠道 `dangerouslyAllowNameMatching: true` 的直接可变名称/邮箱/昵称匹配。
+对于 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，发件人授权默认优先基于 ID。
+只有在你明确接受相关风险时，才应针对每个渠道的 DiscordSlackGoogle ChatMicrosoft TeamsMattermost`dangerouslyAllowNameMatching: true` 启用直接的可变名称/电子邮件/昵称匹配。
 
-### Anthropic API 密钥 + MiniMax 回退
+### Anthropic API 密钥 + MiniMax 备选
 
 ```json5
 {
@@ -644,10 +672,10 @@ title: "配置示例"
 
 ## 提示
 
-- 如果你设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
-- 提供商 ID 各不相同（电话号码、用户 ID、渠道 ID）。请使用提供商文档确认格式。
-- 稍后可添加的可选章节：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 有关更深入的设置说明，请参阅[提供程序](/zh/providers)和[故障排除](/zh/gateway/troubleshooting)。
+- 如果您设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
+- 提供商 ID 各不相同（电话号码、用户 ID、渠道 ID）。请查阅提供商文档以确认格式。
+- 稍后要添加的可选部分：`web`、`browser`、`ui`、`discovery`、`plugins`、`talk`、`signal`、`imessage`。
+- 有关更深入的设置说明，请参阅 [提供商](/zh/providers) 和 [故障排除](/zh/gateway/troubleshooting)。
 
 ## 相关
 

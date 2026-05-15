@@ -7,22 +7,22 @@ read_when:
 title: "節點"
 ---
 
-**節點** 是一個伴隨裝置（macOS/iOS/Android/headless），使用 `role: "node"` 連接到閘道器 **WebSocket**（與操作員連接埠相同），並透過 `node.invoke` 公開指令介面（例如 `canvas.*`、`camera.*`、`device.*`、`notifications.*`、`system.*`）。協議詳情：[Gateway protocol](/zh-Hant/gateway/protocol)。
+**節點** 是一個伴隨裝置（macOS/iOS/Android/headless），使用 `role: "node"` 連接到 Gateway **WebSocket**（與操作員相同的連接埠），並透過 `node.invoke` 暴露指令介面（例如 `canvas.*`、`camera.*`、`device.*`、`notifications.*`、`system.*`）。協議詳情：[Gateway protocol](/zh-Hant/gateway/protocol)。
 
-舊版傳輸：[Bridge protocol](/zh-Hant/gateway/bridge-protocol) (TCP JSONL；
-僅供當前節點歷史參考)。
+舊版傳輸：[Bridge protocol](/zh-Hant/gateway/bridge-protocol) (TCP JSONL;
+僅供當前節點參考歷史使用)。
 
-macOS 也可以在 **節點模式** 下執行：選單列應用程式連接到閘道器的
-WS 伺服器，並將其本機畫布/相機指令作為節點公開（因此
-`openclaw nodes …` 可在此 Mac 上執行）。在遠端閘道器模式下，瀏覽器
-自動化是由 CLI 節點主機（`openclaw node run` 或
-已安裝的節點服務）處理，而不是由原生應用程式節點處理。
+macOS 也可以在 **節點模式** 下運行：選單列應用程式連接到 Gateway 的
+WS 伺服器，並將其本機的 canvas/camera 指令作為節點暴露（因此
+`openclaw nodes …` 可針對此 Mac 運作）。在遠端 Gateway 模式下，瀏覽器
+自動化由 CLI 節點主機（`openclaw node run` 或已
+安裝的節點服務）處理，而非由原生應用程式節點處理。
 
 注意：
 
-- 節點是 **周邊設備**，不是閘道器。它們不執行閘道器服務。
+- 節點是 **外設**，不是 Gateway。它們不運行 gateway 服務。
 - Telegram/WhatsApp/等訊息會落在 **閘道器** 上，而不是節點上。
-- 故障排除手冊：[/nodes/troubleshooting](/zh-Hant/nodes/troubleshooting)
+- 疑難排解手冊：[/nodes/troubleshooting](/zh-Hant/nodes/troubleshooting)
 
 ## 配對 + 狀態
 
@@ -168,9 +168,9 @@ openclaw config set tools.exec.node "<id-or-name>"
 
 相關：
 
-- [節點主機 CLI](/zh-Hant/cli/node)
-- [Exec 工具](/zh-Hant/tools/exec)
-- [Exec 核准](/zh-Hant/tools/exec-approvals)
+- [Node host CLI](/zh-Hant/cli/node)
+- [Exec tool](/zh-Hant/tools/exec)
+- [Exec approvals](/zh-Hant/tools/exec-approvals)
 
 ## 呼叫命令
 
@@ -180,20 +180,46 @@ openclaw config set tools.exec.node "<id-or-name>"
 openclaw nodes invoke --node <idOrNameOrIp> --command canvas.eval --params '{"javaScript":"location.href"}'
 ```
 
-針對常見的「提供代理程式媒體附件」工作流程，存在更高階的輔助工具。
+針對常見的「給予代理程式 MEDIA 附件」工作流程，存在更高層級的輔助工具。
 
-## 螢幕截圖 (Canvas 快照)
+## 指令政策
+
+節點指令必須通過兩道關卡才能被叫用：
+
+1. 節點必須在其 WebSocket `connect.commands` 列表中宣告該指令。
+2. Gateway 的平台政策必須允許該已宣告的指令。
+
+Windows 和 macOS 伴隨節點預設允許安全的已宣告命令，例如
+`canvas.*`、`camera.list`、`location.get` 和 `screen.snapshot`。
+廣告 `talk` 功能或宣告 `talk.*` 命令的受信任節點
+也預設允許已宣告的按住通話命令（`talk.ptt.start`、`talk.ptt.stop`、
+`talk.ptt.cancel`、`talk.ptt.once`），與平台標籤無關。
+危險或涉及隱私的命令，例如 `camera.snap`、`camera.clip` 和
+`screen.record`，仍然需要透過 `gateway.nodes.allowCommands` 明確選擇加入。
+`gateway.nodes.denyCommands` 始終優先於
+預設值和額外的允許清單項目。
+
+外掛程式擁有的節點命令可以新增 Gateway 節點調用原則。該原則
+在允許清單檢查之後且轉發到節點之前執行，因此原始
+`node.invoke`、CLI 助手和專用的代理程式工具共享相同的外掛程式
+權限邊界。危險的外掛程式節點命令仍然需要明確
+`gateway.nodes.allowCommands` 選擇加入。
+
+節點變更其宣告的命令清單後，請拒絕舊的裝置配對
+並批准新請求，以便 Gateway 儲存更新後的命令快照。
+
+## 螢幕截圖（canvas 快照）
 
 如果節點正在顯示 Canvas (WebView)，`canvas.snapshot` 會傳回 `{ format, base64 }`。
 
-CLI 輔助程式（寫入暫存檔案並印出 `MEDIA:<path>`）：
+CLI 助手（寫入暫存檔案並列印 `MEDIA:<path>`）：
 
 ```bash
 openclaw nodes canvas snapshot --node <idOrNameOrIp> --format png
 openclaw nodes canvas snapshot --node <idOrNameOrIp> --format jpg --max-width 1200 --quality 0.9
 ```
 
-### Canvas 控制
+### Canvas 控制項
 
 ```bash
 openclaw nodes canvas present --node <idOrNameOrIp> --target https://example.com
@@ -204,8 +230,8 @@ openclaw nodes canvas eval --node <idOrNameOrIp> --js "document.title"
 
 備註：
 
-- `canvas present` 接受 URL 或本機檔案路徑 (`--target`)，以及用於定位的選用 `--x/--y/--width/--height`。
-- `canvas eval` 接受內嵌 JS (`--js`) 或位置參數。
+- `canvas present` 接受 URL 或本機檔案路徑（`--target`），以及用於定位的可選 `--x/--y/--width/--height`。
+- `canvas eval` 接受內聯 JS（`--js`）或位置引數。
 
 ### A2UI (Canvas)
 
@@ -217,11 +243,11 @@ openclaw nodes canvas a2ui reset --node <idOrNameOrIp>
 
 備註：
 
-- 僅支援 A2UI v0.8 JSONL (v0.9/createSurface 會被拒絕)。
+- 僅支援 A2UI v0.8 JSONL（拒絕 v0.9/createSurface）。
 
-## 照片 + 影片 (節點相機)
+## 照片 + 影片（節點相機）
 
-照片 (`jpg`)：
+照片（`jpg`）：
 
 ```bash
 openclaw nodes camera list --node <idOrNameOrIp>
@@ -229,7 +255,7 @@ openclaw nodes camera snap --node <idOrNameOrIp>            # default: both faci
 openclaw nodes camera snap --node <idOrNameOrIp> --facing front
 ```
 
-視訊片段 (`mp4`)：
+視訊片段（`mp4`）：
 
 ```bash
 openclaw nodes camera clip --node <idOrNameOrIp> --duration 10s
@@ -238,13 +264,13 @@ openclaw nodes camera clip --node <idOrNameOrIp> --duration 3000 --no-audio
 
 備註：
 
-- 節點必須處於 **前景** 才能進行 `canvas.*` 和 `camera.*`（背景呼叫會傳回 `NODE_BACKGROUND_UNAVAILABLE`）。
-- 片段持續時間會受到限制（目前為 `<= 60s`），以避免 base64 載荷過大。
-- Android 盡可能會提示授與 `CAMERA`/`RECORD_AUDIO` 權限；遭拒絕的權限會傳回 `*_PERMISSION_REQUIRED` 錯誤。
+- 節點必須處於**前景**才能使用 `canvas.*` 和 `camera.*`（背景呼叫會傳回 `NODE_BACKGROUND_UNAVAILABLE`）。
+- 剪輯持續時間會被限制（目前為 `<= 60s`），以避免 base64 載荷過大。
+- 在可能的情況下，Android 會提示授與 `CAMERA`/`RECORD_AUDIO` 權限；拒絕權限將導致失敗並傳回 `*_PERMISSION_REQUIRED`。
 
-## 螢幕錄製 (節點)
+## 螢幕錄製（節點）
 
-支援的節點會公開 `screen.record` (mp4)。範例：
+支援的節點會公開 `screen.record` (mp4)。例如：
 
 ```bash
 openclaw nodes screen record --node <idOrNameOrIp> --duration 10s --fps 10
@@ -254,15 +280,15 @@ openclaw nodes screen record --node <idOrNameOrIp> --duration 10s --fps 10 --no-
 備註：
 
 - `screen.record` 的可用性取決於節點平台。
-- 螢幕錄製會限制為 `<= 60s`。
-- `--no-audio` 會在支援的平台上停用麥克風擷取。
+- 螢幕錄製會被限制為 `<= 60s`。
+- 在支援的平台上，`--no-audio` 會停用麥克風擷取。
 - 當有多個螢幕可用時，使用 `--screen <index>` 來選擇顯示器。
 
-## 位置 (節點)
+## 位置（節點）
 
 當在設定中啟用位置時，節點會公開 `location.get`。
 
-CLI 輔助程式：
+CLI 輔助工具：
 
 ```bash
 openclaw nodes location get --node <idOrNameOrIp>
@@ -273,9 +299,9 @@ openclaw nodes location get --node <idOrNameOrIp> --accuracy precise --max-age 1
 
 - 位置**預設為關閉**。
 - 「始終」需要系統權限；背景擷取為盡力而為。
-- 回應包含經緯度、精確度 (公尺) 和時間戳記。
+- 回應包括經緯度、準確度（公尺）和時間戳記。
 
-## SMS (Android 節點)
+## SMS（Android 節點）
 
 當使用者授予 **SMS** 權限且裝置支援電話功能時，Android 節點可以公開 `sms.send`。
 
@@ -287,14 +313,14 @@ openclaw nodes invoke --node <idOrNameOrIp> --command sms.send --params '{"to":"
 
 備註：
 
-- 權限提示必須在 Android 裝置上被接受，才會公告此功能。
-- 不支援電話功能的僅 Wi-Fi 裝置將不會通告 `sms.send`。
+- 必須在 Android 裝置上接受權限提示，才會宣佈此功能。
+- 不具電話功能的僅 Wi-Fi 裝置將不會宣佈 `sms.send`。
 
 ## Android 裝置 + 個人資料指令
 
-當啟用對應功能時，Android 節點可以公告額外的指令系列。
+當啟用對應的功能時，Android 節點可以宣佈額外的指令系列。
 
-可用系列：
+可用的系列：
 
 - `device.status`、`device.info`、`device.permissions`、`device.health`
 - `notifications.list`、`notifications.actions`
@@ -303,9 +329,9 @@ openclaw nodes invoke --node <idOrNameOrIp> --command sms.send --params '{"to":"
 - `calendar.events`、`calendar.add`
 - `callLog.search`
 - `sms.search`
-- `motion.activity`、`motion.pedometer`
+- `motion.activity`, `motion.pedometer`
 
-調用範例：
+範例呼叫：
 
 ```bash
 openclaw nodes invoke --node <idOrNameOrIp> --command device.status --params '{}'
@@ -313,14 +339,14 @@ openclaw nodes invoke --node <idOrNameOrIp> --command notifications.list --param
 openclaw nodes invoke --node <idOrNameOrIp> --command photos.latest --params '{"limit":1}'
 ```
 
-備註：
+註記：
 
-- 動作指令取決於可用感應器的功能。
+- 動作指令視可用感應器而定。
 
 ## 系統指令 (node host / mac node)
 
-macOS 節點公開 `system.run`、`system.notify` 和 `system.execApprovals.get/set`。
-無介面節點主機公開 `system.run`、`system.which` 和 `system.execApprovals.get/set`。
+macOS 節點公開了 `system.run`、`system.notify` 和 `system.execApprovals.get/set`。
+無頭節點主機公開了 `system.run`、`system.which` 和 `system.execApprovals.get/set`。
 
 範例：
 
@@ -329,58 +355,58 @@ openclaw nodes notify --node <idOrNameOrIp> --title "Ping" --body "Gateway ready
 openclaw nodes invoke --node <idOrNameOrIp> --command system.which --params '{"name":"git"}'
 ```
 
-備註：
+註記：
 
-- `system.run` 會在載荷中返回 stdout/stderr/退出碼。
-- Shell 執行現在通過帶有 `host=node` 的 `exec` 工具進行；`nodes` 仍然是明確節點指令的直接 RPC 介面。
-- `nodes invoke` 不公開 `system.run` 或 `system.run.prepare`；這些僅保留在 exec 路徑上。
-- exec 路徑在批准之前會準備一個規範的 `systemRunPlan`。一旦授予批准，閘道會轉發該儲存的計劃，而不是任何後續呼叫者編輯的 command/cwd/session 欄位。
-- `system.notify` 遵守 macOS 應用程式上的通知權限狀態。
-- 無法識別的節點 `platform` / `deviceFamily` 元資料使用保守的預設允許清單，其中不包括 `system.run` 和 `system.which`。如果您針對未知平台有意需要這些指令，請透過 `gateway.nodes.allowCommands` 明確新增它們。
+- `system.run` 會在 payload 中回傳 stdout/stderr/exit code。
+- Shell 執行現在透過 `exec` 工具並搭配 `host=node` 進行；`nodes` 仍是明確節點指令的直接 RPC 介面。
+- `nodes invoke` 不會公開 `system.run` 或 `system.run.prepare`；這些僅保留在 exec 路徑上。
+- exec 路徑會在核准前準備一個標準的 `systemRunPlan`。一旦
+  核准通過，gateway 會轉發該儲存的計劃，而非任何後續
+  呼叫者編輯過的 command/cwd/session 欄位。
+- `system.notify` 會遵守 macOS 應用程式上的通知權限狀態。
+- 無法辨識的節點 `platform` / `deviceFamily` 中繼資料會使用保守的預設允許清單，其中排除 `system.run` 和 `system.which`。如果您刻意需要在未知平台上使用這些指令，請透過 `gateway.nodes.allowCommands` 明確新增它們。
 - `system.run` 支援 `--cwd`、`--env KEY=VAL`、`--command-timeout` 和 `--needs-screen-recording`。
-- 對於 shell 包裝器（`bash|sh|zsh ... -c/-lc`），請求範圍的 `--env` 值會被縮減為明確的允許清單（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。
-- 在允許清單模式下，對於「一律允許」的決策，已知的分派包裝器（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）會保存內部可執行檔路徑，而非包裝器路徑。如果解開包裝不安全，則不會自動保存允許清單項目。
-- 在允許清單模式的 Windows 節點主機上，透過 `cmd.exe /c` 執行的 shell 包裝器需要核准（僅有允許清單項目並不會自動允許包裝器形式）。
+- 對於 shell 包裝器 (`bash|sh|zsh ... -c/-lc`)，請求範圍的 `--env` 值會縮減為明確的允許清單 (`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`)。
+- 在允許清單模式下，對於始終允許的決策，已知的分發包裝器 (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) 會保留內部可執行檔路徑而非包裝器路徑。如果解包不安全，則不會自動保留允許清單條目。
+- 在允許清單模式下的 Windows 節點主機上，透過 `cmd.exe /c` 執行的 shell 包裝器需要核准（僅有允許清單條目不會自動允許包裝器形式）。
 - `system.notify` 支援 `--priority <passive|active|timeSensitive>` 和 `--delivery <system|overlay|auto>`。
-- 節點主機會忽略 `PATH` 覆寫，並移除危險的啟動/shell 金鑰（`DYLD_*`、`LD_*`、`NODE_OPTIONS`、`PYTHON*`、`PERL*`、`RUBYOPT`、`SHELLOPTS`、`PS4`）。如果您需要額外的 PATH 項目，請設定節點主機服務環境（或將工具安裝在標準位置），而不是透過 `--env` 傳遞 `PATH`。
+- 節點主機會忽略 `PATH` 覆蓋設定，並移除危險的啟動/shell 金鑰 (`DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`)。如果您需要額外的 PATH 項目，請設定節點主機服務環境（或將工具安裝在標準位置），而不是透過 `--env` 傳遞 `PATH`。
 - 在 macOS 節點模式下，`system.run` 受 macOS 應用程式中的執行核准限制（設定 → 執行核准）。
-  Ask/allowlist/full 的行為與無頭節點主機相同；被拒絕的提示會傳回 `SYSTEM_RUN_DENIED`。
-- 在無頭節點主機上，`system.run` 受執行核准限制（`~/.openclaw/exec-approvals.json`）。
+  詢問/允許清單/完整 的行為與無頭節點主機相同；拒絕的提示會傳回 `SYSTEM_RUN_DENIED`。
+- 在無頭節點主機上，`system.run` 受執行核准限制 (`~/.openclaw/exec-approvals.json`)。
 
-## Exec node 綁定
+## Exec 節點綁定
 
 當有多個節點可用時，您可以將 exec 綁定到特定節點。
-這會設定 `exec host=node` 的預設節點（並可針對每個代理程式進行覆寫）。
+這會設定 `exec host=node` 的預設節點（並且可以針對每個代理程式進行覆蓋）。
 
-全域預設：
+全域預設值：
 
 ```bash
 openclaw config set tools.exec.node "node-id-or-name"
 ```
 
-個別 agent 覆蓋：
+針對每個代理程式的覆蓋：
 
 ```bash
 openclaw config get agents.list
 openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 ```
 
-取消設定以允許任何 node：
+取消設定以允許任何節點：
 
 ```bash
 openclaw config unset tools.exec.node
 openclaw config unset agents.list[0].tools.exec.node
 ```
 
-## 權限對應
+## 權限映射
 
-節點可能包含 `permissions` 地圖，位於 `node.list` / `node.describe` 中，以權限名稱為鍵（例如 `screenRecording`、`accessibility`），並具有布林值（`true` = 已授予）。
+節點可以在 `node.list` / `node.describe` 中包含 `permissions` 映射，以權限名稱為鍵（例如 `screenRecording`, `accessibility`），值為布林值（`true` = 已授予）。
 
-## Headless node host（跨平台）
+## 無頭節點主機（跨平台）
 
-OpenClaw 可以執行 **無頭節點主機**（無 UI），它連接到 Gateway
-WebSocket 並公開 `system.run` / `system.which`。這在 Linux/Windows
-上很有用，或是用於在伺服器旁邊執行最小化節點。
+OpenClaw 可以運行一個 **無頭節點主機**（無 UI），它連接到 Gateway WebSocket 並暴露 `system.run` / `system.which`。這在 Linux/Windows 上很有用，或者用於在伺服器旁運行一個最小化的節點。
 
 啟動它：
 
@@ -388,18 +414,18 @@ WebSocket 並公開 `system.run` / `system.which`。這在 Linux/Windows
 openclaw node run --host <gateway-host> --port 18789
 ```
 
-備註：
+注意：
 
-- 仍然需要配對（Gateway 將顯示裝置配對提示）。
-- 節點主機將其節點 ID、權杖、顯示名稱和 Gateway 連線資訊儲存在 `~/.openclaw/node.json` 中。
-- Exec 批准是透過 `~/.openclaw/exec-approvals.json` 在本機強制執行的
-  （請參閱 [Exec approvals](/zh-Hant/tools/exec-approvals)）。
-- 在 macOS 上，無頭節點主機預設會在本機執行 `system.run`。請設定
-  `OPENCLAW_NODE_EXEC_HOST=app` 以透過隨行應用程式 exec 主機路由 `system.run`；新增
-  `OPENCLAW_NODE_EXEC_FALLBACK=0` 以要求應用程式主機，且如果無法使用則以封閉式失敗。
-- 當 Gateway WS 使用 TLS 時，請新增 `--tls` / `--tls-fingerprint`。
+- 仍然需要配對（Gateway 將顯示設備配對提示）。
+- 節點主機將其節點 ID、令牌、顯示名稱和 Gateway 連接資訊存儲在 `~/.openclaw/node.json` 中。
+- 執行批准通過 `~/.openclaw/exec-approvals.json` 在本地執行
+  （請參閱 [執行批准](/zh-Hant/tools/exec-approvals)）。
+- 在 macOS 上，無頭節點主機預設在本地執行 `system.run`。設置
+  `OPENCLAW_NODE_EXEC_HOST=app` 以通過配套應用程式執行主機路由 `system.run`；添加
+  `OPENCLAW_NODE_EXEC_FALLBACK=0` 以要求應用程式主機，並在不可用時以封閉模式失敗。
+- 當 Gateway WS 使用 TLS 時，添加 `--tls` / `--tls-fingerprint`。
 
 ## Mac 節點模式
 
-- macOS 選單列應用程式會作為節點連接到 Gateway WS 伺服器（因此 `openclaw nodes …` 可針對此 Mac 運作）。
-- 在遠端模式下，應用程式會為 Gateway 連接埠開啟 SSH 通道，並連接到 `localhost`。
+- macOS 選單列應用程式作為節點連接到 Gateway WS 伺服器（因此 `openclaw nodes …` 可以針對此 Mac 運作）。
+- 在遠端模式下，應用程式會為 Gateway 埠打開 SSH 隧道並連接到 `localhost`。

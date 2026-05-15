@@ -21,7 +21,7 @@ Chaque agent dans une configuration multi-agent peut remplacer le sandbox global
 </CardGroup>
 
 <Warning>
-L'auth est par agent : chaque agent lit depuis son propre `agentDir` magasin d'auth à `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`. Les identifiants ne sont **pas** partagés entre les agents. Ne réutilisez jamais `agentDir` entre les agents. Si vous souhaitez partager des identifiants, copiez `auth-profiles.json` dans le `agentDir` de l'autre agent.
+L'authentification est limitée par agent : chaque agent possède son propre magasin d'authentification `agentDir` à `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`. Ne réutilisez jamais `agentDir`OAuth entre les agents. Les agents peuvent accéder aux profils d'authentification de l'agent par défaut/principal lorsqu'ils n'ont pas de profil local, mais les jetons d'actualisation OAuth ne sont pas clonés dans les magasins des agents secondaires. Si vous copiez des identifiants manuellement, ne copiez que des profils statiques portables `api_key` ou `token`.
 </Warning>
 
 ---
@@ -205,18 +205,20 @@ L'ordre de filtrage est le suivant :
 
 <AccordionGroup>
   <Accordion title="Règles de priorité">
-    - Chaque niveau peut restreindre davantage les outils, mais ne peut pas rétablir les outils refusés des niveaux précédents. - Si `agents.list[].tools.sandbox.tools` est défini, il remplace `tools.sandbox.tools` pour cet agent. - Si `agents.list[].tools.profile` est défini, il remplace `tools.profile` pour cet agent. - Les clés d'outil du fournisseur acceptent soit `provider` (ex.
-    `google-antigravity`) soit `provider/model` (ex. `openai/gpt-5.4`).
+    - Chaque niveau peut restreindre davantage les outils, mais ne peut pas rétablir les outils refusés des niveaux précédents.
+    - Si `agents.list[].tools.sandbox.tools` est défini, il remplace `tools.sandbox.tools` pour cet agent.
+    - Si `agents.list[].tools.profile` est défini, il remplace `tools.profile` pour cet agent.
+    - Les clés d'outil du fournisseur acceptent soit `provider` (par ex. `google-antigravity`) soit `provider/model` (par ex. `openai/gpt-5.4`).
+
   </Accordion>
   <Accordion title="Comportement de la liste blanche vide">
-    Si une liste blanche explicite de cette chaîne laisse l'exécution sans outils appelables, OpenClaw s'arrête avant de soumettre le prompt au modèle. C'est intentionnel : un agent configuré avec un outil manquant tel que `agents.list[].tools.allow: ["query_db"]` doit échouer de manière visible jusqu'à ce que le plugin qui enregistre `query_db` soit activé, et non continuer comme un agent texte
-    uniquement.
+    Si une liste blanche explicite de cette chaîne laisse l'exécution sans outils appelables, OpenClaw s'arrête avant de soumettre le prompt au modèle. C'est intentionnel : un agent configuré avec un outil manquant tel que `agents.list[].tools.allow: ["query_db"]` doit échouer de manière visible jusqu'à ce que le plugin qui enregistre `query_db` soit activé, et non continuer comme un agent texte uniquement.
   </Accordion>
 </AccordionGroup>
 
-Les stratégies d'outils prennent en charge les raccourcis `group:*` qui s'étendent à plusieurs outils. Voir [Groupes d'outils](/fr/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands) pour la liste complète.
+Les stratégies d'outil prennent en charge les raccourcis `group:*` qui s'étendent à plusieurs outils. Consultez [Groupes d'outils](/fr/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands) pour la liste complète.
 
-Les remplacements elevés par agent (`agents.list[].tools.elevated`) peuvent restreindre davantage l'exécution élevée pour des agents spécifiques. Voir [Mode élevé](/fr/tools/elevated) pour les détails.
+Les remplacements élevés par agent (`agents.list[].tools.elevated`) peuvent restreindre davantage l'exécution élevée pour des agents spécifiques. Consultez [Mode élevé](/fr/tools/elevated) pour plus de détails.
 
 ---
 
@@ -280,7 +282,7 @@ Les remplacements elevés par agent (`agents.list[].tools.elevated`) peuvent res
     }
     ```
   </Tab>
-  <Tab title="Exécution sécurisée (pas de modification de fichiers)">
+  <Tab title="Exécution du shell avec les outils de système de fichiers désactivés">
     ```json
     {
       "tools": {
@@ -289,6 +291,11 @@ Les remplacements elevés par agent (`agents.list[].tools.elevated`) peuvent res
       }
     }
     ```
+
+    <Warning>
+    Cette stratégie désactive les outils de système de fichiers OpenClaw, mais `exec` est toujours un shell et peut écrire des fichiers où que ce soit, tant que l'hôte sélectionné ou le système de fichiers du bac à sable le permet. Pour un agent en lecture seule, refusez `exec` et `process`, ou combinez l'accès au shell avec des contrôles du système de fichiers du bac à sable tels que `agents.defaults.sandbox.workspaceAccess: "ro"` ou `"none"`.
+    </Warning>
+
   </Tab>
   <Tab title="Communication-only">
     ```json
@@ -301,7 +308,7 @@ Les remplacements elevés par agent (`agents.list[].tools.elevated`) peuvent res
     }
     ```
 
-    `sessions_history` dans ce profil renvoie toujours une vue de rappel limitée et nettoyée plutôt qu'un vidage brut de la transcription. Le rappel de l'assistant supprime les balises de réflexion, l'échafaudage `<relevant-memories>`, les charges utiles XML d'appel d'outil en texte brut (y compris `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` et les blocs d'appel d'outil tronqués), l'échafaudage d'appel d'outil rétrogradé, les jetons de contrôle de modèle ASCII/pleine largeur divulgués et les appels d'outil XML MiniMax malformés avant la rédaction/troncature.
+    `sessions_history` dans ce profil renvoie toujours une vue de rappel limitée et nettoyée plutôt qu'un vidage brut de la transcription. Le rappel de l'assistant supprime les balises de réflexion, l'échafaudage `<relevant-memories>`, les charges utiles XML d'appel d'outil en texte brut (y compris `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>`, et les blocs d'appel d'outil tronqués), l'échafaudage d'appel d'outil rétrogradé, les jetons de contrôle de modèle ASCII/pleine largeur fuités, et les XML d'appel d'outil MiniMax malformés avant la rédaction/troncation.
 
   </Tab>
 </Tabs>
@@ -310,7 +317,7 @@ Les remplacements elevés par agent (`agents.list[].tools.elevated`) peuvent res
 
 ## Piège courant : « non-main »
 
-<Warning>`agents.defaults.sandbox.mode: "non-main"` est basé sur `session.mainKey` (par défaut `"main"`), et non sur l'identifiant de l'agent. Les sessions de groupe/canal obtiennent toujours leurs propres clés, elles sont donc traitées comme non-main et seront sandboxées. Si vous souhaitez qu'un agent ne soit jamais sandboxé, définissez `agents.list[].sandbox.mode: "off"`.</Warning>
+<Warning>`agents.defaults.sandbox.mode: "non-main"` est basé sur `session.mainKey` (défaut `"main"`), et non sur l'id de l'agent. Les sessions de groupe/de obtiennent toujours leurs propres clés, elles sont donc traitées comme non-main et seront . Si vous souhaitez qu'un agent ne soit jamais , définissez `agents.list[].sandbox.mode: "off"`.</Warning>
 
 ---
 
@@ -332,6 +339,7 @@ Après avoir configuré le bac à sable multi-agent et les outils :
   <Step title="Test tool restrictions">
     - Envoyez un message nécessitant des outils restreints.
     - Vérifiez que l'agent ne peut pas utiliser les outils refusés.
+
   </Step>
   <Step title="Monitor logs">
     ```bash
@@ -345,9 +353,22 @@ Après avoir configuré le bac à sable multi-agent et les outils :
 ## Dépannage
 
 <AccordionGroup>
-  <Accordion title="Agent not sandboxed despite `mode: 'all'`">- Vérifiez s'il existe un `agents.defaults.sandbox.mode` global qui le remplace. - La configuration spécifique à l'agent est prioritaire, définissez donc `agents.list[].sandbox.mode: "all"`.</Accordion>
-  <Accordion title="Outils toujours disponibles malgré la liste de refus">- Vérifiez l'ordre de filtrage des outils : global → agent → sandbox → sous-agent. - Chaque niveau peut uniquement restreindre davantage, pas rétablir. - Vérifiez avec les journaux : `[tools] filtering tools for agent:${agentId}`.</Accordion>
-  <Accordion title="Conteneur non isolé par agent">- Définissez `scope: "agent"` dans la configuration sandbox spécifique à l'agent. - La valeur par défaut est `"session"` qui crée un conteneur par session.</Accordion>
+  <Accordion title="Agent not sandboxed despite `mode: 'all'`">
+    - Vérifiez s'il existe un `agents.defaults.sandbox.mode` global qui le remplace.
+    - La configuration spécifique à l'agent est prioritaire, définissez donc `agents.list[].sandbox.mode: "all"`.
+
+  </Accordion>
+  <Accordion title="Outils toujours disponibles malgré la liste de refus">
+    - Vérifiez l'ordre de filtrage des outils : global → agent → sandbox → sous-agent.
+    - Chaque niveau ne peut que restreindre davantage, pas rétablir.
+    - Vérifiez avec les journaux : `[tools] filtering tools for agent:${agentId}`.
+
+  </Accordion>
+  <Accordion title="Conteneur non isolé par agent">
+    - Définissez `scope: "agent"` dans la configuration du sandbox spécifique à l'agent.
+    - La valeur par défaut est `"session"`, qui crée un conteneur par session.
+
+  </Accordion>
 </AccordionGroup>
 
 ---
@@ -357,6 +378,6 @@ Après avoir configuré le bac à sable multi-agent et les outils :
 - [Mode élevé](/fr/tools/elevated)
 - [Routage multi-agent](/fr/concepts/multi-agent)
 - [Configuration du Sandbox](/fr/gateway/config-agents#agentsdefaultssandbox)
-- [Sandbox vs stratégie d'outil vs mode élevé](/fr/gateway/sandbox-vs-tool-policy-vs-elevated) — débogage de « pourquoi cela est-il bloqué ? »
-- [Sandboxing](/fr/gateway/sandboxing) — référence complète du Sandbox (modes, portées, backends, images)
+- [Sandbox vs stratégie d'outil vs élevé](/fr/gateway/sandbox-vs-tool-policy-vs-elevated) — débogage de "pourquoi cela est-il bloqué ?"
+- [Sandboxing](/fr/gateway/sandboxing) — référence complète du sandbox (modes, portées, backends, images)
 - [Gestion de session](/fr/concepts/session)

@@ -197,10 +197,11 @@ Elija su superficie de proveedor y siga los pasos de configuración.
   </Accordion>
 
   <Accordion title="Notas">
-    - El proveedor se incluye con OpenClaw, por lo que no hay un paso separado de instalación del complemento.
-    - `step-3.5-flash-2603` actualmente se expone solo en `stepfun-plan`.
-    - Un único flujo de autenticación escribe perfiles coincidentes por región tanto para `stepfun` como para `stepfun-plan`, por lo que ambas superficies pueden descubrirse juntas.
+    - El proveedor está incluido con OpenClaw, por lo que no hay un paso separado de instalación del complemento.
+    - `step-3.5-flash-2603` está expuesto actualmente solo en `stepfun-plan`.
+    - Un único flujo de autenticación escribe perfiles coincidentes con la región para ambos `stepfun` y `stepfun-plan`, por lo que ambas superficies pueden descubrirse juntas.
     - Use `openclaw models list` y `openclaw models set <provider/model>` para inspeccionar o cambiar modelos.
+
   </Accordion>
 </AccordionGroup>
 

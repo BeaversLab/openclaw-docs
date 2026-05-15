@@ -8,7 +8,7 @@ title: "ClawDock"
 
 ClawDock es una pequeña capa auxiliar de shell para instalaciones de OpenClaw basadas en Docker.
 
-Proporciona comandos cortos como `clawdock-start`, `clawdock-dashboard` y `clawdock-fix-token` en lugar de invocaciones más largas de `docker compose ...`.
+Ofrece comandos cortos como `clawdock-start`, `clawdock-dashboard` y `clawdock-fix-token` en lugar de invocaciones más largas de `docker compose ...`.
 
 Si aún no has configurado Docker, comienza con [Docker](/es/install/docker).
 
@@ -21,7 +21,7 @@ mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/open
 echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
-Si anteriormente instalaste ClawDock desde `scripts/shell-helpers/clawdock-helpers.sh`, reinstálalo desde la nueva ruta `scripts/clawdock/clawdock-helpers.sh`. La ruta antigua de GitHub sin procesar se eliminó.
+Si anteriormente instalaste ClawDock desde `scripts/shell-helpers/clawdock-helpers.sh`, reinstálalo desde la nueva ruta `scripts/clawdock/clawdock-helpers.sh`. La antigua ruta raw de GitHub se eliminó.
 
 ## Lo que obtienes
 
@@ -91,14 +91,22 @@ clawdock-approve <request-id>
 ClawDock funciona con la misma división de configuración de Docker descrita en [Docker](/es/install/docker):
 
 - `<project>/.env` para valores específicos de Docker como el nombre de la imagen, los puertos y el token de la puerta de enlace
-- `~/.openclaw/.env` para claves de proveedor y tokens de bot respaldados por variables de entorno
-- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` para la autenticación OAuth/de clave de API del proveedor almacenada
+- `~/.openclaw/.env` para claves de proveedor respaldadas por variables de entorno y tokens de bot
+- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` para autenticación de OAuth/clave de API de proveedor almacenada
 - `~/.openclaw/openclaw.json` para la configuración del comportamiento
 
-Use `clawdock-show-config` cuando quiera inspeccionar rápidamente los archivos `.env` y `openclaw.json`. Redacta los valores de `.env` en su salida impresa.
+Use `clawdock-show-config` cuando desee inspeccionar los archivos `.env` y `openclaw.json` rápidamente. Redacta los valores `.env` en su salida impresa.
 
-## Páginas relacionadas
+## Relacionado
 
-- [Docker](/es/install/docker)
-- [Docker VM Runtime](/es/install/docker-vm-runtime)
-- [Actualización](/es/install/updating)
+<CardGroup cols={2}>
+  <Card title="Docker" href="/es/install/docker" icon="docker">
+    Instalación canónica de Docker para OpenClaw.
+  </Card>
+  <Card title="Docker VM runtime" href="/es/install/docker-vm-runtime" icon="cube">
+    Tiempo de ejecución de VM administrado por Docker para aislamiento reforzado.
+  </Card>
+  <Card title="Updating" href="/es/install/updating" icon="arrow-up-right-from-square">
+    Actualización del paquete OpenClaw y de los servicios administrados.
+  </Card>
+</CardGroup>

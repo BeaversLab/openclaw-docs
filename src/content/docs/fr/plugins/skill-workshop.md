@@ -217,7 +217,7 @@ Le relecteur n'a aucun outil :
 - `toolsAllow: []`
 - `disableMessageTool: true`
 
-Le relecteur renvoie soit `{ "action": "none" }` soit une proposition. Le champ `action` est `create`, `append` ou `replace` — préférez `append`/`replace` lorsqu'une compétence pertinente existe déjà ; utilisez `create` uniquement si aucune compétence existante ne convient.
+Le réviseur renvoie soit `{ "action": "none" }` soit une proposition. Le champ `action` est `create`, `append` ou `replace` - privilégiez `append`/`replace` lorsqu'une compétence pertinente existe déjà ; utilisez `create` uniquement si aucune compétence existante ne convient.
 
 Exemple `create` :
 
@@ -354,7 +354,7 @@ Créer une proposition. Avec `approvalPolicy: "pending"` (par défaut), cela met
 ```
 
 <AccordionGroup>
-  <Accordion title="Forcer une écriture sûre (apply: true)">
+  <Accordion title="Demander une écriture immédiate en mode automatique (apply: true)">
 
 ```json
 {
@@ -365,6 +365,9 @@ Créer une proposition. Avec `approvalPolicy: "pending"` (par défaut), cela met
   "body": "## Workflow\n\n- Verify true animation.\n- Record attribution."
 }
 ```
+
+Avec `approvalPolicy: "pending"`, `apply: true` met toujours la proposition en file d'attente. Passez-la en revue, puis utilisez
+l'action `apply` après approbation.
 
   </Accordion>
 
@@ -414,6 +417,9 @@ Créer une proposition. Avec `approvalPolicy: "pending"` (par défaut), cela met
 
 Appliquer une proposition en attente.
 
+Avec `approvalPolicy: "pending"`, cette action demande l'approbation de l'opérateur avant d'écrire
+la compétence de l'espace de travail.
+
 ```json
 {
   "action": "apply",
@@ -440,7 +446,7 @@ Marquer une proposition comme rejetée.
 
 ### `write_support_file`
 
-Écrire un fichier de support dans un répertoire de compétences existant ou proposé.
+Écrire un fichier de support dans un répertoire de compétence existant ou proposé.
 
 Répertoires de support de niveau supérieur autorisés :
 
@@ -465,13 +471,13 @@ Les fichiers de support sont limités à l'espace de travail, vérifiés par che
 
 ## Écritures de compétences
 
-Skill Workshop n'écrit que sous :
+Skill Workshop écrit uniquement sous :
 
 ```text
 <workspace>/skills/<normalized-skill-name>/
 ```
 
-Les noms des compétences sont normalisés :
+Les noms de compétences sont normalisés :
 
 - en minuscules
 - les exécutions non `[a-z0-9_-]` deviennent `-`
@@ -486,8 +492,8 @@ Pour `create` :
 
 Pour `append` :
 
-- si la compétence existe, Skill Workshop l'ajoute à la section demandée
-- si elle n'existe pas, Skill Workshop crée une compétence minimale puis l'ajoute
+- si la compétence existe, Skill Workshop ajoute à la section demandée
+- si elle n'existe pas, Skill Workshop crée une compétence minimale puis ajoute
 
 Pour `replace` :
 
@@ -495,92 +501,94 @@ Pour `replace` :
 - `oldText` doit être présent exactement
 - seule la première correspondance exacte est remplacée
 
-Toutes les écritures sont atomiques et rafraîchissent immédiatement l'instantané des compétences en mémoire, de sorte que
-la nouvelle ou la compétence mise à jour peut devenir visible sans redémarrage de Gateway.
+Toutes les écritures sont atomiques et actualisent immédiatement l'instantané des compétences en mémoire, de sorte que
+la nouvelle ou la compétence mise à jour peut devenir visible sans redémarrage du Gateway.
 
 ## Modèle de sécurité
 
-Skill Workshop dispose d'un scanner de sécurité sur le contenu généré `SKILL.md` et les fichiers de support.
+Skill Workshop dispose d'un scanner de sécurité sur le contenu `SKILL.md` généré et les fichiers
+de support.
 
 Les résultats critiques mettent en quarantaine les propositions :
 
-| ID de règle                            | Bloque le contenu qui...                                                               |
-| -------------------------------------- | -------------------------------------------------------------------------------------- |
-| `prompt-injection-ignore-instructions` | dit à l'agent d'ignorer les instructions antérieures ou de niveau supérieur            |
-| `prompt-injection-system`              | référence des invites système, des messages de développeur ou des instructions cachées |
-| `prompt-injection-tool`                | encourage à contourner les permissions/approbations d'outils                           |
-| `shell-pipe-to-shell`                  | inclut `curl`/`wget` redirigé vers `sh`, `bash` ou `zsh`                               |
-| `secret-exfiltration`                  | semble envoyer des données d'environnement/de processus sur le réseau                  |
+| ID de règle                            | Bloque le contenu qui...                                                              |
+| -------------------------------------- | ------------------------------------------------------------------------------------- |
+| `prompt-injection-ignore-instructions` | dit à l'agent d'ignorer les instructions antérieures/supérieures                      |
+| `prompt-injection-system`              | réfère à des invites système, des messages de développeur ou des instructions cachées |
+| `prompt-injection-tool`                | encourage à contourner l'autorisation/approbation des outils                          |
+| `shell-pipe-to-shell`                  | inclut `curl`/`wget` redirigé vers `sh`, `bash` ou `zsh`                              |
+| `secret-exfiltration`                  | semble envoyer des données d'environnement/de processus sur le réseau                 |
 
 Les avertissements sont conservés mais ne bloquent pas par eux-mêmes :
 
-| ID de règle          | Avertit sur...                                   |
-| -------------------- | ------------------------------------------------ |
-| `destructive-delete` | commandes de style `rm -rf` larges               |
-| `unsafe-permissions` | utilisation des permissions de style `chmod 777` |
+| ID de règle          | Avertit pour...                                 |
+| -------------------- | ----------------------------------------------- |
+| `destructive-delete` | commandes de style `rm -rf` larges              |
+| `unsafe-permissions` | utilisation d'autorisation de style `chmod 777` |
 
 Propositions mises en quarantaine :
 
-- conserver `scanFindings`
-- conserver `quarantineReason`
-- apparaître dans `list_quarantine`
-- ne peut être appliqué via `apply`
+- garder `scanFindings`
+- garder `quarantineReason`
+- apparaissent dans `list_quarantine`
+- ne peuvent pas être appliquées via `apply`
 
-Pour récupérer une proposition mise en quarantaine, créez une nouvelle proposition sûre avec le contenu non sécurisé supprimé. N'éditez pas le JSON du magasin manuellement.
+Pour récupérer une proposition mise en quarantaine, créez une nouvelle proposition sûre avec le
+contenu non sûr supprimé. N'éditez pas le JSON du magasin à la main.
 
-## Consignes d'invite
+## Conseils d'invite
 
-Lorsqu'il est activé, Skill Workshop injecte une section d'invite courte qui indique à l'agent d'utiliser `skill_workshop` pour une mémoire procédurale durable.
+Lorsqu'il est activé, Skill Workshop injecte une courte section d'invite qui indique à l'agent
+d'utiliser `skill_workshop` pour une mémoire procédurale durable.
 
-Les consignes mettent l'accent sur :
+Les conseils soulignent :
 
 - les procédures, pas les faits/préférences
 - les corrections de l'utilisateur
-- les procédures réussies non évidentes
+- les procédures réussites non évidentes
 - les pièges récurrents
-- la réparation de compétences obsolètes/mauvaises par ajout/remplacement
-- sauvegarder la procédure réutilisable après de longues boucles d'outils ou des corrections difficiles
+- la réparation de compétences périmées/fines/incorrectes par ajout/remplacement
+- sauvegarder la procédure réutilisable après de longues boucles d'outils ou des correctifs difficiles
 - texte de compétence impératif court
 - pas de vidages de transcription
 
 Le texte du mode d'écriture change avec `approvalPolicy` :
 
-- mode en attente : mettre en file d'attente les suggestions ; appliquer uniquement après approbation explicite
-- mode automatique : appliquer les mises à jour de compétences de l'espace de travail sûres lorsqu'elles sont clairement réutilisables
+- mode en attente : mettre les suggestions en file d'attente ; utiliser `apply` après approbation explicite
+- mode automatique : appliquer les mises à jour sûres des compétences de l'espace de travail, sauf si `apply: false` les met en file d'attente à la place
 
 ## Coûts et comportement à l'exécution
 
 La capture heuristique n'appelle pas de modèle.
 
-LLM review uses an embedded run on the active/default agent model. It is
-threshold-based so it does not run on every turn by default.
+La révision LLM utilise une exécution intégrée sur le modèle d'agent actif/défaut. Elle est basée sur un seuil et ne s'exécute donc pas à chaque tour par défaut.
 
-The reviewer:
+Le réviseur :
 
-- uses the same configured provider/model context when available
-- falls back to runtime agent defaults
-- has `reviewTimeoutMs`
-- uses lightweight bootstrap context
-- has no tools
-- writes nothing directly
-- can only emit a proposal that goes through the normal scanner and
-  approval/quarantine path
+- utilise le même contexte fournisseur/modèle configuré lorsque disponible
+- revient aux valeurs par défaut de l'agent à l'exécution
+- a `reviewTimeoutMs`
+- utilise un contexte d'amorçage léger
+- n'a aucun outil
+- n'écrit rien directement
+- peut uniquement émettre une proposition qui passe par le scanner normal et
+  le chemin d'approbation/quarantaine
 
-If the reviewer fails, times out, or returns invalid JSON, the plugin logs a
-warning/debug message and skips that review pass.
+Si le réviseur échoue, expire ou renvoie du JSON invalide, le plugin enregistre un
+message d'avertissement/débogage et ignore cette passe de révision.
 
-## Operating patterns
+## Modes opératoires
 
-Use Skill Workshop when the user says:
+Utilisez Skill Workshop lorsque l'utilisateur dit :
 
-- “next time, do X”
-- “from now on, prefer Y”
-- “make sure to verify Z”
-- “save this as a workflow”
-- “this took a while; remember the process”
-- “update the local skill for this”
+- "la prochaine fois, fais X"
+- "dorénavant, préfère Y"
+- "assure-toi de vérifier Z"
+- "enregistre ceci en tant que workflow"
+- "cela a pris du temps ; souviens-toi du processus"
+- "met à jour la compétence locale pour cela"
 
-Good skill text:
+Bon texte de compétence :
 
 ```markdown
 ## Workflow
@@ -592,57 +600,57 @@ Good skill text:
 - Verify the local asset renders in the target UI before final reply.
 ```
 
-Poor skill text:
+Mauvais texte de compétence :
 
 ```markdown
 The user asked about a GIF and I searched two websites. Then one was blocked by
 Cloudflare. The final answer said to check attribution.
 ```
 
-Reasons the poor version should not be saved:
+Raisons pour lesquelles la mauvaise version ne devrait pas être enregistrée :
 
-- transcript-shaped
-- not imperative
-- includes noisy one-off details
-- does not tell the next agent what to do
+- forme de transcription
+- pas impératif
+- inclut des détails ponctuels bruyants
+- ne dit pas au prochain agent quoi faire
 
-## Debugging
+## Débogage
 
-Check whether the plugin is loaded:
+Vérifiez si le plugin est chargé :
 
 ```bash
 openclaw plugins list --enabled
 ```
 
-Check proposal counts from an agent/tool context:
+Vérifiez les nombres de propositions depuis un contexte agent/outil :
 
 ```json
 { "action": "status" }
 ```
 
-Inspect pending proposals:
+Inspectez les propositions en attente :
 
 ```json
 { "action": "list_pending" }
 ```
 
-Inspect quarantined proposals:
+Inspectez les propositions en quarantaine :
 
 ```json
 { "action": "list_quarantine" }
 ```
 
-Common symptoms:
+Symptômes courants :
 
-| Symptom                               | Likely cause                                                                              | Check                                                                           |
-| ------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Tool is unavailable                   | Plugin entry is not enabled                                                               | `plugins.entries.skill-workshop.enabled` and `openclaw plugins list`            |
-| No automatic proposal appears         | `autoCapture: false`, `reviewMode: "off"`, or thresholds not met                          | Config, proposal status, Gateway logs                                           |
-| Heuristic did not capture             | User wording did not match correction patterns                                            | Use explicit `skill_workshop.suggest` or enable LLM reviewer                    |
-| Reviewer did not create a proposal    | Reviewer returned `none`, invalid JSON, or timed out                                      | Gateway logs, `reviewTimeoutMs`, thresholds                                     |
-| Proposal is not applied               | `approvalPolicy: "pending"`                                                               | `list_pending`, then `apply`                                                    |
-| Proposal disappeared from pending     | Duplicate proposal reused, max pending pruning, or was applied/rejected/quarantined       | `status`, `list_pending` with status filters, `list_quarantine`                 |
-| Skill file exists but model misses it | L'instantané de la compétence n'est pas actualisé ou le filtrage des compétences l'exclut | `openclaw skills` statut et éligibilité de la compétence de l'espace de travail |
+| Symptôme                                                      | Cause probable                                                                                                    | Vérifier                                                                       |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| L'outil est indisponible                                      | L'entrée du plugin n'est pas activée                                                                              | `plugins.entries.skill-workshop.enabled` et `openclaw plugins list`            |
+| Aucune proposition automatique n'apparaît                     | `autoCapture: false`, `reviewMode: "off"`, ou seuils non atteints                                                 | Configuration, statut de la proposition, journaux Gateway                      |
+| L'heuristique n'a pas capturé                                 | Les termes de l'utilisateur ne correspondaient pas aux modèles de correction                                      | Utilisez `skill_workshop.suggest` explicite ou activez le réviseur LLM         |
+| Le réviseur n'a pas créé de proposition                       | Le réviseur a renvoyé `none`, du JSON invalide ou a expiré                                                        | Journaux Gateway, `reviewTimeoutMs`, seuils                                    |
+| La proposition n'est pas appliquée                            | `approvalPolicy: "pending"`                                                                                       | `list_pending`, puis `apply`                                                   |
+| La proposition a disparu de la liste en attente               | Proposition en double réutilisée, nettoyage de l'attente maximale, ou a été appliquée/rejetée/mise en quarantaine | `status`, `list_pending` avec des filtres de statut, `list_quarantine`         |
+| Le fichier de compétence existe mais le modèle ne le voit pas | L'instantané des compétences n'a pas été actualisé ou le filtrage des compétences l'exclut                        | Statut `openclaw skills` et éligibilité des compétences de l'espace de travail |
 
 Journaux pertinents :
 
@@ -653,9 +661,9 @@ Journaux pertinents :
 - `skill-workshop: reviewer skipped: ...`
 - `skill-workshop: reviewer found no update`
 
-## Scénarios QA
+## Scénarios de tests qualité
 
-Scénarios QA basés sur le dépôt :
+Scénarios de tests qualité basés sur le dépôt :
 
 - `qa/scenarios/plugins/skill-workshop-animated-gif-autocreate.md`
 - `qa/scenarios/plugins/skill-workshop-pending-approval.md`

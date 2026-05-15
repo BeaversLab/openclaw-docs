@@ -12,9 +12,9 @@ El espacio de trabajo es el hogar del agente. Es el único directorio de trabajo
 Esto es independiente de `~/.openclaw/`, que almacena la configuración, las credenciales y las sesiones.
 
 <Warning>
-El espacio de trabajo es el **cwd predeterminado**, no un entorno protegido (sandbox) estricto. Las herramientas resuelven las rutas relativas con respecto al espacio de trabajo, pero las rutas absolutas aún pueden llegar a otros lugares del host a menos que se habilite el aislamiento (sandboxing). Si necesita aislamiento, use [`agents.defaults.sandbox`](/es/gateway/sandboxing) (y/o la configuración de sandbox por agente).
+El espacio de trabajo es el **cwd predeterminado**, no un sandbox estricto. Las herramientas resuelven las rutas relativas con respecto al espacio de trabajo, pero las rutas absolutas aún pueden alcanzar otros lugares en el host a menos que se habilite el sandbox. Si necesitas aislamiento, usa [`agents.defaults.sandbox`](/es/gateway/sandboxing) (y/o configuración de sandbox por agente).
 
-Cuando el aislamiento está habilitado y `workspaceAccess` no es `"rw"`, las herramientas operan dentro de un espacio de trabajo de aislamiento bajo `~/.openclaw/sandboxes`, no en su espacio de trabajo del host.
+Cuando se habilita el sandbox y `workspaceAccess` no es `"rw"`, las herramientas operan dentro de un espacio de trabajo de espacio aislado bajo `~/.openclaw/sandboxes`, no en tu espacio de trabajo del host.
 
 </Warning>
 
@@ -60,42 +60,46 @@ Las instalaciones anteriores pueden haber creado `~/openclaw`. Mantener varios d
 Estos son los archivos estándar que OpenClaw espera dentro del espacio de trabajo:
 
 <AccordionGroup>
-  <Accordion title="AGENTS.md — instrucciones de funcionamiento">Instrucciones de funcionamiento para el agente y cómo debe utilizar la memoria. Se cargan al inicio de cada sesión. Es un buen lugar para reglas, prioridades y detalles sobre "cómo comportarse".</Accordion>
-  <Accordion title="SOUL.md — personalidad y tono">Personalidad, tono y límites. Se cargan en cada sesión. Guía: [guía de personalidad SOUL.md](/es/concepts/soul).</Accordion>
-  <Accordion title="USER.md — quién es el usuario">Quién es el usuario y cómo dirigirse a él. Se carga en cada sesión.</Accordion>
-  <Accordion title="IDENTITY.md — nombre, ambiente, emoji">El nombre, el ambiente y el emoji del agente. Creado/actualizado durante el ritual de arranque.</Accordion>
-  <Accordion title="TOOLS.md — convenciones de herramientas locales">Notas sobre tus herramientas locales y convenciones. No controla la disponibilidad de las herramientas; es solo orientación.</Accordion>
-  <Accordion title="HEARTBEAT.md — lista de verificación de latido">Pequeña lista de verificación opcional para ejecuciones de latido. Mantenla corta para evitar el consumo de tokens.</Accordion>
-  <Accordion title="BOOT.md — lista de verificación de inicio">Lista de verificación de inicio opcional que se ejecuta automáticamente al reiniciar la puerta de enlace (cuando los [ganchos internos](/es/automation/hooks) están habilitados). Mantenla corta; usa la herramienta de mensaje para envíos salientes.</Accordion>
-  <Accordion title="BOOTSTRAP.md — ritual de primera ejecución">Ritual de primera ejecución único. Solo se crea para un espacio de trabajo completamente nuevo. Elimínalo después de que se complete el ritual.</Accordion>
-  <Accordion title="memory/YYYY-MM-DD.md — registro de memoria diaria">Registro de memoria diaria (un archivo por día). Se recomienda leer hoy + ayer al inicio de la sesión.</Accordion>
-  <Accordion title="MEMORY.md — curated long-term memory (optional)">Memoria a largo plazo curada. Cargar solo en la sesión principal privada (no en contextos compartidos/grupales). Consulte [Memory](/es/concepts/memory) para ver el flujo de trabajo y el vaciado automático de la memoria.</Accordion>
-  <Accordion title="skills/ — workspace skills (optional)">Habilidades específicas del espacio de trabajo. Ubicación de habilidades de mayor precedencia para ese espacio de trabajo. Anula las habilidades del agente del proyecto, las habilidades del agente personal, las habilidades administradas, las habilidades incluidas y `skills.load.extraDirs` cuando los nombres colisionan.</Accordion>
-  <Accordion title="canvas/ — Canvas UI files (optional)">Archivos de la interfaz de usuario de Canvas para visualizaciones de nodos (por ejemplo, `canvas/index.html`).</Accordion>
+  <Accordion title="AGENTS.md - instrucciones de operación">Instrucciones de operación para el agente y cómo debe usar la memoria. Se cargan al inicio de cada sesión. Buen lugar para reglas, prioridades y detalles sobre "cómo comportarse".</Accordion>
+  <Accordion title="SOUL.md - personalidad y tono">Personalidad, tono y límites. Se cargan en cada sesión. Guía: [guía de personalidad de SOUL.md](/es/concepts/soul).</Accordion>
+  <Accordion title="USER.md - quién es el usuario">Quién es el usuario y cómo dirigirse a él. Se carga en cada sesión.</Accordion>
+  <Accordion title="IDENTITY.md - nombre, vibra, emoji">El nombre, vibra y emoji del agente. Creado/actualizado durante el ritual de arranque.</Accordion>
+  <Accordion title="TOOLS.md - convenciones de herramientas locales">Notas sobre tus herramientas locales y convenciones. No controla la disponibilidad de herramientas; es solo orientación.</Accordion>
+  <Accordion title="HEARTBEAT.md - lista de verificación de latido">Pequeña lista de verificación opcional para ejecuciones de latido. Mantenla corta para evitar quemar tokens.</Accordion>
+  <Accordion title="BOOT.md - lista de verificación de inicio">Lista de verificación de inicio opcional que se ejecuta automáticamente al reiniciar el gateway (cuando los [ganchos internos](/es/automation/hooks) están habilitados). Mantenla corta; usa la herramienta de mensaje para envíos salientes.</Accordion>
+  <Accordion title="BOOTSTRAP.md - first-run ritual">Ritual de primera ejecución única. Solo se crea para un espacio de trabajo completamente nuevo. Elimínelo después de que se complete el ritual.</Accordion>
+  <Accordion title="memory/YYYY-MM-DD.md - daily memory log">Registro de memoria diaria (un archivo por día). Se recomienda leer hoy + ayer al iniciar la sesión.</Accordion>
+  <Accordion title="MEMORY.md - curated long-term memory (optional)">
+    Memoria a largo plazo curada: hechos duraderos, preferencias, decisiones y resúmenes cortos. Mantenga registros detallados en `memory/YYYY-MM-DD.md` para que las herramientas de memoria puedan recuperarlos bajo demanda sin inyectarlos en cada mensaje. Cargue `MEMORY.md` solo en la sesión privada principal (no en contextos compartidos o grupales). Consulte [Memory](/es/concepts/memory) para
+    conocer el flujo de trabajo y el vaciado automático de memoria.
+  </Accordion>
+  <Accordion title="skills/ - workspace skills (optional)">Habilidades específicas del espacio de trabajo. Ubicación de habilidades de mayor precedencia para ese espacio de trabajo. Anula las habilidades del agente del proyecto, las habilidades del agente personal, las habilidades administradas, las habilidades empaquetadas y `skills.load.extraDirs` cuando los nombres colisionan.</Accordion>
+  <Accordion title="canvas/ - Canvas UI files (optional)">Archivos de interfaz de usuario de Canvas para visualizaciones de nodos (por ejemplo `canvas/index.html`).</Accordion>
 </AccordionGroup>
 
 <Note>
-  Si falta algún archivo de arranque, OpenClaw inyecta un marcador de "archivo faltante" en la sesión y continúa. Los archivos de arranque grandes se truncan al inyectarse; ajuste los límites con `agents.defaults.bootstrapMaxChars` (predeterminado: 12000) y `agents.defaults.bootstrapTotalMaxChars` (predeterminado: 60000). `openclaw setup` puede recrear los valores predeterminados faltantes sin
+  Si falta algún archivo de arranque, OpenClaw inyecta un marcador de "archivo faltante" en la sesión y continúa. Los archivos de arranque grandes se truncarán al inyectarse; ajuste los límites con `agents.defaults.bootstrapMaxChars` (predeterminado: 12000) y `agents.defaults.bootstrapTotalMaxChars` (predeterminado: 60000). `openclaw setup` puede recrear los valores predeterminados que faltan sin
   sobrescribir los archivos existentes.
 </Note>
 
 ## Qué NO está en el espacio de trabajo
 
-Estos se encuentran bajo `~/.openclaw/` y NO se deben confirmar en el repositorio del espacio de trabajo:
+Estos residen bajo `~/.openclaw/` y NO deben enviarse al repositorio del espacio de trabajo:
 
 - `~/.openclaw/openclaw.json` (config)
-- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (perfiles de autenticación del modelo: OAuth + claves API)
+- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (perfiles de autenticación de modelos: OAuth + claves API)
+- `~/.openclaw/agents/<agentId>/agent/codex-home/` (cuenta de tiempo de ejecución de Codex por agente, configuración, habilidades, complementos y estado de subproceso nativo)
 - `~/.openclaw/credentials/` (estado del canal/proveedor más datos de importación de OAuth heredados)
 - `~/.openclaw/agents/<agentId>/sessions/` (transcripciones de sesión + metadatos)
 - `~/.openclaw/skills/` (habilidades administradas)
 
 Si necesita migrar sesiones o configuraciones, cópielas por separado y manténgalas fuera del control de versiones.
 
-## Copia de seguridad de Git (recomendada, privada)
+## Copia de seguridad de Git (recomendado, privado)
 
-Trate el espacio de trabajo como memoria privada. Colóquelo en un repositorio git **privado** para que se realice una copia de seguridad y sea recuperable.
+Trate el espacio de trabajo como memoria privada. Colóquelo en un repositorio git **privado** para que se haga una copia de seguridad y se pueda recuperar.
 
-Ejecute estos pasos en la máquina donde se ejecuta el Gateway (es ahí donde reside el espacio de trabajo).
+Ejecute estos pasos en la máquina donde se ejecuta el Gateway (es donde reside el espacio de trabajo).
 
 <Steps>
   <Step title="Inicializar el repositorio">
@@ -109,13 +113,13 @@ Ejecute estos pasos en la máquina donde se ejecuta el Gateway (es ahí donde re
     ```
 
   </Step>
-  <Step title="Añadir un remoto privado">
+  <Step title="Agregar un control remoto privado">
     <Tabs>
       <Tab title="Interfaz web de GitHub">
-        1. Cree un nuevo repositorio **privado** en GitHub.
+        1. Cree un repositorio nuevo **privado** en GitHub.
         2. No lo inicialice con un README (evita conflictos de fusión).
-        3. Copie la URL remota HTTPS.
-        4. Añada el remoto y haga push:
+        3. Copie la URL remota de HTTPS.
+        4. Agregue el control remoto y haga push:
 
         ```bash
         git branch -M main
@@ -130,10 +134,10 @@ Ejecute estos pasos en la máquina donde se ejecuta el Gateway (es ahí donde re
         ```
       </Tab>
       <Tab title="Interfaz web de GitLab">
-        1. Cree un nuevo repositorio **privado** en GitLab.
+        1. Cree un repositorio nuevo **privado** en GitLab.
         2. No lo inicialice con un README (evita conflictos de fusión).
-        3. Copie la URL remota HTTPS.
-        4. Añada el remoto y haga push:
+        3. Copie la URL remota de HTTPS.
+        4. Agregue el control remoto y haga push:
 
         ```bash
         git branch -M main
@@ -154,20 +158,20 @@ Ejecute estos pasos en la máquina donde se ejecuta el Gateway (es ahí donde re
   </Step>
 </Steps>
 
-## No confunda secretos
+## No confirme secretos
 
 <Warning>
 Incluso en un repositorio privado, evite almacenar secretos en el espacio de trabajo:
 
 - Claves de API, tokens de OAuth, contraseñas o credenciales privadas.
 - Cualquier cosa en `~/.openclaw/`.
-- Volcados en bruto de chats o archivos adjuntos confidenciales.
+- Volcados sin procesar de chats o archivos adjuntos confidenciales.
 
-Si debe almacenar referencias confidenciales, use marcadores de posición y mantenga el secreto real en otro lugar (gestor de contraseñas, variables de entorno o `~/.openclaw/`).
+Si debe almacenar referencias confidenciales, use marcadores de posición y mantenga el secreto real en otro lugar (administrador de contraseñas, variables de entorno o `~/.openclaw/`).
 
 </Warning>
 
-Inicial `.gitignore` sugerido:
+Inicializador `.gitignore` sugerido:
 
 ```gitignore
 .DS_Store
@@ -181,13 +185,13 @@ Inicial `.gitignore` sugerido:
 
 <Steps>
   <Step title="Clonar el repositorio">
-    Clone el repositorio en la ruta deseada (por defecto `~/.openclaw/workspace`).
+    Clona el repositorio en la ruta deseada (por defecto `~/.openclaw/workspace`).
   </Step>
   <Step title="Actualizar configuración">
-    Establezca `agents.defaults.workspace` en esa ruta en `~/.openclaw/openclaw.json`.
+    Establece `agents.defaults.workspace` en esa ruta en `~/.openclaw/openclaw.json`.
   </Step>
-  <Step title="Generar archivos faltantes">
-    Ejecute `openclaw setup --workspace <path>` para generar cualquier archivo faltante.
+  <Step title="Sembrar archivos faltantes">
+    Ejecuta `openclaw setup --workspace <path>` para sembrar cualquier archivo faltante.
   </Step>
   <Step title="Copiar sesiones (opcional)">
     Si necesitas las sesiones, copia `~/.openclaw/agents/<agentId>/sessions/` de la máquina antigua por separado.
@@ -196,12 +200,12 @@ Inicial `.gitignore` sugerido:
 
 ## Notas avanzadas
 
-- El enrutamiento multiagente puede usar diferentes espacios de trabajo por agente. Consulta [Enrutamiento de canales](/es/channels/channel-routing) para la configuración de enrutamiento.
-- Si `agents.defaults.sandbox` está habilitado, las sesiones que no sean las principales pueden usar espacios de trabajo de espacio aislado por sesión bajo `agents.defaults.sandbox.workspaceRoot`.
+- El enrutamiento multiagente puede utilizar diferentes espacios de trabajo por agente. Consulta [Enrutamiento de canales](/es/channels/channel-routing) para la configuración de enrutamiento.
+- Si `agents.defaults.sandbox` está habilitado, las sesiones que no sean la principal pueden usar espacios de trabajo de sandbox por sesión bajo `agents.defaults.sandbox.workspaceRoot`.
 
 ## Relacionado
 
-- [Heartbeat](/es/gateway/heartbeat) — archivo de espacio de trabajo HEARTBEAT.md
-- [Sandboxing](/es/gateway/sandboxing) — acceso al espacio de trabajo en entornos con espacio aislado
-- [Sesión](/es/concepts/session) — rutas de almacenamiento de sesiones
-- [Standing orders](/es/automation/standing-orders) — instrucciones persistentes en archivos del espacio de trabajo
+- [Heartbeat](/es/gateway/heartbeat) - archivo de espacio de trabajo HEARTBEAT.md
+- [Sandboxing](/es/gateway/sandboxing) - acceso al espacio de trabajo en entornos con sandbox
+- [Sesión](/es/concepts/session) - rutas de almacenamiento de sesiones
+- [Órdenes permanentes](/es/automation/standing-orders) - instrucciones persistentes en archivos del espacio de trabajo

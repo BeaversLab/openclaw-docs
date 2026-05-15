@@ -8,8 +8,8 @@ read_when:
 title: "OAuth"
 ---
 
-OpenClaw admite la “autenticación de suscripción” mediante OAuth para los proveedores que la ofrecen
-(notablemente **OpenAI Codex (OAuth de ChatGPT)**). Para Anthropic, la división práctica
+OpenClaw soporta "subscription auth" a través de OAuth para proveedores que lo ofrecen
+(notablemente **OpenAI Codex (ChatGPT OAuth)**). Para Anthropic, la división práctica
 es ahora:
 
 - **Clave de API de Anthropic**: facturación normal de la API de Anthropic
@@ -25,8 +25,8 @@ Para Anthropic en producción, la autenticación con clave de API es la ruta rec
 - dónde se **almacenan** los tokens (y por qué)
 - cómo manejar **múltiples cuentas** (perfiles + anulaciones por sesión)
 
-OpenClaw también admite **complementos de proveedores** que incluyen sus propios flujos de OAuth o claves de API.
-Ejecútelos a través de:
+OpenClaw también soporta **provider plugins** que incluyen sus propios flujos de OAuth o claves de API.
+Ejecute estos a través de:
 
 ```bash
 openclaw models auth login --provider <id>
@@ -38,7 +38,7 @@ Los proveedores de OAuth suelen generar un **nuevo token de actualización** dur
 
 Síntoma práctico:
 
-- inicia sesión a través de OpenClaw _y_ a través de Claude Code / Codex CLI → uno de ellos se “cierra sesión” aleatoriamente más tarde
+- inicia sesión a través de OpenClaw _y_ a través de Claude Code / Codex CLI → uno de ellos es "desconectado" aleatoriamente más tarde
 
 Para reducir eso, OpenClaw trata `auth-profiles.json` como un **sumidero de tokens**:
 
@@ -48,56 +48,63 @@ Para reducir eso, OpenClaw trata `auth-profiles.json` como un **sumidero de toke
   `openai-codex:default` vacío, pero una vez que OpenClaw tiene un perfil OAuth local,
   el token de actualización local es el canónico; otras integraciones pueden permanecer
   administradas externamente y volver a leer su almacén de autenticación CLI
+- rutas de estado e inicio que ya conocen el conjunto de proveedores configurados limitan
+  el descubrimiento de CLI externo a ese conjunto, de modo que no se sondea un almacén de inicio de sesión de CLI no relacionado
+  para una configuración de un solo proveedor
 
-## Almacenamiento (dónde viven los tokens)
+## Almacenamiento (dónde residen los tokens)
 
-Los secretos se almacenan **por agente**:
+Los secretos se almacenan en los almacenes de autenticación de los agentes:
 
 - Perfiles de autenticación (OAuth + claves de API + referencias opcionales a nivel de valor): `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 - Archivo de compatibilidad heredado: `~/.openclaw/agents/<agentId>/agent/auth.json`
   (las entradas `api_key` estáticas se eliminan cuando se descubren)
 
-Archivo heredado de solo importación (todavía compatible, pero no el almacén principal):
+Archivo heredado solo de importación (aún admitido, pero no el almacenamiento principal):
 
 - `~/.openclaw/credentials/oauth.json` (importado a `auth-profiles.json` en el primer uso)
 
 Todo lo anterior también respeta `$OPENCLAW_STATE_DIR` (anulación del directorio de estado). Referencia completa: [/gateway/configuration](/es/gateway/configuration-reference#auth-storage)
 
-Para obtener información sobre referencias de secretos estáticos y el comportamiento de activación de instantáneas en tiempo de ejecución, consulte [Gestión de secretos](/es/gateway/secrets).
+Para las referencias estáticas de secretos y el comportamiento de activación de instantáneas en tiempo de ejecución, consulte [Secrets Management](/es/gateway/secrets).
+
+Cuando un agente secundario no tiene un perfil de autenticación local, OpenClaw utiliza la herencia
+read-through desde el almacén del agente predeterminado/principal. No clona el
+`auth-profiles.json` del agente principal al leer. Los tokens de actualización de OAuth son especialmente
+sensibles: los flujos de copia normales los omiten de forma predeterminada porque algunos proveedores rotan
+o invalidan los tokens de actualización después de su uso. Configure un inicio de sesión de OAuth independiente para un
+agente cuando necesite una cuenta independiente.
 
 ## Compatibilidad con tokens heredados de Anthropic
 
 <Warning>
-La documentación pública de Claude Code de Anthropic indica que el uso directo de Claude Code se mantiene dentro de los límites de la suscripción a Claude, y el personal de Anthropic nos informó que el uso de la CLI de Claude al estilo OpenClaw está permitido nuevamente. Por lo tanto, OpenClaw trata el reuso de la CLI de Claude y el uso de `claude -p` como autorizados para esta integración, a menos que Anthropic publique una nueva política.
+Los documentos públicos de Claude Code de Anthropic indican que el uso directo de Claude Code se mantiene dentro de los límites de suscripción de Claude, y el personal de Anthropic nos informó que el uso de Claude CLI al estilo de OpenClaw está permitido nuevamente. Por lo tanto, OpenClaw trata el uso de Claude CLI reutilizado y `claude -p` como autorizado para esta integración, a menos que Anthropic publique una nueva política.
 
-Para ver la documentación actual del plan directo de Claude Code de Anthropic, consulte [Uso de Claude Code con su plan Pro o
-Max](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
-y [Uso de Claude Code con su plan de Empresa o
-Team](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
+Para ver los documentos actuales del plan directo de Claude Code de Anthropic, consulte [Uso de Claude Code con su plan Pro o Max](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
+y [Uso de Claude Code con su plan de Team o Enterprise](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
 Si desea otras opciones de estilo de suscripción en OpenClaw, consulte [OpenAI
-Codex](/es/providers/openai), [Plan de codificación en la nube de
-Qwen](/es/providers/qwen), [Plan de codificación de MiniMax](/es/providers/minimax)
+Codex](/es/providers/openai), [Plan de codificación en la nube de Qwen](/es/providers/qwen), [Plan de codificación de MiniMax](/es/providers/minimax)
 y [Plan de codificación de Z.AI / GLM](/es/providers/glm).
 
 </Warning>
 
-OpenClaw también expone el token de configuración de Anthropic como una ruta de autenticación por token admitida, pero ahora prefiere el reuso de la CLI de Claude y `claude -p` cuando están disponibles.
+OpenClaw también expone el setup-token de Anthropic como una ruta de autenticación por token admitida, pero ahora prefiere la reutilización de Claude CLI y `claude -p` cuando están disponibles.
 
-## Migración de la CLI de Anthropic Claude
+## Migración de Anthropic Claude CLI
 
-OpenClaw admite el reuso de la CLI de Anthropic Claude nuevamente. Si ya tiene un inicio de sesión local de Claude en el host, la incorporación/configuración puede reutilizarlo directamente.
+OpenClaw vuelve a admitir la reutilización de Anthropic Claude CLI. Si ya tiene un inicio de sesión local de Claude en el host, la incorporación/configuración puede reutilizarlo directamente.
 
 ## Intercambio de OAuth (cómo funciona el inicio de sesión)
 
 Los flujos de inicio de sesión interactivo de OpenClaw se implementan en `@mariozechner/pi-ai` y se conectan a los asistentes/comandos.
 
-### Token de configuración de Anthropic
+### setup-token de Anthropic
 
 Forma del flujo:
 
-1. iniciar el token de configuración de Anthropic o pegar el token desde OpenClaw
-2. OpenClaw almacena la credencial de Anthropic resultante en un perfil de autenticación
+1. iniciar el setup-token de Anthropic o pegar el token desde OpenClaw
+2. OpenClaw almacena la credencial resultante de Anthropic en un perfil de autenticación
 3. la selección del modelo se mantiene en `anthropic/...`
 4. los perfiles de autenticación de Anthropic existentes siguen disponibles para el control de reversión/orden
 
@@ -110,7 +117,7 @@ Forma del flujo (PKCE):
 1. generar verificador/desafío PKCE + `state` aleatorio
 2. abrir `https://auth.openai.com/oauth/authorize?...`
 3. intentar capturar la devolución de llamada en `http://127.0.0.1:1455/auth/callback`
-4. si la devolución de llamada no puede vincularse (o si está en modo remoto/sin interfaz gráfica), pegue la URL/código de redirección
+4. si la devolución de llamada no puede vincularse (o si es remoto/sin cabeza), pegue la URL/código de redireccionamiento
 5. intercambiar en `https://auth.openai.com/oauth/token`
 6. extraer `accountId` del token de acceso y almacenar `{ access, refresh, expires, accountId }`
 
@@ -124,13 +131,16 @@ En tiempo de ejecución:
 
 - si `expires` está en el futuro → usar el token de acceso almacenado
 - si ha caducado → actualizar (bajo un bloqueo de archivo) y sobrescribir las credenciales almacenadas
-- excepción: algunas credenciales de CLI externas siguen siendo gestionadas externamente; OpenClaw
+- si un agente secundario lee un perfil OAuth heredado del agente principal, la actualización
+  escribe de nuevo en el almacén del agente principal en lugar de copiar el token de actualización en
+  el almacén del agente secundario
+- excepción: algunas credenciales externas de CLI permanecen administradas externamente; OpenClaw
   vuelve a leer esos almacenes de autenticación de CLI en lugar de gastar tokens de actualización copiados.
   El arranque de la CLI de Codex es intencionalmente más limitado: inicializa un perfil
-  `openai-codex:default` vacío y, luego, las actualizaciones propiedad de OpenClaw mantienen el perfil
+  `openai-codex:default` vacío y, a continuación, las actualizaciones propiedad de OpenClaw mantienen el perfil
   local como canónico.
 
-El flujo de actualización es automático; generalmente no necesitas gestionar los tokens manualmente.
+El flujo de actualización es automático; por lo general, no necesitas gestionar los tokens manualmente.
 
 ## Múltiples cuentas (perfiles) + enrutamiento
 
@@ -138,18 +148,18 @@ Dos patrones:
 
 ### 1) Recomendado: agentes separados
 
-Si quieres que lo "personal" y lo "laboral" nunca interactúen, usa agentes aislados (sesiones + credenciales + espacio de trabajo separados):
+Si quieres que lo "personal" y lo "laboral" nunca interactúen, usa agentes aislados (sesiones separadas + credenciales + espacio de trabajo):
 
 ```bash
 openclaw agents add work
 openclaw agents add personal
 ```
 
-Luego configura la autenticación por agente (asistente) y enruta los chats al agente correcto.
+A continuación, configura la autenticación por agente (asistente) y enruta los chats al agente correcto.
 
 ### 2) Avanzado: múltiples perfiles en un agente
 
-`auth-profiles.json` admite múltiples ID de perfil para el mismo proveedor.
+`auth-profiles.json` soporta múltiples IDs de perfil para el mismo proveedor.
 
 Elige qué perfil se usa:
 
@@ -160,7 +170,7 @@ Ejemplo (anulación de sesión):
 
 - `/model Opus@anthropic:work`
 
-Cómo ver qué ID de perfil existen:
+Cómo ver qué IDs de perfil existen:
 
 - `openclaw channels list --json` (muestra `auth[]`)
 
@@ -171,6 +181,6 @@ Documentos relacionados:
 
 ## Relacionado
 
-- [Autenticación](/es/gateway/authentication) — resumen de autenticación del proveedor de modelos
-- [Secretos](/es/gateway/secrets) — almacenamiento de credenciales y SecretRef
-- [Referencia de configuración](/es/gateway/configuration-reference#auth-storage) — claves de configuración de autenticación
+- [Autenticación](/es/gateway/authentication) - descripción general de la autenticación del proveedor de modelos
+- [Secretos](/es/gateway/secrets) - almacenamiento de credenciales y SecretRef
+- [Referencia de configuración](/es/gateway/configuration-reference#auth-storage) - claves de configuración de autenticación

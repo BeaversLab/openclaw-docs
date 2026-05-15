@@ -25,29 +25,35 @@ read_when:
 }
 ```
 
-若要在沒有 API 金鑰的情況下使用本地嵌入，請將選用的 `node-llama-cpp`
-執行時套件安裝在 OpenClaw 旁邊，並使用 `provider: "local"`。
+對於多端點設定，`provider` 也可以是自訂的
+`models.providers.<id>` 項目，例如 `ollama-5080`，當該供應商設定
+了 `api: "ollama"` 或其他嵌入配接器擁有者時。
 
-部分與 OpenAI 相容的嵌入端點需要不對稱標籤，例如用於搜尋的
-`input_type: "query"` 和用於索引區塊的 `input_type: "document"` 或 `"passage"`。
-請使用 `memorySearch.queryInputType` 和 `memorySearch.documentInputType` 進行設定；請參閱[記憶組態參考資料](/zh-Hant/reference/memory-config#provider-specific-config)。
+對於沒有 API 金鑰的本機嵌入，請設定 `provider: "local"`。來源檢出
+可能仍需要原生建置核准：`pnpm approve-builds` 然後
+`pnpm rebuild node-llama-cpp`。
 
-## 支援的提供者
+部分相容 OpenAI 的嵌入端點需要非對稱標籤，例如搜尋使用
+`input_type: "query"`，而索引區塊使用 `input_type: "document"` 或 `"passage"`。
+請使用 `memorySearch.queryInputType` 和
+`memorySearch.documentInputType` 來設定這些項目；請參閱 [記憶體設定參考](/zh-Hant/reference/memory-config#provider-specific-config)。
 
-| 提供者         | ID               | 需要 API 金鑰 | 備註                        |
+## 支援的供應商
+
+| 供應商         | ID               | 需要 API 金鑰 | 備註                        |
 | -------------- | ---------------- | ------------- | --------------------------- |
 | Bedrock        | `bedrock`        | 否            | 當 AWS 憑證鏈解析時自動偵測 |
-| Gemini         | `gemini`         | 是            | 支援圖片/音訊索引           |
+| Gemini         | `gemini`         | 是            | 支援影像/音訊索引           |
 | GitHub Copilot | `github-copilot` | 否            | 自動偵測，使用 Copilot 訂閱 |
-| 本機           | `local`          | 否            | GGUF 模型，約需下載 0.6 GB  |
+| Local          | `local`          | 否            | GGUF 模型，約需下載 0.6 GB  |
 | Mistral        | `mistral`        | 是            | 自動偵測                    |
-| Ollama         | `ollama`         | 否            | 本地，必須明確設定          |
+| Ollama         | `ollama`         | 否            | 本機，必須明確設定          |
 | OpenAI         | `openai`         | 是            | 自動偵測，快速              |
 | Voyage         | `voyage`         | 是            | 自動偵測                    |
 
 ## 搜尋運作方式
 
-OpenClaw 並行執行兩個檢索路徑並合併結果：
+OpenClaw 會並行執行兩個檢索路徑並合併結果：
 
 ```mermaid
 flowchart LR
@@ -60,32 +66,30 @@ flowchart LR
     M --> R["Top Results"]
 ```
 
-- **向量搜尋** 尋找語意相似的筆記（例如「gateway host」符合
-  「執行 OpenClaw 的機器」）。
-- **BM25 關鍵字搜尋** 尋找精確相符項（ID、錯誤字串、設定
-  金鑰）。
+- **向量搜尋** 尋找含義相似的筆記（「gateway host」會符合
+  「the machine running OpenClaw」）。
+- **BM25 關鍵字搜尋** 尋找完全相符的項目（ID、錯誤字串、設定
+  鍵）。
 
-如果只有一個路徑可用（沒有嵌入或沒有 FTS），另一個會單獨運作。
+如果只有一條路徑可用（沒有嵌入或沒有 FTS），另一條路徑會單獨執行。
 
-當嵌入無法使用時，OpenClaw 仍會對 FTS 結果使用詞彙排序，而不是僅退回到原始的精確匹配排序。這種降級模式會提昇具有較強查詢詞涵蓋率和相關檔案路徑的區塊，即使沒有 `sqlite-vec` 或嵌入提供者，也能保持召回的實用性。
+當嵌入無法使用時，OpenClaw 仍會對 FTS 結果使用詞彙排序，而不是僅回退到原始的完全相符順序。這種降級模式會提升具有較強查詢詞涵蓋率和相關檔案路徑的區塊，即使沒有 `sqlite-vec` 或嵌入供應商，也能保持召回率的實用性。
 
 ## 改善搜尋品質
 
-當您有大量的筆記紀錄時，有兩個可選功能可以提供幫助：
+當您有大量的筆記歷史記錄時，有兩個可選功能可以提供幫助：
 
 ### 時間衰減
 
-舊筆記會逐漸降低排序權重，以便讓近期資訊優先顯示。
-在預設半衰期為 30 天的情況下，上個月的筆記評分為其原始權重的 50%。像 `MEMORY.md` 這類常青檔案永遠不會被衰減。
+舊筆記會逐漸降低排名權重，因此近期資訊會優先顯示。使用預設的 30 天半衰期，上個月的筆記分數為其原始權重的 50%。像 `MEMORY.md` 這樣的常青檔案永遠不會衰減。
 
-<Tip>如果您的代理程式有數月的每日筆記，且過時資訊的排名持續高於近期 情境，請啟用時間衰減。</Tip>
+<Tip>如果您的代理程式擁有數月的每日筆記，且過時資訊的排名持續高於近期上下文，請啟用時間衰減。</Tip>
 
-### MMR (多樣性)
+### MMR（多樣性）
 
-減少重複結果。如果有五則筆記都提及相同的路由器設定，MMR
-會確保主要結果涵蓋不同的主題，而不是重複出現。
+減少重複結果。如果五則筆記都提及相同的路由器設定，MMR 會確保頂部結果涵蓋不同主題，而不是重複出現。
 
-<Tip>如果 `memory_search` 持續從不同的每日筆記中傳回幾乎重複的片段，請啟用 MMR。</Tip>
+<Tip>如果 `memory_search` 持續從不同的每日筆記傳回近乎重複的片段，請啟用 MMR。</Tip>
 
 ### 同時啟用兩者
 
@@ -108,30 +112,30 @@ flowchart LR
 
 ## 多模態記憶
 
-使用 Gemini Embedding 2，您可以將圖像和音訊檔案與 Markdown 一起編入索引。搜尋查詢仍為文字，但它們會匹配視覺和音訊內容。請參閱 [記憶體配置參考](/zh-Hant/reference/memory-config) 以進行設定。
+使用 Gemini Embedding 2，您可以將圖片和音訊檔案與 Markdown 一起建立索引。搜尋查詢保持為文字，但它們會與視覺和音訊內容進行比對。請參閱 [記憶體設定參考](/zh-Hant/reference/memory-config) 了解設定方式。
 
-## Session memory search
+## 會話記憶搜尋
 
-您可以選擇將會話紀錄文字稿編入索引，以便 `memory_search` 能夠回憶先前的對話。這是透過 `memorySearch.experimental.sessionMemory` 進行選擇加入的。請參閱 [配置參考](/zh-Hant/reference/memory-config) 以了解詳情。
+您可以選擇性地將會話逐字稿建立索引，以便 `memory_search` 能夠回憶先前的對話。這是透過 `memorySearch.experimental.sessionMemory` 啟用的。詳情請參閱 [設定參考](/zh-Hant/reference/memory-config)。
 
 ## 疑難排解
 
 **沒有結果？** 執行 `openclaw memory status` 以檢查索引。如果是空的，請執行 `openclaw memory index --force`。
 
-**只有關鍵字匹配？** 您的嵌入供應商可能尚未設定。請檢查 `openclaw memory status --deep`。
+**只有關鍵字相符？** 您的嵌入供應商可能尚未設定。請檢查 `openclaw memory status --deep`。
 
-**本機嵌入逾時？** 預設情況下，`ollama`、`lmstudio` 和 `local` 使用較長的內聯批次逾時時間。如果主機只是速度較慢，請設定 `agents.defaults.memorySearch.sync.embeddingBatchTimeoutSeconds` 並重新執行 `openclaw memory index --force`。
+**本機嵌入逾時？** `ollama`、`lmstudio` 和 `local` 預設使用較長的內聯批次逾時時間。如果主機只是速度較慢，請設定 `agents.defaults.memorySearch.sync.embeddingBatchTimeoutSeconds` 並重新執行 `openclaw memory index --force`。
 
 **找不到 CJK 文字？** 使用 `openclaw memory index --force` 重建 FTS 索引。
 
 ## 延伸閱讀
 
-- [Active Memory](/zh-Hant/concepts/active-memory) -- 用於互動式聊天會話的子代理程式記憶體
+- [Active Memory](/zh-Hant/concepts/active-memory) -- 用於互動式聊天會話的子代理記憶
 - [Memory](/zh-Hant/concepts/memory) -- 檔案佈局、後端、工具
-- [Memory configuration reference](/zh-Hant/reference/memory-config) -- 所有配置選項
+- [記憶體設定參考](/zh-Hant/reference/memory-config) -- 所有設定選項
 
 ## 相關
 
 - [記憶體概觀](/zh-Hant/concepts/memory)
-- [Active memory](/zh-Hant/concepts/active-memory)
-- [內建記憶體引擎](/zh-Hant/concepts/memory-builtin)
+- [主動記憶](/zh-Hant/concepts/active-memory)
+- [內建記憶引擎](/zh-Hant/concepts/memory-builtin)

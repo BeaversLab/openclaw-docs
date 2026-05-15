@@ -28,9 +28,9 @@ Quel que soit le parcours que vous choisissez, l'onboarding configure :
 1. **Fournisseur de modèles et authentification** — clé API, OAuth ou jeton de configuration pour votre fournisseur choisi
 2. **Espace de travail** — répertoire pour les fichiers des agents, les modèles d'amorçage et la mémoire
 3. **Gateway** — port, adresse de liaison, mode d'authentification
-4. **Canaux** (optionnel) — canaux de chat intégrés et regroupés tels que
-   BlueBubbles, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams,
-   Telegram, WhatsApp, et plus
+4. **Canaux** (optionnels) — canaux de chat intégrés et regroupés tels que
+   iMessage, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams,
+   Telegram, WhatsApp, et plus encore
 5. **Démon** (optionnel) — service en arrière-plan pour que le Gateway démarre automatiquement
 
 ## Onboarding CLI

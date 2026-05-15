@@ -8,85 +8,83 @@ read_when:
 title: "Hetzner"
 ---
 
-# OpenClaw en Hetzner (Guía de VPS de producción con Docker)
-
 ## Objetivo
 
-Ejecutar un OpenClaw Gateway persistente en un VPS de Hetzner usando Docker, con estado duradero, binarios integrados y un comportamiento de reinicio seguro.
+Ejecuta un OpenClaw Gateway persistente en un VPS de Hetzner usando Docker, con estado duradero, binarios integrados y un comportamiento de reinicio seguro.
 
-Si quieres "OpenClaw 24/7 por ~$5", esta es la configuración más fiable y sencilla.
-Los precios de Hetzner cambian; elige el VPS más pequeño de Debian/Ubuntu y escala si encuentras errores de falta de memoria (OOMs).
+Si quieres "OpenClaw 24/7 por ~$5", esta es la configuración más sencilla y confiable.
+Los precios de Hetzner cambian; elige el VPS más pequeño de Debian/Ubuntu y escala si experimentas errores de falta de memoria (OOMs).
 
 Recordatorio del modelo de seguridad:
 
-- Los agentes compartidos por la empresa están bien cuando todos están dentro del mismo límite de confianza y el tiempo de ejecución es solo para negocios.
+- Los agentes compartidos por la empresa están bien cuando todos están en el mismo límite de confianza y el tiempo de ejecución es solo para negocios.
 - Mantén una separación estricta: VPS/tiempo de ejecución dedicado + cuentas dedicadas; sin perfiles personales de Apple/Google/navegador/gestor de contraseñas en ese host.
-- Si los usuarios son adversarios entre sí, sepáralos por gateway/host/usuario del SO.
+- Si los usuarios son adversarios entre sí, sepáralos por puerta de enlace/host/usuario del sistema operativo.
 
-Consulte [Seguridad](/es/gateway/security) y [Alojamiento VPS](/es/vps).
+Consulta [Seguridad](/es/gateway/security) y [Alojamiento VPS](/es/vps).
 
-## ¿Qué estamos haciendo (términos simples)?
+## ¿Qué estamos haciendo (en términos sencillos)?
 
-- Alquilar un pequeño servidor Linux (VPS de Hetzner)
-- Instalar Docker (tiempo de ejecución de aplicación aislado)
+- Alquilar un servidor Linux pequeño (VPS de Hetzner)
+- Instalar Docker (entorno de ejecución de aplicación aislado)
 - Iniciar el OpenClaw Gateway en Docker
 - Persistir `~/.openclaw` + `~/.openclaw/workspace` en el host (sobrevive a reinicios/reconstrucciones)
-- Acceder a la Interfaz de Control (Control UI) desde tu portátil a través de un túnel SSH
+- Acceder a la Interfaz de Control desde tu portátil a través de un túnel SSH
 
-Ese estado `~/.openclaw` montado incluye `openclaw.json`, `agents/<agentId>/agent/auth-profiles.json` por agente
-y `.env`.
+Ese estado `~/.openclaw` montado incluye `openclaw.json`, por agente
+`agents/<agentId>/agent/auth-profiles.json`, y `.env`.
 
-Se puede acceder a la Gateway a través de:
+Se puede acceder al Gateway a través de:
 
-- Redirección de puertos SSH desde su portátil
-- Exposición directa de puertos si gestiona el firewall y los tokens usted mismo
+- Redirección de puertos SSH desde tu portátil
+- Exposición directa de puertos si gestionas el firewall y los tokens tú mismo
 
 Esta guía asume Ubuntu o Debian en Hetzner.  
-Si está en otro VPS de Linux, asigne los paquetes correspondientemente.
-Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
+Si estás en otro VPS de Linux, asigna los paquetes correspondientemente.
+Para el flujo genérico de Docker, consulta [Docker](/es/install/docker).
 
 ---
 
-## Ruta rápida (operadores experimentados)
+## Camino rápido (operadores experimentados)
 
 1. Aprovisionar VPS de Hetzner
 2. Instalar Docker
-3. Clonar repositorio de OpenClaw
+3. Clonar el repositorio de OpenClaw
 4. Crear directorios persistentes del host
 5. Configurar `.env` y `docker-compose.yml`
-6. Incluir los binarios necesarios en la imagen
+6. Integrar los binarios necesarios en la imagen
 7. `docker compose up -d`
-8. Verificar la persistencia y el acceso a la Gateway
+8. Verificar la persistencia y el acceso al Gateway
 
 ---
 
-## Lo que necesita
+## Lo que necesitas
 
 - VPS de Hetzner con acceso root
-- Acceso SSH desde su portátil
+- Acceso SSH desde tu portátil
 - Conocimientos básicos de SSH + copiar/pegar
 - ~20 minutos
 - Docker y Docker Compose
 - Credenciales de autenticación del modelo
 - Credenciales opcionales del proveedor
   - Código QR de WhatsApp
-  - Token de bot de Telegram
+  - Token del bot de Telegram
   - OAuth de Gmail
 
 ---
 
 <Steps>
   <Step title="Aprovisionar el VPS">
-    Cree un VPS de Ubuntu o Debian en Hetzner.
+    Crea un VPS de Ubuntu o Debian en Hetzner.
 
-    Conéctese como root:
+    Conecta como root:
 
     ```bash
     ssh root@YOUR_VPS_IP
     ```
 
     Esta guía asume que el VPS tiene estado.
-    No lo trate como una infraestructura desechable.
+    No lo trates como infraestructura desechable.
 
   </Step>
 
@@ -97,7 +95,7 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
     curl -fsSL https://get.docker.com | sh
     ```
 
-    Verifique:
+    Verificar:
 
     ```bash
     docker --version
@@ -106,18 +104,18 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
 
   </Step>
 
-  <Step title="Clonar el repositorio de OpenClaw">
+  <Step title="Clona el repositorio de OpenClaw">
     ```bash
     git clone https://github.com/openclaw/openclaw.git
     cd openclaw
     ```
 
-    Esta guía asume que construirá una imagen personalizada para garantizar la persistencia de los binarios.
+    Esta guía asume que construirás una imagen personalizada para garantizar la persistencia de los binarios.
 
   </Step>
 
   <Step title="Crear directorios persistentes del host">
-    Los contenedores Docker son efímeros.
+    Los contenedores de Docker son efímeros.
     Todo el estado de larga duración debe residir en el host.
 
     ```bash
@@ -130,7 +128,7 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
   </Step>
 
   <Step title="Configurar variables de entorno">
-    Cree `.env` en la raíz del repositorio.
+    Crea `.env` en la raíz del repositorio.
 
     ```bash
     OPENCLAW_IMAGE=openclaw:latest
@@ -145,24 +143,26 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
     XDG_CONFIG_HOME=/home/node/.openclaw
     ```
 
-    Deje `OPENCLAW_GATEWAY_TOKEN` en blanco a menos que explícitamente desee
-    administrarlo a través de `.env`; OpenClaw escribe un token de puerta de enlace aleatorio en
-    la configuración al iniciarse por primera vez. Genere una contraseña de llavero y péguela en
-    `GOG_KEYRING_PASSWORD`:
+    Establece `OPENCLAW_GATEWAY_TOKEN` cuando quieras gestionar el token estable de la puerta de enlace
+    a través de `.env`; de lo contrario, configura `gateway.auth.token` antes
+    de confiar en los clientes a través de reinicios. Si ninguna fuente existe, OpenClaw usa
+    un token solo de tiempo de ejecución para ese inicio. Genera una contraseña del llavero y pégala
+    en `GOG_KEYRING_PASSWORD`:
 
     ```bash
     openssl rand -hex 32
     ```
 
-    **No confirme este archivo.**
+    **No confirmes (commitees) este archivo.**
 
-    Este archivo `.env` es para el entorno de contenedor/tiempo de ejecución, como `OPENCLAW_GATEWAY_TOKEN`.
-    La autenticación almacenada de OAuth/API-key del proveedor vive en el `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` montado.
+    Este archivo `.env` es para el entorno del contenedor/tiempo de ejecución, como `OPENCLAW_GATEWAY_TOKEN`.
+    La autenticación almacenada de OAuth/API-key del proveedor reside en el
+    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` montado.
 
   </Step>
 
   <Step title="Configuración de Docker Compose">
-    Cree o actualice `docker-compose.yml`.
+    Crea o actualiza `docker-compose.yml`.
 
     ```yaml
     services:
@@ -202,22 +202,37 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
           ]
     ```
 
-    `--allow-unconfigured` es solo para conveniencia de inicio, no es un reemplazo para una configuración adecuada de puerta de enlace. Aún así, configure la autenticación (`gateway.auth.token` o contraseña) y use configuraciones de enlace seguro para su implementación.
+    `--allow-unconfigured` es solo por conveniencia para el arranque, no es un reemplazo para una configuración adecuada de la puerta de enlace. Aún así, establece la autenticación (`gateway.auth.token` o contraseña) y usa configuraciones de enlace (bind) seguras para tu implementación.
 
   </Step>
 
-  <Step title="Pasos de tiempo de ejecución de VM Docker compartidos">
-    Use la guía de tiempo de ejecución compartida para el flujo común de host Docker:
+  <Step title="Pasos de tiempo de ejecución compartidos de Docker VM">
+    Usa la guía de tiempo de ejecución compartido para el flujo común de host Docker:
 
-    - [Incorporar los binarios necesarios en la imagen](/es/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+    - [Hornear los binarios necesarios en la imagen](/es/install/docker-vm-runtime#bake-required-binaries-into-the-image)
     - [Construir y lanzar](/es/install/docker-vm-runtime#build-and-launch)
     - [Qué persiste dónde](/es/install/docker-vm-runtime#what-persists-where)
     - [Actualizaciones](/es/install/docker-vm-runtime#updates)
 
   </Step>
 
-  <Step title="Acceso específico de Hetzner">
-    Después de los pasos compartidos de construcción y lanzamiento, haga un túnel desde su portátil:
+  <Step title="Acceso específico para Hetzner">
+    Después de los pasos de construcción e inicio compartidos, complete la siguiente configuración para abrir el túnel:
+
+    **Requisito previo:** Asegúrese de que la configuración sshd de su VPS permita el reenvío TCP. Si
+    ha endurecido su configuración SSH, verifique `/etc/ssh/sshd_config` y establezca:
+
+    ```
+    AllowTcpForwarding local
+    ```
+
+    `local` permite `ssh -L` reenvíos locales desde su portátil mientras bloquea
+    los reenvíos remotos desde el servidor. Establecerlo en `no` hará fallar el túnel
+    con:
+    `channel 3: open failed: administratively prohibited: open failed`
+
+    Después de confirmar que el reenvío TCP está habilitado, reinicie el servicio SSH
+    (`systemctl restart ssh`) y ejecute el túnel desde su portátil:
 
     ```bash
     ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
@@ -227,23 +242,23 @@ Para el flujo genérico de Docker, consulte [Docker](/es/install/docker).
 
     `http://127.0.0.1:18789/`
 
-    Pegue el secreto compartido configurado. Esta guía usa el token de puerta de enlace por
-    defecto; si cambió a autenticación por contraseña, use esa contraseña en su lugar.
+    Pegue el secreto compartido configurado. Esta guía utiliza el token de puerta de enlace por
+    defecto; si cambió a la autenticación por contraseña, use esa contraseña en su lugar.
 
   </Step>
 </Steps>
 
-El mapa de persistencia compartida reside en [Docker VM Runtime](/es/install/docker-vm-runtime#what-persists-where).
+El mapa de persistencia compartido reside en [Docker VM Runtime](/es/install/docker-vm-runtime#what-persists-where).
 
-## Infraestructura como Código (Terraform)
+## Infraestructura como código (Terraform)
 
 Para equipos que prefieren flujos de trabajo de infraestructura como código, una configuración de Terraform mantenida por la comunidad proporciona:
 
 - Configuración modular de Terraform con gestión de estado remoto
-- Aprovisionamiento automatizado vía cloud-init
-- Scripts de implementación (arranque, despliegue, copia de seguridad/restauración)
+- Aprovisionamiento automatizado mediante cloud-init
+- Scripts de implementación (inicio, despliegue, copia de seguridad/restauración)
 - Endurecimiento de seguridad (cortafuegos, UFW, acceso solo SSH)
-- Configuración de túnel SSH para acceso al gateway
+- Configuración de túnel SSH para el acceso a la puerta de enlace
 
 **Repositorios:**
 
@@ -257,7 +272,7 @@ Este enfoque complementa la configuración de Docker anterior con implementacion
 ## Siguientes pasos
 
 - Configurar canales de mensajería: [Canales](/es/channels)
-- Configurar el Gateway: [Configuración del Gateway](/es/gateway/configuration)
+- Configurar la puerta de enlace: [Configuración de la puerta de enlace](/es/gateway/configuration)
 - Mantener OpenClaw actualizado: [Actualización](/es/install/updating)
 
 ## Relacionado

@@ -1,5 +1,5 @@
 ---
-summary: "OpenClawnpmDockerInstaller OpenClaw — script d'installation, npm/pnpm/bun, depuis les sources, Docker, et plus"
+summary: "OpenClawnpmDockerInstaller OpenClaw - script d'installation, npm/pnpm/bun, depuis les sources, Docker, et plus encore"
 read_when:
   - You need an install method other than the Getting Started quickstart
   - You want to deploy to a cloud platform
@@ -9,8 +9,8 @@ title: "Installer"
 
 ## Configuration système requise
 
-- **Node 24** (recommandé) ou Node 22.14+ — le script d'installation gère cela automatiquement
-- **macOS, Linux ou Windows** — Windows natif et WSL2 sont tous deux pris en charge ; WSL2 est plus stable. Voir [Windows](macOSLinuxWindowsWindowsWSL2WSL2Windows/en/platforms/windows).
+- **Node 24** (recommandé) ou Node 22.16+ - le script d'installation gère cela automatiquement
+- **macOS, Linux ou Windows** - Windows natif et WSL2 sont tous deux pris en charge ; WSL2 est plus stable. Voir [Windows](macOSLinuxWindowsWindowsWSL2WSL2Windows/en/platforms/windows).
 - `pnpm` n'est nécessaire que si vous compilez depuis les sources
 
 ## Recommandé : script d'installation

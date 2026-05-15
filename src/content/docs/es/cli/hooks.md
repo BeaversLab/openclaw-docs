@@ -130,7 +130,7 @@ openclaw hooks enable <name>
 
 Habilita un hook específico añadiéndolo a tu configuración (`~/.openclaw/openclaw.json` por defecto).
 
-**Nota:** Los hooks del espacio de trabajo están deshabilitados por defecto hasta que se habiliten aquí o en la configuración. Los hooks gestionados por complementos muestran `plugin:<id>` en `openclaw hooks list` y no se pueden habilitar/deshabilitar aquí. Habilita/deshabilita el complemento en su lugar.
+**Nota:** Los hooks del espacio de trabajo están deshabilitados de manera predeterminada hasta que se habiliten aquí o en la configuración. Los hooks gestionados por complementos muestran `plugin:<id>` en `openclaw hooks list` y no se pueden habilitar/deshabilitar aquí. Habilite/deshabilite el complemento en su lugar.
 
 **Argumentos:**
 
@@ -197,7 +197,7 @@ openclaw hooks disable command-logger
 ## Instalar paquetes de hooks
 
 ```bash
-openclaw plugins install <package>        # ClawHub first, then npm
+openclaw plugins install <package>        # npm by default
 openclaw plugins install npm:<package>    # npm only
 openclaw plugins install <package> --pin  # pin version
 openclaw plugins install <path>           # local path
@@ -282,9 +282,9 @@ Guarda el contexto de la sesión en la memoria cuando emite `/new` o `/reset`.
 openclaw hooks enable session-memory
 ```
 
-**Salida:** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
+**Salida:** `~/.openclaw/workspace/memory/YYYY-MM-DD-HHMM.md` de manera predeterminada. Establezca `hooks.internal.entries.session-memory.llmSlug: true` para slugs de nombres de archivo generados por el modelo.
 
-**Consulte:** [documentación de session-memory](/es/automation/hooks#session-memory)
+**Vea:** [documentación de session-memory](/es/automation/hooks#session-memory)
 
 ### bootstrap-extra-files
 
@@ -296,7 +296,7 @@ Inyecta archivos de arranque adicionales (por ejemplo, monorepo-local `AGENTS.md
 openclaw hooks enable bootstrap-extra-files
 ```
 
-**Consulte:** [documentación de bootstrap-extra-files](/es/automation/hooks#bootstrap-extra-files)
+**Vea:** [documentación de bootstrap-extra-files](/es/automation/hooks#bootstrap-extra-files)
 
 ### command-logger
 
@@ -323,7 +323,7 @@ cat ~/.openclaw/logs/commands.log | jq .
 grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 ```
 
-**Consulte:** [documentación de command-logger](/es/automation/hooks#command-logger)
+**Vea:** [documentación del command-logger](/es/automation/hooks#command-logger)
 
 ### boot-md
 
@@ -337,9 +337,9 @@ Ejecuta `BOOT.md` cuando se inicia la puerta de enlace (después de que se inici
 openclaw hooks enable boot-md
 ```
 
-**Consulte:** [documentación de boot-md](/es/automation/hooks#boot-md)
+**Vea:** [documentación de boot-md](/es/automation/hooks#boot-md)
 
 ## Relacionado
 
-- [Referencia de CLI](/es/cli)
-- [Hooks de automatización](/es/automation/hooks)
+- [Referencia de la CLI](/es/cli)
+- [Ganchos de automatización](/es/automation/hooks)

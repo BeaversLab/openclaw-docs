@@ -1,5 +1,5 @@
 ---
-summary: "安裝 OpenClaw — 安裝程式腳本、npm/pnpm/bun、從原始碼、Docker 等更多方式"
+summary: "安裝 OpenClaw - 安裝程式腳本、npm/pnpm/bun、從原始碼、Docker 等等"
 read_when:
   - You need an install method other than the Getting Started quickstart
   - You want to deploy to a cloud platform
@@ -9,8 +9,8 @@ title: "安裝"
 
 ## 系統需求
 
-- **Node 24**（推薦）或 Node 22.14+ — 安裝程式腳本會自動處理此項
-- **macOS、Linux 或 Windows** — 同時支援原生 Windows 和 WSL2；WSL2 更穩定。請參閱 [Windows](/zh-Hant/platforms/windows)。
+- **Node 24**（推薦）或 Node 22.16+ - 安裝程式腳本會自動處理此項
+- **macOS、Linux 或 Windows** - 同時支援原生 Windows 和 WSL2；WSL2 更穩定。請參閱 [Windows](/zh-Hant/platforms/windows)。
 - `pnpm` 僅在您從原始碼建置時才需要
 
 ## 推薦：安裝程式腳本

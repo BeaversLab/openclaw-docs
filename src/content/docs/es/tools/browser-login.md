@@ -6,48 +6,46 @@ read_when:
 title: "Inicio de sesión en el navegador"
 ---
 
-# Inicio de sesión en el navegador + publicaciones en X/Twitter
-
 ## Inicio de sesión manual (recomendado)
 
 Cuando un sitio requiera inicio de sesión, **inicie sesión manualmente** en el perfil del navegador **host** (el navegador openclaw).
 
-**No** proporcione sus credenciales al modelo. Los inicios de sesión automatizados a menudo activan defensas anti-bot y pueden bloquear la cuenta.
+**No** proporcione sus credenciales al modelo. Los inicios de sesión automatizados a menudo activan defensas anti-bots y pueden bloquear la cuenta.
 
 Volver a la documentación principal del navegador: [Browser](/es/tools/browser).
 
 ## ¿Qué perfil de Chrome se utiliza?
 
-OpenClaw controla un **perfil dedicado de Chrome** (denominado `openclaw`, interfaz de usuario de tono naranja). Esto es independiente de su perfil de navegador diario.
+OpenClaw controla un **perfil dedicado de Chrome** (denominado `openclaw`, interfaz de usuario de tono naranja). Esto está separado de su perfil de navegador diario.
 
-Para las llamadas a herramientas de navegador del agente:
+Para las llamadas a herramientas del navegador del agente:
 
-- Elección predeterminada: el agente debe usar su navegador aislado `openclaw`.
-- Use `profile="user"` solo cuando importen las sesiones iniciadas existentes y el usuario esté en la computadora para hacer clic/aprobar cualquier mensaje de adjunto.
-- Si tienes varios perfiles de navegador de usuario, especifica el perfil explícitamente en lugar de adivinar.
+- Elección predeterminada: el agente debe usar su navegador `openclaw` aislado.
+- Use `profile="user"` solo cuando las sesiones iniciadas existentes importen y el usuario esté en la computadora para hacer clic/aprobar cualquier prompt de adjuntar.
+- Si tiene varios perfiles de navegador de usuario, especifique el perfil explícitamente en lugar de adivinar.
 
 Dos formas fáciles de acceder a él:
 
-1. **Pídele al agente que abra el navegador** y luego inicia sesión tú mismo.
-2. **Ábrelo a través de la CLI**:
+1. **Pida al agente que abra el navegador** y luego inicie sesión usted mismo.
+2. **Ábralo a través de CLI**:
 
 ```bash
 openclaw browser start
 openclaw browser open https://x.com
 ```
 
-Si tienes varios perfiles, pasa `--browser-profile <name>` (el predeterminado es `openclaw`).
+Si tiene varios perfiles, pase `--browser-profile <name>` (el predeterminado es `openclaw`).
 
 ## X/Twitter: flujo recomendado
 
-- **Leer/buscar/hilos:** usa el navegador **host** (inicio de sesión manual).
-- **Publicar actualizaciones:** usa el navegador **host** (inicio de sesión manual).
+- **Leer/buscar/hilos:** use el navegador **host** (inicio de sesión manual).
+- **Publicar actualizaciones:** use el navegador **host** (inicio de sesión manual).
 
 ## Sandboxing + acceso al navegador host
 
-Las sesiones de navegador en sandbox **son más propensas** a activar la detección de bots. Para X/Twitter (y otros sitios estrictos), prefiere el navegador **host**.
+Las sesiones del navegador en sandbox son **más probables** de activar la detección de bots. Para X/Twitter (y otros sitios estrictos), prefiera el navegador **host**.
 
-Si el agente está en sandbox, la herramienta del navegador usa el sandbox de forma predeterminada. Para permitir el control del host:
+Si el agente está en sandbox, la herramienta del navegador usa el sandbox por defecto. Para permitir el control del host:
 
 ```json5
 {
@@ -64,16 +62,16 @@ Si el agente está en sandbox, la herramienta del navegador usa el sandbox de fo
 }
 ```
 
-Luego apunta al navegador host:
+Luego apunte al navegador host:
 
 ```bash
 openclaw browser open https://x.com --browser-profile openclaw --target host
 ```
 
-O deshabilita el sandboxing para el agente que publica actualizaciones.
+O deshabilite el sandbox para el agente que publica actualizaciones.
 
 ## Relacionado
 
-- [Navegador](/es/tools/browser)
-- [Solución de problemas del navegador en Linux](/es/tools/browser-linux-troubleshooting)
-- [Solución de problemas del navegador en WSL2](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+- [Browser](/es/tools/browser)
+- [Solución de problemas de Browser en Linux](/es/tools/browser-linux-troubleshooting)
+- [Solución de problemas de Browser en WSL2](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

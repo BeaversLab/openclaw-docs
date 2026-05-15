@@ -12,7 +12,7 @@ La aplicación de la barra de menús de macOS incorpora la interfaz de usuario d
 
 ## Lanzamiento y depuración
 
-- Manual: menú Lobster → “Open Chat”.
+- Manual: menú Lobster → "Open Chat".
 - Apertura automática para pruebas:
 
   ```bash
@@ -34,7 +34,7 @@ La aplicación de la barra de menús de macOS incorpora la interfaz de usuario d
   omiten, y las filas excesivamente grandes pueden ser reemplazadas por marcadores de posición.
 - Sesión: por defecto es la sesión principal (`main`, o `global` cuando el alcance es
   global). La interfaz puede cambiar entre sesiones.
-- La incorporación (onboarding) utiliza una sesión dedicada para mantener la configuración de primera ejecución separada.
+- La incorporación utiliza una sesión dedicada para mantener separada la configuración de primera ejecución.
 
 ## Superficie de seguridad
 

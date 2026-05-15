@@ -6,14 +6,14 @@ read_when:
 title: "macOS app"
 ---
 
-macOS 應用程式是 OpenClaw 的**選單列伴隨程式**。它擁有權限，在本機管理/附加至 Gateway（透過 launchd 或手動），並將 macOS 功能以節點形式暴露給代理程式。
+macOS 應用程式是 OpenClaw 的 **選單列夥伴**。它擁有權限，在本地管理/附加至 Gateway（launchd 或手動），並將 macOS 功能作為節點公開給代理程式。
 
 ## 功能說明
 
 - 在選單列中顯示原生通知與狀態。
 - 擁有 TCC 提示（通知、輔助使用、螢幕錄製、麥克風、語音辨識、自動化/AppleScript）。
 - 執行或連接至 Gateway（本機或遠端）。
-- 公開僅限 macOS 的工具（Canvas、Camera、螢幕錄製、`system.run`）。
+- 公開僅限 macOS 的工具（Canvas、Camera、Screen Recording、`system.run`）。
 - 在**遠端**模式（launchd）下啟動本機節點主機服務，並在**本機**模式下停止它。
 - 選擇性地託管用於 UI 自動化的 **PeekabooBridge**。
 - 根據要求透過 npm、pnpm 或 bun 安裝全域 CLI（`openclaw`）（應用程式偏好 npm，其次是 pnpm，然後是 bun；Node 仍是推薦的 Gateway 執行環境）。
@@ -28,8 +28,8 @@ macOS 應用程式是 OpenClaw 的**選單列伴隨程式**。它擁有權限，
 
 ## Launchd 控制
 
-應用程式管理標記為 `ai.openclaw.gateway` 的個別使用者 LaunchAgent
-（或使用 `--profile`/`OPENCLAW_PROFILE` 時的 `ai.openclaw.<profile>`；舊版 `com.openclaw.*` 仍會卸載）。
+該應用程式管理一個標記為 `ai.openclaw.gateway` 的每用戶 LaunchAgent
+（或在使用 `--profile`/`OPENCLAW_PROFILE` 時為 `ai.openclaw.<profile>`；舊版 `com.openclaw.*` 仍會卸載）。
 
 ```bash
 launchctl kickstart -k gui/$UID/ai.openclaw.gateway
@@ -38,7 +38,7 @@ launchctl bootout gui/$UID/ai.openclaw.gateway
 
 執行命名設定檔時，請將標記替換為 `ai.openclaw.<profile>`。
 
-如果未安裝 LaunchAgent，請從應用程式啟用它，或執行
+如果未安裝 LaunchAgent，請從應用程式中啟用它或執行
 `openclaw gateway install`。
 
 ## 節點功能 (mac)
@@ -50,7 +50,7 @@ macOS 應用程式將自己呈現為一個節點。常見指令：
 - 螢幕：`screen.snapshot`，`screen.record`
 - 系統：`system.run`，`system.notify`
 
-該節點回報一個 `permissions` 映射，以便代理程式能決定允許的操作。
+節點會回報 `permissions` 映射，以便代理程式決定允許的內容。
 
 節點服務 + 應用程式 IPC：
 
@@ -98,8 +98,8 @@ Gateway -> Node Service (WS)
 
 - `allowlist` 條目是解析後的二進位路徑的 glob 模式，或是透過 PATH 呼叫之指令的純指令名稱。
 - 包含 shell 控制或展開語法的原始 shell 指令文字（`&&`、`||`、`;`、`|`、`` ` ``, `$`, `<`, `>`, `(`, `)`) 會被視為允許清單不符，並需要明確核准（或是將 shell 二進位檔加入允許清單）。
-- 在提示中選擇「總是允許」會將該指令加入允許清單。
-- `system.run` 環境變數覆寫會被過濾（捨棄 `PATH`、`DYLD_*`、`LD_*`、`NODE_OPTIONS`、`PYTHON*`、`PERL*`、`RUBYOPT`、`SHELLOPTS`、`PS4`），然後與應用程式的環境合併。
+- 在提示中選擇「Always Allow」會將該指令新增到允許清單中。
+- `system.run` 環境覆寫會被過濾（捨棄 `PATH`、`DYLD_*`、`LD_*`、`NODE_OPTIONS`、`PYTHON*`、`PERL*`、`RUBYOPT`、`SHELLOPTS`、`PS4`），然後與應用程式的環境合併。
 - 對於 Shell 包裝程式 (`bash|sh|zsh ... -c/-lc`)，請求範圍的環境變數覆寫被減少為一個小型明確的允許清單 (`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`)。
 - 對於允許清單模式中的「一律允許」決定，已知的分派包裝程式 (`env`、`nice`、`nohup`、`stdbuf`、`timeout`) 會儲存內部可執行檔路徑，而非包裝程式路徑。如果解包不安全，則不會自動儲存任何允許清單項目。
 
@@ -155,7 +155,7 @@ OPENCLAW_STATE_DIR=~/.openclaw
 
 它會發出警告並建議移回本機路徑。
 
-## 建置與開發工作流程（原生）
+## 建置和開發工作流程（原生）
 
 - `cd apps/macos && swift build`
 - `swift run OpenClaw`（或 Xcode）
@@ -181,7 +181,7 @@ swift run openclaw-mac discover --timeout 3000 --json
 
 探索選項：
 
-- `--include-local`：包含會被篩選為「本機」的閘道
+- `--include-local`：包含會被過濾為「local」的 gateway
 - `--timeout <ms>`：整體探索時間視窗（預設值：`2000`）
 - `--json`：用於比對的結構化輸出
 

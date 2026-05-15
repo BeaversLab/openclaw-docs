@@ -32,8 +32,8 @@ title: "功能"
 
 **渠道：**
 
-- 内置渠道包括 Discord、Google Chat、iMessage（旧版）、IRC、Signal、Slack、Telegram、WebChat 和 WhatsApp
-- 捆绑的插件渠道包括用于 BlueBubbles 的 iMessage、飞书、LINE、Matrix、Mattermost、Microsoft Teams、Nextcloud Talk、Nostr、QQ 机器人、Synology Chat、Tlon、Twitch、Zalo 和 Zalo 个人版
+- 内置频道包括 Discord、Google Chat、iMessage、IRC、Signal、Slack、Telegram、WebChat 和 WhatsApp
+- 捆绑的插件频道包括 Feishu、LINE、Matrix、Mattermost、Microsoft Teams、Nextcloud Talk、Nostr、QQ Bot、Synology Chat、Tlon、Twitch、Zalo 和 Zalo Personal
 - 可选的单独安装渠道插件包括语音通话和第三方软件包，例如微信
 - 第三方渠道插件可以进一步扩展 Gateway(网关)，例如微信
 - 支持群聊，具有基于提及的激活功能
@@ -43,7 +43,7 @@ title: "功能"
 
 - 带有工具流传输的嵌入式智能体运行时
 - 针对每个工作区或发送者使用隔离会话的多智能体路由
-- 会话：直接聊天会合并到共享 `main` 中；群组是隔离的
+- Sessions：直接聊天会折叠到共享的 `main` 中；群组是隔离的
 - 针对长响应的流式传输和分块
 
 **身份验证和提供商：**
@@ -75,5 +75,17 @@ title: "功能"
 
 ## 相关
 
-- [实验性功能](/zh/concepts/experimental-features)
-- [Agent 运行时](/zh/concepts/agent)
+<CardGroup cols={2}>
+  <Card title="Experimental features" href="/zh/concepts/experimental-features" icon="flask">
+    尚未发布到默认界面的可选功能。
+  </Card>
+  <Card title="Agent runtime" href="/zh/concepts/agent" icon="robot">
+    Agent 运行时模型以及运行如何被分派。
+  </Card>
+  <Card title="Channels" href="/zh/channels" icon="message-square"TelegramWhatsAppDiscordSlackGateway(网关)>
+    从一个 Gateway(网关) 连接 Telegram、WhatsApp、Discord、Slack 和更多。
+  </Card>
+  <Card title="Plugins" href="/zh/tools/plugin" icon="plug"OpenClaw>
+    扩展 OpenClaw 的内置和第三方插件。
+  </Card>
+</CardGroup>

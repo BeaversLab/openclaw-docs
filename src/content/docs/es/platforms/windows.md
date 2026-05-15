@@ -23,7 +23,7 @@ Los flujos de la CLI nativa de Windows están mejorando, pero WSL2 sigue siendo 
 
 Lo que funciona bien en Windows nativo hoy:
 
-- instalador del sitio web a través de `install.ps1`
+- instalador del sitio web mediante `install.ps1`
 - uso local de la CLI como `openclaw --version`, `openclaw doctor` y `openclaw plugins list --json`
 - pruebas de humo del agente local/proveedor integradas, tales como:
 
@@ -33,7 +33,7 @@ openclaw agent --local --agent main --thinking low -m "Reply with exactly WINDOW
 
 Salvedades actuales:
 
-- `openclaw onboard --non-interactive` todavía espera un gateway local accesible a menos que pases `--skip-health`
+- `openclaw onboard --non-interactive` todavía espera una puerta de enlace local accesible a menos que pases `--skip-health`
 - `openclaw onboard --non-interactive --install-daemon` y `openclaw gateway install` intentan primero las Tareas Programadas de Windows
 - si se niega la creación de la Tarea Programada, OpenClaw recurre a un elemento de inicio de sesión de carpeta de Inicio por usuario e inicia el gateway inmediatamente
 - si `schtasks` mismo se bloquea o deja de responder, OpenClaw ahora aborta esa ruta rápidamente y recurre en lugar de colgarse para siempre
@@ -57,7 +57,7 @@ Si la creación de Tareas Programadas está bloqueada, el modo de servicio de re
 
 ## Gateway
 
-- [Manual de procedimientos del Gateway](/es/gateway)
+- [Manual de procedimientos de Gateway](/es/gateway)
 - [Configuración](/es/gateway/configuration)
 
 ## Instalación del servicio Gateway (CLI)
@@ -116,7 +116,7 @@ En PowerShell como Administrador:
 schtasks /create /tn "WSL Boot" /tr "wsl.exe -d Ubuntu --exec /bin/true" /sc onstart /ru SYSTEM
 ```
 
-Reemplaza `Ubuntu` con el nombre de tu distro de:
+Reemplace `Ubuntu` con el nombre de su distribución desde:
 
 ```powershell
 wsl --list --verbose
@@ -170,9 +170,9 @@ netsh interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.
 Notas:
 
 - El SSH desde otra máquina apunta a la **IP del host de Windows** (ejemplo: `ssh user@windows-host -p 2222`).
-- Los nodos remotos deben apuntar a una URL de Gateway **accesible** (no `127.0.0.1`); usa
-  `openclaw status --all` para confirmar.
-- Usa `listenaddress=0.0.0.0` para el acceso a LAN; `127.0.0.1` lo mantiene solo local.
+- Los nodos remotos deben apuntar a una URL de Gateway **accesible** (no `127.0.0.1`); use
+  `openclaw status --all` para confirmarlo.
+- Use `listenaddress=0.0.0.0` para el acceso a LAN; `127.0.0.1` lo mantiene solo localmente.
 - Si quieres que esto sea automático, registra una Tarea Programada para ejecutar el paso
   de actualización al iniciar sesión.
 
@@ -227,8 +227,8 @@ pnpm ui:build
 pnpm openclaw onboard --install-daemon
 ```
 
-Si estás desarrollando desde el código fuente en lugar de realizar la incorporación por primera vez, usa el
-bucle de desarrollo desde el código fuente en [Configuración](/es/start/setup):
+Si está desarrollando desde el código fuente en lugar de realizar la incorporación por primera vez, use el
+ciclo de desarrollo de fuentes desde [Configuración](/es/start/setup):
 
 ```bash
 pnpm install
@@ -241,10 +241,41 @@ Guía completa: [Introducción](/es/start/getting-started)
 
 ## Aplicación complementaria de Windows
 
-Aún no tenemos una aplicación complementaria de Windows. Las contribuciones son bienvenidas si desea
-contribuciones para hacerla realidad.
+Todavía no tenemos una aplicación de acompañamiento para Windows. Las contribuciones son bienvenidas si quieres ayudar a que esto suceda.
+
+## Conectividad con Git y GitHub (colaboradores)
+
+Algunas redes bloquean o limitan el tráfico HTTPS hacia GitHub. Si `git clone` falla con tiempos de espera
+o reestablecimientos de conexión, prueba con otra red, una VPN o un proxy HTTP/HTTPS que tu
+organización proporcione.
+
+Si `gh auth login` falla durante el flujo de dispositivos del navegador (por ejemplo, un tiempo de espera
+al alcanzar `github.com:443`), autentícate con un token de acceso personal en su lugar:
+
+1. Cree un token con al menos el alcance `repo` (PAT clásico) o el equivalente
+   acceso de granularidad fina.
+2. En PowerShell para la sesión actual:
+
+```powershell
+$env:GH_TOKEN="<your-token>"
+gh auth status
+gh auth setup-git
+```
+
+3. Si `gh auth status` advierte sobre falta de `read:org`, genere un token que incluya
+   ese alcance y reasigne la variable:
+
+```powershell
+$env:GH_TOKEN="<your-token-with-repo-and-read:org>"
+gh auth status
+```
+
+`gh auth refresh -s read:org` solo se aplica cuando se autenticó mediante `gh auth login`
+y tiene credenciales almacenadas para actualizar (no cuando usa `GH_TOKEN`).
+
+Nunca confirme tokens ni los pegue en problemas o solicitudes de extracción.
 
 ## Relacionado
 
-- [Resumen de instalación](/es/install)
+- [Descripción general de la instalación](/es/install)
 - [Plataformas](/es/platforms)

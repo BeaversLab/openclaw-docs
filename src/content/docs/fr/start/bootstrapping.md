@@ -8,7 +8,7 @@ title: "Initialisation de l'agent"
 sidebarTitle: "Initialisation"
 ---
 
-L'initialisation est le rituel du **premier démarrage** qui prépare un espace de travail pour l'agent et collecte les détails d'identité. Elle a lieu après l'intégration (onboarding), lorsque l'agent démarre pour la première fois.
+L'amorçage est le rituel de **première exécution** qui prépare un espace de travail pour l'agent et collecte les détails d'identité. Il se produit après l'onboarding, lorsque l'agent démarre pour la première fois.
 
 ## Ce que fait l'initialisation
 
@@ -20,17 +20,19 @@ Lors de la première exécution de l'agent, OpenClaw initialise l'espace de trav
 - Écrit l'identité et les préférences dans `IDENTITY.md`, `USER.md`, `SOUL.md`.
 - Supprime `BOOTSTRAP.md` une fois terminé pour qu'il ne s'exécute qu'une seule fois.
 
-## Ignorer l'initialisation
+Pour les exécutions avec des modèles intégrés/locaux, OpenClaw maintient `BOOTSTRAP.md` en dehors du contexte système privilégié. Lors de la première exécution interactive principale, il transmet toujours le contenu du fichier dans l'invite utilisateur afin que les modèles qui n'appellent pas de manière fiable l'outil `read` puissent accomplir le rituel. Si l'exécution actuelle ne peut pas accéder en toute sécurité à l'espace de travail, l'agent reçoit une note d'amorçage limitée au lieu d'une salutation générique.
 
-Pour ignorer cette étape pour un espace de travail pré-initialisé, exécutez `openclaw onboard --skip-bootstrap`.
+## Ignorer l'amorçage
 
-## Où elle s'exécute
+Pour ignorer cette étape pour un espace de travail prérempli, exécutez `openclaw onboard --skip-bootstrap`.
 
-L'initialisation s'exécute toujours sur l'**hôte de la passerelle**. Si l'application macOS se connecte à une passerelle (Gateway) distante, l'espace de travail et les fichiers d'initialisation résident sur cette machine distante.
+## Où il s'exécute
 
-<Note>Lorsque la Gateway s'exécute sur une autre machine, modifiez les fichiers de l'espace de travail sur l'hôte de la passerelle (par exemple, `user@gateway-host:~/.openclaw/workspace`).</Note>
+L'amorçage s'exécute toujours sur l'**hôte de passerelle**. Si l'application macOS se connecte à une passerelle distante (Gateway), l'espace de travail et les fichiers d'amorçage résident sur cette machine distante.
+
+<Note>Lorsque la Gateway s'exécute sur une autre machine, modifiez les fichiers de l'espace de travail sur l'hôte de passerelle (par exemple, `user@gateway-host:~/.openclaw/workspace`).</Note>
 
 ## Documentation connexe
 
-- Intégration de l'application macOS : [Onboarding](/fr/start/onboarding)
-- Structure de l'espace de travail : [Espace de travail de l'agent](/fr/concepts/agent-workspace)
+- Onboarding de l'application macOS : [Onboarding](/fr/start/onboarding)
+- Disposition de l'espace de travail : [Espace de travail de l'agent](/fr/concepts/agent-workspace)

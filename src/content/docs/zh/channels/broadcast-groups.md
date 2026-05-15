@@ -156,10 +156,21 @@ sidebarTitle: "广播群组"
 ### 消息流
 
 <Steps>
-  <Step title="Incoming message arrives">一条 WhatsApp 群组或私信消息到达。</Step>
-  <Step title="Broadcast check">系统检查对端 ID 是否在 `broadcast` 中。</Step>
-  <Step title="If in broadcast list">- 列出的所有代理都会处理该消息。 - 每个代理都有自己的会话密钥和隔离的上下文。 - 代理并行处理（默认）或顺序处理。</Step>
-  <Step title="If not in broadcast list">应用正常路由（第一个匹配的绑定）。</Step>
+  <Step title="Incoming message arrives">
+    一条 WhatsApp 群组或私信消息到达。
+  </Step>
+  <Step title="Broadcast check">
+    系统检查对端 ID 是否在 `broadcast` 中。
+  </Step>
+  <Step title="如果位于广播列表中">
+    - 所有列出的代理都会处理该消息。
+    - 每个代理都有自己的会话密钥和隔离的上下文。
+    - 代理并行（默认）或串行处理。
+
+  </Step>
+  <Step title="If not in broadcast list">
+    应用正常路由（第一个匹配的绑定）。
+  </Step>
 </Steps>
 
 <Note>广播组不会绕过渠道白名单或组激活规则（提及/命令等）。它们仅改变当消息符合处理条件时_运行哪些代理_。</Note>
@@ -229,21 +240,23 @@ sidebarTitle: "广播群组"
     {
       "agents": {
         "reviewer": {
-          "tools": { "allow": ["read", "exec"] } // Read-only
+          "tools": { "allow": ["read", "exec"] }
         },
         "fixer": {
-          "tools": { "allow": ["read", "write", "edit", "exec"] } // Read-write
+          "tools": { "allow": ["read", "write", "edit", "exec"] }
         }
       }
     }
     ```
 
+    `reviewer` 是只读的。 `fixer` 可以读取和写入。
+
   </Accordion>
   <Accordion title="4. 监控性能">
-    拥有许多代理时，请考虑：
+    拥有多个代理时，请考虑：
 
-    - 使用 `"strategy": "parallel"`（默认）以提升速度
-    - 将广播组的代理限制在 5-10 个
+    - 使用 `"strategy": "parallel"`（默认）以提高速度
+    - 将广播组限制为 5-10 个代理
     - 为简单的代理使用更快的模型
 
   </Accordion>
@@ -287,19 +300,19 @@ sidebarTitle: "广播群组"
 }
 ```
 
-- `GROUP_A`：仅 alfred 响应（常规路由）。
-- `GROUP_B`：agent1 和 agent2 都响应（广播）。
+- `GROUP_A`: 仅 alfred 响应（正常路由）。
+- `GROUP_B`: agent1 和 agent2 都响应（广播）。
 
 <Note>**优先级：** `broadcast` 优先于 `bindings`。</Note>
 
 ## 故障排除
 
 <AccordionGroup>
-  <Accordion title="代理无响应">
+  <Accordion title="代理未响应">
     **检查：**
 
     1. 代理 ID 存在于 `agents.list` 中。
-    2. 对等 ID 格式正确（例如 `120363403215116621@g.us`）。
+    2. 对等 ID 格式正确（例如，`120363403215116621@g.us`）。
     3. 代理不在拒绝列表中。
 
     **调试：**
@@ -309,10 +322,10 @@ sidebarTitle: "广播群组"
     ```
 
   </Accordion>
-  <Accordion title="仅有一个代理响应">
-    **原因：** 对等 ID 可能位于 `bindings` 中，但不在 `broadcast` 中。
+  <Accordion title="只有一个代理响应">
+    **原因：** 对等 ID 可能在 `bindings` 中但不在 `broadcast` 中。
 
-    **修复：** 添加到广播配置或从绑定中移除。
+    **修复：** 添加到广播配置中或从绑定中移除。
 
   </Accordion>
   <Accordion title="性能问题">
@@ -367,10 +380,10 @@ sidebarTitle: "广播群组"
 
     **响应：**
 
-    - code-formatter: "修复了缩进并添加了类型提示"
-    - security-scanner: "⚠️ 第 12 行存在 SQL 注入漏洞"
-    - test-coverage: "覆盖率为 45%，缺少错误情况的测试"
-    - docs-checker: "函数 `process_data` 缺少文档字符串"
+    - code-formatter：“已修复缩进并添加了类型提示”
+    - security-scanner：“⚠️ 第 12 行存在 SQL 注入漏洞”
+    - test-coverage：“覆盖率为 45%，缺少错误用例的测试”
+    - docs-checker：“函数 `process_data` 缺少文档字符串”
 
   </Accordion>
   <Accordion title="示例 2：多语言支持">
@@ -408,10 +421,10 @@ interface OpenClawConfig {
 ### 字段
 
 <ParamField path="strategy" type='"parallel" | "sequential"' default='"parallel"'>
-  如何处理代理。`parallel` 同时运行所有代理；`sequential` 按数组顺序运行它们。
+  如何处理智能体。`parallel` 同时运行所有智能体；`sequential` 按数组顺序运行它们。
 </ParamField>
-<ParamField path="[peerId]" type="string[]">
-  WhatsApp 组 JID、E.164 号码或其他对等 ID。该值是应处理消息的代理 ID 数组。
+<ParamField path="[peerId]" type="string[]" WhatsApp>
+  WhatsApp 群组 JID、E.164 号码或其他对等 ID。值为应处理消息的智能体 ID 数组。
 </ParamField>
 
 ## 限制
@@ -432,8 +445,8 @@ interface OpenClawConfig {
 
 ## 相关
 
-- [渠道路由](/zh/channels/channel-routing)
+- [通道路由](/zh/channels/channel-routing)
 - [群组](/zh/channels/groups)
-- [多代理沙盒工具](/zh/tools/multi-agent-sandbox-tools)
+- [多智能体沙盒工具](/zh/tools/multi-agent-sandbox-tools)
 - [配对](/zh/channels/pairing)
 - [会话管理](/zh/concepts/session)

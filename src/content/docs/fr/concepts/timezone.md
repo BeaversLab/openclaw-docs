@@ -1,95 +1,47 @@
 ---
-summary: "Gestion des fuseaux horaires pour les agents, les enveloppes et les invites"
+summary: "OpenClawOù les fuseaux horaires apparaissent dans OpenClaw — enveloppes, charges utiles d'outils, système de prompt"
 read_when:
-  - You need to understand how timestamps are normalized for the model
-  - Configuring the user timezone for system prompts
+  - You want a quick mental model for timezone handling
+  - You are deciding where to set or override a timezone
 title: "Fuseaux horaires"
 ---
 
-OpenClaw normalise les horodatages afin que le modèle voie une **heure de référence unique**.
+OpenClaw normalise les horodatages afin que le model voie une **heure de référence unique** au lieu d'un mélange d'horloges locales aux fournisseurs. Il existe trois surfaces où les fuseaux horaires apparaissent, chacune ayant son propre objectif :
 
-## Enveloppes de messages (locales par défaut)
+## Trois surfaces de fuseau horaire
 
-Les messages entrants sont enveloppés dans une enveloppe telle que :
+| Surface                 | Ce qu'elle affiche                                                                                                              | Par défaut                                                  | Configuré via                                                  |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------- |
+| Enveloppes de messages  | Entoure les messages de channel entrants : `[Signal +1555 2026-01-18 00:19 PST] hello`                                          | Hôte local                                                  | `agents.defaults.envelopeTimezone`                             |
+| Charges utiles d'outils | Les outils de style channel `readMessages` renvoient l'heure brute du provider + `timestampMs` normalisé / `timestampUtc`       | Champs UTC toujours présents                                | Non configurable — préserve les horodatages natifs du provider |
+| Prompt système          | Un petit bloc `Current Date & Time` avec **uniquement le fuseau horaire** (pas de valeur d'horloge, pour la stabilité du cache) | Fuseau horaire de l'hôte si `userTimezone` n'est pas défini | `agents.defaults.userTimezone`                                 |
 
-```
-[Provider ... 2026-01-05 16:26 PST] message text
-```
+Le prompt système omet délibérément l'horloge en direct pour garder la mise en cache du prompt stable entre les tours. Lorsque l'agent a besoin de l'heure actuelle, il appelle `session_status`.
 
-L'horodatage dans l'enveloppe est **local à l'hôte par défaut**, avec une précision à la minute.
-
-Vous pouvez modifier ce paramètre avec :
+## Définir le fuseau horaire de l'utilisateur
 
 ```json5
 {
   agents: {
     defaults: {
-      envelopeTimezone: "local", // "utc" | "local" | "user" | IANA timezone
-      envelopeTimestamp: "on", // "on" | "off"
-      envelopeElapsed: "on", // "on" | "off"
+      userTimezone: "America/Chicago",
     },
   },
 }
 ```
 
-- `envelopeTimezone: "utc"` utilise UTC.
-- `envelopeTimezone: "user"` utilise `agents.defaults.userTimezone` (revient au fuseau horaire de l'hôte).
-- Utilisez un fuseau horaire IANA explicite (par ex., `"Europe/Vienna"`) pour un décalage fixe.
-- `envelopeTimestamp: "off"` supprime les horodatages absoluts des en-têtes de l'enveloppe.
-- `envelopeElapsed: "off"` supprime les suffixes de temps écoulé (le style `+2m`).
+Si `userTimezone`OpenClaw n'est pas défini, OpenClaw résout le fuseau horaire de l'hôte au moment de l'exécution (pas d'écriture de configuration). `agents.defaults.timeFormat` (`auto` | `12` | `24`) contrôle le rendu 12h/24h dans les enveloppes et les surfaces en aval, et non dans la section du prompt système.
 
-### Exemples
+## Quand remplacer
 
-**Local (par défaut) :**
+- **Utilisez les enveloppes UTC** (`envelopeTimezone: "utc"`) lorsque vous souhaitez des horodatages stables sur les hôtes dans différentes régions, ou lorsque vous souhaitez que les journaux alignés sur l'UTC correspondent à la sortie de diagnostic.
+- **Utilisez un fuseau IANA fixe** (par exemple `"Europe/Vienna"`) lorsque l'hôte de passerelle est dans une zone mais que l'utilisateur est dans une autre et que vous souhaitez que les enveloppes soient lues dans la zone de l'utilisateur quelle que soit la migration de l'hôte.
+- **Définissez `envelopeTimestamp: "off"`** pour des enveloppes à faible nombre de jetons lorsque le contexte d'horodatage n'est pas utile pour la conversation.
 
-```
-[Signal Alice +1555 2026-01-18 00:19 PST] hello
-```
-
-**Fuseau horaire fixe :**
-
-```
-[Signal Alice +1555 2026-01-18 06:19 GMT+1] hello
-```
-
-**Temps écoulé :**
-
-```
-[Signal Alice +1555 +2m 2026-01-18T05:19Z] follow-up
-```
-
-## Payloads d'outils (données brutes du provider + champs normalisés)
-
-Les appels d'outils (`channels.discord.readMessages`, `channels.slack.readMessages`, etc.) renvoient des **horodatages bruts du provider**.
-Nous attachons également des champs normalisés pour la cohérence :
-
-- `timestampMs` (millisecondes depuis l'époque UTC)
-- `timestampUtc` (chaîne ISO 8601 UTC)
-
-Les champs bruts du provider sont conservés.
-
-## Fuseau horaire de l'utilisateur pour le système de prompt
-
-Définissez `agents.defaults.userTimezone` pour indiquer au modèle le fuseau horaire local de l'utilisateur. S'il n'est
-pas défini, OpenClaw résout le **fuseau horaire de l'hôte au moment de l'exécution** (sans écriture de configuration).
-
-```json5
-{
-  agents: { defaults: { userTimezone: "America/Chicago" } },
-}
-```
-
-Le système de prompt inclut :
-
-- Section `Current Date & Time` avec l'heure locale et le fuseau horaire
-- `Time format: 12-hour` ou `24-hour`
-
-Vous pouvez contrôler le format du prompt avec `agents.defaults.timeFormat` (`auto` | `12` | `24`).
-
-Voir [Date & Time](/fr/date-time) pour le comportement complet et les exemples.
+Pour la référence complète du comportement, les exemples par provider et le formatage de la durée écoulée, voir [Date & Time](/fr/date-time).
 
 ## Connexes
 
-- [Heartbeat](/fr/gateway/heartbeat) — les heures actives utilisent le fuseau horaire pour la planification
-- [Cron Jobs](/fr/automation/cron-jobs) — les expressions cron utilisent le fuseau horaire pour la planification
-- [Date & Time](/fr/date-time) — comportement complet de la date/heure et exemples
+- [Date & Time](/fr/date-time) — comportement complet de l'enveloppe/tool/prompt et exemples.
+- [Heartbeat](/fr/gateway/heartbeat) — les heures actives utilisent le fuseau horaire pour la planification.
+- [Cron Jobs](/fr/automation/cron-jobs) — les expressions cron utilisent le fuseau horaire pour la planification.

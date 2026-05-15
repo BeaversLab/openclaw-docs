@@ -6,9 +6,9 @@ read_when:
 title: "apply_patch tool"
 ---
 
-Appliquer des modifications de fichiers à l'aide d'un format de correctif structuré. C'est idéal pour les modifications multi-fichiers ou multi-hunk où un seul appel `edit` serait fragile.
+Appliquer les modifications de fichiers à l'aide d'un format de correctif structuré. C'est idéal pour les modifications multi-fichiers ou multi-segments où un seul appel `edit` serait fragile.
 
-L'tool accepte une seule chaîne `input` qui englobe une ou plusieurs opérations sur fichiers :
+L'outil accepte une seule chaîne `input` qui englobe une ou plusieurs opérations sur fichiers :
 
 ```
 *** Begin Patch
@@ -25,17 +25,17 @@ L'tool accepte une seule chaîne `input` qui englobe une ou plusieurs opération
 
 ## Paramètres
 
-- `input` (obligatoire) : Contenu complet du correctif, y compris `*** Begin Patch` et `*** End Patch`.
+- `input` (requis) : Contenu complet du correctif, y compris `*** Begin Patch` et `*** End Patch`.
 
 ## Notes
 
 - Les chemins de correctif prennent en charge les chemins relatifs (à partir du répertoire de l'espace de travail) et les chemins absolus.
-- `tools.exec.applyPatch.workspaceOnly` est par défaut `true` (contenu dans l'espace de travail). Définissez-le sur `false` uniquement si vous souhaitez intentionnellement que `apply_patch` écrive/supprime en dehors du répertoire de l'espace de travail.
-- Utilisez `*** Move to:` dans un hunk `*** Update File:` pour renommer des fichiers.
-- `*** End of File` marque une insertion en fin de fichier (EOF uniquement) si nécessaire.
+- `tools.exec.applyPatch.workspaceOnly` est par défaut `true` (contenu dans l'espace de travail). Définissez-le sur `false` uniquement si vous souhaitez intentionnellement que `apply_patch` écrive ou supprime en dehors du répertoire de l'espace de travail.
+- Utilisez `*** Move to:` dans un segment `*** Update File:` pour renommer des fichiers.
+- `*** End of File` marque une insertion en fin de fichier (EOF) si nécessaire.
 - Disponible par défaut pour les modèles OpenAI et OpenAI Codex. Définissez `tools.exec.applyPatch.enabled: false` pour le désactiver.
-- Conditionnez éventuellement par model via `tools.exec.applyPatch.allowModels`.
-- La configuration n'est disponible que sous `tools.exec`.
+- Optionnellement restreindre par modèle via `tools.exec.applyPatch.allowModels`.
+- La configuration se trouve uniquement sous `tools.exec`.
 
 ## Exemple
 
@@ -48,6 +48,14 @@ L'tool accepte une seule chaîne `input` qui englobe une ou plusieurs opération
 
 ## Connexes
 
-- [Diffs](/fr/tools/diffs)
-- [Exec tool](/fr/tools/exec)
-- [Code execution](/fr/tools/code-execution)
+<CardGroup cols={2}>
+  <Card title="Diffs" href="/fr/tools/diffs" icon="code-compare">
+    Visualiseur de différences en lecture seule pour la présentation des modifications.
+  </Card>
+  <Card title="Exec tool" href="/fr/tools/exec" icon="terminal">
+    Exécution de commandes shell depuis l'agent.
+  </Card>
+  <Card title="Code execution" href="/fr/tools/code-execution" icon="square-code">
+    Analyse Python distante sécurisée avec xAI.
+  </Card>
+</CardGroup>

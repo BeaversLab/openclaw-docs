@@ -6,8 +6,8 @@ read_when:
   - You need the API key env var or CLI auth choice
 ---
 
-La [Vercel AI Gateway](https://vercel.com/ai-gateway) fournit une API unifiée pour
-accéder à des centaines de modèles via un seul point de terminaison.
+Le [Vercel AI Gateway](https://vercel.com/ai-gateway) fournit une API unifiée pour
+accéder à des centaines de modèles via un point de terminaison unique.
 
 | Propriété            | Valeur                                     |
 | -------------------- | ------------------------------------------ |
@@ -16,7 +16,7 @@ accéder à des centaines de modèles via un seul point de terminaison.
 | API                  | Compatible avec les messages Anthropic     |
 | Catalogue de modèles | Découvert automatiquement via `/v1/models` |
 
-<Tip>OpenClaw découvre automatiquement le catalogue `/v1/models` de la passerelle, donc `/models vercel-ai-gateway` inclut des références de modèles actuelles telles que `vercel-ai-gateway/openai/gpt-5.5` et `vercel-ai-gateway/moonshotai/kimi-k2.6`.</Tip>
+<Tip>OpenClaw découvre automatiquement le catalogue Gateway `/v1/models`, donc `/models vercel-ai-gateway` inclut les références de modèles actuelles telles que `vercel-ai-gateway/openai/gpt-5.5` et `vercel-ai-gateway/moonshotai/kimi-k2.6`.</Tip>
 
 ## Getting started
 
@@ -76,9 +76,9 @@ moment de l'exécution :
 ## Configuration avancée
 
 <AccordionGroup>
-  <Accordion title="Environment variable for daemon processes">
-    Si le OpenClaw Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous que
-    `AI_GATEWAY_API_KEY` est disponible pour ce processus.
+  <Accordion title="Variable d'environnement pour les processus daemon">
+    Si le OpenClaw Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous
+    que `AI_GATEWAY_API_KEY` est disponible pour ce processus.
 
     <Warning>
     Une clé définie uniquement dans `~/.profile` ne sera pas visible pour un démon launchd/systemd
@@ -89,13 +89,22 @@ moment de l'exécution :
 
   </Accordion>
 
-  <Accordion title="Provider routing">
+  <Accordion title="Routage du fournisseur">
     Le Vercel AI Gateway achemine les requêtes vers le fournisseur amont en fonction du préfixe
-    de référence du modèle. Par exemple, `vercel-ai-gateway/anthropic/claude-opus-4.6` transite
-    via Anthropic, tandis que `vercel-ai-gateway/openai/gpt-5.5` transite via
-    OpenAI et `vercel-ai-gateway/moonshotai/kimi-k2.6` transite via
-    MoonshotAI. Votre unique `AI_GATEWAY_API_KEY` gère l'authentification pour tous
+    de référence du modèle. Par exemple, `vercel-ai-gateway/anthropic/claude-opus-4.6` route
+    via Anthropic, tandis que `vercel-ai-gateway/openai/gpt-5.5` route via
+    OpenAI et `vercel-ai-gateway/moonshotai/kimi-k2.6` route via
+    MoonshotAI. Votre seul `AI_GATEWAY_API_KEY` gère l'authentification pour tous
     les fournisseurs amont.
+  </Accordion>
+  <Accordion title="Thinking levels">
+    Les options `/think` suivent les préfixes de modèle en amont de confiance lorsque OpenClaw connaît
+    le contrat du fournisseur en amont. `vercel-ai-gateway/anthropic/...` utilise le
+    profil de réflexion Claude, y compris les valeurs adaptatives par défaut pour les modèles Claude 4.6.
+    Les références de style `vercel-ai-gateway/openai/gpt-5.4`, `gpt-5.5` et Codex exposent
+    `/think xhigh` tout comme les fournisseurs directs OpenAI/OpenAI Codex. Les autres
+    références avec espace de noms conservent les niveaux de raisonnement normaux, sauf si leurs métadonnées
+    de catalogue en déclarent davantage.
   </Accordion>
 </AccordionGroup>
 
@@ -103,7 +112,7 @@ moment de l'exécution :
 
 <CardGroup cols={2}>
   <Card title="Model selection" href="/fr/concepts/model-providers" icon="layers">
-    Choisir les fournisseurs, les références de modèles et le comportement de basculement.
+    Choix des fournisseurs, des références de modèle et du comportement de basculement.
   </Card>
   <Card title="Troubleshooting" href="/fr/help/troubleshooting" icon="wrench">
     Dépannage général et FAQ.

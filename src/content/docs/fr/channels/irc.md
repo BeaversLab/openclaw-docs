@@ -39,40 +39,41 @@ openclaw gateway run
 
 ## Security defaults
 
-- `channels.irc.dmPolicy` par défaut est `"pairing"`.
-- `channels.irc.groupPolicy` par défaut est `"allowlist"`.
-- Avec `groupPolicy="allowlist"`, définissez `channels.irc.groups` pour définir les channels autorisés.
-- Utilisez TLS (`channels.irc.tls=true`) sauf si vous acceptez intentionnellement le transport en clair.
+- IRC utilise des sockets TCP/TLS bruts en dehors du routage du proxy de géré par l'opérateur d'OpenClaw. Dans les déploiements qui nécessitent que tout le trafic sortant passe par ce proxy de, définissez OpenClaw`channels.irc.enabled=false` à moins que la sortie IRC directe ne soit explicitement approuvée.
+- `channels.irc.dmPolicy` est par défaut `"pairing"`.
+- `channels.irc.groupPolicy` est par défaut `"allowlist"`.
+- Avec `groupPolicy="allowlist"`, définissez `channels.irc.groups` pour spécifier les channels autorisés.
+- Utilisez TLS (`channels.irc.tls=true`) sauf si vous acceptez intentionnellement le transport en texte clair.
 
-## Access control
+## Contrôle d'accès
 
-Il y a deux « portes » séparées pour les channels IRC :
+Il existe deux « portes » distinctes pour les channels IRC :
 
-1. **Accès channel** (`groupPolicy` + `groups`) : si le bot accepte les messages d'un channel ou non.
-2. **Accès expéditeur** (`groupAllowFrom` / `groups["#channel"].allowFrom` par channel) : qui est autorisé à déclencher le bot dans ce channel.
+1. **Accès au channel** (`groupPolicy` + `groups`) : si le bot accepte ou non les messages d'un channel.
+2. **Accès de l'expéditeur** (`groupAllowFrom` / `groups["#channel"].allowFrom` par channel) : qui est autorisé à déclencher le bot dans ce channel.
 
 Clés de configuration :
 
-- Liste d'autorisation DM (accès expéditeur DM) : `channels.irc.allowFrom`
-- Liste d'autorisation d'expéditeur de groupe (accès expéditeur channel) : `channels.irc.groupAllowFrom`
+- Liste d'autorisation DM (accès de l'expéditeur DM) : `channels.irc.allowFrom`
+- Liste d'autorisation des expéditeurs de groupe (accès de l'expéditeur de channel) : `channels.irc.groupAllowFrom`
 - Contrôles par channel (channel + expéditeur + règles de mention) : `channels.irc.groups["#channel"]`
-- `channels.irc.groupPolicy="open"` permet les channels non configurés (**toujours limité par mention par défaut**)
+- `channels.irc.groupPolicy="open"` autorise les channels non configurés (**toujours limité par mention par défaut**)
 
 Les entrées de la liste d'autorisation doivent utiliser des identités d'expéditeur stables (`nick!user@host`).
-La correspondance de pseudo brut est modifiable et uniquement activée lorsque `channels.irc.dangerouslyAllowNameMatching: true`.
+La correspondance de pseudo simple est modifiable et n'est activée que lorsque `channels.irc.dangerouslyAllowNameMatching: true`.
 
-### Problème courant : `allowFrom` est pour les DMs, pas pour les channels
+### Piège courant : `allowFrom` est pour les DMs, pas pour les channels
 
 Si vous voyez des journaux comme :
 
 - `irc: drop group sender alice!ident@host (policy=allowlist)`
 
-…cela signifie que l'expéditeur n'était pas autorisé pour les messages de **groupe/channel**. Corrigez-le soit par :
+...cela signifie que l'expéditeur n'était pas autorisé pour les messages de **groupe/channel**. Corrigez cela soit par :
 
-- le réglage de `channels.irc.groupAllowFrom` (global pour tous les channels), ou
-- définition de listes d'autorisation d'expéditeur par channel : `channels.irc.groups["#channel"].allowFrom`
+- le paramétrage de `channels.irc.groupAllowFrom` (global pour tous les channels), ou
+- le paramétrage de listes d'autorisation d'expéditeurs par channel : `channels.irc.groups["#channel"].allowFrom`
 
-Exemple (autoriser quiconque dans `#tuirc-dev` à parler au bot) :
+Exemple (autoriser n'importe qui dans `#tuirc-dev` à parler au bot) :
 
 ```json5
 {
@@ -89,11 +90,11 @@ Exemple (autoriser quiconque dans `#tuirc-dev` à parler au bot) :
 
 ## Déclenchement de réponse (mentions)
 
-Même si un channel est autorisé (via `groupPolicy` + `groups`) et que l'expéditeur est autorisé, OpenClaw utilise par défaut le **mention-gating** dans les contextes de groupe.
+Même si un channel est autorisé (via `groupPolicy` + `groups`OpenClaw) et que l'expéditeur est autorisé, OpenClaw utilise par défaut le **mention-gating** dans les contextes de groupe.
 
-Cela signifie que vous pouvez voir des journaux tels que `drop channel … (missing-mention)` à moins que le message n'inclue un modèle de mention correspondant au bot.
+Cela signifie que vous pouvez voir des journaux comme `drop channel … (missing-mention)` sauf si le message inclut un motif de mention qui correspond au bot.
 
-Pour que le bot réponde dans un channel IRC **sans avoir besoin d'une mention**, désactivez le mention gating pour ce channel :
+Pour faire répondre le bot dans un channel IRC **sans avoir besoin d'une mention**, désactivez le filtrage par mention pour ce channel :
 
 ```json5
 {
@@ -111,7 +112,7 @@ Pour que le bot réponde dans un channel IRC **sans avoir besoin d'une mention**
 }
 ```
 
-Ou pour autoriser **tous** les channels IRC (pas de liste d'autorisation par channel) et toujours répondre sans mentions :
+Ou pour autoriser **tous** les channels IRC (pas de liste d'autorisation par channel) et répondre toujours sans mentions :
 
 ```json5
 {
@@ -128,10 +129,10 @@ Ou pour autoriser **tous** les channels IRC (pas de liste d'autorisation par cha
 
 ## Note de sécurité (recommandé pour les channels publics)
 
-Si vous autorisez `allowFrom: ["*"]` dans un channel public, n'importe qui peut solliciter le bot.
+Si vous autorisez `allowFrom: ["*"]` dans un channel public, n'importe qui peut inviter le bot.
 Pour réduire les risques, restreignez les outils pour ce channel.
 
-### Mêmes outils pour tout le monde dans le channel
+### Mêmes outils pour tous dans le channel
 
 ```json5
 {
@@ -150,9 +151,9 @@ Pour réduire les risques, restreignez les outils pour ce channel.
 }
 ```
 
-### Outils différents par expéditeur (le propriétaire obtient plus de pouvoirs)
+### Outils différents par expéditeur (le propriétaire a plus de pouvoir)
 
-Utilisez `toolsBySender` pour appliquer une politique plus stricte à `"*"` et une plus souple à votre pseudo :
+Utilisez `toolsBySender` pour appliquer une politique plus stricte à `"*"` et une politique plus souple à votre pseudo :
 
 ```json5
 {
@@ -178,12 +179,12 @@ Utilisez `toolsBySender` pour appliquer une politique plus stricte à `"*"` et u
 
 Notes :
 
-- Les clés `toolsBySender` devraient utiliser `id:` pour les valeurs d'identité d'expéditeur IRC :
+- Les clés `toolsBySender` doivent utiliser `id:` pour les valeurs d'identité de l'expéditeur IRC :
   `id:eigen` ou `id:eigen!~eigen@174.127.248.171` pour une correspondance plus forte.
-- Les clés héritées sans préfixe sont toujours acceptées et correspondent uniquement en tant que `id:`.
-- La première stratégie d'expéditeur correspondante gagne ; `"*"` est le repli par défaut (wildcard).
+- Les anciennes clés sans préfixe sont toujours acceptées et correspondent uniquement en tant que `id:`.
+- La première stratégie d'expéditeur correspondante l'emporte ; `"*"` est le fallback de remplacement (wildcard).
 
-Pour plus d'informations sur l'accès aux groupes par rapport au mention-gating (et sur la manière dont ils interagissent), voir : [/channels/groups](/fr/channels/groups).
+Pour plus d'informations sur l'accès par groupe par opposition au filtrage par mention (et sur leur interaction), consultez : [/channels/groups](/fr/channels/groups).
 
 ## NickServ
 
@@ -203,7 +204,7 @@ Pour s'identifier avec NickServ après la connexion :
 }
 ```
 
-Enregistrement unique facultatif à la connexion :
+Enregistrement ponctuel optionnel à la connexion :
 
 ```json5
 {
@@ -218,7 +219,7 @@ Enregistrement unique facultatif à la connexion :
 }
 ```
 
-Désactivez `register` après que le pseudo est enregistré pour éviter les tentatives répétées de REGISTER.
+Désactivez `register` après l'enregistrement du pseudo pour éviter des tentatives répétées de REGISTER.
 
 ## Variables d'environnement
 
@@ -231,22 +232,22 @@ Le compte par défaut prend en charge :
 - `IRC_USERNAME`
 - `IRC_REALNAME`
 - `IRC_PASSWORD`
-- `IRC_CHANNELS` (séparé par des virgules)
+- `IRC_CHANNELS` (séparés par des virgules)
 - `IRC_NICKSERV_PASSWORD`
 - `IRC_NICKSERV_REGISTER_EMAIL`
 
-`IRC_HOST` ne peut pas être défini à partir d'un espace de travail `.env` ; voir [Fichiers d'espace de travail `.env`](/fr/gateway/security).
+`IRC_HOST` ne peut pas être défini depuis un `.env` d'espace de travail ; voir [Fichiers `.env` d'espace de travail](/fr/gateway/security).
 
 ## Dépannage
 
-- Si le bot se connecte mais ne répond jamais dans les channels, vérifiez `channels.irc.groups` **et** si le filtrage par mention abandonne les messages (`missing-mention`). Si vous souhaitez qu'il réponde sans mentions, définissez `requireMention:false` pour le channel.
-- Si la connexion échoue, vérifiez la disponibilité du pseudonyme et le mot de passe du serveur.
+- Si le bot se connecte mais ne répond jamais dans les channels, vérifiez `channels.irc.groups` **et** si le filtrage par mention supprime des messages (`missing-mention`). Si vous souhaitez qu'il réponde sans pings, définissez `requireMention:false` pour le channel.
+- Si la connexion échoue, vérifiez la disponibilité du pseudo et le mot de passe du serveur.
 - Si TLS échoue sur un réseau personnalisé, vérifiez l'hôte/le port et la configuration du certificat.
 
 ## Connexes
 
-- [Aperçu des channels](/fr/channels) — tous les channels pris en charge
-- [Appariement](/fr/channels/pairing) — authentification DM et flux d'appariement
+- [Vue d'ensemble des channels](/fr/channels) — tous les channels pris en charge
+- [Jumelage](/fr/channels/pairing) — authentification par DM et flux de jumelage
 - [Groupes](/fr/channels/groups) — comportement de chat de groupe et filtrage par mention
 - [Routage de channel](/fr/channels/channel-routing) — routage de session pour les messages
 - [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

@@ -90,7 +90,7 @@ Champs de provenance des données recommandés pour chaque élément collecté :
 
 Faites en sorte que le workflow rejette ou marque les éléments obsolètes avant la synthèse. L'étape LLM ne doit recevoir que du JSON structuré et on doit lui demander de préserver `sourceUrl`, `retrievedAt` et `asOf` dans sa sortie. Utilisez [LLM Task](/fr/tools/llm-task) lorsque vous avez besoin d'une étape de modèle validée par schéma dans le workflow.
 
-Pour les workflows d'équipe ou communautaires réutilisables, emballez la CLI, les fichiers `.lobster` et toutes les notes de configuration sous forme de compétence ou de plugin et publiez-le via [ClawHub](/fr/tools/clawhub). Conservez les garde-fous spécifiques au workflow dans ce paquet, sauf si l'API du plugin API manque d'une capacité générique nécessaire.
+Pour les flux de travail réutilisables par une équipe ou la communauté, packagez le CLI, les fichiers `.lobster` et toutes les notes de configuration sous forme de compétence ou de plugin, et publiez-le via [ClawHub](/fr/clawhub). Conservez les garde-fous spécifiques au flux de travail dans ce package, sauf si l'API de plugin API manque d'une capacité générique nécessaire.
 
 ## Modes de synchronisation
 

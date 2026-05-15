@@ -19,7 +19,7 @@ Les autorisations de l'OS sont à plusieurs niveaux. Nous pouvons exposer un sé
 
 - iOS/macOS peuvent exposer **Pendant l'utilisation** ou **Toujours** dans les invites système/Paramètres.
 - L'application Android prend actuellement en charge uniquement la localisation au premier plan.
-- La localisation précise est une autorisation distincte (iOS 14+ « Précise », Android « fine » contre « grossière »).
+- La localisation précise est une autorisation distincte (iOS 14+ « Précise », Android « fine » vs « grossière »).
 
 Le sélecteur de l'interface utilisateur définit notre mode demandé ; l'octroi réel réside dans les paramètres de l'OS.
 
@@ -92,8 +92,8 @@ Erreurs (codes stables) :
 ## Texte de l'interface utilisateur (suggéré)
 
 - Désactivé : « Le partage de la localisation est désactivé. »
-- Pendant l'utilisation : « Seulement lorsque OpenClaw est ouvert. »
-- Précise : « Utiliser la position GPS précise. Désactiver pour partager une position approximative. »
+- Pendant l'utilisation : « Uniquement lorsque OpenClaw est ouvert. »
+- Précise : « Utiliser la localisation GPS précise. Désactiver pour partager une localisation approximative. »
 
 ## Connexes
 

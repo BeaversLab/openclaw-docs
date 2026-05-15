@@ -94,7 +94,8 @@ Qianfan est la plateforme MaaS de Baidu, fournissant une **API unifiée** qui ac
   <Accordion title="Dépannage">
     - Assurez-vous que votre clé API commence par `bce-v3/ALTAK-` et que l'accès à l'API Qianfan est activé dans la console Baidu Cloud.
     - Si les modèles ne sont pas listés, confirmez que votre compte a le service Qianfan activé.
-    - L'URL de base par défaut est `https://qianfan.baidubce.com/v2`. Ne la modifiez que si vous utilisez un point de terminaison personnalisé ou un proxy.
+    - L'URL de base par défaut est `https://qianfan.baidubce.com/v2`. Ne la modifiez que si vous utilisez un endpoint personnalisé ou un proxy.
+
   </Accordion>
 </AccordionGroup>
 

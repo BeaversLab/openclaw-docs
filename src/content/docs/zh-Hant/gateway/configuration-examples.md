@@ -1,13 +1,13 @@
 ---
-summary: "符合架構的常見 OpenClaw 設定範例"
+summary: "適用於常見 OpenClaw 設定的符合架構配置範例"
 read_when:
   - Learning how to configure OpenClaw
   - Looking for configuration examples
   - Setting up OpenClaw for the first time
-title: "設定範例"
+title: "配置範例"
 ---
 
-以下範例與目前的設定架構一致。若要查看完整參考與各欄位說明，請參閱[設定](/zh-Hant/gateway/configuration)。
+以下範例與目前的配置架構一致。如需完整參考及各欄位說明，請參閱 [配置](/zh-Hant/gateway/configuration)。
 
 ## 快速開始
 
@@ -20,7 +20,7 @@ title: "設定範例"
 }
 ```
 
-儲存至 `~/.openclaw/openclaw.json`，您就可以從該號碼傳送私訊給機器人。
+儲存至 `~/.openclaw/openclaw.json`，您即可從該號碼向機器人傳送私訊。
 
 ### 建議的入門設定
 
@@ -39,6 +39,12 @@ title: "設定範例"
     whatsapp: {
       allowFrom: ["+15555550123"],
       groups: { "*": { requireMention: true } },
+    },
+  },
+  messages: {
+    visibleReplies: "automatic",
+    groupChat: {
+      visibleReplies: "message_tool", // default; use "automatic" for legacy room replies
     },
   },
 }
@@ -96,30 +102,27 @@ title: "設定範例"
   // Message formatting
   messages: {
     messagePrefix: "[openclaw]",
+    visibleReplies: "automatic",
     responsePrefix: ">",
     ackReaction: "👀",
     ackReactionScope: "group-mentions",
-  },
-
-  // Routing + queue
-  routing: {
     groupChat: {
-      mentionPatterns: ["@openclaw", "openclaw"],
       historyLimit: 50,
+      visibleReplies: "message_tool", // normal final replies stay private in groups/channels
     },
     queue: {
-      mode: "collect",
-      debounceMs: 1000,
+      mode: "steer",
+      debounceMs: 500,
       cap: 20,
       drop: "summarize",
       byChannel: {
-        whatsapp: "collect",
-        telegram: "collect",
-        discord: "collect",
-        slack: "collect",
-        signal: "collect",
-        imessage: "collect",
-        webchat: "collect",
+        whatsapp: "steer",
+        telegram: "steer",
+        discord: "steer",
+        slack: "steer",
+        signal: "steer",
+        imessage: "steer",
+        webchat: "steer",
       },
     },
   },
@@ -163,7 +166,6 @@ title: "設定範例"
       mode: "warn",
       pruneAfter: "30d",
       maxEntries: 500,
-      rotateBytes: "10mb",
       resetArchiveRetention: "30d", // duration or false
       maxDiskBytes: "500mb", // optional
       highWaterBytes: "400mb", // optional (defaults to 80% of maxDiskBytes)
@@ -247,6 +249,8 @@ title: "設定範例"
       skills: ["github", "weather"], // inherited by agents that omit list[].skills
       thinkingDefault: "low",
       verboseDefault: "off",
+      toolProgressDetail: "explain",
+      reasoningDefault: "off",
       elevatedDefault: "on",
       blockStreamingDefault: "off",
       blockStreamingBreak: "text_end",
@@ -304,6 +308,9 @@ title: "設定範例"
         id: "main",
         default: true,
         // inherits defaults.skills -> github, weather
+        groupChat: {
+          mentionPatterns: ["@openclaw", "openclaw"],
+        },
         thinkingDefault: "high", // per-agent thinking override
         reasoningDefault: "on", // per-agent reasoning visibility
         fastModeDefault: false, // per-agent fast mode
@@ -440,10 +447,12 @@ title: "設定範例"
     allowBundled: ["gemini", "peekaboo"],
     load: {
       extraDirs: ["~/Projects/agent-scripts/skills"],
+      allowSymlinkTargets: ["~/Projects/agent-scripts/skills"],
     },
     install: {
       preferBrew: true,
       nodeManager: "npm", // npm | pnpm | yarn | bun
+      allowUploadedArchives: false,
     },
     entries: {
       "image-lab": {
@@ -457,9 +466,29 @@ title: "設定範例"
 }
 ```
 
+### 符號連結的同級技能儲存庫
+
+當內建技能根目錄包含指向同級儲存庫的符號連結時使用此設定，
+例如 `~/.agents/skills/manager -> ~/Projects/manager/skills`。
+
+```json5
+{
+  skills: {
+    load: {
+      extraDirs: ["~/Projects/manager/skills"],
+      allowSymlinkTargets: ["~/Projects/manager/skills"],
+    },
+  },
+}
+```
+
+- `extraDirs` 會將同級儲存庫掃描為明確的技能根目錄。
+- `allowSymlinkTargets` 允許符號連結的技能資料夾解析至該受信任的
+  實際目標根目錄，而不允許任意符號連結逸出。
+
 ## 常見模式
 
-### 具有單一覆寫的共享技能基線
+### 共享技能基準與單一覆寫
 
 ```json5
 {
@@ -476,9 +505,9 @@ title: "設定範例"
 }
 ```
 
-- `agents.defaults.skills` 是共享基線。
-- `agents.list[].skills` 會取代單一代理程式的基線。
-- 當代理程式不應該看到任何技能時，請使用 `skills: []`。
+- `agents.defaults.skills` 是共享基準。
+- `agents.list[].skills` 會替換單一代理程式的該基準。
+- 當代理程式不應看到任何技能時，請使用 `skills: []`。
 
 ### 多平台設定
 
@@ -503,7 +532,9 @@ title: "設定範例"
 
 ### 受信任節點網路自動核准
 
-除非您控制網路路徑，否則請保持裝置配對為手動。對於專屬實驗室或 tailnet 子網路，您可以選擇使用精確 CIDR 或 IP 啟用首次節點裝置自動核准：
+除非您控制網路路徑，否則請保持裝置配對為手動。對於專用
+實驗室或 tailnet 子網路，您可以選擇加入首次節點裝置自動核准
+並指定確切的 CIDR 或 IP：
 
 ```json5
 {
@@ -517,11 +548,13 @@ title: "設定範例"
 }
 ```
 
-若未設定則保持關閉。這僅適用於沒有要求範圍的新 `role: node` 配對。操作員/瀏覽器用戶端以及角色、範圍、中繼資料或公開金鑰升級仍需手動核准。
+若未設定則保持關閉。此僅適用於沒有請求範圍的全新 `role: node` 配對。
+操作員/瀏覽器客戶端以及角色、範圍、中繼資料或
+公鑰升級仍需手動核准。
 
-### 安全私訊模式（共用收件匣 / 多使用者私訊）
+### 安全私訊模式（共享收件匣 / 多使用者私訊）
 
-如果多個人可以私訊您的機器人（`allowFrom` 中有多個項目、多人的配對核准，或 `dmPolicy: "open"`），請啟用 **安全私訊模式**，讓不同寄件者的私訊預設不會共用同一個情境：
+如果有多個人可以向您的機器人傳送私訊（`allowFrom` 中有多個項目、多人的配對核准，或 `dmPolicy: "open"`），請啟用 **安全私訊模式**，使不同寄件者的私訊預設不會共用同一個上下文：
 
 ```json5
 {
@@ -545,8 +578,8 @@ title: "設定範例"
 }
 ```
 
-對於 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，寄件者授權預設以 ID 為優先。
-只有在您明確接受相關風險時，才使用各頻道的 `dangerouslyAllowNameMatching: true` 啟用直接可變名稱/電子郵件/暱稱比對。
+對於 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，寄件者授權預設優先使用 ID。
+僅在您明確接受風險時，才在各頻道的 `dangerouslyAllowNameMatching: true` 中啟用直接可變名稱/電子郵件/暱稱比對。
 
 ### Anthropic API 金鑰 + MiniMax 備援
 
@@ -607,7 +640,7 @@ title: "設定範例"
 }
 ```
 
-### 僅限本機模型
+### 僅使用本機模型
 
 ```json5
 {
@@ -641,12 +674,12 @@ title: "設定範例"
 
 ## 提示
 
-- 如果您設定 `dmPolicy: "open"`，相符的 `allowFrom` 清單必須包含 `"*"`。
-- 提供者 ID 不同（電話號碼、使用者 ID、頻道 ID）。請使用提供者文件確認格式。
-- 稍後可新增的選用區段：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 請參閱 [Providers](/zh-Hant/providers) 與 [Troubleshooting](/zh-Hant/gateway/troubleshooting) 以獲得更深入的設定說明。
+- 如果您設定了 `dmPolicy: "open"`，則對應的 `allowFrom` 清單必須包含 `"*"`。
+- 提供者 ID 各不相同（電話號碼、使用者 ID、頻道 ID）。請參閱提供者文件以確認格式。
+- 稍後可新增的選用章節：`web`、`browser`、`ui`、`discovery`、`plugins`、`talk`、`signal`、`imessage`。
+- 請參閱 [提供者](/zh-Hant/providers) 和 [疑難排解](/zh-Hant/gateway/troubleshooting) 以深入了解設定說明。
 
 ## 相關
 
-- [Configuration reference](/zh-Hant/gateway/configuration-reference)
-- [Configuration](/zh-Hant/gateway/configuration)
+- [設定參考](/zh-Hant/gateway/configuration-reference)
+- [設定](/zh-Hant/gateway/configuration)

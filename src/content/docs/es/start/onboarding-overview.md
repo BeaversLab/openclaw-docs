@@ -30,8 +30,8 @@ Independientemente de la ruta que elijas, la incorporación configura:
 1. **Proveedor de modelos y autenticación** — clave de API, OAuth o token de configuración para tu proveedor elegido
 2. **Espacio de trabajo** — directorio para los archivos de los agentes, plantillas de arranque y memoria
 3. **Gateway** — puerto, dirección de enlace, modo de autenticación
-4. **Canales** (opcional) — canales de chat integrados y empaquetados como
-   BlueBubbles, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams,
+4. **Canales** (opcional) — canales de chat integrados y empaquetados, como
+   iMessage, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams,
    Telegram, WhatsApp y más
 5. **Demonio** (opcional) — servicio en segundo plano para que el Gateway se inicie automáticamente
 

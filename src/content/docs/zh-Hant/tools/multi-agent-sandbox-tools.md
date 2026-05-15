@@ -21,7 +21,7 @@ status: active
 </CardGroup>
 
 <Warning>
-認證是依代理劃分：每個代理會從 `agentDir` 的 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 讀取自己的認證儲存。憑證**不**會在代理之間共享。切勿跨代理重複使用 `agentDir`。如果您想要共用憑證，請將 `auth-profiles.json` 複製到另一個代理的 `agentDir` 中。
+認證範圍是以代理程式為單位：每個代理程式在 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 都有自己的 `agentDir` 認證存儲。切勿在不同代理程式之間重複使用 `agentDir`。當代理程式沒有本機設定檔時，可以讀取預設/主要代理程式的認證設定檔，但 OAuth 重新整理權杖不會複製到次要代理程式的存儲中。如果您手動複製憑證，請僅複製可攜帶的靜態 `api_key` 或 `token` 設定檔。
 </Warning>
 
 ---
@@ -204,13 +204,21 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 </Steps>
 
 <AccordionGroup>
-  <Accordion title="優先順序規則">- 每個層級都可以進一步限制工具，但無法恢復先前層級中被拒絕的工具。 - 如果設定了 `agents.list[].tools.sandbox.tools`，它將取代該代理程式的 `tools.sandbox.tools`。 - 如果設定了 `agents.list[].tools.profile`，它將覆寫該代理程式的 `tools.profile`。 - 提供者工具金鑰接受 `provider` (例如 `google-antigravity`) 或 `provider/model` (例如 `openai/gpt-5.4`)。</Accordion>
-  <Accordion title="空許可清單行為">如果該鏈結中的任何明確許可清單導致執行時沒有可呼叫的工具，OpenClaw 將在將提示提交給模型之前停止。這是故意的：配置了遺失工具 (例如 `agents.list[].tools.allow: ["query_db"]`) 的代理程式應該在註冊 `query_db` 的外掛程式啟用前明確失敗，而不是繼續作為純文字代理程式運作。</Accordion>
+  <Accordion title="優先順序規則">
+    - 每個層級都可以進一步限制工具，但無法恢復之前層級中已拒絕的工具。
+    - 如果設定了 `agents.list[].tools.sandbox.tools`，它將取代該代理程式的 `tools.sandbox.tools`。
+    - 如果設定了 `agents.list[].tools.profile`，它將覆蓋該代理程式的 `tools.profile`。
+    - 提供者工具金鑰接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.4`）。
+
+  </Accordion>
+  <Accordion title="空許可清單行為">
+    如果該鏈結中的任何明確許可清單導致執行時沒有可呼叫的工具，OpenClaw 將在將提示提交給模型之前停止。這是故意的：配置了遺失工具 (例如 `agents.list[].tools.allow: ["query_db"]`) 的代理程式應該在註冊 `query_db` 的外掛程式啟用前明確失敗，而不是繼續作為純文字代理程式運作。
+  </Accordion>
 </AccordionGroup>
 
-工具政策支援擴展為多個工具的 `group:*` 簡寫。請參閱 [工具群組](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands) 以取得完整清單。
+工具原則支援可擴展為多個工具的 `group:*` 簡寫。請參閱 [工具群組](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands) 以取得完整清單。
 
-各個代理程式的提權覆寫 (`agents.list[].tools.elevated`) 可以進一步限制特定代理程式的提權執行。詳情請參閱 [提權模式](/zh-Hant/tools/elevated)。
+個別代理程式的提升權限覆寫（`agents.list[].tools.elevated`）可以進一步限制特定代理程式的提升執行權限。詳情請參閱 [提升模式](/zh-Hant/tools/elevated)。
 
 ---
 
@@ -274,7 +282,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
     }
     ```
   </Tab>
-  <Tab title="安全執行 (無檔案修改)">
+  <Tab title="停用檔案系統工具的 Shell 執行">
     ```json
     {
       "tools": {
@@ -283,6 +291,11 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
       }
     }
     ```
+
+    <Warning>
+    此原則會停用 OpenClaw 檔案系統工具，但 `exec` 仍然是 shell，可以在所選主機或沙箱檔案系統允許的任何位置寫入檔案。對於唯讀代理程式，請拒絕 `exec` 和 `process`，或者將 shell 存取與沙箱檔案系統控制項（例如 `agents.defaults.sandbox.workspaceAccess: "ro"` 或 `"none"`）結合使用。
+    </Warning>
+
   </Tab>
   <Tab title="Communication-only">
     ```json
@@ -295,7 +308,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
     }
     ```
 
-    在此設定檔中，`sessions_history` 仍然會傳回有界限且經過清理的召回檢視，而不是原始的文字記錄傾印。Assistant recall 會在編輯/截斷之前移除 thinking 標籤、`<relevant-memories>` scaffolding、純文字工具呼叫 XML 載荷（包括 `<tool_call>...</tool_call>`、`<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、`<function_calls>...</function_calls>` 和被截斷的工具呼叫區塊）、降級的工具呼叫 scaffolding、洩漏的 ASCII/全形模型控制權杖，以及格式錯誤的 MiniMax 工具呼叫 XML。
+    此設定檔中的 `sessions_history` 仍然會返回有界且經過清理的回顧檢視，而不是原始的記錄傾印。Assistant 回顧會移除思考標籤、`<relevant-memories>` 腳手架、純文字工具呼叫 XML 載荷（包括 `<tool_call>...</tool_call>`、`<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、`<function_calls>...</function_calls>` 以及被截斷的工具呼叫區塊）、降級的工具呼叫腳手架、洩漏的 ASCII/全形模型控制權杖，以及在編輯/截斷之前的格式錯誤的 MiniMax 工具呼叫 XML。
 
   </Tab>
 </Tabs>
@@ -304,30 +317,31 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ## 常見陷阱：「非主要」
 
-<Warning>`agents.defaults.sandbox.mode: "non-main"` 是基於 `session.mainKey`（預設為 `"main"`），而不是 agent id。群組/頻道工作階段總是會獲得自己的金鑰，因此它們會被視為非主要並將會被沙箱化。如果您希望 agent 永不被沙箱化，請設定 `agents.list[].sandbox.mode: "off"`。</Warning>
+<Warning>`agents.defaults.sandbox.mode: "non-main"` 是基於 `session.mainKey`（預設為 `"main"`），而不是代理程式 ID。群組/頻道階段總是會獲得它們自己的金鑰，因此它們被視為非主要，並將會被放入沙箱。如果您希望代理程式永遠不進入沙箱，請設定 `agents.list[].sandbox.mode: "off"`。</Warning>
 
 ---
 
 ## 測試
 
-設定多代理沙箱和工具後：
+配置多代理程式沙箱和工具後：
 
 <Steps>
-  <Step title="Check agent resolution">
+  <Step title="檢查代理程式解析">
     ```bash
     openclaw agents list --bindings
     ```
   </Step>
-  <Step title="Verify sandbox containers">
+  <Step title="驗證沙箱容器">
     ```bash
     docker ps --filter "name=openclaw-sbx-"
     ```
   </Step>
-  <Step title="Test tool restrictions">
-    - 傳送需要受限制工具的訊息。
-    - 驗證 agent 無法使用被拒絕的工具。
+  <Step title="測試工具限制">
+    - 傳送一條需要受限工具的訊息。
+    - 驗證代理程式無法使用被拒絕的工具。
+
   </Step>
-  <Step title="Monitor logs">
+  <Step title="監控日誌">
     ```bash
     tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
     ```
@@ -336,12 +350,25 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ---
 
-## 疑難排解
+## 故障排除
 
 <AccordionGroup>
-  <Accordion title="Agent not sandboxed despite `mode: 'all'`">- 檢查是否有全域 `agents.defaults.sandbox.mode` 覆寫了它。 - Agent 特定設定具有優先權，因此請設定 `agents.list[].sandbox.mode: "all"`。</Accordion>
-  <Accordion title="Tools still available despite deny list">- 檢查工具篩選順序：global → agent → sandbox → subagent。 - 每個層級只能進一步限制，無法恢復權限。 - 使用日誌驗證：`[tools] filtering tools for agent:${agentId}`。</Accordion>
-  <Accordion title="Container not isolated per agent">- 在特定代理的沙箱設定中設定 `scope: "agent"`。 - 預設值為 `"session"`，這會為每個工作階段建立一個容器。</Accordion>
+  <Accordion title="儘管設定了 `mode: 'all'`，代理程式仍未進入沙箱">
+    - 檢查是否存在覆蓋它的全域 `agents.defaults.sandbox.mode`。
+    - 代理程式專用配置具有優先權，因此請設定 `agents.list[].sandbox.mode: "all"`。
+
+  </Accordion>
+  <Accordion title="儘管有拒絕清單，工具仍可用">
+    - 檢查工具過濾順序：global → agent → sandbox → subagent。
+    - 每個層級只能進一步限制，不能重新授予權限。
+    - 透過日誌驗證：`[tools] filtering tools for agent:${agentId}`。
+
+  </Accordion>
+  <Accordion title="容器未按代理程式隔離">
+    - 在代理程式專用的沙箱設定中設定 `scope: "agent"`。
+    - 預設值為 `"session"`，這會為每個 session 建立一個容器。
+
+  </Accordion>
 </AccordionGroup>
 
 ---
@@ -349,8 +376,8 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 ## 相關
 
 - [提權模式](/zh-Hant/tools/elevated)
-- [多代理路由](/zh-Hant/concepts/multi-agent)
+- [多代理程式路由](/zh-Hant/concepts/multi-agent)
 - [沙箱設定](/zh-Hant/gateway/config-agents#agentsdefaultssandbox)
-- [沙箱 vs 工具策略 vs 提權](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated) — 偵錯「為什麼被封鎖？」
-- [沙箱機制](/zh-Hant/gateway/sandboxing) — 完整沙箱參考（模式、範圍、後端、映像檔）
-- [工作階段管理](/zh-Hant/concepts/session)
+- [沙箱與工具政策與提權的比較](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated) — 偵錯「為什麼被阻擋？」
+- [沙箱機制](/zh-Hant/gateway/sandboxing) — 完整的沙箱參考（模式、範圍、後端、映像檔）
+- [Session 管理](/zh-Hant/concepts/session)

@@ -22,8 +22,8 @@ Casos de uso comunes:
 - Mantener exec **en sandbox** en la puerta de enlace, pero delegar las ejecuciones aprobadas a otros hosts.
 - Proporcionar un objetivo de ejecución ligero y sin interfaz para nodos de automatización o CI.
 
-La ejecución aún está protegida por **aprobaciones de ejecución** y listas de permitidos por agente en el
-host del nodo, por lo que puede mantener el acceso a los comandos limitado y explícito.
+La ejecución todavía está protegida por **aprobasiones de ejecución** y listas de permitidos por agente en el
+host del nodo, por lo que puedes mantener el acceso a los comandos limitado y explícito.
 
 ## Proxy del navegador (sin configuración)
 

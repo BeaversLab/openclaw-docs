@@ -6,8 +6,7 @@ read_when:
 title: "apply_patch herramienta"
 ---
 
-Aplica cambios en archivos usando un formato de parche estructurado. Esto es ideal para ediciones
-multiples de archivos o múltiples fragmentos donde una sola llamada `edit` sería frágil.
+Aplique cambios en archivos utilizando un formato de parche estructurado. Esto es ideal para ediciones de varios archivos o de varios fragmentos donde una sola llamada `edit` sería frágil.
 
 La herramienta acepta una sola cadena `input` que envuelve una o más operaciones de archivo:
 
@@ -26,19 +25,17 @@ La herramienta acepta una sola cadena `input` que envuelve una o más operacione
 
 ## Parámetros
 
-- `input` (obligatorio): Contenido completo del parche incluyendo `*** Begin Patch` y `*** End Patch`.
+- `input` (obligatorio): Contenido completo del parche, incluyendo `*** Begin Patch` y `*** End Patch`.
 
 ## Notas
 
 - Las rutas de parche soportan rutas relativas (desde el directorio del espacio de trabajo) y rutas absolutas.
-- `tools.exec.applyPatch.workspaceOnly` por defecto es `true` (contenido en el espacio de trabajo). Establézcalo en `false` solo si intencionalmente quiere que `apply_patch` escriba/elimine fuera del directorio del espacio de trabajo.
-- Use `*** Move to:` dentro de un fragmento `*** Update File:` para renombrar archivos.
+- `tools.exec.applyPatch.workspaceOnly` se predetermina en `true` (contenido en el espacio de trabajo). Establézcalo en `false` solo si intencionalmente desea que `apply_patch` escriba/elimine fuera del directorio del espacio de trabajo.
+- Use `*** Move to:` dentro de un fragmento `*** Update File:` para cambiar el nombre de los archivos.
 - `*** End of File` marca una inserción solo de EOF cuando sea necesario.
-- Disponible por defecto para modelos de OpenAI y OpenAI Codex. Establezca
-  `tools.exec.applyPatch.enabled: false` para desactivarlo.
-- Opcionalmente restringir por modelo mediante
-  `tools.exec.applyPatch.allowModels`.
-- La configuración está solo bajo `tools.exec`.
+- Disponible de forma predeterminada para los modelos OpenAI y OpenAI Codex. Establezca `tools.exec.applyPatch.enabled: false` para desactivarlo.
+- Opcionalmente restringir por modelo mediante `tools.exec.applyPatch.allowModels`.
+- La configuración solo está bajo `tools.exec`.
 
 ## Ejemplo
 
@@ -51,6 +48,14 @@ La herramienta acepta una sola cadena `input` que envuelve una o más operacione
 
 ## Relacionado
 
-- [Diferencias](/es/tools/diffs)
-- [Herramienta Exec](/es/tools/exec)
-- [Ejecución de código](/es/tools/code-execution)
+<CardGroup cols={2}>
+  <Card title="Diffs" href="/es/tools/diffs" icon="code-compare">
+    Visor de diferencias de solo lectura para la presentación de cambios.
+  </Card>
+  <Card title="Exec tool" href="/es/tools/exec" icon="terminal">
+    Ejecución de comandos de shell desde el agente.
+  </Card>
+  <Card title="Code execution" href="/es/tools/code-execution" icon="square-code">
+    Análisis remoto de Python en espacio aislado con xAI.
+  </Card>
+</CardGroup>

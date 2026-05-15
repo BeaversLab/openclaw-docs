@@ -12,7 +12,7 @@ title: "記錄"
 
 相關主題：
 
-- 日誌概覽：[日誌](/zh-Hant/logging)
+- 日誌概覽：[日誌記錄](/zh-Hant/logging)
 - Gateway CLI：[gateway](/zh-Hant/cli/gateway)
 
 ## 選項
@@ -56,9 +56,10 @@ openclaw logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
 ## 備註
 
 - 使用 `--local-time` 以您的當地時區顯示時間戳記。
-- 如果本機回環 Gateway 要求配對，`openclaw logs` 會自動回退至已設定的本機日誌檔。明確的 `--url` 目標不會使用此回退機制。
+- 如果隱式本地回環 Gateway 要求配對、在連接期間關閉，或者在 `logs.tail` 回應之前超時，`openclaw logs` 將自動回退到已配置的 Gateway 檔案日誌。明確的 `--url` 目標不會使用此回退機制。
+- 使用 `--follow` 時，暫時性的 gateway 中斷連線（WebSocket 關閉、逾時、連線中斷）會觸發自動重新連線，並伴隨指數退避（最多重試 8 次，每次嘗試間隔上限為 30 秒）。每次重試時會向 stderr 列印警告，一旦輪詢成功，便會列印 `[logs] gateway reconnected` 通知。在 `--json` 模式下，重試警告和重新連線過渡都會以 `{"type":"notice"}` 記錄的形式發送到 stderr。無法修復的錯誤（驗證失敗、配置錯誤）仍會立即結束程式。
 
 ## 相關
 
 - [CLI 參考](/zh-Hant/cli)
-- [Gateway 記錄](/zh-Hant/gateway/logging)
+- [Gateway 日誌記錄](/zh-Hant/gateway/logging)

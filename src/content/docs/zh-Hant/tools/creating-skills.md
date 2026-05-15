@@ -8,7 +8,7 @@ read_when:
 
 技能會教導代理如何以及何時使用工具。每個技能都是一個目錄，其中包含一個帶有 YAML 前置資訊和 Markdown 指令的 `SKILL.md` 檔案。
 
-關於技能如何載入和設定優先順序，請參閱 [技能](/zh-Hant/tools/skills)。
+關於如何載入和優先排序技能，請參閱 [Skills](/zh-Hant/tools/skills)。
 
 ## 建立您的第一個技能
 
@@ -23,12 +23,12 @@ read_when:
   </Step>
 
   <Step title="撰寫 SKILL.md">
-    在該目錄中建立 `SKILL.md`。前置資訊定義元資料，
-    而 Markdown 主體包含給代理的指令。
+    在該目錄中建立 `SKILL.md`。Frontmatter 定義了中繼資料，
+    而 markdown 主體包含給代理程式的指示。
 
     ```markdown
     ---
-    name: hello_world
+    name: hello-world
     description: A simple skill that says hello.
     ---
 
@@ -38,12 +38,15 @@ read_when:
     "Hello from your custom skill!".
     ```
 
+    技能的 `name` 請使用小寫字母、數字和連字號的連字號寫法（hyphen-case）。
+    請保持資料夾名稱與 frontmatter 中的 `name` 一致。
+
   </Step>
 
   <Step title="新增工具（選用）">
-    您可以在前置資訊中定義自訂工具架構，或指示代理
+    您可以在 frontmatter 中定義自訂工具架構，或指示代理程式
     使用現有的系統工具（例如 `exec` 或 `browser`）。技能也可以
-    隨附於外掛程式中，與其所記錄的工具一起打包。
+    隨同其記載的工具一起在插件內發布。
 
   </Step>
 
@@ -82,20 +85,20 @@ read_when:
 
 YAML 前置資訊支援以下欄位：
 
-| 欄位                                | 必要 | 說明                                     |
-| ----------------------------------- | ---- | ---------------------------------------- |
-| `name`                              | 是   | 唯一識別碼 (snake_case)                  |
-| `description`                       | 是   | 顯示給代理的單行描述                     |
-| `metadata.openclaw.os`              | 否   | OS 篩選器 (`["darwin"]`、`["linux"]` 等) |
-| `metadata.openclaw.requires.bins`   | 否   | PATH 中必要的二元檔案                    |
-| `metadata.openclaw.requires.config` | 否   | 必要的設定金鑰                           |
+| 欄位                                | 必要 | 說明                                      |
+| ----------------------------------- | ---- | ----------------------------------------- |
+| `name`                              | 是   | 使用小寫字母、數字和連字號的唯一識別碼    |
+| `description`                       | 是   | 顯示給代理的單行描述                      |
+| `metadata.openclaw.os`              | 否   | OS 篩選器（`["darwin"]`、`["linux"]` 等） |
+| `metadata.openclaw.requires.bins`   | 否   | PATH 中必要的二元檔案                     |
+| `metadata.openclaw.requires.config` | 否   | 必要的設定金鑰                            |
 
 ## 最佳實務
 
 - **保持簡潔** — 指示模型做什麼，而不是如何成為 AI
-- **安全第一** — 如果您的技能使用 `exec`，請確保提示不允許來自不受信任輸入的任意命令注入
-- **本地測試** — 在分享之前使用 `openclaw agent --message "..."` 進行測試
-- **使用 ClawHub** — 瀏覽並在 [ClawHub](https://clawhub.ai) 上貢獻技能
+- **安全第一** — 如果您的技能使用 `exec`，請確保提示不允許來自不受信任輸入的任意指令注入
+- **本機測試** — 在分享前使用 `openclaw agent --message "..."` 進行測試
+- **使用 ClawHub** — 在 [ClawHub](https://clawhub.ai) 瀏覽和貢獻技能
 
 ## 技能存放位置
 
@@ -110,7 +113,7 @@ YAML 前置資訊支援以下欄位：
 
 ## 相關
 
-- [技能參考](/zh-Hant/tools/skills) — 載入、優先順序和閘控規則
-- [技能設定](/zh-Hant/tools/skills-config) — `skills.*` 設定綱要
-- [ClawHub](/zh-Hant/tools/clawhub) — 公共技能註冊表
-- [建置外掛程式](/zh-Hant/plugins/building-plugins) — 外掛程式可以隨附技能
+- [Skills 參考](/zh-Hant/tools/skills) — 載入、優先順序和閘道規則
+- [Skills 配置](/zh-Hant/tools/skills-config) — `skills.*` 配置架構
+- [ClawHub](/zh-Hant/clawhub) — 公開技能註冊表
+- [建置插件](/zh-Hant/plugins/building-plugins) — 插件可以發布技能

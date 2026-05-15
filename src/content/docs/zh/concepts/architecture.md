@@ -7,7 +7,7 @@ title: "Gateway(网关) 架构"
 
 ## 概述
 
-- 一个单一的长生命周期 **Gateway(网关)** 拥有所有消息传递表面（通过 Baileys 的 WhatsApp、通过 grammY 的 Telegram、Slack、Discord、Signal、iMessage、WebChat）。
+- 单个长期运行的 **Gateway(网关)** 拥有所有消息传递表面（通过 WhatsApp 的 Baileys，通过 Telegram 的 grammY，Slack，Discord，Signal，iMessage，WebChat）。
 - 控制平面客户端（macOS 应用、CLI、Web UI、自动化）通过 **WebSocket** 连接到配置的绑定主机（默认为 `127.0.0.1:18789`）上的 Gateway(网关)。
 - **节点**（macOS/iOS/Android/headless）也通过 **WebSocket** 连接，但使用显式的 caps/commands 声明 `role: node`。
 - 每台主机一个 Gateway(网关)；它是唯一打开 WhatsApp 会话的地方。
@@ -21,7 +21,7 @@ title: "Gateway(网关) 架构"
 ### Gateway(网关) (daemon)
 
 - 维护提供商连接。
-- 公开类型化的 WS API（请求、响应、服务器推送事件）。
+- 暴露一个类型化的 WS API（请求、响应、服务器推送事件）。
 - 根据 JSON Schema 验证入站帧。
 - 发出事件，如 `agent`、`chat`、`presence`、`health`、`heartbeat`、`cron`。
 
@@ -34,7 +34,7 @@ title: "Gateway(网关) 架构"
 ### 节点 (macOS / iOS / Android / headless)
 
 - 使用 `role: node` 连接到 **同一 WS 服务器**。
-- 在 `connect` 中提供设备标识；配对是 **基于设备的**（角色 `node`），批准存储在设备配对存储中。
+- 在 `connect` 中提供设备身份；配对是 **基于设备的**（角色 `node`），并且批准存在于设备配对存储中。
 - 公开命令，如 `canvas.*`、`camera.*`、`screen.record`、`location.get`。
 
 协议详情：
@@ -83,8 +83,7 @@ sequenceDiagram
   而非使用 `connect.params.auth.*`。
 - 私有入口 `gateway.auth.mode: "none"` 完全禁用共享密钥认证；
   请勿将该模式用于公共/不受信任的入口。
-- 副作用方法（`send`, `agent`）需要幂等性密钥
-  以便安全重试；服务器会保留短期去重缓存。
+- 具有副作用的方法（`send`，`agent`）需要幂等键以安全重试；服务器会保留一个短期的去重缓存。
 - 节点必须在 `connect` 中包含 `role: "node"` 以及 caps/commands/permissions。
 
 ## 配对 + 本地信任
@@ -99,7 +98,7 @@ sequenceDiagram
 - 所有连接必须对 `connect.challenge` nonce 进行签名。
 - 签名负载 `v3` 还绑定了 `platform` + `deviceFamily`；网关
   会在重新连接时锁定已配对的元数据，并要求进行修复配对以更改元数据。
-- **非本地** 连接仍然需要明确的批准。
+- **非本地** 连接仍然需要显式批准。
 - Gateway(网关) 认证 (`gateway.auth.*`) 仍然适用于 **所有** 连接，无论是本地还是远程。
 
 详情：[Gateway(网关) protocol](/zh/gateway/protocol)、[Pairing](/zh/channels/pairing)、
@@ -127,12 +126,12 @@ sequenceDiagram
 
 - 启动：`openclaw gateway`（前台运行，日志输出到 stdout）。
 - 健康检查：通过 WS 发送 `health`（也包含在 `hello-ok` 中）。
-- 监控：使用 launchd/systemd 进行自动重启。
+- 监管：使用 launchd/systemd 进行自动重启。
 
 ## Invariants
 
 - 每个主机上只有一个 Gateway(网关) 控制一个 Baileys 会话。
-- 握手是强制性的；任何非 JSON 或非 connect 的第一帧都会导致强制关闭连接。
+- 握手是强制性的；任何非 JSON 或非连接的首帧都会导致强制关闭。
 - Events 不会重放；客户端必须在出现间隙时进行刷新。
 
 ## Related

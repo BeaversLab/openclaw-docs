@@ -28,9 +28,12 @@ Los perfiles de autenticación son **por agente**. Cada agente lee de su propio:
 `sessions_history` es también la ruta de recuperación entre sesiones más segura aquí: devuelve una vista limitada y saneada, no un volcado de transcripción sin procesar. La recuperación del asistente elimina etiquetas de pensamiento, andamiaje `<relevant-memories>`, cargas XML de llamadas a herramientas en texto plano (incluyendo `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` y bloques de llamadas a herramientas truncados), andamiaje de llamadas a herramientas degradados, tokens de control de modelo ASCII/ ancho filtrados y XML de llamadas a herramientas de MiniMax malformados antes de la redacción/truncamiento.
 </Note>
 
-<Warning>Las credenciales del agente principal **no** se comparten automáticamente. Nunca reutilices `agentDir` entre agentes (causa colisiones de autenticación/sesión). Si deseas compartir credenciales, copia `auth-profiles.json` en el `agentDir` del otro agente.</Warning>
+<Warning>
+  Nunca reutilices `agentDir` entre agentes (causa colisiones de autenticación/sesión). Los agentes pueden leer los perfiles de autenticación del agente predeterminado/principal cuando no tienen un perfil local, pero OpenClaw no clona los tokens de actualización de OAuth en el almacenamiento del agente secundario. Si deseas una cuenta OAuth independiente, inicia sesión desde dicho agente; si
+  copias las credenciales manualmente, copia solo perfiles estáticos portátiles de `api_key` o `token`.
+</Warning>
 
-Las habilidades se cargan desde el espacio de trabajo de cada agente más las raíces compartidas como `~/.openclaw/skills`, y luego se filtran por la lista de permisos de habilidades del agente efectivo cuando está configurado. Usa `agents.defaults.skills` para una base compartida y `agents.list[].skills` para el reemplazo por agente. Consulta [Habilidades: por agente vs compartidas](/es/tools/skills#per-agent-vs-shared-skills) y [Habilidades: listas de permisos de habilidades del agente](/es/tools/skills#agent-skill-allowlists).
+Las habilidades se cargan desde el espacio de trabajo de cada agente más las raíces compartidas como `~/.openclaw/skills`, y luego se filtran por la lista de permitidos de habilidades del agente efectivo cuando está configurado. Usa `agents.defaults.skills` para una base compartida y `agents.list[].skills` para el reemplazo por agente. Consulta [Skills: per-agent vs shared](/es/tools/skills#per-agent-vs-shared-skills) y [Skills: agent skill allowlists](/es/tools/skills#agent-skill-allowlists).
 
 El Gateway puede alojar **un agente** (predeterminado) o **muchos agentes** simultáneamente.
 
@@ -84,17 +87,17 @@ openclaw agents list --bindings
 
   </Step>
   <Step title="Crear cuentas de canal">
-    Cree una cuenta por agente en sus canales preferidos:
+    Crea una cuenta por agente en tus canales preferidos:
 
-    - Discord: un bot por agente, habilite el Intento de Contenido de Mensajes, copie cada token.
-    - Telegram: un bot por agente a través de BotFather, copie cada token.
-    - WhatsApp: vincule cada número de teléfono por cuenta.
+    - Discord: un bot por agente, habilita Message Content Intent, copia cada token.
+    - Telegram: un bot por agente a través de BotFather, copia cada token.
+    - WhatsApp: vincula cada número de teléfono por cuenta.
 
     ```bash
     openclaw channels login --channel whatsapp --account work
     ```
 
-    Consulte las guías de canales: [Discord](/es/channels/discord), [Telegram](/es/channels/telegram), [WhatsApp](/es/channels/whatsapp).
+    Consulta las guías de canales: [Discord](/es/channels/discord), [Telegram](/es/channels/telegram), [WhatsApp](/es/channels/whatsapp).
 
   </Step>
   <Step title="Añadir agentes, cuentas y enlaces">
@@ -194,7 +197,7 @@ Ejemplo:
 Notas:
 
 - El control de acceso de MD es **global por cuenta de WhatsApp** (vinculación/lista de permitidos), no por agente.
-- Para grupos compartidos, vincule el grupo a un agente o use [Grupos de difusión](/es/channels/broadcast-groups).
+- Para grupos compartidos, vincula el grupo a un agente o usa [Broadcast groups](/es/channels/broadcast-groups).
 
 ## Reglas de enrutamiento (cómo los mensajes eligen un agente)
 
@@ -212,9 +215,16 @@ Las vinculaciones son **deterministas** y **gana la más específica**:
 </Steps>
 
 <AccordionGroup>
-  <Accordion title="Tie-breaking and AND semantics">- Si varias vinculaciones coinciden en el mismo nivel, gana la primera en el orden de configuración. - Si una vinculación establece varios campos de coincidencia (por ejemplo `peer` + `guildId`), se requieren todos los campos especificados (semántica `AND`).</Accordion>
+  <Accordion title="Desempate y semántica AND">
+    - Si varias vinculaciones coinciden en el mismo nivel, gana la primera en el orden de configuración.
+    - Si una vinculación establece varios campos de coincidencia (por ejemplo `peer` + `guildId`), se requieren todos los campos especificados (semántica `AND`).
+
+  </Accordion>
   <Accordion title="Account-scope detail">
-    - Una vinculación que omite `accountId` coincide solo con la cuenta predeterminada. - Use `accountId: "*"` para una alternativa de todo el canal en todas las cuentas. - Si más tarde añade la misma vinculación para el mismo agente con una identificación de cuenta explícita, OpenClaw actualiza la vinculación existente de solo canal a ámbito de cuenta en lugar de duplicarla.
+    - Un enlace que omite `accountId` coincide solo con la cuenta predeterminada.
+    - Use `accountId: "*"` para un respaldo en todo el canal a través de todas las cuentas.
+    - Si más tarde agrega el mismo enlace para el mismo agente con una identificación de cuenta explícita, OpenClaw actualiza el enlace existente de solo canal a nivel de cuenta en lugar de duplicarlo.
+
   </Accordion>
 </AccordionGroup>
 
@@ -228,19 +238,19 @@ Los canales comunes que soportan este patrón incluyen:
 
 - `whatsapp`, `telegram`, `discord`, `slack`, `signal`, `imessage`
 - `irc`, `line`, `googlechat`, `mattermost`, `matrix`, `nextcloud-talk`
-- `bluebubbles`, `zalo`, `zalouser`, `nostr`, `feishu`
+- `zalo`, `zalouser`, `nostr`, `feishu`
 
 ## Conceptos
 
-- `agentId`: un "cerebro" (espacio de trabajo, autenticación por agente, almacenamiento de sesiones por agente).
-- `accountId`: una instancia de cuenta de canal (por ejemplo, cuenta de WhatsApp `"personal"` vs `"biz"`).
-- `binding`: enruta los mensajes entrantes a un `agentId` por `(channel, accountId, peer)` y opcionalmente por ids de gremio/equipo.
-- Los chats directos colapsan a `agent:<agentId>:<mainKey>` ("principal" por agente; `session.mainKey`).
+- `agentId`: un "cerebro" (espacio de trabajo, autenticación por agente, almacenamiento de sesión por agente).
+- `accountId`: una instancia de cuenta de canal (p. ej., cuenta de WhatsApp `"personal"` vs `"biz"`).
+- `binding`: enruta los mensajes entrantes a un `agentId` por `(channel, accountId, peer)` e opcionalmente identificaciones de gremio/equipo.
+- Los chats directos se colapsan en `agent:<agentId>:<mainKey>` ("principal" por agente; `session.mainKey`).
 
 ## Ejemplos de plataformas
 
 <AccordionGroup>
-  <Accordion title="Bots de Discord por agente">
+  <Accordion title="Discord bots per agent">
     Cada cuenta de bot de Discord se asigna a un `accountId` único. Vincule cada cuenta a un agente y mantenga listas de permitidos por bot.
 
     ```json5
@@ -285,11 +295,11 @@ Los canales comunes que soportan este patrón incluyen:
     }
     ```
 
-    - Invite cada bot al gremio y habilite el Intento de contenido de mensajes.
+    - Invite cada bot al gremio y habilite la intención de contenido de mensaje (Message Content Intent).
     - Los tokens viven en `channels.discord.accounts.<id>.token` (la cuenta predeterminada puede usar `DISCORD_BOT_TOKEN`).
 
   </Accordion>
-  <Accordion title="Bots de Telegram por agente">
+  <Accordion title="Telegram bots per agent">
     ```json5
     {
       agents: {
@@ -324,7 +334,7 @@ Los canales comunes que soportan este patrón incluyen:
     - Los tokens viven en `channels.telegram.accounts.<id>.botToken` (la cuenta predeterminada puede usar `TELEGRAM_BOT_TOKEN`).
 
   </Accordion>
-  <Accordion title="Números de WhatsApp por agente">
+  <Accordion title="WhatsApp numbers per agent">
     Vincule cada cuenta antes de iniciar la puerta de enlace:
 
     ```bash
@@ -401,8 +411,8 @@ Los canales comunes que soportan este patrón incluyen:
 ## Patrones comunes
 
 <Tabs>
-  <Tab title="WhatsApp diario + Telegram trabajo profundo">
-    Dividir por canal: enrutar WhatsApp a un agente rápido de todos los días y Telegram a un agente Opus.
+  <Tab title="WhatsApp diario + Telegram para trabajo profundo">
+    Dividir por canal: enruta WhatsApp a un agente rápido para el día a día y Telegram a un agente Opus.
 
     ```json5
     {
@@ -431,8 +441,8 @@ Los canales comunes que soportan este patrón incluyen:
 
     Notas:
 
-    - Si tiene varias cuentas para un canal, agregue `accountId` al enlace (por ejemplo `{ channel: "whatsapp", accountId: "personal" }`).
-    - Para enrutar un solo MD/grupo a Opus manteniendo el resto en el chat, agregue un enlace `match.peer` para ese par; las coincidencias de pares siempre ganan sobre las reglas de todo el canal.
+    - Si tienes varias cuentas para un canal, añade `accountId` al enlace (por ejemplo `{ channel: "whatsapp", accountId: "personal" }`).
+    - Para enrutar un solo DM/grupo a Opus manteniendo el resto en el chat, añade un enlace `match.peer` para ese par; las coincidencias de pares siempre tienen prioridad sobre las reglas de todo el canal.
 
   </Tab>
   <Tab title="Mismo canal, un par a Opus">
@@ -560,7 +570,7 @@ Cada agente puede tener su propio sandbox y restricciones de herramientas:
 }
 ```
 
-<Note>`setupCommand` vive bajo `sandbox.docker` y se ejecuta una vez al crear el contenedor. Las anulaciones de `sandbox.docker.*` por agente se ignoran cuando el ámbito resuelto es `"shared"`.</Note>
+<Note>`setupCommand` se encuentra en `sandbox.docker` y se ejecuta una vez al crear el contenedor. Las anulaciones `sandbox.docker.*` por agente se ignoran cuando el ámbito resuelto es `"shared"`.</Note>
 
 **Beneficios:**
 
@@ -568,14 +578,14 @@ Cada agente puede tener su propio sandbox y restricciones de herramientas:
 - **Control de recursos**: sandbox para agentes específicos mientras se mantienen otros en el host.
 - **Políticas flexibles**: diferentes permisos por agente.
 
-<Note>`tools.elevated` es **global** y se basa en el remitente; no es configurable por agente. Si necesitas límites por agente, usa `agents.list[].tools` para denegar `exec`. Para la orientación por grupos, usa `agents.list[].groupChat.mentionPatterns` para que las @menciones se asignen claramente al agente deseado.</Note>
+<Note>`tools.elevated` es **global** y se basa en el remitente; no es configurable por agente. Si necesitas límites por agente, usa `agents.list[].tools` para denegar `exec`. Para la orientación a grupos, usa `agents.list[].groupChat.mentionPatterns` para que las @menciones se asignen claramente al agente previsto.</Note>
 
-Consulta [Multi-agent sandbox and tools](/es/tools/multi-agent-sandbox-tools) para ver ejemplos detallados.
+Consulta [Sandbox y herramientas multiagente](/es/tools/multi-agent-sandbox-tools) para ver ejemplos detallados.
 
 ## Relacionado
 
-- [ACP agents](/es/tools/acp-agents) — ejecución de arneses de codificación externos
-- [Channel routing](/es/channels/channel-routing) — cómo se enrutan los mensajes a los agentes
-- [Presence](/es/concepts/presence) — presencia y disponibilidad del agente
-- [Session](/es/concepts/session) — aislamiento y enrutamiento de sesiones
-- [Sub-agents](/es/tools/subagents) — generación de ejecuciones de agentes en segundo plano
+- [Agentes ACP](/es/tools/acp-agents) — ejecutando arneses de codificación externos
+- [Enrutamiento de canales](/es/channels/channel-routing) — cómo los mensajes se enrutan a los agentes
+- [Presencia](/es/concepts/presence) — presencia y disponibilidad del agente
+- [Sesión](/es/concepts/session) — aislamiento y enrutamiento de sesiones
+- [Sub-agentes](/es/tools/subagents) — generando ejecuciones de agentes en segundo plano

@@ -49,7 +49,7 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 
 ## Notes / hypothèse
 
-- `tsx` utilise esbuild pour transformer TS/ESM. Le `keepNames` d'esbuild émet une fonction utilitaire `__name` et enveloppe les définitions de fonction avec `__name(...)`.
+- `tsx` utilise esbuild pour transformer TS/ESM. Le `keepNames` d'esbuild émet une fonction utilitaire `__name` et encapsule les définitions de fonctions avec `__name(...)`.
 - Le crash indique que `__name` existe mais n'est pas une fonction à l'exécution, ce qui implique que l'utilitaire est manquant ou écrasé pour ce module dans le chemin du chargeur Node 25.
 - Des problèmes similaires avec la fonction utilitaire `__name` ont été signalés chez d'autres consommateurs d'esbuild lorsque l'utilitaire est manquant ou réécrit.
 

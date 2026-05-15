@@ -7,7 +7,7 @@ read_when:
 title: "Standing orders"
 ---
 
-Les standing orders confèrent à votre agent une **autorité opérationnelle permanente** pour des programmes définis. Au lieu de donner des instructions de tâches individuelles à chaque fois, vous définissez des programmes avec une portée claire, des déclencheurs et des règles d'escalade — et l'agent exécute de manière autonome dans ces limites.
+Les ordres permanents confèrent à votre agent une **autorité opérationnelle permanente** pour des programmes définis. Au lieu de donner des instructions de tâches individuelles à chaque fois, vous définissez des programmes avec une portée claire, des déclencheurs et des règles d'escalade - et l'agent exécute de manière autonome dans ces limites.
 
 C'est la différence entre dire à votre assistant "envoyez le rapport hebdomadaire" chaque vendredi et accorder une autorité permanente : "Vous êtes responsable du rapport hebdomadaire. Compilez-le chaque vendredi, envoyez-le et n'escaladez que si quelque chose semble anormal."
 
@@ -33,14 +33,14 @@ Les standing orders sont définis dans les fichiers de votre [agent workspace](/
 
 Chaque programme spécifie :
 
-1. **Portée** — ce que l'agent est autorisé à faire
-2. **Déclencheurs** — quand exécuter (horaire, événement ou condition)
-3. **Barrières d'approbation** — ce qui nécessite une signature humaine avant d'agir
-4. **Règles d'escalade** — quand s'arrêter et demander de l'aide
+1. **Portée** - ce que l'agent est autorisé à faire
+2. **Déclencheurs** - quand exécuter (planification, événement ou condition)
+3. **Barrières d'approbation** - ce qui nécessite une signature humaine avant d'agir
+4. **Règles d'escalade** - quand s'arrêter et demander de l'aide
 
 L'agent charge ces instructions à chaque session via les fichiers d'amorçage de l'espace de travail (voir [Agent Workspace](/fr/concepts/agent-workspace) pour la liste complète des fichiers injectés automatiquement) et exécute en fonction d'elles, combinées aux [cron jobs](/fr/automation/cron-jobs) pour l'application basée sur le temps.
 
-<Tip>Placez les ordres permanents dans `AGENTS.md` pour garantir qu'ils sont chargés à chaque session. L'amorçage de l'espace de travail injecte automatiquement `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` et `MEMORY.md` — mais pas les fichiers arbitraires dans les sous-répertoires.</Tip>
+<Tip>Placez les ordres permanents dans `AGENTS.md` pour garantir qu'ils sont chargés à chaque session. L'amorçage de l'espace de travail injecte automatiquement `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` et `MEMORY.md` - mais pas les fichiers arbitraires dans les sous-répertoires.</Tip>
 
 ## Anatomie d'un ordre permanent
 
@@ -64,7 +64,7 @@ L'agent charge ces instructions à chaque session via les fichiers d'amorçage d
 
 - Do not send reports to external parties
 - Do not modify source data
-- Do not skip delivery if metrics look bad — report accurately
+- Do not skip delivery if metrics look bad - report accurately
 ```
 
 ## Ordres permanents et tâches cron
@@ -88,7 +88,7 @@ openclaw cron add \
   --tz America/New_York \
   --timeout-seconds 300 \
   --announce \
-  --channel bluebubbles \
+  --channel imessage \
   --to "+1XXXXXXXXXX" \
   --message "Execute daily inbox triage per standing orders. Check mail for new alerts. Parse, categorize, and persist each item. Report summary to owner. Escalate unknowns."
 ```
@@ -107,7 +107,7 @@ openclaw cron add \
 ### Weekly cycle
 
 - **Monday:** Review platform metrics and audience engagement
-- **Tuesday–Thursday:** Draft social posts, create blog content
+- **Tuesday-Thursday:** Draft social posts, create blog content
 - **Friday:** Compile weekly marketing brief → deliver to owner
 
 ### Content rules
@@ -174,9 +174,9 @@ openclaw cron add \
 
 Les ordres permanents fonctionnent mieux lorsqu'ils sont combinés à une discipline d'exécution stricte. Chaque tâche dans un ordre permanent doit suivre cette boucle :
 
-1. **Exécuter** — Effectuer le travail réel (ne pas se contenter d'accuser réception de l'instruction)
-2. **Vérifier** — Confirmer que le résultat est correct (le fichier existe, le message est livré, les données sont analysées)
-3. **Rapporter** — Informer le propriétaire de ce qui a été fait et de ce qui a été vérifié
+1. **Exécuter** - Faire le travail réel (ne pas simplement reconnaître l'instruction)
+2. **Vérifier** - Confirmer que le résultat est correct (le fichier existe, le message est livré, les données sont analysées)
+3. **Rapporter** - Dire au propriétaire ce qui a été fait et ce qui a été vérifié
 
 ```markdown
 ### Execution rules
@@ -186,7 +186,7 @@ Les ordres permanents fonctionnent mieux lorsqu'ils sont combinés à une discip
 - "Done" without verification is not acceptable. Prove it.
 - If execution fails: retry once with adjusted approach.
 - If still fails: report failure with diagnosis. Never silently fail.
-- Never retry indefinitely — 3 attempts max, then escalate.
+- Never retry indefinitely - 3 attempts max, then escalate.
 ```
 
 Ce motif empêche le mode d'échec le plus courant de l'agent : accuser réception d'une tâche sans la terminer.
@@ -226,18 +226,18 @@ Chaque programme doit avoir :
 
 - Commencez avec une autorisation étroite et élargissez-la au fur et à mesure que la confiance s'établit
 - Définissez des portes d'approbation explicites pour les actions à risque élevé
-- Incluez des sections « Ce qu'il ne faut PAS faire » — les limites sont aussi importantes que les autorisations
+- Incluez des sections "Ce qu'il ne faut PAS faire" - les limites sont aussi importantes que les autorisations
 - Combinez avec des tâches cron pour une exécution fiable basée sur le temps
 - Examinez les journaux de l'agent hebdomadairement pour vérifier que les ordres permanents sont respectés
-- Mettez à jour les ordres permanents à mesure que vos besoins évoluent — ce sont des documents vivants
+- Mettez à jour les ordres permanents au fur et à mesure que vos besoins évoluent - ce sont des documents vivants
 
 ### À éviter
 
 - Accorder une large autorité dès le premier jour (« fais ce que tu penses être meilleur »)
-- Omettre les règles d'escalade — chaque programme a besoin d'une clause « quand s'arrêter et demander »
-- Supposer que l'agent se souviendra des instructions orales — mettez tout dans le fichier
-- Mélanger les préoccupations dans un seul programme — des programmes séparés pour des domaines séparés
-- Oublier de faire appliquer par des tâches cron — les ordres permanents sans déclencheurs deviennent de simples suggestions
+- Omettez les règles d'escalade - chaque programme a besoin d'une clause "quand s'arrêter et demander"
+- Supposez que l'agent se souviendra des instructions verbales - mettez tout dans le fichier
+- Mélangez les préoccupations dans un seul programme - des programmes séparés pour des domaines distincts
+- Oubliez de faire respecter avec les tâches cron - les ordres permanents sans déclencheurs deviennent des suggestions
 
 ## Connexes
 

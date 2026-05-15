@@ -1,13 +1,13 @@
 ---
-summary: "Tâches LLM JSON uniquement pour les flux de travail (outil de plugin facultatif)"
+summary: "LLMTâches LLM JSON uniquement pour les flux de travail (tool de plugin optionnel)"
 read_when:
   - You want a JSON-only LLM step inside workflows
   - You need schema-validated LLM output for automation
-title: "Tâche LLM"
+title: "LLMTâche LLM"
 ---
 
-`llm-task` est un **outil de plugin optionnel** qui exécute une tâche LLM JSON uniquement et
-retourne une sortie structurée (éventuellement validée par JSON Schema).
+`llm-task`LLM est un **tool de plugin optionnel** qui exécute une tâche LLM JSON uniquement et
+renvoie une sortie structurée (éventuellement validée par rapport à un schéma JSON).
 
 C'est idéal pour les moteurs de workflow comme Lobster : vous pouvez ajouter une seule étape LLM
 sans écrire de code OpenClaw personnalisé pour chaque workflow.
@@ -26,22 +26,19 @@ sans écrire de code OpenClaw personnalisé pour chaque workflow.
 }
 ```
 
-2. Ajouter l'outil à la liste blanche (il est enregistré avec `optional: true`) :
+2. Autoriser le tool optionnel :
 
 ```json
 {
-  "agents": {
-    "list": [
-      {
-        "id": "main",
-        "tools": { "allow": ["llm-task"] }
-      }
-    ]
+  "tools": {
+    "alsoAllow": ["llm-task"]
   }
 }
 ```
 
-## Config (optionnel)
+Utilisez `tools.allow` uniquement lorsque vous souhaitez un mode de liste d'autorisation restrictif.
+
+## Config (facultatif)
 
 ```json
 {
@@ -63,30 +60,47 @@ sans écrire de code OpenClaw personnalisé pour chaque workflow.
 }
 ```
 
-`allowedModels` est une liste blanche de chaînes `provider/model`. Si défini, toute requête
+`allowedModels` est une liste d'autorisation (allowlist) de chaînes `provider/model`. Si elle est définie, toute demande
 en dehors de la liste est rejetée.
 
 ## Paramètres de l'outil
 
 - `prompt` (chaîne, requis)
-- `input` (n'importe quel type, optionnel)
-- `schema` (objet, JSON Schema optionnel)
-- `provider` (chaîne, optionnel)
-- `model` (chaîne, optionnel)
-- `thinking` (chaîne, optionnel)
-- `authProfileId` (chaîne, optionnel)
-- `temperature` (nombre, optionnel)
-- `maxTokens` (nombre, optionnel)
-- `timeoutMs` (nombre, optionnel)
+- `input` (any, facultatif)
+- `schema` (objet, schéma JSON facultatif)
+- `provider` (chaîne, facultatif)
+- `model` (chaîne, facultatif)
+- `thinking` (chaîne, facultatif)
+- `authProfileId` (chaîne, facultatif)
+- `temperature` (nombre, facultatif)
+- `maxTokens` (nombre, facultatif)
+- `timeoutMs` (nombre, facultatif)
 
-`thinking` accepte les préréglages de raisonnement standard OpenClaw, tels que `low` ou `medium`.
+`thinking`OpenClaw accepte les préréglages de raisonnement standard OpenClaw, tels que `low` ou `medium`.
 
 ## Sortie
 
-Retourne `details.json` contenant le JSON analysé (et valide par rapport à
-`schema` lorsque fourni).
+Renvoie `details.json` contenant le JSON analysé (et valide par rapport à
+`schema` lorsqu'il est fourni).
 
-## Exemple : étape de workflow Lobster
+## Exemple : étape de flux de travail Lobster
+
+### Limitation importante
+
+L'exemple ci-dessous suppose que la **CLI Lobster autonome** est en cours d'exécution dans un environnement où LobsterCLI`openclaw.invoke` possède déjà le contexte d'URL de passerelle/d'authentification correct.
+
+Pour l'exécuteur **intégré** (embedded) de Lobster inclus dans OpenClaw, ce modèle de CLI imbriqué n'est **pas actuellement fiable** :
+
+```lobster
+openclaw.invoke --tool llm-task --action json --args-json '{ ... }'
+```
+
+Jusqu'à ce que Lobster intégré dispose d'un pont pris en charge pour ce flux, préférez soit :
+
+- des appels de tool `llm-task`Lobster directs en dehors de Lobster, soit
+- Étapes Lobster qui ne reposent pas sur des appels Lobster`openclaw.invoke` imbriqués.
+
+Exemple autonome de CLI LobsterCLI :
 
 ```lobster
 openclaw.invoke --tool llm-task --action json --args-json '{
@@ -108,13 +122,13 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 }'
 ```
 
-## Remarques de sécurité
+## Notes de sécurité
 
-- L'outil est **JSON uniquement** et instruit le model pour qu'il ne sorte que du JSON (pas
-  de clôtures de code, pas de commentaire).
-- Aucun outil n'est exposé au model pour cette exécution.
-- Traitez la sortie comme non fiable à moins que vous ne la validiez avec `schema`.
-- Placez les approbations avant toute étape ayant des effets secondaires (send, post, exec).
+- L'outil est **uniquement JSON** et instruit le modèle de ne sortir que du JSON (sans
+  blocs de code, sans commentaire).
+- Aucun outil n'est exposé au modèle pour cette exécution.
+- Traitez la sortie comme non fiable sauf si vous la validez avec `schema`.
+- Placez les approbations avant toute étape avec effets de bord (send, post, exec).
 
 ## Connexes
 

@@ -37,7 +37,7 @@ Los modelos se mantienen en un repositorio separado: [vignesh07/openclaw-formal-
 Hoy en día, los resultados se reproducen clonando localmente el repositorio de modelos y ejecutando TLC (ver abajo). Una iteración futura podría ofrecer:
 
 - Modelos ejecutados por CI con artefactos públicos (rastros de contraejemplo, registros de ejecución)
-- un flujo de trabajo alojado de "ejecutar este modelo" para verificaciones pequeñas y acotadas
+- un flujo de trabajo alojado "ejecutar este modelo" para verificaciones pequeñas y acotadas
 
 Para comenzar:
 
@@ -87,7 +87,7 @@ Ver también: `docs/gateway-exposure-matrix.md` en el repositorio de modelos.
 
 ### Bloqueo de entrada (menciones + omisión de comando de control)
 
-**Afirmación:** en contextos grupales que requieren mención, un "comando de control" no autorizado no puede omitir el bloqueo por mención.
+**Afirmación:** en contextos grupales que requieren mención, un "comando de control" no autorizado no puede evitar el filtrado por mención.
 
 - Verde:
   - `make ingress-gating`
@@ -109,11 +109,11 @@ Estos son modelos de seguimiento que ajustan la fidelidad en torno a los modos d
 
 ### Concurrencia / idempotencia del almacén de emparejamiento
 
-**Afirmación:** un almacén de emparejamiento debe hacer cumplir `MaxPending` y la idempotencia incluso bajo intercalaciones (es decir, "verificar-luego-escribir" debe ser atómico/bloqueado; la actualización no debe crear duplicados).
+**Afirmación:** un almacén de emparejamiento debe hacer cumplir `MaxPending` y la idempotencia incluso bajo intercalaciones (es decir, "verificar-then-escribir" debe ser atómico/bloqueado; la actualización no debe crear duplicados).
 
 Lo que significa:
 
-- Bajo solicitudes concurrentes, no puedes exceder `MaxPending` para un canal.
+- En solicitudes concurrentes, no puedes exceder `MaxPending` para un canal.
 - Las solicitudes/actualizaciones repetidas para el mismo `(channel, sender)` no deben crear filas pendientes en vivo duplicadas.
 
 - Ejecuciones verdes:

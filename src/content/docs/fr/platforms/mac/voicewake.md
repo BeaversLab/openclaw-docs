@@ -15,7 +15,7 @@ title: "Réveil vocal (macOS)"
 ## Comportement d'exécution (mot de réveil)
 
 - Le module de reconnaissance vocale réside dans `VoiceWakeRuntime`.
-- Le déclencheur ne se déclenche que lorsqu'il y a une **pause significative** entre le mot de réveil et le mot suivant (écart d'environ 0,55 s). La superposition/le signal sonore peut commencer à la pause même avant que la commande ne commence.
+- Le déclencheur ne s'active que lorsqu'il y a une **pause significative** entre le mot de réveil et le mot suivant (intervalle d'environ 0,55 s). La superposition/l'indicatif sonore peut commencer lors de la pause, même avant que la commande ne commence.
 - Fenêtres de silence : 2,0 s lorsque la parole est en cours, 5,0 s si seul le déclencheur a été entendu.
 - Arrêt forcé : 120 s pour empêcher les sessions incontrôlées.
 - Anti-rebond entre les sessions : 350 ms.
@@ -29,7 +29,7 @@ title: "Réveil vocal (macOS)"
 
 ## Mode de défaillance de superposition persistante (précédent)
 
-Auparavant, si la superposition restait bloquée visible et que vous la fermiez manuellement, le Réveil Vocal pouvait sembler « mort » car la tentative de redémarrage de l'exécution pouvait être bloquée par la visibilité de la superposition et aucun redémarrage ultérieur n'était planifié.
+Auparavant, si la superposition restait bloquée à l'écran et que vous la fermiez manuellement, Voice Wake pouvait sembler « mort » car la tentative de redémarrage du runtime pouvait être bloquée par la visibilité de la superposition et aucun redémarrage ultérieur n'était planifié.
 
 Renforcement :
 
@@ -50,7 +50,7 @@ Renforcement :
 - **Maintenir Cmd+Fn pour parler** : active le moniteur d'appui pour parler. Désactivé sur macOS < 26.
 - Sélecteurs de langue et de micro, niveau sonore en direct, table des mots de déclenchement, testeur (local uniquement ; ne transfère pas).
 - Le sélecteur de micro préserve la dernière sélection si un périphérique se déconnecte, affiche un indicateur de déconnexion, et revient temporairement au défaut système jusqu'à ce qu'il réapparaisse.
-- **Sons** : sons lors de la détection d'un déclencheur et de l'envoi ; par défaut, le son système « Glass » de macOS. Vous pouvez choisir n'importe quel fichier chargeable par `NSSound` (ex. MP3/WAV/AIFF) pour chaque événement ou choisir **Aucun son**.
+- **Sons** : indications sonores lors de la détection du déclencheur et de l'envoi ; le son système par défaut est « Glass » de macOS. Vous pouvez choisir n'importe quel fichier chargeable par macOS`NSSound` (par exemple MP3/WAV/AIFF) pour chaque événement ou choisir **Aucun son**.
 
 ## Comportement de transfert
 

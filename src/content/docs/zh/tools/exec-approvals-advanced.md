@@ -7,9 +7,7 @@ read_when:
 title: "执行批准 — 高级"
 ---
 
-高级执行批准主题：`safeBins` 快速路径、解释器/运行时
-绑定，以及向聊天频道（包括原生交付）转发批准。
-有关核心策略和批准流程，请参阅 [执行批准](/zh/tools/exec-approvals)。
+高级执行审批主题：`safeBins` 快速路径、解释器/运行时绑定，以及向聊天频道（包括原生投递）的审批转发。有关核心策略和审批流程，请参阅 [Exec approvals](/zh/tools/exec-approvals)。
 
 ## 安全二进制文件（仅 stdin）
 
@@ -79,18 +77,18 @@ title: "执行批准 — 高级"
 | -------- | -------------------------------------- | ------------------------------------------------------------------ |
 | 目标     | 自动允许狭窄的 stdin 过滤器            | 显式信任特定可执行文件                                             |
 | 匹配类型 | 可执行文件名称 + 安全二进制 argv 策略  | 已解析的可执行文件路径 glob，或针对 PATH 调用命令的裸命令名称 glob |
-| 参数范围 | 受安全二进制配置文件和字面标记规则限制 | 仅路径匹配；参数否则由您自行负责                                   |
+| 参数范围 | 受安全二进制配置文件和字面标记规则限制 | 默认按路径匹配；可选的 `argPattern` 可以限制已解析的 argv          |
 | 典型示例 | `head`、`tail`、`tr`、`wc`             | `jq`、`python3`、`node`、`ffmpeg`、自定义 CLI                      |
 | 最佳用途 | 管道中的低风险文本转换                 | 具有更广泛行为或副作用的任何工具                                   |
 
 配置位置：
 
-- `safeBins` 来自配置（`tools.exec.safeBins` 或特定于代理的 `agents.list[].tools.exec.safeBins`）。
-- `safeBinTrustedDirs` 来自配置（`tools.exec.safeBinTrustedDirs` 或特定于代理的 `agents.list[].tools.exec.safeBinTrustedDirs`）。
-- `safeBinProfiles` 来自配置（`tools.exec.safeBinProfiles` 或特定于代理的 `agents.list[].tools.exec.safeBinProfiles`）。特定于代理的配置文件键会覆盖全局键。
-- 允许列表条目驻留在 `agents.<id>.allowlist` 下的主机本地 `~/.openclaw/exec-approvals.json` 中（或通过控制 UI / `openclaw approvals allowlist ...`）。
-- 当解释器/运行时二进制文件出现在 `safeBins` 中而没有显式配置文件时，`openclaw security audit` 会发出 `tools.exec.safe_bins_interpreter_unprofiled` 警告。
-- `openclaw doctor --fix` 可以将缺失的自定义 `safeBinProfiles.<bin>` 条目搭建为 `{}`（稍后请进行审查和收紧）。解释器/运行时 bin 不会自动搭建。
+- `safeBins` 来自配置（`tools.exec.safeBins` 或每个代理的 `agents.list[].tools.exec.safeBins`）。
+- `safeBinTrustedDirs` 来自配置（`tools.exec.safeBinTrustedDirs` 或每个代理的 `agents.list[].tools.exec.safeBinTrustedDirs`）。
+- `safeBinProfiles` 来自配置（`tools.exec.safeBinProfiles` 或每个代理的 `agents.list[].tools.exec.safeBinProfiles`）。每个代理的配置文件键会覆盖全局键。
+- 允许列表条目位于主机本地的 `~/.openclaw/exec-approvals.json` 下的 `agents.<id>.allowlist` 中（或通过 Control UI / `openclaw approvals allowlist ...`）。
+- 当解释器/运行时二进制文件在没有显式配置文件的情况下出现在 `safeBins` 中时，`openclaw security audit` 会发出 `tools.exec.safe_bins_interpreter_unprofiled` 警告。
+- `openclaw doctor --fix` 可以将缺失的自定义 `safeBinProfiles.<bin>` 条目生成为 `{}`（随后请审核并收紧）。解释器/运行时二进制文件不会自动生成。
 
 自定义配置文件示例：
 
@@ -112,7 +110,7 @@ title: "执行批准 — 高级"
 }
 ```
 
-如果您明确选择将 `jq` 加入 `safeBins`，OpenClaw 仍然会在安全 bin 模式下拒绝 `env` 内置命令，因此 `jq -n env` 无法在没有显式允许列表路径或批准提示的情况下转储主机进程环境。
+如果您显式选择将 `jq` 加入 `safeBins`OpenClaw，OpenClaw 仍会在安全二进制模式下拒绝 `env` 内置命令，因此 `jq -n env` 无法在没有显式允许列表路径或审批提示的情况下转储主机进程环境。
 
 ## 解释器/运行时命令
 
@@ -120,24 +118,25 @@ title: "执行批准 — 高级"
 
 - 精确的 argv/cwd/env 上下文始终是绑定的。
 - 直接 shell 脚本和直接运行时文件形式会尽力绑定到一个具体的本地文件快照。
-- 仍然解析为一个直接本地文件的常见包管理器包装器形式（例如 `pnpm exec`、`pnpm node`、`npm exec`、`npx`）会在绑定之前被解包。
+- 仍然解析为一个直接本地文件的常见包管理器包装器形式（例如
+  `pnpm exec`、`pnpm node`、`npm exec`、`npx`）会在绑定之前被解包。
 - 如果 OpenClaw 无法为解释器/运行时命令确定一个具体的本地文件（例如包脚本、eval 形式、特定于运行时的加载器链或歧义的多文件形式），将拒绝基于批准的执行，而不是声称其不具备的语义覆盖范围。
 - 对于这些工作流，首选沙箱隔离、独立的主机边界，或显式受信任的允许列表/完整工作流，其中操作员接受更广泛的运行时语义。
 
-当需要批准时，exec 工具会立即返回一个批准 ID。使用该 ID 关联后续系统事件（`Exec finished` / `Exec denied`）。如果在超时之前没有做出决定，该请求将被视为批准超时，并作为拒绝原因显示出来。
+当需要批准时，exec 工具会立即返回一个批准 ID。使用该 ID 来关联后续的系统事件（`Exec finished` / `Exec denied`）。如果在超时之前没有收到决定，该请求将被视为批准超时，并作为拒绝原因呈现。
 
 ### 后续交付行为
 
-批准的异步 exec 完成后，OpenClaw 会向同一会话发送后续 `agent` 轮次。
+批准的异步 exec 完成后，OpenClaw 会向同一会话发送后续 OpenClaw`agent` 轮次。
 
-- 如果存在有效的外部交付目标（可交付渠道加上目标 `to`），后续交付将使用该渠道。
-- 在仅网络聊天或没有外部目标的内部会话流程中，后续投递保持仅限会话（`deliver: false`）。
-- 如果调用方明确要求严格的外部投递但无法解析外部渠道，该请求将失败并返回 `INVALID_REQUEST`。
-- 如果启用了 `bestEffortDeliver` 且无法解析外部渠道，投递将降级为仅限会话，而不是失败。
+- 如果存在有效的外部传递目标（可传递渠道加上目标 `to`），后续传递将使用该渠道。
+- 在没有外部目标的仅 Web 聊天或内部会话流程中，后续传递保持仅会话状态（`deliver: false`）。
+- 如果调用方明确请求严格的外部传递但没有可解析的外部渠道，该请求将因 `INVALID_REQUEST` 而失败。
+- 如果启用了 `bestEffortDeliver` 且无法解析外部渠道，传递将降级为仅会话，而不是失败。
 
 ## 审批转发到聊天渠道
 
-您可以将执行审批提示转发到任何聊天渠道（包括插件渠道），并使用 `/approve` 批准它们。这使用正常的出站投递管道。
+您可以将 exec 批准提示转发到任何聊天渠道（包括插件渠道），并使用 `/approve` 进行批准。这使用正常的出站传递管道。
 
 配置：
 
@@ -166,11 +165,11 @@ title: "执行批准 — 高级"
 /approve <id> deny
 ```
 
-`/approve` 命令同时处理执行审批和插件审批。如果 ID 与待处理的执行审批不匹配，它会自动检查插件审批。
+`/approve` 命令同时处理 exec 批准和插件批准。如果该 ID 不匹配挂起的 exec 批准，它会自动检查插件批准。
 
 ### 插件审批转发
 
-插件审批转发使用与执行审批相同的投递管道，但在 `approvals.plugin` 下有其独立的配置。启用或禁用一个不会影响另一个。
+插件批准转发使用与 exec 批准相同的传递管道，但在 `approvals.plugin` 下有自己独立的配置。启用或禁用其中一个不会影响另一个。
 
 ```json5
 {
@@ -191,74 +190,83 @@ title: "执行批准 — 高级"
 配置形状与 `approvals.exec` 相同：`enabled`、`mode`、`agentFilter`、
 `sessionFilter` 和 `targets` 的工作方式相同。
 
-支持共享交互式回复的渠道会为执行审批和插件审批渲染相同的审批按钮。没有共享交互式 UI 的渠道会回退到带有 `/approve`
-说明的纯文本。
+支持共享交互式回复的渠道会为 exec 和插件审批呈现相同的审批按钮。不支持共享交互式 UI 的渠道将回退到包含 `/approve`Gateway(网关) 指令的纯文本模式。
+插件审批请求可能会限制可用的决策。审批界面使用请求声明的决策集，而 Gateway(网关) 会拒绝提交未提供的决策的尝试。
 
 ### 在任何渠道上进行同聊审批
 
-当执行或插件审批请求来自可投递的聊天表面时，默认情况下，同一个聊天现在可以使用 `/approve` 进行批准。这适用于诸如 Slack、Matrix 和
-Microsoft Teams 等渠道，以及现有的 Web UI 和终端 UI 流程。
+当 exec 或插件审批请求源自可投递的聊天界面时，默认情况下，同一聊天现在可以使用 `/approve`SlackMatrixMicrosoft Teams 对其进行审批。这适用于 Slack、Matrix 和 Microsoft Teams 等渠道，以及现有的 Web UI 和终端 UI 流程。
 
 此共享文本命令路径使用该对话的正常渠道身份验证模型。如果发起聊天的渠道已经可以发送命令并接收回复，则审批请求不再需要单独的本地投递适配器来保持待处理状态。
 
-Discord 和 Telegram 也支持同渠道 `/approve`，但即使禁用了原生审批传递，这些渠道仍使用其解析的审批人列表进行授权。
+Discord 和 Telegram 也支持同聊天 DiscordTelegram`/approve`，但即使禁用了原生审批投递，这些渠道仍使用其解析的审批人列表进行授权。
 
 对于 Telegram 和其他直接调用 Gateway(网关) 的原生审批客户端，此回退机制有意限制为“未找到审批”失败。真正的 exec 审批拒绝/错误不会作为插件审批静默重试。
 
 ### 原生审批传递
 
-某些渠道也可以充当原生审批客户端。原生客户端在共享的同渠道 `/approve` 流程之上，增加了审批人私信、原始聊天分发以及特定渠道的交互式审批 UX。
+某些渠道也可以充当原生审批客户端。原生客户端在共享的同聊天 `/approve` 流程之上，增加了审批人私信、源聊天分发以及特定渠道的交互式审批 UX。
 
-当可使用原生审批卡片/按钮时，该原生 UI 是面向代理的主要路径。除非工具结果指示聊天审批不可用或手动审批是仅剩的路径，否则代理不应重复输出纯聊天 `/approve` 命令。
+当原生审批卡片/按钮可用时，该原生 UI 是面向 Agent 的主要路径。除非工具结果显示聊天审批不可用或手动审批是仅剩的途径，否则 Agent 不应重复回显纯聊天 `/approve` 指令。
+
+如果配置了原生审批客户端，但源渠道没有激活的原生运行时，OpenClaw 会保持本地确定性 OpenClaw`/approve`OpenClaw 提示可见。如果原生运行时已激活并尝试投递，但没有任何目标收到卡片，OpenClaw 会发送一条带有确切 `/approve <id> <decision>` 指令的同聊天回退通知，以便仍可以解决该请求。
 
 通用模型：
 
-- host exec policy 仍然决定是否需要 exec 审批
-- `approvals.exec` 控制将审批提示转发到其他聊天目标
+- 主机 exec 策略仍然决定是否需要 exec 审批
+- `approvals.exec` 控制是否将审批提示转发到其他聊天目标
 - `channels.<channel>.execApprovals` 控制该渠道是否充当原生审批客户端
 
-当以下所有条件都满足时，原生审批客户端将自动启用“私信优先”传递：
+当满足以下所有条件时，原生审批客户端会自动启用优先私信传送：
 
-- 该渠道支持原生审批传递
-- 可以从显式 `execApprovals.approvers` 或该渠道记录的回退源中解析审批人
+- 该渠道支持原生审批传送
+- 可以从显式的 `execApprovals.approvers` 或所有者身份（例如 `commands.ownerAllowFrom`）中解析出审批者
 - `channels.<channel>.execApprovals.enabled` 未设置或为 `"auto"`
 
-设置 `enabled: false` 以明确禁用原生审批客户端。设置 `enabled: true` 以在解析出审批人时强制启用它。公开的原始聊天传递通过 `channels.<channel>.execApprovals.target` 保持显式。
+设置 `enabled: false` 以明确禁用原生审批客户端。设置 `enabled: true` 以在解析出审批者时强制启用它。公共原始聊天传送仍通过 `channels.<channel>.execApprovals.target` 进行显式控制。
 
-常见问题：[为什么聊天审批有两个 exec 审批配置？](/zh/help/faq-first-run#why-are-there-two-exec-approval-configs-for-chat-approvals)
+常见问题：[为什么聊天审批有两个 exec approval 配置？](/zh/help/faq-first-run#why-are-there-two-exec-approval-configs-for-chat-approvals)
 
-- Discord: `channels.discord.execApprovals.*`
-- Slack: `channels.slack.execApprovals.*`
-- Telegram: `channels.telegram.execApprovals.*`
+- Discord：Discord`channels.discord.execApprovals.*`
+- Slack：Slack`channels.slack.execApprovals.*`
+- Telegram：Telegram`channels.telegram.execApprovals.*`
 
-这些原生审批客户端在共享的同渠道 `/approve` 流程和共享审批按钮之上，增加了私信路由和可选的渠道分发。
+这些原生审批客户端在共享的同聊 `/approve` 流程和共享审批按钮之上，增加了私信路由和可选的渠道分发。
 
 共享行为：
 
-- Slack、Matrix、Microsoft Teams 和类似的可投递聊天使用普通渠道身份验证模型进行同聊天 `/approve`
-- 当原生审批客户端自动启用时，默认的原生投递目标是审批人私信
-- 对于 Discord 和 Telegram，只有已解析的审批人才能批准或拒绝
-- Discord 审批人可以是显式的 (`execApprovals.approvers`) 也可以从 `commands.ownerAllowFrom` 推断
-- Telegram 审批人可以是显式的 (`execApprovals.approvers`) 也可以从现有所有者配置推断 (`allowFrom`，加上支持私信的 `defaultTo`)
-- Slack 审批人可以是显式的 (`execApprovals.approvers`) 也可以从 `commands.ownerAllowFrom` 推断
-- Slack 原生按钮保留审批 ID 类型，因此 `plugin:` ID 可以解析插件审批，而无需第二层 Slack 本地回退
-- Matrix 原生私信/渠道路由和反应快捷方式处理执行和插件审批；插件授权仍来自 `channels.matrix.dm.allowFrom`
-- 请求者不必是审批人
-- 当源聊天已经支持命令和回复时，可以直接通过 `/approve` 进行批准
-- 原生 Discord 审批按钮按审批 ID 类型路由：`plugin:` ID 直接进入插件审批，其他所有内容进入执行审批
-- 原生 Telegram 审批按钮遵循与 `/approve` 相同的有界执行到插件回退机制
-- 当原生 `target` 启用源聊天投递时，审批提示包含命令文本
+- Slack、Matrix、Microsoft Teams 和类似的可传送聊天使用正常的渠道授权模型进行同聊 SlackMatrixMicrosoft Teams`/approve`
+- 当原生审批客户端自动启用时，默认的原生传送目标是审批者的私信
+- 对于 Discord 和 Telegram，只有已解析的审批者可以批准或拒绝
+- Discord 审批者可以是显式的（Discord`execApprovals.approvers`）或从 `commands.ownerAllowFrom` 推断
+- Telegram 审批者可以是显式的（Telegram`execApprovals.approvers`）或从 `commands.ownerAllowFrom` 推断
+- Slack 审批者可以是显式的（Slack`execApprovals.approvers`）或从 `commands.ownerAllowFrom` 推断
+- Slack 原生按钮保留审批 ID 类型，因此 Slack`plugin:`Slack ID 可以解析插件审批，而无需第二层 Slack 本地回退层
+- Matrix 原生私信/渠道路由和反应快捷方式同时处理执行和插件审批；
+  插件授权仍然来自 Matrix`channels.matrix.dm.allowFrom`
+- Matrix 原生提示在第一个提示事件中包含 Matrix`com.openclaw.approval` 自定义事件内容，以便支持 OpenClaw 的 Matrix 客户端可以读取结构化审批状态，而标准客户端
+  则保留纯文本 `/approve` 回退
+- 请求者不必是审批者
+- 当源聊天已支持命令和回复时，可以直接通过 `/approve` 进行审批
+- 原生 Discord 审批按钮按审批 ID 类型路由：`plugin:` ID 直接
+  进入插件审批，其他所有内容进入执行审批
+- 原生 Telegram 审批按钮遵循与 `/approve` 相同的有界执行到插件回退逻辑
+- 当原生 `target` 启用源聊天传递时，审批提示包含命令文本
 - 待处理的执行审批默认在 30 分钟后过期
-- 如果没有操作员 UI 或配置的审批客户端可以接受请求，提示将回退到 `askFallback`
+- 如果没有操作员 UI 或配置的审批客户端可以接受该请求，提示将回退到 `askFallback`
 
-Telegram 默认为审批人私信 (`target: "dm"`)。当您希望审批提示也出现在源 Telegram 聊天/主题中时，您可以切换到 `channel` 或 `both`。对于 Telegram 论坛主题，OpenClaw 会保留审批提示和批准后后续跟进的主题。
+敏感的仅限所有者的组命令（如 `/diagnostics` 和 `/export-trajectory`）对审批提示和最终结果使用私有所有者路由。OpenClaw 首先尝试在所有者运行命令的同一表面上建立私有路由。如果该表面没有私有所有者路由，它会回退到 `commands.ownerAllowFrom` 中的第一个可用所有者路由，因此 Discord 组命令
+仍可在 Telegram 是配置的
+主要私有接口时，将审批和结果发送到所有者的 Telegram 私信。组聊天只会收到一条简短的确认。
+
+Telegram 默认使用审批人私信 (Telegram`target: "dm"`)。当你希望审批提示也出现在发起的 Telegram 聊天/主题中时，可以切换到 `channel` 或 `both`TelegramTelegramOpenClaw。对于 Telegram 论坛主题，OpenClaw 会为审批提示和批准后的后续跟进保留该主题。
 
 参见：
 
-- [Discord](/zh/channels/discord)
-- [Telegram](/zh/channels/telegram)
+- [Discord](Discord/en/channels/discord)
+- [Telegram](Telegram/en/channels/telegram)
 
-### macOS IPC flow
+### macOS IPC 流程
 
 ```
 Gateway -> Node Service (WS)
@@ -271,11 +279,11 @@ Gateway -> Node Service (WS)
 
 - Unix socket 模式 `0600`，令牌存储在 `exec-approvals.json` 中。
 - Same-UID 对等检查。
-- Challenge/response（nonce + HMAC 令牌 + 请求哈希）+ 短 TTL。
+- Challenge/response（随机数 + HMAC 令牌 + 请求哈希）+ 短期 TTL。
 
 ## 相关
 
-- [Exec approvals](/zh/tools/exec-approvals) — 核心策略和批准流程
+- [Exec approvals](/zh/tools/exec-approvals) — 核心策略和审批流程
 - [Exec 工具](/zh/tools/exec)
-- [提升模式](/zh/tools/elevated)
+- [Elevated mode](/zh/tools/elevated)
 - [Skills](/zh/tools/skills) — 基于 Skills 的自动允许行为

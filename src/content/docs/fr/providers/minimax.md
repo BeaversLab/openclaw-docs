@@ -13,7 +13,7 @@ MiniMax fournit également :
 - Synthèse vocale intégrée via T2A v2
 - Compréhension d'images intégrée via `MiniMax-VL-01`
 - Génération de musique intégrée via `music-2.6`
-- `web_search` inclus via l'API de recherche Coding Plan de MiniMax
+- Regroupé `web_search` via l'API de recherche Token Plan de MiniMaxAPI
 
 Répartition du fournisseur :
 
@@ -41,35 +41,35 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
 
 <Tabs>
   <Tab title="OAuth (Coding Plan)">
-    **Idéal pour :** configuration rapide avec le MiniMax Coding Plan via OAuth, aucune clé API requise.
+    **Idéal pour :** configuration rapide avec le Coding Plan MiniMax via OAuth, aucune clé API requise.
 
     <Tabs>
       <Tab title="International">
         <Steps>
-          <Step title="Exécuter l'intégration">
+          <Step title="Run onboarding">
             ```bash
             openclaw onboard --auth-choice minimax-global-oauth
             ```
 
-            Ceci authentifie contre `api.minimax.io`.
+            Cela authentifie contre `api.minimax.io`.
           </Step>
-          <Step title="Vérifier que le modèle est disponible">
+          <Step title="Verify the model is available">
             ```bash
             openclaw models list --provider minimax-portal
             ```
           </Step>
         </Steps>
       </Tab>
-      <Tab title="Chine">
+      <Tab title="China">
         <Steps>
-          <Step title="Exécuter l'intégration">
+          <Step title="Run onboarding">
             ```bash
             openclaw onboard --auth-choice minimax-cn-oauth
             ```
 
-            Ceci authentifie contre `api.minimaxi.com`.
+            Cela authentifie contre `api.minimaxi.com`.
           </Step>
-          <Step title="Vérifier que le modèle est disponible">
+          <Step title="Verify the model is available">
             ```bash
             openclaw models list --provider minimax-portal
             ```
@@ -79,11 +79,11 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
     </Tabs>
 
     <Note>
-    Les configurations OAuth utilisent l'ID de fournisseur `minimax-portal`. Les références de modèle suivent le format `minimax-portal/MiniMax-M2.7`.
+    Les configurations OAuth utilisent l'id de fournisseur `minimax-portal`. Les références de modèle suivent la forme `minimax-portal/MiniMax-M2.7`.
     </Note>
 
     <Tip>
-    Lien de parrainage pour le MiniMax Coding Plan (10 % de réduction) : [MiniMax Coding Plan](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)
+    Lien de parrainage pour le Coding Plan MiniMax (10 % de réduction) : [Coding Plan MiniMax](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)
     </Tip>
 
   </Tab>
@@ -242,7 +242,7 @@ via le point de terminaison CN ; le point de terminaison global par défaut est
 
 Lors de l'intégration ou de la configuration de la clé API écrit des entrées explicites `models.providers.minimax`, OpenClaw matérialise `MiniMax-M2.7` et `MiniMax-M2.7-highspeed` en tant que modèles de chat texte uniquement. La compréhension d'image est exposée séparément via le `MiniMax-VL-01` fournisseur de média appartenant au plugin.
 
-<Note>Voir [Génération d'image](/fr/tools/image-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération d'images](/fr/tools/image-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ### Synthèse vocale
 
@@ -292,7 +292,7 @@ Pour utiliser MiniMax comme fournisseur de musique par défaut :
 }
 ```
 
-<Note>Voir [Génération de musique](/fr/tools/music-generation) pour les paramètres d'outils partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération de musique](/fr/tools/music-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ### Génération de vidéo
 
@@ -318,7 +318,7 @@ Pour utiliser MiniMax comme fournisseur vidéo par défaut :
 }
 ```
 
-<Note>Voir [Génération de vidéo](/fr/tools/video-generation) pour les paramètres d'outils partagés, la sélection du fournisseur et le comportement de basculement.</Note>
+<Note>Voir [Génération vidéo](/fr/tools/video-generation) pour les paramètres d'outil partagés, la sélection du fournisseur et le comportement de basculement.</Note>
 
 ### Compréhension d'image
 
@@ -335,19 +335,20 @@ lorsque le catalogue de fournisseur de texte groupé affiche encore des référe
 
 ### Recherche Web
 
-Le plugin MiniMax enregistre également `web_search` via l'API de recherche MiniMax Coding Plan.
+Le plugin MiniMax enregistre également `web_search` via l'API de recherche
+Token Plan MiniMaxAPI.
 
 - ID du fournisseur : `minimax`
 - Résultats structurés : titres, URL, extraits, requêtes associées
 - Variable d'environnement préférée : `MINIMAX_CODE_PLAN_KEY`
-- Alias d'environnement accepté : `MINIMAX_CODING_API_KEY`
-- Repli de compatibilité : `MINIMAX_API_KEY` lorsqu'il pointe déjà vers un jeton de coding-plan
-- Réutilisation de la région : `plugins.entries.minimax.config.webSearch.region`, puis `MINIMAX_API_HOST`, puis les URL de base du fournisseur MiniMax
-- La recherche reste sur l'ID de fournisseur `minimax` ; la configuration OAuth CN/global peut toujours orienter indirectement la région via `models.providers.minimax-portal.baseUrl`
+- Alias d'environnement acceptés : `MINIMAX_CODING_API_KEY`, `MINIMAX_OAUTH_TOKEN`
+- Retour de compatibilité : `MINIMAX_API_KEY` lorsqu'il pointe déjà vers des informations d'identification de type token-plan
+- Réutilisation de la région : `plugins.entries.minimax.config.webSearch.region`, puis `MINIMAX_API_HOST`, puis les URL de base du provider MiniMax
+- La recherche reste sur l'id de provider `minimax` ; la configuration OAuth CN/mondiale peut orienter indirectement la région via `models.providers.minimax-portal.baseUrl` et peut fournir une authentification bearer via `MINIMAX_OAUTH_TOKEN`
 
 La configuration se trouve sous `plugins.entries.minimax.config.webSearch.*`.
 
-<Note>Voir [MiniMax Search](/fr/tools/minimax-search) pour la configuration complète et l'utilisation de la recherche Web.</Note>
+<Note>Voir [Recherche MiniMax](/fr/tools/minimax-search) pour la configuration et l'utilisation complètes de la recherche web.</Note>
 
 ## Configuration avancée
 
@@ -355,22 +356,22 @@ La configuration se trouve sous `plugins.entries.minimax.config.webSearch.*`.
   <Accordion title="Configuration options">
     | Option | Description |
     | --- | --- |
-    | `models.providers.minimax.baseUrl` | Préférer `https://api.minimax.io/anthropic` (compatible Anthropic) ; `https://api.minimax.io/v1` est optionnel pour les charges utiles compatibles OpenAI |
-    | `models.providers.minimax.api` | Préférer `anthropic-messages` ; `openai-completions` est optionnel pour les charges utiles compatibles OpenAI |
-    | `models.providers.minimax.apiKey` | Clé d'API MiniMax (`MINIMAX_API_KEY`) |
+    | `models.providers.minimax.baseUrl` | Préférer `https://api.minimax.io/anthropic` (compatible Anthropic) ; `https://api.minimax.io/v1` est optionnel pour les payloads compatibles OpenAI |
+    | `models.providers.minimax.api` | Préférer `anthropic-messages` ; `openai-completions` est optionnel pour les payloads compatibles OpenAI |
+    | `models.providers.minimax.apiKey` | Clé MiniMax de l'API MiniMax (`MINIMAX_API_KEY`) |
     | `models.providers.minimax.models` | Définir `id`, `name`, `reasoning`, `contextWindow`, `maxTokens`, `cost` |
-    | `agents.defaults.models` | Modèles alias que vous souhaitez dans la liste autorisée |
-    | `models.mode` | Conserver `merge` si vous souhaitez ajouter API aux modèles intégrés |
+    | `agents.defaults.models` | Modèles alias que vous souhaitez dans la liste blanche |
+    | `models.mode` | Conserver `merge` si vous souhaitez ajouter MiniMax aux modèles intégrés |
   </Accordion>
 
   <Accordion title="Thinking defaults">
-    Sur `api: "anthropic-messages"`, OpenClaw injecte `thinking: { type: "disabled" }` sauf si la réflexion est déjà explicitement définie dans les paramètres/la configuration.
+    Sur `api: "anthropic-messages"`OpenClaw, OpenClaw injecte `thinking: { type: "disabled" }`MiniMax sauf si la réflexion (thinking) est déjà explicitement définie dans les paramètres/la configuration.
 
-    Cela empêche le point de terminaison de flux de MiniMax d'émettre `reasoning_content` dans les chunks delta de style OpenAI, ce qui ferait fuiter le raisonnement interne dans la sortie visible.
+    Cela empêche le point de terminaison de streaming de MiniMax d'émettre `reasoning_content`OpenAI dans les chunks delta de style OpenAI, ce qui divulguerait le raisonnement interne dans la sortie visible.
 
   </Accordion>
 
-<Accordion title="Fast mode">`/fast on` ou `params.fastMode: true` réécrit `MiniMax-M2.7` en `MiniMax-M2.7-highspeed` sur le chemin de flux compatible Anthropic.</Accordion>
+<Accordion title="Fast mode">`/fast on` ou `params.fastMode: true` réécrit `MiniMax-M2.7` en `MiniMax-M2.7-highspeed`Anthropic sur le chemin de streaming compatible avec Anthropic.</Accordion>
 
   <Accordion title="Fallback example">
     **Idéal pour :** conserver votre modèle le plus puissant de dernière génération comme principal, basculer vers MiniMax M2.7 en cas de défaillance. L'exemple ci-dessous utilise Opus comme modèle principal concret ; remplacez-le par votre modèle principal de dernière génération préféré.
@@ -395,37 +396,39 @@ La configuration se trouve sous `plugins.entries.minimax.config.webSearch.*`.
 
   </Accordion>
 
-  <Accordion title="Détails de l'utilisation du Coding Plan">
-    - API d'utilisation du Coding Plan : `https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains` (nécessite une clé de coding plan).
-    - OpenClaw normalise l'utilisation du coding plan MiniMax pour l'afficher de la même manière `% left` que celle utilisée par d'autres providers. Les champs bruts `usage_percent` / `usagePercent` de MiniMax correspondent au quota restant, et non au quota consommé, donc OpenClaw les inverse. Les champs basés sur le nombre prévalent lorsqu'ils sont présents.
-    - Lorsque l'API renvoie `model_remains`, OpenClaw privilégie l'entrée du chat-model, dérive l'étiquette de la fenêtre à partir de `start_time` / `end_time` si nécessaire, et inclut le nom du modèle sélectionné dans l'étiquette du plan afin que les fenêtres du coding-plan soient plus faciles à distinguer.
-    - Les instantanés d'utilisation traitent `minimax`, `minimax-cn` et `minimax-portal` comme la même surface de quota MiniMax, et préfèrent le MiniMax OAuth stocké avant de revenir aux variables d'environnement de la clé Coding Plan.
+  <Accordion title="Détails de l'utilisation du Coding Plan"API>
+    - API d'utilisation du Coding Plan : `https://api.minimaxi.com/v1/token_plan/remains` ou `https://api.minimax.io/v1/token_plan/remains` (nécessite une clé de coding plan).
+    - L'interrogation de l'utilisation dérive l'hôte de `models.providers.minimax-portal.baseUrl` ou `models.providers.minimax.baseUrl` lorsque configuré, donc les configurations globales utilisant `https://api.minimax.io/anthropic` interrogent `api.minimax.io`OpenClawMiniMax. Les URL de base manquantes ou malformées conservent le repli CN pour la compatibilité.
+    - OpenClaw normalise l'utilisation du coding-plan MiniMax au même affichage `% left`MiniMax que celui utilisé par d'autres providers. Les champs bruts `usage_percent` / `usagePercent`OpenClawAPI de MiniMax représentent le quota restant, et non le quota consommé, OpenClaw les inverse donc. Les champs basés sur le nombre ont priorité lorsqu'ils sont présents.
+    - Lorsque l'API renvoie `model_remains`OpenClaw, OpenClaw privilégie l'entrée du chat-model, dérive l'étiquette de la fenêtre à partir de `start_time` / `end_time` si nécessaire, et inclut le nom du modèle sélectionné dans l'étiquette du plan afin de distinguer plus facilement les fenêtres du coding-plan.
+    - Les instantanés d'utilisation traitent `minimax`, `minimax-cn` et `minimax-portal`MiniMaxMiniMaxOAuth comme la même surface de quota MiniMax, et préfèrent le OAuth MiniMax stocké avant de revenir aux variables d'environnement de clé Coding Plan.
+
   </Accordion>
 </AccordionGroup>
 
 ## Notes
 
 - Les références de modèle suivent le chemin d'authentification :
-  - Configuration de la clé API : `minimax/<model>`
-  - Configuration OAuth : `minimax-portal/<model>`
+  - Configuration de la clé API : API`minimax/<model>`
+  - Configuration OAuth : OAuth`minimax-portal/<model>`
 - Modèle de chat par défaut : `MiniMax-M2.7`
 - Modèle de chat alternatif : `MiniMax-M2.7-highspeed`
 - L'intégration et la configuration directe par clé API écrivent des définitions de modèle texte uniquement pour les deux variantes M2.7
-- La compréhension d'image utilise le provider média `MiniMax-VL-01` appartenant au plugin
+- La compréhension d'image utilise le fournisseur de média `MiniMax-VL-01` appartenant au plugin
 - Mettez à jour les valeurs de tarification dans `models.json` si vous avez besoin d'un suivi précis des coûts
-- Utilisez `openclaw models list` pour confirmer l'identifiant actuel du provider, puis basculez avec `openclaw models set minimax/MiniMax-M2.7` ou `openclaw models set minimax-portal/MiniMax-M2.7`
+- Utilisez `openclaw models list` pour confirmer l'identifiant actuel du fournisseur, puis basculez avec `openclaw models set minimax/MiniMax-M2.7` ou `openclaw models set minimax-portal/MiniMax-M2.7`
 
-<Tip>Lien de parrainage pour le Coding Plan MiniMax (10 % de réduction) : [Coding Plan MiniMax](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)</Tip>
+<Tip>Lien de parrainage pour le MiniMax Coding Plan (10 % de réduction) : [MiniMax Coding Plan](MiniMaxMiniMaxhttps://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)</Tip>
 
-<Note>Voir [Model providers](/fr/concepts/model-providers) pour les règles des providers.</Note>
+<Note>Voir [Model providers](/fr/concepts/model-providers) pour les règles du provider.</Note>
 
 ## Dépannage
 
 <AccordionGroup>
   <Accordion title='"Unknown model: minimax/MiniMax-M2.7"'>
-    Cela signifie généralement que le **provider MiniMax n'est pas configuré** (aucune entrée de provider correspondante et aucun profil d'authentification/clé d'environnement MiniMax trouvé). Une correction pour cette détection est prévue dans la version **2026.1.12**. Corrigez en :
+    Cela signifie généralement que le **provider MiniMax n'est pas configuré** (aucune entrée de provider correspondante et aucun profil/clé d'environnement d'authentification MiniMax trouvé). Une correction pour cette détection est prévue pour le **2026.1.12**. Corriger en :
 
-    - Mettant à niveau vers **2026.1.12** (ou en exécutant à partir de la source `main`), puis en redémarrant la passerelle.
+    - Mettant à niveau vers le **2026.1.12** (ou en exécutant à partir de la source `main`), puis en redémarrant la passerelle.
     - Exécutant `openclaw configure` et en sélectionnant une option d'authentification **MiniMax**, ou
     - Ajoutant manuellement le bloc `models.providers.minimax` ou `models.providers.minimax-portal` correspondant, ou
     - Définissant `MINIMAX_API_KEY`, `MINIMAX_OAUTH_TOKEN`, ou un profil d'authentification MiniMax pour que le provider correspondant puisse être injecté.
@@ -461,8 +464,8 @@ La configuration se trouve sous `plugins.entries.minimax.config.webSearch.*`.
   <Card title="Video generation" href="/fr/tools/video-generation" icon="video">
     Paramètres de l'outil vidéo partagés et sélection du provider.
   </Card>
-  <Card title="Recherche MiniMax" href="/fr/tools/minimax-search" icon="magnifying-glass">
-    Configuration de la recherche Web via le plan de codage MiniMax.
+  <Card title="MiniMax Search" href="/fr/tools/minimax-search" icon="magnifying-glass" MiniMax>
+    Configuration de la recherche web via le MiniMax Token Plan.
   </Card>
   <Card title="Résolution des problèmes" href="/fr/help/troubleshooting" icon="wrench">
     Dépannage général et FAQ.

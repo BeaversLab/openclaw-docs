@@ -10,7 +10,7 @@ title: "入门指南"
 
 ## 准备工作
 
-- **Node.js** — 推荐 Node 24（也支持 Node 22.14+）
+- **Node.js** — 推荐使用 Node 24（同时也支持 Node 22.16+）
 - **来自模型提供商的 API 密钥**（Anthropic、OpenAI、Google 等）— 新手引导会提示您输入
 
 <Tip>使用 `node --version` 检查您的 Node 版本。 **Windows 用户：** 原生 Windows 和 WSL2 均受支持。WSL2 更稳定，推荐用于完整体验。请参阅 [Windows](/zh/platforms/windows)。 需要安装 Node？请参阅 [Node 设置](/zh/install/node)。</Tip>

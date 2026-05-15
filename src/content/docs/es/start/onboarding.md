@@ -7,8 +7,8 @@ title: "Incorporación (aplicación macOS)"
 sidebarTitle: "Incorporación: aplicación macOS"
 ---
 
-Este documento describe el flujo de configuración de **primera** ejecución actual. El objetivo es una experiencia fluida del "día 0": elegir dónde se ejecuta el Gateway, conectar la autenticación, ejecutar el asistente y dejar que el agente se inicie automáticamente.
-Para obtener una descripción general de las rutas de incorporación, consulte [Descripción general de la incorporación](/es/start/onboarding-overview).
+Este documento describe el flujo de configuración de **primer inicio** **actual**. El objetivo es una experiencia fluida del "día 0": elegir dónde se ejecuta el Gateway, conectar la autenticación, ejecutar el asistente y dejar que el agente se inicie automáticamente.
+Para obtener una descripción general de las rutas de incorporación, consulte [Información general sobre la incorporación](/es/start/onboarding-overview).
 
 <Steps>
 <Step title="Aprobar advertencia de macOS">
@@ -41,16 +41,16 @@ Modelo de confianza de seguridad:
 
 ¿Dónde se ejecuta el **Gateway**?
 
-- **Este Mac (solo local):** la incorporación puede configurar la autenticación y escribir las credenciales localmente.
+- **Esta Mac (solo local):** la incorporación puede configurar la autenticación y escribir las credenciales localmente.
 - **Remoto (a través de SSH/Tailnet):** la incorporación **no** configura la autenticación local; las credenciales deben existir en el host de la puerta de enlace.
-- **Configurar más tarde:** omita la configuración y deje la aplicación sin configurar.
+- **Configurar más tarde:** omitir la configuración y dejar la aplicación sin configurar.
 
 <Tip>
-**Consejo de autenticación de Gateway:**
+**Sugerencia de autenticación del Gateway:**
 
-- El asistente ahora genera un **token** incluso para el bucle invertido, por lo que los clientes WS locales deben autenticarse.
+- El asistente ahora genera un **token** incluso para el bucle local, por lo que los clientes de WS locales deben autenticarse.
 - Si deshabilita la autenticación, cualquier proceso local puede conectarse; úselo solo en máquinas de total confianza.
-- Use un **token** para el acceso a varias máquinas o enlaces que no sean de bucle invertido.
+- Use un **token** para el acceso de varias máquinas o enlaces que no sean de bucle local.
 
 </Tip>
 </Step>
@@ -78,7 +78,7 @@ La incorporación solicita los permisos TCC necesarios para:
   Para el tiempo de ejecución de Gateway, Node sigue siendo la ruta recomendada.
 </Step>
 <Step title="Chat de incorporación (sesión dedicada)">
-  Después de la configuración, la aplicación abre una sesión de chat de incorporación dedicada para que el agente pueda presentarse y guiar los siguientes pasos. Esto mantiene la orientación de la primera ejecución separada de su conversación normal. Consulte [Inicialización](/es/start/bootstrapping) para obtener información sobre lo que sucede en el host de la puerta de enlace durante la primera ejecución del agente.
+  Después de la configuración, la aplicación abre una sesión de chat de incorporación dedicada para que el agente pueda presentarse y guiar los siguientes pasos. Esto mantiene la guía de primer inicio separada de su conversación normal. Consulte [Inicialización](/es/start/bootstrapping) para ver qué sucede en el host de la puerta de enlace durante la primera ejecución del agente.
 </Step>
 </Steps>
 

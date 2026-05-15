@@ -8,7 +8,7 @@ title: "ClawDock"
 
 ClawDock 是一个用于基于 Docker 的 OpenClaw 安装的小型 shell 辅助层。
 
-它提供了 `clawdock-start`、`clawdock-dashboard` 和 `clawdock-fix-token` 等简短命令，而不是较长的 `docker compose ...` 调用。
+它提供了像 `clawdock-start`、`clawdock-dashboard` 和 `clawdock-fix-token` 这样的短命令，而不是更长的 `docker compose ...` 调用。
 
 如果您尚未设置 Docker，请从 [Docker](/zh/install/docker) 开始。
 
@@ -21,7 +21,7 @@ mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/open
 echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
-如果您以前从 `scripts/shell-helpers/clawdock-helpers.sh` 安装过 ClawDock，请从新的 `scripts/clawdock/clawdock-helpers.sh` 路径重新安装。旧的 GitHub 原始路径已被移除。
+如果您之前是从 `scripts/shell-helpers/clawdock-helpers.sh` 安装的 ClawDock，请从新的 `scripts/clawdock/clawdock-helpers.sh` 路径重新安装。旧的 raw GitHub 路径已被移除。
 
 ## 功能概览
 
@@ -88,17 +88,25 @@ clawdock-approve <request-id>
 
 ## 配置和密钥
 
-ClawDock 使用与 [Docker](/zh/install/docker) 中描述的相同的 Docker 配置分离方式：
+ClawDock 的工作方式与 [Docker](/zh/install/docker) 中描述的相同 Docker 配置拆分一致：
 
 - `<project>/.env` 用于 Docker 特定的值，例如镜像名称、端口和网关令牌
-- `~/.openclaw/.env` 用于基于环境的提供商密钥和机器人令牌
-- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 用于存储的提供商 OAuth/API 密钥身份验证
+- `~/.openclaw/.env` 用于基于环境变量的提供商密钥和机器人令牌
+- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 用于存储的提供商 OAuth/API 密钥认证
 - `~/.openclaw/openclaw.json` 用于行为配置
 
-当您想要快速检查 `.env` 文件和 `openclaw.json` 时，请使用 `clawdock-show-config`。它会在打印输出中编辑 `.env` 值。
+当您想要快速检查 `.env` 文件和 `openclaw.json` 时，请使用 `clawdock-show-config`。它会在打印输出中隐藏 `.env` 的值。
 
-## 相关页面
+## 相关
 
-- [Docker](/zh/install/docker)
-- [Docker VM Runtime](/zh/install/docker-vm-runtime)
-- [更新](/zh/install/updating)
+<CardGroup cols={2}>
+  <Card title="DockerDocker" href="/zh/install/docker" icon="docker" DockerOpenClaw>
+    适用于 OpenClaw 的 Docker 规范安装。
+  </Card>
+  <Card title="DockerDocker VM runtime" href="/zh/install/docker-vm-runtime" icon="cube" Docker>
+    Docker 管理的 VM 运行时，用于强化隔离。
+  </Card>
+  <Card title="Updating" href="/zh/install/updating" icon="arrow-up-right-from-square" OpenClaw>
+    更新 OpenClaw 软件包和管理服务。
+  </Card>
+</CardGroup>

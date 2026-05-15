@@ -32,8 +32,8 @@ title: "功能"
 
 **頻道：**
 
-- 內建頻道包括 Discord、Google Chat、iMessage (舊版)、IRC、Signal、Slack、Telegram、WebChat 和 WhatsApp
-- 隨附的外掛程式頻道包括 BlueBubbles for iMessage、Feishu、LINE、Matrix、Mattermost、Microsoft Teams、Nextcloud Talk、Nostr、QQ Bot、Synology Chat、Tlon、Twitch、Zalo 和 Zalo Personal
+- 內建頻道包括 Discord、Google Chat、iMessage、IRC、Signal、Slack、Telegram、WebChat 和 WhatsApp
+- 隨附的外掛頻道包括 Feishu、LINE、Matrix、Mattermost、Microsoft Teams、Nextcloud Talk、Nostr、QQ Bot、Synology Chat、Tlon、Twitch、Zalo 和 Zalo Personal
 - 可選的額外安裝頻道外掛程式包括語音通話以及第三方套件，例如 WeChat
 - 第三方頻道外掛程式可以進一步擴充 Gateway，例如 WeChat
 - 群組聊天支援，並透過提及來啟動
@@ -43,7 +43,7 @@ title: "功能"
 
 - 內建代理程式執行環境，支援工具串流
 - Multi-agent 路由，每個工作區或發送者具有獨立的會話
-- 會話：直接聊天合併到共用的 `main` 中；群組是隔離的
+- Sessions：直接聊天合併到共享的 `main` 中；群組則被隔離
 - 長回應的串流和分塊處理
 
 **驗證和供應商：**
@@ -75,5 +75,17 @@ title: "功能"
 
 ## 相關
 
-- [實驗性功能](/zh-Hant/concepts/experimental-features)
-- [Agent runtime](/zh-Hant/concepts/agent)
+<CardGroup cols={2}>
+  <Card title="實驗性功能" href="/zh-Hant/concepts/experimental-features" icon="flask">
+    尚未發布至預設介面的選用功能。
+  </Card>
+  <Card title="Agent 執行時期" href="/zh-Hant/concepts/agent" icon="robot">
+    Agent 執行時期模型以及執行是如何分派的。
+  </Card>
+  <Card title="頻道" href="/zh-Hant/channels" icon="message-square">
+    從單一 Gateway 連接 Telegram、WhatsApp、Discord、Slack 等更多服務。
+  </Card>
+  <Card title="外掛" href="/zh-Hant/tools/plugin" icon="plug">
+    擴充 OpenClaw 的隨附及第三方外掛。
+  </Card>
+</CardGroup>

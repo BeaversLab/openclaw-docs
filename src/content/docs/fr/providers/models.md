@@ -6,13 +6,11 @@ read_when:
 title: "Démarrage rapide du provider de modèles"
 ---
 
-# Fournisseurs de modèles
+OpenClaw peut utiliser de nombreux providers LLM. Choisissez-en un, authentifiez-vous, puis définissez le modèle par défaut sur OpenClawLLM`provider/model`.
 
-OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentifiez-vous, puis définissez le modèle par défaut sur `provider/model`.
+## Quick start (deux étapes)
 
-## Démarrage rapide (deux étapes)
-
-1. Authentifiez-vous auprès du fournisseur (généralement via `openclaw onboard`).
+1. Authentifiez-vous auprès du provider (généralement via `openclaw onboard`).
 2. Définir le modèle par défaut :
 
 ```json5
@@ -21,31 +19,32 @@ OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentif
 }
 ```
 
-## Fournisseurs pris en charge (ensemble de démarrage)
+## Providers pris en charge (ensemble de démarrage)
 
 - [Alibaba Model Studio](/fr/providers/alibaba)
-- [Amazon Bedrock](/fr/providers/bedrock)
-- [Anthropic (API + Claude CLI)](/fr/providers/anthropic)
+- [Amazon Bedrock](Amazon Bedrock/en/providers/bedrock)
+- [Anthropic (API + Claude CLI)](AnthropicAPICLI/en/providers/anthropic)
 - [BytePlus (International)](/fr/concepts/model-providers#byteplus-international)
 - [Chutes](/fr/providers/chutes)
 - [ComfyUI](/fr/providers/comfy)
-- [Cloudflare AI Gateway](/fr/providers/cloudflare-ai-gateway)
+- [Cloudflare AI Gateway](Gateway/en/providers/cloudflare-ai-gateway)
+- [DeepInfra](/fr/providers/deepinfra)
 - [fal](/fr/providers/fal)
 - [Fireworks](/fr/providers/fireworks)
-- [GLM models](/fr/providers/glm)
-- [MiniMax](/fr/providers/minimax)
+- [GLM models](GLM/en/providers/glm)
+- [MiniMax](MiniMax/en/providers/minimax)
 - [Mistral](/fr/providers/mistral)
-- [Moonshot AI (Kimi + Kimi Coding)](/fr/providers/moonshot)
-- [OpenAI (API + Codex)](/fr/providers/openai)
+- [Moonshot AI (Kimi + Kimi Coding)](Moonshot/en/providers/moonshot)
+- [OpenAI (API + Codex)](OpenAIAPI/en/providers/openai)
 - [OpenCode (Zen + Go)](/fr/providers/opencode)
-- [OpenRouter](/fr/providers/openrouter)
+- [OpenRouter](OpenRouter/en/providers/openrouter)
 - [Qianfan](/fr/providers/qianfan)
-- [Qwen](/fr/providers/qwen)
+- [Qwen](Qwen/en/providers/qwen)
 - [Runway](/fr/providers/runway)
 - [StepFun](/fr/providers/stepfun)
 - [Synthetic](/fr/providers/synthetic)
-- [Vercel AI Gateway](/fr/providers/vercel-ai-gateway)
-- [Venice (Venice AI)](/fr/providers/venice)
+- [Vercel AI Gateway](VercelGateway/en/providers/vercel-ai-gateway)
+- [Venice (Venice AI)](VeniceVenice/en/providers/venice)
 - [xAI](/fr/providers/xai)
 - [Z.AI](/fr/providers/zai)
 
@@ -55,11 +54,10 @@ OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentif
 - `copilot-proxy` - pont de proxy VS Code Copilot local ; utilisez `openclaw onboard --auth-choice copilot-proxy`
 - `google-gemini-cli` - flux CLI OAuth OAuth non officiel ; nécessite une installation locale de `gemini` (`brew install gemini-cli` ou `npm install -g @google/gemini-cli`) ; model `google-gemini-cli/gemini-3-flash-preview` par défaut ; utilisez `openclaw onboard --auth-choice google-gemini-cli` ou `openclaw models auth login --provider google-gemini-cli --set-default`
 
-Pour le catalogue complet des fournisseurs (xAI, Groq, Mistral, etc.) et la configuration avancée,
-voyez [Model providers](/fr/concepts/model-providers).
+Pour le catalogue complet des providers (xAI, Groq, Mistral, etc.) et la configuration avancée, consultez [Model providers](/fr/concepts/model-providers).
 
 ## Connexes
 
-- [Sélection du modèle](/fr/concepts/model-providers)
-- [Bascule de modèle](/fr/concepts/model-failover)
-- [CLI de modèles](CLI)(/en/cli/models)
+- [Sélection de modèle](/fr/concepts/model-providers)
+- [Basculement de modèle](/fr/concepts/model-failover)
+- [CLI Modèles](CLI/en/cli/models)

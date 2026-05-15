@@ -23,10 +23,10 @@ OpenClaw 使用 pi SDK 将 AI 编码代理嵌入到其消息网关架构中。Op
 
 ```json
 {
-  "@mariozechner/pi-agent-core": "0.70.2",
-  "@mariozechner/pi-ai": "0.70.2",
-  "@mariozechner/pi-coding-agent": "0.70.2",
-  "@mariozechner/pi-tui": "0.70.2"
+  "@mariozechner/pi-agent-core": "0.73.0",
+  "@mariozechner/pi-ai": "0.73.0",
+  "@mariozechner/pi-coding-agent": "0.73.0",
+  "@mariozechner/pi-tui": "0.73.0"
 }
 ```
 
@@ -327,7 +327,7 @@ const compactResult = await compactEmbeddedPiSessionDirect({
 });
 ```
 
-## 身份验证与模型解析
+## 身份验证和模型解析
 
 ### 身份验证配置
 
@@ -403,7 +403,7 @@ if (cfg?.agents?.defaults?.contextPruning?.mode === "cache-ttl") {
 }
 ```
 
-## 流式传输与块回复
+## 流式传输和块回复
 
 ### 块分块
 

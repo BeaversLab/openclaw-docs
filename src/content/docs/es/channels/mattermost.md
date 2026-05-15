@@ -7,17 +7,15 @@ title: "Mattermost"
 sidebarTitle: "Mattermost"
 ---
 
-Estado: complemento incluido (token de bot + eventos de WebSocket). Se admiten canales, grupos y MD. Mattermost es una plataforma de mensajería para equipos que se puede alojar por uno mismo; consulte el sitio oficial en [mattermost.com](https://mattermost.com) para obtener detalles del producto y descargas.
+Estado: complemento descargable (token de bot + eventos de WebSocket). Se admiten canales, grupos y MD. Mattermost es una plataforma de mensajería para equipos autohospedable; consulte el sitio oficial en [mattermost.com](https://mattermost.com) para obtener detalles del producto y descargas.
 
-## Complemento incluido
+## Instalar
 
-<Note>Mattermost se distribuye como un complemento incluido en las versiones actuales de OpenClaw, por lo que las compilaciones empaquetadas normales no necesitan una instalación separada.</Note>
-
-Si está en una compilación anterior o en una instalación personalizada que excluye Mattermost, instálelo manualmente:
+Instale Mattermost antes de configurar el canal:
 
 <Tabs>
-  <Tab title="npm registry">```bash openclaw plugins install @openclaw/mattermost ```</Tab>
-  <Tab title="Local checkout">```bash openclaw plugins install ./path/to/local/mattermost-plugin ```</Tab>
+  <Tab title="registro npm">```bash openclaw plugins install @openclaw/mattermost ```</Tab>
+  <Tab title="Copia local">```bash openclaw plugins install ./path/to/local/mattermost-plugin ```</Tab>
 </Tabs>
 
 Detalles: [Complementos](/es/tools/plugin)
@@ -26,7 +24,7 @@ Detalles: [Complementos](/es/tools/plugin)
 
 <Steps>
   <Step title="Asegurarse de que el complemento esté disponible">
-    Las versiones empaquetadas actuales de OpenClaw ya lo incluyen. Las instalaciones antiguas/personalizadas pueden agregarlo manualmente con los comandos anteriores.
+    Las versiones empaquetadas actuales de OpenClaw ya lo incluyen. Las instalaciones antiguas o personalizadas pueden agregarlo manualmente con los comandos anteriores.
   </Step>
   <Step title="Crear un bot de Mattermost">
     Cree una cuenta de bot de Mattermost y copie el **token del bot**.
@@ -34,7 +32,7 @@ Detalles: [Complementos](/es/tools/plugin)
   <Step title="Copiar la URL base">
     Copie la **URL base** de Mattermost (por ejemplo, `https://chat.example.com`).
   </Step>
-  <Step title="Configurar OpenClaw e iniciar la pasarela">
+  <Step title="Configurar OpenClaw e iniciar la puerta de enlace">
     Configuración mínima:
 
     ```json5
@@ -55,7 +53,7 @@ Detalles: [Complementos](/es/tools/plugin)
 
 ## Comandos de barra nativos
 
-Los comandos de barra nativos son opcionales. Cuando están habilitados, OpenClaw registra comandos de barra `oc_*` a través de la API de Mattermost y recibe devoluciones de llamada POST en el servidor HTTP de la pasarela.
+Los comandos de barra nativos son opcionales. Cuando están habilitados, OpenClaw registra comandos de barra `oc_*` a través de la API de Mattermost y recibe devoluciones de llamadas POST en el servidor HTTP de la puerta de enlace.
 
 ```json5
 {
@@ -75,22 +73,25 @@ Los comandos de barra nativos son opcionales. Cuando están habilitados, OpenCla
 
 <AccordionGroup>
   <Accordion title="Notas de comportamiento">
-    - `native: "auto"` está deshabilitado de forma predeterminada para Mattermost. Establezca `native: true` para habilitar.
-    - Si se omite `callbackUrl`, OpenClaw deriva uno del host/puerto de la puerta de enlace + `callbackPath`.
+    - `native: "auto"` está deshabilitado de forma predeterminada para Mattermost. Establezca `native: true` para habilitarlo.
+    - Si se omite `callbackUrl`, OpenClaw deriva uno a partir del host/puerto de la puerta de enlace + `callbackPath`.
     - Para configuraciones de múltiples cuentas, `commands` se puede establecer en el nivel superior o bajo `channels.mattermost.accounts.<id>.commands` (los valores de la cuenta anulan los campos de nivel superior).
     - Las devoluciones de llamada de comandos se validan con los tokens por comando devueltos por Mattermost cuando OpenClaw registra `oc_*` comandos.
-    - Las devoluciones de llamada de barra fallan de forma cerrada cuando el registro falló, el inicio fue parcial o el token de devolución de llamada no coincide con ninguno de los comandos registrados.
+    - OpenClaw actualiza el registro actual del comando de Mattermost antes de aceptar cada devolución de llamada, por lo que los tokens obsoletos de comandos de barra eliminados o regenerados dejan de ser aceptados sin reiniciar la puerta de enlace.
+    - La validación de devoluciones de llamada falla de forma cerrada si la API de Mattermost no puede confirmar que el comando sigue siendo actual; las validaciones fallidas se almacenan en caché brevemente, las búsquedas simultáneas se combinan y los inicios de búsquedas nuevas tienen límite de velocidad por comando para limitar la presión de repetición.
+    - Las devoluciones de llamada de barra fallan de forma cerrada cuando el registro falló, el inicio fue parcial o el token de devolución de llamada no coincide con el token registrado del comando resuelto (un token válido para un comando no puede alcanzar la validación ascendente para un comando diferente).
+
   </Accordion>
   <Accordion title="Requisito de accesibilidad">
     El punto final de devolución de llamada debe ser accesible desde el servidor de Mattermost.
 
     - No establezca `callbackUrl` en `localhost` a menos que Mattermost se ejecute en el mismo host/espacio de nombres de red que OpenClaw.
-    - No establezca `callbackUrl` en su URL base de Mattermost a menos que esa URL actúe como proxy inverso de `/api/channels/mattermost/command` hacia OpenClaw.
-    - Una verificación rápida es `curl https://<gateway-host>/api/channels/mattermost/command`; un GET debería devolver `405 Method Not Allowed` de OpenClaw, no `404`.
+    - No establezca `callbackUrl` en su URL base de Mattermost a menos que esa URL actúe como proxy inverso de `/api/channels/mattermost/command` a OpenClaw.
+    - Una verificación rápida es `curl https://<gateway-host>/api/channels/mattermost/command`; una solicitud GET debería devolver `405 Method Not Allowed` desde OpenClaw, no `404`.
 
   </Accordion>
   <Accordion title="Lista de permitidos de salida de Mattermost">
-    Si sus objetivos de devolución de llamada son direcciones privadas/tailnet/internas, configure `ServiceSettings.AllowedUntrustedInternalConnections` de Mattermost para incluir el host/dominio de devolución de llamada.
+    Si sus destinos de devolución de llamada son direcciones privadas/tailnet/internas, configure Mattermost `ServiceSettings.AllowedUntrustedInternalConnections` para incluir el host/dominio de devolución de llamada.
 
     Use entradas de host/dominio, no URL completas.
 
@@ -102,7 +103,7 @@ Los comandos de barra nativos son opcionales. Cuando están habilitados, OpenCla
 
 ## Variables de entorno (cuenta predeterminada)
 
-Establezca estas en el host de la puerta de enlace si prefiere variables de entorno:
+Establezca estas en el host de la puerta de enlace si prefiere las variables de entorno:
 
 - `MATTERMOST_BOT_TOKEN=...`
 - `MATTERMOST_URL=https://chat.example.com`
@@ -110,7 +111,7 @@ Establezca estas en el host de la puerta de enlace si prefiere variables de ento
 <Note>
 Las variables de entorno se aplican solo a la cuenta **predeterminada** (`default`). Otras cuentas deben usar valores de configuración.
 
-`MATTERMOST_URL` no se puede establecer desde un archivo `.env` del espacio de trabajo; consulte [Archivos `.env` del espacio de trabajo](/es/gateway/security).
+`MATTERMOST_URL` no se puede establecer desde un espacio de trabajo `.env`; consulte [Archivos de `.env` del espacio de trabajo](/es/gateway/security).
 
 </Note>
 
@@ -119,9 +120,9 @@ Las variables de entorno se aplican solo a la cuenta **predeterminada** (`defaul
 Mattermost responde a los MD automáticamente. El comportamiento del canal se controla mediante `chatmode`:
 
 <Tabs>
-  <Tab title="oncall (default)">Responder solo cuando se le haga una @mención en los canales.</Tab>
+  <Tab title="oncall (predeterminado)">Responder solo cuando se le @mencione en los canales.</Tab>
   <Tab title="onmessage">Responder a cada mensaje del canal.</Tab>
-  <Tab title="onchar">Responder cuando un mensaje comience con un prefijo de activación.</Tab>
+  <Tab title="onchar">Responder cuando un mensaje comienza con un prefijo de activación.</Tab>
 </Tabs>
 
 Ejemplo de configuración:
@@ -140,14 +141,14 @@ Ejemplo de configuración:
 Notas:
 
 - `onchar` todavía responde a @menciones explícitas.
-- Se respeta `channels.mattermost.requireMention` para configuraciones heredadas, pero se prefiere `chatmode`.
+- `channels.mattermost.requireMention` se respeta para configuraciones heredadas, pero se prefiere `chatmode`.
 
 ## Hilos y sesiones
 
-Use `channels.mattermost.replyToMode` para controlar si las respuestas de canales y grupos se quedan en el canal principal o inician un hilo debajo de la publicación desencadenante.
+Use `channels.mattermost.replyToMode` para controlar si las respuestas de canal y grupo se quedan en el canal principal o inician un hilo debajo de la publicación desencadenante.
 
-- `off` (predeterminado): solo responder en un hilo cuando la publicación entrante ya está en uno.
-- `first`: para publicaciones de nivel superior en canales/grupos, iniciar un hilo debajo de esa publicación y enrutar la conversación a una sesión con alcance de hilo.
+- `off` (predeterminado): responder en un hilo solo cuando la publicación entrante ya está en uno.
+- `first`: para publicaciones de nivel superior de canal/grupo, inicie un hilo debajo de esa publicación y enrute la conversación a una sesión con ámbito de hilo.
 - `all`: mismo comportamiento que `first` para Mattermost hoy.
 - Los mensajes directos ignoran esta configuración y permanecen sin hilos.
 
@@ -165,25 +166,27 @@ Ejemplo de configuración:
 
 Notas:
 
-- Las sesiones con alcance de hilo usan el id de la publicación desencadenante como la raíz del hilo.
-- `first` y `all` son actualmente equivalentes porque una vez que Mattermost tiene una raíz de hilo, los fragmentos de seguimiento y los medios continúan en ese mismo hilo.
+- Las sesiones con ámbito de hilo utilizan el id de la publicación desencadenante como la raíz del hilo.
+- `first` y `all` son actualmente equivalentes porque una vez que Mattermost tiene una raíz de hilo, los fragmentos y medios de seguimiento continúan en ese mismo hilo.
 
 ## Control de acceso (MDs)
 
 - Predeterminado: `channels.mattermost.dmPolicy = "pairing"` (los remitentes desconocidos reciben un código de emparejamiento).
-- Aprobar vía:
+- Aprobar a través de:
   - `openclaw pairing list mattermost`
   - `openclaw pairing approve mattermost <CODE>`
 - MDs públicos: `channels.mattermost.dmPolicy="open"` más `channels.mattermost.allowFrom=["*"]`.
+- `channels.mattermost.allowFrom` acepta entradas `accessGroup:<name>`. Consulte [Grupos de acceso](/es/channels/access-groups).
 
 ## Canales (grupos)
 
-- Predeterminado: `channels.mattermost.groupPolicy = "allowlist"` (limitado a menciones).
-- Lista de permitidos para remitentes con `channels.mattermost.groupAllowFrom` (se recomiendan los ID de usuario).
-- Las anulaciones de mención por canal se encuentran en `channels.mattermost.groups.<channelId>.requireMention` o `channels.mattermost.groups["*"].requireMention` para un valor predeterminado.
+- Predeterminado: `channels.mattermost.groupPolicy = "allowlist"` (restringido por mención).
+- Permitir remitentes con `channels.mattermost.groupAllowFrom` (se recomiendan los IDs de usuario).
+- `channels.mattermost.groupAllowFrom` acepta entradas `accessGroup:<name>`. Consulte [Grupos de acceso](/es/channels/access-groups).
+- Las anulaciones de mención por canal se encuentran bajo `channels.mattermost.groups.<channelId>.requireMention` o `channels.mattermost.groups["*"].requireMention` para un valor predeterminado.
 - La coincidencia de `@username` es mutable y solo se habilita cuando `channels.mattermost.dangerouslyAllowNameMatching: true`.
-- Canales abiertos: `channels.mattermost.groupPolicy="open"` (limitado a menciones).
-- Nota de ejecución: si `channels.mattermost` falta completamente, la ejecución vuelve a `groupPolicy="allowlist"` para las comprobaciones de grupo (incluso si `channels.defaults.groupPolicy` está configurado).
+- Canales abiertos: `channels.mattermost.groupPolicy="open"` (restringido por mención).
+- Nota de tiempo de ejecución: si `channels.mattermost` falta por completo, el tiempo de ejecución recurre a `groupPolicy="allowlist"` para las comprobaciones de grupo (incluso si `channels.defaults.groupPolicy` está configurado).
 
 Ejemplo:
 
@@ -210,9 +213,9 @@ Use estos formatos de objetivo con `openclaw message send` o cron/webhooks:
 - `@username` para un MD (resuelto a través de la API de Mattermost)
 
 <Warning>
-Los ID opacos simples (como `64ifufp...`) son **ambiguos** en Mattermost (ID de usuario frente a ID de canal).
+Los IDs opacos simples (como `64ifufp...`) son **ambiguos** en Mattermost (ID de usuario vs. ID de canal).
 
-OpenClaw los resuelve **primero el usuario**:
+OpenClaw los resuelve **con prioridad de usuario**:
 
 - Si el ID existe como usuario (`GET /api/v4/users/<id>` tiene éxito), OpenClaw envía un **MD** resolviendo el canal directo a través de `/api/v4/channels/direct`.
 - De lo contrario, el ID se trata como un **ID de canal**.
@@ -223,9 +226,9 @@ Si necesita un comportamiento determinista, use siempre los prefijos explícitos
 
 ## Reintento de canal MD
 
-Cuando OpenClaw envía a un objetivo MD de Mattermost y necesita resolver primero el canal directo, reintentará los fallos transitorios de creación de canal directo de manera predeterminada.
+Cuando OpenClaw envía a un destino MD de Mattermost y necesita resolver el canal directo primero, reintenta por defecto los fallos transitorios de creación de canales directos.
 
-Use `channels.mattermost.dmChannelRetry` para ajustar ese comportamiento globalmente para el complemento Mattermost, o `channels.mattermost.accounts.<id>.dmChannelRetry` para una cuenta.
+Use `channels.mattermost.dmChannelRetry` para ajustar ese comportamiento globalmente para el complemento de Mattermost, o `channels.mattermost.accounts.<id>.dmChannelRetry` para una cuenta.
 
 ```json5
 {
@@ -245,14 +248,14 @@ Use `channels.mattermost.dmChannelRetry` para ajustar ese comportamiento globalm
 Notas:
 
 - Esto se aplica solo a la creación de canales MD (`/api/v4/channels/direct`), no a cada llamada a la API de Mattermost.
-- Los reintentos se aplican a fallos transitorios como límites de velocidad, respuestas 5xx y errores de red o de tiempo de espera.
+- Los reintentos se aplican a fallos transitorios como límites de tasa, respuestas 5xx y errores de red o de tiempo de espera.
 - Los errores de cliente 4xx distintos de `429` se tratan como permanentes y no se reintentan.
 
-## Vista previa de transmisión
+## Transmisión de vista previa
 
-Mattermost transmite el pensamiento, la actividad de las herramientas y el texto de respuesta parcial en un único **borrador de publicación de vista previa** que se finaliza en su lugar cuando la respuesta final es segura de enviar. La vista previa se actualiza en el mismo id de publicación en lugar de saturar el canal con mensajes por fragmento. Los finales de medios/errores cancelan las ediciones de vista previa pendientes y utilizan la entrega normal en lugar de vaciar una publicación de vista previa desechable.
+Mattermost transmite el pensamiento, la actividad de las herramientas y el texto de respuesta parcial en una única **publicación de vista previa de borrador** que se finaliza en su lugar cuando la respuesta final es segura para enviar. La vista previa se actualiza en la misma ID de publicación en lugar de saturar el canal con mensajes por fragmentos. Los finales de medios/errores cancelan las ediciones de vista previa pendientes y utilizan la entrega normal en lugar de vaciar una publicación de vista previa desechable.
 
-Activar mediante `channels.mattermost.streaming`:
+Active a través de `channels.mattermost.streaming`:
 
 ```json5
 {
@@ -266,22 +269,24 @@ Activar mediante `channels.mattermost.streaming`:
 
 <AccordionGroup>
   <Accordion title="Modos de transmisión">
-    - `partial` es la opción habitual: una publicación de vista previa que se edita a medida que crece la respuesta y luego se finaliza con la respuesta completa.
+    - `partial` es la elección habitual: una publicación de vista previa que se edita a medida que crece la respuesta y luego se finaliza con la respuesta completa.
     - `block` usa fragmentos de borrador de estilo anexar dentro de la publicación de vista previa.
     - `progress` muestra una vista previa de estado mientras se genera y solo publica la respuesta final al completarse.
     - `off` desactiva la transmisión de vista previa.
+
   </Accordion>
   <Accordion title="Notas sobre el comportamiento de la transmisión">
-    - Si la transmisión no puede finalizarse en su lugar (por ejemplo, la publicación se eliminó a mitad de la transmisión), OpenClaw recurre a enviar una publicación final nueva para que la respuesta nunca se pierda.
-    - Las cargas útiles solo de razonamiento se suprimen de las publicaciones del canal, incluyendo el texto que llega como un blockquote `> Reasoning:`. Establezca `/reasoning on` para ver el pensamiento en otras superficies; la publicación final de Mattermost mantiene solo la respuesta.
-    - Consulte [Streaming](/es/concepts/streaming#preview-streaming-modes) para ver la matriz de mapeo de canales.
+    - Si la transmisión no puede finalizarse en su lugar (por ejemplo, si el mensaje se eliminó a mitad de la transmisión), OpenClaw recurre al envío de un mensaje final nuevo para que la respuesta nunca se pierda.
+    - Las cargas útiles solo de razonamiento se suprimen de los mensajes del canal, incluido el texto que llega como un `> Reasoning:` blockquote. Establezca `/reasoning on` para ver el pensamiento en otras superficies; el mensaje final de Mattermost mantiene solo la respuesta.
+    - Consulte [Streaming](/es/concepts/streaming#preview-streaming-modes) para ver la matriz de asignación de canales.
+
   </Accordion>
 </AccordionGroup>
 
 ## Reacciones (herramienta de mensaje)
 
 - Use `message action=react` con `channel=mattermost`.
-- `messageId` es el id de publicación de Mattermost.
+- `messageId` es el id del mensaje de Mattermost.
 - `emoji` acepta nombres como `thumbsup` o `:+1:` (los dos puntos son opcionales).
 - Establezca `remove=true` (booleano) para eliminar una reacción.
 - Los eventos de agregar/eliminar reacciones se reenvían como eventos del sistema a la sesión del agente enrutado.
@@ -295,14 +300,14 @@ message action=react channel=mattermost target=channel:<channelId> messageId=<po
 
 Configuración:
 
-- `channels.mattermost.actions.reactions`: habilitar/deshabilitar acciones de reacción (por defecto verdadero).
+- `channels.mattermost.actions.reactions`: habilitar/deshabilitar acciones de reacción (por defecto true).
 - Anulación por cuenta: `channels.mattermost.accounts.<id>.actions.reactions`.
 
 ## Botones interactivos (herramienta de mensaje)
 
 Envíe mensajes con botones en los que se puede hacer clic. Cuando un usuario hace clic en un botón, el agente recibe la selección y puede responder.
 
-Habilite los botones añadiendo `inlineButtons` a las capacidades del canal:
+Habilite los botones agregando `inlineButtons` a las capacidades del canal:
 
 ```json5
 {
@@ -314,19 +319,19 @@ Habilite los botones añadiendo `inlineButtons` a las capacidades del canal:
 }
 ```
 
-Use `message action=send` con un parámetro `buttons`. Los botones son un array bidimensional (filas de botones):
+Use `message action=send` con un parámetro `buttons`. Los botones son una matriz 2D (filas de botones):
 
 ```
 message action=send channel=mattermost target=channel:<channelId> buttons=[[{"text":"Yes","callback_data":"yes"},{"text":"No","callback_data":"no"}]]
 ```
 
-Campos de los botones:
+Campos de botón:
 
 <ParamField path="text" type="string" required>
   Etiqueta de visualización.
 </ParamField>
 <ParamField path="callback_data" type="string" required>
-  Valor devuelto al hacer clic (se usa como ID de acción).
+  Valor enviado al hacer clic (se utiliza como el ID de acción).
 </ParamField>
 <ParamField path="style" type='"default" | "primary" | "danger"'>
   Estilo del botón.
@@ -341,17 +346,19 @@ Cuando un usuario hace clic en un botón:
 
 <AccordionGroup>
   <Accordion title="Notas de implementación">
-    - Las devoluciones de llamada de los botones usan verificación HMAC-SHA256 (automática, no se necesita configuración).
-    - Mattermost elimina los datos de devolución de llamada de sus respuestas de API (característica de seguridad), por lo que todos los botones se eliminan al hacer clic — no es posible una eliminación parcial.
-    - Los IDs de acción que contienen guiones o guiones bajos se sanitizan automáticamente (limitación de enrutamiento de Mattermost).
+    - Los retornos de llamada de los botones utilizan verificación HMAC-SHA256 (automático, no se requiere configuración).
+    - Mattermost elimina los datos de retorno de llamada de sus respuestas de la API (característica de seguridad), por lo que todos los botones se eliminan al hacer clic; no es posible una eliminación parcial.
+    - Los ID de acción que contienen guiones o guiones bajos se sanean automáticamente (limitación de enrutamiento de Mattermost).
+
   </Accordion>
   <Accordion title="Configuración y accesibilidad">
-    - `channels.mattermost.capabilities`: matriz de cadenas de capacidades. Añada `"inlineButtons"` para habilitar la descripción de la herramienta de botones en el mensaje del sistema del agente.
-    - `channels.mattermost.interactions.callbackBaseUrl`: URL base externa opcional para las devoluciones de llamada de los botones (por ejemplo `https://gateway.example.com`). Úsela cuando Mattermost no pueda alcanzar la puerta de enlace en su host de enlace directamente.
-    - En configuraciones de múltiples cuentas, también puede establecer el mismo campo en `channels.mattermost.accounts.<id>.interactions.callbackBaseUrl`.
-    - Si se omite `interactions.callbackBaseUrl`, OpenClaw deriva la URL de devolución de llamada de `gateway.customBindHost` + `gateway.port` y luego recurre a `http://localhost:<port>`.
-    - Regla de accesibilidad: la URL de devolución de llamada de los botones debe ser accesible desde el servidor de Mattermost. `localhost` solo funciona cuando Mattermost y OpenClaw se ejecutan en el mismo host/espacio de nombres de red.
-    - Si su objetivo de devolución de llamada es privado/tailnet/interno, añada su host/dominio a la configuración de Mattermost `ServiceSettings.AllowedUntrustedInternalConnections`.
+    - `channels.mattermost.capabilities`: matriz de cadenas de capacidades. Agregue `"inlineButtons"` para habilitar la descripción de la herramienta de botones en el mensaje del sistema del agente.
+    - `channels.mattermost.interactions.callbackBaseUrl`: URL base externa opcional para los retornos de llamada de los botones (por ejemplo `https://gateway.example.com`). Úselo cuando Mattermost no pueda alcanzar la puerta de enlace en su host de enlace directamente.
+    - En configuraciones multicuenta, también puede establecer el mismo campo en `channels.mattermost.accounts.<id>.interactions.callbackBaseUrl`.
+    - Si se omite `interactions.callbackBaseUrl`, OpenClaw deriva la URL de retorno de llamada de `gateway.customBindHost` + `gateway.port`, y luego recurre a `http://localhost:<port>`.
+    - Regla de accesibilidad: la URL de retorno de llamada del botón debe ser accesible desde el servidor de Mattermost. `localhost` solo funciona cuando Mattermost y OpenClaw se ejecutan en el mismo host/espacio de nombres de red.
+    - Si su objetivo de retorno de llamada es privado/tailnet/interno, agregue su host/dominio a la `ServiceSettings.AllowedUntrustedInternalConnections` de Mattermost.
+
   </Accordion>
 </AccordionGroup>
 
@@ -359,7 +366,7 @@ Cuando un usuario hace clic en un botón:
 
 Los scripts externos y los webhooks pueden publicar botones directamente a través de la API REST de Mattermost en lugar de pasar por la herramienta `message` del agente. Use `buildButtonAttachments()` del complemento cuando sea posible; si publica JSON sin procesar, siga estas reglas:
 
-**Estructura de la carga útil:**
+**Estructura del payload:**
 
 ```json5
 {
@@ -370,7 +377,7 @@ Los scripts externos y los webhooks pueden publicar botones directamente a trav�
       {
         actions: [
           {
-            id: "mybutton01", // alphanumeric only — see below
+            id: "mybutton01", // alphanumeric only - see below
             type: "button", // required, or clicks are silently ignored
             name: "Approve", // display label
             style: "primary", // optional: "default", "primary", "danger"
@@ -395,12 +402,13 @@ Los scripts externos y los webhooks pueden publicar botones directamente a trav�
 **Reglas críticas**
 
 1. Los adjuntos van en `props.attachments`, no en el nivel superior `attachments` (se ignoran silenciosamente).
-2. Cada acción necesita `type: "button"` — sin él, los clics se tragan silenciosamente.
-3. Cada acción necesita un campo `id` — Mattermost ignora las acciones sin ID.
-4. La acción `id` debe ser **solo alfanumérica** (`[a-zA-Z0-9]`). Los guiones y guiones bajos rompen el enrutamiento de acciones del lado del servidor de Mattermost (devuelve 404). Elimínelos antes de usarlos.
-5. `context.action_id` debe coincidir con el `id` del botón para que el mensaje de confirmación muestre el nombre del botón (por ejemplo, "Aprobar") en lugar de una ID sin procesar.
-6. `context.action_id` es obligatorio — el controlador de interacción devuelve 400 sin él.
-   </Warning>
+2. Cada acción necesita `type: "button"`: sin él, los clics se ignoran silenciosamente.
+3. Cada acción necesita un campo `id` - Mattermost ignora las acciones sin ID.
+4. La `id` de la acción debe ser **solo alfanumérica** (`[a-zA-Z0-9]`). Los guiones y guiones bajos rompen el enrutamiento de acciones del lado del servidor de Mattermost (devuelve 404). Elimínelos antes de usarlos.
+5. `context.action_id` debe coincidir con la `id` del botón para que el mensaje de confirmación muestre el nombre del botón (por ejemplo, "Aprobar") en lugar de una ID sin procesar.
+6. `context.action_id` es obligatorio: el manejador de interacción devuelve 400 sin él.
+
+</Warning>
 
 **Generación de tokens HMAC**
 
@@ -411,7 +419,7 @@ La puerta de enlace verifica los clics en los botones con HMAC-SHA256. Los scrip
   <Step title="Construir el objeto de contexto">Construya el objeto de contexto con todos los campos **excepto** `_token`.</Step>
   <Step title="Serializar con claves ordenadas">Serialice con **claves ordenadas** y **sin espacios** (la puerta de enlace usa `JSON.stringify` con claves ordenadas, lo que produce una salida compacta).</Step>
   <Step title="Firmar la carga útil">`HMAC-SHA256(key=secret, data=serializedContext)`</Step>
-  <Step title="Añadir el token">Añada el resumen hexadecimal resultante como `_token` en el contexto.</Step>
+  <Step title="Agregar el token">Agregue el resumen hexadecimal resultante como `_token` en el contexto.</Step>
 </Steps>
 
 Ejemplo en Python:
@@ -432,19 +440,20 @@ context = {**ctx, "_token": token}
 ```
 
 <AccordionGroup>
-  <Accordion title="Problemas comunes de HMAC">
+  <Accordion title="Errores comunes de HMAC">
     - El `json.dumps` de Python añade espacios por defecto (`{"key": "val"}`). Use `separators=(",", ":")` para coincidir con la salida compacta de JavaScript (`{"key":"val"}`).
-    - Firma siempre **todos** los campos de contexto (excepto `_token`). La puerta de enlace elimina `_token` y luego firma todo lo restante. Firmar un subconjunto causa un fallo silencioso de verificación.
-    - Use `sort_keys=True` — la puerta de enlace ordena las claves antes de firmar, y Mattermost puede reordenar los campos de contexto al almacenar el payload.
-    - Derive el secreto del token del bot (determinista), no de bytes aleatorios. El secreto debe ser el mismo en el proceso que crea los botones y en la puerta de enlace que verifica.
+    - Firme siempre **todos** los campos de contexto (excepto `_token`). La puerta de enlace elimina `_token` y luego firma todo lo que queda. Firmar un subconjunto causa un fallo silencioso de verificación.
+    - Use `sort_keys=True` - la puerta de enlace ordena las claves antes de firmar y Mattermost puede reordenar los campos de contexto al almacenar el payload.
+    - Derive el secreto desde el token del bot (determinista), no desde bytes aleatorios. El secreto debe ser el mismo en el proceso que crea los botones y la puerta de enlace que los verifica.
+
   </Accordion>
 </AccordionGroup>
 
 ## Adaptador de directorio
 
-El complemento de Mattermost incluye un adaptador de directorio que resuelve los nombres de canales y usuarios a través de la API de Mattermost. Esto permite los destinos `#channel-name` y `@username` en `openclaw message send` y entregas de cron/webhook.
+El complemento de Mattermost incluye un adaptador de directorio que resuelve los nombres de canal y usuario a través de la API de Mattermost. Esto permite los objetivos `#channel-name` y `@username` en `openclaw message send` y entregas cron/webhook.
 
-No se necesita configuración — el adaptador usa el token del bot de la configuración de la cuenta.
+No se necesita configuración: el adaptador usa el token del bot de la configuración de la cuenta.
 
 ## Multicuenta
 
@@ -466,25 +475,40 @@ Mattermost soporta múltiples cuentas bajo `channels.mattermost.accounts`:
 ## Solución de problemas
 
 <AccordionGroup>
-  <Accordion title="Sin respuestas en los canales">Asegúrese de que el bot esté en el canal y se le mencione (oncall), use un prefijo de activador (onchar) o configure `chatmode: "onmessage"`.</Accordion>
-  <Accordion title="Errores de autenticación o multicuenta">- Verifique el token del bot, la URL base y si la cuenta está habilitada. - Problemas de multicuenta: las variables de entorno solo se aplican a la cuenta `default`.</Accordion>
-  <Accordion title="Error en los comandos de barra nativos">
-    - `Unauthorized: invalid command token.`: OpenClaw no aceptó el token de devolución de llamada (callback). Causas típicas: - el registro del comando de barra falló o solo se completó parcialmente al iniciar - la devolución de llamada está llegando a la puerta de enlace/cuenta incorrecta - Mattermost todavía tiene comandos antiguos apuntando a un objetivo de devolución de llamada anterior - la
-    puerta de enlace se reinició sin reactivar los comandos de barra - Si los comandos de barra nativos dejan de funcionar, revise los registros en busca de `mattermost: failed to register slash commands` o `mattermost: native slash commands enabled but no commands could be registered`. - Si se omite `callbackUrl` y los registros advierten que la devolución de llamada se resolvió a
-    `http://127.0.0.1:18789/...`, es probable que esa URL solo sea accesible cuando Mattermost se ejecuta en el mismo host/espacio de nombres de red que OpenClaw. Establezca un `commands.callbackUrl` explícito y accesible externamente en su lugar.
+  <Accordion title="Sin respuestas en los canales">
+    Asegúrese de que el bot esté en el canal y de mencionarlo (oncall), use un prefijo de activación (onchar) o configure `chatmode: "onmessage"`.
   </Accordion>
-  <Accordion title="Problemas con botones">
-    - Los botones aparecen como cuadros blancos: el agente puede estar enviando datos de botón con formato incorrecto. Compruebe que cada botón tiene tanto los campos `text` como `callback_data`. - Los botones se muestran pero los clics no hacen nada: verifique que `AllowedUntrustedInternalConnections` en la configuración del servidor de Mattermost incluye `127.0.0.1 localhost`, y que
-    `EnablePostActionIntegration` es `true` en ServiceSettings. - Los botones devuelven 404 al hacer clic: el `id` del botón probablemente contiene guiones o guiones bajos. El enrutador de acciones de Mattermost falla con IDs no alfanuméricos. Use solo `[a-zA-Z0-9]`. - Los registros de Gateway muestran `invalid _token`: discordancia de HMAC. Compruebe que firma todos los campos de contexto (no un
-    subconjunto), usa claves ordenadas y usa JSON compacto (sin espacios). Vea la sección HMAC anterior. - Los registros de Gateway muestran `missing _token in context`: el campo `_token` no está en el contexto del botón. Asegúrese de que se incluya al construir la carga útil de la integración. - La confirmación muestra el ID sin procesar en lugar del nombre del botón: `context.action_id` no
-    coincide con el `id` del botón. Establezca ambos con el mismo valor saneado. - El agente no conoce los botones: agregue `capabilities: ["inlineButtons"]` a la configuración del canal de Mattermost.
+  <Accordion title="Errores de autenticación o multicuenta">
+    - Verifique el token del bot, la URL base y si la cuenta está habilitada.
+    - Problemas de multicuenta: las variables de entorno solo se aplican a la cuenta `default`.
+
+  </Accordion>
+  <Accordion title="Fallo de comandos de barra nativos">
+    - `Unauthorized: invalid command token.`: OpenClaw no aceptó el token de devolución de llamada. Causas típicas:
+      - el registro del comando de barra falló o solo se completó parcialmente al iniciar
+      - la devolución de llamada está llegando a la puerta de enlace/cuenta equivocada
+      - Mattermost todavía tiene comandos antiguos apuntando a un objetivo de devolución de llamada anterior
+      - la puerta de enlace se reinició sin reactivar los comandos de barra
+    - Si los comandos de barra nativos dejan de funcionar, revise los registros en busca de `mattermost: failed to register slash commands` o `mattermost: native slash commands enabled but no commands could be registered`.
+    - Si se omite `callbackUrl` y los registros advierten que la devolución de llamada se resolvió a `http://127.0.0.1:18789/...`, es probable que esa URL solo sea accesible cuando Mattermost se ejecuta en el mismo host/espacio de nombres de red que OpenClaw. Establezca un `commands.callbackUrl` explícito accesible externamente en su lugar.
+
+  </Accordion>
+  <Accordion title="Problemas con los botones">
+    - Los botones aparecen como cuadros blancos: es posible que el agente esté enviando datos de botón con formato incorrecto. Compruebe que cada botón tenga los campos `text` y `callback_data`.
+    - Los botones se renderizan pero los clics no hacen nada: verifique que `AllowedUntrustedInternalConnections` en la configuración del servidor de Mattermost incluya `127.0.0.1 localhost` y que `EnablePostActionIntegration` sea `true` en ServiceSettings.
+    - Los botones devuelven 404 al hacer clic: es probable que el `id` del botón contenga guiones o guiones bajos. El enrutador de acciones de Mattermost falla con IDs no alfanuméricos. Use solo `[a-zA-Z0-9]`.
+    - El registro de la puerta de enlace muestra `invalid _token`: Discordancia de HMAC. Compruebe que firme todos los campos de contexto (no un subconjunto), use claves ordenadas y use JSON compacto (sin espacios). Consulte la sección HMAC anterior.
+    - El registro de la puerta de enlace muestra `missing _token in context`: el campo `_token` no está en el contexto del botón. Asegúrese de que se incluya al construir la carga útil de integración.
+    - La confirmación muestra la ID sin procesar en lugar del nombre del botón: `context.action_id` no coincide con la `id` del botón. Establezca ambos con el mismo valor saneado.
+    - El agente no sabe nada sobre los botones: agregue `capabilities: ["inlineButtons"]` a la configuración del canal de Mattermost.
+
   </Accordion>
 </AccordionGroup>
 
 ## Relacionado
 
-- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Descripción general de canales](/es/channels) — todos los canales compatibles
-- [Grupos](/es/channels/groups) — comportamiento del chat de grupo y control de menciones
-- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
-- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento
+- [Enrutamiento de canales](/es/channels/channel-routing) - enrutamiento de sesión para mensajes
+- [Descripción general de canales](/es/channels) - todos los canales compatibles
+- [Grupos](/es/channels/groups) - comportamiento del chat grupal y filtrado de menciones
+- [Emparejamiento](/es/channels/pairing) - autenticación y flujo de emparejamiento de MD
+- [Seguridad](/es/gateway/security) - modelo de acceso y endurecimiento

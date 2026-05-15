@@ -154,7 +154,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Custom provider 範例">
+  <Accordion title="自訂供應商範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -164,11 +164,13 @@ openclaw onboard --non-interactive \
       --custom-api-key "$CUSTOM_API_KEY" \
       --custom-provider-id "my-custom" \
       --custom-compatibility anthropic \
+      --custom-image-input \
       --gateway-port 18789 \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` 是選用的。如果省略，入門流程會檢查 `CUSTOM_API_KEY`。
+    `--custom-api-key` 是可選的。如果省略，入門向導會檢查 `CUSTOM_API_KEY`。
+    OpenClaw 會自動將常見的視覺模型 ID 標記為具備影像處理能力。為未知的自訂視覺 ID 新增 `--custom-image-input`，或新增 `--custom-text-input` 以強制僅使用文字元資料。
 
     參照模式變體：
 
@@ -182,11 +184,12 @@ openclaw onboard --non-interactive \
       --secret-input-mode ref \
       --custom-provider-id "my-custom" \
       --custom-compatibility anthropic \
+      --custom-image-input \
       --gateway-port 18789 \
       --gateway-bind loopback
     ```
 
-    在此模式下，入站流程會將 `apiKey` 儲存為 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
+    在此模式下，入門向導會將 `apiKey` 儲存為 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
 
   </Accordion>
 </AccordionGroup>
@@ -195,8 +198,8 @@ Anthropic setup-token 仍然可用作支援的 onboarding token 路徑，但 Ope
 
 ## 新增另一個代理程式
 
-使用 `openclaw agents add <name>` 建立具有自己的工作區、
-工作階段和設定檔的個別代理程式。如果不執行 `--workspace`，則會啟動精靈。
+使用 `openclaw agents add <name>` 建立一個擁有自己工作區、
+工作階段和驗證設定檔的獨立代理程式。若未帶 `--workspace` 執行則會啟動精靈。
 
 ```bash
 openclaw agents add work \
@@ -216,11 +219,11 @@ openclaw agents add work \
 備註：
 
 - 預設工作區遵循 `~/.openclaw/workspace-<agentId>`。
-- 新增 `bindings` 以路由傳入訊息 (精靈可以執行此操作)。
-- 非互動式標誌：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
+- 新增 `bindings` 以路由傳送傳入訊息（精靈可以執行此操作）。
+- 非互動式旗標：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
 
 ## 相關文件
 
-- 入門中心：[Onboarding (CLI)](/zh-Hant/start/wizard)
-- 完整參考資料：[CLI Setup Reference](/zh-Hant/start/wizard-cli-reference)
-- 指令參考資料：[`openclaw onboard`](/zh-Hant/cli/onboard)
+- 入門中心：[入門 (CLI)](/zh-Hant/start/wizard)
+- 完整參考：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference)
+- 指令參考：[`openclaw onboard`](/zh-Hant/cli/onboard)

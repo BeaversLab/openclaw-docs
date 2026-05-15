@@ -21,7 +21,7 @@ Linux 配套應用程式已在計劃中，但 Gateway 目前已完全支援。
 - Windows: [Windows](/zh-Hant/platforms/windows)
 - Linux: [Linux](/zh-Hant/platforms/linux)
 
-## VPS 與託管
+## VPS 與主機代管
 
 - VPS hub: [VPS hosting](/zh-Hant/vps)
 - Fly.io: [Fly.io](/zh-Hant/install/fly)

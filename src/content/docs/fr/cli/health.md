@@ -1,7 +1,7 @@
 ---
 summary: "Référence CLI pour `openclaw health` (instantané de santé de la passerelle via RPC)"
 read_when:
-  - You want to quickly check the running Gateway’s health
+  - You want to quickly check the running Gateway's health
 title: "Health"
 ---
 

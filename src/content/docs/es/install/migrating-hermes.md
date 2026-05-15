@@ -46,14 +46,16 @@ OpenClaw importa el estado de Hermes a través de un proveedor de migración inc
 <AccordionGroup>
   <Accordion title="Configuración del modelo">
     - Selección del modelo predeterminado de Hermes `config.yaml`.
-    - Proveedores de modelos configurados y puntos de conexión personalizados compatibles con OpenAI desde `providers` y `custom_providers`.
+    - Proveedores de modelo configurados y endpoints personalizados compatibles con OpenAI de `providers` y `custom_providers`.
+
   </Accordion>
   <Accordion title="Servidores MCP">
     Definiciones de servidores MCP desde `mcp_servers` o `mcp.servers`.
   </Accordion>
   <Accordion title="Archivos del espacio de trabajo">
     - `SOUL.md` y `AGENTS.md` se copian en el espacio de trabajo del agente OpenClaw.
-    - `memories/MEMORY.md` y `memories/USER.md` se **agregan** a los archivos de memoria correspondientes de OpenClaw en lugar de sobrescribirlos.
+    - `memories/MEMORY.md` y `memories/USER.md` se **añaden** a los archivos de memoria de OpenClaw correspondientes en lugar de sobrescribirlos.
+
   </Accordion>
   <Accordion title="Configuración de memoria">
     Valores predeterminados de configuración de memoria para la memoria de archivos de OpenClaw. Los proveedores de memoria externos como Honcho se registran como elementos de archivo o de revisión manual para que pueda moverlos deliberadamente.

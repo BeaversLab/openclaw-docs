@@ -7,7 +7,7 @@ read_when:
 title: "Órdenes permanentes"
 ---
 
-Las órdenes permanentes otorgan a su agente **autoridad operativa permanente** para programas definidos. En lugar de dar instrucciones de tareas individuales cada vez, usted define programas con un alcance claro, desencadenadores y reglas de escalada, y el agente se ejecuta de forma autónoma dentro de esos límites.
+Las órdenes permanentes otorgan a su agente **autoridad operativa permanente** para programas definidos. En lugar de dar instrucciones individuales de tarea cada vez, define programas con un alcance claro, disparadores y reglas de escalada, y el agente se ejecuta de forma autónoma dentro de esos límites.
 
 Esta es la diferencia entre decirle a su asistente "envía el informe semanal" todos los viernes frente a otorgar autoridad permanente: "Usted es responsable del informe semanal. Compílelo todos los viernes, envíelo y solo escale si algo parece incorrecto".
 
@@ -33,14 +33,14 @@ Las órdenes permanentes se definen en los archivos de su [espacio de trabajo de
 
 Cada programa especifica:
 
-1. **Alcance** — lo que el agente está autorizado a hacer
-2. **Desencadenadores** — cuándo ejecutar (programación, evento o condición)
-3. **Puertas de aprobación** — qué requiere la firma de un humano antes de actuar
-4. **Reglas de escalada** — cuándo detenerse y pedir ayuda
+1. **Alcance** - lo que el agente está autorizado a hacer
+2. **Disparadores** - cuándo ejecutar (programación, evento o condición)
+3. **Puertas de aprobación** - qué requiere la firma de un humano antes de actuar
+4. **Reglas de escalada** - cuándo detenerse y pedir ayuda
 
 El agente carga estas instrucciones en cada sesión a través de los archivos de arranque del espacio de trabajo (consulte [Espacio de trabajo del agente](/es/concepts/agent-workspace) para obtener la lista completa de archivos inyectados automáticamente) y se ejecuta según ellas, combinado con [trabajos cron](/es/automation/cron-jobs) para el cumplimiento basado en tiempo.
 
-<Tip>Pon las órdenes permanentes en `AGENTS.md` para garantizar que se carguen en cada sesión. El arranque del espacio de trabajo inyecta automáticamente `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` y `MEMORY.md` — pero no archivos arbitrarios en subdirectorios.</Tip>
+<Tip>Ponga las órdenes permanentes en `AGENTS.md` para garantizar que se carguen en cada sesión. El arranque del espacio de trabajo inyecta automáticamente `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` y `MEMORY.md`, pero no archivos arbitrarios en subdirectorios.</Tip>
 
 ## Anatomía de una orden permanente
 
@@ -64,7 +64,7 @@ El agente carga estas instrucciones en cada sesión a través de los archivos de
 
 - Do not send reports to external parties
 - Do not modify source data
-- Do not skip delivery if metrics look bad — report accurately
+- Do not skip delivery if metrics look bad - report accurately
 ```
 
 ## Órdenes permanentes más trabajos cron
@@ -88,7 +88,7 @@ openclaw cron add \
   --tz America/New_York \
   --timeout-seconds 300 \
   --announce \
-  --channel bluebubbles \
+  --channel imessage \
   --to "+1XXXXXXXXXX" \
   --message "Execute daily inbox triage per standing orders. Check mail for new alerts. Parse, categorize, and persist each item. Report summary to owner. Escalate unknowns."
 ```
@@ -107,7 +107,7 @@ openclaw cron add \
 ### Weekly cycle
 
 - **Monday:** Review platform metrics and audience engagement
-- **Tuesday–Thursday:** Draft social posts, create blog content
+- **Tuesday-Thursday:** Draft social posts, create blog content
 - **Friday:** Compile weekly marketing brief → deliver to owner
 
 ### Content rules
@@ -174,9 +174,9 @@ openclaw cron add \
 
 Las órdenes permanentes funcionan mejor cuando se combinan con una disciplina de ejecución estricta. Cada tarea en una orden permanente debe seguir este bucle:
 
-1. **Ejecutar** — Hacer el trabajo real (no solo reconocer la instrucción)
-2. **Verificar** — Confirmar que el resultado es correcto (el archivo existe, el mensaje se envió, los datos se analizaron)
-3. **Reportar** — Decir al propietario qué se hizo y qué se verificó
+1. **Ejecutar** - Hacer el trabajo real (no solo reconocer la instrucción)
+2. **Verificar** - Confirmar que el resultado es correcto (el archivo existe, el mensaje se envió, los datos se analizaron)
+3. **Informar** - Decirle al propietario qué se hizo y qué se verificó
 
 ```markdown
 ### Execution rules
@@ -186,7 +186,7 @@ Las órdenes permanentes funcionan mejor cuando se combinan con una disciplina d
 - "Done" without verification is not acceptable. Prove it.
 - If execution fails: retry once with adjusted approach.
 - If still fails: report failure with diagnosis. Never silently fail.
-- Never retry indefinitely — 3 attempts max, then escalate.
+- Never retry indefinitely - 3 attempts max, then escalate.
 ```
 
 Este patrón evita el modo de fallo más común del agente: reconocer una tarea sin completarla.
@@ -226,18 +226,18 @@ Cada programa debe tener:
 
 - Comienza con una autoridad limitada y amplíala a medida que se construya la confianza
 - Define puertas de aprobación explícitas para acciones de alto riesgo
-- Incluye secciones de "Qué NO hacer" — los límites son tan importantes como los permisos
+- Incluya secciones de "Qué NO hacer" - los límites importan tanto como los permisos
 - Combínalas con trabajos cron para una ejecución confiable basada en tiempo
 - Revisa los registros del agente semanalmente para verificar que se están cumpliendo las órdenes permanentes
-- Actualiza las órdenes permanentes a medida que tus necesidades evolucionan — son documentos vivos
+- Actualice las órdenes permanentes a medida que sus necesidades evolucionan; son documentos vivos
 
 ### Evitar
 
 - Otorgar autoridad amplia desde el primer día ("haz lo que creas que es mejor")
-- Omitir las reglas de escalada — cada programa necesita una cláusula de "cuándo detenerse y preguntar"
-- Asumir que el agente recordará las instrucciones verbales — pon todo en el archivo
-- Mezclar preocupaciones en un solo programa — programas separados para dominios separados
-- Olvidar hacer cumplir con trabajos cron — las órdenes permanentes sin desencadenantes se convierten en sugerencias
+- Omita las reglas de escalada: cada programa necesita una cláusula de "cuándo detenerse y preguntar"
+- Asuma que el agente recordará las instrucciones verbales: ponga todo en el archivo
+- Mezcle preocupaciones en un solo programa: separe programas para dominios separados
+- Olvide hacer cumplir con trabajos cron: las órdenes permanentes sin disparadores se convierten en sugerencias
 
 ## Relacionado
 

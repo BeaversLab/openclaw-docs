@@ -49,7 +49,7 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 
 ## 说明 / 假设
 
-- `tsx` 使用 esbuild 来转换 TS/ESM。esbuild 的 `keepNames` 会发出一个 `__name` 辅助函数，并用 `__name(...)` 包装函数定义。
+- `tsx` 使用 esbuild 转换 TS/ESM。esbuild 的 `keepNames` 会发出一个 `__name` 辅助函数，并用 `__name(...)` 包装函数定义。
 - 崩溃表明 `__name` 存在但在运行时不是一个函数，这意味着该辅助函数在 Node 25 加载器路径中缺失或被覆盖。
 - 在其他 esbuild 使用者中，当辅助函数缺失或被重写时，也报告过类似的 `__name` 辅助函数问题。
 

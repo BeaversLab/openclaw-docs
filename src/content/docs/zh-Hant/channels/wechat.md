@@ -137,6 +137,9 @@ openclaw plugins install "@tencent-weixin/openclaw-weixin" --force
 openclaw gateway restart
 ```
 
+如果啟動時報告已安裝的外掛程式套件 `requires compiled runtime
+output for TypeScript entry`，表示發布的 npm 套件缺少 OpenClaw 所需的編譯後 JavaScript 執行時檔案。請在外掛程式發行者發布修正後的套件後更新/重新安裝，或者暫時停用/解除安裝該外掛程式。
+
 暫時停用：
 
 ```bash
@@ -146,7 +149,7 @@ openclaw gateway restart
 
 ## 相關文件
 
-- 通道概述：[聊天通道](/zh-Hant/channels)
+- 通道概覽：[聊天通道](/zh-Hant/channels)
 - 配對：[配對](/zh-Hant/channels/pairing)
 - 通道路由：[通道路由](/zh-Hant/channels/channel-routing)
 - 外掛程式架構：[外掛程式架構](/zh-Hant/plugins/architecture)

@@ -90,7 +90,7 @@ steps:
 
 讓工作流程在總結之前拒絕或標記過時項目。LLM 步驟應僅接收結構化 JSON，並被要求在其輸出中保留 `sourceUrl`、`retrievedAt` 和 `asOf`。當您在工作流程內需要經過 schema 驗證的模型步驟時，請使用 [LLM Task](/zh-Hant/tools/llm-task)。
 
-對於可重複使用的團隊或社群工作流程，將 CLI、`.lobster` 檔案和任何設定說明打包為技能或外掛程式，並透過 [ClawHub](/zh-Hant/tools/clawhub) 發佈。除非外掛程式 API 缺少所需的通用功能，否則請將特定於工作流程的防護措施保留在該套件中。
+對於可重複使用的團隊或社群工作流程，請將 CLI、`.lobster` 檔案以及任何設定說明打包為技能或外掛程式，並透過 [ClawHub](/zh-Hant/clawhub) 發布。除非外掛程式 API 缺少必要的通用功能，否則請將工作流程特定的防護機制保留在該套件中。
 
 ## 同步模式
 

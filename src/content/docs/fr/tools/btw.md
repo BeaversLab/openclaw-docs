@@ -6,9 +6,9 @@ read_when:
 title: "Questions annexes BTW"
 ---
 
-`/btw` vous permet de poser une question annexe rapide sur la **session actuelle** sans transformer cette question en historique de conversation normal.
+`/btw` vous permet de poser une question rapide sur la **session actuelle** sans transformer cette question en un historique de conversation normal. `/side` est un alias.
 
-Elle est basée sur le comportement `/btw` de Claude Code, mais adaptée à l'architecture de la OpenClaw et multi-canal de Gateway.
+Il est basé sur le comportement `/btw` de Claude Code, mais adapté à l'architecture OpenClaw Gateway et multi-channel.
 
 ## Ce qu'elle fait
 
@@ -37,7 +37,7 @@ Le modèle mental important est :
 
 ## Ce qu'elle ne fait pas
 
-`/btw` ne fait **pas** :
+`/btw` fait **pas** :
 
 - créer une nouvelle session durable,
 - continuer la tâche principale inachevée,
@@ -66,12 +66,12 @@ BTW n'est **pas** livré comme un message de transcription d'assistant normal.
 
 Au niveau du protocole Gateway :
 
-- la discussion normale avec l'assistant utilise l'événement `chat`
+- le chat de l'assistant normal utilise l'événement `chat`
 - BTW utilise l'événement `chat.side_result`
 
 Cette séparation est intentionnelle. Si BTW réutilisait le chemin d'événement normal `chat`, les clients le traiteraient comme un historique de conversation normal.
 
-Parce que BTW utilise un événement en direct distinct et n'est pas rejoué depuis `chat.history`, il disparaît après rechargement.
+Parce que BTW utilise un événement en direct séparé et n'est pas rejoué depuis `chat.history`, il disparaît après le rechargement.
 
 ## Comportement de surface
 
@@ -81,7 +81,7 @@ Dans TUI, BTW est rendu en ligne dans la vue de la session actuelle, mais il res
 éphémère :
 
 - visiblement distinct d'une réponse normale de l'assistant
-- révocable avec `Enter` ou `Esc`
+- rémissible avec `Enter` ou `Esc`
 - non rejoué lors du rechargement
 
 ### Canaux externes
@@ -94,17 +94,13 @@ La réponse est toujours traitée comme un résultat secondaire, et non comme l'
 
 ### Interface de contrôle / web
 
-Le Gateway émet BTW correctement sous la forme `chat.side_result`, et BTW n'est pas inclus
-dans `chat.history`, le contrat de persistance est donc déjà correct pour le web.
+Le Gateway émet BTW correctement comme `chat.side_result`, et BTW n'est pas inclus dans `chat.history`, le contrat de persistance est donc déjà correct pour le web.
 
-L'interface de contrôle actuelle a toujours besoin d'un consommateur dédié `chat.side_result` pour
-afficher BTW en direct dans le navigateur. jusqu'à ce que ce support côté client soit intégré, BTW est une
-fonctionnalité de niveau Gateway avec un comportement complet sur TUI et les canaux externes, mais pas encore
-une expérience utilisateur complète sur le navigateur.
+L'interface de contrôle actuelle (Control UI) a toujours besoin d'un consommateur dédié `chat.side_result` pour afficher BTW en direct dans le navigateur. Jusqu'à ce que ce support côté client soit ajouté, BTW est une fonctionnalité de niveau Gateway avec un comportement complet de TUI et de canal externe, mais pas encore une expérience utilisateur (UX) navigateur complète.
 
 ## Quand utiliser BTW
 
-Utilisez `/btw` lorsque vous souhaitez :
+Utilisez `/btw` lorsque vous voulez :
 
 - une clarification rapide sur le travail en cours,
 - une réponse factuelle secondaire pendant qu'une exécution longue est toujours en cours,
@@ -114,6 +110,7 @@ Exemples :
 
 ```text
 /btw what file are we editing?
+/side what changed while the main run continued?
 /btw what does this error mean?
 /btw summarize the current task in one sentence
 /btw what is 17 * 19?
@@ -121,13 +118,23 @@ Exemples :
 
 ## Quand ne pas utiliser BTW
 
-N'utilisez pas `/btw` si vous voulez que la réponse fasse partie du futur
-contexte de travail de la session.
+N'utilisez pas `/btw` lorsque vous voulez que la réponse fasse partie du contexte de travail futur de la session.
 
 Dans ce cas, posez la question normalement dans la session principale au lieu d'utiliser BTW.
 
 ## Connexes
 
-- [Commandes slash](/fr/tools/slash-commands)
-- [Niveaux de réflexion](/fr/tools/thinking)
-- [Session](/fr/concepts/session)
+<CardGroup cols={2}>
+  <Card title="Commandes slash" href="/fr/tools/slash-commands" icon="terminal">
+    Catalogue de commandes natives et directives de chat.
+  </Card>
+  <Card title="Niveaux de réflexion" href="/fr/tools/thinking" icon="brain">
+    Niveaux d'effort de raisonnement pour l'appel au modèle de question secondaire.
+  </Card>
+  <Card title="Session" href="/fr/concepts/session" icon="comments">
+    Clés de session, historique et sémantique de persistance.
+  </Card>
+  <Card title="Steer command" href="/fr/tools/steer" icon="arrow-right">
+    Injecter un message de pilotage dans l'exécution active sans la terminer.
+  </Card>
+</CardGroup>

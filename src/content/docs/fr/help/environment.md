@@ -90,7 +90,7 @@ Vous pouvez référencer des env vars directement dans les valeurs de chaîne de
 }
 ```
 
-Voir [Configuration : Substitution des env vars](/fr/gateway/configuration-reference#env-var-substitution) pour plus de détails.
+Voir [Configuration : Substitution de variables d'environnement](/fr/gateway/configuration-reference#env-var-substitution) pour tous les détails.
 
 ## Références secrètes vs chaînes `${ENV}`
 
@@ -99,29 +99,30 @@ OpenClaw prend en charge deux modèles basés sur les env vars :
 - Substitution de chaîne `${VAR}` dans les valeurs de configuration.
 - Objets SecretRef (`{ source: "env", provider: "default", id: "VAR" }`) pour les champs qui prennent en charge les références de secrets.
 
-Les deux sont résolus à partir des env vars du processus au moment de l'activation. Les détails de SecretRef sont documentés dans [Gestion des secrets](/fr/gateway/secrets).
+Les deux sont résolus à partir de l'environnement du processus au moment de l'activation. Les détails sur SecretRef sont documentés dans [Gestion des secrets](/fr/gateway/secrets).
 
 ## Env vars liés au chemin
 
-| Variable               | Objet                                                                                                                                                                                                                                              |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_HOME`        | Remplace le répertoire personnel utilisé pour toute la résolution de chemin interne (`~/.openclaw/`, répertoires d'agent, sessions, informations d'identification). Utile lors de l'exécution de OpenClaw en tant qu'utilisateur de service dédié. |
-| `OPENCLAW_STATE_DIR`   | Remplace le répertoire d'état (par défaut `~/.openclaw`).                                                                                                                                                                                          |
-| `OPENCLAW_CONFIG_PATH` | Remplace le chemin du fichier de configuration (par défaut `~/.openclaw/openclaw.json`).                                                                                                                                                           |
+| Variable                 | Objet                                                                                                                                                                                                                                              |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_HOME`          | Remplace le répertoire personnel utilisé pour toute la résolution de chemin interne (`~/.openclaw/`, répertoires d'agent, sessions, informations d'identification). Utile lors de l'exécution de OpenClaw en tant qu'utilisateur de service dédié. |
+| `OPENCLAW_STATE_DIR`     | Remplace le répertoire d'état (par défaut `~/.openclaw`).                                                                                                                                                                                          |
+| `OPENCLAW_CONFIG_PATH`   | Remplace le chemin du fichier de configuration (par défaut `~/.openclaw/openclaw.json`).                                                                                                                                                           |
+| `OPENCLAW_INCLUDE_ROOTS` | Liste de chemins de répertoires où les directives `$include` peuvent résoudre des fichiers en dehors du répertoire de configuration (par défaut : aucun — `$include` est confiné au répertoire de configuration). Avec expansion du tilde.         |
 
 ## Journalisation
 
-| Variable             | Objet                                                                                                                                                                                                                                           |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_LOG_LEVEL` | Remplace le niveau de journalisation pour les fichiers et la console (par exemple `debug`, `trace`). A priorité sur `logging.level` et `logging.consoleLevel` dans la configuration. Les valeurs invalides sont ignorées avec un avertissement. |
+| Variable             | Objectif                                                                                                                                                                                                                                     |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_LOG_LEVEL` | Remplacer le niveau de journalisation pour les fichiers et la console (par ex. `debug`, `trace`). A priorité sur `logging.level` et `logging.consoleLevel` dans la configuration. Les valeurs invalides sont ignorées avec un avertissement. |
 
 ### `OPENCLAW_HOME`
 
-Lorsqu'elle est définie, `OPENCLAW_HOME` remplace le répertoire personnel système (`$HOME` / `os.homedir()`) pour toute la résolution de chemin interne. Cela permet une isolation complète du système de fichiers pour les comptes de service sans interface.
+Lorsqu'elle est définie, `OPENCLAW_HOME` remplace le répertoire personnel du système (`$HOME` / `os.homedir()`) pour toute résolution de chemin interne. Cela permet une isolation complète du système de fichiers pour les comptes de service sans interface.
 
-**Priorité :** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
+**Priorité :** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
 
-**Exemple** (LaunchDaemon macOS) :
+**Exemple** (LaunchDaemon macOS) :
 
 ```xml
 <key>EnvironmentVariables</key>
@@ -131,20 +132,20 @@ Lorsqu'elle est définie, `OPENCLAW_HOME` remplace le répertoire personnel syst
 </dict>
 ```
 
-`OPENCLAW_HOME` peut également être défini sur un chemin avec tilde (p. ex. `~/svc`), qui est développé en utilisant `$HOME` avant utilisation.
+`OPENCLAW_HOME` peut également être défini sur un chemin avec tilde (par ex. `~/svc`), qui est étendu en utilisant `$HOME` avant utilisation.
 
-## utilisateurs de nvm : échecs TLS de web_fetch
+## utilisateurs de nvm : échecs TLS web_fetch
 
 Si Node.js a été installé via **nvm** (et non le gestionnaire de paquets du système), le `fetch()` intégré utilise
-le magasin de CA fourni avec nvm, qui peut manquer de CA racines modernes (ISRG Root X1/X2 pour Let's Encrypt,
+le magasin de CA groupé par nvm, qui peut manquer de racines CA modernes (ISRG Root X1/X2 pour Let's Encrypt,
 DigiCert Global Root G2, etc.). Cela provoque l'échec de `web_fetch` avec `"fetch failed"` sur la plupart des sites HTTPS.
 
 Sur Linux, OpenClaw détecte automatiquement nvm et applique le correctif dans l'environnement de démarrage réel :
 
 - `openclaw gateway install` écrit `NODE_EXTRA_CA_CERTS` dans lvironnement du service systemd
-- le point d'entrée `openclaw` CLI se réexécute lui-même avec `NODE_EXTRA_CA_CERTS` défini avant le démarrage de Node
+- le point d'entrée `openclaw` de la CLI se réexécute lui-même avec `NODE_EXTRA_CA_CERTS` défini avant le démarrage de Node
 
-**Correction manuelle (pour les versions anciennes ou les lancements directs `node ...`) :**
+**Correction manuelle (pour les anciennes versions ou les lancements directs `node ...`) :**
 
 Exportez la variable avant de démarrer OpenClaw :
 
@@ -156,8 +157,20 @@ openclaw gateway run
 Ne comptez pas sur l'écriture uniquement dans `~/.openclaw/.env` pour cette variable ; Node lit
 `NODE_EXTRA_CA_CERTS` au démarrage du processus.
 
+## Variables d'environnement héritées
+
+OpenClaw lit uniquement les variables d'environnement `OPENCLAW_*`. Les préfixes hérités
+`CLAWDBOT_*` et `MOLTBOT_*` des versions précédentes sont silencieusement
+ignorés.
+
+Si certaines sont toujours définies sur le processus Gateway au démarrage, OpenClaw émet un
+seul avertissement de dépréciation Node (`OPENCLAW_LEGACY_ENV_VARS`) listant les
+préfixes détectés et le nombre total. Renommez chaque valeur en remplaçant le
+préfixe hérité par `OPENCLAW_` (par exemple `CLAWDBOT_GATEWAY_TOKEN` →
+`OPENCLAW_GATEWAY_TOKEN`) ; les anciens noms n'ont aucun effet.
+
 ## Connexes
 
 - [Configuration du Gateway](/fr/gateway/configuration)
-- [FAQ : env vars et chargement .env](/fr/help/faq#env-vars-and-env-loading)
+- [FAQ : variables d'environnement et chargement .env](/fr/help/faq#env-vars-and-env-loading)
 - [Aperçu des modèles](/fr/concepts/models)

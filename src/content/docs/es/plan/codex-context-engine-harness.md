@@ -133,14 +133,14 @@ Por lo tanto, la implementación necesita una capa de proyección. La primera ve
 
 Para motores como lossless-claw, el contexto ensamblado debe ser determinista para entradas sin cambios. No añada marcas de tiempo, ids aleatorios ni ordenamiento no determinista al texto de contexto generado.
 
-### La semántica de reserva (fallback) de PI no cambia
+### La semántica de selección en tiempo de ejecución no cambia
 
 La selección del arnés permanece como está:
 
 - `runtime: "pi"` fuerza PI
 - `runtime: "codex"` selecciona el arnés de Codex registrado
 - `runtime: "auto"` permite a los arneses de complementos reclamar proveedores compatibles
-- `fallback: "none"` deshabilita la reserva (fallback) de PI cuando ningún arnés de complemento coincide
+- las ejecuciones de `auto` no coincidentes usan PI
 
 Este trabajo cambia lo que sucede después de que se selecciona el arnés de Codex.
 

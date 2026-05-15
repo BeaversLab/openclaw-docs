@@ -8,7 +8,7 @@ read_when:
 
 Skills 教会智能体如何以及何时使用工具。每个 Skill 是一个包含 `SKILL.md` 文件的目录，该文件具有 YAML frontmatter 和 markdown 指令。
 
-有关 Skills 如何加载和确定优先级的信息，请参阅 [Skills](/zh/tools/skills)。
+有关如何加载和优先处理 Skills，请参阅 [Skills](/zh/tools/skills)。
 
 ## 创建你的第一个 Skill
 
@@ -24,11 +24,11 @@ Skills 教会智能体如何以及何时使用工具。每个 Skill 是一个包
 
   <Step title="编写 SKILL.md">
     在该目录内创建 `SKILL.md`。Frontmatter 定义元数据，
-    而 markdown 主体包含给智能体的指令。
+    而 Markdown 主体包含给 Agent 的说明。
 
     ```markdown
     ---
-    name: hello_world
+    name: hello-world
     description: A simple skill that says hello.
     ---
 
@@ -38,12 +38,15 @@ Skills 教会智能体如何以及何时使用工具。每个 Skill 是一个包
     "Hello from your custom skill!".
     ```
 
+    技能 `name` 请使用由小写字母、数字和连字符组成的连字符命名法 (hyphen-case)。
+    保持文件夹名称与 frontmatter 中的 `name` 一致。
+
   </Step>
 
   <Step title="添加工具（可选）">
-    你可以在 frontmatter 中定义自定义工具架构，或指示智能体
+    您可以在 frontmatter 中定义自定义工具架构，或指示 Agent
     使用现有的系统工具（如 `exec` 或 `browser`）。Skills 也可以
-    与它们记录的工具一起打包在插件内部。
+    随其文档化的工具一起打包在插件中。
 
   </Step>
 
@@ -82,20 +85,20 @@ Skills 教会智能体如何以及何时使用工具。每个 Skill 是一个包
 
 YAML frontmatter 支持以下字段：
 
-| 字段                                | 必填 | 描述                                          |
-| ----------------------------------- | ---- | --------------------------------------------- |
-| `name`                              | 是   | 唯一标识符 (snake_case)                       |
-| `description`                       | 是   | 向智能体显示的单行描述                        |
-| `metadata.openclaw.os`              | 否   | 操作系统筛选器 (`["darwin"]`, `["linux"]` 等) |
-| `metadata.openclaw.requires.bins`   | 否   | PATH 上所需的二进制文件                       |
-| `metadata.openclaw.requires.config` | 否   | 所需的配置键                                  |
+| 字段                                | 必填 | 描述                                           |
+| ----------------------------------- | ---- | ---------------------------------------------- |
+| `name`                              | 是   | 使用小写字母、数字和连字符的唯一标识符         |
+| `description`                       | 是   | 向智能体显示的单行描述                         |
+| `metadata.openclaw.os`              | 否   | 操作系统筛选器 (`["darwin"]`, `["linux"]`, 等) |
+| `metadata.openclaw.requires.bins`   | 否   | PATH 上所需的二进制文件                        |
+| `metadata.openclaw.requires.config` | 否   | 所需的配置键                                   |
 
 ## 最佳实践
 
 - **保持简洁** — 指示模型*做*什么，而不是如何成为 AI
-- **安全第一** — 如果你的 skill 使用了 `exec`，请确保提示词不允许来自不受信任输入的任意命令注入
+- **安全第一** — 如果您的技能使用了 `exec`，请确保提示词不允许来自不受信任输入的任意命令注入
 - **本地测试** — 在分享之前使用 `openclaw agent --message "..."` 进行测试
-- **使用 ClawHub** — 浏览并贡献 skills 于 [ClawHub](https://clawhub.ai)
+- **使用 ClawHub** — 在 [ClawHub](https://clawhub.ai) 浏览和贡献技能
 
 ## Skills 的位置
 
@@ -112,5 +115,5 @@ YAML frontmatter 支持以下字段：
 
 - [Skills 参考](/zh/tools/skills) — 加载、优先级和门控规则
 - [Skills 配置](/zh/tools/skills-config) — `skills.*` 配置架构
-- [ClawHub](/zh/tools/clawhub) — 公共 Skill 注册表
-- [构建插件](/zh/plugins/building-plugins) — 插件可以附带 Skills
+- [ClawHub](/zh/clawhub) — 公共技能注册表
+- [构建插件](/zh/plugins/building-plugins) — 插件可以包含技能

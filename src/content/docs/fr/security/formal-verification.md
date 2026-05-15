@@ -1,5 +1,5 @@
 ---
-summary: Modèles de sécurité vérifiés par machine pour les chemins à plus haut risque d'OpenClaw.
+summary: Modèles de sécurité vérifiés par machine pour les chemins les plus à risque d'OpenClaw.
 title: Vérification formelle (modèles de sécurité)
 read_when:
   - Reviewing formal security model guarantees or limits
@@ -20,7 +20,7 @@ sécurité contre la mauvaise configuration), sous des hypothèses explicites.
 - Chaque revendication dispose d'une vérification de modèle exécutable sur un espace d'états fini.
 - De nombreuses revendications disposent d'un **modèle négatif** associé qui produit une trace de contre-exemple pour une classe de bugs réaliste.
 
-**Ce que ce n'est pas (encore) :** une preuve qu'« OpenClaw est sécurisé à tous égards » ou que l'implémentation TypeScript complète est correcte.
+**Ce que ce n'est pas (encore) :** une preuve qu'« OpenClaw est sécurisé sous tous les aspects » ou que l'implémentation TypeScript complète est correcte.
 
 ## Où se trouvent les modèles
 
@@ -29,7 +29,7 @@ Les modèles sont maintenus dans un dépôt séparé : [vignesh07/openclaw-forma
 ## Avertissements importants
 
 - Ce sont des **modèles**, et non l'implémentation TypeScript complète. Une dérive entre le modèle et le code est possible.
-- Les résultats sont limités par l'espace d'états exploré par TLC ; « vert » n'implique pas la sécurité au-delà des hypothèses et limites modélisées.
+- Les résultats sont bornés par l'espace d'états exploré par TLC ; « vert » n'implique pas la sécurité au-delà des hypothèses et limites modélisées.
 - Certaines revendications reposent sur des hypothèses environnementales explicites (par exemple, déploiement correct, entrées de configuration correctes).
 
 ## Reproduction des résultats
@@ -109,11 +109,11 @@ Il s'agit de modèles de suivi qui renforcent la fidélité autour des modes de 
 
 ### Concurrence / idempotence du store de couplage
 
-**Revendication :** un store de couplage doit appliquer `MaxPending` et l'idempotence même sous les entrelacements (c'est-à-dire que « vérifier puis écrire » doit être atomique / verrouillé ; le rafraîchissement ne doit pas créer de doublons).
+**Revendication :** un magasin d'appariement doit appliquer `MaxPending` et l'idempotence même sous les entrelacements (c'est-à-dire que « vérifier puis écrire » doit être atomique/verrouillé ; le rafraîchissement ne doit pas créer de doublons).
 
 Ce que cela signifie :
 
-- Sous des demandes simultanées, vous ne pouvez pas dépasser `MaxPending` pour un channel.
+- Sous les requêtes simultanées, vous ne pouvez pas dépasser `MaxPending` pour un channel.
 - Les demandes/rafraîchissements répétés pour le même `(channel, sender)` ne doivent pas créer de lignes en attente actives en double.
 
 - Exécutions vertes :

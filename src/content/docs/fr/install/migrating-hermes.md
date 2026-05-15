@@ -45,15 +45,17 @@ OpenClaw importe l'état de Hermes via un fournisseur de migration inclus. Le fo
 
 <AccordionGroup>
   <Accordion title="Configuration du modèle">
-    - Sélection du modèle par défaut depuis Hermes `config.yaml`.
+    - Sélection du modèle par défaut depuis Hermes `config.yaml`OpenAI.
     - Fournisseurs de modèles configurés et points de terminaison personnalisés compatibles OpenAI depuis `providers` et `custom_providers`.
+
   </Accordion>
   <Accordion title="Serveurs MCP">
     Définitions de serveurs MCP depuis `mcp_servers` ou `mcp.servers`.
   </Accordion>
   <Accordion title="Fichiers de l'espace de travail">
-    - `SOUL.md` et `AGENTS.md` sont copiés dans l'espace de travail de l'agent OpenClaw.
-    - `memories/MEMORY.md` et `memories/USER.md` sont **ajoutés** aux fichiers de mémoire OpenClaw correspondants au lieu de les écraser.
+    - `SOUL.md` et `AGENTS.md`OpenClaw sont copiés dans l'espace de travail de l'agent OpenClaw.
+    - `memories/MEMORY.md` et `memories/USER.md`OpenClaw sont **ajoutés** aux fichiers de mémoire OpenClaw correspondants au lieu de les écraser.
+
   </Accordion>
   <Accordion title="Configuration de la mémoire">
     La configuration de mémoire par défaut concerne la mémoire de fichier OpenClaw. Les fournisseurs de mémoire externes tels que Honcho sont enregistrés en tant qu'éléments d'archive ou de révision manuelle afin que vous puissiez les déplacer délibérément.

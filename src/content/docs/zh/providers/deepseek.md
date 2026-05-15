@@ -6,7 +6,7 @@ read_when:
   - You need the API key env var or CLI auth choice
 ---
 
-[DeepSeek](https://www.deepseek.com) 通过兼容 OpenAI 的 API 提供强大的 AI 模型。
+[DeepSeek](https://www.deepseek.com) 提供具有 OpenAI 兼容 API 的强大 AI 模型。
 
 | 属性     | 值                         |
 | -------- | -------------------------- |
@@ -18,7 +18,7 @@ read_when:
 ## 入门指南
 
 <Steps>
-  <Step title="获取你的 API 密钥">
+  <Step title="获取您的 API 密钥">
     在 [platform.deepseek.com](https://platform.deepseek.com/api_keys) 创建 API 密钥。
   </Step>
   <Step title="运行新手引导">
@@ -71,26 +71,30 @@ read_when:
 | `deepseek/deepseek-chat`     | DeepSeek Chat     | text | 131,072   | 8,192    | DeepSeek V3.2 非思考表面        |
 | `deepseek/deepseek-reasoner` | DeepSeek Reasoner | text | 131,072   | 65,536   | 启用推理的 V3.2 表面            |
 
-<Tip>V4 模型支持 DeepSeek 的 `thinking` 控制。OpenClaw 还会在后续轮次中重放 DeepSeek `reasoning_content`，以便使用工具调用的思考会话能够继续。</Tip>
+<Tip>V4 模型支持 DeepSeek 的 `thinking` 控制。OpenClaw 还会在后续回合中重放 DeepSeek `reasoning_content`，以便结合工具调用的思考会话能够继续。 将 `/think xhigh` 或 `/think max` 与 DeepSeek V4 模型结合使用，以请求 DeepSeek 的 最大 `reasoning_effort`。</Tip>
 
 ## 思考与工具
 
-与大多数 OpenAI 兼容的提供商相比，DeepSeek V4 思考会话有更严格的重放契约：当启用思考的助手消息包含
-工具调用时，DeepSeek 要求在后续请求中将先前的助手 `reasoning_content` 发送回去。
-OpenClaw 会在 DeepSeek 插件内部处理此问题，因此正常的多轮工具使用可用于 `deepseek/deepseek-v4-flash` 和
-`deepseek/deepseek-v4-pro`。
+DeepSeek V4 思考会话的重放契约比大多数
+OpenAI 兼容提供商更严格：在启用思考的回合使用工具后，DeepSeek
+期望该回合重放的助手消息在后续请求中包含
+`reasoning_content`。OpenClaw 在 DeepSeek 插件内部处理了这一点，因此
+`deepseek/deepseek-v4-flash` 和 `deepseek/deepseek-v4-pro` 的普通多轮工具使用可以正常工作。
 
 如果您将现有会话从另一个 OpenAI 兼容提供商切换到
-DeepSeek V4 模型，较旧的助手工具调用轮次可能没有原生的
-DeepSeek `reasoning_content`。OpenClaw 会为 DeepSeek V4 思考请求填充该缺失字段，
-以便提供商可以接受重放的工具调用历史，而无需 `/new`。
+DeepSeek V4 模型，较早的助手工具调用回合可能没有原生的
+DeepSeek `reasoning_content`。OpenClaw 会为 DeepSeek V4 思考请求在重放的
+助手消息中填充该缺失字段，以便提供商能够接受
+历史记录而无需 `/new`。
 
 当在 OpenClaw 中禁用思考时（包括 UI 中的 **None** 选择），
-OpenClaw 会发送 DeepSeek `thinking: { type: "disabled" }` 并从传出历史记录中剥离已重放的
-`reasoning_content`。这将使禁用思考的会话保持在非思考 DeepSeek 路径上。
+OpenClaw 会发送 DeepSeek `thinking: { type: "disabled" }` 并从传出历史记录中剥离重放的
+`reasoning_content`。这将使禁用思考的
+会话保持在非思考 DeepSeek 路径上。
 
-使用 `deepseek/deepseek-v4-flash` 作为默认的快速路径。当您想要更强大的 V4 模型并且可以接受
-更高的成本或延迟时，请使用 `deepseek/deepseek-v4-pro`。
+将 `deepseek/deepseek-v4-flash` 用于默认的快速路径。当您需要更强的 V4 模型并且可以接受
+更高的成本或延迟时，使用
+`deepseek/deepseek-v4-pro`。
 
 ## 实时测试
 

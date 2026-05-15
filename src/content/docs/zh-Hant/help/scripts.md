@@ -13,7 +13,7 @@ title: "腳本"
 
 - 除非在文件或發布檢查清單中引用，否則腳本是**可選的**。
 - 當存在 CLI 介面時，請優先使用它們（例如：auth monitoring 使用 `openclaw models status --check`）。
-- 假設腳本是特定於主機的；在新機器上執行前請先閱讀它們。
+- 假設腳本是特定於主機的；在新機器上運行之前請先閱讀它們。
 
 ## Auth monitoring scripts
 

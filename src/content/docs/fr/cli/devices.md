@@ -124,7 +124,7 @@ Renvoie le résultat de la révocation au format JSON.
 ## Notes
 
 - La rotation des jetons renvoie un nouveau jeton (sensible). Traitez-le comme un secret.
-- Ces commandes requièrent la portée `operator.pairing` (ou `operator.admin`).
+- Ces commandes nécessitent la portée `operator.pairing` (ou `operator.admin`). Certaines approbations nécessitent également que l'appelant possède les portées d'opérateur que l'appareil cible créerait ou hériterait ; voir [Portées d'opérateur](/fr/gateway/operator-scopes).
 - `gateway.nodes.pairing.autoApproveCidrs` est une stratégie Gateway optionnelle pour
   l'appareil de nœud frais uniquement ; elle ne modifie pas l'autorité d'approbation du CLI.
 - La rotation et la révocation de jetons restent dans l'ensemble de rôles d'appariement approuvés et
@@ -180,9 +180,9 @@ Notes :
 Connexes :
 
 - [Dépannage de l'authentification du tableau de bord](/fr/web/dashboard#if-you-see-unauthorized-1008)
-- [Dépannage du Gateway](/fr/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Gateway troubleshooting](/fr/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
 ## Connexes
 
-- [Référence de la CLI](/fr/cli)
+- [CLI reference](/fr/cli)
 - [Nœuds](/fr/nodes)

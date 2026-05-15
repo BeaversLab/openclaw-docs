@@ -1,7 +1,7 @@
 ---
 summary: "用于 `openclaw nodes`（状态、配对、调用、camera/canvas/screen）的 CLI 参考"
 read_when:
-  - You’re managing paired nodes (cameras, screen, canvas)
+  - You're managing paired nodes (cameras, screen, canvas)
   - You need to approve requests or invoke node commands
 title: "节点"
 ---
@@ -12,7 +12,7 @@ title: "节点"
 
 相关：
 
-- 节点概述：[Nodes](/zh/nodes)
+- Nodes 概述：[Nodes](/zh/nodes)
 - Camera：[Camera nodes](/zh/nodes/camera)
 - Images：[Image nodes](/zh/nodes/images)
 
@@ -65,10 +65,10 @@ openclaw nodes invoke --node <id|name|ip> --command <command> --params <json>
 - 此处阻止 `system.run` 和 `system.run.prepare`；对于 Shell 执行，请将 `exec` 工具与 `host=node` 一起使用。
 
 若要在节点上执行 Shell，请使用带有 `host=node` 的 `exec` 工具，而不是 `openclaw nodes run`。
-`nodes` CLI 现在专注于功能：通过 `nodes invoke` 进行直接 RPC，以及配对、camera、
-screen、location、canvas 和通知。
+`nodes`CLIRPC CLI 现在专注于功能：通过 `nodes invoke`CanvasCanvasCanvas 进行直接 RPC，以及配对、camera、
+screen、location、Canvas 和通知。Canvas 命令由捆绑的实验性 Canvas 插件实现；核心保留了兼容性挂钩，因此它们仍位于 `openclaw nodes canvas` 下。
 
 ## 相关
 
-- [CLI reference](/zh/cli)
+- [CLI 参考](CLI/en/cli)
 - [Nodes](/zh/nodes)

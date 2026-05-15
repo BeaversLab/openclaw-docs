@@ -84,46 +84,51 @@ token 计数和时间戳。按 kind (`main`, `group`, `cron`, `hook`,
 - **即发即弃：** 设置 `timeoutSeconds: 0` 以立即排队并返回。
 - **等待回复：** 设置超时时间并内联获取响应。
 
-目标响应后，OpenClaw 可以运行 **回复循环**，其中代理交替发送消息（最多 5 轮）。目标代理可以回复 `REPLY_SKIP` 以提前停止。
+线程范围的聊天会话（例如以 `:thread:<id>` 结尾的 Slack 或 Discord 密钥）不是有效的 `sessions_send` 目标。请使用父渠道会话密钥进行代理间协调，以免通过工具路由的消息出现在活跃的面向人类的线程中。
+
+消息和 A2A 后续回复在接收提示（`[Inter-session message ... isUser=false]`）和记录踪来源中都被标记为会话间数据。接收代理应将它们视为通过工具路由的数据，而不是直接由最终用户编写的指令。
+
+目标响应后，OpenClaw 可以运行一个**回复循环**，代理之间交替发送消息（最多 5 轮）。目标代理可以回复 `REPLY_SKIP` 以提前停止。
 
 ## 状态和编排辅助工具
 
-`session_status` 是针对当前或其他可见会话的轻量级 `/status` 等效工具。它报告使用情况、时间、模型/运行时状态以及链接的后台任务上下文（如果存在）。与 `/status` 类似，它可以从最新的记录使用条目中回填稀疏的令牌/缓存计数器，而 `model=default` 会清除每个会话的覆盖设置。对调用者的当前会话使用 `sessionKey="current"`；可见的客户端标签（如 `openclaw-tui`）不是会话密钥。
+`session_status` 是针对当前或其他可见会话的轻量级 `/status` 等效工具。它报告使用情况、时间、模型/运行时状态（如果存在）以及链接的后台任务上下文。与 `/status` 类似，它可以从最新的记录踪使用条目中回填稀疏的令牌/缓存计数器，而 `model=default` 会清除按会话的覆盖设置。对调用者当前的会话使用 `sessionKey="current"`；可见的客户端标签（例如 `openclaw-tui`）不是会话密钥。
 
-`sessions_yield` 有意结束当前轮次，以便下一条消息可以成为您正在等待的后续事件。在生成子代理后使用它，当您希望完成结果作为下一条消息到达，而不是构建轮询循环时。
+`sessions_yield` 会有意结束当前轮次，以便下一条消息可以是您正在等待的后续事件。在生成子代理后使用它，当您希望完成结果作为下一条消息到达而不是构建轮询循环时。
 
-`subagents` 是已生成的 OpenClaw 子代理的控制平面辅助工具。它支持：
+`subagents` 是针对已生成的 OpenClaw 子代理的控制平面辅助工具。它支持：
 
-- `action: "list"` 以检查活动/最近的运行
-- `action: "steer"` 以向正在运行的子级发送后续指导
-- `action: "kill"` 以停止一个子级或 `all`
+- `action: "list"` 用于检查活跃/最近的运行
+- `action: "steer"` 用于向正在运行的子代理发送后续指导
+- `action: "kill"` 用于停止一个子代理或 `all`
 
 ## 生成子代理
 
 `sessions_spawn` 默认为后台任务创建一个隔离的会话。
-它始终是非阻塞的 —— 它会立即返回一个 `runId` 和
+它始终是非阻塞的——会立即返回 `runId` 和
 `childSessionKey`。
 
 关键选项：
 
-- `runtime: "subagent"`（默认）或 `"acp"` 用于外部驱动代理。
-- `model` 和 `thinking` 覆盖子会话的设置。
-- `thread: true` 将生成的子代理绑定到聊天线程（Discord、Slack 等）。
-- `sandbox: "require"` 强制子进程进行沙箱隔离。
-- `context: "fork"` 用于原生子代理，当子代理需要当前的
-  请求者记录时；省略它或使用 `context: "isolated"` 以获得一个干净的子代理。
+- 用于外部代理（harness）代理的 `runtime: "subagent"`（默认）或 `"acp"`。
+- 子会话的 `model` 和 `thinking` 覆盖设置。
+- `thread: true` 用于将生成的代理绑定到聊天线程（Discord、Slack 等）。
+- `sandbox: "require"` 用于对子代理强制执行沙箱隔离。
+- 当子代理需要当前请求者的记录时，原生子代理使用 `context: "fork"`；对于干净的子代理，请省略它或使用 `context: "isolated"`。
+  绑定到线程的原生子代理默认为 `context: "fork"`，除非
+  `threadBindings.defaultSpawnContext` 另有说明。
 
-默认的叶子子代理无法获取会话工具。当
-`maxSpawnDepth >= 2` 时，深度为 1 的编排子代理还会接收
+默认的叶子子代理不会获得会话工具。当
+`maxSpawnDepth >= 2` 时，深度为 1 的编排器子代理还会收到
 `sessions_spawn`、`subagents`、`sessions_list` 和 `sessions_history`，以便它们
-可以管理自己的子代理。叶子运行仍然不会获取递归的
+可以管理自己的子代理。叶子运行仍然不会获得递归
 编排工具。
 
 完成后，一个公告步骤会将结果发布到请求者的渠道。
-完成交付在可用时会保留绑定的线程/主题路由，如果
-完成来源仅标识了一个渠道，OpenClaw 仍然可以重用
-请求者会话存储的路由（`lastChannel` / `lastTo`）进行直接
-投递。
+完成交付在可用时保留绑定的线程/主题路由，并且如果
+完成来源仅标识了渠道，OpenClaw 仍然可以重用
+请求者会话的存储路由（`lastChannel` / `lastTo`）进行直接
+交付。
 
 有关 ACP 特定的行为，请参阅 [ACP 代理](/zh/tools/acp-agents)。
 
@@ -131,24 +136,23 @@ token 计数和时间戳。按 kind (`main`, `group`, `cron`, `hook`,
 
 会话工具具有作用域，以限制代理可以看到的内容：
 
-| 级别    | 作用域                         |
-| ------- | ------------------------------ |
-| `self`  | 仅当前会话                     |
-| `tree`  | 当前会话 + 生成的子代理        |
-| `agent` | 该代理的所有会话               |
-| `all`   | 所有会话（如果配置了则跨代理） |
+| 级别    | 范围                             |
+| ------- | -------------------------------- |
+| `self`  | 仅当前会话                       |
+| `tree`  | 当前会话 + 生成的子代理          |
+| `agent` | 此代理的所有会话                 |
+| `all`   | 所有会话（如果已配置，则跨代理） |
 
-默认值为 `tree`。沙箱隔离会话无论
-配置如何都会被限制为 `tree`。
+默认值为 `tree`。无论配置如何，沙箱隔离会话都会被限制为 `tree`。
 
 ## 延伸阅读
 
 - [会话管理](/zh/concepts/session) -- 路由、生命周期、维护
-- [ACP Agents](/zh/tools/acp-agents) -- 外部线束生成
-- [Multi-agent](/zh/concepts/multi-agent) -- 多智能体架构
-- [Gateway(网关) Configuration](/zh/gateway/configuration) -- 会话工具配置旋钮
+- [ACP 代理](/zh/tools/acp-agents) -- 外部控制线生成
+- [多代理](/zh/concepts/multi-agent) -- 多代理架构
+- [Gateway(网关) 配置](<Gateway(网关)/en/gateway/configuration>) -- 会话工具配置项
 
 ## 相关
 
-- [Session management](/zh/concepts/session)
-- [Session pruning](/zh/concepts/session-pruning)
+- [会话管理](/zh/concepts/session)
+- [会话清理](/zh/concepts/session-pruning)

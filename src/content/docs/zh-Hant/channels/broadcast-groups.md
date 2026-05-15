@@ -156,10 +156,21 @@ sidebarTitle: "廣播群組"
 ### 訊息流程
 
 <Steps>
-  <Step title="收到傳入訊息">收到 WhatsApp 群組或 DM 訊息。</Step>
-  <Step title="廣播檢查">系統檢查 peer ID 是否在 `broadcast` 中。</Step>
-  <Step title="If in broadcast list">- 清單中列出的所有代理都會處理該訊息。 - 每個代理都有自己的會話金鑰和隔離的上下文。 - 代理會並行處理（預設）或循序處理。</Step>
-  <Step title="If not in broadcast list">適用一般路由規則（第一個匹配的綁定）。</Step>
+  <Step title="收到傳入訊息">
+    收到 WhatsApp 群組或 DM 訊息。
+  </Step>
+  <Step title="廣播檢查">
+    系統檢查 peer ID 是否在 `broadcast` 中。
+  </Step>
+  <Step title="If in broadcast list">
+    - 列表中的所有代理都會處理該訊息。
+    - 每個代理都有自己的會話金鑰和獨立的上下文。
+    - 代理可以並行處理（預設）或循序處理。
+
+  </Step>
+  <Step title="If not in broadcast list">
+    適用一般路由規則（第一個匹配的綁定）。
+  </Step>
 </Steps>
 
 <Note>廣播群組不會繞過頻道允許清單或群組啟用規則（提及/指令等）。它們僅在訊息符合處理資格時改變「執行哪些代理」。</Note>
@@ -222,29 +233,31 @@ sidebarTitle: "廣播群組"
     ```
 
   </Accordion>
-  <Accordion title="3. 配置不同的工具存取權限">
-    只提供代理程式所需的工具：
+  <Accordion title="3. Configure different tool access">
+    僅授予代理所需的工具：
 
     ```json
     {
       "agents": {
         "reviewer": {
-          "tools": { "allow": ["read", "exec"] } // Read-only
+          "tools": { "allow": ["read", "exec"] }
         },
         "fixer": {
-          "tools": { "allow": ["read", "write", "edit", "exec"] } // Read-write
+          "tools": { "allow": ["read", "write", "edit", "exec"] }
         }
       }
     }
     ```
 
-  </Accordion>
-  <Accordion title="4. 監控效能">
-    如果有許多代理程式，請考慮：
+    `reviewer` 是唯讀的。`fixer` 可以讀寫。
 
-    - 使用 `"strategy": "parallel"` (預設) 以提升速度
-    - 將廣播群組限制在 5-10 個代理程式
-    - 為較簡單的代理程式使用更快的模型
+  </Accordion>
+  <Accordion title="4. Monitor performance">
+    當有多個代理時，請考慮：
+
+    - 使用 `"strategy": "parallel"`（預設）以提高速度
+    - 將廣播群組限制在 5-10 個代理
+    - 為較簡單的代理使用更快的模型
 
   </Accordion>
   <Accordion title="5. 優雅地處理失敗">
@@ -287,20 +300,20 @@ sidebarTitle: "廣播群組"
 }
 ```
 
-- `GROUP_A`: 只有 alfred 回應 (正常路由)。
-- `GROUP_B`: agent1 和 agent2 都會回應 (廣播)。
+- `GROUP_A`：只有 alfred 回應（正常路由）。
+- `GROUP_B`：agent1 和 agent2 都會回應（廣播）。
 
-<Note>**優先順序：** `broadcast` 的優先順序高於 `bindings`。</Note>
+<Note>**優先順序：** `broadcast` 優先於 `bindings`。</Note>
 
 ## 疑難排解
 
 <AccordionGroup>
-  <Accordion title="代理程式無回應">
+  <Accordion title="Agents not responding">
     **檢查：**
 
-    1. 代理程式 ID 存在於 `agents.list` 中。
-    2. 對等 ID 格式正確 (例如 `120363403215116621@g.us`)。
-    3. 代理程式不在拒絕清單中。
+    1. Agent IDs 存在於 `agents.list` 中。
+    2. Peer ID 格式正確（例如 `120363403215116621@g.us`）。
+    3. 代理未被列入拒絕清單中。
 
     **除錯：**
 
@@ -309,10 +322,10 @@ sidebarTitle: "廣播群組"
     ```
 
   </Accordion>
-  <Accordion title="只有一個代理程式回應">
-    **原因：** 對等 ID 可能存在於 `bindings` 中，但不存在於 `broadcast` 中。
+  <Accordion title="Only one agent responding">
+    **原因：** Peer ID 可能位於 `bindings` 中，但不在 `broadcast` 中。
 
-    **解決方法：** 新增至廣播組態或從綁定中移除。
+    **解決方法：** 新增至廣播設定或從綁定中移除。
 
   </Accordion>
   <Accordion title="效能問題">
@@ -328,7 +341,7 @@ sidebarTitle: "廣播群組"
 ## 範例
 
 <AccordionGroup>
-  <Accordion title="範例 1：程式碼審查團隊">
+  <Accordion title="Example 1: Code review team">
     ```json
     {
       "broadcast": {
@@ -367,10 +380,10 @@ sidebarTitle: "廣播群組"
 
     **回應：**
 
-    - code-formatter: "修正了縮排並新增了型別提示"
-    - security-scanner: "⚠️ 第 12 行存在 SQL 注入漏洞"
-    - test-coverage: "覆蓋率為 45%，缺少錯誤情況的測試"
-    - docs-checker: "函數 `process_data` 缺少文件字串"
+    - code-formatter：「已修正縮排並新增類型提示」
+    - security-scanner：「⚠️ 第 12 行存在 SQL 注入漏洞」
+    - test-coverage：「覆蓋率為 45%，缺少錯誤情況的測試」
+    - docs-checker：「函式 `process_data` 缺少 docstring」
 
   </Accordion>
   <Accordion title="範例 2：多語言支援">
@@ -408,10 +421,10 @@ interface OpenClawConfig {
 ### 欄位
 
 <ParamField path="strategy" type='"parallel" | "sequential"' default='"parallel"'>
-  如何處理代理程式。`parallel` 同時執行所有代理程式；`sequential` 依陣列順序執行它們。
+  如何處理代理程式。`parallel` 會同時執行所有代理程式；`sequential` 則會依陣列順序執行。
 </ParamField>
 <ParamField path="[peerId]" type="string[]">
-  WhatsApp 群組 JID、E.164 號碼或其他對等 ID。值為應處理訊息的代理程式 ID 陣列。
+  WhatsApp 群組 JID、E.164 號碼或其他對等 ID。數值為應處理訊息的代理程式 ID 陣列。
 </ParamField>
 
 ## 限制
@@ -436,4 +449,4 @@ interface OpenClawConfig {
 - [群組](/zh-Hant/channels/groups)
 - [多代理程式沙箱工具](/zh-Hant/tools/multi-agent-sandbox-tools)
 - [配對](/zh-Hant/channels/pairing)
-- [工作階段管理](/zh-Hant/concepts/session)
+- [會話管理](/zh-Hant/concepts/session)

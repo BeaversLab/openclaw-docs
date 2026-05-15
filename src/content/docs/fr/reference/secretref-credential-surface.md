@@ -50,6 +50,8 @@ Intention de la portée :
 - `plugins.entries.firecrawl.config.webSearch.apiKey`
 - `plugins.entries.minimax.config.webSearch.apiKey`
 - `plugins.entries.tavily.config.webSearch.apiKey`
+- `plugins.entries.voice-call.config.realtime.providers.*.apiKey`
+- `plugins.entries.voice-call.config.streaming.providers.*.apiKey`
 - `plugins.entries.voice-call.config.tts.providers.*.apiKey`
 - `plugins.entries.voice-call.config.twilio.authToken`
 - `tools.web.search.apiKey`
@@ -80,14 +82,14 @@ Intention de la portée :
 - `channels.irc.nickserv.password`
 - `channels.irc.accounts.*.password`
 - `channels.irc.accounts.*.nickserv.password`
-- `channels.bluebubbles.password`
-- `channels.bluebubbles.accounts.*.password`
 - `channels.feishu.appSecret`
 - `channels.feishu.encryptKey`
 - `channels.feishu.verificationToken`
 - `channels.feishu.accounts.*.appSecret`
 - `channels.feishu.accounts.*.encryptKey`
 - `channels.feishu.accounts.*.verificationToken`
+- `channels.qqbot.clientSecret`
+- `channels.qqbot.accounts.*.clientSecret`
 - `channels.msteams.appPassword`
 - `channels.mattermost.botToken`
 - `channels.mattermost.accounts.*.botToken`
@@ -108,29 +110,29 @@ Intention de la portée :
 
 ### `auth-profiles.json` targets (`secrets configure` + `secrets apply` + `secrets audit`)
 
-- `profiles.*.keyRef` (`type: "api_key"`; unsupported when `auth.profiles.<id>.mode = "oauth"`)
-- `profiles.*.tokenRef` (`type: "token"`; unsupported when `auth.profiles.<id>.mode = "oauth"`)
+- `profiles.*.keyRef` (`type: "api_key"`; non pris en charge lorsque `auth.profiles.<id>.mode = "oauth"`)
+- `profiles.*.tokenRef` (`type: "token"`; non pris en charge lorsque `auth.profiles.<id>.mode = "oauth"`)
 
 [//]: # "secretref-supported-list-end"
 
 Notes :
 
-- Auth-profile plan targets require `agentId`.
-- Plan entries target `profiles.*.key` / `profiles.*.token` and write sibling refs (`keyRef` / `tokenRef`).
-- Auth-profile refs are included in runtime resolution and audit coverage.
-- Dans `openclaw.json`, les SecretRefs doivent utiliser des objets structurés tels que `{"source":"env","provider":"default","id":"DISCORD_BOT_TOKEN"}`. Les chaînes de marqueurs `secretref-env:<ENV_VAR>` héritées sont rejetées sur les chemins d'identification SecretRef ; exécutez `openclaw doctor --fix` pour migrer les marqueurs valides.
+- Les cibles de plan de profil d'authentification nécessitent `agentId`.
+- Les entrées de plan ciblent `profiles.*.key` / `profiles.*.token` et écrivent des références sœurs (`keyRef` / `tokenRef`).
+- Les références de profil d'authentification sont incluses dans la résolution au moment de l'exécution et la couverture d'audit.
+- Dans `openclaw.json`, les SecretRefs doivent utiliser des objets structurés tels que `{"source":"env","provider":"default","id":"DISCORD_BOT_TOKEN"}`. Les chaînes de marqueur `secretref-env:<ENV_VAR>` héritées sont rejetées sur les chemins d'informations d'identification SecretRef ; exécutez `openclaw doctor --fix` pour migrer les marqueurs valides.
 - Garde de stratégie OAuth : `auth.profiles.<id>.mode = "oauth"` ne peut pas être combiné avec des entrées SecretRef pour ce profil. Le démarrage/rechargement et la résolution du profil d'authentification échouent rapidement lorsque cette stratégie est violée.
-- Pour les fournisseurs de modèles gérés par SecretRef, les entrées `agents/*/agent/models.json` générées conservent des marqueurs non secrets (pas les valeurs de secrets résolues) pour les surfaces `apiKey`/en-tête.
-- La persistance des marqueurs est basée sur la source : OpenClaw écrit les marqueurs à partir de l'instantané actif de la configuration source (pré-résolution), et non à partir des valeurs de secrets résolues au moment de l'exécution.
-- Pour la recherche web :
-  - En mode fournisseur explicite (`tools.web.search.provider` défini), seule la clé du fournisseur sélectionné est active.
+- Pour les fournisseurs de modèle gérés par SecretRef, les entrées `agents/*/agent/models.json` générées conservent des marqueurs non secrets (pas les valeurs de secrètes résolues) pour les surfaces `apiKey`/header.
+- La persistance des marqueurs est basée sur la source : OpenClaw écrit les marqueurs à partir de l'instantané de la configuration source active (pré-résolution), et non à partir des valeurs de secrètes résolues au moment de l'exécution.
+- Pour la recherche Web :
+  - En mode fournisseur explicite (`tools.web.search.provider` défini), seule la clé de fournisseur sélectionnée est active.
   - En mode automatique (`tools.web.search.provider` non défini), seule la première clé de fournisseur résolue par priorité est active.
-  - En mode automatique, les références de fournisseurs non sélectionnés sont considérées comme inactives jusqu'à leur sélection.
-  - Les chemins de fournisseur `tools.web.search.*` hérités se résolvent encore pendant la fenêtre de compatibilité, mais la surface canonique SecretRef est `plugins.entries.<plugin>.config.webSearch.*`.
+  - En mode automatique, les références de fournisseur non sélectionnées sont traitées comme inactives jusqu'à leur sélection.
+  - Les chemins de fournisseur `tools.web.search.*` hérités sont toujours résolus pendant la fenêtre de compatibilité, mais la surface SecretRef canonique est `plugins.entries.<plugin>.config.webSearch.*`.
 
-## Identifiants non pris en charge
+## Informations d'identification non prises en charge
 
-Les identifiants hors périmètre incluent :
+Les informations d'identification hors portée incluent :
 
 [//]: # "secretref-unsupported-list-start"
 
@@ -146,11 +148,11 @@ Les identifiants hors périmètre incluent :
 
 [//]: # "secretref-unsupported-list-end"
 
-Rationale :
+Justification :
 
-- Ces identifiants sont des classes émises, rotatives, portant des sessions ou durables OAuth qui ne correspondent pas à une résolution externe SecretRef en lecture seule.
+- Ces informations d'identification sont des classes créées, rotatives, porteuses de session ou durables OAuth qui ne correspondent pas à la résolution externe en lecture seule de SecretRef.
 
 ## Connexes
 
 - [Gestion des secrets](/fr/gateway/secrets)
-- [Sémantique des identifiants d'authentification](/fr/auth-credential-semantics)
+- [Sémantique des informations d'identification d'authentification](/fr/auth-credential-semantics)

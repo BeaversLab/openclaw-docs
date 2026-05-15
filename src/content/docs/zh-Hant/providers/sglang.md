@@ -6,41 +6,47 @@ read_when:
 title: "SGLang"
 ---
 
-SGLang 可以透過 **OpenAI 相容** 的 HTTP API 提供開源模型。
-OpenClaw 可以使用 `openai-completions` API 連接到 SGLang。
+SGLang 透過 OpenAI 相容的 HTTP API 提供開放權重模型。OpenClaw 使用 `openai-completions` 提供者系列連接到 SGLang，並自動探索可用的模型。
 
-當您使用 `SGLANG_API_KEY` 選擇加入時（如果您的伺服器不強制執行驗證，則任何值皆可），
-且您未定義明確的 `models.providers.sglang` 條目，OpenClaw 也可以從 SGLang **自動探索** 可用模型。
+| 屬性           | 值                                                      |
+| -------------- | ------------------------------------------------------- |
+| 提供者 ID      | `sglang`                                                |
+| 外掛程式       | 內建，`enabledByDefault: true`                          |
+| 授權環境變數   | `SGLANG_API_KEY` （如果伺服器沒有授權，則為任何非空值） |
+| 入門旗標       | `--auth-choice sglang`                                  |
+| API            | OpenAI 相容 （`openai-completions`）                    |
+| 預設基礎 URL   | `http://127.0.0.1:30000/v1`                             |
+| 預設模型佔位符 | `sglang/Qwen/Qwen3-8B`                                  |
+| 串流使用方式   | 是 （`supportsStreamingUsage: true`）                   |
+| 定價           | 標記為外部免費 （`modelPricing.external: false`）       |
 
-OpenClaw 將 `sglang` 視為支援串流
-使用量計算的本機 OpenAI 相容供應商，因此狀態/內容 token 計數可以從
-`stream_options.include_usage` 回應中更新。
+當您選擇使用 `SGLANG_API_KEY` 且未定義明確的 `models.providers.sglang` 項目時，OpenClaw 也會從 SGLang **自動探索** 可用的模型——請參閱下方的 [模型探索 （隱含提供者）](#model-discovery-implicit-provider)。
 
 ## 開始使用
 
 <Steps>
   <Step title="啟動 SGLang">
     使用 OpenAI 相容伺服器啟動 SGLang。您的基礎 URL 應公開
-    `/v1` 端點（例如 `/v1/models`、`/v1/chat/completions`）。SGLang
+    `/v1` 端點 （例如 `/v1/models`、`/v1/chat/completions`）。SGLang
     通常運行於：
 
     - `http://127.0.0.1:30000/v1`
 
   </Step>
   <Step title="設定 API 金鑰">
-    如果您的伺服器未設定驗證，則任何值均可：
+    如果您的伺服器未設定授權，則任何值均可運作：
 
     ```bash
     export SGLANG_API_KEY="sglang-local"
     ```
 
   </Step>
-  <Step title="執行設定精靈或直接設定模型">
+  <Step title="執行入門或直接設定模型">
     ```bash
     openclaw onboard
     ```
 
-    或者手動設定模型：
+    或手動設定模型：
 
     ```json5
     {
@@ -55,23 +61,23 @@ OpenClaw 將 `sglang` 視為支援串流
   </Step>
 </Steps>
 
-## 模型探索（隱含提供者）
+## 模型探索 （隱含提供者）
 
-當設定了 `SGLANG_API_KEY`（或存在驗證設定檔）且您 **不**
+當設定了 `SGLANG_API_KEY` （或存在授權設定檔） 且您 **未**
 定義 `models.providers.sglang` 時，OpenClaw 將會查詢：
 
 - `GET http://127.0.0.1:30000/v1/models`
 
 並將傳回的 ID 轉換為模型項目。
 
-<Note>如果您明確設定了 `models.providers.sglang`，將會跳過自動探索， 且您必須手動定義模型。</Note>
+<Note>如果您明確設定 `models.providers.sglang`，則會跳過自動探索， 且您必須手動定義模型。</Note>
 
-## 明確設定（手動模型）
+## 明確設定 （手動模型）
 
-在下列情況使用明確設定：
+在以下情況使用明確設定：
 
-- SGLang 運行於不同的主機/連接埠。
-- 您想要固定 `contextWindow`/`maxTokens` 值。
+- SGLang 運行在不同的主機/連接埠上。
+- 您想要固定 `contextWindow`/`maxTokens` 數值。
 - 您的伺服器需要真實的 API 金鑰（或者您想要控制標頭）。
 
 ```json5
@@ -99,26 +105,26 @@ OpenClaw 將 `sglang` 視為支援串流
 }
 ```
 
-## 進階設定
+## 進階組態
 
 <AccordionGroup>
-  <Accordion title="Proxy 樣式行為">
-    SGLang 被視為 Proxy 樣式的 OpenAI 相容 `/v1` 後端，而非
-    原生 OpenAI 端點。
+  <Accordion title="Proxy-style behavior">
+    SGLang 被視為一種代理風格 (proxy-style) 的 OpenAI 相容 `/v1` 後端，而非
+    原生的 OpenAI 端點。
 
     | 行為 | SGLang |
     |----------|--------|
-    | 僅限 OpenAI 的請求塑造 | 不套用 |
-    | `service_tier`、回應 `store`、提示快取提示 | 不傳送 |
-    | 推理相容酬載塑造 | 不套用 |
-    | 隱藏的歸因標頭 (`originator`, `version`, `User-Agent`) | 不在自訂 SGLang 基礎 URL 上注入 |
+    | 僅限 OpenAI 的請求塑形 | 未套用 |
+    | `service_tier`、回應 `store`、prompt-cache 提示 | 未發送 |
+    | 推理相容酬載塑形 | 未套用 |
+    | 隱藏的歸因標頭 (`originator`、`version`、`User-Agent`) | 不會在自訂 SGLang 基礎 URL 上注入 |
 
   </Accordion>
 
-  <Accordion title="疑難排解">
-    **伺服器無法連線**
+  <Accordion title="Troubleshooting">
+    **無法連線至伺服器**
 
-    請驗證伺服器是否正在運作並有回應：
+    驗證伺服器是否正在運行並回應：
 
     ```bash
     curl http://127.0.0.1:30000/v1/models
@@ -126,13 +132,13 @@ OpenClaw 將 `sglang` 視為支援串流
 
     **驗證錯誤**
 
-    如果請求因驗證錯誤而失敗，請設定一個符合您
-    伺服器設定的真實 `SGLANG_API_KEY`，或在
-    `models.providers.sglang` 下明確設定供應商。
+    如果請求因驗證錯誤而失敗，請設定一個符合
+    您伺服器組態的真實 `SGLANG_API_KEY`，或者在
+    `models.providers.sglang` 下明確組態供應商。
 
     <Tip>
-    如果您在沒有驗證的情況下執行 SGLang，任何非空的
-    `SGLANG_API_KEY` 值都足以啟用模型探索功能。
+    如果您在沒有驗證的情況下執行 SGLang，
+    任何非空白的 `SGLANG_API_KEY` 數值都足以啟用模型探索。
     </Tip>
 
   </Accordion>
@@ -142,9 +148,9 @@ OpenClaw 將 `sglang` 視為支援串流
 
 <CardGroup cols={2}>
   <Card title="Model selection" href="/zh-Hant/concepts/model-providers" icon="layers">
-    選擇提供者、模型參照和故障轉移行為。
+    選擇供應商、模型參照和故障轉移行為。
   </Card>
   <Card title="Configuration reference" href="/zh-Hant/gateway/configuration-reference" icon="gear">
-    完整的設定架構，包括提供者項目。
+    包含供應商項目的完整組態架構。
   </Card>
 </CardGroup>

@@ -12,10 +12,10 @@ sidebarTitle: "Agents ACP"
 
 Les sessions [Agent Client Protocol (ACP)](https://agentclientprotocol.com/) permettent à OpenClaw d'exécuter des harnais de codage externes (par exemple Pi, Claude Code, Cursor, Copilot, Droid, OpenClaw ACP, OpenCode, Gemini CLI et autres harnais ACPX pris en charge) via un plugin backend ACP.
 
-Chaque lancement de session ACP est suivi en tant que [tâche d'arrière-plan](/fr/automation/tasks).
+Chaque création de session ACP est suivie en tant que [tâche d'arrière-plan](/fr/automation/tasks).
 
 <Note>
-**ACP est le chemin de harnais externe, et non le chemin Codex par défaut.** Le plugin natif d'application serveur Codex possède les contrôles `/codex ...` et le runtime intégré `agentRuntime.id: "codex"` ; ACP possède les contrôles `/acp ...` et les sessions `sessions_spawn({ runtime: "acp" })`.
+**ACP est le chemin du harnais externe, et non le chemin Codex par défaut.** Le plugin natif de serveur d'application Codex possède les contrôles `/codex ...` et l'exécution intégrée par défaut `openai/gpt-*` pour les tours d'agent ; ACP possède les contrôles `/acp ...` et les sessions `sessions_spawn({ runtime: "acp" })`.
 
 Si vous souhaitez que Codex ou Claude Code se connecte en tant que client MCP externe directement aux conversations de canal OpenClaw existantes, utilisez [`openclaw mcp serve`](/fr/cli/mcp) au lieu d'ACP.
 
@@ -23,209 +23,237 @@ Si vous souhaitez que Codex ou Claude Code se connecte en tant que client MCP ex
 
 ## Quelle page me faut-il ?
 
-| Vous souhaitez…                                                                                  | Utiliser ceci                            | Notes                                                                                                                                                                                                                     |
-| ------------------------------------------------------------------------------------------------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Lier ou contrôler Codex dans la conversation actuelle                                            | `/codex bind`, `/codex threads`          | Chemin d'application serveur natif Codex lorsque le plugin `codex` est activé ; inclut les réponses de chat liées, le transfert d'images, model/fast/permissions, stop et les contrôles steer. ACP est un repli explicite |
-| Exécuter Claude Code, Gemini CLI, Codex ACP explicite ou un autre harnais externe _via_ OpenClaw | Cette page                               | Sessions liées au chat, `/acp spawn`, `sessions_spawn({ runtime: "acp" })`, tâches d'arrière-plan, contrôles d'exécution                                                                                                  |
-| Exposer une session OpenClaw Gateway _en tant que_ serveur ACP pour un éditeur ou un client      | [`openclaw acp`](/fr/cli/acp)            | Mode pont. L'IDE/le client parle ACP à OpenClaw via stdio/WebSocket                                                                                                                                                       |
-| Réutiliser un AI CLI local en tant que modèle de repli texte uniquement                          | [Backends CLI](/fr/gateway/cli-backends) | Pas ACP. Pas d'outils OpenClaw, pas de contrôles ACP, pas de runtime de harnais                                                                                                                                           |
+| Vous souhaitez…                                                                                  | Utiliser ceci                            | Notes                                                                                                                                                                                                                              |
+| ------------------------------------------------------------------------------------------------ | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lier ou contrôler Codex dans la conversation actuelle                                            | `/codex bind`, `/codex threads`          | Chemin natif du serveur d'application Codex lorsque le plugin `codex` est activé ; inclut les réponses de discussion liées, le transfert d'images, model/fast/permissions, stop et les contrôles steer. ACP est un repli explicite |
+| Exécuter Claude Code, Gemini CLI, Codex ACP explicite ou un autre harnais externe _via_ OpenClaw | Cette page                               | Sessions liées à la discussion, `/acp spawn`, `sessions_spawn({ runtime: "acp" })`, tâches d'arrière-plan, contrôles d'exécution                                                                                                   |
+| Exposer une session OpenClaw Gateway _en tant que_ serveur ACP pour un éditeur ou un client      | [`openclaw acp`](/fr/cli/acp)            | Mode pont. L'IDE/le client parle ACP à OpenClaw via stdio/WebSocket                                                                                                                                                                |
+| Réutiliser un AI CLI local en tant que modèle de repli texte uniquement                          | [Backends CLI](/fr/gateway/cli-backends) | Pas ACP. Pas d'outils OpenClaw, pas de contrôles ACP, pas de runtime de harnais                                                                                                                                                    |
 
 ## Est-ce que cela fonctionne hors de la boîte ?
 
-Généralement oui. Les nouvelles installations livrent le plugin d'exécution `acpx` groupé activé par défaut avec un binaire `acpx` épinglé localement au plugin que OpenClaw détecte et répare automatiquement au démarrage. Exécutez `/acp doctor` pour une vérification de l'état de préparation.
+Oui, après avoir installé le plugin officiel d'exécution ACP :
 
-OpenClaw n'enseigne aux agents la génération ACP que lorsque l'ACP est **vraiment utilisable** : l'ACP doit être activé, la répartition ne doit pas être désactivée, la session actuelle ne doit pas être bloquée par le bac à sable, et un backend d'exécution doit être chargé. Si ces conditions ne sont pas remplies, les compétences du plugin ACP et les conseils ACP `sessions_spawn` restent masqués pour que l'agent ne suggère pas un backend indisponible.
+```bash
+openclaw plugins install @openclaw/acpx
+openclaw config set plugins.entries.acpx.enabled true
+```
+
+Les extractions de code source peuvent utiliser le plugin d'espace de travail local `extensions/acpx` après
+`pnpm install`. Exécutez `/acp doctor` pour une vérification de l'état de préparation.
+
+OpenClaw n'enseigne aux agents la génération ACP que lorsque l'ACP est **vraiment
+utilisable** : l'ACP doit être activé, la répartition (dispatch) ne doit pas être désactivée, la session
+actuelle ne doit pas être bloquée par le bac à sable, et un backend d'exécution doit être
+chargé. Si ces conditions ne sont pas remplies, les compétences du plugin ACP et
+les conseils ACP `sessions_spawn` restent masqués afin que l'agent ne suggère pas
+un backend indisponible.
 
 <AccordionGroup>
   <Accordion title="Pièges de la première exécution">
-    - Si `plugins.allow` est défini, il s'agit d'un inventaire de plugins restrictif et il **doit** inclure `acpx` ; sinon, la valeur par défaut groupée est intentionnellement bloquée et `/acp doctor` signale l'entrée de liste d'autorisation manquante.
-    - Les adaptateurs de harnais cibles (Codex, Claude, etc.) peuvent être récupérés à la demande avec `npx` la première fois que vous les utilisez.
+    - Si `plugins.allow` est défini, il s'agit d'un inventaire de plugins restrictif et **doit** inclure `acpx` ; sinon, le backend ACP installé est intentionnellement bloqué et `/acp doctor` signale l'entrée manquante dans la liste d'autorisation.
+    - L'adaptateur ACP Codex est mis en place avec le plugin `acpx` et lancé localement si possible.
+    - L'ACP Codex s'exécute avec un `CODEX_HOME` isolé ; OpenClaw ne copie que les entrées de projet approuvées depuis la configuration Codex hôte et approuve l'espace de travail actif, en laissant l'authentification, les notifications et les crochets (hooks) sur la configuration hôte.
+    - D'autres adaptateurs de harnais cibles peuvent toujours être récupérés à la demande avec `npx` la première fois que vous les utilisez.
     - L'authentification du fournisseur doit toujours exister sur l'hôte pour ce harnais.
-    - Si l'hôte n'a pas d'accès npm ou réseau, les récupérations d'adaptateurs lors de la première exécution échouent jusqu'à ce que les caches soient préchargés ou que l'adaptateur soit installé d'une autre manière.
+    - Si l'hôte n'a pas accès à npm ou au réseau, les récupérations de l'adaptateur lors de la première exécution échouent jusqu'à ce que les caches soient préchauffés ou que l'adaptateur soit installé d'une autre manière.
+
   </Accordion>
-  <Accordion title="Runtime prerequisites">
-    ACP lance un véritable processus de harnais externe. OpenClaw gère le routage,
+  <Accordion title="Prérequis d'exécution">
+    L'ACP lance un véritable processus de harnais externe. OpenClaw gère le routage,
     l'état des tâches d'arrière-plan, la livraison, les liaisons et les stratégies ; le harnais
-    gère sa connexion au fournisseur, son catalogue de modèles, son comportement de système de fichiers et ses
-    outils natifs.
+    gère sa connexion au fournisseur, son catalogue de modèles, son comportement du système de fichiers et
+    ses outils natifs.
 
     Avant de blâmer OpenClaw, vérifiez :
 
-    - `/acp doctor` signale un backend actif et sain.
+    - `/acp doctor` signale un backend activé et sain.
     - L'identifiant cible est autorisé par `acp.allowedAgents` lorsque cette liste d'autorisation est définie.
-    - La commande du harnais peut démarrer sur l'hôte OpenClaw.
+    - La commande du harnais peut démarrer sur l'hôte du Gateway.
     - L'authentification du fournisseur est présente pour ce harnais (`claude`, `codex`, `gemini`, `opencode`, `droid`, etc.).
-    - Le modèle sélectionné existe pour ce harnais — les identifiants de modèle ne sont pas portables entre les harnais.
+    - Le modèle sélectionné existe pour ce harnais - les identifiants de modèle ne sont pas portables d'un harnais à l'autre.
     - Le `cwd` demandé existe et est accessible, ou omettez `cwd` et laissez le backend utiliser sa valeur par défaut.
-    - Le mode d'autorisation correspond au travail. Les sessions non interactives ne peuvent pas cliquer sur les invites d'autorisation natives, donc les exécutions de code intensives en écriture/exécution ont généralement besoin d'un profil d'autorisation ACPX capable de procéder sans interaction.
+    - Le mode de permission correspond au travail. Les sessions non interactives ne peuvent pas cliquer sur les invites de permission natives, les exécutions de code intensives en écriture/exécution ont donc généralement besoin d'un profil de permission ACPX capable de procéder sans intervention.
 
   </Accordion>
 </AccordionGroup>
 
 Les outils du plugin OpenClaw et les outils intégrés de OpenClaw ne sont **pas** exposés aux
 harnais ACP par défaut. Activez les ponts MCP explicites dans
-[ACP agents — setup](/fr/tools/acp-agents-setup) uniquement lorsque le harnais
+[ACP agents - configuration](/fr/tools/acp-agents-setup) uniquement lorsque le harnais
 doit appeler ces outils directement.
 
 ## Cibles de harnais prises en charge
 
-Avec le backend `acpx` fourni, utilisez ces identifiants de harnais comme cibles `/acp spawn <id>`
+Avec le backend `acpx`, utilisez ces identifiants de harnais comme cibles `/acp spawn <id>`
 ou `sessions_spawn({ runtime: "acp", agentId: "<id>" })` :
 
-| Identifiant de harnais | Backend typique                                | Notes                                                                                            |
-| ---------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `claude`               | Adaptateur ACP Claude Code                     | Nécessite une authentification Claude Code sur l'hôte.                                           |
-| `codex`                | Adaptateur ACP Codex                           | Repli explicite ACP uniquement lorsque le `/codex` natif est indisponible ou qu'ACP est demandé. |
-| `copilot`              | Adaptateur ACP GitHub Copilot                  | Nécessite une authentification Copilot CLI/runtime.                                              |
-| `cursor`               | ACP CLI Cursor (`cursor-agent acp`)            | Remplacez la commande acpx si une installation locale expose un point d'entrée ACP différent.    |
-| `droid`                | Factory Droid CLI                              | Requires Factory/Droid auth or `FACTORY_API_KEY` in the harness environment.                     |
-| `gemini`               | Adaptateur ACP Gemini CLI                      | Requires Gemini CLI auth or API key setup.                                                       |
-| `iflow`                | iFlow CLI                                      | Adapter availability and model control depend on the installed CLI.                              |
-| `kilocode`             | Kilo Code CLI                                  | Adapter availability and model control depend on the installed CLI.                              |
-| `kimi`                 | Kimi/Moonshot CLI                              | Requires Kimi/Moonshot auth on the host.                                                         |
-| `kiro`                 | Kiro CLI                                       | Adapter availability and model control depend on the installed CLI.                              |
-| `opencode`             | Adaptateur ACP OpenCode                        | Requires OpenCode CLI/provider auth.                                                             |
-| `openclaw`             | OpenClaw Gateway bridge through `openclaw acp` | Lets an ACP-aware harness talk back to an OpenClaw Gateway session.                              |
-| `pi`                   | Pi/runtime OpenClaw intégré                    | Used for OpenClaw-native harness experiments.                                                    |
-| `qwen`                 | Qwen Code / Qwen CLI                           | Requires Qwen-compatible auth on the host.                                                       |
+| Identifiant de harnais | Backend typique                                         | Notes                                                                                                         |
+| ---------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `claude`               | Adaptateur ACP Claude Code                              | Nécessite une authentification Claude Code sur l'hôte.                                                        |
+| `codex`                | Adaptateur ACP Codex                                    | Recours explicite à l'ACP uniquement lorsque le `/codex` natif n'est pas disponible ou que l'ACP est demandé. |
+| `copilot`              | Adaptateur ACP GitHub Copilot                           | Nécessite une authentification Copilot CLI/runtime.                                                           |
+| `cursor`               | Adaptateur ACP CLI Cursor (CLI`cursor-agent acp`)       | Remplacez la commande acpx si une installation locale expose un point d'entrée ACP différent.                 |
+| `droid`                | CLI Droid Factory                                       | Nécessite une authentification Factory/Droid ou `FACTORY_API_KEY` dans l'environnement du harnais.            |
+| `gemini`               | Adaptateur ACP CLI Gemini                               | Nécessite une authentification CLI Gemini ou la configuration d'une clé API.                                  |
+| `iflow`                | CLI iFlow                                               | La disponibilité de l'adaptateur et le contrôle du modèle dépendent du CLI installé.                          |
+| `kilocode`             | CLI Kilo Code                                           | La disponibilité de l'adaptateur et le contrôle du modèle dépendent du CLI installé.                          |
+| `kimi`                 | CLI Kimi/Moonshot                                       | Nécessite une authentification Kimi/Moonshot sur l'hôte.                                                      |
+| `kiro`                 | CLI Kiro                                                | La disponibilité de l'adaptateur et le contrôle du modèle dépendent du CLI installé.                          |
+| `opencode`             | Adaptateur ACP OpenCode                                 | Nécessite une authentification CLI/provider OpenCode.                                                         |
+| `openclaw`             | Pont OpenClaw Gateway via OpenClawGateway`openclaw acp` | Permet à un harnais compatible ACP de communiquer avec une session OpenClaw Gateway.                          |
+| `pi`                   | Runtime OpenClaw intégré/Pi                             | Utilisé pour les expériences de harnais natif OpenClaw.                                                       |
+| `qwen`                 | Qwen Code / CLI Qwen                                    | Nécessite une authentification compatible Qwen sur l'hôte.                                                    |
 
-Custom acpx agent aliases can be configured in acpx itself, but OpenClaw
-policy still checks `acp.allowedAgents` and any
-`agents.list[].runtime.acp.agent` mapping before dispatch.
+Les alias d'agents acpx personnalisés peuvent être configurés dans acpx lui-même, mais la stratégie OpenClaw vérifie toujours OpenClaw`acp.allowedAgents` et tout mappage `agents.list[].runtime.acp.agent` avant l'envoi.
 
-## Operator runbook
+## Manuel de l'opérateur
 
-Quick `/acp` flow from chat:
+Flux rapide `/acp` depuis le chat :
 
 <Steps>
-  <Step title="Spawn">
+  <Step title="Générer">
     `/acp spawn claude --bind here`,
-    `/acp spawn gemini --mode persistent --thread auto`, or explicit
+    `/acp spawn gemini --mode persistent --thread auto`, ou explicite
     `/acp spawn codex --bind here`.
   </Step>
-  <Step title="Work">
-    Continue in the bound conversation or thread (or target the session
-    key explicitly).
+  <Step title="Travailler">
+    Continuez dans la conversation liée ou le fil (ou ciblez explicitement la clé de session).
   </Step>
-  <Step title="Check state">
+  <Step title="Vérifier l'état">
     `/acp status`
   </Step>
-  <Step title="Tune">
+  <Step title="Régler">
     `/acp model <provider/model>`,
     `/acp permissions <profile>`,
     `/acp timeout <seconds>`.
   </Step>
-  <Step title="Steer">
-    Without replacing context: `/acp steer tighten logging and continue`.
+  <Step title="Orienter">
+    Sans remplacer le contexte : `/acp steer tighten logging and continue`.
   </Step>
-  <Step title="Stop">
+  <Step title="Arrêter">
     `/acp cancel` (tour actuel) ou `/acp close` (session + liaisons).
   </Step>
 </Steps>
 
 <AccordionGroup>
-  <Accordion title="Détails du cycle de vie">
-    - Spawn crée ou reprend une session d'exécution ACP, enregistre les métadonnées ACP dans le magasin de sessions OpenClaw et peut créer une tâche d'arrière-plan lorsque l'exécution est détenue par le parent.
-    - Les messages de suivi liés vont directement à la session ACP jusqu'à ce que la liaison soit fermée, désactivée, réinitialisée ou expirée.
-    - Les commandes Gateway restent locales. `/acp ...`, `/status` et `/unfocus` ne sont jamais envoyés en tant que texte d'invite normal à un harnais ACP lié.
-    - `cancel` abandonne le tour actuel lorsque le backend prend en charge l'annulation ; il ne supprime pas la liaison ni les métadonnées de session.
-    - `close` met fin à la session ACP du point de vue de OpenClaw et supprime la liaison. Un harnais peut toujours conserver son propre historique en amont s'il prend en charge la reprise.
+  <Accordion title="Détails du cycle de vie"OpenClawGateway>
+    - Spawn crée ou reprend une session d'exécution ACP, enregistre les métadonnées ACP dans le magasin de sessions OpenClaw et peut créer une tâche en arrière-plan lorsque l'exécution est détenue par le parent.
+    - Les sessions ACP détenues par le parent sont traitées comme un travail en arrière-plan, même lorsque la session d'exécution est persistante ; la livraison de l'achèvement et inter-surfaces passe par le notificateur de tâche parent plutôt que d'agir comme une session de chat normale face à l'utilisateur.
+    - La maintenance des tâches ferme les sessions ACP ponctuelles détenues par le parent qui sont terminées ou orphelines. Les sessions ACP persistantes sont conservées tant qu'une liaison de conversation active reste ; les sessions persistantes obsolètes sans liaison active sont fermées pour qu'elles ne puissent pas être reprises silencieusement après que la tâche propriétaire est terminée ou que son enregistrement de tâche a disparu.
+    - Les messages de suivi liés vont directement à la session ACP jusqu'à ce que la liaison soit fermée, non focalisée, réinitialisée ou expirée.
+    - Les commandes de la passerelle restent locales. `/acp ...`, `/status` et `/unfocus` ne sont jamais envoyés en tant que texte d'invite normal à un harnais ACP lié.
+    - `cancel` abandonne le tour actif lorsque le backend prend en charge l'annulation ; il ne supprime pas la liaison ou les métadonnées de session.
+    - `close`OpenClawOpenClaw termine la session ACP du point de vue d'OpenClaw et supprime la liaison. Un harnais peut encore conserver son propre historique en amont s'il prend en charge la reprise.
+    - Le plugin acpx nettoie les processus de wrapper et d'adaptateur détenus par OpenClaw après `close`OpenClawGateway, et moissonne les orphelins ACPX détenus par OpenClaw obsolètes lors du démarrage de la passerelle.
     - Les workers d'exécution inactifs sont éligibles au nettoyage après `acp.runtime.ttlMinutes` ; les métadonnées de session stockées restent disponibles pendant `/acp sessions`.
+
   </Accordion>
   <Accordion title="Règles de routage Codex natif">
     Déclencheurs en langage naturel qui doivent être acheminés vers le **plugin Codex
     natif** lorsqu'il est activé :
 
-    - "Lier ce Discord channel à Codex."
+    - "Lier ce channel Discord à Codex."
     - "Attacher ce chat au fil de discussion Codex `<id>`."
     - "Afficher les fils Codex, puis lier celui-ci."
 
     La liaison de conversation Codex native est le chemin de contrôle de chat par défaut.
     Les outils dynamiques OpenClaw s'exécutent toujours via OpenClaw, tandis que
     les outils natifs Codex tels que shell/apply-patch s'exécutent dans Codex.
-    Pour les événements d'outil natifs Codex, OpenClaw injecte un relais de hook natif par tour
-    afin que les hooks de plugin puissent bloquer `before_tool_call`, observer
+    Pour les événements d'outil natifs Codex, OpenClaw injecte un relais de hook natif
+    par tour afin que les hooks de plugin puissent bloquer `before_tool_call`, observer
     `after_tool_call` et acheminer les événements Codex `PermissionRequest`
     via les approbations OpenClaw. Les hooks Codex `Stop` sont relayés à
     OpenClaw `before_agent_finalize`, où les plugins peuvent demander une passe de
-    model supplémentaire avant que Codex ne finalise sa réponse. Le relais reste
+    modèle supplémentaire avant que Codex ne finalise sa réponse. Le relais reste
     délibérément conservateur : il ne mute pas les arguments d'outil natifs Codex
-    et ne réécrit pas les enregistrements de fils Codex. Utilisez l'ACP explicite uniquement
+    ni ne réécrit les enregistrements de fils Codex. Utilisez l'ACP explicite uniquement
     lorsque vous souhaitez le modèle d'exécution/session ACP. La limite de support Codex
     intégrée est documentée dans le
-    [Contrat de support du harnais Codex v1](/fr/plugins/codex-harness#v1-support-contract).
+    [Contrat de support du harnais Codex v1](/fr/plugins/codex-harness-runtime#v1-support-contract).
 
   </Accordion>
-  <Accordion title="Aide-memoire de sélection Model / provider / runtime">
-    - `openai-codex/*` — itinéraire d'abonnement/OAuth PI Codex.
-    - `openai/*` plus `agentRuntime.id: "codex"` — runtime intégré app-server Codex natif.
-    - `/codex ...` — contrôle de conversation Codex natif.
-    - `/acp ...` ou `runtime: "acp"` — contrôle explicite ACP/acpx.
+  <Accordion title="Feuille de triche pour la sélection du modèle / fournisseur / runtime">
+    - `openai-codex/*` - ancien chemin de modèle Codex OAuth/abonnement réparé par le docteur.
+    - `openai/*` - runtime intégré du serveur d'application Codex natif pour les tours d'agent OpenAI.
+    - `/codex ...` - contrôle de conversation Codex natif.
+    - `/acp ...` ou `runtime: "acp"` - contrôle ACP/acpx explicite.
+
   </Accordion>
-  <Accordion title="Déclencheurs de langage naturel pour le routage ACP">
-    Déclencheurs qui doivent être acheminés vers le runtime ACP :
+  <Accordion title="Déclencheurs en langage naturel pour le routage ACP">
+    Déclencheurs qui doivent acheminer vers le runtime ACP :
 
     - « Exécuter ceci en tant que session ACP Claude Code ponctuelle et résumer le résultat. »
     - « Utiliser Gemini CLI pour cette tâche dans un fil, puis conserver les suivis dans ce même fil. »
     - « Exécuter Codex via ACP dans un fil d'arrière-plan. »
 
-    OpenClaw sélectionne `runtime: "acp"`, résout le harnais `agentId`,
+    OpenClaw choisit `runtime: "acp"`, résout le harnais `agentId`,
     se lie à la conversation ou au fil actuel lorsque pris en charge, et
-    achemine les suivis vers cette session jusqu'à la fermeture ou l'expiration. Codex ne suit ce chemin que lorsque ACP/acpx est explicite ou que le plugin natif Codex n'est pas disponible pour l'opération demandée.
+    achemine les suivis vers cette session jusqu'à la fermeture ou l'expiration. Codex ne
+    suit ce chemin que lorsque ACP/acpx est explicite ou que le plugin
+    Codex natif n'est pas disponible pour l'opération demandée.
 
-    Pour `sessions_spawn`, `runtime: "acp"` n'est annoncé que lorsque ACP
-    est activé, que le demandeur n'est pas sandboxé, et qu'un backend
-    d'exécution ACP est chargé. `acp.dispatch.enabled=false` met en pause la
-    répartition automatique des fils ACP mais ne masque ni ne bloque les appels explicites `sessions_spawn({ runtime: "acp" })`. Il cible les identifiants de harnais ACP tels que `codex`,
-    `claude`, `droid`, `gemini` ou `opencode`. Ne transmettez pas un identifiant d'agent de configuration OpenClaw normal depuis `agents_list` sauf si cette entrée est explicitement configurée avec `agents.list[].runtime.type="acp"` ;
-    sinon, utilisez le runtime de sous-agent par défaut. Lorsqu'un agent OpenClaw est configuré avec `runtime.type="acp"`, OpenClaw utilise `runtime.acp.agent` comme identifiant de harnais sous-jacent.
+    Pour `sessions_spawn`, `runtime: "acp"` est annoncé uniquement lorsque ACP
+    est activé, que le demandeur n'est pas %%PH:GLOSSARY:sandboxed%% et qu'un backend
+    d'exécution ACP est chargé. `acp.dispatch.enabled=false` suspend la distribution
+    automatique des fils ACP mais ne masque ni ne bloque les appels explicites
+    `sessions_spawn({ runtime: "acp" })`. Il cible les identifiants de harnais ACP tels que `codex`,
+    `claude`, `droid`, `gemini` ou `opencode`. Ne passez pas un
+    identifiant d'agent de configuration OpenClaw normal depuis `agents_list` à moins que cette entrée ne soit
+    explicitement configurée avec `agents.list[].runtime.type="acp"` ;
+    sinon, utilisez le runtime de sous-agent par défaut. Lorsqu'un agent
+    OpenClaw est configuré avec `runtime.type="acp"`, OpenClaw utilise
+    `runtime.acp.agent` comme identifiant de harnais sous-jacent.
 
   </Accordion>
 </AccordionGroup>
 
 ## ACP par rapport aux sous-agents
 
-Utilisez ACP lorsque vous souhaitez un runtime de harnais externe. Utilisez le **serveur d'application natif Codex** pour la liaison/le contrôle de conversation Codex lorsque le plugin `codex` est activé. Utilisez les **sous-agents** lorsque vous souhaitez des exécutions déléguées natives OpenClaw.
+Utilisez ACP lorsque vous souhaitez un runtime de harnais externe. Utilisez l'**application serveur
+Codex native** pour la liaison/le contrôle de conversation Codex lorsque le plugin
+`codex` est activé. Utilisez les **sous-agents** lorsque vous souhaitez des exécutions
+déléguées natives OpenClaw.
 
 | Zone                  | Session ACP                           | Exécution de sous-agent               |
 | --------------------- | ------------------------------------- | ------------------------------------- |
 | Runtime               | Plugin backend ACP (par exemple acpx) | Runtime de sous-agent natif OpenClaw  |
 | Clé de session        | `agent:<agentId>:acp:<uuid>`          | `agent:<agentId>:subagent:<uuid>`     |
 | Commandes principales | `/acp ...`                            | `/subagents ...`                      |
-| Outil de lancement    | `sessions_spawn` avec `runtime:"acp"` | `sessions_spawn` (runtime par défaut) |
+| Outil de Spawn        | `sessions_spawn` avec `runtime:"acp"` | `sessions_spawn` (runtime par défaut) |
 
 Voir aussi [Sous-agents](/fr/tools/subagents).
 
-## Fonctionnement d'ACP avec Claude Code
+## Comment ACP exécute Claude Code
 
-Pour Claude Code via ACP, la pile est la suivante :
+Pour Claude Code via ACP, la pile est :
 
 1. Plan de contrôle de session ACP OpenClaw.
-2. Plugin d'exécution `acpx` groupé.
+2. Plugin de runtime `@openclaw/acpx` officiel.
 3. Adaptateur ACP Claude.
-4. Mécanisme d'exécution/session côté Claude.
+4. Mécanisme de runtime/session côté Claude.
 
-ACP Claude est une **session de harnais** avec des contrôles ACP, la reprise de session, le suivi des tâches en arrière-plan et une liaison facultative de conversation/fil.
+ACP Claude est une **session de harnais** avec des contrôles ACP, la reprise de session, le suivi des tâches en arrière-plan et la liaison optionnelle de conversation/fil.
 
-Les backends CLI sont des runtimes de repli locaux texte-only distincts — voir [Backends CLI](/fr/gateway/cli-backends).
+Les backends CLI sont des runtimes de secours locaux texte-only séparés - voir [Backends CLI](CLICLI/en/gateway/cli-backends).
 
 Pour les opérateurs, la règle pratique est :
 
-- **Vous voulez `/acp spawn`, des sessions liables, des contrôles d'exécution ou un travail de harnais persistant ?** Utilisez ACP.
-- **Vous voulez un repli texte local simple via le CLI brut ?** Utilisez les backends CLI.
+- **Vous voulez `/acp spawn`, des sessions liables, des contrôles de runtime ou un travail de harnais persistant ?** Utilisez ACP.
+- **Vous voulez une solution de secours texte locale simple via le CLI brut ?** Utilisez les backends CLI.
 
 ## Sessions liées
 
 ### Modèle mental
 
-- **Surface de chat** — l'endroit où les gens continuent de discuter (channel Discord, sujet Telegram, chat iMessage).
-- **Session ACP** — l'état d'exécution durable Codex/Claude/Gemini vers lequel OpenClaw achemine.
-- **Fil de discussion/sujet enfant** — une surface de messagerie supplémentaire facultative créée uniquement par `--thread ...`.
-- **Espace de travail d'exécution** — l'emplacement du système de fichiers (`cwd`, extraction de repo, espace de travail backend) où le harnais s'exécute. Indépendant de la surface de chat.
+- **Surface de chat** - là où les gens continuent de discuter (channel Discord, sujet Telegram, chat iMessage).
+- **Session ACP** - l'état de runtime Codex/Claude/Gemini durable vers lequel OpenClaw route.
+- **Fil/sujet enfant** - une surface de messagerie supplémentaire optionnelle créée uniquement par `--thread ...`.
+- **Espace de travail runtime** - l'emplacement du système de fichiers (`cwd`, extraction de dépôt, espace de travail backend) où le harnais s'exécute. Indépendant de la surface de chat.
 
-### Liaisons de conversation actuelle
+### Liens de conversation actuelle
 
-`/acp spawn <harness> --bind here` épingler la conversation actuelle à la session ACP générée — pas de fil enfant, même surface de chat. OpenClaw conserve la propriété du transport, de l'auth, de la sécurité et de la livraison. Les messages de suivi dans cette conversation sont acheminés vers la même session ; `/new` et `/reset` réinitialisent la session sur place ; `/acp close` supprime la liaison.
+`/acp spawn <harness> --bind here`OpenClaw épinglie la conversation actuelle à la session ACP générée - pas de fil enfant, même surface de chat. OpenClaw continue de posséder le transport, l'authentification, la sécurité et la livraison. Les messages de suivi dans cette conversation routent vers la même session ; `/new` et `/reset` réinitialisent la session sur place ; `/acp close` supprime la liaison.
 
 Exemples :
 
@@ -240,42 +268,44 @@ Exemples :
 
 <AccordionGroup>
   <Accordion title="Règles de liaison et exclusivité">
-    - `--bind here` et `--thread ...` s'excluent mutuellement.
-    - `--bind here` fonctionne uniquement sur les canaux qui annoncent une liaison à la conversation en cours ; OpenClaw renvoie un message clair indiquant l'absence de prise en charge sinon. Les liaisons persistent après les redémarrages du gateway.
-    - Sur Discord, `spawnAcpSessions` n'est requis que lorsque OpenClaw a besoin de créer un fil de discussion enfant pour `--thread auto|here` — et non pour `--bind here`.
-    - Si vous effectuez un spawn vers un autre agent ACP sans `--cwd`, OpenClaw hérite par défaut de l'espace de travail de **l'agent cible**. Les chemins hérités manquants (`ENOENT`/`ENOTDIR`) reviennent par défaut au backend ; les autres erreurs d'accès (par exemple `EACCES`) apparaissent comme des erreurs de spawn.
-    - Les commandes de gestion du Gateway restent locales dans les conversations liées — les commandes `/acp ...` sont gérées par OpenClaw même lorsque le texte de suivi normal est acheminé vers la session ACP liée ; `/status` et `/unfocus` restent également locales chaque fois que la gestion des commandes est activée pour cette surface.
+    - `--bind here` et `--thread ...` sont mutuellement exclusifs.
+    - `--bind here` ne fonctionne que sur les canaux qui annoncent une liaison à la conversation en cours ; OpenClaw renvoie sinon un message clair d'incompatibilité. Les liaisons persistent après les redémarrages de la passerelle.
+    - Sur Discord, `spawnSessions` verrouille la création de fils de discussion enfants pour `--thread auto|here` - et non pour `--bind here`.
+    - Si vous effectuez un lancement vers un autre agent ACP sans `--cwd`, OpenClaw hérite par défaut de l'**espace de travail de l'agent cible**. Les chemins hérités manquants (`ENOENT`/`ENOTDIR`) reviennent à la valeur par défaut du backend ; les autres erreurs d'accès (par ex. `EACCES`Gateway) apparaissent comme des erreurs de lancement.
+    - Les commandes de gestion de passerelle restent locales dans les conversations liées - les commandes `/acp ...` sont gérées par OpenClaw même lorsque le texte de suivi normal est acheminé vers la session ACP liée ; `/status` et `/unfocus` restent également locales chaque fois que la gestion des commandes est activée pour cette surface.
+
   </Accordion>
-  <Accordion title="Sessions liées aux fils de discussion">
-    Lorsque les liaisons de fils de discussion sont activées pour un adaptateur de canal :
+  <Accordion title="Sessions liées aux fils"OpenClaw>
+    Lorsque les liaisons de fils (threads) sont activées pour un adaptateur de canal :
 
-    - OpenClaw lie un fil de discussion à une session ACP cible.
+    - OpenClaw lie un fil à une session ACP cible.
     - Les messages de suivi dans ce fil sont acheminés vers la session ACP liée.
-    - La sortie ACP est renvoyée vers le même fil de discussion.
-    - La perte de focus, la fermeture, l'archivage, l'expiration du délai d'inactivité ou l'expiration de la durée de vie maximale supprime la liaison.
-    - `/acp close`, `/acp cancel`, `/acp status`, `/status` et `/unfocus` sont des commandes Gateway, et non des invites pour le harnais ACP.
+    - La sortie ACP est renvoyée vers le même fil.
+    - La perte de focus/la fermeture/l'archivage/le délai d'inactivité ou l'expiration de la durée maximale supprime la liaison.
+    - `/acp close`, `/acp cancel`, `/acp status`, `/status` et `/unfocus`Gateway sont des commandes Gateway, et non des invites pour le harnais ACP.
 
-    Indicateurs de fonctionnalités requis pour l'ACP liée aux fils de discussion :
+    Indicateurs de fonctionnalités requis pour l'ACP liée aux fils :
 
     - `acp.enabled=true`
-    - `acp.dispatch.enabled` est activé par défaut (définissez `false` pour suspendre l'expédition automatique des fils ACP ; les appels explicites `sessions_spawn({ runtime: "acp" })` fonctionnent toujours).
-    - Indicateur de création de fil ACP par adaptateur de canal activé (spécifique à l'adaptateur) :
-      - Discord : `channels.discord.threadBindings.spawnAcpSessions=true`
-      - Telegram : `channels.telegram.threadBindings.spawnAcpSessions=true`
+    - `acp.dispatch.enabled` est activé par défaut (définissez `false` pour suspendre la répartition automatique des fils ACP ; les appels explicites `sessions_spawn({ runtime: "acp" })` fonctionnent toujours).
+    - Créations de sessions de fils d'adaptateur de canal activées (par défaut : `true`Discord) :
+      - Discord : `channels.discord.threadBindings.spawnSessions=true`Telegram
+      - Telegram : `channels.telegram.threadBindings.spawnSessions=true`OpenClaw
 
-    La prise en charge de la liaison de fil est spécifique à l'adaptateur. Si l'adaptateur de canal actif ne prend pas en charge les liaisons de fils, OpenClaw renvoie un message clair indiquant que la fonctionnalité n'est pas prise en charge ou indisponible.
+    La prise en charge des liaisons de fils est spécifique à l'adaptateur. Si l'adaptateur de canal actif ne prend pas en charge les liaisons de fils, OpenClaw renvoie un message clair indiquant que la fonctionnalité n'est pas prise en charge ou indisponible.
 
   </Accordion>
-  <Accordion title="Canaux prenant en charge les fils">
-    - Tout adaptateur de canal qui expose la capacité de liaison de session/fil.
-    - Prise en charge intégrée actuelle : fils/canaux **Discord**, sujets **Telegram** (sujets de forum dans les groupes/super-groupes et sujets DM).
-    - Les canaux de plug-ins peuvent ajouter une prise en charge via la même interface de liaison.
+  <Accordion title="Canaux prenant en charge les fils"DiscordTelegram>
+    - Tout adaptateur de canal qui expose une capacité de liaison de session/de fil.
+    - Prise en charge intégrée actuelle : fils/canaux **Discord**, sujets **Telegram** (sujets de forum dans les groupes/supergroupes et sujets DM).
+    - Les canaux de plugins peuvent ajouter une prise en charge via la même interface de liaison.
+
   </Accordion>
 </AccordionGroup>
 
-## Liaisons de canal persistantes
+## Liaisons persistantes de canaux
 
-Pour les workflows non éphémères, configurez les liaisons ACP persistantes dans les entrées `bindings[]` de niveau supérieur.
+Pour les flux de travail non éphémères, configurez les liaisons ACP persistantes dans les entrées `bindings[]` de premier niveau.
 
 ### Modèle de liaison
 
@@ -285,44 +315,44 @@ Pour les workflows non éphémères, configurez les liaisons ACP persistantes da
 <ParamField path="bindings[].match" type="object">
   Identifie la conversation cible. Formes par canal :
 
-- **Canal/fil Discord :** `match.channel="discord"` + `match.peer.id="<channelOrThreadId>"`
-- **Sujet de forum Telegram :** `match.channel="telegram"` + `match.peer.id="<chatId>:topic:<topicId>"`
-- **DM/groupe BlueBubbles :** `match.channel="bluebubbles"` + `match.peer.id="<handle|chat_id:*|chat_guid:*|chat_identifier:*>"`. Préférez `chat_id:*` ou `chat_identifier:*` pour des liaisons de groupe stables.
-- **DM/groupe iMessage :** `match.channel="imessage"` + `match.peer.id="<handle|chat_id:*|chat_guid:*|chat_identifier:*>"`. Préférez `chat_id:*` pour des liaisons de groupe stables.
-  </ParamField>
-<ParamField path="bindings[].agentId" type="string">
-L'id de l'agent OpenClaw propriétaire.
+- **Discord channel/thread :** Discord`match.channel="discord"` + `match.peer.id="<channelOrThreadId>"`
+- **Telegram forum topic :** Telegram`match.channel="telegram"` + `match.peer.id="<chatId>:topic:<topicId>"`
+- **iMessage DM/group :** iMessage`match.channel="imessage"` + `match.peer.id="<handle|chat_id:*|chat_guid:*|chat_identifier:*>"`. Préférez `chat_id:*` pour les liaisons de groupe stables.
+
+</ParamField>
+<ParamField path="bindings[].agentId" type="string"OpenClaw>
+  L'identifiant de l'agent propriétaire OpenClaw.
 </ParamField>
 <ParamField path="bindings[].acp.mode" type='"persistent" | "oneshot"'>
-Surcharge ACP facultative.
+  Remplacement ACP optionnel.
 </ParamField>
 <ParamField path="bindings[].acp.label" type="string">
-Libellé orienté opérateur facultatif.
+  Libellé orienté opérateur optionnel.
 </ParamField>
 <ParamField path="bindings[].acp.cwd" type="string">
-Répertoire de travail d'exécution facultatif.
+  Répertoire de travail d'exécution optionnel.
 </ParamField>
 <ParamField path="bindings[].acp.backend" type="string">
-Surcharge de backend facultative.
+  Remplacement de backend optionnel.
 </ParamField>
 
 ### Runtime defaults per agent
 
-Use `agents.list[].runtime` to define ACP defaults once per agent:
+Utilisez `agents.list[].runtime` pour définir les valeurs par défaut de l'ACP une fois par agent :
 
 - `agents.list[].runtime.type="acp"`
-- `agents.list[].runtime.acp.agent` (harness id, e.g. `codex` or `claude`)
+- `agents.list[].runtime.acp.agent` (harness id, e.g. `codex` ou `claude`)
 - `agents.list[].runtime.acp.backend`
 - `agents.list[].runtime.acp.mode`
 - `agents.list[].runtime.acp.cwd`
 
-**Override precedence for ACP bound sessions:**
+**Priorité de remplacement pour les sessions liées à l'ACP :**
 
 1. `bindings[].acp.*`
 2. `agents.list[].runtime.acp.*`
-3. Global ACP defaults (e.g. `acp.backend`)
+3. Valeurs par défaut globales de l'ACP (par ex. `acp.backend`)
 
-### Example
+### Exemple
 
 ```json5
 {
@@ -402,23 +432,22 @@ Use `agents.list[].runtime` to define ACP defaults once per agent:
 }
 ```
 
-### Behavior
+### Comportement
 
-- OpenClaw ensures the configured ACP session exists before use.
-- Messages in that channel or topic route to the configured ACP session.
-- In bound conversations, `/new` and `/reset` reset the same ACP session key in place.
-- Temporary runtime bindings (for example created by thread-focus flows) still apply where present.
-- For cross-agent ACP spawns without an explicit `cwd`, OpenClaw inherits the target agent workspace from agent config.
-- Missing inherited workspace paths fall back to the backend default cwd; non-missing access failures surface as spawn errors.
+- OpenClaw s'assure que la session ACP configurée existe avant utilisation.
+- Les messages de ce channel ou sujet sont acheminés vers la session ACP configurée.
+- Dans les conversations liées, `/new` et `/reset` réinitialisent la même clé de session ACP sur place.
+- Les liaisons d'exécution temporaires (par exemple créées par les flux de focus sur le fil de discussion) s'appliquent toujours là où elles sont présentes.
+- Pour les créations d'ACP inter-agents sans `cwd`OpenClaw explicite, OpenClaw hérite de l'espace de travail de l'agent cible à partir de la configuration de l'agent.
+- Les chemins d'espace de travail hérités manquants reviennent au répertoire de travail actuel par défaut du backend ; les échecs d'accès non manquants se manifestent par des erreurs de lancement.
 
-## Start ACP sessions
+## Démarrer des sessions ACP
 
-Two ways to start an ACP session:
+Deux façons de démarrer une session ACP :
 
 <Tabs>
   <Tab title="From sessions_spawn">
-    Utilisez `runtime: "acp"` pour démarrer une session ACP à partir d'un tour d'agent ou
-    d'un appel de tool.
+    Utilisez `runtime: "acp"` pour démarrer une session ACP à partir d'un tour d'agent ou d'un appel d'outil.
 
     ```json
     {
@@ -433,8 +462,8 @@ Two ways to start an ACP session:
     <Note>
     `runtime` est `subagent` par défaut, définissez donc `runtime: "acp"` explicitement
     pour les sessions ACP. Si `agentId` est omis, OpenClaw utilise
-    `acp.defaultAgent` lorsque configuré. `mode: "session"` nécessite
-    `thread: true` pour conserver une conversation liée persistante.
+    `acp.defaultAgent` lorsqu'il est configuré. `mode: "session"` nécessite
+    `thread: true` pour maintenir une conversation liée persistante.
     </Note>
 
   </Tab>
@@ -461,10 +490,10 @@ Two ways to start an ACP session:
   </Tab>
 </Tabs>
 
-### paramètres `sessions_spawn`
+### Paramètres `sessions_spawn`
 
 <ParamField path="task" type="string" required>
-  Invite initiale envoyée à la session ACP.
+  Invite initial envoyée à la session ACP.
 </ParamField>
 <ParamField path="runtime" type='"acp"' required>
   Doit être `"acp"` pour les sessions ACP.
@@ -473,84 +502,85 @@ Two ways to start an ACP session:
   ID du harnais cible ACP. Revient à `acp.defaultAgent` si défini.
 </ParamField>
 <ParamField path="thread" type="boolean" default="false">
-  Demander le flux de liaison du fil de discussion lorsque pris en charge.
+  Demande le flux de liaison de discussion là où c'est pris en charge.
 </ParamField>
 <ParamField path="mode" type='"run" | "session"' default="run">
   `"run"` est ponctuel ; `"session"` est persistant. Si `thread: true` et
-  `mode` sont omis, OpenClaw peut revenir par défaut à un comportement persistant selon
+  `mode` sont omis, OpenClaw peut par défaut adopter un comportement persistant selon
   le chemin d'exécution. `mode: "session"` nécessite `thread: true`.
 </ParamField>
 <ParamField path="cwd" type="string">
   Répertoire de travail d'exécution demandé (validé par la stratégie
-  backend/runtime). S'il est omis, le spawning ACP hérite de l'espace de travail de l'agent cible
-  lorsqu'il est configuré ; les chemins hérités manquants reviennent aux valeurs par défaut du backend,
-  tandis que les erreurs d'accès réelles sont renvoyées.
+  backend/runtime). Si omis, le spawn ACP hérite de l'espace de travail
+  de l'agent cible lorsqu'il est configuré ; les chemins hérités manquants
+  reviennent aux valeurs par défaut du backend, tandis que les vraies
+  erreurs d'accès sont renvoyées.
 </ParamField>
 <ParamField path="label" type="string">
-  Libellé orienté opérateur utilisé dans le texte de la session/bannière.
+  Libellé destiné à l'opérateur, utilisé dans le texte de session/bannière.
 </ParamField>
 <ParamField path="resumeSessionId" type="string">
-  Reprend une session ACP existante au lieu d'en créer une nouvelle. L'agent
-  rejoue son historique de conversation via `session/load`. Nécessite
+  Reprendre une session ACP existante au lieu d'en créer une nouvelle.
+  L'agent rejoue son historique de conversation via `session/load`. Nécessite
   `runtime: "acp"`.
 </ParamField>
 <ParamField path="streamTo" type='"parent"'>
-  `"parent"` diffuse les résumés de progression de l'exécution ACP initiale vers la
-  session demandrice sous forme d'événements système. Les réponses acceptées incluent
-  `streamLogPath` pointant vers un journal JSONL délimité à la session
-  (`<sessionId>.acp-stream.jsonl`) que vous pouvez suivre pour l'historique de relais complet.
+  `"parent"` diffuse les résumés de progression de l'exécution ACP initiale
+  vers la session demanderesse sous forme d'événements système. Les réponses
+  acceptées incluent `streamLogPath` pointant vers un journal JSONL délimité à la session
+  (`<sessionId>.acp-stream.jsonl`) que vous pouvez suivre pour l'historique complet du relais.
 </ParamField>
 <ParamField path="runTimeoutSeconds" type="number">
-  Abandonne le tour enfant ACP après N secondes. `0` conserve le tour sur
-  le chemin sans délai d'expiration de la passerelle. La même valeur est appliquée à l'exécution Gateway
-  et au runtime ACP afin que les harnais bloqués ou épuisant leur quota n'occupent
-  pas indéfiniment la voie de l'agent parent.
+  Abandonne le tour enfant ACP après N secondes. `0` maintient le tour sur le
+  chemin sans délai d'expiration du Gateway. La même valeur est appliquée à l'exécution du
+  OpenClaw et au runtime ACP pour que les harnais bloqués ou ayant épuisé leur quota
+  n'occupent pas indéfiniment la voie de l'agent parent.
 </ParamField>
 <ParamField path="model" type="string">
-  Remplacement explicite de model pour la session enfant ACP. Les spawns Codex ACP
-  normalisent les références Codex OpenClaw telles que `openai-codex/gpt-5.4` vers la configuration
-  de démarrage Codex ACP avant `session/new` ; les formes avec barre oblique telles que
+  Remplacement explicite de model pour la session enfant ACP. Les spawns
+  Codex ACP normalisent les réfs Codex OpenClaw telles que `openai-codex/gpt-5.4` vers la configuration
+  de démarrage Codex ACP avant `session/new` ; les formes avec slash telles que
   `openai-codex/gpt-5.4/high` définissent également l'effort de raisonnement Codex ACP.
-  Les autres harnais doivent annoncer l'ACP `models` et prendre en charge
+  Les autres harnais doivent annoncer la `models` ACP et prendre en charge
   `session/set_model` ; sinon OpenClaw/acpx échoue clairement au lieu de
   revenir silencieusement à la valeur par défaut de l'agent cible.
 </ParamField>
 <ParamField path="thinking" type="string">
   Effort de réflexion/raisonnement explicite. Pour Codex ACP, `minimal` correspond à
   un faible effort, `low`/`medium`/`high`/`xhigh` correspondent directement, et `off`
-  omet le remplacement au démarrage de l'effort de raisonnement.
+  omet le remplacement du démarrage pour l'effort de raisonnement.
 </ParamField>
 
-## Modes de liaison et de thread de spawn
+## Spawn bind et modes de thread
 
 <Tabs>
   <Tab title="--bind here|off">
     | Mode   | Comportement                                                               |
     | ------ | -------------------------------------------------------------------------- |
-    | `here` | Lie la conversation active actuelle sur place ; échoue si aucune n'est active. |
-    | `off`  | Ne crée pas de liaison avec la conversation actuelle.                          |
+    | `here` | Lier la conversation active actuelle sur place ; échouer si aucune n'est active. |
+    | `off`  | Ne pas créer de liaison de conversation actuelle.                          |
 
     Notes :
 
-    - `--bind here` est le chemin d'exploitation le plus simple pour « rendre ce channel ou chat pris en charge par Codex ».
+    - `--bind here` est le chemin opérateur le plus simple pour « rendre ce channel ou chat Codex-backed. »
     - `--bind here` ne crée pas de thread enfant.
-    - `--bind here` n'est disponible que sur les channels qui exposent une prise en charge de la liaison de conversation actuelle.
+    - `--bind here` n'est disponible que sur les channels qui exposent la prise en charge de la liaison de conversation actuelle.
     - `--bind` et `--thread` ne peuvent pas être combinés dans le même appel `/acp spawn`.
 
   </Tab>
   <Tab title="--thread auto|here|off">
     | Mode   | Comportement                                                                                            |
     | ------ | ------------------------------------------------------------------------------------------------------- |
-    | `auto` | Dans un thread actif : lie ce thread. En dehors d'un thread : crée/lie un thread enfant si pris en charge. |
-    | `here` | Nécessite le thread actif actuel ; échoue si on n'est pas dans un thread.                                                  |
+    | `auto` | Dans un thread actif : lier ce thread. En dehors d'un thread : créer/lier un thread enfant lorsque pris en charge. |
+    | `here` | Nécessite le thread actif actuel ; échouer si aucun n'est actif.                                                  |
     | `off`  | Aucune liaison. La session démarre non liée.                                                                 |
 
     Notes :
 
     - Sur les surfaces sans liaison de thread, le comportement par défaut est effectivement `off`.
-    - Le spawn lié à un thread nécessite une prise en charge de la stratégie de channel :
-      - Discord : `channels.discord.threadBindings.spawnAcpSessions=true`
-      - Telegram : `channels.telegram.threadBindings.spawnAcpSessions=true`
+    - Le spawn lié à un thread nécessite la prise en charge de la stratégie de channel :
+      - Discord : `channels.discord.threadBindings.spawnSessions=true`
+      - Telegram : `channels.telegram.threadBindings.spawnSessions=true`
     - Utilisez `--bind here` lorsque vous souhaitez épingler la conversation actuelle sans créer de thread enfant.
 
   </Tab>
@@ -558,56 +588,59 @@ Two ways to start an ACP session:
 
 ## Modèle de livraison
 
-Les sessions ACP peuvent être des espaces de travail interactifs ou un travail d'arrière-plan appartenant au parent. Le chemin de livraison dépend de cette forme.
+Les sessions ACP peuvent être soit des espaces de travail interactifs, soit un travail d'arrière-plan appartenant au parent. Le chemin de livraison dépend de cette forme.
 
 <AccordionGroup>
   <Accordion title="Sessions ACP interactives">
-    Les sessions interactives sont destinées à poursuivre la conversation sur une surface de chat visible :
+    Les sessions interactives sont conçues pour continuer à parler sur une surface de chat visible :
 
     - `/acp spawn ... --bind here` lie la conversation actuelle à la session ACP.
-    - `/acp spawn ... --thread ...` lie un fil/sujet de channel à la session ACP.
-    - Les `bindings[].type="acp"` configurés de manière persistante acheminent les conversations correspondantes vers la même session ACP.
+    - `/acp spawn ... --thread ...` lie un fil/sujet de canal à la session ACP.
+    - `bindings[].type="acp"` persistants configurés routent les conversations correspondantes vers la même session ACP.
 
-    Les messages de suivi dans la conversation liée sont acheminés directement vers la session ACP, et la sortie de l'ACP est renvoyée vers le même channel/fil/sujet.
+    Les messages de suivi dans la conversation liée sont acheminés directement vers la session ACP, et la sortie ACP est renvoyée vers ce même canal/fil/sujet.
 
     Ce que OpenClaw envoie au harnais :
 
-    - Les suivis liés normaux sont envoyés sous forme de texte d'invite, plus des pièces jointes uniquement lorsque le harnais/le backend les prend en charge.
-    - Les commandes de gestion `/acp` et les commandes locales de la Gateway sont interceptées avant l'acheminement ACP.
-    - Les événements de achèvement générés lors de l'exécution sont matérialisés par cible. Les agents OpenClaw reçoivent l'enveloppe de contexte d'exécution interne de OpenClaw ; les harnais ACP externes reçoivent une invite simple avec le résultat enfant et l'instruction. L'enveloppe brute `<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>` ne doit jamais être envoyée aux harnais externes ou persistée en tant que texte de transcription utilisateur ACP.
-    - Les entrées de transcription ACP utilisent le texte de déclenchement visible par l'utilisateur ou l'invite de achèvement simple. Les métadonnées d'événement internes restent structurées dans OpenClaw autant que possible et ne sont pas traitées comme du contenu de chat rédigé par l'utilisateur.
+    - Les suivis liés normaux sont envoyés sous forme de texte d'invite, plus des pièces jointes uniquement lorsque le harnais/backend les prend en charge.
+    - Les commandes de gestion `/acp` et les commandes locales Gateway sont interceptées avant l'expédition ACP.
+    - Les événements de complétion générés lors de l'exécution sont matérialisés par cible. Les agents OpenClaw reçoivent l'enveloppe de contexte d'exécution interne de OpenClaw ; les harnais ACP externes reçoivent une invite simple avec le résultat enfant et l'instruction. L'enveloppe brute `<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>` ne doit jamais être envoyée aux harnais externes ou conservée en tant que texte de transcription utilisateur ACP.
+    - Les entrées de transcription ACP utilisent le texte de déclencheur visible par l'utilisateur ou l'invite de complétion simple. Les métadonnées d'événement internes restent structurées dans OpenClaw autant que possible et ne sont pas traitées comme du contenu de chat créé par l'utilisateur.
 
   </Accordion>
   <Accordion title="Sessions ACP ponctuelles détenues par le parent">
-    Les sessions ACP ponctuelles générées par une autre exécution d'agent sont des enfants d'arrière-plan, similaires aux sous-agents :
+    Les sessions ACP ponctuelles créées par une autre exécution d'agent sont des
+    enfants d'arrière-plan, similaires aux sous-agents :
 
     - Le parent demande du travail avec `sessions_spawn({ runtime: "acp", mode: "run" })`.
     - L'enfant s'exécute dans sa propre session de harnais ACP.
-    - Les tours de l'enfant s'exécutent sur la même voie d'arrière-plan utilisée par les générations de sous-agents natifs, donc un harnais ACP lent ne bloque pas le travail de la session principale non lié.
-    - L'achèvement est signalé via le chemin d'annonce de fin de tâche. OpenClaw convertit les métadonnées d'achèvement internes en une invite ACP simple avant de l'envoyer à un harnais externe, donc les harnais ne voient pas les marqueurs de contexte d'exécution propres à OpenClaw.
-    - Le parent réécrit le résultat de l'enfant dans une voix d'assistant normale lorsqu'une réponse visible par l'utilisateur est utile.
+    - Les tours de l'enfant s'exécutent sur la même voie d'arrière-plan que celle utilisée par les créations de sous-agents natifs, donc un harnais ACP lent ne bloque pas le travail de la session principale non lié.
+    - Les rapports d'achèvement reviennent par le chemin d'annonce d'achèvement des tâches. OpenClaw convertit les métadonnées d'achèvement internes en une invite ACP simple avant de l'envoyer à un harnais externe, donc les harnais ne voient pas les marqueurs de contexte d'exécution propres à OpenClaw.
+    - Le parent réécrit le résultat de l'enfant avec la voix normale de l'assistant lorsqu'une réponse visible par l'utilisateur est utile.
 
-    Ne **pas** traiter ce chemin comme une conversation de pair à pair entre le parent
-    et l'enfant. L'enfant a déjà un canal d'achèvement retour vers le
+    Ne traitez **pas** ce chemin comme un chat de pair à pair entre le parent
+    et l'enfant. L'enfant dispose déjà d'un canal d'achèvement pour revenir au
     parent.
 
   </Accordion>
   <Accordion title="sessions_send et livraison A2A">
-    `sessions_send` peut cibler une autre session après la génération. Pour les sessions pairs normales, OpenClaw utilise un chemin de suivi d'agent à agent (A2A)
-    après l'injection du message :
+    `sessions_send` peut cibler une autre session après la création. Pour les
+    sessions homologues normales, OpenClaw utilise un chemin de suivi
+    agent-à-agent (A2A) après l'injection du message :
 
     - Attendre la réponse de la session cible.
-    - Optionnellement laisser le demandeur et la cible échanger un nombre borné de tours de suivi.
+    - Optionnellement laisser le demandeur et la cible échanger un nombre limité de tours de suivi.
     - Demander à la cible de produire un message d'annonce.
-    - Livrer cette annonce au canal ou au fil visible.
+    - Livrer cette annonce au channel ou au fil visible.
 
-    Ce chemin A2A est un repli pour les envois entre pairs où l'expéditeur a besoin d'un
-    suivi visible. Il reste activé lorsqu'une session sans relation peut
-    voir et envoyer un message à une cible ACP, par exemple sous des paramètres `tools.sessions.visibility` larges.
+    Ce chemin A2A est un repli pour les envois homologues où l'expéditeur a besoin
+    d'un suivi visible. Il reste activé lorsqu'une session non liée peut
+    voir et envoyer un message à une cible ACP, par exemple sous des paramètres
+    `tools.sessions.visibility` larges.
 
     OpenClaw ignore le suivi A2A uniquement lorsque le demandeur est le
     parent de son propre enfant ACP ponctuel détenu par le parent. Dans ce cas,
-    exécuter A2A par-dessus l'achèvement de la tâche peut réveiller le parent avec le
+    l'exécution de l'A2A par-dessus l'achèvement de la tâche peut réveiller le parent avec le
     résultat de l'enfant, transférer la réponse du parent vers l'enfant, et
     créer une boucle d'écho parent/enfant. Le résultat `sessions_send` signale
     `delivery.status="skipped"` pour ce cas d'enfant détenu car le
@@ -621,7 +654,7 @@ Les sessions ACP peuvent être des espaces de travail interactifs ou un travail 
 
     ```json
     {
-      "task": "Continue where we left off — fix the remaining test failures",
+      "task": "Continue where we left off - fix the remaining test failures",
       "runtime": "acp",
       "agentId": "codex",
       "resumeSessionId": "<previous-session-id>"
@@ -630,52 +663,54 @@ Les sessions ACP peuvent être des espaces de travail interactifs ou un travail 
 
     Cas d'usage courants :
 
-    - Transférer une session Codex de votre ordinateur portable vers votre téléphone — demandez à votre agent de reprendre là où vous vous êtes arrêté.
-    - Continuer une session de codage démarrée de manière interactive dans le CLI, désormais en mode headless via votre agent.
+    - Transférer une session Codex de votre ordinateur portable vers votre téléphone - demandez à votre agent de reprendre là où vous vous êtes arrêté.
+    - Continuer une session de codage démarrée de manière interactive dans le CLI, maintenant sans interface (headlessly) via votre agent.
     - Reprendre le travail qui a été interrompu par un redémarrage de la passerelle ou un délai d'inactivité.
 
     Notes :
 
     - `resumeSessionId` ne s'applique que lorsque `runtime: "acp"`; le runtime du sous-agent par défaut ignore ce champ spécifique à l'ACP.
     - `streamTo` ne s'applique que lorsque `runtime: "acp"`; le runtime du sous-agent par défaut ignore ce champ spécifique à l'ACP.
-    - `resumeSessionId` est un ID de reprise ACP/harness local à l'hôte, et non une clé de session de OpenClaw channel; OpenClaw vérifie toujours la stratégie de spawn ACP et la stratégie de l'agent cible avant l'expédition, tandis que le backend ACP ou le harness possède l'autorisation pour le chargement de cet ID en amont.
+    - `resumeSessionId` est un ID de reprise ACP/harness local à l'hôte, et non une clé de session de OpenClaw channel; OpenClaw vérifie toujours la stratégie de spawn ACP et la stratégie de l'agent cible avant l'envoi, tandis que le backend ACP ou le harness possède l'autorisation pour charger cet ID en amont.
     - `resumeSessionId` restaure l'historique de conversation ACP en amont; `thread` et `mode` s'appliquent toujours normalement à la nouvelle session OpenClaw que vous créez, donc `mode: "session"` nécessite toujours `thread: true`.
     - L'agent cible doit prendre en charge `session/load` (Codex et Claude Code le font).
-    - Si l'ID de session n'est pas trouvé, le spawn échoue avec une erreur claire — pas de repli silencieux vers une nouvelle session.
+    - Si l'ID de session n'est pas trouvé, le spawn échoue avec une erreur claire - pas de repli silencieux vers une nouvelle session.
 
   </Accordion>
-  <Accordion title="Post-deploy smoke test">
-    Après un déploiement de passerelle, effectuez une vérification de bout en bout en direct plutôt que de faire confiance aux tests unitaires :
+  <Accordion title="Test de fumée après déploiement">
+    Après un déploiement de passerelle, effectuez une vérification de bout en bout en direct plutôt que
+    de faire confiance aux tests unitaires :
 
-    1. Vérifiez la version déployée de la passerelle et le commit sur l'hôte cible.
+    1. Vérifiez la version et le commit de la passerelle déployée sur l'hôte cible.
     2. Ouvrez une session de pont ACPX temporaire vers un agent en direct.
-    3. Demandez à cet agent d'appeler `sessions_spawn` avec `runtime: "acp"`, `agentId: "codex"`, `mode: "run"`, et la tâche `Reply with exactly LIVE-ACP-SPAWN-OK`.
-    4. Vérifiez `accepted=yes`, un `childSessionKey` réel, et aucune erreur de validateur.
+    3. Demandez à cet agent d'appeler `sessions_spawn` avec `runtime: "acp"`, `agentId: "codex"`, `mode: "run"` et la tâche `Reply with exactly LIVE-ACP-SPAWN-OK`.
+    4. Vérifiez `accepted=yes`, un vrai `childSessionKey` et aucune erreur de validateur.
     5. Nettoyez la session de pont temporaire.
 
-    Gardez la porte sur `mode: "run"` et sautez `streamTo: "parent"` —
-    les chemins `mode: "session"` liés aux threads et de relais de flux sont des passes d'intégration plus riches et séparées.
+    Gardez la porte sur `mode: "run"` et sautez `streamTo: "parent"` -
+    les chemins liés aux threads `mode: "session"` et de relais de flux sont des passes d'intégration plus riches et distinctes.
 
   </Accordion>
 </AccordionGroup>
 
 ## Compatibilité du bac à sable
 
-Les sessions ACP s'exécutent actuellement sur l'exécutable de l'hôte, **pas** à l'intérieur du
-OpenClaw bac à sable.
+Les sessions ACP s'exécutent actuellement sur le runtime de l'hôte, et non à l'intérieur du
+bac à sable OpenClaw.
 
 <Warning>
 **Limite de sécurité :**
 
 - Le harnais externe peut lire/écrire en fonction de ses propres autorisations CLI et du `cwd` sélectionné.
-- La stratégie de bac à sable d'OpenClaw **ne** couvre **pas** l'exécution du harnais ACP.
+- La stratégie de bac à sable de OpenClaw n'entoure **pas** l'exécution du harnais ACP.
 - OpenClaw applique toujours les portes de fonctionnalités ACP, les agents autorisés, la propriété de la session, les liaisons de canal et la stratégie de livraison Gateway.
-- Utilisez `runtime: "subagent"` pour le travail natif d'OpenClaw appliqué par le bac à sable.
-  </Warning>
+- Utilisez `runtime: "subagent"` pour le travail natif OpenClaw avec application du bac à sable.
+
+</Warning>
 
 Limitations actuelles :
 
-- Si la session demandeur est isolée, les créations ACP sont bloquées pour `sessions_spawn({ runtime: "acp" })` et `/acp spawn`.
+- Si la session demandeur est sandboxée, les créations ACP sont bloquées à la fois pour `sessions_spawn({ runtime: "acp" })` et `/acp spawn`.
 - `sessions_spawn` avec `runtime: "acp"` ne prend pas en charge `sandbox: "require"`.
 
 ## Résolution de la cible de session
@@ -686,89 +721,93 @@ La plupart des actions `/acp` acceptent une cible de session facultative (`sessi
 **Ordre de résolution :**
 
 1. Argument de cible explicite (ou `--session` pour `/acp steer`)
-   - clé d'essais
-   - puis l'identifiant de session de forme UUID
+   - essaye la clé
+   - puis l'id de session en forme d'UUID
    - puis l'étiquette
-2. Liaison de fil actuelle (si cette conversation/fil est liée à une session ACP).
-3. Repli de la session du demandeur actuel.
+2. Liaison de fil actuel (si cette conversation/fil est liée à une session ACP).
+3. Repli vers la session du demandeur actuel.
 
-Les liaisons de conversation actuelle et les liaisons de fil de discussion participent toutes deux à l'étape 2.
+Les liaisons de conversation actuelle et les liaisons de fil participent toutes deux
+à l'étape 2.
 
-Si aucune cible n'est résolue, OpenClaw renvoie une erreur claire (`Unable to resolve session target: ...`).
+Si aucune cible n'est résolue, OpenClaw renvoie une erreur claire
+(`Unable to resolve session target: ...`).
 
 ## Contrôles ACP
 
-| Commande             | Ce qu'elle fait                                                                     | Exemple                                                       |
-| -------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| `/acp spawn`         | Créer une session ACP ; liaison actuelle ou liaison de fil de discussion en option. | `/acp spawn codex --bind here --cwd /repo`                    |
-| `/acp cancel`        | Annuler le tour en cours pour la session cible.                                     | `/acp cancel agent:codex:acp:<uuid>`                          |
-| `/acp steer`         | Envoyer une instruction de guidage à la session en cours d'exécution.               | `/acp steer --session support inbox prioritize failing tests` |
-| `/acp close`         | Fermer la session et dissocier les cibles de fil de discussion.                     | `/acp close`                                                  |
-| `/acp status`        | Afficher le backend, le mode, l'état, les options d'exécution, les capacités.       | `/acp status`                                                 |
-| `/acp set-mode`      | Définir le mode d'exécution pour la session cible.                                  | `/acp set-mode plan`                                          |
-| `/acp set`           | Écriture générique d'option de configuration d'exécution.                           | `/acp set model openai/gpt-5.4`                               |
-| `/acp cwd`           | Définir le remplacement du répertoire de travail d'exécution.                       | `/acp cwd /Users/user/Projects/repo`                          |
-| `/acp permissions`   | Définir le profil de stratégie d'approbation.                                       | `/acp permissions strict`                                     |
-| `/acp timeout`       | Définir le délai d'expiration d'exécution (secondes).                               | `/acp timeout 120`                                            |
-| `/acp model`         | Définir le remplacement du modèle d'exécution.                                      | `/acp model anthropic/claude-opus-4-6`                        |
-| `/acp reset-options` | Supprimer les remplacements des options d'exécution de session.                     | `/acp reset-options`                                          |
-| `/acp sessions`      | Lister les sessions ACP récentes du stock.                                          | `/acp sessions`                                               |
-| `/acp doctor`        | Santé du backend, capacités, correctifs actionnables.                               | `/acp doctor`                                                 |
-| `/acp install`       | Imprimer les étapes d'installation et d'activation déterministes.                   | `/acp install`                                                |
+| Commande             | Ce qu'elle fait                                                               | Exemple                                                       |
+| -------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `/acp spawn`         | Créer une session ACP ; liaison actuelle ou liaison de fil en option.         | `/acp spawn codex --bind here --cwd /repo`                    |
+| `/acp cancel`        | Annuler le tour en cours pour la session cible.                               | `/acp cancel agent:codex:acp:<uuid>`                          |
+| `/acp steer`         | Envoyer une instruction de guidage à la session en cours.                     | `/acp steer --session support inbox prioritize failing tests` |
+| `/acp close`         | Fermer la session et dissocier les cibles de fil.                             | `/acp close`                                                  |
+| `/acp status`        | Afficher le backend, le mode, l'état, les options d'exécution, les capacités. | `/acp status`                                                 |
+| `/acp set-mode`      | Définir le mode d'exécution pour la session cible.                            | `/acp set-mode plan`                                          |
+| `/acp set`           | Écriture d'une option de configuration d'exécution générique.                 | `/acp set model openai/gpt-5.4`                               |
+| `/acp cwd`           | Définir le remplacement du répertoire de travail d'exécution.                 | `/acp cwd /Users/user/Projects/repo`                          |
+| `/acp permissions`   | Définir le profil de politique d'approbation.                                 | `/acp permissions strict`                                     |
+| `/acp timeout`       | Définir le délai d'exécution (secondes).                                      | `/acp timeout 120`                                            |
+| `/acp model`         | Définir le remplacement du modèle d'exécution.                                | `/acp model anthropic/claude-opus-4-6`                        |
+| `/acp reset-options` | Supprimer les remplacements d'options d'exécution de session.                 | `/acp reset-options`                                          |
+| `/acp sessions`      | Lister les sessions ACP récentes du stock.                                    | `/acp sessions`                                               |
+| `/acp doctor`        | Santé du backend, capacités, correctifs actionnables.                         | `/acp doctor`                                                 |
+| `/acp install`       | Imprimer les étapes déterministes d'installation et d'activation.             | `/acp install`                                                |
 
-`/acp status` affiche les options d'exécution effectives ainsi que les identifiants de session au niveau de l'exécution et du backend. Les erreurs de contrôle non prises en charge apparaissent clairement lorsqu'un backend manque d'une capacité. `/acp sessions` lit le stockage pour la session liée actuelle ou la session demandante ; les jetons cibles (`session-key`, `session-id`, ou `session-label`) sont résolus via la découverte de session de la passerelle, y compris les racines `session.store` personnalisées par agent.
+`/acp status` affiche les options d'exécution effectives ainsi que les identifiants de session au niveau de l'exécution et du backend. Les erreurs de contrôle non pris en charge apparaissent clairement lorsqu'un backend manque d'une capacité. `/acp sessions` lit le magasin pour la session liée actuelle ou la session du demandeur ; les jetons cibles (`session-key`, `session-id` ou `session-label`) sont résolus via la découverte de session de la passerelle, y compris les racines `session.store` personnalisées par agent.
 
 ### Mappage des options d'exécution
 
 `/acp` dispose de commandes pratiques et d'un paramètre générique. Opérations équivalentes :
 
-| Commande                     | Correspond à                                       | Notes                                                                                                                                                                                                        |
-| ---------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `/acp model <id>`            | clé de configuration d'exécution `model`           | Pour Codex ACP, OpenClaw normalise `openai-codex/<model>` vers l'ID du modèle d'adaptateur et mappe les suffixes de raisonnement de type slash tels que `openai-codex/gpt-5.4/high` vers `reasoning_effort`. |
-| `/acp set thinking <level>`  | clé de configuration d'exécution `thinking`        | Pour Codex ACP, OpenClaw envoie le `reasoning_effort` correspondant lorsque l'adaptateur en prend en charge un.                                                                                              |
-| `/acp permissions <profile>` | clé de configuration d'exécution `approval_policy` | —                                                                                                                                                                                                            |
-| `/acp timeout <seconds>`     | clé de configuration d'exécution `timeout`         | —                                                                                                                                                                                                            |
-| `/acp cwd <path>`            | remplacement du cwd d'exécution                    | Mise à jour directe.                                                                                                                                                                                         |
-| `/acp set <key> <value>`     | générique                                          | `key=cwd` utilise le chemin de remplacement du cwd.                                                                                                                                                          |
-| `/acp reset-options`         | efface tous les remplacements d'exécution          | —                                                                                                                                                                                                            |
+| Commande                     | Correspond à                                | Remarques                                                                                                                                                                                                                            |
+| ---------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/acp model <id>`            | clé de configuration d'exécution `model`    | Pour Codex ACP, OpenClaw normalise `openai-codex/<model>` vers l'identifiant du modèle de l'adaptateur et mappe les suffixes de raisonnement de type slash tels que `openai-codex/gpt-5.4/high` vers `reasoning_effort`.             |
+| `/acp set thinking <level>`  | option canonique `thinking`                 | OpenClaw envoie l'équivalent annoncé par le backend lorsqu'il est présent, en privilégiant `thinking`, puis `effort`, `reasoning_effort` ou `thought_level`. Pour Codex ACP, l'adaptateur mappe les valeurs vers `reasoning_effort`. |
+| `/acp permissions <profile>` | option canonique `permissionProfile`        | OpenClaw envoie l'équivalent annoncé par le backend lorsqu'il est présent, tel que `approval_policy`, `permission_profile`, `permissions` ou `permission_mode`.                                                                      |
+| `/acp timeout <seconds>`     | option canonique `timeoutSeconds`           | OpenClaw envoie l'équivalent annoncé par le backend lorsqu'il est présent, tel que `timeout` ou `timeout_seconds`.                                                                                                                   |
+| `/acp cwd <path>`            | remplacement du cwd d'exécution             | Mise à jour directe.                                                                                                                                                                                                                 |
+| `/acp set <key> <value>`     | générique                                   | `key=cwd` utilise le chemin de remplacement du cwd.                                                                                                                                                                                  |
+| `/acp reset-options`         | efface toutes les substitutions d'exécution | -                                                                                                                                                                                                                                    |
 
-## configuration du harnais acpx, configuration du plugin et autorisations
+## configuration du harnais acpx, du plugin et des autorisations
 
-Pour la configuration du harnais acpx (alias Claude Code / Codex / Gemini CLI), les ponts MCP plugin-tools et OpenClaw-tools, et les modes d'autorisation ACP, voir [ACP agents — configuration](/fr/tools/acp-agents-setup).
+Pour la configuration du harnais acpx (alias Claude Code / Codex / Gemini CLI), les ponts MCP plugin-tools et OpenClaw-tools, et les modes d'autorisation ACP, voir
+[ACP agents - configuration](/fr/tools/acp-agents-setup).
 
 ## Dépannage
 
-| Symptôme                                                                     | Cause probable                                                                                       | Solution                                                                                                                                                                                                                |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ACP runtime backend is not configured`                                      | Plugin backend manquant, désactivé ou bloqué par `plugins.allow`.                                    | Installez et activez le plugin backend, incluez `acpx` dans `plugins.allow` lorsque cette liste d'autorisation est définie, puis exécutez `/acp doctor`.                                                                |
-| `ACP is disabled by policy (acp.enabled=false)`                              | ACP désactivé globalement.                                                                           | Définissez `acp.enabled=true`.                                                                                                                                                                                          |
-| `ACP dispatch is disabled by policy (acp.dispatch.enabled=false)`            | Répartition automatique depuis les messages de fil normaux désactivée.                               | Définissez `acp.dispatch.enabled=true` pour reprendre le routage automatique des fils ; les appels explicites à `sessions_spawn({ runtime: "acp" })` fonctionnent toujours.                                             |
-| `ACP agent "<id>" is not allowed by policy`                                  | Agent absent de la liste autorisée.                                                                  | Utilisez un `agentId` autorisé ou mettez à jour `acp.allowedAgents`.                                                                                                                                                    |
-| `/acp doctor` indique que le backend n'est pas prêt juste après le démarrage | La sonde de dépendance du plugin ou la réparation automatique est toujours en cours.                 | Attendez brièvement et relancez `/acp doctor` ; si l'état reste non sain, inspectez l'erreur d'installation du backend et la politique d'autorisation/refus du plugin.                                                  |
-| Commande de harnais introuvable                                              | Le CLI de l'adaptateur n'est pas installé ou la récupération du premier démarrage `npx` a échoué.    | Installez/préchauffez l'adaptateur sur l'hôte Gateway, ou configurez explicitement la commande de l'agent acpx.                                                                                                         |
-| Modèle introuvable en provenance du harnais                                  | L'identifiant du modèle est valide pour un autre fournisseur/harnais, mais pas pour cette cible ACP. | Utilisez un modèle répertorié par ce harnais, configurez le modèle dans le harnais, ou omettez la substitution.                                                                                                         |
-| Erreur d'authentification fournisseur en provenance du harnais               | OpenClaw est sain, mais le CLI/fournisseur cible n'est pas connecté.                                 | Connectez-vous ou fournissez la clé de fournisseur requise dans l'environnement de l'hôte Gateway.                                                                                                                      |
-| `Unable to resolve session target: ...`                                      | Jeton de clé/id/étiquette incorrect.                                                                 | Exécutez `/acp sessions`, copiez la clé/l'étiquette exacte, réessayez.                                                                                                                                                  |
-| `--bind here requires running /acp spawn inside an active ... conversation`  | `--bind here` utilisé sans conversation active pouvant être liée.                                    | Déplacez-vous vers la conversation/channel cible et réessayez, ou utilisez un démarrage non lié.                                                                                                                        |
-| `Conversation bindings are unavailable for <channel>.`                       | L'adaptateur ne prend pas en charge la capacité de liaison ACP pour la conversation actuelle.        | Utilisez `/acp spawn ... --thread ...` là où c'est pris en charge, configurez `bindings[]` de niveau supérieur, ou déplacez-vous vers un channel pris en charge.                                                        |
-| `--thread here requires running /acp spawn inside an active ... thread`      | `--thread here` utilisé en dehors d'un contexte de fil.                                              | Déplacez-vous vers le fil cible ou utilisez `--thread auto`/`off`.                                                                                                                                                      |
-| `Only <user-id> can rebind this channel/conversation/thread.`                | Un autre utilisateur possède la cible de liaison active.                                             | Reliez en tant que propriétaire ou utilisez une conversation ou un fil différent.                                                                                                                                       |
-| `Thread bindings are unavailable for <channel>.`                             | L'adaptateur ne possède pas la capacité de liaison de fil de discussion.                             | Utilisez `--thread off` ou passez à un adaptateur/canal pris en charge.                                                                                                                                                 |
-| `Sandboxed sessions cannot spawn ACP sessions ...`                           | L'exécution ACP se trouve côté hôte ; la session du demandeur est isolée (sandboxed).                | Utilisez `runtime="subagent"` depuis des sessions isolées, ou exécutez le spawn ACP depuis une session non isolée.                                                                                                      |
-| `sessions_spawn sandbox="require" is unsupported for runtime="acp" ...`      | `sandbox="require"` demandé pour l'exécution ACP.                                                    | Utilisez `runtime="subagent"` pour l'isolement requis, ou utilisez ACP avec `sandbox="inherit"` depuis une session non isolée.                                                                                          |
-| `Cannot apply --model ... did not advertise model support`                   | Le harnais cible n'expose pas de changement de modèle ACP générique.                                 | Utilisez un harnais qui annonce ACP `models`/`session/set_model`, utilisez les références de modèle ACP Codex, ou configurez le modèle directement dans le harnais s'il possède son propre indicateur de démarrage.     |
-| Métadonnées ACP manquantes pour la session liée                              | Métadonnées de session ACP périmées/supprimées.                                                      | Recréez avec `/acp spawn`, puis reliez/focalisez le fil de discussion.                                                                                                                                                  |
-| `AcpRuntimeError: Permission prompt unavailable in non-interactive mode`     | `permissionMode` bloque les écritures/exécutions dans une session ACP non interactive.               | Définissez `plugins.entries.acpx.config.permissionMode` sur `approve-all` et redémarrez la passerelle. Voir [Permission configuration](/fr/tools/acp-agents-setup#permission-configuration).                            |
-| La session ACP échoue rapidement avec peu de sortie                          | Les invites d'autorisation sont bloquées par `permissionMode`/`nonInteractivePermissions`.           | Vérifiez les journaux de la passerelle pour `AcpRuntimeError`. Pour des autorisations complètes, définissez `permissionMode=approve-all` ; pour une dégradation gracieuse, définissez `nonInteractivePermissions=deny`. |
-| La session ACP se bloque indéfiniment après avoir terminé le travail         | Le processus du harnais est terminé mais la session ACP n'a pas signalé la completion.               | Surveillez avec `ps aux \| grep acpx` ; tuez manuellement les processus périmés.                                                                                                                                        |
-| Le harnais voit `<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>`                      | L'enveloppe d'événement interne a fui à travers la frontière ACP.                                    | Mettez à jour OpenClaw et relancez le flux de completion ; les harnais externes ne devraient recevoir que des invites de completion simples.                                                                            |
+| Symptôme                                                                     | Cause probable                                                                                                                                                                 | Solution                                                                                                                                                                                                               |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ACP runtime backend is not configured`                                      | Plugin backend manquant, désactivé ou bloqué par `plugins.allow`.                                                                                                              | Installez et activez le plugin backend, incluez `acpx` dans `plugins.allow` lorsque cette liste d'autorisation est définie, puis exécutez `/acp doctor`.                                                               |
+| `ACP is disabled by policy (acp.enabled=false)`                              | ACP désactivé globalement.                                                                                                                                                     | Définissez `acp.enabled=true`.                                                                                                                                                                                         |
+| `ACP dispatch is disabled by policy (acp.dispatch.enabled=false)`            | Répartition automatique à partir des messages de fil normaux désactivée.                                                                                                       | Définissez `acp.dispatch.enabled=true` pour reprendre le routage automatique des fils ; les appels explicites `sessions_spawn({ runtime: "acp" })` fonctionnent toujours.                                              |
+| `ACP agent "<id>" is not allowed by policy`                                  | Agent absent de la liste d'autorisation.                                                                                                                                       | Utilisez un `agentId` autorisé ou mettez à jour `acp.allowedAgents`.                                                                                                                                                   |
+| `/acp doctor` signale que le backend n'est pas prêt juste après le démarrage | Le plugin backend est manquant, désactivé, bloqué par une stratégie d'autorisation/refus, ou son exécutable configuré n'est pas disponible.                                    | Installez/activez le plugin backend, relancez `/acp doctor`, et inspectez l'erreur d'installation ou de stratégie du backend s'il reste non fonctionnel.                                                               |
+| Commande de harnais introuvable                                              | Le CLI de l'adaptateur n'est pas installé, le plugin externe est manquant, ou la récupération `npx` lors de la première exécution a échoué pour un adaptateur autre que Codex. | Exécutez `/acp doctor`, installez/préchauffez l'adaptateur sur l'hôte du Gateway, ou configurez explicitement la commande de l'agent acpx.                                                                             |
+| Modèle introuvable en provenance du harnais                                  | L'identifiant du modèle est valide pour un autre fournisseur/harnais mais pas pour cette cible ACP.                                                                            | Utilisez un modèle répertorié par ce harnais, configurez le modèle dans le harnais, ou omettez la substitution.                                                                                                        |
+| Erreur d'authentification fournisseur en provenance du harnais               | OpenClaw est sain, mais le CLI/fournisseur cible n'est pas connecté.                                                                                                           | Connectez-vous ou fournissez la clé de fournisseur requise sur l'environnement hôte du Gateway.                                                                                                                        |
+| `Unable to resolve session target: ...`                                      | Jeton de clé/id/label incorrect.                                                                                                                                               | Exécutez `/acp sessions`, copiez la clé/label exacte, réessayez.                                                                                                                                                       |
+| `--bind here requires running /acp spawn inside an active ... conversation`  | `--bind here` utilisé sans conversation liable active.                                                                                                                         | Déplacez-vous vers le chat/la channel cible et réessayez, ou utilisez un spawn non lié.                                                                                                                                |
+| `Conversation bindings are unavailable for <channel>.`                       | L'adaptateur manque de capacité de liaison ACP de conversation actuelle.                                                                                                       | Utilisez `/acp spawn ... --thread ...` lorsque pris en charge, configurez `bindings[]` de niveau supérieur, ou déplacez-vous vers un channel pris en charge.                                                           |
+| `--thread here requires running /acp spawn inside an active ... thread`      | `--thread here` utilisé en dehors d'un contexte de fil de discussion.                                                                                                          | Déplacez-vous vers le fil de discussion cible ou utilisez `--thread auto`/`off`.                                                                                                                                       |
+| `Only <user-id> can rebind this channel/conversation/thread.`                | Un autre utilisateur possède la cible de liaison active.                                                                                                                       | Reliez en tant que propriétaire ou utilisez une conversation ou un fil de discussion différent.                                                                                                                        |
+| `Thread bindings are unavailable for <channel>.`                             | L'adaptateur manque de capacité de liaison de fil de discussion.                                                                                                               | Utilisez `--thread off` ou déplacez-vous vers un adaptateur/channel pris en charge.                                                                                                                                    |
+| `Sandboxed sessions cannot spawn ACP sessions ...`                           | Le runtime ACP est côté hôte ; la session du demandeur est sandboxée.                                                                                                          | Utilisez `runtime="subagent"` depuis les sessions sandboxées, ou exécutez un spawn ACP depuis une session non sandboxée.                                                                                               |
+| `sessions_spawn sandbox="require" is unsupported for runtime="acp" ...`      | `sandbox="require"` demandé pour le runtime ACP.                                                                                                                               | Utilisez `runtime="subagent"` pour le sandboxing requis, ou utilisez ACP avec `sandbox="inherit"` depuis une session non sandboxée.                                                                                    |
+| `Cannot apply --model ... did not advertise model support`                   | Le harnais cible n'expose pas de changement de modèle ACP générique.                                                                                                           | Utilisez un harnais qui annonce ACP `models`/`session/set_model`, utilisez des références de modèle ACP Codex, ou configurez le modèle directement dans le harnais s'il possède son propre indicateur de démarrage.    |
+| Métadonnées ACP manquantes pour la session liée                              | Métadonnées de session ACP obsolètes/supprimées.                                                                                                                               | Recréez avec `/acp spawn`, puis reliez/focalisez le fil de discussion.                                                                                                                                                 |
+| `AcpRuntimeError: Permission prompt unavailable in non-interactive mode`     | `permissionMode` bloque les écritures/exéc dans une session ACP non interactive.                                                                                               | Définissez `plugins.entries.acpx.config.permissionMode` sur `approve-all` et redémarrez la passerelle. Voir [Permission configuration](/fr/tools/acp-agents-setup#permission-configuration).                           |
+| La session ACP échoue rapidement avec peu de sortie                          | Les invites d'autorisation sont bloquées par `permissionMode`/`nonInteractivePermissions`.                                                                                     | Vérifiez les journaux de la passerelle pour `AcpRuntimeError`. Pour des autorisations complètes, définissez `permissionMode=approve-all` ; pour une dégradation élégante, définissez `nonInteractivePermissions=deny`. |
+| La session ACP stalle indéfiniment après avoir terminé le travail            | Le processus du harnais est terminé mais la session ACP n'a pas signalé l'achèvement.                                                                                          | Mettez à jour OpenClaw ; le nettoyage actuel d'acpx récupère les processus de wrapper et d'adaptateur périmés appartenant à OpenClaw à la fermeture et au démarrage de Gateway.                                        |
+| Le harnais voit `<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>`                      | L'enveloppe d'événement interne a fui à travers la limite ACP.                                                                                                                 | Mettez à jour OpenClaw et relancez le flux d'achèvement ; les harnais externes ne doivent recevoir que des invites d'achèvement simples.                                                                               |
 
 ## Connexes
 
-- [Agents ACP — configuration](/fr/tools/acp-agents-setup)
-- [Envoi d'agent](/fr/tools/agent-send)
-- [Backends CLI](/fr/gateway/cli-backends)
-- [Harnais Codex](/fr/plugins/codex-harness)
-- [Outils de bac à sable multi-agents](/fr/tools/multi-agent-sandbox-tools)
-- [`openclaw acp` (mode pont)](/fr/cli/acp)
-- [Sous-agents](/fr/tools/subagents)
+- [ACP agents - setup](/fr/tools/acp-agents-setup)
+- [Agent send](/fr/tools/agent-send)
+- [CLI Backends](/fr/gateway/cli-backends)
+- [Codex harness](/fr/plugins/codex-harness)
+- [Codex harness runtime](/fr/plugins/codex-harness-runtime)
+- [Multi-agent sandbox tools](/fr/tools/multi-agent-sandbox-tools)
+- [`openclaw acp` (bridge mode)](/fr/cli/acp)
+- [Sub-agents](/fr/tools/subagents)

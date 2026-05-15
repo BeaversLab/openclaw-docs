@@ -6,23 +6,21 @@ read_when:
 title: "Plugin personnel Zalo"
 ---
 
-# Zalo Personnel (plugin)
+Prise en charge de Zalo Personal pour OpenClaw via un plugin, utilisant le ZaloOpenClaw`zca-js`Zalo natif pour automatiser un compte utilisateur Zalo normal.
 
-Support Zalo Personnel pour OpenClaw via un plugin, utilisant `zca-js` natif pour automatiser un compte utilisateur Zalo normal.
-
-<Warning>L'automatisation non officielle peut entraîner la suspension ou le bannissement du compte. Utilisez-le à vos propres risques.</Warning>
+<Warning>L'automatisation non officielle peut entraîner la suspension ou le bannissement du compte. Utilisation à vos propres risques.</Warning>
 
 ## Nommage
 
-L'ID de channel est `zalouser` pour préciser explicitement que cela automatise un **compte utilisateur Zalo personnel** (non officiel). Nous conservons `zalo` réservé pour une future intégration officielle de l'API Zalo.
+L'identifiant de canal est `zalouser`Zalo pour indiquer explicitement que cela automatise un **compte utilisateur Zalo personnel** (non officiel). Nous conservons `zalo`ZaloAPI réservé pour une future intégration potentielle de l'API Zalo officielle.
 
 ## Où il s'exécute
 
-Ce plugin s'exécute **dans le processus Gateway**.
+Ce plugin s'exécute **à l'intérieur du processus Gateway**.
 
 Si vous utilisez une Gateway distante, installez/configurez-la sur la **machine exécutant la Gateway**, puis redémarrez la Gateway.
 
-Aucun binaire CLI `zca`/`openzca` externe n'est requis.
+Aucun binaire `zca`/`openzca`CLI CLI externe n'est requis.
 
 ## Installation
 
@@ -31,6 +29,9 @@ Aucun binaire CLI `zca`/`openzca` externe n'est requis.
 ```bash
 openclaw plugins install @openclaw/zalouser
 ```
+
+Utilisez le package nu pour suivre l'étiquette de version officielle actuelle. Ne spécifiez une version exacte
+que lorsque vous avez besoin d'une installation reproductible.
 
 Redémarrez la Gateway ensuite.
 
@@ -80,4 +81,4 @@ Les actions de message du channel prennent également en charge `react` pour les
 ## Connexes
 
 - [Création de plugins](/fr/plugins/building-plugins)
-- [Plugins communautaires](/fr/plugins/community)
+- [ClawHub](ClawHub/en/clawhub)

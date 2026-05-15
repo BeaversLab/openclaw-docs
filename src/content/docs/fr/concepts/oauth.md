@@ -8,7 +8,7 @@ read_when:
 title: "OAuth"
 ---
 
-OpenClaw prend en charge l'« authentification par abonnement » via OAuth pour les providers qui l'offrent
+OpenClaw prend en charge « subscription auth » via OAuth pour les providers qui l'offrent
 (notamment **OpenAI Codex (ChatGPT OAuth)**). Pour Anthropic, la division pratique
 est désormais :
 
@@ -25,8 +25,8 @@ Pour Anthropic en production, l'auth par clé API est le chemin recommandé le p
 - où sont **stockés** les jetons (et pourquoi)
 - comment gérer **plusieurs comptes** (profils + substitutions par session)
 
-OpenClaw prend également en charge les **plugins de provider** qui fournissent leurs propres flux OAuth ou de clé API.
-Exécutez-les via :
+OpenClaw prend également en charge les **provider plugins** qui incluent leurs propres flux OAuth ou
+clés API. Exécutez-les via :
 
 ```bash
 openclaw models auth login --provider <id>
@@ -38,7 +38,8 @@ Les providers OAuth créent généralement un **nouveau jeton d'actualisation** 
 
 Symptôme pratique :
 
-- vous vous connectez via OpenClaw _et_ via Claude Code / CLI Codex → l'un d'eux est « déconnecté » de manière aléatoire plus tard
+- vous vous connectez via OpenClaw _et_ via Claude Code / Codex CLI → l'un d'eux est « déconnecté »
+  aléatoirement plus tard
 
 Pour réduire cela, OpenClaw traite `auth-profiles.json` comme un **puits de jetons** :
 
@@ -48,72 +49,81 @@ Pour réduire cela, OpenClaw traite `auth-profiles.json` comme un **puits de jet
   `openai-codex:default` vide, mais une fois qu'OpenClaw dispose d'un profil OAuth local,
   le jeton d'actualisation local est canonique ; les autres intégrations peuvent rester
   gérées externement et relire leur magasin d'auth CLI
+- les chemins de statut et de démarrage qui connaissent déjà l'ensemble de providers configurés limitent
+  la découverte CLI externe à cet ensemble, afin qu'un magasin de connexion CLI non lié ne soit pas
+  sondé pour une configuration à fournisseur unique
 
 ## Stockage (où vivent les jetons)
 
-Les secrets sont stockés **par agent** :
+Les secrets sont stockés dans les magasins d'authentification des agents :
 
-- Profils d'auth (OAuth + clés API + références de niveau de valeur optionnelles) : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+- Profils d'authentification (OAuth + clés API + références au niveau des valeurs optionnelles) : OAuthAPI`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 - Fichier de compatibilité hérité : `~/.openclaw/agents/<agentId>/agent/auth.json`
   (les entrées `api_key` statiques sont supprimées lorsqu'elles sont découvertes)
 
-Fichier d'importation hérité uniquement (toujours pris en charge, mais pas le magasin principal) :
+Fichier d'importation hérité uniquement (toujours pris en charge, mais pas le stockage principal) :
 
-- `~/.openclaw/credentials/oauth.json` (importé dans `auth-profiles.json` à la première utilisation)
+- `~/.openclaw/credentials/oauth.json` (importé dans `auth-profiles.json` lors de la première utilisation)
 
 Tout ce qui précède respecte également `$OPENCLAW_STATE_DIR` (remplacement du répertoire d'état). Référence complète : [/gateway/configuration](/fr/gateway/configuration-reference#auth-storage)
 
-Pour les références de secrets statiques et le comportement d'activation de l'instantané d'exécution, voir [Gestion des secrets](/fr/gateway/secrets).
+Pour les références de secrets statiques et le comportement d'activation des instantanés d'exécution, voir [Gestion des secrets](/fr/gateway/secrets).
+
+Lorsqu'un agent secondaire n'a pas de profil d'authentification local, OpenClaw utilise l'héritage
+par lecture à partir du magasin de l'agent par défaut/principal. Il ne clone pas le OpenClaw`auth-profiles.json`OAuthOAuth
+de l'agent principal lors de la lecture. Les jetons d'actualisation OAuth sont particulièrement
+sensibles : les flux de copie normaux les ignorent par défaut car certains providers font pivoter
+ou invalident les jetons d'actualisation après utilisation. Configurez une connexion OAuth séparée pour un
+agent lorsqu'il a besoin d'un compte indépendant.
 
 ## Compatibilité des jetons hérités Anthropic
 
 <Warning>
-La documentation publique Claude Code de Anthropic indique que l'utilisation directe de Claude Code reste dans les limites de l'abonnement Claude, et le personnel de Anthropic nous a indiqué que l'utilisation de la Claude OpenClaw de style CLI est à nouveau autorisée. OpenClaw traite donc la réutilisation de la Claude CLI et l'utilisation de `claude -p` comme étant sanctionnées pour cette intégration, sauf si Anthropic publie une nouvelle politique.
+La documentation publique de Claude Code de Anthropic indique que l'utilisation directe de Claude Code reste dans les limites de l'abonnement Claude, et le personnel de Anthropic nous a informés que l'utilisation de Claude OpenClaw de type CLI est à nouveau autorisée. OpenClaw considère donc la réutilisation de Claude CLI et l'utilisation de `claude -p` comme étant autorisées pour cette intégration, à moins que Anthropic ne publie une nouvelle politique.
 
-Pour la documentation actuelle du plan direct-Claude-Code de Anthropic, voir [Utiliser Claude Code
-avec votre plan Pro ou Max
+Pour la documentation actuelle du plan direct-Claude-Code de Anthropic, consultez [Utilisation de Claude Code avec votre plan Pro ou Max
 ](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
-et [Utiliser Claude Code avec votre plan Team ou Enterprise
+et [Utilisation de Claude Code avec votre plan Team ou Enterprise
 ](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
-Si vous souhaitez d'autres options de style abonnement dans OpenClaw, voir [OpenAI
+Si vous souhaitez d'autres options de type abonnement dans OpenClaw, consultez [OpenAI
 Codex](/fr/providers/openai), [Plan de codage cloud Qwen
 ](/fr/providers/qwen), [Plan de codage MiniMax](/fr/providers/minimax),
 et [Plan de codage Z.AI / GLM](/fr/providers/glm).
 
 </Warning>
 
-OpenClaw expose également le setup-token Anthropic comme chemin d'authentification par jeton pris en charge, mais il préfère désormais la réutilisation de la Claude CLI et `claude -p` lorsque disponibles.
+OpenClaw expose également le setup-token de Anthropic en tant que chemin d'authentification par jeton pris en charge, mais il préfère désormais la réutilisation de Claude CLI et `claude -p` lorsqu'elles sont disponibles.
 
-## Migration vers la Claude Anthropic CLI
+## Migration vers Claude Anthropic de CLI
 
-OpenClaw prend à nouveau en charge la réutilisation de la Claude Anthropic CLI. Si vous avez déjà une connexion locale
-Claude sur l'hôte, onboarding/configure peut la réutiliser directement.
+OpenClaw prend à nouveau en charge la réutilisation de Claude Anthropic de CLI. Si vous disposez déjà d'une connexion
+Claude locale sur l'hôte, onboarding/configure peut la réutiliser directement.
 
 ## Échange OAuth (fonctionnement de la connexion)
 
-Les flux de connexion interactifs de OpenClaw sont implémentés dans `@mariozechner/pi-ai` et intégrés aux assistants/commands.
+Les flux de connexion interactifs de OpenClaw sont implémentés dans `@mariozechner/pi-ai` et connectés aux assistants/aux commandes.
 
 ### Setup-token Anthropic
 
 Forme du flux :
 
-1. démarrer le setup-token ou paste-token Anthropic depuis OpenClaw
+1. démarrer le setup-token Anthropic ou coller le jeton depuis OpenClaw
 2. OpenClaw stocke les informations d'identification Anthropic résultantes dans un profil d'authentification
 3. la sélection du modèle reste sur `anthropic/...`
-4. les profils d'authentification Anthropic existants restent disponibles pour le contrôle de retour/arrière (rollback/order control)
+4. les profils d'authentification Anthropic existants restent disponibles pour le retour en arrière/le contrôle de l'ordre
 
-### Codex OpenAI (ChatGPT OAuth)
+### OpenAI Codex (ChatGPT OAuth)
 
-Le OpenAI Codex OAuth est explicitement pris en charge pour une utilisation en dehors de la CLI Codex, y compris dans les workflows OpenClaw.
+OpenAI Codex OAuth est explicitement pris en charge pour une utilisation en dehors du CLI Codex, y compris dans les workflows OpenClaw.
 
 Forme du flux (PKCE) :
 
-1. générer vérificateur/défi PKCE + `state` aléatoire
+1. générer le vérificateur/défi PKCE + un `state` aléatoire
 2. ouvrir `https://auth.openai.com/oauth/authorize?...`
-3. essayer de capturer le rappel sur `http://127.0.0.1:1455/auth/callback`
-4. si le rappel ne peut pas se lier (ou si vous êtes en mode distant/headless), collez l'URL/code de redirection
-5. échange à `https://auth.openai.com/oauth/token`
+3. tenter de capturer le rappel sur `http://127.0.0.1:1455/auth/callback`
+4. si le rappel ne peut pas être lié (ou si vous êtes distant/sans tête), coller l'URL/code de redirection
+5. échanger à `https://auth.openai.com/oauth/token`
 6. extraire `accountId` du jeton d'accès et stocker `{ access, refresh, expires, accountId }`
 
 Le chemin de l'assistant est `openclaw onboard` → choix d'auth `openai-codex`.
@@ -125,12 +135,14 @@ Les profils stockent un horodatage `expires`.
 À l'exécution :
 
 - si `expires` est dans le futur → utiliser le jeton d'accès stocké
-- si expiré → actualiser (sous un verrou de fichier) et écraser les informations d'identification stockées
-- exception : certaines informations d'identification externes CLI restent gérées de manière externe ; OpenClaw
-  relit ces magasins d'authentification CLI au lieu de dépenser des jetons d'actualisation copiés.
-  L'amorçage de l'interface en ligne de commande (CLI) Codex CLI est intentionnellement plus étroit : il initialise un profil
-  `openai-codex:default` vide, puis les actualisations détenues par OpenClaw gardent le profil
-  local canonique.
+- si expiré → actualiser (sous un verrou de fichier) et écraser les identifiants stockés
+- si un agent secondaire lit un profil OAuth hérité d'un agent principal, l'actualisation
+  réécrit dans le stock de l'agent principal au lieu de copier le jeton d'actualisation dans
+  le stock de l'agent secondaire
+- exception : certains identifiants CLI externes restent gérés en externe ; OpenClaw
+  relit ces magasins d'auth CLI au lieu de dépenser les jetons d'actualisation copiés.
+  L'amorçage du CLI Codex est intentionnellement plus restreint : il crée un profil `openai-codex:default` vide,
+  puis les actualisations détenues par OpenClaw gardent le profil local comme source canonique.
 
 Le flux d'actualisation est automatique ; vous n'avez généralement pas besoin de gérer les jetons manuellement.
 
@@ -138,27 +150,27 @@ Le flux d'actualisation est automatique ; vous n'avez généralement pas besoin 
 
 Deux modèles :
 
-### 1) Préféré : agents distincts
+### 1) Préféré : agents séparés
 
-Si vous voulez que « personnel » et « travail » n'interagissent jamais, utilisez des agents isolés (sessions distinctes + informations d'identification + espace de travail) :
+Si vous souhaitez que « personnel » et « travail » n'interagissent jamais, utilisez des agents isolés (sessions séparées + identifiants + espace de travail) :
 
 ```bash
 openclaw agents add work
 openclaw agents add personal
 ```
 
-Ensuite, configurez l'authentification par agent (assistant) et acheminez les discussions vers le bon agent.
+Configurez ensuite l'authentification par agent (assistant) et acheminez les discussions vers le bon agent.
 
 ### 2) Avancé : plusieurs profils dans un seul agent
 
-`auth-profiles.json` prend en charge plusieurs ID de profil pour le même fournisseur.
+`auth-profiles.json` prend en charge plusieurs ID de profil pour le même provider.
 
-Choisir quel profil est utilisé :
+Choisissez le profil utilisé :
 
 - globalement via l'ordre de configuration (`auth.order`)
 - par session via `/model ...@<profileId>`
 
-Exemple (remplacement de session) :
+Exemple (remplacement par session) :
 
 - `/model Opus@anthropic:work`
 
@@ -168,11 +180,11 @@ Comment voir quels ID de profil existent :
 
 Documentation connexe :
 
-- [Basculade de modèle](/fr/concepts/model-failover) (règles de rotation + temps de recharge)
-- [Commandes slash](/fr/tools/slash-commands) (surface de commande)
+- [Basculement de model](/fr/concepts/model-failover) (règles de rotation + temps de recharge)
+- [Commandes slash](/fr/tools/slash-commands) (interface de commande)
 
 ## Connexes
 
-- [Authentification](/fr/gateway/authentication) — vue d'ensemble de l'authentification des fournisseurs de modèles
-- [Secrets](/fr/gateway/secrets) — stockage des informations d'identification et SecretRef
-- [Référence de configuration](/fr/gateway/configuration-reference#auth-storage) — clés de configuration de l'authentification
+- [Authentification](/fr/gateway/authentication) - aperçu de l'authentification des providers de modèles
+- [Secrets](/fr/gateway/secrets) - stockage des identifiants et SecretRef
+- [Référence de configuration](/fr/gateway/configuration-reference#auth-storage) - clés de configuration d'authentification

@@ -13,14 +13,14 @@ title: "Journalisation macOS"
 OpenClaw achemine les journaux d'application macOS via swift-log (journalisation unifiée par défaut) et peut écrire un fichier journal local rotatif sur le disque lorsque vous avez besoin d'une capture durable.
 
 - Verbosité : **Volet Débogage → Journaux → Journalisation des applications → Verbosité**
-- Activer : **Volet Débogage → Journaux → Journalisation des applications → « Écrire un journal de diagnostic rotatif (JSONL) »**
+- Activer : **Panneau Débogage → Journaux → Journalisation de l’application → « Écrire un journal de diagnostics tournant (JSONL) »**
 - Emplacement : `~/Library/Logs/OpenClaw/diagnostics.jsonl` (rotation automatique ; les anciens fichiers sont suffixés avec `.1`, `.2`, …)
-- Effacer : **Volet Débogage → Journaux → Journalisation des applications → « Effacer »**
+- Effacer : **Panneau Débogage → Journaux → Journalisation de l’application → « Effacer »**
 
 Notes :
 
 - Cette option est **désactivée par défaut**. Activez-la uniquement lors d'un débogage actif.
-- Traitez le fichier comme sensible ; ne le partagez pas sans révision.
+- Traitez ce fichier comme sensible ; ne le partagez pas sans révision.
 
 ## Données privées de journalisation unifiée sur macOS
 

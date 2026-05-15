@@ -281,24 +281,23 @@ Fichiers principaux :
 Nouveaux assistants probables :
 
 - `ui/src/ui/custom-theme.ts`
-- `ui/src/ui/custom-theme-import.ts`
 
 Tests :
 
 - `ui/src/ui/app-settings.test.ts`
 - `ui/src/ui/storage.node.test.ts`
 - `ui/src/ui/views/config.browser.test.ts`
-- nouveaux tests ciblés pour l'analyse d'URL et la normalisation de la charge utile
+- nouveaux tests ciblés pour l'analyse de l'URL et la normalisation de la charge utile
 
 ## Tests
 
-Couverture minimale de la mise en œuvre :
+Couverture minimale de l'implémentation :
 
-- analyser l'URL du lien de partage pour obtenir l'identifiant du thème tweakcn
+- analyser l'URL du lien de partage pour obtenir l'ID du thème tweakcn
 - normaliser `/themes/{id}` et `/r/themes/{id}` dans l'URL de récupération
-- rejeter les hôtes non pris en charge et les identifiants malformés
+- rejeter les hôtes non pris en charge et les ID mal formés
 - valider la forme de la charge utile tweakcn
-- mapper une charge utile tweakcn valide dans les cartes de jetons clair et sombre normalisées OpenClaw
+- mapper une charge utile tweakcn valide vers des cartes de jetons clair et sombre normalisées OpenClaw
 - charger et enregistrer la charge utile personnalisée dans les paramètres locaux du navigateur
 - résoudre `custom` pour `light`, `dark` et `system`
 - désactiver la sélection `Custom` lorsqu'aucune charge utile n'existe
@@ -307,11 +306,11 @@ Couverture minimale de la mise en œuvre :
 
 Objectif de vérification manuelle :
 
-- importer un thème tweakcn connu à partir des Paramètres
+- importer un thème tweakcn connu depuis Paramètres
 - basculer entre `light`, `dark` et `system`
 - basculer entre `custom` et les familles intégrées
 - recharger la page et confirmer que le thème personnalisé importé persiste localement
 
 ## Notes de déploiement
 
-Cette fonctionnalité est volontairement limitée. Si les utilisateurs demandent ultérieurement plusieurs thèmes importés, le renommage, l'exportation ou la synchronisation multi-appareils, traitez cela comme une conception ultérieure. Ne créez pas une abstraction de bibliothèque de thèmes dans cette implémentation.
+Cette fonctionnalité est volontairement réduite. Si les utilisateurs demandent ultérieurement plusieurs thèmes importés, le renommage, l'exportation ou la synchronisation multi-appareils, considérez cela comme une conception ultérieure. Ne pré-construisez pas d'abstraction de bibliothèque de thèmes dans cette implémentation.

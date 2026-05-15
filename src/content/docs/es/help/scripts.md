@@ -13,7 +13,7 @@ Use estos cuando una tarea esté claramente vinculada a un script; de lo contrar
 
 - Los scripts son **opcionales**, a menos que se mencionen en la documentación o en las listas de verificación de lanzamiento.
 - Prefiera las interfaces de la CLI cuando existan (ejemplo: la supervisión de autenticación usa `openclaw models status --check`).
-- Asuma que los scripts son específicos del host; léalos antes de ejecutarlos en una máquina nueva.
+- Asuma que los scripts son específicos del host; léelos antes de ejecutarlos en una nueva máquina.
 
 ## Scripts de supervisión de autenticación
 

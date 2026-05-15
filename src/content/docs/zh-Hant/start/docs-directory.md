@@ -36,15 +36,14 @@ title: "文件目錄"
 - [Telegram](/zh-Hant/channels/telegram)
 - [Discord](/zh-Hant/channels/discord)
 - [Mattermost](/zh-Hant/channels/mattermost)
-- [BlueBubbles（iMessage）](/zh-Hant/channels/bluebubbles)
-- [QQ 機器人](/zh-Hant/channels/qqbot)
-- [iMessage（舊版）](/zh-Hant/channels/imessage)
+- [QQ Bot](/zh-Hant/channels/qqbot)
+- [iMessage](/zh-Hant/channels/imessage)
 - [群組](/zh-Hant/channels/groups)
 - [WhatsApp 群組訊息](/zh-Hant/channels/group-messages)
 - [媒體圖片](/zh-Hant/nodes/images)
 - [媒體音訊](/zh-Hant/nodes/audio)
 
-## 伴隨應用程式
+## 配套應用程式
 
 - [macOS 應用程式](/zh-Hant/platforms/macos)
 - [iOS 應用程式](/zh-Hant/platforms/ios)
@@ -58,10 +57,10 @@ title: "文件目錄"
 - [Cron jobs](/zh-Hant/automation/cron-jobs)
 - [Webhooks](/zh-Hant/automation/cron-jobs#webhooks)
 - [Gmail hooks (Pub/Sub)](/zh-Hant/automation/cron-jobs#gmail-pubsub-integration)
-- [Security](/zh-Hant/gateway/security)
-- [Troubleshooting](/zh-Hant/gateway/troubleshooting)
+- [安全性](/zh-Hant/gateway/security)
+- [疑難排解](/zh-Hant/gateway/troubleshooting)
 
-## 相關
+## 相關內容
 
-- [Getting started](/zh-Hant/start/getting-started)
-- [Docs hubs](/zh-Hant/start/hubs)
+- [入門指南](/zh-Hant/start/getting-started)
+- [文件中心](/zh-Hant/start/hubs)

@@ -217,7 +217,7 @@ El revisor no tiene herramientas:
 - `toolsAllow: []`
 - `disableMessageTool: true`
 
-El revisor devuelve `{ "action": "none" }` o una propuesta. El campo `action` es `create`, `append` o `replace` — se prefiere `append`/`replace` cuando ya existe una habilidad relevante; use `create` solo cuando ninguna habilidad existente se ajuste.
+El revisor devuelve `{ "action": "none" }` o una propuesta. El campo `action` es `create`, `append` o `replace` - prefiera `append`/`replace` cuando ya exista una habilidad relevante; use `create` solo cuando ninguna habilidad existente se ajuste.
 
 Ejemplo de `create`:
 
@@ -357,7 +357,7 @@ Crear una propuesta. Con `approvalPolicy: "pending"` (predeterminado), esto pone
 ```
 
 <AccordionGroup>
-  <Accordion title="Forzar una escritura segura (apply: true)">
+  <Accordion title="Solicitar escritura inmediata en modo automático (apply: true)">
 
 ```json
 {
@@ -368,6 +368,9 @@ Crear una propuesta. Con `approvalPolicy: "pending"` (predeterminado), esto pone
   "body": "## Workflow\n\n- Verify true animation.\n- Record attribution."
 }
 ```
+
+Con `approvalPolicy: "pending"`, `apply: true` todavía pone en cola la propuesta. Revísela y luego use
+la acción `apply` después de la aprobación.
 
   </Accordion>
 
@@ -417,6 +420,9 @@ Crear una propuesta. Con `approvalPolicy: "pending"` (predeterminado), esto pone
 
 Aplicar una propuesta pendiente.
 
+Con `approvalPolicy: "pending"`, esta acción solicita la aprobación del operador antes de escribir la
+habilidad del espacio de trabajo.
+
 ```json
 {
   "action": "apply",
@@ -463,12 +469,12 @@ Ejemplo:
 }
 ```
 
-Los archivos de soporte tienen alcance de espacio de trabajo, están verificados por ruta, limitados en bytes por
+Los archivos de soporte tienen alcance de espacio de trabajo, verificación de ruta, límite de bytes por
 `maxSkillBytes`, se escanean y se escriben de forma atómica.
 
 ## Escrituras de habilidades
 
-Skill Workshop solo escribe en:
+Skill Workshop escribe solo bajo:
 
 ```text
 <workspace>/skills/<normalized-skill-name>/
@@ -477,7 +483,7 @@ Skill Workshop solo escribe en:
 Los nombres de las habilidades se normalizan:
 
 - en minúsculas
-- las ejecuciones que no son de `[a-z0-9_-]` se convierten en `-`
+- las ejecuciones que no son `[a-z0-9_-]` se convierten en `-`
 - se eliminan los caracteres no alfanuméricos al principio y al final
 - la longitud máxima es de 80 caracteres
 - el nombre final debe coincidir con `[a-z0-9][a-z0-9_-]{1,79}`
@@ -485,12 +491,12 @@ Los nombres de las habilidades se normalizan:
 Para `create`:
 
 - si la habilidad no existe, Skill Workshop escribe un nuevo `SKILL.md`
-- si ya existe, Skill Workshop añade el cuerpo a `## Workflow`
+- si ya existe, Skill Workshop agrega el cuerpo a `## Workflow`
 
 Para `append`:
 
-- si la habilidad existe, Skill Workshop añade a la sección solicitada
-- si no existe, Skill Workshop crea una habilidad mínima y luego añade
+- si la habilidad existe, Skill Workshop agrega a la sección solicitada
+- si no existe, Skill Workshop crea una habilidad mínima y luego agrega
 
 Para `replace`:
 
@@ -503,18 +509,18 @@ la habilidad nueva o actualizada puede hacerse visible sin reiniciar el Gateway.
 
 ## Modelo de seguridad
 
-Skill Workshop tiene un escáner de seguridad en el contenido `SKILL.md` generado y en los
-documentos de soporte.
+Skill Workshop tiene un escáner de seguridad en el contenido generado de `SKILL.md` y archivos de
+soporte.
 
 Los hallazgos críticos ponen en cuarentena las propuestas:
 
-| ID de regla                            | Bloquea el contenido que...                                                              |
-| -------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `prompt-injection-ignore-instructions` | indica al agente que ignore instrucciones previas/superiores                             |
-| `prompt-injection-system`              | hace referencia a prompts del sistema, mensajes de desarrollador o instrucciones ocultas |
-| `prompt-injection-tool`                | anula el permiso/aprobación de herramientas                                              |
-| `shell-pipe-to-shell`                  | incluye `curl`/`wget` canalizados hacia `sh`, `bash` o `zsh`                             |
-| `secret-exfiltration`                  | parece enviar datos de entorno/proceso a través de la red                                |
+| ID de regla                            | Bloquea el contenido que...                                                                  |
+| -------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `prompt-injection-ignore-instructions` | dice al agente que ignore instrucciones previas/superiores                                   |
+| `prompt-injection-system`              | hace referencia a los prompts del sistema, mensajes de desarrollador o instrucciones ocultas |
+| `prompt-injection-tool`                | anula a omitir el permiso/aprobación de la herramienta                                       |
+| `shell-pipe-to-shell`                  | incluye `curl`/`wget` canalizado hacia `sh`, `bash` o `zsh`                                  |
+| `secret-exfiltration`                  | parece enviar datos de variables de entorno/proceso a través de la red                       |
 
 Los hallazgos de advertencia se conservan pero no bloquean por sí mismos:
 
@@ -533,55 +539,57 @@ Propuestas en cuarentena:
 Para recuperarse de una propuesta en cuarentena, cree una nueva propuesta segura con el
 contenido no seguro eliminado. No edite el JSON del almacén manualmente.
 
-## Guía de prompts
+## Guía del prompt
 
-Cuando está habilitado, Skill Workshop inyecta una sección breve de prompt que le indica al agente
+Cuando está habilitado, Skill Workshop inyecta una sección corta de prompt que indica al agente
 que use `skill_workshop` para memoria de procedimientos duradera.
 
 La guía enfatiza:
 
-- procedimientos, no hechos/preferencias
+- procedimientos, no datos/hechos/preferencias
 - correcciones del usuario
 - procedimientos exitosos no obvios
 - errores recurrentes
 - reparación de habilidades obsoletas/insuficientes/incorrectas mediante anexión/reemplazo
-- guardar procedimientos reutilizables después de bucles de herramientas largos o correcciones difíciles
+- guardar procedimientos reutilizables después de bucles largos de herramientas o arreglos difíciles
 - texto de habilidad imperativo corto
 - sin volcados de transcripciones
 
 El texto del modo de escritura cambia con `approvalPolicy`:
 
-- modo pendiente: poner en cola sugerencias; aplicar solo después de la aprobación explícita
-- modo automático: aplicar actualizaciones de habilidades del espacio de trabajo seguras cuando sean claramente reutilizables
+- modo pendiente: poner sugerencias en cola; usar `apply` después de la aprobación explícita
+- modo automático: aplicar actualizaciones de habilidades del área de trabajo seguras a menos que `apply: false` ponga en cola en su lugar
 
 ## Costos y comportamiento en tiempo de ejecución
 
-La captura heurística no llama a ningún modelo.
+La captura heurística no invoca a ningún modelo.
 
-La revisión LLM utiliza una ejecución integrada en el modelo de agente activo/predeterminado. Se basa en umbrales, por lo que no se ejecuta en cada turno de forma predeterminada.
+La revisión LLM utiliza una ejecución integrada en el modelo del agente activo/predeterminado. Se basa en umbrales, por lo que de forma predeterminada no se ejecuta en cada turno.
 
 El revisor:
 
-- utiliza el mismo proveedor/modelo de contexto configurado cuando está disponible
+- utiliza el mismo contexto de proveedor/modelo configurado cuando está disponible
 - recurre a los valores predeterminados del agente en tiempo de ejecución
 - tiene `reviewTimeoutMs`
 - utiliza un contexto de arranque ligero
 - no tiene herramientas
 - no escribe nada directamente
-- solo puede emitir una propuesta que pase por el escáner normal y la ruta de aprobación/cuarentena
+- solo puede emitir una propuesta que pasa por el escáner normal y
+  la ruta de aprobación/cuarentena
 
-Si el revisor falla, se agota el tiempo o devuelve un JSON no válido, el complemento registra un mensaje de advertencia/depuración y omite ese paso de revisión.
+Si el revisor falla, expira el tiempo de espera o devuelve JSON no válido, el complemento registra un
+mensaje de advertencia/depuración y omite ese pase de revisión.
 
-## Patrones de operación
+## Patrones operativos
 
 Use Skill Workshop cuando el usuario diga:
 
-- «la próxima vez, haz X»
-- «a partir de ahora, prefiere Y»
-- «asegúrate de verificar Z»
-- «guarda esto como un flujo de trabajo»
-- «esto tomó un tiempo; recuerda el proceso»
-- «actualiza la habilidad local para esto»
+- "la próxima vez, haz X"
+- "a partir de ahora, prefiere Y"
+- "asegúrate de verificar Z"
+- "guarda esto como un flujo de trabajo"
+- "esto tomó un tiempo; recuerda el proceso"
+- "actualiza la habilidad local para esto"
 
 Texto de habilidad bueno:
 
@@ -595,18 +603,18 @@ Texto de habilidad bueno:
 - Verify the local asset renders in the target UI before final reply.
 ```
 
-Texto de habilidad deficiente:
+Texto de habilidad pobre:
 
 ```markdown
 The user asked about a GIF and I searched two websites. Then one was blocked by
 Cloudflare. The final answer said to check attribution.
 ```
 
-Razones por las que no se debe guardar la versión deficiente:
+Razones por las que la versión pobre no debería guardarse:
 
 - con forma de transcripción
-- no es imperativo
-- incluye detalles únicos y con ruido
+- no imperativo
+- incluye detalles ruidosos de una sola vez
 - no le dice al siguiente agente qué hacer
 
 ## Depuración
@@ -637,15 +645,15 @@ Inspeccione las propuestas en cuarentena:
 
 Síntomas comunes:
 
-| Síntoma                                                | Causa probable                                                                                          | Verificar                                                                        |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| La herramienta no está disponible                      | La entrada del complemento no está habilitada                                                           | `plugins.entries.skill-workshop.enabled` y `openclaw plugins list`               |
-| No aparece ninguna propuesta automática                | `autoCapture: false`, `reviewMode: "off"`, o umbrales no cumplidos                                      | Configuración, estado de la propuesta, registros de Gateway                      |
-| La heurística no capturó                               | Las palabras del usuario no coincidieron con los patrones de corrección                                 | Use `skill_workshop.suggest` explícito o habilite el revisor LLM                 |
-| El revisor no creó una propuesta                       | El revisor devolvió `none`, JSON no válido o se agotó el tiempo                                         | Registros de Gateway, `reviewTimeoutMs`, umbrales                                |
-| La propuesta no se aplica                              | `approvalPolicy: "pending"`                                                                             | `list_pending`, luego `apply`                                                    |
-| La propuesta desapareció de pendientes                 | Se reutilizó una propuesta duplicada, poda máxima de pendientes, o se aplicó/rechazó/puso en cuarentena | `status`, `list_pending` con filtros de estado, `list_quarantine`                |
-| El archivo de habilidad existe pero el modelo lo omite | La instantánea de habilidades no se ha actualizado o el filtrado de habilidades la excluye              | Estado de `openclaw skills` y elegibilidad de habilidades del espacio de trabajo |
+| Síntoma                                                | Causa probable                                                                                            | Comprobar                                                                        |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| La herramienta no está disponible                      | La entrada del complemento no está habilitada                                                             | `plugins.entries.skill-workshop.enabled` y `openclaw plugins list`               |
+| No aparece ninguna propuesta automática                | `autoCapture: false`, `reviewMode: "off"` o umbrales no cumplidos                                         | Configuración, estado de la propuesta, registros de Gateway                      |
+| La heurística no capturó                               | Las palabras del usuario no coincidieron con los patrones de corrección                                   | Use `skill_workshop.suggest` explícito o habilite el revisor LLM                 |
+| El revisor no creó una propuesta                       | El revisor devolvió `none`, JSON no válido o expiró el tiempo                                             | Registros de Gateway, `reviewTimeoutMs`, umbrales                                |
+| La propuesta no se aplica                              | `approvalPolicy: "pending"`                                                                               | `list_pending`, entonces `apply`                                                 |
+| La propuesta desapareció de pendientes                 | Propuesta duplicada reutilizada, poda máxima de pendientes, o fue aplicada/rechazada/puesta en cuarentena | `status`, `list_pending` con filtros de estado, `list_quarantine`                |
+| El archivo de habilidad existe pero el modelo lo omite | La instantánea de habilidad no se actualizó o el filtrado de habilidades la excluye                       | Estado de `openclaw skills` y elegibilidad de habilidades del espacio de trabajo |
 
 Registros relevantes:
 
@@ -681,20 +689,20 @@ pnpm openclaw qa suite \
   --concurrency 1
 ```
 
-El escenario del revisor está separado intencionalmente porque habilita
-`reviewMode: "llm"` y ejerce el pase del revisor incorporado.
+El escenario del revisor es intencionalmente separado porque habilita
+`reviewMode: "llm"` y ejercita el pase del revisor incrustado.
 
-## Cuándo no habilitar la autoaplicación
+## Cuándo no habilitar la aplicación automática
 
 Evite `approvalPolicy: "auto"` cuando:
 
-- el espacio de trabajo contiene procedimientos sensibles
-- el agente está trabajando en entradas no confiables
+- el espacio de trabajo contiene procedimientos confidenciales
+- el agente está trabajando en entrada no confiable
 - las habilidades se comparten en un equipo amplio
-- aún está ajustando los prompts o las reglas del escáner
-- el modelo maneja con frecuencia contenido web/correo electrónico hostil
+- todavía está ajustando los mensajes o las reglas del escáner
+- el modelo maneja frecuentemente contenido web/correo hostil
 
-Use primero el modo pendiente. Cambie al modo automático solo después de revisar el tipo de
+Use el modo pendiente primero. Cambie al modo automático solo después de revisar el tipo de
 habilidades que el agente propone en ese espacio de trabajo.
 
 ## Documentos relacionados

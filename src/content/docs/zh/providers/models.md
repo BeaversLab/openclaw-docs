@@ -6,13 +6,11 @@ read_when:
 title: "模型提供商快速入门"
 ---
 
-# 模型提供商
+OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，然后将默认模型设置为 OpenClawLLM`provider/model`。
 
-OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，然后将默认模型设置为 `provider/model`。
+## 快速开始（两步）
 
-## 快速入门（两步）
-
-1. 与提供商进行身份验证（通常通过 `openclaw onboard`）。
+1. 通过提供商进行身份验证（通常通过 `openclaw onboard`）。
 2. 设置默认模型：
 
 ```json5
@@ -24,28 +22,29 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，
 ## 支持的提供商（入门套件）
 
 - [Alibaba Model Studio](/zh/providers/alibaba)
-- [Amazon Bedrock](/zh/providers/bedrock)
-- [Anthropic (API + Claude CLI)](/zh/providers/anthropic)
+- [Amazon Bedrock](Amazon Bedrock/en/providers/bedrock)
+- [Anthropic (API + Claude CLI)](AnthropicAPICLI/en/providers/anthropic)
 - [BytePlus (International)](/zh/concepts/model-providers#byteplus-international)
 - [Chutes](/zh/providers/chutes)
 - [ComfyUI](/zh/providers/comfy)
-- [Cloudflare AI Gateway(网关)](/zh/providers/cloudflare-ai-gateway)
+- [Cloudflare AI Gateway(网关)](<Gateway(网关)/en/providers/cloudflare-ai-gateway>)
+- [DeepInfra](/zh/providers/deepinfra)
 - [fal](/zh/providers/fal)
 - [Fireworks](/zh/providers/fireworks)
-- [GLM models](/zh/providers/glm)
-- [MiniMax](/zh/providers/minimax)
+- [GLM 模型](GLM/en/providers/glm)
+- [MiniMax](MiniMax/en/providers/minimax)
 - [Mistral](/zh/providers/mistral)
-- [Moonshot AI (Kimi + Kimi Coding)](/zh/providers/moonshot)
-- [OpenAI (API + Codex)](/zh/providers/openai)
+- [Moonshot AI (Kimi + Kimi Coding)](Moonshot/en/providers/moonshot)
+- [OpenAI (API + Codex)](OpenAIAPI/en/providers/openai)
 - [OpenCode (Zen + Go)](/zh/providers/opencode)
-- [OpenRouter](/zh/providers/openrouter)
+- [OpenRouter](OpenRouter/en/providers/openrouter)
 - [Qianfan](/zh/providers/qianfan)
-- [Qwen](/zh/providers/qwen)
+- [Qwen](Qwen/en/providers/qwen)
 - [Runway](/zh/providers/runway)
 - [StepFun](/zh/providers/stepfun)
 - [Synthetic](/zh/providers/synthetic)
-- [Vercel AI Gateway(网关)](/zh/providers/vercel-ai-gateway)
-- [Venice (Venice AI)](/zh/providers/venice)
+- [Vercel AI Gateway(网关)](<VercelGateway(网关)/en/providers/vercel-ai-gateway>)
+- [Venice (Venice AI)](VeniceVenice/en/providers/venice)
 - [xAI](/zh/providers/xai)
 - [Z.AI](/zh/providers/zai)
 
@@ -55,10 +54,10 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，
 - `copilot-proxy` - 本地 VS Code Copilot 代理桥接器；使用 `openclaw onboard --auth-choice copilot-proxy`
 - `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要本地安装 `gemini`（`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`）；默认模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
 
-有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，请参阅 [Model providers](/zh/concepts/model-providers)。
+有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，请参阅[模型提供商](/zh/concepts/model-providers)。
 
 ## 相关
 
 - [模型选择](/zh/concepts/model-providers)
 - [模型故障转移](/zh/concepts/model-failover)
-- [模型 CLI](/zh/cli/models)
+- [模型 CLI](CLI/en/cli/models)

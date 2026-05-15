@@ -1,5 +1,5 @@
 ---
-summary: "Tareas de LLM solo JSON para flujos de trabajo (herramienta de complemento opcional)"
+summary: "Tareas LLM solo JSON para flujos de trabajo (herramienta de complemento opcional)"
 read_when:
   - You want a JSON-only LLM step inside workflows
   - You need schema-validated LLM output for automation
@@ -26,20 +26,17 @@ sin escribir código OpenClaw personalizado para cada flujo de trabajo.
 }
 ```
 
-2. Permitir la herramienta (está registrada con `optional: true`):
+2. Permitir la herramienta opcional:
 
 ```json
 {
-  "agents": {
-    "list": [
-      {
-        "id": "main",
-        "tools": { "allow": ["llm-task"] }
-      }
-    ]
+  "tools": {
+    "alsoAllow": ["llm-task"]
   }
 }
 ```
+
+Use `tools.allow` solo cuando desee un modo restrictivo de lista blanca.
 
 ## Configuración (opcional)
 
@@ -63,7 +60,7 @@ sin escribir código OpenClaw personalizado para cada flujo de trabajo.
 }
 ```
 
-`allowedModels` es una lista de permitidos de cadenas `provider/model`. Si se establece, cualquier solicitud
+`allowedModels` es una lista blanca de cadenas `provider/model`. Si se establece, cualquier solicitud
 fuera de la lista es rechazada.
 
 ## Parámetros de la herramienta
@@ -79,7 +76,7 @@ fuera de la lista es rechazada.
 - `maxTokens` (número, opcional)
 - `timeoutMs` (número, opcional)
 
-`thinking` acepta los preajustes de razonamiento estándar de OpenClaw, como `low` o `medium`.
+`thinking` acepta los ajustes preestablecidos de razonamiento estándar de OpenClaw, como `low` o `medium`.
 
 ## Salida
 
@@ -87,6 +84,23 @@ Devuelve `details.json` que contiene el JSON analizado (y valida contra
 `schema` cuando se proporciona).
 
 ## Ejemplo: paso de flujo de trabajo de Lobster
+
+### Limitación importante
+
+El ejemplo a continuación asume que el **CLI de Lobster independiente** se está ejecutando en un entorno donde `openclaw.invoke` ya tiene la URL de puerta de enlace y el contexto de autenticación correctos.
+
+Para el ejecutor **integrado** de Lobster dentro de OpenClaw, este patrón de CLI anidado **actualmente no es confiable**:
+
+```lobster
+openclaw.invoke --tool llm-task --action json --args-json '{ ... }'
+```
+
+Hasta que Lobster integrado tenga un puente compatible para este flujo, prefiera cualquiera de los siguientes:
+
+- llamadas directas a la herramienta `llm-task` fuera de Lobster, o
+- pasos de Lobster que no dependen de llamadas anidadas a `openclaw.invoke`.
+
+Ejemplo de CLI de Lobster independiente:
 
 ```lobster
 openclaw.invoke --tool llm-task --action json --args-json '{
@@ -110,11 +124,11 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 
 ## Notas de seguridad
 
-- La herramienta es **solo JSON** e instruye al modelo para que solo produzca JSON (sin
+- La herramienta es **solo JSON** e instruye al modelo a que genere solo JSON (sin
   cercas de código, sin comentarios).
 - No se exponen herramientas al modelo para esta ejecución.
-- Trate la salida como no confiable a menos que valide con `schema`.
-- Coloque aprobaciones antes de cualquier paso con efectos secundarios (enviar, publicar, ejecutar).
+- Trate la salida como no confiable a menos que la valide con `schema`.
+- Coloque aprobaciones antes de cualquier paso con efectos secundarios (send, post, exec).
 
 ## Relacionado
 

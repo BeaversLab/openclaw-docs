@@ -9,7 +9,7 @@ OpenClaw possède trois contrôles liés (mais différents) :
 
 1. **Sandbox** (`agents.defaults.sandbox.*` / `agents.list[].sandbox.*`) décide **où les tools s'exécutent** (sandbox backend vs host).
 2. **Tool policy** (`tools.*`, `tools.sandbox.tools.*`, `agents.list[].tools.*`) décide **quels tools sont disponibles/autorisés**.
-3. **Elevated** (`tools.elevated.*`, `agents.list[].tools.elevated.*`) est une **échappatoire exec-only** pour s'exécuter en dehors du sandbox lorsque vous êtes sandboxed (`gateway` par défaut, ou `node` lorsque la cible d'exécution est configurée sur `node`).
+3. **Elevated** (`tools.elevated.*`, `agents.list[].tools.elevated.*`) est une **échappatoire d'exécution uniquement** pour s'exécuter en dehors du sandbox lorsque vous êtes sandboxé (`gateway` par défaut, ou `node` lorsque la cible d'exécution est configurée sur `node`).
 
 ## Débogage rapide
 
@@ -34,10 +34,10 @@ Il affiche :
 Le sandboxing est contrôlé par `agents.defaults.sandbox.mode` :
 
 - `"off"` : tout s'exécute sur l'hôte.
-- `"non-main"` : seules les sessions non-main sont sandboxed (« surprise » courante pour les groupes/canaux).
+- `"non-main"` : seules les sessions non principales sont sandboxées (« surprise » courante pour les groupes/canaux).
 - `"all"` : tout est sandboxed.
 
-Voir [Sandboxing](/fr/gateway/sandboxing) pour la matrice complète (portée, montages d'espace de travail, images).
+Voir [Sandboxing](/fr/gateway/sandboxing) pour la matrice complète (portée, montages de l'espace de travail, images).
 
 ### Bind mounts (vérification rapide de sécurité)
 
@@ -64,12 +64,13 @@ Règles empiriques :
 - `deny` gagne toujours.
 - Si `allow` n'est pas vide, tout le reste est traité comme bloqué.
 - La stratégie d'outil est l'arrêt définitif : `/exec` ne peut pas remplacer un outil `exec` refusé.
-- `/exec` modifie uniquement les valeurs par défaut de session pour les expéditeurs autorisés ; il n'accorde pas l'accès aux outils.
-  Les clés d'outil de fournisseur acceptent soit `provider` (par ex. `google-antigravity`) soit `provider/model` (par ex. `openai/gpt-5.4`).
+- La stratégie de tools filtre la disponibilité des tools par nom ; elle n'inspecte pas les effets secondaires dans `exec`. Si `exec` est autorisé, le refus de `write`, `edit` ou `apply_patch` ne rend pas les commandes shell en lecture seule.
+- `/exec` ne modifie que les valeurs par défaut de session pour les expéditeurs autorisés ; il n'accorde pas l'accès aux tools.
+  Les clés de tools du fournisseur acceptent soit `provider` (par exemple `google-antigravity`) soit `provider/model` (par exemple `openai/gpt-5.4`).
 
-### Groupes d'outils (abréviations)
+### Groupes de tools (raccourcis)
 
-Les stratégies d'outil (globale, agent, bac à sable) prennent en charge les entrées `group:*` qui s'étendent à plusieurs outils :
+Les stratégies de tools (globales, agent, sandbox) prennent en charge les entrées `group:*` qui s'étendent à plusieurs tools :
 
 ```json5
 {
@@ -88,52 +89,53 @@ Groupes disponibles :
 - `group:runtime` : `exec`, `process`, `code_execution` (`bash` est accepté comme
   un alias pour `exec`)
 - `group:fs` : `read`, `write`, `edit`, `apply_patch`
+  Pour les agents en lecture seule, refusez `group:runtime` ainsi que les tools de système de fichiers mutants, sauf si la stratégie de système de fichiers du sandbox ou une limite d'hôte distincte applique la contrainte de lecture seule.
 - `group:sessions` : `sessions_list`, `sessions_history`, `sessions_send`, `sessions_spawn`, `sessions_yield`, `subagents`, `session_status`
 - `group:memory` : `memory_search`, `memory_get`
 - `group:web` : `web_search`, `x_search`, `web_fetch`
 - `group:ui` : `browser`, `canvas`
-- `group:automation` : `cron`, `gateway`
+- `group:automation` : `heartbeat_respond`, `cron`, `gateway`
 - `group:messaging` : `message`
 - `group:nodes` : `nodes`
-- `group:agents` : `agents_list`
-- `group:media` : `image`, `image_generate`, `video_generate`, `tts`
-- `group:openclaw` : tous les outils intégrés OpenClaw (exclut les plugins de provider)
+- `group:agents` : `agents_list`, `update_plan`
+- `group:media` : `image`, `image_generate`, `music_generate`, `video_generate`, `tts`
+- `group:openclaw` : tous les outils intégrés OpenClaw (exclut les plugins provider)
 
-## Élevé : exécution uniquement "run on host"
+## Elevated : exécution uniquement "exécuter sur l'hôte"
 
 Le mode élevé n'accorde **pas** d'outils supplémentaires ; il affecte uniquement `exec`.
 
-- Si vous êtes dans un bac à sable, `/elevated on` (ou `exec` avec `elevated: true`) s'exécute en dehors du bac à sable (les approbations peuvent toujours s'appliquer).
+- Si vous êtes %%PH:GLOSSARY:sandboxed%%4d83966c%% (ou `/elevated on``exec` avec `elevated: true`), il s'exécute en dehors du bac à sable (les approbations peuvent toujours s'appliquer).
 - Utilisez `/elevated full` pour ignorer les approbations d'exécution pour la session.
-- Si vous fonctionnez déjà en mode direct, le mode élevé est effectivement une opération vide (toujours restreint).
-- Le mode élevé n'est **pas** limité aux compétences (skill-scoped) et ne remplace **pas** les autorisations/refus d'outils.
-- Le mode élevé n'accorde pas de remplacements arbitraires entre hôtes depuis `host=auto` ; il suit les règles normales de cible d'exécution et ne préserve `node` que lorsque la cible configurée/de session est déjà `node`.
-- `/exec` est distinct du mode élevé. Il n'ajuste que les valeurs par défaut d'exécution par session pour les expéditeurs autorisés.
+- Si vous exécutez déjà en direct, le mode élevé est effectivement une opération vide (toujours restreint).
+- Elevated n'est **pas** limité aux compétences (skill-scoped) et ne **surcharge pas** l'autorisation/refus des outils.
+- Le mode élevé n'accorde pas de remplacements arbitraires entre hôtes depuis `host=auto` ; il suit les règles normales de cible d'exécution et ne conserve `node` que lorsque la cible configurée/de session est déjà `node`.
+- `/exec` est distinct du mode élevé. Il ajuste uniquement les valeurs par défaut d'exécution par session pour les expéditeurs autorisés.
 
 Portes :
 
 - Activation : `tools.elevated.enabled` (et facultativement `agents.list[].tools.elevated.enabled`)
 - Listes d'autorisation des expéditeurs : `tools.elevated.allowFrom.<provider>` (et facultativement `agents.list[].tools.elevated.allowFrom.<provider>`)
 
-Voir [Mode élevé](/fr/tools/elevated).
+Voir [Elevated Mode](/fr/tools/elevated).
 
-## Corrections courantes du "bac à sable (sandbox jail)"
+## Corrections courantes du "bac à sable"
 
-### "Tool X bloqué par la stratégie d'outil du bac à sable"
+### "Outil X bloqué par la stratégie d'outil du bac à sable"
 
 Clés de réparation (en choisir une) :
 
-- Désactiver le bac à sable : `agents.defaults.sandbox.mode=off` (ou `agents.list[].sandbox.mode=off` par agent)
+- Désactiver le bac à sable (sandbox) : `agents.defaults.sandbox.mode=off` (ou par agent `agents.list[].sandbox.mode=off`)
 - Autoriser l'outil dans le bac à sable :
-  - le retirer de `tools.sandbox.tools.deny` (ou `agents.list[].tools.sandbox.tools.deny` par agent)
-  - ou l'ajouter à `tools.sandbox.tools.allow` (ou allow par agent)
+  - le supprimer de `tools.sandbox.tools.deny` (ou par agent `agents.list[].tools.sandbox.tools.deny`)
+  - ou l'ajouter à `tools.sandbox.tools.allow` (ou autorisation par agent)
 
-### "Je pensais que c'était main, pourquoi est-ce sandboxed ?"
+### "Je pensais que c'était le principal, pourquoi est-il sandboxé ?"
 
-En mode `"non-main"`, les clés de groupe/channel ne sont _pas_ main. Utilisez la clé de session principale (affichée par `sandbox explain`) ou passez en mode `"off"`.
+En mode `"non-main"`, les clés de groupe/channel ne sont pas principales. Utilisez la clé de session principale (affichée par `sandbox explain`) ou passez en mode `"off"`.
 
 ## Connexes
 
-- [Mise en bac à sable (Sandboxing)](/fr/gateway/sandboxing) -- référence complète du bac à sable (modes, portées, backends, images)
-- [Bac à sable et outils multi-agents](/fr/tools/multi-agent-sandbox-tools) -- remplacements et priorités par agent
-- [Mode élevé](/fr/tools/elevated)
+- [Sandboxing](/fr/gateway/sandboxing) -- référence complète sur le bac à sable (modes, portées, backends, images)
+- [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools) -- substitutions par agent et priorité
+- [Elevated Mode](/fr/tools/elevated)

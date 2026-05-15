@@ -5,11 +5,9 @@ read_when:
 title: "Registrar herramientas"
 ---
 
-# Registro de herramientas en complementos
-
-Esta página se ha movido. Consulte [Building Plugins: Registro de herramientas de agente](/es/plugins/building-plugins#registering-agent-tools).
+Esta página se ha movido. Consulte [Creación de complementos: Registro de herramientas de agente](/es/plugins/building-plugins#registering-agent-tools).
 
 ## Relacionado
 
-- [Compilar complementos](/es/plugins/building-plugins)
+- [Creación de complementos](/es/plugins/building-plugins)
 - [Configuración del SDK de complementos](/es/plugins/sdk-setup)

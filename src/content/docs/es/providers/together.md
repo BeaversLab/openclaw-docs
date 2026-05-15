@@ -109,10 +109,10 @@ Para usar Together como proveedor de video predeterminado:
   </Accordion>
 
   <Accordion title="Solución de problemas">
-    - Verifique que su clave funcione: `openclaw models list --provider together`
-    - Si los modelos no aparecen, confirme que la clave de API está configurada en el entorno correcto
-      para su proceso de Gateway.
+    - Verifique que su clave funciona: `openclaw models list --provider together`
+    - Si los modelos no aparecen, confirme que la clave API está configurada en el entorno correcto para su proceso de Gateway.
     - Las referencias de modelos usan el formato `together/<model-id>`.
+
   </Accordion>
 </AccordionGroup>
 

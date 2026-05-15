@@ -101,7 +101,7 @@ openclaw models set venice/claude-opus-4-6
 列出所有可用的模型：
 
 ```bash
-openclaw models list | grep venice
+openclaw models list --all --provider venice
 ```
 
 您也可以執行 `openclaw configure`，選擇 **Model/auth**，然後選擇 **Venice AI**。
@@ -123,11 +123,12 @@ openclaw models list | grep venice
 
 ## DeepSeek V4 重播行為
 
-如果 Venice 提供了 DeepSeek V4 模型，例如 `venice/deepseek-v4-pro` 或
-`venice/deepseek-v4-flash`，OpenClaw 會在代理程式工具呼叫回合中填入所需的 DeepSeek V4
-`reasoning_content` 重播預留位置（當代理伺服器省略該預留位置時）。Venice 會拒絕 DeepSeek 原生的頂層 `thinking` 控制，
-因此 OpenClaw 將此特定提供者的重播修復與原生
-DeepSeek 提供者的思考控制分開處理。
+如果 Venice 公開了 DeepSeek V4 模型，例如 `venice/deepseek-v4-pro` 或
+`venice/deepseek-v4-flash`，當代理伺服器
+遺漏時，OpenClaw 會在助理訊息上填入所需的 DeepSeek V4
+`reasoning_content` 重播佔位符。Venice 會拒絕 DeepSeek 原生頂層的 `thinking` 控制，因此
+OpenClaw 會將該供應商特定的重播修復與原生
+DeepSeek 供應商的思考控制分開處理。
 
 ## 內建目錄（共 41 個）
 
@@ -186,9 +187,9 @@ DeepSeek 提供者的思考控制分開處理。
 
 ## 模型探索
 
-當設定 `VENICE_API_KEY` 時，OpenClaw 會自動從 Venice API 探索模型。如果 API 無法連線，它會回退到靜態目錄。
+OpenClaw 內建了一個基於清單的 Venice 種子目錄，用於唯讀模型列表。執行階段重新整理仍然可以從 Venice API 發現模型，如果無法連上 API，則會回退到清單目錄。
 
-`/models` 端點是公開的（列出清單不需要認證），但推論需要有效的 API 金鑰。
+`/models` 端點是公開的（列出項目不需要驗證），但推論需要有效的 API 金鑰。
 
 ## 串流與工具支援
 
@@ -201,7 +202,7 @@ DeepSeek 提供者的思考控制分開處理。
 
 ## 定價
 
-Venice 使用點數系統。請查看 [venice.ai/pricing](https://venice.ai/pricing) 以了解當前費率：
+Venice 使用基於點數的系統。請查看 [venice.ai/pricing](https://venice.ai/pricing) 以了解當前費率：
 
 - **Private models**：通常費用較低
 - **Anonymized models**：類似於直接 API 定價 + 少量 Venice 手續費
@@ -237,7 +238,7 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
 ## 疑難排解
 
 <AccordionGroup>
-  <Accordion title="API key not recognized">
+  <Accordion title="無法識別 API 金鑰">
     ```bash
     echo $VENICE_API_KEY
     openclaw models list | grep venice
@@ -247,9 +248,9 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
 
   </Accordion>
 
-<Accordion title="Model not available">Venice 模型目錄會動態更新。執行 `openclaw models list` 以查看目前可用的模型。部分模型可能暫時離線。</Accordion>
+<Accordion title="模型無法使用">Venice 模型目錄會動態更新。執行 `openclaw models list` 以查看目前可用的模型。部分模型可能暫時離線。</Accordion>
 
-  <Accordion title="Connection issues">
+  <Accordion title="連線問題">
     Venice API 位於 `https://api.venice.ai/api/v1`。請確保您的網路允許 HTTPS 連線。
   </Accordion>
 </AccordionGroup>

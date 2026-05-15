@@ -160,9 +160,18 @@ Utilisez `openclaw sandbox recreate` pour forcer la suppression des anciens runt
 
 <Tip>Privilégiez `openclaw sandbox recreate` par rapport au nettoyage manuel spécifique au backend. Il utilise le registre des runtimes du Gateway et évite les incohérences lorsque les clés de portée ou de session changent.</Tip>
 
+## Migration du registre
+
+OpenClaw stocke les métadonnées du runtime de sandbox sous forme d'un fragment JSON par entrée conteneur/navigateur dans le répertoire d'état de la sandbox. Les installations plus anciennes peuvent encore posséder des fichiers monolithiques hérités :
+
+- `~/.openclaw/sandbox/containers.json`
+- `~/.openclaw/sandbox/browsers.json`
+
+Les lectures régulières du runtime de sandbox ne réécrivent pas ces fichiers. Exécutez `openclaw doctor --fix` pour migrer les entrées héritées valides vers les répertoires du registre partitionné. Les fichiers hérités non valides sont mis en quarantaine afin qu'un ancien registre corrompu ne puisse pas masquer les entrées du runtime actuel.
+
 ## Configuration
 
-Les paramètres du Sandbox se trouvent dans `~/.openclaw/openclaw.json` sous `agents.defaults.sandbox` (les substitutions par agent vont dans `agents.list[].sandbox`) :
+Les paramètres de la sandbox se trouvent dans `~/.openclaw/openclaw.json` sous `agents.defaults.sandbox` (les redéfinitions par agent se trouvent dans `agents.list[].sandbox`) :
 
 ```jsonc
 {
@@ -192,4 +201,4 @@ Les paramètres du Sandbox se trouvent dans `~/.openclaw/openclaw.json` sous `ag
 - [Référence CLI](/fr/cli)
 - [Sandboxing](/fr/gateway/sandboxing)
 - [Espace de travail de l'agent](/fr/concepts/agent-workspace)
-- [Doctor](/fr/gateway/doctor) : vérifie la configuration du Sandbox.
+- [Doctor](/fr/gateway/doctor) : vérifie la configuration de la sandbox.

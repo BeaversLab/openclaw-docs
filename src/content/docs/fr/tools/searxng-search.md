@@ -7,7 +7,7 @@ read_when:
 title: "Recherche SearXNG"
 ---
 
-OpenClaw prend en charge [SearXNG](https://docs.searxng.org/) en tant que fournisseur `web_search` **auto-hébergé et sans clé**. SearXNG est un métamoteur de recherche open source qui agrège les résultats de Google, Bing, DuckDuckGo et d'autres sources.
+OpenClaw prend en charge [SearXNG](OpenClawhttps://docs.searxng.org/) en tant que fournisseur `web_search` **auto-hébergé, sans clé**. SearXNG est un méta-moteur de recherche open source qui agrège les résultats de Google, Bing, DuckDuckGo et d'autres sources.
 
 Avantages :
 
@@ -82,6 +82,7 @@ Règles de transport :
 - `https://` fonctionne pour les hôtes SearXNG publics ou privés
 - `http://` n'est accepté que pour les hôtes de réseau privé de confiance ou de boucle locale (loopback)
 - les hôtes SearXNG publics doivent utiliser `https://`
+- les hôtes privés/internes utilisent le garde réseau auto-hébergé ; les hôtes `https://` publics restent sur le garde de recherche web stricte et ne peuvent pas rediriger vers des adresses privées
 
 ## Variable d'environnement
 
@@ -91,9 +92,9 @@ Définissez `SEARXNG_BASE_URL` comme alternative à la configuration :
 export SEARXNG_BASE_URL="http://localhost:8888"
 ```
 
-Lorsque `SEARXNG_BASE_URL` est défini et qu'aucun fournisseur explicite n'est configuré, la détection automatique choisit automatiquement SearXNG (avec la plus basse priorité -- tout fournisseur prenant en charge une API avec une clé est prioritaire).
+Lorsque `SEARXNG_BASE_URL` est défini et qu'aucun fournisseur explicite n'est configuré, la détection automatique choisit SearXNG automatiquement (à la priorité la plus basse -- tout fournisseur API avec une clé gagne en premier).
 
-## Référence de configuration du plugin
+## Référence de la configuration du plugin
 
 | Champ        | Description                                                                    |
 | ------------ | ------------------------------------------------------------------------------ |
@@ -104,19 +105,23 @@ Lorsque `SEARXNG_BASE_URL` est défini et qu'aucun fournisseur explicite n'est c
 ## Notes
 
 - **JSON API** -- utilise le point de terminaison natif `format=json` de SearXNG, pas le scraping HTML
-- **Pas de clé API** -- fonctionne avec n'importe quelle instance SearXNG directement
-- **Validation de l'URL de base** -- `baseUrl` doit être une `http://` ou une `https://`
-  URL valide ; les hôtes publics doivent utiliser `https://`
-- **Ordre de détection automatique** -- SearXNG est vérifié en dernier (ordre 200) lors de
-  la détection automatique. Les fournisseurs utilisant une API avec des clés configurées s'exécutent en premier, puis
+- **URL des résultats d'images** -- les résultats de la catégorie image incluent `img_src` lorsque SearXNG renvoie une URL d'image directe
+- **Pas de clé API** -- fonctionne avec n'importe quelle instance SearXNG hors de la boîte
+- **Validation de l'URL de base** -- `baseUrl` doit être une URL `http://` ou `https://` valide ; les hôtes publics doivent utiliser `https://`
+- **Garde réseau** -- les points de terminaison SearXNG privés/internes optent pour l'accès au réseau privé ; les points de terminaison SearXNG `https://` publics gardent une protection SSRF stricte
+- **Ordre de détection automatique** -- SearXNG est vérifié en dernier (ordre 200) lors
+  de la détection automatique. Les fournisseurs prenant en charge l'API avec des clés configurées s'exécutent en premier, puis
   DuckDuckGo (ordre 100), puis Ollama Web Search (ordre 110)
-- **Auto-hébergé** -- vous contrôlez l'instance, les requêtes et les moteurs de recherche en amont
-- **Catégories** par défaut à `general` si non configurées
+- **Auto-hébergé** -- vous contrôlez l'instance, les requêtes et les moteurs de recherche amont
+- **Catégories** définies par défaut sur `general` si elles ne sont pas configurées
+- **Repli de catégorie** -- si une demande de catégorie non-`general` réussit mais
+  renvoie zéro résultat, OpenClaw réessaie la même requête une fois avec `general`
+  avant de renvoyer un ensemble de résultats vide
 
-<Tip>Pour que l'API JSON SearXNG fonctionne, assurez-vous que votre instance SearXNG a le format `json` activé dans son `settings.yml` sous `search.formats`.</Tip>
+<Tip>Pour que l'API JSON de SearXNG fonctionne, assurez-vous que votre instance SearXNG a le format `json` activé dans son `settings.yml` sous `search.formats`.</Tip>
 
 ## Connexes
 
 - [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
-- [DuckDuckGo Search](/fr/tools/duckduckgo-search) -- une autre solution de secours sans clé
-- [Brave Search](/fr/tools/brave-search) -- résultats structurés avec un niveau gratuit
+- [Recherche DuckDuckGo](/fr/tools/duckduckgo-search) -- un autre repli sans clé
+- [Recherche Brave](/fr/tools/brave-search) -- résultats structurés avec une offre gratuite

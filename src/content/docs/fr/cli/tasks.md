@@ -9,7 +9,7 @@ title: "`openclaw tasks`"
 Inspect durable background tasks and Task Flow state. With no subcommand,
 `openclaw tasks` is equivalent to `openclaw tasks list`.
 
-See [Background Tasks](/fr/automation/tasks) for the lifecycle and delivery model.
+Voir [Tâches d'arrière-plan](/fr/automation/tasks) pour le cycle de vie et le modèle de livraison.
 
 ## Usage
 
@@ -83,11 +83,17 @@ Surfaces stale, lost, delivery-failed, or otherwise inconsistent task and Task F
 openclaw tasks maintenance [--apply] [--json]
 ```
 
-Previews or applies task and Task Flow reconciliation, cleanup stamping, and pruning.
-For cron tasks, reconciliation uses persisted run logs/job state before marking an
-old active task `lost`, so completed cron runs do not become false audit errors
-just because the in-memory Gateway runtime state is gone. Offline CLI audit is
-not authoritative for the Gateway's process-local cron active-job set.
+Prévisualise ou applique la réconciliation des tâches et des flux de tâches, le nettoyage de l'horodatage, l'élagage,
+et le nettoyage du registre de sessions d'exécution cron obsolètes.
+Pour les tâches cron, la réconciliation utilise les journaux d'exécution persistés/l'état des tâches avant de marquer une
+ancienne tâche active `lost`, afin que les exécutions cron terminées ne deviennent pas de fausses erreurs d'audit
+simplement parce que l'état d'exécution en mémoire du Gateway a disparu. L'audit hors ligne de la CLI
+n'est pas autoritaire pour l'ensemble de tâches cron actives locales au processus du Gateway. Les tâches de la CLI
+avec un ID d'exécution/ID source sont marquées `lost` lorsque leur contexte d'exécution en direct du Gateway a
+disparu, même si une ancienne ligne de session enfant reste.
+Lorsqu'elle est appliquée, la maintenance élague également les lignes du registre de sessions `cron:<jobId>:run:<uuid>`
+âgées de plus de 7 jours tout en préservant les tâches cron en cours d'exécution et en laissant
+les lignes de sessions non cron intactes.
 
 ### `flow`
 
@@ -101,5 +107,5 @@ Inspects or cancels durable Task Flow state under the task ledger.
 
 ## Related
 
-- [CLI reference](/fr/cli)
-- [Background tasks](/fr/automation/tasks)
+- [Référence de la CLI](/fr/cli)
+- [Tâches d'arrière-plan](/fr/automation/tasks)

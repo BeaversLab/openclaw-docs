@@ -10,7 +10,7 @@ title: "快速開始"
 
 ## 您需要什麼
 
-- **Node.js** — 推薦使用 Node 24（也支援 Node 22.14+）
+- **Node.js** — 建議使用 Node 24（也支援 Node 22.16+）
 - **一個 API 金鑰**，來自模型供應商（Anthropic、OpenAI、Google 等）——導引程式會提示您輸入
 
 <Tip>使用 `node --version` 檢查您的 Node 版本。 **Windows 使用者：** 同時支援原生 Windows 和 WSL2。WSL2 更穩定，建議使用以獲得完整體驗。參閱 [Windows](/zh-Hant/platforms/windows)。 需要安裝 Node 嗎？參閱 [Node 設定](/zh-Hant/install/node)。</Tip>

@@ -12,10 +12,7 @@ La herramienta `music_generate` permite al agente crear música o audio a travé
 capacidad compartida de generación de música con proveedores configurados — Google,
 MiniMax y ComfyUI configurado por flujo de trabajo hoy en día.
 
-Para ejecuciones de agente respaldadas por sesión, OpenClaw inicia la generación de música como una
-tarea en segundo plano, la rastrea en el libro mayor de tareas y luego despierta al agente nuevamente
-cuando la pista está lista para que el agente pueda publicar el audio terminado de nuevo en
-el canal original.
+Para ejecuciones de agentes respaldadas por sesión, OpenClaw inicia la generación de música como una tarea en segundo plano, la rastrea en el libro de tareas y luego despierta al agente nuevamente cuando la pista está lista para que el agente pueda informar al usuario y adjuntar el audio terminado. En chats de grupo/canal que usan entrega visible solo con herramienta de mensaje, el agente transmite el resultado a través de la herramienta de mensaje. Si el agente de finalización escribe solo una respuesta final privada, OpenClaw recurre a un envío de canal directo con los medios generados. El despertar de finalización advierte explícitamente al agente que las respuestas finales normales son privadas en esas rutas.
 
 <Note>La herramienta compartida integrada solo aparece cuando al menos un proveedor de generación de música está disponible. Si no ves `music_generate` en las herramientas de tu agente, configura `agents.defaults.musicGenerationModel` o configura una clave de API del proveedor.</Note>
 
@@ -130,7 +127,7 @@ Ejemplo de generación directa:
   `"status"` devuelve la tarea de la sesión actual; `"list"` inspecciona los proveedores.
 </ParamField>
 <ParamField path="model" type="string">
-  Sobrescritura de proveedor/modelo (p. ej., `google/lyria-3-pro-preview`, `comfy/workflow`).
+  Invalidación de proveedor/modelo (p. ej., `google/lyria-3-pro-preview`, `comfy/workflow`).
 </ParamField>
 <ParamField path="lyrics" type="string">
   Letra opcional cuando el proveedor admite la entrada explícita de letras.
@@ -139,10 +136,10 @@ Ejemplo de generación directa:
   Solicitar salida solo instrumental cuando el proveedor lo admite.
 </ParamField>
 <ParamField path="image" type="string">
-  Ruta o URL de una sola imagen de referencia.
+  Ruta o URL de una única imagen de referencia.
 </ParamField>
 <ParamField path="images" type="string[]">
-  Múltiples imágenes de referencia (hasta 10 en proveedores compatibles).
+  Varias imágenes de referencia (hasta 10 en proveedores compatibles).
 </ParamField>
 <ParamField path="durationSeconds" type="number">
   Duración objetivo en segundos cuando el proveedor admite sugerencias de duración.
@@ -154,7 +151,7 @@ Ejemplo de generación directa:
   Sugerencia de nombre de archivo de salida.
 </ParamField>
 <ParamField path="timeoutMs" type="number">
-  Tiempo de espera de solicitud del proveedor opcional en milisegundos.
+  Tiempo de espera de solicitud de proveedor opcional en milisegundos. Los valores inferiores a 10000 ms se elevan a 10000 ms y se informan en el resultado de la herramienta.
 </ParamField>
 
 <Note>

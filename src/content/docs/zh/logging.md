@@ -72,9 +72,7 @@ openclaw logs --follow
 - `notice`：截断/轮换提示
 - `raw`：未解析的日志行
 
-如果本地环回 Gateway(网关) 请求配对，`openclaw logs` 将自动回退到
-配置的本地日志文件。显式的 `--url` 目标不会
-使用此回退机制。
+如果隐式 local loopback Gateway(网关) 请求配对、在连接期间关闭，或者在 Gateway(网关)`logs.tail` 回答之前超时，`openclaw logs`Gateway(网关) 将自动回退到配置的 Gateway(网关) 文件日志。显式 `--url` 目标不使用此回退。
 
 如果 Gateway(网关) 无法访问，CLI 会打印一个简短的提示以运行：
 
@@ -84,8 +82,7 @@ openclaw doctor
 
 ### Control UI (Web)
 
-控制 UI 的 **Logs** 选项卡使用 `logs.tail` 跟踪同一个文件。
-请参阅 [/web/control-ui](/zh/web/control-ui) 了解如何打开它。
+控制 UI 的 **日志** 选项卡使用 `logs.tail` 追踪同一文件。请参阅 [控制 UI](/zh/web/control-ui) 了解如何打开它。
 
 ### 仅限频道的日志
 
@@ -103,31 +100,33 @@ openclaw channels logs --channel whatsapp
 
 在可用的情况下，文件日志 JSONL 记录还包括可进行机器过滤的顶级字段：
 
-- `hostname`：Gateway 主机名。
+- `hostname`：Gateway(网关) 主机名。
 - `message`：用于全文搜索的扁平化日志消息文本。
-- `agent_id`：当日志调用携带 agent 上下文时的活动 agent ID。
-- `session_id`：当日志调用携带会话上下文时的活动会话 ID/键。
+- `agent_id`：当日志调用携带 agent 上下文时的活动 agent id。
+- `session_id`：当日志调用携带会话上下文时的活动会话 id/密钥。
 - `channel`：当日志调用携带渠道上下文时的活动渠道。
 
 OpenClaw 会保留这些字段旁边的原始结构化日志参数，以便读取编号 tslog 参数键的现有解析器继续工作。
 
+Talk、实时语音和托管房间活动通过同一个文件日志管道发出有边界生命周期日志记录。这些记录包括事件类型、模式、传输、提供商以及可用时的大小/时间测量，但省略了转录文本、音频负载、回合 id、调用 id 和提供商项目 id。
+
 ### 控制台输出
 
-控制台日志具有 **TTY 感知** 能力，并针对可读性进行了格式化：
+控制台日志是 **TTY 感知** 的，并针对可读性进行了格式化：
 
 - 子系统前缀（例如 `gateway/channels/whatsapp`）
-- 级别着色（info/warn/error）
+- 级别着色（信息/警告/错误）
 - 可选的紧凑或 JSON 模式
 
 控制台格式化由 `logging.consoleStyle` 控制。
 
-### Gateway WebSocket 日志
+### Gateway(网关) WebSocket 日志
 
-`openclaw gateway` 还具有用于 RPC 流量的 WebSocket 协议日志记录：
+`openclaw gateway`RPC 也有针对 RPC 流量的 WebSocket 协议日志记录：
 
-- 普通模式：仅显示有趣的结果（错误、解析错误、慢速调用）
+- 正常模式：仅显示有趣的结果（错误、解析错误、慢调用）
 - `--verbose`：所有请求/响应流量
-- `--ws-log auto|compact|full`：选择详细的渲染样式
+- `--ws-log auto|compact|full`：选择详细渲染样式
 - `--compact`：`--ws-log compact` 的别名
 
 示例：
@@ -140,7 +139,7 @@ openclaw gateway --verbose --ws-log full
 
 ## 配置日志记录
 
-所有日志记录配置均位于 `~/.openclaw/openclaw.json` 中的 `logging` 下。
+所有日志记录配置都位于 `~/.openclaw/openclaw.json` 中的 `logging` 下。
 
 ```json
 {
@@ -157,67 +156,72 @@ openclaw gateway --verbose --ws-log full
 
 ### 日志级别
 
-- `logging.level`：**file logs** (JSONL) 级别。
-- `logging.consoleLevel`：**console** 详细程度级别。
+- `logging.level`：**文件日志** (JSONL) 级别。
+- `logging.consoleLevel`：**console**（控制台）详细级别。
 
-您可以通过 **`OPENCLAW_LOG_LEVEL`** 环境变量（例如 `OPENCLAW_LOG_LEVEL=debug`）覆盖这两项。环境变量优先于配置文件，因此您可以在不编辑 `openclaw.json` 的情况下提高单次运行的详细程度。您还可以传递全局 CLI 选项 **`--log-level <level>`**（例如 `openclaw --log-level debug gateway run`），这将覆盖该命令的环境变量。
+你可以通过 **`OPENCLAW_LOG_LEVEL`** 环境变量（例如 `OPENCLAW_LOG_LEVEL=debug`）覆盖这两者。环境变量的优先级高于配置文件，因此你无需编辑 `openclaw.json`CLI 即可为单次运行提高详细级别。你还可以传递全局 CLI 选项 **`--log-level <level>`**（例如，`openclaw --log-level debug gateway run`），它会覆盖该命令的环境变量。
 
-`--verbose` 仅影响控制台输出和 WS 日志详细程度；它不会更改
+`--verbose` 仅影响控制台输出和 WebSocket (WS) 日志详细级别；它不会改变
 文件日志级别。
 
 ### 追踪关联
 
 文件日志为 JSONL 格式。当日志调用携带有效的诊断追踪上下文时，
-OpenClaw 会将追踪字段作为顶级 JSON 键（`traceId`、`spanId`、
-`parentSpanId`、`traceFlags`）写入，以便外部日志处理器可以将该行
-与 OTEL 跨度和提供商 `traceparent` 传播相关联。
+OpenClaw 会将追踪字段写入顶层 JSON 键（OpenClaw`traceId`、`spanId`、
+`parentSpanId`、`traceFlags`），以便外部日志处理器可以将该行
+与 OTEL 跨度（spans）和提供商 `traceparent` 传播相关联。
 
-Gateway(网关) HTTP 请求和 Gateway(网关) WebSocket 帧建立了一个内部请求
-追踪范围。在该异步范围内发出的日志和诊断事件会继承
-请求追踪（前提是它们未传递显式追踪上下文）。Agent 运行和
+Gateway(网关) HTTP 请求和 Gateway(网关) WebSocket 帧会建立一个内部请求
+追踪范围。在该异步范围内发出的日志和诊断事件会在未传递显式追踪上下文时
+继承请求追踪。Agent 运行和
 模型调用追踪将成为活动请求追踪的子项，因此本地日志、
-诊断快照、OTEL 跨度和可信提供商 `traceparent` 标头可以
-通过 `traceId` 进行关联，而无需记录原始请求或模型内容。
+诊断快照、OTEL 跨度和可信提供商 Gateway(网关)Gateway(网关)`traceparent` 标头可以
+通过 `traceId` 关联起来，而无需记录原始请求或模型内容。
 
-### 模型调用大小和时间
+当启用 OpenTelemetry 日志导出时，
+对话生命周期日志记录也会使用与文件日志相同的受限属性流向 OTLP 日志。
 
-模型调用诊断记录有界的请求/响应测量值，而不
-捕获原始提示或响应内容：
+### 模型调用大小和计时
+
+模型调用诊断记录受限制的请求/响应测量值，而
+不捕获原始提示或响应内容：
 
 - `requestPayloadBytes`：最终模型请求负载的 UTF-8 字节大小
 - `responseStreamBytes`：流式模型响应事件的 UTF-8 字节大小
 - `timeToFirstByteMs`：第一个流式响应事件之前的经过时间
-- `durationMs`：模型调用的总持续时间
+- `durationMs`：模型调用总持续时间
 
-当启用诊断导出时，这些字段可用于诊断快照、模型调用插件挂钩以及
-OTEL 模型调用跨度/指标。
+当启用诊断导出时，这些字段可用于诊断快照、模型调用插件挂钩以及 OTEL 模型调用 spans/指标。
 
 ### 控制台样式
 
 `logging.consoleStyle`：
 
-- `pretty`：人类友好、彩色、带时间戳。
-- `compact`：更紧凑的输出（最适合长会话）。
-- `json`：每行 JSON（适用于日志处理器）。
+- `pretty`：人性化，带颜色，带时间戳。
+- `compact`：更紧凑的输出（适用于长会话）。
+- `json`：每行一个 JSON（适用于日志处理器）。
 
 ### 编辑
 
-OpenClaw 可以在敏感令牌到达控制台输出、文件日志、
-OTLP 日志记录或持久化会话文本之前对其进行编辑：
+OpenClaw 可以在敏感令牌到达控制台输出、文件日志、OTLP 日志记录、持久化会话文本记录或 Control UI 工具事件负载（工具启动参数、部分/最终结果负载、派生执行输出和补丁摘要）之前对其进行编辑：
 
-- `logging.redactSensitive`：`off` | `tools`（默认值：`tools`）
-- `logging.redactPatterns`：用于覆盖默认集合的正则字符串列表
+- `logging.redactSensitive`：`off` | `tools`（默认：`tools`）
+- `logging.redactPatterns`：用于覆盖默认集的 regex 字符串列表。自定义模式在 Control UI 工具负载的内置默认值之上应用，因此添加模式绝不会削弱对已被默认值捕获的值的编辑。
 
-文件日志和会话记录保持 JSONL 格式，但在将行或消息写入磁盘之前，匹配的密钥值会被屏蔽。屏蔽是尽力而为的：它适用于包含文本的消息内容和日志字符串，而非每个标识符或二进制负载字段。
+文件日志和会话记录保持 JSONL 格式，但在行或消息写入磁盘之前，匹配的密钥值会被屏蔽。编辑是尽力而为的：它适用于包含文本的消息内容和日志字符串，而非每个标识符或二进制负载字段。
 
-## 诊断和 OpenTelemetry
+内置默认值涵盖了常见的 API 凭据和支付凭证字段名称，例如卡号、CVC/CVV、共享支付令牌和支付凭证，当它们作为 JSON 字段、URL 参数、CLI 标志或赋值出现时。
 
-诊断是用于模型运行和消息流遥测（webhook、队列、会话状态）的结构化、机器可读事件。它们并**不**取代日志——而是为指标、跟踪和导出器提供数据。无论是否导出，事件都会在进程内发出。
+`logging.redactSensitive: "off"`OpenClaw 仅禁用此通用日志/记录策略。OpenClaw 仍然编辑可以显示给 UI 客户端、支持包、诊断观察者、审批提示或代理工具的安全边界负载。示例包括 Control UI 工具调用事件、`sessions_history`Gateway(网关) 输出、诊断支持导出、提供商错误观察、执行审批命令显示和 Gateway WebSocket 协议日志。自定义 `logging.redactPatterns` 仍可在这些表面上添加项目特定的模式。
 
-两个相邻的层面：
+## 诊断与 OpenTelemetry
 
-- **OpenTelemetry 导出** — 通过 OTLP/HTTP 将指标、跟踪和日志发送到任何兼容 OpenTelemetry 的收集器或后端（Grafana、Datadog、Honeycomb、New Relic、Tempo 等）。完整配置、信号目录、指标/跨度名称、环境变量和隐私模型位于专用页面：[OpenTelemetry 导出](/zh/gateway/opentelemetry)。
-- **诊断标志** — 针对性的调试日志标志，用于将额外的日志路由到 `logging.file`，而无需提高 `logging.level`。标志不区分大小写，并支持通配符（`telegram.*`、`*`）。在 `diagnostics.flags` 下配置，或通过 `OPENCLAW_DIAGNOSTICS=...` 环境变量覆盖进行配置。完整指南：[诊断标志](/zh/diagnostics/flags)。
+诊断是针对模型运行和消息流遥测（webhooks、队列、会话状态）的结构化、机器可读事件。它们**不**替代日志——它们为指标、跟踪和导出器提供数据。无论您是否导出这些事件，它们都会在进程内发出。
+
+两个相邻的表面：
+
+- **OpenTelemetry 导出** — 通过 OTLP/HTTP 将指标、跟踪和日志发送到任何兼容 OpenTelemetry 的收集器或后端（Grafana、Datadog、Honeycomb、New Relic、Tempo 等）。完整配置、信号目录、指标/跟踪名称、环境变量和隐私模型位于专用页面：[OpenTelemetry export](/zh/gateway/opentelemetry)。
+- **诊断标志** — 有针对性的调试日志标志，用于将额外的日志路由到 `logging.file` 而不提高 `logging.level`。标志不区分大小写并支持通配符（`telegram.*`、`*`）。在 `diagnostics.flags` 下配置，或通过 `OPENCLAW_DIAGNOSTICS=...` 环境变量覆盖进行配置。完整指南：[Diagnostics flags](/zh/diagnostics/flags)。
 
 要在不进行 OTLP 导出的情况下为插件或自定义接收器启用诊断事件：
 
@@ -227,7 +231,7 @@ OTLP 日志记录或持久化会话文本之前对其进行编辑：
 }
 ```
 
-要将 OTLP 导出到收集器，请参阅 [OpenTelemetry 导出](/zh/gateway/opentelemetry)。
+如需将 OTLP 导出到收集器，请参阅 [OpenTelemetry export](/zh/gateway/opentelemetry)。
 
 ## 故障排除提示
 
@@ -237,7 +241,7 @@ OTLP 日志记录或持久化会话文本之前对其进行编辑：
 
 ## 相关
 
-- [OpenTelemetry 导出](/zh/gateway/opentelemetry) — OTLP/HTTP 导出、指标/跨度目录、隐私模型
-- [诊断标志](/zh/diagnostics/flags) — 针对性的调试日志标志
-- [Gateway(网关) logging internals](/zh/gateway/logging) — WS log styles, subsystem prefixes, and console capture
-- [Configuration reference](/zh/gateway/configuration-reference#diagnostics) — full `diagnostics.*` field reference
+- [OpenTelemetry export](/zh/gateway/opentelemetry) — OTLP/HTTP 导出、指标/跟踪目录、隐私模型
+- [Diagnostics flags](/zh/diagnostics/flags) — 有针对性的调试日志标志
+- [Gateway(网关) logging internals](/zh/gateway/logging) — WS 日志样式、子系统前缀和控制台捕获
+- [Configuration reference](/zh/gateway/configuration-reference#diagnostics) — 完整的 `diagnostics.*` 字段参考

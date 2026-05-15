@@ -7,29 +7,27 @@ read_when:
 title: "Azure"
 ---
 
-# OpenClaw sur Azure Linux VM
-
-Ce guide configure une Azure Linux VM avec Azure CLI, applique le durcissement du groupe de sécurité réseau (NSG), configure Azure Bastion pour l'accès SSH et installe OpenClaw.
+Ce guide configure une machine virtuelle Azure Linux avec l'interface de ligne de commande Azure (CLI), applique le durcissement du groupe de sécurité réseau (NSG), configure Azure Bastion pour l'accès SSH et installe OpenClaw.
 
 ## Ce que vous allez faire
 
-- Créer des ressources de mise en réseau (VNet, sous-réseaux, NSG) et de calcul Azure avec Azure CLI
-- Appliquer les règles du groupe de sécurité réseau afin que le SSH de la VM soit autorisé uniquement depuis Azure Bastion
-- Utiliser Azure Bastion pour l'accès SSH (pas d'IP publique sur la VM)
+- Créer des ressources de mise en réseau (VNet, sous-réseaux, NSG) et de calcul Azure avec l'interface de ligne de commande Azure (CLI)
+- Appliquer des règles de groupe de sécurité réseau pour que le SSH de la machine virtuelle soit autorisé uniquement depuis Azure Bastion
+- Utiliser Azure Bastion pour l'accès SSH (pas d'adresse IP publique sur la machine virtuelle)
 - Installer OpenClaw avec le script d'installation
-- Vérifier le Gateway
+- Vérifier la passerelle (Gateway)
 
 ## Ce dont vous avez besoin
 
-- Un abonnement Azure avec l'autorisation de créer des ressources de calcul et réseau
-- Azure CLI installée (voir les [étapes d'installation de l'Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) si nécessaire)
-- Une paire de clés SSH (le guide couvre la génération d'une paire si nécessaire)
+- Un abonnement Azure avec l'autorisation de créer des ressources de calcul et de réseau
+- Interface de ligne de commande Azure (CLI) installée (voir les [étapes d'installation de l'interface de ligne de commande Azure](CLICLIhttps://learn.microsoft.com/cli/azure/install-azure-cli) si nécessaire)
+- Une paire de clés SSH (le guide explique comment en générer une si nécessaire)
 - ~20-30 minutes
 
 ## Configurer le déploiement
 
 <Steps>
-  <Step title="Se connecter à Azure CLI">
+  <Step title="CLISe connecter à l'interface de ligne de commande Azure">
     ```bash
     az login
     az extension add -n ssh
@@ -39,7 +37,7 @@ Ce guide configure une Azure Linux VM avec Azure CLI, applique le durcissement d
 
   </Step>
 
-  <Step title="Inscrire les fournisseurs de ressources requis (une fois)">
+  <Step title="Inscrire les fournisseurs de ressources requis (une seule fois)">
     ```bash
     az provider register --namespace Microsoft.Compute
     az provider register --namespace Microsoft.Network
@@ -70,7 +68,7 @@ Ce guide configure une Azure Linux VM avec Azure CLI, applique le durcissement d
     BASTION_PIP_NAME="pip-openclaw-bastion"
     ```
 
-    Ajustez les noms et les plages CIDR pour qu'ils correspondent à votre environnement. Le sous-réseau Bastion doit être d'au moins `/26`.
+    Ajustez les noms et les plages CIDR pour qu'ils correspondent à votre environnement. Le sous-réseau Bastion doit être au minimum de `/26`.
 
   </Step>
 
@@ -90,7 +88,7 @@ Ce guide configure une Azure Linux VM avec Azure CLI, applique le durcissement d
 
   </Step>
 
-  <Step title="Sélectionner la taille de la machine virtuelle et du disque du système d'exploitation">
+  <Step title="Sélectionner la taille de la machine virtuelle et la taille du disque du système d'exploitation">
     ```bash
     VM_SIZE="Standard_B2as_v2"
     OS_DISK_SIZE_GB=64
@@ -98,9 +96,9 @@ Ce guide configure une Azure Linux VM avec Azure CLI, applique le durcissement d
 
     Choisissez une taille de machine virtuelle et une taille de disque du système d'exploitation disponibles dans votre abonnement et votre région :
 
-    - Commencez plus petit pour une utilisation légère et augmentez la taille ultérieurement
-    - Utilisez plus de vCPU/RAM/disque pour une automatisation plus lourde, plus de canaux ou des charges de travail de model/tool plus importantes
-    - Si une taille de machine virtuelle n'est pas disponible dans votre région ou le quota de votre abonnement, choisissez la référence SKU disponible la plus proche
+    - Commencez plus petit pour une utilisation légère et passez à l'échelle plus tard
+    - Utilisez plus de vCPU/RAM/disque pour une automatisation plus lourde, plus de canaux ou des charges de travail de modèle/outil plus importantes
+    - Si une taille de machine virtuelle n'est pas disponible dans votre région ou votre quota d'abonnement, choisissez la référence (SKU) disponible la plus proche
 
     Répertorier les tailles de machines virtuelles disponibles dans votre région cible :
 
@@ -108,7 +106,7 @@ Ce guide configure une Azure Linux VM avec Azure CLI, applique le durcissement d
     az vm list-skus --location "${LOCATION}" --resource-type virtualMachines -o table
     ```
 
-    Vérifier votre utilisation/quota actuel de vCPU et de disque :
+    Vérifiez votre utilisation et votre quota actuels de vCPU et de disque :
 
     ```bash
     az vm list-usage --location "${LOCATION}" -o table
@@ -117,7 +115,7 @@ Ce guide configure une Azure Linux VM avec Azure CLI, applique le durcissement d
   </Step>
 </Steps>
 
-## Déployer les ressources Azure
+## Déployer des ressources Azure
 
 <Steps>
   <Step title="Créer le groupe de ressources">
@@ -204,9 +202,9 @@ Ce guide configure une Azure Linux VM avec Azure CLI, applique le durcissement d
       --nsg ""
     ```
 
-    `--public-ip-address ""` empêche l'attribution d'une adresse IP publique. `--nsg ""` ignore la création d'un NSG par carte réseau (le NSG au niveau du sous-réseau gère la sécurité).
+    `--public-ip-address ""` empêche l'attribution d'une adresse IP publique. `--nsg ""` ignore la création d'un groupe de sécurité réseau par interface réseau (le NSG au niveau du sous-réseau gère la sécurité).
 
-    **Reproductibilité :** La commande ci-dessus utilise `latest` pour l'image Ubuntu. Pour figer une version spécifique, répertoriez les versions disponibles et remplacez `latest` :
+    **Reproductibilité :** La commande ci-dessus utilise `latest` pour l'image Ubuntu. Pour épingler une version spécifique, listez les versions disponibles et remplacez `latest` :
 
     ```bash
     az vm image list \
@@ -217,7 +215,7 @@ Ce guide configure une Azure Linux VM avec Azure CLI, applique le durcissement d
   </Step>
 
   <Step title="Créer Azure Bastion">
-    Azure Bastion fournit un accès SSH géré à la machine virtuelle sans exposer d'adresse IP publique. Le Référence SKU Standard avec tunneling est requis pour CLI basé sur `az network bastion ssh`.
+    Azure Bastion fournit un accès SSH géré à la machine virtuelle sans exposer d'adresse IP publique. Le SKU Standard avec tunneling est requis pour CLI `az network bastion ssh`.
 
     ```bash
     az network public-ip create \
@@ -261,37 +259,37 @@ Ce guide configure une Azure Linux VM avec Azure CLI, applique le durcissement d
     rm -f /tmp/install.sh
     ```
 
-    Le programme d'installation installe Node LTS et les dépendances si elles ne sont pas déjà présentes, installe OpenClaw et lance l'assistant d'intégration. Consultez la page [Installation](/fr/install) pour plus de détails.
+    Le programme d'installation installe Node LTS et les dépendances si elles ne sont pas déjà présentes, installe OpenClaw et lance l'assistant d'intégration. Voir [Installer](/fr/install) pour plus de détails.
 
   </Step>
 
-  <Step title="Vérifier la passerelle">
+  <Step title="Vérifier le Gateway">
     Une fois l'intégration terminée :
 
     ```bash
     openclaw gateway status
     ```
 
-    La plupart des équipes d'entreprise Azure possèdent déjà des licences Gateway Copilot. Si c'est votre cas, nous vous recommandons de choisir le fournisseur GitHub Copilot dans l'assistant d'intégration GitHub. Consultez la section [Fournisseur OpenClaw Copilot](/fr/providers/github-copilot).
+    La plupart des équipes Azure entreprise possèdent déjà des licences GitHub Copilot. Si c'est votre cas, nous recommandons de choisir le provider GitHub Copilot dans l'assistant d'intégration OpenClaw. Voir [Provider GitHub Copilot](/fr/providers/github-copilot).
 
   </Step>
 </Steps>
 
 ## Considérations relatives aux coûts
 
-Le Référence SKU Standard d'Azure Bastion coûte environ **140 $/mois** et la machine virtuelle (Standard_B2as_v2) coûte environ **55 $/mois**.
+Le SKU Standard Azure Bastion coûte environ **140 $/mois** et la machine virtuelle (Standard_B2as_v2) coûte environ **55 $/mois**.
 
 Pour réduire les coûts :
 
-- **Libérer la machine virtuelle** lorsqu'elle n'est pas utilisée (arrête la facturation de calcul ; les frais de disque restent). La passerelle OpenClaw Gateway ne sera pas accessible tant que la machine virtuelle est libérée — redémarrez-la lorsque vous en avez besoin à nouveau :
+- **Libérer la machine virtuelle** lorsqu'elle n'est pas utilisée (arrête la facturation de calcul ; les frais de disque restent). Le OpenClaw Gateway ne sera pas accessible tant que la machine virtuelle est libérée — redémarrez-la lorsque vous en avez besoin à nouveau :
 
   ```bash
   az vm deallocate -g "${RG}" -n "${VM_NAME}"
   az vm start -g "${RG}" -n "${VM_NAME}"   # restart later
   ```
 
-- **Supprimer Bastion lorsqu'il n'est pas nécessaire** et le recréer lorsque vous avez besoin d'un accès SSH. Bastion est le composant le plus coûteux et ne prend que quelques minutes à approvisionner.
-- **Utiliser le Référence SKU Bastion Basic** (~38 $/mois) si vous avez uniquement besoin d'un accès SSH basé sur le portail et que vous n'exigez pas de tunneling CLI (`az network bastion ssh`).
+- **Supprimer Bastion** lorsqu'il n'est pas nécessaire et le recréer lorsque vous avez besoin d'un accès SSH. Bastion est le composant le plus coûteux et ne prend que quelques minutes à provisionner.
+- **Utiliser le SKU Basic Bastion** (~38 $/mois) si vous avez uniquement besoin d'un SSH basé sur le portail et que vous n'exigez pas de tunneling CLI (`az network bastion ssh`).
 
 ## Nettoyage
 
@@ -306,8 +304,8 @@ Cela supprime le groupe de ressources et tout ce qu'il contient (machine virtuel
 ## Étapes suivantes
 
 - Configurer les canaux de messagerie : [Canaux](/fr/channels)
-- Associer les appareils locaux en tant que nœuds : [Nœuds](/fr/nodes)
-- Configurer le Gateway : [Configuration du Gateway](/fr/gateway/configuration)
+- Associer des appareils locaux en tant que nœuds : [Nœuds](/fr/nodes)
+- Configurer le Gateway : [configuration du Gateway](/fr/gateway/configuration)
 - Pour plus de détails sur le déploiement Azure OpenClaw avec le fournisseur de modèle Copilot GitHub : [OpenClaw sur Azure avec Copilot GitHub](https://github.com/johnsonshi/openclaw-azure-github-copilot)
 
 ## Connexes

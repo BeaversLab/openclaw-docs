@@ -7,10 +7,15 @@ title: "Configurar"
 
 # `openclaw configure`
 
-Indicación interactiva para configurar las credenciales, los dispositivos y los valores predeterminados del agente.
+Prompt interactivo para realizar cambios específicos en una configuración existente: credenciales, dispositivos, valores predeterminados del agente, puerta de enlace, canales, complementos, habilidades y comprobaciones de estado.
+
+Use `openclaw onboard` para el recorrido guiado completo de primera ejecución, `openclaw setup` solo para la configuración/espacio de trabajo base y `openclaw channels add` cuando solo necesite configurar la cuenta del canal.
 
 <Note>
-La sección **Modelo** incluye una selección múltiple para la lista de permitidos (allowlist) de `agents.defaults.models` (lo que aparece en `/model` y el selector de modelos). Las opciones de configuración con alcance de proveedor fusionan sus modelos seleccionados en la lista de permitidos existente en lugar de reemplazar a los proveedores no relacionados ya presentes en la configuración. Volver a ejecutar la autenticación del proveedor desde configure preserva un `agents.defaults.model.primary` existente. Use `openclaw models auth login --provider <id> --set-default` o `openclaw models set <model>` cuando intencionalmente desee cambiar el modelo predeterminado.
+La sección **Model** (Modelo) incluye una selección múltiple para la lista de permitidos (allowlist) de `agents.defaults.models` (lo que aparece en `/model` y en el selector de modelos). Las opciones de configuración con ámbito de proveedor fusionan sus modelos seleccionados en la lista de permitidos existente en lugar de reemplazar a los proveedores no relacionados ya presentes en la configuración.
+
+Volver a ejecutar la autenticación del proveedor desde configure conserva un `agents.defaults.model.primary` existente, incluso cuando el paso de autenticación del proveedor devuelve un parche de configuración con su propio modelo predeterminado recomendado. Esto significa que agregar o volver a autenticar xAI, OpenRouter u otro proveedor debería hacer que el nuevo modelo esté disponible sin reemplazar a su modelo principal actual. Use `openclaw models auth login --provider <id> --set-default` o `openclaw models set <model>` cuando intencionalmente desee cambiar el modelo predeterminado.
+
 </Note>
 
 Cuando configure se inicia desde una elección de autenticación de proveedor, los selectores de modelo predeterminado y lista de permitidos prefieren automáticamente ese proveedor. Para proveedores emparejados como Volcengine y BytePlus, la misma preferencia también coincide con sus variantes de plan de codificación (`volcengine-plan/*`, `byteplus-plan/*`). Si el filtro de proveedor preferido produjera una lista vacía, configure recurre al catálogo sin filtrar en lugar de mostrar un selector en blanco.
@@ -28,7 +33,7 @@ preguntas de seguimiento específicas del proveedor:
 
 Relacionado:
 
-- Referencia de configuración de Gateway: [Configuración](/es/gateway/configuration)
+- Referencia de configuración de Gateway: [Configuration](/es/gateway/configuration)
 - CLI de configuración: [Config](/es/cli/config)
 
 ## Opciones
@@ -49,10 +54,11 @@ Secciones disponibles:
 
 Notas:
 
-- Elegir dónde se ejecuta el Gateway siempre actualiza `gateway.mode`. Puede seleccionar "Continuar" sin otras secciones si eso es todo lo que necesita.
-- Los servicios orientados a canales (Slack/Discord/Matrix/Microsoft Teams) solicitan listas de permitidos de canales/salas durante la configuración. Puede ingresar nombres o IDs; el asistente resuelve los nombres a IDs cuando es posible.
-- Si ejecuta el paso de instalación del demonio, la autenticación con token requiere un token, y si `gateway.auth.token` está administrado por SecretRef, configure valida el SecretRef pero no persiste los valores de token de texto plano resueltos en los metadatos del entorno del servicio supervisor.
-- Si la autenticación por token requiere un token y la referencia secreta (SecretRef) del token configurado no está resuelta, configure bloquea la instalación del demonio con una guía de remediation accionable.
+- Elegir dónde se ejecuta el Gateway siempre actualiza `gateway.mode`. Puede seleccionar "Continue" sin otras secciones si eso es todo lo que necesita.
+- Después de escribir la configuración local, configure instala los complementos descargables seleccionados cuando la ruta de configuración elegida los requiere. La configuración remota del Gateway no instala paquetes de complementos locales.
+- Los servicios orientados a canales (Slack/Discord/Matrix/Microsoft Teams) solicitan listas de permitidos (allowlists) de canales/salas durante la configuración. Puede ingresar nombres o ID; el asistente resuelve los nombres a ID cuando es posible.
+- Si ejecuta el paso de instalación del demonio, la autenticación por token requiere un token y `gateway.auth.token` está administrado por SecretRef, configure valida el SecretRef pero no persiste los valores de token de texto plano resueltos en los metadatos del entorno del servicio supervisor.
+- Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, configure bloquea la instalación del demonio con una guía de remediation accionable.
 - Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, configure bloquea la instalación del demonio hasta que el modo se establezca explícitamente.
 
 ## Ejemplos
@@ -66,5 +72,5 @@ openclaw configure --section gateway --section daemon
 
 ## Relacionado
 
-- [Referencia de la CLI](/es/cli)
-- [Configuración](/es/gateway/configuration)
+- [Referencia de CLI](/es/cli)
+- [Configuration](/es/gateway/configuration)

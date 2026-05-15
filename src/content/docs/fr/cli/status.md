@@ -2,13 +2,11 @@
 summary: "Référence CLI pour `openclaw status` (diagnostics, sondages, instantanés d'utilisation)"
 read_when:
   - You want a quick diagnosis of channel health + recent session recipients
-  - You want a pasteable “all” status for debugging
-title: "Status"
+  - You want a pasteable "all" status for debugging
+title: "openclaw status"
 ---
 
-# `openclaw status`
-
-Diagnostics pour les channels + sessions.
+Diagnostics for channels + sessions.
 
 ```bash
 openclaw status
@@ -19,21 +17,24 @@ openclaw status --usage
 
 Notes :
 
-- `--deep` exécute des sondes en direct (WhatsApp Web + Telegram + Discord + Slack + Signal).
-- `--usage` affiche les fenêtres d'utilisation normalisées du fournisseur sous la forme `X% left`.
-- La sortie de l'état de la session sépare `Execution:` de `Runtime:`. `Execution` est le chemin du bac à sable (`direct`, `docker/*`), tandis que `Runtime` vous indique si la session utilise `OpenClaw Pi Default`, `OpenAI Codex`, un backend CLI, ou un backend ACP tel que `codex (acp/acpx)`. Voir [Runtimes de l'agent](/fr/concepts/agent-runtimes) pour la distinction fournisseur/modèle/runtime.
-- Les champs bruts `usage_percent` / `usagePercent` de MiniMax correspondent au quota restant, donc OpenClaw les inverse avant l'affichage ; les champs basés sur le nombre prévalent lorsqu'ils sont présents. Les réponses `model_remains` privilégient l'entrée du modèle de chat, déduisent l'étiquette de la fenêtre à partir des horodatages si nécessaire, et incluent le nom du modèle dans l'étiquette du plan.
-- Lorsque l'instantané de la session actuelle est fragmenté, `/status` peut reconstituer les compteurs de jetons et de cache à partir du journal d'utilisation de la transcription le plus récent. Les valeurs actuelles non nulles existantes prévalent toujours sur les valeurs de secours de la transcription.
-- Le mécanisme de secours de la transcription peut également récupérer l'étiquette du modèle d'exécution actif lorsque l'entrée de la session en direct ne la contient pas. Si ce modèle de transcription diffère du modèle sélectionné, l'état résout la fenêtre de contexte par rapport au modèle d'exécution récupéré plutôt qu'au modèle sélectionné.
-- Pour la comptabilisation de la taille du prompt, le mécanisme de secours de la transcription privilégie le total orienté prompt le plus important lorsque les métadonnées de la session sont manquantes ou plus petites, afin que les sessions de fournisseurs personnalisés ne se réduisent pas à des affichages de jetons `0`.
-- La sortie inclut les magasins de session par agent lorsque plusieurs agents sont configurés.
-- La vue d'ensemble inclut l'état d'installation/d'exécution du service hôte du Gateway et du nœud, le cas échéant.
-- La vue d'ensemble inclut le canal de mise à jour + le SHA de git (pour les extraits source).
-- Les informations de mise à jour apparaissent dans la vue d'ensemble ; si une mise à jour est disponible, l'état affiche un conseil pour exécuter `openclaw update` (voir [Mise à jour](/fr/install/updating)).
-- Les surfaces d'état en lecture seule (`status`, `status --json`, `status --all`) résolvent les SecretRefs pris en charge pour leurs chemins de configuration ciblés lorsque cela est possible.
-- Si un SecretRef de channel pris en charge est configuré mais indisponible dans le chemin de commande actuel, l'état reste en lecture seule et signale une sortie dégradée au lieu de planter. La sortie humaine affiche des avertissements tels que « configured token unavailable in this command path », et la sortie JSON inclut `secretDiagnostics`.
-- Lorsque la résolution de SecretRef locale à la commande réussit, l'état privilégie l'instantané résolu et efface les marqueurs de channel transitoires « secret unavailable » de la sortie finale.
-- `status --all` inclut une ligne de vue d'ensemble des Secrets et une section de diagnostic qui résume les diagnostics des secrets (tronqués pour la lisibilité) sans arrêter la génération du rapport.
+- `--deep` runs live probes (WhatsApp Web + Telegram + Discord + Slack + Signal).
+- Plain `openclaw status` stays on the fast read-only path and marks memory as `not checked` instead of unavailable when it skips memory inspection. Heavy security audit, plugin compatibility, and memory-vector probes are left to `openclaw status --all`, `openclaw status --deep`, `openclaw security audit`, and `openclaw memory status --deep`.
+- `status --json --all` reports memory details from the active memory plugin runtime selected by `plugins.slots.memory`. Custom memory plugins can leave built-in `agents.defaults.memorySearch.enabled` disabled and still report their own files, chunks, vector, and FTS state.
+- `--usage` prints normalized provider usage windows as `X% left`.
+- Session status output separates `Execution:` from `Runtime:`. `Execution` is the sandbox path (`direct`, `docker/*`), while `Runtime` tells you whether the session is using `OpenClaw Pi Default`, `OpenAI Codex`, a CLI backend, or an ACP backend such as `codex (acp/acpx)`. See [Agent runtimes](/fr/concepts/agent-runtimes) for the provider/model/runtime distinction.
+- MiniMax's raw `usage_percent` / `usagePercent` fields are remaining quota, so OpenClaw inverts them before display; count-based fields win when present. `model_remains` responses prefer the chat-model entry, derive the window label from timestamps when needed, and include the model name in the plan label.
+- Lorsque l'instantané de la session actuelle est clairsemé, `/status` peut remplir les compteurs de jetons et de cache à partir du journal d'utilisation de la transcription le plus récent. Les valeurs actives non nulles existantes priment toujours sur les valeurs de secours de la transcription.
+- `/status` inclut le temps de fonctionnement compact du processus Gateway et le temps de fonctionnement du système hôte.
+- Le repli sur la transcription peut également récupérer l'étiquette du modèle d'exécution actif lorsque l'entrée de la session active ne la contient pas. Si ce modèle de transcription diffère du modèle sélectionné, le statut résout la fenêtre de contexte par rapport au modèle d'exécution récupéré au lieu du modèle sélectionné.
+- Pour la comptabilisation de la taille du prompt, le repli sur la transcription préfère le total orienté prompt le plus élevé lorsque les métadonnées de la session sont manquantes ou plus petites, afin que les sessions des fournisseurs personnalisés ne s'effondrent pas dans des affichages de jetons `0`.
+- La sortie inclut les magasins de sessions par agent lorsque plusieurs agents sont configurés.
+- La vue d'ensemble inclut le statut d'installation/d'exécution du service Gateway + de l'hôte du nœud lorsque disponible.
+- La vue d'ensemble inclut le canal de mise à jour + le SHA git (pour les extraits source).
+- Les informations de mise à jour apparaissent dans la vue d'ensemble ; si une mise à jour est disponible, le statut affiche un conseil pour exécuter `openclaw update` (voir [Mise à jour](/fr/install/updating)).
+- Les surfaces de statut en lecture seule (`status`, `status --json`, `status --all`) résolvent les SecretRefs pris en charge pour leurs chemins de configuration ciblés lorsque cela est possible.
+- Si un SecretRef de canal pris en charge est configuré mais indisponible dans le chemin de commande actuel, le statut reste en lecture seule et signale une sortie dégradée au lieu de planter. La sortie humaine affiche des avertissements tels que "configured token unavailable in this command path", et la sortie JSON inclut `secretDiagnostics`.
+- Lorsque la résolution locale de commande du SecretRef réussit, le statut privilégie l'instantané résolu et efface les marqueurs de canal transitoires "secret unavailable" de la sortie finale.
+- `status --all` inclut une ligne de vue d'ensemble des Secrets et une section de diagnostic qui résume les diagnostics de secrets (tronqués pour la lisibilité) sans arrêter la génération du rapport.
 
 ## Connexes
 

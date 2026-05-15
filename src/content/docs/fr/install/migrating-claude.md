@@ -43,9 +43,19 @@ OpenClaw importe l'état local de Claude via le provider de migration Claude int
 ## Ce qui est importé
 
 <AccordionGroup>
-  <Accordion title="Instructions et mémoire">- Le contenu du projet `CLAUDE.md` et `.claude/CLAUDE.md` est copié ou ajouté dans l'espace de travail de l'agent OpenClaw `AGENTS.md`. - Le contenu utilisateur `~/.claude/CLAUDE.md` est ajouté dans l'espace de travail `USER.md`.</Accordion>
-  <Accordion title="Serveurs MCP">Les définitions de serveur MCP sont importées depuis le projet `.mcp.json`, Claude Code `~/.claude.json`, et Claude Desktop `claude_desktop_config.json` lorsqu'ils sont présents.</Accordion>
-  <Accordion title="Compétences et commandes">- Les compétences Claude avec un fichier `SKILL.md` sont copiées dans le répertoire des compétences de l'espace de travail OpenClaw. - Les fichiers Markdown de commandes Claude sous `.claude/commands/` ou `~/.claude/commands/` sont convertis en compétences OpenClaw avec `disable-model-invocation: true`.</Accordion>
+  <Accordion title="Instructions and memory">
+    - Le contenu du projet `CLAUDE.md` et `.claude/CLAUDE.md` est copié ou ajouté à l'espace de travail de l'agent OpenClaw `AGENTS.md`.
+    - Le contenu `~/.claude/CLAUDE.md` de l'utilisateur est ajouté à l'espace de travail `USER.md`.
+
+  </Accordion>
+  <Accordion title="Serveurs MCP">
+    Les définitions de serveur MCP sont importées depuis le projet `.mcp.json`, Claude Code `~/.claude.json`, et Claude Desktop `claude_desktop_config.json` lorsqu'ils sont présents.
+  </Accordion>
+  <Accordion title="Skills and commands">
+    - Les compétences Claude avec un fichier `SKILL.md` sont copiées dans le répertoire des compétences de l'espace de travail OpenClaw.
+    - Les fichiers Markdown de commandes Claude sous `.claude/commands/` ou `~/.claude/commands/` sont convertis en compétences OpenClaw avec `disable-model-invocation: true`.
+
+  </Accordion>
 </AccordionGroup>
 
 ## Ce qui reste en archive uniquement

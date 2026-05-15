@@ -1,5 +1,5 @@
 ---
-summary: "Installer et configurer Node.js pour OpenClaw — exigences de version, options d'installation et dépannage du PATH"
+summary: "Installer et configurer Node.js pour OpenClaw - exigences de version, options d'installation et dépannage du PATH"
 title: "Node.js"
 read_when:
   - "You need to install Node.js before installing OpenClaw"
@@ -7,7 +7,7 @@ read_when:
   - "npm install -g fails with permissions or PATH issues"
 ---
 
-OpenClaw nécessite **Node 22.14 ou une version plus récente**. **Node 24 est l'environnement d'exécution par défaut et recommandé** pour les installations, l'intégration continue et les workflows de publication. Node 22 continue d'être pris en charge via la ligne LTS active. Le [script d'installation](/fr/install#alternative-install-methods) détectera et installera Node automatiquement — cette page est destinée au cas où vous souhaiteriez configurer Node vous-même et vous assurer que tout est correctement connecté (versions, PATH, installations globales).
+OpenClaw nécessite **Node 22.16 ou une version plus récente**. **Node 24 est l'exécution par défaut et recommandée** pour les installations, l'CI et les workflows de publication. Node 22 reste pris en charge via la branche LTS active. Le [script d'installation](/fr/install#alternative-install-methods) détectera et installera Node automatiquement - cette page est destinée au cas où vous souhaiteriez configurer Node vous-même et vous assurer que tout est correctement connecté (versions, PATH, installations globales).
 
 ## Vérifiez votre version
 
@@ -15,7 +15,7 @@ OpenClaw nécessite **Node 22.14 ou une version plus récente**. **Node 24 est l
 node -v
 ```
 
-Si cela affiche `v24.x.x` ou une version supérieure, vous utilisez la version par défaut recommandée. Si cela affiche `v22.14.x` ou une version supérieure, vous êtes sur la voie LTS Node 22 prise en charge, mais nous recommandons tout de même de passer à Node 24 lorsque cela est possible. Si Node n'est pas installé ou si la version est trop ancienne, choisissez une méthode d'installation ci-dessous.
+Si cela affiche `v24.x.x` ou une version supérieure, vous êtes sur la version par défaut recommandée. Si cela affiche `v22.16.x` ou une version supérieure, vous êtes sur la branche Node 22 LTS prise en charge, mais nous recommandons tout de même de passer à Node 24 lorsque cela est possible. Si Node n'est pas installé ou si la version est trop ancienne, choisissez une méthode d'installation ci-dessous.
 
 ## Installer Node
 
@@ -65,12 +65,12 @@ Si cela affiche `v24.x.x` ou une version supérieure, vous utilisez la version p
   </Tab>
 </Tabs>
 
-<Accordion title="Utiliser un gestionnaire de versions (nvm, fnm, mise, asdf)">
-  Les gestionnaires de versions vous permettent de basculer facilement entre les versions de Node. Options populaires :
+<Accordion title="Utilisation d'un gestionnaire de versions (nvm, fnm, mise, asdf)">
+  Les gestionnaires de versions vous permettent de passer facilement d'une version de Node à l'autre. Options populaires :
 
-- [**fnm**](https://github.com/Schniz/fnm) — rapide, multiplateforme
-- [**nvm**](https://github.com/nvm-sh/nvm) — largement utilisé sur macOS/Linux
-- [**mise**](https://mise.jdx.dev/) — polyglotte (Node, Python, Ruby, etc.)
+- [**fnm**](https://github.com/Schniz/fnm) - rapide, multiplateforme
+- [**nvm**](https://github.com/nvm-sh/nvm) - largement utilisé sur macOS/Linux
+- [**mise**](https://mise.jdx.dev/) - polyglotte (Node, Python, Ruby, etc.)
 
 Exemple avec fnm :
 
@@ -137,6 +137,6 @@ Ajoutez la ligne `export PATH=...` à votre `~/.bashrc` ou `~/.zshrc` pour rendr
 
 ## Connexes
 
-- [Vue d'ensemble de l'installation](/fr/install) — toutes les méthodes d'installation
-- [Mise à jour](/fr/install/updating) — tenir OpenClaw à jour
-- [Getting Started](/fr/start/getting-started) — premiers pas après l'installation
+- [Vue d'ensemble de l'installation](/fr/install) - toutes les méthodes d'installation
+- [Mise à jour](/fr/install/updating) - tenir OpenClaw à jour
+- [Getting Started](/fr/start/getting-started) - premiers pas après l'installation

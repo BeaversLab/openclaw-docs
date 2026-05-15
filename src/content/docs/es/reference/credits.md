@@ -5,8 +5,6 @@ read_when:
 title: "Créditos"
 ---
 
-# Créditos y reconocimientos
-
 ## El nombre
 
 OpenClaw = CLAW + TARDIS, porque cada langosta espacial necesita una máquina del tiempo y del espacio.
@@ -14,7 +12,7 @@ OpenClaw = CLAW + TARDIS, porque cada langosta espacial necesita una máquina de
 ## Créditos
 
 - **Peter Steinberger** ([@steipete](https://x.com/steipete)) - Creador, susurrador de langostas
-- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Creador de Pi, experto en pruebas de penetración de seguridad
+- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Creador de Pi, probador de seguridad de penetración
 - **Clawd** - La langosta espacial que exigió un mejor nombre
 
 ## Colaboradores principales
@@ -31,5 +29,5 @@ MIT - Libre como una langosta en el océano.
 
 ## Relacionado
 
-- [Uso y costes de tokens](/es/reference/token-use)
-- [Política de lanzamientos](/es/reference/RELEASING)
+- [Uso y costos de tokens](/es/reference/token-use)
+- [Política de lanzamiento](/es/reference/RELEASING)

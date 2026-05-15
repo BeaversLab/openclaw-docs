@@ -268,35 +268,40 @@ const adapter: ChannelOutboundAdapter = {
 在桥接旧代码时，使用来自 `openclaw/plugin-sdk/interactive-runtime` 的助手：
 
 ```ts
-import { interactiveReplyToPresentation, normalizeMessagePresentation, presentationToInteractiveReply, renderMessagePresentationFallbackText } from "openclaw/plugin-sdk/interactive-runtime";
+import { interactiveReplyToPresentation, normalizeMessagePresentation, presentationToInteractiveControlsReply, presentationToInteractiveReply, renderMessagePresentationFallbackText } from "openclaw/plugin-sdk/interactive-runtime";
 ```
 
 新代码应直接接受或生成 `MessagePresentation`。
 
-## 投递固定
+`presentationToInteractiveReply(...)` 通过将 title、text、context、buttons 和 selects 映射到较旧的 `InteractiveReply` 形状来保留可见的呈现文本。已经原生绘制 title、text、context 和 divider 块的组件渲染器应该改用 `presentationToInteractiveControlsReply(...)`，然后仅追加 button 和 select 控件。
 
-固定是投递行为，不是展示行为。请使用 `delivery.pin` 而不是提供商原生字段，例如 `channelData.telegram.pin`。
+`renderMessagePresentationFallbackText(...)` 对于没有文本回退的呈现块（例如仅包含分隔符的呈现）返回空字符串。需要非空发送正文的传输可以传递 `emptyFallback` 以选择最小正文，而无需更改默认回退约定。
+
+## 交付固定
+
+固定是交付行为，而非呈现。请使用 `delivery.pin` 而非提供商原生字段（如 `channelData.telegram.pin`）。
 
 语义：
 
-- `pin: true` 固定第一条成功投递的消息。
+- `pin: true` 固定第一条成功交付的消息。
 - `pin.notify` 默认为 `false`。
 - `pin.required` 默认为 `false`。
-- 可选固定失败会降级并保持已发送的消息完整。
-- 必需固定失败会导致投递失败。
-- 分块消息固定的是第一个投递的块，而不是尾部块。
+- 可选固定失败会降级并保持发送的消息完整。
+- 必需固定失败会导致交付失败。
+- 分块消息固定第一个已交付的块，而非尾部块。
 
 对于提供商支持这些操作的现有消息，手动 `pin`、`unpin` 和 `pins` 消息操作仍然存在。
 
 ## 插件作者检查清单
 
-- 当渠道可以渲染或安全降级语义展示时，从 `describeMessageTool(...)` 声明 `presentation`。
+- 当渠道能够呈现或安全降级语义呈现时，从 `describeMessageTool(...)` 声明 `presentation`。
 - 将 `presentationCapabilities` 添加到运行时出站适配器。
-- 在运行时代码中实现 `renderPresentation`，而不是在控制平面插件设置代码中。
-- 请将原生 UI 库排除在热设置/目录路径之外。
+- 在运行时代码中实现 `renderPresentation`，而非控制平面插件设置代码。
+- 请勿将原生 UI 库放入热设置/目录路径中。
 - 在渲染器和测试中保留平台限制。
-- 为不支持的按钮、选择、URL 按钮、标题/文本重复以及混合 `message` 加上 `presentation` 发送添加回退测试。
-- 仅当提供商能够固定已发送消息 ID 时，才通过 `deliveryCapabilities.pin` 和 `pinDeliveredMessage` 添加传递固定支持。
+- 为不支持的按钮、选择、URL 按钮、title/text 重复以及混合 `message` 和 `presentation` 发送添加回退测试。
+- 仅当提供商能够固定已发送消息 ID 时，才通过 `deliveryCapabilities.pin` 和
+  `pinDeliveredMessage` 添加传递固定支持。
 - 不要通过共享消息操作架构暴露新的提供商原生卡片/块/组件/按钮字段。
 
 ## 相关文档

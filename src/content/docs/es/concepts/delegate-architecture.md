@@ -5,7 +5,7 @@ read_when: "Desea un agente con su propia identidad que actúe en nombre de los 
 status: activo
 ---
 
-Objetivo: ejecutar OpenClaw como un **delegado con nombre** — un agente con su propia identidad que actúa "en nombre de" las personas de una organización. El agente nunca suplanta a un ser humano. Envía, lee y programa bajo su propia cuenta con permisos de delegación explícitos.
+Objetivo: ejecutar OpenClaw como un **delegado con nombre** - un agente con su propia identidad que actúa "en nombre de" las personas de una organización. El agente nunca suplanta a un ser humano. Envía, lee y programa bajo su propia cuenta con permisos de delegación explícitos.
 
 Esto extiende el [Enrutamiento multiagente](/es/concepts/multi-agent) del uso personal a los despliegues organizacionales.
 
@@ -14,15 +14,15 @@ Esto extiende el [Enrutamiento multiagente](/es/concepts/multi-agent) del uso pe
 Un **delegado** es un agente de OpenClaw que:
 
 - Tiene su **propia identidad** (dirección de correo electrónico, nombre para mostrar, calendario).
-- Actúa **en nombre de** uno o más humanos — nunca finge ser ellos.
+- Actúa **en nombre de** uno o más humanos: nunca finge serlos.
 - Opera bajo **permisos explícitos** otorgados por el proveedor de identidad de la organización.
-- Sigue **[órdenes permanentes](/es/automation/standing-orders)** — reglas definidas en el `AGENTS.md` del agente que especifican lo que puede hacer de forma autónoma frente a lo que requiere aprobación humana (ver [Cron Jobs](/es/automation/cron-jobs) para la ejecución programada).
+- Sigue **[órdenes permanentes](/es/automation/standing-orders)** - reglas definidas en el `AGENTS.md` del agente que especifican qué puede hacer de forma autónoma frente a lo que requiere aprobación humana (ver [Cron Jobs](/es/automation/cron-jobs) para la ejecución programada).
 
 El modelo de delegado se asigna directamente a cómo funcionan los asistentes ejecutivos: tienen sus propias credenciales, envían correos "en nombre de" su principal y siguen un ámbito de autoridad definido.
 
 ## ¿Por qué delegados?
 
-El modo predeterminado de OpenClaw es un **asistente personal** — un humano, un agente. Los delegados extienden esto a las organizaciones:
+El modo predeterminado de OpenClaw es un **asistente personal** - un humano, un agente. Los delegados extienden esto a las organizaciones:
 
 | Modo personal                  | Modo delegado                                       |
 | ------------------------------ | --------------------------------------------------- |
@@ -48,7 +48,7 @@ El delegado puede **leer** datos organizacionales y **redactar** mensajes para s
 - Calendario: leer eventos, señalar conflictos, resumir el día.
 - Archivos: leer documentos compartidos, resumir contenido.
 
-Este nivel solo requiere permisos de lectura del proveedor de identidades. El agente no escribe en ningún buzón ni calendario; los borradores y propuestas se entregan a través del chat para que la persona actúe sobre ellos.
+Este nivel solo requiere permisos de lectura del proveedor de identidad. El agente no escribe en ningún buzón ni calendario: los borradores y propuestas se entregan a través del chat para que el humano actúe sobre ellos.
 
 ### Nivel 2: Enviar en nombre de
 
@@ -89,7 +89,7 @@ Estas reglas se cargan en cada sesión. Son la última línea de defensa indepen
 
 ### Restricciones de herramientas
 
-Use la política de herramientas por agente (v2026.1.6+) para hacer cumplir los límites en el nivel de Gateway. Esto opera independientemente de los archivos de personalidad del agente; incluso si se instruye al agente para que eluda sus reglas, el Gateway bloquea la llamada a la herramienta:
+Utilice la política de herramientas por agente (v2026.1.6+) para hacer cumplir los límites a nivel de Gateway. Esto opera de forma independiente de los archivos de personalidad del agente; incluso si se le indica al agente que eluda sus reglas, el Gateway bloquea la llamada a la herramienta:
 
 ```json5
 {
@@ -155,7 +155,7 @@ Configure la personalidad del delegado en sus archivos de espacio de trabajo:
 
 ### 2. Configurar la delegación del proveedor de identidad
 
-El delegado necesita su propia cuenta en su proveedor de identidad con permisos de delegación explícitos. **Aplique el principio de menor privilegio** — comience con el Nivel 1 (solo lectura) y escale solo cuando el caso de uso lo exija.
+El delegado necesita su propia cuenta en su proveedor de identidad con permisos de delegación explícitos. **Aplique el principio de menor privilegio**: comience con el Nivel 1 (solo lectura) y escale solo cuando el caso de uso lo exija.
 
 #### Microsoft 365
 
@@ -280,7 +280,7 @@ Una configuración delegada completa para un asistente organizacional que maneja
 }
 ```
 
-El `AGENTS.md` del delegado define su autoridad autónoma: qué puede hacer sin preguntar, qué requiere aprobación y qué está prohibido. Los [Trabajos de Cron](/es/automation/cron-jobs) impulsan su programación diaria.
+El `AGENTS.md` del delegado define su autoridad autónoma: qué puede hacer sin preguntar, qué requiere aprobación y qué está prohibido. Los [Cron Jobs](/es/automation/cron-jobs) impulsan su horario diario.
 
 Si concede `sessions_history`, recuerde que es una vista de recuerdo limitada y filtrada por seguridad. OpenClaw redacta texto similar a credenciales/tokens, trunca contenido largo, elimina etiquetas de pensamiento / andamiaje de `<relevant-memories>` / cargas útiles XML de llamadas a herramientas en texto plano (incluyendo `<tool_call>...</tool_call>`,
 `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`,
@@ -294,13 +294,13 @@ en lugar de devolver un volcado de transcripción sin procesar.
 El modelo de delegado funciona para cualquier organización pequeña:
 
 1. **Cree un agente delegado** por organización.
-2. **Endurezca primero** — restricciones de herramientas, espacio aislado (sandbox), bloqueos duros, rastro de auditoría.
+2. **Primero endurezca (Harden first)** - restricciones de herramientas, sandbox, bloqueos duros, registro de auditoría.
 3. **Otorgue permisos con ámbito** a través del proveedor de identidad (mínimo privilegio).
 4. **Defina [órdenes permanentes](/es/automation/standing-orders)** para operaciones autónomas.
 5. **Programe trabajos cron** para tareas recurrentes.
 6. **Revise y ajuste** el nivel de capacidad a medida que se construye la confianza.
 
-Múltiples organizaciones pueden compartir un servidor Gateway utilizando el enrutamiento multiagente — cada organización obtiene su propio agente aislado, espacio de trabajo y credenciales.
+Múltiples organizaciones pueden compartir un servidor Gateway utilizando el enrutamiento multiagente: cada organización obtiene su propio agente aislado, espacio de trabajo y credenciales.
 
 ## Relacionado
 

@@ -116,7 +116,7 @@ macOS 配套應用程式提供了一個核取方塊：
 
 - **Settings → General → Allow Camera** (`openclaw.cameraEnabled`)
   - 預設值：**關閉**
-  - 關閉時：相機請求會回傳「Camera disabled by user」。
+  - 關閉時：相機請求會返回「使用者已停用相機」。
 
 ### CLI 助手 (node invoke)
 

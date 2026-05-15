@@ -6,18 +6,16 @@ read_when:
 title: "Kubernetes"
 ---
 
-# 在 Kubernetes 上執行 OpenClaw
-
-在 Kubernetes 上執行 OpenClaw 的最小起點 — 並非可用於生產環境的部署。它涵蓋了核心資源，旨在適應您的環境。
+在 Kubernetes 上執行 OpenClaw 的最小起點——並非可用於生產環境的部署。它涵蓋了核心資源，旨在適應您的環境。
 
 ## 為什麼不使用 Helm？
 
-OpenClaw 是一個帶有一些配置檔案的單一容器。有趣的客製化在於代理程式內容（markdown 檔案、技能、配置覆蓋），而非基礎設施範本。Kustomize 可在沒有 Helm chart 開銷的情況下處理疊加層。如果您的部署變得更複雜，可以在這些清單之上疊加 Helm chart。
+OpenClaw 是一個帶有設定檔的單一容器。有趣的客製化在於代理程式內容（Markdown 檔案、技能、設定覆寫），而非基礎架構範本。Kustomize 可在沒有 Helm 圖表開銷的情況下處理疊加層。如果您的部署變得更複雜，可以在這些清單之上疊加 Helm 圖表。
 
 ## 您需要什麼
 
-- 一個正在執行的 Kubernetes 叢集 (AKS, EKS, GKE, k3s, kind, OpenShift 等)
-- `kubectl` 已連線到您的叢集
+- 一個執行中的 Kubernetes 叢集（AKS、EKS、GKE、k3s、kind、OpenShift 等）
+- `kubectl` 已連線至您的叢集
 - 至少一個模型供應商的 API 金鑰
 
 ## 快速開始
@@ -31,15 +29,15 @@ kubectl port-forward svc/openclaw 18789:18789 -n openclaw
 open http://localhost:18789
 ```
 
-檢索為控制 UI 配置的共享密鑰。此部署腳本默認創建令牌認證：
+擷取為控制 UI 設定的共用密鑰。此部署腳本預設會建立 Token 認證：
 
 ```bash
 kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GATEWAY_TOKEN}' | base64 -d
 ```
 
-對於本地除錯，`./scripts/k8s/deploy.sh --show-token` 會在部署後印出 token。
+對於本機除錯，`./scripts/k8s/deploy.sh --show-token` 會在部署後列印 Token。
 
-## 使用 Kind 進行本地測試
+## 使用 Kind 進行本機測試
 
 如果您沒有叢集，請使用 [Kind](https://kind.sigs.k8s.io/) 在本機建立一個：
 
@@ -50,7 +48,7 @@ kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GAT
 
 然後照常使用 `./scripts/k8s/deploy.sh` 進行部署。
 
-## 逐步操作
+## 逐步說明
 
 ### 1) 部署
 
@@ -62,7 +60,7 @@ export <PROVIDER>_API_KEY="..."
 ./scripts/k8s/deploy.sh
 ```
 
-該腳本會使用 API 金鑰和自動產生的 Gateway Token 建立 Kubernetes Secret，然後進行部署。如果 Secret 已存在，它將保留目前的 Gateway Token 和任何未被變更的供應商金鑰。
+該腳本會使用 API 金鑰和自動產生的 Gateway Token 建立 Kubernetes Secret，然後進行部署。如果 Secret 已存在，它將保留目前的 Gateway Token 以及任何未變更的供應商金鑰。
 
 **選項 B** — 分別建立 Secret：
 
@@ -72,7 +70,7 @@ export <PROVIDER>_API_KEY="..."
 ./scripts/k8s/deploy.sh
 ```
 
-如果您希望將 token 輸出到 stdout 以進行本地測試，請將 `--show-token` 與任一指令搭配使用。
+如果您希望將 Token 列印至標準輸出以進行本機測試，請在任一指令中使用 `--show-token`。
 
 ### 2) 存取 Gateway
 
@@ -81,7 +79,7 @@ kubectl port-forward svc/openclaw 18789:18789 -n openclaw
 open http://localhost:18789
 ```
 
-## 會部署什麼
+## 部署了什麼
 
 ```
 Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
@@ -102,13 +100,13 @@ Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
 ./scripts/k8s/deploy.sh
 ```
 
-### Gateway 配置
+### Gateway 設定
 
-編輯 `scripts/k8s/manifests/configmap.yaml` 中的 `openclaw.json`。請參閱 [Gateway configuration](/zh-Hant/gateway/configuration) 以獲得完整參考。
+編輯 `scripts/k8s/manifests/configmap.yaml` 中的 `openclaw.json`。完整參考請參閱 [Gateway configuration](/zh-Hant/gateway/configuration)。
 
 ### 新增供應商
 
-匯出額外的金鑰後重新執行：
+匯出額外的金鑰並重新執行：
 
 ```bash
 export ANTHROPIC_API_KEY="..."
@@ -117,9 +115,9 @@ export OPENAI_API_KEY="..."
 ./scripts/k8s/deploy.sh
 ```
 
-除非您覆蓋現有的供應商金鑰，否則它們會保留在 Secret 中。
+現有的供應商金鑰會保留在 Secret 中，除非您覆寫它們。
 
-或直接修補 Secret：
+或者直接修補 Secret：
 
 ```bash
 kubectl patch secret openclaw-secrets -n openclaw \
@@ -127,7 +125,7 @@ kubectl patch secret openclaw-secrets -n openclaw \
 kubectl rollout restart deployment/openclaw -n openclaw
 ```
 
-### 自訂命名空間
+### 自訂 Namespace
 
 ```bash
 OPENCLAW_NAMESPACE=my-namespace ./scripts/k8s/deploy.sh
@@ -135,21 +133,21 @@ OPENCLAW_NAMESPACE=my-namespace ./scripts/k8s/deploy.sh
 
 ### 自訂映像檔
 
-編輯 `image` 欄位於 `scripts/k8s/manifests/deployment.yaml` 中：
+編輯 `scripts/k8s/manifests/deployment.yaml` 中的 `image` 欄位：
 
 ```yaml
 image: ghcr.io/openclaw/openclaw:latest # or pin to a specific version from https://github.com/openclaw/openclaw/releases
 ```
 
-### 超越 Port Forward 的暴露
+### 超越 Port Forward 的公開方式
 
-預設清單將 gateway 繫結到 Pod 內部的 loopback。這適用於 `kubectl port-forward`，但不適用於需要到達 Pod IP 的 Kubernetes `Service` 或 Ingress 路徑。
+預設的清單會將閘道繫結到 Pod 內的 loopback。這適用於 `kubectl port-forward`，但對於需要連接到 Pod IP 的 Kubernetes `Service` 或 Ingress 路徑則無法運作。
 
-如果您想透過 Ingress 或負載平衡器暴露 gateway：
+如果您想透過 Ingress 或負載平衡器公開閘道：
 
-- 將 `scripts/k8s/manifests/configmap.yaml` 中的 gateway 繫結從 `loopback` 更改為符合您部署模型的非 loopback 繫結
-- 保持啟用 gateway 驗證並使用適當的 TLS 終止入口
-- 使用支援的 Web 安全模型設定 Control UI 以進行遠端存取（例如 HTTPS/Tailscale Serve 以及必要的明確允許來源）
+- 在 `scripts/k8s/manifests/configmap.yaml` 中將閘道繫結從 `loopback` 更改為符合您的部署模型的非 loopback 繫結
+- 保持啟用閘道驗證，並使用適當的 TLS 終止入口點
+- 使用支援的 Web 安全模型（例如 HTTPS/Tailscale Serve 以及必要時明確指定的允許來源）設定 Control UI 以進行遠端存取
 
 ## 重新部署
 
@@ -157,7 +155,7 @@ image: ghcr.io/openclaw/openclaw:latest # or pin to a specific version from http
 ./scripts/k8s/deploy.sh
 ```
 
-這會套用所有清單並重新啟動 Pod，以套用任何設定或 Secret 的變更。
+這會套用所有清單並重新啟動 Pod，以套用任何組態或 Secret 的變更。
 
 ## 拆除
 
@@ -169,12 +167,12 @@ image: ghcr.io/openclaw/openclaw:latest # or pin to a specific version from http
 
 ## 架構備註
 
-- Gateway 預設會繫結到 Pod 內部的 loopback，因此包含的設定是用於 `kubectl port-forward`
-- 沒有叢集範圍的資源 — 所有資源都位於單一命名空間中
-- 安全性：`readOnlyRootFilesystem`、`drop: ALL` 能力、非 root 使用者（UID 1000）
-- 預設設定將 Control UI 保持在較安全的本機存取路徑：loopback 繫結加上 `kubectl port-forward` 到 `http://127.0.0.1:18789`
-- 如果您超越本地主機存取，請使用支援的遠端模型：HTTPS/Tailscale 加上適當的 gateway 繫結和 Control UI 來源設定
-- Secrets 是在暫存目錄中產生的，並直接套用到叢集 — 不會將任何 Secret 資料寫入 repo checkout
+- 預設情況下，閘道會繫結到 Pod 內的 loopback，因此包含的設定適用於 `kubectl port-forward`
+- 沒有叢集範圍的資源 —— 所有資源都位於單一命名空間中
+- 安全性：`readOnlyRootFilesystem`、`drop: ALL` 功能、非 root 使用者（UID 1000）
+- 預設組態會將 Control UI 保持在較安全的本地存取路徑上：loopback 繫結加上 `kubectl port-forward` 到 `http://127.0.0.1:18789`
+- 如果您超出 localhost 存取範圍，請使用支援的遠端模型：HTTPS/Tailscale 加上適當的閘道繫結和 Control UI 來源設定
+- Secrets 是在暫存目錄中產生並直接套用到叢集 —— 沒有任何 Secret 資料會寫入 repo 檢出
 
 ## 檔案結構
 
@@ -194,4 +192,4 @@ scripts/k8s/
 
 - [Docker](/zh-Hant/install/docker)
 - [Docker VM runtime](/zh-Hant/install/docker-vm-runtime)
-- [安裝概覽](/zh-Hant/install)
+- [安裝概述](/zh-Hant/install)

@@ -101,7 +101,7 @@ openclaw models set venice/claude-opus-4-6
 Lister tous les modèles disponibles :
 
 ```bash
-openclaw models list | grep venice
+openclaw models list --all --provider venice
 ```
 
 Vous pouvez également exécuter `openclaw configure`, sélectionner **Modèle/auth**, et choisir **Venice AI**.
@@ -125,10 +125,10 @@ Utilisez le tableau ci-dessous pour choisir le bon modèle pour votre cas d'util
 
 Si Venice expose des modèles DeepSeek V4 tels que `venice/deepseek-v4-pro` ou
 `venice/deepseek-v4-flash`, OpenClaw remplit l'espace réservé de relecture `reasoning_content` requis de DeepSeek V4
-lors des tours d'appel d'outil de l'assistant lorsque le
-proxy l'omet. Venice rejette le contrôle de `thinking` de premier niveau natif de DeepSeek,
-donc OpenClaw garde cette correction de relecture spécifique au fournisseur séparée des contrôles de
-pensée du fournisseur DeepSeek natif.
+sur les messages de l'assistant lorsque le proxy
+l'omet. Venice rejette le contrôle de premier niveau `thinking` natif de DeepSeek, donc
+OpenClaw conserve cette correction de relecture spécifique au fournisseur séparée des contrôles
+de réflexion du fournisseur DeepSeek natif.
 
 ## Catalogue intégré (41 au total)
 
@@ -187,18 +187,18 @@ pensée du fournisseur DeepSeek natif.
 
 ## Découverte de modèles
 
-OpenClaw découvre automatiquement les modèles à partir de l'Venice API lorsque `VENICE_API_KEY` est défini. Si l'API est inaccessible, il revient à un catalogue statique.
+OpenClaw est fourni avec un catalogue de modèles initial Venice basé sur un manifeste pour le listing en lecture seule. L'actualisation au moment de l'exécution peut toujours découvrir des modèles à partir de Venice API, et revient au catalogue du manifeste si API est inaccessible.
 
-Le point de terminaison `/models` est public (aucune authentification requise pour la liste), mais l'inférence nécessite une clé API valide.
+Le point de terminaison `/models` est public (aucune authentification requise pour le listing), mais l'inférence nécessite une clé API valide.
 
 ## Streaming et support des outils
 
-| Fonctionnalité         | Support                                                                |
-| ---------------------- | ---------------------------------------------------------------------- |
-| **Streaming**          | Tous les modèles                                                       |
-| **Appel de fonctions** | La plupart des modèles (vérifiez `supportsFunctionCalling` dans l'API) |
-| **Vision/Images**      | Modèles marqués avec la fonctionnalité "Vision"                        |
-| **Mode JSON**          | Pris en charge via `response_format`                                   |
+| Fonctionnalité         | Support                                                          |
+| ---------------------- | ---------------------------------------------------------------- |
+| **Streaming**          | Tous les modèles                                                 |
+| **Appel de fonctions** | La plupart des modèles (voir `supportsFunctionCalling` dans API) |
+| **Vision/Images**      | Modèles marqués avec la fonctionnalité "Vision"                  |
+| **Mode JSON**          | Pris en charge via `response_format`                             |
 
 ## Tarification
 
@@ -238,7 +238,7 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
 ## Dépannage
 
 <AccordionGroup>
-  <Accordion title="Clé API non reconnue">
+  <Accordion title="APIClé API non reconnue">
     ```bash
     echo $VENICE_API_KEY
     openclaw models list | grep venice
@@ -248,10 +248,12 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
 
   </Accordion>
 
-<Accordion title="Modèle non disponible">Le catalogue de modèles Venice est mis à jour dynamiquement. Exécutez `openclaw models list` pour voir les modèles actuellement disponibles. Certains modèles peuvent être temporairement hors ligne.</Accordion>
+<Accordion title="Modèle non disponible" Venice>
+  Le catalogue de modèles Venice est mis à jour dynamiquement. Exécutez `openclaw models list` pour voir les modèles actuellement disponibles. Certains modèles peuvent être temporairement hors ligne.
+</Accordion>
 
-  <Accordion title="Problèmes de connexion">
-    L'Venice API se trouve à `https://api.venice.ai/api/v1`. Assurez-vous que votre réseau autorise les connexions HTTPS.
+  <Accordion title="Problèmes de connexion"VeniceAPI>
+    L'API Venice se trouve à `https://api.venice.ai/api/v1`. Assurez-vous que votre réseau autorise les connexions HTTPS.
   </Accordion>
 </AccordionGroup>
 

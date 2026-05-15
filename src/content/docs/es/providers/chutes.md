@@ -101,10 +101,11 @@ El catálogo de respaldo incluido contiene las referencias actuales de Chutes:
 
   </Accordion>
 
-  <Accordion title="Notes">
-    - Tanto el descubrimiento por clave de API como por OAuth utilizan el mismo id de proveedor `chutes`.
+  <Accordion title="Notas">
+    - El descubrimiento mediante API-key y OAuth utiliza el mismo id de proveedor `chutes`.
     - Los modelos de Chutes se registran como `chutes/<model-id>`.
-    - Si el descubrimiento falla al iniciar, se utiliza automáticamente el catálogo estático incluido.
+    - Si el descubrimiento falla al iniciar, el catálogo estático incluido se utiliza automáticamente.
+
   </Accordion>
 </AccordionGroup>
 

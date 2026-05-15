@@ -6,21 +6,19 @@ read_when:
 title: "Webhooks 外掛程式"
 ---
 
-# Webhooks (外掛程式)
+Webhooks 外掛程式新增經過驗證的 HTTP 路由，將外部自動化系統連結至 OpenClaw TaskFlows。
 
-Webhooks 外掛程式新增了經過驗證的 HTTP 路由，將外部自動化系統連結至 OpenClaw TaskFlows。
-
-當您希望受信任的系統（例如 Zapier、n8n、CI 工作或內部服務）建立和管理受管理的 TaskFlows，而不需要先編寫自訂外掛程式時，請使用它。
+當您希望信賴的系統（例如 Zapier、n8n、CI 工作或內部服務）能夠建立並驅動受管理的 TaskFlows，而無需先撰寫自訂外掛程式時，請使用此外掛程式。
 
 ## 執行位置
 
-Webhooks 外掛程式執行於 Gateway 處理程序內部。
+Webhooks 外掛程式執行於 Gateway 程序內部。
 
-如果您的 Gateway 在另一台機器上執行，請在該 Gateway 主機上安裝並設定外掛程式，然後重新啟動 Gateway。
+如果您的 Gateway 執行於另一台機器上，請在該 Gateway 主機上安裝並設定此外掛程式，然後重新啟動 Gateway。
 
 ## 設定路由
 
-在 `plugins.entries.webhooks.config` 下設定配置：
+在 `plugins.entries.webhooks.config` 下設定組態：
 
 ```json5
 {
@@ -53,45 +51,45 @@ Webhooks 外掛程式執行於 Gateway 處理程序內部。
 
 - `enabled`：選用，預設為 `true`
 - `path`：選用，預設為 `/plugins/webhooks/<routeId>`
-- `sessionKey`：擁有綁定 TaskFlows 的必填 session
-- `secret`：必填的共用金鑰或 SecretRef
-- `controllerId`：所建立受管理流程的選用控制器 ID
-- `description`：選用的操作員註記
+- `sessionKey`：擁有綁定 TaskFlows 的必要 session
+- `secret`：必要的共用金鑰或 SecretRef
+- `controllerId`：已建立受管理流程的選用控制器 ID
+- `description`：選用的操作員備註
 
 支援的 `secret` 輸入：
 
 - 純字串
 - 帶有 `source: "env" | "file" | "exec"` 的 SecretRef
 
-如果無法在啟動時解析金鑰支援路由的金鑰，外掛程式將跳過該路由並記錄警告，而不是暴露損壞的端點。
+如果依賴金鑰的路由在啟動時無法解析其金鑰，外掛程式將跳過該路由並記錄警告，而不會暴露損壞的端點。
 
 ## 安全模型
 
-每個路由都被信任以其設定 `sessionKey` 的 TaskFlow 權限執行操作。
+每個路由都被信任以其設定之 `sessionKey` 的 TaskFlow 權限進行操作。
 
-這意味著路由可以檢查和變更該 session 擁有的 TaskFlows，因此您應該：
+這意味著該路由可以檢查和變更該 session 擁有的 TaskFlows，因此您應該：
 
-- 為每個路由使用強大的唯一金鑰
-- 優先使用金鑰參照，而非行內明文金鑰
-- 將路由綁定至符合工作流程的最小權限 session
+- 為每個路由使用強式且唯一的金鑰
+- 優先使用金鑰參考，而非內嵌純文字金鑰
+- 將路由綁定至符合工作流程的最狹隘 session
 - 僅暴露您所需的特定 webhook 路徑
 
-外掛程式套用：
+外掛程式會套用：
 
 - 共用金鑰驗證
-- 要求主體大小與逾時防護
+- 請求主體大小與逾時防護
 - 固定視窗速率限制
-- 執行中要求限制
-- 透過 `api.runtime.taskFlow.bindSession(...)` 進行所有者綁定的 TaskFlow 存取
+- 進行中請求限制
+- 透過 `api.runtime.tasks.managedFlows.bindSession(...)` 進行擁有者綁定的 TaskFlow 存取
 
-## 要求格式
+## 請求格式
 
-發送 `POST` 要求並包含：
+發送包含以下內容的 `POST` 請求：
 
 - `Content-Type: application/json`
 - `Authorization: Bearer <secret>` 或 `x-openclaw-webhook-secret: <secret>`
 
-例如：
+範例：
 
 ```bash
 curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
@@ -102,7 +100,7 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 
 ## 支援的動作
 
-此外掛目前接受這些 JSON `action` 值：
+外掛程式目前接受這些 JSON `action` 值：
 
 - `create_flow`
 - `get_flow`
@@ -120,9 +118,9 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 
 ### `create_flow`
 
-為路由繫結的工作階段建立受管理的 TaskFlow。
+為路由繫結的工作階段建立受管 TaskFlow。
 
-例如：
+範例：
 
 ```json
 {
@@ -135,14 +133,14 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 
 ### `run_task`
 
-在現有的受管理 TaskFlow 中建立受管理的子任務。
+在現有的受管 TaskFlow 中建立受管子任務。
 
-允許的執行時期為：
+允許的執行環境為：
 
 - `subagent`
 - `acp`
 
-例如：
+範例：
 
 ```json
 {
@@ -156,7 +154,7 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 
 ## 回應格式
 
-成功的回傳回應：
+成功的回應會傳回：
 
 ```json
 {
@@ -166,7 +164,7 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 }
 ```
 
-被拒絕的請求會回傳：
+被拒絕的請求會傳回：
 
 ```json
 {
@@ -178,7 +176,7 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 }
 ```
 
-此外掛會刻意從 webhook 回應中清除擁有者/工作階段元資料。
+此外掛程式會刻意從 webhook 回應中清除擁有者/工作階段元資料。
 
 ## 相關文件
 

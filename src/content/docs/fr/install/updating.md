@@ -1,5 +1,5 @@
 ---
-summary: "Mise à jour sécurisée d'OpenClaw (installation globale ou source), plus stratégie de retour en arrière"
+summary: "Mettre à jour OpenClaw en toute sécurité (installation globale ou source), plus stratégie de retour en arrière"
 read_when:
   - Updating OpenClaw
   - Something breaks after an update
@@ -25,16 +25,22 @@ openclaw update --tag main
 openclaw update --dry-run   # preview without applying
 ```
 
-`--channel beta` privilégie la version bêta, mais l'exécution revient à stable/latest lorsque
-le tag bêta est manquant ou plus ancien que la dernière version stable. Utilisez `--tag beta`
-si vous souhaitez le dist-tag bêta brut npm pour une mise à jour ponctuelle de package.
+`openclaw update` n'accepte pas `--verbose`. Pour le diagnostic de mise à jour, utilisez
+`--dry-run` pour prévisualiser les actions planifiées, `--json` pour les résultats structurés ou
+`openclaw update status --json` pour inspecter l'état du canal et de la disponibilité. L'installeur
+possède son propre indicateur `--verbose`, mais cet indicateur ne fait pas partie de
+`openclaw update`.
+
+`--channel beta` préfère la version bêta, mais l'exécution revient à stable/latest lorsque
+l'étiquette bêta est manquante ou plus ancienne que la dernière version stable. Utilisez `--tag beta`
+si vous souhaitez le dist-tag bêta brut npm pour une mise à jour ponctuelle du package.
 
 Voir [Canaux de développement](/fr/install/development-channels) pour la sémantique des canaux.
 
 ## Basculer entre les installations npm et git
 
 Utilisez les canaux lorsque vous souhaitez changer le type d'installation. Le programme de mise à jour conserve votre
-état, votre configuration, vos identifiants et votre espace de travail dans `~/.openclaw` ; il modifie uniquement
+état, votre configuration, vos identifiants et votre espace de travail dans `~/.openclaw` ; il ne modifie que
 l'installation du code OpenClaw utilisée par le CLI et la passerelle.
 
 ```bash
@@ -45,7 +51,7 @@ openclaw update --channel dev
 openclaw update --channel stable
 ```
 
-Exécutez d'abord avec `--dry-run` pour prévisualiser le changement exact de mode d'installation :
+Exécutez d'abord avec `--dry-run` pour prévisualiser le basculement exact du mode d'installation :
 
 ```bash
 openclaw update --channel dev --dry-run
@@ -55,45 +61,51 @@ openclaw update --channel stable --dry-run
 Le canal `dev` assure une extraction git, la construit et installe le CLI global
 à partir de cette extraction. Les canaux `stable` et `beta` utilisent des installations de packages. Si la
 passerelle est déjà installée, `openclaw update` actualise les métadonnées du service
-et la redémarre sauf si vous passez `--no-restart`.
+et le redémarre, sauf si vous passez `--no-restart`.
 
-## Alternative : relancer l'installateur
+## Alternative : réexécuter l'installeur
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-Ajoutez `--no-onboard` pour ignorer l'intégration. Pour forcer un type d'installation spécifique via
+Ajoutez `--no-onboard` pour ignorer l'onboarding. Pour forcer un type d'installation spécifique via
 l'installateur, passez `--install-method git --no-onboard` ou
 `--install-method npm --no-onboard`.
 
-Si `openclaw update` échoue après la phase d'installation du package npm, relancez
-l'installateur. L'installateur n'appelle pas l'ancien programme de mise à jour ; il exécute directement l'installation
-du package global et peut récupérer une installation npm partiellement mise à jour.
+Si `openclaw update` échoue après la phase d'installation du paquet npm, relancez
+l'installateur. L'installateur n'appelle pas l'ancien outil de mise à jour ; il exécute l'installation
+globale du paquet directement et peut récupérer une installation npm partiellement mise à jour.
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method npm
 ```
 
-Pour figer la récupération sur une version ou un dist-tag spécifique, ajoutez `--version` :
+Pour figer la récupération à une version spécifique ou à une balise de distribution (dist-tag), ajoutez `--version` :
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method npm --version <version-or-dist-tag>
 ```
 
-## Alternative : npm, pnpm ou bun manuels
+## Alternative : npm, pnpm ou bun manuel
 
 ```bash
 npm i -g openclaw@latest
 ```
 
-Lorsque `openclaw update` gère une installation globale npm, il installe d'abord la cible dans
-un préfixe npm temporaire, vérifie l'inventaire `dist` empaqueté, puis échange
-l'arborescence de paquets propre contre le préfixe global réel. Cela évite à npm de superposer un
-nouveau paquet aux fichiers obsolètes de l'ancien paquet. Si la commande d'installation échoue,
+Préférez `openclaw update` pour les installations supervisées car il peut coordonner l'échange
+de paquets avec le service Gateway en cours d'exécution. Si vous mettez à jour manuellement alors qu'un
+Gateway géré est en cours d'exécution, redémarrez le Gateway immédiatement après la fin du gestionnaire
+de paquets afin que l'ancien processus ne continue pas à servir à partir des fichiers
+de paquets remplacés.
+
+Lorsque `openclaw update` gère une installation globale npm, il installe la cible dans
+un préfixe npm temporaire, vérifie l'inventaire `dist` du paquet, puis échange
+l'arborescence de paquets propre dans le véritable préfixe global. Cela évite à npm de superposer un
+nouveau paquet sur des fichiers obsolètes de l'ancien paquet. Si la commande d'installation échoue,
 OpenClaw réessaie une fois avec `--omit=optional`. Cette nouvelle tentative aide les hôtes où les dépendances
 optionnelles natives ne peuvent pas être compilées, tout en gardant l'échec original visible
-si la solution de secourt échoue également.
+si la solution de secours échoue également.
 
 ```bash
 pnpm add -g openclaw@latest
@@ -103,41 +115,25 @@ pnpm add -g openclaw@latest
 bun add -g openclaw@latest
 ```
 
-### Rubriques avancées sur l'installation npm
+### Sujets avancés sur l'installation npm
 
 <AccordionGroup>
-  <Accordion title="Arborescence de paquets en lecture seule">
-    OpenClaw traite les installations globales empaquetées comme étant en lecture seule lors de l'exécution, même lorsque le répertoire du paquet global est accessible en écriture par l'utilisateur actuel. Les dépendances d'exécution des plugins empaquetés sont placées dans un répertoire d'exécution accessible en écriture au lieu de modifier l'arborescence des paquets. Cela empêche `openclaw update` d'entrer en concurrence avec une passerelle en cours d'exécution ou un agent local qui répare les dépendances des plugins lors de la même installation.
+  <Accordion title="Arborescence de packages en lecture seule"OpenClawOpenClawnpmGatewayOpenClawLinuxnpm>
+    OpenClaw traite les installations globales packagées comme étant en lecture seule lors de l'exécution, même lorsque le répertoire global des packages est accessible en écriture par l'utilisateur actuel. Les installations de packages de plugins résident dans les racines npm/git détenues par OpenClaw sous le répertoire de configuration utilisateur, et le démarrage de la Gateway ne modifie pas l'arborescence des packages OpenClaw.
 
-    Certaines configurations Linux npm installent des paquets globaux dans des répertoires détenus par root, tels que `/usr/lib/node_modules/openclaw`. OpenClaw prend en charge cette disposition via le même chemin de mise en scène externe.
+    Certaines configurations npm sous Linux installent les packages globaux dans des répertoires détenus par root, tels que `/usr/lib/node_modules/openclaw`OpenClaw. OpenClaw prend en charge cette disposition car les commandes d'installation/de mise à jour de plugins écrivent en dehors de ce répertoire global de packages.
 
   </Accordion>
-  <Accordion title="Unités systemd renforcées">
-    Définissez un répertoire de mise en scène accessible en écriture qui est inclus dans `ReadWritePaths` :
+  <Accordion title="Unités systemd renforcées"OpenClaw>
+    Accordez à OpenClaw un accès en écriture à ses racines de configuration/état afin que les installations explicites de plugins, les mises à jour de plugins et le nettoyage du doctor puissent conserver leurs modifications :
 
     ```ini
-    Environment=OPENCLAW_PLUGIN_STAGE_DIR=/var/lib/openclaw/plugin-runtime-deps
     ReadWritePaths=/var/lib/openclaw /home/openclaw/.openclaw /tmp
     ```
 
-    `OPENCLAW_PLUGIN_STAGE_DIR` accepte également une liste de chemins. OpenClaw résout les dépendances d'exécution des plugins empaquetées de gauche à droite sur les racines répertoriées, traite les racines antérieures comme des couches préinstallées en lecture seule, et n'installe ou ne répare que dans la racine accessible en écriture finale :
-
-    ```ini
-    Environment=OPENCLAW_PLUGIN_STAGE_DIR=/opt/openclaw/plugin-runtime-deps:/var/lib/openclaw/plugin-runtime-deps
-    ReadWritePaths=/var/lib/openclaw /home/openclaw/.openclaw /tmp
-    ```
-
-    Si `OPENCLAW_PLUGIN_STAGE_DIR` n'est pas défini, OpenClaw utilise `$STATE_DIRECTORY` lorsque systemd le fournit, puis revient à `~/.openclaw/plugin-runtime-deps`. L'étape de réparation traite cette mise en scène comme une racine de paquet locale détenue par OpenClaw et ignore le préfixe utilisateur npm et les paramètres globaux, donc la configuration npm d'installation globale ne redirige pas les dépendances des plugins empaquetés vers `~/node_modules` ou l'arborescence des paquets globaux.
-
   </Accordion>
-  <Accordion title="Disk-space preflight">
-    Avant les mises à jour des packages et les réparations des dépendances d'exécution groupées, OpenClaw tente une vérification de l'espace disque au mieux pour le volume cible. Un espace faible produit un avertissement avec le chemin vérifié, mais ne bloque pas la mise à jour car les quotas de système de fichiers, les instantanés et les volumes réseau peuvent changer après la vérification. L'installation npm réelle, la copie et la vérification post-installation restent autoritaires.
-  </Accordion>
-  <Accordion title="Bundled plugin runtime dependencies">
-    Les installations packagées maintiennent les dépendances d'exécution des plugins groupés en dehors de l'arborescence de packages en lecture seule. Au démarrage et pendant `openclaw doctor --fix`, OpenClaw répare les dépendances d'exécution uniquement pour les plugins groupés qui sont actifs dans la configuration, actifs via la configuration de canal héritée, ou activés par leur défaut de manifeste groupé. L'état d'authentification de canal persisté seul ne déclenche pas la réparation des dépendances d'exécution au démarrage du Gateway.
-
-    La désactivation explicite l'emporte. Un plugin ou canal désactivé ne voit pas ses dépendances d'exécution réparées simplement parce qu'il existe dans le package. Les plugins externes et les chemins de chargement personnalisés utilisent toujours `openclaw plugins install` ou `openclaw plugins update`.
-
+  <Accordion title="Vérification préalable de l'espace disque"OpenClaw>
+    Avant les mises à jour de packages et les installations explicites de plugins, OpenClaw tente une vérification de l'espace disque au mieux pour le volume cible. Un espace faible produit un avertissement avec le chemin vérifié, mais ne bloque pas la mise à jour car les quotas de système de fichiers, les instantanés et les volumes réseau peuvent changer après la vérification. L'installation réelle du gestionnaire de packages et la vérification post-installation restent autoritaires.
   </Accordion>
 </AccordionGroup>
 
@@ -163,24 +159,31 @@ La mise à jour automatique est désactivée par défaut. Activez-la dans `~/.op
 | -------- | --------------------------------------------------------------------------------------------------------------------- |
 | `stable` | Attend `stableDelayHours`, puis applique avec une gigue déterministe sur `stableJitterHours` (déploiement échelonné). |
 | `beta`   | Vérifie toutes les `betaCheckIntervalHours` (par défaut : toutes les heures) et applique immédiatement.               |
-| `dev`    | Aucune application automatique. Utilisez `openclaw update` manuellement.                                              |
+| `dev`    | Pas d'application automatique. Utilisez `openclaw update` manuellement.                                               |
 
-Le gateway enregistre également un indice de mise à jour au démarrage (désactivez avec `update.checkOnStart: false`).
-Pour une rétrogradation ou une récupération d'incident, définissez `OPENCLAW_NO_AUTO_UPDATE=1` dans l'environnement du gateway pour bloquer les applications automatiques même lorsque `update.auto.enabled` est configuré. Les indices de mise à jour au démarrage peuvent toujours s'exécuter sauf si `update.checkOnStart` est également désactivé.
+Le Gateway enregistre également un indice de mise à jour au démarrage (désactivez avec `update.checkOnStart: false`).
+Pour une rétrogradation ou une récupération après incident, définissez `OPENCLAW_NO_AUTO_UPDATE=1` dans l'environnement du Gateway pour bloquer l'application automatique même lorsque `update.auto.enabled` est configuré. Les indices de mise à jour au démarrage peuvent toujours s'exécuter sauf si `update.checkOnStart` est également désactivé.
+
+Les mises à jour du gestionnaire de packages demandées via le gestionnaire de plan de contrôle du Gateway en direct
+forcent un redémarrage de mise à jour sans délai ni temps de recharge après l'échange de packages. Cela
+évite de laisser un ancien processus en mémoire assez longtemps pour charger paresseusement des blocs
+depuis une arborescence de packages qui a déjà été remplacée. Le shell Gateway`openclaw update`
+reste le chemin privilégié pour les installations supervisées car il peut arrêter et
+redémarrer le service autour de la mise à jour.
 
 ## Après la mise à jour
 
 <Steps>
 
-### Exécuter le docteur
+### Exécuter le doctor
 
 ```bash
 openclaw doctor
 ```
 
-Migre la configuration, audite les politiques DM et vérifie l'état de la passerelle. Détails : [Doctor](/fr/gateway/doctor)
+Migre la configuration, audite les stratégies DM et vérifie la santé du Gateway. Détails : [Doctor](/fr/gateway/doctor)
 
-### Redémarrez la passerelle
+### Redémarrer le Gateway
 
 ```bash
 openclaw gateway restart
@@ -194,7 +197,7 @@ openclaw health
 
 </Steps>
 
-## Retour en arrière
+## Annulation (Rollback)
 
 ### Épingler une version (npm)
 
@@ -220,8 +223,8 @@ Pour revenir à la dernière version : `git checkout main && git pull`.
 ## Si vous êtes bloqué
 
 - Exécutez `openclaw doctor` à nouveau et lisez attentivement la sortie.
-- Pour `openclaw update --channel dev` sur les extraits de code source, le programme de mise à jour amorce automatiquement `pnpm` si nécessaire. Si vous voyez une erreur d'amorçage pnpm/corepack, installez `pnpm` manuellement (ou réactivez `corepack`) et relancez la mise à jour.
-- Vérifier : [Dépannage](/fr/gateway/troubleshooting)
+- Pour `openclaw update --channel dev` sur les extraits de source, le programme de mise à jour amorce automatiquement `pnpm` si nécessaire. Si vous voyez une erreur d'amorçage pnpm/corepack, installez `pnpm` manuellement (ou réactivez `corepack`) et relancez la mise à jour.
+- Consultez : [Dépannage](/fr/gateway/troubleshooting)
 - Demandez sur Discord : [https://discord.gg/clawd](https://discord.gg/clawd)
 
 ## Connexes

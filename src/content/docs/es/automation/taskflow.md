@@ -90,7 +90,7 @@ Campos de procedencia de datos recomendados para cada elemento recopilado:
 
 Haga que el flujo de trabajo rechace o marque los elementos obsoletos antes del resumen. El paso LLM debe recibir solo JSON estructurado y se le debe pedir que preserve `sourceUrl`, `retrievedAt` y `asOf` en su salida. Use [LLM Task](/es/tools/llm-task) cuando necesite un paso de modelo validado por esquema dentro del flujo de trabajo.
 
-Para flujos de trabajo reutilizables de equipo o comunidad, empaquete la CLI, los archivos `.lobster` y cualquier nota de configuración como una habilidad o complemento y publíquelo a través de [ClawHub](/es/tools/clawhub). Mantenga las salvaguardas específicas del flujo de trabajo en ese paquete, a menos que la API del complemento carezca de una capacidad genérica necesaria.
+Para flujos de trabajo reutilizables de equipo o de la comunidad, empaqueta la CLI, los archivos `.lobster` y cualquier nota de configuración como una habilidad o complemento y publícalo a través de [ClawHub](/es/clawhub). Mantén las salvaguardas específicas del flujo de trabajo en ese paquete, a menos que falte en la API del complemento una capacidad genérica necesaria.
 
 ## Modos de sincronización
 

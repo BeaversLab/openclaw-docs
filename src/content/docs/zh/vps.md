@@ -50,10 +50,10 @@ tuning that applies everywhere.
   </Card>
 </CardGroup>
 
-**AWS (EC2 / Lightsail / 免费层级)** 也可以很好地运行。
-社区视频演练可在
+**AWS (EC2 / Lightsail / 免费套餐)** 也很适用。
+社区视频演练可在以下地址观看：
 [x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
-获取（社区资源 -- 可能会失效）。
+（社区资源 —— 可能会失效）。
 
 ## 云设置的工作原理
 
@@ -65,26 +65,42 @@ tuning that applies everywhere.
 
 相关页面：[Gateway(网关) 远程访问](/zh/gateway/remote)，[平台中心](/zh/platforms)。
 
-## 在 VPS 上共享公司代理
+## 首先加固管理员访问
 
-当每个用户都在同一信任边界内且该代理仅用于业务时，为团队运行单个代理是一种有效的设置。
+在公共 VPS 上安装 OpenClaw 之前，请先确定您希望如何
+管理该服务器本身。
 
-- 将其保留在专用运行时环境（VPS/VM/容器 + 专用操作系统用户/帐户）上。
+- 如果您希望仅通过 Tailnet 进行管理员访问，请先安装 Tailscale，将 VPS
+  加入您的 tailnet，通过 Tailscale IP 或
+  MagicDNS 名称验证第二个 SSH 会话，然后限制公共 SSH。
+- 如果您不使用 Tailscale，请在暴露更多服务之前
+  对您的 SSH 路径应用同等的加固措施。
+- 这与 Gateway(网关) 访问是分开的。您仍然可以将 OpenClaw 绑定到
+  loopback，并使用 SSH 隧道或 Tailscale Serve 来访问仪表板。
+
+Tailscale 特定的 Gateway(网关) 选项位于 [Tailscale](/zh/gateway/tailscale)。
+
+## 在 VPS 上使用共享的公司代理
+
+当所有用户都在同一信任边界内且该代理仅用于业务时，为团队运行单个代理是一种有效的设置。
+
+- 将其保留在专用的运行时环境（VPS/VM/容器 + 专用操作系统用户/账户）中。
 - 不要将该运行时环境登录到个人 Apple/Google 帐户或个人浏览器/密码管理器配置文件中。
-- 如果用户之间存在对抗关系，请按 gateway（网关）/主机/操作系统用户进行拆分。
+- 如果用户之间存在对抗关系，请按 gateway/host/OS 用户进行拆分。
 
-安全模型详情：[安全性](/zh/gateway/security)。
+安全模型详情：[Security](/zh/gateway/security)。
 
-## 将节点与 VPS 配合使用
+## 在 VPS 中使用节点
 
-您可以将 Gateway(网关) 保留在云端，并在本地设备（Mac/iOS/Android/无头设备）上配对 **nodes**。节点提供本地屏幕/摄像头/画布和 `system.run`
+您可以将 Gateway(网关) 保留在云端，并在本地设备上配对 **节点**
+(Mac/iOS/Android/headless)。节点提供本地屏幕/摄像头/画布和 `system.run`
 功能，而 Gateway(网关) 则保留在云端。
 
-文档：[节点](/zh/nodes)，[节点 CLI](/zh/cli/nodes)。
+文档：[Nodes](/zh/nodes)，[Nodes CLI](/zh/cli/nodes)。
 
-## 小型 VM 和 ARM 主机的启动优化
+## 小型虚拟机和 ARM 主机的启动优化
 
-如果在低功耗虚拟机（或 ARM 主机）上感觉 CLI 命令缓慢，请启用 Node 的模块编译缓存：
+如果在低功耗虚拟机（或 ARM 主机）上感到 CLI 命令速度较慢，请启用 Node 的模块编译缓存：
 
 ```bash
 grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF'
@@ -95,14 +111,14 @@ EOF
 source ~/.bashrc
 ```
 
-- `NODE_COMPILE_CACHE` 可改善重复命令的启动时间。
-- `OPENCLAW_NO_RESPAWN=1` 可避免来自自重新生成路径的额外启动开销。
-- 首次命令运行会预热缓存；随后的运行会更快。
-- 有关 Raspberry Pi 的详细信息，请参阅 [Raspberry Pi](/zh/install/raspberry-pi)。
+- `NODE_COMPILE_CACHE` 改善了重复命令的启动时间。
+- `OPENCLAW_NO_RESPAWN=1` 避免了自重新生成路径带来的额外启动开销。
+- 首次命令运行会预热缓存；后续运行会更快。
+- 有关 Raspberry Pi 的具体信息，请参阅 [Raspberry Pi](/zh/install/raspberry-pi)。
 
-### systemd 调优检查清单（可选）
+### systemd 调优清单（可选）
 
-对于使用 `systemd` 的 VM 主机，请考虑：
+对于使用 `systemd` 的虚拟机主机，请考虑：
 
 - 添加服务环境变量以获得稳定的启动路径：
   - `OPENCLAW_NO_RESPAWN=1`
@@ -111,9 +127,9 @@ source ~/.bashrc
   - `Restart=always`
   - `RestartSec=2`
   - `TimeoutStartSec=90`
-- 对于状态/缓存路径，首选支持 SSD 的磁盘，以减少随机 I/O 冷启动惩罚。
+- 状态/缓存路径优先使用 SSD 支持的磁盘，以减少随机 I/O 冷启动惩罚。
 
-对于标准 `openclaw onboard --install-daemon` 路径，请编辑用户单元：
+对于标准的 `openclaw onboard --install-daemon` 路径，请编辑用户单元：
 
 ```bash
 systemctl --user edit openclaw-gateway.service
@@ -128,12 +144,13 @@ RestartSec=2
 TimeoutStartSec=90
 ```
 
-如果您是有意安装了系统单元，请通过 `sudo systemctl edit openclaw-gateway.service` 编辑 `openclaw-gateway.service`。
+如果您特意安装了系统单元，请通过 `sudo systemctl edit openclaw-gateway.service` 编辑
+`openclaw-gateway.service`。
 
 `Restart=` 策略如何帮助自动恢复：
-[systemd 可以自动化服务恢复](https://www.redhat.com/en/blog/systemd-automate-recovery)。
+[systemd 可以自动恢复服务](https://www.redhat.com/en/blog/systemd-automate-recovery)。
 
-关于 Linux OOM 行为、子进程牺牲选择以及 `exit 137`
+有关 Linux OOM 行为、子进程受害者选择和 `exit 137`
 诊断，请参阅 [Linux 内存压力和 OOM 终止](/zh/platforms/linux#memory-pressure-and-oom-kills)。
 
 ## 相关

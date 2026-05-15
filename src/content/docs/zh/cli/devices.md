@@ -108,7 +108,7 @@ openclaw devices revoke --device <deviceId> --role node
 ## 注意
 
 - 令牌轮换会返回一个新的令牌（敏感）。请将其视为密钥处理。
-- 这些命令需要 `operator.pairing`（或 `operator.admin`）作用域。
+- 这些命令需要 `operator.pairing`（或 `operator.admin`）范围。某些审批还需要调用者持有目标设备将铸造或继承的 operator 范围；请参阅 [Operator scopes](/zh/gateway/operator-scopes)。
 - `gateway.nodes.pairing.autoApproveCidrs` 是一项可选的 Gateway 策略，
   仅适用于新节点设备配对；它不会更改 CLI 批准权限。
 - 令牌轮换和撤销保留在该设备的已批准配对角色集和
@@ -163,10 +163,10 @@ openclaw devices approve <requestId>
 
 相关：
 
-- [Dashboard 身份验证故障排除](/zh/web/dashboard#if-you-see-unauthorized-1008)
-- [Gateway 故障排除](/zh/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Dashboard auth 故障排除](/zh/web/dashboard#if-you-see-unauthorized-1008)
+- [Gateway(网关) 故障排除](<Gateway(网关)/en/gateway/troubleshooting#dashboard-control-ui-connectivity>)
 
 ## 相关
 
-- [CLI 参考](/zh/cli)
-- [节点](/zh/nodes)
+- [CLI reference](CLI/en/cli)
+- [Nodes](/zh/nodes)

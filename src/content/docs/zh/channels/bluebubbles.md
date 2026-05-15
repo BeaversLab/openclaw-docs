@@ -14,7 +14,7 @@ sidebarTitle: "BlueBubbles"
 
 ## 概述
 
-- 通过 BlueBubbles 辅助应用程序在 macOS 上运行 ([bluebubbles.app](https://bluebubbles.app))。
+- 通过 BlueBubbles 助手应用在 macOS 上运行（[bluebubbles.app](macOSBlueBubbleshttps://bluebubbles.app)）。
 - 推荐/测试环境：macOS Sequoia (15)。macOS Tahoe (26) 可用；但在 Tahoe 上编辑功能目前损坏，群组图标更新可能报告成功但不会同步。
 - OpenClaw 通过其 REST API (`GET /api/v1/ping`, `POST /message/text`, `POST /chat/:id/*`) 与其通信。
 - 传入消息通过 webhooks 到达；传出回复、正在输入指示器、已读回执和点回（tapbacks）均为 REST 调用。
@@ -27,8 +27,8 @@ sidebarTitle: "BlueBubbles"
 ## 快速开始
 
 <Steps>
-  <Step title="安装 BlueBubbles">
-    在您的 Mac 上安装 BlueBubbles 服务器（请遵循 [bluebubbles.app/install](https://bluebubbles.app/install) 上的说明）。
+  <Step title="BlueBubbles安装 BlueBubbles"BlueBubbles>
+    在您的 Mac 上安装 BlueBubbles 服务器（遵循 [bluebubbles.app/install](https://bluebubbles.app/install) 上的说明）。
   </Step>
   <Step title="启用 web API">
     在 BlueBubbles 配置中，启用 web API 并设置密码。
@@ -62,9 +62,10 @@ sidebarTitle: "BlueBubbles"
 **安全性**
 
 - 始终设置 webhook 密码。
-- Webhook 认证始终是必需的。OpenClaw 会拒绝 BlueBubbles 的 webhook 请求，除非它们包含与 `channels.bluebubbles.password` 匹配的密码/guid（例如 `?password=<password>` 或 `x-password`），无论是否为环回/代理拓扑。
-- 密码认证会在读取/解析完整的 webhook 正文之前进行检查。
-  </Warning>
+- 始终需要 webhook 身份验证。除非包含匹配 OpenClawBlueBubbles`channels.bluebubbles.password` 的密码/guid（例如 `?password=<password>` 或 `x-password`），否则 OpenClaw 会拒绝 BlueBubbles webhook 请求，无论回环/代理拓扑如何。
+- 密码身份验证会在读取/解析完整 webhook 正文之前进行检查。
+
+</Warning>
 
 ## 保持 Messages.app 活跃（虚拟机 / 无头设置）
 
@@ -169,16 +170,18 @@ openclaw channels add bluebubbles --http-url http://192.168.1.100:1234 --passwor
 
 <Tabs>
   <Tab title="私信">
-    - 默认：`channels.bluebubbles.dmPolicy = "pairing"`。
-    - 未知发送者会收到配对码；在获得批准之前消息将被忽略（代码 1 小时后过期）。
-    - 批准方式：
+    - 默认值：`channels.bluebubbles.dmPolicy = "pairing"`。
+    - 未知发送者会收到配对码；在批准之前消息将被忽略（代码 1 小时后过期）。
+    - 通过以下方式批准：
       - `openclaw pairing list bluebubbles`
       - `openclaw pairing approve bluebubbles <CODE>`
-    - 配对是默认的令牌交换方式。详情：[配对](/zh/channels/pairing)
+    - 配对是默认的令牌交换。详情：[配对](/zh/channels/pairing)
+
   </Tab>
   <Tab title="群组">
-    - `channels.bluebubbles.groupPolicy = open | allowlist | disabled`（默认：`allowlist`）。
-    - `channels.bluebubbles.groupAllowFrom` 控制当设置 `allowlist` 时谁可以在群组中触发。
+    - `channels.bluebubbles.groupPolicy = open | allowlist | disabled`（默认值：`allowlist`）。
+    - 当设置 `allowlist` 时，`channels.bluebubbles.groupAllowFrom` 控制谁可以在群组中触发。
+
   </Tab>
 </Tabs>
 
@@ -262,15 +265,7 @@ BlueBubbles 支持群聊的提及限制，匹配 iMessage/WhatsApp 的行为：
     bluebubbles: {
       groups: {
         "iMessage;+;chat-family": {
-          systemPrompt: [
-            "When replying in this group, always call action=reply with the",
-            "[[reply_to:N]] messageId from context so your response threads",
-            "under the triggering message. Never send a new unlinked message.",
-            "",
-            "For short acknowledgements ('ok', 'got it', 'on it'), use",
-            "action=react with an appropriate tapback emoji (❤️, 👍, 😂, ‼️, ❓)",
-            "instead of sending a text reply.",
-          ].join(" "),
+          systemPrompt: "When replying in this group, always call action=reply with the [[reply_to:N]] messageId from context so your response threads under the triggering message. Never send a new unlinked message. For short acknowledgements ('ok', 'got it', 'on it'), use action=react with an appropriate tapback emoji (❤️, 👍, 😂, ‼️, ❓) instead of sending a text reply.",
         },
       },
     },
@@ -278,7 +273,7 @@ BlueBubbles 支持群聊的提及限制，匹配 iMessage/WhatsApp 的行为：
 }
 ```
 
-点按反应和串联回复都需要 BlueBubbles 私有 API；有关底层机制，请参阅[高级操作](#advanced-actions)和[消息 ID](#message-ids-short-vs-full)。
+Tapback 反应和线程回复都需要 BlueBubbles 私有 API；有关底层机制，请参阅 [高级操作](BlueBubblesAPI#advanced-actions) 和 [消息 ID](#message-ids-short-vs-full)。
 
 ## ACP 会话绑定
 
@@ -332,7 +327,7 @@ BlueBubbles 聊天可以转换为持久的 ACP 工作区，而无需更改传输
 }
 ```
 
-有关共享 ACP 绑定行为，请参阅 [ACP Agents](/zh/tools/acp-agents)。
+有关共享 ACP 绑定行为，请参阅 [ACP 代理](/zh/tools/acp-agents)。
 
 ## 正在输入 + 已读回执
 
@@ -378,10 +373,20 @@ BlueBubbles 聊天可以转换为持久的 ACP 工作区，而无需更改传输
 
 <AccordionGroup>
   <Accordion title="可用操作">
-    - **react**：添加/删除轻触反应（`messageId`、`emoji`、`remove`）。iMessage 原生的轻触反应集合为 `love`、`like`、`dislike`、`laugh`、`emphasize` 和 `question`。当代理选择了该集合之外的表情符号（例如 `👀`）时，反应工具会回退到 `love`，以便轻触反应仍能渲染，而不是导致整个请求失败。已配置的确认反应仍会进行严格验证，并在遇到未知值时报错。 - **edit**：编辑已发送的消息（`messageId`、`text`）。 -
-    **unsend**：撤回一条消息（`messageId`）。 - **reply**：回复特定消息（`messageId`、`text`、`to`）。 - **sendWithEffect**：发送时带 iMessage 效果（`text`、`to`、`effectId`）。 - **renameGroup**：重命名群组聊天（`chatGuid`、`displayName`）。 - **setGroupIcon**：设置群组聊天的图标/照片（`chatGuid`、`media`） — 在 macOS 26 Tahoe 上不稳定（API 可能返回成功但图标不同步）。 -
-    **addParticipant**：将某人添加到群组（`chatGuid`、`address`）。 - **removeParticipant**：从群组中移除某人（`chatGuid`、`address`）。 - **leaveGroup**：离开群组聊天（`chatGuid`）。 - **upload-file**：发送媒体/文件（`to`、`buffer`、`filename`、`asVoice`）。 - 语音备忘录：将 `asVoice: true` 设置为 **MP3** 或 **CAF** 音频，以作为 iMessage 语音消息发送。发送语音备忘录时，BlueBubbles 会将 MP3 转换为
-    CAF。 - 旧版别名：`sendAttachment` 仍然有效，但 `upload-file` 是规范的操作名称。
+    - **react**：添加/删除点按反应（`messageId`、`emoji`、`remove`）。iMessage 的原生点按集合为 `love`、`like`、`dislike`、`laugh`、`emphasize` 和 `question`。当代理选择该集合之外的表情符号（例如 `👀`）时，反应工具将回退到 `love`，以便点按仍然能够渲染，而不会导致整个请求失败。配置的确认反应仍会进行严格验证，并在遇到未知值时报错。
+    - **edit**：编辑已发送的消息（`messageId`、`text`）。
+    - **unsend**：撤销发送一条消息（`messageId`）。
+    - **reply**：回复特定消息（`messageId`、`text`、`to`）。
+    - **sendWithEffect**：带有 iMessage 特效发送（`text`、`to`、`effectId`）。
+    - **renameGroup**：重命名群组聊天（`chatGuid`、`displayName`）。
+    - **setGroupIcon**：设置群组聊天的图标/照片（`chatGuid`、`media`）——在 macOS 26 Tahoe 上不稳定（API 可能返回成功，但图标不会同步）。
+    - **addParticipant**：将某人添加到群组（`chatGuid`、`address`）。
+    - **removeParticipant**：从群组中移除某人（`chatGuid`、`address`）。
+    - **leaveGroup**：退出群组聊天（`chatGuid`）。
+    - **upload-file**：发送媒体/文件（`to`、`buffer`、`filename`、`asVoice`）。
+      - 语音备忘录：将 `asVoice: true` 设置为 **MP3** 或 **CAF** 音频，以作为 iMessage 语音消息发送。发送语音备忘录时，BlueBubbles 会将 MP3 转换为 CAF。
+    - 旧版别名：`sendAttachment` 仍然有效，但 `upload-file` 是规范的操作名称。
+
   </Accordion>
 </AccordionGroup>
 
@@ -459,9 +464,10 @@ OpenClaw 可能会显示*短*消息 ID（例如，`1`、`2`）以节省 token。
 
   </Tab>
   <Tab title="权衡">
-    - **私信控制命令的延迟增加。** 开启该标志后，私信控制命令消息（如 `Dump`、`Save` 等）现在会在发送前等待去抖动窗口的时间，以防有 payload webhook 到来。群聊命令保持即时发送。
-    - **合并输出受限** — 合并文本上限为 4000 个字符，并带有明确的 `…[truncated]` 标记；附件上限为 20 个；源条目上限为 10 个（超过此数量后保留第一个和最新的）。每个源 `messageId` 仍会到达入站去重，因此稍后对任何单个事件的 MessagePoller 重放都会被识别为重复。
-    - **可选，按渠道。** 其他渠道（Telegram、WhatsApp、Slack，…）不受影响。
+    - **私信控制命令增加了延迟。** 开启该标志后，私信控制命令消息（如 `Dump`、`Save` 等）在分派前会等待最长至去抖动窗口的时间，以防有负载 Webhook 传来。群聊命令保持立即分派。
+    - **合并输出受限** — 合并文本上限为 4000 个字符，并带有显式的 `…[truncated]` 标记；附件上限为 20 个；源条目上限为 10 个（超出部分保留最早的和最新的）。每个源 `messageId` 仍会到达入站去重，因此随后对任何单个事件的 MessagePoller 重放都会被识别为重复项。
+    - **按渠道选择性启用。** 其他渠道（Telegram、WhatsApp、Slack 等）不受影响。
+
   </Tab>
 </Tabs>
 
@@ -532,40 +538,46 @@ OpenClaw 可能会显示*短*消息 ID（例如，`1`、`2`）以节省 token。
 
 ## 配置参考
 
-完整配置：[Configuration](/zh/gateway/configuration)
+完整配置：[配置](/zh/gateway/configuration)
 
 <AccordionGroup>
   <Accordion title="连接和 Webhook">
     - `channels.bluebubbles.enabled`：启用/禁用该渠道。
-    - `channels.bluebubbles.serverUrl`：BlueBubbles REST BlueBubbles 基础 URL。
+    - `channels.bluebubbles.serverUrl`：BlueBubbles REST API 基础 URL。
     - `channels.bluebubbles.password`：API 密码。
     - `channels.bluebubbles.webhookPath`：Webhook 端点路径（默认：`/bluebubbles-webhook`）。
+
   </Accordion>
   <Accordion title="访问策略">
-    - `channels.bluebubbles.dmPolicy`：`pairing | allowlist | open | disabled`（默认：`pairing`）。
-    - `channels.bluebubbles.allowFrom`：私信允许列表（handles、emails、E.164 号码、`chat_id:*`、`chat_guid:*`）。
-    - `channels.bluebubbles.groupPolicy`：`open | allowlist | disabled`（默认：`allowlist`）。
-    - `channels.bluebubbles.groupAllowFrom`：群组发送者允许列表。
-    - `channels.bluebubbles.enrichGroupParticipantsFromContacts`：在 macOS 上，可选地在网关通过后从本地联系人中获取未命名的群组参与者信息。默认：`false`。
-    - `channels.bluebubbles.groups`：每组配置（`requireMention` 等）。
+    - `channels.bluebubbles.dmPolicy`： `pairing | allowlist | open | disabled`（默认： `pairing`）。
+    - `channels.bluebubbles.allowFrom`： 私信白名单（handles、emails、E.164 号码、`chat_id:*`、 `chat_guid:*`）。
+    - `channels.bluebubbles.groupPolicy`： `open | allowlist | disabled`（默认： `allowlist`）。
+    - `channels.bluebubbles.groupAllowFrom`： 群组发送者白名单。
+    - `channels.bluebubbles.enrichGroupParticipantsFromContacts`macOS： 在 macOS 上，可选地在通过访问控制后，从本地联系人中丰富未命名的群组参与者。默认： `false`。
+    - `channels.bluebubbles.groups`： 每个群组的配置（`requireMention` 等）。
+
   </Accordion>
   <Accordion title="传递和分块">
-    - `channels.bluebubbles.sendReadReceipts`：发送已读回执（默认：`true`）。
-    - `channels.bluebubbles.blockStreaming`：启用分块流式传输（默认：`false`；流式回复所必需）。
-    - `channels.bluebubbles.textChunkLimit`：出站分块大小，以字符为单位（默认：4000）。
-    - `channels.bluebubbles.sendTimeoutMs`：通过 `/api/v1/message/text` 发送出站文本时的每个请求超时时间（毫秒）（默认：30000）。在 macOS 26 设置中，如果 Private API iMessage 发送在 iMessage 框架内停滞超过 60 秒，请提高此值；例如 `45000` 或 `60000`。探测、聊天查询、反应、编辑和健康检查目前保持较短的 10 秒默认值；计划作为后续工作将覆盖范围扩大到反应和编辑。每个账户的覆盖设置：`channels.bluebubbles.accounts.<accountId>.sendTimeoutMs`。
-    - `channels.bluebubbles.chunkMode`：`length`（默认）仅在超过 `textChunkLimit` 时才拆分；`newline` 在按长度分块之前先在空行（段落边界）处拆分。
+    - `channels.bluebubbles.sendReadReceipts`： 发送已读回执（默认： `true`）。
+    - `channels.bluebubbles.blockStreaming`： 启用分块流式传输（默认： `false`；流式回复所必需）。
+    - `channels.bluebubbles.textChunkLimit`： 出站分块大小（字符）（默认： 4000）。
+    - `channels.bluebubbles.sendTimeoutMs`： 通过 `/api/v1/message/text`macOSAPIiMessageiMessage 发送出站文本的每个请求超时时间（毫秒）（默认： 30000）。在 macOS 26 环境中提高此值，因为私有 API iMessage 发送可能会在 iMessage 框架内停顿 60 秒以上；例如 `45000` 或 `60000`。探测、聊天查找、反应、编辑和健康检查目前保持较短的 10 秒默认值；计划在后续步骤中将覆盖范围扩大到反应和编辑。按账户覆盖： `channels.bluebubbles.accounts.<accountId>.sendTimeoutMs`。
+    - `channels.bluebubbles.chunkMode`： `length`（默认）仅在超过 `textChunkLimit` 时拆分； `newline` 在按长度分块之前按空行（段落边界）拆分。
+
   </Accordion>
-  <Accordion title="媒体和历史记录">
+  <Accordion title="媒体与历史">
     - `channels.bluebubbles.mediaMaxMb`：入站/出站媒体上限，单位 MB（默认：8）。
-    - `channels.bluebubbles.mediaLocalRoots`：允许用于出站本地媒体路径的绝对本地目录的显式允许列表。除非配置此项，否则默认拒绝本地路径发送。每个账户的覆盖设置：`channels.bluebubbles.accounts.<accountId>.mediaLocalRoots`。
-    - `channels.bluebubbles.coalesceSameSenderDms`：将连续的同发送者私信 webhook 合并为一个代理轮次，以便 Apple 的文本+URL 分开发送作为一条消息到达（默认：`false`）。有关场景、窗口调整和权衡，请参阅 [合并分开发送的私信](#coalescing-split-send-dms-command--url-in-one-composition)。在未指定 `messages.inbound.byChannel.bluebubbles` 的情况下启用时，将默认入站防抖窗口从 500 毫秒扩大到 2500 毫秒。
-    - `channels.bluebubbles.historyLimit`：上下文的最大群组消息数（0 表示禁用）。
+    - `channels.bluebubbles.mediaLocalRoots`：允许用于出站本地媒体路径的绝对本地目录显式允许列表。除非配置此项，否则默认禁止发送本地路径。按账户覆盖：`channels.bluebubbles.accounts.<accountId>.mediaLocalRoots`。
+    - `channels.bluebubbles.coalesceSameSenderDms`：将连续的同一发送者私信 Webhook 合并为一个 agent 轮次，以便 Apple 的文本+URL 分批发送作为单条消息到达（默认：`false`）。请参阅[合并分批发送的私信](#coalescing-split-send-dms-command--url-in-one-composition)了解场景、窗口调整和权衡。如果在没有显式 `messages.inbound.byChannel.bluebubbles` 的情况下启用此功能，会将默认入站防抖窗口从 500 毫秒扩大到 2500 毫秒。
+    - `channels.bluebubbles.historyLimit`：用于上下文的最大群组消息数（0 表示禁用）。
     - `channels.bluebubbles.dmHistoryLimit`：私信历史记录限制。
+    - `channels.bluebubbles.replyContextApiFallback`：当入站回复到达时缺少 `replyToBody`/`replyToSender` 且内存中的回复上下文缓存未命中时，从 BlueBubbles HTTP API 获取原始消息作为尽力而为的回退（默认：`false`）。这对于共享一个 BlueBubbles 账户的多实例部署、进程重启后或长期 TTL/LRU 缓存驱逐后非常有用。该获取操作受与其他每个 BlueBubbles 客户端请求相同的策略保护以防止 SSRF，永不抛出异常，并填充缓存以便后续回复摊销成本。按账户覆盖：`channels.bluebubbles.accounts.<accountId>.replyContextApiFallback`。渠道级别的设置会传播到省略该标志的账户。
+
   </Accordion>
-  <Accordion title="操作和账户">
+  <Accordion title="操作与账户">
     - `channels.bluebubbles.actions`：启用/禁用特定操作。
     - `channels.bluebubbles.accounts`：多账户配置。
+
   </Accordion>
 </AccordionGroup>
 
@@ -576,42 +588,42 @@ OpenClaw 可能会显示*短*消息 ID（例如，`1`、`2`）以节省 token。
 
 ## 寻址 / 投递目标
 
-为了稳定的路由，建议使用 `chat_guid`：
+为稳定路由首选 `chat_guid`：
 
-- `chat_guid:iMessage;-;+15555550123`（首选用于群组）
+- `chat_guid:iMessage;-;+15555550123` (群组首选)
 - `chat_id:123`
 - `chat_identifier:...`
-- 直接句柄：`+15555550123`，`user@example.com`
-  - 如果直接句柄没有现有的私信聊天，OpenClaw 将通过 `POST /api/v1/chat/new` 创建一个。这需要启用 BlueBubbles 私有 API。
+- 直接句柄：`+15555550123`、`user@example.com`
+  - 如果直接句柄没有现有的私聊聊天，OpenClaw 将通过 `POST /api/v1/chat/new` 创建一个。这需要启用 BlueBubbles 私有 API。
 
 ### iMessage 与 SMS 路由
 
-当同一句柄在 Mac 上同时具有 iMessage 和 SMS 聊天时（例如，一个已注册 iMessage 但也收到过绿色气泡回退的电话号码），OpenClaw 优先选择 iMessage 聊天，且绝不会静默降级到 SMS。要强制使用 SMS 聊天，请使用显式的 `sms:` 目标前缀（例如 `sms:+15555550123`）。没有匹配 iMessage 聊天的句柄仍然通过 BlueBubbles 报告的任何聊天发送。
+当同一句柄在 Mac 上同时具有 iMessage 和 SMS 聊天时（例如一个已注册 iMessage 但也收到过绿色气泡回退短信的电话号码），OpenClaw 首选 iMessage 聊天，且绝不会静默降级为 SMS。要强制使用 SMS 聊天，请使用显式的 `sms:` 目标前缀（例如 `sms:+15555550123`）。没有匹配 iMessage 聊天的句柄仍将通过 BlueBubbles 报告的任何聊天发送。
 
 ## 安全性
 
-- Webhook 请求通过将 `guid`/`password` 查询参数或标头与 `channels.bluebubbles.password` 进行比较来验证身份。
+- Webhook 请求通过将 `guid`/`password` 查询参数或标头与 `channels.bluebubbles.password` 进行比较来进行身份验证。
 - 请保持 API 密码和 webhook 端点的机密性（将它们视为凭据）。
-- 对于 BlueBubbles webhook 验证，没有本地主机绕过机制。如果您代理 webhook 流量，请保持 BlueBubbles 密码在请求中端到端传递。在此处 `gateway.trustedProxies` 不会替换 `channels.bluebubbles.password`。参见 [Gateway(网关) 安全性](/zh/gateway/security#reverse-proxy-configuration)。
+- BlueBubbles Webhook 身份验证没有本地主机绕过机制。如果您代理 Webhook 流量，请确保请求端到端保留 BlueBubbles 密码。`gateway.trustedProxies` 不会在此处替换 `channels.bluebubbles.password`。参见 [Gateway(网关) 安全](/zh/gateway/security#reverse-proxy-configuration)。
 - 如果在局域网外暴露 BlueBubbles 服务器，请在其上启用 HTTPS 和防火墙规则。
 
 ## 故障排除
 
-- 如果输入/已读事件停止工作，请检查 BlueBubbles webhook 日志并验证网关路径是否匹配 `channels.bluebubbles.webhookPath`。
+- 如果输入/已读事件停止工作，请检查 BlueBubbles Webhook 日志并验证网关路径是否匹配 `channels.bluebubbles.webhookPath`。
 - 配对码在一小时后过期；请使用 `openclaw pairing list bluebubbles` 和 `openclaw pairing approve bluebubbles <code>`。
-- 表情回应需要 BlueBubbles 私有 API (`POST /api/v1/message/react`)；请确保服务器版本已将其公开。
+- 反应需要 BlueBubbles 私有 API (`POST /api/v1/message/react`)；请确保服务器版本已将其公开。
 - 编辑/取消发送需要 macOS 13+ 和兼容的 BlueBubbles 服务器版本。在 macOS 26 (Tahoe) 上，由于私有 API 变更，编辑功能目前无法使用。
 - 在 macOS 26 (Tahoe) 上，群组图标更新可能不稳定：API 可能返回成功，但新图标不会同步。
-- OpenClaw 会根据 BlueBubbles 服务器的 macOS 版本自动隐藏已知损坏的操作。如果在 macOS 26 (Tahoe) 上仍显示编辑选项，请使用 `channels.bluebubbles.actions.edit=false` 手动将其禁用。
-- 已启用 `coalesceSameSenderDms`，但分段发送（例如 `Dump` + URL）仍然作为两个回合到达：请参阅 [分段发送合并故障排除](#split-send-coalescing-troubleshooting) 检查清单 —— 常见原因包括去抖动窗口过紧、会话日志时间戳被误读为 Webhook 到达时间，或者是回复引用发送（这使用 `replyToBody`，而不是第二个 Webhook）。
-- 有关状态/健康信息：`openclaw status --all` 或 `openclaw status --deep`。
+- OpenClaw 会根据 BlueBubbles 服务器的 macOS 版本自动隐藏已知损坏的操作。如果在 macOS 26 (Tahoe) 上仍然显示编辑功能，请使用 OpenClawBlueBubblesmacOSmacOS`channels.bluebubbles.actions.edit=false` 手动禁用它。
+- 已启用 `coalesceSameSenderDms` 但拆分发送（例如 `Dump` + URL）仍然作为两个回合到达：请参阅[拆分发送合并故障排除](#split-send-coalescing-troubleshooting)检查清单 —— 常见原因是防抖窗口过紧、会话日志时间戳被误读为 Webhook 到达时间，或者是回复引用发送（它使用 `replyToBody`，而不是第二个 Webhook）。
+- 有关状态/运行状况信息：`openclaw status --all` 或 `openclaw status --deep`。
 
-有关一般渠道工作流参考，请参阅 [渠道](/zh/channels) 和 [插件](/zh/tools/plugin) 指南。
+有关一般渠道工作流参考，请参阅[渠道](/zh/channels)和[插件](/zh/tools/plugin)指南。
 
 ## 相关
 
-- [渠道路由](/zh/channels/channel-routing) — 消息的会话路由
-- [渠道概述](/zh/channels) — 所有支持的渠道
-- [群组](/zh/channels/groups) — 群聊行为和提及门控
-- [配对](/zh/channels/pairing) — 私信认证和配对流程
-- [安全](/zh/gateway/security) — 访问模型和加固
+- [渠道路由](/zh/channels/channel-routing) —— 消息的会话路由
+- [渠道概述](/zh/channels) —— 所有支持的渠道
+- [群组](/zh/channels/groups) —— 群聊行为和提及控制
+- [配对](/zh/channels/pairing) —— 私信认证和配对流程
+- [安全性](/zh/gateway/security) —— 访问模型和加固

@@ -7,7 +7,7 @@ read_when:
 title: "橋接協議"
 ---
 
-<Warning>TCP 橋接已被**移除**。目前的 OpenClaw 建置版本不附帶橋接監聽器，且 `bridge.*` 組態金鑰已不再位於架構中。此頁面僅供歷史參考之用。請對於所有節點/操作員客戶端使用 [Gateway Protocol](/zh-Hant/gateway/protocol)。</Warning>
+<Warning>TCP 橋接器已被**移除**。目前的 OpenClaw 建置版本不包含橋接器監聽器，且 `bridge.*` 設定金鑰已不在架構中。此頁面僅供歷史參考。對於所有節點/操作員客戶端，請使用 [Gateway Protocol](/zh-Hant/gateway/protocol)。</Warning>
 
 ## 為何存在
 
@@ -38,48 +38,47 @@ title: "橋接協議"
 3. 客戶端發送 `pair-request`。
 4. Gateway 等待核准，然後發送 `pair-ok` 和 `hello-ok`。
 
-在歷史上，`hello-ok` 會傳回 `serverName`，且可能包含
-`canvasHostUrl`。
+歷史上，`hello-ok` 曾回傳 `serverName`；託管的外掛介面現在透過 `pluginSurfaceUrls` 公告。Canvas/A2UI 使用 `pluginSurfaceUrls.canvas`；已棄用的 `canvasHostUrl` 別名並非重構後協定的一部分。
 
 ## 幀
 
 客戶端 → Gateway：
 
-- `req` / `res`: 範圍限定的 gateway RPC (chat, sessions, config, health, voicewake, skills.bins)
-- `event`: 節點訊號 (voice transcript, agent request, chat subscribe, exec lifecycle)
+- `req` / `res`：範圍限定的閘道 RPC (聊天、會話、設定、健康狀態、語音喚醒、skills.bins)
+- `event`：節點訊號 (語音文字紀錄、代理請求、聊天訂閱、執行生命週期)
 
 Gateway → 客戶端：
 
-- `invoke` / `invoke-res`：節點指令（`canvas.*`、`camera.*`、`screen.record`、
-  `location.get`、`sms.send`）
-- `event`：針對已訂閱會話的聊天更新
+- `invoke` / `invoke-res`：節點指令 (`canvas.*`、`camera.*`、`screen.record`、
+  `location.get`、`sms.send`)
+- `event`：已訂閱會話的聊天更新
 - `ping` / `pong`：保持連線
 
-舊版的允許清單執行機制位於 `src/gateway/server-bridge.ts`（已移除）。
+舊版允許清單執行機制位於 `src/gateway/server-bridge.ts` (已移除)。
 
 ## Exec 生命週期事件
 
-節點可以發出 `exec.finished` 或 `exec.denied` 事件來呈現 system.run 活動。
-這些事件會對應到閘道中的系統事件。（舊版節點可能仍會發出 `exec.started`。）
+節點可以發出 `exec.finished` 或 `exec.denied` 事件以呈現 system.run 活動。
+這些會被對應到閘道中的系統事件。(舊版節點可能仍會發出 `exec.started`。)
 
 Payload 欄位（除非另有說明，皆為選填）：
 
-- `sessionKey`（必填）：接收系統事件的 agent 會話。
-- `runId`：用於分組的唯一 exec ID。
+- `sessionKey` (必要)：接收系統事件的代理會話。
+- `runId`：用於分組的唯一執行 ID。
 - `command`：原始或格式化的指令字串。
-- `exitCode`、`timedOut`、`success`、`output`：完成詳情（僅限 finished）。
-- `reason`：拒絕原因（僅限 denied）。
+- `exitCode`、`timedOut`、`success`、`output`：完成細節 (僅限已完成)。
+- `reason`：拒絕原因 (僅限已拒絕)。
 
 ## 歷史 tailnet 使用方式
 
-- 將橋接器綁定到 tailnet IP：`bridge.bind: "tailnet"` 於
+- 將橋接綁定到 tailnet IP：`bridge.bind: "tailnet"` 於
   `~/.openclaw/openclaw.json` 中（僅供歷史參考；`bridge.*` 已不再有效）。
 - 用戶端透過 MagicDNS 名稱或 tailnet IP 進行連線。
-- Bonjour **不會**跨越網路；如有需要，請使用手動設定主機/埠或廣域 DNS‑SD。
+- Bonjour **不會**跨越網路；必要時請使用手動主機/埠或廣域 DNS-SD。
 
 ## 版本控制
 
-橋接器為 **隱含 v1**（無 min/max 協商）。本節僅供歷史參考；目前的節點/操作員用戶端使用 WebSocket
+該橋接為 **隱式 v1**（無最小/最大版本協商）。本節僅供歷史參考；目前的節點/操作員客戶端使用 WebSocket
 [Gateway Protocol](/zh-Hant/gateway/protocol)。
 
 ## 相關內容

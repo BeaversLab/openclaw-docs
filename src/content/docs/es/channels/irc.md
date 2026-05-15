@@ -39,22 +39,23 @@ openclaw gateway run
 
 ## Valores predeterminados de seguridad
 
-- `channels.irc.dmPolicy` por defecto es `"pairing"`.
-- `channels.irc.groupPolicy` por defecto es `"allowlist"`.
+- IRC utiliza sockets TCP/TLS sin procesar fuera del enrutamiento del proxy de reenvío gestionado por el operador de OpenClaw. En los despliegues que requieren que todo el tráfico de salida pase a través de ese proxy de reenvío, establezca `channels.irc.enabled=false` a menos que se apruebe explícitamente el tráfico de salida directo de IRC.
+- `channels.irc.dmPolicy` se establece de forma predeterminada en `"pairing"`.
+- `channels.irc.groupPolicy` se establece de forma predeterminada en `"allowlist"`.
 - Con `groupPolicy="allowlist"`, establezca `channels.irc.groups` para definir los canales permitidos.
-- Use TLS (`channels.irc.tls=true`) a menos que acepte intencionalmente el transporte en texto plano.
+- Utilice TLS (`channels.irc.tls=true`) a menos que acepte intencionalmente el transporte en texto sin formato.
 
 ## Control de acceso
 
-Hay dos "puertas" separadas para los canales IRC:
+Existen dos "puertas" separadas para los canales IRC:
 
-1. **Acceso al canal** (`groupPolicy` + `groups`): si el bot acepta mensajes de un canal en absoluto.
-2. **Acceso del remitente** (`groupAllowFrom` / `groups["#channel"].allowFrom` por canal): quién tiene permiso para activar el bot dentro de ese canal.
+1. **Acceso al canal** (`groupPolicy` + `groups`): si el bot acepta mensajes de un canal o no.
+2. **Acceso del remitente** (`groupAllowFrom` / por canal `groups["#channel"].allowFrom`): quién tiene permiso para activar el bot dentro de ese canal.
 
 Claves de configuración:
 
-- Lista de permitidos de DM (acceso de remitente DM): `channels.irc.allowFrom`
-- Lista de permitidos de remitentes de grupo (acceso de remitente del canal): `channels.irc.groupAllowFrom`
+- Lista de permitidos de DM (acceso de remitente de DM): `channels.irc.allowFrom`
+- Lista de permitidos de remitentes de grupo (acceso de remitente de canal): `channels.irc.groupAllowFrom`
 - Controles por canal (canal + remitente + reglas de mención): `channels.irc.groups["#channel"]`
 - `channels.irc.groupPolicy="open"` permite canales no configurados (**todavía restringidos por mención de forma predeterminada**)
 
@@ -67,12 +68,12 @@ Si ve registros como:
 
 - `irc: drop group sender alice!ident@host (policy=allowlist)`
 
-…significa que al remitente no se le permitió para mensajes de **grupo/canal**. Soluciónelo mediante:
+...significa que el remitente no tenía permiso para mensajes de **grupo/canal**. Soluciónelo mediante:
 
-- estableciendo `channels.irc.groupAllowFrom` (global para todos los canales), o
-- estableciendo listas de permitidos de remitentes por canal: `channels.irc.groups["#channel"].allowFrom`
+- establecer `channels.irc.groupAllowFrom` (global para todos los canales), o
+- establecer listas de permitidos de remitentes por canal: `channels.irc.groups["#channel"].allowFrom`
 
-Ejemplo (permitir a cualquier persona en `#tuirc-dev` hablar con el bot):
+Ejemplo (permitir a cualquiera en `#tuirc-dev` hablar con el bot):
 
 ```json5
 {
@@ -89,11 +90,11 @@ Ejemplo (permitir a cualquier persona en `#tuirc-dev` hablar con el bot):
 
 ## Activación de respuesta (menciones)
 
-Incluso si un canal está permitido (vía `groupPolicy` + `groups`) y el remitente está permitido, OpenClaw usa por defecto el **filtrado por menciones** (mention-gating) en contextos de grupo.
+Incluso si se permite un canal (vía `groupPolicy` + `groups`) y se permite el remitente, OpenClaw tiene como valor predeterminado el **control por mención** en contextos de grupo.
 
-Eso significa que puedes ver registros como `drop channel … (missing-mention)` a menos que el mensaje incluya un patrón de mención que coincida con el bot.
+Eso significa que puede ver registros como `drop channel … (missing-mention)` a menos que el mensaje incluya un patrón de mención que coincida con el bot.
 
-Para hacer que el bot responda en un canal IRC **sin necesidad de una mención**, desactiva el filtrado por menciones para ese canal:
+Para hacer que el bot responda en un canal IRC **sin necesidad de una mención**, desactiva el filtrado por mención para ese canal:
 
 ```json5
 {
@@ -128,7 +129,7 @@ O para permitir **todos** los canales IRC (sin lista de permitidos por canal) y 
 
 ## Nota de seguridad (recomendado para canales públicos)
 
-Si permites `allowFrom: ["*"]` en un canal público, cualquiera puede enviarle instrucciones al bot.
+Si permites `allowFrom: ["*"]` en un canal público, cualquiera puede hacer solicitudes al bot.
 Para reducir el riesgo, restringe las herramientas para ese canal.
 
 ### Mismas herramientas para todos en el canal
@@ -152,7 +153,7 @@ Para reducir el riesgo, restringe las herramientas para ese canal.
 
 ### Diferentes herramientas por remitente (el propietario obtiene más poder)
 
-Usa `toolsBySender` para aplicar una política más estricta a `"*"` y una más relajada a tu apodo:
+Usa `toolsBySender` para aplicar una política más estricta a `"*"` y una más relajada a tu nick:
 
 ```json5
 {
@@ -181,9 +182,9 @@ Notas:
 - Las claves de `toolsBySender` deben usar `id:` para los valores de identidad del remitente de IRC:
   `id:eigen` o `id:eigen!~eigen@174.127.248.171` para una coincidencia más fuerte.
 - Las claves heredadas sin prefijo todavía se aceptan y coinciden solo como `id:`.
-- Gana la primera política de remitente que coincida; `"*"` es el respaldo de comodín.
+- Gana la primera política de remitente que coincida; `"*"` es el respaldo comodín.
 
-Para obtener más información sobre el acceso de grupos frente a las menciones (y cómo interactúan), consulte: [/channels/groups](/es/channels/groups).
+Para obtener más información sobre el acceso de grupos frente a las menciones (y cómo interactúan), consulta: [/channels/groups](/es/channels/groups).
 
 ## NickServ
 
@@ -203,7 +204,7 @@ Para identificarse con NickServ después de conectarse:
 }
 ```
 
-Registro opcional de una sola vez al conectarse:
+Registro opcional de una vez al conectarse:
 
 ```json5
 {
@@ -218,11 +219,11 @@ Registro opcional de una sola vez al conectarse:
 }
 ```
 
-Deshabilita `register` después de que el apodo esté registrado para evitar intentos repetidos de REGISTER.
+Deshabilita `register` después de que el nick esté registrado para evitar intentos repetidos de REGISTER.
 
 ## Variables de entorno
 
-La cuenta predeterminada admite:
+La cuenta predeterminada soporta:
 
 - `IRC_HOST`
 - `IRC_PORT`
@@ -231,22 +232,22 @@ La cuenta predeterminada admite:
 - `IRC_USERNAME`
 - `IRC_REALNAME`
 - `IRC_PASSWORD`
-- `IRC_CHANNELS` (separadas por comas)
+- `IRC_CHANNELS` (separados por comas)
 - `IRC_NICKSERV_PASSWORD`
 - `IRC_NICKSERV_REGISTER_EMAIL`
 
-`IRC_HOST` no se puede establecer desde un espacio de trabajo `.env`; consulte [Archivos `.env` del espacio de trabajo](/es/gateway/security).
+`IRC_HOST` no se puede establecer desde un `.env` del espacio de trabajo; consulta [Archivos `.env` del espacio de trabajo](/es/gateway/security).
 
 ## Solución de problemas
 
-- Si el bot se conecta pero nunca responde en los canales, verifique `channels.irc.groups` **y** si el filtrado por menciones está descartando mensajes (`missing-mention`). Si desea que responda sin notificaciones, establezca `requireMention:false` para el canal.
-- Si el inicio de sesión falla, verifica la disponibilidad del nick y la contraseña del servidor.
-- Si falla TLS en una red personalizada, verifica la configuración del host/puerto y del certificado.
+- Si el bot se conecta pero nunca responde en los canales, verifica `channels.irc.groups` **y** si el filtrado por menciones está descartando mensajes (`missing-mention`). Si quieres que responda sin pings, establece `requireMention:false` para el canal.
+- Si falla el inicio de sesión, verifica la disponibilidad del nick y la contraseña del servidor.
+- Si falla TLS en una red personalizada, verifica el host/puerto y la configuración del certificado.
 
 ## Relacionado
 
-- [Descripción general de canales](/es/channels) — todos los canales admitidos
-- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
-- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
-- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento
+- [Resumen de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación DM y flujo de emparejamiento
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado por menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Seguridad](/es/gateway/security) — modelo de acceso y reforzamiento

@@ -7,21 +7,33 @@ title: "Heartbeat"
 sidebarTitle: "Heartbeat"
 ---
 
-<Note>**Heartbeat vs cron?** See [Automation & Tasks](/zh-Hant/automation) for guidance on when to use each.</Note>
+<Note>**Heartbeat vs cron？** 請參閱 [Automation & Tasks](/zh-Hant/automation) 以獲得關於何時使用每一項的指導。</Note>
 
 Heartbeat 會在主對話階段中執行**週期性代理輪次**，以便模型能突顯需要注意的事項，而不會對您造成垃圾訊息干擾。
 
-Heartbeat 是一個排程的主對話階段輪次 — 它並**不**會建立 [background task](/zh-Hant/automation/tasks) 記錄。任務記錄是用於分離的工作（ACP 執行、子代理、獨立的 cron 工作）。
+Heartbeat 是一個預定的主會話回合 — 它**不會**建立 [background task](/zh-Hant/automation/tasks) 記錄。任務記錄是用於分離的工作（ACP 執行、子代理、獨立的 cron 工作）。
 
 疑難排解：[Scheduled Tasks](/zh-Hant/automation/cron-jobs#troubleshooting)
 
 ## 快速入門（初學者）
 
 <Steps>
-  <Step title="選擇頻率">保持啟用心跳 (預設為 `30m`，若是 Anthropic OAuth/token 驗證 (包括 Claude CLI 重用) 則為 `1h`)，或設定您自己的頻率。</Step>
-  <Step title="新增 HEARTBEAT.md (選用)">在代理工作區中建立一個微小的 `HEARTBEAT.md` 檢查清單或 `tasks:` 區塊。</Step>
-  <Step title="決定心跳訊息應傳送至何處">預設為 `target: "none"`；設定 `target: "last"` 以傳送至最後一個聯絡人。</Step>
-  <Step title="選用的微調">- 啟用心跳推理傳遞以提高透明度。 - 如果心跳執行只需要 `HEARTBEAT.md`，請使用輕量級啟動內容。 - 啟用獨立對話以避免每次心跳都傳送完整的對話記錄。 - 將心跳限制在活動時間內 (當地時間)。</Step>
+  <Step title="選擇頻率">
+    保持啟用 heartbeat（預設為 `30m`，若為 Anthropic OAuth/token 驗證模式，包括 Claude CLI 重用，則為 `1h`）或設定您自己的頻率。
+  </Step>
+  <Step title="新增 HEARTBEAT.md（選用）">
+    在代理工作區中建立一個小型的 `HEARTBEAT.md` 檢查清單或 `tasks:` 區塊。
+  </Step>
+  <Step title="決定 heartbeat 訊息應該送往何處">
+    `target: "none"` 是預設值；設定 `target: "last"` 以路由至最後一個聯絡人。
+  </Step>
+  <Step title="選用性調整">
+    - 啟用 heartbeat 推理傳遞以增加透明度。
+    - 如果 heartbeat 執行僅需 `HEARTBEAT.md`，請使用輕量級啟動上下文。
+    - 啟用獨立會話以避免每次 heartbeat 都傳送完整的對話記錄。
+    - 將 heartbeat 限制在活動時間內（當地時間）。
+
+  </Step>
 </Steps>
 
 範例配置：
@@ -36,6 +48,7 @@ Heartbeat 是一個排程的主對話階段輪次 — 它並**不**會建立 [ba
         directPolicy: "allow", // default: allow direct/DM targets; set "block" to suppress
         lightContext: true, // optional: only inject HEARTBEAT.md from bootstrap files
         isolatedSession: true, // optional: fresh session each run (no conversation history)
+        skipWhenBusy: true, // optional: also defer when subagent or nested lanes are busy
         // activeHours: { start: "08:00", end: "24:00" },
         // includeReasoning: true, // optional: send separate `Reasoning:` message too
       },
@@ -46,31 +59,33 @@ Heartbeat 是一個排程的主對話階段輪次 — 它並**不**會建立 [ba
 
 ## 預設值
 
-- 間隔：`30m` (當偵測到的驗證模式為 Anthropic OAuth/token 驗證 (包括 Claude CLI 重用) 時則為 `1h`)。設定 `agents.defaults.heartbeat.every` 或各代理的 `agents.list[].heartbeat.every`；使用 `0m` 來停用。
-- 提示主體 (可透過 `agents.defaults.heartbeat.prompt` 設定)：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
+- 間隔：`30m`（若偵測到的驗證模式為 Anthropic OAuth/token 驗證，包括 Claude CLI 重用，則為 `1h`）。設定 `agents.defaults.heartbeat.every` 或每個代理的 `agents.list[].heartbeat.every`；使用 `0m` 來停用。
+- 提示詞主體（可透過 `agents.defaults.heartbeat.prompt` 設定）：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
 - 心跳提示詞會作為用戶訊息**逐字**發送。系統提示詞僅在為預設代理啟用心跳時才包含「Heartbeat」部分，且該運行會在內部被標記。
-- 當使用 `0m` 停用心跳時，正常運行也會從引導上下文中省略 `HEARTBEAT.md`，以便模型不會看到僅限心跳的指令。
-- 活動時間 (`heartbeat.activeHours`) 會在設定的時區中進行檢查。在時間窗外，心跳將被跳過，直到時間窗內的下一個刻度。
+- 當使用 `0m` 停用 heartbeat 時，正常執行也會從啟動上下文中省略 `HEARTBEAT.md`，這樣模型就不會看到僅限 heartbeat 的指示。
+- 活動時間 (`heartbeat.activeHours`) 會根據設定的時區進行檢查。在時間視窗之外，心跳會被跳過，直到視窗內的下一次刻度。
+- 當 cron 工作處於活動或佇列狀態時，心跳會自動延後。設定 `heartbeat.skipWhenBusy: true` 可讓心跳在額外忙碌的通道（子代理或巢狀指令工作）中也延後執行；這對於本機 Ollama 和其他受限的單一執行環境主機非常有用。
 
-## 心跳提示詞的用途
+## 心跳提示的用途
 
-預設提示詞的設計意圖是廣泛的：
+預設提示是故意設計得非常廣泛的：
 
-- **背景任務**：「考慮未完成的任務」會促使代理檢查後續事項（收件匣、日曆、提醒、排隊的工作），並提出任何緊急事項。
-- **人類確認**：「有時在白天檢查一下你的人類」會促使偶爾發送輕量級的「您需要什麼嗎？」訊息，但透過使用您設定的本地時區來避免夜間騷擾（請參閱 [Timezone](/zh-Hant/concepts/timezone)）。
+- **背景任務**：「考慮未完成的任務」會提示代理檢查後續事項（收件匣、行事曆、提醒、佇列工作），並提出任何緊急事項。
+- **人類確認**：「有時在日間檢查你的人類」會偶爾觸發輕量級的「有什麼需要嗎？」訊息，但透過使用您設定的本地時區來避免夜間騷擾（請參閱 [時區](/zh-Hant/concepts/timezone)）。
 
-心跳可以對已完成的 [background tasks](/zh-Hant/automation/tasks) 做出反應，但心跳運行本身不會建立任務記錄。
+心跳可以對已完成的 [背景任務](/zh-Hant/automation/tasks) 做出反應，但心跳執行本身並不會建立任務記錄。
 
-如果您希望心跳執行非常具體的操作（例如「檢查 Gmail PubSub 統計數據」或「驗證閘道健康狀況」），請將 `agents.defaults.heartbeat.prompt`（或 `agents.list[].heartbeat.prompt`）設定為自訂內容（將逐字發送）。
+如果您希望心跳執行非常具體的操作（例如「檢查 Gmail PubSub 統計資料」或「驗證閘道健康狀態」），請將 `agents.defaults.heartbeat.prompt`（或 `agents.list[].heartbeat.prompt`）設為自訂主體（將逐字發送）。
 
-## 回應契約
+## 回應合約
 
-- 如果不需要注意任何事情，請以 **`HEARTBEAT_OK`** 回覆。
-- 在心跳運行期間，當 `HEARTBEAT_OK` 出現在回覆的**開頭或結尾**時，OpenClaw 會將其視為確認信號。該標記會被移除，如果剩餘內容**≤ `ackMaxChars`**（預設值：300），則回覆會被丟棄。
+- 如果沒有需要注意的事項，請回覆 **`HEARTBEAT_OK`**。
+- 具備工具能力的心跳執行可以改為呼叫 `heartbeat_respond` 並搭配 `notify: false` 以表示沒有可見的更新，或是呼叫 `notify: true` 加上 `notificationText` 以發出警示。當存在結構化工具回應時，其優先順序高於文字後備方案。
+- 在心跳執行期間，當 `HEARTBEAT_OK` 出現在回覆的**開頭或結尾**時，OpenClaw 會將其視為確認信號。該 token 會被移除，如果剩餘內容**≤ `ackMaxChars`**（預設值：300），則該回覆將被丟棄。
 - 如果 `HEARTBEAT_OK` 出現在回覆的**中間**，則不會受到特殊處理。
-- 對於警報，**請勿**包含 `HEARTBEAT_OK`；僅傳回警報文字。
+- 對於警示，**請勿**包含 `HEARTBEAT_OK`；僅回傳警示文字。
 
-在心跳之外，訊息開頭/結尾處的零散 `HEARTBEAT_OK` 將被移除並記錄；僅包含 `HEARTBEAT_OK` 的訊息將被丟棄。
+在心跳之外，訊息開頭/結尾的零散 `HEARTBEAT_OK` 會被移除並記錄；如果訊息僅包含 `HEARTBEAT_OK`，則該訊息會被丟棄。
 
 ## Config
 
@@ -84,7 +99,8 @@ Heartbeat 是一個排程的主對話階段輪次 — 它並**不**會建立 [ba
         includeReasoning: false, // default: false (deliver separate Reasoning: message when available)
         lightContext: false, // default: false; true keeps only HEARTBEAT.md from workspace bootstrap files
         isolatedSession: false, // default: false; true runs each heartbeat in a fresh session (no conversation history)
-        target: "last", // default: none | options: last | none | <channel id> (core or plugin, e.g. "bluebubbles")
+        skipWhenBusy: false, // default: false; true also waits for subagent/nested lanes
+        target: "last", // default: none | options: last | none | <channel id> (core or plugin, e.g. "imessage")
         to: "+15551234567", // optional channel-specific override
         accountId: "ops-bot", // optional multi-account channel id
         prompt: "Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.",
@@ -98,14 +114,14 @@ Heartbeat 是一個排程的主對話階段輪次 — 它並**不**會建立 [ba
 ### Scope and precedence
 
 - `agents.defaults.heartbeat` 設定全域心跳行為。
-- `agents.list[].heartbeat` 會合併在最上層；如果任何代理擁有 `heartbeat` 區塊，**僅有這些代理**會執行心跳。
-- `channels.defaults.heartbeat` 設定所有頻道的可見性預設值。
+- `agents.list[].heartbeat` 會在頂部合併；如果有任何代理擁有 `heartbeat` 區塊，**僅這些代理** 會執行心跳。
+- `channels.defaults.heartbeat` 為所有頻道設定可見性預設值。
 - `channels.<channel>.heartbeat` 會覆寫頻道預設值。
 - `channels.<channel>.accounts.<id>.heartbeat`（多帳號頻道）會覆寫個別頻道設定。
 
-### 個別代理心跳
+### Per-agent heartbeats
 
-如果任何 `agents.list[]` 項目包含 `heartbeat` 區塊，**僅有這些代理**會執行心跳。個別代理區塊會合併在 `agents.defaults.heartbeat` 之上（因此您可以設定一次共享預設值，並針對各個代理進行覆寫）。
+如果有任何 `agents.list[]` 項目包含 `heartbeat` 區塊，**僅這些代理** 會執行心跳。個別代理區塊會在 `agents.defaults.heartbeat` 之上合併（因此您可以設定一次共用的預設值，並針對各個代理進行覆寫）。
 
 範例：兩個代理，僅第二個代理執行心跳。
 
@@ -135,7 +151,7 @@ Heartbeat 是一個排程的主對話階段輪次 — 它並**不**會建立 [ba
 }
 ```
 
-### 啟用時段範例
+### Active hours example
 
 將心跳限制在特定時區的營業時間內：
 
@@ -157,20 +173,20 @@ Heartbeat 是一個排程的主對話階段輪次 — 它並**不**會建立 [ba
 }
 ```
 
-在此時間範圍之外（美國東部時間上午 9 點之前或晚上 10 點之後），將會跳過心跳。在範圍內的下一個排定刻度將會正常執行。
+在此時間範圍之外（美國東部時間上午 9 點之前或晚上 10 點之後），心跳將會跳過。在此範圍內的下一個排程執行時間將會正常執行。
 
-### 24/7 設定
+### 24/7 setup
 
-如果您希望心跳整天運作，請使用以下其中一種模式：
+如果您希望心跳全天候執行，請使用下列其中一種模式：
 
-- 完全省略 `activeHours`（沒有時間視窗限制；這是預設行為）。
-- 設定全天時間視窗：`activeHours: { start: "00:00", end: "24:00" }`。
+- 完全省略 `activeHours`（無時間視窗限制；這是預設行為）。
+- 設定全天的時間視窗：`activeHours: { start: "00:00", end: "24:00" }`。
 
-<Warning>請勿將 `start` 和 `end` 設定為相同的時間（例如 `08:00` 到 `08:00`）。這將被視為零寬度視窗，因此心跳將會永遠被跳過。</Warning>
+<Warning>請勿將 `start` 和 `end` 設定為相同的時間（例如從 `08:00` 到 `08:00`）。這會被視為零寬度視窗，因此心跳將永遠被跳過。</Warning>
 
-### 多帳號範例
+### Multi-account example
 
-使用 `accountId` 來鎖定 Telegram 這類多帳號頻道上的特定帳號：
+使用 `accountId` 指定 Telegram 等多帳號頻道上的特定帳號：
 
 ```json5
 {
@@ -197,90 +213,105 @@ Heartbeat 是一個排程的主對話階段輪次 — 它並**不**會建立 [ba
 }
 ```
 
-### 實作筆記
+### Field notes
 
 <ParamField path="every" type="string">
   心跳間隔（持續時間字串；預設單位 = 分鐘）。
 </ParamField>
 <ParamField path="model" type="string">
-  心跳執行的選用模型覆寫 (`provider/model`)。
+  心跳執行的可選模型覆寫 (`provider/model`)。
 </ParamField>
 <ParamField path="includeReasoning" type="boolean" default="false">
-  啟用時，也會在可用時傳送獨立的 `Reasoning:` 訊息（形狀與 `/reasoning on` 相同）。
+  啟用時，也可在可用時傳送獨立的 `Reasoning:` 訊息（形狀與 `/reasoning on` 相同）。
 </ParamField>
 <ParamField path="lightContext" type="boolean" default="false">
-  當為 true 時，心跳執行會使用輕量級啟動上下文，並且僅保留來自工作區啟動檔案的 `HEARTBEAT.md`。
+  當為 true 時，心跳執行使用輕量級啟動上下文，並僅保留工作區啟動檔案中的 `HEARTBEAT.md`。
 </ParamField>
 <ParamField path="isolatedSession" type="boolean" default="false">
-  當為 true 時，每次心跳都在沒有先前對話記錄的新工作階段中執行。使用與 cron `sessionTarget: "isolated"` 相同的隔離模式。大幅降低每次心跳的 token 成本。與 `lightContext: true` 結合使用以實現最大節省。傳送路由仍使用主工作階段上下文。
+  當為 true 時，每次心跳都在一個沒有先前對話歷史的新會話中執行。使用與 cron `sessionTarget: "isolated"` 相同的隔離模式。大幅減少每次心跳的 token 成本。結合 `lightContext: true` 以獲得最大節省。傳送路由仍使用主會話上下文。
+</ParamField>
+<ParamField path="skipWhenBusy" type="boolean" default="false">
+  當為 true 時，心跳執行會在額外忙碌的通道上延遲：子代理或巢狀指令工作。Cron 通道總是會延遲心跳，即使沒有此標誌也是如此，因此本地模型主機不會同時執行 cron 和 heartbeat 提示。
 </ParamField>
 <ParamField path="session" type="string">
-  心跳執行的選用工作階段金鑰。
+  心跳執行的可選會話金鑰。
 
-- `main` (預設): agent 主工作階段。
-- 明確的工作階段金鑰 (從 `openclaw sessions --json` 複製，或是來自 [sessions CLI](/zh-Hant/cli/sessions))。
-- 工作階段金鑰格式：請參閱 [Sessions](/zh-Hant/concepts/session) 和 [Groups](/zh-Hant/channels/groups)。
-  </ParamField>
+- `main` (預設)：代理主會話。
+- 明確的會話金鑰（從 `openclaw sessions --json` 複製或透過 [sessions CLI](/zh-Hant/cli/sessions) 複製）。
+- 會話金鑰格式：請參閱 [Sessions](/zh-Hant/concepts/session) 和 [Groups](/zh-Hant/channels/groups)。
+
+</ParamField>
 <ParamField path="target" type="string">
-- `last`: 傳送至上次使用的外部頻道。
-- 明確頻道：任何已設定的頻道或 plugin id，例如 `discord`、`matrix`、`telegram` 或 `whatsapp`。
-- `none` (預設): 執行心跳但**不對外發送**。
+- `last`：傳送至最後使用的外部頻道。
+- 明確指定頻道：任何已設定的頻道或外掛 ID，例如 `discord`、`matrix`、`telegram` 或 `whatsapp`。
+- `none` (預設)：執行心跳但**不進行外部傳送**。
 
-  </ParamField>
+</ParamField>
 <ParamField path="directPolicy" type='"allow" | "block"' default="allow">
-控制直接訊息/DM 發送行為。`allow`: 允許直接訊息/DM 心跳發送。`block`: 抑制直接訊息/DM 發送 (`reason=dm-blocked`)。
+  控制直接訊息/DM 的傳送行為。`allow`：允許直接訊息/DM 的心跳傳送。`block`：抑制直接訊息/DM 的傳送 (`reason=dm-blocked`)。
+
 </ParamField>
 <ParamField path="to" type="string">
-可選的收件者覆蓋 (通道特定 ID，例如 WhatsApp 的 E.164 或 Telegram 聊天 ID)。對於 Telegram 主題/討論串，請使用 `<chatId>:topic:<messageThreadId>`。
+  選用的收件者覆寫 (特定頻道 ID，例如 WhatsApp 的 E.164 或 Telegram 聊天 ID)。對於 Telegram 主題/串列，請使用 `<chatId>:topic:<messageThreadId>`。
+
 </ParamField>
 <ParamField path="accountId" type="string">
-多帳號通道的可選帳號 ID。當為 `target: "last"` 時，帳號 ID 應用於解析到的最後一個通道（如果該通道支援帳號）；否則將被忽略。如果帳號 ID 與解析通道的已配置帳號不匹配，則跳過發送。
+  多帳號頻道的選用帳號 ID。當為 `target: "last"` 時，若解析出的最後一個頻道支援帳號，則帳號 ID 套用至該頻道；否則將予以忽略。如果帳號 ID 與解析出的頻道之已設定帳號不符，將跳過傳送。
+
 </ParamField>
 <ParamField path="prompt" type="string">
-覆蓋預設提示詞內容 (不會合併)。
+  覆寫預設的提示詞主體 (不會合併)。
+
 </ParamField>
 <ParamField path="ackMaxChars" type="number" default="300">
-在 `HEARTBEAT_OK` 之後、發送之前允許的最大字元數。
+  在 `HEARTBEAT_OK` 之後、傳送之前允許的最大字元數。
+
 </ParamField>
 <ParamField path="suppressToolErrorWarnings" type="boolean">
-當為 true 時，在心跳執行期間抑制工具錯誤警告負載。
+  為 true 時，在心跳執行期間抑制工具錯誤警示的負載。
+
 </ParamField>
 <ParamField path="activeHours" type="object">
-將心跳執行限制在時間視窗內。具有 `start` (HH:MM，包含；使用 `00:00` 表示一天開始)、`end` (HH:MM，不包含；`24:00` 允許用於一天結束) 和可選的 `timezone` 的物件。
+  將心跳執行限制在時間視窗內。包含 `start`（HH:MM，包含；使用 `00:00` 表示一天開始）、`end`（HH:MM 不包含；允許使用 `24:00` 表示一天結束）以及可選的 `timezone` 的物件。
 
-- 省略或設定為 `"user"`: 如果已設定則使用您的 `agents.defaults.userTimezone`，否則回退到主機系統時區。
-- `"local"`: 始終使用主機系統時區。
+- 省略或 `"user"`：如果設定了則使用您的 `agents.defaults.userTimezone`，否則回退到主機系統時區。
+- `"local"`：始終使用主機系統時區。
 - 任何 IANA 識別碼（例如 `America/New_York`）：直接使用；如果無效，則回退到上述 `"user"` 的行為。
-- `start` 和 `end` 對於活動視窗不得相等；相等的值被視為零寬度（始終在視窗之外）。
-- 在活動視窗之外，跳過心跳直到視窗內的下一個刻度。
-  </ParamField>
+- 對於有效的視窗，`start` 和 `end` 不得相等；相等的值會被視為零寬度（始終在視窗外）。
+- 在有效視窗之外，會跳過心跳，直到視窗內的下一個刻度。
 
-## 傳遞行為
+</ParamField>
+
+## 遞送行為
 
 <AccordionGroup>
   <Accordion title="Session and target routing">
-    - 心跳預設在代理的主會話中運行（`agent:<id>:<mainKey>`），或者在 `session.scope = "global"` 時為 `global`。設定 `session` 以覆蓋為特定的頻道會話（Discord/WhatsApp 等）。
-    - `session` 僅影響運行上下文；傳遞由 `target` 和 `to` 控制。
-    - 若要傳遞到特定的頻道/接收者，請設定 `target` + `to`。使用 `target: "last"` 時，傳遞使用該會話的最後一個外部頻道。
-    - 心跳傳遞預設允許直接/DM 目標。設定 `directPolicy: "block"` 以在仍執行心跳輪次時抑制直接目標傳送。
-    - 如果主佇列忙碌，則跳過心跳並稍後重試。
-    - 如果 `target` 解析為無外部目的地，運行仍會發生，但不會傳送出站訊息。
+    - Heartbeats run in the agent's main session by default (`agent:<id>:<mainKey>`), or `global` when `session.scope = "global"`. Set `session` to override to a specific channel session (Discord/WhatsApp/etc.).
+    - `session` only affects the run context; delivery is controlled by `target` and `to`.
+    - To deliver to a specific channel/recipient, set `target` + `to`. With `target: "last"`, delivery uses the last external channel for that session.
+    - Heartbeat deliveries allow direct/DM targets by default. Set `directPolicy: "block"` to suppress direct-target sends while still running the heartbeat turn.
+    - If the main queue, target session lane, cron lane, or an active cron job is busy, the heartbeat is skipped and retried later.
+    - If `skipWhenBusy: true`, subagent and nested lanes also defer heartbeat runs.
+    - If `target` resolves to no external destination, the run still happens but no outbound message is sent.
+
   </Accordion>
-  <Accordion title="可見性和跳過行為">
-    - 如果 `showOk`、`showAlerts` 和 `useIndicator` 均被停用，則該執行會在開頭被跳過並標記為 `reason=alerts-disabled`。
-    - 如果僅停用了警報傳遞，OpenClaw 仍然可以執行心跳、更新到期任務的時間戳、恢復會話閒置時間戳，並抑制外發警報負載。
-    - 如果解析後的心跳目標支援輸入狀態指示，OpenClaw 會在心跳執行期間顯示輸入狀態。這使用與心跳發送聊天輸出相同的目標，並且被 `typingMode: "never"` 停用。
+  <Accordion title="Visibility and skip behavior">
+    - If `showOk`, `showAlerts`, and `useIndicator` are all disabled, the run is skipped up front as `reason=alerts-disabled`.
+    - If only alert delivery is disabled, OpenClaw can still run the heartbeat, update due-task timestamps, restore the session idle timestamp, and suppress the outward alert payload.
+    - If the resolved heartbeat target supports typing, OpenClaw shows typing while the heartbeat run is active. This uses the same target the heartbeat would send chat output to, and it is disabled by `typingMode: "never"`.
+
   </Accordion>
-  <Accordion title="會話生命週期與稽核">
-    - 僅有心跳的回覆**不會**保持會話存活。心跳元數據可能會更新會話行，但閒置過期使用最後一次真實用戶/頻道訊息的 `lastInteractionAt`，而每日過期使用 `sessionStartedAt`。
-    - 控制介面 和 WebChat 歷史記錄會隱藏心跳提示和僅包含 OK 的確認回覆。底層的會話逐字稿仍可包含這些輪次以供稽核/重播。
-    - 分離的 [背景任務](/zh-Hant/automation/tasks) 可以將系統事件加入佇列，並在主會話需要快速注意某些事情時喚醒心跳。該喚醒操作不會使心跳執行變成背景任務。
+  <Accordion title="Session lifecycle and audit">
+    - 僅限 Heartbeat 的回應**不會**讓會話保持活躍。Heartbeat 元資料可能會更新會話記錄，但閒置到期使用的是來自最後一次真實使用者/頻道訊息的 `lastInteractionAt`，而每日到期使用的是 `sessionStartedAt`。
+    - Control UI 和 WebChat 歷程記錄會隱藏 heartbeat 提示和僅有 OK 的確認。底層的會話逐字稿仍可包含這些輪次以供審計/重播。
+    - 分離的 [background tasks](/zh-Hant/automation/tasks) 可以將系統事件加入佇列，並在主會話應快速注意某些事項時喚醒 heartbeat。該喚醒動作不會讓 heartbeat 執行背景任務。
+
   </Accordion>
 </AccordionGroup>
 
 ## 可見性控制
 
-預設情況下，當傳遞警報內容時，會隱藏 `HEARTBEAT_OK` 確認回覆。您可以針對每個頻道或每個帳戶調整此設定：
+根據預設，傳遞警示內容時會隱藏 `HEARTBEAT_OK` 確認。您可以針對每個頻道或每個帳戶調整此設定：
 
 ```yaml
 channels:
@@ -301,13 +332,13 @@ channels:
 
 優先順序：per-account → per-channel → channel defaults → built-in defaults。
 
-### 每個標誌的作用
+### 每個旗標的作用
 
-- `showOk`：當模型僅傳回 OK 回覆時，發送 `HEARTBEAT_OK` 確認。
-- `showAlerts`：當模型傳回非 OK 回覆時，發送警報內容。
-- `useIndicator`：針對 UI 狀態介面發出指示器事件。
+- `showOk`：當模型返回僅有 OK 的回覆時，發送 `HEARTBEAT_OK` 確認。
+- `showAlerts`：當模型返回非 OK 的回覆時，發送警示內容。
+- `useIndicator`：為 UI 狀態介面發出指示器事件。
 
-如果**全部三個**皆為 false，OpenClaw 將完全跳過心跳執行（不呼叫模型）。
+如果這三個**全部**為 false，OpenClaw 將完全跳過此次執行 (不呼叫模型)。
 
 ### Per-channel 與 per-account 範例
 
@@ -332,22 +363,22 @@ channels:
 
 ### 常見模式
 
-| 目標                          | 設定                                                                                     |
-| ----------------------------- | ---------------------------------------------------------------------------------------- |
-| 預設行為（靜默 OK，開啟警報） | （無需設定）                                                                             |
-| 完全靜默（無訊息，無指示器）  | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: false }` |
-| 僅指示器（無訊息）            | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: true }`  |
-| 僅在一個頻道中顯示 OK         | `channels.telegram.heartbeat: { showOk: true }`                                          |
+| 目標                         | 設定                                                                                     |
+| ---------------------------- | ---------------------------------------------------------------------------------------- |
+| 預設行為 (靜默 OK，開啟警示) | _(無需設定)_                                                                             |
+| 完全靜默 (無訊息，無指示器)  | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: false }` |
+| 僅指示器 (無訊息)            | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: true }`  |
+| 僅在一個頻道顯示 OK          | `channels.telegram.heartbeat: { showOk: true }`                                          |
 
-## HEARTBEAT.md（可選）
+## HEARTBEAT.md (選用)
 
-如果工作區中存在 `HEARTBEAT.md` 檔案，預設提示會指示代理讀取它。您可以將其視為您的「心跳檢查清單」：小巧、穩定，且每 30 分鐘包含一次是安全的。
+如果工作區中存在 `HEARTBEAT.md` 檔案，預設提示會告訴代理程式閱讀它。您可以將其視為您的「heartbeat 檢查清單」：小巧、穩定，且每 30 分鐘包含一次是安全的。
 
-在正常執行時，只有當預設代理啟用了心跳指引時，才會注入 `HEARTBEAT.md`。使用 `0m` 停用心跳頻率或設定 `includeSystemPromptSection: false` 將會將其從正常啟動上下文中省略。
+在正常執行時，只有在為預設代理啟用了 heartbeat 指導時，才會注入 `HEARTBEAT.md`。使用 `0m` 停用 heartbeat 節奏，或設定 `includeSystemPromptSection: false`，會使其從正常的啟動上下文中省略。
 
-如果 `HEARTBEAT.md` 存在但實際上是空的（只有空白行和像 `# Heading` 這樣的 markdown 標題），OpenClaw 會跳過心跳執行以節省 API 呼叫。該跳過會被回報為 `reason=empty-heartbeat-file`。如果檔案不存在，心跳仍會執行，模型會決定要做什麼。
+如果 `HEARTBEAT.md` 存在但實際上為空（只有空行和像 `# Heading` 這樣的 markdown 標題），OpenClaw 會跳過 heartbeat 執行以節省 API 呼叫。該跳過會被回報為 `reason=empty-heartbeat-file`。如果檔案不存在，heartbeat 仍會執行，模型將決定要做什麼。
 
-保持極小（短檢查清單或提醒），以避免提示膨脹。
+保持簡短（簡短的檢查清單或提醒），以避免提示膨脹。
 
 `HEARTBEAT.md` 範例：
 
@@ -361,7 +392,7 @@ channels:
 
 ### `tasks:` 區塊
 
-`HEARTBEAT.md` 也支援一個小型結構化的 `tasks:` 區塊，用於心跳內部基於間隔的檢查。
+`HEARTBEAT.md` 也支援一個小型的結構化 `tasks:` 區塊，用於 heartbeat 內部的基於間隔的檢查。
 
 範例：
 
@@ -383,61 +414,72 @@ tasks:
 
 <AccordionGroup>
   <Accordion title="行為">
-    - OpenClaw 解析 `tasks:` 區塊，並根據其自身的 `interval` 檢查每個任務。 - 只有**到期**的任務會包含在該次心跳的提示中。 - 如果沒有任務到期，心跳將被完全跳過（`reason=no-tasks-due`），以避免浪費模型呼叫。 - `HEARTBEAT.md` 中的非任務內容將被保留，並作為額外上下文附加在到期任務列表之後。 - 任務上次執行的時間戳記存儲在會話狀態中（`heartbeatTaskState`），因此間隔設定在正常重啟後仍然有效。 -
-    只有在心跳執行完成其正常回覆路徑後，任務時間戳記才會前進。跳過的 `empty-heartbeat-file` / `no-tasks-due` 執行不會將任務標記為已完成。
+    - OpenClaw 會解析 `tasks:` 區塊，並根據其自身的 `interval` 檢查每個任務。
+    - 只有 **到期** 的任務會包含在該次週期的 heartbeat 提示中。
+    - 如果沒有任務到期，將完全跳過 heartbeat (`reason=no-tasks-due`)，以避免浪費模型的呼叫。
+    - `HEARTBEAT.md` 中的非任務內容會被保留，並作為額外上下文附加在到期任務清單之後。
+    - 任務的最後執行時間戳記會儲存在會話狀態中 (`heartbeatTaskState`)，因此間隔設定在正常重啟後仍然有效。
+    - 任務時間戳記僅在 heartbeat 執行完成其正常回覆路徑後才會前進。跳過的 `empty-heartbeat-file` / `no-tasks-due` 執行不會將任務標記為已完成。
+
   </Accordion>
 </AccordionGroup>
 
-當您希望一個 heartbeat 檔案包含多個定期檢查而不想每次心跳都為所有檢查付費時，Task 模式非常有用。
+當您希望一個 heartbeat 檔案包含多個定期檢查，而不想在每次週期時為所有檢查付費時，任務模式非常有用。
 
-### 代理程式可以更新 HEARTBEAT.md 嗎？
+### 代理可以更新 HEARTBEAT.md 嗎？
 
-可以 —— 如果您要求它這樣做的話。
+可以 — 如果您要求它的話。
 
-`HEARTBEAT.md` 只是代理程式工作區中的一個普通檔案，因此您可以在一般聊天中告訴代理程式類似這樣的話：
+`HEARTBEAT.md` 只是代理工作區中的一個普通檔案，因此您可以在（正常聊天中）告訴代理類似這樣的內容：
 
-- "更新 `HEARTBEAT.md` 以新增每日日曆檢查。"
-- "重寫 `HEARTBEAT.md` 使其更簡短，並專注於收件箱後續追蹤。"
+- 「更新 `HEARTBEAT.md` 以新增每日日曆檢查。」
+- 「重寫 `HEARTBEAT.md`，使其更簡短並專注於收件箱的後續追蹤。」
 
-如果您希望這主動發生，您也可以在 heartbeat 提示中包含明確的一行，例如：「如果檢查清單變得過時，請用更好的版本更新 HEARTBEAT.md。」
+如果您希望這主動發生，您也可以在您的 heartbeat 提示詞中包含一個明確的行：「如果檢查清單變得過時，請用更好的版本更新 HEARTBEAT.md。」
 
-<Warning>不要將祕密（API 金鑰、電話號碼、私人權杖）放入 `HEARTBEAT.md` —— 它會成為提示內容的一部分。</Warning>
+<Warning>請勿將機密資訊（API 金鑰、電話號碼、私人權杖）放入 `HEARTBEAT.md` —— 它將成為提示詞上下文的一部分。</Warning>
 
 ## 手喚醒（按需）
 
-您可以將系統事件加入佇列並透過以下方式觸發立即心跳：
+您可以將系統事件加入佇列並使用以下方式觸發立即的心跳：
 
 ```bash
 openclaw system event --text "Check for urgent follow-ups" --mode now
 ```
 
-如果有多個代理程式設定 `heartbeat`，手喚醒會立即執行每個代理程式的心跳。
+如果多個代理配置了 `heartbeat`，手喚醒會立即執行這些代理的每一個心跳。
 
-使用 `--mode next-heartbeat` 等待下一次排程的刻度。
+使用 `--mode next-heartbeat` 以等待下一次排程的刻度。
 
-## 推理交付（可選）
+## 推理傳遞（選用）
 
-預設情況下，心跳僅交付最終的「答案」承載。
+預設情況下，心跳僅傳遞最終的「答案」負載。
 
-如果您希望提高透明度，請啟用：
+如果您想要透明度，請啟用：
 
 - `agents.defaults.heartbeat.includeReasoning: true`
 
-啟用後，心跳還將交付一條單獨的前綴為 `Reasoning:` 的訊息（形狀與 `/reasoning on` 相同）。當代理程式管理多個工作階段/codexes 且您希望查看其決定通知您的原因時，這很有用 —— 但這也可能洩露比您想要的更多內部細節。建議在群組聊天中將其關閉。
+啟用後，心跳也會傳遞一條單獨的訊息，前綴為 `Reasoning:`（形狀與 `/reasoning on` 相同）。當代理正在管理多個會話/codex 時，這很有用，因為您可以看到它決定呼叫您的原因 —— 但這也可能洩漏比您想要的更多的內部細節。建議在群組聊天中將其關閉。
 
-## 成本意識
+## 成本考量
 
-心跳執行完整的代理程式回合。較短的間隔會消耗更多權杖。為了降低成本：
+心跳運行完整的代理回合。較短的間隔會消耗更多的 token。若要降低成本：
 
-- 使用 `isolatedSession: true` 避免發送完整的對話歷史記錄（從每次執行約 10萬 權杖降至約 2-5千 權杖）。
-- 使用 `lightContext: true` 將啟動檔案限制為僅 `HEARTBEAT.md`。
-- 設定較便宜的 `model`（例如 `ollama/llama3.2:1b`）。
+- 使用 `isolatedSession: true` 以避免發送完整的對話歷史記錄（每次執行從約 100K token 減少到約 2-5K）。
+- 使用 `lightContext: true` 將引導檔案限制為僅 `HEARTBEAT.md`。
+- 設定一個更便宜的 `model`（例如 `ollama/llama3.2:1b`）。
 - 保持 `HEARTBEAT.md` 簡短。
 - 如果您只想要內部狀態更新，請使用 `target: "none"`。
 
+## 心跳後的上下文溢出
+
+如果心跳先前將一個現有的會話留在一個較小的本地模型上，例如具有 32k 視窗的 Ollama 模型，並且下一次主會話回合報告上下文溢出，請將會話運行時模型重置為已配置的主要模型。當最後的運行時模型與已配置的 `heartbeat.model` 相符時，OpenClaw 的重置訊息會指出這一點。
+
+目前的 heartbeat 在執行完成後會保留共享會話現有的執行時期模型。您仍然可以使用 `isolatedSession: true` 在新的會話中執行 heartbeat，將其與 `lightContext: true` 結合以使用最精簡的提示，或是選擇一個具有足以容納共享會話之上下文視窗的 heartbeat 模型。
+
 ## 相關
 
-- [自動化與任務](/zh-Hant/automation) — 所有自動化機制概覽
-- [背景任務](/zh-Hant/automation/tasks) — 如何追蹤分離的工作
-- [時區](/zh-Hant/concepts/timezone) — 時區如何影響心跳排程
-- [疑難排解](/zh-Hant/automation/cron-jobs#troubleshooting) — 自動化問題的除錯
+- [Automation & Tasks](/zh-Hant/automation) — 所有自動化機制一覽
+- [Background Tasks](/zh-Hant/automation/tasks) — 如何追蹤分離的工作
+- [Timezone](/zh-Hant/concepts/timezone) — 時區如何影響 heartbeat 排程
+- [Troubleshooting](/zh-Hant/automation/cron-jobs#troubleshooting) — 自動化問題的除錯

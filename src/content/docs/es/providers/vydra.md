@@ -14,17 +14,22 @@ El complemento Vydra incluido añade:
 
 OpenClaw utiliza el mismo `VYDRA_API_KEY` para las tres capacidades.
 
-<Warning>
-Use `https://www.vydra.ai/api/v1` como la URL base.
+| Propiedad                            | Valor                                                                     |
+| ------------------------------------ | ------------------------------------------------------------------------- |
+| Id. de proveedor                     | `vydra`                                                                   |
+| Complemento                          | incluido, `enabledByDefault: true`                                        |
+| Variable de entorno de autenticación | `VYDRA_API_KEY`                                                           |
+| Indicador de incorporación           | `--auth-choice vydra-api-key`                                             |
+| Indicador directo de CLI             | `--vydra-api-key <key>`                                                   |
+| Contratos                            | `imageGenerationProviders`, `videoGenerationProviders`, `speechProviders` |
+| URL base                             | `https://www.vydra.ai/api/v1` (use el host `www`)                         |
 
-El host apex de Vydra (`https://vydra.ai/api/v1`) actualmente redirige a `www`. Algunos clientes HTTP descartan `Authorization` en esa redirección entre hosts, lo que convierte una clave de API válida en un error de autenticación engañoso. El complemento incluido usa la URL base `www` directamente para evitar eso.
-
-</Warning>
+<Warning>Use `https://www.vydra.ai/api/v1` como la URL base. El host principal de Vydra (`https://vydra.ai/api/v1`) actualmente redirige a `www`. Algunos clientes HTTP descartan `Authorization` en esa redirección entre hosts, lo que convierte una clave de API válida en un error de autenticación engañoso. El complemento incluido usa la URL base `www` directamente para evitar eso.</Warning>
 
 ## Configuración
 
 <Steps>
-  <Step title="Ejecutar incorporación interactiva">
+  <Step title="Ejecutar la incorporación interactiva">
     ```bash
     openclaw onboard --auth-choice vydra-api-key
     ```
@@ -49,7 +54,7 @@ El host apex de Vydra (`https://vydra.ai/api/v1`) actualmente redirige a `www`. 
 
     - `vydra/grok-imagine`
 
-    Establézcalo como proveedor de imágenes predeterminado:
+    Establézcalo como el proveedor de imágenes predeterminado:
 
     ```json5
     {
@@ -63,21 +68,21 @@ El host apex de Vydra (`https://vydra.ai/api/v1`) actualmente redirige a `www`. 
     }
     ```
 
-    El soporte incluido actual es solo de texto a imagen. Las rutas de edición alojadas de Vydra esperan URL de imágenes remotas, y OpenClaw aún no añade un puente de carga específico para Vydra en el complemento incluido.
+    El soporte incluido actual es solo de texto a imagen. Las rutas de edición alojadas de Vydra esperan URLs de imágenes remotas, y OpenClaw aún no agrega un puente de carga específico de Vydra en el complemento incluido.
 
     <Note>
-    Consulte [Image Generation](/es/tools/image-generation) para conocer los parámetros de herramientas compartidas, la selección de proveedores y el comportamiento de conmutación por error.
+    Consulte [Image Generation](/es/tools/image-generation) para ver los parámetros de herramientas compartidas, la selección del proveedor y el comportamiento de conmutación por error.
     </Note>
 
   </Accordion>
 
-  <Accordion title="Generación de vídeo">
-    Modelos de vídeo registrados:
+  <Accordion title="Generación de video">
+    Modelos de video registrados:
 
-    - `vydra/veo3` para texto a vídeo
-    - `vydra/kling` para imagen a vídeo
+    - `vydra/veo3` para texto a video
+    - `vydra/kling` para imagen a video
 
-    Establezca Vydra como el proveedor de vídeo predeterminado:
+    Establezca Vydra como el proveedor de video predeterminado:
 
     ```json5
     {
@@ -93,18 +98,18 @@ El host apex de Vydra (`https://vydra.ai/api/v1`) actualmente redirige a `www`. 
 
     Notas:
 
-    - `vydra/veo3` se incluye solo como texto a vídeo.
+    - `vydra/veo3` se incluye solo como texto a video.
     - `vydra/kling` actualmente requiere una referencia de URL de imagen remota. Las cargas de archivos locales se rechazan de inmediato.
-    - La ruta HTTP `kling` actual de Vydra ha sido inconsistente en cuanto a si requiere `image_url` o `video_url`; el proveedor incluido asigna la misma URL de imagen remota a ambos campos.
-    - El plugin incluido se mantiene conservador y no reenvía controles de estilo no documentados, como la relación de aspecto, la resolución, la marca de agua o el audio generado.
+    - La ruta HTTP `kling` actual de Vydra ha sido inconsistente sobre si requiere `image_url` o `video_url`; el proveedor incluido asigna la misma URL de imagen remota a ambos campos.
+    - El complemento incluido se mantiene conservador y no reenvía controles de estilo no documentados, como la relación de aspecto, la resolución, la marca de agua o el audio generado.
 
     <Note>
-    Consulte [Video Generation](/es/tools/video-generation) para ver los parámetros de herramientas compartidas, la selección de proveedores y el comportamiento de conmutación por error.
+    Consulte [Video Generation](/es/tools/video-generation) para conocer los parámetros de herramientas compartidas, la selección de proveedores y el comportamiento de conmutación por error.
     </Note>
 
   </Accordion>
 
-  <Accordion title="Pruebas en vivo de vídeo">
+  <Accordion title="Pruebas en vivo de video">
     Cobertura en vivo específica del proveedor:
 
     ```bash
@@ -115,10 +120,10 @@ El host apex de Vydra (`https://vydra.ai/api/v1`) actualmente redirige a `www`. 
 
     El archivo en vivo de Vydra incluido ahora cubre:
 
-    - `vydra/veo3` texto a vídeo
-    - `vydra/kling` imagen a vídeo utilizando una URL de imagen remota
+    - `vydra/veo3` texto a video
+    - `vydra/kling` imagen a video utilizando una URL de imagen remota
 
-    Anule la imagen de prueba remota cuando sea necesario:
+    Anule la imagen de dispositivo remota cuando sea necesario:
 
     ```bash
     export OPENCLAW_LIVE_VYDRA_KLING_IMAGE_URL="https://example.com/reference.png"
@@ -150,7 +155,7 @@ El host apex de Vydra (`https://vydra.ai/api/v1`) actualmente redirige a `www`. 
     - Modelo: `elevenlabs/tts`
     - ID de voz: `21m00Tcm4TlvDq8ikWAM`
 
-    El plugin incluido actualmente expone una voz predeterminada comprobada y devuelve archivos de audio MP3.
+    El complemento incluido actualmente expone una voz predeterminada comprobada y devuelve archivos de audio MP3.
 
   </Accordion>
 </AccordionGroup>
@@ -162,10 +167,10 @@ El host apex de Vydra (`https://vydra.ai/api/v1`) actualmente redirige a `www`. 
     Explore todos los proveedores disponibles.
   </Card>
   <Card title="Generación de imágenes" href="/es/tools/image-generation" icon="image">
-    Parámetros compartidos de la herramienta de imágenes y selección del proveedor.
+    Parámetros compartidos de la herramienta de imágenes y selección de proveedor.
   </Card>
   <Card title="Generación de videos" href="/es/tools/video-generation" icon="video">
-    Parámetros compartidos de la herramienta de videos y selección del proveedor.
+    Parámetros compartidos de la herramienta de videos y selección de proveedor.
   </Card>
   <Card title="Referencia de configuración" href="/es/gateway/config-agents#agent-defaults" icon="gear">
     Valores predeterminados del agente y configuración del modelo.

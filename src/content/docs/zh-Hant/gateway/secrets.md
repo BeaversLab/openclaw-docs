@@ -35,10 +35,21 @@ SecretRefs 僅在實際有效的表面上進行驗證。
 - 非使用中的參照會發出代碼為 `SECRETS_REF_IGNORED_INACTIVE_SURFACE` 的非致命診斷訊息。
 
 <AccordionGroup>
-  <Accordion title="非作用表面的範例">
-    - 已停用的頻道/帳戶項目。 - 沒有已啟用帳戶繼承的頂層頻道憑證。 - 已停用的工具/功能表面。 - 未由 `tools.web.search.provider` 選取的網頁搜尋供應商特定金鑰。在自動模式（未設定供應商）中，金鑰會依優先順序供供應商自動偵測參考，直到解析出一個為止。選取後，未選取的供應商金鑰會被視為非使用中，直到被選中。 - 沙箱 SSH
-    驗證資料（`agents.defaults.sandbox.ssh.identityData`、`certificateData`、`knownHostsData`，加上各個代理程式的覆寫）僅在預設代理程式或已啟用代理程式的有效沙箱後端為 `ssh` 時才會作用。 - 當以下任一條件為真時，`gateway.remote.token` / `gateway.remote.password` SecretRef 為使用中： - `gateway.mode=remote` - 已設定 `gateway.remote.url` - `gateway.tailscale.mode` 為 `serve` 或 `funnel` -
-    在沒有這些遠端表面的本機模式中： - 當權杖驗證可以勝出且未設定 env/auth 權杖時，`gateway.remote.token` 為使用中。 - 僅當密碼驗證可以勝出且未設定 env/auth 密碼時，`gateway.remote.password` 為使用中。 - 當設定 `OPENCLAW_GATEWAY_TOKEN` 時，`gateway.auth.token` SecretRef 對於啟動驗證解析為非使用中，因為 env 權杖輸入在該執行時期中勝出。
+  <Accordion title="非活動介面範例">
+    - 已停用的頻道/帳戶項目。
+    - 沒有已啟用帳戶繼承的頂層頻道憑證。
+    - 已停用的工具/功能介面。
+    - 未被 `tools.web.search.provider` 選取的網頁搜尋供應商特定金鑰。在自動模式（未設定供應商）中，會根據優先順序查詢金鑰以進行供應商自動偵測，直到其中一個解析為止。選取後，未選取的供應商金鑰將被視為非活動，直到被選取為止。
+    - Sandbox SSH 認證資料（`agents.defaults.sandbox.ssh.identityData`、`certificateData`、`knownHostsData`，加上每個代理程式的覆寫值）只有在預設代理程式或已啟用代理程式的有效沙箱後端為 `ssh` 時才會啟用。
+    - 如果符合以下任一條件，`gateway.remote.token` / `gateway.remote.password` SecretRef 為啟用狀態：
+      - `gateway.mode=remote`
+      - 已設定 `gateway.remote.url`
+      - `gateway.tailscale.mode` 為 `serve` 或 `funnel`
+      - 在沒有這些遠端介面的本機模式中：
+        - 當 token 認證可以獲勝且未設定 env/auth token 時，`gateway.remote.token` 為啟用狀態。
+        - 只有在密碼認證可以獲勝且未設定 env/auth 密碼時，`gateway.remote.password` 才為啟用狀態。
+    - 當設定 `OPENCLAW_GATEWAY_TOKEN` 時，`gateway.auth.token` SecretRef 在啟動認證解析中為非活動狀態，因為 env token 輸入在該執行時間中獲勝。
+
   </Accordion>
 </AccordionGroup>
 
@@ -144,16 +155,18 @@ SecretRefs 僅在實際有效的表面上進行驗證。
 ```
 
 <AccordionGroup>
-  <Accordion title="Env provider">
-    - 透過 `allowlist` 進行可選允許清單。
-    - 缺少/空白的环境值將導致解析失敗。
+  <Accordion title="Env 供應商">
+    - 透過 `allowlist` 的選用允許清單。
+    - 遺漏/空的環境變數值將導致解析失敗。
+
   </Accordion>
   <Accordion title="File provider">
-    - 從 `path` 讀取本機檔案。
-    - `mode: "json"` 預期 JSON 物件 payload 並將 `id` 解析為指標。
-    - `mode: "singleValue"` 預期 ref id `"value"` 並傳回檔案內容。
+    - 從 `path` 讀取本地檔案。
+    - `mode: "json"` 期望 JSON 物件 payload，並將 `id` 解析為指標。
+    - `mode: "singleValue"` 期望 ref id `"value"` 並傳回檔案內容。
     - 路徑必須通過擁有權/權限檢查。
-    - Windows 失敗封閉備註：如果路徑無法進行 ACL 驗證，解析將會失敗。僅針對信任的路徑，在該提供者上設定 `allowInsecurePath: true` 以略過路徑安全性檢查。
+    - Windows 失敗關閉說明：如果路徑無法進行 ACL 驗證，解析將會失敗。僅對於受信任路徑，請在該提供者上設定 `allowInsecurePath: true` 以繞過路徑安全檢查。
+
   </Accordion>
   <Accordion title="Exec 提供者">
     - 執行設定的絕對二進位路徑，不透過 shell。

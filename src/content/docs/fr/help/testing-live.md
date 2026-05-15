@@ -8,9 +8,10 @@ title: "Tests : suites en direct"
 sidebarTitle: "Tests en direct"
 ---
 
-Pour un démarrage rapide, les exécuteurs QA, les suites unitaires/d'intégration et les flux Docker, consultez
-[Tests](/fr/help/testing). Cette page couvre les suites de tests **en direct** (avec accès réseau) :
-matrice de modèles, backends CLI, ACP et tests en direct des fournisseurs de médias, ainsi que la gestion des identifiants.
+Pour un démarrage rapide, les exécuteurs QA, les suites unitaires/d'intégration et les flux Docker, voir
+[Testing](/fr/help/testing). Cette page couvre les suites de tests **live** (touchant le réseau) :
+matrice de modèles, backends CLI, ACP et tests live de fournisseurs de médias, ainsi que
+la gestion des identifiants.
 
 ## En direct : commandes de smoke de profil local
 
@@ -54,14 +55,14 @@ Plivo, une vérification de préparation réussie nécessite une URL de webhook 
 - Remplacements de cibles optionnels :
   - `OPENCLAW_ANDROID_NODE_ID` ou `OPENCLAW_ANDROID_NODE_NAME`.
   - `OPENCLAW_ANDROID_GATEWAY_URL` / `OPENCLAW_ANDROID_GATEWAY_TOKEN` / `OPENCLAW_ANDROID_GATEWAY_PASSWORD`.
-- Détails complets de la configuration Android : [Application Android](/fr/platforms/android)
+- Détails complets de la configuration Android : [Android App](/fr/platforms/android)
 
 ## En direct : smoke de modèle (clés de profil)
 
 Les tests en direct sont divisés en deux couches afin que nous puissions isoler les échecs :
 
-- « Modèle direct » nous indique si le fournisseur/le modèle peut répondre du tout avec la clé donnée.
-- « Gateway smoke » nous indique que le pipeline complet passerelle+agent fonctionne pour ce model (sessions, historique, outils, stratégie de bac à sable, etc.).
+- "Direct model" nous indique si le provider/model peut répondre du tout avec la clé donnée.
+- "Gateway smoke" nous indique si le pipeline complet gateway+agent fonctionne pour ce modèle (sessions, historique, outils, stratégie de sandbox, etc.).
 
 ### Couche 1 : Achèvement direct du model (sans passerelle)
 
@@ -74,9 +75,9 @@ Les tests en direct sont divisés en deux couches afin que nous puissions isoler
   - `pnpm test:live` (ou `OPENCLAW_LIVE_TEST=1` si vous invoquez Vitest directement)
 - Définissez `OPENCLAW_LIVE_MODELS=modern` (ou `all`, alias pour modern) pour exécuter réellement cette suite ; sinon, elle est ignorée pour que `pnpm test:live` reste concentré sur le smoke de la passerelle
 - Comment sélectionner les models :
-  - `OPENCLAW_LIVE_MODELS=modern` pour exécuter la liste d'autorisation moderne (Opus/Sonnet 4.6+, GPT-5.2 + Codex, Gemini 3, DeepSeek V4, GLM 4.7, MiniMax M2.7, Grok 4)
+  - `OPENCLAW_LIVE_MODELS=modern` pour exécuter la liste d'autorisation moderne (Opus/Sonnet 4.6+, GPT-5.2 + Codex, Gemini 3, DeepSeek V4, GLM 4.7, MiniMax M2.7, Grok 4.3)
   - `OPENCLAW_LIVE_MODELS=all` est un alias pour la liste d'autorisation moderne
-  - ou `OPENCLAW_LIVE_MODELS="openai/gpt-5.2,openai-codex/gpt-5.2,anthropic/claude-opus-4-6,..."` (liste d'autorisation par virgule)
+  - ou `OPENCLAW_LIVE_MODELS="openai/gpt-5.5,openai-codex/gpt-5.5,anthropic/claude-opus-4-6,..."` (liste d'autorisation par virgule)
   - Les balayages modernes/tous sont définis par défaut sur une limite curée à fort signal ; définissez `OPENCLAW_LIVE_MAX_MODELS=0` pour un balayage moderne exhaustif ou un nombre positif pour une limite plus petite.
   - Les balayages exhaustifs utilisent `OPENCLAW_LIVE_TEST_TIMEOUT_MS` pour le délai d'expiration global du test de modèle direct. Par défaut : 60 minutes.
   - Les sondes de modèle direct s'exécutent avec un parallélisme de 20 voies par défaut ; définissez `OPENCLAW_LIVE_MODEL_CONCURRENCY` pour modifier.
@@ -86,7 +87,7 @@ Les tests en direct sont divisés en deux couches afin que nous puissions isoler
   - Par défaut : magasin de profils et replis d'environnement
   - Définissez `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'utilisation uniquement du **magasin de profils**
 - Pourquoi cela existe :
-  - Sépare « l'API du provider est cassée / la clé n'est pas valide » de « le pipeline de l'agent de passerelle est cassé »
+  - Sépare "l'API du provider est cassée / la clé est invalide" de "le pipeline de l'agent Gateway est cassé"
   - Contient de petites régressions isolées (exemple : rejeu du raisonnement OpenAI Responses/Codex Responses + flux tool-call)
 
 ### Couche 2 : Gateway + test de fumée de l'agent de développement (ce que "@openclaw" fait réellement)
@@ -96,7 +97,7 @@ Les tests en direct sont divisés en deux couches afin que nous puissions isoler
   - Lancer une passerelle (gateway) en processus
   - Créer/patcher une session `agent:dev:*` (remplacement de modèle par exécution)
   - Itérer les modèles avec clés et vérifier :
-    - réponse « significative » (sans outils)
+    - réponse "significative" (pas d'outils)
     - une invocation d'outil réelle fonctionne (sonde de lecture)
     - sondes d'outil supplémentaires optionnelles (sonde exec+read)
     - les chemins de régression OpenAI (tool-call-only → follow-up) continuent de fonctionner
@@ -108,17 +109,17 @@ Les tests en direct sont divisés en deux couches afin que nous puissions isoler
 - Comment activer :
   - `pnpm test:live` (ou `OPENCLAW_LIVE_TEST=1` si vous appelez Vitest directement)
 - Comment sélectionner les modèles :
-  - Par défaut : liste d'autorisation moderne (Opus/Sonnet 4.6+, GPT-5.2 + Codex, Gemini 3, DeepSeek V4, GLM 4.7, MiniMax M2.7, Grok 4)
+  - Par défaut : liste d'autorisation moderne (Opus/Sonnet 4.6+, GPT-5.2 + Codex, Gemini 3, DeepSeek V4, GLM 4.7, MiniMax M2.7, Grok 4.3)
   - `OPENCLAW_LIVE_GATEWAY_MODELS=all` est un alias pour la liste d'autorisation moderne
   - Ou définissez `OPENCLAW_LIVE_GATEWAY_MODELS="provider/model"` (ou une liste séparée par des virgules) pour restreindre
   - Les parcours Modern/all gateway sont limités par défaut à une limite de signal élevé soigneusement sélectionnée ; définissez `OPENCLAW_LIVE_GATEWAY_MAX_MODELS=0` pour un parcours moderne exhaustif ou un nombre positif pour une limite plus petite.
-- Comment sélectionner les fournisseurs (évitez « OpenRouter tout ») :
+- Comment sélectionner les providers (éviter "OpenRouter tout") :
   - `OPENCLAW_LIVE_GATEWAY_PROVIDERS="google,google-antigravity,google-gemini-cli,openai,anthropic,zai,minimax"` (liste d'autorisation séparée par des virgules)
 - Les sondages d'outil et d'image sont toujours activés dans ce test en direct :
   - Sondage `read` + sondage `exec+read` (stress de l'outil)
   - Le sondage d'image s'exécute lorsque le modèle annonce la prise en charge des entrées d'image
   - Flux (haut niveau) :
-    - Le test génère un minuscule PNG avec « CAT » + code aléatoire (`src/gateway/live-image-probe.ts`)
+    - Le test génère un petit PNG avec "CAT" + code aléatoire (`src/gateway/live-image-probe.ts`)
     - L'envoie via `agent` `attachments: [{ mimeType: "image/png", content: "<base64>" }]`
     - Gateway analyse les pièces jointes en `images[]` (`src/gateway/server-methods/agent.ts` + `src/gateway/chat-attachments.ts`)
     - L'agent intégré transmet un message utilisateur multimodal au modèle
@@ -146,7 +147,7 @@ openclaw models list --json
   - Fournisseur/modèle par défaut : `claude-cli/claude-sonnet-4-6`
   - Le comportement de la commande/args/image provient des métadonnées du plugin backend CLI propriétaire.
 - Remplacements (optionnels) :
-  - `OPENCLAW_LIVE_CLI_BACKEND_MODEL="codex-cli/gpt-5.2"`
+  - `OPENCLAW_LIVE_CLI_BACKEND_MODEL="codex-cli/gpt-5.5"`
   - `OPENCLAW_LIVE_CLI_BACKEND_COMMAND="/full/path/to/codex"`
   - `OPENCLAW_LIVE_CLI_BACKEND_ARGS='["exec","--json","--color","never","--sandbox","read-only","--skip-git-repo-check"]'`
   - `OPENCLAW_LIVE_CLI_BACKEND_IMAGE_PROBE=1` pour envoyer une véritable pièce jointe image (les chemins sont injectés dans le prompt). Les recettes Docker désactivent cela par défaut, sauf demande explicite.
@@ -160,7 +161,7 @@ Exemple :
 
 ```bash
 OPENCLAW_LIVE_CLI_BACKEND=1 \
-  OPENCLAW_LIVE_CLI_BACKEND_MODEL="codex-cli/gpt-5.2" \
+  OPENCLAW_LIVE_CLI_BACKEND_MODEL="codex-cli/gpt-5.5" \
   pnpm test:live src/gateway/gateway-cli-backend.live.test.ts
 ```
 
@@ -197,19 +198,28 @@ Notes :
 - Le smoke live de backend CLI exerce désormais le même flux de bout en bout pour Claude, Codex et Gemini : tour de texte, tour de classification d'image, puis appel d'outil MCP `cron` vérifié via la CLI Gateway.
 - Le smoke par défaut de Claude corrige également la session de Sonnet à Opus et vérifie que la session reprise se souvient toujours d'une note précédente.
 
-## Live : Smoke de liaison ACP (`/acp spawn ... --bind here`)
+## Live : accessibilité du proxy HTTP/2 APNs
+
+- Test : `src/infra/push-apns-http2.live.test.ts`
+- Objectif : tunnelliser via un proxy HTTP CONNECT local vers le point de terminaison APNs de bac à sable d'Apple, envoyer la demande de validation HTTP/2 APNs, et vérifier que la vraie réponse `403 InvalidProviderToken` d'Apple revient via le chemin du proxy.
+- Activer :
+  - `OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_APNS_REACHABILITY=1 pnpm test:live src/infra/push-apns-http2.live.test.ts`
+- Délai d'expiration facultatif :
+  - `OPENCLAW_LIVE_APNS_TIMEOUT_MS=30000`
+
+## Live : ACP bind smoke (`/acp spawn ... --bind here`)
 
 - Test : `src/gateway/gateway-acp-bind.live.test.ts`
-- Objectif : valider le flux réel de liaison de conversation ACP avec un agent ACP en direct :
+- Objectif : valider le flux réel de conversation-bind ACP avec un agent ACP live :
   - envoyer `/acp spawn <agent> --bind here`
-  - lier une conversation de canal de messages synthétique en place
+  - lier une conversation de message-channel synthétique en place
   - envoyer une suite normale sur cette même conversation
-  - vérifier que la suite aboutit dans la transcription de session ACP liée
+  - vérifier que la suite atterrit dans la transcription de session ACP liée
 - Activer :
   - `pnpm test:live src/gateway/gateway-acp-bind.live.test.ts`
   - `OPENCLAW_LIVE_ACP_BIND=1`
-- Valeurs par défaut :
-  - Agents ACP dans Docker : `claude,codex,gemini`
+- Par défaut :
+  - Agents ACP dans Docker : Docker`claude,codex,gemini`
   - Agent ACP pour `pnpm test:live ...` direct : `claude`
   - Canal synthétique : contexte de conversation style DM Slack
   - Backend ACP : `acpx`
@@ -221,17 +231,17 @@ Notes :
   - `OPENCLAW_LIVE_ACP_BIND_AGENT=opencode`
   - `OPENCLAW_LIVE_ACP_BIND_AGENTS=claude,codex,gemini`
   - `OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND='npx -y @agentclientprotocol/claude-agent-acp@<version>'`
-  - `OPENCLAW_LIVE_ACP_BIND_CODEX_MODEL=gpt-5.2`
+  - `OPENCLAW_LIVE_ACP_BIND_CODEX_MODEL=gpt-5.5`
   - `OPENCLAW_LIVE_ACP_BIND_OPENCODE_MODEL=opencode/kimi-k2.6`
   - `OPENCLAW_LIVE_ACP_BIND_REQUIRE_TRANSCRIPT=1`
   - `OPENCLAW_LIVE_ACP_BIND_REQUIRE_CRON=1`
-  - `OPENCLAW_LIVE_ACP_BIND_PARENT_MODEL=openai/gpt-5.2`
+  - `OPENCLAW_LIVE_ACP_BIND_PARENT_MODEL=openai/gpt-5.5`
 - Notes :
-  - This lane uses the gateway `chat.send` surface with admin-only synthetic originating-route fields so tests can attach message-channel context without pretending to deliver externally.
-  - When `OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND` is unset, the test uses the embedded `acpx` plugin's built-in agent registry for the selected ACP harness agent.
-  - Bound-session cron MCP creation is best-effort by default because external ACP harnesses can cancel MCP calls after the bind/image proof has passed; set `OPENCLAW_LIVE_ACP_BIND_REQUIRE_CRON=1` to make that post-bind cron probe strict.
+  - Cette voie utilise la surface `chat.send` de la passerelle avec des champs de route d'origine synthétiques réservés aux administrateurs, afin que les tests puissent attacher un contexte de canal de message sans prétendre livrer à l'externe.
+  - Lorsque `OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND` n'est pas défini, le test utilise le registre d'agents intégré du plugin `acpx` pour l'agent harnais ACP sélectionné.
+  - La création de MCP cron de session liée est de type « best-effort » par défaut car les harnais ACP externes peuvent annuler les appels MCP une fois la preuve de liaison/d'image passée ; définissez `OPENCLAW_LIVE_ACP_BIND_REQUIRE_CRON=1` pour rendre cette sonde cron post-liaison stricte.
 
-Example :
+Exemple :
 
 ```bash
 OPENCLAW_LIVE_ACP_BIND=1 \
@@ -239,13 +249,13 @@ OPENCLAW_LIVE_ACP_BIND=1 \
   pnpm test:live src/gateway/gateway-acp-bind.live.test.ts
 ```
 
-Docker recipe :
+Recette Docker :
 
 ```bash
 pnpm test:docker:live-acp-bind
 ```
 
-Single-agent Docker recipes :
+Recettes Docker à agent unique :
 
 ```bash
 pnpm test:docker:live-acp-bind:claude
@@ -255,38 +265,35 @@ pnpm test:docker:live-acp-bind:gemini
 pnpm test:docker:live-acp-bind:opencode
 ```
 
-Docker notes :
+Notes Docker :
 
-- The Docker runner lives at `scripts/test-live-acp-bind-docker.sh`.
-- By default, it runs the ACP bind smoke against the aggregate live CLI agents in sequence: `claude`, `codex`, then `gemini`.
-- Use `OPENCLAW_LIVE_ACP_BIND_AGENTS=claude`, `OPENCLAW_LIVE_ACP_BIND_AGENTS=codex`, `OPENCLAW_LIVE_ACP_BIND_AGENTS=droid`, `OPENCLAW_LIVE_ACP_BIND_AGENTS=gemini`, or `OPENCLAW_LIVE_ACP_BIND_AGENTS=opencode` to narrow the matrix.
-- It sources `~/.profile`, stages the matching CLI auth material into the container, then installs the requested live CLI (`@anthropic-ai/claude-code`, `@openai/codex`, Factory Droid via `https://app.factory.ai/cli`, `@google/gemini-cli`, or `opencode-ai`) if missing. The ACP backend itself is the bundled embedded `acpx/runtime` package from the `acpx` plugin.
-- The Droid Docker variant stages `~/.factory` for settings, forwards `FACTORY_API_KEY`, and requires that API key because local Factory OAuth/keyring auth is not portable into the container. It uses ACPX's built-in `droid exec --output-format acp` registry entry.
-- La variante OpenCode Docker est une voie de régression stricte à un seul agent. Elle écrit un `OPENCODE_CONFIG_CONTENT` de modèle par défaut temporaire à partir de `OPENCLAW_LIVE_ACP_BIND_OPENCODE_MODEL` (`opencode/kimi-k2.6` par défaut) après avoir chargé `~/.profile`, et `pnpm test:docker:live-acp-bind:opencode` nécessite une transcription d'assistant liée au lieu d'accepter l'option de saut générique post-liaison.
-- Les appels `acpx` CLI directs ne sont qu'une solution manuelle/de contournement pour comparer le comportement en dehors du CLI. Le test de fumée de liaison ACP Docker exerce le backend d'exécution `acpx` intégré de Gateway.
+- L'exécuteur Docker se trouve à Docker`scripts/test-live-acp-bind-docker.sh`.
+- Par défaut, il exécute le test de fumée de liaison ACP contre les agents CLI live agrégés en séquence : CLI`claude`, `codex`, puis `gemini`.
+- Utilisez `OPENCLAW_LIVE_ACP_BIND_AGENTS=claude`, `OPENCLAW_LIVE_ACP_BIND_AGENTS=codex`, `OPENCLAW_LIVE_ACP_BIND_AGENTS=droid`, `OPENCLAW_LIVE_ACP_BIND_AGENTS=gemini` ou `OPENCLAW_LIVE_ACP_BIND_AGENTS=opencode` pour restreindre la matrice.
+- Il source `~/.profile`CLICLI, met en place le matériel d'authentification CLI correspondant dans le conteneur, puis installe le CLI en temps réel demandé (`@anthropic-ai/claude-code`, `@openai/codex`, Factory Droid via `https://app.factory.ai/cli`, `@google/gemini-cli`, ou `opencode-ai`) s'il est manquant. Le backend ACP lui-même est le package `acpx/runtime` intégré du plugin officiel `acpx`.
+- La variante Droid Docker met en place Docker`~/.factory` pour les paramètres, transfère `FACTORY_API_KEY`APIOAuth et nécessite cette clé d'API car l'authentification OAuth/keyring Factory locale n'est pas portable dans le conteneur. Elle utilise l'entrée de registre `droid exec --output-format acp` intégrée d'ACPX.
+- La variante OpenCode Docker est une voie de régression à agent unique stricte. Elle écrit un model par défaut Docker`OPENCODE_CONFIG_CONTENT` temporaire à partir de `OPENCLAW_LIVE_ACP_BIND_OPENCODE_MODEL` (par défaut `opencode/kimi-k2.6`) après avoir sourcé `~/.profile`, et `pnpm test:docker:live-acp-bind:opencode` nécessite une transcription d'assistant liée au lieu d'accepter le saut générique post-liaison.
+- Les appels directs au CLI `acpx`CLIGatewayDockerOpenClaw ne constituent qu'une voie manuelle/de contournement pour comparer le comportement en dehors du Gateway. Le test de fumée de liaison ACP Docker exerce le backend d'exécution `acpx` intégré d'OpenClaw.
 
 ## Live: Codex app-server harness smoke
 
-- Objectif : valider le harnais Codex détenu par le plugin via la méthode `agent` de passerelle normale :
-  - charger le plugin `codex` groupé
-  - sélectionner `OPENCLAW_AGENT_RUNTIME=codex`
-  - send a first gateway agent turn to `openai/gpt-5.2` with the Codex harness forced
+- Goal: validate the plugin-owned Codex harness through the normal gateway
+  `agent` method:
+  - load the bundled `codex` plugin
+  - select `openai/gpt-5.5`OpenAI, which routes OpenAI agent turns through Codex by default
+  - send a first gateway agent turn to `openai/gpt-5.5` with the Codex harness selected
   - send a second turn to the same OpenClaw session and verify the app-server
     thread can resume
-  - run `/codex status` and `/codex models` through the same gateway command
-    path
-  - optionally run two Guardian-reviewed escalated shell probes: one benign
-    command that should be approved and one fake-secret upload that should be
-    denied so the agent asks back
-- Test: `src/gateway/gateway-codex-harness.live.test.ts`
-- Enable: `OPENCLAW_LIVE_CODEX_HARNESS=1`
-- Default model: `openai/gpt-5.2`
-- Optional image probe: `OPENCLAW_LIVE_CODEX_HARNESS_IMAGE_PROBE=1`
-- Optional MCP/tool probe: `OPENCLAW_LIVE_CODEX_HARNESS_MCP_PROBE=1`
-- Optional Guardian probe: `OPENCLAW_LIVE_CODEX_HARNESS_GUARDIAN_PROBE=1`
-- The smoke sets `OPENCLAW_AGENT_HARNESS_FALLBACK=none` so a broken Codex
-  harness cannot pass by silently falling back to PI.
-- Auth : auth du serveur d'application Codex à partir de la connexion d'abonnement Codex local. Les tests Docker peuvent également fournir `OPENAI_API_KEY` pour les sondes non-Codex, le cas échéant, ainsi que des `~/.codex/auth.json` et `~/.codex/config.toml` copiés en option.
+  - exécuter `/codex status` et `/codex models` via le même chemin de commande de passerelle
+  - exécuter facultativement deux sondes de shell échelonnées examinées par Guardian : une commande bénigne qui doit être approuvée et un faux téléchargement de secret qui doit être refusé afin que l'agent redemande
+- Test : `src/gateway/gateway-codex-harness.live.test.ts`
+- Activer : `OPENCLAW_LIVE_CODEX_HARNESS=1`
+- Model par défaut : `openai/gpt-5.5`
+- Sonde d'image facultative : `OPENCLAW_LIVE_CODEX_HARNESS_IMAGE_PROBE=1`
+- Sonde MCP/tool facultative : `OPENCLAW_LIVE_CODEX_HARNESS_MCP_PROBE=1`
+- Sonde Guardian facultative : `OPENCLAW_LIVE_CODEX_HARNESS_GUARDIAN_PROBE=1`
+- Le test de fumée force le provider/model `agentRuntime.id: "codex"` afin qu'un harnais Codex défaillant ne puisse pas réussir en retombant silencieusement sur PI.
+- Auth : auth Codex app-server à partir de la connexion locale à l'abonnement Codex. Les smokes Docker peuvent également fournir `OPENAI_API_KEY` pour les sondes non-Codex, le cas échéant, ainsi que des fichiers `~/.codex/auth.json` et `~/.codex/config.toml` copiés facultatifs.
 
 Recette locale :
 
@@ -296,7 +303,7 @@ OPENCLAW_LIVE_CODEX_HARNESS=1 \
   OPENCLAW_LIVE_CODEX_HARNESS_IMAGE_PROBE=1 \
   OPENCLAW_LIVE_CODEX_HARNESS_MCP_PROBE=1 \
   OPENCLAW_LIVE_CODEX_HARNESS_GUARDIAN_PROBE=1 \
-  OPENCLAW_LIVE_CODEX_HARNESS_MODEL=openai/gpt-5.2 \
+  OPENCLAW_LIVE_CODEX_HARNESS_MODEL=openai/gpt-5.5 \
   pnpm test:live -- src/gateway/gateway-codex-harness.live.test.ts
 ```
 
@@ -310,28 +317,28 @@ pnpm test:docker:live-codex-harness
 Notes Docker :
 
 - Le runner Docker se trouve à `scripts/test-live-codex-harness-docker.sh`.
-- Il sourc le `~/.profile` monté, passe `OPENAI_API_KEY`, copie les fichiers d'auth Codex CLI lorsqu'ils sont présents, installe `@openai/codex` dans un préfixe npm monté en écriture, prépare l'arborescence source, puis exécute uniquement le test en direct du harnais Codex.
-- Docker active par défaut les sondes d'image, MCP/tool et Guardian. Définissez `OPENCLAW_LIVE_CODEX_HARNESS_IMAGE_PROBE=0` ou `OPENCLAW_LIVE_CODEX_HARNESS_MCP_PROBE=0` ou `OPENCLAW_LIVE_CODEX_HARNESS_GUARDIAN_PROBE=0` lorsque vous avez besoin d'une exécution de débogage plus ciblée.
-- Docker exporte également `OPENCLAW_AGENT_HARNESS_FALLBACK=none`, correspondant à la configuration de test en direct, afin que les alias hérités ou le repli PI ne puissent pas masquer une régression du harnais Codex.
+- Il source le `~/.profile` monté, passe `OPENAI_API_KEY`, copie les fichiers d'auth Codex CLI lorsqu'ils sont présents, installe `@openai/codex` dans un préfixe npm monté en écriture, prépare l'arborescence source, puis exécute uniquement le test en direct Codex-harness.
+- Docker active les sondes d'image, MCP/tool et Guardian par défaut. Définissez `OPENCLAW_LIVE_CODEX_HARNESS_IMAGE_PROBE=0` ou `OPENCLAW_LIVE_CODEX_HARNESS_MCP_PROBE=0` ou `OPENCLAW_LIVE_CODEX_HARNESS_GUARDIAN_PROBE=0` lorsque vous avez besoin d'un exécution de débogage plus ciblée.
+- Docker utilise la même configuration d'exécution explicite Codex, de sorte que les alias hérités ou le repli PI ne peuvent pas masquer une régression du harnais Codex.
 
-### Recettes live recommandées
+### Recettes en direct recommandées
 
 Les listes d'autorisation étroites et explicites sont les plus rapides et les moins instables :
 
-- Modèle unique, direct (sans passerelle) :
-  - `OPENCLAW_LIVE_MODELS="openai/gpt-5.2" pnpm test:live src/agents/models.profiles.live.test.ts`
+- Model unique, direct (sans passerelle) :
+  - `OPENCLAW_LIVE_MODELS="openai/gpt-5.5" pnpm test:live src/agents/models.profiles.live.test.ts`
 
-- Modèle unique, smoke de passerelle :
-  - `OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.2" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+- Model unique, test de fumée de passerelle :
+  - `OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
-- Appel d'outils sur plusieurs fournisseurs :
-  - `OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.2,openai-codex/gpt-5.2,anthropic/claude-opus-4-6,google/gemini-3-flash-preview,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+- Appel de tool sur plusieurs providers :
+  - `OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5,openai-codex/gpt-5.5,anthropic/claude-opus-4-6,google/gemini-3-flash-preview,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 - Focus Google (clé API Gemini + Antigravity) :
   - Gemini (clé API) : `OPENCLAW_LIVE_GATEWAY_MODELS="google/gemini-3-flash-preview" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
   - Antigravity (OAuth) : `OPENCLAW_LIVE_GATEWAY_MODELS="google-antigravity/claude-opus-4-6-thinking,google-antigravity/gemini-3-pro-high" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
-- Smoke de la pensée adaptative Google :
+- Test de fumée de la pensée adaptative Google :
   - Si les clés locales résident dans le profil du shell : `source ~/.profile`
   - Par défaut dynamique Gemini 3 : `pnpm openclaw qa manual --provider-mode live-frontier --model google/gemini-3.1-pro-preview --alt-model google/gemini-3.1-pro-preview --message '/think adaptive Reply exactly: GEMINI_ADAPTIVE_OK' --timeout-ms 180000`
   - Budget dynamique Gemini 2.5 : `pnpm openclaw qa manual --provider-mode live-frontier --model google/gemini-2.5-flash --alt-model google/gemini-2.5-flash --message '/think adaptive Reply exactly: GEMINI25_ADAPTIVE_OK' --timeout-ms 180000`
@@ -340,115 +347,116 @@ Notes :
 
 - `google/...` utilise l'API Gemini (clé API).
 - `google-antigravity/...` utilise le pont OAuth Antigravity (point de terminaison de l'agent style Cloud Code Assist).
-- `google-gemini-cli/...` utilise le CLI Gemini local sur votre machine (authentification distincte + particularités des outils).
+- `google-gemini-cli/...` utilise le CLI Gemini local sur votre machine (auth séparée + particularités des outils).
 - API Gemini vs CLI Gemini :
-  - API : OpenClaw appelle l'API Gemini hébergée par Google via HTTP (clé API / authentification de profil) ; c'est ce que la plupart des utilisateurs entendent par « Gemini ».
-  - CLI : OpenClaw appelle un binaire `gemini` local ; il possède sa propre authentification et peut se comporter différemment (prise en charge du streaming/outils/décalage de version).
+  - API : OpenClaw appelle l'API Gemini hébergée par Google via HTTP (clé API / auth profil) ; c'est ce que la plupart des utilisateurs entendent par « Gemini ».
+  - CLI : OpenClaw délègue à un binaire `gemini` local ; il possède sa propre auth et peut se comporter différemment (prise en charge du streaming/outils/décalage de version).
 
-## Live : matrice de modèles (ce que nous couvrons)
+## En direct : matrice de modèles (ce que nous couvrons)
 
-Il n'y a pas de « liste de modèles CI » fixe (live est optionnel), mais ce sont les modèles **recommandés** à couvrir régulièrement sur une machine de développement avec des clés.
+Il n'y a pas de « liste de modèles CI » fixe (les tests en direct sont optionnels), mais voici les modèles **recommandés** à couvrir régulièrement sur une machine de développement avec des clés.
 
-### Ensemble de tests de fumée modernes (appel d'outil + image)
+### Ensemble de tests de fumée modernes (appel d'outils + image)
 
-C'est l'exécution des « modèles courants » que nous nous attendons à maintenir fonctionnelle :
+Il s'agit de l'exécution des « modèles communs » que nous espérons maintenir fonctionnels :
 
-- OpenAI (non-Codex) : `openai/gpt-5.2`
-- OAuth OpenAI Codex : `openai-codex/gpt-5.2`
+- OpenAI (hors Codex) : `openai/gpt-5.5`
+- OpenAI OAuth Codex : `openai-codex/gpt-5.5`
 - Anthropic : `anthropic/claude-opus-4-6` (ou `anthropic/claude-sonnet-4-6`)
-- Google (API Gemini) : `google/gemini-3.1-pro-preview` et `google/gemini-3-flash-preview` (éviter les anciens modèles Gemini 2.x)
+- Google (API Gemini) : `google/gemini-3.1-pro-preview` et `google/gemini-3-flash-preview` (évitez les anciens modèles Gemini 2.x)
 - Google (Antigravity) : `google-antigravity/claude-opus-4-6-thinking` et `google-antigravity/gemini-3-flash`
 - DeepSeek : `deepseek/deepseek-v4-flash` et `deepseek/deepseek-v4-pro`
-- Z.AI (GLM) : `zai/glm-5.1`
-- MiniMax : `minimax/MiniMax-M2.7`
+- Z.AI (GLM) : GLM`zai/glm-5.1`
+- MiniMax : MiniMax`minimax/MiniMax-M2.7`
 
-Exécuter le test de fumée de la passerelle avec tools + image :
-`OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.2,openai-codex/gpt-5.2,anthropic/claude-opus-4-6,google/gemini-3.1-pro-preview,google/gemini-3-flash-preview,google-antigravity/claude-opus-4-6-thinking,google-antigravity/gemini-3-flash,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+Exécuter le test de fumée de la passerelle avec les outils + l'image :
+`OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5,openai-codex/gpt-5.5,anthropic/claude-opus-4-6,google/gemini-3.1-pro-preview,google/gemini-3-flash-preview,google-antigravity/claude-opus-4-6-thinking,google-antigravity/gemini-3-flash,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
-### Référence : tool calling (Read + Exec facultatif)
+### Référence : appel d'outil (Read + Exec facultatif)
 
-Choisir au moins un par famille de provider :
+Choisissez au moins un par famille de providers :
 
-- OpenAI : `openai/gpt-5.2`
-- Anthropic : `anthropic/claude-opus-4-6` (ou `anthropic/claude-sonnet-4-6`)
+- OpenAI : OpenAI`openai/gpt-5.5`
+- Anthropic : Anthropic`anthropic/claude-opus-4-6` (ou `anthropic/claude-sonnet-4-6`)
 - Google : `google/gemini-3-flash-preview` (ou `google/gemini-3.1-pro-preview`)
 - DeepSeek : `deepseek/deepseek-v4-flash`
-- Z.AI (GLM) : `zai/glm-5.1`
-- MiniMax : `minimax/MiniMax-M2.7`
+- Z.AI (GLM) : GLM`zai/glm-5.1`
+- MiniMax : MiniMax`minimax/MiniMax-M2.7`
 
-Couverture supplémentaire optionnelle (optionnel mais souhaitable) :
+Couverture supplémentaire facultative (souhaitable) :
 
-- xAI : `xai/grok-4` (ou la dernière disponible)
-- Mistral : `mistral/`… (choisissez un modèle capable de « tools » que vous avez activé)
+- xAI : `xai/grok-4.3` (ou la dernière version disponible)
+- Mistral : `mistral/`… (choisissez un modèle compatible avec les outils que avez activé)
 - Cerebras : `cerebras/`… (si vous y avez accès)
-- LM Studio : `lmstudio/`… (local ; l'appel d'outils dépend du mode API)
+- LM Studio : `lmstudio/`API… (local ; l'appel d'outil dépend du mode API)
 
 ### Vision : envoi d'image (pièce jointe → message multimodal)
 
-Incluez au moins un modèle capable d'images dans `OPENCLAW_LIVE_GATEWAY_MODELS` (variantes compatibles vision Claude/Gemini/OpenAI, etc.) pour tester la sonde d'image.
+Incluez au moins un modèle compatible avec l'image dans `OPENCLAW_LIVE_GATEWAY_MODELS`OpenAI (variantes Claude/Gemini/OpenAI compatibles avec la vision, etc.) pour tester la sonde d'image.
 
 ### Agrégateurs / passerelles alternatives
 
-Si vous avez des clés activées, nous prenons également en charge les tests via :
+Si vous avez activé des clés, nous prenons également en charge les tests via :
 
-- OpenRouter : `openrouter/...` (des centaines de modèles ; utilisez `openclaw models scan` pour trouver les candidats compatibles avec les outils et les images)
+- OpenRouter : OpenRouter`openrouter/...` (des centaines de modèles ; utilisez `openclaw models scan` pour trouver les candidats compatibles avec les outils et l'image)
 - OpenCode : `opencode/...` pour Zen et `opencode-go/...` pour Go (auth via `OPENCODE_API_KEY` / `OPENCODE_ZEN_API_KEY`)
 
-Davantage de fournisseurs que vous pouvez inclure dans la matrice live (si vous avez les identifiants/config) :
+D'autres providers que vous pouvez inclure dans la matrice live (si vous avez des identifiants/config) :
 
 - Intégré : `openai`, `openai-codex`, `anthropic`, `google`, `google-vertex`, `google-antigravity`, `google-gemini-cli`, `zai`, `openrouter`, `opencode`, `opencode-go`, `xai`, `groq`, `cerebras`, `mistral`, `github-copilot`
 - Via `models.providers` (points de terminaison personnalisés) : `minimax` (cloud/API), ainsi que tout proxy compatible OpenAI/Anthropic (LM Studio, vLLM, LiteLLM, etc.)
 
-<Tip>Ne codez pas en dur "tous les modèles" dans la documentation. La liste faisant autorité correspond à ce que `discoverModels(...)` renvoie sur votre machine, ainsi qu'aux clés disponibles.</Tip>
+<Tip>Ne durcissez pas « tous les modèles » dans la documentation. La liste faisant autorité est tout ce que `discoverModels(...)` renvoie sur votre machine ainsi que les clés disponibles.</Tip>
 
-## Identifiants (ne jamais commiter)
+## Identifiants (ne jamais commettre)
 
-Les tests en direct découvrent les identifiants de la même manière que la CLI. Conséquences pratiques :
+Les tests en direct découvrent les identifiants de la même manière que le CLI. Implications pratiques :
 
-- Si la CLI fonctionne, les tests en direct devraient trouver les mêmes clés.
-- Si un test en direct indique "no creds" (pas d'identifiants), déboguez de la même manière que vous débogueriez `openclaw models list` / la sélection de modèle.
+- Si le CLI fonctionne, les tests en direct devraient trouver les mêmes clés.
+- Si un test en direct indique « no creds », déboguez de la même manière que vous débogueriez `openclaw models list` / la sélection de modèle.
 
-- Profils d'authentification par agent : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (ce que signifie "clés de profil" dans les tests en direct)
-- Config : `~/.openclaw/openclaw.json` (ou `OPENCLAW_CONFIG_PATH`)
-- Répertoire d'état hérité : `~/.openclaw/credentials/` (copié dans le domicile de test en direct préparé s'il est présent, mais pas le stockage principal des clés de profil)
-- Les exécutions locales en direct copient par défaut la configuration active, les fichiers `auth-profiles.json` par agent, le `credentials/` hérité et les répertoires d'authentification de CLI externes pris en charge dans un domicile de test temporaire ; les domiciles en direct préparés ignorent `workspace/` et `sandboxes/`, et les remplacements de chemin `agents.*.workspace` / `agentDir` sont supprimés pour que les sondages restent en dehors de votre espace de travail hôte réel.
+- Profils d'authentification par agent : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (c'est ce que signifie « clés de profil » dans les tests en direct)
+- Configuration : `~/.openclaw/openclaw.json` (ou `OPENCLAW_CONFIG_PATH`)
+- Répertoire d'état hérité : `~/.openclaw/credentials/` (copié dans le répertoire d'accueil de test en direct mis en scène lorsqu'il est présent, mais pas le stockage principal des clés de profil)
+- Les exécutions locales en direct copient par défaut la configuration active, les fichiers `auth-profiles.json` par agent, le `credentials/`CLI hérité et les répertoires d'authentification CLI externes pris en charge dans un répertoire d'accueil de test temporaire ; les répertoires d'accueil de test en direct mis en scène ignorent `workspace/` et `sandboxes/`, et les remplacements de chemin `agents.*.workspace` / `agentDir` sont supprimés afin que les sondes restent en dehors de votre espace de travail hôte réel.
 
-Si vous souhaitez vous fier aux clés d'environnement (par exemple, exportées dans votre `~/.profile`), exécutez les tests locaux après `source ~/.profile`, ou utilisez les runners Docker ci-dessous (ils peuvent monter `~/.profile` dans le conteneur).
+Si vous souhaitez vous baser sur des clés d'environnement (par exemple, exportées dans votre `~/.profile`), exécutez les tests locaux après `source ~/.profile`, ou utilisez les runners Docker ci-dessous (ils peuvent monter `~/.profile` dans le conteneur).
 
-## Deepgram en direct (transcription audio)
+## Deepgram live (transcription audio)
 
 - Test : `extensions/deepgram/audio.live.test.ts`
 - Activer : `DEEPGRAM_API_KEY=... DEEPGRAM_LIVE_TEST=1 pnpm test:live extensions/deepgram/audio.live.test.ts`
 
-## BytePlus plan de codage en direct
+## BytePlus coding plan live
 
 - Test : `extensions/byteplus/live.test.ts`
 - Activer : `BYTEPLUS_API_KEY=... BYTEPLUS_LIVE_TEST=1 pnpm test:live extensions/byteplus/live.test.ts`
-- Remplacement de modèle facultatif : `BYTEPLUS_CODING_MODEL=ark-code-latest`
+- Remplacement facultatif de model : `BYTEPLUS_CODING_MODEL=ark-code-latest`
 
-## Workflow média ComfyUI en direct
+## ComfyUI workflow media live
 
 - Test : `extensions/comfy/comfy.live.test.ts`
 - Activer : `OPENCLAW_LIVE_TEST=1 COMFY_LIVE_TEST=1 pnpm test:live -- extensions/comfy/comfy.live.test.ts`
 - Portée :
-  - Exerce les chemins d'image, vidéo et `music_generate` comfy groupés
+  - Teste les chemins d'image, de vidéo et `music_generate` comfy fournis
   - Ignore chaque capacité sauf si `plugins.entries.comfy.config.<capability>` est configuré
-  - Utile après avoir modifié la soumission, le sondage, les téléchargements ou l'enregistrement des plugins du workflow comfy
+  - Utile après avoir modifié la soumission, le polling, les téléchargements ou l'enregistrement du plugin comfy
 
-## Génération d'images en direct
+## Image generation live
 
 - Test : `test/image-generation.runtime.live.test.ts`
 - Commande : `pnpm test:live test/image-generation.runtime.live.test.ts`
-- Harnais : `pnpm test:live:media image`
+- Harness : `pnpm test:live:media image`
 - Portée :
-  - Énumère chaque plugin de provider de génération d'images enregistré
-  - Charge les variables d'environnement provider manquantes depuis votre shell de connexion (`~/.profile`) avant de sonder
-  - Utilise par défaut les clés API live/env avant les profils d'authentification stockés, afin que les clés de test obsolètes dans `auth-profiles.json` ne masquent pas les informations d'identification réelles du shell
-  - Ignore les providers sans auth/profil/modèle utilisable
-  - Exécute chaque provider configuré via le runtime de génération d'images partagé :
+  - Énumère chaque plugin de provider de génération d'image enregistré
+  - Charge les variables d'environnement de provider manquantes depuis votre shell de connexion (`~/.profile`) avant les tests
+  - Utilise par défaut les clés API live/env avant les profils d'authentification stockés, afin que les clés de test obsolètes dans `auth-profiles.json` ne masquent pas les véritables identifiants du shell
+  - Ignore les providers sans authentification/profil/model utilisable
+  - Exécute chaque provider configuré via le runtime partagé de génération d'image :
     - `<provider>:generate`
-    - `<provider>:edit` lorsque le provider déclare prendre en charge la modification
-- Providers groupés actuels couverts :
+    - `<provider>:edit` lorsque le provider déclare la prise en charge de l'édition
+- Providers fournis actuellement couverts :
+  - `deepinfra`
   - `fal`
   - `google`
   - `minimax`
@@ -458,12 +466,13 @@ Si vous souhaitez vous fier aux clés d'environnement (par exemple, exportées d
   - `xai`
 - Rétrécissement facultatif :
   - `OPENCLAW_LIVE_IMAGE_GENERATION_PROVIDERS="openai,google,openrouter,xai"`
+  - `OPENCLAW_LIVE_IMAGE_GENERATION_PROVIDERS="deepinfra"`
   - `OPENCLAW_LIVE_IMAGE_GENERATION_MODELS="openai/gpt-image-2,google/gemini-3.1-flash-image-preview,openrouter/google/gemini-3.1-flash-image-preview,xai/grok-imagine-image"`
   - `OPENCLAW_LIVE_IMAGE_GENERATION_CASES="google:flash-generate,google:pro-edit,openrouter:generate,xai:default-generate,xai:default-edit"`
 - Comportement d'authentification facultatif :
-  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'authentification du magasin de profils et ignorer les remplacements basés uniquement sur les variables d'environnement
+  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'authentification par magasin de profils et ignorer les remplacements d'environnement uniquement
 
-Pour le chemin CLI expédié, ajoutez un test `infer` après la réussite du test en direct du provider/runtime :
+Pour le chemin CLI fourni, ajoutez un test `infer` après la réussite du test en direct du fournisseur/runtime :
 
 ```bash
 OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_INFER_CLI_TEST=1 pnpm test:live -- test/image-generation.infer-cli.live.test.ts
@@ -475,75 +484,75 @@ openclaw infer image generate \
   --json
 ```
 
-Cela couvre l'analyse des arguments de CLI, la résolution de la config/default-agent, l'activation des plugins groupés, la réparation à la demande des dépendances d'exécution groupées, l'exécution partagée de génération d'images, et la requête en direct du fournisseur.
+Cela couvre l'analyse des arguments CLI, la résolution config/default-agent, l'activation des plugins groupés, le runtime de génération d'images partagé et la demande en direct au fournisseur. Les dépendances des plugins sont censées être présentes avant le chargement du runtime.
 
-## Test en direct de génération musicale
+## Génération de musique en direct
 
 - Test : `extensions/music-generation-providers.live.test.ts`
 - Activer : `OPENCLAW_LIVE_TEST=1 pnpm test:live -- extensions/music-generation-providers.live.test.ts`
 - Harnais : `pnpm test:live:media music`
 - Portée :
-  - Exerce le chemin groupé partagé du fournisseur de génération musicale
+  - Exerce le chemin partagé groupé du fournisseur de génération de musique
   - Couvre actuellement Google et MiniMax
-  - Charge les env vars du fournisseur depuis votre shell de connexion (`~/.profile`) avant les sondages
-  - Utilise par défaut les clés API live/env avant les profils d'auth stockés, afin que les clés de test obsolètes dans `auth-profiles.json` ne masquent pas les véritables identifiants du shell
-  - Ignore les fournisseurs sans auth/profil/model utilisable
-  - Exécute les deux modes d'exécution déclarés, lorsque disponibles :
-    - `generate` avec une entrée prompt uniquement
+  - Charge les env vars du fournisseur depuis votre shell de connexion (`~/.profile`) avant de sonder
+  - Utilise par défaut les clés API live/env avant les profils d'authentification stockés, afin que les clés de test périmées dans `auth-profiles.json` ne masquent pas les véritables identifiants du shell
+  - Ignore les fournisseurs sans authentification/profil/model utilisable
+  - Exécute les deux modes de runtime déclarés, le cas échéant :
+    - `generate` avec une entrée prompt-only
     - `edit` lorsque le fournisseur déclare `capabilities.edit.enabled`
   - Couverture actuelle de la voie partagée :
     - `google` : `generate`, `edit`
     - `minimax` : `generate`
-    - `comfy` : fichier de test en direct Comfy séparé, non ce balayage partagé
-- Rétrécissement optionnel :
+    - `comfy` : fichier live Comfy séparé, pas ce balayage partagé
+- Rétrécissement facultatif :
   - `OPENCLAW_LIVE_MUSIC_GENERATION_PROVIDERS="google,minimax"`
   - `OPENCLAW_LIVE_MUSIC_GENERATION_MODELS="google/lyria-3-clip-preview,minimax/music-2.6"`
-- Comportement d'auth optionnel :
-  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'auth du magasin de profils et ignorer les remplacements uniquement env
+- Comportement d'authentification facultatif :
+  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'authentification par magasin de profils et ignorer les remplacements d'environnement uniquement
 
-## Test en direct de génération vidéo
+## Génération de vidéo en direct
 
 - Test : `extensions/video-generation-providers.live.test.ts`
 - Activer : `OPENCLAW_LIVE_TEST=1 pnpm test:live -- extensions/video-generation-providers.live.test.ts`
 - Harnais : `pnpm test:live:media video`
 - Portée :
-  - Exerce le chemin groupé partagé du fournisseur de génération vidéo
-  - Par défaut, utilise le chemin de test de smoke sécurisé pour la release : fournisseurs non-FAL, une requête texte-vers-vidéo par fournisseur, une invite homard d'une seconde, et une limite d'opération par fournisseur issue de `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` (`180000` par défaut)
-  - Ignore FAL par défaut car la latence de la file d'attente côté fournisseur peut dominer le temps de release ; passez `--video-providers fal` ou `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="fal"` pour l'exécuter explicitement
-  - Charge les env vars du fournisseur depuis votre shell de connexion (`~/.profile`) avant les sondages
-  - Utilise par défaut les clés d'API live/env avant les profils d'authentification stockés, afin que les clés de test obsolètes dans `auth-profiles.json` ne masquent pas les véritables identifiants du shell
-  - Ignore les fournisseurs sans auth/profil/model utilisable
+  - Exerce le chemin partagé groupé du fournisseur de génération de vidéo
+  - Par défaut, utilise le chemin de smoke sécurisé pour la release : providers non-FAL, une requête text-to-video par provider, une invite lobster d'une seconde, et une limite d'opération par provider à partir de `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` (`180000` par défaut)
+  - Saute FAL par défaut car la latence de la file d'attente côté provider peut dominer le temps de release ; passez `--video-providers fal` ou `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="fal"` pour l'exécuter explicitement
+  - Charge les env vars du provider à partir de votre shell de connexion (`~/.profile`) avant de sonder
+  - Utilise par priorité les clés live/env API plutôt que les profils d'authentification stockés, afin que les clés de test obsolètes dans `auth-profiles.json` ne masquent pas les véritables identifiants du shell
+  - Ignore les providers sans auth/profil/model utilisable
   - N'exécute que `generate` par défaut
-  - Définissez `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` pour exécuter également les modes de transformation déclarés lorsqu'ils sont disponibles :
-    - `imageToVideo` lorsque le fournisseur déclare `capabilities.imageToVideo.enabled` et que le fournisseur/model sélectionné accepte les images locales en mémoire tampon dans le balayage partagé
-    - `videoToVideo` lorsque le fournisseur déclare `capabilities.videoToVideo.enabled` et que le fournisseur/model sélectionné accepte les vidéos locales en mémoire tampon dans le balayage partagé
-  - Fournisseurs `imageToVideo` actuellement déclarés mais ignorés dans le balayage partagé :
-    - `vydra` car le `veo3` inclus est texte uniquement et le `kling` inclus nécessite une URL d'image distante
-  - Couverture Vydra spécifique au fournisseur :
+  - Définissez `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` pour exécuter également les modes de transformation déclarés lorsque disponibles :
+    - `imageToVideo` lorsque le provider déclare `capabilities.imageToVideo.enabled` et que le provider/model sélectionné accepte l'entrée d'image locale soutenue par un tampon dans le sweep partagé
+    - `videoToVideo` lorsque le provider déclare `capabilities.videoToVideo.enabled` et que le provider/model sélectionné accepte l'entrée vidéo locale soutenue par un tampon dans le sweep partagé
+  - Providers `imageToVideo` actuellement déclarés mais ignorés dans le sweep partagé :
+    - `vydra` car le `veo3` groupé est texte uniquement et le `kling` groupé nécessite une URL d'image distante
+  - Couverture Vydra spécifique au provider :
     - `OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_VYDRA_VIDEO=1 pnpm test:live -- extensions/vydra/vydra.live.test.ts`
-    - ce fichier exécute le `veo3` texte-vers-vidéo plus une voie `kling` qui utilise une fixture d'URL d'image distante par défaut
-  - Couverture actuelle `videoToVideo` en direct :
+    - ce fichier exécute du `veo3` text-to-video plus une voie `kling` qui utilise par défaut une fixture d'URL d'image distante
+  - Couverture live actuelle `videoToVideo` :
     - `runway` uniquement lorsque le modèle sélectionné est `runway/gen4_aleph`
-  - Fournisseurs `videoToVideo` actuellement déclarés mais ignorés dans le balayage partagé :
+  - Providers `videoToVideo` actuellement déclarés mais ignorés dans le sweep partagé :
     - `alibaba`, `qwen`, `xai` car ces chemins nécessitent actuellement des URL de référence `http(s)` / MP4 distantes
-    - `google` car la voie partagée Gemini/Véo actuelle utilise une entrée locale en mémoire tampon et ce chemin n'est pas accepté dans le balayage partagé
-    - `openai` car la voie partagée actuelle ne garantit pas l'accès à la réinpaint/remix vidéo spécifique à l'organisation
-- Rétrécissement optionnel :
-  - `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="google,openai,runway"`
+    - `google` car la voie Gemini/Veo partagée actuelle utilise une entrée locale soutenue par un tampon et que ce chemin n'est pas accepté dans le sweep partagé
+    - `openai` car la voie partagée actuelle ne garantit pas l'accès spécifique à l'organisation pour l'inpaint/remix vidéo
+- Réduction facultative :
+  - `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="deepinfra,google,openai,runway"`
   - `OPENCLAW_LIVE_VIDEO_GENERATION_MODELS="google/veo-3.1-fast-generate-preview,openai/sora-2,runway/gen4_aleph"`
-  - `OPENCLAW_LIVE_VIDEO_GENERATION_SKIP_PROVIDERS=""` pour inclure chaque fournisseur dans le balayage par défaut, y compris FAL
-  - `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS=60000` pour réduire la limite d'opérations de chaque fournisseur pour une exécution de test rapide agressive
+  - `OPENCLAW_LIVE_VIDEO_GENERATION_SKIP_PROVIDERS=""` pour inclure chaque provider dans le sweep par défaut, y compris FAL
+  - `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS=60000` pour réduire la limite d'opération de chaque provider pour une exécution de smoke agressive
 - Comportement d'authentification facultatif :
-  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'authentification du magasin de profils et ignorer les remplacements uniquement par variables d'environnement
+  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'authentification profile-store et ignorer les substitutions env-only
 
-## Harnais de test en direct pour les médias
+## Media live harness
 
 - Commande : `pnpm test:live:media`
 - Objectif :
-  - Exécute les suites de tests en direct partagées pour les images, la musique et la vidéo via un point d'entrée natif au dépôt
-  - Charge automatiquement les variables d'environnement provider manquantes depuis `~/.profile`
-  - Réduit automatiquement chaque suite aux providers disposant actuellement d'une authentification utilisable par défaut
-  - Réutilise `scripts/test-live.mjs`, de sorte que le comportement du heartbeat et du mode silencieux reste cohérent
+  - Exécute les suites live partagées pour les images, la musique et la vidéo via un point d'entrée natif du dépôt
+  - Charge automatiquement les env vars provider manquants depuis `~/.profile`
+  - Réduit automatiquement chaque suite aux providers qui ont actuellement une authentification utilisable par défaut
+  - Réutilise `scripts/test-live.mjs`, donc le comportement heartbeat et quiet-mode reste cohérent
 - Exemples :
   - `pnpm test:live:media`
   - `pnpm test:live:media image video --providers openai,google,minimax`
@@ -552,4 +561,4 @@ Cela couvre l'analyse des arguments de CLI, la résolution de la config/default-
 
 ## Connexes
 
-- [Testing](/fr/help/testing) — suites de tests unitaires, d'intégration, QA et Docker
+- [Testing](/fr/help/testing) - suites unitaires, d'intégration, QA et Docker

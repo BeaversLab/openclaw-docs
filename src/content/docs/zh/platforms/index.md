@@ -22,7 +22,7 @@ Linux 的配套应用已在计划中，但 Gateway(网关) 目前已完全支持
 - Windows: [Windows](/zh/platforms/windows)
 - Linux: [Linux](/zh/platforms/linux)
 
-## VPS 与托管
+## VPS 和主机托管
 
 - VPS 中心: [VPS 托管](/zh/vps)
 - Fly.io: [Fly.io](/zh/install/fly)

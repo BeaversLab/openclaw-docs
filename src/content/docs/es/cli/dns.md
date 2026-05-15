@@ -2,7 +2,7 @@
 summary: "Referencia de la CLI para `openclaw dns` (asistentes de descubrimiento de área amplia)"
 read_when:
   - You want wide-area discovery (DNS-SD) via Tailscale + CoreDNS
-  - You’re setting up split DNS for a custom discovery domain (example: openclaw.internal)
+  - You're setting up split DNS for a custom discovery domain (example: openclaw.internal)
 title: "DNS"
 ---
 

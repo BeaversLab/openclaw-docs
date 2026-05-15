@@ -34,11 +34,21 @@ openclaw agents add <name>
 新手引导以 **QuickStart**（默认设置）与 **Advanced**（完全控制）开始。
 
 <Tabs>
-  <Tab title="QuickStart (defaults)">
-    - 本地网关（loopback） - 工作区默认值（或现有工作区） - Gateway(网关) 端口 **18789** - Gateway(网关) 认证 **Token**（自动生成，即使在 loopback 上） - 新本地设置的默认工具策略：`tools.profile: "coding"`（现有的显式配置文件将被保留） - 私信隔离默认值：本地新手引导在未设置时写入 `session.dmScope: "per-channel-peer"`。详情：[CLI Setup
-    Reference](/zh/start/wizard-cli-reference#outputs-and-internals) - Tailscale 暴露 **关闭** - Telegram + WhatsApp 私信默认为 **allowlist**（系统将提示您输入电话号码）
+  <Tab title="QuickStart (默认设置)"Gateway(网关)Gateway(网关)>
+    - 本地网关 (loopback)
+    - 默认工作区 (或现有工作区)
+    - Gateway(网关) 端口 **18789**
+    - Gateway(网关) 认证 **Token** (自动生成，即使在 loopback 上)
+    - 新本地设置的默认工具策略：`tools.profile: "coding"` (保留现有的显式配置)
+    - 私信隔离默认值：当未设置时，本地新手引导会写入 `session.dmScope: "per-channel-peer"`CLI。详情：[CLI 设置参考](/zh/start/wizard-cli-reference#outputs-and-internalsTailscaleTelegramWhatsApp)
+    - Tailscale 暴露 **关闭**
+    - Telegram + WhatsApp 私信默认为 **allowlist** (系统将提示您输入电话号码)
+
   </Tab>
-  <Tab title="Advanced (full control)">- 展示每个步骤（模式、工作区、网关、渠道、守护进程、技能）。</Tab>
+  <Tab title="Advanced (完全控制)">
+    - 公开每个步骤 (模式、工作区、网关、频道、守护进程、技能)。
+
+  </Tab>
 </Tabs>
 
 ## 新手引导配置的内容
@@ -56,7 +66,7 @@ openclaw agents add <name>
 3. **Gateway(网关)** — 端口、绑定地址、身份验证模式、Tailscale 暴露。
    在交互式令牌模式下，选择默认明文令牌存储或选择加入 SecretRef。
    非交互式令牌 SecretRef 路径：`--gateway-token-ref-env <ENV_VAR>`。
-4. **通道** — 内置和捆绑的聊天通道，如 BlueBubbles、Discord、飞书、Google Chat、Mattermost、Microsoft Teams、QQ 机器人、Signal、Slack、Telegram、WhatsApp 等等。
+4. **频道** — 内置且捆绑的聊天频道，例如 iMessage、Discord、飞书、Google Chat、Mattermost、Microsoft Teams、QQ 机器人、Signal、Slack、Telegram、WhatsApp 等等。
 5. **Daemon** — 安装 LaunchAgent (macOS)、systemd 用户单元 (Linux/WSL2) 或具有每用户启动文件夹回退机制的原生 Windows 计划任务。
    如果 token 身份验证需要 token 且 `gateway.auth.token` 由 SecretRef 管理，daemon 安装会验证它，但不会将解析后的 token 持久化到 supervisor 服务环境元数据中。
    如果 token 身份验证需要 token 且配置的 token SecretRef 未解析，daemon 安装将被阻止，并提供可操作的指导。

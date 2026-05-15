@@ -6,19 +6,20 @@ read_when:
 title: "SenseAudio"
 ---
 
-# SenseAudio
+SenseAudio peut transcrire les pièces jointes audio et les notes vocales entrantes via le pipeline partagé `tools.media.audio` d'OpenClaw. OpenClaw envoie de l'audio multiparts au point de terminaison de transcription compatible OpenAI et injecte le texte renvoyé en tant que `{{Transcript}}` plus un bloc `[Audio]`.
 
-SenseAudio peut transcrire les pièces jointes audio/notes vocales entrantes via le pipeline partagé OpenClaw `tools.media.audio`. OpenClaw envoie l'audio multipart à le point de terminaison de transcription compatible OpenAI et injecte le texte renvoyé en tant que `{{Transcript}}` plus un bloc `[Audio]`.
+| Propriété                                   | Valeur                                           |
+| ------------------------------------------- | ------------------------------------------------ |
+| ID du fournisseur                           | `senseaudio`                                     |
+| Plugin                                      | intégré, `enabledByDefault: true`                |
+| Contrat                                     | `mediaUnderstandingProviders` (audio)            |
+| Variable d'environnement d'authentification | `SENSEAUDIO_API_KEY`                             |
+| Modèle par défaut                           | `senseaudio-asr-pro-1.5-260319`                  |
+| URL par défaut                              | `https://api.senseaudio.cn/v1`                   |
+| Site Web                                    | [senseaudio.cn](https://senseaudio.cn)           |
+| Docs                                        | [senseaudio.cn/docs](https://senseaudio.cn/docs) |
 
-| Détail            | Valeur                                           |
-| ----------------- | ------------------------------------------------ |
-| Site Web          | [senseaudio.cn](https://senseaudio.cn)           |
-| Docs              | [senseaudio.cn/docs](https://senseaudio.cn/docs) |
-| Auth              | `SENSEAUDIO_API_KEY`                             |
-| Modèle par défaut | `senseaudio-asr-pro-1.5-260319`                  |
-| URL par défaut    | `https://api.senseaudio.cn/v1`                   |
-
-## Getting Started
+## Getting started
 
 <Steps>
   <Step title="Définissez votre clé API">
@@ -41,7 +42,8 @@ SenseAudio peut transcrire les pièces jointes audio/notes vocales entrantes via
     ```
   </Step>
   <Step title="Envoyez une note vocale">
-    Envoyez un message audio via n'importe quel channel connecté. OpenClaw télécharge l'audio vers SenseAudio et utilise la transcription dans le pipeline de réponse.
+    Envoyez un message audio via n'importe quel canal connecté. OpenClaw télécharge l'audio
+    vers SenseAudio et utilise la transcription dans le pipeline de réponse.
   </Step>
 </Steps>
 
@@ -55,4 +57,9 @@ SenseAudio peut transcrire les pièces jointes audio/notes vocales entrantes via
 | `baseUrl`  | `tools.media.audio.baseUrl` ou modèle | Remplacer la base compatible OpenAI |
 | `headers`  | `tools.media.audio.request.headers`   | En-têtes de demande supplémentaires |
 
-<Note>SenseAudio est uniquement un STT par lot dans OpenClaw. La transcription en temps réel des appels vocaux continue d'utiliser des fournisseurs prenant en charge le STT en continu.</Note>
+<Note>SenseAudio est uniquement un STT par lots dans OpenClaw. La transcription en temps réel des appels vocaux continue d'utiliser des fournisseurs prenant en charge le STT en continu.</Note>
+
+## Connexes
+
+- [Compréhension des médias (audio)](/fr/nodes/audio)
+- [Fournisseurs de modèles](/fr/concepts/model-providers)

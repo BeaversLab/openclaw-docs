@@ -1,7 +1,7 @@
 ---
 summary: "Référence CLI pour `openclaw nodes` (status, pairing, invoke, camera/canvas/screen)"
 read_when:
-  - You’re managing paired nodes (cameras, screen, canvas)
+  - You're managing paired nodes (cameras, screen, canvas)
   - You need to approve requests or invoke node commands
 title: "Nodes"
 ---
@@ -12,9 +12,9 @@ Gérer les nœuds jumelés (appareils) et appeler les capacités des nœuds.
 
 Connexes :
 
-- Aperçu des nœuds : [Nodes](/fr/nodes)
-- Caméra : [Camera nodes](/fr/nodes/camera)
-- Images : [Image nodes](/fr/nodes/images)
+- Aperçu des Nodes : [Nodes](/fr/nodes)
+- Caméra : [Nodes de caméra](/fr/nodes/camera)
+- Images : [Nodes d'image](/fr/nodes/images)
 
 Options courantes :
 
@@ -66,11 +66,11 @@ Drapeaux d'appel (Invoke flags) :
 - `--idempotency-key <key>` : clé d'idempotence facultative.
 - `system.run` et `system.run.prepare` sont bloqués ici ; utilisez l'tool `exec` avec `host=node` pour l'exécution de shell.
 
-Pour l'exécution de shell sur un nœud, utilisez l'tool `exec` avec `host=node` au lieu de `openclaw nodes run`.
-Le `nodes` CLI est désormais axé sur les capacités : RPC direct via `nodes invoke`, plus l'appariement, la caméra,
-l'écran, la localisation, le canvas et les notifications.
+Pour l'exécution de shell sur un nœud, utilisez l'outil `exec` avec `host=node` au lieu de `openclaw nodes run`.
+La CLI `nodes` CLIRPC est désormais axée sur les fonctionnalités : RPC direct via `nodes invoke`, ainsi que l'appariement, la caméra,
+l'écran, la localisation, Canvas et les notifications. Les commandes Canvas sont implémentées par le plugin expérimental Canvas inclus ; le cœur conserve un hook de compatibilité pour qu'elles restent sous `openclaw nodes canvas`.
 
 ## Connexes
 
-- [CLI référence](/fr/cli)
+- [Référence CLI](/fr/cli)
 - [Nodes](/fr/nodes)

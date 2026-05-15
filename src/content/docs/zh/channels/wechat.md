@@ -130,6 +130,9 @@ openclaw plugins install "@tencent-weixin/openclaw-weixin" --force
 openclaw gateway restart
 ```
 
+如果启动时报告已安装的插件包 `requires compiled runtime
+output for TypeScript entry`，则表示发布的 npm 包中未包含 OpenClaw 所需的已编译 JavaScript 运行时文件。请在插件发布者提供修复后的包后更新/重新安装，或者暂时禁用/卸载该插件。
+
 暂时禁用：
 
 ```bash
@@ -139,9 +142,9 @@ openclaw gateway restart
 
 ## 相关文档
 
-- 渠道概述：[聊天渠道](/zh/channels)
-- 配对：[配对](/zh/channels/pairing)
-- 渠道路由：[渠道路由](/zh/channels/channel-routing)
-- 插件架构：[插件架构](/zh/plugins/architecture)
-- 渠道插件 SDK：[渠道插件 SDK](/zh/plugins/sdk-channel-plugins)
+- 渠道概述：[Chat Channels](/zh/channels)
+- 配对：[Pairing](/zh/channels/pairing)
+- 渠道路由：[Channel Routing](/zh/channels/channel-routing)
+- 插件架构：[Plugin Architecture](/zh/plugins/architecture)
+- 渠道插件 SDK：[Channel Plugin SDK](/zh/plugins/sdk-channel-plugins)
 - 外部包：[@tencent-weixin/openclaw-weixin](https://www.npmjs.com/package/@tencent-weixin/openclaw-weixin)

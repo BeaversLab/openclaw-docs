@@ -14,8 +14,8 @@ title: "Hooks"
 
 相关内容：
 
-- Hooks: [Hooks](/zh/automation/hooks)
-- 插件挂钩：[Plugin hooks](/zh/plugins/hooks)
+- Hooks：[Hooks](/zh/automation/hooks)
+- 插件 Hooks：[Plugin hooks](/zh/plugins/hooks)
 
 ## 列出所有挂钩
 
@@ -130,7 +130,7 @@ openclaw hooks enable <name>
 
 通过将特定 Hook 添加到您的配置文件（默认为 `~/.openclaw/openclaw.json`）来启用它。
 
-**注意：** 工作区 Hooks 默认处于禁用状态，直到在此处或配置文件中启用。由插件管理的 Hooks 在 `openclaw hooks list` 中显示为 `plugin:<id>`，无法在此处启用/禁用。请改为启用/禁用插件。
+**注意：** 工作区 Hooks 默认处于禁用状态，直到在此处或配置中启用。由插件管理的 Hooks 在 `openclaw hooks list` 中显示为 `plugin:<id>`，并且无法在此处启用/禁用。请改为启用/禁用插件。
 
 **参数：**
 
@@ -196,7 +196,7 @@ openclaw hooks disable command-logger
 ## 安装挂钩包
 
 ```bash
-openclaw plugins install <package>        # ClawHub first, then npm
+openclaw plugins install <package>        # npm by default
 openclaw plugins install npm:<package>    # npm only
 openclaw plugins install <package> --pin  # pin version
 openclaw plugins install <path>           # local path
@@ -274,13 +274,13 @@ openclaw plugins update --all
 openclaw hooks enable session-memory
 ```
 
-**输出：** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
+**输出：** 默认为 `~/.openclaw/workspace/memory/YYYY-MM-DD-HHMM.md`。设置 `hooks.internal.entries.session-memory.llmSlug: true` 以使用模型生成的文件名标识符。
 
 **参见：** [会话-memory 文档](/zh/automation/hooks#session-memory)
 
 ### bootstrap-extra-files
 
-在 `agent:bootstrap` 期间注入额外的引导文件（例如 monorepo 本地的 `AGENTS.md` / `TOOLS.md`）。
+在 `agent:bootstrap` 期间注入额外的引导文件（例如 monorepo 本地 `AGENTS.md` / `TOOLS.md`）。
 
 **启用：**
 
@@ -319,9 +319,9 @@ grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 
 ### boot-md
 
-当网关启动时（在通道启动之后）运行 `BOOT.md`。
+当网关启动时（在频道启动之后）运行 `BOOT.md`。
 
-**事件**： `gateway:startup`
+**事件**：`gateway:startup`
 
 **启用**：
 
@@ -333,5 +333,5 @@ openclaw hooks enable boot-md
 
 ## 相关
 
-- [CLI reference](/zh/cli)
-- [Automation hooks](/zh/automation/hooks)
+- [CLI 参考](/zh/cli)
+- [自动化 Hooks](/zh/automation/hooks)

@@ -7,7 +7,7 @@ read_when:
 title: "Búsqueda SearXNG"
 ---
 
-OpenClaw admite [SearXNG](https://docs.searxng.org/) como un proveedor `web_search` **autoalojado y sin clave**. SearXNG es un metabuscador de código abierto que agrega resultados de Google, Bing, DuckDuckGo y otras fuentes.
+OpenClaw es compatible con [SearXNG](https://docs.searxng.org/) como proveedor `web_search` **autoalojado y sin clave**. SearXNG es un metabuscador de código abierto que agrega resultados de Google, Bing, DuckDuckGo y otras fuentes.
 
 Ventajas:
 
@@ -83,6 +83,9 @@ Reglas de transporte:
 - `https://` funciona para hosts SearXNG públicos o privados
 - `http://` solo se acepta para hosts de red privada de confianza o localhost
 - los hosts públicos de SearXNG deben usar `https://`
+- los hosts privados/internos usan el guardián de red autoalojado; los hosts `https://`
+  públicos se mantienen en el guardián de búsqueda web estricto y no pueden redirigir a direcciones
+  privadas
 
 ## Variable de entorno
 
@@ -92,32 +95,42 @@ Establezca `SEARXNG_BASE_URL` como alternativa a la configuración:
 export SEARXNG_BASE_URL="http://localhost:8888"
 ```
 
-Cuando se establece `SEARXNG_BASE_URL` y no se configura ningún proveedor explícito, la detección automática elige SearXNG automáticamente (con la menor prioridad: primero gana cualquier proveedor con API que tenga una clave).
+Cuando `SEARXNG_BASE_URL` está establecido y no se configura ningún proveedor explícito, la detección automática
+elige SearXNG automáticamente (con la prioridad más baja: cualquier proveedor con API que tenga una
+clave gana primero).
 
 ## Referencia de configuración del complemento
 
 | Campo        | Descripción                                                        |
 | ------------ | ------------------------------------------------------------------ |
-| `baseUrl`    | URL base de su instancia de SearXNG (requerido)                    |
+| `baseUrl`    | URL base de su instancia SearXNG (obligatorio)                     |
 | `categories` | Categorías separadas por comas, como `general`, `news` o `science` |
 | `language`   | Código de idioma para los resultados, como `en`, `de` o `fr`       |
 
 ## Notas
 
-- **API JSON** -- utiliza el punto final `format=json` nativo de SearXNG, no raspado HTML
-- **Sin clave de API** -- funciona con cualquier instancia de SearXNG de inmediato
+- **API JSON** -- usa el punto final `format=json` nativo de SearXNG, no scraping de HTML
+- **URL de resultados de imágenes** -- los resultados de la categoría de imágenes incluyen `img_src` cuando SearXNG
+  devuelve una URL de imagen directa
+- **Sin clave de API** -- funciona con cualquier instancia de SearXNG directamente
 - **Validación de URL base** -- `baseUrl` debe ser una `http://` o `https://`
-  URL válida; los hosts públicos deben usar `https://`
-- **Orden de detección automática** -- SearXNG se verifica en último lugar (orden 200) en
+  válida; los hosts públicos deben usar `https://`
+- **Guardián de red** -- los puntos finales SearXNG privados/internos aceptan
+  el acceso a red privada; los puntos finales SearXNG `https://` públicos mantienen una protección SSRF
+  estricta
+- **Orden de detección automática** -- SearXNG se comprueba en último lugar (orden 200) en
   la detección automática. Los proveedores con API y claves configuradas se ejecutan primero, luego
   DuckDuckGo (orden 100), luego Ollama Web Search (orden 110)
-- **Autoalojado** -- controlas la instancia, las consultas y los motores de búsqueda ascendentes
+- **Autohospedado** -- controlas la instancia, las consultas y los motores de búsqueda ascendentes
 - **Categorías** por defecto son `general` cuando no están configuradas
+- **Respaldo de categoría** -- si una solicitud de categoría que no sea `general` tiene éxito pero
+  devuelve cero resultados, OpenClaw reintenta la misma consulta una vez con `general`
+  antes de devolver un conjunto de resultados vacío
 
 <Tip>Para que la API JSON de SearXNG funcione, asegúrate de que tu instancia de SearXNG tenga el formato `json` habilitado en su `settings.yml` bajo `search.formats`.</Tip>
 
 ## Relacionado
 
-- [Resumen de búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
-- [Búsqueda DuckDuckGo](/es/tools/duckduckgo-search) -- otro respaldo sin clave
-- [Búsqueda Brave](/es/tools/brave-search) -- resultados estructurados con nivel gratuito
+- [Resumen de Web Search](/es/tools/web) -- todos los proveedores y detección automática
+- [DuckDuckGo Search](/es/tools/duckduckgo-search) -- otro respaldo sin clave
+- [Brave Search](/es/tools/brave-search) -- resultados estructurados con nivel gratuito

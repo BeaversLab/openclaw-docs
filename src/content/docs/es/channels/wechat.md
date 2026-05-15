@@ -149,7 +149,9 @@ openclaw plugins install "@tencent-weixin/openclaw-weixin" --force
 openclaw gateway restart
 ```
 
-Desactivación temporal:
+Si el inicio indica que el paquete del plugin instalado `requiere salida de tiempo de ejecución compilada para la entrada de TypeScript`, el paquete npm se publicó sin los archivos de tiempo de ejecución de JavaScript compilados que OpenClaw necesita. Actualice/reinstale después de que el editor del plugin envíe un paquete corregido, o deshabilite/desinstale temporalmente el plugin.
+
+Deshabilitar temporal:
 
 ```bash
 openclaw config set plugins.entries.openclaw-weixin.enabled false
@@ -158,9 +160,9 @@ openclaw gateway restart
 
 ## Documentos relacionados
 
-- Visión general del canal: [Canales de chat](/es/channels)
+- Descripción general del canal: [Canales de chat](/es/channels)
 - Emparejamiento: [Emparejamiento](/es/channels/pairing)
-- Enrutamiento de canales: [Enrutamiento de canales](/es/channels/channel-routing)
-- Arquitectura de complementos: [Arquitectura de complementos](/es/plugins/architecture)
-- SDK de complementos de canal: [SDK de complementos de canal](/es/plugins/sdk-channel-plugins)
+- Enrutamiento de canal: [Enrutamiento de canal](/es/channels/channel-routing)
+- Arquitectura del complemento: [Arquitectura del complemento](/es/plugins/architecture)
+- SDK del complemento de canal: [SDK del complemento de canal](/es/plugins/sdk-channel-plugins)
 - Paquete externo: [@tencent-weixin/openclaw-weixin](https://www.npmjs.com/package/@tencent-weixin/openclaw-weixin)

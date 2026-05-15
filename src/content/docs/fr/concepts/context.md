@@ -1,13 +1,13 @@
 ---
 summary: "Contexte : ce que le modèle voit, comment il est construit et comment l'inspecter"
 read_when:
-  - You want to understand what “context” means in OpenClaw
-  - You are debugging why the model “knows” something (or forgot it)
+  - You want to understand what "context" means in OpenClaw
+  - You are debugging why the model "knows" something (or forgot it)
   - You want to reduce context overhead (/context, /status, /compact)
 title: "Contexte"
 ---
 
-Le « contexte » est **tout ce que OpenClaw envoie au modèle pour une exécution**. Il est délimité par la **fenêtre de contexte** du modèle (limite de jetons).
+Le « contexte » est **tout ce qu'OpenClaw envoie au modèle pour une exécution**. Il est limité par la **fenêtre de contexte** (limite de jetons) du modèle.
 
 Modèle mental débutant :
 
@@ -19,17 +19,17 @@ Le contexte n'est _pas la même chose_ que la « mémoire » : la mémoire peut 
 
 ## Quick start (inspect context)
 
-- `/status` → vue rapide « à quel point ma fenêtre est pleine ? » + paramètres de session.
+- `/status` → vue rapide « ma fenêtre est-elle pleine ? » + paramètres de session.
 - `/context list` → ce qui est injecté + tailles approximatives (par fichier + totaux).
-- `/context detail` → répartition plus détaillée : par fichier, tailles de schéma par outil, tailles d'entrée par compétence et taille de l'invite système.
+- `/context detail` → répartition plus détaillée : par fichier, tailles de schéma par outil, tailles d'entrée par compétence, et taille du prompt système.
 - `/usage tokens` → ajouter un pied de page d'utilisation par réponse aux réponses normales.
-- `/compact` → résumer l'historique plus ancien dans une entrée compacte pour libérer de l'espace dans la fenêtre.
+- `/compact` → résumer l'historique ancien dans une entrée compacte pour libérer de l'espace dans la fenêtre.
 
-Voir aussi : [Slash commands](/fr/tools/slash-commands), [Token use & costs](/fr/reference/token-use), [Compaction](/fr/concepts/compaction).
+Voir aussi : [Commandes slash](/fr/tools/slash-commands), [Utilisation des jetons et coûts](/fr/reference/token-use), [Compactage](/fr/concepts/compaction).
 
 ## Example output
 
-Les valeurs varient selon le modèle, le fournisseur, la stratégie d'outil et ce qui se trouve dans votre espace de travail.
+Les valeurs varient en fonction du modèle, du fournisseur, de la stratégie d'outil et de ce qui se trouve dans votre espace de travail.
 
 ### `/context list`
 
@@ -83,7 +83,7 @@ Tout ce que le modèle reçoit compte, y compris :
 - Appels d'outils + résultats d'outils.
 - Pièces jointes/transcriptions (images/audio/fichiers).
 - Résumés de compression et artefacts d'élagage.
-- « Enveloppes » ou en-têtes cachés du fournisseur (non visibles, mais toujours comptés).
+- « Enveloppes » du fournisseur ou en-têtes masqués (non visibles, mais toujours comptés).
 
 ## How OpenClaw builds the system prompt
 
@@ -96,7 +96,7 @@ L'invite système est **propriété de OpenClaw** et reconstruite à chaque exé
 - Métadonnées d'exécution (hôte/OS/modèle/réflexion).
 - Fichiers d'amorçage de l'espace de travail injectés sous **Contexte du projet**.
 
-Répartition complète : [System Prompt](/fr/concepts/system-prompt).
+Répartition complète : [Prompt système](/fr/concepts/system-prompt).
 
 ## Injected workspace files (Project Context)
 
@@ -110,34 +110,34 @@ Par défaut, OpenClaw injecte un ensemble fixe de fichiers d'espace de travail (
 - `HEARTBEAT.md`
 - `BOOTSTRAP.md` (première exécution uniquement)
 
-Les fichiers volumineux sont tronqués fichier par fichier à l'aide de `agents.defaults.bootstrapMaxChars` (défaut `12000` caractères). OpenClaw applique également une limite globale d'injection d'amorçage sur tous les fichiers avec `agents.defaults.bootstrapTotalMaxChars` (défaut `60000` caractères). `/context` affiche les tailles **brutes par rapport à injectées** et indique si une troncature a eu lieu.
+Les fichiers volumineux sont tronqués par fichier en utilisant `agents.defaults.bootstrapMaxChars` (défaut `12000`OpenClaw caractères). OpenClaw applique également une plafond global d'injection d'amorçage sur tous les fichiers avec `agents.defaults.bootstrapTotalMaxChars` (défaut `60000` caractères). `/context` affiche les tailles **brutes par rapport à injectées** et indique si une troncation a eu lieu.
 
-Lorsqu'une troncature se produit, l'environnement d'exécution peut injecter un bloc d'avertissement dans l'invite sous Project Context. Configurez ceci avec `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ; défaut `once`).
+Lorsqu'une troncature se produit, le runtime peut injecter un bloc d'avertissement dans le prompt sous le Contexte du projet. Configurez ceci avec `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ; défaut `once`).
 
 ## Skills : injectées ou chargées à la demande
 
 L'invite système comprend une liste compacte de **skills** (nom + description + emplacement). Cette liste a une surcharge réelle.
 
-Les instructions des skills ne sont _pas_ incluses par défaut. Le modèle est censé `read` `SKILL.md` de la skill **uniquement lorsque cela est nécessaire**.
+Les instructions de compétence ne sont _pas_ incluses par défaut. On s'attend à ce que le model `read` le `SKILL.md` de la compétence **uniquement si nécessaire**.
 
 ## Tools : il y a deux coûts
 
 Les outils affectent le contexte de deux manières :
 
-1. **Texte de la liste des outils** dans l'invite système (ce que vous voyez en tant que « Tooling »).
-2. **Schémas d'outils** (JSON). Ils sont envoyés au modèle afin qu'il puisse appeler les outils. Ils comptent dans le contexte même si vous ne les voyez pas en texte brut.
+1. **Texte de la liste des outils** dans le prompt système (ce que vous voyez sous "Tooling").
+2. **Schémas d'outils** (JSON). Ceux-ci sont envoyés au model afin qu'il puisse appeler les outils. Ils comptent dans le contexte même si vous ne les voyez pas en texte brut.
 
-`/context detail` décompose les plus grands schémas d'outils afin que vous puissiez voir ce qui domine.
+`/context detail` décompose les plus gros schémas d'outils afin que vous puissiez voir ce qui domine.
 
 ## Commandes, directives et "raccourcis en ligne"
 
 Les commandes slash sont gérées par la Gateway. Il existe quelques comportements différents :
 
-- **Commandes autonomes** : un message qui n'est que `/...` s'exécute en tant que commande.
-- **Directives** : `/think`, `/verbose`, `/trace`, `/reasoning`, `/elevated`, `/model`, `/queue` sont supprimées avant que le modèle ne voie le message.
+- **Commandes autonomes** : un message qui est uniquement `/...` s'exécute en tant que commande.
+- **Directives** : `/think`, `/verbose`, `/trace`, `/reasoning`, `/elevated`, `/model`, `/queue` sont supprimés avant que le model ne voie le message.
   - Les messages contenant uniquement des directives conservent les paramètres de la session.
   - Les directives en ligne dans un message normal agissent comme des indices par message.
-- **Raccourcis en ligne** (expéditeurs autorisés uniquement) : certains jetons `/...` à l'intérieur d'un message normal peuvent s'exécuter immédiatement (exemple : « hey /status »), et sont supprimés avant que le modèle ne voie le texte restant.
+- **Raccourcis en ligne** (expéditeurs autorisés uniquement) : certains jetons `/...` à l'intérieur d'un message normal peuvent s'exécuter immédiatement (exemple : "hey /status"), et sont supprimés avant que le model ne voie le texte restant.
 
 Détails : [Commandes slash](/fr/tools/slash-commands).
 
@@ -147,30 +147,41 @@ Ce qui persiste d'un message à l'autre dépend du mécanisme :
 
 - L'**historique normal** persiste dans la transcription de la session jusqu'à ce qu'il soit compacté/élagué par la stratégie.
 - Le **compactage** fait persister un résumé dans la transcription et conserve les messages récents intacts.
-- L'**élagage** supprime les anciens résultats d'outils du prompt _en mémoire_ pour libérer de l'espace dans la fenêtre de contexte, mais ne réécrit pas la transcription de la session — l'historique complet reste toujours inspectable sur le disque.
+- Le **Nettoyage** (Pruning) supprime les anciens résultats d'outils du prompt _en mémoire_ pour libérer de l'espace dans la fenêtre de contexte, mais ne réécrit pas la transcription de la session - l'historique complet est toujours inspectable sur le disque.
 
-Documentation : [Session](/fr/concepts/session), [Compactage](/fr/concepts/compaction), [Élagage de session](/fr/concepts/session-pruning).
+Docs : [Session](/fr/concepts/session), [Compaction](/fr/concepts/compaction), [Session pruning](/fr/concepts/session-pruning).
 
 Par défaut, OpenClaw utilise le moteur de contexte intégré `legacy` pour l'assemblage et
-le compactage. Si vous installez un plugin qui fournit `kind: "context-engine"` et
-que vous le sélectionnez avec `plugins.slots.contextEngine`, OpenClaw délègue l'assemblage
-du contexte, `/compact`, et les crochets de cycle de vie du contexte des sous-agents associés à ce moteur à la place. `ownsCompaction: false` ne revient pas automatiquement au moteur
-hérité ; le moteur actif doit toujours implémenter `compact()` correctement. Voir
-[Moteur de contexte](/fr/concepts/context-engine) pour l'interface
-complétement enfichable, les crochets de cycle de vie et la configuration.
+la compactage. Si vous installez un plugin qui fournit `kind: "context-engine"` et
+le sélectionnez avec `plugins.slots.contextEngine`, OpenClaw délègue l'assemblage du contexte,
+`/compact` et les hooks de cycle de vie du contexte des sous-agents associés à ce
+moteur à la place. `ownsCompaction: false` ne revient pas automatiquement à l'ancien
+moteur ; le moteur actif doit toujours implémenter `compact()` correctement. Voir
+[Context Engine](/fr/concepts/context-engine) pour l'interface
+complètement enfichable, les hooks de cycle de vie et la configuration.
 
 ## Ce que `/context` rapporte réellement
 
 `/context` préfère le dernier rapport de prompt système **construit lors de l'exécution** lorsqu'il est disponible :
 
-- `System prompt (run)` = capturé à partir de la dernière exécution intégrée (capable d'outils) et conservé dans le magasin de sessions.
+- `System prompt (run)` = capturé à partir de la dernière exécution intégrée (compatible avec les outils) et persisté dans le magasin de session.
 - `System prompt (estimate)` = calculé à la volée lorsqu'aucun rapport d'exécution n'existe (ou lors de l'exécution via un backend CLI qui ne génère pas le rapport).
 
 Dans les deux cas, il rapporte les tailles et les principaux contributeurs ; il n'**affiche pas** le prompt système complet ou les schémas d'outils.
 
 ## Connexes
 
-- [Moteur de contexte](/fr/concepts/context-engine) — injection de contexte personnalisée via des plugins
-- [Compactage](/fr/concepts/compaction) — résumé des longues conversations
-- [Invite système](/fr/concepts/system-prompt) — construction de l'invite système
-- [Boucle d'agent](/fr/concepts/agent-loop) — le cycle complet d'exécution de l'agent
+<CardGroup cols={2}>
+  <Card title="Context engine" href="/fr/concepts/context-engine" icon="puzzle-piece">
+    Injection de contexte personnalisé via des plugins.
+  </Card>
+  <Card title="Compaction" href="/fr/concepts/compaction" icon="compress">
+    Résumer les longues conversations pour les maintenir dans la fenêtre du modèle.
+  </Card>
+  <Card title="System prompt" href="/fr/concepts/system-prompt" icon="message-lines">
+    Comment le prompt système est construit et ce qu'il injecte à chaque tour.
+  </Card>
+  <Card title="Agent loop" href="/fr/concepts/agent-loop" icon="arrows-rotate">
+    Le cycle d'exécution complet de l'agent, du message entrant à la réponse finale.
+  </Card>
+</CardGroup>

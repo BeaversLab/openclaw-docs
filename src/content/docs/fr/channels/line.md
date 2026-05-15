@@ -1,5 +1,5 @@
 ---
-summary: "Configuration, configuration et utilisation du plugin LINE Messaging API"
+summary: "Configuration, installation et utilisation du plug-in de l'API de messagerie LINE"
 read_when:
   - You want to connect OpenClaw to LINE
   - You need LINE webhook + credential setup
@@ -9,13 +9,11 @@ title: LINE
 
 LINE se connecte à OpenClaw via l'API de messagerie LINE. Le plugin fonctionne en tant que récepteur de webhook sur la passerelle et utilise votre jeton d'accès de canal et votre secret de canal pour l'authentification.
 
-Statut : plugin inclus. Les messages directs, les discussions de groupe, les médias, les lieux, les messages Flex, les modèles de messages et les réponses rapides sont pris en charge. Les réactions et les fils de discussion ne sont pas pris en charge.
+État : plug-in téléchargeable. Les messages directs, les discussions de groupe, les médias, les localisations, les messages Flex, les modèles de messages et les réponses rapides sont pris en charge. Les réactions et les fils de discussion ne sont pas pris en charge.
 
-## Plugin inclus
+## Installer
 
-LINE est fourni en tant que plugin inclus dans les versions actuelles d'OpenClaw, les builds packagés normaux n'ont donc pas besoin d'une installation séparée.
-
-Si vous êtes sur une build plus ancienne ou une installation personnalisée qui exclut LINE, installez-le manuellement :
+Installez LINE avant de configurer le canal :
 
 ```bash
 openclaw plugins install @openclaw/line
@@ -32,8 +30,8 @@ openclaw plugins install ./path/to/local/line-plugin
 1. Créez un compte LINE Developers et ouvrez la Console :
    [https://developers.line.biz/console/](https://developers.line.biz/console/)
 2. Créez (ou choisissez) un fournisseur et ajoutez un canal **Messaging API**.
-3. Copiez le **Channel access token** (jeton d'accès du canal) et le **Channel secret** (secret du canal) à partir des paramètres du canal.
-4. Activez **Use webhook** (Utiliser le webhook) dans les paramètres de l'API de messagerie.
+3. Copiez le **Channel access token** et le **Channel secret** depuis les paramètres du canal.
+4. Activez **Use webhook** dans les paramètres du Messaging API.
 5. Définissez l'URL du webhook sur votre point de terminaison de passerelle (HTTPS requis) :
 
 ```
@@ -44,10 +42,10 @@ La passerelle répond à la vérification du webhook de LINE (GET) et aux évén
 Si vous avez besoin d'un chemin personnalisé, définissez `channels.line.webhookPath` ou
 `channels.line.accounts.<id>.webhookPath` et mettez à jour l'URL en conséquence.
 
-Remarque de sécurité :
+Note de sécurité :
 
-- La vérification de la signature LINE dépend du corps (HMAC sur le corps brut), donc OpenClaw applique des limites strictes et un délai d'attente sur le corps pré-authentification avant vérification.
-- OpenClaw traite les événements de webhook à partir des octets de demande bruts vérifiés. Les valeurs `req.body` transformées par le middleware en amont sont ignorées pour la sécurité de l'intégrité de la signature.
+- La vérification de la signature LINE dépend du corps (HMAC sur le corps brut), donc OpenClaw applique des limites strictes de corps et de délai d'attente avant la vérification.
+- OpenClaw traite les événements de webhook à partir des octets de demande bruts vérifiés. Les valeurs `req.body` transformées par l'intergiciel (middleware) en amont sont ignorées pour la sécurité de l'intégrité de la signature.
 
 ## Configurer
 
@@ -61,6 +59,22 @@ Configuration minimale :
       channelAccessToken: "LINE_CHANNEL_ACCESS_TOKEN",
       channelSecret: "LINE_CHANNEL_SECRET",
       dmPolicy: "pairing",
+    },
+  },
+}
+```
+
+Configuration publique de DM :
+
+```json5
+{
+  channels: {
+    line: {
+      enabled: true,
+      channelAccessToken: "LINE_CHANNEL_ACCESS_TOKEN",
+      channelSecret: "LINE_CHANNEL_SECRET",
+      dmPolicy: "open",
+      allowFrom: ["*"],
     },
   },
 }
@@ -116,10 +130,11 @@ openclaw pairing approve line <CODE>
 Listes d'autorisation et stratégies :
 
 - `channels.line.dmPolicy` : `pairing | allowlist | open | disabled`
-- `channels.line.allowFrom` : IDs utilisateur LINE sur liste blanche pour les DMs
+- `channels.line.allowFrom` : IDs d'utilisateurs LINE autorisés pour les DMs ; `dmPolicy: "open"` nécessite `["*"]`
 - `channels.line.groupPolicy` : `allowlist | open | disabled`
-- `channels.line.groupAllowFrom` : ID utilisateur LINE autorisés pour les groupes
+- `channels.line.groupAllowFrom` : IDs d'utilisateurs LINE autorisés pour les groupes
 - Remplacements par groupe : `channels.line.groups.<groupId>.allowFrom`
+- Les groupes d'accès d'expéditeur statiques peuvent être référencés depuis `allowFrom`, `groupAllowFrom` et par groupe `allowFrom` avec `accessGroup:<name>`.
 - Note d'exécution : si `channels.line` est complètement manquant, l'exécution revient à `groupPolicy="allowlist"` pour les vérifications de groupe (même si `channels.defaults.groupPolicy` est défini).
 
 Les ID LINE sont sensibles à la casse. Les ID valides ressemblent à :
@@ -130,14 +145,18 @@ Les ID LINE sont sensibles à la casse. Les ID valides ressemblent à :
 
 ## Comportement des messages
 
-- Le texte est découpé par blocs de 5000 caractères.
+- Le texte est découpé par tranches de 5000 caractères.
 - Le formatage Markdown est supprimé ; les blocs de code et les tableaux sont convertis en cartes Flex lorsque cela est possible.
-- Les réponses en continu sont mises en tampon ; LINE reçoit des blocs complets avec une animation de chargement pendant que l'agent travaille.
-- Les téléchargements de médias sont plafonnés par `channels.line.mediaMaxMb` (par défaut 10).
+- Les réponses en flux continu sont mises en tampon ; LINE reçoit des blocs complets avec une animation de chargement pendant que l'agent travaille.
+- Les téléchargements de médias sont limités par `channels.line.mediaMaxMb` (par défaut 10).
+- Les médias entrants sont enregistrés sous `~/.openclaw/media/inbound/` avant d'être transmis
+  à l'agent, correspondant au stockage de médias partagé utilisé par d'autres plugins de channel
+  inclus.
 
-## Données de canal (messages enrichis)
+## Données de channel (messages riches)
 
-Utilisez `channelData.line` pour envoyer des réponses rapides, des lieux, des cartes Flex ou des modèles de messages.
+Utilisez `channelData.line` pour envoyer des réponses rapides, des lieux, des cartes Flex ou des messages
+modèles.
 
 ```json5
 {
@@ -181,32 +200,35 @@ Le plugin LINE fournit également une commande `/card` pour les préréglages de
 LINE prend en charge les liaisons de conversation ACP (Agent Communication Protocol) :
 
 - `/acp spawn <agent> --bind here` lie la conversation LINE actuelle à une session ACP sans créer de fil de discussion enfant.
-- Les liaisons ACP configurées et les sessions ACP actives liées aux conversations fonctionnent sur LINE comme sur les autres canaux de conversation.
+- Les liaisons ACP configurées et les sessions ACP actives liées à une conversation fonctionnent sur LINE comme sur les autres canaux de conversation.
 
 Voir [Agents ACP](/fr/tools/acp-agents) pour plus de détails.
 
 ## Médias sortants
 
-Le plugin LINE prend en charge l'envoi d'images, de vidéos et de fichiers audio via l'outil de message de l'agent. Les médias sont envoyés via le chemin de livraison spécifique à LINE avec une gestion appropriée des aperçus et du suivi :
+Le plugin LINE prend en charge l'envoi d'images, de vidéos et de fichiers audio via l'outil de message de l'agent. Les médias sont envoyés via le chemin de livraison spécifique à LINE avec une gestion appropriée de l'aperçu et du suivi :
 
 - **Images** : envoyées sous forme de messages image LINE avec génération automatique d'aperçu.
 - **Vidéos** : envoyées avec un aperçu explicite et une gestion du type de contenu.
 - **Audio** : envoyé sous forme de messages audio LINE.
 
-Les URL de médias sortants doivent être des URL HTTPS publiques. OpenClaw valide le nom d'hôte cible avant de transmettre l'URL à LINE et rejette les cibles de bouclage, de liaison locale et de réseau privé.
+Les URL de médias sortants doivent être des URL HTTPS publiques. OpenClaw valide le nom d'hôte cible avant de transmettre l'URL à LINE et rejette les cibles de bouclage, de lien local et de réseau privé.
 
-Les envois de médias génériques reviennent à l'itinéraire existant « images uniquement » lorsqu'un chemin spécifique à LINE n'est pas disponible.
+Les envois de médias génériques reviennent à l'itinéraire existant réservé aux images lorsqu'un chemin spécifique à LINE n'est pas disponible.
 
 ## Dépannage
 
-- **Échec de la vérification du webhook** : assurez-vous que l'URL du webhook est en HTTPS et que le `channelSecret` correspond à la console LINE.
-- **Aucun événement entrant** : confirmez que le chemin du webhook correspond à `channels.line.webhookPath` et que la passerelle est accessible depuis LINE.
-- **Erreurs de téléchargement de médias** : augmentez `channels.line.mediaMaxMb` si les médias dépassent la limite par défaut.
+- **Échec de la vérification du webhook :** assurez-vous que l'URL du webhook est HTTPS et que
+  `channelSecret` correspond à la console LINE.
+- **Pas d'événements entrants :** confirmez que le chemin du webhook correspond à `channels.line.webhookPath`
+  et que la passerelle est accessible depuis LINE.
+- **Erreurs de téléchargement de média :** déclenchent `channels.line.mediaMaxMb` si le média dépasse la
+  limite par défaut.
 
 ## Connexes
 
-- [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
-- [Appairage](/fr/channels/pairing) — flux d'authentification et d'appairage DM
-- [Groupes](/fr/channels/groups) — comportement des discussions de groupe et filtrage des mentions
+- [Aperçu des canaux](/fr/channels) — tous les canaux pris en charge
+- [Appariement](/fr/channels/pairing) — authentification DM et flux d'appariement
+- [Groupes](/fr/channels/groups) — comportement des conversations de groupe et filtrage des mentions
 - [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
 - [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

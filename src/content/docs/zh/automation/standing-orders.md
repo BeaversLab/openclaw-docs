@@ -7,7 +7,7 @@ read_when:
 title: "长期指令"
 ---
 
-长期指令授予您的智能体对特定程序的**永久操作权限**。与其每次都下达单独的任务指令，不如定义出具有明确范围、触发条件和升级规则的程序 —— 智能体便可在这些边界内自主执行。
+长期指令授予您的代理对特定程序的**永久操作权限**。您无需每次都给出单独的任务指令，而是定义具有清晰范围、触发器和升级规则的程序——代理在这些边界内自主执行。
 
 这就是每周五告诉助手“发送周报”与授予长期权限的区别：“周报由你全权负责。每周五整理并发送，只有在出现问题时才上报。”
 
@@ -33,14 +33,14 @@ title: "长期指令"
 
 每个程序指定：
 
-1. **范围** —— 智能体被授权执行的操作
-2. **触发条件** —— 何时执行（计划、事件或条件）
-3. **审批关卡** —— 在采取行动前哪些事项需要人工签字确认
-4. **升级规则** —— 何时停止并请求帮助
+1. **范围**——代理被授权执行的操作
+2. **触发器**——何时执行（计划、事件或条件）
+3. **审批关口**——在采取行动前哪些事项需要人工签字批准
+4. **升级规则**——何时停止并请求帮助
 
 智能体通过工作区启动文件在每个会话中加载这些指令（有关自动注入文件的完整列表，请参阅[智能体工作区](/zh/concepts/agent-workspace)），并结合 [cron 作业](/zh/automation/cron-jobs) 进行基于时间的强制执行，从而据此执行任务。
 
-<Tip>将常备指令放入 `AGENTS.md` 以确保它们在每次会话中都会被加载。工作区启动会自动注入 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 和 `MEMORY.md` — 但不会注入子目录中的任意文件。</Tip>
+<Tip>将长期指令放在 `AGENTS.md` 中，以确保它们在每个会话中都会被加载。工作区引导程序会自动注入 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 和 `MEMORY.md`——但不会注入子目录中的任意文件。</Tip>
 
 ## 常备指令剖析
 
@@ -64,7 +64,7 @@ title: "长期指令"
 
 - Do not send reports to external parties
 - Do not modify source data
-- Do not skip delivery if metrics look bad — report accurately
+- Do not skip delivery if metrics look bad - report accurately
 ```
 
 ## 常备指令结合 Cron 作业
@@ -88,7 +88,7 @@ openclaw cron add \
   --tz America/New_York \
   --timeout-seconds 300 \
   --announce \
-  --channel bluebubbles \
+  --channel imessage \
   --to "+1XXXXXXXXXX" \
   --message "Execute daily inbox triage per standing orders. Check mail for new alerts. Parse, categorize, and persist each item. Report summary to owner. Escalate unknowns."
 ```
@@ -107,7 +107,7 @@ openclaw cron add \
 ### Weekly cycle
 
 - **Monday:** Review platform metrics and audience engagement
-- **Tuesday–Thursday:** Draft social posts, create blog content
+- **Tuesday-Thursday:** Draft social posts, create blog content
 - **Friday:** Compile weekly marketing brief → deliver to owner
 
 ### Content rules
@@ -174,9 +174,9 @@ openclaw cron add \
 
 常备指令在与严格的执行纪律相结合时效果最佳。常备指令中的每一项任务都应遵循此循环：
 
-1. **执行** — 执行实际工作（不仅仅是确认指令）
-2. **验证** — 确认结果正确（文件存在、消息已发送、数据已解析）
-3. **报告** — 告知所有者完成了什么工作以及验证了什么
+1. **执行**——执行实际工作（不要仅仅确认指令）
+2. **验证**——确认结果正确（文件存在、消息已发送、数据已解析）
+3. **报告**——告知所有者已完成的工作和已验证的结果
 
 ```markdown
 ### Execution rules
@@ -186,7 +186,7 @@ openclaw cron add \
 - "Done" without verification is not acceptable. Prove it.
 - If execution fails: retry once with adjusted approach.
 - If still fails: report failure with diagnosis. Never silently fail.
-- Never retry indefinitely — 3 attempts max, then escalate.
+- Never retry indefinitely - 3 attempts max, then escalate.
 ```
 
 此模式可防止最常见的代理失败模式：确认任务但未完成。
@@ -226,18 +226,18 @@ openclaw cron add \
 
 - 从狭窄的权限开始，随着信任的建立而扩展
 - 为高风险操作定义明确的审批关卡
-- 包含“不可做事项”部分 —— 边界与权限同样重要
+- 包含“禁止事项”部分——边界与权限同样重要
 - 结合 Cron 作业以实现可靠的基于时间的执行
 - 每周检查代理日志以验证常备指令是否被遵循
-- 随着需求的发展更新常备指令 —— 它们是活的文档
+- 随着需求的发展更新长期指令——它们是动态文档
 
 ### 避免事项
 
 - 在第一天就给予广泛的权限（“做任何你认为最好的事情”）
 - 跳过升级规则——每个程序都需要一个“何时停止并询问”的条款
-- 假设代理会记住口头指令——把所有内容都写在文件里
-- 在单个程序中混合关注点——为不同域设置单独的程序
-- 忘记用 cron 作业来执行——没有触发器的常设指令只会变成建议
+- 假设代理会记住口头指令——将所有内容写入文件
+- 在单个程序中混合关注点——为不同的域设置独立的程序
+- 忘记通过 cron 作业强制执行——没有触发器的长期指令将变成建议
 
 ## 相关内容
 

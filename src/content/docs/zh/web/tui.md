@@ -68,30 +68,31 @@ openclaw tui --local
   - `per-sender`（默认）：每个代理有多个会话。
   - `global`：TUI 始终使用 `global` 会话（选择器可能为空）。
 - 当前的 Agent + 会话始终在页脚中可见。
+- 当在不带 `--session` 的情况下启动时，如果该会话仍然存在，网关模式的 TUI 将恢复同一网关、代理和会话范围内上次选择的会话。传递 `--session`、`/session`、`/new` 或 `/reset` 仍然保持显式状态。
 
-## 发送 + 投递
+## 发送与投递
 
-- 消息被发送到 Gateway(网关)；默认关闭向提供商的投递。
+- 消息将发送到 Gateway(网关)；默认情况下不投递给提供商。
 - 开启投递：
   - `/deliver on`
   - 或设置面板
-  - 或以 `openclaw tui --deliver` 开头
+  - 或使用 `openclaw tui --deliver` 启动
 
-## 选择器 + 覆盖层
+## 选择器与覆盖层
 
 - 模型选择器：列出可用模型并设置会话覆盖。
-- Agent 选择器：选择不同的 Agent。
-- 会话选择器：仅显示当前 Agent 的会话。
+- 代理选择器：选择不同的代理。
+- 会话选择器：显示当前代理在过去 7 天内更新的最多 50 个会话。使用 `/session <key>` 跳转到旧的已知会话。
 - 设置：切换投递、工具输出扩展和思考可见性。
 
 ## 键盘快捷键
 
 - Enter：发送消息
-- Esc：中止活动运行
-- Ctrl+C：清除输入（按两次退出）
+- Esc：中止正在运行的任务
+- Ctrl+C：清除输入（按两次以退出）
 - Ctrl+D：退出
 - Ctrl+L：模型选择器
-- Ctrl+G：Agent 选择器
+- Ctrl+G：代理选择器
 - Ctrl+P：会话选择器
 - Ctrl+O：切换工具输出扩展
 - Ctrl+T：切换思考可见性（重新加载历史记录）
@@ -121,31 +122,29 @@ openclaw tui --local
 会话生命周期：
 
 - `/new` 或 `/reset`（重置会话）
-- `/abort`（中止当前运行）
+- `/abort`（中止正在运行的任务）
 - `/settings`
 - `/exit`
 
 仅限本地模式：
 
-- `/auth [provider]` 在 TUI 内打开提供商身份验证/登录流程。
+- `/auth [provider]` 在 TUI 内部打开提供商身份验证/登录流程。
 
-其他 Gateway(网关) 斜杠命令（例如 `/context`）将被转发到 Gateway(网关) 并作为系统输出显示。请参阅 [斜杠命令](/zh/tools/slash-commands)。
+其他 Gateway(网关) 斜杠命令（例如 `/context`）会被转发到 Gateway(网关) 并显示为系统输出。请参阅 [斜杠命令](/zh/tools/slash-commands)。
 
 ## 本地 Shell 命令
 
-- 在一行的开头加上 `!`，以便在 TUI 主机上运行本地 shell 命令。
-- TUI 每个会话提示一次以允许本地执行；如果拒绝，将在该会话中保持 `!` 禁用状态。
-- 命令在 TUI 工作目录中一个新的非交互式 shell 中运行（没有持久的 `cd`/env）。
-- 本地 shell 命令在其环境中接收 `OPENCLAW_SHELL=tui-local`。
+- 在行首添加 `!` 以在 TUI 主机上运行本地 Shell 命令。
+- TUI 会每个会话提示一次以允许本地执行；拒绝将使 `!` 在该会话中保持禁用状态。
+- 命令在 TUI 工作目录中的一个新的非交互式 Shell 中运行（没有持久的 `cd`/env）。
+- 本地 Shell 命令会在其环境中接收 `OPENCLAW_SHELL=tui-local`。
 - 单独的 `!` 将作为普通消息发送；前导空格不会触发本地执行。
 
 ## 从本地 TUI 修复配置
 
-当当前配置已经验证通过，并且您希望嵌入式代理在同一台机器上检查它、将其与文档进行比较，并帮助修复配置漂移而不依赖正在运行的 Gateway(网关) 时，请使用本地模式。
+当当前配置已通过验证，并且您希望嵌入的 Agent 在同一台机器上检查它，将其与文档进行比较，并在不依赖正在运行的 Gateway(网关) 的情况下帮助修复配置漂移时，请使用本地模式。
 
-如果 `openclaw config validate` 已经失败，请先从 `openclaw configure`
-或 `openclaw doctor --fix` 开始。`openclaw chat` 不会绕过无效
-配置保护。
+如果 `openclaw config validate` 已经失败，请先从 `openclaw configure` 或 `openclaw doctor --fix` 开始。`openclaw chat` 不会绕过无效配置保护。
 
 典型循环：
 
@@ -155,13 +154,13 @@ openclaw tui --local
 openclaw chat
 ```
 
-2. 询问代理您想要检查的内容，例如：
+2. 询问 Agent 您想要检查的内容，例如：
 
 ```text
 Compare my gateway auth config with the docs and suggest the smallest fix.
 ```
 
-3. 使用本地 shell 命令进行确切的证据收集和验证：
+3. 使用本地 Shell 命令进行确切的证据收集和验证：
 
 ```text
 !openclaw config file
@@ -176,25 +175,25 @@ Compare my gateway auth config with the docs and suggest the smallest fix.
 提示：
 
 - 优先使用 `openclaw config set` 或 `openclaw configure`，而不是手动编辑 `openclaw.json`。
-- `openclaw docs "<query>"` 搜索来自同一台机器的实时文档索引。
-- 当您需要结构化架构和 SecretRef/可解析性错误时，`openclaw config validate --json` 很有用。
+- `openclaw docs "<query>"` 会从同一台机器搜索实时文档索引。
+- 当您需要结构化架构以及 SecretRef/可解析性错误时，`openclaw config validate --json` 很有用。
 
 ## 工具输出
 
-- 工具调用以卡片形式显示，包含参数和结果。
-- Ctrl+O 在折叠和展开视图之间切换。
-- 工具运行时，部分更新会流式传输到同一张卡片中。
+- 工具调用显示为包含参数和结果的卡片。
+- Ctrl+O 在折叠/展开视图之间切换。
+- 当工具运行时，部分更新会流入同一个卡片。
 
 ## 终端颜色
 
-- TUI 将助手正文文本保留在终端的默认前景色中，以便深色和浅色终端都能保持可读性。
+- TUI 会将助手正文文本保留在终端的默认前景色中，以便深色和浅色终端都能保持可读性。
 - 如果您的终端使用浅色背景且自动检测错误，请在启动 `openclaw tui` 之前设置 `OPENCLAW_THEME=light`。
-- 若要强制使用原始深色调色板，请设置 `OPENCLAW_THEME=dark`。
+- 要强制使用原始的深色调色板，请设置 `OPENCLAW_THEME=dark`。
 
 ## 历史记录 + 流式传输
 
 - 连接时，TUI 会加载最新的历史记录（默认为 200 条消息）。
-- 流式响应会原位更新，直到完成。
+- 流式响应会在原位更新，直到完成。
 - TUI 还会监听代理工具事件，以提供更丰富的工具卡片。
 
 ## 连接详情
@@ -207,34 +206,34 @@ Compare my gateway auth config with the docs and suggest the smallest fix.
 - `--local`：针对本地嵌入式代理运行时运行
 - `--url <url>`：Gateway(网关) WebSocket URL（默认为配置或 `ws://127.0.0.1:<port>`）
 - `--token <token>`：Gateway(网关) 令牌（如果需要）
-- `--password <password>`: Gateway(网关)密码（如果需要）
-- `--session <key>`: 会话密钥（默认：`main`，或者当作用域为全局时为 `global`）
-- `--deliver`: 将助手回复投递给提供商（默认关闭）
-- `--thinking <level>`: 覆盖发送时的思考级别
-- `--message <text>`: 连接后发送初始消息
-- `--timeout-ms <ms>`: 代理超时时间（毫秒，默认为 `agents.defaults.timeoutSeconds`）
-- `--history-limit <n>`: 要加载的历史记录条目（默认 `200`）
+- `--password <password>`：Gateway(网关) 密码（如果需要）
+- `--session <key>`：会话密钥（默认：`main`，或当作用域为全局时的 `global`）
+- `--deliver`：将助手回复传递给提供商（默认关闭）
+- `--thinking <level>`：覆盖发送的思考级别
+- `--message <text>`：连接后发送初始消息
+- `--timeout-ms <ms>`：代理超时时间（毫秒）（默认为 `agents.defaults.timeoutSeconds`）
+- `--history-limit <n>`：要加载的历史记录条目（默认 `200`）
 
-<Warning>当您设置 `--url` 时，TUI 不会回退到配置或环境凭据。请显式传递 `--token` 或 `--password`。缺少显式凭据将报错。在本地模式下，请勿传递 `--url`、`--token` 或 `--password`。</Warning>
+<Warning>当您设置 `--url`TUI 时，TUI 不会回退到配置文件或环境凭据。请显式传递 `--token` 或 `--password`。缺少显式凭据是一个错误。在本地模式下，请勿传递 `--url`、`--token` 或 `--password`。</Warning>
 
 ## 故障排除
 
 发送消息后无输出：
 
-- 在 TUI 中运行 `/status` 以确认 Gateway(网关)已连接并处于空闲/忙碌状态。
-- 检查 Gateway(网关)日志：`openclaw logs --follow`。
-- 确认代理可以运行：`openclaw status` 和 `openclaw models status`。
+- 在 TUI 中运行 `/status`TUIGateway(网关) 以确认 Gateway(网关) 已连接且处于空闲/忙碌状态。
+- 检查 Gateway(网关) 日志：Gateway(网关)`openclaw logs --follow`。
+- 确认 agent 可以运行：`openclaw status` 和 `openclaw models status`。
 - 如果您期望在聊天渠道中收到消息，请启用投递（`/deliver on` 或 `--deliver`）。
 
 ## 连接故障排除
 
-- `disconnected`: 确保 Gateway(网关)正在运行且您的 `--url/--token/--password` 正确。
-- 选择器中没有代理：检查 `openclaw agents list` 和您的路由配置。
-- 会话选择器为空：您可能处于全局作用域中或还没有会话。
+- `disconnected`Gateway(网关)：确保 Gateway(网关) 正在运行且您的 `--url/--token/--password` 是正确的。
+- 选择器中没有 agent：检查 `openclaw agents list` 和您的路由配置。
+- 会话选择器为空：您可能处于全局作用域或还没有会话。
 
 ## 相关
 
 - [Control UI](/zh/web/control-ui) — 基于 Web 的控制界面
 - [Config](/zh/cli/config) — 检查、验证和编辑 `openclaw.json`
-- [Doctor](/zh/cli/doctor) — 引导式修复和迁移检查
-- [CLI Reference](/zh/cli) — 完整的 CLI 命令参考
+- [Doctor](/zh/cli/doctor) — 指导修复和迁移检查
+- [CLI Reference](CLI/en/cliCLI) — 完整的 CLI 命令参考

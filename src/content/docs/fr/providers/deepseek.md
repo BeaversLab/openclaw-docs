@@ -6,7 +6,7 @@ read_when:
   - You need the API key env var or CLI auth choice
 ---
 
-[DeepSeek](https://www.deepseek.com) fournit des modèles d'IA puissants avec une OpenAI compatible API.
+[DeepSeek](https://www.deepseek.com) fournit des modèles IA puissants avec une API compatible OpenAIAPI.
 
 | Propriété   | Valeur                     |
 | ----------- | -------------------------- |
@@ -71,30 +71,21 @@ read_when:
 | `deepseek/deepseek-chat`     | DeepSeek Chat     | texte  | 131 072   | 8 192      | Surface non réflexion DeepSeek V3.2                 |
 | `deepseek/deepseek-reasoner` | DeepSeek Reasoner | texte  | 131 072   | 65 536     | Surface V3.2 activée pour le raisonnement           |
 
-<Tip>Les modèles V4 prennent en charge le contrôle `thinking` de DeepSeek. OpenClaw rejoue également le `reasoning_content` DeepSeek lors des tours de suivi, afin que les sessions de réflexion avec des appels d'outils puissent se poursuivre.</Tip>
+<Tip>Les modèles V4 prennent en charge le contrôle `thinking` de DeepSeek. OpenClaw rejoue également le `reasoning_content` DeepSeek lors des tours de suivi afin que les sessions de réflexion avec des appels de tool puissent se poursuivre. Utilisez `/think xhigh` ou `/think max` avec les modèles DeepSeek V4 pour demander le `reasoning_effort` maximal de DeepSeek.</Tip>
 
 ## Réflexion et outils
 
-Les sessions de réflexion DeepSeek V4 ont un contrat de relecture plus strict que la plupart
-des fournisseurs compatibles OpenAI : lorsqu'un message d'assistant avec réflexion activée inclut
-des appels d'outils, DeepSeek s'attend à ce que le `reasoning_content` de l'assistant précédent soit renvoyé
-dans la requête de suivi. OpenClaw gère cela en interne dans le plugin DeepSeek,
-ceci permet donc une utilisation normale des outils sur plusieurs tours avec `deepseek/deepseek-v4-flash` et
-`deepseek/deepseek-v4-pro`.
+Les sessions de réflexion DeepSeek V4 ont un contrat de relecture plus strict que la plupart des fournisseurs compatibles OpenAI : après qu'un tour activé pour la réflexion utilise des outils, DeepSeek s'attend à ce que les messages d'assistant relus à partir de ce tour incluent `reasoning_content` lors des demandes de suivi. OpenClaw gère cela en interne via le plugin DeepSeek, donc l'utilisation multi-tours normale des outils fonctionne avec `deepseek/deepseek-v4-flash` et `deepseek/deepseek-v4-pro`.
 
-Si vous basculez une session existante d'un autre fournisseur compatible OpenAI vers un
-modèle DeepSeek V4, les anciens tours d'appels d'outils de l'assistant peuvent ne pas avoir de `reasoning_content`
-natif DeepSeek. OpenClaw comble ce champ manquant pour les requêtes de réflexion DeepSeek V4,
-afin que le fournisseur puisse accepter l'historique des appels d'outils rejoué
-sans exiger `/new`.
+Si vous basculez une session existante d'un autre fournisseur compatible OpenAI vers un modèle DeepSeek V4, les tours d'appels d'outil de l'assistant plus anciens peuvent ne pas avoir de `reasoning_content` natif DeepSeek. OpenClaw remplit ce champ manquant sur les messages d'assistant relus pour les demandes de réflexion DeepSeek V4, afin que le fournisseur puisse accepter l'historique sans exiger `/new`.
 
-Lorsque la réflexion est désactivée dans OpenClaw (y compris la sélection **Aucun** dans l'interface),
-OpenClaw envoie le `thinking: { type: "disabled" }` DeepSeek et supprime les `reasoning_content`
-rejoués de l'historique sortant. Cela maintient les sessions avec réflexion désactivée
+Lorsque la réflexion est désactivée dans OpenClaw (y compris lors de la sélection **None** dans l'interface),
+OpenClaw envoie DeepSeek `thinking: { type: "disabled" }` et supprime les `reasoning_content`
+rejoués de l'historique sortant. Cela permet de maintenir les sessions avec réflexion désactivée
 sur le chemin DeepSeek sans réflexion.
 
 Utilisez `deepseek/deepseek-v4-flash` pour le chemin rapide par défaut. Utilisez
-`deepseek/deepseek-v4-pro` lorsque vous souhaitez le modèle V4 plus puissant et pouvez accepter
+`deepseek/deepseek-v4-pro` lorsque vous souhaitez le model V4 plus puissant et que vous pouvez accepter
 un coût ou une latence plus élevés.
 
 ## Test en direct

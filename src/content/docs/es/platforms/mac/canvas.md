@@ -7,9 +7,9 @@ read_when:
 title: "Canvas"
 ---
 
-La aplicación de macOS incrusta un **panel de Canvas** controlado por un agente utilizando `WKWebView`. Es
+La aplicación de macOS incorpora un **panel de Canvas** controlado por un agente utilizando `WKWebView`. Es
 un espacio de trabajo visual ligero para HTML/CSS/JS, A2UI y pequeñas superficies
-de UI interactivas.
+de IU interactivas.
 
 ## Dónde se encuentra Canvas
 
@@ -27,13 +27,13 @@ Ejemplos:
 - `openclaw-canvas://main/assets/app.css` → `<canvasRoot>/main/assets/app.css`
 - `openclaw-canvas://main/widgets/todo/` → `<canvasRoot>/main/widgets/todo/index.html`
 
-Si no existe ningún `index.html` en la raíz, la aplicación muestra una **página de andamiaje integrada**.
+Si no existe ningún `index.html` en la raíz, la aplicación muestra una **página de andamio incorporada**.
 
 ## Comportamiento del panel
 
 - Panel sin bordes y redimensionable, anclado cerca de la barra de menús (o del cursor del ratón).
 - Recuerda el tamaño/la posición por sesión.
-- Se recarga automáticamente cuando cambian los archivos locales del canvas.
+- Se recarga automáticamente cuando cambian los archivos de lienzo locales.
 - Solo hay un panel de Canvas visible a la vez (la sesión se cambia según sea necesario).
 
 Canvas se puede desactivar desde Configuración → **Permitir Canvas**. Cuando está desactivado, los
@@ -64,9 +64,9 @@ Notas:
 
 ## A2UI en Canvas
 
-A2UI está alojado por el host de canvas de Gateway y se representa dentro del panel de Canvas.
-Cuando Gateway anuncia un host de Canvas, la aplicación de macOS navega automáticamente
-a la página del host A2UI en la primera apertura.
+A2UI está alojado por el host de lienzo de Gateway y se renderiza dentro del panel de Canvas.
+Cuando Gateway anuncia un host de Canvas, la aplicación de macOS navega automáticamente a la
+página de host de A2UI en el primer abierto.
 
 URL del host A2UI predeterminado:
 

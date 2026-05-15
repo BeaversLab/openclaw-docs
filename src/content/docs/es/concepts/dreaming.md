@@ -70,16 +70,19 @@ Dreaming puede ingerir transcripciones de sesión redactadas en el corpus de dre
 
 ## Diario de sueños
 
-Dreaming también mantiene un **Diario de sueños** narrativo en `DREAMS.md`. Después de que cada fase tenga suficiente material, `memory-core` ejecuta un turno de subagente en segundo plano de mejor esfuerzo y añade una breve entrada de diario. Utiliza el modelo de tiempo de ejecución predeterminado a menos que se configure `dreaming.model`.
+Soñar también mantiene un **Diario de Sueños** narrativo en `DREAMS.md`. Después de que cada fase tenga suficiente material, `memory-core` ejecuta un turno de subagente de fondo de mejor esfuerzo y añade una breve entrada de diario. Utiliza el modelo de ejecución predeterminado a menos que se configure `dreaming.model`. Si el modelo configurado no está disponible, el Diario de Sueños se reintenta una vez con el modelo predeterminado de la sesión.
 
 <Note>Este diario es para lectura humana en la interfaz de usuario de Dreams, no una fuente de promoción. Los artefactos de diario/informe generados por Dreaming se excluyen de la promoción a corto plazo. Solo los fragmentos de memoria fundamentados son elegibles para ser promovidos a `MEMORY.md`.</Note>
 
 También existe un carril de relleno histórico fundamentado para el trabajo de revisión y recuperación:
 
 <AccordionGroup>
-  <Accordion title="Comandos de relleno">
-    - `memory rem-harness --path ... --grounded` previsualiza la salida del diario fundamentado a partir de notas `YYYY-MM-DD.md` históricas. - `memory rem-backfill --path ...` escribe entradas de diario fundamentadas reversibles en `DREAMS.md`. - `memory rem-backfill --path ... --stage-short-term` prepara candidatos duraderos fundamentados en el mismo almacén de evidencia a corto plazo que ya
-    utiliza la fase profunda normal. - `memory rem-backfill --rollback` y `--rollback-short-term` eliminan esos artefactos de relleno preparados sin tocar las entradas de diario ordinarias ni el recuerdo a corto plazo en vivo.
+  <Accordion title="Comandos de relleno retroactivo">
+    - `memory rem-harness --path ... --grounded` previsualiza la salida del diario fundamentada a partir de notas `YYYY-MM-DD.md` históricas.
+    - `memory rem-backfill --path ...` escribe entradas de diario fundamentadas y reversibles en `DREAMS.md`.
+    - `memory rem-backfill --path ... --stage-short-term` prepara candidatos duraderos fundamentados en el mismo almacén de evidencia a corto plazo que la fase profunda normal ya utiliza.
+    - `memory rem-backfill --rollback` y `--rollback-short-term` eliminan esos artefactos de relleno retroactivo preparados sin tocar las entradas de diario ordinarias ni la recuperación a corto plazo en vivo.
+
   </Accordion>
 </AccordionGroup>
 
@@ -103,6 +106,8 @@ Los aciertos de las fases ligera y REM añaden un pequeño impulso con decaimien
 ## Programación
 
 Cuando está habilitado, `memory-core` gestiona automáticamente un trabajo cron para un barrido completo de soñar. Cada barrido ejecuta las fases en orden: ligera → REM → profunda.
+
+El barrido incluye el espacio de trabajo de ejecución principal y cualquier espacio de trabajo de agente configurado, deduplicado por ruta, por lo que la expansión del espacio de trabajo del subagente no excluye el `DREAMS.md` ni el estado de memoria del agente principal.
 
 Comportamiento de cadencia predeterminado:
 
@@ -152,7 +157,7 @@ Comportamiento de cadencia predeterminado:
   </Tab>
 </Tabs>
 
-## Comando de barra
+## Comando de barra diagonal
 
 ```
 /dreaming status
@@ -161,7 +166,7 @@ Comportamiento de cadencia predeterminado:
 /dreaming help
 ```
 
-## Flujo de trabajo CLI
+## Flujo de trabajo de CLI
 
 <Tabs>
   <Tab title="Vista previa / aplicar promoción">
@@ -172,11 +177,11 @@ Comportamiento de cadencia predeterminado:
     openclaw memory status --deep
     ```
 
-    El `memory promote` manual utiliza umbrales de fase profunda de forma predeterminada a menos que se anule con indicadores CLI.
+    La `memory promote` manual utiliza los umbrales de la fase profunda de forma predeterminada a menos que se anulen con los indicadores de CLI.
 
   </Tab>
   <Tab title="Explicar promoción">
-    Explica por qué un candidato específico promocionaría o no:
+    Explique por qué un candidato específico promovería o no promovería:
 
     ```bash
     openclaw memory promote-explain "router vlan"
@@ -185,7 +190,7 @@ Comportamiento de cadencia predeterminado:
 
   </Tab>
   <Tab title="Vista previa del arnés REM">
-    Vista previa de las reflexiones REM, verdades candidatas y salida de promoción profunda sin escribir nada:
+    Obtén una vista previa de las reflexiones REM, verdades candidatas y resultados de promoción profunda sin escribir nada:
 
     ```bash
     openclaw memory rem-harness
@@ -195,34 +200,38 @@ Comportamiento de cadencia predeterminado:
   </Tab>
 </Tabs>
 
-## Valores predeterminados clave
+## Valores clave predeterminados
 
-Todas las configuraciones viven bajo `plugins.entries.memory-core.config.dreaming`.
+Todas las configuraciones se encuentran en `plugins.entries.memory-core.config.dreaming`.
 
 <ParamField path="enabled" type="boolean" default="false">
-  Habilitar o deshabilitar el barrido de soñado (dreaming).
+  Activa o desactiva el barrido de soñar (dreaming).
 </ParamField>
 <ParamField path="frequency" type="string" default="0 3 * * *">
-  Cadencia de Cron para el barrido completo de soñado.
+  Cadencia de Cron para el barrido completo de soñar.
 </ParamField>
 <ParamField path="model" type="string">
-  Invalidación opcional del modelo del subagente Dream Diary. Use un valor canónico `provider/model` cuando también establezca una lista blanca de subagente `allowedModels`.
+  Invalidación opcional del modelo del subagente Dream Diary. Utiliza un valor canónico de `provider/model` cuando también configures una lista de permitidos (allowlist) de subagente `allowedModels`.
 </ParamField>
 
-<Warning>`dreaming.model` requiere `plugins.entries.memory-core.subagent.allowModelOverride: true`. Para restringirlo, también establezca `plugins.entries.memory-core.subagent.allowedModels`.</Warning>
+<Warning>`dreaming.model` requiere `plugins.entries.memory-core.subagent.allowModelOverride: true`. Para restringirlo, también establece `plugins.entries.memory-core.subagent.allowedModels`. Los fallos de confianza o de lista de permitidos permanecen visibles en lugar de recurrir silenciosamente; el reintento solo cubre errores de modelo no disponible.</Warning>
 
-<Note>La política de fases, los umbrales y el comportamiento de almacenamiento son detalles de implementación internos (no configuración para el usuario). Consulte [Referencia de configuración de memoria](/es/reference/memory-config#dreaming) para la lista completa de claves.</Note>
+<Note>La política de fase, los umbrales y el comportamiento de almacenamiento son detalles de implementación internos (no configuración orientada al usuario). Consulta [Referencia de configuración de memoria](/es/reference/memory-config#dreaming) para ver la lista completa de claves.</Note>
 
-## Interfaz de usuario de Sueños
+## Interfaz de usuario de Dreams
 
-Cuando está habilitado, la pestaña **Dreams** de Gateway muestra:
+Cuando está activado, la pestaña **Dreams** (Sueños) de Gateway muestra:
 
-- estado habilitado actual del soñado
+- estado actual de habilitación de soñar
 - estado a nivel de fase y presencia de barrido administrado
-- recuentos de corto plazo, anclados, de señal y promovidos hoy
-- tiempo de la próxima ejecución programada
-- un carril de Escena anclada distinto para entradas de repetición histórica preparadas
-- un lector expandible del Dream Diary respaldado por `doctor.memory.dreamDiary`
+- recuentos a corto plazo, basados (grounded), de señal y promocionados hoy
+- momento de la próxima ejecución programada
+- un carril de escena (Scene) distinto (grounded) para entradas de reproducción histórica en escena (staged)
+- un lector expandible del diario de sueños (Dream Diary) respaldado por `doctor.memory.dreamDiary`
+
+## Soñar nunca se ejecuta: el estado muestra bloqueado
+
+Si `openclaw memory status` informa `Dreaming status: blocked`, el cron administrado existe pero el latido del agente predeterminado no se está ejecutando. Verifica que el latido esté habilitado para el agente predeterminado y que su objetivo no sea `none`, luego ejecuta `openclaw memory status --deep` nuevamente después del siguiente intervalo de latido.
 
 ## Relacionado
 

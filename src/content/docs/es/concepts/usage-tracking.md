@@ -21,12 +21,12 @@ title: "Seguimiento de uso"
 
 ## Dónde aparece
 
-- `/status` en chats: tarjeta de estado con muchos emojis con tokens de sesión + costo estimado (solo clave de API). El uso del proveedor se muestra para el **proveedor del modelo actual** cuando está disponible como una ventana normalizada `X% left`.
+- `/status` en chats: tarjeta de estado llena de emojis con tokens de sesión + costo estimado (solo API key). El uso del proveedor se muestra para el **proveedor del modelo actual** cuando está disponible como una ventana `X% left` normalizada.
 - `/usage off|tokens|full` en chats: pie de página de uso por respuesta (OAuth muestra solo tokens).
 - `/usage cost` en chats: resumen de costos locales agregado a partir de registros de sesión de OpenClaw.
 - CLI: `openclaw status --usage` imprime un desglose completo por proveedor.
 - CLI: `openclaw channels list` imprime la misma instantánea de uso junto con la configuración del proveedor (use `--no-usage` para omitir).
-- Barra de menú de macOS: sección “Uso” en Contexto (solo si está disponible).
+- Barra de menú de macOS: sección "Usage" bajo Context (solo si está disponible).
 
 ## Proveedores + credenciales
 
@@ -36,20 +36,23 @@ title: "Seguimiento de uso"
   - El uso de JSON vuelve a `stats`; `stats.cached` se normaliza en
     `cacheRead`.
 - **OpenAI Codex**: tokens OAuth en perfiles de autenticación (se usa accountId cuando está presente).
-- **MiniMax**: clave de API o perfil de autenticación OAuth de MiniMax. OpenClaw trata
-  `minimax`, `minimax-cn` y `minimax-portal` como la misma superficie
-  de cuota de MiniMax, prefiere el OAuth de MiniMax almacenado cuando está presente y, de lo contrario, recurre
+- **MiniMax**: API key o perfil de autenticación MiniMax OAuth. OpenClaw trata
+  `minimax`, `minimax-cn` y `minimax-portal` como la misma superficie de cuota
+  de MiniMax, prefiere el MiniMax OAuth almacenado cuando está presente y, de lo contrario, recurre
   a `MINIMAX_CODE_PLAN_KEY`, `MINIMAX_CODING_API_KEY` o `MINIMAX_API_KEY`.
-  Los campos `usage_percent` / `usagePercent` crudos de MiniMax significan cuota **restante**,
-  por lo que OpenClaw los invierte antes de mostrarlos; los campos basados en recuentos tienen prioridad cuando
+  La consulta de uso deriva el host del Coding Plan de `models.providers.minimax-portal.baseUrl`
+  o `models.providers.minimax.baseUrl` cuando están configurados y, de lo contrario, usa el
+  host MiniMax CN.
+  Los campos `usage_percent` / `usagePercent` sin procesar de MiniMax significan **restante**
+  de cuota, por lo que OpenClaw los invierte antes de mostrarlos; los campos basados en conteo tienen prioridad cuando
   están presentes.
-  - Las etiquetas de la ventana del plan de codificación provienen de los campos de horas/minutos del proveedor cuando
-    están presentes; de lo contrario, recurren al intervalo `start_time` / `end_time`.
-  - Si el endpoint del plan de codificación devuelve `model_remains`, OpenClaw prefiere la
-    entrada del modelo de chat, deriva la etiqueta de la ventana a partir de las marcas de tiempo cuando los campos explícitos
+  - Las etiquetas de ventana del coding-plan provienen de los campos de horas/minutos del proveedor cuando
+    están presentes, luego recurren al lapso `start_time` / `end_time`.
+  - Si el punto final del coding-plan devuelve `model_remains`, OpenClaw prefiere la
+    entrada del modelo de chat, deriva la etiqueta de la ventana de las marcas de tiempo cuando los campos explícitos
     `window_hours` / `window_minutes` están ausentes e incluye el nombre
     del modelo en la etiqueta del plan.
-- **Xiaomi MiMo**: clave de API a través de env/config/auth store (`XIAOMI_API_KEY`).
+- **Xiaomi MiMo**: API key a través de env/config/auth store (`XIAOMI_API_KEY`).
 - **z.ai**: clave de API a través de env/config/auth store.
 
 El uso se oculta cuando no se puede resolver ninguna autenticación de uso del proveedor utilizable. Los proveedores

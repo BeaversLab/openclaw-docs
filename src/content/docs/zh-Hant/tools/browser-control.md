@@ -7,9 +7,9 @@ read_when:
 title: "瀏覽器控制 API"
 ---
 
-有關設定、設定和疑難排解，請參閱[瀏覽器](/zh-Hant/tools/browser)。
-此頁面是本機控制 HTTP API、`openclaw browser`
-CLI 和腳本模式（快照、refs、waits、debug flows）的參考。
+有關設定、組態與疑難排解，請參閱 [Browser](/zh-Hant/tools/browser)。
+本頁是本機控制 HTTP API、`openclaw browser`
+CLI 與腳本模式（快照、參照、等待、除錯流程）的參考文件。
 
 ## 控制 API（可選）
 
@@ -63,7 +63,9 @@ CLI 和腳本模式（快照、refs、waits、debug flows）的參考。
 
 ### Playwright 需求
 
-部分功能 (導航/動作/AI 快照/角色快照、元素擷圖、PDF) 需要 Playwright。如果未安裝 Playwright，這些端點會傳回明確的 501 錯誤。
+部分功能（導航/操作/AI 快照/角色快照、元素螢幕截圖、
+PDF）需要 Playwright。如果未安裝 Playwright，這些端點會傳回
+明確的 501 錯誤。
 
 沒有 Playwright 仍可使用的功能：
 
@@ -87,14 +89,14 @@ CLI 和腳本模式（快照、refs、waits、debug flows）的參考。
 元素截圖也會拒絕 `--full-page`；該路由會回傳 `fullPage is
 not supported for element screenshots`。
 
-如果您看到 `Playwright is not available in this gateway build`，請修復
-隨附的瀏覽器外掛程式執行階段相依性，以便安裝 `playwright-core`，
-然後重新啟動 Gateway。對於套件安裝，請執行 `openclaw doctor --fix`。
-對於 Docker，還需如下所示安裝 Chromium 瀏覽器二進位檔。
+如果您看到 `Playwright is not available in this gateway build`，表示打包的
+Gateway 缺少核心瀏覽器執行時期相依性。請重新安裝或更新
+OpenClaw，然後重新啟動 gateway。對於 Docker，還須如下所示安裝 Chromium
+瀏覽器二進位檔。
 
 #### Docker Playwright 安裝
 
-如果您的 Gateway 在 Docker 中執行，請避免 `npx playwright` (npm 覆寫衝突)。
+如果您的 Gateway 在 Docker 中執行，請避免 `npx playwright`（npm 覆寫衝突）。
 請改用隨附的 CLI：
 
 ```bash
@@ -102,9 +104,10 @@ docker compose run --rm openclaw-cli \
   node /app/node_modules/playwright-core/cli.js install chromium
 ```
 
-若要保存瀏覽器下載內容，請設定 `PLAYWRIGHT_BROWSERS_PATH` (例如，
-`/home/node/.cache/ms-playwright`) 並確保 `/home/node` 透過
-`OPENCLAW_HOME_VOLUME` 或繫結掛載被保存。請參閱 [Docker](/zh-Hant/install/docker)。
+若要保存瀏覽器下載項目，請設定 `PLAYWRIGHT_BROWSERS_PATH`（例如，
+`/home/node/.cache/ms-playwright`）並確保 `/home/node` 已透過
+`OPENCLAW_HOME_VOLUME` 或繫結掛載保存。OpenClaw 會在 Linux 上自動偵測已保存的
+Chromium。請參閱 [Docker](/zh-Hant/install/docker)。
 
 ## 運作方式 (內部)
 
@@ -112,7 +115,7 @@ docker compose run --rm openclaw-cli \
 
 ## CLI 快速參考
 
-所有命令都接受 `--browser-profile <name>` 以針對特定設定檔，以及 `--json` 以取得機器可讀的輸出。
+所有指令都接受 `--browser-profile <name>` 以指定特定設定檔，以及 `--json` 以取得機器可讀輸出。
 
 <AccordionGroup>
 
@@ -212,51 +215,55 @@ openclaw browser set device "iPhone 14"
 
 備註：
 
-- `upload` 和 `dialog` 是「啟動」呼叫；請在觸發選擇器/對話框的點擊/按下動作之前執行它們。
-- `click`/`type`/等需要來自 `snapshot` 的 `ref`（數字 `12`、角色參照 `e12` 或可操作的 ARIA 參照 `ax12`)。動作有意不支援 CSS 選擇器。當可見視口位置是唯一可靠的目標時，請使用 `click-coords`。
-- 下載、追蹤和上傳路徑受限於 OpenClaw 暫存根目錄：`/tmp/openclaw{,/downloads,/uploads}`（後備：`${os.tmpdir()}/openclaw/...`）。
+- `upload` 與 `dialog` 為**準備**呼叫；請在觸發選擇器/對話方塊的點擊/按下動作之前執行它們。
+- `click`/`type`/等需要來自 `snapshot` 的 `ref`（數值 `12`、角色參照 `e12` 或可執行 ARIA 參照 `ax12`）。動作刻意不支援 CSS 選擇器。當可見視口位置是唯一可靠的目標時，請使用 `click-coords`。
+- 下載、追蹤與上傳路徑受限於 OpenClaw 暫存根目錄：`/tmp/openclaw{,/downloads,/uploads}`（後備：`${os.tmpdir()}/openclaw/...`）。
 - `upload` 也可以透過 `--input-ref` 或 `--element` 直接設定檔案輸入。
 
-當 OpenClaw 能夠證明替換分頁（例如相同的 URL 或單一舊分頁在表單提交後變成單一新分頁）時，穩定的分頁 ID 和標籤會在 Chromium 原始目標替換中保留下來。原始目標 ID 仍然是不穩定的；在腳本中請優先使用來自 `tabs` 的 `suggestedTargetId`。
+當 OpenClaw 能夠證明替換分頁時（例如相同的 URL 或單一舊分頁在表單提交後變成單一新分頁），穩定的分頁 ID 和標籤在 Chromium 原始目標替換中會被保留。原始目標 ID 仍然是不穩定的；在腳本中請優先使用來自 `tabs` 的 `suggestedTargetId`。
 
 快照旗標一覽：
 
-- `--format ai` （使用 Playwright 時的預設值）：具有數字參照（`aria-ref="<n>"`）的 AI 快照。
-- `--format aria`：含有 `axN` 參照的可存取性樹。當 Playwright 可用時，OpenClaw 會將參照與後端 DOM ID 繫結到即時頁面，以便後續操作可以使用它們；否則請將輸出視為僅供檢查。
-- `--efficient`（或 `--mode efficient`）：緊湊的角色快照預設。設定 `browser.snapshotDefaults.mode: "efficient"` 將其設為預設值（請參閱 [Gateway configuration](/zh-Hant/gateway/configuration-reference#browser)）。
-- `--interactive`、`--compact`、`--depth`、`--selector` 強制產生含有 `ref=e12` 參照的角色快照。`--frame "<iframe>"` 將角色快照的範圍限制在 iframe 內。
-- `--labels` 會新增一張僅限視口 的截圖，並加上參照標籤覆蓋（列印 `MEDIA:<path>`）。
-- `--urls` 會將發現的連結目的地附加到 AI 快照。
+- `--format ai` (使用 Playwright 時的預設值)：帶有數字參照 (`aria-ref="<n>"`) 的 AI 快照。
+- `--format aria`：帶有 `axN` 參照的無障礙樹。當 Playwright 可用時，OpenClaw 會將帶有後端 DOM ID 的參照綁定到即時頁面，以便後續操作可以使用它們；否則請將輸出視為僅供檢查。
+- `--efficient` (或 `--mode efficient`)：精簡角色快照預設。設定 `browser.snapshotDefaults.mode: "efficient"` 可將此設為預設值 (請參閱 [Gateway configuration](/zh-Hant/gateway/configuration-reference#browser))。
+- `--interactive`、`--compact`、`--depth`、`--selector` 會強制使用帶有 `ref=e12` 參照的角色快照。`--frame "<iframe>"` 將角色快照的範圍限定在 iframe 內。
+- `--labels` 會新增一個僅檢視區的螢幕截圖，並覆蓋參照標籤 (列印 `MEDIA:<path>`)。
+- `--urls` 會將探索到的連結目的地附加到 AI 快照。
 
 ## 快照與參照
 
 OpenClaw 支援兩種「快照」樣式：
 
-- **AI 快照（數字參照）**：`openclaw browser snapshot`（預設值；`--format ai`）
+- **AI 快照 (數字參照)**：`openclaw browser snapshot` (預設值；`--format ai`)
   - 輸出：包含數字參照的文字快照。
   - 操作：`openclaw browser click 12`、`openclaw browser type 23 "hello"`。
   - 在內部，參照是透過 Playwright 的 `aria-ref` 解析的。
 
-- **角色快照（如 `e12` 的角色參照）**：`openclaw browser snapshot --interactive`（或 `--compact`、`--depth`、`--selector`、`--frame`）
-  - 輸出：基於角色的清單/樹狀結構，並帶有 `[ref=e12]`（以及選用的 `[nth=1]`）。
+- **角色快照 (類似 `e12` 的角色參照)**：`openclaw browser snapshot --interactive` (或 `--compact`、`--depth`、`--selector`、`--frame`)
+  - 輸出：帶有 `[ref=e12]` (以及選用的 `[nth=1]`) 的基於角色的清單/樹狀結構。
   - 操作：`openclaw browser click e12`、`openclaw browser highlight e12`。
-  - 在內部，參照是透過 `getByRole(...)` 解析的（對於重複項則加上 `nth()`）。
-  - 新增 `--labels` 以包含一張視口截圖，並覆蓋 `e12` 標籤。
-  - 當連結文字不明確且代理程式需要具體的
-    導覽目標時，請新增 `--urls`。
+  - 在內部，ref 是透過 `getByRole(...)` 解析的（對於重複項則加上 `nth()`）。
+  - 新增 `--labels` 以包含帶有重疊 `e12` 標籤的視口截圖。
+  - 當連結文字不明確且代理需要具體的導航目標時，新增 `--urls`。
 
-- **ARIA 快照（ARIA 參考如 `ax12`）**：`openclaw browser snapshot --format aria`
+- **ARIA 快照（ARIA refs 如 `ax12`）**：`openclaw browser snapshot --format aria`
   - 輸出：作為結構化節點的可存取性樹。
-  - 動作：當快照路徑可以透過 Playwright 和 Chrome 後端 DOM ID 綁定參考時，`openclaw browser click ax12` 會運作。
-- 如果 Playwright 不可用，ARIA 快照對於檢查仍然有用，但參考可能無法執行動作。當您需要動作參考時，請使用 `--format ai` 或 `--interactive` 重新取得快照。
-- 原始 CDP 備援路徑的 Docker 證明：`pnpm test:docker:browser-cdp-snapshot` 使用 CDP 啟動 Chromium，執行 `browser doctor --deep`，並驗證角色快照包含連結 URL、游標促成的可點擊元素以及 iframe 中繼資料。
+  - 動作：當快照路徑可以透過 Playwright 和 Chrome 後端 DOM ID 綁定 ref 時，`openclaw browser click ax12` 有效。
+- 如果 Playwright 不可用，ARIA 快照仍然適用於檢查，但 refs 可能無法執行。當您需要動作 refs 時，請使用 `--format ai`
+  或 `--interactive` 重新擷取快照。
+- raw-CDP 備援路徑的 Docker 證明：`pnpm test:docker:browser-cdp-snapshot`
+  使用 CDP 啟動 Chromium，執行 `browser doctor --deep`，並驗證角色
+  快照包含連結 URL、游標提升的可點擊元素和 iframe 元資料。
 
 參考行為：
 
-- 參考在導航之間**不穩定**；如果操作失敗，請重新執行 `snapshot` 並使用新的參考。
-- `/act` 在動作觸發的替換後，當其能證明被替換的分頁時，會傳回目前的原始 `targetId`。請繼續使用穩定的分頁 ID/標籤進行後續指令。
-- 如果角色快照是使用 `--frame` 取得的，則角色參考的範圍限定於該 iframe，直到下一次角色快照為止。
-- 未知或過時的 `axN` 參考會快速失敗，而不是退回到 Playwright 的 `aria-ref` 選擇器。發生這種情況時，請在同一個分頁上執行新的快照。
+- Refs 在導航之間**不穩定**；如果操作失敗，請重新執行 `snapshot` 並使用新的 ref。
+- 當 `/act` 能夠證明被替換的分頁時，它會在觸發動作的替換之後返回當前的原始 `targetId`。請繼續使用穩定的分頁 ID/標籤進行
+  後續指令。
+- 如果角色快照是使用 `--frame` 擷取的，則角色 refs 的範圍限定在該 iframe 內，直到下一次角色快照為止。
+- 未知或過時的 `axN` refs 會快速失敗，而不是回退到
+  Playwright 的 `aria-ref` 選擇器。當發生這種情況時，請在同一個分頁上執行新的快照。
 
 ## 等待增強功能
 
@@ -283,11 +290,11 @@ openclaw browser wait "#main" \
 
 ## 偵錯工作流程
 
-當動作失敗時（例如「not visible」、「strict mode violation」、「covered」）：
+當動作失敗時（例如「不可見」、「違反嚴格模式」、「被覆蓋」）：
 
 1. `openclaw browser snapshot --interactive`
-2. 使用 `click <ref>` / `type <ref>`（在互動模式下偏好角色參考）
-3. 如果仍然失敗：`openclaw browser highlight <ref>` 查看 Playwright 的目標是什麼
+2. 使用 `click <ref>` / `type <ref>`（在互動模式下首選 role refs）
+3. 如果仍然失敗：`openclaw browser highlight <ref>` 以查看 Playwright 的目標是什麼
 4. 如果頁面行為異常：
    - `openclaw browser errors --clear`
    - `openclaw browser requests --filter api --clear`
@@ -309,31 +316,31 @@ openclaw browser requests --filter api --json
 openclaw browser cookies --json
 ```
 
-JSON 中的角色快照包含 `refs` 加上一個小的 `stats` 區塊（行/字元/參照/互動），以便工具能夠推斷負載大小和密度。
+JSON 中的角色快照包含 `refs` 以及一個小型的 `stats` 區塊（行/字元/參照/互動），以便工具能夠推斷負載大小和密度。
 
 ## 狀態與環境控制選項
 
-這些對於「讓網站表現得像 X」的工作流程很有用：
+這些功能對於「讓網站表現得像 X」的工作流程非常有用：
 
 - Cookies：`cookies`、`cookies set`、`cookies clear`
 - 儲存空間：`storage local|session get|set|clear`
 - 離線：`set offline on|off`
-- 標頭：`set headers --headers-json '{"X-Debug":"1"}'`（舊版 `set headers --json '{"X-Debug":"1"}'` 仍然受支援）
+- 標頭：`set headers --headers-json '{"X-Debug":"1"}'`（舊版的 `set headers --json '{"X-Debug":"1"}'` 仍然支援）
 - HTTP 基本驗證：`set credentials user pass`（或 `--clear`）
 - 地理位置：`set geo <lat> <lon> --origin "https://example.com"`（或 `--clear`）
 - 媒體：`set media dark|light|no-preference|none`
-- 時區 / 語言地區：`set timezone ...`、`set locale ...`
+- 時區 / 地區設定：`set timezone ...`、`set locale ...`
 - 裝置 / 視口：
-  - `set device "iPhone 14"`（Playwright 裝置預設）
+  - `set device "iPhone 14"` (Playwright 裝置預設集)
   - `set viewport 1280 720`
 
 ## 安全性與隱私
 
 - openclaw 瀏覽器設定檔可能包含已登入的工作階段；請將其視為敏感資料。
 - `browser act kind=evaluate` / `openclaw browser evaluate` 和 `wait --fn`
-  會在頁面上下文中執行任意 JavaScript。提示詞注入可能會操控
-  這項操作。如果您不需要它，請使用 `browser.evaluateEnabled=false` 將其停用。
-- 有關登入和防機器人注意事項（X/Twitter 等），請參閱 [瀏覽器登入 + X/Twitter 張貼](/zh-Hant/tools/browser-login)。
+  會在頁面上下文中執行任意的 JavaScript。提示注入可以操縱
+  此行為。如果您不需要它，請使用 `browser.evaluateEnabled=false` 將其停用。
+- 有關登入和反機器人注意事項（X/Twitter 等），請參閱 [Browser login + X/Twitter posting](/zh-Hant/tools/browser-login)。
 - 請將 Gateway/節點主機保持私密（僅限回送或 tailnet）。
 - 遠端 CDP 端點非常強大；請為其建立通道並加以保護。
 
@@ -353,7 +360,7 @@ JSON 中的角色快照包含 `refs` 加上一個小的 `stats` 區塊（行/字
 
 ## 相關內容
 
-- [瀏覽器](/zh-Hant/tools/browser) — 概觀、設定、設定檔、安全性
-- [瀏覽器登入](/zh-Hant/tools/browser-login) — 登入網站
-- [瀏覽器 Linux 疑難排解](/zh-Hant/tools/browser-linux-troubleshooting)
-- [瀏覽器 WSL2 疑難排解](/zh-Hant/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+- [Browser](/zh-Hant/tools/browser) - 概覽、設定、設定檔、安全性
+- [Browser login](/zh-Hant/tools/browser-login) - 登入網站
+- [Browser Linux troubleshooting](/zh-Hant/tools/browser-linux-troubleshooting)
+- [Browser WSL2 troubleshooting](/zh-Hant/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

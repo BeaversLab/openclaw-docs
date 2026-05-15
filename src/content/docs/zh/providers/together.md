@@ -107,9 +107,9 @@ OpenClaw 附带了此捆绑的 Together 目录：
 
   <Accordion title="故障排除">
     - 验证您的密钥是否有效：`openclaw models list --provider together`
-    - 如果模型未显示，请确认 API 密钥已为您的 Gateway(网关) 进程设置在正确的
-      环境中。
+    - 如果模型未显示，请确认在正确的环境中为您的 API 进程设置了 Gateway(网关) 密钥。
     - 模型引用使用格式 `together/<model-id>`。
+
   </Accordion>
 </AccordionGroup>
 

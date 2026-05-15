@@ -7,8 +7,8 @@ title: "入門 (macOS 應用程式)"
 sidebarTitle: "Onboarding：macOS 應用程式"
 ---
 
-本文說明**目前**的首次執行設定流程。目標是提供順暢的「第 0 天」體驗：選擇 Gateway 的執行位置、連結驗證、執行精靈，並讓代理程式完成自舉。
-若要瞭解入門路徑的一般概覽，請參閱[入門概覽](/zh-Hant/start/onboarding-overview)。
+本文描述了**目前**的首次執行設定流程。目標是提供流暢的「第 0 天」體驗：選擇 Gateway 的執行位置、連接驗證、執行精靈，然後讓代理程式自行引導。
+如需關於入門路徑的一般概覽，請參閱 [Onboarding Overview](/zh-Hant/start/onboarding-overview)。
 
 <Steps>
 <Step title="核准 macOS 警告">
@@ -39,19 +39,18 @@ sidebarTitle: "Onboarding：macOS 應用程式"
 <img src="/assets/macos-onboarding/04-choose-gateway.png" alt="" />
 </Frame>
 
-**Gateway** 應在何處執行？
+**Gateway** 在何處執行？
 
-- **此 Mac (僅限本機)：** 入門可以設定驗證並在本機寫入憑證。
-- **遠端 (透過 SSH/Tailnet)：** 入門**不會**設定本機驗證；
-  憑證必須存在於 gateway 主機上。
-- **稍後設定：** 跳過設定並讓應用程式保持未設定狀態。
+- **此 Mac (僅限本機)：** 入門程序可以在本機設定驗證並寫入憑證。
+- **遠端 (透過 SSH/Tailnet)：** 入門程序**不會**設定本機驗證；憑證必須存在於 gateway 主機上。
+- **稍後設定：** 略過設定並讓應用程式保持未設定狀態。
 
 <Tip>
 **Gateway 驗證提示：**
 
-- 精靈現在即使對於回送也會產生**權杖**，因此本機 WS 用戶端必須進行驗證。
-- 如果您停用驗證，任何本機處理程序都可以連線；請僅在完全信任的機器上使用。
-- 請使用**權杖**進行多機器存取或非回送連線。
+- 精靈現在即使對於回環也會產生一個 **token**，因此本機 WS 用戶端必須進行驗證。
+- 如果您停用驗證，任何本機程序都可以連線；請僅在完全受信任的機器上使用。
+- 請使用 **token** 進行多機存取或非回環綁定。
 
 </Tip>
 </Step>
@@ -77,10 +76,8 @@ Onboarding 會請求所需的 TCC 權限，範圍包括：
   應用程式可透過 npm、pnpm 或 bun 安裝全域 `openclaw` CLI。
   它會優先使用 npm，其次是 pnpm，若僅偵測到 bun 則使用 bun。對於 Gateway 執行時，Node 仍是推薦的路徑。
 </Step>
-<Step title="Onboarding Chat (專屬工作階段)">
-  設定完成後，應用程式會開啟專屬的 onboarding 聊天工作階段，讓 Agent
-  能夠自我介紹並引導後續步驟。這能將首次執行的引導與您的一般對話分開。請參閱 [Bootstrapping](/zh-Hant/start/bootstrapping) 以了解
-  首次執行 Agent 時在 gateway 主機上發生的情況。
+<Step title="入門聊天 (專屬工作階段)">
+  設定完成後，應用程式會開啟專屬的入門聊天工作階段，讓代理程式能夠自我介紹並引導後續步驟。這能讓首次執行的指引與您的一般對話保持分開。如需關於第一次執行代理程式時 gateway 主機上發生什麼的資訊，請參閱 [Bootstrapping](/zh-Hant/start/bootstrapping)。
 </Step>
 </Steps>
 

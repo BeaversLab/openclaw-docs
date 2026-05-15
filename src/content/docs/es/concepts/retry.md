@@ -37,7 +37,7 @@ title: "Política de reintentos"
 
 ### Discord
 
-- Solo se reintentan los errores de límite de velocidad (HTTP 429).
+- Reintentos en errores de límite de velocidad (HTTP 429), tiempos de espera de solicitud, respuestas HTTP 5xx y fallos transitorios de transporte como fallos de búsqueda de DNS, restablecimientos de conexión, cierres de socket y fallos de recuperación.
 - Usa el `retry_after` de Discord cuando está disponible, de lo contrario usa retroceso exponencial.
 
 ### Telegram

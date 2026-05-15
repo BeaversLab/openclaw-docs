@@ -191,5 +191,5 @@ Modèle de repli filtré par page :
 
 ## Connexes
 
-- [Tools Overview](/fr/tools) — tous les outils d'agent disponibles
-- [Configuration Reference](/fr/gateway/config-agents#agent-defaults) — configuration pdfMaxBytesMb et pdfMaxPages
+- [Vue d'ensemble des outils](/fr/tools) - tous les outils d'agent disponibles
+- [Référence de configuration](/fr/gateway/config-agents#agent-defaults) - configuration de pdfMaxBytesMb et pdfMaxPages

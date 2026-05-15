@@ -196,11 +196,12 @@ Step Plan (`stepfun-plan`)：
     ```
   </Accordion>
 
-  <Accordion title="Notes">
-    - The 提供商 is bundled with OpenClaw, so there is no separate plugin install step.
-    - `step-3.5-flash-2603` is currently exposed only on `stepfun-plan`.
-    - A single auth flow writes region-matched profiles for both `stepfun` and `stepfun-plan`, so both surfaces can be discovered together.
-    - Use `openclaw models list` and `openclaw models set <provider/model>` to inspect or switch models.
+  <Accordion title="注意"OpenClaw>
+    - 该提供商与 OpenClaw 捆绑在一起，因此无需单独安装插件。
+    - `step-3.5-flash-2603` 目前仅在 `stepfun-plan` 上公开。
+    - 单个身份验证流程会为 `stepfun` 和 `stepfun-plan` 写入区域匹配的配置文件，因此可以一起发现这两个服务面。
+    - 使用 `openclaw models list` 和 `openclaw models set <provider/model>` 检查或切换模型。
+
   </Accordion>
 </AccordionGroup>
 

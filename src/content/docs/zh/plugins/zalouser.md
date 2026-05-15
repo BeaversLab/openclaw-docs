@@ -6,21 +6,19 @@ read_when:
 title: "Zalo 个人插件"
 ---
 
-# Zalo Personal（插件）
+通过插件为 Zalo 提供 OpenClaw 个人版支持，使用原生 `zca-js` 来自动化普通的 Zalo 用户账户。
 
-通过插件为 OpenClaw 提供 Zalo Personal 支持，使用原生 `zca-js` 来自动化普通的 Zalo 用户账号。
-
-<Warning>非官方自动化可能会导致账户暂停或封禁。使用风险自负。</Warning>
+<Warning>非官方的自动化可能会导致账户暂停或封禁。使用风险自负。</Warning>
 
 ## 命名
 
-通道 ID 为 `zalouser`，以明确表明这是自动化 **个人 Zalo 账号**（非官方）。我们将 `zalo` 保留给潜在的未来官方 Zalo API 集成。
+通道 ID 是 `zalouser`，以明确表明这是通过自动化 **个人 Zalo 用户账户**（非官方）实现的。我们将 `zalo` 保留给未来潜在的官方 Zalo API 集成。
 
 ## 运行位置
 
-此插件在 **Gateway(网关) 网关 进程内部** 运行。
+此插件在 **Gateway(网关) 进程内部** 运行。
 
-如果您使用远程 Gateway(网关) 网关，请在 **运行 Gateway(网关) 网关 的机器** 上安装/配置它，然后重启 Gateway(网关) 网关。
+如果您使用远程 Gateway(网关)，请在 **运行 Gateway(网关) 的机器** 上安装/配置它，然后重启 Gateway(网关)。
 
 不需要外部的 `zca`/`openzca` CLI 二进制文件。
 
@@ -31,6 +29,8 @@ title: "Zalo 个人插件"
 ```bash
 openclaw plugins install @openclaw/zalouser
 ```
+
+使用裸包以遵循当前的官方发布标签。仅在需要可重现的安装时才固定确切的版本。
 
 之后重启 Gateway(网关) 网关。
 
@@ -80,4 +80,4 @@ openclaw directory peers list --channel zalouser --query "name"
 ## 相关
 
 - [构建插件](/zh/plugins/building-plugins)
-- [社区插件](/zh/plugins/community)
+- [ClawHub](/zh/clawhub)

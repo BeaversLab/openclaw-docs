@@ -67,14 +67,14 @@ Les cibles de routage prennent en charge exactement l'une des options suivantes 
 Qui le reçoit :
 
 - Tous les clients WebSocket (application macOS, WebChat, etc.)
-- Tous les nœuds connectés (iOS/Android), et également lors de la connexion du nœud en tant que push initial de « l'état actuel ».
+- Tous les nœuds connectés (iOS/Android), et également lors de la connexion du nœud en tant qu'envoi initial de l'état actuel.
 
 ## Comportement du client
 
 ### Application macOS
 
 - Utilise la liste globale pour filtrer les déclencheurs `VoiceWakeRuntime`.
-- La modification des « Mots déclencheurs » dans les paramètres du Réveil vocal appelle `voicewake.set` et s'appuie ensuite sur la diffusion pour maintenir les autres clients synchronisés.
+- La modification des « Mots déclencheurs » dans les paramètres de Voice Wake appelle `voicewake.set`, puis s'appuie sur la diffusion pour garder les autres clients synchronisés.
 
 ### Nœud iOS
 

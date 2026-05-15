@@ -1,7 +1,8 @@
 ---
-summary: "对入站自动回复运行进行序列化的命令队列设计"
+summary: "自动回复队列模式、默认值和每会话覆盖"
 read_when:
   - Changing auto-reply execution or concurrency
+  - Explaining /queue modes or message steering behavior
 title: "Command queue"
 ---
 
@@ -20,23 +21,35 @@ title: "Command queue"
 - 当启用详细日志记录时，如果排队运行在开始前等待了超过约 2 秒，则会发出一条简短通知。
 - 输入指示器仍会在入队时立即触发（如果渠道支持），因此在我们等待轮次时，用户体验不会改变。
 
-## 队列模式（按渠道）
+## 默认值
 
-入站消息可以引导当前运行、等待下一轮次，或两者兼做：
+未设置时，所有入站渠道界面使用：
 
-- `steer`：立即注入到当前运行中（在下一个工具边界之后取消待处理的工具调用）。如果不是流式传输，则回退到跟进。
-- `followup`：在当前运行结束后为下一个代理轮次排队。
-- `collect`：将所有排队的消息合并为**单个**跟进轮次（默认）。如果消息针对不同的渠道/线程，它们会单独处理以保持路由。
-- `steer-backlog`（又名 `steer+backlog`）：现在引导**并**保留消息以供跟进轮次。
+- `mode: "steer"`
+- `debounceMs: 500`
+- `cap: 20`
+- `drop: "summarize"`
+
+`steer` 是默认模式，因为它能在不启动第二次会话运行的情况下，保持当前模型轮次的响应性。它会排空所有在下一个模型边界之前到达的引导消息。如果当前运行无法接受引导，OpenClaw 会回退到一个后续队列条目。
+
+## 队列模式
+
+入站消息可以引导当前运行、等待后续轮次，或两者兼做：
+
+- `steer`：将引导消息排队到活动运行时中。Pi 在当前助手轮次完成其工具调用**之后**、下一次 LLM 调用**之前**，传递所有待处理的引导消息；Codex 应用服务器接收一批 `turn/steer`。如果运行未处于活动流状态或引导不可用，OpenClaw 会回退到一个后续队列条目。
+- `queue`（旧版）：旧的每次一条引导。Pi 在每个模型边界传递一个排队的引导消息；Codex 应用服务器接收单独的 `turn/steer` 请求。除非您需要之前的序列化行为，否则首选 `steer`。
+- `followup`：将每条消息排队，以便在当前运行结束后稍后进行代理轮次。
+- `collect`：将排队的消息在静默窗口后合并为**一个**后续轮次。如果消息针对不同的渠道/线程，它们会单独排空以保留路由。
+- `steer-backlog`（又名 `steer+backlog`）：现在引导**并**保留同一条消息用于后续轮次。
 - `interrupt`（旧版）：中止该会话的活动运行，然后运行最新消息。
-- `queue`（旧版别名）：与 `steer` 相同。
 
-Steer-backlog 意味着在引导运行后，您可能会收到后续回复，因此流式界面可能会看起来像重复消息。如果您希望每条入站消息只收到一个回复，请首选 `collect`/`steer`。
-将 `/queue collect` 作为独立命令发送（每个会话）或设置 `messages.queue.byChannel.discord: "collect"`。
+Steer-backlog 意味着你可以在被引导的运行之后获得后续响应，因此
+流式界面看起来可能会有重复。如果你希望每条入站消息
+只得到一个响应，请优先使用 `collect`/`steer`。
 
-默认值（当在配置中未设置时）：
-
-- 所有界面 → `collect`
+有关运行时特定的时序和依赖行为，请参阅
+[Steering queue](/zh/concepts/queue-steering)。有关显式的 `/steer <message>`
+命令，请参阅 [Steer](/zh/tools/steer)。
 
 通过 `messages.queue` 全局配置或按渠道配置：
 
@@ -44,8 +57,8 @@ Steer-backlog 意味着在引导运行后，您可能会收到后续回复，因
 {
   messages: {
     queue: {
-      mode: "collect",
-      debounceMs: 1000,
+      mode: "steer",
+      debounceMs: 500,
       cap: 20,
       drop: "summarize",
       byChannel: { discord: "collect" },
@@ -56,35 +69,51 @@ Steer-backlog 意味着在引导运行后，您可能会收到后续回复，因
 
 ## 队列选项
 
-这些选项适用于 `followup`、`collect` 和 `steer-backlog`（以及在回退到后续跟进时的 `steer`）：
+选项适用于 `followup`、`collect` 和 `steer-backlog`（以及当引导回退到后续时的 `steer` 或旧版 `queue`）：
 
-- `debounceMs`：在开始后续轮次之前等待安静（防止“继续、继续”）。
-- `cap`：每个会话的最大排队消息数。
-- `drop`：溢出策略（`old`、`new`、`summarize`）。
+- `debounceMs`：清空排队的后续消息之前的静默窗口。纯数字表示毫秒；`/queue` 选项接受 `ms`、`s`、`m`、`h` 和 `d` 单位。
+- `cap`：每个会话的最大排队消息数。低于 `1` 的值将被忽略。
+- `drop: "summarize"`：默认值。根据需要丢弃最旧的排队条目，保留紧凑摘要，并将其作为合成后续提示注入。
+- `drop: "old"`：根据需要丢弃最旧的排队条目，而不保留摘要。
+- `drop: "new"`：当队列已满时拒绝最新的消息。
 
-Summarize 会保留丢弃消息的简短项目符号列表，并将其作为合成后续提示注入。
-默认值：`debounceMs: 1000`、`cap: 20`、`drop: summarize`。
+默认值：`debounceMs: 500`、`cap: 20`、`drop: summarize`。
 
-## 按会话覆盖
+## 优先级
 
-- 将 `/queue <mode>` 作为独立命令发送，以存储当前会话的模式。
-- 选项可以组合使用：`/queue collect debounce:2s cap:25 drop:summarize`
-- `/queue default` 或 `/queue reset` 会清除会话覆盖设置。
+对于模式选择，OpenClaw 按以下顺序解析：
+
+1. 内联或存储的每个会话的 `/queue` 覆盖。
+2. `messages.queue.byChannel.<channel>`。
+3. `messages.queue.mode`。
+4. 默认 `steer`。
+
+对于选项，内联或存储的 `/queue` 选项优先于配置。然后应用特定渠道的去抖动（`messages.queue.debounceMsByChannel`）、插件去抖动默认值、全局 `messages.queue` 选项和内置默认值。`cap` 和 `drop` 是全局/会话选项，而非每渠道配置键。
+
+## 每会话覆盖
+
+- 发送 `/queue <mode>` 作为独立命令，以存储当前会话的模式。
+- 选项可以组合使用：`/queue collect debounce:0.5s cap:25 drop:summarize`
+- `/queue default` 或 `/queue reset` 清除会话覆盖。
 
 ## 范围和保证
 
 - 适用于所有使用网关回复管道（WhatsApp web、Telegram、Slack、Discord、Signal、iMessage、webchat 等）的入站渠道的自动回复代理运行。
-- 默认通道（`main`）对于入站和主心跳是进程范围的；设置 `agents.defaults.maxConcurrent` 以允许多个会话并行运行。
-- 可能存在其他通道（例如 `cron`、`cron-nested`、`nested`、`subagent`），以便后台作业可以并行运行而不会阻塞入站回复。隔离的 cron agent 轮次持有 `cron` 插槽，而其内部的 agent 执行使用 `cron-nested`；两者都使用 `cron.maxConcurrentRuns`。共享的非 cron `nested` 流程保持其自己的通道行为。这些分离的运行被跟踪为 [background tasks](/zh/automation/tasks)。
-- 每个会话的通道确保一次只有一个 agent 运行接触给定的会话。
+- 默认通道（`main`）对于入站 + 主心跳是进程范围的；设置 `agents.defaults.maxConcurrent` 以允许多个会话并行运行。
+- 可能存在额外的通道（例如 `cron`、`cron-nested`、`nested`、`subagent`），以便后台作业可以并行运行而不会阻塞入站回复。隔离的 cron 代理轮次持有一个 `cron` 插槽，而其内部代理执行使用 `cron-nested`；两者都使用 `cron.maxConcurrentRuns`。共享的非 cron `nested` 流程保持其自己的通道行为。这些分离的运行被跟踪为 [后台任务](/zh/automation/tasks)。
+- 每会话通道保证一次只有一个代理运行接触给定的会话。
 - 没有外部依赖或后台工作线程；纯 TypeScript + promises。
 
 ## 故障排除
 
-- 如果命令似乎卡住了，请启用详细日志并查找 “queued for …ms” 行，以确认队列正在排出。
-- 如果您需要队列深度，请启用详细日志并观察队列计时行。
+- 如果命令似乎卡住了，请启用详细日志并查找 "queued for ...ms" 行，以确认队列正在排出。
+- 如果您需要队列深度，请启用详细日志并关注队列计时行。
+- 接受一个轮次然后停止发出进度的 Codex app-server 运行会被 Codex 适配器中断，以便活动会话通道可以释放，而不是等待外部运行超时。
+- 当启用诊断时，在 `processing` 中停留超过 `diagnostics.stuckSessionWarnMs` 且未观察到回复、工具、状态、块或 ACP 进度的会话会按当前活动进行分类。活动工作记录为 `session.long_running`；没有最近进度的活动工作记录为 `session.stalled`；`session.stuck` 保留给没有活动工作的过时会话簿记，只有该路径可以释放受影响的会话通道，以便排队的工作排出。重复的 `session.stuck` 诊断会在会话保持不变时进行退避。
 
 ## 相关
 
-- [Session management](/zh/concepts/session)
-- [Retry policy](/zh/concepts/retry)
+- [会话管理](/zh/concepts/session)
+- [引导队列](/zh/concepts/queue-steering)
+- [引导](/zh/tools/steer)
+- [重试策略](/zh/concepts/retry)

@@ -5,9 +5,7 @@ read_when:
 title: "Prise en charge des images et des médias"
 ---
 
-# Prise en charge des images et des médias (2025-12-05)
-
-Le channel WhatsApp fonctionne via **Baileys Web**. Ce document capture les règles actuelles de gestion des médias pour l'envoi, la passerelle et les réponses des agents.
+Le canal WhatsApp fonctionne via **Baileys Web**. Ce document capture les règles actuelles de gestion des médias pour l'envoi, la passerelle et les réponses de l'agent.
 
 ## Objectifs
 
@@ -21,59 +19,59 @@ Le channel WhatsApp fonctionne via **Baileys Web**. Ce document capture les règ
   - `--media` facultatif ; la légende peut être vide pour les envois de médias uniquement.
   - `--dry-run` affiche la charge utile résolue ; `--json` émet `{ channel, to, messageId, mediaUrl, caption }`.
 
-## Comportement du channel Web WhatsApp
+## Comportement du canal WhatsApp Web
 
-- Entrée : chemin d'accès au fichier local **ou** URL HTTP(S).
+- Entrée : chemin de fichier local **ou** URL HTTP(S).
 - Flux : charger dans un tampon (Buffer), détecter le type de média et construire la charge utile correcte :
-  - **Images :** redimensionner et recompresser en JPEG (côté max 2048 px) en visant `channels.whatsapp.mediaMaxMb` (par défaut : 50 Mo).
-  - **Audio/Voix/Vidéo :** transfert direct jusqu'à 16 Mo ; l'audio est envoyé sous forme de note vocale (`ptt: true`).
-  - **Documents :** tout le reste, jusqu'à 100 Mo, avec le nom de fichier conservé si disponible.
-- Lecture style GIF WhatsApp : envoyer un MP4 avec `gifPlayback: true` (CLI : `--gif-playback`) afin que les clients mobiles bouclent en ligne.
+  - **Images :** redimensionner et recompresser en JPEG (côté max 2048 px) en visant `channels.whatsapp.mediaMaxMb` (par défaut : 50 Mo).
+  - **Audio/Voix/Vidéo :** transfert direct jusqu'à 16 Mo ; l'audio est envoyé comme une note vocale (`ptt: true`).
+  - **Documents :** tout autre chose, jusqu'à 100 Mo, avec le nom de fichier préservé si disponible.
+- Lecture style GIF WhatsApp : envoyer un MP4 avec `gifPlayback: true` (CLI : `--gif-playback`) pour que les clients mobiles bouclent en ligne.
 - La détection MIME privilégie les octets magiques, puis les en-têtes, puis l'extension de fichier.
 - La légende provient de `--message` ou `reply.text` ; une légende vide est autorisée.
-- Journalisation : non verbeux affiche `↩️`/`✅` ; verbeux inclut la taille et le chemin d'accès/URL source.
+- Journalisation : non-verbeux affiche `↩️`/`✅` ; verbeux inclut la taille et le chemin source/URL.
 
 ## Pipeline de réponse automatique
 
 - `getReplyFromConfig` renvoie `{ text?, mediaUrl?, mediaUrls? }`.
 - Lorsque des médias sont présents, l'expéditeur Web résout les chemins locaux ou les URL en utilisant le même pipeline que `openclaw message send`.
-- Plusieurs entrées multimédias sont envoyées séquentiellement si elles sont fournies.
+- Plusieurs entrées multimédias sont envoyées séquentiellement si fournies.
 
 ## Médias entrants vers les commandes (Pi)
 
-- Lorsque les messages web entrants incluent des médias, OpenClaw les télécharge dans un fichier temporaire et expose des variables de modèle :
+- Lorsque les messages Web entrants incluent des médias, OpenClaw les télécharge dans un fichier temporaire et expose des variables de modèle :
   - `{{MediaUrl}}` pseudo-URL pour les médias entrants.
-  - `{{MediaPath}}` chemin temporaire local écrit avant l'exécution de la commande.
-- Lorsqu'un bac à sable Docker par session est activé, les médias entrants sont copiés dans l'espace de travail du bac à sable et `MediaPath`/`MediaUrl` sont réécrits dans un chemin relatif comme `media/inbound/<filename>`.
-- La compréhension des médias (si configurée via `tools.media.*` ou `tools.media.models` partagé) s'exécute avant le modèle et peut insérer des blocs `[Image]`, `[Audio]` et `[Video]` dans `Body`.
+  - `{{MediaPath}}` chemin temp local écrit avant l'exécution de la commande.
+- Lorsqu'un bac à sable Docker par session est activé, les médias entrants sont copiés dans l'espace de travail du bac à sable et Docker`MediaPath`/`MediaUrl` sont réécrits dans un chemin relatif comme `media/inbound/<filename>`.
+- La compréhension des médias (si configurée via `tools.media.*` ou `tools.media.models` partagé) s'exécute avant le templating et peut insérer des blocs `[Image]`, `[Audio]` et `[Video]` dans `Body`.
   - L'audio définit `{{Transcript}}` et utilise la transcription pour l'analyse des commandes, afin que les commandes slash fonctionnent toujours.
   - Les descriptions vidéo et image préservent tout le texte de légende pour l'analyse des commandes.
-  - Si le modèle d'image principal actif prend déjà en charge la vision de manière native, OpenClaw ignore le bloc de `[Image]` summary et transmet l'image originale au modèle à la place.
-- Par défaut, seule la première pièce jointe image/audio/vidéo correspondante est traitée ; définissez `tools.media.<cap>.attachments` pour traiter plusieurs pièces jointes.
+  - Si le modèle d'image principal actif prend déjà en charge la vision nativement, OpenClaw ignore le bloc de résumé OpenClaw`[Image]` et transmet l'image originale au modèle à la place.
+- Par défaut, seule la première pièce jointe image/audio/video correspondante est traitée ; définissez `tools.media.<cap>.attachments` pour traiter plusieurs pièces jointes.
 
-## Limites et Erreurs
+## Limites et erreurs
 
 **Limites d'envoi sortant (envoi web WhatsApp)**
 
 - Images : jusqu'à `channels.whatsapp.mediaMaxMb` (par défaut : 50 Mo) après recompression.
 - Audio/voix/vidéo : limite de 16 Mo ; documents : limite de 100 Mo.
-- Média trop volumineux ou illisible → erreur claire dans les journaux et la réponse est ignorée.
+- Médias trop volumineux ou illisibles → erreur claire dans les journaux et la réponse est ignorée.
 
 **Limites de compréhension des médias (transcription/description)**
 
-- Par défaut pour les images : 10 Mo (`tools.media.image.maxBytes`).
-- Par défaut pour l'audio : 20 Mo (`tools.media.audio.maxBytes`).
-- Par défaut pour la vidéo : 50 Mo (`tools.media.video.maxBytes`).
-- Les médias trop volumineux ignorent la compréhension, mais les réponses sont toujours envoyées avec le corps d'origine.
+- Image par défaut : 10 Mo (`tools.media.image.maxBytes`).
+- Audio par défaut : 20 Mo (`tools.media.audio.maxBytes`).
+- Vidéo par défaut : 50 Mo (`tools.media.video.maxBytes`).
+- Les médias trop volumineux ignorent la compréhension, mais les réponses sont toujours envoyées avec le corps original.
 
 ## Notes pour les tests
 
-- Couvrir les flux d'envoi et de réponse pour les cas image/audio/document.
+- Couvrir les flux d'envoi + réponse pour les cas image/audio/document.
 - Valider la recompression pour les images (limite de taille) et l'indicateur de note vocale pour l'audio.
-- Assurer que les réponses multimédias multiples sont distribuées en tant qu'envois séquentiels.
+- S'assurer que les réponses multimédias multiples sont distribuées en envois séquentiels.
 
 ## Connexes
 
-- [Capture de caméra](/fr/nodes/camera)
+- [Capture photo](/fr/nodes/camera)
 - [Compréhension des médias](/fr/nodes/media-understanding)
 - [Audio et notes vocales](/fr/nodes/audio)

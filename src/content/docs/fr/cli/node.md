@@ -22,8 +22,7 @@ Cas d'usage courants :
 - Gardez l'exécution **sandboxed** sur la passerelle, mais déléguez les exécutions approuvées à d'autres hôtes.
 - Fournir une cible d'exécution légère et sans interface pour l'automatisation ou les nœuds CI.
 
-L'exécution reste protégée par les **approbations d'exécution** et les listes d'autorisation par agent sur
-l'hôte de nœud, vous pouvez donc garder l'accès aux commandes délimité et explicite.
+L'exécution est toujours protégée par les **approbations d'exécution** et les listes d'autorisation par agent sur l'hôte de nœud, vous pouvez donc garder l'accès aux commandes délimité et explicite.
 
 ## Proxy de navigateur (zéro configuration)
 

@@ -11,13 +11,11 @@ Plugin hooks are in-process extension points for OpenClaw plugins. Use them
 when a plugin needs to inspect or change agent runs, tool calls, message flow,
 session lifecycle, subagent routing, installs, or Gateway startup.
 
-Use [internal hooks](/zh-Hant/automation/hooks) instead when you want a small
-operator-installed `HOOK.md` script for command and Gateway events such as
-`/new`, `/reset`, `/stop`, `agent:bootstrap`, or `gateway:startup`.
+當您需要一個小型的、由操作員安裝的 `HOOK.md` 腳本來處理指令和 Gateway 事件（例如 `/new`、`/reset`、`/stop`、`agent:bootstrap` 或 `gateway:startup`）時，請改用 [內部 hooks](/zh-Hant/automation/hooks)。
 
 ## Quick start
 
-Register typed plugin hooks with `api.on(...)` from your plugin entry:
+從您的插件入口使用 `api.on(...)` 註冊類型化的插件 hooks：
 
 ```typescript
 import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
@@ -49,71 +47,104 @@ export default definePluginEntry({
 });
 ```
 
-Hook handlers run sequentially in descending `priority`. Same-priority hooks
-keep registration order.
+Hook 處理程式會依照遞減的 `priority` 順序執行。相同優先級的 hooks 會保持註冊順序。
 
-## Hook catalog
+`api.on(name, handler, opts?)` 接受：
 
-Hooks are grouped by the surface they extend. Names in **bold** accept a
-decision result (block, cancel, override, or require approval); all others are
-observation-only.
+- `priority` - 處理程式排序（數值較高者先執行）。
+- `timeoutMs` - 可選的每個 hook 預算。設定後，當預算耗盡時，hook 執行器會中止該處理程式並繼續執行下一個，而不是讓緩慢的設定或召回工作耗用呼叫者設定的模型逾時時間。省略此項以使用 hook 執行器通用套用的預設觀察/決策逾時時間。
 
-**Agent turn**
+操作員也可以在不修改插件程式碼的情況下設定 hook 預算：
 
-- `before_model_resolve` — override provider or model before session messages load
-- `before_prompt_build` — add dynamic context or system-prompt text before the model call
-- `before_agent_start` — compatibility-only combined phase; prefer the two hooks above
-- **`before_agent_reply`** — short-circuit the model turn with a synthetic reply or silence
-- **`before_agent_finalize`** — inspect the natural final answer and request one more model pass
-- `agent_end` — observe final messages, success state, and run duration
+```json
+{
+  "plugins": {
+    "entries": {
+      "my-plugin": {
+        "hooks": {
+          "timeoutMs": 30000,
+          "timeouts": {
+            "before_prompt_build": 90000,
+            "agent_end": 60000
+          }
+        }
+      }
+    }
+  }
+}
+```
 
-**Conversation observation**
+`hooks.timeouts.<hookName>` 會覆寫 `hooks.timeoutMs`，後者會覆寫插件作者的 `api.on(..., { timeoutMs })` 數值。每個設定的數值必須是不超過 600000 毫秒的正整數。針對已知的緩慢 hooks 優先使用每個 hook 的覆寫設定，這樣單一插件就不會到處都獲得較長的預算。
 
-- `model_call_started` / `model_call_ended` — observe sanitized provider/model call metadata, timing, outcome, and bounded request-id hashes without prompt or response content
-- `llm_input` — observe provider input (system prompt, prompt, history)
-- `llm_output` — observe provider output
+每個 hook 都會接收 `event.context.pluginConfig`，即註冊該處理程式之插件的解析設定。將其用於需要當前插件選項的 hook 決策；OpenClaw 會為每個處理程式注入它，而不會改變其他插件看到的共享事件物件。
 
-**Tools**
+## Hook 目錄
 
-- **`before_tool_call`** — 重寫工具參數、封鎖執行或要求批准
-- `after_tool_call` — 觀察工具結果、錯誤和持續時間
-- **`tool_result_persist`** — 重寫由工具結果產生的助理訊息
-- **`before_message_write`** — 檢查或封鎖正在進行的訊息寫入（罕見）
+Hooks 依其擴展的表面分組。**粗體**名稱接受決策結果（封鎖、取消、覆寫或要求核准）；其他所有名稱僅供觀察。
+
+**Agent 週期**
+
+- `before_model_resolve` - 在載入 session 訊息之前覆寫供應商或模型
+- `agent_turn_prepare` - 消費佇列中的插件回合注入，並在提示詞掛鉤之前新增同輪次上下文
+- `before_prompt_build` - 在模型呼叫之前新增動態上下文或系統提示詞文本
+- `before_agent_start` - 僅用於相容性的合併階段；建議優先使用上述兩個掛鉤
+- **`before_agent_run`** - 在模型提交之前檢查最終提示詞和會話訊息，並可選擇阻斷執行
+- **`before_agent_reply`** - 使用合成回覆或靜默來短路模型回合
+- **`before_agent_finalize`** - 檢查自然的最終答案並請求再進行一次模型傳遞
+- `agent_end` - 觀察最終訊息、成功狀態和執行持續時間
+- `heartbeat_prompt_contribution` - 為背景監控和生命週期外掛程式新增僅心跳上下文
+
+**對話觀察**
+
+- `model_call_started` / `model_call_ended` - 觀察經過清理的提供者/模型呼叫元資料、計時、結果和受限的請求 ID 雜湊，不包含提示詞或回應內容
+- `llm_input` - 觀察提供者輸入（系統提示詞、提示詞、歷史記錄）
+- `llm_output` - 觀察提供者輸出
+
+**工具**
+
+- **`before_tool_call`** - 重寫工具參數、阻斷執行或要求核准
+- `after_tool_call` - 觀察工具結果、錯誤和持續時間
+- **`tool_result_persist`** - 重寫由工具結果產生的助手訊息
+- **`before_message_write`** - 檢查或阻斷正在進行的訊息寫入（罕見）
 
 **訊息與傳遞**
 
-- **`inbound_claim`** — 在代理路由之前聲明傳入訊息（合成回覆）
-- `message_received` — 觀察傳入內容、發送者、執行緒和中繼資料
-- **`message_sending`** — 重寫傳出內容或取消傳遞
-- `message_sent` — 觀察傳出傳遞成功或失敗
-- **`before_dispatch`** — 在通道移交之前檢查或重寫傳出分派
-- **`reply_dispatch`** — 參與最終回覆分派管線
+- **`inbound_claim`** - 在代理程式路由之前認領傳入訊息（合成回覆）
+- `message_received` - 觀察傳入內容、發送者、執行緒和元資料
+- **`message_sending`** - 重寫傳出內容或取消傳遞
+- `message_sent` - 觀察傳出傳遞成功或失敗
+- **`before_dispatch`** - 在通道移交之前檢查或重寫傳出調度
+- **`reply_dispatch`** - 參與最終回覆調度管線
 
-**工作階段與壓縮**
+**會話與壓縮**
 
-- `session_start` / `session_end` — 追蹤工作階段生命週期邊界
-- `before_compaction` / `after_compaction` — 觀察或標註壓縮週期
-- `before_reset` — 觀察工作階段重置事件（`/reset`、程式化重置）
+- `session_start` / `session_end` - 追蹤 Session 生命週期邊界
+- `before_compaction` / `after_compaction` - 觀察或標註壓縮循環
+- `before_reset` - 觀察 Session 重置事件 (`/reset`、程式化重置)
 
-**子代理**
+**Subagents**
 
-- `subagent_spawning` / `subagent_delivery_target` / `subagent_spawned` / `subagent_ended` — 協調子代理路由和完成傳遞
+- `subagent_spawning` / `subagent_delivery_target` / `subagent_spawned` / `subagent_ended` - 協調子代理程式路由與完成交付
 
-**生命週期**
+**Lifecycle**
 
-- `gateway_start` / `gateway_stop` — 隨 Gateway 啟動或停止外掛擁有的服務
-- **`before_install`** — 檢查技能或外掛安裝掃描並選擇性封鎖
+- `gateway_start` / `gateway_stop` - 隨 Gateway 啟動或停止外掛程式擁有的服務
+- `cron_changed` - 觀察 Gateway 擁有的 cron 生命週期變更 (新增、更新、移除、啟動、完成、排程)
+- **`before_install`** - 檢查技能或外掛程式安裝掃描並選擇性封鎖
 
-## 工具呼叫政策
+## 工具呼叫原則
 
 `before_tool_call` 接收：
 
 - `event.toolName`
 - `event.params`
+- 選用 `event.derivedPaths`，包含針對知名工具封包 (例如 `apply_patch`) 盡力而為的主機衍生目標路徑
+  提示；若存在，這些路徑可能不完整或可能過度預估工具實際
+  會觸及的範圍 (例如，在格式錯誤或部分輸入的情況下)
 - 選用 `event.runId`
 - 選用 `event.toolCallId`
-- 諸如 `ctx.agentId`、`ctx.sessionKey`、`ctx.sessionId`、
-  `ctx.runId`、`ctx.jobId`（在 cron 驅動的執行中設定）等上下文字段，以及診斷 `ctx.trace`
+- 內容欄位，例如 `ctx.agentId`、`ctx.sessionKey`、`ctx.sessionId`、
+  `ctx.runId`、`ctx.jobId` (在 cron 驅動的執行上設定)，以及診斷 `ctx.trace`
 
 它可以返回：
 
@@ -136,66 +167,100 @@ type BeforeToolCallResult = {
 
 規則：
 
-- `block: true` 是終止的，並跳過較低優先級的處理程序。
-- `block: false` 被視為未做出決定。
-- `params` 會重寫工具參數以用於執行。
-- `requireApproval` 會暫停代理程式執行，並透過外掛程式
-  批准請求使用者。`/approve` 指令可以批准執行和外掛程式批准。
-- 優先級較低的 `block: true` 仍可在優先級較高的掛鉤
-  請求批准後進行封鎖。
-- `onResolution` 會接收已解析的批准決定 —— `allow-once`、
+- `block: true` 為終止狀態，並跳過較低優先權的處理程序。
+- `block: false` 被視為未作決定。
+- `params` 會重寫工具參數以供執行。
+- `requireApproval` 會暫停代理程式執行並透過外掛程式
+  核准要求使用者。`/approve` 指令可以同時核准執行和外掛程式核准。
+- 較低優先級的 `block: true` 仍可在較高優先級的 hook
+  請求批准後進行阻擋。
+- `onResolution` 會收到已解決的批准決定 — `allow-once`、
   `allow-always`、`deny`、`timeout` 或 `cancelled`。
 
-### 工具結果持久化
+需要主機層級策略的捆綁外掛可以透過 `api.registerTrustedToolPolicy(...)` 註冊受信任的工具策略。
+這些策略會在一般的 `before_tool_call` hooks 以及外掛外部的決策之前執行。
+請僅將它們用於主機信任的閘道，例如工作區策略、預算強制執行或
+保留的工作流程安全性。外部外掛應使用一般的 `before_tool_call`
+hooks。
 
-工具結果可以包含結構化的 `details`，用於 UI 渲染、診斷、
-媒體路由或外掛程式擁有的元資料。請將 `details` 視為執行時期元資料，
-而非提示詞內容：
+### 工具結果持久性
 
-- OpenClaw 會在供應商重播和壓縮輸入之前移除 `toolResult.details`，
-  以免元資料成為模型上下文。
-- 持久化的會話條目僅保留有界的 `details`。過大的詳細資訊
-  會被替換為簡明的摘要和 `persistedDetailsTruncated: true`。
+工具結果可以包含用於 UI 呈現、診斷、
+媒體路由或外掛擁有元資料的結構化 `details`。
+請將 `details` 視為執行時期元資料，
+而非提示內容：
+
+- OpenClaw 會在提供者重放和壓縮
+  輸入之前移除 `toolResult.details`，以免元資料成為模型上下文。
+- 持久化的工作區條目僅保留有界的 `details`。過大的詳細資訊會
+  被替換為精簡摘要和 `persistedDetailsTruncated: true`。
 - `tool_result_persist` 和 `before_message_write` 會在最終
-  持久化上限之前執行。掛鉤仍應保持返回的 `details` 較小，並避免
-  僅將與提示詞相關的文字放在 `details` 中；請將模型可見的工具輸出
+  持久性上限之前執行。Hooks 仍應將返回的 `details` 保持較小，並避免
+  將提示相關的文字僅放在 `details` 中；請將模型可見的工具輸出
   放在 `content` 中。
 
-## 提示詞與模型掛鉤
+## 提示與模型 hooks
 
-針對新外掛程式，使用特定階段的掛鉤：
+請為新外掛使用特定階段的 hooks：
 
-- `before_model_resolve`：僅接收當前提示詞和附件
+- `before_model_resolve`：僅接收目前的提示和附件
   元資料。返回 `providerOverride` 或 `modelOverride`。
-- `before_prompt_build`：接收目前的提示詞和工作階段訊息。
-  傳回 `prependContext`、`systemPrompt`、`prependSystemContext` 或
-  `appendSystemContext`。
+- `agent_turn_prepare`：接收目前的提示、已準備的工作區訊息，
+  以及任何為此工作區已耗盡的恰好一次佇列注入。返回
+  `prependContext` 或 `appendContext`。
+- `before_prompt_build`：接收目前的提示詞和會話訊息。
+  傳回 `prependContext`、`appendContext`、`systemPrompt`、
+  `prependSystemContext` 或 `appendSystemContext`。
+- `heartbeat_prompt_contribution`：僅針對心跳回合執行並傳回
+  `prependContext` 或 `appendContext`。它適用於需要在不改變使用者發起回合的情況下總結目前狀態的背景監控器。
 
-`before_agent_start` 保留用於相容性。建議優先使用上述明確的 hooks，
-讓您的插件不會相依於傳統的合併階段。
+`before_agent_start` 基於相容性而保留。優先使用上述明確的 Hook，
+讓您的外掛不會依賴舊版的合併階段。
 
-`before_agent_start` 和 `agent_end` 會在 OpenClaw 能
-識別活躍執行時包含 `event.runId`。同樣的值也可以在 `ctx.runId` 上取得。
-Cron 驅動的執行也會公開 `ctx.jobId` (來源的 cron job id)，讓
-plugin hooks 可以將指標、副作用或狀態限定於特定的排程
-工作。
+`before_agent_run` 在建構提示詞之後、任何模型輸入之前執行，
+包括提示詞本地的圖片載入和 `llm_input` 觀察。它接收
+目前的使用者輸入作為 `prompt`，加上載入的會話歷史在 `messages`
+以及有效的系統提示詞。傳回 `{ outcome: "block", reason, message? }`
+以在模型讀取提示詞之前停止執行。`reason` 是內部的；
+`message` 是面向使用者的替代方案。僅支援的結果是
+`pass` 和 `block`；不支援的決策形狀會以封閉式失敗處理。
 
-針對不應接收原始提示詞、歷史記錄、回應、標頭、請求
-主體或提供者請求 ID 的提供者呼叫遙測，請使用 `model_call_started` 和 `model_call_ended`。這些 hooks 包含穩定的元數據，例如
-`runId`、`callId`、`provider`、`model`、選用的 `api`/`transport`、終端
-`durationMs`/`outcome`，以及當 OpenClaw 可推導出
-有邊界的提供者請求-id 雜湊時的 `upstreamRequestIdHash`。
+當執行被阻擋時，OpenClaw 僅在 `message.content` 中儲存替換文字，
+加上非敏感的阻擋中繼資料（如阻擋外掛 ID 和時間戳記）。原始的使用者文字不會保留在逐字稿或未來的
+語境中。內部阻擋原因被視為敏感資訊，並從逐字稿、歷史、廣播、日誌和診斷酬載中排除。
+可觀測性應使用經過清理的欄位，例如阻擋器 ID、結果、時間戳記或安全類別。
 
-`before_agent_finalize` 僅在 harness 即將接受自然的
-最終助理回答時執行。它不是 `/stop` 取消路徑，也不會
-在使用者中止回合時執行。傳回 `{ action: "revise", reason }` 以要求
-harness 在最終確定前再進行一次模型傳遞，傳回 `{ action:
-"finalize", reason? }` 以強制最終確定，或省略結果以繼續。
-Codex 原生 `Stop` hooks 會被中繼至此 hook 作為 OpenClaw
-`before_agent_finalize` 決策。
+`before_agent_start` 和 `agent_end` 在 OpenClaw 能
+識別有效執行時包含 `event.runId`。同樣的值也可在 `ctx.runId` 上取得。
+由 Cron 驅動的執行也會公開 `ctx.jobId`（來源 cron 作業 ID），以便
+外掛 Hook 能將指標、副作用或狀態限定在特定的排程作業。
 
-需要 `llm_input`、`llm_output`、
-`before_agent_finalize` 或 `agent_end` 的非封裝插件必須設定：
+對於來自通道的運行，`ctx.messageProvider` 是提供者介面（例如 `discord` 或 `telegram`），而當 OpenClaw 可以從會話金鑰或傳遞元資料中推導出來時，`ctx.channelId` 是對話目標識別碼。
+
+`agent_end` 是一個觀察性掛鉤，並在該輪次之後以即發即棄（fire-and-forget）的方式運行。掛鉤運行器會套用 30 秒的超時時間，因此卡住的插件或嵌入端點無法讓掛鉤承諾永遠處於擱置狀態。超時情況會被記錄下來，且 OpenClaw 會繼續執行；除非插件也使用了自己的中止信號，否則它不會取消插件擁有的網路工作。
+
+對於不應接收原始提示、歷史記錄、回應、標頭、請求主體或提供者請求 ID 的提供者呼叫遙測，請使用 `model_call_started` 和 `model_call_ended`。這些鉤子包括穩定的元資料，例如 `runId`、`callId`、`provider`、`model`、選用的 `api`/`transport`、終端 `durationMs`/`outcome`，以及當 OpenClaw 可推導出有界的提供者請求 ID 雜湊時的 `upstreamRequestIdHash`。
+
+`before_agent_finalize` 僅在工具準備接受自然的最終助手回答時運行。它不是 `/stop` 取消路徑，當使用者中斷對話時不會運行。傳回 `{ action: "revise", reason }` 以要求工具在最終確定前再進行一次模型傳遞，傳回 `{ action:
+"finalize", reason? }` 以強制最終確定，或省略結果以繼續。Codex 原生 `Stop` 掛鉤會作為 OpenClaw
+`before_agent_finalize` 決策轉發到此掛鉤。
+
+當傳回 `action: "revise"` 時，外掛程式可以包含 `retry` 元數據，以使額外的模型傳遞變為有界且重放安全的：
+
+```typescript
+type BeforeAgentFinalizeRetry = {
+  instruction: string;
+  idempotencyKey?: string;
+  maxAttempts?: number;
+};
+```
+
+`instruction` 會被附加到發送給 harness 的修訂原因。
+`idempotencyKey` 讓主機能夠在等效的 finalize 決策之間計算同一個插件請求的重試次數，而 `maxAttempts` 則限制了主機在繼續使用自然最終答案之前所允許的額外通過次數。
+
+需要原始會話掛鉤（`before_model_resolve`、
+`before_agent_reply`、`llm_input`、`llm_output`、`before_agent_finalize`、
+`agent_end` 或 `before_agent_run`）的非綑綁插件必須設定：
 
 ```json
 {
@@ -211,63 +276,92 @@ Codex 原生 `Stop` hooks 會被中繼至此 hook 作為 OpenClaw
 }
 ```
 
-可以針對每個插件使用
-`plugins.entries.<id>.hooks.allowPromptInjection=false` 來停用提示詞修改 hooks。
+可以使用 `plugins.entries.<id>.hooks.allowPromptInjection=false` 針對每個插件停用提示變更掛鉤和持久的下一輪注入。
 
-## 訊息 hooks
+### 會話擴充和下一輪注入
 
-使用訊息鉤子進行通道層級的路由和傳遞策略：
+工作流程外掛程式可以使用 `api.registerSessionExtension(...)` 持久化少量與 JSON 相容的會話狀態，並透過 Gateway 的 `sessions.pluginPatch` 方法進行更新。會話資料列會透過 `pluginExtensions` 投射已註冊的擴充狀態，讓 Control UI 和其他用戶端能夠呈現外掛程式擁有的狀態，而無需了解外掛程式的內部細節。
 
-- `message_received`：觀察輸入內容、發送者、`threadId`、`messageId`、
-  `senderId`、選用的執行/會話關聯以及中繼資料。
+當外掛程式需要持續性內容以在下一個模型輪次中僅觸達一次時，請使用 `api.enqueueNextTurnInjection(...)`。OpenClaw 會在提示詞掛鉤之前清空佇列中的注入內容，捨棄過期的注入內容，並針對每個外掛程式根據 `idempotencyKey` 去重。這是核准恢復、政策摘要、背景監控差異，以及應在下一輪對模型可見但不應成為永久系統提示詞文字的命令延續的恰當縫合點。
+
+清理語義是契約的一部分。Session 擴展清理和執行時生命週期清理回呼會接收 `reset`、`delete`、`disable` 或
+`restart`。主機會移除擁有外掛程式的持久 Session 擴展狀態和待處理的下一輪注入，以進行重置/刪除/停用；重新啟動會保留持久 Session 狀態，而清理回呼則允許外掛程式釋放舊執行時產生的排程器工作、執行上下文和其他帶外資源。
+
+## 訊息 Hook
+
+使用訊息 Hook 進行通道層級的路由和傳遞策略：
+
+- `message_received`：觀察輸入內容、傳送者、`threadId`、`messageId`、
+  `senderId`、可選的 run/session 關聯以及元資料。
 - `message_sending`：重寫 `content` 或回傳 `{ cancel: true }`。
 - `message_sent`：觀察最終的成功或失敗。
 
-對於僅音訊的 TTS 回覆，即使通道載荷沒有可見的文字/字幕，`content` 也可能包含隱藏的口述轉錄。
-重寫該 `content` 僅會更新鉤子可見的轉錄；它不會被呈現為
-媒體字幕。
+對於僅音訊的 TTS 回覆，`content` 可能包含隱藏的口語逐字稿，即使通道酬載沒有可見的文字/字幕。重寫該 `content` 僅更新 Hook 可見的逐字稿；它不會被渲染為媒體字幕。
 
-訊息鉤子內容會在可用時公開穩定的關聯欄位：
+Message hook 上下文在可用時會公開穩定的關聯欄位：
 `ctx.sessionKey`、`ctx.runId`、`ctx.messageId`、`ctx.senderId`、`ctx.trace`、
-`ctx.traceId`、`ctx.spanId`、`ctx.parentSpanId` 和 `ctx.callDepth`。在讀取舊版中繼資料之前，
-請優先考慮這些一級欄位。
+`ctx.traceId`、`ctx.spanId`、`ctx.parentSpanId` 和 `ctx.callDepth`。在讀取舊版元數據之前，請優先使用這些一級欄位。
 
-在使用通道特定的中繼資料之前，請優先考慮類型化的 `threadId` 和 `replyToId` 欄位。
+在使用特定頻道的元數據之前，請優先使用類型化的 `threadId` 和 `replyToId` 欄位。
 
 決策規則：
 
-- 帶有 `cancel: true` 的 `message_sending` 是終端操作。
-- 帶有 `cancel: false` 的 `message_sending` 被視為未作決定。
-- 重寫後的 `content` 會繼續傳遞給優先級較低的鉤子，除非後續的鉤子
-  取消傳遞。
+- 帶有 `cancel: true` 的 `message_sending` 為終止狀態。
+- 帶有 `cancel: false` 的 `message_sending` 被視為未作決策。
+- 重寫後的 `content` 會繼續執行優先級較低的掛鉤，除非後續的掛鉤取消傳遞。
+- `message_sending` 可以返回 `cancelReason` 和帶有取消操作的受限 `metadata`。新的訊息生命週期 API 將其公開為具有原因 `cancelled_by_message_sending_hook` 的被抑制傳遞結果；傳統的直接傳遞為了相容性，繼續返回空結果陣列。
+- `message_sent` 僅供觀察。處理程序失敗會被記錄下來，但不會改變傳遞結果。
 
-## 安裝鉤子
+## 安裝掛鉤
 
-`before_install` 在內建技能和外掛程式安裝掃描之後執行。
-回傳其他發現結果或 `{ block: true, blockReason }` 以停止
+`before_install` 在內建的技能和外掛程式安裝掃描之後執行。
+傳回額外的發現或 `{ block: true, blockReason }` 以停止
 安裝。
 
-`block: true` 是終端操作。`block: false` 被視為未作決定。
+`block: true` 是終止的。`block: false` 被視為無決定。
 
 ## Gateway 生命週期
 
-對需要 Gateway 擁有狀態的外掛服務使用 `gateway_start`。該上下文公開了 `ctx.config`、`ctx.workspaceDir` 和 `ctx.getCron?.()` 以進行 cron 檢查和更新。使用 `gateway_stop` 來清理長時間執行的資源。
+對於需要 Gateway 擁有狀態的外掛程式服務，請使用 `gateway_start`。該
+內容公開了 `ctx.config`、`ctx.workspaceDir` 和 `ctx.getCron?.()` 用於
+cron 檢查和更新。使用 `gateway_stop` 來清理長期執行
+的資源。
 
-不要依賴內部 `gateway:startup` hook 來處理外掛擁有的執行時服務。
+對於外掛程式擁有的執行時服務，請勿依賴內部的 `gateway:startup` hook。
 
-## 即將棄用
+`cron_changed` 會針對 Gateway 擁有的 cron 生命週期事件觸發，並帶有類型化
+的事件承載，涵蓋 `added`、`updated`、`removed`、`started`、`finished`
+和 `scheduled` 原因。該事件攜帶 `PluginHookGatewayCronJob`
+快照（包括 `state.nextRunAtMs`、`state.lastRunStatus` 和
+當存在時的 `state.lastError`）以及 `PluginHookGatewayCronDeliveryStatus`
+屬於 `not-requested` | `delivered` | `not-delivered` | `unknown`。移除
+事件仍然會攜帶已刪除的工作快照，以便外部排程器可以
+協調狀態。在同步外部喚醒排程器時，請使用執行時
+內容中的 `ctx.getCron?.()` 和 `ctx.config`，並將 OpenClaw 保持為
+到期檢查和執行的唯一真實來源。
 
-一些與 hook 相關的功能已被棄用但仍然受支援。請在下一個主要版本發布之前遷移：
+## 即將棄用的功能
 
-- `inbound_claim` 和 `message_received` 處理程序中的 **純文字通道信封 (Plaintext channel envelopes)**。請閱讀 `BodyForAgent` 和結構化使用者上下文區塊，而不是解析扁平的信封文字。請參閱 [Plaintext channel envelopes → BodyForAgent](/zh-Hant/plugins/sdk-migration#active-deprecations)。
-- **`before_agent_start`** 為了相容性而保留。新的外掛應該使用 `before_model_resolve` 和 `before_prompt_build` 來取代組合階段。
-- **`before_tool_call` 中的 `onResolution`** 現在使用類型化的 `PluginApprovalResolution` 聯合 (`allow-once` / `allow-always` / `deny` / `timeout` / `cancelled`)，而不是自由形式的 `string`。
+少數與 hook 相關的介面已棄用但仍受支援。請在
+下一個主要版本發布之前進行移轉：
 
-如需完整清單 — 記憶體功能註冊、提供者思考設定檔 (provider thinking profile)、外部驗證提供者、提供者探索類型、任務執行時存取器，以及 `command-auth` → `command-status` 重新命名 — 請參閱 [Plugin SDK migration → Active deprecations](/zh-Hant/plugins/sdk-migration#active-deprecations)。
+- `inbound_claim` 和 `message_received`
+  處理常式中的 **純文字通道封包**。請讀取 `BodyForAgent` 和結構化使用者內容區塊
+  ，而不要解析扁平的封包文字。請參閱
+  [純文字通道封包 → BodyForAgent](/zh-Hant/plugins/sdk-migration#active-deprecations)。
+- **`before_agent_start`** 保留用於相容性。新的外掛應該使用
+  `before_model_resolve` 和 `before_prompt_build`，而不是組合的
+  階段。
+- **`onResolution` 在 `before_tool_call` 中** 現在使用類型化的
+  `PluginApprovalResolution` 聯合類型 (`allow-once` / `allow-always` / `deny` /
+  `timeout` / `cancelled`)，而不是自由形式的 `string`。
+
+有關完整清單——記憶體功能註冊、提供者思考設定檔、外部驗證提供者、提供者探索類型、任務執行時存取器，以及 `command-auth` → `command-status` 重新命名——請參閱
+[Plugin SDK migration → Active deprecations](/zh-Hant/plugins/sdk-migration#active-deprecations)。
 
 ## 相關
 
-- [Plugin SDK migration](/zh-Hant/plugins/sdk-migration) — 目前棄用項目與移除時間表
+- [Plugin SDK migration](/zh-Hant/plugins/sdk-migration) - 目前停用項目與移除時間表
 - [Building plugins](/zh-Hant/plugins/building-plugins)
 - [Plugin SDK overview](/zh-Hant/plugins/sdk-overview)
 - [Plugin entry points](/zh-Hant/plugins/sdk-entrypoints)

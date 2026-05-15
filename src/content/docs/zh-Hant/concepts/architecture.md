@@ -7,7 +7,7 @@ title: "Gateway architecture"
 
 ## 概觀
 
-- 單一長期運行的 **Gateway** 擁有所有訊息介面（透過 Baileys 的 WhatsApp、透過 grammY 的 Telegram、Slack、Discord、Signal、iMessage、WebChat）。
+- 單一長期運行的 **Gateway** 擁有所有訊息傳遞介面（WhatsApp 透過 Baileys、Telegram 透過 grammY、Slack、Discord、Signal、iMessage、WebChat）。
 - 控制平面用戶端（macOS app、CLI、web UI、自動化）透過 **WebSocket** 連接到設定好的綁定主機（預設為 `127.0.0.1:18789`）上的 Gateway。
 - **Nodes** (macOS/iOS/Android/headless) 也透過 **WebSocket** 連接，但聲明 `role: node` 並帶有明確的 capabilities/commands。
 - 每個主機一個 Gateway；它是唯一開啟 WhatsApp 會話的地方。
@@ -21,7 +21,7 @@ title: "Gateway architecture"
 ### Gateway (daemon)
 
 - 維護提供者連線。
-- 公開一個型別化的 WS API（請求、回應、伺服器推送事件）。
+- 公開一個具類型的 WS API（請求、回應、伺服器推送事件）。
 - 根據 JSON Schema 驗證傳入的框架。
 - 發出如 `agent`、`chat`、`presence`、`health`、`heartbeat`、`cron` 等事件。
 
@@ -34,7 +34,7 @@ title: "Gateway architecture"
 ### 節點 (macOS / iOS / Android / headless)
 
 - 使用 `role: node` 連接到 **相同的 WS 伺服器**。
-- 在 `connect` 中提供裝置身分；配對是 **基於裝置** (role `node`) 且核准資訊存於裝置配對儲存中。
+- 在 `connect` 中提供裝置身分；配對是**基於裝置**的（角色 `node`），且核准資訊儲存於裝置配對儲存中。
 - 公開如 `canvas.*`、`camera.*`、`screen.record`、`location.get` 等命令。
 
 協議詳情：
@@ -78,7 +78,7 @@ sequenceDiagram
 - 共享金鑰驗證使用 `connect.params.auth.token` 或 `connect.params.auth.password`，具體取決於設定的 gateway 驗證模式。
 - 承載身分的模式，例如 Tailscale Serve (`gateway.auth.allowTailscale: true`) 或非 loopback `gateway.auth.mode: "trusted-proxy"`，透過請求標頭滿足驗證，而非使用 `connect.params.auth.*`。
 - Private-ingress `gateway.auth.mode: "none"` 會完全停用共享金鑰驗證；請勿將該模式暴露於公開/不受信任的入口。
-- 具有副作用的操作方法 (`send`, `agent`) 需要等幂性鍵 (idempotency keys) 以便安全地重試；伺服器會維護一個短暫的去重快取。
+- 具有副作用的方法（`send`、`agent`）需要等冪性金鑰（idempotency keys）以安全地重試；伺服器會維護一個短暫的去重快取。
 - 節點必須在 `connect` 中包含 `role: "node"` 以及 capabilities/commands/permissions。
 
 ## 配對 + 本機信任
@@ -90,7 +90,7 @@ sequenceDiagram
 - Tailnet 和 LAN 連線（包括同主機 tailnet 綁定）仍然需要明確的配對批准。
 - 所有連線都必須簽署 `connect.challenge` nonce。
 - 簽署載荷 `v3` 也會綁定 `platform` + `deviceFamily`；Gateway 會在重新連線時固定配對的元數據，並要求對元數據變更進行修復配對。
-- **非本地** 連線仍然需要明確批准。
+- **非本機**連線仍然需要明確的核准。
 - Gateway 驗證 (`gateway.auth.*`) 仍適用於 **所有** 連線，無論是本機還是遠端。
 
 詳情：[Gateway protocol](/zh-Hant/gateway/protocol)、[Pairing](/zh-Hant/channels/pairing)、[Security](/zh-Hant/gateway/security)。
@@ -122,7 +122,7 @@ sequenceDiagram
 ## 不變性
 
 - 每個主機上，只有一個 Gateway 控制單一 Baileys session。
-- Handshake 是強制的；任何非 JSON 或非 connect 的第一幀都會導致強制關閉連線。
+- 握手是強制性的；任何非 JSON 或非連線的第一幀都會導致強制中斷連線。
 - 事件不會重播；客戶端必須在有間隙時重新整理。
 
 ## 相關

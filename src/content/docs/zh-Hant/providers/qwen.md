@@ -9,8 +9,8 @@ title: "Qwen"
 <Warning>
 
 **Qwen OAuth 已移除。** 使用 `portal.qwen.ai` 端點的免費層 OAuth 整合
-(`qwen-portal`) 已不再提供。
-請參閱 [Issue #49557](https://github.com/openclaw/openclaw/issues/49557) 以瞭解
+(`qwen-portal`) 不再可用。
+請參閱 [Issue #49557](https://github.com/openclaw/openclaw/issues/49557) 瞭解
 背景資訊。
 
 </Warning>
@@ -33,23 +33,72 @@ Coding Plan 端點為目標，並讓舊版的 `modelstudio` ID 能作為
 
 <Tabs>
   <Tab title="Coding Plan (subscription)">
-    **最適用於：** 透過 Qwen Coding Plan 進行訂閱制存取。
+    **最適用於：** 透過 Qwen Coding Plan 進行訂閱式存取。
 
     <Steps>
-      <Step title="取得您的 API 金鑰">
+      <Step title="Get your API key">
         從 [home.qwencloud.com/api-keys](https://home.qwencloud.com/api-keys) 建立或複製 API 金鑰。
       </Step>
-      <Step title="執行引導流程">
-        若為 **Global** 端點：
+      <Step title="Run onboarding">
+        針對 **Global** 端點：
 
         ```bash
         openclaw onboard --auth-choice qwen-api-key
         ```
 
-        若為 **China** 端點：
+        針對 **China** 端點：
 
         ```bash
         openclaw onboard --auth-choice qwen-api-key-cn
+        ```
+      </Step>
+      <Step title="Set a default model">
+        ```json5
+        {
+          agents: {
+            defaults: {
+              model: { primary: "qwen/qwen3.5-plus" },
+            },
+          },
+        }
+        ```
+      </Step>
+      <Step title="Verify the model is available">
+        ```bash
+        openclaw models list --provider qwen
+        ```
+      </Step>
+    </Steps>
+
+    <Note>
+    舊版 `modelstudio-*` auth-choice ID 和 `modelstudio/...` 模型參照仍
+    可作為相容性別名運作，但新的設定流程應優先使用標準
+    `qwen-*` auth-choice ID 和 `qwen/...` 模型參照。如果您定義了具有其他 `api` 值的
+    精確自訂 `models.providers.modelstudio` 項目，則該
+    自訂供應商將擁有 `modelstudio/...` 參照，而非 Qwen 相容性
+    別名。
+    </Note>
+
+  </Tab>
+
+  <Tab title="標準（隨用隨付）">
+    **最適合於：** 透過標準 Model Studio 端點進行隨用隨付存取，包括可能在 Coding Plan 上無法使用的模型，例如 `qwen3.6-plus`。
+
+    <Steps>
+      <Step title="取得您的 API 金鑰">
+        從 [home.qwencloud.com/api-keys](https://home.qwencloud.com/api-keys) 建立或複製 API 金鑰。
+      </Step>
+      <Step title="執行入門引導">
+        若是 **Global** 端點：
+
+        ```bash
+        openclaw onboard --auth-choice qwen-standard-api-key
+        ```
+
+        若是 **China** 端點：
+
+        ```bash
+        openclaw onboard --auth-choice qwen-standard-api-key-cn
         ```
       </Step>
       <Step title="設定預設模型">
@@ -71,51 +120,7 @@ Coding Plan 端點為目標，並讓舊版的 `modelstudio` ID 能作為
     </Steps>
 
     <Note>
-    舊版 `modelstudio-*` auth-choice id 與 `modelstudio/...` 模型參照仍可作為相容性別名運作，但新的設定流程應偏好使用標準 `qwen-*` auth-choice id 與 `qwen/...` 模型參照。如果您定義了使用其他 `api` 值的精確自訂 `models.providers.modelstudio` 項目，則該自訂提供者將擁有 `modelstudio/...` 參照，而不是 Qwen 相容性別名。
-    </Note>
-
-  </Tab>
-
-  <Tab title="Standard (pay-as-you-go)">
-    **最適合：** 透過標準 Model Studio 端點進行隨用隨付存取，包括 Coding Plan 上可能無法使用的模型（例如 `qwen3.6-plus`）。
-
-    <Steps>
-      <Step title="取得您的 API 金鑰">
-        從 [home.qwencloud.com/api-keys](https://home.qwencloud.com/api-keys) 建立或複製 API 金鑰。
-      </Step>
-      <Step title="執行上手導覽">
-        針對 **全球** 端點：
-
-        ```bash
-        openclaw onboard --auth-choice qwen-standard-api-key
-        ```
-
-        針對 **中國** 端點：
-
-        ```bash
-        openclaw onboard --auth-choice qwen-standard-api-key-cn
-        ```
-      </Step>
-      <Step title="設定預設模型">
-        ```json5
-        {
-          agents: {
-            defaults: {
-              model: { primary: "qwen/qwen3.5-plus" },
-            },
-          },
-        }
-        ```
-      </Step>
-      <Step title="驗證模型是否可用">
-        ```bash
-        openclaw models list --provider qwen
-        ```
-      </Step>
-    </Steps>
-
-    <Note>
-    舊版 `modelstudio-*` auth-choice ID 和 `modelstudio/...` 模型參照仍可作為相容性別名使用，但新的設定流程應優先使用標準 `qwen-*` auth-choice ID 和 `qwen/...` 模型參照。如果您使用其他 `api` 值定義了精確的自訂 `models.providers.modelstudio` 項目，則該自訂提供者將擁有 `modelstudio/...` 參照，而不是 Qwen 相容性別名。
+    舊版的 `modelstudio-*` auth-choice id 和 `modelstudio/...` 模型參照仍可作為相容性別名使用，但新的設定流程應優先使用正式的 `qwen-*` auth-choice id 和 `qwen/...` 模型參照。如果您定義了具有其他 `api` 值的精確自訂 `models.providers.modelstudio` 項目，則該自訂供應商將擁有 `modelstudio/...` 參照，而不是 Qwen 相容性別名。
     </Note>
 
   </Tab>
@@ -182,7 +187,7 @@ DashScope 端點（而非 Coding Plan 端點）上公開多模態功能：
 }
 ```
 
-<Note>請參閱 [影片生成](/zh-Hant/tools/video-generation) 以了解共用工具參數、提供者選取與容錯移轉行為。</Note>
+<Note>請參閱 [影片生成](/zh-Hant/tools/video-generation) 以了解共用工具參數、供應商選擇和容錯移轉行為。</Note>
 
 ## 進階配置
 
@@ -199,58 +204,65 @@ DashScope 端點（而非 Coding Plan 端點）上公開多模態功能：
 
   </Accordion>
 
-  <Accordion title="Qwen 3.6 Plus 的可用性">
-    `qwen3.6-plus` 在 Standard (pay-as-you-go) Model Studio 端點上可用：
+  <Accordion title="Qwen 3.6 Plus 可用性">
+    `qwen3.6-plus` 可在標準（隨用隨付）Model Studio
+    端點上使用：
 
-    - 中國： `dashscope.aliyuncs.com/compatible-mode/v1`
-    - 全球： `dashscope-intl.aliyuncs.com/compatible-mode/v1`
+    - 中國：`dashscope.aliyuncs.com/compatible-mode/v1`
+    - 全球：`dashscope-intl.aliyuncs.com/compatible-mode/v1`
 
-    如果 Coding Plan 端點針對 `qwen3.6-plus` 傳回「不支援的模型」錯誤，請切換到 Standard (pay-as-you-go)，而不是使用 Coding Plan 端點/金鑰組。
+    如果 Coding Plan 端點針對
+    `qwen3.6-plus` 返回「不支援的模型」錯誤，請切換到標準（隨用隨付）計畫，而不是 Coding Plan
+    端點/金鑰組合。
+
+    OpenClaw 的內建 Qwen 目錄不在 Coding
+    Plan 端點上公布 `qwen3.6-plus`，但在 `models.providers.qwen.models` 下明確設定的 `qwen/qwen3.6-plus` 項目會在 Coding Plan baseUrl 上受到尊重，因此如果 Aliyun 在您的訂閱中啟用了該模型，您可以選擇加入該模型。
+    上游 API 仍會決定呼叫是否成功。
 
   </Accordion>
 
   <Accordion title="功能計畫">
-    `qwen` 外掛程式被定位為完整 Qwen Cloud 表面的供應商主體，而不僅僅是編碼/文字模型。
+    `qwen` 外掛程式正被定位為完整 Qwen
+    Cloud 表面的供應商主體，而不僅僅是編碼/文字模型。
 
-    - **文字/聊天模型：** 現已隨附
-    - **工具呼叫、結構化輸出、思考：** 繼承自 OpenAI 相容傳輸
-    - **圖像生成：** 計劃在提供者外掛程式層級實作
-    - **圖像/視訊理解：** 現已在 Standard 端點上隨附
-    - **語音/音訊：** 計劃在提供者外掛程式層級實作
-    - **記憶嵌入/重排序：** 計劃透過嵌入介面卡表面實作
-    - **視訊生成：** 現已透過共享視訊生成功能隨附
+    - **文字/聊天模型：** 現已內建
+    - **工具呼叫、結構化輸出、思考：** 繼承自 OpenAI 相容傳輸層
+    - **影像生成：** 計畫在 provider-plugin 層級實現
+    - **影像/影片理解：** 現已在標準端點上內建
+    - **語音/音訊：** 計畫在 provider-plugin 層級實現
+    - **記憶嵌入/重新排序：** 計畫通過嵌入介面卡表面實現
+    - **影片生成：** 現已通過共享的影片生成功能內建
 
   </Accordion>
 
-  <Accordion title="視訊生成詳情">
-    針對視訊生成，OpenClaw 在提交任務之前會將設定的 Qwen 區域對應到相符的
+  <Accordion title="視訊生成細節">
+    針對視訊生成，OpenClaw 會在提交任務前，將設定的 Qwen 區域對應到相符的
     DashScope AIGC 主機：
 
-    - 全球/國際： `https://dashscope-intl.aliyuncs.com`
-    - 中國： `https://dashscope.aliyuncs.com`
+    - 全球/國際：`https://dashscope-intl.aliyuncs.com`
+    - 中國：`https://dashscope.aliyuncs.com`
 
-    這意味著，一個指向 Coding Plan 或標準 Qwen 主機的一般 `models.providers.qwen.baseUrl`
+    這意味著，指向 Coding Plan 或標準 Qwen 主機的常規 `models.providers.qwen.baseUrl`
     仍會將視訊生成保持在正確的區域 DashScope 視訊端點上。
 
     目前內建的 Qwen 視訊生成限制：
 
     - 每次請求最多 **1** 個輸出視訊
-    - 最多 **1** 個輸入圖片
+    - 最多 **1** 張輸入圖片
     - 最多 **4** 個輸入視訊
-    - 最多 **10 秒** 時長
+    - 最長 **10 秒** 時長
     - 支援 `size`、`aspectRatio`、`resolution`、`audio` 和 `watermark`
-    - 參考圖片/視訊模式目前需要 **遠端 http(s) URL**。本機
-      檔案路徑會被一開始就拒絕，因為 DashScope 視訊端點不接受
-      針對這些參考的上傳本機緩衝區。
+    - 參考圖片/視訊模式目前需要 **遠端 http(s) URL**。由於 DashScope
+      視訊端點不接受針對這些參考上傳的本機緩衝區，本機檔案路徑會在開始時被拒絕。
 
   </Accordion>
 
   <Accordion title="串流使用相容性">
-    原生 Model Studio 端點在共用的 `openai-completions` 傳輸上宣佈支援串流使用相容性。
-    OpenClaw 現在會關閉端點功能，因此針對相同原生主機的 DashScope 相容自訂供應商 ID
-    會繼承相同的串流使用行為，而不需要特別要求內建的 `qwen` 供應商 ID。
+    原生 Model Studio 端點在共用的 `openai-completions` 傳輸上宣稱支援串流使用。
+    OpenClaw 現在會讀取端點功能，因此指向相同原生主機的 DashScope 相容自訂提供者 ID
+    會繼承相同的串流使用行為，而不需要特別使用內建的 `qwen` 提供者 ID。
 
-    原生串流使用相容性適用於 Coding Plan 主機和標準 DashScope 相容主機：
+    原生串流使用相容性同時適用於 Coding Plan 主機和標準 DashScope 相容主機：
 
     - `https://coding.dashscope.aliyuncs.com/v1`
     - `https://coding-intl.dashscope.aliyuncs.com/v1`
@@ -263,14 +275,14 @@ DashScope 端點（而非 Coding Plan 端點）上公開多模態功能：
     多模態介面（視訊理解和 Wan 視訊生成）使用
     **標準** DashScope 端點，而非 Coding Plan 端點：
 
-    - 全球/國際標準基礎 URL： `https://dashscope-intl.aliyuncs.com/compatible-mode/v1`
-    - 中國標準基礎 URL： `https://dashscope.aliyuncs.com/compatible-mode/v1`
+    - 全球/國際標準基礎 URL：`https://dashscope-intl.aliyuncs.com/compatible-mode/v1`
+    - 中國標準基礎 URL：`https://dashscope.aliyuncs.com/compatible-mode/v1`
 
   </Accordion>
 
-  <Accordion title="環境和守護程序設定">
-    如果閘道以守護程序 (launchd/systemd) 形式執行，請確保 `QWEN_API_KEY`
-    可供該程序使用（例如，在 `~/.openclaw/.env` 中或透過
+  <Accordion title="Environment and daemon setup">
+    如果 Gateway 作為守護行程 (launchd/systemd) 執行，請確保 `QWEN_API_KEY`
+    對該行程可用（例如，在 `~/.openclaw/.env` 中或透過
     `env.shellEnv`）。
   </Accordion>
 </AccordionGroup>

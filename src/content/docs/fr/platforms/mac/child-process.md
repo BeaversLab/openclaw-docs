@@ -2,28 +2,26 @@
 summary: "Cycle de vie de la Gateway sur macOS (launchd)"
 read_when:
   - Integrating the mac app with the gateway lifecycle
-title: "Gateway lifecycle"
+title: "GatewaymacOSCycle de vie du Gateway sur macOS"
 ---
 
-# Cycle de vie de la Gateway sur macOS
-
-L'application macOS **gère la Gateway via launchd** par défaut et ne génère pas
-la Gateway en tant que processus enfant. Elle essaie d'abord de se connecter à une Gateway
-déjà en cours d'exécution sur le port configuré ; si aucune n'est accessible, elle active le service
-launchd via la CLI externe `openclaw` (pas d'exécution intégrée). Cela vous offre
+Par défaut, l'application macOS **gère le Gateway via launchd** et ne génère pas
+le Gateway en tant que processus enfant. Elle essaie d'abord de s'attacher à un Gateway
+déjà en cours d'exécution sur le port configuré ; si aucun n'est accessible, elle active le service
+launchd via le macOSGatewayGatewayGateway`openclaw`CLI CLI externe (pas d'exécution intégrée). Cela vous offre
 un démarrage automatique fiable à la connexion et un redémarrage en cas de plantage.
 
-Le mode processus enfant (Gateway générée directement par l'application) n'est **pas utilisé**
-à l'heure actuelle. Si vous avez besoin d'un couplage plus étroit avec l'interface utilisateur,
-exécutez la Gateway manuellement dans un terminal.
+Le mode processus enfant (Gateway généré directement par l'application) n'est **pas utilisé**
+aujourd'hui. Si vous avez besoin d'un couplage plus étroit avec l'interface utilisateur,
+lancez le Gateway manuellement dans un terminal.
 
 ## Comportement par défaut (launchd)
 
-- L'application installe un LaunchAgent par utilisateur nommé `ai.openclaw.gateway`
-  (ou `ai.openclaw.<profile>` lors de l'utilisation de `--profile`/`OPENCLAW_PROFILE` ; l'ancien `com.openclaw.*` est pris en charge).
+- L'application installe un LaunchAgent par utilisateur étiqueté `ai.openclaw.gateway`
+  (ou `ai.openclaw.<profile>` lors de l'utilisation de `--profile`/`OPENCLAW_PROFILE` ; `com.openclaw.*` hérité est pris en charge).
 - Lorsque le mode Local est activé, l'application s'assure que le LaunchAgent est chargé et
-  démarre la Gateway si nécessaire.
-- Les journaux sont écrits dans le chemin du journal launchd de la passerelle (visible dans les paramètres de débogage).
+  démarre le Gateway si nécessaire.
+- Les journaux sont écrits dans le chemin du journal launchd du gateway (visible dans Debug Settings).
 
 Commandes courantes :
 
@@ -36,7 +34,7 @@ Remplacez l'étiquette par `ai.openclaw.<profile>` lors de l'exécution d'un pro
 
 ## Versions de développement non signées
 
-`scripts/restart-mac.sh --no-sign` est destiné aux builds locaux rapides lorsque vous ne possédez pas
+`scripts/restart-mac.sh --no-sign` est destiné aux versions locales rapides lorsque vous ne possédez pas
 de clés de signature. Pour empêcher launchd de pointer vers un binaire de relais non signé, il :
 
 - Écrit `~/.openclaw/disable-launchagent`.
@@ -48,26 +46,28 @@ présent. Pour réinitialiser manuellement :
 rm ~/.openclaw/disable-launchagent
 ```
 
-## Mode attachement uniquement
+## Mode Attach uniquement
 
-Pour forcer l'application macOS à **ne jamais installer ni gérer launchd**, lancez-la avec
-`--attach-only` (ou `--no-launchd`). Cela définit `~/.openclaw/disable-launchagent`,
-de sorte que l'application se connecte uniquement à une Gateway déjà en cours d'exécution. Vous pouvez activer
-le même comportement dans les paramètres de débogage.
+Pour forcer l'application macOS à **ne jamais installer ou gérer launchd**, lancez-la avec
+macOS`--attach-only` (ou `--no-launchd`). Cela définit `~/.openclaw/disable-launchagent`Gateway,
+c'est pourquoi l'application s'attache uniquement à un Gateway déjà en cours d'exécution. Vous pouvez activer ou
+désactiver le même comportement dans Debug Settings.
 
 ## Mode distant
 
-Le mode distant ne démarre jamais de Gateway local. L'application utilise un tunnel SSH vers l'hôte distant et se connecte via ce tunnel.
+Le mode distant ne démarre jamais de Gateway local. L'application utilise un tunnel SSH vers l'hôte
+distant et se connecte via ce tunnel.
 
 ## Pourquoi nous préférons launchd
 
 - Démarrage automatique à la connexion.
-- Sémantique intégrée de redémarrage/KeepAlive.
+- Sémantique de redémarrage/KeepAlive intégrée.
 - Journaux et supervision prévisibles.
 
-Si un véritable mode processus enfant est un jour nécessaire à nouveau, il doit être documenté comme un mode distinct et explicite réservé aux développeurs.
+Si un véritable mode de processus enfant est à nouveau nécessaire, il doit être documenté comme un
+mode distinct et explicite réservé aux développeurs.
 
 ## Connexes
 
 - [Application macOS](/fr/platforms/macos)
-- [Guide de déploiement Gateway](/fr/gateway)
+- [Guide du Gateway](/fr/gateway)

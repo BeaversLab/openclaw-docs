@@ -6,15 +6,15 @@ read_when:
 title: "社区插件"
 ---
 
-社区插件是第三方包，它们通过新的渠道、工具、提供者或其他功能来扩展 OpenClaw。它们由社区构建和维护，发布在 [ClawHub](/zh/tools/clawhub) 或 npm 上，并且可以通过一条命令进行安装。
+社区插件是由社区构建和维护的第三方软件包，它们通过新的渠道、工具、提供商或其他功能来扩展 OpenClaw。它们通常发布在 [ClawHub](/zh/clawhub) 上，并且可以通过一条命令安装。在 ClawHub pack 安装包推出之际，npm 仍然是裸包规范的默认启动方式。
 
 ClawHub 是社区插件的权威发现平台。不要为了在此处提高可见性而仅提交文档相关的 PR；请将其发布到 ClawHub 上。
 
 ```bash
-openclaw plugins install <package-name>
+openclaw plugins install clawhub:<package-name>
 ```
 
-OpenClaw 首先检查 ClawHub，然后自动回退到 npm。
+对于托管在 npm 上的包，请使用 `openclaw plugins install <package-name>`。
 
 ## 列出的插件
 
@@ -22,8 +22,8 @@ OpenClaw 首先检查 ClawHub，然后自动回退到 npm。
 
 利用 20,000 多个现成的爬虫从任何网站抓取数据。只需通过简单的指令，即可让您的 Agent 从 Instagram、Facebook、TikTok、YouTube、Google Maps、Google 搜索、电商网站等提取数据。
 
-- **npm:** `@apify/apify-openclaw-plugin`
-- **repo:** [github.com/apify/apify-openclaw-plugin](https://github.com/apify/apify-openclaw-plugin)
+- **npm：** `@apify/apify-openclaw-plugin`
+- **repo：** [github.com/apify/apify-openclaw-plugin](https://github.com/apify/apify-openclaw-plugin)
 
 ```bash
 openclaw plugins install @apify/apify-openclaw-plugin
@@ -33,8 +33,8 @@ openclaw plugins install @apify/apify-openclaw-plugin
 
 用于 Codex App Server 对话的独立 OpenClaw 桥接器。将聊天绑定到 Codex 线程，使用纯文本与其对话，并使用聊天原生命令控制其恢复、规划、审查、模型选择、压缩等操作。
 
-- **npm:** `openclaw-codex-app-server`
-- **repo:** [github.com/pwrdrvr/openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server)
+- **npm：** `openclaw-codex-app-server`
+- **repo：** [github.com/pwrdrvr/openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server)
 
 ```bash
 openclaw plugins install openclaw-codex-app-server
@@ -44,8 +44,8 @@ openclaw plugins install openclaw-codex-app-server
 
 使用流模式的企业级机器人集成。通过任何钉钉客户端支持文本、图片和文件消息。
 
-- **npm:** `@largezhou/ddingtalk`
-- **repo:** [github.com/largezhou/openclaw-dingtalk](https://github.com/largezhou/openclaw-dingtalk)
+- **npm：** `@largezhou/ddingtalk`
+- **repo：** [github.com/largezhou/openclaw-dingtalk](https://github.com/largezhou/openclaw-dingtalk)
 
 ```bash
 openclaw plugins install @largezhou/ddingtalk
@@ -55,8 +55,8 @@ openclaw plugins install @largezhou/ddingtalk
 
 OpenClaw 的无损上下文管理插件。基于 DAG 的对话摘要，采用增量压缩 —— 在减少 token 使用的同时保留完整的上下文保真度。
 
-- **npm:** `@martian-engineering/lossless-claw`
-- **repo:** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
+- **npm：** `@martian-engineering/lossless-claw`
+- **repo：** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
 
 ```bash
 openclaw plugins install @martian-engineering/lossless-claw
@@ -66,8 +66,8 @@ openclaw plugins install @martian-engineering/lossless-claw
 
 将 agent 追踪数据导出到 Opik 的官方插件。监控 agent 行为、成本、token、错误等。
 
-- **npm:** `@opik/opik-openclaw`
-- **repo:** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
+- **npm：** `@opik/opik-openclaw`
+- **repo：** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
 
 ```bash
 openclaw plugins install @opik/opik-openclaw
@@ -88,7 +88,7 @@ openclaw plugins install @prometheusavatar/openclaw-plugin
 
 通过 QQ Bot OpenClaw 将 API 连接到 QQ。支持私聊、群提及、渠道消息以及包括语音、图片、视频和文件在内的富媒体。
 
-当前的 OpenClaw 版本捆绑了 QQ Bot。对于正常安装，请使用 [QQ Bot](/zh/channels/qqbot) 中的捆绑设置；仅当您确实需要腾讯维护的独立软件包时，才此外部插件。
+当前的 OpenClaw 发行版已包含 QQ Bot。对于正常安装，请使用 [QQ Bot](/zh/channels/qqbot) 中的内置设置；仅当您有意使用腾讯维护的独立软件包时，才此外部插件。
 
 - **npm：** `@tencent-connect/openclaw-qqbot`
 - **repo：** [github.com/tencent-connect/openclaw-qqbot](https://github.com/tencent-connect/openclaw-qqbot)
@@ -102,7 +102,7 @@ openclaw plugins install @tencent-connect/openclaw-qqbot
 由腾讯企业微信团队为 OpenClaw 开发的企业微信渠道插件。基于企业微信 Bot WebSocket 持久连接，支持直接消息与群聊、流式回复、主动消息、图片/文件处理、Markdown 格式、内置访问控制，以及文档/会议/消息技能。
 
 - **npm：** `@wecom/wecom-openclaw-plugin`
-- **repo:** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
+- **repo：** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
 
 ```bash
 openclaw plugins install @wecom/wecom-openclaw-plugin
@@ -113,7 +113,7 @@ openclaw plugins install @wecom/wecom-openclaw-plugin
 由腾讯 Yuanbao 团队开发的 OpenClaw Yuanbao 渠道插件。基于 WebSocket 持久连接，支持私信与群聊、流式回复、主动消息、图片/文件/音频/视频处理、Markdown 格式化、内置访问控制以及斜杠命令菜单。
 
 - **npm：** `openclaw-plugin-yuanbao`
-- **repo:** [github.com/yb-claw/openclaw-plugin-yuanbao](https://github.com/yb-claw/openclaw-plugin-yuanbao)
+- **repo：** [github.com/YuanbaoTeam/yuanbao-openclaw-plugin](https://github.com/YuanbaoTeam/yuanbao-openclaw-plugin)
 
 ```bash
 openclaw plugins install openclaw-plugin-yuanbao
@@ -124,10 +124,10 @@ openclaw plugins install openclaw-plugin-yuanbao
 我们欢迎实用、有文档且安全可运行的社区插件。
 
 <Steps>
-  <Step title="发布到 ClawHub 或 npm">
-    您的插件必须可以通过 `openclaw plugins install \<package-name\>` 安装。
-    请发布到 [ClawHub](/zh/tools/clawhub)（推荐）或 npm。
-    请参阅[构建插件](/zh/plugins/building-plugins)以获取完整指南。
+  <Step title="ClawHubnpm发布到 ClawHub 或 npm">
+    您的插件必须可以通过 `openclaw plugins install \<package-name\>`ClawHub 安装。
+    除非您特别需要仅通过 npm 分发，否则请发布到 [ClawHub](/zh/clawhubnpm)。
+    请参阅 [构建插件](/zh/plugins/building-plugins) 获取完整指南。
 
   </Step>
 
@@ -148,12 +148,12 @@ openclaw plugins install openclaw-plugin-yuanbao
 
 ## 质量门槛
 
-| 要求                    | 原因                                           |
-| ----------------------- | ---------------------------------------------- |
-| 已发布于 ClawHub 或 npm | 用户需要 `openclaw plugins install` 能正常工作 |
-| 公开的 GitHub 仓库      | 源代码审查、问题跟踪、透明度                   |
-| 设置和使用文档          | 用户需要知道如何进行配置                       |
-| 积极维护                | 最近有更新或积极处理问题                       |
+| 要求                    | 原因                                             |
+| ----------------------- | ------------------------------------------------ |
+| 已发布于 ClawHub 或 npm | 用户需要 `openclaw plugins install` 才能正常工作 |
+| 公开的 GitHub 仓库      | 源代码审查、问题跟踪、透明度                     |
+| 设置和使用文档          | 用户需要知道如何进行配置                         |
+| 积极维护                | 最近有更新或积极处理问题                         |
 
 低质量的封装、所有权不明确或未维护的包可能会被拒绝。
 

@@ -6,14 +6,14 @@ read_when:
 title: "app de macOS"
 ---
 
-La app de macOS es el **compañero de la barra de menús** de OpenClaw. Es propietaria de los permisos, gestiona/se conecta a la Gateway localmente (launchd o manual) y expone las capacidades de macOS al agente como un nodo.
+La aplicación de macOS es el **compañero de la barra de menús** para OpenClaw. Es propietaria de los permisos, gestiona/conecta localmente con la puerta de enlace (launchd o manual) y expone las capacidades de macOS al agente como un nodo.
 
 ## Lo que hace
 
 - Muestra notificaciones nativas y el estado en la barra de menús.
 - Es propietaria de los avisos TCC (Notificaciones, Accesibilidad, Grabación de pantalla, Micrófono, Reconocimiento de voz, Automatización/AppleScript).
 - Ejecuta o se conecta a la Gateway (local o remota).
-- Expone herramientas exclusivas de macOS (Canvas, Cámara, Grabación de pantalla, `system.run`).
+- Expone herramientas exclusivas de macOS (Canvas, Camera, Screen Recording, `system.run`).
 - Inicia el servicio de host de nodo local en modo **remoto** (launchd) y lo detiene en modo **local**.
 - Opcionalmente aloja **PeekabooBridge** para la automatización de la interfaz de usuario.
 - Instala la CLI global (`openclaw`) bajo demanda a través de npm, pnpm o bun (la app prefiere npm, luego pnpm y luego bun; Node sigue siendo el tiempo de ejecución recomendado para la Gateway).
@@ -29,7 +29,7 @@ La app de macOS es el **compañero de la barra de menús** de OpenClaw. Es propi
 
 ## Control de Launchd
 
-La app gestiona un LaunchAgent por usuario etiquetado como `ai.openclaw.gateway`
+La aplicación gestiona un LaunchAgent por usuario etiquetado como `ai.openclaw.gateway`
 (o `ai.openclaw.<profile>` cuando se usa `--profile`/`OPENCLAW_PROFILE`; el `com.openclaw.*` heredado todavía se descarga).
 
 ```bash
@@ -39,7 +39,7 @@ launchctl bootout gui/$UID/ai.openclaw.gateway
 
 Reemplace la etiqueta con `ai.openclaw.<profile>` al ejecutar un perfil con nombre.
 
-Si el LaunchAgent no está instalado, hábilítelo desde la app o ejecute
+Si el LaunchAgent no está instalado, actívelo desde la aplicación o ejecute
 `openclaw gateway install`.
 
 ## Capacidades del nodo (mac)
@@ -51,7 +51,7 @@ La app de macOS se presenta como un nodo. Comandos comunes:
 - Pantalla: `screen.snapshot`, `screen.record`
 - Sistema: `system.run`, `system.notify`
 
-El nodo informa un mapa `permissions` para que los agentes puedan decidir qué está permitido.
+El nodo informa de un mapa `permissions` para que los agentes puedan decidir qué está permitido.
 
 Servicio de nodo + IPC de la aplicación:
 
@@ -100,7 +100,7 @@ Notas:
 - Las entradas `allowlist` son patrones glob para rutas binarias resueltas, o nombres de comando simples para comandos invocados por PATH.
 - El texto de comando de shell sin procesar que contiene sintaxis de control o expansión de shell (`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) se trata como un fallo en la lista de permitidos y requiere una aprobación explícita (o añadir el binario de shell a la lista de permitidos).
 - Elegir "Permitir siempre" en el mensaje añade ese comando a la lista de permitidos.
-- Las sustituciones del entorno `system.run` se filtran (elimina `PATH`, `DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`) y luego se fusionan con el entorno de la aplicación.
+- Las anulaciones del entorno `system.run` se filtran (elimina `PATH`, `DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`) y luego se fusionan con el entorno de la aplicación.
 - Para los contenedores de shell (`bash|sh|zsh ... -c/-lc`), las anulaciones de entorno con alcance de solicitud se reducen a una pequeña lista de permitidos explícita (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
 - Para las decisiones de permitir siempre en modo de lista de permitidos, los contenedores de despacho conocidos (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) persisten las rutas ejecutables internas en lugar de las rutas de los contenedores. Si el desenvoltorio no es seguro, no se persiste ninguna entrada en la lista de permitidos automáticamente.
 
@@ -157,7 +157,7 @@ Si `openclaw doctor` detecta estado en:
 
 avisará y recomendará volver a una ruta local.
 
-## Flujo de compilación y desarrollo (nativo)
+## Flujo de trabajo de compilación y desarrollo (nativo)
 
 - `cd apps/macos && swift build`
 - `swift run OpenClaw` (o Xcode)
@@ -183,7 +183,7 @@ Opciones de conexión:
 
 Opciones de descubrimiento:
 
-- `--include-local`: incluir gateways que se filtrarían como "locales"
+- `--include-local`: incluye las puertas de enlace que se filtrarían como "locales"
 - `--timeout <ms>`: ventana de descubrimiento general (predeterminado: `2000`)
 - `--json`: salida estructurada para comparaciones
 

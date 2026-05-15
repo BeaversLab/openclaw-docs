@@ -147,6 +147,11 @@ openclaw plugins install "@tencent-weixin/openclaw-weixin" --force
 openclaw gateway restart
 ```
 
+Si le démarrage signale que le paquet du plugin installé `requires compiled runtime
+output for TypeScript entry`, le paquet npm a été publié sans les fichiers d'exécution
+JavaScript compilés dont OpenClaw a besoin. Mettez à jour/réinstallez une fois que l'éditeur
+du plugin a livré un paquet corrigé, ou désinstallez/désactivez temporairement le plugin.
+
 Désactivation temporaire :
 
 ```bash
@@ -156,9 +161,9 @@ openclaw gateway restart
 
 ## Documentation connexe
 
-- Vue d'ensemble des canaux : [Canaux de chat](/fr/channels)
-- Jumelage : [Jumelage](/fr/channels/pairing)
-- Routage des canaux : [Routage des canaux](/fr/channels/channel-routing)
-- Architecture du plugin : [Architecture du plugin](/fr/plugins/architecture)
-- SDK du plugin de canal : [SDK du plugin de canal](/fr/plugins/sdk-channel-plugins)
+- Aperçu des channels : [Channels de chat](/fr/channels)
+- Appairage : [Appairage](/fr/channels/pairing)
+- Routage de channel : [Routage de channel](/fr/channels/channel-routing)
+- Architecture de plugin : [Architecture de plugin](/fr/plugins/architecture)
+- SDK de plugin de channel : [SDK de plugin de channel](/fr/plugins/sdk-channel-plugins)
 - Package externe : [@tencent-weixin/openclaw-weixin](https://www.npmjs.com/package/@tencent-weixin/openclaw-weixin)

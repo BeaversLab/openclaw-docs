@@ -6,21 +6,15 @@ read_when:
 title: "Complemento de Webhooks"
 ---
 
-# Webhooks (plugin)
+El complemento Webhooks añade rutas HTTP autenticadas que vinculan la automatización externa a los TaskFlows de OpenClaw.
 
-El plugin de Webhooks añade rutas HTTP autenticadas que vinculan la
-automatización externa a los TaskFlows de OpenClaw.
-
-Úselo cuando desee que un sistema de confianza, como Zapier, n8n, un trabajo de
-cI o un servicio interno, cree y gestione TaskFlows sin escribir primero un
-plugin personalizado.
+Úselo cuando desee que un sistema de confianza, como Zapier, n8n, un trabajo de CI o un servicio interno, cree y gestione TaskFlows administrados sin tener que escribir primero un complemento personalizado.
 
 ## Dónde se ejecuta
 
-El plugin de Webhooks se ejecuta dentro del proceso Gateway.
+El complemento Webhooks se ejecuta dentro del proceso Gateway.
 
-Si su Gateway se ejecuta en otra máquina, instale y configure el plugin en ese
-host de Gateway y luego reinicie el Gateway.
+Si su Gateway se ejecuta en otra máquina, instale y configure el complemento en ese host de Gateway y luego reinicie el Gateway.
 
 ## Configurar rutas
 
@@ -58,8 +52,8 @@ Campos de ruta:
 - `enabled`: opcional, por defecto es `true`
 - `path`: opcional, por defecto es `/plugins/webhooks/<routeId>`
 - `sessionKey`: sesión requerida que posee los TaskFlows vinculados
-- `secret`: secreto compartido o SecretRef requerido
-- `controllerId`: id de controlador opcional para los flujos gestionados creados
+- `secret`: secreto compartido requerido o SecretRef
+- `controllerId`: ID de controlador opcional para los flujos administrados creados
 - `description`: nota de operador opcional
 
 Entradas `secret` compatibles:
@@ -67,30 +61,26 @@ Entradas `secret` compatibles:
 - Cadena de texto simple
 - SecretRef con `source: "env" | "file" | "exec"`
 
-Si una ruta respaldada por secretos no puede resolver su secreto al iniciarse, el
-plugin omite esa ruta y registra una advertencia en lugar de exponer un
-endpoint roto.
+Si una ruta respaldada por un secreto no puede resolver su secreto al iniciarse, el complemento omite esa ruta y registra una advertencia en lugar de exponer un endpoint roto.
 
 ## Modelo de seguridad
 
-Se confía en cada ruta para actuar con la autoridad de TaskFlow de su
-`sessionKey` configurado.
+Se confía en que cada ruta actúe con la autoridad de TaskFlow de su `sessionKey` configurado.
 
-Esto significa que la ruta puede inspeccionar y mutar TaskFlows propiedad de esa
-sesión, por lo que debe:
+Esto significa que la ruta puede inspeccionar y mutar TaskFlows propiedad de esa sesión, por lo que debería:
 
-- Usar un secreto único y fuerte para cada ruta
-- Preferir referencias secretas sobre secretos de texto simple en línea
+- Usar un secreto único y fuerte por ruta
+- Preferir referencias a secretos sobre secretos de texto plano en línea
 - Vincular rutas a la sesión más estrecha que se ajuste al flujo de trabajo
-- Exponer solo la ruta de webhook específica que necesite
+- Exponer solo la ruta específica de webhook que necesite
 
-El plugin aplica:
+El complemento aplica:
 
 - Autenticación de secreto compartido
-- Guardas de tamaño de cuerpo de solicitud y tiempo de espera
+- Guardas de tamaño del cuerpo de la solicitud y de tiempo de espera
 - Limitación de velocidad de ventana fija
-- Limitación de solicitudes en curso
-- Acceso a TaskFlow vinculado al propietario a través de `api.runtime.taskFlow.bindSession(...)`
+- Limitación de solicitudes en vuelo
+- Acceso a TaskFlow vinculado al propietario a través de `api.runtime.tasks.managedFlows.bindSession(...)`
 
 ## Formato de solicitud
 
@@ -110,7 +100,7 @@ curl -X POST https://gateway.example.com/plugins/webhooks/zapier \
 
 ## Acciones compatibles
 
-Actualmente, el complemento acepta estos valores de `action` JSON:
+Actualmente, el complemento acepta estos valores JSON `action`:
 
 - `create_flow`
 - `get_flow`
@@ -128,7 +118,7 @@ Actualmente, el complemento acepta estos valores de `action` JSON:
 
 ### `create_flow`
 
-Crea un TaskFlow administrado para la sesión vinculada de la ruta.
+Crea un TaskFlow administrado para la sesión vinculada a la ruta.
 
 Ejemplo:
 
@@ -162,7 +152,7 @@ Ejemplo:
 }
 ```
 
-## Formato de respuesta
+## Forma de la respuesta
 
 Las respuestas exitosas devuelven:
 
@@ -186,10 +176,10 @@ Las solicitudes rechazadas devuelven:
 }
 ```
 
-El complemento elimina intencionalmente los metadatos de propietario/sesión de las respuestas de webhooks.
+El complemento elimina intencionalmente los metadatos de propietario/sesión de las respuestas de los webhooks.
 
-## Documentación relacionada
+## Documentos relacionados
 
-- [SDK de tiempo de ejecución del complemento](/es/plugins/sdk-runtime)
+- [SDK del tiempo de ejecución del complemento](/es/plugins/sdk-runtime)
 - [Descripción general de hooks y webhooks](/es/automation/hooks)
 - [Webhooks de CLI](/es/cli/webhooks)

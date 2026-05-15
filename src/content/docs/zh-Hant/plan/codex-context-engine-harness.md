@@ -124,14 +124,14 @@ context-engine 介面傳回 OpenClaw `AgentMessage[]`，而不是 Codex
 
 對於像 lossless-claw 這樣的引擎，組合的上下文對於未變更的輸入應該是確定性的。請勿在產生的上下文文字中新增時間戳記、隨機 ID 或非確定性的排序。
 
-### PI 後援語意保持不變
+### 執行時期選擇語意不變
 
 線束選擇保持原樣：
 
 - `runtime: "pi"` 強制使用 PI
 - `runtime: "codex"` 選擇已註冊的 Codex 線束
 - `runtime: "auto"` 允許插件線束聲明支援的提供者
-- `fallback: "none"` 當沒有插件線束匹配時停用 PI 後援
+- 未匹配的 `auto` 執行個體使用 PI
 
 此工作改變了選擇 Codex 線束後發生的事情。
 

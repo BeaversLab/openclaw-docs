@@ -98,7 +98,7 @@ PR D es la capa de prueba. No debe ser la razón por la que se retrasen las PR d
 
 ### PR B
 
-- los fallos de autenticación/proxy/runtime dejan de colapsarse en el manejo genérico de "model failed"
+- los fallos de autenticación/proxy/tiempo de ejecución dejan de colapsarse en el manejo genérico de "fallo del modelo"
 - `/elevated full` solo se describe como disponible cuando realmente lo está
 - las razones de bloqueo son visibles tanto para el modelo como para el runtime orientado al usuario
 

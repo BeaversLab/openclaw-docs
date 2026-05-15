@@ -14,7 +14,7 @@ title: "Hooks"
 
 相關：
 
-- Hooks：[Hooks](/zh-Hant/automation/hooks)
+- Hooks: [Hooks](/zh-Hant/automation/hooks)
 - Plugin hooks: [Plugin hooks](/zh-Hant/plugins/hooks)
 
 ## 列出所有 hooks
@@ -130,7 +130,7 @@ openclaw hooks enable <name>
 
 透過將特定 hook 新增至您的設定來啟用它 (預設為 `~/.openclaw/openclaw.json`)。
 
-**注意：** 工作區 hooks 預設為停用，直到在此處或在設定中啟用為止。由外掛程式管理的 hooks 在 `openclaw hooks list` 中會顯示 `plugin:<id>`，且無法在此處啟用/停用。請改為啟用/停用外掛程式。
+**注意：** 工作區 hooks 預設為停用，直到在此處或設定中啟用。由外掛程式管理的 hooks 會在 `openclaw hooks list` 中顯示 `plugin:<id>`，且無法在此處啟用/停用。請改為啟用/停用外掛程式。
 
 **引數：**
 
@@ -197,7 +197,7 @@ openclaw hooks disable command-logger
 ## 安裝 hook 套件
 
 ```bash
-openclaw plugins install <package>        # ClawHub first, then npm
+openclaw plugins install <package>        # npm by default
 openclaw plugins install npm:<package>    # npm only
 openclaw plugins install <package> --pin  # pin version
 openclaw plugins install <path>           # local path
@@ -276,7 +276,7 @@ OpenClaw 會列印警告並在繼續之前要求確認。請使用
 openclaw hooks enable session-memory
 ```
 
-**輸出：** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
+**輸出：** 預設為 `~/.openclaw/workspace/memory/YYYY-MM-DD-HHMM.md`。設定 `hooks.internal.entries.session-memory.llmSlug: true` 以使用模型產生的檔名標記。
 
 **參閱：** [session-memory 文件](/zh-Hant/automation/hooks#session-memory)
 
@@ -321,9 +321,9 @@ grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 
 ### boot-md
 
-當閘道啟動時（頻道啟動後）執行 `BOOT.md`。
+當閘道啟動時（在通道啟動後）執行 `BOOT.md`。
 
-**事件**： `gateway:startup`
+**事件：** `gateway:startup`
 
 **啟用**：
 

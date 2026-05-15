@@ -11,9 +11,9 @@ title: "Agents"
 
 相关：
 
-- [Multi-agent routing](/zh/concepts/multi-agent)
-- [Agent workspace](/zh/concepts/agent-workspace)
-- [Skills config](/zh/tools/skills-config)：Skills 可见性配置。
+- [多智能体路由](/zh/concepts/multi-agent)
+- [智能体工作区](/zh/concepts/agent-workspace)
+- [Skills 配置](/zh/tools/skills-config)：Skills 可见性配置。
 
 ## 示例
 
@@ -34,7 +34,7 @@ openclaw agents delete work
 
 使用路由绑定将入站渠道流量固定到特定智能体。
 
-如果您还希望每个 Agent 具有不同的可见 Skills，请在 `openclaw.json` 中配置 `agents.defaults.skills` 和 `agents.list[].skills`。请参阅 [Skills config](/zh/tools/skills-config) 和 [Configuration reference](/zh/gateway/config-agents#agents-defaults-skills)。
+如果您还希望每个智能体具有不同的可见 Skills，请在 `openclaw.json` 中配置 `agents.defaults.skills` 和 `agents.list[].skills`。请参阅 [Skills 配置](/zh/tools/skills-config) 和 [配置参考](/zh/gateway/config-agents#agents-defaults-skills)。
 
 列出绑定：
 
@@ -110,6 +110,7 @@ openclaw agents unbind --agent work --all
 - 传递任何显式的添加标志会将命令切换到非交互路径。
 - 非交互模式需要代理名称和 `--workspace`。
 - `main` 已被保留，不能用作新代理的 ID。
+- 在交互模式下，auth seeding 仅复制可移植的静态配置文件（默认为 `api_key` 和静态 `token`OAuth）。OAuth 刷新令牌配置文件仅能通过从真实的 `main` 智能体存储进行直读继承来使用。如果配置的默认智能体不是 `main`OAuth，请针对新智能体上的 OAuth 配置文件单独登录。
 
 ### `agents bindings`
 
@@ -122,16 +123,16 @@ openclaw agents unbind --agent work --all
 
 选项：
 
-- `--agent <id>` (默认为当前默认代理)
-- `--bind <channel[:accountId]>` (可重复)
+- `--agent <id>`（默认为当前默认智能体）
+- `--bind <channel[:accountId]>`（可重复）
 - `--json`
 
 ### `agents unbind`
 
 选项：
 
-- `--agent <id>` (默认为当前默认代理)
-- `--bind <channel[:accountId]>` (可重复)
+- `--agent <id>`（默认为当前默认智能体）
+- `--bind <channel[:accountId]>`（可重复）
 - `--all`
 - `--json`
 
@@ -142,18 +143,19 @@ openclaw agents unbind --agent work --all
 - `--force`
 - `--json`
 
-备注：
+注意：
 
 - `main` 无法被删除。
-- 如果没有 `--force`，则需要进行交互式确认。
-- 工作区、代理状态和会话记录目录将被移至废纸篓，而非硬删除。
-- 如果另一个 Agent 的工作区是同一路径、在此工作区内，或包含此工作区，
-  则该工作区将被保留，并且 `--json` 会报告 `workspaceRetained`、
+- 如果没有 `--force`，则需要交互式确认。
+- 工作区、智能体状态和会话记录目录将被移动到废纸篓，而不是被硬删除。
+- 当 Gateway(网关) 可达时，删除操作会通过 Gateway(网关) 发送，以便配置和会话存储清理与运行时流量共享同一个写入器。如果无法到达 Gateway(网关)，CLI 将回退到离线本地路径。
+- 如果另一个代理的工作区是同一路径、在此工作区内或包含此工作区，
+  则保留该工作区，并且 `--json` 会报告 `workspaceRetained`、
   `workspaceRetainedReason` 和 `workspaceSharedWith`。
 
 ## 身份文件
 
-每个 Agent 工作区都可以在工作区根目录包含一个 `IDENTITY.md`：
+每个代理工作区都可以在工作区根目录包含一个 `IDENTITY.md`：
 
 - 示例路径：`~/.openclaw/workspace/IDENTITY.md`
 - `set-identity --from-identity` 从工作区根目录（或显式的 `--identity-file`）读取
@@ -183,9 +185,9 @@ openclaw agents unbind --agent work --all
 
 注意：
 
-- 可以使用 `--agent` 或 `--workspace` 来选择目标 Agent。
-- 如果您依赖 `--workspace` 且多个 Agent 共享该工作区，则命令将失败并要求您传递 `--agent`。
-- 当未提供显式身份字段时，该命令会从 `IDENTITY.md` 读取身份数据。
+- 可以使用 `--agent` 或 `--workspace` 来选择目标代理。
+- 如果您依赖 `--workspace` 且多个代理共享该工作区，命令将失败并要求您传递 `--agent`。
+- 当未提供显式身份字段时，该命令从 `IDENTITY.md` 读取身份数据。
 
 从 `IDENTITY.md` 加载：
 
@@ -219,8 +221,8 @@ openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞" --ava
 }
 ```
 
-## 相关内容
+## 相关
 
 - [CLI 参考](/zh/cli)
-- [多智能体路由](/zh/concepts/multi-agent)
-- [智能体工作区](/zh/concepts/agent-workspace)
+- [多代理路由](/zh/concepts/multi-agent)
+- [代理工作区](/zh/concepts/agent-workspace)

@@ -164,11 +164,13 @@ openclaw onboard --non-interactive \
       --custom-api-key "$CUSTOM_API_KEY" \
       --custom-provider-id "my-custom" \
       --custom-compatibility anthropic \
+      --custom-image-input \
       --gateway-port 18789 \
       --gateway-bind loopback
     ```
 
     `--custom-api-key` est facultatif. S'il est omis, l'onboarding vérifie `CUSTOM_API_KEY`.
+    OpenClaw marque automatiquement les ID de modèles de vision courants comme capables d'images. Ajoutez `--custom-image-input` pour les ID de vision personnalisés inconnus, ou `--custom-text-input` pour forcer les métadonnées texte uniquement.
 
     Variante en mode Ref :
 
@@ -182,11 +184,12 @@ openclaw onboard --non-interactive \
       --secret-input-mode ref \
       --custom-provider-id "my-custom" \
       --custom-compatibility anthropic \
+      --custom-image-input \
       --gateway-port 18789 \
       --gateway-bind loopback
     ```
 
-    Dans ce mode, l'onboarding stocke `apiKey` sous forme de `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
+    Dans ce mode, l'onboarding stocke `apiKey` sous `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
 
   </Accordion>
 </AccordionGroup>
@@ -197,7 +200,7 @@ Pour la production, préférez une clé Anthropic API.
 ## Ajouter un autre agent
 
 Utilisez `openclaw agents add <name>` pour créer un agent distinct avec son propre espace de travail,
-sessions et profils d'auth. L'exécution sans `--workspace` lance l'assistant.
+sessions et profils d'authentification. L'exécution sans `--workspace` lance l'assistant.
 
 ```bash
 openclaw agents add work \
@@ -217,11 +220,11 @@ Ce qu'il définit :
 Remarques :
 
 - Les espaces de travail par défaut suivent `~/.openclaw/workspace-<agentId>`.
-- Ajoutez `bindings` pour acheminer les messages entrants (l'assistant peut le faire).
-- Indicateurs non interactifs : `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
+- Ajoutez `bindings` pour router les messages entrants (l'assistant peut le faire).
+- Drapeaux non interactifs : `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
 
 ## Documentation associée
 
-- Hub Onboarding : [Onboarding (CLI)](/fr/start/wizard)
+- Hub d'onboarding : [Onboarding (CLI)](/fr/start/wizard)
 - Référence complète : [CLI Setup Reference](/fr/start/wizard-cli-reference)
-- Référence de la commande : [`openclaw onboard`](/fr/cli/onboard)
+- Référence de commande : [`openclaw onboard`](/fr/cli/onboard)

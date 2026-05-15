@@ -97,10 +97,11 @@ OpenClaw 为捆绑的 Chutes 目录注册了三个便捷别名：
 
   </Accordion>
 
-  <Accordion title="备注">
+  <Accordion title="Notes"APIOAuth>
     - API 密钥和 OAuth 发现均使用相同的 `chutes` 提供商 ID。
     - Chutes 模型注册为 `chutes/<model-id>`。
-    - 如果启动时发现失败，将自动使用捆绑的静态目录。
+    - 如果在启动时发现失败，将自动使用捆绑的静态目录。
+
   </Accordion>
 </AccordionGroup>
 

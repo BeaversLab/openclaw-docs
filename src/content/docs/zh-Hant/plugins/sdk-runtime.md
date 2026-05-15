@@ -1,21 +1,21 @@
 ---
-summary: "api.runtime -- the injected runtime helpers available to plugins"
-title: "Plugin runtime helpers"
-sidebarTitle: "Runtime helpers"
+summary: "api.runtime -- 外掛程式可用的注入執行時期輔助函式"
+title: "外掛程式執行時期輔助函式"
+sidebarTitle: "執行時期輔助函式"
 read_when:
   - You need to call core helpers from a plugin (TTS, STT, image gen, web search, subagent, nodes)
   - You want to understand what api.runtime exposes
   - You are accessing config, agent, or media helpers from plugin code
 ---
 
-註冊期間注入每個外掛程式的 `api.runtime` 物件參考。請使用這些協助程式，而不是直接匯入主機內部元件。
+註冊期間注入至每個外掛程式的 `api.runtime` 物件參考資料。請使用這些輔助函式，而不是直接匯入主機內部。
 
 <CardGroup cols={2}>
-  <Card title="Channel plugins" href="/zh-Hant/plugins/sdk-channel-plugins">
-    針對頻道外掛程式在語境中使用這些協助程式的逐步指南。
+  <Card title="頻道外掛程式" href="/zh-Hant/plugins/sdk-channel-plugins">
+    逐步指南，針對頻道外掛程式在內容中使用這些輔助函式。
   </Card>
-  <Card title="Provider plugins" href="/zh-Hant/plugins/sdk-provider-plugins">
-    針對提供者外掛程式在語境中使用這些協助程式的逐步指南。
+  <Card title="提供者外掛程式" href="/zh-Hant/plugins/sdk-provider-plugins">
+    逐步指南，針對提供者外掛程式在內容中使用這些輔助函式。
   </Card>
 </CardGroup>
 
@@ -27,36 +27,33 @@ register(api) {
 
 ## 設定載入與寫入
 
-優先使用已傳遞至作用中呼叫路徑的設定，例如註冊期間的 `api.config` 或頻道/提供者回呼上的 `cfg` 引數。這能讓單一程序快照持續流經工作流程，而不是在關鍵路徑上重新解析設定。
+偏好使用已傳入至目前呼叫路徑的設定，例如註冊期間的 `api.config` 或頻道/提供者回呼上的 `cfg` 引數。這能讓單一處理程序快照流經工作，而不是在熱路徑上重新解析設定。
 
-僅當長期存活的處理程序需要目前程序快照且未將設定傳遞至該函式時，才使用 `api.runtime.config.current()`。傳回值是唯讀的；在編輯前請先複製或使用變異協助程式。
+僅當長期存活的處理常式需要目前的處理程序快照，且沒有設定傳遞至該函式時，才使用 `api.runtime.config.current()`。傳回值是唯讀的；編輯前請先複製或使用變異輔助函式。
 
-工具工廠會接收 `ctx.runtimeConfig` 加上 `ctx.getRuntimeConfig()`。當工具定義建立後設定可能變更時，請在長期存活工具的 `execute` 回呼中使用 getter。
+工具工廠會接收 `ctx.runtimeConfig` 加上 `ctx.getRuntimeConfig()`。當設定在工具定義建立後可能變更時，請在長期存活的工具 `execute` 回呼內使用 getter。
 
-使用 `api.runtime.config.mutateConfigFile(...)` 或 `api.runtime.config.replaceConfigFile(...)` 保存變更。每次寫入必須選擇明確的 `afterWrite` 政策：
+使用 `api.runtime.config.mutateConfigFile(...)` 或 `api.runtime.config.replaceConfigFile(...)` 來保存變更。每次寫入都必須選擇明確的 `afterWrite` 政策：
 
 - `afterWrite: { mode: "auto" }` 讓閘道重新載入規劃程式決定。
-- 當寫入者知道熱重新載入不安全時，`afterWrite: { mode: "restart", reason: "..." }` 會強制乾淨地重新啟動。
-- `afterWrite: { mode: "none", reason: "..." }` 僅當呼叫者擁有後續處理權時，才會抑制自動重新載入/重新啟動。
+- `afterWrite: { mode: "restart", reason: "..." }` 當寫入者知道熱重新載入不安全時，強制進行乾淨的重新啟動。
+- `afterWrite: { mode: "none", reason: "..." }` 僅當呼叫者擁有後續處理時，才抑制自動重新載入/重新啟動。
 
-這些變更輔助函數會傳回 `afterWrite` 加上一個類型化的 `followUp` 摘要，以便呼叫者記錄或測試他們是否請求了重啟。閘道仍然擁有該重啟實際發生的時機控制權。
+變更輔助函式會傳回 `afterWrite` 以及一個型別化的 `followUp` 摘要，以便呼叫者記錄或測試是否請求了重啟。閘道仍然擁有該重啟實際發生時機的控制權。
 
-`api.runtime.config.loadConfig()` 和 `api.runtime.config.writeConfigFile(...)` 是 `runtime-config-load-write` 下已棄用的相容性輔助函數。它們會在執行時期警告一次，並在遷移期間保留給舊的外部外掛使用。打包外掛必須不得使用它們；如果外掛程式碼呼叫它們或從外掛 SDK 子路徑匯入這些輔助函數，設定邊界防護將會失敗。
+`api.runtime.config.loadConfig()` 和 `api.runtime.config.writeConfigFile(...)` 是 `runtime-config-load-write` 下的已棄用相容性輔助函式。它們在執行時會警告一次，並在遷移期間保留給舊的外部外掛使用。捆綁外掛不得使用它們；如果外掛程式碼呼叫它們或從外掛 SDK 子路徑匯入這些輔助函式，設定邊界防護將會失敗。
 
-對於直接的 SDK 匯入，請使用專注的設定子路徑，而不是廣泛的
-`openclaw/plugin-sdk/config-runtime` 相容性統包：用 `config-types` 取得
-類型，用 `plugin-config-runtime` 取得已載入的設定斷言和外掛
-項目查找，用 `runtime-config-snapshot` 取得目前程序快照，以及
-用 `config-mutation` 進行寫入。打包外掛測試應該直接模擬這些專注的
-子路徑，而不是模擬廣泛的相容性統包。
+對於直接的 SDK 匯入，請使用專注的設定子路徑，而不是廣泛的 `openclaw/plugin-sdk/config-runtime` 相容性匯出桶：`config-types` 用於型別，`plugin-config-runtime` 用於已載入的設定斷言和外掛條目查找，`runtime-config-snapshot` 用於當前程序快照，以及 `config-mutation` 用於寫入。捆綁外掛測試應該直接模擬這些專注的子路徑，而不是模擬廣泛的相容性匯出桶。
 
-內部 OpenClaw 執行時期程式碼有相同的方向：在 CLI、閘道或程序邊界載入設定一次，然後將該值傳遞下去。成功的變更寫入會重新整理程序執行時期快照並推進其內部修訂版本；長期存在的快取應該以執行時期擁有的快取鍵為鍵，而不是在本地序列化設定。長期存在的執行時期模組具有對周遭 `loadConfig()` 呼叫的零容忍掃描器；請在明確的程序邊界使用傳遞的 `cfg`、請求 `context.getRuntimeConfig()` 或 `getRuntimeConfig()`。
+內部 OpenClaw 執行時代碼也有相同的方向：在 CLI、閘道或程序邊界處載入設定一次，然後傳遞該值。成功的變更寫入會刷新程序執行時快照並推進其內部修訂版本；長期存活的快取應該以執行時擁有的快取鍵為鍵，而不是在本地序列化設定。長期存活的執行時模組對於環境 `loadConfig()` 呼叫具有零容忍掃描器；請在明確的程序邊界使用傳入的 `cfg`、請求 `context.getRuntimeConfig()` 或 `getRuntimeConfig()`。
 
-## 執行時期命名空間
+提供者和通道執行路徑必須使用使用中的執行時設定快照，而不是為設定讀回或編輯而傳回的檔案快照。檔案快照會保留原始值，例如用於 UI 和寫入的 SecretRef 標記；提供者回呼需要解析後的執行時視圖。當輔助函式可能會使用使用中的原始快照或使用中的執行時快照呼叫時，請在讀取認證之前透過 `selectApplicableRuntimeConfig()` 進行路由。
+
+## Runtime namespaces
 
 <AccordionGroup>
   <Accordion title="api.runtime.agent">
-    Agent 身份、目錄和會話管理。
+    Agent 身份、目錄與會話管理。
 
     ```typescript
     // Resolve the agent's working directory
@@ -100,26 +97,31 @@ register(api) {
     });
     ```
 
-    `runEmbeddedAgent(...)` 是用於從外掛程式碼啟動標準 OpenClaw agent 輪次的輔助函數。它使用與通道觸發回覆相同的提供者/模型解析和 agent-harness 選擇邏輯。
+    `runEmbeddedAgent(...)` 是從外掛程式碼啟動一般 OpenClaw agent 回合的通用輔助函式。它使用與頻道觸發回覆相同的提供者/模型解析與 agent-harness 選擇邏輯。
 
-    `runEmbeddedPiAgent(...)` 保留為相容性別名。
+    `runEmbeddedPiAgent(...)` 保留作為相容性別名。
 
-    `resolveThinkingPolicy(...)` 會傳回提供者/模型支援的思考層級和可選的預設值。提供者外掛程式透過其思考 hook 擁有特定模型的設定檔，因此工具外掛程式應呼叫此執行時輔助函數，而不是匯入或複製提供者清單。
+    `resolveThinkingPolicy(...)` 會傳回提供者/模型所支援的思考層級與選用的預設值。Provider 外掛透過其 thinking hooks 擁有模型專屬的設定檔，因此工具外掛應呼叫此執行階段輔助函式，而非匯入或重複提供者清單。
 
-    `normalizeThinkingLevel(...)` 會將使用者文字（例如 `on`、`x-high` 或 `extra high`）轉換為標準儲存層級，然後再根據解析的原則進行檢查。
+    `normalizeThinkingLevel(...)` 會先將使用者文字（例如 `on`、`x-high` 或 `extra high`）轉換為標準的儲存層級，再對其進行已解析原則的檢查。
 
-    **Session store helpers** 位於 `api.runtime.agent.session` 下：
+    **Session store 輔助函式** 位於 `api.runtime.agent.session` 之下：
 
     ```typescript
     const storePath = api.runtime.agent.session.resolveStorePath(cfg);
-    const store = api.runtime.agent.session.loadSessionStore(cfg);
-    await api.runtime.agent.session.saveSessionStore(cfg, store);
+    const store = api.runtime.agent.session.loadSessionStore(storePath);
+    await api.runtime.agent.session.updateSessionStore(storePath, (nextStore) => {
+      // Patch one entry without replacing the whole file from stale state.
+      nextStore[sessionKey] = { ...nextStore[sessionKey], thinkingLevel: "high" };
+    });
     const filePath = api.runtime.agent.session.resolveSessionFilePath(cfg, sessionId);
     ```
 
+    針對執行階段寫入，建議優先使用 `updateSessionStore(...)` 或 `updateSessionStoreEntry(...)`。這些函式會透過 Gateway 擁有的 session-store 寫入器進行路由、保留並行更新，並重用快取。`saveSessionStore(...)` 仍可使用，以維持相容性與離線維護類型的重寫作業。
+
   </Accordion>
   <Accordion title="api.runtime.agent.defaults">
-    預設模型和提供者常數：
+    預設模型與提供者常數：
 
     ```typescript
     const model = api.runtime.agent.defaults.model; // e.g. "anthropic/claude-sonnet-4-6"
@@ -127,8 +129,33 @@ register(api) {
     ```
 
   </Accordion>
+
+  <Accordion title="api.runtime.llm">
+    執行主機擁有的文本補全，無需匯入提供商內部機制或
+    重複 OpenClaw 模型/驗證/基礎 URL 的準備工作。
+
+    ```typescript
+    const result = await api.runtime.llm.complete({
+      messages: [{ role: "user", content: "Summarize this transcript." }],
+      purpose: "my-plugin.summary",
+      maxTokens: 512,
+      temperature: 0.2,
+    });
+    ```
+
+    此輔助函數使用與 OpenClaw 內建執行時和主機擁有的執行時設定快照相同的簡單補全準備路徑。上下文引擎
+    會收到一個綁定會話的 `llm.complete` 能力，因此模型呼叫會使用
+    活躍會話的代理程式，並且不會無聲地回退到預設代理程式。
+    結果包含提供商/模型/代理程式的歸屬，以及規範化的 Token、
+    快取和估算的成本使用情況（如果可用）。
+
+    <Warning>
+    模型覆寫需要操作員透過設定中的 `plugins.entries.<id>.llm.allowModelOverride: true` 進行選擇加入。請使用 `plugins.entries.<id>.llm.allowedModels` 將受信任的外掛程式限制為特定的正規 `provider/model` 目標。跨代理程式的補全需要 `plugins.entries.<id>.llm.allowAgentIdOverride: true`。
+    </Warning>
+
+  </Accordion>
   <Accordion title="api.runtime.subagent">
-    啟動並管理背景 subagent 執行。
+    啟動並管理背景子代理程式執行。
 
     ```typescript
     // Start a subagent run
@@ -156,14 +183,14 @@ register(api) {
     ```
 
     <Warning>
-    模型覆寫（`provider`/`model`）需要操作員透過設定中的 `plugins.entries.<id>.subagent.allowModelOverride: true` 手動加入。不受信任的外掛程式仍然可以執行 subagent，但覆寫請求會被拒絕。
+    模型覆寫 (`provider`/`model`) 需要操作員透過設定中的 `plugins.entries.<id>.subagent.allowModelOverride: true` 進行選擇加入。未受信任的外掛程式仍然可以執行子代理程式，但覆寫請求會被拒絕。
     </Warning>
 
     `deleteSession(...)` 可以透過 `api.runtime.subagent.run(...)` 刪除由同一個外掛程式建立的會話。刪除任意使用者或操作員的會話仍然需要具有管理員範圍的 Gateway 請求。
 
   </Accordion>
   <Accordion title="api.runtime.nodes">
-    列出已連接的節點，並從 Gateway 載入的外掛程式碼或外掛程式 CLI 指令叫用節點主機指令。當外掛程式在配對裝置（例如另一台 Mac 上的瀏覽器或音訊橋接器）上擁有本機工作時，請使用此功能。
+    列出已連接的節點，並從 Gateway 載入的插件代碼或插件 CLI 命令調用節點主機命令。當插件在配對設備上擁有本地工作時使用此功能，例如在另一台 Mac 上的瀏覽器或音訊橋接器。
 
     ```typescript
     const { nodes } = await api.runtime.nodes.list({ connected: true });
@@ -176,14 +203,16 @@ register(api) {
     });
     ```
 
-    在 Gateway 內部，此執行時期是同處理序的。在外掛程式 CLI 指令中，它會透過 RPC 呼叫已設定的 Gateway，因此像 `openclaw googlemeet recover-tab` 這類指令可以從終端機檢查配對的節點。節點指令仍會經過正常的 Gateway 節點配對、指令允許清單以及節點本機指令處理。
+    在 Gateway 內部，此運行時是進程內的。在插件 CLI 命令中，它通過 RPC 調用已配置的 Gateway，因此諸如 `openclaw googlemeet recover-tab` 之類的命令可以從終端機檢查配對的節點。節點命令仍然需要經過正常的 Gateway 節點配對、命令允許清單、插件節點調用策略以及節點本地命令處理。
+
+    暴露危險節點主機命令的插件應使用 `api.registerNodeInvokePolicy(...)` 註冊節點調用策略。該策略在命令允許清單檢查之後、命令轉發到節點之前在 Gateway 中運行，因此直接 `node.invoke` 調用和高級別插件工具共享相同的執行路徑。
 
   </Accordion>
-  <Accordion title="api.runtime.taskFlow">
-    將工作流程執行時期繫結至現有的 OpenClaw 工作階段金鑰或受信任工具內容，然後建立及管理工作流程，而不需要在每次呼叫時傳遞擁有者。
+  <Accordion title="api.runtime.tasks.managedFlows">
+    將任務流運行時綁定到現有的 OpenClaw 會話金鑰或受信任的工具上下文，然後創建和管理任務流，而無需在每次調用時傳遞所有者。
 
     ```typescript
-    const taskFlow = api.runtime.taskFlow.fromToolContext(ctx);
+    const taskFlow = api.runtime.tasks.managedFlows.fromToolContext(ctx);
 
     const created = taskFlow.createManaged({
       controllerId: "my-plugin/review-batch",
@@ -207,7 +236,7 @@ register(api) {
     });
     ```
 
-    當您已經有來自您自己繫結層級的受信任 OpenClaw 工作階段金鑰時，請使用 `bindSession({ sessionKey, requesterOrigin })`。請勿從原始使用者輸入進行繫結。
+    當您已經擁有來自您自己的綁定層的受信任 OpenClaw 會話金鑰時，請使用 `bindSession({ sessionKey, requesterOrigin })`。不要從原始用戶輸入進行綁定。
 
   </Accordion>
   <Accordion title="api.runtime.tts">
@@ -233,11 +262,11 @@ register(api) {
     });
     ```
 
-    使用核心 `messages.tts` 設定和提供者選擇。傳回 PCM 音訊緩衝區 + 取樣率。
+    使用核心 `messages.tts` 配置和提供者選擇。返回 PCM 音訊緩衝區 + 取樣率。
 
   </Accordion>
   <Accordion title="api.runtime.mediaUnderstanding">
-    影像、音訊和影片分析。
+    圖像、音訊和影片分析。
 
     ```typescript
     // Describe an image
@@ -267,10 +296,10 @@ register(api) {
     });
     ```
 
-    當未產生輸出（例如跳過的輸入）時，傳回 `{ text: undefined }`。
+    當未產生輸出（例如跳過輸入）時，返回 `{ text: undefined }`。
 
     <Info>
-    `api.runtime.stt.transcribeAudioFile(...)` 仍保留為 `api.runtime.mediaUnderstanding.transcribeAudioFile(...)` 的相容性別名。
+    `api.runtime.stt.transcribeAudioFile(...)` 仍然作為 `api.runtime.mediaUnderstanding.transcribeAudioFile(...)` 的相容性別名。
     </Info>
 
   </Accordion>
@@ -301,7 +330,7 @@ register(api) {
 
   </Accordion>
   <Accordion title="api.runtime.media">
-    底層媒體工具。
+    低階媒體公用程式。
 
     ```typescript
     const webMedia = await api.runtime.media.loadWebMedia(url);
@@ -326,8 +355,9 @@ register(api) {
 
   </Accordion>
   <Accordion title="api.runtime.config">
-    目前的運行時配置快照和事務性配置寫入。優先使用已經傳入目前呼叫路徑的配置；僅當處理程序直接需要進程快照時才使用
-    `current()`。
+    目前的執行時段設定快照與交易式設定寫入。優先使用已傳入
+    至目前呼叫路徑的設定；僅在處理程式直接需要
+    程序快照時才使用 `current()`。
 
     ```typescript
     const cfg = api.runtime.config.current();
@@ -339,17 +369,23 @@ register(api) {
     });
     ```
 
-    `mutateConfigFile(...)` 和 `replaceConfigFile(...)` 會回傳一個 `followUp`
+    `mutateConfigFile(...)` 和 `replaceConfigFile(...)` 會傳回 `followUp`
     值，例如 `{ mode: "restart", requiresRestart: true, reason }`，
-    該值會記錄寫入者的意圖，而不會從閘道奪走重啟控制權。
+    這會記錄寫入者的意圖，而不會將重新啟動控制權從
+    閘道移除。
 
   </Accordion>
   <Accordion title="api.runtime.system">
-    系統層級工具。
+    系統層級公用程式。
 
     ```typescript
     await api.runtime.system.enqueueSystemEvent(event);
-    api.runtime.system.requestHeartbeatNow();
+    api.runtime.system.requestHeartbeat({
+      source: "other",
+      intent: "event",
+      reason: "plugin-event",
+    });
+    api.runtime.system.requestHeartbeatNow({ reason: "plugin-event" }); // Deprecated compatibility alias.
     const output = await api.runtime.system.runCommandWithTimeout(cmd, args, opts);
     const hint = api.runtime.system.formatNativeDependencyHint(pkg);
     ```
@@ -369,7 +405,7 @@ register(api) {
 
   </Accordion>
   <Accordion title="api.runtime.logging">
-    日誌記錄。
+    記錄。
 
     ```typescript
     const verbose = api.runtime.logging.shouldLogVerbose();
@@ -390,15 +426,32 @@ register(api) {
 
   </Accordion>
   <Accordion title="api.runtime.state">
-    狀態目錄解析。
+    狀態目錄解析與基於 SQLite 的鍵值存儲。
 
     ```typescript
-    const stateDir = api.runtime.state.resolveStateDir();
+    const stateDir = api.runtime.state.resolveStateDir(process.env);
+    const store = api.runtime.state.openKeyedStore<MyRecord>({
+      namespace: "my-feature",
+      maxEntries: 200,
+      defaultTtlMs: 15 * 60_000,
+    });
+
+    await store.register("key-1", { value: "hello" });
+    const claimed = await store.registerIfAbsent("dedupe-key", { value: "first" });
+    const value = await store.lookup("key-1");
+    await store.consume("key-1");
+    await store.clear();
     ```
+
+    鍵值存儲在重啟後仍然存在，並且按運行時綁定的插件 ID 進行隔離。使用 `registerIfAbsent(...)` 進行原子性去重聲明：當鍵缺失或過期並被註冊時，它返回 `true`；當實時值已存在時，它返回 `false` 而不覆蓋其值、創建時間或 TTL。限制：每個命名空間 `maxEntries`，每個插件 1,000 個實時行，JSON 值小於 64KB，以及可選的 TTL 過期時間。
+
+    <Warning>
+    本版本僅限捆綁插件。
+    </Warning>
 
   </Accordion>
   <Accordion title="api.runtime.tools">
-    記憶體工廠和 CLI。
+    記憶體工具工廠和 CLI。
 
     ```typescript
     const getTool = api.runtime.tools.createMemoryGetTool(/* ... */);
@@ -408,9 +461,9 @@ register(api) {
 
   </Accordion>
   <Accordion title="api.runtime.channel">
-    特定頻道的執行時期輔助函式（在載入頻道外掛程式時可用）。
+    特定通道的運行時輔助程式（在加載通道插件時可用）。
 
-    `api.runtime.channel.mentions` 是使用執行時期注入之捆綁頻道外掛程式的共用輸入提及原則介面：
+    `api.runtime.channel.mentions` 是使用運行時注入的捆綁通道插件共用的入站提及策略表面：
 
     ```typescript
     const mentionMatch = api.runtime.channel.mentions.matchesMentionWithExplicit(text, {
@@ -437,7 +490,7 @@ register(api) {
     });
     ```
 
-    可用的提及輔助函式：
+    可用的提及輔助程式：
 
     - `buildMentionRegexes`
     - `matchesMentionPatterns`
@@ -445,17 +498,17 @@ register(api) {
     - `implicitMentionKindWhen`
     - `resolveInboundMentionDecision`
 
-    `api.runtime.channel.mentions` 故意不公開較舊的 `resolveMentionGating*` 相容性輔助函式。請優先使用標準化的 `{ facts, policy }` 路徑。
+    `api.runtime.channel.mentions` 故意不公開較舊的 `resolveMentionGating*` 相容性輔助程式。建議優先使用標準化的 `{ facts, policy }` 路徑。
 
   </Accordion>
 </AccordionGroup>
 
-## 儲存執行時期參照
+## 儲存運行時參照
 
-使用 `createPluginRuntimeStore` 來儲存執行時期參照，以便在 `register` 回呼之外使用：
+使用 `createPluginRuntimeStore` 儲存運行時參照，以便在 `register` 回調外部使用：
 
 <Steps>
-  <Step title="建立存放區">
+  <Step title="建立存儲">
     ```typescript
     import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
     import type { PluginRuntime } from "openclaw/plugin-sdk/runtime-store";
@@ -492,11 +545,11 @@ register(api) {
   </Step>
 </Steps>
 
-<Note>針對執行時期存放區的身分識別，請優先使用 `pluginId`。較低層級的 `key` 形式適用於少數情況，即某個外掛程式刻意需要多個執行時期插槽時。</Note>
+<Note>對於運行時存儲標識，建議優先使用 `pluginId`。較低層級的 `key` 形式僅適用於一個插件有意需要多個運行時插槽的罕見情況。</Note>
 
 ## 其他頂層 `api` 欄位
 
-除了 `api.runtime` 之外，API 物件還提供：
+除了 `api.runtime` 之外，該 API 物件還提供：
 
 <ParamField path="api.id" type="string">
   外掛程式 ID。
@@ -505,16 +558,16 @@ register(api) {
   外掛程式顯示名稱。
 </ParamField>
 <ParamField path="api.config" type="OpenClawConfig">
-  目前設定快照 (可用時為作用中記憶體內執行時期快照)。
+  目前的設定快照（可用時為作用中的記憶體內執行時期快照）。
 </ParamField>
 <ParamField path="api.pluginConfig" type="Record<string, unknown>">
   來自 `plugins.entries.<id>.config` 的外掛程式特定設定。
 </ParamField>
 <ParamField path="api.logger" type="PluginLogger">
-  限定範圍的記錄器 (`debug`, `info`, `warn`, `error`)。
+  限定範圍的記錄器（`debug`、`info`、`warn`、`error`）。
 </ParamField>
 <ParamField path="api.registrationMode" type="PluginRegistrationMode">
-  目前載入模式；`"setup-runtime"` 是在完整進入啟動/設定之前的輕量級視窗。
+  目前的載入模式；`"setup-runtime"` 是在完整進入啟動/設定之前的輕量級視窗。
 </ParamField>
 <ParamField path="api.resolvePath(input)" type="(string) => string">
   解析相對於外掛程式根目錄的路徑。
@@ -522,6 +575,6 @@ register(api) {
 
 ## 相關
 
-- [外掛程式內部運作](/zh-Hant/plugins/architecture) — 功能模型與註冊表
+- [外掛程式內部運作](/zh-Hant/plugins/architecture) — 能力模型與註冊表
 - [SDK 進入點](/zh-Hant/plugins/sdk-entrypoints) — `definePluginEntry` 選項
 - [SDK 概覽](/zh-Hant/plugins/sdk-overview) — 子路徑參考

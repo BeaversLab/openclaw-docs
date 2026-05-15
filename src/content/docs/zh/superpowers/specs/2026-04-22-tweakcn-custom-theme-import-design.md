@@ -281,37 +281,36 @@ type ImportedCustomTheme = {
 可能的新辅助文件：
 
 - `ui/src/ui/custom-theme.ts`
-- `ui/src/ui/custom-theme-import.ts`
 
 测试：
 
 - `ui/src/ui/app-settings.test.ts`
 - `ui/src/ui/storage.node.test.ts`
 - `ui/src/ui/views/config.browser.test.ts`
-- 针对 URL 解析和有效负载规范化的新专项测试
+- 针对 URL 解析和负载规范化的新专项测试
 
 ## 测试
 
-最低实施覆盖范围：
+最低实现覆盖率：
 
 - 将分享链接 URL 解析为 tweakcn 主题 ID
-- 将 `/themes/{id}` 和 `/r/themes/{id}` 规范化为获取 URL
+- 将 `/themes/{id}` 和 `/r/themes/{id}` 规范化到获取 URL 中
 - 拒绝不支持的主机和格式错误的 ID
-- 验证 tweakcn 有效负载的形状
-- 将有效的 tweakcn 有效负载映射为标准化的 OpenClaw 亮色和暗色令牌映射
-- 在浏览器本地设置中加载和保存自定义有效负载
+- 验证 tweakcn 负载结构
+- 将有效的 tweakcn 负载映射为规范化的 OpenClaw 亮色和暗色令牌映射
+- 在浏览器本地设置中加载和保存自定义负载
 - 为 `light`、`dark` 和 `system` 解析 `custom`
-- 当不存在有效负载时，禁用 `Custom` 选择
-- 当 `custom` 已处于激活状态时，立即应用导入的主题
-- 当活动的自定义主题被清除时，回退到 `claw`
+- 当不存在负载时禁用 `Custom` 选择
+- 当 `custom` 已处于活动状态时立即应用导入的主题
+- 当清除活动自定义主题时回退到 `claw`
 
 手动验证目标：
 
 - 从设置中导入已知的 tweakcn 主题
 - 在 `light`、`dark` 和 `system` 之间切换
 - 在 `custom` 和内置系列之间切换
-- 重新加载页面并确认导入的自定义主题在本地持久化
+- 重新加载页面并确认导入的自定义主题在本地保持持久化
 
 ## 发布说明
 
-此功能特意保持精简。如果用户随后要求支持多个导入主题、重命名、导出或跨设备同步，请将其视为后续设计。在此实现中，请勿预先构建主题库抽象。
+此功能特意保持小规模。如果用户后来要求支持多个导入主题、重命名、导出或跨设备同步，请将其视为后续设计。不要在此实现中预构建主题库抽象。

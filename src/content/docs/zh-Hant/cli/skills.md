@@ -13,9 +13,9 @@ title: "技能"
 
 相關：
 
-- 技能系統：[技能](/zh-Hant/tools/skills)
-- 技能設定：[技能設定](/zh-Hant/tools/skills-config)
-- ClawHub 安裝：[ClawHub](/zh-Hant/tools/clawhub)
+- Skills 系統：[Skills](/zh-Hant/tools/skills)
+- Skills 設定：[Skills config](/zh-Hant/tools/skills-config)
+- ClawHub 安裝：[ClawHub](/zh-Hant/clawhub/cli)
 
 ## 指令
 
@@ -25,32 +25,39 @@ openclaw skills search --limit 20 --json
 openclaw skills install <slug>
 openclaw skills install <slug> --version <version>
 openclaw skills install <slug> --force
+openclaw skills install <slug> --agent <id>
 openclaw skills update <slug>
 openclaw skills update --all
+openclaw skills update --all --agent <id>
 openclaw skills list
 openclaw skills list --eligible
 openclaw skills list --json
 openclaw skills list --verbose
+openclaw skills list --agent <id>
 openclaw skills info <name>
 openclaw skills info <name> --json
+openclaw skills info <name> --agent <id>
 openclaw skills check
+openclaw skills check --agent <id>
 openclaw skills check --json
 ```
 
-`search`/`install`/`update` 直接使用 ClawHub 並安裝到目前啟用的工作區 `skills/` 目錄中。`list`/`info`/`check` 則仍會檢查目前工作區和設定可見的本地技能。
+`search`/`install`/`update` 直接使用 ClawHub 並安裝到目前的工作區 `skills/` 目錄。`list`/`info`/`check` 仍然會檢查目前工作區和設定可見的本機 skills。工作區支援的命令會從 `--agent <id>` 解析目標工作區，如果目前工作目錄位於已設定的 agent 工作區內，則使用該目錄，最後才使用預設的 agent。
 
-此 CLI `install` 指令會從 ClawHub 下載技能資料夾。由入門導覽或技能設定觸發的 Gateway 支援技能相依性安裝，則是使用獨立的 `skills.install` 請求路徑。
+此 CLI `install` 命令會從 ClawHub 下載 skill 資料夾。從入門 (onboarding) 或 Skills 設定觸發的閘道支援 skill 相依性安裝，則是改用另一個 `skills.install` 要求路徑。
 
 備註：
 
-- `search [query...]` 接受一個可選的查詢；省略它以瀏覽預設的 ClawHub 搜尋摘要。
-- `search --limit <n>` 限制返回的結果數量。
-- `install --force` 會覆寫現有工作區中相同 slug 的技能資料夾。
+- `search [query...]` 接受選用查詢；省略它以瀏覽預設的 ClawHub 搜尋動態訊息。
+- `search --limit <n>` 限制傳回的結果。
+- `install --force` 會覆寫相同 slug 的現有工作區 skill 資料夾。
+- `--agent <id>` 以一個已設定的 agent 工作區為目標，並覆寫目前工作目錄的推斷結果。
 - `update --all` 僅更新活躍工作區中已追蹤的 ClawHub 安裝項目。
-- 當未提供子命令時，`list` 是預設的操作。
-- `list`、`info` 和 `check` 會將其輸出內容寫入 stdout。使用 `--json` 時，這意味著機器可讀的酬載會保留在 stdout 上，以便透過管道和腳本處理。
+- `check --agent <id>` 檢查所選 agent 的工作區，並回報哪些就緒的 skills 實際上可在該 agent 的提示或命令介面上看見。
+- `list` 是未提供子命令時的預設動作。
+- `list`、`info` 和 `check` 會將其轉譯輸出寫入 stdout。使用 `--json` 時，這表示機器可讀取的載荷會保留在 stdout 上，以便透過管道和腳本處理。
 
 ## 相關
 
 - [CLI 參考](/zh-Hant/cli)
-- [技能](/zh-Hant/tools/skills)
+- [Skills](/zh-Hant/tools/skills)

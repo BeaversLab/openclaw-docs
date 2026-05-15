@@ -37,11 +37,21 @@ openclaw agents add <name>
 L'onboarding commence par le **Démarrage rapide** (valeurs par défaut) ou le mode **Avancé** (contrôle total).
 
 <Tabs>
-  <Tab title="Démarrage rapide (valeurs par défaut)">
-    - Passerelle locale (boucle locale) - Espace de travail par défaut (ou espace de travail existant) - Port de la Gateway **18789** - Authentification de la Gateway **Jeton** (auto-généré, même en boucle locale) - Stratégie d'outil par défaut pour les nouvelles configurations locales : `tools.profile: "coding"` (le profil explicite existant est préservé) - Valeur par défaut d'isolement des DM :
-    l'onboarding local écrit `session.dmScope: "per-channel-peer"` s'il n'est pas défini. Détails : [Référence de configuration CLI](/fr/start/wizard-cli-reference#outputs-and-internals) - Exposition Tailscale **Désactivée** - Les DMs Telegram et WhatsApp sont par défaut sur **liste autorisée** (votre numéro de téléphone vous sera demandé)
+  <Tab title="QuickStart (défauts)">
+    - Gateway local (boucle locale)
+    - Espace de travail par défaut (ou espace de travail existant)
+    - Port Gateway **18789**
+    - Authentification Gateway **Token** (généré automatiquement, même en boucle locale)
+    - Stratégie d'outil par défaut pour les nouvelles configurations locales : `tools.profile: "coding"` (le profil explicite existant est conservé)
+    - Par défaut d'isolation des DM : l'onboarding local écrit `session.dmScope: "per-channel-peer"` s'il n'est pas défini. Détails : [Référence de la configuration CLI](/fr/start/wizard-cli-reference#outputs-and-internals)
+    - Exposition Tailscale **Désactivée**
+    - Les DM Telegram + WhatsApp sont réglés par défaut sur **allowlist** (votre numéro de téléphone vous sera demandé)
+
   </Tab>
-  <Tab title="Avancé (contrôle total)">- Expose chaque étape (mode, espace de travail, passerelle, channels, démon, compétences).</Tab>
+  <Tab title="Advanced (contrôle total)">
+    - Expose chaque étape (mode, espace de travail, gateway, canaux, démon, compétences).
+
+  </Tab>
 </Tabs>
 
 ## Ce que configure l'onboarding
@@ -59,7 +69,7 @@ Le **Mode local (par défaut)** vous guide à travers ces étapes :
 3. **Gateway** — Port, adresse de liaison, mode d'auth, exposition Tailscale.
    En mode jeton interactif, choisissez le stockage de jeton en texte clair par défaut ou optez pour SecretRef.
    Chemin SecretRef de jeton non interactif : `--gateway-token-ref-env <ENV_VAR>`.
-4. **Canaux** — canaux de chat intégrés et groupés tels que BlueBubbles, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams, QQ Bot, Signal, Slack, Telegram, WhatsApp, et plus encore.
+4. **Canaux** — canaux de chat intégrés et groupés tels que iMessage, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams, QQ Bot, Signal, Slack, Telegram, WhatsApp, et plus encore.
 5. **Daemon** — Installe un LaunchAgent (macOS), une unité utilisateur systemd (Linux/WSL2) ou une tâche planifiée Windows native avec un repli sur le dossier de Démarrage par utilisateur.
    Si l'authentification par jeton nécessite un jeton et que `gateway.auth.token` est géré par SecretRef, l'installation du daemon le valide mais ne persiste pas le jeton résolu dans les métadonnées d'environnement du service superviseur.
    Si l'authentification par jeton nécessite un jeton et que le SecretRef du jeton configuré n'est pas résolu, l'installation du daemon est bloquée avec des instructions exploitables.

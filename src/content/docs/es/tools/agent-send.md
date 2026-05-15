@@ -7,7 +7,7 @@ title: "Envío de agente"
 ---
 
 `openclaw agent` ejecuta un solo turno de agente desde la línea de comandos sin necesidad
-de un mensaje de chat entrante. Úselo para flujos de trabajo con secuencias de comandos, pruebas y
+de un mensaje de chat entrante. Úselo para flujos de trabajo con guiones, pruebas y
 entrega programática.
 
 ## Inicio rápido
@@ -70,13 +70,13 @@ entrega programática.
 
 ## Comportamiento
 
-- De forma predeterminada, la CLI va **a través de la Gateway**. Agregue `--local` para forzar el
+- De forma predeterminada, la CLI funciona **a través del Gateway**. Agregue `--local` para forzar el
   tiempo de ejecución integrado en la máquina actual.
 - Si la Gateway no es accesible, la CLI **retrocede** a la ejecución integrada local.
 - Selección de sesión: `--to` deriva la clave de sesión (los objetivos de grupo/canal
-  conservan el aislamiento; los chats directos colapsan a `main`).
+  preservan el aislamiento; los chats directos colapsan a `main`).
 - Las opciones de pensamiento y detallado persisten en el almacén de sesiones.
-- Salida: texto plano por defecto, o `--json` para carga útil estructurada + metadatos.
+- Salida: texto plano de forma predeterminada, o `--json` para carga útil estructurada + metadatos.
 
 ## Ejemplos
 
@@ -93,6 +93,17 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 
 ## Relacionado
 
-- [Referencia de la CLI de Agent](/es/cli/agent)
-- [Sub-agentes](/es/tools/subagents) — generación de sub-agentes en segundo plano
-- [Sesiones](/es/concepts/session) — cómo funcionan las claves de sesión
+<CardGroup cols={2}>
+  <Card title="Referencia de la CLI de agentes" href="/es/cli/agent" icon="terminal">
+    Referencia completa de opciones y marcas `openclaw agent`.
+  </Card>
+  <Card title="Sub-agentes" href="/es/tools/subagents" icon="users">
+    Generación de sub-agentes en segundo plano.
+  </Card>
+  <Card title="Sesiones" href="/es/concepts/session" icon="comments">
+    Cómo funcionan las claves de sesión y cómo `--to`, `--agent` y `--session-id` las resuelven.
+  </Card>
+  <Card title="Comandos de barra" href="/es/tools/slash-commands" icon="slash">
+    Catálogo de comandos nativos utilizados dentro de las sesiones de agente.
+  </Card>
+</CardGroup>

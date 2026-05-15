@@ -7,38 +7,36 @@ read_when:
   - Turning a broad product quality review into phased engineering work
 ---
 
-# Plan de modernisation de l'application
-
 ## Objectif
 
 Faire évoluer l'application vers un produit plus propre, plus rapide et plus maintenable sans
-briser les workflows actuels ni masquer les risques dans des refactors massifs. Le travail doit
-être livré sous forme de petites tranches révisables avec des preuves pour chaque surface touchée.
+interrompre les flux de travail actuels ni masquer les risques dans des refactorisations larges. Le travail doit
+être livré sous forme de petites tranches révisables, avec une preuve pour chaque surface touchée.
 
 ## Principes
 
-- Conserver l'architecture actuelle, sauf si une limite cause démonstrablement du turnover,
-  des coûts de performance ou des bugs visibles par l'utilisateur.
+- Conserver l'architecture actuelle, sauf si une frontière cause démonstrablement du turnover,
+  des coûts de performance ou des bogues visibles par l'utilisateur.
 - Privilégier le plus petit correctif approprié pour chaque problème, puis répéter.
-- Séparer les corrections requises des améliorations optionnelles afin que les mainteneurs puissent livrer du travail
-  à forte valeur sans attendre de décisions subjectives.
-- Garder le comportement orienté plugin documenté et rétrocompatible.
-- Vérifier le comportement livré, les contrats de dépendance et les tests avant de prétendre
-  qu'une régression est corrigée.
+- Séparer les corrections requises des améliorations optionnelles afin que les mainteneurs puissent livrer un travail
+  à haute valeur sans attendre de décisions subjectives.
+- Maintenir le comportement orienté plugin documenté et compatible avec les versions antérieures.
+- Vérifier le comportement expédié, les contrats de dépendance et les tests avant d'affirmer qu'une
+  régression est corrigée.
 - Améliorer d'abord le chemin utilisateur principal : onboarding, auth, chat, configuration du provider,
   gestion des plugins et diagnostics.
 
 ## Phase 1 : Audit de référence
 
-Faire l'inventaire de l'application actuelle avant de la modifier.
+Inventorier l'application actuelle avant de la modifier.
 
-- Identifier les workflows utilisateurs principaux et les surfaces de code qui les possèdent.
-- Lister les fonctionnalités inactives, les paramètres en double, les états d'erreur obscurs et les chemins
+- Identifier les principaux flux de travail utilisateur et les surfaces de code qui les possèdent.
+- Lister les fonctionnalités inutilisées, les paramètres en double, les états d'erreur flous et les chemins
   de rendu coûteux.
 - Capturer les commandes de validation actuelles pour chaque surface.
 - Marquer les problèmes comme requis, recommandés ou optionnels.
-- Documenter les bloqueurs connus nécessitant une révision par le propriétaire, en particulier les API, la sécurité,
-  la publication et les modifications de contrats de plugins.
+- Documenter les bloqueurs connus nécessitant un examen par le propriétaire, en particulier les API, la sécurité,
+  la publication et les modifications de contrat de plugin.
 
 Définition de terminé :
 
@@ -47,100 +45,100 @@ Définition de terminé :
   de validation proposé.
 - Aucun élément de nettoyage spéculatif n'est mélangé aux corrections requises.
 
-## Phase 2 : Nettoyage produit et UX
+## Phase 2 : Nettoyage du produit et de l'UX
 
-Prioriser les workflows visibles et éliminer la confusion.
+Prioriser les flux de travail visibles et éliminer la confusion.
 
-- Rendre les textes d'onboarding et les états vides plus stricts autour de l'auth model, du statut de la passerelle,
+- Raffiner les textes d'onboarding et les états vides autour de l'authentification du modèle, du statut de la passerelle,
   et de la configuration des plugins.
-- Supprimer ou désactiver les fonctionnalités inactives où aucune action n'est possible.
-- Garder les actions importantes visibles sur différentes largeurs réactives au lieu de les cacher
+- Supprimer ou désactiver les fonctionnalités inutilisées lorsqu'aucune action n'est possible.
+- Garder les actions importantes visibles sur différentes largeurs responsives au lieu de les cacher
   derrière des hypothèses de mise en page fragiles.
-- Consolider le langage de statut répété pour que les erreurs aient une source unique de vérité.
-- Ajoutez une divulgation progressive pour les paramètres avancés tout en gardant la configuration de base rapide.
+- Consolider le langage de statut répété pour que les erreurs aient une seule source de vérité.
+- Ajouter une divulgation progressive pour les paramètres avancés tout en gardant la configuration principale rapide.
 
 Validation recommandée :
 
-- Chemin heureux manuel pour la configuration du premier lancement et le démarrage des utilisateurs existants.
-- Tests ciblés pour tout routage, persistance de configuration ou logique de dérivation d'état.
-- Captures d'écran du navigateur pour les surfaces réactives modifiées.
+- Chemin heureux manuel pour la configuration de premier démarrage et le démarrage pour les utilisateurs existants.
+- Tests ciblés pour toute logique de routage, de persistance de configuration ou de dérivation de statut.
+- Captures d'écran du navigateur pour les surfaces responsives modifiées.
 
 ## Phase 3 : Resserrage de l'architecture frontend
 
-Améliorez la maintenabilité sans réécriture large.
+Améliorer la maintenabilité sans réécriture large.
 
-- Déplacez les transformations d'état UI répétées vers des assistants typés ciblés.
-- Gardez les responsabilités de récupération de données, de persistance et de présentation séparées.
-- Préférez les hooks, stores et modèles de composants existants aux nouvelles abstractions.
-- Divisez les composants surdimensionnés uniquement lorsque cela réduit le couplage ou clarifie les tests.
-- Évitez d'introduire un état global large pour les interactions de panneaux locaux.
+- Déplacer les transformations d'état d'interface utilisateur répétées vers des assistants typés ciblés.
+- Garder séparées les responsabilités de récupération des données, de persistance et de présentation.
+- Préférer les hooks, stores et modèles de composants existants aux nouvelles abstractions.
+- Diviser les composants surdimensionnés uniquement si cela réduit le couplage ou clarifie les tests.
+- Éviter d'introduire un état global large pour les interactions locales de panneau.
 
 Garanties requises :
 
-- Ne modifiez pas le comportement public comme effet secondaire du fractionnement des fichiers.
-- Gardez le comportement d'accessibilité intact pour les menus, les boîtes de dialogue, les onglets et la navigation au clavier.
-- Vérifiez que les états de chargement, vide, erreur et optimiste s'affichent toujours.
+- Ne pas modifier le comportement public comme effet secondaire du fractionnement des fichiers.
+- Maintenir le comportement d'accessibilité intact pour les menus, les boîtes de dialogue, les onglets et la navigation au clavier.
+- Vérifier que les états de chargement, vide, erreur et optimiste s'affichent toujours.
 
 ## Phase 4 : Performance et fiabilité
 
-Ciblez les douleurs mesurées plutôt que l'optimisation théorique large.
+Cibler la douleur mesurée plutôt qu'une optimisation théorique large.
 
-- Mesurez les coûts de démarrage, de transition de route, de grande liste et de transcript de chat.
-- Remplacez les données dérivées coûteuses répétées par des sélecteurs mémorisés ou des assistants mis en cache là où le profilage prouve la valeur.
-- Réduisez les analyses réseau ou système de fichiers évitables sur les chemins critiques.
-- Conservez un ordre déterministe pour les entrées d'invite, de registre, de fichier, de plugin et de réseau avant la construction de la charge utile du modèle.
-- Ajoutez des tests de régression légers pour les assistants critiques et les limites de contrat.
+- Mesurer les coûts de démarrage, de transition de route, de grande liste et de transcription de chat.
+- Remplacer les données dérivées coûteuses répétées par des sélecteurs mémorisés ou des assistants mis en cache là où le profilage prouve la valeur.
+- Réduire les analyses réseau ou de système de fichiers évitables sur les chemins chauds.
+- Conserver un ordre déterministe pour les entrées de prompt, de registre, de fichier, de plugin et de réseau avant la construction de la charge utile du modèle.
+- Ajouter des tests de régression légers pour les assistants chauds et les limites de contrat.
 
 Définition de terminé :
 
-- Chaque changement de performance enregistre la ligne de base, l'impact attendu, l'impact réel et l'écart restant.
-- Aucun correctif de perf n'est intégré uniquement sur intuition lorsqu'une mesure bon marché est disponible.
+- Chaque modification de performance enregistre la ligne de base, l'impact attendu, l'impact réel et l'écart restant.
+- Aucun correctif de perf n'est intégré uniquement sur l'intuition lorsqu'une mesure bon marché est disponible.
 
-## Phase 5 : Durcissement des types, contrats et tests
+## Phase 5 : Renforcement des types, contrats et tests
 
-Augmentez la correction aux points limites dont dépendent les utilisateurs et les auteurs de plugins.
+Augmenter l'exactitude aux points limites dont dépendent les utilisateurs et les auteurs de plugins.
 
-- Remplacez les chaînes d'exécution souples par des unions discriminées ou des listes de code fermées.
-- Validez les entrées externes avec les assistants de schéma existants ou zod.
-- Ajoutez des tests de contrat autour des manifests de plugin, des catalogues de fournisseur, des messages de protocole de passerelle et du comportement de migration de configuration.
-- Gardez les chemins de compatibilité dans les flux de médecin ou de réparation au lieu des migrations cachées au démarrage.
-- Évitez le couplage réservé aux tests avec les éléments internes des plugins ; utilisez les façades du SDK et les barils documentés.
+- Remplacer les chaînes d'exécution lâches par des unions discriminées ou des listes de code fermées.
+- Valider les entrées externes avec des assistants de schéma existants ou zod.
+- Ajouter des tests de contrat autour des manifestes de plugin, des catalogues de provider, des messages de protocole de passerelle et du comportement de migration de configuration.
+- Conserver les chemins de compatibilité dans les flux de diagnostic ou de réparation plutôt que dans les migrations cachées au démarrage.
+- Éviter le couplage uniquement de test aux internes du plugin ; utiliser les façades du SDK et les barils documentés.
 
 Validation recommandée :
 
 - `pnpm check:changed`
 - Tests ciblés pour chaque limite modifiée.
-- `pnpm build` lorsque les limites différées, le conditionnement ou les surfaces publiées changent.
+- `pnpm build` lorsque les limites paresseuses, le conditionnement ou les surfaces publiées changent.
 
-## Phase 6 : Documentation et préparation à la release
+## Phase 6 : Documentation et préparation à la sortie
 
-Maintenir la documentation utilisateur alignée avec le comportement.
+Garder la documentation utilisateur alignée sur le comportement.
 
-- Mettre à jour la documentation avec les modifications de comportement, d'API, de configuration, d'onboarding ou de plugin.
+- Mettre à jour la documentation avec les modifications de comportement, d'API, de configuration, d'onboarding ou de plugins.
 - Ajouter des entrées dans le journal des modifications uniquement pour les modifications visibles par l'utilisateur.
-- Garder la terminologie des plugins orientée vers l'utilisateur ; n'utiliser les noms de packages internes que là où c'est nécessaire pour les contributeurs.
-- Confirmer que les instructions de release et d'installation correspondent toujours à la surface de commande actuelle.
+- Conserver la terminologie des plugins orientée utilisateur ; n'utiliser les noms de packages internes que là où c'est nécessaire pour les contributeurs.
+- Confirmer que les instructions de publication et d'installation correspondent toujours à la surface de commande actuelle.
 
 Définition de terminé :
 
 - La documentation pertinente est mise à jour dans la même branche que les modifications de comportement.
-- Les vérifications de dérive de la documentation générée ou de l'API passent lorsqu'elles sont touchées.
-- La transmission nomme toute validation omise et explique pourquoi elle a été omise.
+- Les vérifications de dérive de la documentation générée ou de l'API réussissent lorsqu'elles sont touchées.
+- La transmission nomme toute validation ignorée et la raison pour laquelle elle a été ignorée.
 
 ## Première tranche recommandée
 
-Commencer par une portée délimitée de l'interface utilisateur de contrôle et de l'onboarding :
+Commencer par une passe ciblée sur l'interface utilisateur de contrôle et l'onboarding :
 
-- Auditer la configuration de la première exécution, la préparation de l'authentification du fournisseur, l'état de la passerelle et les surfaces de configuration des plugins.
-- Supprimer les actions inutiles et clarifier les états d'échec.
-- Ajouter ou mettre à jour des tests ciblés pour la dérivation de l'état et la persistance de la configuration.
+- Auditer la configuration de première exécution, la préparation de l'authentification du provider, le statut de la passerelle et les surfaces de configuration des plugins.
+- Supprimer les actions mortes et clarifier les états d'échec.
+- Ajouter ou mettre à jour des tests ciblés pour la dérivation de statut et la persistance de la configuration.
 - Exécuter `pnpm check:changed`.
 
-Cela apporte une forte valeur utilisateur avec un risque architectural limité.
+Cela offre une valeur utilisateur élevée avec un risque architectural limité.
 
 ## Mise à jour des compétences frontend
 
-Utilisez cette section pour mettre à jour le `SKILL.md` axé sur le frontend fourni avec la tâche de modernisation. Si vous adoptez ces directives en tant que compétence OpenClaw locale au dépôt, créez d'abord `.agents/skills/openclaw-frontend/SKILL.md`, conservez les métadonnées appartenant à cette compétence cible, puis ajoutez ou remplacez les directives du corps par le contenu suivant.
+Utilisez cette section pour mettre à jour le `SKILL.md` axé sur le frontend fourni avec la tâche de modernisation. Si vous adoptez ces conseils en tant que compétence OpenClaw locale au dépôt, créez d'abord `.agents/skills/openclaw-frontend/SKILL.md`, conservez les métadonnées (frontmatter) qui appartiennent à cette compétence cible, puis ajoutez ou remplacez les directives du corps par le contenu suivant.
 
 ```markdown
 # Frontend Delivery Standards

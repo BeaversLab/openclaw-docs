@@ -110,6 +110,11 @@ Notas:
 - Pasar cualquier flag de ad explícita cambia el comando a la ruta no interactiva.
 - El modo no interactivo requiere tanto un nombre de agente como `--workspace`.
 - `main` está reservado y no se puede utilizar como el nuevo id de agente.
+- En modo interactivo, la propagación de autenticación (auth seeding) copia solo perfiles estáticos portátiles
+  (`api_key` y `token` estático por defecto). Los perfiles de token de actualización de OAuth permanecen
+  disponibles solo por herencia de lectura directa (read-through) desde el almacenamiento real del agente `main`.
+  Si el agente predeterminado configurado no es `main`, inicie sesión por separado para los perfiles
+  de OAuth en el nuevo agente.
 
 ### `agents bindings`
 
@@ -122,7 +127,7 @@ Opciones:
 
 Opciones:
 
-- `--agent <id>` (por defecto al agente predeterminado actual)
+- `--agent <id>` (el valor predeterminado es el agente predeterminado actual)
 - `--bind <channel[:accountId]>` (repetible)
 - `--json`
 
@@ -130,7 +135,7 @@ Opciones:
 
 Opciones:
 
-- `--agent <id>` (por defecto al agente predeterminado actual)
+- `--agent <id>` (el valor predeterminado es el agente predeterminado actual)
 - `--bind <channel[:accountId]>` (repetible)
 - `--all`
 - `--json`
@@ -147,18 +152,19 @@ Notas:
 - `main` no se puede eliminar.
 - Sin `--force`, se requiere confirmación interactiva.
 - Los directorios del espacio de trabajo, el estado del agente y las transcripciones de sesión se mueven a la Papelera, no se eliminan permanentemente.
-- Si el espacio de trabajo de otro agente es la misma ruta, está dentro de este espacio de trabajo o contiene este espacio de trabajo,
-  el espacio de trabajo se conserva y `--json` reporta `workspaceRetained`,
+- Cuando se puede acceder a la Gateway, la eliminación se envía a través de la Gateway para que la limpieza de la configuración y el almacén de sesiones compartan el mismo escritor que el tráfico de tiempo de ejecución. Si no se puede acceder a la Gateway, la CLI recurre a la ruta local sin conexión.
+- Si el área de trabajo de otro agente es la misma ruta, está dentro de esta área de trabajo o contiene esta área de trabajo,
+  el área de trabajo se conserva y `--json` informa `workspaceRetained`,
   `workspaceRetainedReason` y `workspaceSharedWith`.
 
 ## Archivos de identidad
 
-Cada espacio de trabajo de agente puede incluir un `IDENTITY.md` en la raíz del espacio de trabajo:
+Cada área de trabajo del agente puede incluir un `IDENTITY.md` en la raíz del área de trabajo:
 
 - Ruta de ejemplo: `~/.openclaw/workspace/IDENTITY.md`
-- `set-identity --from-identity` lee desde la raíz del espacio de trabajo (o un `--identity-file` explícito)
+- `set-identity --from-identity` lee desde la raíz del área de trabajo (o un `--identity-file` explícito)
 
-Las rutas de los avatares se resuelven en relación con la raíz del espacio de trabajo.
+Las rutas de los avatares se resuelven en relación con la raíz del área de trabajo.
 
 ## Establecer identidad
 
@@ -167,7 +173,7 @@ Las rutas de los avatares se resuelven en relación con la raíz del espacio de 
 - `name`
 - `theme`
 - `emoji`
-- `avatar` (ruta relativa al espacio de trabajo, URL http(s) o URI de datos)
+- `avatar` (ruta relativa al área de trabajo, URL http(s) o URI de datos)
 
 Opciones:
 
@@ -184,7 +190,7 @@ Opciones:
 Notas:
 
 - Se puede usar `--agent` o `--workspace` para seleccionar el agente de destino.
-- Si depende de `--workspace` y varios agentes comparten ese espacio de trabajo, el comando falla y le pide que pase `--agent`.
+- Si confía en `--workspace` y varios agentes comparten esa área de trabajo, el comando falla y le pide que pase `--agent`.
 - Cuando no se proporcionan campos de identidad explícitos, el comando lee los datos de identidad de `IDENTITY.md`.
 
 Cargar desde `IDENTITY.md`:
@@ -193,7 +199,7 @@ Cargar desde `IDENTITY.md`:
 openclaw agents set-identity --workspace ~/.openclaw/workspace --from-identity
 ```
 
-Sobrescribir campos explícitamente:
+Anular campos explícitamente:
 
 ```bash
 openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞" --avatar avatars/openclaw.png
@@ -221,6 +227,6 @@ Ejemplo de configuración:
 
 ## Relacionado
 
-- [Referencia de la CLI](/es/cli)
+- [Referencia de CLI](/es/cli)
 - [Enrutamiento multiagente](/es/concepts/multi-agent)
-- [Espacio de trabajo del agente](/es/concepts/agent-workspace)
+- [Área de trabajo del agente](/es/concepts/agent-workspace)

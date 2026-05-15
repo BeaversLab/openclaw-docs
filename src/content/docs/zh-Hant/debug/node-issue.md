@@ -49,7 +49,7 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 
 ## 筆記 / 假設
 
-- `tsx` 使用 esbuild 來轉換 TS/ESM。esbuild 的 `keepNames` 會發出一個 `__name` 輔助函數，並用 `__name(...)` 包裹函數定義。
+- `tsx` 使用 esbuild 來轉換 TS/ESM。esbuild 的 `keepNames` 會發出一個 `__name` 輔助函式，並用 `__name(...)` 包裝函式定義。
 - 潰潰表示 `__name` 在執行時期存在但不是函數，這意味著在 Node 25 的載入器路徑中，該模組缺少此輔助函數或被覆寫了。
 - 在其他 esbuild 使用者中，當輔助函數缺失或被重寫時，也曾報告過類似的 `__name` 輔助函數問題。
 

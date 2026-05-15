@@ -187,5 +187,5 @@ read_when:
 
 ## 相關
 
-- [工具概覽](/zh-Hant/tools) — 所有可用的代理程式工具
-- [設定參考](/zh-Hant/gateway/config-agents#agent-defaults) — pdfMaxBytesMb 和 pdfMaxPages 設定
+- [工具總覽](/zh-Hant/tools) - 所有可用的代理工具
+- [配置參考](/zh-Hant/gateway/config-agents#agent-defaults) - pdfMaxBytesMb 與 pdfMaxPages 配置

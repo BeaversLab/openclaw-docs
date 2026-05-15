@@ -8,7 +8,10 @@ title: "Recherche Grok"
 
 OpenClaw prend en charge Grok en tant que fournisseur `web_search`, utilisant les réponses ancrées sur le Web d'xAI pour produire des réponses synthétisées par l'IA étayées par des résultats de recherche en direct avec des citations.
 
-Le même `XAI_API_KEY` peut également alimenter l'outil `x_search` intégré pour la recherche de publications sur X (anciennement Twitter). Si vous stockez la clé sous `plugins.entries.xai.config.webSearch.apiKey`, OpenClaw la réutilise désormais également en tant que solution de secours pour le fournisseur de modèle xAI groupé.
+La même clé API xAI peut également alimenter l'outil API`x_search` intégré pour la recherche de publications sur X
+(formerment Twitter) et l'outil `code_execution`. Si vous stockez
+la clé sous `plugins.entries.xai.config.webSearch.apiKey`OpenClaw, OpenClaw la réutilise
+maintenant également en tant que solution de repli pour le fournisseur de modèle xAI intégré.
 
 Pour les métriques X au niveau de la publication telles que les republications, les réponses, les signets ou les vues, privilégiez `x_search` avec l'URL exacte de la publication ou l'ID de statut au lieu d'une requête de recherche large.
 
@@ -30,8 +33,8 @@ Si vous l'ignorez, vous pouvez activer ou modifier `x_search` ultérieurement da
 ## Obtenir une clé API
 
 <Steps>
-  <Step title="Créer une clé">
-    Obtenez une clé API à partir de [xAI](https://console.x.ai/).
+  <Step title="Créer une clé"API>
+    Obtenez une clé API auprès de [xAI](https://console.x.ai/).
   </Step>
   <Step title="Stocker la clé">
     Définissez `XAI_API_KEY` dans l'environnement Gateway, ou configurez via :
@@ -53,6 +56,7 @@ Si vous l'ignorez, vous pouvez activer ou modifier `x_search` ultérieurement da
         config: {
           webSearch: {
             apiKey: "xai-...", // optional if XAI_API_KEY is set
+            baseUrl: "https://api.x.ai/v1", // optional Responses API proxy/base URL override
           },
         },
       },
@@ -83,8 +87,20 @@ La recherche Grok prend en charge `query`.
 
 Les filtres spécifiques au fournisseur ne sont actuellement pas pris en charge.
 
+Grok utilise un délai d'attente par défaut de 60 secondes spécifique au fournisseur, car les recherches web ancrées dans xAI Responses
+peuvent prendre plus de temps que le `web_search` par défaut partagé. Définissez
+`tools.web.search.timeoutSeconds` pour le remplacer.
+
+## Remplacements de l'URL de base
+
+Définissez `plugins.entries.xai.config.webSearch.baseUrl`OpenClaw lorsque la recherche web Grok doit
+passer par un proxy opérateur ou un point de terminaison Responses compatible xAI. OpenClaw
+envoie une requête à `<baseUrl>/responses` après avoir supprimé les barres obliques de fin. `x_search`
+utilise le même repli `webSearch.baseUrl` à moins que
+`plugins.entries.xai.config.xSearch.baseUrl` ne soit défini.
+
 ## Connexes
 
-- [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et détection automatique
-- [x_search dans la recherche Web](/fr/tools/web#x_search) -- recherche X de premier plan via xAI
-- [Recherche Gemini](/fr/tools/gemini-search) -- réponses synthétisées par IA via le grounding Google
+- [Aperçu de la recherche web](/fr/tools/web) -- tous les fournisseurs et détection automatique
+- [x_search dans la recherche web](/fr/tools/web#x_search) -- recherche X de premier plan via xAI
+- [Gemini Search](/fr/tools/gemini-search) -- réponses synthétisées par IA via le grounding de Google

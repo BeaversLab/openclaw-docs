@@ -7,7 +7,7 @@ title: "文档中心"
 
 <Note>如果您是 OpenClaw 的新手，请从 [入门指南](/zh/start/getting-started) 开始。</Note>
 
-利用这些中心探索所有页面，包括左侧导航栏中未显示的深度解析和参考文档。
+使用这些中心来发现所有页面，包括未显示在左侧导航栏中的深度解析和参考文档。
 
 ## 从这里开始
 
@@ -16,7 +16,7 @@ title: "文档中心"
 - [新手引导](/zh/start/onboarding)
 - [新手引导 (CLI)](/zh/start/wizard)
 - [设置](/zh/start/setup)
-- [仪表板（本地 Gateway(网关)）](http://127.0.0.1:18789/)
+- [Dashboard (local Gateway(网关))](http://127.0.0.1:18789/)
 - [帮助](/zh/help)
 - [文档目录](/zh/start/docs-directory)
 - [配置](/zh/gateway/configuration)
@@ -71,9 +71,8 @@ title: "文档中心"
 - [Discord](/zh/channels/discord)
 - [Mattermost](/zh/channels/mattermost)
 - [Signal](/zh/channels/signal)
-- [BlueBubbles (iMessage)](/zh/channels/bluebubbles)
 - [QQ 机器人](/zh/channels/qqbot)
-- [iMessage (旧版)](/zh/channels/imessage)
+- [iMessage](/zh/channels/imessage)
 - [位置解析](/zh/channels/location)
 - [WebChat](/zh/web/webchat)
 - [Webhooks](/zh/automation/cron-jobs#webhooks)
@@ -82,21 +81,21 @@ title: "文档中心"
 ## Gateway(网关) + 运维
 
 - [Gateway(网关) 运维手册](/zh/gateway)
-- [网络模型](/zh/gateway/network-model)
+- [网络模型](/zh/network#core-model)
 - [Gateway(网关) 配对](/zh/gateway/pairing)
 - [Gateway(网关) 锁](/zh/gateway/gateway-lock)
 - [后台进程](/zh/gateway/background-process)
 - [健康检查](/zh/gateway/health)
 - [心跳](/zh/gateway/heartbeat)
 - [诊断](/zh/gateway/doctor)
-- [日志](/zh/gateway/logging)
+- [日志记录](/zh/gateway/logging)
 - [沙箱隔离](/zh/gateway/sandboxing)
 - [仪表板](/zh/web/dashboard)
 - [控制界面](/zh/web/control-ui)
 - [远程访问](/zh/gateway/remote)
-- [远程 Gateway(网关) 说明](/zh/gateway/remote-gateway-readme)
+- [远程 自述](/zh/gateway/remote-gateway-readme)
 - [Tailscale](/zh/gateway/tailscale)
-- [安全](/zh/gateway/security)
+- [安全性](/zh/gateway/security)
 - [故障排除](/zh/gateway/troubleshooting)
 
 ## 工具 + 自动化
@@ -109,54 +108,54 @@ title: "文档中心"
 - [提升模式](/zh/tools/elevated)
 - [Cron 作业](/zh/automation/cron-jobs)
 - [自动化与任务](/zh/automation)
-- [思考与详细输出](/zh/tools/thinking)
+- [思考 + 详细输出](/zh/tools/thinking)
 - [模型](/zh/concepts/models)
 - [子代理](/zh/tools/subagents)
-- [Agent send CLI](/zh/tools/agent-send)
-- [终端 UI](/zh/web/tui)
-- [浏览器控制](/zh/tools/browser)
-- [浏览器（Linux 故障排除）](/zh/tools/browser-linux-troubleshooting)
-- [轮询](/zh/cli/message)
+- [Agent send CLI](CLI/en/tools/agent-send)
+- [Terminal UI](/zh/web/tui)
+- [Browser control](/zh/tools/browser)
+- [Browser (Linux 故障排除)](Linux/en/tools/browser-linux-troubleshooting)
+- [Polls](/zh/cli/message)
 
-## 节点、媒体、语音
+## Nodes, media, voice
 
-- [节点概览](/zh/nodes)
-- [相机](/zh/nodes/camera)
-- [图像](/zh/nodes/images)
-- [音频](/zh/nodes/audio)
-- [位置命令](/zh/nodes/location-command)
-- [语音唤醒](/zh/nodes/voicewake)
-- [对话模式](/zh/nodes/talk)
+- [Nodes overview](/zh/nodes)
+- [Camera](/zh/nodes/camera)
+- [Images](/zh/nodes/images)
+- [Audio](/zh/nodes/audio)
+- [Location command](/zh/nodes/location-command)
+- [Voice wake](/zh/nodes/voicewake)
+- [Talk mode](/zh/nodes/talk)
 
-## 平台
+## Platforms
 
-- [平台概览](/zh/platforms)
-- [macOS](/zh/platforms/macos)
-- [iOS](/zh/platforms/ios)
-- [Android](/zh/platforms/android)
-- [Windows (WSL2)](/zh/platforms/windows)
-- [Linux](/zh/platforms/linux)
-- [Web 界面](/zh/web)
+- [Platforms overview](/zh/platforms)
+- [macOS](macOS/en/platforms/macos)
+- [iOS](iOS/en/platforms/ios)
+- [Android](Android/en/platforms/android)
+- [Windows (WSL2)](WindowsWSL2/en/platforms/windows)
+- [Linux](Linux/en/platforms/linux)
+- [Web surfaces](/zh/web)
 
-## macOS 伴侣应用（高级）
+## macOS companion app (advanced)
 
-- [macOS 开发设置](/zh/platforms/mac/dev-setup)
-- [macOS 菜单栏](/zh/platforms/mac/menu-bar)
-- [macOS 语音唤醒](/zh/platforms/mac/voicewake)
-- [macOS 语音覆盖层](/zh/platforms/mac/voice-overlay)
-- [macOS WebChat](/zh/platforms/mac/webchat)
-- [macOS Canvas](/zh/platforms/mac/canvas)
-- [macOS 子进程](/zh/platforms/mac/child-process)
-- [macOS 健康状态](/zh/platforms/mac/health)
-- [macOS 图标](/zh/platforms/mac/icon)
-- [macOS 日志记录](/zh/platforms/mac/logging)
-- [macOS 权限](/zh/platforms/mac/permissions)
-- [macOS 远程控制](/zh/platforms/mac/remote)
-- [macOS 签名](/zh/platforms/mac/signing)
-- [macOS 网关 (launchd)](/zh/platforms/mac/bundled-gateway)
-- [macOS XPC](/zh/platforms/mac/xpc)
-- [macOS Skills](/zh/platforms/mac/skills)
-- [macOS Peekaboo](/zh/platforms/mac/peekaboo)
+- [macOS dev setup](macOS/en/platforms/mac/dev-setup)
+- [macOS menu bar](macOS/en/platforms/mac/menu-bar)
+- [macOS voice wake](macOS/en/platforms/mac/voicewake)
+- [macOS voice overlay](macOS/en/platforms/mac/voice-overlay)
+- [macOS WebChat](macOSWebChat/en/platforms/mac/webchat)
+- [macOS Canvas](macOSCanvas/en/platforms/mac/canvas)
+- [macOS child process](macOS/en/platforms/mac/child-process)
+- [macOS health](macOS/en/platforms/mac/health)
+- [macOS icon](macOS/en/platforms/mac/icon)
+- [macOS logging](macOS/en/platforms/mac/logging)
+- [macOS permissions](macOS/en/platforms/mac/permissions)
+- [macOS 远程](macOS/en/platforms/mac/remote)
+- [macOS 签名](macOS/en/platforms/mac/signing)
+- [macOS 网关 (launchd)](macOS/en/platforms/mac/bundled-gateway)
+- [macOS XPC](macOSXPC/en/platforms/mac/xpc)
+- [macOS 技能](macOS/en/platforms/mac/skills)
+- [macOS Peekaboo](macOSPeekaboo/en/platforms/mac/peekaboo)
 
 ## 插件
 
@@ -166,15 +165,15 @@ title: "文档中心"
 - [插件清单](/zh/plugins/manifest)
 - [代理工具](/zh/plugins/building-plugins#registering-agent-tools)
 - [插件包](/zh/plugins/bundles)
-- [社区插件](/zh/plugins/community)
-- [功能指南](/zh/tools/capability-cookbook)
+- [ClawHub](ClawHub/en/clawhub)
+- [功能手册](/zh/tools/capability-cookbook)
 - [语音通话插件](/zh/plugins/voice-call)
-- [Zalo 用户插件](/zh/plugins/zalouser)
+- [Zalo 用户插件](Zalo/en/plugins/zalouser)
 
 ## 工作区 + 模板
 
 - [Skills](/zh/tools/skills)
-- [ClawHub](/zh/tools/clawhub)
+- [ClawHub](ClawHub/en/clawhub)
 - [Skills 配置](/zh/tools/skills-config)
 - [默认 AGENTS](/zh/reference/AGENTS.default)
 - [模板：AGENTS](/zh/reference/templates/AGENTS)
@@ -187,7 +186,7 @@ title: "文档中心"
 
 ## 项目
 
-- [致谢](/zh/reference/credits)
+- [贡献者](/zh/reference/credits)
 
 ## 测试 + 发布
 
@@ -195,6 +194,6 @@ title: "文档中心"
 - [发布策略](/zh/reference/RELEASING)
 - [设备型号](/zh/reference/device-models)
 
-## 相关
+## 相关内容
 
 - [入门指南](/zh/start/getting-started)

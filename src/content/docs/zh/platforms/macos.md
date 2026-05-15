@@ -6,14 +6,14 @@ read_when:
 title: "macOS 应用"
 ---
 
-macOS 应用是 OpenClaw 的**菜单栏伴侣**。它拥有权限，在本地管理/连接到 Gateway(网关)（launchd 或手动），并将 macOS 功能作为节点暴露给代理。
+macOS 应用是 OpenClaw 的**菜单栏伴侣**。它拥有权限，在本地管理/连接到 Gateway（通过 launchd 或手动），并将 macOS 功能作为节点暴露给代理。
 
 ## 功能
 
 - 在菜单栏中显示原生通知和状态。
 - 拥有 TCC 提示（通知、辅助功能、屏幕录制、麦克风、语音识别、自动化/AppleScript）。
 - 运行或连接到 Gateway(网关)（本地或远程）。
-- 暴露仅限 macOS 的工具（Canvas、Camera、屏幕录制、`system.run`）。
+- 暴露仅限 macOS 的工具（Canvas、Camera、Screen Recording、macOSCanvas`system.run`）。
 - 在**远程**模式下启动本地节点主机服务，并在**本地**模式下停止它。
 - 可选地托管 **PeekabooBridge** 用于 UI 自动化。
 - 根据请求通过 npm、pnpm 或 bun 安装全局 CLI（`openclaw`）（应用首选 npm，其次是 pnpm，然后是 bun；Node 仍然是推荐的 Gateway(网关) 运行时）。
@@ -25,7 +25,7 @@ macOS 应用是 OpenClaw 的**菜单栏伴侣**。它拥有权限，在本地管
 
 ## Launchd 控制
 
-应用管理一个标记为 `ai.openclaw.gateway` 的每用户 LaunchAgent（使用 `--profile`/`OPENCLAW_PROFILE` 时为 `ai.openclaw.<profile>`；旧的 `com.openclaw.*` 仍会卸载）。
+该应用管理一个标记为 `ai.openclaw.gateway` 的每用户 LaunchAgent（在使用 `--profile`/`OPENCLAW_PROFILE` 时为 `ai.openclaw.<profile>`；旧的 `com.openclaw.*` 仍会卸载）。
 
 ```bash
 launchctl kickstart -k gui/$UID/ai.openclaw.gateway
@@ -34,7 +34,8 @@ launchctl bootout gui/$UID/ai.openclaw.gateway
 
 运行命名配置文件时，将标签替换为 `ai.openclaw.<profile>`。
 
-如果未安装 LaunchAgent，请从应用中启用它或运行 `openclaw gateway install`。
+如果未安装 LaunchAgent，请从应用中启用它或运行
+`openclaw gateway install`。
 
 ## 节点功能
 
@@ -45,7 +46,7 @@ macOS 应用将自己呈现为一个节点。常用命令：
 - 屏幕：`screen.snapshot`, `screen.record`
 - 系统：`system.run`, `system.notify`
 
-该节点报告一个 `permissions` 映射，以便 Agent 可以决定允许哪些操作。
+节点报告 `permissions` 映射，以便代理决定允许执行的操作。
 
 节点服务 + 应用 IPC：
 
@@ -94,7 +95,7 @@ Gateway -> Node Service (WS)
 - `allowlist` 条目是已解析二进制路径的 glob 模式，或者是通过 PATH 调用的命令的裸命令名称。
 - 包含 shell 控制或扩展语法（`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) 的原始 shell 命令文本将被视为允许列表未命中，并需要显式批准（或将 shell 二进制文件加入允许列表）。
 - 在提示中选择“始终允许”会将该命令添加到允许列表中。
-- `system.run` 环境覆盖项会被过滤（删除 `PATH`, `DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`），然后与应用的环境合并。
+- `system.run` 环境覆盖项会被过滤（丢弃 `PATH`、`DYLD_*`、`LD_*`、`NODE_OPTIONS`、`PYTHON*`、`PERL*`、`RUBYOPT`、`SHELLOPTS`、`PS4`），然后与应用的环境合并。
 - 对于 Shell 封装器 (`bash|sh|zsh ... -c/-lc`)，请求作用域的环境变量覆盖被缩减为一小部分显式允许列表 (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`)。
 - 对于允许列表模式下的“始终允许”决策，已知的调度封装器 (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) 会持久化内部可执行文件路径，而不是封装器路径。如果解包不安全，则不会自动持久化允许列表条目。
 
@@ -177,7 +178,7 @@ swift run openclaw-mac discover --timeout 3000 --json
 
 发现选项：
 
-- `--include-local`: 包含会被过滤为“本地”的 Gateway(网关)
+- `--include-local`：包含将被过滤为“本地”的网关
 - `--timeout <ms>`: 整体发现窗口（默认：`2000`）
 - `--json`: 用于比较的结构化输出
 

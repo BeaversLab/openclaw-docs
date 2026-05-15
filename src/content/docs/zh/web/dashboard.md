@@ -10,15 +10,15 @@ Gateway(网关) 仪表板是默认在 `/` 提供的浏览器控制 UI
 
 快速打开（本地 Gateway(网关)）：
 
-- [http://127.0.0.1:18789/](http://127.0.0.1:18789/)（或 [http://localhost:18789/](http://localhost:18789/））
+- [http://127.0.0.1:18789/](http://127.0.0.1:18789/)（或 [http://localhost:18789/](http://localhost:18789/）
 - 使用 `gateway.tls.enabled: true` 时，请使用 `https://127.0.0.1:18789/` 和
   `wss://127.0.0.1:18789` 作为 WebSocket 端点。
 
 关键参考：
 
-- 有关用法和 UI 功能，请参阅[控制 UI](/zh/web/control-ui)。
-- 有关 Serve/Funnel 自动化，请参阅 [Tailscale](/zh/gateway/tailscale)。
-- 有关绑定模式和安全说明，请参阅 [Web 界面](/zh/web)。
+- [Control UI](/zh/web/control-ui) 以了解使用方法和 UI 功能。
+- [Tailscale](/zh/gateway/tailscale) 以了解 Serve/Funnel 自动化。
+- [Web surfaces](/zh/web) 以了解绑定模式和安全说明。
 
 身份验证通过配置的网关身份验证路径在 WebSocket 握手时强制执行：
 
@@ -35,54 +35,49 @@ Gateway(网关) 仪表板是默认在 `/` 提供的浏览器控制 UI
 
 - 新手引导完成后，CLI 会自动打开仪表板并打印一个干净的（无令牌的）链接。
 - 随时重新打开：`openclaw dashboard`（复制链接，如果可能则打开浏览器，如果是无头模式则显示 SSH 提示）。
-- 如果 UI 提示进行共享密钥身份验证，请将配置的令牌或密码粘贴到控制 UI 设置中。
+- 如果剪贴板和浏览器传递失败，`openclaw dashboard` 仍然会打印
+  清理后的 URL，并提示您使用来自 `OPENCLAW_GATEWAY_TOKEN` 或
+  `gateway.auth.token` 的令牌作为 URL 片段键 `token`；它不会在日志中打印令牌
+  值。
+- 如果 UI 提示进行共享密钥身份验证，请将配置的令牌或
+  密码粘贴到 Control UI 设置中。
 
-## 身份验证基础（本地 vs 远程）
+## Auth basics (local vs remote)
 
 - **Localhost**：打开 `http://127.0.0.1:18789/`。
-- **Gateway(网关) TLS**：当 `gateway.tls.enabled: true` 时，仪表板/状态链接使用
-  `https://`，控制 UI WebSocket 链接使用 `wss://`。
-- **共享密令牌源**：`gateway.auth.token`（或
+- **Gateway(网关) TLS**：当 `gateway.tls.enabled: true` 时，仪表盘/状态链接使用
+  `https://`，Control UI WebSocket 链接使用 `wss://`。
+- **Shared-secret token source**：`gateway.auth.token`（或
   `OPENCLAW_GATEWAY_TOKEN`）；`openclaw dashboard` 可以通过 URL 片段传递它
-  以进行一次性引导，控制 UI 将其保留在 sessionStorage 中，用于
-  当前浏览器标签页会话和选定的 Gateway(网关) URL，而不是 localStorage。
-- 如果 `gateway.auth.token` 由 SecretRef 管理，则 `openclaw dashboard`
-  按设计打印/复制/打开非令牌化 URL。这避免了在外部
-  管理的令牌暴露在 Shell 日志、剪贴板历史记录或浏览器启动
-  参数中。
-- 如果 `gateway.auth.token` 被配置为 SecretRef 且在您
-  当前的 Shell 中未解析，`openclaw dashboard` 仍会打印非令牌化 URL 以及
-  可操作的认证设置指南。
-- **共享密钥密码**：使用已配置的 `gateway.auth.password`（或
-  `OPENCLAW_GATEWAY_PASSWORD`）。仪表板不会在重载之间保留密码。
-- **身份验证模式**：当启用 `gateway.auth.allowTailscale: true` 时，Tailscale Serve 可以通过身份标头满足 Control UI/WebSocket 认证，并且非环回的身份感知反向代理可以满足
-  `gateway.auth.mode: "trusted-proxy"`。在这些模式下，仪表板不需要为 WebSocket 粘贴共享密钥。
-- **非本地主机**：使用 Tailscale Serve、非环回共享密钥绑定、带有
-  `gateway.auth.mode: "trusted-proxy"` 的非环回身份感知反向代理，或 SSH 隧道。除非您有意运行私有入口
-  `gateway.auth.mode: "none"` 或受信任代理 HTTP 认证，否则 HTTP API 仍使用共享密钥认证。请参阅
-  [Web 表面](/zh/web)。
+  以进行一次性引导，Control UI 会将其保存在当前浏览器标签页会话和选定的网关 URL 的 sessionStorage 中，而不是 localStorage 中。
+- 如果 `gateway.auth.token` 由 SecretRef 管理，设计上 `openclaw dashboard`
+  会打印/复制/打开不带令牌的 URL。这可以避免在外部
+  管理的令牌暴露在 Shell 日志、剪贴板历史记录或浏览器启动参数中。
+- 如果 `gateway.auth.token` 被配置为 SecretRef 且在您当前的
+  Shell 中未解析，`openclaw dashboard` 仍然会打印不带令牌的 URL 以及
+  可操作的身份验证设置指南。
+- **Shared-secret password**：使用配置的 `gateway.auth.password`（或
+  `OPENCLAW_GATEWAY_PASSWORD`）。仪表盘不会在重新加载后保留密码。
+- **承载身份的模式**：当处于 `gateway.auth.allowTailscale: true` 时，Tailscale Serve 可以通过身份标头满足控制 UI/WebSocket 认证，而非回环的感知身份反向代理可以满足 `gateway.auth.mode: "trusted-proxy"`。在这些模式下，仪表板不需要为 WebSocket 粘贴共享密钥。
+- **非本地主机**：使用 Tailscale Serve、非回环共享密钥绑定、带有 `gateway.auth.mode: "trusted-proxy"` 的非回环感知身份反向代理，或 SSH 隧道。除非您有意运行私有入口 `gateway.auth.mode: "none"` 或可信代理 HTTP 认证，否则 HTTP API 仍使用共享密钥认证。请参阅 [Web surfaces](/zh/web)。
 
 <a id="if-you-see-unauthorized-1008"></a>
 
-## 如果您看到“未授权” / 1008
+## 如果您看到“unauthorized” / 1008
 
 - 确保网关可达（本地：`openclaw status`；远程：SSH 隧道 `ssh -N -L 18789:127.0.0.1:18789 user@host` 然后打开 `http://127.0.0.1:18789/`）。
-- 对于 `AUTH_TOKEN_MISMATCH`，当网关返回重试提示时，客户端可以使用缓存的设备令牌执行一次受信任的重试。该缓存令牌重试会重用令牌的缓存批准范围；显式 `deviceToken` / 显式 `scopes` 调用者会保留其请求的范围集。如果在该重试后认证仍然失败，请手动解决令牌偏差。
-- 除了该重试路径外，连接认证优先级首先是显式共享令牌/密码，然后是显式 `deviceToken`，接着是存储的设备令牌，最后是引导令牌。
-- 在异步 Tailscale Serve Control UI 路径上，对同一个
-  `{scope, ip}` 的失败尝试会在失败认证限制器记录它们之前进行序列化，因此第二个并发的不良重试可能已经显示 `retry later`。
+- 对于 `AUTH_TOKEN_MISMATCH`，当网关返回重试提示时，客户端可能会使用缓存的设备令牌执行一次可信重试。该缓存令牌重试会重用令牌的缓存批准范围；显式 `deviceToken` / 显式 `scopes` 调用者会保留其请求的范围集。如果该重试后认证仍然失败，请手动解决令牌偏差。
+- 在该重试路径之外，连接认证的优先级首先是显式共享令牌/密码，然后是显式 `deviceToken`，接着是存储的设备令牌，最后是引导令牌。
+- 在异步 Tailscale Serve 控制 UI 路径上，针对同一个 `{scope, ip}` 的失败尝试会在失败认证限制器记录它们之前进行序列化，因此第二次并发的错误重试可能已经显示 `retry later`。
 - 有关令牌偏差修复步骤，请遵循 [令牌偏差恢复检查清单](/zh/cli/devices#token-drift-recovery-checklist)。
 - 从网关主机检索或提供共享密钥：
   - 令牌：`openclaw config get gateway.auth.token`
-  - 密码：解析已配置的 `gateway.auth.password` 或
+  - 密码：解析配置的 `gateway.auth.password` 或
     `OPENCLAW_GATEWAY_PASSWORD`
-  - SecretRef 托管令牌：解析外部 secret 提供商或在此 shell 中导出
-    `OPENCLAW_GATEWAY_TOKEN`，然后重新运行 `openclaw dashboard`
+  - SecretRef 托管令牌：解析外部 secret 提供商或在此 shell 中导出 `OPENCLAW_GATEWAY_TOKEN`，然后重新运行 `openclaw dashboard`
   - 未配置共享密钥：`openclaw doctor --generate-gateway-token`
-- 在仪表板设置中，将令牌或密码粘贴到身份验证字段中，
-  然后连接。
-- UI 语言选择器位于 **Overview -> Gateway(网关) Access -> Language**。
-  它是访问卡的一部分，而不是 Appearance 部分。
+- 在仪表板设置中，将令牌或密码粘贴到身份验证字段中，然后连接。
+- UI 语言选择器位于 **Overview -> Gateway(网关) Access -> Language** 中。它是访问卡的一部分，而不是外观部分。
 
 ## 相关
 

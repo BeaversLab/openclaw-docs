@@ -1,20 +1,21 @@
 ---
-summary: "Búsqueda MiniMax a través de la API de búsqueda Coding Plan"
+summary: "Búsqueda de MiniMax a través de la API de búsqueda del Plan de Token"
 read_when:
   - You want to use MiniMax for web_search
-  - You need a MiniMax Coding Plan key
+  - You need a MiniMax Token Plan key or OAuth token
   - You want MiniMax CN/global search host guidance
 title: "Búsqueda de MiniMax"
 ---
 
-OpenClaw es compatible con MiniMax como proveedor `web_search` a través de la API de búsqueda del Coding Plan de MiniMax. Devuelve resultados de búsqueda estructurados con títulos, URLs, fragmentos y consultas relacionadas.
+OpenClaw soporta MiniMax como proveedor de `web_search` a través de la API de búsqueda del Plan de Token de MiniMax. Devuelve resultados de búsqueda estructurados con títulos, URL, fragmentos y consultas relacionadas.
 
-## Obtener una clave del Coding Plan
+## Obtener una credencial del Plan de Token
 
 <Steps>
   <Step title="Crear una clave">
-    Cree o copie una clave del Coding Plan de MiniMax desde
-    [Plataforma de MiniMax](https://platform.minimax.io/user-center/basic-information/interface-key).
+    Cree o copie una clave del Plan de Token de MiniMax desde
+    [Plataforma MiniMax](https://platform.minimax.io/user-center/basic-information/interface-key).
+    Las configuraciones de OAuth pueden reutilizar `MINIMAX_OAUTH_TOKEN` en su lugar.
   </Step>
   <Step title="Guardar la clave">
     Establezca `MINIMAX_CODE_PLAN_KEY` en el entorno de Gateway, o configure a través de:
@@ -26,8 +27,10 @@ OpenClaw es compatible con MiniMax como proveedor `web_search` a través de la A
   </Step>
 </Steps>
 
-OpenClaw también acepta `MINIMAX_CODING_API_KEY` como un alias de entorno. `MINIMAX_API_KEY`
-se sigue leyendo como método alternativo de compatibilidad cuando ya apunta a un token de coding-plan.
+OpenClaw también acepta `MINIMAX_CODING_API_KEY`, `MINIMAX_OAUTH_TOKEN` y
+`MINIMAX_API_KEY` como alias de entorno. `MINIMAX_API_KEY` debe apuntar a una
+credencial del Plan de Token con búsqueda habilitada; las claves de API del modelo ordinario de MiniMax pueden no
+ser aceptadas por el endpoint de búsqueda del Plan de Token.
 
 ## Configuración
 
@@ -38,7 +41,7 @@ se sigue leyendo como método alternativo de compatibilidad cuando ya apunta a u
       minimax: {
         config: {
           webSearch: {
-            apiKey: "sk-cp-...", // optional if MINIMAX_CODE_PLAN_KEY is set
+            apiKey: "sk-cp-...", // optional if a MiniMax Token Plan env var is set
             region: "global", // or "cn"
           },
         },
@@ -55,7 +58,8 @@ se sigue leyendo como método alternativo de compatibilidad cuando ya apunta a u
 }
 ```
 
-**Alternativa de entorno:** establezca `MINIMAX_CODE_PLAN_KEY` en el entorno de Gateway.
+**Alternativa de entorno:** establezca `MINIMAX_CODE_PLAN_KEY`, `MINIMAX_CODING_API_KEY`,
+`MINIMAX_OAUTH_TOKEN` o `MINIMAX_API_KEY` en el entorno de Gateway.
 Para una instalación de gateway, póngalo en `~/.openclaw/.env`.
 
 ## Selección de región
@@ -74,18 +78,19 @@ la región en este orden:
 4. `models.providers.minimax-portal.baseUrl`
 
 Eso significa que la incorporación en CN o `MINIMAX_API_HOST=https://api.minimaxi.com/...`
-mantiene automáticamente la búsqueda de MiniMax en el host de CN también.
+mantiene automáticamente la Búsqueda de MiniMax en el host CN también.
 
-Incluso cuando autenticó MiniMax a través de la ruta OAuth `minimax-portal`,
+Incluso cuando haya autenticado MiniMax a través de la ruta OAuth `minimax-portal`,
 la búsqueda web todavía se registra como id de proveedor `minimax`; la URL base del proveedor OAuth
-solo se usa como sugerencia de región para la selección de host CN/global.
+se utiliza como sugerencia de región para la selección de host CN/global, y `MINIMAX_OAUTH_TOKEN`
+puede satisfacer la credencial de portador de MiniMax Search.
 
 ## Parámetros compatibles
 
 La búsqueda de MiniMax es compatible con:
 
 - `query`
-- `count` (OpenClaw recorta la lista de resultados devuelta a la cantidad solicitada)
+- `count` (OpenClaw recorta la lista de resultados devueltos al número solicitado)
 
 Los filtros específicos del proveedor actualmente no son compatibles.
 

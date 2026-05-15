@@ -2,7 +2,7 @@
 summary: "CLI 参考，用于 `openclaw memory` (status/index/search/promote/promote-explain/rem-harness)"
 read_when:
   - You want to index or search semantic memory
-  - You’re debugging memory availability or indexing
+  - You're debugging memory availability or indexing
   - You want to promote recalled short-term memory into `MEMORY.md`
 title: "Memory"
 ---
@@ -51,7 +51,7 @@ openclaw memory index --agent main --verbose
 
 `memory status`：
 
-- `--deep`：探测向量和嵌入可用性。普通的 `memory status` 保持快速，且不运行实时嵌入检查。QMD 词法 `searchMode: "search"` 即使使用 `--deep` 也会跳过语义向量探测和嵌入维护。
+- `--deep`：探测本地向量存储就绪状态、嵌入提供商就绪状态以及语义向量搜索就绪状态。普通的 `memory status` 保持快速，不会运行实时嵌入或提供商发现工作；未知的向量存储或语义向量状态表示该命令未对其进行探测。QMD 词法 `searchMode: "search"` 跳过语义向量探测和嵌入维护，即使使用了 `--deep`。
 - `--index`：如果存储库是脏的，则运行重新索引（意味着 `--deep`）。
 - `--fix`：修复过时的召回锁并规范化提升元数据。
 - `--json`：打印 JSON 输出。

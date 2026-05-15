@@ -8,7 +8,7 @@ read_when:
 
 Les compétences enseignent à l'agent comment et quand utiliser les outils. Chaque compétence est un répertoire contenant un fichier `SKILL.md` avec des en-têtes YAML et des instructions markdown.
 
-Pour savoir comment les compétences sont chargées et priorisées, consultez [Compétences](/fr/tools/skills).
+Pour savoir comment les compétences sont chargées et priorisées, consultez [Skills](/fr/tools/skills).
 
 ## Créer votre première compétence
 
@@ -22,13 +22,13 @@ Pour savoir comment les compétences sont chargées et priorisées, consultez [C
 
   </Step>
 
-  <Step title="Écrire SKILL.md">
-    Créez `SKILL.md` à l'intérieur de ce répertoire. L'en-tête définit les métadonnées,
+  <Step title="Write SKILL.md">
+    Créez `SKILL.md` dans ce répertoire. La page frontmatter définit les métadonnées,
     et le corps markdown contient les instructions pour l'agent.
 
     ```markdown
     ---
-    name: hello_world
+    name: hello-world
     description: A simple skill that says hello.
     ---
 
@@ -38,12 +38,15 @@ Pour savoir comment les compétences sont chargées et priorisées, consultez [C
     "Hello from your custom skill!".
     ```
 
+    Utilisez le format kebab-case avec des lettres minuscules, des chiffres et des traits d'union pour l'identifiant de la compétence
+    `name`. Gardez le nom du dossier et `name` de la page frontmatter alignés.
+
   </Step>
 
-  <Step title="Ajouter des outils (optionnel)">
-    Vous pouvez définir des schémas d'outils personnalisés dans l'en-tête ou demander à l'agent
-    d'utiliser les outils système existants (comme `exec` ou `browser`). Les compétences peuvent également
-    être fournies dans des plugins à côté des outils qu'elles documentent.
+  <Step title="Add tools (optional)">
+    Vous pouvez définir des schémas d'outil personnalisés dans la page frontmatter ou instruire l'agent
+    à utiliser des outils système existants (comme `exec` ou `browser`). Les compétences peuvent également
+    être livrées dans des plugins aux côtés des outils qu'elles documentent.
 
   </Step>
 
@@ -82,20 +85,20 @@ Pour savoir comment les compétences sont chargées et priorisées, consultez [C
 
 L'en-tête YAML prend en charge ces champs :
 
-| Champ                               | Obligatoire | Description                                  |
-| ----------------------------------- | ----------- | -------------------------------------------- |
-| `name`                              | Oui         | Identifiant unique (snake_case)              |
-| `description`                       | Oui         | Description sur une ligne affichée à l'agent |
-| `metadata.openclaw.os`              | Non         | Filtre OS (`["darwin"]`, `["linux"]`, etc.)  |
-| `metadata.openclaw.requires.bins`   | Non         | Binaires requis sur le PATH                  |
-| `metadata.openclaw.requires.config` | Non         | Clés de configuration requises               |
+| Champ                               | Obligatoire | Description                                                                             |
+| ----------------------------------- | ----------- | --------------------------------------------------------------------------------------- |
+| `name`                              | Oui         | Identifiant unique utilisant des lettres minuscules, des chiffres et des traits d'union |
+| `description`                       | Oui         | Description sur une ligne affichée à l'agent                                            |
+| `metadata.openclaw.os`              | Non         | Filtre OS (`["darwin"]`, `["linux"]`, etc.)                                             |
+| `metadata.openclaw.requires.bins`   | Non         | Binaires requis sur le PATH                                                             |
+| `metadata.openclaw.requires.config` | Non         | Clés de configuration requises                                                          |
 
 ## Meilleures pratiques
 
 - **Soyez concis** — indiquez au modèle _quoi_ faire, pas comment être une IA
-- **Sécurité avant tout** — si votre skill utilise `exec`, assurez-vous que les invites n'autorisent pas l'injection de commandes arbitraires depuis une entrée non fiable
-- **Testez localement** — utilisez `openclaw agent --message "..."` pour tester avant de partager
-- **Utilisez ClawHub** — parcourez et contribuez aux compétences sur [ClawHub](https://clawhub.ai)
+- **Sécurité avant tout** — si votre compétence utilise `exec`, assurez-vous que les invites n'autorisent pas l'injection arbitraire de commandes provenant d'une entrée non fiable
+- **Tester localement** — utilisez `openclaw agent --message "..."` pour tester avant de partager
+- **Utiliser ClawHub** — parcourez et contribuez aux compétences sur [ClawHub](ClawHubClawHubhttps://clawhub.ai)
 
 ## Où se trouvent les skills
 
@@ -110,7 +113,7 @@ L'en-tête YAML prend en charge ces champs :
 
 ## Connexes
 
-- [Référence des Skills](/fr/tools/skills) — chargement, priorité et règles de filtrage
-- [Configuration des Skills](/fr/tools/skills-config) — schéma de configuration `skills.*`
-- [ClawHub](/fr/tools/clawhub) — registre public de compétences
-- [Création de plugins](/fr/plugins/building-plugins) — les plugins peuvent fournir des compétences
+- [Référence des compétences](/fr/tools/skills) — chargement, priorité et règles de filtrage
+- [Config des compétences](/fr/tools/skills-config) — schéma de config `skills.*`
+- [ClawHub](ClawHub/en/clawhub) — registre public de compétences
+- [Création de plugins](/fr/plugins/building-plugins) — les plugins peuvent livrer des compétences

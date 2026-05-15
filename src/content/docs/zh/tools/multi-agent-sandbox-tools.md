@@ -21,7 +21,7 @@ status: active
 </CardGroup>
 
 <Warning>
-认证是按代理进行的：每个代理从 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 处读取自己的 `agentDir` 认证存储。凭证在代理之间**不**共享。切勿跨代理重用 `agentDir`。如果您想共享凭证，请将 `auth-profiles.json` 复制到另一个代理的 `agentDir` 中。
+Auth 的作用域按 Agent 划分：每个 Agent 在 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 都有自己的 `agentDir` auth store。切勿跨 Agent 重用 `agentDir`OAuth。当没有本地配置文件时，Agent 可以读取默认/主 Agent 的 auth 配置文件，但 OAuth 刷新令牌不会克隆到次级 Agent 存储中。如果您手动复制凭据，请仅复制可移植的静态 `api_key` 或 `token` 配置文件。
 </Warning>
 
 ---
@@ -204,13 +204,21 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 </Steps>
 
 <AccordionGroup>
-  <Accordion title="优先级规则">- 每一层级都可以进一步限制工具，但不能恢复之前层级中已拒绝的工具。 - 如果设置了 `agents.list[].tools.sandbox.tools`，它将替换该代理的 `tools.sandbox.tools`。 - 如果设置了 `agents.list[].tools.profile`，它将覆盖该代理的 `tools.profile`。 - 提供商工具键接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.4`）。</Accordion>
-  <Accordion title="空允许列表行为">如果该链中的任何显式允许列表导致运行时没有可调用的工具，OpenClaw 将在向模型提交提示之前停止。这是有意的：配置了缺失工具（例如 `agents.list[].tools.allow: ["query_db"]`）的代理应该明确报错，直到注册 `query_db` 的插件被启用，而不是作为仅文本代理继续运行。</Accordion>
+  <Accordion title="优先级规则">
+    - 每个层级都可以进一步限制工具，但不能恢复之前层级拒绝的工具。
+    - 如果设置了 `agents.list[].tools.sandbox.tools`，它将替换该 Agent 的 `tools.sandbox.tools`。
+    - 如果设置了 `agents.list[].tools.profile`，它将覆盖该 Agent 的 `tools.profile`。
+    - Provider 工具键接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.4`）。
+
+  </Accordion>
+  <Accordion title="空允许列表行为">
+    如果该链中的任何显式允许列表导致运行时没有可调用的工具，OpenClaw 将在向模型提交提示之前停止。这是有意的：配置了缺失工具（例如 `agents.list[].tools.allow: ["query_db"]`）的代理应该明确报错，直到注册 `query_db` 的插件被启用，而不是作为仅文本代理继续运行。
+  </Accordion>
 </AccordionGroup>
 
-工具策略支持扩展为多个工具的 `group:*` 简写。有关完整列表，请参阅[工具组](/zh/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
+工具策略支持可扩展为多个工具的 `group:*` 简写形式。有关完整列表，请参阅 [工具组](/zh/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
 
-每个代理的提升覆盖（`agents.list[].tools.elevated`）可以进一步限制特定代理的提升执行。有关详细信息，请参阅[提升模式](/zh/tools/elevated)。
+按 Agent 覆盖的 Elevated 配置 (`agents.list[].tools.elevated`) 可以进一步限制特定 Agent 的 elevated exec。有关详细信息，请参阅 [Elevated 模式](/zh/tools/elevated)。
 
 ---
 
@@ -264,7 +272,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 ## 工具限制示例
 
 <Tabs>
-  <Tab title="只读代理">
+  <Tab title="只读 Agent">
     ```json
     {
       "tools": {
@@ -274,7 +282,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
     }
     ```
   </Tab>
-  <Tab title="安全执行（无文件修改）">
+  <Tab title="禁用文件系统工具的 Shell 执行">
     ```json
     {
       "tools": {
@@ -283,6 +291,11 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
       }
     }
     ```
+
+    <Warning>
+    此策略禁用了 OpenClaw 文件系统工具，但 `exec` 仍然是一个 Shell，可以在所选主机或沙箱文件系统允许的任何位置写入文件。对于只读 Agent，请拒绝 `exec` 和 `process`，或者将 Shell 访问与沙箱文件系统控制（例如 `agents.defaults.sandbox.workspaceAccess: "ro"` 或 `"none"`）结合使用。
+    </Warning>
+
   </Tab>
   <Tab title="Communication-only">
     ```json
@@ -295,16 +308,16 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
     }
     ```
 
-    此配置文件中的 `sessions_history` 仍会返回有界的、经过清理的召回视图，而不是原始的对话记录转储。Assistant recall 会移除 thinking 标签、`<relevant-memories>` 脚手架、纯文本工具调用 XML 载荷（包括 `<tool_call>...</tool_call>`、`<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、`<function_calls>...</function_calls>` 和截断的工具调用块）、降级的工具调用脚手架、泄露的 ASCII/全角模型控制令牌以及格式错误的 MiniMax 工具调用 XML，然后再进行编辑/截断。
+    此配置文件中的 `sessions_history` 仍然返回有界的、经过清理的召回视图，而不是原始的对话记录转储。助手召回会去除思考标签、`<relevant-memories>` 脚手架、纯文本工具调用 XML 载荷（包括 `<tool_call>...</tool_call>`、`<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、`<function_calls>...</function_calls>`MiniMax 以及被截断的工具调用块）、降级的工具调用脚手架、泄露的 ASCII/全角模型控制令牌，以及在编辑/截断之前格式错误的 MiniMax 工具调用 XML。
 
   </Tab>
 </Tabs>
 
 ---
 
-## 常见陷阱：“非主”
+## 常见误区：“非主”
 
-<Warning>`agents.defaults.sandbox.mode: "non-main"` 基于 `session.mainKey`（默认为 `"main"`），而非代理 ID。群组/渠道会话始终获取其自己的密钥，因此它们被视为非主会话并将受到沙箱隔离。如果您希望代理永不进行沙箱隔离，请设置 `agents.list[].sandbox.mode: "off"`。</Warning>
+<Warning>`agents.defaults.sandbox.mode: "non-main"` 基于 `session.mainKey`（默认为 `"main"`），而非代理 ID。群组/渠道会话总是拥有自己的密钥，因此它们被视为“非主”并将处于沙箱隔离状态。如果您希望代理永远不被沙箱隔离，请设置 `agents.list[].sandbox.mode: "off"`。</Warning>
 
 ---
 
@@ -313,21 +326,22 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 配置多代理沙箱和工具后：
 
 <Steps>
-  <Step title="检查代理解析">
+  <Step title="Check agent resolution">
     ```bash
     openclaw agents list --bindings
     ```
   </Step>
-  <Step title="验证沙箱容器">
+  <Step title="Verify sandbox containers">
     ```bash
     docker ps --filter "name=openclaw-sbx-"
     ```
   </Step>
-  <Step title="测试工具限制">
+  <Step title="Test 工具 restrictions">
     - 发送一条需要受限工具的消息。
     - 验证代理无法使用被拒绝的工具。
+
   </Step>
-  <Step title="监控日志">
+  <Step title="Monitor logs">
     ```bash
     tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
     ```
@@ -339,18 +353,31 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 ## 故障排除
 
 <AccordionGroup>
-  <Accordion title="尽管设置了 `mode: 'all'` 但代理未被沙箱隔离">- 检查是否存在覆盖该设置的全局 `agents.defaults.sandbox.mode`。 - 特定于代理的配置优先级更高，因此请设置 `agents.list[].sandbox.mode: "all"`。</Accordion>
-  <Accordion title="尽管有拒绝列表，工具仍然可用">- 检查工具过滤顺序：全局 (global) → 代理 (agent) → 沙箱 (sandbox) → 子代理 (subagent)。 - 每个层级只能进一步限制，不能恢复权限。 - 使用日志验证：`[tools] filtering tools for agent:${agentId}`。</Accordion>
-  <Accordion title="容器未按代理隔离">- 在代理特定的沙箱配置中设置 `scope: "agent"`。 - 默认值是 `"session"`，它会为每个会话 (会话) 创建一个容器。</Accordion>
+  <Accordion title="Agent not 沙箱隔离 despite `mode: 'all'`">
+    - 检查是否存在覆盖该设置的全局 `agents.defaults.sandbox.mode`。
+    - 特定于代理的配置优先级更高，因此请设置 `agents.list[].sandbox.mode: "all"`。
+
+  </Accordion>
+  <Accordion title="尽管有拒绝列表，工具仍然可用">
+    - 检查工具过滤顺序：全局 → 代理 → 沙箱 → 子代理。
+    - 每一层只能进一步限制，不能重新授权。
+    - 通过日志验证：`[tools] filtering tools for agent:${agentId}`。
+
+  </Accordion>
+  <Accordion title="容器未按代理隔离">
+    - 在代理特定的沙箱配置中设置 `scope: "agent"`。
+    - 默认值为 `"session"`，即每个会话创建一个容器。
+
+  </Accordion>
 </AccordionGroup>
 
 ---
 
 ## 相关
 
-- [提升模式 (Elevated mode)](/zh/tools/elevated)
-- [多代理路由 (Multi-agent routing)](/zh/concepts/multi-agent)
-- [沙箱配置 (沙箱 configuration)](/zh/gateway/config-agents#agentsdefaultssandbox)
-- [沙箱 vs 工具策略 vs 提升 (沙箱 vs 工具 policy vs elevated)](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) — 调试“为什么被阻止？”
-- [沙箱隔离 (沙箱隔离)](/zh/gateway/sandboxing) — 完整的沙箱参考（模式、作用域、后端、镜像）
-- [会话管理 (Session management)](/zh/concepts/session)
+- [提升模式](/zh/tools/elevated)
+- [多代理路由](/zh/concepts/multi-agent)
+- [沙箱配置](/zh/gateway/config-agents#agentsdefaultssandbox)
+- [沙箱与工具策略及提升模式](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) — 调试“为什么被阻止？”
+- [沙箱隔离](/zh/gateway/sandboxing) — 完整的沙箱参考（模式、范围、后端、镜像）
+- [会话管理](/zh/concepts/session)

@@ -17,7 +17,7 @@ title: "Docker VM runtime"
 
 下面的示例仅展示了三种常见的二进制文件：
 
-- `gog` 用于 Gmail 访问
+- `gog` (来自 `gogcli`) 用于 Gmail 访问
 - `goplaces` 用于 Google Places
 - `wacli` 用于 WhatsApp
 
@@ -37,17 +37,23 @@ FROM node:24-bookworm
 
 RUN apt-get update && apt-get install -y socat && rm -rf /var/lib/apt/lists/*
 
-# Example binary 1: Gmail CLI
-RUN curl -L https://github.com/steipete/gog/releases/latest/download/gog_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/gog
+# Example binary 1: Gmail CLI (gogcli — installs as `gog`)
+# Copy the current Linux asset URL from https://github.com/steipete/gogcli/releases
+RUN curl -L https://github.com/steipete/gogcli/releases/latest/download/gogcli_linux_amd64.tar.gz \
+  | tar -xzO gog > /usr/local/bin/gog; \
+  chmod +x /usr/local/bin/gog
 
 # Example binary 2: Google Places CLI
-RUN curl -L https://github.com/steipete/goplaces/releases/latest/download/goplaces_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/goplaces
+# Copy the current Linux asset URL from https://github.com/steipete/goplaces/releases
+RUN curl -L https://github.com/steipete/goplaces/releases/latest/download/goplaces_linux_amd64.tar.gz \
+  | tar -xzO goplaces > /usr/local/bin/goplaces; \
+  chmod +x /usr/local/bin/goplaces
 
 # Example binary 3: WhatsApp CLI
-RUN curl -L https://github.com/steipete/wacli/releases/latest/download/wacli_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/wacli
+# Copy the current Linux asset URL from https://github.com/steipete/wacli/releases
+RUN curl -L https://github.com/steipete/wacli/releases/latest/download/wacli-linux-amd64.tar.gz \
+  | tar -xzO wacli > /usr/local/bin/wacli; \
+  chmod +x /usr/local/bin/wacli
 
 # Add more binaries below using the same pattern
 
@@ -69,7 +75,7 @@ ENV NODE_ENV=production
 CMD ["node","dist/index.js"]
 ```
 
-<Note>上述下载 URL 针对 x86_64 (amd64)。对于基于 ARM 的虚拟机（例如 Hetzner ARM、GCP Tau T2A），请将下载 URL 替换为各工具发布页面上的相应 ARM64 变体。</Note>
+<Note>上述 URL 仅作示例。对于基于 ARM 的虚拟机，请选择 `arm64` 资产。为了实现可复现的构建，请固定版本化的发布 URL。</Note>
 
 ## 构建和启动
 
@@ -78,8 +84,8 @@ docker compose build
 docker compose up -d openclaw-gateway
 ```
 
-如果构建在 `pnpm install --frozen-lockfile` 期间因 `Killed` 或 `exit code 137` 失败，则虚拟机内存不足。
-重试前请使用更大的机器规格。
+如果在 `pnpm install --frozen-lockfile` 期间构建因 `Killed` 或 `exit code 137` 而失败，则表示虚拟机内存不足。
+请在重试前使用更大规格的机器。
 
 验证二进制文件：
 
@@ -114,22 +120,23 @@ docker compose logs -f openclaw-gateway
 OpenClaw 在 Docker 中运行，但 Docker 并不是事实的来源。
 所有长期存在的状态必须在重启、重新构建和系统重启后依然存在。
 
-| 组件                 | 位置                              | 持久化机制    | 备注                                                          |
-| -------------------- | --------------------------------- | ------------- | ------------------------------------------------------------- |
-| Gateway(网关) 配置   | `/home/node/.openclaw/`           | 主机卷挂载    | 包括 `openclaw.json`，`.env`                                  |
-| 模型身份验证配置文件 | `/home/node/.openclaw/agents/`    | 主机卷挂载    | `agents/<agentId>/agent/auth-profiles.json` (OAuth，API 密钥) |
-| 技能配置             | `/home/node/.openclaw/skills/`    | 主机卷挂载    | 技能级别的状态                                                |
-| 代理工作区           | `/home/node/.openclaw/workspace/` | 主机卷挂载    | 代码和代理制品                                                |
-| WhatsApp 会话        | `/home/node/.openclaw/`           | 主机卷挂载    | 保留二维码登录                                                |
-| Gmail 密钥环         | `/home/node/.openclaw/`           | 主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD`                                   |
-| 外部二进制文件       | `/usr/local/bin/`                 | Docker 镜像   | 必须在构建时烘焙                                              |
-| Node 运行时          | 容器文件系统                      | Docker 镜像   | 每次镜像构建时重新构建                                        |
-| 操作系统包           | 容器文件系统                      | Docker 镜像   | 不要在运行时安装                                              |
-| Docker 容器          | 临时的                            | 可重启的      | 可安全销毁                                                    |
+| 组件                 | 位置                                                   | 持久化机制    | 备注                                                          |
+| -------------------- | ------------------------------------------------------ | ------------- | ------------------------------------------------------------- |
+| Gateway(网关) 配置   | `/home/node/.openclaw/`                                | 主机卷挂载    | 包括 `openclaw.json`、`.env`                                  |
+| 模型身份验证配置文件 | `/home/node/.openclaw/agents/`                         | 主机卷挂载    | `agents/<agentId>/agent/auth-profiles.json` (OAuth、API 密钥) |
+| 技能配置             | `/home/node/.openclaw/skills/`                         | 主机卷挂载    | 技能级别的状态                                                |
+| 代理工作区           | `/home/node/.openclaw/workspace/`                      | 主机卷挂载    | 代码和代理制品                                                |
+| WhatsApp 会话        | `/home/node/.openclaw/`                                | 主机卷挂载    | 保留二维码登录                                                |
+| Gmail 密钥环         | `/home/node/.openclaw/`                                | 主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD`                                   |
+| 插件包               | `/home/node/.openclaw/npm`、`/home/node/.openclaw/git` | 主机卷挂载    | 可下载的插件包根目录                                          |
+| 外部二进制文件       | `/usr/local/bin/`                                      | Docker 镜像   | 必须在构建时烘焙                                              |
+| Node 运行时          | 容器文件系统                                           | Docker 镜像   | 每次镜像构建时重建                                            |
+| 操作系统包           | 容器文件系统                                           | Docker 镜像   | 不要在运行时安装                                              |
+| Docker 容器          | 临时的                                                 | 可重启的      | 可安全销毁                                                    |
 
 ## 更新
 
-要在 VM 上更新 OpenClaw：
+要在虚拟机上更新 OpenClaw：
 
 ```bash
 git pull

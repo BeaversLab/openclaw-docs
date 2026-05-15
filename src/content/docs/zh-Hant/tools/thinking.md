@@ -9,11 +9,11 @@ title: "思考層級"
 
 - 任何輸入內文中的內聯指令：`/t <level>`、`/think:<level>` 或 `/thinking <level>`。
 - 層級（別名）：`off | minimal | low | medium | high | xhigh | adaptive | max`
-  - minimal → “think”
-  - low → “think hard”
-  - medium → “think harder”
-  - high → “ultrathink” (max budget)
-  - xhigh → “ultrathink+” (GPT-5.2+ 和 Codex 模型，以及 Anthropic Claude Opus 4.7 力度)
+  - minimal → "think"
+  - low → "think hard"
+  - medium → "think harder"
+  - high → "ultrathink" (最大預算)
+  - xhigh → "ultrathink+" (GPT-5.2+ 和 Codex 模型，加上 Anthropic Claude Opus 4.7 努力程度)
   - adaptive → 提供者管理的自適應思考（支援 Anthropic/Bedrock 上的 Claude 4.6、Anthropic Claude Opus 4.7 和 Google Gemini 動態思考）
   - max → 提供者最大推理 (Anthropic Claude Opus 4.7；Ollama 將其對應至最高的原生 `think` 力度)
   - `x-high`、`x_high`、`extra-high`、`extra high` 和 `extra_high` 對應至 `xhigh`。
@@ -26,105 +26,115 @@ title: "思考層級"
   - Anthropic Claude Opus 4.7 不會預設為自適應思考。除非您明確設定思考層級，否則其 API 努力預設值仍由提供者擁有。
   - Anthropic Claude Opus 4.7 將 `/think xhigh` 對應至自適應思考加上 `output_config.effort: "xhigh"`，因為 `/think` 是思考指令，而 `xhigh` 是 Opus 4.7 的力度設定。
   - Anthropic Claude Opus 4.7 也公開了 `/think max`；它對應到相同的提供商擁有的最大努力路徑。
-  - Ollama 具備思考能力的模型公開了 `/think low|medium|high|max`；`max` 對應到原生 `think: "high"`，因為 Ollama 的原生 API 接受 `low`、`medium` 和 `high` 努力字串。
-  - OpenAI GPT 模型透過特定模型的 Responses API 努力支援來對應 `/think`。`/think off` 僅在目標模型支援時才發送 `reasoning.effort: "none"`；否則 OpenClaw 會省略停用的推理酬載，而不是發送不支援的值。
-  - 過時設定的 OpenRouter Hunter Alpha 參照會跳過代理推理注入，因為該已退役的路由可能透過推理欄位傳回最終答案文字。
-  - Google Gemini 將 `/think adaptive` 對應至 Gemini 提供商擁有的動態思考。Gemini 3 請求會省略固定的 `thinkingLevel`，而 Gemini 2.5 請求則發送 `thinkingBudget: -1`；固定等級仍會對應至該模型系列最接近的 Gemini `thinkingLevel` 或預算。
-  - 在 Anthropic 相容串流路徑上的 MiniMax (`minimax/*`) 預設為 `thinking: { type: "disabled" }`，除非您在模型參數或請求參數中明確設定思考。這可以避免來自 MiniMax 非原生 Anthropic 串流格式的 `reasoning_content` 差異洩漏。
-  - Z.AI (`zai/*`) 僅支援二元思考 (`on`/`off`)。任何非 `off` 等級都會被視為 `on` (對應至 `low`)。
-  - Moonshot (`moonshot/*`) 將 `/think off` 對應至 `thinking: { type: "disabled" }`，並將任何非 `off` 等級對應至 `thinking: { type: "enabled" }`。當啟用思考時，Moonshot 僅接受 `tool_choice` `auto|none`；OpenClaw 會將不相容的值正規化為 `auto`。
+  - 直接的 DeepSeek V4 模型公開 `/think xhigh|max`；兩者都對應到 DeepSeek `reasoning_effort: "max"`，而較低的非官方層級則對應到 `high`。
+  - 經由 OpenRouter 路由的 DeepSeek V4 模型公開 `/think xhigh` 並發送 OpenRouter 支援的 `reasoning_effort` 值。儲存的 `max` 覆寫會回退到 `xhigh`。
+  - Ollama 支援思考的模型公開 `/think low|medium|high|max`；`max` 對應到原生的 `think: "high"`，因為 Ollama 的原生 API 接受 `low`、`medium` 和 `high` 努力程度字串。
+  - OpenAI GPT 模型透過特定模型的 Responses API 努力程度支援來對應 `/think`。`/think off` 僅在目標模型支援時才發送 `reasoning.effort: "none"`；否則 OpenClaw 會省略停用的推理負載，而不是發送不支援的值。
+  - 自訂的 OpenAI 相容目錄項目可以透過設定 `models.providers.<provider>.models[].compat.supportedReasoningEfforts` 來包含 `"xhigh"`，從而選擇加入 `/think xhigh`。這使用對應出站 OpenAI 推理努力程度負載的相同相容性元資料，因此選單、會話驗證、代理 CLI 和 `llm-task` 都會與傳輸行為一致。
+  - 過時設定的 OpenRouter Hunter Alpha 參照會跳過代理推理注入，因為該已退役的路由可能會透過推理欄位傳回最終答案文字。
+  - Google Gemini 將 `/think adaptive` 對應到 Gemini 提供商擁有的動態思考。Gemini 3 請求會省略固定的 `thinkingLevel`，而 Gemini 2.5 請求會發送 `thinkingBudget: -1`；固定層級仍然會對應到該模型系列最接近的 Gemini `thinkingLevel` 或預算。
+  - MiniMax (`minimax/*`) 在 Anthropic 相容串流路徑上預設為 `thinking: { type: "disabled" }`，除非您在模型參數或請求參數中明確設定 thinking。這可避免從 MiniMax 非原生的 Anthropic 串流格式洩漏 `reasoning_content` delta。
+  - Z.AI (`zai/*`) 僅支援二元思維 (`on`/`off`)。任何非 `off` 層級都會被視為 `on` (對應到 `low`)。
+  - Moonshot (`moonshot/*`) 將 `/think off` 對應到 `thinking: { type: "disabled" }`，並將任何非 `off` 層級對應到 `thinking: { type: "enabled" }`。當啟用思維時，Moonshot 僅接受 `tool_choice` `auto|none`；OpenClaw 會將不相容的值正規化為 `auto`。
 
 ## 解析順序
 
-1. 訊息上的內嵌指令（僅適用於該訊息）。
-2. 會話覆蓋（透過發送僅包含指令的訊息來設定）。
-3. 個別代理預設值（設定中的 `agents.list[].thinkingDefault`）。
-4. 全域預設值（設定中的 `agents.defaults.thinkingDefault`）。
-5. 後備：當可用時使用供應商宣告的預設值；否則具備推理能力的模型解析為 `medium` 或該模型最接近支援的非 `off` 層級，而非推理模型則保持 `off`。
+1. 訊息上的內聯指令 (僅套用於該訊息)。
+2. Session 覆寫 (透過發送僅包含指令的訊息來設定)。
+3. 每個 Agent 的預設值 (設定中的 `agents.list[].thinkingDefault`)。
+4. 全域預設值 (設定中的 `agents.defaults.thinkingDefault`)。
+5. 後備機制：若可用則使用供應商宣告的預設值；否則，具備推理能力的模型會解析為 `medium` 或該模型最接近的支援非 `off` 層級，而不具推理能力的模型則保持 `off`。
 
-## 設定會話預設值
+## 設定 Session 預設值
 
-- 發送一條**僅**包含指令的訊息（允許空白字元），例如 `/think:medium` 或 `/t high`。
-- 這將在當前會話中持續生效（預設為每位發送者各別設定）；透過 `/think:off` 或會話閒置重置來清除。
-- 系統會發送確認回覆（`Thinking level set to high.` / `Thinking disabled.`）。如果層級無效（例如 `/thinking big`），該指令將會被拒絕並顯示提示，且會話狀態保持不變。
-- 發送不帶參數的 `/think`（或 `/think:`）以查看當前的思考層級。
+- 發送一條**僅**包含指令的訊息 (允許空白字元)，例如 `/think:medium` 或 `/t high`。
+- 這會在目前 session 生效 (預設為按發送者區分)。使用 `/think default` 清除 session 覆寫並繼承已設定/供應商的預設值；別名包括 `inherit`、`clear`、`reset` 和 `unpin`。
+- `/think off` 會儲存一個明確的關閉覆寫。它會停用思維功能，直到您變更或清除 session 覆寫為止。
+- 會傳送確認回覆（`Thinking level set to high.` / `Thinking disabled.`）。如果等級無效（例如 `/thinking big`），該指令將被拒絕並顯示提示，且會話狀態保持不變。
+- 發送 `/think`（或 `/think:`）且不帶參數，以查看當前的思考等級。
 
-## 由代理應用
+## 由代理程式應用
 
-- **內嵌 Pi**：解析出的層級會被傳遞給行程內的 Pi 代理執行時期。
+- **嵌入式 Pi**：解析出的等級會傳遞給程序內的 Pi 代理程式執行時。
+- **Claude CLI 後端**：當使用 `claude-cli` 時，非關閉等級會作為 `--effort` 傳遞給 Claude Code；請參閱 [CLI backends](/zh-Hant/gateway/cli-backends)。
 
 ## 快速模式 (/fast)
 
-- 層級：`on|off`。
-- 僅包含指令的訊息會切換會話的快速模式覆蓋設定，並回覆 `Fast mode enabled.` / `Fast mode disabled.`。
-- 發送不帶模式的 `/fast`（或 `/fast status`）以查看當前有效的快速模式狀態。
-- OpenClaw 依照以下順序解析快速模式：
-  1. 內嵌/僅指令 `/fast on|off`
-  2. 會話覆蓋
-  3. 個別代理預設值（`agents.list[].fastModeDefault`）
-  4. 個別模型設定：`agents.defaults.models["<provider>/<model>"].params.fastMode`
+- 等級：`on|off|default`。
+- 僅包含指令的訊息會切換會話快速模式覆寫，並回覆 `Fast mode enabled.` / `Fast mode disabled.`。使用 `/fast default` 來清除會話覆寫並繼承設定的預設值；別名包括 `inherit`、`clear`、`reset` 和 `unpin`。
+- 發送 `/fast`（或 `/fast status`）且不帶模式參數，以查看當前有效的快速模式狀態。
+- OpenClaw 按以下順序解析快速模式：
+  1. 內聯/僅指令 `/fast on|off` 覆寫（`/fast default` 會清除此層級）
+  2. 會話覆寫
+  3. 每個代理程式的預設值（`agents.list[].fastModeDefault`）
+  4. 每個模型的設定：`agents.defaults.models["<provider>/<model>"].params.fastMode`
   5. 後備：`off`
-- 對於 `openai/*`，快速模式會透過在支援的 Responses 請求中發送 `service_tier=priority` 對應至 OpenAI 的優先處理。
-- 對於 `openai-codex/*`，快速模式會在 Codex 回應中發送相同的 `service_tier=priority` 標誌。OpenClaw 在這兩種驗證路徑之間保持一個共用的 `/fast` 切換開關。
-- 對於直接公開的 `anthropic/*` 請求，包括傳送到 `api.anthropic.com` 的經 OAuth 驗證的流量，快速模式對應至 Anthropic 服務層級：`/fast on` 設定 `service_tier=auto`，`/fast off` 設定 `service_tier=standard_only`。
-- 對於 Anthropic 相容路徑上的 `minimax/*`，`/fast on`（或 `params.fastMode: true`）會將 `MiniMax-M2.7` 重寫為 `MiniMax-M2.7-highspeed`。
-- 當同時設定了明確的 Anthropic `serviceTier` / `service_tier` 模型參數時，它們會覆寫快速模式的預設值。對於非 Anthropic 代理基底 URL，OpenClaw 仍然會跳過 Anthropic 服務層級的注入。
+- 對於 `openai/*`，快速模式會透過在支援的 Requests 要求中發送 `service_tier=priority` 來對應到 OpenAI 的優先處理。
+- 對於 `openai-codex/*`，快速模式會在 Codex Requests 上發送相同的 `service_tier=priority` 標誌。OpenClaw 在這兩種驗證路徑之間保持一個共用的 `/fast` 切換開關。
+- 對於直接的公開 `anthropic/*` 請求，包括傳送到 `api.anthropic.com` 的 OAuth 驗證流量，快速模式對應至 Anthropic 服務層級：`/fast on` 設定 `service_tier=auto`，`/fast off` 設定 `service_tier=standard_only`。
+- 對於 Anthropic 相容路徑上的 `minimax/*`，`/fast on` (或 `params.fastMode: true`) 會將 `MiniMax-M2.7` 重寫為 `MiniMax-M2.7-highspeed`。
+- 當同時設定時，明確的 Anthropic `serviceTier` / `service_tier` 模型參數會覆寫快速模式的預設值。對於非 Anthropic 代理基礎 URL，OpenClaw 仍然會跳過 Anthropic 服務層級的注入。
 - `/status` 僅在啟用快速模式時顯示 `Fast`。
 
 ## 詳細指令 (/verbose 或 /v)
 
-- 層級：`on` (最少) | `full` | `off` (預設)。
-- 僅含指令的訊息會切換工作階段詳細模式並回覆 `Verbose logging enabled.` / `Verbose logging disabled.`；無效的層級會傳回提示而不改變狀態。
-- `/verbose off` 會儲存明確的工作階段覆寫值；您可以透過 Sessions UI 選擇 `inherit` 來清除它。
-- 內聯指令僅影響該則訊息；否則會套用工作階段/全域預設值。
-- 傳送 `/verbose`（或 `/verbose:`） 且不帶任何引數，以查看目前的詳細層級。
-- 當詳細模式開啟時，發出結構化工具結果的代理程式（Pi、其他 JSON 代理程式）會將每個工具呼叫作為其自身的僅元數據訊息傳回，並在可用時加上 `<emoji> <tool-name>: <arg>` 前綴（路徑/指令）。這些工具摘要會在每個工具啟動時立即傳送（獨立氣泡），而不是作為串流增量傳送。
-- 在正常模式下，工具失敗摘要仍然可見，但除非 verbose 為 `on` 或 `full`，否則原始錯誤詳情後綴會被隱藏。
-- 當 verbose 為 `full` 時，工具輸出也會在完成後轉發（獨立的氣泡，截斷至安全長度）。如果您在執行過程中切換 `/verbose on|full|off`，隨後的工具氣泡將遵循新設定。
+- 層級：`on` (最小) | `full` | `off` (預設)。
+- 僅指令訊息會切換會話的詳細模式並回覆 `Verbose logging enabled.` / `Verbose logging disabled.`；無效的層級會傳回提示而不會改變狀態。
+- `/verbose off` 會儲存明確的會話覆寫；透過在 Sessions UI 中選擇 `inherit` 來清除它。
+- 內聯指令僅影響該訊息；否則會套用會話/全域預設值。
+- 傳送 `/verbose` (或 `/verbose:`) 且不帶參數，以查看目前的詳細層級。
+- 當啟用詳細模式時，發出結構化工具結果的代理程式 (Pi、其他 JSON 代理程式) 會將每個工具呼叫作為其自己的僅包含中繼資料的訊息傳回，並在可用時加上 `<emoji> <tool-name>: <arg>` 前綴。這些工具摘要會在每個工具啟動時立即傳送 (獨立氣泡)，而不是作為串流增量傳送。
+- 工具失敗摘要在正常模式下保持可見，但除非詳細層級為 `on` 或 `full`，否則會隱藏原始錯誤詳細資訊後綴。
+- 當 verbose 為 `full` 時，工具輸出也會在完成後轉發（單獨的氣泡，截斷為安全長度）。如果您在執行過程中切換 `/verbose on|full|off`，隨後的工具氣泡將遵循新設定。
+- `agents.defaults.toolProgressDetail` 控制著 `/verbose` 工具摘要和進度草稿工具行的形狀。使用 `"explain"`（預設）以獲得緊湊的標籤，例如 `🛠️ Exec: checking JS syntax`；當您也想要附加原始指令/細節以進行除錯時，請使用 `"raw"`。每個代理程式的 `agents.list[].toolProgressDetail` 會覆寫預設值。
+  - `explain`：`🛠️ Exec: check JS syntax for /tmp/app.js`
+  - `raw`：`🛠️ Exec: check JS syntax for /tmp/app.js, node --check /tmp/app.js`
 
 ## 外掛程式追蹤指令 (/trace)
 
 - 層級：`on` | `off`（預設）。
-- 僅含指令的訊息會切換會話外掛程式追蹤輸出並回覆 `Plugin trace enabled.` / `Plugin trace disabled.`。
-- 內聯指令僅影響該訊息；否則應用會話/全域預設值。
-- 傳送 `/trace`（或 `/trace:`）且不帶參數，以查看當前追蹤層級。
-- `/trace` 比 `/verbose` 更狹窄：它僅顯示外掛程式擁有的追蹤/除錯行，例如 Active Memory 除錯摘要。
-- 追蹤行可以出現在 `/status` 中，並作為正常助理回覆後的後續診斷訊息。
+- 僅指令訊息會切換工作階段外掛程式追蹤輸出並回覆 `Plugin trace enabled.` / `Plugin trace disabled.`。
+- 內聯指令僅影響該訊息；否則適用工作階段/全域預設值。
+- 發送 `/trace`（或 `/trace:`）且不帶參數，以查看目前的追蹤層級。
+- `/trace` 比 `/verbose` 更狹窄：它僅公開外掛程式擁有的追蹤/除錯行，例如 Active Memory 除錯摘要。
+- 追蹤行可以出現在 `/status` 中，並作為正常助理回覆之後的後續診斷訊息。
 
 ## 推理可見性 (/reasoning)
 
 - 層級：`on|off|stream`。
-- 僅含指令的訊息會切換回覆中是否顯示思考區塊。
-- 啟用後，推理將作為帶有 `Reasoning:` 前綴的**單獨訊息**傳送。
-- `stream`（僅限 Telegram）：在生成回覆時將推理串流到 Telegram 草稿氣泡中，然後發送不包含推理的最終答案。
+- 僅指令訊息會切換是否在回覆中顯示思考區塊。
+- 啟用後，推理將作為單獨的訊息發送，並以前綴 `Reasoning:`。
+- `stream`（僅限 Telegram）：在生成回覆時將推理串流到 Telegram 草稿氣泡中，然後發送不含推理的最終答案。
 - 別名：`/reason`。
-- 傳送 `/reasoning`（或 `/reasoning:`）且不帶參數，以查看當前推理層級。
-- 解析順序：內聯指令，然後是會話覆蓋，接著是每個代理的預設值 (`agents.list[].reasoningDefault`)，最後是後備值 (`off`)。
+- 發送 `/reasoning`（或 `/reasoning:`）且不帶參數，以查看目前的推理層級。
+- 解析順序：內聯指令，然後是會話覆蓋，接著是每個代理的預設值（`agents.list[].reasoningDefault`），然後是全域預設值（`agents.defaults.reasoningDefault`），最後是後備值（`off`）。
 
-格式錯誤的本地模型推理標籤會以保守方式處理。已關閉的 `<think>...</think>` 區塊在正常回覆中保持隱藏，而在已顯示文字之後未關閉的推理內容也會被隱藏。如果回覆完全被單個未關閉的開啟標籤包裹，並且原本會傳遞空文字，OpenClaw 將移除格式錯誤的開啟標籤並傳遞其餘文字。
+格式錯誤的本地模型推理標籤會被保守地處理。已封閉的 `<think>...</think>` 區塊在正常回覆中保持隱藏，且在已可見文字之後未封閉的推理也會被隱藏。如果回覆完全被單一未封閉的開頭標籤包圍，且原本會傳送為空文字，OpenClaw 會移除格式錯誤的開頭標籤並傳送剩餘的文字。
 
 ## 相關
 
-- 提升模式文檔位於 [提升模式](/zh-Hant/tools/elevated)。
+- 提升模式文件位於 [Elevated mode](/zh-Hant/tools/elevated)。
 
 ## 心跳
 
 - 心跳探測主體是已配置的心跳提示（預設：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`）。心跳訊息中的內聯指令照常應用（但避免從心跳更改會話預設值）。
-- 心跳傳遞預設僅包含最終負載。若也要發送獨立的 `Reasoning:` 訊息（當可用時），請設定 `agents.defaults.heartbeat.includeReasoning: true` 或針對每個代理設定 `agents.list[].heartbeat.includeReasoning: true`。
+- 心跳傳送預設僅包含最終 payload。若也要傳送單獨的 `Reasoning:` 訊息（當可用時），請設定 `agents.defaults.heartbeat.includeReasoning: true` 或每個代理的 `agents.list[].heartbeat.includeReasoning: true`。
 
-## 網頁聊天 UI
+## Web 聊天 UI
 
-- 當頁面載入時，網頁聊天的思考選擇器會反映來自傳入會話儲存/配置的會話儲存等級。
-- 選擇另一個等級會透過 `sessions.patch` 立即寫入會話覆蓋；它不會等待下一次發送，也不是一次性 `thinkingOnce` 覆蓋。
-- 第一個選項總是 `Default (<resolved level>)`，其中解析的預設值來自活動會話模型的提供者思考設定檔，加上 `/status` 和 `session_status` 使用的相同後備邏輯。
-- 選擇器使用閘道會話列/預設值返回的 `thinkingLevels`，其中 `thinkingOptions` 作為舊版標籤列表保留。瀏覽器 UI 不維護自己的提供者正則表達式列表；外掛程式擁有特定於模型的等級集。
-- `/think:<level>` 仍然有效並更新相同的儲存會話等級，因此聊天指令和選擇器保持同步。
+- 當頁面載入時，Web 聊天的思考選擇器會反映來自傳入會話儲存/配置的會話已儲存層級。
+- 選擇另一個層級會透過 `sessions.patch` 立即寫入會話覆蓋；它不會等待下一次傳送，也不是一次性 `thinkingOnce` 覆蓋。
+- 第一個選項始終是清除覆蓋的選擇。當會話繼承非關閉的有效預設值時，它會顯示 `Inherited: <resolved level>`；當繼承的思考被停用時，則顯示 `Off`。
+- 明確的選擇器選項會標記為覆蓋，同時在存在時保留提供者標籤（例如，對於具有提供者標籤的 `max` 選項，顯示 `Override: maximum`）。
+- 選擇器使用閘道會話列/預設值傳回的 `thinkingLevels`，並將 `thinkingOptions` 保留為舊版標籤清單。瀏覽器 UI 不會維護自己的提供者正則表達式清單；外掛程式擁有特定模型的層級集。
+- `/think:<level>` 仍然有效並更新相同的儲存會話層級，因此聊天指令和選擇器保持同步。
 
 ## 提供者設定檔
 
-- 提供者外掛程式可以公開 `resolveThinkingProfile(ctx)` 以定義模型支援的等級和預設值。
-- 代理 Claude 模型的提供者外掛程式應該從 `openclaw/plugin-sdk/provider-model-shared` 重用 `resolveClaudeThinkingProfile(modelId)`，以便直接 Anthropic 和代理目錄保持一致。
-- 每個設定檔層級都有一個儲存的規範 `id` (`off`、`minimal`、`low`、`medium`、`high`、`xhigh`、`adaptive` 或 `max`)，並且可能包含顯示 `label`。二元提供者使用 `{ id: "low", label: "on" }`。
-- 需要驗證明確思考覆寫的工具外掛應該使用 `api.runtime.agent.resolveThinkingPolicy({ provider, model })` 加上 `api.runtime.agent.normalizeThinkingLevel(...)`；它們不應該維護自己的提供者/模型層級列表。
-- 已發佈的舊版 hooks (`supportsXHighThinking`、`isBinaryThinking` 和 `resolveDefaultThinkingLevel`) 作為相容性轉接器保留，但新的自訂層級集應該使用 `resolveThinkingProfile`。
-- Gateway 資料列/預設值公開 `thinkingLevels`、`thinkingOptions` 和 `thinkingDefault`，以便 ACP/chat 用戶端呈現與執行時期驗證使用的相同設定檔 ID 和標籤。
+- 提供者外掛程式可以公開 `resolveThinkingProfile(ctx)` 來定義模型支援的層級和預設值。
+- 代理 Claude 模型的提供者外掛程式應重複使用 `openclaw/plugin-sdk/provider-model-shared` 中的 `resolveClaudeThinkingProfile(modelId)`，以便直接 Anthropic 和代理目錄保持一致。
+- 每個設定檔層級都有一個儲存的標準 `id`（`off`、`minimal`、`low`、`medium`、`high`、`xhigh`、`adaptive` 或 `max`），並且可能包含顯示 `label`。二元提供者使用 `{ id: "low", label: "on" }`。
+- 需要驗證明確思考覆寫的工具外掛程式應使用 `api.runtime.agent.resolveThinkingPolicy({ provider, model })` 加上 `api.runtime.agent.normalizeThinkingLevel(...)`；它們不應保留自己的提供者/模型層級清單。
+- 可以存取已設定自訂模型元資料的工具外掛程式可以將 `catalog` 傳遞到 `resolveThinkingPolicy` 中，以便 `compat.supportedReasoningEfforts` 的選擇加入反映在外掛程式端的驗證中。
+- 已發佈的舊版掛勾（`supportsXHighThinking`、`isBinaryThinking` 和 `resolveDefaultThinkingLevel`）保留為相容性轉接器，但新的自訂層級集應使用 `resolveThinkingProfile`。
+- Gateway 列/預設值公開 `thinkingLevels`、`thinkingOptions` 和 `thinkingDefault`，以便 ACP/聊天用戶端呈現與執行時期驗證使用的相同設定檔 ID 和標籤。

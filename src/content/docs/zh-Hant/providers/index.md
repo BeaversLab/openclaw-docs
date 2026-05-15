@@ -6,15 +6,13 @@ read_when:
 title: "提供者目錄"
 ---
 
-# 模型供應商
-
-OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證，然後將預設模型設定為 `provider/model`。
+OpenClaw 可以使用許多 LLM 提供商。選擇一個提供商，進行驗證，然後將預設模型設為 `provider/model`。
 
 正在尋找聊天頻道文件（WhatsApp/Telegram/Discord/Slack/Mattermost (外掛)/etc.）？請參閱 [頻道](/zh-Hant/channels)。
 
 ## 快速開始
 
-1. 向供應商進行驗證（通常是透過 `openclaw onboard`）。
+1. 向提供商進行驗證（通常透過 `openclaw onboard`）。
 2. 設定預設模型：
 
 ```json5
@@ -23,7 +21,7 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 }
 ```
 
-## 供應商文件
+## 提供商文件
 
 - [Alibaba Model Studio](/zh-Hant/providers/alibaba)
 - [Amazon Bedrock](/zh-Hant/providers/bedrock)
@@ -41,9 +39,9 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 - [fal](/zh-Hant/providers/fal)
 - [Fireworks](/zh-Hant/providers/fireworks)
 - [GitHub Copilot](/zh-Hant/providers/github-copilot)
-- [Gradium](/zh-Hant/providers/gradium)
 - [GLM models](/zh-Hant/providers/glm)
 - [Google (Gemini)](/zh-Hant/providers/google)
+- [Gradium](/zh-Hant/providers/gradium)
 - [Groq (LPU inference)](/zh-Hant/providers/groq)
 - [Hugging Face (Inference)](/zh-Hant/providers/huggingface)
 - [inferrs (local models)](/zh-Hant/providers/inferrs)
@@ -59,33 +57,33 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 - [OpenCode](/zh-Hant/providers/opencode)
 - [OpenCode Go](/zh-Hant/providers/opencode-go)
 - [OpenRouter](/zh-Hant/providers/openrouter)
-- [Perplexity (web search)](/zh-Hant/providers/perplexity-provider)
+- [Perplexity (網頁搜尋)](/zh-Hant/providers/perplexity-provider)
 - [Qianfan](/zh-Hant/providers/qianfan)
 - [Qwen Cloud](/zh-Hant/providers/qwen)
 - [Runway](/zh-Hant/providers/runway)
 - [SenseAudio](/zh-Hant/providers/senseaudio)
-- [SGLang (local models)](/zh-Hant/providers/sglang)
+- [SGLang (本機模型)](/zh-Hant/providers/sglang)
 - [StepFun](/zh-Hant/providers/stepfun)
 - [Synthetic](/zh-Hant/providers/synthetic)
 - [Tencent Cloud (TokenHub)](/zh-Hant/providers/tencent)
 - [Together AI](/zh-Hant/providers/together)
-- [Venice (Venice AI，注重隱私)](/zh-Hant/providers/venice)
+- [Venice (Venice AI, 注重隱私)](/zh-Hant/providers/venice)
 - [Vercel AI Gateway](/zh-Hant/providers/vercel-ai-gateway)
 - [vLLM (本機模型)](/zh-Hant/providers/vllm)
-- [Volcengine (豆包)](/zh-Hant/providers/volcengine)
+- [Volcengine (Doubao)](/zh-Hant/providers/volcengine)
 - [Vydra](/zh-Hant/providers/vydra)
 - [xAI](/zh-Hant/providers/xai)
-- [小米](/zh-Hant/providers/xiaomi)
+- [Xiaomi](/zh-Hant/providers/xiaomi)
 - [Z.AI](/zh-Hant/providers/zai)
 
 ## 共享概覽頁面
 
-- [額外內建變體](/zh-Hant/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
-- [圖像生成](/zh-Hant/tools/image-generation) - 共用 `image_generate` 工具、提供者選擇與故障轉移
-- [音樂生成](/zh-Hant/tools/music-generation) - 共用 `music_generate` 工具、提供者選擇與故障轉移
-- [影片生成](/zh-Hant/tools/video-generation) - 共用 `video_generate` 工具、提供者選擇與故障轉移
+- [額外的內建變體](/zh-Hant/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
+- [圖像生成](/zh-Hant/tools/image-generation) - 共享的 `image_generate` 工具、供應商選擇和故障轉移
+- [音樂生成](/zh-Hant/tools/music-generation) - 共享的 `music_generate` 工具、供應商選擇和故障轉移
+- [影片生成](/zh-Hant/tools/video-generation) - 共享的 `video_generate` 工具、供應商選擇和故障轉移
 
-## 轉錄提供者
+## 轉錄供應商
 
 - [Deepgram (音訊轉錄)](/zh-Hant/providers/deepgram)
 - [ElevenLabs](/zh-Hant/providers/elevenlabs#speech-to-text)
@@ -96,7 +94,7 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 
 ## 社群工具
 
-- [Claude Max API Proxy](/zh-Hant/providers/claude-max-api-proxy) - Claude 訂閱憑證的社群代理（使用前請驗證 Anthropic 的政策/條款）
+- [Claude Max API Proxy](/zh-Hant/providers/claude-max-api-proxy) - 用於 Claude 訂閱憑證的社群 Proxy (使用前請驗證 Anthropic 政策/條款)
 
-若要查看完整的提供者目錄（xAI、Groq、Mistral 等）與進階設定，
-請參閱[模型提供者](/zh-Hant/concepts/model-providers)。
+如需完整的供應商目錄 (xAI、Groq、Mistral 等) 和進階設定，
+請參閱 [模型供應商](/zh-Hant/concepts/model-providers)。

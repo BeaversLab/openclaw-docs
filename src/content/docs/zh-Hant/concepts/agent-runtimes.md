@@ -18,49 +18,60 @@ read_when:
 | Agent 執行時 | `pi`、`codex`、`claude-cli`           | 執行已準備回合的低層級迴圈或後端。                |
 | 通道         | Telegram、Discord、Slack、WhatsApp    | 訊息進入和離開 OpenClaw 的地方。                  |
 
-您還會在程式碼中看到 **harness** 這個詞。Harness 是提供 Agent 執行時的實作。例如，內建的 Codex harness 實作了 `codex` 執行時。公開設定使用 `agentRuntime.id`；`openclaw
-doctor --fix` 會將較舊的 runtime-policy 金鑰重寫為該格式。
+您也會在程式碼中看到 **harness** 一詞。Harness 是提供
+agent runtime 的實作。例如，內建的 Codex harness 實作了
+`codex` runtime。公開設定在 provider 或 model 項目上使用
+`agentRuntime.id`；整個 agent 的 runtime 金鑰已被棄用且會被忽略。
+`openclaw doctor --fix` 會移除舊的整個 agent runtime 固定設定，並在需要時將舊的
+runtime model 參照重寫為正式的 provider/model 參照加上 model-scoped
+runtime policy。
 
 有兩個執行時系列：
 
-- **Embedded harnesses** 在 OpenClaw 已準備的 Agent 迴圈內執行。目前這是內建的 `pi` 執行時加上已註冊的外掛 harness，例如 `codex`。
-- **CLI backends** 執行本機 CLI 程序，同時保持模型參考為標準格式。例如，`anthropic/claude-opus-4-7` 搭配 `agentRuntime.id: "claude-cli"` 表示「選取 Anthropic 模型，透過 Claude CLI 執行」。`claude-cli` 不是一個 embedded harness ID，不得傳遞給 AgentHarness 選擇。
+- **Embedded harnesses** 在 OpenClaw 的準備好的 agent 迴圈內執行。目前這包含
+  內建的 `pi` runtime 以及已註冊的 plugin harness，例如
+  `codex`。
+- **CLI backends** 執行本地 CLI 程序，同時保持 model 參照
+  為正式格式。例如，`anthropic/claude-opus-4-7` 搭配
+  model-scoped 的 `agentRuntime.id: "claude-cli"` 表示「選擇 Anthropic
+  model，透過 Claude CLI 執行」。`claude-cli` 不是 embedded harness id
+  且不得傳遞給 AgentHarness 選擇邏輯。
 
-## 三個命名為 Codex 的東西
+## Codex surfaces
 
-大多數混淆來自於三個不同的介面共用 Codex 這個名稱：
+大多數的混淆來自於幾個不同的介面共用 Codex 這個名稱：
 
-| 介面                                               | OpenClaw 名稱/設定                   | 作用                                                                            |
-| -------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------- |
-| Codex OAuth 提供者路由                             | `openai-codex/*` 模型參考            | 透過正常的 OpenClaw PI 執行器使用 ChatGPT/Codex 訂閱 OAuth。                    |
-| 原生 Codex app-server 執行期                       | `agentRuntime.id: "codex"`           | 透過隨附的 Codex app-server harness 執行嵌入式 agent 週期。                     |
-| Codex ACP 介面卡                                   | `runtime: "acp"`, `agentId: "codex"` | 透過外部 ACP/acpx 控制平面執行 Codex。僅在明確要求使用 ACP/acpx 時使用。        |
-| 原生 Codex chat-control 指令集                     | `/codex ...`                         | 從聊天中綁定、恢復、導引、停止和檢查 Codex app-server 執行緒。                  |
-| 用於 GPT/Codex 樣式模型的 OpenAI Platform API 路由 | `openai/*` 模型參考                  | 使用 OpenAI API 金鑰驗證，除非執行期覆寫（例如 `runtime: "codex"`）執行該週期。 |
+| 介面                                         | OpenClaw 名稱/設定                   | 作用                                                                                       |
+| -------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------ |
+| 原生 Codex app-server runtime                | `openai/*` model 參照                | 透過 Codex app-server 執行 OpenAI embedded agent 週期。這是常見的 ChatGPT/Codex 訂閱設定。 |
+| Codex OAuth auth profiles                    | `openai-codex` auth provider         | 儲存 Codex app-server harness 所使用的 ChatGPT/Codex 訂閱驗證資訊。                        |
+| Codex ACP 介面卡                             | `runtime: "acp"`、`agentId: "codex"` | 透過外部 ACP/acpx 控制平面執行 Codex。僅在明確要求使用 ACP/acpx 時使用。                   |
+| 原生 Codex chat-control 指令集               | `/codex ...`                         | 從聊天中綁定、恢復、導引、停止和檢查 Codex app-server 執行緒。                             |
+| 用於非 agent 介面的 OpenAI Platform API 路由 | `openai/*` 加上 API-key 驗證         | 用於直接的 OpenAI API，例如圖片、嵌入、語音和即時通訊。                                    |
 
-這些介面是有意設計為獨立的。啟用 `codex` 外掛程式會讓原生 app-server 功能可供使用；它不會將
-`openai-codex/*` 重寫為 `openai/*`，不會變更現有工作階段，也不會
-將 ACP 設為 Codex 的預設值。選取 `openai-codex/*` 表示「使用 Codex
-OAuth 提供者路由」，除非您另外強制指定執行期。
+這些介面是有意設計為獨立的。啟用 `codex` plugin 可讓
+原生 app-server 功能可用；`openclaw doctor --fix` 負責舊版
+`openai-codex/*` 路由修復和過期 session 固定清理。為
+agent model 選擇 `openai/*` 現在表示「透過 Codex 執行此操作」，除非正在使用
+非 agent 的 OpenAI API 介面。
 
-常見的 Codex 設定會使用 `openai` 提供者與 `codex` 執行期：
+常見的 ChatGPT/Codex 訂閱設定使用 Codex OAuth 進行驗證，但將
+模型參照保留為 `openai/*` 並選擇 `codex` 執行時：
 
 ```json5
 {
   agents: {
     defaults: {
       model: "openai/gpt-5.5",
-      agentRuntime: {
-        id: "codex",
-      },
     },
   },
 }
 ```
 
-這表示 OpenClaw 選取 OpenAI 模型參考，然後要求 Codex app-server
-執行期執行嵌入式 agent 週期。這不代表通道、模型
-提供者目錄或 OpenClaw 工作階段存放區會變成 Codex。
+這意味著 OpenClaw 選擇一個 OpenAI 模型參照，然後要求 Codex 應用程式伺服器
+執行時來執行內嵌的代理程式輪次。這並不意味著「使用 API 計費」，
+也不代表通道、模型提供者目錄或 OpenClaw 工作階段儲存空間
+會變成 Codex。
 
 當啟用隨附的 `codex` 外掛程式時，自然語言 Codex 控制
 應使用原生 `/codex` 指令介面（`/codex bind`、`/codex threads`、
@@ -71,63 +82,75 @@ OAuth 提供者路由」，除非您另外強制指定執行期。
 這是 agent 導向的決策樹：
 
 1. 如果使用者要求 **Codex bind/control/thread/resume/steer/stop**，請在啟用內建的 `codex` 外掛程式時，使用原生的 `/codex` 指令介面。
-2. 如果使用者要求 **Codex 作為嵌入式執行時環境**，請搭配 `agentRuntime.id: "codex"` 使用 `openai/<model>`。
-3. 如果使用者在一般的 OpenClaw 執行器上要求 **Codex OAuth/subscription auth**，請使用 `openai-codex/<model>` 並將執行時環境保留為 PI。
-4. 如果使用者明確提到 **ACP**、**acpx** 或 **Codex ACP adapter**，請搭配 `runtime: "acp"` 和 `agentId: "codex"` 使用 ACP。
-5. 如果請求是針對 **Claude Code、Gemini CLI、OpenCode、Cursor、Droid 或其他外部套件**，請使用 ACP/acpx，而非原生子代理程式執行時環境。
+2. 如果使用者要求 **Codex 作為內嵌執行時** 或想要正常的
+   訂閱支援的 Codex 代理程式體驗，請使用 `openai/<model>`。
+3. 如果使用者明確選擇 **PI 用於 OpenAI 模型**，請將模型參照
+   保留為 `openai/<model>` 並將提供者/模型執行時原則設定為
+   `agentRuntime.id: "pi"`。選取的 `openai-codex` 驗證設定檔會透過
+   PI 的舊版 Codex-auth 傳輸在內部進行路由。
+4. 如果舊版設定仍包含 **`openai-codex/*` 模型參照**，請將其修復為
+   `openai/<model>` 並搭配 `openclaw doctor --fix`。
+5. 如果使用者明確提到 **ACP**、**acpx** 或 **Codex ACP 配接器**，請使用
+   ACP 搭配 `runtime: "acp"` 和 `agentId: "codex"`。
+6. 如果請求是針對 **Claude Code、Gemini CLI、OpenCode、Cursor、Droid 或
+   其他外部套件**，請使用 ACP/acpx，而不是原生子代理程式執行時。
 
-| 您的意思是...                           | 請使用...                                |
-| --------------------------------------- | ---------------------------------------- |
-| Codex app-server chat/thread control    | 來自內建 `codex` 外掛程式的 `/codex ...` |
-| Codex app-server embedded agent runtime | `agentRuntime.id: "codex"`               |
-| PI 執行器上的 OpenAI Codex OAuth        | `openai-codex/*` 模型參照                |
-| Claude Code 或其他外部套件              | ACP/acpx                                 |
+| 您的意思是……                           | 使用……                                   |
+| -------------------------------------- | ---------------------------------------- |
+| Codex 應用程式伺服器聊天/執行緒控制    | 來自內建 `codex` 外掛程式的 `/codex ...` |
+| Codex 應用程式伺服器內嵌代理程式執行時 | `openai/*` 代理程式模型參照              |
+| OpenAI Codex OAuth                     | `openai-codex` 驗證設定檔                |
+| Claude Code 或其他外部套件             | ACP/acpx                                 |
 
-關於 OpenAI 系列前綴的區分，請參閱 [OpenAI](/zh-Hant/providers/openai) 和 [模型提供者](/zh-Hant/concepts/model-providers)。關於 Codex 執行時環境支援合約，請參閱 [Codex 套件](/zh-Hant/plugins/codex-harness#v1-support-contract)。
+關於 OpenAI 系列前綴拆分，請參閱 [OpenAI](/zh-Hant/providers/openai) 和
+[Model providers](/zh-Hant/concepts/model-providers)。關於 Codex 執行時支援
+合約，請參閱 [Codex harness runtime](/zh-Hant/plugins/codex-harness-runtime#v1-support-contract)。
 
-## 執行時環境擁有權
+## 執行時擁有權
 
-不同的執行時環境擁有不同數量的迴圈。
+不同的執行時擁有不同數量的迴圈控制權。
 
-| 介面                  | OpenClaw PI embedded               | Codex app-server                                 |
-| --------------------- | ---------------------------------- | ------------------------------------------------ |
-| 模型迴圈擁有者        | 透過 PI embedded 執行器的 OpenClaw | Codex app-server                                 |
-| 標準執行緒狀態        | OpenClaw 轉錄                      | Codex 執行緒，加上 OpenClaw 轉錄鏡像             |
-| OpenClaw 動態工具     | 原生 OpenClaw 工具迴圈             | 透過 Codex 轉接器橋接                            |
-| 原生 Shell 和檔案工具 | PI/OpenClaw 路徑                   | Codex 原生工具，在支援的情況下透過原生攔截器橋接 |
-| 內容引擎              | 原生 OpenClaw 內容組裝             | OpenClaw 將專案組裝的內容放入 Codex 回合中       |
-| 壓縮                  | OpenClaw 或選定的內容引擎          | Codex 原生壓縮，並包含 OpenClaw 通知和鏡像維護   |
-| 管道傳遞              | OpenClaw                           | OpenClaw                                         |
+| 介面                  | OpenClaw PI 內嵌              | Codex 應用程式伺服器                              |
+| --------------------- | ----------------------------- | ------------------------------------------------- |
+| 模型迴圈擁有者        | 透過 PI 內嵌執行器的 OpenClaw | Codex 應用程式伺服器                              |
+| 標準執行緒狀態        | OpenClaw 逐字稿               | Codex 執行緒，加上 OpenClaw 逐字稿鏡像            |
+| OpenClaw 動態工具     | 原生 OpenClaw 工具迴圈        | 透過 Codex 介接器橋接                             |
+| 原生 Shell 和檔案工具 | PI/OpenClaw 路徑              | Codex 原生工具，在支援的情況下透過原生 Hooks 橋接 |
+| 語境引擎              | 原生 OpenClaw 語境組裝        | OpenClaw 將專案組裝的語境放入 Codex 迴圈          |
+| 壓縮                  | OpenClaw 或選定的語境引擎     | Codex 原生壓縮，並附帶 OpenClaw 通知和鏡像維護    |
+| 通道傳遞              | OpenClaw                      | OpenClaw                                          |
 
-此擁有權區分是主要設計原則：
+此種所有權劃分是主要的設計原則：
 
-- 如果 OpenClaw 擁有表面控制權，OpenClaw 即可提供正常的插件掛鉤行為。
-- 如果原生執行時擁有表面控制權，OpenClaw 需要執行時事件或原生掛鉤。
-- 如果原生執行時擁有標準的線程狀態，OpenClaw 應鏡像並投射上下文，而不是重寫不支援的內部結構。
+- 若 OpenClaw 擁有 Surface，OpenClaw 即可提供正常的 Plugin Hook 行為。
+- 若原生 Runtime 擁有 Surface，OpenClaw 需要依賴 Runtime 事件或原生 Hooks。
+- 若原生 Runtime 擁有標準執行緒狀態，OpenClaw 應該鏡像並投射語境，而非重寫不支援的內部細節。
 
-## 執行時選擇
+## Runtime 選擇
 
-OpenClaw 在解析供應商和模型之後選擇嵌入式執行時：
+OpenClaw 在解析 Provider 和 Model 之後選擇嵌入式 Runtime：
 
-1. 會話記錄的執行時優先。配置變更不會將現有
-   轉錄熱切換到不同的原生線程系統。
-2. `OPENCLAW_AGENT_RUNTIME=<id>` 強制新會話或重置後的會話使用該執行時。
-3. `agents.defaults.agentRuntime.id` 或 `agents.list[].agentRuntime.id` 可以設定
-   `auto`、`pi`、註冊的嵌入式 harness ID（例如 `codex`），或
-   支援的 CLI 後端別名（例如 `claude-cli`）。
-4. 在 `auto` 模式下，註冊的插件執行時可以認領支援的供應商/模型
+1. Model 範圍的 Runtime 原則優先。這可以存在於已設定的 Provider
+   Model 項目中，或者存在於 `agents.defaults.models["provider/model"].agentRuntime` /
+   `agents.list[].models["provider/model"].agentRuntime` 中。
+2. 接著是 Provider 範圍的 Runtime 原則，位於
+   `models.providers.<provider>.agentRuntime`。
+3. 在 `auto` 模式下，註冊的插件執行時可以認領支援的供應商/模型
    配對。
-5. 如果在 `auto` 模式下沒有執行時認領輪次，並且設定了 `fallback: "pi"`
-   （預設值），OpenClaw 將使用 PI 作為相容性後備方案。設定
-   `fallback: "none"` 可以改為讓不匹配的 `auto` 模式選擇失敗。
+4. 如果在 `auto` 模式下沒有 Runtime 聲明擁有該迴圈，OpenClaw 將使用 PI 作為
+   相容性 Runtime。當執行必須嚴格時，請使用明確的 Runtime ID。
 
-顯式指定的插件執行時預設會以失敗封閉。例如，
-`runtime: "codex"` 表示 Codex 或明確的選擇錯誤，除非您在同一個覆蓋範圍內設定
-`fallback: "pi"`。執行時覆蓋不會繼承
-更廣泛的後備設定，因此代理層級的 `runtime: "codex"` 不會僅因預設值使用了 `fallback: "pi"` 而被靜默
-路由回 PI。
+整個 Session 和整個 Agent 的 Runtime 釘選會被忽略。這包括
+`OPENCLAW_AGENT_RUNTIME`、Session `agentHarnessId`/`agentRuntimeOverride` 狀態、
+`agents.defaults.agentRuntime` 和 `agents.list[].agentRuntime`。請執行
+`openclaw doctor --fix` 來移除過時的整個 Agent Runtime 設定，並在 OpenClaw 能夠保留意圖的情況下轉換
+舊有的 Runtime Model 參照。
 
-CLI 後端別名與嵌入式 harness ID 不同。首選的
+明確的 Provider/Model Plugin Runtime 會以封閉式失敗處理。例如，
+Provider 或 Model 上的 `agentRuntime.id: "codex"` 意味著 Codex 或明確的
+選擇/Runtime 錯誤；它絕不會被靜默路由回 PI。
+
+CLI 後端別名與嵌入式 Harness ID 不同。首選的
 Claude CLI 形式是：
 
 ```json5
@@ -135,52 +158,58 @@ Claude CLI 形式是：
   agents: {
     defaults: {
       model: "anthropic/claude-opus-4-7",
-      agentRuntime: { id: "claude-cli" },
+      models: {
+        "anthropic/claude-opus-4-7": {
+          agentRuntime: { id: "claude-cli" },
+        },
+      },
     },
   },
 }
 ```
 
-舊式引用（如 `claude-cli/claude-opus-4-7`）仍為了
-相容性而獲得支援，但新配置應保持供應商/模型的標準形式，並將
-執行後端置於 `agentRuntime.id` 中。
+諸如 `claude-cli/claude-opus-4-7` 的舊有參照為了相容性仍受支援，但新設定應保持 Provider/Model 為標準形式，並將
+執行後端置於 Provider/Model Runtime 原則中。
 
-`auto` 模式是有意保守的。外掛程式執行時可以聲明它們理解的提供者/模型配對，但 Codex 外掛程式不會在 `auto` 模式下聲明 `openai-codex` 提供者。這能將 `openai-codex/*` 保留為明確的 PI Codex OAuth 路由，並避免將訂閱驗證配置無聲地移動到原生應用程式伺服器綁定上。
+`auto` 模式對大多數提供者來說是刻意保守的。OpenAI 代理模型是例外：未設定的 Runtime 和 `auto` 都會解析為 Codex harness。明確的 PI Runtime 設定仍是 `openai/*` 代理轉數的可選相容性途徑；當與選定的 `openai-codex` 認證設定檔配對時，OpenClaw 會在內部透過舊版 Codex-auth 傳輸路由 PI，同時將公開模型參照保持為 `openai/*`。過時的 OpenAI PI 連線釘選會被 Runtime 選擇忽略，並可以使用 `openclaw doctor --fix` 清理。
 
-如果 `openclaw doctor` 警告在 `openai-codex/*` 仍透過 PI 路由時啟用了 `codex` 外掛程式，請將其視為診斷，而不是遷移。當您需要的是 PI Codex OAuth 時，請保持配置不變。僅當您需要原生 Codex 應用程式伺服器執行時，才切換到 `openai/<model>` 加上 `agentRuntime.id: "codex"`。
+如果 `openclaw doctor` 警告 `codex` 外掛程式已啟用，但 `openai-codex/*` 仍保留在設定中，請將其視為舊版路由狀態。執行 `openclaw doctor --fix` 將其重寫為 `openai/*` 並搭配 Codex Runtime。
 
 ## 相容性合約
 
-當執行時不是 PI 時，它應該記錄它支援哪些 OpenClaw 介面。請使用此格式來撰寫執行時文件：
+當 Runtime 不是 PI 時，它應該記錄它支援哪些 OpenClaw 介面。
+請使用此格式記錄 Runtime：
 
-| 問題                        | 為何重要                                                                                    |
-| --------------------------- | ------------------------------------------------------------------------------------------- |
-| 誰擁有模型迴圈？            | 決定重試、工具延續和最終答案決策發生的位置。                                                |
-| 誰擁有正規執行緒歷史？      | 決定 OpenClaw 是可以編輯歷史，還是只能反映歷史。                                            |
-| OpenClaw 動態工具是否運作？ | 訊息傳遞、工作階段、排程和 OpenClaw 擁有的工具依賴於此。                                    |
-| 動態工具掛鉤是否運作？      | 外掛程式期望在 OpenClaw 擁有的工具周圍有 `before_tool_call`、`after_tool_call` 和中介軟體。 |
-| 原生工具掛鉤是否運作？      | Shell、修補和執行時擁有的工具需要原生掛鉤支援來進行原則和觀察。                             |
-| 內文引擎生命週期是否執行？  | 記憶體和內文外掛程式依賴於組裝、攝取、回合後和壓縮生命週期。                                |
-| 公開了哪些壓縮資料？        | 有些外掛程式只需要通知，而其他的則需要保留/捨棄的中繼資料。                                 |
-| 什麼是故意不支援的？        | 在原生執行時擁有更多狀態的情況下，使用者不應假設與 PI 等效。                                |
+| 問題                        | 為何重要                                                                                  |
+| --------------------------- | ----------------------------------------------------------------------------------------- |
+| 誰擁有模型迴圈？            | 決定重試、工具接續和最終答案決策發生的位置。                                              |
+| 誰擁有標準執行緒歷史記錄？  | 決定 OpenClaw 可以編輯歷史記錄還是只能鏡像它。                                            |
+| OpenClaw 動態工具是否運作？ | 訊息傳遞、工作階段、 cron 和 OpenClaw 擁有的工具依賴於此。                                |
+| 動態工具勾點 是否運作？     | 外掛程式期望 OpenClaw 擁有的工具周圍有 `before_tool_call`、`after_tool_call` 和中介軟體。 |
+| 原生工具勾點 是否運作？     | Shell、修補 和 Runtime 擁有的工具需要原生勾點支援以進行策略和觀察。                       |
+| 情境引擎生命週期是否執行？  | 記憶和情境外掛程式依賴於組合、攝取、轉數後 和壓縮 生命週期。                              |
+| 暴露了哪些壓縮資料？        | 有些外掛程式只需要通知，而其他則需要保留/捨棄的中繼資料。                                 |
+| 什麼是刻意不支援的？        | 在原生 Runtime 擁有更多狀態的情況下，使用者不應假設其與 PI 等效。                         |
 
-Codex 執行時支援合約記錄在 [Codex 綁定](/zh-Hant/plugins/codex-harness#v1-support-contract) 中。
+Codex Runtime 支援合約記錄在
+[Codex harness runtime](/zh-Hant/plugins/codex-harness-runtime#v1-support-contract) 中。
 
 ## 狀態標籤
 
-狀態輸出可能會同時顯示 `Execution` 和 `Runtime` 標籤。請將它們視為診斷，而不是提供者名稱。
+狀態輸出可能會同時顯示 `Execution` 和 `Runtime` 標籤。請將其視為診斷資訊，而非提供者名稱。
 
-- 模型參考（model ref）例如 `openai/gpt-5.5` 會告訴您所選的提供者/模型。
-- 執行時期 ID（runtime id）例如 `codex` 會告訴您哪個迴圈正在執行該回合。
+- 模型參照（例如 `openai/gpt-5.5`）會告訴您所選擇的提供者/模型。
+- 執行時期 ID（例如 `codex`）會告訴您哪個迴圈正在執行該輪次。
 - 頻道標籤（例如 Telegram 或 Discord）會告訴您對話發生的位置。
 
-如果在變更執行時期配置後，工作階段仍然顯示 PI，請使用 `/new` 開啟新的工作階段，或使用 `/reset` 清除目前的工作階段。現有的工作階段會保留其記錄的執行時期，因此對話紀錄不會在兩個不相容的原生工作階段系統之間重新播放。
+如果執行仍顯示非預期的執行時期，請先檢查所選的提供者/模型執行時期原則。舊版的工作階段執行時期固定設定不再決定路由。
 
 ## 相關
 
-- [Codex 套件](/zh-Hant/plugins/codex-harness)
+- [Codex harness](/zh-Hant/plugins/codex-harness)
+- [Codex harness runtime](/zh-Hant/plugins/codex-harness-runtime)
 - [OpenAI](/zh-Hant/providers/openai)
-- [Agent 套件外掛程式](/zh-Hant/plugins/sdk-agent-harness)
-- [Agent 迴圈](/zh-Hant/concepts/agent-loop)
-- [模型](/zh-Hant/concepts/models)
-- [狀態](/zh-Hant/cli/status)
+- [Agent harness plugins](/zh-Hant/plugins/sdk-agent-harness)
+- [Agent loop](/zh-Hant/concepts/agent-loop)
+- [Models](/zh-Hant/concepts/models)
+- [Status](/zh-Hant/cli/status)

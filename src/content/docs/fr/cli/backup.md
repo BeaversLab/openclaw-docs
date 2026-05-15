@@ -53,20 +53,23 @@ ignorés.
 
 La charge utile de l'archive stocke le contenu des fichiers de ces arbres sources, et le `manifest.json` intégré enregistre les chemins sources absolus résolus ainsi que la disposition de l'archive utilisée pour chaque élément.
 
+Lors de la création de l'archive, OpenClaw ignore les fichiers connus de mutation en direct qui n'ont pas de valeur de restauration, y compris les transcriptions de session d'agent actif, les journaux d'exécution cron, les journaux circulaires, les files de livraison, les fichiers socket/pid/temp sous le répertoire d'état et les fichiers temporaires de file d'attente durables associés. Le résultat JSON inclut `skippedVolatileCount` afin que l'automatisation puisse voir combien de fichiers ont été intentionnellement omis.
+
+Les fichiers source et manifeste des plugins installés sous l'arborescence `extensions/` du répertoire d'état sont inclus, mais leurs arborescences de dépendances `node_modules/` imbriquées sont ignorées. Ces dépendances sont des artefacts d'installation reconstructibles ; après avoir restauré une archive, utilisez `openclaw plugins update <id>` ou réinstallez le plugin avec `openclaw plugins install <spec> --force` lorsqu'un plugin restauré signale des dépendances manquantes.
+
 ## Comportement en cas de configuration invalide
 
-`openclaw backup` contourne intentionnellement la pré-vérification normale de la configuration afin de pouvoir toujours aider lors de la récupération. Comme la découverte des espaces de travail dépend d'une configuration valide, `openclaw backup create` échoue désormais rapidement lorsque le fichier de configuration existe mais est invalide et que la sauvegarde de l'espace de travail est toujours activée.
+`openclaw backup` contourne intentionnellement la pré-vérification normale de la configuration afin de pouvoir tout de même aider lors de la récupération. Comme la découverte de l'espace de travail dépend d'une configuration valide, `openclaw backup create` échoue désormais rapidement lorsque le fichier de configuration existe mais est invalide et que la sauvegarde de l'espace de travail est toujours activée.
 
-Si vous souhaitez toujours une sauvegarde partielle dans cette situation, relancez :
+Si vous souhaitez tout de même une sauvegarde partielle dans cette situation, relancez :
 
 ```bash
 openclaw backup create --no-include-workspace
 ```
 
-Cela maintient l'état, la configuration et le répertoire des identifiants externes dans le périmètre tout en
-ignorant entièrement la découverte des espaces de travail.
+Cela permet de conserver l'état, la configuration et le répertoire des identifiants externes tout en ignorant entièrement la découverte de l'espace de travail.
 
-Si vous avez seulement besoin d'une copie du fichier de configuration lui-même, `--only-config` fonctionne également lorsque la configuration est malformée car il ne repose pas sur l'analyse de la configuration pour la découverte des espaces de travail.
+Si vous avez uniquement besoin d'une copie du fichier de configuration lui-même, `--only-config` fonctionne également lorsque la configuration est malformée car il ne repose pas sur l'analyse de la configuration pour la découverte de l'espace de travail.
 
 ## Taille et performances
 
@@ -74,15 +77,15 @@ OpenClaw n'impose pas de taille maximale de sauvegarde intégrée ni de limite d
 
 Les limites pratiques proviennent de la machine locale et du système de fichiers de destination :
 
-- Espace disponible pour l'écriture temporaire de l'archive plus l'archive finale
-- Temps nécessaire pour parcourir de grands arbres d'espace de travail et les compresser dans un `.tar.gz`
-- Temps pour rescanner l'archive si vous utilisez `openclaw backup create --verify` ou exécutez `openclaw backup verify`
-- Comportement du système de fichiers sur le chemin de destination. OpenClaw privilégie une étape de publication par liens durs sans écrasement et revient à une copie exclusive lorsque les liens durs ne sont pas pris en charge
+- Espace disponible pour l'écriture temporaire de l'archive ainsi que pour l'archive finale
+- Temps nécessaire pour parcourir les grandes arborescences de l'espace de travail et les compresser dans un `.tar.gz`
+- Temps nécessaire pour réanalyser l'archive si vous utilisez `openclaw backup create --verify` ou exécutez `openclaw backup verify`
+- Comportement du système de fichiers au chemin de destination. OpenClaw privilégie une étape de publication par lien dur sans écrasement et revient à une copie exclusive lorsque les liens durs ne sont pas pris en charge
 
-Les grands espaces de travail sont généralement le principal facteur de taille de l'archive. Si vous souhaitez une sauvegarde plus petite ou plus rapide, utilisez `--no-include-workspace`.
+Les espaces de travail volumineux sont généralement le principal facteur de taille de l'archive. Si vous souhaitez une sauvegarde plus petite ou plus rapide, utilisez `--no-include-workspace`.
 
-Pour la plus petite archive, utilisez `--only-config`.
+Pour obtenir la plus petite archive, utilisez `--only-config`.
 
-## Associé
+## Connexes
 
-- [CLI référence](/fr/cli)
+- [Référence CLI](/fr/cli)

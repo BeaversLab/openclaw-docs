@@ -1,21 +1,21 @@
 ---
-summary: "api.runtime -- los ayudantes de tiempo de ejecución inyectados disponibles para los complementos"
-title: "Ayudantes de tiempo de ejecución del complemento"
-sidebarTitle: "Ayudantes de tiempo de ejecución"
+summary: "api.runtime: los asistentes de tiempo de ejecución inyectados disponibles para los complementos"
+title: "Asistentes de tiempo de ejecución de complementos"
+sidebarTitle: "Asistentes de tiempo de ejecución"
 read_when:
   - You need to call core helpers from a plugin (TTS, STT, image gen, web search, subagent, nodes)
   - You want to understand what api.runtime exposes
   - You are accessing config, agent, or media helpers from plugin code
 ---
 
-Referencia del objeto `api.runtime` inyectado en cada complemento durante el registro. Utilice estos ayudantes en lugar de importar directamente los internos del host.
+Referencia del objeto `api.runtime` inyectado en cada complemento durante el registro. Utilice estos asistentes en lugar de importar directamente los aspectos internos del host.
 
 <CardGroup cols={2}>
   <Card title="Complementos de canal" href="/es/plugins/sdk-channel-plugins">
-    Guía paso a paso que utiliza estos ayudantes en contexto para complementos de canal.
+    Guía paso a paso que utiliza estos asistentes en el contexto de los complementos de canal.
   </Card>
   <Card title="Complementos de proveedor" href="/es/plugins/sdk-provider-plugins">
-    Guía paso a paso que utiliza estos ayudantes en contexto para complementos de proveedor.
+    Guía paso a paso que utiliza estos asistentes en el contexto de los complementos de proveedor.
   </Card>
 </CardGroup>
 
@@ -25,29 +25,31 @@ register(api) {
 }
 ```
 
-## Carga y escritura de configuración
+## Carga y escritura de configuraciones
 
-Prefiera la configuración que ya se pasó a la ruta de llamada activa, por ejemplo `api.config` durante el registro o un argumento `cfg` en las devoluciones de llamada de canal/proveedor. Esto mantiene fluyendo una instantánea del proceso a través del trabajo en lugar de volver a analizar la configuración en rutas críticas.
+Se prefiere la configuración que ya se ha pasado a la ruta de llamada activa, por ejemplo `api.config` durante el registro o un argumento `cfg` en las devoluciones de llamada de canal/proveedor. Esto mantiene una instantánea del proceso fluyendo a través del trabajo en lugar de volver a analizar la configuración en rutas críticas.
 
-Use `api.runtime.config.current()` solo cuando un controlador de larga duración necesita la instantánea del proceso actual y no se pasó ninguna configuración a esa función. El valor devuelto es de solo lectura; clónelo o use un ayudante de mutación antes de editarlo.
+Use `api.runtime.config.current()` solo cuando un controlador de larga duración necesite la instantánea del proceso actual y no se haya pasado ninguna configuración a esa función. El valor devuelto es de solo lectura; clone o use un asistente de mutación antes de editar.
 
-Las fábricas de herramientas reciben `ctx.runtimeConfig` más `ctx.getRuntimeConfig()`. Use el captador dentro de la devolución de llamada `execute` de una herramienta de larga duración cuando la configuración puede cambiar después de que se creó la definición de la herramienta.
+Las fábricas de herramientas reciben `ctx.runtimeConfig` más `ctx.getRuntimeConfig()`. Use el captador dentro de la devolución de llamada `execute` de una herramienta de larga duración cuando la configuración puede cambiar después de que se haya creado la definición de la herramienta.
 
-Persista los cambios con `api.runtime.config.mutateConfigFile(...)` o `api.runtime.config.replaceConfigFile(...)`. Cada escritura debe elegir una política explícita `afterWrite`:
+Persista los cambios con `api.runtime.config.mutateConfigFile(...)` o `api.runtime.config.replaceConfigFile(...)`. Cada escritura debe elegir una política `afterWrite` explícita:
 
 - `afterWrite: { mode: "auto" }` permite que el planificador de recarga de la puerta de enlace decida.
 - `afterWrite: { mode: "restart", reason: "..." }` fuerza un reinicio limpio cuando el escritor sabe que la recarga en caliente no es segura.
-- `afterWrite: { mode: "none", reason: "..." }` suprime la recarga/reinicio automático solo cuando la persona que llama es dueña del seguimiento.
+- `afterWrite: { mode: "none", reason: "..." }` suprime la recarga/reinicio automático solo cuando quien llama es el propietario del seguimiento.
 
-Los ayudantes de mutación devuelven `afterWrite` más un resumen `followUp` tipado para que los llamadores puedan registrar o probar si solicitaron un reinicio. La puerta de enlace sigue siendo la propietaria de cuándo ocurre realmente ese reinicio.
+Los auxiliares de mutación devuelven `afterWrite` más un resumen `followUp` tipado para que los llamadores puedan registrar o probar si solicitaron un reinicio. La puerta de enlace sigue siendo la propietaria de cuándo ocurre realmente ese reinicio.
 
-`api.runtime.config.loadConfig()` y `api.runtime.config.writeConfigFile(...)` son ayudantes de compatibilidad en desuso bajo `runtime-config-load-write`. Advierten una vez en tiempo de ejecución y permanecen disponibles para complementos externos antiguos durante el período de migración. Los complementos integrados no deben usarlos; los guardias de límite de configuración fallan si el código del complemento los llama o importa esos ayudantes desde las subrutas del SDK de complementos.
+`api.runtime.config.loadConfig()` y `api.runtime.config.writeConfigFile(...)` son auxiliares de compatibilidad en desuso bajo `runtime-config-load-write`. Advierten una vez en tiempo de ejecución y permanecen disponibles para complementos externos antiguos durante la ventana de migración. Los complementos integrados no deben usarlos; los guardianes del límite de configuración fallan si el código del complemento los llama o importa esos auxiliares desde las subrutas del SDK del complemento.
 
-Para las importaciones directas del SDK, utilice las subrutas de configuración enfocadas en lugar del barril de compatibilidad `openclaw/plugin-sdk/config-runtime` amplio: `config-types` para tipos, `plugin-config-runtime` para afirmaciones de configuración ya cargadas y búsqueda de entradas de complementos, `runtime-config-snapshot` para instantáneas del proceso actual y `config-mutation` para escrituras. Las pruebas de complementos integrados deben simular estas subrutas enfocadas directamente en lugar de simular el barril de compatibilidad amplio.
+Para las importaciones directas del SDK, use las subrutas de configuración enfocadas en lugar del barril de compatibilidad amplio `openclaw/plugin-sdk/config-runtime`: `config-types` para tipos, `plugin-config-runtime` para afirmaciones de configuración ya cargadas y búsqueda de entradas de complementos, `runtime-config-snapshot` para instantáneas del proceso actual, y `config-mutation` para escrituras. Las pruebas de complementos integrados deben simular estas subrutas enfocadas directamente en lugar de simular el barril de compatibilidad amplio.
 
-El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección: cargar la configuración una vez en el límite de la CLI, la puerta de enlace o el proceso, y luego pasar ese valor. Las escrituras de mutación exitosas actualizan la instantánea del tiempo de ejecución del proceso y avanzan su revisión interna; las memorias caché de larga duración deben basarse en la clave de caché propiedad del tiempo de ejecución en lugar de serializar la configuración localmente. Los módulos de tiempo de ejecución de larga duración tienen un escáner de tolerancia cero para llamadas `loadConfig()` ambientales; use un `cfg` pasado, una `context.getRuntimeConfig()` de solicitud o `getRuntimeConfig()` en un límite de proceso explícito.
+El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección: cargar la configuración una vez en el límite de la CLI, la puerta de enlace o el proceso, y luego pasar ese valor. Las escrituras de mutación exitosas actualizan la instantánea del tiempo de ejecución del proceso y avanzan su revisión interna; las cachés de larga duración deben basarse en la clave de caché propiedad del tiempo de ejecución en lugar de serializar la configuración localmente. Los módulos de tiempo de ejecución de larga duración tienen un escáner de tolerancia cero para llamadas `loadConfig()` de ambiente; use un `cfg` pasado, una solicitud `context.getRuntimeConfig()` o `getRuntimeConfig()` en un límite de proceso explícito.
 
-## Espacios de nombres de tiempo de ejecución
+Las rutas de ejecución del proveedor y del canal deben usar la instantánea de configuración del tiempo de ejecución activa, no una instantánea de archivo devuelta para la lectura o edición de la configuración. Las instantáneas de archivo preservan valores de origen como los marcadores SecretRef para la interfaz de usuario y las escrituras; las devoluciones de llamada del proveedor necesitan la vista resuelta del tiempo de ejecución. Cuando un auxiliar puede ser llamado con la instantánea de origen activa o la instantánea de tiempo de ejecución activa, enrute a través de `selectApplicableRuntimeConfig()` antes de leer las credenciales.
+
+## Espacios de nombres del tiempo de ejecución
 
 <AccordionGroup>
   <Accordion title="api.runtime.agent">
@@ -95,22 +97,27 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
     });
     ```
 
-    `runEmbeddedAgent(...)` es el asistente neutral para iniciar un turno normal de agente OpenClaw desde el código del complemento. Utiliza la misma resolución de proveedor/modelo y selección de arnés de agente que las respuestas activadas por el canal.
+    `runEmbeddedAgent(...)` es el asistente neutral para iniciar un turno normal del agente OpenClaw desde el código del complemento. Utiliza la misma resolución de proveedor/modelo y selección de arnés del agente que las respuestas activadas por el canal.
 
     `runEmbeddedPiAgent(...)` permanece como un alias de compatibilidad.
 
-    `resolveThinkingPolicy(...)` devuelve los niveles de pensamiento admitidos por el proveedor/modelo y el valor predeterminado opcional. Los complementos del proveedor son los propietarios del perfil específico del modelo a través de sus ganchos de pensamiento (thinking hooks), por lo que los complementos de herramientas deben llamar a este asistente de ejecución en lugar de importar o duplicar las listas de proveedores.
+    `resolveThinkingPolicy(...)` devuelve los niveles de pensamiento admitidos por el proveedor/modelo y el predeterminado opcional. Los complementos del proveedor son propietarios del perfil específico del modelo a través de sus ganchos de pensamiento, por lo que los complementos de herramientas deben llamar a este asistente de ejecución en lugar de importar o duplicar las listas de proveedores.
 
-    `normalizeThinkingLevel(...)` convierte el texto del usuario, como `on`, `x-high` o `extra high`, al nivel almacenado canónico antes de verificarlo con la política resuelta.
+    `normalizeThinkingLevel(...)` convierte el texto del usuario, como `on`, `x-high` o `extra high`, al nivel almacenado canónico antes de verificarlo contra la política resuelta.
 
-    Los **asistentes de almacenamiento de sesión** están en `api.runtime.agent.session`:
+    **Los asistentes del almacén de sesiones** están en `api.runtime.agent.session`:
 
     ```typescript
     const storePath = api.runtime.agent.session.resolveStorePath(cfg);
-    const store = api.runtime.agent.session.loadSessionStore(cfg);
-    await api.runtime.agent.session.saveSessionStore(cfg, store);
+    const store = api.runtime.agent.session.loadSessionStore(storePath);
+    await api.runtime.agent.session.updateSessionStore(storePath, (nextStore) => {
+      // Patch one entry without replacing the whole file from stale state.
+      nextStore[sessionKey] = { ...nextStore[sessionKey], thinkingLevel: "high" };
+    });
     const filePath = api.runtime.agent.session.resolveSessionFilePath(cfg, sessionId);
     ```
+
+    Prefiera `updateSessionStore(...)` o `updateSessionStoreEntry(...)` para escrituras en tiempo de ejecución. Se enrutan a través del escritor del almacén de sesiones propiedad de Gateway, preservan las actualizaciones simultáneas y reutilizan la memoria caché activa. `saveSessionStore(...)` permanece disponible por compatibilidad y reescrituras de estilo de mantenimiento sin conexión.
 
   </Accordion>
   <Accordion title="api.runtime.agent.defaults">
@@ -122,8 +129,34 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
     ```
 
   </Accordion>
+
+  <Accordion title="api.runtime.llm">
+    Ejecute una finalización de texto propiedad del host sin importar elementos internos del proveedor o
+    duplicar la preparación del modelo/auth/URL base de OpenClaw.
+
+    ```typescript
+    const result = await api.runtime.llm.complete({
+      messages: [{ role: "user", content: "Summarize this transcript." }],
+      purpose: "my-plugin.summary",
+      maxTokens: 512,
+      temperature: 0.2,
+    });
+    ```
+
+    El ayudante utiliza la misma ruta de preparación de finalización simple que el tiempo de ejecución
+    integrado de OpenClaw y la instantánea de configuración del tiempo de ejecución propiedad del host. Los motores de contexto
+    reciben una capacidad `llm.complete` vinculada a la sesión, por lo que las llamadas al modelo utilizan el
+    agente de la sesión activa y no vuelven silenciosamente al agente predeterminado. El
+    resultado incluye la atribución del proveedor/modelo/agente, más tokens normalizados,
+    caché y uso de costos estimados cuando esté disponible.
+
+    <Warning>
+    Las anulaciones de modelo requieren la aceptación del operador a través de `plugins.entries.<id>.llm.allowModelOverride: true` en la configuración. Use `plugins.entries.<id>.llm.allowedModels` para restringir los complementos de confianza a objetivos `provider/model` canónicos específicos. Las finalizaciones entre agentes requieren `plugins.entries.<id>.llm.allowAgentIdOverride: true`.
+    </Warning>
+
+  </Accordion>
   <Accordion title="api.runtime.subagent">
-    Inicie y administre ejecuciones de subagentes en segundo plano.
+    Inicie y gestione ejecuciones de subagentes en segundo plano.
 
     ```typescript
     // Start a subagent run
@@ -154,11 +187,11 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
     Las anulaciones de modelo (`provider`/`model`) requieren la aceptación del operador a través de `plugins.entries.<id>.subagent.allowModelOverride: true` en la configuración. Los complementos que no son de confianza aún pueden ejecutar subagentes, pero las solicitudes de anulación se rechazan.
     </Warning>
 
-    `deleteSession(...)` puede eliminar las sesiones creadas por el mismo complemento a través de `api.runtime.subagent.run(...)`. Eliminar sesiones arbitrarias de usuario u operador aún requiere una solicitud de Gateway con ámbito de administrador.
+    `deleteSession(...)` puede eliminar las sesiones creadas por el mismo complemento a través de `api.runtime.subagent.run(...)`. La eliminación de sesiones arbitrarias de usuario u operador aún requiere una solicitud de Gateway con ámbito de administrador.
 
   </Accordion>
   <Accordion title="api.runtime.nodes">
-    Lista los nodos conectados e invoca un comando de nodo-host desde el código del complemento cargado por Gateway o desde los comandos CLI del complemento. Use esto cuando un complemento posee trabajo local en un dispositivo emparejado, por ejemplo, un navegador o puente de audio en otro Mac.
+    Lista los nodos conectados e invoca un comando de host de nodos desde el código de complementos cargados por Gateway o desde los comandos CLI de complementos. Úselo cuando un complemento sea propietario del trabajo local en un dispositivo emparejado, por ejemplo, un navegador o puente de audio en otro Mac.
 
     ```typescript
     const { nodes } = await api.runtime.nodes.list({ connected: true });
@@ -171,14 +204,16 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
     });
     ```
 
-    Dentro del Gateway, este tiempo de ejecución está en proceso. En los comandos CLI del complemento, llama al Gateway configurado a través de RPC, por lo que comandos como `openclaw googlemeet recover-tab` pueden inspeccionar los nodos emparejados desde la terminal. Los comandos de nodo aún pasan por el emparejamiento normal de nodos del Gateway, listas de permitidos de comandos y manejo de comandos locales del nodo.
+    Dentro de Gateway, este tiempo de ejecución es en proceso. En los comandos CLI de complementos, llama al Gateway configurado a través de RPC, por lo que comandos como `openclaw googlemeet recover-tab` pueden inspeccionar los nodos emparejados desde la terminal. Los comandos de nodos todavía pasan por el emparejamiento normal de nodos de Gateway, listas de permitidos de comandos, políticas de invocación de nodos de complementos y el manejo de comandos locales del nodo.
+
+    Los complementos que expongan comandos de host de nodos peligrosos deben registrar una política de invocación de nodos con `api.registerNodeInvokePolicy(...)`. La política se ejecuta en el Gateway después de las comprobaciones de la lista de permitidos y antes de que el comando se reenvía al nodo, por lo que las llamadas directas `node.invoke` y las herramientas de complementos de nivel superior comparten la misma ruta de aplicación.
 
   </Accordion>
-  <Accordion title="api.runtime.taskFlow">
-    Vincula un tiempo de ejecución de Task Flow a una clave de sesión de OpenClaw existente o a un contexto de herramienta confiable, luego crea y gestiona Task Flows sin pasar un propietario en cada llamada.
+  <Accordion title="api.runtime.tasks.managedFlows">
+    Vincula un tiempo de ejecución de flujo de tareas a una clave de sesión de OpenClaw existente o a un contexto de herramienta de confianza, luego crea y administra flujos de tareas sin pasar un propietario en cada llamada.
 
     ```typescript
-    const taskFlow = api.runtime.taskFlow.fromToolContext(ctx);
+    const taskFlow = api.runtime.tasks.managedFlows.fromToolContext(ctx);
 
     const created = taskFlow.createManaged({
       controllerId: "my-plugin/review-batch",
@@ -202,7 +237,7 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
     });
     ```
 
-    Use `bindSession({ sessionKey, requesterOrigin })` cuando ya tenga una clave de sesión de OpenClaw confiable de su propia capa de vinculación. No vincule desde la entrada cruda del usuario.
+    Use `bindSession({ sessionKey, requesterOrigin })` cuando ya tenga una clave de sesión de OpenClaw de confianza de su propia capa de vinculación. No se vincule desde la entrada cruda del usuario.
 
   </Accordion>
   <Accordion title="api.runtime.tts">
@@ -228,11 +263,11 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
     });
     ```
 
-    Utiliza la configuración y la selección de proveedor principales de `messages.tts`. Devuelve el búfer de audio PCM + la frecuencia de muestreo.
+    Utiliza la configuración y selección de proveedores de `messages.tts` principal. Devuelve un búfer de audio PCM + tasa de muestreo.
 
   </Accordion>
   <Accordion title="api.runtime.mediaUnderstanding">
-    Análisis de imágenes, audio y video.
+    Análisis de imagen, audio y video.
 
     ```typescript
     // Describe an image
@@ -262,7 +297,7 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
     });
     ```
 
-    Devuelve `{ text: undefined }` cuando no se produce ninguna salida (p. ej., entrada omitida).
+    Devuelve `{ text: undefined }` cuando no se produce ninguna salida (por ejemplo, entrada omitida).
 
     <Info>
     `api.runtime.stt.transcribeAudioFile(...)` permanece como un alias de compatibilidad para `api.runtime.mediaUnderstanding.transcribeAudioFile(...)`.
@@ -321,7 +356,7 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
 
   </Accordion>
   <Accordion title="api.runtime.config">
-    Instantánea de la configuración de tiempo de ejecución actual y escrituras de configuración transaccionales. Se prefiere
+    Instantánea de la configuración en tiempo de ejecución actual y escrituras de configuración transaccionales. Se prefiere
     la configuración que ya se pasó a la ruta de llamada activa; use
     `current()` solo cuando el controlador necesita la instantánea del proceso directamente.
 
@@ -337,7 +372,7 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
 
     `mutateConfigFile(...)` y `replaceConfigFile(...)` devuelven un valor `followUp`,
     por ejemplo `{ mode: "restart", requiresRestart: true, reason }`,
-    que registra la intención del escritor sin quitarle el control de reinicio a la
+    que registra la intención del escritor sin quitar el control de reinicio a la
     puerta de enlace.
 
   </Accordion>
@@ -346,14 +381,19 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
 
     ```typescript
     await api.runtime.system.enqueueSystemEvent(event);
-    api.runtime.system.requestHeartbeatNow();
+    api.runtime.system.requestHeartbeat({
+      source: "other",
+      intent: "event",
+      reason: "plugin-event",
+    });
+    api.runtime.system.requestHeartbeatNow({ reason: "plugin-event" }); // Deprecated compatibility alias.
     const output = await api.runtime.system.runCommandWithTimeout(cmd, args, opts);
     const hint = api.runtime.system.formatNativeDependencyHint(pkg);
     ```
 
   </Accordion>
   <Accordion title="api.runtime.events">
-    Suscripciones a eventos.
+    Suscripciones de eventos.
 
     ```typescript
     api.runtime.events.onAgentEvent((event) => {
@@ -387,15 +427,32 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
 
   </Accordion>
   <Accordion title="api.runtime.state">
-    Resolución del directorio de estado.
+    Resolución del directorio de estado y almacenamiento con clave respaldado por SQLite.
 
     ```typescript
-    const stateDir = api.runtime.state.resolveStateDir();
+    const stateDir = api.runtime.state.resolveStateDir(process.env);
+    const store = api.runtime.state.openKeyedStore<MyRecord>({
+      namespace: "my-feature",
+      maxEntries: 200,
+      defaultTtlMs: 15 * 60_000,
+    });
+
+    await store.register("key-1", { value: "hello" });
+    const claimed = await store.registerIfAbsent("dedupe-key", { value: "first" });
+    const value = await store.lookup("key-1");
+    await store.consume("key-1");
+    await store.clear();
     ```
+
+    Los almacenes con clave sobreviven a los reinicios y están aislados por el ID del complemento vinculado al tiempo de ejecución. Use `registerIfAbsent(...)` para reclamaciones de deduplicación atómica: devuelve `true` cuando la clave faltaba o había expirado y se registró, o `false` cuando ya existe un valor activo sin sobrescribir su valor, hora de creación o TTL. Límites: `maxEntries` por espacio de nombres, 1,000 filas activas por complemento, valores JSON menores a 64 KB y expiración TTL opcional.
+
+    <Warning>
+    Solo complementos incluidos en esta versión.
+    </Warning>
 
   </Accordion>
   <Accordion title="api.runtime.tools">
-    Fábricas de herramientas de memoria y línea de comandos.
+    Fábricas de herramientas de memoria e interfaz de línea de comandos (CLI).
 
     ```typescript
     const getTool = api.runtime.tools.createMemoryGetTool(/* ... */);
@@ -405,9 +462,9 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
 
   </Accordion>
   <Accordion title="api.runtime.channel">
-    Funciones auxiliares de tiempo de ejecución específicas del canal (disponibles cuando se carga un complemento de canal).
+    Asistentes de tiempo de ejecución específicos del canal (disponibles cuando se carga un complemento de canal).
 
-    `api.runtime.channel.mentions` es la superficie compartida de la política de menciones entrantes para los complementos de canal empaquetados que utilizan la inyección de tiempo de ejecución:
+    `api.runtime.channel.mentions` es la superficie compartida de la política de menciones entrantes para los complementos de canal incluidos que utilizan inyección en tiempo de ejecución:
 
     ```typescript
     const mentionMatch = api.runtime.channel.mentions.matchesMentionWithExplicit(text, {
@@ -434,7 +491,7 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
     });
     ```
 
-    Funciones auxiliares de mención disponibles:
+    Asistentes de mención disponibles:
 
     - `buildMentionRegexes`
     - `matchesMentionPatterns`
@@ -442,14 +499,14 @@ El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección
     - `implicitMentionKindWhen`
     - `resolveInboundMentionDecision`
 
-    `api.runtime.channel.mentions` intencionalmente no expone las funciones auxiliares de compatibilidad `resolveMentionGating*` más antiguas. Prefiera la ruta normalizada `{ facts, policy }`.
+    `api.runtime.channel.mentions` intencionalmente no expone los asistentes de compatibilidad más antiguos `resolveMentionGating*`. Prefiera la ruta normalizada `{ facts, policy }`.
 
   </Accordion>
 </AccordionGroup>
 
-## Almacenamiento de referencias de tiempo de ejecución
+## Almacenamiento de referencias en tiempo de ejecución
 
-Use `createPluginRuntimeStore` para almacenar la referencia de tiempo de ejecución para usarla fuera de la devolución de llamada `register`:
+Use `createPluginRuntimeStore` para almacenar la referencia en tiempo de ejecución para usarla fuera de la devolución de llamada `register`:
 
 <Steps>
   <Step title="Crear el almacén">
@@ -489,29 +546,29 @@ Use `createPluginRuntimeStore` para almacenar la referencia de tiempo de ejecuci
   </Step>
 </Steps>
 
-<Note>Prefiera `pluginId` para la identidad del almacén de tiempo de ejecución. El formulario de nivel inferior `key` es para casos poco comunes en los que un complemento necesita intencionalmente más de una ranura de tiempo de ejecución.</Note>
+<Note>Prefiera `pluginId` para la identidad del almacén en tiempo de ejecución. El formato de nivel inferior `key` es para casos poco comunes en los que un complemento necesita intencionalmente más de una ranura de tiempo de ejecución.</Note>
 
 ## Otros campos de nivel superior `api`
 
-Más allá de `api.runtime`, el objeto de API también proporciona:
+Además de `api.runtime`, el objeto API también proporciona:
 
 <ParamField path="api.id" type="string">
-  Id. del complemento.
+  ID del complemento.
 </ParamField>
 <ParamField path="api.name" type="string">
   Nombre para mostrar del complemento.
 </ParamField>
 <ParamField path="api.config" type="OpenClawConfig">
-  Instantánea de configuración actual (instantánea de tiempo de ejecución en memoria activa cuando está disponible).
+  Instantánea de configuración actual (instantánea de memoria activa en tiempo de ejecución cuando está disponible).
 </ParamField>
 <ParamField path="api.pluginConfig" type="Record<string, unknown>">
-  Configuración específica del complemento de `plugins.entries.<id>.config`.
+  Configuración específica del complemento desde `plugins.entries.<id>.config`.
 </ParamField>
 <ParamField path="api.logger" type="PluginLogger">
   Registrador con ámbito (`debug`, `info`, `warn`, `error`).
 </ParamField>
 <ParamField path="api.registrationMode" type="PluginRegistrationMode">
-  Modo de carga actual; `"setup-runtime"` es la ventana de inicio/configuración previa ligera a la entrada completa.
+  Modo de carga actual; `"setup-runtime"` es la ventana ligera de inicio/configuración previa a la entrada completa.
 </ParamField>
 <ParamField path="api.resolvePath(input)" type="(string) => string">
   Resuelve una ruta relativa a la raíz del complemento.
@@ -519,6 +576,6 @@ Más allá de `api.runtime`, el objeto de API también proporciona:
 
 ## Relacionado
 
-- [Plugin internals](/es/plugins/architecture) — modelo de capacidad y registro
-- [SDK entry points](/es/plugins/sdk-entrypoints) — opciones de `definePluginEntry`
-- [SDK overview](/es/plugins/sdk-overview) — referencia de subruta
+- [Aspectos internos del complemento](/es/plugins/architecture) — modelo de capacidades y registro
+- [Puntos de entrada del SDK](/es/plugins/sdk-entrypoints) — opciones `definePluginEntry`
+- [Descripción general del SDK](/es/plugins/sdk-overview) — referencia de subruta

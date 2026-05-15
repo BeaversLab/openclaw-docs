@@ -6,7 +6,7 @@ read_when:
   - You need the API key env var or CLI auth choice
 ---
 
-[DeepSeek](https://www.deepseek.com) 提供了具有 OpenAI 相容 API 的強大 AI 模型。
+[DeepSeek](https://www.deepseek.com) 透過與 OpenAI 相容的 API 提供強大的 AI 模型。
 
 | 屬性     | 值                         |
 | -------- | -------------------------- |
@@ -70,26 +70,30 @@ read_when:
 | `deepseek/deepseek-chat`     | DeepSeek Chat     | 文字 | 131,072   | 8,192    | DeepSeek V3.2 非思考介面        |
 | `deepseek/deepseek-reasoner` | DeepSeek Reasoner | 文字 | 131,072   | 65,536   | 具備推理功能的 V3.2 介面        |
 
-<Tip>V4 模型支援 DeepSeek 的 `thinking` 控制。OpenClaw 也會在後續輪次中重放 DeepSeek `reasoning_content`，因此包含工具呼叫的思考會話可以繼續進行。</Tip>
+<Tip>V4 模型支援 DeepSeek 的 `thinking` 控制。OpenClaw 也會在後續輪次中重放 DeepSeek `reasoning_content`，以便包含工具呼叫的思考會話能夠繼續。 使用 `/think xhigh` 或 `/think max` 搭配 DeepSeek V4 模型，以請求 DeepSeek 的 最大 `reasoning_effort`。</Tip>
 
 ## 思考與工具
 
-DeepSeek V4 思考會話比大多數 OpenAI 相容的供應商有更嚴格的重放合約：當啟用思考的助理訊息包含
-工具呼叫時，DeepSeek 要求先前的助理 `reasoning_content` 必須在後續請求中一併發回。OpenClaw 在 DeepSeek 外掛內部處理了這一點，
-因此正常的輪式工具使用可以在 `deepseek/deepseek-v4-flash` 和
-`deepseek/deepseek-v4-pro` 上運作。
+DeepSeek V4 思考會話比大多數
+OpenAI 相容的提供者有更嚴格的重放合約：在使用啟用思考的輪次呼叫工具後，DeepSeek
+預期來自該輪次的重放助理訊息在後續請求中包含
+`reasoning_content`。OpenClaw 會在 DeepSeek 外掛程式內部處理此問題，因此
+`deepseek/deepseek-v4-flash` 和 `deepseek/deepseek-v4-pro` 的正常多輪次工具使用也能正常運作。
 
-如果您將現有的會話從另一個 OpenAI 相容的供應商切換到
+如果您將現有的會話從其他 OpenAI 相容的提供者切換至
 DeepSeek V4 模型，較舊的助理工具呼叫輪次可能沒有原生的
-DeepSeek `reasoning_content`。OpenClaw 會為 DeepSeek V4 思考請求填補該缺失欄位，
-以便供應商可以接受重放的工具呼叫歷史，而無需 `/new`。
+DeepSeek `reasoning_content`。OpenClaw 會在針對 DeepSeek V4 思考請求重放的
+助理訊息中填補該缺失欄位，讓提供者能夠接受
+歷史記錄，而不需要 `/new`。
 
-當在 OpenClaw 中停用思考時（包括 UI 中的 **None** 選擇），
-OpenClaw 會發送 DeepSeek `thinking: { type: "disabled" }` 並從傳出的歷史中移除重放的
-`reasoning_content`。這可將停用思考的會話保持在非思考的 DeepSeek 路徑上。
+當在 OpenClaw 中停用思考時（包括在 UI 中選擇 **None**），
+OpenClaw 會發送 DeepSeek `thinking: { type: "disabled" }` 並從傳出的歷史記錄中移除重放的
+`reasoning_content`。這可讓停用思考的
+會話保持在非思考的 DeepSeek 路徑上。
 
-使用 `deepseek/deepseek-v4-flash` 作為預設的快速路徑。當您想要更強大的 V4 模型並且可以接受
-更高的成本或延遲時，請使用 `deepseek/deepseek-v4-pro`。
+請使用 `deepseek/deepseek-v4-flash` 作為預設的快速路徑。當您想要使用更強大的 V4 模型且可接受
+較高成本或延遲時，請使用
+`deepseek/deepseek-v4-pro`。
 
 ## 即時測試
 

@@ -36,29 +36,28 @@ title: "文档目录"
 - [Telegram](/zh/channels/telegram)
 - [Discord](/zh/channels/discord)
 - [Mattermost](/zh/channels/mattermost)
-- [BlueBubbles (iMessage)](/zh/channels/bluebubbles)
 - [QQ 机器人](/zh/channels/qqbot)
-- [iMessage（旧版）](/zh/channels/imessage)
+- [iMessage](iMessage/en/channels/imessage)
 - [群组](/zh/channels/groups)
-- [WhatsApp 群消息](/zh/channels/group-messages)
+- [WhatsApp 群组消息](WhatsApp/en/channels/group-messages)
 - [媒体图片](/zh/nodes/images)
 - [媒体音频](/zh/nodes/audio)
 
 ## 配套应用
 
-- [macOS 应用](/zh/platforms/macos)
-- [iOS 应用](/zh/platforms/ios)
-- [Android 应用](/zh/platforms/android)
-- [Windows (WSL2)](/zh/platforms/windows)
-- [Linux 应用](/zh/platforms/linux)
+- [macOS 应用](macOS/en/platforms/macos)
+- [iOS 应用](iOS/en/platforms/ios)
+- [Android 应用](Android/en/platforms/android)
+- [Windows (WSL2)](WindowsWSL2/en/platforms/windows)
+- [Linux 应用](Linux/en/platforms/linux)
 
-## 运维和安全
+## 操作与安全
 
 - [会话](/zh/concepts/session)
-- [Cron 作业](/zh/automation/cron-jobs)
+- [Cron 任务](/zh/automation/cron-jobs)
 - [Webhooks](/zh/automation/cron-jobs#webhooks)
 - [Gmail 钩子 (Pub/Sub)](/zh/automation/cron-jobs#gmail-pubsub-integration)
-- [安全性](/zh/gateway/security)
+- [安全](/zh/gateway/security)
 - [故障排除](/zh/gateway/troubleshooting)
 
 ## 相关

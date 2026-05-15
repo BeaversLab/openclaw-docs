@@ -54,14 +54,16 @@ openclaw agent --agent ops --message "Run locally" --local
 
 - 當 Gateway 要求失敗時，Gateway 模式會回退到內建代理程式。使用 `--local` 強制一開始就執行內建模式。
 - `--local` 仍然會先預載外掛程式註冊表，因此外掛程式提供的供應商、工具和頻道在內建執行期間仍然可用。
-- 每次呼叫 `openclaw agent` 都會被視為一次性執行。為該次執行開啟的隨附或使用者設定的 MCP 伺服器會在回覆後結束，即使該指令使用 Gateway 路徑也是如此，因此 stdio MCP 子程序不會在腳本呼叫之間保持運作。
-- `--channel`、`--reply-channel` 和 `--reply-account` 影響的是回覆傳遞，而非對話路由。
-- `--json` 會保留 stdout 給 JSON 回應使用。Gateway、外掛程式和內建回退的診斷資訊會被導向至 stderr，以便腳本能直接解析 stdout。
-- 嵌入式後備 JSON 包含 `meta.transport: "embedded"` 和 `meta.fallbackFrom: "gateway"`，以便腳本能夠區分後備執行與 Gateway 執行。
-- 當此指令觸發 `models.json` 重新生成時，由 SecretRef 管理的提供者憑證會以非秘密標記（例如環境變數名稱、`secretref-env:ENV_VAR_NAME` 或 `secretref-managed`）形式保存，而非已解析的秘密明文。
-- 標記寫入以來源為準：OpenClaw 保存的是來自活動來源配置快照的標記，而非來自已解析的執行時期秘密值。
+- `--local` 和嵌入式備援執行被視為一次性執行。為該本機程序開啟的捆綁 MCP 環回資源和熱 Claude stdio 會話在回覆後會被淘汰，因此腳本呼叫不會讓本機子進程保持活躍。
+- 由 Gateway 支援的執行會將 Gateway 擁有的 MCP 環回資源保留在執行中的 Gateway 進程下；舊版客戶端可能仍會發送歷史清理標誌，但 Gateway 會將其視為相容性的無操作（no-op）來接受。
+- `--channel`、`--reply-channel` 和 `--reply-account` 影響的是回覆傳遞，而非會話路由。
+- `--json` 將 stdout 保留給 JSON 回應。Gateway、外掛程式和嵌入式備援的診斷資訊會路由到 stderr，以便腳本能直接解析 stdout。
+- 嵌入式備援 JSON 包含 `meta.transport: "embedded"` 和 `meta.fallbackFrom: "gateway"`，因此腳本可以區分備援執行和 Gateway 執行。
+- 如果 Gateway 接受了 agent 執行，但 CLI 等待最終回應時逾時，嵌入式備援會使用新的明確 `gateway-fallback-*` 會話/執行 ID 並回報 `meta.fallbackReason: "gateway_timeout"` 以及備援會話欄位。這可避免與 Gateway 擁有的文字記錄鎖產生競爭，或靜默替換原始路由的對話會話。
+- 當此指令觸發 `models.json` 重新生成時，SecretRef 管理的提供者憑證會以非祕密標記（例如環境變數名稱、`secretref-env:ENV_VAR_NAME` 或 `secretref-managed`）持久化，而不是已解析的祕密明文。
+- 標記寫入是以來源為準的：OpenClaw 從使用中的來源配置快照持久化標記，而非從已解析的執行時祕密值。
 
 ## 相關
 
 - [CLI 參考](/zh-Hant/cli)
-- [Agent 執行時期](/zh-Hant/concepts/agent)
+- [Agent 執行時](/zh-Hant/concepts/agent)

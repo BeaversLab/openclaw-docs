@@ -275,47 +275,59 @@ Use los asistentes de `openclaw/plugin-sdk/interactive-runtime` al puentear cód
 antiguo:
 
 ```ts
-import { interactiveReplyToPresentation, normalizeMessagePresentation, presentationToInteractiveReply, renderMessagePresentationFallbackText } from "openclaw/plugin-sdk/interactive-runtime";
+import { interactiveReplyToPresentation, normalizeMessagePresentation, presentationToInteractiveControlsReply, presentationToInteractiveReply, renderMessagePresentationFallbackText } from "openclaw/plugin-sdk/interactive-runtime";
 ```
 
 El código nuevo debe aceptar o producir `MessagePresentation` directamente.
 
+`presentationToInteractiveReply(...)` preserva el texto de presentación visible
+asignando el título, el texto, el contexto, los botones y las selecciones a la forma antigua
+`InteractiveReply`. Los procesadores de componentes que ya dibujan bloques de título, texto,
+contexto y divisores de forma nativa deben usar
+`presentationToInteractiveControlsReply(...)` en su lugar, y luego añadir solo los
+controles de botón y selección.
+
+`renderMessagePresentationFallbackText(...)` devuelve una cadena vacía para
+los bloques de presentación que no tienen alternativa de texto, como una presentación que solo contiene un divisor.
+Los transportes que requieren un cuerpo de envío no vacío pueden pasar
+`emptyFallback` para optar por un cuerpo mínimo sin cambiar el contrato de alternativa predeterminado.
+
 ## Pin de entrega
 
-Fijar es un comportamiento de entrega, no una presentación. Use `delivery.pin` en lugar de
+Fijar (pinning) es un comportamiento de entrega, no de presentación. Use `delivery.pin` en lugar de
 campos nativos del proveedor como `channelData.telegram.pin`.
 
 Semántica:
 
 - `pin: true` fija el primer mensaje entregado con éxito.
-- `pin.notify` por defecto es `false`.
-- `pin.required` por defecto es `false`.
-- Los fallos de fijación opcionales degradan y dejan el mensaje enviado intacto.
-- Los fallos de fijación requeridos fallan la entrega.
+- `pin.notify` es `false` de forma predeterminada.
+- `pin.required` es `false` de forma predeterminada.
+- Los fallos de fijación opcionales se degradan y dejan el mensaje enviado intacto.
+- Los fallos de fijación requerida hacen que la entrega falle.
 - Los mensajes fragmentados fijan el primer fragmento entregado, no el fragmento final.
 
-Las acciones de mensaje manuales `pin`, `unpin` y `pins` todavía existen para mensajes
+Las acciones de mensaje manuales `pin`, `unpin` y `pins` aún existen para mensajes
 existentes donde el proveedor admite esas operaciones.
 
 ## Lista de verificación para el autor del complemento
 
 - Declare `presentation` de `describeMessageTool(...)` cuando el canal pueda
-  renderizar o degradar de forma segura la presentación semántica.
+  representar o degradar de forma segura la presentación semántica.
 - Agregue `presentationCapabilities` al adaptador de salida en tiempo de ejecución.
 - Implemente `renderPresentation` en el código en tiempo de ejecución, no en el código de
-  c configuración del complemento del plano de control.
-- Mantenga las bibliotecas de interfaz de usuario nativas fuera de las rutas de configuración/catálogo críticas.
-- Respete los límites de la plataforma en el renderizador y en las pruebas.
-- Añada pruebas de reserva para botones no admitidos, selecciones, botones de URL, duplicación de título/texto
+  configuración del complemento del plano de control.
+- Mantenga las bibliotecas de IU nativas fuera de las rutas de configuración/catálogo activas.
+- Conserve los límites de la plataforma en el procesador y en las pruebas.
+- Agregue pruebas de alternativa para botones, selecciones, botones de URL no admitidos, duplicación de título/texto
   y envíos mixtos de `message` más `presentation`.
-- Añada soporte de anclaje de entrega a través de `deliveryCapabilities.pin` y
-  `pinDeliveredMessage` solo cuando el proveedor pueda anclar el id del mensaje enviado.
-- No exponga nuevos campos nativos del proveedor para tarjetas/bloques/componentes/botones a través
+- Añada soporte de pin de entrega a través de `deliveryCapabilities.pin` y
+  `pinDeliveredMessage` solo cuando el proveedor pueda fijar el id del mensaje enviado.
+- No exponga nuevos campos nativos de proveedor para tarjetas/bloques/componentes/botones a través
   del esquema de acción de mensaje compartido.
 
 ## Documentos relacionados
 
 - [CLI de mensajes](/es/cli/message)
-- [Descripción general del SDK de complementos](/es/plugins/sdk-overview)
-- [Arquitectura de complementos](/es/plugins/architecture-internals#message-tool-schemas)
+- [Resumen del SDK de plugins](/es/plugins/sdk-overview)
+- [Arquitectura de plugins](/es/plugins/architecture-internals#message-tool-schemas)
 - [Plan de refactorización de la presentación del canal](/es/plan/ui-channels)

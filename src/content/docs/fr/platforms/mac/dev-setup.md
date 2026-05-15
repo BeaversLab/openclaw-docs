@@ -14,7 +14,7 @@ Générez et exécutez l'application OpenClaw macOS à partir du code source.
 Avant de compiler l'application, assurez-vous d'avoir installé les éléments suivants :
 
 1. **Xcode 26.2+** : Requis pour le développement Swift.
-2. **Node.js 24 & pnpm** : Recommandé pour la passerelle, la CLI et les scripts de packaging. Node 22 LTS, actuellement `22.14+`, reste pris en charge pour la compatibilité.
+2. **Node.js 24 & pnpm** : Recommandé pour la passerelle, la CLI et les scripts de packaging. Node 22 LTS, actuellement `22.16+`, reste pris en charge pour la compatibilité.
 
 ## 1. Installer les dépendances
 

@@ -2,14 +2,14 @@
 summary: "透過 Google 搜尋接採進行 Gemini 網頁搜尋"
 read_when:
   - You want to use Gemini for web_search
-  - You need a GEMINI_API_KEY
+  - You need a GEMINI_API_KEY or models.providers.google.apiKey
   - You want Google Search grounding
 title: "Gemini 搜尋"
 ---
 
-OpenClaw 支援內建
+OpenClaw 支援具備內建
 [Google Search grounding](https://ai.google.dev/gemini-api/docs/grounding) 的 Gemini 模型，
-這會傳回由即時 Google 搜尋結果與引用來源所支援的 AI 綜合答案。
+該功能會傳回由即時 Google Search 結果支援並附有引用來源的 AI 綜合回答。
 
 ## 取得 API 金鑰
 
@@ -19,7 +19,8 @@ OpenClaw 支援內建
     API 金鑰。
   </Step>
   <Step title="儲存金鑰">
-    在 Gateway 環境中設定 `GEMINI_API_KEY`，或透過以下方式設定：
+    在 Gateway 環境中設定 `GEMINI_API_KEY`，重複使用
+    `models.providers.google.apiKey`，或透過以下方式設定專用的網頁搜尋金鑰：
 
     ```bash
     openclaw configure --section web
@@ -37,7 +38,8 @@ OpenClaw 支援內建
       google: {
         config: {
           webSearch: {
-            apiKey: "AIza...", // optional if GEMINI_API_KEY is set
+            apiKey: "AIza...", // optional if GEMINI_API_KEY or models.providers.google.apiKey is set
+            baseUrl: "https://generativelanguage.googleapis.com/v1beta", // optional; falls back to models.providers.google.baseUrl
             model: "gemini-2.5-flash", // default
           },
         },
@@ -54,42 +56,52 @@ OpenClaw 支援內建
 }
 ```
 
-**環境替代方案：** 在 Gateway 環境中設定 `GEMINI_API_KEY`。
-若是 gateway 安裝，請將其置於 `~/.openclaw/.env` 中。
+**憑證優先順序：** Gemini 網頁搜尋會先使用
+`plugins.entries.google.config.webSearch.apiKey`，然後是 `GEMINI_API_KEY`，
+接著是 `models.providers.google.apiKey`。對於 Base URL，專用的
+`plugins.entries.google.config.webSearch.baseUrl` 優先於
+`models.providers.google.baseUrl`。
+
+若是 gateway 安裝，請將環境金鑰放在 `~/.openclaw/.env` 中。
 
 ## 運作方式
 
-不同於傳統搜尋提供者傳回連結和摘要列表，
-Gemini 使用 Google Search grounding 產生具有
-內文引用的 AI 綜合答案。結果同時包含綜合答案與來源
+不同於傳統搜尋供應商傳回連結列表和摘要片段，
+Gemini 使用 Google 搜尋接採來產生包含內嵌引用的 AI 綜合回答。結果同時包含綜合回答和來源
 URL。
 
-- 來自 Gemini grounding 的引用 URL 會從 Google
-  重新導向 URL 自動解析為直接 URL。
-- 在傳回最終引用 URL 之前，重新導向解析會使用 SSRF 防護路徑 (HEAD + 重新導向檢查 +
-  http/https 驗證)。
-- 重新導向解析使用嚴格的 SSRF 預設值，因此會封鎖
-  對私人/內部目標的重新導向。
+- 來自 Gemini 接採的引用 URL 會自動從 Google
+  重新導向 URL 解析為直接 URL。
+- 在傳回最終引用 URL 之前，重新導向解析會使用 SSRF 防護路徑（HEAD + 重新導向檢查 +
+  http/https 驗證）。
+- 重新導向解析使用嚴格的 SSRF 預設值，因此對
+  私有/內部目標的重新導向會被封鎖。
 
 ## 支援的參數
 
-Gemini 搜尋支援 `query`。
+Gemini 搜尋支援 `query`、`freshness`、`date_after` 和 `date_before`。
 
-接受 `count` 以相容共用 `web_search`，但 Gemini grounding
-仍會傳回一個帶有引用的綜合答案，而非 N 個結果的
+為了與共用的 `web_search` 相容，接受 `count`，但 Gemini grounding
+仍然會傳回一個附有引用來源的綜合回答，而不是 N 個結果的
 列表。
 
-不支援特定提供者的過濾器，如 `country`、`language`、`freshness` 和
-`domain_filter`。
+`freshness` 接受 `day`、`week`、`month`、`year`，以及共用的快捷方式
+`pd`、`pw`、`pm` 和 `py`。OpenClaw 會將這些數值，或明確的
+`date_after`/`date_before` 範圍，轉換為 Gemini Google Search grounding 的
+`timeRangeFilter`。不支援 `country`、`language` 和 `domain_filter`。
 
 ## 模型選擇
 
 預設模型為 `gemini-2.5-flash` (快速且具成本效益)。任何支援 grounding 的 Gemini
-模型皆可透過
+模型都可以透過
 `plugins.entries.google.config.webSearch.model` 使用。
+
+## Base URL 覆寫
+
+當 Gemini 網路搜尋必須透過操作員代理或自訂的 Gemini 相容端點進行路由時，請設定 `plugins.entries.google.config.webSearch.baseUrl`。如果未設定，Gemini 網路搜尋將重複使用 `models.providers.google.baseUrl`。純 `https://generativelanguage.googleapis.com` 值會被正規化為 `https://generativelanguage.googleapis.com/v1beta`；自訂代理路徑在移除尾部斜線後會保持原樣。
 
 ## 相關
 
-- [Web Search 概覽](/zh-Hant/tools/web) -- 所有提供者與自動偵測
-- [Brave Search](/zh-Hant/tools/brave-search) -- 附帶摘要的結構化結果
+- [Web Search overview](/zh-Hant/tools/web) -- 所有供應商與自動偵測
+- [Brave Search](/zh-Hant/tools/brave-search) -- 帶有摘錄的結構化結果
 - [Perplexity Search](/zh-Hant/tools/perplexity-search) -- 結構化結果 + 內容擷取

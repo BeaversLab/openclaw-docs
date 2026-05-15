@@ -12,9 +12,9 @@ sidebarTitle: "Agent 的工作区"
 这与 `~/.openclaw/` 分开，后者存储配置、凭据和会话。
 
 <Warning>
-工作区是 **默认 cwd**，而不是硬性的沙箱。工具根据工作区解析相对路径，但除非启用了沙箱隔离，否则绝对路径仍可到达主机上的其他位置。如果需要隔离，请使用 [`agents.defaults.sandbox`](/zh/gateway/sandboxing)（和/或每个 Agent 的沙箱配置）。
+工作区是**默认 cwd**，而非严格的沙箱。工具会基于工作区解析相对路径，但除非启用了沙箱隔离，否则绝对路径仍可访问主机上的其他位置。如果需要隔离，请使用 [`agents.defaults.sandbox`](/zh/gateway/sandboxing)（和/或针对每个代理的沙箱配置）。
 
-当启用沙箱隔离并且 `workspaceAccess` 不是 `"rw"` 时，工具将在 `~/.openclaw/sandboxes` 下的沙箱工作区内运行，而不是您的主机工作区。
+当启用沙箱隔离且 `workspaceAccess` 不为 `"rw"` 时，工具将在 `~/.openclaw/sandboxes` 下的沙箱工作区内运行，而不是在您的主机工作区中。
 
 </Warning>
 
@@ -60,39 +60,42 @@ sidebarTitle: "Agent 的工作区"
 这些是 OpenClaw 在工作区内期望的标准文件：
 
 <AccordionGroup>
-  <Accordion title="AGENTS.md — operating instructions">代理的操作说明及其应如何使用内存。在每个会话开始时加载。存放规则、优先级和“行为方式”细节的好地方。</Accordion>
-  <Accordion title="SOUL.md — persona and tone">人格、语调和边界。每个会话都会加载。指南：[SOUL.md personality guide](/zh/concepts/soul)。</Accordion>
-  <Accordion title="USER.md — who the user is">用户是谁以及如何称呼他们。每个会话都会加载。</Accordion>
-  <Accordion title="IDENTITY.md — name, vibe, emoji">代理的名称、氛围和表情符号。在初始化仪式期间创建/更新。</Accordion>
-  <Accordion title="TOOLS.md — local 工具 conventions">关于本地工具和约定的注释。不控制工具的可用性；仅作为指导。</Accordion>
-  <Accordion title="HEARTBEAT.md — heartbeat checklist">心跳运行的可选微型检查清单。保持简短以避免消耗 token。</Accordion>
-  <Accordion title="BOOT.md — startup checklist">在网关重启时自动运行的可选启动检查清单（当启用[internal hooks](/zh/automation/hooks)时）。保持简短；使用消息工具进行发送。</Accordion>
-  <Accordion title="BOOTSTRAP.md — first-run ritual">一次性首次运行仪式。仅为全新的工作区创建。仪式完成后将其删除。</Accordion>
-  <Accordion title="memory/YYYY-MM-DD.md — daily memory log">每日内存日志（每天一个文件）。建议在会话开始时读取今天和昨天的记录。</Accordion>
-  <Accordion title="MEMORY.md — curated long-term memory (optional)">策展的长期记忆。仅加载到主要的私人会话中（而非共享/组上下文）。有关工作流和自动内存刷新，请参阅[Memory](/zh/concepts/memory)。</Accordion>
-  <Accordion title="skills/ — workspace skills (optional)">特定于工作区的技能。该工作区的最高优先级技能位置。当名称冲突时，覆盖项目代理技能、个人代理技能、托管技能、捆绑技能和 `skills.load.extraDirs`。</Accordion>
-  <Accordion title="canvas/ — Canvas UI files (optional)">用于节点显示的Canvas UI文件（例如 `canvas/index.html`）。</Accordion>
+  <Accordion title="AGENTS.md - operating instructions">代理的操作说明及其应如何使用记忆。在每次会话开始时加载。适合用于放置规则、优先级和“如何表现”的细节。</Accordion>
+  <Accordion title="SOUL.md - persona and tone">个性、语调和边界。每个会话加载。指南：[SOUL.md personality guide](/zh/concepts/soul)。</Accordion>
+  <Accordion title="USER.md - who the user is">用户是谁以及如何称呼他们。每个会话加载。</Accordion>
+  <Accordion title="IDENTITY.md - name, vibe, emoji">代理的名称、氛围和表情符号。在启动仪式期间创建/更新。</Accordion>
+  <Accordion title="TOOLS.md - local 工具 conventions">关于您的本地工具和约定的说明。这不控制工具的可用性；它仅作为指导。</Accordion>
+  <Accordion title="HEARTBEAT.md - heartbeat checklist">用于心跳运行的可选微型检查清单。保持简短以避免消耗 token。</Accordion>
+  <Accordion title="BOOT.md - startup checklist">在网关重启时自动运行的可选启动检查清单（当启用 [internal hooks](/zh/automation/hooks) 时）。保持简短；使用消息工具进行对外发送。</Accordion>
+  <Accordion title="BOOTSTRAP.md - 首次运行仪式">一次性首次运行仪式。仅为全新的工作区创建。仪式完成后将其删除。</Accordion>
+  <Accordion title="memory/YYYY-MM-DD.md - 每日记忆日志">每日记忆日志（每天一个文件）。建议在会话开始时阅读今天和昨天的日志。</Accordion>
+  <Accordion title="MEMORY.md - 精选长期记忆（可选）">精选长期记忆：持久化的事实、偏好、决策和简短摘要。将详细日志保存在 `memory/YYYY-MM-DD.md` 中，以便记忆工具可以按需检索它们，而无需将它们注入到每个提示中。仅应在主要的私人会话（而非共享/群组上下文）中加载 `MEMORY.md`。有关工作流程和自动内存刷新，请参阅 [Memory](/zh/concepts/memory)。</Accordion>
+  <Accordion title="skills/ - 工作区技能（可选）">特定于工作区的技能。该工作区的最高优先级技能位置。当名称冲突时，覆盖项目代理技能、个人代理技能、托管技能、捆绑技能和 `skills.load.extraDirs`。</Accordion>
+  <Accordion title="Canvascanvas/ - Canvas UI 文件（可选）" Canvas>
+    用于节点显示的 Canvas UI 文件（例如 `canvas/index.html`）。
+  </Accordion>
 </AccordionGroup>
 
-<Note>如果缺少任何引导文件，OpenClaw 会在会话中注入“缺少文件”标记并继续。注入时大型引导文件会被截断；使用 `agents.defaults.bootstrapMaxChars`（默认值：12000）和 `agents.defaults.bootstrapTotalMaxChars`（默认值：60000）调整限制。`openclaw setup` 可以重新创建缺少的默认值，而不会覆盖现有文件。</Note>
+<Note>如果缺少任何引导文件，OpenClaw 会向会话中注入一个“缺失文件”标记并继续。注入大型引导文件时会被截断；可以使用 OpenClaw`agents.defaults.bootstrapMaxChars`（默认：12000）和 `agents.defaults.bootstrapTotalMaxChars`（默认：60000）调整限制。`openclaw setup` 可以重新创建缺失的默认文件，而不会覆盖现有文件。</Note>
 
 ## 工作区中不存在的内容
 
-这些位于 `~/.openclaw/` 下，不应提交到工作区仓库：
+这些文件位于 `~/.openclaw/` 下，不应提交到工作区仓库：
 
 - `~/.openclaw/openclaw.json`（配置）
-- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`（模型认证配置：OAuth + API 密钥）
-- `~/.openclaw/credentials/`（渠道/提供商状态以及旧版 OAuth 导入数据）
-- `~/.openclaw/agents/<agentId>/sessions/`（会话记录 + 元数据）
-- `~/.openclaw/skills/`（托管技能）
+- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (模型身份验证配置：OAuth + API 密钥)
+- `~/.openclaw/agents/<agentId>/agent/codex-home/` (每个代理的 Codex 运行时账户、配置、技能、插件和原生线程状态)
+- `~/.openclaw/credentials/` (渠道/提供商状态以及旧版 OAuth 导入数据)
+- `~/.openclaw/agents/<agentId>/sessions/` (会话记录 + 元数据)
+- `~/.openclaw/skills/` (托管技能)
 
-如果您需要迁移会话或配置，请单独复制它们，并将其置于版本控制之外。
+如果您需要迁移会话或配置，请单独复制它们，并将其保留在版本控制之外。
 
 ## Git 备份（推荐，私有）
 
-将工作区视为私有记忆。将其放入**私有** git 仓库中，以便备份和恢复。
+将工作区视为私有内存。将其放在一个 **私有** git 仓库中，以便进行备份和恢复。
 
-在运行 Gateway（即工作区所在位置）的机器上运行这些步骤。
+在运行 Gateway(网关) 的机器上运行这些步骤（那是工作区所在的位置）。
 
 <Steps>
   <Step title="初始化仓库">
@@ -108,9 +111,9 @@ sidebarTitle: "Agent 的工作区"
   </Step>
   <Step title="添加私有远程仓库">
     <Tabs>
-      <Tab title="GitHub web UI">
-        1. 在 GitHub 上创建一个新的 **private** 仓库。
-        2. 不要用 README 初始化（以避免合并冲突）。
+      <Tab title="GitHub Web UI">
+        1. 在 GitHub 上创建一个新的 **私有** 仓库。
+        2. 不要使用 README 初始化（避免合并冲突）。
         3. 复制 HTTPS 远程 URL。
         4. 添加远程仓库并推送：
 
@@ -126,9 +129,9 @@ sidebarTitle: "Agent 的工作区"
         gh repo create openclaw-workspace --private --source . --remote origin --push
         ```
       </Tab>
-      <Tab title="GitLab web UI">
-        1. 在 GitLab 上创建一个新的 **private** 仓库。
-        2. 不要用 README 初始化（以避免合并冲突）。
+      <Tab title="GitLab Web UI">
+        1. 在 GitLab 上创建一个新的 **私有** 仓库。
+        2. 不要使用 README 初始化（避免合并冲突）。
         3. 复制 HTTPS 远程 URL。
         4. 添加远程仓库并推送：
 
@@ -141,7 +144,7 @@ sidebarTitle: "Agent 的工作区"
     </Tabs>
 
   </Step>
-  <Step title="持续更新">
+  <Step title="后续更新">
     ```bash
     git status
     git add .
@@ -154,13 +157,13 @@ sidebarTitle: "Agent 的工作区"
 ## 不要提交机密信息
 
 <Warning>
-即使在私有仓库中，也要避免在工作区中存储机密信息：
+即使在私有仓库中，也应避免在工作区中存储机密信息：
 
 - API 密钥、OAuth 令牌、密码或私有凭证。
-- `~/.openclaw/` 下的任何内容。
+- APIOAuth`~/.openclaw/` 下的任何内容。
 - 聊天记录或敏感附件的原始转储。
 
-如果必须存储敏感引用，请使用占位符并将真正的机密信息保存在其他地方（密码管理器、环境变量或 `~/.openclaw/`）。
+如果必须存储敏感引用，请使用占位符，并将真实的机密信息存放在别处（密码管理器、环境变量或 `~/.openclaw/`）。
 
 </Warning>
 
@@ -183,22 +186,22 @@ sidebarTitle: "Agent 的工作区"
   <Step title="更新配置">
     在 `~/.openclaw/openclaw.json` 中将 `agents.defaults.workspace` 设置为该路径。
   </Step>
-  <Step title="补全缺失文件">
-    运行 `openclaw setup --workspace <path>` 以补全任何缺失的文件。
+  <Step title="补充缺失文件">
+    运行 `openclaw setup --workspace <path>` 以补充任何缺失的文件。
   </Step>
   <Step title="复制会话（可选）">
-    如果您需要会话，请从旧机器单独复制 `~/.openclaw/agents/<agentId>/sessions/`。
+    如果您需要会话，请单独从旧机器复制 `~/.openclaw/agents/<agentId>/sessions/`。
   </Step>
 </Steps>
 
 ## 高级说明
 
-- 多代理路由可以为每个代理使用不同的工作区。有关路由配置，请参阅 [通道路由](/zh/channels/channel-routing)。
-- 如果启用了 `agents.defaults.sandbox`，非主会话可以使用 `agents.defaults.sandbox.workspaceRoot` 下的基于会话的沙箱工作区。
+- 多代理路由可以为每个代理使用不同的工作区。有关路由配置，请参阅[通道路由](/zh/channels/channel-routing)。
+- 如果启用了 `agents.defaults.sandbox`，非主会话可以使用 `agents.defaults.sandbox.workspaceRoot` 下的每会话沙箱工作区。
 
-## 相关
+## 相关内容
 
-- [Heartbeat](/zh/gateway/heartbeat) — HEARTBEAT.md 工作区文件
-- [沙箱隔离](/zh/gateway/sandboxing) — 沙箱隔离环境中的工作区访问
-- [Session](/zh/concepts/session) — 会话存储路径
-- [Standing orders](/zh/automation/standing-orders) — 工作区文件中的持久指令
+- [Heartbeat](/zh/gateway/heartbeat) - HEARTBEAT.md 工作区文件
+- [沙箱隔离](/zh/gateway/sandboxing) - 沙箱环境中的工作区访问
+- [会话](/zh/concepts/session) - 会话存储路径
+- [长期指令](/zh/automation/standing-orders) - 工作区文件中的持久指令

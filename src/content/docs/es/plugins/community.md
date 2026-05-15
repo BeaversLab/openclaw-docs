@@ -6,20 +6,17 @@ read_when:
 title: "Complementos de la comunidad"
 ---
 
-Los complementos de la comunidad son paquetes de terceros que extienden OpenClaw con nuevos
-canales, herramientas, proveedores u otras capacidades. Son construidos y mantenidos
-por la comunidad, publicados en [ClawHub](/es/tools/clawhub) o npm, e
-instalables con un solo comando.
+Los complementos de la comunidad son paquetes de terceros que amplían OpenClaw con nuevos canales, herramientas, proveedores u otras capacidades. Son creados y mantenidos por la comunidad, generalmente publicados en [ClawHub](/es/clawhub) e instalables con un solo comando. Npm sigue siendo el predeterminado de lanzamiento para especificaciones de paquetes básicos, mientras se implementan las instalaciones de paquetes de ClawHub.
 
 ClawHub es la superficie de descubrimiento canónica para los complementos de la comunidad. No abra
 PRs solo para documentación con el fin de agregar su complemento aquí para su descubrimiento; en su lugar, publíquelo en
 ClawHub.
 
 ```bash
-openclaw plugins install <package-name>
+openclaw plugins install clawhub:<package-name>
 ```
 
-OpenClaw verifica ClawHub primero y recurre automáticamente a npm.
+Use `openclaw plugins install <package-name>` para paquetes alojados en npm.
 
 ## Complementos listados
 
@@ -68,7 +65,7 @@ basado en DAG con compactación incremental: preserva la fidelidad completa del 
 mientras reduce el uso de tokens.
 
 - **npm:** `@martian-engineering/lossless-claw`
-- **repo:** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
+- **repositorio:** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
 
 ```bash
 openclaw plugins install @martian-engineering/lossless-claw
@@ -80,7 +77,7 @@ Complemento oficial que exporta trazas de agentes a Opik. Monitoree el comportam
 costo, tokens, errores y más.
 
 - **npm:** `@opik/opik-openclaw`
-- **repo:** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
+- **repositorio:** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
 
 ```bash
 openclaw plugins install @opik/opik-openclaw
@@ -91,7 +88,7 @@ openclaw plugins install @opik/opik-openclaw
 Dale a tu agente OpenClaw un avatar Live2D con sincronización labial en tiempo real, expresiones de emoción y texto a voz. Incluye herramientas de creador para la generación de activos con IA y el despliegue con un solo clic en el Prometheus Marketplace. Actualmente en alfa.
 
 - **npm:** `@prometheusavatar/openclaw-plugin`
-- **repo:** [github.com/myths-labs/prometheus-avatar](https://github.com/myths-labs/prometheus-avatar)
+- **repositorio:** [github.com/myths-labs/prometheus-avatar](https://github.com/myths-labs/prometheus-avatar)
 
 ```bash
 openclaw plugins install @prometheusavatar/openclaw-plugin
@@ -101,10 +98,12 @@ openclaw plugins install @prometheusavatar/openclaw-plugin
 
 Conecta OpenClaw con QQ a través de la API de QQ Bot. Soporta chats privados, menciones de grupo, mensajes de canal y contenido enriquecido que incluye voz, imágenes, videos y archivos.
 
-Las versiones actuales de OpenClaw incluyen QQ Bot. Utiliza la configuración incluida en [QQ Bot](/es/channels/qqbot) para instalaciones normales; instala este complemento externo solo cuando desees intencionalmente el paquete independiente mantenido por Tencent.
+Las versiones actuales de OpenClaw incluyen QQ Bot. Utilice la configuración incluida en
+[QQ Bot](/es/channels/qqbot) para instalaciones normales; instale este plugin externo solo
+cuando desee intencionalmente el paquete independiente mantenido por Tencent.
 
 - **npm:** `@tencent-connect/openclaw-qqbot`
-- **repo:** [github.com/tencent-connect/openclaw-qqbot](https://github.com/tencent-connect/openclaw-qqbot)
+- **repositorio:** [github.com/tencent-connect/openclaw-qqbot](https://github.com/tencent-connect/openclaw-qqbot)
 
 ```bash
 openclaw plugins install @tencent-connect/openclaw-qqbot
@@ -115,7 +114,7 @@ openclaw plugins install @tencent-connect/openclaw-qqbot
 Complemento de canal WeCom para OpenClaw por el equipo de Tencent WeCom. Impulsado por conexiones persistentes de WebSocket de WeCom Bot, soporta mensajes directos y chats grupales, respuestas en streaming, mensajería proactiva, procesamiento de imágenes/archivos, formato Markdown, control de acceso integrado y habilidades de documentos/reuniones/mensajería.
 
 - **npm:** `@wecom/wecom-openclaw-plugin`
-- **repo:** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
+- **repositorio:** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
 
 ```bash
 openclaw plugins install @wecom/wecom-openclaw-plugin
@@ -126,7 +125,7 @@ openclaw plugins install @wecom/wecom-openclaw-plugin
 Complemento de canal Yuanbao para OpenClaw por el equipo de Tencent Yuanbao. Impulsado por conexiones persistentes de WebSocket, admite mensajes directos y chats grupales, respuestas en streaming, mensajería proactiva, procesamiento de imagen/archivo/audio/video, formato Markdown, control de acceso integrado y menús de comandos con barra.
 
 - **npm:** `openclaw-plugin-yuanbao`
-- **repo:** [github.com/yb-claw/openclaw-plugin-yuanbao](https://github.com/yb-claw/openclaw-plugin-yuanbao)
+- **repositorio:** [github.com/YuanbaoTeam/yuanbao-openclaw-plugin](https://github.com/YuanbaoTeam/yuanbao-openclaw-plugin)
 
 ```bash
 openclaw plugins install openclaw-plugin-yuanbao
@@ -139,7 +138,8 @@ Damos la bienvenida a los complementos de la comunidad que sean útiles, documen
 <Steps>
   <Step title="Publicar en ClawHub o npm">
     Tu complemento debe ser instalable a través de `openclaw plugins install \<package-name\>`.
-    Publícalo en [ClawHub](/es/tools/clawhub) (preferido) o npm.
+    Publica en [ClawHub](/es/clawhub) a menos que específicamente necesites
+    distribución solo por npm.
     Consulta [Building Plugins](/es/plugins/building-plugins) para la guía completa.
 
   </Step>
@@ -164,7 +164,7 @@ Damos la bienvenida a los complementos de la comunidad que sean útiles, documen
 
 | Requisito                            | Por qué                                                             |
 | ------------------------------------ | ------------------------------------------------------------------- |
-| Publicado en ClawHub o npm           | Los usuarios necesitan `openclaw plugins install` para que funcione |
+| Publicado en ClawHub o npm           | Los usuarios necesitan `openclaw plugins install` para funcionar    |
 | Repositorio público de GitHub        | Revisión del código fuente, seguimiento de problemas, transparencia |
 | Documentación de configuración y uso | Los usuarios necesitan saber cómo configurarlo                      |
 | Mantenimiento activo                 | Actualizaciones recientes o manejo receptivo de problemas           |
@@ -174,5 +174,5 @@ Los envoltorios de bajo esfuerzo, la propiedad poco clara o los paquetes sin man
 ## Relacionado
 
 - [Instalar y configurar complementos](/es/tools/plugin) — cómo instalar cualquier complemento
-- [Crear complementos](/es/plugins/building-plugins) — crea el tuyo propio
+- [Construir complementos](/es/plugins/building-plugins) — crear el tuyo propio
 - [Manifiesto del complemento](/es/plugins/manifest) — esquema del manifiesto

@@ -6,21 +6,19 @@ read_when:
   - Setting up Fly volumes, secrets, and first-run config
 ---
 
-# Déploiement sur Fly.io
-
-**Objectif :** OpenClaw Gateway fonctionnant sur une machine [Fly.io](https://fly.io) avec stockage persistant, HTTPS automatique et accès Discord/channel.
+**Objectif :** OpenClaw Gateway fonctionnant sur une machine [Fly.io](https://fly.io) avec stockage persistant, HTTPS automatique et accès Discord/canal.
 
 ## Ce dont vous avez besoin
 
 - [flyctl CLI](https://fly.io/docs/hands-on/install-flyctl/) installé
 - Compte Fly.io (le niveau gratuit fonctionne)
 - Authentification du modèle : clé API pour votre fournisseur de modèle choisi
-- Identifiants de channel : jeton de bot Discord, jeton Telegram, etc.
+- Identifiants du canal : jeton de bot Discord, jeton Telegram, etc.
 
-## Accès rapide pour débutants
+## Chemin rapide pour débutants
 
-1. Cloner le repo → personnaliser `fly.toml`
-2. Créer l'application + le volume → définir les secrets
+1. Cloner le dépôt → personnaliser `fly.toml`
+2. Créer une application + un volume → définir les secrets
 3. Déployer avec `fly deploy`
 4. Se connecter via SSH pour créer la configuration ou utiliser l'interface de contrôle
 
@@ -38,14 +36,14 @@ read_when:
     fly volumes create openclaw_data --size 1 --region iad
     ```
 
-    **Astuce :** Choisissez une région proche de chez vous. Options courantes : `lhr` (Londres), `iad` (Virginie), `sjc` (San Jose).
+    **Astuce :** Choisissez une région proche de chez vous. Options courantes : `lhr` (Londres), `iad` (Virginie), `sjc` (San José).
 
   </Step>
 
   <Step title="Configurer fly.toml">
-    Modifiez `fly.toml` pour correspondre au nom de votre application et à vos exigences.
+    Modifiez `fly.toml` pour qu'il corresponde au nom de votre application et à vos besoins.
 
-    **Note de sécurité :** La configuration par défaut expose une URL publique. Pour un déploiement sécurisé sans adresse IP publique, consultez [Private Deployment](#private-deployment-hardened) ou utilisez `fly.private.toml`.
+    **Note de sécurité :** La configuration par défaut expose une URL publique. Pour un déploiement renforcé sans IP publique, consultez [Private Deployment](#private-deployment-hardened) ou utilisez `deploy/fly.private.toml`.
 
     ```toml
     app = "my-openclaw"  # Your app name
@@ -78,15 +76,17 @@ read_when:
     [mounts]
       source = "openclaw_data"
       destination = "/data"
-    ```
+    ```OpenClawDocker
+
+    L'image Docker OpenClaw utilise `tini`Docker comme point d'entrée. Les commandes de processus Fly remplacent la commande Docker `CMD` sans remplacer `ENTRYPOINT`, le processus s'exécute donc toujours sous `tini`.
 
     **Paramètres clés :**
 
-    | Paramètre                        | Pourquoi                                                                         |
+    | Setting                        | Why                                                                         |
     | ------------------------------ | --------------------------------------------------------------------------- |
-    | `--bind lan`                   | Se lie à `0.0.0.0` afin que le proxy Fly puisse atteindre la passerelle                     |
+    | `--bind lan`                   | Se lie à `0.0.0.0` pour que le proxy de Fly puisse atteindre la passerelle                     |
     | `--allow-unconfigured`         | Démarre sans fichier de configuration (vous en créerez un après)                      |
-    | `internal_port = 3000`         | Doit correspondre à `--port 3000` (ou `OPENCLAW_GATEWAY_PORT`) pour les contrôles de santé Fly |
+    | `internal_port = 3000`         | Doit correspondre à `--port 3000` (ou `OPENCLAW_GATEWAY_PORT`) pour les contrôles de santé de Fly |
     | `memory = "2048mb"`            | 512 Mo est trop petit ; 2 Go recommandés                                         |
     | `OPENCLAW_STATE_DIR = "/data"` | Conserve l'état sur le volume                                                |
 
@@ -110,9 +110,9 @@ read_when:
 
     **Notes :**
 
-    - Les liaisons non-bouclage (`--bind lan`) nécessitent un chemin d'authentification passerelle valide. Cet exemple Fly.io utilise `OPENCLAW_GATEWAY_TOKEN`, mais `gateway.auth.password` ou un déploiement `trusted-proxy` non-bouclage correctement configuré satisfont également à cette exigence.
+    - Les liaisons non-boucle (`--bind lan`) nécessitent un chemin d'authentification de passerelle valide. Cet exemple Fly.io utilise `OPENCLAW_GATEWAY_TOKEN`, mais `gateway.auth.password` ou un déploiement `trusted-proxy` non-boucle correctement configuré satisfont également la condition.
     - Traitez ces jetons comme des mots de passe.
-    - **Privilégiez les env vars aux fichiers de configuration** pour toutes les clés API et les jetons. Cela permet de garder les secrets hors de `openclaw.json` où ils pourraient être accidentellement exposés ou consignés.
+    - **Privilégiez les env vars aux fichiers de configuration** pour toutes les clés et jetons API. Cela permet de garder les secrets en dehors de `openclaw.json` où ils pourraient être accidentellement exposés ou enregistrés.
 
   </Step>
 
@@ -121,7 +121,7 @@ read_when:
     fly deploy
     ```
 
-    Le premier déploiement crée l'image Docker (~2-3 minutes). Les déploiements suivants sont plus rapides.
+    Le premier déploiement construit l'image Docker (environ 2-3 minutes). Les déploiements suivants sont plus rapides.
 
     Après le déploiement, vérifiez :
 
@@ -140,7 +140,7 @@ read_when:
   </Step>
 
   <Step title="Créer le fichier de configuration">
-    Connectez-vous par SSH à la machine pour créer une configuration appropriée :
+    Connectez-vous via SSH à la machine pour créer une configuration appropriée :
 
     ```bash
     fly ssh console
@@ -207,22 +207,16 @@ read_when:
     EOF
     ```
 
-    **Remarque :** Avec `OPENCLAW_STATE_DIR=/data`, le chemin de configuration est `/data/openclaw.json`.
+    **Note :** Avec `OPENCLAW_STATE_DIR=/data`, le chemin de configuration est `/data/openclaw.json`.
 
-    **Remarque :** Remplacez `https://my-openclaw.fly.dev` par la véritable origine de
-    votre application Fly. Le démarrage du Gateway initialise les origines locales de
-    l'interface de contrôle à partir des valeurs d'exécution `--bind` et
-    `--port` afin que le premier démarrage puisse avoir lieu avant
-    l'existence de la configuration, mais l’accès via le navigateur via Fly nécessite
-    toujours l’origine HTTPS exacte listée dans `gateway.controlUi.allowedOrigins`.
+    **Note :** Remplacez `https://my-openclaw.fly.dev`Gateway par votre véritable origine d'application Fly. Le Gateway initialise les origines de l'interface de contrôle locale à partir des valeurs d'exécution `--bind` et `--port` pour que le premier démarrage puisse avoir lieu avant l'existence de la configuration, mais l'accès via le navigateur via Fly nécessite toujours l'origine HTTPS exacte listée dans `gateway.controlUi.allowedOrigins`Discord.
 
-    **Remarque :** Le jeton Discord peut provenir de :
+    **Note :** Le jeton Discord peut provenir de :
 
     - Variable d'environnement : `DISCORD_BOT_TOKEN` (recommandé pour les secrets)
     - Fichier de configuration : `channels.discord.token`
 
-    Si vous utilisez une variable d'environnement, il n'est pas nécessaire d'ajouter le
-    jeton à la configuration. Le gateway lit `DISCORD_BOT_TOKEN` automatiquement.
+    Si vous utilisez une env var, il n'est pas nécessaire d'ajouter le jeton à la configuration. Le gateway lit `DISCORD_BOT_TOKEN` automatiquement.
 
     Redémarrez pour appliquer :
 
@@ -233,7 +227,7 @@ read_when:
 
   </Step>
 
-  <Step title="Accéder au Gateway">
+  <Step title="GatewayAccéder à la Gateway">
     ### Interface de contrôle
 
     Ouvrir dans le navigateur :
@@ -242,11 +236,11 @@ read_when:
     fly open
     ```
 
-    Ou visitez `https://my-openclaw.fly.dev/`
+    Ou visiter `https://my-openclaw.fly.dev/`
 
-    Authentifiez-vous avec le secret partagé configuré. Ce guide utilise le jeton
-    gateway provenant de `OPENCLAW_GATEWAY_TOKEN` ; si vous avez passé à l'authentification
-    par mot de passe, utilisez plutôt ce mot de passe.
+    Authentifiez-vous avec le secret partagé configuré. Ce guide utilise le jeton de la gateway
+    provenant de `OPENCLAW_GATEWAY_TOKEN` ; si vous avez basculé vers l'authentification par mot de passe, utilisez
+    ce mot de passe à la place.
 
     ### Journaux
 
@@ -268,19 +262,19 @@ read_when:
 
 ### "L'application n'écoute pas sur l'adresse attendue"
 
-Le gateway se lie à `127.0.0.1` au lieu de `0.0.0.0`.
+La gateway se lie à `127.0.0.1` au lieu de `0.0.0.0`.
 
-**Correction :** Ajoutez `--bind lan` à votre commande de processus dans `fly.toml`.
+**Solution :** Ajoutez `--bind lan` à votre commande de processus dans `fly.toml`.
 
 ### Échec des contrôles de santé / connexion refusée
 
-Fly ne peut pas atteindre la passerelle sur le port configuré.
+Fly ne peut pas atteindre la gateway sur le port configuré.
 
-**Correction :** Assurez-vous que `internal_port` correspond au port du gateway (définissez `--port 3000` ou `OPENCLAW_GATEWAY_PORT=3000`).
+**Correction :** Assurez-vous que `internal_port` correspond au port de la passerelle (définissez `--port 3000` ou `OPENCLAW_GATEWAY_PORT=3000`).
 
 ### OOM / Problèmes de mémoire
 
-Le conteneur redémarre ou est arrêté de manière répétée. Signes : `SIGABRT`, `v8::internal::Runtime_AllocateInYoungGeneration`, ou redémarrages silencieux.
+Le conteneur redémarre continuellement ou est arrêté. Signes : `SIGABRT`, `v8::internal::Runtime_AllocateInYoungGeneration`, ou redémarrages silencieux.
 
 **Correction :** Augmentez la mémoire dans `fly.toml` :
 
@@ -295,13 +289,13 @@ Ou mettez à jour une machine existante :
 fly machine update <machine-id> --vm-memory 2048 -y
 ```
 
-**Remarque :** 512 Mo est trop petit. 1 Go peut fonctionner mais peut provoquer une OOM sous charge ou avec une journalisation verbeuse. **2 Go est recommandé.**
+**Remarque :** 512 Mo est trop petit. 1 Go peut fonctionner mais peut provoquer une OOM sous charge ou avec une journalisation détaillée. **2 Go est recommandé.**
 
-### Problèmes de verrouillage du Gateway
+### Gateway problèmes de verrouillage
 
-Gateway refuse de démarrer avec des erreurs "déjà en cours d'exécution".
+Gateway refuse de démarrer avec des erreurs « déjà en cours d'exécution ».
 
-Cela arrive lorsque le conteneur redémarre mais que le fichier de verrouillage PID persiste sur le volume.
+Cela se produit lorsque le conteneur redémarre mais que le fichier de verrouillage PID persiste sur le volume.
 
 **Correction :** Supprimez le fichier de verrouillage :
 
@@ -310,11 +304,11 @@ fly ssh console --command "rm -f /data/gateway.*.lock"
 fly machine restart <machine-id>
 ```
 
-Le fichier de verrou se trouve à `/data/gateway.*.lock` (pas dans un sous-répertoire).
+Le fichier de verrouillage se trouve à `/data/gateway.*.lock` (pas dans un sous-répertoire).
 
-### Configuration non lue
+### Config non lue
 
-`--allow-unconfigured` contourne uniquement la garde de démarrage. Il ne crée pas ni ne répare `/data/openclaw.json`, assurez-vous donc que votre configuration réelle existe et inclut `gateway.mode="local"` lorsque vous souhaitez un démarrage normal de la passerelle locale.
+`--allow-unconfigured` contourne uniquement la garde de démarrage. Il ne crée pas ni ne répare `/data/openclaw.json`, alors assurez-vous que votre véritable configuration existe et inclut `gateway.mode="local"` lorsque vous voulez un démarrage normal de la passerelle locale.
 
 Vérifiez que la configuration existe :
 
@@ -343,7 +337,8 @@ fly ssh console --command "rm /data/openclaw.json"
 
 ### L'état ne persiste pas
 
-Si vous perdez les profils d'authentification, l'état du canal/fournisseur ou les sessions après un redémarrage, le répertoire d'état écrit sur le système de fichiers du conteneur.
+Si vous perdez les profils d'authentification, l'état du channel/provider ou les sessions après un redémarrage,
+le répertoire d'état écrit sur le système de fichiers du conteneur.
 
 **Correction :** Assurez-vous que `OPENCLAW_STATE_DIR=/data` est défini dans `fly.toml` et redéployez.
 
@@ -363,7 +358,7 @@ fly logs
 
 ### Mise à jour de la commande machine
 
-Si vous devez modifier la commande de démarrage sans redéployer entièrement :
+Si vous devez modifier la commande de démarrage sans redéploiement complet :
 
 ```bash
 # Get machine ID
@@ -376,7 +371,7 @@ fly machine update <machine-id> --command "node dist/index.js gateway --port 300
 fly machine update <machine-id> --vm-memory 2048 --command "node dist/index.js gateway --port 3000 --bind lan" -y
 ```
 
-**Remarque :** Après `fly deploy`, la commande machine peut être réinitialisée à ce qui est dans `fly.toml`. Si vous avez apporté des modifications manuelles, réappliquez-les après le déploiement.
+**Remarque :** Après `fly deploy`, la commande machine peut être réinitialisée à celle présente dans `fly.toml`. Si vous avez apporté des modifications manuelles, réappliquez-les après le déploiement.
 
 ## Déploiement privé (renforcé)
 
@@ -389,18 +384,18 @@ Pour un déploiement renforcé avec **aucune exposition publique**, utilisez le 
 - Vous effectuez uniquement des appels/messages **sortants** (pas de webhooks entrants)
 - Vous utilisez des tunnels **ngrok ou Tailscale** pour tous les webhooks de rappel
 - Vous accédez à la passerelle via **SSH, proxy ou WireGuard** au lieu du navigateur
-- Vous souhaitez que le déploiement **soit caché des scanners Internet**
+- Vous souhaitez que le déploiement soit **caché des scanners Internet**
 
 ### Configuration
 
-Utilisez `fly.private.toml` à la place de la configuration standard :
+Utilisez `deploy/fly.private.toml` à la place de la configuration standard :
 
 ```bash
 # Deploy with private config
-fly deploy -c fly.private.toml
+fly deploy -c deploy/fly.private.toml
 ```
 
-Ou convertissez un déploiement existant :
+Ou convertir un déploiement existant :
 
 ```bash
 # List current IPs
@@ -412,7 +407,7 @@ fly ips release <public-ipv6> -a my-openclaw
 
 # Switch to private config so future deploys don't re-allocate public IPs
 # (remove [http_service] or deploy with the private template)
-fly deploy -c fly.private.toml
+fly deploy -c deploy/fly.private.toml
 
 # Allocate private-only IPv6
 fly ips allocate-v6 --private -a my-openclaw
@@ -458,9 +453,9 @@ fly ssh console -a my-openclaw
 
 Si vous avez besoin de rappels de webhooks (Twilio, Telnyx, etc.) sans exposition publique :
 
-1. **Tunnel ngrok** - Exécutez ngrok à l'intérieur du conteneur ou en tant que sidecar
-2. **Tailscale Funnel** - Exposez des chemins spécifiques via Tailscale
-3. **Sortant uniquement** - Certains fournisseurs (Twilio) fonctionnent bien pour les appels sortants sans webhooks
+1. **Tunnel ngrok** - Exécuter ngrok à l'intérieur du conteneur ou en tant que sidecar
+2. **Tailscale Funnel** - Exposer des chemins spécifiques via Tailscale
+3. **Sortant uniquement** - Certains fournisseurs (Twilio) fonctionnent correctement pour les appels sortants sans webhooks
 
 Exemple de configuration d'appel vocal avec ngrok :
 
@@ -483,22 +478,22 @@ Exemple de configuration d'appel vocal avec ngrok :
 }
 ```
 
-Le tunnel ngrok s'exécute à l'intérieur du conteneur et fournit une URL publique de webhook sans exposer l'application Fly elle-même. Définissez `webhookSecurity.allowedHosts` sur le nom d'hôte du tunnel public afin que les en-têtes d'hôte transmis soient acceptés.
+Le tunnel ngrok s'exécute à l'intérieur du conteneur et fournit une URL publique de webhook sans exposer l'application Fly elle-même. Définissez `webhookSecurity.allowedHosts` sur le nom d'hôte public du tunnel afin que les en-têtes d'hôte transmis soient acceptés.
 
-### Avantages en matière de sécurité
+### Avantages de sécurité
 
 | Aspect                          | Public      | Privé      |
 | ------------------------------- | ----------- | ---------- |
-| Scanners Internet               | Découvrable | Caché      |
-| Attaques directes               | Possible    | Bloqué     |
+| Scanners Internet               | Découvrable | Masqué     |
+| Attaques directes               | Possibles   | Bloquées   |
 | Accès à l'interface de contrôle | Navigateur  | Proxy/VPN  |
-| Livraison des webhooks          | Direct      | Via tunnel |
+| Livraison des webhooks          | Directe     | Via tunnel |
 
-## Notes
+## Remarques
 
-- Fly.io utilise une **architecture x86** (pas ARM)
+- Fly.io utilise l'**architecture x86** (et non ARM)
 - Le Dockerfile est compatible avec les deux architectures
-- Pour l'intégration WhatsApp/Telegram, utilisez `fly ssh console`
+- Pour l'onboarding WhatsApp/Telegram, utilisez `fly ssh console`
 - Les données persistantes résident sur le volume à `/data`
 - Signal nécessite Java + signal-cli ; utilisez une image personnalisée et maintenez la mémoire à 2 Go ou plus.
 
@@ -509,7 +504,7 @@ Avec la configuration recommandée (`shared-cpu-2x`, 2 Go de RAM) :
 - ~10-15 $/mois selon l'utilisation
 - La offre gratuite inclut un certain quota
 
-Voir la [tarification Fly.io](https://fly.io/docs/about/pricing/) pour plus de détails.
+Voir les [tarifs Fly.io](https://fly.io/docs/about/pricing/) pour plus de détails.
 
 ## Étapes suivantes
 

@@ -8,6 +8,13 @@ title: "CLI 參考資料"
 
 `openclaw` 是主要的 CLI 進入點。每個核心指令都有專屬的參考頁面，或是與其別名指令一起記錄；本索引列出了指令、全域旗標，以及適用於整個 CLI 的輸出樣式規則。
 
+根據意圖使用設定指令：
+
+- `openclaw setup` 會建立基礎設定和工作區，而無需走過完整的引導式入門流程。
+- `openclaw onboard` 是針對 gateway、模型驗證、工作區、通道、技能和健康狀況的完整引導式首次執行路徑。
+- `openclaw configure` 會變更現有設定的目標部分，例如模型驗證、gateway、通道、外掛程式或技能。
+- `openclaw channels add` 會在基礎存在後設定通道帳戶；不加旗標執行以進行引導式通道設定，或加上通道特定旗標以供指令碼使用。
+
 ## 指令頁面
 
 | 區域               | 指令                                                                                                                                                                                                                                                              |
@@ -15,41 +22,41 @@ title: "CLI 參考資料"
 | 設定與入門         | [`crestodian`](/zh-Hant/cli/crestodian) · [`setup`](/zh-Hant/cli/setup) · [`onboard`](/zh-Hant/cli/onboard) · [`configure`](/zh-Hant/cli/configure) · [`config`](/zh-Hant/cli/config) · [`completion`](/zh-Hant/cli/completion) · [`doctor`](/zh-Hant/cli/doctor) · [`dashboard`](/zh-Hant/cli/dashboard) |
 | 重設與解除安裝     | [`backup`](/zh-Hant/cli/backup) · [`reset`](/zh-Hant/cli/reset) · [`uninstall`](/zh-Hant/cli/uninstall) · [`update`](/zh-Hant/cli/update)                                                                                                                                             |
 | 訊息與代理程式     | [`message`](/zh-Hant/cli/message) · [`agent`](/zh-Hant/cli/agent) · [`agents`](/zh-Hant/cli/agents) · [`acp`](/zh-Hant/cli/acp) · [`mcp`](/zh-Hant/cli/mcp)                                                                                                                                |
-| 健康狀態與作業階段 | [`status`](/zh-Hant/cli/status) · [`health`](/zh-Hant/cli/health) · [`sessions`](/zh-Hant/cli/sessions)                                                                                                                                                                          |
-| 閘道與日誌         | [`gateway`](/zh-Hant/cli/gateway) · [`logs`](/zh-Hant/cli/logs) · [`system`](/zh-Hant/cli/system)                                                                                                                                                                                |
-| 模型與推論         | [`models`](/zh-Hant/cli/models) · [`infer`](/zh-Hant/cli/infer) · `capability` ([`infer`](/zh-Hant/cli/infer) 的別名) · [`memory`](/zh-Hant/cli/memory) · [`wiki`](/zh-Hant/cli/wiki)                                                                                                      |
+| 健康狀況與工作階段 | [`status`](/zh-Hant/cli/status) · [`health`](/zh-Hant/cli/health) · [`sessions`](/zh-Hant/cli/sessions)                                                                                                                                                                          |
+| Gateway 與日誌     | [`gateway`](/zh-Hant/cli/gateway) · [`logs`](/zh-Hant/cli/logs) · [`system`](/zh-Hant/cli/system)                                                                                                                                                                                |
+| 模型與推論         | [`models`](/zh-Hant/cli/models) · [`infer`](/zh-Hant/cli/infer) · `capability` ([`infer`](/zh-Hant/cli/infer) 的別名) · [`memory`](/zh-Hant/cli/memory) · [`commitments`](/zh-Hant/cli/commitments) · [`wiki`](/zh-Hant/cli/wiki)                                                               |
 | 網路與節點         | [`directory`](/zh-Hant/cli/directory) · [`nodes`](/zh-Hant/cli/nodes) · [`devices`](/zh-Hant/cli/devices) · [`node`](/zh-Hant/cli/node)                                                                                                                                               |
-| 執行時期與沙盒     | [`approvals`](/zh-Hant/cli/approvals) · `exec-policy` (請參閱 [`approvals`](/zh-Hant/cli/approvals)) · [`sandbox`](/zh-Hant/cli/sandbox) · [`tui`](/zh-Hant/cli/tui) · `chat`/`terminal` ([`tui --local`](/zh-Hant/cli/tui) 的別名) · [`browser`](/zh-Hant/cli/browser)                         |
+| 執行時期與沙箱     | [`approvals`](/zh-Hant/cli/approvals) · `exec-policy` (參見 [`approvals`](/zh-Hant/cli/approvals)) · [`sandbox`](/zh-Hant/cli/sandbox) · [`tui`](/zh-Hant/cli/tui) · `chat`/`terminal` ([`tui --local`](/zh-Hant/cli/tui) 的別名) · [`browser`](/zh-Hant/cli/browser)                           |
 | 自動化             | [`cron`](/zh-Hant/cli/cron) · [`tasks`](/zh-Hant/cli/tasks) · [`hooks`](/zh-Hant/cli/hooks) · [`webhooks`](/zh-Hant/cli/webhooks)                                                                                                                                                     |
 | 探索與文件         | [`dns`](/zh-Hant/cli/dns) · [`docs`](/zh-Hant/cli/docs)                                                                                                                                                                                                                     |
 | 配對與頻道         | [`pairing`](/zh-Hant/cli/pairing) · [`qr`](/zh-Hant/cli/qr) · [`channels`](/zh-Hant/cli/channels)                                                                                                                                                                                |
-| 安全性與外掛       | [`security`](/zh-Hant/cli/security) · [`secrets`](/zh-Hant/cli/secrets) · [`skills`](/zh-Hant/cli/skills) · [`plugins`](/zh-Hant/cli/plugins) · [`proxy`](/zh-Hant/cli/proxy)                                                                                                              |
+| 安全性和外掛程式   | [`security`](/zh-Hant/cli/security) · [`secrets`](/zh-Hant/cli/secrets) · [`skills`](/zh-Hant/cli/skills) · [`plugins`](/zh-Hant/cli/plugins) · [`proxy`](/zh-Hant/cli/proxy)                                                                                                              |
 | 舊版別名           | [`daemon`](/zh-Hant/cli/daemon) (gateway service) · [`clawbot`](/zh-Hant/cli/clawbot) (namespace)                                                                                                                                                                           |
-| 外掛 (選用)        | [`voicecall`](/zh-Hant/cli/voicecall) (若已安裝)                                                                                                                                                                                                                       |
+| 外掛程式（選用）   | [`path`](/zh-Hant/cli/path) · [`voicecall`](/zh-Hant/cli/voicecall) (如果已安裝)                                                                                                                                                                                            |
 
 ## 全域旗標
 
-| 旗標                    | 用途                                                          |
-| ----------------------- | ------------------------------------------------------------- |
-| `--dev`                 | 將狀態隔離在 `~/.openclaw-dev` 下並移動預設連接埠             |
-| `--profile <name>`      | 將狀態隔離在 `~/.openclaw-<name>` 下                          |
-| `--container <name>`    | 指定具名容器以執行                                            |
-| `--no-color`            | 停用 ANSI 顏色 (`NO_COLOR=1` 也會受到尊重)                    |
-| `--update`              | [`openclaw update`](/zh-Hant/cli/update) 的簡寫 (僅限從原始碼安裝) |
-| `-V`、`--version`、`-v` | 列印版本並結束                                                |
+| 旗標                    | 用途                                                         |
+| ----------------------- | ------------------------------------------------------------ |
+| `--dev`                 | 隔離 `~/.openclaw-dev` 下的狀態並移動預設連接埠              |
+| `--profile <name>`      | 隔離 `~/.openclaw-<name>` 下的狀態                           |
+| `--container <name>`    | 指定命名的容器以執行                                         |
+| `--no-color`            | 停用 ANSI 顏色（也會遵守 `NO_COLOR=1`）                      |
+| `--update`              | [`openclaw update`](/zh-Hant/cli/update) 的簡寫（僅限原始碼安裝） |
+| `-V`, `--version`, `-v` | 列印版本並結束                                               |
 
 ## 輸出模式
 
-- ANSI 顏色和進度指示器僅在 TTY 會話中呈現。
-- OSC-8 超連結在支援的情況下會顯示為可點擊的連結；否則 CLI 會回退為純文字 URL。
-- `--json` (以及在支援情況下的 `--plain`) 會停用樣式以產生乾淨的輸出。
-- 長時間執行的指令會顯示進度指示器 (在支援的情況下為 OSC 9;4)。
+- ANSI 顏色和進度指示器僅在 TTY 工作階段中呈現。
+- OSC-8 超連結在支援的情況下會呈現為可點擊的連結；否則 CLI 會回退為純文字 URL。
+- `--json` (以及支援情況下的 `--plain`) 會停用樣式以產生乾淨的輸出。
+- 長時間執行的指令會顯示進度指示器（支援時為 OSC 9;4）。
 
-調色盤的來源依據：`src/terminal/palette.ts`。
+色盤的依據來源：`src/terminal/palette.ts`。
 
 ## 指令樹
 
-<Accordion title="完整命令樹">
+<Accordion title="完整指令樹">
 
 ```
 openclaw [--dev] [--profile <name>] <command>
@@ -117,6 +124,15 @@ openclaw [--dev] [--profile <name>] <command>
     status
     index
     search
+  path
+    resolve
+    find
+    set
+    validate
+    emit
+  commitments
+    list
+    dismiss
   wiki
     status
     doctor
@@ -349,22 +365,22 @@ openclaw [--dev] [--profile <name>] <command>
 
 ## 聊天斜線指令
 
-聊天訊息支援 `/...` 指令。請參閱 [斜線指令](/zh-Hant/tools/slash-commands)。
+聊天訊息支援 `/...` 指令。請參閱[斜線指令](/zh-Hant/tools/slash-commands)。
 
 重點：
 
 - `/status` — 快速診斷。
-- `/trace` — 會話範圍的外掛程式追蹤/除錯行。
-- `/config` — 持久化的設定變更。
-- `/debug` — 僅限執行時期的設定覆寫（記憶體中，而非磁碟；需要 `commands.debug: true`）。
+- `/trace` — 作用域限於工作階段的外掛程式追蹤/除錯行。
+- `/config` — 持續性的設定變更。
+- `/debug` — 僅限執行時期的設定覆寫（僅存在記憶體中，不會寫入磁碟；需要 `commands.debug: true`）。
 
 ## 使用量追蹤
 
-當提供 OAuth/API 憑證時，`openclaw status --usage` 和控制 UI 會顯示提供者的使用量/配額。資料直接來自提供者的使用量端點，並正規化為 `X% left`。目前具有使用量視窗的提供者：Anthropic、GitHub Copilot、Gemini CLI、OpenAI Codex、MiniMax、小米和 z.ai。
+當 OAuth/API 憑證可用時，`openclaw status --usage` 和控制 UI 介面會顯示供應商的使用量/配額。資料直接來自供應商的使用量端點，並正規化為 `X% left`。目前提供使用量視窗的供應商：Anthropic、GitHub Copilot、Gemini CLI、OpenAI Codex、MiniMax、Xiaomi 和 z.ai。
 
-詳情請參閱 [使用量追蹤](/zh-Hant/concepts/usage-tracking)。
+詳情請參閱[使用量追蹤](/zh-Hant/concepts/usage-tracking)。
 
-## 相關
+## 相關內容
 
 - [斜線指令](/zh-Hant/tools/slash-commands)
 - [設定](/zh-Hant/gateway/configuration)

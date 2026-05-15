@@ -14,7 +14,7 @@ Esta aplicación generalmente se compila desde [`scripts/package-mac-app.sh`](ht
 - llama a [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) para firmar el binario principal y el paquete de la aplicación para que macOS trate cada reconstrucción como el mismo paquete firmado y mantenga los permisos TCC (notificaciones, accesibilidad, grabación de pantalla, micrófono, voz). Para permisos estables, utilice una identidad de firma real; la ad-hoc es opcional y frágil (consulte [macOS permissions](/es/platforms/mac/permissions)).
 - usa `CODESIGN_TIMESTAMP=auto` de forma predeterminada; habilita marcas de tiempo de confianza para las firmas de ID de desarrollador. Establezca `CODESIGN_TIMESTAMP=off` para omitir la marca de tiempo (compilaciones de depuración sin conexión).
 - inyecta metadatos de compilación en Info.plist: `OpenClawBuildTimestamp` (UTC) y `OpenClawGitCommit` (hash corto) para que el panel Acerca de pueda mostrar compilación, git y canal de depuración/lanzamiento.
-- **El empaquetado usa Node 24 por defecto**: el script ejecuta las compilaciones de TS y la compilación de la interfaz de usuario de Control. Node 22 LTS, actualmente `22.14+`, sigue siendo compatible para compatibilidad.
+- **El empaquetado usa por defecto Node 24**: el script ejecuta compilaciones de TS y la compilación de la interfaz de usuario de Control. Node 22 LTS, actualmente `22.16+`, sigue siendo compatible.
 - lee `SIGN_IDENTITY` del entorno. Agregue `export SIGN_IDENTITY="Apple Development: Your Name (TEAMID)"` (o su certificado de aplicación de ID de desarrollador) a su shell rc para siempre firmar con su certificado. La firma ad-hoc requiere participación explícita a través de `ALLOW_ADHOC_SIGNING=1` o `SIGN_IDENTITY="-"` (no recomendado para pruebas de permisos).
 - ejecuta una auditoría de ID de equipo después de firmar y falla si algún Mach-O dentro del paquete de la aplicación está firmado por un ID de equipo diferente. Establezca `SKIP_TEAM_ID_CHECK=1` para omitir.
 
@@ -40,11 +40,11 @@ Al firmar con `SIGN_IDENTITY="-"` (ad-hoc), el script deshabilita automáticamen
 - `OpenClawBuildTimestamp`: ISO8601 UTC en el momento del empaquetado
 - `OpenClawGitCommit`: hash corto de git (o `unknown` si no está disponible)
 
-La pestaña About lee estas claves para mostrar la versión, la fecha de compilación, el commit de git y si es una compilación de depuración (vía `#if DEBUG`). Ejecute el empaquetador para actualizar estos valores después de los cambios en el código.
+La pestaña Acerca de lee estas claves para mostrar la versión, la fecha de compilación, el commit de git y si es una compilación de depuración (a través de `#if DEBUG`). Ejecute el empaquetador para actualizar estos valores después de cambios en el código.
 
 ## Por qué
 
-Los permisos TCC están vinculados al identificador del paquete _y_ a la firma del código. Las compilaciones de depuración sin firmar con UUID variables hacían que macOS olvidara los permisos después de cada recompilación. La firma de los binarios (ad-hoc de forma predeterminada) y el mantenimiento de una identificación/ruta de paquete fija (`dist/OpenClaw.app`) conservan los permisos entre compilaciones, coincidiendo con el enfoque de VibeTunnel.
+Los permisos TCC están vinculados al identificador del paquete _y_ a la firma del código. Las compilaciones de depuración sin firmar con UUID cambiantes hacían que macOS olvidara los permisos después de cada recompilación. Firmar los binarios (ad-hoc por defecto) y mantener una identificación/ruta de paquete fija (`dist/OpenClaw.app`) conserva los permisos entre compilaciones, coincidiendo con el enfoque de VibeTunnel.
 
 ## Relacionado
 

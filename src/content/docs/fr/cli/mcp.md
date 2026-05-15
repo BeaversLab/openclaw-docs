@@ -48,9 +48,14 @@ Utilisez plutôt [`openclaw acp`](/fr/cli/acp) lorsque OpenClaw doit héberger l
 
 <AccordionGroup>
   <Accordion title="Comportement important">
-    - l'état de la file d'attente en direct commence lorsque le pont se connecte - l'historique des transcription plus ancien est lu avec `messages_read` - les notifications de push Claude n'existent que tant que la session MCP est active - lorsque le client se déconnecte, le pont se ferme et la file d'attente en direct disparaît - les points d'entrée d'agent ponctuels tels que `openclaw agent` et
-    `openclaw infer model run` ferment tous les runtimes MCP groupés qu'ils ouvrent lorsque la réponse est terminée, de sorte que les exécutions scriptées répétées n'accumulent pas de processus enfants MCP stdio - les serveurs MCP stdio lancés par OpenClaw (groupés ou configurés par l'utilisateur) sont détruits en tant qu'arborescence de processus à l'arrêt, de sorte que les sous-processus enfants
-    démarrés par le serveur ne survivent pas après la sortie du client stdio parent - la suppression ou la réinitialisation d'une session supprime les clients MCP de cette session via le chemin de nettoyage du runtime partagé, de sorte qu'il n'y a pas de connexions stdio persistantes liées à une session supprimée
+    - l'état de la file d'attente en direct commence lorsque le pont se connecte
+    - l'historique des transcripts plus ancien est lu avec `messages_read`
+    - les notifications push de Claude n'existent que tant que la session MCP est active
+    - lorsque le client se déconnecte, le pont se ferme et la file d'attente en direct disparaît
+    - les points d'entrée d'agent à usage unique tels que `openclaw agent` et `openclaw infer model run` ferment tous les runtimes MCP groupés qu'ils ouvrent lorsque la réponse est terminée, afin que les exécutions scriptées répétées n'accumulent pas de processus enfants MCP stdio
+    - les serveurs MCP stdio lancés par OpenClaw (groupés ou configurés par l'utilisateur) sont détruits en tant qu'arborescence de processus à l'arrêt, de sorte que les sous-processus enfants démarrés par le serveur ne survivent pas après la sortie du client stdio parent
+    - la suppression ou la réinitialisation d'une session supprime les clients MCP de cette session via le chemin de nettoyage du runtime partagé, il n'y a donc aucune connexion stdio résiduelle liée à une session supprimée
+
   </Accordion>
 </AccordionGroup>
 
@@ -109,7 +114,7 @@ Le pont actuel expose ces outils MCP :
 
   </Accordion>
   <Accordion title="conversation_get">
-    Renvoie une conversation par `session_key`.
+    Renvoie une conversation par `session_key` en utilisant une recherche de session Gateway directe.
   </Accordion>
   <Accordion title="messages_read">
     Lit les messages de transcript récents pour une conversation soutenue par une session.
@@ -162,7 +167,12 @@ Types d'événements actuels :
 - `plugin_approval_resolved`
 - `claude_permission_request`
 
-<Warning>- la file d'attente est active uniquement ; elle démarre lorsque le pont MCP démarre - `events_poll` et `events_wait` ne rejouent pas par eux-mêmes l'historique plus ancien du Gateway - l'historique durable doit être lu avec `messages_read`</Warning>
+<Warning>
+- la file d'attente est en direct uniquement ; elle commence lorsque le pont MCP démarre
+- `events_poll` et `events_wait` ne rejouent pas par eux-mêmes l'historique Gateway plus ancien
+- le backlog durable doit être lu avec `messages_read`
+
+</Warning>
 
 ### Notifications du canal Claude
 
@@ -297,10 +307,14 @@ Ces commandes n'exposent pas OpenClaw via MCP. Elles gèrent les définitions de
 Ces définitions enregistrées sont destinées aux runtimes que OpenClaw lance ou configure plus tard, tels que Pi intégré et autres adaptateurs de runtime. OpenClaw stocke les définitions de manière centralisée pour que ces runtimes n'aient pas besoin de conserver leurs propres listes de serveurs MCP en double.
 
 <AccordionGroup>
-  <Accordion title="Comportement important">
-    - ces commandes lisent ou écrivent uniquement la configuration OpenClaw - elles ne se connectent pas au serveur MCP cible - elles ne valident pas si la commande, l'URL ou le transport distant est accessible maintenant - les adaptateurs d'exécution décident quelles formes de transport ils prennent en charge réellement au moment de l'exécution - Pi intégré expose les outils MCP configurés dans
-    les profils d'outil `coding` et `messaging` normaux ; `minimal` les masque toujours, et `tools.deny: ["bundle-mcp"]` les désactive explicitement - les environnements d'exécution MCP groupés limités à la session sont récoltés après `mcp.sessionIdleTtlMs` millisecondes d'inactivité (par défaut 10 minutes ; définissez `0` pour désactiver) et les exécutions intégrées ponctuelles les nettoient à la
-    fin de l'exécution
+  <Accordion title="Comportement important"OpenClaw>
+    - ces commandes ne font que lire ou écrire la configuration OpenClaw
+    - elles ne se connectent pas au serveur MCP cible
+    - elles ne valident pas si la commande, l'URL ou le transport distant est accessible pour le moment
+    - les adaptateurs d'exécution décident quelles formes de transport ils supportent réellement au moment de l'exécution
+    - Pi intégré expose les outils MCP configurés dans les profils d'outils normaux `coding` et `messaging` ; `minimal` les masque toujours, et `tools.deny: ["bundle-mcp"]` les désactive explicitement
+    - les runtimes MCP regroupés avec portée de session sont récoltés après `mcp.sessionIdleTtlMs` millisecondes d'inactivité (par défaut 10 minutes ; définissez `0` pour désactiver) et les exécutions intégrées ponctuelles les nettoient à la fin de l'exécution
+
   </Accordion>
 </AccordionGroup>
 

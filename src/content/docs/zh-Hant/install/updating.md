@@ -1,5 +1,5 @@
 ---
-summary: "安全地更新 OpenClaw（全域安裝或來源），以及回滾策略"
+summary: "安全地更新 OpenClaw（全域安裝或原始碼），以及回滾策略"
 read_when:
   - Updating OpenClaw
   - Something breaks after an update
@@ -8,9 +8,9 @@ title: "更新"
 
 保持 OpenClaw 為最新狀態。
 
-## 建議：`openclaw update`
+## 建議使用：`openclaw update`
 
-最快的更新方式。它會偵測您的安裝類型（npm 或 git），取得最新版本，執行 `openclaw doctor`，並重新啟動閘道。
+最快的更新方式。它會偵測您的安裝類型（npm 或 git），取得最新版本，執行 `openclaw doctor`，然後重新啟動 gateway。
 
 ```bash
 openclaw update
@@ -25,13 +25,22 @@ openclaw update --tag main
 openclaw update --dry-run   # preview without applying
 ```
 
-`--channel beta` 偏好 beta，但當 beta 標籤缺失或比最新穩定版舊時，執行時會回退至 stable/latest。如果您想要針對單次套件更新使用原始 npm beta dist-tag，請使用 `--tag beta`。
+`openclaw update` 不接受 `--verbose`。若要進行更新診斷，請使用
+`--dry-run` 預覽計畫操作，`--json` 取得結構化結果，或
+`openclaw update status --json` 檢查通道和可用性狀態。安裝程式有其自己的
+`--verbose` 標誌，但該標誌並非 `openclaw update` 的一部分。
 
-請參閱 [開發頻道](/zh-Hant/install/development-channels) 以了解頻道語意。
+`--channel beta` 偏好 beta，但當 beta 標籤缺失或比最新的穩定版舊時，執行時
+會退回至 stable/latest。如果您想要一次性套件更新的原始 npm beta dist-tag，請使用
+`--tag beta`。
 
-## 在 npm 與 git 安裝之間切換
+請參閱 [開發通道](/zh-Hant/install/development-channels) 以了解通道語意。
 
-當您想要變更安裝類型時，請使用頻道。更新程式會將您的狀態、設定、憑證和工作區保留在 `~/.openclaw` 中；它僅會變更 CLI 與閘道所使用的 OpenClaw 程式碼安裝。
+## 在 npm 和 git 安裝之間切換
+
+當您想要變更安裝類型時，請使用通道。更新程式會將您的狀態、設定、
+憑證和工作區保留在 `~/.openclaw` 中；它僅會變更 CLI 和 gateway
+所使用的 OpenClaw 程式碼安裝。
 
 ```bash
 # npm package install -> editable git checkout
@@ -48,7 +57,10 @@ openclaw update --channel dev --dry-run
 openclaw update --channel stable --dry-run
 ```
 
-`dev` 頻道會確保進行 git checkout、建構它，並從該 checkout 安裝全域 CLI。`stable` 和 `beta` 頻道則使用套件安裝。如果閘道已經安裝，除非您傳遞 `--no-restart`，否則 `openclaw update` 會重新整理服務中繼資料並重新啟動它。
+`dev` 通道會確保進行 git checkout，進行建構，並從該 checkout
+安裝全域 CLI。`stable` 和 `beta` 通道則使用套件安裝。
+如果 gateway 已安裝，除非您傳遞 `--no-restart`，否則 `openclaw update`
+會重新整理服務中繼資料並重新啟動服務。
 
 ## 替代方案：重新執行安裝程式
 
@@ -56,15 +68,19 @@ openclaw update --channel stable --dry-run
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-加入 `--no-onboard` 以跳過入引導。若要透過安裝程式強制執行特定安裝類型，請傳遞 `--install-method git --no-onboard` 或 `--install-method npm --no-onboard`。
+加入 `--no-onboard` 以跳過入門導覽。若要透過安裝程式強制執行特定
+安裝類型，請傳遞 `--install-method git --no-onboard` 或
+`--install-method npm --no-onboard`。
 
-如果 `openclaw update` 在 npm 套件安裝階段後失敗，請重新執行安裝程式。安裝程式不會呼叫舊的更新程式；它會直接執行全域套件安裝，並可恢復部分更新的 npm 安裝。
+如果在 npm 套件安裝階段後 `openclaw update` 失敗，請重新執行
+安裝程式。安裝程式不會呼叫舊的更新程式；它會直接執行全域
+套件安裝，並可以恢復部分更新的 npm 安裝。
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method npm
 ```
 
-若要將恢復固定至特定版本或 dist-tag，請加入 `--version`：
+若要將恢復作業鎖定至特定版本或分發標籤，請新增 `--version`：
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method npm --version <version-or-dist-tag>
@@ -76,7 +92,18 @@ curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method npm --ve
 npm i -g openclaw@latest
 ```
 
-當 `openclaw update` 管理全域 npm 安裝時，它會先將目標安裝到臨時 npm 前綴目錄，驗證打包的 `dist` 清單，然後將乾淨的套件樹交換到實際的全域前綴目錄中。這避免了 npm 將新套件覆蓋在舊套件的過時檔案上。如果安裝指令失敗，OpenClaw 會使用 `--omit=optional` 重試一次。這項重試有助於無法編譯原生選用相依性的主機，同時在備用方案也失敗時保持原始失敗訊息的可見性。
+對於受監管的安裝，建議優先使用 `openclaw update`，因為它可以協調
+與執行中的 Gateway 服務進行套件交換。如果您在受管理的 Gateway 執行時
+手動更新，請在套件管理員完成後立即重新啟動 Gateway，以免舊程序繼續
+從已取代的套件檔案中提供服務。
+
+當 `openclaw update` 管理全域 npm 安裝時，它會先將目標安裝到
+暫時的 npm 前綴中，驗證打包的 `dist` 清單，然後將
+乾淨的套件樹交換到實際的全域前綴中。這避免了 npm 將新套件
+覆蓋在舊套件的過時檔案上。如果安裝指令失敗，
+OpenClaw 會使用 `--omit=optional` 重試一次。該重試有助於原生
+選用相依性無法編譯的主機，同時若後備方案也失敗，則保留
+原始失敗的可見性。
 
 ```bash
 pnpm add -g openclaw@latest
@@ -90,43 +117,27 @@ bun add -g openclaw@latest
 
 <AccordionGroup>
   <Accordion title="唯讀套件樹">
-    OpenClaw 在執行時將打包的全域安裝視為唯讀，即使全域套件目錄可被目前使用者寫入。打包的插件執行時期相依性會被暫存到可寫入的執行時期目錄，而不是變更套件樹。這可以防止 `openclaw update` 與正在修復同一安裝期間插件相依性的執行中閘道或本機代理程式產生競爭。
+    OpenClaw 在執行時期會將打包的全域安裝視為唯讀，即使全域套件目錄可由當前使用者寫入。外掛程式套件安裝位於使用者設定目錄下 OpenClaw 擁有的 npm/git 根目錄中，且 Gateway 啟動不會變更 OpenClaw 套件樹。
 
-    某些 Linux npm 設定會將全域套件安裝在 root 擁有的目錄下，例如 `/usr/lib/node_modules/openclaw`。OpenClaw 透過相同的外部暫存路徑支援該佈局。
+    某些 Linux npm 設定會將全域套件安裝在 root 擁有的目錄下，例如 `/usr/lib/node_modules/openclaw`。OpenClaw 支援該配置，因為外掛程式安裝/更新指令會在該全域套件目錄之外進行寫入。
 
   </Accordion>
-  <Accordion title="強化的 systemd 單元">
-    設定包含在 `ReadWritePaths` 中的可寫入暫存目錄：
+  <Accordion title="強化 systemd 單元">
+    授予 OpenClaw 對其設定/狀態根目錄的寫入權限，以便明確的外掛程式安裝、外掛程式更新和 doctor 清理可以保存其變更：
 
     ```ini
-    Environment=OPENCLAW_PLUGIN_STAGE_DIR=/var/lib/openclaw/plugin-runtime-deps
     ReadWritePaths=/var/lib/openclaw /home/openclaw/.openclaw /tmp
     ```
-
-    `OPENCLAW_PLUGIN_STAGE_DIR` 也接受路徑清單。OpenClaw 會從左到右跨列出的根目錄解析打包的插件執行時期相依性，將較早的根目錄視為唯讀的預安裝層，並僅安裝或修復到最後一個可寫入的根目錄：
-
-    ```ini
-    Environment=OPENCLAW_PLUGIN_STAGE_DIR=/opt/openclaw/plugin-runtime-deps:/var/lib/openclaw/plugin-runtime-deps
-    ReadWritePaths=/var/lib/openclaw /home/openclaw/.openclaw /tmp
-    ```
-
-    如果未設定 `OPENCLAW_PLUGIN_STAGE_DIR`，OpenClaw 會在 systemd 提供時使用 `$STATE_DIRECTORY`，然後回退到 `~/.openclaw/plugin-runtime-deps`。修復步驟會將該暫存目錄視為 OpenClaw 擁有的本機套件根目錄，並忽略使用者 npm 前綴和全域設定，因此全域安裝的 npm 設定不會將打包的插件相依性重新導向到 `~/node_modules` 或全域套件樹。
 
   </Accordion>
   <Accordion title="磁碟空間預檢">
-    在套件更新和綑綁的執行時期相依性修復之前，OpenClaw 會盡力檢查目標磁碟區的磁碟空間。空間不足會產生包含已檢查路徑的警告，但並不會阻擋更新，因為檔案系統配額、快照和網路磁碟區在檢查後可能會變動。實際的 npm 安裝、複製和安裝後驗證仍然具有決定性。
-  </Accordion>
-  <Accordion title="綑綁的外掛程式執行時期相依性">
-    封裝安裝會將綑綁的外掛程式執行時期相依性保持在唯讀套件樹之外。在啟動期間以及執行 `openclaw doctor --fix` 時，OpenClaw 僅會針對在設定中啟用、透過舊版通道設定啟用，或由其綑綁清單預設啟用的綑綁外掛程式修復執行時期相依性。僅持續儲存的通道驗證狀態並不會觸發 Gateway 啟動時的執行時期相依性修復。
-
-    明確的停用具有優先權。已停用的外掛程式或通道不會因為存在於套件中就獲得執行時期相依性修復。外部外掛程式和自訂載入路徑仍然使用 `openclaw plugins install` 或 `openclaw plugins update`。
-
+    在套件更新和明確的插件安裝之前，OpenClaw 會嘗試對目標卷進行盡力的磁碟空間檢查。空間不足會產生帶有已檢查路徑的警告，但不會阻擋更新，因為檔案系統配額、快照和網路卷在檢查後可能會變化。實際的套件管理器安裝和安裝後驗證仍然具有決定性。
   </Accordion>
 </AccordionGroup>
 
 ## 自動更新程式
 
-自動更新程式預設為關閉。請在 `~/.openclaw/openclaw.json` 中啟用它：
+自動更新程式預設為關閉。在 `~/.openclaw/openclaw.json` 中啟用它：
 
 ```json5
 {
@@ -142,28 +153,30 @@ bun add -g openclaw@latest
 }
 ```
 
-| 通道     | 行為                                                                                    |
-| -------- | --------------------------------------------------------------------------------------- |
-| `stable` | 等待 `stableDelayHours`，然後在 `stableJitterHours` 範圍內套用決定性抖動 (分階段推出)。 |
-| `beta`   | 每隔 `betaCheckIntervalHours` 檢查一次 (預設為每小时)，並立即套用。                     |
-| `dev`    | 不自動套用。請手動使用 `openclaw update`。                                              |
+| 通道     | 行為                                                                                 |
+| -------- | ------------------------------------------------------------------------------------ |
+| `stable` | 等待 `stableDelayHours`，然後在 `stableJitterHours` 內套用決定性抖動（分階段推出）。 |
+| `beta`   | 每隔 `betaCheckIntervalHours` 檢查一次（預設：每小時）並立即套用。                   |
+| `dev`    | 不自動套用。手動使用 `openclaw update`。                                             |
 
-Gateway 也會在啟動時記錄更新提示 (可使用 `update.checkOnStart: false` 停用)。
-若要進行降級或事故復原，請在 Gateway 環境中設定 `OPENCLAW_NO_AUTO_UPDATE=1` 以阻擋自動套用，即使已設定 `update.auto.enabled` 也一樣。除非同時停用 `update.checkOnStart`，否則啟動更新提示仍可執行。
+閘道還會在啟動時記錄更新提示（使用 `update.checkOnStart: false` 禁用）。
+若要降級或進行事件復原，請在閘道環境中設定 `OPENCLAW_NO_AUTO_UPDATE=1` 以阻擋自動套用，即使已設定 `update.auto.enabled`。除非同時停用 `update.checkOnStart`，否則啟動更新提示仍可執行。
+
+透過即時 Gateway 控制平面處理程序請求的套件管理器更新，會在套件交換後強制執行非延遲、無冷卻的更新重新啟動。這可避免讓舊的記憶體內進程停留太久，以至於從已被替換的套件樹延遲載入區塊。Shell `openclaw update` 仍為受監管安裝的首選路徑，因為它可以在更新期間停止並重新啟動服務。
 
 ## 更新後
 
 <Steps>
 
-### 執行 doctor
+### 執行 Doctor
 
 ```bash
 openclaw doctor
 ```
 
-遷移配置、審核 DM 政策並檢查 Gateway 健康狀態。詳情：[Doctor](/zh-Hant/gateway/doctor)
+遷移設定、稽核 DM 原則並檢查閘道健康狀況。詳情：[Doctor](/zh-Hant/gateway/doctor)
 
-### 重新啟動 Gateway
+### 重新啟動閘道
 
 ```bash
 openclaw gateway restart
@@ -179,7 +192,7 @@ openclaw health
 
 ## 還原
 
-### 鎖定版本 (npm)
+### 固定版本 (npm)
 
 ```bash
 npm i -g openclaw@<version>
@@ -189,7 +202,7 @@ openclaw gateway restart
 
 <Tip>`npm view openclaw version` 顯示當前已發布的版本。</Tip>
 
-### 鎖定提交 (source)
+### 固定提交 (來源)
 
 ```bash
 git fetch origin
@@ -203,9 +216,9 @@ openclaw gateway restart
 ## 如果您遇到困難
 
 - 再次執行 `openclaw doctor` 並仔細閱讀輸出內容。
-- 對於原始碼檢出上的 `openclaw update --channel dev`，更新程式會在需要時自動啟動 `pnpm`。如果您看到 pnpm/corepack 啟動錯誤，請手動安裝 `pnpm`（或重新啟用 `corepack`）並重新執行更新。
+- 對於原始碼結帳上的 `openclaw update --channel dev`，更新程式會在需要時自動啟動 `pnpm`。如果您看到 pnpm/corepack 啟動錯誤，請手動安裝 `pnpm`（或重新啟用 `corepack`）並重新執行更新。
 - 檢查：[疑難排解](/zh-Hant/gateway/troubleshooting)
-- 在 Discord 中發問：[https://discord.gg/clawd](https://discord.gg/clawd)
+- 在 Discord 中提問：[https://discord.gg/clawd](https://discord.gg/clawd)
 
 ## 相關
 

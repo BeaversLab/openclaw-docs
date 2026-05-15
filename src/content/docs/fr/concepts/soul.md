@@ -45,7 +45,7 @@ Si vous souhaitez une meilleure personnalité, rédigez des instructions plus fo
 Réf. OpenAI :
 
 - [Ingénierie de prompt](https://developers.openai.com/api/docs/guides/prompt-engineering)
-- [Rôles des messages et suivi des instructions](https://developers.openai.com/api/docs/guides/prompt-engineering#message-roles-and-instruction-following)
+- [Rôles de messages et suivi des instructions](https://developers.openai.com/api/docs/guides/prompt-engineering#message-roles-and-instruction-following)
 
 ## Le prompt Molty
 
@@ -70,7 +70,7 @@ Save the new `SOUL.md`. Welcome to having a personality.
 
 ## À quoi ressemble le bon
 
-Les bonnes règles `SOUL.md` ressemblent à ceci :
+De bonnes règles `SOUL.md` ressemblent à ceci :
 
 - avoir un avis
 - passer les remplissages
@@ -78,7 +78,7 @@ Les bonnes règles `SOUL.md` ressemblent à ceci :
 - signaler les mauvaises idées tôt
 - rester concis sauf si la profondeur est réellement utile
 
-Les mauvaises règles `SOUL.md` ressemblent à ceci :
+De mauvaises règles `SOUL.md` ressemblent à ceci :
 
 - maintenir le professionnalisme à tout moment
 - fournir une assistance complète et réfléchie
@@ -90,12 +90,22 @@ Cette deuxième liste est ce qui vous donne de la bouillie.
 
 La personnalité n'est pas une permission d'être négligé.
 
-Gardez `AGENTS.md` pour les règles de fonctionnement. Gardez `SOUL.md` pour la voix, la position et le style. Si votre agent travaille dans des canaux partagés, des réponses publiques ou des surfaces client, assurez-vous que le ton convient toujours à la salle.
+Réservez `AGENTS.md` aux règles de fonctionnement. Réservez `SOUL.md` à la voix, à la position et
+au style. Si votre agent travaille dans des canaux partagés, des réponses publiques ou des interfaces
+client, assurez-vous que le ton est toujours adapté à la pièce.
 
 Précis est bon. Agaçant ne l'est pas.
 
-## Docs associés
+## Connexes
 
-- [Espace de travail de l'agent](/fr/concepts/agent-workspace)
-- [Invite système](/fr/concepts/system-prompt)
-- [Modèle SOUL.md](/fr/reference/templates/SOUL)
+<CardGroup cols={2}>
+  <Card title="Espace de travail de l'agent" href="/fr/concepts/agent-workspace" icon="folder-open">
+    Fichiers de l'espace de travail que OpenClaw injecte dans le système de prompt.
+  </Card>
+  <Card title="Système de prompt" href="/fr/concepts/system-prompt" icon="message-lines">
+    Comment `SOUL.md` est composé dans le système de prompt par tour.
+  </Card>
+  <Card title="Modèle SOUL.md" href="/fr/reference/templates/SOUL" icon="file-lines">
+    Modèle de démarrage pour un fichier de personnalité.
+  </Card>
+</CardGroup>

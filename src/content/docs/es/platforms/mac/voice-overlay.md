@@ -16,7 +16,7 @@ Público: colaboradores de la aplicación macOS. Objetivo: mantener la superposi
 
 ## Implementado (9 de diciembre de 2025)
 
-- Las sesiones de la superposición ahora llevan un token por cada captura (palabra de activación o pulsación para hablar). Las actualizaciones de parciales/finales/envío/descarte/nivel se descartan cuando el token no coincide, evitando devoluciones de llamada obsoletas.
+- Las sesiones de superposición ahora llevan un token por captura (palabra de activación o pulsar para hablar). Las actualizaciones parcial/final/enviar/descartar/nivel se descartan cuando el token no coincide, evitando devoluciones de llamada obsoletas.
 - La pulsación para hablar adopta cualquier texto visible de la superposición como prefijo (por lo que presionar la tecla de acceso rápido mientras la superposición de activación está activa mantiene el texto y añade el nuevo discurso). Espera hasta 1,5 segundos una transcripción final antes de volver al texto actual.
 - El registro de la campana/superposición se emite en `info` en las categorías `voicewake.overlay`, `voicewake.ptt` y `voicewake.chime` (inicio de sesión, parcial, final, envío, descarte, motivo de la campana).
 
@@ -35,7 +35,7 @@ Público: colaboradores de la aplicación macOS. Objetivo: mantener la superposi
 4. **Ruta de envío unificada**
    - En `endCapture`: si el texto recortado está vacío → descartar; si no `performSend(session:)` (reproduce el tono de envío una vez, reenvía, descarta).
    - Pulsar para hablar: sin retraso; palabra de activación: retraso opcional para envío automático.
-   - Aplique un breve tiempo de espera al tiempo de ejecución de activación después de que termine la función de pulsar para hablar para que la palabra de activación no se active de nuevo inmediatamente.
+   - Aplicar un breve enfriamiento al tiempo de ejecución de activación después de que finalice la función de pulsar para hablar, de modo que la palabra de activación no se reactive inmediatamente.
 5. **Registro**
    - El coordinador emite registros `.info` en el subsistema `ai.openclaw`, categorías `voicewake.overlay` y `voicewake.chime`.
    - Eventos clave: `session_started`, `adopted_by_push_to_talk`, `partial`, `finalized`, `send`, `dismiss`, `cancel`, `cooldown`.

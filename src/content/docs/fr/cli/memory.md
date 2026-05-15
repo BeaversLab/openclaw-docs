@@ -2,7 +2,7 @@
 summary: "Référence CLI pour `openclaw memory` (status/index/search/promote/promote-explain/rem-harness)"
 read_when:
   - You want to index or search semantic memory
-  - You’re debugging memory availability or indexing
+  - You're debugging memory availability or indexing
   - You want to promote recalled short-term memory into `MEMORY.md`
 title: "Mémoire"
 ---
@@ -51,7 +51,7 @@ openclaw memory index --agent main --verbose
 
 `memory status` :
 
-- `--deep` : sonder la disponibilité des vecteurs et des plongements (embeddings). `memory status` simple reste rapide et n'exécute pas de ping de plongement en direct. Le `searchMode: "search"` lexical QMD ignore les sondages de vecteurs sémantiques et la maintenance des plongements même avec `--deep`.
+- `--deep` : sonde la disponibilité du magasin de vecteurs local, la disponibilité du fournisseur d’embeddings et la disponibilité de la recherche sémantique par vecteurs. `memory status` simple reste rapide et n’exécute pas de calcul d’embeddings ni de découverte de fournisseur en temps réel ; un état inconnu du magasin de vecteurs ou des vecteurs sémantiques signifie que la sonde n’a pas été effectuée dans cette commande. `searchMode: "search"` lexical QMD ignore les sondes de vecteurs sémantiques et la maintenance des embeddings, même avec `--deep`.
 - `--index` : exécuter une réindexation si le stockage est sale (implique `--deep`).
 - `--fix` : réparer les verrous de rappel (recall) périmés et normaliser les métadonnées de promotion.
 - `--json` : imprimer la sortie JSON.

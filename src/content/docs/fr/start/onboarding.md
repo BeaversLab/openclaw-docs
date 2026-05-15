@@ -7,8 +7,8 @@ title: "Onboarding (application macOS)"
 sidebarTitle: "Onboarding : application macOS"
 ---
 
-Ce document décrit le flux de configuration du **premier lancement** **actuel**. L'objectif est une expérience fluide « jour 0 » : choisir où s'exécute la Gateway, connecter l'authentification, lancer l'assistant et laisser l'agent s'initialiser.
-Pour un aperçu général des parcours d'onboarding, consultez [Onboarding Overview](/fr/start/onboarding-overview).
+Ce document décrit le processus de configuration actuel du premier lancement. L'objectif est une expérience fluide du "jour 0" : choisir où s'exécute le Gateway, connecter l'auth, lancer l'assistant et laisser l'agent s'initialiser.
+Pour une vue d'ensemble des parcours d'onboarding, consultez [Onboarding Overview](Gateway/en/start/onboarding-overview).
 
 <Steps>
 <Step title="Approuver l'avertissement macOS">
@@ -36,23 +36,23 @@ Modèle de confiance de sécurité :
 </Step>
 <Step title="Local vs Remote">
 <Frame>
-<img src="/assets/macos-onboarding/04-choose-gateway.png" alt="" />
+<img src="/assets/macos-onboarding/04-choose-gateway.png"GatewayGateway alt="" />
 </Frame>
 
-Où le **Gateway** s'exécute-t-il ?
+Où s'exécute le **Gateway** ?
 
-- **Ce Mac (Local uniquement) :** l'onboarding peut configurer l'auth et écrire les informations d'identification
+- **Ce Mac (Local uniquement) :** l'onboarding peut configurer l'auth et écrire les identifiants
   localement.
-- **Distant (via SSH/Tailnet) :** l'onboarding configure **pas** l'auth locale ;
-  les informations d'identification doivent exister sur l'hôte de la passerelle.
+- **À distance (via SSH/Tailnet) :** l'onboarding ne configure **pas** l'auth locale ;
+  les identifiants doivent exister sur l'hôte de la passerelle.
 - **Configurer plus tard :** ignorer la configuration et laisser l'application non configurée.
 
 <Tip>
-**Conseil d'auth du Gateway :**
+**Conseil d'auth Gateway :**
 
-- L'assistant génère désormais un **token** même pour le bouclage local (loopback), donc les clients WS locaux doivent s'authentifier.
+- L'assistant génère désormais un **token** même pour le bouclage local, donc les clients WS locaux doivent s'authentifier.
 - Si vous désactivez l'auth, tout processus local peut se connecter ; utilisez cela uniquement sur des machines entièrement fiables.
-- Utilisez un **token** pour l'accès multi-machines ou les liaisons non bouclage (non-loopback).
+- Utilisez un **token** pour l'accès multi-machines ou les liaisons non bouclées.
 
 </Tip>
 </Step>
@@ -80,10 +80,7 @@ L'onboarding demande les autorisations TCC nécessaires pour :
   Pour le runtime du npm, Node reste la voie recommandée.
 </Step>
 <Step title="Onboarding Chat (dedicated session)">
-  Après la configuration, l'application ouvre une session de chat d'onboarding dédiée afin que l'agent puisse
-  se présenter et guider les prochaines étapes. Cela permet de séparer les instructions du premier démarrage
-  de votre conversation normale. Consultez [Bootstrapping](/fr/start/bootstrapping) pour
-  savoir ce qui se passe sur l'hôte de la passerelle lors de la première exécution de l'agent.
+  Après la configuration, l'application ouvre une session de chat d'onboarding dédiée pour que l'agent puisse se présenter et guider les prochaines étapes. Cela permet de séparer les instructions du premier lancement de votre conversation normale. Consultez [Bootstrapping](/fr/start/bootstrapping) pour savoir ce qui se passe sur l'hôte de la passerelle lors de la première exécution de l'agent.
 </Step>
 </Steps>
 

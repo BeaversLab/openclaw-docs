@@ -164,11 +164,13 @@ openclaw onboard --non-interactive \
       --custom-api-key "$CUSTOM_API_KEY" \
       --custom-provider-id "my-custom" \
       --custom-compatibility anthropic \
+      --custom-image-input \
       --gateway-port 18789 \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` es opcional. Si se omite, la incorporación verifica `CUSTOM_API_KEY`.
+    `--custom-api-key` es opcional. Si se omite, el onboarding verifica `CUSTOM_API_KEY`.
+    OpenClaw marca los IDs de modelos de visión comunes como con capacidad de imagen automáticamente. Agregue `--custom-image-input` para IDs de visión personalizados desconocidos, o `--custom-text-input` para forzar metadatos de solo texto.
 
     Variante en modo de referencia:
 
@@ -182,11 +184,12 @@ openclaw onboard --non-interactive \
       --secret-input-mode ref \
       --custom-provider-id "my-custom" \
       --custom-compatibility anthropic \
+      --custom-image-input \
       --gateway-port 18789 \
       --gateway-bind loopback
     ```
 
-    En este modo, la incorporación almacena `apiKey` como `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
+    En este modo, el onboarding almacena `apiKey` como `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
 
   </Accordion>
 </AccordionGroup>
@@ -217,11 +220,11 @@ Lo que configura:
 Notas:
 
 - Los espacios de trabajo predeterminados siguen `~/.openclaw/workspace-<agentId>`.
-- Añada `bindings` para enrutar los mensajes entrantes (el asistente puede hacer esto).
+- Agregue `bindings` para enrutar mensajes entrantes (el asistente puede hacer esto).
 - Marcas no interactivas: `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
 
 ## Documentos relacionados
 
-- Centro de incorporación: [Incorporación (CLI)](/es/start/wizard)
-- Referencia completa: [Referencia de configuración de CLI](/es/start/wizard-cli-reference)
+- Centro de onboarding: [Onboarding (CLI)](/es/start/wizard)
+- Referencia completa: [CLI Setup Reference](/es/start/wizard-cli-reference)
 - Referencia de comandos: [`openclaw onboard`](/es/cli/onboard)

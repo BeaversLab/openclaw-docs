@@ -5,21 +5,20 @@ read_when:
 title: "選單列"
 ---
 
-# Menu Bar Status Logic
+## 顯示內容
 
-## What is shown
-
-- We surface the current agent work state in the menu bar icon and in the first status row of the menu.
-- Health status is hidden while work is active; it returns when all sessions are idle.
-- The “Nodes” block in the menu lists **devices** only (paired nodes via `node.list`), not client/presence entries.
-- A “Usage” section appears under Context when provider usage snapshots are available.
+- 我們會在選單列圖示及選單的第一個狀態列中顯示目前的代理工作狀態。
+- 當工作進行時，健康狀態會隱藏；當所有工作階段處於閒置狀態時，健康狀態會恢復顯示。
+- 根層級的「Context」子選單包含最近的工作階段，而不是直接在根選單中展開它們。
+- 根選單中的「Nodes」區塊僅列出 **裝置**（透過 `node.list` 配對的節點），不列出用戶端/在線項目。
+- 當提供者使用情況快照可用時，根層級會在 Context 下方出現「Usage」區段，接著是使用費用的詳細資訊（如果有）。
 
 ## State model
 
-- Sessions: events arrive with `runId` (per-run) plus `sessionKey` in the payload. The “main” session is the key `main`; if absent, we fall back to the most recently updated session.
-- Priority: main always wins. If main is active, its state is shown immediately. If main is idle, the most recently active non‑main session is shown. We do not flip‑flop mid‑activity; we only switch when the current session goes idle or main becomes active.
+- Sessions：事件隨 `runId`（每次執行）以及 Payload 中的 `sessionKey` 一起到達。「main」工作階段是鍵值 `main`；如果不存在，我們會回退到最近更新的工作階段。
+- 優先順序：main 永遠優先。如果 main 處於活動狀態，其狀態會立即顯示。如果 main 處於閒置狀態，則會顯示最近活動的非 main 工作階段。我們不會在活動中途反覆切換；只有當前工作階段變為閒置或 main 變為活動時才會切換。
 - Activity kinds:
-  - `job`: high‑level command execution (`state: started|streaming|done|error`).
+  - `job`：高階指令執行 (`state: started|streaming|done|error`)。
   - `tool`: `phase: start|result` with `toolName` and `meta/args`.
 
 ## IconState enum (Swift)
@@ -41,46 +40,54 @@ title: "選單列"
 ### Visual mapping
 
 - `idle`: normal critter.
-- `workingMain`: badge with glyph, full tint, leg “working” animation.
+- `workingMain`：帶有圖示的徽章、完全著色、腿部「working」動畫。
 - `workingOther`: badge with glyph, muted tint, no scurry.
 - `overridden`: uses the chosen glyph/tint regardless of activity.
 
-## Status row text (menu)
+## Context 子選單
 
-- While work is active: `<Session role> · <activity label>`
+- 根選單顯示一個帶有工作階段計數/狀態的「Context」列，並開啟一個子選單。
+- Context 子選單標頭顯示過去 24 小時內的活動工作階段數量。
+- 每個工作階段列都保留了其 Token 列、存留時間、預覽、思考/詳細、重設、精簡和刪除動作。
+- 載入中、已斷線和工作階段載入錯誤訊息會出現在 Context 子選單內。
+- 提供者使用情況和使用費用詳細資訊保留在 Context 下方根層級，以便無需開啟子選單即可瀏覽。
+
+## 狀態列文字（選單）
+
+- 當工作進行時：`<Session role> · <activity label>`
   - 範例：`Main · exec: pnpm test`、`Other · read: apps/macos/Sources/OpenClaw/AppState.swift`。
-- 閒置時：回退到健康摘要。
+- 當閒置時：回退到健康摘要。
 
-## 事件接收
+## 事件攝入
 
-- 來源：control‑channel `agent` 事件（`ControlChannel.handleAgentEvent`）。
+- 來源：control-channel `agent` 事件 (`ControlChannel.handleAgentEvent`)。
 - 解析欄位：
-  - 帶有 `data.state` 的 `stream: "job"`，用於開始/停止。
-  - 帶有 `data.phase`、`name`、可選 `meta`/`args` 的 `stream: "tool"`。
+  - `stream: "job"` 搭配 `data.state` 用於開始/停止。
+  - `stream: "tool"` 搭配 `data.phase`、`name`、選用的 `meta`/`args`。
 - 標籤：
   - `exec`：`args.command` 的第一行。
   - `read`/`write`：縮短的路徑。
-  - `edit`：路徑加上來自 `meta`/diff 計數的推斷變更類型。
-  - 回退：工具名稱。
+  - `edit`：路徑加上來自 `meta`/diff 計數推斷的變更類型。
+  - 備案：工具名稱。
 
-## 偵錯覆寫
+## 除錯覆寫
 
-- Settings ▸ Debug ▸ “Icon override” 選擇器：
-  - `System (auto)`（預設）
-  - `Working: main`（依工具種類）
-  - `Working: other`（依工具種類）
+- Settings ▸ Debug ▸ "Icon override" 選擇器：
+  - `System (auto)` (預設)
+  - `Working: main` (根據工具類型)
+  - `Working: other` (根據工具類型)
   - `Idle`
-- 透過 `@AppStorage("iconOverride")` 儲存；對應到 `IconState.overridden`。
+- 透過 `@AppStorage("iconOverride")` 儲存；對應至 `IconState.overridden`。
 
 ## 測試檢查清單
 
-- 觸發主要 session 工作：驗證圖示立即切換，且狀態列顯示主要標籤。
-- 在主要 session 閒置時觸發非主要 session 工作：圖示/狀態顯示非主要；保持穩定直到完成。
-- 在其他作用中時啟動主要 session：圖示立即切換到主要。
-- 快速工具爆發：確保徽章不會閃爍（工具結果上的 TTL 寬限期）。
-- 所有 session 閒置後，健康列會重新出現。
+- 觸發主要 session 工作：確認圖示立即切換，且狀態列顯示主要標籤。
+- 當主要 session 閒置時觸發非主要 session 工作：圖示/狀態顯示非主要；直到完成前保持穩定。
+- 當其他活動正在進行時啟動主要 session：圖示立即翻轉至主要 session。
+- 快速工具爆發：確保徽章不會閃爍 (工具結果的 TTL 寬限期)。
+- 一旦所有 session 閒置，健康狀態列會重新出現。
 
 ## 相關
 
 - [macOS app](/zh-Hant/platforms/macos)
-- [選單列圖示](/zh-Hant/platforms/mac/icon)
+- [Menu bar icon](/zh-Hant/platforms/mac/icon)

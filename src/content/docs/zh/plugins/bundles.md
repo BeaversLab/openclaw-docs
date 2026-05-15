@@ -155,52 +155,53 @@ MCP 服务器可以使用 stdio 或 HTTP 传输：
 OpenClaw 会以提供商安全名称的形式注册捆绑包 MCP OpenClaw，格式为 `serverName__toolName`。例如，键为 `"vigil-harbor"` 且公开 `memory_search` OpenClaw 的服务器会注册为 `vigil-harbor__memory_search`。
 
 - `A-Za-z0-9_-` 之外的字符会被替换为 `-`
-- 服务器前缀上限为 30 个字符
-- 完整工具名称上限为 64 个字符
+- 以非字母开头的片段会获得一个字母前缀，因此数字服务器键（如 `12306`）会成为对提供商安全的工具前缀
+- 服务器前缀限制为 30 个字符
+- 完整的工具名称限制为 64 个字符
 - 空的服务器名称会回退到 `mcp`
-- 冲突的清理名称将通过数字后缀进行消除歧义
-- 最终公开的工具顺序按安全名称确定，以保持重复的 Pi
-  轮次缓存稳定
-- 配置文件过滤将来自同一个捆绑包 MCP 服务器的所有工具视为由 `bundle-mcp` 拥有的插件，因此配置文件的允许列表和拒绝列表可以包含单个公开的工具名称或 `bundle-mcp` 插件密钥
+- 冲突的清理后名称将通过数字后缀进行消歧
+- 最终暴露的工具顺序由安全名称决定，以确保重复的 Pi 轮次保持缓存稳定
+- 配置文件过滤会将来自同一个 bundle MCP 服务器的所有工具视为由 `bundle-mcp` 拥有的插件，因此配置文件的允许列表和拒绝列表可以包含单独暴露的工具名称或 `bundle-mcp` 插件键
 
-#### Embedded Pi settings
+#### 嵌入式 Pi 设置
 
-- 当捆绑包被启用时，Claude `settings.json` 会被作为默认的嵌入式 Pi 设置导入
-- OpenClaw sanitizes shell override keys before applying them
+- 当启用该 bundle 时，Claude `settings.json` 将作为默认的嵌入式 Pi 设置导入
+- OpenClaw 在应用 shell 覆盖键之前会对其进行清理
 
-Sanitized keys:
+清理后的键：
 
 - `shellPath`
 - `shellCommandPrefix`
 
-#### Embedded Pi LSP
+#### 嵌入式 Pi LSP
 
-- enabled Claude bundles can contribute LSP server config
-- OpenClaw 会加载 `.lsp.json` 以及清单中声明的任何 `lspServers` 路径
-- bundle LSP config is merged into the effective embedded Pi LSP defaults
-- 目前仅支持受支持的 stdio 支持的 LSP 服务器运行；不受支持的传输仍会显示在 `openclaw plugins inspect <id>` 中
+- 启用的 Claude bundles 可以提供 LSP 服务器配置
+- OpenClaw 会加载 OpenClaw`.lsp.json` 以及任何清单声明的 `lspServers` 路径
+- bundle LSP 配置将合并到有效的嵌入式 Pi LSP 默认值中
+- 目前只有受支持的 stdio 支持的 LSP 服务器可以运行；不支持的传输方式仍会显示在 `openclaw plugins inspect <id>` 中
 
 ### 已检测但未执行
 
-这些项目会被识别并显示在诊断信息中，但 OpenClaw 不会运行它们：
+这些内容会被识别并显示在诊断信息中，但 OpenClaw 不会运行它们：
 
 - Claude `agents`、`hooks.json` 自动化、`outputStyles`
 - Cursor `.cursor/agents`、`.cursor/hooks.json`、`.cursor/rules`
-- 能力报告之外的 Codex 内联/应用元数据
+- 除能力报告之外的 Codex 内联/应用元数据
 
 ## Bundle 格式
 
 <AccordionGroup>
-  <Accordion title="Codex 捆绑包">
+  <Accordion title="Codex 包">
     标记：`.codex-plugin/plugin.json`
 
     可选内容：`skills/`、`hooks/`、`.mcp.json`、`.app.json`
 
-    当 Codex 捆绑包使用技能根目录和 OpenClaw 风格的钩子包目录（`HOOK.md` + `handler.ts`）时，最适合 OpenClaw。
+    当 Codex 包使用技能根目录和 OpenClaw 风格的
+    hook-pack 目录（`HOOK.md` + `handler.ts`）时，最适配 OpenClaw。
 
   </Accordion>
 
-  <Accordion title="Claude bundles">
+  <Accordion title="Claude 包">
     两种检测模式：
 
     - **基于清单：** `.claude-plugin/plugin.json`
@@ -209,15 +210,15 @@ Sanitized keys:
     Claude 特有行为：
 
     - `commands/` 被视为技能内容
-    - `settings.json` 被导入到嵌入式 Pi 设置中（Shell 覆盖键已净化）
-    - `.mcp.json` 向嵌入式 Pi 公开受支持的 stdio 工具
-    - `.lsp.json` 加上清单中声明的 `lspServers` 路径会被加载到嵌入式 Pi LSP 默认值中
-    - `hooks/hooks.json` 会被检测但不会执行
+    - `settings.json` 被导入到嵌入式 Pi 设置中（shell 覆盖键会被清理）
+    - `.mcp.json` 向嵌入式 Pi 暴露支持的 stdio 工具
+    - `.lsp.json` 加上清单声明的 `lspServers` 路径会加载到嵌入式 Pi LSP 默认设置中
+    - `hooks/hooks.json` 会被检测但不会被执行
     - 清单中的自定义组件路径是累加的（它们扩展默认值，而不是替换它们）
 
   </Accordion>
 
-  <Accordion title="Cursor bundles">
+  <Accordion title="Cursor 包">
     标记：`.cursor-plugin/plugin.json`
 
     可选内容：`skills/`、`.cursor/commands/`、`.cursor/agents/`、`.cursor/rules/`、`.cursor/hooks.json`、`.mcp.json`
@@ -233,44 +234,46 @@ Sanitized keys:
 OpenClaw 会首先检查原生插件格式：
 
 1. `openclaw.plugin.json` 或带有 `openclaw.extensions` 的有效 `package.json` — 被视为 **原生插件**
-2. Bundle 标记（`.codex-plugin/`、`.claude-plugin/` 或默认 Claude/Cursor 布局） — 被视为 **Bundle**
+2. Bundle 标记（`.codex-plugin/`、`.claude-plugin/` 或默认的 Claude/Cursor 布局）— 被视为 **bundle**
 
-如果一个目录同时包含两者，OpenClaw 将使用本机路径。这可以防止双格式包被部分安装为 bundle。
+如果目录同时包含两者，OpenClaw 将使用原生路径。这可以防止双格式包被部分作为 bundle 安装。
 
-## 运行时依赖和清理
+## 运行时依赖与清理
 
-- 捆绑的插件运行时依赖项随 OpenClaw 包一起在 `dist/*` 下提供。对于捆绑的插件，OpenClaw **不会**在启动时运行 `npm install`；发布流水线负责运送完整的捆绑依赖负载（请参阅 [Releasing](/zh/reference/RELEASING) 中的 postpublish 验证规则）。
+- 第三方兼容的 bundle 不会获得启动时 `npm install` 修复。它们应该通过 `openclaw plugins install` 安装，并在已安装的插件目录中包含所需的一切。
+- OpenClaw 拥有的捆绑插件要么在核心中轻量级提供，要么可通过插件安装程序下载。Gateway(网关) 启动永远不会为它们运行包管理器。
+- `openclaw doctor --fix` 会删除旧的临时依赖目录，并且可以在配置引用时恢复本地插件索引中缺少的可下载插件。
 
 ## 安全性
 
-与原生插件相比，插件包具有更窄的信任边界：
+Bundles 比原生插件具有更窄的信任边界：
 
-- OpenClaw **不会**在进程内加载任意的插件包运行时模块
-- Skills 和 hook-pack 的路径必须保留在插件根目录内（经过边界检查）
-- 读取设置文件时会进行相同的边界检查
-- 支持的 stdio MCP 服务器可能会作为子进程启动
+- OpenClaw **不会** 在进程中加载任意的 bundle 运行时模块
+- Skills 和 hook-pack 路径必须保留在插件根目录内（经过边界检查）
+- 设置文件读取时会进行相同的边界检查
+- 支持的 stdio MCP 服务器可以作为子进程启动
 
-这使得插件包默认更安全，但对于它们确实暴露的功能，您仍应将第三方插件包视为受信任的内容。
+这使得 bundles 默认情况下更安全，但对于它们确实暴露的功能，您仍应将第三方 bundles 视为受信任的内容。
 
 ## 故障排除
 
 <AccordionGroup>
-  <Accordion title="检测到插件包但功能未运行">
+  <Accordion title="Bundle 已检测到但功能未运行">
     运行 `openclaw plugins inspect <id>`。如果列出了某个功能但标记为
-    未连接，则这是产品限制——而不是安装损坏。
+    未连接，则这是产品限制 — 而不是安装损坏。
   </Accordion>
 
-<Accordion title="未显示 Claude 命令文件">确保插件包已启用，并且 markdown 文件位于检测到的 `commands/` 或 `skills/` 根目录内。</Accordion>
+<Accordion title="Claude 命令文件未出现">确保 bundle 已启用，且 markdown 文件位于检测到的 `commands/` 或 `skills/` 根目录内。</Accordion>
 
-<Accordion title="Claude 设置未生效">仅支持来自 `settings.json` 的嵌入式 Pi 设置。OpenClaw 不会将插件包设置视为原始配置补丁。</Accordion>
+<Accordion title="Claude 设置不适用">仅支持来自 `settings.json`OpenClaw 的嵌入式 Pi 设置。OpenClaw 不会 将 bundle 设置视为原始配置补丁。</Accordion>
 
-  <Accordion title="Claude 钩子未执行">
-    `hooks/hooks.json` 仅用于检测。如果您需要可运行的钩子，请使用
+  <Accordion title="Claude 钩子不执行">
+    `hooks/hooks.json`OpenClaw 仅用于检测。如果您需要可运行的钩子，请使用
     OpenClaw hook-pack 布局或提供原生插件。
   </Accordion>
 </AccordionGroup>
 
-## 相关内容
+## 相关
 
 - [安装和配置插件](/zh/tools/plugin)
 - [构建插件](/zh/plugins/building-plugins) — 创建原生插件

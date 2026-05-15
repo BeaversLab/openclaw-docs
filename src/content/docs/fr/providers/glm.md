@@ -1,44 +1,69 @@
 ---
-summary: "Aperçu de la famille de modèles GLM + comment l'utiliser dans OpenClaw"
+summary: "GLMOpenClawAperçu de la famille de modèles GLM et comment l'utiliser dans OpenClaw"
 read_when:
   - You want GLM models in OpenClaw
   - You need the model naming convention and setup
-title: "GLM (Zhipu)"
+title: "GLMGLM (Zhipu)"
 ---
 
-# Modèles GLM
+GLM est une famille de modèles (et non une entreprise) disponible via la plateforme [Z.AI](https://z.ai). Dans OpenClaw, les modèles GLM sont accessibles via le provider `zai` fourni avec des références telles que `zai/glm-5.1`.
 
-GLM est une **famille de modèles** (et non une entreprise) disponible via la plateforme Z.AI. Dans OpenClaw, les modèles GLM sont accessibles via le provider `zai` et des ID de modèle comme `zai/glm-5`.
+| Propriété                        | Valeur                                                                      |
+| -------------------------------- | --------------------------------------------------------------------------- |
+| ID du fournisseur                | `zai`                                                                       |
+| Plugin                           | inclus, `enabledByDefault: true`                                            |
+| Variables d'environnement d'auth | `ZAI_API_KEY` ou `Z_AI_API_KEY`                                             |
+| Choix d'intégration              | `zai-api-key`, `zai-coding-global`, `zai-coding-cn`, `zai-global`, `zai-cn` |
+| API                              | compatible OpenAI                                                           |
+| URL de base par défaut           | `https://api.z.ai/api/paas/v4`                                              |
+| Par défaut suggéré               | `zai/glm-5.1`                                                               |
+| Modèle d'image par défaut        | `zai/glm-4.6v`                                                              |
 
 ## Getting started
 
 <Steps>
   <Step title="Choose an auth route and run onboarding">
-    Choisissez l'option d'intégration correspondant à votre offre Z.AI et à votre région :
+    Choisissez l'option d'intégration qui correspond à votre forfait et votre région Z.AI. L'option générique `zai-api-key` détecte automatiquement le point de terminaison correspondant en fonction de la forme de la clé ; utilisez les options régionales explicites lorsque vous souhaitez forcer un Coding Plan spécifique ou une surface API générale.
 
-    | Choix d'auth | Idéal pour |
-    | ----------- | -------- |
-    | `zai-api-key` | Configuration générique de clé API avec détection automatique du point de terminaison |
-    | `zai-coding-global` | Utilisateurs du Coding Plan (mondial) |
-    | `zai-coding-cn` | Utilisateurs du Coding Plan (région Chine) |
-    | `zai-global` | API générale (mondial) |
-    | `zai-cn` | API générale (région Chine) |
+    | Auth choice         | Best for                                            |
+    | ------------------- | --------------------------------------------------- |
+    | `zai-api-key`       | Clé API générique avec détection automatique du point de terminaison        |
+    | `zai-coding-global` | Utilisateurs du Coding Plan (mondial)                          |
+    | `zai-coding-cn`     | Utilisateurs du Coding Plan (région Chine)                    |
+    | `zai-global`        | API générale (mondiale)                                |
+    | `zai-cn`            | API générale (région Chine)                          |
 
-    ```bash
-    # Example: generic auto-detect
-    openclaw onboard --auth-choice zai-api-key
+    <CodeGroup>
 
-    # Example: Coding Plan global
-    openclaw onboard --auth-choice zai-coding-global
-    ```
+```bash Auto-detect
+openclaw onboard --auth-choice zai-api-key
+```
+
+```bash Coding Plan (global)
+openclaw onboard --auth-choice zai-coding-global
+```
+
+```bash Coding Plan (China)
+openclaw onboard --auth-choice zai-coding-cn
+```
+
+```bash General API (global)
+openclaw onboard --auth-choice zai-global
+```
+
+```bash General API (China)
+openclaw onboard --auth-choice zai-cn
+```
+
+    </CodeGroup>
 
   </Step>
-  <Step title="Définir GLM comme model par défaut">
+  <Step title="Définir GLM comme le modèle par défaut">
     ```bash
     openclaw config set agents.defaults.model.primary "zai/glm-5.1"
     ```
   </Step>
-  <Step title="Vérifier que les models sont disponibles">
+  <Step title="Vérifier que les modèles sont disponibles">
     ```bash
     openclaw models list --provider zai
     ```
@@ -54,49 +79,55 @@ GLM est une **famille de modèles** (et non une entreprise) disponible via la pl
 }
 ```
 
-<Tip>`zai-api-key` permet à OpenClaw de détecter le point de terminaison Z.AI correspondant à partir de la clé et d'appliquer automatiquement l'URL de base correcte. Utilisez les choix régionaux explicites lorsque vous souhaitez forcer un Coding Plan spécifique ou une surface d'API générale.</Tip>
+<Tip>`zai-api-key` permet à OpenClaw de détecter le point de terminaison Z.AI correspondant à partir de la forme de la clé et d'appliquer automatiquement l'URL de base correcte. Utilisez les choix régionaux explicites lorsque vous souhaitez épingler un plan de codage spécifique ou une surface d'API générale.</Tip>
 
 ## Catalogue intégré
 
-OpenClaw fournit actuellement le provider `zai` inclus avec ces références GLM :
+Le provider `zai`GLM inclus fournit 13 références de model GLM. Toutes les entrées prennent en charge le raisonnement, sauf indication contraire ; `glm-5v-turbo` et `glm-4.6v` acceptent les entrées d'image ainsi que le texte.
 
-| Modèle          | Modèle           |
-| --------------- | ---------------- |
-| `glm-5.1`       | `glm-4.7`        |
-| `glm-5`         | `glm-4.7-flash`  |
-| `glm-5-turbo`   | `glm-4.7-flashx` |
-| `glm-5v-turbo`  | `glm-4.6`        |
-| `glm-4.5`       | `glm-4.6v`       |
-| `glm-4.5-air`   |                  |
-| `glm-4.5-flash` |                  |
-| `glm-4.5v`      |                  |
+| Référence du modèle  | Remarques                                                           |
+| -------------------- | ------------------------------------------------------------------- |
+| `zai/glm-5.1`        | Model par défaut. Raisonnement, texte uniquement, contexte de 202k. |
+| `zai/glm-5`          | Raisonnement, texte uniquement, contexte 202k.                      |
+| `zai/glm-5-turbo`    | Raisonnement, texte uniquement, 200k de contexte.                   |
+| `zai/glm-5v-turbo`   | Raisonnement, texte + image, contexte 200k.                         |
+| `zai/glm-4.7`        | Raisonnement, texte uniquement, contexte 204k.                      |
+| `zai/glm-4.7-flash`  | Raisonnement, texte uniquement, 200k de contexte.                   |
+| `zai/glm-4.7-flashx` | Raisonnement, texte uniquement.                                     |
+| `zai/glm-4.6`        | Raisonnement, texte uniquement.                                     |
+| `zai/glm-4.6v`       | Raisonnement, texte + image. Modèle d'image par défaut.             |
+| `zai/glm-4.5`        | Raisonnement, texte uniquement.                                     |
+| `zai/glm-4.5-air`    | Raisonnement, texte uniquement.                                     |
+| `zai/glm-4.5-flash`  | Raisonnement, texte uniquement.                                     |
+| `zai/glm-4.5v`       | Raisonnement, texte + image.                                        |
 
-<Note>La référence de modèle par défaut est `zai/glm-5.1`. Les versions et la disponibilité des GLM puvent changer ; consultez la documentation de Z.AI pour les dernières informations.</Note>
+<Note>Les versions et la disponibilité de GLM peuvent changer. Exécutez `openclaw models list --provider zai` pour voir les lignes du catalogue connues de votre version installée, et consultez la documentation de Z.AI pour les modèles nouvellement ajoutés ou obsolètes.</Note>
 
 ## Configuration avancée
 
 <AccordionGroup>
-  <Accordion title="Détection automatique du point de terminaison">
-    Lorsque vous utilisez le choix d'authentification `zai-api-key`, OpenClaw inspecte le format de la clé
-    pour déterminer l'URL de base Z.AI correcte. Les choix régionaux explicites
-    (`zai-coding-global`, `zai-coding-cn`, `zai-global`, `zai-cn`) remplacent
-    la détection automatique et fixent directement le point de terminaison.
+  <Accordion title="Endpoint auto-detection">
+    Lorsque vous utilisez le choix d'authentification `zai-api-key`, OpenClaw inspecte la forme de la clé pour déterminer l'URL de base Z.AI correcte. Les choix régionaux explicites (`zai-coding-global`, `zai-coding-cn`, `zai-global`, `zai-cn`) remplacent la détection automatique et fixent directement le point de terminaison.
   </Accordion>
 
-  <Accordion title="Détails du provider">
-    Les modèles GLM sont fournis par le provider d'exécution `zai`. Pour la configuration complète du provider,
-    les points de terminaison régionaux et les capacités supplémentaires, consultez
-    [Z.AI provider docs](/fr/providers/zai).
+  <Accordion title="Détails du fournisseur"GLM>
+    Les modèles GLM sont servis par le fournisseur d'exécution `zai`. Pour la configuration complète du fournisseur, les points de terminaison régionaux et les fonctionnalités supplémentaires, consultez la [page du fournisseur Z.AI](/fr/providers/zai).
   </Accordion>
 </AccordionGroup>
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Provider Z.AI" href="/fr/providers/zai" icon="server">
+  <Card title="provider Z.AI" href="/fr/providers/zai" icon="serveur">
     Configuration complète du provider Z.AI et points de terminaison régionaux.
   </Card>
-  <Card title="Sélection de modèle" href="/fr/concepts/model-providers" icon="layers">
-    Choix des providers, références de modèle et comportement de basculement.
+  <Card title="Fournisseurs de modèles" href="/fr/concepts/model-providers" icon="couches">
+    Choix des fournisseurs, des références de modèles et du comportement de basculement.
+  </Card>
+  <Card title="Modes de pensée" href="/fr/tools/thinking" icon="brain">
+    Niveaux `/think` pour la famille GLM capable de raisonnement.
+  </Card>
+  <Card title="FAQ sur les modèles" href="/fr/help/faq-models" icon="circle-question">
+    Profils d'authentification, changement de modèles et résolution des erreurs "no profile".
   </Card>
 </CardGroup>

@@ -1,9 +1,9 @@
 ---
-summary: "Centre de dépannage basé sur les symptômes pour OpenClaw"
+summary: "Centre de troubleshooting basé sur les symptômes pour OpenClaw"
 read_when:
   - OpenClaw is not working and you need the fastest path to a fix
   - You want a triage flow before diving into deep runbooks
-title: "Dépannage général"
+title: "General troubleshooting"
 ---
 
 Si vous n'avez que 2 minutes, utilisez cette page comme porte d'entrée de triage.
@@ -26,13 +26,13 @@ Bon résultat en une ligne :
 
 - `openclaw status` → affiche les canaux configurés et aucune erreur d'auth évidente.
 - `openclaw status --all` → le rapport complet est présent et partageable.
-- `openclaw gateway probe` → la passerelle cible attendue est atteignable (`Reachable: yes`). `Capability: ...` indique le niveau d'auth que la sonde a pu prouver, et `Read probe: limited - missing scope: operator.read` est un diagnostic dégradé, pas un échec de connexion.
-- `openclaw gateway status` → `Runtime: running`, `Connectivity probe: ok`, et une ligne `Capability: ...` plausible. Utilisez `--require-rpc` si vous avez également besoin d'une preuve RPC avec portée de lecture.
+- `openclaw gateway probe` → la passerelle cible attendue est joignable (`Reachable: yes`). `Capability: ...` indique le niveau d'auth que la sonde a pu prouver, et `Read probe: limited - missing scope: operator.read` est un diagnostic dégradé, pas un échec de connexion.
+- `openclaw gateway status` → `Runtime: running`, `Connectivity probe: ok` et une ligne `Capability: ...` plausible. Utilisez `--require-rpc` si vous avez besoin d'une preuve RPC avec un champ de lecture aussi.
 - `openclaw doctor` → aucune erreur de configuration/service bloquante.
-- `openclaw channels status --probe` → une passerelle atteignable renvoie l'état de transport en direct par compte
+- `openclaw channels status --probe` → une passerelle joignable renvoie l'état de transport en direct par compte
   ainsi que les résultats de sonde/audit tels que `works` ou `audit ok` ; si la
-  passerelle est inaccessible, la commande revient à des résumés de configuration uniquement.
-- `openclaw logs --follow` → activité régulière, aucune erreur fatale répétée.
+  passerelle est injoignable, la commande se rabat sur des résumés basés uniquement sur la configuration.
+- `openclaw logs --follow` → activité régulière, aucune erreur fatale répétitive.
 
 ## Anthropic contexte long 429
 
@@ -42,27 +42,29 @@ allez sur [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-
 
 ## Le backend local compatible OpenAI fonctionne directement mais échoue dans OpenClaw
 
-Si votre backend local ou auto-hébergé `/v1` répond à de petites sondes directes
-`/v1/chat/completions` mais échoue sur `openclaw infer model run` ou les tours normaux
-d'agent :
+Si votre backend `/v1` local ou auto-hébergé répond à de petites sondes `/v1/chat/completions` directes
+mais échoue sur `openclaw infer model run` ou les tours normaux
+de l'agent :
 
 1. Si l'erreur mentionne `messages[].content` attendant une chaîne, définissez
    `models.providers.<provider>.models[].compat.requiresStringContent: true`.
-2. Si le backend échoue toujours uniquement sur les tours d'agent OpenClaw, définissez
+2. Si le backend échoue toujours uniquement sur les tours de l'agent OpenClaw, définissez
    `models.providers.<provider>.models[].compat.supportsTools: false` et réessayez.
-3. Si les minuscules appels directs fonctionnent toujours mais que les invites OpenClaw plus volumineuses plantent le backend, considérez le problème restant comme une limitation du modèle/serveur amont et continuez dans le runbook approfondi :
+3. Si les petits appels directs fonctionnent toujours mais que les gros OpenClaw font planter le
+   backend, considérez le problème restant comme une limitation en amont du modèle/serveur et
+   continuez avec le runbook approfondi :
    [/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail](/fr/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail)
 
 ## L'installation du plugin échoue en raison d'extensions openclaw manquantes
 
 Si l'installation échoue avec `package.json missing openclaw.extensions`, le package du plugin
-utilise une ancienne structure que OpenClaw n'accepte plus.
+utilise une ancienne forme que OpenClaw n'accepte plus.
 
 Corrigez dans le package du plugin :
 
 1. Ajoutez `openclaw.extensions` à `package.json`.
 2. Faites pointer les entrées vers les fichiers d'exécution construits (généralement `./dist/index.js`).
-3. Republicliez le plugin et exécutez à nouveau `openclaw plugins install <package>`.
+3. Publiez à nouveau le plugin et exécutez `openclaw plugins install <package>` à nouveau.
 
 Exemple :
 
@@ -76,7 +78,41 @@ Exemple :
 }
 ```
 
-Référence : [Architecture des plugins](/fr/plugins/architecture)
+Référence : [Architecture du plugin](/fr/plugins/architecture)
+
+## Plugin présent mais bloqué par une propriété suspecte
+
+Si des avertissements de `openclaw doctor`, de configuration ou de démarrage s'affichent :
+
+```text
+blocked plugin candidate: suspicious ownership (... uid=1000, expected uid=0 or root)
+plugin present but blocked
+```
+
+les fichiers du plugin sont détenus par un utilisateur Unix différent de celui du processus les
+chargeant. Ne supprimez pas la configuration du plugin. Corrigez la propriété des fichiers ou exécutez OpenClaw en tant que
+le même utilisateur que celui qui possède le répertoire d'état.
+
+Les installations Docker s'exécutent normalement en tant que `node` (uid `1000`). Pour la configuration
+Docker par défaut, réparez les montages de liaison de l'hôte :
+
+```bash
+sudo chown -R 1000:1000 /path/to/openclaw-config /path/to/openclaw-workspace
+openclaw doctor --fix
+```
+
+Si vous exécutez intentionnellement OpenClaw en tant que root, réparez à la place la racine du plugin géré
+pour une propriété root :
+
+```bash
+sudo chown -R root:root /path/to/openclaw-config/npm
+openclaw doctor --fix
+```
+
+Documentation approfondie :
+
+- [Propriété du chemin du plugin](/fr/tools/plugin#blocked-plugin-path-ownership)
+- [Permissions Docker](/fr/install/docker#permissions-and-eacces)
 
 ## Arbre de décision
 
@@ -101,7 +137,7 @@ flowchart TD
 ```
 
 <AccordionGroup>
-  <Accordion title="Aucune réponse">
+  <Accordion title="No replies">
     ```bash
     openclaw status
     openclaw gateway status
@@ -110,18 +146,18 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    Un bon résultat ressemble à :
+    Le bon résultat ressemble à :
 
     - `Runtime: running`
     - `Connectivity probe: ok`
     - `Capability: read-only`, `write-capable`, ou `admin-capable`
     - Votre channel affiche un transport connecté et, si pris en charge, `works` ou `audit ok` dans `channels status --probe`
-    - L'expéditeur semble approuvé (ou la stratégie DM est ouverte/liste blanche)
+    - L'expéditeur semble approuvé (ou la politique DM est ouverte/liste verte)
 
     Signatures de journal courantes :
 
-    - `drop guild message (mention required` → mention gating a bloqué le message dans Discord.
-    - `pairing request` → l'expéditeur n'est pas approuvé et attend l'approbation de l'appariement DM.
+    - `drop guild message (mention required` → le filtrage par mention a bloqué le message dans Discord.
+    - `pairing request` → l'expéditeur n'est pas approuvé et attend l'approbation de jumelage DM.
     - `blocked` / `allowlist` dans les journaux du channel → l'expéditeur, la salle ou le groupe est filtré.
 
     Pages approfondies :
@@ -141,30 +177,30 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    Une bonne sortie ressemble à :
+    Un bon résultat ressemble à :
 
     - `Dashboard: http://...` est affiché dans `openclaw gateway status`
     - `Connectivity probe: ok`
-    - `Capability: read-only`, `write-capable`, ou `admin-capable`
-    - Pas de boucle d'authentification dans les journaux
+    - `Capability: read-only`, `write-capable` ou `admin-capable`
+    - Pas de boucle d'auth dans les journaux
 
     Signatures de journal courantes :
 
-    - `device identity required` → Le contexte HTTP/non sécurisé ne peut pas terminer l'authentification de l'appareil.
-    - `origin not allowed` → le navigateur `Origin` n'est pas autorisé pour la cible
-      de passerelle de l'interface de contrôle.
-    - `AUTH_TOKEN_MISMATCH` avec des indices de réessai (`canRetryWithDeviceToken=true`) → une nouvelle tentative de jeton d'appareil de confiance peut se produire automatiquement.
-    - Cette nouvelle tentative à jeton mis en cache réutilise l'ensemble d'étendues mis en cache stocké avec le jeton
-      d'appareil associé. Les appelants explicites `deviceToken` / explicites `scopes` conservent
-      leur ensemble d'étendues demandé à la place.
-    - Sur le chemin asynchrone de l'interface de contrôle Tailscale Serve, les tentatives échouées pour le même
+    - `device identity required` → Le contexte HTTP/non sécurisé ne peut pas terminer l'auth de l'appareil.
+    - `origin not allowed` → le navigateur `Origin` n'est pas autorisé pour la cible de passerelle
+      de l'interface de contrôle.
+    - `AUTH_TOKEN_MISMATCH` avec des indices de nouvelle tentative (`canRetryWithDeviceToken=true`) → une nouvelle tentative de jeton d'appareil de confiance peut se produire automatiquement.
+    - Cette nouvelle tentative à jeton en cache réutilise l'ensemble de portées en cache stocké avec le jeton
+      d'appareil associé. Les appelants avec `deviceToken` explicite / `scopes` explicite conservent
+      leur ensemble de portées demandé à la place.
+    - Sur le chemin asynchrone de l'interface de contrôle Tailscale Serve Tailscale, les tentatives échouées pour le même
       `{scope, ip}` sont sérialisées avant que le limiteur n'enregistre l'échec, donc une
-      deuxième mauvaise tentative simultanée peut déjà afficher `retry later`.
-    - `too many failed authentication attempts (retry later)` depuis une origine de navigateur
-      localhost → des échecs répétés de ce même `Origin` sont temporairement
-      verrouillés ; une autre origine localhost utilise un compartiment séparé.
-    - `unauthorized` répétés après cette nouvelle tentative → mauvais jeton/mot de passe, inadéquation du mode d'authentification ou jeton d'appareil associé périmé.
-    - `gateway connect failed:` → l'interface cible la mauvaise URL/port ou une passerelle injoignable.
+      seconde mauvaise nouvelle tentative simultanée peut déjà afficher `retry later`.
+    - `too many failed authentication attempts (retry later)` à partir d'une origine de navigateur
+      localhost → des échecs répétés de cette même origine `Origin` sont temporairement
+      bloqués ; une autre origine localhost utilise un compartiment séparé.
+    - `unauthorized` répétés après cette nouvelle tentative → mauvais jeton/mot de passe, inadéquation du mode d'auth ou jeton d'appareil associé périmé.
+    - `gateway connect failed:` → L'interface cible la mauvaise URL/port ou une passerelle injoignable.
 
     Pages approfondies :
 
@@ -174,7 +210,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Le Gateway ne démarre pas ou le service est installé mais non exécuté">
+  <Accordion title="GatewayLe Gateway ne démarre pas ou le service est installé mais pas en cours d'exécution">
     ```bash
     openclaw status
     openclaw gateway status
@@ -183,7 +219,7 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    Un bon résultat ressemble à :
+    Un résultat correct ressemble à :
 
     - `Service: ... (loaded)`
     - `Runtime: running`
@@ -192,9 +228,9 @@ flowchart TD
 
     Signatures de journal courantes :
 
-    - `Gateway start blocked: set gateway.mode=local` ou `existing config is missing gateway.mode` → le mode passerelle est distant, ou le fichier de configuration manque le cachet du mode local et doit être réparé.
-    - `refusing to bind gateway ... without auth` → liaison non bouclée sans chemin d'authentification passerelle valide (jeton/mot de passe, ou proxy de confiance où configuré).
-    - `another gateway instance is already listening` ou `EADDRINUSE` → port déjà pris.
+    - `Gateway start blocked: set gateway.mode=local` ou `existing config is missing gateway.mode` → le mode Gateway est distant, ou le fichier de configuration manque le tampon de mode local et doit être réparé.
+    - `refusing to bind gateway ... without auth` → liaison non bouclée sans chemin d'authentification Gateway valide (jeton/mot de passe, ou proxy de confiance si configuré).
+    - `another gateway instance is already listening` ou `EADDRINUSE` → port déjà utilisé.
 
     Pages approfondies :
 
@@ -204,7 +240,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Le canal se connecte mais les messages ne circulent pas">
+  <Accordion title="Le channel se connecte mais les messages ne passent pas">
     ```bash
     openclaw status
     openclaw gateway status
@@ -213,17 +249,17 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    Un bon résultat ressemble à :
+    Un résultat correct ressemble à :
 
-    - Le transport du canal est connecté.
-    - Les contrôles d'appariement/liste blanche réussissent.
-    - Les mentions sont détectées là où c'est requis.
+    - Le transport du channel est connecté.
+    - Les vérifications de jumelage/liste blanche réussissent.
+    - Les mentions sont détectées lorsque cela est requis.
 
     Signatures de journal courantes :
 
-    - `mention required` → le blocage par mention de groupe a empêché le traitement.
-    - `pairing` / `pending` → l'envoyeur du DM n'est pas encore approuvé.
-    - `not_in_channel`, `missing_scope`, `Forbidden`, `401/403` → problème de jeton d'autorisation du canal.
+    - `mention required` → le blocage de mention de groupe a empêché le traitement.
+    - `pairing` / `pending` → l'expéditeur DM n'est pas encore approuvé.
+    - `not_in_channel`, `missing_scope`, `Forbidden`, `401/403` → problème de jeton d'autorisation de channel.
 
     Pages approfondies :
 
@@ -232,7 +268,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Cron ou heartbeat non déclenché ou non livré">
+  <Accordion title="Cron ou heartbeat ne s'est pas déclenché ou n'a pas été délivré">
     ```bash
     openclaw status
     openclaw gateway status
@@ -242,21 +278,21 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    Une bonne sortie ressemble à ceci :
+    Un bon résultat ressemble à ceci :
 
     - `cron.status` indique activé avec un prochain réveil.
-    - `cron runs` affiche des entrées `ok` récentes.
-    - Le heartbeat est activé et pas en dehors des heures actives.
+    - `cron runs` montre des entrées `ok` récentes.
+    - Le heartbeat est activé et n'est pas en dehors des heures actives.
 
     Signatures de journal courantes :
 
     - `cron: scheduler disabled; jobs will not run automatically` → cron est désactivé.
     - `heartbeat skipped` avec `reason=quiet-hours` → en dehors des heures actives configurées.
-    - `heartbeat skipped` avec `reason=empty-heartbeat-file` → `HEARTBEAT.md` existe mais ne contient qu'une structure vide ou avec uniquement des en-têtes.
-    - `heartbeat skipped` avec `reason=no-tasks-due` → le mode de tâche `HEARTBEAT.md` est actif mais aucun des intervalles de tâche n'est encore échu.
+    - `heartbeat skipped` avec `reason=empty-heartbeat-file` → `HEARTBEAT.md` existe mais ne contient qu'une structure vide ou uniquement des en-têtes.
+    - `heartbeat skipped` avec `reason=no-tasks-due` → le mode de tâche `HEARTBEAT.md` est actif mais aucun des intervalles de tâche n'est encore dû.
     - `heartbeat skipped` avec `reason=alerts-disabled` → toute la visibilité du heartbeat est désactivée (`showOk`, `showAlerts` et `useIndicator` sont tous désactivés).
-    - `requests-in-flight` → la voie principale est occupée ; le réveil du heartbeat a été différé.
-    - `unknown accountId` → le compte cible de la livraison du heartbeat n'existe pas.
+    - `requests-in-flight` → voie principale occupée ; le réveil du heartbeat a été différé.
+    - `unknown accountId` → le compte cible de livraison du heartbeat n'existe pas.
 
     Pages approfondies :
 
@@ -275,20 +311,20 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    La sortie correcte ressemble à :
+    Un résultat correct ressemble à ceci :
 
-    - Le nœud est répertorié comme connecté et apparié pour le rôle `node`.
-    - La capacité existe pour la commande que vous appelez.
-    - L'état de l'autorisation est accordé pour l'outil.
+    - Le nœud est répertorié comme connecté et associé pour le rôle `node`.
+    - La capacité existe pour la commande que vous invoquez.
+    - L'état de l'autorisation est accordé pour l'tool.
 
     Signatures de journal courantes :
 
-    - `NODE_BACKGROUND_UNAVAILABLE` → bring node app to foreground.
-    - `*_PERMISSION_REQUIRED` → OS permission was denied/missing.
-    - `SYSTEM_RUN_DENIED: approval required` → exec approval is pending.
-    - `SYSTEM_RUN_DENIED: allowlist miss` → command not on exec allowlist.
+    - `NODE_BACKGROUND_UNAVAILABLE` → mettre l'application du nœud au premier plan.
+    - `*_PERMISSION_REQUIRED` → l'autorisation du système d'exploitation a été refusée ou est manquante.
+    - `SYSTEM_RUN_DENIED: approval required` → l'approbation d'exécution est en attente.
+    - `SYSTEM_RUN_DENIED: allowlist miss` → la commande n'est pas sur la liste d'autorisation d'exécution.
 
-    Pages détaillées :
+    Pages approfondies :
 
     - [/gateway/troubleshooting#node-paired-tool-fails](/fr/gateway/troubleshooting#node-paired-tool-fails)
     - [/nodes/troubleshooting](/fr/nodes/troubleshooting)
@@ -296,7 +332,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Exec demande soudainement une approbation">
+  <Accordion title="Exécution demande soudainement une approbation">
     ```bash
     openclaw config get tools.exec.host
     openclaw config get tools.exec.security
@@ -307,11 +343,11 @@ flowchart TD
     Ce qui a changé :
 
     - Si `tools.exec.host` n'est pas défini, la valeur par défaut est `auto`.
-    - `host=auto` résout à `sandbox` lorsqu'un runtime de bac à sable est actif, `gateway` sinon.
-    - `host=auto` concerne uniquement le routage ; le comportement « YOLO » sans invite provient de `security=full` plus `ask=off` sur la passerelle/le nœud.
-    - Sur `gateway` et `node`, `tools.exec.security` non défini correspond par défaut à `full`.
-    - `tools.exec.ask` non défini correspond par défaut à `off`.
-    - Résultat : si vous voyez des approbations, une stratégie locale à l'hôte ou par session a resserré l'exécution par rapport aux valeurs par défaut actuelles.
+    - `host=auto` correspond à `sandbox` lorsqu'un runtime de bac à sable est actif, `gateway` sinon.
+    - `host=auto` ne gère que le routage ; le comportement "YOLO" sans invite provient de `security=full` associé à `ask=off` sur la passerelle/le nœud.
+    - Sur `gateway` et `node`, si `tools.exec.security` n'est pas défini, la valeur par défaut est `full`.
+    - Si `tools.exec.ask` n'est pas défini, la valeur par défaut est `off`.
+    - Résultat : si vous voyez des demandes d'approbation, une stratégie locale à l'hôte ou par session a resserré l'exécution par rapport aux valeurs par défaut actuelles.
 
     Rétablir le comportement par défaut actuel sans approbation :
 
@@ -324,15 +360,15 @@ flowchart TD
 
     Alternatives plus sûres :
 
-    - Définissez uniquement `tools.exec.host=gateway` si vous voulez simplement un routage hôte stable.
-    - Utilisez `security=allowlist` avec `ask=on-miss` si vous voulez une exécution hôte mais que vous souhaitez toujours une révision en cas d'absence de la liste autorisée.
-    - Activez le mode bac à sable si vous voulez que `host=auto` résolve à nouveau à `sandbox`.
+    - Définissez uniquement `tools.exec.host=gateway` si vous souhaitez simplement un routage d'hôte stable.
+    - Utilisez `security=allowlist` avec `ask=on-miss` si vous souhaitez une exécution sur l'hôte tout en conservant une révision pour les absences de liste autorisée.
+    - Activez le mode bac à sable si vous voulez que `host=auto` corresponde à nouveau à `sandbox`.
 
-    Signatures de journal courantes :
+    Signatures de journaux courantes :
 
     - `Approval required.` → la commande est en attente de `/approve ...`.
     - `SYSTEM_RUN_DENIED: approval required` → l'approbation d'exécution node-host est en attente.
-    - `exec host=sandbox requires a sandbox runtime for this session` → sélection implicite/explicite du bac à sable mais le mode bac à sable est désactivé.
+    - `exec host=sandbox requires a sandbox runtime for this session` → sélection de bac à sable implicite/explicite mais le mode bac à sable est désactivé.
 
     Pages approfondies :
 
@@ -342,7 +378,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Échec de l'outil de navigation">
+  <Accordion title="Échec de l'outil navigateur">
     ```bash
     openclaw status
     openclaw gateway status
@@ -351,22 +387,22 @@ flowchart TD
     openclaw doctor
     ```
 
-    Un bon résultat ressemble à ceci :
+    Une sortie correcte ressemble à ceci :
 
-    - L'état du navigateur affiche `running: true` et un navigateur/profil choisi.
+    - Le statut du navigateur affiche `running: true` et un navigateur/profil choisi.
     - `openclaw` démarre, ou `user` peut voir les onglets Chrome locaux.
 
     Signatures de journal courantes :
 
     - `unknown command "browser"` ou `unknown command 'browser'` → `plugins.allow` est défini et n'inclut pas `browser`.
-    - `Failed to start Chrome CDP on port` → le lancement du navigateur local a échoué.
+    - `Failed to start Chrome CDP on port` → le démarrage du navigateur local a échoué.
     - `browser.executablePath not found` → le chemin binaire configuré est incorrect.
     - `browser.cdpUrl must be http(s) or ws(s)` → l'URL CDP configurée utilise un schéma non pris en charge.
     - `browser.cdpUrl has invalid port` → l'URL CDP configurée a un port incorrect ou hors plage.
-    - `No Chrome tabs found for profile="user"` → le profil de rattachement Chrome MCP n'a aucun onglet Chrome local ouvert.
-    - `Remote CDP for profile "<name>" is not reachable` → le point de terminaison CDP distant configuré n'est pas accessible à partir de cet hôte.
-    - `Browser attachOnly is enabled ... not reachable` ou `Browser attachOnly is enabled and CDP websocket ... is not reachable` → le profil de rattachement uniquement n'a aucune cible CDP active.
-    - substitutions de viewport obsolètes / mode sombre / paramètres régionaux / hors ligne sur les profils CDP distants ou de rattachement uniquement → exécutez `openclaw browser stop --browser-profile <name>` pour fermer la session de contrôle active et libérer l'état d'émulation sans redémarrer la passerelle.
+    - `No Chrome tabs found for profile="user"` → le profil de connexion MCP Chrome n'a aucun onglet Chrome local ouvert.
+    - `Remote CDP for profile "<name>" is not reachable` → le point de terminaison CDP distant configuré n'est pas accessible depuis cet hôte.
+    - `Browser attachOnly is enabled ... not reachable` ou `Browser attachOnly is enabled and CDP websocket ... is not reachable` → le profil de connexion uniquement n'a pas de cible CDP active.
+    - substitutions de viewport obsolète / mode sombre / langue / hors ligne sur les profils CDP distants ou de connexion uniquement → exécutez `openclaw browser stop --browser-profile <name>` pour fermer la session de contrôle active et libérer l'état d'émulation sans redémarrer la passerelle.
 
     Pages approfondies :
 
@@ -381,8 +417,8 @@ flowchart TD
 
 ## Connexes
 
-- [FAQ](/fr/help/faq) — questions fréquemment posées
+- [FAQ](/fr/help/faq) — questions fréquentes
 - [Gateway Troubleshooting](/fr/gateway/troubleshooting) — problèmes spécifiques à la passerelle
-- [Doctor](/fr/gateway/doctor) — vérifications de santé automatiques et réparations
-- [Channel Troubleshooting](/fr/channels/troubleshooting) — problèmes de connectivité de canal
-- [Automation Troubleshooting](/fr/automation/cron-jobs#troubleshooting) — problèmes cron et de pulsation (heartbeat)
+- [Doctor](/fr/gateway/doctor) — vérifications de santé et réparations automatisées
+- [Channel Troubleshooting](/fr/channels/troubleshooting) — problèmes de connectivité des canaux
+- [Automation Troubleshooting](/fr/automation/cron-jobs#troubleshooting) — problèmes cron et heartbeat

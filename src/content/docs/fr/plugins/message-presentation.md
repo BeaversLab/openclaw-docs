@@ -266,47 +266,44 @@ Utilisez les helpers de `openclaw/plugin-sdk/interactive-runtime` lors de la con
 l'ancien code :
 
 ```ts
-import { interactiveReplyToPresentation, normalizeMessagePresentation, presentationToInteractiveReply, renderMessagePresentationFallbackText } from "openclaw/plugin-sdk/interactive-runtime";
+import { interactiveReplyToPresentation, normalizeMessagePresentation, presentationToInteractiveControlsReply, presentationToInteractiveReply, renderMessagePresentationFallbackText } from "openclaw/plugin-sdk/interactive-runtime";
 ```
 
 Le nouveau code doit accepter ou produire `MessagePresentation` directement.
 
+`presentationToInteractiveReply(...)` préserve le texte de présentation visible en mappant le titre, le texte, le contexte, les boutons et les sélections dans l'ancienne forme `InteractiveReply`. Les moteurs de rendu de composants qui dessinent déjà nativement des blocs de titre, de texte, de contexte et de séparateur devraient plutôt utiliser `presentationToInteractiveControlsReply(...)`, puis ajouter uniquement les contrôles de bouton et de sélection.
+
+`renderMessagePresentationFallbackText(...)` renvoie une chaîne vide pour les blocs de présentation qui n'ont pas de repli textuel, comme une présentation composée uniquement d'un séparateur. Les transports qui nécessitent un corps d'envoi non vide peuvent passer `emptyFallback` pour opter pour un corps minimal sans modifier le contrat de repli par défaut.
+
 ## Épinglage de livraison
 
-L'épinglage est un comportement de livraison, pas une présentation. Utilisez `delivery.pin` au lieu de
-champs natifs du fournisseur tels que `channelData.telegram.pin`.
+L'épinglage est un comportement de livraison, pas une présentation. Utilisez `delivery.pin` au lieu des champs natifs du provider tels que `channelData.telegram.pin`.
 
 Sémantique :
 
 - `pin: true` épingle le premier message livré avec succès.
-- `pin.notify` par défaut est `false`.
-- `pin.required` par défaut est `false`.
-- Les échecs d'épinglage optionnel se dégradent et laissent le message envoyé intact.
+- `pin.notify` correspond par défaut à `false`.
+- `pin.required` correspond par défaut à `false`.
+- Les échecs d'épinglage optionnel dégradent et laissent le message envoyé intact.
 - Les échecs d'épinglage requis font échouer la livraison.
-- Les messages fragmentés épinglent le premier fragment livré, et non le fragment final.
+- Les messages fractionnés épinglent le premier bloc livré, et non le bloc de queue.
 
-Les actions de message manuelles `pin`, `unpin` et `pins` existent toujours pour les
-messages existants lorsque le fournisseur prend en charge ces opérations.
+Les actions de message manuelles `pin`, `unpin` et `pins` existent toujours pour les messages existants lorsque le provider prend en charge ces opérations.
 
 ## Liste de contrôle pour l'auteur de plugin
 
-- Déclarez `presentation` à partir de `describeMessageTool(...)` lorsque le canal peut
-  rendre ou dégrader en toute sécurité la présentation sémantique.
-- Ajoutez `presentationCapabilities` à l'adaptateur sortant d'exécution.
-- Implémentez `renderPresentation` dans le code d'exécution, et non dans le code
-  d'installation du plugin de plan de contrôle.
-- Keep native UI libraries out of hot setup/catalog paths.
-- Preserve platform limits in the renderer and tests.
-- Add fallback tests for unsupported buttons, selects, URL buttons, title/text
-  duplication, and mixed `message` plus `presentation` sends.
-- Add delivery pin support through `deliveryCapabilities.pin` and
-  `pinDeliveredMessage` only when the provider can pin the sent message id.
-- Do not expose new provider-native card/block/component/button fields through
-  the shared message action schema.
+- Déclarez `presentation` à partir de `describeMessageTool(...)` lorsque le channel peut restituer ou dégrader en toute sécurité la présentation sémantique.
+- Ajoutez `presentationCapabilities` à l'adaptateur sortant (outbound) au runtime.
+- Implémentez `renderPresentation` dans le code d'exécution (runtime), et non dans le code de configuration du plugin du plan de contrôle.
+- Gardez les bibliothèques d'interface utilisateur natives en dehors des chemins de configuration/catalogue à chaud.
+- Conservez les limites de la plateforme dans le moteur de rendu et les tests.
+- Ajoutez des tests de repli pour les boutons, sélections, boutons d'URL non pris en charge, la duplication de titre/texte et les envois mixtes `message` plus `presentation`.
+- Ajoutez la prise en charge de l'épinglage de livraison via `deliveryCapabilities.pin` et `pinDeliveredMessage` uniquement lorsque le provider peut épingler l'identifiant du message envoyé.
+- N'exposez pas de nouveaux champs natifs de fournisseur pour les cartes/blocs/composants/boutons via le schéma d'action de message partagé.
 
-## Related docs
+## Documentation connexe
 
 - [Message CLI](/fr/cli/message)
-- [Plugin SDK Overview](/fr/plugins/sdk-overview)
-- [Plugin Architecture](/fr/plugins/architecture-internals#message-tool-schemas)
-- [Channel Presentation Refactor Plan](/fr/plan/ui-channels)
+- [Aperçu du Plugin SDK](/fr/plugins/sdk-overview)
+- [Architecture du plugin](/fr/plugins/architecture-internals#message-tool-schemas)
+- [Plan de refonte de la présentation du canal](/fr/plan/ui-channels)

@@ -11,10 +11,10 @@ macOS 選單列應用程式將 WebChat UI 嵌入為原生的 SwiftUI 檢視。
 - **本機模式**：直接連線到本機 Gateway WebSocket。
 - **遠端模式**：透過 SSH 轉發 Gateway 控制埠，並使用該通道作為資料平面。
 
-## 啟動與偵錯
+## 啟動與調試
 
 - 手動：Lobster 選單 → 「Open Chat」。
-- 測試用自動開啟：
+- 測試時自動開啟：
 
   ```bash
   dist/OpenClaw.app/Contents/MacOS/OpenClaw --webchat
@@ -31,7 +31,7 @@ macOS 選單列應用程式將 WebChat UI 嵌入為原生的 SwiftUI 檢視。
   `<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、
   `<function_calls>...</function_calls>` 和截斷的工具呼叫區塊）以及洩漏的 ASCII/全形模型控制權杖會被移除，純靜默權杖助理行（例如精確的 `NO_REPLY` / `no_reply`）會被省略，過大的行可以被預留文字取代。
 - 工作階段：預設為主要工作階段（`main`，或當範圍為全域時的 `global`）。UI 可以在工作階段之間切換。
-- 入門使用專用的工作階段，將首次執行設定分開。
+- Onboarding 使用專用的會話，將首次執行設定分開。
 
 ## 安全表面
 

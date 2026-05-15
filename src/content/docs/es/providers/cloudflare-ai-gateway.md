@@ -17,17 +17,22 @@ Cloudflare AI Gateway se sitúa delante de las API del proveedor y le permite a�
 
 <Note>Para los modelos de Anthropic enrutados a través de Cloudflare AI Gateway, utilice su **clave de API de Anthropic** como clave del proveedor.</Note>
 
-## Para empezar
+Cuando el pensamiento está habilitado para los modelos de Anthropic Messages, OpenClaw elimina los
+turnos de relleno previo del asistente finales antes de enviar la carga a través de Cloudflare AI Gateway.
+Anthropic rechaza el relleno previo de respuestas con pensamiento extendido, mientras que el
+relleno previo ordinario sin pensamiento sigue estando disponible.
+
+## Primeros pasos
 
 <Steps>
-  <Step title="Establecer la clave de API del proveedor y los detalles del Gateway">
+  <Step title="Establecer la clave de API del proveedor y los detalles de Gateway">
     Ejecute la incorporación y elija la opción de autenticación de Cloudflare AI Gateway:
 
     ```bash
     openclaw onboard --auth-choice cloudflare-ai-gateway-api-key
     ```
 
-    Esto le solicitará su ID de cuenta, ID de gateway y clave de API.
+    Esto solicita su ID de cuenta, ID de gateway y clave de API.
 
   </Step>
   <Step title="Establecer un modelo predeterminado">
@@ -68,7 +73,7 @@ openclaw onboard --non-interactive \
 
 <AccordionGroup>
   <Accordion title="Gateways autenticados">
-    Si habilitó la autenticación de Gateway en Cloudflare, añada el encabezado `cf-aig-authorization`. Esto es **además de** su clave de API del proveedor.
+    Si habilitó la autenticación de Gateway en Cloudflare, agregue el encabezado `cf-aig-authorization`. Esto es **además de** su clave de API del proveedor.
 
     ```json5
     {
@@ -85,7 +90,7 @@ openclaw onboard --non-interactive \
     ```
 
     <Tip>
-    El encabezado `cf-aig-authorization` se autentica con el propio Cloudflare Gateway, mientras que la clave de API del proveedor (por ejemplo, su clave de Anthropic) se autentica con el proveedor ascendente.
+    El encabezado `cf-aig-authorization` se autentica con el Cloudflare Gateway en sí, mientras que la clave de API del proveedor (por ejemplo, su clave de Anthropic) se autentica con el proveedor upstream.
     </Tip>
 
   </Accordion>
@@ -94,7 +99,7 @@ openclaw onboard --non-interactive \
     Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `CLOUDFLARE_AI_GATEWAY_API_KEY` esté disponible para ese proceso.
 
     <Warning>
-    Una clave que solo se encuentre en `~/.profile` no servirá de ayuda a un demonio launchd/systemd a menos que ese entorno también se importe allí. Establezca la clave en `~/.openclaw/.env` o a través de `env.shellEnv` para garantizar que el proceso del gateway pueda leerla.
+    Una clave que solo se encuentre en `~/.profile` no ayudará a un demonio launchd/systemd a menos que ese entorno también se importe allí. Establezca la clave en `~/.openclaw/.env` o a través de `env.shellEnv` para asegurar que el proceso del gateway pueda leerla.
     </Warning>
 
   </Accordion>
@@ -104,9 +109,9 @@ openclaw onboard --non-interactive \
 
 <CardGroup cols={2}>
   <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
-    Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
+    Cómo elegir proveedores, referencias de modelos y el comportamiento de conmutación por error.
   </Card>
   <Card title="Solución de problemas" href="/es/help/troubleshooting" icon="wrench">
-    Solución general de problemas y preguntas frecuentes.
+    Solución de problemas generales y preguntas frecuentes.
   </Card>
 </CardGroup>

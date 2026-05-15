@@ -1,5 +1,5 @@
 ---
-summary: "用於外部 CLI (signal-cli, 舊版 imsg) 的 RPC 配接器與閘道模式"
+summary: "外部 CLI（signal-cli、imsg）的 RPC 配接器與閘道模式"
 read_when:
   - Adding or changing external CLI integrations
   - Debugging RPC adapters (signal-cli, imsg)
@@ -17,13 +17,11 @@ OpenClaw 透過 JSON-RPC 整合外部 CLI。目前使用兩種模式。
 
 有關設定和端點，請參閱 [Signal](/zh-Hant/channels/signal)。
 
-## 模式 B：std IO 子進程
+## 模式 B：stdio 子行程 (imsg)
 
-> **注意：** 對於新的 iMessage 設定，請改用 [BlueBubbles](/zh-Hant/channels/bluebubbles)。
-
-- OpenClaw 將 `imsg rpc` 作為子進程生成
-- JSON-RPC 在 stdin/stdout 上以換行分隔 (每行一個 JSON 物件)。
-- 不需要 TCP 連接埠，也不需要守護進程。
+- OpenClaw 產生 `imsg rpc` 作為 [iMessage](/zh-Hant/channels/imessage) 的子行程。
+- JSON-RPC 透過 stdin/stdout 進行行分隔（每行一個 JSON 物件）。
+- 不需要 TCP 通訊埠，不需要常駐程式。
 
 使用的核心方法：
 
@@ -32,14 +30,14 @@ OpenClaw 透過 JSON-RPC 整合外部 CLI。目前使用兩種模式。
 - `send`
 - `chats.list` (探測/診斷)
 
-有關舊版設定和定址，請參閱 [iMessage](/zh-Hant/channels/imessage) (建議使用 `chat_id`)。
+參閱 [iMessage](/zh-Hant/channels/imessage) 以了解舊版設定與定址（建議使用 `chat_id`）。
 
-## 轉接器準則
+## 配接器指南
 
-- 閘道擁有該程序 (啟動/停止與提供者生命週期綁定)。
-- 保持 RPC 客戶端具韌性：設定逾時，退出時重啟。
-- 優先使用穩定的 ID (例如 `chat_id`)，而非顯示字串。
+- 閘道擁有該行程（啟動/停止與提供者生命週期綁定）。
+- 保持 RPC 用戶端強韌：設定逾時、退出時重啟。
+- 優先使用穩定的 ID（例如 `chat_id`）而非顯示字串。
 
 ## 相關
 
-- [閘道協定](/zh-Hant/gateway/protocol)
+- [閘道通訊協定](/zh-Hant/gateway/protocol)

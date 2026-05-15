@@ -196,11 +196,12 @@ Choisissez votre surface de provider et suivez les étapes de configuration.
     ```
   </Accordion>
 
-  <Accordion title="Notes">
-    - Le fournisseur est intégré à OpenClaw, il n'y a donc pas d'étape d'installation de plugin distincte.
+  <Accordion title="Notes"OpenClaw>
+    - Le provider est inclus avec OpenClaw, il n'y a donc pas d'étape d'installation de plugin distincte.
     - `step-3.5-flash-2603` est actuellement exposé uniquement sur `stepfun-plan`.
-    - Un flux d'authentification unique écrit des profils correspondant à la région pour `stepfun` et `stepfun-plan`, de sorte que les deux interfaces peuvent être découvertes ensemble.
+    - Un seul flux d'authentification écrit des profils correspondant à la région pour `stepfun` et `stepfun-plan`, de sorte que les deux surfaces peuvent être découvertes ensemble.
     - Utilisez `openclaw models list` et `openclaw models set <provider/model>` pour inspecter ou changer de modèles.
+
   </Accordion>
 </AccordionGroup>
 

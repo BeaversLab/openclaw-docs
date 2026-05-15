@@ -7,11 +7,9 @@ read_when:
 title: "Ansible"
 ---
 
-# Ansible 安装
+使用 **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** 将 OpenClaw 部署到生产服务器 —— 这是一个具有安全优先架构的自动安装程序。
 
-使用 **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** 将 OpenClaw 部署到生产服务器 —— 这是一款具有安全优先架构的自动化安装程序。
-
-<Info>[openclaw-ansible](https://github.com/openclaw/openclaw-ansible) 仓库是 Ansible 部署的事实来源。本页面是一个快速概览。</Info>
+<Info>[openclaw-ansible](https://github.com/openclaw/openclaw-ansible) 仓库是 Ansible 部署的权威来源。本页仅为简要概述。</Info>
 
 ## 先决条件
 
@@ -20,20 +18,20 @@ title: "Ansible"
 | **操作系统** | Debian 11+ 或 Ubuntu 20.04+     |
 | **访问权限** | Root 或 sudo 权限               |
 | **网络**     | 用于安装软件包的互联网连接      |
-| **Ansible**  | 2.14+（由快速入门脚本自动安装） |
+| **Ansible**  | 2.14+（由快速启动脚本自动安装） |
 
-## 您将获得的内容
+## 您将获得
 
-- **防火墙优先的安全性** —— UFW + Docker 隔离（仅 SSH + Tailscale 可访问）
+- **防火墙优先的安全** —— UFW + Docker 隔离（仅 SSH + Tailscale 可访问）
 - **Tailscale VPN** —— 安全的远程访问，无需公开暴露服务
-- **Docker** —— 隔离的沙箱容器，仅限本地主机绑定
-- **纵深防御** —— 4 层安全架构
-- **Systemd 集成** —— 开机自启动并带有安全加固
-- **单命令设置** —— 数分钟内完成部署
+- **Docker** —— 隔离的沙箱容器，仅本地主机绑定
+- **深度防御** —— 4 层安全架构
+- **Systemd 集成** —— 开机自动启动并包含安全加固
+- **一键设置** —— 数分钟内完成完整部署
 
 ## 快速开始
 
-单命令安装：
+一键安装：
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/openclaw/openclaw-ansible/main/install.sh | bash
@@ -41,14 +39,14 @@ curl -fsSL https://raw.githubusercontent.com/openclaw/openclaw-ansible/main/inst
 
 ## 安装内容
 
-Ansible playbook 将安装并配置以下内容：
+该 Ansible playbook 将安装并配置：
 
-1. **Tailscale** —— 用于安全远程访问的网格 VPN
-2. **UFW 防火墙** —— 仅开放 SSH + Tailscale 端口
-3. **Docker CE + Compose V2** -- 用于默认代理沙箱后端
-4. **Node.js 24 + pnpm** -- 运行时依赖（目前受支持的 Node 22 LTS `22.14+` 仍受支持）
-5. **OpenClaw** —— 基于主机，非容器化
-6. **Systemd 服务** —— 自动启动并带有安全加固
+1. **Tailscale** —— 用于安全远程访问的网状 VPN
+2. **UFW 防火墙** —— 仅开放 SSH 和 Tailscale 端口
+3. **Docker CE + Compose V2** —— 用于默认的代理沙箱后端
+4. **Node.js 24 + pnpm** —— 运行时依赖（Node 22 LTS，目前为 `22.16+`，仍受支持）
+5. **OpenClaw** —— 基于主机，未容器化
+6. **Systemd 服务** —— 开机自动启动并包含安全加固
 
 <Note>网关直接在主机上运行（不在 Docker 中）。代理沙箱隔离是 可选的；此 playbook 安装 Docker 是因为它是默认的沙箱 后端。有关详细信息和其他后端，请参阅 [沙箱隔离](/zh/gateway/sandboxing)。</Note>
 
@@ -56,10 +54,14 @@ Ansible playbook 将安装并配置以下内容：
 
 <Steps>
   <Step title="切换到 openclaw 用户">```bash sudo -i -u openclaw ```</Step>
-  <Step title="运行新手引导向导">安装后脚本将引导您配置 OpenClaw 设置。</Step>
-  <Step title="连接消息提供商">登录 WhatsApp、Telegram、Discord 或 Signal： ```bash openclaw channels login ```</Step>
+  <Step title="运行新手引导向导" OpenClaw>
+    安装后脚本将引导您配置 OpenClaw 设置。
+  </Step>
+  <Step title="连接消息提供商" WhatsAppTelegramDiscordSignal>
+    登录 WhatsApp、Telegram、Discord 或 Signal： ```bash openclaw channels login ```
+  </Step>
   <Step title="验证安装">```bash sudo systemctl status openclaw sudo journalctl -u openclaw -f ```</Step>
-  <Step title="连接到 Tailscale">加入您的 VPN 网状网络以实现安全的远程访问。</Step>
+  <Step title="Tailscale连接到 Tailscale">加入您的 VPN 网络以实现安全的远程访问。</Step>
 </Steps>
 
 ### 快速命令
@@ -81,12 +83,12 @@ openclaw channels login
 
 ## 安全架构
 
-部署使用了 4 层防御模型：
+该部署使用了 4 层防御模型：
 
-1. **防火墙 (UFW)** —— 仅公开 SSH (22) + Tailscale (41641/udp)
-2. **VPN (Tailscale)** —— 网关只能通过 VPN 网状网络访问
-3. **Docker 隔离** —— DOCKER-USER iptables 链防止外部端口暴露
-4. **Systemd 加固** —— NoNewPrivileges、PrivateTmp、非特权用户
+1. **防火墙 (UFW)** -- 仅公开 SSH (22) + Tailscale (41641/udp)
+2. **VPN (Tailscale)** -- 网关只能通过 VPN 网络访问
+3. **Docker 隔离** -- DOCKER-USER iptables 链防止外部端口暴露
+4. **Systemd 加固** -- NoNewPrivileges、PrivateTmp、非特权用户
 
 要验证您的外部攻击面：
 
@@ -94,9 +96,9 @@ openclaw channels login
 nmap -p- YOUR_SERVER_IP
 ```
 
-仅应开放端口 22 (SSH)。所有其他服务（网关、Docker）均已被锁定。
+仅端口 22 (SSH) 应该是开放的。所有其他服务（网关、Docker）均已锁定。
 
-安装 Docker 是为了代理沙箱（隔离工具执行），而非用于运行网关本身。有关沙箱配置，请参阅 [多代理沙箱和工具](/zh/tools/multi-agent-sandbox-tools)。
+安装 Docker 是为了 Agent 沙箱（隔离工具执行），而不是为了运行网关本身。有关沙箱配置，请参阅 [多 Agent 沙箱和工具](Docker/en/tools/multi-agent-sandbox-tools)。
 
 ## 手动安装
 
@@ -114,7 +116,7 @@ nmap -p- YOUR_SERVER_IP
     cd openclaw-ansible
     ```
   </Step>
-  <Step title="安装 Ansible collections">
+  <Step title="Ansible安装 Ansible 集合">
     ```bash
     ansible-galaxy collection install -r requirements.yml
     ```
@@ -135,24 +137,25 @@ nmap -p- YOUR_SERVER_IP
 
 ## 更新
 
-Ansible 安装程序将 OpenClaw 设置为手动更新。请参阅 [更新](/zh/install/updating) 了解标准更新流程。
+Ansible 安装程序将 OpenClaw 配置为手动更新。有关标准更新流程，请参阅 [更新](/zh/install/updating)。
 
-要重新运行 Ansible playbook（例如，为了进行配置更改）：
+要重新运行 Ansible playbook（例如，用于更改配置）：
 
 ```bash
 cd openclaw-ansible
 ./run-playbook.sh
 ```
 
-这是幂等的，多次运行是安全的。
+这是幂等的，可以安全地多次运行。
 
 ## 故障排除
 
 <AccordionGroup>
   <Accordion title="防火墙阻止了我的连接">
-    - 确保您可以先通过 Tailscale VPN 访问
+    - 确保您首先可以通过 Tailscale VPN 访问
     - 始终允许 SSH 访问（端口 22）
     - 根据设计，网关只能通过 Tailscale 访问
+
   </Accordion>
   <Accordion title="服务无法启动">
     ```bash
@@ -177,9 +180,11 @@ cd openclaw-ansible
     # Check sandbox image
     sudo docker images | grep openclaw-sandbox
 
-    # Build sandbox image if missing
+    # Build sandbox image if missing (requires source checkout)
     cd /opt/openclaw/openclaw
     sudo -u openclaw ./scripts/sandbox-setup.sh
+    # For npm installs without a source checkout, see
+    # https://docs.openclaw.ai/gateway/sandboxing#images-and-setup
     ```
 
   </Accordion>
@@ -205,4 +210,4 @@ cd openclaw-ansible
 - [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) -- 完整部署指南
 - [Docker](/zh/install/docker) -- 容器化网关设置
 - [沙箱隔离](/zh/gateway/sandboxing) -- 代理沙箱配置
-- [Multi-Agent 沙箱 and Tools](/zh/tools/multi-agent-sandbox-tools) -- 每个代理的隔离
+- [多代理沙箱和工具](/zh/tools/multi-agent-sandbox-tools) -- 每个代理的隔离

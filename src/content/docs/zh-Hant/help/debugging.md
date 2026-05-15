@@ -1,5 +1,5 @@
 ---
-summary: "除錯工具：監看模式、原始模型串流，以及追蹤推理洩漏"
+summary: "除錯工具：監看模式、原始模型串流以及追蹤推理洩漏"
 read_when:
   - You need to inspect raw model output for reasoning leakage
   - You want to run the Gateway in watch mode while iterating
@@ -11,9 +11,9 @@ title: "除錯"
 
 ## 執行時期除錯覆寫
 
-在聊天中使用 `/debug` 來設定**僅限執行時期**（runtime-only）的設定覆寫（儲存在記憶體中，而非磁碟）。
-`/debug` 預設為停用；請使用 `commands.debug: true` 啟用它。
-當您需要切換不明顯的設定而不編輯 `openclaw.json` 時，這非常方便。
+在聊天中使用 `/debug` 來設定 **僅限執行時期** 的設定覆寫（記憶體，而非磁碟）。
+`/debug` 預設為停用；請使用 `commands.debug: true` 來啟用。
+當您需要切換冷門設定而不編輯 `openclaw.json` 時，這非常方便。
 
 範例：
 
@@ -28,7 +28,7 @@ title: "除錯"
 
 ## Session 追蹤輸出
 
-當您想要在單一 Session 中查看外掛擁有的追蹤/除錯行，而不開啟完整詳細模式的情況下，請使用 `/trace`。
+當您想要在單一作業階段中查看外掛程式擁有的追蹤/除錯行，而不開啟完整詳細模式的情況下，請使用 `/trace`。
 
 範例：
 
@@ -38,137 +38,65 @@ title: "除錯"
 /trace off
 ```
 
-使用 `/trace` 進行外掛診斷，例如 Active Memory 除錯摘要。
-請繼續使用 `/verbose` 來進行一般的詳細狀態/工具輸出，並繼續使用
+請使用 `/trace` 進行外掛程式診斷，例如「主動記憶體」(Active Memory) 除錯摘要。
+請繼續使用 `/verbose` 來顯示一般的詳細狀態/工具輸出，並繼續使用
 `/debug` 進行僅限執行時期的設定覆寫。
 
-## 暫時性 CLI 除錯計時
+## 外掛程式生命週期追蹤
 
-OpenClaw 保留 `src/cli/debug-timing.ts` 作為本地調查的小型輔助工具。它故意未連接到 CLI 啟動、命令路由，或預設情況下的任何命令。僅在除錯緩慢命令時使用它，然後在發布行為變更之前移除匯入和 span。
+當外掛程式生命週期指令感覺變慢，而您需要針對外掛程式中繼資料、探索、登錄、
+執行時期鏡像、設定變更和重新整理工作使用內建的階段細分時，請使用 `OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1`。該追蹤屬於選用性質，並會寫入
+stderr，因此 JSON 指令輸出仍保持可解析狀態。
 
-當命令緩慢且您需要快速階段細分，以決定是否使用 CPU 分析器或修復特定子系統時，請使用此功能。
-
-### 新增暫時性 Spans
-
-在您正在調查的程式碼附近新增輔助工具。例如，在除錯
-`openclaw models list` 時，`src/commands/models/list.list-command.ts` 中的暫時性修補可能如下所示：
-
-```ts
-// Temporary debugging only. Remove before landing.
-import { createCliDebugTiming } from "../../cli/debug-timing.js";
-
-const timing = createCliDebugTiming({ command: "models list" });
-
-const authStore = timing.time("debug:models:list:auth_store", () => ensureAuthProfileStore());
-
-const loaded = await timing.timeAsync(
-  "debug:models:list:registry",
-  () => loadListModelRegistry(cfg, { sourceConfig }),
-  (result) => ({
-    models: result.models.length,
-    discoveredKeys: result.discoveredKeys.size,
-  }),
-);
-```
-
-指導原則：
-
-- 在暫時性階段名稱前加上 `debug:` 前綴。
-- 僅在可疑的緩慢區段周圍新增少數幾個 spans。
-- 優先使用諸如 `registry`、`auth_store` 或 `rows` 等廣泛階段，
-  而非輔助函式名稱。
-- 對於同步工作請使用 `time()`，對於 promises 則使用 `timeAsync()`。
-- 保持 stdout 乾淨。輔助工具會寫入 stderr，因此命令 JSON 輸出保持
-  可解析狀態。
-- 在開啟最終修復 PR 之前，移除暫時性的匯入和 spans。
-- 在說明該優化的 Issue 或 PR 中，包含計時輸出或簡短摘要。
-
-### 以可讀輸出執行
-
-可讀模式最適合即時除錯：
+範例：
 
 ```bash
-OPENCLAW_DEBUG_TIMING=1 pnpm openclaw models list --all --provider moonshot
+OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1 openclaw plugins install tokenjuice --force
 ```
 
-來自暫時 `models list` 調查的輸出範例：
+輸出範例：
 
 ```text
-OpenClaw CLI debug timing: models list
-     0ms     +0ms start all=true json=false local=false plain=false provider="moonshot"
-     2ms     +2ms debug:models:list:import_runtime duration=2ms
-    17ms    +14ms debug:models:list:load_config duration=14ms sourceConfig=true
-  20.3s  +20.3s debug:models:list:auth_store duration=20.3s
-  20.3s     +0ms debug:models:list:resolve_agent_dir duration=0ms agentDir=true
-  20.3s     +0ms debug:models:list:resolve_provider_filter duration=0ms
-  25.3s   +5.0s debug:models:list:ensure_models_json duration=5.0s
-  31.2s   +5.9s debug:models:list:load_model_registry duration=5.9s models=869 availableKeys=38 discoveredKeys=868 availabilityError=false
-  31.2s     +0ms debug:models:list:resolve_configured_entries duration=0ms entries=1
-  31.2s     +0ms debug:models:list:build_configured_lookup duration=0ms entries=1
-  33.6s   +2.4s debug:models:list:read_registry_models duration=2.4s models=871
-  35.2s   +1.5s debug:models:list:append_discovered_rows duration=1.5s seenKeys=0 rows=0
-  36.9s   +1.7s debug:models:list:append_catalog_supplement_rows duration=1.7s seenKeys=5 rows=5
-
-Model                                      Input       Ctx   Local Auth  Tags
-moonshot/kimi-k2-thinking                  text        256k  no    no
-moonshot/kimi-k2-thinking-turbo            text        256k  no    no
-moonshot/kimi-k2-turbo                     text        250k  no    no
-moonshot/kimi-k2.5                         text+image  256k  no    no
-moonshot/kimi-k2.6                         text+image  256k  no    no
-
-  36.9s     +0ms debug:models:list:print_model_table duration=0ms rows=5
-  36.9s     +0ms complete rows=5
+[plugins:lifecycle] phase="config read" ms=6.83 status=ok command="install"
+[plugins:lifecycle] phase="slot selection" ms=94.31 status=ok command="install" pluginId="tokenjuice"
+[plugins:lifecycle] phase="registry refresh" ms=51.56 status=ok command="install" reason="source-changed"
 ```
 
-來自此輸出的發現：
+在尋求 CPU 分析器之前，請先使用此功能進行外掛程式生命週期調查。
+如果指令是從原始碼检出版本執行，請優先在 `pnpm build` 之後，使用 `node dist/entry.js ...` 測量建置的
+執行時期；`pnpm openclaw ...`
+也會測量來源執行器的額外負荷。
 
-| 階段                                     |      時間 | 含義                                                     |
-| ---------------------------------------- | --------: | -------------------------------------------------------- |
-| `debug:models:list:auth_store`           |     20.3s | auth-profile 存儲加載是最大的成本，應首先調查。          |
-| `debug:models:list:ensure_models_json`   |      5.0s | 同步 `models.json` 的成本足以檢查快取或跳過條件。        |
-| `debug:models:list:load_model_registry`  |      5.9s | 註冊表建構和提供程式可用性工作也是重要的成本。           |
-| `debug:models:list:read_registry_models` |      2.4s | 讀取所有註冊表模型並非免費，且可能對 `--all` 有影響。    |
-| 列追加階段                               | 總計 3.2s | 建構五個顯示列仍需幾秒鐘，因此篩選路徑值得更仔細的檢視。 |
-| `debug:models:list:print_model_table`    |       0ms | 渲染並非瓶頸。                                           |
+## CLI 啟動和指令分析
 
-這些發現足以指導下一個修補程式，而無需在生產路徑中保留計時程式碼。
-
-### 以 JSON 輸出執行
-
-當您想要儲存或比較計時數據時，請使用 JSON 模式：
+當指令感覺變慢時，請使用簽入的啟動基準測試：
 
 ```bash
-OPENCLAW_DEBUG_TIMING=json pnpm openclaw models list --all --provider moonshot \
-  2> .artifacts/models-list-timing.jsonl
+pnpm test:startup:bench:smoke
+pnpm tsx scripts/bench-cli-startup.ts --preset real --case status --runs 3
+pnpm tsx scripts/bench-cli-startup.ts --preset real --cpu-prof-dir .artifacts/cli-cpu
 ```
 
-每個 stderr 行都是一個 JSON 物件：
-
-```json
-{
-  "command": "models list",
-  "phase": "debug:models:list:registry",
-  "elapsedMs": 31200,
-  "deltaMs": 5900,
-  "durationMs": 5900,
-  "models": 869,
-  "discoveredKeys": 868
-}
-```
-
-### 提交前清理
-
-在開啟最終 PR 之前：
+若要透過正常來源執行器進行一次性分析，請設定
+`OPENCLAW_RUN_NODE_CPU_PROF_DIR`：
 
 ```bash
-rg 'createCliDebugTiming|debug:[a-z0-9_-]+:' src/commands src/cli \
-  --glob '!src/cli/debug-timing.*' \
-  --glob '!*.test.ts'
+OPENCLAW_RUN_NODE_CPU_PROF_DIR=.artifacts/cli-cpu pnpm openclaw status
 ```
 
-除非 PR 明確新增了永久診斷介面，否則該指令不應傳回任何暫時的檢測呼叫點。對於一般的效能修復，僅保留行為變更、測試以及包含計時證據的簡短說明。
+來源執行器會新增 Node CPU 分析旗標，並為該指令寫入 `.cpuprofile`。
+在對指令程式碼新增臨時檢測功能之前，請先使用此功能。
 
-對於更深入的 CPU 熱點，請使用 Node 分析工具 (`--cpu-prof`) 或外部分析器，而不是新增更多的計時包裝器。
+對於看起來像是同步檔案系統或模組載入器工作的啟動停頓，
+請透過來源執行器新增 Node 的同步 I/O 追蹤旗標：
+
+```bash
+OPENCLAW_TRACE_SYNC_IO=1 pnpm openclaw gateway --force
+```
+
+`pnpm gateway:watch` 預設會對被監看的
+Gateway 子程序停用此旗標。當您在監看模式下明確需要 Node
+同步 I/O 追蹤輸出時，請設定 `OPENCLAW_TRACE_SYNC_IO=1`。
 
 ## Gateway 監看模式
 
@@ -178,57 +106,127 @@ rg 'createCliDebugTiming|debug:[a-z0-9_-]+:' src/commands src/cli \
 pnpm gateway:watch
 ```
 
-這對應於：
+預設情況下，這會啟動或重新啟動一個名為
+`openclaw-gateway-watch-main` 的 tmux 工作階段（或是特定設定檔/連接埠的變體，例如
+`openclaw-gateway-watch-dev-19001`），並從互動式終端機自動附加。
+非互動式 Shell、CI 和代理程式執行呼叫將保持分離狀態，並改為列印附加
+說明。需要時請手動附加：
+
+```bash
+tmux attach -t openclaw-gateway-watch-main
+```
+
+tmux 面板會執行原始監看器：
 
 ```bash
 node scripts/watch-node.mjs gateway --force
 ```
 
-監看器會在 `src/` 下的建置相關檔案、擴充功能原始碼檔案、擴充功能 `package.json` 和 `openclaw.plugin.json` 中繼資料、`tsconfig.json`、`package.json` 和 `tsdown.config.ts` 變更時重新啟動。擴充功能中繼資料變更會重新啟動 gateway，而不會強制 `tsdown` 重新建置；來源和組態變更仍會先重新建置 `dist`。
+當不需要 tmux 時，請使用前景模式：
 
-在 `gateway:watch` 之後新增任何 gateway CLI 標誌，它們會在每次重啟時被傳遞。現在，為同一個 repository/標誌集重新執行相同的 watch 指令會取代較舊的 watcher，而不是留下重複的 watcher 父程序。
+```bash
+pnpm gateway:watch:raw
+# or
+OPENCLAW_GATEWAY_WATCH_TMUX=0 pnpm gateway:watch
+```
+
+停用自動附加，但保留 tmux 管理：
+
+```bash
+OPENCLAW_GATEWAY_WATCH_ATTACH=0 pnpm gateway:watch
+```
+
+當除錯啟動/執行時期效能熱點時，分析被監看 Gateway 的 CPU 時間：
+
+```bash
+pnpm gateway:watch --benchmark
+```
+
+監看包裝器會在叫用 Gateway 之前消耗 `--benchmark`，並在
+`.artifacts/gateway-watch-profiles/` 下為每次 Gateway 子程序離開寫入
+一個 V8 `.cpuprofile`。停止或重新啟動被監看的 gateway 以
+重新整理目前的分析設定檔，然後使用 Chrome DevTools 或 Speedscope 開啟它：
+
+```bash
+npx speedscope .artifacts/gateway-watch-profiles/*.cpuprofile
+```
+
+當您希望分析設定檔位於其他位置時，請使用 `--benchmark-dir <path>`。
+當您希望受測試的子程序跳過
+預設的 `--force` 連接埠清理，且在 Gateway 連接埠已被佔用時快速失敗，
+請使用 `--benchmark-no-force`。
+基準測試模式預設會壓制同步 I/O 追蹤的垃圾訊息。當您明確需要同時取得 CPU
+分析設定檔和 Node 同步 I/O 堆疊追蹤時，請將 `OPENCLAW_TRACE_SYNC_IO=1` 與 `--benchmark` 一起設定。在基準測試模式下，這些追蹤區塊
+會被寫入基準測試目錄下的 `gateway-watch-output.log` 中，
+並從終端機面板中過濾掉；正常的 Gateway 日誌仍然可見。
+
+tmux 包裝器會將常見的非機密執行時選擇器，例如
+`OPENCLAW_PROFILE`、`OPENCLAW_CONFIG_PATH`、`OPENCLAW_STATE_DIR`、
+`OPENCLAW_GATEWAY_PORT` 和 `OPENCLAW_SKIP_CHANNELS`，帶入面板中。請將
+提供者憑證放在您的一般設定檔/組態中，或者對於一次性臨時機密使用
+原始前景模式。
+如果受監控的 Gateway 在啟動期間退出，監控器會執行
+`openclaw doctor --fix --non-interactive` 一次並重新啟動 Gateway 子程序。
+當您想要原始的啟動
+失敗而不含僅限開發的修復過程時，請使用 `OPENCLAW_GATEWAY_WATCH_AUTO_DOCTOR=0`。
+受管理的 tmux 面板預設也會為了可讀性而顯示彩色的 Gateway 日誌；
+啟動 `pnpm gateway:watch` 時設定 `FORCE_COLOR=0` 即可停用 ANSI 輸出。
+
+監控器會在 `src/` 下的建置相關檔案、擴充功能原始檔案、
+擴充功能 `package.json` 和 `openclaw.plugin.json` 元數據、`tsconfig.json`、
+`package.json` 和 `tsdown.config.ts` 上重新啟動。擴充功能元數據變更會重新啟動
+gateway 而不強制進行 `tsdown` 重新建置；來源和組態變更仍然
+會先重新建置 `dist`。
+
+在 `gateway:watch` 之後加入任何 gateway CLI 旗標，它們將在每次
+重新啟動時被傳遞。重新執行相同的監控命令會重新產生命名的 tmux 面板，而
+原始監控器仍會保持其單一監控器鎖定，因此重複的監控器父程序
+會被取代而不是堆積。
 
 ## Dev profile + dev gateway (--dev)
 
-使用 dev profile 來隔離狀態並啟動一個安全、可拋棄的設定以進行除錯。有 **兩個** `--dev` 標誌：
+使用 dev profile 來隔離狀態並啟動一個安全的、可拋棄的設定用於
+除錯。有 **兩個** `--dev` 旗標：
 
-- **全域 `--dev` (profile)：** 在 `~/.openclaw-dev` 下隔離狀態，並將 gateway 預設連接埠設為 `19001`（衍生連接埠會隨之變動）。
-- **`gateway --dev`：告訴 Gateway 在缺少時自動建立預設 config + workspace**（並跳過 BOOTSTRAP.md）。
+- **全域 `--dev` (profile)：** 在 `~/.openclaw-dev` 下隔離狀態並
+  將 gateway 預設連接埠設為 `19001` (衍生連接埠隨之變更)。
+- **`gateway --dev`：告訴 Gateway 在缺失時自動建立預設組態 +
+  workspace** (並跳過 BOOTSTRAP.md)。
 
-建議流程 (dev profile + dev bootstrap)：
+推薦流程 (dev profile + dev bootstrap)：
 
 ```bash
 pnpm gateway:dev
 OPENCLAW_PROFILE=dev openclaw tui
 ```
 
-如果您還沒有全域安裝，請透過 `pnpm openclaw ...` 執行 CLI。
+如果您尚未進行全域安裝，請透過 `pnpm openclaw ...` 執行 CLI。
 
-其作用如下：
+這樣做的作用：
 
-1. **Profile 隔離** (全域 `--dev`)
+1. **Profile 隔離**（全域 `--dev`）
    - `OPENCLAW_PROFILE=dev`
    - `OPENCLAW_STATE_DIR=~/.openclaw-dev`
    - `OPENCLAW_CONFIG_PATH=~/.openclaw-dev/openclaw.json`
-   - `OPENCLAW_GATEWAY_PORT=19001` (瀏覽器/畫布隨之變動)
+   - `OPENCLAW_GATEWAY_PORT=19001`（瀏覽器/canvas 隨之對應調整）
 
-2. **Dev bootstrap** (`gateway --dev`)
-   - 如果缺少則寫入最小設定 (`gateway.mode=local`，繫結 loopback)。
+2. **Dev bootstrap**（`gateway --dev`）
+   - 如果缺少則寫入最小設定（`gateway.mode=local`，綁定 loopback）。
    - 將 `agent.workspace` 設定為 dev workspace。
-   - 設定 `agent.skipBootstrap=true` (無 BOOTSTRAP.md)。
+   - 設定 `agent.skipBootstrap=true`（無 BOOTSTRAP.md）。
    - 如果缺少則植入 workspace 檔案：
      `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`。
-   - 預設身分：**C3‑PO** (protocol droid)。
-   - 在 dev 模式下跳過通道提供者 (`OPENCLAW_SKIP_CHANNELS=1`)。
+   - 預設身分：**C3-PO**（protocol droid）。
+   - 在 dev 模式下跳過 channel providers（`OPENCLAW_SKIP_CHANNELS=1`）。
 
-重設流程 (重新開始)：
+重置流程（全新開始）：
 
 ```bash
 pnpm gateway:dev:reset
 ```
 
 <Note>
-`--dev` 是一個 **全域** profile 標誌，會被某些 runner 吃掉。如果您需要拼出來，請使用 env var 形式：
+`--dev` 是一個 **全域** profile 標誌，會被某些 runner 吃掉。如果您需要明確指定，請使用環境變數形式：
 
 ```bash
 OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
@@ -236,10 +234,11 @@ OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
 
 </Note>
 
-`--reset` 會清除 config、credentials、sessions 和 dev workspace (使用 `trash`，而非 `rm`)，然後重新建立預設 dev 設定。
+`--reset` 會清除設定、憑證、工作階段和 dev workspace（使用
+`trash`，而非 `rm`），然後重新建立預設的 dev 設定。
 
 <Tip>
-如果非開發環境的 Gateway 已經在執行（launchd 或 systemd），請先將其停止：
+如果非開發 gateway 已在執行（launchd 或 systemd），請先將其停止：
 
 ```bash
 openclaw gateway stop
@@ -249,9 +248,9 @@ openclaw gateway stop
 
 ## 原始串流記錄 (OpenClaw)
 
-OpenClaw 可以在任何過濾/格式化之前記錄 **原始助手串流**。
-這是檢查推理內容是否以純文字增量
-（或作為獨立的思考區塊）到達的最佳方式。
+OpenClaw 可以在任何過濾/格式化之前記錄 **原始 assistant stream**。
+這是查看推理內容是否以純文字增量形式到達
+（或作為獨立的 thinking 區塊）的最佳方式。
 
 透過 CLI 啟用：
 
@@ -265,7 +264,7 @@ pnpm gateway:watch --raw-stream
 pnpm gateway:watch --raw-stream --raw-stream-path ~/.openclaw/logs/raw-stream.jsonl
 ```
 
-對等的環境變數：
+對等環境變數：
 
 ```bash
 OPENCLAW_RAW_STREAM=1
@@ -278,7 +277,7 @@ OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-stream.jsonl
 
 ## 原始區塊記錄 (pi-mono)
 
-為了在將 **原始 OpenAI 相容區塊** 解析為區塊之前進行捕獲，
+為了在 **原始 OpenAI 相容區塊** 被解析為區塊之前進行捕獲，
 pi-mono 公開了一個獨立的記錄器：
 
 ```bash
@@ -298,13 +297,45 @@ PI_RAW_STREAM_PATH=~/.pi-mono/logs/raw-openai-completions.jsonl
 > 注意：這僅由使用 pi-mono 的
 > `openai-completions` provider 的程序發出。
 
-## 安全性注意事項
+## 安全注意事項
 
-- 原始串流記錄可能包含完整的提示、工具輸出和使用者資料。
-- 請將記錄保留在本機，並在除錯後將其刪除。
-- 如果您分享記錄，請先清除機密資訊和 PII（個人識別資訊）。
+- 原始串流日誌可能包含完整的提示、工具輸出和用戶數據。
+- 請將日誌保留在本地，並在除錯後刪除。
+- 如果您分享日誌，請先清除機密和個人資訊 (PII)。
 
-## 相關內容
+## 在 VSCode 中除錯
+
+由於在建置過程中許多生成的檔案最終會帶有雜湊名稱，因此需要在基於 VSCode 的 IDE 中啟用偵錯功能必須要有 Source maps。包含的 `launch.json` 設定以 Gateway 服務為目標，但可以快速調整以用於其他用途：
+
+1. **重新建置並偵錯 Gateway (Rebuild and Debug Gateway)** - 在建立新建置後對 Gateway 服務進行偵錯
+2. **偵錯 Gateway (Debug Gateway)** - 對既有的建置之 Gateway 服務進行偵錯
+
+### 設定
+
+預設的 **重新建置並偵錯 Gateway** 設定是功能齊全的，它會自動刪除 `/dist` 資料夾並在啟用偵錯的情況下重新建置專案：
+
+1. 從活動列 開啟 **執行和偵錯** 面板或按下 `Ctrl`+`Shift`+`D`
+2. 在 IDE 中，確保在下拉選單中選取了 **重新建置並偵錯 Gateway**，然後按下 **開始偵錯** 按鈕
+
+或者 - 如果您偏好手動管理建置和偵錯程序：
+
+1. 開啟終端機並啟用 source maps：
+   - **Linux/macOS**：`export OUTPUT_SOURCE_MAPS=1`
+   - **Windows (PowerShell)**：`$env:OUTPUT_SOURCE_MAPS="1"`
+   - **Windows (CMD)**：`set OUTPUT_SOURCE_MAPS=1`
+2. 在同一個終端機中，重新建置專案：`pnpm clean:dist && pnpm build`
+3. 在 IDE 中，於 **執行和偵錯** 設定下拉選單中選取 **偵錯 Gateway** 選項，然後按下 **開始偵錯** 按鈕
+
+您現在可以在 TypeScript 原始碼檔案 (`src/` 目錄) 中設定中斷點，偵錯工具將會透過 source maps 正確地將中斷點對應到編譯後的 JavaScript。您將能夠檢查變數、逐步執行程式碼，並檢視呼叫堆疊，如同預期般運作。
+
+### 備註
+
+- 如果使用 **「重新建置並偵錯 Gateway」** 選項 - 每次啟動偵錯工具時，它將會完全刪除 `/dist` 資料夾，並在啟動 Gateway 之前執行啟用 source maps 的完整 `pnpm build`
+- 如果使用 **「偵錯 Gateway」** 選項 - 偵錯工作階段可以隨時啟動和停止而不影響 `/dist` 資料夾，但您必須使用獨立的終端機程序來啟用偵錯和管理建置週期
+- 修改 `launch.json` 的 `args` 設定，以專案除錯其他部分
+- 如果您需要使用建置好的 OpenClaw CLI 來執行其他工作（例如 `dashboard --no-open`，如果您的除錯工作階段產生了新的 auth token），您可以在另一個終端機中將其執行為 `node ./openclaw.mjs` 或建立如 `alias openclaw-build="node $(pwd)/openclaw.mjs"` 的 shell 別名
+
+## 相關
 
 - [疑難排解](/zh-Hant/help/troubleshooting)
 - [常見問題](/zh-Hant/help/faq)

@@ -93,7 +93,7 @@ Requisito del lado de la puerta de enlace:
 
 Cómo funciona el flujo:
 
-- La aplicación iOS se registra en el relay utilizando App Attest y el recibo de la aplicación.
+- La aplicación de iOS se registra en el repetidor (relay) utilizando App Attest y una transacción de app JWS de StoreKit.
 - El relay devuelve un identificador de relay opaco además de una concesión de envío con ámbito de registro.
 - La aplicación iOS obtiene la identidad de la puerta de enlace emparejada y la incluye en el registro del relay, por lo que el registro respaldado por relay se delega a esa puerta de enlace específica.
 - La aplicación reenvía ese registro respaldado por relay a la puerta de enlace emparejada con `push.apns.register`.
@@ -114,63 +114,70 @@ Flujo de operación esperado:
 4. La aplicación publica `push.apns.register` automáticamente después de tener un token APNs, la sesión del operador está conectada y el registro del relé tiene éxito.
 5. Después de eso, `push.test`, las activaciones de reconexión y los impulsos de activación pueden utilizar el registro respaldado por relé almacenado.
 
+## Balizas de actividad en segundo plano
+
+Cuando iOS despierta la aplicación para una inserción silenciosa, actualización en segundo plano o un evento de ubicación significativa, la aplicación
+intenta una breve reconexión del nodo y luego llama a `node.event` con `event: "node.presence.alive"`.
+La puerta de enlace registra esto como `lastSeenAtMs`/`lastSeenReason` en los metadatos del nodo/dispositivo emparejado solo
+después de que se conoce la identidad del dispositivo del nodo autenticado.
+
+La aplicación considera que un despertar en segundo plano se ha registrado correctamente solo cuando la respuesta de la puerta de enlace incluye
+`handled: true`. Las puertas de enlace antiguas pueden reconocer `node.event` con `{ "ok": true }`; esa respuesta es
+compatible pero no cuenta como una actualización duradera de la última vez visto.
+
 Nota de compatibilidad:
 
-- `OPENCLAW_APNS_RELAY_BASE_URL` todavía funciona como una anulación de entorno temporal para la puerta de enlace.
+- `OPENCLAW_APNS_RELAY_BASE_URL` aún funciona como una anulación de entorno temporal para la puerta de enlace.
 
 ## Flujo de autenticación y confianza
 
-El relé existe para hacer cumplir dos restricciones que el APNs directo en la puerta de enlace no puede proporcionar para
+El repetidor existe para hacer cumplir dos restricciones que el APNs directo en la puerta de enlace no puede proporcionar para
 las compilaciones oficiales de iOS:
 
-- Solo las compilaciones de iOS genuinas de OpenClaw distribuidas a través de Apple pueden usar el relé alojado.
-- Una puerta de enlace solo puede enviar envíos respaldados por relé para dispositivos iOS que se hayan emparejado con esa
+- Solo las compilaciones genuinas de OpenClaw para iOS distribuidas a través de Apple pueden usar el repetidor alojado.
+- Una puerta de enlace solo puede enviar inserciones respaldadas por repetidor para dispositivos iOS que se hayan emparejado con esa
   puerta de enlace específica.
 
 Salto a salto:
 
 1. `iOS app -> gateway`
    - La aplicación primero se empareja con la puerta de enlace a través del flujo de autenticación normal de la puerta de enlace.
-   - Esto le da a la aplicación una sesión de nodo autenticada más una sesión de operador autenticada.
-   - La sesión del operador se utiliza para llamar a `gateway.identity.get`.
+   - Esto proporciona a la aplicación una sesión de nodo autenticada más una sesión de operador autenticada.
+   - La sesión de operador se utiliza para llamar a `gateway.identity.get`.
 
 2. `iOS app -> relay`
-   - La aplicación llama a los puntos finales de registro de relé a través de HTTPS.
-   - El registro incluye la prueba de App Attest más el recibo de la aplicación.
-   - El relé valida el ID del paquete, la prueba de App Attest y el recibo de Apple, y requiere
-     la ruta de distribución oficial/de producción.
-   - Esto es lo que impide que las compilaciones locales de Xcode/desarrollo usen el relé alojado. Una compilación local puede estar
-     firmada, pero no satisface la prueba de distribución oficial de Apple que el relé espera.
+   - La aplicación llama a los puntos finales de registro del repetidor a través de HTTPS.
+   - El registro incluye la prueba de App Attest más una transacción de app JWS de StoreKit.
+   - El repetidor valida el ID del paquete, la prueba de App Attest y la prueba de distribución de Apple, y requiere la
+     ruta de distribución oficial/de producción.
+   - Esto es lo que impide que las compilaciones locales de Xcode/desarrollo usen el repetidor alojado. Una compilación local puede estar
+     firmada, pero no satisface la prueba de distribución oficial de Apple que el repetidor espera.
 
 3. `gateway identity delegation`
-   - Antes del registro en el relé, la aplicación obtiene la identidad de la puerta de enlace emparejada de
+   - Antes del registro en el repetidor, la aplicación obtiene la identidad de la puerta de enlace emparejada desde
      `gateway.identity.get`.
-   - La aplicación incluye esa identidad de la puerta de enlace en la carga útil del registro del relé.
-   - El relé devuelve un identificador de relé y una subvención de envío con ámbito de registro que se delegan a
-     esa identidad de la puerta de enlace.
+   - La aplicación incluye esa identidad de la puerta de enlace en la carga útil de registro del repetidor.
+   - El relay devuelve un identificador de relay y una concesión de envío con ámbito de registro que se delegan a esa identidad de gateway.
 
 4. `gateway -> relay`
-   - La puerta de enlace almacena el identificador del relé y la subvención de envío de `push.apns.register`.
-   - En `push.test`, reconexiones, activaciones y empujes de activación, la puerta de enlace firma la solicitud de envío con su
-     propia identidad de dispositivo.
-   - El relé verifica tanto la subvención de envío almacenada como la firma de la puerta de enlace contra la
-     identidad de puerta de enlace delegada del registro.
-   - Otra puerta de enlace no puede reutilizar ese registro almacenado, incluso si de alguna manera obtiene el identificador.
+   - El gateway almacena el identificador de relay y la concesión de envío de `push.apns.register`.
+   - En `push.test`, reactivaciones de reconexión y empujes de activación, el gateway firma la solicitud de envío con su propia identidad de dispositivo.
+   - El relay verifica tanto la concesión de envío almacenada como la firma del gateway frente a la identidad de gateway delegada del registro.
+   - Otro gateway no puede reutilizar ese registro almacenado, incluso si de alguna manera obtiene el identificador.
 
 5. `relay -> APNs`
-   - El relé posee las credenciales de producción de APNs y el token sin procesar de APNs para la compilación oficial.
-   - La puerta de enlace nunca almacena el token sin procesar de APNs para las compilaciones oficiales respaldadas por el relé.
-   - El relé envía el empuje final a APNs en nombre de la puerta de enlace emparejada.
+   - El relay posee las credenciales de producción de APNs y el token APNs sin procesar para la compilación oficial.
+   - El gateway nunca almacena el token APNs sin procesar para las compilaciones oficiales respaldadas por relay.
+   - El relay envía el envío final a APNs en nombre del gateway emparejado.
 
 Por qué se creó este diseño:
 
-- Para mantener las credenciales de producción de APNs fuera de las puertas de enlace de los usuarios.
-- Para evitar almacenar tokens sin procesar de APNs de compilaciones oficiales en la puerta de enlace.
-- Para permitir el uso del relé alojado solo para compilaciones oficiales/TestFlight de OpenClaw.
-- Para evitar que una puerta de enlace envíe empujes de activación a dispositivos iOS propiedad de una puerta de enlace diferente.
+- Para mantener las credenciales de producción de APNs fuera de los gateways de los usuarios.
+- Para evitar almacenar tokens APNs sin procesar de compilaciones oficiales en el gateway.
+- Para permitir el uso del relay alojado solo para compilaciones oficiales/TestFlight de OpenClaw.
+- Para evitar que un gateway envíe envíos de activación a dispositivos iOS propiedad de un gateway diferente.
 
-Las compilaciones locales/manuales permanecen en APNs directas. Si está probando esas compilaciones sin el relé, la
-puerta de enlace aún necesita credenciales directas de APNs:
+Las compilaciones locales/manuales permanecen en APNs directas. Si está probando esas compilaciones sin el relay, el gateway aún necesita credenciales APNs directas:
 
 ```bash
 export OPENCLAW_APNS_TEAM_ID="TEAMID"
@@ -178,11 +185,9 @@ export OPENCLAW_APNS_KEY_ID="KEYID"
 export OPENCLAW_APNS_PRIVATE_KEY_P8="$(cat /path/to/AuthKey_KEYID.p8)"
 ```
 
-Estas son variables de entorno de tiempo de ejecución del host de la puerta de enlace, no configuraciones de Fastlane. `apps/ios/fastlane/.env` solo almacena
-autenticación de App Store Connect / TestFlight como `ASC_KEY_ID` y `ASC_ISSUER_ID`; no configura
-la entrega directa de APNs para compilaciones locales de iOS.
+Estas son variables de entorno de tiempo de ejecución del host del gateway, no configuraciones de Fastlane. `apps/ios/fastlane/.env` solo almacena la autenticación de App Store Connect / TestFlight, como `ASC_KEY_ID` y `ASC_ISSUER_ID`; no configura la entrega directa de APNs para compilaciones locales de iOS.
 
-Almacenamiento recomendado en el host de la puerta de enlace:
+Almacenamiento recomendado del host del gateway:
 
 ```bash
 mkdir -p ~/.openclaw/credentials/apns
@@ -192,29 +197,27 @@ chmod 600 ~/.openclaw/credentials/apns/AuthKey_KEYID.p8
 export OPENCLAW_APNS_PRIVATE_KEY_PATH="$HOME/.openclaw/credentials/apns/AuthKey_KEYID.p8"
 ```
 
-No confirme el archivo `.p8` ni lo coloque debajo de la descarga del repositorio.
+No confirme el archivo `.p8` ni lo coloque bajo la extracción del repositorio.
 
 ## Rutas de descubrimiento
 
 ### Bonjour (LAN)
 
-La aplicación de iOS explora `_openclaw-gw._tcp` en `local.` y, cuando está configurada, el mismo
-dominio de descubrimiento DNS-SD de área amplia. Los gateways de la misma LAN aparecen automáticamente desde `local.`;
-el descubrimiento entre redes puede usar el dominio de área amplia configurado sin cambiar el tipo de baliza.
+La aplicación iOS explora `_openclaw-gw._tcp` en `local.` y, cuando está configurado, el mismo dominio de descubrimiento DNS-SD de área amplia. Los gateways de la misma LAN aparecen automáticamente desde `local.`; el descubrimiento entre redes puede usar el dominio de área amplia configurado sin cambiar el tipo de baliza.
 
 ### Tailnet (entre redes)
 
-Si mDNS está bloqueado, use una zona DNS-SD unicast (elija un dominio; ejemplo:
+Si mDNS está bloqueado, use una zona DNS-SD unidifusión (elija un dominio; ejemplo:
 `openclaw.internal.`) y Tailscale split DNS.
-Consulte [Bonjour](/es/gateway/bonjour) para ver el ejemplo de CoreDNS.
+Vea [Bonjour](/es/gateway/bonjour) para el ejemplo de CoreDNS.
 
 ### Host/puerto manual
 
-En Configuración, active **Host manual** e introduzca el host + puerto del gateway (por defecto `18789`).
+En Configuración, active **Host manual** e introduzca el host y puerto de la puerta de enlace (predeterminado `18789`).
 
 ## Canvas + A2UI
 
-El nodo de iOS renderiza un canvas WKWebView. Use `node.invoke` para controlarlo:
+El nodo iOS renderiza un lienzo WKWebView. Use `node.invoke` para controlarlo:
 
 ```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18789/__openclaw__/canvas/"}'
@@ -222,12 +225,24 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 
 Notas:
 
-- El host del canvas del Gateway sirve `/__openclaw__/canvas/` y `/__openclaw__/a2ui/`.
-- Se sirve desde el servidor HTTP del Gateway (mismo puerto que `gateway.port`, por defecto `18789`).
-- El nodo de iOS navega automáticamente a A2UI al conectarse cuando se anuncia una URL de host de canvas.
+- El host de lienzo de la puerta de enlace sirve `/__openclaw__/canvas/` y `/__openclaw__/a2ui/`.
+- Se sirve desde el servidor HTTP de la puerta de enlace (mismo puerto que `gateway.port`, predeterminado `18789`).
+- El nodo iOS navega automáticamente a A2UI al conectarse cuando se anuncia una URL de host de lienzo.
 - Vuelva al andamio integrado con `canvas.navigate` y `{"url":""}`.
 
-### Evaluación de canvas / instantánea
+## Relación con Computer Use
+
+La aplicación iOS es una superficie de nodo móvil, no un backend de Codex Computer Use. Codex
+Computer Use y `cua-driver mcp` controlan un escritorio macOS local a través de herramientas MCP;
+la aplicación iOS expone las capacidades del iPhone a través de comandos de nodo OpenClaw
+tales como `canvas.*`, `camera.*`, `screen.*`, `location.*` y `talk.*`.
+
+Los agentes aún pueden operar la aplicación iOS a través de OpenClaw invocando comandos
+de nodo, pero esas llamadas pasan por el protocolo de nodo de puerta de enlace y siguen los límites
+de primer plano/fondo de iOS. Use [Codex Computer Use](/es/plugins/codex-computer-use)
+para el control del escritorio local y esta página para las capacidades del nodo iOS.
+
+### Evaluación/instantánea de Canvas
 
 ```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.eval --params '{"javaScript":"(() => { const {ctx} = window.__openclaw; ctx.clearRect(0,0,innerWidth,innerHeight); ctx.lineWidth=6; ctx.strokeStyle=\"#ff2d55\"; ctx.beginPath(); ctx.moveTo(40,40); ctx.lineTo(innerWidth-40, innerHeight-40); ctx.stroke(); return \"ok\"; })()"}'
@@ -237,19 +252,23 @@ openclaw nodes invoke --node "iOS Node" --command canvas.eval --params '{"javaSc
 openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"maxWidth":900,"format":"jpeg"}'
 ```
 
-## Activación por voz + modo de habla
+## Activación por voz + modo de conversación
 
-- La activación por voz y el modo de habla están disponibles en Configuración.
+- La activación por voz y el modo de conversación están disponibles en Configuración.
+- Los nodos iOS con capacidad de conversación anuncian la capacidad `talk` y pueden declarar
+  `talk.ptt.start`, `talk.ptt.stop`, `talk.ptt.cancel` y `talk.ptt.once`;
+  la puerta de enlace permite esos comandos de pulsar para hablar de forma predeterminada para los nodos
+  de confianza con capacidad de conversación.
 - iOS puede suspender el audio en segundo plano; trate las funciones de voz como mejor esfuerzo cuando la aplicación no está activa.
 
 ## Errores comunes
 
-- `NODE_BACKGROUND_UNAVAILABLE`: traiga la aplicación de iOS al primer plano (los comandos de canvas/cámara/pantalla lo requieren).
-- `A2UI_HOST_NOT_CONFIGURED`: el Gateway no anunció una URL de host de canvas; verifique `canvasHost` en [Configuración del Gateway](/es/gateway/configuration).
-- El mensaje de emparejamiento nunca aparece: ejecute `openclaw devices list` y apruebe manualmente.
-- La reconexión falla después de reinstalar: el token de emparejamiento del Keychain se borró; vuelva a emparejar el nodo.
+- `NODE_BACKGROUND_UNAVAILABLE`: abre la aplicación de iOS en primer plano (los comandos de canvas/cámara/pantalla lo requieren).
+- `A2UI_HOST_NOT_CONFIGURED`: el Gateway no anunció la URL de superficie del complemento Canvas; comprueba `plugins.entries.canvas.config.host` en [configuración del Gateway](/es/gateway/configuration).
+- El aviso de emparejamiento nunca aparece: ejecuta `openclaw devices list` y apruébalo manualmente.
+- La reconexión falla después de reinstalar: el token de emparejamiento del llavero se borró; vuelve a emparejar el nodo.
 
-## Documentos relacionados
+## Documentación relacionada
 
 - [Emparejamiento](/es/channels/pairing)
 - [Descubrimiento](/es/gateway/discovery)

@@ -1,12 +1,12 @@
 ---
-summary: "Ejecuta OpenClaw a través del proxy LiteLLM para acceder a los modelos de forma unificada y realizar un seguimiento de los costos"
+summary: "Ejecuta OpenClaw a través del Proxy LiteLLM para un acceso unificado al modelo y seguimiento de costos"
 title: "LiteLLM"
 read_when:
   - You want to route OpenClaw through a LiteLLM proxy
   - You need cost tracking, logging, or model routing through LiteLLM
 ---
 
-[LiteLLM](https://litellm.ai) es una puerta de enlace (gateway) de LLM de código abierto que proporciona una API unificada para más de 100 proveedores de modelos. Enruta OpenClaw a través de LiteLLM para obtener un seguimiento de costos centralizado, registros y la flexibilidad de cambiar de backend sin modificar tu configuración de OpenClaw.
+[LiteLLM](https://litellm.ai) es una puerta de enlace LLM de código abierto que proporciona una API unificada para más de 100 proveedores de modelos. Enruta OpenClaw a través de LiteLLM para obtener un seguimiento centralizado de costos, registro y la flexibilidad de cambiar de backend sin modificar la configuración de OpenClaw.
 
 <Tip>
 **¿Por qué usar LiteLLM con OpenClaw?**
@@ -23,12 +23,18 @@ read_when:
 
 <Tabs>
   <Tab title="Incorporación (recomendado)">
-    **Lo mejor para:** la ruta más rápida hacia una configuración funcional de LiteLLM.
+    **Mejor para:** la ruta más rápida hacia una configuración funcional de LiteLLM.
 
     <Steps>
       <Step title="Ejecutar incorporación">
         ```bash
         openclaw onboard --auth-choice litellm-api-key
+        ```
+
+        Para una configuración no interactiva contra un proxy remoto, pasa la URL del proxy explícitamente:
+
+        ```bash
+        openclaw onboard --non-interactive --auth-choice litellm-api-key --litellm-api-key "$LITELLM_API_KEY" --custom-base-url "https://litellm.example/v1"
         ```
       </Step>
     </Steps>
@@ -36,10 +42,10 @@ read_when:
   </Tab>
 
   <Tab title="Configuración manual">
-    **Lo mejor para:** control total sobre la instalación y la configuración.
+    **Mejor para:** control total sobre la instalación y la configuración.
 
     <Steps>
-      <Step title="Iniciar el proxy LiteLLM">
+      <Step title="Iniciar Proxy LiteLLM">
         ```bash
         pip install 'litellm[proxy]'
         litellm --model claude-opus-4-6
@@ -111,7 +117,7 @@ export LITELLM_API_KEY="sk-litellm-key"
 ### Generación de imágenes
 
 LiteLLM también puede respaldar la herramienta `image_generate` a través de rutas
-`/images/generations` y `/images/edits` compatibles con OpenAI. Configura un modelo de imagen de LiteLLM
+`/images/generations` y `/images/edits` compatibles con OpenAI. Configura un modelo de imagen LiteLLM
 bajo `agents.defaults.imageGenerationModel`:
 
 ```json5
@@ -135,14 +141,14 @@ bajo `agents.defaults.imageGenerationModel`:
 }
 ```
 
-Las URL de bucle invertido (loopback) de LiteLLM como `http://localhost:4000` funcionan sin una
-sobrescritura de red privada global. Para un proxy alojado en LAN, establece
+Las URL de bucle de retorno de LiteLLM como `http://localhost:4000` funcionan sin una
+anulación global de red privada. Para un proxy alojado en LAN, establece
 `models.providers.litellm.request.allowPrivateNetwork: true` porque la clave de API
 se enviará al host del proxy configurado.
 
 <AccordionGroup>
   <Accordion title="Claves virtuales">
-    Cree una clave dedicada para OpenClaw con límites de gasto:
+    Crea una clave dedicada para OpenClaw con límites de gasto:
 
     ```bash
     curl -X POST "http://localhost:4000/key/generate" \
@@ -155,7 +161,7 @@ se enviará al host del proxy configurado.
       }'
     ```
 
-    Use la clave generada como `LITELLM_API_KEY`.
+    Usa la clave generada como `LITELLM_API_KEY`.
 
   </Accordion>
 
@@ -180,7 +186,7 @@ se enviará al host del proxy configurado.
   </Accordion>
 
   <Accordion title="Ver uso">
-    Verifique el panel de control o la API de LiteLLM:
+    Consulte el panel de control o la API de LiteLLM:
 
     ```bash
     # Key info
@@ -196,16 +202,17 @@ se enviará al host del proxy configurado.
 
   <Accordion title="Notas sobre el comportamiento del proxy">
     - LiteLLM se ejecuta en `http://localhost:4000` de manera predeterminada
-    - OpenClaw se conecta a través del endpoint `/v1` compatible con OpenAI estilo proxy de LiteLLM
-    - El modelado de solicitudes nativas solo para OpenAI no se aplica a través de LiteLLM:
-      sin `service_tier`, sin Responses `store`, sin sugerencias de caché de prompt y sin
-      modelado de payload de compatibilidad de razonamiento de OpenAI
+    - OpenClaw se conecta a través del punto final compatible con OpenAI de estilo proxy de `/v1`
+      de LiteLLM
+    - El modelado de solicitudes nativo solo de OpenAI no se aplica a través de LiteLLM:
+      sin `service_tier`, sin Responses `store`, sin sugerencias de caché de prompts y sin
+      modelado de carga compatible con el razonamiento de OpenAI
     - Los encabezados de atribución ocultos de OpenClaw (`originator`, `version`, `User-Agent`)
-      no se inyectan en URL base personalizadas de LiteLLM
+      no se inyectan en URLs base personalizadas de LiteLLM
   </Accordion>
 </AccordionGroup>
 
-<Note>Para la configuración general del proveedor y el comportamiento de conmutación por error, consulte [Proveedores de modelos](/es/concepts/model-providers).</Note>
+<Note>Para ver la configuración general del proveedor y el comportamiento de conmutación por error, consulte [Model Providers](/es/concepts/model-providers).</Note>
 
 ## Relacionado
 
@@ -213,13 +220,13 @@ se enviará al host del proxy configurado.
   <Card title="Documentación de LiteLLM" href="https://docs.litellm.ai" icon="book">
     Documentación oficial y referencia de la API de LiteLLM.
   </Card>
-  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelos" href="/es/concepts/model-providers" icon="layers">
     Resumen de todos los proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
-  <Card title="Configuration" href="/es/gateway/configuration" icon="gear">
+  <Card title="Configuración" href="/es/gateway/configuration" icon="gear">
     Referencia completa de configuración.
   </Card>
-  <Card title="Model selection" href="/es/concepts/models" icon="brain">
+  <Card title="Selección de modelos" href="/es/concepts/models" icon="brain">
     Cómo elegir y configurar modelos.
   </Card>
 </CardGroup>

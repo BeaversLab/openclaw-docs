@@ -49,7 +49,7 @@ estable, manténlas concisas y versionadas.
 
 Referencias de OpenAI:
 
-- [Ingeniería de instrucciones (prompt engineering)](https://developers.openai.com/api/docs/guides/prompt-engineering)
+- [Ingeniería de prompts](https://developers.openai.com/api/docs/guides/prompt-engineering)
 - [Roles de mensajes y seguimiento de instrucciones](https://developers.openai.com/api/docs/guides/prompt-engineering#message-roles-and-instruction-following)
 
 ## La instrucción Molty
@@ -95,14 +95,22 @@ Esa segunda lista es cómo obtienes algo blando e insípido.
 
 La personalidad no es permiso para ser descuidado.
 
-Mantén `AGENTS.md` para las reglas de operación. Mantén `SOUL.md` para la voz, la postura y
-el estilo. Si tu agente trabaja en canales compartidos, respuestas públicas o superficies
-para clientes, asegúrate de que el tono aún se ajuste al entorno.
+Mantén `AGENTS.md` para las reglas de operación. Mantén `SOUL.md` para la voz, la postura y el
+estilo. Si tu agente trabaja en canales compartidos, respuestas públicas o superficies
+al cliente, asegúrate de que el tono siga siendo apropiado para el ambiente.
 
 Ser directo es bueno. Ser molesto no.
 
-## Documentos relacionados
+## Relacionado
 
-- [Espacio de trabajo del agente](/es/concepts/agent-workspace)
-- [Prompt del sistema](/es/concepts/system-prompt)
-- [Plantilla de SOUL.md](/es/reference/templates/SOUL)
+<CardGroup cols={2}>
+  <Card title="Espacio de trabajo del agente" href="/es/concepts/agent-workspace" icon="folder-open">
+    Archivos del espacio de trabajo que OpenClaw inyecta en el prompt del sistema.
+  </Card>
+  <Card title="Prompt del sistema" href="/es/concepts/system-prompt" icon="message-lines">
+    Cómo se compone `SOUL.md` en el prompt del sistema por turno.
+  </Card>
+  <Card title="Plantilla SOUL.md" href="/es/reference/templates/SOUL" icon="file-lines">
+    Plantilla de inicio para un archivo de personalidad.
+  </Card>
+</CardGroup>

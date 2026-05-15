@@ -7,7 +7,7 @@ title: "上線"
 
 # `openclaw onboard`
 
-用於本地或遠端 Gateway 設定的互動式入門流程。
+針對本地或遠端 Gateway 設定的完整引導式上架流程。當您希望 OpenClaw 在單一流程中逐步引導模型驗證、工作區、閘道、頻道、技能和健康檢查時使用此選項。
 
 ## 相關指南
 
@@ -60,10 +60,12 @@ openclaw onboard --non-interactive \
   --custom-model-id "foo-large" \
   --custom-api-key "$CUSTOM_API_KEY" \
   --secret-input-mode plaintext \
-  --custom-compatibility openai
+  --custom-compatibility openai \
+  --custom-image-input
 ```
 
-`--custom-api-key` 在非互動模式下是可選的。如果省略，入門指南會檢查 `CUSTOM_API_KEY`。
+`--custom-api-key` 在非互動模式下為選用項。如果省略，上架流程會檢查 `CUSTOM_API_KEY`。
+OpenClaw 會自動將常見的視覺模型 ID 標記為支援影像。若為未知的自訂視覺模型 ID，請傳入 `--custom-image-input`，或傳入 `--custom-text-input` 以強制使用僅文字的中繼資料。
 
 LM Studio 在非互動模式下也支援供應商特定的金鑰旗標：
 
@@ -86,7 +88,7 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-`--custom-base-url` 預設為 `http://127.0.0.1:11434`。`--custom-model-id` 是可選的；如果省略，入門指南會使用 Ollama 建議的預設值。雲端模型 ID（例如 `kimi-k2.5:cloud`）也可以在此使用。
+`--custom-base-url` 預設為 `http://127.0.0.1:11434`。`--custom-model-id` 為選用項；如果省略，上架流程會使用 Ollama 建議的預設值。雲端模型 ID（例如 `kimi-k2.5:cloud`）也可以在此使用。
 
 將供應商金鑰以參照形式儲存，而非明文：
 
@@ -97,26 +99,28 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-使用 `--secret-input-mode ref` 時，入門指南會寫入環境變數支援的參照，而非明文金鑰值。
-對於由 auth-profile 支援的供應商，這會寫入 `keyRef` 項目；對於自訂供應商，這會將 `models.providers.<id>.apiKey` 寫入為環境變數參照（例如 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`）。
+使用 `--secret-input-mode ref` 時，上架流程會寫入由環境變數支援的參照，而不是純文字金鑰值。
+對於由 auth-profile 支援的提供者，這會寫入 `keyRef` 項目；對於自訂提供者，這會將 `models.providers.<id>.apiKey` 寫入為環境變數參照（例如 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`）。
 
 非互動式 `ref` 模式合約：
 
-- 在入門指南流程環境中設定供應商環境變數（例如 `OPENAI_API_KEY`）。
-- 除非也設定了該環境變數，否則請勿傳遞內聯金鑰旗標（例如 `--openai-api-key`）。
+- 在上架流程環境中設定提供者環境變數（例如 `OPENAI_API_KEY`）。
+- 除非也已設定該環境變數，否則請勿傳入內聯金鑰旗標（例如 `--openai-api-key`）。
 - 如果在未設定所需環境變數的情況下傳遞內聯金鑰旗標，入門指南會快速失敗並提供指引。
 
 非互動模式下的 Gateway 權杖選項：
 
-- `--gateway-auth token --gateway-token <token>` 會儲存明文權杖。
-- `--gateway-auth token --gateway-token-ref-env <name>` 會將 `gateway.auth.token` 儲存為環境變數 SecretRef。
+- `--gateway-auth token --gateway-token <token>` 會儲存純文字權杖。
+- `--gateway-auth token --gateway-token-ref-env <name>` 會將 `gateway.auth.token` 作為環境變數 SecretRef 儲存。
 - `--gateway-token` 和 `--gateway-token-ref-env` 互斥。
-- `--gateway-token-ref-env` 要求入門指南流程環境中有一個非空的環境變數。
-- 使用 `--install-daemon` 時，當權杖驗證需要權杖時，SecretRef 管理的 gateway 權杖會經過驗證，但不會在監督服務環境中繼資料中以解析出的明文形式保存。
-- 使用 `--install-daemon` 時，如果權杖模式需要權杖且設定的權杖 SecretRef 未解析，入門指南會快速失敗並提供修復指引。
-- 使用 `--install-daemon` 時，如果同時設定了 `gateway.auth.token` 和 `gateway.auth.password` 且未設定 `gateway.auth.mode`，入門指南會封鎖安裝，直到明確設定模式為止。
-- 本機入門會將 `gateway.mode="local"` 寫入設定。如果後續的設定檔缺少 `gateway.mode`，請將其視為設定損壞或不完整的手動編輯，而非有效的本機模式捷徑。
-- `--allow-unconfigured` 是一個獨立的閘道執行時期緊急逃生口。這並不表示入門程序可以省略 `gateway.mode`。
+- `--gateway-token-ref-env` 需要上架流程環境中存在非空的環境變數。
+- 使用 `--install-daemon` 時，當權杖驗證需要權杖時，由 SecretRef 管理的閘道權杖會經過驗證，但不會以解析後的純文字形式儲存在 supervisor 服務環境中繼資料中。
+- 使用 `--install-daemon` 時，如果權杖模式需要權杖且設定的權杖 SecretRef 未解析，上架流程會失敗關閉並提供修復指引。
+- 使用 `--install-daemon` 時，如果同時配置了 `gateway.auth.token` 和 `gateway.auth.password` 且未設定 `gateway.auth.mode`，則上架會阻擋安裝，直到明確設定模式為止。
+- 本地上架會將 `gateway.mode="local"` 寫入組態。如果後續的組態檔案缺少 `gateway.mode`，請將其視為組態損毀或不完整的手動編輯，而非有效的本地模式捷徑。
+- 當選擇的設定路徑需要時，本地上架會安裝所選的可下載外掛。
+- 遠端上架僅會寫入遠端 Gateway 的連線資訊，且不會安裝本地外掛套件。
+- `--allow-unconfigured` 是一個獨立的 gateway 執行時期緊急應變手段。這並不代表上架可以省略 `gateway.mode`。
 
 範例：
 
@@ -130,26 +134,26 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-非互動式本機閘道健康狀態：
+非互動式本地 gateway 健康檢查：
 
-- 除非您傳遞 `--skip-health`，否則入門程序會等待可連線的本機閘道，然後才會成功結束。
-- `--install-daemon` 會先啟動受管理的閘道安裝路徑。如果沒有它，您必須已經有一個本機閘道正在執行，例如 `openclaw gateway run`。
-- 如果您只想在自動化中進行設定/工作區/啟動寫入，請使用 `--skip-health`。
+- 除非您傳遞 `--skip-health`，否則上架會等到可連線的本地 gateway 後才會成功結束。
+- `--install-daemon` 會先啟動受控 gateway 安裝路徑。若沒有它，您必須已經有一個本地 gateway 在執行，例如 `openclaw gateway run`。
+- 如果您只想要在自動化中進行組態/工作區/引導寫入，請使用 `--skip-health`。
 - 如果您自己管理工作區檔案，請傳遞 `--skip-bootstrap` 來設定 `agents.defaults.skipBootstrap: true` 並跳過建立 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md` 和 `BOOTSTRAP.md`。
-- 在原生 Windows 上，如果拒絕建立工作，`--install-daemon` 會先嘗試「排程的工作」，並回退到每個使用者的「啟動」資料夾登入項目。
+- 在原生 Windows 上，`--install-daemon` 會先嘗試「排定的工作」，如果工作建立被拒絕，則會退而求其次使用針對每位使用者的「啟動」資料夾登入項目。
 
-使用參考模式的互動式入門行為：
+使用參考模式的互動式上架行為：
 
-- 當被提示時，選擇 **Use secret reference**。
-- 然後選擇下列其中一項：
+- 當被提示時，選擇 **使用密鑰參考**。
+- 然後選擇下列之一：
   - 環境變數
-  - 設定的秘密提供者 (`file` 或 `exec`)
-- 入門程序會在儲存參照之前執行快速的預先驗證。
-  - 如果驗證失敗，入門程序會顯示錯誤並讓您重試。
+  - 設定的密鑰提供者 (`file` 或 `exec`)
+- 上架會在儲存參考之前執行快速的飛行前驗證。
+  - 如果驗證失敗，上架會顯示錯誤並讓您重試。
 
 ### 非互動式 Z.AI 端點選擇
 
-<Note>`--auth-choice zai-api-key` 會自動為您的金鑰偵測最佳的 Z.AI 端點（偏好使用 `zai/glm-5.1` 的一般 API）。如果您特別想要 GLM Coding Plan 端點，請選擇 `zai-coding-global` 或 `zai-coding-cn`。</Note>
+<Note>`--auth-choice zai-api-key` 會自動為您的金鑰偵測最佳的 Z.AI 端點（偏好使用 `zai/glm-5.1` 的一般 API）。如果您特別想要使用 GLM Coding Plan 端點，請選擇 `zai-coding-global` 或 `zai-coding-cn`。</Note>
 
 ```bash
 # Promptless endpoint selection
@@ -171,40 +175,45 @@ openclaw onboard --non-interactive \
   --mistral-api-key "$MISTRAL_API_KEY"
 ```
 
-## Flow 備註
+## 流程備註
 
 <AccordionGroup>
-  <Accordion title="Flow types">
-    - `quickstart`：最精簡的提示，自動產生 gateway token。
+  <Accordion title="流程類型">
+    - `quickstart`：最少的提示，自動產生 gateway token。
     - `manual`：針對 port、bind 和 auth 的完整提示（`advanced` 的別名）。
     - `import`：執行偵測到的遷移提供者，預覽計畫，然後在確認後套用。
-  </Accordion>
-  <Accordion title="Provider prefiltering">
-    當驗證選擇暗示偏好的提供者時，入門流程會將預設模型與允許清單選擇器預先篩選至該提供者。對於 Volcengine 和 BytePlus，這也會比對 coding-plan 變體（`volcengine-plan/*`、`byteplus-plan/*`）。
-
-    如果偏好提供者篩選尚未產生任何已載入的模型，入門流程會退回至未篩選的目錄，而不是讓選擇器維持空白。
 
   </Accordion>
-  <Accordion title="Web-search follow-ups">
-    部分網頁搜尋提供者會觸發特定提供者的後續提示：
+  <Accordion title="提供者預先篩選">
+    當驗證選擇隱含了偏好的提供者時，onboarding 會將 default-model 和 allowlist 選擇器預先篩選為該提供者。對於 Volcengine 和 BytePlus，這也會符合 coding-plan 變體（`volcengine-plan/*`, `byteplus-plan/*`）。
 
-    - **Grok** 可以提供選用的 `x_search` 設定，使用相同的 `XAI_API_KEY` 以及 `x_search` 模型選擇。
-    - **Kimi** 可以詢問 Moonshot API 區域（`api.moonshot.ai` vs `api.moonshot.cn`）以及預設的 Kimi 網頁搜尋模型。
+    如果偏好的提供者篩選結果尚未產生任何已載入的模型，onboarding 將會退回到未篩選的目錄，而不是讓選擇器保持空白。
 
   </Accordion>
-  <Accordion title="Other behaviors">
+  <Accordion title="網路搜尋後續步驟">
+    某些網路搜尋提供者會觸發特定提供者的後續提示：
+
+    - **Grok** 可以提供可選的 `x_search` 設定，使用相同的 `XAI_API_KEY` 和 `x_search` 模型選擇。
+    - **Kimi** 可以詢問 Moonshot API 區域（`api.moonshot.ai` vs `api.moonshot.cn`）以及預設的 Kimi 網路搜尋模型。
+
+  </Accordion>
+  <Accordion title="其他行為">
     - 本地入門 DM 範圍行為：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference#outputs-and-internals)。
-    - 最快首次聊天：`openclaw dashboard`（Control UI，無頻道設定）。
-    - 自訂提供者：連接任何 OpenAI 或 Anthropic 相容端點，包括未列出的託管提供者。使用 Unknown 來自動偵測。
-    - 如果偵測到 Hermes 狀態，入課程式會提供遷移流程。使用 [Migrate](/zh-Hant/cli/migrate) 進行試執行計畫、覆寫模式、報表與精確對應。
+    - 最快首次聊天：`openclaw dashboard` (Control UI，無須通道設定)。
+    - 自訂供應商：連接任何 OpenAI 或 Anthropic 相容的端點，包括未列出的託管供應商。使用 Unknown 進行自動偵測。
+    - 如果偵測到 Hermes 狀態，入門程序會提供遷移流程。使用 [Migrate](/zh-Hant/cli/migrate) 進行試執行計畫、覆寫模式、報告和精確對應。
+
   </Accordion>
 </AccordionGroup>
 
-## 常見後續指令
+## 常見的後續指令
 
 ```bash
+openclaw channels add
 openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` 並不表示非互動模式。請使用 `--non-interactive` 進行腳本操作。</Note>
+如果您只需要基礎設定/工作區，請改用 `openclaw setup`。稍後請使用 `openclaw configure` 進行特定變更，並使用 `openclaw channels add` 僅進行通道設定。
+
+<Note>`--json` 並不意味著非互動模式。請使用 `--non-interactive` 進行腳本操作。</Note>

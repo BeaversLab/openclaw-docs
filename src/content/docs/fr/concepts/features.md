@@ -32,8 +32,8 @@ title: "Fonctionnalités"
 
 **Canaux :**
 
-- Les canaux intégrés incluent Discord, Google Chat, iMessage (legacy), IRC, Signal, Slack, Telegram, WebChat et WhatsApp
-- Les canaux de plugins inclus comportent BlueBubbles pour iMessage, Feishu, LINE, Matrix, Mattermost, Microsoft Teams, Nextcloud Talk, Nextcloud, QQ Bot, Synology Chat, Nostr, Tlon, Twitch et Zalo Personal
+- Les canaux intégrés incluent Discord, Google Chat, iMessage, IRC, Signal, Slack, Telegram, WebChat et WhatsApp
+- Les canaux de plugins inclus incluent Feishu, LINE, Matrix, Mattermost, Microsoft Teams, Nextcloud Talk, Nostr, QQ Bot, Synology Chat, Tlon, Twitch, Zalo et Zalo Personal
 - Les plugins de canal installés séparément en option incluent Voice Call et des packages tiers tels que WeChat
 - Les plugins de canal tiers peuvent étendre davantage la Gateway, comme WeChat
 - Prise en charge des discussions de groupe avec activation basée sur les mentions
@@ -43,7 +43,7 @@ title: "Fonctionnalités"
 
 - Runtime d'agent intégré avec flux d'outils
 - Routage multi-agent avec sessions isolées par espace de travail ou expéditeur
-- Sessions : les chats directs fusionnent dans un `main` partagé ; les groupes sont isolés
+- Sessions : les discussions directes sont regroupées dans un `main` partagé ; les groupes sont isolés
 - Streaming et découpage (chunking) pour les longues réponses
 
 **Auth et fournisseurs :**
@@ -75,5 +75,17 @@ title: "Fonctionnalités"
 
 ## Connexes
 
-- [Fonctionnalités expérimentales](/fr/concepts/experimental-features)
-- [Runtime de l'agent](/fr/concepts/agent)
+<CardGroup cols={2}>
+  <Card title="Fonctionnalités expérimentales" href="/fr/concepts/experimental-features" icon="flask">
+    Fonctionnalités optionnelles qui n'ont pas encore été déployées sur l'interface par défaut.
+  </Card>
+  <Card title="Runtime de l'agent" href="/fr/concepts/agent" icon="robot">
+    Modèle du runtime de l'agent et distribution des exécutions.
+  </Card>
+  <Card title="Canaux" href="/fr/channels" icon="message-square">
+    Connectez Telegram, WhatsApp, Discord, Slack et plus encore depuis un seul Gateway.
+  </Card>
+  <Card title="Plugins" href="/fr/tools/plugin" icon="plug">
+    Plugins intégrés et tiers qui étendent OpenClaw.
+  </Card>
+</CardGroup>

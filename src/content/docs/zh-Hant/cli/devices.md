@@ -122,7 +122,8 @@ openclaw devices revoke --device <deviceId> --role node
 ## 注意事項
 
 - 權杖輪換會傳回一個新的權杖（敏感性資訊）。請將其視為機密處理。
-- 這些指令需要 `operator.pairing`（或 `operator.admin`）範圍。
+- 這些指令需要 `operator.pairing` (或 `operator.admin`) 範圍。部分
+  核准作業也要求呼叫者持有目標裝置將鑄造或繼承的 operator 範圍；請參閱 [Operator 範圍](/zh-Hant/gateway/operator-scopes)。
 - `gateway.nodes.pairing.autoApproveCidrs` 是一個選用的 Gateway 原則，僅適用於
   全新的節點裝置配對；它不會改變 CLI 的核准權限。
 - 權杖輪換和撤銷僅限於該裝置已核准的配對角色集合和
@@ -177,10 +178,10 @@ openclaw devices approve <requestId>
 
 相關：
 
-- [儀表板驗證疑難排解](/zh-Hant/web/dashboard#if-you-see-unauthorized-1008)
-- [閘道器疑難排解](/zh-Hant/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Dashboard 驗證疑難排解](/zh-Hant/web/dashboard#if-you-see-unauthorized-1008)
+- [Gateway 疑難排解](/zh-Hant/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
 ## 相關
 
-- [CLI 參考](/zh-Hant/cli)
+- [CLI 參考資料](/zh-Hant/cli)
 - [節點](/zh-Hant/nodes)

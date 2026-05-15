@@ -1,13 +1,13 @@
 ---
-summary: "適用於工作流程的僅限 JSON 的 LLM 任務（可選外掛程式工具）"
+summary: "工作流程的僅 JSON LLM 任務（可選外掛工具）"
 read_when:
   - You want a JSON-only LLM step inside workflows
   - You need schema-validated LLM output for automation
 title: "LLM 任務"
 ---
 
-`llm-task` 是一個**選用的外掛工具**，用於執行僅輸出 JSON 的 LLM 任務並
-傳回結構化輸出（可選擇根據 JSON Schema 進行驗證）。
+`llm-task` 是一個 **可選的外掛工具**，用於執行僅輸出 JSON 的 LLM 任務並
+傳回結構化輸出（可選擇透過 JSON Schema 進行驗證）。
 
 這非常適合像 Lobster 這樣的工作流程引擎：您可以新增單一 LLM 步驟，
 而無需為每個工作流程撰寫自訂的 OpenClaw 程式碼。
@@ -26,22 +26,19 @@ title: "LLM 任務"
 }
 ```
 
-2. 將工具加入允許清單（它註冊為 `optional: true`）：
+2. 允許可選工具：
 
 ```json
 {
-  "agents": {
-    "list": [
-      {
-        "id": "main",
-        "tools": { "allow": ["llm-task"] }
-      }
-    ]
+  "tools": {
+    "alsoAllow": ["llm-task"]
   }
 }
 ```
 
-## 設定（選用）
+僅當您想要限制性允許清單模式時，才使用 `tools.allow`。
+
+## 設定（可選）
 
 ```json
 {
@@ -63,30 +60,47 @@ title: "LLM 任務"
 }
 ```
 
-`allowedModels` 是 `provider/model` 字串的允許清單。如果設定，清單之外的任何請求
-將被拒絕。
+`allowedModels` 是 `provider/model` 字串的允許清單。如果設定，任何
+超出清單的請求都會被拒絕。
 
 ## 工具參數
 
 - `prompt`（字串，必填）
-- `input`（任意，選用）
-- `schema`（物件，選用 JSON Schema）
-- `provider`（字串，選用）
-- `model`（字串，選用）
-- `thinking`（字串，選用）
-- `authProfileId`（字串，選用）
-- `temperature`（數字，選用）
-- `maxTokens`（數字，選用）
-- `timeoutMs`（數字，選用）
+- `input`（任何類型，選填）
+- `schema`（物件，選填的 JSON Schema）
+- `provider`（字串，選填）
+- `model`（字串，選填）
+- `thinking`（字串，選填）
+- `authProfileId`（字串，選填）
+- `temperature`（數字，選填）
+- `maxTokens`（數字，選填）
+- `timeoutMs`（數字，選填）
 
 `thinking` 接受標準的 OpenClaw 推理預設，例如 `low` 或 `medium`。
 
 ## 輸出
 
-傳回包含已解析 JSON 的 `details.json`（並在提供時根據
+傳回 `details.json`，其中包含解析後的 JSON（並在提供時根據
 `schema` 進行驗證）。
 
 ## 範例：Lobster 工作流程步驟
+
+### 重要限制
+
+以下範例假設 **獨立 Lobster CLI** 正在 `openclaw.invoke` 已具有正確閘道 URL/驗證內容的環境中執行。
+
+對於 OpenClaw 內捆綁的 **嵌入式** Lobster 執行器，此巢狀 CLI 模式目前 **不可靠**：
+
+```lobster
+openclaw.invoke --tool llm-task --action json --args-json '{ ... }'
+```
+
+在嵌入式 Lobster 擁有支援此流程的橋接器之前，請選擇以下任一方式：
+
+- Lobster 外部的直接 `llm-task` 工具呼叫，或
+- 不依賴巢狀 `openclaw.invoke` 呼叫的 Lobster 步驟。
+
+獨立 Lobster CLI 範例：
 
 ```lobster
 openclaw.invoke --tool llm-task --action json --args-json '{
@@ -110,11 +124,11 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 
 ## 安全注意事項
 
-- 此工具為**僅限 JSON**，並指示模型僅輸出 JSON（無
+- 此工具為 **僅 JSON**，並指示模型僅輸出 JSON（無
   程式碼圍欄，無評論）。
-- 此執行期間沒有工具暴露給模型。
+- 在此執行中，沒有工具暴露給模型。
 - 除非您使用 `schema` 進行驗證，否則請將輸出視為不受信任。
-- 將審核步驟放在任何有副作用的步驟（傳送、張貼、執行）之前。
+- 請將審核步驟放在任何會產生副作用（傳送、發布、執行）的步驟之前。
 
 ## 相關
 

@@ -159,19 +159,17 @@ OpenClaw registra las herramientas MCP de los paquetes con nombres seguros para 
 herramienta `memory_search` se registra como `vigil-harbor__memory_search`.
 
 - los caracteres fuera de `A-Za-z0-9_-` se reemplazan por `-`
-- los prefijos del servidor están limitados a 30 caracteres
-- los nombres completos de las herramientas están limitados a 64 caracteres
+- los fragmentos que comenzarían con una letra que no es una letra reciben un prefijo de letra, por lo que las claves de servidor numéricas como `12306` se convierten en prefijos de herramientas seguros para el proveedor
+- los prefijos de servidor tienen un límite de 30 caracteres
+- los nombres completos de las herramientas tienen un límite de 64 caracteres
 - los nombres de servidor vacíos vuelven a `mcp`
-- los nombres sanitizados en colisión se desambiguan con sufijos numéricos
-- el orden final de herramientas expuestas es determinista por nombre seguro para mantener los turnos Pi repetidos estables en caché
-- el filtrado de perfiles trata todas las herramientas de un servidor MCP de paquete como propiedad del complemento
-  por `bundle-mcp`, por lo que las listas de permitidos y denegados del perfil pueden incluir
-  nombres de herramientas expuestas individuales o la clave del complemento `bundle-mcp`
+- los nombres saneados que colisionan se desambiguan con sufijos numéricos
+- el orden final de las herramientas expuestas es determinista por nombre seguro para mantener los turnos de Pi repetidos estables en caché
+- el filtrado de perfiles trata todas las herramientas de un servidor MCP de un paquete como propiedad del complemento `bundle-mcp`, por lo que las listas de permitidos y denegados del perfil pueden incluir nombres de herramientas expuestas individuales o la clave del complemento `bundle-mcp`
 
-#### Configuración de Pi integrada
+#### Configuración Pi integrada
 
-- Claude `settings.json` se importa como configuración de Pi integrada predeterminada cuando el
-  paquete está habilitado
+- Claude `settings.json` se importa como configuración Pi integrada predeterminada cuando el paquete está habilitado
 - OpenClaw sanea las claves de anulación de shell antes de aplicarlas
 
 Claves saneadas:
@@ -179,13 +177,12 @@ Claves saneadas:
 - `shellPath`
 - `shellCommandPrefix`
 
-#### LSP de Pi integrada
+#### LSP Pi integrado
 
-- los paquetes de Claude habilitados pueden contribuir con la configuración del servidor LSP
+- los paquetes Claude habilitados pueden contribuir con la configuración del servidor LSP
 - OpenClaw carga `.lsp.json` más cualquier ruta `lspServers` declarada en el manifiesto
-- la configuración LSP del paquete se fusiona con los valores predeterminados de LSP de Pi integrada efectivos
-- hoy solo se pueden ejecutar los servidores LSP compatibles con stdio; los transportes
-  no compatibles todavía aparecen en `openclaw plugins inspect <id>`
+- la configuración LSP del paquete se fusiona con los valores predeterminados efectivos del LSP Pi integrado
+- solo los servidores LSP compatibles con stdio son ejecutables hoy; los transportes no compatibles aún aparecen en `openclaw plugins inspect <id>`
 
 ### Detectado pero no ejecutado
 
@@ -193,7 +190,7 @@ Estos se reconocen y muestran en los diagnósticos, pero OpenClaw no los ejecuta
 
 - Claude `agents`, automatización `hooks.json`, `outputStyles`
 - Cursor `.cursor/agents`, `.cursor/hooks.json`, `.cursor/rules`
-- Metadatos en línea/de aplicación de Codex más allá del informe de capacidades
+- metadatos en línea/aplicación de Codex más allá del informe de capacidades
 
 ## Formatos de paquete
 
@@ -203,8 +200,7 @@ Estos se reconocen y muestran en los diagnósticos, pero OpenClaw no los ejecuta
 
     Contenido opcional: `skills/`, `hooks/`, `.mcp.json`, `.app.json`
 
-    Los paquetes de Codex se adaptan mejor a OpenClaw cuando usan raíces de habilidades y directorios de
-    paquetes de ganchos al estilo de OpenClaw (`HOOK.md` + `handler.ts`).
+    Los paquetes de Codex se adaptan mejor a OpenClaw cuando utilizan raíces de habilidades y directorios de paquetes de enganches (hook packs) al estilo de OpenClaw (`HOOK.md` + `handler.ts`).
 
   </Accordion>
 
@@ -217,9 +213,9 @@ Estos se reconocen y muestran en los diagnósticos, pero OpenClaw no los ejecuta
     Comportamiento específico de Claude:
 
     - `commands/` se trata como contenido de habilidad
-    - `settings.json` se importa en la configuración de Pi integrada (las claves de anulación de shell se sanitizan)
+    - `settings.json` se importa a la configuración de Pi integrada (las claves de anulación de shell se depuran)
     - `.mcp.json` expone las herramientas stdio admitidas a Pi integrada
-    - `.lsp.json` más las rutas `lspServers` declaradas en el manifiesto se cargan en los valores predeterminados del LSP de Pi integrada
+    - `.lsp.json` más las rutas `lspServers` declaradas en el manifiesto se cargan en los valores predeterminados de LSP de Pi integrada
     - `hooks/hooks.json` se detecta pero no se ejecuta
     - Las rutas de componentes personalizados en el manifiesto son aditivas (amplían los valores predeterminados, no los reemplazan)
 
@@ -240,51 +236,56 @@ Estos se reconocen y muestran en los diagnósticos, pero OpenClaw no los ejecuta
 
 OpenClaw comprueba primero el formato de complemento nativo:
 
-1. `openclaw.plugin.json` o `package.json` válido con `openclaw.extensions` — tratado como **complemento nativo**
-2. Marcadores de paquetes (`.codex-plugin/`, `.claude-plugin/`, o diseño predeterminado de Claude/Cursor) — tratado como **paquete**
+1. `openclaw.plugin.json` o `package.json` válido con `openclaw.extensions` — tratado como **plugin nativo**
+2. Marcadores de paquete (`.codex-plugin/`, `.claude-plugin/`, o diseño predeterminado de Claude/Cursor) — tratado como **paquete**
 
-Si un directorio contiene ambos, OpenClaw utiliza la ruta nativa. Esto evita que los paquetes de doble formato se instalen parcialmente como paquetes.
+Si un directorio contiene ambos, OpenClaw utiliza la ruta nativa. Esto evita
+que los paquetes de doble formato se instalen parcialmente como paquetes.
 
 ## Dependencias de tiempo de ejecución y limpieza
 
-- Las dependencias de tiempo de ejecución del complemento empaquetado se envían dentro del paquete OpenClaw bajo
-  `dist/*`. OpenClaw **no** ejecuta `npm install` al inicio para los complementos
-  empaquetados; la canalización de versión es responsable de enviar una carga completa de dependencias
-  empaquetadas (consulte la regla de verificación posterior a la publicación en
-  [Releasing](/es/reference/RELEASING)).
+- Los paquetes compatibles de terceros no reciben reparación de `npm install` al inicio. Deben
+  instalarse a través de `openclaw plugins install` e incluir todo lo que
+  necesitan en el directorio del plugin instalado.
+- Los plugins empaquetados propiedad de OpenClaw se envían de forma ligera en el núcleo o
+  se pueden descargar a través del instalador de plugins. El inicio de Gateway nunca ejecuta un
+  gestor de paquetes para ellos.
+- `openclaw doctor --fix` elimina los directorios de dependencias preparados heredados y puede
+  recuperar plugins descargables que faltan en el índice de plugins local cuando
+  la configuración los referencia.
 
 ## Seguridad
 
-Los paquetes tienen un límite de confianza más estrecho que los complementos nativos:
+Los paquetes tienen un límite de confianza más estrecho que los plugins nativos:
 
-- OpenClaw **no** carga módulos de tiempo de ejecución de paquetes arbitrarios en el proceso
-- Las rutas de las habilidades y los paquetes de ganchos deben permanecer dentro de la raíz del complemento (verificación de límites)
-- Los archivos de configuración se leen con las mismas verificaciones de límites
-- Los servidores MCP stdio compatibles pueden iniciarse como subprocesos
+- OpenClaw **no** carga módulos de tiempo de ejecución de paquetes arbitrarios dentro del proceso
+- Las rutas de habilidades y paquetes de hooks deben permanecer dentro de la raíz del plugin (verificadas por límites)
+- Los archivos de configuración se leen con las mismas comprobaciones de límites
+- Los servidores MCP stdio compatibles pueden lanzarse como subprocesos
 
-Esto hace que los paquetes sean más seguros por defecto, pero aun así debe tratar los paquetes
-de terceros como contenido de confianza para las funciones que exponen.
+Esto hace que los paquetes sean más seguros por defecto, pero aún debe tratar los paquetes
+de terceros como contenido de confianza para las características que exponen.
 
 ## Solución de problemas
 
 <AccordionGroup>
   <Accordion title="Se detecta el paquete pero las capacidades no se ejecutan">
-    Ejecute `openclaw plugins inspect <id>`. Si una capacidad aparece en la lista pero está marcada como
-    no conectada, ese es un límite del producto — no una instalación rota.
+    Ejecute `openclaw plugins inspect <id>`. Si una capacidad está listada pero marcada como
+no conectada, es un límite del producto — no una instalación rota.
   </Accordion>
 
-<Accordion title="Los archivos de comandos de Claude no aparecen">Asegúrese de que el paquete esté habilitado y de que los archivos markdown estén dentro de una raíz `commands/` o `skills/` detectada.</Accordion>
+<Accordion title="Los archivos de comandos de Claude no aparecen">Asegúrese de que el paquete esté habilitado y que los archivos markdown estén dentro de una raíz `commands/` o `skills/` detectada.</Accordion>
 
-<Accordion title="La configuración de Claude no se aplica">Solo se admiten las configuraciones Pi integradas de `settings.json`. OpenClaw no trata la configuración del paquete como parches de configuración sin procesar.</Accordion>
+<Accordion title="La configuración de Claude no se aplica">Solo se admiten la configuración integrada de Pi de `settings.json`. OpenClaw no trata la configuración del paquete como parches de configuración sin procesar.</Accordion>
 
-  <Accordion title="Los ganchos de Claude no se ejecutan">
-    `hooks/hooks.json` es solo de detección. Si necesita ganchos ejecutables, use el
-    diseño de paquete de ganchos de OpenClaw o envíe un complemento nativo.
+  <Accordion title="Los hooks de Claude no se ejecutan">
+    `hooks/hooks.json` es solo de detección. Si necesita hooks ejecutables, use el
+    diseño de paquete de hooks de OpenClaw o envíe un complemento nativo.
   </Accordion>
 </AccordionGroup>
 
 ## Relacionado
 
 - [Instalar y configurar complementos](/es/tools/plugin)
-- [Crear complementos](/es/plugins/building-plugins) — crear un complemento nativo
-- [Manifiesto del complemento](/es/plugins/manifest) — esquema de manifiesto nativo
+- [Construcción de complementos](/es/plugins/building-plugins) — crear un complemento nativo
+- [Manifiesto de complementos](/es/plugins/manifest) — esquema de manifiesto nativo

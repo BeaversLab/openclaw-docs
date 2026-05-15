@@ -7,16 +7,18 @@ read_when:
   - You are iterating on end-to-end QA automation
 ---
 
-`qa-channel` est un transport de messages synthétique intégré pour le QA automatisé OpenClaw. Ce n'est pas un channel de production — il existe pour exercer la même limite du plugin de channel utilisée par les transports réels tout en gardant l'état déterministe et entièrement inspectable.
+`qa-channel`OpenClaw est un transport de messages synthétique intégré pour les tests automatisés OpenClaw QA. Ce n'est pas un channel de production - il existe pour exercer la même limite de plugin de channel utilisée par les transports réels tout en gardant l'état déterministe et parfaitement inspectable.
 
 ## Ce qu'il fait
 
 - Grammaire cible de classe Slack :
   - `dm:<user>`
   - `channel:<room>`
+  - `group:<room>`
   - `thread:<room>/<thread>`
-- Bus synthétique soutenu par HTTP pour l'injection de messages entrants, la capture de transcripts sortants, la création de fils de discussion, les réactions, les modifications, les suppressions et les actions de recherche/lecture.
-- Runner de self-check côté hôte qui écrit un rapport Markdown dans `.artifacts/qa-e2e/`.
+- Les conversations partagées `channel:` et `group:`DiscordSlackTelegram sont présentées aux agents comme des tours de salle de groupe/channel, ce qui leur permet d'exercer la même stratégie de routage de réponse visible et d'outil de message utilisée par Discord, Slack, Telegram et les transports similaires.
+- Bus synthétique basé sur HTTP pour l'injection de messages entrants, la capture de transcriptions sortantes, la création de fils de discussion, les réactions, les modifications, les suppressions et les actions de recherche/lecture.
+- Runner de vérification automatique côté hôte qui écrit un rapport Markdown dans `.artifacts/qa-e2e/`.
 
 ## Config
 
@@ -36,51 +38,58 @@ read_when:
 
 Clés de compte :
 
-- `enabled` — interrupteur maître pour ce compte.
-- `name` — étiquette d'affichage facultative.
-- `baseUrl` — URL du bus synthétique.
-- `botUserId` — id d'utilisateur bot de style Matrix utilisé dans la grammaire cible.
-- `botDisplayName` — nom d'affichage pour les messages sortants.
-- `pollTimeoutMs` — fenêtre d'attente de long-poll. Entier entre 100 et 30000.
-- `allowFrom` — liste d'autorisation des expéditeurs (ids utilisateur ou `"*"`).
-- `defaultTo` — cible de repli lorsqu'aucune n'est fournie.
-- `actions.messages` / `actions.reactions` / `actions.search` / `actions.threads` — limitation des outils par action.
+- `enabled` - interrupteur principal pour ce compte.
+- `name` - libellé d'affichage optionnel.
+- `baseUrl` - URL du bus synthétique.
+- `botUserId`Matrix - identifiant utilisateur bot de style Matrix utilisé dans la grammaire cible.
+- `botDisplayName` - nom d'affichage pour les messages sortants.
+- `pollTimeoutMs` - fenêtre d'attente de type long-poll. Entier entre 100 et 30000.
+- `allowFrom` - liste blanche des expéditeurs (identifiants utilisateurs ou `"*"`). Les messages directs et
+  la stratégie de groupe autorisée utilisent tous deux ces identifiants d'expéditeur synthétiques.
+- `groupPolicy` - stratégie de salle partagée : `"open"` (par défaut), `"allowlist"` ou
+  `"disabled"`.
+- `groupAllowFrom` - liste blanche optionnelle des expéditeurs de salle partagée. Si omise sous
+  `"allowlist"`, le QA Channel revient à `allowFrom`.
+- `groups.<room>.requireMention` - nécessite une mention du bot avant de répondre dans une
+  salle de groupe/channel spécifique. `groups."*"` définit la valeur par défaut.
+- `defaultTo` - cible de repli si aucune n'est fournie.
+- `actions.messages` / `actions.reactions` / `actions.search` / `actions.threads` - filtrage des outils par action.
 
-Clés multi-compte au niveau supérieur :
+Clés multi-comptes au niveau supérieur :
 
-- `accounts` — enregistrement des substitutions nommées par compte indexées par id de compte.
-- `defaultAccount` — id de compte préféré lorsque plusieurs sont configurés.
+- `accounts` - enregistrement des remplacements nommés par compte, indexés par l'identifiant de compte.
+- `defaultAccount` - identifiant de compte préféré lorsque plusieurs sont configurés.
 
 ## Runners
 
-Self-check côté hôte (écrit un rapport Markdown sous `.artifacts/qa-e2e/`) :
+Auto-vérification côté hôte (écrit un rapport Markdown sous `.artifacts/qa-e2e/`) :
 
 ```bash
 pnpm qa:e2e
 ```
 
-Cela passe par `qa-lab`, démarre le bus QA dans le dépôt, lance la partie d'exécution intégrée `qa-channel` et exécute une self-check déterministe.
+Cela achemine via `qa-lab`, démarre le bus QA dans le dépôt, lance la tranche d'exécution `qa-channel` groupée et exécute une auto-vérification déterministe.
 
-Suite complète de scénarios basés sur le dépôt :
+Suite de scénarios basée sur le dépôt complet :
 
 ```bash
 pnpm openclaw qa suite
 ```
 
-Exécute des scénarios en parallèle sur la voie de passerelle QA. Consultez la [Vue d'ensemble QA](/fr/concepts/qa-e2e-automation) pour les scénarios, les profils et les modes de fournisseur.
+Exécute des scénarios en parallèle sur la passerelle QA. Consultez la [vue d'ensemble QA](/fr/concepts/qa-e2e-automation) pour les scénarios, les profils et les modes de provider.
 
-Site QA soutenu par Docker (passerelle + interface utilisateur du débogueur QA Lab dans une seule pile) :
+Site QA Docker (passerelle + interface du débogueur QA Lab dans une même stack) :
 
 ```bash
 pnpm qa:lab:up
 ```
 
-Construit le site QA, démarre la passerelle soutenue par Docker + la pile QA Lab, et imprime l'URL du QA Lab. À partir de là, vous pouvez choisir des scénarios, sélectionner la voie du modèle, lancer des exécutions individuelles et regarder les résultats en direct. Le débogueur QA Lab est distinct du bundle de l'interface utilisateur de contrôle expédié.
+Construit le site QA, démarre la stack passerelle + QA Lab Docker et imprime l'URL du QA Lab. À partir de là, vous pouvez choisir des scénarios, sélectionner la voie de model, lancer des exécutions individuelles et regarder les résultats en direct. Le débogueur QA Lab est distinct du bundle d'interface de contrôle expédié.
 
 ## Connexes
 
-- [Vue d'ensemble QA](/fr/concepts/qa-e2e-automation) — pile globale, adaptateurs de transport, création de scénarios
-- [Matrix QA](/fr/concepts/qa-matrix) — exemple de runner de transport en direct qui pilote un canal réel
-- [Jumelage](/fr/channels/pairing)
+- [Vue d'ensemble QA](/fr/concepts/qa-e2e-automation) - stack globale, adaptateurs de transport, rédaction de scénarios
+- [QA Matrix](/fr/concepts/qa-matrix) - exemple de runner de transport en direct qui pilote un channel réel
+- [Appairage](/fr/channels/pairing)
 - [Groupes](/fr/channels/groups)
-- [Vue d'ensemble des canaux](/fr/channels)
+- [Vue d'ensemble des channels](/fr/channels)

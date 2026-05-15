@@ -24,8 +24,8 @@ title: "閘道擁有的配對"
 1. 節點連線至 Gateway WS 並請求配對。
 2. Gateway 儲存一個 **pending request** 並發出 `node.pair.requested`。
 3. 您批准或拒絕該請求（CLI 或 UI）。
-4. 批准後，Gateway 會發行一個 **new token**（token 會在重新配對時輪換）。
-5. 節點使用該 token 重新連線，現在即為「已配對」。
+4. 獲得批准時，Gateway 會發出一個**新令牌**（令牌在重新配對時會輪替）。
+5. 節點使用該令牌重新連接，此時即為「已配對」狀態。
 
 待處理請求會在 **5 分鐘** 後自動過期。
 
@@ -46,17 +46,17 @@ openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 
 事件：
 
-- `node.pair.requested` — 當建立新的待處理請求時發出。
-- `node.pair.resolved` — 當請求被批准/拒絕/過期時發出。
+- `node.pair.requested` - 當建立新的待處理請求時發出。
+- `node.pair.resolved` - 當請求被批准/拒絕/過期時發出。
 
 方法：
 
-- `node.pair.request` — 建立或重複使用待處理請求。
-- `node.pair.list` — 列出待處理和已配對的節點（`operator.pairing`）。
-- `node.pair.approve` — 批准待處理請求（發行 token）。
-- `node.pair.reject` — 拒絕待處理請求。
-- `node.pair.remove` — 移除過時的已配對節點項目。
-- `node.pair.verify` — 驗證 `{ nodeId, token }`。
+- `node.pair.request` - 建立或重用待處理請求。
+- `node.pair.list` - 列出待處理和已配對的節點 (`operator.pairing`)。
+- `node.pair.approve` - 批准待處理請求（發出令牌）。
+- `node.pair.reject` - 拒絕待處理請求。
+- `node.pair.remove` - 移除過時的已配對節點條目。
+- `node.pair.verify` - 驗證 `{ nodeId, token }`。
 
 備註：
 
@@ -64,49 +64,55 @@ openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 - 對同一待處理節點的重複請求也會重新整理儲存的節點
   中繼資料，以及最新的允許清單宣告指令快照，以供操作員檢視。
 - 核准 **永遠** 會產生一個新的 token；`node.pair.request` 永遠不會傳回任何 token。
+- 操作員範圍層級和批准時的檢查已總結於
+  [Operator scopes](/zh-Hant/gateway/operator-scopes)。
 - 請求可能包含 `silent: true` 作為自動核准流程的提示。
-- `node.pair.approve` 使用待處理請求中宣告的指令來強制執行額外的核准範圍：
+- `node.pair.approve` 使用待處理請求中宣告的指令來執行
+  額外的批准範圍：
   - 無指令請求：`operator.pairing`
   - 非執行指令請求：`operator.pairing` + `operator.write`
   - `system.run` / `system.run.prepare` / `system.which` 請求：
     `operator.pairing` + `operator.admin`
 
 <Warning>
-節點配對是一個信任與身份流程加上 token 發行。它 **不會** 針對每個節點鎖定即時節點指令表面。
+節點配對是一個信任與身分流程加上令牌發行。它**不**會針對每個節點固定即時節點指令介面。
 
-- 即時節點指令來自節點在連線時宣告的內容，並在套用閘道的全域節點指令政策 (`gateway.nodes.allowCommands` 和 `denyCommands`) 之後生效。
-- 每個節點的 `system.run` 允許與詢問政策存在於節點上的 `exec.approvals.node.*` 中，而不在配對記錄中。
-  </Warning>
+- 即時節點指令來自節點在連線時所宣告的內容，且需在套用 Gateway 的全域節點指令原則 (`gateway.nodes.allowCommands` 和 `denyCommands`) 之後。
+- 針對單一節點的 `system.run` 允許與詢問原則存在於節點的 `exec.approvals.node.*` 中，而非配對記錄裡。
+
+</Warning>
 
 ## 節點指令閘道 (2026.3.31+)
 
-<Warning>**重大變更：** 從 `2026.3.31` 開始，節點指令將被停用，直到節點配對獲得核准。僅靠裝置配對已不再足以公開已宣告的節點指令。</Warning>
+<Warning>**重大變更：** 自 `2026.3.31` 起，節點指令將在節點配對獲得批准前停用。僅靠裝置配對已不足以公開宣告的節點指令。</Warning>
 
-當節點首次連線時，會自動請求配對。在配對請求獲得核准之前，來自該節點的所有待處理節點指令都會被過濾，並且不會執行。一旦透過配對核准建立了信任，節點宣告的指令就會變為可用，但仍受一般指令政策約束。
+當節點首次連接時，會自動請求配對。在配對請求獲得批准之前，來自該節點的所有待處理節點命令都會被過濾，且不會執行。一旦通過配對批准建立了信任，該節點聲明的命令即會變為可用，但仍需遵守正常的命令策略。
 
 這意味著：
 
-- 先前僅依賴裝置配對來公開指令的節點，現在必須完成節點配對。
-- 在配對核准之前排入佇列的指令會被捨棄，而不是延後執行。
+- 先前僅依賴裝置配對來公開命令的節點，現在必須完成節點配對。
+- 在配對批准前排入佇列的命令會被捨棄，而非延遲。
 
 ## 節點事件信任邊界 (2026.3.31+)
 
-<Warning>**重大變更：** 節點發起的執行現在保持在縮減的信任表面上。</Warning>
+<Warning>**重大變更：** 節點發起的執行現保持在縮減的信任表面上。</Warning>
 
-源自節點的摘要與相關會話事件限制在預期的信任表面上。先前依賴更廣泛主機或會話工具存取的通知驅動或節點觸發流程可能需要調整。這項強化措施確保節點事件無法升級超出節點信任邊界所允許的主機層級工具存取權。
+節點發起的摘要及相關會話事件僅限於預期的信任表面。先前依賴更廣泛的主機或會話工具存取的通知驅動或節點觸發流程，可能需要調整。此強化措施確保節點事件無法升級為超出節點信任邊界允許範圍的主機級工具存取權。
 
-## 自動核准（macOS 應用程式）
+持久化的節點存在狀態更新遵循相同的身分邊界。僅接受來自已驗證節點裝置會話的 `node.presence.alive` 事件，並且僅當裝置/節點身分已配對時才會更新配對元資料。自行宣告的 `client.id` 值不足以寫入最後一次看見的狀態。
 
-當符合以下條件時，macOS 應用程式可以選擇嘗試**靜音核准**：
+## 自動批准 (macOS 應用程式)
+
+macOS 應用程式可以在下列情況下嘗試 **靜默批准**：
 
 - 請求已標記為 `silent`，且
-- 應用程式能使用相同使用者驗證到閘道主機的 SSH 連線。
+- 應用程式能夠使用相同的使用者驗證到閘道主機的 SSH 連線。
 
-如果靜音核准失敗，它會回退到正常的「核准/拒絕」提示。
+如果靜默批准失敗，它會回退到正常的「批准/拒絕」提示。
 
-## Trusted-CIDR 裝置自動核准
+## 受信任 CIDR 裝置自動批准
 
-`role: node` 的 WS 裝置配對預設仍保持手動。對於閘道已信任網路路徑的私有節點網路，操作員可以選擇使用明確的 CIDR 或確切 IP：
+`role: node` 的 WS 裝置配對預設仍為手動。對於閘道已信任網路路徑的私人節點網路，操作員可以選擇加入並指定明確的 CIDR 或確切 IP：
 
 ```json5
 {
@@ -123,48 +129,48 @@ openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 安全性邊界：
 
 - 當未設定 `gateway.nodes.pairing.autoApproveCidrs` 時停用。
-- 不存在全面的 LAN 或私有網路自動核准模式。
-- 僅有沒有請求範圍的全新 `role: node` 裝置配對符合資格。
-- 操作員、瀏覽器、控制 UI 和 WebChat 客戶端仍保持手動。
-- 角色、範圍、中繼資料和公開金鑰升級仍保持手動。
-- 相同主機的回送信任代理標頭路徑不符合資格，因為該路徑可能被本機呼叫者偽造。
+- 不存在全面的 LAN 或私人網路自動批准模式。
+- 只有未請求範圍的全新 `role: node` 裝置配對才符合資格。
+- 操作員、瀏覽器、Control UI 和 WebChat 用戶端仍保持手動。
+- 角色、範圍、元資料和公開金鑰升級仍保持手動。
+- 相同主機的回送受信任代理標頭路徑不符合資格，因為該路徑可以被本機呼叫者偽造。
 
-## 中繼資料升級自動核准
+## 元數據升級自動核准
 
-當已配對的裝置重新連線時，若僅有非敏感的中繼資料變更（例如，顯示名稱或客戶端平台提示），OpenClaw 會將其視為 `metadata-upgrade`。靜音自動核准範圍狹窄：它僅適用於已證明擁有本機或共用憑證的信任非瀏覽器本機重新連線，包括 OS 版本中繼資料變更後的相同主機原生應用程式重新連線。瀏覽器/控制 UI 客戶端和遠端客戶端仍使用明確的重新核准流程。範圍升級（從讀取到寫入/管理員）和公開金鑰變更**不**符合中繼資料升級自動核准的資格——它們仍保持為明確的重新核准請求。
+當已配對的裝置重新連線且僅涉及非敏感元數據變更（例如，顯示名稱或客戶端平台提示）時，OpenClaw 會將其視為 `metadata-upgrade`。靜默自動核准的範圍很窄：僅適用於已證明擁有本機或共用憑證的受信任非瀏覽器本機重新連線，包括在 OS 版本元數據變更後的相同主機原生應用程式重新連線。瀏覽器/控制 UI 客戶端和遠端客戶端仍使用明確的重新核准流程。範圍升級（從讀取到寫入/管理員）和公開金鑰變更**不**符合元數據升級自動核准的資格——它們仍保持為明確的重新核准請求。
 
 ## QR 配對輔助工具
 
-`/pair qr` 將配對載荷呈現為結構化媒體，以便行動裝置和瀏覽器客戶端可以直接掃描。
+`/pair qr` 將配對載荷渲染為結構化媒體，以便行動裝置和瀏覽器客戶端可以直接掃描它。
 
-刪除裝置也會一併清除該裝置 ID 的任何過時待處理配對請求，因此 `nodes pending` 在撤銷後不會顯示孤立的資料列。
+刪除裝置也會清除該裝置 ID 的任何過期擱置配對請求，因此 `nodes pending` 在撤銷後不會顯示孤立的行。
 
-## 區域性與轉送標頭
+## 本地性和轉發標頭
 
-僅當原始 socket 和任何上游代理證據一致時，Gateway 配對才會將連線視為 loopback。如果請求在 loopback 上到達，但攜帶指向非本機來源的 `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` 標頭，該轉送標頭證據將使 loopback 區域性主張無效。配對路徑隨後需要明確批准，而不是將請求靜默視為同主機連線。請參閱 [Trusted Proxy Auth](/zh-Hant/gateway/trusted-proxy-auth) 以了解操作員認證的等效規則。
+只有當原始 socket 和任何上游代理證據一致時，Gateway 配對才會將連線視為回送。如果請求到達回送但攜帶指向非本地來源的 `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` 標頭，則該轉發標頭證據將使回送本地性聲明無效。然後，配對路徑需要明確核准，而不是將請求靜默視為相同主機連線。有關操作員認證的等效規則，請參閱 [Trusted Proxy Auth](/zh-Hant/gateway/trusted-proxy-auth)。
 
-## 儲存（本機、私人）
+## 儲存（本地，私有）
 
 配對狀態儲存在 Gateway 狀態目錄下（預設為 `~/.openclaw`）：
 
 - `~/.openclaw/nodes/paired.json`
 - `~/.openclaw/nodes/pending.json`
 
-如果您覆寫 `OPENCLAW_STATE_DIR`，`nodes/` 資料夾也會隨之移動。
+如果您覆寫 `OPENCLAW_STATE_DIR`，則 `nodes/` 資料夾會隨之移動。
 
-安全備註：
+安全說明：
 
-- Token 是機密；請將 `paired.json` 視為敏感資料。
-- 輪換 Token 需要重新批准（或刪除節點條目）。
+- Token 是機密；請將 `paired.json` 視為敏感資訊。
+- 輪換 Token 需要重新核准（或刪除節點條目）。
 
 ## 傳輸行為
 
-- 傳輸層是 **無狀態 (stateless)** 的；它不會儲存成員資格。
-- 如果 Gateway 離線或停用配對，節點將無法配對。
-- 如果 Gateway 處於遠端模式，配對仍然針對遠端 Gateway 的儲存庫進行。
+- 傳輸層是**無狀態**的；它不存儲成員資格。
+- 如果閘道離線或配對已停用，節點將無法配對。
+- 如果閘道處於遠端模式，配對仍會針對遠端閘道的存儲進行。
 
 ## 相關
 
-- [通道配對](/zh-Hant/channels/pairing)
+- [頻道配對](/zh-Hant/channels/pairing)
 - [節點](/zh-Hant/nodes)
 - [裝置 CLI](/zh-Hant/cli/devices)

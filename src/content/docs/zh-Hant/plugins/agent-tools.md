@@ -5,9 +5,7 @@ read_when:
 title: "註冊工具"
 ---
 
-# 在外掛中註冊工具
-
-此頁面已移動。請參閱[建置外掛：註冊代理工具](/zh-Hant/plugins/building-plugins#registering-agent-tools)。
+本頁面已移動。請參閱 [建置外掛程式：註冊代理程式工具](/zh-Hant/plugins/building-plugins#registering-agent-tools)。
 
 ## 相關
 

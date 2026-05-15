@@ -1,5 +1,5 @@
 ---
-summary: "为 Node.js 安装和配置 OpenClaw —— 版本要求、安装选项和 PATH 故障排除"
+summary: "为 Node.js 安装和配置 OpenClaw - 版本要求、安装选项和 PATH 故障排除"
 title: "Node.js"
 read_when:
   - "You need to install Node.js before installing OpenClaw"
@@ -7,7 +7,7 @@ read_when:
   - "npm install -g fails with permissions or PATH issues"
 ---
 
-OpenClaw 需要 **Node 22.14 或更新版本**。**Node 24 是安装、CI 和发布工作流的默认和推荐运行时**。Node 22 仍然通过当前的 LTS 线路获得支持。[安装程序脚本](/zh/install#alternative-install-methods) 将自动检测并安装 Node —— 本页面适用于您想要自己设置 Node 并确保一切配置正确（版本、PATH、全局安装）的情况。
+OpenClaw 需要 **Node 22.16 或更新版本**。**Node 24 是安装、CI 和发布工作流的默认推荐运行时**。Node 22 仍通过活跃 LTS 线获得支持。[安装脚本](/zh/install#alternative-install-methods) 将自动检测并安装 Node - 本页面适用于您想自行设置 Node 并确保一切配置正确（版本、PATH、全局安装）的情况。
 
 ## 检查你的版本
 
@@ -15,7 +15,7 @@ OpenClaw 需要 **Node 22.14 或更新版本**。**Node 24 是安装、CI 和发
 node -v
 ```
 
-如果打印的是 `v24.x.x` 或更高版本，说明您使用的是推荐的默认版本。如果打印的是 `v22.14.x` 或更高版本，说明您使用的是受支持的 Node 22 LTS 版本，但我们仍然建议您在方便时升级到 Node 24。如果未安装 Node 或版本过旧，请从下方选择一种安装方式。
+如果打印出 `v24.x.x` 或更高版本，则您使用的是推荐的默认版本。如果打印出 `v22.16.x` 或更高版本，则您使用的是受支持的 Node 22 LTS 版本，但我们仍然建议在方便时升级到 Node 24。如果未安装 Node 或版本过旧，请从下方选择一种安装方法。
 
 ## 安装 Node
 
@@ -68,11 +68,11 @@ node -v
 <Accordion title="使用版本管理器 (nvm, fnm, mise, asdf)">
   版本管理器让你可以轻松切换 Node 版本。常用的选项有：
 
-- [**fnm**](https://github.com/Schniz/fnm) — 快速，跨平台
-- [**nvm**](https://github.com/nvm-sh/nvm) — 在 macOS/Linux 上广泛使用
-- [**mise**](https://mise.jdx.dev/) — 多语言支持 (Node, Python, Ruby 等)
+- [**fnm**](https://github.com/Schniz/fnm) - 快速，跨平台
+- [**nvm**](https://github.com/nvm-sh/nvm) - 在 macOS/Linux 上广泛使用
+- [**mise**](https://mise.jdx.dev/) - 多语言支持 (Node, Python, Ruby 等)
 
-fnm 示例：
+使用 fnm 的示例：
 
 ```bash
 fnm install 24
@@ -80,7 +80,7 @@ fnm use 24
 ```
 
   <Warning>
-  确保你的版本管理器已在 Shell 启动文件 (`~/.zshrc` 或 `~/.bashrc`) 中初始化。如果没有初始化，由于 PATH 不会包含 Node 的 bin 目录，在新的终端会话中可能找不到 `openclaw`。
+  确保你的版本管理器已在 shell 启动文件 (`~/.zshrc` 或 `~/.bashrc`) 中初始化。如果没有，在新的终端会话中可能找不到 `openclaw`，因为 PATH 将不包含 Node 的 bin 目录。
   </Warning>
 </Accordion>
 
@@ -137,6 +137,6 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 
 ## 相关
 
-- [安装概述](/zh/install) — 所有安装方法
-- [更新](/zh/install/updating) — 保持 OpenClaw 为最新版本
-- [入门指南](/zh/start/getting-started) — 安装后的第一步
+- [安装概述](/zh/install) - 所有安装方法
+- [更新](/zh/install/updating) - 保持 OpenClaw 为最新
+- [入门指南](/zh/start/getting-started) - 安装后的第一步

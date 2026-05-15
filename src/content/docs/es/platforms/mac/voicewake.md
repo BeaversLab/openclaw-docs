@@ -15,7 +15,7 @@ title: "Activación por voz (macOS)"
 ## Comportamiento en tiempo de ejecución (palabra de activación)
 
 - El reconocedor de voz reside en `VoiceWakeRuntime`.
-- El activador solo se dispara cuando hay una **pausa significativa** entre la palabra de activación y la siguiente palabra (brecha de ~0.55s). La superposición/la señal de sonido pueden comenzar en la pausa incluso antes de que comience el comando.
+- El disparador solo se activa cuando hay una **pausa significativa** entre la palabra de activación y la siguiente palabra (~0.55s de diferencia). La superposición/la señal de sonido pueden iniciarse en la pausa incluso antes de que comience el comando.
 - Ventanas de silencio: 2.0s cuando el discurso fluye, 5.0s si solo se escuchó el activador.
 - Parada forzada: 120s para evitar sesiones incontroladas.
 - Antirrebote entre sesiones: 350ms.
@@ -29,7 +29,7 @@ title: "Activación por voz (macOS)"
 
 ## Modo de fallo de superposición fija (anterior)
 
-Anteriormente, si la superposición se quedaba visible atascada y la cerraba manualmente, la activación por voz podía parecer "muerta" porque el intento de reinicio del tiempo de ejecución podía bloquearse por la visibilidad de la superposición y no se programaba ningún reinicio posterior.
+Anteriormente, si la superposición se quedaba visible atascada y la cerrabas manualmente, Voice Wake podía aparecer "muerto" porque el intento de reinicio del runtime podría bloquearse por la visibilidad de la superposición y no se programaba ningún reinicio posterior.
 
 Endurecimiento:
 
@@ -50,7 +50,7 @@ Endurecimiento:
 - **Mantener presionado Cmd+Fn para hablar**: activa el monitor de pulsación para hablar. Desactivado en macOS < 26.
 - Selectores de idioma y micrófono, medidor de nivel en vivo, tabla de palabras de activación, probador (solo local; no reenvía).
 - El selector de micrófono conserva la última selección si un dispositivo se desconecta, muestra una pista de desconexión y vuelve temporalmente al predeterminado del sistema hasta que regrese.
-- **Sonidos**: campanillas al detectar activación y al enviar; por defecto al sonido del sistema macOS “Glass”. Puede elegir cualquier archivo cargable por `NSSound` (p. ej., MP3/WAV/AIFF) para cada evento o elegir **Sin sonido**.
+- **Sonidos**: campanas al detectar el disparador y al enviar; por defecto usa el sonido del sistema "Glass" de macOS. Puedes elegir cualquier archivo cargable por `NSSound` (p. ej. MP3/WAV/AIFF) para cada evento o elegir **Sin sonido**.
 
 ## Comportamiento de reenvío
 

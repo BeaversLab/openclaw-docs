@@ -7,9 +7,7 @@ read_when:
 title: "執行審核 — 進階"
 ---
 
-進階執行審核主題：`safeBins` 快速路徑、直譯器/執行階段
-綁定，以及將審核轉發至聊天頻道（包括原生傳遞）。
-若要了解核心策略與審核流程，請參閱 [執行審核](/zh-Hant/tools/exec-approvals)。
+進階 exec-approval 主題：`safeBins` 快速路徑、直譯器/執行時期綁定，以及轉發審核到聊天頻道（包括原生傳遞）。關於核心政策和審核流程，請參閱 [Exec approvals](/zh-Hant/tools/exec-approvals)。
 
 ## 安全二進位檔（僅限 stdin）
 
@@ -81,18 +79,18 @@ title: "執行審核 — 進階"
 | -------- | ------------------------------------------ | ------------------------------------------------------------------ |
 | 目標     | 自動允許狹窄的 stdin 過濾器                | 明確信任特定可執行檔                                               |
 | 匹配類型 | 可執行檔名稱 + 安全二進制檔案 argv 策略    | 已解析的可執行檔路徑 glob，或透過 PATH 呼叫之命令的純命令名稱 glob |
-| 參數範圍 | 受安全二進制檔案設定檔和字面值令牌規則限制 | 僅路徑匹配；參數由您自行負責                                       |
+| 參數範圍 | 受安全二進制檔案設定檔和字面值令牌規則限制 | 預設為路徑匹配；可選的 `argPattern` 可以限制解析的 argv            |
 | 典型範例 | `head`、`tail`、`tr`、`wc`                 | `jq`、`python3`、`node`、`ffmpeg`、自訂 CLI                        |
 | 最佳用途 | 管道中的低風險文字轉換                     | 任何具有更廣泛行為或副作用 的工具                                  |
 
 設定位置：
 
-- `safeBins` 來自設定 (`tools.exec.safeBins` 或每個 Agent 的 `agents.list[].tools.exec.safeBins`)。
-- `safeBinTrustedDirs` 來自設定 (`tools.exec.safeBinTrustedDirs` 或每個 Agent 的 `agents.list[].tools.exec.safeBinTrustedDirs`)。
-- `safeBinProfiles` 來自設定 (`tools.exec.safeBinProfiles` 或每個 Agent 的 `agents.list[].tools.exec.safeBinProfiles`)。每個 Agent 的設定檔金鑰會覆蓫全域金鑰。
-- 允許清單條目位於 `agents.<id>.allowlist` 下的主機本地 `~/.openclaw/exec-approvals.json` 中 (或透過 Control UI / `openclaw approvals allowlist ...`)。
-- 當直譯器/執行時二進制檔案在沒有明確設定檔的情況下出現在 `safeBins` 中時，`openclaw security audit` 會發出 `tools.exec.safe_bins_interpreter_unprofiled` 警告。
-- `openclaw doctor --fix` 可以將遺失的自訂 `safeBinProfiles.<bin>` 項目 scaffold 成 `{}`（事後請審閱並收緊）。直譯器/執行時期 bins 不會自動 scaffold。
+- `safeBins` 來自設定（`tools.exec.safeBins` 或每個 agent 的 `agents.list[].tools.exec.safeBins`）。
+- `safeBinTrustedDirs` 來自設定（`tools.exec.safeBinTrustedDirs` 或每個 agent 的 `agents.list[].tools.exec.safeBinTrustedDirs`）。
+- `safeBinProfiles` 來自設定（`tools.exec.safeBinProfiles` 或每個 agent 的 `agents.list[].tools.exec.safeBinProfiles`）。每個 agent 的設定檔鍵會覆寫全域鍵。
+- 允許清單條目位於 `agents.<id>.allowlist` 下的主機本地 `~/.openclaw/exec-approvals.json` 中（或透過 Control UI / `openclaw approvals allowlist ...`）。
+- 當直譯器/執行時期二進位檔出現在 `safeBins` 中而沒有明確的設定檔時，`openclaw security audit` 會以 `tools.exec.safe_bins_interpreter_unprofiled` 發出警告。
+- `openclaw doctor --fix` 可以將缺少的自訂 `safeBinProfiles.<bin>` 條目建構為 `{}`（事後請審查並收緊）。直譯器/執行時期二進位檔不會自動建構。
 
 自訂設定檔範例：
 
@@ -114,7 +112,7 @@ title: "執行審核 — 進階"
 }
 ```
 
-如果您明確將 `jq` 設為 `safeBins`，OpenClaw 仍會在 safe-bin 模式下拒絕 `env` 內建指令，因此 `jq -n env` 若無明確的允許清單路徑或批准提示，便無法傾印主機程序環境。
+如果您明確選擇將 `jq` 加入 `safeBins`，OpenClaw 仍會在安全二進位檔模式下拒絕 `env` 內建指令，因此 `jq -n env` 無法在沒有明確允許清單路徑或審核提示的情況下傾印主機程序環境。
 
 ## 直譯器/執行時期指令
 
@@ -122,24 +120,25 @@ title: "執行審核 — 進階"
 
 - 精確的 argv/cwd/env 環境始終會受到綁定。
 - 直接 shell 腳本和直接執行時期檔案格式會盡力綁定至一個具體的本機檔案快照。
-- 仍可解析為一個直接本機檔案的常見套件管理程式包裝格式（例如 `pnpm exec`、`pnpm node`、`npm exec`、`npx`）會在綁定前被展開。
+- 仍然解析為單個直接本地檔案的常見套件管理器包裝器形式（例如
+  `pnpm exec`、`pnpm node`、`npm exec`、`npx`）會在綁定之前解除包裝。
 - 如果 OpenClaw 無法為直譯器/執行時期指令識別出確切的一個具體本機檔案（例如套件腳本、eval 格式、特定執行時期的載入器鏈結，或歧義的多檔案格式），將會拒絕經批准的執行，而非聲稱其不具備的語意涵蓋範圍。
 - 對於這些工作流程，建議優先採用沙盒、獨立的主機邊界，或是操作員接受更廣泛執行時期語意的明確信任允許清單/完整工作流程。
 
-當需要批准時，exec 工具會立即傳回一個批准 ID。請使用該 ID 來關聯後續的系統事件（`Exec finished` / `Exec denied`）。如果在逾時前未收到決策，該請求將被視為批准逾時，並作為拒絕原因呈現。
+當需要核准時，exec 工具會立即傳回一個核准 ID。使用該 ID 來關聯後續的系統事件（`Exec finished` / `Exec denied`）。如果在逾時之前未收到決定，該請求將被視為核准逾時，並顯示為拒絕原因。
 
 ### 後續傳遞行為
 
-在經批准的非同步 exec 完成後，OpenClaw 會向同一個工作階段發送後續的 `agent` 回合。
+在已核准的非同步 exec 完成後，OpenClaw 會將後續的 `agent` 輪次發送到同一個工作階段。
 
-- 如果存在有效的外部傳遞目標（可傳遞的頻道加上目標 `to`），後續傳遞會使用該頻道。
-- 在僅限網路聊天或沒有外部目標的內部工作階段流程中，後續傳遞僅限於工作階段內（`deliver: false`）。
-- 如果呼叫者明確要求嚴格的外部傳遞但沒有可解析的外部頻道，請求將會失敗並傳回 `INVALID_REQUEST`。
-- 如果啟用了 `bestEffortDeliver` 且無法解析外部頻道，傳遞將降級為僅限工作階段，而不是失敗。
+- 如果存在有效的外部交付目標（可交付的頻道加上目標 `to`），後續交付會使用該頻道。
+- 在僅限網路聊天或內部工作階段且沒有外部目標的流程中，後續交付僅限於工作階段內部（`deliver: false`）。
+- 如果呼叫方明確要求嚴格的外部交付但沒有可解析的外部頻道，該請求將會失敗並顯示 `INVALID_REQUEST`。
+- 如果啟用了 `bestEffortDeliver` 且無法解析外部頻道，交付將降級為僅限工作階段，而不是失敗。
 
 ## 將審核轉發至聊天頻道
 
-您可以將執行審核提示轉發到任何聊天頻道（包括外掛頻道）並使用 `/approve` 進行審核。這使用正常的出站傳遞管道。
+您可以將 exec 核準提示轉發到任何聊天頻道（包括外掛頻道）並使用 `/approve` 進行核准。這會使用正常的 outbound 交付管道。
 
 設定：
 
@@ -168,11 +167,11 @@ title: "執行審核 — 進階"
 /approve <id> deny
 ```
 
-`/approve` 指令同時處理執行審核和外掛審核。如果 ID 不符合待處理的執行審核，它會自動改為檢查外掛審核。
+`/approve` 指令同時處理 exec 核準和外掛核準。如果 ID 與待處理的 exec 核準不符，它會自動檢查外掛核準。
 
 ### 外掛審核轉發
 
-外掛審核轉發使用與執行審核相同的傳遞管道，但在 `approvals.plugin` 下有其獨立的設定。啟用或停用其中一個不會影響另一個。
+外掛核准轉發使用與 exec 核準相同的交付管道，但在 `approvals.plugin` 下有自己的獨立配置。啟用或停用其中一個不會影響另一個。
 
 ```json5
 {
@@ -190,72 +189,73 @@ title: "執行審核 — 進階"
 }
 ```
 
-設定結構與 `approvals.exec` 相同：`enabled`、`mode`、`agentFilter`、`sessionFilter` 和 `targets` 的工作方式相同。
+配置形狀與 `approvals.exec` 相同：`enabled`、`mode`、`agentFilter`、
+`sessionFilter` 和 `targets` 的工作方式相同。
 
-支援共用互動回覆的頻道會為執行審核和外掛審核呈現相同的審核按鈕。沒有共用互動 UI 的頻道會退回到純文字並附帶 `/approve` 指令。
+支援共享互動回覆的頻道會為執行和插件核准呈現相同的核准按鈕。不支援共享互動 UI 的頻道會退回到純文字並附上 `/approve` 指令。插件核准請求可能會限制可用的決策選項。核准介面會使用請求中宣告的決策集合，而 Gateway 會拒絕提交未提供之決策的嘗試。
 
 ### 在任何頻道上進行同聊天審核
 
-當執行或外掛審核請求來自可傳遞的聊天介面時，預設情況下，同一個聊天現在可以使用 `/approve` 對其進行審核。這適用於 Slack、Matrix 和 Microsoft Teams 等頻道，以及現有的 Web UI 和終端機 UI 流程。
+當執行或插件核准請求來自可傳送的聊天介面時，預設情況下，同一個聊天現在可以使用 `/approve` 進行核准。這適用於 Slack、Matrix 和 Microsoft Teams 等頻道，除了現有的 Web UI 和終端機 UI 流程之外。
 
 這個共用的文字指令路徑使用該對話的正常頻道驗證模型。如果來源聊天已經可以發送指令並接收回覆，審核請求不再需要單獨的原生傳遞配接器來保持待處理狀態。
 
-Discord 和 Telegram 也支援同聊天室 `/approve`，但這些頻道即使停用了原生的審核傳送功能，仍然會使用其解析後的審核者清單進行授權。
+Discord 和 Telegram 也支援同一聊天 `/approve`，但即使停用了原生核准傳送，這些頻道仍會使用其解析出的核准者清單進行授權。
 
 對於 Telegram 和其他直接呼叫 Gateway 的原生審核客戶端，此後備機制有意限制在「找不到審核」失敗的情況下。真正的執行審核拒絕/錯誤不會以外掛程式審核的方式靜默重試。
 
 ### 原生審核傳送
 
-某些頻道也可以充當原生審核客戶端。原生客戶端在共享的同聊天室 `/approve` 流程之上，增加了審核者 DM、原始聊天室分流以及特定頻道的互動式審核 UX。
+某些頻道也可以充當原生核准客戶端。原生客戶端在共享的同一聊天 `/approve` 流程之上，增加了核准者 DM、原始聊天分送以及特定頻道的互動核准 UX。
 
-當可使用原生審核卡片/按鈕時，該原生 UI 是面向 Agent 的主要途徑。除非工具結果指出聊天室審核不可用或手動審核是唯一剩餘的途徑，否則 Agent 不應重複回顯單純的聊天室 `/approve` 指令。
+當提供原生核准卡片/按鈕時，該原生 UI 是面向代理的主要路徑。除非工具結果指出聊天核准不可用或手動核准是唯一剩餘的路徑，否則代理不應重複顯示相同的純聊天 `/approve` 指令。
+
+如果設定了原生核准客戶端，但來源頻道沒有作用中的原生執行時期，OpenClaw 會保持本機確定性 `/approve` 提示可見。如果原生執行時期作用中並嘗試傳送但沒有目標收到卡片，OpenClaw 會發送包含確切 `/approve <id> <decision>` 指令的同一聊天備援通知，以便仍能解決該請求。
 
 通用模型：
 
-- host exec policy 仍然決定是否需要執行審核
-- `approvals.exec` 控制將審核提示轉發到其他聊天室目的地
-- `channels.<channel>.execApprovals` 控制該頻道是否充當原生審核客戶端
+- 主機執行政策仍然決定是否需要執行核准
+- `approvals.exec` 控制是否將核准提示轉發到其他聊天目的地
+- `channels.<channel>.execApprovals` 控制該頻道是否充當原生核准客戶端
 
-當以下所有條件均成立時，原生審核客戶端會自動啟用 DM 優先傳送：
+當以下所有條件均為真時，原生核准客戶端會自動啟用 DM 優先傳送：
 
-- 該頻道支援原生審核傳送
-- 可以從明確的 `execApprovals.approvers` 或該頻道文件中記載的後備來源解析審核者
+- 該頻道支援原生核准傳送
+- 可從明確的 `execApprovals.approvers` 或擁有者身分（例如 `commands.ownerAllowFrom`）解析出審批者
 - `channels.<channel>.execApprovals.enabled` 未設定或為 `"auto"`
 
-設定 `enabled: false` 以明確停用原生審核客戶端。設定 `enabled: true` 以在解析出審核者時強制啟用它。公開的原始聊天室傳送保持透過 `channels.<channel>.execApprovals.target` 明確設定。
+設定 `enabled: false` 以明確停用原生審批客戶端。設定 `enabled: true` 以在解析出審批者時強制啟用它。公開的原始聊天室傳遞仍透過 `channels.<channel>.execApprovals.target` 保持明確。
 
-常見問題：[為什麼聊天室審核有兩個執行審核設定？](/zh-Hant/help/faq-first-run#why-are-there-two-exec-approval-configs-for-chat-approvals)
+常見問題：[為什麼聊天審批有兩個 exec 審批設定？](/zh-Hant/help/faq-first-run#why-are-there-two-exec-approval-configs-for-chat-approvals)
 
 - Discord：`channels.discord.execApprovals.*`
 - Slack：`channels.slack.execApprovals.*`
 - Telegram：`channels.telegram.execApprovals.*`
 
-這些原生審核客戶端在共享的同聊天室 `/approve` 流程和共享審核按鈕之上，增加了 DM 路由和可選的頻道分流。
+這些原生審批客戶端在共享的同聊天室 `/approve` 流程和共享審批按鈕之上，增加了 DM 路由和可選的聊天室擴散功能。
 
 共享行為：
 
-- Slack、Matrix、Microsoft Teams 和類似的可傳送聊天平台使用正常的頻道授權模型
-  來處理同頻道的 `/approve`
-- 當原生審批客戶端自動啟用時，預設的原生傳送目標是審批者的 DM
-- 對於 Discord 和 Telegram，只有已解析的審批者可以批准或拒絕
-- Discord 審批者可以是明確指定的 (`execApprovals.approvers`) 或是從 `commands.ownerAllowFrom` 推斷出的
-- Telegram 審批者可以是明確指定的 (`execApprovals.approvers`) 或是從現有的擁有者配置推斷出的 (`allowFrom`，加上直接訊息 `defaultTo`，若支援的話)
-- Slack 審批者可以是明確指定的 (`execApprovals.approvers`) 或是從 `commands.ownerAllowFrom` 推斷出的
-- Slack 原生按鈕會保留審批 ID 種類，因此 `plugin:` ID 可以解析外掛程式審批
-  而不需要第二層 Slack 本地回退層
-- Matrix 原生 DM/頻道路由和反應捷徑同時處理執行和外掛程式審批；
-  外掛程式授權仍來自 `channels.matrix.dm.allowFrom`
+- Slack、Matrix、Microsoft Teams 和類似的可傳遞聊天室使用正常的聊天室授權模型進行同聊天室 `/approve`
+- 當原生審批客戶端自動啟用時，預設的原生傳遞目標是審批者的 DM
+- 對於 Discord 和 Telegram，只有解析出的審批者可以批准或拒絕
+- Discord 審批者可以是明確指定的 (`execApprovals.approvers`) 或從 `commands.ownerAllowFrom` 推斷
+- Telegram 審批者可以是明確指定的 (`execApprovals.approvers`) 或從 `commands.ownerAllowFrom` 推斷
+- Slack 審批者可以是明確指定的 (`execApprovals.approvers`) 或從 `commands.ownerAllowFrom` 推斷
+- Slack 原生按鈕會保留審批 ID 類型，因此 `plugin:` ID 可以解析外掛程式審批，而無需第二層 Slack 本地備援層
+- Matrix 原生 DM/聊天室路由和反應捷徑同時處理 exec 和外掛程式審批；外掛程式授權仍來自 `channels.matrix.dm.allowFrom`
+- Matrix 原生提示在第一個提示事件中包含 `com.openclaw.approval` 自訂事件內容，以便支援 OpenClaw 的 Matrix 客戶端可以讀取結構化審批狀態，而標準客戶端則保留純文字 `/approve` 備援
 - 請求者不需要是審批者
-- 當該聊天已支援指令和回覆時，原始聊天可以直接使用 `/approve` 進行批准
-- 原生 Discord 審批按鈕按審批 ID 種類路由：`plugin:` ID 直接
-  前往外掛程式審批，其他所有內容則前往執行審批
-- 原生 Telegram 審批按鈕遵循與 `/approve` 相同的有界執行至外掛程式回退機制
-- 當原生 `target` 啟用原始聊天傳送時，審批提示會包含指令文字
-- 待處理的執行審批預設在 30 分鐘後過期
-- 如果沒有操作員 UI 或設定的審批客戶端可以接受請求，提示會回退至 `askFallback`
+- 當該聊天已支援指令和回覆時，原始聊天可以使用 `/approve` 直接進行核准
+- 原生的 Discord 核准按鈕會根據核准 ID 種類進行路由：`plugin:` ID 會直接進入外掛程式核准，其他所有項目則進入 exec 核准
+- 原生的 Telegram 核准按鈕遵循與 `/approve` 相同的有界 exec 到外掛程式後援機制
+- 當原生 `target` 啟用來源聊天傳遞時，核准提示會包含指令文字
+- 待處理的 exec 核准預設在 30 分鐘後過期
+- 如果沒有操作者 UI 或設定的核准用戶端可以接受請求，提示會後援至 `askFallback`
 
-Telegram 預設為審批者 DM (`target: "dm"`)。當您希望審批提示也出現在原始 Telegram 聊天/主題中時，您可以切換至 `channel` 或 `both`。對於 Telegram 論壇
-主題，OpenClaw 會為審批提示和審批後的追蹤保留該主題。
+敏感的僅限擁有者的群組指令（例如 `/diagnostics` 和 `/export-trajectory`）會使用私人的擁有者路由來傳送核准提示和最終結果。OpenClaw 會先嘗試在擁有者執行指令的相同表面上使用私人路由。如果該表面沒有私人擁有者路由，它會後援至 `commands.ownerAllowFrom` 中的第一個可用擁有者路由，因此當 Telegram 是設定的主要私人介面時，Discord 群組指令仍然可以將核准和結果傳送給擁有者的 Telegram 私訊。群組聊天只會收到簡短的確認。
+
+Telegram 預設使用核准者私訊 (`target: "dm"`)。當您希望核准提示也出現在原始 Telegram 聊天/主題中時，您可以切換至 `channel` 或 `both`。對於 Telegram 論壇主題，OpenClaw 會為核准提示和核准後的後續追蹤保留該主題。
 
 請參閱：
 
@@ -271,15 +271,15 @@ Gateway -> Node Service (WS)
              Mac App (UI + approvals + system.run)
 ```
 
-安全性備註：
+安全性說明：
 
-- Unix socket 模式 `0600`，token 儲存在 `exec-approvals.json`。
+- Unix socket 模式 `0600`，Token 儲存於 `exec-approvals.json`。
 - 相同 UID 對等檢查。
-- 挑戰/回應 (nonce + HMAC token + 請求雜湊) + 短效 TTL。
+- 挑戰/回應 (nonce + HMAC token + 請求雜湊) + 短 TTL。
 
-## 相關
+## 相關內容
 
-- [Exec approvals](/zh-Hant/tools/exec-approvals) — 核心原則與審核流程
+- [Exec approvals](/zh-Hant/tools/exec-approvals) — 核心原則和核准流程
 - [Exec tool](/zh-Hant/tools/exec)
 - [Elevated mode](/zh-Hant/tools/elevated)
-- [Skills](/zh-Hant/tools/skills) — 技能支援的自動允許行為
+- [Skills](/zh-Hant/tools/skills) — 以技能為基礎的自動允許行為

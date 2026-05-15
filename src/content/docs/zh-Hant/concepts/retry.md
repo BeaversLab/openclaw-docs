@@ -37,7 +37,7 @@ title: "重試政策"
 
 ### Discord
 
-- 僅在速率限制錯誤 (HTTP 429) 時重試。
+- 在速率限制錯誤（HTTP 429）、請求逾時、HTTP 5xx 回應，以及暫時性傳輸失敗（例如 DNS 查詢失敗、連線重設、Socket 關閉和提取失敗）時重試。
 - 盡可能使用 Discord `retry_after`，否則使用指數退避。
 
 ### Telegram

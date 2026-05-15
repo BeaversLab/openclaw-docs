@@ -116,7 +116,7 @@ L'application compagnon macOS expose une case à cocher :
 
 - **Paramètres → Général → Autoriser l'appareil photo** (`openclaw.cameraEnabled`)
   - Par défaut : **désactivé**
-  - Lorsque désactivé : les requêtes d'appareil photo renvoient « Camera disabled by user ».
+  - Lorsqu'elle est désactivée : les demandes d'accès à la caméra renvoient "Camera disabled by user".
 
 ### Assistant CLI (appel de nœud)
 

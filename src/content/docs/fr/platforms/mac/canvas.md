@@ -7,7 +7,7 @@ read_when:
 title: "Canvas"
 ---
 
-L'application macOS intègre un panneau **Canvas** contrôlé par un agent en utilisant `WKWebView`. Il s'agit d'un espace de travail visuel léger pour HTML/CSS/JS, A2UI et de petites surfaces d'interface utilisateur interactives.
+L'application macOS intègre un **panneau Canvas** contrôlé par un agent en utilisant macOSCanvas`WKWebView`. C'est un espace de travail visuel léger pour HTML/CSS/JS, A2UI et de petites surfaces d'interface utilisateur interactives.
 
 ## Emplacement de Canvas
 
@@ -25,13 +25,13 @@ Exemples :
 - `openclaw-canvas://main/assets/app.css` → `<canvasRoot>/main/assets/app.css`
 - `openclaw-canvas://main/widgets/todo/` → `<canvasRoot>/main/widgets/todo/index.html`
 
-Si aucun `index.html` n'existe à la racine, l'application affiche une **page d'échafaudage intégrée**.
+Si aucun `index.html` n'existe à la racine, l'application affiche une **page de structure intégrée**.
 
 ## Comportement du panneau
 
 - Panneau redimensionnable sans bordure, ancré près de la barre de menus (ou du curseur de la souris).
 - Mémorise la taille et la position par session.
-- Se recharge automatiquement lorsque les fichiers Canvas locaux changent.
+- Recharge automatiquement lorsque les fichiers canvas locaux sont modifiés.
 - Un seul panneau Canvas est visible à la fois (la session est changée si nécessaire).
 
 Canvas peut être désactivé depuis Paramètres → **Autoriser Canvas**. Lorsqu'il est désactivé, les commandes de nœud canvas renvoient `CANVAS_DISABLED`.
@@ -61,7 +61,8 @@ Notes :
 
 ## A2UI dans Canvas
 
-A2UI est hébergé par l'hôte de canvas Gateway et rendu à l'intérieur du panneau Canvas. Lorsque le Gateway annonce un hôte Canvas, l'application Canvas navigue automatiquement vers la page de l'hôte A2UI lors de la première ouverture.
+A2UI est hébergé par l'hôte canvas de la Gateway et rendu à l'intérieur du panneau Canvas.
+Lorsque la Gateway annonce un hôte Canvas, l'application macOS navigue automatiquement vers la page d'hôte A2UI lors de la première ouverture.
 
 URL de l'hôte A2UI par défaut :
 

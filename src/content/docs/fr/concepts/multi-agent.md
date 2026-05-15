@@ -28,13 +28,16 @@ Les profils d'authentification sont **par agent**. Chaque agent lit à partir de
 `sessions_history` est également le chemin de rappel inter-sessions plus sûr ici : il renvoie une vue limitée et assainie, et non un vidage brut de la transcription. Le rappel de l'assistant supprime les balises de réflexion, l'échafaudage `<relevant-memories>`, les payloads XML d'appels d'outil en texte brut (y compris `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` et les blocs d'appels d'outil tronqués), l'échafaudage d'appels d'outil rétrogradé, les jetons de contrôle de modèle ASCII/à pleine largeur fuyants et les XML d'appels d'outil MiniMax malformés avant la rédaction/troncature.
 </Note>
 
-<Warning>Les identifiants de l'agent principal ne sont **pas** partagés automatiquement. Ne réutilisez jamais `agentDir` entre les agents (cela provoque des conflits d'authentification/session). Si vous souhaitez partager des identifiants, copiez `auth-profiles.json` dans le `agentDir` de l'autre agent.</Warning>
+<Warning>
+  Ne réutilisez jamais `agentDir` entre plusieurs agents (cela provoque des collisions d'authentification/de session). Les agents peuvent accéder aux profils d'authentification de l'agent par défaut/principal lorsqu'ils n'ont pas de profil local, mais OpenClaw ne clone pas les jetons d'actualisation OAuth dans le stockage de l'agent secondaire. Si vous souhaitez un compte OAuth indépendant,
+  connectez-vous depuis cet agent ; si vous copiez les identifiants manuellement, ne copiez que des profils statiques portables `api_key` ou `token`.
+</Warning>
 
-Les Skills sont chargées depuis l'espace de travail de chaque agent ainsi que depuis les racines partagées telles que `~/.openclaw/skills`, puis filtrées par la liste d'autorisation des Skills de l'agent effectif lorsqu'elle est configurée. Utilisez `agents.defaults.skills` pour une base partagée et `agents.list[].skills` pour un remplacement par agent. Voir [Skills : par agent vs partagées](/fr/tools/skills#per-agent-vs-shared-skills) et [Skills : listes d'autorisation des Skills d'agent](/fr/tools/skills#agent-skill-allowlists).
+Les Skills sont chargées depuis l'espace de travail de chaque agent ainsi que depuis les racines partagées telles que `~/.openclaw/skills`, puis filtrées par la liste d'autorisation des Skills de l'agent effectif lorsqu'elle est configurée. Utilisez `agents.defaults.skills` pour une base partagée et `agents.list[].skills` pour un remplacement spécifique à l'agent. Voir [Skills : par agent vs partagées](/fr/tools/skills#per-agent-vs-shared-skills) et [Skills : listes d'autorisation des Skills de l'agent](/fr/tools/skills#agent-skill-allowlists).
 
 Le Gateway peut héberger **un agent** (par défaut) ou **plusieurs agents** côte à côte.
 
-<Note>**Note sur l'espace de travail :** l'espace de travail de chaque agent est le **cwd par défaut**, et non un bac à sable (sandbox) strict. Les chemins relatifs sont résolus à l'intérieur de l'espace de travail, mais les chemins absolus peuvent atteindre d'autres emplacements de l'hôte, sauf si le sandboxing est activé. Voir [Sandboxing](/fr/gateway/sandboxing).</Note>
+<Note>**Note sur l'espace de travail :** l'espace de travail de chaque agent est le **cwd par défaut**, et non un bac à sable (sandbox) strict. Les chemins relatifs sont résolus à l'intérieur de l'espace de travail, mais les chemins absolus peuvent atteindre d'autres emplacements de l'hôte sauf si le sandboxing est activé. Voir [Sandboxing](/fr/gateway/sandboxing).</Note>
 
 ## Chemins (carte rapide)
 
@@ -83,8 +86,8 @@ openclaw agents list --bindings
     Chaque agent dispose de son propre espace de travail avec `SOUL.md`, `AGENTS.md` et `USER.md` en option, ainsi qu'un `agentDir` dédié et un stockage de sessions sous `~/.openclaw/agents/<agentId>`.
 
   </Step>
-  <Step title="Créer les comptes de canal">
-    Créez un compte par agent sur vos canaux préférés :
+  <Step title="Créer des comptes de canal">
+    Créez un compte par agent sur les canaux de votre choix :
 
     - Discord : un bot par agent, activez l'intention de contenu de message (Message Content Intent), copiez chaque jeton.
     - Telegram : un bot par agent via BotFather, copiez chaque jeton.
@@ -212,9 +215,16 @@ Les liaisons sont **déterministes** et **le plus spécifique l'emporte** :
 </Steps>
 
 <AccordionGroup>
-  <Accordion title="Départage et sémantique ET">- Si plusieurs liaisons correspondent dans le même niveau, la première dans l'ordre de configuration l'emporte. - Si une liaison définit plusieurs champs de correspondance (par exemple `peer` + `guildId`), tous les champs spécifiés sont requis (sémantique `AND`).</Accordion>
+  <Accordion title="Tie-breaking et sémantique ET">
+    - Si plusieurs correspondances de liaison (bindings) correspondent dans le même niveau, la première dans l'ordre de configuration l'emporte.
+    - Si une liaison définit plusieurs champs de correspondance (par exemple `peer` + `guildId`), tous les champs spécifiés sont requis (sémantique `AND`).
+
+  </Accordion>
   <Accordion title="Détail de la portée du compte">
-    - Une liaison qui omet `accountId` ne correspond qu'au compte par défaut. - Utilisez `accountId: "*"` pour un repli à l'échelle du channel sur tous les comptes. - Si vous ajoutez ultérieurement la même liaison pour le même agent avec un ID de compte explicite, OpenClaw met à niveau la liaison existante limitée au channel pour qu'elle soit limitée au compte, au lieu de la dupliquer.
+    - Une liaison qui omet `accountId` ne correspond qu'au compte par défaut.
+    - Utilisez `accountId: "*"` pour un repli à l'échelle du channel sur tous les comptes.
+    - Si vous ajoutez ultérieurement la même liaison pour le même agent avec un ID de compte explicite, OpenClaw met à niveau la liaison existante limitée au channel pour qu'elle soit limitée au compte, au lieu de la dupliquer.
+
   </Accordion>
 </AccordionGroup>
 
@@ -228,20 +238,20 @@ Les channels courants prenant en charge ce modèle incluent :
 
 - `whatsapp`, `telegram`, `discord`, `slack`, `signal`, `imessage`
 - `irc`, `line`, `googlechat`, `mattermost`, `matrix`, `nextcloud-talk`
-- `bluebubbles`, `zalo`, `zalouser`, `nostr`, `feishu`
+- `zalo`, `zalouser`, `nostr`, `feishu`
 
 ## Concepts
 
-- `agentId` : un « cerveau » (espace de travail, authentification par agent, magasin de sessions par agent).
-- `accountId` : une instance de compte de channel (par exemple, le compte WhatsApp `"personal"` contre `"biz"`).
-- `binding` : achemine les messages entrants vers un `agentId` par `(channel, accountId, peer)` et facultativement par les identifiants de guilde/d'équipe.
-- Les discussions directes s'effondrent dans `agent:<agentId>:<mainKey>` ( « principal » par agent ; `session.mainKey`).
+- `agentId` : un « cerveau » (espace de travail, authentification par agent, stockage de session par agent).
+- `accountId` : une instance de compte de channel (par exemple, compte WhatsApp `"personal"` contre `"biz"`).
+- `binding` : achemine les messages entrants vers un `agentId` par `(channel, accountId, peer)` et facultativement par les IDs de guilde/équipe.
+- Les chats directs sont réduits à `agent:<agentId>:<mainKey>` (principal par agent ; `session.mainKey`).
 
 ## Exemples de plateformes
 
 <AccordionGroup>
   <Accordion title="Bots Discord par agent">
-    Chaque compte bot Discord correspond à un `accountId` unique. Liez chaque compte à un agent et conservez les listes d'autorisation par bot.
+    Chaque compte bot Discord correspond à un `accountId` unique. Liez chaque compte à un agent et gardez des listes d'autorisation par bot.
 
     ```json5
     {
@@ -285,11 +295,11 @@ Les channels courants prenant en charge ce modèle incluent :
     }
     ```
 
-    - Invitez chaque bot sur la guilde et activez l'intention de contenu de message.
+    - Invitez chaque bot sur la guilde et activez l'intention de contenu de message (Message Content Intent).
     - Les jetons résident dans `channels.discord.accounts.<id>.token` (le compte par défaut peut utiliser `DISCORD_BOT_TOKEN`).
 
   </Accordion>
-  <Accordion title="Bots Telegram par agent">
+  <Accordion title="TelegramBots Telegram par agent">
     ```json5
     {
       agents: {
@@ -324,7 +334,7 @@ Les channels courants prenant en charge ce modèle incluent :
     - Les jetons résident dans `channels.telegram.accounts.<id>.botToken` (le compte par défaut peut utiliser `TELEGRAM_BOT_TOKEN`).
 
   </Accordion>
-  <Accordion title="Numéros WhatsApp par agent">
+  <Accordion title="WhatsAppNuméros WhatsApp par agent">
     Liez chaque compte avant de démarrer la passerelle :
 
     ```bash
@@ -401,8 +411,8 @@ Les channels courants prenant en charge ce modèle incluent :
 ## Modèles courants
 
 <Tabs>
-  <Tab title="WhatsAppTelegramWhatsApp quotidien + Telegram pour le travail profond"WhatsAppTelegram>
-    Diviser par channel : router WhatsApp vers un agent rapide du quotidien et Telegram vers un agent Opus.
+  <Tab title="WhatsAppTelegramQuotidien WhatsApp + travail approfondi Telegram"WhatsAppTelegram>
+    Divisez par channel : routez WhatsApp vers un agent rapide du quotidien et Telegram vers un agent Opus.
 
     ```json5
     {
@@ -469,8 +479,8 @@ Les channels courants prenant en charge ce modèle incluent :
     Les liaisons de pair l'emportent toujours, donc gardez-les au-dessus de la règle à l'échelle du channel.
 
   </Tab>
-  <Tab title="WhatsAppAgent familial lié à un groupe WhatsApp"WhatsApp>
-    Liez un agent familial dédié à un seul groupe WhatsApp, avec filtrage par mention et une politique de tool plus stricte :
+  <Tab title="WhatsAppAgent famille lié à un groupe WhatsApp"WhatsApp>
+    Liez un agent famille dédié à un groupe WhatsApp unique, avec un filtrage par mention et une politique de tool plus stricte :
 
     ```json5
     {
@@ -517,7 +527,7 @@ Les channels courants prenant en charge ce modèle incluent :
 
     Notes :
 
-    - Les listes d'autorisation/refus de tools sont des **tools**, pas des compétences. Si une compétence doit exécuter un binaire, assurez-vous que `exec` est autorisé et que le binaire existe dans le bac à sable.
+    - Les listes de permission/refus de tool sont des **tools**, pas des compétences. Si une compétence doit exécuter un binaire, assurez-vous que `exec` est autorisé et que le binaire existe dans le bac à sable.
     - Pour un filtrage plus strict, définissez `agents.list[].groupChat.mentionPatterns` et gardez les listes blanches de groupe activées pour le channel.
 
   </Tab>
@@ -560,7 +570,7 @@ Chaque agent peut avoir son propre bac à sable et ses propres restrictions de t
 }
 ```
 
-<Note>`setupCommand` se trouve sous `sandbox.docker` et s'exécute une fois lors de la création du conteneur. Les redéfinitions de `sandbox.docker.*` par agent sont ignorées lorsque la portée résolue est `"shared"`.</Note>
+<Note>`setupCommand` réside sous `sandbox.docker` et s'exécute une fois lors de la création du conteneur. Les substitutions `sandbox.docker.*` par agent sont ignorées lorsque la portée résolue est `"shared"`.</Note>
 
 **Avantages :**
 
@@ -577,5 +587,5 @@ Voir [Multi-agent sandbox and tools](/fr/tools/multi-agent-sandbox-tools) pour d
 - [ACP agents](/fr/tools/acp-agents) — exécution de harnais de codage externes
 - [Channel routing](/fr/channels/channel-routing) — acheminement des messages vers les agents
 - [Presence](/fr/concepts/presence) — présence et disponibilité des agents
-- [Session](/fr/concepts/session) — isolation et acheminement des sessions
+- [Session](/fr/concepts/session) — isolation et routage de session
 - [Sub-agents](/fr/tools/subagents) — lancement d'exécutions d'agents en arrière-plan

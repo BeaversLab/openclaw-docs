@@ -15,7 +15,7 @@ title: "語音喚醒 (macOS)"
 ## 執行時期行為 (喚醒詞)
 
 - 語音辨識器存在於 `VoiceWakeRuntime` 中。
-- 觸發僅在喚醒詞和下一個詞之間有**有意義的暫停**時觸發 (~0.55s 間隔)。覆蓋層/提示音可以在暫停時開始，甚至命令開始之前。
+- 觸發僅在喚醒詞與下一個詞之間有**有意義的暫停**時才會發生（約 0.55 秒的間隔）。覆蓋層/提示音可以在暫停時開始，甚至在指令開始之前。
 - 靜音視窗：語音進行時為 2.0s，若僅聽到觸發詞則為 5.0s。
 - 強制停止：120s 以防止失控的會話。
 - 會話之間的防彈跳：350ms。
@@ -29,7 +29,7 @@ title: "語音喚醒 (macOS)"
 
 ## 黏性覆蓋層失敗模式 (先前)
 
-先前，如果覆蓋層卡住顯示而您手動關閉它，語音喚醒可能會顯示「死機」，因為執行時的重新啟動嘗試可能被覆蓋層可見性阻止，且未安排後續重新啟動。
+先前，如果覆蓋層卡住可見狀態而您手動將其關閉，Voice Wake 可能會顯示為「失效」，因為執行階段的重新啟動嘗試可能會被覆蓋層的可見性阻擋，且未排程後續的重新啟動。
 
 強化：
 
@@ -50,7 +50,7 @@ title: "語音喚醒 (macOS)"
 - **Hold Cmd+Fn to talk**: enables the push-to-talk monitor. Disabled on macOS < 26.
 - Language & mic pickers, live level meter, trigger-word table, tester (local-only; does not forward).
 - Mic picker preserves the last selection if a device disconnects, shows a disconnected hint, and temporarily falls back to the system default until it returns.
-- **Sounds**: chimes on trigger detect and on send; defaults to the macOS “Glass” system sound. You can pick any `NSSound`-loadable file (e.g. MP3/WAV/AIFF) for each event or choose **No Sound**.
+- **音效**：在偵測到觸發和發送時播放提示音；預設為 macOS 的「Glass」系統音效。您可以為每個事件選擇任何 `NSSound` 可載入的檔案（例如 MP3/WAV/AIFF），或選擇**無音效**。
 
 ## Forwarding behavior
 

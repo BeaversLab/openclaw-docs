@@ -21,17 +21,17 @@ Cuando `agents.defaults.typingMode` está **sin establecer**, OpenClaw mantiene 
 
 ## Modos
 
-Establezca `agents.defaults.typingMode` en uno de los siguientes:
+Establezca `agents.defaults.typingMode` en uno de:
 
-- `never` — sin indicador de escritura, nunca.
-- `instant` — comenzar a escribir **tan pronto como inicie el bucle del modelo**, incluso si la ejecución
-  más tarde devuelve solo el token de respuesta silenciosa.
-- `thinking` — comenzar a escribir en el **primer delta de razonamiento** (requiere
+- `never` - ningún indicador de escritura, nunca.
+- `instant` - comenzar a escribir **tan pronto como comience el bucle del modelo**, incluso si la ejecución
+  luego devuelve solo el token de respuesta silenciosa.
+- `thinking` - comenzar a escribir en el **primer delta de razonamiento** (requiere
   `reasoningLevel: "stream"` para la ejecución).
-- `message` — comenzar a escribir en el **primer delta de texto no silencioso** (ignora
+- `message` - comenzar a escribir en el **primer delta de texto no silencioso** (ignora
   el token silencioso `NO_REPLY`).
 
-Orden de “qué tan pronto se activa”:
+Orden de "qué tan pronto se activa":
 `never` → `message` → `thinking` → `instant`
 
 ## Configuración
@@ -58,18 +58,27 @@ Puede anular el modo o el cadencia por sesión:
 
 ## Notas
 
-- El modo `message` no mostrará estado de escritura para respuestas solo silenciosas cuando toda
+- El modo `message` no mostrará escritura para respuestas solo silenciosas cuando toda
   la carga útil es el token silencioso exacto (por ejemplo `NO_REPLY` / `no_reply`,
-  coincidiendo sin distinción de mayúsculas y minúsculas).
+  coincidencia sin distinción de mayúsculas y minúsculas).
 - `thinking` solo se activa si la ejecución transmite razonamiento (`reasoningLevel: "stream"`).
   Si el modelo no emite deltas de razonamiento, la escritura no comenzará.
-- La escritura de latido es una señal de actividad para el objetivo de entrega resuelto. Esta
-  comienza al inicio de la ejecución de latido en lugar de seguir el tiempo de transmisión de `message` o `thinking`.
-  Establezca `typingMode: "never"` para deshabilitarla.
-- Los latidos no muestran que se está escribiendo cuando `target: "none"`, cuando el destino no se puede resolver, cuando la entrega de chat está deshabilitada para el latido, o cuando el canal no admite la escritura.
-- `typingIntervalSeconds` controla el **ritmo de actualización**, no la hora de inicio. El valor predeterminado es 6 segundos.
+- La escritura de latido es una señal de actividad para el objetivo de entrega resuelto. Comienza
+  al inicio del latido de la ejecución en lugar de seguir el tiempo de transmisión de `message` o `thinking`.
+  Establezca `typingMode: "never"` para desactivarla.
+- Los latidos no muestran escritura cuando `target: "none"`, cuando el objetivo no puede
+  ser resuelto, cuando la entrega de chat está desactivada para el latido, o cuando el
+  canal no admite escritura.
+- `typingIntervalSeconds` controla la **cadencia de actualización**, no la hora de inicio.
+  El valor predeterminado es 6 segundos.
 
 ## Relacionado
 
-- [Presencia](/es/concepts/presence)
-- [Transmisión y fragmentación](/es/concepts/streaming)
+<CardGroup cols={2}>
+  <Card title="Presence" href="/es/concepts/presence" icon="signal">
+    Cómo el Gateway rastrea a los clientes conectados y los muestra en la pestaña Instances de macOS.
+  </Card>
+  <Card title="Transmisión y fragmentación" href="/es/concepts/streaming" icon="bars-staggered">
+    Comportamiento de transmisión saliente, límites de fragmentos y entrega específica del canal.
+  </Card>
+</CardGroup>

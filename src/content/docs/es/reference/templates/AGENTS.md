@@ -94,7 +94,7 @@ En los chats grupales donde recibes todos los mensajes, sé **inteligente sobre 
 - Corregir información importante errónea
 - Resumir cuando te lo pidan
 
-**Mantén silencio (HEARTBEAT_OK) cuando:**
+**Mantente en silencio cuando:**
 
 - Es solo una charla informal entre humanos
 - Alguien ya respondió a la pregunta

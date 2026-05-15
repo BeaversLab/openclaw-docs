@@ -2,32 +2,32 @@
 summary: "OpenClaw 的進階設定與開發工作流程"
 read_when:
   - Setting up a new machine
-  - You want “latest + greatest” without breaking your personal setup
+  - You want "latest + greatest" without breaking your personal setup
 title: "設定"
 ---
 
-<Note>如果您是第一次進行設定，請從[入門指南](/zh-Hant/start/getting-started)開始。 關於入門的詳細資訊，請參閱[入門 (CLI)](/zh-Hant/start/wizard)。</Note>
+<Note>如果您是第一次進行設定，請從[入門指南](/zh-Hant/start/getting-started)開始。 關於入門的詳細資訊，請參閱 [入門 (CLI)](/zh-Hant/start/wizard)。</Note>
 
 ## TL;DR
 
 根據您希望更新的頻率以及是否想自行執行 Gateway，選擇一種設定工作流程：
 
-- **客製化設定位於 repo 之外：** 請將您的設定和工作區保留在 `~/.openclaw/openclaw.json` 和 `~/.openclaw/workspace/` 中，以免 repo 更新影響到它們。
+- **客製化配置位於 repo 之外：** 將您的設定和工作區保留在 `~/.openclaw/openclaw.json` 和 `~/.openclaw/workspace/` 中，這樣 repo 更新就不會影響它們。
 - **穩定工作流程（推薦給大多數人）：** 安裝 macOS 應用程式並讓它執行內建的 Gateway。
-- **最新工作流程（開發者）：** 透過 `pnpm gateway:watch` 自行執行 Gateway，然後讓 macOS 應用程式以本地模式連接。
+- **最新工作流程 (開發)：** 透過 `pnpm gateway:watch` 自己執行 Gateway，然後讓 macOS 應用程式以本地模式連線。
 
 ## 先決條件 (從原始碼)
 
-- 建議使用 Node 24 (Node 22 LTS，目前為 `22.14+`，仍受支援)
-- `pnpm` 為首選（如果您有意使用 [Bun 工作流程](/zh-Hant/install/bun)，則使用 Bun）
-- Docker（可選；僅用於容器化設置/e2e — 請參見 [Docker](/zh-Hant/install/docker)）
+- 建議使用 Node 24 (Node 22 LTS，目前為 `22.16+`，仍受支援)
+- 原始碼簽出需要 `pnpm`。OpenClaw 在開發模式下會從 `extensions/*` pnpm 工作區套件載入捆綁的外掛，因此根目錄的 `npm install` 不會準備完整的原始碼樹。
+- Docker (選用；僅用於容器化設定/e2e - 請參閱 [Docker](/zh-Hant/install/docker))
 
 ## 客製化策略 (以免更新受影響)
 
-如果您想要「100% 量身打造」_且_ 易於更新，請將您的客製化內容保留於：
+如果您想要「100% 為我量身打造」_且_ 容易更新，請將您的客製化內容保留在：
 
 - **設定：** `~/.openclaw/openclaw.json` (JSON/JSON5-ish)
-- **工作區：** `~/.openclaw/workspace` (skills、prompts、memories；將其設為私人 git repo)
+- **工作區：** `~/.openclaw/workspace` (技能、提示詞、記憶；將其設為私有的 git repo)
 
 引導一次：
 
@@ -41,7 +41,7 @@ openclaw setup
 openclaw setup
 ```
 
-如果您尚未進行全域安裝，請透過 `pnpm openclaw setup` 執行 (若您使用 Bun workflow 則為 `bun run openclaw setup`)。
+如果您還沒有全域安裝，請透過 `pnpm openclaw setup` 執行它。
 
 ## 從此 repo 執行 Gateway
 
@@ -93,29 +93,20 @@ pnpm openclaw setup
 pnpm gateway:watch
 ```
 
-`gateway:watch` 以監視模式運行閘道，並在相關源代碼、配置和捆綁插件元數據更改時重新加載。
-`pnpm openclaw setup` 是全新檢出時的一次性本地配置/工作區初始化步驟。
-`pnpm gateway:watch` 不會重新構建 `dist/control-ui`，因此請在 `ui/` 更改後重新運行 `pnpm ui:build`，或在開發 Control UI 時使用 `pnpm ui:dev`。
+`gateway:watch` 在指定的 tmux 會話中啟動或重新啟動 Gateway 監視程序，並從互動式終端機自動附加。非互動式 Shell 保持分離並列印 `tmux attach -t openclaw-gateway-watch-main`；請使用 `OPENCLAW_GATEWAY_WATCH_ATTACH=0 pnpm gateway:watch` 讓互動式執行保持分離，或使用 `pnpm gateway:watch:raw` 進行前景監視模式。監視器會在相關的來源、設定和捆綁插件元資料變更時重新載入。如果受監視的 Gateway 在啟動期間退出，`gateway:watch` 會執行一次 `openclaw doctor --fix --non-interactive` 並重試；設定 `OPENCLAW_GATEWAY_WATCH_AUTO_DOCTOR=0` 可停用此僅限開發的修復程序。
+`pnpm openclaw setup` 是全新檢出的一次性本機設定/工作區初始化步驟。
+`pnpm gateway:watch` 不會重建 `dist/control-ui`，因此請在 `ui/` 變更後重新執行 `pnpm ui:build`，或在開發 Control UI 時使用 `pnpm ui:dev`。
 
-如果您刻意使用 Bun workflow，對等的指令為：
-
-```bash
-bun install
-# First run only (or after resetting local OpenClaw config/workspace)
-bun run openclaw setup
-bun run gateway:watch
-```
-
-### 2) 讓 macOS 應用程式指向您正在執行的 Gateway
+### 2) 將 macOS 應用程式指向您執行中的 Gateway
 
 在 **OpenClaw.app** 中：
 
-- 連線模式：**Local**
-  應用程式將會連接到設定埠上正在執行的 gateway。
+- 連線模式：**本地**
+  應用程式將會附加到設定連接埠上執行中的 gateway。
 
 ### 3) 驗證
 
-- 應用程式內的 Gateway 狀態應顯示 **“Using existing gateway …”**
+- 應用程式內的 Gateway 狀態應顯示 **"Using existing gateway …"**
 - 或透過 CLI：
 
 ```bash
@@ -124,49 +115,51 @@ openclaw health
 
 ### 常見陷阱
 
-- **錯誤的連接埠：** 閘道 WS 默認為 `ws://127.0.0.1:18789`；請將應用程式和 CLI 保持在同一連接埠上。
-- **狀態存放位置：**
+- **錯誤的連接埠：** Gateway WS 預設為 `ws://127.0.0.1:18789`；請保持應用程式與 CLI 在相同的連接埠上。
+- **狀態儲存位置：**
   - 頻道/提供者狀態：`~/.openclaw/credentials/`
-  - 模型身份驗證設定檔：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-  - 會話：`~/.openclaw/agents/<agentId>/sessions/`
+  - 模型驗證設定檔：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+  - 工作階段：`~/.openclaw/agents/<agentId>/sessions/`
   - 日誌：`/tmp/openclaw/`
 
-## 憑證儲存對應表
+## 憑證儲存對應
 
-在偵錯認證或決定要備份什麼時使用：
+在除錯驗證或決定要備份什麼時使用此功能：
 
 - **WhatsApp**：`~/.openclaw/credentials/whatsapp/<accountId>/creds.json`
-- **Telegram 機器人權杖**：config/env 或 `channels.telegram.tokenFile`（僅限常規文件；不接受符號連結）
-- **Discord bot token**：config/env 或 SecretRef（env/file/exec 提供者）
+- **Telegram 機器人權杖**：config/env 或 `channels.telegram.tokenFile` (僅限一般檔案；不接受符號連結)
+- **Discord 機器人權杖**：config/env 或 SecretRef (env/file/exec 提供者)
 - **Slack 權杖**：config/env (`channels.slack.*`)
 - **配對允許清單**：
-  - `~/.openclaw/credentials/<channel>-allowFrom.json`（預設帳戶）
-  - `~/.openclaw/credentials/<channel>-<accountId>-allowFrom.json`（非預設帳戶）
-- **模型身份驗證設定檔**：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-- **檔案支援的秘密載荷（可選）**：`~/.openclaw/secrets.json`
+  - `~/.openclaw/credentials/<channel>-allowFrom.json` (預設帳戶)
+  - `~/.openclaw/credentials/<channel>-<accountId>-allowFrom.json` (非預設帳戶)
+- **模型驗證設定檔**：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+- **檔案支援的 secrets payload（可選）**：`~/.openclaw/secrets.json`
 - **舊版 OAuth 匯入**：`~/.openclaw/credentials/oauth.json`
-  更多詳細資訊：[Security](/zh-Hant/gateway/security#credential-storage-map)。
+  更多詳情：[安全性](/zh-Hant/gateway/security#credential-storage-map)。
 
 ## 更新（不破壞您的設定）
 
-- 將 `~/.openclaw/workspace` 和 `~/.openclaw/` 視為「您的個人資料」；請勿將個人提示/配置放入 `openclaw` 存儲庫中。
-- 更新原始碼：`git pull` + 您選擇的套件管理器安裝步驟（預設為 `pnpm install`；Bun 工作流程則為 `bun install`）+ 繼續使用相應的 `gateway:watch` 指令。
+- 將 `~/.openclaw/workspace` 和 `~/.openclaw/` 視為「您的東西」；不要將個人 prompts/config 放入 `openclaw` repo 中。
+- 更新來源：`git pull` + `pnpm install` + 繼續使用 `pnpm gateway:watch`。
 
 ## Linux（systemd 使用者服務）
 
-Linux 安裝使用 systemd **使用者** 服務。預設情況下，systemd 會在登出/閒置時停止使用者
-服務，這會終止 Gateway。入座流程會嘗試為您啟用 linger（可能會提示輸入 sudo）。如果仍然關閉，請執行：
+Linux 安裝程式使用 systemd **使用者** 服務。預設情況下，systemd 會在登出/閒置時停止使用者
+服務，這會終止 Gateway。Onboarding 會嘗試為您啟用
+lingering（可能會提示輸入 sudo）。如果仍然關閉，請執行：
 
 ```bash
 sudo loginctl enable-linger $USER
 ```
 
-對於永遠線上或多使用者伺服器，請考慮使用 **system** 服務而不是 user 服務（不需要 lingering）。請參閱 [Gateway runbook](/zh-Hant/gateway) 瞭解 systemd 說明。
+對於隨時運行或多使用者伺服器，請考慮使用 **系統** 服務而非
+使用者服務（不需要 lingering）。有關 systemd 的說明，請參閱 [Gateway runbook](/zh-Hant/gateway)。
 
 ## 相關文件
 
 - [Gateway runbook](/zh-Hant/gateway)（旗標、監控、連接埠）
-- [Gateway configuration](/zh-Hant/gateway/configuration)（配置架構 + 範例）
+- [Gateway 設定](/zh-Hant/gateway/configuration)（設定結構 + 範例）
 - [Discord](/zh-Hant/channels/discord) 和 [Telegram](/zh-Hant/channels/telegram)（回覆標籤 + replyToMode 設定）
-- [OpenClaw assistant setup](/zh-Hant/start/openclaw)
-- [macOS app](/zh-Hant/platforms/macos)（gateway 生命週期）
+- [OpenClaw assistant 設定](/zh-Hant/start/openclaw)
+- [macOS 應用程式](/zh-Hant/platforms/macos)（gateway 生命週期）

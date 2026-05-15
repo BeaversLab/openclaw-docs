@@ -48,9 +48,14 @@ Use [`openclaw acp`](/es/cli/acp) en su lugar cuando OpenClaw debería alojar é
 
 <AccordionGroup>
   <Accordion title="Comportamiento importante">
-    - el estado de la cola en vivo comienza cuando se conecta el puente - el historial de transcripciones antiguo se lee con `messages_read` - las notificaciones push de Claude solo existen mientras la sesión MCP está activa - cuando el cliente se desconecta, el puente se cierra y la cola en vivo desaparece - los puntos de entrada de agentes de un solo uso, como `openclaw agent` y `openclaw infer
-    model run`, cierran cualquier tiempo de ejecución de MCP incluido que abran cuando se completa la respuesta, por lo que las ejecuciones de scripts repetidas no acumulan procesos secundarios de MCP stdio - los servidores MCP stdio lanzados por OpenClaw (incluidos o configurados por el usuario) se derriban como un árbol de procesos al apagarse, por lo que los subprocesos secundarios iniciados
-    por el servidor no sobreviven después de que el cliente stdio principal se cierra - al eliminar o restablecer una sesión, se eliminan los clientes MCP de esa sesión a través de la ruta de limpieza del tiempo de ejecución compartido, por lo que no hay conexiones stdio persistentes vinculadas a una sesión eliminada
+    - el estado de la cola en vivo comienza cuando se conecta el puente
+    - el historial de transcripciones antiguo se lee con `messages_read`
+    - las notificaciones push de Claude solo existen mientras la sesión MCP está activa
+    - cuando el cliente se desconecta, el puente sale y la cola en vivo desaparece
+    - los puntos de entrada de agentes de un solo uso, como `openclaw agent` y `openclaw infer model run`, retiran cualquier tiempo de ejecución MCP agrupado que abran cuando se completa la respuesta, por lo que las ejecuciones con secuencias de comandos repetidas no acumulan procesos secundarios MCP stdio
+    - los servidores MCP stdio iniciados por OpenClaw (agrupados o configurados por el usuario) se desmantelan como un árbol de procesos al apagar, por lo que los subprocesos secundarios iniciados por el servidor no sobreviven después de que el cliente stdio principal sale
+    - eliminar o restablecer una sesión elimina los clientes MCP de esa sesión a través de la ruta de limpieza del tiempo de ejecución compartido, por lo que no hay conexiones stdio persistentes vinculadas a una sesión eliminada
+
   </Accordion>
 </AccordionGroup>
 
@@ -109,7 +114,7 @@ El puente actual expone estas herramientas MCP:
 
   </Accordion>
   <Accordion title="conversation_get">
-    Devuelve una conversación por `session_key`.
+    Devuelve una conversación por `session_key` utilizando una búsqueda directa de sesión de Gateway.
   </Accordion>
   <Accordion title="messages_read">
     Lee los mensajes de transcripción recientes de una conversación respaldada por sesión.
@@ -162,7 +167,12 @@ Tipos de eventos actuales:
 - `plugin_approval_resolved`
 - `claude_permission_request`
 
-<Warning>- la cola es solo en vivo; comienza cuando se inicia el puente MCP - `events_poll` y `events_wait` no reproducen por sí mismos el historial antiguo de la Gateway - el historial acumulable duradero debe leerse con `messages_read`</Warning>
+<Warning>
+- la cola es solo en vivo; comienza cuando se inicia el puente MCP
+- `events_poll` y `events_wait` no reproducen por sí mismos el historial antiguo de Gateway
+- el registro duradero debe leerse con `messages_read`
+
+</Warning>
 
 ### Notificaciones del canal de Claude
 
@@ -298,9 +308,13 @@ Esas definiciones guardadas son para tiempos de ejecución que OpenClaw lanza o 
 
 <AccordionGroup>
   <Accordion title="Comportamiento importante">
-    - estos comandos solo leen o escriben la configuración de OpenClaw - no se conectan al servidor MCP de destino - no validan si el comando, la URL o el transporte remoto es alcanzable en este momento - los adaptadores de tiempo de ejecución deciden qué formas de transporte admiten realmente en el momento de la ejecución - Pi integrado expone las herramientas MCP configuradas en perfiles de
-    herramientas normales `coding` y `messaging`; `minimal` aún las oculta, y `tools.deny: ["bundle-mcp"]` las deshabilita explícitamente - los tiempos de ejecución de MCP agrupados con ámbito de sesión se recolectan después de `mcp.sessionIdleTtlMs` milisegundos de tiempo de inactividad (por defecto 10 minutos; establezca `0` para deshabilitar) y las ejecuciones integradas de un solo shot las
-    limpian al final de la ejecución
+    - estos comandos solo leen o escriben la configuración de OpenClaw
+    - no se conectan al servidor MCP de destino
+    - no validan si el comando, la URL o el transporte remoto son accesibles en este momento
+    - los adaptadores de tiempo de ejecución deciden qué formas de transporte admiten realmente en el momento de la ejecución
+    - Pi integrado expone las herramientas MCP configuradas en perfiles de herramientas normales `coding` y `messaging`; `minimal` aún las oculta y `tools.deny: ["bundle-mcp"]` las desactiva explícitamente
+    - los tiempos de ejecución de MCP agrupados con ámbito de sesión se eliminan después de `mcp.sessionIdleTtlMs` milisegundos de tiempo de inactividad (10 minutos por defecto; configure `0` para desactivar) y las ejecuciones integradas de un solo shot las limpian al final de la ejecución
+
   </Accordion>
 </AccordionGroup>
 

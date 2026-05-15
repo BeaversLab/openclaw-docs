@@ -31,39 +31,42 @@ Ligne de base saine :
 
 ### Signatures d'échec WhatsApp
 
-| Symptôme                                      | Vérification la plus rapide                                              | Correctif                                                                           |
-| --------------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
-| Connecté mais pas de réponses en DM           | `openclaw pairing list whatsapp`                                         | Approuvez l'expéditeur ou modifiez la stratégie/la liste d'autorisation DM.         |
-| Messages de groupe ignorés                    | Vérifiez `requireMention` + les modèles de mention dans la configuration | Mentionnez le bot ou assouplissez la stratégie de mention pour ce groupe.           |
-| La connexion par QR expire avec 408           | Vérifiez la passerelle `HTTPS_PROXY` / l'environnement `HTTP_PROXY`      | Définissez un proxy accessible ; n'utilisez `NO_PROXY` que pour les contournements. |
-| Boucles de déconnexion/reconnexion aléatoires | `openclaw channels status --probe` + journaux                            | Reconnectez-vous et vérifiez que le répertoire des identifiants est sain.           |
+| Symptôme                                                  | Vérification la plus rapide                                              | Correctif                                                                                                                                                                           |
+| --------------------------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Connecté mais pas de réponses en DM                       | `openclaw pairing list whatsapp`                                         | Approuvez l'expéditeur ou modifiez la stratégie/la liste d'autorisation DM.                                                                                                         |
+| Messages de groupe ignorés                                | Vérifiez `requireMention` + les modèles de mention dans la configuration | Mentionnez le bot ou assouplissez la stratégie de mention pour ce groupe.                                                                                                           |
+| La connexion par QR expire avec 408                       | Vérifiez la passerelle `HTTPS_PROXY` / l'environnement `HTTP_PROXY`      | Définissez un proxy accessible ; n'utilisez `NO_PROXY` que pour les contournements.                                                                                                 |
+| Boucles de déconnexion/reconnexion aléatoires             | `openclaw channels status --probe` + journaux                            | Les reconnexions récentes sont signalées même lorsqu'elles sont actuellement connectées ; surveillez les journaux, redémarrez la passerelle, puis reliez si le flottement continue. |
+| Les réponses arrivent quelques secondes/minutes en retard | `openclaw doctor --fix`                                                  | Doctor arrête les clients TUI locaux périmés vérifiés lorsqu'ils dégradent la boucle d'événements du Gateway.                                                                       |
 
-Dépannage complet : [WhatsApp troubleshooting](/fr/channels/whatsapp#troubleshooting)
+Dépannage complet : [Dépannage WhatsApp](WhatsApp/en/channels/whatsapp#troubleshooting)
 
 ## Telegram
 
 ### Telegram failure signatures
 
-| Symptôme                                                       | Vérification la plus rapide                                             | Correction                                                                                                                                                                 |
-| -------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/start` mais aucun flux de réponse utilisable                 | `openclaw pairing list telegram`                                        | Approuvez l'appariement ou modifiez la stratégie de DM.                                                                                                                    |
-| Bot en ligne mais le groupe reste silencieux                   | Vérifiez l'exigence de mention et le mode de confidentialité du bot     | Désactivez le mode de confidentialité pour la visibilité du groupe ou mentionnez le bot.                                                                                   |
-| Échecs d'envoi avec des erreurs réseau                         | Inspectez les journaux pour les échels d'appel Telegram API             | Corrigez le routage DNS/IPv6/proxy vers `api.telegram.org`.                                                                                                                |
-| Le sondage bloque ou se reconnecte lentement                   | `openclaw logs --follow` pour le diagnostic du sondage                  | Mettez à niveau ; si les redémarrages sont de faux positifs, ajustez `pollingStallThresholdMs`. Les blocages persistants indiquent toujours un problème de proxy/DNS/IPv6. |
-| `setMyCommands` rejeté au démarrage                            | Inspectez les journaux pour `BOT_COMMANDS_TOO_MUCH`                     | Réduisez les commandes de plugin/compétence/custom Telegram ou désactivez les menus natifs.                                                                                |
-| Mise à niveau effectuée et la liste d'autorisation vous bloque | `openclaw security audit` et les listes d'autorisation de configuration | Exécutez `openclaw doctor --fix` ou remplacez `@username` par des ID d'expéditeurs numériques.                                                                             |
+| Symptôme                                            | Vérification la plus rapide                                             | Correctif                                                                                                                                                              |
+| --------------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/start` mais aucun flux de réponse utilisable      | `openclaw pairing list telegram`                                        | Approuver l'appairage ou modifier la stratégie de DM.                                                                                                                  |
+| Bot en ligne mais le groupe reste silencieux        | Vérifier la exigence de mention et le mode de confidentialité du bot    | Désactiver le mode de confidentialité pour la visibilité du groupe ou mentionner le bot.                                                                               |
+| Échecs d'envoi avec erreurs réseau                  | Inspecter les journaux pour les échecs des appels API TelegramAPI       | Corriger le routage DNS/IPv6/proxy vers `api.telegram.org`.                                                                                                            |
+| Le démarrage signale `getMe returned 401`           | Vérifier la source du jeton configurée                                  | Recopier ou régénérer le jeton BotFather et mettre à jour `botToken`, `tokenFile`, ou default-account `TELEGRAM_BOT_TOKEN`.                                            |
+| Le sondage stagne ou se reconnecte lentement        | `openclaw logs --follow` pour le diagnostic du sondage                  | Mettre à niveau ; si les redémarrages sont de faux positifs, ajustez `pollingStallThresholdMs`. Les stagnations persistantes pointent toujours vers un proxy/DNS/IPv6. |
+| `setMyCommands` rejeté au démarrage                 | Inspecter les journaux pour `BOT_COMMANDS_TOO_MUCH`                     | Réduire les commandes plugin/skill/personnalisées Telegram ou désactiver les menus natifs.                                                                             |
+| Mis à niveau et la liste d'autorisation vous bloque | `openclaw security audit` et les listes d'autorisation de configuration | Exécuter `openclaw doctor --fix` ou remplacer `@username` par des ID d'expéditeurs numériques.                                                                         |
 
-Dépannage complet : [Telegram troubleshooting](/fr/channels/telegram#troubleshooting)
+Dépannage complet : [Dépannage Telegram](Telegram/en/channels/telegram#troubleshooting)
 
 ## Discord
 
 ### Discord failure signatures
 
-| Symptôme                                   | Vérification la plus rapide                                          | Correction                                                                 |
-| ------------------------------------------ | -------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Bot en ligne mais aucune réponse de guilde | `openclaw channels status --probe`                                   | Autoriser la guilde/le channel et vérifier l'intent de contenu de message. |
-| Messages de groupe ignorés                 | Vérifier les journaux pour les abandons dus au filtrage des mentions | Mentionner le bot ou définir `requireMention: false` de guilde/channel.    |
-| Réponses DM manquantes                     | `openclaw pairing list discord`                                      | Approuver l'appariement DM ou ajuster la politique DM.                     |
+| Symptôme                                                   | Vérification la plus rapide                                                                | Correctif                                                                                                                                                                                                           |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bot en ligne mais aucune réponse de guilde                 | `openclaw channels status --probe`                                                         | Autoriser la guilde/le canal et vérifier l'intention de contenu du message.                                                                                                                                         |
+| Messages de groupe ignorés                                 | Vérifiez les journaux pour les abandons dus au filtrage des mentions                       | Mentionnez le bot ou définissez `requireMention: false` de guilde/channel.                                                                                                                                          |
+| Utilisation de la frappe/jetons mais aucun message Discord | Le journal de session montre le texte de l'assistant avec `didSendViaMessagingTool: false` | Le modèle a répondu en privé au lieu d'appeler l'outil de message. Utilisez un modèle fiable pour les appels d'outils, ou définissez `messages.groupChat.visibleReplies: "automatic"` pour publier automatiquement. |
+| Réponses DM manquantes                                     | `openclaw pairing list discord`                                                            | Approuvez l'appairage DM ou ajustez la politique DM.                                                                                                                                                                |
 
 Dépannage complet : [Dépannage Discord](/fr/channels/discord#troubleshooting)
 
@@ -71,70 +74,69 @@ Dépannage complet : [Dépannage Discord](/fr/channels/discord#troubleshooting)
 
 ### Signatures d'échec Slack
 
-| Symptôme                                 | Vérification la plus rapide                                  | Correction                                                                                                                                                                                        |
-| ---------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mode socket connecté mais aucune réponse | `openclaw channels status --probe`                           | Vérifier le jeton d'application + le jeton bot et les portées requises ; surveiller les `botTokenStatus` / `appTokenStatus = configured_unavailable` sur les configurations basées sur SecretRef. |
-| DMs bloqués                              | `openclaw pairing list slack`                                | Approuver l'appariement ou assouplir la politique DM.                                                                                                                                             |
-| Message de channel ignoré                | Vérifier `groupPolicy` et la liste d'autorisation du channel | Autoriser le channel ou passer la politique à `open`.                                                                                                                                             |
+| Symptôme                                 | Vérification la plus rapide                                    | Correctif                                                                                                                                                                                      |
+| ---------------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mode socket connecté mais aucune réponse | `openclaw channels status --probe`                             | Vérifiez le jeton d'application + le jeton bot et les étendues requises ; surveillez `botTokenStatus` / `appTokenStatus = configured_unavailable` sur les configurations basées sur SecretRef. |
+| DMs bloqués                              | `openclaw pairing list slack`                                  | Approuvez l'appairage ou assouplissez la politique DM.                                                                                                                                         |
+| Message de channel ignoré                | Vérifiez `groupPolicy` et la liste d'autorisation des channels | Autorisez le channel ou passez la politique à `open`.                                                                                                                                          |
 
 Dépannage complet : [Dépannage Slack](/fr/channels/slack#troubleshooting)
 
-## iMessage et BlueBubbles
+## iMessage
 
-### Signatures d'échec iMessage et BlueBubbles
+### Signatures d'échec iMessage
 
-| Symptôme                                  | Vérification la plus rapide                                                          | Correction                                                                    |
-| ----------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| Aucun événement entrant                   | Vérifier l'accessibilité du webhook/serveur et les permissions de l'application      | Corriger l'URL du webhook ou l'état du serveur BlueBubbles.                   |
-| Peut envoyer mais ne reçoit pas sur macOS | Vérifier les permissions de confidentialité macOS pour l'automatisation des Messages | Accorder à nouveau les permissions TCC et redémarrer le processus du channel. |
-| Expéditeur DM bloqué                      | `openclaw pairing list imessage` ou `openclaw pairing list bluebubbles`              | Approuver l'appariement ou mettre à jour la liste d'autorisation.             |
+| Symptôme                                  | Vérification la plus rapide                                                           | Correctif                                                                        |
+| ----------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `imsg` manquant ou échoue sur non-macOS   | `openclaw channels status --probe --channel imessage`                                 | Exécutez OpenClaw sur le Mac Messages ou utilisez un wrapper SSH pour `cliPath`. |
+| Peut envoyer mais ne reçoit pas sur macOS | Vérifiez les autorisations de confidentialité macOS pour l'automatisation de Messages | Accordez à nouveau les autorisations TCC et redémarrez le processus du channel.  |
+| Expéditeur DM bloqué                      | `openclaw pairing list imessage`                                                      | Approuvez l'appairage ou mettez à jour la liste d'autorisation.                  |
 
 Dépannage complet :
 
 - [Dépannage iMessage](/fr/channels/imessage#troubleshooting)
-- [Dépannage BlueBubbles](/fr/channels/bluebubbles#troubleshooting)
 
 ## Signal
 
 ### Signatures d'échec Signal
 
-| Symptôme                                  | Vérification la plus rapide                                            | Correction                                                              |
-| ----------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Démon accessible mais bot silencieux      | `openclaw channels status --probe`                                     | Vérifier l'URL/le compte du démon `signal-cli` et le mode de réception. |
-| DM bloqué                                 | `openclaw pairing list signal`                                         | Approuver l'expéditeur ou ajuster la politique DM.                      |
-| Les réponses de groupe ne déclenchent pas | Vérifier la liste d'autorisation des groupes et les modèles de mention | Ajouter l'expéditeur/le groupe ou desserrer le filtrage.                |
+| Symptôme                                  | Vérification la plus rapide                                            | Correctif                                                            |
+| ----------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Démon accessible mais bot silencieux      | `openclaw channels status --probe`                                     | Vérifiez l'URL/compte du démon `signal-cli` et le mode de réception. |
+| DM bloqué                                 | `openclaw pairing list signal`                                         | Approuvez l'expéditeur ou ajustez la stratégie de DM.                |
+| Les réponses de groupe ne déclenchent pas | Vérifiez la liste d'autorisation des groupes et les modèles de mention | Ajoutez l'expéditeur/le groupe ou assouplissez le filtrage.          |
 
-Dépannage complet : [Dépannage Signal](/fr/channels/signal#troubleshooting)
+Dépannage complet : [Signal troubleshooting](/fr/channels/signal#troubleshooting)
 
-## Bot QQ
+## QQ Bot
 
-### Signatures d'échec du Bot QQ
+### Signatures d'échec du QQ Bot
 
-| Symptôme                     | Vérification la plus rapide                              | Correction                                                                |
-| ---------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Le bot répond "gone to Mars" | Vérifiez `appId` et `clientSecret` dans la configuration | Définissez les identifiants ou redémarrez la passerelle.                  |
-| Aucun message entrant        | `openclaw channels status --probe`                       | Vérifiez les identifiants sur la QQ Open Platform.                        |
-| Voix non transcrite          | Vérifiez la configuration du fournisseur STT             | Configurez `channels.qqbot.stt` ou `tools.media.audio`.                   |
-| Messages proactifs non reçus | Vérifiez les exigences d'interaction de la plateforme QQ | QQ peut bloquer les messages initiés par le bot sans interaction récente. |
+| Symptôme                              | Vérification la plus rapide                              | Correction                                                                |
+| ------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Le bot répond "parti sur Mars"        | Vérifiez `appId` et `clientSecret` dans la configuration | Définissez les identifiants ou redémarrez la passerelle.                  |
+| Aucun message entrant                 | `openclaw channels status --probe`                       | Vérifiez les identifiants sur la plateforme ouverte QQ.                   |
+| La voix n'est pas transcrite          | Vérifiez la configuration du fournisseur STT             | Configurez `channels.qqbot.stt` ou `tools.media.audio`.                   |
+| Les messages proactifs n'arrivent pas | Vérifiez les exigences d'interaction de la plateforme QQ | QQ peut bloquer les messages initiés par le bot sans interaction récente. |
 
-Dépannage complet : [Dépannage du bot QQ](/fr/channels/qqbot#troubleshooting)
+Dépannage complet : [QQ Bot troubleshooting](/fr/channels/qqbot#troubleshooting)
 
 ## Matrix
 
 ### Signatures d'échec Matrix
 
-| Symptôme                                                | Vérification la plus rapide            | Correction                                                                                                  |
-| ------------------------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Connecté mais ignore les messages du salon              | `openclaw channels status --probe`     | Vérifiez `groupPolicy`, la liste d'autorisation des salons et le filtrage par mention.                      |
-| Les DMs ne sont pas traités                             | `openclaw pairing list matrix`         | Approuvez l'expéditeur ou ajustez la stratégie de DM.                                                       |
-| Échec des salons chiffrés                               | `openclaw matrix verify status`        | Vérifiez à nouveau l'appareil, puis vérifiez `openclaw matrix verify backup status`.                        |
-| La restauration de la sauvegarde est en cours/échouée   | `openclaw matrix verify backup status` | Exécutez `openclaw matrix verify backup restore` ou relancez avec une clé de récupération.                  |
-| Le croisement de signatures/l'amorçage semble incorrect | `openclaw matrix verify bootstrap`     | Réparez le stockage des secrets, le croisement de signatures et l'état de la sauvegarde en une seule passe. |
+| Symptôme                                              | Vérification la plus rapide            | Correction                                                                                           |
+| ----------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Connecté mais ignore les messages de salle            | `openclaw channels status --probe`     | Vérifiez `groupPolicy`, la liste d'autorisation des salles et le filtrage des mentions.              |
+| Les DMs ne sont pas traités                           | `openclaw pairing list matrix`         | Approuvez l'expéditeur ou ajustez la stratégie de DM.                                                |
+| Les salles chiffrées échouent                         | `openclaw matrix verify status`        | Vérifiez à nouveau l'appareil, puis vérifiez `openclaw matrix verify backup status`.                 |
+| La restauration de la sauvegarde est en cours/échouée | `openclaw matrix verify backup status` | Exécutez `openclaw matrix verify backup restore` ou relancez avec une clé de récupération.           |
+| La signature croisée/l'amorçage semble incorrect      | `openclaw matrix verify bootstrap`     | Réparez le stockage des secrets, la signature croisée et l'état de la sauvegarde en une seule passe. |
 
 Configuration complète : [Matrix](/fr/channels/matrix)
 
-## Connexe
+## Connexes
 
-- [Appairage](/fr/channels/pairing)
+- [Jumelage](/fr/channels/pairing)
 - [Routage de canal](/fr/channels/channel-routing)
-- [Dépannage de la passerelle](/fr/gateway/troubleshooting)
+- [Gateway troubleshooting](/fr/gateway/troubleshooting)

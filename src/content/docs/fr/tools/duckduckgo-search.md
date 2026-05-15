@@ -9,11 +9,11 @@ title: "DuckDuckGo search"
 
 OpenClaw prend en charge DuckDuckGo en tant que provider **sans clé** `web_search`. Aucune clé API ni compte n'est requis.
 
-<Warning>DuckDuckGo est une intégration **expérimentale, non officielle** qui récupère les résultats des pages de recherche non-JavaScript de DuckDuckGo — et non une API officielle. Attendez-vous à des pannes occasionnelles dues aux pages de défi pour bots ou aux modifications HTML.</Warning>
+<Warning>DuckDuckGo est une intégration **expérimentale et non officielle** qui extrait les résultats des pages de recherche non-JavaScript de DuckDuckGo - et non d'une API officielle. Attendez-vous à des pannes occasionnelles dues aux pages de défis pour les bots ou aux modifications du HTML.</Warning>
 
 ## Configuration
 
-Aucune clé API nécessaire — définissez simplement DuckDuckGo comme votre provider :
+Aucune clé API nécessaire - définissez simplement DuckDuckGo comme votre provider :
 
 <Steps>
   <Step title="Configure">```bash openclaw configure --section web # Select "duckduckgo" as the provider ```</Step>
@@ -59,7 +59,7 @@ Paramètres facultatifs au niveau du plugin pour la région et SafeSearch :
 </ParamField>
 
 <ParamField path="count" type="number" default="5">
-  Résultats à renvoyer (1–10).
+  Résultats à renvoyer (1-10).
 </ParamField>
 
 <ParamField path="region" type="string">
@@ -70,15 +70,21 @@ Paramètres facultatifs au niveau du plugin pour la région et SafeSearch :
   Niveau SafeSearch.
 </ParamField>
 
-La région et SafeSearch peuvent également être définis dans la configuration du plugin (voir ci-dessus) — les paramètres de l'outil remplacent les valeurs de configuration pour chaque requête.
+La région et le SafeSearch peuvent également être définis dans la configuration du plugin (voir ci-dessus) - les
+paramètres de l'outil remplacent les valeurs de configuration par requête.
 
 ## Notes
 
-- **Pas de clé API** — fonctionne immédiatement, sans configuration
-- **Expérimental** — récupère les résultats à partir des pages de recherche HTML non-JavaScript de DuckDuckGo, et non via une API ou un SDK officiel
-- **Risque de défi pour bots** — DuckDuckGo peut servir des CAPTCHAs ou bloquer les requêtes en cas d'utilisation intensive ou automatisée
-- **Analyse HTML** — les résultats dépendent de la structure de la page, qui peut changer sans préavis
-- **Ordre de détection automatique** — DuckDuckGo est le premier repli sans clé (ordre 100) dans la détection automatique. Les providers soutenus par une API avec des clés configurées s'exécutent en premier, puis Ollama Web Search (ordre 110), puis SearXNG (ordre 200)
+- **Pas de clé API** - fonctionne immédiatement, sans configuration
+- **Expérimental** - récupère les résultats des pages de recherche HTML
+  non-JavaScript de DuckDuckGo, et non d'une API ou d'un SDK officiel
+- **Risque de défi pour les bots** - DuckDuckGo peut présenter des CAPTCHAs ou bloquer les requêtes
+  en cas d'utilisation intensive ou automatisée
+- **Analyse HTML** - les résultats dépendent de la structure de la page, qui peut changer sans
+  préavis
+- **Ordre de détection automatique** - DuckDuckGo est le premier repli sans clé
+  (ordre 100) dans la détection automatique. Les providers pris en charge par une API avec des clés configurées sont exécutés
+  en premier, puis Ollama Web Search (ordre 110), puis SearXNG (ordre 200)
 - **SafeSearch est réglé sur modéré par défaut** lorsqu'il n'est pas configuré
 
 <Tip>Pour une utilisation en production, envisagez [Brave Search](/fr/tools/brave-search) (gratuit disponible) ou un autre provider soutenu par une API.</Tip>

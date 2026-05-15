@@ -7,17 +7,23 @@ read_when:
 title: "Gateway en macOS"
 ---
 
-OpenClaw.app ya no incluye Node/Bun ni el tiempo de ejecución de Gateway. La aplicación de macOS espera una instalación de la CLI `openclaw` **externa**, no inicia Gateway como un proceso secundario y gestiona un servicio launchd por usuario para mantener Gateway en ejecución (o se conecta a un Gateway local existente si ya hay uno en ejecución).
+OpenClaw.app ya no incluye Node/Bun ni el runtime de Gateway. La aplicación de
+macOS espera una instalación de la CLI `openclaw` **externa**, no inicia Gateway
+como un proceso secundario y gestiona un servicio launchd por usuario para mantener
+Gateway en ejecución (o se conecta a un Gateway local existente si ya se está ejecutando).
 
 ## Instalar la CLI (necesario para el modo local)
 
-Node 24 es el tiempo de ejecución predeterminado en Mac. Node 22 LTS, actualmente `22.14+`, todavía funciona por compatibilidad. Luego instale `openclaw` globalmente:
+Node 24 es el runtime predeterminado en Mac. Node 22 LTS, actualmente `22.16+`, todavía funciona por compatibilidad. Luego instale `openclaw` globalmente:
 
 ```bash
 npm install -g openclaw@<version>
 ```
 
-El botón **Install CLI** de la aplicación de macOS ejecuta el mismo flujo de instalación global que la aplicación utiliza internamente: prefiere npm primero, luego pnpm, luego bun si ese es el único gestor de paquetes detectado. Node sigue siendo el tiempo de ejecución de Gateway recomendado.
+El botón **Install CLI** de la aplicación de macOS ejecuta el mismo flujo de
+instalación global que la aplicación usa internamente: prefiere npm primero,
+luego pnpm, luego bun si ese es el único gestor de paquetes detectado. Node
+sigue siendo el runtime recomendado para Gateway.
 
 ## Launchd (Gateway como LaunchAgent)
 
@@ -37,7 +43,7 @@ Gestor:
 
 Comportamiento:
 
-- “OpenClaw Active” habilita/deshabilita el LaunchAgent.
+- "OpenClaw Active" activa/desactiva el LaunchAgent.
 - Salir de la aplicación **no** detiene el gateway (launchd lo mantiene activo).
 - Si un Gateway ya se está ejecutando en el puerto configurado, la aplicación se conecta a él en lugar de iniciar uno nuevo.
 
@@ -47,7 +53,9 @@ Registro:
 
 ## Compatibilidad de versiones
 
-La aplicación de macOS comprueba la versión del gateway contra su propia versión. Si son incompatibles, actualice la CLI global para que coincida con la versión de la aplicación.
+La aplicación de macOS verifica la versión de gateway contra su propia versión. Si
+son incompatibles, actualice la CLI global para que coincida con la versión de la
+aplicación.
 
 ## Prueba rápida
 

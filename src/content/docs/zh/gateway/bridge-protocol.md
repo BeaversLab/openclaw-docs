@@ -7,7 +7,7 @@ read_when:
 title: "Bridge 协议"
 ---
 
-<Warning>TCP 桥接已被**移除**。当前的 OpenClaw 构建版本不包含桥接监听器，并且 `bridge.*` 配置键已不再存在于架构中。此页面仅作为历史参考保留。请将 [Gateway Protocol](/zh/gateway/protocol) 用于所有节点/操作员客户端。</Warning>
+<Warning>TCP 桥接已被 **移除**。当前的 OpenClaw 构建版本不包含桥接监听器，并且 OpenClaw`bridge.*`Gateway(网关) 配置键也不再存在于架构中。此页面仅作历史参考保留。请将 [Gateway Protocol](/zh/gateway/protocol) 用于所有节点/操作员客户端。</Warning>
 
 ## 存在原因
 
@@ -31,50 +31,51 @@ title: "Bridge 协议"
 3. 客户端发送 `pair-request`。
 4. Gateway 等待批准，然后发送 `pair-ok` 和 `hello-ok`。
 
-历史上，`hello-ok` 返回 `serverName` 并且可能包含 `canvasHostUrl`。
+历史上，`hello-ok` 返回 `serverName`；托管插件表面现在通过 `pluginSurfaceUrls`Canvas 进行通告。Canvas/A2UI 使用
+`pluginSurfaceUrls.canvas`；已弃用的 `canvasHostUrl` 别名不是重构后协议的一部分。
 
 ## 帧
 
 客户端 → Gateway：
 
-- `req` / `res`：限定范围的 gateway RPC（聊天、会话、配置、健康、语音唤醒、skills.bins）
-- `event`：节点信号（语音转录、代理请求、聊天订阅、执行生命周期）
+- `req` / `res`RPC: 作用域 Gateway RPC（聊天、会话、配置、健康、语音唤醒、skills.bins）
+- `event`: 节点信号（语音转录、代理请求、聊天订阅、exec 生命周期）
 
 Gateway → 客户端：
 
-- `invoke` / `invoke-res`：节点命令（`canvas.*`、`camera.*`、`screen.record`、
-  `location.get`、`sms.send`）
-- `event`：已订阅会话的聊天更新
-- `ping` / `pong`：保活
+- `invoke` / `invoke-res`: 节点命令（`canvas.*`, `camera.*`, `screen.record`,
+  `location.get`, `sms.send`）
+- `event`: 已订阅会话的聊天更新
+- `ping` / `pong`: 保活
 
-旧版允许列表执行存在于 `src/gateway/server-bridge.ts` 中（已移除）。
+旧的允许列表强制执行位于 `src/gateway/server-bridge.ts`（已移除）中。
 
 ## Exec 生命周期事件
 
-节点可以发出 `exec.finished` 或 `exec.denied` 事件以展示 system.run 活动。
-这些事件会被映射到 Gateway(网关)中的系统事件。（旧版节点可能仍会发出 `exec.started`。）
+节点可以发出 `exec.finished` 或 `exec.denied` 事件来展示 system.run 活动。
+这些事件被映射到网关中的系统事件。（旧节点可能仍会发出 `exec.started`。）
 
 有效载荷字段（除非另有说明，否则均为可选）：
 
-- `sessionKey`（必需）：接收系统事件的 agent 会话。
+- `sessionKey`（必需）：用于接收系统事件的代理会话。
 - `runId`：用于分组的唯一 exec id。
 - `command`：原始或格式化的命令字符串。
-- `exitCode`、`timedOut`、`success`、`output`：完成详细信息（仅限已完成）。
+- `exitCode`, `timedOut`, `success`, `output`：完成详情（仅限已完成）。
 - `reason`：拒绝原因（仅限已拒绝）。
 
 ## 历史 tailnet 用法
 
-- 将 bridge 绑定到 tailnet IP：`bridge.bind: "tailnet"` 位于
+- 将桥接绑定到 tailnet IP：`bridge.bind: "tailnet"` 在
   `~/.openclaw/openclaw.json` 中（仅限历史记录；`bridge.*` 不再有效）。
 - 客户端通过 MagicDNS 名称或 tailnet IP 进行连接。
-- Bonjour **不**跨越网络；如有需要，请使用手动主机/端口或广域 DNS‑SD。
+- Bonjour **不**跨越网络；必要时请使用手动主机/端口或广域 DNS-SD。
 
 ## 版本控制
 
-该 bridge 为 **隐式 v1**（无最小/最大协商）。本节仅供参考；当前的节点/操作员客户端使用 WebSocket
-[Gateway(网关) 协议](/zh/gateway/protocol)。
+桥接是**隐式 v1**（无最小/最大协商）。本节仅供参考；当前的节点/操作员客户端使用 WebSocket
+[Gateway(网关) 协议](<Gateway(网关)/en/gateway/protocol>)。
 
 ## 相关
 
-- [Gateway(网关) 协议](/zh/gateway/protocol)
+- [Gateway(网关) 协议](<Gateway(网关)/en/gateway/protocol>)
 - [节点](/zh/nodes)

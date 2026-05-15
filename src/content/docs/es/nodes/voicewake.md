@@ -67,14 +67,14 @@ Los objetivos de ruta soportan exactamente uno de:
 Quién lo recibe:
 
 - Todos los clientes WebSocket (aplicación macOS, WebChat, etc.)
-- Todos los nodos conectados (iOS/Android), y también al conectar el nodo como un envío inicial del "estado actual".
+- Todos los nodos conectados (iOS/Android), y también al conectar un nodo como un envío inicial del "estado actual".
 
 ## Comportamiento del cliente
 
 ### Aplicación macOS
 
 - Usa la lista global para filtrar los activadores `VoiceWakeRuntime`.
-- Editar "Palabras activadoras" en la configuración de Activación por voz llama a `voicewake.set` y luego se basa en la transmisión para mantener sincronizados a otros clientes.
+- Al editar "Palabras desencadenantes" en la configuración de activación por voz, se llama a `voicewake.set` y luego se confía en la transmisión para mantener sincronizados los demás clientes.
 
 ### Nodo iOS
 

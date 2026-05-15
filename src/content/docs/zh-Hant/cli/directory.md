@@ -8,7 +8,7 @@ title: "目錄"
 
 # `openclaw directory`
 
-針對支援的頻道（聯絡人/對象、群組及「我」）進行目錄查詢。
+針對支援的頻道進行目錄查詢（聯絡人/同儕、群組和「我」）。
 
 ## 通用旗標
 
@@ -20,7 +20,8 @@ title: "目錄"
 
 - `directory` 旨在幫助您尋找可貼上至其他指令的 ID（特別是 `openclaw message send --target ...`）。
 - 對於許多頻道而言，結果是基於設定的（白名單 / 已設定的群組），而非即時的提供者目錄。
-- 預設輸出為以 tab 分隔的 `id`（有時包含 `name`）；請使用 `--json` 進行腳本撰寫。
+- 已安裝的頻道外掛程式仍可能不支援目錄；在這種情況下，該指令會回報不支援的目錄操作，而不是重新安裝外掛程式。
+- 預設輸出為 `id`（有時包含 `name`），以 tab 分隔；請使用 `--json` 進行腳本撰寫。
 
 ## 搭配 `message send` 使用結果
 
@@ -31,22 +32,22 @@ openclaw message send --channel slack --target user:U012ABCDEF --message "hello"
 
 ## ID 格式（依頻道）
 
-- WhatsApp：`+15551234567`（DM）、`1234567890-1234567890@g.us`（群組）
-- Telegram：`@username` 或數值聊天 ID；群組為數值 ID
+- WhatsApp：`+15551234567`（DM）、`1234567890-1234567890@g.us`（群組）、`120363123456789@newsletter`（頻道/電子報傳出目標）
+- Telegram：`@username` 或數字聊天 ID；群組為數字 ID
 - Slack：`user:U…` 和 `channel:C…`
 - Discord：`user:<id>` 和 `channel:<id>`
-- Matrix (外掛)：`user:@user:server`、`room:!roomId:server` 或 `#alias:server`
-- Microsoft Teams (外掛)：`user:<id>` 和 `conversation:<id>`
-- Zalo (外掛)：user id (Bot API)
-- Zalo Personal / `zalouser` (外掛)：來自 `zca` (`me`、`friend list`、`group list`) 的 thread id (DM/群組)
+- Matrix (外掛程式)：`user:@user:server`、`room:!roomId:server` 或 `#alias:server`
+- Microsoft Teams (外掛程式)：`user:<id>` 和 `conversation:<id>`
+- Zalo (外掛程式)：使用者 ID (Bot API)
+- Zalo Personal / `zalouser` (外掛程式)：來自 `zca` 的 thread ID (DM/群組)（`me`、`friend list`、`group list`）
 
-## Self ("me")
+## 自我（「我」）
 
 ```bash
 openclaw directory self --channel zalouser
 ```
 
-## Peers (contacts/users)
+## 同儕（聯絡人/使用者）
 
 ```bash
 openclaw directory peers list --channel zalouser
@@ -54,7 +55,7 @@ openclaw directory peers list --channel zalouser --query "name"
 openclaw directory peers list --channel zalouser --limit 50
 ```
 
-## Groups
+## 群組
 
 ```bash
 openclaw directory groups list --channel zalouser
@@ -64,4 +65,4 @@ openclaw directory groups members --channel zalouser --group-id <id>
 
 ## 相關
 
-- [CLI 參考](/zh-Hant/cli)
+- [CLI 參考資料](/zh-Hant/cli)

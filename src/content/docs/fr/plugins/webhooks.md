@@ -6,17 +6,15 @@ read_when:
 title: "Webhooks plugin"
 ---
 
-# Webhooks (plugin)
-
 Le plugin Webhooks ajoute des routes HTTP authentifiées qui lient l'automatisation externe aux TaskFlows OpenClaw.
 
-Utilisez-le lorsque vous souhaitez qu'un système de confiance tel que Zapier, n8n, un travail CI, ou un service interne crée et pilote des TaskFlows gérés sans avoir à écrire un plugin personnalisé au préalable.
+Utilisez-le lorsque vous souhaitez qu'un système de confiance tel que Zapier, n8n, une tâche CI ou un service interne crée et pilote des TaskFlows gérés sans avoir à écrire d'abord un plugin personnalisé.
 
 ## Où il s'exécute
 
 Le plugin Webhooks s'exécute dans le processus Gateway.
 
-Si votre Gateway s'exécute sur une autre machine, installez et configurez le plugin sur cet hôte Gateway, puis redémarrez le Gateway.
+Si votre Gateway s'exécute sur une autre machine, installez et configurez le plugin sur cet hôte Gateway, puis redémarrez la Gateway.
 
 ## Configurer les routes
 
@@ -51,8 +49,8 @@ Définissez la configuration sous `plugins.entries.webhooks.config` :
 
 Champs de route :
 
-- `enabled` : facultatif, valeur par défaut `true`
-- `path` : facultatif, valeur par défaut `/plugins/webhooks/<routeId>`
+- `enabled` : facultatif, la valeur par défaut est `true`
+- `path` : facultatif, la valeur par défaut est `/plugins/webhooks/<routeId>`
 - `sessionKey` : session requise qui possède les TaskFlows liés
 - `secret` : secret partagé ou SecretRef requis
 - `controllerId` : identifiant de contrôleur facultatif pour les flux gérés créés
@@ -60,29 +58,29 @@ Champs de route :
 
 Entrées `secret` prises en charge :
 
-- Chaîne simple
+- Chaîne brute
 - SecretRef avec `source: "env" | "file" | "exec"`
 
-Si une route basée sur un secret ne peut pas résoudre son secret au démarrage, le plugin ignore cette route et enregistre un avertissement au lieu d'exposer un point de terminaison défaillant.
+Si une route basée sur un secret ne peut pas résoudre son secret au démarrage, le plugin ignore cette route et enregistre un avertissement au lieu d'exposer un point de terminaison défectueux.
 
 ## Modèle de sécurité
 
-Chaque route est de confiance pour agir avec l'autorité TaskFlow de sa `sessionKey` configurée.
+Chaque route est approuvée pour agir avec l'autorité TaskFlow de sa `sessionKey` configurée.
 
 Cela signifie que la route peut inspecter et modifier les TaskFlows appartenant à cette session, vous devez donc :
 
-- Utiliser un secret unique et fort pour chaque route
-- Préférer les références de secret aux secrets en texte brut en ligne
-- Lier les routes à la session la plus restreinte correspondant au flux de travail
-- Exposer uniquement le chemin webhook spécifique dont vous avez besoin
+- Utiliser un secret unique et fort par route
+- Privilégier les références de secret par rapport aux secrets en texte brut en ligne
+- Lier les routes à la session la plus étroite correspondant au flux de travail
+- N'exposer que le chemin webhook spécifique dont vous avez besoin
 
 Le plugin applique :
 
 - Authentification par secret partagé
-- Gardiens de taille et de délai d'expiration du corps de la requête
+- Gardes de taille du corps de la requête et de délai d'attente
 - Limitation de débit à fenêtre fixe
 - Limitation des requêtes en cours
-- Accès TaskFlow lié au propriétaire via `api.runtime.taskFlow.bindSession(...)`
+- Accès TaskFlow lié au propriétaire via `api.runtime.tasks.managedFlows.bindSession(...)`
 
 ## Format de la requête
 
@@ -180,8 +178,8 @@ Les requêtes rejetées renvoient :
 
 Le plugin nettoie intentionnellement les métadonnées de propriétaire/session des réponses webhook.
 
-## Documentation associée
+## Documentation connexe
 
-- [Plugin runtime SDK](/fr/plugins/sdk-runtime)
-- [Aperçu des hooks et webhooks](/fr/automation/hooks)
+- [SDK du runtime du plugin](/fr/plugins/sdk-runtime)
+- [Vue d'ensemble des hooks et webhooks](/fr/automation/hooks)
 - [CLI webhooks](/fr/cli/webhooks)

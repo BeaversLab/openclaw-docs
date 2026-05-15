@@ -13,14 +13,14 @@ title: "macOS 記錄"
 OpenClaw 透過 swift-log (預設為統一記錄) 路由 macOS 應用程式記錄，並且在您需要持久性擷取時，可以將本機輪替檔案記錄寫入磁碟。
 
 - 詳細程度：**Debug pane → Logs → App logging → Verbosity**
-- 啟用：**Debug pane → Logs → App logging → “Write rolling diagnostics log (JSONL)”**
+- 啟用：**Debug pane → Logs → App logging → "Write rolling diagnostics log (JSONL)"**
 - 位置：`~/Library/Logs/OpenClaw/diagnostics.jsonl` (自動輪替；舊檔案會附加上 `.1`、`.2`，…)
-- 清除：**Debug pane → Logs → App logging → “Clear”**
+- 清除：**Debug pane → Logs → App logging → "Clear"**
 
 備註：
 
 - 此功能**預設為關閉**。僅在主動進行除錯時啟用。
-- 請將該檔案視為敏感資料；未經審查請勿分享。
+- 將該檔案視為敏感資料；未經審查請勿分享。
 
 ## macOS 上的統一記錄私人資料
 

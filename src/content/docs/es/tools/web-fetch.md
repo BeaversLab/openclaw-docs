@@ -11,7 +11,7 @@ sidebarTitle: "Obtención web"
 La herramienta `web_fetch` realiza un HTTP GET simple y extrae contenido legible
 (de HTML a markdown o texto). **No** ejecuta JavaScript.
 
-Para sitios con mucho JavaScript o páginas protegidas por inicio de sesión, utilice
+Para sitios con mucho JS o páginas protegidas por inicio de sesión, utilice
 [Navegador Web](/es/tools/browser) en su lugar.
 
 ## Inicio rápido
@@ -61,8 +61,13 @@ await web_fetch({ url: "https://example.com/article" });
         timeoutSeconds: 30,
         cacheTtlMinutes: 15,
         maxRedirects: 3,
+        useTrustedEnvProxy: false, // let a trusted HTTP(S) env proxy resolve DNS
         readability: true, // use Readability extraction
         userAgent: "Mozilla/5.0 ...", // override User-Agent
+        ssrfPolicy: {
+          allowRfc2544BenchmarkRange: true, // opt-in for trusted fake-IP proxies using 198.18.0.0/15
+          allowIpv6UniqueLocalRange: true, // opt-in for trusted fake-IP proxies using fc00::/7
+        },
       },
     },
   },
@@ -72,7 +77,7 @@ await web_fetch({ url: "https://example.com/article" });
 ## Respaldo de Firecrawl
 
 Si la extracción de Readability falla, `web_fetch` puede recurrir a
-[Firecrawl](/es/tools/firecrawl) para la evasión de bots y una mejor extracción:
+[Firecrawl](/es/tools/firecrawl) para evitar detección de bots y mejorar la extracción:
 
 ```json5
 {
@@ -107,28 +112,48 @@ La configuración heredada `tools.web.fetch.firecrawl.*` se migra automáticamen
 
 <Note>Si Firecrawl está habilitado y su SecretRef no está resuelto sin un respaldo de entorno `FIRECRAWL_API_KEY`, el inicio de la puerta de enlace falla rápidamente.</Note>
 
-<Note>Las anulaciones de Firecrawl `baseUrl` están bloqueadas: deben usar `https://` y el host oficial de Firecrawl (`api.firecrawl.dev`).</Note>
+<Note>Las anulaciones de `baseUrl` de Firecrawl están bloqueadas: el tráfico alojado utiliza `https://api.firecrawl.dev`; las anulaciones autohospedadas deben apuntar a endpoints privados o internos, y `http://` se acepta solo para esos destinos privados.</Note>
 
 Comportamiento actual en tiempo de ejecución:
 
 - `tools.web.fetch.provider` selecciona explícitamente el proveedor de reserva de recuperación.
-- Si se omite `provider`, OpenClaw detecta automáticamente el primer proveedor de recuperación web listo
-  a partir de las credenciales disponibles. Hoy, el proveedor incluido es Firecrawl.
-- Si Readability está deshabilitado, `web_fetch` salta directamente al proveedor de reserva
-  seleccionado. Si no hay ningún proveedor disponible, falla de forma segura.
+- Si se omite `provider`, OpenClaw detecta automáticamente el primer proveedor de web-fetch listo
+  a partir de las credenciales disponibles. `web_fetch` sin sandbox puede usar
+  complementos instalados que declaren `contracts.webFetchProviders` y registren un
+  proveedor coincidente en tiempo de ejecución. Hoy el proveedor incluido es Firecrawl.
+- Las llamadas `web_fetch` en sandbox se limitan a los proveedores incluidos.
+- Si Readability está deshabilitado, `web_fetch` omite directamente al proveedor alternativo
+  seleccionado. Si no hay ningún proveedor disponible, falla de forma cerrada.
+
+## Proxy de entorno confiable
+
+Si su implementación requiere que `web_fetch` pase a través de un proxy HTTP(S)
+saliente de confianza, configure `tools.web.fetch.useTrustedEnvProxy: true`.
+
+En este modo, OpenClaw todavía aplica comprobaciones SSRF basadas en el nombre de host antes de enviar
+la solicitud, pero permite que el proxy resuelva el DNS en lugar de hacer el anclaje de DNS
+local. Habilite esto solo cuando el proxy esté controlado por el operador y haga cumplir
+la política de salida después de la resolución del DNS.
+
+<Note>Si no se configura ninguna variable de entorno de proxy HTTP(S), o el host de destino es excluido por `NO_PROXY`, `web_fetch` vuelve a la ruta estricta normal con anclaje de DNS local.</Note>
 
 ## Límites y seguridad
 
 - `maxChars` está limitado a `tools.web.fetch.maxCharsCap`
-- El cuerpo de la respuesta se limita a `maxResponseBytes` antes del análisis; las respuestas
-  excesivamente grandes se truncan con una advertencia
+- El cuerpo de la respuesta está limitado a `maxResponseBytes` antes del análisis; las respuestas
+  excesivamente grandes se truncarán con una advertencia
 - Los nombres de host privados/internos están bloqueados
-- Las redirecciones se verifican y limitan mediante `maxRedirects`
-- `web_fetch` se hace lo mejor posible: algunos sitios necesitan el [Navegador web](/es/tools/browser)
+- `tools.web.fetch.ssrfPolicy.allowRfc2544BenchmarkRange` y
+  `tools.web.fetch.ssrfPolicy.allowIpv6UniqueLocalRange` son opciones de participación limitada
+  para pilas de proxy de IP falsas de confianza; déjelos sin configurar a menos que su proxy sea dueño de
+  esos rangos sintéticos y haga cumplir su propia política de destino
+- Los redireccionamientos se verifican y limitan mediante `maxRedirects`
+- `useTrustedEnvProxy` es una opción de participación explícita y solo debe habilitarse para proxys controlados por el operador que todavía apliquen la política de salida después de la resolución de DNS
+- `web_fetch` es de mejor esfuerzo; algunos sitios necesitan el [Web Browser](/es/tools/browser)
 
 ## Perfiles de herramientas
 
-Si utiliza perfiles de herramientas o listas de permitidos, añada `web_fetch` o `group:web`:
+Si utiliza perfiles de herramientas o listas de permitidos, agregue `web_fetch` o `group:web`:
 
 ```json5
 {
@@ -141,6 +166,6 @@ Si utiliza perfiles de herramientas o listas de permitidos, añada `web_fetch` o
 
 ## Relacionado
 
-- [Búsqueda web](/es/tools/web) -- busque en la web con varios proveedores
-- [Navegador web](/es/tools/browser) -- automatización completa del navegador para sitios con mucho JS
-- [Firecrawl](/es/tools/firecrawl) -- herramientas de búsqueda y extracción de Firecrawl
+- [Web Search](/es/tools/web): busque en la web con varios proveedores
+- [Web Browser](/es/tools/browser): automatización completa del navegador para sitios con mucho JavaScript
+- [Firecrawl](/es/tools/firecrawl): herramientas de búsqueda y extracción de Firecrawl

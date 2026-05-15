@@ -154,7 +154,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="自定义提供商示例">
+  <Accordion title="Custom 提供商 example">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -164,13 +164,15 @@ openclaw onboard --non-interactive \
       --custom-api-key "$CUSTOM_API_KEY" \
       --custom-provider-id "my-custom" \
       --custom-compatibility anthropic \
+      --custom-image-input \
       --gateway-port 18789 \
       --gateway-bind loopback
     ```
 
     `--custom-api-key` 是可选的。如果省略，新手引导将检查 `CUSTOM_API_KEY`。
+    OpenClaw 会自动将常见的视觉模型 ID 标记为具备图像处理能力。为未知的自定义视觉 ID 添加 `--custom-image-input`，或添加 `--custom-text-input` 以强制使用仅文本元数据。
 
-    引用模式变体：
+    Ref 模式变体：
 
     ```bash
     export CUSTOM_API_KEY="your-key"
@@ -182,6 +184,7 @@ openclaw onboard --non-interactive \
       --secret-input-mode ref \
       --custom-provider-id "my-custom" \
       --custom-compatibility anthropic \
+      --custom-image-input \
       --gateway-port 18789 \
       --gateway-bind loopback
     ```
@@ -196,8 +199,7 @@ Anthropic setup-token 仍作为受支持的新手引导令牌路径提供，但 
 
 ## 添加另一个 Agent
 
-使用 `openclaw agents add <name>` 创建一个具有自己的工作区、
-会话和身份配置文件的独立代理。不带 `--workspace` 运行将启动向导。
+使用 `openclaw agents add <name>` 创建一个具有独立工作区、会话和身份验证配置文件的单独代理。如果不带 `--workspace` 运行，则会启动向导。
 
 ```bash
 openclaw agents add work \

@@ -14,22 +14,24 @@ title: "Verrou de la passerelle"
 
 ## Mécanisme
 
-- La passerelle lie l'écouteur WebSocket (par défaut `ws://127.0.0.1:18789`) immédiatement au démarrage en utilisant un écouteur TCP exclusif.
-- Si la liaison échoue avec `EADDRINUSE`, le démarrage génère `GatewayLockError("another gateway instance is already listening on ws://127.0.0.1:<port>")`.
-- Le système d'exploitation libère l'écouteur automatiquement à toute sortie de processus, y compris les plantages et SIGKILL — aucun fichier de verrouillage séparé ni étape de nettoyage n'est nécessaire.
-- À l'arrêt, la passerelle ferme le serveur WebSocket et le serveur HTTP sous-jacent pour libérer le port rapidement.
+- La passerelle acquiert d'abord un fichier de verrouillage par configuration sous le répertoire de verrouillage d'état et sonde le port configuré pour un écouteur existant.
+- Si le propriétaire du verrou enregistré a disparu, le port est libre ou le verrou est périmé, le démarrage récupère le verrou et continue.
+- La passerelle lie ensuite l'écouteur HTTP/WebSocket (par défaut `ws://127.0.0.1:18789`) à l'aide d'un écouteur TCP exclusif.
+- Si la liaison échoue avec `EADDRINUSE`, le démarrage lance `GatewayLockError("another gateway instance is already listening on ws://127.0.0.1:<port>")`.
+- Lors de l'arrêt, la passerelle ferme le serveur HTTP/WebSocket et supprime le fichier de verrouillage.
 
 ## Surface d'erreur
 
 - Si un autre processus détient le port, le démarrage génère `GatewayLockError("another gateway instance is already listening on ws://127.0.0.1:<port>")`.
-- Les autres échecs de liaison apparaissent sous la forme `GatewayLockError("failed to bind gateway socket on ws://127.0.0.1:<port>: …")`.
+- Les autres échecs de liaison apparaissent sous la forme de `GatewayLockError("failed to bind gateway socket on ws://127.0.0.1:<port>: …")`.
 
 ## Notes opérationnelles
 
 - Si le port est occupé par un _autre_ processus, l'erreur est la même ; libérez le port ou choisissez-en un autre avec `openclaw gateway --port <port>`.
-- L'application macOS maintient toujours sa propre garde légère de PID avant de lancer la passerelle ; le verrou d'exécution est appliqué par la liaison WebSocket.
+- Sous un superviseur de service, un nouveau processus de passerelle qui voit un répondeur `/healthz` sain existant laisse ce processus en contrôle. Sur systemd, le lanceur en double se termine avec le code 78 afin que le `RestartPreventExitStatus=78` par défaut empêche `Restart=always` de boucler sur un verrou ou un conflit `EADDRINUSE`. Si le processus existant ne devient jamais sain, les tentatives sont limitées et le démarrage échoue avec une erreur de verrou claire au lieu de boucler indéfiniment.
+- L'application macOS maintient toujours sa propre protection légère de PID avant de lancer la passerelle ; le verrouillage d'exécution est appliqué par le fichier de verrou ainsi que par la liaison HTTP/WebSocket.
 
 ## Connexes
 
-- [Plusieurs passerelles](/fr/gateway/multiple-gateways) — exécution de plusieurs instances avec des ports uniques
-- [Dépannage](/fr/gateway/troubleshooting) — diagnostic de `EADDRINUSE` et des conflits de ports
+- [Passerelles multiples](/fr/gateway/multiple-gateways) — exécution de plusieurs instances avec des ports uniques
+- [Dépannage](/fr/gateway/troubleshooting) — diagnostic des `EADDRINUSE` et des conflits de ports

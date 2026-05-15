@@ -5,7 +5,7 @@ read_when: "Vous souhaitez un agent avec sa propre identité qui agit pour le co
 status: active
 ---
 
-Objectif : exécuter OpenClaw en tant que **délégué nommé** — un agent ayant sa propre identité qui agit « au nom de » personnes au sein d'une organisation. L'agent n'impersonne jamais un humain. Il envoie, lit et planifie sous son propre compte avec des permissions de délégation explicites.
+Objectif : exécuter OpenClaw en tant que **délégué nommé** - un agent avec sa propre identité qui agit "au nom de" personnes dans une organisation. L'agent n'usurpe jamais l'identité d'un humain. Il envoie, lit et planifie sous son propre compte avec des autorisations de délégation explicites.
 
 Cela étend le [Multi-Agent Routing](/fr/concepts/multi-agent) d'un usage personnel aux déploiements organisationnels.
 
@@ -14,15 +14,15 @@ Cela étend le [Multi-Agent Routing](/fr/concepts/multi-agent) d'un usage person
 Un **délégué** est un agent OpenClaw qui :
 
 - Possède sa **propre identité** (adresse e-mail, nom d'affichage, calendrier).
-- Agit **au nom de** un ou plusieurs humains — ne fait jamais semblant d'être eux.
+- Agit **au nom de** un ou plusieurs humains - ne prétend jamais être eux.
 - Fonctionne sous **autorisations explicites** accordées par le fournisseur d'identité de l'organisation.
-- Suit les **[ordres permanents](/fr/automation/standing-orders)** — des règles définies dans le `AGENTS.md` de l'agent qui spécifient ce qu'il peut faire de manière autonome par opposition à ce qui nécessite une approbation humaine (voir [Cron Jobs](/fr/automation/cron-jobs) pour l'exécution planifiée).
+- Suit les **[ordres permanents](/fr/automation/standing-orders)** - règles définies dans le `AGENTS.md` de l'agent qui spécifient ce qu'il peut faire de manière autonome par rapport à ce qui nécessite une approbation humaine (voir [Cron Jobs](/fr/automation/cron-jobs) pour l'exécution planifiée).
 
 Le modèle de délégué correspond directement au fonctionnement des assistants de direction : ils ont leurs propres identifiants, envoient des courriels « de la part de » de leur principal et suivent une portée d'autorité définie.
 
 ## Pourquoi des délégués ?
 
-Le mode par défaut de OpenClaw est un **assistant personnel** — un humain, un agent. Les délégués étendent cela aux organisations :
+Le mode par défaut de OpenClaw est un **assistant personnel** - un humain, un agent. Les délégués étendent cela aux organisations :
 
 | Mode personnel                   | Mode délégué                                       |
 | -------------------------------- | -------------------------------------------------- |
@@ -48,7 +48,7 @@ Le délégué peut **lire** les données organisationnelles et **rédiger** des 
 - Calendrier : lire les événements, mettre en évidence les conflits, résumer la journée.
 - Fichiers : lire les documents partagés, résumer le contenu.
 
-Ce niveau ne nécessite que des autorisations de lecture de la part du fournisseur d'identité. L'agent n'écrit dans aucune boîte aux lettres ou calendrier — les brouillons et propositions sont transmis via chat pour que l'humain puisse agir.
+Ce niveau ne nécessite que des autorisations de lecture de la part du fournisseur d'identité. L'agent n'écrit dans aucune boîte aux lettres ou calendrier - les brouillons et propositions sont livrés via chat pour que l'humain puisse agir.
 
 ### Niveau 2 : Envoyer en tant que délégué
 
@@ -89,7 +89,7 @@ Ces règles sont chargées à chaque session. Elles constituent la dernière lig
 
 ### Restrictions d'outils
 
-Utilisez une stratégie d'outil par agent (v2026.1.6+) pour appliquer des limites au niveau du Gateway. Cela fonctionne indépendamment des fichiers de personnalité de l'agent — même si l'agent est instruit de contourner ses règles, le Gateway bloque l'appel de l'outil :
+Utilisez une stratégie d'outil par agent (v2026.1.6+) pour appliquer des limites au niveau du Gateway. Cela fonctionne indépendamment des fichiers de personnalité de l'agent - même si l'agent est instruit de contourner ses règles, le Gateway bloque l'appel d'outil :
 
 ```json5
 {
@@ -155,7 +155,7 @@ Configurez la personnalité du délégué dans ses fichiers d'espace de travail 
 
 ### 2. Configurer la délégation du fournisseur d'identité
 
-Le délégué a besoin de son propre compte dans votre fournisseur d'identité avec des autorisations de délégation explicites. **Appliquez le principe du moindre privilège** — commencez par le niveau 1 (lecture seule) et n'augmentez les privilèges que lorsque le cas d'usage l'exige.
+Le délégué a besoin de son propre compte dans votre fournisseur d'identité avec des autorisations de délégation explicites. **Appliquez le principe du moindre privilège** - commencez par le niveau 1 (lecture seule) et n'augmentez que lorsque le cas d'usage l'exige.
 
 #### Microsoft 365
 
@@ -280,7 +280,7 @@ Une configuration complète de délégué pour un assistant organisationnel gér
 }
 ```
 
-Le `AGENTS.md` du délégué définit son autonomie — ce qu'il peut faire sans demander, ce qui nécessite une approbation et ce qui est interdit. Les [Cron Jobs](/fr/automation/cron-jobs) pilotent son emploi du temps quotidien.
+Le `AGENTS.md` du délégué définit son autorité autonome - ce qu'il peut faire sans demander, ce qui nécessite une approbation et ce qui est interdit. Les [Cron Jobs](/fr/automation/cron-jobs) pilotent son emploi du temps quotidien.
 
 Si vous accordez `sessions_history`, rappelez-vous qu'il s'agit d'une vue de rappel limitée et filtrée par sécurité. OpenClaw masque le texte de type identifiant/jeton, tronque le contenu long, supprime les balises de réflexion / l'échafaudage `<relevant-memories>` / les payloads XML d'appels d'outil en texte brut (y compris `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` et les blocs d'appels d'outil tronqués) / l'échafaudage d'appels d'outil rétrogradé / les jetons de contrôle de modèle ASCII/pleine largeur divulgués / les XML d'appels d'outil MiniMax malformés du rappel de l'assistant, et peut remplacer les lignes trop volumineuses par `[sessions_history omitted: message too large]` au lieu de renvoyer un vidage brut de la transcription.
 
@@ -289,13 +289,13 @@ Si vous accordez `sessions_history`, rappelez-vous qu'il s'agit d'une vue de rap
 Le modèle de délégué fonctionne pour toute petite organisation :
 
 1. **Créez un agent délégué** par organisation.
-2. **Sécurisez d'abord** — restrictions des outils, bac à sable, blocages stricts, traçabilité d'audit.
+2. **Sécuriser d'abord** - restrictions d'outil, bac à sable, blocs stricts, traçabilité d'audit.
 3. **Accordez des autorisations délimitées** via le fournisseur d'identité (principe du moindre privilège).
 4. **Définissez des [ordres permanents](/fr/automation/standing-orders)** pour les opérations autonomes.
 5. **Planifiez des tâches cron** pour les tâches récurrentes.
 6. **Révisez et ajustez** le niveau de capacité au fur et à mesure que la confiance s'établit.
 
-Plusieurs organisations peuvent partager un seul serveur Gateway en utilisant le routage multi-agent — chaque org obtient son propre agent isolé, son espace de travail et ses identifiants.
+Plusieurs organisations peuvent partager un serveur Gateway en utilisant le routage multi-agent - chaque organisation obtient son propre agent isolé, son propre espace de travail et ses propres identifiants.
 
 ## Connexes
 

@@ -7,7 +7,7 @@ read_when:
 title: "常駐指令"
 ---
 
-常駐指令授予您的代理對於既定程式的**永久運作權限**。您不必每次都發送個別任務指令，而是定義具有明確範圍、觸發條件和升級規則的程式 — 代理會在這些界限內自主執行。
+常規指令授予您的代理人在既定程式下的**永久運作權限**。與其每次都給予單獨的任務指示，您不如定義具有明確範圍、觸發條件和升級規則的程式——代理人會在這些界限內自主執行。
 
 這就是每週五告訴助理「發送週報」與授予常駐權限之間的差別：「你負責週報。每週五彙整並發送，只有在看起來有異常時才升級回報。」
 
@@ -33,14 +33,14 @@ title: "常駐指令"
 
 每個程式指定：
 
-1. **範圍 (Scope)** — 代理獲授權執行的操作
-2. **觸發條件 (Triggers)** — 何時執行（排程、事件或條件）
-3. **審核閘門 (Approval gates)** — 採取行動前需要人工簽核的事項
-4. **升級規則 (Escalation rules)** — 何時停止並請求協助
+1. **範圍** —— 代理人獲授權執行的內容
+2. **觸發條件** —— 何時執行（排程、事件或條件）
+3. **審核閘門** —— 在採取行動前需要哪些人工簽核
+4. **升級規則** —— 何時停止並請求協助
 
 代理會透過工作區引導檔案在每個工作階段載入這些指令（有關自動注入檔案的完整列表，請參閱 [Agent Workspace](/zh-Hant/concepts/agent-workspace)），並結合 [cron jobs](/zh-Hant/automation/cron-jobs) 進行基於時間的強制執行，對其進行執行。
 
-<Tip>將常駐指令放在 `AGENTS.md` 以確保它們在每次會話中都被載入。工作區啟動程序會自動注入 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 和 `MEMORY.md` —— 但不會注入子目錄中的任意檔案。</Tip>
+<Tip>將常規指令放在 `AGENTS.md` 中，以確保它們在每個工作階段都會被載入。工作區啟動程序會自動注入 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 和 `MEMORY.md` —— 但不會注入子目錄中的任意檔案。</Tip>
 
 ## 常駐指令剖析
 
@@ -64,7 +64,7 @@ title: "常駐指令"
 
 - Do not send reports to external parties
 - Do not modify source data
-- Do not skip delivery if metrics look bad — report accurately
+- Do not skip delivery if metrics look bad - report accurately
 ```
 
 ## 常駐指令加上 cron 排程工作
@@ -88,7 +88,7 @@ openclaw cron add \
   --tz America/New_York \
   --timeout-seconds 300 \
   --announce \
-  --channel bluebubbles \
+  --channel imessage \
   --to "+1XXXXXXXXXX" \
   --message "Execute daily inbox triage per standing orders. Check mail for new alerts. Parse, categorize, and persist each item. Report summary to owner. Escalate unknowns."
 ```
@@ -107,7 +107,7 @@ openclaw cron add \
 ### Weekly cycle
 
 - **Monday:** Review platform metrics and audience engagement
-- **Tuesday–Thursday:** Draft social posts, create blog content
+- **Tuesday-Thursday:** Draft social posts, create blog content
 - **Friday:** Compile weekly marketing brief → deliver to owner
 
 ### Content rules
@@ -174,9 +174,9 @@ openclaw cron add \
 
 常駐指令若結合嚴格的執行紀律，效果最佳。常駐指令中的每個任務都應遵循此循環：
 
-1. **執行** —— 執行實際工作（不要僅確認收到指令）
+1. **執行** —— 執行實際工作（不要只是確認指令）
 2. **驗證** —— 確認結果正確（檔案存在、訊息已送出、資料已解析）
-3. **回報** —— 告訴擁有者完成了什麼以及驗證了什麼
+3. **報告** —— 告知擁有者執行了什麼以及驗證了什麼
 
 ```markdown
 ### Execution rules
@@ -186,7 +186,7 @@ openclaw cron add \
 - "Done" without verification is not acceptable. Prove it.
 - If execution fails: retry once with adjusted approach.
 - If still fails: report failure with diagnosis. Never silently fail.
-- Never retry indefinitely — 3 attempts max, then escalate.
+- Never retry indefinitely - 3 attempts max, then escalate.
 ```
 
 此模式能避免最常見的代理失敗模式：確認了任務卻未完成。
@@ -226,18 +226,18 @@ openclaw cron add \
 
 - 從狹小的權限開始，並隨著信任建立而擴大
 - 為高風險行動定義明確的審核閘門
-- 納入「什麼不該做」章節 —— 邊界與權限同等重要
+- 包含「不可做什麼」章節 —— 界限與權限同樣重要
 - 結合 cron 排程工作以進行可靠的定時執行
 - 每週審查代理日誌，以驗證常駐指令是否被遵循
-- 隨著需求演進更新常駐指令 —— 它們是活的文件
+- 隨著需求演進更新常規指令 —— 它們是活的文件
 
 ### 避免
 
 - 第一天就賦予廣泛權限（「做任何你認為最好的事」）
-- 跳過升級規則 — 每個程式都需要一個「何時停止並請示」的條款
-- 假設代理程式會記住口頭指示 — 將所有內容寫入檔案
-- 在單一程式中混合關注點 — 為不同的領域分設獨立的程式
-- 忘記透過 cron 工作來強制執行 — 沒有觸發條件的常備指示只會變成建議
+- 省略升級規則 —— 每個程式都需要「何時停止並請求」的條款
+- 假設代理人會記住口頭指示 —— 將一切寫入檔案中
+- 在單一程式中混合關注點 —— 為不同領域使用分開的程式
+- 忘記透過 cron 工作強制執行 —— 沒有觸發條件的常規指令只會變成建議
 
 ## 相關內容
 

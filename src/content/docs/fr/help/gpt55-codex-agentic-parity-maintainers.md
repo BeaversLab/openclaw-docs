@@ -98,7 +98,7 @@ La PR D est la couche de preuve. Elle ne doit pas être la raison du retard des 
 
 ### PR B
 
-- les défaillances auth/proxy/runtime ne s'effondrent plus dans la gestion générique « model failed »
+- les échecs d'authentification/proxy/runtime ne s'effondrent plus dans la gestion générique "model failed"
 - `/elevated full` est décrit comme disponible uniquement lorsqu'il est réellement disponible
 - les raisons du blocage sont visibles à la fois pour le modèle et le runtime orienté utilisateur
 

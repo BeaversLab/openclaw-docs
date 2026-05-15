@@ -30,9 +30,9 @@ OpenClaw 有兩種入門途徑。兩者都會設定驗證、Gateway 以及
 1. **模型供應商和驗證** — 您所選供應商的 API 金鑰、OAuth 或設定 token
 2. **工作區** — 用於儲存 Agent 檔案、啟動範本和記憶體的目錄
 3. **Gateway** — 連接埠、綁定位址、驗證模式
-4. **頻道** (選用) — 內建和內建的聊天頻道，例如
-   BlueBubbles、Discord、Feishu、Google Chat、Mattermost、Microsoft Teams、
-   Telegram、WhatsApp 等等
+4. **頻道**（可選）— 內建和打包的聊天頻道，例如
+   iMessage、Discord、Feishu、Google Chat、Mattermost、Microsoft Teams、
+   Telegram、WhatsApp 以及更多
 5. **Daemon** (選用) — 背景服務，讓 Gateway 能自動啟動
 
 ## CLI 入門

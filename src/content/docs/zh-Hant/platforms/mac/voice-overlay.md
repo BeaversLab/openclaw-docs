@@ -16,7 +16,7 @@ title: "語音覆蓋"
 
 ## 已實作 (2025年12月9日)
 
-- 覆蓋層工作階段現在會為每次擷取（喚醒詞或按住講話）攜帶一個權杖。當權杖不匹配時，會捨棄部分/最終/發送/關閉/音量更新，以避免過時的回呼。
+- Overlay 會話現在為每次擷取（喚醒詞或按住講話）攜帶一個 token。當 token 不匹配時，部分/最終/發送/關閉/電平更新會被丟棄，從而避免過期的回呼。
 - 按住講話會將任何可見的覆蓋層文字作為前綴（因此在喚醒覆蓋層顯示時按下熱鍵，會保留文字並附加新的語音）。在回退至目前文字之前，它會等待最多 1.5 秒以取得最終轉錄結果。
 - 提示音/覆蓋層日誌會在 `info` 發出，分類為 `voicewake.overlay`、`voicewake.ptt` 和 `voicewake.chime`（工作階段開始、部分、最終、發送、關閉、提示音原因）。
 
@@ -35,7 +35,7 @@ title: "語音覆蓋"
 4. **統一傳送路徑**
    - 在 `endCapture` 上：如果修剪後的文字為空 → 解除；否則 `performSend(session:)`（播放傳送提示音一次、轉發、解除）。
    - Push-to-talk：無延遲；wake-word：自動傳送的可選延遲。
-   - 在 push-to-talk 結束後，對 wake runtime 套用短暫的冷卻時間，以免 wake-word 立即重新觸發。
+   - 在按住講話結束後，對喚醒運行時套用短暫的冷卻時間，以免喚醒詞立即再次觸發。
 5. **日誌記錄**
    - 協調器在子系統 `ai.openclaw`、類別 `voicewake.overlay` 和 `voicewake.chime` 中發出 `.info` 日誌。
    - 關鍵事件：`session_started`、`adopted_by_push_to_talk`、`partial`、`finalized`、`send`、`dismiss`、`cancel`、`cooldown`。

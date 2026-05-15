@@ -35,11 +35,21 @@ SecretRef 仅在有效的活动面上进行验证。
 - Inactive refs emit non-fatal diagnostics with code `SECRETS_REF_IGNORED_INACTIVE_SURFACE`.
 
 <AccordionGroup>
-  <Accordion title="Examples of inactive surfaces">
-    - Disabled 渠道/account entries. - Top-level 渠道 credentials that no enabled account inherits. - Disabled 工具/feature surfaces. - Web search 提供商-specific keys that are not selected by `tools.web.search.provider`. In auto mode (提供商 unset), keys are consulted by precedence for 提供商 auto-detection until one resolves. After selection, non-selected 提供商 keys are treated as inactive
-    until selected. - 沙箱 SSH auth material (`agents.defaults.sandbox.ssh.identityData`, `certificateData`, `knownHostsData`, plus per-agent overrides) is active only when the effective sandbox backend is `ssh` for the default agent or an enabled agent. - `gateway.remote.token` / `gateway.remote.password` SecretRefs are active if one of these is true: - `gateway.mode=remote` -
-    `gateway.remote.url` is configured - `gateway.tailscale.mode` is `serve` or `funnel` - In local mode without those remote surfaces: - `gateway.remote.token` is active when token auth can win and no env/auth token is configured. - `gateway.remote.password` is active only when password auth can win and no env/auth password is configured. - `gateway.auth.token` SecretRef is inactive for startup
-    auth resolution when `OPENCLAW_GATEWAY_TOKEN` is set, because env token input wins for that runtime.
+  <Accordion title="非活动界面示例">
+    - 已禁用的渠道/账户条目。
+    - 没有已启用账户继承的顶级渠道凭据。
+    - 已禁用的工具/功能界面。
+    - 未被 `tools.web.search.provider` 选中的 Web 搜索提供商特定密钥。在自动模式（未设置提供商）下，系统会按优先级顺序查询密钥以进行提供商自动检测，直到解析成功。选择后，未选中的提供商密钥将被视为非活动状态，直到被选中。
+    - 沙箱 SSH 认证材料（`agents.defaults.sandbox.ssh.identityData`、`certificateData`、`knownHostsData` 以及每个代理的覆盖项）仅当默认代理或已启用代理的有效沙箱后端为 `ssh` 时才处于活动状态。
+    - 如果满足以下任一条件，`gateway.remote.token` / `gateway.remote.password` SecretRefs 处于活动状态：
+      - `gateway.mode=remote`
+      - 已配置 `gateway.remote.url`
+      - `gateway.tailscale.mode` 为 `serve` 或 `funnel`
+      - 在没有这些远程界面的本地模式下：
+        - 当令牌认证可以生效且未配置环境变量/认证令牌时，`gateway.remote.token` 处于活动状态。
+        - 仅当密码认证可以生效且未配置环境变量/认证密码时，`gateway.remote.password` 处于活动状态。
+    - 当设置了 `OPENCLAW_GATEWAY_TOKEN` 时，`gateway.auth.token` SecretRef 对启动认证解析处于非活动状态，因为对于该运行时，环境令牌输入优先。
+
   </Accordion>
 </AccordionGroup>
 
@@ -147,14 +157,16 @@ SecretRef 仅在有效的活动面上进行验证。
 <AccordionGroup>
   <Accordion title="Env 提供商">
     - 通过 `allowlist` 进行可选的允许列表配置。
-    - 缺失/为空的环境值会导致解析失败。
+    - 缺失/为空的环境变量值将导致解析失败。
+
   </Accordion>
-  <Accordion title="File 提供商">
+  <Accordion title="文件提供商">
     - 从 `path` 读取本地文件。
     - `mode: "json"` 期望 JSON 对象负载并将 `id` 解析为指针。
     - `mode: "singleValue"` 期望引用 ID `"value"` 并返回文件内容。
     - 路径必须通过所有权/权限检查。
-    - Windows 故障封闭说明：如果某路径的 ACL 验证不可用，解析将失败。仅对于受信任的路径，在该提供商上设置 `allowInsecurePath: true` 以绕过路径安全检查。
+    - Windows 失败关闭说明：如果路径的 ACL 验证不可用，解析将失败。仅限受信任路径，在该提供商上设置 `allowInsecurePath: true` 以绕过路径安全检查。
+
   </Accordion>
   <Accordion title="Exec 提供商">
     - 运行配置的绝对二进制路径，无 shell。

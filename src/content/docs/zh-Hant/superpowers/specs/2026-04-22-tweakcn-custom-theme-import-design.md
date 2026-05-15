@@ -281,37 +281,36 @@ type ImportedCustomTheme = {
 可能的新輔助函式：
 
 - `ui/src/ui/custom-theme.ts`
-- `ui/src/ui/custom-theme-import.ts`
 
 測試：
 
 - `ui/src/ui/app-settings.test.ts`
 - `ui/src/ui/storage.node.test.ts`
 - `ui/src/ui/views/config.browser.test.ts`
-- 針對 URL 解析和 payload 正規化的新專注測試
+- 針對 URL 解析和 payload 標準化的新專注測試
 
 ## 測試
 
-最低實作涵蓋範圍：
+最低實作覆蓋率：
 
-- 將分享連結 URL 解析為 tweakcn theme id
-- 將 `/themes/{id}` 和 `/r/themes/{id}` 正規化為擷取 URL
-- 拒絕不支援的主機和格式錯誤的 id
-- 驗證 tweakcn payload 格式
-- 將有效的 tweakcn payload 映射到正規化的 OpenClaw light 和 dark token maps
-- 在瀏覽器本機設定中載入並儲存 custom payload
-- 解析 `light`、`dark` 和 `system` 的 `custom`
+- 將分享連結 URL 解析為 tweakcn 主題 ID
+- 將 `/themes/{id}` 和 `/r/themes/{id}` 標準化為 fetch URL
+- 拒絕不支援的主機和格式錯誤的 ID
+- 驗證 tweakcn payload 的形狀
+- 將有效的 tweakcn payload 映射為標準化的 OpenClaw 亮色和暗色 token 映射
+- 在瀏覽器本機設定中載入和儲存自訂 payload
+- 為 `light`、`dark` 和 `system` 解析 `custom`
 - 當不存在 payload 時停用 `Custom` 選擇
-- 當 `custom` 已經是啟用狀態時，立即套用匯入的主題
-- 當作用中的自訂主題被清除時，退回到 `claw`
+- 當 `custom` 已處於啟用狀態時立即套用匯入的主題
+- 當目前啟用的自訂主題被清除時，回退至 `claw`
 
 手動驗證目標：
 
-- 從設定匯入已知的 tweakcn 主題
+- 從設定中匯入已知的 tweakcn 主題
 - 在 `light`、`dark` 和 `system` 之間切換
-- 在 `custom` 與內建系列之間切換
-- 重新載入頁面，確認匯入的自訂主題會保留在本地
+- 在 `custom` 和內建系列之間切換
+- 重新載入頁面並確認匯入的自訂主題在本機持續存在
 
 ## 推出說明
 
-此功能刻意保持精簡。如果使用者後續要求支援匯入多個主題、重新命名、匯出或跨裝置同步，請將其視為後續設計。請勿在此實作中預先建構主題庫抽象層。
+此功能刻意保持精簡。如果使用者後續要求匯入多個主題、重新命名、匯出或跨裝置同步，請將其視為後續設計。請勿在此實作中預先建構主題庫抽象。

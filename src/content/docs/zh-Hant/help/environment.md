@@ -89,7 +89,7 @@ OpenClaw 也會將上下文標記注入到衍生的子行程中：
 }
 ```
 
-請參閱 [設定：環境變數替換](/zh-Hant/gateway/configuration-reference#env-var-substitution) 以了解完整詳情。
+詳情請參閱 [Configuration: Env var substitution](/zh-Hant/gateway/configuration-reference#env-var-substitution)。
 
 ## Secret 參照與 `${ENV}` 字串
 
@@ -98,25 +98,26 @@ OpenClaw 支援兩種由環境變數驅動的模式：
 - 設定值中的 `${VAR}` 字串替換。
 - SecretRef 物件 (`{ source: "env", provider: "default", id: "VAR" }`)，用於支援 secret 參照的欄位。
 
-兩者都會在啟動時從進程環境變數解析。SecretRef 的詳細資訊記錄在 [Secret 管理](/zh-Hant/gateway/secrets) 中。
+兩者都在啟用時從進行環境變數解析。SecretRef 的詳細文件記載於 [Secrets Management](/zh-Hant/gateway/secrets)。
 
 ## 路徑相關的環境變數
 
-| 變數                   | 用途                                                                                                                            |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_HOME`        | 覆寫用於所有內部路徑解析的家目錄 (`~/.openclaw/`、代理程式目錄、工作階段、憑證)。當將 OpenClaw 作為專用服務使用者執行時很有用。 |
-| `OPENCLAW_STATE_DIR`   | 覆寫狀態目錄 (預設 `~/.openclaw`)。                                                                                             |
-| `OPENCLAW_CONFIG_PATH` | 覆寫設定檔路徑 (預設 `~/.openclaw/openclaw.json`)。                                                                             |
+| 變數                     | 用途                                                                                                                            |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_HOME`          | 覆寫用於所有內部路徑解析的家目錄 (`~/.openclaw/`、代理程式目錄、工作階段、憑證)。當將 OpenClaw 作為專用服務使用者執行時很有用。 |
+| `OPENCLAW_STATE_DIR`     | 覆寫狀態目錄 (預設 `~/.openclaw`)。                                                                                             |
+| `OPENCLAW_CONFIG_PATH`   | 覆寫設定檔路徑 (預設 `~/.openclaw/openclaw.json`)。                                                                             |
+| `OPENCLAW_INCLUDE_ROOTS` | 目錄路徑清單，允許 `$include` 指令在設定目錄之外解析檔案（預設值：無 —— `$include` 僅限於設定目錄）。支援波浪號展開。           |
 
-## 記錄
+## 日誌記錄
 
-| 變數                 | 用途                                                                                                                                             |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `OPENCLAW_LOG_LEVEL` | 覆寫檔案和控制台的記錄層級 (例如 `debug`、`trace`)。優先順序高於設定中的 `logging.level` 和 `logging.consoleLevel`。無效的值將被忽略並顯示警告。 |
+| 變數                 | 用途                                                                                                                                                |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_LOG_LEVEL` | 覆寫檔案與主控台的日誌層級（例如 `debug`、`trace`）。優先順序高於設定中的 `logging.level` 與 `logging.consoleLevel`。無效的數值將被忽略並顯示警告。 |
 
 ### `OPENCLAW_HOME`
 
-設定後，`OPENCLAW_HOME` 會取代系統家目錄 (`$HOME` / `os.homedir()`) 用於所有內部路徑解析。這可為無頭服務帳戶啟用完整的檔案系統隔離。
+設定後，`OPENCLAW_HOME` 將取代系統主目錄（`$HOME` / `os.homedir()`）用於所有內部路徑解析。這可為無介面服務帳戶啟用完整的檔案系統隔離。
 
 **優先順序：** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
 
@@ -130,33 +131,45 @@ OpenClaw 支援兩種由環境變數驅動的模式：
 </dict>
 ```
 
-`OPENCLAW_HOME` 也可以設定為波浪號路徑（例如 `~/svc`），該路徑會在使用前透過 `$HOME` 進行擴充。
+`OPENCLAW_HOME` 也可設為波浪號路徑（例如 `~/svc`），該路徑會在使用前透過 `$HOME` 進行展開。
 
 ## nvm 使用者：web_fetch TLS 失敗
 
-如果 Node.js 是透過 **nvm**（而非系統套件管理器）安裝的，內建的 `fetch()` 會使用
-nvm 捆綁的 CA 存儲，這可能會缺少現代的根 CA（用於 Let's Encrypt 的 ISRG Root X1/X2、
-DigiCert Global Root G2 等）。這會導致 `web_fetch` 在大多數 HTTPS 網站上因 `"fetch failed"` 而失敗。
+如果 Node.js 是透過 **nvm** 安裝（而非系統套件管理員），內建的 `fetch()` 會使用
+nvm 隨附的 CA 存儲，該存儲可能缺少現代的根 CA（例如 Let's Encrypt 的 ISRG Root X1/X2、
+DigiCert Global Root G2 等）。這會導致 `web_fetch` 在大多數 HTTPS 網站上失敗並出現 `"fetch failed"` 錯誤。
 
-在 Linux 上，OpenClaw 會自動偵測 nvm 並在實際的啟動環境中套用修復：
+在 Linux 上，OpenClaw 會自動偵測 nvm 並在實際啟動環境中套用修正：
 
-- `openclaw gateway install` 會將 `NODE_EXTRA_CA_CERTS` 寫入 systemd 服務環境中
+- `openclaw gateway install` 會將 `NODE_EXTRA_CA_CERTS` 寫入 systemd 服務環境
 - `openclaw` CLI 進入點會在 Node 啟動前設定 `NODE_EXTRA_CA_CERTS` 並重新執行自身
 
-**手動修復（適用於舊版本或直接 `node ...` 啟動）：**
+**手動修正（適用於舊版本或直接 `node ...` 啟動）：**
 
-在啟動 OpenClaw 之前匯出該變數：
+在啟動 OpenClaw 之前匯出變數：
 
 ```bash
 export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
 openclaw gateway run
 ```
 
-不要僅依賴寫入 `~/.openclaw/.env` 來設定此變數；Node 會在
+不要依賴僅寫入 `~/.openclaw/.env` 來設定此變數；Node 會在
 程序啟動時讀取 `NODE_EXTRA_CA_CERTS`。
+
+## 舊版環境變數
+
+OpenClaw 僅讀取 `OPENCLAW_*` 環境變數。來自早期版本的舊版
+`CLAWDBOT_*` 和 `MOLTBOT_*` 前綴會被
+靜默忽略。
+
+如果在 Gateway 程序啟動時仍設定了任何這些變數，OpenClaw 會發出
+單一個 Node 棄用警告 (`OPENCLAW_LEGACY_ENV_VARS`)，列出
+偵測到的前綴和總數。請透過將
+舊版前綴替換為 `OPENCLAW_` 來重新命名每個值（例如 `CLAWDBOT_GATEWAY_TOKEN` →
+`OPENCLAW_GATEWAY_TOKEN`）；舊名稱將不會生效。
 
 ## 相關
 
-- [Gateway configuration](/zh-Hant/gateway/configuration)
-- [FAQ: env vars and .env loading](/zh-Hant/help/faq#env-vars-and-env-loading)
-- [Models overview](/zh-Hant/concepts/models)
+- [Gateway 配置](/zh-Hant/gateway/configuration)
+- [常見問題：環境變數與 .env 載入](/zh-Hant/help/faq#env-vars-and-env-loading)
+- [模型概覽](/zh-Hant/concepts/models)

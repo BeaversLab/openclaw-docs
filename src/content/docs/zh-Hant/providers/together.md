@@ -109,9 +109,9 @@ OpenClaw 隨附此捆綁的 Together 目錄：
 
   <Accordion title="疑難排解">
     - 驗證您的金鑰是否正常運作：`openclaw models list --provider together`
-    - 如果模型未出現，請確認 API 金鑰已在您的 Gateway 程序的正確
-      環境中設定。
+    - 如果模型未顯示，請確認 API 金鑰已在您的 Gateway 程序的環境中正確設定。
     - 模型參照使用格式 `together/<model-id>`。
+
   </Accordion>
 </AccordionGroup>
 

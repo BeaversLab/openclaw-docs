@@ -1,5 +1,5 @@
 ---
-summary: "Prise en charge de Windows : chemins d'installation natifs et WSL2, démon et avertissements actuels"
+summary: "Prise en charge Windows : chemins d'installation natifs et WSL2, démon et avertissements actuels"
 read_when:
   - Installing OpenClaw on Windows
   - Choosing between native Windows and WSL2
@@ -13,7 +13,7 @@ Les applications compagnes natives pour Windows sont prévues.
 
 ## WSL2 (recommandé)
 
-- [Getting Started](/fr/start/getting-started) (à utiliser dans WSL2)
+- [Getting Started](/fr/start/getting-started) (à utiliser dans WSL)
 - [Install & updates](/fr/install/updating)
 - Guide officiel WSL2 (Microsoft) : [https://learn.microsoft.com/windows/wsl/install](https://learn.microsoft.com/windows/wsl/install)
 
@@ -24,7 +24,7 @@ Les flux de l'Windows natif CLI s'améliorent, mais WSL2 reste tout de même le 
 Ce qui fonctionne bien sur le Windows natif aujourd'hui :
 
 - programme d'installation du site Web via `install.ps1`
-- utilisation locale de l'CLI telle que `openclaw --version`, `openclaw doctor` et `openclaw plugins list --json`
+- utilisation locale de la CLI telle que `openclaw --version`, `openclaw doctor` et `openclaw plugins list --json`
 - test de fumée local-agent/provider intégré, tel que :
 
 ```powershell
@@ -36,7 +36,7 @@ Avertissements actuels :
 - `openclaw onboard --non-interactive` s'attend toujours à une passerelle locale accessible, sauf si vous passez `--skip-health`
 - `openclaw onboard --non-interactive --install-daemon` et `openclaw gateway install` essaient d'abord les tâches planifiées Windows
 - si la création de tâche planifiée est refusée, OpenClaw revient à un élément de connexion dans le dossier de démarrage par utilisateur et démarre la passerelle immédiatement
-- si `schtasks` lui-même se bloque ou cesse de répondre, OpenClaw abandonne désormais rapidement ce chemin et revient à la solution de secours au lieu de rester bloqué indéfiniment
+- si `schtasks` lui-même se bloque ou cesse de répondre, OpenClaw abandonne maintenant rapidement cette voie et bascule au lieu de rester bloqué indéfiniment
 - Les tâches planifiées sont toujours préférées lorsqu'elles sont disponibles car elles offrent un meilleur statut de superviseur
 
 Si vous ne voulez que le CLI natif, sans installation du service de passerelle, utilisez l'un de ceux-ci :
@@ -116,7 +116,7 @@ In PowerShell as Administrator :
 schtasks /create /tn "WSL Boot" /tr "wsl.exe -d Ubuntu --exec /bin/true" /sc onstart /ru SYSTEM
 ```
 
-Replace `Ubuntu` with your distro name from :
+Remplacez `Ubuntu` par le nom de votre distribution depuis :
 
 ```powershell
 wsl --list --verbose
@@ -169,8 +169,8 @@ netsh interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.
 
 Remarques :
 
-- Le SSH depuis une autre machine cible l'**adresse IP de l'hôte Windows** (exemple : `ssh user@windows-host -p 2222`).
-- Les nœuds distants doivent pointer vers une URL Gateway **accessible** (pas `127.0.0.1`) ; utilisez
+- Le SSH depuis une autre machine cible l'IP de l'hôte **Windows** (exemple : `ssh user@windows-host -p 2222`).
+- Les nœuds distants doivent pointer vers une URL de Gateway **accessible** (pas `127.0.0.1`) ; utilisez
   `openclaw status --all` pour confirmer.
 - Utilisez `listenaddress=0.0.0.0` pour l'accès LAN ; `127.0.0.1` le garde uniquement en local.
 - Si vous souhaitez que ce soit automatique, enregistrez une tâche planifiée pour exécuter l'étape d'actualisation
@@ -227,7 +227,8 @@ pnpm ui:build
 pnpm openclaw onboard --install-daemon
 ```
 
-Si vous développez à partir du code source au lieu de faire un premier onboarding, utilisez la boucle de développement source à partir de [Configuration](/fr/start/setup) :
+Si vous développez à partir du code source au lieu de faire une intégration pour la première fois, utilisez la
+boucle de développement source depuis [Setup](/fr/start/setup) :
 
 ```bash
 pnpm install
@@ -241,7 +242,33 @@ Guide complet : [Getting Started](/fr/start/getting-started)
 ## Application compagnon Windows
 
 Nous n'avons pas encore d'application compagnon Windows. Les contributions sont les bienvenues si vous souhaitez
-contribuer à sa réalisation.
+aider à sa réalisation.
+
+## Connectivité Git et GitHub (contributeurs)
+
+Certains réseaux bloquent ou limitent le HTTPS vers GitHub. Si GitHub`git clone` échoue avec des expirations de délai (timeouts) ou des réinitialisations de connexion, essayez un autre réseau, un VPN ou un proxy HTTP/HTTPS fourni par votre organisation.
+
+Si `gh auth login` échoue lors du flux de périphérique du navigateur (par exemple une expiration de délai pour atteindre `github.com:443`), authentifiez-vous plutôt avec un jeton d'accès personnel (PAT) :
+
+1. Créez un jeton avec au moins la portée (scope) `repo` (PAT classique) ou un accès granulaire équivalent.
+2. Dans PowerShell pour la session actuelle :
+
+```powershell
+$env:GH_TOKEN="<your-token>"
+gh auth status
+gh auth setup-git
+```
+
+3. Si `gh auth status` avertit concernant l'absence de `read:org`, créez un jeton incluant cette portée et réassignez la variable :
+
+```powershell
+$env:GH_TOKEN="<your-token-with-repo-and-read:org>"
+gh auth status
+```
+
+`gh auth refresh -s read:org` s'applique uniquement lorsque vous vous êtes authentifié via `gh auth login` et que vous avez stocké des informations d'identification pour actualiser (pas lors de l'utilisation de `GH_TOKEN`).
+
+Ne commettez jamais de jetons ou ne les collez pas dans des tickets de suivi (issues) ou des demandes de tirage (pull requests).
 
 ## Connexes
 

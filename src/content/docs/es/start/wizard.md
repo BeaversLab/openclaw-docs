@@ -38,10 +38,20 @@ La incorporación comienza con **Inicio rápido** (valores predeterminados) fren
 
 <Tabs>
   <Tab title="Inicio rápido (valores predeterminados)">
-    - Puerta de enlace local (bucle local) - Espacio de trabajo predeterminado (o espacio de trabajo existente) - Puerto de puerta de enlace **18789** - Autenticación de puerta de enlace **Token** (auto-generado, incluso en bucle local) - Política de herramientas predeterminada para nuevas configuraciones locales: `tools.profile: "coding"` (se conserva el perfil explícito existente) - Aislamiento
-    de MD predeterminado: la incorporación local escribe `session.dmScope: "per-channel-peer"` cuando no está configurado. Detalles: [Referencia de configuración de CLI](/es/start/wizard-cli-reference#outputs-and-internals) - Exposición de Tailscale **Desactivada** - Los MD de Telegram + WhatsApp se predeterminan en **lista de permitidos** (se le pedirá su número de teléfono)
+    - Puerta de enlace local (loopback)
+    - Espacio de trabajo predeterminado (o espacio de trabajo existente)
+    - Puerto de puerta de enlace **18789**
+    - Autenticación de puerta de enlace **Token** (generado automáticamente, incluso en loopback)
+    - Política de herramientas predeterminada para nuevas configuraciones locales: `tools.profile: "coding"` (se conserva el perfil explícito existente)
+    - Aislamiento de DM predeterminado: la incorporación local escribe `session.dmScope: "per-channel-peer"` cuando no está configurado. Detalles: [Referencia de configuración de CLI](/es/start/wizard-cli-reference#outputs-and-internals)
+    - Exposición de Tailscale **Desactivada**
+    - Los MD de Telegram + WhatsApp se configuran de forma predeterminada en **lista blanca** (se le pedirá su número de teléfono)
+
   </Tab>
-  <Tab title="Avanzado (control total)">- Expone cada paso (modo, espacio de trabajo, puerta de enlace, canales, demonio, habilidades).</Tab>
+  <Tab title="Avanzado (control total)">
+    - Expone cada paso (modo, espacio de trabajo, puerta de enlace, canales, demonio, habilidades).
+
+  </Tab>
 </Tabs>
 
 ## Qué configura la incorporación
@@ -59,7 +69,7 @@ El **modo local (predeterminado)** le guía a través de estos pasos:
 3. **Gateway** — Puerto, dirección de enlace, modo de autenticación, exposición a Tailscale.
    En el modo de token interactivo, elige el almacenamiento de token de texto sin formato predeterminado o opta por SecretRef.
    Ruta de SecretRef de token no interactivo: `--gateway-token-ref-env <ENV_VAR>`.
-4. **Canales** — canales de chat integrados y agrupados, como BlueBubbles, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams, QQ Bot, Signal, Slack, Telegram, WhatsApp y más.
+4. **Canales** — canales de chat integrados y incluidos, como iMessage, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams, QQ Bot, Signal, Slack, Telegram, WhatsApp y más.
 5. **Demonio** — Instala un LaunchAgent (macOS), una unidad de usuario systemd (Linux/WSL2) o una Tarea Programada nativa de Windows con respaldo en la carpeta de Inicio por usuario.
    Si la autenticación por token requiere un token y `gateway.auth.token` está gestionado por SecretRef, la instalación del demonio lo valida pero no persiste el token resuelto en los metadatos del entorno del servicio supervisor.
    Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, la instalación del demonio se bloquea con una guía accionable.

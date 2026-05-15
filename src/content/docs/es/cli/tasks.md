@@ -9,7 +9,7 @@ title: "`openclaw tasks`"
 Inspeccione tareas en segundo plano duraderas y el estado de Task Flow. Sin un subcomando,
 `openclaw tasks` es equivalente a `openclaw tasks list`.
 
-Consulte [Tareas en segundo plano](/es/automation/tasks) para conocer el ciclo de vida y el modelo de entrega.
+Consulte [Tareas en segundo plano](/es/automation/tasks) para obtener información sobre el ciclo de vida y el modelo de entrega.
 
 ## Uso
 
@@ -83,11 +83,9 @@ Muestra registros de tareas y flujos de tareas obsoletos, perdidos, con fallas d
 openclaw tasks maintenance [--apply] [--json]
 ```
 
-Vista previa o aplica la conciliación de tareas y flujos de tareas, la limpieza de marcas y la poda.
-Para las tareas cron, la conciliación utiliza los registros de ejecución/estado del trabajo persistidos antes de marcar una
-tarea activa antigua como `lost`, por lo que las ejecuciones cron completadas no se convierten en errores de auditoría falsos
-solo porque el estado de ejecución en memoria de Gateway se ha ido. La auditoría de CLI sin conexión no
-es autorizada para el conjunto de trabajos activos de cron local del proceso de Gateway.
+Obtiene una vista previa o aplica la conciliación de tareas y de flujos de tareas (Task Flow), el sellado de limpieza, la poda y la limpieza del registro de sesiones de ejecuciones de cron obsoletas.
+Para las tareas de cron, la conciliación utiliza los registros de ejecución o el estado del trabajo persistidos antes de marcar una tarea activa antigua como `lost`, de modo que las ejecuciones de cron completadas no se conviertan en errores de auditoría falsos simplemente porque el estado de ejecución en memoria de Gateway se ha ido. La auditoría de CLI sin conexión no es autorizada para el conjunto de trabajos activos de cron local al proceso de Gateway. Las tareas de CLI con un id de ejecución/id de fuente se marcan como `lost` cuando su contexto de ejecución de Gateway en vivo ha desaparecido, incluso si permanece una fila de sesión secundaria antigua.
+Cuando se aplica, el mantenimiento también poda las filas del registro de sesiones `cron:<jobId>:run:<uuid>` de más de 7 días de antigüedad, conservando al mismo tiempo los trabajos de cron que se están ejecutando actualmente y dejando sin tocar las filas de sesiones que no son de cron.
 
 ### `flow`
 
@@ -101,5 +99,5 @@ Inspecciona o cancela el estado duradero del flujo de tareas bajo el libro mayor
 
 ## Relacionado
 
-- [Referencia de CLI](/es/cli)
+- [Referencia de la CLI](/es/cli)
 - [Tareas en segundo plano](/es/automation/tasks)
