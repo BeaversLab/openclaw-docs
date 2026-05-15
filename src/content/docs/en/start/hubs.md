@@ -109,7 +109,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [PDF tool](/en/tools/pdf)
 - [Elevated mode](/en/tools/elevated)
 - [Cron jobs](/en/automation/cron-jobs)
-- [Automation & Tasks](/en/automation)
+- [Automation](/en/automation)
 - [Thinking + verbose](/en/tools/thinking)
 - [Models](/en/concepts/models)
 - [Sub-agents](/en/tools/subagents)

@@ -112,16 +112,12 @@ If still stuck:
 - Re-grant OS permissions.
 - Recreate/adjust exec approval policy.
 
-Related:
-
-- [/nodes/index](/en/nodes/index)
-- [/nodes/camera](/en/nodes/camera)
-- [/nodes/location-command](/en/nodes/location-command)
-- [/tools/exec-approvals](/en/tools/exec-approvals)
-- [/gateway/pairing](/en/gateway/pairing)
-
 ## Related
 
 - [Nodes overview](/en/nodes)
+- [Camera nodes](/en/nodes/camera)
+- [Location command](/en/nodes/location-command)
+- [Exec approvals](/en/tools/exec-approvals)
+- [Gateway pairing](/en/gateway/pairing)
 - [Gateway troubleshooting](/en/gateway/troubleshooting)
 - [Channel troubleshooting](/en/channels/troubleshooting)
