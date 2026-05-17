@@ -21,6 +21,9 @@ Text is supported everywhere; media and reactions vary by channel.
 - Channels that accept bot-authored inbound messages can use shared
   [bot loop protection](/en/channels/bot-loop-protection) to prevent bot pairs from
   replying to each other indefinitely.
+- Supported always-on rooms can use [ambient room events](/en/channels/ambient-room-events)
+  so unmentioned room chatter becomes quiet context unless the agent sends with
+  the `message` tool.
 
 ## Supported channels
 
