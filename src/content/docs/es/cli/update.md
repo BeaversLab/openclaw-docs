@@ -11,8 +11,8 @@ title: "Actualizar"
 
 Actualice OpenClaw de forma segura y cambie entre los canales estable/beta/desarrollo.
 
-Si instalaste vía **npm/pnpm/bun** (instalación global, sin metadatos de git),
-las actualizaciones ocurren a través del flujo del gestor de paquetes en [Updating](/es/install/updating).
+Si instalaste a través de **npm/pnpm/bun** (instalación global, sin metadatos de git),
+las actualizaciones se realizan mediante el flujo del gestor de paquetes en [Actualización](/es/install/updating).
 
 ## Uso
 
@@ -38,22 +38,23 @@ openclaw --update
 - `--tag <dist-tag|version|spec>`: anula el objetivo del paquete solo para esta actualización. Para instalaciones de paquetes, `main` se mapea a `github:openclaw/openclaw#main`.
 - `--dry-run`: previsualiza las acciones de actualización planificadas (canal/etiqueta/objetivo/flujo de reinicio) sin escribir configuración, instalar, sincronizar complementos o reiniciar.
 - `--json`: imprime JSON `UpdateRunResult` legible por máquina, incluyendo
-  `postUpdate.plugins.warnings` cuando complementos administrados corruptos o no cargables necesitan
-  reparación después de que la actualización del núcleo tenga éxito, y `postUpdate.plugins.integrityDrifts`
-  cuando se detecta una deriva de artefactos de complementos de npm durante la sincronización de complementos posterior a la actualización.
+  `postUpdate.plugins.warnings` cuando los complementos administrados corruptos o no cargables necesitan
+  reparación después de que la actualización del núcleo tenga éxito, detalles de reserva del complemento del canal beta
+  cuando un complemento no tiene versión beta, y `postUpdate.plugins.integrityDrifts`
+  cuando se detecta una desviación de artefactos del complemento npm durante la sincronización de complementos posterior a la actualización.
 - `--timeout <seconds>`: tiempo de espera por paso (por defecto es 1800s).
 - `--yes`: omite los mensajes de confirmación (por ejemplo confirmación de desactualización).
 
 `openclaw update` no tiene una opción `--verbose`. Usa `--dry-run` para previsualizar
-las acciones planificadas de canal/etiqueta/instalación/reinicio, `--json` para resultados
+las acciones planeadas de canal/etiqueta/instalación/reinicio, `--json` para resultados
 legibles por máquina y `openclaw update status --json` cuando solo necesitas detalles del canal y
-disponibilidad. Si estás depurando registros de Gateway alrededor de una actualización,
-la verbosidad de la consola y el nivel de registro de archivo son separados: la opción `--verbose` de Gateway afecta
+disponibilidad. Si estás depurando los registros de Gateway alrededor de una actualización,
+el verbosidad de la consola y el nivel de registro de archivo son separados: la opción `--verbose` de Gateway afecta
 la salida de terminal/WebSocket, mientras que los registros de archivo requieren `logging.level: "debug"` o
-`"trace"` en la configuración. Consulta [Gateway logging](/es/gateway/logging).
+`"trace"` en la configuración. Consulta [Registro de Gateway](/es/gateway/logging).
 
 <Note>
-  En modo Nix (`OPENCLAW_NIX_MODE=1`), las ejecuciones de mutación de `openclaw update` están deshabilitadas. Actualice la fuente de Nix o la entrada de flake para esta instalación en su lugar; para nix-openclaw, use el [Inicio rápido] centrado en el agente (https://github.com/openclaw/nix-openclaw#quick-start). `openclaw update status` y `openclaw update --dry-run` permanecen de solo lectura.
+  En modo Nix (`OPENCLAW_NIX_MODE=1`), las ejecuciones mutantes de `openclaw update` están deshabilitadas. Actualiza en su lugar la fuente de Nix o la entrada de flake para esta instalación; para nix-openclaw, usa el [Inicio rápido](https://github.com/openclaw/nix-openclaw#quick-start) con prioridad de agente. `openclaw update status` y `openclaw update --dry-run` permanecen de solo lectura.
 </Note>
 
 <Warning>Las downgrades requieren confirmación porque las versiones anteriores pueden romper la configuración.</Warning>
@@ -123,36 +124,40 @@ Cuando se instala un servicio Gateway local administrado y el reinicio está hab
     los ejecutores de CI.
   </Step>
   <Step title="Rebase">Hace rebase sobre la confirmación seleccionada (solo para desarrollo).</Step>
-  <Step title="Instalar dependencias">Utiliza el gestor de paquetes del repositorio. Para checkouts de pnpm, el actualizador inicializa `pnpm` bajo demanda (primero a través de `corepack`, luego un respaldo `npm install pnpm@10` temporal) en lugar de ejecutar `npm run build` dentro de un espacio de trabajo pnpm.</Step>
+  <Step title="Instalar dependencias">Usa el gestor de paquetes del repositorio. Para checkouts de pnpm, el actualizador inicializa `pnpm` bajo demanda (vía `corepack` primero, luego una reserva temporal `npm install pnpm@11`) en lugar de ejecutar `npm run build` dentro de un espacio de trabajo pnpm.</Step>
   <Step title="Construir UI de Control">Construye la puerta de enlace y la UI de Control.</Step>
   <Step title="Ejecutar doctor">`openclaw doctor` se ejecuta como la verificación final de actualización segura.</Step>
   <Step title="Sincronizar complementos">Sincroniza los complementos con el canal activo. El desarrollo utiliza complementos empaquetados; estable y beta utilizan npm. Actualiza las instalaciones de complementos rastreadas.</Step>
 </Steps>
 
-En el canal de actualización beta, las instalaciones de complementos rastreados de npm y ClawHub que siguen
-la línea predeterminada/más reciente (default/latest) intentan primero una versión `@beta` del complemento. Si el complemento no tiene
-versión beta, OpenClaw vuelve a la especificación predeterminada/más reciente registrada. Para los complementos
-de npm, OpenClaw también vuelve cuando el paquete beta existe pero falla la
-validación de la instalación. Las versiones exactas y las etiquetas explícitas no se reescriben.
+En el canal de actualización beta, las instalaciones de plugins de npm y ClawHub rastreadas que siguen
+la línea predeterminada/más reciente intentan primero una versión beta del plugin `@beta`. Si el plugin no tiene
+una versión beta, OpenClaw recurre a la especificación predeterminada/más reciente registrada y la reporta
+como una advertencia. Para los plugins de npm, OpenClaw también recurre cuando el paquete
+beta existe pero falla la validación de la instalación. Estas advertencias de respaldo del plugin no
+hacen que falle la actualización principal. Las versiones exactas y las etiquetas explícitas no se
+reescriben.
 
 <Warning>Si una actualización de un complemento de npm fijado exactamente se resuelve en un artefacto cuya integridad difiere del registro de instalación almacenado, `openclaw update` aborta esa actualización del artefacto del complemento en lugar de instalarlo. Reinstale o actualice el complemento explícitamente solo después de verificar que confía en el nuevo artefacto.</Warning>
 
 <Note>
-Los fallos de sincronización de complementos posteriores a la actualización que están limitados a un complemento administrado se reportan como advertencias después de que la actualización del núcleo tiene éxito. El resultado JSON mantiene el `status: "ok"` de actualización de nivel superior y reporta `postUpdate.plugins.status: "warning"` con `openclaw doctor --fix` y orientación `openclaw plugins inspect <id> --runtime --json`. Las excepciones inesperadas del actualizador o de sincronización aún hacen fallar el resultado de la actualización. Corrija el error de instalación o actualización del complemento y luego vuelva a ejecutar `openclaw doctor --fix` o `openclaw update`.
+Los fallos de sincronización de complementos posteriores a la actualización que están limitados a un complemento administrado y que la ruta de sincronización puede evitar (por ejemplo, un registro npm inalcanzable para un complemento no esencial) se reportan como advertencias después de que la actualización central tiene éxito. El resultado JSON mantiene la actualización `status: "ok"` de nivel superior y reporta `postUpdate.plugins.status: "warning"` con la orientación `openclaw doctor --fix` y `openclaw plugins inspect <id> --runtime --json`. Las excepciones inesperadas del actualizador o de sincronización aún hacen que el resultado de la actualización falle. Solucione el error de instalación o actualización del complemento y luego vuelva a ejecutar `openclaw doctor --fix` o `openclaw update`.
 
-Cuando se inicia el Gateway actualizado, la carga de complementos es solo de verificación: el inicio no ejecuta administradores de paquetes ni muta los árboles de dependencias. Los reinicios `update.run` del administrador de paquetes omiten la aplazamiento normal de inactividad y el enfriamiento de reinicio después de que se haya intercambiado el árbol de paquetes, por lo que el proceso antiguo no puede seguir cargando de forma diferida los fragmentos eliminados.
+Después del paso de sincronización por complemento, `openclaw update` ejecuta un paso obligatorio de **convergencia post-central** antes de que se reinicie la puerta de enlace: repara las cargas útiles de complementos configuradas que faltan, valida cada registro de instalación rastreado _activo_ en el disco y verifica estáticamente que su `package.json` sea analizable (y que exista cualquier `main` declarado explícitamente). Los fallos de este paso, así como una instantánea no válida de la configuración de OpenClaw, devuelven `postUpdate.plugins.status: "error"` y cambian la actualización `status` de nivel superior a `"error"`, por lo que `openclaw update` sale con un valor distinto de cero y la puerta de enlace _no_ se reinicia con un conjunto de complementos no verificado. El error incluye líneas `postUpdate.plugins.warnings[].guidance` estructuradas que apuntan a `openclaw doctor --fix` y `openclaw plugins inspect <id> --runtime --json` para el seguimiento. Las entradas de complementos deshabilitados y los registros que no son objetivos de sincronización oficial vinculados a fuentes confiables se omiten aquí, reflejando la política `skipDisabledPlugins` utilizada por la verificación de carga útil faltante, por lo que un registro de complemento deshabilitado obsoleto no puede bloquear una actualización que, por lo demás, es válida.
 
-Si el arranque (bootstrap) de pnpm aún falla, el actualizador se detiene temprano con un error específico del administrador de paquetes en lugar de intentar `npm run build` dentro de la extracción.
+Cuando se inicia la puerta de enlace actualizada, la carga de complementos es solo de verificación: el inicio no ejecuta gestores de paquetes ni muta árboles de dependencias. Los reinicios `update.run` del gestor de paquetes omiten la aplazamiento normal de inactividad y el tiempo de espera de reinicio después de que se ha intercambiado el árbol de paquetes, por lo que el proceso antiguo no puede seguir cargando de forma diferida fragmentos eliminados.
+
+Si la inicialización de pnpm aún falla, el actualizador se detiene prematuramente con un error específico del gestor de paquetes en lugar de intentar `npm run build` dentro de la copia de trabajo.
 
 </Note>
 
-## Abreviatura de `--update`
+## `--update` abreviada
 
-`openclaw --update` se reescribe como `openclaw update` (útil para shells y scripts de inicio).
+`openclaw --update` se reescribe como `openclaw update` (útil para shells y scripts de lanzamiento).
 
 ## Relacionado
 
-- `openclaw doctor` (ofrece ejecutar la actualización primero en las extracciones de git)
+- `openclaw doctor` (ofrece ejecutar primero la actualización en checkouts de git)
 - [Canales de desarrollo](/es/install/development-channels)
 - [Actualización](/es/install/updating)
-- [Referencia de la CLI](/es/cli)
+- [Referencia de CLI](/es/cli)

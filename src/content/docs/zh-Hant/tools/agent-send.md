@@ -75,6 +75,7 @@ title: "Agent send"
   會保持隔離；直接聊天則合併為 `main`)。
 - 思考和詳細標誌會持續存在於 session store 中。
 - 輸出：預設為純文字，或是使用 `--json` 取得結構化 payload + 中繼資料。
+- 使用 `--json --deliver` 時，JSON 包含已發送、已隱藏、部分發送和發送失敗的傳送狀態。請參閱 [JSON 傳送狀態](/zh-Hant/cli/agent#json-delivery-status)。
 
 ## 範例
 
@@ -93,15 +94,15 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 
 <CardGroup cols={2}>
   <Card title="Agent CLI 參考資料" href="/zh-Hant/cli/agent" icon="terminal">
-    完整的 `openclaw agent` flag 和選項參考資料。
+    完整的 `openclaw agent` 標誌和選項參考資料。
   </Card>
-  <Card title="Sub-agents" href="/zh-Hant/tools/subagents" icon="users">
-    背景子 agent 生成。
+  <Card title="子代理程式" href="/zh-Hant/tools/subagents" icon="users">
+    背景子代理程式產生。
   </Card>
   <Card title="Sessions" href="/zh-Hant/concepts/session" icon="comments">
     Session 金鑰的運作方式，以及 `--to`、`--agent` 和 `--session-id` 如何解析它們。
   </Card>
   <Card title="斜線指令" href="/zh-Hant/tools/slash-commands" icon="slash">
-    在 agent sessions 中使用的原生指令目錄。
+    在代理程式 sessions 中使用的原生指令目錄。
   </Card>
 </CardGroup>

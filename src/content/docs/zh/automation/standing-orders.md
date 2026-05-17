@@ -241,7 +241,7 @@ openclaw cron add \
 
 ## 相关内容
 
-- [自动化和任务](/zh/automation)：一目了然的所有自动化机制。
+- [自动化](/zh/automation)：一览所有自动化机制。
 - [Cron 作业](/zh/automation/cron-jobs)：常设指令的定时执行。
 - [钩子](/zh/automation/hooks)：针对代理生命周期事件的事件驱动脚本。
 - [Webhook](/zh/automation/cron-jobs#webhooks)：入站 HTTP 事件触发器。

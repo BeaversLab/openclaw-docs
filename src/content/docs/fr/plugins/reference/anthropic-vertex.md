@@ -12,7 +12,7 @@ Ajoute la prise en charge du fournisseur de modèles Anthropic Vertex à OpenCla
 ## Distribution
 
 - Package : `@openclaw/anthropic-vertex-provider`
-- Route d'installation : inclus dans OpenClaw
+- Voie d'installation : npm ; ClawHub
 
 ## Surface
 

@@ -186,13 +186,13 @@ OpenClaw 可以在回复管道运行之前**总结传入媒体**（图像/音频
     使用 `read_many_files` 进行 `gemini`。
   </Step>
   <Step title="Provider auth">
-    - 支持该功能的已配置 `models.providers.*` 条目将在内置回退顺序之前尝试。
-    - 即使不是内置供应商插件，具有图像处理能力的仅图像配置提供商也会自动注册媒体理解功能。
-    - 当明确选择时，例如通过 `agents.defaults.imageModel` 或 `openclaw infer image describe --model ollama/<vision-model>`，可以使用 Ollama 图像理解。
+    - 支持该功能的已配置 `models.providers.*` 条目会在内置的回退顺序之前尝试。
+    - 即使不是内置的供应商插件，具有具备图像处理能力的模型的仅图像配置提供程序也会自动注册以进行媒体理解。
+    - 当明确选择时，例如通过 `agents.defaults.imageModel` 或 `openclaw infer image describe --model ollama/<vision-model>`，Ollama 图像理解功能可用。
 
     内置回退顺序：
 
-    - 音频：OpenAI → Groq → xAI → Deepgram → Google → SenseAudio → ElevenLabs → Mistral
+    - 音频：OpenAI → Groq → xAI → Deepgram → OpenRouter → Google → SenseAudio → ElevenLabs → Mistral
     - 图像：OpenAI → Anthropic → Google → MiniMax → MiniMax Portal → Z.AI
     - 视频：Google → Qwen → Moonshot
 
@@ -235,7 +235,7 @@ OpenClaw 可以在回复管道运行之前**总结传入媒体**（图像/音频
 - `openai`、`anthropic`、`minimax`：**图像**
 - `minimax-portal`：**图像**
 - `moonshot`：**图像 + 视频**
-- `openrouter`：**图像**
+- `openrouter`：**图像 + 音频**
 - `google`API (Gemini API)：**图像 + 音频 + 视频**
 - `qwen`：**图像 + 视频**
 - `mistral`：**音频**
@@ -252,7 +252,7 @@ OpenClaw 可以在回复管道运行之前**总结传入媒体**（图像/音频
 | 功能 | 提供商集成                                                                                                             | 说明                                                                                                                                                                                                                     |
 | ---- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 图像 | OpenAI，OpenAI Codex OAuth，Codex app-server，OpenRouter，Anthropic，Google，MiniMax，Moonshot，Qwen，Z.AI，配置提供商 | 提供商插件注册图像支持；`openai-codex/*`OAuth 使用 OAuth 提供商底层设施；`codex/*`MiniMaxMiniMaxOAuth 使用有限的 Codex 应用服务器轮次；MiniMax 和 MiniMax OAuth 均使用 `MiniMax-VL-01`；支持图像的配置提供商会自动注册。 |
-| 音频 | OpenAI，Groq，xAI，Deepgram，Google，SenseAudio，ElevenLabs，Mistral                                                   | 提供商转录（Whisper/Groq/xAI/Deepgram/Gemini/SenseAudio/Scribe/Voxtral）。                                                                                                                                               |
+| 音频 | OpenAI、Groq、xAI、Deepgram、OpenRouter、Google、SenseAudio、ElevenLabs、Mistral                                       | 提供程序转录（Whisper/Groq/xAI/Deepgram/OpenRouter STT/Gemini/SenseAudio/Scribe/Voxtral）。                                                                                                                              |
 | 视频 | Google，Qwen，Moonshot                                                                                                 | 通过供应商插件实现的提供商视频理解；Qwen 视频理解使用标准 DashScope 端点。                                                                                                                                               |
 
 <Note>

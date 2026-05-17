@@ -7,7 +7,7 @@ title: "TypeBox"
 
 TypeBox es una biblioteca de esquemas con prioridad para TypeScript. La usamos para definir el **protocolo WebSocket de Gateway** (handshake, solicitud/respuesta, eventos del servidor). Esos esquemas impulsan la **validación en tiempo de ejecución**, la **exportación de JSON Schema** y la **generación de código Swift** para la aplicación macOS. Una única fuente de verdad; todo lo demás se genera.
 
-Si deseas el contexto de nivel superior del protocolo, comienza con
+Si deseas el contexto de protocolo de nivel superior, comienza con
 [Arquitectura de Gateway](/es/concepts/architecture).
 
 ## Modelo mental (30 segundos)
@@ -90,7 +90,7 @@ Conexión (primer mensaje):
   "id": "c1",
   "method": "connect",
   "params": {
-    "minProtocol": 4,
+    "minProtocol": 3,
     "maxProtocol": 4,
     "client": {
       "id": "openclaw-macos",
@@ -256,14 +256,15 @@ El generador de Swift emite:
 
 - Enum `GatewayFrame` con casos `req`, `res`, `event` y `unknown`
 - Structs/enums de carga útil fuertemente tipados
-- Valores `ErrorCode` y `GATEWAY_PROTOCOL_VERSION`
+- valores `ErrorCode`, `GATEWAY_PROTOCOL_VERSION` y `GATEWAY_MIN_PROTOCOL_VERSION`
 
 Los tipos de trama desconocidos se conservan como cargas útiles sin procesar para la compatibilidad futura.
 
 ## Versionado + compatibilidad
 
 - `PROTOCOL_VERSION` vive en `src/gateway/protocol/version.ts`.
-- Los clientes envían `minProtocol` + `maxProtocol`; el servidor rechaza las discordancias.
+- Los clientes envían `minProtocol` + `maxProtocol`; el servidor rechaza los rangos que
+  no incluyen su protocolo actual.
 - Los modelos Swift mantienen tipos de trama desconocidos para evitar romper clientes antiguos.
 
 ## Patrones y convenciones de esquemas
@@ -274,12 +275,12 @@ Los tipos de trama desconocidos se conservan como cargas útiles sin procesar pa
 - Los métodos con efectos secundarios generalmente requieren un `idempotencyKey` en los parámetros
   (ejemplo: `send`, `poll`, `agent`, `chat.send`).
 - `agent` acepta `internalEvents` opcional para el contexto de orquestación generado en tiempo de ejecución
-  (por ejemplo, transferencia de finalización de tareas de subagente/cron); trátelo como superficie de API interna.
+  (por ejemplo, traspaso de finalización de tareas de subagente/cron); trata esto como superficie de API interna.
 
 ## JSON de esquema en vivo
 
 El JSON Schema generado está en el repositorio en `dist/protocol.schema.json`. El
-archivo crudo publicado suele estar disponible en:
+archivo raw publicado típicamente está disponible en:
 
 - [https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json](https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json)
 
@@ -287,8 +288,8 @@ archivo crudo publicado suele estar disponible en:
 
 1. Actualiza los esquemas de TypeBox.
 2. Registra el método/evento en `src/gateway/server-methods-list.ts`.
-3. Actualiza `src/gateway/method-scopes.ts` cuando el nuevo RPC necesita clasificación de alcance de operador o
-   de nodo.
+3. Actualiza `src/gateway/method-scopes.ts` cuando el nuevo RPC necesite clasificación de ámbito de operador o
+   nodo.
 4. Ejecuta `pnpm protocol:check`.
 5. Confirma el esquema regenerado + los modelos Swift.
 

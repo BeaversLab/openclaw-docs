@@ -358,6 +358,6 @@ Un ejemplo público: una CLI de "segundo cerebro" + canalizaciones de Lobster qu
 
 ## Relacionado
 
-- [Automatización y tareas](/es/automation) - programación de flujos de trabajo de Lobster
+- [Automatización](/es/automation) - programación de flujos de trabajo de Lobster
 - [Descripción general de automatización](/es/automation) - todos los mecanismos de automatización
 - [Descripción general de herramientas](/es/tools) - todas las herramientas de agente disponibles

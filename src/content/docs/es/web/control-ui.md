@@ -87,7 +87,7 @@ Las traducciones de la documentación se generan para el mismo conjunto de confi
 
 ## Temas de apariencia
 
-El panel de Apariencia mantiene los temas integrados Claw, Knot y Dash, además de una ranura de importación de tweakcn local del navegador. Para importar un tema, abra el [editor de tweakcn](https://tweakcn.com/editor/theme), elija o cree un tema, haga clic en **Share** (Compartir) y pegue el enlace del tema copiado en Apariencia. El importador también acepta URLs del registro `https://tweakcn.com/r/themes/<id>`, URL del editor como `https://tweakcn.com/editor/theme?theme=amethyst-haze`, rutas relativas `/themes/<id>`, ID de temas sin formato y nombres de temas predeterminados como `amethyst-haze`.
+El panel Apariencia conserva los temas integrados Claw, Knot y Dash, además de una ranura de importación de tweakcn local del navegador. Para importar un tema, abra el [editor de tweakcn](https://tweakcn.com/editor/theme), elija o cree un tema, haga clic en **Share** y pegue el enlace del tema copiado en Apariencia. El importador también acepta URLs del registro `https://tweakcn.com/r/themes/<id>`, URLs del editor como `https://tweakcn.com/editor/theme?theme=amethyst-haze`, rutas relativas `/themes/<id>`, ID de temas sin formato y nombres de temas predeterminados como `amethyst-haze`.
 
 Los temas importados se almacenan solo en el perfil del navegador actual. No se escriben en la configuración de la puerta de enlace y no se sincronizan entre dispositivos. Reemplazar el tema importado actualiza la ranura local; borrarlo cambia el tema activo de nuevo a Claw si se había seleccionado el tema importado.
 
@@ -150,24 +150,24 @@ Los temas importados se almacenan solo en el perfil del navegador actual. No se 
 ## Comportamiento del chat
 
 <AccordionGroup>
-  <Accordion title="Semántica de envío e historial">
-    - `chat.send` es **no bloqueante**: reconoce inmediatamente con `{ runId, status: "started" }` y la respuesta se transmite a través de eventos `chat`.
-    - Las cargas del chat aceptan imágenes y archivos que no sean de video. Las imágenes mantienen la ruta nativa de la imagen; otros archivos se almacenan como medios administrados y se muestran en el historial como enlaces de adjuntos.
-    - Reenviar con el mismo `idempotencyKey` devuelve `{ status: "in_flight" }` mientras se ejecuta, y `{ status: "ok" }` después de completarse.
-    - Las respuestas de `chat.history` tienen límite de tamaño para la seguridad de la interfaz de usuario. Cuando las entradas de la transcripción son demasiado grandes, Gateway puede truncar campos de texto largos, omitir bloques de metadatos pesados y reemplazar mensajes excesivamente grandes con un marcador de posición (`[chat.history omitted: message too large]`).
-    - Las imágenes generadas por el asistente se conservan como referencias de medios administrados y se devuelven a través de URL de medios de Gateway autenticadas, por lo que las recargas no dependen de que las cargas de imágenes base64 sin procesar permanezcan en la respuesta del historial del chat.
-    - Al renderizar `chat.history`, la interfaz de usuario de Control elimina las etiquetas de directivas en línea solo de visualización del texto visible del asistente (por ejemplo, `[[reply_to_*]]` y `[[audio_as_voice]]`), las cargas útiles XML de llamadas a herramientas en texto plano (incluyendo `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` y bloques de llamadas a herramientas truncados), y los tokens de control de modelo ASCII/anchura completa filtrados, y omite las entradas del asistente cuyo texto visible completo sea solo el token silencioso exacto `NO_REPLY` / `no_reply` o el token de reconocimiento de latido `HEARTBEAT_OK`.
-    - Durante un envío activo y la actualización final del historial, la vista de chat mantiene visibles los mensajes optimistas locales del usuario/asistente si `chat.history` devuelve brevemente una instantánea anterior; la transcripción canónica reemplaza esos mensajes locales una vez que el historial de Gateway se actualiza.
-    - Los eventos en vivo `chat` son el estado de entrega, mientras que `chat.history` se reconstruye a partir de la transcripción duradera de la sesión. Después de los eventos finales de herramientas, la interfaz de usuario de Control recarga el historial y fusiona solo una pequeña cola optimista; el límite de la transcripción está documentado en [WebChat](/es/web/webchat).
-    - `chat.inject` agrega una nota del asistente a la transcripción de la sesión y transmite un evento `chat` para actualizaciones solo de la interfaz de usuario (sin ejecución de agente, sin entrega de canal).
-    - El encabezado del chat muestra el filtro de agente antes del selector de sesión, y el selector de sesión tiene el alcance del agente seleccionado. Cambiar de agente muestra solo las sesiones vinculadas a ese agente y vuelve a la sesión principal de ese agente cuando aún no tiene sesiones de panel guardadas.
-    - En anchos de escritorio, los controles de chat permanecen en una fila compacta y se colapsan al desplazarse hacia abajo por la transcripción; al desplazarse hacia arriba, volver arriba o llegar al final, se restauran los controles.
-    - Los mensajes consecutivos duplicados de solo texto se representan como una burbuja con una insignia de recuento. Los mensajes que contienen imágenes, archivos adjuntos, salida de herramientas o vistas previas de canvas no se colapsan.
-    - Los selectores de modelo y de pensamiento del encabezado del chat aplican parches a la sesión activa inmediatamente a través de `sessions.patch`; son anulaciones persistentes de la sesión, no opciones de envío de un solo turno.
+  <Accordion title="Envío y semántica del historial">
+    - `chat.send` es **no bloqueante**: confirma inmediatamente con `{ runId, status: "started" }` y la respuesta se transmite a través de eventos `chat`.
+    - Las cargas del chat aceptan imágenes más archivos que no sean de video. Las imágenes conservan la ruta nativa de la imagen; otros archivos se almacenan como medios administrados y se muestran en el historial como enlaces de adjuntos.
+    - Reenviar con el mismo `idempotencyKey` devuelve `{ status: "in_flight" }` mientras se ejecuta y `{ status: "ok" }` después de completarse.
+    - Las respuestas `chat.history` tienen un límite de tamaño para la seguridad de la interfaz de usuario. Cuando las entradas de la transcripción son demasiado grandes, Gateway puede truncar campos de texto largos, omitir bloques de metadatos pesados y reemplazar mensajes excesivamente grandes con un marcador de posición (`[chat.history omitted: message too large]`).
+    - Las imágenes generadas por el asistente se persisten como referencias de medios administrados y se vuelven a servir a través de URL de medios de Gateway autenticadas, por lo que las recargas no dependen de que las cargas de imágenes base64 sin procesar permanezcan en la respuesta del historial del chat.
+    - Al renderizar `chat.history`, el Control UI elimina las etiquetas de directivas en línea de solo visualización del texto visible del asistente (por ejemplo `[[reply_to_*]]` y `[[audio_as_voice]]`), las cargas XML de llamadas a herramientas en texto plano (incluyendo `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` y bloques de llamadas a herramientas truncados), y los tokens de control de modelo ASCII/ancho completo filtrados, y omite las entradas del asistente cuyo texto visible completo es solo el token silencioso exacto `NO_REPLY` / `no_reply` o el token de reconocimiento de latido `HEARTBEAT_OK`.
+    - Durante un envío activo y la actualización final del historial, la vista de chat mantiene visibles los mensajes optimistas locales del usuario/asistente si `chat.history` devuelve brevemente una instantánea anterior; la transcripción canónica reemplaza esos mensajes locales una vez que el historial del Gateway alcanza el estado actualizado.
+    - Los eventos `chat` en vivo son el estado de entrega, mientras que `chat.history` se reconstruye a partir de la transcripción de la sesión duradera. Después de los eventos de herramienta final, el Control UI recarga el historial y fusiona solo una pequeña cola optimista; el límite de la transcripción está documentado en [WebChat](/es/web/webchat).
+    - `chat.inject` agrega una nota del asistente a la transcripción de la sesión y transmite un evento `chat` para actualizaciones solo de la interfaz de usuario (sin ejecución de agente, sin entrega al canal).
+    - El encabezado del chat muestra el filtro de agente antes del selector de sesión, y el selector de sesión está limitado por el agente seleccionado. Cambiar de agente muestra solo las sesiones vinculadas a ese agente y vuelve a la sesión principal de ese agente cuando aún no tiene sesiones de panel guardadas.
+    - En anchos de escritorio, los controles del chat permanecen en una fila compacta y se contraen al desplazarse hacia abajo por la transcripción; al desplazarse hacia arriba, volver arriba o llegar al final, se restauran los controles.
+    - Los mensajes de texto consecutivos duplicados se representan como una burbuja con una insignia de conteo. Los mensajes que contienen imágenes, adjuntos, salida de herramientas o vistas previas de lienzo se dejan sin contraer.
+    - Los selectores de modelo y pensamiento del encabezado del chat aplican un parche a la sesión activa inmediatamente a través de `sessions.patch`; son anulaciones persistentes de la sesión, no opciones de envío de un solo turno.
     - Si envía un mensaje mientras un cambio de selector de modelo para la misma sesión aún se está guardando, el compositor espera ese parche de sesión antes de llamar a `chat.send` para que el envío use el modelo seleccionado.
-    - Escribir `/new` en la interfaz de usuario de Control crea y cambia a la misma sesión de panel nueva que Nuevo chat, excepto cuando `session.dmScope: "main"` está configurado y el padre actual es la sesión principal del agente; en ese caso, restablece la sesión principal en su lugar. Escribir `/reset` mantiene el restablecimiento explícito en su lugar de Gateway para la sesión actual.
-    - El selector de modelo de chat solicita la vista de modelo configurada de Gateway. Si `agents.defaults.models` está presente, esa lista de permitidos impulsa el selector, incluidas las entradas `provider/*` que mantienen los catálogos con ámbito de proveedor dinámicos. De lo contrario, el selector muestra entradas explícitas `models.providers.*.models` más proveedores con autenticación utilizable. El catálogo completo permanece disponible a través de la RPC de depuración `models.list` con `view: "all"`.
-    - Cuando los informes de uso de sesión de Gateway recientes incluyen tokens de contexto actuales, el área del compositor del chat muestra un indicador compacto de uso de contexto. Cambia al estilo de advertencia bajo alta presión de contexto y, en los niveles de compactación recomendados, muestra un botón compacto que ejecuta la ruta normal de compactación de sesión. Las instantáneas de tokens obsoletas se ocultan hasta que Gateway informe del uso nuevamente.
+    - Escribir `/new` en el Control UI crea y cambia a la misma sesión de panel nueva que Nuevo Chat, excepto cuando `session.dmScope: "main"` está configurado y el padre actual es la sesión principal del agente; en ese caso, restablece la sesión principal en su lugar. Escribir `/reset` mantiene el restablecimiento explícito en su lugar del Gateway para la sesión actual.
+    - El selector de modelo de chat solicita la vista de modelo configurada del Gateway. Si `agents.defaults.models` está presente, esa lista de permitidos impulsa el selector, incluidas las entradas `provider/*` que mantienen los catálogos con ámbito de proveedor dinámicos. De lo contrario, el selector muestra entradas `models.providers.*.models` explícitas más proveedores con autenticación utilizable. El catálogo completo permanece disponible a través del RPC de depuración `models.list` con `view: "all"`.
+    - Cuando los informes de uso de la sesión fresca del Gateway incluyen tokens de contexto actuales, el área del compositor de chat muestra un indicador compacto de uso del contexto. Cambia al estilo de advertencia ante una alta presión de contexto y, en los niveles de compactación recomendados, muestra un botón compacto que ejecuta la ruta de compactación de sesión normal. Las instantáneas de tokens obsoletas se ocultan hasta que el Gateway vuelve a informar un uso fresco.
 
   </Accordion>
   <Accordion title="Modo Talk (tiempo real del navegador)">
@@ -219,7 +219,7 @@ La interfaz de usuario de Control utiliza estos métodos de Gateway con ámbito 
 - `push.web.unsubscribe` — elimina un punto final registrado.
 - `push.web.test` — envía una notificación de prueba a la suscripción del autor de la llamada.
 
-<Note>Web Push es independiente de la ruta de relé APNS de iOS (consulte [Configuration](/es/gateway/configuration) para push con respaldo de relé) y del método `push.test` existente, que tiene como objetivo el emparejamiento móvil nativo.</Note>
+<Note>Web Push es independiente de la ruta de retransmisión iOS APNS (consulte [Configuration](/es/gateway/configuration) para las notificaciones push con respaldo de relay) y del método existente `push.test`, que tiene como objetivo el emparejamiento móvil nativo.</Note>
 
 ## Incrustaciones alojadas
 
@@ -350,10 +350,10 @@ Excepciones documentadas:
     </Warning>
 
   </Accordion>
-  <Accordion title="Trusted-proxy note">
-    - La autenticación exitosa de proxy confiable puede admitir sesiones de la interfaz de usuario de control de **operador** sin identidad del dispositivo.
-    - Esto **no** se extiende a las sesiones de la interfaz de usuario de control de rol de nodo.
-    - Los proxies inversos de bucle invertido del mismo host todavía no satisfacen la autenticación de proxy confiable; consulte [Trusted proxy auth](/es/gateway/trusted-proxy-auth).
+  <Accordion title="Nota sobre proxy de confianza">
+    - La autenticación exitosa de proxy de confianza puede admitir sesiones de la Interfaz de usuario de Control de **operador** sin identidad de dispositivo.
+    - Esto **no** se extiende a las sesiones de la Interfaz de usuario de Control con rol de nodo.
+    - Los proxies inversos de bucle invertido del mismo host aún no satisfacen la autenticación de proxy de confianza; consulte [Trusted proxy auth](/es/gateway/trusted-proxy-auth).
 
   </Accordion>
 </AccordionGroup>
@@ -415,12 +415,22 @@ pnpm ui:dev
 
 Luego apunte la interfaz de usuario a su URL de Gateway WS (por ejemplo, `ws://127.0.0.1:18789`).
 
-## Depuración/pruebas: servidor de desarrollo + puerta de enlace remota
+## Página en blanco de la Interfaz de usuario de Control
 
-La interfaz de usuario de Control son archivos estáticos; el destino de WebSocket es configurable y puede ser diferente del origen HTTP. Esto es útil cuando desea tener el servidor de desarrollo de Vite localmente pero la puerta de enlace se ejecuta en otro lugar.
+Si el navegador carga un panel en blanco y DevTools no muestra ningún error útil, es posible que una extensión o un script de contenido temprano haya impedido que se evaluara la aplicación del módulo JavaScript. La página estática incluye un panel de recuperación HTML simple que aparece cuando `<openclaw-app>` no está registrado después del inicio.
+
+Use la acción **Try again** del panel después de cambiar el entorno del navegador, o recargue manualmente después de estas comprobaciones:
+
+- Desactive las extensiones que se inyectan en todas las páginas, especialmente las extensiones con scripts de contenido `<all_urls>`.
+- Pruebe una ventana privada, un perfil de navegador limpio u otro navegador.
+- Mantenga el Gateway en ejecución y verifique la misma URL del panel después del cambio del navegador.
+
+## Depuración/pruebas: servidor de desarrollo + Gateway remoto
+
+La Interfaz de usuario de Control son archivos estáticos; el destino de WebSocket es configurable y puede ser diferente del origen HTTP. Esto es útil cuando desea el servidor de desarrollo de Vite localmente pero el Gateway se ejecuta en otro lugar.
 
 <Steps>
-  <Step title="Inicie el servidor de desarrollo de la interfaz de usuario">
+  <Step title="Iniciar el servidor de desarrollo de la UI">
     ```bash
     pnpm ui:dev
     ```
@@ -442,15 +452,15 @@ La interfaz de usuario de Control son archivos estáticos; el destino de WebSock
 <AccordionGroup>
   <Accordion title="Notas">
     - `gatewayUrl` se almacena en localStorage después de la carga y se elimina de la URL.
-    - Si pasas un endpoint completo `ws://` o `wss://` a través de `gatewayUrl`, codifica en URL el valor `gatewayUrl` para que el navegador analice correctamente la cadena de consulta.
-    - `token` debe pasarse a través del fragmento de URL (`#token=...`) siempre que sea posible. Los fragmentos no se envían al servidor, lo que evita la filtración de registros de solicitud y referer. Los parámetros de consulta heredados `?token=` todavía se importan una vez por compatibilidad, pero solo como reserva, y se eliminan inmediatamente después del arranque.
+    - Si pasa un endpoint `ws://` o `wss://` completo a través de `gatewayUrl`, codifique en URL el valor `gatewayUrl` para que el navegador analice la cadena de consulta correctamente.
+    - `token` debe pasarse a través del fragmento de URL (`#token=...`) siempre que sea posible. Los fragmentos no se envían al servidor, lo que evita fugas en los registros de solicitud y del referer. Los parámetros de consulta `?token=` heredados todavía se importan una vez por compatibilidad, pero solo como reserva, y se eliminan inmediatamente después del arranque.
     - `password` se mantiene solo en memoria.
-    - Cuando `gatewayUrl` está configurado, la interfaz de usuario no recurre a credenciales de configuración o de entorno. Proporciona `token` (o `password`) explícitamente. La falta de credenciales explícitas es un error.
-    - Usa `wss://` cuando el Gateway está detrás de TLS (Tailscale Serve, proxy HTTPS, etc.).
+    - Cuando `gatewayUrl` está configurado, la interfaz de usuario no recurre a credenciales de configuración o de entorno. Proporcione `token` (o `password`) explícitamente. La falta de credenciales explícitas es un error.
+    - Use `wss://` cuando el Gateway está detrás de TLS (Tailscale Serve, proxy HTTPS, etc.).
     - `gatewayUrl` solo se acepta en una ventana de nivel superior (no incrustada) para evitar el secuestro de clics.
-    - Las implementaciones de Control UI que no sean de loopback deben establecer `gateway.controlUi.allowedOrigins` explícitamente (orígenes completos). Esto incluye configuraciones de desarrollo remoto.
-    - El inicio del Gateway puede sembrar orígenes locales como `http://localhost:<port>` y `http://127.0.0.1:<port>` desde el enlace y puerto de tiempo de ejecución efectivo, pero los orígenes del navegador remoto todavía necesitan entradas explícitas.
-    - No uses `gateway.controlUi.allowedOrigins: ["*"]` excepto para pruebas locales estrechamente controladas. Significa permitir cualquier origen de navegador, no "coincidir con el host que estoy usando".
+    - Las implementaciones de la interfaz de usuario de Control que no son de loopback deben establecer `gateway.controlUi.allowedOrigins` explícitamente (orígenes completos). Esto incluye configuraciones de desarrollo remoto.
+    - El inicio del Gateway puede sembrar orígenes locales como `http://localhost:<port>` y `http://127.0.0.1:<port>` desde el enlace y puerto de tiempo de ejecución efectivo, pero los orígenes del navegador remoto aún necesitan entradas explícitas.
+    - No use `gateway.controlUi.allowedOrigins: ["*"]` excepto para pruebas locales estrictamente controladas. Significa permitir cualquier origen de navegador, no "coincidir con el host que estoy usando".
     - `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` habilita el modo de reserva de origen del encabezado Host, pero es un modo de seguridad peligroso.
 
   </Accordion>
@@ -468,11 +478,11 @@ Ejemplo:
 }
 ```
 
-Detalles de la configuración de acceso remoto: [Remote access](/es/gateway/remote).
+Detalles de configuración de acceso remoto: [Acceso remoto](/es/gateway/remote).
 
 ## Relacionado
 
-- [Dashboard](/es/web/dashboard) — panel de control de la puerta de enlace
-- [Health Checks](/es/gateway/health) — supervisión de la salud de la puerta de enlace
+- [Panel de control](/es/web/dashboard) — panel de control del gateway
+- [Verificaciones de estado](/es/gateway/health) — monitoreo de estado del gateway
 - [TUI](/es/web/tui) — interfaz de usuario de terminal
 - [WebChat](/es/web/webchat) — interfaz de chat basada en navegador

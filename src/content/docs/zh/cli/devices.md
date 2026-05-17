@@ -108,7 +108,8 @@ openclaw devices revoke --device <deviceId> --role node
 ## 注意
 
 - 令牌轮换会返回一个新的令牌（敏感）。请将其视为密钥处理。
-- 这些命令需要 `operator.pairing`（或 `operator.admin`）范围。某些审批还需要调用者持有目标设备将铸造或继承的 operator 范围；请参阅 [Operator scopes](/zh/gateway/operator-scopes)。
+- 这些命令需要 `operator.pairing`（或 `operator.admin`）作用域。某些
+  审批还要求调用者持有目标设备将生成或继承的操作员作用域；请参阅 [操作员作用域](/zh/gateway/operator-scopes)。
 - `gateway.nodes.pairing.autoApproveCidrs` 是一项可选的 Gateway 策略，
   仅适用于新节点设备配对；它不会更改 CLI 批准权限。
 - 令牌轮换和撤销保留在该设备的已批准配对角色集和
@@ -126,7 +127,7 @@ openclaw devices revoke --device <deviceId> --role node
 
 ## 令牌漂移恢复检查清单
 
-当 Control UI 或其他客户端持续因 `AUTH_TOKEN_MISMATCH` 或 `AUTH_DEVICE_TOKEN_MISMATCH` 失败时，请使用此方法。
+当 Control UI 或其他客户端持续因 `AUTH_TOKEN_MISMATCH`、`AUTH_DEVICE_TOKEN_MISMATCH` 或 `AUTH_SCOPE_MISMATCH` 而失败时，请使用此选项。
 
 1. 确认当前 Gateway 令牌来源：
 
@@ -158,15 +159,16 @@ openclaw devices approve <requestId>
 
 注意：
 
-- 正常的重新连接身份验证优先级依次为：显式共享令牌/密码、显式 `deviceToken`、存储的设备令牌，然后是引导令牌。
-- 受信任的 `AUTH_TOKEN_MISMATCH` 恢复可以在一次有界的重试中临时同时发送共享令牌和存储的设备令牌。
+- 正常的重新连接身份验证优先级首先是显式共享令牌/密码，其次是显式 `deviceToken`，然后是存储的设备令牌，最后是引导令牌。
+- 受信任的 `AUTH_TOKEN_MISMATCH` 恢复可以针对一次有界重试临时同时发送共享令牌和存储的设备令牌。
+- `AUTH_SCOPE_MISMATCH` 表示设备令牌已被识别，但不携带请求的作用域集；在更改共享网关身份验证之前，请修复配对/作用域审批约定。
 
 相关：
 
-- [Dashboard auth 故障排除](/zh/web/dashboard#if-you-see-unauthorized-1008)
+- [Dashboard 身份验证故障排除](/zh/web/dashboard#if-you-see-unauthorized-1008)
 - [Gateway(网关) 故障排除](<Gateway(网关)/en/gateway/troubleshooting#dashboard-control-ui-connectivity>)
 
 ## 相关
 
-- [CLI reference](CLI/en/cli)
-- [Nodes](/zh/nodes)
+- [CLI 参考](CLI/en/cli)
+- [节点](/zh/nodes)

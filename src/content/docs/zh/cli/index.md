@@ -253,6 +253,7 @@ openclaw [--dev] [--profile <name>] <command>
   cron
     status
     list
+    get
     add
     edit
     rm
@@ -360,7 +361,7 @@ openclaw [--dev] [--profile <name>] <command>
   terminal (alias: tui --local)
 ```
 
-插件可以添加额外的顶级命令（例如 `openclaw voicecall`）。
+插件可以添加额外的顶层命令（例如 `openclaw voicecall`）。
 
 </Accordion>
 

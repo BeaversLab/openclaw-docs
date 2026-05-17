@@ -50,23 +50,26 @@ WebChat possède deux chemins de données distincts :
 
 - Le fichier JSONL de session est la transcription durable du modèle/d'exécution. Pour les exécutions normales d'agent, Pi conserve les messages `user`, `assistant` et `toolResult`WebChat visibles par le modèle via son gestionnaire de session. WebChat n'écrit pas de texte de livraison, d'état ou d'assistance arbitraire dans cette transcription.
 - Les événements Gateway`ReplyPayload`WebChat de la passerelle sont la projection de livraison en direct. Ils peuvent être normalisés pour l'affichage WebChat/canal, le block streaming, les balises de directive, l'intégration de médias, les indicateurs audio/TTS et le comportement de repli de l'interface utilisateur. Ils ne constituent pas eux-mêmes le journal de session canonique.
-- WebChat injecte des entrées de transcription d'assistant uniquement lorsque la passerelle possède un message affiché en dehors d'un tour d'assistant Pi normal : WebChatGateway`chat.inject`WebChat, les réponses de commande sans agent, la sortie partielle abandonnée et les suppléments de transcription de médias gérés par WebChat.
-- `chat.history` lit le transcript de session stocké et applique la projection d'affichage WebChat. Si le texte de l'assistant en direct apparaît lors d'une exécution mais disparaît après le rechargement de l'historique, vérifiez d'abord si le JSONL brut contient le texte de l'assistant, puis si la projection `chat.history` l'a supprimé, puis si la fusion de file optimiste de l'interface de contrôle a remplacé l'état de livraison local par l'instantané persistant.
+- Les harnais qui nécessitent des réponses visibles via `tools.message` utilisent toujours WebChat comme récepteur de réponses source interne pour l'exécution en cours. Un `message.send` sans cible de cette exécution WebChat active est projeté dans le même chat et mis en miroir dans la transcription de la session ; WebChat ne devient pas un canal sortant réutilisable et n'hérite jamais de `lastChannel`.
+- WebChat injecte des entrées de transcription d'assistant uniquement lorsque le Gateway possède un message affiché en dehors d'un tour d'assistant Pi normal : `chat.inject`, les réponses aux commandes non-agent, la sortie partielle interrompue, et les suppléments de transcription multimédia gérés par WebChat.
+- `chat.history` lit la transcription de session stockée et applique la projection d'affichage WebChat. Si du texte d'assistant en direct apparaît pendant une exécution mais disparaît après le rechargement de l'historique, vérifiez d'abord si le JSONL brut contient le texte de l'assistant, puis si la projection `chat.history` l'a supprimé, puis si la fusion de queue optimiste de l'interface de contrôle a remplacé l'état de livraison local par l'instantané persistant.
 
-Les réponses finales normales d'exécution d'agent doivent être durables car Pi écrit le `message_end` de l'assistant. Tout repli qui met en miroir une charge utile finale livrée dans le transcript doit d'abord éviter de dupliquer un tour d'assistant que Pi a déjà écrit.
+Les réponses finales des exécutions d'agents normales doivent être durables car Pi écrit le `message_end` de l'assistant. Tout mécanisme de secours qui met en miroir une charge utile finale livrée dans la transcription doit d'abord éviter de dupliquer un tour d'assistant que Pi a déjà écrit.
 
 ## Panneau des outils des agents de l'interface de contrôle
 
-- Le panneau d'outils `/agents` de l'interface de contrôle possède deux vues distinctes :
-  - **Disponible maintenant** utilise `tools.effective(sessionKey=...)` et montre ce que la session actuelle peut réellement utiliser à l'exécution, y compris les outils principaux, les plugins et ceux détenus par le channel.
-  - **Configuration des outils** utilise `tools.catalog` et reste concentré sur les profils, les substitutions et la sémantique du catalogue.
-- La disponibilité à l'exécution est limitée à la session. Changer de session sur le même agent peut modifier la liste **Disponible maintenant**.
-- L'éditeur de configuration n'implique pas la disponibilité à l'exécution ; l'accès effectif suit toujours la priorité de la stratégie (`allow`/`deny`, substitutions par agent et provider/channel).
+- Le panneau des outils `/agents` de l'interface de contrôle possède deux vues distinctes :
+  - **Disponible immédiatement** utilise `tools.effective(sessionKey=...)` et affiche ce que la session
+    courante peut réellement utiliser au moment de l'exécution, y compris les outils principaux, les plugins et ceux appartenant au canal.
+  - **Configuration des outils** utilise `tools.catalog` et reste axé sur les profils, les overrides et
+    la sémantique du catalogue.
+- La disponibilité au moment de l'exécution est limitée à la session. Le changement de session sur le même agent peut modifier la liste **Disponible immédiatement**.
+- L'éditeur de configuration n'implique pas la disponibilité au moment de l'exécution ; l'accès effectif suit toujours la priorité de la stratégie (`allow`/`deny`, overrides par agent et par fournisseur/canal).
 
 ## Utilisation à distance
 
-- Le mode distant tunnel le WebSocket du via SSH/Tailscale.
-- Vous n'avez pas besoin d'exécuter un serveur WebChat séparé.
+- Le mode distant tunnel le WebSocket de la passerelle via SSH/Tailscale.
+- Vous n'avez pas besoin d'exécuter un serveur WebChat distinct.
 
 ## Référence de configuration (WebChat)
 
@@ -74,17 +77,17 @@ Configuration complète : [Configuration](/fr/gateway/configuration)
 
 Options WebChat :
 
-- `gateway.webchat.chatHistoryMaxChars` : nombre maximum de caractères pour les champs de texte dans les réponses `chat.history`. Lorsqu'une entrée de transcript dépasse cette limite, le Gateway tronque les champs de texte longs et peut remplacer les messages trop volumineux par un espace réservé. Un `maxChars` par requête peut également être envoyé par le client pour remplacer cette valeur par défaut pour un seul appel `chat.history`.
+- `gateway.webchat.chatHistoryMaxChars` : nombre maximum de caractères pour les champs de texte dans les réponses `chat.history`. Lorsqu'une entrée de transcription dépasse cette limite, le Gateway tronque les champs de texte longs et peut remplacer les messages trop volumineux par un espace réservé. Un `maxChars` par requête peut également être envoyé par le client pour remplacer cette valeur par défaut pour un seul appel `chat.history`.
 
 Options globales connexes :
 
 - `gateway.port`, `gateway.bind` : hôte/port WebSocket.
 - `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password` :
-  auth WebSocket par secret partagé.
-- `gateway.auth.allowTailscale` : l'onglet de chat de l'interface de contrôle du navigateur peut utiliser Tailscale
-  Servir les en-têtes d'identité lorsqu'il est activé.
-- `gateway.auth.mode: "trusted-proxy"` : auth par proxy inverse pour les clients navigateur derrière une source de proxy **non-boucle** sensible à l'identité (voir [Trusted Proxy Auth](/fr/gateway/trusted-proxy-auth)).
-- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password` : passerelle distante cible.
+  authentification WebSocket par secret partagé.
+- `gateway.auth.allowTailscale` : l'onglet de chat de l'interface de contrôle du navigateur peut utiliser les en-têtes d'identité Tailscale
+  Serve lorsqu'ils sont activés.
+- `gateway.auth.mode: "trusted-proxy"` : authentification par proxy inverse pour les clients navigateurs derrière une source proxy **non-boucle** (loopback) consciente de l'identité (voir [Trusted Proxy Auth](/fr/gateway/trusted-proxy-auth)).
+- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password` : cible de passerelle distante.
 - `session.*` : stockage de session et valeurs par défaut de la clé principale.
 
 ## Connexes

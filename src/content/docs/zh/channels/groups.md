@@ -111,7 +111,7 @@ Discord/Slack/Telegram 的发送失败。请使用可靠调用工具的模型用
   </Accordion>
 </AccordionGroup>
 
-![群组消息流程](/images/groups-flow.svg)
+![Group message flow](/images/groups-flow.svg)
 
 如果您想要...
 
@@ -123,7 +123,7 @@ Discord/Slack/Telegram 的发送失败。请使用可靠调用工具的模型用
 | 仅您可以在群组中触发            | `groupPolicy: "allowlist"`、`groupAllowFrom: ["+1555..."]` |
 | 跨渠道复用同一组受信任的发件人  | `groupAllowFrom: ["accessGroup:operators"]`                |
 
-有关可复用的发件人允许列表，请参阅[访问组](/zh/channels/access-groups)。
+对于可重用的发送者允许列表，请参阅[访问组](/zh/channels/access-groups)。
 
 ## 会话密钥
 
@@ -145,7 +145,7 @@ Discord/Slack/Telegram 的发送失败。请使用可靠调用工具的模型用
 - **私信**：完整工具（主机）
 - **群组**：沙箱 + 受限工具
 
-<Note>如果您需要真正独立的工作区/角色（“个人”和“公共”绝不能混合），请使用第二个代理 + 绑定。请参阅 [Multi-Agent Routing](/zh/concepts/multi-agent)。</Note>
+<Note>如果您需要真正独立的工作区/角色（“个人”和“公开”绝不能混合），请使用第二个代理 + 绑定。请参阅[多代理路由](/zh/concepts/multi-agent)。</Note>
 
 <Tabs>
   <Tab title="私信 on host, groups 沙箱隔离">
@@ -200,8 +200,8 @@ Discord/Slack/Telegram 的发送失败。请使用可靠调用工具的模型用
 
 相关：
 
-- 配置键和默认值：[Gateway(网关) configuration](/zh/gateway/config-agents#agentsdefaultssandbox)
-- 调试工具被阻止的原因：[沙箱 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
+- 配置键和默认值：[Gateway(网关)配置](/zh/gateway/config-agents#agentsdefaultssandbox)
+- 调试工具被阻止的原因：[沙箱与工具策略与提升权限](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
 - 绑定挂载详细信息：[沙箱隔离](/zh/gateway/sandboxing#custom-bind-mounts)
 
 ## 显示标签
@@ -332,16 +332,16 @@ Discord/Slack/Telegram 的发送失败。请使用可靠调用工具的模型用
 ```
 
 <AccordionGroup>
-  <Accordion title="提及筛选说明">
+  <Accordion title="提及 gating 注意事项">
     - `mentionPatterns` 是不区分大小写的安全正则表达式模式；无效的模式和不安全的嵌套重复形式将被忽略。
-    - 提供明确提及的表面仍然会通过；模式仅作为后备。
-    - 每个代理的覆盖设置：`agents.list[].groupChat.mentionPatterns`（当多个代理共享一个群组时很有用）。
-    - 仅当可以进行提及检测（配置了原生提及或 `mentionPatterns`）时，才会强制执行提及筛选。
-    - 将群组或发送者列入允许名单不会禁用提及筛选；当所有消息都应触发时，请将该群组的 `requireMention` 设置为 `false`。
-    - 群聊提示上下文在每一轮都会携带已解析的静默回复指令；工作区文件不应重复 `NO_REPLY` 机制。
-    - 允许静默回复的群组将干净的空回复或仅包含推理的模型轮次视为静默，等同于 `NO_REPLY`。直接聊天仅在明确允许直接静默回复时才会这样做；否则，空回复仍将视为失败的代理轮次。
-    - Discord 默认值位于 `channels.discord.guilds."*"` 中（可按公会/渠道覆盖）。
-    - 群组历史上下文在所有渠道中统一包装，并且是 **仅待处理**（因提及筛选而跳过的消息）；使用 `messages.groupChat.historyLimit` 设置全局默认值，使用 `channels.<channel>.historyLimit`（或 `channels.<channel>.accounts.*.historyLimit`）进行覆盖。设置 `0` 以禁用。
+    - 提供明确提及的界面仍然通过；模式作为后备。
+    - 每个代理覆盖：`agents.list[].groupChat.mentionPatterns` （当多个代理共享一个组时很有用）。
+    - 仅在可以检测到提及时（配置了原生提及或 `mentionPatterns`）才会强制执行提及 gating。
+    - 将组或发送者列入允许列表不会禁用提及 gating；当所有消息都应触发时，将该组的 `requireMention` 设置为 `false`。
+    - 组聊天提示上下文每一轮都携带已解析的静默回复指令；工作区文件不应重复 `NO_REPLY` 机制。
+    - 允许静默回复的组将干净的空回复或仅包含推理的  轮次视为静默，等同于 `NO_REPLY`。直接聊天仅在明确允许直接静默回复时才执行相同操作；否则空回复仍将是失败的代理轮次。
+    - Discord 默认值位于 `channels.discord.guilds."*"` （可按 guild/渠道 覆盖）。
+    - 组历史上下文在渠道间统一包装。提及 gating 的组保留待处理的跳过消息；始终开启的组在渠道支持时也可能保留最近已处理的房间消息。使用 `messages.groupChat.historyLimit` 作为全局默认值，使用 `channels.<channel>.historyLimit` （或 `channels.<channel>.accounts.*.historyLimit`）进行覆盖。设置 `0` 以禁用。
 
   </Accordion>
 </AccordionGroup>
@@ -351,13 +351,13 @@ Discord/Slack/Telegram 的发送失败。请使用可靠调用工具的模型用
 某些渠道配置支持限制在 **特定群组/房间/渠道内** 可用的工具。
 
 - `tools`：允许/拒绝整个群组的工具。
-- `toolsBySender`：群组内按发送者的覆盖设置。使用显式键前缀：`id:<senderId>`、`e164:<phone>`、`username:<handle>`、`name:<displayName>` 和 `"*"` 通配符。传统的无前缀键仍被接受，并且仅作为 `id:` 进行匹配。
+- `toolsBySender`：组内每个发送者的覆盖。使用显式键前缀：`channel:<channelId>:<senderId>`、`id:<senderId>`、`e164:<phone>`、`username:<handle>`、`name:<displayName>` 和 `"*"` 通配符。渠道 ID 使用规范的 OpenClaw 渠道 ID；例如 `teams` 等别名会规范化为 `msteams`。仍然接受旧的无前缀键，并仅作为 `id:` 进行匹配。
 
 解析顺序（最具体者生效）：
 
 <Steps>
-  <Step title="Group toolsBySender">群组/渠道 `toolsBySender` 匹配。</Step>
-  <Step title="Group tools">群组/渠道 `tools`。</Step>
+  <Step title="Group toolsBySender">组/渠道 `toolsBySender` 匹配。</Step>
+  <Step title="Group tools">组/渠道 `tools`。</Step>
   <Step title="Default toolsBySender">默认 (`"*"`) `toolsBySender` 匹配。</Step>
   <Step title="Default tools">默认 (`"*"`) `tools`。</Step>
 </Steps>
@@ -382,13 +382,13 @@ Discord/Slack/Telegram 的发送失败。请使用可靠调用工具的模型用
 }
 ```
 
-<Note>群组/渠道工具限制会在全局/代理工具策略之外额外应用（拒绝仍然优先）。部分渠道对房间/渠道使用不同的嵌套结构（例如，Discord `guilds.*.channels.*`、Slack `channels.*`、Microsoft Teams `teams.*.channels.*`）。</Note>
+<Note>组/渠道工具限制除全局/代理工具策略外应用（拒绝仍然优先）。某些渠道对房间/渠道使用不同的嵌套结构（例如，Discord `guilds.*.channels.*`、Slack `channels.*`、Microsoft Teams `teams.*.channels.*`）。</Note>
 
 ## 群组允许列表
 
-当配置了 `channels.whatsapp.groups`、`channels.telegram.groups` 或 `channels.imessage.groups` 时，这些键将作为群组允许列表。使用 `"*"` 可以允许所有群组，同时仍然设置默认提及行为。
+当配置 `channels.whatsapp.groups`、`channels.telegram.groups` 或 `channels.imessage.groups` 时，这些键将作为组允许列表。使用 `"*"` 以允许所有组，同时仍然设置默认提及行为。
 
-<Warning>常见误区：私信配对批准与群组授权不同。对于支持私信配对的渠道，配对存储仅解锁私信。群组命令仍需要来自配置允许列表（如 `groupAllowFrom`）的明确群组发送者授权，或该渠道记录的配置回退机制。</Warning>
+<Warning>常见误区：私信 配对批准与组授权不同。对于支持 私信 配对的渠道，配对存储仅解锁 私信。组命令仍然需要来自配置允许列表（例如 `groupAllowFrom`）的显式组发送者授权，或该渠道记录的配置回退。</Warning>
 
 常见意图（复制/粘贴）：
 
@@ -447,37 +447,37 @@ Discord/Slack/Telegram 的发送失败。请使用可靠调用工具的模型用
 - `/activation mention`
 - `/activation always`
 
-所有者由 `channels.whatsapp.allowFrom` 确定（如果未设置，则为机器人自身的 E.164）。将该命令作为独立消息发送。其他表面目前会忽略 `/activation`。
+所有者由 `channels.whatsapp.allowFrom` 确定（若未设置，则为机器人自身的 E.164 号码）。请将该命令作为独立消息发送。其他平台目前会忽略 `/activation`。
 
 ## 上下文字段
 
 群组入站负载设置：
 
 - `ChatType=group`
-- `GroupSubject` （如果已知）
-- `GroupMembers` （如果已知）
-- `WasMentioned` （提及门控结果）
+- `GroupSubject`（如果已知）
+- `GroupMembers`（如果已知）
+- `WasMentioned`（提及过滤结果）
 - Telegram 论坛主题还包括 `MessageThreadId` 和 `IsForum`。
 
-代理系统提示词会在新群组会话的第一轮包含群组介绍。它提醒模型像人类一样回复，避免使用 Markdown 表格，尽量减少空行并遵循正常的聊天间距，并避免输入字面意义上的 `\n` 序列。源自渠道的群组名称和参与者标签呈现为 fenced untrusted metadata（围栏不可信元数据），而不是内联系统指令。
+代理系统提示词在新的群组会话的第一轮包含群组简介。它提醒模型像人类一样回复，避免使用 Markdown 表格，尽量减少空行并遵循正常的聊天间距，避免输入字面上的 `\n` 序列。源自频道的群组名称和参与者标签呈现为围栏不受信任的元数据，而不是内联系统指令。
 
 ## iMessage 细节
 
-- 路由或设置允许名单时，首选 `chat_id:<id>`。
+- 在路由或添加到允许列表时，首选 `chat_id:<id>`。
 - 列出聊天：`imsg chats --limit 20`。
-- 群组回复始终发回同一个 `chat_id`。
+- 群组回复总是发回同一个 `chat_id`。
 
 ## WhatsApp 系统提示词
 
-有关规范的 WhatsApp 系统提示词规则，包括群组和直接提示词解析、通配符行为以及帐户覆盖语义，请参阅 [WhatsApp](/zh/channels/whatsapp#system-prompts)。
+有关规范的 WhatsApp 系统提示词规则（包括群组和直接提示词解析、通配符行为和帐号覆盖语义），请参阅 [WhatsApp](/zh/channels/whatsapp#system-prompts)。
 
 ## WhatsApp 特有功能
 
-有关 WhatsApp 独有行为（历史记录注入、提及处理详细信息），请参阅 [Group messages](/zh/channels/group-messages)。
+有关仅限 WhatsApp 的行为（历史记录注入、提及处理详细信息），请参阅 [群组消息](/zh/channels/group-messages)。
 
 ## 相关
 
-- [Broadcast groups](/zh/channels/broadcast-groups)
-- [Channel routing](/zh/channels/channel-routing)
-- [Group messages](/zh/channels/group-messages)
-- [Pairing](/zh/channels/pairing)
+- [广播群组](/zh/channels/broadcast-groups)
+- [频道路由](/zh/channels/channel-routing)
+- [群组消息](/zh/channels/group-messages)
+- [配对](/zh/channels/pairing)

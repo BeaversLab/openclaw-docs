@@ -55,17 +55,17 @@ sidebarTitle: "首次執行常見問題"
 
   </Accordion>
 
-  <Accordion title="Heartbeat 持續跳過。跳過原因代表什麼意思？">
-    常見的 Heartbeat 跳過原因：
+  <Accordion title="Heartbeat keeps skipping. What do the skip reasons mean?">
+    常見的心跳跳過原因：
 
-    - `quiet-hours`：超出設定的活躍時間視窗
-    - `empty-heartbeat-file`：`HEARTBEAT.md` 存在，但僅包含空白/僅標題的支架內容
+    - `quiet-hours`：超出設定的啟用時段視窗
+    - `empty-heartbeat-file`：`HEARTBEAT.md` 存在，但僅包含空白/僅標頭的結構
     - `no-tasks-due`：`HEARTBEAT.md` 任務模式處於啟用狀態，但尚未到達任何任務間隔時間
-    - `alerts-disabled`：所有 Heartbeat 可見性均已停用（`showOk`、`showAlerts` 和 `useIndicator` 均已關閉）
+    - `alerts-disabled`：所有心跳可見性均已停用（`showOk`、`showAlerts` 和 `useIndicator` 均已關閉）
 
-    在任務模式下，到期時間戳記僅在真實的 Heartbeat 執行完成後才會向前推進。被跳過的執行不會將任務標記為已完成。
+    在任務模式下，只有在完成一次實際的心跳執行後，才會推進到期時間戳記。跳過的執行不會將任務標記為已完成。
 
-    文件：[Heartbeat](/zh-Hant/gateway/heartbeat)、[Automation & Tasks](/zh-Hant/automation)。
+    文件：[Heartbeat](/zh-Hant/gateway/heartbeat)、[Automation](/zh-Hant/automation)。
 
   </Accordion>
 

@@ -72,7 +72,7 @@ openclaw message <subcommand> [flags]
   - 可选：`--media`、`--presentation`、`--delivery`、`--pin`、`--reply-to`、`--thread-id`、`--gif-playback`、`--force-document`、`--silent`
   - 共享展示负载：`--presentation` 发送语义块（`text`、`context`、`divider`、`buttons`、`select`），核心通过所选渠道声明的功能进行渲染。参见 [Message Presentation](/zh/plugins/message-presentation)。
   - 通用投递首选项：`--delivery` 接受投递提示，例如 `{ "pin": true }`；当渠道支持时，`--pin` 是固定投递的简写。
-  - 仅限 Telegram：`--force-document`（将图像和 GIF 作为文档发送以避免 Telegram 压缩）
+  - 仅限 Telegram：`--force-document`（将图片、GIF 和视频作为文档发送，以避免 Telegram 压缩）
   - 仅限 Telegram：`--thread-id`（论坛主题 ID）
   - 仅限 Slack：`--thread-id`（线程时间戳；`--reply-to` 使用相同的字段）
   - Telegram + Discord：`--silent`

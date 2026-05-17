@@ -57,7 +57,7 @@ Source de vérité de la palette : `src/terminal/palette.ts`.
 
 ## Arborescence des commandes
 
-<Accordion title="Arbre de commandes complet">
+<Accordion title="Arborescence complète des commandes">
 
 ```
 openclaw [--dev] [--profile <name>] <command>
@@ -253,6 +253,7 @@ openclaw [--dev] [--profile <name>] <command>
   cron
     status
     list
+    get
     add
     edit
     rm
@@ -360,7 +361,7 @@ openclaw [--dev] [--profile <name>] <command>
   terminal (alias: tui --local)
 ```
 
-Les plugins peuvent ajouter des commandes de niveau supérieur supplémentaires (par exemple `openclaw voicecall`).
+Les plugins peuvent ajouter des commandes de premier niveau supplémentaires (par exemple `openclaw voicecall`).
 
 </Accordion>
 

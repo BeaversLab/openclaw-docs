@@ -31,10 +31,11 @@ openclaw status --usage
 - 概述包括 Gateway(网关) + 节点主机服务安装/运行时状态（如果可用）。
 - 概述包括更新渠道 + git SHA（用于源代码检出）。
 - 更新信息显示在概述中；如果有可用更新，status 会打印提示以运行 `openclaw update`（请参阅[更新](/zh/install/updating)）。
-- 只读状态表面（`status`、`status --json`、`status --all`）会在可能的情况下解析其目标配置路径支持的 SecretRefs。
-- 如果配置了支持的渠道 SecretRef 但在当前命令路径中不可用，status 将保持只读并报告降级输出，而不是崩溃。人类可读输出会显示诸如“在此命令路径中配置的令牌不可用”之类的警告，而 JSON 输出则包含 `secretDiagnostics`。
-- 当命令本地 SecretRef 解析成功时，status 优先使用解析的快照，并从最终输出中清除瞬态的“secret unavailable”渠道标记。
-- `status --all` 包括一个 Secrets 概述行和一个诊断部分，该部分汇总了机密诊断（为提高可读性而截断），而不会停止报告生成。
+- 模型定价刷新失败显示为可选的定价警告。这并不意味着 Gateway(网关) 或渠道不健康。
+- 只读状态表面 (`status`, `status --json`, `status --all`) 在可能的情况下，会解析其目标配置路径支持的 SecretRefs。
+- 如果配置了支持的渠道 SecretRef 但在当前命令路径中不可用，状态将保持只读，并报告降级输出而不是崩溃。人工输出会显示诸如“在此命令路径中配置的令牌不可用”之类的警告，而 JSON 输出包含 `secretDiagnostics`。
+- 当命令本地 SecretRef 解析成功时，状态首选解析的快照，并从最终输出中清除瞬时的“secret unavailable”渠道标记。
+- `status --all` 包括一个 Secrets 概览行和一个诊断部分，该部分汇总了机密诊断信息（为提高可读性而截断），且不会停止报告的生成。
 
 ## 相关
 

@@ -123,22 +123,22 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
   `"status"` 返回当前会话任务；`"list"` 检查提供商。
 </ParamField>
 <ParamField path="model" type="string">
-  提供商/模型覆盖（例如 `google/lyria-3-pro-preview`， `comfy/workflow`）。
+  提供商/模型覆盖（例如 `google/lyria-3-pro-preview`、 `comfy/workflow`）。
 </ParamField>
 <ParamField path="lyrics" type="string">
   当提供商支持显式歌词输入时的可选歌词。
 </ParamField>
 <ParamField path="instrumental" type="boolean">
-  当提供商支持时，请求仅纯音乐输出。
+  当提供商支持时请求仅器乐输出。
 </ParamField>
 <ParamField path="image" type="string">
-  单个参考图片路径或 URL。
+  单个参考图像路径或 URL。
 </ParamField>
 <ParamField path="images" type="string[]">
-  多个参考图片（支持的提供商最多 10 张）。
+  多个参考图像（支持提供商上最多 10 个）。
 </ParamField>
 <ParamField path="durationSeconds" type="number">
-  当提供商支持持续时间提示时，以秒为单位的目标持续时间。
+  当提供商支持时长提示时，以秒为单位的目标时长。
 </ParamField>
 <ParamField path="format" type='"mp3" | "wav"'>
   当提供商支持时的输出格式提示。
@@ -147,28 +147,26 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
   输出文件名提示。
 </ParamField>
 <ParamField path="timeoutMs" type="number">
-  可选的提供商请求超时（以毫秒为单位）。低于 10000ms 的值将被提升至 10000ms，并在工具结果中报告。
+  可选提供商请求超时（毫秒）。如果省略，OpenClaw 将在配置时使用 `agents.defaults.musicGenerationModel.timeoutMs`。低于 10000ms 的值将提升至 10000ms 并在工具结果中报告。
 </ParamField>
 
-<Note>并非所有提供商都支持所有参数。OpenClaw 仍会在提交前验证硬性限制，例如输入计数。当提供商支持持续时间但使用的最大值小于请求的值时，OpenClaw 会将其限制为最接近的支持的持续时间。当所选提供商或模型无法遵守真正不支持的可选提示时，这些提示将被忽略并发出警告。工具结果报告已应用的设置；`details.normalization` 捕获任何从请求到应用的映射。</Note>
+<Note>并非所有提供商都支持所有参数。OpenClaw 仍会在提交前验证输入计数等硬性限制。当提供商支持持续时间但使用的最大值小于请求值时，OpenClaw 会将其钳位到最接近的支持持续时间。如果选定的提供商或模型无法兑现真正不支持的可选提示，则会在发出警告的情况下忽略这些提示。工具结果会报告应用的设置；`details.normalization` 捕获任何从请求到应用的映射。</Note>
 
 ## 异步行为
 
 基于会话的音乐生成作为后台任务运行：
 
-- **后台任务：** `music_generate` 创建一个后台任务，立即返回一个
-  已启动/任务响应，并在随后的代理消息中发布完成的音轨。
-- **重复预防：** 当任务处于 `queued` 或 `running` 状态时，同一会话中随后的
-  `music_generate` 调用将返回任务状态，而不是
-  启动新的生成。请使用 `action: "status"` 进行显式检查。
+- **后台任务：** `music_generate` 创建一个后台任务，立即返回
+  一个 started/task 响应，并在随后的代理消息中稍后发布完成的音轨。
+- **防止重复：** 当任务为 `queued` 或 `running` 时，同一
+  会话中后续的 `music_generate` 调用将返回任务状态，而不会
+  启动另一次生成。请使用 `action: "status"` 进行明确检查。
 - **状态查询：** `openclaw tasks list` 或 `openclaw tasks show <taskId>`
-  检查已排队、正在运行和终止状态。
+  用于检查已排队、运行中和终止状态。
 - **完成唤醒：** OpenClaw 将内部完成事件注入
   回同一会话，以便模型可以自行编写面向用户的
   后续消息。
-- **提示提示：** 当音乐任务已在运行时，同一会话中后续的用户/手动轮次会收到一个
-  小的运行时提示，以免模型
-  盲目再次调用 `music_generate`。
+- **提示词提示：** 当同一会话中后续的用户/手动轮次在音乐任务已运行时会收到一个小型的运行时提示，因此模型不会盲目地再次调用 `music_generate`。
 - **无会话回退：** 没有真实代理会话的直接/本地上下文内联运行，并在同一轮中返回最终音频结果。
 
 ### 任务生命周期
@@ -209,9 +207,9 @@ openclaw tasks cancel <taskId>
 
 OpenClaw 按以下顺序尝试提供商：
 
-1. 来自工具调用的 `model` 参数（如果代理指定了一个）。
-2. 来自配置的 `musicGenerationModel.primary`。
-3. 按顺序排列的 `musicGenerationModel.fallbacks`。
+1. 工具调用中的 `model` 参数（如果代理指定了一个）。
+2. 从配置中获取 `musicGenerationModel.primary`。
+3. 按顺序使用 `musicGenerationModel.fallbacks`。
 4. 仅使用支持身份验证的提供商默认值进行自动检测：
    - 首先是当前的默认提供商；
    - 其余注册的音乐生成提供商按提供商 ID 顺序排列。
@@ -225,9 +223,9 @@ OpenClaw 按以下顺序尝试提供商：
 ## 提供商说明
 
 <AccordionGroup>
-  <Accordion title="ComfyUI">由工作流驱动，并依赖于为提示词/输出字段配置的图谱和节点映射。 捆绑的 `comfy` 插件通过音乐生成提供商注册表 插入到共享的 `music_generate` 工具中。</Accordion>
+  <Accordion title="ComfyUI">由工作流驱动，取决于为提示词/输出字段配置的图和节点映射。 捆绑的 `comfy` 插件通过音乐生成提供商注册表 插入到共享的 `music_generate` 工具中。</Accordion>
   <Accordion title="Google (Lyria 3)">使用 Lyria 3 批量生成。当前捆绑的流程支持 提示词、可选歌词文本和可选参考图像。</Accordion>
-  <Accordion title="MiniMax">使用批量 `music_generation` 端点。支持提示词、可选 歌词、器乐模式、时长控制，并通过 `minimax` API 密钥身份验证或 `minimax-portal` OAuth 支持 mp3 输出。</Accordion>
+  <Accordion title="MiniMaxMiniMax">使用批量 `music_generation` 端点。支持提示词、可选 歌词、器乐模式、时长控制以及通过 `minimax`API API 密钥身份验证或 `minimax-portal`OAuth OAuth 进行 mp3 输出。</Accordion>
 </AccordionGroup>
 
 ## 选择合适的路径
@@ -237,17 +235,17 @@ OpenClaw 按以下顺序尝试提供商：
 - **插件路径**，当您需要自定义工作流图谱或
   不属于共享捆绑音乐功能的提供商时。
 
-如果您正在调试 ComfyUI 特定的行为，请参阅
+如果您正在调试 ComfyUI 特有的行为，请参阅
 [ComfyUI](/zh/providers/comfy)。如果您正在调试共享提供商
-的行为，请从 [Google (Gemini)](/zh/providers/google) 或
+行为，请从 [Google (Gemini)](/zh/providers/googleMiniMax) 或
 [MiniMax](/zh/providers/minimax) 开始。
 
 ## 提供商能力模式
 
 共享音乐生成合约支持显式模式声明：
 
-- `generate` 用于仅提示词的生成。
-- `edit` 当请求包含一张或多张参考图像时。
+- `generate` 用于仅基于提示词的生成。
+- 当请求包含一个或多个参考图像时，请使用 `edit`。
 
 新的提供商实现应优先使用显式模式块：
 
@@ -268,9 +266,9 @@ capabilities: {
 ```
 
 传统的扁平字段（如 `maxInputImages`、`supportsLyrics` 和
-`supportsFormat`）**不足以**声明编辑支持。提供商应明确声明
-`generate` 和 `edit`，以便实时测试、契约测试
-和共享 `music_generate` 工具能够确定性地验证模式支持。
+`supportsFormat`）**不**足以表明支持编辑。提供商
+应显式声明 `generate` 和 `edit`，以便实时测试、
+合同测试和共享的 `music_generate` 工具能够确定性地验证模式支持。
 
 ## 实时测试
 
@@ -286,12 +284,10 @@ OPENCLAW_LIVE_TEST=1 pnpm test:live -- extensions/music-generation-providers.liv
 pnpm test:live:media music
 ```
 
-此实时文件从 `~/.profile` 加载缺失的提供商环境变量，默认优先使用
-live/env API 密钥而非存储的身份验证配置文件，并且当提供商启用编辑
-模式时，同时运行 `generate` 和已声明的 `edit` 覆盖。当前的覆盖范围：
+此实时文件从 `~/.profile` 加载缺失的提供商环境变量，默认优先使用 live/env API 密钥而非存储的身份验证配置文件，并且当提供商启用编辑模式时，同时运行 `generate` 和声明的 `edit` 覆盖。目前的覆盖范围：
 
-- `google`：`generate` 加上 `edit`
-- `minimax`：仅 `generate`
+- `google`: `generate` 加上 `edit`
+- `minimax`：仅限 `generate`
 - `comfy`：独立的 Comfy 实时覆盖，而非共享提供商扫描
 
 针对捆绑 ComfyUI 音乐路径的可选实时覆盖：
@@ -304,10 +300,10 @@ OPENCLAW_LIVE_TEST=1 COMFY_LIVE_TEST=1 pnpm test:live -- extensions/comfy/comfy.
 
 ## 相关
 
-- [后台任务](/zh/automation/tasks) — 针对分离式 `music_generate` 运行的任务跟踪
+- [Background tasks](/zh/automation/tasks) — 针对 `music_generate` 的任务跟踪
 - [ComfyUI](/zh/providers/comfy)
-- [配置参考](/zh/gateway/config-agents#agent-defaults) — `musicGenerationModel` 配置
+- [配置参考](/zh/gateway/config-agents#agent-defaults) — `musicGenerationModel` config
 - [Google (Gemini)](/zh/providers/google)
-- [MiniMax](/zh/providers/minimax)
+- [MiniMax](MiniMax/en/providers/minimax)
 - [模型](/zh/concepts/models) — 模型配置和故障转移
 - [工具概述](/zh/tools)

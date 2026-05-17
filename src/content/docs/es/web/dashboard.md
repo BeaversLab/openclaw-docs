@@ -18,7 +18,7 @@ Referencias clave:
 
 - [Control UI](/es/web/control-ui) para el uso y las capacidades de la interfaz de usuario.
 - [Tailscale](/es/gateway/tailscale) para la automatización de Serve/Funnel.
-- [Web surfaces](/es/web) para los modos de enlace y las notas de seguridad.
+- [Web surfaces](/es/web) para los modos de enlace y notas de seguridad.
 
 La autenticación se aplica en el protocolo de enlace WebSocket a través de la ruta de autenticación de la gateway configurada:
 
@@ -62,7 +62,7 @@ Nota de seguridad: la interfaz de usuario de control es una **superficie de admi
   `OPENCLAW_GATEWAY_PASSWORD`). El panel no persiste las contraseñas entre
   recargas.
 - **Modos con identidad**: Tailscale Serve puede satisfacer la autenticación de Control UI/WebSocket mediante encabezados de identidad cuando `gateway.auth.allowTailscale: true`, y un proxy inverso con conocimiento de identidad que no sea de bucle local puede satisfacer `gateway.auth.mode: "trusted-proxy"`. En esos modos, el panel de control no necesita un secreto compartido pegado para el WebSocket.
-- **No localhost**: use Tailscale Serve, un enlace de secreto compartido que no sea de bucle local, un proxy inverso con conocimiento de identidad que no sea de bucle local con `gateway.auth.mode: "trusted-proxy"`, o un túnel SSH. Las API HTTP todavía usan autenticación de secreto compartido a menos que ejecute intencionalmente ingreso privado `gateway.auth.mode: "none"` o autenticación HTTP de proxy confiable. Vea [Superficies web](/es/web).
+- **No localhost**: use Tailscale Serve, un enlace de secreto compartido que no sea de bucle local, un proxy inverso con conocimiento de identidad que no sea de bucle local con `gateway.auth.mode: "trusted-proxy"`, o un túnel SSH. Las API HTTP aún usan autenticación de secreto compartido a menos que ejecute intencionalmente private-ingress `gateway.auth.mode: "none"` o autenticación HTTP de proxy confiable. Consulte [Web surfaces](/es/web).
 
 <a id="if-you-see-unauthorized-1008"></a>
 
@@ -70,19 +70,19 @@ Nota de seguridad: la interfaz de usuario de control es una **superficie de admi
 
 - Asegúrese de que la puerta de enlace sea alcanzable (local: `openclaw status`; remoto: túnel SSH `ssh -N -L 18789:127.0.0.1:18789 user@host` y luego abrir `http://127.0.0.1:18789/`).
 - Para `AUTH_TOKEN_MISMATCH`, los clientes pueden hacer un reintento confiable con un token de dispositivo almacenado en caché cuando la puerta de enlace devuelve sugerencias de reintento. Ese reintento con token en caché reutiliza los alcances aprobados en caché del token; los llamadores explícitos `deviceToken` / explícitos `scopes` mantienen su conjunto de alcances solicitados. Si la autenticación aún falla después de ese reintento, resuelva la deriva del token manualmente.
-- Fuera de esa ruta de reintento, la precedencia de autenticación de conexión es primero token/contraseña compartido explícito, luego `deviceToken` explícito, luego token de dispositivo almacenado, luego token de inicialización.
-- En la ruta asincrónica de Control UI de Tailscale Serve, los intentos fallidos para el mismo `{scope, ip}` se serializan antes de que el limitador de autenticación fallida los registre, por lo que el segundo reintento incorrecto concurrente ya puede mostrar `retry later`.
-- Para obtener los pasos de reparación de la deriva del token, siga la [Lista de verificación de recuperación de deriva de token](/es/cli/devices#token-drift-recovery-checklist).
-- Recupere o proporcione el secreto compartido desde el host de la puerta de enlace:
+- Para `AUTH_SCOPE_MISMATCH`, el token del dispositivo se reconoció pero no lleva los alcances solicitados por el panel; vuelva a emparejar o apruebe el contrato de alcance solicitado en lugar de rotar el token compartido de la puerta de enlace.
+- Fuera de esa ruta de reintento, la precedencia de autenticación de conexión es primero el token/contraseña compartido explícito, luego `deviceToken` explícito, luego el token de dispositivo almacenado y luego el token de arranque.
+- En la ruta asíncrona de la interfaz de usuario de control de Tailscale Serve, los intentos fallidos para el mismo `{scope, ip}` se serializan antes de que el limitador de autenticación fallida los registre, por lo que el segundo reintento incorrecto simultáneo ya puede mostrar `retry later`.
+- Para los pasos de reparación de deriva de tokens, siga la [Lista de verificación de recuperación de deriva de tokens](/es/cli/devices#token-drift-recovery-checklist).
+- Recupere o proporcione el secreto compartido del host de la puerta de enlace:
   - Token: `openclaw config get gateway.auth.token`
-  - Contraseña: resuelva la `gateway.auth.password` configurada o `OPENCLAW_GATEWAY_PASSWORD`
+  - Contraseña: resuelva el `gateway.auth.password` o `OPENCLAW_GATEWAY_PASSWORD` configurado
   - Token administrado por SecretRef: resuelva el proveedor de secretos externo o exporte `OPENCLAW_GATEWAY_TOKEN` en este shell, luego vuelva a ejecutar `openclaw dashboard`
-  - No hay secreto compartido configurado: `openclaw doctor --generate-gateway-token`
+  - No se ha configurado ningún secreto compartido: `openclaw doctor --generate-gateway-token`
 - En la configuración del panel, pegue el token o la contraseña en el campo de autenticación, luego conéctese.
-- El selector de idioma de la interfaz de usuario se encuentra en **Overview -> Gateway Access -> Language**.
-  Es parte de la tarjeta de acceso, no de la sección Appearance.
+- El selector de idioma de la interfaz de usuario está en **Overview -> Gateway Access -> Language**. Es parte de la tarjeta de acceso, no de la sección Appearance.
 
 ## Relacionado
 
-- [Interfaz de control](/es/web/control-ui)
+- [Control UI](/es/web/control-ui)
 - [WebChat](/es/web/webchat)

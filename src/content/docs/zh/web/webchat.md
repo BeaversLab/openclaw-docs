@@ -42,44 +42,45 @@ WebChat 有两个独立的数据路径：
 
 - 会话 JSONL 文件是持久的模型/运行时记录。对于正常的 agent 运行，Pi 通过其会话管理器持久化模型可见的 `user`、`assistant` 和 `toolResult`WebChat 消息。WebChat 不会将任意的交付、状态或辅助文本写入该记录中。
 - Gateway Gateway(网关)`ReplyPayload`WebChat 事件是实时的交付投影。它们可以针对 WebChat/渠道显示、分块流式传输、指令标签、媒体嵌入、TTS/音频标志和 UI 回退行为进行规范化。它们本身不是规范化的会话日志。
-- 仅当 Gateway 在正常的 Pi 助手轮次之外拥有显示的消息时，WebChat 才会注入助手记录条目：WebChatGateway(网关)`chat.inject`WebChat、非 agent 命令回复、中止的部分输出以及 WebChat 管理的媒体记录补充。
-- `chat.history`WebChat 读取存储的会话记录并应用 WebChat 显示投影。如果在运行过程中出现了实时的助手文本，但在重新加载历史记录后消失了，请首先检查原始 JSONL 是否包含该助手文本，然后检查 `chat.history` 投影是否将其剥离，最后检查 Control UI 乐观尾部合并是否用持久化的快照替换了本地传递状态。
+- 需要通过 `tools.message` 获得可见回复的 Harness 仍将 WebChat 用作当前运行的内部源回复接收器。来自该活动 WebChat 运行的无目标 `message.send` 会被投影到同一个聊天中并镜像到会话记录；WebChat 不会成为可重用的出站渠道，也从不继承 `lastChannel`。
+- 仅当 Gateway 拥有显示在正常 Pi 助手轮次之外的消息时，WebChat 才会注入助手对话条目：WebChatGateway(网关)`chat.inject`WebChat、非代理命令回复、已中止的部分输出以及 WebChat 管理的媒体对话补充。
+- `chat.history`WebChat 读取存储的会话记录并应用 WebChat 显示投影。如果实时助手文本在运行期间出现但在重新加载历史记录后消失，首先检查原始 JSONL 是否包含助手文本，然后检查 `chat.history` 投影是否将其剥离，最后检查控制 UI 的乐观尾部合并是否用持久化快照替换了本地传递状态。
 
-正常的代理运行最终答案应该是持久的，因为 Pi 会写入助手 `message_end`。任何将已传递的最终有效负载镜像到记录中的回退机制，都必须首先避免重复 Pi 已经写入的助手回合。
+正常的代理运行最终答案应该是持久的，因为 Pi 会编写助手 `message_end`。任何将已传递的最终有效负载镜像到转录的后备方案，都必须首先避免重复 Pi 已经编写的助手轮次。
 
-## Control UI 代理工具面板
+## 控制 UI 代理工具面板
 
-- Control UI `/agents` 工具面板有两个独立的视图：
-  - **当前可用** 使用 `tools.effective(sessionKey=...)` 并显示当前会话在运行时实际可以使用的内容，包括核心、插件和渠道拥有的工具。
-  - **工具配置** 使用 `tools.catalog` 并专注于配置文件、覆盖和目录语义。
-- 运行时可用性是会话作用域的。在同一代理上切换会话可能会改变 **当前可用** 列表。
-- 配置编辑器并不暗示运行时可用性；有效访问仍然遵循策略优先级（`allow`/`deny`，以及每个代理和提供商/渠道的覆盖设置）。
+- 控制 UI `/agents` 工具面板有两个单独的视图：
+  - **Available Right Now** 使用 `tools.effective(sessionKey=...)` 并显示当前会话在运行时实际可用的内容，包括核心、插件和渠道拥有的工具。
+  - **Tool Configuration** 使用 `tools.catalog` 并专注于配置文件、覆盖和目录语义。
+- 运行时可用性是会话范围的。在同一代理上切换会话可以更改 **Available Right Now** 列表。
+- 配置编辑器并不代表运行时可用性；有效访问仍遵循策略优先级（`allow`/`deny`，以及按代理和提供商/渠道覆盖设置）。
 
 ## 远程使用
 
-- 远程模式通过 SSH/Tailscale 隧道传输 Gateway WebSocket。
-- 您不需要运行单独的 WebChat 服务器。
+- 远程模式通过 SSH/Tailscale 隧道传输网关 WebSocket。
+- 您无需运行单独的 WebChat 服务器。
 
-## 配置参考
+## 配置参考（WebChat）
 
 完整配置：[配置](/zh/gateway/configuration)
 
 WebChat 选项：
 
-- `gateway.webchat.chatHistoryMaxChars`：`chat.history`Gateway(网关) 响应中文本字段的最大字符数。当记录条目超过此限制时，Gateway 会截断长文本字段，并可能用占位符替换过大的消息。客户端还可以发送每个请求的 `maxChars` 来覆盖单个 `chat.history` 调用的此默认值。
+- `gateway.webchat.chatHistoryMaxChars`：`chat.history` 响应中文本字段的最大字符数。当转录条目超过此限制时，Gateway(网关) 会截断长文本字段，并可能会用占位符替换过大的消息。客户端还可以发送针对每个请求的 `maxChars`，以便为单个 `chat.history` 调用覆盖此默认值。
 
-相关全局选项：
+相关的全局选项：
 
-- `gateway.port`, `gateway.bind`: WebSocket 主机/端口。
-- `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`:
-  shared-secret WebSocket 认证。
-- `gateway.auth.allowTailscale`: 启用后，浏览器 Control UI 聊天选项卡可以使用 Tailscale
+- `gateway.port`, `gateway.bind`：WebSocket 主机/端口。
+- `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`：
+  共享密钥 WebSocket 认证。
+- `gateway.auth.allowTailscale`Tailscale：启用后，浏览器控制 UI 聊天选项卡可以使用 Tailscale
   提供身份标头。
-- `gateway.auth.mode: "trusted-proxy"`: 位于具有身份感知的**非环回**代理源后面的浏览器客户端的反向代理认证（请参阅[受信任的代理认证](/zh/gateway/trusted-proxy-auth)）。
-- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`: 远程网关目标。
-- `session.*`: 会话存储和主键默认值。
+- `gateway.auth.mode: "trusted-proxy"`：位于支持身份识别的 **非环回** 代理源之后的浏览器客户端的反向代理认证（请参阅 [Trusted Proxy Auth](/zh/gateway/trusted-proxy-auth)）。
+- `gateway.remote.url`、`gateway.remote.token`、`gateway.remote.password`：远程网关目标。
+- `session.*`：会话存储和主键默认值。
 
 ## 相关
 
-- [Control UI](/zh/web/control-ui)
-- [Dashboard](/zh/web/dashboard)
+- [控制界面](/zh/web/control-ui)
+- [仪表板](/zh/web/dashboard)

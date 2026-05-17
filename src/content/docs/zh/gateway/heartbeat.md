@@ -7,7 +7,7 @@ title: "Heartbeat"
 sidebarTitle: "Heartbeat"
 ---
 
-<Note>**Heartbeat vs cron？** 请参阅[自动化与任务](/zh/automation)以获取有关何时使用每种方法的指导。</Note>
+<Note>**Heartbeat 对比 cron？** 请参阅 [自动化](/zh/automation) 以获取关于何时使用每种机制的指导。</Note>
 
 Heartbeat 在主会话中运行**定期的 agent 轮次**，以便模型可以引起您对需要注意的事项的注意，而不会对您造成信息轰炸。
 
@@ -479,7 +479,7 @@ openclaw system event --text "Check for urgent follow-ups" --mode now
 
 ## 相关
 
-- [Automation & Tasks](/zh/automation) — 所有自动化机制概览
+- [自动化](/zh/automation) — 一目了然的所有自动化机制
 - [Background Tasks](/zh/automation/tasks) — 如何跟踪分离的工作
 - [Timezone](/zh/concepts/timezone) — 时区如何影响心跳调度
 - [Troubleshooting](/zh/automation/cron-jobs#troubleshooting) — 调试自动化问题

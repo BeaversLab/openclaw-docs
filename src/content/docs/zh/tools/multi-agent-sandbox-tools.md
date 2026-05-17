@@ -50,8 +50,14 @@ Auth 的作用域按 Agent 划分：每个 Agent 在 `~/.openclaw/agents/<agentI
               "scope": "agent"
             },
             "tools": {
-              "allow": ["read"],
-              "deny": ["exec", "write", "edit", "apply_patch", "process", "browser"]
+              "allow": ["read", "message"],
+              "deny": ["exec", "write", "edit", "apply_patch", "process", "browser"],
+              "message": {
+                "crossContext": {
+                  "allowWithinProvider": false,
+                  "allowAcrossProviders": false
+                }
+              }
             }
           }
         ]
@@ -74,8 +80,8 @@ Auth 的作用域按 Agent 划分：每个 Agent 在 `~/.openclaw/agents/<agentI
 
     **结果：**
 
-    - `main` 代理：在主机上运行，拥有完全的工具访问权限。
-    - `family` 代理：在 Docker 中运行（每个代理一个容器），仅有 `read` 工具。
+    - `main` 代理：在主机上运行，拥有完整工具访问权限。
+    - `family`Docker 代理：在 Docker 中运行（每个代理一个容器），仅 `read` 和当前对话的消息发送。
 
   </Accordion>
   <Accordion title="示例 2：具有共享沙箱的工作代理">

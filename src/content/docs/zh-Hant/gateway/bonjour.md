@@ -138,15 +138,18 @@ Gateway 會寫入一個滾動日誌檔案（啟動時會列印為
 - `bonjour: watchdog detected non-announced service ...`
 - `bonjour: disabling advertiser after ... failed restarts ...`
 
-Bonjour 使用系統主機名稱作為廣播 `.local` 主機，前提是它是
-有效的 DNS 標籤。如果系統主機名稱包含空格、底線或其他
-無效的 DNS 標籤字元，OpenClaw 會回退到 `openclaw.local`。當您需要
-明確的主機標籤時，請在啟動 Gateway 之前設定
-`OPENCLAW_MDNS_HOSTNAME=<name>`。
+監視程式將作用中的 `probing`、`announcing` 和新的衝突重新命名視為
+進行中狀態。如果服務從未達到 `announced`，OpenClaw 最終會
+重建廣告程式，並在重複失敗後停用該
+Gateway 程序的 Bonjour，而不是無限期地重新廣告。
+
+當系統主機名稱是有效的 DNS 標籤時，Bonjour 會使用系統主機名稱作為廣告的 `.local` 主機。
+如果系統主機名稱包含空格、底線或其他無效的 DNS 標籤字元，OpenClaw 會退回到 `openclaw.local`。
+當您需要明確的主機標籤時，請在啟動 Gateway 之前設定 `OPENCLAW_MDNS_HOSTNAME=<name>`。
 
 ## 在 iOS 節點上進行偵錯
 
-iOS 節點使用 `NWBrowser` 來發現 `_openclaw-gw._tcp`。
+iOS 節點使用 `NWBrowser` 來探索 `_openclaw-gw._tcp`。
 
 若要擷取日誌：
 
@@ -158,10 +161,10 @@ iOS 節點使用 `NWBrowser` 來發現 `_openclaw-gw._tcp`。
 ## 何時啟用 Bonjour
 
 Bonjour 會在 macOS 主機上以空設定啟動 Gateway 時自動啟動，因為
-本機 App 和附近的 iOS/Android 節點通常依賴同 LAN 發現。
+本機應用程式和附近的 iOS/Android 節點通常依賴同一區域網路的探索。
 
-當同 LAN 自動發現在 Linux、
-Windows 或其他非 macOS 主機上有用時，請明確啟用 Bonjour：
+當 Linux、
+Windows 或其他非 macOS 主機上的同一區域網路自動探索有用時，請明確啟用 Bonjour：
 
 ```bash
 openclaw plugins enable bonjour
@@ -169,26 +172,29 @@ openclaw plugins enable bonjour
 
 啟用後，Bonjour 會使用 `discovery.mdns.mode` 來決定要發布多少 TXT 中繼資料。
 預設模式是 `minimal`；僅當本機用戶端需要
-`cliPath` 或 `sshPort` 提示時才使用 `full`，並使用 `off` 來抑制 LAN 多播而不
-變更外掛程式啟用狀態。
+`cliPath` 或 `sshPort` 提示時才使用 `full`，並使用 `off` 在不變更
+外掛程式啟用狀態的情況下抑制區域網路多播。
 
 ## 何時停用 Bonjour
 
-當 LAN 多播廣告是不必要、無法使用
-或有害時，請讓 Bonjour 保持停用狀態。常見情況包括非 macOS 伺服器、Docker 橋接網路、
-WSL，或捨棄 mDNS 多播的網路政策。在這些環境中，
+當區域網路多播廣告是不必要、不可用
+或有害時，請保持 Bonjour 停用。常見情況是非 macOS 伺服器、Docker 橋接網路、
+WSL 或捨棄 mDNS 多播的網路政策。在那些環境中，
 Gateway 仍可透過其發布的 URL、SSH、Tailnet 或廣域
-DNS-SD 存取，但 LAN 自動發現並不可靠。
+DNS-SD 存取，但區域網路自動探索並不可靠。
 
-當問題僅限於部署範圍時，優先使用現有的環境變數覆寫：
+當問題與部署範圍相關時，請優先使用現有的環境覆寫：
 
 ```bash
 OPENCLAW_DISABLE_BONJOUR=1
 ```
 
-這會停用 LAN 多播廣告，而無需變更外掛程式組態。它對於 Docker 映像檔、服務檔案、啟動腳本和一次性偵錯是安全的，因為當環境消失時該設定也會隨之消失。
+這會在不變更外掛程式設定的情況下停用 LAN 多點傳播廣告。
+這對於 Docker 映像檔、服務檔案、啟動腳本和一次性
+除錯是安全的，因為當環境不存在時該設定就會消失。
 
-當您有意針對該 OpenClaw 組態關閉隨附的 LAN 探索外掛程式時，請使用外掛程式組態：
+當您有意要針對該 OpenClaw 設定關閉隨附的 LAN
+探索外掛程式時，請使用外掛程式設定：
 
 ```bash
 openclaw plugins disable bonjour
@@ -196,75 +202,89 @@ openclaw plugins disable bonjour
 
 ## Docker 注意事項
 
-當 `OPENCLAW_DISABLE_BONJOUR` 未設定時，隨附的 Bonjour 外掛程式會在偵測到的容器中自動停用 LAN 多播廣告。Docker 橋接網路通常不會在容器與 LAN 之間轉發 mDNS 多播 (`224.0.0.251:5353`)，因此從容器發出的廣告很少能實現探索功能。
+當 `OPENCLAW_DISABLE_BONJOUR` 未設定時，隨附的 Bonjour 外掛程式會在偵測到的
+容器中自動停用 LAN 多點傳播廣告。Docker 橋接網路
+通常不會在容器
+和 LAN 之間轉發 mDNS 多點傳播 (`224.0.0.251:5353`)，因此來自容器的廣告很少能讓探索運作。
 
 重要注意事項：
 
-- Bonjour 在 macOS 主機上會自動啟動，而在其他地方則是選擇加入。讓它保持停用並不會停止 Gateway；它只是跳過 LAN 多播廣告。
-- 停用 Bonjour 不會變更 `gateway.bind`；Docker 仍然預設為 `OPENCLAW_GATEWAY_BIND=lan`，以便發布的主機連接埠可以正常運作。
-- 停用 Bonjour 不會停用廣域 DNS-SD。當 Gateway 和節點不在同一個 LAN 上時，請使用廣域探索或 Tailnet。
-- 在 Docker 之外重複使用相同的 `OPENCLAW_CONFIG_DIR` 並不會保留容器自動停用策略。
-- 僅對主機網路、macvlan 或已知可傳遞 mDNS 多播的其他網路設定 `OPENCLAW_DISABLE_BONJOUR=0`；將其設定為 `1` 以強制停用。
+- Bonjour 在 macOS 主機上會自動啟動，在其他地方則為選用。將其
+  保持停用並不會停止 Gateway；它只會跳過 LAN 多點傳播廣告。
+- 停用 Bonjour 不會變更 `gateway.bind`；Docker 仍預設為
+  `OPENCLAW_GATEWAY_BIND=lan`，以便發佈的主機連接埠能運作。
+- 停用 Bonjour 不會停用廣域 DNS-SD。當 Gateway 和節點不在同一個 LAN 上時，請使用廣域探索
+  或 Tailnet。
+- 在 Docker 外重複使用相同的 `OPENCLAW_CONFIG_DIR` 不會保留
+  容器自動停用策略。
+- 僅針對主機網路、macvlan 或其他
+  已知可傳遞 mDNS 多點傳播的網路設定 `OPENCLAW_DISABLE_BONJOUR=0`；將其設為 `1` 以強制停用。
 
-## 針對已停用 Bonjour 的疑難排解
+## 對已停用的 Bonjour 進行疑難排解
 
-如果在 Docker 設定後，節點無法自動探索到 Gateway：
+如果在 Docker 設定後節點不再自動探索 Gateway：
 
-1. 確認 Gateway 是處於自動、強制開啟還是強制關閉模式：
+1. 確認 Gateway 是以自動、強制開啟還是強制關閉模式執行：
 
    ```bash
    docker compose config | grep OPENCLAW_DISABLE_BONJOUR
    ```
 
-2. 確認 Gateway 本身可透過發布的連接埠連線：
+2. 確認 Gateway 本身可透過發佈的連接埠連線：
 
    ```bash
    curl -fsS http://127.0.0.1:18789/healthz
    ```
 
-3. 當 Bonjour 停用時，請使用直接目標：
+3. 當 Bonjour 停用時使用直接目標：
    - 控制 UI 或本機工具：`http://127.0.0.1:18789`
    - LAN 用戶端：`http://<gateway-host>:18789`
-   - 跨網路用戶端：Tailnet MagicDNS、Tailnet IP、SSH 隧道或廣域 DNS-SD
+   - 跨網路用戶端：Tailnet MagicDNS、Tailnet IP、SSH 隧道，或
+     廣域 DNS-SD
 
-4. 如果您在 Docker 中故意啟用了 Bonjour 外掛程式並使用 `OPENCLAW_DISABLE_BONJOUR=0` 強制廣告，請從主機測試多播：
+4. 如果您在 Docker 中刻意啟用了 Bonjour 外掛程式並使用 `OPENCLAW_DISABLE_BONJOUR=0` 強制廣告，
+   請從主機測試多點傳播：
 
    ```bash
    dns-sd -B _openclaw-gw._tcp local.
    ```
 
-   如果瀏覽結果為空，或 Gateway 日誌顯示重複的 ciao 看門狗取消操作，請還原 `OPENCLAW_DISABLE_BONJOUR=1` 並使用直接連線或 Tailnet 路由。
+   如果瀏覽結果是空的，或 Gateway 記錄顯示重複的 ciao watchdog
+   取消動作，請還原 `OPENCLAW_DISABLE_BONJOUR=1` 並使用直接或
+   Tailnet 路由。
 
 ## 常見失敗模式
 
 - **Bonjour 無法跨越網路**：請使用 Tailnet 或 SSH。
-- **多播被封鎖**：部分 Wi-Fi 網路會停用 mDNS。
-- **廣告端卡在探測/宣告階段**：封鎖多播的主機、容器橋接網路、WSL 或介面頻繁變動可能會導致 ciao 廣告端處於未宣告狀態。OpenClaw 會重試幾次，然後停用目前 Gateway 程序的 Bonjour 功能，而不是無限期地重啟廣告端。
-- **Docker 橋接網路**：Bonjour 會在偵測到的容器中自動停用。僅針對 host、macvlan 或其他支援 mDNS 的網路設定 `OPENCLAW_DISABLE_BONJOUR=0`。
-- **睡眠 / 介面頻繁變動**：macOS 可能會暫時丟失 mDNS 結果；請重試。
-- **瀏覽正常但解析失敗**：請保持機器名稱簡單（避免表情符號或標點符號），然後重新啟動 Gateway。服務實例名稱源自主機名稱，因此過於複雜的名稱可能會混淆某些解析器。
+- **多播被封鎖**：某些 Wi-Fi 網路會停用 mDNS。
+- **廣播者卡在探測/通告中**：封鎖多播的主機、容器網橋、WSL 或介面變動可能會導致 ciao 廣播者處於未通告狀態。OpenClaw 會重試幾次，然後對目前的 Gateway 程序停用 Bonjour，而不是無限期地重新啟動廣播者。
+- **Docker 網橋網路**：Bonjour 會在偵測到的容器中自動停用。
+  僅針對 host、macvlan 或其他支援 mDNS 的網路設定 `OPENCLAW_DISABLE_BONJOUR=0`。
+- **休眠 / 介面變動**：macOS 可能會暫時遺漏 mDNS 結果；請重試。
+- **瀏覽正常但解析失敗**：請保持機器名稱簡單（避免表情符號或標點符號），然後重新啟動 Gateway。服務實例名稱源自主機名稱，因此過於複雜的名稱可能會讓某些解析器感到困惑。
 
-## 轉義的實例名稱 (`\032`)
+## 轉義實例名稱 (`\032`)
 
-Bonjour/DNS-SD 經常將服務實例名稱中的位元組轉義為十進位 `\DDD` 序列（例如，空格變為 `\032`）。
+Bonjour/DNS-SD 經常將服務實例名稱中的位元組轉義為十進位 `\DDD`
+序列（例如空格會變成 `\032`）。
 
-- 這在協定層級是正常的。
-- 使用者介面應該解碼後再顯示（iOS 使用 `BonjourEscapes.decode`）。
+- 這在協議層級是正常的。
+- UI 應進行解碼以供顯示（iOS 使用 `BonjourEscapes.decode`）。
 
 ## 啟用 / 停用 / 設定
 
-- macOS 主機預設會自動啟動內建的 LAN 探索外掛程式。
-- `openclaw plugins enable bonjour` 可在未預設啟用的主機上啟用內建的 LAN 探索外掛程式。
-- `openclaw plugins disable bonjour` 透過停用內建外掛程式來停用 LAN 多播廣告。
-- `OPENCLAW_DISABLE_BONJOUR=1` 停用 LAN 多播廣告，而不變更外掛程式設定；可接受的真值包括 `1`、`true`、`yes` 和 `on`（舊版：`OPENCLAW_DISABLE_BONJOUR`）。
-- `OPENCLAW_DISABLE_BONJOUR=0` 強制開啟 LAN 多播廣告，包括在偵測到的容器內；可接受的假值為 `0`、`false`、`no` 和 `off`。
-- 當啟用 Bonjour 外掛且未設定 `OPENCLAW_DISABLE_BONJOUR` 時，Bonjour 會在一般主機上進行廣告，並在偵測到的容器內自動停用。
-- `~/.openclaw/openclaw.json` 中的 `gateway.bind` 控制 Gateway 綁定模式。
-- 當廣告 `sshPort` 時，`OPENCLAW_SSH_PORT` 會覆寫 SSH 連接埠（舊版：`OPENCLAW_SSH_PORT`）。
+- macOS 主機預設會自動啟動內建的 LAN 探索外掛。
+- `openclaw plugins enable bonjour` 會在未預設啟用該外掛的主機上啟用內建的 LAN 探索外掛。
+- `openclaw plugins disable bonjour` 會透過停用內建外掛來停用 LAN 多播廣告。
+- `OPENCLAW_DISABLE_BONJOUR=1` 會在不變更外插設定的情況下停用 LAN 多播廣告；接受的真值為 `1`、`true`、`yes` 和 `on`（舊版：`OPENCLAW_DISABLE_BONJOUR`）。
+- `OPENCLAW_DISABLE_BONJOUR=0` 會強制開啟 LAN 多播廣告，包括在偵測到的容器內；接受的假值為 `0`、`false`、`no` 和 `off`。
+- 當啟用 Bonjour 外掛程式且未設定 `OPENCLAW_DISABLE_BONJOUR` 時，Bonjour 會在一般主機上進行廣播，並在偵測到的容器內自動停用。
+- `gateway.bind` 於 `~/.openclaw/openclaw.json` 中控制 Gateway 繫結模式。
+- 當廣播 `sshPort` 時，`OPENCLAW_SSH_PORT` 會覆寫 SSH 連接埠（舊版：`OPENCLAW_SSH_PORT`）。
 - 當啟用 mDNS 完整模式時，`OPENCLAW_TAILNET_DNS` 會在 TXT 中發佈 MagicDNS 提示（舊版：`OPENCLAW_TAILNET_DNS`）。
-- `OPENCLAW_CLI_PATH` 會覆寫廣告的 CLI 路徑（舊版：`OPENCLAW_CLI_PATH`）。
+- `OPENCLAW_CLI_PATH` 會覆寫廣播的 CLI 路徑（舊版：`OPENCLAW_CLI_PATH`）。
 
 ## 相關文件
 
-- 探索策略與傳輸選擇：[Discovery](/zh-Hant/gateway/discovery)
-- 節點配對 + 核准：[Gateway pairing](/zh-Hant/gateway/pairing)
+- 探索原則與傳輸選擇：[Discovery](/zh-Hant/gateway/discovery)
+- 節點配對與核准：[Gateway pairing](/zh-Hant/gateway/pairing)

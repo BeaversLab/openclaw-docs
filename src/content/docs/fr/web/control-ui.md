@@ -54,7 +54,7 @@ Si le navigateur réessaie l'appairage avec des détails d'authentification modi
 
 Si le navigateur est déjà apparié et que vous le modifiez pour passer d'un accès en lecture à un accès en écriture/administrateur, cela est considéré comme une mise à niveau de l'approbation, et non comme une reconnexion silencieuse. OpenClaw conserve l'ancienne approbation active, bloque la reconnexion plus large et vous demande d'approuver explicitement le nouvel ensemble de portées.
 
-Une fois approuvé, l'appareil est mémorisé et ne nécessitera pas de réapprobation sauf si vous le révoquez avec `openclaw devices revoke --device <id> --role <role>`CLI. Voir [CLI des appareils](/fr/cli/devices) pour la rotation et la révocation des jetons.
+Une fois approuvé, l'appareil est mémorisé et ne nécessitera pas de nouvelle approbation, sauf si vous le révoquez avec `openclaw devices revoke --device <id> --role <role>`CLI. Consultez [CLI Devices](/fr/cli/devices) pour la rotation et la révocation des jetons.
 
 <Note>
 - Les connexions directes de navigateur en boucle locale (`127.0.0.1` / `localhost`Tailscale) sont automatiquement approuvées.
@@ -87,7 +87,7 @@ Les traductions de la documentation sont générées pour le même ensemble de p
 
 ## Thèmes d'apparence
 
-Le panneau Apparence conserve les thèmes intégrés Claw, Knot et Dash, plus un emplacement d'importation tweakcn local au navigateur. Pour importer un thème, ouvrez l'éditeur tweakcn (https://tweakcn.com/editor/theme), choisissez ou créez un thème, cliquez sur **Partager**, et collez le lien du thème copié dans Apparence. L'importateur accepte également les URL de registre `https://tweakcn.com/r/themes/<id>`, les URL d'éditeur comme `https://tweakcn.com/editor/theme?theme=amethyst-haze`, les chemins relatifs `/themes/<id>`, les ID de thème bruts et les noms de thèmes par défaut tels que `amethyst-haze`.
+Le panneau Apparence conserve les thèmes intégrés Claw, Knot et Dash, plus un emplacement d'importation tweakcn local au navigateur. Pour importer un thème, ouvrez [tweakcn editor](https://tweakcn.com/editor/theme), choisissez ou créez un thème, cliquez sur **Share**, et collez le lien du thème copié dans Apparence. L'importateur accepte également les URL de registre `https://tweakcn.com/r/themes/<id>`, les URL d'éditeur comme `https://tweakcn.com/editor/theme?theme=amethyst-haze`, les chemins relatifs `/themes/<id>`, les identifiants de thèmes bruts, et les noms de thèmes par défaut tels que `amethyst-haze`.
 
 Les thèmes importés sont stockés uniquement dans le profil de navigateur actuel. Ils ne sont pas écrits dans la configuration de la passerelle et ne sont pas synchronisés entre les appareils. Le remplacement du thème importé met à jour l'emplacement local unique ; son effacement remet le thème actif sur Claw si le thème importé était sélectionné.
 
@@ -150,24 +150,24 @@ Les thèmes importés sont stockés uniquement dans le profil de navigateur actu
 ## Comportement de la conversation
 
 <AccordionGroup>
-  <Accordion title="Sémantique d'envoi et d'historique">
-    - `chat.send` est **non bloquant** : il accuse réception immédiatement avec `{ runId, status: "started" }` et la réponse est diffusée via des événements `chat`.
-    - Les téléversements de chat acceptent les images et les fichiers non vidéo. Les images conservent leur chemin d'origine ; les autres fichiers sont stockés en tant que média géré et affichés dans l'historique sous forme de liens de pièces jointes.
+  <Accordion title="Send and history semantics">
+    - `chat.send` est **non bloquant** : il accuse réception immédiatement avec `{ runId, status: "started" }` et la réponse diffuse via des événements `chat`.
+    - Les téléchargements de chat acceptent les images ainsi que les fichiers non vidéo. Les images conservent leur chemin d'origine ; les autres fichiers sont stockés en tant que média géré et affichés dans l'historique sous forme de liens de pièces jointes.
     - Le renvoi avec le même `idempotencyKey` renvoie `{ status: "in_flight" }` pendant l'exécution, et `{ status: "ok" }` après l'achèvement.
-    - Les réponses `chat.history`Gateway sont limitées en taille pour la sécurité de l'interface. Lorsque les entrées de la transcription sont trop volumineuses, le Gateway peut tronquer les champs de texte longs, omettre les blocs de métadonnées lourds et remplacer les messages trop volumineux par un espace réservé (`[chat.history omitted: message too large]`Gateway).
+    - Les réponses `chat.history` sont limitées en taille pour la sécurité de l'interface. Lorsque les entrées de la transcription sont trop volumineuses, le Gateway peut tronquer les champs de texte longs, omettre les blocs de métadonnées lourds et remplacer les messages trop volumineux par un espace réservé (`[chat.history omitted: message too large]`).
     - Les images générées par l'assistant sont persistantes sous forme de références de média géré et renvoyées via des URL média authentifiées du Gateway, de sorte que les rechargements ne dépendent pas du fait que les charges utiles d'image brutes en base64 restent dans la réponse de l'historique du chat.
-    - Lors du rendu de `chat.history`, l'interface de contrôle supprime les balises de directive en ligne d'affichage uniquement du texte visible de l'assistant (par exemple `[[reply_to_*]]` et `[[audio_as_voice]]`), les charges utiles XML d'appel d'outil en texte brut (y compris `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` et les blocs d'appel d'outil tronqués), et les jetons de contrôle de modèle ASCII/pleine largeur divulgués, et omet les entrées de l'assistant dont tout le texte visible n'est que le jeton silencieux exact `NO_REPLY` / `no_reply` ou le jeton d'accusé de réception de battement de cœur `HEARTBEAT_OK`.
-    - Pendant un envoi actif et l'actualisation finale de l'historique, la vue de chat maintient visibles les messages utilisateur/assistant optimistes locaux si `chat.history`Gateway renvoie brièvement un instantané plus ancien ; la transcription canonique remplace ces messages locaux une fois que l'historique du Gateway a rattrapé son retard.
-    - Les événements en direct `chat` sont l'état de livraison, tandis que `chat.history`WebChat est reconstruit à partir de la transcription de session durable. Après les événements finaux d'outil, l'interface de contrôle recharge l'historique et fusionne uniquement une petite file optimiste ; la limite de la transcription est documentée dans [WebChat](/fr/web/webchat).
-    - `chat.inject` ajoute une note de l'assistant à la transcription de session et diffuse un événement `chat` pour les mises à jour de l'interface uniquement (pas d'exécution d'agent, pas de livraison de canal).
-    - L'en-tête du chat affiche le filtre d'agent avant le sélecteur de session, et le sélecteur de session est délimité par l'agent sélectionné. Le changement d'agent affiche uniquement les sessions liées à cet agent et revient à la session principale de cet agent lorsqu'il n'a pas encore de sessions de tableau de bord enregistrées.
-    - Sur les largeurs de bureau, les contrôles de chat restent sur une ligne compacte et se replient lors du défilement vers le bas de la transcription ; le défilement vers le haut, le retour en haut ou l'atteinte du bas restaure les contrôles.
-    - Les messages en double consécutifs en texte seul s'affichent sous la forme d'une bulle avec un badge de comptage. Les messages contenant des images, des pièces jointes, des sorties d'outil ou des aperçus de canevas ne sont pas réduits.
-    - Les sélecteurs de modèle et de réflexion de l'en-tête de chat corrigent la session active immédiatement via `sessions.patch` ; ce sont des remplacements persistants de la session, et non des options d'envoi à tour unique.
-    - Si vous envoyez un message alors qu'un changement de sélecteur de modèle pour la même session est toujours en cours d'enregistrement, le compositeur attend que cette session soit corrigée avant d'appeler `chat.send` afin que l'envoi utilise le modèle sélectionné.
-    - Taper `/new` dans l'interface de contrôle crée et bascule vers la même session de tableau de bord fraîche que Nouveau chat, sauf si `session.dmScope: "main"` est configuré et que le parent actuel est la session principale de l'agent ; dans ce cas, il réinitialise la session principale sur place. Taper `/reset`GatewayGateway conserve la réinitialisation explicite sur place du Gateway pour la session actuelle.
-    - Le sélecteur de modèle de chat demande la vue de modèle configurée du Gateway. Si `agents.defaults.models` est présent, cette liste d'autorisation pilote le sélecteur, y compris les entrées `provider/*` qui maintiennent les catalogues délimités par fournisseur dynamiques. Sinon, le sélecteur affiche les entrées explicites `models.providers.*.models` plus les fournisseurs avec une authentification utilisable. Le catalogue complet reste disponible via le RPC de débogage `models.list`RPC avec `view: "all"`GatewayGateway.
-    - Lorsque les rapports d'utilisation de session Gateway frais incluent des jetons de contexte actuels, la zone du compositeur de chat affiche un indicateur compact d'utilisation du contexte. Il passe au style d'avertissement en cas de forte pression sur le contexte et, aux niveaux de compactage recommandés, affiche un bouton compact qui exécute le chemin de compactage de session normal. Les instantanés de jetons obsolètes sont masqués jusqu'à ce que le Gateway signale à nouveau une utilisation fraîche.
+    - Lors du rendu de `chat.history`, l'interface utilisateur de contrôle supprime les balises de directive inline affichage uniquement du texte visible de l'assistant (par exemple `[[reply_to_*]]` et `[[audio_as_voice]]`), les charges utiles XML d'appel d'outil en texte brut (y compris `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` et les blocs d'appel d'outil tronqués), et les jetons de contrôle de modèle ASCII/pleine largeur fuités, et omet les entrées de l'assistant dont tout le texte visible n'est que le jeton silencieux exact `NO_REPLY` / `no_reply` ou le jeton d'accusation de réception de battement de cœur `HEARTBEAT_OK`.
+    - Pendant un envoi actif et l'actualisation finale de l'historique, la vue de chat maintient visibles les messages utilisateur/assistant optimistes locaux si `chat.history` renvoie brièvement un instantané plus ancien ; la transcription canonique remplace ces messages locaux une fois que l'historique du Gateway a rattrapé son retard.
+    - Les événements en direct `chat` sont l'état de livraison, tandis que `chat.history` est reconstruit à partir de la transcription de session durable. Après les événements finaux d'outil, l'interface utilisateur de contrôle recharge l'historique et fusionne uniquement une petite queue optimiste ; la limite de la transcription est documentée dans [WebChat](/fr/web/webchat).
+    - `chat.inject` ajoute une note d'assistant à la transcription de session et diffuse un événement `chat` pour les mises à jour de l'interface uniquement (pas d'exécution d'agent, pas de livraison de canal).
+    - L'en-tête de chat affiche le filtre d'agent avant le sélecteur de session, et le sélecteur de session est délimité par l'agent sélectionné. Le changement d'agent n'affiche que les sessions liées à cet agent et revient à la session principale de cet agent lorsqu'il n'a pas encore de sessions de tableau de bord enregistrées.
+    - Sur les largeurs de bureau, les commandes de chat restent sur une ligne compacte et se réduisent lors du défilement vers le bas de la transcription ; le défilement vers le haut, le retour en haut ou l'atteinte du bas restaure les commandes.
+    - Les messages texte consécutifs en double s'affichent sous forme d'une seule bulle avec un badge de comptage. Les messages contenant des images, des pièces jointes, des sorties d'outil ou des aperçus de canevas ne sont pas réduits.
+    - Les sélecteurs de modèle et de réflexion de l'en-tête de chat corrigent immédiatement la session active via `sessions.patch` ; il s'agit de remplacements persistants de session, et non d'options d'envoi pour un seul tour.
+    - Si vous envoyez un message alors qu'un changement de sélecteur de modèle pour la même session est toujours en cours d'enregistrement, le compositeur attend que cette correction de session soit effectuée avant d'appeler `chat.send` afin que l'envoi utilise le modèle sélectionné.
+    - Taper `/new` dans l'interface utilisateur de contrôle crée et bascule vers la même session de tableau de bord fraîche que Nouveau chat, sauf si `session.dmScope: "main"` est configuré et que le parent actuel est la session principale de l'agent ; dans ce cas, il réinitialise la session principale sur place. Taper `/reset` conserve la réinitialisation explicite sur place du Gateway pour la session actuelle.
+    - Le sélecteur de modèle de chat demande la vue de modèle configurée du Gateway. Si `agents.defaults.models` est présent, cette liste d'autorisation pilote le sélecteur, y compris les entrées `provider/*` qui gardent les catalogues délimités par fournisseur dynamiques. Sinon, le sélecteur affiche les entrées `models.providers.*.models` explicites plus les fournisseurs avec une authentification utilisable. Le catalogue complet reste disponible via le RPC de débogage `models.list` avec `view: "all"`.
+    - Lorsque les rapports d'utilisation de session fraîche du Gateway incluent des jetons de contexte actuels, la zone du compositeur de chat affiche un indicateur compact d'utilisation du contexte. Il passe au style d'avertissement en cas de forte pression de contexte et, aux niveaux de compactage recommandés, affiche un bouton compact qui exécute le chemin de compactage de session normal. Les instantanés de jetons obsolètes sont masqués jusqu'à ce que le Gateway signale une nouvelle utilisation.
 
   </Accordion>
   <Accordion title="Talk mode (browser realtime)">
@@ -219,7 +219,7 @@ L'interface de contrôle utilise ces méthodes de passerie limitées par portée
 - `push.web.unsubscribe` — supprime un point de terminaison enregistré.
 - `push.web.test` — envoie une notification de test à l'abonnement de l'appelant.
 
-<Note>Web Push est indépendant du chemin de relais APNS iOS (voir [Configuration](iOS/en/gateway/configuration) pour le push basé sur le relais) et de la méthode existante `push.test`, qui ciblent l'appairage mobile natif.</Note>
+<Note>Web Push est indépendant du chemin de relais APNS iOS (voir [Configuration](/fr/gateway/configuration) pour la push via relais) et de la méthode `push.test` existante, qui ciblent l'appairage mobile natif.</Note>
 
 ## Intégrations hébergées
 
@@ -350,15 +350,15 @@ Exceptions documentées :
     </Warning>
 
   </Accordion>
-  <Accordion title="Note sur le proxy de confiance">
-    - Une authentification proxy de confiance réussie peut admettre des sessions **d'opérateur** de l'interface de contrôle (Control UI) sans identité d'appareil.
-    - Cela ne s'étend **pas** aux sessions de l'interface de contrôle (Control UI) avec rôle de nœud.
-    - Les proxys inversés de bouclage sur le même hôte ne satisfont toujours pas l'authentification proxy de confiance ; voir [Authentification proxy de confiance](/fr/gateway/trusted-proxy-auth).
+  <Accordion title="Trusted-proxy note">
+    - Une authentification trusted-proxy réussie peut admettre des sessions **opérateur** de l'interface de contrôle (Control UI) sans identité d'appareil.
+    - Cela ne s'étend **pas** aux sessions Control UI de rôle nœud.
+    - Les proxies inversés en boucle locale (loopback) sur le même hôte ne satisfont toujours pas l'authentification trusted-proxy ; voir [Trusted proxy auth](/fr/gateway/trusted-proxy-auth).
 
   </Accordion>
 </AccordionGroup>
 
-Consultez Tailscale (/en/gateway/tailscale) pour des conseils sur la configuration HTTPS.
+Voir [Tailscale](/fr/gateway/tailscale) pour des conseils sur la configuration HTTPS.
 
 ## Politique de sécurité du contenu
 
@@ -415,22 +415,32 @@ pnpm ui:dev
 
 Ensuite, pointez l'interface utilisateur vers l'URL WS de votre Gateway (par exemple `ws://127.0.0.1:18789`).
 
+## Page vide de l'interface de contrôle (Control UI)
+
+Si le navigateur charge un tableau de bord vide et que les DevTools n'affichent aucune erreur utile, une extension ou un script de contenu précoce a peut-être empêché l'évaluation de l'application module JavaScript. La page statique inclut un panneau de récupération HTML brut qui apparaît lorsque `<openclaw-app>` n'est pas enregistré après le démarrage.
+
+Utilisez l'action **Réessayer** du panneau après avoir modifié l'environnement du navigateur, ou rechargez manuellement après ces vérifications :
+
+- Désactivez les extensions qui s'injectent dans toutes les pages, en particulier les extensions avec des scripts de contenu `<all_urls>`.
+- Essayez une fenêtre privée, un profil de navigateur propre ou un autre navigateur.
+- Gardez le Gateway en cours d'exécution et vérifiez la même URL de tableau de bord après le changement de navigateur.
+
 ## Débogage/tests : serveur de développement + Gateway distant
 
-L'interface utilisateur de contrôle est constituée de fichiers statiques ; la cible WebSocket est configurable et peut être différente de l'origine HTTP. C'est pratique lorsque vous souhaitez le serveur de développement Vite localement mais que le Gateway s'exécute ailleurs.
+L'interface de contrôle (Control UI) se compose de fichiers statiques ; la cible WebSocket est configurable et peut être différente de l'origine HTTP. C'est pratique lorsque vous voulez le serveur de développement Vite localement mais que le Gateway s'exécute ailleurs.
 
 <Steps>
-  <Step title="Démarrer le serveur de dev de l'interface utilisateur">
+  <Step title="Start the UI dev server">
     ```bash
     pnpm ui:dev
     ```
   </Step>
-  <Step title="Ouvrir avec gatewayUrl">
+  <Step title="Open with gatewayUrl">
     ```text
     http://localhost:5173/?gatewayUrl=ws%3A%2F%2F<gateway-host>%3A18789
     ```
 
-    Authentification unique facultative (si nécessaire) :
+    Authentification ponctuelle optionnelle (si nécessaire) :
 
     ```text
     http://localhost:5173/?gatewayUrl=wss%3A%2F%2F<gateway-host>%3A18789#token=<gateway-token>
@@ -442,16 +452,16 @@ L'interface utilisateur de contrôle est constituée de fichiers statiques ; la 
 <AccordionGroup>
   <Accordion title="Notes">
     - `gatewayUrl` est stocké dans localStorage après le chargement et supprimé de l'URL.
-    - Si vous transmettez un point de terminaison `ws://` ou `wss://` complet via `gatewayUrl`, encodez l'URL de la valeur `gatewayUrl` afin que le navigateur analyse correctement la chaîne de requête.
-    - `token` doit être transmis via le fragment d'URL (`#token=...`) chaque fois que possible. Les fragments ne sont pas envoyés au serveur, ce qui évite les fuites de journaux de requête et d'en-têtes Referer. Les paramètres de requête `?token=` hérités sont toujours importés une fois pour la compatibilité, mais uniquement en tant que solution de secours, et sont supprimés immédiatement après l'amorçage.
+    - Si vous passez un point de terminaison `ws://` ou `wss://` complet via `gatewayUrl`, encodez l'URL de la valeur `gatewayUrl` afin que le navigateur analyse correctement la chaîne de requête.
+    - `token` doit être passé via le fragment d'URL (`#token=...`) autant que possible. Les fragments ne sont pas envoyés au serveur, ce qui évite les fuites dans les journaux de requête et l'en-tête Referer. Les paramètres de requête `?token=` hérités sont toujours importés une fois pour compatibilité, mais uniquement en tant que solution de secours, et sont supprimés immédiatement après l'amorçage.
     - `password` est conservé uniquement en mémoire.
-    - Lorsque `gatewayUrl` est défini, l'UI ne revient pas aux identifiants de configuration ou d'environnement. Fournissez `token` (ou `password`) explicitement. L'absence d'identifiants explicites constitue une erreur.
-    - Utilisez `wss://` lorsque le Gateway se trouve derrière TLS (Tailscale Serve, proxy HTTPS, etc.).
-    - `gatewayUrl` n'est accepté que dans une fenêtre de niveau supérieur (non intégrée) pour empêcher le clickjacking.
-    - Les déploiements de l'UI de contrôle non-boucle (non-loopback) doivent définir `gateway.controlUi.allowedOrigins` explicitement (origines complètes). Cela inclut les configurations de développement distant.
+    - Lorsque `gatewayUrl` est défini, l'UI ne revient pas aux identifiants de configuration ou d'environnement. Fournissez `token` (ou `password`) explicitement. L'absence d'identifiants explicites est une erreur.
+    - Utilisez `wss://` lorsque le GatewayTailscale est derrière TLS (Tailscale Serve, proxy HTTPS, etc.).
+    - `gatewayUrl` n'est accepté que dans une fenêtre de niveau supérieur (non intégrée) pour empêcher le détournement de clic.
+    - Les déploiements de l'UI de contrôle non-bouclage doivent définir `gateway.controlUi.allowedOrigins` explicitement (origines complètes). Cela inclut les configurations de développement à distance.
     - Le démarrage du Gateway peut amorcer des origines locales telles que `http://localhost:<port>` et `http://127.0.0.1:<port>` à partir de la liaison d'exécution effective et du port, mais les origines du navigateur distant ont toujours besoin d'entrées explicites.
-    - N'utilisez pas `gateway.controlUi.allowedOrigins: ["*"]` sauf pour les tests locaux étroitement contrôlés. Cela signifie autoriser n'importe quelle origine de navigateur, et non « correspondre à l'hôte que j'utilise ».
-    - `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` active le mode de secours d'origine via l'en-tête Host, mais c'est un mode de sécurité dangereux.
+    - N'utilisez pas `gateway.controlUi.allowedOrigins: ["*"]` sauf pour des tests locaux strictement contrôlés. Cela signifie autoriser n'importe quelle origine de navigateur, et non « correspondre à l'hôte que j'utilise ».
+    - `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` active le mode de repli d'origine basé sur l'en-tête Host, mais c'est un mode de sécurité dangereux.
 
   </Accordion>
 </AccordionGroup>
@@ -468,11 +478,11 @@ Exemple :
 }
 ```
 
-Détails de la configuration de l'accès distant : [Accès distant](/fr/gateway/remote).
+Détails de la configuration de l'accès à distance : [Accès à distance](/fr/gateway/remote).
 
 ## Connexes
 
 - [Tableau de bord](/fr/web/dashboard) — tableau de bord de la passerelle
-- [Contrôles de santé](/fr/gateway/health) — surveillance de la santé de la passerelle
-- [TUI](TUI/en/web/tui) — interface utilisateur en terminal
-- [WebChat](WebChat/en/web/webchat) — interface de chat basée sur le navigateur
+- [Contrôles de santé](/fr/gateway/health) — surveillance de santé de la passerelle
+- [TUI](/fr/web/tui) — interface utilisateur en terminal
+- [WebChat](/fr/web/webchat) — interface de chat basée sur le navigateur

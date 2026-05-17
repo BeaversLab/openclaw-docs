@@ -12,7 +12,7 @@ title: "Slack 外掛程式"
 ## 發行
 
 - 套件：`@openclaw/slack`
-- 安裝途徑：包含於 OpenClaw 中
+- 安裝途徑：npm；ClawHub
 
 ## 介面
 

@@ -55,17 +55,18 @@ Q&A sur le démarrage rapide et la première exécution. Pour les opérations qu
 
   </Accordion>
 
-  <Accordion title="Le battement de cœur (heartbeat) continue d'être ignoré. Que signifient les motifs d'ignorance ?">
-    Raisons courantes d'ignorance du battement de cœur :
+  <Accordion title="Le heartbeat continue de passer. Que signifient les raisons de l'omission ?">
+    Raisons courantes des omissions de heartbeat :
 
-    - `quiet-hours` : en dehors de la fenêtre des heures actives configurée
-    - `empty-heartbeat-file` : `HEARTBEAT.md` existe mais ne contient qu'une structure vide ou composée uniquement d'en-têtes
-    - `no-tasks-due` : le mode tâche `HEARTBEAT.md` est actif mais aucun des intervalles de tâches n'est encore échu
-    - `alerts-disabled` : toute la visibilité du battement de cœur est désactivée (`showOk`, `showAlerts` et `useIndicator` sont tous désactivés)
+    - `quiet-hours` : en dehors de la fenêtre d'heures actives configurée
+    - `empty-heartbeat-file` : `HEARTBEAT.md` existe mais ne contient qu'une structure vide ou avec des en-têtes uniquement
+    - `no-tasks-due` : le mode de tâche `HEARTBEAT.md` est actif mais aucun des intervalles de tâches n'est encore échu
+    - `alerts-disabled` : toute la visibilité du heartbeat est désactivée (`showOk`, `showAlerts` et `useIndicator` sont tous désactivés)
 
-    En mode tâche, les horodatages d'échéance ne sont avancés qu'une fois qu'une exécution réelle du battement de cœur est terminée. Les exécutions ignorées ne marquent pas les tâches comme terminées.
+    En mode tâche, les horodatages d'échéance ne sont avancés qu'une fois qu'une exécution réelle du heartbeat
+    est terminée. Les exécutions omises ne marquent pas les tâches comme terminées.
 
-    Docs : [Heartbeat](/fr/gateway/heartbeat), [Automation & Tasks](/fr/automation).
+    Documentation : [Heartbeat](/fr/gateway/heartbeat), [Automation](/fr/automation).
 
   </Accordion>
 

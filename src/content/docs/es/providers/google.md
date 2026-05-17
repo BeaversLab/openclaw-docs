@@ -168,9 +168,9 @@ o permítale reutilizar `models.providers.google.apiKey` después de `GEMINI_API
 }
 ```
 
-La precedencia de credenciales es `webSearch.apiKey` dedicada, luego `GEMINI_API_KEY`,
+La precedencia de las credenciales es dedicada `webSearch.apiKey`, luego `GEMINI_API_KEY`,
 luego `models.providers.google.apiKey`. `webSearch.baseUrl` es opcional y
-existe para proxies de operador o puntos finales de la API de Gemini compatibles; cuando se omite,
+existe para proxies de operadores o puntos de conexión de la API de Gemini compatibles; cuando se omite,
 la búsqueda web de Gemini reutiliza `models.providers.google.baseUrl`. Consulte
 [Gemini search](/es/tools/gemini-search) para el comportamiento específico de la herramienta del proveedor.
 
@@ -216,7 +216,7 @@ Para usar Google como proveedor de imágenes predeterminado:
 }
 ```
 
-<Note>Consulte [Image Generation](/es/tools/image-generation) para obtener parámetros de herramientas compartidos, selección de proveedor y comportamiento de conmutación por error.</Note>
+<Note>Consulte [Image Generation](/es/tools/image-generation) para ver los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.</Note>
 
 ## Generación de video
 
@@ -224,8 +224,8 @@ El complemento incluido `google` también registra la generación de video a tra
 
 - Modelo de video predeterminado: `google/veo-3.1-fast-generate-preview`
 - Modos: texto a video, imagen a video y flujos de referencia de video único
-- Admite `aspectRatio`, `resolution` y `audio`
-- Límite de duración actual: **de 4 a 8 segundos**
+- Admite `aspectRatio` (`16:9`, `9:16`) y `resolution` (`720P`, `1080P`); Veo no admite la salida de audio hoy en día
+- Duraciones admitidas: **4, 6 u 8 segundos** (otros valores se ajustan al valor permitido más cercano)
 
 Para usar Google como proveedor de video predeterminado:
 
@@ -241,18 +241,19 @@ Para usar Google como proveedor de video predeterminado:
 }
 ```
 
-<Note>Consulte [Generación de video](/es/tools/video-generation) para obtener los parámetros de la herramienta compartida, la selección del proveedor y el comportamiento de conmutación por error.</Note>
+<Note>Consulte [Video Generation](/es/tools/video-generation) para ver los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.</Note>
 
 ## Generación de música
 
-El complemento incluido `google` también registra la generación de música a través de la herramienta compartida `music_generate`.
+El complemento `google` incluido también registra la generación de música a través de la herramienta compartida
+`music_generate`.
 
 - Modelo de música predeterminado: `google/lyria-3-clip-preview`
 - También admite `google/lyria-3-pro-preview`
-- Controles de prompt: `lyrics` y `instrumental`
-- Formato de salida: `mp3` de manera predeterminada, además de `wav` en `google/lyria-3-pro-preview`
+- Controles del prompt: `lyrics` y `instrumental`
+- Formato de salida: `mp3` de forma predeterminada, además de `wav` en `google/lyria-3-pro-preview`
 - Entradas de referencia: hasta 10 imágenes
-- Las ejecuciones respaldadas por sesión se desvinculan a través del flujo de tarea/estado compartido, incluido `action: "status"`
+- Las ejecuciones respaldadas por sesión se separan a través del flujo compartido de tarea/estado, incluyendo `action: "status"`
 
 Para usar Google como proveedor de música predeterminado:
 
@@ -268,18 +269,22 @@ Para usar Google como proveedor de música predeterminado:
 }
 ```
 
-<Note>Consulte [Generación de música](/es/tools/music-generation) para obtener los parámetros de la herramienta compartida, la selección del proveedor y el comportamiento de conmutación por error.</Note>
+<Note>Consulte [Music Generation](/es/tools/music-generation) para ver los parámetros compartidos de la herramienta, la selección del proveedor y el comportamiento de conmutación por error.</Note>
 
 ## Texto a voz
 
-El proveedor de voz `google` incluido utiliza la ruta TTS de la API de Gemini con `gemini-3.1-flash-tts-preview`.
+El proveedor de voz `google` incluido utiliza la ruta TTS de la API de Gemini con
+`gemini-3.1-flash-tts-preview`.
 
 - Voz predeterminada: `Kore`
 - Autenticación: `messages.tts.providers.google.apiKey`, `models.providers.google.apiKey`, `GEMINI_API_KEY` o `GOOGLE_API_KEY`
 - Salida: WAV para archivos adjuntos de TTS normales, Opus para objetivos de notas de voz, PCM para Talk/telefonía
-- Salida de nota de voz: el PCM de Google se envuelve como WAV y se transcodifica a Opus de 48 kHz con `ffmpeg`
+- Salida de notas de voz: Google PCM se envuelve como WAV y se transcodifica a Opus de 48 kHz con `ffmpeg`
 
-La ruta de TTS por lotes de Gemini de Google devuelve el audio generado en la respuesta `generateContent` completada. Para conversaciones habladas con la menor latencia, utilice el proveedor de voz en tiempo real de Google respaldado por Gemini Live API en lugar de TTS por lotes.
+La ruta de TTS por lotes de Gemini de Google devuelve el audio generado en la respuesta
+`generateContent` completada. Para conversaciones habladas con la menor latencia,
+utilice el proveedor de voz en tiempo real de Google respaldado por la Gemini Live API en lugar de TTS
+por lotes.
 
 Para usar Google como proveedor de TTS predeterminado:
 
@@ -301,9 +306,14 @@ Para usar Google como proveedor de TTS predeterminado:
 }
 ```
 
-La API de Gemini TTS usa instrucciones en lenguaje natural para el control de estilo. Establezca `audioProfile` para anteponer una instrucción de estilo reutilizable antes del texto hablado. Establezca `speakerName` cuando su texto de instrucción se refiera a un locutor con nombre.
+La API de TTS de Gemini usa el uso de lenguaje natural para el control del estilo. Establezca
+`audioProfile` para anteponer un aviso de estilo reutilizable antes del texto hablado. Establezca
+`speakerName` cuando su texto de aviso se refiera a un hablante con nombre.
 
-La API de Gemini TTS también acepta etiquetas de audio expresivas de corchetes cuadrados en el texto, como `[whispers]` o `[laughs]`. Para mantener las etiquetas fuera de la respuesta visible del chat mientras se envían a TTS, colóquelas dentro de un bloque `[[tts:text]]...[[/tts:text]]`:
+La API de TTS de Gemini también acepta etiquetas de audio expresivas entre corchetes en el texto,
+tales como `[whispers]` o `[laughs]`. Para mantener las etiquetas fuera de la respuesta visible del chat
+mientras se envían a TTS, colóquelas dentro de un bloque
+`[[tts:text]]...[[/tts:text]]`:
 
 ```text
 Here is the clean reply text.
@@ -315,7 +325,8 @@ Here is the clean reply text.
 
 ## Voz en tiempo real
 
-El complemento `google` incluido registra un proveedor de voz en tiempo real respaldado por la API de Gemini Live para puentes de audio de backend, como Llamada de voz y Google Meet.
+El complemento `google` incluido registra un proveedor de voz en tiempo real respaldado por la
+Gemini Live API para puentes de audio de backend como Voice Call y Google Meet.
 
 | Configuración                       | Ruta de configuración                                               | Predeterminado                                                                  |
 | ----------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
@@ -361,32 +372,32 @@ Ejemplo de configuración en tiempo real para Voice Call:
 ```
 
 <Note>
-  Google Live API utiliza audio bidireccional y llamadas a funciones a través de un WebSocket. OpenClaw adapta el audio del puente telefónico/Meet al flujo de la PCM Live API de Gemini y mantiene las llamadas a herramientas en el contrato de voz en tiempo real compartido. Deje `temperature` sin configurar a menos que necesite cambios de muestreo; OpenClaw omite los valores no positivos porque
-  Google Live puede devolver transcripciones sin audio para `temperature: 0`. La transcripción de la API de Gemini está habilitada sin `languageCodes`; el SDK de Google actual rechaza las sugerencias de código de idioma en esta ruta de la API.
+  Google Live API utiliza audio bidireccional y llamadas a funciones a través de un WebSocket. OpenClaw adapta el audio de los puentes de telefonía/Meet al flujo de la API PCM Live de Gemini y mantiene las llamadas a herramientas en el contrato de voz en tiempo real compartido. Deje `temperature` sin configurar a menos que necesite cambios de muestreo; OpenClaw omite los valores no positivos
+  porque Google Live puede devolver transcripciones sin audio para `temperature: 0`. La transcripción de la API de Gemini está habilitada sin `languageCodes`; el SDK de Google actual rechaza las sugerencias de código de idioma en esta ruta de la API.
 </Note>
 
 <Note>Control UI Talk admite sesiones del navegador de Google Live con tokens de un solo uso restringidos. Los proveedores de voz en tiempo real solo de backend también pueden ejecutarse a través del transporte de retransmisión genérica de Gateway, que mantiene las credenciales del proveedor en el Gateway.</Note>
 
 Para la verificación en vivo del mantenedor, ejecute
 `OPENAI_API_KEY=... GEMINI_API_KEY=... node --import tsx scripts/dev/realtime-talk-live-smoke.ts`.
-El smoke test también cubre las rutas de backend/WebRTC de OpenAI; la parte de Google crea la misma
-forma de token restringido de la Live API que usa Control UI Talk, abre el punto final
-WebSocket del navegador, envía la carga útil de configuración inicial y espera
+La prueba también cubre las rutas de backend/WebRTC de OpenAI; la parte de Google crea la misma
+forma de token restringido de la API Live que usa Talk en la Interfaz de Control, abre el
+punto final WebSocket del navegador, envía la carga útil de configuración inicial y espera
 `setupComplete`.
 
 ## Configuración avanzada
 
 <AccordionGroup>
-  <Accordion title="Reutilización directa de caché de Gemini">
+  <Accordion title="Reutilización directa de caché Gemini">
     Para ejecuciones directas de la API de Gemini (`api: "google-generative-ai"`), OpenClaw
     pasa un identificador `cachedContent` configurado a través de las solicitudes a Gemini.
 
     - Configure parámetros por modelo o globales con cualquiera de los dos
-      `cachedContent` o el parámetro heredado `cached_content`
-    - Si ambos están presentes, `cachedContent` prevalece
+      `cachedContent` o el heredado `cached_content`
+    - Si ambos están presentes, `cachedContent` tiene prioridad
     - Valor de ejemplo: `cachedContents/prebuilt-context`
-    - El uso de aciertos de caché de Gemini se normaliza en `cacheRead` de OpenClaw desde
-      `cachedContentTokenCount` aguas arriba
+    - El uso de aciertos de caché de Gemini se normaliza en OpenClaw `cacheRead` desde
+      `cachedContentTokenCount` anterior
 
     ```json5
     {
@@ -406,19 +417,19 @@ WebSocket del navegador, envía la carga útil de configuración inicial y esper
 
   </Accordion>
 
-  <Accordion title="Notas de uso de JSON de CLI de Gemini">
+  <Accordion title="Notas de uso JSON de CLI Gemini">
     Al usar el proveedor OAuth `google-gemini-cli`, OpenClaw normaliza
     la salida JSON de la CLI de la siguiente manera:
 
-    - El texto de respuesta proviene del campo JSON de CLI `response`.
+    - El texto de respuesta proviene del campo `response` del JSON de la CLI.
     - El uso vuelve a `stats` cuando la CLI deja `usage` vacío.
-    - `stats.cached` se normaliza en `cacheRead` de OpenClaw.
+    - `stats.cached` se normaliza en OpenClaw `cacheRead`.
     - Si falta `stats.input`, OpenClaw deriva los tokens de entrada de
       `stats.input_tokens - stats.cached`.
 
   </Accordion>
 
-  <Accordion title="Configuración del entorno y del demonio">
+  <Accordion title="Entorno y configuración del demonio">
     Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `GEMINI_API_KEY`
     esté disponible para ese proceso (por ejemplo, en `~/.openclaw/.env` o a través de
     `env.shellEnv`).

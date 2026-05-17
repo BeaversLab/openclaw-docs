@@ -239,13 +239,13 @@ title: "常见问题"
   </Accordion>
 
   <Accordion title="Cron 或提醒未触发。我应该检查什么？"Gateway(网关)Gateway(网关)>
-    Cron 在 Gateway(网关) 进程内运行。如果 Gateway(网关) 未持续运行，
-    计划任务将不会执行。
+    Cron 在 Gateway(网关) 进程内运行。如果 Gateway(网关) 没有持续运行，
+    定时任务将不会执行。
 
     检查清单：
 
     - 确认 cron 已启用 (`cron.enabled`) 且未设置 `OPENCLAW_SKIP_CRON`Gateway(网关)。
-    - 检查 Gateway(网关) 是否 24/7 运行（无休眠/重启）。
+    - 检查 Gateway(网关) 是否全天候运行（无休眠/重启）。
     - 验证任务的时区设置 (`--tz` 与主机时区对比)。
 
     调试：
@@ -255,7 +255,7 @@ title: "常见问题"
     openclaw cron runs --id <jobId> --limit 50
     ```
 
-    文档：[Cron 任务](/zh/automation/cron-jobs), [自动化与任务](/zh/automation)。
+    文档：[Cron jobs](/zh/automation/cron-jobs)，[Automation](/zh/automation)。
 
   </Accordion>
 
@@ -327,14 +327,14 @@ title: "常见问题"
 
   </Accordion>
 
-  <Accordion title="OpenClawOpenClaw 可以按计划运行任务或在后台持续运行吗？"Gateway(网关)>
+  <Accordion title="OpenClawOpenClaw 可以按计划或在后台持续运行任务吗？"Gateway(网关)>
     可以。使用 Gateway(网关) 调度器：
 
-    - **Cron jobs** 用于计划或定期任务（重启后依然保留）。
+    - **Cron jobs** 用于定时或周期性任务（重启后持久保留）。
     - **Heartbeat** 用于“主会话”的定期检查。
-    - **Isolated jobs** 用于将摘要发布到聊天或交付聊天的自主代理。
+    - **Isolated jobs** 用于自主代理，可发布摘要或发送消息到聊天。
 
-    文档：[Cron jobs](/zh/automation/cron-jobs)、[Automation & Tasks](/zh/automation)、
+    文档：[Cron jobs](/zh/automation/cron-jobs)，[Automation](/zh/automation)，
     [Heartbeat](/zh/gateway/heartbeat)。
 
   </Accordion>

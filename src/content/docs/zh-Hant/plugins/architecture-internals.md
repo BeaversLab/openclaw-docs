@@ -411,6 +411,30 @@ const video = await api.runtime.mediaUnderstanding.describeVideoFile({
   filePath: "/tmp/inbound-video.mp4",
   cfg: api.config,
 });
+
+const extraction = await api.runtime.mediaUnderstanding.extractStructuredWithModel({
+  provider: "codex",
+  model: "gpt-5.5",
+  input: [
+    {
+      type: "image",
+      buffer: receiptImageBuffer,
+      fileName: "receipt.png",
+      mime: "image/png",
+    },
+    { type: "text", text: "Use the printed fields as the source of truth." },
+  ],
+  instructions: "Return entities and searchable tags.",
+  schemaName: "example.evidence",
+  jsonSchema: {
+    type: "object",
+    properties: {
+      entities: { type: "array", items: { type: "string" } },
+      tags: { type: "array", items: { type: "string" } },
+    },
+  },
+  cfg: api.config,
+});
 ```
 
 對於音訊轉錄，外掛程式可以使用媒體理解執行時期或較舊的 STT 別名：
@@ -428,11 +452,12 @@ const { text } = await api.runtime.mediaUnderstanding.transcribeAudioFile({
 
 - `api.runtime.mediaUnderstanding.*` 是用於
   影像/音訊/影片理解的首選共享介面。
-- 使用核心媒體理解音訊組態 (`tools.media.audio`) 與提供者後援順序。
-- 當未產生轉錄輸出時 (例如跳過/不支援的輸入)，會傳回 `{ text: undefined }`。
-- `api.runtime.stt.transcribeAudioFile(...)` 保留作為相容性別名。
+- `extractStructuredWithModel(...)` 是插件接縫，用於有界的提供者擁有的圖像優先提取。請至少包含一個圖像輸入；文字輸入是補充上下文。產品外掛擁有自己的路由和結構描述，而 OpenClaw 則擁有提供者/執行時邊界。
+- 使用核心媒體理解音訊配置 (`tools.media.audio`) 和提供者後援順序。
+- 當未產生輸出輸出時（例如跳過/不支援的輸入），傳回 `{ text: undefined }`。
+- `api.runtime.stt.transcribeAudioFile(...)` 作為相容性別名保留。
 
-外掛程式也可以透過 `api.runtime.subagent` 啟動背景子代理程式執行：
+外掛也可以透過 `api.runtime.subagent` 啟動背景子代理程式執行：
 
 ```ts
 const result = await api.runtime.subagent.run({
@@ -444,16 +469,16 @@ const result = await api.runtime.subagent.run({
 });
 ```
 
-注意事項：
+備註：
 
-- `provider` 和 `model` 是選用性的單次執行覆寫，而非永續的階段變更。
-- OpenClaw 僅針對受信任的呼叫者遵守那些覆寫欄位。
-- 對於外掛程式擁有的後援執行，操作員必須使用 `plugins.entries.<id>.subagent.allowModelOverride: true` 加入。
-- 使用 `plugins.entries.<id>.subagent.allowedModels` 將受信任的外掛程式限制在特定的正規 `provider/model` 目標，或使用 `"*"` 來明確允許任何目標。
-- 不受信任的外掛程式子代理程式執行仍然有效，但覆寫請求會被拒絕，而不是靜默後援。
-- 外掛程式建立的子代理程式階段會標註建立外掛程式的 ID。後援 `api.runtime.subagent.deleteSession(...)` 只能刪除那些擁有的階段；任意刪除階段仍需要具有管理員範圍的 Gateway 請求。
+- `provider` 和 `model` 是每次執行的選用覆寫，而非持續性的工作階段變更。
+- OpenClaw 僅對受信任的呼叫者遵守那些覆寫欄位。
+- 對於外掛擁有的後援執行，操作員必須使用 `plugins.entries.<id>.subagent.allowModelOverride: true` 來選擇加入。
+- 使用 `plugins.entries.<id>.subagent.allowedModels` 將受信任的外掛限制為特定的規範 `provider/model` 目標，或使用 `"*"` 來明確允許任何目標。
+- 不受信任的外掛子代理程式執行仍然有效，但覆寫請求會被拒絕，而不是靜默後援。
+- 外掛建立的子代理程式工作階段會標記建立外掛 ID。後援 `api.runtime.subagent.deleteSession(...)` 只能刪除那些擁有的工作階段；任意工作階段刪除仍需要管理員範圍的 Gateway 請求。
 
-對於網路搜尋，外掛程式可以使用共享執行時期輔助函式，而不是深入探討代理程式工具接線：
+對於網路搜尋，外掛可以使用共享執行時輔助程式，而不需要深入代理程式工具連線：
 
 ```ts
 const providers = api.runtime.webSearch.listProviders({
@@ -469,14 +494,13 @@ const result = await api.runtime.webSearch.search({
 });
 ```
 
-外掛程式也可以透過
-`api.registerWebSearchProvider(...)` 註冊網頁搜尋提供者。
+外掛也可以透過 `api.registerWebSearchProvider(...)` 註冊網路搜尋提供者。
 
-注意事項：
+備註：
 
-- 將提供者選擇、認證解析和共享請求語意保留在核心中。
-- 使用網路搜尋提供者進行供應商特定的搜尋傳輸。
-- `api.runtime.webSearch.*` 是需要搜尋行為而不依賴代理程式工具包裝器的功能/通道外掛程式的首選共用介面。
+- 將提供者選擇、憑證解析和共用請求語意保留在核心中。
+- 使用網路搜尋提供者進行廠商特定的搜尋傳輸。
+- `api.runtime.webSearch.*` 是需要搜尋行為而不依賴代理程式工具包裝函式的功能/通道外掛的首選共享介面。
 
 ### `api.runtime.imageGeneration`
 
@@ -491,12 +515,12 @@ const providers = api.runtime.imageGeneration.listProviders({
 });
 ```
 
-- `generate(...)`：使用設定的圖像生成提供者鏈結生成圖像。
+- `generate(...)`：使用設定的圖像生成提供者鏈產生圖像。
 - `listProviders(...)`：列出可用的圖像生成提供者及其功能。
 
 ## Gateway HTTP 路由
 
-外掛程式可以使用 `api.registerHttpRoute(...)` 公開 HTTP 端點。
+外掛程式可以使用 `api.registerHttpRoute(...)` 來公開 HTTP 端點。
 
 ```ts
 api.registerHttpRoute({
@@ -514,185 +538,178 @@ api.registerHttpRoute({
 路由欄位：
 
 - `path`：Gateway HTTP 伺服器下的路由路徑。
-- `auth`：必填。使用 `"gateway"` 要求正常的 Gateway 驗證，或使用 `"plugin"` 進行外掛程式管理的驗證/Webhook 驗證。
+- `auth`：必填。使用 `"gateway"` 要求標準 Gateway 驗證，或使用 `"plugin"` 進行外掛程式管理的驗證/Webhook 驗證。
 - `match`：選填。`"exact"` (預設) 或 `"prefix"`。
-- `replaceExisting`：選填。允許同一外掛程式替換其現有的路由註冊。
-- `handler`：當路由處理請求時傳回 `true`。
+- `replaceExisting`：選填。允許同一個外掛程式取代其既有的路由註冊。
+- `handler`：當路由處理了請求時，回傳 `true`。
 
 備註：
 
 - `api.registerHttpHandler(...)` 已移除，將會導致外掛程式載入錯誤。請改用 `api.registerHttpRoute(...)`。
 - 外掛程式路由必須明確宣告 `auth`。
-- 除非 `replaceExisting: true`，否則會拒絕確切的 `path + match` 衝突，並且一個外掛程式無法取代另一個外掛程式的路由。
-- 會拒絕具有不同 `auth` 層級的重疊路由。請將 `exact`/`prefix` 透傳鏈維持在相同的驗證層級上。
-- `auth: "plugin"` 路由**不會**自動接收操作員執行時範圍。它們是用於外掛程式管理的 webhook/簽章驗證，而不是特權 Gateway 輔助呼叫。
-- `auth: "gateway"` 路由在 Gateway 請求執行時範圍內執行，但該範圍是刻意保守的：
-  - 共用密碼 bearer auth (`gateway.auth.mode = "token"` / `"password"`) 會將外掛程式路由執行時範圍固定為 `operator.write`，即使呼叫端發送 `x-openclaw-scopes` 也一樣
-  - 可信載有身份的 HTTP 模式（例如私人 ingress 上的 `trusted-proxy` 或 `gateway.auth.mode = "none"`）僅在標頭明確存在時才會遵循 `x-openclaw-scopes`
-  - 如果這些載有身份的外掛程式路由請求中缺少 `x-openclaw-scopes`，執行時範圍會回退至 `operator.write`
-- 實用規則：不要假設 gateway-auth 外掛程式路由是隱含的管理員介面。如果您的路由需要僅限管理員的行為，請要求載有身份的驗證模式並記錄明確的 `x-openclaw-scopes` 標頭合約。
+- 除非設定 `replaceExisting: true`，否則會拒絕精確的 `path + match` 衝突，且一個外掛程式不能取代另一個外掛程式的路由。
+- 具有不同 `auth` 層級的重疊路由將會被拒絕。請將 `exact`/`prefix` 透傳鏈保持僅在同一個驗證層級。
+- `auth: "plugin"` 路由**不會**自動接收操作員執行時範圍。它們是用於外掛程式管理的 Webhook/簽章驗證，而非特權 Gateway 協助程式呼叫。
+- `auth: "gateway"` 路由在 Gateway 請求執行時範圍內運作，但該範圍是有意設為保守的：
+  - 共享金鑰 bearer 驗證 (`gateway.auth.mode = "token"` / `"password"`) 會將外掛程式路由執行時範圍鎖定為 `operator.write`，即使呼叫者發送了 `x-openclaw-scopes`
+  - 攜帶受信任識別的 HTTP 模式 (例如私人入口上的 `trusted-proxy` 或 `gateway.auth.mode = "none"`) 僅在標頭明確存在時才會遵守 `x-openclaw-scopes`
+  - 如果這些帶有身分的 plugin-route 請求中缺少 `x-openclaw-scopes`，執行時範圍會回退至 `operator.write`
+- 實用規則：不要假設 gateway-auth plugin route 是一個隱含的管理介面。如果您的路由需要僅限管理員的行為，請要求採用帶有身分的驗證模式，並記錄明確的 `x-openclaw-scopes` 標頭合約。
 
 ## Plugin SDK 匯入路徑
 
-在撰寫新外掛程式時，請使用狹窄的 SDK 子路徑，而不是單一整體的 `openclaw/plugin-sdk` 根 barrel。核心子路徑：
+在撰寫新插件時，請使用狹窄的 SDK 子路徑，而非單一的 `openclaw/plugin-sdk` 根桶。核心子路徑：
 
-| 子路徑                              | 用途                                             |
-| ----------------------------------- | ------------------------------------------------ |
-| `openclaw/plugin-sdk/plugin-entry`  | 外掛程式註冊原語                                 |
-| `openclaw/plugin-sdk/channel-core`  | 通道進入點/建置輔助程式                          |
-| `openclaw/plugin-sdk/core`          | 通用共享輔助程式和整合合約                       |
-| `openclaw/plugin-sdk/config-schema` | 根 `openclaw.json` Zod schema (`OpenClawSchema`) |
+| 子路徑                              | 用途                                           |
+| ----------------------------------- | ---------------------------------------------- |
+| `openclaw/plugin-sdk/plugin-entry`  | 插件註冊基元                                   |
+| `openclaw/plugin-sdk/channel-core`  | 通道入口/建置輔助程式                          |
+| `openclaw/plugin-sdk/core`          | 通用共享輔助程式與傘式合約                     |
+| `openclaw/plugin-sdk/config-schema` | 根 `openclaw.json` Zod 綱要 (`OpenClawSchema`) |
 
-通道外掛從一系列狹縫接口中進行選擇 — `channel-setup`、
-`setup-runtime`、`setup-adapter-runtime`、`setup-tools`、`channel-pairing`、
+通道插件從一組狹窄的縫隙中選擇 —— `channel-setup`、
+`setup-runtime`、`setup-tools`、`channel-pairing`、
 `channel-contract`、`channel-feedback`、`channel-inbound`、`channel-lifecycle`、
 `channel-reply-pipeline`、`command-auth`、`secret-input`、`webhook-ingress`、
-`channel-targets` 和 `channel-actions`。審批行為應整合
-到單一個 `approvalCapability` 契約中，而不是混合於不相關
-的外掛欄位之間。請參閱[通道外掛](/zh-Hant/plugins/sdk-channel-plugins)。
+`channel-targets` 和 `channel-actions`。核准行為應整合於單一 `approvalCapability` 合約，而非混雜於不相關的插件欄位之間。請參閱 [通道插件](/zh-Hant/plugins/sdk-channel-plugins)。
 
-執行時和配置輔助程式位於匹配的專注 `*-runtime` 子路徑下
-(`approval-runtime`、`agent-runtime`、`lazy-runtime`、`directory-runtime`、
-`text-runtime`、`runtime-store`、`system-event-runtime`、`heartbeat-runtime`、
-`channel-activity-runtime` 等)。建議優先使用 `config-types`、
-`plugin-config-runtime`、`runtime-config-snapshot` 和 `config-mutation`，
-而不是廣泛的 `config-runtime` 相容性桶檔。
+Runtime and config helpers live under matching focused `*-runtime` subpaths
+(`approval-runtime`, `agent-runtime`, `lazy-runtime`, `directory-runtime`,
+`text-runtime`, `runtime-store`, `system-event-runtime`, `heartbeat-runtime`,
+`channel-activity-runtime`, etc.). Prefer `config-contracts`,
+`plugin-config-runtime`, `runtime-config-snapshot`, and `config-mutation`
+instead of the broad `config-runtime` compatibility barrel.
 
-<Info>`openclaw/plugin-sdk/channel-runtime`、`openclaw/plugin-sdk/config-runtime` 和 `openclaw/plugin-sdk/infra-runtime` 是針對舊版外掛的已棄用相容性填充層 (shim)。 新程式碼應改為匯入更狹隘的通用基本型別。</Info>
+<Info>`openclaw/plugin-sdk/channel-runtime`, `openclaw/plugin-sdk/config-runtime`, and `openclaw/plugin-sdk/infra-runtime` are deprecated compatibility shims for older plugins. New code should import narrower generic primitives instead.</Info>
 
-Repo 內部進入點（針對每個打包的外掛套件根目錄）：
+Repo-internal entry points (per bundled plugin package root):
 
-- `index.js` — 捆綁外掛入口
-- `api.js` — 輔助/型別桶檔
-- `runtime-api.js` — 僅執行時桶檔
-- `setup-entry.js` — 設定外掛入口
+- `index.js` — bundled plugin entry
+- `api.js` — helper/types barrel
+- `runtime-api.js` — runtime-only barrel
+- `setup-entry.js` — setup plugin entry
 
-外部外掛應僅匯入 `openclaw/plugin-sdk/*` 子路徑。切勿
-從核心或其他外掛匯入另一個外掛套件的 `src/*`。
-外掛載入的入口點在存在時會優先使用作用中的執行時配置快照，
-然後再回退到磁碟上解析出的配置檔案。
+External plugins should only import `openclaw/plugin-sdk/*` subpaths. Never
+import another plugin package's `src/*` from core or from another plugin.
+Facade-loaded entry points prefer the active runtime config snapshot when one
+exists, then fall back to the resolved config file on disk.
 
-特定功能的子路徑，例如 `image-generation`、`media-understanding`
-和 `speech` 之所以存在，是因為打包外掛程式目前會使用它們。它們並
-不會自動成為長期凍結的外部合約——依賴它們時請查看相關的 SDK
-參考頁面。
+Capability-specific subpaths such as `image-generation`, `media-understanding`,
+and `speech` exist because bundled plugins use them today. They are not
+automatically long-term frozen external contracts — check the relevant SDK
+reference page when relying on them.
 
-## 訊息工具架構
+## Message tool schemas
 
-外掛程式應擁有特定頻道的 `describeMessageTool(...)` 結構描述貢獻，
-用於反應、已讀和投票等非訊息原語。共用的傳送呈現應使用通用 `MessagePresentation` 合約，
-而不是提供者原生的按鈕、元件、區塊或卡片欄位。
-請參閱 [訊息呈現](/zh-Hant/plugins/message-presentation) 以了解合約、
-後援規則、提供者對應以及外掛程式作者檢查清單。
+外掛程式應擁有針對非訊息基本類型（例如反應、已讀和投票）的特定頻道 `describeMessageTool(...)` 結構描述貢獻。共享傳送展示應使用通用的 `MessagePresentation` 合約，而不是提供者原生的按鈕、元件、區塊或卡片欄位。請參閱 [訊息展示](/zh-Hant/plugins/message-presentation) 以了解合約、後援規則、提供者對應以及外掛程式作者檢查清單。
 
-具備傳送功能的外掛會透過訊息功能宣告其可呈現的內容：
+具備傳送功能的外掛程式透過訊息能力宣告它們可以呈現的內容：
 
-- `presentation` 用於語意呈現區塊 (`text`、`context`、`divider`、`buttons`、`select`)
-- `delivery-pin` 用於釘選傳遞請求
+- `presentation` 用於語意展示區塊 (`text`, `context`, `divider`, `buttons`, `select`)
+- `delivery-pin` 用於固定傳送請求
 
-核心會決定是以原生方式呈現呈現內容還是將其降級為文字。請勿從通用訊息工具暴露供應商原生 UI 逃逸方法。針對舊版原生架構的已棄用 SDK 輔助程式仍會匯出，以供現有的第三方外掛使用，但新外掛不應使用它們。
+核心決定是原生呈現展示還是將其降級為文字。請勿從通用訊息工具中公開提供者原生的 UI 逃生艙。針對舊版原生結構描述的已棄用 SDK 輔助程式仍會為現有的第三方外掛程式匯出，但新外掛程式不應使用它們。
 
 ## 頻道目標解析
 
-頻道外掛應擁有特定於頻道的目標語意。保持共享的
-輸出主機通用，並使用訊息配接器介面作為提供者規則：
+頻道外掛程式應擁有特定頻道的目標語意。保持共享輸出主機通用，並使用訊息介面卡層來處理提供者規則：
 
-- `messaging.inferTargetChatType({ to })` 決定在目錄查閱之前，是否應將正規化目標
-  視為 `direct`、`group` 或 `channel`。
-- `messaging.targetResolver.looksLikeId(raw, normalized)` 告訴核心輸入是否應
-  跳過目錄搜尋直接進行類似 ID 的解析。
-- 當核心在正規化或目錄未命中後需要最終的提供者擁有解析時，
-  `messaging.targetResolver.resolveTarget(...)` 是外掛程式的後援機制。
-- 一旦目標解析完成，`messaging.resolveOutboundSessionRoute(...)` 負責
-  特定提供者的會話路由建構。
+- `messaging.inferTargetChatType({ to })` 決定在目錄查閱之前，是否應將標準化目標視為 `direct`、`group` 或 `channel`。
+- `messaging.targetResolver.looksLikeId(raw, normalized)` 告訴核心輸入是否應跳過目錄搜尋，直接進行類似 ID 的解析。
+- `messaging.targetResolver.resolveTarget(...)` 是當核心在標準化或目錄未命中後需要最終的提供者擁有解析時的外掛程式後援方案。
+- `messaging.resolveOutboundSessionRoute(...)` 在目標解析後，擁有特定提供者的會話路由建構。
 
-建議的分割方式：
+建議的分工：
 
-- 對於在搜尋同層/群組之前應該發生的類別決策，請使用 `inferTargetChatType`。
-- 對於「將此視為明確/原生目標 ID」的檢查，請使用 `looksLikeId`。
-- 請將 `resolveTarget` 用於特定提供者的正規化後援，
-  而非用於廣泛的目錄搜尋。
-- 請將聊天 ID、執行緒 ID、JID、Handle 和 房間
-  ID 等提供者原生 ID 保留在 `target` 值或特定提供者的參數中，
-  不要放在通用 SDK 欄位中。
+- 使用 `inferTargetChatType` 來進行在搜尋對等/群組之前應發生的類別決策。
+- 使用 `looksLikeId` 進行「將此視為明確/原生目標 ID」的檢查。
+- 將 `resolveTarget` 用於供應商特定的正規化後備機制，而不是用於
+  廣泛的目錄搜尋。
+- 將供應商原生 ID（例如聊天 ID、執行緒 ID、JID、代號和房間
+  ID）保留在 `target` 值或供應商特定的參數中，而不是放在通用的 SDK
+  欄位中。
 
 ## 設定支援的目錄
 
-從設定衍生目錄條目的外掛程式應將該邏輯保留在外掛程式中，並重複使用來自 `openclaw/plugin-sdk/directory-runtime` 的共用輔助程式。
+從設定衍生目錄條目的外掛程式應將該邏輯保留在外掛程式中，並重複使用來自
+`openclaw/plugin-sdk/directory-runtime` 的共用輔助程式。
 
-當頻道需要設定支援的對等/群組時使用此功能，例如：
+當通道需要設定支援的對等/群組時使用此功能，例如：
 
-- 允許清單驅動的 DM 對等
-- 已設定的頻道/群組對應
-- 帳號範圍的靜態目錄後備
+- 由允許清單驅動的 DM 對等
+- 已設定的通道/群組對應
+- 帳戶範圍的靜態目錄後備機制
 
-`directory-runtime` 中的共用輔助程式僅處理一般操作：
+`directory-runtime` 中的共用輔助程式僅處理通用操作：
 
 - 查詢篩選
 - 限制套用
 - 重複資料刪除/正規化輔助程式
-- 建置 `ChannelDirectoryEntry[]`
+- 建構 `ChannelDirectoryEntry[]`
 
-特定於頻道的帳號檢查和 ID 正規化應保留在外掛實作中。
+通道特定的帳戶檢查和 ID 正規化應保留在外掛程式實作中。
 
-## 提供者目錄
+## 供應商型錄
 
-提供者外掛程式可以使用 `registerProvider({ catalog: { run(...) { ... } } })` 定義用於推斷的模型目錄。
+供應商外掛程式可以使用 `registerProvider({ catalog: { run(...) { ... } } })` 定義用於推斷的模型型錄。
 
 `catalog.run(...)` 會傳回與 OpenClaw 寫入 `models.providers` 相同的形狀：
 
-- 用於單一提供者條目的 `{ provider }`
-- 用於多個提供者條目的 `{ providers }`
+- 用於一個供應商條目的 `{ provider }`
+- 用於多個供應商條目的 `{ providers }`
 
-當外掛程式擁有提供者特定的模型 ID、基底 URL 預設值，或需要驗證的模型中繼資料時，請使用 `catalog`。
+當外掛程式擁有供應商特定的模型 ID、基礎 URL
+預設值或授權閘道的模型中繼資料時，請使用 `catalog`。
 
-`catalog.order` 控制外掛程式的目錄相對於 OpenClaw 內建隱含提供者的合併時機：
+`catalog.order` 控制外掛程式的型錄相對於 OpenClaw
+內建隱含供應商的合併時機：
 
-- `simple`：純 API 金鑰或環境變數驅動的提供者
-- `profile`：當存在驗證設定檔時出現的提供者
-- `paired`：綜合多個相關提供者條目的提供者
-- `late`：最後一輪，在其他隱含提供者之後
+- `simple`：單純的 API 金鑰或環境變數驅動的供應商
+- `profile`：當授權設定檔存在時出現的供應商
+- `paired`：合成多個相關供應商條目的供應商
+- `late`：最後一輪，在其他隱含供應商之後
 
-後續的提供者在鍵值衝突中勝出，因此外掛可以故意用相同的提供者 ID 覆蓋內建的提供者條目。
+後續的供應商在金鑰衝突時獲勝，因此外掛程式可以故意使用相同的供應商 ID 覆蓋
+內建的供應商條目。
 
-外掛程式也可以透過 `api.registerModelCatalogProvider({ provider, kinds, staticCatalog, liveCatalog })` 發布唯讀模型資料列。這是清單/說明/選擇器介面的正向路徑，並支援 `text`、`image_generation`、`video_generation` 和 `music_generation` 資料列。
-提供者外掛程式仍擁有即時端點呼叫、權杖交換和廠商回應對應；核心則擁有通用資料列形狀、來源標籤和媒體工具說明格式。媒體產生提供者註冊會自動從 `defaultModel`、`models` 和 `capabilities` 綜合靜態目錄資料列。
+外掛程式也可以透過 `api.registerModelCatalogProvider({ provider, kinds, staticCatalog, liveCatalog
+})` 發布唯讀模型資料列。這是清單/說明/選擇器介面的正向路徑，並支援 `text`、`image_generation`、`video_generation` 和 `music_generation` 資料列。
+提供者外掛程式仍然擁有即時端點呼叫、權杖交換和供應商回應映射；核心擁有通用資料列形狀、來源標籤和媒體工具說明格式。媒體生成提供者註冊會自動從 `defaultModel`、`models` 和 `capabilities` 合成靜態目錄資料列。
 
 相容性：
 
-- `discovery` 仍可作為舊版別名使用，但會發出棄用警告
-- 如果同時註冊了 `catalog` 和 `discovery`，OpenClaw 將使用 `catalog`
-- `augmentModelCatalog` 已棄用；打包的提供者應透過 `registerModelCatalogProvider` 發布補充行
+- `discovery` 仍作為傳統別名使用，但會發出棄用警告
+- 如果同時註冊了 `catalog` 和 `discovery`，OpenClaw 會使用 `catalog`
+- `augmentModelCatalog` 已棄用；捆綁的提供者應透過 `registerModelCatalogProvider` 發布補充資料列
 
 ## 唯讀通道檢查
 
-如果您的外掛註冊了一個通道，建議在實作 `resolveAccount(...)` 的同時實作 `plugin.config.inspectAccount(cfg, accountId)`。
+如果您的外掛程式註冊了通道，建議與 `resolveAccount(...)` 一起實作 `plugin.config.inspectAccount(cfg, accountId)`。
 
 原因：
 
-- `resolveAccount(...)` 是執行時期路徑。它可以假定憑證已完全具體化，並在缺少必要的機密時快速失敗。
+- `resolveAccount(...)` 是執行時期路徑。它可以假設憑證已完全具體化，並在缺少所需秘密時快速失敗。
 - 諸如 `openclaw status`、`openclaw status --all`、
-  `openclaw channels status`、`openclaw channels resolve` 以及 doctor/config
-  修復流程等唯讀指令路徑，不應僅為了描述設定就將執行時期憑證具體化。
+  `openclaw channels status`、`openclaw channels resolve` 和 doctor/config
+  修復流程等唯讀指令路徑，不應僅為了描述設定而具體化執行時期憑證。
 
 建議的 `inspectAccount(...)` 行為：
 
-- 僅返回描述性的帳戶狀態。
+- 僅傳回描述性帳戶狀態。
 - 保留 `enabled` 和 `configured`。
 - 在相關時包含憑證來源/狀態欄位，例如：
   - `tokenSource`、`tokenStatus`
   - `botTokenSource`、`botTokenStatus`
   - `appTokenSource`、`appTokenStatus`
-  - `signingSecretSource`、`signingSecretStatus`
-- 您不需要僅為了報告唯讀可用性而返回原始權杖值。返回 `tokenStatus: "available"`（以及相符的來源
-  欄位）對於狀態類型的指令來說就足夠了。
-- 當憑證透過 SecretRef 設定但在目前指令路徑中無法使用時，請使用 `configured_unavailable`。
+  - `signingSecretSource`, `signingSecretStatus`
+- 您不需要僅為了報告唯讀可用性而返回原始權杖值。返回 `tokenStatus: "available"`（以及相符的來源欄位）對於狀態式指令已足夠。
+- 當憑證是透過 SecretRef 設定但在目前的指令路徑中無法使用時，請使用 `configured_unavailable`。
 
-這讓唯讀指令能夠回報「已設定但在目前指令路徑中無法使用」，而不是崩潰或錯誤地將帳戶回報為未設定。
+這讓唯讀指令能回報「已設定但在本指令路徑中無法使用」，而不是當機或將帳戶誤報為未設定。
 
-## 套件包 (Package packs)
+## 套件包
 
-外掛目錄可以包含一個帶有 `openclaw.extensions` 的 `package.json`：
+外掛程式目錄可能包含一個含有 `openclaw.extensions` 的 `package.json`：
 
 ```json
 {
@@ -704,40 +721,37 @@ Repo 內部進入點（針對每個打包的外掛套件根目錄）：
 }
 ```
 
-每個條目都會成為一個外掛。如果該包列出了多個擴充功能，外掛 ID 會變成 `name/<fileBase>`。
+每個條目都會成為一個外掛程式。如果套件包列出多個擴充功能，外掛程式 ID 會變成 `name/<fileBase>`。
 
-如果您的外掛匯入了 npm 相依項，請將它們安裝在該目錄中，以便 `node_modules` 可用 (`npm install` / `pnpm install`)。
+如果您的外掛程式匯入 npm 相依性，請將其安裝在該目錄中，以便 `node_modules` 可用（`npm install` / `pnpm install`）。
 
-安全防護：每個 `openclaw.extensions` 項目在解析符號連結後必須保持在 plugin 目錄內。逃離套件目錄的項目會被拒絕。
+安全防護：解析符號連結後，每個 `openclaw.extensions` 條目都必須保留在外掛程式目錄內。超出套件目錄的條目將會被拒絕。
 
-安全說明：`openclaw plugins install` 會使用專案本地的 `npm install --omit=dev --ignore-scripts` 來安裝外掛相依性（無生命週期腳本，執行時期無開發相依性），並忽略繼承的全域 npm 安裝設定。請保持外掛相依性樹為「純 JS/TS」，並避免需要 `postinstall` 建置的套件。
+安全說明：`openclaw plugins install` 會使用專本地的 `npm install --omit=dev --ignore-scripts`（無生命週期腳本、執行時期無 dev 相依性）來安裝外掛程式相依性，忽略繼承的全域 npm 安裝設定。請保持外掛程式相依性樹為「純 JS/TS」，並避免需要 `postinstall` 建置的套件。
 
-選用：`openclaw.setupEntry` 可以指向一個輕量級的僅設定模組。當 OpenClaw 需要已停用通道外掛的設定介面，或是當通道外掛已啟用但尚未設定時，它會載入 `setupEntry` 而非完整的外掛進入點。當您的主要外掛進入點也連接了工具、掛勾或其他僅執行時期的程式碼時，這能讓啟動和設定更輕量。
+選用：`openclaw.setupEntry` 可以指向一個輕量的僅設定模組。當 OpenClaw 需要已停用通道外掛程式的設定介面，或者當通道外掛程式已啟用但尚未設定時，它會載入 `setupEntry` 而非完整的外掛程式進入點。這能在您的主要外掛程式進入點同時連接工具、掛鉤或其他僅執行時期程式碼時，保持啟動和設定的輕量化。
 
-選用：`openclaw.startup.deferConfiguredChannelFullLoadUntilAfterListen`
-可以讓通道外掛在閘道的預監聽啟動階段選擇進入相同的 `setupEntry` 路徑，即使該通道已經設定過也是如此。
+選用：`openclaw.startup.deferConfiguredChannelFullLoadUntilAfterListen` 可以讓通道外掛程式在閘道的預先監聽啟動階段，選擇加入相同的 `setupEntry` 路徑，即使通道已經設定過。
 
-僅當 `setupEntry` 完整涵蓋了閘道開始監聽前必須存在的啟動介面時，才使用此選項。實務上，這意味著設定進入點必須註冊啟動所依賴的每一個通道擁有的功能，例如：
+僅當 `setupEntry` 完全涵蓋了 Gateway 開始監聽之前必須存在的啟動表面時，才使用此功能。實際上，這意味著 setup entry 必須註冊啟動所依賴的每一個 channel 所有的 capability，例如：
 
-- 通道註冊本身
-- 任何在閘道開始監聽前必須可用的 HTTP 路由
-- 任何在同一個時間視窗內必須存在的閘道方法、工具或服務
+- channel 註冊本身
+- 任何在 Gateway 開始監聽之前必須可用的 HTTP 路由
+- 任何在同一時間視窗內必須存在的 gateway 方法、工具或服務
 
-如果您的完整進入點仍然擁有任何必要的啟動功能，請勿啟用此旗標。請讓外掛保持預設行為，並讓 OpenClaw 在啟動期間載入完整進入點。
+如果您的完整 entry 仍然擁有任何啟動所需的 capability，請不要啟用此標誌。請保持插件的預設行為，並讓 OpenClaw 在啟動期間加載完整的 entry。
 
-捆綁的通道也可以發布僅設定的合約介面輔助程式，讓核心在載入完整通道執行時期之前進行查詢。目前的設定推廣介面為：
+捆綁的 channel 也可以發布僅用於設定的契約表面輔助工具，core 可以在加載完整的 channel 運行時之前查詢這些工具。目前的設定升級表面包括：
 
 - `singleAccountKeysToMove`
 - `namedAccountPromotionKeys`
 - `resolveSingleAccountPromotionTarget(...)`
 
-當 Core 需要將舊版單一帳號通道設定提升為 `channels.<id>.accounts.*` 而不載入完整外掛程式條目時，會使用該介面。Matrix 是目前的內建範例：當具名帳號已存在時，它只會將驗證/啟動金鑰移至具名的提升帳號，並且可以保留已設定的非正式 default-account 金鑰，而不是總是建立 `accounts.default`。
+當 Core 需要將舊版單一帳戶 channel 配置升級為 `channels.<id>.accounts.*` 而不加載完整的 plugin entry 時，會使用該表面。Matrix 是目前捆綁的範例：當已存在命名帳戶時，它僅將 auth/bootstrap 金鑰移動到命名的升級帳戶中，並且它可以保留配置的非規範 default-account 金鑰，而不是總是建立 `accounts.default`。
 
-這些設定修補介面卡讓內建合約介面探索保持延遲。匯入時間保持輕量；提升介面僅在首次使用時載入，而不是在模組匯入時重新進入內建通道啟動程序。
+那些設定修補適配器保持捆綁契約表面發現的延遲加載。導入時間保持輕量；升級表面僅在首次使用時加載，而不是在模組導入時重新進入捆綁 channel 啟動。
 
-當那些啟動介面包含 Gateway RPC 方法時，請將其保留在特定於外掛的前綴上。核心管理命名空間（`config.*`、
-`exec.approvals.*`、`wizard.*`、`update.*`）保持保留狀態，且總是解析為
-`operator.admin`，即使外掛請求了更窄的範圍也一樣。
+當這些啟動表面包含 gateway RPC 方法時，請將它們保留在特定於插件的前綴上。Core 管理命名空間（`config.*`、`exec.approvals.*`、`wizard.*`、`update.*`）仍然被保留，並且始終解析為 `operator.admin`，即使插件請求了更窄的範圍。
 
 範例：
 
@@ -754,10 +768,9 @@ Repo 內部進入點（針對每個打包的外掛套件根目錄）：
 }
 ```
 
-### Channel 目錄元資料
+### Channel 目錄元數據
 
-Channel 外掛可以透過 `openclaw.channel` 宣告設定/探索元資料，並透過
-`openclaw.install` 提供安裝提示。這讓核心目錄保持無資料狀態。
+Channel 插件可以透過 `openclaw.channel` 宣傳設定/發現元數據，並透過 `openclaw.install` 提供安裝提示。這使核心目錄保持無數據狀態。
 
 範例：
 
@@ -785,49 +798,38 @@ Channel 外掛可以透過 `openclaw.channel` 宣告設定/探索元資料，並
 }
 ```
 
-除了最小範例外，還有其他實用的 `openclaw.channel` 欄位：
+除了最小範例外，還有有用的 `openclaw.channel` 欄位：
 
 - `detailLabel`：用於更豐富的目錄/狀態介面的次要標籤
 - `docsLabel`：覆寫文件連結的連結文字
-- `preferOver`：此目錄項應排名高於的較低優先級外掛/頻道 ID
-- `selectionDocsPrefix`、`selectionDocsOmitLabel`、`selectionExtras`：選取介面複製控制項
-- `markdownCapable`：將頻道標記為支援 Markdown，以供輸出格式設定使用
-- `exposure.configured`：當設定為 `false` 時，在已設定頻道的列表介面中隱藏該頻道
-- `exposure.setup`：當設定為 `false` 時，在互動式設定/配置選取器中隱藏該頻道
-- `exposure.docs`：將頻道標記為內部/私有，僅用於文件導航介面
+- `preferOver`：此目錄項目應排名較高的優先級較低的插件/頻道 ID
+- `selectionDocsPrefix`、`selectionDocsOmitLabel`、`selectionExtras`：選取介面的複製控制
+- `markdownCapable`：將頻道標記為支援 Markdown，以便進行輸出格式化決策
+- `exposure.configured`：當設為 `false` 時，在已設定頻道的列舉介面中隱藏該頻道
+- `exposure.setup`：當設為 `false` 時，在互動式設定/配置選擇器中隱藏該頻道
+- `exposure.docs`：將頻道標記為內部/私人，僅用於文件導覽介面
 - `showConfigured` / `showInSetup`：為相容性仍接受的舊版別名；建議使用 `exposure`
-- `quickstartAllowFrom`：將管道選入標準快速啟動 `allowFrom` 流程
+- `quickstartAllowFrom`：讓頻道加入標準快速入門 `allowFrom` 流程
 - `forceAccountBinding`：即使僅存在一個帳戶，也要求明確的帳戶綁定
-- `preferSessionLookupForAnnounceTarget`：在解析 announce 目標時優先使用會話查找
+- `preferSessionLookupForAnnounceTarget`：在解析公告目標時，優先使用工作階段查詢
 
-OpenClaw 也可以合併**外部管道目錄**（例如，MPM 註冊表匯出）。將 JSON 檔案放置於以下任一路徑：
+OpenClaw 也可以合併 **外部頻道目錄**（例如 MPM 登錄檔匯出）。請將 JSON 檔案置於以下任一路徑：
 
 - `~/.openclaw/mpm/plugins.json`
 - `~/.openclaw/mpm/catalog.json`
 - `~/.openclaw/plugins/catalog.json`
 
-或者將 `OPENCLAW_PLUGIN_CATALOG_PATHS`（或 `OPENCLAW_MPM_CATALOG_PATHS`）指向一或多個 JSON 檔案（以逗號、分號或 `PATH` 分隔）。每個檔案應包含 `{ "entries": [ { "name": "@scope/pkg", "openclaw": { "channel": {...}, "install": {...} } } ] }`。解析器也接受 `"packages"` 或 `"plugins"` 作為 `"entries"` 鍵的舊版別名。
+或者將 `OPENCLAW_PLUGIN_CATALOG_PATHS`（或 `OPENCLAW_MPM_CATALOG_PATHS`）指向一或多個 JSON 檔案（以逗號/分號/`PATH` 分隔）。每個檔案應包含 `{ "entries": [ { "name": "@scope/pkg", "openclaw": { "channel": {...}, "install": {...} } } ] }`。解析器也接受 `"packages"` 或 `"plugins"` 作為 `"entries"` 鍵的舊版別名。
 
-產生的通道目錄條目和提供者安裝目錄條目會在原始 `openclaw.install` 區塊旁公開標準化的安裝來源事實。標準化事實會識別 npm 規格是確切版本還是浮動選擇器、是否存在預期的完整性元數據，以及是否有本機來源路徑可用。當目錄/套件身分已知時，如果解析出的 npm 套件名稱與該身分不一致，標準化事實會發出警告。當 `defaultChoice` 無效或指向不可用的來源，以及當存在 npm 完整性元數據卻沒有有效的 npm 來源時，它們也會發出警告。消費者應將 `installSource` 視為加選的選用欄位，因此手動建置的條目和目錄填充層（shims）不必合成它。這讓上架和診斷功能能夠解釋來源平面狀態，而無需匯入外掛執行時。
+生成的通道目錄條目和提供者安裝目錄條目會在原始 `openclaw.install` 區塊旁邊公開標準化的安裝來源事實。標準化事務會識別 npm 規範是精確版本還是浮動選擇器、是否存在預期的完整性元數據，以及是否也有本機來源路徑可用。當目錄/套件身分已知時，如果解析出的 npm 套件名稱偏離了該身分，標準化事務會發出警告。當 `defaultChoice` 無效或指向不可用的來源時，以及當存在 npm 完整性元數據卻沒有有效的 npm 來源時，它們也會發出警告。消費者應將 `installSource` 視為一個額外的可選欄位，因此手動建構的條目和目錄填充層不必合成它。這使得上架和診斷能夠說明來源層面的狀態，而無需匯入外掛程式執行時。
 
-官方的 npm 外部條目應優先使用精確的 `npmSpec` 加上
-`expectedIntegrity`。為了相容性，純套件名稱和發行標籤仍然有效，
-但它們會顯示原始層級的警告，以便目錄能夠在不破壞現有外掛的情況下
-邁向鎖定且經過完整性檢查的安裝。當從本地目錄路徑載入安裝時，它會記錄一個受管理外掛
-的外掛索引條目，其中包含 `source: "path"` 和工作區相對的
-`sourcePath`（如果可能）。絕對的操作載入路徑保留在
-`plugins.load.paths` 中；安裝記錄避免將本地工作站路徑
-重複到長期配置中。這讓本地開發安裝對原始層級診斷可見，而不增加
-第二個原始檔案系統路徑的洩露面。已儲存的 `plugins/installs.json` 外掛索引是安裝
-的單一真實來源，且可以在不載入外掛執行時模組的情況下重新整理。
-其 `installRecords` 對映即使在外掛清單遺失或無效時
-也是持久的；其 `plugins` 陣列則是可重建的清單視圖。
+官方的外部 npm 條目應偏好使用精確的 `npmSpec` 加上 `expectedIntegrity`。雖然純套件名稱和發行版本標籤為了相容性仍然有效，但會顯示來源層面的警告，以便目錄能夠在不破壞現有外掛程式的情況下，朝向釘選且經過完整性檢查的安裝邁進。當從本機目錄路徑上架安裝時，它會記錄一個受管理的外掛程式外掛程式索引條目，其中包含 `source: "path"` 以及盡可能包含工作區相對的 `sourcePath`。絕對的作業負載路徑保留在 `plugins.load.paths` 中；安裝記錄可避免將本機工作站路徑重複複製到長期儲存的設定中。這讓本機開發安裝對來源層面診斷可見，而不會新增第二個原始檔案系統路徑的洩露表面。持久化的 `plugins/installs.json` 外掛程式索引是安裝的來源事實，並且可以在不載入外掛程式執行時模組的情況下重新整理。其 `installRecords` 對映即使在缺少或無效的外掛程式清單時也是持久的；其 `plugins` 陣列則是一個可重建的清單檢視。
 
-## 內容引擎外掛
+## Context engine plugins
 
-Context engine plugins 擁有針對攝取、組裝和壓縮的會話上下文編排功能。請使用 `api.registerContextEngine(id, factory)` 從您的插件中註冊它們，然後使用 `plugins.slots.contextEngine` 選擇活動引擎。
+Context engine plugins 擁有用於攝取、組裝和壓縮的 session context 編排功能。從您的 plugin 使用 `api.registerContextEngine(id, factory)` 註冊它們，然後使用 `plugins.slots.contextEngine` 選擇啟用的引擎。
 
-當您的插件需要取代或擴充預設的內容流水線，而不僅僅是新增記憶體搜尋或掛鉤時，請使用此功能。
+當您的 plugin 需要取代或擴充預設的 context pipeline，而不僅僅是新增記憶體搜尋或 hooks 時，請使用此功能。
 
 ```ts
 import { buildMemorySystemPromptAddition } from "openclaw/plugin-sdk/core";
@@ -855,9 +857,9 @@ export default function (api) {
 }
 ```
 
-工廠 `ctx` 公開了用於建構時初始化的可選 `config`、`agentDir` 和 `workspaceDir` 值。
+工廠 `ctx` 公開了可選的 `config`、`agentDir` 和 `workspaceDir` 值，用於建構時初始化。
 
-如果您的引擎**不**擁有壓縮演算法，請保持 `compact()` 已實作並明確地委派它：
+如果您的引擎**不**擁有壓縮演算法，請保持 `compact()` 的實作並明確地委派它：
 
 ```ts
 import { buildMemorySystemPromptAddition, delegateCompactionToRuntime } from "openclaw/plugin-sdk/core";
@@ -891,38 +893,37 @@ export default function (api) {
 
 ## 新增新功能
 
-當插件需要不符合目前 API 的行為時，請使用私有的存取方式繞過插件系統。請新增缺失的功能。
+當 plugin 需要不符合目前 API 的行為時，不要使用私有的 reach-in 繞過 plugin 系統。請新增缺失的功能。
 
 建議順序：
 
-1. 定義核心合約
-   決定核心應擁有哪些共享行為：原則、後備、配置合併、
-   生命週期、面向通道的語意以及執行時輔助程式形狀。
-2. 新增型別化的外掛程式註冊/執行時介面
-   以最小的實用型別化功能介面擴充 `OpenClawPluginApi` 和/或 `api.runtime`。
-3. 連接核心 + 頻道/功能消費者
-   頻道和功能外掛程式應透過核心來使用新功能，而不是直接匯入供應商實作。
+1. 定義核心契約
+   決定 core 應該擁有哪些共享行為：原則、後援、設定合併、生命週期、面向通道的語意，以及 runtime helper 形狀。
+2. 新增型別化的 plugin 註冊 / runtime 介面
+   使用最小且有用的型別化功能介面來擴充 `OpenClawPluginApi` 和/或 `api.runtime`。
+3. 連接 core + 通道/功能消費者
+   通道和功能 plugin 應該透過 core 來使用新功能，而不是直接匯入供應商的實作。
 4. 註冊供應商實作
-   供應商外掛程式隨後針對該功能註冊其後端。
-5. 新增合約覆蓋範圍
-   新增測試，讓所有權和註冊結構隨時間保持明確。
+   然後，供應商 plugin 會針對該功能註冊其後端。
+5. 新增契約覆蓋範圍
+   新增測試，以便擁有權和註冊形狀隨著時間保持明確。
 
-這就是 OpenClaw 如何在不硬編碼單一供應商世界觀的情況下保持主見。請參閱 [Capability Cookbook](/zh-Hant/tools/capability-cookbook) 以取得具體的檔案檢查清單和實作範例。
+這就是 OpenClaw 如何在不變成硬編碼至單一供應商世界觀的情況下保持主見的方法。請參閱 [Capability Cookbook](/zh-Hant/tools/capability-cookbook) 以取得具體的檔案檢查清單和實作範例。
 
 ### 功能檢查清單
 
-當您新增功能時，實作通常應同時觸及這些介面：
+當您新增新功能時，實作通常應該同時接觸這些介面：
 
-- `src/<capability>/types.ts` 中的核心合約型別
-- `src/<capability>/runtime.ts` 中的核心執行器/執行時輔助程式
-- `src/plugins/types.ts` 中的外掛程式 API 註冊介面
-- `src/plugins/registry.ts` 中的外掛程式註冊表連線
-- 當功能/頻道外掛程式需要使用它時，在 `src/plugins/runtime/*` 中公開外掛程式執行時
+- `src/<capability>/types.ts` 中的核心契約型別
+- `src/<capability>/runtime.ts` 中的核心執行器/runtime helper
+- `src/plugins/types.ts` 中的 plugin API 註冊介面
+- `src/plugins/registry.ts` 中的 plugin registry 連接
+- 當功能/通道插件需要使用時，在 `src/plugins/runtime/*` 中暴露插件執行時
 - `src/test-utils/plugin-registration.ts` 中的捕獲/測試輔助程式
-- `src/plugins/contracts/registry.ts` 中的所有權/合約斷言
-- `docs/` 中的操作員/外掛程式文件
+- `src/plugins/contracts/registry.ts` 中的擁有權/契約斷言
+- `docs/` 中的操作員/插件文件
 
-如果缺少其中一個介面，通常表示該功能尚未完全整合。
+如果缺少其中任何一個介面，這通常表示該功能尚未完全整合。
 
 ### 功能範本
 
@@ -952,22 +953,22 @@ const clip = await api.runtime.videoGeneration.generate({
 });
 ```
 
-合約測試模式：
+契約測試模式：
 
 ```ts
 expect(findVideoGenerationProviderIdsForPlugin("openai")).toEqual(["openai"]);
 ```
 
-這讓規則保持簡單：
+這樣可以保持規則簡單：
 
-- 核心擁有功能合約 + 協調流程
-- 供應商外掛程式擁有供應商實作
-- 功能/頻道外掛程式使用執行時輔助程式
-- 合約測試保持所有權明確
+- 核心擁有功能契約和編排
+- 供應商插件擁有供應商實作
+- 功能/通道插件使用執行時輔助程式
+- 契約測試使擁有權明確化
 
 ## 相關
 
-- [Plugin architecture](/zh-Hant/plugins/architecture) — 公開功能模型和結構
+- [Plugin architecture](/zh-Hant/plugins/architecture) — 公開功能模型和形狀
 - [Plugin SDK subpaths](/zh-Hant/plugins/sdk-subpaths)
 - [Plugin SDK setup](/zh-Hant/plugins/sdk-setup)
 - [Building plugins](/zh-Hant/plugins/building-plugins)

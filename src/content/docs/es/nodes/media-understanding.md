@@ -186,13 +186,13 @@ Si `tools.media.<capability>.enabled` **no** está establecido en `false` y no h
     `gemini` usando `read_many_files`.
   </Step>
   <Step title="Autenticación del proveedor">
-    - Se intentan primero las entradas de configuración `models.providers.*` configuradas que admitan la capacidad antes que el orden de respaldo incluido.
-    - Los proveedores de configuración solo de imágenes con un modelo capaz de procesar imágenes se registran automáticamente para la comprensión de medios incluso cuando no son un complemento de proveedor incluido.
+    - Se intentan las entradas `models.providers.*` configuradas que admitan la capacidad antes que el orden de reserva integrado.
+    - Los proveedores de configuración solo de imagen con un modelo con capacidad de imagen se registran automáticamente para la comprensión de medios, incluso si no son un complemento de proveedor integrado.
     - La comprensión de imágenes de Ollama está disponible cuando se selecciona explícitamente, por ejemplo a través de `agents.defaults.imageModel` o `openclaw infer image describe --model ollama/<vision-model>`.
 
-    Orden de respaldo incluido:
+    Orden de reserva integrado:
 
-    - Audio: OpenAI → Groq → xAI → Deepgram → Google → SenseAudio → ElevenLabs → Mistral
+    - Audio: OpenAI → Groq → xAI → Deepgram → OpenRouter → Google → SenseAudio → ElevenLabs → Mistral
     - Imagen: OpenAI → Anthropic → Google → MiniMax → MiniMax Portal → Z.AI
     - Video: Google → Qwen → Moonshot
 
@@ -235,7 +235,7 @@ Si configura `capabilities`, la entrada solo se ejecuta para esos tipos de medio
 - `openai`, `anthropic`, `minimax`: **imagen**
 - `minimax-portal`: **imagen**
 - `moonshot`: **imagen + video**
-- `openrouter`: **imagen**
+- `openrouter`: **imagen + audio**
 - `google` (API de Gemini): **imagen + audio + video**
 - `qwen`: **imagen + video**
 - `mistral`: **audio**
@@ -252,7 +252,7 @@ Para las entradas de CLI, **establezca `capabilities` explícitamente** para evi
 | Capacidad | Integración de proveedor                                                                                                                 | Notas                                                                                                                                                                                                                                                                                                                                                    |
 | --------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Imagen    | OpenAI, OpenAI Codex OAuth, Codex app-server, OpenRouter, Anthropic, Google, MiniMax, Moonshot, Qwen, Z.AI, proveedores de configuración | Los complementos del proveedor registran el soporte de imágenes; `openai-codex/*` utiliza la infraestructura del proveedor OAuth; `codex/*` utiliza un turno limitado del servidor de aplicaciones Codex; MiniMax y MiniMax OAuth ambos utilizan `MiniMax-VL-01`; los proveedores de configuración con capacidad de imagen se registran automáticamente. |
-| Audio     | OpenAI, Groq, xAI, Deepgram, Google, SenseAudio, ElevenLabs, Mistral                                                                     | Transcripción del proveedor (Whisper/Groq/xAI/Deepgram/Gemini/SenseAudio/Scribe/Voxtral).                                                                                                                                                                                                                                                                |
+| Audio     | OpenAI, Groq, xAI, Deepgram, OpenRouter, Google, SenseAudio, ElevenLabs, Mistral                                                         | Transcripción del proveedor (Whisper/Groq/xAI/Deepgram/OpenRouter STT/Gemini/SenseAudio/Scribe/Voxtral).                                                                                                                                                                                                                                                 |
 | Vídeo     | Google, Qwen, Moonshot                                                                                                                   | Comprensión de video del proveedor a través de complementos del proveedor; la comprensión de video de Qwen utiliza los puntos finales estándar de DashScope.                                                                                                                                                                                             |
 
 <Note>

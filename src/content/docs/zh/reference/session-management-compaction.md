@@ -21,10 +21,10 @@ OpenClaw 在以下领域端到端地管理会话：
 
 - [会话管理](/zh/concepts/session)
 - [压缩](/zh/concepts/compaction)
-- [内存概览](/zh/concepts/memory)
+- [内存概述](/zh/concepts/memory)
 - [内存搜索](/zh/concepts/memory-search)
 - [会话修剪](/zh/concepts/session-pruning)
-- [逐字稿清理](/zh/reference/transcript-hygiene)
+- [对话记录清理](/zh/reference/transcript-hygiene)
 
 ---
 
@@ -128,7 +128,7 @@ openclaw sessions cleanup --enforce
 - Cron：`cron:<job.id>`
 - Webhook：`hook:<uuid>`（除非被覆盖）
 
-规范规则记录在 [/concepts/会话](/zh/concepts/session)。
+标准规则记录于 [/concepts/会话](/zh/concepts/session)。
 
 ---
 
@@ -183,7 +183,7 @@ openclaw sessions cleanup --enforce
 
 ## 转录结构（`*.jsonl`）
 
-转录由 `@mariozechner/pi-coding-agent` 的 `SessionManager` 管理。
+Transcripts 由 `@earendil-works/pi-coding-agent` 的 `SessionManager` 管理。
 
 该文件是 JSONL：
 
@@ -214,7 +214,7 @@ OpenClaw 故意**不**“修复”脚本；Gateway 使用 OpenClawGateway(网关
 - 上下文窗口来自模型目录（并且可以通过配置覆盖）。
 - 存储中的 `contextTokens` 是一个运行时估算/报告值；不要将其视为严格的保证。
 
-有关更多信息，请参阅 [/token-use](/zh/reference/token-use)。
+更多信息，请参阅 [/token-use](/zh/reference/token-use)。
 
 ---
 
@@ -227,7 +227,7 @@ OpenClaw 故意**不**“修复”脚本；Gateway 使用 OpenClawGateway(网关
 - 压缩摘要
 - `firstKeptEntryId` 之后的消息
 
-压缩是**持久化**的（与会话修剪不同）。请参阅 [/concepts/会话-pruning](/zh/concepts/session-pruning)。
+压缩是**持久性**的（与 会话 修剪不同）。请参阅 [/concepts/会话-pruning](/zh/concepts/session-pruning)。
 
 ## 压缩块边界和工具配对
 
@@ -348,74 +348,70 @@ OpenClaw 还为嵌入式运行强制执行一个安全下限：
 - `/status`（在任何聊天会话中）
 - `openclaw status`CLI (CLI)
 - `openclaw sessions` / `sessions --json`
+- Gateway(网关) 日志 (Gateway(网关)`pnpm gateway:watch` 或 `openclaw logs --follow`)：`embedded run auto-compaction start` + `complete`
 - 详细模式：`🧹 Auto-compaction complete` + 压缩计数
 
 ---
 
 ## 静默维护 (`NO_REPLY`)
 
-OpenClaw 支持针对后台任务的“静默”轮次，在这些任务中用户不应看到中间输出。
+OpenClaw 支持用于后台任务的“静默”轮次，其中用户不应看到中间输出。
 
 约定：
 
-- 助手以其输出以确切的静默令牌 `NO_REPLY` /
-  `no_reply` 开头来指示“不向用户发送回复”。
-- OpenClaw 在交付层剥离/抑制此内容。
-- 确切的静默令牌抑制不区分大小写，因此 `NO_REPLY` 和
-  `no_reply` 在整个有效载荷仅为静默令牌时均计入。
-- 这仅用于真正的后台/不交付轮次；它不是针对
-  普通可执行用户请求的快捷方式。
+- 助手以其输出以精确的静默令牌 `NO_REPLY` /
+  `no_reply` 开头，以表示“不向用户传递回复”。
+- OpenClaw 会在交付层中剥离/抑制它。
+- 精确的静默令牌抑制不区分大小写，因此 `NO_REPLY` 和
+  `no_reply` 在整个载荷仅为静默令牌时均有效。
+- 这仅适用于真正的后台/无交付轮次；它不是普通可操作用户请求的捷径。
 
-自 `2026.1.10`OpenClaw 起，OpenClaw 还会在
-部分块以 `NO_REPLY` 开头时抑制 **草稿/输入流**，因此静默操作不会在轮次中途
-泄漏部分输出。
+截至 `2026.1.10`OpenClaw，当部分块以 `NO_REPLY` 开头时，OpenClaw 还会抑制 **草稿/输入流式传输**，因此静默操作不会在轮次中途泄漏部分输出。
 
 ---
 
 ## 预压缩“内存刷新”（已实现）
 
-目标：在自动压缩发生之前，运行一个静默代理轮次，将持久化
-状态写入磁盘（例如，代理工作区中的 `memory/YYYY-MM-DD.md`），以便压缩无法
-擦除关键上下文。
+目标：在自动压缩发生之前，运行一个静默的代理轮次，将持久化状态写入磁盘（例如代理工作区中的 `memory/YYYY-MM-DD.md`），以便压缩无法擦除关键上下文。
 
 OpenClaw 使用 **预阈值刷新** 方法：
 
-1. 监控会话上下文使用情况。
-2. 当它越过“软阈值”（低于 Pi 的压缩阈值）时，向代理运行静默的
-   “立即写入内存”指令。
+1. 监控会话上下文的使用情况。
+2. 当它跨越一个“软阈值”（低于 Pi 的压缩阈值）时，向代理运行一个静默的“立即写入内存”指令。
 3. 使用确切的静默令牌 `NO_REPLY` / `no_reply`，以便用户
    什么都看不到。
 
 配置 (`agents.defaults.compaction.memoryFlush`)：
 
-- `enabled`（默认值：`true`）
-- `model`（可选的精确提供商/模型覆盖，用于刷新轮次，例如 `ollama/qwen3:8b`）
-- `softThresholdTokens`（默认值：`4000`）
-- `prompt`（刷新轮次的用户消息）
-- `systemPrompt`（为刷新轮次附加的额外系统提示词）
+- `enabled` (默认值：`true`)
+- `model` (可选的确切提供商/模型覆盖，用于刷新轮次，例如 `ollama/qwen3:8b`)
+- `softThresholdTokens` (默认值：`4000`)
+- `prompt` (刷新轮次的用户消息)
+- `systemPrompt` (为刷新轮次追加的额外系统提示)
 
 注意：
 
-- 默认提示词/系统提示词包含一个 `NO_REPLY` 提示以阻止投递。
-- 当设置了 `model` 时，刷新轮次将使用该模型，而不继承活动会话的回退链，因此仅限本地的维护任务不会在不知情的情况下回退到付费对话模型。
-- 刷新在每个压缩周期运行一次（在 `sessions.json` 中跟踪）。
-- 刷新仅针对嵌入式 Pi 会话运行（CLI 后端会跳过它）。
-- 当会话工作区为只读时（`workspaceAccess: "ro"` 或 `"none"`），将跳过刷新。
-- 有关工作区文件布局和写入模式，请参阅 [Memory](/zh/concepts/memory)。
+- 默认提示/系统提示包含一个 `NO_REPLY` 提示以抑制
+  投递。
+- 当设置了 `model` 时，清理回合将使用该模型，而不继承当前会话的回退链，因此仅限本地的维护工作不会静默回退到付费的对话模型。
+- 每个压缩周期运行一次清理（记录在 `sessions.json` 中）。
+- 清理仅针对嵌入式 Pi 会话运行（CLI 后端会跳过它）。
+- 当会话工作区为只读（`workspaceAccess: "ro"` 或 `"none"`）时，将跳过刷新。
+- 有关工作区文件布局和写入模式，请参阅 [内存](/zh/concepts/memory)。
 
-Pi 还在扩展 API 中暴露了一个 `session_before_compact` 钩子，但 OpenClaw 的刷新逻辑目前位于 Gateway(网关) 端。
+Pi 还在扩展 API 中公开了一个 `session_before_compact` 钩子，但 OpenClaw 的刷新逻辑目前位于 Gateway(网关) 端。
 
 ---
 
-## 故障排除清单
+## 故障排查清单
 
-- 会话密钥错误？首先从 [/concepts/会话](/zh/concepts/session) 开始，并确认 `sessionKey` 在 `/status` 中。
-- 存储与记录不匹配？从 `openclaw status` 确认 Gateway(网关) 主机和存储路径。
-- 压缩垃圾信息？检查：
+- 会话密钥错误？请先阅读 [/concepts/会话](/zh/concepts/session) 并确认 `sessionKey` 中的 `/status`。
+- 存储与记录不匹配？请从 Gateway(网关)`openclaw status` 中确认 Gateway(网关) 主机和存储路径。
+- 压缩垃圾信息？请检查：
   - 模型上下文窗口（太小）
-  - 压缩设置（相对于模型窗口 `reserveTokens` 太高可能会导致更早的压缩）
-  - 工具结果膨胀：启用/调整会话修剪
-- 静默轮次泄漏？确认回复以 `NO_REPLY` 开头（不区分大小写的精确令牌），并且您使用的是包含流抑制修复的版本。
+  - 压缩设置（`reserveTokens` 对模型窗口来说过高可能导致更早压缩）
+  - 工具结果膨胀：启用/调优会话修剪
+- 静默轮次泄漏？确认回复以 `NO_REPLY` 开头（不区分大小写的精确标记），并且您使用的是包含流式抑制修复的版本。
 
 ## 相关
 

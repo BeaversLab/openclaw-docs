@@ -1,65 +1,64 @@
 ---
-summary: "OpenClaw 浏览器控制 API、CLI 参考以及脚本操作"
+summary: "OpenClawAPICLIOpenClaw 浏览器控制 API、CLI 参考和脚本操作"
 read_when:
   - Scripting or debugging the agent browser via the local control API
   - Looking for the `openclaw browser` CLI reference
   - Adding custom browser automation with snapshots and refs
-title: "浏览器控制 API"
+title: "API浏览器控制 API"
 ---
 
-有关设置、配置和故障排除，请参阅 [Browser](/zh/tools/browserAPI)。
-本页面是本地控制 HTTP API、`openclaw browser`CLI
-CLI 和脚本模式（快照、引用、等待、调试流程）的参考文档。
+有关设置、配置和故障排除，请参阅 [Browser](/zh/tools/browser)。
+此页面是本地控制 HTTP API、`openclaw browser`
+CLI 和脚本模式（快照、引用、等待、调试流）的参考。
 
 ## 控制 API（可选）
 
 仅适用于本地集成，Gateway(网关) 公开了一个小型回环 HTTP API：
 
 - 状态/启动/停止：`GET /`、`POST /start`、`POST /stop`
-- 标签页：`GET /tabs`、`POST /tabs/open`、`POST /tabs/focus`、`DELETE /tabs/:targetId`
-- 快照/截图：`GET /snapshot`、`POST /screenshot`
-- 操作：`POST /navigate`、`POST /act`
-- 钩子：`POST /hooks/file-chooser`、`POST /hooks/dialog`
+- 标签页：`GET /tabs`, `POST /tabs/open`, `POST /tabs/focus`, `DELETE /tabs/:targetId`
+- 快照/截图：`GET /snapshot`, `POST /screenshot`
+- 操作：`POST /navigate`, `POST /act`
+- 钩子：`POST /hooks/file-chooser`, `POST /hooks/dialog`
 - 下载：`POST /download`、`POST /wait/download`
 - 权限：`POST /permissions/grant`
 - 调试：`GET /console`、`POST /pdf`
 - 调试：`GET /errors`、`GET /requests`、`POST /trace/start`、`POST /trace/stop`、`POST /highlight`
 - 网络：`POST /response/body`
-- 状态：`GET /cookies`、`POST /cookies/set`、`POST /cookies/clear`
-- 状态：`GET /storage/:kind`、`POST /storage/:kind/set`、`POST /storage/:kind/clear`
+- 状态：`GET /cookies`，`POST /cookies/set`，`POST /cookies/clear`
+- 状态：`GET /storage/:kind`，`POST /storage/:kind/set`，`POST /storage/:kind/clear`
 - 设置：`POST /set/offline`、`POST /set/headers`、`POST /set/credentials`、`POST /set/geolocation`、`POST /set/media`、`POST /set/timezone`、`POST /set/locale`、`POST /set/device`
 
-所有端点都接受 `?profile=<name>`。`POST /start?headless=true` 请求为本地管理的配置文件进行一次性无头启动，而不更改持久化的浏览器配置；仅附加、远程 CDP 和现有会话配置文件会拒绝该覆盖，因为 OpenClaw 不会启动那些浏览器进程。
+所有端点都接受 `?profile=<name>`。`POST /start?headless=true`OpenClaw 请求针对本地托管配置文件的一次性无头启动，而不更改持久化的浏览器配置；仅附加、远程 CDP 和现有会话配置文件会拒绝该覆盖，因为 OpenClaw 不会启动这些浏览器进程。
 
 如果配置了共享密钥网关身份验证，浏览器 HTTP 路由也需要身份验证：
 
 - `Authorization: Bearer <gateway token>`
-- `x-openclaw-password: <gateway password>` 或使用该密码进行 HTTP Basic 身份验证
+- `x-openclaw-password: <gateway password>` 或使用该密码进行 HTTP Basic 认证
 
 注意：
 
 - 此独立回环浏览器 API **不**使用受信任代理或 Tailscale Serve 身份标头。
-- 如果 `gateway.auth.mode` 是 `none` 或 `trusted-proxy`，这些回环浏览器路由不会继承那些带有身份的模式；请将它们保持为仅回环访问。
+- 如果 `gateway.auth.mode` 是 `none` 或 `trusted-proxy`，这些回环浏览器路由不会继承那些承载身份的模式；请将它们保持为仅限回环访问。
 
 ### `/act` 错误约定
 
-`POST /act` 使用结构化错误响应来处理路由级验证和策略失败：
+`POST /act` 针对路由级验证和策略失败使用结构化错误响应：
 
 ```json
 { "error": "<message>", "code": "ACT_*" }
 ```
 
-当前的 `code` 值：
+当前 `code` 值：
 
 - `ACT_KIND_REQUIRED` (HTTP 400)：`kind` 缺失或无法识别。
 - `ACT_INVALID_REQUEST` (HTTP 400)：操作负载未能通过规范化或验证。
 - `ACT_SELECTOR_UNSUPPORTED` (HTTP 400)：`selector` 与不支持的操作类型一起使用。
-- `ACT_EVALUATE_DISABLED` (HTTP 403)：`evaluate`（或 `wait --fn`）已被配置禁用。
-- `ACT_TARGET_ID_MISMATCH` (HTTP 403)：顶层或批处理的 `targetId` 与请求目标冲突。
-- `ACT_EXISTING_SESSION_UNSUPPORTED` (HTTP 501)：操作不支持现有会话配置文件。
+- `ACT_EVALUATE_DISABLED` (HTTP 403)：`evaluate`（或 `wait --fn`）被配置禁用。
+- `ACT_TARGET_ID_MISMATCH` (HTTP 403)：顶级或批处理的 `targetId` 与请求目标冲突。
+- `ACT_EXISTING_SESSION_UNSUPPORTED` (HTTP 501)：该操作不支持现有会话配置文件。
 
-其他运行时失败可能仍返回 `{ "error": "<message>" }`，但不包含
-`code` 字段。
+其他运行时故障仍可能返回 `{ "error": "<message>" }` 而不带 `code` 字段。
 
 ### Playwright 要求
 
@@ -70,35 +69,39 @@ PDF）需要 Playwright。如果未安装 Playwright，这些端点将返回
 在没有 Playwright 的情况下仍然有效的功能：
 
 - ARIA 快照
-- 当有每个标签页的 CDP WebSocket 可用时，基于角色的可访问性快照（`--interactive`、`--compact`、
-  `--depth`、`--efficient`）。这是
-  用于检查和 ref 发现的回退方案；Playwright 仍然是主要的
+- 当存在每个标签页的 CDP WebSocket 时，提供基于角色的可访问性快照（`--interactive`、`--compact`、
+  `--depth`、`--efficient`）。这是用于检查和 ref 发现的回退方案；Playwright 仍然是主要的
   操作引擎。
-- 当有每个标签页的 CDP
-  WebSocket 可用时，托管 `openclaw` 浏览器的页面截图
+- 当存在逐标签页 CDP WebSocket 时，托管 `openclaw` 浏览器的页面截图
 - `existing-session` / Chrome MCP 配置文件的页面截图
-- 来自快照输出的 `existing-session` 基于 ref 的截图（`--ref`）
+- 来自快照输出的 `existing-session` 基于引用的截图 (`--ref`)
 
 仍然需要 Playwright 的部分：
 
 - `navigate`
 - `act`
 - 依赖 Playwright 原生 AI 快照格式的 AI 快照
-- CSS 选择器元素截图（`--element`）
+- CSS 选择器元素截图 (`--element`)
 - 完整浏览器 PDF 导出
 
-元素截图也会拒绝 `--full-page`；路由返回 `fullPage is
+元素屏幕截图也会拒绝 `--full-page`；路由返回 `fullPage is
 not supported for element screenshots`。
 
-如果您看到 `Playwright is not available in this gateway build`Gateway(网关)OpenClawDocker，说明打包的
+如果看到 `Playwright is not available in this gateway build`，说明打包的
 Gateway(网关) 缺少核心浏览器运行时依赖。请重新安装或更新
-OpenClaw，然后重启网关。对于 Docker，还需按如下所示安装 Chromium
+OpenClaw，然后重启网关。对于 Docker，还请按照下文所示安装 Chromium
 浏览器二进制文件。
 
 #### Docker Playwright 安装
 
-如果您的 Gateway(网关) 在 Docker 中运行，请避免 Gateway(网关)Docker`npx playwright`npmCLI（npm 覆盖冲突）。
-请改用捆绑的 CLI：
+如果您的 Gateway(网关) 在 Docker 中运行，请避免 Gateway(网关)Docker`npx playwright`npm（npm 覆盖冲突）。
+对于自定义镜像，请将 Chromium 预构建到镜像中：
+
+```bash
+OPENCLAW_INSTALL_BROWSER=1 ./scripts/docker/setup.sh
+```
+
+对于现有镜像，改为通过随附的 CLI 安装：
 
 ```bash
 docker compose run --rm openclaw-cli \
@@ -106,17 +109,17 @@ docker compose run --rm openclaw-cli \
 ```
 
 要持久化浏览器下载，请设置 `PLAYWRIGHT_BROWSERS_PATH`（例如，
-`/home/node/.cache/ms-playwright`）并确保 `/home/node` 通过
-`OPENCLAW_HOME_VOLUME`OpenClawLinuxDocker 或绑定挂载进行持久化。OpenClaw 会在 Linux 上自动检测
-已持久化的 Chromium。请参阅 [Docker](/zh/install/docker)。
+`/home/node/.cache/ms-playwright`）并确保通过
+`OPENCLAW_HOME_VOLUME` 或绑定挂载来持久化 `/home/node`。OpenClaw 会自动检测 Linux 上已持久化的
+Chromium。请参阅 [Docker](/zh/install/docker)。
 
 ## 工作原理（内部）
 
-一个小型的回环控制服务器接受 HTTP 请求，并通过 CDP 连接到基于 Chromium 的浏览器。高级操作（点击/输入/快照/PDF）通过 CDP 之上的 Playwright 执行；当缺少 Playwright 时，仅非 Playwright 操作可用。代理端看到一个稳定的接口，而本地/远程浏览器和配置文件在底层可以自由切换。
+一个小型回环控制服务器接受 HTTP 请求，并通过 CDP 连接到基于 Chromium 的浏览器。高级操作（点击/输入/快照/PDF）通过 CDP 之上的 Playwright 进行；当 Playwright 缺失时，仅支持非 Playwright 操作。在底层本地/远程浏览器和配置文件自由切换的同时，代理看到的始终是一个稳定的接口。
 
 ## CLI 快速参考
 
-所有命令都接受 `--browser-profile <name>` 以针对特定配置文件，并接受 `--json` 以获取机器可读的输出。
+所有命令都接受 `--browser-profile <name>` 以针对特定的配置文件，并接受 `--json` 以获取机器可读的输出。
 
 <AccordionGroup>
 
@@ -163,7 +166,7 @@ openclaw browser responsebody "**/api" --max-chars 5000
 
 </Accordion>
 
-<Accordion title="操作：导航、点击、输入、拖动、等待、执行">
+<Accordion title="操作：navigate、click、type、drag、wait、evaluate">
 
 ```bash
 openclaw browser navigate https://example.com
@@ -191,7 +194,7 @@ openclaw browser trace stop
 
 </Accordion>
 
-<Accordion title="状态：Cookie、存储、离线、标头、地理位置、设备">
+<Accordion title="状态：cookies、storage、offline、headers、geo、device">
 
 ```bash
 openclaw browser cookies
@@ -216,73 +219,69 @@ openclaw browser set device "iPhone 14"
 
 备注：
 
-- `upload` 和 `dialog` 是**准备**（arming）调用；在触发选择器/对话框的点击/按压操作之前运行它们。
-- `click`/`type`/等需要来自 `snapshot` 的 `ref`（数字 `12`、角色引用 `e12` 或可操作的 ARIA 引用 `ax12`）。操作有意不支持 CSS 选择器。当可见视口位置是唯一可靠的目标时，请使用 `click-coords`。
-- 下载、跟踪和上传路径被限制在 OpenClaw 临时根目录：OpenClaw`/tmp/openclaw{,/downloads,/uploads}`（回退值：`${os.tmpdir()}/openclaw/...`）。
+- `upload` 和 `dialog` 是 **arming（预备）** 调用；请在触发选择器/对话框的点击/按键操作之前运行它们。
+- `click`/`type`/etc 等需要一个来自 `snapshot` 的 `ref`（数字 `12`、角色引用 `e12` 或可操作的 ARIA 引用 `ax12`）。操作有意不支持 CSS 选择器。当可见视口位置是唯一可靠的目标时，请使用 `click-coords`。
+- 下载、跟踪和上传路径被限制在 OpenClaw 临时根目录：`/tmp/openclaw{,/downloads,/uploads}`（回退：`${os.tmpdir()}/openclaw/...`）。
 - `upload` 也可以通过 `--input-ref` 或 `--element` 直接设置文件输入。
 
-当 OpenClaw 可以证明替换标签页时（例如相同的 URL，或表单提交后单个旧标签页变为单个新标签页），稳定的标签页 ID 和标签可以在 Chromium 原始目标替换中保留下来。原始目标 ID 仍然是不稳定的；在脚本中请优先使用来自 `tabs` 的 OpenClaw`suggestedTargetId`。
+当 OpenClaw 可以证明替换标签页（例如相同的 URL，或者表单提交后单个旧标签页变为单个新标签页）时，稳定的标签页 ID 和标签可以在 Chromium 原始目标替换中保留下来。原始目标 ID 仍然是不稳定的；在脚本中，优先使用来自 `tabs` 的 `suggestedTargetId`。
 
 快照标志概览：
 
-- `--format ai`（Playwright 的默认设置）：带有数字引用（`aria-ref="<n>"`）的 AI 快照。
-- `--format aria`：带有 `axN`OpenClaw 引用的可访问性树。当 Playwright 可用时，OpenClaw 会将带有后端 DOM ID 的引用绑定到实时页面，以便后续操作可以使用它们；否则，请将输出视为仅用于检查。
-- `--efficient`（或 `--mode efficient`）：紧凑的角色快照预设。设置 `browser.snapshotDefaults.mode: "efficient"`Gateway(网关) 使其成为默认值（请参阅 [Gateway 配置](/zh/gateway/configuration-reference#browser)）。
-- `--interactive`、`--compact`、`--depth`、`--selector` 强制生成带有 `ref=e12` 引用的角色快照。`--frame "<iframe>"` 将角色快照限定在 iframe 范围内。
-- `--labels` 添加一张仅包含视口区域的屏幕截图，上面覆盖了引用标签（打印 `MEDIA:<path>`）。
+- `--format ai`（使用 Playwright 时的默认设置）：带有数字引用 (`aria-ref="<n>"`) 的 AI 快照。
+- `--format aria`：带有 `axN` 引用的可访问性树。当 Playwright 可用时，OpenClaw 会将引用与后端 DOM ID 绑定到实时页面，以便后续操作使用它们；否则，请将输出视为仅用于检查。
+- `--efficient`（或 `--mode efficient`）：紧凑的角色快照预设。设置 `browser.snapshotDefaults.mode: "efficient"` 使其成为默认值（请参阅 [Gateway(网关) 配置](/zh/gateway/configuration-reference#browser)）。
+- `--interactive`、`--compact`、`--depth`、`--selector` 强制使用 `ref=e12` 引用进行角色快照。`--frame "<iframe>"` 将角色快照的作用域限定在 iframe 内。
+- `--labels` 添加仅视口截图，并覆盖引用标签（打印 `MEDIA:<path>`）。
 - `--urls` 将发现的链接目标附加到 AI 快照。
 
 ## 快照和引用
 
 OpenClaw 支持两种“快照”样式：
 
-- **AI 快照（数字引用）**：`openclaw browser snapshot`（默认值；`--format ai`）
+- **AI 快照（数字引用）**：`openclaw browser snapshot`（默认；`--format ai`）
   - 输出：包含数字引用的文本快照。
-  - 操作：`openclaw browser click 12`、`openclaw browser type 23 "hello"`。
-  - 在内部，该引用通过 Playwright 的 `aria-ref` 解析。
+  - 操作：`openclaw browser click 12`，`openclaw browser type 23 "hello"`。
+  - 在内部，该引用是通过 Playwright 的 `aria-ref` 解析的。
 
-- **角色快照（角色引用如 `e12`）**：`openclaw browser snapshot --interactive`（或 `--compact`、`--depth`、`--selector`、`--frame`）
-  - 输出：带有 `[ref=e12]`（以及可选的 `[nth=1]`）的基于角色的列表/树。
+- **角色快照（如 `e12` 等角色引用）**：`openclaw browser snapshot --interactive`（或 `--compact`、`--depth`、`--selector`、`--frame`）
+  - 输出：包含 `[ref=e12]`（以及可选的 `[nth=1]`）的基于角色的列表/树。
   - 操作：`openclaw browser click e12`、`openclaw browser highlight e12`。
-  - 在内部，引用通过 `getByRole(...)` 解析（对于重复项，加上 `nth()`）。
+  - 在内部，引用是通过 `getByRole(...)` 解析的（对于重复项则加上 `nth()`）。
   - 添加 `--labels` 以包含带有覆盖 `e12` 标签的视口截图。
-  - 当链接文本模棱两可，并且代理需要具体的
-    导航目标时，添加 `--urls`。
+  - 当链接文本不明确且代理需要具体的导航目标时，添加 `--urls`。
 
 - **ARIA 快照（ARIA 引用如 `ax12`）**：`openclaw browser snapshot --format aria`
-  - 输出：作为结构化节点的无障碍树。
-  - 操作：当快照路径可以通过 Playwright 和 Chrome 后端 DOM id 绑定
-    引用时，`openclaw browser click ax12` 有效。
-- 如果 Playwright 不可用，ARIA 快照对于
-  检查仍然有用，但引用可能无法执行。当您需要操作引用时，请使用 `--format ai`
-  或 `--interactive` 重新快照。
-- raw-CDP 回退路径的 Docker 证明：`pnpm test:docker:browser-cdp-snapshot`
+  - 输出：作为结构化节点的可访问性树。
+  - Actions: `openclaw browser click ax12` 在快照路径可以通过 Playwright 和 Chrome 后端 DOM ID 绑定 ref 时有效。
+- 如果 Playwright 不可用，ARIA 快照仍然可用于检查，但 ref 可能无法执行操作。当你需要操作 ref 时，请使用 `--format ai` 或 `--interactive` 重新生成快照。
+- Docker 证明针对 raw-CDP 回退路径：Docker`pnpm test:docker:browser-cdp-snapshot`
   启动带有 CDP 的 Chromium，运行 `browser doctor --deep`，并验证角色
   快照包含链接 URL、光标提升的可点击项以及 iframe 元数据。
 
-引用行为：
+Ref 行为：
 
-- 引用在导航之间**不稳定**；如果操作失败，请重新运行 `snapshot` 并使用新的引用。
-- 当 `/act` 能证明替换标签页时，它会在操作触发的替换后返回当前的原始 `targetId`。对于
-  后续命令，请继续使用稳定的标签页 id/标签。
-- 如果角色快照是使用 `--frame` 获取的，则角色引用的作用域限定为该 iframe，直到下一次角色快照。
-- 未知或过时的 `axN` 引用会快速失败，而不是回退到
-  Playwright 的 `aria-ref` 选择器。发生这种情况时，请在同一标签页上运行新的快照。
+- Refs 在导航过程中**不稳定**；如果发生故障，请重新运行 `snapshot` 并使用新的 ref。
+- `/act` 在操作触发的替换后返回当前的原始 `targetId`，
+  当它能证明替换标签页时。后续命令请继续使用稳定的标签页 ID/标签。
+- 如果角色快照是使用 `--frame` 拍摄的，则角色引用将作用于该 iframe，直到拍摄下一个角色快照。
+- 未知或过时的 `axN` ref 会快速失败，而不是回退到
+  Playwright 的 `aria-ref` 选择器。当发生这种情况时，请在同一标签页上运行一个新的快照。
 
-## Wait 增强功能
+## 等待增强功能
 
-您不仅可以等待时间/文本，还可以等待：
+您可以等待的不仅仅是时间/文本：
 
-- 等待 URL（支持 Playwright 的 glob 模式）：
+- 等待 URL（支持 Playwright 支持的 glob 模式）：
   - `openclaw browser wait --url "**/dash"`
 - 等待加载状态：
   - `openclaw browser wait --load networkidle`
 - 等待 JS 谓词：
   - `openclaw browser wait --fn "window.ready===true"`
-- 等待选择器变为可见：
+- 等待选择器变得可见：
   - `openclaw browser wait "#main"`
 
-这些条件可以组合使用：
+这些可以组合使用：
 
 ```bash
 openclaw browser wait "#main" \
@@ -294,22 +293,22 @@ openclaw browser wait "#main" \
 
 ## 调试工作流
 
-当某个操作失败时（例如“不可见”、“严格模式违规”、“被覆盖”）：
+当操作失败时（例如“不可见”、“严格模式违规”、“被覆盖”）：
 
 1. `openclaw browser snapshot --interactive`
 2. 使用 `click <ref>` / `type <ref>`（在交互模式下首选角色引用）
-3. 如果仍然失败：`openclaw browser highlight <ref>` 以查看 Playwright 的定位目标
-4. 如果页面行为异常：
+3. 如果仍然失败：`openclaw browser highlight <ref>` 查看 Playwright 的目标
+4. 如果页面表现异常：
    - `openclaw browser errors --clear`
    - `openclaw browser requests --filter api --clear`
-5. 对于深度调试：录制一个 trace：
+5. 进行深度调试：记录跟踪：
    - `openclaw browser trace start`
-   - 重现该问题
-   - `openclaw browser trace stop`（打印 `TRACE:<path>`）
+   - 复现问题
+   - `openclaw browser trace stop` （打印 `TRACE:<path>`）
 
 ## JSON 输出
 
-`--json` 用于脚本编写和结构化工具。
+`--json` 适用于脚本编写和结构化工具。
 
 示例：
 
@@ -320,20 +319,20 @@ openclaw browser requests --filter api --json
 openclaw browser cookies --json
 ```
 
-JSON 中的角色快照包含 `refs` 以及一个小型的 `stats` 块（行/字符/引用/交互），以便工具能够推断有效载荷的大小和密度。
+JSON 中的 Role 快照包含 `refs` 以及一个小的 `stats` 块（行/字符/引用/交互），以便工具能够推断负载大小和密度。
 
 ## 状态和环境控制项
 
-这些对于“让网站像 X 一样运行”的工作流很有用：
+这些对于“让网站表现得像 X”的工作流非常有用：
 
 - Cookies：`cookies`、`cookies set`、`cookies clear`
 - 存储：`storage local|session get|set|clear`
 - 离线：`set offline on|off`
-- 请求头：`set headers --headers-json '{"X-Debug":"1"}'`（旧版 `set headers --json '{"X-Debug":"1"}'` 仍然受支持）
+- 标头：`set headers --headers-json '{"X-Debug":"1"}'`（仍支持旧版 `set headers --json '{"X-Debug":"1"}'`）
 - HTTP 基本身份验证：`set credentials user pass`（或 `--clear`）
 - 地理位置：`set geo <lat> <lon> --origin "https://example.com"`（或 `--clear`）
 - 媒体：`set media dark|light|no-preference|none`
-- 时区 / 语言环境：`set timezone ...`、`set locale ...`
+- 时区 / 语言环境：`set timezone ...`，`set locale ...`
 - 设备 / 视口：
   - `set device "iPhone 14"`（Playwright 设备预设）
   - `set viewport 1280 720`
@@ -342,11 +341,11 @@ JSON 中的角色快照包含 `refs` 以及一个小型的 `stats` 块（行/字
 
 - openclaw 浏览器配置文件可能包含已登录的会话；请将其视为敏感信息。
 - `browser act kind=evaluate` / `openclaw browser evaluate` 和 `wait --fn`
-  在页面上下文中执行任意 JavaScript。提示注入可以操纵
+  在页面上下文中执行任意 JavaScript。提示注入可以操控
   此行为。如果不需要，请使用 `browser.evaluateEnabled=false` 将其禁用。
-- 有关登录和反机器人说明（X/Twitter 等），请参阅 [Browser login + X/Twitter posting](/zh/tools/browser-login)。
-- 请保持 Gateway(网关)/node 主机的私密性（仅限回环或 tailnet）。
-- 远程 CDP 端点功能强大；请对其进行隧道传输和保护。
+- 有关登录和反机器人注意事项（X/Twitter 等），请参阅 [Browser login + X/Twitter posting](/zh/tools/browser-login)。
+- 请保持 Gateway(网关)/节点主机为私有（仅限本地回环或 tailnet）。
+- 远程 CDP 端点功能强大；请通过隧道传输并加以保护。
 
 严格模式示例（默认阻止私有/内部目标）：
 
@@ -364,7 +363,7 @@ JSON 中的角色快照包含 `refs` 以及一个小型的 `stats` 块（行/字
 
 ## 相关
 
-- [Browser](/zh/tools/browser) - 概述、配置、配置文件、安全
-- [浏览器登录](/zh/tools/browser-login) - 登录网站
-- [Browser Linux 故障排除](Linux/en/tools/browser-linux-troubleshooting)
-- [Browser WSL2 故障排除](WSL2/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+- [浏览器](/zh/tools/browser) - 概述、配置、配置文件、安全
+- [浏览器登录](/zh/tools/browser-login) - 站点登录
+- [Browser Linux 故障排除](/zh/tools/browser-linux-troubleshooting)
+- [Browser WSL2 故障排除](/zh/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

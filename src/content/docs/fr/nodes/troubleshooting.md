@@ -109,16 +109,12 @@ Si toujours bloqué :
 - Redonner les autorisations OS.
 - Recréer/ajuster la stratégie d'approbation d'exécution.
 
-Connexes :
-
-- [/nodes/index](/fr/nodes/index)
-- [/nodes/camera](/fr/nodes/camera)
-- [/nodes/location-command](/fr/nodes/location-command)
-- [/tools/exec-approvals](/fr/tools/exec-approvals)
-- [/gateway/pairing](/fr/gateway/pairing)
-
 ## Connexes
 
 - [Vue d'ensemble des nœuds](/fr/nodes)
-- [Dépannage de la passerelle](/fr/gateway/troubleshooting)
-- [Dépannage du canal](/fr/channels/troubleshooting)
+- [Nœuds caméra](/fr/nodes/camera)
+- [Commande de localisation](/fr/nodes/location-command)
+- [Approbations d'exécution](/fr/tools/exec-approvals)
+- [Jumelage de la Gateway](Gateway/en/gateway/pairing)
+- [Dépannage de la Gateway](Gateway/en/gateway/troubleshooting)
+- [Dépannage des canaux](/fr/channels/troubleshooting)

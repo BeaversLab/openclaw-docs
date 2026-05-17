@@ -79,7 +79,7 @@ infraestructura lo emite.
 | ---------- | --------------------------------------- | ----------------------------------------------- | ---------------------------------------------------- |
 | ComfyUI    | `workflow`                              | Sí (1 imagen, configurado por flujo de trabajo) | `COMFY_API_KEY` o `COMFY_CLOUD_API_KEY` para la nube |
 | DeepInfra  | `black-forest-labs/FLUX-1-schnell`      | Sí (1 imagen)                                   | `DEEPINFRA_API_KEY`                                  |
-| fal        | `fal-ai/flux/dev`                       | Sí                                              | `FAL_KEY`                                            |
+| fal        | `fal-ai/flux/dev`                       | Sí (límites específicos del modelo)             | `FAL_KEY`                                            |
 | Google     | `gemini-3.1-flash-image-preview`        | Sí                                              | `GEMINI_API_KEY` o `GOOGLE_API_KEY`                  |
 | LiteLLM    | `gpt-image-2`                           | Sí (hasta 5 imágenes de entrada)                | `LITELLM_API_KEY`                                    |
 | MiniMax    | `image-01`                              | Sí (referencia del sujeto)                      | `MINIMAX_API_KEY` o MiniMax OAuth (`minimax-portal`) |
@@ -96,13 +96,13 @@ Use `action: "list"` para inspeccionar los proveedores y modelos disponibles en 
 
 ## Capacidades del proveedor
 
-| Capacidad                 | ComfyUI                       | DeepInfra | fal              | Google           | MiniMax                         | OpenAI           | Vydra | xAI              |
-| ------------------------- | ----------------------------- | --------- | ---------------- | ---------------- | ------------------------------- | ---------------- | ----- | ---------------- |
-| Generar (cantidad máxima) | Definido por flujo de trabajo | 4         | 4                | 4                | 9                               | 4                | 1     | 4                |
-| Editar / referencia       | 1 imagen (flujo de trabajo)   | 1 imagen  | 1 imagen         | Hasta 5 imágenes | 1 imagen (referencia de sujeto) | Hasta 5 imágenes | -     | Hasta 5 imágenes |
-| Control de tamaño         | -                             | ✓         | ✓                | ✓                | -                               | Hasta 4K         | -     | -                |
-| Relación de aspecto       | -                             | -         | ✓ (solo generar) | ✓                | ✓                               | -                | -     | ✓                |
-| Resolución (1K/2K/4K)     | -                             | -         | ✓                | ✓                | -                               | -                | -     | 1K, 2K           |
+| Capacidad                 | ComfyUI                       | DeepInfra | fal                       | Google           | MiniMax                         | OpenAI           | Vydra | xAI              |
+| ------------------------- | ----------------------------- | --------- | ------------------------- | ---------------- | ------------------------------- | ---------------- | ----- | ---------------- |
+| Generar (cantidad máxima) | Definido por flujo de trabajo | 4         | 4                         | 4                | 9                               | 4                | 1     | 4                |
+| Editar / referencia       | 1 imagen (flujo de trabajo)   | 1 imagen  | Flux: 1; GPT: 10; NB2: 14 | Hasta 5 imágenes | 1 imagen (referencia de sujeto) | Hasta 5 imágenes | -     | Hasta 5 imágenes |
+| Control de tamaño         | -                             | ✓         | ✓                         | ✓                | -                               | Hasta 4K         | -     | -                |
+| Relación de aspecto       | -                             | -         | ✓                         | ✓                | ✓                               | -                | -     | ✓                |
+| Resolución (1K/2K/4K)     | -                             | -         | ✓                         | ✓                | -                               | -                | -     | 1K, 2K           |
 
 ## Parámetros de la herramienta
 
@@ -208,8 +208,7 @@ de imágenes de referencia. Pase una ruta o URL de imagen de referencia:
 "Generate a watercolor version of this photo" + image: "/path/to/photo.jpg"
 ```
 
-OpenAI, OpenRouter, Google y xAI admiten hasta 5 imágenes de referencia a través del
-parámetro `images`. fal, MiniMax y ComfyUI admiten 1.
+OpenAI, OpenRouter, Google y xAI admiten hasta 5 imágenes de referencia a través del parámetro `images`. fal admite 1 imagen de referencia para Flux de imagen a imagen, hasta 10 para ediciones de GPT Image 2 y hasta 14 para ediciones de Nano Banana 2. MiniMax y ComfyUI admiten 1.
 
 ## Análisis detallados de proveedores
 

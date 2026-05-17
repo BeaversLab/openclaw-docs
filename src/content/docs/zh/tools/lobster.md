@@ -358,6 +358,6 @@ OpenProse 与 Lobster 搭配得很好：使用 OpenProseLobster`/prose`LobsterLo
 
 ## 相关
 
-- [自动化与任务](/zh/automationLobster) - 调度 Lobster 工作流
+- [自动化](/zh/automation) - 调度 Lobster 工作流
 - [自动化概述](/zh/automation) - 所有自动化机制
 - [工具概述](/zh/tools) - 所有可用的代理工具

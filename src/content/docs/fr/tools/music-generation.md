@@ -129,16 +129,16 @@ Exemple de génération directe :
 ## Paramètres de l'outil
 
 <ParamField path="prompt" type="string" required>
-  Invite de génération de musique. Requis pour `action: "generate"`.
+  Invite de génération musicale. Requis pour `action: "generate"`.
 </ParamField>
 <ParamField path="action" type='"generate" | "status" | "list"' default="generate">
   `"status"` renvoie la tâche de session actuelle ; `"list"` inspecte les providers.
 </ParamField>
 <ParamField path="model" type="string">
-  Remplacement de provider/model (p. ex. `google/lyria-3-pro-preview`, `comfy/workflow`).
+  Remplacement de provider/model (ex. `google/lyria-3-pro-preview`, `comfy/workflow`).
 </ParamField>
 <ParamField path="lyrics" type="string">
-  Paroles optionnelles lorsque le provider prend en charge la saisie explicite de paroles.
+  Paroles facultatives lorsque le provider prend en charge la saisie explicite de paroles.
 </ParamField>
 <ParamField path="instrumental" type="boolean">
   Demander une sortie instrumentale uniquement lorsque le provider le prend en charge.
@@ -159,23 +159,30 @@ Exemple de génération directe :
   Indication de nom de fichier de sortie.
 </ParamField>
 <ParamField path="timeoutMs" type="number">
-  Délai d'expiration de la requête provider optionnel en millisecondes. Les valeurs inférieures à 10000 ms sont élevées à 10000 ms et signalées dans le résultat de l'outil.
+  Délai d'expiration de la requête du provider facultatif en millisecondes. En cas d'omission, OpenClaw utilise `agents.defaults.musicGenerationModel.timeoutMs` si configuré. Les valeurs inférieures à 10000 ms sont augmentées à 10000 ms et signalées dans le résultat de l'outil.
 </ParamField>
 
 <Note>
-  Tous les providers ne prennent pas en charge tous les paramètres. OpenClaw valide néanmoins les limites strictes telles que les nombres d'entrées avant la soumission. Lorsqu'un provider prend en charge la durée mais utilise un maximum plus court que la valeur demandée, OpenClaw réduit la durée à la valeur prise en charge la plus proche. Les indications facultatives non prises en charge sont
-  ignorées avec un avertissement lorsque le provider ou le modèle sélectionné ne peut pas les respecter. Les résultats de l'outil signalent les paramètres appliqués ; `details.normalization` capture toute correspondance entre la demande et l'application.
+  Tous les providers ne prennent pas en charge tous les paramètres. OpenClaw valide toujours les limites strictes telles que les comptes d'entrées avant soumission. Lorsqu'un provider prend en charge la durée mais utilise un maximum plus court que la valeur demandée, OpenClaw la réduit à la durée prise en charge la plus proche. Les indices facultatifs réellement non pris en charge sont ignorés
+  avec un avertissement lorsque le provider ou le modèle sélectionné ne peut pas les respecter. Les résultats des outils signalent les paramètres appliqués ; OpenClawOpenClaw`details.normalization` capture toute correspondance entre les valeurs demandées et appliquées.
 </Note>
 
 ## Comportement asynchrone
 
 La génération de musique avec session s'exécute en tant que tâche d'arrière-plan :
 
-- **Tâche d'arrière-plan :** `music_generate` crée une tâche d'arrière-plan, renvoie une réponse de démarrage/tâche immédiatement, et publie la piste terminée ultérieurement dans un message de suivi de l'agent.
-- **Prévention des doublons :** tant qu'une tâche est `queued` ou `running`, les appels `music_generate` ultérieurs dans la même session renvoient le statut de la tâche au lieu de démarrer une autre génération. Utilisez `action: "status"` pour vérifier explicitement.
-- **Recherche de statut :** `openclaw tasks list` ou `openclaw tasks show <taskId>` inspectent les statuts mis en file d'attente, en cours d'exécution et terminaux.
+- **Tâche d'arrière-plan :** `music_generate` crée une tâche d'arrière-plan, renvoie une
+  réponse started/task immédiatement, et publie la piste terminée plus tard
+  dans un message de suivi de l'agent.
+- **Prévention des doublons :** alors qu'une tâche est `queued` ou `running`, les appels
+  `music_generate` ultérieurs dans la même session renvoient le statut de la tâche au lieu de
+  démarrer une autre génération. Utilisez `action: "status"` pour vérifier explicitement.
+- **Recherche de statut :** `openclaw tasks list` ou `openclaw tasks show <taskId>`
+  inspectent les statuts en file d'attente, en cours d'exécution et terminaux.
 - **Réveil à l'achèvement :** OpenClaw réinjecte un événement d'achèvement interne dans la même session pour que le modèle puisse écrire lui-même le suivi destiné à l'utilisateur.
-- **Indicateur d'invite (prompt hint) :** les tours ultérieurs de l'utilisateur ou manuels dans la même session reçoivent un petit indice d'exécution lorsqu'une tâche musicale est déjà en cours, pour que le modèle n'appelle pas `music_generate` aveuglément à nouveau.
+- **Indice d'invite :** les tours utilisateur/manuels ultérieurs dans la même session reçoivent un petit
+  indice d'exécution lorsqu'une tâche musicale est déjà en cours, afin que le modèle
+  n'appelle pas `music_generate` aveuglément à nouveau.
 - **Repli sans session :** les contextes directs/locaux sans véritable session d'agent s'exécutent en ligne et renvoient le résultat audio final dans le même tour.
 
 ### Cycle de vie de la tâche
@@ -216,8 +223,8 @@ openclaw tasks cancel <taskId>
 
 OpenClaw essaie les fournisseurs dans cet ordre :
 
-1. Paramètre `model` de l'appel d'outil (si l'agent en spécifie un).
-2. `musicGenerationModel.primary` à partir de la configuration.
+1. paramètre `model` de l'appel d'outil (si l'agent en spécifie un).
+2. `musicGenerationModel.primary` depuis la configuration.
 3. `musicGenerationModel.fallbacks` dans l'ordre.
 4. Détection automatique utilisant uniquement les valeurs par défaut du fournisseur prises en charge par l'authentification :
    - le fournisseur par défaut actuel en premier ;
@@ -231,9 +238,9 @@ les entrées explicites `model`, `primary` et `fallbacks`.
 ## Notes sur les fournisseurs
 
 <AccordionGroup>
-  <Accordion title="ComfyUI">Basé sur un workflow et dépend du graphe configuré ainsi que du mappage des nœuds pour les champs de prompt/sortie. Le plugin `comfy` inclus se connecte à l'outil partagé `music_generate` via le registre des fournisseurs de génération musicale.</Accordion>
+  <Accordion title="ComfyUI">Basé sur le workflow et dépend du graphe configuré ainsi que du mappage des nœuds pour les champs d'invite/de sortie. Le plugin `comfy` fourni se connecte à l'outil partagé `music_generate` via le registre de providers de génération musicale.</Accordion>
   <Accordion title="Google (Lyria 3)">Utilise la génération par lots Lyria 3. Le flux groupé actuel prend en charge le prompt, le texte de paroles facultatif et les images de référence facultatives.</Accordion>
-  <Accordion title="MiniMax">Utilise le point de terminaison de lot `music_generation`. Prend en charge le prompt, les paroles facultatives, le mode instrumental, le contrôle de la durée et la sortie mp3 via soit l'auth par clé `minimax` MiniMax, soit `minimax-portal` API.</Accordion>
+  <Accordion title="MiniMaxMiniMax">Utilise le endpoint de batch `music_generation`. Prend en charge le prompt, les paroles optionnelles, le mode instrumental, la réglage de la durée, et la sortie mp3 via soit l'auth par clé `minimax`API API, soit `minimax-portal`OAuth OAuth.</Accordion>
 </AccordionGroup>
 
 ## Choisir le bon chemin
@@ -244,16 +251,16 @@ les entrées explicites `model`, `primary` et `fallbacks`.
   fournisseur qui ne fait pas partie de la fonctionnalité musicale groupée partagée.
 
 Si vous déboguez un comportement spécifique à ComfyUI, consultez
-[ComfyUI](/fr/providers/comfy). Si vous déboguez le comportement du fournisseur partagé,
-commencez par [Google (Gemini)](/fr/providers/google) ou
+[ComfyUI](/fr/providers/comfy). Si vous déboguez un comportement partagé du fournisseur,
+commencez par [Google (Gemini)](/fr/providers/googleMiniMax) ou
 [MiniMax](/fr/providers/minimax).
 
 ## Modes de capacité du fournisseur
 
 Le contrat de génération musicale partagée prend en charge les déclarations de mode explicites :
 
-- `generate` pour la génération avec prompt uniquement.
-- `edit` lorsque la demande inclut une ou plusieurs images de référence.
+- `generate` pour la génération par prompt uniquement.
+- `edit` lorsque la requête inclut une ou plusieurs images de référence.
 
 Les nouvelles implémentations de fournisseurs devraient préférer les blocs de mode explicites :
 
@@ -276,7 +283,7 @@ capabilities: {
 Les champs plats hérités tels que `maxInputImages`, `supportsLyrics` et
 `supportsFormat` ne sont **pas** suffisants pour annoncer la prise en charge de l'édition. Les fournisseurs
 doivent déclarer `generate` et `edit` explicitement afin que les tests en direct, les tests
-de contrat et l'outil `music_generate` partagé puissent valider la prise en charge du mode
+contractuels et l'outil partagé `music_generate` puissent valider la prise en charge du mode
 de manière déterministe.
 
 ## Tests en direct
@@ -293,14 +300,14 @@ Wrapper de dépôt :
 pnpm test:live:media music
 ```
 
-Ce fichier en direct charge les variables d'environnement du fournisseur manquantes depuis `~/.profile`, préfère
-les clés API live/env aux profils d'authentification stockés par défaut, et exécute à la fois
-la couverture `generate` et la couverture déclarée `edit` lorsque le fournisseur active le mode
+Ce fichier en direct charge les env vars de fournisseur manquantes depuis `~/.profile`API, préfère
+les clés API live/env aux profils d'auth stockés par défaut, et exécute à la fois
+la couverture `generate` et la `edit` déclarée lorsque le fournisseur active le mode
 édition. Couverture actuelle :
 
 - `google` : `generate` plus `edit`
 - `minimax` : `generate` uniquement
-- `comfy` : couverture en direct Comfy distincte, et non le balayage du fournisseur partagé
+- `comfy` : couverture en direct séparée pour Comfy, non concernée par le balayage du fournisseur partagé
 
 Couverture en direct par opt-in pour le chemin musical ComfyUI groupé :
 
@@ -317,6 +324,6 @@ sections sont configurées.
 - [ComfyUI](/fr/providers/comfy)
 - [Référence de configuration](/fr/gateway/config-agents#agent-defaults) — config `musicGenerationModel`
 - [Google (Gemini)](/fr/providers/google)
-- [MiniMax](/fr/providers/minimax)
+- [MiniMax](MiniMax/en/providers/minimax)
 - [Modèles](/fr/concepts/models) — configuration et basculement des modèles
 - [Aperçu des outils](/fr/tools)

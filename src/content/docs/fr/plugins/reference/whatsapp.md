@@ -12,22 +12,12 @@ Ajoute la surface de channel WhatsApp pour l'envoi et la réception de messages 
 ## Distribution
 
 - Package : `@openclaw/whatsapp`
-- Install route : npm ; ClawHub
+- Méthode d'installation : ClawHub : ClawHub`clawhub:@openclaw/whatsapp`npm ; npm
 
 ## Surface
 
 channels : whatsapp
 
-## Note d'installation Windows
-
-Sur Windows, le plugin WhatsApp nécessite Git sur WindowsWhatsApp`PATH`npmBaileysWindows durant l'installation npm car l'une de ses dépendances Baileys/libsignal est récupérée depuis une URL git. Installez Git pour Windows, puis redémarrez le shell et relancez l'installation :
-
-```powershell
-winget install --id Git.Git -e
-```
-
-Portable Git fonctionne également si son répertoire `bin` est sur `PATH`.
-
-## Docs connexes
+## Documentation connexe
 
 - [whatsapp](/fr/channels/whatsapp)

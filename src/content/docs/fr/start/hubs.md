@@ -107,7 +107,7 @@ Utilisez ces hubs pour découvrir toutes les pages, y compris les approfondissem
 - [Outil PDF](/fr/tools/pdf)
 - [Mode élevé](/fr/tools/elevated)
 - [Tâches Cron](/fr/automation/cron-jobs)
-- [Automatisation et tâches](/fr/automation)
+- [Automatisation](/fr/automation)
 - [Réflexion + mode verbeux](/fr/tools/thinking)
 - [Modèles](/fr/concepts/models)
 - [Sous-agents](/fr/tools/subagents)

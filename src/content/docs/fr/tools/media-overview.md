@@ -57,7 +57,7 @@ La parole en direct utilise le contrat de session Talk plutôt que le chemin de 
 | MiniMax     |   ✓   |   ✓   |    ✓    |  ✓  |     |                    |                          |
 | Mistral     |       |       |         |     |  ✓  |                    |                          |
 | OpenAI      |   ✓   |   ✓   |         |  ✓  |  ✓  |         ✓          |            ✓             |
-| OpenRouter  |   ✓   |   ✓   |         |  ✓  |     |                    |            ✓             |
+| OpenRouter  |   ✓   |   ✓   |         |  ✓  |  ✓  |                    |            ✓             |
 | Qwen        |       |   ✓   |         |     |     |                    |                          |
 | Runway      |       |   ✓   |         |     |     |                    |                          |
 | SenseAudio  |       |       |         |     |  ✓  |                    |                          |
@@ -85,7 +85,12 @@ Pour les outils asynchrones, OpenClaw soumet la requête au fournisseur, renvoie
 
 ## Speech-to-text et Voice Call
 
-Deepgram, DeepInfra, ElevenLabs, Mistral, OpenAI, SenseAudio et xAI peuvent tous transcrire l'audio entrant via le chemin batch `tools.media.audio` lorsqu'ils sont configurés. Les plugins de channel qui effectuent un pré-vol sur une note vocale pour le filtrage par mention ou l'analyse des commandes marquent la pièce jointe transcrite dans le contexte entrant, afin que la passe de compréhension des médias partagée réutilise cette transcription au lieu de faire un second appel STT pour le même audio.
+Deepgram, DeepInfra, ElevenLabs, Mistral, OpenAI, OpenRouter, SenseAudio et xAI peuvent tous transcrire
+l'audio entrant via le chemin de traitement par lot `tools.media.audio` lorsqu'ils sont configurés.
+Les plugins de canal qui effectuent un contrôle préalable d'une note vocale pour le filtrage par mention ou l'analyse de commandes
+marquent la pièce jointe transcrite dans le contexte entrant, afin que la passe
+partagée de compréhension des médias réutilise cette transcription au lieu de faire un second
+appel STT pour le même audio.
 
 Deepgram, ElevenLabs, Mistral, OpenAI et xAI enregistrent également des fournisseurs STT en streaming pour Voice Call, afin que l'audio téléphonique en direct puisse être transmis au fournisseur sélectionné sans attendre un enregistrement complet.
 

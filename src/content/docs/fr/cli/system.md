@@ -31,45 +31,59 @@ openclaw system presence
 
 ## `system event`
 
-Mettre en file d'attente un événement système sur la session **principale**. Le prochain battement de cœur (heartbeat) l'injectera
-comme une ligne `System:` dans l'invite. Utilisez `--mode now` pour déclencher le battement de cœur
-immédiatement ; `next-heartbeat` attend le prochain tick planifié.
+Enqueue a system event on the **main** session by default. The next heartbeat
+will inject it as a `System:` line in the prompt. Use `--mode now` to trigger
+the heartbeat immediately; `next-heartbeat` waits for the next scheduled tick.
 
-Indicateurs :
+Pass `--session-key` to target a specific session (for example to relay an
+async-task completion back to the channel that started it).
 
-- `--text <text>` : texte de l'événement système requis.
-- `--mode <mode>` : `now` ou `next-heartbeat` (par défaut).
-- `--json` : sortie lisible par machine.
-- `--url`, `--token`, `--timeout`, `--expect-final` : indicateurs partagés Gateway RPC.
+> **Timing exception with `--session-key`:** when `--session-key` is supplied,
+> `--mode next-heartbeat` collapses to an immediate targeted wake instead of
+> waiting for the next scheduled tick. Targeted wakes use heartbeat intent
+> `immediate` so they bypass the runner's not-due gate that would otherwise
+> defer (and effectively drop) an `event`-intent wake. If you want delayed
+> delivery, omit `--session-key` so the event lands on the main session and
+> rides the next regular heartbeat.
+
+Flags:
+
+- `--text <text>`: required system event text.
+- `--mode <mode>`: `now` or `next-heartbeat` (default).
+- `--session-key <sessionKey>`: optional; target a specific agent session
+  instead of the agent's main session. Keys that do not belong to the
+  resolved agent fall back to the agent's main session.
+- `--json`: machine-readable output.
+- `--url`, `--token`, `--timeout`, `--expect-final`: shared Gateway RPC flags.
 
 ## `system heartbeat last|enable|disable`
 
-Contrôles des battements de cœur :
+Heartbeat controls:
 
-- `last` : afficher le dernier événement de battement de cœur.
-- `enable` : réactiver les battements de cœur (à utiliser s'ils ont été désactivés).
-- `disable` : mettre en pause les battements de cœur.
+- `last`: show the last heartbeat event.
+- `enable`: turn heartbeats back on (use this if they were disabled).
+- `disable`: pause heartbeats.
 
-Indicateurs :
+Flags:
 
-- `--json` : sortie lisible par machine.
-- `--url`, `--token`, `--timeout`, `--expect-final` : indicateurs partagés Gateway RPC.
+- `--json`: machine-readable output.
+- `--url`, `--token`, `--timeout`, `--expect-final`: shared Gateway RPC flags.
 
 ## `system presence`
 
-Lister les entrées de présence système actuelles connues du Gateway (nœuds,
-instances et lignes de statut similaires).
+Liste les entrées de présence système actuelles connues du Gateway (nœuds,
+instances et lignes d'état similaires).
 
-Indicateurs :
+Drapeaux :
 
 - `--json` : sortie lisible par machine.
-- `--url`, `--token`, `--timeout`, `--expect-final` : indicateurs partagés Gateway RPC.
+- `--url`, `--token`, `--timeout`, `--expect-final` : drapeaux partagés Gateway RPC.
 
-## Notes
+## Remarques
 
-- Nécessite un Gateway en cours d'exécution accessible via votre configuration actuelle (locale ou distante).
-- Les événements système sont éphémères et ne sont pas persistants après les redémarrages.
+- Nécessite un Gateway en cours d'exécution accessible par votre configuration actuelle (locale ou distante).
+- Les événements système sont éphémères et ne sont pas conservés après les redémarrages.
 
-## Connexe
+## Connexes
 
 - [Référence CLI](/fr/cli)

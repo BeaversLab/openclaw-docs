@@ -83,14 +83,14 @@ MiniMax 搜尋使用這些端點：
 
 ## 支援的參數
 
-MiniMax 搜尋支援：
+| 參數    | 類型 | 約束 | 說明                                                  |
+| ------- | ---- | ---- | ----------------------------------------------------- |
+| `query` | 字串 | 必填 | 搜尋查詢字串。                                        |
+| `count` | 整數 | 1-10 | 要傳回的結果數量。OpenClaw 會將傳回清單修剪至此大小。 |
 
-- `query`
-- `count` (OpenClaw 會將傳回的結果列表修剪為要求的數量)
-
-目前不支援提供者專屬的篩選器。
+目前不支援供應商特有的篩選器。
 
 ## 相關
 
-- [Web Search 概覽](/zh-Hant/tools/web) -- 所有提供者與自動偵測
-- [MiniMax](/zh-Hant/providers/minimax) -- 模型、影像、語音與驗證設定
+- [Web Search 概觀](/zh-Hant/tools/web) -- 所有供應商與自動偵測
+- [MiniMax](/zh-Hant/providers/minimax) -- 模型、圖片、語音與驗證設定

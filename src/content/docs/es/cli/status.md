@@ -31,12 +31,14 @@ Notas:
 - La descripción general incluye el estado de instalación/tiempo de ejecución del servicio Gateway + host del nodo cuando está disponible.
 - La descripción general incluye el canal de actualización + el SHA de git (para las checkouts de código fuente).
 - La información de actualización aparece en la descripción general; si hay una actualización disponible, el estado imprime una sugerencia para ejecutar `openclaw update` (consulte [Actualización](/es/install/updating)).
+- Los fallos de actualización de precios de los modelos se muestran como advertencias de precios opcionales. No
+  significan que la Gateway o los canales estén en mal estado.
 - Las superficies de estado de solo lectura (`status`, `status --json`, `status --all`) resuelven los SecretRefs admitidos para sus rutas de configuración de destino cuando es posible.
-- Si se configura un SecretRef de canal admitido pero no está disponible en la ruta del comando actual, el estado permanece de solo lectura e informa una salida degradada en lugar de fallar. La salida humana muestra advertencias como "token configurado no disponible en esta ruta de comando", y la salida JSON incluye `secretDiagnostics`.
+- Si un SecretRef de canal admitido está configurado pero no disponible en la ruta del comando actual, el estado permanece de solo lectura e informa una salida degradada en lugar de fallar. La salida humana muestra advertencias como "configured token unavailable in this command path", y la salida JSON incluye `secretDiagnostics`.
 - Cuando la resolución de SecretRef local al comando tiene éxito, el estado prefiere la instantánea resuelta y borra los marcadores de canal transitorios de "secreto no disponible" de la salida final.
 - `status --all` incluye una fila de descripción general de Secrets y una sección de diagnóstico que resume los diagnósticos de secretos (truncados para legibilidad) sin detener la generación del informe.
 
 ## Relacionado
 
-- [Referencia de CLI](/es/cli)
+- [Referencia de la CLI](/es/cli)
 - [Doctor](/es/gateway/doctor)

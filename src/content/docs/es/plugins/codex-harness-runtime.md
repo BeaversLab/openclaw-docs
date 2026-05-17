@@ -65,100 +65,105 @@ adaptador del arnés. Para las herramientas nativas de Codex, Codex posee el reg
 OpenClaw puede reflejar eventos seleccionados, pero no puede reescribir el hilo nativo de
 Codex a menos que Codex exponga esa operación a través de devoluciones de llamada del servidor de aplicaciones o ganchos nativos.
 
-Las proyecciones de compactación y ciclo de vida de LLM provienen de las notificaciones del servidor de aplicaciones
-de Codex y el estado del adaptador de OpenClaw, no de comandos de gancho nativos de Codex.
-Los eventos `before_compaction`, `after_compaction`, `llm_input` y
-`llm_output` de OpenClaw son observaciones a nivel de adaptador, no capturas byte a byte
-de las solicitudes internas de Codex o cargas útiles de compactación.
+Las notificaciones de elementos del servidor de aplicaciones de Codex también proporcionan observaciones `after_tool_call` asíncronas para las finalizaciones de herramientas nativas que aún no están cubiertas por el relé `PostToolUse` nativo. Estas observaciones son solo para telemetría y compatibilidad con complementos; no pueden bloquear, retrasar ni mutar la llamada a la herramienta nativa.
 
-Las notificaciones nativas de `hook/started` y del servidor de aplicaciones `hook/completed` de Codex se proyectan como eventos del agente `codex_app_server.hook` para la trayectoria y la depuración. No invocan los hooks de los complementos de OpenClaw.
+Las proyecciones del ciclo de vida de la compactación y del LLM provienen de las notificaciones del servidor de aplicaciones de Codex y del estado del adaptador OpenClaw, no de los comandos de enlace nativos de Codex. Los eventos `before_compaction`, `after_compaction`, `llm_input` y `llm_output` de OpenClaw son observaciones a nivel de adaptador, no capturas byte por byte de las solicitudes internas de Codex o las cargas útiles de compactación.
+
+Las notificaciones nativas del servidor de aplicaciones `hook/started` y `hook/completed` de Codex se proyectan como eventos de agente `codex_app_server.hook` para la trayectoria y la depuración. No invocan enlaces de complementos de OpenClaw.
 
 ## Contrato de soporte V1
 
-Compatible con el tiempo de ejecución de Codex v1:
+Soportado en tiempo de ejecución de Codex v1:
 
-| Superficie                                          | Soporte                                                                                                             | Por qué                                                                                                                                                                                                                                                                                     |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Bucle de modelos de OpenAI a través de Codex        | Compatible                                                                                                          | El servidor de aplicaciones de Codex posee el turno de OpenAI, la reanudación del subproceso nativo y la continuación de la herramienta nativa.                                                                                                                                             |
-| Enrutamiento y entrega de canales de OpenClaw       | Compatible                                                                                                          | Telegram, Discord, Slack, WhatsApp, iMessage y otros canales permanecen fuera del tiempo de ejecución del modelo.                                                                                                                                                                           |
-| Herramientas dinámicas de OpenClaw                  | Compatible                                                                                                          | Codex pide a OpenClaw que ejecute estas herramientas, por lo que OpenClaw permanece en la ruta de ejecución.                                                                                                                                                                                |
-| Complementos de contexto y avisos (prompt)          | Compatible                                                                                                          | OpenClaw crea superposiciones de avisos y proyecta el contexto en el turno de Codex antes de iniciar o reanudar el subproceso.                                                                                                                                                              |
-| Ciclo de vida del motor de contexto                 | Compatible                                                                                                          | El ensamblaje, la ingestión, el mantenimiento posterior al turno y la coordinación de compactación del motor de contexto se ejecutan para los turnos de Codex.                                                                                                                              |
-| Hooks de herramientas dinámicas                     | Compatible                                                                                                          | `before_tool_call`, `after_tool_call` y el middleware de resultados de herramientas se ejecutan alrededor de las herramientas dinámicas propiedad de OpenClaw.                                                                                                                              |
-| Hooks de ciclo de vida                              | Compatible como observaciones del adaptador                                                                         | `llm_input`, `llm_output`, `agent_end`, `before_compaction` y `after_compaction` se activan con cargas útiles honestas del modo Codex.                                                                                                                                                      |
-| Puerta de revisión de respuesta final               | Compatible a través del relevo de hook nativo                                                                       | El `Stop` de Codex se retransmite a `before_agent_finalize`; `revise` pide a Codex un pase de modelo más antes de la finalización.                                                                                                                                                          |
-| Bloqueo u observación de shell nativo, parche y MCP | Compatible a través del relevo de hook nativo                                                                       | El `PreToolUse` y el `PostToolUse` de Codex se retransmiten para las superficies de herramientas nativas confirmadas, incluidas las cargas útiles de MCP en el servidor de aplicaciones de Codex `0.125.0` o más reciente. El bloqueo es compatible; la reescritura de argumentos no lo es. |
-| Política de permisos nativos                        | Compatible a través de aprobaciones del servidor de aplicaciones de Codex y relevo de hook nativo de compatibilidad | Las solicitudes de aprobación del servidor de aplicaciones de Codex se enrutan a través de OpenClaw después de la revisión de Codex. El relé de enlace nativo `PermissionRequest` es opcional para los modos de aprobación nativos porque Codex lo emite antes de la revisión del guardián. |
-| Captura de trayectoria del servidor de aplicaciones | Compatible                                                                                                          | OpenClaw registra la solicitud que envió al servidor de aplicaciones y las notificaciones del servidor de aplicaciones que recibe.                                                                                                                                                          |
+| Superficie                                          | Soporte                                                                                                           | Por qué                                                                                                                                                                                                                                                                                     |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bucle de modelos de OpenAI a través de Codex        | Soportado                                                                                                         | El servidor de aplicaciones de Codex posee el turno de OpenAI, la reanudación del hilo nativo y la continuación de la herramienta nativa.                                                                                                                                                   |
+| Enrutamiento y entrega de canales de OpenClaw       | Soportado                                                                                                         | Telegram, Discord, Slack, WhatsApp, iMessage y otros canales permanecen fuera del tiempo de ejecución del modelo.                                                                                                                                                                           |
+| Herramientas dinámicas de OpenClaw                  | Soportado                                                                                                         | Codex le pide a OpenClaw que ejecute estas herramientas, por lo que OpenClaw permanece en la ruta de ejecución.                                                                                                                                                                             |
+| Complementos de prompt y contexto                   | Soportado                                                                                                         | OpenClaw crea superposiciones de prompts y proyecta el contexto en el turno de Codex antes de iniciar o reanudar el hilo.                                                                                                                                                                   |
+| Ciclo de vida del motor de contexto                 | Soportado                                                                                                         | El ensamblaje, la ingesta, el mantenimiento posterior al turno y la coordinación de compactación del motor de contexto se ejecutan para los turnos de Codex.                                                                                                                                |
+| Enlaces de herramientas dinámicas                   | Soportado                                                                                                         | `before_tool_call`, `after_tool_call` y el middleware de resultados de herramientas se ejecutan alrededor de las herramientas dinámicas propiedad de OpenClaw.                                                                                                                              |
+| Enlaces del ciclo de vida                           | Soportado como observaciones del adaptador                                                                        | `llm_input`, `llm_output`, `agent_end`, `before_compaction` y `after_compaction` se activan con cargas útiles honestas del modo Codex.                                                                                                                                                      |
+| Puerta de revisión de respuesta final               | Admitido a través del relé de enlace nativo                                                                       | Codex `Stop` se transmite a `before_agent_finalize`; `revise` le pide a Codex otro pase del modelo antes de la finalización.                                                                                                                                                                |
+| Bloqueo u observación de shell nativo, parche y MCP | Admitido a través del relé de enlace nativo                                                                       | Codex `PreToolUse` y `PostToolUse` se transmiten para superficies de herramientas nativas confirmadas, incluyendo cargas útiles de MCP en el servidor de aplicaciones de Codex `0.125.0` o más reciente. El bloqueo es admitido; la reescritura de argumentos no lo es.                     |
+| Política de permisos nativos                        | Admitido a través de aprobaciones del servidor de aplicaciones de Codex y relé de enlace nativo de compatibilidad | Las solicitudes de aprobación del servidor de aplicaciones de Codex se enrutan a través de OpenClaw después de la revisión de Codex. El relé de enlace nativo `PermissionRequest` es opcional para los modos de aprobación nativos porque Codex lo emite antes de la revisión del guardián. |
+| Captura de trayectoria del servidor de aplicaciones | Admitido                                                                                                          | OpenClaw registra la solicitud que envió al servidor de aplicaciones y las notificaciones del servidor de aplicaciones que recibe.                                                                                                                                                          |
 
-No compatible en el tiempo de ejecución de Codex v1:
+No admitido en el tiempo de ejecución de Codex v1:
 
-| Superficie                                                            | Límite V1                                                                                                                                                                             | Ruta futura                                                                                                                |
-| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Mutación de argumentos de herramientas nativas                        | Los enlaces pre-tool nativos de Codex pueden bloquear, pero OpenClaw no reescribe los argumentos de herramientas nativas de Codex.                                                    | Requiere soporte de enlace/esquema de Codex para la entrada de herramienta de reemplazo.                                   |
-| Historial de transcripciones nativas de Codex editables               | Codex posee el historial canónico del subproceso nativo. OpenClaw posee una réplica y puede proyectar contexto futuro, pero no debe mutar elementos internos no compatibles.          | Agregue APIs explícitas del servidor de aplicaciones de Codex si se necesita cirugía del subproceso nativo.                |
-| `tool_result_persist` para registros de herramientas nativas de Codex | Ese enlace transforma las escrituras de transcripciones propiedad de OpenClaw, no los registros de herramientas nativas de Codex.                                                     | Podría reflejar registros transformados, pero la reescritura canónica necesita soporte de Codex.                           |
-| Metadatos de compactación nativa enriquecidos                         | OpenClaw observa el inicio y la finalización de la compactación, pero no recibe una lista estable de elementos mantenidos/eliminados, un delta de tokens o una carga útil de resumen. | Necesita eventos de compactación de Codex más enriquecidos.                                                                |
-| Intervención de compactación                                          | Los enlaces de compactación actuales de OpenClaw son de nivel de notificación en el modo Codex.                                                                                       | Agregue enlaces de pre/post compactación de Codex si los complementos necesitan vetar o reescribir la compactación nativa. |
-| Captura de solicitudes de API de modelo byte por byte                 | OpenClaw puede capturar solicitudes y notificaciones del servidor de aplicaciones, pero el núcleo de Codex construye la solicitud final de la API de OpenAI internamente.             | Necesita un evento de rastreo de solicitud de modelo de Codex o una API de depuración.                                     |
+| Superficie                                                            | Límite V1                                                                                                                                                                             | Ruta futura                                                                                                              |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Mutación de argumentos de herramienta nativa                          | Los enlaces previos a la herramienta nativos de Codex pueden bloquear, pero OpenClaw no reescribe los argumentos de herramientas nativas de Codex.                                    | Requiere soporte de enlace/esquema de Codex para la entrada de herramienta de reemplazo.                                 |
+| Historial de transcripciones nativas de Codex editable                | Codex posee el historial canónico de hilos nativos. OpenClaw posee un espejo y puede proyectar contexto futuro, pero no debe mutar los internos no admitidos.                         | Agregue API explícitas del servidor de aplicaciones de Codex si se necesita cirugía de hilos nativos.                    |
+| `tool_result_persist` para registros de herramientas nativas de Codex | Ese enlace transforma las escrituras de transcripciones propiedad de OpenClaw, no los registros de herramientas nativas de Codex.                                                     | Podría reflejar registros transformados, pero la reescritura canónica necesita soporte de Codex.                         |
+| Metadatos de compactación nativa enriquecidos                         | OpenClaw observa el inicio y la finalización de la compactación, pero no recibe una lista estable de elementos mantenidos/eliminados, un delta de tokens o una carga útil de resumen. | Necesita eventos de compactación de Codex más enriquecidos.                                                              |
+| Intervención de compactación                                          | Los ganchos de compactación actuales de OpenClaw son de nivel de notificación en el modo Codex.                                                                                       | Añada ganchos de pre/post compactación de Codex si los complementos necesitan vetar o reescribir la compactación nativa. |
+| Captura de solicitudes de API de modelo byte por byte                 | OpenClaw puede capturar solicitudes y notificaciones del servidor de aplicaciones, pero el núcleo de Codex construye la solicitud final de la API de OpenAI internamente.             | Necesita un evento de seguimiento de solicitud de modelo de Codex o una API de depuración.                               |
 
 ## Permisos nativos y elicitaciones MCP
 
 Para `PermissionRequest`, OpenClaw solo devuelve decisiones explícitas de permitir o denegar
-cuando la política lo decide. Un resultado sin decisión no es un permiso. Codex lo trata como sin
-decisión de enlace y pasa a su propia ruta de aprobación de guardián o usuario.
+cuando la política lo decide. Un resultado de sin-decisión no es un permiso. Codex lo trata como sin
+decisión de gancho y pasa a su propia ruta de guardián o aprobación del usuario.
 
-Los modos de aprobación del servidor de aplicaciones de Codex omiten este enlace nativo de forma predeterminada. Este comportamiento
+Los modos de aprobación del servidor de aplicaciones de Codex omiten este gancho nativo de manera predeterminada. Este comportamiento
 se aplica cuando `permission_request` se incluye explícitamente en
 `nativeHookRelay.events` o un tiempo de ejecución de compatibilidad lo instala.
 
-Cuando un operador elige `allow-always` para una solicitud de permiso nativa de Codex, OpenClaw recuerda esa huella digital exacta de proveedor/sesión/herramienta/entrada/cwd para una ventana de sesión limitada. La decisión recordada es intencionalmente solo de coincidencia exacta: un comando modificado, argumentos, carga útil de la herramienta o cwd crea una aprobación nueva.
+Cuando un operador elige `allow-always` para una solicitud de permiso nativo de Codex,
+OpenClaw recuerda esa huella digital exacta de proveedor/sesión/herramienta/entrada/cwd para una
+ventana de sesión limitada. La decisión recordada es intencionalmente solo de coincidencia exacta:
+un comando modificado, argumentos, carga útil de la herramienta o cwd crea una
+aprobación nueva.
 
-Las solicitudes de aprobación de herramientas MCP de Codex se enrutan a través del flujo de aprobación de complementos de OpenClaw cuando Codex marca `_meta.codex_approval_kind` como `"mcp_tool_call"`. Los prompts `request_user_input` de Codex se devuelven al chat de origen, y el siguiente mensaje de seguimiento en cola responde a esa solicitud del servidor nativo en lugar de ser redirigido como contexto adicional. Otras solicitudes de elicitación de MCP fallan de forma cerrada.
+Las elicitaciones de aprobación de herramientas MCP de Codex se enrutan a través del flujo de
+aprobación de complementos de OpenClaw cuando Codex marca `_meta.codex_approval_kind` como
+`"mcp_tool_call"`. Los mensajes `request_user_input` de Codex se envían de vuelta al
+chat de origen, y el siguiente mensaje de seguimiento en cola responde a esa solicitud de
+servidor nativo en lugar de ser redirigido como contexto adicional. Otras solicitudes de
+elicitación MCP fallan cerradas.
 
 ## Dirección de la cola
 
-La dirección de la cola de ejecución activa se asigna al `turn/steer` del servidor de aplicaciones de Codex. Con el `messages.queue.mode: "steer"` predeterminado, OpenClaw agrupa los mensajes de chat en cola para la ventana de silencio configurada y los envía como una solicitud `turn/steer` en orden de llegada. El modo `queue` heredado envía solicitudes `turn/steer` separadas.
+La dirección de la cola de ejecución activa se asigna al `turn/steer` del servidor de aplicaciones de Codex. Con el
+`messages.queue.mode: "steer"` predeterminado, OpenClaw agrupa los mensajes de chat en cola
+para la ventana de silencio configurada y los envía como una solicitud `turn/steer` en
+orden de llegada. El modo heredado `queue` envía solicitudes `turn/steer` separadas.
 
-Las revisiones de Codex y las turnos de compactación manual pueden rechazar la dirección en el mismo turno. En ese caso, OpenClaw utiliza la cola de seguimiento cuando el modo seleccionado permite la alternativa. Consulte [Cola de dirección](/es/concepts/queue-steering).
+Los turnos de revisión y compactación manual de Codex pueden rechazar la dirección en el mismo turno. En ese
+caso, OpenClaw usa la cola de seguimiento cuando el modo seleccionado permite la alternativa.
+Vea [Cola de dirección](/es/concepts/queue-steering).
 
 ## Carga de comentarios de Codex
 
-Cuando se aprueba `/diagnostics [note]` para una sesión que utiliza el arnés nativo de Codex, OpenClaw también llama al `feedback/upload` del servidor de aplicaciones de Codex para los hilos de Codex relevantes. La carga solicita al servidor de aplicaciones que incluya registros para cada hilo listado y subhilos de Codex generados cuando estén disponibles.
+Cuando se aprueba `/diagnostics [note]` para una sesión mediante el arnés nativo de Codex, OpenClaw también llama a `feedback/upload` del servidor de aplicaciones de Codex para los subprocesos de Codex pertinentes. La carga solicita al servidor de aplicaciones que incluya registros para cada subproceso listado y subprocesos secundarios de Codex generados cuando estén disponibles.
 
-La carga se realiza a través de la ruta normal de comentarios de Codex hacia los servidores de OpenAI. Si los comentarios de Codex están deshabilitados en ese servidor de aplicaciones, el comando devuelve el error del servidor de aplicaciones. La respuesta de diagnóstico completada lista los canales, los ids de sesión de OpenClaw, los ids de hilo de Codex y los comandos locales `codex resume <thread-id>` para los hilos que se enviaron.
+La carga se realiza a través de la ruta de comentarios normal de Codex hacia los servidores de OpenAI. Si los comentarios de Codex están deshabilitados en ese servidor de aplicaciones, el comando devuelve el error del servidor de aplicaciones. La respuesta de diagnósticos completada enumera los canales, los ids de sesión de OpenClaw, los ids de subproceso de Codex y los comandos locales `codex resume <thread-id>` para los subprocesos que se enviaron.
 
-Si deniega o ignora la aprobación, OpenClaw no imprime esos identificadores de Codex y
-no envía comentarios de Codex. La carga no reemplaza la exportación local de
-diagnósticos de Gateway. Consulte [Exportación de diagnósticos](/es/gateway/diagnostics) para obtener información sobre la
-aprobación, privacidad, paquete local y el comportamiento en chats grupales.
+Si deniega o ignora la aprobación, OpenClaw no imprime esos ids de Codex y no envía comentarios de Codex. La carga no reemplaza la exportación de diagnósticos local de Gateway. Consulte [Exportación de diagnósticos](/es/gateway/diagnostics) para conocer el comportamiento de aprobación, privacidad, paquete local y chat en grupo.
 
-Use `/codex diagnostics [note]` solo cuando específicamente desee la carga de
-comentarios de Codex para el hilo adjunto actualmente sin el paquete completo de
-diagnósticos de Gateway.
+Use `/codex diagnostics [note]` solo cuando específicamente desee la carga de comentarios de Codex para el subproceso adjunto actualmente sin el paquete completo de diagnósticos de Gateway.
 
 ## Compactación y espejo de transcripción
 
-Cuando el modelo seleccionado utiliza el arnés de Codex, la compactación nativa de
-hilos se delega al servidor de aplicaciones de Codex. OpenClaw mantiene un espejo de
-transcripción para el historial del canal, búsqueda, `/new`, `/reset` y el cambio futuro de modelo o arnés.
+Cuando el modelo seleccionado utiliza el arnés de Codex, la compactación de subprocesos nativos se delega al servidor de aplicaciones de Codex. OpenClaw mantiene un espejo de transcripción para el historial del canal, búsqueda, `/new`, `/reset` y el cambio futuro de modelo o arnés.
 
-El espejo incluye el mensaje del usuario, el texto final del asistente y registros ligeros de razonamiento o planificación de Codex cuando el servidor de la aplicación los emite. Hoy, OpenClaw solo registra señales nativas de inicio y finalización de compactación. Todavía no expone un resumen de compactación legible por humanos ni una lista auditable de las entradas que Codex conservó después de la compactación.
+El espejo incluye el mensaje del usuario, el texto final del asistente y registros ligeros de razonamiento o planificación de Codex cuando el servidor de aplicaciones los emite. Hoy, OpenClaw solo registra señales de inicio y finalización de compactación nativa. Aún no expone un resumen de compactación legible por humanos ni una lista auditable de las entradas que Codex conservó después de la compactación.
 
-Debido a que Codex posee el hilo nativo canónico, `tool_result_persist` actualmente no reescribe los registros de resultados de herramientas nativos de Codex. Solo se aplica cuando OpenClaw está escribiendo un resultado de herramienta de transcripción de sesión propiedad de OpenClaw.
+Debido a que Codex posee el subproceso nativo canónico, `tool_result_persist` actualmente no reescribe los registros de resultados de herramientas nativas de Codex. Solo se aplica cuando OpenClaw está escribiendo un resultado de herramienta de transcripción de sesión propiedad de OpenClaw.
 
 ## Medios y entrega
 
-OpenClaw continúa siendo propietario de la entrega de medios y la selección del proveedor de medios. La imagen, el video, la música, el PDF, el TTS y la comprensión de medios utilizan configuraciones de proveedor/modelo coincidentes como `agents.defaults.imageGenerationModel`, `videoGenerationModel`, `pdfModel` y `messages.tts`.
+OpenClaw sigue siendo responsable de la entrega de medios y la selección del proveedor de medios. Imagen, video, música, PDF, TTS y la comprensión de medios utilizan configuraciones de proveedor/modelo coincidentes como `agents.defaults.imageGenerationModel`, `videoGenerationModel`, `pdfModel` y `messages.tts`.
 
-Texto, imágenes, video, música, TTS, aprobaciones y la salida de la herramienta de mensajería continúan a través de la ruta de entrega normal de OpenClaw. La generación de medios no requiere PI.
+El texto, las imágenes, el video, la música, el TTS, las aprobaciones y el resultado de la herramienta de mensajería continúan a través de la ruta de entrega normal de OpenClaw. La generación de medios no requiere PI. Cuando Codex emite un elemento nativo de generación de imágenes con un `savedPath`, OpenClaw reenvía ese archivo exacto a través de la ruta normal de medios de respuesta, incluso si el turno de Codex no tiene texto de asistente.
 
 ## Relacionado
 
 - [Codex harness](/es/plugins/codex-harness)
-- [Referencia de Codex harness](/es/plugins/codex-harness-reference)
-- [Complementos nativos de Codex](/es/plugins/codex-native-plugins)
-- [Ganchos de complementos](/es/plugins/hooks)
-- [Complementos de Agent harness](/es/plugins/sdk-agent-harness)
-- [Exportación de diagnósticos](/es/gateway/diagnostics)
-- [Exportación de trayectoria](/es/tools/trajectory)
+- [Codex harness reference](/es/plugins/codex-harness-reference)
+- [Native Codex plugins](/es/plugins/codex-native-plugins)
+- [Plugin hooks](/es/plugins/hooks)
+- [Agent harness plugins](/es/plugins/sdk-agent-harness)
+- [Diagnostics export](/es/gateway/diagnostics)
+- [Trajectory export](/es/tools/trajectory)

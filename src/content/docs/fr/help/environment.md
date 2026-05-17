@@ -90,7 +90,7 @@ Vous pouvez référencer des env vars directement dans les valeurs de chaîne de
 }
 ```
 
-Voir [Configuration : Substitution de variables d'environnement](/fr/gateway/configuration-reference#env-var-substitution) pour tous les détails.
+Voir [Configuration : Substitution de variables d'environnement](/fr/gateway/configuration-reference#env-var-substitution) pour plus de détails.
 
 ## Références secrètes vs chaînes `${ENV}`
 
@@ -112,17 +112,21 @@ Les deux sont résolus à partir de l'environnement du processus au moment de l'
 
 ## Journalisation
 
-| Variable             | Objectif                                                                                                                                                                                                                                     |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_LOG_LEVEL` | Remplacer le niveau de journalisation pour les fichiers et la console (par ex. `debug`, `trace`). A priorité sur `logging.level` et `logging.consoleLevel` dans la configuration. Les valeurs invalides sont ignorées avec un avertissement. |
+| Variable                         | Objectif                                                                                                                                                                                                                                     |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_LOG_LEVEL`             | Remplacer le niveau de journalisation pour les fichiers et la console (par ex. `debug`, `trace`). A priorité sur `logging.level` et `logging.consoleLevel` dans la configuration. Les valeurs invalides sont ignorées avec un avertissement. |
+| `OPENCLAW_DEBUG_MODEL_TRANSPORT` | Émettez des diagnostics de chronométrage des requêtes/réponses du modèle ciblées au niveau `info` sans activer les journaux de débogage globaux.                                                                                             |
+| `OPENCLAW_DEBUG_MODEL_PAYLOAD`   | Diagnostics de charge utile du modèle : `summary`, `tools` ou `full-redacted`. `full-redacted` est limité et masqué, mais peut inclure le texte de l'invite/message.                                                                         |
+| `OPENCLAW_DEBUG_SSE`             | Diagnostics de streaming : `events` pour le chronométrage du début/fin, `peek` pour inclure les cinq premiers événements SSE masqués.                                                                                                        |
+| `OPENCLAW_DEBUG_CODE_MODE`       | Diagnostics en mode code à la surface du modèle, incluant le masquage des outils fournisseur et l'application stricte de l'exécution/attente.                                                                                                |
 
 ### `OPENCLAW_HOME`
 
-Lorsqu'elle est définie, `OPENCLAW_HOME` remplace le répertoire personnel du système (`$HOME` / `os.homedir()`) pour toute résolution de chemin interne. Cela permet une isolation complète du système de fichiers pour les comptes de service sans interface.
+Lorsqu'elle est définie, `OPENCLAW_HOME` remplace le répertoire personnel du système (`$HOME` / `os.homedir()`) pour toutes les résolutions de chemins internes. Cela permet une isolation complète du système de fichiers pour les comptes de service sans interface.
 
-**Priorité :** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
+**Précédence :** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
 
-**Exemple** (LaunchDaemon macOS) :
+**Exemple** (macOS LaunchDaemon) :
 
 ```xml
 <key>EnvironmentVariables</key>
@@ -132,20 +136,20 @@ Lorsqu'elle est définie, `OPENCLAW_HOME` remplace le répertoire personnel du s
 </dict>
 ```
 
-`OPENCLAW_HOME` peut également être défini sur un chemin avec tilde (par ex. `~/svc`), qui est étendu en utilisant `$HOME` avant utilisation.
+`OPENCLAW_HOME` peut également être défini sur un chemin avec tilde (par ex. `~/svc`), qui sera développé en utilisant `$HOME` avant utilisation.
 
-## utilisateurs de nvm : échecs TLS web_fetch
+## Utilisateurs de nvm : échecs TLS web_fetch
 
-Si Node.js a été installé via **nvm** (et non le gestionnaire de paquets du système), le `fetch()` intégré utilise
-le magasin de CA groupé par nvm, qui peut manquer de racines CA modernes (ISRG Root X1/X2 pour Let's Encrypt,
+Si Node.js a été installé via **nvm** (et non le gestionnaire de paquets du système), le Node.js`fetch()` intégré utilise
+le magasin de CA groupé de nvm, qui peut manquer de CA racines modernes (ISRG Root X1/X2 pour Let's Encrypt,
 DigiCert Global Root G2, etc.). Cela provoque l'échec de `web_fetch` avec `"fetch failed"` sur la plupart des sites HTTPS.
 
-Sur Linux, OpenClaw détecte automatiquement nvm et applique le correctif dans l'environnement de démarrage réel :
+Sur Linux, OpenClaw détecte automatiquement nvm et applique la correction dans l'environnement de démarrage réel :
 
-- `openclaw gateway install` écrit `NODE_EXTRA_CA_CERTS` dans lvironnement du service systemd
-- le point d'entrée `openclaw` de la CLI se réexécute lui-même avec `NODE_EXTRA_CA_CERTS` défini avant le démarrage de Node
+- `openclaw gateway install` écrit `NODE_EXTRA_CA_CERTS` dans l'environnement du service systemd
+- le point d'entrée `openclaw` CLI se relance lui-même avec `NODE_EXTRA_CA_CERTS` défini avant le démarrage de Node
 
-**Correction manuelle (pour les anciennes versions ou les lancements directs `node ...`) :**
+**Correction manuelle (pour les anciennes versions ou les lancements `node ...` directs) :**
 
 Exportez la variable avant de démarrer OpenClaw :
 
@@ -164,13 +168,13 @@ OpenClaw lit uniquement les variables d'environnement `OPENCLAW_*`. Les préfixe
 ignorés.
 
 Si certaines sont toujours définies sur le processus Gateway au démarrage, OpenClaw émet un
-seul avertissement de dépréciation Node (`OPENCLAW_LEGACY_ENV_VARS`) listant les
+avertissement de dépréciation Node unique (`OPENCLAW_LEGACY_ENV_VARS`) listant les
 préfixes détectés et le nombre total. Renommez chaque valeur en remplaçant le
 préfixe hérité par `OPENCLAW_` (par exemple `CLAWDBOT_GATEWAY_TOKEN` →
 `OPENCLAW_GATEWAY_TOKEN`) ; les anciens noms n'ont aucun effet.
 
 ## Connexes
 
-- [Configuration du Gateway](/fr/gateway/configuration)
+- [Configuration Gateway](/fr/gateway/configuration)
 - [FAQ : variables d'environnement et chargement .env](/fr/help/faq#env-vars-and-env-loading)
 - [Aperçu des modèles](/fr/concepts/models)

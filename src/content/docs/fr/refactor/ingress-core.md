@@ -315,7 +315,6 @@ Chaque lot de travaux enregistre :
 - le code de compatibilité est isolé aux coutures SDK/core
 - les plugins empaquetés consomment directement les projections d'ingress ou les résultats génériques
 - le LOC de production des plugins est au moins 1 500 net négatif par rapport à `origin/main`
-- le nombre de lignes de code (LOC) de production en cœur est <= +1 500, ou tout excédent est compensé tant que le total reste
-  <= +2 000
+- le nombre de lignes de code de production du cœur est `<= +1,500`, ou tout excédent est payé tant que le total reste `<= +2,000`
 - des tests représentatifs couvrent la rédaction, l'acheminement, la commande/événement, l'activation,
   le groupe d'accès et le comportement de repli spécifique au canal

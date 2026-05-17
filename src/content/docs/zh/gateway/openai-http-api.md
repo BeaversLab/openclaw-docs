@@ -191,20 +191,81 @@ OpenClaw 将 OpenAI OpenClawOpenAI`model` 字段视为 **代理目标**，而不
 - 每行事件均为 `data: <json>`
 - 流以 `data: [DONE]` 结束
 
+## Chat 工具 contract
+
+`/v1/chat/completions` 支持与常见 OpenAI Chat 客户端兼容的 function-工具 子集。
+
+### 支持的请求字段
+
+- `tools`：`{ "type": "function", "function": { ... } }` 的数组
+- `tool_choice`: `"auto"`, `"none"`
+- `messages[*].role: "tool"` 后续轮次
+- `messages[*].tool_call_id` 用于将工具结果绑定回先前的工具调用
+- `max_completion_tokens`: number; 单次调用总补全令牌（包括推理令牌）的上限。当前 OpenAI Chat Completions 字段名称；当同时发送 `max_completion_tokens` 和 `max_tokens` 时优先使用。
+- `max_tokens`: number; 为向后兼容而接受的旧别名。当同时存在 `max_completion_tokens` 时将被忽略。
+
+当任一字段被设置时，该值会通过代理流参数通道转发给上游提供商。发送给上游提供商的实际线端字段名称由提供商传输方式选择：对于 OpenAI 系列端点，使用 `max_completion_tokens`；对于仅接受传统名称的提供商（例如 Mistral 和 Chutes），使用 `max_tokens`。
+
+### 不支持的变体
+
+对于不受支持的工具变体，端点将返回 `400 invalid_request_error`，包括：
+
+- 非数组 `tools`
+- 非函数工具条目
+- 缺少 `tool.function.name`
+- `tool_choice` 变体，例如 `allowed_tools` 和 `custom`
+- `tool_choice: "required"`（尚未在运行时强制执行；将在实施严格强制执行后支持）
+- `tool_choice: { "type": "function", "function": { "name": "..." } }`（理由与 `required` 相同）
+- 与提供的 `tools` 不匹配的 `tool_choice.function.name` 值
+
+### 非流式工具响应形状
+
+当代理决定调用工具时，响应使用：
+
+- `choices[0].finish_reason = "tool_calls"`
+- `choices[0].message.tool_calls[]` 条目包含：
+  - `id`
+  - `type: "function"`
+  - `function.name`
+  - `function.arguments` （JSON 字符串）
+
+工具调用之前的助手评论在 `choices[0].message.content` 中返回（可能为空）。
+
+### 流式工具响应结构
+
+当 `stream: true` 时，工具调用以增量 SSE 块的形式发出：
+
+- 初始助手角色增量
+- 可选的助手注释增量
+- 一个或多个携带工具标识和参数片段的 `delta.tool_calls` 块
+- 带有 `finish_reason: "tool_calls"` 的最终块
+- `data: [DONE]`
+
+如果 `stream_options.include_usage=true`，则在 `[DONE]` 之前发出一个尾随的使用量块。
+
+### 工具后续循环
+
+收到 `tool_calls` 后，客户端应执行请求的函数并发送包含以下内容的后续请求：
+
+- 之前的助手工具调用消息
+- 一条或多条具有匹配 `tool_call_id` 的 `role: "tool"` 消息
+
+这允许网关代理运行继续相同的推理循环并生成最终的助手回答。
+
 ## Open WebUI 快速设置
 
 对于基本的 Open WebUI 连接：
 
-- 基础 URL： `http://127.0.0.1:18789/v1`
-- macOS 上的 Docker 基础 URL： DockermacOS`http://host.docker.internal:18789/v1`
+- 基础 URL：`http://127.0.0.1:18789/v1`
+- macOS 上的 Docker 基础 URL：DockermacOS`http://host.docker.internal:18789/v1`
 - API 密钥：您的 Gateway(网关) bearer token
-- 模型： `openclaw/default`
+- 模型：`openclaw/default`
 
 预期行为：
 
-- `GET /v1/models` 应列出 `openclaw/default`
-- Open WebUI 应使用 `openclaw/default` 作为聊天模型 ID
-- 如果您希望为该代理使用特定的后端提供商/模型，请设置代理的正常默认模型或发送 `x-openclaw-model`
+- `GET /v1/models` 应该列出 `openclaw/default`
+- Open WebUI 应将 `openclaw/default` 用作聊天模型 ID
+- 如果您希望为该代理指定特定的后端提供商/模型，请设置代理的常规默认模型或发送 `x-openclaw-model`
 
 快速冒烟测试：
 
@@ -213,11 +274,11 @@ curl -sS http://127.0.0.1:18789/v1/models \
   -H 'Authorization: Bearer YOUR_TOKEN'
 ```
 
-如果返回 `openclaw/default`，大多数 Open WebUI 设置都可以使用相同的基础 URL 和令牌进行连接。
+如果返回 `openclaw/default`，大多数 Open WebUI 设置可以使用相同的基础 URL 和令牌进行连接。
 
 ## 示例
 
-非流式传输：
+非流式：
 
 ```bash
 curl -sS http://127.0.0.1:18789/v1/chat/completions \
@@ -229,7 +290,7 @@ curl -sS http://127.0.0.1:18789/v1/chat/completions \
   }'
 ```
 
-流式传输：
+流式：
 
 ```bash
 curl -N http://127.0.0.1:18789/v1/chat/completions \
@@ -270,14 +331,14 @@ curl -sS http://127.0.0.1:18789/v1/embeddings \
   }'
 ```
 
-备注：
+注意：
 
-- `/v1/models`OpenClaw 返回 OpenClaw 代理目标，而不是原始提供商目录。
-- `openclaw/default` 始终存在，因此一个稳定的 ID 可在不同环境中使用。
-- 后端提供商/模型覆盖属于 `x-openclaw-model`OpenAI，而不是 OpenAI `model` 字段。
-- `/v1/embeddings` 支持 `input` 作为字符串或字符串数组。
+- `/v1/models`OpenClaw 返回 OpenClaw agent 目标，而非原始提供商目录。
+- `openclaw/default` 始终存在，因此一个稳定的 ID 可在所有环境中使用。
+- 后端提供商/模型覆盖应位于 `x-openclaw-model`OpenAI 中，而非 OpenAI 的 `model` 字段。
+- `/v1/embeddings` 支持 `input` 为字符串或字符串数组。
 
 ## 相关
 
 - [配置参考](/zh/gateway/configuration-reference)
-- [OpenAI](OpenAI/en/providers/openai)
+- [OpenAI](/zh/providers/openai)

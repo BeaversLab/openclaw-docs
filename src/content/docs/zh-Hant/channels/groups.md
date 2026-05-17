@@ -125,7 +125,7 @@ Discord/Slack/Telegram 的傳送失敗。請使用對工具呼叫可靠的模型
 | 只有您可以在群組中觸發          | `groupPolicy: "allowlist"`, `groupAllowFrom: ["+1555..."]` |
 | 跨頻道重複使用一組信任的發送者  | `groupAllowFrom: ["accessGroup:operators"]`                |
 
-關於可重複使用的發送者允許清單，請參閱 [存取群組](/zh-Hant/channels/access-groups)。
+關於可重複使用的發送者許可清單，請參閱 [存取群組](/zh-Hant/channels/access-groups)。
 
 ## 工作階段金鑰
 
@@ -147,7 +147,7 @@ Discord/Slack/Telegram 的傳送失敗。請使用對工具呼叫可靠的模型
 - **DM**：完整工具 (主機)
 - **群組**：沙盒 + 受限工具
 
-<Note>如果您需要真正獨立的工作區/角色（「個人」和「公開」絕不能混合），請使用第二個代理 + 綁定。請參閱 [Multi-Agent Routing](/zh-Hant/concepts/multi-agent)。</Note>
+<Note>如果您需要完全獨立的工作區/角色（「個人」和「公開」絕不能混合），請使用第二個代理程式 + 綁定。請參閱 [多代理程式路由](/zh-Hant/concepts/multi-agent)。</Note>
 
 <Tabs>
   <Tab title="DMs on host, groups sandboxed">
@@ -202,9 +202,9 @@ Discord/Slack/Telegram 的傳送失敗。請使用對工具呼叫可靠的模型
 
 相關連結：
 
-- 配置鍵和預設值：[Gateway configuration](/zh-Hant/gateway/config-agents#agentsdefaultssandbox)
-- 調試工具被封鎖的原因：[Sandbox vs Tool Policy vs Elevated](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Bind mounts 詳細資訊：[Sandboxing](/zh-Hant/gateway/sandboxing#custom-bind-mounts)
+- 設定金鑰與預設值：[Gateway configuration](/zh-Hant/gateway/config-agents#agentsdefaultssandbox)
+- 除錯工具被封鎖的原因：[Sandbox vs Tool Policy vs Elevated](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Bind mounts 詳情：[Sandboxing](/zh-Hant/gateway/sandboxing#custom-bind-mounts)
 
 ## 顯示標籤
 
@@ -334,16 +334,16 @@ Discord/Slack/Telegram 的傳送失敗。請使用對工具呼叫可靠的模型
 ```
 
 <AccordionGroup>
-  <Accordion title="提及門檻備註">
-    - `mentionPatterns` 是不區分大小寫的安全正則表達式模式；無效的模式和不安全的巢狀重複形式會被忽略。
-    - 提供明確提及的介面仍然會通過；模式是備案。
+  <Accordion title="提及閘控備註">
+    - `mentionPatterns` 為不區分大小寫的安全正規表達式模式；無效的模式和不安全的巢狀重複形式會被忽略。
+    - 提供明確提及的介面仍然會通過；模式僅作為後備方案。
     - 每個代理的覆寫：`agents.list[].groupChat.mentionPatterns`（當多個代理共用一個群組時很有用）。
-    - 僅當可以進行提及偵測時（已配置原生提及或 `mentionPatterns`），才會執行提及門檻。
-    - 將群組或發送者加入允許清單並不會停用提及門檻；當所有訊息都應觸發時，請將該群組的 `requireMention` 設為 `false`。
-    - 群組聊天提示詞上下文每輪都會攜帶已解析的靜音回覆指令；工作區檔案不應重複 `NO_REPLY` 機制。
-    - 允許靜音回覆的群組會將純空白的或僅包含推理的模型輪次視為靜音，等同於 `NO_REPLY`。直接聊天也是如此，但僅當明確允許直接靜音回覆時；否則空白回覆將保持為失敗的代理輪次。
-    - Discord 預設值位於 `channels.discord.guilds."*"` 中（可依伺服器/頻道覆寫）。
-    - 群組歷史記錄上下文在所有頻道中均被統一封裝，且為 **僅待處理**（因提及門檻而跳過的訊息）；使用 `messages.groupChat.historyLimit` 作為全域預設值，並使用 `channels.<channel>.historyLimit`（或 `channels.<channel>.accounts.*.historyLimit`）進行覆寫。設定 `0` 可停用。
+    - 只有在可以進行提及偵測時（已設定原生提及或 `mentionPatterns`），才會執行提及閘控。
+    - 將群組或發送者加入允許清單並不會停用提及閘控；當所有訊息都應觸發時，請將該群組的 `requireMention` 設為 `false`。
+    - 群組聊天提示詞上下文每回合都會攜帶已解析的靜音回覆指令；工作區檔案不應重複 `NO_REPLY` 機制。
+    - 允許靜音回覆的群組會將純空白或僅包含推理的模型回合視為靜音，等同於 `NO_REPLY`。直接聊天僅在明確允許直接靜音回覆時才會這樣做；否則，空白回覆將保持為代理失敗的回合。
+    - Discord 的預設值位於 `channels.discord.guilds."*"`（可依伺服器/頻道覆寫）。
+    - 群組歷史記錄上下文在所有頻道中以統一方式包裝。受提及閘控的群組會保留待處理的略過訊息；始終開啟的群組在頻道支援的情況下，也可能會保留最近已處理的房間訊息。請使用 `messages.groupChat.historyLimit` 作為全域預設值，並使用 `channels.<channel>.historyLimit`（或 `channels.<channel>.accounts.*.historyLimit`）進行覆寫。設定 `0` 以停用。
 
   </Accordion>
 </AccordionGroup>
@@ -353,15 +353,15 @@ Discord/Slack/Telegram 的傳送失敗。請使用對工具呼叫可靠的模型
 某些頻道配置支援限制**在特定群組/房間/頻道內**可用的工具。
 
 - `tools`：針對整個群組允許/拒絕工具。
-- `toolsBySender`：群組內針對每位發送者的覆寫。使用明確的金鑰前綴：`id:<senderId>`、`e164:<phone>`、`username:<handle>`、`name:<displayName>` 和 `"*"` 萬用字元。仍接受舊版無前綴金鑰，並僅將其匹配為 `id:`。
+- `toolsBySender`：群組內針對每個發送者的覆寫。使用明確的鍵前綴：`channel:<channelId>:<senderId>`、`id:<senderId>`、`e164:<phone>`、`username:<handle>`、`name:<displayName>` 和 `"*"` 萬用字元。頻道 ID 使用標準的 OpenClaw 頻道 ID；別名例如 `teams` 會正規化為 `msteams`。仍接受舊版無前綴的鍵，且僅將其匹配為 `id:`。
 
 解析順序（最特定者優先）：
 
 <Steps>
-  <Step title="群組 toolsBySender">群組/頻道 `toolsBySender` 匹配。</Step>
-  <Step title="群組 tools">群組/頻道 `tools`。</Step>
-  <Step title="預設 toolsBySender">預設 (`"*"`) `toolsBySender` 匹配。</Step>
-  <Step title="預設 tools">預設 (`"*"`) `tools`。</Step>
+  <Step title="Group toolsBySender">群組/頻道 `toolsBySender` 符合。</Step>
+  <Step title="Group tools">群組/頻道 `tools`。</Step>
+  <Step title="Default toolsBySender">預設 (`"*"`) `toolsBySender` 符合。</Step>
+  <Step title="Default tools">預設 (`"*"`) `tools`。</Step>
 </Steps>
 
 範例（Telegram）：
@@ -384,13 +384,13 @@ Discord/Slack/Telegram 的傳送失敗。請使用對工具呼叫可靠的模型
 }
 ```
 
-<Note>群組/頻道工具限制會在全域/代理程式工具原則之外額外套用（拒絕仍優先）。部分頻道對房間/頻道使用不同的巢狀結構（例如，Discord `guilds.*.channels.*`、Slack `channels.*`、Microsoft Teams `teams.*.channels.*`）。</Note>
+<Note>群組/頻道工具限制會與全域/代理程式工具政策一併套用（拒絕權限優先）。部分頻道針對房間/頻道使用不同的巢狀結構（例如 Discord `guilds.*.channels.*`、Slack `channels.*`、Microsoft Teams `teams.*.channels.*`）。</Note>
 
 ## 群組允許清單
 
-當配置了 `channels.whatsapp.groups`、`channels.telegram.groups` 或 `channels.imessage.groups` 時，這些金鑰會作為群組允許清單。請使用 `"*"` 來允許所有群組，同時仍設定預設的提及行為。
+當設定了 `channels.whatsapp.groups`、`channels.telegram.groups` 或 `channels.imessage.groups` 時，這些鍵會作為群組允許清單。請使用 `"*"` 來允許所有群組，同時仍設定預設提及行為。
 
-<Warning>常見混淆：DM 配對批准不同於群組授權。對於支援 DM 配對的頻道，配對儲存庫僅解鎖 DM。群組指令仍需要來自配置允許清單（例如 `groupAllowFrom`）的明確群組發送者授權，或該頻道記錄的配置後援。</Warning>
+<Warning>常見誤解：DM 配對批准與群組授權並不相同。對於支援 DM 配對的頻道，配對儲存庫僅會解鎖 DM。群組指令仍需要來自組態允許清單（例如 `groupAllowFrom`）或該頻道文件中所述組態後援機制的明確群組傳送者授權。</Warning>
 
 常見意圖（複製/貼上）：
 
@@ -449,37 +449,37 @@ Discord/Slack/Telegram 的傳送失敗。請使用對工具呼叫可靠的模型
 - `/activation mention`
 - `/activation always`
 
-擁有者由 `channels.whatsapp.allowFrom` 決定（若未設定則為 Bot 自己的 E.164）。請將該指令作為獨立訊息發送。其他介面目前會忽略 `/activation`。
+擁有者由 `channels.whatsapp.allowFrom` 決定（若未設定則為機器人自身的 E.164）。請將該指令作為獨立訊息傳送。其他介面目前會忽略 `/activation`。
 
 ## Context 欄位
 
 群組輸入 Payload 設定：
 
 - `ChatType=group`
-- `GroupSubject`（如果已知）
-- `GroupMembers`（如果已知）
-- `WasMentioned`（提及閘道結果）
+- `GroupSubject` (如果已知)
+- `GroupMembers` (如果已知)
+- `WasMentioned` (提及過濾結果)
 - Telegram 論壇主題也包含 `MessageThreadId` 和 `IsForum`。
 
-Agent 系統提示會在新群組會話的第一輪加入群組介紹。它會提醒模型像人類一樣回應，避免使用 Markdown 表格，盡量減少空行並遵循正常的聊天間距，並避免輸入字面上的 `\n` 序列。來自頻道的群組名稱和參與者標籤會呈現為被圍欄隔離的不受信任元資料，而非內聯系統指令。
+代理系統提示在新群組會話的第一輪包含群組介紹。它提醒模型像人類一樣回應，避免 Markdown 表格，盡量減少空行並遵循正常的聊天間距，並避免輸入字面 `\n` 序列。來自頻道的群組名稱和參與者標籤被渲染為圍欄不信任元數據，而不是行內系統指令。
 
 ## iMessage 詳細資訊
 
-- 在路由或加入允許清單時，建議優先使用 `chat_id:<id>`。
+- 在路由或允許列舉時優先使用 `chat_id:<id>`。
 - 列出聊天：`imsg chats --limit 20`。
-- 群組回覆總是會傳回同一個 `chat_id`。
+- 群組回覆總是回到同一個 `chat_id`。
 
 ## WhatsApp 系統提示
 
-請參閱 [WhatsApp](/zh-Hant/channels/whatsapp#system-prompts) 以了解正式的 WhatsApp 系統提示詞規則，包括群組和直接提示詞解析、萬用字元行為以及帳號覆蓋語意。
+有關規範的 WhatsApp 系統提示規則（包括群組和直接提示解析、萬用字元行為和帳戶覆蓋語義），請參閱 [WhatsApp](/zh-Hant/channels/whatsapp#system-prompts)。
 
 ## WhatsApp 特定細節
 
-請參閱 [群組訊息](/zh-Hant/channels/group-messages) 以了解 WhatsApp 專屬的行為（歷史記錄注入、提及處理細節）。
+有關 WhatsApp 專屬行為（歷史記錄注入、提及處理細節），請參閱 [Group messages](/zh-Hant/channels/group-messages)。
 
 ## 相關內容
 
-- [廣播群組](/zh-Hant/channels/broadcast-groups)
-- [頻道路由](/zh-Hant/channels/channel-routing)
-- [群組訊息](/zh-Hant/channels/group-messages)
-- [配對](/zh-Hant/channels/pairing)
+- [Broadcast groups](/zh-Hant/channels/broadcast-groups)
+- [Channel routing](/zh-Hant/channels/channel-routing)
+- [Group messages](/zh-Hant/channels/group-messages)
+- [Pairing](/zh-Hant/channels/pairing)

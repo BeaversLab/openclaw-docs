@@ -15,7 +15,9 @@ Le texte est pris en charge partout ; les médias et les réactions varient selo
   sont converties en réponses média sur le chemin de sortie final lorsque cela est possible.
 - Les DMs multi-personnes Slack sont acheminés comme des discussions de groupe, donc la stratégie de groupe, le comportement de mention
   et les règles de session de groupe s'appliquent aux conversations MPIM.
-- La configuration de WhatsApp est à la demande : l'onboarding peut afficher le flux de configuration avant que le paquet du plugin ne soit installé, et le Gateway ne charge l'exécution WhatsApp que lorsque le channel est réellement actif.
+- Le configuration de WhatsApp est installée à la demande : l'intégration peut afficher le processus de configuration avant
+  l'installation du package du plugin, et le Gateway ne charge le plugin externe
+  ClawHub/npm que lorsque le channel est réellement actif.
 
 ## Canaux pris en charge
 

@@ -9,14 +9,16 @@ title: "Health"
 
 Récupérer l'état de santé du passerelle en cours d'exécution.
 
-Options :
+## Options
 
-- `--json` : sortie lisible par machine
-- `--timeout <ms>` : délai de connexion en millisecondes (par défaut `10000`)
-- `--verbose` : journalisation détaillée
-- `--debug` : alias pour `--verbose`
+| Flag             | Default | Description                                                        |
+| ---------------- | ------- | ------------------------------------------------------------------ |
+| `--json`         | `false` | Print machine-readable JSON instead of text.                       |
+| `--timeout <ms>` | `10000` | Connection timeout in milliseconds.                                |
+| `--verbose`      | `false` | Verbose logging. Forces a live probe and expands per-agent output. |
+| `--debug`        | `false` | Alias for `--verbose`.                                             |
 
-Exemples :
+Examples:
 
 ```bash
 openclaw health
@@ -26,16 +28,16 @@ openclaw health --verbose
 openclaw health --debug
 ```
 
-Notes :
+Notes:
 
-- Le `openclaw health` par défaut demande à la passerelle en cours d'exécution son instantané de santé. Lorsque la
-  passerelle dispose déjà d'un instantané en cache frais, elle peut renvoyer cette charge utile en cache et
-  l'actualiser en arrière-plan.
-- `--verbose` force une sonde en direct, imprime les détails de connexion de la passerelle et étend la
-  sortie lisible par l'homme sur tous les comptes et agents configurés.
-- La sortie inclut les magasins de session par agent lorsque plusieurs agents sont configurés.
+- Default `openclaw health` asks the running gateway for its health snapshot. When the
+  gateway already has a fresh cached snapshot, it can return that cached payload and
+  refresh in the background.
+- `--verbose` forces a live probe, prints gateway connection details, and expands the
+  human-readable output across all configured accounts and agents.
+- Output includes per-agent session stores when multiple agents are configured.
 
-## Associé
+## Related
 
 - [CLI reference](/fr/cli)
 - [Gateway health](/fr/gateway/health)

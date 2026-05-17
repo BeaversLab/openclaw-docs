@@ -72,7 +72,7 @@ openclaw message <subcommand> [flags]
   - 選填：`--media`、`--presentation`、`--delivery`、`--pin`、`--reply-to`、`--thread-id`、`--gif-playback`、`--force-document`、`--silent`
   - 共享的呈現內容：`--presentation` 發送語義區塊（`text`、`context`、`divider`、`buttons`、`select`），核心會透過所選頻道宣告的功能來進行轉譯。請參閱 [訊息呈現](/zh-Hant/plugins/message-presentation)。
   - 通用傳遞偏好設定：`--delivery` 接受傳遞提示，例如 `{ "pin": true }`；如果頻道支援，`--pin` 是固定傳遞的簡寫。
-  - 僅限 Telegram：`--force-document`（將圖片和 GIF 作為文件傳送以避免 Telegram 壓縮）
+  - 僅限 Telegram：`--force-document`（將圖片、GIF 和影片以文件形式發送，以避免 Telegram 壓縮）
   - 僅限 Telegram：`--thread-id`（論壇主題 ID）
   - 僅限 Slack：`--thread-id` (執行緒時間戳記；`--reply-to` 使用相同的欄位)
   - Telegram + Discord：`--silent`

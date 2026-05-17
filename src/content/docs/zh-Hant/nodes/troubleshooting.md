@@ -113,16 +113,12 @@ openclaw logs --follow
 - 重新授予 OS 權限。
 - 重新建立/調整 exec 批准策略。
 
-相關：
-
-- [/nodes/index](/zh-Hant/nodes/index)
-- [/nodes/camera](/zh-Hant/nodes/camera)
-- [/nodes/location-command](/zh-Hant/nodes/location-command)
-- [/tools/exec-approvals](/zh-Hant/tools/exec-approvals)
-- [/gateway/pairing](/zh-Hant/gateway/pairing)
-
 ## 相關
 
 - [節點概觀](/zh-Hant/nodes)
+- [相機節點](/zh-Hant/nodes/camera)
+- [Location 指令](/zh-Hant/nodes/location-command)
+- [Exec 核准](/zh-Hant/tools/exec-approvals)
+- [閘道配對](/zh-Hant/gateway/pairing)
 - [閘道疑難排解](/zh-Hant/gateway/troubleshooting)
 - [通道疑難排解](/zh-Hant/channels/troubleshooting)

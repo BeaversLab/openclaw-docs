@@ -15,7 +15,9 @@ El texto es compatible en todas partes; los medios y las reacciones varían seg�
   se convierten en respuestas multimedia en la ruta de salida final cuando es posible.
 - Los MD multipersonales de Slack se enrutan como chats grupales, por lo que la política de grupo, el comportamiento de mención
   y las reglas de sesión de grupo se aplican a las conversaciones MPIM.
-- La configuración de WhatsApp es bajo demanda: la integración puede mostrar el flujo de configuración antes de que se instale el paquete del complemento, y el Gateway carga el tiempo de ejecución de WhatsApp solo cuando el canal está realmente activo.
+- La configuración de WhatsApp es bajo demanda: la incorporación puede mostrar el flujo de configuración antes
+  de que se instale el paquete del complemento, y el Gateway carga el complemento externo
+  de ClawHub/npm solo cuando el canal está realmente activo.
 
 ## Canales compatibles
 

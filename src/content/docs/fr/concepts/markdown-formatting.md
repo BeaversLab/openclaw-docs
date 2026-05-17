@@ -58,7 +58,7 @@ Les tableaux Markdown ne sont pas pris en charge de manière cohérente sur les 
 `markdown.tables` pour contrôler la conversion par channel (et par compte).
 
 - `code` : rend les tableaux sous forme de blocs de code (par défaut pour la plupart des channels).
-- `bullets` : convertit chaque ligne en puces (par défaut pour Signal + WhatsApp).
+- `bullets` : convertit chaque ligne en puces (par défaut pour Matrix, Signal et WhatsApp).
 - `off` : désactive l'analyse et la conversion des tableaux ; le texte brut du tableau passe tel quel.
 
 Clés de configuration :

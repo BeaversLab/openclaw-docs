@@ -43,19 +43,20 @@ OpenClaw 內建了一個用於託管影像和影片生成的 `fal` 提供者。
 內建的 `fal` 影像生成提供者預設為
 `fal/fal-ai/flux/dev`。
 
-| 功能       | 值                   |
-| ---------- | -------------------- |
-| 最大影像數 | 每次請求 4 張        |
-| 編輯模式   | 已啟用，1 張參考影像 |
-| 尺寸覆寫   | 支援                 |
-| 長寬比     | 支援                 |
-| 解析度     | 支援                 |
-| 輸出格式   | `png` 或 `jpeg`      |
+| 功能       | 值                                                           |
+| ---------- | ------------------------------------------------------------ |
+| 最大影像數 | 每次請求 4 張                                                |
+| 編輯模式   | Flux：1 張參考圖片；GPT Image 2：10 張；Nano Banana 2：14 張 |
+| 尺寸覆寫   | 支援                                                         |
+| 長寬比     | 支援 generate 以及 GPT Image 2/Nano Banana 2 編輯            |
+| 解析度     | 支援                                                         |
+| 輸出格式   | `png` 或 `jpeg`                                              |
 
-<Warning>fal 影像編輯端點**不**支援 `aspectRatio` 覆寫。</Warning>
+<Warning>Flux 圖生圖請求**不**支援 `aspectRatio` 覆寫。GPT Image 2 和 Nano Banana 2 編輯請求使用 fal 的 `/edit` 端點並接受 長寬比提示。</Warning>
 
-當您想要 PNG 輸出時，請使用 `outputFormat: "png"`。fal 並未在 OpenClaw 中宣告明確的透明背景控制，因此對於 fal 模型來說，`background:
-"transparent"` 會被回報為已忽略的覆寫設定。
+當您需要 PNG 輸出時，請使用 `outputFormat: "png"`。fal 並未在 OpenClaw 中宣告明確的
+透明背景控制，因此 `background:
+"transparent"` 會被回報為 fal 模型的已忽略覆寫設定。
 
 若要將 fal 作為預設的影像提供者：
 
@@ -73,7 +74,7 @@ OpenClaw 內建了一個用於託管影像和影片生成的 `fal` 提供者。
 
 ## 影片生成
 
-內建的 `fal` 影片生成提供者預設為
+內建的 `fal` 視訊生成提供者預設為
 `fal/fal-ai/minimax/video-01-live`。
 
 | 功能     | 值                                                       |
@@ -82,12 +83,12 @@ OpenClaw 內建了一個用於託管影像和影片生成的 `fal` 提供者。
 | 執行時間 | 針對長時間執行的工作，採用由佇列支援的提交/狀態/結果流程 |
 
 <AccordionGroup>
-  <Accordion title="可用的影片模型">
-    **HeyGen video-agent:**
+  <Accordion title="可用的視訊模型">
+    **HeyGen video-agent：**
 
     - `fal/fal-ai/heygen/v2/video-agent`
 
-    **Seedance 2.0:**
+    **Seedance 2.0：**
 
     - `fal/bytedance/seedance-2.0/fast/text-to-video`
     - `fal/bytedance/seedance-2.0/fast/image-to-video`
@@ -112,7 +113,7 @@ OpenClaw 內建了一個用於託管影像和影片生成的 `fal` 提供者。
     ```
   </Accordion>
 
-  <Accordion title="Seedance 2.0 參考影片組態範例">
+  <Accordion title="Seedance 2.0 參考生成視訊設定範例">
     ```json5
     {
       agents: {
@@ -125,9 +126,9 @@ OpenClaw 內建了一個用於託管影像和影片生成的 `fal` 提供者。
     }
     ```
 
-    參考影片（Reference-to-video）透過共用的 `video_generate` `images`、`videos` 和 `audioRefs`
-    參數，最多接受 9 張圖片、3 部影片和 3 個音訊參考，
-    且參考檔案總數最多為 12 個。
+    參考生成視訊透過共用的 `video_generate` `images`、`videos` 和 `audioRefs`
+    參數，最多接受 9 張圖片、3 部視訊和 3 個音訊參考，
+    總參考檔案數最多 12 個。
 
   </Accordion>
 
@@ -146,7 +147,7 @@ OpenClaw 內建了一個用於託管影像和影片生成的 `fal` 提供者。
   </Accordion>
 </AccordionGroup>
 
-<Tip>使用 `openclaw models list --provider fal` 查看可用的 fal 模型完整清單， 包括最近新增的項目。</Tip>
+<Tip>使用 `openclaw models list --provider fal` 查看所有可用 fal 模型的 完整清單，包括最近新增的項目。</Tip>
 
 ## 相關
 

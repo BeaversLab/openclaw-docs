@@ -190,13 +190,74 @@ Establezca `stream: true` para recibir eventos enviados por el servidor (SSE):
 - Cada línea de evento es `data: <json>`
 - El flujo termina con `data: [DONE]`
 
+## Contrato de herramientas de chat
+
+`/v1/chat/completions` admite un subconjunto de herramientas de función compatible con los clientes de Chat de OpenAI comunes.
+
+### Campos de solicitud admitidos
+
+- `tools`: matriz de `{ "type": "function", "function": { ... } }`
+- `tool_choice`: `"auto"`, `"none"`
+- `messages[*].role: "tool"` turnos de seguimiento
+- `messages[*].tool_call_id` para vincular los resultados de las herramientas a una llamada de herramienta anterior
+- `max_completion_tokens`: número; límite por llamada para el total de tokens de finalización (tokens de razonamiento incluidos). Nombre de campo actual de OpenAI Chat Completions; preferido cuando se envían tanto `max_completion_tokens` como `max_tokens`.
+- `max_tokens`: número; alias heredado aceptado por compatibilidad con versiones anteriores. Se ignora cuando `max_completion_tokens` también está presente.
+
+Cuando se establece cualquiera de los campos, el valor se reenvía al proveedor ascendente a través del canal de parámetros de flujo del agente. El nombre del campo real enviado al proveedor ascendente es elegido por el transporte del proveedor: `max_completion_tokens` para los puntos finales de la familia OpenAI y `max_tokens` para los proveedores que solo aceptan el nombre heredado (como Mistral y Chutes).
+
+### Variantes no admitidas
+
+El punto final devuelve `400 invalid_request_error` para variantes de herramientas no admitidas, incluyendo:
+
+- `tools` que no sea una matriz
+- entradas de herramientas que no son funciones
+- falta `tool.function.name`
+- variantes de `tool_choice` como `allowed_tools` y `custom`
+- `tool_choice: "required"` (aún no se aplica en tiempo de ejecución; se admitirá una vez que se implemente la aplicación estricta)
+- `tool_choice: { "type": "function", "function": { "name": "..." } }` (el mismo rationale que `required`)
+- valores `tool_choice.function.name` que no coinciden con el `tools` proporcionado
+
+### Forma de respuesta de herramienta sin transmisión
+
+Cuando el agente decide llamar a las herramientas, la respuesta utiliza:
+
+- `choices[0].finish_reason = "tool_calls"`
+- entradas `choices[0].message.tool_calls[]` con:
+  - `id`
+  - `type: "function"`
+  - `function.name`
+  - `function.arguments` (cadena JSON)
+
+Los comentarios del asistente antes de la llamada a la herramienta se devuelven en `choices[0].message.content` (posiblemente vacío).
+
+### Forma de respuesta de herramienta en transmisión
+
+Cuando `stream: true`, las llamadas a herramientas se emiten como fragmentos SSE incrementales:
+
+- delta inicial del rol del asistente
+- deltas opcionales de comentarios del asistente
+- uno o más fragmentos `delta.tool_calls` que transportan la identidad de la herramienta y fragmentos de argumentos
+- fragmento final con `finish_reason: "tool_calls"`
+- `data: [DONE]`
+
+Si `stream_options.include_usage=true`, se emite un fragmento de uso final antes de `[DONE]`.
+
+### Bucle de seguimiento de herramientas
+
+Después de recibir `tool_calls`, el cliente debe ejecutar la(s) función(es) solicitada(s) y enviar una solicitud de seguimiento que incluya:
+
+- mensaje de llamada a herramienta del asistente anterior
+- uno o más mensajes `role: "tool"` con `tool_call_id` coincidente
+
+Esto permite que la ejecución del agente de puerta de enlace continúe el mismo bucle de razonamiento y produzca la respuesta final del asistente.
+
 ## Configuración rápida de Open WebUI
 
 Para una conexión básica de Open WebUI:
 
 - URL base: `http://127.0.0.1:18789/v1`
-- Docker en macOS URL base: `http://host.docker.internal:18789/v1`
-- Clave API: su token de portador (bearer token) de Gateway
+- URL base de Docker en macOS: `http://host.docker.internal:18789/v1`
+- Clave de API: su token de portador de Gateway
 - Modelo: `openclaw/default`
 
 Comportamiento esperado:
@@ -256,7 +317,7 @@ curl -sS http://127.0.0.1:18789/v1/models/openclaw%2Fdefault \
   -H 'Authorization: Bearer YOUR_TOKEN'
 ```
 
-Crear incrustaciones (embeddings):
+Crear incrustaciones:
 
 ```bash
 curl -sS http://127.0.0.1:18789/v1/embeddings \
@@ -271,10 +332,10 @@ curl -sS http://127.0.0.1:18789/v1/embeddings \
 
 Notas:
 
-- `/v1/models` devuelve objetivos de agente OpenClaw, no catálogos de proveedores sin procesar.
-- `openclaw/default` siempre está presente para que un id estable funcione en diferentes entornos.
-- Las anulaciones de proveedor/modelo de backend pertenecen a `x-openclaw-model`, no al campo `model` de OpenAI.
-- `/v1/embeddings` admite `input` como una cadena o matriz de cadenas.
+- `/v1/models` devuelve objetivos de agente de OpenClaw, no catálogos de proveedores sin procesar.
+- `openclaw/default` siempre está presente para que un id estable funcione en todos los entornos.
+- Las anulaciones del proveedor/modelo de backend pertenecen a `x-openclaw-model`, no al campo de OpenAI `model`.
+- `/v1/embeddings` es compatible con `input` como una cadena o una matriz de cadenas.
 
 ## Relacionado
 

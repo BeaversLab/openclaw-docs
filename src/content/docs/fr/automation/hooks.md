@@ -11,7 +11,7 @@ Les Hooks sont de petits scripts qui s'exécutent lorsqu'un événement se produ
 Il existe deux types de hooks dans OpenClaw :
 
 - **Hooks internes** (cette page) : s'exécutent dans le Gateway lorsque les événements de l'agent se déclenchent, comme `/new`, `/reset`, `/stop`, ou les événements de cycle de vie.
-- **Webhooks** : points de terminaison HTTP externes qui permettent à d'autres systèmes de déclencher des travaux dans OpenClaw. Voir [Webhooks](/fr/automation/cron-jobs#webhooks).
+- **Webhooks** : points de terminaison HTTP externes qui permettent à d'autres systèmes de déclencher des travaux dans OpenClaw. Voir [Webhooks](OpenClaw/en/automation/cron-jobs#webhooks).
 
 Les hooks peuvent également être regroupés dans des plugins. `openclaw hooks list` montre à la fois les hooks autonomes et les hooks gérés par des plugins.
 
@@ -127,47 +127,46 @@ Chaque événement comprend : `type`, `action`, `sessionKey`, `timestamp`, `mess
 
 **Événements de compactage** : `session:compact:before` inclut `messageCount`, `tokenCount`. `session:compact:after` ajoute `compactedCount`, `summaryLength`, `tokensBefore`, `tokensAfter`.
 
-`command:stop` observe l'utilisateur émettant `/stop` ; il s'agit d'un cycle de vie d'annulation/de commande,
-pas d'une porte de finalisation d'agent. Les plugins qui doivent inspecter une
-réponse finale naturelle et demander à l'agent un passage supplémentaire doivent utiliser le hook de plugin typé
-`before_agent_finalize` à la place. Voir [Plugin hooks](/fr/plugins/hooks).
+`command:stop` observe l'utilisateur émettant `/stop` ; il s'agit d'un cycle de vie d'annulation/de commande, et non d'une porte de finalisation d'agent. Les plugins qui doivent inspecter une réponse finale naturelle et demander à l'agent d'effectuer un autre passage doivent utiliser à la place le hook de plugin typé `before_agent_finalize`. Voir [Plugin hooks](/fr/plugins/hooks).
 
 **Événements de cycle de vie du Gateway** : `gateway:shutdown` inclut `reason` et `restartExpectedMs` et se déclenche lorsque l'arrêt de la passerelle commence. `gateway:pre-restart` inclut le même contexte mais se déclenche uniquement lorsque l'arrêt fait partie d'un redémarrage attendu et qu'une valeur finie `restartExpectedMs` est fournie. Pendant l'arrêt, chaque attente de hook de cycle de vie est de meilleur effort et limitée afin que l'arrêt se poursuive si un gestionnaire bloque.
 
-## Découverte de hooks
+Entre l'événement `gateway:shutdown` (ou `gateway:pre-restart`) et le reste de la séquence d'arrêt, la passerelle déclenche également un hook de plugin typé `session_end` pour chaque session qui était encore active lorsque le processus s'est arrêté. Le `reason` de l'événement est `shutdown` pour un arrêt SIGTERM/SIGINT simple et `restart` lorsque la fermeture a été planifiée dans le cadre d'un redémarrage attendu. Ce drainage est limité, de sorte qu'un gestionnaire `session_end` lent ne peut pas bloquer la sortie du processus, et les sessions qui ont déjà été finalisées via remplacement / réinitialisation / suppression / compactage sont ignorées pour éviter les déclenchements en double.
+
+## Découverte des hooks
 
 Les hooks sont découverts à partir de ces répertoires, par ordre de priorité de remplacement croissante :
 
-1. **Bundled hooks** : fournis avec OpenClaw
-2. **Plugin hooks** : hooks regroupés dans les plugins installés
+1. **Hooks fournis** : livrés avec OpenClaw
+2. **Hooks de plugin** : hooks regroupés dans les plugins installés
 3. **Hooks gérés** : `~/.openclaw/hooks/` (installés par l'utilisateur, partagés entre les espaces de travail). Les répertoires supplémentaires de `hooks.internal.load.extraDirs` partagent cette priorité.
-4. **Hooks d'espace de travail** : `<workspace>/hooks/` (par agent, désactivés par défaut jusqu'à activation explicite)
+4. **Hooks de l'espace de travail** : `<workspace>/hooks/` (par agent, désactivés par défaut jusqu'à être explicitement activés)
 
-Les hooks d'espace de travail peuvent ajouter de nouveaux noms de hooks mais ne peuvent pas remplacer les hooks regroupés, gérés ou fournis par des plugins portant le même nom.
+Les hooks de l'espace de travail peuvent ajouter de nouveaux noms de hooks mais ne peuvent pas remplacer les hooks fournis, gérés ou fournis par des plugins portant le même nom.
 
-Le Gateway ignore la découverte de hooks internes au démarrage jusqu'à ce que les hooks internes soient configurés. Activez un hook groupé ou géré avec `openclaw hooks enable <name>`, installez un pack de hooks ou définissez `hooks.internal.enabled=true` pour opter. Lorsque vous activez un hook nommé, le Gateway ne charge que le gestionnaire de ce hook ; `hooks.internal.enabled=true`, les répertoires de hooks supplémentaires et les gestionnaires hérités optent pour une découverte large.
+Le Gateway ignore la découverte des hooks internes au démarrage jusqu'à ce que les hooks internes soient configurés. Activez un hook fourni ou géré avec `openclaw hooks enable <name>`, installez un pack de hooks, ou définissez `hooks.internal.enabled=true` pour activer cette fonctionnalité. Lorsque vous activez un hook nommé, le Gateway ne charge que le gestionnaire de ce hook ; `hooks.internal.enabled=true`, les répertoires de hooks supplémentaires et les gestionnaires hérités activent la découverte large.
 
 ### Packs de hooks
 
-Les packs de hooks sont des packages npm qui exportent des hooks via npm`openclaw.hooks` dans `package.json`. Installez avec :
+Les packs de hooks sont des packages npm qui exportent des hooks via `openclaw.hooks` dans `package.json`. Installez avec :
 
 ```bash
 openclaw plugins install <path-or-spec>
 ```
 
-Les specs npm sont exclusivement de registre (nom de package + version exacte facultative ou dist-tag). Les specs Git/URL/fichier et les plages semver sont rejetées.
+Les spécifications Npm sont exclusivement pour le registre (nom du package + version exacte optionnelle ou balise de distribution). Les spécifications Git/URL/fichier et les plages semver sont rejetées.
 
-## Hooks regroupés
+## Hooks fournis
 
-| Hook                  | Événements                                        | Ce qu'il fait                                                                                  |
-| --------------------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| session-memory        | `command:new`, `command:reset`                    | Enregistre le contexte de la session dans `<workspace>/memory/`                                |
-| bootstrap-extra-files | `agent:bootstrap`                                 | Injecte des fichiers d'amorçage supplémentaires à partir de motifs glob                        |
-| command-logger        | `command`                                         | Enregistre toutes les commandes dans `~/.openclaw/logs/commands.log`                           |
-| compaction-notifier   | `session:compact:before`, `session:compact:after` | Envoie des notifications de chat visibles lorsque la compaction de session commence/se termine |
-| boot-md               | `gateway:startup`                                 | Exécute `BOOT.md` lorsque la passerelle démarre                                                |
+| Hook                  | Événements                                        | Ce qu'il fait                                                                         |
+| --------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| session-memory        | `command:new`, `command:reset`                    | Enregistre le contexte de la session dans `<workspace>/memory/`                       |
+| bootstrap-extra-files | `agent:bootstrap`                                 | Injecte des fichiers d'amorçage supplémentaires à partir de motifs glob               |
+| command-logger        | `command`                                         | Enregistre toutes les commandes dans `~/.openclaw/logs/commands.log`                  |
+| compaction-notifier   | `session:compact:before`, `session:compact:after` | Envoie des avis de chat visibles lorsque la compactage de session commence/se termine |
+| boot-md               | `gateway:startup`                                 | Exécute `BOOT.md` lorsque la passerelle démarre                                       |
 
-Activer n'importe quel hook intégré :
+Activez n'importe quel hook fourni :
 
 ```bash
 openclaw hooks enable <hook-name>
@@ -175,13 +174,13 @@ openclaw hooks enable <hook-name>
 
 <a id="session-memory"></a>
 
-### détails de session-memory
+### Détails de session-memory
 
-Extrait les 15 derniers messages utilisateur/assistant et les enregistre dans `<workspace>/memory/YYYY-MM-DD-HHMM.md` en utilisant la date locale de l'hôte. La capture de la mémoire s'exécute en arrière-plan, de sorte que les accusés de réception `/new` et `/reset` ne sont pas retardés par les lectures de transcription ou la génération optionnelle de slug. Définissez `hooks.internal.entries.session-memory.llmSlug: true` pour générer des slugs de noms de fichiers descriptifs avec le modèle configuré. Nécessite que `workspace.dir` soit configuré.
+Extrait les 15 derniers messages utilisateur/assistant et enregistre dans `<workspace>/memory/YYYY-MM-DD-HHMM.md` en utilisant la date locale de l'hôte. La capture de la mémoire s'exécute en arrière-plan, de sorte que les accusés de réception `/new` et `/reset` ne sont pas retardés par les lectures de transcription ou la génération optionnelle de slugs. Définissez `hooks.internal.entries.session-memory.llmSlug: true` pour générer des slugs de nom de fichier descriptifs avec le modèle configuré. Nécessite que `workspace.dir` soit configuré.
 
 <a id="bootstrap-extra-files"></a>
 
-### config bootstrap-extra-files
+### Configuration de bootstrap-extra-files
 
 ```json
 {
@@ -204,28 +203,28 @@ Les chemins sont résolus par rapport à l'espace de travail. Seuls les noms de 
 
 ### détails de command-logger
 
-Enregistre chaque commande slash dans `~/.openclaw/logs/commands.log`.
+Enregistre chaque commande barre oblique dans `~/.openclaw/logs/commands.log`.
 
 <a id="compaction-notifier"></a>
 
 ### détails de compaction-notifier
 
-Envoie des messages de statut courts dans la conversation en cours lorsque OpenClaw commence et termine la compaction de la transcription de session. Cela rend les tours longs moins déroutants sur les surfaces de chat car l'utilisateur peut voir que l'assistant résume le contexte et continuera après la compaction.
+Envoie de courts messages d'état dans la conversation en cours lorsque OpenClaw commence et termine la compactage de la transcription de la session. Cela rend les longs tours moins confus sur les surfaces de chat car l'utilisateur peut voir que l'assistant résume le contexte et continuera après la compactage.
 
 <a id="boot-md"></a>
 
-### Détails de boot-md
+### détails de boot-md
 
-Exécute `BOOT.md` depuis l'espace de travail actif lors du démarrage de la passerelle.
+Exécute `BOOT.md` à partir de l'espace de travail actif lorsque la passerelle démarre.
 
 ## Hooks de plugin
 
-Les plugins peuvent enregistrer des hooks typés via le Plugin SDK pour une intégration plus profonde :
-intercepter les appels d'outils, modifier les invites, contrôler le flux des messages, et plus encore.
+Les plugins peuvent enregistrer des hooks typés via le Plugin SDK pour une intégration plus approfondie :
+interception des appels d'outils, modification des invites, contrôle du flux des messages, et plus encore.
 Utilisez les hooks de plugin lorsque vous avez besoin de `before_tool_call`, `before_agent_reply`,
-`before_install`, ou d'autres hooks de cycle de vie in-process.
+`before_install`, ou d'autres hooks de cycle de vie en processus.
 
-Pour la référence complète des hooks de plugin, consultez [Hooks de plugin](/fr/plugins/hooks).
+Pour la référence complète des hooks de plugin, consultez [Plugin hooks](/fr/plugins/hooks).
 
 ## Configuration
 
@@ -295,10 +294,10 @@ openclaw hooks disable <hook-name>
 
 ## Bonnes pratiques
 
-- **Gardez les gestionnaires rapides.** Les hooks s'exécutent pendant le traitement des commandes. Lancez en « fire-and-forget » les tâches lourdes avec `void processInBackground(event)`.
-- **Gérez les erreurs avec élégance.** Enveloppez les opérations risquées dans des try/catch ; ne levez pas d'exception pour que les autres gestionnaires puissent s'exécuter.
+- **Gardez les gestionnaires rapides.** Les hooks s'exécutent pendant le traitement des commandes. Lancez en parallèle le travail lourd avec `void processInBackground(event)`.
+- **Gérez les erreurs avec élégance.** Enveloppez les opérations risquées dans des blocs try/catch ; ne lancez pas d'exceptions pour que les autres gestionnaires puissent s'exécuter.
 - **Filtrez les événements tôt.** Retournez immédiatement si le type/action de l'événement n'est pas pertinent.
-- **Utilisez des clés d'événement spécifiques.** Préférez `"events": ["command:new"]` à `"events": ["command"]` pour réduire la surcharge.
+- **Utilisez des clés d'événement spécifiques.** Privilégiez `"events": ["command:new"]` plutôt que `"events": ["command"]` pour réduire la surcharge.
 
 ## Dépannage
 
@@ -321,15 +320,15 @@ openclaw hooks info my-hook
 
 Vérifiez les binaires manquants (PATH), les variables d'environnement, les valeurs de configuration ou la compatibilité du système d'exploitation.
 
-### Hook ne s'exécutant pas
+### Hook non exécuté
 
 1. Vérifiez que le hook est activé : `openclaw hooks list`
-2. Redémarrez votre processus de passerelle pour que les hooks se rechargent.
+2. Redémarrez votre processus passerelle afin que les hooks soient rechargés.
 3. Vérifiez les journaux de la passerelle : `./scripts/clawlog.sh | grep hook`
 
 ## Connexes
 
 - [Référence CLI : hooks](/fr/cli/hooks)
 - [Webhooks](/fr/automation/cron-jobs#webhooks)
-- [Hooks de plugin](/fr/plugins/hooks) — hooks de cycle de vie de plugin in-process
+- [Hooks de plugin](/fr/plugins/hooks) — hooks de cycle de vie de plugin en cours de processus
 - [Configuration](/fr/gateway/configuration-reference#hooks)

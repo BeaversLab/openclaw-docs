@@ -124,7 +124,7 @@ Renvoie le résultat de la révocation au format JSON.
 ## Notes
 
 - La rotation des jetons renvoie un nouveau jeton (sensible). Traitez-le comme un secret.
-- Ces commandes nécessitent la portée `operator.pairing` (ou `operator.admin`). Certaines approbations nécessitent également que l'appelant possède les portées d'opérateur que l'appareil cible créerait ou hériterait ; voir [Portées d'opérateur](/fr/gateway/operator-scopes).
+- Ces commandes nécessitent la portée `operator.pairing` (ou `operator.admin`). Certaines approbations nécessitent également que l'appelant détienne les portées d'opérateur que l'appareil cible émettrait ou hériterait ; voir [Operator scopes](/fr/gateway/operator-scopes).
 - `gateway.nodes.pairing.autoApproveCidrs` est une stratégie Gateway optionnelle pour
   l'appareil de nœud frais uniquement ; elle ne modifie pas l'autorité d'approbation du CLI.
 - La rotation et la révocation de jetons restent dans l'ensemble de rôles d'appariement approuvés et
@@ -142,7 +142,7 @@ Renvoie le résultat de la révocation au format JSON.
 
 ## Liste de vérification de la récupération de dérive de jeton
 
-Utilisez ceci lorsque l'interface utilisateur de contrôle ou d'autres clients échouent continuellement avec `AUTH_TOKEN_MISMATCH` ou `AUTH_DEVICE_TOKEN_MISMATCH`.
+Utilisez ceci lorsque l'interface de contrôle ou d'autres clients continuent d'échouer avec `AUTH_TOKEN_MISMATCH`, `AUTH_DEVICE_TOKEN_MISMATCH` ou `AUTH_SCOPE_MISMATCH`.
 
 1. Confirmer la source actuelle du jeton de passerelle :
 
@@ -174,15 +174,16 @@ openclaw devices approve <requestId>
 
 Notes :
 
-- La priorité d'authentification de reconnexion normale est d'abord le jeton/mot de passe partagé explicite, puis `deviceToken` explicite, puis le jeton d'appareil stocké, puis le jeton d'amorçage.
-- La récupération `AUTH_TOKEN_MISMATCH` de confiance peut temporairement envoyer à la fois le jeton partagé et le jeton d'appareil stocké pour la nouvelle tentative limitée unique.
+- La priorité normale d'authentification de reconnexion est d'abord le jeton/mot de passe partagé explicite, puis `deviceToken` explicite, puis le jeton d'appareil stocké, puis le jeton d'amorçage.
+- La récupération `AUTH_TOKEN_MISMATCH` de confiance peut temporairement envoyer à la fois le jeton partagé et le jeton d'appareil stocké pour la nouvelle tentative délimitée unique.
+- `AUTH_SCOPE_MISMATCH` signifie que le jeton d'appareil a été reconnu mais ne porte pas l'ensemble de portées demandé ; corrigez le contrat d'approbation de jumelage/de portée avant de modifier l'authentification de la passerelle partagée.
 
-Connexes :
+Connexe :
 
 - [Dépannage de l'authentification du tableau de bord](/fr/web/dashboard#if-you-see-unauthorized-1008)
-- [Gateway troubleshooting](/fr/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Dépannage de la Gateway](/fr/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
 ## Connexes
 
-- [CLI reference](/fr/cli)
+- [Référence de la CLI](/fr/cli)
 - [Nœuds](/fr/nodes)

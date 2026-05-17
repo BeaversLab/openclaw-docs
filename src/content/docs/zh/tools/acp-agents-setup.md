@@ -7,11 +7,11 @@ read_when:
 title: "ACP 代理 — 设置"
 ---
 
-有关概述、操作员手册和概念，请参阅 [ACP 代理](/zh/tools/acp-agents)。
+有关概述、操作员手册和概念，请参阅 [ACP agents](/zh/tools/acp-agents)。
 
 以下章节涵盖 acpx harness 配置、MCP 网桥的插件设置以及权限配置。
 
-仅在设置 ACP/acpx 路由时使用此页面。对于原生 Codex 应用服务器运行时配置，请使用 [Codex harness](/zh/plugins/codex-harnessOpenAIAPIOAuthOpenAI)。对于 OpenAI API 密钥或 Codex OAuth 模型提供商配置，请使用 [OpenAI](/zh/providers/openai)。
+仅在您设置 ACP/acpx 路由时使用此页面。对于原生 Codex 应用服务器运行时配置，请使用 [Codex harness](/zh/plugins/codex-harnessOpenAIAPIOAuthOpenAI)。对于 OpenAI API 密钥或 Codex OAuth 模型提供商配置，请使用 [OpenAI](/zh/providers/openai)。
 
 Codex 有两条 OpenClaw 路由：
 
@@ -101,7 +101,7 @@ ACP 核心基线：
 
 当前对话绑定不需要创建子线程。它们需要活动的对话上下文和暴露 ACP 对话绑定的渠道适配器。
 
-请参阅[配置参考](/zh/gateway/configuration-reference)。
+请参阅 [Configuration Reference](/zh/gateway/configuration-reference)。
 
 ## acpx 后端的插件设置
 
@@ -143,8 +143,7 @@ openclaw plugins install ./path/to/local/acpx-plugin
 
 ### acpx 命令和版本配置
 
-默认情况下，`acpx` 插件会注册嵌入式 ACP 后端，而不会在 Gateway(网关) 启动期间生成 ACP 代理。运行 `/acp doctor` 以进行显式
-的存活探测。仅当您需要 Gateway(网关) 在启动时探测已配置的代理时，才设置 `OPENCLAW_ACPX_RUNTIME_STARTUP_PROBE=1`。
+默认情况下，`acpx`Gateway(网关) 插件在 Gateway(网关) 启动期间探测嵌入式 ACP 后端，并等待该探测完成后才发送网关 `ready` 信号。设置 `OPENCLAW_ACPX_RUNTIME_STARTUP_PROBE=0` 以跳过启动探测，改为延迟注册后端。运行 `/acp doctor` 进行显式的按需探测。
 
 在插件配置中覆盖命令或版本：
 
@@ -164,9 +163,9 @@ openclaw plugins install ./path/to/local/acpx-plugin
 }
 ```
 
-- `command` 接受绝对路径、相对路径（从 OpenClaw 工作区解析）或命令名称。
+- `command`OpenClaw 接受绝对路径、相对路径（从 OpenClaw 工作区解析）或命令名称。
 - `expectedVersion: "any"` 禁用严格版本匹配。
-- 自定义 `command` 路径将禁用插件本地自动安装。
+- 自定义 `command` 路径会禁用插件本地自动安装。
 
 当路径或标志值应保持为一个 argv 标记时，使用结构化参数覆盖单个 ACP 代理命令：
 
@@ -191,15 +190,13 @@ openclaw plugins install ./path/to/local/acpx-plugin
 ```
 
 - `agents.<id>.command` 是该 ACP 代理的可执行文件或现有命令字符串。
-- `agents.<id>.args` 是可选的。在 OpenClaw 将其通过当前的 acpx 命令字符串注册表传递之前，每个数组项都会经过 shell 引用。
+- `agents.<id>.args`OpenClaw 是可选的。每个数组项在 OpenClaw 将其传递给当前的 acpx 命令字符串注册表之前都会进行 shell 引用。
 
-请参阅[插件](/zh/tools/plugin)。
+请参阅 [Plugins](/zh/tools/plugin)。
 
 ### 自动依赖安装
 
-当您使用 OpenClaw`npm install -g openclaw` 全局安装 OpenClaw 时，acpx
-运行时依赖项（特定平台的二进制文件）会通过 postinstall 钩子自动
-安装。如果自动安装失败，网关仍会正常启动，并通过 `openclaw acp doctor` 报告缺失的依赖项。
+当您使用 OpenClaw`npm install -g openclaw` 全局安装 OpenClaw 时，acpx 运行时依赖项（特定于平台的二进制文件）会通过 postinstall 钩子自动安装。如果自动安装失败，网关仍会正常启动，并通过 `openclaw acp doctor` 报告缺少的依赖项。
 
 ### 插件工具 MCP 桥接
 
@@ -215,8 +212,7 @@ openclaw config set plugins.entries.acpx.config.pluginToolsMcpBridge true
 
 其作用如下：
 
-- 将名为 `openclaw-plugin-tools` 的内置 MCP 服务器注入到 ACPX 会话
-  引导过程中。
+- 将名为 `openclaw-plugin-tools` 的内置 MCP 服务器注入 ACPX 会话引导中。
 - 暴露已由已安装且已启用的 OpenClaw
   插件注册的插件工具。
 - 保持该功能显式化且默认关闭。
@@ -229,14 +225,12 @@ openclaw config set plugins.entries.acpx.config.pluginToolsMcpBridge true
   OpenClaw 本身中执行相同的信任边界。
 - 启用此功能前，请检查已安装的插件。
 
-自定义 `mcpServers` 仍像以前一样工作。内置的 plugin-tools 桥接是一个
-额外的可选便捷功能，并非通用 MCP 服务器配置的替代品。
+自定义 `mcpServers` 仍然像以前一样工作。内置 plugin-tools 网桥是一个额外的可选便利功能，而不是通用 MCP 服务器配置的替代品。
 
 ### OpenClaw 工具 MCP 桥接
 
-默认情况下，ACPX 会话也**不会**通过
-MCP 暴露内置的 OpenClaw 工具。当 ACP 代理需要特定的
-内置工具（例如 OpenClaw`cron`）时，请启用单独的 core-tools 桥接：
+默认情况下，ACPX 会话也**不会**通过 MCP 公开内置的 OpenClaw 工具。
+当 ACP 代理需要选定的内置工具（例如 OpenClaw`cron`）时，启用单独的 core-tools 网桥：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.openClawToolsMcpBridge true
@@ -245,13 +239,16 @@ openclaw config set plugins.entries.acpx.config.openClawToolsMcpBridge true
 其作用如下：
 
 - 将名为 `openclaw-tools` 的内置 MCP 服务器注入到 ACPX 会话
-  引导过程中。
-- 暴露选定的内置 OpenClaw 工具。初始服务器暴露 OpenClaw`cron`。
+  启动过程中。
+- 公开选定的内置 OpenClaw 工具。初始服务器公开 OpenClaw`cron`。
 - 保持核心工具暴露显式化且默认关闭。
 
 ### 运行时超时配置
 
-`acpx` 插件默认将嵌入式运行时轮次设置为 120 秒超时。这为较慢的 Harness（例如 Gemini CLI）提供了足够的时间来完成 ACP 启动和初始化。如果您的主机需要不同的运行时限制，请覆盖此设置：
+`acpx`CLI 插件默认将嵌入式运行时轮次超时设置为 120 秒。
+这为较慢的 harness（例如 Gemini CLI）提供了足够的时间来完成
+ACP 启动和初始化。如果您的主机需要不同的
+运行时限制，请覆盖它：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.timeoutSeconds 180
@@ -261,7 +258,10 @@ openclaw config set plugins.entries.acpx.config.timeoutSeconds 180
 
 ### 健康探测代理配置
 
-当 `/acp doctor` 或可选的启动探测检查后端时，捆绑的 `acpx` 插件会探测一个 Harness 代理。如果设置了 `acp.allowedAgents`，则默认为第一个允许的代理；否则默认为 `codex`。如果您的部署需要不同的 ACP 代理进行健康检查，请显式设置探测代理：
+当 `/acp doctor` 或启动探针检查后端时，捆绑的 `acpx`
+插件会探查一个 harness 代理。如果设置了 `acp.allowedAgents`，它默认为
+第一个允许的代理；否则默认为 `codex`。如果您的部署
+需要不同的 ACP 代理进行健康检查，请显式设置探针代理：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.probeAgent claude
@@ -273,7 +273,7 @@ openclaw config set plugins.entries.acpx.config.probeAgent claude
 
 ACP 会话以非交互方式运行 —— 没有 TTY 来批准或拒绝文件写入和 shell 执行权限提示。acpx 插件提供了两个配置键来控制权限的处理方式：
 
-这些 ACPX Harness 权限与 OpenClaw 执行批准是分开的，也与 CLI 后端供应商绕过标志（例如 Claude CLI `--permission-mode bypassPermissions`）是分开的。ACPX `approve-all` 是 ACP 会话的 Harness 级别紧急开关。
+这些 ACPX harness 权限与 OpenClaw 执行批准分开，也与 CLI 后端供应商绕过标志（例如 Claude CLI OpenClawCLICLI`--permission-mode bypassPermissions`）分开。ACPX `approve-all` 是 ACP 会话的 harness 级紧急开关。
 
 ### `permissionMode`
 
@@ -306,14 +306,14 @@ openclaw config set plugins.entries.acpx.config.nonInteractivePermissions fail
 更改这些值后，请重启网关。
 
 <Warning>
-OpenClaw 默认为 `permissionMode=approve-reads` 和 `nonInteractivePermissions=fail`。在非交互式 ACP 会话中，任何触发权限提示的写入或执行操作都可能会因 `AcpRuntimeError: Permission prompt unavailable in non-interactive mode` 而失败。
+OpenClaw 默认为 OpenClaw`permissionMode=approve-reads` 和 `nonInteractivePermissions=fail`。在非交互式 ACP 会话中，任何触发权限提示的写入或执行操作都可能会因 `AcpRuntimeError: Permission prompt unavailable in non-interactive mode` 而失败。
 
-如果需要限制权限，请将 `nonInteractivePermissions` 设置为 `deny`，以便会话能够优雅降级而不是崩溃。
+如果您需要限制权限，请将 `nonInteractivePermissions` 设置为 `deny`，以便会话优雅降级而不是崩溃。
 
 </Warning>
 
 ## 相关
 
-- [ACP agents](/zh/tools/acp-agents) — 概述、操作员手册、概念
-- [Sub-agents](/zh/tools/subagents)
-- [Multi-agent routing](/zh/concepts/multi-agent)
+- [ACP 代理](/zh/tools/acp-agents) — 概述、操作员手册、概念
+- [子代理](/zh/tools/subagents)
+- [多代理路由](/zh/concepts/multi-agent)

@@ -62,16 +62,16 @@ Si el agente está en sandbox, la herramienta del navegador usa el sandbox por d
 }
 ```
 
-Luego apunte al navegador host:
+A continuación, abra el navegador del host usted mismo (las invocaciones de CLI siempre se ejecutan contra el navegador del host):
 
 ```bash
-openclaw browser open https://x.com --browser-profile openclaw --target host
+openclaw browser open https://x.com --browser-profile openclaw
 ```
 
-O deshabilite el sandbox para el agente que publica actualizaciones.
+Las llamadas a la herramienta `browser` del agente pueden entonces dirigirse al host una vez que se establece `sandbox.browser.allowHostControl: true`. Alternativamente, desactive el sandboxing para el agente que publica actualizaciones.
 
 ## Relacionado
 
 - [Browser](/es/tools/browser)
-- [Solución de problemas de Browser en Linux](/es/tools/browser-linux-troubleshooting)
-- [Solución de problemas de Browser en WSL2](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+- [Solución de problemas del navegador en Linux](/es/tools/browser-linux-troubleshooting)
+- [Solución de problemas del navegador en WSL2](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

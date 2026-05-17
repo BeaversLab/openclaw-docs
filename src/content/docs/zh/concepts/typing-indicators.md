@@ -35,16 +35,20 @@ title: "正在输入指示器"
 
 ## 配置
 
+设置 Agent 级别的默认值：
+
 ```json5
 {
-  agent: {
-    typingMode: "thinking",
-    typingIntervalSeconds: 6,
+  agents: {
+    defaults: {
+      typingMode: "thinking",
+      typingIntervalSeconds: 6,
+    },
   },
 }
 ```
 
-您可以在每个会话中覆盖模式或节奏：
+按会话覆盖模式或频率：
 
 ```json5
 {
@@ -55,19 +59,16 @@ title: "正在输入指示器"
 }
 ```
 
-## 注意
+## 注意事项
 
-- 当整个有效负载完全由静默令牌组成时（例如 `NO_REPLY` / `no_reply`，
-  不区分大小写匹配），`message` 模式不会为仅静默的回复显示输入。
-- `thinking` 仅在运行流式传输推理时触发（`reasoningLevel: "stream"`）。
-  如果模型未发出推理增量，则不会开始输入。
-- 心跳输入是解析后的传递目标的活跃信号。
+- 当整个有效负载是完全的静默令牌（例如 `NO_REPLY` / `no_reply`，不区分大小写匹配）时，`message` 模式不会针对纯静默回复显示正在输入状态。
+- `thinking` 仅当运行流式传输推理（`reasoningLevel: "stream"`）时才会触发。
+  如果模型不发出推理增量，打字将不会开始。
+- 心跳打字是已解析的传递目标的活跃信号。
   它在心跳运行开始时启动，而不是遵循 `message` 或 `thinking`
-  流时序。设置 `typingMode: "never"` 可将其禁用。
-- 当 `target: "none"`、无法解析目标、为心跳禁用了聊天传递，或
-  渠道不支持输入时，心跳不会显示输入状态。
-- `typingIntervalSeconds` 控制**刷新频率**，而非开始时间。
-  默认为 6 秒。
+  的流式传输时间。设置 `typingMode: "never"` 可将其禁用。
+- 当 `target: "none"`、无法解析目标、为心跳禁用了聊天投递或渠道不支持打字输入时，心跳不会显示打字输入状态。
+- `typingIntervalSeconds` 控制**刷新节奏**，而非开始时间。默认值为 6 秒。
 
 ## 相关
 
@@ -75,7 +76,7 @@ title: "正在输入指示器"
   <Card title="Presence" href="/zh/concepts/presence" icon="signal"Gateway(网关)macOS>
     Gateway(网关) 如何跟踪已连接的客户端并在 macOS 实例选项卡中显示它们。
   </Card>
-  <Card title="Streaming and chunking" href="/zh/concepts/streaming" icon="bars-staggered">
-    出站流式传输行为、块边界以及特定于渠道的传递。
+  <Card title="流式传输和分块" href="/zh/concepts/streaming" icon="bars-staggered">
+    出站流式传输行为、分块边界以及特定渠道的传递。
   </Card>
 </CardGroup>

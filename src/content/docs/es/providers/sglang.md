@@ -20,7 +20,7 @@ SGLang sirve modelos de pesos abiertos a través de una API HTTP compatible con 
 | Uso en streaming                              | Sí (`supportsStreamingUsage: true`)                                               |
 | Precios                                       | Marcado como externo gratuito (`modelPricing.external: false`)                    |
 
-OpenClaw también **descubre automáticamente** los modelos disponibles de SGLang cuando aceptas con `SGLANG_API_KEY` y no defines una entrada `models.providers.sglang` explícita — consulte [Descubrimiento de modelos (proveedor implícito)](#model-discovery-implicit-provider) a continuación.
+OpenClaw también **descubre automáticamente** los modelos disponibles de SGLang cuando activas esta opción con `SGLANG_API_KEY`. Usa `sglang/*` en `agents.defaults.models` para mantener el descubrimiento dinámico cuando también configuras una URL base personalizada de SGLang. Consulta [Model discovery (implicit provider)](#model-discovery-implicit-provider) más abajo.
 
 ## Para empezar
 
@@ -63,21 +63,21 @@ OpenClaw también **descubre automáticamente** los modelos disponibles de SGLan
 
 ## Descubrimiento de modelos (proveedor implícito)
 
-Cuando `SGLANG_API_KEY` está configurado (o existe un perfil de autenticación) y usted **no**
+Cuando `SGLANG_API_KEY` está configurado (o existe un perfil de autenticación) y **no**
 define `models.providers.sglang`, OpenClaw consultará:
 
 - `GET http://127.0.0.1:30000/v1/models`
 
 y convertirá los IDs devueltos en entradas de modelos.
 
-<Note>Si establece `models.providers.sglang` explícitamente, se omite el descubrimiento automático y debes definir los modelos manualmente.</Note>
+<Note>Si establece `models.providers.sglang` explícitamente, OpenClaw usa sus modelos declarados por defecto. Añada `"sglang/*": {}` a `agents.defaults.models` cuando quiera que OpenClaw consulte el endpoint `/models` de ese proveedor configurado e incluya todos los modelos SGLang anunciados.</Note>
 
 ## Configuración explícita (modelos manuales)
 
 Use configuración explícita cuando:
 
 - SGLang se ejecuta en un host/puerto diferente.
-- Deseas fijar los valores de `contextWindow`/`maxTokens`.
+- Desea fijar los valores de `contextWindow`/`maxTokens`.
 - Tu servidor requiere una clave API real (o deseas controlar los encabezados).
 
 ```json5
@@ -114,9 +114,9 @@ Use configuración explícita cuando:
 
     | Comportamiento | SGLang |
     |----------|--------|
-    | Formación de solicitudes solo para OpenAI | No aplicado |
+    | Formación de solicitudes solo de OpenAI | No aplicado |
     | `service_tier`, Respuestas `store`, sugerencias de caché de prompts | No enviados |
-    | Formación de carga útil compat. con razonamiento | No aplicado |
+    | Formación de payload compatible con razonamiento | No aplicado |
     | Encabezados de atribución ocultos (`originator`, `version`, `User-Agent`) | No inyectados en URLs base personalizadas de SGLang |
 
   </Accordion>
@@ -124,7 +124,7 @@ Use configuración explícita cuando:
   <Accordion title="Solución de problemas">
     **Servidor no accesible**
 
-    Verifica que el servidor esté ejecutándose y respondiendo:
+    Verifique que el servidor se esté ejecutando y respondiendo:
 
     ```bash
     curl http://127.0.0.1:30000/v1/models
@@ -132,13 +132,13 @@ Use configuración explícita cuando:
 
     **Errores de autenticación**
 
-    Si las solicitudes fallan con errores de autenticación, establece un `SGLANG_API_KEY` real que coincida
-    con la configuración de tu servidor, o configura el proveedor explícitamente bajo
+    Si las solicitudes fallan con errores de autenticación, configure un `SGLANG_API_KEY` real que coincida
+    con la configuración de su servidor, o configure el proveedor explícitamente en
     `models.providers.sglang`.
 
     <Tip>
-    Si ejecutas SGLang sin autenticación, cualquier valor no vacío para
-    `SGLANG_API_KEY` es suficiente para optar por el descubrimiento de modelos.
+    Si ejecuta SGLang sin autenticación, cualquier valor no vacío para
+    `SGLANG_API_KEY` es suficiente para habilitar el descubrimiento de modelos.
     </Tip>
 
   </Accordion>

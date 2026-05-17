@@ -12,7 +12,7 @@ title: "Anthropic Vertex 外掛程式"
 ## 發布
 
 - 套件：`@openclaw/anthropic-vertex-provider`
-- 安裝途徑：包含於 OpenClaw 中
+- 安裝路徑：npm；ClawHub
 
 ## 介面
 

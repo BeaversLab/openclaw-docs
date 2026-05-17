@@ -399,6 +399,30 @@ const video = await api.runtime.mediaUnderstanding.describeVideoFile({
   filePath: "/tmp/inbound-video.mp4",
   cfg: api.config,
 });
+
+const extraction = await api.runtime.mediaUnderstanding.extractStructuredWithModel({
+  provider: "codex",
+  model: "gpt-5.5",
+  input: [
+    {
+      type: "image",
+      buffer: receiptImageBuffer,
+      fileName: "receipt.png",
+      mime: "image/png",
+    },
+    { type: "text", text: "Use the printed fields as the source of truth." },
+  ],
+  instructions: "Return entities and searchable tags.",
+  schemaName: "example.evidence",
+  jsonSchema: {
+    type: "object",
+    properties: {
+      entities: { type: "array", items: { type: "string" } },
+      tags: { type: "array", items: { type: "string" } },
+    },
+  },
+  cfg: api.config,
+});
 ```
 
 对于音频转录，插件可以使用媒体理解运行时或较旧的 STT 别名：
@@ -415,11 +439,12 @@ const { text } = await api.runtime.mediaUnderstanding.transcribeAudioFile({
 注意事项：
 
 - `api.runtime.mediaUnderstanding.*` 是图像/音频/视频理解的首选共享界面。
+- `extractStructuredWithModel(...)`OpenClaw 是插件面向的接口，用于有界的、提供商拥有的以图像为主的提取。至少包含一个图像输入；文本输入是补充上下文。产品插件拥有其路由和架构，而 OpenClaw 拥有提供商/运行时边界。
 - 使用核心媒体理解音频配置 (`tools.media.audio`) 和提供商回退顺序。
-- 当未生成转录输出时（例如跳过/不支持的输入），返回 `{ text: undefined }`。
-- `api.runtime.stt.transcribeAudioFile(...)` 仍作为兼容性别名保留。
+- 当未产生转录输出时（例如跳过/不支持的输入），返回 `{ text: undefined }`。
+- `api.runtime.stt.transcribeAudioFile(...)` 保留为兼容性别名。
 
-插件也可以通过 `api.runtime.subagent` 启动后台子代理运行：
+插件还可以通过 `api.runtime.subagent` 启动后台子代理运行：
 
 ```ts
 const result = await api.runtime.subagent.run({
@@ -431,16 +456,16 @@ const result = await api.runtime.subagent.run({
 });
 ```
 
-注意事项：
+注：
 
-- `provider` 和 `model` 是可选的每次运行覆盖，而不是持久的会话更改。
-- OpenClaw 仅针对受信任的调用者遵守那些覆盖字段。
-- 对于插件拥有的回退运行，操作员必须通过 `plugins.entries.<id>.subagent.allowModelOverride: true` 选择加入。
-- 使用 `plugins.entries.<id>.subagent.allowedModels` 将受信任插件限制为特定的规范 `provider/model` 目标，或使用 `"*"` 显式允许任何目标。
+- `provider` 和 `model` 是每次运行的可选覆盖项，而非持久的会话更改。
+- OpenClaw 仅对受信任的调用者遵守这些覆盖字段。
+- 对于插件拥有的回退运行，操作员必须使用 `plugins.entries.<id>.subagent.allowModelOverride: true` 选择加入。
+- 使用 `plugins.entries.<id>.subagent.allowedModels` 将受信任的插件限制为特定的规范 `provider/model` 目标，或使用 `"*"` 显式允许任何目标。
 - 不受信任的插件子代理运行仍然有效，但覆盖请求将被拒绝，而不是静默回退。
-- 插件创建的子代理会话带有创建插件 ID 的标记。回退 `api.runtime.subagent.deleteSession(...)`Gateway(网关) 只能删除那些拥有的会话；任意会话删除仍然需要管理员范围的 Gateway(网关) 请求。
+- 插件创建的子代理会话使用创建插件 ID 进行标记。回退 `api.runtime.subagent.deleteSession(...)`Gateway(网关) 只能删除那些拥有的会话；任意会话删除仍然需要管理员范围的 Gateway 请求。
 
-对于网络搜索，插件可以使用共享运行时助手，而不是深入到代理工具连线中：
+对于网络搜索，插件可以使用共享的运行时辅助程序，而不是深入代理工具连线：
 
 ```ts
 const providers = api.runtime.webSearch.listProviders({
@@ -456,14 +481,13 @@ const result = await api.runtime.webSearch.search({
 });
 ```
 
-插件也可以通过
-`api.registerWebSearchProvider(...)` 注册网络搜索提供商。
+插件还可以通过 `api.registerWebSearchProvider(...)` 注册网络搜索提供商。
 
 注：
 
 - 将提供商选择、凭据解析和共享请求语义保留在核心中。
-- 使用网络搜索提供商处理特定于供应商的搜索传输。
-- `api.runtime.webSearch.*` 是需要搜索行为但不依赖代理工具包装器的功能/渠道插件的首选共享界面。
+- 将网络搜索提供商用于特定于供应商的搜索传输。
+- `api.runtime.webSearch.*` 是需要搜索行为而不依赖代理工具包装器的功能/渠道插件的首选共享接口。
 
 ### `api.runtime.imageGeneration`
 
@@ -479,7 +503,7 @@ const providers = api.runtime.imageGeneration.listProviders({
 ```
 
 - `generate(...)`：使用配置的图像生成提供商链生成图像。
-- `listProviders(...)`：列出可用的图像生成提供程序及其功能。
+- `listProviders(...)`: 列出可用的图像生成提供商及其功能。
 
 ## Gateway(网关) HTTP 路由
 
@@ -500,160 +524,163 @@ api.registerHttpRoute({
 
 路由字段：
 
-- `path`：Gateway(网关) HTTP 服务器下的路由路径。
-- `auth`：必填。使用 `"gateway"` 要求正常的 Gateway(网关) 身份验证，或使用 `"plugin"` 进行插件管理的身份验证/Webhook 验证。
-- `match`：可选。`"exact"`（默认）或 `"prefix"`。
-- `replaceExisting`：可选。允许同一插件替换其现有的路由注册。
-- `handler`：当路由处理了请求时返回 `true`。
+- `path`: gateway HTTP 服务器下的路由路径。
+- `auth`: 必填。使用 `"gateway"` 要求正常的 gateway 身份验证，或使用 `"plugin"` 进行插件管理的身份验证/webhook 验证。
+- `match`: 可选。`"exact"`（默认）或 `"prefix"`。
+- `replaceExisting`: 可选。允许同一插件替换其现有的路由注册。
+- `handler`: 当路由处理请求时返回 `true`。
 
 注意：
 
 - `api.registerHttpHandler(...)` 已被移除，将导致插件加载错误。请改用 `api.registerHttpRoute(...)`。
 - 插件路由必须显式声明 `auth`。
-- 除非设置了 `replaceExisting: true`，否则将拒绝精确的 `path + match` 冲突，并且一个插件无法替换另一个插件的路由。
-- 将拒绝具有不同 `auth` 级别的重叠路由。请将 `exact`/`prefix` 传递链保持在相同的身份验证级别上。
+- 完全相同的 `path + match` 冲突会被拒绝，除非设置了 `replaceExisting: true`，且一个插件不能替换另一个插件的路由。
+- 具有不同 `auth` 级别的重叠路由会被拒绝。请将 `exact`/`prefix` 穿透链保持在同一身份验证级别。
 - `auth: "plugin"`Gateway(网关) 路由**不会**自动接收操作员运行时作用域。它们用于插件管理的 webhook/签名验证，而非特权 Gateway(网关) 辅助调用。
 - `auth: "gateway"`Gateway(网关) 路由在 Gateway(网关) 请求运行时作用域内运行，但该作用域是有意保守的：
-  - 共享密钥不记名身份验证（`gateway.auth.mode = "token"` / `"password"`）将插件路由运行时作用域固定到 `operator.write`，即使调用者发送了 `x-openclaw-scopes`
-  - 受信任的承载身份的 HTTP 模式（例如私有入口上的 `trusted-proxy` 或 `gateway.auth.mode = "none"`）仅在标头显式存在时才遵守 `x-openclaw-scopes`
-  - 如果在那些承载身份的插件路由请求中缺少 `x-openclaw-scopes`，运行时作用域将回退到 `operator.write`
-- 实用规则：不要假设网关认证插件路由是一个隐式的管理员接口。如果您的路由需要仅管理员的行为，请要求一种承载身份的认证模式，并在文档中明确说明 `x-openclaw-scopes` 头部约定。
+  - 共享密钥不记名身份验证（`gateway.auth.mode = "token"` / `"password"`）将插件路由运行时作用域固定为 `operator.write`，即使调用方发送了 `x-openclaw-scopes`
+  - 承载身份的受信任 HTTP 模式（例如专用入口上的 `trusted-proxy` 或 `gateway.auth.mode = "none"`）仅在该标头明确存在时才遵循 `x-openclaw-scopes`
+  - 如果在那些承载身份的插件路由请求中缺少 `x-openclaw-scopes`，运行时范围将回退到 `operator.write`
+- 实用规则：不要假设网关认证插件路由是隐式的管理员界面。如果您的路由需要仅管理员行为，请要求承载身份的认证模式并记录明确的 `x-openclaw-scopes` 标头约定。
 
 ## Plugin SDK import paths
 
-在编写新插件时，使用狭窄的 SDK 子路径，而不是单一的 `openclaw/plugin-sdk` 根入口。核心子路径包括：
+在编写新插件时，请使用狭窄的 SDK 子路径，而不是单一的 `openclaw/plugin-sdk` 根导出。核心子路径：
 
-| 子路径                              | 用途                                           |
+| Subpath                             | Purpose                                        |
 | ----------------------------------- | ---------------------------------------------- |
-| `openclaw/plugin-sdk/plugin-entry`  | 插件注册原语                                   |
-| `openclaw/plugin-sdk/channel-core`  | 频道入口/构建辅助工具                          |
-| `openclaw/plugin-sdk/core`          | 通用共享辅助工具和总括协议                     |
+| `openclaw/plugin-sdk/plugin-entry`  | Plugin registration primitives                 |
+| `openclaw/plugin-sdk/channel-core`  | Channel entry/build helpers                    |
+| `openclaw/plugin-sdk/core`          | Generic shared helpers and umbrella contract   |
 | `openclaw/plugin-sdk/config-schema` | 根 `openclaw.json` Zod 架构 (`OpenClawSchema`) |
 
-通道插件可以从一系列狭窄的接口中选择 — `channel-setup`、
-`setup-runtime`、`setup-adapter-runtime`、`setup-tools`、`channel-pairing`、
+通道插件从一系列狭窄的接缝中进行选择——`channel-setup`、
+`setup-runtime`、`setup-tools`、`channel-pairing`、
 `channel-contract`、`channel-feedback`、`channel-inbound`、`channel-lifecycle`、
 `channel-reply-pipeline`、`command-auth`、`secret-input`、`webhook-ingress`、
-`channel-targets` 和 `channel-actions`。审批行为应整合
-在一个 `approvalCapability` 约定上，而不是混合在不相关的
-插件字段中。请参阅 [Channel plugins](/zh/plugins/sdk-channel-plugins)。
+`channel-targets` 和 `channel-actions`。批准行为应统一在一个 `approvalCapability` 约定上，而不是在不相关的插件字段之间混合使用。请参阅 [Channel plugins](/zh/plugins/sdk-channel-plugins)。
 
-运行时和配置辅助函数位于匹配的聚焦 `*-runtime` 子路径下
-(`approval-runtime`、`agent-runtime`、`lazy-runtime`、`directory-runtime`、
+运行时和配置辅助程序位于匹配的专注 `*-runtime` 子路径
+（`approval-runtime`、`agent-runtime`、`lazy-runtime`、`directory-runtime`、
 `text-runtime`、`runtime-store`、`system-event-runtime`、`heartbeat-runtime`、
-`channel-activity-runtime` 等)。优先使用 `config-types`、
-`plugin-config-runtime`、`runtime-config-snapshot` 和 `config-mutation`
-而不是宽泛的 `config-runtime` 兼容入口。
+`channel-activity-runtime` 等）之下。请优先使用 `config-contracts`、
+`plugin-config-runtime`、`runtime-config-snapshot` 和 `config-mutation`，
+而不是宽泛的 `config-runtime` 兼容性汇总文件。
 
-<Info>`openclaw/plugin-sdk/channel-runtime`、`openclaw/plugin-sdk/config-runtime` 和 `openclaw/plugin-sdk/infra-runtime` 是用于旧版插件的已弃用兼容性垫片。新代码应改为导入更窄的通用原语。</Info>
+<Info>`openclaw/plugin-sdk/channel-runtime`、`openclaw/plugin-sdk/config-runtime` 和 `openclaw/plugin-sdk/infra-runtime` 是针对较旧插件的已弃用兼容性垫片。新代码应改为导入更窄的通用原语。</Info>
 
-仓库内部入口点（位于每个打包插件包根目录）：
+仓库内部入口点（位于每个打包的插件包根目录）：
 
-- `index.js` — 捆绑插件入口
-- `api.js` — 辅助/类型汇总导出（barrel）
-- `runtime-api.js` — 仅运行时汇总导出（barrel）
+- `index.js` — 打包插件入口
+- `api.js` — 辅助程序/类型汇总文件
+- `runtime-api.js` — 仅运行时汇总文件
 - `setup-entry.js` — 设置插件入口
 
 外部插件应仅导入 `openclaw/plugin-sdk/*` 子路径。切勿
 从核心或其他插件导入另一个插件包的 `src/*`。
-Facade 加载的入口点在存在时优先使用活动的运行时配置快照，
-然后回退到磁盘上已解析的配置文件。
+Facade 加载的入口点在存在时优先使用活动的运行时配置快照，然后回退到磁盘上已解析的配置文件。
 
-特定功能的子路径，如 `image-generation`、`media-understanding`
-和 `speech` 之所以存在，是因为捆绑插件目前在使用它们。它们
-并非自动长期冻结的外部契约 — 在依赖它们时，请查阅相关的 SDK
+特定于功能的子路径，如 `image-generation`、`media-understanding`
+和 `speech`，之所以存在是因为打包的插件当前在使用它们。它们并非
+自动长期冻结的外部契约 —— 在依赖它们时，请查看相关的 SDK
 参考页面。
 
 ## 消息工具架构
 
-插件应拥有针对非消息原语（如反应、已读和投票）的特定渠道 `describeMessageTool(...)` 架构
-贡献。共享发送呈现应使用通用的 `MessagePresentation` 契约，
-而不是提供商原生的按钮、组件、块或卡片字段。
-请参阅 [消息呈现](/zh/plugins/message-presentation) 了解相关契约、
-回退规则、提供商映射和插件作者检查清单。
+插件应拥有针对非消息原语（如反应、已读回执和投票）的特定于 `describeMessageTool(...)` 的架构贡献。共享发送演示应使用通用 `MessagePresentation` 契约，而不是提供商原生的按钮、组件、块或卡片字段。有关契约、回退规则、提供商映射和插件作者清单，请参阅[消息演示](/zh/plugins/message-presentation)。
 
-具备发送能力的插件通过消息功能声明它们可以渲染的内容：
+具备发送能力的插件通过消息能力声明它们可以渲染的内容：
 
-- `presentation` 用于语义呈现块（`text`、`context`、`divider`、`buttons`、`select`）
-- `delivery-pin` 用于固定投递请求
+- `presentation` 用于语义演示块（`text`、`context`、`divider`、`buttons`、`select`）
+- `delivery-pin` 用于固定传递请求
 
-Core 决定是原生渲染展示还是将其降级为文本。不要从通用消息工具中暴露提供商原生的 UI 逃生舱。针对旧版原生架构的已弃用 SDK 辅助函数仍然为现有的第三方插件导出，但新插件不应使用它们。
+核心决定是原生渲染演示还是将其降级为文本。不要从通用消息工具中暴露提供商原生的 UI 逃生舱门。用于遗留原生架构的已弃用 SDK 辅助函数仍会为现有的第三方插件导出，但新插件不应使用它们。
 
 ## 渠道目标解析
 
-渠道插件应拥有特定于渠道的目标语义。保持共享的出站主机通用，并使用消息适配器表面来处理提供商规则：
+渠道插件应拥有特定于渠道的目标语义。保持共享出站主机的通用性，并使用消息适配器表面来处理提供商规则：
 
-- `messaging.inferTargetChatType({ to })` 决定在目录查找之前，
-  是否应将规范化目标视为 `direct`、`group` 还是 `channel`。
-- `messaging.targetResolver.looksLikeId(raw, normalized)` 告知核心
-  输入是否应直接跳过到类似 ID 的解析，而不是目录搜索。
-- `messaging.targetResolver.resolveTarget(...)` 是插件的后备方案，当核心在规范化或目录未命中后需要最终提供商拥有的解析结果时使用。
-- 一旦目标被解析，`messaging.resolveOutboundSessionRoute(...)` 负责提供商特定的会话路由构建。
+- `messaging.inferTargetChatType({ to })` 决定在目录查找之前，规范化目标应被视为 `direct`、`group` 还是 `channel`。
+- `messaging.targetResolver.looksLikeId(raw, normalized)` 告诉核心输入是否应跳过目录搜索而直接进行类似 ID 的解析。
+- `messaging.targetResolver.resolveTarget(...)` 是插件的后备方案，当核心在规范化之后或目录未命中之后需要最终的提供商拥有的解析时使用。
+- `messaging.resolveOutboundSessionRoute(...)` 负责特定于提供商的会话路由构造，一旦目标被解析。
 
-建议的划分：
+推荐的拆分：
 
-- 使用 `inferTargetChatType` 进行应在搜索对等方/组之前发生的类别决策。
-- 使用 `looksLikeId` 进行“将其视为显式/原生目标 id”的检查。
-- 使用 `resolveTarget` 进行提供商特定的规范化后备，而不是用于广泛的目录搜索。
-- 将提供商原生 id（如聊天 id、线程 id、JID、句柄和房间 id）保留在 `target` 值或提供商特定参数中，而不是通用 SDK 字段中。
+- 使用 `inferTargetChatType` 进行应在搜索对等/组之前发生的类别决策。
+- 使用 `looksLikeId` 进行“将此视为显式/原生目标 ID”的检查。
+- 将 `resolveTarget` 用于特定于提供商的规范化回退，而不用于
+  广泛的目录搜索。
+- 将特定于提供商的 ID（如聊天 ID、线程 ID、JID、句柄和房间
+  ID）保留在 `target` 值或特定于提供商的参数中，而不是通用 SDK
+  字段中。
 
-## 配置支持的目录
+## 基于配置的目录
 
-从配置派生目录条目的插件应将该逻辑保留在插件中，并重用 `openclaw/plugin-sdk/directory-runtime` 中的共享辅助函数。
+从配置派生目录条目的插件应将该逻辑保留在
+插件中，并重用
+`openclaw/plugin-sdk/directory-runtime` 中的共享助手。
 
-当渠道需要配置支持的对等方/组时，请使用此方法，例如：
+当渠道需要基于配置的对等方/组（例如）时，请使用此选项：
 
-- 允许列表驱动的私信对等方
+- 由允许列表驱动的私信对等方
 - 配置的渠道/组映射
 - 帐户范围的静态目录回退
 
-`directory-runtime` 中的共享辅助函数仅处理通用操作：
+`directory-runtime` 中的共享助手仅处理通用操作：
 
 - 查询过滤
 - 限制应用
-- 去重/规范化辅助程序
+- 去重/规范化助手
 - 构建 `ChannelDirectoryEntry[]`
 
-特定于渠道的帐户检查和 ID 规范化应保留在插件实现中。
+特定于渠道的帐户检查和 ID 规范化应保留在
+插件实现中。
 
 ## 提供商目录
 
-提供商插件可以使用 `registerProvider({ catalog: { run(...) { ... } } })` 为推理定义模型目录。
+提供商插件可以使用
+`registerProvider({ catalog: { run(...) { ... } } })` 定义用于推理的模型目录。
 
-`catalog.run(...)` 返回与 OpenClaw 写入 `models.providers` 相同的形状：
+`catalog.run(...)` 返回与 OpenClaw 写入
+`models.providers` 的相同形状：
 
-- `{ provider }` 用于单个提供商条目
-- `{ providers }` 用于多个提供商条目
+- 用于一个提供商条目的 `{ provider }`
+- 用于多个提供商条目的 `{ providers }`
 
-当插件拥有提供商特定的模型 id、基础 URL 默认值或身份验证门控的模型元数据时，请使用 `catalog`。
+当插件拥有特定于提供商的模型 ID、基础 URL
+默认值或受身份验证保护的模型元数据时，请使用 `catalog`。
 
-`catalog.order` 控制插件目录相对于 OpenClaw 内置隐式提供商的合并时机：
+`catalog.order` 控制插件目录相对于 OpenClaw
+内置隐式提供商的合并时机：
 
 - `simple`：纯 API 密钥或环境驱动的提供商
 - `profile`：存在身份验证配置文件时出现的提供商
-- `paired`：综合多个相关提供商条目的提供商
+- `paired`：合成多个相关提供商条目的提供商
 - `late`：最后一遍，在其他隐式提供商之后
 
-当键发生冲突时，后注册的提供商优先，因此插件可以有意使用相同的提供商 ID 覆盖内置提供商条目。
+在键冲突时，后出现的提供商获胜，因此插件可以使用相同的提供商 ID 覆盖
+内置提供商条目。
 
-插件还可以通过 `api.registerModelCatalogProvider({ 提供商, kinds, staticCatalog, liveCatalog })` 发布只读模型行。这是列表/帮助/选择器表面的前向路径，支持 `text`、`image_generation`、`video_generation` 和 `music_generation` 行。提供商插件仍然拥有实时端点调用、令牌交换和供应商响应映射；核心拥有通用行形状、源标签和媒体工具帮助格式。媒体生成提供商注册会自动从 `defaultModel`、`models` 和 `capabilities` 合成静态目录行。
+插件还可以通过 `api.registerModelCatalogProvider({ 提供商, kinds, staticCatalog, liveCatalog })` 发布只读模型行。这是列表/帮助/选择器表面的正向路径，支持 `text`、`image_generation`、`video_generation` 和 `music_generation` 行。
+提供商插件仍然拥有实时端点调用、令牌交换和供应商响应映射的所有权；核心拥有通用行形状、源标签和媒体工具帮助格式的所有权。媒体生成提供商注册会自动从 `defaultModel`、`models` 和 `capabilities` 合成静态目录行。
 
 兼容性：
 
-- `discovery` 仍作为旧别名工作，但会发出弃用警告
+- `discovery` 作为旧版别名仍然有效，但会发出弃用警告
 - 如果同时注册了 `catalog` 和 `discovery`，OpenClaw 将使用 `catalog`
-- `augmentModelCatalog` 已被弃用；捆绑提供商应通过 `registerModelCatalogProvider` 发布补充行
+- `augmentModelCatalog` 已被弃用；捆绑的提供商应通过 `registerModelCatalogProvider` 发布补充行
 
 ## 只读渠道检查
 
-如果您的插件注册了渠道，建议在实现 `resolveAccount(...)` 的同时实现 `plugin.config.inspectAccount(cfg, accountId)`。
+如果您的插件注册了渠道，建议在实现 `resolveAccount(...)` 的同时也实现 `plugin.config.inspectAccount(cfg, accountId)`。
 
 原因：
 
-- `resolveAccount(...)` 是运行时路径。它允许假定凭据已完全物化，并且在缺少所需机密时可以快速失败。
-- 诸如 `openclaw status`、`openclaw status --all`、`openclaw channels status`、`openclaw channels resolve` 以及医生/配置修复流程之类的只读命令路径，不应仅仅为了描述配置而物化运行时凭据。
+- `resolveAccount(...)` 是运行时路径。它被允许假设凭据已完全具体化，并且在缺少所需机密时可以快速失败。
+- 只读命令路径（例如 `openclaw status`、`openclaw status --all`、`openclaw channels status`、`openclaw channels resolve` 以及 doctor/config 修复流程）不应仅为了描述配置而具体化运行时凭据。
 
-推荐的 `inspectAccount(...)` 行为：
+建议的 `inspectAccount(...)` 行为：
 
 - 仅返回描述性帐户状态。
 - 保留 `enabled` 和 `configured`。
@@ -662,10 +689,10 @@ Core 决定是原生渲染展示还是将其降级为文本。不要从通用消
   - `botTokenSource`，`botTokenStatus`
   - `appTokenSource`，`appTokenStatus`
   - `signingSecretSource`, `signingSecretStatus`
-- 您不需要仅为了报告只读可用性而返回原始令牌值。返回 `tokenStatus: "available"`（以及匹配的源字段）足以用于状态样式的命令。
+- 您无需仅为了报告只读可用性而返回原始令牌值。返回 `tokenStatus: "available"`（以及匹配的源字段）足以满足状态类命令的需求。
 - 当凭证通过 SecretRef 配置但在当前命令路径中不可用时，请使用 `configured_unavailable`。
 
-这使得只读命令可以报告“已配置但在当前命令路径中不可用”，而不是崩溃或将账户错误地报告为未配置。
+这允许只读命令报告“已配置但在当前命令路径中不可用”，而不是崩溃或错误地报告账户未配置。
 
 ## Package packs
 
@@ -681,37 +708,37 @@ Core 决定是原生渲染展示还是将其降级为文本。不要从通用消
 }
 ```
 
-每个条目都会成为一个插件。如果包列出了多个扩展，插件 ID 将变为 `name/<fileBase>`。
+每个条目都会成为一个插件。如果 pack 列出了多个扩展，插件 ID 将变为 `name/<fileBase>`。
 
 如果您的插件导入了 npm 依赖项，请在该目录中安装它们，以便 `node_modules` 可用（`npm install` / `pnpm install`）。
 
-安全防护措施：解析符号链接后，每个 `openclaw.extensions` 条目必须保留在插件目录内。转义包目录的条目将被拒绝。
+安全防护：解析符号链接后，每个 `openclaw.extensions` 条目必须保留在插件目录内。转义出包目录的条目将被拒绝。
 
 安全说明：`openclaw plugins install` 使用项目本地的 `npm install --omit=dev --ignore-scripts` 安装插件依赖项（无生命周期脚本，运行时无开发依赖项），忽略继承的全局 npm 安装设置。保持插件依赖树为“纯 JS/TS”，并避免需要 `postinstall` 构建的包。
 
-可选：`openclaw.setupEntry` 可以指向一个仅用于设置的轻量级模块。当 OpenClaw 需要为已禁用的渠道插件提供设置界面，或者当渠道插件已启用但仍未配置时，它会加载 `setupEntry` 而不是完整的插件入口。当您的主插件入口还连接了工具、挂钩或其他仅运行时代码时，这会使启动和设置更加轻量。
+可选：`openclaw.setupEntry` 可以指向一个仅用于轻量级设置的模块。当 OpenClaw 需要为已禁用的渠道插件提供设置界面时，或者当渠道插件已启用但尚未配置时，它会加载 `setupEntry` 而不是完整的插件入口。这可以在您的主插件入口还连接了工具、钩子或其他仅运行时代码时，使启动和设置更加轻量。
 
-可选：`openclaw.startup.deferConfiguredChannelFullLoadUntilAfterListen` 可以使渠道插件在网关的预监听启动阶段选择进入相同的 `setupEntry` 路径，即使该渠道已配置。
+可选：`openclaw.startup.deferConfiguredChannelFullLoadUntilAfterListen` 可以在网关的预监听启动阶段，让渠道插件选择进入相同的 `setupEntry` 路径，即使该渠道已经配置。
 
-仅当 `setupEntry` 完全覆盖网关开始监听之前必须存在的启动表面时，才使用此项。实际上，这意味着设置入口必须注册启动所依赖的每个渠道拥有的能力，例如：
+仅当 `setupEntry` 完全覆盖网关开始监听之前必须存在的启动表面时，才使用此选项。实际上，这意味着设置入口必须注册启动依赖的每个渠道拥有的能力，例如：
 
 - 渠道注册本身
 - 网关开始监听之前必须可用的任何 HTTP 路由
-- 在此期间必须存在的任何网关方法、工具或服务
+- 在同一窗口期间必须存在的任何网关方法、工具或服务
 
-如果您的完整入口仍然拥有任何必需的启动能力，请不要启用此标志。保持插件的默认行为，并让 OpenClaw 在启动期间加载完整入口。
+如果您完整入口仍然拥有任何必需的启动能力，请不要启用此标志。保持插件的默认行为，并让 OpenClaw 在启动期间加载完整入口。
 
-捆绑的渠道还可以发布仅限设置的契约表面助手，核心可以在加载完整的渠道运行时之前查询这些助手。当前的设置提升表面包括：
+打包的渠道还可以发布仅限设置的契约表面辅助工具，核心可以在加载完整渠道运行时之前查询这些工具。当前的设置提升表面是：
 
 - `singleAccountKeysToMove`
 - `namedAccountPromotionKeys`
 - `resolveSingleAccountPromotionTarget(...)`
 
-当核心需要将旧版单帐户渠道配置提升为 `channels.<id>.accounts.*` 而不加载完整插件入口时，会使用该表面。Matrix 是当前的捆绑示例：当命名帐户已存在时，它仅将身份验证/引导密钥移动到命名的提升帐户中，并且它可以保留配置的非规范默认帐户密钥，而不是总是创建 `accounts.default`。
+核心在需要将旧版单账户渠道配置提升为 `channels.<id>.accounts.*` 而不加载完整插件入口时使用该表面。Matrix 是当前的打包示例：当命名账户已存在时，它仅将 auth/bootstrap 键移动到命名提升账户中，并且它可以保留配置的非规范 default-account 键，而不是总是创建 `accounts.default`。
 
-这些设置修补适配器保持捆绑契约表面发现的延迟加载。导入时间保持轻量；提升表面仅在首次使用时加载，而不是在模块导入时重新进入捆绑渠道启动。
+这些设置修补适配器保持打包的契约表面发现是延迟的。导入时间保持轻量；提升表面仅在首次使用时加载，而不是在模块导入时重新进入打包渠道启动。
 
-当这些启动表面包含网关 RPC 方法时，请将它们保留在特定于插件的前缀上。核心管理命名空间（`config.*`、`exec.approvals.*`、`wizard.*`、`update.*`）保留供使用，并且始终解析为 `operator.admin`，即使插件请求了更窄的范围。
+当这些启动表面包含网关 RPC 方法时，请将它们保留在特定于插件的前缀上。核心管理命名空间（`config.*`、`exec.approvals.*`、`wizard.*`、`update.*`）保留，并且即使插件请求更窄的范围，也始终解析为 `operator.admin`。
 
 示例：
 
@@ -758,22 +785,22 @@ Core 决定是原生渲染展示还是将其降级为文本。不要从通用消
 }
 ```
 
-除最小示例外，还有更多有用的 `openclaw.channel` 字段：
+除最小示例外，还有其他有用的 `openclaw.channel` 字段：
 
-- `detailLabel`：用于更丰富的目录/状态界面的次要标签
+- `detailLabel`：用于更丰富的目录/状态界面的辅助标签
 - `docsLabel`：覆盖文档链接的链接文本
-- `preferOver`：此目录条目应覆盖的较低优先级插件/渠道 ID
-- `selectionDocsPrefix`、`selectionDocsOmitLabel`、`selectionExtras`：选择界面复制控件
-- `markdownCapable`：将渠道标记为支持 Markdown，以便做出出站格式化决策
+- `preferOver`：此目录条目应优先于哪些较低优先级的插件/渠道 ID
+- `selectionDocsPrefix`、`selectionDocsOmitLabel`、`selectionExtras`：选择界面副本控制
+- `markdownCapable`：将渠道标记为支持 Markdown，用于出站格式决策
 - `exposure.configured`：当设置为 `false` 时，在已配置渠道列表界面中隐藏该渠道
 - `exposure.setup`：当设置为 `false` 时，在交互式设置/配置选择器中隐藏该渠道
-- `exposure.docs`：将渠道标记为文档导航界面的内部/私有渠道
-- `showConfigured` / `showInSetup`：出于兼容性仍接受的旧版别名；首选 `exposure`
-- `quickstartAllowFrom`：将渠道纳入标准快速启动 `allowFrom` 流程
-- `forceAccountBinding`：即使仅存在一个帐户，也要求显式帐户绑定
-- `preferSessionLookupForAnnounceTarget`：在解析通告目标时首选会话查找
+- `exposure.docs`：将渠道标记为内部/私有，用于文档导航界面
+- `showConfigured` / `showInSetup`：为兼容性仍接受的旧别名；建议使用 `exposure`
+- `quickstartAllowFrom`：将渠道加入标准快速启动 `allowFrom` 流程
+- `forceAccountBinding`：即使只存在一个帐户，也要求显式绑定帐户
+- `preferSessionLookupForAnnounceTarget`：在解析通知目标时优先查找会话
 
-OpenClaw 也可以合并**外部渠道目录**（例如，MPM 注册表导出）。将 JSON 文件放置在以下任一位置：
+OpenClaw 还可以合并**外部渠道目录**（例如 MPM 注册表导出）。将 JSON 文件放置于以下位置之一：
 
 - `~/.openclaw/mpm/plugins.json`
 - `~/.openclaw/mpm/catalog.json`
@@ -781,17 +808,17 @@ OpenClaw 也可以合并**外部渠道目录**（例如，MPM 注册表导出）
 
 或者将 `OPENCLAW_PLUGIN_CATALOG_PATHS`（或 `OPENCLAW_MPM_CATALOG_PATHS`）指向
 一个或多个 JSON 文件（以逗号/分号/`PATH` 分隔）。每个文件应
-包含 `{ "entries": [ { "name": "@scope/pkg", "openclaw": { "channel": {...}, "install": {...} } } ] }`。解析器也接受 `"packages"` 或 `"plugins"` 作为 `"entries"` 键的旧版别名。
+包含 `{ "entries": [ { "name": "@scope/pkg", "openclaw": { "channel": {...}, "install": {...} } } ] }`。解析器也接受 `"packages"` 或 `"plugins"` 作为 `"entries"` 键的旧别名。
 
-生成的渠道目录条目和提供商安装目录条目在原始 `openclaw.install` 块旁边公开了标准化的安装源事实。标准化事实标识 npm 规范是确切版本还是浮动选择器，是否存在预期的完整性元数据，以及是否也有本地源路径可用。当目录/包标识已知时，如果解析出的 npm 包名称偏离该标识，标准化事实会发出警告。当 `defaultChoice` 无效或指向不可用的源时，以及当存在没有有效 npm 源的 npm 完整性元数据时，它们也会发出警告。使用者应将 `installSource` 视为一个附加的可选字段，这样手动构建的条目和目录填充就不必合成它。这使得新手引导和诊断可以在不导入插件运行时的情况下解释源平面状态。
+生成的渠道目录条目和提供商安装目录条目在原始 `openclaw.install`npmnpm 块旁边公开了规范化的安装源事实。规范化的事实可以识别 npm 规范是确切版本还是浮动选择器，是否存在预期的完整性元数据，以及是否有本地源路径可用。当目录/包身份已知时，如果解析出的 npm 包名称与该身份不符，规范化事实会发出警告。此外，当 `defaultChoice`npmnpm 无效或指向不可用的源，以及存在 npm 完整性元数据但缺少有效的 npm 源时，它们也会发出警告。使用者应将 `installSource` 视为附加的可选字段，因此手动构建的条目和目录垫片（shims）无需合成它。这使得新手引导和诊断能够在不导入插件运行时的情况下解释源端状态。
 
-官方外部 npm 条目应首选确切的 `npmSpec` 加上 `expectedIntegrity`。为了兼容性，裸包名称和分发标签仍然有效，但它们会显示源平面警告，以便目录可以在不破坏现有插件的情况下转向固定、经过完整性检查的安装。当从本地目录路径进行新手引导安装时，它会在可能的情况下记录一个包含 `source: "path"` 和工作区相对 `sourcePath` 的托管插件索引条目。绝对的操作加载路径保留在 `plugins.load.paths` 中；安装记录避免了将本地工作站路径重复到长期存在的配置中。这使得本地开发安装对源平面诊断可见，而不会增加第二个原始文件系统路径披露表面。持久化的 `plugins/installs.json` 插件索引是安装的真实来源，可以在不加载插件运行时模块的情况下刷新。其 `installRecords` 映射即使在插件清单缺失或无效时也是持久的；其 `plugins` 数组是一个可重建的清单视图。
+官方外部 npm 条目应首选确切的 npm`npmSpec` 加上 `expectedIntegrity`。出于兼容性考虑，仅使用包名称和分发标签（dist-tags）仍然有效，但它们会显示源端警告，以便目录可以转向固定的、经过完整性检查的安装，而不会破坏现有的插件。当从本地目录路径进行新手引导安装时，它会记录一个托管插件索引条目，其中包含 `source: "path"` 以及尽可能包含工作区相对路径 `sourcePath`。绝对操作加载路径保留在 `plugins.load.paths` 中；安装记录避免将本地工作站路径重复到长期配置中。这使得本地开发安装对源端诊断可见，而无需添加第二个原始文件系统路径公开表面。持久化的 `plugins/installs.json` 插件索引是安装的真实来源，可以在不加载插件运行时模块的情况下刷新。其 `installRecords` 映射即使在插件清单缺失或无效时也是持久的；其 `plugins` 数组是可重建的清单视图。
 
 ## 上下文引擎插件
 
-上下文引擎插件拥有用于摄取、组装和压缩的会话上下文编排功能。使用 `api.registerContextEngine(id, factory)` 从你的插件注册它们，然后使用 `plugins.slots.contextEngine` 选择活动引擎。
+上下文引擎插件负责摄入、组装和压缩的会话上下文编排。使用 `api.registerContextEngine(id, factory)` 从插件中注册它们，然后使用 `plugins.slots.contextEngine` 选择活动引擎。
 
-当你的插件需要替换或扩展现有的默认上下文管道，而不仅仅是添加内存搜索或挂钩时，请使用此方法。
+当您的插件需要替换或扩展默认上下文管道而不仅仅是添加内存搜索或钩子时，请使用此方法。
 
 ```ts
 import { buildMemorySystemPromptAddition } from "openclaw/plugin-sdk/core";
@@ -821,7 +848,7 @@ export default function (api) {
 
 工厂 `ctx` 暴露了可选的 `config`、`agentDir` 和 `workspaceDir` 值，用于构造时初始化。
 
-如果你的引擎**不**拥有压缩算法，请保持 `compact()` 的实现并显式地委托它：
+如果您的引擎**不**拥有压缩算法，请保持 `compact()` 的实现并显式地委托它：
 
 ```ts
 import { buildMemorySystemPromptAddition, delegateCompactionToRuntime } from "openclaw/plugin-sdk/core";
@@ -855,39 +882,39 @@ export default function (api) {
 
 ## 添加新功能
 
-当插件需要不符合当前 API 的行为时，不要通过私有访问绕过插件系统。请添加缺失的功能。
+当插件需要的行为不符合当前的 API 时，不要通过私有访问绕过插件系统。添加缺失的功能。
 
-推荐顺序：
+建议顺序：
 
-1. 定义核心合约
-   决定核心应拥有哪些共享行为：策略、回退、配置合并、生命周期、面向渠道的语义和运行时辅助程序形状。
+1. 定义核心契约
+   决定核心应拥有什么共享行为：策略、回退、配置合并、生命周期、面向渠道的语义和运行时辅助程序形状。
 2. 添加类型化插件注册/运行时表面
    使用最小的有用类型化功能表面扩展 `OpenClawPluginApi` 和/或 `api.runtime`。
 3. 连接核心 + 渠道/功能消费者
    渠道和功能插件应通过核心使用新功能，而不是直接导入供应商实现。
 4. 注册供应商实现
-   然后，供应商插件将其后端注册到该功能。
-5. 添加合约覆盖
-   添加测试，以确保所有权和注册形状随时间保持明确。
+   然后供应商插件根据该功能注册其后端。
+5. 添加契约覆盖
+   添加测试，以便所有权和注册形状随时间保持明确。
 
-这就是 OpenClaw 在不硬编码于某个提供商世界观的情况下保持主见的方式。有关具体文件清单和实际示例，请参阅[功能开发指南](OpenClaw/en/tools/capability-cookbook)。
+这就是 OpenClaw 在保持观点鲜明的同时，不会硬编码到某个提供商的世界观中的方式。有关具体的文件清单和实际示例，请参阅[功能指南](/zh/tools/capability-cookbook)。
 
 ### 功能清单
 
-添加新功能时，实现通常应同时涉及这些表面：
+添加新功能时，实现通常应该同时涉及这些表面：
 
-- `src/<capability>/types.ts` 中的核心合约类型
+- `src/<capability>/types.ts` 中的核心契约类型
 - `src/<capability>/runtime.ts` 中的核心运行器/运行时辅助程序
-- API`src/plugins/types.ts` 中的插件 API 注册表面
+- `src/plugins/types.ts` 中的插件 API 注册表面
 - `src/plugins/registry.ts` 中的插件注册表连接
-- 当功能/渠道插件需要消费插件运行时暴露时，在 `src/plugins/runtime/*` 中的暴露
-- `src/test-utils/plugin-registration.ts` 中的 capture/test 辅助工具
+- 当功能/渠道插件需要消费时，在 `src/plugins/runtime/*` 中的插件运行时暴露
+- `src/test-utils/plugin-registration.ts` 中的捕获/测试辅助工具
 - `src/plugins/contracts/registry.ts` 中的所有权/契约断言
 - `docs/` 中的操作员/插件文档
 
-如果缺少其中任何一个表面，通常表明该能力尚未完全集成。
+如果缺少其中任何一个环节，通常表明该功能尚未完全集成。
 
-### 能力模板
+### 功能模板
 
 最小模式：
 
@@ -921,16 +948,16 @@ const clip = await api.runtime.videoGeneration.generate({
 expect(findVideoGenerationProviderIdsForPlugin("openai")).toEqual(["openai"]);
 ```
 
-这使规则保持简单：
+这样可以使规则保持简单：
 
-- 核心拥有能力契约 + 编排
+- 核心拥有功能契约 + 编排
 - 供应商插件拥有供应商实现
 - 功能/渠道插件消费运行时辅助工具
 - 契约测试使所有权明确
 
-## 相关
+## 相关内容
 
-- [插件架构](/zh/plugins/architecture) — 公共能力模型和形状
-- [Plugin SDK 子路径](/zh/plugins/sdk-subpaths)
-- [Plugin SDK 设置](/zh/plugins/sdk-setup)
+- [插件架构](/zh/plugins/architecture) — 公共功能模型和形状
+- [插件 SDK 子路径](/zh/plugins/sdk-subpaths)
+- [插件 SDK 设置](/zh/plugins/sdk-setup)
 - [构建插件](/zh/plugins/building-plugins)

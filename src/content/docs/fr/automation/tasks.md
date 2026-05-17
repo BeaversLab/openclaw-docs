@@ -8,7 +8,7 @@ title: "Tâches d'arrière-plan"
 sidebarTitle: "Tâches d'arrière-plan"
 ---
 
-<Note>Vous cherchez une planification ? Voir [Automation and tasks](/fr/automation) pour choisir le bon mécanisme. Cette page est le registre d'activité pour le travail en arrière-plan, et non le planificateur.</Note>
+<Note>Vous cherchez une planification ? Voir [Automation](/fr/automation) pour choisir le bon mécanisme. Cette page est le registre d'activité pour le travail en arrière-plan, et non le planificateur.</Note>
 
 Les tâches d'arrière-plan suivent le travail qui s'exécute **en dehors de votre session de conversation principale** : exécutions ACP, générations de sous-agents, exécutions de tâches cron isolées et opérations initiées par la CLI.
 
@@ -148,7 +148,7 @@ L'achèvement de l'exécution de l'agent est décisif pour les enregistrements d
 
 Lorsqu'une tâche atteint un état terminal, OpenClaw vous en avertit. Il existe deux chemins de livraison :
 
-**Livraison directe** - si la tâche a une cible de canal (le `requesterOrigin`), le message d'achèvement va directement à ce canal (Telegram, Discord, Slack, etc.). Pour les achèvements de sous-agent, OpenClaw préserve également le routage de fil/discussion lié lorsque disponible et peut remplir un `to` / compte manquant à partir de la route stockée de la session du demandeur (`lastChannel` / `lastTo` / `lastAccountId`) avant d'abandonner la livraison directe.
+**Livraison directe** - si la tâche a une cible de channel (le `requesterOrigin`), le message d'achèvement va directement à ce channel (Telegram, Discord, Slack, etc.). Les achèvements de tâches de groupe et de channel sont acheminés via la session demandeur afin que l'agent parent puisse écrire la réponse visible. Pour les achèvements de sous-agent, OpenClaw préserve également le routage thread/topic lié lorsque disponible et peut remplir un `to` / compte manquant à partir de la route stockée de la session demandeur (`lastChannel` / `lastTo` / `lastAccountId`) avant d'abandonner la livraison directe.
 
 **Livraison en file d'attente de session** - si la livraison directe échoue ou si aucune origine n'est définie, la mise à jour est mise en file d'attente en tant qu'événement système dans la session du demandeur et apparaît au prochain battement de cœur (heartbeat).
 
@@ -343,7 +343,7 @@ Un balayeur (sweeper) s'exécute toutes les **60 secondes** et gère quatre él�
 
 ## Connexes
 
-- [Automatisation et tâches](/fr/automation) - tous les mécanismes d'automatisation en un coup d'œil
+- [Automation](/fr/automation) - tous les mécanismes d'automatisation en un coup d'œil
 - [CLI : Tâches](CLI/en/cli/tasksCLI) - référence des commandes CLI
 - [Heartbeat](/fr/gateway/heartbeat) - tours de session principale périodiques
 - [Tâches planifiées](/fr/automation/cron-jobs) - planification des tâches en arrière-plan

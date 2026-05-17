@@ -23,10 +23,10 @@ OpenClaw utilise le SDK Pi pour intégrer un agent de codage IA dans son archite
 
 ```json
 {
-  "@mariozechner/pi-agent-core": "0.73.0",
-  "@mariozechner/pi-ai": "0.73.0",
-  "@mariozechner/pi-coding-agent": "0.73.0",
-  "@mariozechner/pi-tui": "0.73.0"
+  "@earendil-works/pi-agent-core": "0.74.0",
+  "@earendil-works/pi-ai": "0.74.0",
+  "@earendil-works/pi-coding-agent": "0.74.0",
+  "@earendil-works/pi-tui": "0.74.0"
 }
 ```
 
@@ -166,7 +166,7 @@ const result = await runEmbeddedPiAgent({
 Dans `runEmbeddedAttempt()` (appelé par `runEmbeddedPiAgent()`), le SDK pi est utilisé :
 
 ```typescript
-import { createAgentSession, DefaultResourceLoader, SessionManager, SettingsManager } from "@mariozechner/pi-coding-agent";
+import { createAgentSession, DefaultResourceLoader, SessionManager, SettingsManager } from "@earendil-works/pi-coding-agent";
 
 const resourceLoader = new DefaultResourceLoader({
   cwd: resolvedWorkspace,
@@ -282,7 +282,7 @@ Cela garantit que le filtrage par stratégie, l'integration du bac à sable et l
 
 ## Construction du prompt système
 
-Le prompt système est construit dans `buildAgentSystemPrompt()` (`system-prompt.ts`). Il assemble un prompt complet avec des sections incluant Tooling, Tool Call Style, Safety guardrails, la référence de la OpenClaw CLI, Skills, Docs, Workspace, Sandbox, Messaging, Reply Tags, Voice, Silent Replies, Heartbeats, Runtime metadata, plus Memory et Reactions lorsqu'ils sont activés, ainsi que des fichiers de contexte facultatifs et du contenu de prompt système supplémentaire. Les sections sont réduites pour le mode de prompt minimal utilisé par les sous-agents.
+Le système d'invite est construit dans `buildAgentSystemPrompt()` (`system-prompt.ts`). Il assemble une invite complète avec des sections incluant Outils, Style d'appel d'outil, Garanties de sécurité, Contrôle OpenClaw, Compétences, Docs, Espace de travail, Sandbox, Messagerie, Directives de sortie de l'assistant, Voix, Réponses silencieuses, Signaux de présence (Heartbeats), Métadonnées d'exécution, plus Mémoire et Réactions lorsqu'elles sont activées, ainsi que des fichiers de contexte facultatifs et du contenu d'invite système supplémentaire. Les sections sont réduites pour le mode d'invite minimal utilisé par les sous-agents.
 
 Le prompt est appliqué après la création de la session via `applySystemPromptOverrideToSession()` :
 
@@ -508,7 +508,7 @@ OpenClaw possède également un mode local TUI qui utilise directement les compo
 
 ```typescript
 // src/tui/tui.ts
-import { ... } from "@mariozechner/pi-tui";
+import { ... } from "@earendil-works/pi-tui";
 ```
 
 Cela fournit l'expérience interactive du terminal similaire au mode natif de pi.

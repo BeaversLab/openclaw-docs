@@ -36,16 +36,20 @@ Orden de "qué tan pronto se activa":
 
 ## Configuración
 
+Establecer el valor predeterminado del nivel de agente:
+
 ```json5
 {
-  agent: {
-    typingMode: "thinking",
-    typingIntervalSeconds: 6,
+  agents: {
+    defaults: {
+      typingMode: "thinking",
+      typingIntervalSeconds: 6,
+    },
   },
 }
 ```
 
-Puede anular el modo o el cadencia por sesión:
+Anular el modo o la cadencia por sesión:
 
 ```json5
 {
@@ -58,27 +62,19 @@ Puede anular el modo o el cadencia por sesión:
 
 ## Notas
 
-- El modo `message` no mostrará escritura para respuestas solo silenciosas cuando toda
-  la carga útil es el token silencioso exacto (por ejemplo `NO_REPLY` / `no_reply`,
-  coincidencia sin distinción de mayúsculas y minúsculas).
-- `thinking` solo se activa si la ejecución transmite razonamiento (`reasoningLevel: "stream"`).
-  Si el modelo no emite deltas de razonamiento, la escritura no comenzará.
-- La escritura de latido es una señal de actividad para el objetivo de entrega resuelto. Comienza
-  al inicio del latido de la ejecución en lugar de seguir el tiempo de transmisión de `message` o `thinking`.
-  Establezca `typingMode: "never"` para desactivarla.
-- Los latidos no muestran escritura cuando `target: "none"`, cuando el objetivo no puede
-  ser resuelto, cuando la entrega de chat está desactivada para el latido, o cuando el
-  canal no admite escritura.
-- `typingIntervalSeconds` controla la **cadencia de actualización**, no la hora de inicio.
-  El valor predeterminado es 6 segundos.
+- El modo `message` no mostrará que está escribiendo para las respuestas que sean solo silencio cuando toda la carga útil sea el token de silencio exacto (por ejemplo `NO_REPLY` / `no_reply`, coincidiendo sin distinción de mayúsculas y minúsculas).
+- `thinking` solo se activa si la ejecución transmite el razonamiento (`reasoningLevel: "stream"`). Si el modelo no emite deltas de razonamiento, la indicación de escritura no comenzará.
+- La escritura del latido es una señal de actividad para el destino de entrega resuelto. Comienza al inicio de la ejecución del latido en lugar de seguir el tiempo de transmisión de `message` o `thinking`. Establezca `typingMode: "never"` para desactivarla.
+- Los latidos no muestran que se está escribiendo cuando `target: "none"`, cuando no se puede resolver el destino, cuando la entrega por chat está desactivada para el latido, o cuando el canal no admite la indicación de escritura.
+- `typingIntervalSeconds` controla la **cadencia de actualización**, no la hora de inicio. El valor predeterminado es de 6 segundos.
 
 ## Relacionado
 
 <CardGroup cols={2}>
   <Card title="Presence" href="/es/concepts/presence" icon="signal">
-    Cómo el Gateway rastrea a los clientes conectados y los muestra en la pestaña Instances de macOS.
+    Cómo el Gateway rastrea a los clientes conectados y los muestra en la pestaña Instancias de macOS.
   </Card>
-  <Card title="Transmisión y fragmentación" href="/es/concepts/streaming" icon="bars-staggered">
-    Comportamiento de transmisión saliente, límites de fragmentos y entrega específica del canal.
+  <Card title="Streaming and chunking" href="/es/concepts/streaming" icon="bars-staggered">
+    Comportamiento de transmisión saliente, límites de los fragmentos y entrega específica del canal.
   </Card>
 </CardGroup>

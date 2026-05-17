@@ -12,7 +12,7 @@ Ajoute la prise en charge du fournisseur de modèles Amazon Bedrock Mantle à Op
 ## Distribution
 
 - Paquet : `@openclaw/amazon-bedrock-mantle-provider`
-- Chemin d'installation : inclus dans OpenClaw
+- Route d'installation : npm
 
 ## Surface
 

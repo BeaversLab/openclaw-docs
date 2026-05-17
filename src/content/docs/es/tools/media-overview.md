@@ -57,7 +57,7 @@ El habla en vivo utiliza el contrato de sesión Talk en lugar de la ruta de la h
 | MiniMax     |   ✓    |   ✓   |   ✓    |  ✓  |     |                    |                       |
 | Mistral     |        |       |        |     |  ✓  |                    |                       |
 | OpenAI      |   ✓    |   ✓   |        |  ✓  |  ✓  |         ✓          |           ✓           |
-| OpenRouter  |   ✓    |   ✓   |        |  ✓  |     |                    |           ✓           |
+| OpenRouter  |   ✓    |   ✓   |        |  ✓  |  ✓  |                    |           ✓           |
 | Qwen        |        |   ✓   |        |     |     |                    |                       |
 | Runway      |        |   ✓   |        |     |     |                    |                       |
 | SenseAudio  |        |       |        |     |  ✓  |                    |                       |
@@ -92,11 +92,10 @@ la alternativa de medios generados directamente al canal original.
 
 ## Conversión de voz a texto y llamada de voz
 
-Deepgram, DeepInfra, ElevenLabs, Mistral, OpenAI, SenseAudio y xAI pueden todos transcribir
+Deepgram, DeepInfra, ElevenLabs, Mistral, OpenAI, OpenRouter, SenseAudio y xAI pueden todos transcribir
 audio entrante a través de la ruta por lotes `tools.media.audio` cuando están configurados.
-Los complementos de canal que realizan un verificación previa de una nota de voz para el bloqueo de menciones o el análisis
-de comandos marcan el archivo adjunto transcrito en el contexto entrante, por lo que el paso compartido
-de comprensión de medios reutiliza esa transcripción en lugar de hacer una segunda
+Los complementos de canal que realizan un verificación previa de una nota de voz para el bloqueo de menciones o el análisis de comandos
+marcan el archivo adjunto transcrito en el contexto entrante, por lo que el pase compartido de comprensión de medios reutiliza esa transcripción en lugar de hacer una segunda
 llamada STT para el mismo audio.
 
 Deepgram, ElevenLabs, Mistral, OpenAI y xAI también registran proveedores

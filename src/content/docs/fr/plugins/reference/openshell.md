@@ -12,7 +12,7 @@ Backend de Sandbox propulsé par OpenShell avec espaces de travail locaux en mir
 ## Distribution
 
 - Package : `@openclaw/openshell-sandbox`
-- Méthode d'installation : incluse dans OpenClaw
+- Route d'installation : npm ; ClawHub
 
 ## Surface
 

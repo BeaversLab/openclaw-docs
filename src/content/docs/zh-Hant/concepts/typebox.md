@@ -8,7 +8,7 @@ title: "TypeBox"
 TypeBox 是一個以 TypeScript 為優先的 Schema 函式庫。我們使用它來定義 **Gateway
 WebSocket 協定**（handshake、請求/回應、伺服器事件）。這些 schemas 驅動 macOS 應用程式的**執行時期驗證**、**JSON Schema 匯出**以及 **Swift 程式碼產生**。單一真實來源；其他一切都由此產生。
 
-如果您想要更高層次的協定脈絡，請從
+如果您需要更高層級的協議背景，請從
 [Gateway architecture](/zh-Hant/concepts/architecture) 開始。
 
 ## 心智模型（30 秒）
@@ -89,7 +89,7 @@ Client                    Gateway
   "id": "c1",
   "method": "connect",
   "params": {
-    "minProtocol": 4,
+    "minProtocol": 3,
     "maxProtocol": 4,
     "client": {
       "id": "openclaw-macos",
@@ -254,39 +254,38 @@ Swift 生成器會發出：
 
 - 帶有 `req`、`res`、`event` 和 `unknown` case 的 `GatewayFrame` enum
 - 強類型 payload structs/enums
-- `ErrorCode` 值和 `GATEWAY_PROTOCOL_VERSION`
+- `ErrorCode` 值、`GATEWAY_PROTOCOL_VERSION` 和 `GATEWAY_MIN_PROTOCOL_VERSION`
 
 未知的幀類型會保留為原始 payload 以實現向前兼容。
 
 ## 版本控制 + 兼容性
 
-- `PROTOCOL_VERSION` 存在於 `src/gateway/protocol/version.ts` 中。
-- 客戶端發送 `minProtocol` + `maxProtocol`；伺服器會拒絕不匹配的情況。
+- `PROTOCOL_VERSION` 位於 `src/gateway/protocol/version.ts`。
+- 客戶端發送 `minProtocol` + `maxProtocol`；伺服器會拒絕不包含其目前協議的範圍。
 - Swift 模型會保留未知的幀類型，以避免破壞舊版客戶端。
 
 ## Schema 模式與慣例
 
-- 大多數物件使用 `additionalProperties: false` 來表示嚴格的 payload。
-- `NonEmptyString` 是 ID 和方法/事件名稱的預設選項。
+- 大多數物件使用 `additionalProperties: false` 來處理嚴格的 Payload。
+- `NonEmptyString` 是 ID 和方法/事件名稱的預設值。
 - 頂層 `GatewayFrame` 在 `type` 上使用**鑑別器**。
-- 具有副作用的方法通常在參數中需要 `idempotencyKey`
-  （例如：`send`、`poll`、`agent`、`chat.send`）。
-- `agent` 接受可選的 `internalEvents` 用於運行時生成的編排上下文
-  （例如子代理/cron 任務完成交接）；將此視為內部 API 介面。
+- 具有副作用的方法通常在參數中需要一個 `idempotencyKey`
+  (例如：`send`、`poll`、`agent`、`chat.send`)。
+- `agent` 接受選用的 `internalEvents`，用於執行時生成的協調上下文
+  (例如子代理/cron 任務完成的交接)；請將此視為內部 API 表面。
 
 ## 即時 Schema JSON
 
-生成的 JSON Schema 位於 repo 中的 `dist/protocol.schema.json`。
-發佈的原始檔案通常可在以下位置取得：
+生成的 JSON Schema 位於倉庫的 `dist/protocol.schema.json`。
+發布的原始檔案通常可在以下位置獲得：
 
 - [https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json](https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json)
 
 ## 當您變更 Schema 時
 
 1. 更新 TypeBox Schema。
-2. 在 `src/gateway/server-methods-list.ts` 中註冊該方法/事件。
-3. 當新的 RPC 需要 operator 或
-   node 範圍分類時，更新 `src/gateway/method-scopes.ts`。
+2. 在 `src/gateway/server-methods-list.ts` 中註冊方法/事件。
+3. 當新的 RPC 需要操作員或節點範圍分類時，更新 `src/gateway/method-scopes.ts`。
 4. 執行 `pnpm protocol:check`。
 5. 提交重新產生的 Schema 與 Swift 模型。
 

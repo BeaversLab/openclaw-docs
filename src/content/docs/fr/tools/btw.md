@@ -21,7 +21,7 @@ Lorsque vous envoyez :
 OpenClaw :
 
 1. capture le contexte de la session actuelle,
-2. exécute un appel de **model** distinct sans outil,
+2. exécute une requête latérale éphémère distincte,
 3. répond uniquement à la question annexe,
 4. laisse l'exécution principale tranquille,
 5. n'écrit **pas** la question ou la réponse BTW dans l'historique de la session,
@@ -31,17 +31,24 @@ Le modèle mental important est :
 
 - même contexte de session
 - requête latère unique et distincte
-- pas d'appels d'outil
+- le même transport de harnais natif lorsque la session utilise un harnais natif
 - pas de pollution du contexte futur
 - pas de persistance de la transcription
 
-## Ce qu'elle ne fait pas
+Pour les sessions de harnais Codex, BTW reste à l'intérieur de Codex en forkant le thread
+actuel du serveur d'application en tant que thread latéral éphémère. Cela permet de conserver le OAuth Codex
+et le comportement du thread natif intacts tout en isolant la réponse latérale de la transcription
+parente. Comme le `/side` de Codex, le thread latéral conserve les autorisations Codex
+actuelles et la surface de l'outil natif, avec des garde-fous indiquant au modèle de ne pas
+considérer le travail hérité du thread parent comme des instructions actives. Les runtimes
+non-Codex conservent l'ancien chemin direct à tir unique.
 
-`/btw` fait **pas** :
+## Ce qu'il ne fait pas
+
+`/btw` ne fait **pas** :
 
 - créer une nouvelle session durable,
 - continuer la tâche principale inachevée,
-- exécuter des outils ou des boucles d'outils d'agent,
 - écrire les données de question/réponse BTW dans l'historique de la transcription,
 - apparaître dans `chat.history`,
 - survivre à un rechargement.
@@ -56,7 +63,7 @@ Si l'exécution principale est actuellement active, OpenClaw capture l'état act
 
 - répondre uniquement à la question annexe,
 - ne pas reprendre ou terminer la tâche principale inachevée,
-- ne pas émettre d'appels d'outils ou de pseudo-appels d'outils.
+- ne font pas dériver la conversation parente.
 
 Cela permet de garder BTW isolé de l'exécution principale tout en le rendant conscient de ce dont traite la session.
 
@@ -66,12 +73,14 @@ BTW n'est **pas** livré comme un message de transcription d'assistant normal.
 
 Au niveau du protocole Gateway :
 
-- le chat de l'assistant normal utilise l'événement `chat`
+- le chat normal de l'assistant utilise l'événement `chat`
 - BTW utilise l'événement `chat.side_result`
 
-Cette séparation est intentionnelle. Si BTW réutilisait le chemin d'événement normal `chat`, les clients le traiteraient comme un historique de conversation normal.
+Cette séparation est intentionnelle. Si BTW réutilisait le chemin normal de l'événement `chat`,
+les clients le traiteraient comme l'historique de conversation normal.
 
-Parce que BTW utilise un événement en direct séparé et n'est pas rejoué depuis `chat.history`, il disparaît après le rechargement.
+Parce que BTW utilise un événement en direct distinct et n'est pas rejoué à partir de
+`chat.history`, il disparaît après le rechargement.
 
 ## Comportement de surface
 
@@ -81,7 +90,7 @@ Dans TUI, BTW est rendu en ligne dans la vue de la session actuelle, mais il res
 éphémère :
 
 - visiblement distinct d'une réponse normale de l'assistant
-- rémissible avec `Enter` ou `Esc`
+- peut être rejeté avec `Enter` ou `Esc`
 - non rejoué lors du rechargement
 
 ### Canaux externes
@@ -94,9 +103,13 @@ La réponse est toujours traitée comme un résultat secondaire, et non comme l'
 
 ### Interface de contrôle / web
 
-Le Gateway émet BTW correctement comme `chat.side_result`, et BTW n'est pas inclus dans `chat.history`, le contrat de persistance est donc déjà correct pour le web.
+Le Gateway émet correctement BTW en tant que `chat.side_result`, et BTW n'est pas inclus
+dans `chat.history`, le contrat de persistance est donc déjà correct pour le web.
 
-L'interface de contrôle actuelle (Control UI) a toujours besoin d'un consommateur dédié `chat.side_result` pour afficher BTW en direct dans le navigateur. Jusqu'à ce que ce support côté client soit ajouté, BTW est une fonctionnalité de niveau Gateway avec un comportement complet de TUI et de canal externe, mais pas encore une expérience utilisateur (UX) navigateur complète.
+L'interface de contrôle actuelle a toujours besoin d'un consommateur dédié `chat.side_result` pour
+afficher BTW en direct dans le navigateur. Jusqu'à ce que ce support côté client soit ajouté, BTW est une
+fonctionnalité de niveau Gateway avec un comportement complet de TUI et de canal externe, mais pas encore
+une expérience utilisateur navigateur complète.
 
 ## Quand utiliser BTW
 
@@ -118,7 +131,8 @@ Exemples :
 
 ## Quand ne pas utiliser BTW
 
-N'utilisez pas `/btw` lorsque vous voulez que la réponse fasse partie du contexte de travail futur de la session.
+N'utilisez pas `/btw` lorsque vous voulez que la réponse fasse partie du contexte
+de travail futur de la session.
 
 Dans ce cas, posez la question normalement dans la session principale au lieu d'utiliser BTW.
 

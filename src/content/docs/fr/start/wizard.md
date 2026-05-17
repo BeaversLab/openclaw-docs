@@ -69,7 +69,7 @@ Le **Mode local (par défaut)** vous guide à travers ces étapes :
 3. **Gateway** — Port, adresse de liaison, mode d'auth, exposition Tailscale.
    En mode jeton interactif, choisissez le stockage de jeton en texte clair par défaut ou optez pour SecretRef.
    Chemin SecretRef de jeton non interactif : `--gateway-token-ref-env <ENV_VAR>`.
-4. **Canaux** — canaux de chat intégrés et groupés tels que iMessage, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams, QQ Bot, Signal, Slack, Telegram, WhatsApp, et plus encore.
+4. **Canaux** — canaux de discussion intégrés et officiels des plugins tels que iMessage, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams, QQ Bot, Signal, Slack, Telegram, WhatsApp, et plus encore.
 5. **Daemon** — Installe un LaunchAgent (macOS), une unité utilisateur systemd (Linux/WSL2) ou une tâche planifiée Windows native avec un repli sur le dossier de Démarrage par utilisateur.
    Si l'authentification par jeton nécessite un jeton et que `gateway.auth.token` est géré par SecretRef, l'installation du daemon le valide mais ne persiste pas le jeton résolu dans les métadonnées d'environnement du service superviseur.
    Si l'authentification par jeton nécessite un jeton et que le SecretRef du jeton configuré n'est pas résolu, l'installation du daemon est bloquée avec des instructions exploitables.

@@ -127,7 +127,7 @@ Devuelve el resultado de la revocación como JSON.
 ## Notas
 
 - La rotación de tokens devuelve un nuevo token (sensible). Trátelo como un secreto.
-- Estos comandos requieren el alcance `operator.pairing` (o `operator.admin`). Algunas aprobaciones también requieren que el solicitante posea los alcances del operador que el dispositivo de destino acuñaría o heredaría; consulte [Operator scopes](/es/gateway/operator-scopes).
+- Estos comandos requieren el alcance `operator.pairing` (o `operator.admin`). Algunas aprobaciones también requieren que el autor de la llamada tenga los alcances de operador que el dispositivo de destino acuñaría o heredaría; consulte [Operator scopes](/es/gateway/operator-scopes).
 - `gateway.nodes.pairing.autoApproveCidrs` es una política opcional de la puerta de enlace para
   el emparejamiento de dispositivos de nodo nuevos únicamente; no cambia la autoridad de aprobación de la CLI.
 - La rotación y revocación de tokens se mantienen dentro del conjunto de roles de emparejamiento aprobados y la línea de base de ámbito aprobado para ese dispositivo. Una entrada de token en caché extraviada no
@@ -144,7 +144,7 @@ Devuelve el resultado de la revocación como JSON.
 
 ## Lista de verificación para la recuperación de deriva de token
 
-Use esto cuando la interfaz de usuario de Control u otros clientes sigan fallando con `AUTH_TOKEN_MISMATCH` o `AUTH_DEVICE_TOKEN_MISMATCH`.
+Úselo cuando Control UI u otros clientes sigan fallando con `AUTH_TOKEN_MISMATCH`, `AUTH_DEVICE_TOKEN_MISMATCH` o `AUTH_SCOPE_MISMATCH`.
 
 1. Confirme la fuente actual del token de la puerta de enlace:
 
@@ -176,8 +176,9 @@ openclaw devices approve <requestId>
 
 Notas:
 
-- La precedencia de autenticación de reconexión normal es primero el token/contraseña compartido explícito, luego `deviceToken` explícito, luego el token de dispositivo almacenado y luego el token de arranque.
-- La recuperación de `AUTH_TOKEN_MISMATCH` de confianza puede enviar temporalmente tanto el token compartido como el token de dispositivo almacenado juntos para el único reintento limitado.
+- La precedencia normal de autenticación de reconexión es primero un token/contraseña compartido explícito, luego `deviceToken` explícito, luego el token del dispositivo almacenado y finalmente el token de inicialización.
+- La recuperación de confianza de `AUTH_TOKEN_MISMATCH` puede enviar temporalmente tanto el token compartido como el token del dispositivo almacenado juntos para el único reintento limitado.
+- `AUTH_SCOPE_MISMATCH` significa que el token del dispositivo fue reconocido pero no lleva el conjunto de alcances solicitado; corrija el contrato de aprobación de emparejamiento/alcance antes de cambiar la autenticación compartida de la puerta de enlace.
 
 Relacionado:
 

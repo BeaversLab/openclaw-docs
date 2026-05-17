@@ -8,120 +8,147 @@ read_when:
 title: "Tavily"
 ---
 
-OpenClaw peut utiliser **Tavily** de deux manières :
+[Tavily](https://tavily.com) est une API de recherche conçue pour les applications dIA. OpenClaw lexpose de deux manières :
 
-- en tant que fournisseur `web_search`
+- en tant que provider `web_search` pour l'outil de recherche générique
 - en tant qu'outils de plugin explicites : `tavily_search` et `tavily_extract`
 
-Tavily est une API de recherche conçue pour les applications d'IA, renvoyant des résultats structurés
-optimisés pour la consommation par API. Elle prend en charge une profondeur de recherche configurable, le filtrage
-par sujet, les filtres de domaine, les résumés de réponses générés par l'IA et l'extraction de contenu
-à partir d'URL (y compris les pages rendues en JavaScript).
+Tavily renvoie des résultats structurés optimisés pour la consommation par LLM, avec une profondeur de recherche configurable, un filtrage par sujet et par domaine, des résumés de réponses générés par l'IA, et une extraction de contenu à partir d'URL (y compris les pages rendues en JavaScript).
 
-## Obtenir une clé API
+| Propriété      | Valeur                                |
+| -------------- | ------------------------------------- |
+| ID du plugin   | `tavily`                              |
+| Auth           | `TAVILY_API_KEY` ou config `apiKey`   |
+| URL de base    | `https://api.tavily.com` (par défaut) |
+| Outils groupés | `tavily_search`, `tavily_extract`     |
 
-1. Créez un compte Tavily sur [tavily.com](https://tavily.com/).
-2. Générez une clé API dans le tableau de bord.
-3. Stockez-la dans la configuration ou définissez `TAVILY_API_KEY` dans l'environnement de la passerelle.
+## Getting started
 
-## Configurer la recherche Tavily
-
-```json5
-{
-  plugins: {
-    entries: {
-      tavily: {
-        enabled: true,
-        config: {
-          webSearch: {
-            apiKey: "tvly-...", // optional if TAVILY_API_KEY is set
-            baseUrl: "https://api.tavily.com",
+<Steps>
+  <Step title="Obtenir une clé API">
+    Créez un compte Tavily sur [tavily.com](https://tavily.com), puis générez une clé API dans le tableau de bord.
+  </Step>
+  <Step title="Configurer le plugin et le provider">
+    ```json5
+    {
+      plugins: {
+        entries: {
+          tavily: {
+            enabled: true,
+            config: {
+              webSearch: {
+                apiKey: "tvly-...", // optional if TAVILY_API_KEY is set
+                baseUrl: "https://api.tavily.com",
+              },
+            },
           },
         },
       },
-    },
-  },
-  tools: {
-    web: {
-      search: {
-        provider: "tavily",
+      tools: {
+        web: {
+          search: {
+            provider: "tavily",
+          },
+        },
       },
-    },
-  },
-}
-```
+    }
+    ```
+  </Step>
+  <Step title="Vérifier les exécutions de recherche">
+    Déclenchez une `web_search` depuis n'importe quel agent, ou appelez `tavily_search` directement.
+  </Step>
+</Steps>
 
-Notes :
+<Tip>Choisir Tavily lors de l'intégration (onboarding) ou `openclaw configure --section web` active automatiquement le plugin Tavily inclus.</Tip>
 
-- Choisir Tavily lors de l'onboarding ou `openclaw configure --section web` active
-  automatiquement le plugin Tavily fourni.
-- Stockez la configuration Tavily sous `plugins.entries.tavily.config.webSearch.*`.
-- `web_search` avec Tavily prend en charge `query` et `count` (jusqu'à 20 résultats).
-- Pour les contrôles spécifiques à Tavily comme `search_depth`, `topic`, `include_answer`,
-  ou les filtres de domaine, utilisez `tavily_search`.
-
-## Outils du plugin Tavily
+## Référence de l'outil
 
 ### `tavily_search`
 
-Utilisez ceci lorsque vous souhaitez des contrôles de recherche spécifiques à Tavily au lieu du
-`web_search` générique.
+Utilisez ceci lorsque vous souhaitez des contrôles de recherche spécifiques à Tavily au lieu de `web_search` générique.
 
-| Paramètre         | Description                                                                      |
-| ----------------- | -------------------------------------------------------------------------------- |
-| `query`           | Chaîne de requête de recherche (garder sous 400 caractères)                      |
-| `search_depth`    | `basic` (par défaut, équilibré) ou `advanced` (plus haute pertinence, plus lent) |
-| `topic`           | `general` (par défaut), `news` (mises à jour en temps réel), ou `finance`        |
-| `max_results`     | Nombre de résultats, 1-20 (par défaut : 5)                                       |
-| `include_answer`  | Inclure un résumé de réponse généré par l'IA (par défaut : false)                |
-| `time_range`      | Filtrer par récence : `day`, `week`, `month`, ou `year`                          |
-| `include_domains` | Tableau de domaines pour restreindre les résultats                               |
-| `exclude_domains` | Tableau de domaines à exclure des résultats                                      |
+| Paramètre         | Type               | Contraintes / par défaut                  | Description                                                     |
+| ----------------- | ------------------ | ----------------------------------------- | --------------------------------------------------------------- |
+| `query`           | string             | requis                                    | Chaîne de requête de recherche. Ne dépassez pas 400 caractères. |
+| `search_depth`    | énumération        | `basic` (par défaut), `advanced`          | `advanced` est plus lent mais plus pertinent.                   |
+| `topic`           | enum               | `general` (par défaut), `news`, `finance` | Filtrer par famille de sujets.                                  |
+| `max_results`     | entier             | 1-20                                      | Nombre de résultats.                                            |
+| `include_answer`  | booléen            | default `false`                           | Inclure un résumé de réponse généré par l'IA de Tavily.         |
+| `time_range`      | enum               | `day`, `week`, `month`, `year`            | Filtrer les résultats par récence.                              |
+| `include_domains` | tableau de chaînes | (aucun)                                   | Inclure uniquement les résultats de ces domaines.               |
+| `exclude_domains` | tableau de chaînes | (aucun)                                   | Exclure les résultats de ces domaines.                          |
 
-**Profondeur de recherche :**
+Compromis sur la profondeur de recherche :
 
-| Profondeur | Vitesse     | Pertinence     | Idéal pour                              |
-| ---------- | ----------- | -------------- | --------------------------------------- |
-| `basic`    | Plus rapide | Élevée         | Requêtes à usage général (par défaut)   |
-| `advanced` | Plus lent   | La plus élevée | Précision, faits spécifiques, recherche |
+| Profondeur | Vitesse     | Pertinence    | Idéal pour                                        |
+| ---------- | ----------- | ------------- | ------------------------------------------------- |
+| `basic`    | Plus rapide | Élevé         | Requêtes à usage général (par défaut).            |
+| `advanced` | Plus lent   | Le plus élevé | Recherche de précision et vérification des faits. |
 
 ### `tavily_extract`
 
-Utilisez ceci pour extraire un contenu propre d'une ou de plusieurs URL. Gère les
-pages rendues par JavaScript et prend en charge le découpage (chunking) axé sur la requête pour une
-extraction ciblée.
+Utilisez ceci pour extraire du contenu propre d'une ou plusieurs URL. Prend en charge les pages rendues via JavaScript et prend en charge le découpage axé sur la requête pour une extraction ciblée.
 
-| Paramètre           | Description                                                                          |
-| ------------------- | ------------------------------------------------------------------------------------ |
-| `urls`              | Tableau d'URL à extraire (1 à 20 par requête)                                        |
-| `query`             | Réorganiser les blocs extraits par pertinence pour cette requête                     |
-| `extract_depth`     | `basic` (par défaut, rapide) ou `advanced` (pour les pages utilisant beaucoup de JS) |
-| `chunks_per_source` | Blocs par URL, 1 à 5 (requiert `query`)                                              |
-| `include_images`    | Inclure les URL d'images dans les résultats (par défaut : faux)                      |
+| Paramètre           | Type               | Contraintes / défaut             | Description                                                                           |
+| ------------------- | ------------------ | -------------------------------- | ------------------------------------------------------------------------------------- |
+| `urls`              | tableau de chaînes | requis, 1-20                     | URLs à partir desquelles extraire du contenu.                                         |
+| `query`             | string             | (facultatif)                     | Réorganiser les extraits extraits par pertinence pour cette requête.                  |
+| `extract_depth`     | enum               | `basic` (par défaut), `advanced` | Utilisez `advanced` pour les pages lourdes en JS, les SPA ou les tableaux dynamiques. |
+| `chunks_per_source` | entier             | 1-5 ; **nécessite `query`**      | Segments retournés par URL. Erreur si défini sans `query`.                            |
+| `include_images`    | booléen            | par défaut `false`               | Inclure les URL d'image dans les résultats.                                           |
 
-**Profondeur d'extraction :**
+Compromis de profondeur d'extraction :
 
 | Profondeur | Quand utiliser                                  |
 | ---------- | ----------------------------------------------- |
-| `basic`    | Pages simples - essayez ceci d'abord            |
-| `advanced` | SPA rendues par JS, contenu dynamique, tableaux |
+| `basic`    | Pages simples. Essayez ceci d'abord.            |
+| `advanced` | SPA rendus par JS, contenu dynamique, tableaux. |
 
-Conseils :
-
-- Maximum 20 URL par requête. Regroupez les listes plus volumineuses en plusieurs appels.
-- Utilisez `query` + `chunks_per_source` pour obtenir uniquement le contenu pertinent au lieu des pages complètes.
-- Essayez d'abord `basic` ; revenez à `advanced` si le contenu est manquant ou incomplet.
+<Tip>Regroupez des listes d'URL plus importantes en plusieurs appels `tavily_extract` (maximum 20 par requête). Utilisez `query` plus `chunks_per_source` pour obtenir uniquement le contenu pertinent au lieu des pages complètes.</Tip>
 
 ## Choisir le bon outil
 
 | Besoin                                        | Outil            |
 | --------------------------------------------- | ---------------- |
-| Recherche Web rapide, sans options spéciales  | `web_search`     |
+| Recherche Web rapide, pas d'options spéciales | `web_search`     |
 | Recherche avec profondeur, sujet, réponses IA | `tavily_search`  |
 | Extraire le contenu d'URL spécifiques         | `tavily_extract` |
 
+<Note>The generic `web_search` tool with Tavily as provider supports `query` and `count` (up to 20 results). For Tavily-specific controls (`search_depth`, `topic`, `include_answer`, domain filters, time range), use `tavily_search` instead.</Note>
+
+## Configuration avancée
+
+<AccordionGroup>
+  <Accordion title="APIOrdre de résolution de la clé API"API>
+    Le client Tavily recherche sa clé API dans cet ordre :
+
+    1. `plugins.entries.tavily.config.webSearch.apiKey` (résolu via SecretRefs).
+    2. `TAVILY_API_KEY` depuis l'environnement de la passerelle.
+
+    `tavily_extract` génère une erreur de configuration si aucun n'est présent.
+
+  </Accordion>
+
+<Accordion title="URL de base personnalisée">Remplacez `plugins.entries.tavily.config.webSearch.baseUrl` si vous placez Tavily derrière un proxy. La valeur par défaut est `https://api.tavily.com`.</Accordion>
+
+  <Accordion title="`chunks_per_source` nécessite `query`">
+    `tavily_extract` rejette les appels qui passent `chunks_per_source` sans `query`. Tavily classe les extraits par pertinence de la requête, le paramètre est donc sans signification sans cette dernière.
+  </Accordion>
+</AccordionGroup>
+
 ## Connexes
 
-- [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
-- [Firecrawl](/fr/tools/firecrawl) -- recherche + scraping avec extraction de contenu
-- [Recherche Exa](/fr/tools/exa-search) -- recherche neurale avec extraction de contenu
+<CardGroup cols={2}>
+  <Card title="Vue d'ensemble de la recherche Web" href="/fr/tools/web" icon="magnifying-glass">
+    Tous les fournisseurs et règles de détection automatique.
+  </Card>
+  <Card title="FirecrawlFirecrawl" href="/fr/tools/firecrawl" icon="fire">
+    Recherche plus scraping avec extraction de contenu.
+  </Card>
+  <Card title="Exa Search" href="/fr/tools/exa-search" icon="binoculars">
+    Recherche neuronale avec extraction de contenu.
+  </Card>
+  <Card title="Configuration" href="/fr/gateway/configuration" icon="gear">
+    Schéma de configuration complet pour les entrées de plugin et le routage des tools.
+  </Card>
+</CardGroup>

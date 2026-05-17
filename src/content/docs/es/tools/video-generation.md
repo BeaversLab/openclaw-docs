@@ -99,7 +99,7 @@ Si una tarea de video ya está `queued` o `running` para la sesión actual, `vid
 | Vydra                 | `veo3`                          |   ✓   | 1 imagen (`kling`)                                             | -                                              | `VYDRA_API_KEY`                         |
 | xAI                   | `grok-imagine-video`            |   ✓   | 1 imagen del primer fotograma o hasta a 7 `reference_image`s   | 1 vídeo                                        | `XAI_API_KEY`                           |
 
-Algunos proveedores aceptan variables de entorno de clave de API adicionales o alternativas. Consulte las [páginas del proveedor](#related) individuales para obtener más detalles.
+Algunos proveedores aceptan variables de entorno de claves de API adicionales o alternativas. Consulte las [páginas de proveedores individuales](#related) para obtener más detalles.
 
 Ejecute `video_generate action=list` para inspeccionar los proveedores, modelos y modos de ejecución disponibles en tiempo de ejecución.
 
@@ -198,20 +198,20 @@ Seedance lo usa para detectar automáticamente la relación de aspecto a partir 
 <ParamField path="action" type='"generate" | "status" | "list"' default="generate">
   `"status"` devuelve la tarea de la sesión actual; `"list"` inspecciona los proveedores.
 </ParamField>
-<ParamField path="model" type="string">Anulación de proveedor/modelo (p. ej. `runway/gen4.5`).</ParamField>
+<ParamField path="model" type="string">Sobrescritura de proveedor/modelo (p. ej. `runway/gen4.5`).</ParamField>
 <ParamField path="filename" type="string">Sugerencia de nombre de archivo de salida.</ParamField>
-<ParamField path="timeoutMs" type="number">Tiempo de espera de operación opcional del proveedor en milisegundos.</ParamField>
+<ParamField path="timeoutMs" type="number">Tiempo de espera de operación de proveedor opcional en milisegundos. Si se omite, OpenClaw usa `agents.defaults.videoGenerationModel.timeoutMs` si está configurado.</ParamField>
 <ParamField path="providerOptions" type="object">
   Opciones específicas del proveedor como un objeto JSON (p. ej. `{"seed": 42, "draft": true}`).
-  Los proveedores que declaran un esquema tipado validan las claves y los tipos; las claves
-  desconocidas o las discordancias omiten al candidato durante la reserva. Los proveedores sin un
+  Los proveedores que declaran un esquema con tipos validan las claves y los tipos; las claves
+  desconocidas o discordancias omiten el candidato durante la conmutación por error. Los proveedores sin un
   esquema declarado reciben las opciones tal cual. Ejecute `video_generate action=list`
   para ver qué acepta cada proveedor.
 </ParamField>
 
 <Note>
-  No todos los proveedores admiten todos los parámetros. OpenClaw normaliza la duración al valor admitido más cercano del proveedor y remapea las sugerencias de geometría traducidas, como el tamaño a la relación de aspecto, cuando un proveedor de reserva expone una superficie de control diferente. Las anulaciones realmente no admitidas se ignoran sobre una base de mejor esfuerzo y se reportan como
-  advertencias en el resultado de la herramienta. Los límites estrictos de capacidad (como demasiadas entradas de referencia) fallan antes del envío. Los resultados de la herramienta reportan la configuración aplicada; `details.normalization` captura cualquier traducción de solicitado a aplicado.
+  No todos los proveedores admiten todos los parámetros. OpenClaw normaliza la duración al valor admitido más cercano del proveedor y remapea sugerencias de geometría traducidas tales como tamaño a relación de aspecto cuando un proveedor de respaldo expone una superficie de control diferente. Las sobrescrituras realmente no admitidas se ignoran en un intento de mejor esfuerzo y se reportan como
+  advertencias en el resultado de la herramienta. Los límites duros de capacidad (como demasiadas entradas de referencia) fallan antes del envío. Los resultados de la herramienta reportan la configuración aplicada; `details.normalization` captura cualquier traducción de solicitado a aplicado.
 </Note>
 
 Las entradas de referencia seleccionan el modo de tiempo de ejecución:
@@ -220,7 +220,7 @@ Las entradas de referencia seleccionan el modo de tiempo de ejecución:
 - Cualquier referencia de imagen → `imageToVideo`
 - Cualquier referencia de video → `videoToVideo`
 - Las entradas de audio de referencia **no** cambian el modo resuelto; se aplican
-  encima de cualquier modo que seleccionen las referencias de imagen/video y solo funcionan
+  sobre cualquier modo que seleccionen las referencias de imagen/video y solo funcionan
   con proveedores que declaran `maxInputAudios`.
 
 Las referencias mixtas de imagen y video no son una superficie de capacidad compartida estable.
@@ -230,11 +230,22 @@ Prefiera un tipo de referencia por solicitud.
 
 Algunas comprobaciones de capacidades se aplican en la capa de reserva (fallback) en lugar de en el límite de la herramienta, por lo que una solicitud que exceda los límites del proveedor principal aún puede ejecutarse en una reserva capaz:
 
-- El candidato activo que no declare `maxInputAudios` (o `0`) se omite cuando la solicitud contiene referencias de audio; se prueba el siguiente candidato.
-- El `maxDurationSeconds` del candidato activo por debajo del `durationSeconds` solicitado sin una lista de `supportedDurationSeconds` declarada → se omite.
-- La solicitud contiene `providerOptions` y el candidato activo declara explícitamente un esquema `providerOptions` tipado → se omite si las claves suministradas no están en el esquema o si los tipos de valor no coinciden. Los proveedores sin un esquema declarado reciben las opciones tal cual (transferencia compatible con versiones anteriores). Un proveedor puede optar por no participar en todas las opciones de proveedor declarando un esquema vacío (`capabilities.providerOptions: {}`), lo que provoca la misma omisión que una discrepancia de tipos.
+- Se omite el candidato activo que declara no tener `maxInputAudios` (o `0`) cuando
+  la solicitud contiene referencias de audio; se prueba el siguiente candidato.
+- El `maxDurationSeconds` del candidato activo por debajo del `durationSeconds` solicitado
+  sin una lista declarada de `supportedDurationSeconds` → omitido.
+- La solicitud contiene `providerOptions` y el candidato activo declara explícitamente
+  un esquema `providerOptions` tipado → se omite si las claves proporcionadas no están
+  en el esquema o si los tipos de valor no coinciden. Los proveedores sin un
+  esquema declarado reciben las opciones tal cual (paso transparente
+  compatible con versiones anteriores). Un proveedor puede optar por no participar en todas las opciones de proveedor
+  declarando un esquema vacío (`capabilities.providerOptions: {}`), lo que
+  provoca la misma omisión que una discrepancia de tipo.
 
-El primer motivo de omisión en una solicitud se registra en `warn` para que los operadores vean cuándo se pasó por alto su proveedor principal; las omisiones posteriores se registran en `debug` para mantener silenciosas las cadenas de reserva largas. Si se omite todos los candidatos, el error agregado incluye el motivo de omisión de cada uno.
+El primer motivo de omisión en una solicitud se registra en `warn` para que los operadores vean cuándo
+se pasó por alto su proveedor principal; las omisiones posteriores se registran en `debug` para
+mantener silenciosas las cadenas de reserva largas. Si se omite todos los candidatos, el
+error agregado incluye el motivo de omisión de cada uno.
 
 ## Acciones
 
@@ -255,7 +266,7 @@ OpenClaw resuelve el modelo en este orden:
 
 Si un proveedor falla, se prueba automáticamente el siguiente candidato. Si fallan todos los candidatos, el error incluye detalles de cada intento.
 
-Configure `agents.defaults.mediaGenerationAutoProviderFallback: false` para usar
+Establezca `agents.defaults.mediaGenerationAutoProviderFallback: false` para usar
 solo las entradas explícitas `model`, `primary` y `fallbacks`.
 
 ```json5
@@ -275,8 +286,8 @@ solo las entradas explícitas `model`, `primary` y `fallbacks`.
 
 <AccordionGroup>
   <Accordion title="Alibaba">
-    Utiliza el punto de conexión asíncrono de DashScope / Model Studio. Las imágenes y
-    videos de referencia deben ser URLs `http(s)` remotas.
+    Utiliza el punto de conexión asíncrono de DashScope / Model Studio. Las imágenes y videos
+    de referencia deben ser URLs `http(s)` remotas.
   </Accordion>
   <Accordion title="BytePlus (1.0)">
     ID del proveedor: `byteplus`.
@@ -286,9 +297,9 @@ solo las entradas explícitas `model`, `primary` y `fallbacks`.
     `seedance-1-0-lite-t2v-250428`, `seedance-1-0-lite-i2v-250428`.
 
     Los modelos T2V (`*-t2v-*`) no aceptan entradas de imagen; los modelos I2V y
-    los modelos generales `*-pro-*` admiten una sola imagen de referencia (primer
-    fotograma). Pase la imagen posicionalmente o configure `role: "first_frame"`.
-    Los ID de los modelos T2V se cambian automáticamente a la variante I2V
+    los modelos generales `*-pro-*` admiten una única imagen de referencia (primer
+    cuadro). Pase la imagen posicionalmente o configure `role: "first_frame"`.
+    Los IDs de los modelos T2V se cambian automáticamente a la variante I2V
     correspondiente cuando se proporciona una imagen.
 
     Claves `providerOptions` admitidas: `seed` (número), `draft` (booleano -
@@ -296,16 +307,16 @@ solo las entradas explícitas `model`, `primary` y `fallbacks`.
 
   </Accordion>
   <Accordion title="BytePlus Seedance 1.5">
-    Requiere el complemento [`@openclaw/byteplus-modelark`](https://www.npmjs.com/package/@openclaw/byteplus-modelark).
-    ID del proveedor: `byteplus-seedance15`. Modelo:
+    Requiere el plugin [`@openclaw/byteplus-modelark`](https://www.npmjs.com/package/@openclaw/byteplus-modelark)
+    . ID del proveedor: `byteplus-seedance15`. Modelo:
     `seedance-1-5-pro-251215`.
 
-    Utiliza la API unificada `content[]`. Admite un máximo de 2 imágenes de entrada
-    (`first_frame` + `last_frame`). Todas las entradas deben ser URLs `https://`
-    remotas. Configure `role: "first_frame"` / `"last_frame"` en cada imagen, o
+    Utiliza la API unificada `content[]`. Admite como máximo 2 imágenes de entrada
+    (`first_frame` + `last_frame`). Todas las entradas deben ser URLs remotas `https://`
+    . Configure `role: "first_frame"` / `"last_frame"` en cada imagen, o
     pase las imágenes posicionalmente.
 
-    `aspectRatio: "adaptive"` detecta automáticamente la relación de aspecto de la imagen de entrada.
+    `aspectRatio: "adaptive"` detecta automáticamente la proporción de la imagen de entrada.
     `audio: true` se asigna a `generate_audio`. `providerOptions.seed`
     (número) se reenvía.
 
@@ -316,12 +327,13 @@ solo las entradas explícitas `model`, `primary` y `fallbacks`.
     `dreamina-seedance-2-0-260128`,
     `dreamina-seedance-2-0-fast-260128`.
 
-    Utiliza la API unificada `content[]`. Admite hasta 9 imágenes de referencia,
-    3 videos de referencia y 3 audios de referencia. Todas las entradas deben ser URLs `https://` remotas. Establezca `role` en cada activo; valores admitidos:
+    Utiliza la API unificada de `content[]`. Admite hasta 9 imágenes de referencia,
+    3 videos de referencia y 3 audios de referencia. Todas las entradas deben ser URLs `https://` remotas.
+    Establezca `role` en cada activo; valores admitidos:
     `"first_frame"`, `"last_frame"`, `"reference_image"`,
     `"reference_video"`, `"reference_audio"`.
 
-    `aspectRatio: "adaptive"` detecta automáticamente la proporción de la imagen de entrada.
+    `aspectRatio: "adaptive"` detecta automáticamente la relación de aspecto desde la imagen de entrada.
     `audio: true` se asigna a `generate_audio`. `providerOptions.seed`
     (número) se reenvía.
 
@@ -339,14 +351,14 @@ solo las entradas explícitas `model`, `primary` y `fallbacks`.
     un máximo de 12 archivos de referencia en total.
   </Accordion>
   <Accordion title="Google (Gemini / Veo)">
-    Admite una imagen o un video de referencia. Las solicitudes de audio generado se
-    ignoran con una advertencia en la ruta de la API de Gemini porque esa API rechaza
+    Admite una imagen o un video de referencia. Las solicitudes de audio generado son
+    ignoradas con una advertencia en la ruta de la API de Gemini porque esa API rechaza
     el parámetro `generateAudio` para la generación de video actual de Veo.
   </Accordion>
   <Accordion title="MiniMax">
-    Solo referencia de imagen única. MiniMax acepta `768P` y `1080P`
-    como resoluciones; las solicitudes como `720P` se normalizan al valor
-    admitido más cercano antes del envío.
+    Solo referencia de imagen única. MiniMax acepta las resoluciones `768P` y `1080P`;
+    las solicitudes como `720P` se normalizan al valor admitido más cercano
+    antes del envío.
   </Accordion>
   <Accordion title="OpenAI">
     Solo se reenvía la anulación `size`. Otras anulaciones de estilo
@@ -356,13 +368,13 @@ solo las entradas explícitas `model`, `primary` y `fallbacks`.
   <Accordion title="OpenRouter">
     Utiliza la API asíncrona `/videos` de OpenRouter. OpenClaw envía el
     trabajo, sondea `polling_url` y descarga `unsigned_urls` o el
-    punto de conexión de contenido del trabajo documentado. El modelo `google/veo-3.1-fast` incluido por defecto
-    anuncia duraciones de 4/6/8 segundos, resoluciones `720P`/`1080P` y
+    punto final de contenido del trabajo documentado. El `google/veo-3.1-fast` predeterminado
+    incluido anuncia duraciones de 4/6/8 segundos, resoluciones `720P`/`1080P` y
     relaciones de aspecto `16:9`/`9:16`.
   </Accordion>
   <Accordion title="Qwen">
-    El mismo backend DashScope que Alibaba. Las entradas de referencia deben ser URLs de
-    `http(s)` remotas; los archivos locales se rechazan de inmediato.
+    El mismo backend DashScope que Alibaba. Las entradas de referencia deben ser
+    URL `http(s)` remotas; los archivos locales se rechazan de inmediato.
   </Accordion>
   <Accordion title="Runway">
     Admite archivos locales a través de URI de datos. Video a video requiere
@@ -373,13 +385,13 @@ solo las entradas explícitas `model`, `primary` y `fallbacks`.
     Solo referencia de imagen única.
   </Accordion>
   <Accordion title="Vydra">
-    Utiliza `https://www.vydra.ai/api/v1` directamente para evitar redirecciones que eliminan la autenticación.
-    `veo3` se incluye solo para texto a video; `kling` requiere
+    Utiliza `https://www.vydra.ai/api/v1` directamente para evitar redirecciones
+    que eliminen la autenticación. `veo3` se incluye solo como texto a video; `kling` requiere
     una URL de imagen remota.
   </Accordion>
   <Accordion title="xAI">
     Admite texto a video, imagen a video de un solo primer fotograma, hasta 7
-    entradas `reference_image` a través de xAI `reference_images`, y flujos de
+    entradas `reference_image` a través de xAI `reference_images` y flujos de
     edición/extensión de video remotos.
   </Accordion>
 </AccordionGroup>
@@ -413,15 +425,13 @@ capabilities: {
 }
 ```
 
-Los campos agregados planos como `maxInputImages` y `maxInputVideos`
-**no** son suficientes para anunciar la compatibilidad con el modo de transformación. Los proveedores deben
+Los campos agregados planos como `maxInputImages` y `maxInputVideos` **no** son
+suficientes para anunciar la compatibilidad con el modo de transformación. Los proveedores deben
 declarar `generate`, `imageToVideo` y `videoToVideo` explícitamente para que las pruebas
 en vivo, las pruebas de contrato y la herramienta compartida `video_generate` puedan validar
 la compatibilidad del modo de manera determinista.
 
-Cuando un modelo en un proveedor tiene una compatibilidad de entrada de referencia más amplia que el
-resto, use `maxInputImagesByModel`, `maxInputVideosByModel` o
-`maxInputAudiosByModel` en lugar de aumentar el límite en todo el modo.
+Cuando un modelo en un proveedor tiene soporte de entrada de referencia más amplio que el resto, use `maxInputImagesByModel`, `maxInputVideosByModel`, o `maxInputAudiosByModel` en lugar de aumentar el límite global del modo.
 
 ## Pruebas en vivo
 
@@ -437,14 +447,12 @@ Contenedor del repositorio:
 pnpm test:live:media video
 ```
 
-Este archivo en vivo carga las variables de entorno del proveedor faltantes desde `~/.profile`, prefiere
-las claves de API de live/env antes que los perfiles de autenticación almacenados de forma predeterminada, y ejecuta una
-prueba de humo segura para el lanzamiento de forma predeterminada:
+Este archivo en vivo carga las variables de entorno del proveedor faltantes desde `~/.profile`, prefiere las claves de API de live/env por encima de los perfiles de autenticación almacenados de forma predeterminada, y ejecuta una prueba de humo segura para lanzamientos de forma predeterminada:
 
 - `generate` para cada proveedor que no sea FAL en el barrido.
 - Indicador de langosta de un segundo.
-- Límite de operaciones por proveedor de
-  `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` (`180000` por defecto).
+- Límite de operaciones por proveedor desde
+  `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` (`180000` de forma predeterminada).
 
 FAL es opcional porque la latencia de la cola del lado del proveedor puede dominar el tiempo
 de lanzamiento:
@@ -453,15 +461,14 @@ de lanzamiento:
 pnpm test:live:media video --video-providers fal
 ```
 
-Establezca `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` para también ejecutar los modos de
-transformación declarados que el barrido compartido puede ejercitar de manera segura con medios locales:
+Establezca `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` para también ejecutar los modos de transformación declarados que el barrido compartido puede ejercer de manera segura con medios locales:
 
 - `imageToVideo` cuando `capabilities.imageToVideo.enabled`.
 - `videoToVideo` cuando `capabilities.videoToVideo.enabled` y el
   proveedor/modelo acepta entrada de video local respaldada por búfer en el barrido
   compartido.
 
-Hoy, el carril en vivo compartido `videoToVideo` cubre `runway` solo cuando
+Hoy, el carril en vivo compartido `videoToVideo` cubre `runway` solo cuando usted
 selecciona `runway/gen4_aleph`.
 
 ## Configuración
@@ -490,7 +497,7 @@ openclaw config set agents.defaults.videoGenerationModel.primary "qwen/wan2.6-t2
 ## Relacionado
 
 - [Alibaba Model Studio](/es/providers/alibaba)
-- [Tareas en segundo plano](/es/automation/tasks) - seguimiento de tareas para la generación asíncrona de videos
+- [Tareas en segundo plano](/es/automation/tasks) - seguimiento de tareas para la generación de videos asíncrona
 - [BytePlus](/es/concepts/model-providers#byteplus-international)
 - [ComfyUI](/es/providers/comfy)
 - [Referencia de configuración](/es/gateway/config-agents#agent-defaults)

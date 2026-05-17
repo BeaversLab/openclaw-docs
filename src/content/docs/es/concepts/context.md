@@ -22,12 +22,13 @@ El contexto _no es lo mismo_ que "memoria": la memoria se puede almacenar en el 
 - `/status` → vista rápida de "qué tan llena está mi ventana?" + configuración de sesión.
 - `/context list` → qué se inyecta + tamaños aproximados (por archivo + totales).
 - `/context detail` → desglose más profundo: por archivo, tamaños de esquema por herramienta, tamaños de entrada por habilidad y tamaño del prompt del sistema.
-- `/usage tokens` → añadir pie de uso por respuesta a las respuestas normales.
-- `/compact` → resumir el historial antiguo en una entrada compacta para liberar espacio en la ventana.
+- `/context map` → imagen de treemap estilo WinDirStat de los contribuyentes del contexto rastreados en la sesión actual.
+- `/usage tokens` → añade un pie de página de uso por respuesta a las respuestas normales.
+- `/compact` → resume el historial anterior en una entrada compacta para liberar espacio en la ventana.
 
 Ver también: [Slash commands](/es/tools/slash-commands), [Token use & costs](/es/reference/token-use), [Compaction](/es/concepts/compaction).
 
-## Salida de ejemplo
+## Ejemplo de salida
 
 Los valores varían según el modelo, el proveedor, la política de herramientas y lo que haya en su espacio de trabajo.
 
@@ -74,6 +75,17 @@ Top tools (schema size):
 … (+N more tools)
 ```
 
+### `/context map`
+
+Envía una imagen generada a partir del informe de ejecución en caché más reciente. Antes de que un mensaje normal haya producido un informe de ejecución en la sesión, `/context map` devuelve un mensaje no disponible en lugar de renderizar una estimación. El área del rectángulo es proporcional a los caracteres del prompt rastreados:
+
+- archivos del espacio de trabajo inyectados
+- texto del prompt del sistema base
+- entradas de prompt de habilidades
+- esquemas JSON de herramientas
+
+`/context list`, `/context detail` y `/context json` aún pueden inspeccionar una estimación bajo demanda cuando no hay ningún informe de ejecución en caché.
+
 ## Qué cuenta hacia la ventana de contexto
 
 Todo lo que recibe el modelo cuenta, incluyendo:
@@ -90,17 +102,17 @@ Todo lo que recibe el modelo cuenta, incluyendo:
 El prompt del sistema es **propiedad de OpenClaw** y se reconstruye en cada ejecución. Incluye:
 
 - Lista de herramientas + descripciones breves.
-- Lista de habilidades (solo metadatos; ver más abajo).
+- Lista de habilidades (solo metadatos; ver abajo).
 - Ubicación del espacio de trabajo.
 - Hora (UTC + hora de usuario convertida si está configurado).
 - Metadatos de tiempo de ejecución (host/SO/modelo/pensamiento).
-- Archivos de arranque del espacio de trabajo inyectados en **Contexto del proyecto**.
+- Archivos de arranque del espacio de trabajo inyectados en **Project Context**.
 
 Desglose completo: [System Prompt](/es/concepts/system-prompt).
 
-## Archivos del espacio de trabajo inyectados (Contexto del proyecto)
+## Archivos del espacio de trabajo inyectados (Project Context)
 
-De forma predeterminada, OpenClaw inyecta un conjunto fijo de archivos del espacio de trabajo (si están presentes):
+De manera predeterminada, OpenClaw inyecta un conjunto fijo de archivos del espacio de trabajo (si están presentes):
 
 - `AGENTS.md`
 - `SOUL.md`
@@ -108,59 +120,59 @@ De forma predeterminada, OpenClaw inyecta un conjunto fijo de archivos del espac
 - `IDENTITY.md`
 - `USER.md`
 - `HEARTBEAT.md`
-- `BOOTSTRAP.md` (solo primera ejecución)
+- `BOOTSTRAP.md` (solo en la primera ejecución)
 
-Los archivos grandes se truncan por archivo usando `agents.defaults.bootstrapMaxChars` (por defecto `12000` caracteres). OpenClaw también impone un límite total de inyección de arranque entre archivos con `agents.defaults.bootstrapTotalMaxChars` (por defecto `60000` caracteres). `/context` muestra tamaños **sin procesar vs inyectados** y si ocurrió el truncamiento.
+Los archivos grandes se truncan por archivo usando `agents.defaults.bootstrapMaxChars` (por defecto `12000` caracteres). OpenClaw también impone un límite máximo de inyección de arranque total entre archivos con `agents.defaults.bootstrapTotalMaxChars` (por defecto `60000` caracteres). `/context` muestra los tamaños **brutos frente a los inyectados** y si se produjo un truncamiento.
 
-Cuando se produce el truncamiento, el tiempo de ejecución puede inyectar un bloque de advertencia en el prompt bajo Project Context. Configure esto con `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`; por defecto `once`).
+Cuando se produce el truncamiento, el tiempo de ejecución puede inyectar un bloque de advertencia en el aviso bajo el Contexto del proyecto. Configure esto con `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`; por defecto `once`).
 
 ## Habilidades: inyectadas vs cargadas bajo demanda
 
 El mensaje del sistema incluye una **lista de habilidades** compacta (nombre + descripción + ubicación). Esta lista tiene una sobrecarga real.
 
-Las instrucciones de las habilidades _no_ se incluyen por defecto. Se espera que el modelo `read` el `SKILL.md` de la habilidad **solo cuando sea necesario**.
+Las instrucciones de habilidad _no_ se incluyen de forma predeterminada. Se espera que el modelo `read` el `SKILL.md` de la habilidad **solo cuando sea necesario**.
 
 ## Herramientas: hay dos costos
 
 Las herramientas afectan el contexto de dos maneras:
 
-1. **Texto de la lista de herramientas** en el prompt del sistema (lo que ves como "Herramientas").
-2. **Esquemas de herramientas** (JSON). Estos se envían al modelo para que pueda llamar a las herramientas. Cuentan para el contexto aunque no los veas como texto plano.
+1. **Texto de la lista de herramientas** en el mensaje del sistema (lo que ves como "Herramientas").
+2. **Esquemas de herramientas** (JSON). Estos se envían al modelo para que pueda llamar a las herramientas. Cuentan hacia el contexto aunque no los veas como texto plano.
 
 `/context detail` desglosa los esquemas de herramientas más grandes para que puedas ver qué domina.
 
 ## Comandos, directivas y "atajos en línea"
 
-Los comandos de barra son manejados por la Gateway. Hay algunos comportamientos diferentes:
+Los comandos de barra diagonal son manejados por la Puerta de enlace (Gateway). Hay algunos comportamientos diferentes:
 
 - **Comandos independientes**: un mensaje que es solo `/...` se ejecuta como un comando.
 - **Directivas**: `/think`, `/verbose`, `/trace`, `/reasoning`, `/elevated`, `/model`, `/queue` se eliminan antes de que el modelo vea el mensaje.
-  - Los mensajes de solo directiva mantienen la configuración de la sesión.
+  - Los mensajes que solo son directivas mantienen la configuración de la sesión.
   - Las directivas en línea en un mensaje normal actúan como sugerencias por mensaje.
-- **Atajos en línea** (solo remitentes autorizados): ciertos tokens `/...` dentro de un mensaje normal pueden ejecutarse inmediatamente (ejemplo: "hey /status"), y se eliminan antes de que el modelo vea el texto restante.
+- **Accesos directos en línea** (solo remitentes permitidos): ciertos tokens `/...` dentro de un mensaje normal pueden ejecutarse inmediatamente (ejemplo: "hey /status") y se eliminan antes de que el modelo vea el texto restante.
 
-Detalles: [Comandos de barra](/es/tools/slash-commands).
+Detalles: [Slash commands](/es/tools/slash-commands).
 
 ## Sesiones, compactación y poda (lo que persiste)
 
-Lo que persiste entre los mensajes depende del mecanismo:
+Lo que persiste entre mensajes depende del mecanismo:
 
-- **El historial normal** persiste en la transcripción de la sesión hasta que se compacta/poda por política.
-- **La compactación** persiste un resumen en la transcripción y mantiene los mensajes recientes intactos.
-- **Poda** elimina los resultados antiguos de las herramientas del prompt _en memoria_ para liberar espacio en la ventana de contexto, pero no reescribe la transcripción de la sesión; el historial completo sigue siendo inspeccionable en el disco.
+- **Historial normal** persiste en la transcripción de la sesión hasta que se compacta/poda por política.
+- **Compactación** persiste un resumen en la transcripción y mantiene los mensajes recientes intactos.
+- **Poda** elimina los resultados de herramientas antiguos del mensaje _en memoria_ para liberar espacio en la ventana de contexto, pero no reescribe la transcripción de la sesión; el historial completo aún se puede inspeccionar en disco.
 
-Documentación: [Sesión](/es/concepts/session), [Compactación](/es/concepts/compaction), [Poda de sesión](/es/concepts/session-pruning).
+Documentos: [Session](/es/concepts/session), [Compaction](/es/concepts/compaction), [Session pruning](/es/concepts/session-pruning).
 
-De forma predeterminada, OpenClaw utiliza el motor de contexto `legacy` incorporado para el ensamblaje y la compactación. Si instalas un complemento que proporciona `kind: "context-engine"` y lo seleccionas con `plugins.slots.contextEngine`, OpenClaw delega el ensamblaje del contexto, `/compact` y los ganchos del ciclo de vida del contexto de los subagentes relacionados a ese motor. `ownsCompaction: false` no regresa automáticamente al motor heredado; el motor activo aún debe implementar `compact()` correctamente. Consulta [Motor de contexto](/es/concepts/context-engine) para obtener la interfaz conectable completa, los ganchos del ciclo de vida y la configuración.
+De manera predeterminada, OpenClaw utiliza el motor de contexto `legacy` integrado para el ensamblaje y la compactación. Si instala un complemento que proporciona `kind: "context-engine"` y lo selecciona con `plugins.slots.contextEngine`, OpenClaw delega el ensamblaje del contexto, `/compact` y los ganchos del ciclo de vida del contexto de subagentes relacionados a ese motor en su lugar. `ownsCompaction: false` no vuelve automáticamente al motor heredado; el motor activo aún debe implementar `compact()` correctamente. Consulte [Context Engine](/es/concepts/context-engine) para obtener la interfaz conectable completa, los ganchos del ciclo de vida y la configuración.
 
-## Lo que `/context` realmente reporta
+## Lo que `/context` realmente informa
 
-`/context` prefiere el informe del sistema más reciente **creado en la ejecución** cuando está disponible:
+`/context` prefiere el informe más reciente del mensaje del sistema **construido en la ejecución** cuando está disponible:
 
-- `System prompt (run)` = capturado desde la última ejecución integrada (con capacidad de herramientas) y persistido en el almacenamiento de la sesión.
+- `System prompt (run)` = capturado de la última ejecución integrada (con capacidad de herramientas) y persistido en el almacén de sesiones.
 - `System prompt (estimate)` = calculado al vuelo cuando no existe un informe de ejecución (o al ejecutarse a través de un backend de CLI que no genera el informe).
 
-De cualquier manera, informa de los tamaños y los principales contribuyentes; **no** vuelca el prompt del sistema completo ni los esquemas de herramientas.
+De cualquier manera, informa los tamaños y los principales contribuyentes; **no** vuelca el mensaje del sistema completo ni los esquemas de herramientas.
 
 ## Relacionado
 
@@ -169,7 +181,7 @@ De cualquier manera, informa de los tamaños y los principales contribuyentes; *
     Inyección de contexto personalizado mediante complementos.
   </Card>
   <Card title="Compactación" href="/es/concepts/compaction" icon="compress">
-    Resumir conversaciones largas para mantenerlas dentro de la ventana del modelo.
+    Resumiendo conversaciones largas para mantenerlas dentro de la ventana del modelo.
   </Card>
   <Card title="Prompt del sistema" href="/es/concepts/system-prompt" icon="message-lines">
     Cómo se construye el prompt del sistema y qué inyecta en cada turno.

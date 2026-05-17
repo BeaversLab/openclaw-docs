@@ -84,14 +84,14 @@ MiniMax 搜索使用以下端点：
 
 ## 支持的参数
 
-MiniMax 搜索支持：
-
-- `query`
-- `count`（OpenClaw 会将返回的结果列表裁剪为请求的数量）
+| 参数    | 类型   | 约束 | 描述                                                    |
+| ------- | ------ | ---- | ------------------------------------------------------- |
+| `query` | 字符串 | 必填 | 搜索查询字符串。                                        |
+| `count` | 整数   | 1-10 | 要返回的结果数量。OpenClaw 会将返回的列表裁剪为此大小。 |
 
 目前不支持特定于提供商的过滤器。
 
 ## 相关
 
-- [Web Search overview](/zh/tools/web) -- 所有提供商及自动检测
-- [MiniMax](/zh/providers/minimax) -- 模型、图像、语音和认证设置
+- [Web Search 概述](/zh/tools/web) -- 所有提供商和自动检测
+- [MiniMax](/zh/providers/minimax) -- 模型、图像、语音和身份验证设置

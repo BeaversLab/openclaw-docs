@@ -1,11 +1,11 @@
 ---
-summary: "OpenRouterAPIOpenClawUtilisez l'API unifiée d'OpenRouter pour accéder à de nombreux modèles dans OpenClaw"
+summary: "Utilisez l'API unifiée d'OpenRouterAPI pour accéder à de nombreux modèles dans OpenClaw"
 read_when:
   - You want a single API key for many LLMs
   - You want to run models via OpenRouter in OpenClaw
   - You want to use OpenRouter for image generation
   - You want to use OpenRouter for video generation
-title: "OpenRouterOpenRouter"
+title: "OpenRouter"
 ---
 
 OpenRouter fournit une **API unifiée** qui achemine les demandes vers de nombreux modèles derrière un seul point de terminaison et clé d'API. Elle est compatible avec OpenAI, donc la plupart des SDK OpenAI fonctionnent en changeant l'URL de base.
@@ -13,7 +13,7 @@ OpenRouter fournit une **API unifiée** qui achemine les demandes vers de nombre
 ## Getting started
 
 <Steps>
-  <Step title="APIObtenez votre clé API"API>
+  <Step title="Obtenir votre clé API">
     Créez une clé API sur [openrouter.ai/keys](https://openrouter.ai/keys).
   </Step>
   <Step title="Exécuter l'intégration">
@@ -22,7 +22,7 @@ OpenRouter fournit une **API unifiée** qui achemine les demandes vers de nombre
     ```
   </Step>
   <Step title="(Facultatif) Passer à un modèle spécifique">
-    L'intégration utilise par défaut `openrouter/auto`. Choisissez un modèle concret plus tard :
+    L'intégration est définie par défaut sur `openrouter/auto`. Choisissez un modèle concret plus tard :
 
     ```bash
     openclaw models set openrouter/<provider>/<model>
@@ -47,7 +47,7 @@ OpenRouter fournit une **API unifiée** qui achemine les demandes vers de nombre
 ## Références de modèles
 
 <Note>
-Les références de modèle suivent le modèle `openrouter/<provider>/<model>`. Pour la liste complète des
+Les références de modèles suivent le modèle `openrouter/<provider>/<model>`. Pour la liste complète des
 fournisseurs et modèles disponibles, consultez [/concepts/model-providers](/fr/concepts/model-providers).
 </Note>
 
@@ -61,7 +61,7 @@ Exemples de repli groupés :
 
 ## Génération d'images
 
-OpenRouter peut également prendre en charge l'outil OpenRouter`image_generate`OpenRouter. Utilisez un modèle d'image OpenRouter sous `agents.defaults.imageGenerationModel` :
+OpenRouter peut également prendre en charge l'outil `image_generate`. Utilisez un modèle d'image OpenRouter sous `agents.defaults.imageGenerationModel` :
 
 ```json5
 {
@@ -77,11 +77,11 @@ OpenRouter peut également prendre en charge l'outil OpenRouter`image_generate`O
 }
 ```
 
-OpenClaw envoie les demandes d'images à l'API de chat et de génération d'images d'OpenRouter avec OpenClawOpenRouterAPI`modalities: ["image", "text"]`. Les modèles d'images Gemini reçoivent les indices `aspectRatio` et `resolution`OpenRouter pris en charge via `image_config` d'OpenRouter. Utilisez `agents.defaults.imageGenerationModel.timeoutMs`OpenRouter pour les modèles d'images OpenRouter plus lents ; le paramètre `timeoutMs` par appel de l'outil `image_generate` l'emporte toujours.
+OpenClaw envoie des demandes d'image à l'API de complétion de chat d'image d'OpenRouterAPI avec `modalities: ["image", "text"]`. Les modèles d'image Gemini reçoivent des indices `aspectRatio` et `resolution` pris en charge via `image_config` d'OpenRouter. Utilisez `agents.defaults.imageGenerationModel.timeoutMs` pour les modèles d'image OpenRouter plus lents ; le paramètre `timeoutMs` par appel de l'outil `image_generate` l'emporte toujours.
 
 ## Génération vidéo
 
-OpenRouter peut également prendre en charge l'outil OpenRouter`video_generate` via son API asynchrone `/videos`APIOpenRouter. Utilisez un modèle vidéo OpenRouter sous `agents.defaults.videoGenerationModel` :
+OpenRouter peut également prendre en charge l'outil `video_generate` via son API `/videos`. Utilisez un modèle vidéo OpenRouter sous `agents.defaults.videoGenerationModel` :
 
 ```json5
 {
@@ -96,11 +96,11 @@ OpenRouter peut également prendre en charge l'outil OpenRouter`video_generate` 
 }
 ```
 
-OpenClaw soumet des tâches text-to-video et image-to-video à OpenRouter, interroge le OpenClawOpenRouter`polling_url`OpenRouter renvoyé et télécharge la vidéo terminée depuis le `unsigned_urls` d'OpenRouter ou le point de terminaison de contenu de tâche documenté. Les images de référence sont envoyées en tant qu'images de première/dernière image par défaut ; les images balisées avec `reference_image`OpenRouter sont envoyées en tant que références d'entrée OpenRouter. Le `google/veo-3.1-fast` par défaut groupé annonce les durées de 4/6/8 secondes actuellement prises en charge, les résolutions `720P`/`1080P` et les formats d'image `16:9`/`9:16`OpenRouterAPI. La fonction vidéo-vers-vidéo n'est pas enregistrée pour OpenRouter car l'API de génération vidéo en amont accepte actuellement des références de texte et d'image.
+OpenClaw soumet des tâches de synthèse vidéo et de vidéo par image à OpenRouter, interroge le OpenClawOpenRouter`polling_url`OpenRouter renvoyé et télécharge la vidéo terminée depuis le `unsigned_urls` d'OpenRouter ou le point de terminaison de contenu de tâche documenté. Les images de référence sont envoyées en tant qu'images de première/dernière image par défaut ; les images balisées avec `reference_image`OpenRouter sont envoyées en tant que références d'entrée OpenRouter. La valeur par défaut du `google/veo-3.1-fast` inclus annonce les durées actuellement prises en charge de 4/6/8 secondes, les résolutions `720P`/`1080P` et les rapports d'aspect `16:9`/`9:16`OpenRouterAPI. La vidéo-à-vidéo n'est pas enregistrée pour OpenRouter car l'API de génération vidéo en amont accepte actuellement des références de texte et d'image.
 
 ## Synthèse vocale
 
-OpenRouter peut également être utilisé comme provider TTS via son point de terminaison OpenRouterOpenAI`/audio/speech` compatible OpenAI.
+OpenRouter peut également être utilisé comme fournisseur TTS via son point de terminaison OpenRouterOpenAI`/audio/speech` compatible OpenAI.
 
 ```json5
 {
@@ -122,7 +122,26 @@ OpenRouter peut également être utilisé comme provider TTS via son point de te
 
 Si `messages.tts.providers.openrouter.apiKey` est omis, le TTS réutilise `models.providers.openrouter.apiKey`, puis `OPENROUTER_API_KEY`.
 
-## Authentification et en-têtes
+## Speech-to-text (inbound audio)
+
+OpenRouter peut transcrire les pièces jointes vocales/audio entrantes via le chemin partagé OpenRouter`tools.media.audio` en utilisant son point de terminaison STT (`/audio/transcriptions`). Cela s'applique à tout plugin de canal qui transfère la voix/audio entrant dans la prévol de compréhension des médias.
+
+```json5
+{
+  tools: {
+    media: {
+      audio: {
+        enabled: true,
+        models: [{ provider: "openrouter", model: "openai/whisper-large-v3-turbo" }],
+      },
+    },
+  },
+}
+```
+
+OpenClaw envoie les requêtes STT OpenRouter sous forme de JSON avec de l'audio en base64 sous OpenClawOpenRouter`input_audio`OpenRouterOpenAI (contrat STT OpenRouter), et non sous forme de téléchargements de formulaires multipart OpenAI.
+
+## Authentication and headers
 
 OpenRouter utilise un jeton Bearer avec votre clé API en arrière-plan.
 
@@ -134,14 +153,14 @@ Sur les vraies requêtes OpenRouter (OpenRouter`https://openrouter.ai/api/v1`Ope
 | `X-OpenRouter-Title`      | `OpenClaw`                                                                                             |
 | `X-OpenRouter-Categories` | `cli-agent,cloud-agent,programming-app,creative-writing,writing-assistant,general-chat,personal-agent` |
 
-<Warning>Si vous redirigez le provider OpenRouter vers un autre proxy ou une URL de base, OpenClaw n'injecte **pas** ces en-têtes spécifiques à OpenRouter ou les marqueurs de cache Anthropic.</Warning>
+<Warning>Si vous redirigez le fournisseur OpenRouter vers un autre proxy ou une URL de base, OpenClaw n'injecte **pas** ces en-têtes spécifiques à OpenRouter ou les marqueurs de cache Anthropic.</Warning>
 
 ## Configuration avancée
 
 <AccordionGroup>
   <Accordion title="Response caching">
-    OpenRouter response caching is opt-in. Enable it per OpenRouter model with
-    model params:
+    La mise en cache des réponses de OpenRouter est optionnelle. Activez-la pour chaque model OpenRouter avec
+    les paramètres du model :
 
     ```json5
     {
@@ -160,42 +179,44 @@ Sur les vraies requêtes OpenRouter (OpenRouter`https://openrouter.ai/api/v1`Ope
     }
     ```
 
-    OpenClaw sends `X-OpenRouter-Cache: true` and, when configured,
-    `X-OpenRouter-Cache-TTL`. `responseCacheClear: true` forces a refresh for
-    the current request and stores the replacement response. Snake_case aliases
-    (`response_cache`, `response_cache_ttl_seconds`, and
-    `response_cache_clear`) are also accepted.
+    OpenClaw envoie `X-OpenRouter-Cache: true` et, si configuré,
+    `X-OpenRouter-Cache-TTL`. `responseCacheClear: true` force un rafraîchissement pour
+    la requête actuelle et stocke la réponse de remplacement. Les alias en snake_case
+    (`response_cache`, `response_cache_ttl_seconds` et
+    `response_cache_clear`) sont également acceptés.
 
-    This is separate from provider prompt caching and from OpenRouter's
-    Anthropic `cache_control` markers. It is only applied on verified
-    `openrouter.ai` routes, not custom proxy base URLs.
+    Ceci est distinct de la mise en cache des invites du fournisseur et des marqueurs
+    `cache_control` de OpenRouter Anthropic. Elle n'est appliquée que sur les routes
+    `openrouter.ai` vérifiées, et non sur les URL de base de proxy personnalisées.
 
   </Accordion>
 
-<Accordion title="Anthropic cache markers">On verified OpenRouter routes, Anthropic model refs keep the OpenRouter-specific Anthropic `cache_control` markers that OpenClaw uses for better prompt-cache reuse on system/developer prompt blocks.</Accordion>
+<Accordion title="Marqueurs de cache Anthropic">Sur les routes OpenRouter vérifiées, les références de model Anthropic conservent les marqueurs `cache_control` OpenRouter spécifiques à Anthropic que OpenClaw utilise pour une meilleure réutilisation du cache d'invite sur les blocs d'invite système/développeur.</Accordion>
 
-<Accordion title="Anthropic reasoning prefill">On verified OpenRouter routes, Anthropic model refs with reasoning enabled drop trailing assistant prefill turns before the request reaches OpenRouter, matching Anthropic's requirement that reasoning conversations end with a user turn.</Accordion>
+<Accordion title="Préremplissage du raisonnement Anthropic">
+  Sur les routes OpenRouter vérifiées, les références de model Anthropic avec le raisonnement activé suppriment les tours de préremplissage de l'assistant à la fin avant que la requête n'atteigne OpenRouter, conformément à la exigence de Anthropic selon laquelle les conversations de raisonnement doivent se terminer par un tour utilisateur.
+</Accordion>
 
-<Accordion title="Injection de réflexion / raisonnement">
-  Sur les routes non-`auto`OpenClawOpenRouter prises en charge, OpenClaw mappe le niveau de réflexion sélectionné aux payloads de raisonnement du proxy OpenRouter. Les indications de modèle non prises en charge et `openrouter/auto`OpenRouter ignorent cette injection de raisonnement. Hunter Alpha ignore également le raisonnement proxy pour les références de modèle configurées obsolètes car
+<Accordion title="Thinking / reasoning injection">
+  Sur les routes non-`auto`OpenClawOpenRouter prises en charge, OpenClaw mappe le niveau de réflexion sélectionné sur les payloads de raisonnement de proxy OpenRouter. Les indications de model non prises en charge et `openrouter/auto`OpenRouter ignorent cette injection de raisonnement. Hunter Alpha ignore également le raisonnement proxy pour les références de model configurées obsolètes car
   OpenRouter pourrait renvoyer du texte de réponse finale dans les champs de raisonnement pour cette route retirée.
 </Accordion>
 
-<Accordion title="Relecture du raisonnement DeepSeek V4" OpenRouter>
-  Sur les routes OpenRouter vérifiées, `openrouter/deepseek/deepseek-v4-flash` et `openrouter/deepseek/deepseek-v4-pro` remplissent les `reasoning_content`OpenClawOpenRouter manquants sur les tours d'assistant relus afin que les conversations de réflexion/outils conservent la forme de suivi requise par DeepSeek V4. OpenClaw envoie les valeurs `reasoning_effort` prises en charge par OpenRouter pour
-  ces routes ; `xhigh` est le niveau le plus élevé annoncé, et les remplacements obsolètes `max` sont mappés vers `xhigh`.
+<Accordion title="DeepSeek V4 reasoning replay" OpenRouter>
+  Sur les routes OpenRouter vérifiées, `openrouter/deepseek/deepseek-v4-flash` et `openrouter/deepseek/deepseek-v4-pro` remplissent les `reasoning_content`OpenClawOpenRouter manquants sur les tours d'assistant rejoués afin que les conversations de réflexion/outils conservent la forme de suivi requise par DeepSeek V4. OpenClaw envoie des valeurs `reasoning_effort` prises en charge par OpenRouter
+  pour ces routes ; `xhigh` est le niveau le plus élevé annoncé, et les substitutions obsolètes `max` sont mappées vers `xhigh`.
 </Accordion>
 
-<Accordion title="OpenAIMise en forme des requêtes OpenAI uniquement" OpenRouterOpenAIOpenAI>
-  OpenRouter passe toujours par le chemin compatible OpenAI de style proxy, donc la mise en forme native des requêtes OpenAI uniquement telles que `serviceTier`, Responses `store`OpenAI, les payloads raisonnement-compat OpenAI et les indications de cache de prompt ne sont pas transmis.
+<Accordion title="OpenAIOpenAI-only request shaping" OpenRouterOpenAIOpenAI>
+  OpenRouter passe toujours par le chemin compatible OpenAI de style proxy, donc le façonnage de requête natif OpenAI-only tel que `serviceTier`, Responses `store`OpenAI, les payloads de raisonnement compatibles OpenAI, et les indications de cache de prompt ne sont pas transmis.
 </Accordion>
 
-<Accordion title="Routes soutenues par Gemini" OpenRouterOpenClaw>
-  Les références OpenRouter soutenues par Gemini restent sur le chemin proxy-Gemini : OpenClaw y maintient le nettoyage de la signature de pensée de Gemini, mais n'active pas la relecture native ou les réécritures d'amorçage de Gemini.
+<Accordion title="Gemini-backed routes" OpenRouterOpenClaw>
+  Les références OpenRouter soutenues par Gemini restent sur le chemin proxy-Gemini : OpenClaw y conserve le nettoyage de la signature de pensée Gemini, mais n'active pas la validation de relecture native Gemini ni les réécritures d'amorçage.
 </Accordion>
 
-  <Accordion title="Provider routing metadata"OpenRouter>
-    Si vous transmettez le routage de fournisseur OpenRouter sous les paramètres du modèle, OpenClawOpenRouter le transfère
+  <Accordion title="Provider routing metadata"OpenRouterOpenClawOpenRouter>
+    Si vous transmettez le routage du fournisseur OpenRouter sous les paramètres du modèle, OpenClaw le transfère
     en tant que métadonnées de routage OpenRouter avant l'exécution des wrappers de flux partagés.
   </Accordion>
 </AccordionGroup>
@@ -204,7 +225,7 @@ Sur les vraies requêtes OpenRouter (OpenRouter`https://openrouter.ai/api/v1`Ope
 
 <CardGroup cols={2}>
   <Card title="Model selection" href="/fr/concepts/model-providers" icon="layers">
-    Choix des fournisseurs, références de modèles et comportement de basculement.
+    Choix des fournisseurs, des références de modèles et du comportement de basculement.
   </Card>
   <Card title="Configuration reference" href="/fr/gateway/configuration-reference" icon="gear">
     Référence complète de la configuration pour les agents, les modèles et les fournisseurs.

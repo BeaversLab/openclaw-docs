@@ -29,7 +29,7 @@ L'authentification est limitée par agent : chaque agent possède son propre mag
 ## Exemples de configuration
 
 <AccordionGroup>
-  <Accordion title="Exemple 1 : Agent personnel + agent familial restreint">
+  <Accordion title="Exemple 1 : Agent personnel + restreint pour la famille">
     ```json
     {
       "agents": {
@@ -50,8 +50,14 @@ L'authentification est limitée par agent : chaque agent possède son propre mag
               "scope": "agent"
             },
             "tools": {
-              "allow": ["read"],
-              "deny": ["exec", "write", "edit", "apply_patch", "process", "browser"]
+              "allow": ["read", "message"],
+              "deny": ["exec", "write", "edit", "apply_patch", "process", "browser"],
+              "message": {
+                "crossContext": {
+                  "allowWithinProvider": false,
+                  "allowAcrossProviders": false
+                }
+              }
             }
           }
         ]
@@ -74,8 +80,8 @@ L'authentification est limitée par agent : chaque agent possède son propre mag
 
     **Résultat :**
 
-    - Agent `main` : s'exécute sur l'hôte, accès complet aux outils.
-    - Agent `family` : s'exécute dans Docker (un conteneur par agent), uniquement l'outil `read`.
+    - `main` agent : s'exécute sur l'hôte, accès complet aux tools.
+    - `family` agent : s'exécute dans Docker (un conteneur par agent), uniquement `read` et les envois de messages de la conversation en cours.
 
   </Accordion>
   <Accordion title="Exemple 2 : Agent de travail avec sandbox partagé">

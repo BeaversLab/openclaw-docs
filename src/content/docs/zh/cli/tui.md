@@ -16,15 +16,32 @@ title: "TUI"
 
 - TUI 指南：[TUI](/zh/web/tui)
 
-注意：
+## 选项
+
+| 标志                  | 默认值                                  | 描述                                                       |
+| --------------------- | --------------------------------------- | ---------------------------------------------------------- |
+| `--local`             | `false`                                 | 针对本地嵌入式代理运行时运行，而不是 Gateway(网关)。       |
+| `--url <url>`         | 来自配置的 `gateway.remote.url`         | Gateway(网关) WebSocket URL。                              |
+| `--token <token>`     | （无）                                  | 如果需要，提供 Gateway(网关) 令牌。                        |
+| `--password <pass>`   | （无）                                  | 如果需要，提供 Gateway(网关) 密码。                        |
+| `--session <key>`     | `main`（或当作用域为全局时的 `global`） | 会话密钥。在代理工作区内，它会自动选择该代理，除非加前缀。 |
+| `--deliver`           | `false`                                 | 通过配置的渠道发送助手回复。                               |
+| `--thinking <level>`  | （模型默认值）                          | 思考级别覆盖。                                             |
+| `--message <text>`    | （无）                                  | 连接后发送初始消息。                                       |
+| `--timeout-ms <ms>`   | `agents.defaults.timeoutSeconds`        | 代理超时。无效值将记录警告并被忽略。                       |
+| `--history-limit <n>` | `200`                                   | 附加时要加载的历史记录条目。                               |
+
+别名：`openclaw chat` 和 `openclaw terminal` 调用相同的命令，并隐含 `--local`。
+
+备注：
 
 - `chat` 和 `terminal` 是 `openclaw tui --local` 的别名。
-- `--local` 不能与 `--url`、`--token` 或 `--password` 结合使用。
-- `tui` 在可能的情况下解析配置的网关认证 SecretRefs，以便进行令牌/密码认证（`env`/`file`/`exec` 提供程序）。
-- 当从配置的代理工作区目录内启动时，TUI 会自动选择该代理作为会话密钥的默认值（除非 `--session` 被显式设置为 `agent:<id>:...`）。
-- 本地模式直接使用嵌入式代理运行时。大多数本地工具都可以使用，但仅限 Gateway(网关) 的功能不可用。
-- 本地模式在 TUI 命令界面内添加了 `/auth [provider]`。
-- 插件批准网关在本地模式下仍然适用。需要批准的工具会在终端中提示进行决策；没有任何内容会被静默自动批准，因为未涉及 Gateway(网关)。
+- `--local` 不能与 `--url`、`--token` 或 `--password` 组合使用。
+- `tui` 尽可能解析配置的 Gateway 认证 SecretRefs 以进行令牌/密码认证（`env`/`file`/`exec` 提供商）。
+- 当从已配置的代理工作区目录内启动时，TUI 会自动选择该代理作为会话密钥的默认值（除非明确将 TUI`--session` 设置为 `agent:<id>:...`）。
+- 本地模式直接使用嵌入式代理运行时。大多数本地工具都可以使用，但仅 Gateway(网关) 支持的功能不可用。
+- 本地模式在 TUI 命令界面内添加 `/auth [provider]`TUI。
+- 在本地模式下，插件批准关卡仍然适用。需要批准的工具会在终端中提示您做出决定；没有任何内容会因为不涉及 Gateway(网关) 而被静默自动批准。
 
 ## 示例
 
@@ -41,10 +58,11 @@ openclaw tui --session bugfix
 
 ## 配置修复循环
 
-当当前配置已经通过验证，并且您希望嵌入式代理检查它、将其与文档进行比较，并帮助从同一终端修复它时，请使用本地模式：
+当当前配置已通过验证，并且您希望嵌入式代理检查它、将其与文档进行比较并帮助从同一终端修复它时，请使用本地模式：
 
 如果 `openclaw config validate` 已经失败，请先使用 `openclaw configure` 或
-`openclaw doctor --fix`。`openclaw chat` 不会绕过无效配置保护。
+`openclaw doctor --fix`。`openclaw chat` 不会绕过无效
+配置保护。
 
 ```bash
 openclaw chat

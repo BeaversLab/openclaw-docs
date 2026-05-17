@@ -12,9 +12,9 @@ Model discovery, scanning, and configuration (default model, fallbacks, auth pro
 
 相關：
 
-- 提供者 + 模型：[Models](/zh-Hant/providers/models)
+- 提供商 + 模型：[Models](/zh-Hant/providers/models)
 - 模型選擇概念 + `/models` 斜線指令：[Models concept](/zh-Hant/concepts/models)
-- 提供者驗證設定：[Getting started](/zh-Hant/start/getting-started)
+- 提供商驗證設定：[Getting started](/zh-Hant/start/getting-started)
 
 ## 常用指令
 
@@ -25,26 +25,26 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` 顯示已解析的預設/備選機制以及驗證概覽。
-當提供者使用情況快照可用時，OAuth/API 金鑰狀態區段會包含
-提供者使用視窗和配額快照。
-目前支援使用視窗的提供者：Anthropic、GitHub Copilot、Gemini CLI、OpenAI
-Codex、MiniMax、Xiaomi 和 z.ai。使用情況驗證來自提供者特定的掛鉤
-（如果可用）；否則 OpenClaw 會回退到從驗證設定檔、環境變數或設定中
-匹配 OAuth/API 金鑰憑證。
-在 `--json` 輸出中，`auth.providers` 是具備環境/設定/儲存感知的提供者
-概覽，而 `auth.oauth` 僅包含驗證儲存設定檔的健康狀態。
-新增 `--probe` 以對每個已設定的提供者設定檔執行即時驗證探測。
-探測是真實的請求（可能會消耗 token 並觸發速率限制）。
-使用 `--agent <id>` 來檢查已設定代理程式的模型/驗證狀態。如果省略，
-該指令會使用 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（如果已設定），否則使用
+`openclaw models status` 會顯示解析後的預設值/備選方案以及驗證概覽。
+當提供商使用量快照可用時，OAuth/API-key 狀態區段會包含
+提供商使用視窗和配額快照。
+目前的使用視窗提供商：Anthropic、GitHub Copilot、Gemini CLI、OpenAI
+Codex、MiniMax、Xiaomi 和 z.ai。使用量驗證來自提供商專屬的掛鉤
+（如果可用）；否則 OpenClaw 會回退到從驗證設定檔、env 或 config
+中匹配 OAuth/API-key 憑證。
+在 `--json` 輸出中，`auth.providers` 是意識 env/config/store 的提供商
+概覽，而 `auth.oauth` 僅為 auth-store 設定檔的健康狀態。
+新增 `--probe` 以對每個已設定的提供商設定檔執行即時驗證探測。
+探測是真實請求（可能會消耗 Token 並觸發速率限制）。
+使用 `--agent <id>` 來檢查已設定代理程式的模型/驗證狀態。若省略，
+指令會使用 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（如果已設定），否則使用
 已設定的預設代理程式。
-探測列可以來自驗證設定檔、環境憑證或 `models.json`。
-若要進行 Codex OAuth 疑難排解，`openclaw models status`、
+探測列可以來自驗證設定檔、env 憑證或 `models.json`。
+若要針對 Codex OAuth 進行疑難排解，`openclaw models status`、
 `openclaw models auth list --provider openai-codex` 和
-`openclaw config get agents.defaults.model --json` 是確認代理程式是否
-透過原生 Codex 執行時期擁有可用的 `openai-codex` 驗證設定檔以用於
-`openai/*` 的最快方式。請參閱 [OpenAI provider setup](/zh-Hant/providers/openai#check-and-recover-codex-oauth-routing)。
+`openclaw config get agents.defaults.model --json` 是確認代理程式
+是否擁有可透過原生 Codex 執行時期使用 `openai-codex` 的可用
+`openai/*` 驗證設定檔的最快方式。請參閱 [OpenAI provider setup](/zh-Hant/providers/openai#check-and-recover-codex-oauth-routing)。
 
 備註：
 
@@ -159,30 +159,31 @@ openclaw models auth paste-token
 `add`、`list`、`login`、`setup-token`、`paste-token` 和
 `login-github-copilot` 遵循。
 
+對於 OpenAI 模型，`--provider openai` 預設為 ChatGPT/Codex 帳號登入。
+僅在您想要新增 OpenAI API-key 設定檔時才使用 `--method api-key`，
+通常是作為 Codex 訂閱限制的備份。舊版的
+`--provider openai-codex` 拼寫方式仍然適用於現有指令碼。
+
 範例：
 
 ```bash
-openclaw models auth login --provider openai-codex --set-default
-openclaw models auth list --provider openai-codex
+openclaw models auth login --provider openai --set-default
+openclaw models auth login --provider openai --method api-key
+openclaw models auth list --provider openai
 ```
 
 備註：
 
-- `setup-token` 和 `paste-token` 仍是針對公開
-  權杖驗證方法的提供者之一般權杖指令。
-- `setup-token` 需要互動式 TTY 並執行提供者的權杖驗證
-  方法 (當提供者公開此方法時，預設為該提供者的 `setup-token` 方法)。
-- `paste-token` 接受從其他地方或自動化產生的權杖字串。
-- `paste-token` 需要 `--provider`，會提示輸入權杖值，並將
-  其寫入預設的設定檔 ID `<provider>:manual`，除非您傳遞
-  `--profile-id`。
-- `paste-token --expires-in <duration>` 會從相對持續時間 (例如 `365d` 或 `12h`)
-  儲存絕對的權杖到期時間。
-- Anthropic 備註：Anthropic 人員告訴我們，OpenClaw 風格的 Claude CLI 使用再次被允許，因此除非 Anthropic 發布新政策，否則 OpenClaw 將 Claude CLI 的重複使用和 `claude -p` 的使用視為此整合的核准做法。
-- Anthropic `setup-token` / `paste-token` 仍可作為支援的 OpenClaw 權杖路徑使用，但 OpenClaw 現在偏好 Claude CLI 的重複使用以及 `claude -p` (如果可用的話)。
+- 對於公開權杖驗證方法的提供者，`setup-token` 和 `paste-token` 仍然是通用的權杖指令。
+- `setup-token` 需要一個互動式 TTY 並執行提供者的權杖驗證方法（當該方法存在時，預設為該提供者的 `setup-token` 方法）。
+- `paste-token` 接受在其他地方產生或來自動自動化的權杖字串。
+- `paste-token` 需要 `--provider`，會提示輸入權杖值，並將其寫入預設的 profile id `<provider>:manual`，除非您傳遞了 `--profile-id`。
+- `paste-token --expires-in <duration>` 會根據相對持續時間（例如 `365d` 或 `12h`）儲存絕對的權杖到期時間。
+- Anthropic 說明：Anthropic 人員告訴我們，OpenClaw 風格的 Claude CLI 使用再次被允許，因此除非 Anthropic 發布新政策，否則 OpenClaw 將此整合中的 Claude CLI 重用和 `claude -p` 使用視為經過授權。
+- Anthropic `setup-token` / `paste-token` 仍然作為支援的 OpenClaw 權杖路徑可用，但當 Claude CLI 重用和 `claude -p` 可用時，OpenClaw 現在傾向於使用它們。
 
 ## 相關
 
 - [CLI 參考](/zh-Hant/cli)
 - [模型選擇](/zh-Hant/concepts/model-providers)
-- [模型容錯移轉](/zh-Hant/concepts/model-failover)
+- [模型故障轉移](/zh-Hant/concepts/model-failover)

@@ -320,7 +320,7 @@ Cada paquete de trabajo registra:
 - el código de compatibilidad está aislado en costuras de SDK/núcleo
 - los complementos agrupados consumen proyecciones de entrada o resultados genéricos directamente
 - el LOC de producción del complemento es al menos 1.500 netos negativos frente a `origin/main`
-- el LOC de producción del núcleo es <= +1.500, o cualquier exceso se paga mientras el total se mantiene
-  <= +2.000
+- las líneas de código de producción del núcleo son `<= +1,500`, o cualquier exceso se paga mientras el total
+  se mantiene `<= +2,000`
 - las pruebas representativas cubren la redacción, la ruta, el comando/evento, la activación,
   el grupo de acceso y el comportamiento de respaldo específico del canal

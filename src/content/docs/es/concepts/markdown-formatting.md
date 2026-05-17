@@ -65,7 +65,7 @@ Las tablas de Markdown no son compatibles de manera coherente en los clientes de
 `markdown.tables` para controlar la conversión por canal (y por cuenta).
 
 - `code`: representar las tablas como bloques de código (predeterminado para la mayoría de los canales).
-- `bullets`: convertir cada fila en viñetas (predeterminado para Signal + WhatsApp).
+- `bullets`: convierte cada fila en viñetas (predeterminado para Matrix, Signal y WhatsApp).
 - `off`: deshabilitar el análisis y la conversión de tablas; el texto de la tabla sin procesar se pasa tal cual.
 
 Claves de configuración:

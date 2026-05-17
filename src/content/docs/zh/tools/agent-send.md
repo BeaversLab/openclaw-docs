@@ -73,6 +73,7 @@ title: "Agent send"
 - 会话选择：`--to` 派生会话密钥（群组/渠道目标保持隔离；直接聊天折叠为 `main`）。
 - 思考和详细标志会持久化到会话存储中。
 - 输出：默认为纯文本，或使用 `--json` 获取结构化负载和元数据。
+- 使用 `--json --deliver` 时，JSON 包含已发送、已抑制、部分发送和发送失败的传递状态。请参阅 [JSON 传递状态](/zh/cli/agent#json-delivery-status)。
 
 ## 示例
 
@@ -87,19 +88,19 @@ openclaw agent --session-id 1234 --message "Summarize inbox" --thinking medium
 openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram --reply-to "@admin"
 ```
 
-## 相关内容
+## 相关
 
 <CardGroup cols={2}>
   <Card title="Agent CLI 参考" href="/zh/cli/agent" icon="terminal">
     完整的 `openclaw agent` 标志和选项参考。
   </Card>
-  <Card title="子代理" href="/zh/tools/subagents" icon="users">
+  <Card title="Sub-agents" href="/zh/tools/subagents" icon="users">
     后台子代理生成。
   </Card>
-  <Card title="会话" href="/zh/concepts/session" icon="comments">
-    会话密钥的工作原理以及 `--to`、`--agent` 和 `--session-id` 如何解析它们。
+  <Card title="Sessions" href="/zh/concepts/session" icon="comments">
+    会话密钥的工作原理，以及 `--to`、`--agent` 和 `--session-id` 如何解析它们。
   </Card>
   <Card title="Slash commands" href="/zh/tools/slash-commands" icon="slash">
-    在 Agent 会话中使用的原生命令目录。
+    在代理会话中使用的本机命令目录。
   </Card>
 </CardGroup>

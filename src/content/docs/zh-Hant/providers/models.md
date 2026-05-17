@@ -21,17 +21,17 @@ OpenClaw 可以使用許多 LLM 提供商。選擇一個，進行身份驗證，
 
 ## 支援的提供商（入門組合）
 
-- [Alibaba Model Studio](/zh-Hant/providers/alibaba)
+- [阿里雲模型工作室](/zh-Hant/providers/alibaba)
 - [Amazon Bedrock](/zh-Hant/providers/bedrock)
 - [Anthropic (API + Claude CLI)](/zh-Hant/providers/anthropic)
-- [BytePlus (International)](/zh-Hant/concepts/model-providers#byteplus-international)
+- [BytePlus (國際版)](/zh-Hant/concepts/model-providers#byteplus-international)
 - [Chutes](/zh-Hant/providers/chutes)
 - [ComfyUI](/zh-Hant/providers/comfy)
 - [Cloudflare AI Gateway](/zh-Hant/providers/cloudflare-ai-gateway)
 - [DeepInfra](/zh-Hant/providers/deepinfra)
 - [fal](/zh-Hant/providers/fal)
 - [Fireworks](/zh-Hant/providers/fireworks)
-- [GLM models](/zh-Hant/providers/glm)
+- [GLM 模型](/zh-Hant/providers/glm)
 - [MiniMax](/zh-Hant/providers/minimax)
 - [Mistral](/zh-Hant/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/zh-Hant/providers/moonshot)
@@ -48,16 +48,17 @@ OpenClaw 可以使用許多 LLM 提供商。選擇一個，進行身份驗證，
 - [xAI](/zh-Hant/providers/xai)
 - [Z.AI](/zh-Hant/providers/zai)
 
-## 其他內建提供者變體
+## 其他提供者變體
 
-- `anthropic-vertex` - 當有 Vertex 憑證可用時，隱含支援 Google Vertex 上的 Anthropic；無需額外的入門驗證選擇
+- `anthropic-vertex` - 安裝 `@openclaw/anthropic-vertex-provider` 以在 Vertex 憑證可用時支援 Google Vertex 上的隱式 Anthropic；無需單獨的入門驗證選項
 - `copilot-proxy` - 本機 VS Code Copilot Proxy 橋接器；使用 `openclaw onboard --auth-choice copilot-proxy`
-- `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要在本地安裝 `gemini`（`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`）；預設模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
+- `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要本機安裝 `gemini` (`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`)；預設模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
 
-如需完整的提供商目錄（xAI、Groq、Mistral 等）和進階設定，請參閱 [Model providers](/zh-Hant/concepts/model-providers)。
+如需完整的提供者目錄（xAI、Groq、Mistral 等）及進階設定，
+請參閱 [模型提供者](/zh-Hant/concepts/model-providers)。
 
 ## 相關
 
-- [Model selection](/zh-Hant/concepts/model-providers)
-- [Model failover](/zh-Hant/concepts/model-failover)
-- [Models CLI](/zh-Hant/cli/models)
+- [模型選擇](/zh-Hant/concepts/model-providers)
+- [模型容錯](/zh-Hant/concepts/model-failover)
+- [模型 CLI](/zh-Hant/cli/models)

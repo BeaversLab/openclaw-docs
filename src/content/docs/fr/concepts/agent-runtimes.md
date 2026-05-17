@@ -76,20 +76,24 @@ Ceci est l'arbre de décision orienté agent :
    surface de commande native `/codex` lorsque le plugin `codex` groupé est activé.
 2. Si l'utilisateur demande **Codex en tant que runtime intégré** ou souhaite l'expérience d'agent Codex normale soutenue par abonnement, utilisez `openai/<model>`.
 3. Si l'utilisateur choisit explicitement **PI pour un modèle OpenAI**, conservez la référence du modèle comme `openai/<model>` et définissez la stratégie de runtime fournisseur/modèle sur `agentRuntime.id: "pi"`. Un profil d'authentification `openai-codex` sélectionné est acheminé en interne via le transport hérité d'auth Codex de PI.
-4. Si la configuration héritée contient encore des **références de modèle `openai-codex/*`**, réparez-la en `openai/<model>` avec `openclaw doctor --fix`.
-5. Si l'utilisateur dit explicitement **ACP**, **acpx**, ou **adaptateur ACP Codex**, utilisez ACP avec `runtime: "acp"` et `agentId: "codex"`.
+4. Si la configuration héritée contient encore des **`openai-codex/*` model refs**, réparez-la en
+   `openai/<model>` avec `openclaw doctor --fix` ; le médecin garde la route d'auth Codex
+   en ajoutant des `agentRuntime.id: "codex"` étendues au provider/model là où
+   l'ancienne model ref l'impliquait.
+5. Si l'utilisateur dit explicitement **ACP**, **acpx** ou **adaptateur ACP Codex**, utilisez
+   ACP avec `runtime: "acp"` et `agentId: "codex"`.
 6. Si la demande concerne **Claude Code, la CLI Gemini, OpenCode, Cursor, Droid, ou un autre harnais externe**, utilisez ACP/acpx, et non le runtime de sous-agent natif.
 
 | Vous voulez dire...                                               | Utilisez...                                  |
 | ----------------------------------------------------------------- | -------------------------------------------- |
-| Contrôle de chat/fil de discussion de l'application serveur Codex | `/codex ...` depuis le plugin `codex` groupé |
-| Runtime d'agent intégré de l'application serveur Codex            | Références de modèle d'agent `openai/*`      |
-| OAuth Codex OpenAIOAuth                                           | `openai-codex` profils d'auth                |
+| Contrôle de chat/fil de discussion de l'application serveur Codex | `/codex ...` depuis le plugin `codex` fourni |
+| Runtime d'agent intégré de l'application serveur Codex            | `openai/*` model refs d'agent                |
+| OAuth Codex OpenAIOAuth                                           | profils d'auth `openai-codex`                |
 | Claude Code ou autre harnais externe                              | ACP/acpx                                     |
 
-Pour la division du préfixe de la famille OpenAI, voir [OpenAI](/fr/providers/openai) et
-[Fournisseurs de modèles](/fr/concepts/model-providers). Pour le contrat de support du runtime Codex,
-voir [Runtime du harnais Codex](/fr/plugins/codex-harness-runtime#v1-support-contract).
+Pour le fractionnement du préfixe de la famille OpenAI, voir [OpenAI](/fr/providers/openai) et
+[Model providers](/fr/concepts/model-providers). Pour le contrat de support du runtime Codex,
+voir [Codex harness runtime](/fr/plugins/codex-harness-runtime#v1-support-contract).
 
 ## Propriété du runtime
 
@@ -115,25 +119,24 @@ Cette division de propriété est la règle de conception principale :
 
 OpenClaw choisit un runtime intégré après la résolution du fournisseur et du modèle :
 
-1. La stratégie de runtime au niveau du modèle l'emporte. Elle peut résider dans une entrée de
-   modèle de fournisseur configurée ou dans `agents.defaults.models["provider/model"].agentRuntime` /
+1. La stratégie de runtime étendue au modèle l'emporte. Elle peut résider dans une entrée de modèle provider configurée ou dans `agents.defaults.models["provider/model"].agentRuntime` /
    `agents.list[].models["provider/model"].agentRuntime`.
-2. La stratégie de runtime étendue au fournisseur vient ensuite à
+2. La stratégie de runtime étendue au provider vient ensuite à
    `models.providers.<provider>.agentRuntime`.
-3. En mode `auto`, les runtimes de plugin enregistrés peuvent revendiquer des paires fournisseur/modèle prises en charge.
+3. En mode `auto`, les runtimes de plugin enregistrés peuvent revendiquer des paires provider/model prises en charge.
 4. Si aucun runtime ne revendique un tour en mode `auto`, OpenClaw utilise PI comme
    runtime de compatibilité. Utilisez un id de runtime explicite lorsque l'exécution doit être
    stricte.
 
 Les épingles de runtime pour toute la session et tout l'agent sont ignorées. Cela inclut
-`OPENCLAW_AGENT_RUNTIME`, l'état de session `agentHarnessId`/`agentRuntimeOverride`,
-`agents.defaults.agentRuntime`, et `agents.list[].agentRuntime`. Exécutez
+`OPENCLAW_AGENT_RUNTIME`, l'état `agentHarnessId`/`agentRuntimeOverride` de session,
+`agents.defaults.agentRuntime` et `agents.list[].agentRuntime`. Exécutez
 `openclaw doctor --fix` pour supprimer la configuration de runtime d'agent entier obsolète et convertir
-les références de modèle de runtime héritées là où OpenClaw peut préserver l'intention.
+les model refs de runtime héritées là où OpenClaw peut préserver l'intention.
 
-Les runtimes de plug-in fournisseur/modèle explicites échouent en mode fermé. Par exemple,
-`agentRuntime.id: "codex"` sur un fournisseur ou un modèle signifie Codex ou une erreur
-de sélection/runtime claire ; il n'est jamais redirigé silencieusement vers PI.
+Les runtimes de plugin provider/model explicites échouent en mode fermé. Par exemple,
+`agentRuntime.id: "codex"` sur un provider ou un modèle signifie Codex ou une erreur
+claire de sélection/runtime ; il n'est jamais routé silencieusement vers PI.
 
 Les alias de backend CLI sont différents des ids de harnais intégrés. La forme
 Claude CLI préférée est :
@@ -153,17 +156,9 @@ Claude CLI préférée est :
 }
 ```
 
-Les références héritées telles que `claude-cli/claude-opus-4-7` restent prises en charge pour
-la compatibilité, mais la nouvelle configuration doit garder le fournisseur/modèle canonique et placer
-le backend d'exécution dans la stratégie de runtime fournisseur/modèle.
+Les références héritées telles que `claude-cli/claude-opus-4-7` restent prises en charge pour la compatibilité, mais les nouvelles configurations doivent conserver le provider/model canonique et placer le backend d'exécution dans la stratégie d'exécution du provider/model.
 
-Le mode `auto` est intentionnellement conservateur pour la plupart des fournisseurs. Les modèles d'agent OpenAI
-sont l'exception : le runtime non défini et `auto` résolvent tous les deux vers le harnais
-Codex. La configuration de runtime PI explicite reste une route de compatibilité opt-in pour
-les tours d'agent `openai/*` ; lorsqu'elle est associée à un profil d'authentification `openai-codex` sélectionné,
-OpenClaw route PI en interne via le transport d'auth Codex hérité tout en
-conservant la référence de modèle publique comme `openai/*`. Les épingles de session PI OpenAI obsolètes sont
-ignorées par la sélection du runtime et peuvent être nettoyées avec `openclaw doctor --fix`.
+Le mode `auto` est intentionnellement conservateur pour la plupart des providers. Les modèles d'agent OpenAI font exception : le runtime non défini et `auto` résolvent tous deux vers le harnais Codex. La configuration explicite du runtime PI reste une option de compatibilité opt-in pour les tours d'agent `openai/*` ; lorsqu'elle est associée à un profil d'authentification `openai-codex` sélectionné, OpenClaw achemine PI en interne via le transport d'auth Codex hérité tout en conservant la référence publique du modèle sous la forme `openai/*`. Les épingles de session PI OpenAI obsolètes sont ignorées par la sélection du runtime et peuvent être nettoyées avec `openclaw doctor --fix`.
 
 Si `openclaw doctor` avertit que le plugin `codex` est activé alors que `openai-codex/*` reste dans la configuration, considérez cela comme un état d'acheminement hérité. Exécutez `openclaw doctor --fix` pour le réécrire en `openai/*` avec le runtime Codex.
 
@@ -172,37 +167,36 @@ Si `openclaw doctor` avertit que le plugin `codex` est activé alors que `openai
 Lorsqu'un runtime n'est pas PI, il doit documenter les surfaces OpenClaw qu'il prend en charge.
 Utilisez cette structure pour la documentation des runtimes :
 
-| Question                                                    | Pourquoi c'est important                                                                                                          |
-| ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Qui possède la boucle du modèle ?                           | Détermine où ont lieu les nouvelles tentatives, la continuation des outils et les décisions de réponse finale.                    |
-| Qui possède l'historique canonique des fils de discussion ? | Détermine si OpenClaw peut modifier l'historique ou seulement le refléter.                                                        |
-| Les outils dynamiques OpenClaw fonctionnent-ils ?           | La messagerie, les sessions, le cron et les outils détenus par OpenClaw reposent là-dessus.                                       |
-| Les hooks d'outils dynamiques fonctionnent-ils ?            | Les plugins s'attendent à `before_tool_call`, `after_tool_call` et un intergiciel autour des outils détenus par OpenClaw.         |
-| Les hooks d'outils natifs fonctionnent-ils ?                | Le shell, le patch et les outils détenus par le runtime ont besoin du support natif des hooks pour la stratégie et l'observation. |
-| Le cycle de vie du moteur de contexte s'exécute-t-il ?      | Les plugins de mémoire et de contexte dépendent des cycles de vie d'assemblage, d'ingestion, après-tour et de compactage.         |
-| Quelles données de compactage sont exposées ?               | Certains plugins ont uniquement besoin de notifications, tandis que d'autres ont besoin des métadonnées conservées/supprimées.    |
-| Qu'est-ce qui est intentionnellement non pris en charge ?   | Les utilisateurs ne doivent pas supposer une équivalence avec PI là où le runtime natif possède plus d'état.                      |
+| Question                                                    | Pourquoi c'est important                                                                                                                 |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Qui possède la boucle du modèle ?                           | Détermine où ont lieu les nouvelles tentatives, la continuation des outils et les décisions de réponse finale.                           |
+| Qui possède l'historique canonique des fils de discussion ? | Détermine si OpenClaw peut modifier l'historique ou seulement le refléter.                                                               |
+| Les outils dynamiques OpenClaw fonctionnent-ils ?           | La messagerie, les sessions, le cron et les outils détenus par OpenClaw reposent là-dessus.                                              |
+| Les hooks d'outils dynamiques fonctionnent-ils ?            | Les plugins s'attendent à `before_tool_call`, `after_tool_call` et à un intergiciel (middleware) autour des outils détenus par OpenClaw. |
+| Les hooks d'outils natifs fonctionnent-ils ?                | Le shell, le patch et les outils détenus par le runtime ont besoin du support natif des hooks pour la stratégie et l'observation.        |
+| Le cycle de vie du moteur de contexte s'exécute-t-il ?      | Les plugins de mémoire et de contexte dépendent des cycles de vie d'assemblage, d'ingestion, après-tour et de compactage.                |
+| Quelles données de compactage sont exposées ?               | Certains plugins ont uniquement besoin de notifications, tandis que d'autres ont besoin des métadonnées conservées/supprimées.           |
+| Qu'est-ce qui est intentionnellement non pris en charge ?   | Les utilisateurs ne doivent pas supposer une équivalence avec PI là où le runtime natif possède plus d'état.                             |
 
 Le contrat de support du runtime Codex est documenté dans
 [Codex harness runtime](/fr/plugins/codex-harness-runtime#v1-support-contract).
 
 ## Libellés de statut
 
-La sortie de statut peut afficher à la fois les libellés `Execution` et `Runtime`. Lisez-les comme
-diagnostic, et non comme des noms de provider.
+La sortie d'état peut afficher à la fois les étiquettes `Execution` et `Runtime`. Lisez-les comme des diagnostics, et non comme des noms de provider.
 
 - Une référence de modèle telle que `openai/gpt-5.5` vous indique le provider/model sélectionné.
-- Un ID de runtime tel que `codex` vous indique quelle boucle exécute le tour.
+- Un identifiant de runtime tel que `codex` vous indique quelle boucle exécute le tour.
 - Un libellé de canal tel que Telegram ou Discord vous indique où se déroule la conversation.
 
 Si une exécution affiche toujours un runtime inattendu, inspectez d'abord la stratégie de runtime provider/model sélectionnée. Les épingles de runtime de session héritées ne décident plus du routage.
 
 ## Connexes
 
-- [Harnais Codex](/fr/plugins/codex-harness)
-- [Runtime du harnais Codex](/fr/plugins/codex-harness-runtime)
+- [Codex harness](/fr/plugins/codex-harness)
+- [Codex harness runtime](/fr/plugins/codex-harness-runtime)
 - [OpenAI](/fr/providers/openai)
-- [Plugins de harnais d'agent](/fr/plugins/sdk-agent-harness)
-- [Boucle d'agent](/fr/concepts/agent-loop)
-- [Modèles](/fr/concepts/models)
-- [Statut](/fr/cli/status)
+- [Agent harness plugins](/fr/plugins/sdk-agent-harness)
+- [Agent loop](/fr/concepts/agent-loop)
+- [Models](/fr/concepts/models)
+- [Status](/fr/cli/status)

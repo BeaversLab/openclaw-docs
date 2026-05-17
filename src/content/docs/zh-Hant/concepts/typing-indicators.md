@@ -35,16 +35,20 @@ title: "Typing indicators"
 
 ## 設定
 
+設定代理層級的預設值：
+
 ```json5
 {
-  agent: {
-    typingMode: "thinking",
-    typingIntervalSeconds: 6,
+  agents: {
+    defaults: {
+      typingMode: "thinking",
+      typingIntervalSeconds: 6,
+    },
   },
 }
 ```
 
-您可以針對每個會話覆寫模式或頻率：
+針對每個階段覆寫模式或頻率：
 
 ```json5
 {
@@ -57,18 +61,11 @@ title: "Typing indicators"
 
 ## 備註
 
-- 當整個
-  載荷確切為靜默權杖時（例如 `NO_REPLY` / `no_reply`，
-  不區分大小寫匹配），`message` 模式不會對純靜默回覆顯示正在輸入。
-- `thinking` 僅在執行串流推理時觸發（`reasoningLevel: "stream"`）。
-  如果模型未發出推理增量，輸入將不會開始。
-- 心跳輸入是已解析傳送目標的活躍訊號。它
-  在心跳執行開始時啟動，而不是遵循 `message` 或 `thinking`
-  的串流時序。設定 `typingMode: "never"` 以停用它。
-- 當 `target: "none"`、無法解析目標、針對心跳停用聊天傳送，或
-  頻道不支援輸入時，心跳不會顯示正在輸入。
-- `typingIntervalSeconds` 控制**更新頻率**，而非開始時間。
-  預設值為 6 秒。
+- `message` 模式不會在整個內容完全為靜默 Token 時顯示輸入中狀態（例如 `NO_REPLY` / `no_reply`，不區分大小寫）。
+- `thinking` 僅在執行串流推論時觸發 (`reasoningLevel: "stream"`)。如果模型未發出推論增量，輸入中狀態將不會開始。
+- 心跳輸入是已解析傳遞目標的活躍訊號。它在心跳執行開始時啟動，而不是遵循 `message` 或 `thinking` 串流時序。設定 `typingMode: "never"` 可將其停用。
+- 當 `target: "none"` 時，當無法解析目標時，當針對心跳停用聊天傳遞時，或當通道不支援輸入中狀態時，心跳不會顯示輸入中狀態。
+- `typingIntervalSeconds` 控制的是 **更新頻率**，而非開始時間。預設為 6 秒。
 
 ## 相關
 
@@ -76,7 +73,7 @@ title: "Typing indicators"
   <Card title="Presence" href="/zh-Hant/concepts/presence" icon="signal">
     Gateway 如何追蹤已連線的用戶端並在 macOS Instances 分頁中顯示它們。
   </Card>
-  <Card title="串流與分塊" href="/zh-Hant/concepts/streaming" icon="bars-staggered">
-    傳出串流行為、區塊邊界以及特定管道的傳遞。
+  <Card title="Streaming and chunking" href="/zh-Hant/concepts/streaming" icon="bars-staggered">
+    外傳串流行為、區塊邊界以及特定通道的傳遞。
   </Card>
 </CardGroup>

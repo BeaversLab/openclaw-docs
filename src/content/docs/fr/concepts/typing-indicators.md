@@ -36,16 +36,20 @@ Ordre de « rapidité de déclenchement » :
 
 ## Configuration
 
+Définir la valeur par défaut au niveau de l'agent :
+
 ```json5
 {
-  agent: {
-    typingMode: "thinking",
-    typingIntervalSeconds: 6,
+  agents: {
+    defaults: {
+      typingMode: "thinking",
+      typingIntervalSeconds: 6,
+    },
   },
 }
 ```
 
-Vous pouvez remplacer le mode ou la cadence par session :
+Remplacer le mode ou la cadence par session :
 
 ```json5
 {
@@ -58,27 +62,19 @@ Vous pouvez remplacer le mode ou la cadence par session :
 
 ## Notes
 
-- Le mode `message` n'affichera pas la frappe pour les réponses entièrement silencieuses lorsque la
-  charge utile entière correspond exactement au jeton silencieux (par exemple `NO_REPLY` / `no_reply`,
-  correspondance insensible à la casse).
-- `thinking` ne se déclenche que si l'exécution diffuse du raisonnement (`reasoningLevel: "stream"`).
-  Si le modèle n'émet pas de différences de raisonnement, la frappe ne commencera pas.
-- La frappe de pulsation (heartbeat) est un signal de vivacité pour la cible de livraison résolue. Elle
-  commence au démarrage de la pulsation au lieu de suivre `message` ou `thinking`
-  le timing du flux. Définissez `typingMode: "never"` pour la désactiver.
-- Les pulsations n'affichent pas la frappe lorsque `target: "none"`, lorsque la cible ne peut pas
-  être résolue, lorsque la livraison par chat est désactivée pour la pulsation, ou lorsque le
-  channel ne prend pas en charge la frappe.
-- `typingIntervalSeconds` contrôle la **cadence d'actualisation**, et non l'heure de début.
-  La valeur par défaut est de 6 secondes.
+- Le mode `message` n'affichera pas la saisie pour les réponses entièrement silencieuses lorsque la charge utile entière est le jeton silencieux exact (par exemple `NO_REPLY` / `no_reply`, correspondance insensible à la casse).
+- `thinking` ne se déclenche que si l'exécution diffuse le raisonnement (`reasoningLevel: "stream"`). Si le modèle n'émet pas de deltas de raisonnement, la saisie ne commencera pas.
+- La saisie par pulsation (heartbeat) est un signal de vivacité pour la cible de livraison résolue. Elle commence au démarrage de l'exécution de la pulsation au lieu de suivre le calendrier de diffusion de `message` ou `thinking`. Définissez `typingMode: "never"` pour la désactiver.
+- Les pulsations n'affichent pas la saisie lors de `target: "none"`, lorsque la cible ne peut pas être résolue, lorsque la livraison par chat est désactivée pour la pulsation, ou lorsque le channel ne prend pas en charge la saisie.
+- `typingIntervalSeconds` contrôle la **cadence de rafraîchissement**, et non l'heure de début. La valeur par défaut est de 6 secondes.
 
 ## Connexes
 
 <CardGroup cols={2}>
   <Card title="Présence" href="/fr/concepts/presence" icon="signal">
-    Comment le Gateway suit les clients connectés et les affiche dans l'onglet Instances macOS.
+    Comment le Gateway suit les clients connectés et les affiche dans l'onglet Instances de macOS.
   </Card>
-  <Card title="Streaming and chunking" href="/fr/concepts/streaming" icon="bars-staggered">
-    Comportement du flux sortant, limites des segments et livraison spécifique au channel.
+  <Card title="Streaming et découpage" href="/fr/concepts/streaming" icon="bars-staggered">
+    Comportement de diffusion sortant, limites des blocs et livraison spécifique au channel.
   </Card>
 </CardGroup>

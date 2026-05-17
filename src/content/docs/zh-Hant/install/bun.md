@@ -37,13 +37,13 @@ Bun 是一個可選的本機執行環境，用於直接執行 TypeScript (`bun r
 
 除非明確信任，否則 Bun 會阻擋相依套件的生命週期腳本。對於此 repo，通常被阻擋的腳本並非必要：
 
-- `@whiskeysockets/baileys` `preinstall` -- 檢查 Node 主要版本 >= 20（OpenClaw 預設為 Node 24，仍支援 Node 22 LTS，目前為 `22.16+`）
+- `baileys` `preinstall` -- 檢查 Node 主版本 >= 20（OpenClaw 預設為 Node 24，且仍支援 Node 22 LTS，目前為 `22.16+`）
 - `protobufjs` `postinstall` -- 針對不相容的版本機制發出警告 (無建構產物)
 
 如果您遇到需要這些腳本的執行時期問題，請明確信任它們：
 
 ```sh
-bun pm trust @whiskeysockets/baileys protobufjs
+bun pm trust baileys protobufjs
 ```
 
 ## 注意事項

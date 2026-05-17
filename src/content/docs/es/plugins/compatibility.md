@@ -61,14 +61,14 @@ Use `--json` para una salida estable legible por máquina en anotaciones de CI. 
 
 ### Carril de aceptación del mantenedor
 
-Use Blacksmith Testbox para el carril de aceptación de paquetes instalables al validar el inspector externo con los paquetes de plugins de OpenClaw. Ejecútelo desde una comprobación limpia de OpenClaw después de que se construya el paquete:
+Use Crabbox-backed Blacksmith Testbox para el carril de aceptación de paquetes instalables
+al validar el inspector externo contra los paquetes de complementos de OpenClaw.
+Ejecute el código desde una copia limpia de OpenClaw después de que se haya construido el paquete:
 
 ```sh
-blacksmith testbox warmup ci-check-testbox.yml --ref main --idle-timeout 90
-blacksmith testbox run --id <tbx_id> "pnpm install && pnpm build && npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/telegram --json"
-blacksmith testbox run --id <tbx_id> "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/discord --json"
-blacksmith testbox run --id <tbx_id> "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- <clawhub-plugin-dir> --json"
-blacksmith testbox stop <tbx_id>
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "pnpm install && pnpm build && npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/telegram --json"
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/discord --json"
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- <clawhub-plugin-dir> --json"
 ```
 
 Mantenga este carril opcional para los mantenedores porque instala un paquete npm externo y puede inspeccionar paquetes de plugins clonados fuera del repositorio. Los guardias del repositorio local cubren el mapa de exportación del SDK, los metadatos del registro de compatibilidad, la reducción de la importación del SDK en desuso y los límites de importación de extensiones agrupadas; la prueba del inspector Testbox cubre el paquete tal como lo consumen los autores de plugins externos.

@@ -357,6 +357,6 @@ Un exemple public : une CLI de "second cerveau" + des pipelines Lobster qui gèr
 
 ## Connexes
 
-- [Automatisation et tâches](/fr/automationLobster) - planification des workflows Lobster
+- [Automation](/fr/automationLobster) - planification des workflows Lobster
 - [Présentation de l'automatisation](/fr/automation) - tous les mécanismes d'automatisation
 - [Présentation des outils](/fr/tools) - tous les outils d'agent disponibles

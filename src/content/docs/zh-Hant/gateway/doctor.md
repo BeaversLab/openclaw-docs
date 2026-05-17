@@ -227,7 +227,7 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
 
   </Accordion>
   <Accordion title="2b. OpenCode 提供者覆寫">
-    如果您手動新增了 `models.providers.opencode`、`opencode-zen` 或 `opencode-go`，它會覆寫來自 `@mariozechner/pi-ai` 的內建 OpenCode 目錄。這可能會強制模型使用錯誤的 API 或將成本歸零。Doctor 會發出警告，以便您移除該覆寫並恢復依模型的 API 路由與成本。
+    如果您手動新增了 `models.providers.opencode`、`opencode-zen` 或 `opencode-go`，它會覆寫來自 `@earendil-works/pi-ai` 的內建 OpenCode 目錄。這可能會強制模型使用錯誤的 API 或將成本歸零。Doctor 會發出警告，以便您移除覆寫並恢復依模型的 API 路由 + 成本。
   </Accordion>
   <Accordion title="2c. 瀏覽器遷移與 Chrome MCP 就緒檢查">
     如果您的瀏覽器設定仍然指向已移除的 Chrome 擴充功能路徑，doctor 會將其正規化為目前的主機本機 Chrome MCP 附加模型：
@@ -260,135 +260,136 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
     如果您先前在 `models.providers.openai-codex` 下新增了舊版 OpenAI 傳輸設定，它們可能會覆蓋較新版本自動使用的內建 Codex OAuth 提供者路徑。當 Doctor 發現這些舊的傳輸設定與 Codex OAuth 並存時會發出警告，以便您移除或重寫過時的傳輸覆寫，並恢復內建的路由/後援行為。自訂 proxy 和僅標頭的覆寫仍受支援，且不會觸發此警告。
   </Accordion>
   <Accordion title="2f. Codex 路由修復">
-    Doctor 會檢查舊版 `openai-codex/*` 模型參照。原生 Codex harness 路由使用標準 `openai/*` 模型參照；OpenAI agent 轉向會透過 Codex app-server harness，而不是 OpenClaw PI OpenAI 路徑。
+    Doctor 會檢查舊版 `openai-codex/*` 模型參照 (model refs)。原生 Codex harness 路由使用標準 `openai/*` 模型參照；OpenAI agent 請求會經過 Codex app-server harness，而不是 OpenClaw PI OpenAI 路徑。
 
-    在 `--fix` / `--repair` 模式下，doctor 會重寫受影響的 default-agent 和 per-agent 參照，包括主要模型、後備、heartbeat/subagent/compaction 覆寫、hooks、通道模型覆寫，以及過時的持久化會話路由狀態：
+    在 `--fix` / `--repair` 模式下，doctor 會重寫受影響的 default-agent 和 per-agent 參照，包括主要模型、備援、heartbeat/subagent/compaction 覆寫、hooks、通道模型覆寫，以及過時的持久化會話路由狀態：
 
     - `openai-codex/gpt-*` 會變成 `openai/gpt-*`。
-    - 過時的 whole-agent runtime 配置和持久化會話 runtime pin 會被移除，因為 runtime 選擇是針對提供者/模型的範圍。
-    - 明確的提供者/模型 runtime 策略會被保留。
-    - 現有的模型後備清單會被保留，並將其舊版條目重寫；複製的 per-model 設定會從舊版金鑰移至標準 `openai/*` 金鑰。
-    - 持久化會話 `modelProvider`/`providerOverride`、`model`/`modelOverride`、後備通知、auth-profile pins 和 Codex harness pins 會在所有發現的 agent 會話存放區中修復。
+    - Codex 意圖會移動到針對修復後 agent 模型參照的 provider/model-scoped `agentRuntime.id: "codex"` 條目，以便在模型參照變成 `openai/*` 後仍能選取 `openai-codex:...` auth profile。
+    - 會移除過時的 whole-agent runtime config 和持久化會話 runtime pin，因為 runtime 選擇是 provider/model-scoped 的。
+    - 會保留現有的 provider/model runtime 原則，除非修復後的舊版模型參照需要 Codex 路由來保留舊的 auth 路徑。
+    - 會保留現有的模型備援清單並重寫其中的舊版條目；複製的 per-model 設定會從舊版金鑰移至標準 `openai/*` 金鑰。
+    - 會在所有探索到的 agent session stores 中修復持久化會話 `modelProvider`/`providerOverride`、`model`/`modelOverride`、備援通知以及 auth-profile pin。
     - `/codex ...` 表示「從聊天控制或綁定原生 Codex 對話」。
     - `/acp ...` 或 `runtime: "acp"` 表示「使用外部 ACP/acpx 配接器」。
 
   </Accordion>
-  <Accordion title="2g. 會話路由清理">
-    當您將已配置的模型或執行時從外掛擁有的路由（例如 Codex）移開後，Doctor 還會掃描發現的代理程式會話儲存，以尋找過時的自動建立路由狀態。
+  <Accordion title="2g. Session route cleanup">
+    當您將設定的模型或執行環境從外掛擁有的路由（例如 Codex）移開後，Doctor 也會掃描探索到的代理程式會話儲存庫，尋找過時的自動建立路由狀態。
 
-    當其擁有的路由不再被配置時，`openclaw doctor --fix` 可以清除自動建立的過時狀態，例如 `modelOverrideSource: "auto"` 模型釘選、執行時模型中繼資料、已釘選的 harness id、CLI 會話綁定和自動 auth-profile 覆寫。明確的使用者或舊版會話模型選擇將被回報以供手動審查，並保持不變；請使用 `/model ...`、`/new` 進行切換，或者當該路由不再需要時重置會話。
+    當其擁有的路由不再設定時，`openclaw doctor --fix` 可以清除自動建立的過時狀態，例如 `modelOverrideSource: "auto"` 模型釘選、執行模型元數據、釘選的 harness id、CLI 會話綁定，以及自動認證設定檔覆寫。明確的使用者或舊版會話模型選擇會被回報以供手動審查，且保持不變；請使用 `/model ...`、`/new` 進行切換，或者當該路由不再需要時重設會話。
 
   </Accordion>
-  <Accordion title="3. 舊版狀態遷移（磁碟佈局）">
-    Doctor 可以將較舊的磁碟佈局遷移到當前結構：
+  <Accordion title="3. Legacy state migrations (disk layout)">
+    Doctor 可以將較舊的磁碟佈局遷移到目前的結構中：
 
-    - 會話儲存 + 轉錄：
+    - Sessions store + transcripts:
       - 從 `~/.openclaw/sessions/` 到 `~/.openclaw/agents/<agentId>/sessions/`
-    - 代理程式目錄：
+    - Agent dir:
       - 從 `~/.openclaw/agent/` 到 `~/.openclaw/agents/<agentId>/agent/`
-    - WhatsApp 認證狀態：
-      - 從舊版 `~/.openclaw/credentials/*.json` （`oauth.json` 除外）
-      - 到 `~/.openclaw/credentials/whatsapp/<accountId>/...` （預設帳戶 id：`default`）
+    - WhatsApp auth state (Baileys):
+      - 從舊版 `~/.openclaw/credentials/*.json`（`oauth.json` 除外）
+      - 到 `~/.openclaw/credentials/whatsapp/<accountId>/...`（預設帳戶 id：`default`）
 
-    這些遷移是盡力而為且冪等的；當 doctor 將任何舊版資料夾作為備份保留時，會發出警告。Gateway/CLI 也會在啟動時自動遷移舊版會話 + 代理程式目錄，以便歷史記錄/認證/模型無需手動執行 doctor 即可落入每個代理程式的路徑中。WhatsApp 認證僅透過 `openclaw doctor` 故意進行遷移。Talk provider/provider-map 正規化現在使用結構相等性進行比較，因此僅鍵順序的差異不再觸發重複的空操作 `doctor --fix` 變更。
+    這些遷移是盡力而為且等冪的；當 doctor 將任何舊版資料夾作為備份保留時，會發出警告。Gateway/CLI 也會在啟動時自動遷移舊版 sessions + agent dir，因此歷史記錄/認證/模型會直接進入 per-agent 路徑，而無需手動執行 doctor。WhatsApp 認證僅透過 `openclaw doctor` 故意進行遷移。Talk provider/provider-map 正規化現在透過結構相等性進行比較，因此僅鍵順序的差異不再觸發重複的無操作 `doctor --fix` 變更。
 
   </Accordion>
-  <Accordion title="3a. Legacy plugin manifest migrations">
-    Doctor 會掃描所有已安裝的外掛清單，尋找已棄用的頂層功能金鑰（`speechProviders`、`realtimeTranscriptionProviders`、`realtimeVoiceProviders`、`mediaUnderstandingProviders`、`imageGenerationProviders`、`videoGenerationProviders`、`webFetchProviders`、`webSearchProviders`）。當找到這些金鑰時，它會提議將其移至 `contracts` 物件中，並直接重寫清單檔案。此遷移具備等冪性（idempotent）；如果 `contracts` 金鑰已包含相同的數值，則會移除舊版金鑰而不會重複該資料。
+  <Accordion title="3a. 舊版外掛清單遷移">
+    Doctor 會掃描所有已安裝的外掛清單，尋找已棄用的頂層功能鍵 (`speechProviders`、`realtimeTranscriptionProviders`、`realtimeVoiceProviders`、`mediaUnderstandingProviders`、`imageGenerationProviders`、`videoGenerationProviders`、`webFetchProviders`、`webSearchProviders`)。當找到這些鍵時，它會提議將其移動到 `contracts` 物件中，並就地重寫清單檔案。此遷移具有等冪性；如果 `contracts` 鍵已經具有相同的值，則會移除舊版鍵而不會重複資料。
   </Accordion>
-  <Accordion title="3b. Legacy cron store migrations">
-    Doctor 也會檢查 cron job store（預設為 `~/.openclaw/cron/jobs.json`，若覆寫則為 `cron.store`），尋找排程器為相容性仍接受的舊 job 形狀。
+  <Accordion title="3b. 舊版 cron 儲存遷移">
+    Doctor 也會檢查 cron job 儲存庫（預設為 `~/.openclaw/cron/jobs.json`，若被覆寫則為 `cron.store`）中排程器為了相容性仍接受的舊版 job 形狀。
 
     目前的 cron 清理項目包括：
 
     - `jobId` → `id`
     - `schedule.cron` → `schedule.expr`
-    - 頂層 payload 欄位（`message`、`model`、`thinking`，...）→ `payload`
-    - 頂層 delivery 欄位（`deliver`、`channel`、`to`、`provider`，...）→ `delivery`
+    - 頂層 payload 欄位（`message`、`model`、`thinking`、...）→ `payload`
+    - 頂層 delivery 欄位（`deliver`、`channel`、`to`、`provider`、...）→ `delivery`
     - payload `provider` delivery 別名 → 明確的 `delivery.channel`
-    - 簡單的舊版 `notify: true` webhook 後備 jobs → 明確的 `delivery.mode="webhook"` 並搭配 `delivery.to=cron.webhook`
+    - 簡單的舊版 `notify: true` webhook 後備 job → 帶有 `delivery.to=cron.webhook` 的明確 `delivery.mode="webhook"`
 
-    Doctor 只有在能夠不改變行為的情況下，才會自動遷移 `notify: true` jobs。如果某個 job 結合了舊版 notify 後備機制與現有的非 webhook delivery 模式，doctor 會發出警告並將該 job 留待人工審查。
+    Doctor 只會在能夠不改變行為的情況下，自動遷移 `notify: true` job。如果 job 結合了舊版 notify 後備機制與現有的非 webhook 傳遞模式，doctor 會發出警告並保留該 job 供人工審查。
 
-    在 Linux 上，如果使用者的 crontab 仍然呼叫舊版的 `~/.openclaw/bin/ensure-whatsapp.sh`，doctor 也會發出警告。該主機本機腳本已不由目前的 OpenClaw 維護，且當 cron 無法連線至 systemd user bus 時，可能會寫入錯誤的 `Gateway inactive` 訊息到 `~/.openclaw/logs/whatsapp-health.log`。請使用 `crontab -e` 移除過時的 crontab 項目；並使用 `openclaw channels status --probe`、`openclaw doctor` 和 `openclaw gateway status` 進行目前的健康檢查。
+    在 Linux 上，如果使用者的 crontab 仍在呼叫舊版 `~/.openclaw/bin/ensure-whatsapp.sh`，doctor 也會發出警告。該主機本機腳本並非由目前的 OpenClaw 維護，且當 cron 無法連接到 systemd user bus 時，可能會將錯誤的 `Gateway inactive` 訊息寫入 `~/.openclaw/logs/whatsapp-health.log`。請使用 `crontab -e` 移除過時的 crontab 項目；並使用 `openclaw channels status --probe`、`openclaw doctor` 和 `openclaw gateway status` 進行目前的健康檢查。
 
   </Accordion>
   <Accordion title="3c. Session lock cleanup">
-    Doctor 會掃描每一個 agent session 目錄，尋找過時的寫入鎖定檔案（write-lock files）—— 即在會話異常結束後遺留的檔案。對於每個找到的鎖定檔案，它會回報：路徑、PID、PID 是否仍在執行、鎖定存在時間，以及是否被視為過時（PID 已死、超過 30 分鐘，或是可證實屬於非 OpenClaw 程序的活躍 PID）。在 `--fix` / `--repair` 模式下，它會自動移除過時的鎖定檔案；否則它會列印備註並指示您使用 `--fix` 重新執行。
+    Doctor 會掃描每個代理程式 (agent) 工作階段目錄，尋找過期的寫入鎖定檔案 (stale write-lock files) —— 這是當工作階段異常終止時遺留下來的檔案。對於找到的每個鎖定檔案，它會回報：路徑、PID、PID 是否仍存活、鎖定存在時間，以及是否被視為過期 (PID 已死、超過 30 分鐘，或是可證明屬於非 OpenClaw 程序的存活 PID)。在 `--fix` / `--repair` 模式下，它會自動移除過期的鎖定檔案；否則，它會列印訊息並指示您使用 `--fix` 重新執行。
   </Accordion>
   <Accordion title="3d. Session transcript branch repair">
-    Doctor 會掃描 agent session JSONL 檔案，尋找由 2026.4.24 prompt transcript rewrite 錯誤所建立的重複分支結構：一個包含 OpenClaw 內部執行時期內容的已棄用使用者回合，以及一個包含相同可見使用者提示的活躍同層分支。在 `--fix` / `--repair` 模式下，doctor 會將每個受影響的檔案備份在原始檔案旁，並將內容重寫至活躍分支，讓 gateway 歷史記錄與記憶體讀取器不再看到重複的回合。
+    Doctor 會掃描代理程式工作階段的 JSONL 檔案，尋找由 2026.4.24 提示詞文字紀錄 (prompt transcript) 重寫錯誤所建立的重複分支形狀：一個包含 OpenClaw 內部執行時期內容的已放棄使用者回合，加上一個包含相同可見使用者提示詞的作用中同層級項目。在 `--fix` / `--repair` 模式下，doctor 會在原始檔案旁邊備份每個受影響的檔案，並將文字紀錄重寫至作用中分支，以便閘道歷程和記憶體讀取器不再看到重複的回合。
   </Accordion>
   <Accordion title="4. 狀態完整性檢查（會話持久化、路由與安全性）">
-    狀態目錄是運作中的核心。若其消失，您將失去會話、憑證、日誌與配置（除非您在其他地方有備份）。
+    狀態目錄是運作的中樞。若它消失，您將失去會話、憑證、日誌和設定（除非您在其他地方有備份）。
 
     Doctor 會檢查：
 
-    - **State dir missing**（狀態目錄遺失）：警告可能發生災難性的狀態遺失，提示重新建立目錄，並提醒您無法還原遺失的資料。
-    - **State dir permissions**（狀態目錄權限）：驗證可寫入性；提供修復權限（並在偵測到擁有者/群組不符時發出 `chown` 提示）。
-    - **macOS cloud-synced state dir**（macOS 雲端同步狀態目錄）：當狀態解析於 iCloud Drive（`~/Library/Mobile Documents/com~apple~CloudDocs/...`）或 `~/Library/CloudStorage/...` 下時發出警告，因為同步支援的路徑可能導致較慢的 I/O 與鎖定/同步競爭。
-    - **Linux SD or eMMC state dir**（Linux SD 或 eMMC 狀態目錄）：當狀態解析至 `mmcblk*``sessions/` 掛載來源時發出警告，因為 SD 或 eMMC 支援的隨機 I/O 在會話與憑證寫入時可能較慢且磨損較快。
-    - **Session dirs missing**（會話目錄遺失）：%%PH:INLINE_CODE:383:bea0b5b9％％與會話儲存目錄為持久化歷史與避免 `ENOENT` 崩潰所必需。
-    - **Transcript mismatch**（對話紀錄不符）：當最近的會話項目缺少對話紀錄檔案時發出警告。
-    - **Main session "1-line JSONL"**（主會話「單行 JSONL」）：當主要對話紀錄只有一行時標記（表示歷史未累積）。
-    - **Multiple state dirs**（多個狀態目錄）：當多個 `~/.openclaw` 資料夾存在於各個家目錄中，或當 `OPENCLAW_STATE_DIR``~/.openclaw/openclaw.json``gateway.mode=remote` 指向其他位置時發出警告（歷史可能分散於不同安裝之間）。
-    - **Remote mode reminder**（遠端模式提醒）：若 %%PH:INLINE_CODE:387:6dea0cf9％，doctor 會提醒您在遠端主機上執行（狀態位於該處）。
-    - **Config file permissions**（配置檔案權限）：若 %%PH:INLINE_CODE:388:beb9fec7％％ 可被群組/全世界讀取則發出警告，並提供將其加強為 `600`。
+    - **狀態目錄遺失**：針對毀滅性的狀態丟失發出警告，提示重建目錄，並提醒您無法還原遺失的資料。
+    - **狀態目錄權限**：驗證可寫性；提供修復權限的選項（並在偵測到擁有者/群組不符時發出 `chown` 提示）。
+    - **macOS 雲端同步的狀態目錄**：當狀態位於 iCloud Drive（`~/Library/Mobile Documents/com~apple~CloudDocs/...`）或 `~/Library/CloudStorage/...` 下時發出警告，因為同步備份的路徑可能導致較慢的 I/O 以及鎖定/同步競爭。
+    - **Linux SD 或 eMMC 狀態目錄**：當狀態位於 `mmcblk*` 掛載來源時發出警告，因為 SD 或 eMMC 支援的隨機 I/O 在會話與憑證寫入時可能較慢且磨損更快。
+    - **會話目錄遺失**：`sessions/` 和會話儲存目錄是持久化歷史記錄及避免 `ENOENT` 當機所必需的。
+    - **Transcript 不符**：當最近的會話項目遺失 transcript 檔案時發出警告。
+    - **主要會話「單行 JSONL」**：當主要 transcript 僅有一行時標示（表示歷史記錄未在累積）。
+    - **多個狀態目錄**：當存在多個跨家目錄的 `~/.openclaw` 資料夾，或當 `OPENCLAW_STATE_DIR` 指向其他位置時發出警告（歷史記錄可能會分散在不同安裝之間）。
+    - **遠端模式提醒**：若 `gateway.mode=remote`，doctor 會提醒您在遠端主機上執行（狀態位於該處）。
+    - **設定檔權限**：若 `~/.openclaw/openclaw.json` 可被群組/其他人讀取，則發出警告並提供收紧至 `600` 的選項。
 
   </Accordion>
-  <Accordion title="5. 模型授權健康狀態 (OAuth 過期)">
-    Doctor 會檢查授權儲存庫中的 OAuth 設定檔，在權杖即將過期或已過期時發出警告，並在安全時進行刷新。如果 Anthropic OAuth/token 設定檔已過時，它會建議使用 Anthropic API 金鑰或 Anthropic setup-token 路徑。刷新提示僅在以互動方式執行 (TTY) 時出現；`--non-interactive` 會跳過刷新嘗試。
+  <Accordion title="5. 模型身份驗證健康狀況 (OAuth 過期)">
+    Doctor 會檢查身份驗證儲存庫中的 OAuth 設定檔，在權杖即將過期或已過期時發出警告，並在安全時進行更新。如果 Anthropic OAuth/權杖設定檔已失效，它會建議使用 Anthropic API 金鑰或 Anthropic setup-token 路徑。更新提示僅會在以互動方式 (TTY) 執行時顯示；`--non-interactive` 會跳過更新嘗試。
 
-    當 OAuth 刷新永久失敗時（例如 `refresh_token_reused`、`invalid_grant`，或是提供者要求您重新登入），doctor 會報告需要重新驗證，並列印出確切的 `openclaw models auth login --provider ...` 指令以供執行。
+    當 OAuth 更新永久失敗時 (例如 `refresh_token_reused`、`invalid_grant`，或供應商要求您再次登入)，doctor 會報告需要重新進行身份驗證，並印出確切的 `openclaw models auth login --provider ...` 指令以供執行。
 
-    Doctor 也會回報因以下原因而暫時無法使用的授權設定檔：
+    Doctor 也會報告因以下原因而暫時無法使用的身份驗證設定檔：
 
-    - 短暫冷卻 (速率限制/逾時/授權失敗)
-    - 較長期的停用 (帳單/點數失敗)
+    - 短暫冷卻 (速率限制/逾時/身分驗證失敗)
+    - 較長時間的停用 (計費/點數失敗)
 
   </Accordion>
   <Accordion title="6. Hooks 模型驗證">
-    如果設定了 `hooks.gmail.model`，doctor 會根據目錄和允許清單驗證模型參照，並在無法解析或被拒絕時發出警告。
+    如果設定了 `hooks.gmail.model`，doctor 會根據目錄和允許清單驗證模型參照，並在無法解析或被禁止時發出警告。
   </Accordion>
   <Accordion title="7. Sandboxing 映像檔修復">
     當啟用沙盒機制時，doctor 會檢查 Docker 映像檔，如果目前的映像檔遺失，會提供建立或切換至舊版名稱的選項。
   </Accordion>
-  <Accordion title="7b. 外掛程式安裝清理">
-    Doctor 會在 `openclaw doctor --fix` / `openclaw doctor --repair` 模式中移除舊版 OpenClaw 產生的外掛程式依賴暫存狀態。這涵蓋過時的產生依賴根目錄、舊的安裝階段目錄、來自早期捆綁外掛程式依賴修復程式碼的套件本地殘留，以及可能遮蔽目前捆綁清單的孤立或已復原受管理 npm 捆綁 `@openclaw/*` 外掛程式複本。
+  <Accordion title="7b. Plugin install cleanup">
+    Doctor 會移除 OpenClaw 舊版產生的外掛依賴暫存狀態（於 `openclaw doctor --fix` / `openclaw doctor --repair` 模式）。這包含過時的產生根目錄、舊的安裝階段目錄、先前打包外掛依賴修復程式碼留下的套件區域殘留檔案，以及可能遮蔽當前打包清單的孤兒或已復原的受管理 npm `@openclaw/*` 外掛副本。Doctor 也會重新連結主機 `openclaw` 套件到宣告了 `peerDependencies.openclaw` 的受管理 npm 外掛，因此像 `openclaw/plugin-sdk/*` 這類的套件區域執行匯入在更新或 npm 修復後仍能正確解析。
 
-    當設定參照了可下載的外掛程式但本地外掛程式登錄區找不到它們時，Doctor 也可以重新安裝這些遺失的外掛程式。範例包括素材 `plugins.entries`、設定的頻道/提供者/搜尋設定，以及設定的代理程式執行時。在套件更新期間，當核心套件正在交換時，doctor 會避免執行套件管理員外掛修復；如果設定的外掛程式仍需要復原，請在更新後再次執行 `openclaw doctor --fix`。Gateway 啟動和設定重新載入不會執行套件管理員；外掛程式安裝仍然是明確的 doctor/install/update 工作。
-
-  </Accordion>
-  <Accordion title="8. Gateway 服務移轉與清理提示">
-    Doctor 會偵測舊版 gateway 服務（launchd/systemd/schtasks），並提議移除它們並使用目前的 gateway 連接埠安裝 OpenClaw 服務。它也可以掃描額外類似 gateway 的服務並列印清理提示。以設定檔命名的 OpenClaw gateway 服務被視為一等公民，不會被標記為「額外」。
-
-    在 Linux 上，如果缺少使用者層級的 gateway 服務但存在系統層級的 OpenClaw gateway 服務，doctor 不會自動安裝第二個使用者層級服務。請使用 `openclaw gateway status --deep` 或 `openclaw doctor --deep` 進行檢查，然後移除重複項目或在系統監督器擁有 gateway 生命週期時設定 `OPENCLAW_SERVICE_REPAIR_POLICY=external`。
+    當配置參照了可下載的外掛但本機外掛註冊表找不到時，Doctor 也可以重新安裝這些外掛。範例包括素材 `plugins.entries`、已配置的通道/提供者/搜尋設定，以及已配置的代理執行環境。在套件更新期間，當核心套件正在置換時，doctor 會避免執行套件管理器外掛修復；如果在更新後已配置的外掛仍需復原，請在更新後再次執行 `openclaw doctor --fix`。閘道啟動和配置重新載入不會執行套件管理器；外掛安裝仍須透過明確的 doctor/install/update 工作。
 
   </Accordion>
-  <Accordion title="8b. 啟動 Matrix 遷移">
-    當 Matrix 頻道帳戶有待處理或可操作的舊版狀態遷移時，doctor（在 `--fix` / `--repair` 模式下）會建立遷移前快照，然後執行盡力的遷移步驟：舊版 Matrix 狀態遷移和舊版加密狀態準備。這兩個步驟都不是致命的；錯誤會被記錄下來，並且啟動會繼續。在唯讀模式（`openclaw doctor` 不含 `--fix`）下，此檢查會被完全跳過。
+  <Accordion title="8. Gateway service migrations and cleanup hints">
+    Doctor 會偵測舊版閘道服務（launchd/systemd/schtasks）並提供移除它們以及使用當前閘道連接埠安裝 OpenClaw 服務的選項。它也可以掃描額外的類閘道服務並列印清理提示。以配置檔命名的 OpenClaw 閘道服務被視為一等公民，不會被標記為「額外」。
+
+    在 Linux 上，如果缺少使用者層級閘道服務但存在系統層級 OpenClaw 閘道服務，doctor 不會自動安裝第二個使用者層級服務。請使用 `openclaw gateway status --deep` 或 `openclaw doctor --deep` 進行檢查，然後移除重複項，或在系統監督器擁有閘道生命週期時設定 `OPENCLAW_SERVICE_REPAIR_POLICY=external`。
+
+  </Accordion>
+  <Accordion title="8b. 啟動時 Matrix 遷移">
+    當 Matrix 頻道帳號有待處理或可採取行動的舊版狀態遷移時，doctor（在 `--fix` / `--repair` 模式下）會建立遷移前快照，然後執行盡力的遷移步驟：舊版 Matrix 狀態遷移與舊版加密狀態準備。這兩個步驟皆非致命錯誤；錯誤會被記錄下來且啟動繼續進行。在唯讀模式下（`openclaw doctor` 不含 `--fix`），此檢查會被完全跳過。
   </Accordion>
   <Accordion title="8c. 裝置配對與認證漂移">
-    Doctor 現在會將檢查裝置配對狀態作為正常健康檢查的一部分。
+    Doctor 現在會檢查裝置配對狀態，作為常規健康檢查的一部分。
 
-    它會回報：
+    回報內容：
 
     - 待處理的首次配對請求
-    - 已配對裝置的待處理角色升級
-    - 已配對裝置的待處理範圍升級
-    - 公鑰不匹配的修復，其中裝置 ID 仍然匹配，但裝置身分不再符合已核准的記錄
-    - 已配對記錄缺少已核准角色的有效權杖
-    - 已配對權杖的範圍偏離已核准的配對基準
-    - 本機快取的目前機器裝置權杖條目，其日期早於閘道端權杖輪替或包含過期的範圍中繼資料
+    - 已配對裝置待處理的角色升級
+    - 已配對裝置待處理的範圍（scope）升級
+    - 公鑰不符的修復，其中裝置 ID 仍相符但裝置身分不再符合已批准的記錄
+    - 已配對記錄缺少已批准角色的有效權杖（token）
+    - 已配對權杖的範圍漂移超出已批准的配對基準
+    - 目前機器的本機快取裝置權杖條目，其時間早於閘道端權杖輪替，或帶有過時的範圍中繼資料
 
-    Doctor 不會自動核准配對請求或自動輪替裝置權杖。相反地，它會列印出確切的後續步驟：
+    Doctor 不會自動批准配對請求或自動輪替裝置權杖。它會改為列印出確切後續步驟：
 
-    - 使用 `openclaw devices list` 檢查待處理的請求
-    - 使用 `openclaw devices approve <requestId>` 核准確切的請求
-    - 使用 `openclaw devices rotate --device <deviceId> --role <role>` 輪替新的權杖
-    - 使用 `openclaw devices remove <deviceId>` 移除並重新核准過期的記錄
+    - 使用 `openclaw devices list` 檢查待處理請求
+    - 使用 `openclaw devices approve <requestId>` 批准確切請求
+    - 使用 `openclaw devices rotate --device <deviceId> --role <role>` 輪替新鮮權杖
+    - 使用 `openclaw devices remove <deviceId>` 移除並重新批准過時記錄
 
-    這解決了常見的「已配對但仍要求配對」問題：doctor 現在可以區分首次配對、待處理的角色/範圍升級以及過期權杖/裝置身分漂移。
+    這解決了常見的「已配對卻仍提示需要配對」漏洞：doctor 現在能區分首次配對、待處理的角色/範圍升級，以及過時權杖/裝置身分漂移。
 
   </Accordion>
   <Accordion title="9. 安全性警告">
@@ -397,46 +398,46 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
   <Accordion title="10. systemd linger (Linux)">
     若作為 systemd 使用者服務執行，doctor 會確保已啟用 linger，讓登出後閘道仍保持運作。
   </Accordion>
-  <Accordion title="11. Workspace status (skills, plugins, and legacy dirs)">
-    Doctor 會列印預設代理程式的工作區狀態摘要：
+  <Accordion title="11. 工作區狀態（技能、插件和舊版目錄）">
+    Doctor 會列印預設代理的工作區狀態摘要：
 
-    - **Skills status**：計算符合資格、缺少需求及被允許清單封鎖的 skills。
-    - **Legacy workspace dirs**：當 `~/openclaw` 或其他舊版工作區目錄與目前工作區並存時發出警告。
-    - **Plugin status**：計算已啟用/已停用/錯誤的插件；列出任何錯誤的插件 ID；回報套件插件功能。
-    - **Plugin compatibility warnings**：標記與目前執行環境有相容性問題的插件。
-    - **Plugin diagnostics**：顯示外掛程式登錄處發出的任何載入時期警告或錯誤。
+    - **技能狀態**：計算符合資格、缺少需求以及被允許清單封鎖的技能。
+    - **舊版工作區目錄**：當 `~/openclaw` 或其他舊版工作區目錄與目前的工作區並存時發出警告。
+    - **插件狀態**：計算已啟用/已停用/錯誤的插件；列出任何錯誤的插件 ID；回報套件組合插件功能。
+    - **插件相容性警告**：標記與目前執行環境有相容性問題的插件。
+    - **插件診斷**：呈現插件登錄處發出的任何載入時間警告或錯誤。
 
   </Accordion>
-  <Accordion title="11b. Bootstrap file size">
-    Doctor 會檢查工作區引導檔案（例如 `AGENTS.md`、`CLAUDE.md` 或其他插入的上下文檔案）是否接近或超過設定的字元預算。它會回報每個檔案的原始與插入字元數、截斷百分比、截斷原因（`max/file` 或 `max/total`），以及總插入字元數佔總預算的比例。當檔案被截斷或接近上限時，doctor 會列印調整 `agents.defaults.bootstrapMaxChars` 和 `agents.defaults.bootstrapTotalMaxChars` 的提示。
+  <Accordion title="11b. 啟動檔案大小">
+    Doctor 會檢查工作區啟動檔案（例如 `AGENTS.md`、`CLAUDE.md` 或其他注入的上下文檔案）是否接近或超過設定的字元預算。它會回報每個檔案的原始與注入字元計數、截斷百分比、截斷原因（`max/file` 或 `max/total`），以及總注入字元佔總預算的比例。當檔案被截斷或接近限制時，doctor 會列印調整 `agents.defaults.bootstrapMaxChars` 和 `agents.defaults.bootstrapTotalMaxChars` 的提示。
   </Accordion>
-  <Accordion title="11d. Stale channel plugin cleanup">
-    當 `openclaw doctor --fix` 移除遺漏的頻道插件時，它也會移除參照該插件的懸置頻道範圍配置：`channels.<id>` 項目、命名該頻道的心跳目標，以及 `agents.*.models["<channel>/*"]` 覆寫。這可防止 Gateway 開機迴圈，即頻道執行環境已消失但配置仍要求閘道繫結至該處。
+  <Accordion title="11d. 過期頻道插件清理">
+    當 `openclaw doctor --fix` 移除遺失的頻道插件時，它也會移除參照該插件的懸空頻道範圍配置：`channels.<id>` 項目、命名該頻道的心跳目標，以及 `agents.*.models["<channel>/*"]` 覆寫。這可以防止 Gateway 啟動迴圈，即頻道執行環境已消失但配置仍要求 gateway 繫結至該頻道。
   </Accordion>
   <Accordion title="11c. Shell completion">
-    Doctor 會檢查目前 Shell (zsh、bash、fish 或 PowerShell) 是否已安裝 Tab 補齊功能：
+    Doctor 會檢查目前 Shell（zsh、bash、fish 或 PowerShell）是否已安裝 Tab 鍵自動補全功能：
 
-    - 如果 Shell 設定檔使用緩慢的動態補齊模式 (`source <(openclaw completion ...)`)，doctor 會將其升級為更快的快取檔案變體。
-    - 如果補齊功能已在設定檔中設定，但缺少快取檔案，doctor 會自動重新產生快取。
-    - 如果完全沒有設定補齊功能，doctor 會提示安裝 (僅限互動模式；使用 `--non-interactive` 時會跳過)。
+    - 如果 Shell 設定檔使用緩慢的動態補全模式（`source <(openclaw completion ...)`），doctor 會將其升級為更快的快取檔案版本。
+    - 如果設定檔中已設定補全功能但快取檔案遺失，doctor 會自動重新產生快取。
+    - 如果完全未設定補全功能，doctor 會提示您進行安裝（僅限互動模式；若使用 `--non-interactive` 則會跳過）。
 
-    執行 `openclaw completion --write-state` 以手動重新產生快取。
+    執行 `openclaw completion --write-state` 可手動重新產生快取。
 
   </Accordion>
   <Accordion title="12. Gateway auth checks (local token)">
-    Doctor 會檢查本機 Gateway Token 驗證的準備狀態。
+    Doctor 會檢查本機 Gateway 權杖驗證的就緒狀態。
 
-    - 如果 Token 模式需要 Token 但不存在 Token 來源，doctor 會提議產生一個。
-    - 如果 `gateway.auth.token` 是由 SecretRef 管理但無法使用，doctor 會發出警告，並不會用純文字覆寫它。
-    - `openclaw doctor --generate-gateway-token` 僅在未設定 Token SecretRef 時強制產生。
+    - 如果權杖模式需要權杖但不存在權杖來源，doctor 會提議產生一個。
+    - 如果 `gateway.auth.token` 是由 SecretRef 管理但目前無法使用，doctor 會發出警告且不會以純文字覆寫它。
+    - `openclaw doctor --generate-gateway-token` 僅在未設定權杖 SecretRef 時才強制產生權杖。
 
   </Accordion>
   <Accordion title="12b. Read-only SecretRef-aware repairs">
-    某些修復流程需要檢查已設定的認證資訊，而不會削弱執行時期的快速失敗 (fail-fast) 行為。
+    某些修復流程需要檢查已設定的憑證，而不會削弱執行時期的快速失敗（fail-fast）行為。
 
-    - `openclaw doctor --fix` 現在針對目標設定修復，使用與 status 系列指令相同的唯讀 SecretRef 摘要模型。
-    - 範例：當可用時，Telegram `allowFrom` / `groupAllowFrom` `@username` 修復會嘗試使用已設定的 Bot 認證資訊。
-    - 如果 Telegram Bot Token 透過 SecretRef 設定，但在目前指令路徑中無法使用，doctor 會回報該認證資訊為「已設定但無法使用」，並跳過自動解決，而不是當機或將 Token 誤報為遺失。
+    - `openclaw doctor --fix` 現在使用與狀態系列（status-family）指令相同的唯讀 SecretRef 摘要模型，以進行目標設定修復。
+    - 範例：Telegram `allowFrom` / `groupAllowFrom` `@username` 修復會嘗試在可用時使用已設定的機器人憑證。
+    - 如果 Telegram 機器人權杖是透過 SecretRef 設定，但在目前的指令路徑中無法使用，doctor 會回報該憑證為「已設定但無法使用」，並跳過自動解析，而不是當機或錯誤地將權杖回報為遺失。
 
   </Accordion>
   <Accordion title="13. Gateway health check + restart">
@@ -445,12 +446,12 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
   <Accordion title="13b. 記憶體搜尋就緒狀態">
     Doctor 會檢查為預設代理程式設定的記憶體搜尋嵌入提供者是否已就緒。其行為取決於設定的後端與提供者：
 
-    - **QMD 後端**：探測 `qmd` 二進位檔案是否可用且可啟動。如果不可用，則會列印修復指引，包括 npm 套件與手動二進位路徑選項。
-    - **明確的本地提供者**：檢查是否存在本機模型檔案或可識別的遠端/可下載模型 URL。如果缺失，建議切換至遠端提供者。
-    - **明確的遠端提供者**（`openai`、`voyage` 等）：驗證環境或認證儲存中是否存在 API 金鑰。如果缺失，會列印可執行的修復提示。
-    - **自動提供者**：優先檢查本機模型可用性，接著依自動選擇順序嘗試各個遠端提供者。
+    - **QMD 後端**：探測 `qmd` 二進位檔案是否可用且可啟動。如果不可用，會列印修復指引，包括 npm 套件與手動二進位路徑選項。
+    - **明確本機提供者**：檢查是否有本機模型檔案或可識別的遠端/可下載模型 URL。如果缺少，建議切換至遠端提供者。
+    - **明確遠端提供者**（`openai`、`voyage` 等）：驗證環境變數或認證儲存中是否存在 API 金鑰。如果缺少，會列印可操作的修復提示。
+    - **自動提供者**：先檢查本機模型可用性，然後依照自動選擇順序嘗試各個遠端提供者。
 
-    當有快取的閘道探測結果可用（檢查時閘道處於健康狀態），doctor 會將其結果與 CLI 可見設定進行比對，並標註任何差異。Doctor 不會在預設路徑上發起新的嵌入連線測試；若您需要即時提供者檢查，請使用 deep memory status 指令。
+    當有閘道快取的探測結果可用時（閘道在檢查當時是健康的），Doctor 會將其結果與 CLI 可見設定進行比對，並標記任何差異。Doctor 不會在預設路徑上發起新的嵌入請求（ping）；若需要即時提供者檢查，請使用 deep memory status 指令。
 
     使用 `openclaw memory status --deep` 以在執行時期驗證嵌入就緒狀態。
 
@@ -458,48 +459,48 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
   <Accordion title="14. 頻道狀態警告">
     如果閘道狀態健康，doctor 會執行頻道狀態探測並回報附帶建議修復方式的警告。
   </Accordion>
-  <Accordion title="15. 監管程式設定稽核與修復">
-    Doctor 會檢查已安裝的監管程式設定 (launchd/systemd/schtasks) 是否有遺漏或過時的預設值（例如：systemd network-online 相依性和重新啟動延遲）。當發現不符時，它會建議進行更新，並可將服務檔案/工作重寫為目前的預設值。
+  <Accordion title="15. 管理程式配置稽核與修復">
+    Doctor 會檢查已安裝的管理程式配置（launchd/systemd/schtasks）是否有遺失或過時的預設值（例如：systemd network-online 相依性和重新啟動延遲）。當發現不一致時，它會建議更新並可將服務檔案/工作重寫為目前的預設值。
 
     註記：
 
-    - `openclaw doctor` 會在重寫監管程式設定前提示。
+    - `openclaw doctor` 會在重寫管理程式配置前提示。
     - `openclaw doctor --yes` 接受預設的修復提示。
-    - `openclaw doctor --repair` 套用建議的修復，不經提示。
-    - `openclaw doctor --repair --force` 覆寫自訂監管程式設定。
-    - `OPENCLAW_SERVICE_REPAIR_POLICY=external` 讓 doctor 對於閘道服務生命週期保持唯讀。它仍會回報服務健康狀況並執行非服務修復，但因為生命週期由外部監管程式管理，所以會跳過服務安裝/啟動/重新啟動/啟動、監管程式設定重寫，以及舊版服務清理。
-    - 在 Linux 上，當對應的 systemd 閘道單元處於作用中時，doctor 不會重寫 command/entrypoint 中繼資料。在重複服務掃描期間，它也會忽略非舊版且非作用中的額外閘道類似單元，以免伴隨服務檔案產生清理雜訊。
-    - 如果權杖驗證需要權杖且 `gateway.auth.token` 是由 SecretRef 管理，doctor 服務安裝/修復會驗證 SecretRef，但不會將解析後的明文權杖值保存至監管程式服務環境中繼資料中。
-    - Doctor 會偵測受管理的 `.env`/SecretRef 支援的服務環境值，這些值在舊版 LaunchAgent、systemd 或 Windows 排程任務安裝中是內嵌的，並會重寫服務中繼資料，讓這些值從執行時期來源載入，而非從監管程式定義載入。
-    - Doctor 會偵測當服務指令在 `gateway.port` 變更後仍釘選到舊的 `--port`，並將服務中繼資料重寫為目前連接埠。
-    - 如果權杖驗證需要權杖且設定的權杖 SecretRef 未解析，doctor 會提供可執行的指引並封鎖安裝/修復路徑。
+    - `openclaw doctor --repair` 套用建議的修復而不提示。
+    - `openclaw doctor --repair --force` 覆寫自訂管理程式配置。
+    - `OPENCLAW_SERVICE_REPAIR_POLICY=external` 讓 doctor 對於閘道服務生命週期保持唯讀。它仍會報告服務健康狀態並執行非服務修復，但會跳過服務安裝/啟動/重新啟動/啟動程式、管理程式配置重寫以及舊版服務清理，因為外部管理程式擁有該生命週期。
+    - 在 Linux 上，當對應的 systemd 閘道單元處於作用中時，doctor 不會重寫 command/entrypoint 中繼資料。它也會在重複服務掃描期間忽略非作用中的非舊版額外閘道類似單元，以免伴隨的服務檔案造成清理干擾。
+    - 如果 Token 驗證需要 token 且 `gateway.auth.token` 是由 SecretRef 管理，doctor 服務安裝/修復會驗證 SecretRef，但不會將解析出的明文 token 值保存到管理程式服務環境中繼資料中。
+    - Doctor 會偵測到較舊的 LaunchAgent、systemd 或 Windows 的工作排程安裝內嵌的管理 `.env`/SecretRef 支援的服務環境值，並重寫服務中繼資料，以便這些值從執行階段來源載入，而非從管理程式定義載入。
+    - Doctor 會偵測當服務命令在 `gateway.port` 變更後仍釘選到舊的 `--port`，並將服務中繼資料重寫為目前的連接埠。
+    - 如果 Token 驗證需要 token 且設定的 token SecretRef 未解析，doctor 會提供可行的指引並封鎖安裝/修復路徑。
     - 如果同時設定了 `gateway.auth.token` 和 `gateway.auth.password` 且未設定 `gateway.auth.mode`，doctor 會封鎖安裝/修復，直到明確設定模式。
-    - 針對 Linux 使用者 systemd 單元，doctor 權杖偏移檢查現在在比較服務驗證中繼資料時會包含 `Environment=` 和 `EnvironmentFile=` 來源。
-    - 當設定最後是由較新版本寫入時，Doctor 服務修復會拒絕重寫、停止或重新啟動來自較舊 OpenClaw 二進位檔案的閘道服務。請參閱 [閘道疑難排解](/zh-Hant/gateway/troubleshooting#split-brain-installs-and-newer-config-guard)。
-    - 您隨時可以透過 `openclaw gateway install --force` 強制執行完整重寫。
+    - 對於 Linux 使用者 systemd 單元，doctor token 偏差檢查現在在比較服務驗證中繼資料時會包含 `Environment=` 和 `EnvironmentFile=` 來源。
+    - 當配置最後是由較新版本寫入時，Doctor 服務修復會拒絕重寫、停止或重新啟動來自較舊 OpenClaw 二進位檔案的閘道服務。請參閱[閘道疑難排解](/zh-Hant/gateway/troubleshooting#split-brain-installs-and-newer-config-guard)。
+    - 您可以透過 `openclaw gateway install --force` 強制執行完整重寫。
 
   </Accordion>
   <Accordion title="16. Gateway runtime + port diagnostics">
-    Doctor 會檢查服務運行時（PID、上次退出狀態），並在服務已安裝但實際未運行時發出警告。它還會檢查 Gateway 連接埠（預設為 `18789`）是否有連接埠衝突，並報告可能的原因（Gateway 已在運行、SSH 隧道）。
+    Doctor 會檢查服務執行時（PID，最後退出狀態），並在服務已安裝但未實際執行時發出警告。它也會檢查 Gateway 連接埠（預設 `18789`）上的連接埠衝突，並回報可能的原因（Gateway 已在執行中、SSH tunnel）。
   </Accordion>
   <Accordion title="17. Gateway runtime best practices">
-    當 Gateway 服務在 Bun 或受版本管理的 Node 路徑（`nvm`、`fnm`、`volta`、`asdf` 等）上運行時，Doctor 會發出警告。WhatsApp 和 Telegram 頻道需要 Node，而版本管理器路徑可能會在升級後失效，因為服務不會載入您的 shell 初始化設定。當有可用的系統 Node 安裝（Homebrew/apt/choco）時，Doctor 會建議遷移。
+    當 Gateway 服務在 Bun 或版本管理的 Node 路徑（`nvm`、`fnm`、`volta`、`asdf` 等）上執行時，Doctor 會發出警告。WhatsApp + Telegram 頻道需要 Node，而版本管理員路徑可能會在升級後失效，因為服務不會載入您的 shell init。當有可用的系統 Node 安裝時，Doctor 會提供遷移至該安裝的選項（Homebrew/apt/choco）。
 
-    新安裝或修復的 macOS LaunchAgents 會使用標準的系統 PATH（`/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin`），而不是複製互動式 shell 的 PATH，因此 Homebrew 管理的系統二進位檔案仍可使用，而 Volta、asdf、fnm、pnpm 和其他版本管理器目錄不會影響 Node 子程序解析的路徑。Linux 服務仍會保留明確的環境根目錄（`NVM_DIR`、`FNM_DIR`、`VOLTA_HOME`、`ASDF_DATA_DIR`、`BUN_INSTALL`、`PNPM_HOME`）和穩定的使用者 bin 目錄，但推測的版本管理器備用目錄僅在這些目錄存在於磁碟上時才會寫入服務 PATH。
+    新安裝或修復後的 macOS LaunchAgents 會使用正準的系統 PATH（`/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin`），而不是複製互動式 shell PATH，因此 Homebrew 管理的系統二進位檔維持可用，而 Volta、asdf、fnm、pnpm 和其他版本管理員目錄不會改變 Node 子程序解析的路徑。Linux 服務仍會保留明確的環境根目錄（`NVM_DIR`、`FNM_DIR`、`VOLTA_HOME`、`ASDF_DATA_DIR`、`BUN_INSTALL`、`PNPM_HOME`）和穩定的使用者 bin 目錄，但猜測的版本管理員後備目錄只有在磁碟上存在該目錄時才會寫入服務 PATH。
 
   </Accordion>
   <Accordion title="18. Config write + wizard metadata">
     Doctor 會保存任何設定變更，並標記精靈中繼資料以記錄 doctor 的執行。
   </Accordion>
-  <Accordion title="19. 工作區提示（備份 + 記憶系統）">
-    當缺少工作區記憶系統時，Doctor 會建議安裝一個，如果工作區尚未使用 git，則會列印備份提示。
+  <Accordion title="19. Workspace tips (backup + memory system)">
+    當工作區缺少記憶系統時，Doctor 會建議建立一個；如果工作區尚未在 git 版本控制下，它會列印備份提示。
 
-    參閱 [/concepts/agent-workspace](/zh-Hant/concepts/agent-workspace) 以取得工作區結構和 git 備份的完整指南（建議使用私有的 GitHub 或 GitLab）。
+    請參閱 [/concepts/agent-workspace](/zh-Hant/concepts/agent-workspace) 以取得工作區結構和 git 備份（建議使用私有的 GitHub 或 GitLab）的完整指南。
 
   </Accordion>
 </AccordionGroup>
 
 ## 相關
 
-- [Gateway 操作手冊](/zh-Hant/gateway)
-- [Gateway 疑難排解](/zh-Hant/gateway/troubleshooting)
+- [Gateway runbook](/zh-Hant/gateway)
+- [Gateway troubleshooting](/zh-Hant/gateway/troubleshooting)

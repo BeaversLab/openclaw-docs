@@ -12,7 +12,7 @@ Ajoute la surface channel Slack pour l'envoi et la réception de messages OpenCl
 ## Distribution
 
 - Package : `@openclaw/slack`
-- Install route : inclus dans OpenClaw
+- Route d'installation : npm ; ClawHub
 
 ## Surface
 

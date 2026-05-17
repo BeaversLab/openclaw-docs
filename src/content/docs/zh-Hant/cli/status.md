@@ -31,12 +31,13 @@ openclaw status --usage
 - 概覽會在可用時包含 Gateway + 節點主機服務的安裝/運行時狀態。
 - 概覽會包含更新通道 + git SHA（針對原始碼簽出）。
 - 更新資訊會顯示在概覽中；如果有可用的更新，status 會列印提示以執行 `openclaw update`（請參閱[更新](/zh-Hant/install/updating)）。
-- 唯讀狀態介面（`status`、`status --json`、`status --all`）會盡可能針對其目標配置路徑解析支援的 SecretRefs。
-- 如果配置了支援的通道 SecretRef，但在目前的指令路徑中無法使用，status 會保持唯讀狀態並回報降級輸出，而不是當機。人類可讀輸出會顯示諸如「configured token unavailable in this command path」的警告，而 JSON 輸出則會包含 `secretDiagnostics`。
-- 當指令本地的 SecretRef 解析成功時，status 會優先使用解析的快照，並從最終輸出中清除暫時性的「secret unavailable」通道標記。
-- `status --all` 包含 Secrets 概覽列和診斷區段，該區段會總結秘密診斷（為了易讀性已截斷），而不會停止報告的生成。
+- 模型定價重新整理失敗會顯示為選用的定價警告。這並不代表 Gateway 或管道狀態不健康。
+- 唯讀狀態表面 (`status`, `status --json`, `status --all`) 會在可行時解析其目標設定路徑的支援 SecretRefs。
+- 如果設定了支援的管道 SecretRef 但在目前的指令路徑中無法使用，狀態會保持唯讀並回報降級輸出，而不是直接崩潰。人工輸出會顯示諸如「configured token unavailable in this command path」的警告，而 JSON 輸出則包含 `secretDiagnostics`。
+- 當指令本地的 SecretRef 解析成功時，狀態會優先使用解析後的快照，並從最終輸出中清除暫時性的「secret unavailable」管道標記。
+- `status --all` 包含一個 Secrets 概觀列和一個診斷區段，該區段彙總了 Secret 診斷（為了可讀性已截斷），而不會停止報告的產生。
 
 ## 相關
 
-- [CLI 參考](/zh-Hant/cli)
+- [CLI 參考資料](/zh-Hant/cli)
 - [Doctor](/zh-Hant/gateway/doctor)

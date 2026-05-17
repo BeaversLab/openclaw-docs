@@ -160,11 +160,13 @@ Exemple de configuration de liste blanche :
 
 ```json5
 {
-  agent: {
-    model: { primary: "anthropic/claude-sonnet-4-6" },
-    models: {
-      "anthropic/claude-sonnet-4-6": { alias: "Sonnet" },
-      "anthropic/claude-opus-4-6": { alias: "Opus" },
+  agents: {
+    defaults: {
+      model: { primary: "anthropic/claude-sonnet-4-6" },
+      models: {
+        "anthropic/claude-sonnet-4-6": { alias: "Sonnet" },
+        "anthropic/claude-opus-4-6": { alias: "Opus" },
+      },
     },
   },
 }

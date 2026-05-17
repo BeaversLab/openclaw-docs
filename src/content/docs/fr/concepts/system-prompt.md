@@ -51,39 +51,41 @@ Le prompt est intentionnellement compact et utilise des sections fixes :
   faibles, vérifier l'état mutable en direct et vérifier avant de finaliser.
 - **Sécurité** : court rappel des garde-fous pour éviter les comportements de recherche de pouvoir ou le contournement de la supervision.
 - **Skills** (lorsqu'elles sont disponibles) : indique au modèle comment charger les instructions de skills à la demande.
-- **Mise à jour automatique d'OpenClaw** : comment inspecter la configuration en toute sécurité avec
-  OpenClaw`config.schema.lookup`, modifier la configuration avec `config.patch`, remplacer la configuration
-  complète par `config.apply` et exécuter `update.run` uniquement sur demande explicite de
-  l'utilisateur. L'outil `gateway` réservé au propriétaire refuse également de réécrire
-  `tools.exec.ask` / `tools.exec.security`, y compris les alias `tools.bash.*`
-  hérités qui sont normalisés vers ces chemins d'exécution protégés.
-- **Espace de travail** : répertoire de travail (`agents.defaults.workspace`).
-- **Documentation** : chemin local vers la documentation d'OpenClaw (dépôt ou package npm) et quand les lire.
-- **Fichiers de l'espace de travail (injectés)** : indique que les fichiers d'amorçage sont inclus ci-dessous.
-- **Bac à sable** (Sandbox) (lorsqu'il est activé) : indique l'exécution en bac à sable, les chemins du bac à sable et si une exécution élevée est disponible.
-- **Date et heure actuelles** : fuseau horaire uniquement (stable dans le cache ; l'horloge en direct provient de `session_status`).
-- **Balises de réponse** : syntaxe de balise de réponse optionnelle pour les fournisseurs pris en charge.
-- **Battements de cœur** (Heartbeats) : comportement du prompt et de l'accusé de réception des battements de cœur, lorsqu'ils sont activés pour l'agent par défaut.
-- **Exécution** (Runtime) : hôte, système d'exploitation, nœud, modèle, racine du dépôt (lorsqu'elle est détectée), niveau de réflexion (une ligne).
-- **Raisonnement** : niveau de visibilité actuel + indice de basculement /reasoning.
+- **OpenClaw Control** : indique au modèle de privilégier l'outil OpenClaw`gateway` pour
+  le travail de configuration/redémarrage et d'éviter d'inventer des commandes CLI.
+- **OpenClaw Self-Update** : comment inspecter la configuration en toute sécurité avec
+  OpenClaw`config.schema.lookup`, modifier la configuration avec `config.patch`, remplacer la
+  configuration complète avec `config.apply`, et exécuter `update.run` uniquement sur
+  demande explicite de l'utilisateur. L'outil `gateway` réservé au propriétaire refuse également de
+  réécrire `tools.exec.ask` / `tools.exec.security`, y compris les alias `tools.bash.*`
+  obsolètes qui sont normalisés vers ces chemins d'exécution protégés.
+- **Workspace** : répertoire de travail (`agents.defaults.workspace`).
+- **Documentation** : chemin local vers la documentation/la source d'OpenClaw et quand les lire.
+- **Workspace Files (injected)** : indique que les fichiers d'amorçage sont inclus ci-dessous.
+- **Sandbox** (lorsqu'activé) : indique l'exécution isolée (sandboxed), les chemins du bac à sable (sandbox), et si l'exécution avec élévation est disponible.
+- **Current Date & Time** : fuseau horaire uniquement (stable dans le cache ; l'horloge en direct provient de `session_status`).
+- **Assistant Output Directives** : syntaxe de pièce jointe compacte, de note vocale et de balise de réponse.
+- **Heartbeats** : comportement du prompt et de l'accusé de réception des battements de cœur (heartbeat), lorsque ceux-ci sont activés pour l'agent par défaut.
+- **Runtime** : hôte, système d'exploitation, nœud, modèle, racine du dépôt (lorsqu'elle est détectée), niveau de réflexion (une ligne).
+- **Reasoning** : niveau de visibilité actuel + indice de basculement /reasoning.
 
-OpenClaw conserve le contenu stable de grande taille, y compris **Contexte du projet**, au-dessus de
+OpenClaw conserve le contenu stable important, y compris le **Contexte du Projet**, au-dessus de
 la limite du cache de prompt interne. Les sections volatiles de canal/session telles que
-les conseils intégrés de l'interface de contrôle, **Messagerie**, **Voix**, **Contexte de conversation de groupe**,
-**Réactions**, **Battements de cœur**, et **Exécution** sont ajoutées en dessous de cette limite
-afin que les backends locaux avec des préfixes de cache puissent réutiliser le préfixe stable de l'espace de travail
-à travers les tours de canal. Les descriptions des outils devraient également éviter d'intégrer les noms de
+les conseils intégrés de l'interface utilisateur de contrôle, la **Messagerie**, la **Voix**, le **Contexte de Discussion de Groupe**,
+les **Réactions**, les **Battements de Cœur (Heartbeats)** et le **Runtime** sont ajoutées sous cette limite
+afin que les backends locaux avec des préfixes de cache puissent réutiliser le préfixe d'espace de travail stable
+à travers les tours de canal. Les descriptions des outils doivent également éviter d'intégrer les noms de
 canal actuels lorsque le schéma accepté transporte déjà ce détail d'exécution.
 
-La section Outils (Tooling) comprend également des conseils d'exécution pour le travail de longue durée :
+La section Outils (Tooling) inclut également des conseils d'exécution pour le travail de longue durée :
 
-- utilisez cron pour le suivi futur (`check back later`, rappels, travail récurrent)
-  au lieu des boucles de sommeil `exec`, des astuces de délai `yieldMs` ou du `process`
-  polling répété
-- utilisez `exec` / `process` uniquement pour les commandes qui démarrent maintenant et continuent de s'exécuter
+- utilisez cron pour les suivis futurs (`check back later`, rappels, travail récurrent)
+  au lieu des boucles de veille `exec`, des astuces de délai `yieldMs` ou des interrogations `process`
+  répétées
+- utilisez `exec` / `process` uniquement pour les commandes qui commencent maintenant et continuent de s'exécuter
   en arrière-plan
 - lorsque le réveil automatique à l'achèvement est activé, lancez la commande une seule fois et comptez sur
-  le chemin de réveil basé sur le push (push) lorsqu'elle émet une sortie ou échoue
+  le chemin de réveil basé sur le push lorsqu'elle émet une sortie ou échoue
 - utilisez `process` pour les journaux, le statut, la saisie ou l'intervention lorsque vous devez
   inspecter une commande en cours d'exécution
 - si la tâche est plus importante, préférez `sessions_spawn` ; l'achèvement du sous-agent est
@@ -91,20 +93,20 @@ La section Outils (Tooling) comprend également des conseils d'exécution pour l
 - n'interrogez pas `subagents list` / `sessions_list` en boucle juste pour attendre
   l'achèvement
 
-`agents.defaults.subagents.delegationMode` peut renforcer cette orientation. Le
-mode `suggest` par défaut conserve le rappel de base (nudge). `prefer` ajoute une section
-dédiée **Délégation de sous-agent** (Sub-Agent Delegation) indiquant à l'agent principal d'agir en tant que coordinateur
+`agents.defaults.subagents.delegationMode` peut renforcer cette recommandation. Le mode par défaut
+`suggest` conserve le rappel de base. `prefer` ajoute une section dédiée
+**Délégation de sous-agent** indiquant à l'agent principal d'agir en tant que coordinateur
 réactif et de transmettre tout ce qui dépasse une réponse directe via
-`sessions_spawn`. Cela concerne uniquement le prompt ; la stratégie d'outil (tool policy) contrôle toujours si
+`sessions_spawn`. Cela concerne uniquement le prompt ; la stratégie d'outil contrôle toujours si
 `sessions_spawn` est disponible.
 
-Lorsque l'outil expérimental `update_plan` est activé, la section Outils (Tooling) indique également au
-modèle de l'utiliser uniquement pour le travail multi-étapes non trivial, de garder exactement une
-étape `in_progress`, et d'éviter de répéter l'ensemble du plan après chaque mise à jour.
+Lorsque l'outil expérimental `update_plan` est activé, la partie Outiling indique également au
+modèle de ne l'utiliser que pour le travail multi-étapes non trivial, de garder exactement une étape
+`in_progress`, et d'éviter de répéter l'intégralité du plan après chaque mise à jour.
 
-Les garde-fous de sécurité dans le prompt système sont consultatifs. Ils guident le comportement du modèle mais n'appliquent pas la stratégie. Utilisez la stratégie d'outil, les approbations d'exécution, la mise en bac à sable et les listes d'autorisation de canal (channel allowlists) pour une application stricte ; les opérateurs peuvent les désactiver par conception.
+Les garde-fous de sécurité dans le système de prompt sont consultatifs. Ils guident le comportement du modèle mais n'appliquent pas la stratégie. Utilisez la stratégie d'outil, les approbations d'exécution, la mise en bac à sable et les listes de canaux autorisés pour une application stricte ; les opérateurs peuvent les désactiver par conception.
 
-Sur les canaux dotés de cartes/boutons d'approbation natifs, le prompt d'exécution indique désormais à
+Sur les canaux avec des boutons/cartes d'approbation natifs, le prompt d'exécution indique désormais à
 l'agent de s'appuyer d'abord sur cette interface d'approbation native. Il ne doit inclure une commande manuelle
 `/approve` que lorsque le résultat de l'outil indique que les approbations par chat sont indisponibles ou
 que l'approbation manuelle est le seul chemin possible.
@@ -112,57 +114,57 @@ que l'approbation manuelle est le seul chemin possible.
 ## Modes de prompt
 
 OpenClaw peut générer des invites système plus petites pour les sous-agents. Le runtime définit un
-`promptMode` pour chaque exécution (pas une configuration visible par l'utilisateur) :
+OpenClaw`promptMode` pour chaque exécution (pas une configuration visible par l'utilisateur) :
 
 - `full` (par défaut) : inclut toutes les sections ci-dessus.
-- `minimal` : utilisé pour les sous-agents ; omet **Skills**, **Memory Recall**, **OpenClaw
-  Self-Update**, **Model Aliases**, **User Identity**, **Reply Tags**,
-  **Messaging**, **Silent Replies** et **Heartbeats**. Les outils, **Safety**,
-  l'espace de travail, Sandbox, la date et l'heure actuelles (lorsqu'elles sont connues), le runtime et le contexte
-  injecté restent disponibles.
+- `minimal`OpenClaw : utilisé pour les sous-agents ; omet **Memory Recall**, **OpenClaw
+  Self-Update**, **Model Aliases**, **User Identity**, **Assistant Output Directives**,
+  **Messaging**, **Silent Replies**, et **Heartbeats**. Les outils, **Safety**,
+  **Skills** (si fournis), l'espace de travail, le bac à sable, la date et l'heure actuelles (si
+  connues), le runtime et le contexte injecté restent disponibles.
 - `none` : renvoie uniquement la ligne d'identité de base.
 
-Lorsque `promptMode=minimal`, les invites injectées supplémentaires sont étiquetées **Subagent
+Lorsque `promptMode=minimal`, les invites supplémentaires injectées sont étiquetées **Subagent
 Context** au lieu de **Group Chat Context**.
 
-Pour les exécutions de réponse automatique sur un channel, OpenClaw peut omettre la section générique **Silent Replies**
-lorsque le contexte de conversation directe/groupe inclut déjà le comportement résolu
-spécifique à la conversation `NO_REPLY`. Cela évite de répéter la mécanique des jetons
-dans l'invite système globale et le contexte du channel.
+Pour les exécutions de réponse automatique sur le canal, OpenClaw peut omettre la section générique **Silent Replies**
+lorsque le contexte de chat direct/de groupe inclut déjà le comportement OpenClaw`NO_REPLY` résolu spécifique à la conversation. Cela évite de répéter la mécanique des jetons
+dans l'invite système globale et le contexte du canal.
 
-## Instantanés d'invite
+## Instantanés d'invites
 
-OpenClaw conserve des instantanés d'invite validés pour le chemin heureux du runtime Codex sous
-`test/fixtures/agents/prompt-snapshots/codex-runtime-happy-path/`. Ils génèrent
-les paramètres de fil/tour de serveur d'application sélectionnés plus une pile de calques d'invite liée au modèle reconstruite pour les tours directs Telegram, les groupes Discord et les battements de cœur. Cette pile
-inclut une fixture d'invite de modèle Codex `gpt-5.5` épinglée générée à partir de la forme du catalogue/cache de modèle de Codex,
-le texte de développeur d'autorisation du chemin heureux de Codex,
-les instructions de développeur OpenClaw, les instructions de mode de collaboration étendues au tour
-lorsque OpenClaw les fournit, l'entrée utilisateur du tour et des références aux spécifications d'outils dynamiques.
+OpenClaw conserve des instantanés d'invites validés pour le chemin heureux du runtime Codex sous
+OpenClaw`test/fixtures/agents/prompt-snapshots/codex-runtime-happy-path/`TelegramDiscord. Ils affichent
+les paramètres de fil/discussion du serveur d'application sélectionnés plus une pile de couches d'invites liées au modèle reconstruite
+pour les discussions directes Telegram, les groupes Discord et les battements de cœur. Cette pile
+inclut un appareil d'invite de modèle Codex `gpt-5.5`OpenClawOpenClaw épinglé généré à partir de la forme
+du catalogue/cache de modèles de Codex, le texte développeur d'autorisation du chemin heureux Codex,
+les instructions développeur d'OpenClaw, les instructions de mode collaboration limitées au tour
+lorsqu'OpenClaw les fournit, l'entrée utilisateur du tour et les références aux spécifications d'outils dynamiques.
 
-Actualisez la fixture de prompt de modèle Codex épinglée avec
-`pnpm prompt:snapshots:sync-codex-model`. Par défaut, le script recherche
-le cache d'exécution de Codex à `$CODEX_HOME/models_cache.json`, puis
-`~/.codex/models_cache.json`, et ne revient ensuite à la convention de checkout
-du mainteneur Codex à `~/code/codex/codex-rs/models-manager/models.json` que si nécessaire. Si
-aucune de ces sources n'existe, la commande se termine sans modifier la fixture
-validée. Passez `--catalog <path>` pour actualiser à partir d'un `models_cache.json`
-spécifique ou d'un fichier `models.json`.
+Actualisez la fixture de prompt du modèle Codex épinglée avec
+`pnpm prompt:snapshots:sync-codex-model`. Par défaut, le script recherche le
+cache d'exécution de Codex à `$CODEX_HOME/models_cache.json`, puis
+`~/.codex/models_cache.json`, et ne se rabat ensuite que sur la convention de checkout
+du mainteneur Codex à `~/code/codex/codex-rs/models-manager/models.json`. Si aucune
+de ces sources n'existe, la commande s'arrête sans modifier la fixture
+validée. Passez `--catalog <path>` pour actualiser depuis un `models_cache.json`
+spécifique ou un fichier `models.json`.
 
-Ces instantanés ne sont toujours pas une capture brute octet par octet d'une requête OpenAI. Codex
-peut ajouter un contexte d'espace de travail propriétaire de l'exécution tel que `AGENTS.md`, le contexte
-d'environnement, les mémoires, les instructions de l'application/plugin et les instructions intégrées
-de mode de collaboration par défaut dans le runtime Codex après que OpenClaw a envoyé
+Ces instantanés ne constituent toujours pas une capture brute octet par octet d'une requête OpenAI. Codex
+peut ajouter du contexte d'espace de travail propriétaire de l'exécution, tel que `AGENTS.md`, le contexte
+de l'environnement, les mémoires, les instructions de l'application/plugin, et les instructions intégrées
+de mode de collaboration par défaut dans l'exécution Codex après que OpenClaw a envoyé
 les paramètres de fil et de tour.
 
 Régénérez-les avec `pnpm prompt:snapshots:gen` et vérifiez la dérive avec
-`pnpm prompt:snapshots:check`. Le CI exécute la vérification de dérive dans le shard de
+`pnpm prompt:snapshots:check`. L'IC exécute la vérification de dérive dans le shard de
 frontière supplémentaire afin que les modifications de prompt et les mises à jour d'instantanés restent attachées à la même
 PR.
 
-## Injection du bootstrap de l'espace de travail
+## Injection de bootstrap de l'espace de travail
 
-Les fichiers de bootstrap sont rognés et ajoutés sous **Contexte du projet** afin que le modèle voie le contexte d'identité et de profil sans avoir besoin de lectures explicites :
+Les fichiers de bootstrap sont coupés et ajoutés sous **Contexte du projet** pour que le modèle voie le contexte d'identité et de profil sans avoir besoin de lectures explicites :
 
 - `AGENTS.md`
 - `SOUL.md`
@@ -171,74 +173,74 @@ Les fichiers de bootstrap sont rognés et ajoutés sous **Contexte du projet** a
 - `USER.md`
 - `HEARTBEAT.md`
 - `BOOTSTRAP.md` (uniquement sur les espaces de travail tout neufs)
-- `MEMORY.md` lorsque présent
+- `MEMORY.md` lorsqu'il est présent
 
-Tous ces fichiers sont **injectés dans la fenêtre de contexte** à chaque tour, sauf si une porte spécifique au fichier s'applique. `HEARTBEAT.md` est omis lors des exécutions normales lorsque les battements de cœur sont désactivés pour l'agent par défaut ou que `agents.defaults.heartbeat.includeSystemPromptSection` est faux. Gardez les fichiers injectés concis, en particulier `MEMORY.md`. `MEMORY.md` est destiné à rester un résumé à long terme soigné ; les notes quotidiennes détaillées appartiennent à `memory/*.md` où `memory_search` et `memory_get` peuvent les récupérer à la demande. Les fichiers `MEMORY.md` trop volumineux augmentent l'utilisation du prompt et peuvent être partiellement injectés en raison des limites des fichiers de démarrage ci-dessous.
+Tous ces fichiers sont **injectés dans la fenêtre de contexte** à chaque tour, sauf si une porte spécifique au fichier s'applique. `HEARTBEAT.md` est omis lors des exécutions normales lorsque les battements de cœur sont désactivés pour l'agent par défaut ou que `agents.defaults.heartbeat.includeSystemPromptSection` est faux. Gardez les fichiers injectés concis, en particulier `MEMORY.md`. `MEMORY.md` est destiné à rester un résumé à long terme soigneusement sélectionné ; les notes quotidiennes détaillées appartiennent à `memory/*.md` où `memory_search` et `memory_get` peuvent les récupérer à la demande. Les fichiers `MEMORY.md` trop volumineux augmentent l'utilisation du prompt et peuvent être partiellement injectés en raison des limites des fichiers de bootstrap ci-dessous.
 
-Lorsqu'une session s'exécute sur le harnais natif Codex, Codex charge `AGENTS.md` via sa propre découverte de documents de projet. OpenClaw résout toujours les fichiers de démarrage restants et les transmet en tant qu'instructions de configuration Codex, donc `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` et `MEMORY.md` conservent le même rôle de contexte de l'espace de travail sans dupliquer `AGENTS.md`.
+Lorsqu'une session s'exécute sur le harnais natif Codex, Codex charge `AGENTS.md` via sa propre découverte de documents de projet. OpenClaw résout toujours les fichiers de bootstrap restants et les transmet en tant qu'instructions de configuration Codex, de sorte que `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` et `MEMORY.md` conservent le même rôle de contexte d'espace de travail sans dupliquer `AGENTS.md`.
 
 <Note>
-  Les fichiers quotidiens `memory/*.md` ne font **pas** partie du contexte de projet de démarrage normal. Lors des tours ordinaires, ils sont accessibles à la demande via les outils `memory_search` et `memory_get`, ils ne comptent donc pas contre la fenêtre de contexte à moins que le modèle ne les lise explicitement. Les tours `/new` et `/reset` nus font exception : le runtime peut ajouter une
-  mémoire quotidienne récente comme bloc de contexte de démarrage ponctuel pour ce premier tour.
+  Les fichiers quotidiens `memory/*.md` ne font **pas** partie du contexte de projet de bootstrap normal. Lors des tours ordinaires, ils sont consultés à la demande via les outils `memory_search` et `memory_get`, ils ne comptent donc pas dans la fenêtre de contexte, sauf si le modèle les lit explicitement. Les tours `/new` et `/reset` nus font exception : le runtime peut ajouter en préambule la
+  mémoire quotidienne récente sous forme de bloc de contexte de démarrage ponctuel pour ce premier tour.
 </Note>
 
-Les fichiers volumineux sont tronqués à l'aide d'un marqueur. La taille maximale par fichier est contrôlée par
+Les fichiers volumineux sont tronqués avec un marqueur. La taille maximale par fichier est contrôlée par
 `agents.defaults.bootstrapMaxChars` (par défaut : 12000). Le contenu total de bootstrap injecté
-sur tous les fichiers est plafonné par `agents.defaults.bootstrapTotalMaxChars`
+d'entre les fichiers est plafonné par `agents.defaults.bootstrapTotalMaxChars`
 (par défaut : 60000). Les fichiers manquants injectent un marqueur court de fichier manquant. Lorsqu'une troncation
-se produit, OpenClaw peut injecter un avis d'avertissement concis sur le système de prompt ; contrôlez cela avec
+se produit, OpenClaw peut injecter un avertissement concis dans le système de prompt ; contrôlez cela avec
 `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ;
-par défaut : `once`). Les comptes détaillés bruts/injectés restent dans les diagnostics tels que
-`/context`, `/status`, doctor, et les journaux.
+par défaut : `once`). Des comptes bruts/injectés détaillés restent dans les diagnostics tels que
+`/context`, `/status`, doctor et les logs.
 
-Pour les fichiers de mémoire, la troncation ne signifie pas une perte de données : le fichier reste intact sur le disque,
+Pour les fichiers de mémoire, la troncation n'est pas une perte de données : le fichier reste intact sur le disque,
 mais le modèle ne voit que la copie injectée raccourcie jusqu'à ce qu'il lise ou recherche
 la mémoire directement. Si `MEMORY.md` est tronqué à plusieurs reprises, distillez-le en un
 résumé durable plus court et déplacez l'historique détaillé dans `memory/*.md`, ou
 augmentez intentionnellement les limites de bootstrap.
 
-Les sessions de sous-agent n'injectent que `AGENTS.md` et `TOOLS.md` (les autres fichiers de bootstrap
+Les sessions de sous-agents n'injectent que `AGENTS.md` et `TOOLS.md` (les autres fichiers de bootstrap
 sont filtrés pour garder le contexte du sous-agent petit).
 
 Les crochets internes peuvent intercepter cette étape via `agent:bootstrap` pour modifier ou remplacer
-les fichiers de bootstrap injectés (par exemple en échangeant `SOUL.md` pour une persona alternative).
+les fichiers de bootstrap injectés (par exemple en échangeant `SOUL.md` pour une personnalité alternative).
 
 Si vous souhaitez rendre l'agent moins générique, commencez par
 le [Guide de personnalité SOUL.md](/fr/concepts/soul).
 
-Pour inspecter la contribution de chaque fichier injecté (brut par rapport à injecté, troncation, plus la surcharge du schéma d'outil), utilisez `/context list` ou `/context detail`. Voir [Contexte](/fr/concepts/context).
+Pour inspecter la contribution de chaque fichier injecté (brut vs injecté, troncation, plus la surcharge du schéma d'outil), utilisez `/context list` ou `/context detail`. Voir [Contexte](/fr/concepts/context).
 
-## Gestion de l'heure
+## Gestion du temps
 
-Le système de prompt comprend une section dédiée **Date et heure actuelles** lorsque le
-fuseau horaire de l'utilisateur est connu. Pour garder le cache du prompt stable, il inclut désormais
-uniquement le **fuseau horaire** (pas d'horloge dynamique ni de format d'heure).
+Le système de prompt inclut une section dédiée **Date et heure actuelles** lorsque le
+fuseau horaire de l'utilisateur est connu. Pour garder le cache du prompt stable, il n'inclut maintenant que
+le **fuseau horaire** (pas d'horloge dynamique ni de format d'heure).
 
 Utilisez `session_status` lorsque l'agent a besoin de l'heure actuelle ; la carte d'état
-comprend une ligne d'horodatage. Le même outil peut éventuellement définir une substitution de model
-par session (`model=default` l'efface).
+inclut une ligne d'horodatage. Le même outil peut optionnellement définir une substitution de modèle par session
+(`model=default` l'efface).
 
 Configurez avec :
 
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-Voir [Date & Heure](/fr/date-time) pour plus de détails sur le comportement.
+Voir [Date & Heure](/fr/date-time) pour les détails complets du comportement.
 
 ## Skills
 
-Lorsque des skills éligibles existent, OpenClaw injecte une **liste des skills disponibles** compacte
-(`formatSkillsForPrompt`) qui inclut le **chemin de fichier** pour chaque skill. Le
-prompt instruit le model d'utiliser `read` pour charger le SKILL.md à l'emplacement
-indiqué (espace de travail, géré ou groupé). Si aucune skill n'est éligible, la
+Lorsque des compétences éligibles existent, OpenClaw injecte une **liste de compétences disponibles** compacte
+(`formatSkillsForPrompt`) qui inclut le **chemin de fichier** pour chaque compétence. Le
+prompt instruit le modèle d'utiliser `read` pour charger le SKILL.md à l'emplacement
+listé (espace de travail, géré ou groupé). Si aucune compétence n'est éligible, la
 section Skills est omise.
 
-L'éligibilité comprend les portes de métadonnées de skill, les vérifications de configuration/environnement d'exécution,
-et la liste d'autorisation effective des skills de l'agent lorsque `agents.defaults.skills` ou
+L'éligibilité comprend les portes de métadonnées de compétences, les vérifications d'environnement/de configuration d'exécution,
+et la liste blanche effective des compétences de l'agent lorsque `agents.defaults.skills` ou
 `agents.list[].skills` est configuré.
 
-Les skills groupées par plugin ne sont éligibles que lorsque leur plugin propriétaire est activé.
-Cela permet aux plugins d'outil d'exposer des guides d'utilisation approfondis sans intégrer toutes
+Les compétences groupées par plugin ne sont éligibles que lorsque leur plugin propriétaire est activé.
+Cela permet aux plugins d'outils d'exposer des guides opérationnels plus approfondis sans intégrer toutes
 ces directives directement dans chaque description d'outil.
 
 ```
@@ -251,9 +253,9 @@ ces directives directement dans chaque description d'outil.
 </available_skills>
 ```
 
-Cela permet de garder le prompt de base petit tout en permettant une utilisation ciblée des skills.
+Cela permet de garder le prompt de base petit tout en permettant une utilisation ciblée des compétences.
 
-Le budget de la liste des skills est détenu par le sous-système des skills :
+Le budget de la liste des compétences est détenu par le sous-système des compétences :
 
 - Par défaut global : `skills.limits.maxSkillsPromptChars`
 - Substitution par agent : `agents.list[].skillsLimits.maxSkillsPromptChars`
@@ -263,17 +265,17 @@ Les extraits d'exécution bornés génériques utilisent une surface différente
 - `agents.defaults.contextLimits.*`
 - `agents.list[].contextLimits.*`
 
-Cette séparation maintient le dimensionnement des skills distinct du dimensionnement de la lecture/injection d'exécution tel
-que `memory_get`, les résultats d'outil en direct et les actualisations AGENTS.md post-compaction.
+Cette séparation permet de distinguer le dimensionnement des compétences de celui de la lecture/injection d'exécution telles
+que `memory_get`, les résultats directs des outils, et les rafraîchissements AGENTS.md post-compaction.
 
 ## Documentation
 
-Le système de prompt comprend une section **Documentation**. Lorsque la documentation locale est disponible, il
+Le prompt système inclut une section **Documentation**. Lorsque la documentation locale est disponible, il
 pointe vers le répertoire de documentation local OpenClaw (`docs/` dans un extrait Git ou le package npm
-groupé). Si la documentation locale n'est pas disponible, il revient à
+documentaire groupé). Si la documentation locale n'est pas disponible, il revient à
 [https://docs.openclaw.ai](https://docs.openclaw.ai).
 
-La même section inclut également l'emplacement de la source OpenClaw. Les extraits Git exposent la racine source locale afin que l'agent puisse inspecter le code directement. Les installations de paquets incluent l'URL source GitHub et indiquent à l'agent d'examiner la source à cet endroit chaque fois que la documentation est incomplète ou obsolète. Le prompt mentionne également le miroir de la documentation publique, le Discord communautaire et ClawHub ([https://clawhub.ai](https://clawhub.ai)) pour la découverte de compétences. Il indique au modèle de consulter d'abord la documentation pour le comportement, les commandes, la configuration ou l'architecture OpenClaw, et d'exécuter `openclaw status` lui-même lorsque cela est possible (en demandant à l'utilisateur uniquement lorsqu'il n'a pas accès). Pour la configuration spécifiquement, il dirige les agents vers l'action d'outil `gateway` `config.schema.lookup` pour une documentation exacte au niveau du champ et des contraintes, puis vers `docs/gateway/configuration.md` et `docs/gateway/configuration-reference.md` pour des conseils plus généraux.
+La même section inclut également l'emplacement de la source OpenClaw. Les extraits Git exposent la racine source locale afin que l'agent puisse inspecter le code directement. Les installations de packages incluent l'URL source GitHub et indiquent à l'agent de consulter la source à cet endroit chaque fois que la documentation est incomplète ou obsolète. Le prompt mentionne également le miroir de la documentation publique, le Discord communautaire et ClawHub ([https://clawhub.ai](https://clawhub.ai)) pour la découverte de compétences. Il indique au modèle de consulter d'abord la documentation pour le comportement, les commandes, la configuration ou l'architecture de OpenClaw, et d'exécuter `openclaw status` lui-même lorsque cela est possible (en demandant à l'utilisateur uniquement lorsqu'il n'y a pas d'accès). Pour la configuration spécifiquement, il oriente les agents vers l'action d'outil `gateway` `config.schema.lookup` pour une documentation et des contraintes exactes au niveau des champs, puis vers `docs/gateway/configuration.md` et `docs/gateway/configuration-reference.md` pour des conseils plus généraux.
 
 ## Connexes
 

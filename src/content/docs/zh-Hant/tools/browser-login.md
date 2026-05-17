@@ -12,7 +12,7 @@ title: "Browser login"
 
 請**勿**將您的憑證提供給模型。自動登入經常會觸發反機器人防禦，並可能導致帳戶被鎖定。
 
-回到主要瀏覽器文件：[瀏覽器](/zh-Hant/tools/browser)。
+返回主要瀏覽器文件：[瀏覽器](/zh-Hant/tools/browser)。
 
 ## 使用哪個 Chrome 設定檔？
 
@@ -62,13 +62,13 @@ openclaw browser open https://x.com
 }
 ```
 
-然後指定主機瀏覽器：
+然後自己開啟主機瀏覽器（CLI 呼叫一律對主機瀏覽器執行）：
 
 ```bash
-openclaw browser open https://x.com --browser-profile openclaw --target host
+openclaw browser open https://x.com --browser-profile openclaw
 ```
 
-或為發布更新的代理程式停用沙盒。
+代理程式的 `browser` 工具呼叫在設定 `sandbox.browser.allowHostControl: true` 後，便可將目標設為主機。或者，為發佈更新的代理程式停用沙箱。
 
 ## 相關
 

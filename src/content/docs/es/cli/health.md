@@ -9,12 +9,14 @@ title: "Salud"
 
 Obtener el estado de la puerta de enlace en ejecución.
 
-Opciones:
+## Opciones
 
-- `--json`: salida legible por máquina
-- `--timeout <ms>`: tiempo de espera de conexión en milisegundos (predeterminado `10000`)
-- `--verbose`: registro detallado
-- `--debug`: alias para `--verbose`
+| Opción           | Predeterminado | Descripción                                                                  |
+| ---------------- | -------------- | ---------------------------------------------------------------------------- |
+| `--json`         | `false`        | Imprime JSON legible por máquina en lugar de texto.                          |
+| `--timeout <ms>` | `10000`        | Tiempo de espera de conexión en milisegundos.                                |
+| `--verbose`      | `false`        | Registro detallado. Fuerza un sondeo en vivo y expande la salida por agente. |
+| `--debug`        | `false`        | Alias para `--verbose`.                                                      |
 
 Ejemplos:
 
@@ -28,14 +30,14 @@ openclaw health --debug
 
 Notas:
 
-- El `openclaw health` predeterminado le pide a la puerta de enlace en ejecución su instantánea de salud. Cuando la
+- El `openclaw health` predeterminado solicita a la puerta de enlace en ejecución su instantánea de salud. Cuando la
   puerta de enlace ya tiene una instantánea en caché fresca, puede devolver esa carga útil en caché y
   actualizarla en segundo plano.
-- `--verbose` fuerza una sondel en vivo, imprime los detalles de conexión de la puerta de enlace y expande la
+- `--verbose` fuerza un sondeo en vivo, imprime los detalles de conexión de la puerta de enlace y expande la
   salida legible por humanos en todas las cuentas y agentes configurados.
 - La salida incluye almacenes de sesión por agente cuando se configuran múltiples agentes.
 
 ## Relacionado
 
 - [Referencia de la CLI](/es/cli)
-- [Estado de la puerta de enlace](/es/gateway/health)
+- [Salud de la puerta de enlace](/es/gateway/health)

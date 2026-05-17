@@ -114,7 +114,7 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
 ## 工具參數
 
 <ParamField path="prompt" type="string" required>
-  音樂生成提示詞。`action: "generate"` 的必要參數。
+  音樂生成提示詞。`action: "generate"` 的必填項。
 </ParamField>
 <ParamField path="action" type='"generate" | "status" | "list"' default="generate">
   `"status"` 返回目前的工作階段任務；`"list"` 檢視提供者。
@@ -123,10 +123,10 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
   提供者/模型覆寫（例如 `google/lyria-3-pro-preview`、 `comfy/workflow`）。
 </ParamField>
 <ParamField path="lyrics" type="string">
-  當提供者支援明確的歌詞輸入時，可選用的歌詞。
+  當提供者支援明確歌詞輸入時的可選歌詞。
 </ParamField>
 <ParamField path="instrumental" type="boolean">
-  當提供者支援時，請求僅輸出器樂。
+  當提供者支援時請求僅樂器輸出。
 </ParamField>
 <ParamField path="image" type="string">
   單一參考圖片路徑或 URL。
@@ -135,38 +135,33 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
   多個參考圖片（支援的提供者最多 10 張）。
 </ParamField>
 <ParamField path="durationSeconds" type="number">
-  當提供者支援持續時間提示時，以秒為單位的目標持續時間。
+  當提供者支援時長提示時的目標時長（秒）。
 </ParamField>
 <ParamField path="format" type='"mp3" | "wav"'>
   當提供者支援時的輸出格式提示。
 </ParamField>
 <ParamField path="filename" type="string">
-  輸出檔案名稱提示。
+  輸出檔名提示。
 </ParamField>
 <ParamField path="timeoutMs" type="number">
-  選用的提供者請求逾時時間（毫秒）。低於 10000ms 的數值會被提高至 10000ms，並在工具結果中回報。
+  以毫秒為單位的可選提供者請求逾時。若省略，OpenClaw 會在設定時使用 `agents.defaults.musicGenerationModel.timeoutMs`。低於 10000ms 的數值會提升至 10000ms，並在工具結果中回報。
 </ParamField>
 
-<Note>並非所有提供者都支援所有參數。在提交之前，OpenClaw 仍會驗證輸入計數等硬性限制。當提供者支援持續時間但使用的最大值小於請求值時，OpenClaw 會將其限制為最接近的支援持續時間。當選定的提供者或模型無法遵守真正不支援的選用提示時，這些提示將被忽略並發出警告。工具結果會回報套用的設定；`details.normalization` 會擷取任何請求到套用的對應關係。</Note>
+<Note>並非所有供應商都支援所有參數。OpenClaw 仍會在提交前驗證嚴格限制（例如輸入計數）。當供應商支援持續時間但使用的最大值短於請求值時，OpenClaw 會將其調整為最接近的支援持續時間。當所選供應商或模型無法滿足真正不支援的可選提示時，這些提示將被忽略並發出警告。工具結果會回報套用的設定；`details.normalization` 會捕捉任何從請求到套用的對應。</Note>
 
 ## 非同步行為
 
 基於會話的音樂生成作為背景任務執行：
 
-- **背景任務：** `music_generate` 建立一個背景任務，立即
-  回傳已開始/任務的回應，並在後續的代理訊息中
-  發布完成的音軌。
-- **重複防護：** 當任務為 `queued` 或 `running` 時，
-  同一會話中後續的 `music_generate` 呼叫將回傳任務狀態而非
-  開始另一個生成作業。請使用 `action: "status"` 進行明確檢查。
+- **背景任務：** `music_generate` 會建立背景任務，立即傳回已啟動/任務回應，並在後續的代理訊息中發布完成的音軌。
+- **重複防護：** 當任務為 `queued` 或 `running` 時，同一工作階段中後續的
+  `music_generate` 呼叫會傳回任務狀態，而非啟動另一個生成作業。請使用 `action: "status"` 進行明確檢查。
 - **狀態查詢：** `openclaw tasks list` 或 `openclaw tasks show <taskId>`
-  會檢查佇列中、執行中及終結狀態。
+  會檢查佇列中、執行中及終止狀態。
 - **完成喚醒：** OpenClaw 將內部的完成事件注入回
   同一會話，以便模型能自行撰寫給使用者看的
   後續回應。
-- **提示提示：** 當音樂任務正在進行時，同一會話中後續的使用者/手動
-  輪次會收到一個小型執行時提示，讓模型不會
-  盲目地再次呼叫 `music_generate`。
+- **提示提示：** 當音樂任務已在進行中時，同一工作階段中後續的使用者/手動輪次會收到一個小型的執行階段提示，以免模型再次盲目呼叫 `music_generate`。
 - **無會話備援：** 沒有真實代理會話的直接/本機上下文會
   同步執行，並在同一輪中回傳最終的音訊結果。
 
@@ -208,9 +203,9 @@ openclaw tasks cancel <taskId>
 
 OpenClaw 依以下順序嘗試供應商：
 
-1. 工具呼叫中的 `model` 參數（如果代理指定了一個）。
-2. 設定中的 `musicGenerationModel.primary`。
-3. 依序 `musicGenerationModel.fallbacks`。
+1. 來自工具呼叫的 `model` 參數（如果代理指定了該參數）。
+2. 來自設定的 `musicGenerationModel.primary`。
+3. 依序使用 `musicGenerationModel.fallbacks`。
 4. 僅使用支援驗證的供應商預設值進行自動偵測：
    - 目前的預設供應商優先；
    - 其餘已註冊的音樂生成供應商依供應商 ID 順序。
@@ -224,9 +219,9 @@ OpenClaw 依以下順序嘗試供應商：
 ## 供應商注意事項
 
 <AccordionGroup>
-  <Accordion title="ComfyUI">由工作流程驅動，並且依賴於針對提示/輸出欄位設定的圖譜和節點對應。 隨附的 `comfy` 插件透過音樂生成供應商註冊表 插入共享的 `music_generate` 工具中。</Accordion>
+  <Accordion title="ComfyUI">由工作流程驅動，並取決於針對提示/輸出欄位所設定的圖形和節點對應。 內建的 `comfy` 外掛程式透過音樂生成供應商註冊表 插入共用的 `music_generate` 工具。</Accordion>
   <Accordion title="Google (Lyria 3)">使用 Lyria 3 批次生成。目前的隨附流程支援 提示、選用歌詞文字和選用參考圖片。</Accordion>
-  <Accordion title="MiniMax">使用批次 `music_generation` 端點。支援提示、選用 歌詞、純音樂模式、持續時間引導以及透過 `minimax` API 金鑰驗證或 `minimax-portal` OAuth 進行的 MP3 輸出。</Accordion>
+  <Accordion title="MiniMax">使用批量 `music_generation` 端點。支援提示、選用 歌詞、純音樂模式、持續時間控制以及透過 `minimax` API 金鑰驗證或 `minimax-portal` OAuth 輸出的 mp3 格式。</Accordion>
 </AccordionGroup>
 
 ## 選擇正確的路徑
@@ -236,8 +231,8 @@ OpenClaw 依以下順序嘗試供應商：
 - **插件路徑 (ComfyUI)** 當您需要自訂工作流程圖譜或
   不屬於共享隨附音樂功能的供應商時。
 
-如果您正在除錯 ComfyUI 特定行為，請參閱
-[ComfyUI](/zh-Hant/providers/comfy)。如果您正在除錯共享供應商
+如果您正在除錯 ComfyUI 特定的行為，請參閱
+[ComfyUI](/zh-Hant/providers/comfy)。如果您正在除錯共享的供應商
 行為，請從 [Google (Gemini)](/zh-Hant/providers/google) 或
 [MiniMax](/zh-Hant/providers/minimax) 開始。
 
@@ -245,8 +240,8 @@ OpenClaw 依以下順序嘗試供應商：
 
 共享音樂生成合約支援明確的模式宣告：
 
-- `generate` 用於僅提示生成。
-- `edit` 當請求包含一或多個參考圖片時。
+- `generate` 用於僅提示詞的生成。
+- 當請求包含一或多張參考圖片時使用 `edit`。
 
 新的供應商實作應優先使用明確的模式區塊：
 
@@ -266,10 +261,10 @@ capabilities: {
 }
 ```
 
-舊版扁平欄位（如 `maxInputImages`、`supportsLyrics` 和
-`supportsFormat`）**不**足以宣佈支援編輯。供應商應明確宣告
-`generate` 和 `edit`，以便即時測試、合約測試
-及共享的 `music_generate` 工具能確定性驗證模式支援。
+傳統的扁平欄位，例如 `maxInputImages`、`supportsLyrics` 和
+`supportsFormat`，**不**足以宣告編輯支援。供應商
+應明確宣告 `generate` 和 `edit`，以便即時測試、合約
+測試和共享的 `music_generate` 工具能決定性地驗證模式支援。
 
 ## 即時測試
 
@@ -285,14 +280,13 @@ Repo 包裝器：
 pnpm test:live:media music
 ```
 
-此即時檔案會從 `~/.profile` 載入缺失的供應商環境變數，預設優先使用
-live/env API 金鑰而非儲存的驗證設定檔，並在供應商啟用編輯
-模式時執行 `generate` 和已宣告的 `edit` 覆蓋範圍。
-目前的覆蓋範圍：
+此即時檔案會從 `~/.profile` 載入缺失的供應商環境變數，預設
+優先使用即時/env API 金鑰而非已儲存的驗證設定檔，並在供應商啟用編輯
+模式時執行 `generate` 和已宣告的 `edit` 覆蓋率。目前的覆蓋率：
 
 - `google`：`generate` 加上 `edit`
 - `minimax`：僅 `generate`
-- `comfy`：個別的 Comfy 即時覆蓋範圍，非共享供應商掃描
+- `comfy`：獨立的 Comfy 即時覆蓋率，非共享供應商掃描
 
 選用打包 ComfyUI 音樂路徑的即時覆蓋範圍：
 
@@ -304,10 +298,10 @@ OPENCLAW_LIVE_TEST=1 COMFY_LIVE_TEST=1 pnpm test:live -- extensions/comfy/comfy.
 
 ## 相關
 
-- [背景任務](/zh-Hant/automation/tasks) — 針對分離式 `music_generate` 執行的任務追蹤
+- [背景工作](/zh-Hant/automation/tasks) — 用於分離式 `music_generate` 執行的工作追蹤
 - [ComfyUI](/zh-Hant/providers/comfy)
 - [組態參考](/zh-Hant/gateway/config-agents#agent-defaults) — `musicGenerationModel` 組態
 - [Google (Gemini)](/zh-Hant/providers/google)
 - [MiniMax](/zh-Hant/providers/minimax)
 - [模型](/zh-Hant/concepts/models) — 模型組態與故障轉移
-- [工具概覽](/zh-Hant/tools)
+- [工具總覽](/zh-Hant/tools)

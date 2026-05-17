@@ -230,24 +230,24 @@ title: "常見問題"
 
   </Accordion>
 
-  <Accordion title="Cron 或提醒未觸發。我應該檢查什麼？">
-    Cron 在 Gateway 進程內運行。如果 Gateway 未持續運行，
-    定時任務將不會運行。
+  <Accordion title="Cron 或提醒沒有觸發。我應該檢查什麼？">
+    Cron 在 Gateway 程序內部運行。如果 Gateway 沒有持續運行，
+    排程的工作將不會運行。
 
     檢查清單：
 
-    - 確認 cron 已啟用（`cron.enabled`）並且未設置 `OPENCLAW_SKIP_CRON`。
-    - 檢查 Gateway 是否 24/7 運行（無睡眠/重啟）。
-    - 驗證任務的時區設置（`--tz` 與主機時區）。
+    - 確認 cron 已啟用 (`cron.enabled`) 並且未設定 `OPENCLAW_SKIP_CRON`。
+    - 檢查 Gateway 是否 24/7 運行（無休眠/重啟）。
+    - 驗證工作的時區設定 (`--tz` 與主機時區的對比)。
 
-    調試：
+    除錯：
 
     ```bash
     openclaw cron run <jobId>
     openclaw cron runs --id <jobId> --limit 50
     ```
 
-    文檔：[Cron 任務](/zh-Hant/automation/cron-jobs)、[自動化與任務](/zh-Hant/automation)。
+    文件：[Cron jobs](/zh-Hant/automation/cron-jobs)、[Automation](/zh-Hant/automation)。
 
   </Accordion>
 
@@ -321,14 +321,14 @@ title: "常見問題"
 
   </Accordion>
 
-  <Accordion title="OpenClaw 可以排程執行任務或在背景持續執行嗎？">
-    是的。使用 Gateway 排程器：
+  <Accordion title="OpenClaw 可以按排程或在背景持續執行任務嗎？">
+    可以。使用 Gateway 排程器：
 
-    - **Cron jobs** 用於排程或週期性任務（重啟後仍持續）。
-    - **Heartbeat** 用於「主工作階段」的定期檢查。
-    - **Isolated jobs** 用於發布摘要或傳送訊息至聊天室的自主代理程式。
+    - **Cron jobs** 用於排程或週期性任務（重啟後仍會保留）。
+    - **Heartbeat** 用於「主會話」的定期檢查。
+    - **Isolated jobs** 用於發布摘要或傳送到聊天的自主代理程式。
 
-    文件：[Cron jobs](/zh-Hant/automation/cron-jobs)、[Automation & Tasks](/zh-Hant/automation)、
+    文件：[Cron jobs](/zh-Hant/automation/cron-jobs)、[Automation](/zh-Hant/automation)、
     [Heartbeat](/zh-Hant/gateway/heartbeat)。
 
   </Accordion>

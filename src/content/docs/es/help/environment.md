@@ -90,7 +90,7 @@ Puede referenciar variables de entorno directamente en los valores de cadena de 
 }
 ```
 
-Consulte [Configuración: Sustitución de variables de entorno](/es/gateway/configuration-reference#env-var-substitution) para obtener detalles completos.
+Consulte [Configuration: Env var substitution](/es/gateway/configuration-reference#env-var-substitution) para obtener detalles completos.
 
 ## Referencias secretas frente a cadenas `${ENV}`
 
@@ -99,7 +99,7 @@ OpenClaw admite dos patrones basados en entorno:
 - Sustitución de cadenas `${VAR}` en valores de configuración.
 - Objetos SecretRef (`{ source: "env", provider: "default", id: "VAR" }`) para campos que admiten referencias a secretos.
 
-Ambos se resuelven desde el entorno del proceso en el momento de la activación. Los detalles de SecretRef están documentados en [Gestión de secretos](/es/gateway/secrets).
+Ambos se resuelven desde el entorno del proceso en el momento de la activación. Los detalles de SecretRef están documentados en [Secrets Management](/es/gateway/secrets).
 
 ## Variables de entorno relacionadas con la ruta
 
@@ -112,13 +112,17 @@ Ambos se resuelven desde el entorno del proceso en el momento de la activación.
 
 ## Registro
 
-| Variable             | Propósito                                                                                                                                                                                                                                   |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_LOG_LEVEL` | Anula el nivel de registro tanto para archivo como para consola (por ejemplo, `debug`, `trace`). Tiene prioridad sobre `logging.level` y `logging.consoleLevel` en la configuración. Se ignoran los valores no válidos con una advertencia. |
+| Variable                         | Propósito                                                                                                                                                                                                                                   |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_LOG_LEVEL`             | Anula el nivel de registro tanto para archivo como para consola (por ejemplo, `debug`, `trace`). Tiene prioridad sobre `logging.level` y `logging.consoleLevel` en la configuración. Se ignoran los valores no válidos con una advertencia. |
+| `OPENCLAW_DEBUG_MODEL_TRANSPORT` | Emitir diagnósticos de tiempo de solicitud/respuesta del modelo dirigidos en el nivel `info` sin habilitar los registros de depuración globales.                                                                                            |
+| `OPENCLAW_DEBUG_MODEL_PAYLOAD`   | Diagnósticos de carga útil del modelo: `summary`, `tools`, o `full-redacted`. `full-redacted` está limitado y redactado, pero puede incluir texto de prompt/mensaje.                                                                        |
+| `OPENCLAW_DEBUG_SSE`             | Diagnósticos de transmisión: `events` para el tiempo de inicio/fin, `peek` para incluir los primeros cinco eventos de SSE redactados.                                                                                                       |
+| `OPENCLAW_DEBUG_CODE_MODE`       | Diagnósticos de superficie del modelo en modo de código, incluyendo la ocultación de herramientas del proveedor y la aplicación exclusiva de ejecución/espera.                                                                              |
 
 ### `OPENCLAW_HOME`
 
-Cuando se establece, `OPENCLAW_HOME` reemplaza el directorio de inicio del sistema (`$HOME` / `os.homedir()`) para toda la resolución interna de rutas. Esto habilita el aislamiento completo del sistema de archivos para cuentas de servicio sin cabeza.
+Cuando se establece, `OPENCLAW_HOME` reemplaza al directorio de inicio del sistema (`$HOME` / `os.homedir()`) para toda la resolución de rutas internas. Esto habilita el aislamiento completo del sistema de archivos para cuentas de servicio sin interfaz gráfica.
 
 **Precedencia:** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
 
@@ -132,20 +136,20 @@ Cuando se establece, `OPENCLAW_HOME` reemplaza el directorio de inicio del siste
 </dict>
 ```
 
-`OPENCLAW_HOME` también se puede establecer en una ruta de tilde (por ejemplo, `~/svc`), la cual se expande usando `$HOME` antes de su uso.
+`OPENCLAW_HOME` también se puede establecer en una ruta con tilde (p. ej. `~/svc`), que se expande usando `$HOME` antes de su uso.
 
-## usuarios de nvm: fallos de TLS en web_fetch
+## usuarios de nvm: fallos TLS de web_fetch
 
-Si Node.js se instaló mediante **nvm** (no el gestor de paquetes del sistema), el `fetch()` integrado utiliza
-el almacén de CA incluido en nvm, el cual puede carecer de certificados raíz modernos (ISRG Root X1/X2 para Let's Encrypt,
+Si Node.js se instaló mediante **nvm** (no el administrador de paquetes del sistema), el `fetch()` integrado usa
+el almacén de CA incluido en nvm, que puede carecer de CA raíz modernas (ISRG Root X1/X2 para Let's Encrypt,
 DigiCert Global Root G2, etc.). Esto hace que `web_fetch` falle con `"fetch failed"` en la mayoría de los sitios HTTPS.
 
-En Linux, OpenClaw detecta automáticamente nvm y aplica la solución en el entorno de inicio real:
+En Linux, OpenClaw detecta automáticamente nvm y aplica la corrección en el entorno de inicio real:
 
 - `openclaw gateway install` escribe `NODE_EXTRA_CA_CERTS` en el entorno del servicio systemd
-- el punto de entrada de la CLI `openclaw` se vuelve a ejecutar con `NODE_EXTRA_CA_CERTS` establecido antes del inicio de Node
+- el punto de entrada de la CLI de `openclaw` se vuelve a ejecutar a sí mismo con `NODE_EXTRA_CA_CERTS` establecido antes del inicio de Node
 
-**Corrección manual (para versiones anteriores o lanzamientos directos de `node ...`):**
+**Solución manual (para versiones anteriores o lanzamientos directos de `node ...`):**
 
 Exporte la variable antes de iniciar OpenClaw:
 
@@ -154,19 +158,19 @@ export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
 openclaw gateway run
 ```
 
-No confíe en escribir solo en `~/.openclaw/.env` para esta variable; Node lee
-`NODE_EXTRA_CA_CERTS` al iniciar el proceso.
+No confíe solo en escribir en `~/.openclaw/.env` para esta variable; Node lee
+`NODE_EXTRA_CA_CERTS` al inicio del proceso.
 
 ## Variables de entorno heredadas
 
-OpenClaw solo lee variables de entorno `OPENCLAW_*`. Los prefijos
-heredados `CLAWDBOT_*` y `MOLTBOT_*` de versiones anteriores se ignoran
+OpenClaw solo lee variables de entorno `OPENCLAW_*`. Los prefijos heredados
+`CLAWDBOT_*` y `MOLTBOT_*` de versiones anteriores se ignoran
 silenciosamente.
 
-Si alguno todavía está establecido en el proceso de Gateway al iniciar, OpenClaw emite una
-sola advertencia de obsolescencia de Node (`OPENCLAW_LEGACY_ENV_VARS`) que enumera los
+Si alguno todavía está establecido en el proceso de Gateway al inicio, OpenClaw emite una
+sola advertencia de obsolescencia de Node (`OPENCLAW_LEGACY_ENV_VARS`) listando los
 prefijos detectados y el conteo total. Cambie el nombre de cada valor reemplazando el
-prefijo heredado con `OPENCLAW_` (por ejemplo, `CLAWDBOT_GATEWAY_TOKEN` →
+prefijo heredado con `OPENCLAW_` (por ejemplo `CLAWDBOT_GATEWAY_TOKEN` →
 `OPENCLAW_GATEWAY_TOKEN`); los nombres antiguos no tienen ningún efecto.
 
 ## Relacionado

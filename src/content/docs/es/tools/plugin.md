@@ -8,18 +8,18 @@ title: "Complementos"
 sidebarTitle: "Instalación y configuración"
 ---
 
-Los complementos amplían OpenClaw con nuevas capacidades: canales, proveedores de modelos,
+Los complementos extienden OpenClaw con nuevas capacidades: canales, proveedores de modelos,
 arneses de agentes, herramientas, habilidades, voz, transcripción en tiempo real,
-voz en tiempo real, comprensión de medios, generación de imágenes, generación de video,
-recuperación web, búsqueda web y más. Algunos complementos son **centrales** (incluidos con OpenClaw), otros
-son **externos**. La mayoría de los complementos externos se publican y descubren a través de
+voz en tiempo real, comprensión de medios, generación de imágenes, generación de videos,
+recuperación web, búsqueda web y más. Algunos complementos son **core** (incluidos con OpenClaw),
+otros son **externos**. La mayoría de los complementos externos se publican y descubren a través de
 [ClawHub](/es/clawhub). Npm sigue siendo compatible para instalaciones directas y para un
 conjunto temporal de paquetes de complementos propiedad de OpenClaw mientras finaliza esa migración.
 
 ## Inicio rápido
 
-Para ver ejemplos de instalación, lista, desinstalación, actualización y publicación para copiar y pegar, consulte
-[Gestionar complementos](/es/plugins/manage-plugins).
+Para ejemplos de instalación, listado, desinstalación, actualización y publicación de copiar y pegar,
+consulte [Administrar complementos](/es/plugins/manage-plugins).
 
 <Steps>
   <Step title="Ver lo que está cargado">
@@ -115,9 +115,16 @@ el inicio de la Gateway omite el trabajo de descubrimiento/carga del plugin y `o
 la configuración del plugin deshabilitado en lugar de eliminarla automáticamente. Reactive los plugins antes de
 ejecutar la limpieza del médico si desea que se eliminen los identificadores de plugins obsoletos.
 
-La instalación de dependencias de complementos ocurre solo durante flujos explícitos de instalación/actualización o reparación del doctor. El inicio de la puerta de enlace, la recarga de la configuración y la inspección en tiempo de ejecución no ejecutan administradores de paquetes ni reparan árboles de dependencias. Los complementos locales ya deben tener sus dependencias instaladas, mientras que los complementos de npm, git y ClawHub se instalan en las raíces de complementos administradas por OpenClaw. Las dependencias de npm pueden ser elevadas dentro de la raíz de npm administrada por OpenClaw; la instalación/actualización escanea esa raíz administrada antes de que la confianza y la desinstalación eliminen los paquetes administrados por npm a través de npm. Los complementos externos y las rutas de carga personalizadas aún deben instalarse a través de `openclaw plugins install`.
+La instalación de dependencias de complementos ocurre solo durante flujos explícitos de instalación/actualización o
+reparación del doctor. El inicio de Gateway, la recarga de configuración y la inspección en tiempo de ejecución no
+ejecutan administradores de paquetes ni reparan árboles de dependencias. Los complementos locales ya deben
+tener sus dependencias instaladas, mientras que los complementos npm, git y ClawHub se
+instalan bajo las raíces administradas de complementos de OpenClaw. Las dependencias de npm pueden ser elevadas
+dentro de la raíz administrada de npm de OpenClaw; la instalación/actualización escanea esa raíz administrada antes de
+confianza y desinstala los paquetes administrados por npm a través de npm. Los complementos externos
+y las rutas de carga personalizadas aún deben instalarse a través de `openclaw plugins install`.
 Use `openclaw plugins list --json` para ver el `dependencyStatus` estático para cada
-complemento visible sin importar código en tiempo de ejecución ni reparar dependencias.
+complemento visible sin importar código de tiempo de ejecución ni reparar dependencias.
 Consulte [Resolución de dependencias de complementos](/es/plugins/dependency-resolution) para el
 ciclo de vida de tiempo de instalación.
 
@@ -162,10 +169,10 @@ OpenClaw reconoce dos formatos de complemento:
 | **Nativo**           | `openclaw.plugin.json` + módulo de tiempo de ejecución; se ejecuta en proceso   | Complementos oficiales, paquetes de npm de la comunidad |
 | **Paquete (Bundle)** | Diseño compatible con Codex/Claude/Cursor; asignado a las funciones de OpenClaw | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/`  |
 
-Ambos aparecen bajo `openclaw plugins list`. Consulte [Plugin Bundles](/es/plugins/bundles) para obtener detalles sobre los paquetes.
+Ambos aparecen en `openclaw plugins list`. Consulte [Paquetes de complementos](/es/plugins/bundles) para obtener detalles del paquete.
 
-Si está escribiendo un complemento nativo, comience con [Building Plugins](/es/plugins/building-plugins)
-y la [Plugin SDK Overview](/es/plugins/sdk-overview).
+Si está escribiendo un complemento nativo, comience con [Construcción de complementos](/es/plugins/building-plugins)
+y la [Descripción general del SDK de complementos](/es/plugins/sdk-overview).
 
 ## Puntos de entrada del paquete
 
@@ -177,19 +184,25 @@ Las instalaciones empaquetadas deben incluir esa salida de tiempo de ejecución 
 La alternativa de fuente de TypeScript es para checkouts de código y rutas de desarrollo local,
 no para paquetes npm instalados en la raíz de complementos administrada de OpenClaw.
 
-Si una advertencia de paquete administrado indica que `requires compiled runtime output for
-TypeScript entry ...`, el paquete se publicó sin los archivos JavaScript
-que OpenClaw necesita en tiempo de ejecución. Ese es un problema de empaquetado del complemento,
-no un problema de configuración local. Actualice o reinstale el complemento después de que el editor
-rep publique JavaScript compilado, o deshabilite/desinstale ese complemento hasta que
-esté disponible un paquete corregido.
+Los directorios no rastreados colocados en la raíz de extensiones global se tratan como
+checkouts de código fuente local y pueden cargar entradas de TypeScript directamente. Los directorios
+que aún conservan el nombre de un registro de instalación, incluyendo `installPath` o `sourcePath`, se mantienen
+gestionados y conservan el requisito de salida compilada incluso cuando el escaneo global los
+detecta. Si convierte intencionalmente una instalación gestionada en un checkout local
+no rastreado, elimine primero el registro de instalación obsoleto con uninstall o doctor cleanup.
 
-Use `openclaw.runtimeExtensions` cuando los archivos de tiempo de ejecución publicados no residen en las
-mismas rutas que las entradas de fuente. Cuando está presente, `runtimeExtensions` debe contener
-exactamente una entrada por cada entrada `extensions`. Las listas desiguales fallan la instalación y
-el descubrimiento de complementos en lugar de volver silenciosamente a las rutas de fuente. Si también
+Si una advertencia de paquete gestionado indica que `requires compiled runtime output for
+TypeScript entry ...`, el paquete se publicó sin los archivos JavaScript
+que OpenClaw necesita en tiempo de ejecución. Ese es un problema de empaquetado del complemento, no un problema de configuración
+local. Actualice o reinstale el complemento después de que el editor rep publique los archivos
+JavaScript compilados, o deshabilite/desinstale ese complemento hasta que esté disponible un paquete corregido.
+
+Use `openclaw.runtimeExtensions` cuando los archivos de tiempo de ejecución publicados no se encuentren en las
+mismas rutas que las entradas de origen. Cuando está presente, `runtimeExtensions` debe contener
+exactamente una entrada para cada entrada `extensions`. Las listas desajustadas hacen que la instalación y
+el descubrimiento de complementos fallen en lugar de volver silenciosamente a las rutas de origen. Si también
 publica `openclaw.setupEntry`, use `openclaw.runtimeSetupEntry` para su par
-JavaScript compilado; ese archivo es obligatorio cuando se declara.
+JavaScript construido; ese archivo es obligatorio cuando se declara.
 
 ```json
 {
@@ -205,17 +218,17 @@ JavaScript compilado; ese archivo es obligatorio cuando se declara.
 
 ### Paquetes npm propiedad de OpenClaw durante la migración
 
-ClawHub es la ruta de distribución principal para la mayoría de complementos. Las versiones
-empaquetadas actuales de OpenClaw ya incluyen muchos complementos oficiales, por lo que esos no necesitan
-instalaciones npm separadas en configuraciones normales. Hasta que cada complemento propiedad de OpenClaw haya
+ClawHub es la ruta de distribución principal para la mayoría de los complementos. Las versiones empaquetadas
+de OpenClaw actuales ya incluyen muchos complementos oficiales, por lo que esos no necesitan
+instalaciones de npm separadas en configuraciones normales. Hasta que cada complemento propiedad de OpenClaw haya
 migrado a ClawHub, OpenClaw aún envía algunos paquetes de complementos `@openclaw/*` en
 npm para instalaciones antiguas/personalizadas y flujos de trabajo directos de npm.
 
-Si npm informa un paquete de complemento `@openclaw/*` como obsoleto, esa versión del paquete
-proviene de un tren de paquetes externo anterior. Use el complemento incluido en
+Si npm informa un paquete de complemento `@openclaw/*` como obsoleto, esa versión
+del paquete proviene de un tren de paquetes externo anterior. Use el complemento incluido en
 OpenClaw actual o un checkout local hasta que se publique un paquete npm más reciente.
 
-| Complemento     | Paquete                    | Documentos                                    |
+| Complemento     | Paquete                    | Documentación                                 |
 | --------------- | -------------------------- | --------------------------------------------- |
 | Discord         | `@openclaw/discord`        | [Discord](/es/channels/discord)               |
 | Feishu          | `@openclaw/feishu`         | [Feishu](/es/channels/feishu)                 |
@@ -233,7 +246,7 @@ OpenClaw actual o un checkout local hasta que se publique un paquete npm más re
 ### Core (incluido con OpenClaw)
 
 <AccordionGroup>
-  <Accordion title="Proveedores de modelos (habilitados por defecto)">
+  <Accordion title="Proveedores de modelos (habilitados de forma predeterminada)">
     `anthropic`, `byteplus`, `cloudflare-ai-gateway`, `github-copilot`, `google`,
     `huggingface`, `kilocode`, `kimi-coding`, `minimax`, `mistral`, `qwen`,
     `moonshot`, `nvidia`, `openai`, `opencode`, `opencode-go`, `openrouter`,
@@ -245,7 +258,7 @@ OpenClaw actual o un checkout local hasta que se publique un paquete npm más re
     - `memory-core` - búsqueda de memoria incluida (por defecto a través de `plugins.slots.memory`)
     - `memory-lancedb` - memoria a largo plazo respaldada por LanceDB con recuperación/captura automática (establezca `plugins.slots.memory = "memory-lancedb"`)
 
-    Consulte [Memory LanceDB](/es/plugins/memory-lancedb) para la configuración de incrustaciones compatible con OpenAI,
+    Consulte [Memory LanceDB](/es/plugins/memory-lancedb) para obtener configuraciones de incrustación compatibles con OpenAI,
     ejemplos de Ollama, límites de recuperación y solución de problemas.
 
   </Accordion>
@@ -254,7 +267,7 @@ OpenClaw actual o un checkout local hasta que se publique un paquete npm más re
 
   <Accordion title="Otros">
     - `browser` - plugin de navegador incluido para la herramienta de navegador, CLI de `openclaw browser`, método de puerta de enlace `browser.request`, tiempo de ejecución del navegador y servicio de control de navegador predeterminado (habilitado por defecto; desactívelo antes de reemplazarlo)
-    - `copilot-proxy` - puente VS Code Copilot Proxy (desactivado por defecto)
+    - `copilot-proxy` - puente proxy de VS Code Copilot (desactivado por defecto)
 
   </Accordion>
 </AccordionGroup>
@@ -280,44 +293,43 @@ OpenClaw actual o un checkout local hasta que se publique un paquete npm más re
 | Campo              | Descripción                                                           |
 | ------------------ | --------------------------------------------------------------------- |
 | `enabled`          | Interruptor maestro (predeterminado: `true`)                          |
-| `allow`            | Lista blanca de plugins (opcional)                                    |
+| `allow`            | Lista de permitidos de plugins (opcional)                             |
 | `bundledDiscovery` | Modo de descubrimiento de plugins incluidos (`allowlist` por defecto) |
-| `deny`             | Lista negra de plugins (opcional; denegar gana)                       |
+| `deny`             | Lista de bloqueados de plugins (opcional; denegar gana)               |
 | `load.paths`       | Archivos/directorios de plugins adicionales                           |
-| `slots`            | Selectores de ranura exclusivos (ej. `memory`, `contextEngine`)       |
-| `entries.\<id\>`   | Interruptores y configuración por plugin                              |
+| `slots`            | Selectores de ranura exclusiva (ej. `memory`, `contextEngine`)        |
+| `entries.\<id\>`   | Interruptores + configuración por plugin                              |
 
 `plugins.allow` es exclusivo. Cuando no está vacío, solo los complementos listados pueden cargar
 o exponer herramientas, incluso si `tools.allow` contiene `"*"` o un nombre de
-herramienta propiedad de un complemento específico. Si una lista blanca de herramientas hace referencia a herramientas de complementos, agregue los ids de los complementos propietarios
-a `plugins.allow` o elimine `plugins.allow`; `openclaw doctor` advierte sobre este
-formato.
+herramienta propiedad de un complemento específico. Si una lista de permitidos de herramientas referencia herramientas de complemento, añada los ids de los complementos propietarios
+a `plugins.allow` o elimine `plugins.allow`; `openclaw doctor` advierte sobre esta
+configuración.
 
 `plugins.bundledDiscovery` por defecto es `"allowlist"` para nuevas configuraciones, por lo que un
-inventario restrictivo de `plugins.allow` también bloquea los complementos de proveedores empaquetados omitidos,
-incluido el descubrimiento del proveedor de búsqueda web en tiempo de ejecución. Doctor marca las
-configuraciones de listas blancas restrictivas más antiguas con `"compat"` durante la migración para que las actualizaciones mantengan
-el comportamiento del proveedor empaquetado heredado hasta que el operador opte por el modo más estricto.
-Un `plugins.allow` vacío aún se trata como no establecido/abierto.
+inventario `plugins.allow` restrictivo también bloquea complementos de proveedor empaquetados omitidos,
+incluyendo el descubrimiento de proveedores de búsqueda web en tiempo de ejecución. Doctor marca configuraciones
+antiguas de lista de permitidos restrictiva con `"compat"` durante la migración para que las actualizaciones mantengan
+el comportamiento de proveedor empaquetado heredado hasta que el operador opte por el modo más estricto.
+Un `plugins.allow` vacío todavía se trata como sin establecer/abierto.
 
 Los cambios de configuración realizados a través de `/plugins enable` o `/plugins disable` activan una
-recarga del complemento de la Gateway en proceso. Los nuevos turnos de agente reconstruyen su lista de herramientas a partir
-del registro de complementos actualizado. Las operaciones que cambian el origen, como instalar,
-actualizar y desinstalar, aún reinician el proceso de Gateway porque los módulos de complementos ya importados
-no pueden reemplazarse de manera segura en su lugar.
+recarga del complemento de Gateway en proceso. Los nuevos turnos de agente reconstruyen su lista de herramientas a partir
+del registro de complementos actualizado. Las operaciones que cambian el código fuente como instalar,
+actualizar y desinstalar aún reinician el proceso de Gateway porque los módulos de complemento
+ya importados no pueden reemplazarse de manera segura en su lugar.
 
 `openclaw plugins list` es una instantánea local del registro/configuración de complementos. Un
 complemento `enabled` allí significa que el registro persistido y la configuración actual permiten que el
-complemento participe. No prueba que una Gateway remota ya en ejecución
+complemento participe. No prueba que un Gateway remoto ya en ejecución
 haya recargado o reiniciado con el mismo código de complemento. En configuraciones de VPS/contenedor
-con procesos de contenedor, envíe reinicios o escrituras que activen la recarga al proceso real
-`openclaw gateway run`, o use `openclaw gateway restart` contra la
-Gateway en ejecución cuando la recarga reporte un error.
+con procesos de envoltura, envíe reinicios o escrituras que activen recargas al proceso `openclaw gateway run` real, o use `openclaw gateway restart` contra el
+Gateway en ejecución cuando la recarga reporte un fallo.
 
 <Accordion title="Plugin states: disabled vs missing vs invalid">
   - **Disabled**: el complemento existe pero las reglas de habilitación lo desactivaron. La configuración se conserva.
   - **Missing**: la configuración hace referencia a un id de complemento que el descubrimiento no encontró.
-  - **Invalid**: el complemento existe pero su configuración no coincide con el esquema declarado. El inicio de Gateway solo omite ese complemento; `openclaw doctor --fix` puede poner en cuarentena la entrada no válida deshabilitándola y eliminando su carga de configuración.
+  - **Invalid**: el complemento existe pero su configuración no coincide con el esquema declarado. El inicio de Gateway omite solo ese complemento; `openclaw doctor --fix` puede poner en cuarentena la entrada inválida deshabilitándola y eliminando su carga de configuración.
 
 </Accordion>
 
@@ -327,8 +339,8 @@ OpenClaw busca complementos en este orden (gana la primera coincidencia):
 
 <Steps>
   <Step title="Config paths">
-    `plugins.load.paths` - rutas de archivo o directorio explícitas. Las rutas que
-    apuntan hacia atrás a los propios directorios de complementos empaquetados de OpenClaw se ignoran;
+    `plugins.load.paths` - rutas de archivo o directorio explícitas. Las rutas que apuntan
+    hacia atrás a los propios directorios de complementos empaquetados de OpenClaw se ignoran;
     ejecute `openclaw doctor --fix` para eliminar esos alias obsoletos.
   </Step>
 
@@ -341,51 +353,62 @@ OpenClaw busca complementos en este orden (gana la primera coincidencia):
   </Step>
 
   <Step title="Bundled plugins">
-    Incluidos con OpenClaw. Muchos están habilitados de forma predeterminada (proveedores de modelos, voz).
+    Enviados con OpenClaw. Muchos están habilitados de forma predeterminada (proveedores de modelos, voz).
     Otros requieren habilitación explícita.
   </Step>
 </Steps>
 
-Las instalaciones empaquetadas y las imágenes de Docker normalmente resuelven los complementos empaquetados desde el árbol `dist/extensions` compilado. Si un directorio fuente de un complemento empaquetado se monta mediante bind sobre la ruta fuente empaquetada correspondiente, por ejemplo `/app/extensions/synology-chat`, OpenClaw trata ese directorio fuente montado como una superposición de fuente empaquetada y lo descubre antes del paquete `/app/dist/extensions/synology-chat` empaquetado. Esto mantiene los bucles de contenedor del mantenedor funcionando sin tener que volver a cambiar cada complemento empaquetado al fuente TypeScript.
-Establezca `OPENCLAW_DISABLE_BUNDLED_SOURCE_OVERLAYS=1` para forzar los paquetes dist empaquetados incluso cuando están presentes los montajes de superposición de fuente.
+Las instalaciones empaquetadas y las imágenes de Docker normalmente resuelven los complementos empaquetados desde el
+árbol `dist/extensions` compilado. Si un directorio fuente de un complemento empaquetado está
+montado con bind sobre la ruta fuente empaquetada correspondiente, por ejemplo
+`/app/extensions/synology-chat`, OpenClaw trata ese directorio fuente montado
+como una superposición de fuente empaquetada y lo descubre antes que el paquete
+`/app/dist/extensions/synology-chat` empaquetado. Esto mantiene los bucles del contenedor
+del mantenedor funcionando sin tener que volver a cambiar cada complemento empaquetado a fuente TypeScript.
+Establezca `OPENCLAW_DISABLE_BUNDLED_SOURCE_OVERLAYS=1` para forzar paquetes dist empaquetados
+incluso cuando hay montajes de superposición de fuente presentes.
 
 ### Reglas de habilitación
 
 - `plugins.enabled: false` deshabilita todos los complementos y omite el trabajo de descubrimiento/carga de complementos
-- `plugins.deny` siempre gana frente a allow
+- `plugins.deny` siempre gana sobre allow
 - `plugins.entries.\<id\>.enabled: false` deshabilita ese complemento
-- Los complementos originados en el espacio de trabajo están **deshabilitados de forma predeterminada** (deben habilitarse explícitamente)
-- Los complementos empaquetados siguen el conjunto predeterminado de activación integrado a menos que se anulen
-- Las ranuras exclusivas pueden forzar la habilitación del complemento seleccionado para esa ranura
-- Algunos complementos empaquetados de participación voluntaria se habilitan automáticamente cuando la configuración nombra una superficie propiedad de un complemento, como una referencia de modelo de proveedor, configuración de canal o tiempo de ejecución de arnés
+- Los complementos de origen del espacio de trabajo están **deshabilitados de manera predeterminada** (deben habilitarse explícitamente)
+- Los complementos agrupados siguen el conjunto predeterminado de activación integrado a menos que se anulen
+- Las ranuras exclusivas pueden forzar la activación del complemento seleccionado para esa ranura
+- Algunos complementos agrupados opcionales se habilitan automáticamente cuando la configuración nombra
+  una superficie propiedad del complemento, como una referencia de modelo de proveedor,
+  configuración de canal o tiempo de ejecución del arnés
 - La configuración obsoleta del complemento se conserva mientras `plugins.enabled: false` está activo;
-  vuelva a habilitar los complementos antes de ejecutar la limpieza del médico si desea que se eliminen los identificadores obsoletos
-- Las rutas de Codex de la familia de OpenAI mantienen límites de complemento separados:
-  `openai-codex/*` pertenece al complemento de OpenAI, mientras que el complemento del servidor de aplicaciones Codex empaquetado se selecciona mediante referencias canónicas del agente `openai/*`, `agentRuntime.id: "codex"` proveedor/modelo explícito, o referencias de modelo `codex/*` heredadas
+  vuelva a habilitar los complementos antes de ejecutar la limpieza del doctor si desea que se eliminen los identificadores obsoletos
+- Las rutas de Codex de la familia OpenAI mantienen límites de complementos separados:
+  `openai-codex/*` pertenece al complemento OpenAI, mientras que el complemento del servidor
+  de aplicaciones Codex agrupado se selecciona mediante referencias canónicas de agente `openai/*`,
+  `agentRuntime.id: "codex"` proveedor/modelo explícitos, o referencias de modelo `codex/*` heredadas
 
 ## Solución de problemas de enlaces de tiempo de ejecución
 
-Si un complemento aparece en `plugins list` pero los efectos secundarios o enlaces de `register(api)`
-no se ejecutan en el tráfico de chat en vivo, verifique primero estos:
+Si un complemento aparece en `plugins list` pero los efectos secundarios o enlaces `register(api)`
+no se ejecutan en el tráfico del chat en vivo, verifique esto primero:
 
 - Ejecute `openclaw gateway status --deep --require-rpc` y confirme que la URL de Gateway activa,
   el perfil, la ruta de configuración y el proceso son los que está editando.
-- Reinicie el Gateway en vivo después de instalar/configurar/cambiar el código del complemento. En contenedores
-  envoltorios, PID 1 puede ser solo un supervisor; reinicie o envíe una señal al proceso secundario
-  `openclaw gateway run`.
-- Use `openclaw plugins inspect <id> --runtime --json` para confirmar los registros de enlaces y
-  diagnósticos. Los enlaces de conversión no empaquetados, como `before_model_resolve`,
+- Reinicie el Gateway en vivo después de instalar, configurar o cambiar el código del complemento.
+  En contenedores envolventes, PID 1 solo puede ser un supervisor; reinicie o envíe una señal
+  al proceso secundario `openclaw gateway run`.
+- Use `openclaw plugins inspect <id> --runtime --json` para confirmar los registros de enlace y
+  los diagnósticos. Los enlaces de conversación no agrupados, como `before_model_resolve`,
   `before_agent_reply`, `before_agent_run`, `llm_input`, `llm_output`,
   `before_agent_finalize` y `agent_end` necesitan
   `plugins.entries.<id>.hooks.allowConversationAccess=true`.
-- Para el cambio de modelo, prefiera `before_model_resolve`. Se ejecuta antes de la
-  resolución del modelo para los turnos del agente; `llm_output` solo se ejecuta después de que un intento de modelo
-  produce salida del asistente.
-- Para probar el modelo de sesión efectivo, use `openclaw sessions` o las superficies de sesión/estado de Gateway y, al depurar cargas útiles del proveedor, inicie Gateway con `--raw-stream --raw-stream-path <path>`.
+- Para el cambio de modelo, prefiera `before_model_resolve`. Se ejecuta antes de la resolución
+  del modelo para los turnos del agente; `llm_output` solo se ejecuta después de que un intento de modelo
+  produce la salida del asistente.
+- Para probar el modelo de sesión efectivo, use `openclaw sessions` o las superficies de sesión/estado del Gateway y, al depurar cargas útiles del proveedor, inicie el Gateway con `--raw-stream --raw-stream-path <path>`.
 
-### Configuración lenta de herramientas de complemento
+### Configuración lenta de herramientas de complementos
 
-Si los turnos del agente parecen detenerse mientras se preparan las herramientas, active el registro de seguimiento y busque líneas de tiempo de fábrica de herramientas de complemento:
+Si los turnos del agente parecen detenerse mientras se preparan las herramientas, habilite el registro de seguimiento y verifique las líneas de tiempo de la fábrica de herramientas de complementos:
 
 ```bash
 openclaw config set logging.level trace
@@ -398,9 +421,9 @@ Busque:
 [trace:plugin-tools] factory timings ...
 ```
 
-El resumen enumera el tiempo total de fábrica y las fábricas de herramientas de complemento más lentas, incluyendo el id del complemento, los nombres de herramientas declarados, la forma del resultado y si la herramienta es opcional. Las líneas lentas se promueven a advertencias cuando una sola fábrica tarda al menos 1 s o la preparación total de la fábrica de herramientas del complemento tarda al menos 5 s.
+El resumen enumera el tiempo total de la fábrica y las fábricas de herramientas de complementos más lentas, incluido el id del complemento, los nombres de las herramientas declaradas, la forma del resultado y si la herramienta es opcional. Las líneas lentas se promueven a advertencias cuando una sola fábrica tarda al menos 1s o la preparación total de la fábrica de herramientas del complemento tarda al menos 5s.
 
-OpenClaw almacena en caché los resultados exitosos de la fábrica de herramientas de complemento para resoluciones repetidas con el mismo contexto de solicitud efectivo. La clave de caché incluye la configuración de tiempo de ejecución efectiva, el espacio de trabajo, los ids de agente/sesión, la política de sandbox, la configuración del navegador, el contexto de entrega, la identidad del solicitante y el estado de propiedad, por lo que las fábricas que dependen de esos campos de confianza se vuelven a ejecutar cuando cambia el contexto.
+OpenClaw almacena en caché los resultados exitosos de la fábrica de herramientas de complementos para resoluciones repetidas con el mismo contexto de solicitud efectivo. La clave de caché incluye la configuración efectiva de tiempo de ejecución, el espacio de trabajo, los ids de agente/sesión, la política de sandbox, la configuración del navegador, el contexto de entrega, la identidad del solicitante y el estado de propiedad, por lo que las fábricas que dependen de esos campos de confianza se vuelven a ejecutar cuando cambia el contexto.
 
 Si un complemento domina el tiempo, inspeccione sus registros de tiempo de ejecución:
 
@@ -418,29 +441,26 @@ Síntomas:
 - `channel setup already registered: <channel-id> (<plugin-id>)`
 - `plugin tool name conflict (<plugin-id>): <tool-name>`
 
-Estos significan que más de un complemento habilitado está intentando poseer el mismo canal, flujo de configuración o nombre de herramienta. La causa más común es un complemento de canal externo instalado junto a un complemento agrupado que ahora proporciona el mismo id de canal.
+Esto significa que más de un complemento habilitado está intentando ser propietario del mismo canal, flujo de configuración o nombre de herramienta. La causa más común es un complemento de canal externo instalado junto a un complemento empaquetado que ahora proporciona el mismo id de canal.
 
 Pasos de depuración:
 
-- Ejecute `openclaw plugins list --enabled --verbose` para ver cada complemento habilitado
-  y origen.
-- Ejecute `openclaw plugins inspect <id> --runtime --json` para cada complemento sospechoso y
-  compare `channels`, `channelConfigs`, `tools` y diagnósticos.
-- Ejecute `openclaw plugins registry --refresh` después de instalar o eliminar
-  paquetes de complementos para que los metadatos persistentes reflejen la instalación actual.
-- Reinicie Gateway después de cambios de instalación, registro o configuración.
+- Ejecute `openclaw plugins list --enabled --verbose` para ver todos los complementos habilitados y su origen.
+- Ejecute `openclaw plugins inspect <id> --runtime --json` para cada complemento sospechoso y compare `channels`, `channelConfigs`, `tools` y los diagnósticos.
+- Ejecute `openclaw plugins registry --refresh` después de instalar o eliminar paquetes de complementos para que los metadatos persistentes reflejen la instalación actual.
+- Reinicie el Gateway después de cambios de instalación, registro o configuración.
 
 Opciones de solución:
 
 - Si un complemento reemplaza intencionalmente a otro para el mismo id de canal, el
   complemento preferido debe declarar `channelConfigs.<channel-id>.preferOver` con
   el id del complemento de menor prioridad. Consulte [/plugins/manifest#replacing-another-channel-plugin](/es/plugins/manifest#replacing-another-channel-plugin).
-- Si el duplicado es accidental, deshabilite uno de los lados con
+- Si el duplicado es accidental, deshabilite un lado con
   `plugins.entries.<plugin-id>.enabled: false` o elimine la instalación del
   complemento obsoleto.
 - Si habilitó explícitamente ambos complementos, OpenClaw mantiene esa solicitud y
-  reporta el conflicto. Elija un único propietario para el canal o renombre las herramientas
-  propiedad del complemento para que la superficie de tiempo de ejecución sea inequívoca.
+  reporta el conflicto. Elija un propietario para el canal o cambie el nombre de las herramientas
+  propiedad del complemento para que la superficie de ejecución sea inequívoca.
 
 ## Slots de complementos (categorías exclusivas)
 
@@ -457,9 +477,9 @@ Algunas categorías son exclusivas (solo una activa a la vez):
 }
 ```
 
-| Slot            | Lo que controla               | Predeterminado       |
+| Slot            | Qué controla                  | Predeterminado       |
 | --------------- | ----------------------------- | -------------------- |
-| `memory`        | Complemento de memoria activa | `memory-core`        |
+| `memory`        | Complemento de memoria activo | `memory-core`        |
 | `contextEngine` | Motor de contexto activo      | `legacy` (integrado) |
 
 ## Referencia de CLI
@@ -510,44 +530,44 @@ openclaw plugins enable <id>
 openclaw plugins disable <id>
 ```
 
-Los complementos empaquetados se distribuyen con OpenClaw. Muchos están habilitados de forma predeterminada (por ejemplo,
-los proveedores de modelos empaquetados, los proveedores de voz empaquetados y el complemento del
-navegador empaquetado). Otros complementos empaquetados aún necesitan `openclaw plugins enable <id>`.
+Los complementos agrupados se distribuyen con OpenClaw. Muchos están habilitados de forma predeterminada (por ejemplo,
+los proveedores de modelos agrupados, los proveedores de voz agrupados y el complemento del
+navegador agrupado). Otros complementos agrupados aún necesitan `openclaw plugins enable <id>`.
 
-`--force` sobrescribe un complemento o paquete de hooks instalado existente en su lugar. Use
-`openclaw plugins update <id-or-npm-spec>` para actualizaciones de rutina de complementos npm
-rastreados. No es compatible con `--link`, que reutiliza la ruta de origen en lugar
-de copiar sobre un destino de instalación administrado.
+`--force` sobrescribe un complemento o paquete de hook instalado existente en su lugar. Use
+`openclaw plugins update <id-or-npm-spec>` para actualizaciones de rutina de complementos
+npm rastreados. No es compatible con `--link`, que reutiliza la ruta de origen en lugar
+de copiar sobre un objetivo de instalación administrado.
 
-Cuando `plugins.allow` ya está configurado, `openclaw plugins install` agrega el
+Cuando `plugins.allow` ya está configurado, `openclaw plugins install` añade el
 id del complemento instalado a esa lista de permitidos antes de habilitarlo. Si el mismo id de
 complemento está presente en `plugins.deny`, la instalación elimina esa entrada de denegación obsoleta para que
 la instalación explícita se pueda cargar inmediatamente después de reiniciar.
 
-OpenClaw mantiene un registro de complementos local persistente como el modelo de lectura en frío para el inventario de complementos, la propiedad de las contribuciones y la planificación del inicio. Los flujos de instalación, actualización, desinstalación, habilitación y deshabilitación actualizan ese registro después de cambiar el estado del complemento. El mismo archivo `plugins/installs.json` mantiene los metadatos de instalación duraderos en `installRecords` de nivel superior y los metadatos de manifiesto reconstruibles en `plugins`. Si el registro falta, está obsoleto o no es válido, `openclaw plugins registry --refresh` reconstruye su vista de manifiesto a partir de los registros de instalación, la política de configuración y los metadatos de manifiesto/paquete sin cargar los módulos de tiempo de ejecución del complemento.
+OpenClaw mantiene un registro local persistente de complementos como el modelo de lectura en frío para el inventario de complementos, la propiedad de las contribuciones y la planificación del inicio. Los flujos de instalación, actualización, desinstalación, habilitación y deshabilitación actualizan ese registro después de cambiar el estado del complemento. El mismo archivo `plugins/installs.json` mantiene los metadatos de instalación duraderos en `installRecords` de nivel superior y los metadatos de manifiesto reconstruibles en `plugins`. Si falta el registro, está obsoleto o no es válido, `openclaw plugins registry --refresh` reconstruye su vista de manifiesto a partir de los registros de instalación, la política de configuración y los metadatos de manifiesto/paquete sin cargar los módulos de tiempo de ejecución del complemento.
 
-En modo Nix (`OPENCLAW_NIX_MODE=1`), los mutadores del ciclo de vida del complemento están deshabilitados. Administre la selección y la configuración del paquete del complemento a través de la fuente Nix para la instalación en su lugar; para nix-openclaw, comience con el [Inicio rápido](https://github.com/openclaw/nix-openclaw#quick-start) con prioridad de agente. `openclaw plugins update <id-or-npm-spec>` se aplica a las instalaciones rastreadas. Pasar una especificación de paquete npm con una etiqueta de distribución o una versión exacta resuelve el nombre del paquete de vuelta al registro del complemento rastreado y registra la nueva especificación para futuras actualizaciones. Pasar el nombre del paquete sin una versión mueve una instalación fijada exacta de vuelta a la línea de lanzamiento predeterminada del registro. Si el complemento npm instalado ya coincide con la versión resuelta y la identidad del artefacto registrado, OpenClaw omite la actualización sin descargar, reinstalar o reescribir la configuración. Cuando `openclaw update` se ejecuta en el canal beta, los registros de complementos npm y ClawHub de línea predeterminada intentan `@beta` primero y recurren a default/latest cuando no existe un lanzamiento beta del complemento. Las versiones exactas y las etiquetas explícitas permanecen fijas.
+En modo Nix (`OPENCLAW_NIX_MODE=1`), los mutadores del ciclo de vida del complemento están deshabilitados. Administre la selección y configuración de paquetes de complementos a través de la fuente de Nix para la instalación en su lugar; para nix-openclaw, comience con el [Inicio rápido](https://github.com/openclaw/nix-openclaw#quick-start) centrado en agentes. `openclaw plugins update <id-or-npm-spec>` se aplica a las instalaciones rastreadas. Al pasar una especificación de paquete npm con una etiqueta de distribución o una versión exacta, se resuelve el nombre del paquete de vuelta al registro del complemento rastreado y se registra la nueva especificación para futuras actualizaciones. Al pasar el nombre del paquete sin una versión, se mueve una instalación fijada exacta de vuelta a la línea de lanzamiento predeterminada del registro. Si el complemento npm instalado ya coincide con la versión resuelta y la identidad del artefacto registrado, OpenClaw omite la actualización sin descargar, reinstalar o reescribir la configuración. Cuando `openclaw update` se ejecuta en el canal beta, los registros de complementos npm y ClawHub de la línea predeterminada intentan `@beta` primero y recurren a default/latest cuando no existe una versión beta del complemento. Las versiones exactas y las etiquetas explícitas permanecen fijas.
 
-`--pin` es exclusivo de npm. No es compatible con `--marketplace`, porque las instalaciones del mercado persisten los metadatos de origen del mercado en lugar de una especificación npm.
+`--pin` es solo para npm. No es compatible con `--marketplace`, porque las instalaciones del mercado persisten los metadatos de origen del mercado en lugar de una especificación npm.
 
-`--dangerously-force-unsafe-install` es una anulación de emergencia para los falsos positivos del escáner de código peligroso integrado. Permite que las instalaciones y actualizaciones de complementos continúen a pesar de los hallazgos integrados de `critical`, pero aún no evita los bloqueos de política de complementos `before_install` ni el bloqueo por fallo de escaneo. Los escaneos de instalación ignoran los archivos y directorios de prueba comunes, como `tests/`, `__tests__/`, `*.test.*` y `*.spec.*`, para evitar bloquear los simulacros de prueba empaquetados; los puntos de entrada de tiempo de ejecución del complemento declarados todavía se escanean, incluso si usan uno de esos nombres.
+`--dangerously-force-unsafe-install` es una invalidación de emergencia para los falsos positivos del escáner de código peligroso integrado. Permite que las instalaciones y actualizaciones de complementos continúen más allá de los hallazgos integrados de `critical`, pero aun así no evita los bloqueos de política de complementos `before_install` ni el bloqueo por fallas en el escaneo. Los escaneos de instalación ignoran los archivos y directorios de prueba comunes como `tests/`, `__tests__/`, `*.test.*` y `*.spec.*` para evitar bloquear simulacros de prueba empaquetados; los puntos de entrada de tiempo de ejecución del complemento declarados todavía se escanean incluso si usan uno de esos nombres.
 
-Este indicador de CLI se aplica solo a los flujos de instalación/actualización de complementos. Las instalaciones de dependencias de habilidades respaldadas por Gateway utilizan la anulación de solicitud `dangerouslyForceUnsafeInstall` coincidente, mientras que `openclaw skills install` sigue siendo el flujo separado de descarga/instalación de habilidades de ClawHub.
+Este indicador de CLI se aplica únicamente a los flujos de instalación/actualización de complementos. Las instalaciones de dependencias de habilidades respaldadas por Gateway usan la invalidación de solicitud `dangerouslyForceUnsafeInstall` coincidente, mientras que `openclaw skills install` sigue siendo el flujo separado de descarga/instalación de habilidades de ClawHub.
 
-Si un complemento que publicaste en ClawHub está oculto o bloqueado por un escaneo, abre el panel de ClawHub o ejecuta `clawhub package rescan <name>` para pedirle a ClawHub que lo vuelva a comprobar. `--dangerously-force-unsafe-install` solo afecta las instalaciones en tu propia máquina; no pide a ClawHub que vuelva a escanear el complemento ni que haga pública una versión bloqueada.
+Si un complemento que publicaste en ClawHub está oculto o bloqueado por un escaneo, abre el panel de ClawHub o ejecuta `clawhub package rescan <name>` para pedirle a ClawHub que lo verifique nuevamente. `--dangerously-force-unsafe-install` solo afecta las instalaciones en tu propia máquina; no le pide a ClawHub que vuelva a escanear el complemento ni hace pública una versión bloqueada.
 
-Los paquetes compatibles participan en el mismo flujo de lista/inspección/habilitación/deshabilitación de complementos. El soporte de tiempo de ejecución actual incluye habilidades de paquete, habilidades de comandos de Claude, valores predeterminados de `settings.json` de Claude, `.lsp.json` de Claude y valores predeterminados `lspServers` declarados en el manifiesto, habilidades de comandos de Cursor y directorios de enlaces de Codex compatibles.
+Los paquetes compatibles participan en el mismo flujo de lista/inspección/habilitación/deshabilitación de complementos. El soporte de tiempo de ejecución actual incluye habilidades de paquete, habilidades de comando de Claude, valores predeterminados `settings.json` de Claude, `.lsp.json` de Claude y valores predeterminados `lspServers` declarados en el manifiesto, habilidades de comando de Cursor y directorios de enlace de Codex compatibles.
 
-`openclaw plugins inspect <id>` también informa las capacidades del paquete detectadas, además de las entradas de servidor MCP y LSP compatibles o no compatibles para complementos respaldados por paquetes.
+`openclaw plugins inspect <id>` también informa las capacidades del paquete detectadas además de las entradas de servidor MCP y LSP compatibles o no compatibles para complementos respaldados por paquetes.
 
-Las fuentes del marketplace pueden ser un nombre de marketplace conocido de Claude de `~/.claude/plugins/known_marketplaces.json`, una ruta raíz del marketplace local o una ruta `marketplace.json`, una abreviatura de GitHub como `owner/repo`, una URL de repositorio de GitHub o una URL de git. Para los marketplaces remotos, las entradas de complementos deben permanecer dentro del repositorio del marketplace clonado y usar solo fuentes de ruta relativa.
+Las fuentes del mercado pueden ser un nombre de mercado conocido de Claude de `~/.claude/plugins/known_marketplaces.json`, una ruta raíz de mercado local o ruta `marketplace.json`, una abreviatura de GitHub como `owner/repo`, una URL de repositorio de GitHub o una URL de git. Para los mercados remotos, las entradas de complementos deben permanecer dentro del repositorio del mercado clonado y usar solo fuentes de ruta relativa.
 
-Consulte la [referencia de la CLI de `openclaw plugins`](/es/cli/plugins) para obtener todos los detalles.
+Consulte [referencia de la CLI de `openclaw plugins`](/es/cli/plugins) para obtener detalles completos.
 
 ## Resumen de la API de complementos
 
-Los complementos nativos exportan un objeto de entrada que expone `register(api)`. Los
-complementos más antiguos aún pueden usar `activate(api)` como alias heredado, pero los nuevos complementos deben
+Los complementos nativos exportan un objeto de entrada que expone `register(api)`. Los complementos
+antiguos aún pueden usar `activate(api)` como un alias heredado, pero los nuevos complementos deben
 usar `register`.
 
 ```typescript
@@ -569,24 +589,24 @@ export default definePluginEntry({
 ```
 
 OpenClaw carga el objeto de entrada y llama a `register(api)` durante la
-activación del complemento. El cargador aún recurre a `activate(api)` para los complementos más antiguos,
-pero los complementos empaquetados y los nuevos complementos externos deben tratar `register` como el
+activación del complemento. El cargador todavía recurre a `activate(api)` para complementos
+antiguos, pero los complementos empaquetados y los nuevos complementos externos deben tratar `register` como el
 contrato público.
 
-`api.registrationMode` indica a un complemento por qué se está cargando su entrada:
+`api.registrationMode` le indica a un complemento por qué se está cargando su entrada:
 
-| Modo            | Significado                                                                                                                                                                                        |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `full`          | Activación en tiempo de ejecución. Registra herramientas, enlaces, servicios, comandos, rutas y otros efectos secundarios en vivo.                                                                 |
-| `discovery`     | Descubrimiento de capacidades de solo lectura. Registra proveedores y metadatos; se puede cargar el código de entrada de complemento de confianza, pero se omiten los efectos secundarios en vivo. |
-| `setup-only`    | Carga de metadatos de configuración del canal a través de una entrada de configuración ligera.                                                                                                     |
-| `setup-runtime` | Carga de configuración del canal que también necesita la entrada de tiempo de ejecución.                                                                                                           |
-| `cli-metadata`  | Solo recopilación de metadatos de comandos de CLI.                                                                                                                                                 |
+| Modo            | Significado                                                                                                                                                                               |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `full`          | Activación en tiempo de ejecución. Registra herramientas, ganchos, servicios, comandos, rutas y otros efectos secundarios en vivo.                                                        |
+| `discovery`     | Descubrimiento de capacidades de solo lectura. Registra proveedores y metadatos; el código de entrada del complemento de confianza puede cargar, pero omitir efectos secundarios en vivo. |
+| `setup-only`    | Carga de metadatos de configuración del canal a través de una entrada de configuración ligera.                                                                                            |
+| `setup-runtime` | Carga de configuración del canal que también necesita la entrada de tiempo de ejecución.                                                                                                  |
+| `cli-metadata`  | Solo recopilación de metadatos de comandos de CLI.                                                                                                                                        |
 
 Las entradas de complementos que abren sockets, bases de datos, trabajadores en segundo plano o clientes
 de larga duración deben proteger esos efectos secundarios con `api.registrationMode === "full"`.
 Las cargas de descubrimiento se almacenan en caché por separado de las cargas de activación y no reemplazan
-el registro de Gateway en ejecución. El descubrimiento no es de activación, no libre de importaciones:
+el registro Gateway en ejecución. El descubrimiento no es activador, no libre de importaciones:
 OpenClaw puede evaluar la entrada del complemento de confianza o el módulo del complemento del canal para construir
 la instantánea. Mantenga los niveles superiores del módulo ligeros y sin efectos secundarios, y mueva
 los clientes de red, subprocesos, escuchas, lecturas de credenciales y el inicio de servicios
@@ -594,44 +614,44 @@ detrás de rutas de tiempo de ejecución completo.
 
 Métodos de registro comunes:
 
-| Método                                  | Lo que registra                          |
-| --------------------------------------- | ---------------------------------------- |
-| `registerProvider`                      | Proveedor de modelos (LLM)               |
-| `registerChannel`                       | Canal de chat                            |
-| `registerTool`                          | Herramienta de agente                    |
-| `registerHook` / `on(...)`              | Enlaces del ciclo de vida                |
-| `registerSpeechProvider`                | Conversión de texto a voz / STT          |
-| `registerRealtimeTranscriptionProvider` | STT en streaming                         |
-| `registerRealtimeVoiceProvider`         | Voz en tiempo real dúplex                |
-| `registerMediaUnderstandingProvider`    | Análisis de imagen/audio                 |
-| `registerImageGenerationProvider`       | Generación de imágenes                   |
-| `registerMusicGenerationProvider`       | Generación de música                     |
-| `registerVideoGenerationProvider`       | Generación de video                      |
-| `registerWebFetchProvider`              | Proveedor de recuperación/extracción web |
-| `registerWebSearchProvider`             | Búsqueda web                             |
-| `registerHttpRoute`                     | Endpoint HTTP                            |
-| `registerCommand` / `registerCli`       | Comandos de CLI                          |
-| `registerContextEngine`                 | Motor de contexto                        |
-| `registerService`                       | Servicio en segundo plano                |
+| Método                                  | Lo que registra                       |
+| --------------------------------------- | ------------------------------------- |
+| `registerProvider`                      | Proveedor de modelos (LLM)            |
+| `registerChannel`                       | Canal de chat                         |
+| `registerTool`                          | Herramienta de agente                 |
+| `registerHook` / `on(...)`              | Ganchos del ciclo de vida             |
+| `registerSpeechProvider`                | Texto a voz / STT                     |
+| `registerRealtimeTranscriptionProvider` | STT en streaming                      |
+| `registerRealtimeVoiceProvider`         | Voz en tiempo real dúplex             |
+| `registerMediaUnderstandingProvider`    | Análisis de imagen/audio              |
+| `registerImageGenerationProvider`       | Generación de imágenes                |
+| `registerMusicGenerationProvider`       | Generación de música                  |
+| `registerVideoGenerationProvider`       | Generación de video                   |
+| `registerWebFetchProvider`              | Proveedor de obtención/extracción web |
+| `registerWebSearchProvider`             | Búsqueda web                          |
+| `registerHttpRoute`                     | Endpoint HTTP                         |
+| `registerCommand` / `registerCli`       | Comandos CLI                          |
+| `registerContextEngine`                 | Motor de contexto                     |
+| `registerService`                       | Servicio en segundo plano             |
 
-Comportamiento de protección de enlace para enlaces del ciclo de vida tipados:
+Comportamiento de guarda de enlace para enlaces del ciclo de vida tipados:
 
 - `before_tool_call`: `{ block: true }` es terminal; se omiten los controladores de menor prioridad.
-- `before_tool_call`: `{ block: false }` es una operación nula y no borra un bloque anterior.
+- `before_tool_call`: `{ block: false }` es una operación nula y no borra un bloqueo anterior.
 - `before_install`: `{ block: true }` es terminal; se omiten los controladores de menor prioridad.
-- `before_install`: `{ block: false }` es una operación nula y no borra un bloque anterior.
+- `before_install`: `{ block: false }` es una operación nula y no borra un bloqueo anterior.
 - `message_sending`: `{ cancel: true }` es terminal; se omiten los controladores de menor prioridad.
 - `message_sending`: `{ cancel: false }` es una operación nula y no borra una cancelación anterior.
 
-El servidor de aplicaciones nativo de Codex ejecuta un puente que devuelve eventos de herramientas nativas de Codex a esta superficie de enlace. Los complementos pueden bloquear herramientas nativas de Codex a través de `before_tool_call`, observar resultados a través de `after_tool_call` y participar en aprobaciones de `PermissionRequest` de Codex. El puente aún no reescribe los argumentos de las herramientas nativas de Codex. El límite exacto de soporte en tiempo de ejecución de Codex se encuentra en el [contrato de soporte del arnés Codex v1](/es/plugins/codex-harness-runtime#v1-support-contract).
+El servidor de aplicaciones nativo de Codex devuelve los eventos de herramientas nativas de Codex a esta superficie de enlace. Los complementos pueden bloquear las herramientas nativas de Codex a través de `before_tool_call`, observar los resultados a través de `after_tool_call` y participar en las aprobaciones de `PermissionRequest` de Codex. El puente aún no reescribe los argumentos de las herramientas nativas de Codex. El límite exacto de soporte del tiempo de ejecución de Codex se encuentra en el [contrato de soporte del arnés Codex v1](/es/plugins/codex-harness-runtime#v1-support-contract).
 
-Para conocer el comportamiento completo de los enlaces tipados, consulte [información general del SDK](/es/plugins/sdk-overview#hook-decision-semantics).
+Para obtener el comportamiento completo de los enlaces tipados, consulte [Descripción general del SDK](/es/plugins/sdk-overview#hook-decision-semantics).
 
 ## Relacionado
 
 - [Creación de complementos](/es/plugins/building-plugins) - crea tu propio complemento
 - [Paquetes de complementos](/es/plugins/bundles) - compatibilidad de paquetes Codex/Claude/Cursor
-- [Manifiesto de complemento](/es/plugins/manifest) - esquema del manifiesto
+- [Manifiesto de complementos](/es/plugins/manifest) - esquema del manifiesto
 - [Registro de herramientas](/es/plugins/building-plugins#registering-agent-tools) - agregar herramientas de agente en un complemento
-- [Aspectos internos del complemento](/es/plugins/architecture) - modelo de capacidades y canalización de carga
+- [Funcionamiento interno de complementos](/es/plugins/architecture) - modelo de capacidades y canalización de carga
 - [ClawHub](/es/clawhub) - descubrimiento de complementos de terceros

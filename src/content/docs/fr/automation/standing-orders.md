@@ -241,7 +241,7 @@ Chaque programme doit avoir :
 
 ## Connexes
 
-- [Automatisation et tâches](/fr/automation) : tous les mécanismes d'automatisation en un coup d'œil.
+- [Automatisation](/fr/automation) : tous les mécanismes d'automatisation en un coup d'œil.
 - [Tâches cron](/fr/automation/cron-jobs) : application de planification pour les ordres permanents.
 - [Hooks](/fr/automation/hooks) : scripts pilotés par les événements pour les événements du cycle de vie de l'agent.
 - [Webhooks](/fr/automation/cron-jobs#webhooks) : déclencheurs d'événements HTTP entrants.

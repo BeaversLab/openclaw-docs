@@ -7,7 +7,7 @@ title: "Heartbeat"
 sidebarTitle: "Heartbeat"
 ---
 
-<Note>**Heartbeat vs cron？** 請參閱 [Automation & Tasks](/zh-Hant/automation) 以獲得關於何時使用每一項的指導。</Note>
+<Note>**Heartbeat 與 cron？** 請參閱 [Automation](/zh-Hant/automation) 以了解使用時機的指引。</Note>
 
 Heartbeat 會在主對話階段中執行**週期性代理輪次**，以便模型能突顯需要注意的事項，而不會對您造成垃圾訊息干擾。
 
@@ -479,7 +479,7 @@ openclaw system event --text "Check for urgent follow-ups" --mode now
 
 ## 相關
 
-- [Automation & Tasks](/zh-Hant/automation) — 所有自動化機制一覽
+- [Automation](/zh-Hant/automation) — 所有自動化機制一覽
 - [Background Tasks](/zh-Hant/automation/tasks) — 如何追蹤分離的工作
 - [Timezone](/zh-Hant/concepts/timezone) — 時區如何影響 heartbeat 排程
 - [Troubleshooting](/zh-Hant/automation/cron-jobs#troubleshooting) — 自動化問題的除錯

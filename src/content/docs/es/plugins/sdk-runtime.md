@@ -43,7 +43,12 @@ Los auxiliares de mutación devuelven `afterWrite` más un resumen `followUp` ti
 
 `api.runtime.config.loadConfig()` y `api.runtime.config.writeConfigFile(...)` son auxiliares de compatibilidad en desuso bajo `runtime-config-load-write`. Advierten una vez en tiempo de ejecución y permanecen disponibles para complementos externos antiguos durante la ventana de migración. Los complementos integrados no deben usarlos; los guardianes del límite de configuración fallan si el código del complemento los llama o importa esos auxiliares desde las subrutas del SDK del complemento.
 
-Para las importaciones directas del SDK, use las subrutas de configuración enfocadas en lugar del barril de compatibilidad amplio `openclaw/plugin-sdk/config-runtime`: `config-types` para tipos, `plugin-config-runtime` para afirmaciones de configuración ya cargadas y búsqueda de entradas de complementos, `runtime-config-snapshot` para instantáneas del proceso actual, y `config-mutation` para escrituras. Las pruebas de complementos integrados deben simular estas subrutas enfocadas directamente en lugar de simular el barril de compatibilidad amplio.
+Para las importaciones directas del SDK, utilice las subrutas de configuración centradas en lugar del
+barril de compatibilidad amplio `openclaw/plugin-sdk/config-runtime`: `config-contracts` para
+tipos, `plugin-config-runtime` para afirmaciones de configuración ya cargadas y búsqueda de entradas de complementos,
+`runtime-config-snapshot` para instantáneas del proceso actual y
+`config-mutation` para escrituras. Las pruebas de complementos agrupadas deben simular estas subrutas
+centradas directamente en lugar de simular el barril de compatibilidad amplio.
 
 El código de tiempo de ejecución interno de OpenClaw tiene la misma dirección: cargar la configuración una vez en el límite de la CLI, la puerta de enlace o el proceso, y luego pasar ese valor. Las escrituras de mutación exitosas actualizan la instantánea del tiempo de ejecución del proceso y avanzan su revisión interna; las cachés de larga duración deben basarse en la clave de caché propiedad del tiempo de ejecución en lugar de serializar la configuración localmente. Los módulos de tiempo de ejecución de larga duración tienen un escáner de tolerancia cero para llamadas `loadConfig()` de ambiente; use un `cfg` pasado, una solicitud `context.getRuntimeConfig()` o `getRuntimeConfig()` en un límite de proceso explícito.
 
@@ -210,7 +215,12 @@ Las rutas de ejecución del proveedor y del canal deben usar la instantánea de 
 
   </Accordion>
   <Accordion title="api.runtime.tasks.managedFlows">
-    Vincula un tiempo de ejecución de flujo de tareas a una clave de sesión de OpenClaw existente o a un contexto de herramienta de confianza, luego crea y administra flujos de tareas sin pasar un propietario en cada llamada.
+    Vincula un tiempo de ejecución de Task Flow a una clave de sesión de OpenClaw existente o a un contexto de herramienta confiable, y luego crea y administra Task Flows sin pasar un propietario en cada llamada.
+
+    Task Flow rastrea el estado del flujo de trabajo de varios pasos duradero. No es un programador:
+    use Cron o `api.session.workflow.scheduleSessionTurn(...)` para activaciones
+    futuras, y luego use `managedFlows` desde el turno programado cuando ese trabajo
+    necesite estado de flujo, tareas secundarias, esperas o cancelación.
 
     ```typescript
     const taskFlow = api.runtime.tasks.managedFlows.fromToolContext(ctx);
@@ -237,7 +247,7 @@ Las rutas de ejecución del proveedor y del canal deben usar la instantánea de 
     });
     ```
 
-    Use `bindSession({ sessionKey, requesterOrigin })` cuando ya tenga una clave de sesión de OpenClaw de confianza de su propia capa de vinculación. No se vincule desde la entrada cruda del usuario.
+    Use `bindSession({ sessionKey, requesterOrigin })` cuando ya tenga una clave de sesión de OpenClaw confiable de su propia capa de vinculación. No se vincule desde la entrada sin procesar del usuario.
 
   </Accordion>
   <Accordion title="api.runtime.tts">
@@ -263,7 +273,7 @@ Las rutas de ejecución del proveedor y del canal deben usar la instantánea de 
     });
     ```
 
-    Utiliza la configuración y selección de proveedores de `messages.tts` principal. Devuelve un búfer de audio PCM + tasa de muestreo.
+    Utiliza la configuración central `messages.tts` y la selección del proveedor. Devuelve un búfer de audio PCM + tasa de muestreo.
 
   </Accordion>
   <Accordion title="api.runtime.mediaUnderstanding">
@@ -293,6 +303,34 @@ Las rutas de ejecución del proveedor y del canal deben usar la instantánea de 
     // Generic file analysis
     const result = await api.runtime.mediaUnderstanding.runFile({
       filePath: "/tmp/inbound-file.pdf",
+      cfg: api.config,
+    });
+
+    // Structured image extraction through a specific provider/model.
+    // Include at least one image; text inputs are supplemental context.
+    const evidence = await api.runtime.mediaUnderstanding.extractStructuredWithModel({
+      provider: "codex",
+      model: "gpt-5.5",
+      input: [
+        {
+          type: "image",
+          buffer: receiptImageBuffer,
+          fileName: "receipt.png",
+          mime: "image/png",
+        },
+        { type: "text", text: "Prefer the printed total over handwritten notes." },
+      ],
+      instructions: "Extract vendor, total, and searchable tags.",
+      schemaName: "receipt.evidence",
+      jsonSchema: {
+        type: "object",
+        properties: {
+          vendor: { type: "string" },
+          total: { type: "number" },
+          tags: { type: "array", items: { type: "string" } },
+        },
+        required: ["vendor", "total"],
+      },
       cfg: api.config,
     });
     ```
@@ -356,7 +394,7 @@ Las rutas de ejecución del proveedor y del canal deben usar la instantánea de 
 
   </Accordion>
   <Accordion title="api.runtime.config">
-    Instantánea de la configuración en tiempo de ejecución actual y escrituras de configuración transaccionales. Se prefiere
+    Instantánea de la configuración de tiempo de ejecución actual y escrituras de configuración transaccionales. Se prefiere
     la configuración que ya se pasó a la ruta de llamada activa; use
     `current()` solo cuando el controlador necesita la instantánea del proceso directamente.
 
@@ -370,7 +408,8 @@ Las rutas de ejecución del proveedor y del canal deben usar la instantánea de 
     });
     ```
 
-    `mutateConfigFile(...)` y `replaceConfigFile(...)` devuelven un valor `followUp`,
+    `mutateConfigFile(...)` y `replaceConfigFile(...)` devuelven un valor
+    `followUp`,
     por ejemplo `{ mode: "restart", requiresRestart: true, reason }`,
     que registra la intención del escritor sin quitar el control de reinicio a la
     puerta de enlace.
@@ -444,10 +483,10 @@ Las rutas de ejecución del proveedor y del canal deben usar la instantánea de 
     await store.clear();
     ```
 
-    Los almacenes con clave sobreviven a los reinicios y están aislados por el ID del complemento vinculado al tiempo de ejecución. Use `registerIfAbsent(...)` para reclamaciones de deduplicación atómica: devuelve `true` cuando la clave faltaba o había expirado y se registró, o `false` cuando ya existe un valor activo sin sobrescribir su valor, hora de creación o TTL. Límites: `maxEntries` por espacio de nombres, 1,000 filas activas por complemento, valores JSON menores a 64 KB y expiración TTL opcional.
+    Los almacenes con clave sobreviven a los reinicios y están aislados por el id del plugin vinculado al tiempo de ejecución. Use `registerIfAbsent(...)` para reclamaciones de deduplicación atómicas: devuelve `true` cuando la clave faltaba o había expirado y se registró, o `false` cuando ya existe un valor activo sin sobrescribir su valor, tiempo de creación o TTL. Límites: `maxEntries` por espacio de nombres, 1,000 filas activas por plugin, valores JSON menores a 64 KB y caducidad TTL opcional.
 
     <Warning>
-    Solo complementos incluidos en esta versión.
+    Solo plugins incluidos en esta versión.
     </Warning>
 
   </Accordion>
@@ -462,9 +501,9 @@ Las rutas de ejecución del proveedor y del canal deben usar la instantánea de 
 
   </Accordion>
   <Accordion title="api.runtime.channel">
-    Asistentes de tiempo de ejecución específicos del canal (disponibles cuando se carga un complemento de canal).
+    Asistentes de tiempo de ejecución específicos del canal (disponibles cuando se carga un plugin de canal).
 
-    `api.runtime.channel.mentions` es la superficie compartida de la política de menciones entrantes para los complementos de canal incluidos que utilizan inyección en tiempo de ejecución:
+    `api.runtime.channel.mentions` es la superficie compartida de la política de menciones de entrada para los plugins de canal incluidos que usan inyección en tiempo de ejecución:
 
     ```typescript
     const mentionMatch = api.runtime.channel.mentions.matchesMentionWithExplicit(text, {
@@ -491,7 +530,7 @@ Las rutas de ejecución del proveedor y del canal deben usar la instantánea de 
     });
     ```
 
-    Asistentes de mención disponibles:
+    Asistentes de menciones disponibles:
 
     - `buildMentionRegexes`
     - `matchesMentionPatterns`
@@ -499,14 +538,14 @@ Las rutas de ejecución del proveedor y del canal deben usar la instantánea de 
     - `implicitMentionKindWhen`
     - `resolveInboundMentionDecision`
 
-    `api.runtime.channel.mentions` intencionalmente no expone los asistentes de compatibilidad más antiguos `resolveMentionGating*`. Prefiera la ruta normalizada `{ facts, policy }`.
+    `api.runtime.channel.mentions` intencionalmente no expone los asistentes de compatibilidad `resolveMentionGating*` anteriores. Se prefiere la ruta normalizada `{ facts, policy }`.
 
   </Accordion>
 </AccordionGroup>
 
 ## Almacenamiento de referencias en tiempo de ejecución
 
-Use `createPluginRuntimeStore` para almacenar la referencia en tiempo de ejecución para usarla fuera de la devolución de llamada `register`:
+Use `createPluginRuntimeStore` para almacenar la referencia del tiempo de ejecución para usarla fuera de la devolución de llamada `register`:
 
 <Steps>
   <Step title="Crear el almacén">
@@ -546,11 +585,11 @@ Use `createPluginRuntimeStore` para almacenar la referencia en tiempo de ejecuci
   </Step>
 </Steps>
 
-<Note>Prefiera `pluginId` para la identidad del almacén en tiempo de ejecución. El formato de nivel inferior `key` es para casos poco comunes en los que un complemento necesita intencionalmente más de una ranura de tiempo de ejecución.</Note>
+<Note>Prefiera `pluginId` para la identidad del runtime-store. El formato de nivel inferior `key` es para casos poco comunes en los que un complemento necesita intencionalmente más de una ranura de tiempo de ejecución.</Note>
 
 ## Otros campos de nivel superior `api`
 
-Además de `api.runtime`, el objeto API también proporciona:
+Más allá de `api.runtime`, el objeto API también proporciona:
 
 <ParamField path="api.id" type="string">
   ID del complemento.
@@ -559,16 +598,16 @@ Además de `api.runtime`, el objeto API también proporciona:
   Nombre para mostrar del complemento.
 </ParamField>
 <ParamField path="api.config" type="OpenClawConfig">
-  Instantánea de configuración actual (instantánea de memoria activa en tiempo de ejecución cuando está disponible).
+  Instantánea de configuración actual (instantánea de tiempo de ejecución activa en memoria cuando está disponible).
 </ParamField>
 <ParamField path="api.pluginConfig" type="Record<string, unknown>">
-  Configuración específica del complemento desde `plugins.entries.<id>.config`.
+  Configuración específica del complemento de `plugins.entries.<id>.config`.
 </ParamField>
 <ParamField path="api.logger" type="PluginLogger">
   Registrador con ámbito (`debug`, `info`, `warn`, `error`).
 </ParamField>
 <ParamField path="api.registrationMode" type="PluginRegistrationMode">
-  Modo de carga actual; `"setup-runtime"` es la ventana ligera de inicio/configuración previa a la entrada completa.
+  Modo de carga actual; `"setup-runtime"` es la ventana de inicio/configuración previa ligera a la entrada completa.
 </ParamField>
 <ParamField path="api.resolvePath(input)" type="(string) => string">
   Resuelve una ruta relativa a la raíz del complemento.

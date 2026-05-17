@@ -185,7 +185,9 @@ Il extrait la référence du harnais de workflow, construit des arbres de travai
 `Mantis Telegram Live` encapsule le lane QA en direct Telegram existant dans le même pipeline de preuves de PR. Il extrait la référence candidate de confiance dans un arbre de travail séparé, exécute `pnpm openclaw qa telegram --credential-source convex
 --credential-role ci`, writes a `mantis-evidence.` manifest à partir du résumé QA Telegram et de l'artefact de message observé, rend le HTML de la transcription expurgée via un navigateur de bureau Crabbox, génère un GIF rogné au mouvement avec `crabbox media preview`, et publie le commentaire de preuve PR en ligne lorsqu'un numéro de PR est disponible. Ce lane est visuel par transcription plutôt qu'une preuve Telegram Web connectée : le Telegram Bot API fournit des preuves de messages en direct stables, mais l'état de connexion Telegram Web n'est pas requis pour l'automatisation Mantis normale.
 
-Pour une configuration de bureau Telegram avec intervention humaine, utilisez le constructeur de scénario :
+`Mantis Telegram Desktop Proof` est le wrapper natif agentique avant/après pour Telegram Desktop. Un mainteneur peut le déclencher depuis un commentaire de PR avec `@Mantis telegram desktop proof`, depuis l'interface utilisateur Actions avec des instructions libres, ou via le répartiteur générique `Mantis Scenario`. Le workflow transmet la PR, la référence de base, la référence candidate et les instructions du mainteneur à Codex. L'agent lit la PR, décide quel comportement visible sur Telegram prouve le changement, exécute la ligne de preuve Crabbox Telegram Desktop pour utilisateur réel pour la base et le candidat, itère jusqu'à ce que les GIF natifs soient utiles, écrit des artefacts `motionPreview` appariés dans `mantis-evidence.json`, télécharge le bundle et publie un tableau de preuves PR à 2 colonnes lorsqu'un numéro de PR est disponible.
+
+Pour la configuration du bureau Telegram avec humain dans la boucle, utilisez le constructeur de scénario :
 
 ```bash
 pnpm openclaw qa mantis telegram-desktop-builder \
@@ -194,18 +196,18 @@ pnpm openclaw qa mantis telegram-desktop-builder \
   --keep-lease
 ```
 
-Le constructeur loue ou réutilise un bureau Crabbox, installe le binaire natif du bureau Linux pour Telegram, restaure facultativement une archive de session utilisateur, configure OpenClaw avec le jeton de bot SUT Telegram loué, démarre `openclaw gateway run` sur le port `38974`, publie un message de préparation du bot pilote vers le groupe privé loué, puis capture une capture d'écran et un MP4 depuis le bureau VNC visible. Un jeton de bot ne se connecte jamais au bureau Telegram ; il configure uniquement OpenClaw. La visionneuse de bureau est une session utilisateur Telegram distincte restaurée depuis `--telegram-profile-archive-env <name>` ou créée manuellement via VNC et maintenue en vie avec `--keep-lease`.
+Le constructeur loue ou réutilise un bureau Crabbox, installe le binaire natif du bureau Linux sous Telegram, restaure optionnellement une archive de session utilisateur, configure OpenClaw avec le jeton de bot SUT Telegram loué, démarre `openclaw gateway run` sur le port `38974`, publie un message de disponibilité du bot pilote dans le groupe privé loué, puis capture une capture d'écran et un MP4 du bureau VNC visible. Un jeton de bot ne connecte jamais Telegram Desktop ; il configure uniquement OpenClaw. La visionneuse de bureau est une session utilisateur Telegram distincte restaurée depuis `--telegram-profile-archive-env <name>` ou créée manuellement via VNC et maintenue active avec `--keep-lease`.
 
-Indicateurs utiles du constructeur de bureau Telegram :
+Drapeaux utiles du constructeur de bureau Telegram :
 
-- `--lease-id <cbx_...>` relance sur une machine virtuelle où un opérateur s'est déjà connecté au bureau Telegram.
-- `--telegram-profile-archive-env <name>` lit une archive de profil du bureau Telegram en base64 `.tgz` à partir de cette variable d'environnement et la restaure avant le lancement.
-- `--telegram-profile-dir <remote-path>` contrôle le répertoire du profil du bureau Telegram distant. La valeur par défaut est `$HOME/.local/share/TelegramDesktop`.
-- `--no-gateway-setup` installe et ouvre le bureau Telegram sans configurer OpenClaw.
-- `--credential-source convex --credential-role ci` utilise le courtier d'informations d'identification partagé au lieu des jetons d'environnement Telegram directs.
+- `--lease-id <cbx_...>` réexécute sur une VM où un opérateur s'est déjà connecté à Telegram Desktop.
+- `--telegram-profile-archive-env <name>` lit une archive de profil bureau Telegram en base64 `.tgz` à partir de cette variable d'environnement et la restaure avant le lancement.
+- `--telegram-profile-dir <remote-path>`Telegram contrôle le répertoire distant du profil Telegram Desktop. La valeur par défaut est `$HOME/.local/share/TelegramDesktop`.
+- `--no-gateway-setup`TelegramOpenClaw installe et ouvre Telegram Desktop sans configurer OpenClaw.
+- `--credential-source convex --credential-role ci`Telegram utilise le courtier d'informations d'identification partagé au lieu des jetons d'environnement Telegram directs.
 
-Chaque scénario de publication de PR écrit `mantis-evidence.json` à côté de son rapport.
-Ce schéma est le transfert entre le code du scénario et les commentaires GitHub :
+Chaque scénario de publication sur une PR écrit `mantis-evidence.json`GitHub à côté de son rapport.
+Ce schéma sert de passerelle entre le code du scénario et les commentaires GitHub :
 
 ```json
 {
@@ -233,27 +235,27 @@ Ce schéma est le transfert entre le code du scénario et les commentaires GitHu
 }
 ```
 
-Les valeurs des `path` sont relatives au répertoire du manifeste. Les valeurs
+Les valeurs de l'artefact `path` sont relatives au répertoire du manifeste. Les valeurs
 `targetPath` sont des chemins relatifs sous le répertoire de publication de la branche
 `qa-artifacts`.
 L'éditeur rejette la traversée de chemins et ignore les entrées marquées
-`"required": false` lorsque les aperçus ou vidéos optionnels ne sont pas disponibles.
+`"required": false` lorsque les aperçus ou vidéos facultatifs ne sont pas disponibles.
 
 Types d'artefacts pris en charge :
 
 - `timeline` : capture d'écran déterministe du scénario, généralement avant/après.
-- `desktopScreenshot` : capture d'écran du bureau VNC/du navigateur.
+- `desktopScreenshot` : capture d'écran du bureau VNC/navigateur.
 - `motionPreview` : GIF animé en ligne généré à partir de l'enregistrement du bureau.
-- `motionClip` : MP4 rogné par mouvement qui supprime l'introduction et la fin statiques.
+- `motionClip` : MP4 découpé par mouvement qui supprime l'introduction et la fin statiques.
 - `fullVideo` : enregistrement MP4 complet pour une inspection approfondie.
-- `metadata` : fichier annexe JSON/journal.
+- `metadata` : fichier joint JSON/journal.
 - `report` : rapport Markdown.
 
 L'éditeur réutilisable est `scripts/mantis/publish-pr-evidence.mjs`. Les workflows
 l'appellent avec le manifeste, la PR cible, la racine cible `qa-artifacts`, le marqueur de commentaire,
-l'URL de l'artefact Actions, l'URL d'exécution et la source de la demande. Il copie les artefacts déclarés
-vers la branche `qa-artifacts`, construit un commentaire de PR avec un résumé en premier contenant des
-images/aperçus en ligne et des vidéos liées, puis met à jour le commentaire marqueur existant ou
+l'URL de l'artefact Actions, l'URL d'exécution et la source de la requête. Il copie les artefacts déclarés
+vers la branche `qa-artifacts`, construit un commentaire de PR avec le résumé en premier, des images/aperçus en ligne
+et des vidéos liées, puis met à jour le commentaire marqueur existant ou
 en crée un nouveau.
 
 Vous pouvez également déclencher l'exécution des réactions de statut directement depuis un commentaire de PR :
@@ -262,17 +264,13 @@ Vous pouvez également déclencher l'exécution des réactions de statut directe
 @Mantis discord status reactions
 ```
 
-Le déclencheur de commentaire est volontairement restreint. Il ne s'exécute que sur les
-commentaires de pull request d'utilisateurs ayant un accès en écriture, maintenance ou administration, et il ne reconnaît que
-les demandes de réaction de statut Discord. Par défaut, il utilise la référence de base connue comme mauvaise
-et le SHA de tête actuel de la PR comme candidat. Les mainteneurs peuvent remplacer l'une ou l'autre
-référence :
+Le déclencheur de commentaire est volontairement restreint. Il ne s'exécute que sur les commentaires de demande de tirage (pull request) d'utilisateurs ayant un accès en écriture, de maintenance ou d'administrateur, et il ne reconnaît que les demandes de réaction de statut Discord. Par défaut, il utilise la référence de base connue comme mauvaise (known bad baseline ref) et le SHA de tête actuel de la PR comme candidat. Les mainteneurs peuvent remplacer l'une ou l'autre référence :
 
 ```text
 @Mantis discord status reactions baseline=origin/main candidate=HEAD
 ```
 
-Le QA en direct Telegram peut également être déclenché depuis un commentaire de PR :
+Le QA en direct Telegram peut également être déclenché par un commentaire sur une PR :
 
 ```text
 @Mantis telegram
@@ -280,10 +278,7 @@ Le QA en direct Telegram peut également être déclenché depuis un commentaire
 @Mantis telegram scenarios=telegram-status-command,telegram-mentioned-message-reply
 ```
 
-Par défaut, il utilise le SHA de tête actuel de la PR comme candidat et exécute
-`telegram-status-command`. Les mainteneurs peuvent remplacer `candidate=...`,
-`provider=aws|hetzner` et `lease=<cbx_...>` lorsqu'ils ont besoin d'une référence spécifique ou d'un
-bureau Crabbox préchauffé.
+Par défaut, il utilise le SHA de tête actuel de la PR comme candidat et exécute `telegram-status-command`. Les mainteneurs peuvent remplacer `candidate=...`, `provider=aws|hetzner` et `lease=<cbx_...>` lorsqu'ils ont besoin d'une référence spécifique ou d'un bureau Crabbox préchauffé.
 
 Exemples de commandes ClawSweeper :
 
@@ -292,43 +287,43 @@ Exemples de commandes ClawSweeper :
 @clawsweeper verify e2e discord
 ```
 
-La première commande est explicite et axée sur le scénario. La seconde pourra ultérieurement mapper une PR ou un problème aux scénarios Mantis recommandés à partir des étiquettes, des fichiers modifiés et des conclusions de revue ClawSweeper.
+La première commande est explicite et axée sur le scénario. La seconde pourra ultérieurement associer une PR ou un problème aux scénarios Mantis recommandés à partir des étiquettes, des fichiers modifiés et des conclusions de révision ClawSweeper.
 
-## Cycle d'exécution
+## Cycle de vie d'exécution
 
 1. Acquérir les identifiants.
 2. Allouer ou réutiliser une machine virtuelle.
-3. Préparer le profil de bureau/navigateur lorsque le scénario nécessite des preuves d'interface utilisateur.
+3. Préparer le profil du bureau/navigateur lorsque le scénario nécessite des preuves de l'interface utilisateur.
 4. Préparer un checkout propre pour la référence de base.
 5. Installer les dépendances et construire uniquement ce dont le scénario a besoin.
-6. Démarrer une passerelle OpenClaw Gateway enfant avec un répertoire d'état isolé.
+6. Démarrer une passerelle enfant OpenClaw Gateway avec un répertoire d'état isolé.
 7. Configurer le transport en direct, le fournisseur, le modèle et le profil du navigateur.
 8. Exécuter le scénario et capturer les preuves de base.
 9. Arrêter la passerelle et conserver les journaux.
 10. Préparer la référence candidate dans la même machine virtuelle.
 11. Exécuter le même scénario et capturer les preuves candidates.
 12. Comparer les résultats de l'oracle et les preuves visuelles.
-13. Écrire les artefacts Markdown, JSON, journaux, captures d'écran et traces facultatives.
-14. Téléverser les artefacts GitHub Actions.
-15. Publier un message de statut concis pour la PR ou Discord.
+13. Écrire des artefacts Markdown, JSON, journaux, captures d'écran et des traces facultatives.
+14. Télécharger les artefacts d'actions GitHub.
+15. Publier un message de statut concis sur la PR ou Discord.
 
 Le scénario doit pouvoir échouer de deux manières différentes :
 
-- **Bug reproduit** : la base a échoué de la manière attendue.
-- **Échec du harnais** : la configuration de l'environnement, les identifiants, l'Discord API, le navigateur ou le fournisseur a échoué avant que l'oracle de bug ne soit significatif.
+- **Bug reproduit** : la base de référence a échoué de la manière attendue.
+- **Échec du harnais** : la configuration de l'environnement, les identifiants, l'Discord API, le navigateur ou le fournisseur ont échoué avant que l'oracle de bug ne soit significatif.
 
 Le rapport final doit distinguer ces cas afin que les mainteneurs ne confondent pas un environnement instable avec le comportement du produit.
 
 ## MVP Discord
 
-Le premier scénario doit cibler les réactions de statut Discord dans les canaux de guilde où le mode de livraison de réponse source est `message_tool_only`.
+Le premier scénario doit cibler les réactions de statut Discord dans les canaux de guilde où le mode de livraison des réponses source est Discord`message_tool_only`.
 
 Pourquoi c'est une bonne graine Mantis :
 
-- C'est visible dans Discord sous forme de réactions sur le message déclencheur.
-- Il possède un oracle REST fort grâce à l'état de réaction aux messages Discord.
-- Il exerce une véritable passerelle OpenClaw Gateway, l'authentification bot Discord, la distribution de messages, le mode de livraison de réponse source, l'état de réaction de statut et le cycle de vie du tour de modèle.
-- Il est suffisamment étroit pour garder la première implémentation honnête.
+- C'est visible sur Discord sous forme de réactions sur le message déclencheur.
+- Il dispose d'un oracle REST solide via l'état des réactions aux messages Discord.
+- Il exerce une véritable passerelle OpenClaw, l'authentification du bot Discord, la distribution des messages, le mode de livraison des réponses source, l'état des réactions de statut et le cycle de vie du tour de model.
+- Il est assez étroit pour garder la première implémentation honnête.
 
 Forme de scénario attendue :
 
@@ -361,9 +356,9 @@ evidence:
     screenshotMessageRow: true
 ```
 
-Les preuves de référence doivent montrer la réaction d'accusé de réception mise en file d'attente mais aucune transition de cycle de vie en mode outil uniquement. Les preuves candidates doivent montrer les réactions d'état du cycle de vie en cours d'exécution lorsque `messages.statusReactions.enabled` est explicitement vrai.
+La preuve de base doit montrer la réaction d'accusé de réception en file d'attente mais aucune transition de cycle de vie en mode tool uniquement. La preuve candidate doit montrer les réactions de statut de cycle de vie en cours d'exécution lorsque `messages.statusReactions.enabled` est explicitement vrai.
 
-La première tranche exécutable est le scénario QA en direct Discord optionnel :
+La première tranche exécutable est le scénario QA live Discord opt-in :
 
 ```bash
 pnpm openclaw qa discord \
@@ -375,22 +370,22 @@ pnpm openclaw qa discord \
   --output-dir .artifacts/qa-e2e/mantis/discord-status-reactions-candidate
 ```
 
-Il configure le SUT avec une gestion de guilde toujours activée, `visibleReplies:
-"message_tool"`, `ackReaction: "👀"`, et des réactions d'état explicites. L'oracle interroge le message déclencheur réel Discord et s'attend à la séquence observée `👀 -> 🤔 -> 👍`. Les artefacts incluent `discord-qa-reaction-timelines.json`,
-`discord-status-reactions-tool-only-timeline.html` et
+Il configure le SUT avec une gestion de guilde toujours active, `visibleReplies:
+"message_tool"`, `DiscordackReaction: "👀"`, et des réactions de statut explicites. L'oracle interroge le vrai message déclencheur Discord et s'attend à la séquence observée `👀 -> 🤔 -> 👍`. Les artefacts incluent `discord-qa-reaction-timelines.json`,
+`discord-status-reactions-tool-only-timeline.html`, et
 `discord-status-reactions-tool-only-timeline.png`.
 
 ## Pièces QA existantes
 
-Mantis devrait s'appuyer sur la pile QA privée existante au lieu de partir de zéro :
+Mantis doit s'appuyer sur la pile QA privée existante au lieu de repartir de zéro :
 
-- `pnpm openclaw qa discord`Discord exécute déjà une ligne Discord en direct avec des bots pilotes et SUT.
-- Le lanceur de transport en direct écrit déjà des rapports et des artefacts de messages observés sous `.artifacts/qa-e2e/`.
-- Les baux d'informations d'identification Convex fournissent déjà un accès exclusif aux informations d'identification de transport en direct partagées.
-- Le service de contrôle du navigateur prend déjà en charge les captures d'écran, les instantanés, les profilés gérés sans tête et les profilés CDP distants.
-- QA Lab possède déjà une interface de débogueur et un bus pour les tests de type transport.
+- `pnpm openclaw qa discord`Discord exécute déjà une voie Discord live avec des bots de pilote et SUT.
+- Le runner de transport live écrit déjà des rapports et des artefacts de messages observés sous `.artifacts/qa-e2e/`.
+- Les baux d'identification Convex fournissent déjà un accès exclusif aux identifiants de transport live partagés.
+- Le service de contrôle du navigateur prend déjà en charge les captures d'écran, les instantanés, les profils gérés headless et les profils CDP distants.
+- QA Lab dispose déjà d'une interface utilisateur de débogueur et d'un bus pour les tests de forme de transport.
 
-La première implémentation de Mantis peut être un lanceur avant/après léger reposant sur ces pièces, plus une couche de preuve visuelle.
+La première implémentation de Mantis peut être un mince runner avant/après sur ces pièces, plus une couche de preuve visuelle.
 
 ## Modèle de preuve
 
@@ -414,76 +409,80 @@ Chaque exécution écrit un répertoire d'artefacts stable :
   run.log
 ```
 
-`mantis-summary.json` doit être la source de vérité lisible par machine. Le rapport Markdown est destiné aux commentaires de PR et à la révision humaine.
+`mantis-summary.json` doit être la source de vérité lisible par machine. Le
+rapport Markdown est destiné aux commentaires de PR et à la révision humaine.
 
 Le résumé doit inclure :
 
-- références et SHA testés
-- transport et identifiant de scénario
-- provider de machine et identifiant de machine ou identifiant de bail
-- source des informations d'identification sans valeurs secrètes
-- résultat de référence
-- résultat candidat
-- si le bug s'est reproduit sur la référence
+- les refs et les SHA testés
+- le transport et l'identifiant du scénario
+- le provider de machine et l'identifiant de la machine ou du bail
+- la source des informations d'identification sans les valeurs secrètes
+- le résultat de base
+- le résultat candidat
+- si le bug s'est reproduit sur la base
 - si le candidat l'a corrigé
-- chemins des artefacts
-- problèmes de configuration ou de nettoyage nettoyés
+- les chemins des artefacts
+- les problèmes de configuration ou de nettoyage nettoyés
 
-Les captures d'écran sont des preuves, pas des secrets. Elles nécessitent encore une discipline de rédaction :
-les noms de canaux privés, les noms d'utilisateurs ou le contenu des messages peuvent apparaître. Pour les PR publics,
-préférez les liens d'artefacts GitHub Actions aux images intégrées tant que la gestion de la rédaction
-n'est pas plus robuste.
+Les captures d'écran sont des preuves, pas des secrets. Elles nécessitent encore une
+discipline de rédaction : les noms de canaux privés, les noms d'utilisateur ou le
+contenu des messages peuvent apparaître. Pour les PR publiques, préférez les liens
+d'artefacts GitHub Actions aux images en ligne jusqu'à ce que la
+gestion de la rédaction soit plus robuste.
 
 ## Navigateur et VNC
 
 La voie du navigateur a deux modes :
 
-- **Automatisation sans affichage (headless)** : valeur par défaut pour la CI. Chrome s'exécute avec CDP activé, et
-  Playwright ou le contrôle de navigateur OpenClaw capture des captures d'écran.
-- **Sauvetage VNC** : activé sur la même machine virtuelle lorsque la connexion, la MFA, l'anti-automatisation Discord,
-  ou le débogage visuel nécessite une intervention humaine.
+- **Automatisation sans tête (Headless)** : valeur par défaut pour la CI. Chrome
+  s'exécute avec CDP activé, et Playwright ou le contrôle de navigateur OpenClaw
+  capture des captures d'écran.
+- **Secours VNC** : activé sur la même machine virtuelle lorsque la connexion,
+  la MFA, l'anti-automatisation Discord ou le débogage visuel nécessite une
+  intervention humaine.
 
-Le profil de navigateur de l'observateur Discord doit être suffisamment persistant pour éviter
-la connexion à chaque exécution, mais isolé de l'état du navigateur personnel. Un profil
-appartient au pool de machines Mantis, et non à l'ordinateur portable d'un développeur.
+Le profil de navigateur de l'observateur Discord doit être suffisamment persistant
+pour éviter de se connecter à chaque exécution, mais isolé de l'état du navigateur
+personnel. Un profil appartient au pool de machines Mantis, et non à l'ordinateur
+portable d'un développeur.
 
 Lorsque Mantis est bloqué, il publie un message de statut Discord avec :
 
-- id d'exécution
-- id de scénario
-- fournisseur de machine
-- répertoire d'artefacts
-- instructions de connexion VNC ou noVNC si disponibles
-- texte court sur le blocage
+- l'identifiant de l'exécution
+- l'identifiant du scénario
+- le provider de machine
+- le répertoire des artefacts
+- les instructions de connexion VNC ou noVNC si disponibles
+- un court texte sur le blocage
 
-La première privée de déploiement peut publier ces messages sur le canal de l'opérateur existant
-et passer à un canal Mantis dédié plus tard.
+La première privatisation de déploiement peut poster ces messages sur le canal
+opérateur existant et passer ensuite à un canal Mantis dédié.
 
 ## Machines
 
 Mantis devrait préférer AWS via Crabbox pour la première implémentation distante.
-Crabbox nous fournit des machines réchauffées, le suivi des baux, l'hydratation, les journaux, les résultats et
-le nettoyage. Si la capacité AWS est trop lente ou indisponible, ajoutez un fournisseur Hetzner
-derrière la même interface machine.
+Crabbox nous fournit des machines prêtes, le suivi des baux, l'hydratation, les
+journaux, les résultats et le nettoyage. Si la capacité AWS est trop lente ou
+indisponible, ajoutez un provider Hetzner derrière la même interface
+machine.
 
 Configuration minimale de la VM :
 
 - Linux avec une installation Chrome ou Chromium compatible bureau
 - Accès CDP pour l'automatisation du navigateur
-- VNC ou noVNC pour le sauvetage
+- VNC ou noVNC pour le secours
 - Node 22 et pnpm
-- Extraction OpenClaw et cache des dépendances
+- Checkout OpenClaw et cache des dépendances
 - Cache du navigateur Chromium Playwright lorsque Playwright est utilisé
-- suffisamment de CPU et de mémoire pour un OpenClaw Gateway, un navigateur et une exécution de modèle
+- suffisamment de CPU et de mémoire pour une passerelle OpenClaw Gateway, un navigateur et une exécution de modèle
 - accès sortant vers Discord, GitHub, les fournisseurs de modèles et le courtier d'informations d'identification
 
-La VM ne doit pas conserver de secrets bruts à long terme en dehors des magasins d'informations d'identification attendus ou
-les magasins de profils de navigateur.
+La machine virtuelle ne doit pas conserver de secrets bruts à long terme en dehors des magasins d'informations d'identification ou de profils de navigateur attendus.
 
 ## Secrets
 
-Les secrets résident dans les secrets de l'organisation ou du dépôt GitHub pour les exécutions distantes, et dans
-un fichier de secrets local contrôlé par l'opérateur pour les exécutions locales.
+Les secrets résident dans les secrets de l'organisation ou du dépôt GitHub pour les exécutions distantes, et dans un fichier de secrets contrôlé par l'opérateur local pour les exécutions locales.
 
 Noms de secrets recommandés :
 
@@ -499,34 +498,26 @@ Noms de secrets recommandés :
 - `OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR`
 - `OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN`
 
-À long terme, le pool d'identifiants Convex doit rester la source normale pour les
-identifiants de transport en direct. Les secrets GitHub amorcent le courtier et les voies de secours.
-Le workflow de réactions d'état Discord mappe les secrets Mantis Crabbox vers les
-variables d'environnement `CRABBOX_COORDINATOR` et `CRABBOX_COORDINATOR_TOKEN`
-que la CLI Crabbox attend. Les noms de secrets GitHub bruts `CRABBOX_*` restent
-acceptés comme solution de repli de compatibilité.
+À long terme, le pool d'informations d'identification Convex devrait rester la source normale pour les informations d'identification de transport en direct. Les secrets GitHub amorcent le courtier et les voies de secours. Le workflow de réactions de statut Discord mappe les secrets Mantis Crabbox vers les variables d'environnement `CRABBOX_COORDINATOR` et `CRABBOX_COORDINATOR_TOKEN` attendues par la CLI Crabbox. Les noms de secrets bruts `CRABBOX_*` GitHub restent acceptés en guise de solution de repli de compatibilité.
 
-L'exécuteur Mantis ne doit jamais afficher :
+Le runner Mantis ne doit jamais imprimer :
 
-- Jeton de bot Discord
-- clés API du fournisseur
+- Jetons de bot Discord
+- Clés API du fournisseur
 - cookies du navigateur
 - contenu du profil d'authentification
 - mots de passe VNC
-- payloads d'identifiants bruts
+- payloads d'informations d'identification bruts
 
-Les téléchargements d'artefacts publics doivent également masquer les métadonnées de la cible Discord telles que le bot,
-la guilde, le channel et les identifiants de message. Le workflow de fumée GitHub active
-`OPENCLAW_QA_REDACT_PUBLIC_METADATA=1` pour cette raison.
+Les téléchargements d'artefacts publics doivent également masquer les métadonnées de cible Discord telles que les identifiants de bot, de guilde, de canal et de message. Le workflow de smoke GitHub active `OPENCLAW_QA_REDACT_PUBLIC_METADATA=1` pour cette raison.
 
-Si un jeton est collé accidentellement dans un problème, une PR, une discussion ou un journal, faites-le tourner
-une fois le nouveau secret stocké.
+Si un jeton est collé accidentellement dans un ticket, une PR, un chat ou un journal, faites-le pivoter une fois que le nouveau secret a été stocké.
 
 ## Artefacts GitHub et commentaires de PR
 
-Les workflows Mantis doivent télécharger l'ensemble complet des preuves en tant qu'artefact Actions à courte durée de vie. Lorsque le workflow est exécuté pour un rapport de bogue ou une PR de correction, il doit également publier les captures d'écran PNG expurgées vers la branche `qa-artifacts` et insérer (upsert) un commentaire sur ce bogue ou cette PR de correction avec des captures d'écran avant/après en ligne. Ne publiez pas la preuve principale uniquement sur une PR d'automatisation QA générique. Les journaux bruts, les messages observés et autres preuves volumineuses restent dans l'artefact Actions.
+Les workflows Mantis doivent télécharger l'intégralité du bundle de preuves en tant qu'artefact Actions à court terme. Lorsque le workflow est exécuté pour un rapport de bogue ou une PR de correction, il doit également publier les captures d'écran PNG expurgées vers la branche `qa-artifacts` et insérer (upsert) un commentaire sur ce bogue ou cette PR de correction avec des captures d'écran avant/après en ligne. Ne publiez pas la preuve principale uniquement sur une PR générique d'automatisation QA. Les journaux bruts, les messages observés et autres preuves volumineuses restent dans l'artefact Actions.
 
-Les workflows de production doivent publier ces commentaires avec l'application Mantis GitHub, et non avec `github-actions[bot]`. Stockez l'identifiant de l'application et la clé privée en tant que secrets `MANTIS_GITHUB_APP_ID` et `MANTIS_GITHUB_APP_PRIVATE_KEY` des actions GitHub. Le workflow utilise un marqueur caché comme clé d'upsert, met à jour ce commentaire lorsque le jeton peut le modifier, et crée un nouveau commentaire détenu par Mantis lorsqu'un ancien marqueur détenu par un bot ne peut pas être modifié.
+Les workflows de production doivent publier ces commentaires avec l'application Mantis GitHub et non avec `github-actions[bot]`. Stockez l'identifiant de l'application et la clé privée en tant que secrets `MANTIS_GITHUB_APP_ID` et `MANTIS_GITHUB_APP_PRIVATE_KEY` des actions GitHub. Le workflow utilise un marqueur caché comme clé d'upsert, met à jour ce commentaire lorsque le jeton peut le modifier, et crée un nouveau commentaire détenu par Mantis lorsqu'un ancien marqueur détenu par un bot ne peut pas être modifié.
 
 Le commentaire de la PR doit être court et visuel :
 
@@ -548,23 +539,23 @@ candidate showed the expected queued -> thinking -> done sequence.
 | <inline screenshot> | <inline screenshot> |
 ```
 
-Lorsque l'exécution échoue parce que le harnais a échoué, le commentaire doit le dire au lieu d'impliquer que le candidat a échoué.
+Lorsque l'exécution échoue à cause de l'échec du harnais, le commentaire doit le dire au lieu d'impliquer que le candidat a échoué.
 
 ## Notes de déploiement privé
 
-Un déploiement privé peut déjà avoir une application Mantis Discord. Réutilisez cette application au lieu d'en créer une autre lorsqu'elle dispose des bonnes autorisations de bot et peut être renouvelée en toute sécurité.
+Un déploiement privé peut déjà disposer d'une application Mantis Discord. Réutilisez cette application au lieu d'en créer une autre lorsqu'elle dispose des bonnes autorisations de bot et peut faire l'objet d'une rotation en toute sécurité.
 
-Définissez le channel de notification initial de l'opérateur via des secrets ou la configuration de déploiement. Il peut pointer d'abord vers un channel de mainteneur ou d'opérations existant, puis se déplacer vers un channel Mantis dédié une fois qu'il existe.
+Définissez le channel de notification initial de l'opérateur via des secrets ou la configuration de déploiement. Il peut pointer d'abord vers un channel de maintenance ou d'opérations existant, puis passer à un channel Mantis dédié une fois que celui-ci existe.
 
-Ne mettez pas les identifiants de guilde, les identifiants de channel, les jetons de bot, les cookies du navigateur ou les mots de passe VNC dans ce document. Stockez-les dans les secrets GitHub, le courtier d'identifiants ou le magasin de secrets local de l'opérateur.
+Ne mettez pas les identifiants de guilde (guild ids), les identifiants de channel, les jetons de bot, les cookies de navigateur ou les mots de passe VNC dans ce document. Stockez-les dans les secrets GitHub, le courtier d'informations d'identification (credential broker) ou le stockage de secrets local de l'opérateur.
 
-## Ajout d'un scénario
+## Ajouter un scénario
 
 Un scénario Mantis doit déclarer :
 
 - id et titre
 - transport
-- identifiants requis
+- informations d'identification requises
 - politique de référence de base
 - politique de référence candidate
 - correctif de configuration OpenClaw
@@ -576,38 +567,32 @@ Un scénario Mantis doit déclarer :
 - budget de délai d'attente
 - étapes de nettoyage
 
-Les scénarios devraient préférer des oracles petits et typés :
+Les scénarios doivent préférer des oracles petits et typés :
 
 - état de réaction Discord pour les bogues de réaction
 - références de message Discord pour les bogues de discussion (threading)
-- thread ts et l'état de l'API de réaction SlackAPI pour les bugs Slack
-- identifiants de messages et en-têtes pour les bugs email
-- captures d'écran du navigateur lorsque l'interface utilisateur est la seule observable fiable
+- Identifiant de fil (thread ts) et état de l'API de réaction pour les bugs SlackAPISlack
+- Identifiants de message et en-têtes pour les bugs de courrier électronique
+- Captures d'écran du navigateur lorsque l'interface utilisateur est le seul élément observable fiable
 
-Les contrôles de vision doivent être additifs. Si une API de plateforme peut prouver le bug, utilisez la
-API comme oracle de succès/échec et conservez les captures d'écran pour la confiance humaine.
+Les vérifications visuelles doivent être additives. Si une API de plateforme peut prouver le bug, utilisez la API comme oracle de réussite/échec et gardez les captures d'écran pour la confiance humaine.
 
-## Extension du fournisseur
+## Extension des fournisseurs
 
 Après Discord, le même exécuteur peut ajouter :
 
 - Slack : réactions, fils, mentions d'application, modales, téléchargements de fichiers.
-- Email : authentification Gmail et fil de messages utilisant `gog` lorsque les connecteurs ne sont pas
-  suffisants.
-- WhatsApp : connexion QR, ré-identification, livraison de messages, médias, réactions.
-- Telegram : filtrage des mentions de groupe, commandes, réactions lorsque disponibles.
+- Email : authentification Gmail et messagerie en fil de discussion utilisant `gog` lorsque les connecteurs ne sont pas suffisants.
+- WhatsApp : connexion QR, ré-identification, livraison de messages, média, réactions.
+- Telegram : filtrage des mentions de groupe, commandes, réactions lorsque disponible.
 - Matrix : salons chiffrés, relations de fil ou de réponse, reprise après redémarrage.
 
-Chaque transport doit avoir un scénario de fumée peu coûteux et un ou plusieurs scénarios de classe de bug.
-Les scénarios visuels coûteux doivent rester optionnels.
+Chaque transport devrait avoir un scénario de fumée peu coûteux et un ou plusieurs scénarios de classe de bug. Les scénarios visuels coûteux devraient rester optionnels.
 
 ## Questions ouvertes
 
-- Quel bot Discord doit être le pilote, et lequel doit être le SUT, lorsque le
-  bot Mantis existant est réutilisé ?
-- La connexion du navigateur observateur doit-elle utiliser un compte humain Discord, un compte de test,
-  ou uniquement des preuves REST lisibles par le bot pour la première phase ?
-- Pendant combien de temps GitHub doit-il conserver les artefacts Mantis pour les PR ?
-- Quand ClawSweeper doit-il recommander automatiquement Mantis au lieu d'attendre une
-  commande de mainteneur ?
+- Quel bot Discord doit être le pilote, et lequel doit être le SUT, lorsque le bot Mantis existant est réutilisé ?
+- La connexion du navigateur observateur doit-elle utiliser un compte humain Discord, un compte de test, ou uniquement des preuves REST lisibles par le bot pour la première phase ?
+- Combien de temps GitHub doit-il conserver les artefacts Mantis pour les PR ?
+- Quand ClawSweeper doit-il recommander automatiquement Mantis au lieu d'attendre une commande de mainteneur ?
 - Les captures d'écran doivent-elles être expurgées ou recadrées avant le téléchargement pour les PR publics ?

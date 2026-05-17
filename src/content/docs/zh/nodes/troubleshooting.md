@@ -112,16 +112,12 @@ If still stuck:
 - Re-grant OS permissions.
 - Recreate/adjust exec approval policy.
 
-Related:
+## 相关
 
-- [/nodes/index](/zh/nodes/index)
-- [/nodes/camera](/zh/nodes/camera)
-- [/nodes/location-command](/zh/nodes/location-command)
-- [/tools/exec-approvals](/zh/tools/exec-approvals)
-- [/gateway/pairing](/zh/gateway/pairing)
-
-## Related
-
-- [Nodes overview](/zh/nodes)
-- [Gateway(网关) 故障排除](/zh/gateway/troubleshooting)
-- [Channel 故障排除](/zh/channels/troubleshooting)
+- [节点概述](/zh/nodes)
+- [相机节点](/zh/nodes/camera)
+- [位置命令](/zh/nodes/location-command)
+- [执行审批](/zh/tools/exec-approvals)
+- [Gateway(网关) 配对](<Gateway(网关)/en/gateway/pairing>)
+- [Gateway(网关) 故障排除](<Gateway(网关)/en/gateway/troubleshooting>)
+- [通道故障排除](/zh/channels/troubleshooting)

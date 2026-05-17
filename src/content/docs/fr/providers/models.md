@@ -22,42 +22,43 @@ OpenClaw peut utiliser de nombreux providers LLM. Choisissez-en un, authentifiez
 ## Providers pris en charge (ensemble de démarrage)
 
 - [Alibaba Model Studio](/fr/providers/alibaba)
-- [Amazon Bedrock](Amazon Bedrock/en/providers/bedrock)
-- [Anthropic (API + Claude CLI)](AnthropicAPICLI/en/providers/anthropic)
+- [Amazon Bedrock](/fr/providers/bedrock)
+- [Anthropic (API + Claude CLI)](/fr/providers/anthropic)
 - [BytePlus (International)](/fr/concepts/model-providers#byteplus-international)
 - [Chutes](/fr/providers/chutes)
 - [ComfyUI](/fr/providers/comfy)
-- [Cloudflare AI Gateway](Gateway/en/providers/cloudflare-ai-gateway)
+- [Cloudflare AI Gateway](/fr/providers/cloudflare-ai-gateway)
 - [DeepInfra](/fr/providers/deepinfra)
 - [fal](/fr/providers/fal)
 - [Fireworks](/fr/providers/fireworks)
-- [GLM models](GLM/en/providers/glm)
-- [MiniMax](MiniMax/en/providers/minimax)
+- [GLM models](/fr/providers/glm)
+- [MiniMax](/fr/providers/minimax)
 - [Mistral](/fr/providers/mistral)
-- [Moonshot AI (Kimi + Kimi Coding)](Moonshot/en/providers/moonshot)
-- [OpenAI (API + Codex)](OpenAIAPI/en/providers/openai)
+- [Moonshot AI (Kimi + Kimi Coding)](/fr/providers/moonshot)
+- [OpenAI (API + Codex)](/fr/providers/openai)
 - [OpenCode (Zen + Go)](/fr/providers/opencode)
-- [OpenRouter](OpenRouter/en/providers/openrouter)
+- [OpenRouter](/fr/providers/openrouter)
 - [Qianfan](/fr/providers/qianfan)
-- [Qwen](Qwen/en/providers/qwen)
+- [Qwen](/fr/providers/qwen)
 - [Runway](/fr/providers/runway)
 - [StepFun](/fr/providers/stepfun)
 - [Synthetic](/fr/providers/synthetic)
-- [Vercel AI Gateway](VercelGateway/en/providers/vercel-ai-gateway)
-- [Venice (Venice AI)](VeniceVenice/en/providers/venice)
+- [Vercel AI Gateway](/fr/providers/vercel-ai-gateway)
+- [Venice (Venice AI)](/fr/providers/venice)
 - [xAI](/fr/providers/xai)
 - [Z.AI](/fr/providers/zai)
 
-## Variantes de provider groupées supplémentaires
+## Variantes de provider supplémentaires
 
-- `anthropic-vertex` - prise en charge implicite de Anthropic sur Google Vertex lorsque les informations d'identification Vertex sont disponibles ; aucun choix d'authentification onboarding distinct
-- `copilot-proxy` - pont de proxy VS Code Copilot local ; utilisez `openclaw onboard --auth-choice copilot-proxy`
-- `google-gemini-cli` - flux CLI OAuth OAuth non officiel ; nécessite une installation locale de `gemini` (`brew install gemini-cli` ou `npm install -g @google/gemini-cli`) ; model `google-gemini-cli/gemini-3-flash-preview` par défaut ; utilisez `openclaw onboard --auth-choice google-gemini-cli` ou `openclaw models auth login --provider google-gemini-cli --set-default`
+- `anthropic-vertex` - installez `@openclaw/anthropic-vertex-provider` pour la prise en charge implicite de Anthropic sur Google Vertex lorsque les informations d'identification Vertex sont disponibles ; aucun choix d'authentification onboarding séparé
+- `copilot-proxy` - pont proxy local VS Code Copilot ; utilisez `openclaw onboard --auth-choice copilot-proxy`
+- `google-gemini-cli` - flux OAuth Gemini CLI OAuth non officiel ; nécessite une installation locale de `gemini` (`brew install gemini-cli` ou `npm install -g @google/gemini-cli`) ; model par défaut `google-gemini-cli/gemini-3-flash-preview` ; utilisez `openclaw onboard --auth-choice google-gemini-cli` ou `openclaw models auth login --provider google-gemini-cli --set-default`
 
-Pour le catalogue complet des providers (xAI, Groq, Mistral, etc.) et la configuration avancée, consultez [Model providers](/fr/concepts/model-providers).
+Pour le catalogue complet des providers (xAI, Groq, Mistral, etc.) et la configuration avancée,
+voyez [Model providers](/fr/concepts/model-providers).
 
 ## Connexes
 
-- [Sélection de modèle](/fr/concepts/model-providers)
-- [Basculement de modèle](/fr/concepts/model-failover)
-- [CLI Modèles](CLI/en/cli/models)
+- [Model selection](/fr/concepts/model-providers)
+- [Model failover](/fr/concepts/model-failover)
+- [Models CLI](/fr/cli/models)

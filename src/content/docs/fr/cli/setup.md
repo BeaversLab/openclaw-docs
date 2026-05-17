@@ -1,24 +1,37 @@
 ---
-summary: "Référence CLI pour `openclaw setup` (initialiser la config + l'espace de travail)"
+summary: "CLIRéférence CLI pour `openclaw setup` (initialiser la configuration et l'espace de travail, exécuter facultativement l'onboarding)"
 read_when:
   - You're doing first-run setup without full CLI onboarding
   - You want to set the default workspace path
+  - You need every flag and how setup decides between baseline and wizard mode
 title: "Configuration"
 ---
 
 # `openclaw setup`
 
-Initialisez la configuration de base et l'espace de travail de l'agent sans exécuter le processus d'intégration guidé complet.
+Initialise la configuration de base et l'espace de travail de l'agent. Si un indicateur d'onboarding est présent, exécute également l'assistant.
 
-<Note>
-  `openclaw setup` est destiné aux installations de configuration modifiable. En mode Nix (`OPENCLAW_NIX_MODE=1`), OpenClaw refuse les écritures de configuration car le fichier de configuration est géré par Nix. Les agents doivent utiliser le [nix-openclaw Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) de première partie ou la configuration source équivalente pour un autre
-  paquet Nix.
-</Note>
+<Note>`openclaw setup` est destiné aux installations avec configuration mutable. En mode Nix (`OPENCLAW_NIX_MODE=1`), OpenClaw refuse les écritures de configuration car le fichier de configuration est géré par Nix. Utilisez le [nix-openclaw Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) officiel ou la configuration source équivalente pour un autre paquet Nix.</Note>
 
-Connexes :
+## Options
 
-- Getting started : [Getting started](/fr/start/getting-started)
-- onboarding CLI : [Onboarding (CLI)](/fr/start/wizard)
+| Indicateur                 | Description                                                                                                                  |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `--workspace <dir>`        | Répertoire de l'espace de travail de l'agent (par défaut `~/.openclaw/workspace` ; stocké sous `agents.defaults.workspace`). |
+| `--wizard`                 | Exécuter l'onboarding interactif.                                                                                            |
+| `--non-interactive`        | Exécuter l'onboarding sans invite.                                                                                           |
+| `--mode <mode>`            | Mode d'onboarding : `local` ou `remote`.                                                                                     |
+| `--import-from <provider>` | Provider de migration à exécuter pendant l'onboarding.                                                                       |
+| `--import-source <path>`   | Répertoire agent source pour `--import-from`.                                                                                |
+| `--import-secrets`         | Importer les secrets pris en charge pendant la migration de l'onboarding.                                                    |
+| `--remote-url <url>`       | URL WebSocket du Gateway distant.                                                                                            |
+| `--remote-token <token>`   | Jeton du Gateway distant (optionnel).                                                                                        |
+
+### Déclenchement automatique de l'assistant
+
+`openclaw setup` exécute l'assistant lorsque l'un de ces indicateurs est explicitement présent, même sans `--wizard` :
+
+`--wizard`, `--non-interactive`, `--mode`, `--import-from`, `--import-source`, `--import-secrets`, `--remote-url`, `--remote-token`.
 
 ## Exemples
 
@@ -30,32 +43,15 @@ openclaw setup --wizard --import-from hermes --import-source ~/.hermes
 openclaw setup --non-interactive --mode remote --remote-url wss://gateway-host:18789 --remote-token <token>
 ```
 
-## Options
+## Notes
 
-- `--workspace <dir>` : répertoire de l'espace de travail de l'agent (stocké comme `agents.defaults.workspace`)
-- `--wizard` : exécuter l'onboarding
-- `--non-interactive` : exécuter l'onboarding sans invite
-- `--mode <local|remote>` : mode d'onboarding
-- `--import-from <provider>` : provider de migration à exécuter pendant l'onboarding
-- `--import-source <path>` : répertoire d'origine de l'agent pour `--import-from`
-- `--import-secrets` : importer les secrets pris en charge lors de la migration de l'onboarding
-- `--remote-url <url>` : URL WebSocket du Gateway distant
-- `--remote-token <token>` : jeton du Gateway distant
-
-Pour exécuter l'onboarding via le setup :
-
-```bash
-openclaw setup --wizard
-```
-
-Notes :
-
-- Le `openclaw setup` simple initialise la configuration + l'espace de travail sans le processus d'onboarding complet.
-- Après le setup simple, exécutez `openclaw onboard` pour le processus guidé complet, `openclaw configure` pour des modifications ciblées, ou `openclaw channels add` pour ajouter des comptes de channel.
-- L'onboarding s'exécute automatiquement lorsque des indicateurs d'onboarding sont présents (`--wizard`, `--non-interactive`, `--mode`, `--import-from`, `--import-source`, `--import-secrets`, `--remote-url`, `--remote-token`).
-- Si un état Hermes est détecté, l'onboarding interactif peut proposer une migration automatiquement. L'importation via l'onboarding nécessite une nouvelle installation ; utilisez [Migrate](/fr/cli/migrate) pour les plans de simulation, les sauvegardes et le mode de surcharge en dehors de l'onboarding.
+- Un `openclaw setup` simple initialise la configuration et l'espace de travail sans exécuter le processus d'onboarding complet.
+- Après une installation simple, exécutez `openclaw onboard` pour le processus guidé complet, `openclaw configure` pour des modifications ciblées, ou `openclaw channels add` pour ajouter des comptes de channel.
+- Si un état Hermes est détecté, l'onboarding interactif peut proposer automatiquement une migration. L'importation lors de l'onboarding nécessite une nouvelle installation ; utilisez [Migrate](/fr/cli/migrate) pour les plans de simulation, les sauvegardes et le mode de réécriture en dehors de l'onboarding.
 
 ## Connexes
 
-- [Référence CLI](CLI/en/cli)
+- [Référence CLI](/fr/cli)
+- [Onboarding (CLI)](/fr/start/wizard)
+- [Getting started](/fr/start/getting-started)
 - [Vue d'ensemble de l'installation](/fr/install)

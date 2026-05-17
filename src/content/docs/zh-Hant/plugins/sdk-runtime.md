@@ -43,7 +43,7 @@ register(api) {
 
 `api.runtime.config.loadConfig()` 和 `api.runtime.config.writeConfigFile(...)` 是 `runtime-config-load-write` 下的已棄用相容性輔助函式。它們在執行時會警告一次，並在遷移期間保留給舊的外部外掛使用。捆綁外掛不得使用它們；如果外掛程式碼呼叫它們或從外掛 SDK 子路徑匯入這些輔助函式，設定邊界防護將會失敗。
 
-對於直接的 SDK 匯入，請使用專注的設定子路徑，而不是廣泛的 `openclaw/plugin-sdk/config-runtime` 相容性匯出桶：`config-types` 用於型別，`plugin-config-runtime` 用於已載入的設定斷言和外掛條目查找，`runtime-config-snapshot` 用於當前程序快照，以及 `config-mutation` 用於寫入。捆綁外掛測試應該直接模擬這些專注的子路徑，而不是模擬廣泛的相容性匯出桶。
+對於直接導入 SDK，請使用專注的配置子路徑，而不是廣泛的 `openclaw/plugin-sdk/config-runtime` 相容性桶（barrel）：`config-contracts` 用於類型，`plugin-config-runtime` 用於已載入的配置斷言和插件入口查找，`runtime-config-snapshot` 用於當前進程快照，以及 `config-mutation` 用於寫入。打包的插件測試應該直接模擬這些專注的子路徑，而不是模擬廣泛的相容性桶。
 
 內部 OpenClaw 執行時代碼也有相同的方向：在 CLI、閘道或程序邊界處載入設定一次，然後傳遞該值。成功的變更寫入會刷新程序執行時快照並推進其內部修訂版本；長期存活的快取應該以執行時擁有的快取鍵為鍵，而不是在本地序列化設定。長期存活的執行時模組對於環境 `loadConfig()` 呼叫具有零容忍掃描器；請在明確的程序邊界使用傳入的 `cfg`、請求 `context.getRuntimeConfig()` 或 `getRuntimeConfig()`。
 
@@ -209,7 +209,10 @@ register(api) {
 
   </Accordion>
   <Accordion title="api.runtime.tasks.managedFlows">
-    將任務流運行時綁定到現有的 OpenClaw 會話金鑰或受信任的工具上下文，然後創建和管理任務流，而無需在每次調用時傳遞所有者。
+    將 Task Flow 執行時綁定到現有的 OpenClaw 會話金鑰或受信任的工具上下文，然後建立和管理 Task Flows，而無需在每次調用時傳遞所有者。
+
+    Task Flow 追蹤持久的多步工作流狀態。它不是排程器：請使用 Cron 或 `api.session.workflow.scheduleSessionTurn(...)` 進行未來
+    的喚醒，然後在該工作需要流狀態、子任務、等待或取消時，從預定的回合中使用 `managedFlows`。
 
     ```typescript
     const taskFlow = api.runtime.tasks.managedFlows.fromToolContext(ctx);
@@ -236,7 +239,7 @@ register(api) {
     });
     ```
 
-    當您已經擁有來自您自己的綁定層的受信任 OpenClaw 會話金鑰時，請使用 `bindSession({ sessionKey, requesterOrigin })`。不要從原始用戶輸入進行綁定。
+    當您已經來自自己的綁定層擁有受信任的 OpenClaw 會話金鑰時，請使用 `bindSession({ sessionKey, requesterOrigin })`。切勿從原始使用者輸入進行綁定。
 
   </Accordion>
   <Accordion title="api.runtime.tts">
@@ -266,7 +269,7 @@ register(api) {
 
   </Accordion>
   <Accordion title="api.runtime.mediaUnderstanding">
-    圖像、音訊和影片分析。
+    圖像、音訊和視訊分析。
 
     ```typescript
     // Describe an image
@@ -294,12 +297,40 @@ register(api) {
       filePath: "/tmp/inbound-file.pdf",
       cfg: api.config,
     });
+
+    // Structured image extraction through a specific provider/model.
+    // Include at least one image; text inputs are supplemental context.
+    const evidence = await api.runtime.mediaUnderstanding.extractStructuredWithModel({
+      provider: "codex",
+      model: "gpt-5.5",
+      input: [
+        {
+          type: "image",
+          buffer: receiptImageBuffer,
+          fileName: "receipt.png",
+          mime: "image/png",
+        },
+        { type: "text", text: "Prefer the printed total over handwritten notes." },
+      ],
+      instructions: "Extract vendor, total, and searchable tags.",
+      schemaName: "receipt.evidence",
+      jsonSchema: {
+        type: "object",
+        properties: {
+          vendor: { type: "string" },
+          total: { type: "number" },
+          tags: { type: "array", items: { type: "string" } },
+        },
+        required: ["vendor", "total"],
+      },
+      cfg: api.config,
+    });
     ```
 
-    當未產生輸出（例如跳過輸入）時，返回 `{ text: undefined }`。
+    當未產生輸出（例如跳過的輸入）時，返回 `{ text: undefined }`。
 
     <Info>
-    `api.runtime.stt.transcribeAudioFile(...)` 仍然作為 `api.runtime.mediaUnderstanding.transcribeAudioFile(...)` 的相容性別名。
+    `api.runtime.stt.transcribeAudioFile(...)` 作為 `api.runtime.mediaUnderstanding.transcribeAudioFile(...)` 的相容性別名保留。
     </Info>
 
   </Accordion>
@@ -355,9 +386,8 @@ register(api) {
 
   </Accordion>
   <Accordion title="api.runtime.config">
-    目前的執行時段設定快照與交易式設定寫入。優先使用已傳入
-    至目前呼叫路徑的設定；僅在處理程式直接需要
-    程序快照時才使用 `current()`。
+    目前的執行時期設定快照與交易式設定寫入。偏好使用已傳入至目前呼叫路徑的設定；僅在處理程式直接需要處理程序快照時才使用
+    `current()`。
 
     ```typescript
     const cfg = api.runtime.config.current();
@@ -369,10 +399,9 @@ register(api) {
     });
     ```
 
-    `mutateConfigFile(...)` 和 `replaceConfigFile(...)` 會傳回 `followUp`
+    `mutateConfigFile(...)` 與 `replaceConfigFile(...)` 會回傳 `followUp`
     值，例如 `{ mode: "restart", requiresRestart: true, reason }`，
-    這會記錄寫入者的意圖，而不會將重新啟動控制權從
-    閘道移除。
+    這會記錄寫入者的意圖，而不會從閘道手中取走重新啟動控制權。
 
   </Accordion>
   <Accordion title="api.runtime.system">
@@ -426,7 +455,7 @@ register(api) {
 
   </Accordion>
   <Accordion title="api.runtime.state">
-    狀態目錄解析與基於 SQLite 的鍵值存儲。
+    狀態目錄解析與 SQLite 支援的鍵值儲存。
 
     ```typescript
     const stateDir = api.runtime.state.resolveStateDir(process.env);
@@ -443,10 +472,10 @@ register(api) {
     await store.clear();
     ```
 
-    鍵值存儲在重啟後仍然存在，並且按運行時綁定的插件 ID 進行隔離。使用 `registerIfAbsent(...)` 進行原子性去重聲明：當鍵缺失或過期並被註冊時，它返回 `true`；當實時值已存在時，它返回 `false` 而不覆蓋其值、創建時間或 TTL。限制：每個命名空間 `maxEntries`，每個插件 1,000 個實時行，JSON 值小於 64KB，以及可選的 TTL 過期時間。
+    鍵值儲存空間在重新啟動後仍會保留，並且會透過執行時期綁定的外掛 ID 進行隔離。使用 `registerIfAbsent(...)` 進行原子重複資料剔除宣告：當金鑰不存在或已過期且已註冊時，它會回傳 `true`；當有效值已存在時，則回傳 `false`，且不會覆寫其值、建立時間或 TTL。限制：每個命名空間 `maxEntries`，每個外掛 1,000 個有效資料列，JSON 值小於 64KB，以及可選的 TTL 過期時間。
 
     <Warning>
-    本版本僅限捆綁插件。
+    此版本僅限隨附外掛使用。
     </Warning>
 
   </Accordion>
@@ -461,9 +490,9 @@ register(api) {
 
   </Accordion>
   <Accordion title="api.runtime.channel">
-    特定通道的運行時輔助程式（在加載通道插件時可用）。
+    通道特定的執行時期輔助程式（載入通道外掛時可用）。
 
-    `api.runtime.channel.mentions` 是使用運行時注入的捆綁通道插件共用的入站提及策略表面：
+    `api.runtime.channel.mentions` 是使用執行時期插入之隨附通道外掛的共用輸入提及政策介面：
 
     ```typescript
     const mentionMatch = api.runtime.channel.mentions.matchesMentionWithExplicit(text, {
@@ -498,14 +527,14 @@ register(api) {
     - `implicitMentionKindWhen`
     - `resolveInboundMentionDecision`
 
-    `api.runtime.channel.mentions` 故意不公開較舊的 `resolveMentionGating*` 相容性輔助程式。建議優先使用標準化的 `{ facts, policy }` 路徑。
+    `api.runtime.channel.mentions` 故意不公開較舊的 `resolveMentionGating*` 相容性輔助程式。請優先使用標準化的 `{ facts, policy }` 路徑。
 
   </Accordion>
 </AccordionGroup>
 
 ## 儲存運行時參照
 
-使用 `createPluginRuntimeStore` 儲存運行時參照，以便在 `register` 回調外部使用：
+使用 `createPluginRuntimeStore` 來儲存執行時期參照，以便在 `register` 回呼之外使用：
 
 <Steps>
   <Step title="建立存儲">
@@ -545,36 +574,36 @@ register(api) {
   </Step>
 </Steps>
 
-<Note>對於運行時存儲標識，建議優先使用 `pluginId`。較低層級的 `key` 形式僅適用於一個插件有意需要多個運行時插槽的罕見情況。</Note>
+<Note>建議優先使用 `pluginId` 作為 runtime-store 身份。較低層級的 `key` 形式僅適用於少數情況，例如當某個外掛刻意需要多個 runtime 時段時。</Note>
 
 ## 其他頂層 `api` 欄位
 
-除了 `api.runtime` 之外，該 API 物件還提供：
+除了 `api.runtime` 之外，API 物件還提供：
 
 <ParamField path="api.id" type="string">
-  外掛程式 ID。
+  外掛 ID。
 </ParamField>
 <ParamField path="api.name" type="string">
-  外掛程式顯示名稱。
+  外掛顯示名稱。
 </ParamField>
 <ParamField path="api.config" type="OpenClawConfig">
-  目前的設定快照（可用時為作用中的記憶體內執行時期快照）。
+  目前的設定快照（可用時的活躍記憶體內執行時快照）。
 </ParamField>
 <ParamField path="api.pluginConfig" type="Record<string, unknown>">
-  來自 `plugins.entries.<id>.config` 的外掛程式特定設定。
+  來自 `plugins.entries.<id>.config` 的外掛特定設定。
 </ParamField>
 <ParamField path="api.logger" type="PluginLogger">
-  限定範圍的記錄器（`debug`、`info`、`warn`、`error`）。
+  作用域記錄器（`debug`、`info`、`warn`、`error`）。
 </ParamField>
 <ParamField path="api.registrationMode" type="PluginRegistrationMode">
-  目前的載入模式；`"setup-runtime"` 是在完整進入啟動/設定之前的輕量級視窗。
+  目前的載入模式；`"setup-runtime"` 是輕量級的完全進入前啟動/設定視窗。
 </ParamField>
 <ParamField path="api.resolvePath(input)" type="(string) => string">
-  解析相對於外掛程式根目錄的路徑。
+  解析相對於外掛根目錄的路徑。
 </ParamField>
 
 ## 相關
 
-- [外掛程式內部運作](/zh-Hant/plugins/architecture) — 能力模型與註冊表
+- [外掛內部機制](/zh-Hant/plugins/architecture) — 能力模型與註冊表
 - [SDK 進入點](/zh-Hant/plugins/sdk-entrypoints) — `definePluginEntry` 選項
 - [SDK 概覽](/zh-Hant/plugins/sdk-overview) — 子路徑參考

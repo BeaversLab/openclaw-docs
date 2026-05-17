@@ -37,22 +37,23 @@ openclaw --update
 - `--channel <stable|beta|dev>` : définir le canal de mise à jour (git + npm ; persisté dans la configuration).
 - `--tag <dist-tag|version|spec>` : remplacer la cible du paquet pour cette mise à jour uniquement. Pour les installations de paquets, `main` correspond à `github:openclaw/openclaw#main`.
 - `--dry-run` : prévisualiser les actions de mise à jour prévues (canal/tag/cible/flux de redémarrage) sans écrire la configuration, installer, synchroniser les plugins ou redémarrer.
-- `--json` : afficher du JSON `UpdateRunResult` lisible par la machine, y compris
+- `--json` : imprime du JSON `UpdateRunResult` lisible par la machine, y compris
   `postUpdate.plugins.warnings` lorsque des plugins gérés corrompus ou non chargeables nécessitent
-  une réparation après la réussite de la mise à jour du cœur, et `postUpdate.plugins.integrityDrifts`
-  lorsqu'une dérive des artefacts de plugins npm est détectée lors de la synchronisation des plugins après mise à jour.
+  une réparation après la réussite de la mise à jour du cœur, les détails de repli du plugin du channel bêta
+  lorsqu'un plugin n'a pas de version bêta, et `postUpdate.plugins.integrityDrifts`
+  lorsqu'une dérive d'artefact de plugin npm est détectée lors de la synchronisation des plugins post-mise à jour.
 - `--timeout <seconds>` : délai d'attente par étape (par défaut 1800s).
 - `--yes` : ignorer les invites de confirmation (par exemple confirmation de rétrogradation).
 
-`openclaw update` n'a pas d'indicateur `--verbose`. Utilisez `--dry-run` pour prévisualiser
-les actions planifiées de canal/balise/installation/redémarrage, `--json` pour des résultats
-lisibles par machine, et `openclaw update status --json` lorsque vous avez uniquement besoin des détails de
-canal et de disponibilité. Si vous déboguez les journaux du Gateway lors d'une mise à jour,
-la verbosité de la console et le niveau de journalisation fichier sont distincts : `--verbose` du Gateway affecte
+`openclaw update` n'a pas de drapeau `--verbose`. Utilisez `--dry-run` pour prévisualiser
+les actions planifiées de channel/tag/installation/redémarrage, `--json` pour des résultats
+lisibles par la machine, et `openclaw update status --json` lorsque vous avez uniquement besoin des détails du channel et
+de la disponibilité. Si vous déboguez les journaux Gateway autour d'une mise à jour,
+la verbosité de la console et le niveau de journalisation fichier sont séparés : Gateway `--verbose` affecte
 la sortie terminal/WebSocket, tandis que les journaux fichiers nécessitent `logging.level: "debug"` ou
-`"trace"` dans la configuration. Voir [Journalisation du Gateway](/fr/gateway/logging).
+`"trace"` dans la configuration. Voir [Journalisation Gateway](/fr/gateway/logging).
 
-<Note>En mode Nix (`OPENCLAW_NIX_MODE=1`), les exécutions de `openclaw update` avec mutation sont désactivées. Mettez plutôt à jour la source Nix ou l'entrée flake pour cette installation ; pour nix-openclaw, utilisez le [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) axé sur l'agent. `openclaw update status` et `openclaw update --dry-run` restent en lecture seule.</Note>
+<Note>En mode Nix (`OPENCLAW_NIX_MODE=1`), les exécutions mutantes de `openclaw update` sont désactivées. Mettez plutôt à jour la source Nix ou l'entrée flake pour cette installation ; pour nix-openclaw, utilisez le [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) centré sur l'agent. `openclaw update status` et `openclaw update --dry-run` restent en lecture seule.</Note>
 
 <Warning>Les rétrogradations nécessitent une confirmation car les anciennes versions peuvent casser la configuration.</Warning>
 
@@ -131,36 +132,40 @@ Lorsqu'un service Gateway géré localement est installé et que le redémarrage
     les runners CI.
   </Step>
   <Step title="Rebase">Effectue un rebase sur le commit sélectionné (dev uniquement).</Step>
-  <Step title="Installer les dépendances">Utilise le gestionnaire de paquets du dépôt. Pour les checkouts pnpm, l'updater amorce `pnpm` à la demande (via `corepack` d'abord, puis un `npm install pnpm@10` de repli temporaire) au lieu d'exécuter `npm run build` dans un espace de travail pnpm.</Step>
+  <Step title="Installer les dépendances">Utilise le gestionnaire de paquets du dépôt. Pour les checkouts pnpm, le programme de mise à jour amorce `pnpm` à la demande (via `corepack` d'abord, puis un repli temporaire `npm install pnpm@11`) au lieu d'exécuter `npm run build` dans un espace de travail pnpm.</Step>
   <Step title="Build Control UI">Build la passerelle et l'interface utilisateur de contrôle.</Step>
   <Step title="Exécuter doctor">`openclaw doctor` s'exécute en tant que vérification finale de mise à jour sécurisée.</Step>
   <Step title="Synchroniser les plugins">Synchronise les plugins avec le canal actif. Dev utilise les plugins groupés ; stable et bêta utilisent npm. Met à jour les installations de plugins suivies.</Step>
 </Steps>
 
-Sur le canal de mise à jour bêta, les installations de plugins suivies npm et ClawHub qui suivent
-la ligne default/latest essaient d'abord une version de plugin `@beta`. Si le plugin n'a pas
-de version bêta, OpenClaw revient à la spécification default/latest enregistrée. Pour les plugins
-npm, OpenClaw revient également lorsque le paquet bêta existe mais échoue à la
-validation de l'installation. Les versions exactes et les balises explicites ne sont pas réécrites.
+Sur le channel de mise à jour bêta, les installations de plugins suivis via npm et ClawHub qui suivent
+la ligne par défaut/dernière version essaient d'abord une version de plugin `@beta`. Si le plugin n'a pas
+de version bêta, OpenClaw revient à la spec par défaut/dernière version enregistrée et signale
+cela sous forme d'avertissement. Pour les plugins npm, OpenClaw revient également lorsque le paquet
+bêta existe mais échoue à la validation d'installation. Ces avertissements de repli de plugin
+ne font pas échouer la mise à jour du cœur. Les versions exactes et les balises explicites ne sont
+pas réécrites.
 
 <Warning>Si une mise à jour de plugin npm épinglée exacte résout en un artefact dont l'intégrité diffère de l'enregistrement d'installation stocké, `openclaw update` abandonne cette mise à jour d'artefact de plugin au lieu de l'installer. Réinstallez ou mettez à jour le plugin explicitement uniquement après avoir vérifié que vous faites confiance au nouvel artefact.</Warning>
 
 <Note>
-Les échecs de synchronisation de plugin post-mise à jour qui sont limités à un plugin géré sont signalés comme des avertissements après la réussite de la mise à jour du cœur. Le résultat JSON conserve le `status: "ok"` de mise à jour de niveau supérieur et signale `postUpdate.plugins.status: "warning"` avec les conseils `openclaw doctor --fix` et `openclaw plugins inspect <id> --runtime --json`. Les exceptions inattendues du programme de mise à jour ou de synchronisation font toujours échouer le résultat de la mise à jour. Corrigez l'erreur d'installation ou de mise à jour du plugin, puis réexécutez `openclaw doctor --fix` ou `openclaw update`.
+Les échecs de synchronisation des plugins après mise à jour, limités à un plugin géré et que le chemin de synchronisation peut contourner (par exemple, un registre npm inaccessible pour un plugin non essentiel), sont signalés sous forme d'avertissements après la réussite de la mise à jour du cœur. Le résultat JSON conserve le `status: "ok"` de mise à jour de premier niveau et signale `postUpdate.plugins.status: "warning"` avec des conseils `openclaw doctor --fix` et `openclaw plugins inspect <id> --runtime --json`. Les exceptions inattendues du programme de mise à jour ou de la synchronisation font toujours échouer le résultat de la mise à jour. Corrigez l'erreur d'installation ou de mise à jour du plugin, puis relancez `openclaw doctor --fix` ou `openclaw update`.
 
-Lorsque le Gateway mis à jour démarre, le chargement des plugins est en mode vérification uniquement : le démarrage n'exécute pas les gestionnaires de packages et ne modifie pas les arbres de dépendances. Les redémarrages `update.run` du gestionnaire de packages contournent la temporisation d'inactivité normale et le temps de recharge après l'échange de l'arborescence des packages, afin que l'ancien processus ne puisse pas continuer à charger paresseusement des chunks supprimés.
+Après l'étape de synchronisation par plugin, `openclaw update` exécute une passe obligatoire de **post-convergence du cœur** avant le redémarrage de la passerelle : elle répare les charges utiles de plugins configurés manquantes, valide chaque enregistrement d'installation suivi _actif_ sur le disque, et vérifie statiquement que son `package.json` est analysable (et que tout `main` déclaré explicitement existe). Les échecs de cette passe — et un instantané de configuration OpenClaw invalide — renvoient `postUpdate.plugins.status: "error"` et basculent le `status` de mise à jour de premier niveau sur `"error"`, de sorte que `openclaw update` se ferme avec un code non nul et que la passerelle n'est _pas_ redémarrée avec un ensemble de plugins non vérifié. L'erreur comprend des lignes `postUpdate.plugins.warnings[].guidance` structurées pointant vers `openclaw doctor --fix` et `openclaw plugins inspect <id> --runtime --json` pour le suivi. Les entrées de plugins désactivés et les enregistrements qui ne sont pas des cibles de synchronisation officielles liées à une source de confiance sont ignorés ici, reflétant la politique `skipDisabledPlugins` utilisée par la vérification des charges utiles manquantes, de sorte qu'un enregistrement de plugin désactivé obsolète ne peut pas bloquer une mise à jour autrement valide.
 
-Si l'amorçage (bootstrap) pnpm échoue toujours, le programme de mise à jour s'arrête prématurément avec une erreur spécifique au gestionnaire de packages au lieu d'essayer `npm run build` dans l'extraction.
+Lorsque la Gateway mise à jour démarre, le chargement des plugins est en mode vérification uniquement : le démarrage n'exécute pas les gestionnaires de packages ni ne modifie les arbres de dépendances. Les redémarrages `update.run` du gestionnaire de packages contournent la différance d'inactivité normale et le temps de refroidissement de redémarrage une fois l'arborescence des packages échangée, afin que l'ancien processus ne puisse pas continuer à charger paresseusement des chunks supprimés.
+
+Si l'amorçage pnpm échoue toujours, le programme de mise à jour s'arrête prématurément avec une erreur spécifique au gestionnaire de packages au lieu d'essayer `npm run build` à l'intérieur de l'extraction.
 
 </Note>
 
 ## Raccourci `--update`
 
-`openclaw --update` se réécrit en `openclaw update` (utile pour les shells et les scripts de lanceur).
+`openclaw --update` se réécrit en `openclaw update` (utile pour les shells et les scripts de lancement).
 
 ## Connexes
 
 - `openclaw doctor` (propose d'exécuter la mise à jour en premier sur les extraits git)
 - [Canaux de développement](/fr/install/development-channels)
 - [Mise à jour](/fr/install/updating)
-- [Référence CLI](/fr/cli)
+- [Référence CLI](CLI/en/cli)

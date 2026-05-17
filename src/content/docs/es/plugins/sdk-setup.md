@@ -257,7 +257,7 @@ Incluso los complementos sin configuración deben enviar un esquema. Un esquema 
 }
 ```
 
-Consulte [Plugin manifest](/es/plugins/manifest) para obtener la referencia completa del esquema.
+Consulta [Manifiesto del complemento](/es/plugins/manifest) para obtener la referencia completa del esquema.
 
 ## Publicación en ClawHub
 
@@ -317,24 +317,24 @@ Para rutas de acceso rápido solo de configuración, prefiera las costuras limit
 | Ruta de importación                | Úselo para                                                                                                                         | Exportaciones clave                                                                                                                                                                                                                                                                          |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `plugin-sdk/setup-runtime`         | ayudantes de tiempo de ejecución de tiempo de configuración que permanecen disponibles en `setupEntry` / inicio diferido del canal | `createPatchedAccountSetupAdapter`, `createEnvPatchedAccountSetupAdapter`, `createSetupInputPresenceValidator`, `noteChannelLookupFailure`, `noteChannelLookupSummary`, `promptResolvedAllowFrom`, `splitSetupEntries`, `createAllowlistSetupWizardProxy`, `createDelegatedSetupWizardProxy` |
-| `plugin-sdk/setup-adapter-runtime` | adaptadores de configuración de cuenta conscientes del entorno                                                                     | `createEnvPatchedAccountSetupAdapter`                                                                                                                                                                                                                                                        |
+| `plugin-sdk/setup-adapter-runtime` | alias de compatibilidad en desuso; usa `plugin-sdk/setup-runtime`                                                                  | `createEnvPatchedAccountSetupAdapter`                                                                                                                                                                                                                                                        |
 | `plugin-sdk/setup-tools`           | ayudantes de configuración/instalación de CLI/archivo/documentos                                                                   | `formatCliCommand`, `detectBinary`, `extractArchive`, `resolveBrewExecutable`, `formatDocsLink`, `CONFIG_DIR`                                                                                                                                                                                |
 
-Use la costura `plugin-sdk/setup` más amplia cuando desee el conjunto de herramientas de configuración compartida completa, incluidos los auxiliares de parches de configuración como `moveSingleAccountChannelSectionToDefaultAccount(...)`.
+Usa la costura `plugin-sdk/setup` más amplia cuando quieras el cuadro de herramientas de configuración compartida completa, incluidos los auxiliares de parches de configuración como `moveSingleAccountChannelSectionToDefaultAccount(...)`.
 
-Los adaptadores de parches de configuración permanecen seguros en la ruta crítica (hot-path) al importarlos. Su búsqueda de superficie de contrato de promoción de cuenta única incluida es diferida, por lo que importar `plugin-sdk/setup-runtime` no carga con entusiasmo el descubrimiento de superficie de contrato incluido antes de que el adaptador se use realmente.
+Los adaptadores de parches de configuración mantienen la seguridad de la ruta crítica al importar. Su búsqueda de superficie de contrato de promoción de cuenta única empaquetada es diferida, por lo que importar `plugin-sdk/setup-runtime` no carga ansiosamente el descubrimiento de superficie de contrato empaquetado antes de que el adaptador se use realmente.
 
 ### Promoción de cuenta única propiedad del canal
 
-Cuando un canal actualiza desde una configuración de nivel superior de cuenta única a `channels.<id>.accounts.*`, el comportamiento compartido predeterminado es mover los valores promocionados con ámbito de cuenta a `accounts.default`.
+Cuando un canal se actualiza desde una configuración de nivel superior de cuenta única a `channels.<id>.accounts.*`, el comportamiento compartido predeterminado es mover los valores promocionados con ámbito de cuenta a `accounts.default`.
 
 Los canales incluidos pueden limitar o anular esa promoción a través de su superficie de contrato de configuración:
 
 - `singleAccountKeysToMove`: claves adicionales de nivel superior que deben moverse a la cuenta promocionada
 - `namedAccountPromotionKeys`: cuando ya existen cuentas con nombre, solo estas claves se mueven a la cuenta promocionada; las claves compartidas de política/entrega permanecen en la raíz del canal
-- `resolveSingleAccountPromotionTarget(...)`: elija qué cuenta existente recibe los valores promocionados
+- `resolveSingleAccountPromotionTarget(...)`: elige qué cuenta existente recibe los valores promocionados
 
-<Note>Matrix es el ejemplo incluido actual. Si existe exactamente una cuenta de Matrix con nombre, o si `defaultAccount` apunta a una clave no canónica existente como `Ops`, la promoción preserva esa cuenta en lugar de crear una nueva entrada `accounts.default`.</Note>
+<Note>Matrix es el ejemplo empaquetado actual. Si ya existe exactamente una cuenta de Matrix con nombre, o si `defaultAccount` apunta a una clave canónica no existente como `Ops`, la promoción conserva esa cuenta en lugar de crear una nueva entrada `accounts.default`.</Note>
 
 ## Esquema de configuración
 
@@ -354,7 +354,7 @@ La configuración del complemento se valida contra el JSON Schema en su manifies
 }
 ```
 
-Su complemento recibe esta configuración como `api.pluginConfig` durante el registro.
+Tu complemento recibe esta configuración como `api.pluginConfig` durante el registro.
 
 Para una configuración específica del canal, utilice la sección de configuración del canal en su lugar:
 
@@ -371,7 +371,7 @@ Para una configuración específica del canal, utilice la sección de configurac
 
 ### Construcción de esquemas de configuración de canal
 
-Use `buildChannelConfigSchema` para convertir un esquema Zod en el contenedor `ChannelConfigSchema` utilizado por los artefactos de configuración propiedad del complemento:
+Usa `buildChannelConfigSchema` para convertir un esquema Zod en el contenedor `ChannelConfigSchema` utilizado por los artefactos de configuración propiedad del complemento:
 
 ```typescript
 import { z } from "zod";
@@ -401,11 +401,11 @@ const configSchema = buildJsonChannelConfigSchema(
 );
 ```
 
-Para plugins de terceros, el contrato de ruta fría sigue siendo el manifiesto del plugin: refleje el esquema JSON generado en `openclaw.plugin.json#channelConfigs` para que el esquema de configuración, la configuración y las superficies de la interfaz de usuario puedan inspeccionar `channels.<id>` sin cargar código en tiempo de ejecución.
+Para complementos de terceros, el contrato de la ruta fría sigue siendo el manifiesto del complemento: refleja el esquema JSON generado en `openclaw.plugin.json#channelConfigs` para que el esquema de configuración, la configuración y las superficies de la interfaz de usuario puedan inspeccionar `channels.<id>` sin cargar código en tiempo de ejecución.
 
 ## Asistentes de configuración
 
-Los plugins de canal pueden proporcionar asistentes de configuración interactivos para `openclaw onboard`. El asistente es un objeto `ChannelSetupWizard` en el `ChannelPlugin`:
+Los complementos de canal pueden proporcionar asistentes de configuración interactivos para `openclaw onboard`. El asistente es un objeto `ChannelSetupWizard` en el `ChannelPlugin`:
 
 ```typescript
 import type { ChannelSetupWizard } from "openclaw/plugin-sdk/channel-setup";
@@ -438,14 +438,14 @@ const setupWizard: ChannelSetupWizard = {
 };
 ```
 
-El tipo `ChannelSetupWizard` admite `credentials`, `textInputs`, `dmPolicy`, `allowFrom`, `groupAccess`, `prepare`, `finalize` y más. Consulte los paquetes de plugins incluidos (por ejemplo, el plugin de Discord `src/channel.setup.ts`) para ver ejemplos completos.
+El tipo `ChannelSetupWizard` admite `credentials`, `textInputs`, `dmPolicy`, `allowFrom`, `groupAccess`, `prepare`, `finalize` y más. Consulte los paquetes de complementos incluidos (por ejemplo, el complemento de Discord `src/channel.setup.ts`) para ver ejemplos completos.
 
 <AccordionGroup>
   <Accordion title="Shared allowFrom prompts">
-    Para las solicitudes de lista blanca de MD que solo necesitan el flujo estándar `note -> prompt -> parse -> merge -> patch`, prefiera los asistentes de configuración compartidos de `openclaw/plugin-sdk/setup`: `createPromptParsedAllowFromForAccount(...)`, `createTopLevelChannelParsedAllowFromPrompt(...)` y `createNestedChannelParsedAllowFromPrompt(...)`.
+    Para las solicitudes de lista de permitidos de MD que solo necesitan el flujo estándar de `note -> prompt -> parse -> merge -> patch`, prefiera los asistentes de configuración compartidos de `openclaw/plugin-sdk/setup`: `createPromptParsedAllowFromForAccount(...)`, `createTopLevelChannelParsedAllowFromPrompt(...)` y `createNestedChannelParsedAllowFromPrompt(...)`.
   </Accordion>
   <Accordion title="Standard channel setup status">
-    Para los bloques de estado de configuración del canal que solo varían en etiquetas, puntuaciones y líneas opcionales adicionales, prefiera `createStandardChannelSetupStatus(...)` de `openclaw/plugin-sdk/setup` en lugar de crear manualmente el mismo objeto `status` en cada plugin.
+    Para los bloques de estado de configuración del canal que solo varían en las etiquetas, las puntuaciones y las líneas opcionales adicionales, prefiera `createStandardChannelSetupStatus(...)` de `openclaw/plugin-sdk/setup` en lugar de crear manualmente el mismo objeto `status` en cada complemento.
   </Accordion>
   <Accordion title="Superficie de configuración opcional del canal">
     Para superficies de configuración opcionales que solo deben aparecer en ciertos contextos, use `createOptionalChannelSetupSurface` de `openclaw/plugin-sdk/channel-setup`:
@@ -462,17 +462,17 @@ El tipo `ChannelSetupWizard` admite `credentials`, `textInputs`, `dmPolicy`, `al
     // Returns { setupAdapter, setupWizard }
     ```
 
-    `plugin-sdk/channel-setup` también expone los constructores de nivel inferior `createOptionalChannelSetupAdapter(...)` y `createOptionalChannelSetupWizard(...)` cuando solo necesita una mitad de esa superficie de instalación opcional.
+    `plugin-sdk/channel-setup` también expone los constructores de menor nivel `createOptionalChannelSetupAdapter(...)` y `createOptionalChannelSetupWizard(...)` cuando solo necesita una mitad de esa superficie de instalación opcional.
 
-    El adaptador/asistente opcional generado falla cerrado en escrituras de configuración reales. Reutilizan un mensaje de instalación requerido en `validateInput`, `applyAccountConfig` y `finalize`, y agregan un enlace a la documentación cuando `docsPath` está establecido.
+    El adaptador/asistente opcional generado falla cerrado en escrituras de configuración reales. Reutilizan un mensaje de instalación requerida en `validateInput`, `applyAccountConfig` y `finalize`, y añaden un enlace a la documentación cuando `docsPath` está configurado.
 
   </Accordion>
   <Accordion title="Asistentes de configuración respaldados por binarios">
-    Para interfaces de usuario de configuración respaldadas por binarios, prefiera los asistentes delegados compartidos en lugar de copiar el mismo pegamento de binario/estado en cada canal:
+    Para interfaces de usuario de configuración respaldadas por binarios, prefiera los asistentes delegados compartidos en lugar de copiar el mismo pegamento binario/de estado en cada canal:
 
     - `createDetectedBinaryStatus(...)` para bloques de estado que varían solo por etiquetas, sugerencias, puntuaciones y detección de binarios
     - `createCliPathTextInput(...)` para entradas de texto respaldadas por rutas
-    - `createDelegatedSetupWizardStatusResolvers(...)`, `createDelegatedPrepare(...)`, `createDelegatedFinalize(...)` y `createDelegatedResolveConfigured(...)` cuando `setupEntry` necesita reenviar a un asistente completo más pesado de forma diferida
+    - `createDelegatedSetupWizardStatusResolvers(...)`, `createDelegatedPrepare(...)`, `createDelegatedFinalize(...)` y `createDelegatedResolveConfigured(...)` cuando `setupEntry` necesita reenviar a un asistente completo más pesado de manera perezosa
     - `createDelegatedTextInputShouldPrompt(...)` cuando `setupEntry` solo necesita delegar una decisión `textInputs[*].shouldPrompt`
 
   </Accordion>
@@ -480,7 +480,7 @@ El tipo `ChannelSetupWizard` admite `credentials`, `textInputs`, `dmPolicy`, `al
 
 ## Publicación e instalación
 
-**Complementos externos:** publique en [ClawHub](/es/clawhub), luego instale:
+**Plugins externos:** publíquelos en [ClawHub](/es/clawhub), luego instálelos:
 
 <Tabs>
   <Tab title="npm">
@@ -515,7 +515,7 @@ El tipo `ChannelSetupWizard` admite `credentials`, `textInputs`, `dmPolicy`, `al
 openclaw plugins install <package-name>
 ```
 
-<Info>Para las instalaciones desde npm, `openclaw plugins install` instala el paquete bajo `~/.openclaw/npm` con los scripts de ciclo de vida deshabilitados. Mantenga los árboles de dependencias de los plugins puramente JS/TS y evite paquetes que requieran compilaciones `postinstall`.</Info>
+<Info>Para instalaciones desde npm, `openclaw plugins install` instala el paquete en `~/.openclaw/npm` con los scripts de ciclo de vida deshabilitados. Mantenga los árboles de dependencias de los plugins como JS/TS puros y evite paquetes que requieran compilaciones `postinstall`.</Info>
 
 <Note>El inicio de Gateway no instala las dependencias de los plugins. Los flujos de instalación de npm/git/ClawHub poseen la convergencia de dependencias; los plugins locales ya deben tener instaladas sus dependencias.</Note>
 
@@ -524,5 +524,5 @@ Los metadatos del paquete empaquetado son explícitos, no se infieren del JavaSc
 ## Relacionado
 
 - [Construcción de plugins](/es/plugins/building-plugins) — guía de introducción paso a paso
-- [Manifiesto de plugin](/es/plugins/manifest) — referencia completa del esquema del manifiesto
+- [Manifiesto del plugin](/es/plugins/manifest) — referencia completa del esquema del manifiesto
 - [Puntos de entrada del SDK](/es/plugins/sdk-entrypoints) — `definePluginEntry` y `defineChannelPluginEntry`

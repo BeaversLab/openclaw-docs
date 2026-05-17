@@ -20,11 +20,11 @@ OpenClaw gère les sessions de bout en bout dans ces domaines :
 Si vous souhaitez d'abord un aperçu de plus haut niveau, commencez par :
 
 - [Gestion de session](/fr/concepts/session)
-- [Compactage](/fr/concepts/compaction)
-- [Aperçu de la mémoire](/fr/concepts/memory)
+- [Compaction](/fr/concepts/compaction)
+- [Vue d'ensemble de la mémoire](/fr/concepts/memory)
 - [Recherche en mémoire](/fr/concepts/memory-search)
 - [Élagage de session](/fr/concepts/session-pruning)
-- [Hygiène des transcriptions](/fr/reference/transcript-hygiene)
+- [Hygiène de la transcription](/fr/reference/transcript-hygiene)
 
 ---
 
@@ -179,7 +179,7 @@ Le magasin peut être édité en toute sécurité, mais le Gateway fait autorit�
 
 ## Structure de la transcription (`*.jsonl`)
 
-Les transcriptions sont gérées par le `SessionManager` de `@mariozechner/pi-coding-agent`.
+Les transcriptions sont gérées par `@earendil-works/pi-coding-agent`'s `SessionManager`.
 
 Le fichier est un JSONL :
 
@@ -223,7 +223,7 @@ Après le compactage, les futurs tours voient :
 - Le résumé de compactage
 - Les messages après `firstKeptEntryId`
 
-Le compactage est **persistant** (contrairement à l'élagage de session). Voir [/concepts/session-pruning](/fr/concepts/session-pruning).
+La compaction est **persistante** (contrairement à l'élagage de session). Voir [/concepts/session-pruning](/fr/concepts/session-pruning).
 
 ## Limites des blocs de compactage et appariement d'outils
 
@@ -355,48 +355,49 @@ Vous pouvez observer la compaction et l'état de la session via :
 - `/status` (dans n'importe quelle session de chat)
 - `openclaw status` (CLI)
 - `openclaw sessions` / `sessions --json`
-- Mode verbeux : `🧹 Auto-compaction complete` + nombre de compactages
+- Journaux Gateway (`pnpm gateway:watch` ou `openclaw logs --follow`) : `embedded run auto-compaction start` + `complete`
+- Mode verbeux : `🧹 Auto-compaction complete` + nombre de compactions
 
 ---
 
 ## Maintenance silencieuse (`NO_REPLY`)
 
-OpenClaw prend en charge les tours « silencieux » pour les tâches en arrière-plan où l'utilisateur ne doit pas voir la sortie intermédiaire.
+OpenClaw prend en charge les tours "silencieux" pour les tâches en arrière-plan où l'utilisateur ne doit pas voir la sortie intermédiaire.
 
 Convention :
 
 - L'assistant commence sa sortie par le jeton silencieux exact `NO_REPLY` /
-  `no_reply` pour indiquer « ne pas envoyer de réponse à l'utilisateur ».
-- OpenClaw supprime/occulte cela dans la couche de livraison.
-- La suppression exacte du jeton silencieux ne tient pas compte de la casse, donc `NO_REPLY` et
-  `no_reply` comptent tous les deux lorsque la charge utile entière est juste le jeton silencieux.
-- Ceci est pour les tours d'arrière-plan/sans livraison uniquement ; ce n'est pas un raccourci pour
-  les requêtes utilisateur exploitables ordinaires.
+  `no_reply` pour indiquer "ne pas envoyer de réponse à l'utilisateur".
+- OpenClaw supprime/ignore cela dans la couche de livraison.
+- La suppression exacte du jeton silencieux est insensible à la casse, donc `NO_REPLY` et
+  `no_reply` comptent tous les deux lorsque la charge utile entière est uniquement le jeton silencieux.
+- Ceci est uniquement pour les vrais tours d'arrière-plan/sans livraison ; ce n'est pas un raccourci pour
+  les demandes utilisateur actionnables ordinaires.
 
-Depuis `2026.1.10`, OpenClaw supprime également le **streaming de brouillon/frappe** lorsqu'un
+Depuis `2026.1.10`, OpenClaw supprime également le **flux de brouillon/frappe** lorsqu'un
 bloc partiel commence par `NO_REPLY`, afin que les opérations silencieuses ne fuient pas de sortie
 partielle en cours de tour.
 
 ---
 
-## « Vidage de mémoire » de pré-compaction (implémenté)
+## "Vidange de mémoire" pré-compaction (implémentée)
 
-Objectif : avant que la compactage automatique ne se produise, exécuter un tour agent silencieux qui écrit l'état
-durable sur le disque (par exemple `memory/YYYY-MM-DD.md` dans l'espace de travail de l'agent) afin que la compaction ne puisse pas
-effacer le contexte critique.
+Objectif : avant que l'auto-compaction n'ait lieu, lancer un tour agentique silencieux qui écrit un état
+durable sur le disque (par ex. `memory/YYYY-MM-DD.md` dans l'espace de travail de l'agent) afin que la compaction ne puisse
+pas effacer le contexte critique.
 
-OpenClaw utilise l'approche du **vidage préalable au seuil** :
+OpenClaw utilise l'approche du **pre-threshold flush** :
 
-1. Surveiller l'utilisation du contexte de la session.
-2. Lorsqu'il dépasse un « seuil souple » (en dessous du seuil de compactage de Pi), exécuter une directive silencieuse
-   « écrire la mémoire maintenant » à l'agent.
+1. Surveiller l'utilisation du contexte de session.
+2. Lorsqu'elle dépasse un « seuil souple » (en dessous du seuil de compactage de Pi), exécuter une directive silencieuse
+   « write memory now » vers l'agent.
 3. Utiliser le jeton silencieux exact `NO_REPLY` / `no_reply` afin que l'utilisateur ne voie
    rien.
 
-Configuration (`agents.defaults.compaction.memoryFlush`) :
+Config (`agents.defaults.compaction.memoryFlush`) :
 
 - `enabled` (par défaut : `true`)
-- `model` (remplacement exact optionnel de provider/model pour le tour de flush, par exemple `ollama/qwen3:8b`)
+- `model` (remplacement facultatif exact du provider/modèle pour le tour de flush, par exemple `ollama/qwen3:8b`)
 - `softThresholdTokens` (par défaut : `4000`)
 - `prompt` (message utilisateur pour le tour de flush)
 - `systemPrompt` (prompt système supplémentaire ajouté pour le tour de flush)
@@ -405,31 +406,31 @@ Notes :
 
 - Le prompt système par défaut inclut un indice `NO_REPLY` pour supprimer
   la livraison.
-- Lorsque `model` est défini, le tour de flush utilise ce modèle sans hériter de
-  la chaîne de repli de session active, afin que la maintenance locale uniquement ne retombe
+- Lorsque `model` est défini, le tour de flush utilise ce modèle sans hériter de la
+  chaîne de repli de session active, afin que la maintenance locale uniquement ne retombe
   pas silencieusement sur un modèle de conversation payant.
 - Le flush s'exécute une fois par cycle de compactage (suivi dans `sessions.json`).
-- Le flush s'exécute uniquement pour les sessions Pi intégrées (les backends CLI l'ignorent).
+- Le flush s'exécute uniquement pour les sessions Pi embarquées (les backends CLI l'ignorent).
 - Le flush est ignoré lorsque l'espace de travail de la session est en lecture seule (`workspaceAccess: "ro"` ou `"none"`).
-- Consultez [Mémoire](/fr/concepts/memory) pour la disposition des fichiers de l'espace de travail et les modèles d'écriture.
+- Voir [Memory](/fr/concepts/memory) pour la disposition des fichiers de l'espace de travail et les modèles d'écriture.
 
-Pi expose également un hook `session_before_compact` dans l'API d'extension API, mais la logique de flush de OpenClaw
+Pi expose également un hook `session_before_compact` dans l'API d'extension, mais la logique de flush de OpenClaw
 réside aujourd'hui du côté du Gateway.
 
 ---
 
-## Checklist de dépannage
+## Liste de contrôle de dépannage
 
 - Clé de session incorrecte ? Commencez par [/concepts/session](/fr/concepts/session) et confirmez le `sessionKey` dans `/status`.
-- Inadéquation entre le store et la transcription ? Confirmez l'hôte Gateway et le chemin du store depuis `openclaw status`.
+- Inadéquation entre le magasin et la transcription ? Confirmez l'hôte du Gateway et le chemin du magasin à partir de `openclaw status`.
 - Spam de compactage ? Vérifiez :
   - fenêtre de contexte du modèle (trop petite)
-  - paramètres de compactage (`reserveTokens` trop élevé pour la fenêtre du modèle peut provoquer un compactage plus précoce)
-  - gonflement des résultats d'outils : activez/réglez le pruning de session
-- Fuite de tours silencieux ? Confirmez que la réponse commence par `NO_REPLY` (token exact insensible à la casse) et que vous êtes sur une version qui inclut le correctif de suppression du streaming.
+  - paramètres de compactage (`reserveTokens` trop élevés pour la fenêtre du modèle peuvent provoquer un compactage plus précoce)
+  - gonflement des résultats d'outils : activer/régler l'élagage de session
+- Fuites de tours silencieux ? Confirmez que la réponse commence par `NO_REPLY` (jeton exact insensible à la casse) et que vous utilisez une version incluant le correctif de suppression du flux.
 
 ## Connexes
 
 - [Gestion de session](/fr/concepts/session)
-- [Nettoyage de session](/fr/concepts/session-pruning)
+- [Élagage de session](/fr/concepts/session-pruning)
 - [Moteur de contexte](/fr/concepts/context-engine)

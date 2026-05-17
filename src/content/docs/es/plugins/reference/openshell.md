@@ -12,7 +12,7 @@ Backend de sandbox impulsado por OpenShell con espacios de trabajo locales refle
 ## Distribución
 
 - Paquete: `@openclaw/openshell-sandbox`
-- Ruta de instalación: incluido en OpenClaw
+- Ruta de instalación: npm; ClawHub
 
 ## Superficie
 

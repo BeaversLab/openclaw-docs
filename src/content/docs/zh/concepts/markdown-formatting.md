@@ -58,7 +58,7 @@ Markdown 表格在聊天客户端中的支持并不一致。请使用
 `markdown.tables` 来控制每个渠道（以及每个账户）的转换方式。
 
 - `code`：将表格渲染为代码块（大多数渠道的默认设置）。
-- `bullets`：将每一行转换为项目符号（Signal + WhatsApp 的默认设置）。
+- `bullets`MatrixSignalWhatsApp：将每一行转换为项目符号（Matrix、Signal 和 WhatsApp 的默认选项）。
 - `off`：禁用表格解析和转换；原始表格文本将原样通过。
 
 配置键：

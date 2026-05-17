@@ -22,14 +22,15 @@ Le contexte n'est _pas la même chose_ que la « mémoire » : la mémoire peut 
 - `/status` → vue rapide « ma fenêtre est-elle pleine ? » + paramètres de session.
 - `/context list` → ce qui est injecté + tailles approximatives (par fichier + totaux).
 - `/context detail` → répartition plus détaillée : par fichier, tailles de schéma par outil, tailles d'entrée par compétence, et taille du prompt système.
-- `/usage tokens` → ajouter un pied de page d'utilisation par réponse aux réponses normales.
-- `/compact` → résumer l'historique ancien dans une entrée compacte pour libérer de l'espace dans la fenêtre.
+- `/context map` → image de treemap style WinDirStat des contributeurs au contexte suivis pour la session actuelle.
+- `/usage tokens` → ajoute un pied de page d'utilisation par réponse aux réponses normales.
+- `/compact` → résume l'historique ancien en une entrée compacte pour libérer de l'espace dans la fenêtre.
 
-Voir aussi : [Commandes slash](/fr/tools/slash-commands), [Utilisation des jetons et coûts](/fr/reference/token-use), [Compactage](/fr/concepts/compaction).
+Voir aussi : [Commandes slash](/fr/tools/slash-commands), [Utilisation des tokens et coûts](/fr/reference/token-use), [Compactage](/fr/concepts/compaction).
 
-## Example output
+## Exemple de sortie
 
-Les valeurs varient en fonction du modèle, du fournisseur, de la stratégie d'outil et de ce qui se trouve dans votre espace de travail.
+Les valeurs varient en fonction du model, du provider, de la politique d'outil et de ce qui se trouve dans votre espace de travail.
 
 ### `/context list`
 
@@ -74,33 +75,44 @@ Top tools (schema size):
 … (+N more tools)
 ```
 
-## What counts toward the context window
+### `/context map`
 
-Tout ce que le modèle reçoit compte, y compris :
+Envoie une image générée à partir du dernier rapport d'exécution mis en cache. Avant qu'un message normal n'ait produit un rapport d'exécution dans la session, `/context map` renvoie un message indisponible au lieu de rendre une estimation. La surface du rectangle est proportionnelle aux caractères de prompt suivis :
 
-- Invite système (toutes les sections).
-- Historique de conversation.
-- Appels d'outils + résultats d'outils.
+- fichiers de l'espace de travail injectés
+- texte du système de base
+- entrées de prompt de compétences
+- schémas JSON d'outils
+
+`/context list`, `/context detail` et `/context json` peuvent toujours inspecter une estimation à la demande lorsqu'aucun rapport d'exécution n'est mis en cache.
+
+## Ce qui compte dans la fenêtre de contexte
+
+Tout ce que le model reçoit compte, y compris :
+
+- System prompt (toutes les sections).
+- Historique de la conversation.
+- Appels d'outils + résultats des outils.
 - Pièces jointes/transcriptions (images/audio/fichiers).
-- Résumés de compression et artefacts d'élagage.
-- « Enveloppes » du fournisseur ou en-têtes masqués (non visibles, mais toujours comptés).
+- Résumés de compactage et artefacts d'élagage.
+- "Wrappers" ou en-têtes cachés du provider (non visibles, mais toujours comptés).
 
-## How OpenClaw builds the system prompt
+## Comment OpenClaw construit le system prompt
 
-L'invite système est **propriété de OpenClaw** et reconstruite à chaque exécution. Elle inclut :
+Le system prompt est **la propriété de OpenClaw** et est reconstruit à chaque exécution. Il inclut :
 
-- Liste des outils + brèves descriptions.
-- Liste des compétences (métadonnées uniquement ; voir ci-dessous).
+- Liste des outils + courtes descriptions.
+- Liste des Skills (métadonnées uniquement ; voir ci-dessous).
 - Emplacement de l'espace de travail.
 - Heure (UTC + heure utilisateur convertie si configurée).
-- Métadonnées d'exécution (hôte/OS/modèle/réflexion).
-- Fichiers d'amorçage de l'espace de travail injectés sous **Contexte du projet**.
+- Métadonnées d'exécution (hôte/OS/model/pensée).
+- Fichiers d'amorçage de l'espace de travail injectés sous **Projet Context**.
 
-Répartition complète : [Prompt système](/fr/concepts/system-prompt).
+Répartition complète : [System Prompt](/fr/concepts/system-prompt).
 
-## Injected workspace files (Project Context)
+## Fichiers de l'espace de travail injectés (Projet Context)
 
-Par défaut, OpenClaw injecte un ensemble fixe de fichiers d'espace de travail (s'ils sont présents) :
+Par défaut, OpenClaw injecte un ensemble fixe de fichiers de l'espace de travail (s'ils sont présents) :
 
 - `AGENTS.md`
 - `SOUL.md`
@@ -110,34 +122,34 @@ Par défaut, OpenClaw injecte un ensemble fixe de fichiers d'espace de travail (
 - `HEARTBEAT.md`
 - `BOOTSTRAP.md` (première exécution uniquement)
 
-Les fichiers volumineux sont tronqués par fichier en utilisant `agents.defaults.bootstrapMaxChars` (défaut `12000`OpenClaw caractères). OpenClaw applique également une plafond global d'injection d'amorçage sur tous les fichiers avec `agents.defaults.bootstrapTotalMaxChars` (défaut `60000` caractères). `/context` affiche les tailles **brutes par rapport à injectées** et indique si une troncation a eu lieu.
+Les fichiers volumineux sont tronqués par fichier à l'aide de `agents.defaults.bootstrapMaxChars` (défaut `12000` caractères). OpenClaw applique également une limite totale d'injection d'amorçage sur l'ensemble des fichiers avec `agents.defaults.bootstrapTotalMaxChars` (défaut `60000` caractères). `/context` affiche les tailles **brutes par rapport à injectées** et indique si une troncation a eu lieu.
 
-Lorsqu'une troncature se produit, le runtime peut injecter un bloc d'avertissement dans le prompt sous le Contexte du projet. Configurez ceci avec `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ; défaut `once`).
+Lorsqu'une troncation se produit, l'exécution peut injecter un bloc d'avertissement dans le prompt sous Project Context. Configurez ceci avec `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ; défaut `once`).
 
-## Skills : injectées ou chargées à la demande
+## Compétences : injectées vs chargées à la demande
 
-L'invite système comprend une liste compacte de **skills** (nom + description + emplacement). Cette liste a une surcharge réelle.
+Le prompt système inclut une **liste de compétences** compacte (nom + description + emplacement). Cette liste représente une surcharge réelle.
 
-Les instructions de compétence ne sont _pas_ incluses par défaut. On s'attend à ce que le model `read` le `SKILL.md` de la compétence **uniquement si nécessaire**.
+Les instructions des compétences ne sont _pas_ incluses par défaut. On attend du modèle qu'il `read` le `SKILL.md` de la compétence **uniquement lorsque cela est nécessaire**.
 
-## Tools : il y a deux coûts
+## Outils : il y a deux coûts
 
 Les outils affectent le contexte de deux manières :
 
-1. **Texte de la liste des outils** dans le prompt système (ce que vous voyez sous "Tooling").
-2. **Schémas d'outils** (JSON). Ceux-ci sont envoyés au model afin qu'il puisse appeler les outils. Ils comptent dans le contexte même si vous ne les voyez pas en texte brut.
+1. **Texte de la liste des outils** dans le prompt système (ce que vous voyez en tant que "Tooling").
+2. **Schémas d'outils** (JSON). Ceux-ci sont envoyés au modèle afin qu'il puisse appeler les outils. Ils comptent dans le contexte même si vous ne les voyez pas en texte brut.
 
-`/context detail` décompose les plus gros schémas d'outils afin que vous puissiez voir ce qui domine.
+`/context detail` détaille les plus gros schémas d'outils afin que vous puissiez voir ce qui domine.
 
 ## Commandes, directives et "raccourcis en ligne"
 
-Les commandes slash sont gérées par la Gateway. Il existe quelques comportements différents :
+Les commandes slash sont gérées par la Gateway. Il y a quelques comportements différents :
 
 - **Commandes autonomes** : un message qui est uniquement `/...` s'exécute en tant que commande.
-- **Directives** : `/think`, `/verbose`, `/trace`, `/reasoning`, `/elevated`, `/model`, `/queue` sont supprimés avant que le model ne voie le message.
-  - Les messages contenant uniquement des directives conservent les paramètres de la session.
+- **Directives** : `/think`, `/verbose`, `/trace`, `/reasoning`, `/elevated`, `/model`, `/queue` sont supprimées avant que le modèle ne voie le message.
+  - Les messages constitués uniquement de directives conservent les paramètres de la session.
   - Les directives en ligne dans un message normal agissent comme des indices par message.
-- **Raccourcis en ligne** (expéditeurs autorisés uniquement) : certains jetons `/...` à l'intérieur d'un message normal peuvent s'exécuter immédiatement (exemple : "hey /status"), et sont supprimés avant que le model ne voie le texte restant.
+- **Raccourcis en ligne** (expéditeurs autorisés uniquement) : certains jetons `/...` dans un message normal peuvent s'exécuter immédiatement (exemple : « hey /status »), et sont supprimés avant que le modèle ne voie le texte restant.
 
 Détails : [Commandes slash](/fr/tools/slash-commands).
 
@@ -145,43 +157,36 @@ Détails : [Commandes slash](/fr/tools/slash-commands).
 
 Ce qui persiste d'un message à l'autre dépend du mécanisme :
 
-- L'**historique normal** persiste dans la transcription de la session jusqu'à ce qu'il soit compacté/élagué par la stratégie.
-- Le **compactage** fait persister un résumé dans la transcription et conserve les messages récents intacts.
-- Le **Nettoyage** (Pruning) supprime les anciens résultats d'outils du prompt _en mémoire_ pour libérer de l'espace dans la fenêtre de contexte, mais ne réécrit pas la transcription de la session - l'historique complet est toujours inspectable sur le disque.
+- **L'historique normal** persiste dans la transcription de la session jusqu'à ce qu'il soit compacté/élagué par la stratégie.
+- **Le compactage** fait persister un résumé dans la transcription et conserve les messages récents intacts.
+- **L'élagage** supprime les anciens résultats d'outils du _prompt en mémoire_ pour libérer de l'espace dans la fenêtre de contexte, mais ne réécrit pas la transcription de la session - l'historique complet est toujours inspectable sur le disque.
 
-Docs : [Session](/fr/concepts/session), [Compaction](/fr/concepts/compaction), [Session pruning](/fr/concepts/session-pruning).
+Docs : [Session](/fr/concepts/session), [Compactage](/fr/concepts/compaction), [Élagage de session](/fr/concepts/session-pruning).
 
-Par défaut, OpenClaw utilise le moteur de contexte intégré `legacy` pour l'assemblage et
-la compactage. Si vous installez un plugin qui fournit `kind: "context-engine"` et
-le sélectionnez avec `plugins.slots.contextEngine`, OpenClaw délègue l'assemblage du contexte,
-`/compact` et les hooks de cycle de vie du contexte des sous-agents associés à ce
-moteur à la place. `ownsCompaction: false` ne revient pas automatiquement à l'ancien
-moteur ; le moteur actif doit toujours implémenter `compact()` correctement. Voir
-[Context Engine](/fr/concepts/context-engine) pour l'interface
-complètement enfichable, les hooks de cycle de vie et la configuration.
+Par défaut, OpenClaw utilise le moteur de contexte intégré `legacy` pour l'assemblage et le compactage. Si vous installez un plugin qui fournit `kind: "context-engine"` et que vous le sélectionnez avec `plugins.slots.contextEngine`, OpenClaw délègue l'assemblage du contexte, `/compact` et les hooks de cycle de vie de contexte de sous-agent connexes à ce moteur à la place. `ownsCompaction: false` ne revient pas automatiquement à l'ancien moteur ; le moteur actif doit toujours implémenter `compact()` correctement. Voir [Context Engine](/fr/concepts/context-engine) pour l'interface complète enfichable, les hooks de cycle de vie et la configuration.
 
 ## Ce que `/context` rapporte réellement
 
 `/context` préfère le dernier rapport de prompt système **construit lors de l'exécution** lorsqu'il est disponible :
 
-- `System prompt (run)` = capturé à partir de la dernière exécution intégrée (compatible avec les outils) et persisté dans le magasin de session.
+- `System prompt (run)` = capturé à partir de la dernière exécution intégrée (capable d'utiliser des outils) et persisté dans le magasin de sessions.
 - `System prompt (estimate)` = calculé à la volée lorsqu'aucun rapport d'exécution n'existe (ou lors de l'exécution via un backend CLI qui ne génère pas le rapport).
 
-Dans les deux cas, il rapporte les tailles et les principaux contributeurs ; il n'**affiche pas** le prompt système complet ou les schémas d'outils.
+Dans les deux cas, il signale les tailles et les principaux contributeurs ; il **ne** déverse **pas** le prompt système complet ou les schémas d'outils.
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Context engine" href="/fr/concepts/context-engine" icon="puzzle-piece">
+  <Card title="Moteur de contexte" href="/fr/concepts/context-engine" icon="puzzle-piece">
     Injection de contexte personnalisé via des plugins.
   </Card>
-  <Card title="Compaction" href="/fr/concepts/compaction" icon="compress">
-    Résumer les longues conversations pour les maintenir dans la fenêtre du modèle.
+  <Card title="Compactage" href="/fr/concepts/compaction" icon="compress">
+    Résumé des longues conversations pour les maintenir dans la fenêtre du modèle.
   </Card>
-  <Card title="System prompt" href="/fr/concepts/system-prompt" icon="message-lines">
-    Comment le prompt système est construit et ce qu'il injecte à chaque tour.
+  <Card title="Invite système" href="/fr/concepts/system-prompt" icon="message-lines">
+    Construction de l'invite système et ce qu'elle injecte à chaque tour.
   </Card>
-  <Card title="Agent loop" href="/fr/concepts/agent-loop" icon="arrows-rotate">
-    Le cycle d'exécution complet de l'agent, du message entrant à la réponse finale.
+  <Card title="Boucle de l'agent" href="/fr/concepts/agent-loop" icon="arrows-rotate">
+    Le cycle complet d'exécution de l'agent, du message entrant à la réponse finale.
   </Card>
 </CardGroup>

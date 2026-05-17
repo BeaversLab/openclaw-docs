@@ -12,7 +12,7 @@ Lorsqu'un site nécessite une connexion, **connectez-vous manuellement** dans le
 
 **Ne** fournissez **pas** vos identifiants au modèle. Les connexions automatisées déclenchent souvent les défenses anti-bots et peuvent verrouiller le compte.
 
-Retour à la documentation principale du navigateur : [Navigateur](/fr/tools/browser).
+Retour à la documentation principale du navigateur : [Browser](/fr/tools/browser).
 
 ## Quel profil Chrome est utilisé ?
 
@@ -62,16 +62,16 @@ Si l'agent est isolé, l'outil de navigateur utilise par défaut le bac à sable
 }
 ```
 
-Ciblez ensuite le navigateur hôte :
+Ensuite, ouvrez le navigateur hôte vous-même (les appels de la CLI s'exécutent toujours sur le navigateur hôte) :
 
 ```bash
-openclaw browser open https://x.com --browser-profile openclaw --target host
+openclaw browser open https://x.com --browser-profile openclaw
 ```
 
-Ou désactivez l'isolation pour l'agent qui publie des mises à jour.
+Les appels de `browser` de l'outil de l'agent peuvent ensuite cibler l'hôte une fois que `sandbox.browser.allowHostControl: true` est défini. Alternativement, désactivez le sandboxing pour l'agent qui publie les mises à jour.
 
 ## Connexes
 
-- [Navigateur](/fr/tools/browser)
-- [Dépannage navigateur Linux](/fr/tools/browser-linux-troubleshooting)
-- [Dépannage navigateur WSL2](/fr/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+- [Browser](/fr/tools/browser)
+- [Browser Linux troubleshooting](/fr/tools/browser-linux-troubleshooting)
+- [Browser WSL2 troubleshooting](/fr/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

@@ -43,20 +43,20 @@ OpenClaw incluye un proveedor `fal` integrado para la generación de imágenes y
 El proveedor de generación de imágenes `fal` incluido tiene como valor predeterminado
 `fal/fal-ai/flux/dev`.
 
-| Capacidad                | Valor                              |
-| ------------------------ | ---------------------------------- |
-| Máximo de imágenes       | 4 por solicitud                    |
-| Modo de edición          | Habilitado, 1 imagen de referencia |
-| Sobrescrituras de tamaño | Compatible                         |
-| Relación de aspecto      | Compatible                         |
-| Resolución               | Compatible                         |
-| Formato de salida        | `png` o `jpeg`                     |
+| Capacidad                | Valor                                                            |
+| ------------------------ | ---------------------------------------------------------------- |
+| Máximo de imágenes       | 4 por solicitud                                                  |
+| Modo de edición          | Flux: 1 imagen de referencia; GPT Image 2: 10; Nano Banana 2: 14 |
+| Sobrescrituras de tamaño | Compatible                                                       |
+| Relación de aspecto      | Soportado para generate y edición de GPT Image 2/Nano Banana 2   |
+| Resolución               | Compatible                                                       |
+| Formato de salida        | `png` o `jpeg`                                                   |
 
-<Warning>El endpoint de edición de imágenes de fal **no** admite anulaciones de `aspectRatio`.</Warning>
+<Warning>Las solicitudes de imagen a imagen de Flux **no** admiten anulaciones `aspectRatio`. Las solicitudes de edición de GPT Image 2 y Nano Banana 2 utilizan el punto final `/edit` de fal y aceptan sugerencias de relación de aspecto.</Warning>
 
 Use `outputFormat: "png"` cuando desee salida PNG. fal no declara un
 control explícito de fondo transparente en OpenClaw, por lo que `background:
-"transparent"` se reporta como una anulación ignorada para los modelos de fal.
+"transparent"` se reporta como una anulación ignorada para los modelos fal.
 
 Para usar fal como proveedor de imágenes predeterminado:
 
@@ -74,7 +74,7 @@ Para usar fal como proveedor de imágenes predeterminado:
 
 ## Generación de video
 
-El proveedor de generación de videos `fal` incluido tiene como valor predeterminado
+El proveedor de generación de video `fal` incluido tiene como valor predeterminado
 `fal/fal-ai/minimax/video-01-live`.
 
 | Capacidad           | Valor                                                                               |
@@ -126,9 +126,10 @@ El proveedor de generación de videos `fal` incluido tiene como valor predetermi
     }
     ```
 
-    La referencia a video acepta hasta 9 imágenes, 3 videos y 3 referencias de audio
-    a través de los parámetros compartidos `video_generate` `images`, `videos` y `audioRefs`,
-    con un máximo de 12 archivos de referencia en total.
+    Referencia a video acepta hasta 9 imágenes, 3 videos y 3 referencias de audio
+
+a través de los parámetros compartidos `video_generate` `images`, `videos` y `audioRefs`,
+con un máximo de 12 archivos de referencia en total.
 
   </Accordion>
 
@@ -147,7 +148,7 @@ El proveedor de generación de videos `fal` incluido tiene como valor predetermi
   </Accordion>
 </AccordionGroup>
 
-<Tip>Use `openclaw models list --provider fal` para ver la lista completa de modelos fal disponibles, incluyendo cualquier entrada agregada recientemente.</Tip>
+<Tip>Use `openclaw models list --provider fal` para ver la lista completa de los modelos fal disponibles, incluidas las entradas agregadas recientemente.</Tip>
 
 ## Relacionado
 

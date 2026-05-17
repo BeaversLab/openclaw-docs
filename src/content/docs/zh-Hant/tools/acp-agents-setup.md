@@ -7,12 +7,12 @@ read_when:
 title: "ACP 代理程式 — 設定"
 ---
 
-如需概覽、操作員手冊和概念，請參閱 [ACP agents](/zh-Hant/tools/acp-agents)。
+概覽、操作員手冊與概念，請參閱 [ACP agents](/zh-Hant/tools/acp-agents)。
 
 下列章節涵蓋 acpx harness 設定、MCP 橋接器的外掛程式設定，以及權限設定。
 
-僅在您設定 ACP/acpx 路由時使用此頁面。若為原生 Codex
-應用程式伺服器執行時設定，請使用 [Codex harness](/zh-Hant/plugins/codex-harness)。若為
+僅在設定 ACP/acpx 路由時使用本頁。若為原生 Codex
+app-server 執行時設定，請使用 [Codex harness](/zh-Hant/plugins/codex-harness)。若為
 OpenAI API 金鑰或 Codex OAuth 模型提供者設定，請使用
 [OpenAI](/zh-Hant/providers/openai)。
 
@@ -107,7 +107,7 @@ Codex 有兩個 OpenClaw 路由：
 
 目前對話的綁定不需要建立子執行緒。它們需要一個有效的對語上下文，以及一個暴露 ACP 對話綁定的通道適配器。
 
-請參閱 [設定參考](/zh-Hant/gateway/configuration-reference)。
+請參閱 [Configuration Reference](/zh-Hant/gateway/configuration-reference)。
 
 ## acpx 後端的外掛程式設定
 
@@ -149,10 +149,10 @@ openclaw plugins install ./path/to/local/acpx-plugin
 
 ### acpx 指令與版本設定
 
-預設情況下，`acpx` 外掛會註冊內嵌的 ACP 後端，而不會
-在 Gateway 啟動期間產生 ACP 代理程式。執行 `/acp doctor` 進行明確的
-即時探測。僅當您需要 Gateway 在啟動時探測設定的代理程式時，才設定
-`OPENCLAW_ACPX_RUNTIME_STARTUP_PROBE=1`。
+預設情況下，`acpx` 外掛程式會在 Gateway
+啟動期間探測內嵌的 ACP 後端，並在 Gateway `ready` 訊號前等待該探測。設定
+`OPENCLAW_ACPX_RUNTIME_STARTUP_PROBE=0` 以跳過啟動探測，改為延遲註冊
+後端。執行 `/acp doctor` 以進行明確的隨需探測。
 
 在外掛設定中覆寫指令或版本：
 
@@ -174,7 +174,7 @@ openclaw plugins install ./path/to/local/acpx-plugin
 
 - `command` 接受絕對路徑、相對路徑（從 OpenClaw 工作區解析）或指令名稱。
 - `expectedVersion: "any"` 停用嚴格版本比對。
-- 自訂 `command` 路徑會停用外掛本機自動安裝。
+- 自訂 `command` 路徑會停用外掛程式本機自動安裝。
 
 當路徑或標誌值應保持為單一 argv 權杖時，使用結構化引數覆寫個別 ACP 代理程式指令：
 
@@ -199,15 +199,15 @@ openclaw plugins install ./path/to/local/acpx-plugin
 ```
 
 - `agents.<id>.command` 是該 ACP 代理程式的可執行檔或現有指令字串。
-- `agents.<id>.args` 是選用的。在 OpenClaw 將其透過目前的 acpx 指令字串登錄表傳遞之前，每個陣列項目都會經過 shell 引用。
+- `agents.<id>.args` 為選用項目。OpenClaw 將每個陣列項目透過目前的 acpx 指令字串登錄表傳遞前，會先進行 shell 引號包裹。
 
-請參閱 [外掛](/zh-Hant/tools/plugin)。
+請參閱 [Plugins](/zh-Hant/tools/plugin)。
 
 ### 自動相依性安裝
 
 當您使用 `npm install -g openclaw` 全域安裝 OpenClaw 時，acpx
-執行期相依性（平台特定的二進位檔案）會透過 postinstall hook 自動
-安裝。如果自動安裝失敗，閘道仍會正常啟動，並透過 `openclaw acp doctor` 回報遺失的相依性。
+執行時相依元件（平台特定二進位檔）會透過 postinstall hook 自動安裝。
+若自動安裝失敗，Gateway 仍會正常啟動，並透過 `openclaw acp doctor` 回報缺少的相依元件。
 
 ### 外掛工具 MCP 橋接器
 
@@ -222,7 +222,8 @@ openclaw config set plugins.entries.acpx.config.pluginToolsMcpBridge true
 
 其作用如下：
 
-- 將名為 `openclaw-plugin-tools` 的內建 MCP 伺服器注入到 ACPX 階段啟動程序中。
+- 將名為 `openclaw-plugin-tools` 的內建 MCP 伺服器注入至 ACPX 會話
+  bootstrap。
 - 公開已由已安裝並啟用的 OpenClaw 外掛註冊的外掛工具。
 - 保持該功能為明確選項且預設關閉。
 
@@ -233,11 +234,13 @@ openclaw config set plugins.entries.acpx.config.pluginToolsMcpBridge true
 - 將此視為與允許這些外掛在 OpenClaw 本身執行相同的信任邊界。
 - 啟用此功能前，請先檢視已安裝的外掛。
 
-自訂 `mcpServers` 仍如往常般運作。內建 plugin-tools 橋接器是一個額外的選用便利功能，並非通用 MCP 伺服器設定的替代方案。
+自訂 `mcpServers` 仍如往常般運作。內建的 plugin-tools 橋接器是額外的選用便利功能，並非通用 MCP 伺服器設定的替代方案。
 
 ### OpenClaw 工具 MCP 橋接器
 
-預設情況下，ACPX 階段也**不**會透過 MCP 公開內建的 OpenClaw 工具。當 ACP 代理需要選取的內建工具（例如 `cron`）時，請啟用獨立的 core-tools 橋接器：
+預設情況下，ACPX 會話也**不**會透過
+MCP 公開內建的 OpenClaw 工具。當 ACP 代理程式需要選取的
+內建工具（例如 `cron`）時，請啟用獨立的 core-tools 橋接器：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.openClawToolsMcpBridge true
@@ -245,13 +248,17 @@ openclaw config set plugins.entries.acpx.config.openClawToolsMcpBridge true
 
 其作用如下：
 
-- 將名為 `openclaw-tools` 的內建 MCP 伺服器注入到 ACPX 階段啟動程序中。
-- 公開選取的內建 OpenClaw 工具。初始伺服器會公開 `cron`。
+- 將名為 `openclaw-tools` 的內建 MCP 伺服器注入到 ACPX 階段
+  bootstrap 中。
+- 公開選取的內建 OpenClaw 工具。初始伺服器公開 `cron`。
 - 保持核心工具的公開為明確選項且預設關閉。
 
 ### 執行階段逾時設定
 
-`acpx` 外掛預設將內嵌執行階段設為 120 秒逾時。這讓較慢的駝駁（如 Gemini CLI）有足夠的時間完成 ACP 啟動和初始化。如果您的主機需要不同的執行階段限制，請加以覆寫：
+`acpx` 外掛程式預設將內嵌執行環境逾時設定為 120 秒。
+這讓較慢的 harness（例如 Gemini CLI）有足夠的時間完成
+ACP 啟動和初始化。如果您的主機需要不同的
+執行環境限制，請加以覆寫：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.timeoutSeconds 180
@@ -261,7 +268,10 @@ openclaw config set plugins.entries.acpx.config.timeoutSeconds 180
 
 ### 健康探測代理設定
 
-當 `/acp doctor` 或選用的啟動探測檢查後端時，隨附的 `acpx` 外掛會探測一個駝駁代理。如果設定了 `acp.allowedAgents`，則預設為第一個允許的代理；否則預設為 `codex`。如果您的部署需要不同的 ACP 代理進行健康檢查，請明確設定探測代理：
+當 `/acp doctor` 或啟動探針檢查後端時，隨附的 `acpx`
+外掛程式會探測一個 harness 代理程式。如果設定了 `acp.allowedAgents`，它會預設為
+第一個允許的代理程式；否則會預設為 `codex`。如果您的部署
+需要不同的 ACP 代理程式進行健康檢查，請明確設定探針代理程式：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.probeAgent claude
@@ -273,7 +283,7 @@ openclaw config set plugins.entries.acpx.config.probeAgent claude
 
 ACP 會話以非互動方式執行 — 沒有 TTY 來批准或拒絕檔案寫入和 shell 執行權限提示。acpx 外掛程式提供了兩個組態鍵來控制如何處理權限：
 
-這些 ACPX harness 權限與 OpenClaw 執行核准分開，也與 CLI 後端供應商旁路旗標（例如 Claude CLI `--permission-mode bypassPermissions`）分開。ACPX `approve-all` 是 ACP 會話的 harness 層級緊急開關。
+這些 ACPX harness 權限與 OpenClaw exec 核准分開，也與 CLI 後端供應商略過旗標（例如 Claude CLI `--permission-mode bypassPermissions`）分開。ACPX `approve-all` 是 ACP 階段的 harness 層級緊急開關。
 
 ### `permissionMode`
 
@@ -289,10 +299,10 @@ ACP 會話以非互動方式執行 — 沒有 TTY 來批准或拒絕檔案寫入
 
 控制當顯示權限提示但沒有可用的互動式 TTY 時會發生什麼情況（這對於 ACP 會話總是如此）。
 
-| 數值   | 行為                                            |
-| ------ | ----------------------------------------------- |
-| `fail` | 使用 `AcpRuntimeError` 中止會話。**（預設值）** |
-| `deny` | 靜默拒絕權限並繼續（優雅降級）。                |
+| 數值   | 行為                                             |
+| ------ | ------------------------------------------------ |
+| `fail` | 使用 `AcpRuntimeError` 中止階段。 **（預設值）** |
+| `deny` | 靜默拒絕權限並繼續（優雅降級）。                 |
 
 ### 組態
 
@@ -306,14 +316,14 @@ openclaw config set plugins.entries.acpx.config.nonInteractivePermissions fail
 變更這些數值後，請重新啟動閘道。
 
 <Warning>
-OpenClaw 預設為 `permissionMode=approve-reads` 和 `nonInteractivePermissions=fail`。在非互動式 ACP 會話中，任何觸發權限提示的寫入或執行都可能因 `AcpRuntimeError: Permission prompt unavailable in non-interactive mode` 而失敗。
+OpenClaw 預設為 `permissionMode=approve-reads` 和 `nonInteractivePermissions=fail`。在非互動式 ACP 階段中，任何觸發權限提示的寫入或 exec 都可能因 `AcpRuntimeError: Permission prompt unavailable in non-interactive mode` 而失敗。
 
-如果您需要限制權限，請將 `nonInteractivePermissions` 設定為 `deny`，以便會話優雅降級而不是崩潰。
+如果您需要限制權限，請將 `nonInteractivePermissions` 設定為 `deny`，以便階段能優雅降級而不是當機。
 
 </Warning>
 
 ## 相關
 
-- [ACP agents](/zh-Hant/tools/acp-agents) — 概述、操作員手冊、概念
+- [ACP agents](/zh-Hant/tools/acp-agents) — 概觀、操作員手冊、概念
 - [Sub-agents](/zh-Hant/tools/subagents)
 - [Multi-agent routing](/zh-Hant/concepts/multi-agent)

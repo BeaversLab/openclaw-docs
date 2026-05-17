@@ -12,7 +12,7 @@ Añade la superficie del canal de Slack para enviar y recibir mensajes de OpenCl
 ## Distribución
 
 - Paquete: `@openclaw/slack`
-- Ruta de instalación: incluida en OpenClaw
+- Ruta de instalación: npm; ClawHub
 
 ## Superficie
 

@@ -16,9 +16,9 @@ Ouverture rapide (Gateway local) :
 
 Références clés :
 
-- [Control UI](/fr/web/control-ui) pour l'utilisation et les fonctionnalités de l'interface utilisateur.
-- [Tailscale](Tailscale/en/gateway/tailscale) pour l'automatisation Serve/Funnel.
-- [Web surfaces](/fr/web) pour les modes de liaison et les notes de sécurité.
+- [Interface de contrôle](/fr/web/control-ui) pour l'utilisation et les fonctionnalités de l'interface.
+- [Tailscale](/fr/gateway/tailscale) pour l'automatisation de Serve/Funnel.
+- [Surfaces Web](/fr/web) pour les modes de liaison et les notes de sécurité.
 
 L'authentification est appliquée lors de la poignée de main WebSocket via le chemin d'authentification de la passerelle configuré :
 
@@ -27,7 +27,7 @@ L'authentification est appliquée lors de la poignée de main WebSocket via le c
 - En-têtes d'identité Tailscale Serve lorsque `gateway.auth.allowTailscale: true`
 - en-têtes d'identité de proxy de confiance lorsque `gateway.auth.mode: "trusted-proxy"`
 
-Voir `gateway.auth`Gateway dans [Gateway configuration](/fr/gateway/configuration).
+Voir `gateway.auth` dans la [configuration Gateway](/fr/gateway/configuration).
 
 Note de sécurité : l'interface de contrôle est une **surface d'administration** (chat, configuration, approbations d'exécution).
 Ne l'exposez pas publiquement. L'interface conserve les jetons de l'URL du tableau de bord dans sessionStorage
@@ -65,7 +65,10 @@ Privilégiez localhost, Tailscale Serve, ou un tunnel SSH.
   `OPENCLAW_GATEWAY_PASSWORD`). Le tableau de bord ne persiste pas les mots de passe
   après un rechargement.
 - **Modes porteurs d'identité** : Tailscale Serve peut satisfaire l'authentification UI de contrôle/WebSocket via les en-têtes d'identité lorsque Tailscale`gateway.auth.allowTailscale: true`, et un proxy inverse sensible à l'identité et non bouclé peut satisfaire `gateway.auth.mode: "trusted-proxy"`. Dans ces modes, le tableau de bord n'a pas besoin d'un secret partagé collé pour le WebSocket.
-- **Pas localhost** : utilisez Tailscale Serve, une liaison de secret partagé non bouclée, un proxy inverse sensible à l'identité non bouclé avec Tailscale`gateway.auth.mode: "trusted-proxy"`, ou un tunnel SSH. Les API HTTP utilisent toujours l'authentification par secret partagé, sauf si vous exécutez intentionnellement `gateway.auth.mode: "none"` à entrée privée ou l'authentification HTTP de proxy approuvé. Voir [Surfaces Web](/fr/web).
+- **Pas localhost** : utilisez Tailscale Serve, une liaison de secret partagé non bouclée, un proxy inverse sensible à l'identité non bouclé avec
+  `gateway.auth.mode: "trusted-proxy"`, ou un tunnel SSH. Les API HTTP utilisent toujours
+  l'auth par secret partagé sauf si vous exécutez intentionnellement un `gateway.auth.mode: "none"` à accès privé ou une auth HTTP trusted-proxy. Voir
+  [Surfaces Web](/fr/web).
 
 <a id="if-you-see-unauthorized-1008"></a>
 
@@ -73,21 +76,25 @@ Privilégiez localhost, Tailscale Serve, ou un tunnel SSH.
 
 - Assurez-vous que la passerelle est accessible (local : `openclaw status` ; distant : tunnel SSH `ssh -N -L 18789:127.0.0.1:18789 user@host` puis ouvrez `http://127.0.0.1:18789/`).
 - Pour `AUTH_TOKEN_MISMATCH`, les clients peuvent effectuer une nouvelle tentative approuvée avec un jeton d'appareil mis en cache lorsque la passerelle renvoie des indices de nouvelle tentative. Cette nouvelle tentative avec jeton mis en cache réutilise les étendues approuvées mises en cache du jeton ; les appelants avec `deviceToken` explicite / `scopes` explicite conservent leur ensemble d'étendues demandées. Si l'authentification échoue toujours après cette nouvelle tentative, résolvez manuellement la dérive du jeton.
-- En dehors de ce chemin de nouvelle tentative, la priorité d'authentification de connexion est d'abord le jeton/mot de passe partagé explicite, puis `deviceToken` explicite, puis le jeton d'appareil stocké, puis le jeton d'amorçage.
-- Sur le chemin asynchrone de l'UI de contrôle Tailscale Serve, les tentatives échouées pour le même Tailscale`{scope, ip}` sont sérialisées avant que le limiteur d'authentification échouée ne les enregistre, de sorte que la deuxième mauvaise nouvelle tentative simultanée peut déjà afficher `retry later`.
-- Pour les étapes de réparation de la dérive de jeton, suivez la [Liste de contrôle de récupération de la dérive de jeton](/fr/cli/devices#token-drift-recovery-checklist).
-- Récupérez ou fournissez le secret partagé à partir de l'hôte de la passerelle :
+- Pour `AUTH_SCOPE_MISMATCH`, le jeton d'appareil a été reconnu mais ne porte pas les étendues demandées par le tableau de bord ; réassociez ou approuvez le contrat d'étendue demandé au lieu de faire tourner le jeton Gateway partagé.
+- En dehors de ce chemin de réessai, la priorité de l'auth de connexion est d'abord le jeton/mot de passe partagé explicite, puis `deviceToken` explicite, puis le jeton d'appareil stocké, puis le jeton d'amorçage.
+- Sur le chemin asynchrone de l'interface de contrôle Tailscale Serve, les tentatives échouées pour le même
+  `{scope, ip}` sont sérialisées avant que le limiteur d'auth échouée ne les enregistre, donc
+  la deuxième mauvaise réessai simultanée peut déjà afficher `retry later`.
+- Pour les étapes de réparation de dérive de jeton, suivez la [Liste de contrôle de récupération de dérive de jeton](/fr/cli/devices#token-drift-recovery-checklist).
+- Récupérez ou fournissez le secret partagé depuis l'hôte de la passerelle :
   - Jeton : `openclaw config get gateway.auth.token`
   - Mot de passe : résolvez le `gateway.auth.password` configuré ou
     `OPENCLAW_GATEWAY_PASSWORD`
-  - Jeton géré par SecretRef : résolvez le fournisseur de secret externe ou exportez `OPENCLAW_GATEWAY_TOKEN` dans ce shell, puis relancez `openclaw dashboard`
-  - Aucun secret partagé configuré : `openclaw doctor --generate-gateway-token`
-- Dans les paramètres du tableau de bord, collez le jeton ou le mot de passe dans le champ d'authentification,
+  - Jeton géré par SecretRef : résolvez le fournisseur de secrets externe ou exportez
+    `OPENCLAW_GATEWAY_TOKEN` dans ce shell, puis relancez `openclaw dashboard`
+  - Aucun secret partagé configuré : `openclaw doctor --generate-gateway-token`
+- Dans les paramètres du tableau de bord, collez le jeton ou le mot de passe dans le champ d'auth,
   puis connectez-vous.
-- Le sélecteur de langue de l'interface utilisateur se trouve dans **Aperçu -> Accès Gateway -> Langue**.
+- Le sélecteur de langue de l'interface utilisateur se trouve dans **Overview -> Gateway Access -> Language**.
   Il fait partie de la carte d'accès, et non de la section Apparence.
 
 ## Connexes
 
-- [Interface de contrôle](/fr/web/control-ui)
-- [WebChat](/fr/web/webchat)
+- [Control UI](/fr/web/control-ui)
+- [WebChat](WebChat/en/web/webchat)

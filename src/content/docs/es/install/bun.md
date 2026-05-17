@@ -37,13 +37,13 @@ Bun es un tiempo de ejecución local opcional para ejecutar TypeScript directame
 
 Bun bloquea los scripts de ciclo de vida de las dependencias a menos que sean de confianza explícita. Para este repositorio, los scripts comúnmente bloqueados no son necesarios:
 
-- `@whiskeysockets/baileys` `preinstall` -- verifica Node principal >= 20 (OpenClaw usa Node 24 por defecto y aún admite Node 22 LTS, actualmente `22.16+`)
+- `baileys` `preinstall` -- comprueba que la versión principal de Node sea >= 20 (OpenClaw usa por defecto Node 24 y aún admite Node 22 LTS, actualmente `22.16+`)
 - `protobufjs` `postinstall` -- emite advertencias sobre esquemas de versión incompatibles (sin artefactos de compilación)
 
 Si encuentras un problema en tiempo de ejecución que requiere estos scripts, confía en ellos explícitamente:
 
 ```sh
-bun pm trust @whiskeysockets/baileys protobufjs
+bun pm trust baileys protobufjs
 ```
 
 ## Advertencias

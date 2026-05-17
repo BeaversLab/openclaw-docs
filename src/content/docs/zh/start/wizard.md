@@ -66,7 +66,7 @@ openclaw agents add <name>
 3. **Gateway(网关)** — 端口、绑定地址、身份验证模式、Tailscale 暴露。
    在交互式令牌模式下，选择默认明文令牌存储或选择加入 SecretRef。
    非交互式令牌 SecretRef 路径：`--gateway-token-ref-env <ENV_VAR>`。
-4. **频道** — 内置且捆绑的聊天频道，例如 iMessage、Discord、飞书、Google Chat、Mattermost、Microsoft Teams、QQ 机器人、Signal、Slack、Telegram、WhatsApp 等等。
+4. **通道** — 内置和官方插件聊天通道，例如 iMessage、Discord、飞书、Google Chat、Mattermost、Microsoft Teams、QQ 机器人、Signal、Slack、Telegram、WhatsApp 等等。
 5. **Daemon** — 安装 LaunchAgent (macOS)、systemd 用户单元 (Linux/WSL2) 或具有每用户启动文件夹回退机制的原生 Windows 计划任务。
    如果 token 身份验证需要 token 且 `gateway.auth.token` 由 SecretRef 管理，daemon 安装会验证它，但不会将解析后的 token 持久化到 supervisor 服务环境元数据中。
    如果 token 身份验证需要 token 且配置的 token SecretRef 未解析，daemon 安装将被阻止，并提供可操作的指导。

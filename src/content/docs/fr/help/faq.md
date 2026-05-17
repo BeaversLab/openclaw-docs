@@ -240,15 +240,15 @@ se trouve sur la [First-run FAQ](/fr/help/faq-first-run).
 
   </Accordion>
 
-  <Accordion title="Les tâches Cron ou les rappels ne se déclenchent pas. Que dois-je vérifier ?"GatewayGateway>
-    Cron s'exécute dans le processus Gateway. Si le Gateway ne fonctionne pas en continu,
+  <Accordion title="Cron ou les rappels ne se déclenchent pas. Que dois-je vérifier ?"GatewayGateway>
+    Cron s'exécute dans le processus Gateway. Si la Gateway ne fonctionne pas en continu,
     les tâches planifiées ne s'exécuteront pas.
 
     Liste de vérification :
 
     - Confirmez que cron est activé (`cron.enabled`) et que `OPENCLAW_SKIP_CRON`Gateway n'est pas défini.
-    - Vérifiez que le Gateway fonctionne 24h/24 (pas de mise en veille/redémarrages).
-    - Vérifiez les paramètres de fuseau horaire pour la tâche (`--tz` par rapport au fuseau horaire de l'hôte).
+    - Vérifiez que la Gateway fonctionne 24 h/24 et 7 j/7 (pas de mise en veille/redémarrage).
+    - Vérifiez les paramètres de fuseau horaire pour la tâche (`--tz` vs fuseau horaire de l'hôte).
 
     Débogage :
 
@@ -257,7 +257,7 @@ se trouve sur la [First-run FAQ](/fr/help/faq-first-run).
     openclaw cron runs --id <jobId> --limit 50
     ```
 
-    Docs : [Tâches Cron](/fr/automation/cron-jobs), [Automatisation et tâches](/fr/automation).
+    Docs : [Cron jobs](/fr/automation/cron-jobs), [Automation](/fr/automation).
 
   </Accordion>
 
@@ -336,14 +336,14 @@ se trouve sur la [First-run FAQ](/fr/help/faq-first-run).
 
   </Accordion>
 
-  <Accordion title="OpenClaw peut-il exécuter des tâches selon un calendrier ou en continu en arrière-plan ?">
-    Oui. Utilisez le planificateur Gateway :
+  <Accordion title="OpenClawOpenClaw peut-il exécuter des tâches selon un calendrier ou en continu en arrière-plan ?"Gateway>
+    Oui. Utilisez le planificateur de Gateway :
 
-    - **Cron jobs** pour les tâches planifiées ou récurrentes (persistantes après redémarrage).
-    - **Heartbeat** pour les vérifications périodiques de la « session principale ».
-    - **Isolated jobs** pour les agents autonomes qui publient des résumés ou les livrent aux discussions.
+    - **Tâches Cron** pour les tâches planifiées ou récurrentes (persistantes après redémarrage).
+    - **Heartbeat** pour les vérifications périodiques de la "session principale".
+    - **Tâches isolées** pour les agents autonomes qui publient des résumés ou les livrent aux discussions.
 
-    Documentation : [Cron jobs](/fr/automation/cron-jobs), [Automation & Tasks](/fr/automation),
+    Docs : [Cron jobs](/fr/automation/cron-jobs), [Automation](/fr/automation),
     [Heartbeat](/fr/gateway/heartbeat).
 
   </Accordion>

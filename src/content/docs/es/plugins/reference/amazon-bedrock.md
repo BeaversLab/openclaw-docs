@@ -12,7 +12,7 @@ Añade compatibilidad con el proveedor de modelos de Amazon Bedrock a OpenClaw.
 ## Distribución
 
 - Paquete: `@openclaw/amazon-bedrock-provider`
-- Ruta de instalación: incluido en OpenClaw
+- Ruta de instalación: npm
 
 ## Superficie
 

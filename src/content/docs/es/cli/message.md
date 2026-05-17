@@ -72,7 +72,7 @@ Búsqueda de nombres:
   - Opcional: `--media`, `--presentation`, `--delivery`, `--pin`, `--reply-to`, `--thread-id`, `--gif-playback`, `--force-document`, `--silent`
   - Cargas de presentación compartidas: `--presentation` envía bloques semánticos (`text`, `context`, `divider`, `buttons`, `select`) que el núcleo renderiza a través de las capacidades declaradas del canal seleccionado. Consulte [Presentación de mensajes](/es/plugins/message-presentation).
   - Preferencias de entrega genéricas: `--delivery` acepta sugerencias de entrega como `{ "pin": true }`; `--pin` es una abreviatura para la entrega fijada cuando el canal lo admite.
-  - Solo Telegram: `--force-document` (envía imágenes y GIF como documentos para evitar la compresión de Telegram)
+  - Solo Telegram: `--force-document` (enviar imágenes, GIFs y videos como documentos para evitar la compresión de Telegram)
   - Solo Telegram: `--thread-id` (id del tema del foro)
   - Solo Slack: `--thread-id` (marca de tiempo del hilo; `--reply-to` usa el mismo campo)
   - Telegram + Discord: `--silent`

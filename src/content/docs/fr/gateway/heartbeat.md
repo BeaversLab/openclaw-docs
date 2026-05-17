@@ -7,7 +7,7 @@ title: "Heartbeat"
 sidebarTitle: "Heartbeat"
 ---
 
-<Note>**Heartbeat vs cron ?** Consultez [Automation & Tasks](/fr/automation) pour obtenir des conseils sur l'utilisation de chacun.</Note>
+<Note>**Heartbeat ou cron ?** Consultez [Automatisation](/fr/automation) pour obtenir des conseils sur l'utilisation de chacun.</Note>
 
 Heartbeat exécute des **tours d'agent périodiques** dans la session principale afin que le modèle puisse signaler tout ce qui nécessite une attention sans vous spammer.
 
@@ -479,7 +479,7 @@ Les battements de cœur actuels préservent le modèle d'exécution existant de 
 
 ## Connexes
 
-- [Automatisation et tâches](/fr/automation) — tous les mécanismes d'automatisation en un coup d'œil
+- [Automatisation](/fr/automation) — tous les mécanismes d'automatisation en un coup d'œil
 - [Tâches d'arrière-plan](/fr/automation/tasks) — comment le travail détaché est suivi
 - [Fuseau horaire](/fr/concepts/timezone) — comment le fuseau horaire affecte la planification des battements de cœur
 - [Dépannage](/fr/automation/cron-jobs#troubleshooting) — débogage des problèmes d'automatisation

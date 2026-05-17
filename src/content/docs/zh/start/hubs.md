@@ -107,7 +107,7 @@ title: "文档中心"
 - [PDF 工具](/zh/tools/pdf)
 - [提升模式](/zh/tools/elevated)
 - [Cron 作业](/zh/automation/cron-jobs)
-- [自动化与任务](/zh/automation)
+- [自动化](/zh/automation)
 - [思考 + 详细输出](/zh/tools/thinking)
 - [模型](/zh/concepts/models)
 - [子代理](/zh/tools/subagents)

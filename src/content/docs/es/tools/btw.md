@@ -23,7 +23,7 @@ Cuando envías:
 OpenClaw:
 
 1. captura el contexto de la sesión actual,
-2. ejecuta una llamada de modelo separada **sin herramientas**,
+2. ejecuta una consulta lateral efímera separada,
 3. responde solo a la pregunta secundaria,
 4. deja la ejecución principal tranquila,
 5. **no** escribe la pregunta o respuesta BTW en el historial de la sesión,
@@ -33,17 +33,18 @@ El modelo mental importante es:
 
 - mismo contexto de sesión
 - consulta secundaria única y separada
-- sin llamadas a herramientas
+- el mismo transporte de arnés nativo cuando la sesión utiliza un arnés nativo
 - sin contaminación del contexto futuro
 - sin persistencia de la transcripción
+
+Para sesiones con arnés Codex, BTW permanece dentro de Codex al bifurcar el subproceso activo del servidor de aplicaciones como un subproceso lateral efímero. Esto mantiene el comportamiento de OAuth y el subproceso nativo de Codex intactos, aislando aún así la respuesta lateral de la transcripción principal. Al igual que `/side` de Codex, el subproceso lateral mantiene los permisos actuales de Codex y la superficie de herramientas nativas, con barreras que indican al modelo que no trate el trabajo heredado del subproceso principal como instrucciones activas. Los entornos de ejecución que no son Codex mantienen la ruta directa de un solo shot más antigua.
 
 ## Lo que no hace
 
 `/btw` **no**:
 
 - crea una nueva sesión duradera,
-- continúa la tarea principal inacabada,
-- ejecuta herramientas o bucles de herramientas de agente,
+- continúa la tarea principal sin terminar,
 - escribe datos de preguntas/respuestas BTW en el historial de transcripciones,
 - aparece en `chat.history`,
 - sobrevive a una recarga.
@@ -60,7 +61,7 @@ le dice explícitamente al modelo:
 
 - responda solo a la pregunta secundaria,
 - no reanude ni complete la tarea principal inacabada,
-- no emita llamadas a herramientas ni pseudollamadas a herramientas.
+- no dirigen la conversación principal.
 
 Eso mantiene BTW aislado de la ejecución principal mientras sigue siendo consciente de lo que
 es la sesión.
@@ -74,8 +75,8 @@ A nivel del protocolo Gateway:
 - el chat normal del asistente utiliza el evento `chat`
 - BTW utiliza el evento `chat.side_result`
 
-Esta separación es intencional. Si BTW reutilizara la ruta normal del evento `chat`,
-los clientes lo tratarían como el historial de conversación normal.
+Esta separación es intencional. Si BTW reutilizara la ruta de eventos normal `chat`,
+los clientes la tratarían como el historial de conversación regular.
 
 Debido a que BTW utiliza un evento en vivo separado y no se reproduce desde
 `chat.history`, desaparece después de recargar.
@@ -88,7 +89,7 @@ En la TUI, BTW se representa en línea en la vista de la sesión actual, pero pe
 efímero:
 
 - visualmente distinto de una respuesta normal del asistente
-- se puede descartar con `Enter` o `Esc`
+- descartable con `Enter` o `Esc`
 - no se reproduce al recargar
 
 ### Canales externos
@@ -101,10 +102,10 @@ La respuesta aún se trata como un resultado lateral, no como historial normal d
 
 ### UI de control / web
 
-La Gateway emite BTW correctamente como `chat.side_result`, y BTW no está incluido
+El Gateway emite BTW correctamente como `chat.side_result`, y BTW no está incluido
 en `chat.history`, por lo que el contrato de persistencia ya es correcto para la web.
 
-El Control UI actual aún necesita un consumidor dedicado `chat.side_result` para
+El Control UI actual todavía necesita un consumidor dedicado `chat.side_result` para
 renderizar BTW en vivo en el navegador. Hasta que llegue ese soporte del lado del cliente, BTW es una
 función a nivel de Gateway con comportamiento completo de TUI y canales externos, pero aún no
 una experiencia de usuario completa en el navegador.
@@ -129,8 +130,7 @@ Ejemplos:
 
 ## Cuándo no usar BTW
 
-No uses `/btw` cuando quieras que la respuesta pase a formar parte del contexto de
-trabajo futuro de la sesión.
+No uses `/btw` cuando quieras que la respuesta se convierta en parte del contexto de trabajo futuro de la sesión.
 
 En ese caso, pregunte normalmente en la sesión principal en lugar de usar BTW.
 

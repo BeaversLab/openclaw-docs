@@ -241,15 +241,15 @@ residen en las [Preguntas frecuentes de la primera ejecución](/es/help/faq-firs
 
   </Accordion>
 
-  <Accordion title="Cron o recordatorios no se ejecutan. ¿Qué debería verificar?">
+  <Accordion title="Cron o recordatorios no se activan. ¿Qué debería verificar?">
     Cron se ejecuta dentro del proceso Gateway. Si el Gateway no se está ejecutando continuamente,
-    los trabajos programados no se ejecutarán.
+    las tareas programadas no se ejecutarán.
 
     Lista de verificación:
 
-    - Confirme que cron está habilitado (`cron.enabled`) y `OPENCLAW_SKIP_CRON` no está establecido.
-    - Verifique que el Gateway se esté ejecutando 24/7 (sin suspensión/reinicios).
-    - Verifique la configuración de zona horaria para el trabajo (`--tz` vs zona horaria del host).
+    - Confirme que cron está habilitado (`cron.enabled`) y `OPENCLAW_SKIP_CRON` no está configurado.
+    - Verifique que el Gateway esté funcionando 24/7 (sin suspensiones/reinicios).
+    - Verifique la configuración de zona horaria para la tarea (`--tz` vs zona horaria del host).
 
     Depuración:
 
@@ -258,7 +258,7 @@ residen en las [Preguntas frecuentes de la primera ejecución](/es/help/faq-firs
     openclaw cron runs --id <jobId> --limit 50
     ```
 
-    Documentación: [Trabajos Cron](/es/automation/cron-jobs), [Automatización y tareas](/es/automation).
+    Documentación: [Cron jobs](/es/automation/cron-jobs), [Automation](/es/automation).
 
   </Accordion>
 
@@ -338,14 +338,14 @@ n sincronizar sus propias habilidades. Para instalaciones compartidas entre agen
 
   </Accordion>
 
-  <Accordion title="¿Puede OpenClaw ejecutar tareas según una programación o continuamente en segundo plano?">
+  <Accordion title="¿Puede OpenClaw ejecutar tareas según un programa o continuamente en segundo plano?">
     Sí. Utilice el programador de Gateway:
 
-    - **Trabajos Cron** para tareas programadas o recurrentes (persisten tras los reinicios).
+    - **Cron jobs** para tareas programadas o recurrentes (persisten tras los reinicios).
     - **Heartbeat** para verificaciones periódicas de la "sesión principal".
-    - **Trabajos aislados** para agentes autónomos que publican resúmenes o los entregan a chats.
+    - **Isolated jobs** para agentes autónomos que publican resúmenes o los envían a chats.
 
-    Documentación: [Trabajos Cron](/es/automation/cron-jobs), [Automatización y Tareas](/es/automation),
+    Documentación: [Cron jobs](/es/automation/cron-jobs), [Automation](/es/automation),
     [Heartbeat](/es/gateway/heartbeat).
 
   </Accordion>

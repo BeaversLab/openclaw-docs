@@ -185,14 +185,14 @@ Si `tools.media.<capability>.enabled` n'est **pas** défini sur `false` et que v
   <Step title="CLICLI Gemini">
     `gemini` utilisant `read_many_files`.
   </Step>
-  <Step title="Authentification du fournisseur">
-    - Les entrées `models.providers.*` configurées qui prennent en charge cette fonctionnalité sont essayées avant l'ordre de repli intégré.
-    - Les fournisseurs de configuration image uniquement avec un modèle capable d'images s'enregistrent automatiquement pour la compréhension des médias même s'ils ne sont pas un plugin fournisseur intégré.
-    - La compréhension d'image Ollama est disponible lorsqu'elle est sélectionnée explicitement, par exemple via `agents.defaults.imageModel` ou `openclaw infer image describe --model ollama/<vision-model>`.
+  <Step title="Fournisseur d'authentification">
+    - Les entrées `models.providers.*` configurées qui prennent en charge cette fonctionnalité sont essayées avant l'ordre de repli groupé.
+    - Les fournisseurs de configuration pour images uniquement avec un modèle capable de traiter les images s'inscrivent automatiquement pour la compréhension des médias, même s'ils ne sont pas un plugin fournisseur groupé.
+    - La compréhension d'images par Ollama est disponible lorsqu'elle est sélectionnée explicitement, par exemple via `agents.defaults.imageModel` ou `openclaw infer image describe --model ollama/<vision-model>`.
 
-    Ordre de repli intégré :
+    Ordre de repli groupé :
 
-    - Audio : OpenAI → Groq → xAI → Deepgram → Google → SenseAudio → ElevenLabs → Mistral
+    - Audio : OpenAI → Groq → xAI → Deepgram → OpenRouter → Google → SenseAudio → ElevenLabs → Mistral
     - Image : OpenAI → Anthropic → Google → MiniMax → MiniMax Portal → Z.AI
     - Vidéo : Google → Qwen → Moonshot
 
@@ -235,7 +235,7 @@ Si vous définissez `capabilities`, l'entrée ne s'exécute que pour ces types d
 - `openai`, `anthropic`, `minimax` : **image**
 - `minimax-portal` : **image**
 - `moonshot` : **image + vidéo**
-- `openrouter` : **image**
+- `openrouter` : **image + audio**
 - `google` (Gemini API) : **image + audio + vidéo**
 - `qwen` : **image + vidéo**
 - `mistral` : **audio**
@@ -252,7 +252,7 @@ Pour les entrées CLI, **définissez `capabilities` explicitement** pour éviter
 | Capacité | Intégration de fournisseur                                                                                                                           | Notes                                                                                                                                                                                                                                                                                                                                                                         |
 | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Image    | OpenAI, Codex OpenAI OAuth, serveur d'application Codex, OpenRouter, Anthropic, Google, MiniMax, Moonshot, Qwen, Z.AI, fournisseurs de configuration | Les plugins de fournisseur enregistrent la prise en charge des images ; `openai-codex/*` utilise l'infrastructure du fournisseur OAuth ; `codex/*` utilise un tour de serveur d'application Codex borné ; MiniMax et MiniMax OAuth utilisent tous les deux `MiniMax-VL-01` ; les fournisseurs de configuration capables de traiter les images s'enregistrent automatiquement. |
-| Audio    | OpenAI, Groq, xAI, Deepgram, Google, SenseAudio, ElevenLabs, Mistral                                                                                 | Transcription du fournisseur (Whisper/Groq/xAI/Deepgram/Gemini/SenseAudio/Scribe/Voxtral).                                                                                                                                                                                                                                                                                    |
+| Audio    | OpenAI, Groq, xAI, Deepgram, OpenRouter, Google, SenseAudio, ElevenLabs, Mistral                                                                     | Transcription du fournisseur (Whisper/Groq/xAI/Deepgram/OpenRouter STT/Gemini/SenseAudio/Scribe/Voxtral).                                                                                                                                                                                                                                                                     |
 | Vidéo    | Google, Qwen, Moonshot                                                                                                                               | Compréhension vidéo par le fournisseur via les plugins ; la compréhension vidéo Qwen utilise les points de terminaison DashScope Standard.                                                                                                                                                                                                                                    |
 
 <Note>

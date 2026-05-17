@@ -72,18 +72,18 @@ Remplacement par agent (facultatif) :
 
 ### Comportement des champs
 
-| Champ                            | Par défaut | Effet                                                                                                                                         |
-| -------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `enabled`                        | `false`    | Commutateur principal pour les détecteurs d'historique déroulant. Le réglage de `false` désactive également le garde-fou post-compaction.     |
-| `historySize`                    | `30`       | Nombre d'appels d'outils récents conservés pour analyse.                                                                                      |
-| `warningThreshold`               | `10`       | Seuil avant qu'un modèle ne soit classé comme avertissement uniquement.                                                                       |
-| `criticalThreshold`              | `20`       | Seuil de blocage des modèles de boucle répétitifs.                                                                                            |
-| `unknownToolThreshold`           | `10`       | Bloquer les appels répétés au même outil indisponible après ce nombre d'échecs.                                                               |
-| `globalCircuitBreakerThreshold`  | `30`       | Seuil global de rupture sans progrès pour tous les détecteurs.                                                                                |
-| `detectors.genericRepeat`        | `true`     | Détecte les modèles répétitifs de même tool + mêmes paramètres.                                                                               |
-| `detectors.knownPollNoProgress`  | `true`     | Détecte les modèles de type polling connus sans changement d'état.                                                                            |
-| `detectors.pingPong`             | `true`     | Détecte les modèles alternés de ping-pong.                                                                                                    |
-| `postCompactionGuard.windowSize` | `3`        | Nombre d'appels de tool post-compaction pendant lesquels la garde reste armée et le nombre de triplets identiques qui interrompt l'exécution. |
+| Champ                            | Par défaut | Effet                                                                                                                                              |
+| -------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled`                        | `false`    | Commutateur principal pour les détecteurs d'historique déroulant. Le réglage de `false` désactive également le garde-fou post-compaction.          |
+| `historySize`                    | `30`       | Nombre d'appels d'outils récents conservés pour analyse.                                                                                           |
+| `warningThreshold`               | `10`       | Seuil avant qu'un modèle ne soit classé comme avertissement uniquement.                                                                            |
+| `criticalThreshold`              | `20`       | Seuil pour bloquer les modèles de boucle répétitifs sans progrès.                                                                                  |
+| `unknownToolThreshold`           | `10`       | Bloquer les appels répétés au même outil indisponible après ce nombre d'échecs.                                                                    |
+| `globalCircuitBreakerThreshold`  | `30`       | Seuil global de rupture sans progrès pour tous les détecteurs.                                                                                     |
+| `detectors.genericRepeat`        | `true`     | Avertit en cas de modèles répétés de même tool + mêmes paramètres et bloque lorsque les mêmes appels renvoient également des résultats identiques. |
+| `detectors.knownPollNoProgress`  | `true`     | Détecte les modèles de type polling connus sans changement d'état.                                                                                 |
+| `detectors.pingPong`             | `true`     | Détecte les modèles alternés de ping-pong.                                                                                                         |
+| `postCompactionGuard.windowSize` | `3`        | Nombre d'appels de tool post-compaction pendant lesquels la garde reste armée et le nombre de triplets identiques qui interrompt l'exécution.      |
 
 Pour `exec`, les vérifications d'absence de progrès comparent les résultats stables des commandes et ignorent les métadonnées d'exécution volatiles telles que la durée, le PID, l'ID de session et le répertoire de travail. Lorsqu'un ID d'exécution est disponible, l'historique récent des appels de tool n'est évalué que dans cette exécution, afin que les cycles de heartbeat planifiés et les nouvelles exécutions n'héritent pas de comptes de boucles périmés des exécutions précédentes.
 

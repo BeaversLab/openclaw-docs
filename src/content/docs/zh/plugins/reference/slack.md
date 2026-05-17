@@ -12,7 +12,7 @@ title: "SlackSlack 插件"
 ## 分发
 
 - 包： `@openclaw/slack`
-- 安装路径：包含在 OpenClaw 中
+- 安装途径：npm；ClawHub
 
 ## 表面
 

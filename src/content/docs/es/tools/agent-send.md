@@ -77,6 +77,7 @@ entrega programática.
   preservan el aislamiento; los chats directos colapsan a `main`).
 - Las opciones de pensamiento y detallado persisten en el almacén de sesiones.
 - Salida: texto plano de forma predeterminada, o `--json` para carga útil estructurada + metadatos.
+- Con `--json --deliver`, el JSON incluye el estado de entrega para envíos enviados, suprimidos, parciales y fallidos. Consulte [estado de entrega JSON](/es/cli/agent#json-delivery-status).
 
 ## Ejemplos
 
@@ -95,10 +96,10 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 
 <CardGroup cols={2}>
   <Card title="Referencia de la CLI de agentes" href="/es/cli/agent" icon="terminal">
-    Referencia completa de opciones y marcas `openclaw agent`.
+    Referencia completa de opciones y marcas de `openclaw agent`.
   </Card>
-  <Card title="Sub-agentes" href="/es/tools/subagents" icon="users">
-    Generación de sub-agentes en segundo plano.
+  <Card title="Subagentes" href="/es/tools/subagents" icon="users">
+    Generación de subagentes en segundo plano.
   </Card>
   <Card title="Sesiones" href="/es/concepts/session" icon="comments">
     Cómo funcionan las claves de sesión y cómo `--to`, `--agent` y `--session-id` las resuelven.

@@ -87,14 +87,14 @@ peut satisfaire les informations d'identification bearer pour la recherche MiniM
 
 ## Paramètres pris en charge
 
-MiniMax Search prend en charge :
+| Paramètre | Type   | Contraintes | Description                                                                       |
+| --------- | ------ | ----------- | --------------------------------------------------------------------------------- |
+| `query`   | chaîne | requis      | Chaîne de recherche.                                                              |
+| `count`   | entier | 1-10        | Nombre de résultats à renvoyer. OpenClaw réduit la liste renvoyée à cette taille. |
 
-- `query`
-- `count` (OpenClaw tronque la liste de résultats renvoyée au nombre demandé)
-
-Les filtres spécifiques au provider ne sont actuellement pas pris en charge.
+Les filtres spécifiques au fournisseur ne sont actuellement pas pris en charge.
 
 ## Connexes
 
-- [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et détection automatique
-- [MiniMax](/fr/providers/minimax) -- configuration du model, de l'image, de la voix et de l'authentification
+- [Vue d'ensemble de la recherche Web](/fr/tools/web) -- tous les fournisseurs et détection automatique
+- [MiniMax](/fr/providers/minimax) -- configuration du modèle, de l'image, de la voix et de l'authentification

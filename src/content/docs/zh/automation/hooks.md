@@ -127,47 +127,46 @@ export default handler;
 
 **Compaction events**: `session:compact:before` 包括 `messageCount`, `tokenCount`. `session:compact:after` 添加 `compactedCount`, `summaryLength`, `tokensBefore`, `tokensAfter`.
 
-`command:stop` 观察用户发出 `/stop`; 它是取消/命令
-生命周期，而不是代理完成网关。需要检查
-自然最终答案并要求代理再进行一次传递的插件应改为使用类型化
-插件钩子 `before_agent_finalize`。请参阅 [Plugin hooks](/zh/plugins/hooks)。
+`command:stop` 观察用户发出的 `/stop`；它是取消/命令生命周期，而不是代理终结的关口。需要检查自然最终答案并要求代理再进行一轮的插件应改用类型化插件钩子 `before_agent_finalize`。请参阅 [Plugin hooks](/zh/plugins/hooks)。
 
 **Gateway(网关) 生命周期事件**: `gateway:shutdown` 包括 `reason` 和 `restartExpectedMs` 并在网关关闭开始时触发。`gateway:pre-restart` 包含相同的上下文，但仅在关闭是预期重启的一部分并且提供了有限的 `restartExpectedMs` 值时触发。在关闭期间，每个生命周期钩子等待都是尽力而为且有限界的，因此如果处理程序停止，关闭仍会继续。
 
-## Hook discovery
+在 `gateway:shutdown`（或 `gateway:pre-restart`）事件与关闭序列的其余部分之间，网关还会为进程停止时仍处于活动状态的每个会话触发一个类型化的 `session_end` 插件钩子。对于普通的 SIGTERM/SIGINT 停止，事件的 `reason` 是 `shutdown`，而当关闭被安排作为预期重启的一部分时，则是 `restart`。此排空过程是有界的，因此缓慢的 `session_end` 处理程序无法阻止进程退出，并且已通过 replace / reset / delete / compaction 完成终结的会话将被跳过，以避免重复触发。
 
-Hooks are discovered from these directories, in order of increasing override precedence:
+## 钩子发现
 
-1. **Bundled hooks**: shipped with OpenClaw
-2. **Plugin hooks**: hooks bundled inside installed plugins
-3. **Managed hooks**: `~/.openclaw/hooks/` (用户安装，在工作空间之间共享)。来自 `hooks.internal.load.extraDirs` 的额外目录共享此优先级。
-4. **Workspace hooks**: `<workspace>/hooks/` (每个代理，默认禁用，直到明确启用)
+钩子按覆盖优先级从低到高的顺序从以下目录中发现：
 
-工作区钩子可以添加新的钩子名称，但不能覆盖同名捆绑、托管或插件提供的钩子。
+1. **内置钩子**：随 OpenClaw 附带
+2. **插件钩子**：捆绑在已安装插件内的钩子
+3. **托管钩子**：`~/.openclaw/hooks/`（用户安装的，在工作区之间共享）。来自 `hooks.internal.load.extraDirs` 的额外目录具有相同的优先级。
+4. **工作区钩子**：`<workspace>/hooks/`（每个代理，默认禁用，直到明确启用）
 
-在启动时，Gateway(网关) 会跳过内部钩子发现，直到配置了内部钩子。使用 `openclaw hooks enable <name>` 启用捆绑或托管钩子，安装钩子包，或设置 `hooks.internal.enabled=true` 以选择加入。当您启用一个命名钩子时，Gateway(网关) 仅加载该钩子的处理程序; `hooks.internal.enabled=true`，额外的钩子目录和旧版处理程序选择加入广泛发现。
+工作区钩子可以添加新的钩子名称，但不能覆盖具有相同名称的内置、托管或插件提供的钩子。
 
-### 钩子包
+Gateway(网关)在启动时会跳过内部 hook 发现，直到配置了内部 hook。使用 Gateway(网关)`openclaw hooks enable <name>` 启用捆绑或托管 hook，安装 hook 包，或设置 `hooks.internal.enabled=true`Gateway(网关) 以选择加入。当您启用一个命名 hook 时，Gateway(网关)仅加载该 hook 的处理程序；`hooks.internal.enabled=true`、额外的 hook 目录和遗留处理程序选择加入广泛发现。
 
-Hook 包是 npm 包，它们通过 `package.json` 中的 `openclaw.hooks` 导出 hooks。安装方法：
+### Hook 包
+
+Hook 包是通过 `package.json` 中的 npm`openclaw.hooks` 导出 hook 的 npm 包。安装方法如下：
 
 ```bash
 openclaw plugins install <path-or-spec>
 ```
 
-Npm 规范仅限于注册表（包名称 + 可选的确切版本或分发标签）。将拒绝 Git/URL/文件规范和 semver 范围。
+Npm 规范仅限于注册表（包名称 + 可选的确切版本或分发标签）。Git/URL/文件规范和 semver 范围将被拒绝。
 
-## 捆绑钩子
+## 捆绑的 hooks
 
-| 钩子                  | 事件                                              | 功能                                             |
+| Hook                  | 事件                                              | 功能                                             |
 | --------------------- | ------------------------------------------------- | ------------------------------------------------ |
 | 会话-memory           | `command:new`, `command:reset`                    | 将会话上下文保存到 `<workspace>/memory/`         |
 | bootstrap-extra-files | `agent:bootstrap`                                 | 从 glob 模式注入额外的引导文件                   |
 | command-logger        | `command`                                         | 将所有命令记录到 `~/.openclaw/logs/commands.log` |
-| compaction-notifier   | `session:compact:before`, `session:compact:after` | 当会话压缩开始/结束时，发送可见的聊天通知        |
+| compaction-notifier   | `session:compact:before`, `session:compact:after` | 当会话压缩开始/结束时发送可见的聊天通知          |
 | boot-md               | `gateway:startup`                                 | 当网关启动时运行 `BOOT.md`                       |
 
-启用任何内置 hook：
+启用任何捆绑的 hook：
 
 ```bash
 openclaw hooks enable <hook-name>
@@ -175,9 +174,9 @@ openclaw hooks enable <hook-name>
 
 <a id="session-memory"></a>
 
-### 会话-memory 详情
+### 会话-memory 详细信息
 
-提取最后 15 条用户/助手消息，并使用主机本地日期保存到 `<workspace>/memory/YYYY-MM-DD-HHMM.md`。内存捕获在后台运行，因此 `/new` 和 `/reset` 确认不会因转录读取或可选的 slug 生成而延迟。设置 `hooks.internal.entries.session-memory.llmSlug: true` 可使用配置的模型生成描述性文件名 slug。需要配置 `workspace.dir`。
+提取最后 15 条用户/助手消息并使用主机本地日期保存到 `<workspace>/memory/YYYY-MM-DD-HHMM.md`。内存捕获在后台运行，因此 `/new` 和 `/reset` 确认不会因记录读取或可选的 slug 生成而延迟。设置 `hooks.internal.entries.session-memory.llmSlug: true` 以使用配置的模型生成描述性文件名 slug。需要配置 `workspace.dir`。
 
 <a id="bootstrap-extra-files"></a>
 
@@ -198,34 +197,34 @@ openclaw hooks enable <hook-name>
 }
 ```
 
-路径相对于工作区解析。仅加载已识别的引导基本名称 (`AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md`, `MEMORY.md`)。
+路径是相对于工作区解析的。仅加载已识别的引导基本名称（`AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md`、`MEMORY.md`）。
 
 <a id="command-logger"></a>
 
 ### command-logger 详情
 
-将每条斜杠命令记录到 `~/.openclaw/logs/commands.log`。
+将每个斜杠命令记录到 `~/.openclaw/logs/commands.log`。
 
 <a id="compaction-notifier"></a>
 
 ### compaction-notifier 详情
 
-当 OpenClaw 开始和完成会话转录压缩时，向当前对话发送简短的状态消息。这使得在聊天界面上的长轮次不那么令人困惑，因为用户可以看到助手正在总结上下文，并将在压缩后继续。
+当 OpenClaw 开始和完成压缩会话记录时，向当前对话发送简短的状态消息。这使得聊天界面上的长轮次不再那么令人困惑，因为用户可以看到助手正在总结上下文，并将在压缩后继续。
 
 <a id="boot-md"></a>
 
 ### boot-md 详情
 
-当网关启动时，从活动工作区运行 `BOOT.md`。
+网关启动时，从活动工作区运行 `BOOT.md`。
 
-## 插件钩子
+## 插件 Hooks
 
-插件可以通过插件 SDK 注册类型化钩子，以实现更深入的集成：
-拦截工具调用、修改提示、控制消息流等。
+插件可以通过插件 SDK 注册类型化 Hooks，以实现更深度的集成：
+拦截工具调用、修改提示词、控制消息流等。
 当您需要 `before_tool_call`、`before_agent_reply`、
-`before_install` 或其他进程内生命周期钩子时，请使用插件钩子。
+`before_install` 或其他进程内生命周期 Hooks 时，请使用插件 Hooks。
 
-有关完整的插件钩子参考，请参阅[插件钩子](/zh/plugins/hooks)。
+有关完整的插件 Hook 参考，请参阅 [插件 Hooks](/zh/plugins/hooks)。
 
 ## 配置
 
@@ -243,7 +242,7 @@ openclaw hooks enable <hook-name>
 }
 ```
 
-每个钩子的环境变量：
+每个 Hook 的环境变量：
 
 ```json
 {
@@ -260,7 +259,7 @@ openclaw hooks enable <hook-name>
 }
 ```
 
-额外的钩子目录：
+额外的 Hook 目录：
 
 ```json
 {
@@ -274,7 +273,7 @@ openclaw hooks enable <hook-name>
 }
 ```
 
-<Note>为了向后兼容，仍然支持传统的 `hooks.internal.handlers` 数组配置格式，但新钩子应使用基于发现系统的配置。</Note>
+<Note>传统的 `hooks.internal.handlers` 数组配置格式仍受支持以保持向后兼容，但新的 Hooks 应使用基于发现的系统。</Note>
 
 ## CLI 参考
 
@@ -295,14 +294,14 @@ openclaw hooks disable <hook-name>
 
 ## 最佳实践
 
-- **保持处理程序快速。** 钩子在命令处理期间运行。使用 `void processInBackground(event)` 对繁重的工作进行即发即弃（fire-and-forget）处理。
-- **优雅地处理错误。** 将有风险的操作包装在 try/catch 中；不要抛出异常，以便其他处理程序可以运行。
-- **尽早过滤事件。** 如果事件类型/操作不相关，请立即返回。
-- **使用特定的事件键。** 为了减少开销，优先使用 `"events": ["command:new"]` 而不是 `"events": ["command"]`。
+- **保持处理程序快速。** Hooks 在命令处理期间运行。使用 `void processInBackground(event)` 即发即弃繁重的工作。
+- **优雅地处理错误。** 将有风险的操作包装在 try/catch 中；不要抛出错误，以便其他处理程序可以运行。
+- **尽早过滤事件。** 如果事件类型/操作不相关，则立即返回。
+- **使用特定的事件键。** 优先使用 `"events": ["command:new"]` 而不是 `"events": ["command"]` 以减少开销。
 
 ## 故障排除
 
-### 未发现钩子
+### 未发现 Hook
 
 ```bash
 # Verify directory structure
@@ -313,7 +312,7 @@ ls -la ~/.openclaw/hooks/my-hook/
 openclaw hooks list
 ```
 
-### 钩子不符合条件
+### Hook 不符合条件
 
 ```bash
 openclaw hooks info my-hook
@@ -321,15 +320,15 @@ openclaw hooks info my-hook
 
 检查是否缺少二进制文件 (PATH)、环境变量、配置值或操作系统兼容性问题。
 
-### 钩子未执行
+### Hook 未执行
 
-1. 验证钩子是否已启用：`openclaw hooks list`
-2. 重启您的网关进程以重新加载钩子。
-3. 检查网关日志：`./scripts/clawlog.sh | grep hook`
+1. 验证 Hook 是否已启用：`openclaw hooks list`
+2. 重启您的 Gateway 进程以重新加载 Hook。
+3. 检查 Gateway 日志：`./scripts/clawlog.sh | grep hook`
 
 ## 相关
 
-- [CLI 参考：hooks](/zh/cli/hooks)
+- [CLI 参考：hooks](CLI/en/cli/hooks)
 - [Webhooks](/zh/automation/cron-jobs#webhooks)
-- [插件钩子](/zh/plugins/hooks) — 进程内插件生命周期钩子
+- [插件 hooks](/zh/plugins/hooks) — 进程内插件生命周期 hooks
 - [配置](/zh/gateway/configuration-reference#hooks)

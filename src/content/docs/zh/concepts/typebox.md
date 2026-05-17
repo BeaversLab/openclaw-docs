@@ -10,8 +10,8 @@ WebSocket 协议**（握手、请求/响应、服务器事件）。这些 Schema
 驱动 **运行时验证**、**JSON Schema 导出**以及 macOS 应用程序的
 **Swift 代码生成**。单一事实来源；其他所有内容均由此生成。
 
-如果您想了解更高级别的协议上下文，请从
-[Gateway(网关) 架构](/zh/concepts/architecture)开始。
+如果您需要更高级别的协议上下文，请从
+[Gateway(网关) 架构](<Gateway(网关)/en/concepts/architecture>) 开始。
 
 ## 心智模型（30 秒）
 
@@ -92,7 +92,7 @@ Client                    Gateway
   "id": "c1",
   "method": "connect",
   "params": {
-    "minProtocol": 4,
+    "minProtocol": 3,
     "maxProtocol": 4,
     "client": {
       "id": "openclaw-macos",
@@ -256,43 +256,42 @@ Swift 生成器发出：
 
 - 带有 `req`、`res`、`event` 和 `unknown` 情况的 `GatewayFrame` 枚举
 - 强类型载荷结构体/枚举
-- `ErrorCode` 值和 `GATEWAY_PROTOCOL_VERSION`
+- `ErrorCode` 值、`GATEWAY_PROTOCOL_VERSION` 和 `GATEWAY_MIN_PROTOCOL_VERSION`
 
 未知的帧类型将作为原始载荷保留，以确保向前兼容性。
 
 ## 版本控制 + 兼容性
 
 - `PROTOCOL_VERSION` 位于 `src/gateway/protocol/version.ts` 中。
-- 客户端发送 `minProtocol` + `maxProtocol`；服务器会拒绝不匹配的情况。
+- 客户端发送 `minProtocol` + `maxProtocol`；服务器会拒绝不包含其当前协议的范围。
 - Swift 模型保留未知的帧类型，以避免破坏较旧的客户端。
 
 ## Schema 模式和约定
 
-- 大多数对象使用 `additionalProperties: false` 来表示严格载荷。
+- 大多数对象使用 `additionalProperties: false` 来定义严格的有效载荷。
 - `NonEmptyString` 是 ID 和方法/事件名称的默认值。
-- 顶层 `GatewayFrame` 在 `type` 上使用**判别器**。
-- 具有副作用的方法通常需要在参数中包含 `idempotencyKey`
+- 顶层 `GatewayFrame` 在 `type` 上使用了 **discriminator**（区分符）。
+- 具有副作用的方法通常在参数中需要一个 `idempotencyKey`
   （例如：`send`、`poll`、`agent`、`chat.send`）。
-- `agent` 接受可选的 `internalEvents` 用于运行时生成的编排上下文
-  （例如子代理/定时任务完成交接）；将其视为内部 API 表面。
+- `agent` 接受可选的 `internalEvents`，用于运行时生成的编排上下文
+  （例如子代理/cron 任务完成交接）；请将其视为内部 API 接口。
 
 ## 实时架构 JSON
 
-生成的 JSON 架构位于仓库中的 `dist/protocol.schema.json` 处。
-发布的原始文件通常可在以下位置获取：
+生成的 JSON Schema 位于仓库中的 `dist/protocol.schema.json`。
+发布的原始文件通常可在此处获取：
 
 - [https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json](https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json)
 
 ## 更改架构时
 
 1. 更新 TypeBox 架构。
-2. 在 `src/gateway/server-methods-list.ts` 中注册方法/事件。
-3. 当新的 RPC 需要操作符或
-   节点作用域分类时，更新 `src/gateway/method-scopes.ts`。
+2. 在 `src/gateway/server-methods-list.ts` 中注册该方法/事件。
+3. 当新的 RPC 需要操作员或节点范围分类时，更新 `src/gateway/method-scopes.ts`。
 4. 运行 `pnpm protocol:check`。
 5. 提交重新生成的架构 + Swift 模型。
 
 ## 相关
 
-- [富输出协议](/zh/reference/rich-output-protocol)
-- [RPC 适配器](/zh/reference/rpc)
+- [Rich output protocol](/zh/reference/rich-output-protocol)
+- [RPC 适配器](RPC/en/reference/rpc)

@@ -69,7 +69,7 @@ El **modo local (predeterminado)** le guía a través de estos pasos:
 3. **Gateway** — Puerto, dirección de enlace, modo de autenticación, exposición a Tailscale.
    En el modo de token interactivo, elige el almacenamiento de token de texto sin formato predeterminado o opta por SecretRef.
    Ruta de SecretRef de token no interactivo: `--gateway-token-ref-env <ENV_VAR>`.
-4. **Canales** — canales de chat integrados y incluidos, como iMessage, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams, QQ Bot, Signal, Slack, Telegram, WhatsApp y más.
+4. **Canales** — canales de chat integrados y complementos oficiales, como iMessage, Discord, Feishu, Google Chat, Mattermost, Microsoft Teams, QQ Bot, Signal, Slack, Telegram, WhatsApp y más.
 5. **Demonio** — Instala un LaunchAgent (macOS), una unidad de usuario systemd (Linux/WSL2) o una Tarea Programada nativa de Windows con respaldo en la carpeta de Inicio por usuario.
    Si la autenticación por token requiere un token y `gateway.auth.token` está gestionado por SecretRef, la instalación del demonio lo valida pero no persiste el token resuelto en los metadatos del entorno del servicio supervisor.
    Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, la instalación del demonio se bloquea con una guía accionable.

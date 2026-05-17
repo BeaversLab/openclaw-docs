@@ -7,8 +7,8 @@ title: "TypeBox"
 
 TypeBox est une bibliothèque de schémas TypeScript-first. Nous l'utilisons pour définir le **protocole WebSocket TypeBoxGateway** (handshake, requête/réponse, événements serveur). Ces schémas pilotent la **validation à l'exécution**, l'**export JSON Schema** et la **génération de code Swift** pour l'application macOS. Une source unique de vérité ; tout le reste est généré.
 
-Si vous souhaitez le contexte de plus haut niveau du protocole, commencez par
-[Architecture Gateway](/fr/concepts/architecture).
+Si vous souhaitez le contexte de niveau supérieur du protocole, commencez par
+l'[architecture du Gateway](/fr/concepts/architecture).
 
 ## Modèle mental (30 secondes)
 
@@ -91,7 +91,7 @@ Connexion (premier message) :
   "id": "c1",
   "method": "connect",
   "params": {
-    "minProtocol": 4,
+    "minProtocol": 3,
     "maxProtocol": 4,
     "client": {
       "id": "openclaw-macos",
@@ -256,29 +256,30 @@ Le générateur Swift émet :
 
 - Enum `GatewayFrame` avec les cas `req`, `res`, `event` et `unknown`
 - Structures/enums de charge utile fortement typées
-- Valeurs `ErrorCode` et `GATEWAY_PROTOCOL_VERSION`
+- Valeurs `ErrorCode`, `GATEWAY_PROTOCOL_VERSION` et `GATEWAY_MIN_PROTOCOL_VERSION`
 
 Les types de trames inconnus sont conservés sous forme de charges utiles brutes pour assurer la compatibilité ascendante.
 
 ## Versionnage + compatibilité
 
 - `PROTOCOL_VERSION` se trouve dans `src/gateway/protocol/version.ts`.
-- Les clients envoient `minProtocol` + `maxProtocol` ; le serveur rejette les incohérences.
+- Les clients envoient `minProtocol` + `maxProtocol` ; le serveur rejette les plages qui
+  n'incluent pas leur protocole actuel.
 - Les modèles Swift conservent les types de trames inconnus pour éviter de casser les anciens clients.
 
 ## Modèles et conventions de schéma
 
-- La plupart des objets utilisent `additionalProperties: false` pour les charges utiles strictes.
-- `NonEmptyString` est la valeur par défaut pour les identifiants et les noms de méthodes/événements.
-- Le `GatewayFrame` de premier niveau utilise un **discriminateur** sur `type`.
+- La plupart des objets utilisent `additionalProperties: false` pour les payloads stricts.
+- `NonEmptyString` est la valeur par défaut pour les ID et les noms de méthodes/événements.
+- Le `GatewayFrame` de niveau supérieur utilise un **discriminator** sur `type`.
 - Les méthodes ayant des effets secondaires nécessitent généralement un `idempotencyKey` dans les paramètres
   (exemple : `send`, `poll`, `agent`, `chat.send`).
-- `agent` accepte `internalEvents` facultatif pour le contexte d'orchestration généré à l'exécution
-  (par exemple, transfert lors de l'achèvement de tâche subagent/cron) ; traitez cela comme une surface API interne.
+- `agent` accepte un `internalEvents` optionnel pour le contexte d'orchestration généré à l'exécution
+  (par exemple, le transfert après achèvement de tâche de sous-agent/cron) ; considérez cela comme une surface API interne.
 
 ## JSON de schéma en direct
 
-Le JSON Schema généré se trouve dans le dépôt à `dist/protocol.schema.json`. Le
+Le schéma JSON généré est dans le dépôt à `dist/protocol.schema.json`. Le
 fichier brut publié est généralement disponible à :
 
 - [https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json](https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json)

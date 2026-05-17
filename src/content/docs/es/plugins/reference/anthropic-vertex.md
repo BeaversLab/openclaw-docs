@@ -12,7 +12,7 @@ Añade compatibilidad con el proveedor de modelos Anthropic Vertex a OpenClaw.
 ## Distribución
 
 - Paquete: `@openclaw/anthropic-vertex-provider`
-- Ruta de instalación: incluido en OpenClaw
+- Ruta de instalación: npm; ClawHub
 
 ## Superficie
 

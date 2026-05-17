@@ -87,14 +87,14 @@ puede satisfacer la credencial de portador de MiniMax Search.
 
 ## Parámetros compatibles
 
-La búsqueda de MiniMax es compatible con:
+| Parámetro | Tipo   | Restricciones | Descripción                                                                               |
+| --------- | ------ | ------------- | ----------------------------------------------------------------------------------------- |
+| `query`   | cadena | obligatorio   | Cadena de consulta de búsqueda.                                                           |
+| `count`   | entero | 1-10          | Número de resultados que se devolverán. OpenClaw recorta la lista devuelta a este tamaño. |
 
-- `query`
-- `count` (OpenClaw recorta la lista de resultados devueltos al número solicitado)
-
-Los filtros específicos del proveedor actualmente no son compatibles.
+Actualmente no se admiten filtros específicos del proveedor.
 
 ## Relacionado
 
-- [Descripción general de la búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
-- [MiniMax](/es/providers/minimax) -- modelo, imagen, voz y configuración de autenticación
+- [Resumen de búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [MiniMax](/es/providers/minimax) -- configuración de modelo, imagen, voz y autenticación

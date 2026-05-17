@@ -357,6 +357,6 @@ OpenProse 與 Lobster 搭配得很好：使用 `/prose` 編排多代理準備，
 
 ## 相關
 
-- [自動化與任務](/zh-Hant/automation) - 排程 Lobster 工作流程
+- [Automation](/zh-Hant/automation) - 排程 Lobster 工作流程
 - [自動化概覽](/zh-Hant/automation) - 所有自動化機制
 - [工具概覽](/zh-Hant/tools) - 所有可用的代理工具

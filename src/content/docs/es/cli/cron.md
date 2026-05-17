@@ -10,7 +10,7 @@ title: "Cron"
 
 Administra trabajos de cron para el programador del Gateway.
 
-<Tip>Ejecute `openclaw cron --help` para obtener la superficie de comandos completa. Consulte [Cron jobs](/es/automation/cron-jobs) para obtener la guía conceptual.</Tip>
+<Tip>Ejecute `openclaw cron --help` para conocer la superficie completa de comandos. Consulte [Cron jobs](/es/automation/cron-jobs) para ver la guía conceptual.</Tip>
 
 ## Sesiones
 
@@ -62,90 +62,97 @@ Las notificaciones de fallo se resuelven en este orden:
 
 Nota: las ejecuciones de cron aisladas tratan los fallos del agente a nivel de ejecución como errores del trabajo incluso cuando no se produce ningún payload de respuesta, por lo que los fallos del modelo/proveedor aún incrementan los contadores de errores y activan las notificaciones de fallo.
 
+Si una ejecución aislada agota el tiempo de espera antes de la primera solicitud al modelo, `openclaw cron show`
+y `openclaw cron runs` incluyen un error específico de la fase, como
+`setup timed out before runner start` o
+`stalled before first model call (last phase: context-engine)`.
+Para los proveedores compatibles con CLI, el perro guardián previo al modelo permanece activo hasta que comienza el turno de la CLI externa, por lo que las búsquedas de sesión, ganchos, autenticación, indicaciones y bloqueos de configuración de la CLI se
+informan como fallos de cron previos al modelo.
+
 ## Programación
 
 ### Trabajos de una sola vez
 
-`--at <datetime>` programa una ejecución de una sola vez. Las fechas y horas sin desplazamiento se tratan como UTC a menos que también pase `--tz <iana>`, que interpreta la hora del reloj en la zona horaria dada.
+`--at <datetime>` programa una ejecución de una sola vez. Las fechas y horas sin compensación de zona horaria se tratan como UTC a menos que también pase `--tz <iana>`, que interpreta la hora del reloj en la zona horaria dada.
 
-<Note>Los trabajos de una sola vez se eliminan después del éxito por defecto. Use `--keep-after-run` para conservarlos.</Note>
+<Note>Los trabajos de una sola vez se eliminan después del éxito de forma predeterminada. Use `--keep-after-run` para conservarlos.</Note>
 
 ### Trabajos recurrentes
 
-Los trabajos recurrentes utilizan un retroceso exponencial de reintentos después de errores consecutivos: 30 s, 1 m, 5 m, 15 m, 60 m. La programación vuelve a la normalidad después de la siguiente ejecución exitosa.
+Los trabajos recurrentes utilizan un retroceso exponencial de reintentos después de errores consecutivos: 30s, 1m, 5m, 15m, 60m. El programa vuelve a la normalidad después de la próxima ejecución exitosa.
 
-Las ejecuciones omitidas se rastrean por separado de los errores de ejecución. No afectan el retroceso de reintentos, pero `openclaw cron edit <job-id> --failure-alert-include-skipped` puede optar por que las alertas de error reciban notificaciones repetidas de ejecuciones omitidas.
+Las ejecuciones omitidas se rastrean por separado de los errores de ejecución. No afectan el retroceso de reintentos, pero `openclaw cron edit <job-id> --failure-alert-include-skipped` puede optar por que las alertas de fallo reciban notificaciones repetidas de ejecuciones omitidas.
 
-Para trabajos aislados que tienen como objetivo un proveedor de modelos local configurado, cron ejecuta un verificación previa ligera del proveedor antes de iniciar el turno del agente. Los proveedores de bucle invertido (loopback), red privada y `.local` `api: "ollama"` se sondean en `/api/tags`; los proveedores locales compatibles con OpenAI como vLLM, SGLang y LM Studio se sondean en `/models`. Si el punto de conexión es inalcanzable, la ejecución se registra como `skipped` y se reintenta en una programación posterior; los puntos de conexión muertos coincidentes se almacenan en caché durante 5 minutos para evitar que muchos trabajos golpeen el mismo servidor local.
+Para trabajos aislados que tienen como objetivo un proveedor de modelo local configurado, cron ejecuta una verificación previa ligera del proveedor antes de iniciar el turno del agente. Los proveedores de bucle invertido, red privada y `.local` `api: "ollama"` se sondean en `/api/tags`; los proveedores locales compatibles con OpenAI, como vLLM, SGLang y LM Studio, se sondean en `/models`. Si el punto final es inalcanzable, la ejecución se registra como `skipped` y se reintenta en un horario posterior; los puntos final muertos coincidentes se almacenan en caché durante 5 minutos para evitar que muchos trabajos golpeen el mismo servidor local.
 
-Nota: las definiciones de trabajos de cron residen en `jobs.json`, mientras que el estado de tiempo de ejecución pendiente reside en `jobs-state.json`. Si `jobs.json` se edita externamente, el Gateway recarga las programaciones cambiadas y borra las ranuras pendientes obsoletas; las reescrituras solo de formato no borran la ranura pendiente.
+Nota: las definiciones de trabajos de cron residen en `jobs.json`, mientras que el estado de ejecución pendiente reside en `jobs-state.json`. Si `jobs.json` se edita externamente, Gateway recarga los programas cambiados y borra las ranuras pendientes obsoletas; las reescrituras de solo formato no borran la ranura pendiente.
 
 ### Ejecuciones manuales
 
-`openclaw cron run` regresa tan pronto como se pone en cola la ejecución manual. Las respuestas exitosas incluyen `{ ok: true, enqueued: true, runId }`. Use `openclaw cron runs --id <job-id>` para seguir el resultado final.
+`openclaw cron run` regresa tan pronto como la ejecución manual se pone en cola. Las respuestas exitosas incluyen `{ ok: true, enqueued: true, runId }`. Usa `openclaw cron runs --id <job-id>` para seguir el resultado eventual.
 
 <Note>
-`openclaw cron run <job-id>` fuerza la ejecución de forma predeterminada. Use `--due` para mantener el comportamiento antiguo de "ejecutar solo si está pendiente".
+`openclaw cron run <job-id>` fuerza la ejecución por defecto. Usa `--due` para mantener el comportamiento antiguo de "solo ejecutar si corresponde".
 </Note>
 
 ## Modelos
 
 `cron add|edit --model <ref>` selecciona un modelo permitido para el trabajo.
 
-<Warning>Si el modelo no está permitido o no se puede resolver, cron falla la ejecución con un error de validación explícito en lugar de recurrir al agente del trabajo o a la selección de modelo predeterminada.</Warning>
+<Warning>Si el modelo no está permitido o no se puede resolver, cron falla la ejecución con un error de validación explícito en lugar de recurrir al agente del trabajo o a la selección del modelo predeterminado.</Warning>
 
-Cron `--model` es un **principal del trabajo**, no una anulación de la `/model` de la sesión de chat. Eso significa:
+Cron `--model` es un **principal del trabajo**, no una anulación de `/model` de sesión de chat. Eso significa:
 
-- Los retrocesos (fallbacks) de modelo configurados aún se aplican cuando falla el modelo de trabajo seleccionado.
-- La `fallbacks` de carga útil por trabajo reemplaza la lista de retroceso configurada cuando está presente.
-- Una lista de reserva por trabajo vacía (`fallbacks: []` en el payload/API del trabajo) hace que la ejecución de cron sea estricta.
-- Cuando un trabajo tiene `--model` pero no se configura ninguna lista de reserva, OpenClaw pasa una anulación de reserva vacía explícita para que el agente principal no se agregue como un objetivo de reintentos oculto.
+- Los modelos de respaldo configurados todavía se aplican cuando falla el modelo de trabajo seleccionado.
+- La carga útil por trabajo `fallbacks` reemplaza la lista de respaldo configurada cuando está presente.
+- Una lista de respaldo por trabajo vacía (`fallbacks: []` en la carga útil/API del trabajo) hace que la ejecución de cron sea estricta.
+- Cuando un trabajo tiene `--model` pero no se configura ninguna lista de respaldo, OpenClaw pasa una anulación de respaldo vacía explícita para que el principal del agente no se agregue como un objetivo de reintento oculto.
 
-### Precedencia del modelo de cron aislado
+### Precedencia del modelo cron aislado
 
 El cron aislado resuelve el modelo activo en este orden:
 
-1. Anulación de Gmail-hook.
+1. Anulación de gancho de Gmail.
 2. Por trabajo `--model`.
-3. Anulación del modelo de sesión de cron almacenada (cuando el usuario seleccionó uno).
-4. Selección del modelo del agente o predeterminado.
+3. Anulación de modelo de sesión cron almacenada (cuando el usuario seleccionó uno).
+4. Selección de modelo de agente o predeterminado.
 
 ### Modo rápido
 
-El modo rápido de cron aislado sigue la selección del modelo en vivo resuelta. La configuración del modelo `params.fastMode` se aplica de manera predeterminada, pero una anulación `fastMode` de sesión almacenada aún tiene prioridad sobre la configuración.
+El modo rápido de cron aislado sigue la selección del modelo en vivo resuelta. La configuración del modelo `params.fastMode` se aplica por defecto, pero una anulación de sesión almacenada `fastMode` todavía tiene prioridad sobre la configuración.
 
 ### Reintentos de cambio de modelo en vivo
 
-Si una ejecución aislada lanza `LiveSessionModelSwitchError`, cron persiste el proveedor y modelo cambiados (y la anulación del perfil de autenticación cambiado cuando está presente) para la ejecución activa antes de reintentar. El bucle de reintento externo está limitado a dos reintentos de cambio después del intento inicial, luego se aborta en lugar de buclear para siempre.
+Si una ejecución aislada lanza `LiveSessionModelSwitchError`, cron persiste el proveedor y el modelo cambiados (y la anulación del perfil de autenticación cambiada cuando está presente) para la ejecución activa antes de reintentar. El bucle de reinterno externo está limitado a dos reintentos de cambio después del intento inicial, luego aborta en lugar de buclear infinitamente.
 
 ## Salida de ejecución y denegaciones
 
 ### Supresión de reconocimiento obsoleto
 
-El cron aislado activa la supresión de respuestas de solo reconocimiento obsoleto. Si el primer resultado es solo una actualización de estado interina y ninguna ejecución de subagente descendente es responsable de la respuesta final, cron vuelve a solicitar una vez el resultado real antes de la entrega.
+El cron aislado activa la supresión de respuestas obsoletas de solo confirmación. Si el primer resultado es solo una actualización de estado provisional y ninguna ejecución de subagente descendente es responsable de la respuesta final, el cron vuelve a solicitar una vez el resultado real antes de la entrega.
 
 ### Supresión de token silencioso
 
-Si una ejecución de cron aislada devuelve solo el token silencioso (`NO_REPLY` o `no_reply`), cron suprime tanto la entrega directa de salida como la ruta de resumen en cola de reserva, por lo que no se publica nada de vuelta en el chat.
+Si una ejecución de cron aislada devuelve solo el token silencioso (`NO_REPLY` o `no_reply`), el cron suprime tanto la entrega saliente directa como la ruta alternativa de resumen en cola, por lo que no se publica nada de vuelta en el chat.
 
 ### Denegaciones estructuradas
 
-Las ejecuciones de cron aisladas prefieren metadatos de denegación de ejecución estructurados de la ejecución incrustada, luego recurren a marcadores de denegación conocidos en la salida final, como `SYSTEM_RUN_DENIED`, `INVALID_REQUEST` y frases de rechazo de vinculación de aprobación.
+Las ejecuciones de cron aisladas prefieren metadatos estructurados de denegación de ejecución de la ejecución incrustada y luego recurren a marcadores de denegación conocidos en la salida final, como `SYSTEM_RUN_DENIED`, `INVALID_REQUEST` y frases de rechazo de enlace de aprobación.
 
-`cron list` y el historial de ejecuciones muestran el motivo de la denegación en lugar de reportar un comando bloqueado como `ok`.
+`cron list` y el historial de ejecuciones muestran el motivo de la denegación en lugar de informar un comando bloqueado como `ok`.
 
 ## Retención
 
 La retención y la poda se controlan en la configuración:
 
-- `cron.sessionRetention` (por defecto `24h`) poda las sesiones de ejecución aisladas completadas.
+- `cron.sessionRetention` (predeterminado `24h`) poda las sesiones de ejecución aisladas completadas.
 - `cron.runLog.maxBytes` y `cron.runLog.keepLines` podan `~/.openclaw/cron/runs/<jobId>.jsonl`.
 
 ## Migración de trabajos antiguos
 
 <Note>
-  Si tiene trabajos cron anteriores al formato de entrega y almacenamiento actual, ejecute `openclaw doctor --fix`. Doctor normaliza los campos cron heredados (`jobId`, `schedule.cron`, campos de entrega de nivel superior incluidos los heredados `threadId`, alias de entrega de payload `provider`) y migra los trabajos de reserva simples de webhook `notify: true` a una entrega de webhook explícita
-  cuando `cron.webhook` está configurado.
+  Si tiene trabajos de cron de antes del formato de entrega y almacenamiento actual, ejecute `openclaw doctor --fix`. El Doctor normaliza los campos de cron heredados (`jobId`, `schedule.cron`, campos de entrega de nivel superior incluidos los `threadId` heredados, alias de entrega de carga útil `provider`) y migra los trabajos de reserva simples de webhook `notify: true` a una entrega explícita
+  de webhook cuando `cron.webhook` está configurado.
 </Note>
 
 ## Ediciones comunes
@@ -156,7 +163,7 @@ Actualizar la configuración de entrega sin cambiar el mensaje:
 openclaw cron edit <job-id> --announce --channel telegram --to "123456789"
 ```
 
-Desactivar la entrega de un trabajo aislado:
+Desactivar la entrega para un trabajo aislado:
 
 ```bash
 openclaw cron edit <job-id> --no-deliver
@@ -192,28 +199,31 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` se aplica solo a los trabajos de turno de agente aislados. Para las ejecuciones cron, el modo ligero mantiene el contexto de arranque vacío en lugar de inyectar el conjunto de arranque completo del espacio de trabajo.
+`--light-context` se aplica solo a trabajos de turno de agente aislados. Para las ejecuciones de cron, el modo ligero mantiene el contexto de arranque vacío en lugar de inyectar el conjunto completo de arranque del espacio de trabajo.
 
-## Comandos de administración comunes
+## Comandos comunes de administración
 
 Ejecución manual e inspección:
 
 ```bash
 openclaw cron list
 openclaw cron list --agent ops
+openclaw cron get <job-id>
 openclaw cron show <job-id>
 openclaw cron run <job-id>
 openclaw cron run <job-id> --due
 openclaw cron runs --id <job-id> --limit 50
 ```
 
-`openclaw cron list` muestra todos los trabajos coincidentes de forma predeterminada. Pase `--agent <id>` para mostrar solo los trabajos cuyo id de agente normalizado efectivo coincida; los trabajos sin un id de agente almacenado cuentan como el agente predeterminado configurado.
+`openclaw cron list` muestra todos los trabajos coincidentes de manera predeterminada. Pase `--agent <id>` para mostrar solo los trabajos cuyo id de agente normalizado efectivo coincida; los trabajos sin un id de agente almacenado cuentan como el agente predeterminado configurado.
 
-`cron list --json` y `cron show <job-id> --json` incluyen un campo `status` de nivel superior en cada trabajo, calculado a partir de `enabled`, `state.runningAtMs` y `state.lastRunStatus`. Valores: `disabled`, `running`, `ok`, `error`, `skipped` o `idle`. Esto refleja la columna de estado legible por humanos para que las herramientas externas puedan leer el estado del trabajo sin volver a derivarlo.
+`openclaw cron get <job-id>` devuelve el JSON del trabajo almacenado directamente. Use `cron show <job-id>` cuando desee la vista legible por humanos con la vista previa de la ruta de entrega.
 
-Las entradas `cron runs` incluyen diagnósticos de entrega con el objetivo cron previsto, el objetivo resuelto, envíos de message-tool, uso de reserva y estado de entrega.
+`cron list --json` y `cron show <job-id> --json` incluyen un campo `status` de nivel superior en cada trabajo, calculado a partir de `enabled`, `state.runningAtMs` y `state.lastRunStatus`. Valores: `disabled`, `running`, `ok`, `error`, `skipped` o `idle`. Esto refleja la columna de estado legible por humanos para que las herramientas externas puedan leer el estado del trabajo sin derivarlo nuevamente.
 
-Redireccionamiento de agente y sesión:
+Las entradas `cron runs` incluyen diagnósticos de entrega con el objetivo cron previsto, el objetivo resuelto, los envíos de message-tool, el uso de reserva y el estado de entrega.
+
+Redefinición de agente y sesión:
 
 ```bash
 openclaw cron edit <job-id> --agent ops
@@ -222,7 +232,7 @@ openclaw cron edit <job-id> --session current
 openclaw cron edit <job-id> --session "session:daily-brief"
 ```
 
-`openclaw cron add` advierte cuando se omite `--agent` en trabajos de turno de agente y vuelve al agente predeterminado (`main`). Pase `--agent <id>` en el momento de la creación para fijar un agente específico.
+`openclaw cron add` advierte cuando `--agent` se omite en los trabajos de turno de agente y recurre al agente predeterminado (`main`). Pase `--agent <id>` en el momento de creación para fijar un agente específico.
 
 Ajustes de entrega:
 

@@ -91,7 +91,7 @@ Claude 登入，onboarding/configure 可以直接重複使用它。
 
 ## OAuth 交換 (登入運作方式)
 
-OpenClaw 的互動式登入流程是在 `@mariozechner/pi-ai` 中實作並連接到精靈/指令的。
+OpenClaw 的互動式登入流程實作於 `@earendil-works/pi-ai` 並連接至精靈/指令。
 
 ### Anthropic setup-token
 

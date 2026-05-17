@@ -253,6 +253,7 @@ openclaw [--dev] [--profile <name>] <command>
   cron
     status
     list
+    get
     add
     edit
     rm
@@ -360,7 +361,7 @@ openclaw [--dev] [--profile <name>] <command>
   terminal (alias: tui --local)
 ```
 
-Los complementos pueden añadir comandos de nivel superior adicionales (por ejemplo `openclaw voicecall`).
+Los complementos pueden agregar comandos de nivel superior adicionales (por ejemplo `openclaw voicecall`).
 
 </Accordion>
 

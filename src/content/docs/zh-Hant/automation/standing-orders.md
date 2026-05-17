@@ -241,7 +241,7 @@ openclaw cron add \
 
 ## 相關內容
 
-- [Automation and tasks](/zh-Hant/automation)：一覽所有自動化機制。
+- [自動化](/zh-Hant/automation)：總覽所有自動化機制。
 - [Cron jobs](/zh-Hant/automation/cron-jobs)：常備指示的排程強制執行。
 - [Hooks](/zh-Hant/automation/hooks)：用於代理程式生命週期事件的事件驅動腳本。
 - [Webhooks](/zh-Hant/automation/cron-jobs#webhooks)：傳入的 HTTP 事件觸發器。

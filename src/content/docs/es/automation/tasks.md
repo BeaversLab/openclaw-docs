@@ -8,7 +8,7 @@ title: "Tareas en segundo plano"
 sidebarTitle: "Tareas en segundo plano"
 ---
 
-<Note>¿Buscas programación? Consulta [Automatización y tareas](/es/automation) para elegir el mecanismo adecuado. Esta página es el registro de actividad del trabajo en segundo plano, no el programador.</Note>
+<Note>¿Buscas programación? Consulta [Automation](/es/automation) para elegir el mecanismo adecuado. Esta página es el libro de registro de actividad para el trabajo en segundo plano, no el programador.</Note>
 
 Las tareas en segundo plano rastrean el trabajo que se ejecuta **fuera de tu sesión de conversación principal**: ejecuciones de ACP, creaciones de subagentes, ejecuciones de trabajos de cron aislados y operaciones iniciadas por CLI.
 
@@ -151,7 +151,7 @@ La finalización de la ejecución del agente es definitiva para los registros de
 
 Cuando una tarea alcanza un estado terminal, OpenClaw le notifica. Hay dos rutas de entrega:
 
-**Entrega directa** - si la tarea tiene un objetivo de canal (el `requesterOrigin`), el mensaje de finalización va directamente a ese canal (Telegram, Discord, Slack, etc.). Para las finalizaciones de subagente, OpenClaw también conserva el enrutamiento de hilo/tema vinculado cuando está disponible y puede completar un `to` / cuenta faltante desde la ruta almacenada de la sesión solicitante (`lastChannel` / `lastTo` / `lastAccountId`) antes de renunciar a la entrega directa.
+**Entrega directa** - si la tarea tiene un objetivo de canal (el `requesterOrigin`), el mensaje de finalización va directamente a ese canal (Telegram, Discord, Slack, etc.). Las finalizaciones de tareas de grupo y canal se enrutan a través de la sesión solicitante para que el agente principal pueda escribir la respuesta visible. Para las finalizaciones de subagentes, OpenClaw también conserva el enrutamiento de hilo/tema vinculado cuando está disponible y puede completar un `to` / cuenta faltante desde la ruta almacenada de la sesión solicitante (`lastChannel` / `lastTo` / `lastAccountId`) antes de renunciar a la entrega directa.
 
 **Entrega en cola de sesión** - si la entrega directa falla o no se establece ningún origen, la actualización se pone en cola como un evento del sistema en la sesión del solicitante y aparece en el siguiente latido (heartbeat).
 
@@ -346,7 +346,7 @@ Un limpiador se ejecuta cada **60 segundos** y maneja cuatro cosas:
 
 ## Relacionado
 
-- [Automatización y tareas](/es/automation) - todos los mecanismos de automatización de un vistazo
+- [Automation](/es/automation) - todos los mecanismos de automatización de un vistazo
 - [CLI: Tareas](/es/cli/tasks) - referencia de comandos de la CLI
 - [Heartbeat](/es/gateway/heartbeat) - turnos periódicos de la sesión principal
 - [Tareas programadas](/es/automation/cron-jobs) - programación de trabajos en segundo plano

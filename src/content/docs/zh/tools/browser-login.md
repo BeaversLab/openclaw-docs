@@ -12,7 +12,7 @@ title: "浏览器登录"
 
 请**勿**向模型提供您的凭据。自动登录通常会触发反机器人防御措施，并可能导致账户被锁定。
 
-返回主浏览器文档：[浏览器](/zh/tools/browser)。
+返回主要浏览器文档：[Browser](/zh/tools/browser)。
 
 ## 使用的是哪个 Chrome 配置文件？
 
@@ -62,16 +62,16 @@ openclaw browser open https://x.com
 }
 ```
 
-然后定位主机浏览器：
+然后自行打开主机浏览器（CLI 调用始终针对主机浏览器运行）：
 
 ```bash
-openclaw browser open https://x.com --browser-profile openclaw --target host
+openclaw browser open https://x.com --browser-profile openclaw
 ```
 
-或者为发布更新的代理禁用沙箱隔离。
+一旦设置了 `sandbox.browser.allowHostControl: true`，代理的 `browser` 工具调用便可以主机为目标。或者，对发布更新的代理禁用沙箱隔离。
 
 ## 相关
 
-- [浏览器](/zh/tools/browser)
-- [浏览器 Linux 故障排除](/zh/tools/browser-linux-troubleshooting)
-- [浏览器 WSL2 故障排除](/zh/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+- [Browser](/zh/tools/browser)
+- [Browser Linux 故障排除](Linux/en/tools/browser-linux-troubleshooting)
+- [Browser WSL2 故障排除](WSL2/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

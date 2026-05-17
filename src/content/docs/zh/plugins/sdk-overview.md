@@ -10,9 +10,9 @@ read_when:
 
 插件 SDK 是插件与核心之间的类型化契约。此页面是关于**导入什么**以及**可以注册什么**的参考。
 
-<Note>本页面适用于在 OpenClawGateway(网关)OpenClaw 内部使用 `openclaw/plugin-sdk/*` 的插件作者。对于希望通过 Gateway(网关) 运行代理的外部应用、脚本、仪表板、CI 作业和 IDE 扩展，请改用 [OpenClaw App SDK](/zh/concepts/openclaw-sdk) 和 `@openclaw/sdk` 包。</Note>
+<Note>本页面面向在 OpenClaw 内部使用 `openclaw/plugin-sdk/*` 的插件作者。对于希望通过 Gateway(网关) 运行代理的外部应用程序、脚本、仪表板、CI 作业和 IDE 扩展，请改用 [OpenClaw App SDK](/zh/concepts/openclaw-sdk) 和 `@openclaw/sdk` 包。</Note>
 
-<Tip>改为寻找操作指南？请从 [构建插件](/zh/plugins/building-plugins) 开始，渠道插件请使用 [渠道插件](/zh/plugins/sdk-channel-plugins)，提供商插件请使用 [提供商插件](/zh/plugins/sdk-provider-pluginsCLI)，本地 AI CLI 后端请使用 [CLI 后端插件](/zh/plugins/cli-backend-pluginsCLI)，工具或生命周期钩子插件请使用 [插件钩子](/zh/plugins/hooks)。</Tip>
+<Tip>在寻找操作指南吗？请从 [构建插件](/zh/plugins/building-plugins) 开始，对于渠道插件请使用 [渠道插件](/zh/plugins/sdk-channel-plugins)，对于提供商插件请使用 [提供商插件](/zh/plugins/sdk-provider-plugins)，对于本地 AI CLI 后端请使用 [CLI 后端插件](/zh/plugins/cli-backend-plugins)，对于工具或生命周期挂钩插件请使用 [插件钩子](/zh/plugins/hooks)。</Tip>
 
 ## 导入约定
 
@@ -47,16 +47,20 @@ import { defineChannelPluginEntry } from "openclaw/plugin-sdk/channel-core";
 
 ## 子路径参考
 
-插件 SDK 作为一组按区域（插件入口、渠道、提供商、身份验证、运行时、功能、内存和保留的
-捆绑插件辅助工具）分组的狭窄子路径公开。有关完整的目录——已分组并链接——请参阅
+插件 SDK 作为一组按领域（插件入口、渠道、提供商、身份验证、运行时、能力、内存和保留的捆绑插件辅助工具）分组的狭窄子路径公开。有关完整目录——分组并链接——请参阅
 [插件 SDK 子路径](/zh/plugins/sdk-subpaths)。
 
-生成的 200 多个子路径列表位于 `scripts/lib/plugin-sdk-entrypoints.json` 中。
+编译器入口点清单位于
+`scripts/lib/plugin-sdk-entrypoints.json`；包导出是从
+公共子集生成的，该子集已减去 `scripts/lib/plugin-sdk-private-local-only-subpaths.json` 中列出的仓库本地测试/内部子路径。运行
+`pnpm plugin-sdk:surface` 以审计公共导出计数。足够陈旧且未被捆绑扩展生产代码使用的已弃用公共
+子路径在 `scripts/lib/plugin-sdk-deprecated-public-subpaths.json` 中跟踪；广泛的
+已弃用重新导出桶在 `scripts/lib/plugin-sdk-deprecated-barrel-subpaths.json` 中跟踪。
 
 ## 注册 API
 
-`register(api)` 回调接收一个 `OpenClawPluginApi` 对象，其中包含以下
-方法：
+`register(api)` 回调接收一个包含这些
+方法的 `OpenClawPluginApi` 对象：
 
 ### 功能注册
 
@@ -78,84 +82,109 @@ import { defineChannelPluginEntry } from "openclaw/plugin-sdk/channel-core";
 
 ### 工具和命令
 
-| 方法                            | 注册内容                                |
-| ------------------------------- | --------------------------------------- |
-| `api.registerTool(tool, opts?)` | 代理工具（必需或 `{ optional: true }`） |
-| `api.registerCommand(def)`      | 自定义命令（绕过 LLM）                  |
+| 方法                            | 注册内容                                  |
+| ------------------------------- | ----------------------------------------- |
+| `api.registerTool(tool, opts?)` | Agent 工具（必需或 `{ optional: true }`） |
+| `api.registerCommand(def)`      | 自定义命令（绕过 LLM）                    |
 
-当代理需要一个简短的、命令拥有的路由提示时，插件命令可以设置 `agentPromptGuidance`。保持该文本与命令本身相关；不要将提供商或插件特定的策略添加到核心提示构建器中。
+当 Agent 需要简短的、由命令拥有的路由提示时，插件命令可以设置 `agentPromptGuidance`。保持该文本关于命令本身；请勿将提供商或插件特定的策略添加到核心提示构建器中。
 
 ### 基础设施
 
-| 方法                                           | 注册内容                            |
-| ---------------------------------------------- | ----------------------------------- |
-| `api.registerHook(events, handler, opts?)`     | 事件钩子                            |
-| `api.registerHttpRoute(params)`                | Gateway(网关) HTTP 端点             |
-| `api.registerGatewayMethod(name, handler)`     | Gateway(网关) RPC 方法              |
-| `api.registerGatewayDiscoveryService(service)` | 本地 Gateway(网关) 发现广播器       |
-| `api.registerCli(registrar, opts?)`            | CLI 子命令                          |
-| `api.registerNodeCliFeature(registrar, opts?)` | `openclaw nodes` 下的 Node 功能 CLI |
-| `api.registerService(service)`                 | 后台服务                            |
-| `api.registerInteractiveHandler(registration)` | 交互式处理程序                      |
-| `api.registerAgentToolResultMiddleware(...)`   | 运行时工具结果中间件                |
-| `api.registerMemoryPromptSupplement(builder)`  | 附加的内存相邻提示部分              |
-| `api.registerMemoryCorpusSupplement(adapter)`  | 附加的内存搜索/读取语料库           |
+| 方法                                           | 注册内容                             |
+| ---------------------------------------------- | ------------------------------------ |
+| `api.registerHook(events, handler, opts?)`     | 事件钩子                             |
+| `api.registerHttpRoute(params)`                | Gateway(网关) HTTP 端点              |
+| `api.registerGatewayMethod(name, handler)`     | Gateway(网关) RPC 方法               |
+| `api.registerGatewayDiscoveryService(service)` | 本地 Gateway(网关) 发现广播器        |
+| `api.registerCli(registrar, opts?)`            | CLI 子命令                           |
+| `api.registerNodeCliFeature(registrar, opts?)` | Node 功能 CLI 在 `openclaw nodes` 下 |
+| `api.registerService(service)`                 | 后台服务                             |
+| `api.registerInteractiveHandler(registration)` | 交互式处理程序                       |
+| `api.registerAgentToolResultMiddleware(...)`   | 运行时工具结果中间件                 |
+| `api.registerMemoryPromptSupplement(builder)`  | 附加的内存相邻提示部分               |
+| `api.registerMemoryCorpusSupplement(adapter)`  | 附加的内存搜索/读取语料库            |
 
 ### 工作流插件的主机钩子
 
 主机钩子是插件的 SDK 接口，用于需要参与主机生命周期的插件，而不仅仅是添加提供商、渠道或工具。它们是通用契约；计划模式可以使用它们，审批工作流、工作区策略网关、后台监视器、设置向导和 UI 伴随插件也可以使用它们。
 
-| 方法                                                                     | 它拥有的契约                                                                                                   |
-| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| `api.registerSessionExtension(...)`                                      | 通过 Gateway(网关) 会话投影的插件拥有的、JSON 兼容的会话状态                                                   |
-| `api.enqueueNextTurnInjection(...)`                                      | 注入到单个会话的下一个代理轮次中的持久且仅一次的上下文                                                         |
-| `api.registerTrustedToolPolicy(...)`                                     | 捆绑/受信任的预插件工具策略，可以阻止或重写工具参数                                                            |
-| `api.registerToolMetadata(...)`                                          | 工具目录显示元数据，无需更改工具实现                                                                           |
-| `api.registerCommand(...)`                                               | 作用域插件命令；命令结果可以设置 `continueAgent: true`Discord；Discord 原生命令支持 `descriptionLocalizations` |
-| `api.registerControlUiDescriptor(...)`                                   | 针对会话、工具、运行或设置表面的控制 UI 贡献描述符                                                             |
-| `api.registerRuntimeLifecycle(...)`                                      | 在重置/删除/重新加载路径上，针对插件拥有的运行时资源的清理回调                                                 |
-| `api.registerAgentEventSubscription(...)`                                | 针对工作流状态和监视器的经过清理的事件订阅                                                                     |
-| `api.setRunContext(...)` / `getRunContext(...)` / `clearRunContext(...)` | 每次运行的插件暂存状态，在终止运行生命周期时清除                                                               |
-| `api.registerSessionSchedulerJob(...)`                                   | 具有确定性清理功能的插件拥有的会话调度器作业记录                                                               |
+| 方法                                                                                 | 它拥有的契约                                                                                            |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| `api.session.state.registerSessionExtension(...)`                                    | 通过 Gateway(网关) 会话投影的插件拥有的、JSON 兼容的会话状态                                            |
+| `api.session.workflow.enqueueNextTurnInjection(...)`                                 | 注入到单个会话的下一个代理轮次中的持久且仅一次的上下文                                                  |
+| `api.registerTrustedToolPolicy(...)`                                                 | 捆绑/受信任的预插件工具策略，可以阻止或重写工具参数                                                     |
+| `api.registerToolMetadata(...)`                                                      | 工具目录显示元数据，无需更改工具实现                                                                    |
+| `api.registerCommand(...)`                                                           | 作用域插件命令；命令结果可以设置 `continueAgent: true`；Discord 原生命令支持 `descriptionLocalizations` |
+| `api.session.controls.registerControlUiDescriptor(...)`                              | 针对会话、工具、运行或设置表面的控制 UI 贡献描述符                                                      |
+| `api.lifecycle.registerRuntimeLifecycle(...)`                                        | 在重置/删除/重新加载路径上，针对插件拥有的运行时资源的清理回调                                          |
+| `api.agent.events.registerAgentEventSubscription(...)`                               | 针对工作流状态和监视器的经过清理的事件订阅                                                              |
+| `api.runContext.setRunContext(...)` / `getRunContext(...)` / `clearRunContext(...)`  | 每次运行的插件暂存状态，在终止运行生命周期时清除                                                        |
+| `api.session.workflow.registerSessionSchedulerJob(...)`                              | 清理插件拥有的调度器作业的元数据；不调度工作或创建任务记录                                              |
+| `api.session.workflow.sendSessionAttachment(...)`                                    | 仅限打包的主机中介文件附件传递到活动的直接出站会话路由                                                  |
+| `api.session.workflow.scheduleSessionTurn(...)` / `unscheduleSessionTurnsByTag(...)` | 仅限打包的基于 Cron 的计划会话轮次以及基于标签的清理                                                    |
+| `api.session.controls.registerSessionAction(...)`                                    | 客户端可以通过 Gateway(网关) 调度的类型化会话操作                                                       |
 
-这些契约有意分离了权限：
+对于新的插件代码，请使用分组的命名空间：
 
-- 外部插件可以拥有会话扩展、UI 描述符、命令、工具元数据、下一轮注入和普通钩子。
-- 受信任的工具策略在普通的 `before_tool_call` 钩子之前运行，并且仅限捆绑，因为它们参与主机安全策略。
-- 保留的命令所有权仅限捆绑。外部插件应使用其自己的命令名称或别名。
-- `allowPromptInjection=false` 禁用了提示变异钩子，包括 `agent_turn_prepare`、`before_prompt_build`、`heartbeat_prompt_contribution`、来自旧版 `before_agent_start` 的提示字段以及 `enqueueNextTurnInjection`。
+- `api.session.state.registerSessionExtension(...)`
+- `api.session.workflow.enqueueNextTurnInjection(...)`
+- `api.session.workflow.registerSessionSchedulerJob(...)`
+- `api.session.workflow.sendSessionAttachment(...)`
+- `api.session.workflow.scheduleSessionTurn(...)`
+- `api.session.workflow.unscheduleSessionTurnsByTag(...)`
+- `api.session.controls.registerSessionAction(...)`
+- `api.session.controls.registerControlUiDescriptor(...)`
+- `api.agent.events.registerAgentEventSubscription(...)`
+- `api.agent.events.emitAgentEvent(...)`
+- `api.runContext.setRunContext(...)` / `getRunContext(...)` / `clearRunContext(...)`
+- `api.lifecycle.registerRuntimeLifecycle(...)`
+
+等效的扁平方法仍作为现有插件的已弃用兼容性别名提供。请勿添加调用
+`api.registerSessionExtension`、`api.enqueueNextTurnInjection`、
+`api.registerControlUiDescriptor`、`api.registerRuntimeLifecycle`、
+`api.registerAgentEventSubscription`、`api.emitAgentEvent`、
+`api.setRunContext`、`api.getRunContext`、`api.clearRunContext`、
+`api.registerSessionSchedulerJob`、`api.registerSessionAction`、
+`api.sendSessionAttachment`、`api.scheduleSessionTurn` 或
+`api.unscheduleSessionTurnsByTag` 的新插件代码。
+
+`scheduleSessionTurn(...)` 是基于 Gateway(网关) Cron 调度器的会话范围便捷方法。Cron 负责计时并在轮次运行时创建后台任务记录；Plugin SDK 仅限制目标会话、插件拥有的命名和清理。当工作本身需要持久的多步骤任务流状态时，请在计划的轮次内使用 `api.runtime.tasks.managedFlows`。
+
+这些契约有意划分了权限：
+
+- 外部插件可以拥有会话扩展、UI 描述符、命令、工具元数据、下一轮次注入和普通挂钩。
+- 受信任的工具策略在普通的 `before_tool_call` 挂钩之前运行，并且仅限打包使用，因为它们参与主机安全策略。
+- 保留的命令所有权仅限打包使用。外部插件应使用自己的命令名称或别名。
+- `allowPromptInjection=false` 禁用提示变更挂钩，包括
+  `agent_turn_prepare`、`before_prompt_build`、`heartbeat_prompt_contribution`、
+  来自传统 `before_agent_start` 的提示字段以及
+  `enqueueNextTurnInjection`。
 
 非 Plan 消费者的示例：
 
-| 插件原型            | 使用的钩子                                                                       |
+| 插件原型            | 使用的挂钩                                                                       |
 | ------------------- | -------------------------------------------------------------------------------- |
-| 审批工作流          | 会话扩展、命令继续、下一轮注入、UI 描述符                                        |
+| 审批工作流          | 会话扩展、命令继续、下一轮次注入、UI 描述符                                      |
 | 预算/工作区策略门控 | 受信任的工具策略、工具元数据、会话投影                                           |
-| 后台生命周期监视器  | 运行时生命周期清理、代理事件订阅、会话调度器所有权/清理、心跳提示贡献、UI 描述符 |
+| 后台生命周期监控    | 运行时生命周期清理、代理事件订阅、会话调度器所有权/清理、心跳提示贡献、UI 描述符 |
 | 设置或新手引导向导  | 会话扩展、作用域命令、控制 UI 描述符                                             |
 
-<Note>保留的核心管理员命名空间（`config.*`、`exec.approvals.*`、`wizard.*`、 `update.*`）始终保持 `operator.admin`，即使插件尝试分配 更窄的 Gateway(网关) 方法范围。对于 插件拥有的方法，首选插件特定的前缀。</Note>
+<Note>保留的核心管理员命名空间（`config.*`、`exec.approvals.*`、`wizard.*`、 `update.*`）始终保持 `operator.admin`，即使插件尝试分配 更窄的网关方法作用域。对于插件拥有的方法，建议使用插件特定的前缀。</Note>
 
 <Accordion title="何时使用工具结果中间件">
-  捆绑插件可以在需要在执行后且在运行时
-  将结果反馈回模型之前重写工具结果时使用 `api.registerAgentToolResultMiddleware(...)`。这是受信任的、与运行时无关的
-  接缝，适用于像 tokenjuice 这样的异步输出缩减器。
+  打包插件可以在需要在执行后且运行时将结果反馈给模型之前重写工具结果时使用 `api.registerAgentToolResultMiddleware(...)`。这是受信任的与运行时无关的接缝，用于异步输出缩减器，例如 tokenjuice。
 
-捆绑插件必须为每个
-目标运行时声明 `contracts.agentToolResultMiddleware`，例如 `["pi", "codex"]`OpenClaw。外部插件
-无法注册此中间件；对于不需要
-预模型工具结果计时的的工作，请保留正常的 OpenClaw 插件钩子。仅限 Pi 的旧版
-嵌入式扩展工厂注册路径已被移除。
+打包插件必须为每个目标运行时声明 `contracts.agentToolResultMiddleware`，例如 `["pi", "codex"]`。外部插件无法注册此中间件；对于不需要模型前工具结果计时的工件，请保留常规的 OpenClaw 插件钩子。旧的仅限 Pi 的嵌入式扩展工厂注册路径已被移除。
 
 </Accordion>
 
 ### Gateway(网关) 设备发现注册
 
-`api.registerGatewayDiscoveryService(...)`Gateway(网关)BonjourOpenClawGateway(网关)Gateway(网关) 允许插件在本地设备发现传输（如 mDNS/Bonjour）上
-宣传活动的 Gateway(网关)。当启用本地设备发现时，OpenClaw 在
-Gateway(网关) 启动期间调用该服务，传递当前
-Gateway(网关) 端口和非机密 TXT 提示数据，并在 Gateway(网关) 关闭期间
-调用返回的 `stop`Gateway(网关) 处理程序。
+`api.registerGatewayDiscoveryService(...)` 允许插件在本地设备发现传输（如 mDNS/Gateway(网关)）上通告活动的
+Bonjour。当启用本地设备发现时，OpenClaw 在 Gateway(网关) 启动期间调用该服务，传递当前的
+Gateway(网关) 端口和非机密 TXT 提示数据，并在 Gateway(网关) 关闭期间调用返回的
+`stop` 处理程序。
 
 ```typescript
 api.registerGatewayDiscoveryService({
@@ -171,9 +200,9 @@ api.registerGatewayDiscoveryService({
 });
 ```
 
-Gateway(网关) 设备发现插件不得将宣传的 TXT 值视为机密或
-身份验证。设备发现是一个路由提示；Gateway(网关) 身份验证和 TLS 固定
-仍然拥有信任。
+Gateway(网关) 设备发现插件不得将通告的 TXT 值视为机密或
+身份验证。设备发现是路由提示；Gateway(网关) 身份验证和 TLS 固定仍然
+拥有信任权。
 
 ### CLI 注册元数据
 
@@ -181,11 +210,11 @@ Gateway(网关) 设备发现插件不得将宣传的 TXT 值视为机密或
 
 - `commands`：由注册者拥有的显式命令名称
 - `descriptors`：用于 CLI 帮助、路由和延迟插件 CLI 注册的解析时命令描述符
-- `parentPath`：用于嵌套命令组的可选父命令路径，例如 `["nodes"]`
+- `parentPath`：嵌套命令组的可选父命令路径，例如 `["nodes"]`
 
-对于双节点功能，首选 `api.registerNodeCliFeature(registrar, opts?)`。它是 `api.registerCli(..., { parentPath: ["nodes"] })` 的一个轻量级包装器，并将 `openclaw nodes canvas` 等命令标记为显式的插件拥有节点功能。
+对于双节点功能，首选 `api.registerNodeCliFeature(registrar, opts?)`。它是 `api.registerCli(..., { parentPath: ["nodes"] })` 的轻量级包装器，使得 `openclaw nodes canvas` 等命令成为显式的插件拥有的节点功能。
 
-如果您希望插件命令在正常的根 CLI 路径中保持延迟加载，请提供 `descriptors`，覆盖该注册器公开的每个顶级命令根。
+如果您希望插件命令在正常根 CLI 路径中保持延迟加载，请提供 `descriptors` 以覆盖该注册者公开的每个顶级命令根。
 
 ```typescript
 api.registerCli(
@@ -205,7 +234,7 @@ api.registerCli(
 );
 ```
 
-嵌套命令将解析后的父命令作为 `program` 接收：
+嵌套命令接收解析后的父命令作为 `program`：
 
 ```typescript
 api.registerCli(
@@ -226,7 +255,7 @@ api.registerCli(
 );
 ```
 
-仅在不需要延迟根 CLI 注册时才单独使用 `commands`。该急切兼容路径仍然受支持，但它不会安装描述符支持的占位符以用于解析时延迟加载。
+仅当您不需要延迟根 CLI 注册时，才单独使用 `commands`。该急切兼容路径仍然受支持，但它不会安装用于解析时延迟加载的描述符支持的占位符。
 
 ### CLI 后端注册
 
@@ -234,43 +263,44 @@ api.registerCli(
 
 - 后端 `id` 成为模型引用（如 `codex-cli/gpt-5`）中的提供商前缀。
 - 后端 `config` 使用与 `agents.defaults.cliBackends.<id>` 相同的形状。
-- 用户配置仍然优先。OpenClaw 在运行 CLI 之前，将 `agents.defaults.cliBackends.<id>` 合并到插件默认配置之上。
-- 当后端在合并后需要兼容性重写时（例如标准化旧标志形状），请使用 `normalizeConfig`。
+- 用户配置仍然优先。OpenClaw 会在运行 CLI 之前，将 `agents.defaults.cliBackends.<id>` 合并到插件默认值之上。
+- 当后端在合并后需要兼容性重写（例如标准化旧的标志形状）时，请使用 `normalizeConfig`。
 - 对于属于 CLI 方言的请求范围 argv 重写（例如将 OpenClaw 思考级别映射到原生努力标志），请使用 `resolveExecutionArgs`。
 
-有关端到端创作指南，请参阅 [CLI 后端插件](/zh/plugins/cli-backend-plugins)。
+如需端到端的创作指南，请参阅
+[CLI 后端插件](/zh/plugins/cli-backend-plugins)。
 
-### 独占插槽
+### 独占槽位
 
 | 方法                                       | 注册内容                                                                                                                |
 | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `api.registerContextEngine(id, factory)`   | 上下文引擎（一次激活一个）。`assemble()` 回调接收 `availableTools` 和 `citationsMode`，以便引擎可以定制提示词补充内容。 |
-| `api.registerMemoryCapability(capability)` | 统一内存能力                                                                                                            |
-| `api.registerMemoryPromptSection(builder)` | 内存提示词部分构建器                                                                                                    |
-| `api.registerMemoryFlushPlan(resolver)`    | 内存刷新计划解析器                                                                                                      |
-| `api.registerMemoryRuntime(runtime)`       | 内存运行时适配器                                                                                                        |
+| `api.registerContextEngine(id, factory)`   | 上下文引擎（一次激活一个）。`assemble()` 回调接收 `availableTools` 和 `citationsMode`，以便引擎可以定制提示词附加内容。 |
+| `api.registerMemoryCapability(capability)` | 统一记忆能力                                                                                                            |
+| `api.registerMemoryPromptSection(builder)` | 记忆提示部分构建器                                                                                                      |
+| `api.registerMemoryFlushPlan(resolver)`    | 记忆刷新计划解析器                                                                                                      |
+| `api.registerMemoryRuntime(runtime)`       | 记忆运行时适配器                                                                                                        |
 
-### 内存嵌入适配器
+### 记忆嵌入适配器
 
 | 方法                                           | 注册内容                     |
 | ---------------------------------------------- | ---------------------------- |
-| `api.registerMemoryEmbeddingProvider(adapter)` | 用于活动插件的内存嵌入适配器 |
+| `api.registerMemoryEmbeddingProvider(adapter)` | 用于活动插件的记忆嵌入适配器 |
 
-- `registerMemoryCapability`API 是首选的独占内存插件 API。
+- `registerMemoryCapability` 是首选的独占记忆插件 API。
 - `registerMemoryCapability` 也可以公开 `publicArtifacts.listArtifacts(...)`
-  以便配套插件可以通过 `openclaw/plugin-sdk/memory-host-core` 使用导出的内存工件，而无需访问特定
-  内存插件的私有布局。
+  以便配套插件可以通过 `openclaw/plugin-sdk/memory-host-core` 使用导出的记忆构件，而无需
+  深入特定记忆插件的私有布局。
 - `registerMemoryPromptSection`、`registerMemoryFlushPlan` 和
-  `registerMemoryRuntime` 是兼容旧版的独占内存插件 API。
-- `MemoryFlushPlan.model` 可以将刷新轮次固定到精确的 `provider/model`
-  引用，例如 `ollama/qwen3:8b`，而无需继承活动的后备
+  `registerMemoryRuntime` 是旧版兼容的独占记忆插件 API。
+- `MemoryFlushPlan.model` 可以将刷新轮次固定到确切的 `provider/model`
+  引用，例如 `ollama/qwen3:8b`，而无需继承活动回退
   链。
-- `registerMemoryEmbeddingProvider` 允许活动内存插件注册一个
+- `registerMemoryEmbeddingProvider` 允许活动记忆插件注册一个
   或多个嵌入适配器 ID（例如 `openai`、`gemini` 或自定义
   插件定义的 ID）。
 - 用户配置（如 `agents.defaults.memorySearch.provider` 和
-  `agents.defaults.memorySearch.fallback`）将根据这些已注册
-  的适配器 ID 进行解析。
+  `agents.defaults.memorySearch.fallback`）将根据这些注册的
+  适配器 ID 进行解析。
 
 ### 事件和生命周期
 
@@ -279,42 +309,43 @@ api.registerCli(
 | `api.on(hookName, handler, opts?)`           | 类型化生命周期挂钩 |
 | `api.onConversationBindingResolved(handler)` | 会话绑定回调       |
 
-有关示例、常用挂钩名称和保护语义，请参阅[插件挂钩](/zh/plugins/hooks)。
+有关示例、常用挂钩名称和守护
+语义，请参阅[插件挂钩](/zh/plugins/hooks)。
 
 ### 挂钩决策语义
 
-- `before_tool_call`：返回 `{ block: true }` 是终止性的。一旦任何处理程序设置了它，较低优先级的处理程序将被跳过。
-- `before_tool_call`：返回 `{ block: false }` 被视为未做决定（与省略 `block` 相同），而不是覆盖。
-- `before_install`：返回 `{ block: true }` 是终局性的。一旦任何处理程序设置了它，较低优先级的处理程序将被跳过。
-- `before_install`：返回 `{ block: false }` 被视为未做决定（与省略 `block` 相同），而不是覆盖。
-- `reply_dispatch`：返回 `{ handled: true, ... }` 是终局性的。一旦任何处理程序声明了分发，较低优先级的处理程序和默认模型分发路径将被跳过。
-- `message_sending`：返回 `{ cancel: true }` 是终局性的。一旦任何处理程序设置了它，较低优先级的处理程序将被跳过。
-- `message_sending`：返回 `{ cancel: false }` 被视为未做决定（与省略 `cancel` 相同），而不是覆盖。
-- `message_received`：当您需要入站线程/主题路由时，请使用类型化的 `threadId` 字段。保留 `metadata` 用于渠道特定的附加项。
+- `before_tool_call`：返回 `{ block: true }` 是终结性的。一旦任何处理程序设置了它，较低优先级的处理程序将被跳过。
+- `before_tool_call`：返回 `{ block: false }` 被视为无决定（与省略 `block` 相同），而不是覆盖。
+- `before_install`：返回 `{ block: true }` 是终结性的。一旦任何处理程序设置了它，较低优先级的处理程序将被跳过。
+- `before_install`：返回 `{ block: false }` 被视为无决定（与省略 `block` 相同），而不是覆盖。
+- `reply_dispatch`：返回 `{ handled: true, ... }` 是终结性的。一旦任何处理程序声称负责分发，较低优先级的处理程序和默认模型分发路径将被跳过。
+- `message_sending`：返回 `{ cancel: true }` 是终结性的。一旦任何处理程序设置了它，较低优先级的处理程序将被跳过。
+- `message_sending`：返回 `{ cancel: false }` 被视为无决定（与省略 `cancel` 相同），而不是覆盖。
+- `message_received`：当您需要入站线程/主题路由时，请使用类型化的 `threadId` 字段。保留 `metadata` 用于渠道特定的额外内容。
 - `message_sending`：在回退到渠道特定的 `metadata` 之前，使用类型化的 `replyToId` / `threadId` 路由字段。
-- `gateway_start`：使用 `ctx.config`、`ctx.workspaceDir` 和 `ctx.getCron?.()` 处理网关拥有的启动状态，而不是依赖内部的 `gateway:startup` 钩子。
-- `cron_changed`：观察网关拥有的 cron 生命周期变更。在同步外部唤醒调度器时使用 `event.job?.state?.nextRunAtMs` 和 `ctx.getCron?.()`，并将 OpenClaw 作为到期检查和执行的真实来源。
+- `gateway_start`：对于网关拥有的启动状态，请使用 `ctx.config`、`ctx.workspaceDir` 和 `ctx.getCron?.()`，而不是依赖内部的 `gateway:startup` 钩子。
+- `cron_changed`：观察网关拥有的 cron 生命周期变更。在同步外部唤醒调度器时，请使用 `event.job?.state?.nextRunAtMs` 和 `ctx.getCron?.()`，并保持 OpenClaw 作为到期检查和执行的单一事实来源。
 
 ### API 对象字段
 
-| 字段                     | 类型                      | 描述                                                                      |
-| ------------------------ | ------------------------- | ------------------------------------------------------------------------- |
-| `api.id`                 | `string`                  | 插件 ID                                                                   |
-| `api.name`               | `string`                  | 显示名称                                                                  |
-| `api.version`            | `string?`                 | 插件版本（可选）                                                          |
-| `api.description`        | `string?`                 | 插件描述（可选）                                                          |
-| `api.source`             | `string`                  | 插件源路径                                                                |
-| `api.rootDir`            | `string?`                 | 插件根目录（可选）                                                        |
-| `api.config`             | `OpenClawConfig`          | 当前配置快照（可用时为活动的内存运行时快照）                              |
-| `api.pluginConfig`       | `Record<string, unknown>` | 来自 `plugins.entries.<id>.config` 的插件特定配置                         |
-| `api.runtime`            | `PluginRuntime`           | [运行时辅助工具](/zh/plugins/sdk-runtime)                                 |
-| `api.logger`             | `PluginLogger`            | 作用域日志记录器（`debug`、`info`、`warn`、`error`）                      |
-| `api.registrationMode`   | `PluginRegistrationMode`  | 当前加载模式；`"setup-runtime"` 是完整的入口启动/设置窗口之前的轻量级阶段 |
-| `api.resolvePath(input)` | `(string) => string`      | 解析相对于插件根目录的路径                                                |
+| 字段                     | 类型                      | 描述                                                              |
+| ------------------------ | ------------------------- | ----------------------------------------------------------------- |
+| `api.id`                 | `string`                  | 插件 ID                                                           |
+| `api.name`               | `string`                  | 显示名称                                                          |
+| `api.version`            | `string?`                 | 插件版本（可选）                                                  |
+| `api.description`        | `string?`                 | 插件描述（可选）                                                  |
+| `api.source`             | `string`                  | 插件源路径                                                        |
+| `api.rootDir`            | `string?`                 | 插件根目录（可选）                                                |
+| `api.config`             | `OpenClawConfig`          | 当前配置快照（可用时为活动的内存运行时快照）                      |
+| `api.pluginConfig`       | `Record<string, unknown>` | 来自 `plugins.entries.<id>.config` 的插件特定配置                 |
+| `api.runtime`            | `PluginRuntime`           | [运行时辅助程序](/zh/plugins/sdk-runtime)                         |
+| `api.logger`             | `PluginLogger`            | 作用域记录器 (`debug`, `info`, `warn`, `error`)                   |
+| `api.registrationMode`   | `PluginRegistrationMode`  | 当前加载模式；`"setup-runtime"` 是进入完整启动/设置前的轻量级窗口 |
+| `api.resolvePath(input)` | `(string) => string`      | 解析相对于插件根目录的路径                                        |
 
 ## 内部模块约定
 
-在您的插件中，使用本地桶文件（barrel files）进行内部导入：
+在您的插件内部，请使用本地 barrel 文件进行内部导入：
 
 ```
 my-plugin/
@@ -327,43 +358,48 @@ my-plugin/
 <Warning>
   切勿在生产代码中通过 `openclaw/plugin-sdk/<your-plugin>` 导入您自己的插件。
   请通过 `./api.ts` 或 `./runtime-api.ts` 路由内部导入。
-  SDK 路径仅用于外部契约。
+  SDK 路径仅作为外部契约。
 </Warning>
 
-Facade 加载的捆绑插件公开表面（`api.ts`、`runtime-api.ts`、
-`index.ts`、`setup-entry.ts` 和类似的公开入口文件）在 OpenClaw 正在运行时优先使用活动运行时配置快照。如果尚未存在运行时快照，它们将回退到磁盘上已解析的配置文件。
-打包的捆绑插件 Facade 应通过 OpenClaw 的插件 Facade 加载器加载；从 `dist/extensions/...` 直接导入会绕过清单和运行时 Sidecar 检查，而这些检查是打包安装用于插件自有代码的。
+Facade 加载的打包插件公共表面（`api.ts`、`runtime-api.ts`、
+`index.ts`、`setup-entry.ts` 和类似的公共入口文件）在 OpenClaw 已经运行时优先使用活动的运行时配置快照。如果尚不存在运行时快照，它们将回退到磁盘上已解析的配置文件。
+打包的打包插件 Facade 应通过 OpenClaw 的插件 Facade 加载器加载；直接从 `dist/extensions/...` 导入会绕过清单和运行时 sidecar 检查，而这些是打包安装用于插件拥有的代码的检查项。
 
-当辅助工具有意特定于提供商且尚不属于通用 SDK 子路径时，提供商插件可以暴露一个狭窄的插件本地合约汇总。捆绑示例：
+当辅助工具专门针对提供商且尚不属于通用 SDK 子路径时，提供商插件可以公开一个狭窄的插件本地合约桶。打包示例：
 
-- \*\*Anthropic：用于 Claude beta-header 和 `service_tier` 流辅助工具的公开 `api.ts` / `contract-api.ts` 接缝。
-- \*\*`@openclaw/openai-provider`：`api.ts` 导出提供商构建器、默认模型辅助工具和实时提供商构建器。
-- \*\*`@openclaw/openrouter-provider`：`api.ts` 导出提供商构建器以及新手引导/配置辅助工具。
+- **Anthropic**：公共 `api.ts` / `contract-api.ts` 缝合，用于 Claude
+  beta-header 和 `service_tier` 流辅助工具。
+- **`@openclaw/openai-provider`**：`api.ts` 导出提供商构建器、
+  默认模型辅助工具和实时提供商构建器。
+- **`@openclaw/openrouter-provider`**：`api.ts` 导出提供商构建器
+  以及新手引导/配置辅助工具。
 
 <Warning>
-  扩展生产代码还应避免 `openclaw/plugin-sdk/<other-plugin>`
-  导入。如果辅助工具确实是共享的，请将其提升到中立的 SDK 子路径（例如 `openclaw/plugin-sdk/speech`、`.../provider-model-shared` 或其他面向功能的表面），而不是将两个插件耦合在一起。
+  扩展生产代码也应避免 `openclaw/plugin-sdk/<other-plugin>`
+  导入。如果辅助工具确实由多个插件共享，请将其提升到中立的 SDK 子路径，
+  例如 `openclaw/plugin-sdk/speech`、`.../provider-model-shared` 或其他
+  面向能力的表面，而不是将两个插件耦合在一起。
 </Warning>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Entry points" icon="door-open" href="/zh/plugins/sdk-entrypoints">
+  <Card title="入口点" icon="door-open" href="/zh/plugins/sdk-entrypoints">
     `definePluginEntry` 和 `defineChannelPluginEntry` 选项。
   </Card>
-  <Card title="Runtime helpers" icon="gears" href="/zh/plugins/sdk-runtime">
+  <Card title="运行时辅助工具" icon="gears" href="/zh/plugins/sdk-runtime">
     完整的 `api.runtime` 命名空间参考。
   </Card>
-  <Card title="设置和配置" icon="sliders" href="/zh/plugins/sdk-setup">
+  <Card title="Setup and config" icon="sliders" href="/zh/plugins/sdk-setup">
     打包、清单和配置架构。
   </Card>
-  <Card title="测试" icon="vial" href="/zh/plugins/sdk-testing">
+  <Card title="Testing" icon="vial" href="/zh/plugins/sdk-testing">
     测试工具和 Lint 规则。
   </Card>
-  <Card title="SDK 迁移" icon="arrows-turn-right" href="/zh/plugins/sdk-migration">
+  <Card title="SDK migration" icon="arrows-turn-right" href="/zh/plugins/sdk-migration">
     从已弃用的接口迁移。
   </Card>
-  <Card title="插件内部机制" icon="diagram-project" href="/zh/plugins/architecture">
-    深度架构和功能模型。
+  <Card title="Plugin internals" icon="diagram-project" href="/zh/plugins/architecture">
+    深度架构和模型。
   </Card>
 </CardGroup>

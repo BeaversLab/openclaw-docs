@@ -89,7 +89,7 @@ OpenClaw 还会将上下文标记注入到生成的子进程中：
 }
 ```
 
-有关完整详细信息，请参阅 [配置：环境变量替换](/zh/gateway/configuration-reference#env-var-substitution)。
+有关详细信息，请参阅 [配置：环境变量替换](/zh/gateway/configuration-reference#env-var-substitution)。
 
 ## Secret refs vs `${ENV}` strings
 
@@ -98,7 +98,7 @@ OpenClaw 支持两种由环境驱动的模式：
 - 配置值中的 `${VAR}` 字符串替换。
 - SecretRef 对象 (`{ source: "env", provider: "default", id: "VAR" }`)，用于支持机密引用的字段。
 
-两者均在激活时从进程环境变量中解析。有关 SecretRef 的详细信息，请参阅 [机密管理](/zh/gateway/secrets)。
+两者均在激活时从进程环境解析。有关 SecretRef 的详细信息，请参阅 [机密管理](/zh/gateway/secrets)。
 
 ## Path-related 环境变量
 
@@ -111,17 +111,21 @@ OpenClaw 支持两种由环境驱动的模式：
 
 ## 日志记录
 
-| 变量                 | 用途                                                                                                                                        |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_LOG_LEVEL` | 覆盖文件和控台的日志级别（例如 `debug`、`trace`）。优先级高于配置中的 `logging.level` 和 `logging.consoleLevel`。无效值将被忽略并显示警告。 |
+| 变量                             | 用途                                                                                                                                        |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_LOG_LEVEL`             | 覆盖文件和控台的日志级别（例如 `debug`、`trace`）。优先级高于配置中的 `logging.level` 和 `logging.consoleLevel`。无效值将被忽略并显示警告。 |
+| `OPENCLAW_DEBUG_MODEL_TRANSPORT` | 在 `info` 级别发出针对性的模型请求/响应计时诊断，而无需启用全局调试日志。                                                                   |
+| `OPENCLAW_DEBUG_MODEL_PAYLOAD`   | 模型负载诊断：`summary`、`tools` 或 `full-redacted`。`full-redacted` 受到限制并被编辑，但可能包含提示/消息文本。                            |
+| `OPENCLAW_DEBUG_SSE`             | 流式传输诊断：`events` 用于开始/完成计时，`peek` 用于包含前五个被编辑的 SSE 事件。                                                          |
+| `OPENCLAW_DEBUG_CODE_MODE`       | 代码模式模型表面诊断，包括提供商工具隐藏以及仅执行/等待强制执行。                                                                           |
 
 ### `OPENCLAW_HOME`
 
-设置后，`OPENCLAW_HOME` 将替换所有内部路径解析的系统主目录（`$HOME` / `os.homedir()`）。这为无头服务帐户启用了完整的文件系统隔离。
+设置后，`OPENCLAW_HOME` 将替换所有内部路径解析的系统主目录 (`$HOME` / `os.homedir()`)。这为无头服务帐户启用了完整的文件系统隔离。
 
 **优先级：** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
 
-**示例**（macOS LaunchDaemon）：
+**示例** (macOS LaunchDaemon)：
 
 ```xml
 <key>EnvironmentVariables</key>
@@ -131,20 +135,20 @@ OpenClaw 支持两种由环境驱动的模式：
 </dict>
 ```
 
-`OPENCLAW_HOME` 也可以设置为波浪号路径（例如 `~/svc`），该路径在使用前会使用 `$HOME` 进行展开。
+`OPENCLAW_HOME` 也可以设置为波浪号路径（例如 `~/svc`），该路径在使用前会使用 `$HOME` 进行扩展。
 
 ## nvm 用户：web_fetch TLS 失败
 
 如果 Node.js 是通过 **nvm** 安装的（而不是系统包管理器），则内置的 `fetch()` 使用
-nvm 捆绑的 CA 存储该存储可能缺少现代根 CA（Let's Encrypt 的 ISRG Root X1/X2、
+nvm 捆绑的 CA 存储区，该存储区可能缺少现代根 CA（Let's Encrypt 的 ISRG Root X1/X2、
 DigiCert Global Root G2 等）。这会导致 `web_fetch` 在大多数 HTTPS 站点上因 `"fetch failed"` 而失败。
 
-在 Linux 上，OpenClaw 会自动检测 nvm 并在实际的启动环境中应用修复：
+在 Linux 上，OpenClaw 会自动检测 nvm 并在实际启动环境中应用修复：
 
 - `openclaw gateway install` 将 `NODE_EXTRA_CA_CERTS` 写入 systemd 服务环境
-- `openclaw` CLI 入口点在 Node 启动前设置 `NODE_EXTRA_CA_CERTS` 后会重新执行自身
+- `openclaw`CLI CLI 入口点在 Node 启动前设置 `NODE_EXTRA_CA_CERTS` 并重新执行自身
 
-**手动修复（适用于旧版本或直接启动 `node ...`）：**
+**手动修复（适用于旧版本或直接 `node ...` 启动）：**
 
 在启动 OpenClaw 之前导出该变量：
 
@@ -153,23 +157,23 @@ export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
 openclaw gateway run
 ```
 
-不要仅依赖为此变量写入 `~/.openclaw/.env`；Node 在进程启动时读取
+不要依赖仅将此变量写入 `~/.openclaw/.env`；Node 在进程启动时读取
 `NODE_EXTRA_CA_CERTS`。
 
 ## 旧版环境变量
 
-OpenClaw 仅读取 `OPENCLAW_*` 环境变量。早期版本中的旧版
-`CLAWDBOT_*` 和 `MOLTBOT_*` 前缀将被静默
-忽略。
+OpenClaw 仅读取 OpenClaw`OPENCLAW_*` 环境变量。早期版本中的旧版
+`CLAWDBOT_*` 和 `MOLTBOT_*` 前缀将被
+静默忽略。
 
-如果在启动时 Gateway(网关) 进程上仍然设置了任何此类变量，OpenClaw 将发出
-单个 Node 弃用警告 (`OPENCLAW_LEGACY_ENV_VARS`)，其中列出
-检测到的前缀和总数。通过将
+如果在启动时 Gateway 进程上仍然设置了任何此类变量，OpenClaw 将发出
+一个单独的 Node 弃用警告 (Gateway(网关)OpenClaw`OPENCLAW_LEGACY_ENV_VARS`)，其中列出
+检测到的前缀和总计数。请通过将
 旧版前缀替换为 `OPENCLAW_` 来重命名每个值（例如 `CLAWDBOT_GATEWAY_TOKEN` →
 `OPENCLAW_GATEWAY_TOKEN`）；旧名称将不起作用。
 
 ## 相关
 
-- [Gateway(网关) 配置](/zh/gateway/configuration)
-- [常见问题：环境变量和 .env 加载](/zh/help/faq#env-vars-and-env-loading)
+- [Gateway(网关) 配置](<Gateway(网关)/en/gateway/configuration>)
+- [常见问题：环境变量 和 .env 加载](/zh/help/faq#env-vars-and-env-loading)
 - [模型概述](/zh/concepts/models)

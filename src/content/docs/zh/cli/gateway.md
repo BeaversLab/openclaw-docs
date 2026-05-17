@@ -212,7 +212,7 @@ openclaw gateway stability --json
 
 ### `gateway diagnostics export`
 
-编写一个旨在附加到错误报告的本地诊断 zip 文件。有关隐私模型和捆绑包内容，请参阅 [诊断导出](/zh/gateway/diagnostics)。
+生成一个本地诊断 zip 文件，旨在附加到错误报告中。有关隐私模型和捆绑包内容，请参阅 [Diagnostics Export](/zh/gateway/diagnostics)。
 
 ```bash
 openclaw gateway diagnostics export
@@ -287,21 +287,22 @@ openclaw gateway status --require-rpc
 <AccordionGroup>
   <Accordion title="状态语义">
     - 即使本地 CLI 配置缺失或无效，`gateway status` 仍可用于诊断。
-    - 默认 `gateway status` 证明服务状态、WebSocket 连接以及握手时可见的身份验证能力。它不证明读/写/管理操作。
-    - 对于首次设备身份验证，诊断探针是非变更性的：当存在现有的缓存设备令牌时，它们会重用该令牌，但不会仅为了检查状态而创建新的 CLI 设备身份或只读设备配对记录。
-    - `gateway status` 会在可能的情况下为探针身份验证解析已配置的身份验证 SecretRefs。
-    - 如果在此命令路径中未解析所需的身份验证 SecretRef，则当探针连接性/身份验证失败时，`gateway status --json` 会报告 `rpc.authWarning`；请显式传递 `--token`/`--password` 或先解析密钥源。
-    - 如果探针成功，则将抑制未解析的身份验证引用警告，以避免误报。
-    - 在脚本和自动化中，当仅靠侦听服务不足且您需要读取范围的 RPC 调用也正常时，请使用 `--require-rpc`。
-    - `--deep` 增加了对额外的 launchd/systemd/schtasks 安装的尽力扫描。当检测到多个类似网关的服务时，人工输出会打印清理提示，并警告大多数设置应每台计算机运行一个网关。
-    - `--deep` 还会在服务进程为外部监督程序重启而干净退出时，报告最近的 Gateway(网关) 监督程序重启交接。
-    - 人工输出包括解析的文件日志路径以及 CLI 与服务的配置路径/有效性快照，以帮助诊断配置文件或状态目录漂移。
+    - 默认的 `gateway status` 证明服务状态、WebSocket 连接以及握手时可见的 auth 能力。它不证明读/写/管理操作。
+    - 诊断探针对于首次设备 auth 是非变更性的：当存在现有的缓存设备令牌时，它们会重用它，但它们不会仅为了检查状态而创建新的 CLI 设备身份或只读设备配对记录。
+    - `gateway status` 尽可能为探针 auth 解析已配置的 auth SecretRef。
+    - 如果在此命令路径中所需的 auth SecretRef 未解析，当探针连接性/auth 失败时，`gateway status --json` 将报告 `rpc.authWarning`；请显式传递 `--token`/`--password` 或先解析密钥源。
+    - 如果探针成功，将抑制未解析的 auth-ref 警告以避免误报。
+    - 当仅监听服务不足且您需要读作用域 RPC 调用也保持健康时，请在脚本和自动化中使用 `--require-rpc`。
+    - `--deep` 增加了对额外的 launchd/systemd/schtasks 安装的最大努力扫描。当检测到多个类似 Gateway 的服务时，面向人类的输出会打印清理提示，并警告大多数设置应在每台计算机上运行一个 Gateway。
+    - 当服务进程因外部监督程序重启而正常退出时，`--deep` 还会报告最近的 Gateway(网关) 监督程序重启交接。
+    - `--deep` 在插件感知模式（`pluginValidation: "full"`）下运行配置验证，并显示已配置的插件清单警告（例如，缺少渠道配置元数据），以便安装和更新冒烟测试能捕获它们。默认的 `gateway status` 保持跳过插件验证的快速只读路径。
+    - 面向人类的输出包括解析的文件日志路径以及 CLI-vs-service 配置路径/有效性快照，以帮助诊断配置文件或状态目录漂移。
 
   </Accordion>
   <Accordion title="LinuxLinux systemd auth-drift checks"Linux>
-    - 在 Linux systemd 安装中，服务认证漂移检查会从单元中读取 `Environment=` 和 `EnvironmentFile=` 值（包括 `%h`、带引号的路径、多个文件以及可选的 `-` 文件）。
-    - 漂移检查使用合并的运行时环境（首先是服务命令环境，然后是进程环境回退）来解析 `gateway.auth.token` SecretRefs。
-    - 如果令牌认证未实际生效（显式 `gateway.auth.mode` 为 `password`/`none`/`trusted-proxy`，或模式未设置且密码可能获胜且没有令牌候选者可能获胜），令牌漂移检查将跳过配置令牌解析。
+    - 在 Linux systemd 安装中，服务授权漂移检查会从单元（unit）中读取 `Environment=` 和 `EnvironmentFile=` 值（包括 `%h`、带引号的路径、多个文件以及可选的 `-` 文件）。
+    - 漂移检查使用合并的运行时环境解析 `gateway.auth.token` SecretRefs（优先使用服务命令环境，然后回退到进程环境）。
+    - 如果令牌授权未实际生效（明确 `gateway.auth.mode` 为 `password`/`none`/`trusted-proxy`，或模式未设置且密码可能获胜且没有令牌候选者可能获胜），令牌漂移检查将跳过配置令牌解析。
 
   </Accordion>
 </AccordionGroup>
@@ -329,41 +330,41 @@ openclaw gateway probe --json
 <AccordionGroup>
   <Accordion title="解释">
     - `Reachable: yes` 表示至少有一个目标接受了 WebSocket 连接。
-    - `Capability: read-only|write-capable|admin-capable|pairing-pending|connect-only` 报告了探测可以证明的关于认证的信息。这与可达性是分开的。
-    - `Read probe: ok` 表示读取作用域的详细 RPC 调用（`health`/`status`/`system-presence`/`config.get`）也成功了。
-    - `Read probe: limited - missing scope: operator.read` 表示连接成功，但读取作用域的 RPC 受到限制。这被报告为 **降级** 的可达性，而非完全失败。
-    - `Read probe: failed` 出现在 `Connect: ok` 之后，意味着 Gateway(网关) 接受了 WebSocket 连接，但后续的读取诊断超时或失败。这也是 **降级** 的可达性，并非不可达的 Gateway(网关)。
-    - 与 `gateway status` 类似，探测会重用现有的缓存设备认证，但不会创建首次设备身份或配对状态。
+    - `Capability: read-only|write-capable|admin-capable|pairing-pending|connect-only` 报告探测能够证明的身份验证信息。它与可达性是分开的。
+    - `Read probe: ok` 表示读取范围的详细 RPC 调用（`health`/`status`/`system-presence`/`config.get`）也成功了。
+    - `Read probe: limited - missing scope: operator.read` 表示连接成功，但读取范围的 RPC 受限。这被报告为 **degraded**（降级）的可达性，而非完全失败。
+    - `Read probe: failed` 出现在 `Connect: ok` 之后，意味着 Gateway(网关) 接受了 WebSocket 连接，但后续读取诊断超时或失败。这也属于 **degraded**（降级）的可达性，并非不可达的 Gateway(网关)。
+    - 像 `gateway status` 一样，探测会重用现有的缓存设备身份验证，但不会创建首次设备身份或配对状态。
     - 仅当没有探测到的目标可达时，退出代码才为非零。
 
   </Accordion>
-  <Accordion title="JSON output">
+  <Accordion title="JSON 输出">
     顶层：
 
-    - `ok`：至少有一个目标是可达的。
-    - `degraded`RPC：至少有一个目标接受了连接，但未完成完整的细节 RPC 诊断。
+    - `ok`：至少有一个目标可达。
+    - `degraded`：至少有一个目标接受了连接但未完成完整的 RPC 诊断。
     - `capability`：在可达目标中看到的最佳能力（`read_only`、`write_capable`、`admin_capable`、`pairing_pending`、`connected_no_operator_scope` 或 `unknown`）。
-    - `primaryTargetId`：按此顺序视为活动获胜者的最佳目标：显式 URL、SSH 隧道、配置的远程，然后是本地环回。
-    - `warnings[]`：尽力而为的警告记录，包含 `code`、`message` 和可选的 `targetIds`。
-    - `network`：根据当前配置和主机网络派生的本地环回/tailnet URL 提示。
-    - `discovery.timeoutMs` 和 `discovery.count`：此探测轮次使用的实际发现预算/结果计数。
+    - `primaryTargetId`：按此顺序视为活动获胜者的最佳目标：显式 URL、SSH 隧道、配置的远程，然后是 local loopback。
+    - `warnings[]`：包含 `code`、`message` 和可选 `targetIds` 的尽力警告记录。
+    - `network`：从当前配置和主机网络派生的 local loopback/tailnet URL 提示。
+    - `discovery.timeoutMs` 和 `discovery.count`：此探测传递使用的实际发现预算/结果计数。
 
     每个目标（`targets[].connect`）：
 
     - `ok`：连接后的可达性 + 降级分类。
-    - `rpcOk`RPC：完整的细节 RPC 成功。
-    - `scopeLimited`RPC：由于缺少操作员作用域，细节 RPC 失败。
+    - `rpcOk`：完整细节 RPC 成功。
+    - `scopeLimited`：由于缺少 operator scope，细节 RPC 失败。
 
     每个目标（`targets[].auth`）：
 
     - `role`：在 `hello-ok` 中报告的身份验证角色（如果可用）。
-    - `scopes`：在 `hello-ok` 中报告的已授予作用域（如果可用）。
+    - `scopes`：在 `hello-ok` 中报告的授予范围（如果可用）。
     - `capability`：该目标显示的身份验证能力分类。
 
   </Accordion>
   <Accordion title="常见警告代码">
     - `ssh_tunnel_failed`：SSH 隧道设置失败；命令回退到直接探测。
-    - `multiple_gateways`：有一个以上的目标可达；除非您有意运行隔离的配置文件（例如救援机器人），否则这通常是不寻常的。
+    - `multiple_gateways`：有多个目标可达；除非您有意运行独立的配置文件（例如救援机器人），否则这通常是不寻常的。
     - `auth_secretref_unresolved`：无法为失败的目标解析已配置的身份验证 SecretRef。
     - `probe_scope_limited`：WebSocket 连接成功，但读取探测因缺少 `operator.read` 而受到限制。
 
@@ -372,7 +373,7 @@ openclaw gateway probe --json
 
 #### 通过 SSH 远程访问（Mac 应用对等）
 
-macOS 应用中的“通过 SSH 远程访问”模式使用本地端口转发，以便远程网关（可能仅绑定到环回地址）可以在 macOS`ws://127.0.0.1:<port>` 上被访问。
+macOS 应用程序的“通过 SSH 远程控制”模式使用本地端口转发，以便远程网关（可能仅绑定到环回接口）可在 `ws://127.0.0.1:<port>` 访问。
 
 CLI 等效项：
 
@@ -387,7 +388,7 @@ openclaw gateway probe --ssh user@gateway-host
   身份文件。
 </ParamField>
 <ParamField path="--ssh-auto" type="boolean">
-  从解析的发现端点中选择第一个发现的网关主机作为 SSH 目标（`local.` 加上配置的广域域名，如果有）。仅 TXT 的提示将被忽略。
+  从解析的发现端点（`local.` 加上配置的广域名，如果有）中选择第一个发现的网关主机作为 SSH 目标。仅 TXT 的提示将被忽略。
 </ParamField>
 
 配置（可选，用作默认值）：
@@ -440,7 +441,7 @@ openclaw gateway uninstall
 
 ### 使用包装器安装
 
-当托管服务必须通过另一个可执行文件（例如机密管理器填充程序或 run-as 辅助程序）启动时，请使用 `--wrapper`。包装器接收常规的 Gateway(网关) 参数，并负责最终执行 `openclaw` 或带有这些参数的 Node。
+当托管服务必须通过另一个可执行文件启动时（例如密钥管理器填充程序或运行身份辅助程序），请使用 `--wrapper`。包装器接收常规的 Gateway(网关) 参数，并负责最终使用这些参数 exec `openclaw` 或 Node。
 
 ```bash
 cat > ~/.local/bin/openclaw-doppler <<'EOF'
@@ -454,7 +455,7 @@ openclaw gateway install --wrapper ~/.local/bin/openclaw-doppler --force
 openclaw gateway restart
 ```
 
-您也可以通过环境设置包装器。`gateway install` 会验证该路径是否为可执行文件，将包装器写入服务 `ProgramArguments` 中，并将 `OPENCLAW_WRAPPER` 持久保存在服务环境中，以便稍后进行强制重新安装、更新和医生修复。
+您也可以通过环境设置包装器。`gateway install` 会验证该路径是否为可执行文件，将包装器写入服务 `ProgramArguments` 中，并在服务环境中持久化 `OPENCLAW_WRAPPER`，以便在后续的强制重新安装、更新和医生修复时使用。
 
 ```bash
 OPENCLAW_WRAPPER="$HOME/.local/bin/openclaw-doppler" openclaw gateway install --force
@@ -469,7 +470,7 @@ openclaw gateway restart
 ```
 
 <AccordionGroup>
-  <Accordion title="命令选项">
+  <Accordion title="Command options">
     - `gateway status`: `--url`, `--token`, `--password`, `--timeout`, `--no-probe`, `--require-rpc`, `--deep`, `--json`
     - `gateway install`: `--port`, `--runtime <node|bun>`, `--token`, `--wrapper <path>`, `--force`, `--json`
     - `gateway restart`: `--safe`, `--skip-deferral`, `--force`, `--wait <duration>`, `--json`
@@ -478,31 +479,31 @@ openclaw gateway restart
 
   </Accordion>
   <Accordion title="生命周期行为">
-    - 使用 `gateway restart` 重启受管服务。不要将 `gateway stop` 和 `gateway start` 串联作为重启的替代方案。
-    - 在 macOS 上，`gateway stop` 默认使用 `launchctl bootout`，这会将 LaunchAgent 从当前启动会话中移除，而不会持久化禁用状态 —— 针对未来崩溃的 KeepAlive 自动恢复保持激活，且 `gateway start` 可以在无需手动 `launchctl enable` 的情况下重新干净地启用。传递 `--disable` 以持久化抑制 KeepAlive 和 RunAtLoad，这样 Gateway 在下次显式 `gateway start` 之前不会重新生成；当手动停止操作应在重启或系统重启后仍然生效时，请使用此选项。
-    - `gateway restart --safe` 请求正在运行的 Gateway(网关) 对活动的 OpenClaw 工作进行预检，并推迟重启，直到回复传递、嵌入运行和任务运行耗尽。`--safe` 不能与 `--force` 或 `--wait` 组合使用。
-    - `gateway restart --wait 30s` 覆盖为该重启配置的重启耗尽预算。纯数字表示毫秒；接受诸如 `s`、`m` 和 `h` 之类的单位。`--wait 0` 表示无限期等待。
-    - `gateway restart --safe --skip-deferral` 运行 OpenClawGateway(网关) 感知的安全重启，但绕过推迟门限，因此即使报告了阻塞因素，Gateway 也会立即发出重启信号。这是用于卡住的任务运行推迟的操作员逃生舱门；需要 `--safe`。
-    - `gateway restart --force` 跳过活动工作耗尽并立即重启。当操作员已经检查了列出的任务阻塞因素并希望立即让 Gateway 恢复运行时，请使用此选项。
-    - 生命周期命令接受 `--json` 用于脚本编写。
+    - 使用 `gateway restart` 重启受管服务。不要将 `gateway stop` 和 `gateway start` 链接在一起作为重启的替代方案。
+    - 在 macOS 上，`gateway stop` 默认使用 `launchctl bootout`，这会将 LaunchAgent 从当前启动会话中移除而不持久化禁用状态 —— KeepAlive 自动恢复在未来崩溃时仍然保持活动，且 `gateway start` 能够在无需手动 `launchctl enable` 的情况下干净地重新启用。传递 `--disable` 以持久化抑制 KeepAlive 和 RunAtLoad，这样 Gateway(网关) 在下一次显式 `gateway start` 之前不会重新生成；当手动停止操作应在重启或系统重启后依然有效时，请使用此选项。
+    - `gateway restart --safe` 要求正在运行的 Gateway(网关) 对活动的 OpenClaw 工作进行预检，并推迟重启直到回复传递、嵌入式运行和任务运行排空。`--safe` 不能与 `--force` 或 `--wait` 组合使用。
+    - `gateway restart --wait 30s` 覆盖该重启的配置的重启排空预算。纯数字表示毫秒；接受诸如 `s`、`m` 和 `h` 之类的单位。`--wait 0` 表示无限期等待。
+    - `gateway restart --safe --skip-deferral` 运行 OpenClaw 感知的安全重启，但绕过推迟门控，因此即使报告了阻塞程序，Gateway(网关) 也会立即发出重启。这是针对卡住的任务运行推迟的操作员逃生舱门；需要 `--safe`。
+    - `gateway restart --force` 跳过活动工作排空并立即重启。当操作员已经检查了列出的任务阻塞程序并希望立即恢复 gateway 时，请使用它。
+    - 生命周期命令接受 `--json` 以便编写脚本。
 
   </Accordion>
   <Accordion title="安装时的身份验证和 SecretRefs">
-    - 当令牌身份验证需要令牌且 `gateway.auth.token` 由 SecretRef 管理时，`gateway install` 会验证 SecretRef 是否可解析，但不会将解析出的令牌持久化到服务环境元数据中。
-    - 如果令牌身份验证需要令牌且配置的令牌 SecretRef 未解析，安装将以失败关闭（fail closed）方式进行，而不是持久化回退纯文本。
-    - 对于 `gateway run` 上的密码身份验证，优先使用 `OPENCLAW_GATEWAY_PASSWORD`、`--password-file` 或 SecretRef 支持的 `gateway.auth.password`，而不是内联的 `--password`。
-    - 在推断出的身份验证模式下，仅限 shell 的 `OPENCLAW_GATEWAY_PASSWORD` 不会放宽安装令牌要求；在安装托管服务时，请使用持久化配置（`gateway.auth.password` 或配置 `env`）。
-    - 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password` 且未设置 `gateway.auth.mode`，安装将被阻止，直到明确设置模式。
+    - 当令牌认证需要令牌且 `gateway.auth.token` 由 SecretRef 管理时，`gateway install` 会验证 SecretRef 是否可解析，但不会将解析出的令牌持久化到服务环境元数据中。
+    - 如果令牌认证需要令牌且配置的令牌 SecretRef 未解析，安装将以失败关闭（fail closed）的方式进行，而不是持久化回退明文。
+    - 对于 `gateway run` 上的密码认证，首选 `OPENCLAW_GATEWAY_PASSWORD`、`--password-file` 或由 SecretRef 支持的 `gateway.auth.password`，而不是内联 `--password`。
+    - 在推断身份验证模式下，仅限 shell 的 `OPENCLAW_GATEWAY_PASSWORD` 不会放宽安装令牌要求；安装托管服务时，请使用持久化配置（`gateway.auth.password` 或配置 `env`）。
+    - 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password` 且未设置 `gateway.auth.mode`，安装将被阻止，直到显式设置模式。
 
   </Accordion>
 </AccordionGroup>
 
 ## 发现 Gateway(网关) (Bonjour)
 
-`gateway discover`Gateway(网关) 扫描 Gateway(网关) 信标 (`_openclaw-gw._tcp`)。
+`gateway discover`Gateway(网关) 扫描 Gateway(网关) 信标（`_openclaw-gw._tcp`）。
 
 - 多播 DNS-SD：`local.`
-- 单播 DNS-SD（广域 Bonjour）：选择一个域（例如：`openclaw.internal.`）并设置分离 DNS（split DNS）+ DNS 服务器；请参阅 [Bonjour](/zh/gateway/bonjour)。
+- 单播 DNS-SD（广域 Bonjour）：选择一个域（例如：Bonjour`openclaw.internal.`Bonjour）并设置拆分 DNS + DNS 服务器；参见 [Bonjour](/zh/gateway/bonjour)。
 
 只有启用了 Bonjour 发现功能（默认）的 Gateway(网关) 才会通告信标。
 
@@ -511,10 +512,10 @@ openclaw gateway restart
 - `role`（网关角色提示）
 - `transport`（传输提示，例如 `gateway`）
 - `gatewayPort`（WebSocket 端口，通常为 `18789`）
-- `sshPort`（可选；当它不存在时，客户端将 SSH 目标默认为 `22`）
+- `sshPort`（可选；当它缺失时，客户端将 SSH 目标默认为 `22`）
 - `tailnetDns`（MagicDNS 主机名，如果可用）
-- `gatewayTls` / `gatewayTlsSha256` (已启用 TLS + 证书指纹)
-- `cliPath` (远程安装提示信息已写入广域区域)
+- `gatewayTls` / `gatewayTlsSha256`（已启用 TLS + 证书指纹）
+- `cliPath`（写入广域区域的远程安装提示）
 
 ### `gateway discover`
 
@@ -537,9 +538,9 @@ openclaw gateway discover --json | jq '.beacons[].wsUrl'
 ```
 
 <Note>
-- 当启用了广域域时，CLI 会扫描 CLI`local.` 以及配置的广域域。
-- JSON 输出中的 `wsUrl` 派生自已解析的服务端点，而非仅基于 TXT 的提示信息（如 `lanHost` 或 `tailnetDns`）。
-- 在 `local.` mDNS 上，仅当 `discovery.mdns.mode` 为 `full` 时，才会广播 `sshPort` 和 `cliPath`。广域 DNS-SD 仍会写入 `cliPath`；在那里 `sshPort` 也保持可选。
+- CLI 扫描 CLI`local.` 以及已配置的广域域。
+- JSON 输出中的 `wsUrl` 派生自已解析的服务端点，而非源自 `lanHost` 或 `tailnetDns` 等仅限 TXT 的提示。
+- 在 `local.` mDNS 上，仅当 `discovery.mdns.mode` 为 `full` 时才会广播 `sshPort` 和 `cliPath`。广域 DNS-SD 仍会写入 `cliPath`；`sshPort` 在那里也保持可选。
 
 </Note>
 

@@ -7,7 +7,7 @@ title: "Heartbeat"
 sidebarTitle: "Latido"
 ---
 
-<Note>**¿Latido vs cron?** Consulte [Automatización y tareas](/es/automation) para obtener orientación sobre cuándo usar cada uno.</Note>
+<Note>**¿Latido (heartbeat) frente a cron?** Consulte [Automatización](/es/automation) para obtener orientación sobre cuándo usar cada uno.</Note>
 
 Latido ejecuta **turnos periódicos del agente** en la sesión principal para que el modelo pueda resaltar cualquier cosa que requiera atención sin saturarlo.
 
@@ -479,7 +479,7 @@ Los latidos actuales conservan el modelo de tiempo de ejecución existente de la
 
 ## Relacionado
 
-- [Automatización y tareas](/es/automation) — todos los mecanismos de automatización de un vistazo
+- [Automatización](/es/automation) — todos los mecanismos de automatización de un vistazo
 - [Tareas en segundo plano](/es/automation/tasks) — cómo se realiza el seguimiento del trabajo desacoplado
 - [Zona horaria](/es/concepts/timezone) — cómo la zona horaria afecta la programación de los latidos
 - [Solución de problemas](/es/automation/cron-jobs#troubleshooting) — depuración de problemas de automatización

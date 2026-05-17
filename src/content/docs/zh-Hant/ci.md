@@ -8,18 +8,18 @@ read_when:
   - You are changing ClawSweeper dispatch or GitHub activity forwarding
 ---
 
-OpenClaw CI 在每次推送到 `main` 和每個 pull request 時執行。`preflight` job 會分類差異，並在僅變更不相關區域時關閉昂貴的通道。手動 `workflow_dispatch` 執行會刻意繞過智慧範圍設定，並為發行候選版本和廣泛驗證展開完整圖表。Android 通道透過 `include_android` 保持選擇性加入。僅限發行版本的 plugin 涵蓋範圍位於獨立的 [`Plugin Prerelease`](#plugin-prerelease) workflow 中，且僅從 [`Full Release Validation`](#full-release-validation) 或明確的手動分派執行。
+OpenClaw CI 會在每次推送到 `main` 及每個 pull request 時執行。`preflight` job 會對差異進行分類，並當只有無關區域變更時，將昂貴的通道關閉。手動 `workflow_dispatch` 執行會故意繞過智慧範圍設定，並針對發行候選版本及廣泛驗證展開完整圖譜。Android 通道透過 `include_android` 保持選用。僅限發行版的插件涵蓋範圍位於獨立的 [`Plugin Prerelease`](#plugin-prerelease) workflow 中，且僅從 [`Full Release Validation`](#full-release-validation) 或明確的手動觸發執行。
 
 ## Pipeline 概覽
 
 | Job                              | 目的                                                                                                      | 執行時機                           |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------- |
 | `preflight`                      | 偵測僅文檔變更、已變更範圍、已變更擴充功能，並建置 CI manifest                                            | 總是在非草稿推送和 PR 上執行       |
-| `security-scm-fast`              | 透過 `zizmor` 進行私密金鑰偵測和 workflow 審計                                                            | 總是在非草稿推送和 PR 上執行       |
+| `security-scm-fast`              | 透過 `zizmor` 進行金鑰偵測與 workflow 稽核                                                                | 總是在非草稿推送和 PR 上執行       |
 | `security-dependency-audit`      | 針對 npm 公告進行無相依性生產鎖定檔審計                                                                   | 總是在非草稿推送和 PR 上執行       |
 | `security-fast`                  | 快速安全性 jobs 的必要集合                                                                                | 總是在非草稿推送和 PR 上執行       |
 | `check-dependencies`             | 生產 Knip 僅相依性傳遞加上未使用檔案允許清單防護                                                          | Node 相關變更                      |
-| `build-artifacts`                | 建置 `dist/`、Control UI、建置成品檢查和可重複使用的下游成品                                              | Node 相關變更                      |
+| `build-artifacts`                | 建置 `dist/`、Control UI、建置成品檢查以及可重複使用的下游成品                                            | Node 相關變更                      |
 | `checks-fast-core`               | 快速 Linux 正確性通道，例如 bundled/plugin-contract/protocol 檢查                                         | Node 相關變更                      |
 | `checks-fast-contracts-channels` | 具穩定集合檢查結果的分片通道合約檢查                                                                      | Node 相關變更                      |
 | `checks-node-core-test`          | 核心 Node 測試分片，排除 channel、bundled、contract 和 extension 通道                                     | Node 相關變更                      |
@@ -39,51 +39,51 @@ OpenClaw CI 在每次推送到 `main` 和每個 pull request 時執行。`prefli
 
 ## Fail-fast order
 
-1. `preflight` decides which lanes exist at all. The `docs-scope` and `changed-scope` logic are steps inside this job, not standalone jobs.
-2. `security-scm-fast`, `security-dependency-audit`, `security-fast`, `check`, `check-additional`, `check-docs`, and `skills-python` fail quickly without waiting on the heavier artifact and platform matrix jobs.
-3. `build-artifacts` 與快速 Linux 通道重疊，因此下游消費者可以在共用建置準備就緒後立即開始。
-4. 之後會展開更繁重的平台與執行時通道：`checks-fast-core`、`checks-fast-contracts-channels`、`checks-node-core-test`、`checks`、`checks-windows`、`macos-node`、`macos-swift` 和 `android`。
+1. `preflight` 決定哪些通道實際上存在。`docs-scope` 和 `changed-scope` 邏輯是此 job 內的步驟，而非獨立的 jobs。
+2. `security-scm-fast`、`security-dependency-audit`、`security-fast`、`check`、`check-additional`、`check-docs` 和 `skills-python` 會快速失敗，而不會等待較繁重的產出與平台矩陣任務。
+3. `build-artifacts` 與快速 Linux 軌道重疊，因此下游消費者可以在共用組建完成後立即開始。
+4. 較繁重的平台與執行時軌道會在此之後展開：`checks-fast-core`、`checks-fast-contracts-channels`、`checks-node-core-test`、`checks`、`checks-windows`、`macos-node`、`macos-swift` 和 `android`。
 
-當較新的推送抵達相同的 PR 或 `main` ref 時，GitHub 可能會將被取代的作業標記為 `cancelled`。除非相同 ref 的最新執行也失敗，否則請將其視為 CI 雜訊。彙總分片檢查使用 `!cancelled() && always()`，因此它們仍會回報正常的分片失敗，但在整個工作流程已被取代之後不會進入佇列。自動 CI 並行金鑰已加上版本號 (`CI-v7-*`)，因此 GitHub 端舊佇列群組中的殭屍程序無法無限期地封鎖較新的 main 執行。手動全套組執行使用 `CI-manual-v1-*` 且不會取消進行中的執行。
+當有較新的推送抵達相同的 PR 或 `main` 參照時，GitHub 可能會將被取代的任務標記為 `cancelled`。除非該參照的最新執行也失敗了，否則請將其視為 CI 雜訊。聚合分片檢查使用 `!cancelled() && always()`，因此它們仍會回報正常的分片失敗，但在整個工作流程已被取代後不會再排入佇列。自動 CI 並行金鑰已設定版本 (`CI-v7-*`)，因此 GitHub 端舊佇列組中的殭屍任務無法無限期封鎖較新的 main 執行。手動完整套件執行使用 `CI-manual-v1-*` 且不會取消進行中的執行。
 
-`ci-timings-summary` 作業會為每個非草稿 CI 執行上傳一個精簡的 `ci-timings-summary` 構件。它會記錄當前執行的牆上時間、佇列時間、最慢的作業和失敗的作業，因此 CI 健康檢查不需要重複抓取完整的 Actions 載荷。
+`ci-timings-summary` 任務會為每個非草稿 CI 執行上傳一個精簡的 `ci-timings-summary` 產出。它會記錄當前執行的耗時、佇列時間、最慢的任務與失敗的任務，因此 CI 健康檢查無需重複抓取完整的 Actions 載荷。
 
 ## 範圍與路由
 
-範圍邏輯位於 `scripts/ci-changed-scope.mjs` 中，並由 `src/scripts/ci-changed-scope.test.ts` 中的單元測試涵蓋。手動發送會跳過變更範圍檢測，並使預檢清單的表現就像每個範圍區域都發生了變更一樣。
+範圍邏輯位於 `scripts/ci-changed-scope.mjs` 中，並由 `src/scripts/ci-changed-scope.test.ts` 中的單元測試涵蓋。手動分派會跳過變更範圍檢測，並讓 preflight 表現清單表現得就像每個範圍區域都變更了一樣。
 
 - **CI 工作流程編輯** 會驗證 Node CI 圖形以及工作流程 linting，但本身不會強制執行 Windows、Android 或 macOS 原生建置；這些平台通道仍將範圍限定於平台原始碼變更。
-- **僅限 CI 路由的編輯、選定的低成本核心測試 fixture 編輯，以及狹隘的插件合約 helper/test-routing 編輯** 使用快速的僅 Node manifest 路徑：`preflight`、安全性，以及單一 `checks-fast-core` 任務。當變更僅限於快速任務直接執行的路由或 helper 介面時，該路徑會跳過建構成品、Node 22 相容性、頻道合約、完整核心分片、套件外掛分片以及額外的防護矩陣。
+- **僅限 CI 路由的編輯、選定的低成本核心測試 fixture 編輯，以及狹窄的 plugin contract helper/test-routing 編輯**會使用快速的僅 Node manifest 路徑：`preflight`、安全性以及單一 `checks-fast-core` 任務。當變更僅限於路由或 helper surface（即快速任務直接執行的部分）時，該路徑會跳過構建產物、Node 22 相容性、channel contracts、完整核心 shards、bundled-plugin shards 以及額外的 guard matrices。
 - **Windows Node 檢查** 的範圍限於 Windows 特定的處理程序/路徑包裝器、npm/pnpm/UI runner helper、套件管理員設定，以及執行該路徑的 CI workflow 介面；無關的來源、外掛、install-smoke 和僅測試變更會保留在 Linux Node 路徑上。
 
-最慢的 Node 測試族會被分割或平衡，讓每個作業保持小型而不會過度預留 runner：channel contracts 作為三個加權的 Blacksmith 支援的分片執行，並搭配標準的 GitHub runner 後備方案；core unit fast/support lanes 分開執行；core runtime infra 分割在 state、process/config、cron 與 shared 分片；auto-reply 作為平衡的 worker 執行（其中 reply 子樹分割為 agent-runner、dispatch 與 commands/state-routing 分片）；而 agentic gateway/server configs 則分散在 chat/auth/model/http-plugin/runtime/startup lanes，而非等候建置成果。廣泛的 browser、QA、media 與其他 plugin 測試使用其專屬的 Vitest 設定，而非共用的 plugin 捕捉設定。Include-pattern 分片會使用 CI 分片名稱記錄計時項目，因此 `.artifacts/vitest-shard-timings.json` 可區分完整設定與過濾後的分片。`check-additional` 將 package-boundary compile/canary 工作保持在一起，並將 runtime topology architecture 與 gateway watch coverage 分開；boundary guard 清單會分散在四個矩陣分片，每個分片並行執行選定的獨立 guard 並輸出各項檢查的計時。昂貴的 Codex happy-path prompt snapshot drift 檢查作為額外的獨立作業，僅在手動 CI 與影響 prompt 的變更時執行，因此一般不相關的 Node 變更不會等候冷啟動的 prompt snapshot 生成，且 boundary 分片保持平衡，同時 prompt drift 仍固定在造成它的 PR 上；相同的旗標會跳過 built-artifact core support-boundary 分片內的 prompt snapshot Vitest 生成。Gateway watch、channel 測試與 core support-boundary 分片會在 `build-artifacts` 內並行執行，當 `dist/` 與 `dist-runtime/` 已經建置完成之後。
+最慢的 Node 測試組別經過拆分或平衡，以確保每個作業保持精簡，避免過度預留 Runners：channel contracts 作為三個加權的 Blacksmith 支援分片運行，並備有標準 GitHub runner 作為後備；核心 unit fast/support 軌道獨立運行；核心 runtime infra 則拆分為 state、process/config、cron 和 shared 分片；auto-reply 以平衡 worker 運行（reply 子樹拆分為 agent-runner、dispatch 與 commands/state-routing 分片）；agentic gateway/server configs 則拆分至 chat/auth/model/http-plugin/runtime/startup 軌道，而非等待構建產物。廣泛的 browser、QA、media 與其他 plugin 測試使用其專屬 Vitest 配置，而非共用的 plugin catch-all。Include-pattern 分片使用 CI 分片名稱記錄時序項目，因此 `.artifacts/vitest-shard-timings.json` 可區分完整配置與過濾分片。`check-additional` 將 package-boundary compile/canary 工作保持在一起，並將 runtime topology 架構與 gateway watch 涵蓋範圍分開；boundary guard 清單分散於四個矩陣分片，各並行執行選定的獨立 guard 並輸出各檢查的時序。昂貴的 Codex happy-path prompt snapshot 差異檢查作為額外獨立作業，僅在手動 CI 與影響 prompt 的變更時執行，使一般非關聯的 Node 變更無須等候冷啟 prompt snapshot 產生，同時保持 boundary 分片平衡，並將 prompt 差異仍釘在造成它的 PR 上；同一旗標亦會跳過構建產物的 core support-boundary 分片內的 prompt snapshot Vitest 產生。Gateway watch、channel 測試與核心 support-boundary 分片在 `dist/` 與 `dist-runtime/` 已構建後，於 `build-artifacts` 內並行執行。
 
-Android CI 會同時執行 `testPlayDebugUnitTest` 與 `testThirdPartyDebugUnitTest`，然後建置 Play debug APK。第三方 flavor 沒有獨立的來源集或 manifest；其單元測試 lane 仍會使用 SMS/call-log BuildConfig 旗標編譯該 flavor，同時避免在每次 Android 相關推送時重複執行 debug APK 打包作業。
+Android CI 會同時執行 `testPlayDebugUnitTest` 與 `testThirdPartyDebugUnitTest`，然後建構 Play debug APK。第三方 flavor 並無獨立來源集或 manifest；其單元測試軌道仍會以 SMS/call-log BuildConfig 旗標編譯該 flavor，同時避免在每次與 Android 相關的推送上重複進行 debug APK 打包作業。
 
-`check-dependencies` 分片執行 `pnpm deadcode:dependencies`（一個釘選到最新 Knip 版本的生產環境 Knip 僅依賴項傳遞，針對 `dlx` 安裝停用了 pnpm 的最小發行年限）和 `pnpm deadcode:unused-files`，後者會將 Knip 的生產環境未使用檔案發現與 `scripts/deadcode-unused-files.allowlist.mjs` 進行比較。當 PR 新增未經審查的未使用檔案或保留過時的允許清單條目時，未使用檔案防護會失敗，同時保留 Knip 無法靜態解析的刻意動態外掛、生成、建置、即時測試和套件橋接介面。
+`check-dependencies` 分片執行 `pnpm deadcode:dependencies`（一個釘選到最新 Knip 版本的生產環境 Knip 僅依賴檢查，針對 `dlx` 安裝停用了 pnpm 的最小發行年限）和 `pnpm deadcode:unused-files`，後者會將 Knip 在生產環境中發現的未使用檔案與 `scripts/deadcode-unused-files.allowlist.mjs` 進行比較。當 PR 新增未經審查的未使用檔案或保留過時的允許清單條目時，未使用檔案防護會失敗，同時保留 Knip 無法靜態解析的刻意動態外掛、生成、建置、即時測試和套件橋接介面。
 
 ## ClawSweeeper 活動轉發
 
-`.github/workflows/clawsweeper-dispatch.yml` 是從 OpenClaw 儲存庫活動到 ClawSweeeper 的目標端橋接。它不會簽出或執行不受信任的 PR 程式碼。此工作流程從 `CLAWSWEEPER_APP_PRIVATE_KEY` 建立 GitHub App 權杖，然後將緊湊的 `repository_dispatch` 負載分派給 `openclaw/clawsweeper`。
+`.github/workflows/clawsweeper-dispatch.yml` 是從 OpenClaw 儲存庫活動到 ClawSweeper 的目標端橋接器。它不會簽出或執行不受信任的 PR 程式碼。該工作流程從 `CLAWSWEEPER_APP_PRIVATE_KEY` 建立 GitHub App 權杖，然後將精簡的 `repository_dispatch` 載荷分發至 `openclaw/clawsweeper`。
 
 此工作流程有四個通道：
 
-- `clawsweeper_item` 用於精確的 Issue 和 PR 審查請求；
-- `clawsweeper_comment` 用於 Issue 評論中的明確 ClawSweeeper 指令；
-- `clawsweeper_commit_review` 用於 `main` 推送上的提交層級審查請求；
-- `github_activity` 用於 ClawSweeeper 代理程式可能檢查的一般 GitHub 活動。
+- 針對確切 Issue 和 PR 審查請求的 `clawsweeper_item`；
+- 針對 Issue 留言中明確 ClawSweeper 指令的 `clawsweeper_comment`；
+- 針對 `main` 推送上提交層級審查請求的 `clawsweeper_commit_review`；
+- 針對 ClawSweeper 代理程式可能檢查的一般 GitHub 活動的 `github_activity`。
 
-`github_activity` 通道僅轉發正規化的中繼資料：事件類型、動作、行為者、儲存庫、項目編號、URL、標題、狀態，以及評論或審查（如果存在）的簡短摘錄。它刻意避免轉發完整的 webhook 內文。`openclaw/clawsweeper` 中的接收工作流程是 `.github/workflows/github-activity.yml`，它會將正規化的事件發佈到 ClawSweeeper 代理程式的 OpenClaw Gateway 掛鉤。
+`github_activity` 通道僅轉發正規化後的中繼資料：事件類型、動作、執行者、儲存庫、項目編號、URL、標題、狀態，以及評論或審查（如有存在時）的簡短摘錄。它刻意避免轉發完整的 webhook 內容。`openclaw/clawsweeper` 中的接收工作流程是 `.github/workflows/github-activity.yml`，它會將正規化事件發佈至給 ClawSweeper 代理程式的 OpenClaw Gateway 掛鉤。
 
-一般活動是觀察，而非預設傳遞。ClawSweeeper 代理程式會在其提示中收到 Discord 目標，並且應僅在事件令人驚訝、可採取行動、具風險或具有營運用途時，才將其發佈到 `#clawsweeper`。常規的開啟、編輯、機器人翻攪、重複 webhook 雜訊和正常審查流量應導致 `NO_REPLY`。
+一般活動僅供觀察，並非預設傳遞。ClawSweeper 代理程式會在其提示中接收 Discord 目標，並且僅在事件令人驚訝、可採取行動、有風險或具有營運用途時，才應張貼至 `#clawsweeper`。例行性的開啟、編輯、機器人異動、重複 webhook 雜訊和正常的審查流量應導致 `NO_REPLY`。
 
 在此路徑中，應將 GitHub 標題、評論、內容、審查文字、分支名稱和提交訊息視為不受信任的資料。它們是用於摘要和分類的輸入，而非工作流程或代理執行時期的指令。
 
 ## 手動觸發
 
-手動 CI 觸發執行與一般 CI 相同的作業圖，但會強制開啟每個非 Android 範圍的通道：Linux Node 分片、捆綁外掛程式分片、通道合約、Node 22 相容性、`check`、`check-additional`、建置冒煙測試、文件檢查、Python 技能、Windows、macOS 和 Control UI i18n。獨立的手動 CI 觸發僅透過 `include_android=true` 執行 Android；完整的發布傘會透過傳遞 `include_android=true` 來啟用 Android。外掛程式預發布靜態檢查、僅限發布的 `agentic-plugins` 分片、完整擴充功能批次掃描，以及外掛程式預發布 Docker 通道均不包含在 CI 中。Docker 預發布套件僅當 `Full Release Validation` 觸發啟用 release-validation 閘道的獨立 `Plugin Prerelease` 工作流程時才會執行。
+手動 CI 排程執行與一般 CI 使用相同的工作圖，但會強制開啟所有非 Android 限定範圍的通道：Linux Node 分片、套件插件的分片、通道契約、Node 22 相容性、`check`、`check-additional`、建置冒煙測試、文件檢查、Python 技能、Windows、macOS 以及 Control UI i18n。獨立的手動 CI 排程僅使用 `include_android=true` 執行 Android；完整的發行雨傘會透過傳遞 `include_android=true` 來啟用 Android。插件預先發行靜態檢查、僅限發行的 `agentic-plugins` 分片、完整的擴充功能批次掃描，以及插件預先發行 Docker 通道不包含在 CI 中。Docker 預先發行套件僅在 `Full Release Validation` 啟用 release-validation 閘道並排程獨立的 `Plugin Prerelease` 工作流程時執行。
 
-手動執行使用獨特的併發群組，因此發布候選版本的完整套件不會被同一個 ref 上的另一次推送或 PR 執行所取消。可選的 `target_ref` 輸入允許受信任的呼叫者在使用所選觸發 ref 的工作流程檔案的同時，針對分支、標籤或完整提交 SHA 執行該圖。
+手動執行使用獨特的並行群組，因此發行候選的完整套件不會被同一個 ref 上的另一個推送或 PR 執行所取消。可選的 `target_ref` 輸入允許受信任的呼叫者使用來自所選排程 ref 的工作流程檔案，針對分支、標籤或完整的提交 SHA 執行該工作圖。
 
 ```bash
 gh workflow run ci.yml --ref release/YYYY.M.D
@@ -93,17 +93,17 @@ gh workflow run full-release-validation.yml --ref main -f ref=<branch-or-sha>
 
 ## 執行器
 
-| 執行器                           | 作業                                                                                                                                                                                                                                                                                                                                                                       |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ubuntu-24.04`                   | `preflight`、快速安全性作業和彙總（`security-scm-fast`、`security-dependency-audit`、`security-fast`）、快速協定/合約/捆綁檢查、分片通道合約檢查、`check` 分片（lint 除外）、`check-additional` 彙總、Node 測試彙總驗證器、文件檢查、Python 技能、workflow-sanity、labeler、auto-response；install-smoke 預檢也使用 GitHub 託管的 Ubuntu，以便 Blacksmith 矩陣可以更早排隊 |
-| `blacksmith-4vcpu-ubuntu-2404`   | `CodeQL Critical Quality`、較低權重的擴充分片、`checks-fast-core`、`checks-node-compat-node22`、`check-prod-types` 和 `check-test-types`                                                                                                                                                                                                                                   |
-| `blacksmith-8vcpu-ubuntu-2404`   | `build-artifacts`、build-smoke、Linux Node 測試分片、bundled plugin 測試分片、`check-additional` 分片、`android`                                                                                                                                                                                                                                                           |
-| `blacksmith-16vcpu-ubuntu-2404`  | `check-lint`（對 CPU 敏感程度高，使得 8 vCPU 的成本高於其所節省的成本）；install-smoke Docker 建置（32-vCPU 排隊時間的成本高於其所節省的成本）                                                                                                                                                                                                                             |
-| `blacksmith-16vcpu-windows-2025` | `checks-windows`                                                                                                                                                                                                                                                                                                                                                           |
-| `blacksmith-6vcpu-macos-latest`  | `openclaw/openclaw` 上的 `macos-node`；fork 會回退到 `macos-latest`                                                                                                                                                                                                                                                                                                        |
-| `blacksmith-12vcpu-macos-latest` | `openclaw/openclaw` 上的 `macos-swift`；fork 會回退到 `macos-latest`                                                                                                                                                                                                                                                                                                       |
+| 執行器                           | 作業                                                                                                                                                                                                                                                                                                                                                                              |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ubuntu-24.04`                   | `preflight`、快速的安全性工作與彙總（`security-scm-fast`、`security-dependency-audit`、`security-fast`）、快速協定/契約/套件檢查、分片通道契約檢查、`check` 分片（除 lint 外）、`check-additional` 彙總、Node 測試彙總驗證器、文件檢查、Python 技能、workflow-sanity、labeler、auto-response；install-smoke 預檢也使用 GitHub 託管的 Ubuntu，以便 Blacksmith 矩陣可以更早進入佇列 |
+| `blacksmith-4vcpu-ubuntu-2404`   | `CodeQL Critical Quality`、較低權重的擴充功能分片、`checks-fast-core`、`checks-node-compat-node22`、`check-prod-types` 和 `check-test-types`                                                                                                                                                                                                                                      |
+| `blacksmith-8vcpu-ubuntu-2404`   | build-smoke、Linux Node 測試分片、套件插件測試分片、`check-additional` 分片、`android`                                                                                                                                                                                                                                                                                            |
+| `blacksmith-16vcpu-ubuntu-2404`  | `build-artifacts`，`check-lint`（對 CPU 夠敏感，以致於 8 vCPU 的成本高於其節省的成本）；install-smoke Docker 建置（32-vCPU 排隊時間的成本高於其節省的成本）                                                                                                                                                                                                                       |
+| `blacksmith-16vcpu-windows-2025` | `checks-windows`                                                                                                                                                                                                                                                                                                                                                                  |
+| `blacksmith-6vcpu-macos-latest`  | `macos-node` 位於 `openclaw/openclaw`；fork 會回退到 `macos-latest`                                                                                                                                                                                                                                                                                                               |
+| `blacksmith-12vcpu-macos-latest` | `macos-swift` 位於 `openclaw/openclaw`；fork 會回退到 `macos-latest`                                                                                                                                                                                                                                                                                                              |
 
-Canonical-repo CI 將 Blacksmith 保持為預設的 runner 路徑。在 `preflight` 期間，`scripts/ci-runner-labels.mjs` 會檢查近期佇列中和進行中的 Actions 執行，尋找佇列中的 Blacksmith 工作。如果特定的 Blacksmith 標籤已有佇列工作，那麼將使用該確切標籤的下游工作會在該次執行中回退至對應的 GitHub 託管 runner（`ubuntu-24.04`、`windows-2025` 或 `macos-latest`）。相同 OS 系列中的其他 Blacksmith 大小則保持在主要標籤上。如果 API 探測失敗，則不會套用回退機制。
+Canonical 儲存庫 CI 將 Blacksmith 保留為預設執行器路徑。在 `preflight` 期間，`scripts/ci-runner-labels.mjs` 會檢查近期排隊和進行中的 Actions 執行，尋找排隊的 Blacksmith 工作。如果特定的 Blacksmith 標籤已有排隊的工作，該次執行中會使用該確切標籤的下游工作將僅針對該次執行回退至相符的 GitHub 託管執行器（`ubuntu-24.04`、`windows-2025` 或 `macos-latest`）。相同 OS 系列中的其他 Blacksmith 大小則保持在其主要標籤上。如果 API 探測失敗，則不會套用回退機制。
 
 ## 本地對等項目
 
@@ -134,7 +134,7 @@ pnpm perf:kova:summary --report .artifacts/kova/reports/mock-provider/report.jso
 
 ## OpenClaw 效能
 
-`OpenClaw Performance` 是產品/執行時效能工作流程。它每日在 `main` 上執行，並可手動觸發：
+`OpenClaw Performance` 是產品/執行時期效能工作流程。它每日在 `main` 上執行，並可手動觸發：
 
 ```bash
 gh workflow run openclaw-performance.yml --ref main -f profile=diagnostic -f repeat=3
@@ -142,23 +142,25 @@ gh workflow run openclaw-performance.yml --ref main -f profile=smoke -f repeat=1
 gh workflow run openclaw-performance.yml --ref main -f target_ref=v2026.5.2 -f profile=diagnostic -f repeat=3
 ```
 
-手動觸發通常會對工作流程 ref 進行基準測試。設定 `target_ref` 即可使用當前工作流程實作對發布標籤或其他分支進行基準測試。已發布的報告路徑和最新指標是以測試的 ref 為鍵值，並且每個 `index.md` 都會記錄測試的 ref/SHA、工作流程 ref/SHA、Kova ref、設定檔、通道授權模式、模型、重複次數和場景篩選器。
+手動觸發通常會對工作流程參照進行基準測試。設定 `target_ref` 以使用目前的工作流程實作對發佈標籤或其他分支進行基準測試。已發佈的報表路徑和最新指標是以受測參照為鍵值，且每個 `index.md` 都會記錄受測參照/SHA、工作流程參照/SHA、Kova 參照、設定檔、lane 授權模式、模型、重複計數和場景篩選器。
 
-工作流程從固定的版本安裝 OCM，並從 `openclaw/Kova` 在固定的 `kova_ref` 輸入安裝 Kova，然後執行三個通道：
+此工作流程會從固定發佈版本安裝 OCM，並從 `openclaw/Kova` 安裝 Kova，採用固定的 `kova_ref` 輸入，然後執行三個 lane：
 
-- `mock-provider`：針對具有確定性偽造 OpenAI 相容驗證的本機建構執行環境的 Kova 診斷情境。
-- `mock-deep-profile`：針對啟動、閘道和代理程式輪次熱點進行 CPU/堆疊/追蹤分析。
-- `live-gpt54`：一個真實的 OpenAI `openai/gpt-5.4` 代理程式輪次，當 `OPENAI_API_KEY` 不可用時會跳過。
+- `mock-provider`：針對具有決定性偽造 OpenAI 相容授權的本機建置執行時期，執行 Kova 診斷場景。
+- `mock-deep-profile`：針對啟動、閘道和 agent 週期熱點進行 CPU/堆疊/追蹤分析。
+- `live-gpt54`：一次真實的 OpenAI `openai/gpt-5.4` agent 交談，當 `OPENAI_API_KEY` 不可用時會跳過。
 
-模擬提供者通道也會在 Kova 通過後執行 OpenClaw 原生來源探測：預設、hook 和 50 個外掛程式啟動案例的閘道引導計時與記憶體；重複的模擬 OpenAI `channel-chat-baseline` hello 迴圈；以及針對已啟動閘道的 CLI 啟動指令。來源探測的 Markdown 摘要位於報告套件中的 `source/index.md`，旁邊附有原始 JSON。
+Mock-provider lane 也會在 Kova pass 之後執行 OpenClaw 原生的 source probes：預設、hook 和 50 個 plugin 啟動案例中的 gateway 啟動時間和記憶體；重複的 mock-OpenAI `channel-chat-baseline` hello 迴圈；以及針對已啟動 gateway 的 CLI 啟動指令。Source probe Markdown 摘要位於報告包中的 `source/index.md`，旁邊附有原始 JSON。
 
-每個通道都會上傳 GitHub 成品。當設定 `CLAWGRIT_REPORTS_TOKEN` 時，工作流程也會將 `report.json`、`report.md`、套件、`index.md` 和來源探測成品提交到 `openclaw/clawgrit-reports` 下的 `openclaw-performance/<tested-ref>/<run-id>-<attempt>/<lane>/`。目前測試的 ref 指標會寫入為 `openclaw-performance/<tested-ref>/latest-<lane>.json`。
+每個 lane 都會上傳 GitHub artifacts。當配置了 `CLAWGRIT_REPORTS_TOKEN` 時，workflow 也會將 `report.json`、`report.md`、bundles、`index.md` 和 source-probe artifacts 提交到 `openclaw-performance/<tested-ref>/<run-id>-<attempt>/<lane>/` 下的 `openclaw/clawgrit-reports`。當前測試過的 ref 指標會被寫入為 `openclaw-performance/<tested-ref>/latest-<lane>.json`。
 
 ## 完整版本驗證
 
-`Full Release Validation` 是「發布前執行所有動作」的手動綜合工作流程。它接受分支、標籤或完整的 commit SHA，使用該目標觸發手動 `CI` 工作流程，針對僅限發布的外掛/套件/靜態/Docker 驗證觸發 `Plugin Prerelease`，並針對安裝冒煙測試、套件驗收、跨作業系統套件檢查、QA Lab 對應、Matrix 和 Telegram 軌道觸發 `OpenClaw Release Checks`。穩定/預設執行會將完整的 Live/E2E 和 Docker 發布路徑覆蓋率保留在 `run_release_soak=true` 之後；`release_profile=full` 會強制啟用該浸泡覆蓋率，使廣泛的諮詢驗證保持廣泛。透過 `rerun_group=all` 和 `release_profile=full`，它也會針對發布檢查中的 `release-package-under-test` 成果執行 `NPM Telegram Beta E2E`。發布後，傳遞 `npm_telegram_package_spec` 以針對已發布的 npm 套件重新執行相同的 Telegram 套件軌道。
+`Full Release Validation` 是「發布前執行所有項目」的手動統一 workflow。它接受分支、標籤或完整的 commit SHA，使用該目標 dispatch 手動 `CI` workflow，為僅限發布的 plugin/package/static/Docker proof dispatch `Plugin Prerelease`，並為 install smoke、package acceptance、跨 OS package 檢查、QA Lab parity、Matrix 和 Telegram lanes dispatch `OpenClaw Release Checks`。穩定/預設執行會將詳盡的 live/E2E 和 Docker 發布路徑覆蓋率保留在 `run_release_soak=true` 之後；`release_profile=full` 會強制啟用該 soak coverage，以便廣泛的諮詢驗證保持廣泛。有了 `rerun_group=all` 和 `release_profile=full`，它還會對來自發布檢查的 `release-package-under-test` artifact 執行 `NPM Telegram Beta E2E`。發布後，傳遞 `release_package_spec` 以在發布檢查、Package Acceptance、Docker、跨 OS 和 Telegram 之間重複使用已發布的 npm 套件，而無需重建。僅當 Telegram 必須證明不同的套件時，才使用 `npm_telegram_package_spec`。
 
-請參閱 [完整發布驗證](/zh-Hant/reference/full-release-validation) 以了解階段矩陣、精確的工作流程工作名稱、設定檔差異、成果及專用的重新執行控制碼。
+請參閱 [完整發布驗證](/zh-Hant/reference/full-release-validation) 以了解
+階段矩陣、確切的工作流程作業名稱、設定檔差異、產出成品，以及
+專注的重新執行控制碼。
 
 `OpenClaw Release Publish` 是手動的變更性發布工作流程。在發布標籤存在且 OpenClaw npm 預檢成功後，請從 `release/YYYY.M.D` 或 `main` 觸發它。它會驗證 `pnpm plugins:sync:check`，針對所有可發布的外掛套件觸發 `Plugin NPM Release`，針對相同的發布 SHA 觸發 `Plugin ClawHub Release`，然後才會使用儲存的 `preflight_run_id` 觸發 `OpenClaw NPM Release`。
 
@@ -248,23 +250,23 @@ Docker 支援的即時模型/後端分片針對每個選定的提交使用一個
 
 `package` 設定檔使用離線外掛程式覆蓋範圍，因此已發布套件的驗證不取決於即時 ClawHub 的可用性。選用的 Telegram 軌道會在 `NPM Telegram Beta E2E` 中重複使用 `package-under-test` 構件，並保留已發布 npm 規格路徑以供獨立分發使用。
 
-有關專門的更新和外掛程式測試策略，包括本機指令、
-Docker 軌道、套件驗收輸入、發布預設值和故障分診，
+如需關於專用的更新和外掛程式測試原則，包括本機指令、
+Docker 通道、套件驗收輸入、發布預設值和故障分診，
 請參閱 [測試更新和外掛程式](/zh-Hant/help/testing-updates-plugins)。
 
-版本檢查會使用 `source=artifact`、準備好的發行套件物件 `suite_profile=custom`、`docker_lanes='doctor-switch update-channel-switch skill-install update-corrupt-plugin upgrade-survivor published-upgrade-survivor update-restart-auth plugins-offline plugin-update'` 和 `telegram_mode=mock-openai` 呼叫 Package Acceptance。這可確保套件遷移、更新、即時 ClawHub 技能安裝、過時外掛相依性清理、已設定外掛安裝修復、離線外掛、外掛更新以及 Telegram 驗證都在同一個解析出的套件 tarball 上進行。在完整版本驗證或 OpenClaw 版本檢查上設定 `package_acceptance_package_spec`，即可針對已發布的 npm 套件（而非 SHA 建構的物件）執行相同的矩陣。跨作業系統版本檢查仍涵蓋特定作業系統的上手、安裝程式和平台行為；套件/更新產品驗證應從 Package Acceptance 開始。`published-upgrade-survivor` Docker 軌道在阻塞性發行路徑中，每次執行會驗證一個已發布的套件基準。在 Package Acceptance 中，解析出的 `package-under-test` tarball 一定是候選版本，而 `published_upgrade_survivor_baseline` 會選擇退回的已發布基準，預設為 `openclaw@latest`；失敗軌道重新執行指令會保留該基準。具備 `run_release_soak=true` 或 `release_profile=full` 的完整版本驗證會設定 `published_upgrade_survivor_baselines='last-stable-4 2026.4.23 2026.5.2 2026.4.15'` 和 `published_upgrade_survivor_scenarios=reported-issues`，以擴展至四個最新的穩定 npm 發行版，加上固定的外掛相容性邊界發行版，以及針對 Feishu 設定、保留的 bootstrap/persona 檔案、已設定的 OpenClaw 外掛安裝、tilde 記錄檔路徑和過時的舊版外掛相依性根目錄的 issue-shaped fixtures。多基準已發布升級的篩選項目會依基準分片到不同的目標 Docker 執行器工作。當問題是窮盡式的已發布更新清理，而非一般的完整版本 CI 廣度時，獨立的 `Update Migration` 工作流程會使用 `update-migration` Docker 軌道，並搭配 `all-since-2026.4.23` 和 `plugin-deps-cleanup`。本機彙總執行可以使用 `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPECS` 傳遞確切的套件規格，使用 `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC` (例如 `openclaw@2026.4.15`) 保持單一軌道，或是為情境矩陣設定 `OPENCLAW_UPGRADE_SURVIVOR_SCENARIOS`。已發布軌道會使用內建的 `openclaw config set` 指令配方設定基準，在 `summary.json` 中記錄配方步驟，並在 Gateway 啟動後探測 `/healthz`、`/readyz` 以及 RPC 狀態。Windows 打包和安裝程式全新軌道也會驗證已安裝的套件是否能從原始的 Windows 絕對路徑匯入瀏覽器控制覆寫。OpenAI 跨作業系統代理轉換冒煙測試在設定時預設為 `OPENCLAW_CROSS_OS_OPENAI_MODEL`，否則為 `openai/gpt-5.4`，因此安裝和閘道驗證會保持在 GPT-5 測試模型上，同時避免使用 GPT-4.x 預設值。
+Release checks 呼叫 Package Acceptance 時會使用 `source=artifact`、準備好的 release package artifact `suite_profile=custom`、`docker_lanes='doctor-switch update-channel-switch skill-install update-corrupt-plugin upgrade-survivor published-upgrade-survivor update-restart-auth plugins-offline plugin-update'` 以及 `telegram_mode=mock-openai`。這能確保套件遷移、更新、live ClawHub skill 安裝、stale-plugin-dependency 清理、configured-plugin install repair、offline plugin、plugin-update 以及 Telegram proof 都在相同的解析套件 tarball 上進行。在發布 beta 後，在 Full Release Validation 或 OpenClaw Release Checks 上設定 `release_package_spec`，以便對已發布的 npm 套件執行相同的矩陣而無需重新建置；僅當 Package Acceptance 需要與其餘 release validation 不同的套件時，才設定 `package_acceptance_package_spec`。跨 OS release checks 仍涵蓋 OS 特定的導入、安裝程式和平台行為；套件/更新產品驗證應從 Package Acceptance 開始。`published-upgrade-survivor` Docker lane 在阻塞性的 release 路徑中，每次執行驗證一個已發布的套件基準。在 Package Acceptance 中，解析出的 `package-under-test` tarball 始終是候選版本，而 `published_upgrade_survivor_baseline` 選擇後備的已發布基準，預設為 `openclaw@latest`；失敗 lane 的重新執行指令會保留該基準。具有 `run_release_soak=true` 或 `release_profile=full` 的 Full Release Validation 會設定 `published_upgrade_survivor_baselines='last-stable-4 2026.4.23 2026.5.2 2026.4.15'` 和 `published_upgrade_survivor_scenarios=reported-issues`，以擴展涵蓋四個最新的穩定 npm 版本，加上釘選的 plugin-compatibility boundary 版本以及針對 Feishu config、preserved bootstrap/persona 檔案、configured OpenClaw plugin 安裝、tilde log 路徑和 stale legacy plugin dependency 根目錄的 issue-shaped fixtures。多基準的已發布升級 survivor 選擇會依基準分片到個別目標 Docker runner 工作。當問題是徹底的已發布更新清理，而非一般的 Full Release CI 範圍時，獨立的 `Update Migration` 工作流程會使用帶有 `all-since-2026.4.23` 和 `plugin-deps-cleanup` 的 `update-migration` Docker lane。本機匯總執行可以使用 `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPECS` 傳遞確切的套件規格，使用 `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC` 保持單一 lane（例如 `openclaw@2026.4.15`），或為情境矩陣設定 `OPENCLAW_UPGRADE_SURVIVOR_SCENARIOS`。已發布的 lane 使用 baked 的 `openclaw config set` 指令配方設定基準，在 `summary.json` 中記錄配方步驟，並在 Gateway 啟動後探測 `/healthz`、`/readyz` 以及 RPC 狀態。Windows packaged 和 installer fresh lane 也會驗證已安裝的套件是否能從原始的絕對 Windows 路徑匯入 browser-control override。OpenAI 跨 OS agent-turn smoke 在設定時預設為 `OPENCLAW_CROSS_OS_OPENAI_MODEL`，否則為 `openai/gpt-5.4`，因此安裝和 gateway proof 會保持在 GPT-5 測試模型上，同時避免 GPT-4.x 預設值。
 
 ### 舊版相容性視窗
 
-針對已發布的套件，套件驗收有著有限的舊版相容性視窗。到 `2026.4.25` 為止的套件（包括 `2026.4.25-beta.*`）可以使用相容性路徑：
+Package Acceptance 對於已發布的套件有有限的舊版相容性視窗。`2026.4.25` 之前的套件（包括 `2026.4.25-beta.*`）可以使用相容性路徑：
 
-- `dist/postinstall-inventory.json` 中已知的私人 QA 項目可能指向 tarball 中省略的檔案；
+- `dist/postinstall-inventory.json` 中已知的私有 QA 項目可能指向 tarball 中省略的檔案；
 - 當套件未公開該旗標時，`doctor-switch` 可能會跳過 `gateway install --wrapper` 持久性子案例；
-- `update-channel-switch` 可能會從源自 tarball 的假 git fixture 中修剪遺失的 `pnpm.patchedDependencies`，並記錄遺失的持久化 `update.channel`；
+- `update-channel-switch` 可能會從從 tarball 衍生的偽 git fixture 中修剪遺失的 pnpm `patchedDependencies`，並且可能記錄遺失的持久化 `update.channel`；
 - 外掛程式冒煙測試可能會讀取舊版安裝記錄位置，或接受遺失的 marketplace 安裝記錄持久性；
-- `plugin-update` 可能會允許設定元數據遷移，同時仍要求安裝記錄和無重新安裝行為保持不變。
+- `plugin-update` 可能會允許設定元資料遷移，同時仍然要求安裝記錄和無重新安裝行為保持不變。
 
-已發布的 `2026.4.26` 套件也可能針對已經 shipped 的本地組建元數據戳記檔案發出警告。後續的套件必須滿足現代合約；相同的情況會導致失敗而不是警告或跳過。
+已發布的 `2026.4.26` 套件也可能對已經發布的本地建置元資料戳記檔案發出警告。後續的套件必須滿足現代合約；相同的條件會導致失敗，而不是警告或跳過。
 
 ### 範例
 
@@ -307,60 +309,60 @@ gh workflow run package-acceptance.yml \
   -f docker_lanes='install-e2e plugin-update'
 ```
 
-當除錯失敗的套件驗收執行時，請從 `resolve_package` 摘要開始，以確認套件來源、版本和 SHA-256。然後檢查 `docker_acceptance` 子執行及其 Docker 製件：`.artifacts/docker-tests/**/summary.json`、`failures.json`、lane 記錄、階段計時和重新執行指令。建議優先重新執行失敗的套件設定檔或特定的 Docker lane，而不是重新執行完整的發行版本驗證。
+當偵錯失敗的套件驗收執行時，請從 `resolve_package` 摘要開始，以確認套件來源、版本和 SHA-256。然後檢查 `docker_acceptance` 子執行及其 Docker 成品：`.artifacts/docker-tests/**/summary.json`、`failures.json`、lane 日誌、階段計時和重新執行指令。建議優先重新執行失敗的套件設定檔或確切的 Docker lanes，而不是重新執行完整的發布驗證。
 
 ## 安裝冒煙測試
 
-獨立的 `Install Smoke` 工作流程透過其自己的 `preflight` 工作重複使用相同的範圍腳本。它將冒煙測試覆蓋範圍分為 `run_fast_install_smoke` 和 `run_full_install_smoke`。
+獨立的 `Install Smoke` 工作流程透過其自身的 `preflight` job 重複使用相同的 scope 腳本。它將 smoke 涵蓋範圍拆分為 `run_fast_install_smoke` 和 `run_full_install_smoke`。
 
 - 針對涉及 Docker/套件表面、打包外掛程式套件/資訊清單變更，或 Docker 測試工作所測試的核心外掛程式/頻道/閘道/Plugin SDK 表面的 PR，會執行 **快速路徑**。僅限原始碼的打包外掛程式變更、僅限測試的編輯，以及僅限文件的編輯不會保留 Docker 工作者。快速路徑會建構一次根 Dockerfile 映像檔、檢查 CLI、執行代理程式刪除共用工作區 CLI 測試、執行容器閘道網路 E2E、驗證打包擴充功能的建構引數，並在 240 秒的總指令逾時下執行有界的打包外掛程式 Docker 設定檔（每個場景的 Docker 執行分別設有上限）。
 - **完整路徑** 會為每日排程執行、手動分派、工作流程呼叫發行版本檢查，以及真正涉及安裝程式/套件/Docker 表面的 PR 保留 QR 套件安裝和安裝程式 Docker/更新覆蓋範圍。在完整模式下，install-smoke 會準備或重用一個目標 SHA GHCR 根 Dockerfile 測試映像檔，然後將 QR 套件安裝、根 Dockerfile/閘道測試、安裝程式/更新測試，以及快速打包外掛程式 Docker E2E 作為獨立工作執行，以便安裝程式工作不必等待根映像測試完成。
 
-`main` 推送（包括合併提交）不會強制執行完整路徑；當變更範圍邏輯會在推送時要求完整覆蓋範圍，工作流程會保留快速 Docker 測試，並將完整安裝測試留給每日排程或發行版本驗證。
+`main` 推送（包括合併提交）不會強制執行完整路徑；當變更範圍邏輯會在推送時要求完整涵蓋範圍時，工作流程會保留快速的 Docker smoke，並將完整安裝 smoke 留給每夜或發布驗證。
 
-緩慢的 Bun 全域安裝映像提供者測試單獨由 `run_bun_global_install_smoke` 閘控。它會在每日排程和發行版本檢查工作流程中執行，手動 `Install Smoke` 分派可以選擇加入，但 PR 和 `main` 推送則不會。QR 和安裝程式 Docker 測試會保留自己專注於安裝的 Dockerfiles。
+緩慢的 Bun 全域安裝 image-provider smoke 測試由 `run_bun_global_install_smoke` 單獨控制。它會在排程的夜間構建和 release checks workflow 中執行，手動 `Install Smoke` 分發也可以選擇加入，但 pull request 和 `main` 推送則不會。QR 和安裝程式 Docker 測試保留了自己專注於安裝的 Dockerfiles。
 
 ## 本機 Docker E2E
 
-`pnpm test:docker:all` 預先建構一個共用的即時測試映像檔，將 OpenClaw 打包一次為 npm tarball，並建構兩個共用的 `scripts/e2e/Dockerfile` 映像檔：
+`pnpm test:docker:all` 預先建構一個共享的 live-test 映像檔，將 OpenClaw 打包一次為 npm tarball，並建構兩個共享的 `scripts/e2e/Dockerfile` 映像檔：
 
 - 一個用於安裝程式/更新/外掛程式相依性通道的裸機 Node/Git 執行器；
-- 一個將相同 tarball 安裝到 `/app` 的功能性映像檔，用於正常功能通道。
+- 一個功能映像檔，將相同的 tarball 安裝到 `/app` 中，用於正常的功能通道。
 
-Docker 通道定義位於 `scripts/lib/docker-e2e-scenarios.mjs`，規劃器邏輯位於 `scripts/lib/docker-e2e-plan.mjs`，而執行器僅執行選定的計畫。排程器使用 `OPENCLAW_DOCKER_E2E_BARE_IMAGE` 和 `OPENCLAW_DOCKER_E2E_FUNCTIONAL_IMAGE` 為每個通道選擇鏡像，然後使用 `OPENCLAW_SKIP_DOCKER_BUILD=1` 執行通道。
+Docker 通道定義位於 `scripts/lib/docker-e2e-scenarios.mjs`，規劃器邏輯位於 `scripts/lib/docker-e2e-plan.mjs`，而執行器僅執行選定的計劃。排程器使用 `OPENCLAW_DOCKER_E2E_BARE_IMAGE` 和 `OPENCLAW_DOCKER_E2E_FUNCTIONAL_IMAGE` 為每個通道選擇映像檔，然後使用 `OPENCLAW_SKIP_DOCKER_BUILD=1` 執行通道。
 
 ### 可調整參數
 
-| 變數                                   | 預設值  | 用途                                                                          |
-| -------------------------------------- | ------- | ----------------------------------------------------------------------------- |
-| `OPENCLAW_DOCKER_ALL_PARALLELISM`      | 10      | 正常通道的主要池插槽數量。                                                    |
-| `OPENCLAW_DOCKER_ALL_TAIL_PARALLELISM` | 10      | 供應商敏感的尾部池插槽數量。                                                  |
-| `OPENCLAW_DOCKER_ALL_LIVE_LIMIT`       | 9       | 並發即時通道上限，以避免供應商進行限流。                                      |
-| `OPENCLAW_DOCKER_ALL_NPM_LIMIT`        | 10      | 並發 npm 安裝通道上限。                                                       |
-| `OPENCLAW_DOCKER_ALL_SERVICE_LIMIT`    | 7       | 並發多服務通道上限。                                                          |
-| `OPENCLAW_DOCKER_ALL_START_STAGGER_MS` | 2000    | 通道啟動之間的交錯延遲，以避免 Docker 守護程式建立風暴；設定 `0` 可取消交錯。 |
-| `OPENCLAW_DOCKER_ALL_LANE_TIMEOUT_MS`  | 7200000 | 每個通道的後備逾時（120 分鐘）；選定的即時/尾部通道使用更嚴格的上限。         |
-| `OPENCLAW_DOCKER_ALL_DRY_RUN`          | 未設定  | `1` 列印排程器計畫而不執行通道。                                              |
-| `OPENCLAW_DOCKER_ALL_LANES`            | 未設定  | 逗號分隔的精確通道列表；跳過清理偵測，以便代理可以重現單一失敗的通道。        |
+| 變數                                   | 預設值  | 用途                                                                   |
+| -------------------------------------- | ------- | ---------------------------------------------------------------------- |
+| `OPENCLAW_DOCKER_ALL_PARALLELISM`      | 10      | 正常通道的主要池插槽數量。                                             |
+| `OPENCLAW_DOCKER_ALL_TAIL_PARALLELISM` | 10      | 供應商敏感的尾部池插槽數量。                                           |
+| `OPENCLAW_DOCKER_ALL_LIVE_LIMIT`       | 9       | 並發即時通道上限，以避免供應商進行限流。                               |
+| `OPENCLAW_DOCKER_ALL_NPM_LIMIT`        | 10      | 並發 npm 安裝通道上限。                                                |
+| `OPENCLAW_DOCKER_ALL_SERVICE_LIMIT`    | 7       | 並發多服務通道上限。                                                   |
+| `OPENCLAW_DOCKER_ALL_START_STAGGER_MS` | 2000    | 在通道啟動之間錯開以避免 Docker daemon 建立風暴；設定 `0` 以不錯開。   |
+| `OPENCLAW_DOCKER_ALL_LANE_TIMEOUT_MS`  | 7200000 | 每個通道的後備逾時（120 分鐘）；選定的即時/尾部通道使用更嚴格的上限。  |
+| `OPENCLAW_DOCKER_ALL_DRY_RUN`          | 未設定  | `1` 列印排程器計劃而不執行通道。                                       |
+| `OPENCLAW_DOCKER_ALL_LANES`            | 未設定  | 逗號分隔的精確通道列表；跳過清理偵測，以便代理可以重現單一失敗的通道。 |
 
 高於其有效上限的通道仍可以從空池啟動，然後單獨執行直到釋放容量。本地聚合程式會預檢 Docker、移除過時的 OpenClaw E2E 容器、發出作用中通道狀態、保存通道計時以進行最長優先排序，並且預設在第一次失敗後停止排程新的池化通道。
 
 ### 可重複使用的即時/E2E 工作流程
 
-可重用的即時/E2E 工作流程會詢問 `scripts/test-docker-all.mjs --plan-json` 需要哪些套件、映像檔種類、即時映像檔、通道以及憑證涵蓋範圍。`scripts/docker-e2e.mjs` 接著將該計劃轉換為 GitHub 輸出和摘要。它會透過 `scripts/package-openclaw-for-docker.mjs` 打包 OpenClaw、下載目前執行的套件構件，或從 `package_artifact_run_id` 下載套件構件；驗證 tarball 清單；當計劃需要已安裝套件的通道時，透過 Blacksmith 的 Docker 層快取建置並推送具有套件摘要標籤的 bare/functional GHCR Docker E2E 映像檔；並重複使用提供的 `docker_e2e_bare_image`/`docker_e2e_functional_image` 輸入或現有的套件摘要映像檔，而不是重新建置。Docker 映像檔提取會以每次嘗試 180 秒的有限逾時時間重試，因此卡住的註冊表/快取串流會快速重試，而不會消耗大部分 CI 關鍵路徑。
+可重用的 live/E2E 工作流程會詢問 `scripts/test-docker-all.mjs --plan-json` 需要哪些套件、映像類型、live 映像、通道和憑證覆蓋範圍。`scripts/docker-e2e.mjs` 然後將該計劃轉換為 GitHub 輸出和摘要。它透過 `scripts/package-openclaw-for-docker.mjs` 打包 OpenClaw、下載當前執行的套件構件，或從 `package_artifact_run_id` 下載套件構件；驗證 tarball 清單；當計劃需要已安裝套件的通道時，透過 Blacksmith 的 Docker 層快取建置並推送具有套件摘要標籤的 bare/functional GHCR Docker E2E 映像；並重複使用提供的 `docker_e2e_bare_image`/`docker_e2e_functional_image` 輸入或現有的套件摘要映像，而不是重新建置。Docker 映像拉取會重試，每次嘗試有 180 秒的有界逾時，因此卡住的 registry/cache 串流會快速重試，而不是消耗大部分 CI 的關鍵路徑。
 
 ### Release-path 區塊
 
-Release Docker 涵蓋範圍會使用 `OPENCLAW_SKIP_DOCKER_BUILD=1` 執行較小的區塊工作，因此每個區塊僅提取其所需的映像檔種類，並透過相同的加權排程器執行多個通道：
+Release Docker 覆蓋範圍使用 `OPENCLAW_SKIP_DOCKER_BUILD=1` 執行較小的分塊作業，因此每個分塊僅拉取其所需的映像類型，並透過相同的加權排程器執行多個通道：
 
 - `OPENCLAW_DOCKER_ALL_PROFILE=release-path`
 - `OPENCLAW_DOCKER_ALL_CHUNK=core | package-update-openai | package-update-anthropic | package-update-core | plugins-runtime-plugins | plugins-runtime-services | plugins-runtime-install-a..h`
 
-目前的 release Docker 區塊為 `core`、`package-update-openai`、`package-update-anthropic`、`package-update-core`、`plugins-runtime-plugins`、`plugins-runtime-services` 以及 `plugins-runtime-install-a` 透過 `plugins-runtime-install-h`。`plugins-runtime-core`、`plugins-runtime` 和 `plugins-integrations` 仍為彙總的外掛程式/執行時期別名。`install-e2e` 通道別名仍是這兩個提供者安裝程式通道的彙總手動重新執行別名。
+目前的 release Docker 分塊是 `core`、`package-update-openai`、`package-update-anthropic`、`package-update-core`、`plugins-runtime-plugins`、`plugins-runtime-services` 和 `plugins-runtime-install-a` 透過 `plugins-runtime-install-h`。`plugins-runtime-core`、`plugins-runtime` 和 `plugins-integrations` 仍保持為彙總的 plugin/runtime 別名。`install-e2e` 通道別名仍是這兩個 provider installer 通道的彙總手動重新執行別名。
 
-當完整的 release-path 涵蓋範圍要求時，OpenWebUI 會被合併到 `plugins-runtime-services` 中，並且僅針對僅 OpenWebUI 的分派保留獨立的 `openwebui` 區塊。Bundled-channel 更新通道會針對暫時性 npm 網路失敗重試一次。
+當完整的 release-path 覆蓋範圍要求時，OpenWebUI 會合併到 `plugins-runtime-services` 中，並僅針對僅 OpenWebUI 的派發保留獨立的 `openwebui` 分塊。Bundled-channel 更新通道會針對暫時性的 npm 網路失敗重試一次。
 
-每個區塊會上傳 `.artifacts/docker-tests/`，其中包含通道日誌、計時、`summary.json`、`failures.json`、階段計時、排程器計畫 JSON、慢速通道表格以及各通道重新執行指令。工作流程 `docker_lanes` 輸入會針對準備好的映像檔而非區塊工作來執行選定的通道，這能將失敗通道的除錯範圍限制在一個目標 Docker 工作內，並為該次執行準備、下載或重用套件工件；如果選定的通道是即時 Docker 通道，目標工作會在本地為該次重新執行建構即時測試映像檔。產生的各通道 GitHub 重新執行指令包含 `package_artifact_run_id`、`package_artifact_name` 以及準備好的映像檔輸入（當這些值存在時），以便失敗的通道能重用失敗執行中的確切套件和映像檔。
+每個區塊都會上傳帶有通道日誌、計時資訊、`summary.json`、`failures.json`、階段計時、排程器計劃 JSON、慢速通道表格和每通道重新執行指令的 `.artifacts/docker-tests/`。工作流程 `docker_lanes` 輸入會對準備好的映像檔（而非區塊工作）執行選定的通道，這使得失敗通道的偵錯限制在單一目標 Docker 工作中，並為該次執行準備、下載或重複使用套件構件；如果選定的通道是即時 Docker 通道，目標工作會在本地為該次重新執行建置即時測試映像檔。產生的每通道 GitHub 重新執行指令包含 `package_artifact_run_id`、`package_artifact_name` 以及當這些值存在時的準備映像輸入，因此失敗的通道可以重複使用失敗執行中的確切套件和映像。
 
 ```bash
 pnpm test:docker:rerun <run-id>      # download Docker artifacts and print combined/per-lane targeted rerun commands
@@ -371,27 +373,27 @@ pnpm test:docker:timings <summary>   # slow-lane and phase critical-path summari
 
 ## 外掛程式預先發行
 
-`Plugin Prerelease` 是成本較高的產品/套件覆蓋範圍，因此它是由 `Full Release Validation` 或明確的操作員分派的獨立工作流程。一般的 pull request、`main` 推送和獨立的手動 CI 分派會讓該測試套件保持關閉。它會在八個擴充工作程序之間平衡套件的外掛程式測試；這些擴充分片工作每次會執行最多兩個外掛程式設定群組，每個群組配有一個 Vitest 工作程序，並使用較大的 Node 堆積，以避免匯入負擔較重的外掛程式批次產生額外的 CI 工作。僅限發布的 Docker 預先發行路徑會將目標 Docker 通道分批為小組，以避免為一到三分鐘的工作保留數十個執行器。
+`Plugin Prerelease` 是成本較高的產品/套件覆蓋率，因此它是由 `Full Release Validation` 或特定操作員觸發的獨立工作流程。一般的拉取請求、`main` 推送和獨立的手動 CI 觸發都會關閉該套組。它會將捆綁的外掛程式測試分佈在八個擴充工作者之間；這些擴充分片工作一次最多執行兩個外掛程式設定組，每組一個 Vitest 工作者，並使用較大的 Node 堆積，以避免導入負重的外掛程式批次產生額外的 CI 工作。僅限發行版本的 Docker 發行前路徑會將目標 Docker 通道分批為小組，以避免為一到三分鐘的工作保留數十個執行器。該工作流程也會從 `@openclaw/plugin-inspector` 上傳資訊性的 `plugin-inspector-advisory` 構件；檢查器的發現是分類輸入，並不會改變阻擋性的外掛程式發行前閘門。
 
 ## QA Lab
 
-QA Lab 在主要智慧範圍工作流程之外擁有專用的 CI 通道。代理對等性嵌套在廣泛的 QA 和發布機制之下，而非獨立的 PR 工作流程。當對等性應隨著廣泛驗證執行進行時，請使用帶有 `rerun_group=qa-parity` 的 `Full Release Validation`。
+QA Lab 在主要智能範圍工作流程之外擁有專用的 CI 通道。代理程式對等性嵌套在廣泛的 QA 和發佈線束之下，而非獨立的 PR 工作流程。當對等性應隨廣泛驗證執行進行時，請使用帶有 `rerun_group=qa-parity` 的 `Full Release Validation`。
 
-- `QA-Lab - All Lanes` 工作流程每夜在 `main` 上執行，並可手動分派；它會將模擬對等性通道、即時 Matrix 通道以及即時 Telegram 和 Discord 通道作為平行工作展開。即時工作使用 `qa-live-shared` 環境，而 Telegram/Discord 則使用 Convex 租約。
+- `QA-Lab - All Lanes` 工作流程每晚在 `main` 上運行，並可手動觸發；它會將 mock parity 通道、live Matrix 通道以及 live Telegram 和 Discord 通道作為並行作業展開。Live 作業使用 `qa-live-shared` 環境，而 Telegram/Discord 則使用 Convex leases。
 
-發布檢查會搭配確定性模擬提供者和模擬合格模型 (`mock-openai/gpt-5.5` 和 `mock-openai/gpt-5.5-alt`) 執行 Matrix 和 Telegram 即時傳輸通道，因此通道合約會與即時模型延遲及一般提供者外掛程式的啟動程序隔離。即時傳輸閘道會停用記憶體搜尋，因為 QA 對等性會單獨涵蓋記憶體行為；提供者連線則由獨立的即時模型、原生提供者和 Docker Provider 測試套件涵蓋。
+Release 檢查會使用確定性 mock 提供者和 mock-qualified 模型（`mock-openai/gpt-5.5` 和 `mock-openai/gpt-5.5-alt`）運行 Matrix 和 Telegram live 傳輸通道，以便將通道合約與 live 模型延遲以及正常的提供者外掛程式啟動隔離開來。Live 傳輸閘道會停用記憶體搜尋，因為 QA parity 會單獨涵蓋記憶體行為；提供者連線則由個別的 live 模型、原生提供者和 Docker 提供者套件涵蓋。
 
-Matrix 針對排程和發布閘道使用 `--profile fast`，僅在簽出的 CLI 支援時才新增 `--fail-fast`。CLI 預設和手動工作流程輸入維持 `all`；手動 `matrix_profile=all` 分派總是將完整的 Matrix 涵蓋範圍分片為 `transport`、`media`、`e2ee-smoke`、`e2ee-deep` 和 `e2ee-cli` 工作。
+Matrix 針對預定和 Release 閘道使用 `--profile fast`，僅在簽出的 CLI 支援時才新增 `--fail-fast`。CLI 預設和手動工作流程輸入保持為 `all`；手動 `matrix_profile=all` 分派總是將完整的 Matrix 涵蓋範圍分片為 `transport`、`media`、`e2ee-smoke`、`e2ee-deep` 和 `e2ee-cli` 作業。
 
-`OpenClaw Release Checks` 也會在發布核准前執行發布關鍵的 QA Lab 通道；其 QA 對等性閘道會將候選和基準套件以平行通道工作執行，然後將兩個成品下載至小型報告工作中以進行最終的對等性比較。
+`OpenClaw Release Checks` 也會在 Release 核准前執行對 Release 至關重要的 QA Lab 通道；其 QA parity 閘道會將候選和 baseline 套件作為並行通道作業執行，然後將兩個成品下載到一個小型報告作業中，以進行最終 parity 比較。
 
 對於一般的 PR，請遵循具有範圍的 CI/檢查證據，而非將對等性視為必要狀態。
 
 ## CodeQL
 
-`CodeQL` 工作流程特意設計為狹隘的首輪安全掃描器，而非完整的程式庫掃描。每日、手動和非草稿 PR 的守護執行會掃描 Actions 工作流程程式碼加上最高風險的 JavaScript/TypeScript 介面，並使用高信心安全查詢篩選出高/嚴重 `security-severity`。
+`CodeQL` 工作流程刻意設計為狹窄的首輪安全掃描器，而非完整的存放區掃描。每日、手動和非草稿拉取請求保護執行會掃描 Actions 工作流程程式碼以及風險最高的 JavaScript/TypeScript 介面，並使用高可信度的安全查詢過濾出高/嚴重等級的 `security-severity`。
 
-PR 守護機制保持輕量化：它僅針對 `.github/actions`、`.github/codeql`、`.github/workflows`、`packages` 或 `src` 下的變更啟動，並且執行與排程工作流程相同的高信心安全矩陣。Android 和 macOS CodeQL 不包含在 PR 預設值中。
+PR 守護保持輕量：它僅針對 `.github/actions`、`.github/codeql`、`.github/workflows`、`packages` 或 `src` 下的變更啟動，並且它執行與排程工作流程相同的高信心度安全矩陣。Android 和 macOS CodeQL 不包含在 PR 預設中。
 
 ### Security categories
 
@@ -405,12 +407,12 @@ PR 守護機制保持輕量化：它僅針對 `.github/actions`、`.github/codeq
 
 ### 平台特定安全分片
 
-- `CodeQL Android Critical Security` — 排程的 Android 安全分片。在工作流程健全性所接受的最小 Blacksmith Linux 執行器上，為 CodeQL 手動建置 Android 應用程式。上傳於 `/codeql-critical-security/android` 之下。
-- `CodeQL macOS Critical Security` — 每週/手動 macOS 安全分片。在 Blacksmith macOS 上為 CodeQL 手動建置 macOS 應用程式，從上傳的 SARIF 中篩選出相依性建置結果，並上傳於 `/codeql-critical-security/macos` 之下。因為即使在乾淨狀態下，macOS 建置也會佔據大部分執行時間，所以排除在每日預設值之外。
+- `CodeQL Android Critical Security` — 排程的 Android 安全分片。在工作流程健全性所接受的最小型 Blacksmith Linux 執行器上，為 CodeQL 手動建置 Android 應用程式。上傳至 `/codeql-critical-security/android` 下。
+- `CodeQL macOS Critical Security` — 每週/手動 macOS 安全分片。在 Blacksmith macOS 上為 CodeQL 手動建置 macOS 應用程式，從上傳的 SARIF 中篩選掉相依性建置結果，並上傳至 `/codeql-critical-security/macos` 下。由於即使乾淨建置，macOS 建置仍佔據大部分執行時間，因此保留在每日預設之外。
 
 ### 關鍵品質類別
 
-`CodeQL Critical Quality` 是匹配的非安全性分片。它僅在較小的 Blacksmith Linux 執行器上，針對狹窄的高價值表面執行錯誤嚴重性、非安全性的 JavaScript/TypeScript 品質查詢。其 PR 防護刻意小於排程設定檔：非草稿 PR 僅針對代理程式指令/模型/工具執行與回覆分派程式碼、設定 Schema/遷移/IO 程式碼、驗證/密碼/Sandbox/安全性程式碼、核心頻道與內建頻道外掛程式執行時期、閘道協定/伺服器方法、記憶體執行時期/SDK 膠合程式、MCP/程序/出站傳遞、提供者執行時期/模型目錄、工作階段診斷/傳遞佇列、外掛程式載入器、外掛程式 SDK/套件合約，或外掛程式 SDK 回覆執行時期變更執行匹配的 `agent-runtime-boundary`、`config-boundary`、`core-auth-secrets`、`channel-runtime-boundary`、`gateway-runtime-boundary`、`memory-runtime-boundary`、`mcp-process-runtime-boundary`、`provider-runtime-boundary`、`session-diagnostics-boundary`、`plugin-boundary`、`plugin-sdk-package-contract` 和 `plugin-sdk-reply-runtime` 分片。CodeQL 設定與品質工作流程變更會執行所有十二個 PR 品質分片。
+`CodeQL Critical Quality` 是對應的非安全性分片。它在較小的 Blacksmith Linux 執行器上，針對狹窄的高價值表面，僅執行錯誤嚴重性、非安全性的 JavaScript/TypeScript 品質查詢。其 PR 防禦措施刻意設計得比排程設定檔更精簡：非草稿 PR 僅針對代理程式命令/模型/工具執行與回覆分發程式碼、設定架構/遷移/IO 程式碼、驗證/機密/沙箱/安全性程式碼、核心管道與打包管道外掛程式執行時、閘道協定/伺服器方法、記憶體執行時/SDK 膠合程式碼、MCP/程序/出站傳遞、提供者執行時/模型目錄、工作階段診斷/傳遞佇列、外掛程式載入器、外掛程式 SDK/套件合約，或外掛程式 SDK 回覆執行時變更，執行對應的 `agent-runtime-boundary`、`config-boundary`、`core-auth-secrets`、`channel-runtime-boundary`、`gateway-runtime-boundary`、`memory-runtime-boundary`、`mcp-process-runtime-boundary`、`provider-runtime-boundary`、`session-diagnostics-boundary`、`plugin-boundary`、`plugin-sdk-package-contract` 和 `plugin-sdk-reply-runtime` 分片。CodeQL 設定與品質工作流程的變更則會執行全部十二個 PR 品質分片。
 
 手動分派接受：
 
@@ -443,15 +445,15 @@ profile=all|agent-runtime-boundary|config-boundary|core-auth-secrets|channel-run
 
 ### Docs Agent
 
-`Docs Agent` 工作流程是一個事件驅動的 Codex 維護通道，用於使現有文件與最近送出的變更保持一致。它沒有純粹的排程：在 `main` 上成功的非機器人推送 CI 執行可以觸發它，而手動分派可以直接執行它。當 `main` 已向前推進，或最近一小時內已建立了另一個未跳過的 Docs Agent 執行時，工作流程執行調用會跳過。當它執行時，它會檢閱從上一次未跳過的 Docs Agent 來源 SHA 到目前 `main` 的提交範圍，因此一小時執行一次即可涵蓋自上次文件傳遞以來累積的所有主要變更。
+`Docs Agent` 工作流程是一個事件驅動的 Codex 維護管道，用於將現有文件與最近提交的變更保持同步。它沒有單純的時間表：在 `main` 上成功執行的非機器人推送 CI 執行可以觸發它，而手動分派可以直接執行它。當 `main` 已有進展，或過去一小時內已建立另一個非跳過的 Docs Agent 執行時，工作流程執行呼叫會跳過。當它執行時，它會審查從上一次非跳過的 Docs Agent 來源 SHA 到當前 `main` 的提交範圍，因此每小時一次的執行可以涵蓋自上次文件處理以來累積的所有主要變更。
 
 ### Test Performance Agent
 
-`Test Performance Agent` 工作流程是一個用於緩慢測試的事件驅動 Codex 維護通道。它沒有純粹的排程：在 `main` 上的成功非機器人推送 CI 執行可以觸發它，但如果另一個工作流程執行調用已經在該 UTC 天執行或正在執行，它將會跳過。手動分派會繞過該每日活動閘門。該通道會建置完整的套件分組 Vitest 效能報告，讓 Codex 僅進行維持覆蓋率的小幅測試效能修正，而不是大規模的重構，然後重新執行完整套件報告，並拒絕會減少通過基準測試數量的變更。如果基準測試有失敗的測試，Codex 可能只會修正明顯的失敗，並且在提交任何內容之前，代理程式執行後的完整套件報告必須通過。當 `main` 在機器人推送落地之前推進時，該通道會將驗證過的修補程式變基底，重新執行 `pnpm check:changed`，並重試推送；衝突的過時修補程式將會被跳過。它使用 GitHub 託管的 Ubuntu，以便 Codex 操作能夠保持與文件代理程式相同的 drop-sudo 安全姿態。
+`Test Performance Agent` 工作流程是一個用於慢速測試的事件驅動 Codex 維護管道。它沒有單純的時間表：在 `main` 上成功執行的非機器人推送 CI 執行可以觸發它，但如果同一 UTC 天已經有另一個工作流程執行呼叫正在執行或已執行，則會跳過。手動分派會繞過該每日活動閘門。該管道會建置完整的群組化 Vitest 效能報告，讓 Codex 僅進行保持覆蓋率的小幅測試效能修正，而不是大幅重構，然後重新執行完整套件報告並拒絕會減少通過基準測試計數的變更。如果基準有失敗的測試，Codex 可能只修正明顯的失敗，且在提交任何內容之前，代理之後的完整套件報告必須通過。當 `main` 在機器人推送落地之前推進時，該管道會對驗證過的修補程式進行變基，重新執行 `pnpm check:changed`，並重試推送；衝突的過期修補程式將被跳過。它使用 GitHub 託管的 Ubuntu，以便 Codex 動作可以保持與文件代理相同的 drop-sudo 安全姿態。
 
 ### 合併後的重複 PR
 
-`Duplicate PRs After Merge` 工作流程是一個用於合併後重複項清理的手動維護者工作流程。它預設為空執行，並且僅在 `apply=true` 時關閉明確列出的 PR。在變更 GitHub 之前，它會驗證已合併的 PR 已被合併，並且每個重複項都具有共享的引用問題或重疊的變更區塊。
+`Duplicate PRs After Merge` 工作流程是一個用於落地後重複項清理的手動維護者工作流程。它預設為試運行，並且僅在 `apply=true` 時關閉明確列出的 PR。在變更 GitHub 之前，它會驗證落地的 PR 已合併，並且每個重複項都有共用的參照 issue 或重疊的變更區塊。
 
 ```bash
 gh workflow run duplicate-after-merge.yml \
@@ -462,7 +464,7 @@ gh workflow run duplicate-after-merge.yml \
 
 ## 本機檢查閘門和變更路由
 
-本機變更通道邏輯位於 `scripts/changed-lanes.mjs` 中，並由 `scripts/check-changed.mjs` 執行。該本機檢查閘門對於架構邊界的限制比廣泛的 CI 平台範圍更嚴格：
+區本變更通道邏輯位於 `scripts/changed-lanes.mjs` 中，並由 `scripts/check-changed.mjs` 執行。該區本檢查閘門對架構邊界的限制比廣泛的 CI 平台範圍更嚴格：
 
 - 核心生產環境變更會執行核心生產環境和核心測試類型檢查以及核心 lint/guards；
 - 核心僅測試變更僅執行核心測試類型檢查以及核心 lint；
@@ -472,27 +474,25 @@ gh workflow run duplicate-after-merge.yml \
 - 僅包含發行版元資料的版本遞增會執行目標版本、配置或根依賴項檢查；
 - 未知的根/配置更改會安全地失敗至所有檢查通道。
 
-本地變更測試的路由位於 `scripts/test-projects.test-support.mjs` 中，且設計上比 `check:changed` 更便宜：直接測試編輯會自行執行，來源編輯偏好顯式對應，然後是同層級測試和匯入圖依賴項。共用群組室傳遞配置是顯式對應之一：對群組可見回覆配置、來源回覆傳遞模式或訊息工具系統提示詞的更改，會透過核心回覆測試加上 Discord 和 Slack 傳遞回歸進行路由，以便共用預設值的變更在首次 PR 推送前就會失敗。僅當更改範圍足夠廣泛（涵蓋整個測試框架），導致廉價的對應集不再是可信的代理時，才使用 `OPENCLAW_TEST_CHANGED_BROAD=1 pnpm test:changed`。
+區本變更測試路由位於 `scripts/test-projects.test-support.mjs` 中，且故意設計得比 `check:changed` 更便宜：直接測試編輯會自行執行，原始碼編輯偏好明確映射，然後是同層級測試和匯入圖依賴項。共用群組房間遞送配置是明確映射之一：對群組可見回覆配置、來源回覆遞送模式或訊息工具系統提示的變更，會透過核心回覆測試加上 Discord 和 Slack 遞送迴歸進行路由，以便共用預設值的變更在第一次 PR 推送前就失敗。僅當變更範圍夠廣以致廉價的映射集無法作為可信代理時，才使用 `OPENCLAW_TEST_CHANGED_BROAD=1 pnpm test:changed`。
 
 ## Testbox 驗證
 
-從倉庫根目錄執行 Testbox，並對於廣泛驗證偏好使用新預熱的盒子。在重複使用、已過期或剛報告意外大量同步的盒子上花費緩慢的檢查閘道之前，請先在盒子內執行 `pnpm testbox:sanity`。
+Crabbox 是維護者 Linux proof 的 repo 擁有的遠端 box 包裝函式。當檢查對於區本編輯迴圈來說過於廣泛、當 CI 一致性很重要，或者當 proof 需要秘密、Docker、套件通道、可重複使用的 box 或遠端日誌時，請從 repo 根目錄使用它。正常的 OpenClaw 後端是 `blacksmith-testbox`；擁有的 AWS/Hetzner 容量是 Blacksmith 停機、配額問題或明確擁有容量測試時的後備。
 
-當 `pnpm-lock.yaml` 等必要的根檔案消失，或當 `git status --short` 顯示至少 200 個追蹤刪除時，健全性檢查會快速失敗。這通常表示遠端同步狀態不是 PR 的可信副本；請停止該盒子並預熱一個新的，而不是調試產品測試失敗。對於故意的大量刪除 PR，請為該健全性執行設定 `OPENCLAW_TESTBOX_ALLOW_MASS_DELETIONS=1`。
+Crabbox 支援的 Blacksmith 會執行預熱、認領、同步、執行、報告和清理一次性 Testboxes。當所需的根檔案（例如 `pnpm-lock.yaml`）消失，或當 `git status --short` 顯示至少 200 個追蹤刪除時，內建同步健全性檢查會快速失敗。對於故意的大量刪除 PR，請為遠端指令設定 `OPENCLAW_TESTBOX_ALLOW_MASS_DELETIONS=1`。
 
-`pnpm testbox:run` 也會終止在同步階段停留超過五分鐘且沒有同步後輸出的本地 Blacksmith CLI 呼叫。設定 `OPENCLAW_TESTBOX_SYNC_TIMEOUT_MS=0` 以停用該保護，或是對於異常大的本地差異使用更大的毫秒值。
+Crabbox 也會終止在同步階段停留超過五分鐘而沒有同步後輸出的區本 Blacksmith CLI 叫用。設定 `CRABBOX_BLACKSMITH_SYNC_TIMEOUT_MS=0` 以停用該防護，或是針對異常大的區本差異使用更大的毫秒值。
 
-Crabbox 是倉庫擁有的遠端盒子包裝函式，用於維護者的 Linux 驗證。當檢查對於本地編輯迴圈來說過於廣泛、當 CI 一致性很重要，或是當驗證需要密碼、Docker、套件通道、可重複使用盒子或遠端日誌時，請使用它。正常的 OpenClaw 後端是 `blacksmith-testbox`；擁有的 AWS/Hetzner 容量是 Blacksmith 中斷、配額問題或明確擁有容量測試的後備方案。
-
-在第一次執行之前，請從倉庫根目錄檢查包裝函式：
+在首次執行之前，請從 repo 根目錄檢查包裝函式：
 
 ```bash
 pnpm crabbox:run -- --help | sed -n '1,120p'
 ```
 
-倉庫包裝器會拒絕未宣佈 `blacksmith-testbox` 的過時 Crabbox 二進制檔案。即使 `.crabbox.yaml` 具有自有雲端的預設值，也請明確傳遞提供者。
+Repo 包裝函式會拒絕不宣告 `blacksmith-testbox` 的過時 Crabbox 二進位檔。即使 `.crabbox.yaml` 有擁有雲端預設值，仍請明確傳遞提供者。
 
-已變更的閘道：
+變更閘門：
 
 ```bash
 pnpm crabbox:run -- --provider blacksmith-testbox \
@@ -537,7 +537,7 @@ pnpm crabbox:run -- --provider blacksmith-testbox \
   "env CI=1 NODE_OPTIONS=--max-old-space-size=4096 OPENCLAW_TEST_PROJECTS_PARALLEL=6 OPENCLAW_VITEST_MAX_WORKERS=1 OPENCLAW_VITEST_NO_OUTPUT_TIMEOUT_MS=900000 pnpm test"
 ```
 
-閱讀最終的 JSON 摘要。有用的欄位包括 `provider`、`leaseId`、`syncDelegated`、`exitCode`、`commandMs` 和 `totalMs`。一次性 Blacksmith 支援的 Crabbox 執行應該會自動停止 Testbox；如果執行中斷或清理不明確，請檢查運行中的 box 並僅停止您建立的 box：
+閱讀最終的 JSON 摘要。有用的欄位包括 `provider`、`leaseId`、`syncDelegated`、`exitCode`、`commandMs` 和 `totalMs`。單次由 Blacksmith 支援的 Crabbox 執行應自動停止 Testbox；如果執行中斷或清理不明確，請檢查運行中的盒子並僅停止您建立的盒子：
 
 ```bash
 blacksmith testbox list --all
@@ -545,28 +545,18 @@ blacksmith testbox status --id <tbx_id>
 blacksmith testbox stop --id <tbx_id>
 ```
 
-僅當您有意在同一個已準備好的 box 上執行多個指令時才使用重複使用：
+僅在您有意需要對同一個準備好的盒子執行多個指令時才使用重複使用：
 
 ```bash
 pnpm crabbox:run -- --provider blacksmith-testbox --id <tbx_id> --no-sync --timing-json --shell -- "pnpm test <path-or-filter>"
 pnpm crabbox:stop -- <tbx_id>
 ```
 
-如果 Crabbox 是故障層但 Blacksmith 本身運作正常，請使用直接 Blacksmith 作為狹窄的後備方案：
+如果 Crabbox 是發生問題的層級，但 Blacksmith 本身正常運作，請僅將直接 Blacksmith 用於診斷用途，例如 `list`、`status` 和清理。在將直接 Blacksmith 執行視為維護者證明之前，請先修復 Crabbox 路徑。
 
-```bash
-blacksmith testbox warmup ci-check-testbox.yml --ref main --idle-timeout 90
-blacksmith testbox run --id <tbx_id> "env CI=1 NODE_OPTIONS=--max-old-space-size=4096 OPENCLAW_TEST_PROJECTS_PARALLEL=6 OPENCLAW_VITEST_MAX_WORKERS=1 OPENCLAW_VITEST_NO_OUTPUT_TIMEOUT_MS=900000 pnpm check:changed"
-blacksmith testbox stop --id <tbx_id>
-```
+如果 `blacksmith testbox list --all` 和 `blacksmith testbox status` 正常運作，但新的預熱在幾分鐘後仍處於 `queued` 狀態且沒有 IP 或 Actions 執行 URL，請將其視為 Blacksmith 提供者、佇列、計費或組織限制的壓力。停止您建立的已排程 ID，避免啟動更多 Testbox，並將證明轉移至下方的擁有 Crabbox 容量路徑，同時讓某人檢查 Blacksmith 儀表板、計費和組織限制。
 
-如果 `blacksmith testbox list --all` 和 `blacksmith testbox status` 運作正常，但新的
-warmups 幾分鐘後仍處於 `queued` 狀態且沒有 IP 或 Actions 執行 URL，
-請將其視為 Blacksmith 提供者、佇列、帳單或組織限制的壓力。停止您建立的
-已排隊 ID，避免啟動更多 Testbox，並在有人檢查 Blacksmith 儀表板、
-帳單和組織限制的同時，將驗證轉移至下方的自有 Crabbox 容量路徑。
-
-僅當 Blacksmith 停機、配額受限、缺少所需環境，或明確以自有容量為目標時，才升級至自有 Crabbox 容量：
+僅在 Blacksmith 停機、配額受限、缺少所需環境，或擁有容量明確為目標時，才升級至擁有的 Crabbox 容量：
 
 ```bash
 CRABBOX_CAPACITY_REGIONS=eu-west-1,eu-west-2,eu-central-1,us-east-1,us-west-2 \
@@ -576,11 +566,11 @@ pnpm crabbox:run -- --id <cbx_id-or-slug> --timing-json --shell -- "env NODE_OPT
 pnpm crabbox:stop -- <cbx_id-or-slug>
 ```
 
-在 AWS 壓力下，除非任務確實需要 48xlarge 級別的 CPU，否則請避免使用 `class=beast`。`beast` 請求從 192 個 vCPU 開始，是觸發區域 EC2 Spot 或按需標準配額的最簡單方式。Repo 所有的 `.crabbox.yaml` 預設為 `standard`、多個容量區域以及 `capacity.hints: true`，因此經仲介的 AWS 租約會列印選定的區域/市場、配額壓力、Spot 回退以及高壓力類別警告。對於較重的廣泛檢查，請使用 `fast`；僅在標準/快速檢查不足時使用 `large`；並且僅對特殊的 CPU 密集型通道使用 `beast`，例如全套件或全外掛 Docker 矩陣、明確的發布/阻斷驗證或高核心效能分析。請勿將 `beast` 用於 `pnpm check:changed`、專注測試、僅文檔工作、一般 lint/typecheck、小型 E2E 重現或 Blacksmith 中斷診斷。使用 `--market on-demand` 進行容量診斷，以免 Spot 市場的波動干擾信號。
+在 AWS 壓力下，避免使用 `class=beast`，除非任務真正需要 48xlarge 級別的 CPU。`beast` 請求從 192 個 vCPU 開始，是觸發區域 EC2 Spot 或按需標準配額的最簡單方式。Repo 擁有的 `.crabbox.yaml` 預設為 `standard`、多個容量區域和 `capacity.hints: true`，因此託管的 AWS 租約會列印選定的區域/市場、配額壓力、Spot 回退以及高壓類別警告。對於較重的廣泛檢查，請使用 `fast`；僅在標準/快速不足時使用 `large`；並且僅對於特殊的 CPU 密集型通道（如完整套件或全外掛 Docker 矩陣、明確的發行/阻斷驗證或高核心效能分析）使用 `beast`。不要為 `pnpm check:changed`、專注的測試、僅文檔工作、普通的 lint/typecheck、小型 E2E 重現或 Blacksmith 停機排查使用 `beast`。使用 `--market on-demand` 進行容量診斷，以免 Spot 市場波動混入信號中。
 
-`.crabbox.yaml` 擁有自有雲通道的 provider、sync 和 GitHub Actions hydration 預設值。它排除了本地的 `.git`，因此經過 hydration 的 Actions checkout 會保留其自己的遠端 Git 元數據，而不是同步維護者本地的遠端和物件存儲，並且它排除了絕不應該被傳輸的本地運行時/構建工件。`.github/workflows/crabbox-hydrate.yml` 擁有自有雲 `crabbox run --id <cbx_id>` 指令的 checkout、Node/pnpm 設置、`origin/main` 獲取以及非機密環境交接。
+`.crabbox.yaml` 擁有自有雲通道的提供者、同步和 GitHub Actions 水合預設值。它排除本地 `.git`，以便水合的 Actions 檢出保留其自己的遠端 Git 元數據，而不是同步維護者本地的遠端和物件存儲，並且它排除不應被傳輸的本地運行時/構建工件。`.github/workflows/crabbox-hydrate.yml` 擁有自有雲 `crabbox run --id <cbx_id>` 命令的檢出、Node/pnpm 設置、`origin/main` 獲取以及非秘密環境交接。
 
 ## 相關
 
-- [安裝概覽](/zh-Hant/install)
-- [開發頻道](/zh-Hant/install/development-channels)
+- [安裝概述](/zh-Hant/install)
+- [開發通道](/zh-Hant/install/development-channels)

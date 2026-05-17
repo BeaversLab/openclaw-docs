@@ -109,16 +109,12 @@ Si sigue atascado:
 - Volver a otorgar permisos del SO.
 - Recrear/ajustar la política de aprobación de ejecución.
 
-Relacionado:
-
-- [/nodes/index](/es/nodes/index)
-- [/nodes/camera](/es/nodes/camera)
-- [/nodes/location-command](/es/nodes/location-command)
-- [/tools/exec-approvals](/es/tools/exec-approvals)
-- [/gateway/pairing](/es/gateway/pairing)
-
 ## Relacionado
 
 - [Descripción general de nodos](/es/nodes)
-- [Solución de problemas de la puerta de enlace](/es/gateway/troubleshooting)
-- [Solución de problemas de canales](/es/channels/troubleshooting)
+- [Nodos de cámara](/es/nodes/camera)
+- [Comando de ubicación](/es/nodes/location-command)
+- [Aprobaciones de ejecución](/es/tools/exec-approvals)
+- [Emparejamiento de pasarela](/es/gateway/pairing)
+- [Solución de problemas de la pasarela](/es/gateway/troubleshooting)
+- [Solución de problemas del canal](/es/channels/troubleshooting)

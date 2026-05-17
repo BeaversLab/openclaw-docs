@@ -122,8 +122,8 @@ read_when:
 - `openclaw/plugin-sdk/approval-reply-runtime`
 - `openclaw/plugin-sdk/channel-runtime-context`
 
-同样，在不需要更广泛的通用接口时，首选 `openclaw/plugin-sdk/setup-runtime`、
-`openclaw/plugin-sdk/setup-adapter-runtime`、
+同样，当您不需要更广泛的总体接口时，请优先使用 `openclaw/plugin-sdk/setup-runtime`、
+`openclaw/plugin-sdk/setup-runtime`、
 `openclaw/plugin-sdk/reply-runtime`、
 `openclaw/plugin-sdk/reply-dispatch-runtime`、
 `openclaw/plugin-sdk/reply-reference` 和
@@ -137,8 +137,8 @@ read_when:
   `createSetupInputPresenceValidator`）、lookup-note 输出、
   `promptResolvedAllowFrom`、`splitSetupEntries` 以及委托的
   设置代理构建器
-- `openclaw/plugin-sdk/setup-adapter-runtime` 是 `createEnvPatchedAccountSetupAdapter` 的精细环境感知适配器
-  接缝
+- `openclaw/plugin-sdk/setup-runtime` 包含针对
+  `createEnvPatchedAccountSetupAdapter` 的环境感知适配器接缝
 - `openclaw/plugin-sdk/channel-setup` 涵盖了可选安装的设置
   构建器以及一些设置安全的原语：
   `createOptionalChannelSetupSurface`、`createOptionalChannelSetupAdapter`、

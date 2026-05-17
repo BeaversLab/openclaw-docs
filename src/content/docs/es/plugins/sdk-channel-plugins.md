@@ -183,12 +183,12 @@ necesite una parte de esa familia:
 - `openclaw/plugin-sdk/approval-reply-runtime`
 - `openclaw/plugin-sdk/channel-runtime-context`
 
-Del mismo modo, prefiera `openclaw/plugin-sdk/setup-runtime`,
-`openclaw/plugin-sdk/setup-adapter-runtime`,
+Asimismo, prefiera `openclaw/plugin-sdk/setup-runtime`,
+`openclaw/plugin-sdk/setup-runtime`,
 `openclaw/plugin-sdk/reply-runtime`,
 `openclaw/plugin-sdk/reply-dispatch-runtime`,
 `openclaw/plugin-sdk/reply-reference` y
-`openclaw/plugin-sdk/reply-chunking` cuando no necesite la superficie de paraguas más amplia.
+`openclaw/plugin-sdk/reply-chunking` cuando no necesite la superficie general más amplia.
 
 Específicamente para la configuración:
 
@@ -198,8 +198,8 @@ Específicamente para la configuración:
   `createSetupInputPresenceValidator`), salida de nota de búsqueda,
   `promptResolvedAllowFrom`, `splitSetupEntries` y los constructores
   delegados de proxy de configuración
-- `openclaw/plugin-sdk/setup-adapter-runtime` es la costura del adaptador
-  estrecha y consciente del entorno para `createEnvPatchedAccountSetupAdapter`
+- `openclaw/plugin-sdk/setup-runtime` incluye la costura del adaptador consciente del entorno para
+  `createEnvPatchedAccountSetupAdapter`
 - `openclaw/plugin-sdk/channel-setup` cubre los constructores de configuración
   de instalación opcional junto con algunos primitivos seguros de configuración:
   `createOptionalChannelSetupSurface`, `createOptionalChannelSetupAdapter`,

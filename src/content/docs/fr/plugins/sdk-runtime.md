@@ -43,7 +43,7 @@ Les assistants de mutation renvoient `afterWrite` ainsi qu'un résumé typé `fo
 
 `api.runtime.config.loadConfig()` et `api.runtime.config.writeConfigFile(...)` sont des assistants de compatibilité dépréciés sous `runtime-config-load-write`. Ils avertissent une seule fois lors de l'exécution et restent disponibles pour les anciens plugins externes durant la fenêtre de migration. Les plugins groupés ne doivent pas les utiliser ; les gardes de la limite de configuration échouent si le code du plugin les appelle ou importe ces assistants depuis les sous-chemins du SDK de plugin.
 
-Pour les imports directs du SDK, utilisez les sous-chemins de configuration ciblés au lieu du baril de compatabilité large `openclaw/plugin-sdk/config-runtime` : `config-types` pour les types, `plugin-config-runtime` pour les assertions de configuration déjà chargée et la recherche d'entrée de plugin, `runtime-config-snapshot` pour les instantanés du processus actuel, et `config-mutation` pour les écritures. Les tests des plugins groupés doivent simuler ces sous-chemins ciblés directement au lieu de simuler le baril de compatibilité large.
+Pour les importations directes du SDK, utilisez les sous-chemins de configuration ciblés au lieu du module de compatibilité global `openclaw/plugin-sdk/config-runtime` : `config-contracts` pour les types, `plugin-config-runtime` pour les assertions de configuration déjà chargées et la recherche des points d'entrée des plugins, `runtime-config-snapshot` pour les instantanés du processus actuel, et `config-mutation` pour les écritures. Les tests de plugins groupés doivent simuler (mock) directement ces sous-chemins ciblés au lieu de simuler le module de compatibilité global.
 
 Le code d'exécution interne d'OpenClaw suit la même direction : charger la configuration une fois fois à la limite du CLI, de la passerelle ou du processus, puis transmettre cette valeur. Les écritures de mutation réussies rafraîchissent l'instantané d'exécution du processus et avancent sa révision interne ; les caches à longue durée de vie doivent utiliser la clé de cache détenue par l'exécution au lieu de sérialiser la configuration localement. Les modules d'exécution à longue durée de vie disposent d'un scanner de tolérance zéro pour les appels ambiants `loadConfig()` ; utilisez un `cfg` transmis, une `context.getRuntimeConfig()` de requête, ou `getRuntimeConfig()` à une limite de processus explicite.
 
@@ -210,7 +210,12 @@ Les chemins d'exécution du provider et du channel doivent utiliser l'instantan�
 
   </Accordion>
   <Accordion title="api.runtime.tasks.managedFlows">
-    Lie un runtime de flux de tâches à une clé de session OpenClaw existante ou à un contexte d'outil de confiance, puis crée et gère les flux de tâches sans avoir à passer un propriétaire à chaque appel.
+    Liez un runtime Task Flow à une clé de session OpenClaw existante ou à un contexte d'outil de confiance, puis créez et gérez des Task Flows sans avoir à passer un propriétaire à chaque appel.
+
+    Task Flow suit l'état durable des flux de travail en plusieurs étapes. Ce n'est pas un planificateur :
+    utilisez Cron ou `api.session.workflow.scheduleSessionTurn(...)` pour les réveils
+    futurs, puis utilisez `managedFlows` depuis le tour planifié lorsque ce travail
+    nécessite un état de flux, des tâches enfants, des attentes ou une annulation.
 
     ```typescript
     const taskFlow = api.runtime.tasks.managedFlows.fromToolContext(ctx);
@@ -237,11 +242,11 @@ Les chemins d'exécution du provider et du channel doivent utiliser l'instantan�
     });
     ```
 
-    Utilisez `bindSession({ sessionKey, requesterOrigin })` lorsque vous disposez déjà d'une clé de session OpenClaw de confiance à partir de votre propre couche de liaison. Ne liez pas à partir d'une saisie utilisateur brute.
+    Utilisez `bindSession({ sessionKey, requesterOrigin })` lorsque vous possédez déjà une clé de session OpenClaw de confiance issue de votre propre couche de liaison. Ne liez pas à partir d'une saisie utilisateur brute.
 
   </Accordion>
   <Accordion title="api.runtime.tts">
-    Synthèse texte-parole.
+    Synthèse texte-vers-parole.
 
     ```typescript
     // Standard TTS
@@ -263,11 +268,11 @@ Les chemins d'exécution du provider et du channel doivent utiliser l'instantan�
     });
     ```
 
-    Utilise la configuration centrale `messages.tts` et la sélection du provider. Renvoie un tampon audio PCM + taux d'échantillonnage.
+    Utilise la configuration `messages.tts` principale et la sélection de provider. Renvoie un tampon audio PCM + la fréquence d'échantillonnage.
 
   </Accordion>
   <Accordion title="api.runtime.mediaUnderstanding">
-    Analyse d'image, audio et vidéo.
+    Analyse d'image, d'audio et de vidéo.
 
     ```typescript
     // Describe an image
@@ -295,9 +300,37 @@ Les chemins d'exécution du provider et du channel doivent utiliser l'instantan�
       filePath: "/tmp/inbound-file.pdf",
       cfg: api.config,
     });
+
+    // Structured image extraction through a specific provider/model.
+    // Include at least one image; text inputs are supplemental context.
+    const evidence = await api.runtime.mediaUnderstanding.extractStructuredWithModel({
+      provider: "codex",
+      model: "gpt-5.5",
+      input: [
+        {
+          type: "image",
+          buffer: receiptImageBuffer,
+          fileName: "receipt.png",
+          mime: "image/png",
+        },
+        { type: "text", text: "Prefer the printed total over handwritten notes." },
+      ],
+      instructions: "Extract vendor, total, and searchable tags.",
+      schemaName: "receipt.evidence",
+      jsonSchema: {
+        type: "object",
+        properties: {
+          vendor: { type: "string" },
+          total: { type: "number" },
+          tags: { type: "array", items: { type: "string" } },
+        },
+        required: ["vendor", "total"],
+      },
+      cfg: api.config,
+    });
     ```
 
-    Renvoie `{ text: undefined }` lorsque aucune sortie n'est produite (par ex., entrée ignorée).
+    Renvoie `{ text: undefined }` lorsqu aucune sortie n'est produite (par exemple, entrée ignorée).
 
     <Info>
     `api.runtime.stt.transcribeAudioFile(...)` reste un alias de compatibilité pour `api.runtime.mediaUnderstanding.transcribeAudioFile(...)`.
@@ -356,9 +389,7 @@ Les chemins d'exécution du provider et du channel doivent utiliser l'instantan�
 
   </Accordion>
   <Accordion title="api.runtime.config">
-    Instantané de la configuration d'exécution actuelle et écritures de configuration transactionnelles. Privilégiez
-    la configuration qui a déjà été transmise au chemin d'appel actif ; utilisez
-    `current()` uniquement lorsque le gestionnaire a besoin directement de l'instantané du processus.
+    Instantané de la configuration d'exécution actuelle et écritures de configuration transactionnelles. Privilégiez la configuration qui a déjà été transmise au chemin d'appel actif ; n'utilisez `current()` que lorsque le gestionnaire a besoin directement de l'instantané du processus.
 
     ```typescript
     const cfg = api.runtime.config.current();
@@ -370,9 +401,7 @@ Les chemins d'exécution du provider et du channel doivent utiliser l'instantan�
     });
     ```
 
-    `mutateConfigFile(...)` et `replaceConfigFile(...)` renvoient une valeur `followUp`,
-    par exemple `{ mode: "restart", requiresRestart: true, reason }`,
-    qui enregistre l'intention de l'enregistreur sans retirer le contrôle de redémarrage à la passerelle.
+    `mutateConfigFile(...)` et `replaceConfigFile(...)` renvoient une valeur `followUp`, par exemple `{ mode: "restart", requiresRestart: true, reason }`, qui enregistre l'intention de l'enregistreur sans retirer le contrôle de redémarrage à la passerelle.
 
   </Accordion>
   <Accordion title="api.runtime.system">
@@ -426,7 +455,7 @@ Les chemins d'exécution du provider et du channel doivent utiliser l'instantan�
 
   </Accordion>
   <Accordion title="api.runtime.state">
-    Résolution du répertoire d'état et stockage indexé basé sur SQLite.
+    Résolution du répertoire d'état et stockage à clé supporté par SQLite.
 
     ```typescript
     const stateDir = api.runtime.state.resolveStateDir(process.env);
@@ -443,10 +472,10 @@ Les chemins d'exécution du provider et du channel doivent utiliser l'instantan�
     await store.clear();
     ```
 
-    Les magasins indexés survivent aux redémarrages et sont isolés par l'identifiant du plugin lié au runtime. Utilisez `registerIfAbsent(...)` pour les revendications de déduplication atomique : il renvoie `true` lorsque la clé était manquante ou expirée et a été enregistrée, ou `false` lorsqu'une valeur active existe déjà sans écraser sa valeur, son heure de création ou son TTL. Limites : `maxEntries` par espace de noms, 1 000 lignes actives par plugin, valeurs JSON inférieures à 64 Ko et expiration TTL facultative.
+    Les magasins à clé survivent aux redémarrages et sont isolés par l'identifiant du plugin lié au runtime. Utilisez `registerIfAbsent(...)` pour les revendications de déduplication atomique : il renvoie `true` lorsque la clé était manquante ou expirée et a été enregistrée, ou `false` lorsqu'une valeur active existe déjà sans écraser sa valeur, son heure de création ou son TTL. Limites : `maxEntries` par espace de noms, 1 000 lignes actives par plugin, valeurs JSON de moins de 64 Ko et expiration TTL facultative.
 
     <Warning>
-    Plugins inclus uniquement dans cette version.
+    Plugins fournis uniquement dans cette version.
     </Warning>
 
   </Accordion>
@@ -461,9 +490,9 @@ Les chemins d'exécution du provider et du channel doivent utiliser l'instantan�
 
   </Accordion>
   <Accordion title="api.runtime.channel">
-    Assistants d'exécution spécifiques au canal (disponibles lorsqu'un plugin de canal est chargé).
+    Assistants d'exécution spécifiques au channel (disponibles lorsqu'un plugin de channel est chargé).
 
-    `api.runtime.channel.mentions` est la surface partagée de stratégie de mention entrante pour les plugins de canal inclus qui utilisent l'injection de runtime :
+    `api.runtime.channel.mentions` est la surface partagée de stratégie de mention entrante pour les plugins de channel fournis qui utilisent l'injection runtime :
 
     ```typescript
     const mentionMatch = api.runtime.channel.mentions.matchesMentionWithExplicit(text, {
@@ -498,14 +527,14 @@ Les chemins d'exécution du provider et du channel doivent utiliser l'instantan�
     - `implicitMentionKindWhen`
     - `resolveInboundMentionDecision`
 
-    `api.runtime.channel.mentions` n'expose pas intentionnellement les anciens assistants de compatibilité `resolveMentionGating*`. Préférez le chemin normalisé `{ facts, policy }`.
+    `api.runtime.channel.mentions` n'expose pas intentionnellement les anciens assistants de compatibilité `resolveMentionGating*`. Privilégiez le chemin normalisé `{ facts, policy }`.
 
   </Accordion>
 </AccordionGroup>
 
 ## Storing runtime references
 
-Use `createPluginRuntimeStore` to store the runtime reference for use outside the `register` callback:
+Utilisez `createPluginRuntimeStore` pour stocker la référence runtime pour une utilisation en dehors du rappel `register` :
 
 <Steps>
   <Step title="Create the store">
@@ -545,26 +574,26 @@ Use `createPluginRuntimeStore` to store the runtime reference for use outside th
   </Step>
 </Steps>
 
-<Note>Prefer `pluginId` for the runtime-store identity. The lower-level `key` form is for uncommon cases where one plugin intentionally needs more than one runtime slot.</Note>
+<Note>Privilégiez `pluginId` pour l'identité du runtime-store. Le formulaire de niveau inférieur `key` est destiné aux cas rares où un plugin a intentionnellement besoin de plus d'un emplacement d'exécution.</Note>
 
-## Other top-level `api` fields
+## Autres champs `api` de premier niveau
 
-Outre `api.runtime`, l'objet API fournit également :
+Au-delà de `api.runtime`, l'objet API fournit également :
 
 <ParamField path="api.id" type="string">
-  Identifiant du plugin.
+  ID du plugin.
 </ParamField>
 <ParamField path="api.name" type="string">
   Nom d'affichage du plugin.
 </ParamField>
 <ParamField path="api.config" type="OpenClawConfig">
-  Instantané de la configuration actuelle (instantané d'exécution en mémoire actif lorsque disponible).
+  Instantané de la configuration actuelle (instantané d'exécution en mémoire actif, si disponible).
 </ParamField>
 <ParamField path="api.pluginConfig" type="Record<string, unknown>">
-  Configuration spécifique au plugin depuis `plugins.entries.<id>.config`.
+  Configuration spécifique au plugin à partir de `plugins.entries.<id>.config`.
 </ParamField>
 <ParamField path="api.logger" type="PluginLogger">
-  Enregistreur délimité (scoped logger) (`debug`, `info`, `warn`, `error`).
+  Enregistreur délimité (`debug`, `info`, `warn`, `error`).
 </ParamField>
 <ParamField path="api.registrationMode" type="PluginRegistrationMode">
   Mode de chargement actuel ; `"setup-runtime"` est la fenêtre de démarrage/configuration légère avant l'entrée complète.
@@ -575,6 +604,6 @@ Outre `api.runtime`, l'objet API fournit également :
 
 ## Connexes
 
-- [Plugin internals](/fr/plugins/architecture) — modèle de capacité et registre
+- [Plugin internals](/fr/plugins/architecture) — model de capacité et registre
 - [SDK entry points](/fr/plugins/sdk-entrypoints) — options `definePluginEntry`
 - [SDK overview](/fr/plugins/sdk-overview) — référence de sous-chemin

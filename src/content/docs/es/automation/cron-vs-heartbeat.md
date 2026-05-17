@@ -3,7 +3,7 @@ summary: "Redirect to /automation"
 title: "Cron frente a heartbeat"
 ---
 
-La guía de decisión sobre cron frente a heartbeat se encuentra en [Automatización y tareas](/es/automation).
+La guía de decisión sobre cron versus heartbeat se encuentra en [Automatización](/es/automation).
 
 ## Relacionado
 

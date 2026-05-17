@@ -77,6 +77,8 @@ livraison programmatique.
   préservent l'isolement ; les chats directs se réduisent à `main`).
 - Les flags de réflexion et de verbosité sont conservés dans le magasin de session.
 - Sortie : texte brut par défaut, ou `--json` pour une charge utile structurée + métadonnées.
+- Avec `--json --deliver`, le JSON inclut le statut de livraison pour les envois effectués, supprimés, partiels et échoués. Consultez
+  [JSON delivery status](/fr/cli/agent#json-delivery-status).
 
 ## Exemples
 
@@ -94,14 +96,14 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="CLIRéférence CLI de l'agent" href="/fr/cli/agent" icon="terminal">
+  <Card title="Référence de l'agent CLI" href="/fr/cli/agent" icon="terminal">
     Référence complète des indicateurs et options `openclaw agent`.
   </Card>
   <Card title="Sous-agents" href="/fr/tools/subagents" icon="users">
     Génération de sous-agents en arrière-plan.
   </Card>
   <Card title="Sessions" href="/fr/concepts/session" icon="comments">
-    Fonctionnement des clés de session et comment `--to`, `--agent` et `--session-id` les résolvent.
+    Fonctionnement des clés de session et résolution de celles-ci par `--to`, `--agent` et `--session-id`.
   </Card>
   <Card title="Commandes slash" href="/fr/tools/slash-commands" icon="slash">
     Catalogue de commandes natif utilisé dans les sessions d'agent.

@@ -84,23 +84,24 @@ prompt de réception (`[Inter-session message ... isUser=false]`) et dans la pro
 L'agent récepteur doit les traiter comme des données acheminées par outil, et non comme une
 instruction directe rédigée par l'utilisateur final.
 
-Une fois que la cible a répondu, OpenClaw peut exécuter une **boucle de réponse** où les
-agents alternent les messages (jusqu'à 5 tours). L'agent cible peut répondre
+Une fois la cible répondue, OpenClaw peut exécuter une **boucle de réponse** où
+les agents alternent les messages (jusqu'à `session.agentToAgent.maxPingPongTurns`, plage
+0-20, par défaut 5). L'agent cible peut répondre
 `REPLY_SKIP` pour arrêter plus tôt.
 
 ## Assistants d'état et d'orchestration
 
 `session_status` est l'outil léger équivalent à `/status` pour la session
-actuelle ou une autre session visible. Il rapporte l'utilisation, l'heure, l'état du modèle/d'exécution, et
-le contexte des tâches d'arrière-plan liées lorsqu'il est présent. Comme `/status`, il peut reconstituer
+courante ou une autre session visible. Il rapporte l'utilisation, l'heure, l'état du modèle/d'exécution, et
+le contexte de tâche en arrière-plan lié lorsqu'il est présent. Comme `/status`, il peut remplir rétroactivement
 les compteurs de jetons/cache épars à partir de la dernière entrée d'utilisation de la transcription, et
 `model=default` efface une substitution par session. Utilisez `sessionKey="current"` pour
-la session actuelle de l'appelant ; les étiquettes visibles du client telles que `openclaw-tui` ne sont
-pas des clés de session.
+la session actuelle de l'appelant ; les étiquettes de client visibles telles que `openclaw-tui` ne
+sont pas des clés de session.
 
 `sessions_yield` termine intentionnellement le tour actuel afin que le message suivant puisse être
 l'événement de suivi que vous attendez. Utilisez-le après avoir généré des sous-agents lorsque
-vous voulez que les résultats de complétion arrivent comme le message suivant au lieu de construire
+vous voulez que les résultats d'achèvement arrivent comme le message suivant au lieu de construire
 des boucles de sondage.
 
 `subagents` est l'assistant du plan de contrôle pour les sous-agents OpenClaw
@@ -112,34 +113,31 @@ déjà générés. Il prend en charge :
 
 ## Génération de sous-agents
 
-`sessions_spawn` crée une session isolée pour une tâche d'arrière-plan par défaut.
-C'est toujours non bloquant -- il retourne immédiatement avec un `runId` et
+`sessions_spawn` crée une session isolée pour une tâche en arrière-plan par défaut.
+C'est toujours non bloquant -- il retourne immédiatement un `runId` et
 `childSessionKey`.
 
 Options clés :
 
 - `runtime: "subagent"` (par défaut) ou `"acp"` pour les agents de harnais externes.
-- `model` et `thinking` des substitutions pour la session enfant.
-- `thread: true` pour lier le spawn à un fil de discussion (Discord, Slack, etc.).
-- `sandbox: "require"` pour appliquer le sandboxing sur l'enfant.
-- `context: "fork"` pour les sous-agents natifs lorsque l'enfant a besoin de la transcription
-  du demandeur actuel ; omettez-le ou utilisez `context: "isolated"` pour un enfant propre.
-  Les sous-agents natifs liés à un fil sont par défaut sur `context: "fork"` sauf si
-  `threadBindings.defaultSpawnContext` indique le contraire.
+- `model` et substitutions `thinking` pour la session enfant.
+- `thread: true` pour lier la génération à un fil de discussion (Discord, Slack, etc.).
+- `sandbox: "require"` pour appliquer la sandboxing sur l'enfant.
+- `context: "fork"` pour les sous-agents natifs lorsque l'enfant a besoin de la transcription du demandeur actuel ; omettez-le ou utilisez `context: "isolated"` pour un enfant propre.
+  Les sous-agents natifs liés au fil d'exécution sont par défaut `context: "fork"`, sauf si `threadBindings.defaultSpawnContext` indique le contraire.
 
-Les sous-agents feuilles par défaut ne reçoivent pas d'outils de session. Lorsque
-`maxSpawnDepth >= 2`, les sous-agents orchestrateurs de profondeur 1 reçoivent en outre
-`sessions_spawn`, `subagents`, `sessions_list`, et `sessions_history` afin qu'ils
-puissent gérer leurs propres enfants. Les exécutions feuilles ne reçoivent toujours pas
-d'outils d'orchestration récursifs.
+Les sous-agents feuilles par défaut ne reçoivent pas d'outils de session. Lorsque `maxSpawnDepth >= 2`, les sous-agents orchestrateurs de profondeur 1 reçoivent en outre
+`sessions_spawn`, `subagents`, `sessions_list` et `sessions_history` afin qu'ils
+puissent gérer leurs propres enfants. Les exécutions feuilles ne reçoivent toujours pas d'outils d'orchestration
+récursifs.
 
-Après achèvement, une étape d'annonce publie le résultat dans le channel du demandeur.
-La livraison de l'achèvement préserve le routage de fil/sujet lié lorsque disponible, et si
-l'origine de l'achèvement identifie uniquement un channel, OpenClaw peut toujours réutiliser
-la route stockée de la session du demandeur (`lastChannel` / `lastTo`) pour une livraison
+Après achèvement, une étape d'annonce publie le résultat sur le channel du demandeur.
+La livraison de l'achèvement préserve le routage lié au fil/sujet lorsqu'il est disponible, et si
+l'origine de l'achèvement identifie uniquement un channel, OpenClaw peut toujours réutiliser la
+route stockée de la session du demandeur (`lastChannel` / `lastTo`) pour une livraison
 directe.
 
-Pour un comportement spécifique à l'ACP, voir [ACP Agents](/fr/tools/acp-agents).
+Pour le comportement spécifique à l'ACP, voir [ACP Agents](/fr/tools/acp-agents).
 
 ## Visibilité
 
@@ -156,12 +154,12 @@ La valeur par défaut est `tree`. Les sessions sandboxed sont limitées à `tree
 
 ## Pour aller plus loin
 
-- [Gestion de session](/fr/concepts/session) -- routage, cycle de vie, maintenance
-- [Agents ACP](/fr/tools/acp-agents) -- spawning de harnais externe
+- [Session Management](/fr/concepts/session) -- routage, cycle de vie, maintenance
+- [ACP Agents](/fr/tools/acp-agents) -- génération de harnais externe
 - [Multi-agent](/fr/concepts/multi-agent) -- architecture multi-agent
-- [Configuration de Gateway](/fr/gateway/configuration) -- paramètres de configuration des outils de session
+- [Gateway Configuration](/fr/gateway/configuration) -- paramètres de configuration des outils de session
 
 ## Connexes
 
-- [Gestion de session](/fr/concepts/session)
-- [Élagage de session](/fr/concepts/session-pruning)
+- [Session management](/fr/concepts/session)
+- [Session pruning](/fr/concepts/session-pruning)

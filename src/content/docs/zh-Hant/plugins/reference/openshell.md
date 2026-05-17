@@ -12,7 +12,7 @@ title: "Openshell 外掛程式"
 ## 發行
 
 - 套件：`@openclaw/openshell-sandbox`
-- 安裝途徑：包含於 OpenClaw 中
+- 安裝途徑：npm；ClawHub
 
 ## 介面
 

@@ -107,7 +107,7 @@ Utilice estos centros para descubrir cada página, incluyendo análisis profundo
 - [PDF tool](/es/tools/pdf)
 - [Elevated mode](/es/tools/elevated)
 - [Cron jobs](/es/automation/cron-jobs)
-- [Automation & Tasks](/es/automation)
+- [Automatización](/es/automation)
 - [Thinking + verbose](/es/tools/thinking)
 - [Models](/es/concepts/models)
 - [Sub-agents](/es/tools/subagents)

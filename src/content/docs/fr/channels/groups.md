@@ -119,7 +119,7 @@ Si vous souhaitez...
 | Seul vous pouvez déclencher dans les groupes                                 | `groupPolicy: "allowlist"`, `groupAllowFrom: ["+1555..."]` |
 | Réutiliser un ensemble d'expéditeurs de confiance sur plusieurs canaux       | `groupAllowFrom: ["accessGroup:operators"]`                |
 
-Pour les listes d'autorisation d'expéditeurs réutilisables, consultez [Groupes d'accès](/fr/channels/access-groups).
+Pour les listes d'autorisation d'expéditeurs réutilisables, consultez [Access groups](/fr/channels/access-groups).
 
 ## Clés de session
 
@@ -141,7 +141,7 @@ Cela vous offre un "cerveau" d'agent unique (espace de travail partagé + mémoi
 - **DMs** : outils complets (hôte)
 - **Groupes** : sandbox + outils restreints
 
-<Note>Si vous avez besoin d'espaces de travail ou de personna véritablement séparés (les parties "personnelle" et "publique" ne doivent jamais être mélangées), utilisez un deuxième agent + liaisons. Voir [Routage Multi-Agent](/fr/concepts/multi-agent).</Note>
+<Note>Si vous avez besoin d'espaces de travail ou de personnalités vraiment séparés (les éléments « personnels » et « publics » ne doivent jamais être mélangés), utilisez un deuxième agent + liaisons. Voir [Multi-Agent Routing](/fr/concepts/multi-agent).</Note>
 
 <Tabs>
   <Tab title="DMs sur l'hôte, groupes sandboxés">
@@ -196,9 +196,9 @@ Cela vous offre un "cerveau" d'agent unique (espace de travail partagé + mémoi
 
 Connexes :
 
-- Clés de configuration et valeurs par défaut : [Configuration du Gateway](Gateway/en/gateway/config-agents#agentsdefaultssandbox)
-- Débogage du blocage d'un outil : [Sandbox vs Stratégie d'outil vs Élevé](/fr/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Détails des montages de liaison : [Sandboxing](/fr/gateway/sandboxing#custom-bind-mounts)
+- Clés de configuration et valeurs par défaut : [Gateway configuration](/fr/gateway/config-agents#agentsdefaultssandbox)
+- Débogage du blocage d'un outil : [Sandbox vs Tool Policy vs Elevated](/fr/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Détails des bind mounts : [Sandboxing](/fr/gateway/sandboxing#custom-bind-mounts)
 
 ## Libellés d'affichage
 
@@ -330,14 +330,14 @@ Répondre à un message de bot compte comme une mention implicite lorsque le can
 <AccordionGroup>
   <Accordion title="Notes sur le filtrage des mentions">
     - `mentionPatterns` sont des motifs regex sécurisés insensibles à la casse ; les motifs non valides et les formes de répétition imbriquées non sécurisées sont ignorés.
-    - Les surfaces qui fournissent des mentions explicites passent toujours ; les motifs sont un repli.
+    - Les surfaces qui fournissent des mentions explicites passent toujours ; les motifs servent de solution de secours.
     - Remplacement par agent : `agents.list[].groupChat.mentionPatterns` (utile lorsque plusieurs agents partagent un groupe).
     - Le filtrage des mentions n'est appliqué que lorsque la détection des mentions est possible (mentions natives ou `mentionPatterns` configurés).
-    - Autoriser un groupe ou un expéditeur ne désactive pas le filtrage des mentions ; définissez le `requireMention` de ce groupe sur `false` lorsque tous les messages doivent déclencher une action.
-    - Le contexte du prompt de discussion de groupe transporte l'instruction de réponse silencieuse résolue à chaque tour ; les fichiers de l'espace de travail ne doivent pas dupliquer la mécanique de `NO_REPLY`.
-    - Les groupes où les réponses silencieuses sont autorisées traitent les tours de modèle vides propres ou composés uniquement de raisonnement comme silencieux, équivalent à `NO_REPLY`. Les discussions directes font de même uniquement lorsque les réponses silencieuses directes sont explicitement autorisées ; sinon, les réponses vides restent des tours d'agent échoués.
-    - Les paramètres par défaut Discord se trouvent dans `channels.discord.guilds."*"` (surchargeable par guilde/channel).
-    - Le contexte de l'historique de groupe est enveloppé de manière uniforme sur les channels et est **en attente uniquement** (messages ignorés en raison du filtrage des mentions) ; utilisez `messages.groupChat.historyLimit` pour le défaut global et `channels.<channel>.historyLimit` (ou `channels.<channel>.accounts.*.historyLimit`) pour les surcharges. Définissez `0` pour désactiver.
+    - L'ajout d'un groupe ou d'un expéditeur à la liste blanche ne désactive pas le filtrage des mentions ; définissez `requireMention` de ce groupe sur `false` lorsque tous les messages doivent déclencher.
+    - Le contexte du prompt de conversation de groupe transporte l'instruction de réponse silencieuse résolue à chaque tour ; les fichiers de l'espace de travail ne doivent pas dupliquer les mécanismes `NO_REPLY`.
+    - Les groupes où les réponses silencieuses sont autorisées traitent les tours de modèle vides et propres ou basés uniquement sur le raisonnement comme silencieux, équivalent à `NO_REPLY`. Les discussions directes font de même uniquement lorsque les réponses silencieuses directes sont explicitement autorisées ; sinon, les réponses vides restent des tours d'agent échoués.
+    - Les paramètres par défaut de Discord se trouvent dans `channels.discord.guilds."*"` (surchargeable par guilde/channel).
+    - Le contexte de l'historique de groupe est encapsulé de manière uniforme sur les canaux. Les groupes avec filtrage de mentions conservent les messages en attente ignorés ; les groupes toujours actifs peuvent également conserver les messages récents traités de la salle lorsque le canal le prend en charge. Utilisez `messages.groupChat.historyLimit` pour la valeur par défaut globale et `channels.<channel>.historyLimit` (ou `channels.<channel>.accounts.*.historyLimit`) pour les surcharges. Définissez `0` pour désactiver.
 
   </Accordion>
 </AccordionGroup>
@@ -347,15 +347,15 @@ Répondre à un message de bot compte comme une mention implicite lorsque le can
 Certaines configurations de channel prennent en charge la restriction des outils disponibles **à l'intérieur d'un groupe/salon/channel spécifique**.
 
 - `tools` : autoriser/interdire des outils pour l'ensemble du groupe.
-- `toolsBySender` : remplacements par expéditeur au sein du groupe. Utilisez des préfixes de clé explicites : `id:<senderId>`, `e164:<phone>`, `username:<handle>`, `name:<displayName>` et le caractère générique `"*"`. Les clés héritées sans préfixe sont toujours acceptées et correspondent uniquement à `id:`.
+- `toolsBySender` : substitutions par expéditeur au sein du groupe. Utilisez des préfixes de clé explicites : `channel:<channelId>:<senderId>`, `id:<senderId>`, `e164:<phone>`, `username:<handle>`, `name:<displayName>` et le joker `"*"`. Les IDs de canal utilisent les IDs de canal OpenClaw canoniques ; les alias tels que `teams` sont normalisés en `msteams`. Les clés héritées sans préfixe sont toujours acceptées et correspondantes uniquement en tant que `id:`.
 
 Ordre de résolution (le plus spécifique l'emporte) :
 
 <Steps>
-  <Step title="Group toolsBySender">Correspondance de groupe/channel `toolsBySender`.</Step>
-  <Step title="Group tools">Groupe/channel `tools`.</Step>
-  <Step title="Default toolsBySender">Par défaut (`"*"`) correspondance `toolsBySender`.</Step>
-  <Step title="Default tools">Par défaut (`"*"`) `tools`.</Step>
+  <Step title="Group toolsBySender">Correspondance `toolsBySender` de groupe/canal.</Step>
+  <Step title="Group tools">`tools` de groupe/canal.</Step>
+  <Step title="Default toolsBySender">Correspondance `toolsBySender` par défaut (`"*"`).</Step>
+  <Step title="Default tools">`tools` par défaut (`"*"`).</Step>
 </Steps>
 
 Exemple (Telegram) :
@@ -378,15 +378,15 @@ Exemple (Telegram) :
 }
 ```
 
-<Note>Les restrictions d'outils de groupe/channel sont appliquées en plus de la stratégie d'outils globale/de l'agent (le refus l'emporte toujours). Certains canaux utilisent une imbrication différente pour les salons/canaux (par exemple, Discord `guilds.*.channels.*`, Slack `channels.*`, Microsoft Teams `teams.*.channels.*`).</Note>
+<Note>Les restrictions d'outil de groupe/canal sont appliquées en plus de la stratégie d'outil globale/agent (le refus prime toujours). Certains canaux utilisent une imbrication différente pour les salons/canaux (par exemple, Discord `guilds.*.channels.*`, Slack `channels.*`, Microsoft Teams `teams.*.channels.*`).</Note>
 
 ## Listes blanches de groupes
 
-Lorsque `channels.whatsapp.groups`, `channels.telegram.groups` ou `channels.imessage.groups` est configuré, les clés agissent comme une liste blanche de groupes. Utilisez `"*"` pour autoriser tous les groupes tout en définissant toujours le comportement de mention par défaut.
+Lorsque `channels.whatsapp.groups`, `channels.telegram.groups` ou `channels.imessage.groups` est configuré, les clés agissent comme une liste d'autorisation de groupe. Utilisez `"*"` pour autoriser tous les groupes tout en définissant toujours le comportement de mention par défaut.
 
 <Warning>
-  Confusion courante : l'approbation du jumelage DM n'est pas la même que l'autorisation de groupe. Pour les canaux qui prennent en charge le jumelage DM, le stockage de jumelage déverrouille uniquement les DM. Les commandes de groupe nécessitent toujours une autorisation explicite de l'expéditeur du groupe à partir des listes blanches de configuration telles que `groupAllowFrom` ou le repli de
-  configuration documenté pour ce canal.
+  Confusion courante : l'approbation de l'appariement DM n'est pas la même chose que l'autorisation de groupe. Pour les canaux qui prennent en charge l'appariement DM, le stockage d'appariement déverrouille uniquement les DMs. Les commandes de groupe nécessitent toujours une autorisation d'expéditeur de groupe explicite à partir des listes d'autorisation de configuration telles que
+  `groupAllowFrom` ou le repli de configuration documenté pour ce canal.
 </Warning>
 
 Intentions courantes (copier/coller) :
@@ -446,33 +446,33 @@ Les propriétaires de groupe peuvent activer ou désactiver le groupe par groupe
 - `/activation mention`
 - `/activation always`
 
-Le propriétaire est déterminé par `channels.whatsapp.allowFrom` (ou par l'E.164 propre du bot si non défini). Envoyez la commande sous forme de message autonome. Les autres surfaces ignorent actuellement `/activation`.
+Le propriétaire est déterminé par `channels.whatsapp.allowFrom` (ou par l'E.164 du bot lui-même s'il n'est pas défini). Envoyez la commande sous forme de message autonome. Les autres surfaces ignorent actuellement `/activation`.
 
 ## Champs de contexte
 
 Les charges utiles entrantes de groupe définissent :
 
-- `ChatType=group` (si connu)
+- `ChatType=group`
 - `GroupSubject` (si connu)
 - `GroupMembers` (si connu)
-- `WasMentioned` (résultat du filtrage par mention)
+- `WasMentioned` (résultat du filtrage des mentions)
 - Les sujets de forum Telegram incluent également `MessageThreadId` et `IsForum`.
 
-Le système de prompt de l'agent inclut une introduction de groupe lors du premier tour d'une nouvelle session de groupe. Il rappelle au modèle de répondre comme un humain, d'éviter les tableaux Markdown, de minimiser les lignes vides et de respecter l'espacement normal de la discussion, et d'éviter de taper des séquences `\n` littérales. Les noms de groupe et les étiquettes des participants provenant de la chaîne sont restitués sous forme de métadonnées non fiables clôturées, et non d'instructions système en ligne.
+Le système de prompt de l'agent inclut une introduction au groupe lors du premier tour d'une nouvelle session de groupe. Il rappelle au modèle de répondre comme un humain, d'éviter les tableaux Markdown, de minimiser les lignes vides et de respecter l'espacement normal des discussions, et d'éviter de taper des séquences littérales `\n`. Les noms de groupe et les étiquettes des participants provenant du canal sont rendus en tant que métadonnées non fiables clôturées, et non en tant qu'instructions système en ligne.
 
 ## Spécificités iMessage
 
 - Privilégiez `chat_id:<id>` lors du routage ou de la liste d'autorisation.
 - Lister les discussions : `imsg chats --limit 20`.
-- Les réponses de groupe reviennent toujours au même `chat_id`.
+- Les réponses de groupe retournent toujours au même `chat_id`.
 
 ## Prompts système WhatsApp
 
-Voir [WhatsApp](/fr/channels/whatsapp#system-prompts) pour les règles canoniques des prompts système WhatsApp, y compris la résolution des prompts de groupe et directs, le comportement des caractères génériques et la sémantique de substitution de compte.
+Voir [WhatsApp](/fr/channels/whatsapp#system-prompts) pour les règles canoniques du système de prompt WhatsApp, y compris la résolution des prompts de groupe et directs, le comportement des caractères génériques et la sémantique de remplacement du compte.
 
 ## Spécificités de WhatsApp
 
-Voir [Group messages](/fr/channels/group-messages) pour les comportements spécifiques à WhatsApp (injection de l'historique, détails de la gestion des mentions).
+Voir [Group messages](/fr/channels/group-messages) pour le comportement spécifique à WhatsApp (injection de l'historique, détails de la gestion des mentions).
 
 ## Connexes
 

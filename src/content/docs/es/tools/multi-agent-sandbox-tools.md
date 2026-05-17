@@ -50,8 +50,14 @@ La autenticación tiene ámbito por agente: cada agente tiene su propio almacena
               "scope": "agent"
             },
             "tools": {
-              "allow": ["read"],
-              "deny": ["exec", "write", "edit", "apply_patch", "process", "browser"]
+              "allow": ["read", "message"],
+              "deny": ["exec", "write", "edit", "apply_patch", "process", "browser"],
+              "message": {
+                "crossContext": {
+                  "allowWithinProvider": false,
+                  "allowAcrossProviders": false
+                }
+              }
             }
           }
         ]
@@ -74,8 +80,8 @@ La autenticación tiene ámbito por agente: cada agente tiene su propio almacena
 
     **Resultado:**
 
-    - Agente `main`: se ejecuta en el host, acceso completo a herramientas.
-    - Agente `family`: se ejecuta en Docker (un contenedor por agente), solo herramienta `read`.
+    - El agente `main`: se ejecuta en el host, acceso completo a las herramientas.
+    - El agente `family`: se ejecuta en Docker (un contenedor por agente), solo `read` y envíos de mensajes de la conversación actual.
 
   </Accordion>
   <Accordion title="Ejemplo 2: Agente de trabajo con sandbox compartido">

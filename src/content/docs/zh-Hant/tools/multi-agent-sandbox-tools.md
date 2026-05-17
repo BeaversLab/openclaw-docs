@@ -29,7 +29,7 @@ status: active
 ## 設定範例
 
 <AccordionGroup>
-  <Accordion title="範例 1：個人 + 受限的家庭代理">
+  <Accordion title="範例 1：個人 + 受限的家庭代理程式">
     ```json
     {
       "agents": {
@@ -50,8 +50,14 @@ status: active
               "scope": "agent"
             },
             "tools": {
-              "allow": ["read"],
-              "deny": ["exec", "write", "edit", "apply_patch", "process", "browser"]
+              "allow": ["read", "message"],
+              "deny": ["exec", "write", "edit", "apply_patch", "process", "browser"],
+              "message": {
+                "crossContext": {
+                  "allowWithinProvider": false,
+                  "allowAcrossProviders": false
+                }
+              }
             }
           }
         ]
@@ -74,8 +80,8 @@ status: active
 
     **結果：**
 
-    - `main` 代理：在主機上執行，完整工具存取權。
-    - `family` 代理：在 Docker 中執行（每個代理一個容器），僅限 `read` 工具。
+    - `main` 代理程式：在主機上執行，具有完整的工具存取權限。
+    - `family` 代理程式：在 Docker 中執行（每個代理程式一個容器），僅能 `read` 和傳送目前對話的訊息。
 
   </Accordion>
   <Accordion title="範例 2：具有共用沙箱的工作代理">

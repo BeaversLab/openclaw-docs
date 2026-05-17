@@ -107,7 +107,7 @@ title: "文件中心"
 - [PDF 工具](/zh-Hant/tools/pdf)
 - [提權模式](/zh-Hant/tools/elevated)
 - [Cron 排程](/zh-Hant/automation/cron-jobs)
-- [自動化與任務](/zh-Hant/automation)
+- [自動化](/zh-Hant/automation)
 - [思考 + 詳細輸出](/zh-Hant/tools/thinking)
 - [模型](/zh-Hant/concepts/models)
 - [子代理](/zh-Hant/tools/subagents)

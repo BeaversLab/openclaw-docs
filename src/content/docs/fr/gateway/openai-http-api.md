@@ -190,19 +190,80 @@ Définissez `stream: true` pour recevoir les événements envoyés par le serveu
 - Chaque ligne d'événement est `data: <json>`
 - Le flux se termine par `data: [DONE]`
 
+## Contrat de l'outil de chat
+
+`/v1/chat/completions` prend en charge un sous-ensemble d'outils de fonctions compatible avec les clients Chat OpenAI courants.
+
+### Champs de requête pris en charge
+
+- `tools` : tableau de `{ "type": "function", "function": { ... } }`
+- `tool_choice` : `"auto"`, `"none"`
+- `messages[*].role: "tool"` tours de suivi
+- `messages[*].tool_call_id` pour lier les résultats de l'outil à un appel d'outil précédent
+- `max_completion_tokens` : nombre ; plafond par appel pour le nombre total de jetons de complétion (jetons de raisonnement inclus). Nom de champ actuel des complétions de chat OpenAI ; préféré lorsque `max_completion_tokens` et `max_tokens` sont tous deux envoyés.
+- `max_tokens` : nombre ; alias hérité accepté pour la rétrocompatibilité. Ignoré lorsque `max_completion_tokens` est également présent.
+
+Lorsque l'un ou l'autre champ est défini, la valeur est transmise au fournisseur en amont via le channel de paramètres de flux de l'agent. Le nom réel du champ filaire envoyé au fournisseur en amont est choisi par le transport du fournisseur : `max_completion_tokens` pour les points de terminaison de la famille OpenAI, et `max_tokens` pour les fournisseurs qui n'acceptent que le nom hérité (tels que Mistral et Chutes).
+
+### Variantes non prises en charge
+
+Le point de terminaison renvoie `400 invalid_request_error` pour les variantes d'outils non prises en charge, notamment :
+
+- `tools` qui n'est pas un tableau
+- entrées d'outil qui ne sont pas des fonctions
+- `tool.function.name` manquant
+- variantes `tool_choice` telles que `allowed_tools` et `custom`
+- `tool_choice: "required"` (pas encore appliqué lors de l'exécution ; sera pris en charge une fois l'application stricte implémentée)
+- `tool_choice: { "type": "function", "function": { "name": "..." } }` (même justification que `required`)
+- valeurs `tool_choice.function.name` qui ne correspondent pas aux `tools` fournis
+
+### Format de la réponse de l'outil en non-streaming
+
+Lorsque l'agent décide d'appeler des outils, la réponse utilise :
+
+- `choices[0].finish_reason = "tool_calls"`
+- `choices[0].message.tool_calls[]` entrées avec :
+  - `id`
+  - `type: "function"`
+  - `function.name`
+  - `function.arguments` (chaîne JSON)
+
+Les commentaires de l'assistant avant l'appel d'outil sont renvoyés dans `choices[0].message.content` (possiblement vide).
+
+### Format de la réponse de l'outil en streaming
+
+Lorsque `stream: true`, les appels d'outils sont émis sous forme de blocs SSE incrémentaux :
+
+- delta initial du rôle assistant
+- deltas de commentaires de l'assistant optionnels
+- un ou plusieurs blocs `delta.tool_calls` transportant l'identité de l'outil et des fragments d'arguments
+- bloc final avec `finish_reason: "tool_calls"`
+- `data: [DONE]`
+
+Si `stream_options.include_usage=true`, un bloc d'utilisation final est émis avant `[DONE]`.
+
+### Boucle de suivi de l'outil
+
+Après avoir reçu `tool_calls`, le client doit exécuter la ou les fonctions demandées et envoyer une demande de suivi incluant :
+
+- le message précédent d'appel d'outil de l'assistant
+- un ou plusieurs messages `role: "tool"` avec `tool_call_id` correspondants
+
+Cela permet à l'exécution de l'agent du Gateway de continuer la même boucle de raisonnement et de produire la réponse finale de l'assistant.
+
 ## Configuration rapide d'Open WebUI
 
-Pour une connexion de base Open WebUI :
+Pour une connexion Open WebUI de base :
 
 - URL de base : `http://127.0.0.1:18789/v1`
-- URL de base Docker sur macOS : `http://host.docker.internal:18789/v1`
-- Clé API : votre jeton de porteur Gateway
+- Docker sur macOS URL de base : `http://host.docker.internal:18789/v1`
+- Clé API : votre jeton bearer du Gateway
 - Modèle : `openclaw/default`
 
 Comportement attendu :
 
-- `GET /v1/models` devrait lister `openclaw/default`
-- Open WebUI devrait utiliser `openclaw/default` comme identifiant de modèle de chat
+- `GET /v1/models` doit lister `openclaw/default`
+- Open WebUI doit utiliser `openclaw/default` comme identifiant du modèle de chat
 - Si vous souhaitez un fournisseur/modèle backend spécifique pour cet agent, définissez le modèle par défaut normal de l'agent ou envoyez `x-openclaw-model`
 
 Test rapide :
@@ -256,7 +317,7 @@ curl -sS http://127.0.0.1:18789/v1/models/openclaw%2Fdefault \
   -H 'Authorization: Bearer YOUR_TOKEN'
 ```
 
-Créer des intégrations :
+Créer des embeddings :
 
 ```bash
 curl -sS http://127.0.0.1:18789/v1/embeddings \
@@ -272,11 +333,11 @@ curl -sS http://127.0.0.1:18789/v1/embeddings \
 Notes :
 
 - `/v1/models` renvoie les cibles d'agent OpenClaw, et non les catalogues bruts des fournisseurs.
-- `openclaw/default` est toujours présent afin qu'un identifiant stable fonctionne dans tous les environnements.
-- Les remplacements de fournisseur/model backend appartiennent à `x-openclaw-model`, et non au champ OpenAI `model`.
+- `openclaw/default` est toujours présent, donc un identifiant stable fonctionne dans tous les environnements.
+- Les redéfinitions de fournisseur/model backend doivent figurer dans `x-openclaw-model`OpenAI, et non dans le champ OpenAI `model`.
 - `/v1/embeddings` prend en charge `input` sous forme de chaîne ou de tableau de chaînes.
 
-## Connexe
+## Connexes
 
 - [Référence de configuration](/fr/gateway/configuration-reference)
-- [OpenAI](/fr/providers/openai)
+- [OpenAI](OpenAI/en/providers/openai)

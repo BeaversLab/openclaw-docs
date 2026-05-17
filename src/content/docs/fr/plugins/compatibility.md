@@ -56,16 +56,13 @@ pas publier le binaire de l'inspecteur depuis le package principal `openclaw`.
 
 ### Voie d'acceptation par le mainteneur
 
-Utilisez Blacksmith Testbox pour la voie d'acceptation des packages installables lors de la validation
-de l'inspecteur externe par rapport aux packages de plugins OpenClaw. Exécutez-le à partir d'un
-extraction OpenClaw propre après la construction du package :
+Utilisez Blacksmith Testbox soutenu par Crabbox pour la voie d'acceptation des packages installables lors de la validation de l'inspecteur externe par rapport aux packages de plugins OpenClaw.
+Exécutez-le à partir d'un extrait propre de OpenClaw après la construction du package :
 
 ```sh
-blacksmith testbox warmup ci-check-testbox.yml --ref main --idle-timeout 90
-blacksmith testbox run --id <tbx_id> "pnpm install && pnpm build && npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/telegram --json"
-blacksmith testbox run --id <tbx_id> "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/discord --json"
-blacksmith testbox run --id <tbx_id> "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- <clawhub-plugin-dir> --json"
-blacksmith testbox stop <tbx_id>
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "pnpm install && pnpm build && npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/telegram --json"
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/discord --json"
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- <clawhub-plugin-dir> --json"
 ```
 
 Gardez cette voie en option (opt-in) pour les mainteneurs car elle installe un package externe npm

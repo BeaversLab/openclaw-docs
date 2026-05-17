@@ -61,7 +61,7 @@ Markdown 表格在聊天客戶端之間的支援不一致。請使用
 `markdown.tables` 來控制每個頻道（以及每個帳戶）的轉換。
 
 - `code`：將表格渲染為代碼區塊（大多數頻道的預設值）。
-- `bullets`：將每一行轉換為項目符號（Signal + WhatsApp 的預設值）。
+- `bullets`：將每一列轉換成項目符號（Matrix、Signal 和 WhatsApp 的預設行為）。
 - `off`：停用表格解析和轉換；原始表格文字將直接通過。
 
 配置鍵 (Config keys)：

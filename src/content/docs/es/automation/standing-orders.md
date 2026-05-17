@@ -241,7 +241,7 @@ Cada programa debe tener:
 
 ## Relacionado
 
-- [Automatización y tareas](/es/automation): todos los mecanismos de automatización de un vistazo.
+- [Automatización](/es/automation): todos los mecanismos de automatización de un vistazo.
 - [Trabajos cron](/es/automation/cron-jobs): cumplimiento del horario para las órdenes permanentes.
 - [Ganchos (Hooks)](/es/automation/hooks): scripts controlados por eventos para eventos del ciclo de vida del agente.
 - [Webhooks](/es/automation/cron-jobs#webhooks): desencadenantes de eventos HTTP entrantes.

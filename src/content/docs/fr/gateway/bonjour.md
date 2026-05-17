@@ -139,55 +139,46 @@ Le Gateway écrit un fichier journal circulaire (affiché au démarrage comme `g
 - `bonjour: watchdog detected non-announced service ...`
 - `bonjour: disabling advertiser after ... failed restarts ...`
 
-Bonjour utilise le nom d'hôte système pour l'hôte `.local` annoncé lorsqu'il s'agit d'une étiquette DNS valide. Si le nom d'hôte système contient des espaces, des traits de soulignement ou un autre caractère d'étiquette DNS non valide, OpenClaw revient à `openclaw.local`. Définissez `OPENCLAW_MDNS_HOSTNAME=<name>` avant de démarrer le Gateway lorsque vous avez besoin d'une étiquette d'hôte explicite.
+Le watchdog traite les `probing` actifs, les `announcing` et les renommages récents dus à des conflits comme des états en cours. Si le service n'atteint jamais `announced`OpenClawBonjourGateway, OpenClaw finit par recréer l'annonceur et, après des échecs répétés, désactive Bonjour pour ce processus Gateway au lieu de continuer à annoncer indéfiniment.
 
-## Débogage sur le nœud iOS
+Bonjour utilise le nom d'hôte du système pour l'hôte Bonjour`.local`OpenClaw annoncé lorsqu'il s'agit d'un label DNS valide. Si le nom d'hôte du système contient des espaces, des traits de soulignement ou un autre caractère de label DNS non valide, OpenClaw revient à `openclaw.local`. Définissez `OPENCLAW_MDNS_HOSTNAME=<name>`Gateway avant de démarrer la Gateway lorsque vous avez besoin d'un label d'hôte explicite.
 
-Le nœud iOS utilise `NWBrowser` pour découvrir `_openclaw-gw._tcp`.
+## Débogage sur un nœud iOS
+
+Le nœud iOS utilise iOS`NWBrowser` pour découvrir `_openclaw-gw._tcp`.
 
 Pour capturer les journaux :
 
-- Réglages → Gateway → Avancé → **Journaux de débogage de la découverte**
-- Réglages → Gateway → Avancé → **Journaux de découverte** → reproduire → **Copier**
+- Réglages → Gateway → Avancé → **Journaux de débogage Discovery**
+- Réglages → Gateway → Avancé → **Journaux Discovery** → reproduire → **Copier**
 
-Le journal inclut les transitions d'état du navigateur et les modifications des jeux de résultats.
+Le journal inclut les transitions d'état du navigateur et les modifications de l'ensemble des résultats.
 
 ## Quand activer Bonjour
 
-Bonjour se lance automatiquement au démarrage du Gateway avec une configuration vide sur les hôtes macOS, car l'application locale et les nœuds iOS/Android proches reposent généralement sur la découverte sur le même réseau local.
+Bonjour démarre automatiquement au démarrage d'une Gateway avec une configuration vide sur les hôtes macOS car l'application locale et les nœuds iOS/Android à proximité s'appuient généralement sur la découverte sur le même réseau local.
 
-Activez Bonjour explicitement lorsque la découverte automatique sur le même réseau local est utile sur Linux,
-WindowsmacOS, ou un autre hôte non %%PH:GLOSSARY:167:a457f5c%% :
+Activez Bonjour explicitement lorsque la découverte automatique sur le même réseau local est utile sur Linux, Windows ou un autre hôte non macOS :
 
 ```bash
 openclaw plugins enable bonjour
 ```
 
-Lorsqu'il est activé, Bonjour utilise `discovery.mdns.mode` pour décider de la quantité de métadonnées TXT
-à publier. Le mode par défaut est `minimal` ; utilisez `full` uniquement lorsque les clients locaux ont besoin
-`cliPath` ou `sshPort` indices, et utilisez `off` pour supprimer le multidiffusion LAN sans
-changer l'activation du plugin.
+Lorsqu'il est activé, Bonjour utilise Bonjour`discovery.mdns.mode` pour décider de la quantité de métadonnées TXT à publier. Le mode par défaut est `minimal` ; utilisez `full` uniquement lorsque les clients locaux ont besoin d'indices `cliPath` ou `sshPort`, et utilisez `off` pour supprimer le multidiffusion LAN sans modifier l'activation du plugin.
 
 ## Quand désactiver Bonjour
 
-Laissez Bonjour désactivé lorsque la publicité multidiffusion LAN est inutile, indisponible
-ou nuisible. Les cas courants sont les serveurs non macOS, le réseau de pont Docker,
-WSL, ou une stratégie réseau qui abandonne la multidiffusion mDNS. Dans ces environnements, le
-Gateway est toujours accessible via son URL publiée, SSH, Tailnet, ou DNS-SD
-à grande distance, mais la découverte automatique LAN n'est pas fiable.
+Laissez Bonjour désactivé lorsque la publicité multidiffusion LAN est inutile, indisponible ou nuisible. Les cas courants sont les serveurs non-macOS, le réseau pont Docker, WSL, ou une stratégie réseau qui abandonne la multidiffusion mDNS. Dans ces environnements, le Gateway est toujours accessible via son URL publiée, SSH, Tailnet ou DNS-SD de zone étendue, mais la découverte automatique LAN n'est pas fiable.
 
-Préférez le remplacement de l'environnement existant lorsque le problème est lié au déploiement :
+Préférez la substitution de l'environnement existant lorsque le problème est lié au déploiement :
 
 ```bash
 OPENCLAW_DISABLE_BONJOUR=1
 ```
 
-Cela désactive la publicité multidiffusion LAN sans modifier la configuration du plugin.
-C'est sûr pour les images Docker, les fichiers de service, les scripts de lancement et le débogage
-ponctuel car le paramètre disparaît lorsque l'environnement disparaît.
+Cela désactive la publicité multidiffusion LAN sans modifier la configuration du plugin. C'est sûr pour les images Docker, les fichiers de service, les scripts de lancement et le débogage ponctuel, car le paramètre disparaît lorsque l'environnement n'existe plus.
 
-Utilisez la configuration du plugin lorsque vous souhaitez intentionnellement désactiver le plugin de découverte
-LAN inclus pour cette configuration OpenClaw :
+Utilisez la configuration du plugin lorsque vous souhaitez intentionnellement désactiver le plugin de découverte LAN inclus pour cette configuration OpenClaw :
 
 ```bash
 openclaw plugins disable bonjour
@@ -195,53 +186,53 @@ openclaw plugins disable bonjour
 
 ## Pièges Docker
 
-Le module Bonjour inclus désactive automatiquement la publicité multidiffusion LAN dans les conteneurs détectés lorsque Bonjour`OPENCLAW_DISABLE_BONJOUR` n'est pas défini. Les réseaux pont Docker Docker ne transfèrent généralement pas la multidiffusion mDNS (`224.0.0.251:5353`) entre le conteneur et le réseau local (LAN), de sorte que la publicité depuis le conteneur permet rarement la découverte.
+Le plugin Bonjour inclus désactive automatiquement la publicité multidiffusion LAN dans les conteneurs détectés lorsque `OPENCLAW_DISABLE_BONJOUR` n'est pas défini. Les réseaux pont Docker ne transmettent généralement pas la multidiffusion mDNS (`224.0.0.251:5353`) entre le conteneur et le LAN, donc la publicité depuis le conteneur permet rarement à la découverte de fonctionner.
 
 Pièges importants :
 
-- Bonjour démarre automatiquement sur les hôtes macOS BonjourmacOS et est facultatif ailleurs. Le laisser désactivé n'arrête pas le Gateway Gateway ; cela ne fait que sauter la publicité multidiffusion LAN.
-- Désactiver Bonjour Bonjour ne modifie pas `gateway.bind` ; Docker Docker utilise par défaut `OPENCLAW_GATEWAY_BIND=lan` afin que le port d'hôte publié puisse fonctionner.
-- Désactiver Bonjour Bonjour ne désactive pas le DNS-SD étendu. Utilisez la découverte étendue ou Tailnet lorsque le Gateway Gateway et le nœud ne sont pas sur le même réseau local (LAN).
-- La réutilisation du même `OPENCLAW_CONFIG_DIR` en dehors de Docker Docker ne conserve pas la stratégie de désactivation automatique du conteneur.
-- Définissez `OPENCLAW_DISABLE_BONJOUR=0` uniquement pour le réseau hôte, macvlan ou un autre réseau où la multidiffusion mDNS est connue pour passer ; définissez-le sur `1` pour forcer la désactivation.
+- Bonjour se lance automatiquement sur les hôtes macOS et est optionnel ailleurs. Le laisser désactivé n'arrête pas le Gateway ; cela ne fait que sauter la publicité multidiffusion LAN.
+- Désactiver Bonjour ne change pas `gateway.bind` ; Docker utilise par défaut toujours `OPENCLAW_GATEWAY_BIND=lan` afin que le port d'hôte publié puisse fonctionner.
+- Désactiver Bonjour ne désactive pas le DNS-SD de zone étendue. Utilisez la découverte de zone étendue ou Tailnet lorsque le Gateway et le nœud ne sont pas sur le même LAN.
+- Réutiliser le même `OPENCLAW_CONFIG_DIR` en dehors de Docker ne persiste pas la stratégie de désactivation automatique du conteneur.
+- Définissez `OPENCLAW_DISABLE_BONJOUR=0` uniquement pour le réseau hôte, macvlan ou un autre réseau où l'on sait que le multidiffusion mDNS passe ; définissez-le sur `1` pour forcer la désactivation.
 
-## Dépannage lorsque Bonjour Bonjour est désactivé
+## Dépannage du Bonjour désactivé
 
-Si un nœud ne découvre plus automatiquement le Gateway Gateway après la configuration Docker Docker :
+Si un nœud ne découvre plus automatiquement le Gateway après la configuration Docker :
 
-1. Confirmez si le Gateway Gateway fonctionne en mode automatique, forcé activé ou forcé désactivé :
+1. Confirmez si le Gateway fonctionne en mode automatique, forcé activé ou forcé désactivé :
 
    ```bash
    docker compose config | grep OPENCLAW_DISABLE_BONJOUR
    ```
 
-2. Confirmez que le Gateway Gateway lui-même est accessible via le port publié :
+2. Confirmez que le Gateway lui-même est accessible via le port publié :
 
    ```bash
    curl -fsS http://127.0.0.1:18789/healthz
    ```
 
-3. Utilisez une cible directe lorsque Bonjour Bonjour est désactivé :
+3. Utilisez une cible directe lorsque Bonjour est désactivé :
    - Interface de contrôle ou outils locaux : `http://127.0.0.1:18789`
    - Clients LAN : `http://<gateway-host>:18789`
-   - Clients inter-réseaux : Tailnet MagicDNS, IP Tailnet, tunnel SSH ou DNS-SD étendu
+   - Clients inter-réseaux : MagicDNS Tailnet, IP Tailnet, tunnel SSH, ou DNS-SD étendu
 
-4. Si vous avez délibérément activé le module Bonjour Bonjour dans Docker Docker et forcé la publicité avec `OPENCLAW_DISABLE_BONJOUR=0`, testez la multidiffusion depuis l'hôte :
+4. Si vous avez délibérément activé le plugin Bonjour dans Docker et forcé la publicité avec `OPENCLAW_DISABLE_BONJOUR=0`, testez la multidiffusion depuis l'hôte :
 
    ```bash
    dns-sd -B _openclaw-gw._tcp local.
    ```
 
-   Si la navigation est vide ou si les journaux du Gateway affichent des annulations répétées du chien de garde ciao, rétablissez Gateway`OPENCLAW_DISABLE_BONJOUR=1` et utilisez un itinéraire direct ou Tailnet.
+   Si le navigateur est vide ou si les journaux du Gateway montrent des annulations répétées du chien de garde ciao, restaurez `OPENCLAW_DISABLE_BONJOUR=1` et utilisez un itinéraire direct ou Tailnet.
 
 ## Modes de défaillance courants
 
 - **Bonjour ne traverse pas les réseaux** : utilisez Tailnet ou SSH.
-- **Multicast bloqué** : certains réseaux Wi-Fi désactivent mDNS.
-- **Annonceur bloqué lors de la sonde/annonce** : les hôtes dont le multicast est bloqué, les ponts de conteneurs, WSL, ou la rotation des interfaces peuvent laisser l'annonceur ciao dans un état non annoncé. OpenClaw réessaie plusieurs fois puis désactive Bonjour pour le processus Gateway actuel au lieu de redémarrer l'annonceur indéfiniment.
-- **Réseau pont Docker** : Bonjour se désactive automatiquement dans les conteneurs détectés. Définissez DockerBonjour`OPENCLAW_DISABLE_BONJOUR=0` uniquement pour l'hôte, macvlan, ou un autre réseau compatible mDNS.
-- **Veille / rotation d'interface** : macOS peut temporairement abandonner les résultats mDNS ; réessayez.
-- **La navigation fonctionne mais la résolution échoue** : gardez les noms de machine simples (évitez les émojis ou la ponctuation), puis redémarrez le Gateway. Le nom de l'instance de service dérive du nom d'hôte, donc les noms trop complexes peuvent confondre certains résolveurs.
+- **Multidiffusion bloquée** : certains réseaux Wi-Fi désactivent mDNS.
+- **Annonceur bloqué lors de la détection/annonce** : les hôtes avec une multidiffusion bloquée, les ponts de conteneurs, WSL, ou l'churn des interfaces peuvent laisser l'annonceur ciao dans un état non annoncé. OpenClaw réessaie quelques fois puis désactive Bonjour pour le processus Gateway actuel au lieu de redémarrer l'annonceur indéfiniment.
+- **Réseau pont Docker** : Bonjour se désactive automatiquement dans les conteneurs détectés. Définissez `OPENCLAW_DISABLE_BONJOUR=0` uniquement pour host, macvlan, ou un autre réseau compatible mDNS.
+- **Veille / churn d'interface** : macOS peut temporairement abandonner les résultats mDNS ; réessayez.
+- **Le parcours fonctionne mais la résolution échoue** : gardez les noms de machine simples (évitez les emojis ou la ponctuation), puis redémarrez la Gateway. Le nom de l'instance de service dérive du nom d'hôte, les noms trop complexes peuvent donc déconcerter certains résolveurs.
 
 ## Noms d'instances échappés (`\032`)
 
@@ -250,20 +241,20 @@ Bonjour/DNS-SD échappe souvent les octets dans les noms d'instances de service 
 - Ceci est normal au niveau du protocole.
 - Les interfaces utilisateur doivent décoder pour l'affichage (iOS utilise iOS`BonjourEscapes.decode`).
 
-## Activation / désactivation / configuration
+## Activation / Désactivation / Configuration
 
 - Les hôtes macOS démarrent automatiquement le plugin de découverte LAN inclus par défaut.
 - `openclaw plugins enable bonjour` active le plugin de découverte LAN inclus sur les hôtes où il n'est pas activé par défaut.
-- `openclaw plugins disable bonjour` désactive l'annonce multicast LAN en désactivant le plugin inclus.
-- `OPENCLAW_DISABLE_BONJOUR=1` désactive la publicité multicast LAN sans modifier la configuration du plugin ; les valeurs véridiques acceptées sont `1`, `true`, `yes` et `on` (obsolète : `OPENCLAW_DISABLE_BONJOUR`).
+- `openclaw plugins disable bonjour` désactive la publicité multicast LAN en désactivant le plugin inclus.
+- `OPENCLAW_DISABLE_BONJOUR=1` désactive la publicité multicast LAN sans modifier la configuration du plugin ; les valeurs véridiques acceptées sont `1`, `true`, `yes` et `on` (legacy : `OPENCLAW_DISABLE_BONJOUR`).
 - `OPENCLAW_DISABLE_BONJOUR=0` force l'activation de la publicité multicast LAN, y compris à l'intérieur des conteneurs détectés ; les valeurs fausses acceptées sont `0`, `false`, `no` et `off`.
-- Lorsque le plugin Bonjour est activé et que `OPENCLAW_DISABLE_BONJOUR` n'est pas défini, Bonjour publie sur les hôtes normaux et se désactive automatiquement dans les conteneurs détectés.
-- `gateway.bind` dans `~/.openclaw/openclaw.json` contrôle le mode de liaison du Gateway.
-- `OPENCLAW_SSH_PORT` remplace le port SSH lorsque `sshPort` est publié (obsolète : `OPENCLAW_SSH_PORT`).
-- `OPENCLAW_TAILNET_DNS` publie une indication MagicDNS dans TXT lorsque le mode complet mDNS est activé (obsolète : `OPENCLAW_TAILNET_DNS`).
-- `OPENCLAW_CLI_PATH` remplace le chemin CLI publié (obsolète : `OPENCLAW_CLI_PATH`).
+- Lorsque le plugin Bonjour est activé et que Bonjour`OPENCLAW_DISABLE_BONJOUR`Bonjour n'est pas défini, Bonjour publie sur les hôtes normaux et se désactive automatiquement dans les conteneurs détectés.
+- `gateway.bind` dans `~/.openclaw/openclaw.json`Gateway contrôle le mode de liaison (bind mode) de la Gateway.
+- `OPENCLAW_SSH_PORT` remplace le port SSH lorsque `sshPort` est annoncé (legacy : `OPENCLAW_SSH_PORT`).
+- `OPENCLAW_TAILNET_DNS` publie une indication MagicDNS dans TXT lorsque le mode complet mDNS est activé (legacy : `OPENCLAW_TAILNET_DNS`).
+- `OPENCLAW_CLI_PATH` remplace le chemin CLI annoncé (ancien : `OPENCLAW_CLI_PATH`).
 
 ## Documentation connexe
 
 - Stratégie de découverte et sélection du transport : [Discovery](/fr/gateway/discovery)
-- Appairage de nœuds + approbations : [Appairage de Gateway](/fr/gateway/pairing)
+- Jumelage de nœuds + approbations : [Gateway pairing](/fr/gateway/pairing)

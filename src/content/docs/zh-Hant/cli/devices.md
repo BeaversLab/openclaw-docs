@@ -122,8 +122,9 @@ openclaw devices revoke --device <deviceId> --role node
 ## 注意事項
 
 - 權杖輪換會傳回一個新的權杖（敏感性資訊）。請將其視為機密處理。
-- 這些指令需要 `operator.pairing` (或 `operator.admin`) 範圍。部分
-  核准作業也要求呼叫者持有目標裝置將鑄造或繼承的 operator 範圍；請參閱 [Operator 範圍](/zh-Hant/gateway/operator-scopes)。
+- 這些指令需要 `operator.pairing`（或 `operator.admin`）範圍。某些
+  核准作業也要求呼叫者必須持有目標
+  裝置將鑄造或繼承的操作員範圍；請參閱[操作員範圍](/zh-Hant/gateway/operator-scopes)。
 - `gateway.nodes.pairing.autoApproveCidrs` 是一個選用的 Gateway 原則，僅適用於
   全新的節點裝置配對；它不會改變 CLI 的核准權限。
 - 權杖輪換和撤銷僅限於該裝置已核准的配對角色集合和
@@ -141,7 +142,7 @@ openclaw devices revoke --device <deviceId> --role node
 
 ## 權杖漂移恢復檢查清單
 
-當 Control UI 或其他客戶端持續失敗並顯示 `AUTH_TOKEN_MISMATCH` 或 `AUTH_DEVICE_TOKEN_MISMATCH` 時，請使用此方法。
+當 Control UI 或其他客戶端持續失敗並出現 `AUTH_TOKEN_MISMATCH`、`AUTH_DEVICE_TOKEN_MISMATCH` 或 `AUTH_SCOPE_MISMATCH` 時，請使用此方法。
 
 1. 確認目前的 gateway 權杖來源：
 
@@ -173,15 +174,16 @@ openclaw devices approve <requestId>
 
 備註：
 
-- 正常重新連線驗證的優先順序是：先明確指定的共用權杖/密碼，然後是明確指定的 `deviceToken`，接著是儲存的裝置權杖，最後是啟動權杖。
-- 受信任的 `AUTH_TOKEN_MISMATCH` 復原可以在單次有界重試中，暫時同時傳送共用權杖和儲存的裝置權杖。
+- 正常的重新連線驗證優先順序為：首先使用明確的共用 Token/密碼，接著是明確的 `deviceToken`，然後是儲存的裝置 Token，最後是啟動 Token。
+- 受信任的 `AUTH_TOKEN_MISMATCH` 復原可以在單次有界重試期間，暫時同時傳送共用 Token 和儲存的裝置 Token。
+- `AUTH_SCOPE_MISMATCH` 表示裝置 Token 已被識別但不包含所請求的範圍集；在變更共用閘道驗證之前，請修正配對/範圍核准合約。
 
 相關：
 
 - [Dashboard 驗證疑難排解](/zh-Hant/web/dashboard#if-you-see-unauthorized-1008)
-- [Gateway 疑難排解](/zh-Hant/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [閘道疑難排解](/zh-Hant/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
 ## 相關
 
-- [CLI 參考資料](/zh-Hant/cli)
+- [CLI 參考](/zh-Hant/cli)
 - [節點](/zh-Hant/nodes)

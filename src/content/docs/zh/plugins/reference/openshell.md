@@ -12,7 +12,7 @@ title: "Openshell 插件"
 ## 分发
 
 - 软件包：`@openclaw/openshell-sandbox`
-- 安装方式：包含在 OpenClaw 中
+- 安装途径：npm；ClawHub
 
 ## Surface
 

@@ -43,18 +43,19 @@ OpenClaw est fourni avec un fournisseur `fal` intégré pour la génération d'i
 Le fournisseur de génération d'images `fal` intégré est défini par défaut sur
 `fal/fal-ai/flux/dev`.
 
-| Fonctionnalité          | Valeur                       |
-| ----------------------- | ---------------------------- |
-| Max images              | 4 par requête                |
-| Mode d'édition          | Activé, 1 image de référence |
-| Remplacements de taille | Pris en charge               |
-| Format d'image          | Pris en charge               |
-| Résolution              | Pris en charge               |
-| Format de sortie        | `png` ou `jpeg`              |
+| Fonctionnalité          | Valeur                                                                   |
+| ----------------------- | ------------------------------------------------------------------------ |
+| Max images              | 4 par requête                                                            |
+| Mode d'édition          | Flux : 1 image de référence ; GPT Image 2 : 10 ; Nano Banana 2 : 14      |
+| Remplacements de taille | Pris en charge                                                           |
+| Format d'image          | Pris en charge pour la génération et l'édition GPT Image 2/Nano Banana 2 |
+| Résolution              | Pris en charge                                                           |
+| Format de sortie        | `png` ou `jpeg`                                                          |
 
-<Warning>Le point de terminaison de modification d'image fal ne prend **pas** en charge les remplacements `aspectRatio`.</Warning>
+<Warning>Les demandes image-à-image de Flux ne prennent **pas** en charge les remplacements `aspectRatio`. Les demandes d'édition GPT Image 2 et Nano Banana 2 utilisent le point de terminaison `/edit` de fal et acceptent les indices de format d'image.</Warning>
 
-Utilisez `outputFormat: "png"` lorsque vous voulez une sortie PNG. fal ne déclare pas de contrôle explicite de fond transparent dans OpenClaw, donc `background:
+Utilisez `outputFormat: "png"` lorsque vous voulez une sortie PNG. fal ne déclare pas de
+contrôle explicite de l'arrière-plan transparent dans OpenClaw, donc `background:
 "transparent"` est signalé comme un remplacement ignoré pour les modèles fal.
 
 Pour utiliser fal comme fournisseur d'images par défaut :
@@ -73,8 +74,8 @@ Pour utiliser fal comme fournisseur d'images par défaut :
 
 ## Génération vidéo
 
-Le fournisseur de génération vidéo `fal` intégré est défini par défaut sur
-`fal/fal-ai/minimax/video-01-live`.
+Le provider `fal` de génération vidéo inclus par défaut utilise
+`fal/fal-ai/minimax/video-01-live` par défaut.
 
 | Capacité | Valeur                                                                       |
 | -------- | ---------------------------------------------------------------------------- |
@@ -112,7 +113,7 @@ Le fournisseur de génération vidéo `fal` intégré est défini par défaut su
     ```
   </Accordion>
 
-  <Accordion title="Seedance 2.0 reference-to-video config example">
+  <Accordion title="Exemple de config référence-vers-vidéo Seedance 2.0">
     ```json5
     {
       agents: {
@@ -125,9 +126,10 @@ Le fournisseur de génération vidéo `fal` intégré est défini par défaut su
     }
     ```
 
-    Reference-to-video accepts up to 9 images, 3 videos, and 3 audio references
-    through the shared `video_generate` `images`, `videos`, and `audioRefs`
-    parameters, with at most 12 total reference files.
+    Le mode référence-vers-vidéo accepte jusqu'à 9 images, 3 vidéos et 3 références audio
+
+via les paramètres partagés `video_generate` `images`, `videos` et `audioRefs`,
+avec un maximum de 12 fichiers de référence au total.
 
   </Accordion>
 
@@ -146,7 +148,7 @@ Le fournisseur de génération vidéo `fal` intégré est défini par défaut su
   </Accordion>
 </AccordionGroup>
 
-<Tip>Use `openclaw models list --provider fal` to see the full list of available fal models, including any recently added entries.</Tip>
+<Tip>Utilisez `openclaw models list --provider fal` pour voir la liste complète des modèles fal disponibles, y compris les entrées récemment ajoutées.</Tip>
 
 ## Related
 

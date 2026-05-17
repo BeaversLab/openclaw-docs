@@ -64,7 +64,7 @@ openclaw agents add <name>
 3. **閘道** — 連接埠、綁定位址、認證模式、Tailscale 曝光。
    在互動式令牌模式下，選擇預設純文字令牌儲存或選擇加入 SecretRef。
    非互動式令牌 SecretRef 路徑：`--gateway-token-ref-env <ENV_VAR>`。
-4. **頻道** — 內建及打包的聊天頻道，例如 iMessage、Discord、Feishu、Google Chat、Mattermost、Microsoft Teams、QQ Bot、Signal、Slack、Telegram、WhatsApp 等等。
+4. **頻道** — 內建與官方外掛程式聊天頻道，例如 iMessage、Discord、Feishu、Google Chat、Mattermost、Microsoft Teams、QQ Bot、Signal、Slack、Telegram、WhatsApp 等。
 5. **Daemon** — 安裝 LaunchAgent (macOS)、systemd 使用者單元 (Linux/WSL2)，或原生 Windows 排程任務，並附帶每個使用者的啟動資料夾備援方案。
    如果 token 驗證需要 token 且 `gateway.auth.token` 由 SecretRef 管理，daemon 安裝程式會驗證它，但不會將解析的 token 保存到 supervisor 服務環境元資料中。
    如果 token 驗證需要 token 且設定的 token SecretRef 未解析，daemon 安裝將會被阻止，並提供可操作的指引。

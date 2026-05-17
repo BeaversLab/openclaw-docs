@@ -65,15 +65,15 @@ Preguntas y respuestas de inicio rápido y primera ejecución. Para operaciones 
   <Accordion title="Heartbeat keeps skipping. What do the skip reasons mean?">
     Common heartbeat skip reasons:
 
-    - `quiet-hours`: fuera de la ventana de horas activas configurada
-    - `empty-heartbeat-file`: `HEARTBEAT.md` existe pero solo contiene scaffolding en blanco o solo de encabezados
-    - `no-tasks-due`: el modo de tarea `HEARTBEAT.md` está activo pero aún no vence ningún intervalo de tareas
-    - `alerts-disabled`: toda la visibilidad del heartbeat está deshabilitada (`showOk`, `showAlerts` y `useIndicator` están todos desactivados)
+    - `quiet-hours`: outside the configured active-hours window
+    - `empty-heartbeat-file`: `HEARTBEAT.md` exists but only contains blank/header-only scaffolding
+    - `no-tasks-due`: `HEARTBEAT.md` task mode is active but none of the task intervals are due yet
+    - `alerts-disabled`: all heartbeat visibility is disabled (`showOk`, `showAlerts`, and `useIndicator` are all off)
 
-    En modo de tarea, las marcas de tiempo de vencimiento solo se avanzan después de que se completa
-    una ejecución real del heartbeat. Las ejecuciones omitidas no marcan las tareas como completadas.
+    In task mode, due timestamps are only advanced after a real heartbeat run
+    completes. Skipped runs do not mark tasks as completed.
 
-    Documentos: [Heartbeat](/es/gateway/heartbeat), [Automation & Tasks](/es/automation).
+    Docs: [Heartbeat](/es/gateway/heartbeat), [Automation](/es/automation).
 
   </Accordion>
 
